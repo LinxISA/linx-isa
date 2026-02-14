@@ -12,6 +12,15 @@ Where this manual and the machine-readable catalog disagree, the JSON catalog MU
 
 NOTE: v0.3 unifies the previous v0.2 bring-up profile with v0.3 staged extensions. All architectural contracts are now defined in v0.3.
 
+[[preamble-brand-mark]]
+=== Brand mark
+
+image::linxisa-logo.svg[align="center",width=140]
+
+The LinxISA brand mark is a stylized **灵犀** form that preserves the original silhouette while adding subtle
+semiconductor-style detailing (routed traces, pads/vias) to preserve crisp readability in manual PDFs, web docs, and
+toolchain-generated reports.
+
 [[preamble-scope]]
 === Scope and maturity
 

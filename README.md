@@ -1,5 +1,9 @@
 # linxisa
 
+<p align="center">
+  <img src="docs/architecture/isa-manual/src/images/linxisa-logo.svg" alt="LinxISA logo (灵犀)" width="180" />
+</p>
+
 LinxISA is a new instruction-set architecture (ISA) in the spirit of RISC-style ISAs, with a repository layout intended
 to keep **specification**, **software**, and **hardware** implementations consistent.
 
@@ -8,6 +12,11 @@ to keep **specification**, **software**, and **hardware** implementations consis
 - Official ISA name: **LinxISA** (Linx Instruction Set Architecture)
 - Short name: **Linx**
 - LLVM/MC arch names: `linx32`, `linx64`
+
+## Branding
+
+- Official logo asset (SVG): `docs/architecture/isa-manual/src/images/linxisa-logo.svg`
+- Design intent: preserve the original **灵犀**-inspired silhouette and add subtle semiconductor-style detailing (routed traces, pads/vias) for technical ISA branding.
 
 ## Source of truth
 

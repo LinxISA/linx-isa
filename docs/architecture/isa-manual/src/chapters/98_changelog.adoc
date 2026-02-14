@@ -3,6 +3,17 @@
 
 This section records notable changes to the LinxISA catalog and to the associated manual/tooling in this repository.
 
+[[changelog-branding-2026-02-14]]
+=== Branding update — 2026-02-14
+
+**Logo and identity**
+
+* Added the official LinxISA SVG logo asset:
+  - `docs/architecture/isa-manual/src/images/linxisa-logo.svg`
+* Added logo usage in repository README and ISA manual preamble.
+* Refined the mark by preserving the original silhouette and adding semiconductor-style technical detailing
+  (routed traces, pads/vias) while keeping the **灵犀** identity direction for ISA branding consistency.
+
 [[changelog-v0-3-strict-26check-2026-02-12]]
 === v0.3 (strict 26-check cutover) — 2026-02-12
 
