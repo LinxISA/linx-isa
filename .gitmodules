@@ -1,22 +1,36 @@
 [submodule "compiler/llvm"]
 	path = compiler/llvm
-	url = git@github.com:LinxISA/llvm-project.git
+	url = https://github.com/LinxISA/llvm-project.git
+	branch = main
+	update = checkout
 [submodule "kernel/linux"]
 	path = kernel/linux
-	url = git@github.com:LinxISA/linux.git
+	url = https://github.com/LinxISA/linux.git
+	branch = master
+	update = checkout
 	ignore = dirty
 [submodule "emulator/qemu"]
 	path = emulator/qemu
-	url = git@github.com:LinxISA/qemu.git
+	url = https://github.com/LinxISA/qemu.git
+	branch = master
+	update = checkout
 [submodule "tools/pyCircuit"]
 	path = tools/pyCircuit
-	url = git@github.com:LinxISA/pyCircuit.git
+	url = https://github.com/LinxISA/pyCircuit.git
+	branch = main
+	update = checkout
 [submodule "lib/glibc"]
 	path = lib/glibc
-	url = git@github.com:LinxISA/glibc.git
+	url = https://github.com/LinxISA/glibc.git
+	branch = master
+	update = checkout
 [submodule "lib/musl"]
 	path = lib/musl
-	url = git@github.com:LinxISA/musl.git
+	url = https://github.com/LinxISA/musl.git
+	branch = master
+	update = checkout
 [submodule "rtl/LinxCore"]
 	path = rtl/LinxCore
-	url = git@github.com:LinxISA/LinxCore.git
+	url = https://github.com/LinxISA/LinxCore.git
+	branch = main
+	update = checkout
