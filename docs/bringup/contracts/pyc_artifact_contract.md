@@ -2,9 +2,13 @@
 
 ## Authority and source roots
 
-- pyCircuit repository (authoritative): `~/pyCircuit`
-- Linx CPU source root: `~/pyCircuit/examples/linx_cpu_pyc`
-- Janus source root: `~/pyCircuit/janus/pyc/janus`
+- pyCircuit source of truth can be either:
+  - the pinned submodule: `tools/pyCircuit` (recommended for reproducibility), or
+  - an external checkout (set `PYCIRCUIT_ROOT=/path/to/pyCircuit`).
+- Linx CPU source root:
+  - `tools/pyCircuit/examples/linx_cpu_pyc`
+- Janus source root:
+  - `tools/pyCircuit/janus/pyc/janus`
 
 `linxisa` does not manually author these RTL/model sources.
 
@@ -18,14 +22,16 @@ For each tracked core target:
 
 Recommended generated locations in pyCircuit:
 
-- Linx: `~/pyCircuit/examples/generated/linx_cpu_pyc/`
-- Janus: `~/pyCircuit/janus/generated/`
+- Linx generated artifacts: `tools/pyCircuit/examples/generated/linx_cpu_pyc/`
+- Janus generated artifacts: `tools/pyCircuit/janus/generated/`
 
 ## Canonical generation entrypoints
 
-- `bash ~/pyCircuit/scripts/pyc build`
-- `bash ~/pyCircuit/scripts/pyc regen`
-- `bash ~/pyCircuit/janus/update_generated.sh`
+- `bash tools/pyCircuit/scripts/pyc build`
+- `bash tools/pyCircuit/scripts/pyc regen`
+- `bash tools/pyCircuit/janus/update_generated.sh`
+
+If using an external checkout, prefix those paths with `$PYCIRCUIT_ROOT/` instead.
 
 ## Reproducibility rules
 

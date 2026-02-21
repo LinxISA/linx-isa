@@ -10,7 +10,9 @@ In-repo compile validation assets are centralized under AVS:
 
 ## Current checkpoint
 
-- Host compiler binary commonly used: `~/llvm-project/build-linxisa-clang/bin/clang`
+- Host compiler binary commonly used:
+  - pinned submodule build: `compiler/llvm/build-linxisa-clang/bin/clang`
+  - or an external toolchain (set `CLANG=/path/to/clang`)
 - Supported bring-up targets: `linx64-linx-none-elf`, `linx32-linx-none-elf`
 - Compile test suite entrypoint: `avs/compiler/linx-llvm/tests/run.sh`
 
@@ -23,5 +25,9 @@ In-repo compile validation assets are centralized under AVS:
 ## Execution
 
 ```bash
-CLANG=~/llvm-project/build-linxisa-clang/bin/clang ./avs/compiler/linx-llvm/tests/run.sh
+# Using pinned submodule build
+CLANG=$PWD/compiler/llvm/build-linxisa-clang/bin/clang ./avs/compiler/linx-llvm/tests/run.sh
+
+# Or using an external toolchain
+# CLANG=/path/to/clang ./avs/compiler/linx-llvm/tests/run.sh
 ```

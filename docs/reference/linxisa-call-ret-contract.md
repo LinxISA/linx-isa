@@ -94,7 +94,7 @@ Dynamic control-flow targets from `RET`/`IND`/`ICALL` must resolve to legal bloc
 
 Cross-check against Linux Linx implementation patterns:
 
-- `/Users/zhoubot/linux/arch/linx/kernel/switch_to.S`
-- `/Users/zhoubot/linux/arch/linx/kernel/entry.S`
+- `${LINUX_ROOT}/arch/linx/kernel/switch_to.S`
+- `${LINUX_ROOT}/arch/linx/kernel/entry.S`
 
 These files are treated as authoritative reference behavior for return-target setup and call/return block sequencing.

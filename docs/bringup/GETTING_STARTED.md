@@ -4,13 +4,22 @@ This guide is the entry point for contributors joining the LinxISA bring-up work
 
 ## 1. Prerequisites
 
-Required:
+### Platform notes
 
-- `git` (with GitHub SSH access)
+- **Linux**: supported (recommended).
+- **macOS**: supported for most compiler/emulator/tooling work.
+- **Windows**:
+  - supported **via WSL2** (recommended),
+  - native Windows can be used for editing + some tooling, but most gates expect a POSIX shell.
+
+### Required
+
+- `git`
 - `python3`
-- `clang` + `ld.lld` for Linx cross builds
+- A POSIX shell to run `*.sh` gates (Linux/macOS, or Windows+WSL2)
+- `clang` + `ld.lld` for Linx cross builds (either from the pinned LLVM submodule build, or an external toolchain)
 
-Recommended:
+### Recommended
 
 - `gh` (GitHub CLI)
 
@@ -45,9 +54,20 @@ bash tools/regression/run.sh
 Optional overrides:
 
 ```bash
-export CLANG=~/llvm-project/build-linxisa-clang/bin/clang
-export LLD=~/llvm-project/build-linxisa-clang/bin/ld.lld
-export QEMU=~/qemu/build-tci/qemu-system-linx64
+# Tool paths can come from:
+# - pinned submodules (recommended for reproducibility)
+# - external installs (recommended for day-to-day dev if you already have them)
+#
+# If you built the pinned submodules:
+export CLANG=$PWD/compiler/llvm/build-linxisa-clang/bin/clang
+export LLD=$PWD/compiler/llvm/build-linxisa-clang/bin/ld.lld
+export QEMU=$PWD/emulator/qemu/build/qemu-system-linx64
+
+# Or point to external toolchains:
+# export CLANG=/path/to/clang
+# export LLD=/path/to/ld.lld
+# export QEMU=/path/to/qemu-system-linx64
+
 bash tools/regression/run.sh
 ```
 

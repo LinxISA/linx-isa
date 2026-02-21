@@ -13,8 +13,8 @@ assembly inspection.
 
 ```bash
 python3 workloads/tsvc/run_tsvc.py \
-  --clang /Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/clang \
-  --qemu /Users/zhoubot/linx-isa/emulator/qemu/build/qemu-system-linx64 \
+  --clang $PWD/compiler/llvm/build-linxisa-clang/bin/clang \
+  --qemu $PWD/emulator/qemu/build/qemu-system-linx64 \
   --source-policy linx-v03-parity \
   --vector-mode auto
 ```
@@ -36,8 +36,8 @@ Artifacts are written under `workloads/generated/`:
 
 ```bash
 python3 workloads/tsvc/run_tsvc.py \
-  --clang /Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/clang \
-  --qemu /Users/zhoubot/linx-isa/emulator/qemu/build/qemu-system-linx64 \
+  --clang $PWD/compiler/llvm/build-linxisa-clang/bin/clang \
+  --qemu $PWD/emulator/qemu/build/qemu-system-linx64 \
   --source-policy linx-v03-parity \
   --vector-mode off
 ```
@@ -46,8 +46,8 @@ python3 workloads/tsvc/run_tsvc.py \
 
 ```bash
 python3 workloads/tsvc/run_tsvc.py \
-  --clang /Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/clang \
-  --qemu /Users/zhoubot/linx-isa/emulator/qemu/build/qemu-system-linx64 \
+  --clang $PWD/compiler/llvm/build-linxisa-clang/bin/clang \
+  --qemu $PWD/emulator/qemu/build/qemu-system-linx64 \
   --source-policy linx-v03-parity \
   --vector-mode auto \
   --compare-baseline-log workloads/generated/qemu/tsvc/tsvc.off.stdout.txt \

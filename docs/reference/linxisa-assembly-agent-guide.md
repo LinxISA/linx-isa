@@ -6,7 +6,7 @@ This guide is the canonical agent-facing reference for writing LinxISA assembly 
 
 Source of truth:
 
-- `/Users/zhoubot/linux/Documentation/linxisa/abi.md`
+- `${LINUX_ROOT}/Documentation/linxisa/abi.md`
 
 Register contract:
 
@@ -160,7 +160,7 @@ Linux contract:
 
 Kernel side reference:
 
-- `/Users/zhoubot/linux/arch/linx/kernel/signal.c`
+- `${LINUX_ROOT}/arch/linx/kernel/signal.c`
 
 Userspace requirements:
 
@@ -180,9 +180,9 @@ Policy for bring-up parity:
 
 Primary references:
 
-- `/Users/zhoubot/linux/arch/linx/kernel/switch_to.S`
-- `/Users/zhoubot/linux/arch/linx/kernel/entry.S`
-- `/Users/zhoubot/linux/arch/linx/kernel/signal.c`
+- `${LINUX_ROOT}/arch/linx/kernel/switch_to.S`
+- `${LINUX_ROOT}/arch/linx/kernel/entry.S`
+- `${LINUX_ROOT}/arch/linx/kernel/signal.c`
 
 Patterns to reuse in userspace arch asm:
 

@@ -16,43 +16,53 @@ REPO_ROOT = SCRIPT_DIR.parents[1]
 
 def _default_clang() -> Path:
     cands = [
-        Path("/Users/zhoubot/llvm-project/build-linxisa-clang/bin/clang"),
         REPO_ROOT / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "clang",
+        Path("clang"),
     ]
     for p in cands:
         if p.exists():
             return p
-    return cands[0]
+    return cands[-1]
 
 
 def _default_lld() -> Path:
     cands = [
-        Path("/Users/zhoubot/llvm-project/build-linxisa-clang/bin/ld.lld"),
         REPO_ROOT / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "ld.lld",
+        Path("ld.lld"),
     ]
     for p in cands:
         if p.exists():
             return p
-    return cands[0]
+    return cands[-1]
 
 
 def _default_qemu() -> Path:
     cands = [
         REPO_ROOT / "emulator" / "qemu" / "build" / "qemu-system-linx64",
-        Path("/Users/zhoubot/qemu/build/qemu-system-linx64"),
-        Path("/Users/zhoubot/qemu/build-tci/qemu-system-linx64"),
+        Path("qemu-system-linx64"),
     ]
     for p in cands:
         if p.exists():
             return p
-    return cands[0]
+    return cands[-1]
 
 
-def _check_exe(path: Path, what: str) -> None:
-    if not path.exists():
-        raise SystemExit(f"error: {what} not found: {path}")
-    if not os.access(path, os.X_OK):
-        raise SystemExit(f"error: {what} is not executable: {path}")
+def _check_exe(path: Path, what: str) -> Path:
+    # Accept either an absolute/relative path or a PATH-resolved executable name.
+    if path.exists():
+        if not os.access(path, os.X_OK):
+            raise SystemExit(f"error: {what} is not executable: {path}")
+        return path
+
+    import shutil
+
+    resolved = shutil.which(str(path))
+    if not resolved:
+        raise SystemExit(f"error: {what} not found: {path} (and not in PATH)")
+    rp = Path(resolved)
+    if not os.access(rp, os.X_OK):
+        raise SystemExit(f"error: {what} is not executable: {rp}")
+    return rp
 
 
 def _run(cmd: list[str], *, verbose: bool, **kwargs) -> subprocess.CompletedProcess[bytes]:
@@ -89,9 +99,9 @@ def main(argv: list[str]) -> int:
     out_dir = Path(os.path.expanduser(args.out_dir)).resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    _check_exe(clang, "clang")
-    _check_exe(lld, "ld.lld")
-    _check_exe(qemu, "qemu-system-linx64")
+    clang = _check_exe(clang, "clang")
+    lld = _check_exe(lld, "ld.lld")
+    qemu = _check_exe(qemu, "qemu-system-linx64")
 
     src = SCRIPT_DIR / "tests" / "15_callret_contract_negative.S"
     if not src.exists():

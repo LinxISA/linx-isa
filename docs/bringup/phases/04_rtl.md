@@ -5,7 +5,9 @@ Primary RTL notes: `rtl/README.md`
 ## Scope and source of truth
 
 - Architecture/spec authority: `linxisa` (`isa/v0.3/`, `isa/v0.3/linxisa-v0.3.json`, `isa/generated/codecs/`).
-- RTL/model generation authority: `~/pyCircuit`.
+- RTL/model generation authority:
+  - pinned submodule: `tools/pyCircuit` (recommended for reproducibility)
+  - or an external checkout (set `PYCIRCUIT_ROOT=/path/to/pyCircuit`).
 - Core targets:
   - **Linx CPU** first
   - **Janus Core** second
@@ -38,15 +40,17 @@ produce stable and diffable models/RTL as prerequisites.
 One sprint = one feature slice (instruction/CSR/exception/pipeline rule):
 
 1. Implement/update pyCircuit source in:
-   - `~/pyCircuit/examples/linx_cpu_pyc/`
+   - `tools/pyCircuit/examples/linx_cpu_pyc/` (or `$PYCIRCUIT_ROOT/examples/linx_cpu_pyc/`)
 2. Regenerate C++ and Verilog artifacts via canonical scripts.
 3. Run C++ and RTL simulations on identical program vectors.
 4. Diff against QEMU using the trace contract.
 
 ### Canonical runners
 
-- `bash ~/pyCircuit/tools/run_linx_cpu_pyc_cpp.sh`
-- `python3 ~/pyCircuit/tools/pyc_flow.py verilog-sim linx_cpu_pyc --tool verilator`
+- `bash tools/pyCircuit/tools/run_linx_cpu_pyc_cpp.sh`
+- `python3 tools/pyCircuit/tools/pyc_flow.py verilog-sim linx_cpu_pyc --tool verilator`
+
+(If using an external checkout, prefix those paths with `$PYCIRCUIT_ROOT/`.)
 
 ### Exit criteria
 
@@ -59,14 +63,16 @@ One sprint = one feature slice (instruction/CSR/exception/pipeline rule):
 ### Entry criteria
 
 - Workstream A exit criteria complete.
-- Janus generated artifacts can be refreshed from source in `~/pyCircuit/janus`.
+- Janus generated artifacts can be refreshed from source in `tools/pyCircuit/janus` (or `$PYCIRCUIT_ROOT/janus`).
 
 ### Canonical runners
 
-- `bash ~/pyCircuit/janus/tools/run_janus_bcc_ooo_pyc_cpp.sh`
-- `bash ~/pyCircuit/janus/tools/run_janus_bcc_ooo_pyc_sv.sh`
-- `bash ~/pyCircuit/janus/tools/run_janus_bcc_ooo_pyc_verilator.sh`
-- `bash ~/pyCircuit/janus/tools/run_janus_benchmarks.sh`
+- `bash tools/pyCircuit/janus/tools/run_janus_bcc_ooo_pyc_cpp.sh`
+- `bash tools/pyCircuit/janus/tools/run_janus_bcc_ooo_pyc_sv.sh`
+- `bash tools/pyCircuit/janus/tools/run_janus_bcc_ooo_pyc_verilator.sh`
+- `bash tools/pyCircuit/janus/tools/run_janus_benchmarks.sh`
+
+(If using an external checkout, prefix those paths with `$PYCIRCUIT_ROOT/`.)
 
 ### Validation
 
@@ -88,4 +94,4 @@ One sprint = one feature slice (instruction/CSR/exception/pipeline rule):
 - `models/` for model wrappers and trace adapters
 - `tools/` for reproducible import/check scripts
 
-Direct authoring remains in `~/pyCircuit`; copied artifacts in `linxisa` must be script-derived.
+Direct authoring remains in pyCircuit (pinned `tools/pyCircuit` or external `$PYCIRCUIT_ROOT`); copied artifacts in `linxisa` must be script-derived.

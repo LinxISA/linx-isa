@@ -7,8 +7,8 @@ This note summarizes practical skills and review focus for Linx call/ret and lib
 - Validate emitted call/ret patterns in kernel objects (`entry.o`, `switch_to.o`, `panic.o`).
 - Keep return/indirect paths explicit (`BSTART.RET/IND` + `setc.tgt`).
 - Cross-check with:
-  - `/Users/zhoubot/linux/arch/linx/kernel/entry.S`
-  - `/Users/zhoubot/linux/arch/linx/kernel/switch_to.S`
+  - `${LINUX_ROOT}/arch/linx/kernel/entry.S`
+  - `${LINUX_ROOT}/arch/linx/kernel/switch_to.S`
 - Gate with `tools/ci/check_linx_callret_crossstack.sh`.
 
 ## LLVM

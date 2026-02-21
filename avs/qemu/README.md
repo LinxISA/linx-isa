@@ -94,7 +94,7 @@ Custom output directory:
 For Linux initramfs + musl runtime smoke (malloc/free/printf), use:
 
 ```bash
-python3 /Users/zhoubot/linx-isa/avs/qemu/run_musl_smoke.py --mode phase-b
+python3 avs/qemu/run_musl_smoke.py --mode phase-b
 ```
 
 `run_musl_smoke.py` links the sample at a high userspace image base by default
@@ -102,14 +102,14 @@ python3 /Users/zhoubot/linx-isa/avs/qemu/run_musl_smoke.py --mode phase-b
 
 Artifacts are written under:
 
-- `/Users/zhoubot/linx-isa/avs/qemu/out/musl-smoke/`
+- `avs/qemu/out/musl-smoke/`
 
 ## Call/Ret contract gate
 
 Run the positive call/ret runtime matrix:
 
 ```bash
-python3 /Users/zhoubot/linx-isa/avs/qemu/run_tests.py \
+python3 avs/qemu/run_tests.py \
   --suite callret \
   --require-test-id 0x140b \
   --require-test-id 0x140c
@@ -120,13 +120,13 @@ negative cases must trap with deterministic causes, and positive cases must
 run without block-format faults.
 
 ```bash
-python3 /Users/zhoubot/linx-isa/avs/qemu/run_callret_contract.py
+python3 avs/qemu/run_callret_contract.py
 ```
 
 Run Linux+musl call/ret sample with strict Linux cross-stack audit:
 
 ```bash
-python3 /Users/zhoubot/linx-isa/avs/qemu/run_musl_smoke.py \
+python3 avs/qemu/run_musl_smoke.py \
   --sample callret \
   --link both \
   --callret-crossstack strict
@@ -135,7 +135,7 @@ python3 /Users/zhoubot/linx-isa/avs/qemu/run_musl_smoke.py \
 Enable additional whole-vmlinux contract audit (optional, slower):
 
 ```bash
-LINX_AUDIT_VMLINUX=1 python3 /Users/zhoubot/linx-isa/avs/qemu/run_musl_smoke.py \
+LINX_AUDIT_VMLINUX=1 python3 avs/qemu/run_musl_smoke.py \
   --sample callret \
   --link both \
   --callret-crossstack strict

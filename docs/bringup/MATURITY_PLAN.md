@@ -17,7 +17,8 @@ Required evidence:
 - `bash tools/regression/full_stack.sh` passes.
 - `bash tools/regression/run.sh` passes.
 - `python3 tools/bringup/check26_contract.py --root .` passes.
-- `python3 tools/isa/check_no_legacy_v03.py --root . --extra-root ~/qemu --extra-root ~/linux --extra-root ~/llvm-project` passes.
+- `python3 tools/isa/check_no_legacy_v03.py --root . --extra-root emulator/qemu --extra-root kernel/linux --extra-root compiler/llvm` passes.
+  - If using external trees, point `--extra-root` at those checkouts instead.
 - Linux userspace QEMU boot scripts pass (smoke/full/virtio).
 - LLVM Linx MC+CodeGen test suites pass.
 - pyCircuit/Janus cpp tests and QEMU-vs-pyCircuit trace diff pass.

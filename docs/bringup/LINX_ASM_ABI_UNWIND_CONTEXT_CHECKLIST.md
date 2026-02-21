@@ -4,7 +4,7 @@ Use this checklist when landing Linx64 asm changes in musl/glibc/runtime code.
 
 ## A) ABI Register Contract
 
-- [ ] Uses linx64 ABI register map from `/Users/zhoubot/linux/Documentation/linxisa/abi.md`.
+- [ ] Uses linx64 ABI register map from `${LINUX_ROOT}/Documentation/linxisa/abi.md`.
 - [ ] Preserves callee-saved set (`s0..s8`, `sp`) in callable functions.
 - [ ] Preserves `ra` semantics across calls/returns.
 - [ ] Keeps stack 16-byte aligned at call boundaries.
@@ -48,9 +48,9 @@ Use this checklist when landing Linx64 asm changes in musl/glibc/runtime code.
 ## G) Unwind/Context-Switch Consistency
 
 - [ ] Save/restore order is consistent with Linux Linx kernel patterns:
-  - `/Users/zhoubot/linux/arch/linx/kernel/switch_to.S`
-  - `/Users/zhoubot/linux/arch/linx/kernel/entry.S`
-  - `/Users/zhoubot/linux/arch/linx/kernel/signal.c`
+  - `${LINUX_ROOT}/arch/linx/kernel/switch_to.S`
+  - `${LINUX_ROOT}/arch/linx/kernel/entry.S`
+  - `${LINUX_ROOT}/arch/linx/kernel/signal.c`
 - [ ] Linux cross-stack check confirms call/ret target setup matches kernel patterns.
 - [ ] Noreturn terminal stubs (`sigreturn`, `exit`, unmap-self path) do not expose fake unwind paths.
 - [ ] Any context struct exported to userspace matches ptrace/signal expectations.

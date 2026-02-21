@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-LINUX_ROOT="${1:-/Users/zhoubot/linux}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
+LINUX_ROOT="${1:-${LINUX_ROOT:-$REPO_ROOT/kernel/linux}}"
 VMLINUX=""
 for cand in \
   "$LINUX_ROOT/build-linx-fixed/vmlinux" \
@@ -34,8 +37,8 @@ ENTRY_O="$(pick_first_exists \
 
 if [[ -n "${LLVM_OBJDUMP:-}" ]]; then
   OBJDUMP="$LLVM_OBJDUMP"
-elif [[ -x "/Users/zhoubot/llvm-project/build-linxisa-clang/bin/llvm-objdump" ]]; then
-  OBJDUMP="/Users/zhoubot/llvm-project/build-linxisa-clang/bin/llvm-objdump"
+elif [[ -x "$REPO_ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-objdump" ]]; then
+  OBJDUMP="$REPO_ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-objdump"
 else
   OBJDUMP="$(command -v llvm-objdump || true)"
 fi
@@ -47,8 +50,8 @@ fi
 
 if [[ -n "${LLVM_READELF:-}" ]]; then
   READELF="$LLVM_READELF"
-elif [[ -x "/Users/zhoubot/llvm-project/build-linxisa-clang/bin/llvm-readelf" ]]; then
-  READELF="/Users/zhoubot/llvm-project/build-linxisa-clang/bin/llvm-readelf"
+elif [[ -x "$REPO_ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-readelf" ]]; then
+  READELF="$REPO_ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-readelf"
 else
   READELF="$(command -v llvm-readelf || true)"
 fi

@@ -37,55 +37,65 @@ SAMPLES: dict[str, dict[str, str]] = {
 
 def _default_clang() -> Path:
     cands = [
-        Path("/Users/zhoubot/llvm-project/build-linxisa-clang/bin/clang"),
         REPO_ROOT / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "clang",
+        Path("clang"),
     ]
     for p in cands:
         if p.exists():
             return p
-    return cands[0]
+    return cands[-1]
 
 
 def _default_lld() -> Path:
     cands = [
-        Path("/Users/zhoubot/llvm-project/build-linxisa-clang/bin/ld.lld"),
         REPO_ROOT / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "ld.lld",
+        Path("ld.lld"),
     ]
     for p in cands:
         if p.exists():
             return p
-    return cands[0]
+    return cands[-1]
 
 
 def _default_clangxx(clang: Path) -> Path:
     cands = [
         Path(str(clang).replace("/clang", "/clang++")),
-        Path("/Users/zhoubot/llvm-project/build-linxisa-clang/bin/clang++"),
         REPO_ROOT / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "clang++",
+        Path("clang++"),
     ]
     for p in cands:
         if p.exists():
             return p
-    return cands[0]
+    return cands[-1]
 
 
 def _default_qemu() -> Path:
     cands = [
-        Path("/Users/zhoubot/qemu/build/qemu-system-linx64"),
-        Path("/Users/zhoubot/qemu/build-tci/qemu-system-linx64"),
         REPO_ROOT / "emulator" / "qemu" / "build" / "qemu-system-linx64",
+        Path("qemu-system-linx64"),
     ]
     for p in cands:
         if p.exists():
             return p
-    return cands[0]
+    return cands[-1]
 
 
-def _check_exe(path: Path, what: str) -> None:
-    if not path.exists():
-        raise SystemExit(f"error: {what} not found: {path}")
-    if not os.access(path, os.X_OK):
-        raise SystemExit(f"error: {what} is not executable: {path}")
+def _check_exe(path: Path, what: str) -> Path:
+    # Accept either an absolute/relative path or a PATH-resolved executable name.
+    if path.exists():
+        if not os.access(path, os.X_OK):
+            raise SystemExit(f"error: {what} is not executable: {path}")
+        return path
+
+    import shutil
+
+    resolved = shutil.which(str(path))
+    if not resolved:
+        raise SystemExit(f"error: {what} not found: {path} (and not in PATH)")
+    rp = Path(resolved)
+    if not os.access(rp, os.X_OK):
+        raise SystemExit(f"error: {what} is not executable: {rp}")
+    return rp
 
 
 def _find_kernel(linux_root: Path) -> Path:
@@ -270,8 +280,8 @@ def _run_split_link_modes(args: argparse.Namespace, out_dir: Path, selected_samp
 
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description="Run Linx musl malloc/printf runtime smoke on Linux+initramfs+QEMU.")
-    parser.add_argument("--linux-root", default="/Users/zhoubot/linux")
-    parser.add_argument("--musl-root", default="/Users/zhoubot/linx-isa/lib/musl")
+    parser.add_argument("--linux-root", default=str(REPO_ROOT / "kernel" / "linux"))
+    parser.add_argument("--musl-root", default=str(REPO_ROOT / "lib" / "musl"))
     parser.add_argument("--clang", default=str(_default_clang()))
     parser.add_argument("--clangxx", default="")
     parser.add_argument("--lld", default=str(_default_lld()))
@@ -300,7 +310,7 @@ def main(argv: list[str]) -> int:
     )
     parser.add_argument(
         "--out-dir",
-        default="/Users/zhoubot/linx-isa/avs/qemu/out/musl-smoke",
+        default=str(REPO_ROOT / "avs" / "qemu" / "out" / "musl-smoke"),
     )
     args = parser.parse_args(argv)
 
@@ -358,10 +368,10 @@ def main(argv: list[str]) -> int:
         summary["stages"].append(item)
         _write_summary(summary_path, summary)
 
-    _check_exe(clang, "clang")
-    _check_exe(clangxx, "clang++")
-    _check_exe(lld, "ld.lld")
-    _check_exe(qemu, "qemu-system-linx64")
+    clang = _check_exe(clang, "clang")
+    clangxx = _check_exe(clangxx, "clang++")
+    lld = _check_exe(lld, "ld.lld")
+    qemu = _check_exe(qemu, "qemu-system-linx64")
 
     build_script = musl_root / "tools" / "linx" / "build_linx64_musl.sh"
     if not build_script.exists():

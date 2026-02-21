@@ -46,14 +46,14 @@ Bring up a reproducible Linx musl path for:
 Build musl (`M1/M2/M3`):
 
 ```bash
-cd /Users/zhoubot/linx-isa/lib/musl
+cd lib/musl
 MODE=phase-b ./tools/linx/build_linx64_musl.sh
 ```
 
 Run end-to-end smoke (`R1/R2`):
 
 ```bash
-cd /Users/zhoubot/linx-isa
+cd .
 python3 avs/qemu/run_musl_smoke.py --mode phase-b
 ```
 
@@ -73,8 +73,8 @@ python3 avs/qemu/run_musl_smoke.py --mode phase-b
 - baseline freeze:
   - `out/libc/musl/logs/baseline.md`
 - latest Linux userspace boot results:
-  - `python3 /Users/zhoubot/linux/tools/linxisa/initramfs/smoke.py`
-  - `python3 /Users/zhoubot/linux/tools/linxisa/initramfs/full_boot.py`
+  - `python3 ${LINUX_ROOT}/tools/linxisa/initramfs/smoke.py`
+  - `python3 ${LINUX_ROOT}/tools/linxisa/initramfs/full_boot.py`
 
 ## Exit criteria
 
