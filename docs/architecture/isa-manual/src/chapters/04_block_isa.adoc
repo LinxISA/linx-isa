@@ -16,6 +16,8 @@ This rule is a control-flow integrity requirement. (Evidence: MAN-02)
 * A block may also be *implicitly* terminated by the next `BSTART.*` marker in the instruction stream (toolchain
   convention; some code emits an explicit `BSTOP`/`C.BSTOP` for clarity).
 * An empty block is legal (header and boundary markers only, no payload instructions).
++
++NOTE: In v0.3, `BSTART.*` / `BSTOP` are treated as **block boundary markers** for block init/commit. They may appear as markers/descriptors in the program stream, but there must be no architectural state-modifying *payload* instructions outside block execution.
 * Canonical v0.3 assembly uses typed `BSTART.<type>` forms only; legacy PAR-style shorthand is treated as a non-canonical
   alias in reconciliation tooling and is rejected by v0.3 drift gates.
 * Conditional transitions use a two-step sequence:
@@ -63,7 +65,9 @@ actual instruction body is placed elsewhere.
 * A decoupled header begins with `BSTART.<type>`.
 * After `BSTART.<type>`, the header stream MUST contain **only** `B.*` header descriptors (no non-`B.*`
   instructions).
-* The header MUST provide exactly one `B.TEXT <label>` descriptor which defines `BodyTPC` (the body entrypoint).
+* The header MUST provide exactly one `B.TEXT <label>` descriptor which defines `BodyTPC` (legacy naming for the body entrypoint).
+  - Normative: `BodyTPC` is the initial **Temporary PC** (`TPC`) value used for body execution.
+  - Alignment: `BodyTPC` MUST be 2-byte aligned. Misalignment MUST raise `E_BLOCK(EC_BFETCH)` with `TRAPARG0` set to the misaligned body-fetch address; this fault is **fatal** (non-restartable), see System/Privilege trap semantics.
 * The header ends at `BSTOP`/`C.BSTOP` or implicitly at the next block start marker in the linear stream.
 
 *Body form (required structure):*
@@ -88,14 +92,24 @@ actual instruction body is placed elsewhere.
 *Safety rule interaction (`B.TEXT`):*
 
 * `BodyTPC` is an **engine-internal entrypoint** and need not begin with a block start marker.
-* Any *architectural* control-flow transfer to `BodyTPC` (direct/cond/ind/call/ret) is illegal and MUST raise an
-  exception, identical to branching to the interior of a coupled block.
+* Any *architectural* control-flow transfer to `BodyTPC` (direct/cond/ind/call/ret) is illegal and MUST raise a
+  dedicated control-flow-integrity exception (`E_BLOCK(EC_CFI)`) identical to branching to the interior of a coupled block.
+  (Cause encoding: `EC_CFI=0x1` in `E_BLOCK`, with `EC_CFI_KIND` in `TRAPNO.CAUSE[3:0]`; see System/Privilege trap reporting.
+  Precision: `E_BLOCK(EC_CFI)` is **precise** — no architectural state changes from the offending control-flow instruction are
+  committed. Targets that are invalid encodings but are not *interior-entry* CFI violations remain `E_INST(EC_ILLEGAL)` unless
+  otherwise specified.)
 
 [[blockisa-forms-template]]
 ==== Template blocks (standalone blocks)
 
 Template blocks are standalone blocks that execute via a *code-template generator* (see <<templates>>). They are not
 wrapped by `BSTART..BSTOP`.
+
+Commit point (template blocks): a template block commits when the template engine reports completion and control
+transfers to the next block start marker (the completion boundary).
+
+NOTE: Trap/replay for template execution uses `BSTATE.Template` (including `TemplateKind`) and the trap snapshot rules in
+<<system-bstate-ebstate>> / <<system-trap-routing>>.
 
 Rules:
 
@@ -285,13 +299,23 @@ Strict-v0.3 CUBE `Function` assignment:
 
 Strict-v0.3 TEPL `TileOp10` assignment (current canonical map):
 
-* Elementwise/base: `TADD=0x000`, `TSUB=0x001`, `TMUL=0x002`, `TDIV=0x003`, `TMAX=0x004`, `TMIN=0x005`,
+* Elementwise/base (tile-tile): `TADD=0x000`, `TSUB=0x001`, `TMUL=0x002`, `TDIV=0x003`, `TMAX=0x004`, `TMIN=0x005`,
   `TAND=0x006`, `TOR=0x007`, `TXOR=0x008`, `TSHL=0x009`, `TSHR=0x00A`, `TRELU=0x00D`, `TPRELU=0x00E`, `TCVT=0x00F`.
+* Elementwise TOPS (tile-scalar, scalar RHS via `B.IOR`, broadcast):
+  `TADDS=0x040`, `TSUBS=0x041`, `TMULS=0x042`, `TDIVS=0x043`, `TMAXS=0x044`, `TMINS=0x045`, `TANDS=0x046`,
+  `TORS=0x047`, `TXORS=0x048`, `TSHLS=0x049`, `TSHRS=0x04A`.
+  - NOTE (toolchain convention): place the scalar RHS binding in the first `B.IOR` entry where practical, even though
+    implementations must accept any `B.IOR` position per op-defined parsing.
 * Row/column reductions: `TROWMAX=0x020`, `TROWMIN=0x021`, `TROWSUM=0x022`, `TCOLMAX=0x024`, `TCOLMIN=0x025`,
   `TCOLSUM=0x026`.
+* Reduce expand: `TCOLEXPAND=0x0C0`, `TROWEXPAND=0x0C1`.
 * Math transforms: `TEXP=0x040`, `TLOG=0x041`, `TSQRT=0x042`, `TRSQRT=0x043`, `TRECIP=0x044`.
 * Data movement/shape: `TGATHER=0x060`, `TSCATTER=0x061`, `TRESHAPE=0x062`, `TTRANSPOSE=0x063`.
-* Unassigned `TileOp10` values are reserved for future PTO template extension.
+
+Non-canonical legacy note:
+
+* `TCOLEXPAND=0x027` is non-canonical in strict v0.3 and MUST NOT appear in canonical outputs.
+* Unassigned `TileOp10` values are **non-canonical** and MUST NOT appear in canonical outputs; canonical toolchains MUST reject them. Hardware behavior for such values is unspecified.
 
 Strict-v0.3 `TMOV` contracts:
 
@@ -461,8 +485,10 @@ Bring-up execution model (normative for strict v0.3):
 Decoupled body form (bring-up constraint):
 
 * The header MUST contain exactly one `B.TEXT <tpc>` selecting an out-of-line **linear** body.
-* The body MUST terminate at `BSTOP` / `C.BSTOP`.
-* The body MUST NOT contain any `B.*` header descriptors or block start markers.
+* The body MUST terminate at a block terminator marker. Valid terminators are `BSTOP` / `C.BSTOP` and `BSTART.*` / `C.BSTART.*`.
+  - First terminator wins (anything after is unreachable).
+  - Any `BSTART` encountered inside the body stream acts as a terminator trigger (deterministic), not as an architecturally executed successor from within the body.
+* The body MUST NOT contain any `B.*` header descriptors.
 
 Example (2-D nested loop using `MSEQ`):
 

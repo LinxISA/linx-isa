@@ -21,7 +21,9 @@ Linx is a **block-structured** instruction set architecture with two architectur
 
 Linx uses two program-counter concepts:
 
-* **TPC (Thread PC):** the byte address of the next instruction to execute/fetch for the current LXCPU.
+* **TPC (Temporary PC):** the byte address of the next instruction to execute/fetch for the current LXCPU.
+  - Note: when a block executes an out-of-line body (decoupled blocks via `B.TEXT`, or SIMT vector bodies), the body-entry address is
+    the initial `TPC` value for that body execution context (manual prose may refer to this as `BodyTPC`).
 * **BPC (Block PC):** the byte address of the current block start marker (a `BSTART.*`/`C.BSTART.*`/`HL.BSTART.*` or
   a template block such as `FENTRY`/`FRET.*`).
 

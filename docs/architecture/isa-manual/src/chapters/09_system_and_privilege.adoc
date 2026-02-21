@@ -193,6 +193,95 @@ Routing (bring-up):
 * `ACR2` + `SCT_SYS` routes to **ACR1**.
 * All other valid `request_type` values route to **ACR0**.
 * Invalid encodings MUST trap with `E_INST(EC_ILLEGAL)`.
+* Control-flow integrity violations MUST trap with `E_BLOCK(EC_CFI)`:
+  - architectural control flow into the interior of a coupled block body, or
+  - architectural control flow to an engine-internal entrypoint (e.g. decoupled `BodyTPC` or a vector-body `B.TEXT` target) via architectural control flow, or
+  - fallthrough/linear-stream execution expects a block start marker but the next linear instruction is not a valid block start marker.
++
++Cause encoding (bring-up normative):
++
++* `EC_CFI = 0x1` within the `E_BLOCK` cause space.
++* `TRAPNO_ACRm.CAUSE[3:0]` = `EC_CFI_KIND` (4-bit subcause) when `E_BLOCK(EC_CFI)` is reported.
++* `TRAPNO_ACRm.CAUSE[7:4]` is reserved for future CFI subkind and MUST be `0`.
++* `EC_CFI_KIND` mapping:
++  - `0`: reserved
++  - `1`: `CFI_BAD_TARGET` (direct/indirect/ret target is not a block start marker)
++  - `2`: reserved
++  - `3`: `CFI_MISSING_NEXT_MARKER` (fallthrough expected but next linear instruction is not a block start marker)
++  - `4`: reserved
++
++Reporting (bring-up):
++
++* `TRAPARG0_ACRm` MUST be set to the **source PC/TPC** of the control-flow instruction (or boundary marker) that triggered the CFI violation.
++* `ECSTATE_ACRm.BI` MUST be set to `0` (treat as a header/control-flow legality failure).
++* Precision: `E_BLOCK(EC_CFI)` is **precise** — no architectural state changes from the offending control-flow instruction are committed.
++* Resume PC: `EBARG_TPC_ACRm` is profile-defined/handler-defined for `E_BLOCK(EC_CFI)`.
++
++* Template replay flags (bring-up): implementations SHOULD expose a single EBARG register `EBARG_TPLFLAGS_ACRm` with template trap/replay flags.
++  - Bitfields (widths/encodings TBD): `TPL_VALID`, `TPL_ID_PRESENT` + `TPL_ID`, `TPL_PHASE`, `TPL_DIRTY`, `TPL_REDO_OK`, `TPL_RESUME_OK`.
+    - `TPL_ID` for marker templates (`TemplateKind.class=0`) uses the mnemonic-enum mapping in <<templates-tplid>>.
+    - For marker templates (`TemplateKind.class=0`), `TPL_ID_PRESENT` MUST be `1` (reporting is required).
+    - For TEPL templates (`TemplateKind.class=1`), `TPL_ID_PRESENT` MUST be `1` and `TPL_ID` MUST carry the raw `TileOp10` selector.
++    - `TPL_REDO_OK=1`: handler may restart the template from the beginning (no externally visible partial side effects).
++    - `TPL_RESUME_OK=1`: template supports/permits resume via `EBSTATE` snapshot (template-defined FSM/cursors). Templates that may commit to memory mid-execution MUST set `TPL_REDO_OK=0` and `TPL_RESUME_OK=1`.
++  - `TPL_PHASE` standard meanings:
++    - `0`: decode/validate
++    - `1`: executing
++    - `2`: finishing/commit
++    - `3`: reserved
++  - For `FENTRY`/`FEXIT`/`FRET.*` templates, the expanded uop stream (including `SETC_TGT`) is `TPL_PHASE=1`; `TPL_PHASE=2` is reserved for the final completion/commit boundary cycle.
++  - `TPL_DIRTY` MUST be set once any template uop executes / internal template state advances.
++  - For `FENTRY`/`FEXIT`/`FRET.*` templates:
++    - once `TPL_PHASE>=1`, `TPL_REDO_OK` MUST be `0` (redo-from-beginning is not permitted after execution begins).
++    - once `TPL_PHASE>=1`, `TPL_RESUME_OK` MUST be `1` (resume via EBSTATE is required).
++  - TEPL templates (`TemplateKind.class=1` / `BSTART.TEPL`) are accelerator-driven (not uop-expanded).
++    - `TPL_PHASE` for TEPL is TileOp10-defined but MUST respect the top-level meanings; `TPL_PHASE=0` is decode/validate only and MUST NOT be used once execution begins.
++    - `TPL_REDO_OK` MUST be `0` once execution begins.
++    - `TPL_RESUME_OK` is TileOp10-defined.
++    - `TPL_DIRTY` is set if the TEPL engine state actually progresses and requires restore.
++    - `ECSTATE.BI` for TEPL traps: `BI=0` when `TPL_PHASE=0`, and `BI=1` when `TPL_PHASE=1/2`.
++  - Canonical resume cursor: `BSTATE.Template.StepIndex` is the architectural micro-op progress cursor for template replay.
++  - Template-specific fine-grain subphase/state for replay belongs in `EBSTATE` (template-defined).
++
++* Block-format validation failures (missing/invalid mandatory descriptors) MUST trap with `E_BLOCK(EC_BLOCKFMT)`.
+  - Cause encoding (bring-up normative): `EC_BLOCKFMT = 0x2` within the `E_BLOCK` cause space.
+
+* Block body fetch faults (for decoupled bodies and `B.TEXT` vector bodies) are split into:
+  - **MMU translation/access faults** while fetching/executing a body stream: MUST raise `E_DATA` (with `TRAPARG0` set to the faulting VA) and are handled using the normal data-fault routing.
+    * The trap context MUST still indicate body execution (`BI=1` and `BSTATE.Common.InBody=1` where applicable) so software can resume correctly.
+  - **Non-MMU body-fetch faults** (e.g. misaligned body entrypoint): MUST trap with `E_BLOCK(EC_BFETCH)`.
+    * Cause encoding (bring-up normative): `EC_BFETCH = 0x3` within the `E_BLOCK` cause space.
+    * Reporting (bring-up): `TRAPARG0_ACRm` MUST be set to the faulting body-fetch virtual address.
+    * `ECSTATE_ACRm.BI` MUST be `1`.
+    * The fault is **precise** and **fatal** (non-restartable): software MUST NOT attempt to resume execution from the faulting body entrypoint; treat as an unrecoverable codegen/format error.
+
+NOTE: Restartable body-fetch faults are represented by the underlying MMU translation/access faults (`E_DATA`) taken while `BI=1` (body context).
+  - Missing-descriptor reporting uses `TRAPARG0_ACRm`:
+    - `TRAPARG0[7:0] = MissingDescFamily`
+      - `0 = B.* (generic descriptor stream / non-family-specific)`
+      - `1 = B.DIM`
+      - `2 = B.TEXT`
+      - `3 = B.ARG`
+      - `4 = B.IOR`
+      - `5 = B.IOT/B.IOTI`
+    - `TRAPARG0[15:8] = MissingDetail` (standard meanings):
+      - `0x00`: family missing
+      - `0x01`: family present but value invalid/out-of-range
+      - `0x02`: family present but illegal combination (conflicting descriptors)
+      - `0x03..0xFF`: reserved for op/template-specific detail
+    - upper bits reserved `0`
+  - If multiple mandatory descriptor families are missing, implementations MUST report exactly one missing family.
+    The reporting priority order is:
+    1. `B.ARG`
+    2. `B.TEXT`
+    3. `B.IOT/B.IOTI`
+    4. `B.IOR`
+    5. `B.DIM`
+  - Validation timing: missing/invalid mandatory descriptors MUST be detected during header validation before any block
+    side effects (no body execution / no memory ops).
+  - `ECSTATE_ACRm.BI = 0` and the trap is **precise**.
+
+* Other invalid instruction/control-flow encodings that do not match the above CFI cases MUST trap with `E_INST(EC_ILLEGAL)` unless otherwise specified.
 
 [[system-trap-resume]]
 ====== Resuming after a software request (redo vs advance)
@@ -255,6 +344,7 @@ Dirty vs clean `BSTATE` (bring-up):
 * If a `SERVICE_REQUEST` interrupts a block while its `BSTATE` has been modified but not committed, the `BSTATE` is
   **dirty**.
 * If `BSTATE` is dirty, the implementation saves it into the selected `EBSTATE` storage and sets `CSTATE.ebv = 1`.
+  - Completeness requirement (bring-up): when `ACRE RRAT_RESTORE` is used, the saved `EBSTATE` snapshot MUST be **complete and internally consistent** for replay/resume (no partial snapshots).
 * If `BSTATE` is clean, `EBSTATE` storage remains unchanged and `CSTATE.ebv = 0`.
 
 [[system-bstate-bi]]
@@ -287,9 +377,14 @@ Unless otherwise specified, fields are **XLEN** wide. Addresses are byte address
 ** `BlockType`: the current block type.
 * `BSTATE.Vector` (vector block types such as `VPAR`/`VSEQ`):
 ** `GroupID`: the current group ID.
+** `GroupTPC`: the per-group Temporary PC (`TPC`) for the currently executing/faulting group stream.
 ** `ActiveMask`: the active-lane mask (may be fixed in early bring-up).
 * `BSTATE.Template` (template blocks such as `FENTRY`/`FEXIT`/`FRET.*`/`MCOPY`/`MSET`):
-** `TemplateKind`: which template is executing.
+** `TemplateKind`: which template is executing (packed `class,id`).
+*** `class=0`: marker/template opcodes (`FENTRY`/`FEXIT`/`FRET.*`/`MCOPY`/`MSET`/...) with `id` = opcode-specific enum.
+*** `class=1`: `BSTART.TEPL` templates with `id` = `TileOp10` (0..1023).
+*** `class=2`: reserved for future (implementation-defined templates).
+*** `class=3`: reserved.
 ** `StepIndex`: micro-op progress cursor.
 ** `RemainingCount`: remaining element/iteration count (template-defined).
 ** `CursorAddr`: current memory cursor address (template-defined).
