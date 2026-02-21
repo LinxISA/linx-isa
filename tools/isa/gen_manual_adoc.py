@@ -1092,7 +1092,9 @@ def _write_instruction_details(
                 svg_filename = f"enc_{mnemonic.lower()}.svg"
                 svg_path = os.path.join(svg_dir, svg_filename)
                 if os.path.exists(svg_path):
-                    rel_path = os.path.join("encodings", svg_filename)
+                    # IMPORTANT: AsciiDoc image:: paths must be POSIX-style (forward slashes)
+                    # even when generating on Windows.
+                    rel_path = f"encodings/{svg_filename}"
                     lines.append("")
                     lines.append("Encoding::")
                     lines.append("+")

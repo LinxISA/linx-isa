@@ -1,0 +1,124 @@
+== Tile / Vector Block Instructions (v0.3)
+
+This chapter defines the **normative header contracts** for tile/vector/tensor-style block types in the v0.3 staged
+profile.
+
+It complements:
+
+* <<blockisa-forms>> (block forms, coupled vs decoupled vs template),
+* <<memory-operations>> (architectural memory model + ordering), and
+* the opcode catalog notes (e.g. `isa/v0.3/opcodes/lx_32.opc`).
+
+Unless stated otherwise:
+
+* These blocks do **not** use a coupled SIMT body like scalar blocks.
+* Successor selection is **fallthrough** to the next block start marker in the linear stream (branch/target fields, if
+  present, are ignored).
+* Missing/invalid fallthrough markers are CFI violations (`E_BLOCK(EC_CFI)`), see System/Privilege trap reporting.
+
+[[tileblocks-descriptors]]
+=== Descriptor families (recap)
+
+Tile/vector block headers use the standard descriptor families:
+
+* `B.DIM`  — dimension/loop counters and/or operand extents
+* `B.ARG`  — layout and per-op argument payload (layout defaults may exist per-op)
+* `B.IOR`  — stride/base/scalar register bindings (memory addressing)
+* `B.IOT` / `B.IOTI` — tile binding and tile size (strict range `512B..4KB`)
+* `B.TEXT` — body pointer for SIMT vector blocks (one-lane body)
+
+[[tileblocks-vvec]]
+=== SIMT vector blocks (`VPAR`/`VSEQ`, `MPAR`/`MSEQ`)
+
+These blocks execute a SIMT-style body:
+
+* The body specifies **one lane** of computation.
+* The engine repeats it according to loop counters.
+
+Mandatory header descriptors:
+
+* `B.DIM` is **mandatory** (sets up loop counters / extents).
+* `B.TEXT` is **mandatory** and MUST point to a valid vector body.
+  - The `B.TEXT` target is an engine-internal entrypoint and need not begin with a block start marker.
+  - Alignment: `B.TEXT` targets MUST be 2-byte aligned. Misalignment MUST raise `E_BLOCK(EC_BFETCH)` with `TRAPARG0` set
+    to the misaligned body-fetch address; this fault is **fatal** (non-restartable), see System/Privilege trap semantics.
+  - Any *architectural* control-flow transfer to a `B.TEXT` target is illegal and MUST trap with `E_BLOCK(EC_CFI)` (kind `CFI_BAD_TARGET`).
+
+Vector body termination:
+
+* The out-of-line SIMT body stream terminates on the first terminator marker encountered.
+* Valid terminators are `BSTOP`/`C.BSTOP` and `BSTART.*`/`C.BSTART.*`.
+
+If a mandatory descriptor is missing, hardware MUST trap with `E_BLOCK(EC_BLOCKFMT)` and report the missing descriptor family in `TRAPARG0` (see System/Privilege trap reporting).
+
+MissingDescFamily numeric IDs (from `TRAPARG0[7:0]`, for quick reference):
+
+* `0 = B.* (generic descriptor stream / non-family-specific)`
+* `1 = B.DIM`
+* `2 = B.TEXT`
+* `3 = B.ARG`
+* `4 = B.IOR`
+* `5 = B.IOT/B.IOTI`
+Other descriptors (tile inputs, register in/out bindings, etc.) are kernel-defined and may be mandatory for specific
+kernels but are not universally required by the ISA.
+
+[[tileblocks-tma]]
+=== Tile Memory Agent blocks (`TLOAD`/`TSTORE`)
+
+`BSTART.TLOAD` / `BSTART.TSTORE` are aliases of `BSTART.TMA Function=0/1`.
+
+These blocks do not have a SIMT body (`B.TEXT` is not used).
+
+Mandatory header descriptors:
+
+* `B.ARG` is **mandatory** (layout/pad).
+* `B.IOR` is **mandatory** (stride/base).
+* `B.IOT` / `B.IOTI` is **mandatory** (tile binding + tile size).
+
+Missing mandatory descriptors MUST trap with `E_BLOCK(EC_BLOCKFMT)` and report the missing descriptor family in `TRAPARG0` (see System/Privilege trap reporting).
+[[tileblocks-tmov]]
+=== Tile move / reshape blocks (`TMOV`)
+
+NOTE (header legality): `B.TEXT` is not meaningful for header-driven engine ops (`TMOV`/`TMA`/`CUBE`/`TEPL`). If `B.TEXT` appears in such a header, it is an illegal descriptor combination and MUST trap with `E_BLOCK(EC_BLOCKFMT)` with `MissingDescFamily=B.TEXT` and `MissingDetail=0x02`.
+
+`BSTART.TMOV` is an alias of `BSTART.TMA Function=2`.
+
+`TMOV` is tile-state only (no global memory access). Destination allocation is queue-push only.
+
+Mandatory header descriptors:
+
+* `B.IOT` / `B.IOTI` is **mandatory** (bind source/destination tiles and tile sizes).
+
+Optional descriptors:
+
+* `B.ARG` is optional when the layout is default **ND**.
+  - Normative defaulting: if `B.ARG` is absent, the layout is **ND**.
+* `B.ARG` is required when non-default layout/transform is requested (e.g. transpose/reshape).
+
+[[tileblocks-cube]]
+=== CUBE / tensor blocks (`TMATMUL`, `TMATMUL.ACC`, `ACCCVT`)
+
+`BSTART.TMATMUL` / `BSTART.TMATMUL.ACC` / `BSTART.ACCCVT` are aliases of `BSTART.CUBE` selectors.
+
+These blocks do not have a SIMT body (`B.TEXT` is not used).
+
+==== `TMATMUL` / `TMATMUL.ACC`
+
+Mandatory header descriptors:
+
+* `B.DIM` is **mandatory** and specifies `m/n/k` via `LB0/LB1/LB2`.
+* `B.IOT` / `B.IOTI` is **mandatory** (bind operand tiles and sizes).
+* `B.ARG` is **mandatory** (CUBE uses a fixed layout contract for left/right matrices).
+
+==== `ACCCVT`
+
+Source operand note:
+
+* The source is the implicit **ACC tile**.
+* ACC shape/layout is derived from `B.DIM` (matmul dimension state) plus fixed ACC layout rules.
+
+Mandatory header descriptors:
+
+* `B.DIM` is **mandatory**.
+* `B.IOT` / `B.IOTI` is **mandatory** (bind destination tile + size).
+* `B.ARG` + `B.IOR` are **mandatory** (quantization arguments and scalar bindings).

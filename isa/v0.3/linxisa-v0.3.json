@@ -9272,7 +9272,7 @@
       "id": "bstart_tma_32_f949c94c39c7",
       "length_bits": 32,
       "mnemonic": "BSTART.TMA",
-      "note": "Generic TMA selector form. Function=0/1/2 are emitted as BSTART.TLOAD/BSTART.TSTORE/BSTART.TMOV aliases; 3..31 are reserved in strict v0.3.",
+      "note": "Generic TMA selector form. Function=0/1/2 are emitted as BSTART.TLOAD/BSTART.TSTORE/BSTART.TMOV aliases; 3..31 are reserved in strict v0.3 (architecturally illegal/UNPREDICTABLE): software must not generate them and implementations must not assign ad-hoc semantics.",
       "parts": [
         {
           "segments": [

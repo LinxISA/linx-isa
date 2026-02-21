@@ -10,6 +10,25 @@ non-template instructions by the toolchain.
 [[templates-restart]]
 === Restartability (template-step execution)
 
+[[templates-tplid]]
+==== Template mnemonic IDs (`TPL_ID`)
+
+Bring-up trap/replay uses `EBARG_TPLFLAGS_ACRm.TPL_ID` to identify template blocks.
+
+For `TemplateKind.class=0` (marker/template opcodes), the following mnemonic-enum mapping is normative:
+
+* `1 = FENTRY`
+* `2 = FEXIT`
+* `3 = FRET_RA`
+* `4 = FRET_STK`
+* `5 = MCOPY`
+* `6 = MSET`
+* `7 = ESAVE`
+* `8 = ERCOV`
+* `9..255` reserved
+
+NOTE: For `TemplateKind.class=1` (TEPL templates), identification uses the `TileOp10` selector (not this enum).
+
 Template blocks execute via a **code-template generator** that emits a sequence of internal micro-operations
 (*micro-ops*) based on architectural register inputs.
 

@@ -235,7 +235,7 @@
 |`BSTART.SYS` |32 |- |`BSTART.SYS FALL<, fixup_label>` |-
 |`BSTART.TEPL` |32 |- |`BSTART.TEPL TileOp10, DataType` |TileOp10 selects PTO template ops (for example TADD TSUB TROWMAX). Unassigned TileOp10 values are reserved for future template extension.
 |`BSTART.TLOAD` |32 |- |`BSTART.TLOAD DataType` |Alias of BSTART.TMA Function=0. Requires B.ARG layout/pad and B.IOR stride/base plus B.IOT/B.IOTI tile binding.
-|`BSTART.TMA` |32 |- |`BSTART.TMA Function, DataType` |Generic TMA selector form. Function=0/1/2 are emitted as BSTART.TLOAD/BSTART.TSTORE/BSTART.TMOV aliases; 3..31 are reserved in strict v0.3.
+|`BSTART.TMA` |32 |- |`BSTART.TMA Function, DataType` |Generic TMA selector form. Function=0/1/2 are emitted as BSTART.TLOAD/BSTART.TSTORE/BSTART.TMOV aliases; 3..31 are reserved in strict v0.3 (architecturally illegal/UNPREDICTABLE): software must not generate them and implementations must not assign ad-hoc semantics.
 |`BSTART.TMATMUL` |32 |- |`BSTART.TMATMUL DataType` |Alias of BSTART.CUBE Function=0. Requires B.DIM (LB0/LB1/LB2 as m,n,k) and tile bindings via B.IOT/B.IOTI.
 |`BSTART.TMATMUL.ACC` |32 |- |`BSTART.TMATMUL.ACC DataType` |Alias of BSTART.CUBE Function=2. Requires B.DIM (LB0/LB1/LB2 as m,n,k) and tile bindings via B.IOT/B.IOTI.
 |`BSTART.TMOV` |32 |- |`BSTART.TMOV DataType` |Alias of BSTART.TMA Function=2. TMOV is tile-state only (no GM memory access) and destination allocation is queue-push only.
