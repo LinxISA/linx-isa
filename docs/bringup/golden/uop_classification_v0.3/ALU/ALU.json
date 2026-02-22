@@ -1,6 +1,6 @@
 {
   "big_kind": "ALU",
-  "count": 98,
+  "count": 77,
   "instructions": [
     {
       "class": {
@@ -408,6 +408,18 @@
     },
     {
       "class": {
+        "note": "override: RSV category removed; HL.BFI/HL.MIADD/HL.MISUB are ALU",
+        "source": "override",
+        "uop_kind": "ALU"
+      },
+      "group": "RESERVE",
+      "length_bits": [
+        48
+      ],
+      "mnemonic": "HL.BFI"
+    },
+    {
+      "class": {
         "note": "User confirmed A",
         "source": "group_rule",
         "uop_kind": "ALU"
@@ -441,6 +453,30 @@
         48
       ],
       "mnemonic": "HL.LUI"
+    },
+    {
+      "class": {
+        "note": "override: RSV category removed; HL.BFI/HL.MIADD/HL.MISUB are ALU",
+        "source": "override",
+        "uop_kind": "ALU"
+      },
+      "group": "RESERVE",
+      "length_bits": [
+        48
+      ],
+      "mnemonic": "HL.MIADD"
+    },
+    {
+      "class": {
+        "note": "override: RSV category removed; HL.BFI/HL.MIADD/HL.MISUB are ALU",
+        "source": "override",
+        "uop_kind": "ALU"
+      },
+      "group": "RESERVE",
+      "length_bits": [
+        48
+      ],
+      "mnemonic": "HL.MISUB"
     },
     {
       "class": {
@@ -799,278 +835,6 @@
         32
       ],
       "mnemonic": "SUBW"
-    },
-    {
-      "class": {
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Arithmetic Operation",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.ADD"
-    },
-    {
-      "class": {
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Arithmetic Operation",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.ADDI"
-    },
-    {
-      "class": {
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Arithmetic Operation",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.AND"
-    },
-    {
-      "class": {
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Arithmetic Operation",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.ANDI"
-    },
-    {
-      "class": {
-        "note": "User confirmed A",
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Bit Manipulation",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.BCNT"
-    },
-    {
-      "class": {
-        "note": "User confirmed A",
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Bit Manipulation",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.BIC"
-    },
-    {
-      "class": {
-        "note": "User confirmed A",
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Bit Manipulation",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.BIS"
-    },
-    {
-      "class": {
-        "note": "User confirmed A",
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Bit Manipulation",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.BXS"
-    },
-    {
-      "class": {
-        "note": "User confirmed A",
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Bit Manipulation",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.BXU"
-    },
-    {
-      "class": {
-        "note": "User confirmed A",
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Bit Manipulation",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.CLZ"
-    },
-    {
-      "class": {
-        "note": "User confirmed A",
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Bit Manipulation",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.CTZ"
-    },
-    {
-      "class": {
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Arithmetic Operation",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.OR"
-    },
-    {
-      "class": {
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Arithmetic Operation",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.ORI"
-    },
-    {
-      "class": {
-        "note": "User confirmed A",
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Bit Manipulation",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.REV"
-    },
-    {
-      "class": {
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Arithmetic Operation",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.SLL"
-    },
-    {
-      "class": {
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Arithmetic Operation",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.SLLI"
-    },
-    {
-      "class": {
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Arithmetic Operation",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.SRA"
-    },
-    {
-      "class": {
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Arithmetic Operation",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.SRAI"
-    },
-    {
-      "class": {
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Arithmetic Operation",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.SRL"
-    },
-    {
-      "class": {
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Arithmetic Operation",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.SRLI"
-    },
-    {
-      "class": {
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Arithmetic Operation",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.SUB"
-    },
-    {
-      "class": {
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Arithmetic Operation",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.SUBI"
-    },
-    {
-      "class": {
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Arithmetic Operation",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.XOR"
-    },
-    {
-      "class": {
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Arithmetic Operation",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.XORI"
     },
     {
       "class": {
