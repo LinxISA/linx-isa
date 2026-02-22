@@ -1,6 +1,6 @@
 {
   "big_kind": "FSU",
-  "count": 52,
+  "count": 54,
   "instructions": [
     {
       "class": {
@@ -205,6 +205,30 @@
         32
       ],
       "mnemonic": "FMADD"
+    },
+    {
+      "class": {
+        "note": "override: fmax/fmin are FSU",
+        "source": "override",
+        "uop_kind": "FSU"
+      },
+      "group": "Max-Min",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "FMAX"
+    },
+    {
+      "class": {
+        "note": "override: fmax/fmin are FSU",
+        "source": "override",
+        "uop_kind": "FSU"
+      },
+      "group": "Max-Min",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "FMIN"
     },
     {
       "class": {
