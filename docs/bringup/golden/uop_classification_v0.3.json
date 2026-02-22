@@ -4275,30 +4275,6 @@
         },
         {
           "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Max-Min",
-          "length_bits": [
-            32
-          ],
-          "mnemonic": "FMAX"
-        },
-        {
-          "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Max-Min",
-          "length_bits": [
-            32
-          ],
-          "mnemonic": "FMIN"
-        },
-        {
-          "class": {
             "source": "group_rule",
             "uop_kind": "ALU"
           },
@@ -8341,6 +8317,30 @@
             32
           ],
           "mnemonic": "FMADD"
+        },
+        {
+          "class": {
+            "note": "override: fmax/fmin are FSU",
+            "source": "override",
+            "uop_kind": "FSU"
+          },
+          "group": "Max-Min",
+          "length_bits": [
+            32
+          ],
+          "mnemonic": "FMAX"
+        },
+        {
+          "class": {
+            "note": "override: fmax/fmin are FSU",
+            "source": "override",
+            "uop_kind": "FSU"
+          },
+          "group": "Max-Min",
+          "length_bits": [
+            32
+          ],
+          "mnemonic": "FMIN"
         },
         {
           "class": {
