@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_divuw]]
+==== HL.DIVUW
+
+*Syntax:* hl.divuw SrcL, SrcR, ->Dst0, Dst1
+
+*Description:* Divide registers. Unsigned variant for DIVU.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_divuw.svg[HL.DIVUW encoding,width=800]
+
+*Group:* ALU_MULTI_CYCLE

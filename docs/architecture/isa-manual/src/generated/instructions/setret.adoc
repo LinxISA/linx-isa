@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_setret]]
+==== SETRET
+
+*Syntax:* setret uimm, ->Ra
+
+*Description:* Set Return: set return address (used for function returns).
+
+*Encoding:*
+
+image::../generated/encodings/enc_setret.svg[SETRET encoding,width=800]
+
+*Group:* BRU/BRU

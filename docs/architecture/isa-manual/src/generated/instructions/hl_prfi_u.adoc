@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_prfi_u]]
+==== HL.PRFI.U
+
+*Syntax:* hl.prfi.u{.l1,.l2,.l3} [SrcL, simm]
+
+*Description:* Prefetch instruction for cache hint. Provides a hint to the processor that the specified memory location is likely to be accessed soon.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_prfi_u.svg[HL.PRFI.U encoding,width=800]
+
+*Group:* LDA

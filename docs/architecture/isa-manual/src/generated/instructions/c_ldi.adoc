@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_ldi]]
+==== C.LDI
+
+*Syntax:* c.ldi [srcL, simm], ->t
+
+*Description:* Compressed instruction variant.
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_ldi.svg[C.LDI encoding,width=800]
+
+*Group:* LDA/BASE_IMM

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_add]]
+==== ADD
+
+*Syntax:* add SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}
+
+*Description:* Add registers or immediate to source register.
+
+*Encoding:*
+
+image::../generated/encodings/enc_add.svg[ADD encoding,width=800]
+
+*Group:* ALU

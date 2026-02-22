@@ -85,12 +85,12 @@ This table lists unique mnemonics in the v0.3 catalog. Each mnemonic may have mu
 |`C.CMP.EQI` |C.TINST |16 |1
 |`C.CMP.NEI` |C.TINST |16 |1
 |`C.EBREAK` |C.TINST |16 |1
-|`C.LDI` |Load/Store Immediate Offset |16 |1
-|`C.LWI` |Load/Store Immediate Offset |16 |1
+|`C.LDI` |Load Immediate Offset |16 |1
+|`C.LWI` |Load Immediate Offset |16 |1
 |`C.MOVI` |Move |16 |1
 |`C.MOVR` |Move |16 |1
 |`C.OR` |Arithmetic Operation |16 |1
-|`C.SDI` |Load/Store Immediate Offset |16 |1
+|`C.SDI` |Store Immediate Offset |16 |1
 |`C.SETC.EQ` |Set Commit Argument |16 |1
 |`C.SETC.NE` |Set Commit Argument |16 |1
 |`C.SETC.TGT` |C.UNARY |16 |1
@@ -102,7 +102,7 @@ This table lists unique mnemonics in the v0.3 catalog. Each mnemonic may have mu
 |`C.SRLI` |C.TINST |16 |1
 |`C.SSRGET` |C.TINST |16 |1
 |`C.SUB` |Arithmetic Operation |16 |1
-|`C.SWI` |Load/Store Immediate Offset |16 |1
+|`C.SWI` |Store Immediate Offset |16 |1
 |`C.ZEXT.B` |C.UNARY |16 |1
 |`C.ZEXT.H` |C.UNARY |16 |1
 |`C.ZEXT.W` |C.UNARY |16 |1

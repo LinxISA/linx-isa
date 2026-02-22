@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_xori]]
+==== XORI
+
+*Syntax:* xori SrcL, simm, ->{t, u, Rd}
+
+*Description:* Bitwise XOR (exclusive OR) operation.
+
+*Encoding:*
+
+image::../generated/encodings/enc_xori.svg[XORI encoding,width=800]
+
+*Group:* ALU

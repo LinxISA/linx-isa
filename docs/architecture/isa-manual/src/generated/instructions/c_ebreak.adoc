@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_ebreak]]
+==== C.EBREAK
+
+*Syntax:* c.break imm
+
+*Description:* Breakpoint: triggers a debug breakpoint exception.
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_ebreak.svg[C.EBREAK encoding,width=800]
+
+*Group:* SYS/TRAP

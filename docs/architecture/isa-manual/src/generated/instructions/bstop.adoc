@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_bstop]]
+==== BSTOP
+
+*Syntax:* BSTOP
+
+*Description:* Block Stop: marks the end of a template block.
+
+*Encoding:*
+
+image::../generated/encodings/enc_bstop.svg[BSTOP encoding,width=800]
+
+*Group:* CMD/BLOCK_SPLIT

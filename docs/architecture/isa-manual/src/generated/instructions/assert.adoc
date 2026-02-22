@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_assert]]
+==== ASSERT
+
+*Syntax:* assert SrcL
+
+*Description:* Assert: triggers an assertion check (debug).
+
+*Encoding:*
+
+image::../generated/encodings/enc_assert.svg[ASSERT encoding,width=800]
+
+*Group:* SYS/SYS

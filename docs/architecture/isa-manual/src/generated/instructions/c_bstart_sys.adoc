@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_bstart_sys]]
+==== C.BSTART.SYS
+
+*Syntax:* C.BSTART.SYS FALL
+
+*Description:* Block Start for SYScall: marks entry point for system call block.
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_bstart_sys.svg[C.BSTART.SYS encoding,width=800]
+
+*Group:* BBD/BSTART

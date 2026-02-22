@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_lwuip_u]]
+==== HL.LWUIP.U
+
+*Syntax:* hl.lwuip.u [SrcL, simm], ->Dst0, Dst1
+
+*Description:* Long immediate variant supporting extended address range (48-bit).
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_lwuip_u.svg[HL.LWUIP.U encoding,width=800]
+
+*Group:* LDA/PAIR

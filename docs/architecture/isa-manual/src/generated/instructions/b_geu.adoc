@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_b_geu]]
+==== B.GEU
+
+*Syntax:* b.geu SrcL, SrcR, label
+
+*Description:* Branch if greater than or equal (unsigned): conditional branch based on condition flags.
+
+*Encoding:*
+
+image::../generated/encodings/enc_b_geu.svg[B.GEU encoding,width=800]
+
+*Group:* BRU/BRU

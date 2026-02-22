@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_ori]]
+==== ORI
+
+*Syntax:* ori SrcL, simm, ->{t, u, Rd}
+
+*Description:* Bitwise OR operation.
+
+*Encoding:*
+
+image::../generated/encodings/enc_ori.svg[ORI encoding,width=800]
+
+*Group:* ALU

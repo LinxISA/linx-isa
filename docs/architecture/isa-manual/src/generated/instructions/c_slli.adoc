@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_slli]]
+==== C.SLLI
+
+*Syntax:* c.slli t#1, uimm, ->t
+
+*Description:* Compressed instruction variant (16-bit encoding).
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_slli.svg[C.SLLI encoding,width=800]
+
+*Group:* SHIFT

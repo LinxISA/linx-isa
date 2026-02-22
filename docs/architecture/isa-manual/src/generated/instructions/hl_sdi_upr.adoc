@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_sdi_upr]]
+==== HL.SDI.UPR
+
+*Syntax:* hl.sdi.upr SrcD, [SrcR, simm], ->{t, u, Rd}
+
+*Description:* Long immediate variant supporting extended address range (48-bit).
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_sdi_upr.svg[HL.SDI.UPR encoding,width=800]
+
+*Group:* STA/PRE_INDEX

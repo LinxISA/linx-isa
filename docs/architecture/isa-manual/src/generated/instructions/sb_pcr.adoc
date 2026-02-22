@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_sb_pcr]]
+==== SB.PCR
+
+*Syntax:* sb.pcr SrcL, [symbol]
+
+*Description:* Store 8-bit value to memory.
+
+*Encoding:*
+
+image::../generated/encodings/enc_sb_pcr.svg[SB.PCR encoding,width=800]
+
+*Group:* STA

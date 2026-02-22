@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_bfi]]
+==== HL.BFI
+
+*Syntax:* hl.bfi SrcL, SrcR, M, N, ->{t, u, Rd}
+
+*Description:* Bit Field Insert: inserts a bit field from source into destination.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_bfi.svg[HL.BFI encoding,width=800]
+
+*Group:* RSV/DEFAULT

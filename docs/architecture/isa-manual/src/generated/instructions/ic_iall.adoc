@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_ic_iall]]
+==== IC.IALL
+
+*Syntax:* ic.iall
+
+*Description:* Instruction Cache maintenance: invalidate all
+
+*Encoding:*
+
+image::../generated/encodings/enc_ic_iall.svg[IC.IALL encoding,width=800]
+
+*Group:* SYS/CACHE_MAINT

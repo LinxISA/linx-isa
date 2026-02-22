@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_fnes]]
+==== FNES
+
+*Syntax:* fnes.{T} SrcL, SrcR, ->{t, u, Rd}
+
+*Description:* Floating-point Not Equal comparison.
+
+*Encoding:*
+
+image::../generated/encodings/enc_fnes.svg[FNES encoding,width=800]
+
+*Group:* FSU/DEFAULT

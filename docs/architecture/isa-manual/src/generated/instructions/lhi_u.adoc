@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_lhi_u]]
+==== LHI.U
+
+*Syntax:* lhi.u [SrcL, simm], ->{t, u, Rd}
+
+*Description:* Load unsigned 16-bit halfword from memory.
+
+*Encoding:*
+
+image::../generated/encodings/enc_lhi_u.svg[LHI.U encoding,width=800]
+
+*Group:* LDA/UNSCALED

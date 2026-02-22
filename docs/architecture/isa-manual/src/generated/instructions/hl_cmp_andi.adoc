@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_cmp_andi]]
+==== HL.CMP.ANDI
+
+*Syntax:* hl.cmp.andi SrcL, simm, ->{t, u, Rd}
+
+*Description:* Long immediate compare with extended range.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_cmp_andi.svg[HL.CMP.ANDI encoding,width=800]
+
+*Group:* BRU/CMP

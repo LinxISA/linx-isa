@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_swi]]
+==== HL.SWI
+
+*Syntax:* hl.swi SrcD, [SrcR, simm]
+
+*Description:* Long immediate variant supporting extended address range (48-bit).
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_swi.svg[HL.SWI encoding,width=800]
+
+*Group:* STA/LONG

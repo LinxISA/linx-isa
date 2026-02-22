@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_sd_umax]]
+==== SD.UMAX
+
+*Syntax:* sd.umax<.{rl, f, rlf}> [SrcL], SrcR
+
+*Description:* Atomic Unsigned Max operation: memory value is atomically unsigned maxed with register.
+
+*Encoding:*
+
+image::../generated/encodings/enc_sd_umax.svg[SD.UMAX encoding,width=800]
+
+*Group:* AMO/AMO

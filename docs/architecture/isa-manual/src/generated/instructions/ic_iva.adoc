@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_ic_iva]]
+==== IC.IVA
+
+*Syntax:* ic.iva SrcL
+
+*Description:* Instruction Cache maintenance: invalidate by address
+
+*Encoding:*
+
+image::../generated/encodings/enc_ic_iva.svg[IC.IVA encoding,width=800]
+
+*Group:* SYS/CACHE_MAINT

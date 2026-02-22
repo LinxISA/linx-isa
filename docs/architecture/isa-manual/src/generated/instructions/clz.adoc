@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_clz]]
+==== CLZ
+
+*Syntax:* clz SrcL,  M, N, ->{t, u, Rd}
+
+*Description:* Count Leading Zeros: counts the number of leading zero bits.
+
+*Encoding:*
+
+image::../generated/encodings/enc_clz.svg[CLZ encoding,width=800]
+
+*Group:* ALU

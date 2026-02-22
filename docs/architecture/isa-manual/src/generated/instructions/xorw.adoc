@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_xorw]]
+==== XORW
+
+*Syntax:* xorw SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}
+
+*Description:* ALU operation.
+
+*Encoding:*
+
+image::../generated/encodings/enc_xorw.svg[XORW encoding,width=800]
+
+*Group:* ALU

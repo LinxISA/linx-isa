@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_b_dim]]
+==== B.DIM
+
+*Syntax:* B.DIM RegSrc, uimm, ->LB2
+
+*Description:* Block Argument: passes arguments to a template block.
+
+*Encoding:*
+
+image::../generated/encodings/enc_b_dim.svg[B.DIM encoding,width=800]
+
+*Group:* CMD/BLOCK_ARGUMENT

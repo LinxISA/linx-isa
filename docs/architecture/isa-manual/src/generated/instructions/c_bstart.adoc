@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_bstart]]
+==== C.BSTART
+
+*Syntax:* C.BSTART COND,  label
+
+*Description:* Block control instruction.
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_bstart.svg[C.BSTART encoding,width=800]
+
+*Group:* CMD/BLOCK_SPLIT

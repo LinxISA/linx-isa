@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_dc_csw]]
+==== DC.CSW
+
+*Syntax:* dc.csw SrcL
+
+*Description:* Data Cache maintenance: clean by set/way
+
+*Encoding:*
+
+image::../generated/encodings/enc_dc_csw.svg[DC.CSW encoding,width=800]
+
+*Group:* SYS/CACHE_MAINT

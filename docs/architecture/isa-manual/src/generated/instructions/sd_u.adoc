@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_sd_u]]
+==== SD.U
+
+*Syntax:* sd.u SrcD, [SrcL, SrcR<{.sw,.uw}>]
+
+*Description:* Store 8-bit value to memory.
+
+*Encoding:*
+
+image::../generated/encodings/enc_sd_u.svg[SD.U encoding,width=800]
+
+*Group:* STA/BASE_REG

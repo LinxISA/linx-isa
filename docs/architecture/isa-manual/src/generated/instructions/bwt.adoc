@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_bwt]]
+==== BWT
+
+*Syntax:* bwt SrcL
+
+*Description:* Memory Barrier/ fence: Total Barrier
+
+*Encoding:*
+
+image::../generated/encodings/enc_bwt.svg[BWT encoding,width=800]
+
+*Group:* SYS/SYS

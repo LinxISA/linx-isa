@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_or]]
+==== C.OR
+
+*Syntax:* c.or srcL, srcR, ->t
+
+*Description:* Compressed instruction variant (16-bit encoding).
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_or.svg[C.OR encoding,width=800]
+
+*Group:* ALU

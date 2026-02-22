@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_setc_ne]]
+==== C.SETC.NE
+
+*Syntax:* c.setc.ne srcL, srcR
+
+*Description:* Compressed Set Condition.
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_setc_ne.svg[C.SETC.NE encoding,width=800]
+
+*Group:* BRU/SETC

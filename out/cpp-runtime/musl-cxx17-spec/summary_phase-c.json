@@ -1,0 +1,51 @@
+{
+  "copied_runtime_libs": [
+    "/Users/zhoubot/linx-isa/out/libc/musl/install/phase-c/lib/libc++.a",
+    "/Users/zhoubot/linx-isa/out/libc/musl/install/phase-c/lib/libc++abi.a",
+    "/Users/zhoubot/linx-isa/out/libc/musl/install/phase-c/lib/libunwind.a",
+    "/Users/zhoubot/linx-isa/out/libc/musl/install/phase-c/lib/libclang_rt.builtins-linx64.a"
+  ],
+  "libcxx_exceptions": "ON",
+  "libcxx_filesystem": "ON",
+  "libcxx_localization": "ON",
+  "libcxx_monotonic_clock": "OFF",
+  "libcxx_static_link_abi_in_static": "OFF",
+  "libcxx_threads": "OFF",
+  "libcxxabi_additional_compile_flags": "",
+  "libcxxabi_exceptions": "ON",
+  "libcxxabi_threads": "OFF",
+  "libunwind_enabled": 1,
+  "libunwind_has_dl": "FALSE",
+  "libunwind_has_pthread": "FALSE",
+  "libunwind_threads": "OFF",
+  "logs": {
+    "build": "/Users/zhoubot/linx-isa/out/cpp-runtime/musl-cxx17-spec/logs/build_phase-c.log",
+    "configure": "/Users/zhoubot/linx-isa/out/cpp-runtime/musl-cxx17-spec/logs/configure_phase-c.log",
+    "install": "/Users/zhoubot/linx-isa/out/cpp-runtime/musl-cxx17-spec/logs/install_phase-c.log"
+  },
+  "merge_sysroot": 1,
+  "mode": "phase-c",
+  "paths": {
+    "build_dir": "/Users/zhoubot/linx-isa/out/cpp-runtime/musl-cxx17-spec/build/phase-c",
+    "cache_file": "/Users/zhoubot/linx-isa/compiler/llvm/runtimes/cmake/caches/LinxISA-musl-cxx17-noeh.cmake",
+    "clang": "/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/clang",
+    "clang_resource_dir": "/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/lib/clang/23",
+    "clangxx": "/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/clang++",
+    "install_dir": "/Users/zhoubot/linx-isa/out/cpp-runtime/musl-cxx17-spec/install",
+    "lld": "/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/ld.lld",
+    "llvm_host_build_root": "/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang",
+    "llvm_root": "/Users/zhoubot/linx-isa/compiler/llvm",
+    "musl_sysroot": "/Users/zhoubot/linx-isa/out/libc/musl/install/phase-c",
+    "out_root": "/Users/zhoubot/linx-isa/out/cpp-runtime/musl-cxx17-spec",
+    "resource_builtins": "/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/lib/clang/23/lib/linx64-unknown-linux-musl/libclang_rt.builtins.a",
+    "resource_target_dir": "/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/lib/clang/23/lib/linx64-unknown-linux-musl"
+  },
+  "profile": "spec",
+  "runtime_list": [
+    "libunwind",
+    "libcxxabi",
+    "libcxx"
+  ],
+  "schema_version": "linx-cpp-runtimes-v1",
+  "target": "linx64-unknown-linux-musl"
+}

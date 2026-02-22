@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_rdand]]
+==== V.RDAND
+
+*Syntax:* v.rdand SrcL.<T>, ->Dst<.W>
+
+*Description:* Reduce: performs and operation across all vector elements.
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_rdand_part1.svg[V.RDAND encoding,width=800]
+
+*Group:* VEC/VEC

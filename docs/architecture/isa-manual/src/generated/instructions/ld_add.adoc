@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_ld_add]]
+==== LD.ADD
+
+*Syntax:* ld.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}
+
+*Description:* Atomic Add operation: memory value is atomically added with register.
+
+*Encoding:*
+
+image::../generated/encodings/enc_ld_add.svg[LD.ADD encoding,width=800]
+
+*Group:* AMO/AMO

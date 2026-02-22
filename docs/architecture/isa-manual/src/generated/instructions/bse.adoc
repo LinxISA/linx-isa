@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_bse]]
+==== BSE
+
+*Syntax:* bse SrcL
+
+*Description:* 
+
+*Encoding:*
+
+image::../generated/encodings/enc_bse.svg[BSE encoding,width=800]
+
+*Group:* SYS/SYS

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_oriw]]
+==== ORIW
+
+*Syntax:* oriw SrcL, simm, ->{t, u, Rd}
+
+*Description:* ALU operation.
+
+*Encoding:*
+
+image::../generated/encodings/enc_oriw.svg[ORIW encoding,width=800]
+
+*Group:* ALU

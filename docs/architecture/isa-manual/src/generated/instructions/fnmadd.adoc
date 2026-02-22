@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_fnmadd]]
+==== FNMADD
+
+*Syntax:* fnmadd.{T} SrcL, SrcR, SrcA, ->{t, u, Rd}
+
+*Description:* Floating-point operation.
+
+*Encoding:*
+
+image::../generated/encodings/enc_fnmadd.svg[FNMADD encoding,width=800]
+
+*Group:* FSU/DEFAULT

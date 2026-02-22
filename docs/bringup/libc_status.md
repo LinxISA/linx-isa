@@ -16,15 +16,24 @@ Canonical libc sources:
 - This repository provides orchestration, runtime smoke, and status tracking.
 - Release-strict gating uses canonical artifacts from `docs/bringup/gates/latest.json`.
 
-## Latest verified state (2026-02-17 12:02:37Z)
+## Current verified state (2026-02-22)
 
-- glibc `G1a`: pass (`configure` + `csu/subdir_lib` + startup objects).
-- glibc `G1b`: pass (shared `libc.so` gate) in canonical lane runs.
-- musl `M1`: pass (`configure` accepts `linx64-unknown-linux-musl`).
-- musl `M2`: pass in `phase-b` strict mode.
-- musl `M3`: pass in `phase-b` strict mode (shared `lib/libc.so` built).
-- musl runtime `R1`: pass (compile/link smoke for static+shared).
-- musl runtime `R2`: pass (QEMU runtime smoke for static+shared).
+- glibc `G1a`: ✅ pass (`configure` + `csu/subdir_lib` + startup objects)
+- glibc `G1b`: ⚠️ not tested in current session
+- musl `M1`: ❌ FAIL - compiler-rt build failure (adddf3.c)
+- musl `M2`: ❌ FAIL - compiler-rt build failure (adddf3.c)
+- musl `M3`: ❌ FAIL - compiler-rt build failure (adddf3.c)
+- musl runtime `R1`: ❌ FAIL - blocked by musl build failure
+- musl runtime `R2`: ❌ FAIL - blocked by musl build failure
+
+## Blocker: musl compiler-rt build failure
+
+The current musl build fails with:
+```
+error: failed to compile compiler-rt source: /Users/zhoubot/linx-isa/compiler/llvm/compiler-rt/lib/builtins/adddf3.c
+```
+
+This blocks all musl runtime gates (M1, M2, M3, R1, R2).
 
 ## Evidence pointers
 
@@ -34,9 +43,7 @@ Canonical libc sources:
   - `out/libc/glibc/logs/summary.txt`
   - `out/libc/glibc/logs/g1b-summary.txt`
 - musl logs:
-  - `out/libc/musl/logs/phase-b-summary.txt`
-  - `avs/qemu/out/musl-smoke/summary_static.json`
-  - `avs/qemu/out/musl-smoke/summary_shared.json`
+  - `out/libc/musl/logs/phase-b-runtime-builtins.log`
 
 ## Notes
 

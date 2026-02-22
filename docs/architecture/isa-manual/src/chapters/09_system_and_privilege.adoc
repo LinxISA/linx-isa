@@ -143,11 +143,12 @@ single internal action (no intervening architectural events may occur):
     ** for faults that must be retried: the faulting instruction PC (precise exception),
     ** for traps that must be skipped (e.g. `ACRC`, breakpoints/watchpoints): the following instruction PC.
   * Copy any block-local queues and loop/context state required by the profile (e.g. `TQ`/`UQ`, `LB*`/`LC*`).
-5. Disable interrupts by clearing `CSTATE.I = 0`.
-6. Update the active ring to the managing ring by setting `CSTATE.ACR = m`.
-7. Reset `BARG` to its architectural initial state.
-8. Vector control to the trap handler by setting `BPC = EVBASE_ACRm`.
-9. Populate trap reporting registers:
++
+. Disable interrupts by clearing `CSTATE.I = 0`.
+. Update the active ring to the managing ring by setting `CSTATE.ACR = m`.
+. Reset `BARG` to its architectural initial state.
+. Vector control to the trap handler by setting `BPC = EVBASE_ACRm`.
+. Populate trap reporting registers:
   * For a SYNC_SERVICE_REQUEST: set `TRAPNO_ACRm.E = 0`, then write `TRAPNO_ACRm` / `TRAPARG0_ACRm`.
   * For an ASYNC_SERVICE_REQUEST: set `TRAPNO_ACRm.E = 1`, then write `TRAPNO_ACRm`/`TRAPARG0_ACRm` according to the
     interrupt source definition.

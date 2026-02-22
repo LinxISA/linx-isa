@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_shi_u]]
+==== SHI.U
+
+*Syntax:* shi.u SrcL, [SrcR, simm]
+
+*Description:* Store 8-bit value to memory.
+
+*Encoding:*
+
+image::../generated/encodings/enc_shi_u.svg[SHI.U encoding,width=800]
+
+*Group:* STA/BASE_IMM

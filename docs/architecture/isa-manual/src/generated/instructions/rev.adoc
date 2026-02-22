@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_rev]]
+==== REV
+
+*Syntax:* rev SrcL,  M, N, ->{t, u, Rd}
+
+*Description:* Reverse bits/bytes in register.
+
+*Encoding:*
+
+image::../generated/encodings/enc_rev.svg[REV encoding,width=800]
+
+*Group:* ALU

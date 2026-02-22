@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_fmul]]
+==== FMUL
+
+*Syntax:* fmul.{T} SrcL, SrcR, ->{t, u, Rd}
+
+*Description:* Floating-point Multiply.
+
+*Encoding:*
+
+image::../generated/encodings/enc_fmul.svg[FMUL encoding,width=800]
+
+*Group:* FSU/DEFAULT

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_mcopy]]
+==== MCOPY
+
+*Syntax:* MCOPY [RegSrc0, RegSrc1, RegSrc2]
+
+*Description:* Memory Copy block.
+
+*Encoding:*
+
+image::../generated/encodings/enc_mcopy.svg[MCOPY encoding,width=800]
+
+*Group:* CMD/BLOCK_SPLIT

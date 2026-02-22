@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_setc_ori]]
+==== SETC.ORI
+
+*Syntax:* setc.ori SrcL, simm
+
+*Description:* Set Condition: sets condition flags based on comparison.
+
+*Encoding:*
+
+image::../generated/encodings/enc_setc_ori.svg[SETC.ORI encoding,width=800]
+
+*Group:* BRU/SETC

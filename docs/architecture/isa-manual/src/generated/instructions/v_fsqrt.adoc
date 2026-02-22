@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_fsqrt]]
+==== V.FSQRT
+
+*Syntax:* v.fsqrt SrcL.<T>, ->Dst.<W>
+
+*Description:* Vector Floating-point Square Root.
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_fsqrt_part1.svg[V.FSQRT encoding,width=800]
+
+*Group:* VEC/VEC_FP

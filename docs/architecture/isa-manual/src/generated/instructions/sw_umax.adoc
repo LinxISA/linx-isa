@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_sw_umax]]
+==== SW.UMAX
+
+*Syntax:* sw.umax<.{rl, f, rlf}> [SrcL], SrcR
+
+*Description:* Atomic Unsigned Max operation: memory value is atomically unsigned maxed with register.
+
+*Encoding:*
+
+image::../generated/encodings/enc_sw_umax.svg[SW.UMAX encoding,width=800]
+
+*Group:* AMO/AMO

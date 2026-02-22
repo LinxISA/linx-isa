@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_bstart_fp]]
+==== HL.BSTART.FP
+
+*Syntax:* HL.BSTART.FP COND, <label>
+
+*Description:* Block Start for Floating-point: marks entry point for FP-intensive block.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_bstart_fp.svg[HL.BSTART.FP encoding,width=800]
+
+*Group:* BBD/BSTART

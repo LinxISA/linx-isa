@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_qmt]]
+==== HL.QMT
+
+*Syntax:* hl.qmt.{i,e,s,r,ie,is,ir,es,er,ies,ier} SrcL, SrcR, ->{t, u}
+
+*Description:* Queue Management: manage queue.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_qmt.svg[HL.QMT encoding,width=800]
+
+*Group:* CMD/Q_MANAGE

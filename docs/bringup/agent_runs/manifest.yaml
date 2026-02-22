@@ -1,0 +1,155 @@
+{
+  "version": 1,
+  "policy": {
+    "enforcement": "strict_always",
+    "required_gate_rule": "all_required_non_waived_must_pass",
+    "gate_key_format": "Domain::Gate",
+    "canonical_report": "docs/bringup/gates/latest.json",
+    "blocker_policy": "documented_waiver_only"
+  },
+  "agents": {
+    "llvm": {
+      "owner": "compiler",
+      "checklist": "compiler_llvm.md",
+      "description": "Linx LLVM toolchain and compile-gate owner"
+    },
+    "qemu": {
+      "owner": "emulator",
+      "checklist": "emulator_qemu.md",
+      "description": "Linx QEMU runtime and strict-system owner"
+    },
+    "linux": {
+      "owner": "kernel",
+      "checklist": "kernel_linux.md",
+      "description": "Linx Linux boot/initramfs/9p owner"
+    },
+    "libc": {
+      "owner": "library",
+      "checklist": "libc_runtime.md",
+      "description": "musl/glibc runtime and sysroot owner"
+    },
+    "spec": {
+      "owner": "spec",
+      "checklist": "specint_qemu.md",
+      "description": "SPEC2017 intrate build+run owner"
+    },
+    "integration": {
+      "owner": "bringup",
+      "checklist": "integration_release.md",
+      "description": "cross-repo closure and release gate owner"
+    }
+  },
+  "gate_assignments": [
+    {
+      "gate_key": "ISA::check26 contract",
+      "agent": "integration",
+      "checklist_ids": ["INT-001"]
+    },
+    {
+      "gate_key": "Compiler::AVS compile suites (linx64)",
+      "agent": "llvm",
+      "checklist_ids": ["LLVM-001"]
+    },
+    {
+      "gate_key": "Compiler::Coverage 100% (linx64)",
+      "agent": "llvm",
+      "checklist_ids": ["LLVM-002"]
+    },
+    {
+      "gate_key": "Compiler::AVS compile suites (linx32)",
+      "agent": "llvm",
+      "checklist_ids": ["LLVM-001"]
+    },
+    {
+      "gate_key": "Compiler::Coverage 100% (linx32)",
+      "agent": "llvm",
+      "checklist_ids": ["LLVM-002"]
+    },
+    {
+      "gate_key": "Emulator::QEMU strict system",
+      "agent": "qemu",
+      "checklist_ids": ["QEMU-001"]
+    },
+    {
+      "gate_key": "Emulator::QEMU all suites",
+      "agent": "qemu",
+      "checklist_ids": ["QEMU-002"]
+    },
+    {
+      "gate_key": "Kernel::Linux initramfs smoke",
+      "agent": "linux",
+      "checklist_ids": ["LINUX-001"]
+    },
+    {
+      "gate_key": "Kernel::Linux initramfs full boot",
+      "agent": "linux",
+      "checklist_ids": ["LINUX-002"]
+    },
+    {
+      "gate_key": "Library::musl runtime static+shared",
+      "agent": "libc",
+      "checklist_ids": ["LIBC-003"]
+    },
+    {
+      "gate_key": "Library::glibc G1b shared libc.so",
+      "agent": "libc",
+      "checklist_ids": ["LIBC-004"]
+    },
+    {
+      "gate_key": "Model::QEMU vs model differential suite",
+      "agent": "integration",
+      "checklist_ids": ["INT-003"]
+    },
+    {
+      "gate_key": "Regression::strict_cross_repo.sh",
+      "agent": "integration",
+      "checklist_ids": ["INT-004"]
+    },
+    {
+      "gate_key": "SPEC::SPEC int-rate build phase-c",
+      "agent": "spec",
+      "checklist_ids": ["SPEC-001"]
+    },
+    {
+      "gate_key": "SPEC::SPEC int-rate Stage A subset (qemu+specdiff)",
+      "agent": "spec",
+      "checklist_ids": ["SPEC-003", "SPEC-004"]
+    },
+    {
+      "gate_key": "SPEC::SPEC int-rate Stage B full set (qemu+specdiff)",
+      "agent": "spec",
+      "checklist_ids": ["SPEC-005", "SPEC-006"]
+    },
+    {
+      "gate_key": "SPEC::SPEC Fortran exclusion 548.exchange2_r",
+      "agent": "spec",
+      "checklist_ids": ["SPEC-007"]
+    }
+  ],
+  "checklist_id_map": {
+    "compiler_llvm.md": ["LLVM-001", "LLVM-002", "LLVM-003", "LLVM-004", "LLVM-005"],
+    "emulator_qemu.md": ["QEMU-001", "QEMU-002", "QEMU-003", "QEMU-004"],
+    "kernel_linux.md": ["LINUX-001", "LINUX-002", "LINUX-003"],
+    "libc_runtime.md": ["LIBC-001", "LIBC-002", "LIBC-003", "LIBC-004"],
+    "specint_qemu.md": ["SPEC-001", "SPEC-002", "SPEC-003", "SPEC-004", "SPEC-005", "SPEC-006", "SPEC-007"],
+    "integration_release.md": ["INT-001", "INT-002", "INT-003", "INT-004", "INT-005", "INT-006"]
+  },
+  "spec_policy": {
+    "stage_a_subset": ["999.specrand_ir", "505.mcf_r", "531.deepsjeng_r"],
+    "stage_b_required": [
+      "500.perlbench_r",
+      "502.gcc_r",
+      "505.mcf_r",
+      "520.omnetpp_r",
+      "523.xalancbmk_r",
+      "525.x264_r",
+      "531.deepsjeng_r",
+      "541.leela_r",
+      "557.xz_r",
+      "999.specrand_ir"
+    ],
+    "excluded_benchmarks": ["548.exchange2_r"],
+    "exclusion_reason": "Fortran benchmark excluded from Linx intrate scope",
+    "blocker_policy": "documented_waiver_only"
+  }
+}

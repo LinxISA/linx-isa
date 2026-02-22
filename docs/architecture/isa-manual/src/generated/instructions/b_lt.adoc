@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_b_lt]]
+==== B.LT
+
+*Syntax:* b.lt SrcL, SrcR, label
+
+*Description:* Branch if less than: conditional branch based on condition flags.
+
+*Encoding:*
+
+image::../generated/encodings/enc_b_lt.svg[B.LT encoding,width=800]
+
+*Group:* BRU/BRU

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_bstart_tepl]]
+==== BSTART.TEPL
+
+*Syntax:* BSTART.TEPL TileOp10, DataType
+
+*Description:* Block Start: marks the beginning of a template block with execution hint.
+
+*Encoding:*
+
+image::../generated/encodings/enc_bstart_tepl.svg[BSTART.TEPL encoding,width=800]
+
+*Group:* CMD/BLOCK_SPLIT

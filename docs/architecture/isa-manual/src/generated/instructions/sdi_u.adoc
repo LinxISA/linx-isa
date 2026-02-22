@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_sdi_u]]
+==== SDI.U
+
+*Syntax:* sdi.u SrcL, [SrcR, simm]
+
+*Description:* Store 8-bit value to memory.
+
+*Encoding:*
+
+image::../generated/encodings/enc_sdi_u.svg[SDI.U encoding,width=800]
+
+*Group:* STA/BASE_IMM

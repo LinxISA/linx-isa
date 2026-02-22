@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_jr]]
+==== JR
+
+*Syntax:* jr SrcL, label
+
+*Description:* Jump Register: unconditional jump to address in register.
+
+*Encoding:*
+
+image::../generated/encodings/enc_jr.svg[JR encoding,width=800]
+
+*Group:* BRU/BRU

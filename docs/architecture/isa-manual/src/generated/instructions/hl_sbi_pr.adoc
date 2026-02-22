@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_sbi_pr]]
+==== HL.SBI.PR
+
+*Syntax:* hl.sbi.pr SrcD, [SrcR, simm], ->{t, u, Rd}
+
+*Description:* Long immediate variant supporting extended address range (48-bit).
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_sbi_pr.svg[HL.SBI.PR encoding,width=800]
+
+*Group:* STA/PRE_INDEX

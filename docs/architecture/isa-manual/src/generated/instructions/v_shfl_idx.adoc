@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_shfl_idx]]
+==== V.SHFL.IDX
+
+*Syntax:* v.shfl.idx SrcL.<T>, SrcR.<T>, SrcP.<T>, ->Dst.<W>
+
+*Description:* Shuffle (indexed): permutes vector elements using immediate indices.
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_shfl_idx_part1.svg[V.SHFL.IDX encoding,width=800]
+
+*Group:* VEC/VEC

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_b_ltu]]
+==== B.LTU
+
+*Syntax:* b.ltu SrcL, SrcR, label
+
+*Description:* Branch if less than (unsigned): conditional branch based on condition flags.
+
+*Encoding:*
+
+image::../generated/encodings/enc_b_ltu.svg[B.LTU encoding,width=800]
+
+*Group:* BRU/BRU

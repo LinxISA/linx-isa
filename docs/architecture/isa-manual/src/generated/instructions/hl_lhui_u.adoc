@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_lhui_u]]
+==== HL.LHUI.U
+
+*Syntax:* hl.lhui.u [SrcL, simm], ->{t, u, Rd}
+
+*Description:* Long immediate variant supporting extended address range (48-bit).
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_lhui_u.svg[HL.LHUI.U encoding,width=800]
+
+*Group:* LDA/LONG

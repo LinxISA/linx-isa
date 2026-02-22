@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_ssrget]]
+==== HL.SSRGET
+
+*Syntax:* hl.ssrget SSR_ID, ->{t, u, Rd}
+
+*Description:* Get Special Security Register value.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_ssrget.svg[HL.SSRGET encoding,width=800]
+
+*Group:* SYS/SSR

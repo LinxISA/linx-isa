@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_bxu]]
+==== BXU
+
+*Syntax:* bxu SrcL, M, N, ->{t, u, Rd}
+
+*Description:* Bit Extend Unsigned.
+
+*Encoding:*
+
+image::../generated/encodings/enc_bxu.svg[BXU encoding,width=800]
+
+*Group:* ALU

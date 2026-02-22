@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_bc_iall]]
+==== BC.IALL
+
+*Syntax:* bc.iall
+
+*Description:* Branch predictor Cache maintenance: invalidate all
+
+*Encoding:*
+
+image::../generated/encodings/enc_bc_iall.svg[BC.IALL encoding,width=800]
+
+*Group:* SYS/CACHE_MAINT

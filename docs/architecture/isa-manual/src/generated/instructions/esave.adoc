@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_esave]]
+==== ESAVE
+
+*Syntax:* ESAVE [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]
+
+*Description:* Exit Context: restore context on block exit.
+
+*Encoding:*
+
+image::../generated/encodings/enc_esave.svg[ESAVE encoding,width=800]
+
+*Group:* CMD/BLOCK_SPLIT

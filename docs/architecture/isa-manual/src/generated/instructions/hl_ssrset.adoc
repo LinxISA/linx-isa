@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_ssrset]]
+==== HL.SSRSET
+
+*Syntax:* hl.ssrset SrcL, SSR_ID
+
+*Description:* Set Special Security Register value.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_ssrset.svg[HL.SSRSET encoding,width=800]
+
+*Group:* SYS/SSR

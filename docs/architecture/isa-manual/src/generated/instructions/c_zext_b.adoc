@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_zext_b]]
+==== C.ZEXT.B
+
+*Syntax:* c.zext.b srcL, ->t
+
+*Description:* Compressed instruction variant (16-bit encoding).
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_zext_b.svg[C.ZEXT.B encoding,width=800]
+
+*Group:* ALU

@@ -288,7 +288,7 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--qemu", default=str(_default_qemu()))
     parser.add_argument("--target", default="linx64-unknown-linux-musl")
     parser.add_argument("--image-base", default="0x40000000")
-    parser.add_argument("--mode", choices=["phase-a", "phase-b"], default="phase-b")
+    parser.add_argument("--mode", choices=["phase-a", "phase-b", "phase-c"], default="phase-b")
     parser.add_argument("--link", choices=["static", "shared", "both"], default="both")
     parser.add_argument(
         "--callret-crossstack",
@@ -578,6 +578,8 @@ def main(argv: list[str]) -> int:
                     "-unwindlib=" + cpp_unwindlib,
                 ]
             compile_sample_cmd += [
+                # Linx Linux bring-up runs NOMMU/FDPIC; user binaries must be PIE (ET_DYN).
+                "-fPIE",
                 "-c",
                 str(sample_src),
                 "-o",
@@ -596,11 +598,11 @@ def main(argv: list[str]) -> int:
                         "-fno-exceptions",
                         "-fno-rtti",
                         "-static",
-                        "-no-pie",
+                        "-Wl,-pie",
                         "-unwindlib=" + cpp_unwindlib,
                         "-fuse-ld=lld",
                         "-nostdlib",
-                        str(sysroot / "lib" / "crt1.o"),
+                        str(sysroot / "lib" / "Scrt1.o"),
                         str(sysroot / "lib" / "crti.o"),
                         str(sample_obj),
                         str(runtime_lib),
@@ -619,9 +621,10 @@ def main(argv: list[str]) -> int:
                         "--sysroot",
                         str(sysroot),
                         "-static",
+                        "-Wl,-pie",
                         "-fuse-ld=lld",
                         "-nostdlib",
-                        str(sysroot / "lib" / "crt1.o"),
+                        str(sysroot / "lib" / "Scrt1.o"),
                         str(sysroot / "lib" / "crti.o"),
                         str(sample_obj),
                         str(runtime_lib),
@@ -654,10 +657,11 @@ def main(argv: list[str]) -> int:
                         "-std=c++17",
                         "-fno-exceptions",
                         "-fno-rtti",
+                        "-Wl,-pie",
                         "-unwindlib=" + cpp_unwindlib,
                         "-fuse-ld=lld",
                         "-nostdlib",
-                        str(sysroot / "lib" / "crt1.o"),
+                        str(sysroot / "lib" / "Scrt1.o"),
                         str(sysroot / "lib" / "crti.o"),
                         str(sample_obj),
                         str(runtime_lib),
@@ -678,9 +682,10 @@ def main(argv: list[str]) -> int:
                         args.target,
                         "--sysroot",
                         str(sysroot),
+                        "-Wl,-pie",
                         "-fuse-ld=lld",
                         "-nostdlib",
-                        str(sysroot / "lib" / "crt1.o"),
+                        str(sysroot / "lib" / "Scrt1.o"),
                         str(sysroot / "lib" / "crti.o"),
                         str(sample_obj),
                         str(runtime_lib),

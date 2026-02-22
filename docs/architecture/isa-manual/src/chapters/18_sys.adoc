@@ -1,0 +1,36 @@
+// Generated file; do not edit by hand.
+// Auto-generated from isa/v0.3/linxisa-v0.3.json and uop_classification_v0.3.json
+
+[[chapter_sys]]
+== SYS - System Operations
+
+The System (SYS) group handles all system-level operations including cache maintenance, memory barriers, system registers, and traps.
+
+=== Memory Barriers
+
+include::../generated/instructions/fence_d.adoc[]
+include::../generated/instructions/fence_i.adoc[]
+include::../generated/instructions/bwe.adoc[]
+include::../generated/instructions/bwi.adoc[]
+include::../generated/instructions/bwt.adoc[]
+
+=== Traps and Debug
+
+include::../generated/instructions/ebreak.adoc[]
+include::../generated/instructions/assert.adoc[]
+
+=== Access Control Ring (System Calls)
+
+include::../generated/instructions/acrc.adoc[]
+include::../generated/instructions/acre.adoc[]
+
+=== System Status Register (SSR)
+
+include::../generated/instructions/ssrget.adoc[]
+include::../generated/instructions/ssrset.adoc[]
+include::../generated/instructions/ssrswap.adoc[]
+
+=== Local Status Register (LSR)
+
+include::../generated/instructions/lsrget.adoc[]
+

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_lwu]]
+==== LWU
+
+*Syntax:* lwu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}
+
+*Description:* Load 32-bit word from memory.
+
+*Encoding:*
+
+image::../generated/encodings/enc_lwu.svg[LWU encoding,width=800]
+
+*Group:* LDA/BASE_REG

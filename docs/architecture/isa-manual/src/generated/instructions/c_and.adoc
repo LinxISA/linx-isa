@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_and]]
+==== C.AND
+
+*Syntax:* c.and srcL, srcR, ->t
+
+*Description:* Compressed instruction variant (16-bit encoding).
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_and.svg[C.AND encoding,width=800]
+
+*Group:* ALU

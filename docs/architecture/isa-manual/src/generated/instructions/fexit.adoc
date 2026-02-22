@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_fexit]]
+==== FEXIT
+
+*Syntax:* FEXIT [RegDst0 ~ RegDstn], sp!, uimm
+
+*Description:* Function Exit: marks function exit point.
+
+*Encoding:*
+
+image::../generated/encodings/enc_fexit.svg[FEXIT encoding,width=800]
+
+*Group:* CMD/BLOCK_SPLIT

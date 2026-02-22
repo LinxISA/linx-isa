@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_maddw]]
+==== HL.MADDW
+
+*Syntax:* hl.maddw SrcL, SrcR, SrcD, ->Dst0, Dst1
+
+*Description:* Long immediate variant supporting extended immediate range.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_maddw.svg[HL.MADDW encoding,width=800]
+
+*Group:* ALU_MULTI_CYCLE

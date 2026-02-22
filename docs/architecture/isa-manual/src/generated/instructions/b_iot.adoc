@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_b_iot]]
+==== B.IOT
+
+*Syntax:* B.IOT [SrcTile0<.reuse>, SrcTile1<.reuse>],  group=1, ->DstTile<RegSrc>
+
+*Description:* Block I/O: performs input/output operations at block level.
+
+*Encoding:*
+
+image::../generated/encodings/enc_b_iot.svg[B.IOT encoding,width=800]
+
+*Group:* CMD/BLOCK_IO

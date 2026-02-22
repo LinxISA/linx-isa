@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_fence_i]]
+==== FENCE.I
+
+*Syntax:* fence.i
+
+*Description:* Fence (Instruction): synchronizes instruction cache.
+
+*Encoding:*
+
+image::../generated/encodings/enc_fence_i.svg[FENCE.I encoding,width=800]
+
+*Group:* SYS/SYS

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_casd]]
+==== HL.CASD
+
+*Syntax:* hl.casd<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}
+
+*Description:* Compare and Swap: atomic 64-bit compare-and-swap operation.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_casd.svg[HL.CASD encoding,width=800]
+
+*Group:* AMO/CAS

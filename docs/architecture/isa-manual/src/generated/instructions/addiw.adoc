@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_addiw]]
+==== ADDIW
+
+*Syntax:* addiw SrcL, uimm, ->{t, u, Rd}
+
+*Description:* Add 32-bit registers (word operation).
+
+*Encoding:*
+
+image::../generated/encodings/enc_addiw.svg[ADDIW encoding,width=800]
+
+*Group:* ALU

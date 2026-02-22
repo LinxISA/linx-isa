@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_lh_pcr]]
+==== HL.LH.PCR
+
+*Syntax:* hl.lh.pcr [<symbol>], ->{t, u, Rd}
+
+*Description:* Long immediate variant supporting extended address range (48-bit).
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_lh_pcr.svg[HL.LH.PCR encoding,width=800]
+
+*Group:* LDA/PC_REL

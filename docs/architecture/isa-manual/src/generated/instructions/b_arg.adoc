@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_b_arg]]
+==== B.ARG
+
+*Syntax:* B.ARG NORM.normal
+
+*Description:* Block Argument: passes arguments to a template block.
+
+*Encoding:*
+
+image::../generated/encodings/enc_b_arg.svg[B.ARG encoding,width=800]
+
+*Group:* CMD/BLOCK_ARGUMENT

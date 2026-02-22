@@ -1,61 +1,102 @@
-# LinxISA Agent Navigation Contract (v0.5)
+# LinxISA Agent Navigation Contract
 
-Follow `docs/project/navigation.md` as the canonical map.
+> **Version**: v0.5  
+> **Canonical Map**: [docs/project/navigation.md](docs/project/navigation.md)
 
-## Allowed top-level roots
+This document defines the navigation rules for AI agents and contributors working in the LinxISA superproject.
 
-- `avs`
-- `compiler`
-- `emulator`
-- `kernel`
-- `rtl`
-- `tools`
-- `workloads`
-- `isa`
-- `docs`
-- `lib`
+---
 
-## Canonical destinations
+## Allowed Top-Level Directories
 
-- Runtime tests: `avs/qemu/`
-- Compile-only tests: `avs/compiler/linx-llvm/tests/`
-- Freestanding libc support: `avs/runtime/freestanding/`
-- pyCircuit workspace mirror: `tools/pyCircuit/` (submodule)
-- PTO kernel workspace mirror: `workloads/pto_kernels/` (submodule)
-- Assembly sample pack: `docs/reference/examples/v0.3/`
-
-## Forbidden / replaced paths
-
-Do not create, restore, or route new work to:
-
-- `compiler/linx-llvm`
-- `emulator/linx-qemu`
-- `examples/`
-- `models/`
-- `toolchain/`
-- `tests/`
-- `docs/validation/avs/`
-- `tools/ctuning/`
-- `tools/libc/`
-- `tools/glibc/`
-- `workloads/benchmarks/`
-- `workloads/examples/`
-- `spec/`
-
-## No random folders rule
-
-Do not introduce new top-level directories. Place new files only in canonical domains above.
-
-## Submodule bump workflow
-
-```bash
-git submodule sync --recursive
-git submodule update --init --recursive
-git submodule update --remote compiler/llvm emulator/qemu kernel/linux rtl/LinxCore tools/pyCircuit lib/glibc lib/musl workloads/pto_kernels
+```
+avs/         # Architecture Validation Suite
+compiler/    # LLVM submodule
+emulator/    # QEMU submodule
+kernel/      # Linux kernel submodule
+rtl/         # LinxCore RTL submodule
+tools/       # Build scripts, generators, regression
+workloads/   # Benchmarks and kernels
+isa/         # ISA specification sources
+docs/        # Architecture and bring-up documentation
+lib/         # Standard libraries (glibc, musl)
 ```
 
-Then run:
+---
+
+## Canonical Destinations
+
+| Task | Path |
+|------|------|
+| Runtime AVS tests | `avs/qemu/` |
+| Compile AVS tests | `avs/compiler/linx-llvm/tests/` |
+| Freestanding libc | `avs/runtime/freestanding/` |
+| pyCircuit model | `tools/pyCircuit/` (submodule) |
+| PTO kernels | `workloads/pto_kernels/` (submodule) |
+| Assembly examples | `docs/reference/examples/v0.3/` |
+
+---
+
+## Forbidden Paths
+
+**Do not create, restore, or route new work to these paths:**
+
+| Forbidden Path | Reason |
+|---------------|--------|
+| `compiler/linx-llvm` | Replaced by `compiler/llvm` submodule |
+| `emulator/linx-qemu` | Replaced by `emulator/qemu` submodule |
+| `examples/` | Replaced by `docs/reference/examples/` |
+| `models/` | Replaced by `tools/pyCircuit/` |
+| `toolchain/` | Replaced by `compiler/llvm` |
+| `tests/` | Replaced by `avs/` |
+| `docs/validation/avs/` | Deprecated |
+| `tools/ctuning/` | Deprecated |
+| `tools/libc/` | Deprecated |
+| `tools/glibc/` | Deprecated |
+| `workloads/benchmarks/` | Replaced by workload-specific directories |
+| `workloads/examples/` | Deprecated |
+| `spec/` | Replaced by `workloads/spec2017/` (gitignored) |
+
+---
+
+## Submodule Bump Workflow
+
+```bash
+# Sync all submodules
+git submodule sync --recursive
+
+# Initialize all submodules
+git submodule update --init --recursive
+
+# Pull latest from upstream remotes
+git submodule update --remote \
+    compiler/llvm \
+    emulator/qemu \
+    kernel/linux \
+    rtl/LinxCore \
+    tools/pyCircuit \
+    lib/glibc \
+    lib/musl \
+    workloads/pto_kernels
+
+# Verify repository layout
+bash tools/ci/check_repo_layout.sh
+```
+
+---
+
+## Rule: No Random Folders
+
+Do not introduce new top-level directories. Place all new files in the canonical domains listed above.
+
+---
+
+## Enforcement
+
+The repository layout is validated by:
 
 ```bash
 bash tools/ci/check_repo_layout.sh
 ```
+
+This CI check prevents non-compliant paths from being committed.

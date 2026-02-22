@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_ctz]]
+==== CTZ
+
+*Syntax:* ctz SrcL,  M, N, ->{t, u, Rd}
+
+*Description:* Count Trailing Zeros: counts the number of trailing zero bits.
+
+*Encoding:*
+
+image::../generated/encodings/enc_ctz.svg[CTZ encoding,width=800]
+
+*Group:* ALU

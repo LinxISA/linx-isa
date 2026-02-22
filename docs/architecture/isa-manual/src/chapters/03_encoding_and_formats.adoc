@@ -165,3 +165,36 @@ The authoritative encoding details live in `isa/v0.3/linxisa-v0.3.json`:
 
 The generated codec tables in `isa/generated/codecs/` are derived directly from the JSON and are the recommended entry point for
 tooling.
+
+[[encoding-diagrams]]
+=== Bitfield diagrams
+
+The following examples illustrate the encoding bitfield layout for representative instructions. These diagrams are automatically generated from the machine-readable catalog.
+
+32-bit R-type (register-register):
+
+image::../generated/encodings/enc_add.svg[ADD encoding,width=800]
+
+32-bit I-type (immediate):
+
+image::../generated/encodings/enc_addi.svg[ADDI encoding,width=800]
+
+16-bit compressed:
+
+image::../generated/encodings/enc_c_add.svg[C.ADD encoding,width=600]
+
+Vector 64-bit (prefix + postfix):
+
+image::../generated/encodings/enc_v_add_part1.svg[V.ADD encoding,width=800]
+
+[NOTE]
+====
+A complete set of encoding diagrams for all instructions is available in the `generated/encodings/` directory. These diagrams use color-coded fields to distinguish operand types:
+
+* **Blue**: opcode / funct
+* **Green**: destination register (rd)
+* **Orange**: source registers (rs1, rs2, rs3)
+* **Red**: immediate values
+* **Purple**: funct fields
+* **Gray**: reserved / unused
+====

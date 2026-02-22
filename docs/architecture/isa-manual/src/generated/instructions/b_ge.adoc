@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_b_ge]]
+==== B.GE
+
+*Syntax:* b.ge SrcL, SrcR, label
+
+*Description:* Branch if greater than or equal: conditional branch based on condition flags.
+
+*Encoding:*
+
+image::../generated/encodings/enc_b_ge.svg[B.GE encoding,width=800]
+
+*Group:* BRU/BRU

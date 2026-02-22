@@ -216,6 +216,13 @@ ops:
   gates: []
   owner: ''
   notes: ''
+- tileop10: '0x045'
+  name: TEXPANDS
+  implemented_in: []
+  status: unimplemented
+  gates: []
+  owner: ''
+  notes: ''
 - tileop10: '0x046'
   name: TANDS
   implemented_in: []

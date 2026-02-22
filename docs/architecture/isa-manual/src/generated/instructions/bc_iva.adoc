@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_bc_iva]]
+==== BC.IVA
+
+*Syntax:* bc.iva SrcL
+
+*Description:* Branch predictor Cache maintenance: invalidate by address
+
+*Encoding:*
+
+image::../generated/encodings/enc_bc_iva.svg[BC.IVA encoding,width=800]
+
+*Group:* SYS/CACHE_MAINT

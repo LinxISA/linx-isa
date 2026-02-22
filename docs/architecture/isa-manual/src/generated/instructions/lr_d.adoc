@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_lr_d]]
+==== LR.D
+
+*Syntax:* lr.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], {->t, ->u, ->Rd}
+
+*Description:* Load Reserved: load and reserve the memory location.
+
+*Encoding:*
+
+image::../generated/encodings/enc_lr_d.svg[LR.D encoding,width=800]
+
+*Group:* AMO/AMO

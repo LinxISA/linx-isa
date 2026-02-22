@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_sc_w]]
+==== SC.W
+
+*Syntax:* sc.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], {->t, ->u, ->Rd}
+
+*Description:* Store Conditional: store only if the location is still reserved.
+
+*Encoding:*
+
+image::../generated/encodings/enc_sc_w.svg[SC.W encoding,width=800]
+
+*Group:* AMO/AMO

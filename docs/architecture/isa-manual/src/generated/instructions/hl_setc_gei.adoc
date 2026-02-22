@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_setc_gei]]
+==== HL.SETC.GEI
+
+*Syntax:* hl.setc.gei SrcL, simm
+
+*Description:* Set Condition with long immediate.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_setc_gei.svg[HL.SETC.GEI encoding,width=800]
+
+*Group:* BRU/SETC

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_cmp_eqi]]
+==== C.CMP.EQI
+
+*Syntax:* c.cmp.eqi t#1, simm, ->t
+
+*Description:* Compressed compare immediate.
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_cmp_eqi.svg[C.CMP.EQI encoding,width=800]
+
+*Group:* BRU/CMP

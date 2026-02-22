@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_bstart_mpar]]
+==== C.BSTART.MPAR
+
+*Syntax:* C.BSTART.MPAR FALL
+
+*Description:* Block Start for Memory-PARallel: marks entry point for memory-parallel block.
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_bstart_mpar.svg[C.BSTART.MPAR encoding,width=800]
+
+*Group:* BBD/BSTART

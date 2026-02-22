@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_fabs]]
+==== V.FABS
+
+*Syntax:* v.fabs SrcL.<T>, ->Dst.<W>
+
+*Description:* Vector Floating-point Absolute Value.
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_fabs_part1.svg[V.FABS encoding,width=800]
+
+*Group:* VEC/VEC_FP

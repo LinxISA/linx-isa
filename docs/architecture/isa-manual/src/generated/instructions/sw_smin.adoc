@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_sw_smin]]
+==== SW.SMIN
+
+*Syntax:* sw.smin<.{rl, f, rlf}> [SrcL], SrcR
+
+*Description:* Atomic Signed Min operation: memory value is atomically signed mined with register.
+
+*Encoding:*
+
+image::../generated/encodings/enc_sw_smin.svg[SW.SMIN encoding,width=800]
+
+*Group:* AMO/AMO

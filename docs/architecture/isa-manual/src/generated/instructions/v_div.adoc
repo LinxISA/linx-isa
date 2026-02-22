@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_div]]
+==== V.DIV
+
+*Syntax:* v.div SrcL.<T>, SrcR.<T>, ->Dst.<W>
+
+*Description:* Vector Divide: divides elements.
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_div_part1.svg[V.DIV encoding,width=800]
+
+*Group:* VEC/VEC_DIV

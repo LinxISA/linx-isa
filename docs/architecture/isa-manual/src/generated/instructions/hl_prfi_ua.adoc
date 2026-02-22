@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_prfi_ua]]
+==== HL.PRFI.UA
+
+*Syntax:* hl.prfi.ua{.l1,.l2,.l3} [SrcL, simm], ->{t, u, Rd}
+
+*Description:* Prefetch instruction for cache hint. Provides a hint to the processor that the specified memory location is likely to be accessed soon.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_prfi_ua.svg[HL.PRFI.UA encoding,width=800]
+
+*Group:* LDA

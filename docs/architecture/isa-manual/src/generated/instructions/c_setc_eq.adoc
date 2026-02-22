@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_setc_eq]]
+==== C.SETC.EQ
+
+*Syntax:* c.setc.eq srcL, srcR
+
+*Description:* Compressed Set Condition.
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_setc_eq.svg[C.SETC.EQ encoding,width=800]
+
+*Group:* BRU/SETC

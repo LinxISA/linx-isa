@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_rem]]
+==== REM
+
+*Syntax:* rem SrcL, SrcR, ->{t, u, Rd}
+
+*Description:* Remainder of division operation.
+
+*Encoding:*
+
+image::../generated/encodings/enc_rem.svg[REM encoding,width=800]
+
+*Group:* ALU_MULTI_CYCLE

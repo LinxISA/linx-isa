@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_ld_xor]]
+==== LD.XOR
+
+*Syntax:* ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}
+
+*Description:* Atomic Xor operation: memory value is atomically xored with register.
+
+*Encoding:*
+
+image::../generated/encodings/enc_ld_xor.svg[LD.XOR encoding,width=800]
+
+*Group:* AMO/AMO

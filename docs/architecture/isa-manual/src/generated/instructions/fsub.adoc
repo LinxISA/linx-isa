@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_fsub]]
+==== FSUB
+
+*Syntax:* fsub.{T} SrcL, SrcR, ->{t, u, Rd}
+
+*Description:* Floating-point Subtract.
+
+*Encoding:*
+
+image::../generated/encodings/enc_fsub.svg[FSUB encoding,width=800]
+
+*Group:* FSU/DEFAULT

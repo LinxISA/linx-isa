@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_cmp_lti]]
+==== HL.CMP.LTI
+
+*Syntax:* hl.cmp.lti SrcL, simm, ->{t, u, Rd}
+
+*Description:* Long immediate compare with extended range.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_cmp_lti.svg[HL.CMP.LTI encoding,width=800]
+
+*Group:* BRU/CMP

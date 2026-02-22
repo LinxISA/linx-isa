@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_lhu_pcr]]
+==== LHU.PCR
+
+*Syntax:* lhu.pcr [symbol], ->{t, u, Rd}
+
+*Description:* Load unsigned 16-bit halfword from memory.
+
+*Encoding:*
+
+image::../generated/encodings/enc_lhu_pcr.svg[LHU.PCR encoding,width=800]
+
+*Group:* LDA

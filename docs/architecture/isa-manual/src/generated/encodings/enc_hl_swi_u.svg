@@ -1,70 +1,81 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 950 119" class="encoding-table">
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 120" width="1000" height="120">
   <defs>
     <style>
-      .encoding-table { font-family: "DejaVu Sans Mono", "Courier New", monospace; }
-      .bit-num { font-size: 9px; fill: #666; text-anchor: middle; }
-      .field-name { font-size: 10px; fill: #333; text-anchor: middle; dominant-baseline: middle; font-weight: bold; }
-      .field-value { font-size: 9px; fill: #555; text-anchor: middle; dominant-baseline: middle; }
-      .opcode-text { font-size: 10px; fill: #fff; text-anchor: middle; dominant-baseline: middle; font-weight: bold; }
-      .title { font-size: 14px; fill: #333; text-anchor: start; font-weight: bold; }
-      .legend-text { font-size: 9px; fill: #333; text-anchor: start; }
-      .encoding-diagram rect { stroke: #333; stroke-width: 0.5; }
+      .field-label { 
+        font-family: 'Courier New', monospace; 
+        font-size: 11px; 
+        fill: #333333;
+        font-weight: 500;
+      }
+      .bit-label { 
+        font-family: 'Courier New', monospace; 
+        font-size: 9px; 
+        fill: #888888;
+        text-anchor: middle; 
+      }
+      .mnemonic { 
+        font-family: 'Helvetica Neue', Arial, sans-serif; 
+        font-size: 14px; 
+        font-weight: 600; 
+        fill: #333333;
+      }
+      .field-rect { 
+        stroke: #ffffff; 
+        stroke-width: 1.5px; 
+      }
+      .border-line {
+        stroke: #666666;
+        stroke-width: 1.5px;
+      }
+      .part-label {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        font-size: 10px;
+        fill: #888888;
+        font-weight: 500;
+      }
     </style>
   </defs>
-  <rect x="0" y="0" width="950" height="119" fill="white"/>
-  <text x="10" y="20" class="title">HL.SWI.U (48-bit)</text>
-  <text x="58.854166666666664" y="50" class="bit-num">47</text>
-  <text x="129.6875" y="50" class="bit-num">43</text>
-  <text x="200.52083333333331" y="50" class="bit-num">39</text>
-  <text x="271.35416666666663" y="50" class="bit-num">35</text>
-  <text x="342.1875" y="50" class="bit-num">31</text>
-  <text x="413.0208333333333" y="50" class="bit-num">27</text>
-  <text x="483.85416666666663" y="50" class="bit-num">23</text>
-  <text x="554.6875" y="50" class="bit-num">19</text>
-  <text x="625.5208333333333" y="50" class="bit-num">15</text>
-  <text x="696.3541666666666" y="50" class="bit-num">11</text>
-  <text x="767.1875" y="50" class="bit-num">7</text>
-  <text x="838.0208333333333" y="50" class="bit-num">3</text>
-  <rect x="776.0416666666666" y="57" width="123.95833333333333" height="20" fill="#ffe66d" rx="2"/>
-  <text x="838.0208333333333" y="65.0" class="field-name">simm22[6:0]</text>
-  <rect x="687.5" y="57" width="88.54166666666666" height="20" fill="#4ecdc4" rx="2"/>
-  <text x="731.7708333333334" y="65.0" class="field-name">SrcR</text>
-  <rect x="598.9583333333333" y="57" width="88.54166666666666" height="20" fill="#4ecdc4" rx="2"/>
-  <text x="643.2291666666666" y="65.0" class="field-name">SrcD</text>
-  <rect x="545.8333333333333" y="57" width="53.125" height="20" fill="#e0e0e0" rx="2"/>
-  <text x="572.3958333333333" y="65.0" class="field-name">3'b110</text>
-  <text x="572.3958333333333" y="75.0" class="field-value">110</text>
-  <rect x="457.29166666666663" y="57" width="88.54166666666666" height="20" fill="#ffe66d" rx="2"/>
-  <text x="501.56249999999994" y="65.0" class="field-name">simm22[11:7]</text>
-  <rect x="404.16666666666663" y="57" width="53.125" height="20" fill="#e0e0e0" rx="2"/>
-  <text x="430.72916666666663" y="65.0" class="field-name">3'b101</text>
-  <text x="430.72916666666663" y="75.0" class="field-value">101</text>
-  <rect x="351.04166666666663" y="57" width="53.125" height="20" fill="#e0e0e0" rx="2"/>
-  <text x="377.60416666666663" y="65.0" class="field-name">3'b100</text>
-  <text x="377.60416666666663" y="75.0" class="field-value">100</text>
-  <rect x="333.3333333333333" y="57" width="17.708333333333332" height="20" fill="#e0e0e0" rx="2"/>
-  <text x="342.1875" y="68.0" class="field-name" font-size="8">1</text>
-  <rect x="156.25" y="57" width="177.08333333333331" height="20" fill="#ffe66d" rx="2"/>
-  <text x="244.79166666666666" y="65.0" class="field-name">simm22[21:12]</text>
-  <rect x="120.83333333333333" y="57" width="35.416666666666664" height="20" fill="#e0e0e0" rx="2"/>
-  <text x="138.54166666666666" y="65.0" class="field-name">2'b00</text>
-  <text x="138.54166666666666" y="75.0" class="field-value">00</text>
-  <rect x="67.70833333333333" y="57" width="53.125" height="20" fill="#e0e0e0" rx="2"/>
-  <text x="94.27083333333333" y="65.0" class="field-name">3'b111</text>
-  <text x="94.27083333333333" y="75.0" class="field-value">111</text>
-  <rect x="50.0" y="57" width="17.708333333333332" height="20" fill="#e0e0e0" rx="2"/>
-  <text x="58.854166666666664" y="68.0" class="field-name" font-size="8">0</text>
-  <line x1="50" y1="35" x2="900" y2="35" stroke="#333" stroke-width="1"/>
-  <line x1="50" y1="57" x2="900" y2="57" stroke="#333" stroke-width="1"/>
-  <line x1="50" y1="79" x2="900" y2="79" stroke="#333" stroke-width="1"/>
-  <line x1="50" y1="35" x2="50" y2="79" stroke="#333" stroke-width="1"/>
-  <line x1="900" y1="35" x2="900" y2="79" stroke="#333" stroke-width="1"/>
-  <rect x="50" y="101" width="12" height="12" fill="#e0e0e0" rx="1"/>
-  <text x="65" y="111" class="legend-text">Constant</text>
-  <rect x="150" y="101" width="12" height="12" fill="#4ecdc4" rx="1"/>
-  <text x="165" y="111" class="legend-text">Register</text>
-  <rect x="250" y="101" width="12" height="12" fill="#ffe66d" rx="1"/>
-  <text x="265" y="111" class="legend-text">Immediate</text>
-  <rect x="350" y="101" width="12" height="12" fill="#c792ea" rx="1"/>
-  <text x="365" y="111" class="legend-text">Function</text>
+  
+  <!-- Mnemonic label -->
+  <text x="10" y="18" class="mnemonic">HL.SWI.U</text>
+  <text x="10" y="114" class="bit-label" fill="#888888">48-bit</text>
+  <text x="109.11458333333333" y="24" class="bit-label">47</text>
+  <text x="182.03125" y="24" class="bit-label">43</text>
+  <text x="254.94791666666669" y="24" class="bit-label">39</text>
+  <text x="327.86458333333337" y="24" class="bit-label">35</text>
+  <text x="400.78125" y="24" class="bit-label">31</text>
+  <text x="473.6979166666667" y="24" class="bit-label">27</text>
+  <text x="546.6145833333334" y="24" class="bit-label">23</text>
+  <text x="619.53125" y="24" class="bit-label">19</text>
+  <text x="692.4479166666667" y="24" class="bit-label">15</text>
+  <text x="765.3645833333334" y="24" class="bit-label">11</text>
+  <text x="838.28125" y="24" class="bit-label">7</text>
+  <text x="911.1979166666667" y="24" class="bit-label">3</text>
+  <rect x="100" y="36.25" width="127.60416666666669" height="37.5" fill="#ffe0b9" class="field-rect" rx="3" ry="3"/>
+  <text x="163.80208333333334" y="59" class="field-label" text-anchor="middle">simm22[6:0]</text>
+  <rect x="227.60416666666669" y="36.25" width="91.14583333333331" height="37.5" fill="#ccfdfe" class="field-rect" rx="3" ry="3"/>
+  <text x="273.17708333333337" y="59" class="field-label" text-anchor="middle">SrcR</text>
+  <rect x="318.75" y="36.25" width="91.14583333333337" height="37.5" fill="#ccfdfe" class="field-rect" rx="3" ry="3"/>
+  <text x="364.3229166666667" y="59" class="field-label" text-anchor="middle">SrcD</text>
+  <rect x="409.89583333333337" y="36.25" width="54.6875" height="37.5" fill="#e8e8e8" class="field-rect" rx="3" ry="3"/>
+  <text x="437.23958333333337" y="59" class="field-label" text-anchor="middle">3'b110</text>
+  <rect x="464.58333333333337" y="36.25" width="91.14583333333337" height="37.5" fill="#ffe0b9" class="field-rect" rx="3" ry="3"/>
+  <text x="510.15625000000006" y="59" class="field-label" text-anchor="middle">simm22[11:7]</text>
+  <rect x="555.7291666666667" y="36.25" width="54.6875" height="37.5" fill="#e8e8e8" class="field-rect" rx="3" ry="3"/>
+  <text x="583.0729166666667" y="59" class="field-label" text-anchor="middle">3'b101</text>
+  <rect x="610.4166666666667" y="36.25" width="54.6875" height="37.5" fill="#e8e8e8" class="field-rect" rx="3" ry="3"/>
+  <text x="637.7604166666667" y="59" class="field-label" text-anchor="middle">3'b100</text>
+  <rect x="665.1041666666667" y="36.25" width="18.22916666666663" height="37.5" fill="#e8e8e8" class="field-rect" rx="3" ry="3"/>
+  <rect x="683.3333333333334" y="36.25" width="182.29166666666663" height="37.5" fill="#ffe0b9" class="field-rect" rx="3" ry="3"/>
+  <text x="774.4791666666667" y="59" class="field-label" text-anchor="middle">simm22[21:12]</text>
+  <rect x="865.625" y="36.25" width="36.45833333333337" height="37.5" fill="#e8e8e8" class="field-rect" rx="3" ry="3"/>
+  <text x="883.8541666666667" y="59" class="field-label" text-anchor="middle">2'b00</text>
+  <rect x="902.0833333333334" y="36.25" width="54.6875" height="37.5" fill="#e8e8e8" class="field-rect" rx="3" ry="3"/>
+  <text x="929.4270833333334" y="59" class="field-label" text-anchor="middle">3'b111</text>
+  <rect x="956.7708333333334" y="36.25" width="18.22916666666663" height="37.5" fill="#e8e8e8" class="field-rect" rx="3" ry="3"/>
+  
+  <!-- Border lines -->
+  <line x1="100" y1="30" x2="975" y2="30" class="border-line"/>
+  <line x1="100" y1="80" x2="975" y2="80" class="border-line"/>
 </svg>

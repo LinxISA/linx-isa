@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_csel]]
+==== V.CSEL
+
+*Syntax:* v.csel SrcP.<T>, SrcL.<T>, SrcR.<T><.neg>, ->Dst.<W>
+
+*Description:* Vector Conditional Select.
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_csel_part1.svg[V.CSEL encoding,width=800]
+
+*Group:* VEC/VEC_SEL

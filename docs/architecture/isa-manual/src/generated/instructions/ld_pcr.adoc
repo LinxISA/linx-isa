@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_ld_pcr]]
+==== LD.PCR
+
+*Syntax:* ld.pcr [symbol], ->{t, u, Rd}
+
+*Description:* Load 64-bit doubleword from memory.
+
+*Encoding:*
+
+image::../generated/encodings/enc_ld_pcr.svg[LD.PCR encoding,width=800]
+
+*Group:* LDA

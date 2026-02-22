@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_bstart_sys]]
+==== HL.BSTART.SYS
+
+*Syntax:* HL.BSTART.SYS FALL<, fixup_label>
+
+*Description:* Block Start for SYScall: marks entry point for system call block.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_bstart_sys.svg[HL.BSTART.SYS encoding,width=800]
+
+*Group:* BBD/BSTART

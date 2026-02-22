@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_sd_xor]]
+==== SD.XOR
+
+*Syntax:* sd.xor<.{rl, f, rlf}> [SrcL], SrcR
+
+*Description:* Atomic Xor operation: memory value is atomically xored with register.
+
+*Encoding:*
+
+image::../generated/encodings/enc_sd_xor.svg[SD.XOR encoding,width=800]
+
+*Group:* AMO/AMO

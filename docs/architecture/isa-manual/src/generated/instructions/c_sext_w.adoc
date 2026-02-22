@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_sext_w]]
+==== C.SEXT.W
+
+*Syntax:* c.sext.w srcL, ->t
+
+*Description:* Compressed instruction variant (16-bit encoding).
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_sext_w.svg[C.SEXT.W encoding,width=800]
+
+*Group:* ALU

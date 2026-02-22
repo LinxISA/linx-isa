@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_liu]]
+==== HL.LIU
+
+*Syntax:* hl.liu uimm, ->{t, u, Rd}
+
+*Description:* Load Immediate: loads a 32-bit or 48-bit immediate into register.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_liu.svg[HL.LIU encoding,width=800]
+
+*Group:* ALU

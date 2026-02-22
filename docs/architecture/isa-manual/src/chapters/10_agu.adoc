@@ -1,0 +1,193 @@
+// Generated file; do not edit by hand.
+// Auto-generated from isa/v0.3/linxisa-v0.3.json and uop_classification_v0.3.json
+
+[[chapter_agu]]
+== AGU - Address Generation Unit
+
+The Address Generation Unit (AGU) group handles all memory access operations including loads, stores, and prefetches. These instructions operate on the scalar register file and generate effective addresses through various addressing modes.
+
+=== Load Instructions
+
+include::../generated/instructions/lb.adoc[]
+include::../generated/instructions/lbu.adoc[]
+include::../generated/instructions/lh.adoc[]
+include::../generated/instructions/lhu.adoc[]
+include::../generated/instructions/lw.adoc[]
+include::../generated/instructions/lwu.adoc[]
+include::../generated/instructions/ld.adoc[]
+include::../generated/instructions/prf.adoc[]
+
+=== Load Immediate Offset
+
+include::../generated/instructions/lbi.adoc[]
+include::../generated/instructions/lbui.adoc[]
+include::../generated/instructions/lhi.adoc[]
+include::../generated/instructions/lhui.adoc[]
+include::../generated/instructions/lwi.adoc[]
+include::../generated/instructions/lwui.adoc[]
+include::../generated/instructions/ldi.adoc[]
+
+=== Load Unscaled Immediate
+
+include::../generated/instructions/ldi_u.adoc[]
+include::../generated/instructions/lhi_u.adoc[]
+include::../generated/instructions/lhui_u.adoc[]
+include::../generated/instructions/lwi_u.adoc[]
+include::../generated/instructions/lwui_u.adoc[]
+include::../generated/instructions/prfi_u.adoc[]
+
+=== Load PC-Relative
+
+include::../generated/instructions/lb_pcr.adoc[]
+include::../generated/instructions/lbu_pcr.adoc[]
+include::../generated/instructions/lh_pcr.adoc[]
+include::../generated/instructions/lhu_pcr.adoc[]
+include::../generated/instructions/lw_pcr.adoc[]
+include::../generated/instructions/lwu_pcr.adoc[]
+include::../generated/instructions/ld_pcr.adoc[]
+
+=== Load Long (48-bit)
+
+include::../generated/instructions/hl_lbi.adoc[]
+include::../generated/instructions/hl_lbui.adoc[]
+include::../generated/instructions/hl_lhi.adoc[]
+include::../generated/instructions/hl_lhui.adoc[]
+include::../generated/instructions/hl_lwi.adoc[]
+include::../generated/instructions/hl_lwui.adoc[]
+include::../generated/instructions/hl_ldi.adoc[]
+include::../generated/instructions/hl_ldi_u.adoc[]
+include::../generated/instructions/hl_lhi_u.adoc[]
+include::../generated/instructions/hl_lhui_u.adoc[]
+include::../generated/instructions/hl_lwi_u.adoc[]
+include::../generated/instructions/hl_lwui_u.adoc[]
+
+=== Load Pair
+
+include::../generated/instructions/hl_lbp.adoc[]
+include::../generated/instructions/hl_lbup.adoc[]
+include::../generated/instructions/hl_lbip.adoc[]
+include::../generated/instructions/hl_lbuip.adoc[]
+include::../generated/instructions/hl_lhp.adoc[]
+include::../generated/instructions/hl_lhup.adoc[]
+include::../generated/instructions/hl_lhip.adoc[]
+include::../generated/instructions/hl_lhip_u.adoc[]
+include::../generated/instructions/hl_lhuip.adoc[]
+include::../generated/instructions/hl_lhuip_u.adoc[]
+include::../generated/instructions/hl_lwp.adoc[]
+include::../generated/instructions/hl_lwup.adoc[]
+include::../generated/instructions/hl_lwip.adoc[]
+include::../generated/instructions/hl_lwip_u.adoc[]
+include::../generated/instructions/hl_ldp.adoc[]
+include::../generated/instructions/hl_ldip.adoc[]
+include::../generated/instructions/hl_ldip_u.adoc[]
+
+=== Load Post-Index
+
+include::../generated/instructions/hl_lb_po.adoc[]
+include::../generated/instructions/hl_lbi_po.adoc[]
+include::../generated/instructions/hl_lbu_po.adoc[]
+include::../generated/instructions/hl_lbui_po.adoc[]
+include::../generated/instructions/hl_lh_po.adoc[]
+include::../generated/instructions/hl_lhi_po.adoc[]
+include::../generated/instructions/hl_lhu_po.adoc[]
+include::../generated/instructions/hl_lhui_po.adoc[]
+include::../generated/instructions/hl_lw_po.adoc[]
+include::../generated/instructions/hl_lwi_po.adoc[]
+include::../generated/instructions/hl_lwu_po.adoc[]
+include::../generated/instructions/hl_lwui_po.adoc[]
+include::../generated/instructions/hl_ld_po.adoc[]
+include::../generated/instructions/hl_ldi_po.adoc[]
+include::../generated/instructions/hl_ldi_upo.adoc[]
+
+=== Load Pre-Index
+
+include::../generated/instructions/hl_lb_pr.adoc[]
+include::../generated/instructions/hl_lbi_pr.adoc[]
+include::../generated/instructions/hl_lbu_pr.adoc[]
+include::../generated/instructions/hl_lbui_pr.adoc[]
+include::../generated/instructions/hl_lh_pr.adoc[]
+include::../generated/instructions/hl_lhi_pr.adoc[]
+include::../generated/instructions/hl_lhu_pr.adoc[]
+include::../generated/instructions/hl_lhui_pr.adoc[]
+include::../generated/instructions/hl_lw_pr.adoc[]
+include::../generated/instructions/hl_lwi_pr.adoc[]
+include::../generated/instructions/hl_lwu_pr.adoc[]
+include::../generated/instructions/hl_lwui_pr.adoc[]
+include::../generated/instructions/hl_ld_pr.adoc[]
+include::../generated/instructions/hl_ldi_pr.adoc[]
+include::../generated/instructions/hl_ldi_upr.adoc[]
+
+=== Prefetch
+
+include::../generated/instructions/hl_prf.adoc[]
+include::../generated/instructions/hl_prf_a.adoc[]
+include::../generated/instructions/hl_prfi_u.adoc[]
+include::../generated/instructions/hl_prfi_ua.adoc[]
+
+=== Compressed Loads
+
+include::../generated/instructions/c_ldi.adoc[]
+include::../generated/instructions/c_lwi.adoc[]
+
+=== Store Instructions
+
+include::../generated/instructions/sb.adoc[]
+include::../generated/instructions/sh.adoc[]
+include::../generated/instructions/sw.adoc[]
+include::../generated/instructions/sd.adoc[]
+
+=== Store Immediate
+
+include::../generated/instructions/sbi.adoc[]
+include::../generated/instructions/shi.adoc[]
+include::../generated/instructions/swi.adoc[]
+include::../generated/instructions/sdi.adoc[]
+
+=== Compressed Stores
+
+include::../generated/instructions/c_sdi.adoc[]
+include::../generated/instructions/c_swi.adoc[]
+
+=== Store Long (48-bit)
+
+include::../generated/instructions/hl_sbi.adoc[]
+include::../generated/instructions/hl_shi.adoc[]
+include::../generated/instructions/hl_swi.adoc[]
+include::../generated/instructions/hl_sdi.adoc[]
+
+=== Store Pair
+
+include::../generated/instructions/hl_sbp.adoc[]
+include::../generated/instructions/hl_shp.adoc[]
+include::../generated/instructions/hl_ship.adoc[]
+include::../generated/instructions/hl_swp.adoc[]
+include::../generated/instructions/hl_sdp.adoc[]
+include::../generated/instructions/hl_sbip.adoc[]
+include::../generated/instructions/hl_ship_u.adoc[]
+include::../generated/instructions/hl_swp_u.adoc[]
+include::../generated/instructions/hl_sdp_u.adoc[]
+include::../generated/instructions/hl_sdip.adoc[]
+include::../generated/instructions/hl_sdip_u.adoc[]
+
+=== Store Post-Index
+
+include::../generated/instructions/hl_sb_po.adoc[]
+include::../generated/instructions/hl_sbi_po.adoc[]
+include::../generated/instructions/hl_sh_po.adoc[]
+include::../generated/instructions/hl_shi_po.adoc[]
+include::../generated/instructions/hl_sw_po.adoc[]
+include::../generated/instructions/hl_swi_po.adoc[]
+include::../generated/instructions/hl_sd_po.adoc[]
+include::../generated/instructions/hl_sdi_po.adoc[]
+
+=== Store Pre-Index
+
+include::../generated/instructions/hl_sb_pr.adoc[]
+include::../generated/instructions/hl_sbi_pr.adoc[]
+include::../generated/instructions/hl_sh_pr.adoc[]
+include::../generated/instructions/hl_shi_pr.adoc[]
+include::../generated/instructions/hl_sw_pr.adoc[]
+include::../generated/instructions/hl_swi_pr.adoc[]
+include::../generated/instructions/hl_sd_pr.adoc[]
+include::../generated/instructions/hl_sdi_pr.adoc[]
+

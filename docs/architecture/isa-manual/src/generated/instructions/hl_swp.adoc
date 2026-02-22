@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_swp]]
+==== HL.SWP
+
+*Syntax:* hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<2]
+
+*Description:* Long immediate variant supporting extended address range (48-bit).
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_swp.svg[HL.SWP encoding,width=800]
+
+*Group:* STA/PAIR

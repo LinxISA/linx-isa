@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_subi]]
+==== SUBI
+
+*Syntax:* subi SrcL, uimm, ->{t, u, Rd}
+
+*Description:* Subtract source register or immediate from register.
+
+*Encoding:*
+
+image::../generated/encodings/enc_subi.svg[SUBI encoding,width=800]
+
+*Group:* ALU

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_misub]]
+==== HL.MISUB
+
+*Syntax:* hl.misub SrcL, SrcR, uimm, ->{t, u, Rd}
+
+*Description:* Multiply-Subtract Indexed: multiplies and subtracts with indexed operation.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_misub.svg[HL.MISUB encoding,width=800]
+
+*Group:* RSV/DEFAULT

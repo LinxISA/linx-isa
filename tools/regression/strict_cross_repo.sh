@@ -27,6 +27,13 @@ RUN_MODEL_DIFF="${RUN_MODEL_DIFF-}"
 RUN_CPP_GATES="${RUN_CPP_GATES-}" # 0|1
 CPP_MODE="${CPP_MODE:-phase-b}"
 RUN_CONSISTENCY_CHECKS="${RUN_CONSISTENCY_CHECKS:-1}" # 0|1 (nested runtime-convergence calls set 0)
+MULTI_AGENT_MANIFEST="${MULTI_AGENT_MANIFEST:-$ROOT/docs/bringup/agent_runs/manifest.yaml}"
+MULTI_AGENT_WAIVERS="${MULTI_AGENT_WAIVERS:-$ROOT/docs/bringup/agent_runs/waivers.yaml}"
+MULTI_AGENT_CHECKLISTS_ROOT="${MULTI_AGENT_CHECKLISTS_ROOT:-$ROOT/docs/bringup/agent_runs/checklists}"
+MULTI_AGENT_REPORT="${MULTI_AGENT_REPORT:-}"
+MULTI_AGENT_LANE="${MULTI_AGENT_LANE:-}"
+MULTI_AGENT_RUN_ID="${MULTI_AGENT_RUN_ID:-}"
+MULTI_AGENT_OUT="${MULTI_AGENT_OUT:-}"
 
 if [[ "$LINX_BRINGUP_PROFILE" == "release-strict" ]]; then
   [[ -n "$RUN_GLIBC_G1B" ]] || RUN_GLIBC_G1B=1
@@ -56,6 +63,22 @@ if [[ "$LINX_BRINGUP_PROFILE" == "release-strict" ]]; then
     exit 1
   fi
 fi
+
+if [[ -n "$MULTI_AGENT_REPORT$MULTI_AGENT_LANE$MULTI_AGENT_RUN_ID$MULTI_AGENT_OUT" ]]; then
+  if [[ -z "$MULTI_AGENT_REPORT" || -z "$MULTI_AGENT_LANE" || -z "$MULTI_AGENT_RUN_ID" ]]; then
+    echo "error: multi-agent runtime context requires MULTI_AGENT_REPORT, MULTI_AGENT_LANE, and MULTI_AGENT_RUN_ID together" >&2
+    exit 1
+  fi
+fi
+
+echo
+echo "-- Multi-agent static checklist gate"
+python3 "$ROOT/tools/bringup/check_multi_agent_gates.py" \
+  --strict-always \
+  --mode static \
+  --manifest "$MULTI_AGENT_MANIFEST" \
+  --waivers "$MULTI_AGENT_WAIVERS" \
+  --checklists-root "$MULTI_AGENT_CHECKLISTS_ROOT"
 
 if [[ -z "$CLANG" ]]; then
   clang_candidates=()
@@ -312,9 +335,36 @@ if [[ "$RUN_MODEL_DIFF" == "1" ]]; then
     --report-out "$ROOT/docs/bringup/gates/model_diff_summary.json"
 fi
 
+MULTI_AGENT_SUMMARY_PATH=""
+if [[ -n "$MULTI_AGENT_REPORT" && -n "$MULTI_AGENT_LANE" && -n "$MULTI_AGENT_RUN_ID" ]]; then
+  if [[ -n "$MULTI_AGENT_OUT" ]]; then
+    MULTI_AGENT_SUMMARY_PATH="$MULTI_AGENT_OUT"
+  else
+    MULTI_AGENT_SUMMARY_PATH="$ROOT/docs/bringup/gates/logs/$MULTI_AGENT_RUN_ID/$MULTI_AGENT_LANE/multi_agent_summary.strict_cross.json"
+  fi
+  echo
+  echo "-- Multi-agent runtime closure gate"
+  python3 "$ROOT/tools/bringup/check_multi_agent_gates.py" \
+    --strict-always \
+    --mode runtime \
+    --manifest "$MULTI_AGENT_MANIFEST" \
+    --waivers "$MULTI_AGENT_WAIVERS" \
+    --checklists-root "$MULTI_AGENT_CHECKLISTS_ROOT" \
+    --report "$MULTI_AGENT_REPORT" \
+    --lane "$MULTI_AGENT_LANE" \
+    --run-id "$MULTI_AGENT_RUN_ID" \
+    --out "$MULTI_AGENT_SUMMARY_PATH"
+else
+  echo "note: skipping multi-agent runtime closure gate (report context unavailable)"
+fi
+
 if [[ "$LINX_BRINGUP_PROFILE" == "release-strict" && "$RUN_CONSISTENCY_CHECKS" == "1" ]]; then
   echo
   echo "-- bring-up consistency/freshness checks"
+  CONSISTENCY_MULTI_AGENT_ARGS=()
+  if [[ -n "$MULTI_AGENT_SUMMARY_PATH" ]]; then
+    CONSISTENCY_MULTI_AGENT_ARGS+=(--multi-agent-summary "$MULTI_AGENT_SUMMARY_PATH")
+  fi
   python3 "$ROOT/tools/bringup/check_gate_consistency.py" \
     --report "$ROOT/docs/bringup/gates/latest.json" \
     --progress "$ROOT/docs/bringup/PROGRESS.md" \
@@ -323,7 +373,8 @@ if [[ "$LINX_BRINGUP_PROFILE" == "release-strict" && "$RUN_CONSISTENCY_CHECKS" =
     --profile "$LINX_BRINGUP_PROFILE" \
     --lane-policy "${LINX_LANE_POLICY:-external+pin-required}" \
     --trace-schema-version "${LINX_TRACE_SCHEMA_VERSION:-1.0}" \
-    --max-age-hours "${LINX_GATE_MAX_AGE_HOURS:-24}"
+    --max-age-hours "${LINX_GATE_MAX_AGE_HOURS:-24}" \
+    "${CONSISTENCY_MULTI_AGENT_ARGS[@]}"
 fi
 
 echo

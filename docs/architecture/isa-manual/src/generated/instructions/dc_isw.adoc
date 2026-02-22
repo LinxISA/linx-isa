@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_dc_isw]]
+==== DC.ISW
+
+*Syntax:* dc.isw SrcL
+
+*Description:* Data Cache maintenance: invalidate by set/way
+
+*Encoding:*
+
+image::../generated/encodings/enc_dc_isw.svg[DC.ISW encoding,width=800]
+
+*Group:* SYS/CACHE_MAINT

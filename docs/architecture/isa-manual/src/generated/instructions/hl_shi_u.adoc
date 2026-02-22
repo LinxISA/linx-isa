@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_shi_u]]
+==== HL.SHI.U
+
+*Syntax:* hl.shi.u SrcD, [SrcR, simm]
+
+*Description:* Long immediate variant supporting extended address range (48-bit).
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_shi_u.svg[HL.SHI.U encoding,width=800]
+
+*Group:* STA/LONG

@@ -309,6 +309,7 @@ Strict-v0.3 TEPL `TileOp10` assignment (current canonical map):
 * Row/column reductions: `TROWMAX=0x020`, `TROWMIN=0x021`, `TROWSUM=0x022`, `TCOLMAX=0x024`, `TCOLMIN=0x025`,
   `TCOLSUM=0x026`.
 * Reduce expand: `TCOLEXPAND=0x0C0`, `TROWEXPAND=0x0C1`.
+* Scalar splat/broadcast: `TEXPANDS=0x045`.
 * Math transforms: `TEXP=0x040`, `TLOG=0x041`, `TSQRT=0x042`, `TRSQRT=0x043`, `TRECIP=0x044`.
 * Data movement/shape: `TGATHER=0x060`, `TSCATTER=0x061`, `TRESHAPE=0x062`, `TTRANSPOSE=0x063`.
 

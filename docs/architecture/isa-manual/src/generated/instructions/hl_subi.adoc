@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_subi]]
+==== HL.SUBI
+
+*Syntax:* hl.subi SrcL, uimm, ->{t, u, Rd}
+
+*Description:* Long immediate variant supporting extended immediate range.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_subi.svg[HL.SUBI encoding,width=800]
+
+*Group:* ALU

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_b_dimi]]
+==== C.B.DIMI
+
+*Syntax:* C.B.DIMI imm, ->{LB0, LB1, LB2}
+
+*Description:* Block Dimension: specifies the dimensions for block execution.
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_b_dimi.svg[C.B.DIMI encoding,width=800]
+
+*Group:* CMD/BLOCK_DIMENSION

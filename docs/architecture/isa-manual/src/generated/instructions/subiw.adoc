@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_subiw]]
+==== SUBIW
+
+*Syntax:* subiw SrcL, uimm, ->{t, u, Rd}
+
+*Description:* Subtract 32-bit registers (word operation).
+
+*Encoding:*
+
+image::../generated/encodings/enc_subiw.svg[SUBIW encoding,width=800]
+
+*Group:* ALU

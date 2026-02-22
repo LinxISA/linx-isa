@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_shfl_down]]
+==== V.SHFL.DOWN
+
+*Syntax:* v.shfl.down SrcL.<T>, SrcR.<T>, SrcP.<T>, ->Dst.<W>
+
+*Description:* Shuffle (down): permutes vector elements using register indices.
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_shfl_down_part1.svg[V.SHFL.DOWN encoding,width=800]
+
+*Group:* VEC/VEC

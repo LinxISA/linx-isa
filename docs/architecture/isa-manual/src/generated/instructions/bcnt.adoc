@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_bcnt]]
+==== BCNT
+
+*Syntax:* bcnt srcL,  M, N, ->{t, u, Rd}
+
+*Description:* Bit Count: counts total number of set bits.
+
+*Encoding:*
+
+image::../generated/encodings/enc_bcnt.svg[BCNT encoding,width=800]
+
+*Group:* ALU

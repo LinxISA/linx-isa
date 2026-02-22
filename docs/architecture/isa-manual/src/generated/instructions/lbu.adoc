@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_lbu]]
+==== LBU
+
+*Syntax:* lbu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}
+
+*Description:* Load 8-bit unsigned byte from memory at effective address.
+
+*Encoding:*
+
+image::../generated/encodings/enc_lbu.svg[LBU encoding,width=800]
+
+*Group:* LDA/BASE_REG

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_fges]]
+==== FGES
+
+*Syntax:* fges.{T} SrcL, SrcR, ->{t, u, Rd}
+
+*Description:* Floating-point Greater than or Equal comparison.
+
+*Encoding:*
+
+image::../generated/encodings/enc_fges.svg[FGES encoding,width=800]
+
+*Group:* FSU/DEFAULT

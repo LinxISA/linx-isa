@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_lh]]
+==== LH
+
+*Syntax:* lh [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}
+
+*Description:* Load signed 16-bit halfword from memory.
+
+*Encoding:*
+
+image::../generated/encodings/enc_lh.svg[LH encoding,width=800]
+
+*Group:* LDA/BASE_REG

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_setc_eqi]]
+==== HL.SETC.EQI
+
+*Syntax:* hl.setc.eqi SrcL, simm
+
+*Description:* Set Condition with long immediate.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_setc_eqi.svg[HL.SETC.EQI encoding,width=800]
+
+*Group:* BRU/SETC

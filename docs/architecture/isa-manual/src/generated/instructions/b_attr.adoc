@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_b_attr]]
+==== B.ATTR
+
+*Syntax:* B.ATTR {trap, atomic, <aq, rl, aqrl>, far, DataLayout.{canon, normal}, SrcType, PadValue, DR}
+
+*Description:* Block Attribute descriptor.
+
+*Encoding:*
+
+image::../generated/encodings/enc_b_attr.svg[B.ATTR encoding,width=800]
+
+*Group:* CMD/DESC_B_ATTR

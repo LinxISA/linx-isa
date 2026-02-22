@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_ebreak]]
+==== EBREAK
+
+*Syntax:* ebreak imm
+
+*Description:* Environment Break: triggers a breakpoint exception.
+
+*Encoding:*
+
+image::../generated/encodings/enc_ebreak.svg[EBREAK encoding,width=800]
+
+*Group:* SYS/SYS

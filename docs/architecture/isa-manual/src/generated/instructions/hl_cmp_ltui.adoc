@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_cmp_ltui]]
+==== HL.CMP.LTUI
+
+*Syntax:* hl.cmp.ltui SrcL, uimm, ->{t, u, Rd}
+
+*Description:* Long immediate compare with extended range.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_cmp_ltui.svg[HL.CMP.LTUI encoding,width=800]
+
+*Group:* BRU/CMP

@@ -1,7 +1,15 @@
 [[preamble]]
-== Preamble
+= Preamble
+
+**Document Version**: v0.3 |
+**Architecture**: Block-Structured LinxISA |
+**Classification**: Public Specification
+
+'''
 
 This document is the canonical manual for the **block-structured Linx Instruction Set Architecture (Linx ISA)**, version **v0.3**.
+
+== Authority and Source of Truth
 
 The single source of truth for instruction encodings in this repository is:
 
@@ -10,21 +18,22 @@ The single source of truth for instruction encodings in this repository is:
 
 Where this manual and the machine-readable catalog disagree, the JSON catalog MUST be treated as authoritative.
 
-NOTE: v0.3 unifies the previous v0.2 bring-up profile with v0.3 staged extensions. All architectural contracts are now defined in v0.3.
+[IMPORTANT]
+====
+v0.3 unifies the previous v0.2 bring-up profile with v0.3 staged extensions. All architectural contracts are now defined in v0.3.
+====
 
 [[preamble-brand-mark]]
-=== Brand mark
+== Brand Mark
 
 image::linxisa-logo.svg[align="center",width=140]
 
-The LinxISA brand mark is a stylized **Lingxi** form that preserves the original silhouette while adding subtle
-semiconductor-style detailing (routed traces, pads/vias) to preserve crisp readability in manual PDFs, web docs, and
-toolchain-generated reports.
+The LinxISA brand mark is a stylized **Lingxi** form that preserves the original silhouette while adding subtle semiconductor-style detailing (routed traces, pads/vias) to preserve crisp readability in manual PDFs, web docs, and toolchain-generated reports.
 
 [[preamble-scope]]
-=== Scope and maturity
+== Scope and Maturity
 
-This manual describes the **v0.3 Linx ISA** - a production-ready architecture that incorporates:
+This manual describes the **v0.3 Linx ISA** — a production-ready architecture that incorporates:
 
 * The v0.2 bring-up baseline (privileged architecture, block-structured control flow, template blocks)
 * v0.3 staged extensions (vector/tile operations, SIMD lane policy, MCALL modes)
@@ -32,8 +41,8 @@ This manual describes the **v0.3 Linx ISA** - a production-ready architecture th
 The LinxISA project maintains alignment between:
 
 * The machine-readable catalog (`isa/v0.3/linxisa-v0.3.json`)
-* The LLVM backend (`llvm-project/llvm/lib/Target/LinxISA/`)
-* The QEMU emulator (`qemu/target/linx/`)
+* The LLVM backend (`compiler/llvm/llvm/lib/Target/Linx/`)
+* The QEMU emulator (`emulator/qemu/target/linx/`)
 * This manual
 
 This manual focuses on:

@@ -25,8 +25,9 @@
 |Block Dimension |2 |2
 |C.BSTART |7 |7
 |C.TINST |6 |6
-|Load/Store Immediate Offset |4 |4
+|Load Immediate Offset |23 |23
 |Move |3 |3
+|Store Immediate Offset |9 |9
 |Set Commit Argument |26 |26
 |C.UNARY |7 |7
 |Compare Instruction |40 |40
@@ -56,12 +57,10 @@
 |SSR Access |7 |7
 |Load Register Offset |22 |22
 |Load Symbol |7 |7
-|Load Immediate Offset |21 |21
 |Atomic Operation |68 |68
 |Load UnScaled |16 |16
 |Store Register Offset |21 |21
 |Store Symbol |4 |4
-|Store Immediate Offset |7 |7
 |Bit Manipulation |8 |8
 |Three Source Integer |2 |2
 |Division |2 |2

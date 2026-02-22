@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_qpop]]
+==== HL.QPOP
+
+*Syntax:* hl.qpop.{e,r,er} SrcL, ->Dst0, Dst1
+
+*Description:* Queue Management: pop from queue.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_qpop.svg[HL.QPOP encoding,width=800]
+
+*Group:* CMD/Q_POP

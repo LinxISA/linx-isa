@@ -1,6 +1,6 @@
 # Bring-up Progress (v0.4 workspace)
 
-Last updated: 2026-02-17
+Last updated: 2026-02-22
 
 ## Phase status
 
@@ -21,7 +21,8 @@ Last updated: 2026-02-17
   - check26 directed coverage linkage (including `Model` domain tests),
   - QEMU-vs-model differential suite as a required gate,
   - trace schema version compatibility checks,
-  - external/pin lane parity checks for required gate sets.
+  - external/pin lane parity checks for required gate sets,
+  - strict multi-agent manifest/checklist/waiver validation.
 - Current blockers are tracked in `docs/bringup/MATURITY_PLAN.md` immediate backlog.
 
 ## Gate snapshot
@@ -31,6 +32,7 @@ Last updated: 2026-02-17
 | AVS compile-only (`linx64`/`linx32`) | ✅ | `./avs/compiler/linx-llvm/tests/run.sh` |
 | AVS runtime suites | ✅ | `./avs/qemu/run_tests.sh --all` |
 | Strict system gate | ✅ | `./avs/qemu/check_system_strict.sh` |
+| Multi-agent strict checklist gate | ✅ Policy enabled | `python3 tools/bringup/check_multi_agent_gates.py --strict-always --mode static --manifest docs/bringup/agent_runs/manifest.yaml --waivers docs/bringup/agent_runs/waivers.yaml --checklists-root docs/bringup/agent_runs/checklists` |
 | Main regression | ✅ | `bash tools/regression/run.sh` |
 | Linux initramfs smoke/full | ✅ | `python3 ${LINUX_ROOT}/tools/linxisa/initramfs/smoke.py`; `python3 ${LINUX_ROOT}/tools/linxisa/initramfs/full_boot.py` |
 | glibc `G1a` | ✅ (`configure` + `csu/subdir_lib`) | `bash lib/glibc/tools/linx/build_linx64_glibc.sh` |
@@ -47,6 +49,7 @@ Last updated: 2026-02-17
 - `bash lib/glibc/tools/linx/build_linx64_glibc.sh` ✅ (`G1a`: configure + `csu/subdir_lib` + `crt1.o`)
 - `python3 ${LINUX_ROOT}/tools/linxisa/initramfs/smoke.py` ✅
 - `python3 ${LINUX_ROOT}/tools/linxisa/initramfs/full_boot.py` ✅
+- `python3 tools/bringup/check_multi_agent_gates.py --strict-always --mode static --manifest docs/bringup/agent_runs/manifest.yaml --waivers docs/bringup/agent_runs/waivers.yaml --checklists-root docs/bringup/agent_runs/checklists` ✅
 - `bash tools/regression/strict_cross_repo.sh` ✅
 - `CLANG=${LLVM_ROOT}/build-linxisa-clang/bin/clang LLD=${LLVM_ROOT}/build-linxisa-clang/bin/ld.lld LLVM_ROOT=compiler/llvm QEMU=${QEMU_ROOT}/build/qemu-system-linx64 LINUX_ROOT=${LINUX_ROOT} LINX_DISABLE_TIMER_IRQ=1 LINX_EMU_DISABLE_TIMER_IRQ=0 bash tools/regression/full_stack.sh` ✅
 

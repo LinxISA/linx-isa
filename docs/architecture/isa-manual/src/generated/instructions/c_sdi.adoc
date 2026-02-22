@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_sdi]]
+==== C.SDI
+
+*Syntax:* c.sdi t#1, [srcL, simm]
+
+*Description:* Compressed instruction variant.
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_sdi.svg[C.SDI encoding,width=800]
+
+*Group:* STA/BASE_IMM

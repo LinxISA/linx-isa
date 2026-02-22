@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_ssrswap]]
+==== SSRSWAP
+
+*Syntax:* ssrswap SrcL, SSR_ID, ->{t, u, Rd}
+
+*Description:* Swap System Status Register value.
+
+*Encoding:*
+
+image::../generated/encodings/enc_ssrswap.svg[SSRSWAP encoding,width=800]
+
+*Group:* SYS/SSR

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_shfl_up]]
+==== V.SHFL.UP
+
+*Syntax:* v.shfl.up SrcL.<T>, SrcR.<T>, SrcP.<T>, ->Dst.<W>
+
+*Description:* Shuffle (up): permutes vector elements using register indices.
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_shfl_up_part1.svg[V.SHFL.UP encoding,width=800]
+
+*Group:* VEC/VEC

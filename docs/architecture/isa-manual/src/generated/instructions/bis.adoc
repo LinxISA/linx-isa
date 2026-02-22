@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_bis]]
+==== BIS
+
+*Syntax:* bis SrcL, M, N, ->{t, u, Rd}
+
+*Description:* Bit Set (equivalent to OR).
+
+*Encoding:*
+
+image::../generated/encodings/enc_bis.svg[BIS encoding,width=800]
+
+*Group:* ALU

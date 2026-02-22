@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_addw]]
+==== ADDW
+
+*Syntax:* addw SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}
+
+*Description:* Add 32-bit registers (word operation).
+
+*Encoding:*
+
+image::../generated/encodings/enc_addw.svg[ADDW encoding,width=800]
+
+*Group:* ALU

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_max]]
+==== MAX
+
+*Syntax:* max SrcL, SrcR, ->{t, u, Rd}
+
+*Description:* Maximum (signed comparison).
+
+*Encoding:*
+
+image::../generated/encodings/enc_max.svg[MAX encoding,width=800]
+
+*Group:* ALU

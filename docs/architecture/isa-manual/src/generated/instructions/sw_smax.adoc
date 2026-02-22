@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_sw_smax]]
+==== SW.SMAX
+
+*Syntax:* sw.smax<.{rl, f, rlf}> [SrcL], SrcR
+
+*Description:* Atomic Signed Max operation: memory value is atomically signed maxed with register.
+
+*Encoding:*
+
+image::../generated/encodings/enc_sw_smax.svg[SW.SMAX encoding,width=800]
+
+*Group:* AMO/AMO

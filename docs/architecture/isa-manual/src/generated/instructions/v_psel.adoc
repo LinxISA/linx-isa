@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_psel]]
+==== V.PSEL
+
+*Syntax:* v.psel  SrcP, SrcL.<T>, SrcR.<T><.neg>, ->Dst.<W>
+
+*Description:* Vector Pairwise Select.
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_psel_part1.svg[V.PSEL encoding,width=800]
+
+*Group:* VEC/VEC_SEL

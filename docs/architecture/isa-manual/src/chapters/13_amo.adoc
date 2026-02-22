@@ -1,0 +1,75 @@
+// Generated file; do not edit by hand.
+// Auto-generated from isa/v0.3/linxisa-v0.3.json and uop_classification_v0.3.json
+
+[[chapter_amo]]
+== AMO - Atomic Memory Operations
+
+The Atomic Memory Operations (AMO) group handles all atomic read-modify-write operations including load-reserve/store-conditional (LR/SC) and compare-and-swap (CAS).
+
+=== Load Reserved / Store Conditional
+
+include::../generated/instructions/lr_b.adoc[]
+include::../generated/instructions/lr_h.adoc[]
+include::../generated/instructions/lr_w.adoc[]
+include::../generated/instructions/lr_d.adoc[]
+include::../generated/instructions/sc_b.adoc[]
+include::../generated/instructions/sc_h.adoc[]
+include::../generated/instructions/sc_w.adoc[]
+include::../generated/instructions/sc_d.adoc[]
+
+=== Atomic Memory Operations (32-bit)
+
+include::../generated/instructions/lw_add.adoc[]
+include::../generated/instructions/lw_and.adoc[]
+include::../generated/instructions/lw_or.adoc[]
+include::../generated/instructions/lw_xor.adoc[]
+include::../generated/instructions/lw_smax.adoc[]
+include::../generated/instructions/lw_smin.adoc[]
+include::../generated/instructions/lw_umax.adoc[]
+include::../generated/instructions/lw_umin.adoc[]
+
+=== Atomic Memory Operations (64-bit)
+
+include::../generated/instructions/ld_add.adoc[]
+include::../generated/instructions/ld_and.adoc[]
+include::../generated/instructions/ld_or.adoc[]
+include::../generated/instructions/ld_xor.adoc[]
+include::../generated/instructions/ld_smax.adoc[]
+include::../generated/instructions/ld_smin.adoc[]
+include::../generated/instructions/ld_umax.adoc[]
+include::../generated/instructions/ld_umin.adoc[]
+
+=== Atomic Memory Operations (Store)
+
+include::../generated/instructions/sw_add.adoc[]
+include::../generated/instructions/sw_and.adoc[]
+include::../generated/instructions/sw_or.adoc[]
+include::../generated/instructions/sw_xor.adoc[]
+include::../generated/instructions/sw_smax.adoc[]
+include::../generated/instructions/sw_smin.adoc[]
+include::../generated/instructions/sw_umax.adoc[]
+include::../generated/instructions/sw_umin.adoc[]
+
+include::../generated/instructions/sd_add.adoc[]
+include::../generated/instructions/sd_and.adoc[]
+include::../generated/instructions/sd_or.adoc[]
+include::../generated/instructions/sd_xor.adoc[]
+include::../generated/instructions/sd_smax.adoc[]
+include::../generated/instructions/sd_smin.adoc[]
+include::../generated/instructions/sd_umax.adoc[]
+include::../generated/instructions/sd_umin.adoc[]
+
+=== Atomic Swap
+
+include::../generated/instructions/swapb.adoc[]
+include::../generated/instructions/swaph.adoc[]
+include::../generated/instructions/swapw.adoc[]
+include::../generated/instructions/swapd.adoc[]
+
+=== Compare and Swap
+
+include::../generated/instructions/hl_casb.adoc[]
+include::../generated/instructions/hl_cash.adoc[]
+include::../generated/instructions/hl_casw.adoc[]
+include::../generated/instructions/hl_casd.adoc[]
+

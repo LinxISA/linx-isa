@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_sbi]]
+==== HL.SBI
+
+*Syntax:* hl.sbi SrcD, [SrcR, simm]
+
+*Description:* Long immediate variant supporting extended address range (48-bit).
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_sbi.svg[HL.SBI encoding,width=800]
+
+*Group:* STA/LONG

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_remw]]
+==== REMW
+
+*Syntax:* remw SrcL, SrcR, ->{t, u, Rd}
+
+*Description:* Remainder of division operation.
+
+*Encoding:*
+
+image::../generated/encodings/enc_remw.svg[REMW encoding,width=800]
+
+*Group:* ALU_MULTI_CYCLE

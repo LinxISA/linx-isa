@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_fclass]]
+==== V.FCLASS
+
+*Syntax:* v.fclass SrcL.<T>, ->Dst.<W>
+
+*Description:* Vector Floating-point Classify.
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_fclass_part1.svg[V.FCLASS encoding,width=800]
+
+*Group:* VEC/VEC_FP

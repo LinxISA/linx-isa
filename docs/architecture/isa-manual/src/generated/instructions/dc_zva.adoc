@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_dc_zva]]
+==== DC.ZVA
+
+*Syntax:* dc.zva SrcL
+
+*Description:* Data Cache maintenance: zero by virtual address
+
+*Encoding:*
+
+image::../generated/encodings/enc_dc_zva.svg[DC.ZVA encoding,width=800]
+
+*Group:* SYS/CACHE_MAINT

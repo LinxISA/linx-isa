@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_sw_or]]
+==== SW.OR
+
+*Syntax:* sw.or<.{rl, f, rlf}> [SrcL], SrcR
+
+*Description:* Atomic Or operation: memory value is atomically ored with register.
+
+*Encoding:*
+
+image::../generated/encodings/enc_sw_or.svg[SW.OR encoding,width=800]
+
+*Group:* AMO/AMO

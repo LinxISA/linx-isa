@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_muluw]]
+==== MULUW
+
+*Syntax:* muluw SrcL, SrcR, ->{t, u, Rd}
+
+*Description:* Multiply registers. Unsigned variant for MULU.
+
+*Encoding:*
+
+image::../generated/encodings/enc_muluw.svg[MULUW encoding,width=800]
+
+*Group:* ALU_MULTI_CYCLE

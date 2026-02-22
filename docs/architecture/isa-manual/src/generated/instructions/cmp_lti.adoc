@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_cmp_lti]]
+==== CMP.LTI
+
+*Syntax:* cmp.lti SrcL, simm, ->{t, u, Rd}
+
+*Description:* Compare: performs comparison and sets condition flags.
+
+*Encoding:*
+
+image::../generated/encodings/enc_cmp_lti.svg[CMP.LTI encoding,width=800]
+
+*Group:* BRU/CMP

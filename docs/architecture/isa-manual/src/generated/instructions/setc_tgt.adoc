@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_setc_tgt]]
+==== SETC.TGT
+
+*Syntax:* setc.tgt SrcL
+
+*Description:* Set Condition for target.
+
+*Encoding:*
+
+image::../generated/encodings/enc_setc_tgt.svg[SETC.TGT encoding,width=800]
+
+*Group:* SYS/SSR

@@ -24,6 +24,12 @@ python3 "$ROOT/tools/bringup/check_check26_coverage.py" \
   --status "$ROOT/avs/linx_avs_v1_test_matrix_status.json" \
   --profile "$LINX_BRINGUP_PROFILE" \
   --report-out "$ROOT/docs/bringup/gates/check26_coverage_${LINX_BRINGUP_PROFILE}.json"
+python3 "$ROOT/tools/bringup/check_multi_agent_gates.py" \
+  --strict-always \
+  --mode static \
+  --manifest "$ROOT/docs/bringup/agent_runs/manifest.yaml" \
+  --waivers "$ROOT/docs/bringup/agent_runs/waivers.yaml" \
+  --checklists-root "$ROOT/docs/bringup/agent_runs/checklists"
 
 LEGACY_SCAN_ARGS=()
 if [[ "${ENABLE_CROSS_REPO_SCAN:-0}" == "1" ]]; then

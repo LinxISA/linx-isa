@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_rdfmin]]
+==== V.RDFMIN
+
+*Syntax:* v.rdfmin SrcL.<T>, ->Dst<.W>
+
+*Description:* Reduce: performs floating-point minimum operation across all vector elements.
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_rdfmin_part1.svg[V.RDFMIN encoding,width=800]
+
+*Group:* VEC/VEC

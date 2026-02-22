@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_ssrget]]
+==== C.SSRGET
+
+*Syntax:* c.ssrget SSR-ID, ->t
+
+*Description:* Get Special Security Register value.
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_ssrget.svg[C.SSRGET encoding,width=800]
+
+*Group:* SYS/SSR

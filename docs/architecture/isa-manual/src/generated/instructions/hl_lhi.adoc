@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_lhi]]
+==== HL.LHI
+
+*Syntax:* hl.lhi [SrcL, simm], ->{t, u, Rd}
+
+*Description:* Long immediate variant supporting extended address range (48-bit).
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_lhi.svg[HL.LHI encoding,width=800]
+
+*Group:* LDA/LONG

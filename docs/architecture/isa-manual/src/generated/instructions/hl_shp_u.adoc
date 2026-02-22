@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_shp_u]]
+==== HL.SHP.U
+
+*Syntax:* hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]
+
+*Description:* Long immediate variant supporting extended address range (48-bit).
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_shp_u.svg[HL.SHP.U encoding,width=800]
+
+*Group:* STA/PAIR

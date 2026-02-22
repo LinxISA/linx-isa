@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_mset]]
+==== MSET
+
+*Syntax:* MSET [RegSrc0, RegSrc1, RegSrc2]
+
+*Description:* Memory Set block.
+
+*Encoding:*
+
+image::../generated/encodings/enc_mset.svg[MSET encoding,width=800]
+
+*Group:* CMD/BLOCK_SPLIT

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_acrc]]
+==== ACRC
+
+*Syntax:* acrc rst_type
+
+*Description:* Access Control Ring Call: initiates a system call by entering the kernel.
+
+*Encoding:*
+
+image::../generated/encodings/enc_acrc.svg[ACRC encoding,width=800]
+
+*Group:* SYS/SYS

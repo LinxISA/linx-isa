@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_shi_upo]]
+==== HL.SHI.UPO
+
+*Syntax:* hl.shi.upo SrcD, [SrcR, simm], ->{t, u, Rd}
+
+*Description:* Long immediate variant supporting extended address range (48-bit).
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_shi_upo.svg[HL.SHI.UPO encoding,width=800]
+
+*Group:* STA/POST_INDEX

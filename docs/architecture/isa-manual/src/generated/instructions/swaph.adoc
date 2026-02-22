@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_swaph]]
+==== SWAPH
+
+*Syntax:* swaph<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}
+
+*Description:* Atomic Swap: atomically exchange values between register and memory.
+
+*Encoding:*
+
+image::../generated/encodings/enc_swaph.svg[SWAPH encoding,width=800]
+
+*Group:* AMO/AMO
