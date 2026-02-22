@@ -288,7 +288,7 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--qemu", default=str(_default_qemu()))
     parser.add_argument("--target", default="linx64-unknown-linux-musl")
     parser.add_argument("--image-base", default="0x40000000")
-    parser.add_argument("--mode", choices=["phase-a", "phase-b"], default="phase-b")
+    parser.add_argument("--mode", choices=["phase-a", "phase-b", "phase-c"], default="phase-b")
     parser.add_argument("--link", choices=["static", "shared", "both"], default="both")
     parser.add_argument(
         "--callret-crossstack",
