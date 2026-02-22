@@ -57,9 +57,9 @@ __asm__(
     ".globl __linx_v03_simt_ri_order_body\n"
     "__linx_v03_simt_ri_order_body:\n"
     "  v.add zero, ri6, ->vt.w\n"
-    "  v.sw.brg vt#1, [ri0, zero, zero]\n"
+    "  v.sw.brg vt#1, [ri0, lc0<<2, zero]\n"
     "  v.add zero, ri7, ->vt.w\n"
-    "  v.sw.brg vt#1, [ri0, ri1, zero]\n"
+    "  v.sw.brg vt#1, [ri0, lc0<<2, ri1]\n"
     "  C.BSTOP\n");
 
 /* Empty decoupled body used by typed block-start smoke tests. */
