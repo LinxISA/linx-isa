@@ -1,6 +1,6 @@
 {
   "big_kind": "ALU",
-  "count": 100,
+  "count": 98,
   "instructions": [
     {
       "class": {
@@ -361,30 +361,6 @@
         32
       ],
       "mnemonic": "CTZ"
-    },
-    {
-      "class": {
-        "note": "User confirmed A",
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Max-Min",
-      "length_bits": [
-        32
-      ],
-      "mnemonic": "FMAX"
-    },
-    {
-      "class": {
-        "note": "User confirmed A",
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Max-Min",
-      "length_bits": [
-        32
-      ],
-      "mnemonic": "FMIN"
     },
     {
       "class": {
