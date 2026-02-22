@@ -29,7 +29,11 @@ from typing import Iterable
 
 
 RE_MANUAL_PAIR = re.compile(r"\b([A-Z][A-Z0-9_.]*)=0x([0-9A-Fa-f]{3})\b")
-RE_PTO_CONST = re.compile(r"\bconstexpr\s+unsigned\s+([A-Z][A-Z0-9_.]*)\s*=\s*0x([0-9A-Fa-f]{3})u;\b")
+RE_PTO_CONST = re.compile(
+    r"\bconstexpr\s+(?:unsigned|uint32_t)\s+([A-Z][A-Z0-9_.]*)\s*=\s*0x([0-9A-Fa-f]{3})u;"
+)
+RE_QEMU_TEPL_CONST = re.compile(r"\bLINX_TEPL_([A-Z0-9_]+)\s*=\s*0x([0-9A-Fa-f]{3})u\b")
+RE_LLVM_TEPL_CASE = re.compile(r'\.Case\("([A-Z][A-Z0-9_.]*)",\s*0x([0-9A-Fa-f]{3})u\)')
 
 
 @dataclass(frozen=True)
@@ -52,7 +56,21 @@ def _run_git_show(repo_dir: Path, spec: str) -> str:
 
 
 def _parse_manual_map(text: str) -> dict[str, int]:
-    pairs = RE_MANUAL_PAIR.findall(text)
+    # The manual includes non-canonical legacy notes later in the file; we must
+    # scope parsing to the canonical map section only.
+    start_marker = "Strict-v0.3 TEPL `TileOp10` assignment (current canonical map):"
+    end_marker = "Non-canonical legacy note:"
+
+    start = text.find(start_marker)
+    if start < 0:
+        raise RuntimeError(f"failed to locate TEPL canonical map start marker: {start_marker!r}")
+    end = text.find(end_marker, start)
+    if end < 0:
+        raise RuntimeError(f"failed to locate TEPL canonical map end marker: {end_marker!r}")
+
+    section = text[start:end]
+
+    pairs = RE_MANUAL_PAIR.findall(section)
     if not pairs:
         raise RuntimeError("failed to find any TEPL TileOp10 assignments in manual section")
     out: dict[str, int] = {}
@@ -64,6 +82,35 @@ def _parse_manual_map(text: str) -> dict[str, int]:
 def _parse_pto_constants(text: str) -> dict[str, int]:
     out: dict[str, int] = {}
     for name, hx in RE_PTO_CONST.findall(text):
+        out[name] = int(hx, 16)
+    return out
+
+
+def _parse_qemu_tepl_constants(text: str) -> dict[str, int]:
+    out: dict[str, int] = {}
+    for raw_name, hx in RE_QEMU_TEPL_CONST.findall(text):
+        # QEMU uses C identifiers; map to manual token style.
+        name = raw_name.replace("_", ".")
+        out[name] = int(hx, 16)
+    return out
+
+
+def _parse_llvm_tepl_tileop_cases(text: str) -> dict[str, int]:
+    """
+    Parse LLVM TEPL TileOp10 keyword table.
+
+    We intentionally scope this to the `parseTEPLTileOpKeyword` helper so we
+    don't accidentally treat other `.Case(...)` tables as TEPL encodings.
+    """
+
+    # Best-effort slice to the TEPL table to avoid false positives.
+    marker = "parseTEPLTileOpKeyword"
+    i = text.find(marker)
+    if i < 0:
+        return {}
+    window = text[i : i + 16_384]  # enough to cover the full switch table
+    out: dict[str, int] = {}
+    for name, hx in RE_LLVM_TEPL_CASE.findall(window):
         out[name] = int(hx, 16)
     return out
 
@@ -157,20 +204,48 @@ def main(argv: list[str]) -> int:
         except RuntimeError as exc:
             print(f"NOTE: skipping PTO-Kernel check: {exc}")
 
-    # Optional checks: LLVM/QEMU tables if present.
-    # We only do a light-touch scan for obvious constant definitions; absence is not an error.
-    optional_candidates = [
-        root / "qemu" / "target" / "linx" / "translate.c",
-        root / "qemu" / "target" / "linx" / "decode.c",
-        root / "llvm" / "lib" / "Target" / "Linx" / "LinxInstrInfo.td",
-        root / "llvm" / "lib" / "Target" / "Linx" / "LinxISelLowering.cpp",
-    ]
-
-    qemu_path, qemu_txt = _find_optional_text(optional_candidates, r"TileOp10|BSTART\.TEPL|TEPL")
-    if qemu_path is None:
-        print("NOTE: no QEMU/LLVM TEPL consumer file detected in this repo; skipped optional checks.")
+    # Optional checks: LLVM/QEMU consumers in the superproject if present.
+    qemu_consumer = root / "emulator" / "qemu" / "target" / "linx" / "helper.c"
+    if qemu_consumer.exists():
+        qemu_items = _parse_qemu_tepl_constants(qemu_consumer.read_text(encoding="utf-8", errors="ignore"))
+        if qemu_items:
+            other = SourceMap(f"QEMU({qemu_consumer.relative_to(root)})", qemu_items)
+            errs, notes = _report_diff(canonical, other)
+            for line in notes:
+                print(line)
+            if errs:
+                return 1
+        else:
+            print(f"NOTE: QEMU TEPL consumer present but no constants parsed: {qemu_consumer}")
     else:
-        print(f"NOTE: found potential TEPL consumer file at {qemu_path} (no strict parser implemented; skipped).")
+        print("NOTE: no QEMU TEPL consumer file detected under emulator/qemu; skipped optional check.")
+
+    llvm_consumer = (
+        root
+        / "compiler"
+        / "llvm"
+        / "llvm"
+        / "lib"
+        / "Target"
+        / "LinxISA"
+        / "AsmParser"
+        / "LinxISAAsmParser.cpp"
+    )
+    if llvm_consumer.exists():
+        llvm_items = _parse_llvm_tepl_tileop_cases(
+            llvm_consumer.read_text(encoding="utf-8", errors="ignore")
+        )
+        if llvm_items:
+            other = SourceMap(f"LLVM({llvm_consumer.relative_to(root)})", llvm_items)
+            errs, notes = _report_diff(canonical, other)
+            for line in notes:
+                print(line)
+            if errs:
+                return 1
+        else:
+            print(f"NOTE: LLVM TEPL consumer present but no tileop cases parsed: {llvm_consumer}")
+    else:
+        print("NOTE: no LLVM TEPL consumer file detected under compiler/llvm; skipped optional check.")
 
     print("OK")
     return 0
