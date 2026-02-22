@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_minu]]
+==== MINU
+
+*Syntax:* minu SrcL, SrcR, ->{t, u, Rd}
+
+*Description:* Minimum (unsigned comparison).
+
+*Encoding:*
+
+image::../generated/encodings/enc_minu.svg[MINU encoding,width=800]
+
+*Group:* ALU

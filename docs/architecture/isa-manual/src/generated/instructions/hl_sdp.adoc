@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_sdp]]
+==== HL.SDP
+
+*Syntax:* hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<3]
+
+*Description:* Long immediate variant supporting extended address range (48-bit).
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_sdp.svg[HL.SDP encoding,width=800]
+
+*Group:* STA/PAIR

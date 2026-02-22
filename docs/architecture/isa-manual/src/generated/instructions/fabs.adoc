@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_fabs]]
+==== FABS
+
+*Syntax:* fabs.{T} SrcL, ->{t, u, Rd}
+
+*Description:* Floating-point Absolute Value.
+
+*Encoding:*
+
+image::../generated/encodings/enc_fabs.svg[FABS encoding,width=800]
+
+*Group:* FSU/DEFAULT

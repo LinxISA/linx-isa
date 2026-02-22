@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_sh_pcr]]
+==== SH.PCR
+
+*Syntax:* sh.pcr SrcL, [symbol]
+
+*Description:* Store 8-bit value to memory.
+
+*Encoding:*
+
+image::../generated/encodings/enc_sh_pcr.svg[SH.PCR encoding,width=800]
+
+*Group:* STA

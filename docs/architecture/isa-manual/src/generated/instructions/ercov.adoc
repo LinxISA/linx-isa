@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_ercov]]
+==== ERCOV
+
+*Syntax:* ERCOV [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]
+
+*Description:* Enter Context: save context on block entry.
+
+*Encoding:*
+
+image::../generated/encodings/enc_ercov.svg[ERCOV encoding,width=800]
+
+*Group:* CMD/BLOCK_SPLIT

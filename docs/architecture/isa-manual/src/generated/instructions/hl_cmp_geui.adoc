@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_cmp_geui]]
+==== HL.CMP.GEUI
+
+*Syntax:* hl.cmp.geui SrcL, uimm, ->{t, u, Rd}
+
+*Description:* Long immediate compare with extended range.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_cmp_geui.svg[HL.CMP.GEUI encoding,width=800]
+
+*Group:* BRU/CMP

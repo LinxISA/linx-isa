@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_sh]]
+==== SH
+
+*Syntax:* sh SrcD, [SrcL, SrcR<{.sw,.uw}><<1]
+
+*Description:* Store 8-bit value to memory.
+
+*Encoding:*
+
+image::../generated/encodings/enc_sh.svg[SH encoding,width=800]
+
+*Group:* STA/BASE_REG

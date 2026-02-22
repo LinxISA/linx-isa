@@ -1,0 +1,67 @@
+// Generated file; do not edit by hand.
+// Auto-generated from isa/v0.3/linxisa-v0.3.json and uop_classification_v0.3.json
+
+[[chapter_bru]]
+== BRU - Branch and Compare
+
+The Branch and Compare (BRU) group handles all conditional and unconditional branch instructions, comparisons, and condition code setting.
+
+=== Unconditional Branches
+
+include::../generated/instructions/j.adoc[]
+include::../generated/instructions/jr.adoc[]
+include::../generated/instructions/addtpc.adoc[]
+
+=== Conditional Branches
+
+include::../generated/instructions/b_eq.adoc[]
+include::../generated/instructions/b_ne.adoc[]
+include::../generated/instructions/b_lt.adoc[]
+include::../generated/instructions/b_ltu.adoc[]
+include::../generated/instructions/b_ge.adoc[]
+include::../generated/instructions/b_geu.adoc[]
+include::../generated/instructions/b_z.adoc[]
+include::../generated/instructions/b_nz.adoc[]
+
+=== Return Instructions
+
+include::../generated/instructions/setret.adoc[]
+
+=== Compare Instructions
+
+include::../generated/instructions/cmp_eq.adoc[]
+include::../generated/instructions/cmp_ne.adoc[]
+include::../generated/instructions/cmp_lt.adoc[]
+include::../generated/instructions/cmp_lti.adoc[]
+include::../generated/instructions/cmp_ltu.adoc[]
+include::../generated/instructions/cmp_ltui.adoc[]
+include::../generated/instructions/cmp_ge.adoc[]
+include::../generated/instructions/cmp_gei.adoc[]
+include::../generated/instructions/cmp_geu.adoc[]
+include::../generated/instructions/cmp_geui.adoc[]
+include::../generated/instructions/cmp_eqi.adoc[]
+include::../generated/instructions/cmp_nei.adoc[]
+include::../generated/instructions/cmp_and.adoc[]
+include::../generated/instructions/cmp_andi.adoc[]
+include::../generated/instructions/cmp_or.adoc[]
+include::../generated/instructions/cmp_ori.adoc[]
+
+=== Set Condition
+
+include::../generated/instructions/setc_eq.adoc[]
+include::../generated/instructions/setc_ne.adoc[]
+include::../generated/instructions/setc_lt.adoc[]
+include::../generated/instructions/setc_lti.adoc[]
+include::../generated/instructions/setc_ltu.adoc[]
+include::../generated/instructions/setc_ltui.adoc[]
+include::../generated/instructions/setc_ge.adoc[]
+include::../generated/instructions/setc_gei.adoc[]
+include::../generated/instructions/setc_geu.adoc[]
+include::../generated/instructions/setc_geui.adoc[]
+include::../generated/instructions/setc_eqi.adoc[]
+include::../generated/instructions/setc_nei.adoc[]
+include::../generated/instructions/setc_and.adoc[]
+include::../generated/instructions/setc_andi.adoc[]
+include::../generated/instructions/setc_or.adoc[]
+include::../generated/instructions/setc_ori.adoc[]
+

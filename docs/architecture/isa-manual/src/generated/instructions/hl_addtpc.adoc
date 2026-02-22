@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_addtpc]]
+==== HL.ADDTPC
+
+*Syntax:* hl.addtpc imm, ->{t, u, Rd}
+
+*Description:* Add to PC: PC-relative address calculation for branch targets.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_addtpc.svg[HL.ADDTPC encoding,width=800]
+
+*Group:* BRU/BRU

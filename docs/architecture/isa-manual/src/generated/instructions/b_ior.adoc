@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_b_ior]]
+==== B.IOR
+
+*Syntax:* B.IOR [RegSrc0, RegSrc1, RegSrc2],[RegDst]
+
+*Description:* Block I/O: performs input/output operations at block level.
+
+*Encoding:*
+
+image::../generated/encodings/enc_b_ior.svg[B.IOR encoding,width=800]
+
+*Group:* CMD/BLOCK_IO

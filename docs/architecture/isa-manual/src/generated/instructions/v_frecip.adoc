@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_frecip]]
+==== V.FRECIP
+
+*Syntax:* v.frecip SrcL.<T>, ->Dst.<W>
+
+*Description:* Vector Floating-point Reciprocal.
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_frecip_part1.svg[V.FRECIP encoding,width=800]
+
+*Group:* VEC/VEC_FP

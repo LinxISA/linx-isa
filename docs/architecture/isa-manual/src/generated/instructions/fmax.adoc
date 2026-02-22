@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_fmax]]
+==== FMAX
+
+*Syntax:* fmax.{T} SrcL, SrcR, ->{t, u, Rd}
+
+*Description:* Floating-point Maximum.
+
+*Encoding:*
+
+image::../generated/encodings/enc_fmax.svg[FMAX encoding,width=800]
+
+*Group:* ALU

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_swi_u]]
+==== SWI.U
+
+*Syntax:* swi.u SrcL, [SrcR, simm]
+
+*Description:* Store 8-bit value to memory.
+
+*Encoding:*
+
+image::../generated/encodings/enc_swi_u.svg[SWI.U encoding,width=800]
+
+*Group:* STA/BASE_IMM

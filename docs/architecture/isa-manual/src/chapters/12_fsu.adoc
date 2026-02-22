@@ -1,0 +1,53 @@
+// Generated file; do not edit by hand.
+// Auto-generated from isa/v0.3/linxisa-v0.3.json and uop_classification_v0.3.json
+
+[[chapter_fsu]]
+== FSU - Floating-point / SIMD Unit
+
+The Floating-point/SIMD Unit (FSU) group handles all floating-point arithmetic and SIMD operations.
+
+=== Scalar Floating-point Arithmetic
+
+include::../generated/instructions/fadd.adoc[]
+include::../generated/instructions/fsub.adoc[]
+include::../generated/instructions/fmul.adoc[]
+include::../generated/instructions/fdiv.adoc[]
+include::../generated/instructions/fsqrt.adoc[]
+include::../generated/instructions/fabs.adoc[]
+include::../generated/instructions/frecip.adoc[]
+include::../generated/instructions/fexp.adoc[]
+
+=== Floating-point FMA
+
+include::../generated/instructions/fmadd.adoc[]
+include::../generated/instructions/fmsub.adoc[]
+include::../generated/instructions/fnmadd.adoc[]
+include::../generated/instructions/fnmsub.adoc[]
+
+=== Floating-point Comparisons
+
+include::../generated/instructions/feq.adoc[]
+include::../generated/instructions/fne.adoc[]
+include::../generated/instructions/flt.adoc[]
+include::../generated/instructions/fge.adoc[]
+include::../generated/instructions/feqs.adoc[]
+include::../generated/instructions/fnes.adoc[]
+include::../generated/instructions/flts.adoc[]
+include::../generated/instructions/fges.adoc[]
+
+=== Floating-point Min/Max
+
+include::../generated/instructions/fmax.adoc[]
+include::../generated/instructions/fmin.adoc[]
+
+=== Floating-point Format Conversion
+
+include::../generated/instructions/fcvt.adoc[]
+include::../generated/instructions/fcvta.adoc[]
+include::../generated/instructions/fcvtm.adoc[]
+include::../generated/instructions/fcvtn.adoc[]
+include::../generated/instructions/fcvtp.adoc[]
+include::../generated/instructions/fcvtz.adoc[]
+include::../generated/instructions/scvtf.adoc[]
+include::../generated/instructions/ucvtf.adoc[]
+

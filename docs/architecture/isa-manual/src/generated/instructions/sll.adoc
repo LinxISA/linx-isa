@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_sll]]
+==== SLL
+
+*Syntax:* sll SrcL, SrcR, ->{t, u, Rd}
+
+*Description:* Shift Left Logical by register or immediate amount.
+
+*Encoding:*
+
+image::../generated/encodings/enc_sll.svg[SLL encoding,width=800]
+
+*Group:* ALU

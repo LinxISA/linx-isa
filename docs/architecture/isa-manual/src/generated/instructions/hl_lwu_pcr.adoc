@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_lwu_pcr]]
+==== HL.LWU.PCR
+
+*Syntax:* hl.lwu.pcr [<symbol>], ->{t, u, Rd}
+
+*Description:* Long immediate variant supporting extended address range (48-bit).
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_lwu_pcr.svg[HL.LWU.PCR encoding,width=800]
+
+*Group:* LDA/PC_REL

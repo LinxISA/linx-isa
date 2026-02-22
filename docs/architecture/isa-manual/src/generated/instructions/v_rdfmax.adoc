@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_rdfmax]]
+==== V.RDFMAX
+
+*Syntax:* v.rdfmax SrcL.<T>, ->Dst<.W>
+
+*Description:* Reduce: performs floating-point maximum operation across all vector elements.
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_rdfmax_part1.svg[V.RDFMAX encoding,width=800]
+
+*Group:* VEC/VEC

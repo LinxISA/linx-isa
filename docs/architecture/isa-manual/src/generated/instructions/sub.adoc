@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_sub]]
+==== SUB
+
+*Syntax:* sub SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}
+
+*Description:* Subtract source register or immediate from register.
+
+*Encoding:*
+
+image::../generated/encodings/enc_sub.svg[SUB encoding,width=800]
+
+*Group:* ALU

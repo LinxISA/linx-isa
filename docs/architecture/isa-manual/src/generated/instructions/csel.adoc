@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_csel]]
+==== CSEL
+
+*Syntax:* csel SrcP, SrcL, SrcR<.neg>, ->{t, u, Rd}
+
+*Description:* Conditional Select: select destination based on condition codes.
+
+*Encoding:*
+
+image::../generated/encodings/enc_csel.svg[CSEL encoding,width=800]
+
+*Group:* ALU

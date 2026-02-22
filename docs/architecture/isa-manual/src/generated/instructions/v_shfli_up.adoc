@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_shfli_up]]
+==== V.SHFLI.UP
+
+*Syntax:* v.shfli.up SrcL.<T>, SrcR.<T>, imm, ->Dst.<W>
+
+*Description:* Shuffle (up): permutes vector elements using immediate indices.
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_shfli_up_part1.svg[V.SHFLI.UP encoding,width=800]
+
+*Group:* VEC/VEC

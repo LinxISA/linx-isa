@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_b_eq]]
+==== B.EQ
+
+*Syntax:* b.eq SrcL, SrcR, label
+
+*Description:* Branch if equal: conditional branch based on condition flags.
+
+*Encoding:*
+
+image::../generated/encodings/enc_b_eq.svg[B.EQ encoding,width=800]
+
+*Group:* BRU/BRU

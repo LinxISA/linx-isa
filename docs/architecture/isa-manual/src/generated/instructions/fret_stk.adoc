@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_fret_stk]]
+==== FRET.STK
+
+*Syntax:* FRET.STK [RegDst0 ~ RegDstn], sp!, uimm
+
+*Description:* Function Return: returns from function.
+
+*Encoding:*
+
+image::../generated/encodings/enc_fret_stk.svg[FRET.STK encoding,width=800]
+
+*Group:* CMD/BLOCK_SPLIT

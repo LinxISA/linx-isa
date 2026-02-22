@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_and]]
+==== AND
+
+*Syntax:* and SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}
+
+*Description:* Bitwise AND operation.
+
+*Encoding:*
+
+image::../generated/encodings/enc_and.svg[AND encoding,width=800]
+
+*Group:* ALU

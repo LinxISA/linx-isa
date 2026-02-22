@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_bstart_mseq]]
+==== C.BSTART.MSEQ
+
+*Syntax:* C.BSTART.MSEQ FALL
+
+*Description:* Block Start for Memory-SEQuential: marks entry point for memory-sequential block.
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_bstart_mseq.svg[C.BSTART.MSEQ encoding,width=800]
+
+*Group:* BBD/BSTART

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_cmp_eq]]
+==== CMP.EQ
+
+*Syntax:* cmp.eq SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}
+
+*Description:* Compare: performs comparison and sets condition flags.
+
+*Encoding:*
+
+image::../generated/encodings/enc_cmp_eq.svg[CMP.EQ encoding,width=800]
+
+*Group:* BRU/CMP

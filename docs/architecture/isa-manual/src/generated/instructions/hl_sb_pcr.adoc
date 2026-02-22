@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_sb_pcr]]
+==== HL.SB.PCR
+
+*Syntax:* hl.sb.pcr SrcL, [<symbol>]
+
+*Description:* Long immediate variant supporting extended address range (48-bit).
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_sb_pcr.svg[HL.SB.PCR encoding,width=800]
+
+*Group:* STA/PC_REL

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_xb]]
+==== XB
+
+*Syntax:* XB ACR-ID, C-ID
+
+*Description:* Execute Block: initiates block execution.
+
+*Encoding:*
+
+image::../generated/encodings/enc_xb.svg[XB encoding,width=800]
+
+*Group:* CMD/BLOCK_SPLIT

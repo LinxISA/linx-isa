@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_bstart_tmatmul]]
+==== BSTART.TMATMUL
+
+*Syntax:* BSTART.TMATMUL DataType
+
+*Description:* Block Start: marks the beginning of a template block with execution hint.
+
+*Encoding:*
+
+image::../generated/encodings/enc_bstart_tmatmul.svg[BSTART.TMATMUL encoding,width=800]
+
+*Group:* CMD/BLOCK_SPLIT

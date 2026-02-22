@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_rdxor]]
+==== V.RDXOR
+
+*Syntax:* v.rdxor SrcL.<T>, ->Dst<.W>
+
+*Description:* Reduce: performs xor operation across all vector elements.
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_rdxor_part1.svg[V.RDXOR encoding,width=800]
+
+*Group:* VEC/VEC

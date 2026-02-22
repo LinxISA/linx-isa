@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_sh_u]]
+==== SH.U
+
+*Syntax:* sh.u SrcD, [SrcL, SrcR<{.sw,.uw}>]
+
+*Description:* Store 8-bit value to memory.
+
+*Encoding:*
+
+image::../generated/encodings/enc_sh_u.svg[SH.U encoding,width=800]
+
+*Group:* STA/BASE_REG

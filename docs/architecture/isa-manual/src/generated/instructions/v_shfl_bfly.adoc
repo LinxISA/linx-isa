@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_shfl_bfly]]
+==== V.SHFL.BFLY
+
+*Syntax:* v.shfl.bfly SrcL.<T>, SrcP.<T>, ->Dst.<W>
+
+*Description:* Shuffle (butterfly): permutes vector elements using register indices.
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_shfl_bfly_part1.svg[V.SHFL.BFLY encoding,width=800]
+
+*Group:* VEC/VEC

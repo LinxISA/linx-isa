@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_bwi]]
+==== BWI
+
+*Syntax:* bwi SrcL
+
+*Description:* Memory Barrier/ fence: Instruction Barrier
+
+*Encoding:*
+
+image::../generated/encodings/enc_bwi.svg[BWI encoding,width=800]
+
+*Group:* SYS/SYS

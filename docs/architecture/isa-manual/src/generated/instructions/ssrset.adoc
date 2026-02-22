@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_ssrset]]
+==== SSRSET
+
+*Syntax:* ssrset SrcL, SSR_ID
+
+*Description:* Set System Status Register value.
+
+*Encoding:*
+
+image::../generated/encodings/enc_ssrset.svg[SSRSET encoding,width=800]
+
+*Group:* SYS/SSR

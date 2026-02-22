@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_setc_eqi]]
+==== SETC.EQI
+
+*Syntax:* setc.eqi SrcL, simm
+
+*Description:* Set Condition: sets condition flags based on comparison.
+
+*Encoding:*
+
+image::../generated/encodings/enc_setc_eqi.svg[SETC.EQI encoding,width=800]
+
+*Group:* BRU/SETC

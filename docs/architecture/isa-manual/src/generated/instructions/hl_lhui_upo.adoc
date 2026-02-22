@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_lhui_upo]]
+==== HL.LHUI.UPO
+
+*Syntax:* hl.lhui.upo [SrcL, simm], ->Dst0, Dst1
+
+*Description:* Long immediate variant supporting extended address range (48-bit).
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_lhui_upo.svg[HL.LHUI.UPO encoding,width=800]
+
+*Group:* LDA/POST_INDEX

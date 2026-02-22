@@ -1,0 +1,9 @@
+# ninja log v7
+4	81	1771688562238038662	libunwind/src/CMakeFiles/unwind_static_objects.dir/Unwind-EHABI.cpp.o	769c95269ca17749
+6	83	1771688562240360496	libunwind/src/CMakeFiles/unwind_static_objects.dir/Unwind-sjlj.c.o	b2e7589f97f8b380
+5	84	1771688562239033704	libunwind/src/CMakeFiles/unwind_static_objects.dir/Unwind-seh.cpp.o	8ca14986ee892cdc
+7	84	1771688562240662830	libunwind/src/CMakeFiles/unwind_static_objects.dir/Unwind-wasm.c.o	c35bb7c380f419cf
+6	87	1771688562239707246	libunwind/src/CMakeFiles/unwind_static_objects.dir/UnwindLevel1-gcc-ext.c.o	dc34d80f065e208c
+8	165	1771688562241783205	libunwind/src/CMakeFiles/unwind_static_objects.dir/UnwindRegistersSave.S.o	4bfd981b0f312403
+7	170	1771688562241021872	libunwind/src/CMakeFiles/unwind_static_objects.dir/UnwindRegistersRestore.S.o	538cde1319f1629f
+5	184	1771688562239439913	libunwind/src/CMakeFiles/unwind_static_objects.dir/UnwindLevel1.c.o	16ccb17c795279f5

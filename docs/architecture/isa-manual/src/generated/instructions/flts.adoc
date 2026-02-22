@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_flts]]
+==== FLTS
+
+*Syntax:* flts.{T} SrcL, SrcR, ->{t, u, Rd}
+
+*Description:* Floating-point Less Than comparison.
+
+*Encoding:*
+
+image::../generated/encodings/enc_flts.svg[FLTS encoding,width=800]
+
+*Group:* FSU/DEFAULT

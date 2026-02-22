@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_swi_upr]]
+==== HL.SWI.UPR
+
+*Syntax:* hl.swi.upr SrcD, [SrcR, simm], ->{t, u, Rd}
+
+*Description:* Long immediate variant supporting extended address range (48-bit).
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_swi_upr.svg[HL.SWI.UPR encoding,width=800]
+
+*Group:* STA/PRE_INDEX

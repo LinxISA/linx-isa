@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_lwui]]
+==== LWUI
+
+*Syntax:* lwui [SrcL, simm], ->{t, u, Rd}
+
+*Description:* Load 32-bit word from memory.
+
+*Encoding:*
+
+image::../generated/encodings/enc_lwui.svg[LWUI encoding,width=800]
+
+*Group:* LDA/BASE_IMM

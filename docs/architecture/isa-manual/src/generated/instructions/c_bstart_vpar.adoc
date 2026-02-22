@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_bstart_vpar]]
+==== C.BSTART.VPAR
+
+*Syntax:* C.BSTART.VPAR FALL
+
+*Description:* Block Start for Vector-PARallel: marks entry point for vector-parallel block.
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_bstart_vpar.svg[C.BSTART.VPAR encoding,width=800]
+
+*Group:* BBD/BSTART

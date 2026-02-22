@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_lui]]
+==== HL.LUI
+
+*Syntax:* hl.lui imm, ->{t, u, Rd}
+
+*Description:* Load Upper Immediate: loads a 20-bit immediate into upper 20 bits of register.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_lui.svg[HL.LUI encoding,width=800]
+
+*Group:* ALU

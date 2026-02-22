@@ -20,6 +20,9 @@ RUN_MODEL_DIFF="${RUN_MODEL_DIFF-}"
 RUN_CPP_GATES="${RUN_CPP_GATES-}" # 0|1
 CPP_MODE="${CPP_MODE:-phase-b}"
 STRICT_CROSS_ALLOW_G1_BLOCKED="${STRICT_CROSS_ALLOW_G1_BLOCKED-}"
+MULTI_AGENT_MANIFEST="${MULTI_AGENT_MANIFEST:-$ROOT/docs/bringup/agent_runs/manifest.yaml}"
+MULTI_AGENT_WAIVERS="${MULTI_AGENT_WAIVERS:-$ROOT/docs/bringup/agent_runs/waivers.yaml}"
+MULTI_AGENT_CHECKLISTS_ROOT="${MULTI_AGENT_CHECKLISTS_ROOT:-$ROOT/docs/bringup/agent_runs/checklists}"
 if [[ "$LINX_BRINGUP_PROFILE" == "release-strict" ]]; then
   [[ -n "$RUN_GLIBC_G1B" ]] || RUN_GLIBC_G1B=1
   [[ -n "$GLIBC_G1B_ALLOW_BLOCKED" ]] || GLIBC_G1B_ALLOW_BLOCKED=0
@@ -231,6 +234,13 @@ fi
 
 RUN_LOG_DIR="$OUT_BASE/$RUN_ID/$LANE"
 mkdir -p "$RUN_LOG_DIR"
+
+python3 "$ROOT/tools/bringup/check_multi_agent_gates.py" \
+  --strict-always \
+  --mode static \
+  --manifest "$MULTI_AGENT_MANIFEST" \
+  --waivers "$MULTI_AGENT_WAIVERS" \
+  --checklists-root "$MULTI_AGENT_CHECKLISTS_ROOT"
 
 python3 "$ROOT/tools/bringup/gate_report.py" capture-sha \
   --report "$REPORT" \
@@ -540,7 +550,7 @@ if [[ $SKIP_STRICT_CROSS -eq 0 ]]; then
   run_gate \
     "Regression" \
     "strict_cross_repo.sh" \
-    "cd $ROOT && SKIP_BUILD=1 TOOLCHAIN_LANE=external QEMU_LANE=$QEMU_LANE_VALUE QEMU=$QEMU_BIN LINX_DISABLE_TIMER_IRQ=$LINX_DISABLE_TIMER_IRQ LINX_EMU_DISABLE_TIMER_IRQ=$LINX_EMU_DISABLE_TIMER_IRQ RUN_GLIBC_G1=0 RUN_GLIBC_G1B=$RUN_GLIBC_G1B RUN_MODEL_DIFF=$RUN_MODEL_DIFF RUN_CPP_GATES=$RUN_CPP_GATES CPP_MODE=$CPP_MODE RUN_CONSISTENCY_CHECKS=0 ALLOW_GLIBC_G1_BLOCKED=$STRICT_CROSS_ALLOW_G1_BLOCKED GLIBC_G1B_ALLOW_BLOCKED=$GLIBC_G1B_ALLOW_BLOCKED bash tools/regression/strict_cross_repo.sh" \
+    "cd $ROOT && SKIP_BUILD=1 TOOLCHAIN_LANE=external QEMU_LANE=$QEMU_LANE_VALUE QEMU=$QEMU_BIN LINX_DISABLE_TIMER_IRQ=$LINX_DISABLE_TIMER_IRQ LINX_EMU_DISABLE_TIMER_IRQ=$LINX_EMU_DISABLE_TIMER_IRQ RUN_GLIBC_G1=0 RUN_GLIBC_G1B=$RUN_GLIBC_G1B RUN_MODEL_DIFF=$RUN_MODEL_DIFF RUN_CPP_GATES=$RUN_CPP_GATES CPP_MODE=$CPP_MODE RUN_CONSISTENCY_CHECKS=0 ALLOW_GLIBC_G1_BLOCKED=$STRICT_CROSS_ALLOW_G1_BLOCKED GLIBC_G1B_ALLOW_BLOCKED=$GLIBC_G1B_ALLOW_BLOCKED MULTI_AGENT_MANIFEST=$MULTI_AGENT_MANIFEST MULTI_AGENT_WAIVERS=$MULTI_AGENT_WAIVERS MULTI_AGENT_CHECKLISTS_ROOT=$MULTI_AGENT_CHECKLISTS_ROOT MULTI_AGENT_REPORT=$REPORT MULTI_AGENT_LANE=$LANE MULTI_AGENT_RUN_ID=$RUN_ID MULTI_AGENT_OUT=$RUN_LOG_DIR/multi_agent_summary.strict_cross.json bash tools/regression/strict_cross_repo.sh" \
     "strict_cross_repo_pass" \
     "strict_cross_repo_fail" \
     "reg_strict_cross_repo"
@@ -560,6 +570,27 @@ fi
 
 python3 "$ROOT/tools/bringup/gate_report.py" render --report "$REPORT" --out-md "$ROOT/docs/bringup/GATE_STATUS.md"
 
+MULTI_AGENT_SUMMARY="$RUN_LOG_DIR/multi_agent_summary.json"
+set +e
+python3 "$ROOT/tools/bringup/check_multi_agent_gates.py" \
+  --strict-always \
+  --mode runtime \
+  --manifest "$MULTI_AGENT_MANIFEST" \
+  --waivers "$MULTI_AGENT_WAIVERS" \
+  --checklists-root "$MULTI_AGENT_CHECKLISTS_ROOT" \
+  --report "$REPORT" \
+  --lane "$LANE" \
+  --run-id "$RUN_ID" \
+  --out "$MULTI_AGENT_SUMMARY"
+MULTI_AGENT_RC=$?
+set -e
+if [[ "$MULTI_AGENT_RC" -ne 0 ]]; then
+  echo "error: multi-agent runtime closure failed (rc=$MULTI_AGENT_RC, summary: $MULTI_AGENT_SUMMARY)" >&2
+  FAIL_COUNT=$((FAIL_COUNT + 1))
+else
+  echo "ok: multi-agent runtime closure passed (summary: $MULTI_AGENT_SUMMARY)"
+fi
+
 if [[ "$LINX_BRINGUP_PROFILE" == "release-strict" ]]; then
   python3 "$ROOT/tools/bringup/check_gate_consistency.py" \
     --report "$REPORT" \
@@ -569,6 +600,7 @@ if [[ "$LINX_BRINGUP_PROFILE" == "release-strict" ]]; then
     --profile "$LINX_BRINGUP_PROFILE" \
     --lane-policy "external+pin-required" \
     --trace-schema-version "$TRACE_SCHEMA_VERSION" \
+    --multi-agent-summary "$MULTI_AGENT_SUMMARY" \
     --max-age-hours "${LINX_GATE_MAX_AGE_HOURS:-24}"
 fi
 

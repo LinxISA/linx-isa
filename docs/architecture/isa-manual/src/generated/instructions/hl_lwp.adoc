@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_lwp]]
+==== HL.LWP
+
+*Syntax:* hl.lwp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1
+
+*Description:* Long immediate variant supporting extended address range (48-bit).
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_lwp.svg[HL.LWP encoding,width=800]
+
+*Group:* LDA/PAIR

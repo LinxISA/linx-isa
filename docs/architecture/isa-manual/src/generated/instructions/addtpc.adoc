@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_addtpc]]
+==== ADDTPC
+
+*Syntax:* addtpc simm, ->{t, u, Rd}
+
+*Description:* Add to PC: PC-relative address calculation for branch targets.
+
+*Encoding:*
+
+image::../generated/encodings/enc_addtpc.svg[ADDTPC encoding,width=800]
+
+*Group:* BRU/BRU

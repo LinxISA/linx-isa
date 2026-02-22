@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_mul]]
+==== HL.MUL
+
+*Syntax:* hl.mul SrcL, SrcR, ->Dst0, Dst1
+
+*Description:* Multiply registers. Unsigned variant for MULU.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_mul.svg[HL.MUL encoding,width=800]
+
+*Group:* ALU_MULTI_CYCLE

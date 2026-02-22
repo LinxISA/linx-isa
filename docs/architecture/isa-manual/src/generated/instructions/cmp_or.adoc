@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_cmp_or]]
+==== CMP.OR
+
+*Syntax:* cmp.or SrcL, SrcR<.sw, .uw, .not>, ->{t, u, Rd}
+
+*Description:* Compare: performs comparison and sets condition flags.
+
+*Encoding:*
+
+image::../generated/encodings/enc_cmp_or.svg[CMP.OR encoding,width=800]
+
+*Group:* BRU/CMP

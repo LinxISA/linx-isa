@@ -1,0 +1,13 @@
+// Generated file; do not edit by hand.
+// Auto-generated from isa/v0.3/linxisa-v0.3.json and uop_classification_v0.3.json
+
+[[chapter_rsv]]
+== RSV - Reserved and Indexed Operations
+
+The Reserved (RSV) group contains specialized instructions including indexed multiply operations and bit field manipulation.
+
+=== Bit Field and Indexed Operations
+
+include::../generated/instructions/hl_bfi.adoc[]
+include::../generated/instructions/hl_miadd.adoc[]
+include::../generated/instructions/hl_misub.adoc[]

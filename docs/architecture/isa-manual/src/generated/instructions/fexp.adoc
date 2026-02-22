@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_fexp]]
+==== FEXP
+
+*Syntax:* fexp.{T} SrcL, ->{t, u, Rd}
+
+*Description:* Floating-point Exponential.
+
+*Encoding:*
+
+image::../generated/encodings/enc_fexp.svg[FEXP encoding,width=800]
+
+*Group:* FSU/DEFAULT

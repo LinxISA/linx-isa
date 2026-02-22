@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_sub]]
+==== C.SUB
+
+*Syntax:* c.sub srcL, srcR, ->t
+
+*Description:* Compressed instruction variant (16-bit encoding).
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_sub.svg[C.SUB encoding,width=800]
+
+*Group:* ALU

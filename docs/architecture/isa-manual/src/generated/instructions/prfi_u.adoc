@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_prfi_u]]
+==== PRFI.U
+
+*Syntax:* prfi.u [SrcL, simm]
+
+*Description:* Load/store instruction with LDA/UNSCALED addressing mode.
+
+*Encoding:*
+
+image::../generated/encodings/enc_prfi_u.svg[PRFI.U encoding,width=800]
+
+*Group:* LDA/UNSCALED

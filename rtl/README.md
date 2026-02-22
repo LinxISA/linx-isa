@@ -1,14 +1,30 @@
-# RTL (LinxISA v0.3)
+# RTL (LinxCore)
 
-This directory hosts RTL bring-up assets and verification notes for LinxISA.
+This directory hosts the **LinxCore RTL implementation** for LinxISA v0.3.
 
-## Contracts
+## Overview
 
-- ISA source of truth: `spec/isa/spec/current/linxisa-v0.3.json`
-- Golden source root: `spec/isa/golden/v0.3/`
-- Decode generation inputs: `spec/isa/generated/codecs/`
-- Bring-up phase doc: `docs/bringup/phases/04_rtl.md`
-- Trace contract: `docs/bringup/contracts/trace_schema.md`
+- **Submodule**: [LinxISA/LinxCore](https://github.com/LinxISA/LinxCore)
+- **Purpose**: RTL implementation for FPGA/ASIC targets
+- **ISA Contract**: Must match architected semantics in v0.3 catalog
+
+## Key References
+
+| Topic | Path |
+|-------|------|
+| ISA specification | `isa/v0.3/linxisa-v0.3.json` |
+| ISA manual | `docs/architecture/isa-manual/` |
+| RTL bring-up phase | `docs/bringup/phases/04_rtl.md` |
+| Trace contract | `docs/bringup/contracts/trace_schema.md` |
+| Co-sim tests | `rtl/LinxCore/tests/` |
+
+## Validation
+
+Run RTL co-simulation:
+
+```bash
+bash rtl/LinxCore/tests/test_cosim_smoke.sh
+```
 
 ## Alignment Rule
 

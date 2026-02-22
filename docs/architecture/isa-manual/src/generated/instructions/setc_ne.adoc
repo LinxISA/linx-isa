@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_setc_ne]]
+==== SETC.NE
+
+*Syntax:* setc.ne SrcL, SrcR<{.sw, .uw}>
+
+*Description:* Set Condition: sets condition flags based on comparison.
+
+*Encoding:*
+
+image::../generated/encodings/enc_setc_ne.svg[SETC.NE encoding,width=800]
+
+*Group:* BRU/SETC

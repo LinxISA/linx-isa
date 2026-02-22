@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_fmin]]
+==== FMIN
+
+*Syntax:* fmin.{T} SrcL, SrcR, ->{t, u, Rd}
+
+*Description:* Floating-point Minimum.
+
+*Encoding:*
+
+image::../generated/encodings/enc_fmin.svg[FMIN encoding,width=800]
+
+*Group:* ALU

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_b_text]]
+==== B.TEXT
+
+*Syntax:* B.TEXT <label>
+
+*Description:* Block Text descriptor.
+
+*Encoding:*
+
+image::../generated/encodings/enc_b_text.svg[B.TEXT encoding,width=800]
+
+*Group:* CMD/DESC_B_TEXT

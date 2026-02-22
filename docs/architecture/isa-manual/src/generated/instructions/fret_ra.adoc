@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_fret_ra]]
+==== FRET.RA
+
+*Syntax:* FRET.RA [RegDst0 ~ RegDstn], sp!, uimm
+
+*Description:* Function Return: returns from function.
+
+*Encoding:*
+
+image::../generated/encodings/enc_fret_ra.svg[FRET.RA encoding,width=800]
+
+*Group:* CMD/BLOCK_SPLIT

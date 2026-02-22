@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_qpush]]
+==== HL.QPUSH
+
+*Syntax:* hl.qpush.{h,e,r,he,hr,er,her} SrcL, SrcR, ->{t, u}
+
+*Description:* Queue Management: push to queue.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_qpush.svg[HL.QPUSH encoding,width=800]
+
+*Group:* CMD/Q_PUSH

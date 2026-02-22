@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_movi]]
+==== C.MOVI
+
+*Syntax:* c.movi simm, ->{t, u, Rd}
+
+*Description:* Compressed instruction variant (16-bit encoding).
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_movi.svg[C.MOVI encoding,width=800]
+
+*Group:* ALU

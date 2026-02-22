@@ -352,16 +352,35 @@
 |`C.SSRGET` |16 |- |`c.ssrget SSR-ID, ->t` |-
 |===
 
-[[insnref-load-store-immediate-offset]]
-=== Load/Store Immediate Offset
+[[insnref-load-immediate-offset]]
+=== Load Immediate Offset
 
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`C.LDI` |16 |- |`c.ldi [srcL, simm], ->t` |-
 |`C.LWI` |16 |- |`c.lwi [srcL, simm], ->t` |-
-|`C.SDI` |16 |- |`c.sdi t#1, [srcL, simm]` |-
-|`C.SWI` |16 |- |`c.swi t#1, [srcL, simm]` |-
+|`LBI` |32 |- |`lbi [SrcL, simm], ->{t, u, Rd}` |-
+|`LBUI` |32 |- |`lbui [SrcL, simm], ->{t, u, Rd}` |-
+|`LDI` |32 |- |`ldi [SrcL, simm], ->{t, u, Rd}` |-
+|`LHI` |32 |- |`lhi [SrcL, simm], ->{t, u, Rd}` |-
+|`LHUI` |32 |- |`lhui [SrcL, simm], ->{t, u, Rd}` |-
+|`LWI` |32 |- |`lwi [SrcL, simm], ->{t, u, Rd}` |-
+|`LWUI` |32 |- |`lwui [SrcL, simm], ->{t, u, Rd}` |-
+|`V.LBI` |64 |- |`v.lbi<.local> [SrcL<.ud>, <lc0>, simm], ->Dst.<W>` |-
+|`V.LBI.BRG` |64 |- |`v.lbi.brg<.local> [SrcL<.ud>, <lc0>, simm], ->Dst.<W>` |-
+|`V.LBUI` |64 |- |`v.lbui<.local> [SrcL<.ud>, <lc0>, simm], ->Dst.<W>` |-
+|`V.LBUI.BRG` |64 |- |`v.lbui.brg<.local> [SrcL<.ud>, <lc0>, simm], ->Dst.<W>` |-
+|`V.LDI` |64 |- |`v.ldi<.local> [SrcL<.ud>, <lc0<<3>, simm], ->Dst.<W>` |-
+|`V.LDI.BRG` |64 |- |`v.ldi.brg<.local> [SrcL<.ud>, <lc0<<3>, simm], ->Dst.<W>` |-
+|`V.LHI` |64 |- |`v.lhi<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>` |-
+|`V.LHI.BRG` |64 |- |`v.lhi.brg<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>` |-
+|`V.LHUI` |64 |- |`v.lhui<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>` |-
+|`V.LHUI.BRG` |64 |- |`v.lhui.brg<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>` |-
+|`V.LWI` |64 |- |`v.lwi<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>` |-
+|`V.LWI.BRG` |64 |- |`v.lwi.brg<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>` |-
+|`V.LWUI` |64 |- |`v.lwui<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>` |-
+|`V.LWUI.BRG` |64 |- |`v.lwui.brg<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>` |-
 |===
 
 [[insnref-move]]
@@ -373,6 +392,23 @@
 |`C.MOVI` |16 |- |`c.movi simm, ->{t, u, Rd}` |-
 |`C.MOVR` |16 |- |`c.movr SrcL, ->{t, u, Rd}` |-
 |`C.SETRET` |16 |- |`c.setret uimm, ->Ra` |-
+|===
+
+[[insnref-store-immediate-offset]]
+=== Store Immediate Offset
+
+[cols="1,1,2,4,6",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`C.SDI` |16 |- |`c.sdi t#1, [srcL, simm]` |-
+|`C.SWI` |16 |- |`c.swi t#1, [srcL, simm]` |-
+|`SBI` |32 |- |`sbi SrcL, [SrcR, simm]` |-
+|`SDI` |32 |- |`sdi SrcL, [SrcR, simm]` |-
+|`SDI.U` |32 |- |`sdi.u SrcL, [SrcR, simm]` |-
+|`SHI` |32 |- |`shi SrcL, [SrcR, simm]` |-
+|`SHI.U` |32 |- |`shi.u SrcL, [SrcR, simm]` |-
+|`SWI` |32 |- |`swi SrcL, [SrcR, simm]` |-
+|`SWI.U` |32 |- |`swi.u SrcL, [SrcR, simm]` |-
 |===
 
 [[insnref-set-commit-argument]]
@@ -932,35 +968,6 @@
 |`LWU.PCR` |32 |- |`lwu.pcr [symbol], ->{t, u, Rd}` |-
 |===
 
-[[insnref-load-immediate-offset]]
-=== Load Immediate Offset
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`LBI` |32 |- |`lbi [SrcL, simm], ->{t, u, Rd}` |-
-|`LBUI` |32 |- |`lbui [SrcL, simm], ->{t, u, Rd}` |-
-|`LDI` |32 |- |`ldi [SrcL, simm], ->{t, u, Rd}` |-
-|`LHI` |32 |- |`lhi [SrcL, simm], ->{t, u, Rd}` |-
-|`LHUI` |32 |- |`lhui [SrcL, simm], ->{t, u, Rd}` |-
-|`LWI` |32 |- |`lwi [SrcL, simm], ->{t, u, Rd}` |-
-|`LWUI` |32 |- |`lwui [SrcL, simm], ->{t, u, Rd}` |-
-|`V.LBI` |64 |- |`v.lbi<.local> [SrcL<.ud>, <lc0>, simm], ->Dst.<W>` |-
-|`V.LBI.BRG` |64 |- |`v.lbi.brg<.local> [SrcL<.ud>, <lc0>, simm], ->Dst.<W>` |-
-|`V.LBUI` |64 |- |`v.lbui<.local> [SrcL<.ud>, <lc0>, simm], ->Dst.<W>` |-
-|`V.LBUI.BRG` |64 |- |`v.lbui.brg<.local> [SrcL<.ud>, <lc0>, simm], ->Dst.<W>` |-
-|`V.LDI` |64 |- |`v.ldi<.local> [SrcL<.ud>, <lc0<<3>, simm], ->Dst.<W>` |-
-|`V.LDI.BRG` |64 |- |`v.ldi.brg<.local> [SrcL<.ud>, <lc0<<3>, simm], ->Dst.<W>` |-
-|`V.LHI` |64 |- |`v.lhi<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>` |-
-|`V.LHI.BRG` |64 |- |`v.lhi.brg<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>` |-
-|`V.LHUI` |64 |- |`v.lhui<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>` |-
-|`V.LHUI.BRG` |64 |- |`v.lhui.brg<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>` |-
-|`V.LWI` |64 |- |`v.lwi<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>` |-
-|`V.LWI.BRG` |64 |- |`v.lwi.brg<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>` |-
-|`V.LWUI` |64 |- |`v.lwui<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>` |-
-|`V.LWUI.BRG` |64 |- |`v.lwui.brg<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>` |-
-|===
-
 [[insnref-atomic-operation]]
 === Atomic Operation
 
@@ -1100,21 +1107,6 @@
 |`SD.PCR` |32 |- |`sd.pcr SrcL, [symbol]` |-
 |`SH.PCR` |32 |- |`sh.pcr SrcL, [symbol]` |-
 |`SW.PCR` |32 |- |`sw.pcr SrcL, [symbol]` |-
-|===
-
-[[insnref-store-immediate-offset]]
-=== Store Immediate Offset
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`SBI` |32 |- |`sbi SrcL, [SrcR, simm]` |-
-|`SDI` |32 |- |`sdi SrcL, [SrcR, simm]` |-
-|`SDI.U` |32 |- |`sdi.u SrcL, [SrcR, simm]` |-
-|`SHI` |32 |- |`shi SrcL, [SrcR, simm]` |-
-|`SHI.U` |32 |- |`shi.u SrcL, [SrcR, simm]` |-
-|`SWI` |32 |- |`swi SrcL, [SrcR, simm]` |-
-|`SWI.U` |32 |- |`swi.u SrcL, [SrcR, simm]` |-
 |===
 
 [[insnref-bit-manipulation]]

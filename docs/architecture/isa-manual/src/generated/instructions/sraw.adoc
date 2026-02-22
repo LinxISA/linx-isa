@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_sraw]]
+==== SRAW
+
+*Syntax:* sraw SrcL, SrcR, ->{t, u, Rd}
+
+*Description:* Shift Right Arithmetic (preserves sign bit).
+
+*Encoding:*
+
+image::../generated/encodings/enc_sraw.svg[SRAW encoding,width=800]
+
+*Group:* ALU

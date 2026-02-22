@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_lw_or]]
+==== LW.OR
+
+*Syntax:* lw.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}
+
+*Description:* Atomic Or operation: memory value is atomically ored with register.
+
+*Encoding:*
+
+image::../generated/encodings/enc_lw_or.svg[LW.OR encoding,width=800]
+
+*Group:* AMO/AMO

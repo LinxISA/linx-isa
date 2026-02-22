@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_b_ioti]]
+==== B.IOTI
+
+*Syntax:* B.IOTI [SrcTile0<.reuse>, SrcTile1<.reuse>],  group=0, ->DstTile<Size>
+
+*Description:* Block I/O: performs input/output operations at block level.
+
+*Encoding:*
+
+image::../generated/encodings/enc_b_ioti.svg[B.IOTI encoding,width=800]
+
+*Group:* CMD/BLOCK_IO

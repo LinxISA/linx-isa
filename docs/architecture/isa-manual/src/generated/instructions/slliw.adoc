@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_slliw]]
+==== SLLIW
+
+*Syntax:* slliw SrcL, shamt, ->{t, u, Rd}
+
+*Description:* Shift Left Logical by register or immediate amount.
+
+*Encoding:*
+
+image::../generated/encodings/enc_slliw.svg[SLLIW encoding,width=800]
+
+*Group:* ALU

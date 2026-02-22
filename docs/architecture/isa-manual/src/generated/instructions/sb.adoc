@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_sb]]
+==== SB
+
+*Syntax:* sb SrcD, [SrcL, SrcR<{.sw,.uw}>]
+
+*Description:* Store 8-bit value to memory.
+
+*Encoding:*
+
+image::../generated/encodings/enc_sb.svg[SB encoding,width=800]
+
+*Group:* STA/BASE_REG

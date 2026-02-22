@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_maxu]]
+==== MAXU
+
+*Syntax:* maxu SrcL, SrcR, ->{t, u, Rd}
+
+*Description:* Maximum (unsigned comparison).
+
+*Encoding:*
+
+image::../generated/encodings/enc_maxu.svg[MAXU encoding,width=800]
+
+*Group:* ALU

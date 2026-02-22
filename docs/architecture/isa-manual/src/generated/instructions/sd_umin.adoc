@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_sd_umin]]
+==== SD.UMIN
+
+*Syntax:* sd.umin<.{rl, f, rlf}> [SrcL], SrcR
+
+*Description:* Atomic Unsigned Min operation: memory value is atomically unsigned mined with register.
+
+*Encoding:*
+
+image::../generated/encodings/enc_sd_umin.svg[SD.UMIN encoding,width=800]
+
+*Group:* AMO/AMO

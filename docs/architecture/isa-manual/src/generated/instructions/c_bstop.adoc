@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_bstop]]
+==== C.BSTOP
+
+*Syntax:* C.BSTOP
+
+*Description:* Block control instruction.
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_bstop.svg[C.BSTOP encoding,width=800]
+
+*Group:* CMD/BLOCK_SPLIT

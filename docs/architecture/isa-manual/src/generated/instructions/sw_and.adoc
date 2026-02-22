@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_sw_and]]
+==== SW.AND
+
+*Syntax:* sw.and<.{rl, f, rlf}> [SrcL], SrcR
+
+*Description:* Atomic And operation: memory value is atomically anded with register.
+
+*Encoding:*
+
+image::../generated/encodings/enc_sw_and.svg[SW.AND encoding,width=800]
+
+*Group:* AMO/AMO

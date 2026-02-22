@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_ld_umax]]
+==== LD.UMAX
+
+*Syntax:* ld.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}
+
+*Description:* Atomic Unsigned Max operation: memory value is atomically unsigned maxed with register.
+
+*Encoding:*
+
+image::../generated/encodings/enc_ld_umax.svg[LD.UMAX encoding,width=800]
+
+*Group:* AMO/AMO

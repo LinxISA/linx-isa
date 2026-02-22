@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_fadd]]
+==== FADD
+
+*Syntax:* fadd.{T} SrcL, SrcR, ->{t, u, Rd}
+
+*Description:* Floating-point Add.
+
+*Encoding:*
+
+image::../generated/encodings/enc_fadd.svg[FADD encoding,width=800]
+
+*Group:* FSU/DEFAULT

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_cmp_geui]]
+==== CMP.GEUI
+
+*Syntax:* cmp.geui SrcL, uimm, ->{t, u, Rd}
+
+*Description:* Compare: performs comparison and sets condition flags.
+
+*Encoding:*
+
+image::../generated/encodings/enc_cmp_geui.svg[CMP.GEUI encoding,width=800]
+
+*Group:* BRU/CMP

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_b_z]]
+==== B.Z
+
+*Syntax:* b.z label
+
+*Description:* Branch if zero: conditional branch based on condition flags.
+
+*Encoding:*
+
+image::../generated/encodings/enc_b_z.svg[B.Z encoding,width=800]
+
+*Group:* BRU/BRU

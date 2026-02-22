@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_subw]]
+==== SUBW
+
+*Syntax:* subw SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}
+
+*Description:* Subtract 32-bit registers (word operation).
+
+*Encoding:*
+
+image::../generated/encodings/enc_subw.svg[SUBW encoding,width=800]
+
+*Group:* ALU

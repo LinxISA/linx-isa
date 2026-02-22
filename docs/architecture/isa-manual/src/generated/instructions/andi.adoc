@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_andi]]
+==== ANDI
+
+*Syntax:* andi SrcL, simm, ->{t, u, Rd}
+
+*Description:* Bitwise AND operation.
+
+*Encoding:*
+
+image::../generated/encodings/enc_andi.svg[ANDI encoding,width=800]
+
+*Group:* ALU

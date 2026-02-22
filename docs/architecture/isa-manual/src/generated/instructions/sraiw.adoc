@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_sraiw]]
+==== SRAIW
+
+*Syntax:* sraiw SrcL, shamt, ->{t, u, Rd}
+
+*Description:* Shift Right Arithmetic (preserves sign bit).
+
+*Encoding:*
+
+image::../generated/encodings/enc_sraiw.svg[SRAIW encoding,width=800]
+
+*Group:* ALU

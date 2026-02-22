@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_prf]]
+==== PRF
+
+*Syntax:* prf [SrcL, SrcR<{.sw,.uw}><<<shamt>]
+
+*Description:* Load/store instruction with LDA/BASE_REG addressing mode.
+
+*Encoding:*
+
+image::../generated/encodings/enc_prf.svg[PRF encoding,width=800]
+
+*Group:* LDA/BASE_REG

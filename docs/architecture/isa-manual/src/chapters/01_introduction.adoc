@@ -1,60 +1,45 @@
 [[intro]]
-== Introduction
+= Introduction
 
-Linx is a **block-structured** RISC-style instruction set architecture whose *control-flow contract* and *temporary value model* are
-intentionally different from classic RISC designs.
+Linx is a **block-structured** RISC-style instruction set architecture whose *control-flow contract* and *temporary value model* are intentionally different from classic RISC designs.
 
 At a high level, Linx is designed to be:
 
 * **Compiler-friendly:** encourage compact code generation and predictable control-flow lowering.
-* **Implementation-flexible:** allow efficient implementations across in-order, out-of-order, and accelerator-oriented
-  microarchitectures.
-* **Specification-driven:** keep instruction encodings and toolchains aligned via a machine-readable catalog that
-  generates decoders/encoders and the instruction reference in this manual.
+* **Implementation-flexible:** allow efficient implementations across in-order, out-of-order, and accelerator-oriented microarchitectures.
+* **Specification-driven:** keep instruction encodings and toolchains aligned via a machine-readable catalog that generates decoders/encoders and the instruction reference in this manual.
 
-This manual describes the programmer-visible interface of the Linx ISA as captured in the v0.3 catalog used by
-this repository (see <<preamble>>). It is not a microarchitecture document.
+This manual describes the programmer-visible interface of the Linx ISA as captured in the v0.3 catalog used by this repository (see <<preamble>>). It is not a microarchitecture document.
 
 [[intro-goals]]
-=== Design goals (v0.3)
+== Design Goals (v0.3)
 
 The v0.3 catalog and toolchain bring-up emphasize:
 
-* **Block-structured control flow** (see <<blockisa>>): control-flow is expressed at basic-block granularity using
-  explicit block markers. This supports a translation model where one architectural block maps naturally to one
-  translation unit (e.g. a QEMU TB) and provides a clear boundary for block-local state.
-* **Compact temporaries** (see <<progmodel-clockhands>>): short-lived values can be carried in per-block private
-  queues (ClockHands) to reduce architectural register pressure.
-* **Dense encodings** (see <<encoding-lengths>>): variable-length instruction forms (16/32/48/64-bit) plus composed
-  prefix/postfix forms are used to keep common cases compact while still providing sufficient encoding space.
-* **Extensibility:** opcode space is intentionally structured so future optional domains (vector/tile/system) can grow
-  without re-encoding the scalar core.
-* **Vector/tile acceleration** (v0.3): SIMD lane policies, tile operations, and MCALL modes for accelerator-oriented
-  execution.
+* **Block-structured control flow** (see <<blockisa>>): control-flow is expressed at basic-block granularity using explicit block markers. This supports a translation model where one architectural block maps naturally to one translation unit (e.g. a QEMU TB) and provides a clear boundary for block-local state.
+* **Compact temporaries** (see <<progmodel-clockhands>>): short-lived values can be carried in per-block private queues (ClockHands) to reduce architectural register pressure.
+* **Dense encodings** (see <<encoding-lengths>>): variable-length instruction forms (16/32/48/64-bit) plus composed prefix/postfix forms are used to keep common cases compact while still providing sufficient encoding space.
+* **Extensibility:** opcode space is intentionally structured so future optional domains (vector/tile/system) can grow without re-encoding the scalar core.
+* **Vector/tile acceleration** (v0.3): SIMD lane policies, tile operations, and MCALL modes for accelerator-oriented execution.
 
 [[intro-normative]]
-=== Normative language and notation
+== Normative Language and Notation
 
 This manual uses the key words **MUST**, **MUST NOT**, **SHOULD**, and **MAY** as normative requirements.
 
 Unless stated otherwise:
 
 * A **byte** is 8 bits.
-* Instruction addresses are **byte addresses**, but many PC-relative immediates are **halfword-scaled** (shifted left
-  by 1); see <<encoding-alignment>> and <<encoding-pc-relative>>.
-* The selected profile defines **XLEN**, the width (in bits) of integer register values and most system register
-  values. Where an instruction operates on a smaller width, the mnemonic uses an explicit suffix (e.g. `*w` for
-  32-bit word operations).
+* Instruction addresses are **byte addresses**, but many PC-relative immediates are **halfword-scaled** (shifted left by 1); see <<encoding-alignment>> and <<encoding-pc-relative>>.
+* The selected profile defines **XLEN**, the width (in bits) of integer register values and most system register values. Where an instruction operates on a smaller width, the mnemonic uses an explicit suffix (e.g. `*w` for 32-bit word operations).
 
 [NOTE]
 ====
-This manual includes guidance and bring-up conventions that are useful for toolchain and hardware implementation. Such
-guidance is provided to improve cross-component consistency but does not override the machine-readable catalog where
-that catalog is explicit.
+This manual includes guidance and bring-up conventions that are useful for toolchain and hardware implementation. Such guidance is provided to improve cross-component consistency but does not override the machine-readable catalog where that catalog is explicit.
 ====
 
 [[intro-profiles]]
-=== Profiles and toolchain identifiers
+== Profiles and Toolchain Identifiers
 
 Two architectural profiles are used by the toolchain in this repository:
 
@@ -64,10 +49,9 @@ Two architectural profiles are used by the toolchain in this repository:
 The corresponding compiler target triples are `linx32-linx-none-elf` and `linx64-linx-none-elf`.
 
 [[intro-organization]]
-=== Manual organization
+== Manual Organization
 
-This manual is organized to make the architectural contract discoverable before the instruction-by-instruction
-reference:
+This manual is organized to make the architectural contract discoverable before the instruction-by-instruction reference:
 
 * <<progmodel>> defines programmer-visible state (GPRs, system registers, and block-local state).
 * <<encoding>> explains encoding conventions and multi-part forms.
@@ -77,27 +61,18 @@ reference:
 * <<insnref>> (generated) lists every instruction form in the catalog, including encoding summaries and notes.
 
 [[intro-key-ideas]]
-=== Key ideas
+== Key Concepts
 
-* **Block-structured control flow:** basic blocks are explicitly delimited using `BSTART.*` and `BSTOP` markers. A
-  `BSTART.*` both terminates the current block and begins the next one.
-* **Two private result queues per block (ClockHands):** code generation can target short-lived temporaries using
-  `->t` / `t#k` and `->u` / `u#k`, avoiding allocation pressure on architectural registers.
-* **Variable-length encodings:** instruction forms can be 16/32/48/64-bit, with some longer forms represented as
-  multiple parts (e.g. prefix + main).
+* **Block-structured control flow:** basic blocks are explicitly delimited using `BSTART.*` and `BSTOP` markers. A `BSTART.*` both terminates the current block and begins the next one.
+* **Two private result queues per block (ClockHands):** code generation can target short-lived temporaries using `->t` / `t#k` and `->u` / `u#k`, avoiding allocation pressure on architectural registers.
+* **Variable-length encodings:** instruction forms can be 16/32/48/64-bit, with some longer forms represented as multiple parts (e.g. prefix + main).
 
 [[intro-terminology]]
-=== Terminology (quick reference)
+== Terminology (Quick Reference)
 
 This manual uses the following terms:
 
-* **LXCPU:** an architectural execution context. In toolchain/QEMU bring-up, an LXCPU plays the role of an independent
-  hardware thread with its own architectural state.
-* **Block start marker:** an instruction that begins a block and is a legal architectural control-flow target. This
-  includes explicit `BSTART.*`/`C.BSTART.*`/`HL.BSTART.*` forms and template blocks such as `FENTRY`/`FRET.*`.
-* **Block boundary / commit:** the point where block-to-block control-flow is committed (at `BSTOP`/`C.BSTOP` or at the
-  next block start marker in the instruction stream).
-* **BARG:** Block Argument Register, a per-block control-flow/commit state updated by `BSTART.*`/`B.*`/`SETC.*` and
-  evaluated at block commit.
-
-// Removed: comparison section. Linx is specified on its own terms.
+* **LXCPU:** an architectural execution context. In toolchain/QEMU bring-up, an LXCPU plays the role of an independent hardware thread with its own architectural state.
+* **Block start marker:** an instruction that begins a block and is a legal architectural control-flow target. This includes explicit `BSTART.*`/`C.BSTART.*`/`HL.BSTART.*` forms and template blocks such as `FENTRY`/`FRET.*`.
+* **Block boundary / commit:** the point where block-to-block control-flow is committed (at `BSTOP`/`C.BSTOP` or at the next block start marker in the instruction stream).
+* **BARG:** Block Argument Register, a per-block control-flow/commit state updated by `BSTART.*`/`B.*`/`SETC.*` and evaluated at block commit.

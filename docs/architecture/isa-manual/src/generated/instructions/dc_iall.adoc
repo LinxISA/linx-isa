@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_dc_iall]]
+==== DC.IALL
+
+*Syntax:* dc.iall
+
+*Description:* Data Cache maintenance: invalidate all
+
+*Encoding:*
+
+image::../generated/encodings/enc_dc_iall.svg[DC.IALL encoding,width=800]
+
+*Group:* SYS/CACHE_MAINT

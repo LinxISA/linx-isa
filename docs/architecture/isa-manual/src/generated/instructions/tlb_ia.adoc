@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_tlb_ia]]
+==== TLB.IA
+
+*Syntax:* tlb.ia SrcL
+
+*Description:* TLB maintenance: invalidate by address
+
+*Encoding:*
+
+image::../generated/encodings/enc_tlb_ia.svg[TLB.IA encoding,width=800]
+
+*Group:* SYS/CACHE_MAINT

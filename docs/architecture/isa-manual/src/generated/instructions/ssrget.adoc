@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_ssrget]]
+==== SSRGET
+
+*Syntax:* ssrget SSR_ID, ->{t, u, Rd}
+
+*Description:* Get System Status Register value.
+
+*Encoding:*
+
+image::../generated/encodings/enc_ssrget.svg[SSRGET encoding,width=800]
+
+*Group:* SYS/SSR

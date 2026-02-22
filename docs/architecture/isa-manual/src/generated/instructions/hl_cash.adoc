@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_cash]]
+==== HL.CASH
+
+*Syntax:* hl.cash<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}
+
+*Description:* Compare and Swap: atomic 16-bit compare-and-swap operation.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_cash.svg[HL.CASH encoding,width=800]
+
+*Group:* AMO/CAS

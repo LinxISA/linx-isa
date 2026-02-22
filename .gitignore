@@ -59,3 +59,7 @@ workloads/**/docs/html/
 
 # ctuning scratch (non-source)
 workloads/ctuning/out_single/
+
+# SPEC CPU2017 (too large for upstream)
+workloads/spec2017/
+tools/spec2017/

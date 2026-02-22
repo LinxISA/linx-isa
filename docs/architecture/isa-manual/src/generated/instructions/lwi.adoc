@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_lwi]]
+==== LWI
+
+*Syntax:* lwi [SrcL, simm], ->{t, u, Rd}
+
+*Description:* Load 32-bit word from memory.
+
+*Encoding:*
+
+image::../generated/encodings/enc_lwi.svg[LWI encoding,width=800]
+
+*Group:* LDA/BASE_IMM

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_maddw]]
+==== MADDW
+
+*Syntax:* maddw SrcL, SrcR, SrcD, ->{t, u, Rd}
+
+*Description:* ALU_MULTI_CYCLE operation.
+
+*Encoding:*
+
+image::../generated/encodings/enc_maddw.svg[MADDW encoding,width=800]
+
+*Group:* ALU_MULTI_CYCLE

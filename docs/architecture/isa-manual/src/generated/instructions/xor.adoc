@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_xor]]
+==== XOR
+
+*Syntax:* xor SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}
+
+*Description:* Bitwise XOR (exclusive OR) operation.
+
+*Encoding:*
+
+image::../generated/encodings/enc_xor.svg[XOR encoding,width=800]
+
+*Group:* ALU

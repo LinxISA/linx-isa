@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_cmp_nei]]
+==== C.CMP.NEI
+
+*Syntax:* c.cmp.nei t#1, simm, ->t
+
+*Description:* Compressed compare immediate.
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_cmp_nei.svg[C.CMP.NEI encoding,width=800]
+
+*Group:* BRU/CMP

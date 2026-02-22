@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_feqs]]
+==== FEQS
+
+*Syntax:* feqs.{T} SrcL, SrcR, ->{t, u, Rd}
+
+*Description:* Floating-point Equal comparison.
+
+*Encoding:*
+
+image::../generated/encodings/enc_feqs.svg[FEQS encoding,width=800]
+
+*Group:* FSU/DEFAULT

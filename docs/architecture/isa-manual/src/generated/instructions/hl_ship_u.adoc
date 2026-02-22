@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_ship_u]]
+==== HL.SHIP.U
+
+*Syntax:* hl.ship.u SrcD, SrcD1, [SrcR, simm]
+
+*Description:* Long immediate variant supporting extended address range (48-bit).
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_ship_u.svg[HL.SHIP.U encoding,width=800]
+
+*Group:* STA/PAIR

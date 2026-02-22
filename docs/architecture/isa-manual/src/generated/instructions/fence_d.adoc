@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_fence_d]]
+==== FENCE.D
+
+*Syntax:* fence.d pred_imm, succ_imm
+
+*Description:* Fence (Data): ensures memory ordering for data accesses.
+
+*Encoding:*
+
+image::../generated/encodings/enc_fence_d.svg[FENCE.D encoding,width=800]
+
+*Group:* SYS/SYS

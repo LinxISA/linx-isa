@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_tlb_iv]]
+==== TLB.IV
+
+*Syntax:* tlb.iv SrcL
+
+*Description:* TLB maintenance: invalidate
+
+*Encoding:*
+
+image::../generated/encodings/enc_tlb_iv.svg[TLB.IV encoding,width=800]
+
+*Group:* SYS/CACHE_MAINT

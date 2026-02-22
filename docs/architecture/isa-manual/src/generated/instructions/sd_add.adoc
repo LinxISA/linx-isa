@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_sd_add]]
+==== SD.ADD
+
+*Syntax:* sd.add<.{rl, f, rlf}> [SrcL], SrcR
+
+*Description:* Atomic Add operation: memory value is atomically added with register.
+
+*Encoding:*
+
+image::../generated/encodings/enc_sd_add.svg[SD.ADD encoding,width=800]
+
+*Group:* AMO/AMO

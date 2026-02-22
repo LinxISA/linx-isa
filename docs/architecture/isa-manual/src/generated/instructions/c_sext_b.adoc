@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_sext_b]]
+==== C.SEXT.B
+
+*Syntax:* c.sext.b srcL, ->t
+
+*Description:* Compressed instruction variant (16-bit encoding).
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_sext_b.svg[C.SEXT.B encoding,width=800]
+
+*Group:* ALU

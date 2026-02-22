@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_lsrget]]
+==== LSRGET
+
+*Syntax:* lsrget LSR_ID, ->{t, u, Rd}
+
+*Description:* Get Local Status Register value.
+
+*Encoding:*
+
+image::../generated/encodings/enc_lsrget.svg[LSRGET encoding,width=800]
+
+*Group:* SYS/SSR

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_bstart_std]]
+==== HL.BSTART.STD
+
+*Syntax:* HL.BSTART.STD CALL, <label>
+
+*Description:* Block Start for STandard: marks entry point for standard execution block.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_bstart_std.svg[HL.BSTART.STD encoding,width=800]
+
+*Group:* BBD/BSTART

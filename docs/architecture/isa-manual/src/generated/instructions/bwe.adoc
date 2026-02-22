@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_bwe]]
+==== BWE
+
+*Syntax:* bwe SrcL
+
+*Description:* Memory Barrier/ fence: Store Exclusive
+
+*Encoding:*
+
+image::../generated/encodings/enc_bwe.svg[BWE encoding,width=800]
+
+*Group:* SYS/SYS

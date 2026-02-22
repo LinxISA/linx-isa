@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_sw_po]]
+==== HL.SW.PO
+
+*Syntax:* hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw}><<2], ->{t, u, Rd}
+
+*Description:* Long immediate variant supporting extended address range (48-bit).
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_sw_po.svg[HL.SW.PO encoding,width=800]
+
+*Group:* STA/POST_INDEX

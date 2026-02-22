@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_or]]
+==== OR
+
+*Syntax:* or SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}
+
+*Description:* Bitwise OR operation.
+
+*Encoding:*
+
+image::../generated/encodings/enc_or.svg[OR encoding,width=800]
+
+*Group:* ALU

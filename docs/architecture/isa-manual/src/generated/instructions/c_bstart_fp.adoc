@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_bstart_fp]]
+==== C.BSTART.FP
+
+*Syntax:* C.BSTART.FP BrType
+
+*Description:* Block Start for Floating-point: marks entry point for FP-intensive block.
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_bstart_fp.svg[C.BSTART.FP encoding,width=800]
+
+*Group:* BBD/BSTART

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_sra]]
+==== SRA
+
+*Syntax:* sra SrcL, SrcR, ->{t, u, Rd}
+
+*Description:* Shift Right Arithmetic (preserves sign bit).
+
+*Encoding:*
+
+image::../generated/encodings/enc_sra.svg[SRA encoding,width=800]
+
+*Group:* ALU

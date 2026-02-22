@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_fdiv]]
+==== FDIV
+
+*Syntax:* fdiv.{T} SrcL, SrcR, ->{t, u, Rd}
+
+*Description:* Floating-point Divide.
+
+*Encoding:*
+
+image::../generated/encodings/enc_fdiv.svg[FDIV encoding,width=800]
+
+*Group:* FSU/DEFAULT

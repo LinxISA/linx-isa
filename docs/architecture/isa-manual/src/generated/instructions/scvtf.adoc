@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_scvtf]]
+==== SCVTF
+
+*Syntax:* scvtf.{srcT2dstT} SrcL, ->{t, u, Rd}
+
+*Description:* Convert Signed/Unsigned Integer to Floating-point.
+
+*Encoding:*
+
+image::../generated/encodings/enc_scvtf.svg[SCVTF encoding,width=800]
+
+*Group:* FSU/DEFAULT

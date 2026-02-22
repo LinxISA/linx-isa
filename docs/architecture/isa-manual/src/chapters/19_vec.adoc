@@ -1,0 +1,45 @@
+// Generated file; do not edit by hand.
+// Auto-generated from isa/v0.3/linxisa-v0.3.json and uop_classification_v0.3.json
+
+[[chapter_vec]]
+== VEC - Vector Extensions
+
+The Vector (VEC) group handles all SIMD/vector operations including reductions, shuffles, and element-wise operations.
+
+=== Vector Reductions
+
+include::../generated/instructions/v_rdadd.adoc[]
+include::../generated/instructions/v_rdand.adoc[]
+include::../generated/instructions/v_rdor.adoc[]
+include::../generated/instructions/v_rdxor.adoc[]
+include::../generated/instructions/v_rdmax.adoc[]
+include::../generated/instructions/v_rdmin.adoc[]
+include::../generated/instructions/v_rdfadd.adoc[]
+include::../generated/instructions/v_rdfmax.adoc[]
+include::../generated/instructions/v_rdfmin.adoc[]
+
+=== Vector Shuffles
+
+include::../generated/instructions/v_shfl_bfly.adoc[]
+include::../generated/instructions/v_shfl_down.adoc[]
+include::../generated/instructions/v_shfl_up.adoc[]
+include::../generated/instructions/v_shfl_idx.adoc[]
+
+=== Vector Divide/Remainder
+
+include::../generated/instructions/v_div.adoc[]
+include::../generated/instructions/v_rem.adoc[]
+
+=== Vector Floating-point
+
+include::../generated/instructions/v_fabs.adoc[]
+include::../generated/instructions/v_fclass.adoc[]
+include::../generated/instructions/v_fexp.adoc[]
+include::../generated/instructions/v_frecip.adoc[]
+include::../generated/instructions/v_fsqrt.adoc[]
+
+=== Vector Select
+
+include::../generated/instructions/v_csel.adoc[]
+include::../generated/instructions/v_psel.adoc[]
+

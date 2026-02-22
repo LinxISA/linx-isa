@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_remuw]]
+==== HL.REMUW
+
+*Syntax:* hl.remuw SrcL, SrcR, ->Dst0, Dst1
+
+*Description:* Remainder of division operation.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_remuw.svg[HL.REMUW encoding,width=800]
+
+*Group:* ALU_MULTI_CYCLE

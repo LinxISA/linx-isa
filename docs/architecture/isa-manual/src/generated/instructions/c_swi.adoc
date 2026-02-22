@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_swi]]
+==== C.SWI
+
+*Syntax:* c.swi t#1, [srcL, simm]
+
+*Description:* Compressed instruction variant.
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_swi.svg[C.SWI encoding,width=800]
+
+*Group:* STA/BASE_IMM

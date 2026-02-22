@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_madd]]
+==== HL.MADD
+
+*Syntax:* hl.madd SrcL, SrcR, SrcD, ->Dst0, Dst1
+
+*Description:* Long immediate variant supporting extended immediate range.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_madd.svg[HL.MADD encoding,width=800]
+
+*Group:* ALU_MULTI_CYCLE

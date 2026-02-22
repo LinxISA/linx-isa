@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_bstart_call]]
+==== HL.BSTART CALL
+
+*Syntax:* HL.BSTART.CALL, <br_label>, <rt_label>, -> ra
+
+*Description:* Block Start with CALL: marks entry point for a function/block that may be called.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_bstart_call.svg[HL.BSTART CALL encoding,width=800]
+
+*Group:* BBD/BSTART

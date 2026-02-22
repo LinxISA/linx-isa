@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_andiw]]
+==== ANDIW
+
+*Syntax:* andiw SrcL, simm, ->{t, u, Rd}
+
+*Description:* ALU operation.
+
+*Encoding:*
+
+image::../generated/encodings/enc_andiw.svg[ANDIW encoding,width=800]
+
+*Group:* ALU

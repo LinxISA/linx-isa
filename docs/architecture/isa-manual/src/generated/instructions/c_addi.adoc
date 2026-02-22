@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_addi]]
+==== C.ADDI
+
+*Syntax:* c.addi srcL, simm, ->t
+
+*Description:* Compressed instruction variant (16-bit encoding).
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_addi.svg[C.ADDI encoding,width=800]
+
+*Group:* ALU

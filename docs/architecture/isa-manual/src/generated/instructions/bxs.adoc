@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_bxs]]
+==== BXS
+
+*Syntax:* bxs SrcL, M, N, ->{t, u, Rd}
+
+*Description:* Bit Extend Sign.
+
+*Encoding:*
+
+image::../generated/encodings/enc_bxs.svg[BXS encoding,width=800]
+
+*Group:* ALU

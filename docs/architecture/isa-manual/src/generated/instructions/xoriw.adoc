@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_xoriw]]
+==== XORIW
+
+*Syntax:* xoriw SrcL, simm, ->{t, u, Rd}
+
+*Description:* ALU operation.
+
+*Encoding:*
+
+image::../generated/encodings/enc_xoriw.svg[XORIW encoding,width=800]
+
+*Group:* ALU

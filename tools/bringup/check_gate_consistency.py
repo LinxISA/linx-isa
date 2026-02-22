@@ -113,12 +113,23 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--profile", default="release-strict")
     ap.add_argument("--lane-policy", default="external+pin-required")
     ap.add_argument("--trace-schema-version", default="1.0")
+    ap.add_argument(
+        "--multi-agent-summary",
+        default="",
+        help="Optional path to multi-agent summary JSON; when provided it must report ok=true.",
+    )
+    ap.add_argument(
+        "--require-multi-agent-summary",
+        action="store_true",
+        help="Fail if --multi-agent-summary is not provided.",
+    )
     args = ap.parse_args(argv)
 
     report_path = Path(args.report)
     progress_path = Path(args.progress)
     gate_status_path = Path(args.gate_status)
     libc_status_path = Path(args.libc_status)
+    multi_agent_summary_path = Path(args.multi_agent_summary) if args.multi_agent_summary else None
 
     report = json.loads(report_path.read_text(encoding="utf-8"))
     schema_version = report.get("schema_version")
@@ -201,6 +212,28 @@ def main(argv: list[str]) -> int:
         raise SystemExit(f"error: {libc_status_path} missing strict pass line for musl runtime R2")
     if re.search(r"musl runtime `R2[^`]*`:\s+fail", libc_text, flags=re.I):
         raise SystemExit(f"error: {libc_status_path} still reports failing musl R2 status")
+
+    if args.require_multi_agent_summary and multi_agent_summary_path is None:
+        raise SystemExit("error: --require-multi-agent-summary set but --multi-agent-summary not provided")
+
+    if multi_agent_summary_path is not None:
+        if not multi_agent_summary_path.exists():
+            raise SystemExit(f"error: multi-agent summary not found: {multi_agent_summary_path}")
+        try:
+            multi_summary = json.loads(multi_agent_summary_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            raise SystemExit(f"error: failed to parse multi-agent summary JSON: {multi_agent_summary_path}") from exc
+        if not isinstance(multi_summary, dict):
+            raise SystemExit(f"error: multi-agent summary must decode to object: {multi_agent_summary_path}")
+        if not bool(multi_summary.get("ok", False)):
+            raise SystemExit(
+                f"error: multi-agent summary reports non-passing state: {multi_agent_summary_path}"
+            )
+        mode = str(multi_summary.get("mode", ""))
+        if mode and mode != "runtime":
+            raise SystemExit(
+                f"error: multi-agent summary mode must be runtime when provided (got {mode!r})"
+            )
 
     print(
         "ok: gate consistency/freshness passed "

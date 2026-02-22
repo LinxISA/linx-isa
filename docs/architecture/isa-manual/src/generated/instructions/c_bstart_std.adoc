@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_bstart_std]]
+==== C.BSTART.STD
+
+*Syntax:* C.BSTART.STD BrType
+
+*Description:* Block Start for STandard: marks entry point for standard execution block.
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_bstart_std.svg[C.BSTART.STD encoding,width=800]
+
+*Group:* BBD/BSTART

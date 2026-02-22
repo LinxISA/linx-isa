@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_divu]]
+==== DIVU
+
+*Syntax:* divu SrcL, SrcR, ->{t, u, Rd}
+
+*Description:* Divide registers. Unsigned variant for DIVU.
+
+*Encoding:*
+
+image::../generated/encodings/enc_divu.svg[DIVU encoding,width=800]
+
+*Group:* ALU_MULTI_CYCLE

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_sh_upr]]
+==== HL.SH.UPR
+
+*Syntax:* hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}
+
+*Description:* Long immediate variant supporting extended address range (48-bit).
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_sh_upr.svg[HL.SH.UPR encoding,width=800]
+
+*Group:* STA/PRE_INDEX

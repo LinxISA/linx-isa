@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_prf]]
+==== HL.PRF
+
+*Syntax:* hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>]
+
+*Description:* Prefetch instruction for cache hint. Provides a hint to the processor that the specified memory location is likely to be accessed soon.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_prf.svg[HL.PRF encoding,width=800]
+
+*Group:* LDA

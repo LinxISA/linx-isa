@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_tlb_iav]]
+==== TLB.IAV
+
+*Syntax:* tlb.iav SrcL
+
+*Description:* TLB maintenance: invalidate by address
+
+*Encoding:*
+
+image::../generated/encodings/enc_tlb_iav.svg[TLB.IAV encoding,width=800]
+
+*Group:* SYS/CACHE_MAINT

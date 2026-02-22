@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_b_hint]]
+==== B.HINT
+
+*Syntax:* B.HINT {BR.{likely, unlikely}, TEMP.{hot, warm, cool, none}, PRFSIZE}
+
+*Description:* Block Hint descriptor.
+
+*Encoding:*
+
+image::../generated/encodings/enc_b_hint.svg[B.HINT encoding,width=800]
+
+*Group:* CMD/DESC_B_HINT

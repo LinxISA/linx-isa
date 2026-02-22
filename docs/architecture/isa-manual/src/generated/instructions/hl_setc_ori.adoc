@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_setc_ori]]
+==== HL.SETC.ORI
+
+*Syntax:* hl.setc.ori SrcL, simm
+
+*Description:* Set Condition with long immediate.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_setc_ori.svg[HL.SETC.ORI encoding,width=800]
+
+*Group:* BRU/SETC

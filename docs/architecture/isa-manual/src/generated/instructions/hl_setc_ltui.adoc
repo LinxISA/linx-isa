@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_setc_ltui]]
+==== HL.SETC.LTUI
+
+*Syntax:* hl.setc.ltui SrcL, uimm
+
+*Description:* Set Condition with long immediate.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_setc_ltui.svg[HL.SETC.LTUI encoding,width=800]
+
+*Group:* BRU/SETC

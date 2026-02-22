@@ -1,0 +1,150 @@
+// Generated file; do not edit by hand.
+// Auto-generated from isa/v0.3/linxisa-v0.3.json and uop_classification_v0.3.json
+
+[[chapter_alu]]
+== ALU - Arithmetic Logic Unit
+
+The Arithmetic Logic Unit (ALU) group handles all integer arithmetic, logical, and bit manipulation operations.
+
+=== Basic Arithmetic
+
+include::../generated/instructions/add.adoc[]
+include::../generated/instructions/addi.adoc[]
+include::../generated/instructions/addw.adoc[]
+include::../generated/instructions/addiw.adoc[]
+include::../generated/instructions/sub.adoc[]
+include::../generated/instructions/subi.adoc[]
+include::../generated/instructions/subw.adoc[]
+include::../generated/instructions/subiw.adoc[]
+
+=== Logical Operations
+
+include::../generated/instructions/and.adoc[]
+include::../generated/instructions/andi.adoc[]
+include::../generated/instructions/andw.adoc[]
+include::../generated/instructions/andiw.adoc[]
+include::../generated/instructions/or.adoc[]
+include::../generated/instructions/ori.adoc[]
+include::../generated/instructions/xor.adoc[]
+include::../generated/instructions/xori.adoc[]
+
+=== Immediate Loading
+
+include::../generated/instructions/lui.adoc[]
+include::../generated/instructions/hl_lui.adoc[]
+include::../generated/instructions/hl_lis.adoc[]
+include::../generated/instructions/hl_liu.adoc[]
+
+=== Shift Operations
+
+include::../generated/instructions/sll.adoc[]
+include::../generated/instructions/slli.adoc[]
+include::../generated/instructions/sllw.adoc[]
+include::../generated/instructions/slliw.adoc[]
+include::../generated/instructions/srl.adoc[]
+include::../generated/instructions/srli.adoc[]
+include::../generated/instructions/srlw.adoc[]
+include::../generated/instructions/srliw.adoc[]
+include::../generated/instructions/sra.adoc[]
+include::../generated/instructions/srai.adoc[]
+include::../generated/instructions/sraw.adoc[]
+include::../generated/instructions/sraiw.adoc[]
+
+=== Bit Manipulation
+
+include::../generated/instructions/clz.adoc[]
+include::../generated/instructions/ctz.adoc[]
+include::../generated/instructions/bcnt.adoc[]
+include::../generated/instructions/rev.adoc[]
+include::../generated/instructions/bis.adoc[]
+include::../generated/instructions/bic.adoc[]
+include::../generated/instructions/bxs.adoc[]
+include::../generated/instructions/bxu.adoc[]
+include::../generated/instructions/csel.adoc[]
+
+=== Comparison
+
+include::../generated/instructions/max.adoc[]
+include::../generated/instructions/maxu.adoc[]
+include::../generated/instructions/min.adoc[]
+include::../generated/instructions/minu.adoc[]
+
+=== Multiplication/Division
+
+include::../generated/instructions/mul.adoc[]
+include::../generated/instructions/mulu.adoc[]
+include::../generated/instructions/mulw.adoc[]
+include::../generated/instructions/muluw.adoc[]
+include::../generated/instructions/div.adoc[]
+include::../generated/instructions/divu.adoc[]
+include::../generated/instructions/divw.adoc[]
+include::../generated/instructions/divuw.adoc[]
+include::../generated/instructions/rem.adoc[]
+include::../generated/instructions/remu.adoc[]
+include::../generated/instructions/remw.adoc[]
+include::../generated/instructions/remuw.adoc[]
+include::../generated/instructions/madd.adoc[]
+include::../generated/instructions/maddw.adoc[]
+
+=== Long Immediate
+
+include::../generated/instructions/hl_addi.adoc[]
+include::../generated/instructions/hl_addiw.adoc[]
+include::../generated/instructions/hl_subi.adoc[]
+include::../generated/instructions/hl_subiw.adoc[]
+include::../generated/instructions/hl_andi.adoc[]
+include::../generated/instructions/hl_andiw.adoc[]
+include::../generated/instructions/hl_ori.adoc[]
+include::../generated/instructions/hl_oriw.adoc[]
+include::../generated/instructions/hl_xori.adoc[]
+include::../generated/instructions/hl_xoriw.adoc[]
+
+=== Long Multiplication/Division
+
+include::../generated/instructions/hl_mul.adoc[]
+include::../generated/instructions/hl_mulu.adoc[]
+include::../generated/instructions/hl_div.adoc[]
+include::../generated/instructions/hl_divu.adoc[]
+include::../generated/instructions/hl_divw.adoc[]
+include::../generated/instructions/hl_divuw.adoc[]
+include::../generated/instructions/hl_rem.adoc[]
+include::../generated/instructions/hl_remu.adoc[]
+include::../generated/instructions/hl_remw.adoc[]
+include::../generated/instructions/hl_remuw.adoc[]
+include::../generated/instructions/hl_madd.adoc[]
+include::../generated/instructions/hl_maddw.adoc[]
+
+=== Barrel Shift / Concat
+
+include::../generated/instructions/hl_ccat.adoc[]
+include::../generated/instructions/hl_ccatw.adoc[]
+
+=== Bit Field Operations
+
+include::../generated/instructions/hl_bfi.adoc[]
+
+=== Indexed Multiply
+
+include::../generated/instructions/hl_miadd.adoc[]
+include::../generated/instructions/hl_misub.adoc[]
+
+=== Compressed
+
+include::../generated/instructions/c_add.adoc[]
+include::../generated/instructions/c_addi.adoc[]
+include::../generated/instructions/c_and.adoc[]
+include::../generated/instructions/c_sub.adoc[]
+include::../generated/instructions/c_movi.adoc[]
+include::../generated/instructions/c_movr.adoc[]
+include::../generated/instructions/c_or.adoc[]
+include::../generated/instructions/c_slli.adoc[]
+include::../generated/instructions/c_srli.adoc[]
+include::../generated/instructions/c_setc_tgt.adoc[]
+include::../generated/instructions/c_setret.adoc[]
+include::../generated/instructions/c_sext_b.adoc[]
+include::../generated/instructions/c_sext_h.adoc[]
+include::../generated/instructions/c_sext_w.adoc[]
+include::../generated/instructions/c_zext_b.adoc[]
+include::../generated/instructions/c_zext_h.adoc[]
+include::../generated/instructions/c_zext_w.adoc[]
+

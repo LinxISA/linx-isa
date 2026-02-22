@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_setc_geui]]
+==== SETC.GEUI
+
+*Syntax:* setc.geui SrcL, uimm
+
+*Description:* Set Condition: sets condition flags based on comparison.
+
+*Encoding:*
+
+image::../generated/encodings/enc_setc_geui.svg[SETC.GEUI encoding,width=800]
+
+*Group:* BRU/SETC

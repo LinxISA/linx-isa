@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_swip_u]]
+==== HL.SWIP.U
+
+*Syntax:* hl.swip.u SrcD, SrcD1, [SrcR, simm]
+
+*Description:* Long immediate variant supporting extended address range (48-bit).
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_swip_u.svg[HL.SWIP.U encoding,width=800]
+
+*Group:* STA/PAIR

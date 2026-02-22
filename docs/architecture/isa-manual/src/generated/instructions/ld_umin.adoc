@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_ld_umin]]
+==== LD.UMIN
+
+*Syntax:* ld.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}
+
+*Description:* Atomic Unsigned Min operation: memory value is atomically unsigned mined with register.
+
+*Encoding:*
+
+image::../generated/encodings/enc_ld_umin.svg[LD.UMIN encoding,width=800]
+
+*Group:* AMO/AMO

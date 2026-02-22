@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_addi]]
+==== ADDI
+
+*Syntax:* addi SrcL, uimm, ->{t, u, Rd}
+
+*Description:* Add registers or immediate to source register.
+
+*Encoding:*
+
+image::../generated/encodings/enc_addi.svg[ADDI encoding,width=800]
+
+*Group:* ALU

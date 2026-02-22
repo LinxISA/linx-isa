@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_b_ne]]
+==== B.NE
+
+*Syntax:* b.ne SrcL, SrcR, label
+
+*Description:* Branch if not equal: conditional branch based on condition flags.
+
+*Encoding:*
+
+image::../generated/encodings/enc_b_ne.svg[B.NE encoding,width=800]
+
+*Group:* BRU/BRU

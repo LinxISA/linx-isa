@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_miadd]]
+==== HL.MIADD
+
+*Syntax:* hl.miadd SrcL, SrcR, uimm, ->{t, u, Rd}
+
+*Description:* Multiply-Add Indexed: multiplies and adds with indexed operation.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_miadd.svg[HL.MIADD encoding,width=800]
+
+*Group:* RSV/DEFAULT

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_xori]]
+==== HL.XORI
+
+*Syntax:* hl.xori SrcL, simm, ->{t, u, Rd}
+
+*Description:* Long immediate variant supporting extended immediate range.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_xori.svg[HL.XORI encoding,width=800]
+
+*Group:* ALU

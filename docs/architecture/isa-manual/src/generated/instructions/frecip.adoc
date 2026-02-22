@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_frecip]]
+==== FRECIP
+
+*Syntax:* frecip.{T} SrcL, ->{t, u, Rd}
+
+*Description:* Floating-point Reciprocal (1/x).
+
+*Encoding:*
+
+image::../generated/encodings/enc_frecip.svg[FRECIP encoding,width=800]
+
+*Group:* FSU/DEFAULT

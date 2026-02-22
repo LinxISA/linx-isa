@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_b_nz]]
+==== B.NZ
+
+*Syntax:* b.nz label
+
+*Description:* Branch if not zero: conditional branch based on condition flags.
+
+*Encoding:*
+
+image::../generated/encodings/enc_b_nz.svg[B.NZ encoding,width=800]
+
+*Group:* BRU/BRU

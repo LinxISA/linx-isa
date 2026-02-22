@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_acre]]
+==== ACRE
+
+*Syntax:* acre rra_type
+
+*Description:* Access Control Ring Enter: returns from a system call to user mode.
+
+*Encoding:*
+
+image::../generated/encodings/enc_acre.svg[ACRE encoding,width=800]
+
+*Group:* SYS/SYS

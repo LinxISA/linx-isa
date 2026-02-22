@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_rem]]
+==== V.REM
+
+*Syntax:* v.rem SrcL.<T>, SrcR.<T>, ->Dst.<W>
+
+*Description:* Vector Remainder: computes remainder of division.
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_rem_part1.svg[V.REM encoding,width=800]
+
+*Group:* VEC/VEC_DIV

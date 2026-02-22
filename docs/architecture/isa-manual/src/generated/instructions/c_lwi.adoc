@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_lwi]]
+==== C.LWI
+
+*Syntax:* c.lwi [srcL, simm], ->t
+
+*Description:* Compressed instruction variant.
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_lwi.svg[C.LWI encoding,width=800]
+
+*Group:* LDA/BASE_IMM

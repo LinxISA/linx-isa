@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_fmsub]]
+==== FMSUB
+
+*Syntax:* fmsub.{T} SrcL, SrcR, SrcA, ->{t, u, Rd}
+
+*Description:* Floating-point Multiply.
+
+*Encoding:*
+
+image::../generated/encodings/enc_fmsub.svg[FMSUB encoding,width=800]
+
+*Group:* FSU/DEFAULT

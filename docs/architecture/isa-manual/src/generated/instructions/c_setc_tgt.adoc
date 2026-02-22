@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_setc_tgt]]
+==== C.SETC.TGT
+
+*Syntax:* c.setc.tgt srcL
+
+*Description:* Compressed instruction variant (16-bit encoding).
+
+*Encoding:*
+
+image::../generated/encodings/enc_c_setc_tgt.svg[C.SETC.TGT encoding,width=800]
+
+*Group:* ALU

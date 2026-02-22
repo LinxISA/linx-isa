@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_lhi_pr]]
+==== HL.LHI.PR
+
+*Syntax:* hl.lhi.pr [SrcL, simm], ->Dst0, Dst1
+
+*Description:* Long immediate variant supporting extended address range (48-bit).
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_lhi_pr.svg[HL.LHI.PR encoding,width=800]
+
+*Group:* LDA/PRE_INDEX

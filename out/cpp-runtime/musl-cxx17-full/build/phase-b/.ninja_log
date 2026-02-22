@@ -1,0 +1,5 @@
+# ninja log v7
+32	60	1771687581298528212	/Users/zhoubot/llvm-project/build-linxisa-clang/include/c++/v1/__cxxabi_config.h	a775b9870e5c54be
+61	78	1771687581327196730	/Users/zhoubot/llvm-project/build-linxisa-clang/include/c++/v1/cxxabi.h	ed56f39692ad97e9
+30	102	1771687581296582630	libunwind/src/CMakeFiles/unwind_static_objects.dir/UnwindRegistersSave.S.o	3a9314b9269d169
+30	102	1771687581296430297	libunwind/src/CMakeFiles/unwind_static_objects.dir/UnwindRegistersRestore.S.o	2a3e1e592497d372

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_fcvtn]]
+==== FCVTN
+
+*Syntax:* fcvtn.{srcT2dstT} SrcL, ->{t, u, Rd}
+
+*Description:* Floating-point Convert between formats.
+
+*Encoding:*
+
+image::../generated/encodings/enc_fcvtn.svg[FCVTN encoding,width=800]
+
+*Group:* FSU/DEFAULT

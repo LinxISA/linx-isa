@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_fentry]]
+==== FENTRY
+
+*Syntax:* FENTRY [RegSrc0 ~ RegSrcn], sp!, uimm
+
+*Description:* Function Entry: marks function entry point.
+
+*Encoding:*
+
+image::../generated/encodings/enc_fentry.svg[FENTRY encoding,width=800]
+
+*Group:* CMD/BLOCK_SPLIT

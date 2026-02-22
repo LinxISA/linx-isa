@@ -1,0 +1,54 @@
+// Generated file; do not edit by hand.
+// Auto-generated from isa/v0.3/linxisa-v0.3.json and uop_classification_v0.3.json
+
+[[chapter_cmd]]
+== CMD - Command and Control
+
+The Command (CMD) group handles all template block control instructions including block start/stop, context management, and descriptor operations.
+
+=== Block Control
+
+include::../generated/instructions/bstart.adoc[]
+include::../generated/instructions/bstart_call.adoc[]
+include::../generated/instructions/bstart_fp.adoc[]
+include::../generated/instructions/bstart_std.adoc[]
+include::../generated/instructions/bstart_sys.adoc[]
+include::../generated/instructions/bstart_mseq.adoc[]
+include::../generated/instructions/bstart_mpar.adoc[]
+include::../generated/instructions/bstart_vseq.adoc[]
+include::../generated/instructions/bstart_vpar.adoc[]
+include::../generated/instructions/bstart_par.adoc[]
+include::../generated/instructions/bstart_cube.adoc[]
+include::../generated/instructions/bstart_fixp.adoc[]
+include::../generated/instructions/bstart_acccvt.adoc[]
+include::../generated/instructions/bstart_tepl.adoc[]
+include::../generated/instructions/bstart_tload.adoc[]
+include::../generated/instructions/bstart_tma.adoc[]
+include::../generated/instructions/bstart_tmatmul.adoc[]
+include::../generated/instructions/bstart_tmatmul_acc.adoc[]
+include::../generated/instructions/bstart_tmov.adoc[]
+include::../generated/instructions/bstart_tstore.adoc[]
+include::../generated/instructions/bstop.adoc[]
+
+=== Context Management
+
+include::../generated/instructions/fentry.adoc[]
+include::../generated/instructions/fexit.adoc[]
+include::../generated/instructions/ercov.adoc[]
+include::../generated/instructions/esave.adoc[]
+include::../generated/instructions/fret_ra.adoc[]
+include::../generated/instructions/fret_stk.adoc[]
+
+=== Memory Block Operations
+
+include::../generated/instructions/mcopy.adoc[]
+include::../generated/instructions/mset.adoc[]
+include::../generated/instructions/xb.adoc[]
+
+=== Block Descriptors
+
+include::../generated/instructions/b_attr.adoc[]
+include::../generated/instructions/b_hint.adoc[]
+include::../generated/instructions/b_text.adoc[]
+include::../generated/instructions/b_dim.adoc[]
+

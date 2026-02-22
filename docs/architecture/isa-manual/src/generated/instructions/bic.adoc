@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_bic]]
+==== BIC
+
+*Syntax:* bic SrcL, M, N, ->{t, u, Rd}
+
+*Description:* Bit Clear.
+
+*Encoding:*
+
+image::../generated/encodings/enc_bic.svg[BIC encoding,width=800]
+
+*Group:* ALU

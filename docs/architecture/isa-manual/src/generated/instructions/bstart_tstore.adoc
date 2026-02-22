@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_bstart_tstore]]
+==== BSTART.TSTORE
+
+*Syntax:* BSTART.TSTORE DataType
+
+*Description:* Block Start: marks the beginning of a template block with execution hint.
+
+*Encoding:*
+
+image::../generated/encodings/enc_bstart_tstore.svg[BSTART.TSTORE encoding,width=800]
+
+*Group:* CMD/BLOCK_SPLIT

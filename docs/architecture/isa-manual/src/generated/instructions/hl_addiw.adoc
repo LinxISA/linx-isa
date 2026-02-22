@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_addiw]]
+==== HL.ADDIW
+
+*Syntax:* hl.addiw SrcL, uimm, ->{t, u, Rd}
+
+*Description:* Long immediate variant supporting extended immediate range.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_addiw.svg[HL.ADDIW encoding,width=800]
+
+*Group:* ALU

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_hl_ccat]]
+==== HL.CCAT
+
+*Syntax:* hl.ccat SrcL, SrcR, shamt, ->Dst0, Dst1
+
+*Description:* Long immediate variant supporting extended immediate range.
+
+*Encoding:*
+
+image::../generated/encodings/enc_hl_ccat.svg[HL.CCAT encoding,width=800]
+
+*Group:* BARREL_CCAT

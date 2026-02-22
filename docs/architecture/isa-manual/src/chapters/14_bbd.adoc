@@ -1,0 +1,28 @@
+// Generated file; do not edit by hand.
+// Auto-generated from isa/v0.3/linxisa-v0.3.json and uop_classification_v0.3.json
+
+[[chapter_bbd]]
+== BBD - Block Boundary Delimiters
+
+The Block Boundary Delimiters (BBD) group defines the template block structure in Linx ISA. These instructions mark the beginning (BSTART) and end (BSTOP) of code blocks with execution hints.
+
+=== BSTART - Block Start
+
+The BSTART instruction marks the beginning of a template block and specifies the execution profile for the block.
+
+include::../generated/instructions/bstart_call.adoc[]
+include::../generated/instructions/hl_bstart_call.adoc[]
+include::../generated/instructions/hl_bstart_fp.adoc[]
+include::../generated/instructions/hl_bstart_std.adoc[]
+include::../generated/instructions/hl_bstart_sys.adoc[]
+
+=== Compressed BSTART
+
+include::../generated/instructions/c_bstart_fp.adoc[]
+include::../generated/instructions/c_bstart_mpar.adoc[]
+include::../generated/instructions/c_bstart_mseq.adoc[]
+include::../generated/instructions/c_bstart_std.adoc[]
+include::../generated/instructions/c_bstart_sys.adoc[]
+include::../generated/instructions/c_bstart_vpar.adoc[]
+include::../generated/instructions/c_bstart_vseq.adoc[]
+

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_dc_iva]]
+==== DC.IVA
+
+*Syntax:* dc.iva SrcL
+
+*Description:* Data Cache maintenance: invalidate by address
+
+*Encoding:*
+
+image::../generated/encodings/enc_dc_iva.svg[DC.IVA encoding,width=800]
+
+*Group:* SYS/CACHE_MAINT

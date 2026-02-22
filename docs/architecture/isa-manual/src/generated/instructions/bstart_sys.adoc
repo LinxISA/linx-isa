@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_bstart_sys]]
+==== BSTART.SYS
+
+*Syntax:* BSTART.SYS FALL<, fixup_label>
+
+*Description:* Block Start: marks the beginning of a template block with execution hint.
+
+*Encoding:*
+
+image::../generated/encodings/enc_bstart_sys.svg[BSTART.SYS encoding,width=800]
+
+*Group:* CMD/BLOCK_SPLIT

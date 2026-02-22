@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_j]]
+==== J
+
+*Syntax:* j label
+
+*Description:* Unconditional jump to target address.
+
+*Encoding:*
+
+image::../generated/encodings/enc_j.svg[J encoding,width=800]
+
+*Group:* BRU/BRU

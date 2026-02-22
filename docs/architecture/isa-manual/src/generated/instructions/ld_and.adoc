@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_ld_and]]
+==== LD.AND
+
+*Syntax:* ld.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}
+
+*Description:* Atomic And operation: memory value is atomically anded with register.
+
+*Encoding:*
+
+image::../generated/encodings/enc_ld_and.svg[LD.AND encoding,width=800]
+
+*Group:* AMO/AMO

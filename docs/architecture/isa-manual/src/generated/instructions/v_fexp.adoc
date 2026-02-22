@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_fexp]]
+==== V.FEXP
+
+*Syntax:* v.fexp SrcL.<T>, ->Dst.<W>
+
+*Description:* Vector Floating-point Exponential.
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_fexp_part1.svg[V.FEXP encoding,width=800]
+
+*Group:* VEC/VEC_FP

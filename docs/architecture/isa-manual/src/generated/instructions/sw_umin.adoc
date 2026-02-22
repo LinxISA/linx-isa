@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_sw_umin]]
+==== SW.UMIN
+
+*Syntax:* sw.umin<.{rl, f, rlf}> [SrcL], SrcR
+
+*Description:* Atomic Unsigned Min operation: memory value is atomically unsigned mined with register.
+
+*Encoding:*
+
+image::../generated/encodings/enc_sw_umin.svg[SW.UMIN encoding,width=800]
+
+*Group:* AMO/AMO

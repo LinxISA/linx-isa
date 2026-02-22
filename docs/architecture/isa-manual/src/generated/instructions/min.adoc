@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_min]]
+==== MIN
+
+*Syntax:* min SrcL, SrcR, ->{t, u, Rd}
+
+*Description:* Minimum (signed comparison).
+
+*Encoding:*
+
+image::../generated/encodings/enc_min.svg[MIN encoding,width=800]
+
+*Group:* ALU

@@ -1,0 +1,16 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_fsqrt]]
+==== FSQRT
+
+*Syntax:* fsqrt.{T} SrcL, ->{t, u, Rd}
+
+*Description:* Floating-point Square Root.
+
+*Encoding:*
+
+image::../generated/encodings/enc_fsqrt.svg[FSQRT encoding,width=800]
+
+*Group:* FSU/DEFAULT
