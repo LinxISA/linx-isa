@@ -33,6 +33,10 @@ enum {
     SSR_ACR0_ECSTATE = 0x003C,
     SSR_IRQ_SEEN_BEFORE_ENABLE = 0x003D,
     SSR_BP_RESUME_SEEN = 0x003E,
+    SSR_STEP_TRAP_COUNT = 0x003F,
+    SSR_STEP_LAST_TRAPNO = 0x0040,
+    SSR_STEP_LAST_TRAPARG0 = 0x0041,
+    SSR_STEP_LAST_ECSTATE = 0x0042,
 };
 
 /* Managing-ACR SSR IDs (ACR0 fits in 12-bit; ACR1 requires HL). */
@@ -48,7 +52,18 @@ enum {
     SSR_ETEMP_ACR1 = 0x1F05,
     SSR_ETEMP0_ACR1 = 0x1F06,
     SSR_EBARG_BPC_CUR_ACR1 = 0x1F41,
+    SSR_EBARG_BPC_TGT_ACR1 = 0x1F42,
     SSR_EBARG_TPC_ACR1 = 0x1F43,
+    SSR_EBARG_TQ0_ACR1 = 0x1F45,
+    SSR_EBARG_TQ1_ACR1 = 0x1F46,
+    SSR_EBARG_TQ2_ACR1 = 0x1F47,
+    SSR_EBARG_TQ3_ACR1 = 0x1F48,
+    SSR_EBARG_UQ0_ACR1 = 0x1F49,
+    SSR_EBARG_UQ1_ACR1 = 0x1F4A,
+    SSR_EBARG_UQ2_ACR1 = 0x1F4B,
+    SSR_EBARG_UQ3_ACR1 = 0x1F4C,
+    SSR_EBARG_LB_ACR1 = 0x1F4D,
+    SSR_EBARG_LC_ACR1 = 0x1F4E,
     SSR_TIMER_TIMECMP_ACR1 = 0x1F21,
 
     /* v0.2 debug SSRs (bring-up subset). */
@@ -75,6 +90,7 @@ enum {
     TESTID_ACRE_BAD_TARGET = 0x110C,
     TESTID_ACR0_BAD_REQ = 0x110D,
     TESTID_DBG_BP_RESUME = 0x110E,
+    TESTID_RI_STEP_TRAP_POLLUTE_RESUME = 0x110F,
 };
 
 __attribute__((noreturn)) static void linx_priv_user_code(void);
@@ -85,6 +101,8 @@ __attribute__((noreturn)) static void linx_dbg_wp_user(void);
 __attribute__((noreturn)) static void linx_after_bad_acrc_exit(void);
 __attribute__((noreturn)) static void linx_after_dbg_bp_exit(void);
 __attribute__((noreturn)) static void linx_after_dbg_bp_resume_exit(void);
+__attribute__((noreturn)) static void linx_acr2_ri_step_trap_user(void);
+__attribute__((noreturn)) static void linx_after_ri_step_trap_exit(void);
 __attribute__((noreturn)) static void linx_after_dbg_wp_exit(void);
 __attribute__((noreturn)) static void linx_after_acr2_mac_exit(void);
 __attribute__((noreturn)) static void linx_after_acr1_sec_exit(void);
@@ -105,6 +123,7 @@ __attribute__((noreturn)) static void linx_after_acr0_bad_req_exit(void);
 __attribute__((noreturn)) static void linx_system_done(void);
 
 static volatile uint64_t WATCH_TARGET;
+static volatile uint32_t STEP_RI_OUT[2];
 
 /* v0.2 TRAPNO encoding helpers (E/ARGV/CAUSE/TRAPNUM). */
 static inline uint64_t trapno_is_async(uint64_t trapno) { return (trapno >> 63) & 1ull; }
@@ -177,10 +196,12 @@ extern void linx_acr1_timer_handler(void);
 extern void linx_acr0_exit_handler(void);
 extern void linx_acr1_record_trap_handler(void);
 extern void linx_acr1_bp_resume_handler(void);
+extern void linx_acr1_step_trap_pollute_handler(void);
 extern void linx_bad_acrc_user(void);
 extern void linx_trap_resume_to_exit(void);
 extern void linx_dbg_bp_user(void);
 extern void linx_dbg_bp_resume_user(void);
+extern void __linx_step_ri_trap_body(void);
 extern void linx_acr2_mac_user(void);
 extern void linx_acr1_sec_user(void);
 extern void linx_acr1_bad_req_user(void);
@@ -294,6 +315,71 @@ __asm__(
     "  acre 0\n"
 );
 
+/* ACR1 RI step-trap pollute handler:
+ * - consume SW_BREAKPOINT trap metadata
+ * - poison EBARG(TQ/UQ/LB/LC/BPC/TPC)
+ * - resume ACR2 at captured EBARG_TPC continuation
+ */
+__asm__(
+    ".globl linx_acr1_step_trap_pollute_handler\n"
+    "linx_acr1_step_trap_pollute_handler:\n"
+    "  C.BSTART\n"
+    "  hl.ssrget 0x1f02, ->a0\n" /* TRAPNO_ACR1 */
+    "  hl.ssrget 0x1f03, ->a1\n" /* TRAPARG0_ACR1 */
+    "  hl.ssrget 0x1f00, ->a4\n" /* ECSTATE_ACR1 */
+    "  ssrget 0x003f, ->a5\n"    /* SSR_STEP_TRAP_COUNT */
+    "  addi a5, 1, ->a5\n"
+    "  ssrset a5, 0x003f\n"
+    "  ssrset a0, 0x0040\n"      /* SSR_STEP_LAST_TRAPNO */
+    "  ssrset a1, 0x0041\n"      /* SSR_STEP_LAST_TRAPARG0 */
+    "  ssrset a4, 0x0042\n"      /* SSR_STEP_LAST_ECSTATE */
+    "  hl.ssrget 0x1f43, ->a2\n" /* captured continuation EBARG_TPC */
+    "  addi zero, 0x11, ->a6\n"
+    "  hl.ssrset a6, 0x1f45\n"
+    "  addi zero, 0x12, ->a6\n"
+    "  hl.ssrset a6, 0x1f46\n"
+    "  addi zero, 0x13, ->a6\n"
+    "  hl.ssrset a6, 0x1f47\n"
+    "  addi zero, 0x14, ->a6\n"
+    "  hl.ssrset a6, 0x1f48\n"
+    "  addi zero, 0x21, ->a6\n"
+    "  hl.ssrset a6, 0x1f49\n"
+    "  addi zero, 0x22, ->a6\n"
+    "  hl.ssrset a6, 0x1f4a\n"
+    "  addi zero, 0x23, ->a6\n"
+    "  hl.ssrset a6, 0x1f4b\n"
+    "  addi zero, 0x24, ->a6\n"
+    "  hl.ssrset a6, 0x1f4c\n"
+    "  addi zero, 0x31, ->a6\n"
+    "  hl.ssrset a6, 0x1f4d\n"
+    "  addi zero, 0x32, ->a6\n"
+    "  hl.ssrset a6, 0x1f4e\n"
+    "  addi zero, 0x7f, ->a6\n"
+    "  hl.ssrset a6, 0x1f41\n"
+    "  hl.ssrset a6, 0x1f42\n"
+    "  hl.ssrset a6, 0x1f43\n"
+    "  hl.ssrset a2, 0x1f41\n"
+    "  hl.ssrset a2, 0x1f42\n"
+    "  hl.ssrset a2, 0x1f43\n"
+    "  acre 1\n"
+);
+
+/* ACR2 decoupled MSEQ body: each payload instruction is followed by EBREAK. */
+__asm__(
+    ".p2align 3\n"
+    ".globl __linx_step_ri_trap_body\n"
+    "__linx_step_ri_trap_body:\n"
+    "  v.add zero, ri6, ->vt.w\n"
+    "  ebreak 0\n"
+    "  v.sw.brg vt#1, [ri0, lc0<<2, zero]\n"
+    "  ebreak 0\n"
+    "  v.add zero, ri7, ->vt.w\n"
+    "  ebreak 0\n"
+    "  v.sw.brg vt#1, [ri0, lc0<<2, ri1]\n"
+    "  ebreak 0\n"
+    "  C.BSTOP\n"
+);
+
 /* ACR2 resume block after a recorded trap: exit back to ACR0 (SCT_MAC). */
 __asm__(
     ".globl linx_trap_resume_to_exit\n"
@@ -388,6 +474,40 @@ __attribute__((noreturn)) static void linx_dbg_wp_user(void)
     /* ACR2: perform the watched store, then request exit back to ACR0. */
     WATCH_TARGET = 0x1122334455667788ull;
     __asm__ volatile("acrc 0\n  c.bstop\n" : : : "memory");
+    __builtin_unreachable();
+}
+
+__attribute__((noreturn)) static void linx_acr2_ri_step_trap_user(void)
+{
+    const uint64_t out_base = (uint64_t)(uintptr_t)&STEP_RI_OUT[0];
+    const uint64_t out_stride = 4u;
+    const uint64_t filler2 = 0x11112222u;
+    const uint64_t filler3 = 0x33334444u;
+    const uint64_t filler4 = 0x55556666u;
+    const uint64_t filler5 = 0x77778888u;
+    const uint64_t expect_ri6 = 0x10203040u;
+    const uint64_t expect_ri7 = 0x50607080u;
+    const uint64_t filler8 = 0x90A0B0C0u;
+
+    STEP_RI_OUT[0] = 0xDEADBEEFu;
+    STEP_RI_OUT[1] = 0xDEADBEEFu;
+
+    __asm__ volatile(
+        "BSTART.MSEQ 0\n"
+        "B.TEXT __linx_step_ri_trap_body\n"
+        "B.IOR [%0, %1],[zero]\n"
+        "B.IOR [zero, %2],[%3]\n"
+        "B.IOR [%4, zero],[%5]\n"
+        "B.IOR [%6, %7],[%8]\n"
+        "C.B.DIMI 1, ->lb0\n"
+        "C.BSTART\n"
+        "acrc 0\n"
+        "C.BSTOP\n"
+        :
+        : "r"(out_base), "r"(out_stride), "r"(filler2), "r"(filler3),
+          "r"(filler4), "r"(filler5), "r"(expect_ri6), "r"(expect_ri7),
+          "r"(filler8)
+        : "memory");
     __builtin_unreachable();
 }
 
@@ -571,8 +691,66 @@ __attribute__((noreturn)) static void linx_after_dbg_bp_resume_exit(void)
 
     /* Disable BP0. */
     hl_ssrset_uimm24(SSR_DBCR0_ACR2, 0);
+    hl_ssrset_uimm24(SSR_DWCR0_ACR2, 0);
 
     test_pass(); /* DBG_BP_RESUME */
+
+    /* --------------------------------------------------------------------- */
+    /* RI + step trap + EBARG pollute + restore resume                        */
+    /* --------------------------------------------------------------------- */
+    test_start(TESTID_RI_STEP_TRAP_POLLUTE_RESUME);
+
+    /*
+     * Isolate 0x110F from previous debug cases: clear breakpoint/watchpoint
+     * enables and assert they are off before entering the RI step flow.
+     */
+    hl_ssrset_uimm24(SSR_DBCR0_ACR2, 0);
+    hl_ssrset_uimm24(SSR_DWCR0_ACR2, 0);
+    TEST_EQ64(hl_ssrget_uimm24(SSR_DBCR0_ACR2) & 1ull, 0,
+              TESTID_RI_STEP_TRAP_POLLUTE_RESUME + 101);
+    TEST_EQ64(hl_ssrget_uimm24(SSR_DWCR0_ACR2) & 1ull, 0,
+              TESTID_RI_STEP_TRAP_POLLUTE_RESUME + 102);
+
+    ssrset_uimm(SSR_STEP_TRAP_COUNT, 0);
+    ssrset_uimm(SSR_STEP_LAST_TRAPNO, 0);
+    ssrset_uimm(SSR_STEP_LAST_TRAPARG0, 0);
+    ssrset_uimm(SSR_STEP_LAST_ECSTATE, 0);
+    ssrset_uimm(SSR_ACR0_TRAPNO, 0);
+    ssrset_uimm(SSR_ACR0_TRAPARG0, 0);
+    ssrset_uimm(SSR_ACR0_ECSTATE, 0);
+    ssrset_uimm(SSR_CONT_EXIT, (uint64_t)(uintptr_t)&linx_after_ri_step_trap_exit);
+    hl_ssrset_uimm24(SSR_EVBASE_ACR1, (uint64_t)(uintptr_t)&linx_acr1_step_trap_pollute_handler);
+    ssrset_uimm(SSR_EVBASE_ACR0, (uint64_t)(uintptr_t)&linx_acr0_exit_handler);
+    ssrset_uimm(SSR_ECSTATE_ACR0, 2); /* target ACR2 */
+    ssrset_uimm(SSR_EBARG_BPC_CUR_ACR0, (uint64_t)(uintptr_t)&linx_acr2_ri_step_trap_user);
+    __asm__ volatile("acre 0" : : : "memory");
+    __builtin_unreachable();
+}
+
+__attribute__((noreturn)) static void linx_after_ri_step_trap_exit(void)
+{
+    const uint64_t trapno = ssrget_uimm(SSR_ACR0_TRAPNO);
+    const uint64_t traparg0 = ssrget_uimm(SSR_ACR0_TRAPARG0);
+    const uint64_t ecstate = ssrget_uimm(SSR_ACR0_ECSTATE);
+    const uint64_t step_count = ssrget_uimm(SSR_STEP_TRAP_COUNT);
+    const uint64_t step_trapno = ssrget_uimm(SSR_STEP_LAST_TRAPNO);
+    const uint64_t step_traparg0 = ssrget_uimm(SSR_STEP_LAST_TRAPARG0);
+    const uint64_t step_ecstate = ssrget_uimm(SSR_STEP_LAST_ECSTATE);
+
+    TEST_EQ64(trapno_is_async(trapno), 0, TESTID_RI_STEP_TRAP_POLLUTE_RESUME + 1);
+    TEST_EQ64(trapno_trapnum(trapno), 6 /* SYSCALL */, TESTID_RI_STEP_TRAP_POLLUTE_RESUME + 2);
+    TEST_EQ64(traparg0, 0 /* SCT_MAC */, TESTID_RI_STEP_TRAP_POLLUTE_RESUME + 3);
+    TEST_EQ64(ecstate & CSTATE_ACR_MASK, 2, TESTID_RI_STEP_TRAP_POLLUTE_RESUME + 4);
+    TEST_EQ64(step_count, 4, TESTID_RI_STEP_TRAP_POLLUTE_RESUME + 5);
+    TEST_EQ64(trapno_is_async(step_trapno), 0, TESTID_RI_STEP_TRAP_POLLUTE_RESUME + 6);
+    TEST_EQ64(trapno_has_argv(step_trapno), 1, TESTID_RI_STEP_TRAP_POLLUTE_RESUME + 7);
+    TEST_EQ64(trapno_trapnum(step_trapno), 50 /* SW_BREAKPOINT */, TESTID_RI_STEP_TRAP_POLLUTE_RESUME + 8);
+    TEST_ASSERT(step_traparg0 != 0, TESTID_RI_STEP_TRAP_POLLUTE_RESUME + 9, 1, step_traparg0);
+    TEST_EQ64(step_ecstate & CSTATE_ACR_MASK, 2, TESTID_RI_STEP_TRAP_POLLUTE_RESUME + 10);
+    TEST_EQ32(STEP_RI_OUT[0], 0x10203040u, TESTID_RI_STEP_TRAP_POLLUTE_RESUME + 11);
+    TEST_EQ32(STEP_RI_OUT[1], 0x50607080u, TESTID_RI_STEP_TRAP_POLLUTE_RESUME + 12);
+
+    test_pass(); /* RI_STEP_TRAP_POLLUTE_RESUME */
 
     /* --------------------------------------------------------------------- */
     /* Hardware watchpoint trap (v0.2)                                        */
