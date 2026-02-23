@@ -11,16 +11,16 @@ Generated: `2026-02-16 18:27:10 UTC`
 
 ## Revisions
 
-- external linux: `4011f8a20` (`/Users/zhoubot/linux`)
-- external qemu: `5294f2d01e` (`/Users/zhoubot/qemu`)
-- pinned linux submodule: `37a93dd5c49b` (`/Users/zhoubot/linx-isa/kernel/linux`)
-- pinned qemu submodule: `8d0c4e0d34` (`/Users/zhoubot/linx-isa/emulator/qemu`)
+- external linux: `4011f8a20` (`${LINUX_ROOT}`)
+- external qemu: `5294f2d01e` (`${QEMU_ROOT}`)
+- pinned linux submodule: `37a93dd5c49b` (`${LINXISA_ROOT}/kernel/linux`)
+- pinned qemu submodule: `8d0c4e0d34` (`${LINXISA_ROOT}/emulator/qemu`)
 
 ## Suggested Next Commands
 
 ```bash
-/Users/zhoubot/llvm-project/build-linxisa-clang/bin/llvm-addr2line -e /Users/zhoubot/linux/build-linx-fixed/vmlinux -f -C 0x3166a0
-/Users/zhoubot/llvm-project/build-linxisa-clang/bin/llvm-nm -n /Users/zhoubot/linux/build-linx-fixed/vmlinux | rg 3166a0
-cd /Users/zhoubot/linux && git bisect start && git bisect bad 4011f8a20 && git bisect good 37a93dd5c49b
-cd /Users/zhoubot/qemu && git bisect start && git bisect bad 5294f2d01e && git bisect good 8d0c4e0d34
+${LLVM_ROOT}/build-linxisa-clang/bin/llvm-addr2line -e ${LINUX_ROOT}/build-linx-fixed/vmlinux -f -C 0x3166a0
+${LLVM_ROOT}/build-linxisa-clang/bin/llvm-nm -n ${LINUX_ROOT}/build-linx-fixed/vmlinux | rg 3166a0
+cd ${LINUX_ROOT} && git bisect start && git bisect bad 4011f8a20 && git bisect good 37a93dd5c49b
+cd ${QEMU_ROOT} && git bisect start && git bisect bad 5294f2d01e && git bisect good 8d0c4e0d34
 ```

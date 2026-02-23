@@ -85,7 +85,9 @@ def _validate_contract_shape(contract: Dict[str, Any], root: Path) -> List[str]:
                     p = root / owner
                 if owner.startswith("qemu/") or owner.startswith("linux/") or owner.startswith("llvm/"):
                     continue
-                if owner.startswith("/Users/"):
+                # Absolute owner paths are treated as external lanes/tools and are not
+                # required to exist within the current repo checkout.
+                if p.is_absolute():
                     continue
                 if not p.exists():
                     errors.append(f"check[{cid}] owner path does not exist: {owner}")

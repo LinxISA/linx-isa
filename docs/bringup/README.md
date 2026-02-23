@@ -25,6 +25,25 @@ This directory tracks v0.3 architecture/implementation alignment and public brin
 - `docs/bringup/phases/`
 - `docs/bringup/contracts/`
 
+## Path Variables in Gate Reports (portable)
+
+Checked-in gate reports under `docs/bringup/gates/` use `${...}` placeholders
+instead of machine-specific absolute paths.
+
+Recommended defaults for an in-tree (pinned) checkout:
+
+- `LINXISA_ROOT` = repo root
+- `LLVM_ROOT` = `${LINXISA_ROOT}/compiler/llvm`
+- `QEMU_ROOT` = `${LINXISA_ROOT}/emulator/qemu`
+- `LINUX_ROOT` = `${LINXISA_ROOT}/kernel/linux`
+- `PYCIRCUIT_ROOT` = `${LINXISA_ROOT}/tools/pyCircuit`
+- `LINXCORE_ROOT` = `${LINXISA_ROOT}/rtl/LinxCore`
+- `GLIBC_ROOT` = `${LINXISA_ROOT}/lib/glibc`
+- `MUSL_ROOT` = `${LINXISA_ROOT}/lib/musl`
+
+For the "external" lane, set these variables to point at your external clones/builds
+if you intentionally keep toolchains outside the superproject.
+
 Gate status markdown refresh command:
 
 `python3 tools/bringup/gate_report.py render --report docs/bringup/gates/latest.json --out-md docs/bringup/GATE_STATUS.md`
