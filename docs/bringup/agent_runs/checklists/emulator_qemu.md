@@ -25,7 +25,7 @@
 
 - [ ] ID: QEMU-006 QEMU can boot full Linux with complete runtime APIs.
   Done means: Linux kernel boots with timer interrupts working, full syscalls available.
-  Status: ❌ FAIL (2026-02-23) - QEMU runtime suites are green in run `2026-02-23-r3-pin-qemu-llvm-linux-fix`, but Linux timer-context diagnostic `ctx_tq_irq_smoke.py` still fails with `irq0_delta=0` and BusyBox rootfs boot remains blocked by missing `mkfs.ext4/mke2fs` (logs: `docs/bringup/gates/logs/2026-02-23-r3-pin-qemu-llvm-linux-fix/pin/kernel_ctx_tq_irq_smoke.log`, `docs/bringup/gates/logs/2026-02-23-r3-pin-qemu-llvm-linux-fix/pin/kernel_busybox_rootfs.log`).
+  Status: ❌ FAIL (2026-02-23) - QEMU runtime suites remain green, but Linux timer-context diagnostic still does not close: `ctx_tq_irq_smoke.py` reaches `# ctx_tq_irq_test` and then cannot produce a passing marker, while boot log shows `EBARG selftest: FAIL id=0x1f40 ... got=0x0` in run `2026-02-23-r4-checklist-push` (log: `docs/bringup/gates/logs/2026-02-23-r4-checklist-push/pin/kernel_ctx_tq_irq_smoke_final.log`). BusyBox rootfs closure remains blocked by missing `mkfs.ext4/mke2fs` (previous evidence: `docs/bringup/gates/logs/2026-02-23-r3-pin-qemu-llvm-linux-fix/pin/kernel_busybox_rootfs.log`).
 
 ---
 
