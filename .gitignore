@@ -63,3 +63,7 @@ workloads/ctuning/out_single/
 # SPEC CPU2017 (too large for upstream)
 workloads/spec2017/
 tools/spec2017/
+
+# Local migration / timer debug scratch
+out/submodule_migration_backup_*
+out/timer_on_qemu*.txt
