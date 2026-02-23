@@ -51,6 +51,22 @@ enum {
     SSR_EBARG_TPC_ACR1 = 0x1F43,
     SSR_TIMER_TIMECMP_ACR1 = 0x1F21,
 
+    /* EBARG group (ACR1 banked). */
+    SSR_EBARG0_ACR1 = 0x1F40,
+    SSR_EBARG_LRA_ACR1 = 0x1F44,
+    SSR_EBARG_TQ0_ACR1 = 0x1F45,
+    SSR_EBARG_TQ1_ACR1 = 0x1F46,
+    SSR_EBARG_TQ2_ACR1 = 0x1F47,
+    SSR_EBARG_TQ3_ACR1 = 0x1F48,
+    SSR_EBARG_UQ0_ACR1 = 0x1F49,
+    SSR_EBARG_UQ1_ACR1 = 0x1F4A,
+    SSR_EBARG_UQ2_ACR1 = 0x1F4B,
+    SSR_EBARG_UQ3_ACR1 = 0x1F4C,
+    SSR_EBARG_LB_ACR1 = 0x1F4D,
+    SSR_EBARG_LC_ACR1 = 0x1F4E,
+    SSR_EBARG_EXT_PTR_ACR1 = 0x1F4F,
+    SSR_EBARG_EXT_META_ACR1 = 0x1F50,
+
     /* v0.2 debug SSRs (bring-up subset). */
     SSR_DBCR0_ACR2 = 0x2F90,
     SSR_DBVR0_ACR2 = 0x2F91,
@@ -75,6 +91,7 @@ enum {
     TESTID_ACRE_BAD_TARGET = 0x110C,
     TESTID_ACR0_BAD_REQ = 0x110D,
     TESTID_DBG_BP_RESUME = 0x110E,
+    TESTID_IRQ_EBARG_PRESERVE = 0x110F,
 };
 
 __attribute__((noreturn)) static void linx_priv_user_code(void);
@@ -99,6 +116,9 @@ __attribute__((noreturn)) static void linx_after_acr2_irq_preempt_exit(void);
 __attribute__((noreturn)) static void linx_acr2_irq_meta_user(void);
 __attribute__((noreturn)) static void linx_acr2_irq_meta_after(void);
 __attribute__((noreturn)) static void linx_after_irq_meta_exit(void);
+__attribute__((noreturn)) static void linx_acr2_irq_ebarg_preserve_user(void);
+__attribute__((noreturn)) static void linx_acr2_irq_ebarg_preserve_after(void);
+__attribute__((noreturn)) static void linx_after_irq_ebarg_preserve_exit(void);
 __attribute__((noreturn)) static void linx_after_acr1_bad_target_trap(void);
 __attribute__((noreturn)) static void linx_after_acr1_bad_target_exit(void);
 __attribute__((noreturn)) static void linx_after_acr0_bad_req_exit(void);
@@ -924,6 +944,99 @@ __attribute__((noreturn)) static void linx_after_irq_meta_exit(void)
     test_pass();
 
     /* --------------------------------------------------------------------- */
+    /* EBARG preservation across IRQ preemption                              */
+    /* --------------------------------------------------------------------- */
+    test_start(TESTID_IRQ_EBARG_PRESERVE);
+
+    ssrset_uimm(SSR_IRQ_SEEN, 0);
+    ssrset_uimm(SSR_CONT_EXIT, (uint64_t)(uintptr_t)&linx_after_irq_ebarg_preserve_exit);
+    hl_ssrset_uimm24(SSR_EVBASE_ACR1, (uint64_t)(uintptr_t)&linx_acr1_timer_handler);
+    ssrset_uimm(SSR_ECSTATE_ACR0, 2); /* enter ACR2 */
+    ssrset_uimm(SSR_EBARG_BPC_CUR_ACR0, (uint64_t)(uintptr_t)&linx_acr2_irq_ebarg_preserve_user);
+    __asm__ volatile("acre 0" : : : "memory");
+    __builtin_unreachable();
+
+    /* Next tests continue from linx_after_irq_ebarg_preserve_exit(). */
+}
+
+__attribute__((noreturn)) static void linx_acr2_irq_ebarg_preserve_user(void)
+{
+    uint64_t cstate = ssrget_cstate_symbol();
+    const uint64_t now = ssrget_time_symbol();
+    const uint64_t fail_deadline = now + 25000000ull; /* 25ms */
+
+    /* Only meaningful when running in ACR2. */
+    TEST_EQ64(cstate & CSTATE_ACR_MASK, 2, TESTID_IRQ_EBARG_PRESERVE + 1);
+
+    /* Program sentinel EBARG fields that should survive an IRQ preemption. */
+    hl_ssrset_uimm24(SSR_EBARG0_ACR1,        0x5a5a000000000040ull);
+    hl_ssrset_uimm24(SSR_EBARG_LRA_ACR1,     0x5a5a000000000044ull);
+    hl_ssrset_uimm24(SSR_EBARG_TQ0_ACR1,     0x5a5a000000000045ull);
+    hl_ssrset_uimm24(SSR_EBARG_TQ1_ACR1,     0x5a5a000000000046ull);
+    hl_ssrset_uimm24(SSR_EBARG_TQ2_ACR1,     0x5a5a000000000047ull);
+    hl_ssrset_uimm24(SSR_EBARG_TQ3_ACR1,     0x5a5a000000000048ull);
+    hl_ssrset_uimm24(SSR_EBARG_UQ0_ACR1,     0x5a5a000000000049ull);
+    hl_ssrset_uimm24(SSR_EBARG_UQ1_ACR1,     0x5a5a00000000004aull);
+    hl_ssrset_uimm24(SSR_EBARG_UQ2_ACR1,     0x5a5a00000000004bull);
+    hl_ssrset_uimm24(SSR_EBARG_UQ3_ACR1,     0x5a5a00000000004cull);
+    hl_ssrset_uimm24(SSR_EBARG_LB_ACR1,      0x5a5a00000000004dull);
+    hl_ssrset_uimm24(SSR_EBARG_LC_ACR1,      0x5a5a00000000004eull);
+    hl_ssrset_uimm24(SSR_EBARG_EXT_PTR_ACR1, 0x5a5a00000000004full);
+    hl_ssrset_uimm24(SSR_EBARG_EXT_META_ACR1,0x5a5a000000000050ull);
+
+    /* Redirect after IRQ through ETEMP0. */
+    hl_ssrset_uimm24(SSR_ETEMP0_ACR1, (uint64_t)(uintptr_t)&linx_acr2_irq_ebarg_preserve_after);
+
+    /* Enable IRQ and arm one-shot timer. */
+    cstate &= ~CSTATE_I_BIT;
+    ssrset_cstate_symbol(cstate);
+    hl_ssrset_uimm24(SSR_TIMER_TIMECMP_ACR1, now + 1000000ull); /* +1ms */
+
+    while (ssrget_time_symbol() < fail_deadline) {
+        /* wait for IRQ preemption to redirect to linx_acr2_irq_ebarg_preserve_after */
+    }
+
+    test_fail(TESTID_IRQ_EBARG_PRESERVE + 2, 1, ssrget_uimm(SSR_IRQ_SEEN));
+    __builtin_unreachable();
+}
+
+__attribute__((noreturn)) static void linx_acr2_irq_ebarg_preserve_after(void)
+{
+    TEST_EQ64(ssrget_uimm(SSR_IRQ_SEEN), 1, TESTID_IRQ_EBARG_PRESERVE + 3);
+
+    TEST_EQ64(hl_ssrget_uimm24(SSR_EBARG0_ACR1),         0x5a5a000000000040ull, TESTID_IRQ_EBARG_PRESERVE + 4);
+    TEST_EQ64(hl_ssrget_uimm24(SSR_EBARG_LRA_ACR1),      0x5a5a000000000044ull, TESTID_IRQ_EBARG_PRESERVE + 5);
+    TEST_EQ64(hl_ssrget_uimm24(SSR_EBARG_TQ0_ACR1),      0x5a5a000000000045ull, TESTID_IRQ_EBARG_PRESERVE + 6);
+    TEST_EQ64(hl_ssrget_uimm24(SSR_EBARG_TQ1_ACR1),      0x5a5a000000000046ull, TESTID_IRQ_EBARG_PRESERVE + 7);
+    TEST_EQ64(hl_ssrget_uimm24(SSR_EBARG_TQ2_ACR1),      0x5a5a000000000047ull, TESTID_IRQ_EBARG_PRESERVE + 8);
+    TEST_EQ64(hl_ssrget_uimm24(SSR_EBARG_TQ3_ACR1),      0x5a5a000000000048ull, TESTID_IRQ_EBARG_PRESERVE + 9);
+    TEST_EQ64(hl_ssrget_uimm24(SSR_EBARG_UQ0_ACR1),      0x5a5a000000000049ull, TESTID_IRQ_EBARG_PRESERVE + 10);
+    TEST_EQ64(hl_ssrget_uimm24(SSR_EBARG_UQ1_ACR1),      0x5a5a00000000004aull, TESTID_IRQ_EBARG_PRESERVE + 11);
+    TEST_EQ64(hl_ssrget_uimm24(SSR_EBARG_UQ2_ACR1),      0x5a5a00000000004bull, TESTID_IRQ_EBARG_PRESERVE + 12);
+    TEST_EQ64(hl_ssrget_uimm24(SSR_EBARG_UQ3_ACR1),      0x5a5a00000000004cull, TESTID_IRQ_EBARG_PRESERVE + 13);
+    TEST_EQ64(hl_ssrget_uimm24(SSR_EBARG_LB_ACR1),       0x5a5a00000000004dull, TESTID_IRQ_EBARG_PRESERVE + 14);
+    TEST_EQ64(hl_ssrget_uimm24(SSR_EBARG_LC_ACR1),       0x5a5a00000000004eull, TESTID_IRQ_EBARG_PRESERVE + 15);
+    TEST_EQ64(hl_ssrget_uimm24(SSR_EBARG_EXT_PTR_ACR1),  0x5a5a00000000004full, TESTID_IRQ_EBARG_PRESERVE + 16);
+    TEST_EQ64(hl_ssrget_uimm24(SSR_EBARG_EXT_META_ACR1), 0x5a5a000000000050ull, TESTID_IRQ_EBARG_PRESERVE + 17);
+
+    __asm__ volatile("acrc 0\n  c.bstop\n" : : : "memory");
+    __builtin_unreachable();
+}
+
+__attribute__((noreturn)) static void linx_after_irq_ebarg_preserve_exit(void)
+{
+    const uint64_t trapno = ssrget_uimm(SSR_ACR0_TRAPNO);
+    const uint64_t traparg0 = ssrget_uimm(SSR_ACR0_TRAPARG0);
+    const uint64_t ecstate = ssrget_uimm(SSR_ACR0_ECSTATE);
+
+    TEST_EQ64(trapno_is_async(trapno), 0, TESTID_IRQ_EBARG_PRESERVE + 18);
+    TEST_EQ64(trapno_trapnum(trapno), 6 /* SYSCALL */, TESTID_IRQ_EBARG_PRESERVE + 19);
+    TEST_EQ64(traparg0, 0 /* SCT_MAC */, TESTID_IRQ_EBARG_PRESERVE + 20);
+    TEST_EQ64(ecstate & CSTATE_ACR_MASK, 2, TESTID_IRQ_EBARG_PRESERVE + 21);
+
+    test_pass();
+
+    /* --------------------------------------------------------------------- */
     /* ACRE target validation: ACR1 -> ACR0 must trap EXEC_STATE_CHECK       */
     /* --------------------------------------------------------------------- */
     test_start(TESTID_ACRE_BAD_TARGET);
@@ -1025,7 +1138,7 @@ __attribute__((noreturn)) static void linx_after_acr0_bad_req_exit(void)
     }
 }
 
-__attribute__((noreturn)) static void linx_system_done(void)
+__attribute__((unused, noreturn)) static void linx_system_done(void)
 {
     uart_puts("*** REGRESSION PASSED ***\r\n");
     EXIT_CODE = 0;

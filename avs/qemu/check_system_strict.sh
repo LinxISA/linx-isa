@@ -27,6 +27,7 @@ CMD=(
   --require-test-id 0x110C
   --require-test-id 0x110D
   --require-test-id 0x110E
+  --require-test-id 0x110F
 )
 
 if ! [[ "$RETRIES" =~ ^[0-9]+$ ]] || [[ "$RETRIES" -lt 1 ]]; then
