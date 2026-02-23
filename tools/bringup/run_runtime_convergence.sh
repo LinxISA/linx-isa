@@ -8,11 +8,11 @@ REPORT="$ROOT/docs/bringup/gates/latest.json"
 LINX_BRINGUP_PROFILE="${LINX_BRINGUP_PROFILE:-release-strict}" # dev|release-strict
 TRACE_SCHEMA_VERSION="${TRACE_SCHEMA_VERSION:-1.0}"
 EXTERNAL_ROOT="${EXTERNAL_ROOT:-$HOME}"
-LINUX_ROOT="${LINUX_ROOT:-$HOME/linux}"
+LINUX_ROOT="${LINUX_ROOT:-$ROOT/kernel/linux}"
 OUT_BASE="$ROOT/docs/bringup/gates/logs"
 QEMU_TIMEOUT="${QEMU_TIMEOUT:-10}"
 MUSL_TIMEOUT="${MUSL_TIMEOUT:-90}"
-LINX_DISABLE_TIMER_IRQ="${LINX_DISABLE_TIMER_IRQ:-1}"
+LINX_DISABLE_TIMER_IRQ="${LINX_DISABLE_TIMER_IRQ:-0}"
 LINX_EMU_DISABLE_TIMER_IRQ="${LINX_EMU_DISABLE_TIMER_IRQ:-0}"
 RUN_GLIBC_G1B="${RUN_GLIBC_G1B-}"
 GLIBC_G1B_ALLOW_BLOCKED="${GLIBC_G1B_ALLOW_BLOCKED-}"
@@ -67,7 +67,7 @@ Options:
   --run-id ID                  Run identifier (default: YYYY-MM-DD-r1-<lane>)
   --report PATH                Gate report JSON path
   --external-root PATH         External workspace root (default: $HOME)
-  --linux-root PATH            External linux root (default: $HOME/linux)
+  --linux-root PATH            Linux root (default: $ROOT/kernel/linux)
   --qemu-timeout SEC           run_tests.sh timeout (default: 10)
   --musl-timeout SEC           musl smoke timeout (default: 90)
   --skip-glibc-g1b             Skip glibc G1b shared libc.so gate
@@ -156,10 +156,18 @@ resolve_clang() {
     echo "${CLANG}"
     return
   fi
-  local cands=(
-    "$HOME/llvm-project/build-linxisa-clang/bin/clang"
-    "$ROOT/compiler/llvm/build-linxisa-clang/bin/clang"
-  )
+  local cands=()
+  if [[ "$LANE" == "pin" ]]; then
+    cands=(
+      "$ROOT/compiler/llvm/build-linxisa-clang/bin/clang"
+      "$HOME/llvm-project/build-linxisa-clang/bin/clang"
+    )
+  else
+    cands=(
+      "$HOME/llvm-project/build-linxisa-clang/bin/clang"
+      "$ROOT/compiler/llvm/build-linxisa-clang/bin/clang"
+    )
+  fi
   local c
   for c in "${cands[@]}"; do
     if [[ -x "$c" ]]; then
@@ -229,6 +237,10 @@ if [[ -z "$QEMU_BIN" ]]; then
 fi
 if [[ ! -d "$LINUX_ROOT/tools/linxisa/initramfs" ]]; then
   echo "error: linux initramfs tooling missing: $LINUX_ROOT/tools/linxisa/initramfs" >&2
+  exit 1
+fi
+if [[ ! -f "$LINUX_ROOT/tools/linxisa/busybox_rootfs/boot.py" ]]; then
+  echo "error: linux busybox rootfs tooling missing: $LINUX_ROOT/tools/linxisa/busybox_rootfs/boot.py" >&2
   exit 1
 fi
 
@@ -471,6 +483,14 @@ if [[ $SKIP_LINUX -eq 0 ]]; then
     "linux_full_boot_pass" \
     "linux_full_boot_fail" \
     "kernel_full_boot"
+
+  run_gate \
+    "Kernel" \
+    "Linux busybox rootfs boot" \
+    "LINX_DISABLE_TIMER_IRQ=$LINX_DISABLE_TIMER_IRQ QEMU=$QEMU_BIN python3 $LINUX_ROOT/tools/linxisa/busybox_rootfs/boot.py" \
+    "linux_busybox_rootfs_pass" \
+    "linux_busybox_rootfs_fail" \
+    "kernel_busybox_rootfs"
 else
   record_gate \
     "Kernel" \
@@ -487,6 +507,17 @@ else
     "Kernel" \
     "Linux initramfs full boot" \
     "LINX_DISABLE_TIMER_IRQ=$LINX_DISABLE_TIMER_IRQ QEMU=$QEMU_BIN python3 $LINUX_ROOT/tools/linxisa/initramfs/full_boot.py" \
+    "not_run" \
+    "skipped_by_flag" \
+    "note: --skip-linux" \
+    "no" \
+    "no" \
+    "kernel" \
+    "note"
+  record_gate \
+    "Kernel" \
+    "Linux busybox rootfs boot" \
+    "LINX_DISABLE_TIMER_IRQ=$LINX_DISABLE_TIMER_IRQ QEMU=$QEMU_BIN python3 $LINUX_ROOT/tools/linxisa/busybox_rootfs/boot.py" \
     "not_run" \
     "skipped_by_flag" \
     "note: --skip-linux" \
@@ -544,13 +575,15 @@ fi
 
 if [[ $SKIP_STRICT_CROSS -eq 0 ]]; then
   QEMU_LANE_VALUE="external"
+  TOOLCHAIN_LANE_VALUE="external"
   if [[ "$LANE" == "pin" ]]; then
     QEMU_LANE_VALUE="pin"
+    TOOLCHAIN_LANE_VALUE="pin"
   fi
   run_gate \
     "Regression" \
     "strict_cross_repo.sh" \
-    "cd $ROOT && SKIP_BUILD=1 TOOLCHAIN_LANE=external QEMU_LANE=$QEMU_LANE_VALUE QEMU=$QEMU_BIN LINX_DISABLE_TIMER_IRQ=$LINX_DISABLE_TIMER_IRQ LINX_EMU_DISABLE_TIMER_IRQ=$LINX_EMU_DISABLE_TIMER_IRQ RUN_GLIBC_G1=0 RUN_GLIBC_G1B=$RUN_GLIBC_G1B RUN_MODEL_DIFF=$RUN_MODEL_DIFF RUN_CPP_GATES=$RUN_CPP_GATES CPP_MODE=$CPP_MODE RUN_CONSISTENCY_CHECKS=0 ALLOW_GLIBC_G1_BLOCKED=$STRICT_CROSS_ALLOW_G1_BLOCKED GLIBC_G1B_ALLOW_BLOCKED=$GLIBC_G1B_ALLOW_BLOCKED MULTI_AGENT_MANIFEST=$MULTI_AGENT_MANIFEST MULTI_AGENT_WAIVERS=$MULTI_AGENT_WAIVERS MULTI_AGENT_CHECKLISTS_ROOT=$MULTI_AGENT_CHECKLISTS_ROOT MULTI_AGENT_REPORT=$REPORT MULTI_AGENT_LANE=$LANE MULTI_AGENT_RUN_ID=$RUN_ID MULTI_AGENT_OUT=$RUN_LOG_DIR/multi_agent_summary.strict_cross.json bash tools/regression/strict_cross_repo.sh" \
+    "cd $ROOT && SKIP_BUILD=1 TOOLCHAIN_LANE=$TOOLCHAIN_LANE_VALUE QEMU_LANE=$QEMU_LANE_VALUE QEMU=$QEMU_BIN LINX_DISABLE_TIMER_IRQ=$LINX_DISABLE_TIMER_IRQ LINX_EMU_DISABLE_TIMER_IRQ=$LINX_EMU_DISABLE_TIMER_IRQ RUN_GLIBC_G1=0 RUN_GLIBC_G1B=$RUN_GLIBC_G1B RUN_MODEL_DIFF=$RUN_MODEL_DIFF RUN_CPP_GATES=$RUN_CPP_GATES CPP_MODE=$CPP_MODE RUN_CONSISTENCY_CHECKS=0 ALLOW_GLIBC_G1_BLOCKED=$STRICT_CROSS_ALLOW_G1_BLOCKED GLIBC_G1B_ALLOW_BLOCKED=$GLIBC_G1B_ALLOW_BLOCKED MULTI_AGENT_MANIFEST=$MULTI_AGENT_MANIFEST MULTI_AGENT_WAIVERS=$MULTI_AGENT_WAIVERS MULTI_AGENT_CHECKLISTS_ROOT=$MULTI_AGENT_CHECKLISTS_ROOT MULTI_AGENT_REPORT=$REPORT MULTI_AGENT_LANE=$LANE MULTI_AGENT_RUN_ID=$RUN_ID MULTI_AGENT_OUT=$RUN_LOG_DIR/multi_agent_summary.strict_cross.json bash tools/regression/strict_cross_repo.sh" \
     "strict_cross_repo_pass" \
     "strict_cross_repo_fail" \
     "reg_strict_cross_repo"
@@ -558,7 +591,7 @@ else
   record_gate \
     "Regression" \
     "strict_cross_repo.sh" \
-    "cd $ROOT && SKIP_BUILD=1 TOOLCHAIN_LANE=external QEMU_LANE=$LANE QEMU=$QEMU_BIN LINX_DISABLE_TIMER_IRQ=$LINX_DISABLE_TIMER_IRQ LINX_EMU_DISABLE_TIMER_IRQ=$LINX_EMU_DISABLE_TIMER_IRQ RUN_GLIBC_G1=0 RUN_GLIBC_G1B=$RUN_GLIBC_G1B RUN_MODEL_DIFF=$RUN_MODEL_DIFF RUN_CPP_GATES=$RUN_CPP_GATES CPP_MODE=$CPP_MODE RUN_CONSISTENCY_CHECKS=0 ALLOW_GLIBC_G1_BLOCKED=$STRICT_CROSS_ALLOW_G1_BLOCKED GLIBC_G1B_ALLOW_BLOCKED=$GLIBC_G1B_ALLOW_BLOCKED bash tools/regression/strict_cross_repo.sh" \
+    "cd $ROOT && SKIP_BUILD=1 TOOLCHAIN_LANE=$LANE QEMU_LANE=$LANE QEMU=$QEMU_BIN LINX_DISABLE_TIMER_IRQ=$LINX_DISABLE_TIMER_IRQ LINX_EMU_DISABLE_TIMER_IRQ=$LINX_EMU_DISABLE_TIMER_IRQ RUN_GLIBC_G1=0 RUN_GLIBC_G1B=$RUN_GLIBC_G1B RUN_MODEL_DIFF=$RUN_MODEL_DIFF RUN_CPP_GATES=$RUN_CPP_GATES CPP_MODE=$CPP_MODE RUN_CONSISTENCY_CHECKS=0 ALLOW_GLIBC_G1_BLOCKED=$STRICT_CROSS_ALLOW_G1_BLOCKED GLIBC_G1B_ALLOW_BLOCKED=$GLIBC_G1B_ALLOW_BLOCKED bash tools/regression/strict_cross_repo.sh" \
     "not_run" \
     "skipped_by_flag" \
     "note: --skip-strict-cross" \

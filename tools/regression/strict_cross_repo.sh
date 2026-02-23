@@ -10,11 +10,11 @@ echo "profile: $LINX_BRINGUP_PROFILE"
 CLANG="${CLANG:-}"
 LLD="${LLD:-}"
 QEMU="${QEMU:-}"
-TOOLCHAIN_LANE="${TOOLCHAIN_LANE:-external}" # external|pin|auto
-# Runtime stability baseline defaults to external until pin lane converges.
-QEMU_LANE="${QEMU_LANE:-external}" # auto|pin|external
+TOOLCHAIN_LANE="${TOOLCHAIN_LANE:-pin}" # external|pin|auto
+# Runtime and emulator defaults pin to the in-repo submodule toolchain.
+QEMU_LANE="${QEMU_LANE:-pin}" # auto|pin|external
 QEMU_ROOT="${QEMU_ROOT:-}"
-LINX_DISABLE_TIMER_IRQ="${LINX_DISABLE_TIMER_IRQ:-1}" # Linux runtime stabilization default
+LINX_DISABLE_TIMER_IRQ="${LINX_DISABLE_TIMER_IRQ:-0}" # timer IRQ enabled by default
 LINX_EMU_DISABLE_TIMER_IRQ="${LINX_EMU_DISABLE_TIMER_IRQ:-0}" # strict system/test coverage needs timer IRQ
 
 RUN_GLIBC_G1="${RUN_GLIBC_G1:-1}"
@@ -130,16 +130,14 @@ if [[ -z "$QEMU" ]]; then
       ;;
     external)
       qemu_candidates=(
-        "${QEMU_ROOT:-$HOME/qemu}/build/qemu-system-linx64"
-        "${QEMU_ROOT:-$HOME/qemu}/build-tci/qemu-system-linx64"
+        "$ROOT/emulator/qemu/build/qemu-system-linx64"
+        "$ROOT/emulator/qemu/build-tci/qemu-system-linx64"
       )
       ;;
     auto)
       qemu_candidates=(
         "$ROOT/emulator/qemu/build/qemu-system-linx64"
         "$ROOT/emulator/qemu/build-tci/qemu-system-linx64"
-        "${QEMU_ROOT:-$HOME/qemu}/build/qemu-system-linx64"
-        "${QEMU_ROOT:-$HOME/qemu}/build-tci/qemu-system-linx64"
       )
       ;;
     *)
@@ -178,6 +176,10 @@ echo
 echo "-- Compiler AVS gate"
 (cd "$ROOT/avs/compiler/linx-llvm/tests" && CLANG="$CLANG" ./run.sh)
 
+echo
+echo "-- Handwritten asm t/u target audit"
+bash "$ROOT/tools/ci/check_linx_no_tu_targets.sh"
+
 if [[ "$RUN_CPP_GATES" == "1" ]]; then
   CLANGXX="$(cd "$(dirname "$CLANG")" && pwd)/clang++"
   if [[ ! -x "$CLANGXX" ]]; then
@@ -200,9 +202,13 @@ echo
 echo "-- QEMU strict system gate"
 (cd "$ROOT/avs/qemu" && LINX_DISABLE_TIMER_IRQ="$LINX_EMU_DISABLE_TIMER_IRQ" CLANG="$CLANG" LLD="$LLD" QEMU="$QEMU" ./check_system_strict.sh)
 
-LINUX_ROOT="${LINUX_ROOT:-$HOME/linux}"
+LINUX_ROOT="${LINUX_ROOT:-$ROOT/kernel/linux}"
 if [[ ! -d "$LINUX_ROOT/tools/linxisa/initramfs" ]]; then
   echo "error: Linux initramfs tooling not found at $LINUX_ROOT/tools/linxisa/initramfs" >&2
+  exit 1
+fi
+if [[ ! -f "$LINUX_ROOT/tools/linxisa/busybox_rootfs/boot.py" ]]; then
+  echo "error: Linux busybox rootfs tooling not found at $LINUX_ROOT/tools/linxisa/busybox_rootfs/boot.py" >&2
   exit 1
 fi
 
@@ -210,6 +216,7 @@ echo
 echo "-- Linux initramfs smoke/full"
 LINX_DISABLE_TIMER_IRQ="$LINX_DISABLE_TIMER_IRQ" QEMU="$QEMU" python3 "$LINUX_ROOT/tools/linxisa/initramfs/smoke.py"
 LINX_DISABLE_TIMER_IRQ="$LINX_DISABLE_TIMER_IRQ" QEMU="$QEMU" python3 "$LINUX_ROOT/tools/linxisa/initramfs/full_boot.py"
+LINX_DISABLE_TIMER_IRQ="$LINX_DISABLE_TIMER_IRQ" QEMU="$QEMU" python3 "$LINUX_ROOT/tools/linxisa/busybox_rootfs/boot.py"
 
 echo
 echo "-- musl runtime smoke (phase-b, static+shared)"
