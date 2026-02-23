@@ -1,47 +1,66 @@
 #!/usr/bin/env python3
-"""Patch hard-coded user-specific paths in docs/runbooks.
+"""Patch hard-coded *user-specific* absolute paths in docs/runbooks.
 
-This is intentionally conservative: it only rewrites a small set of known
-hard-coded prefixes to repo-relative or variable-based forms.
+Goal: make checked-in docs and gate reports portable across machines/OSes.
+
+This script is intentionally conservative:
+- it targets doc-like file extensions (including .json gate artifacts)
+- it rewrites common absolute root prefixes to either repo-root variables
+  or external-lane variables
+
+It does **not** attempt to validate the resulting paths; it only de-hardcodes.
 """
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
-# (old, new)
-REPLACEMENTS: list[tuple[str, str]] = [
-    ("/Users/zhoubot/linx-isa/", ""),
-    ("/Users/zhoubot/linx-isa", "."),
-    ("cd /Users/zhoubot/linx-isa", "cd ."),
-    ("/Users/zhoubot/linux/", "${LINUX_ROOT}/"),
-    ("/Users/zhoubot/linux", "${LINUX_ROOT}"),
-    ("/Users/zhoubot/llvm-project/", "${LLVM_ROOT}/"),
-    ("/Users/zhoubot/llvm-project", "${LLVM_ROOT}"),
-    ("/Users/zhoubot/qemu/", "${QEMU_ROOT}/"),
-    ("/Users/zhoubot/qemu", "${QEMU_ROOT}"),
-    ("/Users/zhoubot/pyCircuit", "${PYCIRCUIT_ROOT}"),
-    ("/Users/zhoubot/LinxCore", "${LINXCORE_ROOT}"),
+# Regex replacements (pattern -> replacement)
+# Order matters: rewrite the in-repo prefix first.
+REPLACEMENTS_RX: list[tuple[re.Pattern[str], str]] = [
+    # In-repo absolute paths.
+    # Match as a path token even when followed by whitespace/quotes/commas, etc.
+    (re.compile(r"/(Users|home)/[^/]+/linx-isa(?=(/|\s|\"|'|`|,|:|\)|\]|\}|$))"), "${LINXISA_ROOT}"),
+
+    # External-lane roots (typical standalone clones outside the superproject).
+    (re.compile(r"/(Users|home)/[^/]+/linux(?=(/|\s|\"|'|`|,|:|\)|\]|\}|$))"), "${LINUX_ROOT}"),
+    (re.compile(r"/(Users|home)/[^/]+/glibc(?=(/|\s|\"|'|`|,|:|\)|\]|\}|$))"), "${GLIBC_ROOT}"),
+    (re.compile(r"/(Users|home)/[^/]+/musl(?=(/|\s|\"|'|`|,|:|\)|\]|\}|$))"), "${MUSL_ROOT}"),
+    (re.compile(r"/(Users|home)/[^/]+/llvm-project(?=(/|\s|\"|'|`|,|:|\)|\]|\}|$))"), "${LLVM_ROOT}"),
+    (re.compile(r"/(Users|home)/[^/]+/qemu(?=(/|\s|\"|'|`|,|:|\)|\]|\}|$))"), "${QEMU_ROOT}"),
+    (re.compile(r"/(Users|home)/[^/]+/pyCircuit(?=(/|\s|\"|'|`|,|:|\)|\]|\}|$))"), "${PYCIRCUIT_ROOT}"),
+    (re.compile(r"/(Users|home)/[^/]+/LinxCore(?=(/|\s|\"|'|`|,|:|\)|\]|\}|$))"), "${LINXCORE_ROOT}"),
+
+    # Normalize common command snippets.
+    (re.compile(r"\bcd\s+\$\{LINXISA_ROOT\}\b"), "cd ${LINXISA_ROOT}"),
 ]
 
 TARGETS = [
     REPO_ROOT / "docs" / "bringup",
     REPO_ROOT / "docs" / "reference",
     REPO_ROOT / "avs" / "qemu" / "README.md",
+    # Some bring-up artifacts are tracked under out/ for now.
+    REPO_ROOT / "out" / "bringup",
 ]
 
 
 def patch_file(path: Path) -> bool:
     if not path.is_file():
         return False
-    if path.suffix.lower() not in {".md", ".py", ".sh", ".yaml", ".yml"}:
+
+    # Only patch doc-like files (keep this conservative).
+    if path.suffix.lower() not in {".md", ".adoc", ".py", ".sh", ".yaml", ".yml", ".json"}:
         return False
+
     text = path.read_text(encoding="utf-8", errors="replace")
     orig = text
-    for old, new in REPLACEMENTS:
-        text = text.replace(old, new)
+
+    for rx, repl in REPLACEMENTS_RX:
+        text = rx.sub(repl, text)
+
     if text != orig:
         path.write_text(text, encoding="utf-8")
         return True

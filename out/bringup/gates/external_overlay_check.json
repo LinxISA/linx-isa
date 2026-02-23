@@ -1,12 +1,12 @@
 {
   "gates": [
     {
-      "command": "bash /Users/zhoubot/linx-isa/tools/regression/check_linux_tree_sanity.sh",
-      "cwd": "/Users/zhoubot/linx-isa",
+      "command": "bash ${LINXISA_ROOT}/tools/regression/check_linux_tree_sanity.sh",
+      "cwd": "${LINXISA_ROOT}",
       "duration_sec": 0.039,
       "ended_at": "2026-02-16T18:59:28Z",
       "id": "linux_tree_sanity",
-      "log": "/Users/zhoubot/linx-isa/out/bringup/gates/logs/external_linux_tree_sanity.log",
+      "log": "${LINXISA_ROOT}/out/bringup/gates/logs/external_linux_tree_sanity.log",
       "name": "Linux tree sanity (no hidden overlays)",
       "rc": 2,
       "started_at": "2026-02-16T18:59:28Z",
@@ -16,69 +16,69 @@
   "generated_at": "2026-02-16T18:59:25Z",
   "lane": "external",
   "lane_paths": {
-    "glibc_root": "/Users/zhoubot/glibc",
-    "linux_root": "/Users/zhoubot/linux",
-    "linxcore_root": "/Users/zhoubot/LinxCore",
-    "llvm_root": "/Users/zhoubot/llvm-project",
-    "musl_root": "/Users/zhoubot/linx-isa/lib/musl",
-    "pycircuit_root": "/Users/zhoubot/pyCircuit",
-    "qemu_root": "/Users/zhoubot/qemu"
+    "glibc_root": "${GLIBC_ROOT}",
+    "linux_root": "${LINUX_ROOT}",
+    "linxcore_root": "${LINXCORE_ROOT}",
+    "llvm_root": "${LLVM_ROOT}",
+    "musl_root": "${LINXISA_ROOT}/lib/musl",
+    "pycircuit_root": "${PYCIRCUIT_ROOT}",
+    "qemu_root": "${QEMU_ROOT}"
   },
-  "repo_root": "/Users/zhoubot/linx-isa",
+  "repo_root": "${LINXISA_ROOT}",
   "sha_manifest": {
     "glibc": {
       "dirty": true,
       "git": true,
-      "path": "/Users/zhoubot/glibc",
+      "path": "${GLIBC_ROOT}",
       "present": true,
       "sha": "04e750e75b"
     },
     "linux": {
       "dirty": false,
       "git": true,
-      "path": "/Users/zhoubot/linux",
+      "path": "${LINUX_ROOT}",
       "present": true,
       "sha": "4011f8a20"
     },
     "linx_isa": {
       "dirty": true,
       "git": true,
-      "path": "/Users/zhoubot/linx-isa",
+      "path": "${LINXISA_ROOT}",
       "present": true,
       "sha": "70ae9b3"
     },
     "linxcore": {
       "dirty": true,
       "git": true,
-      "path": "/Users/zhoubot/LinxCore",
+      "path": "${LINXCORE_ROOT}",
       "present": true,
       "sha": "fbb0450"
     },
     "llvm": {
       "dirty": true,
       "git": true,
-      "path": "/Users/zhoubot/llvm-project",
+      "path": "${LLVM_ROOT}",
       "present": true,
       "sha": "ff018fd02a03"
     },
     "musl": {
       "dirty": false,
       "git": true,
-      "path": "/Users/zhoubot/linx-isa/lib/musl",
+      "path": "${LINXISA_ROOT}/lib/musl",
       "present": true,
       "sha": "3bbe5826"
     },
     "pycircuit": {
       "dirty": true,
       "git": true,
-      "path": "/Users/zhoubot/pyCircuit",
+      "path": "${PYCIRCUIT_ROOT}",
       "present": true,
       "sha": "edc3ef5"
     },
     "qemu": {
       "dirty": true,
       "git": true,
-      "path": "/Users/zhoubot/qemu",
+      "path": "${QEMU_ROOT}",
       "present": true,
       "sha": "5294f2d01e"
     }
@@ -89,8 +89,8 @@
     "skipped": 0
   },
   "tooling": {
-    "clang": "/Users/zhoubot/llvm-project/build-linxisa-clang/bin/clang",
-    "lld": "/Users/zhoubot/llvm-project/build-linxisa-clang/bin/ld.lld",
-    "qemu": "/Users/zhoubot/qemu/build-tci/qemu-system-linx64"
+    "clang": "${LLVM_ROOT}/build-linxisa-clang/bin/clang",
+    "lld": "${LLVM_ROOT}/build-linxisa-clang/bin/ld.lld",
+    "qemu": "${QEMU_ROOT}/build-tci/qemu-system-linx64"
   }
 }

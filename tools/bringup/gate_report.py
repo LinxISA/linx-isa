@@ -201,6 +201,36 @@ def _external_paths(external_root: Path) -> dict[str, Path]:
     }
 
 
+def _portable_manifest_path(*, lane: str, repo: str, path: Path, root: Path) -> str:
+    """Render a portable path token for checked-in gate reports.
+
+    We avoid embedding machine-specific absolute paths in committed JSON.
+    """
+
+    if lane == "pin":
+        if repo == "linx-isa":
+            return "${LINXISA_ROOT}"
+        try:
+            rel = path.resolve().relative_to(root.resolve())
+        except Exception:
+            return str(path)
+        return "${LINXISA_ROOT}/" + rel.as_posix()
+
+    if lane == "external":
+        external_vars = {
+            "llvm": "${LLVM_ROOT}",
+            "qemu": "${QEMU_ROOT}",
+            "linux": "${LINUX_ROOT}",
+            "linxcore": "${LINXCORE_ROOT}",
+            "pycircuit": "${PYCIRCUIT_ROOT}",
+            "glibc": "${GLIBC_ROOT}",
+            "musl": "${MUSL_ROOT}",
+        }
+        return external_vars.get(repo, str(path))
+
+    return str(path)
+
+
 def _collect_sha_manifest(lane: str, root: Path, external_root: Path) -> dict[str, Any]:
     if lane == "pin":
         repos = _pin_paths(root)
@@ -213,7 +243,7 @@ def _collect_sha_manifest(lane: str, root: Path, external_root: Path) -> dict[st
     for repo, path in repos.items():
         sha = _run_git_rev(path)
         out[repo] = {
-            "path": str(path),
+            "path": _portable_manifest_path(lane=lane, repo=repo, path=path, root=root),
             "sha": sha if sha is not None else "missing",
         }
     return out

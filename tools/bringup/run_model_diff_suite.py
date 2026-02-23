@@ -153,6 +153,15 @@ def _safe_name(value: str) -> str:
     return "".join(ch if ch.isalnum() or ch in {"-", "_"} else "_" for ch in value)
 
 
+def _portable_path(path: Path, *, root: Path) -> str:
+    """Prefer a repo-root placeholder for paths inside the linx-isa tree."""
+    try:
+        rel = path.resolve().relative_to(root.resolve())
+    except Exception:
+        return str(path)
+    return "${LINXISA_ROOT}/" + rel.as_posix()
+
+
 def _required_for_profile(case: dict[str, Any], profile: str) -> bool:
     required_profiles = case.get("required_in_profile")
     if isinstance(required_profiles, list):
@@ -302,7 +311,7 @@ def main(argv: list[str]) -> int:
         cleanup_work = True
 
     summary: dict[str, Any] = {
-        "suite": str(suite_path),
+        "suite": _portable_path(suite_path, root=root),
         "profile": args.profile,
         "trace_schema_version": args.trace_schema_version,
         "cases": [],
@@ -380,7 +389,7 @@ def main(argv: list[str]) -> int:
                         "status": "fail",
                         "stage": "compile",
                         "seed": seed,
-                        "log": str(log),
+                        "log": _portable_path(log, root=root),
                     }
                     summary["cases"].append(result)
                     if required:
@@ -405,7 +414,7 @@ def main(argv: list[str]) -> int:
                         "status": "fail",
                         "stage": "qemu",
                         "seed": seed,
-                        "log": str(log),
+                        "log": _portable_path(log, root=root),
                     }
                     summary["cases"].append(result)
                     if required:
@@ -425,7 +434,7 @@ def main(argv: list[str]) -> int:
                         "status": "fail",
                         "stage": "shape_block_kind",
                         "seed": seed,
-                        "log": str(log),
+                        "log": _portable_path(log, root=root),
                     }
                     summary["cases"].append(result)
                     if required:
@@ -459,7 +468,7 @@ def main(argv: list[str]) -> int:
                         "status": "fail",
                         "stage": "model",
                         "seed": seed,
-                        "log": str(log),
+                        "log": _portable_path(log, root=root),
                     }
                     summary["cases"].append(result)
                     if required:
@@ -506,7 +515,7 @@ def main(argv: list[str]) -> int:
                             "status": "fail",
                             "stage": f"{trace_name}_trace_schema",
                             "seed": seed,
-                            "log": str(log),
+                            "log": _portable_path(log, root=root),
                         }
                         summary["cases"].append(result)
                         if required:
@@ -524,7 +533,7 @@ def main(argv: list[str]) -> int:
                             "status": "pass",
                             "stage": "schema_only",
                             "seed": seed,
-                            "log": str(log),
+                            "log": _portable_path(log, root=root),
                         }
                         summary["cases"].append(result)
                         if required and category in required_categories:
@@ -556,7 +565,7 @@ def main(argv: list[str]) -> int:
                             "status": "fail",
                             "stage": diff_stage,
                             "seed": seed,
-                            "log": str(log),
+                            "log": _portable_path(log, root=root),
                         }
                         summary["cases"].append(result)
                         if required:
@@ -570,7 +579,7 @@ def main(argv: list[str]) -> int:
                             "status": "pass",
                             "stage": "complete",
                             "seed": seed,
-                            "log": str(log),
+                            "log": _portable_path(log, root=root),
                         }
                         summary["cases"].append(result)
                         if required and category in required_categories:
@@ -587,7 +596,7 @@ def main(argv: list[str]) -> int:
             overall_fail = True
 
         summary["ok"] = not overall_fail
-        summary["workdir"] = str(base_work)
+        summary["workdir"] = _portable_path(base_work, root=root)
         if args.report_out:
             out = Path(args.report_out).resolve()
             out.parent.mkdir(parents=True, exist_ok=True)
