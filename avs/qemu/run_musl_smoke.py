@@ -32,6 +32,12 @@ SAMPLES: dict[str, dict[str, str]] = {
         "start": "MUSL_CPP17_START",
         "pass": "MUSL_CPP17_PASS",
     },
+    "ebarg_timer": {
+        "src": "tests/15_ebarg_init.c",
+        "start": "EBARG_INIT_START",
+        "pass": "[linx] EBARG selftest: PASS",
+    },
+
 }
 
 
