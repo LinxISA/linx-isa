@@ -34,9 +34,7 @@ python3 "$ROOT/tools/bringup/check_multi_agent_gates.py" \
 LEGACY_SCAN_ARGS=()
 if [[ "${ENABLE_CROSS_REPO_SCAN:-0}" == "1" ]]; then
   DEFAULT_LINUX_ROOT="$ROOT/kernel/linux"
-  [[ -d "$DEFAULT_LINUX_ROOT" ]] || DEFAULT_LINUX_ROOT="$HOME/linux"
   DEFAULT_QEMU_ROOT="$ROOT/emulator/qemu"
-  [[ -d "$DEFAULT_QEMU_ROOT" ]] || DEFAULT_QEMU_ROOT="$HOME/qemu"
   DEFAULT_LLVM_ROOT="$ROOT/compiler/llvm"
   [[ -d "$DEFAULT_LLVM_ROOT" ]] || DEFAULT_LLVM_ROOT="$HOME/llvm-project"
 
@@ -119,8 +117,8 @@ if [[ -z "$QEMU" ]]; then
   case "$QEMU_LANE" in
     external)
       qemu_candidates=(
-        "${QEMU_ROOT:-$HOME/qemu}/build/qemu-system-linx64"
-        "${QEMU_ROOT:-$HOME/qemu}/build-tci/qemu-system-linx64"
+        "$ROOT/emulator/qemu/build/qemu-system-linx64"
+        "$ROOT/emulator/qemu/build-tci/qemu-system-linx64"
       )
       ;;
     pin)
@@ -131,8 +129,6 @@ if [[ -z "$QEMU" ]]; then
       ;;
     auto)
       qemu_candidates=(
-        "${QEMU_ROOT:-$HOME/qemu}/build/qemu-system-linx64"
-        "${QEMU_ROOT:-$HOME/qemu}/build-tci/qemu-system-linx64"
         "$ROOT/emulator/qemu/build/qemu-system-linx64"
         "$ROOT/emulator/qemu/build-tci/qemu-system-linx64"
       )
