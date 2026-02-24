@@ -608,6 +608,19 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
     lb2_rhs = next((_note_rhs(n, "LB2") for n in notes if _note_rhs(n, "LB2")), None)
 
     # PC-relative / return-address materialization.
+    if root == "ADDTPC":
+        # Convention: PC-relative base is current PC/TPC; offset is halfword-scaled.
+        if enc == "HL":
+            return ["base = CurrentPC()", "off = (SignExtend(imm32) << 1)", "Write(RegDst, base + off)"]
+        return ["base = CurrentPC()", "off = (SignExtend(imm20) << 1)", "Write(RegDst, base + off)"]
+
+    if root == "SETRET":
+        if enc == "C":
+            return ["base = CurrentPC()", "off = (ZeroExtend(uimm5) << 1)", "ra = base + off"]
+        if enc == "HL":
+            return ["base = CurrentPC()", "off = (ZeroExtend(imm32) << 1)", "ra = base + off"]
+        return ["base = CurrentPC()", "off = (ZeroExtend(imm20) << 1)", "ra = base + off"]
+
     if ra_rhs:
         return [f"ra = {ra_rhs}"]
     if regdst_rhs and root in {"ADDTPC", "HL.ADDTPC"}:

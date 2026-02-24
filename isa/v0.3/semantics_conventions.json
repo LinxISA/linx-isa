@@ -61,6 +61,29 @@
     },
     "assembly": "Assembly syntax elides shamt (prints a single immediate). Assembler/tooling may choose shamt to represent larger aligned constants when encodable."
   },
+  "pc_relative": {
+    "description": "PC-relative immediate conventions (ADDTPC/SETRET and variants).",
+    "base": "current instruction PC (scalar blocks) or current instruction TPC (vec bodies); the instruction description says PC/TPC.",
+    "offset_unit_bytes": 2,
+    "rule": "target = base + (Extend(imm) << 1)",
+    "addtpc": {
+      "imm_kind": "signed",
+      "extend": "SignExtend",
+      "note": "ADDTPC uses a signed immediate (addtpc simm)."
+    },
+    "setret": {
+      "imm_kind": "unsigned",
+      "extend": "ZeroExtend",
+      "note": "SETRET uses an unsigned immediate (setret uimm)."
+    },
+    "compressed": {
+      "c.setret": "uses uimm5 with ZeroExtend, then <<1"
+    },
+    "hl48": {
+      "hl.addtpc": "uses imm32 with SignExtend, then <<1",
+      "hl.setret": "uses imm32 with ZeroExtend, then <<1"
+    }
+  },
   "block_legality": {
     "description": "Legality conventions for which instruction families may appear as payload in coupled scalar blocks vs engine bodies.",
     "bru_control_transfer": {

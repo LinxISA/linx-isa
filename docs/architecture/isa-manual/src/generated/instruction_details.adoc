@@ -1237,7 +1237,9 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+base = CurrentPC()
+off = (SignExtend(imm20) << 1)
+Write(RegDst, base + off)
 ----
 
 [[insndesc-pc-relative-hl-addtpc]]
@@ -1255,7 +1257,9 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+base = CurrentPC()
+off = (SignExtend(imm32) << 1)
+Write(RegDst, base + off)
 ----
 
 [[insndesc-pc-relative-hl-setret]]
@@ -1273,7 +1277,9 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+base = CurrentPC()
+off = (ZeroExtend(imm32) << 1)
+ra = base + off
 ----
 
 [[insndesc-pc-relative-setret]]
@@ -1296,7 +1302,9 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+base = CurrentPC()
+off = (ZeroExtend(imm20) << 1)
+ra = base + off
 ----
 
 [[insndesc-block-argument]]
@@ -4249,7 +4257,9 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+base = CurrentPC()
+off = (ZeroExtend(uimm5) << 1)
+ra = base + off
 ----
 
 [[insndesc-store-immediate-offset]]

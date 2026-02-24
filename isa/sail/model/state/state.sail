@@ -25,6 +25,13 @@ function write_tpc(v : bits(64)) -> unit = {
   unimplemented("write_tpc")
 }
 
+// PC/TPC-unified accessor for PC-relative instructions (ADDTPC/SETRET).
+// In strict v0.3 the base is "current instruction PC/TPC" depending on context.
+function read_pc_or_tpc() -> bits(64) = {
+  unimplemented("read_pc_or_tpc");
+  0x0000_0000_0000_0000
+}
+
 // Block-control predicate / commit-argument (BARG.CARG) update (stub).
 function set_commit_argument(v : bits(64)) -> unit = {
   unimplemented("set_commit_argument")

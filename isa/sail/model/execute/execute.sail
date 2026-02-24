@@ -793,3 +793,37 @@ function exec_jr(SrcL : bits(5), simm12 : bits(12)) -> unit = {
   let off = sext12_to64(simm12) << 1;
   write_tpc(base + off)
 }
+
+
+// -----------------------------------------------------------------------------
+// PC-relative operations (ADDTPC/SETRET)
+
+function exec_addtpc(RegDst : bits(5), imm20 : bits(20)) -> unit = {
+  let base = read_pc_or_tpc();
+  let off = sext20_to64(imm20) << 1;
+  write_regdst(RegDst, base + off)
+}
+
+function exec_setret(imm20 : bits(20)) -> unit = {
+  let base = read_pc_or_tpc();
+  let off = zext20_to64(imm20) << 1;
+  write_regdst(0b01010, base + off)  // RA
+}
+
+function exec_hl_addtpc(RegDst : bits(5), imm32 : bits(32)) -> unit = {
+  let base = read_pc_or_tpc();
+  let off = sext32_from32(imm32) << 1;
+  write_regdst(RegDst, base + off)
+}
+
+function exec_hl_setret(imm32 : bits(32)) -> unit = {
+  let base = read_pc_or_tpc();
+  let off = zext32_from32(imm32) << 1;
+  write_regdst(0b01010, base + off)  // RA
+}
+
+function exec_c_setret(uimm5 : bits(5)) -> unit = {
+  let base = read_pc_or_tpc();
+  let off = (0x0000_0000_0000_0000 | uimm5) << 1;
+  write_regdst(0b01010, base + off)  // RA
+}
