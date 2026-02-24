@@ -1,3 +1,6 @@
+# Workspace output artifacts (do not check in)
+out/
+
 # Generated test artifacts
 avs/compiler/linx-llvm/tests/out/
 avs/compiler/linx-llvm/tests/out-linx32/
