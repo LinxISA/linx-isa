@@ -3,6 +3,12 @@
 #include <sys/reboot.h>
 #include <unistd.h>
 
+static void emit_marker(const char *s)
+{
+	printf("%s\n", s);
+	fflush(stdout);
+}
+
 int main(void)
 {
 	int cfd = open("/dev/console", O_RDWR);
@@ -14,10 +20,9 @@ int main(void)
 			(void)close(cfd);
 	}
 
-	printf("HELLO_WORLD_START\n");
-	printf("Hello, Linx ISA Linux via QEMU\n");
-	printf("HELLO_WORLD_PASS\n");
-	fflush(stdout);
+	emit_marker("HELLO_WORLD_START");
+	emit_marker("Hello, Linx ISA Linux via QEMU");
+	emit_marker("HELLO_WORLD_PASS");
 
 	sync();
 	reboot(RB_POWER_OFF);
