@@ -366,64 +366,51 @@ function bool_to_u64(b : bool) -> bits(64) = {
   if b then 0x0000_0000_0000_0001 else 0x0000_0000_0000_0000
 }
 
+function sanitize_srcrtype_swuw(t : bits(2)) -> bits(2) = {
+  // For forms whose assembly only allows {.sw,.uw}, strict v0.3 treats 11 as 00.
+  if t == 0b11 then 0b00 else t
+}
+
 function exec_cmp_eq(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  if SrcRType == 0b11 then unimplemented("CMP.EQ: SrcRType=11 reserved")
-  else {
-    let b = apply_srcrtype_arith64(SrcRType, b0);
-    write_regdst(RegDst, bool_to_u64(a == b))
-  }
+  let b = apply_srcrtype_arith64(sanitize_srcrtype_swuw(SrcRType), b0);
+  write_regdst(RegDst, bool_to_u64(a == b))
 }
 
 function exec_cmp_ne(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  if SrcRType == 0b11 then unimplemented("CMP.NE: SrcRType=11 reserved")
-  else {
-    let b = apply_srcrtype_arith64(SrcRType, b0);
-    write_regdst(RegDst, bool_to_u64(a != b))
-  }
+  let b = apply_srcrtype_arith64(sanitize_srcrtype_swuw(SrcRType), b0);
+  write_regdst(RegDst, bool_to_u64(a != b))
 }
 
 function exec_cmp_lt(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  if SrcRType == 0b11 then unimplemented("CMP.LT: SrcRType=11 reserved")
-  else {
-    let b = apply_srcrtype_arith64(SrcRType, b0);
-    write_regdst(RegDst, bool_to_u64(signed(a) < signed(b)))
-  }
+  let b = apply_srcrtype_arith64(sanitize_srcrtype_swuw(SrcRType), b0);
+  write_regdst(RegDst, bool_to_u64(signed(a) < signed(b)))
 }
 
 function exec_cmp_ge(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  if SrcRType == 0b11 then unimplemented("CMP.GE: SrcRType=11 reserved")
-  else {
-    let b = apply_srcrtype_arith64(SrcRType, b0);
-    write_regdst(RegDst, bool_to_u64(signed(a) >= signed(b)))
-  }
+  let b = apply_srcrtype_arith64(sanitize_srcrtype_swuw(SrcRType), b0);
+  write_regdst(RegDst, bool_to_u64(signed(a) >= signed(b)))
 }
 
 function exec_cmp_ltu(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  if SrcRType == 0b11 then unimplemented("CMP.LTU: SrcRType=11 reserved")
-  else {
-    let b = apply_srcrtype_arith64(SrcRType, b0);
-    write_regdst(RegDst, bool_to_u64(unsigned(a) < unsigned(b)))
-  }
+  let b = apply_srcrtype_arith64(sanitize_srcrtype_swuw(SrcRType), b0);
+  write_regdst(RegDst, bool_to_u64(unsigned(a) < unsigned(b)))
 }
 
 function exec_cmp_geu(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  if SrcRType == 0b11 then unimplemented("CMP.GEU: SrcRType=11 reserved")
-  else {
-    let b = apply_srcrtype_arith64(SrcRType, b0);
-    write_regdst(RegDst, bool_to_u64(unsigned(a) >= unsigned(b)))
-  }
+  let b = apply_srcrtype_arith64(sanitize_srcrtype_swuw(SrcRType), b0);
+  write_regdst(RegDst, bool_to_u64(unsigned(a) >= unsigned(b)))
 }
 
 function exec_cmp_and(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
@@ -545,61 +532,43 @@ function exec_hl_cmp_ori(RegDst : bits(5), SrcL : bits(5), simm24 : bits(24)) ->
 function exec_setc_eq(SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  if SrcRType == 0b11 then unimplemented("SETC.EQ: SrcRType=11 reserved")
-  else {
-    let b = apply_srcrtype_arith64(SrcRType, b0);
-    set_commit_argument(bool_to_u64(a == b))
-  }
+  let b = apply_srcrtype_arith64(sanitize_srcrtype_swuw(SrcRType), b0);
+  set_commit_argument(bool_to_u64(a == b))
 }
 
 function exec_setc_ne(SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  if SrcRType == 0b11 then unimplemented("SETC.NE: SrcRType=11 reserved")
-  else {
-    let b = apply_srcrtype_arith64(SrcRType, b0);
-    set_commit_argument(bool_to_u64(a != b))
-  }
+  let b = apply_srcrtype_arith64(sanitize_srcrtype_swuw(SrcRType), b0);
+  set_commit_argument(bool_to_u64(a != b))
 }
 
 function exec_setc_lt(SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  if SrcRType == 0b11 then unimplemented("SETC.LT: SrcRType=11 reserved")
-  else {
-    let b = apply_srcrtype_arith64(SrcRType, b0);
-    set_commit_argument(bool_to_u64(signed(a) < signed(b)))
-  }
+  let b = apply_srcrtype_arith64(sanitize_srcrtype_swuw(SrcRType), b0);
+  set_commit_argument(bool_to_u64(signed(a) < signed(b)))
 }
 
 function exec_setc_ge(SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  if SrcRType == 0b11 then unimplemented("SETC.GE: SrcRType=11 reserved")
-  else {
-    let b = apply_srcrtype_arith64(SrcRType, b0);
-    set_commit_argument(bool_to_u64(signed(a) >= signed(b)))
-  }
+  let b = apply_srcrtype_arith64(sanitize_srcrtype_swuw(SrcRType), b0);
+  set_commit_argument(bool_to_u64(signed(a) >= signed(b)))
 }
 
 function exec_setc_ltu(SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  if SrcRType == 0b11 then unimplemented("SETC.LTU: SrcRType=11 reserved")
-  else {
-    let b = apply_srcrtype_arith64(SrcRType, b0);
-    set_commit_argument(bool_to_u64(unsigned(a) < unsigned(b)))
-  }
+  let b = apply_srcrtype_arith64(sanitize_srcrtype_swuw(SrcRType), b0);
+  set_commit_argument(bool_to_u64(unsigned(a) < unsigned(b)))
 }
 
 function exec_setc_geu(SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  if SrcRType == 0b11 then unimplemented("SETC.GEU: SrcRType=11 reserved")
-  else {
-    let b = apply_srcrtype_arith64(SrcRType, b0);
-    set_commit_argument(bool_to_u64(unsigned(a) >= unsigned(b)))
-  }
+  let b = apply_srcrtype_arith64(sanitize_srcrtype_swuw(SrcRType), b0);
+  set_commit_argument(bool_to_u64(unsigned(a) >= unsigned(b)))
 }
 
 function exec_setc_and(SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {

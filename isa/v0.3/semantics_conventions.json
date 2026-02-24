@@ -39,7 +39,11 @@
       "11": "neg (arithmetic families) / not (logical families)"
     },
     "order": "Apply SrcRType first, then apply any explicit shift (e.g. <<<shamt or <<shamt in addressing).",
-    "word_ops": "For *W (32-bit) operations, apply modifiers at 32-bit width, compute a 32-bit result, then sign-extend to 64-bit."
+    "word_ops": "For *W (32-bit) operations, apply modifiers at 32-bit width, compute a 32-bit result, then sign-extend to 64-bit.",
+    "restricted_forms": {
+      "description": "For forms whose assembly syntax only allows {.sw,.uw} (e.g. CMP.{EQ,NE,LT,GE,LTU,GEU} and SETC.{EQ,NE,LT,GE,LTU,GEU}), SrcRType=11 is treated as 00 (no modifier) in strict v0.3.",
+      "policy": "11_as_00"
+    }
   },
   "shifts": {
     "description": "Shift amount masking conventions.",

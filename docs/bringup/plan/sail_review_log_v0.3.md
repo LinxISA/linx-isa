@@ -39,3 +39,22 @@ Follow-ups:
 - Document this convention in `isa/v0.3/semantics_conventions.json`.
 - Update auto-generated pseudocode for SETC.*I in the ISA manual generator.
 - Implement the corresponding Sail semantics.
+
+---
+
+## 2026-02-25 — Restricted SrcRType handling for CMP/SETC
+
+Topic: `CMP.{EQ,NE,LT,GE,LTU,GEU}` and `SETC.{EQ,NE,LT,GE,LTU,GEU}` assembly syntax only allows `{.sw,.uw}`, but encoding still carries a 2-bit `SrcRType`.
+
+Question:
+- What should strict v0.3 do when `SrcRType=11` appears for these restricted forms?
+
+Decision (Kevin):
+- Treat `SrcRType=11` as **equivalent to `00` (no modifier)**.
+
+Rationale:
+- Keeps strict profile deterministic without introducing extra illegal encodings for legacy streams.
+
+Follow-ups:
+- Record in `isa/v0.3/semantics_conventions.json` under `srcrtype.restricted_forms`.
+- Update Sail semantics for the restricted CMP/SETC forms to sanitize 11→00.
