@@ -80,10 +80,11 @@
         },
         "predicate_register": {
           "name": "p",
-          "source": "BARG.CARG (commit-argument / block-control predicate domain)",
+          "domain": "vec engine predicate register",
           "truth_rule": "p != 0",
           "bz": "taken iff p == 0",
-          "bnz": "taken iff p != 0"
+          "bnz": "taken iff p != 0",
+          "note": "The predicate domain is vec-engine-defined; any architectural mirroring through BARG/EBARG is profile-defined and should not be assumed by scalar-only components."
         },
         "note": "When executed in the vec engine scalar lane, BRU control-transfer updates the body-local TPC (not architectural global PC)."
       }

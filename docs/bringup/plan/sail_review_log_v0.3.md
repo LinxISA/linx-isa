@@ -97,7 +97,10 @@ Topic:
 - `B.Z`/`B.NZ` have no source operands; they branch based on a predicate value.
 
 Decision (Kevin):
-- They read the **predicate register `p`** and test whether it is all-zero vs non-zero.
-- For Sail/staged bring-up we model `p` as the block-control predicate domain (`BARG.CARG` / commit-argument):
+- They read the **predicate register `p`** (vec engine predicate domain) and test whether it is all-zero vs non-zero:
   - `B.Z` taken iff `p == 0`
   - `B.NZ` taken iff `p != 0`
+
+Notes:
+- `B.Z`/`B.NZ` are vec-engine-only (scalar blocks executing them trap with `TRAPNUM=4`).
+- Any mirroring of `p` into architectural BARG/EBARG is vec-engine/profile-defined; scalar-only components must not assume it.

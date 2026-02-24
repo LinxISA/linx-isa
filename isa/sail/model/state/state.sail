@@ -31,7 +31,15 @@ function set_commit_argument(v : bits(64)) -> unit = {
 }
 
 function read_commit_argument() -> bits(64) = {
+  // Legacy/staged name: commit-argument / block-control predicate domain.
   unimplemented("read_commit_argument");
+  0x0000_0000_0000_0000
+}
+
+// Vec engine predicate register (p). In strict v0.3, `B.Z`/`B.NZ` consult this
+// predicate domain when executed in the vec engine scalar lane.
+function read_predicate_p() -> bits(64) = {
+  unimplemented("read_predicate_p");
   0x0000_0000_0000_0000
 }
 
