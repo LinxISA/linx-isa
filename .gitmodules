@@ -39,3 +39,7 @@
 	url = https://github.com/LinxISA/PTO-Kernel.git
 	branch = main
 	update = checkout
+[submodule "skills/linx-skills"]
+	path = skills/linx-skills
+	url = https://github.com/LinxISA/linx-skills.git
+	branch = main
