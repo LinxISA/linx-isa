@@ -86,6 +86,11 @@
       "checklist_ids": ["LINUX-002"]
     },
     {
+      "gate_key": "Kernel::Linux busybox rootfs boot",
+      "agent": "linux",
+      "checklist_ids": ["LINUX-004"]
+    },
+    {
       "gate_key": "Library::musl runtime static+shared",
       "agent": "libc",
       "checklist_ids": ["LIBC-003"]
@@ -128,8 +133,8 @@
   ],
   "checklist_id_map": {
     "compiler_llvm.md": ["LLVM-001", "LLVM-002", "LLVM-003", "LLVM-004", "LLVM-005"],
-    "emulator_qemu.md": ["QEMU-001", "QEMU-002", "QEMU-003", "QEMU-004"],
-    "kernel_linux.md": ["LINUX-001", "LINUX-002", "LINUX-003"],
+    "emulator_qemu.md": ["QEMU-001", "QEMU-002", "QEMU-003", "QEMU-004", "QEMU-005", "QEMU-006"],
+    "kernel_linux.md": ["LINUX-001", "LINUX-002", "LINUX-003", "LINUX-004"],
     "libc_runtime.md": ["LIBC-001", "LIBC-002", "LIBC-003", "LIBC-004"],
     "specint_qemu.md": ["SPEC-001", "SPEC-002", "SPEC-003", "SPEC-004", "SPEC-005", "SPEC-006", "SPEC-007"],
     "integration_release.md": ["INT-001", "INT-002", "INT-003", "INT-004", "INT-005", "INT-006"]

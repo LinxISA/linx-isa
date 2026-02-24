@@ -1,0 +1,2 @@
+smoke_loops=8 pass=8 fail=0
+full_loops=6 pass=6 fail=0

@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-02-17 19:41:53Z",
+  "generated_at_utc": "2026-02-23 08:30:41Z",
   "runs": [
     {
       "gates": [
@@ -2554,6 +2554,729 @@
         "qemu": {
           "path": "/Users/zhoubot/linx-isa/emulator/qemu",
           "sha": "d8bfcfcb7909a261a689f19d469cb77f59ba940a"
+        }
+      },
+      "trace_schema_version": "1.0"
+    },
+    {
+      "gates": [
+        {
+          "classification": "compile_pass_linx32",
+          "command": "cd /Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests && CLANG=/Users/zhoubot/llvm-project/build-linxisa-clang/bin/clang TARGET=linx32-linx-none-elf OUT_DIR=/Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/out-linx32 ./run.sh",
+          "domain": "Compiler",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r2-pin-reassess/pin/compiler_linx32.log"
+          ],
+          "evidence_type": "log",
+          "gate": "AVS compile suites (linx32)",
+          "owner": "bringup",
+          "required": true,
+          "status": "pass",
+          "waived": false
+        },
+        {
+          "classification": "compile_pass_linx64",
+          "command": "cd /Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests && CLANG=/Users/zhoubot/llvm-project/build-linxisa-clang/bin/clang TARGET=linx64-linx-none-elf OUT_DIR=/Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/out-linx64 ./run.sh",
+          "domain": "Compiler",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r2-pin-reassess/pin/compiler_linx64.log"
+          ],
+          "evidence_type": "log",
+          "gate": "AVS compile suites (linx64)",
+          "owner": "bringup",
+          "required": true,
+          "status": "pass",
+          "waived": false
+        },
+        {
+          "classification": "mnemonic_coverage_100_linx32",
+          "command": "python3 /Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/analyze_coverage.py --out-dir /Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/out-linx32 --fail-under 100",
+          "domain": "Compiler",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r2-pin-reassess/pin/compiler_cov_linx32.log"
+          ],
+          "evidence_type": "log",
+          "gate": "Coverage 100% (linx32)",
+          "owner": "bringup",
+          "required": true,
+          "status": "pass",
+          "waived": false
+        },
+        {
+          "classification": "mnemonic_coverage_100_linx64",
+          "command": "python3 /Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/analyze_coverage.py --out-dir /Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/out-linx64 --fail-under 100",
+          "domain": "Compiler",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r2-pin-reassess/pin/compiler_cov_linx64.log"
+          ],
+          "evidence_type": "log",
+          "gate": "Coverage 100% (linx64)",
+          "owner": "bringup",
+          "required": true,
+          "status": "pass",
+          "waived": false
+        },
+        {
+          "classification": "all_suites_fail_or_timeout",
+          "command": "cd /Users/zhoubot/linx-isa/avs/qemu && LINX_DISABLE_TIMER_IRQ=0 CLANG=/Users/zhoubot/llvm-project/build-linxisa-clang/bin/clang LLD=/Users/zhoubot/llvm-project/build-linxisa-clang/bin/ld.lld QEMU=/Users/zhoubot/linx-isa/emulator/qemu/build/qemu-system-linx64 ./run_tests.sh --all --timeout 10",
+          "domain": "Emulator",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r2-pin-reassess/pin/emu_all_suites.log"
+          ],
+          "evidence_type": "log",
+          "gate": "QEMU all suites",
+          "owner": "bringup",
+          "required": true,
+          "status": "fail",
+          "waived": false
+        },
+        {
+          "classification": "strict_system_fail",
+          "command": "cd /Users/zhoubot/linx-isa/avs/qemu && LINX_DISABLE_TIMER_IRQ=0 CLANG=/Users/zhoubot/llvm-project/build-linxisa-clang/bin/clang LLD=/Users/zhoubot/llvm-project/build-linxisa-clang/bin/ld.lld QEMU=/Users/zhoubot/linx-isa/emulator/qemu/build/qemu-system-linx64 ./check_system_strict.sh",
+          "domain": "Emulator",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r2-pin-reassess/pin/emu_strict_system.log"
+          ],
+          "evidence_type": "log",
+          "gate": "QEMU strict system",
+          "owner": "bringup",
+          "required": true,
+          "status": "fail",
+          "waived": false
+        },
+        {
+          "classification": "contract_ok",
+          "command": "python3 /Users/zhoubot/linx-isa/tools/bringup/check26_contract.py --root /Users/zhoubot/linx-isa",
+          "domain": "ISA",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r2-pin-reassess/pin/isa_check26.log"
+          ],
+          "evidence_type": "log",
+          "gate": "check26 contract",
+          "owner": "bringup",
+          "required": true,
+          "status": "pass",
+          "waived": false
+        },
+        {
+          "classification": "linux_busybox_rootfs_fail",
+          "command": "LINX_DISABLE_TIMER_IRQ=0 QEMU=/Users/zhoubot/linx-isa/emulator/qemu/build/qemu-system-linx64 python3 /Users/zhoubot/linx-isa/kernel/linux/tools/linxisa/busybox_rootfs/boot.py",
+          "domain": "Kernel",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r2-pin-reassess/pin/kernel_busybox_rootfs.log"
+          ],
+          "evidence_type": "log",
+          "gate": "Linux busybox rootfs boot",
+          "owner": "bringup",
+          "required": true,
+          "status": "fail",
+          "waived": false
+        },
+        {
+          "classification": "linux_full_boot_pass",
+          "command": "LINX_DISABLE_TIMER_IRQ=0 QEMU=/Users/zhoubot/linx-isa/emulator/qemu/build/qemu-system-linx64 python3 /Users/zhoubot/linx-isa/kernel/linux/tools/linxisa/initramfs/full_boot.py",
+          "domain": "Kernel",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r2-pin-reassess/pin/kernel_full_boot.log"
+          ],
+          "evidence_type": "log",
+          "gate": "Linux initramfs full boot",
+          "owner": "bringup",
+          "required": true,
+          "status": "pass",
+          "waived": false
+        },
+        {
+          "classification": "linux_smoke_pass",
+          "command": "LINX_DISABLE_TIMER_IRQ=0 QEMU=/Users/zhoubot/linx-isa/emulator/qemu/build/qemu-system-linx64 python3 /Users/zhoubot/linx-isa/kernel/linux/tools/linxisa/initramfs/smoke.py",
+          "domain": "Kernel",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r2-pin-reassess/pin/kernel_smoke.log"
+          ],
+          "evidence_type": "log",
+          "gate": "Linux initramfs smoke",
+          "owner": "bringup",
+          "required": true,
+          "status": "pass",
+          "waived": false
+        },
+        {
+          "classification": "glibc_g1b_wrapper_fail",
+          "command": "cd /Users/zhoubot/linx-isa && GLIBC_G1B_ALLOW_BLOCKED=0 bash lib/glibc/tools/linx/build_linx64_glibc_g1b.sh",
+          "domain": "Library",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r2-pin-reassess/pin/lib_glibc_g1b.log",
+            "summary:/Users/zhoubot/linx-isa/out/libc/glibc/logs/g1b-summary.txt"
+          ],
+          "evidence_type": "log",
+          "gate": "glibc G1b shared libc.so",
+          "owner": "glibc",
+          "required": true,
+          "status": "fail",
+          "waived": false
+        },
+        {
+          "classification": "runtime_mode_failure",
+          "command": "LINX_DISABLE_TIMER_IRQ=0 python3 /Users/zhoubot/linx-isa/avs/qemu/run_musl_smoke.py --mode phase-b --link both --qemu /Users/zhoubot/linx-isa/emulator/qemu/build/qemu-system-linx64 --timeout 90",
+          "domain": "Library",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r2-pin-reassess/pin/lib_musl_both.log"
+          ],
+          "evidence_type": "log",
+          "gate": "musl runtime static+shared",
+          "owner": "bringup",
+          "required": true,
+          "status": "fail",
+          "waived": false
+        },
+        {
+          "classification": "model_diff_fail",
+          "command": "python3 /Users/zhoubot/linx-isa/tools/bringup/run_model_diff_suite.py --root /Users/zhoubot/linx-isa --suite /Users/zhoubot/linx-isa/avs/model/linx_model_diff_suite.yaml --profile release-strict --trace-schema-version 1.0 --report-out /Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r2-pin-reassess/pin/model_diff_summary.json",
+          "domain": "Model",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r2-pin-reassess/pin/model_diff_suite.log"
+          ],
+          "evidence_type": "log",
+          "gate": "QEMU vs model differential suite",
+          "owner": "bringup",
+          "required": true,
+          "status": "fail",
+          "waived": false
+        },
+        {
+          "classification": "strict_cross_repo_fail",
+          "command": "cd /Users/zhoubot/linx-isa && SKIP_BUILD=1 TOOLCHAIN_LANE=external QEMU_LANE=pin QEMU=/Users/zhoubot/linx-isa/emulator/qemu/build/qemu-system-linx64 LINX_DISABLE_TIMER_IRQ=0 LINX_EMU_DISABLE_TIMER_IRQ=0 RUN_GLIBC_G1=0 RUN_GLIBC_G1B=1 RUN_MODEL_DIFF=1 RUN_CPP_GATES=0 CPP_MODE=phase-b RUN_CONSISTENCY_CHECKS=0 ALLOW_GLIBC_G1_BLOCKED=0 GLIBC_G1B_ALLOW_BLOCKED=0 MULTI_AGENT_MANIFEST=/Users/zhoubot/linx-isa/docs/bringup/agent_runs/manifest.yaml MULTI_AGENT_WAIVERS=/Users/zhoubot/linx-isa/docs/bringup/agent_runs/waivers.yaml MULTI_AGENT_CHECKLISTS_ROOT=/Users/zhoubot/linx-isa/docs/bringup/agent_runs/checklists MULTI_AGENT_REPORT=/Users/zhoubot/linx-isa/docs/bringup/gates/latest.json MULTI_AGENT_LANE=pin MULTI_AGENT_RUN_ID=2026-02-23-r2-pin-reassess MULTI_AGENT_OUT=/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r2-pin-reassess/pin/multi_agent_summary.strict_cross.json bash tools/regression/strict_cross_repo.sh",
+          "domain": "Regression",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r2-pin-reassess/pin/reg_strict_cross_repo.log"
+          ],
+          "evidence_type": "log",
+          "gate": "strict_cross_repo.sh",
+          "owner": "bringup",
+          "required": true,
+          "status": "fail",
+          "waived": false
+        }
+      ],
+      "generated_at_utc": "2026-02-23 04:52:01Z",
+      "lane": "pin",
+      "lane_policy": "external+pin-required",
+      "profile": "release-strict",
+      "run_id": "2026-02-23-r2-pin-reassess",
+      "sha_manifest": {
+        "glibc": {
+          "path": "/Users/zhoubot/linx-isa/lib/glibc",
+          "sha": "f26077d084862e4edbc2d5729fd2c3732ba29026"
+        },
+        "linux": {
+          "path": "/Users/zhoubot/linx-isa/kernel/linux",
+          "sha": "284e7fc25b42de2bed13f6afbf25e1f6f135b218"
+        },
+        "linx-isa": {
+          "path": "/Users/zhoubot/linx-isa",
+          "sha": "566a829372d54f455fe85f1110d5ee2e0185dd17"
+        },
+        "linxcore": {
+          "path": "/Users/zhoubot/linx-isa/rtl/LinxCore",
+          "sha": "9be2cd701fa568d4257eca2b3f2f86423480c054"
+        },
+        "llvm": {
+          "path": "/Users/zhoubot/linx-isa/compiler/llvm",
+          "sha": "c2f015644441d45dddc5fd706c6b1a188967a2ea"
+        },
+        "musl": {
+          "path": "/Users/zhoubot/linx-isa/lib/musl",
+          "sha": "c474cbf83190772306b3e01b2ad1e52259f0e1d3"
+        },
+        "pycircuit": {
+          "path": "/Users/zhoubot/linx-isa/tools/pyCircuit",
+          "sha": "603e6ca3a4940d052720f68ae60b86c2e484e774"
+        },
+        "qemu": {
+          "path": "/Users/zhoubot/linx-isa/emulator/qemu",
+          "sha": "a8958dd84ce2df4165e9f9d7bf4f27f40e49b0da"
+        }
+      },
+      "trace_schema_version": "1.0"
+    },
+    {
+      "gates": [
+        {
+          "classification": "compile_pass_linx32",
+          "command": "cd /Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests && CLANG=/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/clang TARGET=linx32-linx-none-elf OUT_DIR=/Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/out-linx32 ./run.sh",
+          "domain": "Compiler",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r4-pin-qemu-linux-ctxfix/pin/compiler_linx32.log"
+          ],
+          "evidence_type": "log",
+          "gate": "AVS compile suites (linx32)",
+          "owner": "bringup",
+          "required": true,
+          "status": "pass",
+          "waived": false
+        },
+        {
+          "classification": "compile_pass_linx64",
+          "command": "cd /Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests && CLANG=/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/clang TARGET=linx64-linx-none-elf OUT_DIR=/Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/out-linx64 ./run.sh",
+          "domain": "Compiler",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r4-pin-qemu-linux-ctxfix/pin/compiler_linx64.log"
+          ],
+          "evidence_type": "log",
+          "gate": "AVS compile suites (linx64)",
+          "owner": "bringup",
+          "required": true,
+          "status": "pass",
+          "waived": false
+        },
+        {
+          "classification": "mnemonic_coverage_100_linx32",
+          "command": "python3 /Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/analyze_coverage.py --out-dir /Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/out-linx32 --fail-under 100",
+          "domain": "Compiler",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r4-pin-qemu-linux-ctxfix/pin/compiler_cov_linx32.log"
+          ],
+          "evidence_type": "log",
+          "gate": "Coverage 100% (linx32)",
+          "owner": "bringup",
+          "required": true,
+          "status": "pass",
+          "waived": false
+        },
+        {
+          "classification": "mnemonic_coverage_100_linx64",
+          "command": "python3 /Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/analyze_coverage.py --out-dir /Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/out-linx64 --fail-under 100",
+          "domain": "Compiler",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r4-pin-qemu-linux-ctxfix/pin/compiler_cov_linx64.log"
+          ],
+          "evidence_type": "log",
+          "gate": "Coverage 100% (linx64)",
+          "owner": "bringup",
+          "required": true,
+          "status": "pass",
+          "waived": false
+        },
+        {
+          "classification": "all_suites_pass",
+          "command": "cd /Users/zhoubot/linx-isa/avs/qemu && LINX_DISABLE_TIMER_IRQ=0 CLANG=/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/clang LLD=/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/ld.lld QEMU=/Users/zhoubot/linx-isa/emulator/qemu/build/qemu-system-linx64 ./run_tests.sh --all --timeout 10",
+          "domain": "Emulator",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r4-pin-qemu-linux-ctxfix/pin/emu_all_suites.log"
+          ],
+          "evidence_type": "log",
+          "gate": "QEMU all suites",
+          "owner": "bringup",
+          "required": true,
+          "status": "pass",
+          "waived": false
+        },
+        {
+          "classification": "strict_system_pass",
+          "command": "cd /Users/zhoubot/linx-isa/avs/qemu && LINX_DISABLE_TIMER_IRQ=0 CLANG=/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/clang LLD=/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/ld.lld QEMU=/Users/zhoubot/linx-isa/emulator/qemu/build/qemu-system-linx64 ./check_system_strict.sh",
+          "domain": "Emulator",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r4-pin-qemu-linux-ctxfix/pin/emu_strict_system.log"
+          ],
+          "evidence_type": "log",
+          "gate": "QEMU strict system",
+          "owner": "bringup",
+          "required": true,
+          "status": "pass",
+          "waived": false
+        },
+        {
+          "classification": "contract_ok",
+          "command": "python3 /Users/zhoubot/linx-isa/tools/bringup/check26_contract.py --root /Users/zhoubot/linx-isa",
+          "domain": "ISA",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r4-pin-qemu-linux-ctxfix/pin/isa_check26.log"
+          ],
+          "evidence_type": "log",
+          "gate": "check26 contract",
+          "owner": "bringup",
+          "required": true,
+          "status": "pass",
+          "waived": false
+        },
+        {
+          "classification": "linux_busybox_rootfs_fail",
+          "command": "LINX_DISABLE_TIMER_IRQ=0 QEMU=/Users/zhoubot/linx-isa/emulator/qemu/build/qemu-system-linx64 python3 /Users/zhoubot/linx-isa/kernel/linux/tools/linxisa/busybox_rootfs/boot.py",
+          "domain": "Kernel",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r4-pin-qemu-linux-ctxfix/pin/kernel_busybox_rootfs.log"
+          ],
+          "evidence_type": "log",
+          "gate": "Linux busybox rootfs boot",
+          "owner": "bringup",
+          "required": true,
+          "status": "fail",
+          "waived": false
+        },
+        {
+          "classification": "linux_full_boot_pass",
+          "command": "LINX_DISABLE_TIMER_IRQ=0 QEMU=/Users/zhoubot/linx-isa/emulator/qemu/build/qemu-system-linx64 python3 /Users/zhoubot/linx-isa/kernel/linux/tools/linxisa/initramfs/full_boot.py",
+          "domain": "Kernel",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r4-pin-qemu-linux-ctxfix/pin/kernel_full_boot.log"
+          ],
+          "evidence_type": "log",
+          "gate": "Linux initramfs full boot",
+          "owner": "bringup",
+          "required": true,
+          "status": "pass",
+          "waived": false
+        },
+        {
+          "classification": "linux_smoke_pass",
+          "command": "LINX_DISABLE_TIMER_IRQ=0 QEMU=/Users/zhoubot/linx-isa/emulator/qemu/build/qemu-system-linx64 python3 /Users/zhoubot/linx-isa/kernel/linux/tools/linxisa/initramfs/smoke.py",
+          "domain": "Kernel",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r4-pin-qemu-linux-ctxfix/pin/kernel_smoke.log"
+          ],
+          "evidence_type": "log",
+          "gate": "Linux initramfs smoke",
+          "owner": "bringup",
+          "required": true,
+          "status": "pass",
+          "waived": false
+        },
+        {
+          "classification": "glibc_g1b_wrapper_fail",
+          "command": "cd /Users/zhoubot/linx-isa && GLIBC_G1B_ALLOW_BLOCKED=0 bash lib/glibc/tools/linx/build_linx64_glibc_g1b.sh",
+          "domain": "Library",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r4-pin-qemu-linux-ctxfix/pin/lib_glibc_g1b.log",
+            "summary:/Users/zhoubot/linx-isa/out/libc/glibc/logs/g1b-summary.txt"
+          ],
+          "evidence_type": "log",
+          "gate": "glibc G1b shared libc.so",
+          "owner": "glibc",
+          "required": true,
+          "status": "fail",
+          "waived": false
+        },
+        {
+          "classification": "runtime_mode_failure",
+          "command": "LINX_DISABLE_TIMER_IRQ=0 python3 /Users/zhoubot/linx-isa/avs/qemu/run_musl_smoke.py --mode phase-b --link both --qemu /Users/zhoubot/linx-isa/emulator/qemu/build/qemu-system-linx64 --timeout 90",
+          "domain": "Library",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r4-pin-qemu-linux-ctxfix/pin/lib_musl_both.log"
+          ],
+          "evidence_type": "log",
+          "gate": "musl runtime static+shared",
+          "owner": "bringup",
+          "required": true,
+          "status": "fail",
+          "waived": false
+        },
+        {
+          "classification": "model_diff_fail",
+          "command": "python3 /Users/zhoubot/linx-isa/tools/bringup/run_model_diff_suite.py --root /Users/zhoubot/linx-isa --suite /Users/zhoubot/linx-isa/avs/model/linx_model_diff_suite.yaml --profile release-strict --trace-schema-version 1.0 --report-out /Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r4-pin-qemu-linux-ctxfix/pin/model_diff_summary.json",
+          "domain": "Model",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r4-pin-qemu-linux-ctxfix/pin/model_diff_suite.log"
+          ],
+          "evidence_type": "log",
+          "gate": "QEMU vs model differential suite",
+          "owner": "bringup",
+          "required": true,
+          "status": "fail",
+          "waived": false
+        },
+        {
+          "classification": "strict_cross_repo_fail",
+          "command": "cd /Users/zhoubot/linx-isa && SKIP_BUILD=1 TOOLCHAIN_LANE=pin QEMU_LANE=pin QEMU=/Users/zhoubot/linx-isa/emulator/qemu/build/qemu-system-linx64 LINX_DISABLE_TIMER_IRQ=0 LINX_EMU_DISABLE_TIMER_IRQ=0 RUN_GLIBC_G1=0 RUN_GLIBC_G1B=1 RUN_MODEL_DIFF=1 RUN_CPP_GATES=0 CPP_MODE=phase-b RUN_CONSISTENCY_CHECKS=0 ALLOW_GLIBC_G1_BLOCKED=0 GLIBC_G1B_ALLOW_BLOCKED=0 MULTI_AGENT_MANIFEST=/Users/zhoubot/linx-isa/docs/bringup/agent_runs/manifest.yaml MULTI_AGENT_WAIVERS=/Users/zhoubot/linx-isa/docs/bringup/agent_runs/waivers.yaml MULTI_AGENT_CHECKLISTS_ROOT=/Users/zhoubot/linx-isa/docs/bringup/agent_runs/checklists MULTI_AGENT_REPORT=/Users/zhoubot/linx-isa/docs/bringup/gates/latest.json MULTI_AGENT_LANE=pin MULTI_AGENT_RUN_ID=2026-02-23-r4-pin-qemu-linux-ctxfix MULTI_AGENT_OUT=/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r4-pin-qemu-linux-ctxfix/pin/multi_agent_summary.strict_cross.json bash tools/regression/strict_cross_repo.sh",
+          "domain": "Regression",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r4-pin-qemu-linux-ctxfix/pin/reg_strict_cross_repo.log"
+          ],
+          "evidence_type": "log",
+          "gate": "strict_cross_repo.sh",
+          "owner": "bringup",
+          "required": true,
+          "status": "fail",
+          "waived": false
+        }
+      ],
+      "generated_at_utc": "2026-02-23 08:14:19Z",
+      "lane": "pin",
+      "lane_policy": "external+pin-required",
+      "profile": "release-strict",
+      "run_id": "2026-02-23-r4-pin-qemu-linux-ctxfix",
+      "sha_manifest": {
+        "glibc": {
+          "path": "/Users/zhoubot/linx-isa/lib/glibc",
+          "sha": "f26077d084862e4edbc2d5729fd2c3732ba29026"
+        },
+        "linux": {
+          "path": "/Users/zhoubot/linx-isa/kernel/linux",
+          "sha": "c7fe5b9db245195f534052a9ba67764bf10857fc"
+        },
+        "linx-isa": {
+          "path": "/Users/zhoubot/linx-isa",
+          "sha": "d33e82d4cdf4839c5c143c2fd8abcb228ae49287"
+        },
+        "linxcore": {
+          "path": "/Users/zhoubot/linx-isa/rtl/LinxCore",
+          "sha": "9be2cd701fa568d4257eca2b3f2f86423480c054"
+        },
+        "llvm": {
+          "path": "/Users/zhoubot/linx-isa/compiler/llvm",
+          "sha": "c2f015644441d45dddc5fd706c6b1a188967a2ea"
+        },
+        "musl": {
+          "path": "/Users/zhoubot/linx-isa/lib/musl",
+          "sha": "c474cbf83190772306b3e01b2ad1e52259f0e1d3"
+        },
+        "pycircuit": {
+          "path": "/Users/zhoubot/linx-isa/tools/pyCircuit",
+          "sha": "603e6ca3a4940d052720f68ae60b86c2e484e774"
+        },
+        "qemu": {
+          "path": "/Users/zhoubot/linx-isa/emulator/qemu",
+          "sha": "2dd7ea383e6bae5af17bfcdec3cf42d9fa9509e7"
+        }
+      },
+      "trace_schema_version": "1.0"
+    },
+    {
+      "gates": [
+        {
+          "classification": "compile_pass_linx32",
+          "command": "cd /Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests && CLANG=/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/clang TARGET=linx32-linx-none-elf OUT_DIR=/Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/out-linx32 ./run.sh",
+          "domain": "Compiler",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r5-pin-ctx-rootfs/pin/compiler_linx32.log"
+          ],
+          "evidence_type": "log",
+          "gate": "AVS compile suites (linx32)",
+          "owner": "bringup",
+          "required": true,
+          "status": "pass",
+          "waived": false
+        },
+        {
+          "classification": "compile_pass_linx64",
+          "command": "cd /Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests && CLANG=/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/clang TARGET=linx64-linx-none-elf OUT_DIR=/Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/out-linx64 ./run.sh",
+          "domain": "Compiler",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r5-pin-ctx-rootfs/pin/compiler_linx64.log"
+          ],
+          "evidence_type": "log",
+          "gate": "AVS compile suites (linx64)",
+          "owner": "bringup",
+          "required": true,
+          "status": "pass",
+          "waived": false
+        },
+        {
+          "classification": "mnemonic_coverage_100_linx32",
+          "command": "python3 /Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/analyze_coverage.py --out-dir /Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/out-linx32 --fail-under 100",
+          "domain": "Compiler",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r5-pin-ctx-rootfs/pin/compiler_cov_linx32.log"
+          ],
+          "evidence_type": "log",
+          "gate": "Coverage 100% (linx32)",
+          "owner": "bringup",
+          "required": true,
+          "status": "pass",
+          "waived": false
+        },
+        {
+          "classification": "mnemonic_coverage_100_linx64",
+          "command": "python3 /Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/analyze_coverage.py --out-dir /Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/out-linx64 --fail-under 100",
+          "domain": "Compiler",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r5-pin-ctx-rootfs/pin/compiler_cov_linx64.log"
+          ],
+          "evidence_type": "log",
+          "gate": "Coverage 100% (linx64)",
+          "owner": "bringup",
+          "required": true,
+          "status": "pass",
+          "waived": false
+        },
+        {
+          "classification": "all_suites_pass",
+          "command": "cd /Users/zhoubot/linx-isa/avs/qemu && LINX_DISABLE_TIMER_IRQ=0 CLANG=/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/clang LLD=/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/ld.lld QEMU=/Users/zhoubot/linx-isa/emulator/qemu/build/qemu-system-linx64 ./run_tests.sh --all --timeout 10",
+          "domain": "Emulator",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r5-pin-ctx-rootfs/pin/emu_all_suites.log"
+          ],
+          "evidence_type": "log",
+          "gate": "QEMU all suites",
+          "owner": "bringup",
+          "required": true,
+          "status": "pass",
+          "waived": false
+        },
+        {
+          "classification": "strict_system_pass",
+          "command": "cd /Users/zhoubot/linx-isa/avs/qemu && LINX_DISABLE_TIMER_IRQ=0 CLANG=/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/clang LLD=/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/ld.lld QEMU=/Users/zhoubot/linx-isa/emulator/qemu/build/qemu-system-linx64 ./check_system_strict.sh",
+          "domain": "Emulator",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r5-pin-ctx-rootfs/pin/emu_strict_system.log"
+          ],
+          "evidence_type": "log",
+          "gate": "QEMU strict system",
+          "owner": "bringup",
+          "required": true,
+          "status": "pass",
+          "waived": false
+        },
+        {
+          "classification": "contract_ok",
+          "command": "python3 /Users/zhoubot/linx-isa/tools/bringup/check26_contract.py --root /Users/zhoubot/linx-isa",
+          "domain": "ISA",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r5-pin-ctx-rootfs/pin/isa_check26.log"
+          ],
+          "evidence_type": "log",
+          "gate": "check26 contract",
+          "owner": "bringup",
+          "required": true,
+          "status": "pass",
+          "waived": false
+        },
+        {
+          "classification": "linux_busybox_rootfs_fail",
+          "command": "LINX_DISABLE_TIMER_IRQ=0 QEMU=/Users/zhoubot/linx-isa/emulator/qemu/build/qemu-system-linx64 python3 /Users/zhoubot/linx-isa/kernel/linux/tools/linxisa/busybox_rootfs/boot.py",
+          "domain": "Kernel",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r5-pin-ctx-rootfs/pin/kernel_busybox_rootfs.log"
+          ],
+          "evidence_type": "log",
+          "gate": "Linux busybox rootfs boot",
+          "owner": "bringup",
+          "required": true,
+          "status": "fail",
+          "waived": false
+        },
+        {
+          "classification": "linux_full_boot_pass",
+          "command": "LINX_DISABLE_TIMER_IRQ=0 QEMU=/Users/zhoubot/linx-isa/emulator/qemu/build/qemu-system-linx64 python3 /Users/zhoubot/linx-isa/kernel/linux/tools/linxisa/initramfs/full_boot.py",
+          "domain": "Kernel",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r5-pin-ctx-rootfs/pin/kernel_full_boot.log"
+          ],
+          "evidence_type": "log",
+          "gate": "Linux initramfs full boot",
+          "owner": "bringup",
+          "required": true,
+          "status": "pass",
+          "waived": false
+        },
+        {
+          "classification": "linux_smoke_pass",
+          "command": "LINX_DISABLE_TIMER_IRQ=0 QEMU=/Users/zhoubot/linx-isa/emulator/qemu/build/qemu-system-linx64 python3 /Users/zhoubot/linx-isa/kernel/linux/tools/linxisa/initramfs/smoke.py",
+          "domain": "Kernel",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r5-pin-ctx-rootfs/pin/kernel_smoke.log"
+          ],
+          "evidence_type": "log",
+          "gate": "Linux initramfs smoke",
+          "owner": "bringup",
+          "required": true,
+          "status": "pass",
+          "waived": false
+        },
+        {
+          "classification": "glibc_g1b_wrapper_fail",
+          "command": "cd /Users/zhoubot/linx-isa && GLIBC_G1B_ALLOW_BLOCKED=0 bash lib/glibc/tools/linx/build_linx64_glibc_g1b.sh",
+          "domain": "Library",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r5-pin-ctx-rootfs/pin/lib_glibc_g1b.log",
+            "summary:/Users/zhoubot/linx-isa/out/libc/glibc/logs/g1b-summary.txt"
+          ],
+          "evidence_type": "log",
+          "gate": "glibc G1b shared libc.so",
+          "owner": "glibc",
+          "required": true,
+          "status": "fail",
+          "waived": false
+        },
+        {
+          "classification": "runtime_mode_failure",
+          "command": "LINX_DISABLE_TIMER_IRQ=0 python3 /Users/zhoubot/linx-isa/avs/qemu/run_musl_smoke.py --mode phase-b --link both --qemu /Users/zhoubot/linx-isa/emulator/qemu/build/qemu-system-linx64 --timeout 90",
+          "domain": "Library",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r5-pin-ctx-rootfs/pin/lib_musl_both.log"
+          ],
+          "evidence_type": "log",
+          "gate": "musl runtime static+shared",
+          "owner": "bringup",
+          "required": true,
+          "status": "fail",
+          "waived": false
+        },
+        {
+          "classification": "model_diff_fail",
+          "command": "python3 /Users/zhoubot/linx-isa/tools/bringup/run_model_diff_suite.py --root /Users/zhoubot/linx-isa --suite /Users/zhoubot/linx-isa/avs/model/linx_model_diff_suite.yaml --profile release-strict --trace-schema-version 1.0 --report-out /Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r5-pin-ctx-rootfs/pin/model_diff_summary.json",
+          "domain": "Model",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r5-pin-ctx-rootfs/pin/model_diff_suite.log"
+          ],
+          "evidence_type": "log",
+          "gate": "QEMU vs model differential suite",
+          "owner": "bringup",
+          "required": true,
+          "status": "fail",
+          "waived": false
+        },
+        {
+          "classification": "strict_cross_repo_fail",
+          "command": "cd /Users/zhoubot/linx-isa && SKIP_BUILD=1 TOOLCHAIN_LANE=pin QEMU_LANE=pin QEMU=/Users/zhoubot/linx-isa/emulator/qemu/build/qemu-system-linx64 LINX_DISABLE_TIMER_IRQ=0 LINX_EMU_DISABLE_TIMER_IRQ=0 RUN_GLIBC_G1=0 RUN_GLIBC_G1B=1 RUN_MODEL_DIFF=1 RUN_CPP_GATES=0 CPP_MODE=phase-b RUN_CONSISTENCY_CHECKS=0 ALLOW_GLIBC_G1_BLOCKED=0 GLIBC_G1B_ALLOW_BLOCKED=0 MULTI_AGENT_MANIFEST=/Users/zhoubot/linx-isa/docs/bringup/agent_runs/manifest.yaml MULTI_AGENT_WAIVERS=/Users/zhoubot/linx-isa/docs/bringup/agent_runs/waivers.yaml MULTI_AGENT_CHECKLISTS_ROOT=/Users/zhoubot/linx-isa/docs/bringup/agent_runs/checklists MULTI_AGENT_REPORT=/Users/zhoubot/linx-isa/docs/bringup/gates/latest.json MULTI_AGENT_LANE=pin MULTI_AGENT_RUN_ID=2026-02-23-r5-pin-ctx-rootfs MULTI_AGENT_OUT=/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r5-pin-ctx-rootfs/pin/multi_agent_summary.strict_cross.json bash tools/regression/strict_cross_repo.sh",
+          "domain": "Regression",
+          "evidence": [
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-23-r5-pin-ctx-rootfs/pin/reg_strict_cross_repo.log"
+          ],
+          "evidence_type": "log",
+          "gate": "strict_cross_repo.sh",
+          "owner": "bringup",
+          "required": true,
+          "status": "fail",
+          "waived": false
+        }
+      ],
+      "generated_at_utc": "2026-02-23 08:30:41Z",
+      "lane": "pin",
+      "lane_policy": "external+pin-required",
+      "profile": "release-strict",
+      "run_id": "2026-02-23-r5-pin-ctx-rootfs",
+      "sha_manifest": {
+        "glibc": {
+          "path": "/Users/zhoubot/linx-isa/lib/glibc",
+          "sha": "f26077d084862e4edbc2d5729fd2c3732ba29026"
+        },
+        "linux": {
+          "path": "/Users/zhoubot/linx-isa/kernel/linux",
+          "sha": "c7fe5b9db245195f534052a9ba67764bf10857fc"
+        },
+        "linx-isa": {
+          "path": "/Users/zhoubot/linx-isa",
+          "sha": "d33e82d4cdf4839c5c143c2fd8abcb228ae49287"
+        },
+        "linxcore": {
+          "path": "/Users/zhoubot/linx-isa/rtl/LinxCore",
+          "sha": "9be2cd701fa568d4257eca2b3f2f86423480c054"
+        },
+        "llvm": {
+          "path": "/Users/zhoubot/linx-isa/compiler/llvm",
+          "sha": "c2f015644441d45dddc5fd706c6b1a188967a2ea"
+        },
+        "musl": {
+          "path": "/Users/zhoubot/linx-isa/lib/musl",
+          "sha": "c474cbf83190772306b3e01b2ad1e52259f0e1d3"
+        },
+        "pycircuit": {
+          "path": "/Users/zhoubot/linx-isa/tools/pyCircuit",
+          "sha": "603e6ca3a4940d052720f68ae60b86c2e484e774"
+        },
+        "qemu": {
+          "path": "/Users/zhoubot/linx-isa/emulator/qemu",
+          "sha": "2dd7ea383e6bae5af17bfcdec3cf42d9fa9509e7"
         }
       },
       "trace_schema_version": "1.0"

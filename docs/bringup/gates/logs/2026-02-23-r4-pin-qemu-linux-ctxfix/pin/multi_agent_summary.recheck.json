@@ -1,0 +1,67 @@
+{
+  "checked_at_utc": "2026-02-23 08:16:44Z",
+  "checklists_root": "/Users/zhoubot/linx-isa/docs/bringup/agent_runs/checklists",
+  "errors": [
+    {
+      "code": "E_RUNTIME_UNWAIVED_GATE",
+      "gate_key": "Kernel::Linux busybox rootfs boot",
+      "message": "required gate is not pass and has no active waiver",
+      "report_waived": false,
+      "status": "fail"
+    },
+    {
+      "code": "E_RUNTIME_UNWAIVED_GATE",
+      "gate_key": "Library::glibc G1b shared libc.so",
+      "message": "required gate is not pass and has no active waiver",
+      "report_waived": false,
+      "status": "fail"
+    },
+    {
+      "code": "E_RUNTIME_UNWAIVED_GATE",
+      "gate_key": "Library::musl runtime static+shared",
+      "message": "required gate is not pass and has no active waiver",
+      "report_waived": false,
+      "status": "fail"
+    },
+    {
+      "code": "E_RUNTIME_UNWAIVED_GATE",
+      "gate_key": "Model::QEMU vs model differential suite",
+      "message": "required gate is not pass and has no active waiver",
+      "report_waived": false,
+      "status": "fail"
+    },
+    {
+      "code": "E_RUNTIME_UNWAIVED_GATE",
+      "gate_key": "Regression::strict_cross_repo.sh",
+      "message": "required gate is not pass and has no active waiver",
+      "report_waived": false,
+      "status": "fail"
+    }
+  ],
+  "lane": "pin",
+  "manifest": "/Users/zhoubot/linx-isa/docs/bringup/agent_runs/manifest.yaml",
+  "mode": "runtime",
+  "ok": false,
+  "report": "/Users/zhoubot/linx-isa/docs/bringup/gates/latest.json",
+  "run_id": "2026-02-23-r4-pin-qemu-linux-ctxfix",
+  "runtime_stats": {
+    "lane": "pin",
+    "profile": "release-strict",
+    "required_failed": 5,
+    "required_gates_total": 14,
+    "required_pass": 9,
+    "required_waived": 0,
+    "run_id": "2026-02-23-r4-pin-qemu-linux-ctxfix",
+    "waiver_matches": 0
+  },
+  "static_stats": {
+    "agents": 6,
+    "assignments": 18,
+    "declared_checklist_ids": 32,
+    "declared_checklists": 6,
+    "waivers": 0
+  },
+  "strict_always": true,
+  "waivers": "/Users/zhoubot/linx-isa/docs/bringup/agent_runs/waivers.yaml",
+  "warnings": []
+}

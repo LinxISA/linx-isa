@@ -3,12 +3,12 @@
 - [x] ID: QEMU-001 Pass strict-system gate with timer IRQ policy required by strict runs.
   Command: `cd avs/qemu && LINX_DISABLE_TIMER_IRQ=0 ./check_system_strict.sh`
   Done means: strict system suite passes with no trap-noise regressions.
-  Status: ✅ PASS (2026-02-23) - strict system passes in run `2026-02-23-r3-pin-qemu-llvm-linux-fix` with `*** REGRESSION PASSED ***` (log: `docs/bringup/gates/logs/2026-02-23-r3-pin-qemu-llvm-linux-fix/pin/emu_strict_system.log`).
+  Status: ✅ PASS (2026-02-23) - strict system re-verified in run `2026-02-23-r6-pin-linux-stability-fix` with `*** REGRESSION PASSED ***` (log: `docs/bringup/gates/logs/2026-02-23-r6-pin-linux-stability-fix/pin/emu_strict_system.log`).
 
 - [x] ID: QEMU-002 Pass runtime AVS suites (`--all`) with timeout budget.
   Command: `cd avs/qemu && ./run_tests.sh --all --timeout 10`
   Done means: all runtime suites pass and logs are attached to gate evidence.
-  Status: ✅ PASS (2026-02-23) - `run_tests.sh --all --timeout 10` passes in run `2026-02-23-r3-pin-qemu-llvm-linux-fix` (log: `docs/bringup/gates/logs/2026-02-23-r3-pin-qemu-llvm-linux-fix/pin/emu_all_suites.log`).
+  Status: ✅ PASS (2026-02-23) - `run_tests.sh --all --timeout 10` re-verified in run `2026-02-23-r6-pin-linux-stability-fix` (log: `docs/bringup/gates/logs/2026-02-23-r6-pin-linux-stability-fix/pin/emu_all_suites.log`).
 
 - [ ] ID: QEMU-003 Keep regenerated opcode meta/id tables synchronized with decode sources.
   Files: `emulator/qemu/target/linx/linx_opcode_ids_gen.h`, `emulator/qemu/target/linx/linx_opcode_meta_gen.h`
@@ -17,7 +17,7 @@
 
 - [x] ID: QEMU-004 Validate trap semantics match strict v0.3 clarifications for CFI/BLOCKFMT/BFETCH.
   Done means: no conflicting trap behavior is observed in strict-system and model-diff gates.
-  Status: ✅ PASS (2026-02-23) - `LINX_SEMIHOST=0` system run requiring `0x110F` passes and strict system completes in run `2026-02-23-r3-pin-qemu-llvm-linux-fix` (logs: `docs/bringup/gates/logs/2026-02-23-r3-pin-qemu-llvm-linux-fix/pin/emu_system_0x110f.log`, `docs/bringup/gates/logs/2026-02-23-r3-pin-qemu-llvm-linux-fix/pin/emu_strict_system.log`).
+  Status: ✅ PASS (2026-02-23) - strict system with required `0x110F` remains green and call/ret contract trap checks pass in run `2026-02-23-r6-pin-linux-stability-fix` (logs: `docs/bringup/gates/logs/2026-02-23-r6-pin-linux-stability-fix/pin/emu_strict_system.log`, `docs/bringup/gates/logs/2026-02-23-r6-pin-linux-stability-fix/pin/emu_callret_contract.log`).
 
 - [ ] ID: QEMU-005 ISA spec vs QEMU implementation gap analysis.
   Done means: Document all instructions in ISA spec that are not implemented in QEMU decode files.
@@ -25,7 +25,7 @@
 
 - [ ] ID: QEMU-006 QEMU can boot full Linux with complete runtime APIs.
   Done means: Linux kernel boots with timer interrupts working, full syscalls available.
-  Status: ❌ FAIL (2026-02-23) - QEMU runtime suites remain green, but Linux timer-context diagnostic still does not close: `ctx_tq_irq_smoke.py` reaches `# ctx_tq_irq_test` and then cannot produce a passing marker, while boot log shows `EBARG selftest: FAIL id=0x1f40 ... got=0x0` in run `2026-02-23-r4-checklist-push` (log: `docs/bringup/gates/logs/2026-02-23-r4-checklist-push/pin/kernel_ctx_tq_irq_smoke_final.log`). BusyBox rootfs closure remains blocked by missing `mkfs.ext4/mke2fs` (previous evidence: `docs/bringup/gates/logs/2026-02-23-r3-pin-qemu-llvm-linux-fix/pin/kernel_busybox_rootfs.log`).
+  Status: ❌ FAIL (2026-02-23) - emulator suites are green, but full-OS closure is still blocked by Linux BusyBox rootfs instability: userspace marker is missing and logs show `_start` re-entry/hartid corruption signature before handoff. The same signature reproduces in timer-off rootfs run (`kernel_busybox_rootfs_timeroff.log`), so current blocker is broader than timer-on policy (run `2026-02-23-r6-pin-linux-stability-fix`).
 
 ---
 
