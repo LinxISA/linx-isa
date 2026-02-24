@@ -5,12 +5,16 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OUT_LOG="${OUT_LOG:-$SCRIPT_DIR/out/system_strict.log}"
 RETRIES="${RETRIES:-3}"
 STRICT_TIMER_IRQ_DISABLE="${STRICT_TIMER_IRQ_DISABLE:-0}"
+HEARTBEAT_SEC="${HEARTBEAT_SEC:-2}"
+NO_PROGRESS_TIMEOUT="${NO_PROGRESS_TIMEOUT:-0}"
 mkdir -p "$(dirname "$OUT_LOG")"
 
 CMD=(
   python3 "$SCRIPT_DIR/run_tests.py"
   --suite system
   --timeout "${TIMEOUT:-15}"
+  --heartbeat-sec "$HEARTBEAT_SEC"
+  --no-progress-timeout "$NO_PROGRESS_TIMEOUT"
   --verbose
   --require-test-id 0x1100
   --require-test-id 0x1101
@@ -28,6 +32,7 @@ CMD=(
   --require-test-id 0x110D
   --require-test-id 0x110E
   --require-test-id 0x110F
+  --require-test-id 0x1110
 )
 
 if ! [[ "$RETRIES" =~ ^[0-9]+$ ]] || [[ "$RETRIES" -lt 1 ]]; then

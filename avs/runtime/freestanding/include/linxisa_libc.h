@@ -29,7 +29,14 @@ typedef uint64_t u64;
 #endif
 
 /* POSIX-like signed size for printf's %zd, etc. */
+#ifndef _LINX_SSIZE_T_DEFINED
+#define _LINX_SSIZE_T_DEFINED 1
 typedef ptrdiff_t ssize_t;
+#endif
+#ifndef _LINX_OFF_T_DEFINED
+#define _LINX_OFF_T_DEFINED 1
+typedef int64_t off_t;
+#endif
 
 /* Architecture-specific macros */
 #define __LINX_ISA__ linx64
@@ -38,8 +45,28 @@ typedef ptrdiff_t ssize_t;
 void __linx_putchar(int c);
 void __linx_puts(const char *s);
 void __linx_exit(int code) __LINX_NORETURN;
-int __linx_read(int fd, void *buf, size_t count);
-int __linx_write(int fd, const void *buf, size_t count);
+ssize_t __linx_read(int fd, void *buf, size_t count);
+ssize_t __linx_write(int fd, const void *buf, size_t count);
+int __linx_open(const char *pathname, int flags, int mode);
+int __linx_close(int fd);
+void *__linx_brk(void *addr);
+off_t __linx_lseek(int fd, off_t offset, int whence);
+void *__linx_mmap(void *addr, size_t length, int prot, int flags, int fd,
+                  off_t offset);
+int __linx_munmap(void *addr, size_t length);
+int __linx_getpid(void);
+
+/* POSIX-like syscall surface for freestanding bring-up. */
+ssize_t read(int fd, void *buf, size_t count);
+ssize_t write(int fd, const void *buf, size_t count);
+int open(const char *pathname, int flags, int mode);
+int close(int fd);
+void *brk(void *addr);
+off_t lseek(int fd, off_t offset, int whence);
+void *mmap(void *addr, size_t length, int prot, int flags, int fd,
+           off_t offset);
+int munmap(void *addr, size_t length);
+int getpid(void);
 
 /* Memory functions */
 void *memcpy(void *dest, const void *src, size_t n);

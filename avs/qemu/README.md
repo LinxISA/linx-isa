@@ -72,6 +72,18 @@ Increase timeout:
 ./run_tests.sh --timeout 10
 ```
 
+Enable host heartbeat during long runs (prints elapsed/idle/bytes):
+
+```bash
+./run_tests.sh --suite system --timeout 30 --heartbeat-sec 2
+```
+
+Fail early when QEMU has no stdout/stderr progress for too long:
+
+```bash
+./run_tests.sh --suite system --timeout 60 --heartbeat-sec 2 --no-progress-timeout 15
+```
+
 Rebuild from scratch (clear all intermediates):
 
 ```bash

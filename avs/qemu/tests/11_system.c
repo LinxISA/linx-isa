@@ -91,6 +91,7 @@ enum {
     TESTID_ACR0_BAD_REQ = 0x110D,
     TESTID_DBG_BP_RESUME = 0x110E,
     TESTID_RI_STEP_TRAP_POLLUTE_RESUME = 0x110F,
+    TESTID_CFI_BAD_TARGET = 0x1110,
 };
 
 __attribute__((noreturn)) static void linx_priv_user_code(void);
@@ -119,6 +120,7 @@ __attribute__((noreturn)) static void linx_acr2_irq_meta_after(void);
 __attribute__((noreturn)) static void linx_after_irq_meta_exit(void);
 __attribute__((noreturn)) static void linx_after_acr1_bad_target_trap(void);
 __attribute__((noreturn)) static void linx_after_acr1_bad_target_exit(void);
+__attribute__((noreturn)) static void linx_after_cfi_bad_target_exit(void);
 __attribute__((noreturn)) static void linx_after_acr0_bad_req_exit(void);
 __attribute__((noreturn)) static void linx_system_done(void);
 
@@ -198,6 +200,7 @@ extern void linx_acr1_record_trap_handler(void);
 extern void linx_acr1_bp_resume_handler(void);
 extern void linx_acr1_step_trap_pollute_handler(void);
 extern void linx_bad_acrc_user(void);
+extern void linx_cfi_bad_target_user(void);
 extern void linx_trap_resume_to_exit(void);
 extern void linx_dbg_bp_user(void);
 extern void linx_dbg_bp_resume_user(void);
@@ -396,6 +399,16 @@ __asm__(
     "  C.BSTART\n"
     "  acrc 1\n"
     "  addi zero, 0, ->a0\n"
+    "  C.BSTOP\n"
+);
+
+/* ACR2 negative test: invalid DIRECT target must trap E_BLOCK(EC_CFI). */
+__asm__(
+    ".globl linx_cfi_bad_target_user\n"
+    "linx_cfi_bad_target_user:\n"
+    "  C.BSTART DIRECT, linx_cfi_bad_target_bstop\n"
+    "  C.BSTOP\n"
+    "linx_cfi_bad_target_bstop:\n"
     "  C.BSTOP\n"
 );
 
@@ -1165,6 +1178,47 @@ __attribute__((noreturn)) static void linx_after_acr1_bad_target_exit(void)
     TEST_EQ64(trapno_trapnum(trapno), 6 /* SYSCALL */, TESTID_ACRE_BAD_TARGET + 5);
     TEST_EQ64(traparg0, 0 /* SCT_MAC */, TESTID_ACRE_BAD_TARGET + 6);
     TEST_EQ64(ecstate & CSTATE_ACR_MASK, 1, TESTID_ACRE_BAD_TARGET + 7);
+
+    test_pass();
+
+    /* --------------------------------------------------------------------- */
+    /* CFI bad target: E_BLOCK(EC_CFI) encoding + TRAPARG0 source PC         */
+    /* --------------------------------------------------------------------- */
+    test_start(TESTID_CFI_BAD_TARGET);
+
+    ssrset_uimm(SSR_LAST_TRAPNO, 0);
+    ssrset_uimm(SSR_LAST_TRAPARG0, 0);
+    ssrset_uimm(SSR_LAST_EBARG_TPC, 0);
+    ssrset_uimm(SSR_LAST_ECSTATE, 0);
+    hl_ssrset_uimm24(SSR_ETEMP0_ACR1, (uint64_t)(uintptr_t)&linx_trap_resume_to_exit);
+    ssrset_uimm(SSR_CONT_EXIT, (uint64_t)(uintptr_t)&linx_after_cfi_bad_target_exit);
+    hl_ssrset_uimm24(SSR_EVBASE_ACR1, (uint64_t)(uintptr_t)&linx_acr1_record_trap_handler);
+    ssrset_uimm(SSR_EVBASE_ACR0, (uint64_t)(uintptr_t)&linx_acr0_exit_handler);
+
+    /* Enter ACR2 at a block with an invalid DIRECT successor target. */
+    ssrset_uimm(SSR_ECSTATE_ACR0, 2); /* target ACR2 */
+    ssrset_uimm(SSR_EBARG_BPC_CUR_ACR0, (uint64_t)(uintptr_t)&linx_cfi_bad_target_user);
+    __asm__ volatile("acre 0" : : : "memory");
+    __builtin_unreachable();
+}
+
+__attribute__((noreturn)) static void linx_after_cfi_bad_target_exit(void)
+{
+    const uint64_t trapno = ssrget_uimm(SSR_LAST_TRAPNO);
+    const uint64_t traparg0 = ssrget_uimm(SSR_LAST_TRAPARG0);
+    const uint64_t ebarg_tpc = ssrget_uimm(SSR_LAST_EBARG_TPC);
+    const uint64_t ecstate = ssrget_uimm(SSR_LAST_ECSTATE);
+    const uint64_t src_pc = (uint64_t)(uintptr_t)&linx_cfi_bad_target_user;
+
+    TEST_EQ64(trapno_is_async(trapno), 0, TESTID_CFI_BAD_TARGET + 1);
+    TEST_EQ64(trapno_has_argv(trapno), 1, TESTID_CFI_BAD_TARGET + 2);
+    TEST_EQ64(trapno_trapnum(trapno), 5 /* BLOCK_TRAP */, TESTID_CFI_BAD_TARGET + 3);
+    TEST_EQ64(trapno_cause(trapno), 0x101 /* E_BLOCK(EC_CFI, BAD_TARGET) */, TESTID_CFI_BAD_TARGET + 4);
+    TEST_EQ64(traparg0, src_pc, TESTID_CFI_BAD_TARGET + 5);
+    /* Trap is delivered at block commit; EBARG.TPC can point at the terminator. */
+    TEST_EQ64(ebarg_tpc, src_pc + 2, TESTID_CFI_BAD_TARGET + 6);
+    TEST_EQ64(ecstate & CSTATE_ACR_MASK, 2, TESTID_CFI_BAD_TARGET + 7);
+    TEST_EQ64((ecstate >> 62) & 1ull, 0, TESTID_CFI_BAD_TARGET + 8); /* BI=0 */
 
     test_pass();
 
