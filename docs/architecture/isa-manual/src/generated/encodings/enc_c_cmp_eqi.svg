@@ -1,67 +1,30 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 80" width="500" height="80">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 120" width="800" height="120">
   <defs>
     <style>
-      .field-label { 
-        font-family: 'Courier New', monospace; 
-        font-size: 9px; 
-        fill: #333333;
-        font-weight: 500;
-      }
-      .bit-label { 
-        font-family: 'Courier New', monospace; 
-        font-size: 7px; 
-        fill: #888888;
-        text-anchor: middle; 
-      }
-      .mnemonic { 
-        font-family: 'Helvetica Neue', Arial, sans-serif; 
-        font-size: 12px; 
-        font-weight: 600; 
-        fill: #333333;
-      }
-      .field-rect { 
-        stroke: #ffffff; 
-        stroke-width: 1.5px; 
-      }
-      .border-line {
-        stroke: #666666;
-        stroke-width: 1.5px;
-      }
-      .part-label {
-        font-family: 'Helvetica Neue', Arial, sans-serif;
-        font-size: 10px;
-        fill: #888888;
-        font-weight: 500;
-      }
+      .field-label { font-family: "Courier New", monospace; font-size: 11px; fill: #333; }
+      .bit-label { font-family: "Courier New", monospace; font-size: 9px; fill: #666; text-anchor: middle; }
+      .mnemonic { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #333; }
+      .field-rect { stroke: #fff; stroke-width: 1px; }
     </style>
   </defs>
-  
-  <!-- Mnemonic label -->
-  <text x="10" y="18" class="mnemonic">C.CMP.EQI</text>
-  <text x="10" y="74" class="bit-label" fill="#888888">16-bit</text>
-  <text x="73.28125" y="14" class="bit-label">15</text>
-  <text x="126.40625" y="14" class="bit-label">13</text>
-  <text x="179.53125" y="14" class="bit-label">11</text>
-  <text x="232.65625" y="14" class="bit-label">9</text>
-  <text x="285.78125" y="14" class="bit-label">7</text>
-  <text x="338.90625" y="14" class="bit-label">5</text>
-  <text x="392.03125" y="14" class="bit-label">3</text>
-  <text x="445.15625" y="14" class="bit-label">1</text>
-  <rect x="60" y="24.375" width="53.125" height="26.25" fill="#e8e8e8" class="field-rect" rx="2" ry="2"/>
-  <text x="86.5625" y="39.5" class="field-label" text-anchor="middle">2'b00</text>
-  <rect x="113.125" y="24.375" width="79.6875" height="26.25" fill="#e8e8e8" class="field-rect" rx="2" ry="2"/>
-  <text x="152.96875" y="39.5" class="field-label" text-anchor="middle">3'b000</text>
-  <rect x="192.8125" y="24.375" width="132.8125" height="26.25" fill="#ffe0b9" class="field-rect" rx="2" ry="2"/>
-  <text x="259.21875" y="39.5" class="field-label" text-anchor="middle">simm5</text>
-  <rect x="325.625" y="24.375" width="53.125" height="26.25" fill="#e8e8e8" class="field-rect" rx="2" ry="2"/>
-  <text x="352.1875" y="39.5" class="field-label" text-anchor="middle">2'b10</text>
-  <rect x="378.75" y="24.375" width="79.6875" height="26.25" fill="#e8e8e8" class="field-rect" rx="2" ry="2"/>
-  <text x="418.59375" y="39.5" class="field-label" text-anchor="middle">3'b110</text>
-  <rect x="458.4375" y="24.375" width="26.5625" height="26.25" fill="#e8e8e8" class="field-rect" rx="2" ry="2"/>
-  <text x="471.71875" y="39.5" class="field-label" text-anchor="middle">0</text>
-  
-  <!-- Border lines -->
-  <line x1="60" y1="20" x2="485" y2="20" class="border-line"/>
-  <line x1="60" y1="55" x2="485" y2="55" class="border-line"/>
+
+  <text x="10" y="20" class="mnemonic">C.CMP.EQI</text>
+  <text x="10" y="110" class="mnemonic" fill="#666">32-bit</text>
+
+  <text x="71.25" y="22" class="bit-label">31</text>
+  <text x="161.25" y="22" class="bit-label">27</text>
+  <text x="251.25" y="22" class="bit-label">23</text>
+  <text x="341.25" y="22" class="bit-label">19</text>
+  <text x="431.25" y="22" class="bit-label">15</text>
+  <text x="521.25" y="22" class="bit-label">11</text>
+  <text x="611.25" y="22" class="bit-label">7</text>
+  <text x="701.25" y="22" class="bit-label">3</text>
+  <rect x="757.5" y="42.5" width="22.5" height="25.0" fill="#95A5A6" class="field-rect" rx="3"/>
+  <rect x="757.5" y="42.5" width="22.5" height="25.0" fill="#95A5A6" class="field-rect" rx="3"/>
+  <rect x="757.5" y="42.5" width="22.5" height="25.0" fill="#95A5A6" class="field-rect" rx="3"/>
+  <rect x="757.5" y="42.5" width="22.5" height="25.0" fill="#95A5A6" class="field-rect" rx="3"/>
+  <rect x="757.5" y="42.5" width="22.5" height="25.0" fill="#95A5A6" class="field-rect" rx="3"/>
+  <rect x="757.5" y="42.5" width="22.5" height="25.0" fill="#95A5A6" class="field-rect" rx="3"/>
+  <line x1="60" y1="30" x2="780.0" y2="30" stroke="#333" stroke-width="2"/>
+  <line x1="60" y1="55.0" x2="780.0" y2="55.0" stroke="#333" stroke-width="2"/>
 </svg>

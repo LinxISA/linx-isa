@@ -19,6 +19,11 @@ Assembly forms::
 +
 * `acrc rst_type`
 
+Encoding::
++
+image::encodings/enc_acrc.svg[ACRC encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -37,6 +42,11 @@ Assembly forms::
 +
 * `acre rra_type`
 
+Encoding::
++
+image::encodings/enc_acre.svg[ACRE encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -54,6 +64,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `assert SrcL`
+
+Encoding::
++
+image::encodings/enc_assert.svg[ASSERT encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -74,6 +89,11 @@ Assembly forms::
 +
 * `bse SrcL`
 
+Encoding::
++
+image::encodings/enc_bse.svg[BSE encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -91,6 +111,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `bwe SrcL`
+
+Encoding::
++
+image::encodings/enc_bwe.svg[BWE encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -110,6 +135,11 @@ Assembly forms::
 +
 * `bwi SrcL`
 
+Encoding::
++
+image::encodings/enc_bwi.svg[BWI encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -128,6 +158,11 @@ Assembly forms::
 +
 * `bwt SrcL`
 
+Encoding::
++
+image::encodings/enc_bwt.svg[BWT encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -145,6 +180,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `ebreak imm`
+
+Encoding::
++
+image::encodings/enc_ebreak.svg[EBREAK encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -203,6 +243,11 @@ Assembly forms::
 +
 * `add SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_add.svg[ADD encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -223,6 +268,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `addi SrcL, uimm, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_addi.svg[ADDI encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -245,6 +295,11 @@ Assembly forms::
 +
 * `and SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_and.svg[AND encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -265,6 +320,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `andi SrcL, simm, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_andi.svg[ANDI encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -392,6 +452,11 @@ Assembly forms::
 +
 * `or SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_or.svg[OR encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -412,6 +477,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `ori SrcL, simm, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_ori.svg[ORI encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -434,6 +504,11 @@ Assembly forms::
 +
 * `sll SrcL, SrcR, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_sll.svg[SLL encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -454,6 +529,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `slli SrcL, shamt, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_slli.svg[SLLI encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -476,6 +556,11 @@ Assembly forms::
 +
 * `sra SrcL, SrcR, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_sra.svg[SRA encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -496,6 +581,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `srai SrcL, shamt, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_srai.svg[SRAI encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -518,6 +608,11 @@ Assembly forms::
 +
 * `srl SrcL, SrcR, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_srl.svg[SRL encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -538,6 +633,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `srli SrcL, shamt, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_srli.svg[SRLI encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -560,6 +660,11 @@ Assembly forms::
 +
 * `sub SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_sub.svg[SUB encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -580,6 +685,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `subi SrcL, uimm, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_subi.svg[SUBI encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -602,6 +712,11 @@ Assembly forms::
 +
 * `xor SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_xor.svg[XOR encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -622,6 +737,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `xori SrcL, simm, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_xori.svg[XORI encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -647,6 +767,11 @@ Assembly forms::
 +
 * `addiw SrcL, uimm, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_addiw.svg[ADDIW encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -664,6 +789,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `addw SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_addw.svg[ADDW encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -683,6 +813,11 @@ Assembly forms::
 +
 * `andiw SrcL, simm, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_andiw.svg[ANDIW encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -700,6 +835,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `andw SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_andw.svg[ANDW encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -809,6 +949,11 @@ Assembly forms::
 +
 * `oriw SrcL, simm, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_oriw.svg[ORIW encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -826,6 +971,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `orw SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_orw.svg[ORW encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -845,6 +995,11 @@ Assembly forms::
 +
 * `slliw SrcL, shamt, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_slliw.svg[SLLIW encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -862,6 +1017,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `sllw SrcL, SrcR, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_sllw.svg[SLLW encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -881,6 +1041,11 @@ Assembly forms::
 +
 * `sraiw SrcL, shamt, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_sraiw.svg[SRAIW encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -898,6 +1063,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `sraw SrcL, SrcR, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_sraw.svg[SRAW encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -917,6 +1087,11 @@ Assembly forms::
 +
 * `srliw SrcL, shamt, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_srliw.svg[SRLIW encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -934,6 +1109,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `srlw SrcL, SrcR, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_srlw.svg[SRLW encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -953,6 +1133,11 @@ Assembly forms::
 +
 * `subiw SrcL, uimm, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_subiw.svg[SUBIW encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -970,6 +1155,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `subw SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_subw.svg[SUBW encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -989,6 +1179,11 @@ Assembly forms::
 +
 * `xoriw SrcL, simm, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_xoriw.svg[XORIW encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -1006,6 +1201,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `xorw SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_xorw.svg[XORW encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -1027,6 +1227,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `addtpc simm, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_addtpc.svg[ADDTPC encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -1081,6 +1286,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `setret uimm, ->Ra`
+
+Encoding::
++
+image::encodings/enc_setret.svg[SETRET encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -1322,6 +1532,11 @@ Assembly forms::
 +
 * `j label`
 
+Encoding::
++
+image::encodings/enc_j.svg[J encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -1339,6 +1554,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `jr SrcL, label`
+
+Encoding::
++
+image::encodings/enc_jr.svg[JR encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -1772,6 +1992,11 @@ Assembly forms::
 +
 * `bcnt srcL, Nminus1, M, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_bcnt.svg[BCNT encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -1789,6 +2014,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `bic SrcL, Nminus1, M, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_bic.svg[BIC encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -1808,6 +2038,11 @@ Assembly forms::
 +
 * `bis SrcL, Nminus1, M, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_bis.svg[BIS encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -1825,6 +2060,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `bxs SrcL, Nminus1, M, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_bxs.svg[BXS encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -1844,6 +2084,11 @@ Assembly forms::
 +
 * `bxu SrcL, Nminus1, M, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_bxu.svg[BXU encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -1861,6 +2106,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `clz SrcL, Nminus1, M, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_clz.svg[CLZ encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -1880,6 +2130,11 @@ Assembly forms::
 +
 * `ctz SrcL, Nminus1, M, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_ctz.svg[CTZ encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -1897,6 +2152,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `rev SrcL, M, N, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_rev.svg[REV encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -1919,6 +2179,11 @@ Assembly forms::
 +
 * `BSTART {DIRECT, CALL}, <label>`
 * `BSTART COND, <label>`
+
+Encoding::
++
+image::encodings/enc_bstart.svg[BSTART encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -2318,6 +2583,11 @@ Assembly forms::
 +
 * `BSTOP`
 
+Encoding::
++
+image::encodings/enc_bstop.svg[BSTOP encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -2374,6 +2644,11 @@ Assembly forms::
 +
 * `ERCOV [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]`
 
+Encoding::
++
+image::encodings/enc_ercov.svg[ERCOV encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -2391,6 +2666,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `ESAVE [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]`
+
+Encoding::
++
+image::encodings/enc_esave.svg[ESAVE encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -2410,6 +2690,11 @@ Assembly forms::
 +
 * `FENTRY [RegSrc0 ~ RegSrcn], sp!, uimm`
 
+Encoding::
++
+image::encodings/enc_fentry.svg[FENTRY encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -2427,6 +2712,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `FEXIT [RegDst0 ~ RegDstn], sp!, uimm`
+
+Encoding::
++
+image::encodings/enc_fexit.svg[FEXIT encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -2482,6 +2772,11 @@ Assembly forms::
 +
 * `MCOPY [RegSrc0, RegSrc1, RegSrc2]`
 
+Encoding::
++
+image::encodings/enc_mcopy.svg[MCOPY encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -2500,6 +2795,11 @@ Assembly forms::
 +
 * `MSET [RegSrc0, RegSrc1, RegSrc2]`
 
+Encoding::
++
+image::encodings/enc_mset.svg[MSET encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -2517,6 +2817,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `XB ACR-ID, C-ID`
+
+Encoding::
++
+image::encodings/enc_xb.svg[XB encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -3426,6 +3731,11 @@ Assembly forms::
 +
 * `lbi [SrcL, simm], ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_lbi.svg[LBI encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -3446,6 +3756,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `lbui [SrcL, simm], ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_lbui.svg[LBUI encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -3468,6 +3783,11 @@ Assembly forms::
 +
 * `ldi [SrcL, simm], ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_ldi.svg[LDI encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -3487,6 +3807,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `lhi [SrcL, simm], ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_lhi.svg[LHI encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -3509,6 +3834,11 @@ Assembly forms::
 +
 * `lhui [SrcL, simm], ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_lhui.svg[LHUI encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -3530,6 +3860,11 @@ Assembly forms::
 +
 * `lwi [SrcL, simm], ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_lwi.svg[LWI encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -3550,6 +3885,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `lwui [SrcL, simm], ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_lwui.svg[LWUI encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -3962,6 +4302,11 @@ Assembly forms::
 +
 * `sbi SrcL, [SrcR, simm]`
 
+Encoding::
++
+image::encodings/enc_sbi.svg[SBI encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -3980,6 +4325,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `sdi SrcL, [SrcR, simm]`
+
+Encoding::
++
+image::encodings/enc_sdi.svg[SDI encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -4019,6 +4369,11 @@ Assembly forms::
 +
 * `shi SrcL, [SrcR, simm]`
 
+Encoding::
++
+image::encodings/enc_shi.svg[SHI encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -4056,6 +4411,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `swi SrcL, [SrcR, simm]`
+
+Encoding::
++
+image::encodings/enc_swi.svg[SWI encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -5487,6 +5847,11 @@ Assembly forms::
 +
 * `csel SrcP, SrcL, SrcR<.neg>, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_csel.svg[CSEL encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -5508,6 +5873,11 @@ Assembly forms::
 +
 * `div SrcL, SrcR, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_div.svg[DIV encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -5525,6 +5895,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `divu SrcL, SrcR, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_divu.svg[DIVU encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -5544,6 +5919,11 @@ Assembly forms::
 +
 * `divuw SrcL, SrcR, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_divuw.svg[DIVUW encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -5561,6 +5941,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `divw SrcL, SrcR, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_divw.svg[DIVW encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -5796,6 +6181,11 @@ Assembly forms::
 +
 * `madd SrcL, SrcR, SrcD, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_madd.svg[MADD encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -5813,6 +6203,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `maddw SrcL, SrcR, SrcD, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_maddw.svg[MADDW encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -5832,6 +6227,11 @@ Assembly forms::
 +
 * `mul SrcL, SrcR, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_mul.svg[MUL encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -5849,6 +6249,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `mulu SrcL, SrcR, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_mulu.svg[MULU encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -5868,6 +6273,11 @@ Assembly forms::
 +
 * `muluw SrcL, SrcR, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_muluw.svg[MULUW encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -5885,6 +6295,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `mulw SrcL, SrcR, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_mulw.svg[MULW encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -5904,6 +6319,11 @@ Assembly forms::
 +
 * `rem SrcL, SrcR, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_rem.svg[REM encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -5921,6 +6341,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `remu SrcL, SrcR, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_remu.svg[REMU encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -5940,6 +6365,11 @@ Assembly forms::
 +
 * `remuw SrcL, SrcR, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_remuw.svg[REMUW encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -5957,6 +6387,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `remw SrcL, SrcR, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_remw.svg[REMW encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -6015,6 +6450,11 @@ Assembly forms::
 +
 * `fabs.{T} SrcL, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_fabs.svg[FABS encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -6032,6 +6472,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `fadd.{T} SrcL, SrcR, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_fadd.svg[FADD encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -6051,6 +6496,11 @@ Assembly forms::
 +
 * `fdiv.{T} SrcL, SrcR, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_fdiv.svg[FDIV encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -6068,6 +6518,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `fexp.{T} SrcL, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_fexp.svg[FEXP encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -6087,6 +6542,11 @@ Assembly forms::
 +
 * `fmadd.{T} SrcL, SrcR, SrcA, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_fmadd.svg[FMADD encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -6104,6 +6564,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `fmsub.{T} SrcL, SrcR, SrcA, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_fmsub.svg[FMSUB encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -6123,6 +6588,11 @@ Assembly forms::
 +
 * `fmul.{T} SrcL, SrcR, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_fmul.svg[FMUL encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -6140,6 +6610,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `fnmadd.{T} SrcL, SrcR, SrcA, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_fnmadd.svg[FNMADD encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -6159,6 +6634,11 @@ Assembly forms::
 +
 * `fnmsub.{T} SrcL, SrcR, SrcA, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_fnmsub.svg[FNMSUB encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -6176,6 +6656,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `frecip.{T} SrcL, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_frecip.svg[FRECIP encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -6195,6 +6680,11 @@ Assembly forms::
 +
 * `fsqrt.{T} SrcL, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_fsqrt.svg[FSQRT encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -6212,6 +6702,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `fsub.{T} SrcL, SrcR, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_fsub.svg[FSUB encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -6234,6 +6729,11 @@ Assembly forms::
 +
 * `fcvt.{srcT2dstT} SrcL, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_fcvt.svg[FCVT encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -6251,6 +6751,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `fcvta.{srcT2dstT} SrcL, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_fcvta.svg[FCVTA encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -6270,6 +6775,11 @@ Assembly forms::
 +
 * `fcvtm.{srcT2dstT} SrcL, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_fcvtm.svg[FCVTM encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -6287,6 +6797,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `fcvtn.{srcT2dstT} SrcL, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_fcvtn.svg[FCVTN encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -6306,6 +6821,11 @@ Assembly forms::
 +
 * `fcvtp.{srcT2dstT} SrcL, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_fcvtp.svg[FCVTP encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -6323,6 +6843,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `fcvtz.{srcT2dstT} SrcL, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_fcvtz.svg[FCVTZ encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -6342,6 +6867,11 @@ Assembly forms::
 +
 * `scvtf.{srcT2dstT} SrcL, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_scvtf.svg[SCVTF encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -6359,6 +6889,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `ucvtf.{srcT2dstT} SrcL, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_ucvtf.svg[UCVTF encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -6453,6 +6988,11 @@ Assembly forms::
 +
 * `feq.{T} SrcL, SrcR, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_feq.svg[FEQ encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -6470,6 +7010,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `feqs.{T} SrcL, SrcR, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_feqs.svg[FEQS encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -6489,6 +7034,11 @@ Assembly forms::
 +
 * `fge.{T} SrcL, SrcR, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_fge.svg[FGE encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -6506,6 +7056,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `fges.{T} SrcL, SrcR, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_fges.svg[FGES encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -6525,6 +7080,11 @@ Assembly forms::
 +
 * `flt.{T} SrcL, SrcR, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_flt.svg[FLT encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -6542,6 +7102,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `flts.{T} SrcL, SrcR, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_flts.svg[FLTS encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -6561,6 +7126,11 @@ Assembly forms::
 +
 * `fne.{T} SrcL, SrcR, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_fne.svg[FNE encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -6578,6 +7148,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `fnes.{T} SrcL, SrcR, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_fnes.svg[FNES encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -6600,6 +7175,11 @@ Assembly forms::
 +
 * `fmax.{T} SrcL, SrcR, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_fmax.svg[FMAX encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -6617,6 +7197,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `fmin.{T} SrcL, SrcR, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_fmin.svg[FMIN encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -6636,6 +7221,11 @@ Assembly forms::
 +
 * `max SrcL, SrcR, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_max.svg[MAX encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -6653,6 +7243,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `maxu SrcL, SrcR, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_maxu.svg[MAXU encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -6672,6 +7267,11 @@ Assembly forms::
 +
 * `min SrcL, SrcR, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_min.svg[MIN encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -6689,6 +7289,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `minu SrcL, SrcR, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_minu.svg[MINU encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -8585,6 +9190,11 @@ Assembly forms::
 +
 * `lui simm, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_lui.svg[LUI encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -9853,6 +10463,11 @@ Assembly forms::
 +
 * `lsrget LSR_ID, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_lsrget.svg[LSRGET encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -9890,6 +10505,11 @@ Assembly forms::
 +
 * `ssrget SSR_ID, ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_ssrget.svg[SSRGET encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -9909,6 +10529,11 @@ Assembly forms::
 +
 * `ssrset SrcL, SSR_ID`
 
+Encoding::
++
+image::encodings/enc_ssrset.svg[SSRSET encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -9926,6 +10551,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `ssrswap SrcL, SSR_ID, ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_ssrswap.svg[SSRSWAP encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -9950,6 +10580,11 @@ Assembly forms::
 +
 * `lb [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_lb.svg[LB encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -9970,6 +10605,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `lbu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_lbu.svg[LBU encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -9992,6 +10632,11 @@ Assembly forms::
 +
 * `ld [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_ld.svg[LD encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -10011,6 +10656,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `lh [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_lh.svg[LH encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -10033,6 +10683,11 @@ Assembly forms::
 +
 * `lhu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_lhu.svg[LHU encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -10053,6 +10708,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `lw [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
+
+Encoding::
++
+image::encodings/enc_lw.svg[LW encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -10075,6 +10735,11 @@ Assembly forms::
 +
 * `lwu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 
+Encoding::
++
+image::encodings/enc_lwu.svg[LWU encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -10095,6 +10760,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `prf [SrcL, SrcR<{.sw,.uw}><<<shamt>]`
+
+Encoding::
++
+image::encodings/enc_prf.svg[PRF encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -11408,6 +12078,11 @@ Assembly forms::
 +
 * `swapb<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
 
+Encoding::
++
+image::encodings/enc_swapb.svg[SWAPB encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -11427,6 +12102,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `swapd<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+
+Encoding::
++
+image::encodings/enc_swapd.svg[SWAPD encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -11448,6 +12128,11 @@ Assembly forms::
 +
 * `swaph<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
 
+Encoding::
++
+image::encodings/enc_swaph.svg[SWAPH encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -11467,6 +12152,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `swapw<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+
+Encoding::
++
+image::encodings/enc_swapw.svg[SWAPW encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -12366,6 +13056,11 @@ Assembly forms::
 +
 * `sb SrcD, [SrcL, SrcR<{.sw,.uw}>]`
 
+Encoding::
++
+image::encodings/enc_sb.svg[SB encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -12384,6 +13079,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `sd SrcD, [SrcL, SrcR<{.sw,.uw}><<3]`
+
+Encoding::
++
+image::encodings/enc_sd.svg[SD encoding diagram,align="center"]
+
 
 Operation (informative)::
 +
@@ -12423,6 +13123,11 @@ Assembly forms::
 +
 * `sh SrcD, [SrcL, SrcR<{.sw,.uw}><<1]`
 
+Encoding::
++
+image::encodings/enc_sh.svg[SH encoding diagram,align="center"]
+
+
 Operation (informative)::
 +
 [source]
@@ -12460,6 +13165,11 @@ Catalog forms:: 1 form(s) (32 bits).
 Assembly forms::
 +
 * `sw SrcD, [SrcL, SrcR<{.sw,.uw}><<2]`
+
+Encoding::
++
+image::encodings/enc_sw.svg[SW encoding diagram,align="center"]
+
 
 Operation (informative)::
 +

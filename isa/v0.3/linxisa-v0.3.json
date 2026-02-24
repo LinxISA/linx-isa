@@ -147404,6 +147404,36 @@
             "missing_required_ior_desc_family": "B.IOR",
             "missing_required_ior_detail": "0x00",
             "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
+            "name": "TEXPANDS",
+            "phase_model": "op-defined",
+            "redo_ok_after_start": false,
+            "requires_b_ior": true,
+            "resume_ok": false,
+            "scalar_rhs_broadcast": true,
+            "scalar_rhs_extract": "truncate_low_bits",
+            "scalar_rhs_mixed_signedness": false,
+            "scalar_rhs_signedness": "match_tile_dtype",
+            "scalar_rhs_type": "tile_element_dtype",
+            "src_tiles": 0,
+            "tileop10": 69
+          },
+          {
+            "dim_lb_defaults": {
+              "LB1": 1,
+              "LB2": 1
+            },
+            "dim_lb_required": [
+              "LB0"
+            ],
+            "dim_required": true,
+            "dirty_rule": "op-defined",
+            "dst_tiles": 1,
+            "engineop_state_bytes_max": 0,
+            "engineop_state_version": 0,
+            "has_index_tile": false,
+            "missing_required_ior_desc_family": "B.IOR",
+            "missing_required_ior_detail": "0x00",
+            "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
             "name": "TANDS",
             "phase_model": "op-defined",
             "redo_ok_after_start": false,
