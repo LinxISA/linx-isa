@@ -1,12 +1,12 @@
 {
   "gates": [
     {
-      "command": "python3 /Users/zhoubot/linx-isa/tools/bringup/check26_contract.py --root /Users/zhoubot/linx-isa",
-      "cwd": "/Users/zhoubot/linx-isa",
+      "command": "python3 ${LINXISA_ROOT}/tools/bringup/check26_contract.py --root ${LINXISA_ROOT}",
+      "cwd": "${LINXISA_ROOT}",
       "duration_sec": 0.046,
       "ended_at": "2026-02-16T18:18:36Z",
       "id": "check26",
-      "log": "/Users/zhoubot/linx-isa/out/bringup/gates/logs/external_check26.log",
+      "log": "${LINXISA_ROOT}/out/bringup/gates/logs/external_check26.log",
       "name": "Contract check26",
       "rc": 0,
       "started_at": "2026-02-16T18:18:36Z",
@@ -14,11 +14,11 @@
     },
     {
       "command": "bash ./run.sh",
-      "cwd": "/Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests",
+      "cwd": "${LINXISA_ROOT}/avs/compiler/linx-llvm/tests",
       "duration_sec": 2.069,
       "ended_at": "2026-02-16T18:18:38Z",
       "id": "compiler_avs",
-      "log": "/Users/zhoubot/linx-isa/out/bringup/gates/logs/external_compiler_avs.log",
+      "log": "${LINXISA_ROOT}/out/bringup/gates/logs/external_compiler_avs.log",
       "name": "Compiler AVS compile suites",
       "rc": 0,
       "started_at": "2026-02-16T18:18:36Z",
@@ -26,11 +26,11 @@
     },
     {
       "command": "bash ./check_system_strict.sh",
-      "cwd": "/Users/zhoubot/linx-isa/avs/qemu",
+      "cwd": "${LINXISA_ROOT}/avs/qemu",
       "duration_sec": 0.229,
       "ended_at": "2026-02-16T18:18:38Z",
       "id": "qemu_strict_system",
-      "log": "/Users/zhoubot/linx-isa/out/bringup/gates/logs/external_qemu_strict_system.log",
+      "log": "${LINXISA_ROOT}/out/bringup/gates/logs/external_qemu_strict_system.log",
       "name": "QEMU strict system gate",
       "rc": 0,
       "started_at": "2026-02-16T18:18:38Z",
@@ -38,59 +38,59 @@
     },
     {
       "command": "bash ./run_tests.sh --all --timeout 10",
-      "cwd": "/Users/zhoubot/linx-isa/avs/qemu",
+      "cwd": "${LINXISA_ROOT}/avs/qemu",
       "duration_sec": 0.456,
       "ended_at": "2026-02-16T18:18:38Z",
       "id": "qemu_all_suites",
-      "log": "/Users/zhoubot/linx-isa/out/bringup/gates/logs/external_qemu_all_suites.log",
+      "log": "${LINXISA_ROOT}/out/bringup/gates/logs/external_qemu_all_suites.log",
       "name": "QEMU all suites",
       "rc": 0,
       "started_at": "2026-02-16T18:18:38Z",
       "status": "pass"
     },
     {
-      "command": "python3 /Users/zhoubot/linux/tools/linxisa/initramfs/smoke.py",
-      "cwd": "/Users/zhoubot/linx-isa",
+      "command": "python3 ${LINUX_ROOT}/tools/linxisa/initramfs/smoke.py",
+      "cwd": "${LINXISA_ROOT}",
       "duration_sec": 60.135,
       "ended_at": "2026-02-16T18:19:39Z",
       "id": "linux_smoke",
-      "log": "/Users/zhoubot/linx-isa/out/bringup/gates/logs/external_linux_smoke.log",
+      "log": "${LINXISA_ROOT}/out/bringup/gates/logs/external_linux_smoke.log",
       "name": "Linux initramfs smoke",
       "rc": 2,
       "started_at": "2026-02-16T18:18:38Z",
       "status": "fail"
     },
     {
-      "command": "python3 /Users/zhoubot/linux/tools/linxisa/initramfs/full_boot.py",
-      "cwd": "/Users/zhoubot/linx-isa",
+      "command": "python3 ${LINUX_ROOT}/tools/linxisa/initramfs/full_boot.py",
+      "cwd": "${LINXISA_ROOT}",
       "duration_sec": 120.127,
       "ended_at": "2026-02-16T18:21:39Z",
       "id": "linux_full_boot",
-      "log": "/Users/zhoubot/linx-isa/out/bringup/gates/logs/external_linux_full_boot.log",
+      "log": "${LINXISA_ROOT}/out/bringup/gates/logs/external_linux_full_boot.log",
       "name": "Linux initramfs full boot",
       "rc": 2,
       "started_at": "2026-02-16T18:19:39Z",
       "status": "fail"
     },
     {
-      "command": "python3 /Users/zhoubot/linx-isa/avs/qemu/run_musl_smoke.py --mode phase-b --link both --linux-root /Users/zhoubot/linux --musl-root /Users/zhoubot/linx-isa/lib/musl --qemu /Users/zhoubot/qemu/build-tci/qemu-system-linx64 --timeout 90",
-      "cwd": "/Users/zhoubot/linx-isa",
+      "command": "python3 ${LINXISA_ROOT}/avs/qemu/run_musl_smoke.py --mode phase-b --link both --linux-root ${LINUX_ROOT} --musl-root ${LINXISA_ROOT}/lib/musl --qemu ${QEMU_ROOT}/build-tci/qemu-system-linx64 --timeout 90",
+      "cwd": "${LINXISA_ROOT}",
       "duration_sec": 187.148,
       "ended_at": "2026-02-16T18:24:46Z",
       "id": "musl_runtime",
-      "log": "/Users/zhoubot/linx-isa/out/bringup/gates/logs/external_musl_runtime.log",
+      "log": "${LINXISA_ROOT}/out/bringup/gates/logs/external_musl_runtime.log",
       "name": "musl runtime smoke (static+shared)",
       "rc": 2,
       "started_at": "2026-02-16T18:21:39Z",
       "status": "fail"
     },
     {
-      "command": "bash /Users/zhoubot/glibc/tools/linx/build_linx64_glibc.sh",
-      "cwd": "/Users/zhoubot/linx-isa",
+      "command": "bash ${GLIBC_ROOT}/tools/linx/build_linx64_glibc.sh",
+      "cwd": "${LINXISA_ROOT}",
       "duration_sec": 0.0,
       "ended_at": "2026-02-16T18:24:46Z",
       "id": "glibc_g1a",
-      "log": "/Users/zhoubot/linx-isa/out/bringup/gates/logs/external_glibc_g1a.log",
+      "log": "${LINXISA_ROOT}/out/bringup/gates/logs/external_glibc_g1a.log",
       "name": "glibc G1a (configure + csu/subdir_lib)",
       "rc": null,
       "skip_reason": "glibc build script missing",
@@ -98,36 +98,36 @@
       "status": "skipped"
     },
     {
-      "command": "bash /Users/zhoubot/linx-isa/tools/regression/check_glibc_g1b.sh",
-      "cwd": "/Users/zhoubot/linx-isa",
+      "command": "bash ${LINXISA_ROOT}/tools/regression/check_glibc_g1b.sh",
+      "cwd": "${LINXISA_ROOT}",
       "duration_sec": 0.006,
       "ended_at": "2026-02-16T18:24:46Z",
       "id": "glibc_g1b",
-      "log": "/Users/zhoubot/linx-isa/out/bringup/gates/logs/external_glibc_g1b.log",
+      "log": "${LINXISA_ROOT}/out/bringup/gates/logs/external_glibc_g1b.log",
       "name": "glibc G1b (shared libc.so)",
       "rc": 2,
       "started_at": "2026-02-16T18:24:46Z",
       "status": "fail"
     },
     {
-      "command": "bash /Users/zhoubot/linx-isa/tools/regression/run_pycircuit_smoke.sh",
-      "cwd": "/Users/zhoubot/linx-isa",
+      "command": "bash ${LINXISA_ROOT}/tools/regression/run_pycircuit_smoke.sh",
+      "cwd": "${LINXISA_ROOT}",
       "duration_sec": 0.029,
       "ended_at": "2026-02-16T18:24:46Z",
       "id": "pycircuit_smoke",
-      "log": "/Users/zhoubot/linx-isa/out/bringup/gates/logs/external_pycircuit_smoke.log",
+      "log": "${LINXISA_ROOT}/out/bringup/gates/logs/external_pycircuit_smoke.log",
       "name": "pyCircuit smoke",
       "rc": 0,
       "started_at": "2026-02-16T18:24:46Z",
       "status": "pass"
     },
     {
-      "command": "bash /Users/zhoubot/linx-isa/tools/regression/run_linxcore_smoke.sh",
-      "cwd": "/Users/zhoubot/linx-isa",
+      "command": "bash ${LINXISA_ROOT}/tools/regression/run_linxcore_smoke.sh",
+      "cwd": "${LINXISA_ROOT}",
       "duration_sec": 0.35,
       "ended_at": "2026-02-16T18:24:46Z",
       "id": "linxcore_smoke",
-      "log": "/Users/zhoubot/linx-isa/out/bringup/gates/logs/external_linxcore_smoke.log",
+      "log": "${LINXISA_ROOT}/out/bringup/gates/logs/external_linxcore_smoke.log",
       "name": "LinxCore smoke",
       "rc": 0,
       "started_at": "2026-02-16T18:24:46Z",
@@ -137,69 +137,69 @@
   "generated_at": "2026-02-16T18:18:33Z",
   "lane": "external",
   "lane_paths": {
-    "glibc_root": "/Users/zhoubot/glibc",
-    "linux_root": "/Users/zhoubot/linux",
-    "linxcore_root": "/Users/zhoubot/LinxCore",
-    "llvm_root": "/Users/zhoubot/llvm-project",
-    "musl_root": "/Users/zhoubot/linx-isa/lib/musl",
-    "pycircuit_root": "/Users/zhoubot/pyCircuit",
-    "qemu_root": "/Users/zhoubot/qemu"
+    "glibc_root": "${GLIBC_ROOT}",
+    "linux_root": "${LINUX_ROOT}",
+    "linxcore_root": "${LINXCORE_ROOT}",
+    "llvm_root": "${LLVM_ROOT}",
+    "musl_root": "${LINXISA_ROOT}/lib/musl",
+    "pycircuit_root": "${PYCIRCUIT_ROOT}",
+    "qemu_root": "${QEMU_ROOT}"
   },
-  "repo_root": "/Users/zhoubot/linx-isa",
+  "repo_root": "${LINXISA_ROOT}",
   "sha_manifest": {
     "glibc": {
       "dirty": true,
       "git": true,
-      "path": "/Users/zhoubot/glibc",
+      "path": "${GLIBC_ROOT}",
       "present": true,
       "sha": "04e750e75b"
     },
     "linux": {
       "dirty": false,
       "git": true,
-      "path": "/Users/zhoubot/linux",
+      "path": "${LINUX_ROOT}",
       "present": true,
       "sha": "4011f8a20"
     },
     "linx_isa": {
       "dirty": true,
       "git": true,
-      "path": "/Users/zhoubot/linx-isa",
+      "path": "${LINXISA_ROOT}",
       "present": true,
       "sha": "70ae9b3"
     },
     "linxcore": {
       "dirty": true,
       "git": true,
-      "path": "/Users/zhoubot/LinxCore",
+      "path": "${LINXCORE_ROOT}",
       "present": true,
       "sha": "fbb0450"
     },
     "llvm": {
       "dirty": true,
       "git": true,
-      "path": "/Users/zhoubot/llvm-project",
+      "path": "${LLVM_ROOT}",
       "present": true,
       "sha": "ff018fd02a03"
     },
     "musl": {
       "dirty": false,
       "git": true,
-      "path": "/Users/zhoubot/linx-isa/lib/musl",
+      "path": "${LINXISA_ROOT}/lib/musl",
       "present": true,
       "sha": "3bbe5826"
     },
     "pycircuit": {
       "dirty": true,
       "git": true,
-      "path": "/Users/zhoubot/pyCircuit",
+      "path": "${PYCIRCUIT_ROOT}",
       "present": true,
       "sha": "edc3ef5"
     },
     "qemu": {
       "dirty": true,
       "git": true,
-      "path": "/Users/zhoubot/qemu",
+      "path": "${QEMU_ROOT}",
       "present": true,
       "sha": "5294f2d01e"
     }
@@ -210,8 +210,8 @@
     "skipped": 1
   },
   "tooling": {
-    "clang": "/Users/zhoubot/llvm-project/build-linxisa-clang/bin/clang",
-    "lld": "/Users/zhoubot/llvm-project/build-linxisa-clang/bin/ld.lld",
-    "qemu": "/Users/zhoubot/qemu/build-tci/qemu-system-linx64"
+    "clang": "${LLVM_ROOT}/build-linxisa-clang/bin/clang",
+    "lld": "${LLVM_ROOT}/build-linxisa-clang/bin/ld.lld",
+    "qemu": "${QEMU_ROOT}/build-tci/qemu-system-linx64"
   }
 }

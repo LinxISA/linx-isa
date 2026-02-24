@@ -25,7 +25,7 @@
 
 - [ ] ID: QEMU-006 QEMU can boot full Linux with complete runtime APIs.
   Done means: Linux kernel boots with timer interrupts working, full syscalls available.
-  Status: ❌ FAIL (2026-02-23) - emulator suites are green, but full-OS closure is still blocked by Linux BusyBox rootfs instability: userspace marker is missing and logs show `_start` re-entry/hartid corruption signature before handoff. The same signature reproduces in timer-off rootfs run (`kernel_busybox_rootfs_timeroff.log`), so current blocker is broader than timer-on policy (run `2026-02-23-r6-pin-linux-stability-fix`).
+  Status: ❌ FAIL (2026-02-23) - emulator suites are green, but full-OS closure is still blocked. BusyBox rootfs boot remains unstable in run `2026-02-23-r6-pin-linux-stability-fix` (missing userspace marker; `_start` re-entry/hartid corruption signature), and some hosts are additionally blocked building the rootfs due to missing `mkfs.ext4/mke2fs` (see `docs/bringup/gates/logs/2026-02-23-r3-pin-qemu-llvm-linux-fix/pin/kernel_busybox_rootfs.log`).
 
 ---
 

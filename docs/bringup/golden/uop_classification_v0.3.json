@@ -272,202 +272,6 @@
             32
           ],
           "mnemonic": "LWUI"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Immediate Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LBI"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Immediate Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LBI.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Immediate Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LBUI"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Immediate Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LBUI.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Immediate Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LDI"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Immediate Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LDI.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Immediate Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LHI"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Immediate Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LHI.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Immediate Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LHUI"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Immediate Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LHUI.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Immediate Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LWI"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Immediate Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LWI.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Immediate Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LWUI"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Immediate Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LWUI.BRG"
         }
       ],
       "LDA/BASE_REG": [
@@ -582,202 +386,6 @@
             32
           ],
           "mnemonic": "PRF"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LB"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LB.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LBU"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LBU.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LD"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LD.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LH"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LH.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LHU"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LHU.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LW"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LW.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LWU"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LWU.BRG"
         }
       ],
       "LDA/LONG": [
@@ -1938,146 +1546,6 @@
             32
           ],
           "mnemonic": "PRFI.U"
-        },
-        {
-          "class": {
-            "addr_mode": "UNSCALED",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load UnScaled",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LDI.U"
-        },
-        {
-          "class": {
-            "addr_mode": "UNSCALED",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load UnScaled",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LDI.U.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "UNSCALED",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load UnScaled",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LHI.U"
-        },
-        {
-          "class": {
-            "addr_mode": "UNSCALED",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load UnScaled",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LHI.U.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "UNSCALED",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load UnScaled",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LHUI.U"
-        },
-        {
-          "class": {
-            "addr_mode": "UNSCALED",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load UnScaled",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LHUI.U.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "UNSCALED",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load UnScaled",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LWI.U"
-        },
-        {
-          "class": {
-            "addr_mode": "UNSCALED",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load UnScaled",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LWI.U.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "UNSCALED",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load UnScaled",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LWUI.U"
-        },
-        {
-          "class": {
-            "addr_mode": "UNSCALED",
-            "agu_kind": "LDA",
-            "note": "User confirmed all loads are AGU/LDA",
-            "source": "group_rule",
-            "uop_kind": "AGU"
-          },
-          "group": "Load UnScaled",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LWUI.U.BRG"
         }
       ],
       "STA": [
@@ -2312,258 +1780,6 @@
             32
           ],
           "mnemonic": "SWI.U"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SBI"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SBI.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SDI"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SDI.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SDI.U"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SDI.U.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SHI"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SHI.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SHI.U"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SHI.U.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SWI"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SWI.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SWI.U"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_IMM",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SWI.U.BRG"
         }
       ],
       "STA/BASE_REG": [
@@ -2692,258 +1908,6 @@
             32
           ],
           "mnemonic": "SW.U"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SB"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SB.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SD"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SD.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SD.U"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SD.U.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SH"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SH.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SH.U"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SH.U.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SW"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SW.BRG"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SW.U"
-        },
-        {
-          "class": {
-            "addr_mode": "BASE_REG",
-            "agu_kind": "STA",
-            "note": "User confirmed all stores are AGU/STA + STD",
-            "source": "group_rule",
-            "split": [
-              "AGU",
-              "STD"
-            ],
-            "uop_kind": "AGU"
-          },
-          "group": "Store Register Offset",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SW.U.BRG"
         }
       ],
       "STA/LONG": [
@@ -4319,6 +3283,18 @@
         },
         {
           "class": {
+            "note": "override: RSV category removed; HL.BFI/HL.MIADD/HL.MISUB are ALU",
+            "source": "override",
+            "uop_kind": "ALU"
+          },
+          "group": "RESERVE",
+          "length_bits": [
+            48
+          ],
+          "mnemonic": "HL.BFI"
+        },
+        {
+          "class": {
             "note": "User confirmed A",
             "source": "group_rule",
             "uop_kind": "ALU"
@@ -4352,6 +3328,30 @@
             48
           ],
           "mnemonic": "HL.LUI"
+        },
+        {
+          "class": {
+            "note": "override: RSV category removed; HL.BFI/HL.MIADD/HL.MISUB are ALU",
+            "source": "override",
+            "uop_kind": "ALU"
+          },
+          "group": "RESERVE",
+          "length_bits": [
+            48
+          ],
+          "mnemonic": "HL.MIADD"
+        },
+        {
+          "class": {
+            "note": "override: RSV category removed; HL.BFI/HL.MIADD/HL.MISUB are ALU",
+            "source": "override",
+            "uop_kind": "ALU"
+          },
+          "group": "RESERVE",
+          "length_bits": [
+            48
+          ],
+          "mnemonic": "HL.MISUB"
         },
         {
           "class": {
@@ -4716,278 +3716,6 @@
             "source": "group_rule",
             "uop_kind": "ALU"
           },
-          "group": "Arithmetic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.ADD"
-        },
-        {
-          "class": {
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Arithmetic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.ADDI"
-        },
-        {
-          "class": {
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Arithmetic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.AND"
-        },
-        {
-          "class": {
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Arithmetic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.ANDI"
-        },
-        {
-          "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Bit Manipulation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.BCNT"
-        },
-        {
-          "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Bit Manipulation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.BIC"
-        },
-        {
-          "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Bit Manipulation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.BIS"
-        },
-        {
-          "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Bit Manipulation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.BXS"
-        },
-        {
-          "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Bit Manipulation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.BXU"
-        },
-        {
-          "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Bit Manipulation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.CLZ"
-        },
-        {
-          "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Bit Manipulation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.CTZ"
-        },
-        {
-          "class": {
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Arithmetic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.OR"
-        },
-        {
-          "class": {
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Arithmetic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.ORI"
-        },
-        {
-          "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Bit Manipulation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.REV"
-        },
-        {
-          "class": {
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Arithmetic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SLL"
-        },
-        {
-          "class": {
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Arithmetic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SLLI"
-        },
-        {
-          "class": {
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Arithmetic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SRA"
-        },
-        {
-          "class": {
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Arithmetic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SRAI"
-        },
-        {
-          "class": {
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Arithmetic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SRL"
-        },
-        {
-          "class": {
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Arithmetic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SRLI"
-        },
-        {
-          "class": {
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Arithmetic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SUB"
-        },
-        {
-          "class": {
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Arithmetic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SUBI"
-        },
-        {
-          "class": {
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Arithmetic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.XOR"
-        },
-        {
-          "class": {
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Arithmetic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.XORI"
-        },
-        {
-          "class": {
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
           "group": "Arithmetic Operation 64bit",
           "length_bits": [
             32
@@ -5340,30 +4068,6 @@
             32
           ],
           "mnemonic": "REMW"
-        },
-        {
-          "class": {
-            "alu_kind": "ALU_MULTI_CYCLE",
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Multi-Cycle ALU",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.MADD"
-        },
-        {
-          "class": {
-            "alu_kind": "ALU_MULTI_CYCLE",
-            "source": "group_rule",
-            "uop_kind": "ALU"
-          },
-          "group": "Multi-Cycle ALU",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.MUL"
         }
       ],
       "BARREL_CCAT": [
@@ -5960,294 +4664,6 @@
             32
           ],
           "mnemonic": "SWAPW"
-        },
-        {
-          "class": {
-            "note": "User confirmed A: atomic ops execute in AMO class",
-            "source": "group_rule",
-            "uop_kind": "AMO"
-          },
-          "group": "Atomic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LD.ADD"
-        },
-        {
-          "class": {
-            "note": "User confirmed A: atomic ops execute in AMO class",
-            "source": "group_rule",
-            "uop_kind": "AMO"
-          },
-          "group": "Atomic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LD.AND"
-        },
-        {
-          "class": {
-            "note": "User confirmed A: atomic ops execute in AMO class",
-            "source": "group_rule",
-            "uop_kind": "AMO"
-          },
-          "group": "Atomic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LD.MAX"
-        },
-        {
-          "class": {
-            "note": "User confirmed A: atomic ops execute in AMO class",
-            "source": "group_rule",
-            "uop_kind": "AMO"
-          },
-          "group": "Atomic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LD.MIN"
-        },
-        {
-          "class": {
-            "note": "User confirmed A: atomic ops execute in AMO class",
-            "source": "group_rule",
-            "uop_kind": "AMO"
-          },
-          "group": "Atomic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LD.OR"
-        },
-        {
-          "class": {
-            "note": "User confirmed A: atomic ops execute in AMO class",
-            "source": "group_rule",
-            "uop_kind": "AMO"
-          },
-          "group": "Atomic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LD.XOR"
-        },
-        {
-          "class": {
-            "note": "User confirmed A: atomic ops execute in AMO class",
-            "source": "group_rule",
-            "uop_kind": "AMO"
-          },
-          "group": "Atomic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LW.ADD"
-        },
-        {
-          "class": {
-            "note": "User confirmed A: atomic ops execute in AMO class",
-            "source": "group_rule",
-            "uop_kind": "AMO"
-          },
-          "group": "Atomic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LW.AND"
-        },
-        {
-          "class": {
-            "note": "User confirmed A: atomic ops execute in AMO class",
-            "source": "group_rule",
-            "uop_kind": "AMO"
-          },
-          "group": "Atomic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LW.MAX"
-        },
-        {
-          "class": {
-            "note": "User confirmed A: atomic ops execute in AMO class",
-            "source": "group_rule",
-            "uop_kind": "AMO"
-          },
-          "group": "Atomic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LW.MIN"
-        },
-        {
-          "class": {
-            "note": "User confirmed A: atomic ops execute in AMO class",
-            "source": "group_rule",
-            "uop_kind": "AMO"
-          },
-          "group": "Atomic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LW.OR"
-        },
-        {
-          "class": {
-            "note": "User confirmed A: atomic ops execute in AMO class",
-            "source": "group_rule",
-            "uop_kind": "AMO"
-          },
-          "group": "Atomic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.LW.XOR"
-        },
-        {
-          "class": {
-            "note": "User confirmed A: atomic ops execute in AMO class",
-            "source": "group_rule",
-            "uop_kind": "AMO"
-          },
-          "group": "Atomic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SD.ADD"
-        },
-        {
-          "class": {
-            "note": "User confirmed A: atomic ops execute in AMO class",
-            "source": "group_rule",
-            "uop_kind": "AMO"
-          },
-          "group": "Atomic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SD.AND"
-        },
-        {
-          "class": {
-            "note": "User confirmed A: atomic ops execute in AMO class",
-            "source": "group_rule",
-            "uop_kind": "AMO"
-          },
-          "group": "Atomic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SD.MAX"
-        },
-        {
-          "class": {
-            "note": "User confirmed A: atomic ops execute in AMO class",
-            "source": "group_rule",
-            "uop_kind": "AMO"
-          },
-          "group": "Atomic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SD.MIN"
-        },
-        {
-          "class": {
-            "note": "User confirmed A: atomic ops execute in AMO class",
-            "source": "group_rule",
-            "uop_kind": "AMO"
-          },
-          "group": "Atomic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SD.OR"
-        },
-        {
-          "class": {
-            "note": "User confirmed A: atomic ops execute in AMO class",
-            "source": "group_rule",
-            "uop_kind": "AMO"
-          },
-          "group": "Atomic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SD.XOR"
-        },
-        {
-          "class": {
-            "note": "User confirmed A: atomic ops execute in AMO class",
-            "source": "group_rule",
-            "uop_kind": "AMO"
-          },
-          "group": "Atomic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SW.ADD"
-        },
-        {
-          "class": {
-            "note": "User confirmed A: atomic ops execute in AMO class",
-            "source": "group_rule",
-            "uop_kind": "AMO"
-          },
-          "group": "Atomic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SW.AND"
-        },
-        {
-          "class": {
-            "note": "User confirmed A: atomic ops execute in AMO class",
-            "source": "group_rule",
-            "uop_kind": "AMO"
-          },
-          "group": "Atomic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SW.MAX"
-        },
-        {
-          "class": {
-            "note": "User confirmed A: atomic ops execute in AMO class",
-            "source": "group_rule",
-            "uop_kind": "AMO"
-          },
-          "group": "Atomic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SW.MIN"
-        },
-        {
-          "class": {
-            "note": "User confirmed A: atomic ops execute in AMO class",
-            "source": "group_rule",
-            "uop_kind": "AMO"
-          },
-          "group": "Atomic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SW.OR"
-        },
-        {
-          "class": {
-            "note": "User confirmed A: atomic ops execute in AMO class",
-            "source": "group_rule",
-            "uop_kind": "AMO"
-          },
-          "group": "Atomic Operation",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SW.XOR"
         }
       ],
       "CAS": [
@@ -6940,198 +5356,6 @@
             48
           ],
           "mnemonic": "HL.CMP.ORI"
-        },
-        {
-          "class": {
-            "bru_kind": "CMP",
-            "source": "group_rule",
-            "uop_kind": "BRU"
-          },
-          "group": "Compare Instruction",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.CMP.AND"
-        },
-        {
-          "class": {
-            "bru_kind": "CMP",
-            "source": "group_rule",
-            "uop_kind": "BRU"
-          },
-          "group": "Compare Instruction",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.CMP.ANDI"
-        },
-        {
-          "class": {
-            "bru_kind": "CMP",
-            "source": "group_rule",
-            "uop_kind": "BRU"
-          },
-          "group": "Compare Instruction",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.CMP.EQ"
-        },
-        {
-          "class": {
-            "bru_kind": "CMP",
-            "source": "group_rule",
-            "uop_kind": "BRU"
-          },
-          "group": "Compare Instruction",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.CMP.EQI"
-        },
-        {
-          "class": {
-            "bru_kind": "CMP",
-            "source": "group_rule",
-            "uop_kind": "BRU"
-          },
-          "group": "Compare Instruction",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.CMP.GE"
-        },
-        {
-          "class": {
-            "bru_kind": "CMP",
-            "source": "group_rule",
-            "uop_kind": "BRU"
-          },
-          "group": "Compare Instruction",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.CMP.GEI"
-        },
-        {
-          "class": {
-            "bru_kind": "CMP",
-            "source": "group_rule",
-            "uop_kind": "BRU"
-          },
-          "group": "Compare Instruction",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.CMP.GEU"
-        },
-        {
-          "class": {
-            "bru_kind": "CMP",
-            "source": "group_rule",
-            "uop_kind": "BRU"
-          },
-          "group": "Compare Instruction",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.CMP.GEUI"
-        },
-        {
-          "class": {
-            "bru_kind": "CMP",
-            "source": "group_rule",
-            "uop_kind": "BRU"
-          },
-          "group": "Compare Instruction",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.CMP.LT"
-        },
-        {
-          "class": {
-            "bru_kind": "CMP",
-            "source": "group_rule",
-            "uop_kind": "BRU"
-          },
-          "group": "Compare Instruction",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.CMP.LTI"
-        },
-        {
-          "class": {
-            "bru_kind": "CMP",
-            "source": "group_rule",
-            "uop_kind": "BRU"
-          },
-          "group": "Compare Instruction",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.CMP.LTU"
-        },
-        {
-          "class": {
-            "bru_kind": "CMP",
-            "source": "group_rule",
-            "uop_kind": "BRU"
-          },
-          "group": "Compare Instruction",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.CMP.LTUI"
-        },
-        {
-          "class": {
-            "bru_kind": "CMP",
-            "source": "group_rule",
-            "uop_kind": "BRU"
-          },
-          "group": "Compare Instruction",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.CMP.NE"
-        },
-        {
-          "class": {
-            "bru_kind": "CMP",
-            "source": "group_rule",
-            "uop_kind": "BRU"
-          },
-          "group": "Compare Instruction",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.CMP.NEI"
-        },
-        {
-          "class": {
-            "bru_kind": "CMP",
-            "source": "group_rule",
-            "uop_kind": "BRU"
-          },
-          "group": "Compare Instruction",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.CMP.OR"
-        },
-        {
-          "class": {
-            "bru_kind": "CMP",
-            "source": "group_rule",
-            "uop_kind": "BRU"
-          },
-          "group": "Compare Instruction",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.CMP.ORI"
         }
       ],
       "SETC": [
@@ -8473,334 +6697,6 @@
             32
           ],
           "mnemonic": "UCVTF"
-        },
-        {
-          "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
-            "uop_kind": "FSU"
-          },
-          "group": "Three-Source Floating Point",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.FADD"
-        },
-        {
-          "class": {
-            "note": "User: FP groups are FSU type and must be implemented",
-            "source": "group_rule",
-            "uop_kind": "FSU"
-          },
-          "group": "Format Convert",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.FCVT"
-        },
-        {
-          "class": {
-            "note": "User: FP groups are FSU type and must be implemented",
-            "source": "group_rule",
-            "uop_kind": "FSU"
-          },
-          "group": "Format Convert",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.FCVTI"
-        },
-        {
-          "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
-            "uop_kind": "FSU"
-          },
-          "group": "Three-Source Floating Point",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.FDIV"
-        },
-        {
-          "class": {
-            "note": "User: FP groups are FSU type and must be implemented",
-            "source": "group_rule",
-            "uop_kind": "FSU"
-          },
-          "group": "Two-Source Floating Point",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.FEQ"
-        },
-        {
-          "class": {
-            "note": "User: FP groups are FSU type and must be implemented",
-            "source": "group_rule",
-            "uop_kind": "FSU"
-          },
-          "group": "Two-Source Floating Point",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.FEQS"
-        },
-        {
-          "class": {
-            "note": "User: FP groups are FSU type and must be implemented",
-            "source": "group_rule",
-            "uop_kind": "FSU"
-          },
-          "group": "Two-Source Floating Point",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.FGE"
-        },
-        {
-          "class": {
-            "note": "User: FP groups are FSU type and must be implemented",
-            "source": "group_rule",
-            "uop_kind": "FSU"
-          },
-          "group": "Two-Source Floating Point",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.FGES"
-        },
-        {
-          "class": {
-            "note": "User: FP groups are FSU type and must be implemented",
-            "source": "group_rule",
-            "uop_kind": "FSU"
-          },
-          "group": "Two-Source Floating Point",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.FLT"
-        },
-        {
-          "class": {
-            "note": "User: FP groups are FSU type and must be implemented",
-            "source": "group_rule",
-            "uop_kind": "FSU"
-          },
-          "group": "Two-Source Floating Point",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.FLTS"
-        },
-        {
-          "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
-            "uop_kind": "FSU"
-          },
-          "group": "Three-Source Floating Point",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.FMADD"
-        },
-        {
-          "class": {
-            "note": "User: FP groups are FSU type and must be implemented",
-            "source": "group_rule",
-            "uop_kind": "FSU"
-          },
-          "group": "Two-Source Floating Point",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.FMAX"
-        },
-        {
-          "class": {
-            "note": "User: FP groups are FSU type and must be implemented",
-            "source": "group_rule",
-            "uop_kind": "FSU"
-          },
-          "group": "Two-Source Floating Point",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.FMIN"
-        },
-        {
-          "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
-            "uop_kind": "FSU"
-          },
-          "group": "Three-Source Floating Point",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.FMSUB"
-        },
-        {
-          "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
-            "uop_kind": "FSU"
-          },
-          "group": "Three-Source Floating Point",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.FMUL"
-        },
-        {
-          "class": {
-            "note": "User: FP groups are FSU type and must be implemented",
-            "source": "group_rule",
-            "uop_kind": "FSU"
-          },
-          "group": "Two-Source Floating Point",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.FNE"
-        },
-        {
-          "class": {
-            "note": "User: FP groups are FSU type and must be implemented",
-            "source": "group_rule",
-            "uop_kind": "FSU"
-          },
-          "group": "Two-Source Floating Point",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.FNES"
-        },
-        {
-          "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
-            "uop_kind": "FSU"
-          },
-          "group": "Three-Source Floating Point",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.FNMADD"
-        },
-        {
-          "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
-            "uop_kind": "FSU"
-          },
-          "group": "Three-Source Floating Point",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.FNMSUB"
-        },
-        {
-          "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
-            "uop_kind": "FSU"
-          },
-          "group": "Three-Source Floating Point",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.FSUB"
-        },
-        {
-          "class": {
-            "note": "User: FP groups are FSU type and must be implemented",
-            "source": "group_rule",
-            "uop_kind": "FSU"
-          },
-          "group": "Format Convert",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.ICVT"
-        },
-        {
-          "class": {
-            "note": "User: FP groups are FSU type and must be implemented",
-            "source": "group_rule",
-            "uop_kind": "FSU"
-          },
-          "group": "Format Convert",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.ICVTF"
-        },
-        {
-          "class": {
-            "note": "User: FP groups are FSU type and must be implemented",
-            "source": "group_rule",
-            "uop_kind": "FSU"
-          },
-          "group": "Two-Source Floating Point",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.MAX"
-        },
-        {
-          "class": {
-            "note": "User: FP groups are FSU type and must be implemented",
-            "source": "group_rule",
-            "uop_kind": "FSU"
-          },
-          "group": "Two-Source Floating Point",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.MIN"
-        }
-      ]
-    },
-    "RSV": {
-      "DEFAULT": [
-        {
-          "class": {
-            "note": "User: add dedicated RSV uop_kind for reserve group",
-            "source": "group_rule",
-            "uop_kind": "RSV"
-          },
-          "group": "RESERVE",
-          "length_bits": [
-            48
-          ],
-          "mnemonic": "HL.BFI"
-        },
-        {
-          "class": {
-            "note": "User: add dedicated RSV uop_kind for reserve group",
-            "source": "group_rule",
-            "uop_kind": "RSV"
-          },
-          "group": "RESERVE",
-          "length_bits": [
-            48
-          ],
-          "mnemonic": "HL.MIADD"
-        },
-        {
-          "class": {
-            "note": "User: add dedicated RSV uop_kind for reserve group",
-            "source": "group_rule",
-            "uop_kind": "RSV"
-          },
-          "group": "RESERVE",
-          "length_bits": [
-            48
-          ],
-          "mnemonic": "HL.MISUB"
         }
       ]
     },
@@ -9260,314 +7156,2314 @@
       ]
     },
     "VEC": {
+      "AGU": [
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LB"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LB.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Immediate Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LBI"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Immediate Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LBI.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LBU"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LBU.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Immediate Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LBUI"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Immediate Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LBUI.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LD"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LD.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Immediate Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LDI"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Immediate Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LDI.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "UNSCALED",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load UnScaled",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LDI.U"
+        },
+        {
+          "class": {
+            "addr_mode": "UNSCALED",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load UnScaled",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LDI.U.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LH"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LH.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Immediate Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LHI"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Immediate Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LHI.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "UNSCALED",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load UnScaled",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LHI.U"
+        },
+        {
+          "class": {
+            "addr_mode": "UNSCALED",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load UnScaled",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LHI.U.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LHU"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LHU.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Immediate Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LHUI"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Immediate Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LHUI.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "UNSCALED",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load UnScaled",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LHUI.U"
+        },
+        {
+          "class": {
+            "addr_mode": "UNSCALED",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load UnScaled",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LHUI.U.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LW"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LW.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Immediate Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LWI"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Immediate Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LWI.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "UNSCALED",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load UnScaled",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LWI.U"
+        },
+        {
+          "class": {
+            "addr_mode": "UNSCALED",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load UnScaled",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LWI.U.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LWU"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LWU.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Immediate Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LWUI"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load Immediate Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LWUI.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "UNSCALED",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load UnScaled",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LWUI.U"
+        },
+        {
+          "class": {
+            "addr_mode": "UNSCALED",
+            "agu_kind": "LDA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Load UnScaled",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LWUI.U.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SB"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SB.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SBI"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SBI.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SD"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SD.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SD.U"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SD.U.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SDI"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SDI.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SDI.U"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SDI.U.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SH"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SH.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SH.U"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SH.U.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SHI"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SHI.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SHI.U"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SHI.U.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SW"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SW.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SW.U"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_REG",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Register Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SW.U.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SWI"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SWI.BRG"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SWI.U"
+        },
+        {
+          "class": {
+            "addr_mode": "BASE_IMM",
+            "agu_kind": "STA",
+            "note": "vector-prefix override: dispatch to VEC (subkind=AGU)",
+            "source": "override",
+            "split": [
+              "AGU",
+              "STD"
+            ],
+            "uop_kind": "VEC",
+            "vec_subkind": "AGU"
+          },
+          "group": "Store Offset",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SWI.U.BRG"
+        }
+      ],
+      "ALU": [
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "ALU"
+          },
+          "group": "Arithmetic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.ADD"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "ALU"
+          },
+          "group": "Arithmetic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.ADDI"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "ALU"
+          },
+          "group": "Arithmetic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.AND"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "ALU"
+          },
+          "group": "Arithmetic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.ANDI"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "ALU"
+          },
+          "group": "Bit Manipulation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.BCNT"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "ALU"
+          },
+          "group": "Bit Manipulation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.BIC"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "ALU"
+          },
+          "group": "Bit Manipulation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.BIS"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "ALU"
+          },
+          "group": "Bit Manipulation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.BXS"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "ALU"
+          },
+          "group": "Bit Manipulation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.BXU"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "ALU"
+          },
+          "group": "Bit Manipulation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.CLZ"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "ALU"
+          },
+          "group": "Bit Manipulation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.CTZ"
+        },
+        {
+          "class": {
+            "alu_kind": "ALU_MULTI_CYCLE",
+            "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "ALU"
+          },
+          "group": "Multi-Cycle ALU",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.MADD"
+        },
+        {
+          "class": {
+            "alu_kind": "ALU_MULTI_CYCLE",
+            "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "ALU"
+          },
+          "group": "Multi-Cycle ALU",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.MUL"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "ALU"
+          },
+          "group": "Arithmetic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.OR"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "ALU"
+          },
+          "group": "Arithmetic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.ORI"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "ALU"
+          },
+          "group": "Bit Manipulation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.REV"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "ALU"
+          },
+          "group": "Arithmetic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SLL"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "ALU"
+          },
+          "group": "Arithmetic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SLLI"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "ALU"
+          },
+          "group": "Arithmetic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SRA"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "ALU"
+          },
+          "group": "Arithmetic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SRAI"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "ALU"
+          },
+          "group": "Arithmetic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SRL"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "ALU"
+          },
+          "group": "Arithmetic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SRLI"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "ALU"
+          },
+          "group": "Arithmetic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SUB"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "ALU"
+          },
+          "group": "Arithmetic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SUBI"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "ALU"
+          },
+          "group": "Arithmetic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.XOR"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "ALU"
+          },
+          "group": "Arithmetic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.XORI"
+        }
+      ],
+      "AMO": [
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AMO"
+          },
+          "group": "Atomic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LD.ADD"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AMO"
+          },
+          "group": "Atomic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LD.AND"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AMO"
+          },
+          "group": "Atomic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LD.MAX"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AMO"
+          },
+          "group": "Atomic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LD.MIN"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AMO"
+          },
+          "group": "Atomic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LD.OR"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AMO"
+          },
+          "group": "Atomic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LD.XOR"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AMO"
+          },
+          "group": "Atomic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LW.ADD"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AMO"
+          },
+          "group": "Atomic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LW.AND"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AMO"
+          },
+          "group": "Atomic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LW.MAX"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AMO"
+          },
+          "group": "Atomic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LW.MIN"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AMO"
+          },
+          "group": "Atomic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LW.OR"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AMO"
+          },
+          "group": "Atomic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.LW.XOR"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AMO"
+          },
+          "group": "Atomic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SD.ADD"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AMO"
+          },
+          "group": "Atomic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SD.AND"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AMO"
+          },
+          "group": "Atomic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SD.MAX"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AMO"
+          },
+          "group": "Atomic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SD.MIN"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AMO"
+          },
+          "group": "Atomic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SD.OR"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AMO"
+          },
+          "group": "Atomic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SD.XOR"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AMO"
+          },
+          "group": "Atomic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SW.ADD"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AMO"
+          },
+          "group": "Atomic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SW.AND"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AMO"
+          },
+          "group": "Atomic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SW.MAX"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AMO"
+          },
+          "group": "Atomic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SW.MIN"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AMO"
+          },
+          "group": "Atomic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SW.OR"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "AMO"
+          },
+          "group": "Atomic Operation",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SW.XOR"
+        }
+      ],
+      "BRU": [
+        {
+          "class": {
+            "bru_kind": "CMP",
+            "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "BRU"
+          },
+          "group": "Compare Instruction",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.CMP.AND"
+        },
+        {
+          "class": {
+            "bru_kind": "CMP",
+            "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "BRU"
+          },
+          "group": "Compare Instruction",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.CMP.ANDI"
+        },
+        {
+          "class": {
+            "bru_kind": "CMP",
+            "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "BRU"
+          },
+          "group": "Compare Instruction",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.CMP.EQ"
+        },
+        {
+          "class": {
+            "bru_kind": "CMP",
+            "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "BRU"
+          },
+          "group": "Compare Instruction",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.CMP.EQI"
+        },
+        {
+          "class": {
+            "bru_kind": "CMP",
+            "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "BRU"
+          },
+          "group": "Compare Instruction",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.CMP.GE"
+        },
+        {
+          "class": {
+            "bru_kind": "CMP",
+            "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "BRU"
+          },
+          "group": "Compare Instruction",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.CMP.GEI"
+        },
+        {
+          "class": {
+            "bru_kind": "CMP",
+            "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "BRU"
+          },
+          "group": "Compare Instruction",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.CMP.GEU"
+        },
+        {
+          "class": {
+            "bru_kind": "CMP",
+            "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "BRU"
+          },
+          "group": "Compare Instruction",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.CMP.GEUI"
+        },
+        {
+          "class": {
+            "bru_kind": "CMP",
+            "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "BRU"
+          },
+          "group": "Compare Instruction",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.CMP.LT"
+        },
+        {
+          "class": {
+            "bru_kind": "CMP",
+            "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "BRU"
+          },
+          "group": "Compare Instruction",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.CMP.LTI"
+        },
+        {
+          "class": {
+            "bru_kind": "CMP",
+            "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "BRU"
+          },
+          "group": "Compare Instruction",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.CMP.LTU"
+        },
+        {
+          "class": {
+            "bru_kind": "CMP",
+            "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "BRU"
+          },
+          "group": "Compare Instruction",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.CMP.LTUI"
+        },
+        {
+          "class": {
+            "bru_kind": "CMP",
+            "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "BRU"
+          },
+          "group": "Compare Instruction",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.CMP.NE"
+        },
+        {
+          "class": {
+            "bru_kind": "CMP",
+            "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "BRU"
+          },
+          "group": "Compare Instruction",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.CMP.NEI"
+        },
+        {
+          "class": {
+            "bru_kind": "CMP",
+            "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "BRU"
+          },
+          "group": "Compare Instruction",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.CMP.OR"
+        },
+        {
+          "class": {
+            "bru_kind": "CMP",
+            "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "BRU"
+          },
+          "group": "Compare Instruction",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.CMP.ORI"
+        }
+      ],
+      "FSU": [
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "FSU"
+          },
+          "group": "Three-Source Floating Point",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.FADD"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "FSU"
+          },
+          "group": "Format Convert",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.FCVT"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "FSU"
+          },
+          "group": "Format Convert",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.FCVTI"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "FSU"
+          },
+          "group": "Three-Source Floating Point",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.FDIV"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "FSU"
+          },
+          "group": "Two-Source Floating Point",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.FEQ"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "FSU"
+          },
+          "group": "Two-Source Floating Point",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.FEQS"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "FSU"
+          },
+          "group": "Two-Source Floating Point",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.FGE"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "FSU"
+          },
+          "group": "Two-Source Floating Point",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.FGES"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "FSU"
+          },
+          "group": "Two-Source Floating Point",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.FLT"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "FSU"
+          },
+          "group": "Two-Source Floating Point",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.FLTS"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "FSU"
+          },
+          "group": "Three-Source Floating Point",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.FMADD"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "FSU"
+          },
+          "group": "Two-Source Floating Point",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.FMAX"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "FSU"
+          },
+          "group": "Two-Source Floating Point",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.FMIN"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "FSU"
+          },
+          "group": "Three-Source Floating Point",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.FMSUB"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "FSU"
+          },
+          "group": "Three-Source Floating Point",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.FMUL"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "FSU"
+          },
+          "group": "Two-Source Floating Point",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.FNE"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "FSU"
+          },
+          "group": "Two-Source Floating Point",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.FNES"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "FSU"
+          },
+          "group": "Three-Source Floating Point",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.FNMADD"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "FSU"
+          },
+          "group": "Three-Source Floating Point",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.FNMSUB"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "FSU"
+          },
+          "group": "Three-Source Floating Point",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.FSUB"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "FSU"
+          },
+          "group": "Format Convert",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.ICVT"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "FSU"
+          },
+          "group": "Format Convert",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.ICVTF"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "FSU"
+          },
+          "group": "Two-Source Floating Point",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.MAX"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "FSU"
+          },
+          "group": "Two-Source Floating Point",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.MIN"
+        }
+      ],
       "VEC": [
         {
           "class": {
-            "note": "User confirmed VEC with internal subclasses",
-            "source": "group_rule",
-            "uop_kind": "VEC"
-          },
-          "group": "Reduce Operation with Register",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.RDADD"
-        },
-        {
-          "class": {
-            "note": "User confirmed VEC with internal subclasses",
-            "source": "group_rule",
-            "uop_kind": "VEC"
-          },
-          "group": "Reduce Operation with Register",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.RDAND"
-        },
-        {
-          "class": {
-            "note": "User confirmed VEC with internal subclasses",
-            "source": "group_rule",
-            "uop_kind": "VEC"
-          },
-          "group": "Reduce Operation with Register",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.RDFADD"
-        },
-        {
-          "class": {
-            "note": "User confirmed VEC with internal subclasses",
-            "source": "group_rule",
-            "uop_kind": "VEC"
-          },
-          "group": "Reduce Operation with Register",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.RDFMAX"
-        },
-        {
-          "class": {
-            "note": "User confirmed VEC with internal subclasses",
-            "source": "group_rule",
-            "uop_kind": "VEC"
-          },
-          "group": "Reduce Operation with Register",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.RDFMIN"
-        },
-        {
-          "class": {
-            "note": "User confirmed VEC with internal subclasses",
-            "source": "group_rule",
-            "uop_kind": "VEC"
-          },
-          "group": "Reduce Operation with Register",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.RDMAX"
-        },
-        {
-          "class": {
-            "note": "User confirmed VEC with internal subclasses",
-            "source": "group_rule",
-            "uop_kind": "VEC"
-          },
-          "group": "Reduce Operation with Register",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.RDMIN"
-        },
-        {
-          "class": {
-            "note": "User confirmed VEC with internal subclasses",
-            "source": "group_rule",
-            "uop_kind": "VEC"
-          },
-          "group": "Reduce Operation with Register",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.RDOR"
-        },
-        {
-          "class": {
-            "note": "User confirmed VEC with internal subclasses",
-            "source": "group_rule",
-            "uop_kind": "VEC"
-          },
-          "group": "Reduce Operation with Register",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.RDXOR"
-        },
-        {
-          "class": {
-            "note": "User confirmed VEC with internal subclasses",
-            "source": "group_rule",
-            "uop_kind": "VEC"
-          },
-          "group": "Shuffle",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SHFL.BFLY"
-        },
-        {
-          "class": {
-            "note": "User confirmed VEC with internal subclasses",
-            "source": "group_rule",
-            "uop_kind": "VEC"
-          },
-          "group": "Shuffle",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SHFL.DOWN"
-        },
-        {
-          "class": {
-            "note": "User confirmed VEC with internal subclasses",
-            "source": "group_rule",
-            "uop_kind": "VEC"
-          },
-          "group": "Shuffle",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SHFL.IDX"
-        },
-        {
-          "class": {
-            "note": "User confirmed VEC with internal subclasses",
-            "source": "group_rule",
-            "uop_kind": "VEC"
-          },
-          "group": "Shuffle",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SHFL.UP"
-        },
-        {
-          "class": {
-            "note": "User confirmed VEC with internal subclasses",
-            "source": "group_rule",
-            "uop_kind": "VEC"
-          },
-          "group": "Shuffle",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SHFLI.BFLY"
-        },
-        {
-          "class": {
-            "note": "User confirmed VEC with internal subclasses",
-            "source": "group_rule",
-            "uop_kind": "VEC"
-          },
-          "group": "Shuffle",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SHFLI.DOWN"
-        },
-        {
-          "class": {
-            "note": "User confirmed VEC with internal subclasses",
-            "source": "group_rule",
-            "uop_kind": "VEC"
-          },
-          "group": "Shuffle",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SHFLI.IDX"
-        },
-        {
-          "class": {
-            "note": "User confirmed VEC with internal subclasses",
-            "source": "group_rule",
-            "uop_kind": "VEC"
-          },
-          "group": "Shuffle",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.SHFLI.UP"
-        }
-      ],
-      "VEC_DIV": [
-        {
-          "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
+            "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+            "source": "override",
             "uop_kind": "VEC",
-            "vec_kind": "VEC_DIV"
-          },
-          "group": "Division",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.DIV"
-        },
-        {
-          "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
-            "uop_kind": "VEC",
-            "vec_kind": "VEC_DIV"
-          },
-          "group": "Division",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.REM"
-        }
-      ],
-      "VEC_FP": [
-        {
-          "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
-            "uop_kind": "VEC",
-            "vec_kind": "VEC_FP"
-          },
-          "group": "Floating Point Arithmetic",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.FABS"
-        },
-        {
-          "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
-            "uop_kind": "VEC",
-            "vec_kind": "VEC_FP"
-          },
-          "group": "Floating Point Arithmetic",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.FCLASS"
-        },
-        {
-          "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
-            "uop_kind": "VEC",
-            "vec_kind": "VEC_FP"
-          },
-          "group": "Floating Point Arithmetic",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.FEXP"
-        },
-        {
-          "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
-            "uop_kind": "VEC",
-            "vec_kind": "VEC_FP"
-          },
-          "group": "Floating Point Arithmetic",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.FRECIP"
-        },
-        {
-          "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
-            "uop_kind": "VEC",
-            "vec_kind": "VEC_FP"
-          },
-          "group": "Floating Point Arithmetic",
-          "length_bits": [
-            64
-          ],
-          "mnemonic": "V.FSQRT"
-        }
-      ],
-      "VEC_SEL": [
-        {
-          "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
-            "uop_kind": "VEC",
-            "vec_kind": "VEC_SEL"
+            "vec_kind": "VEC_SEL",
+            "vec_subkind": "VEC"
           },
           "group": "Three Source Integer",
           "length_bits": [
@@ -9577,33 +9473,344 @@
         },
         {
           "class": {
-            "note": "User confirmed A",
-            "source": "group_rule",
+            "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+            "source": "override",
             "uop_kind": "VEC",
-            "vec_kind": "VEC_SEL"
+            "vec_kind": "VEC_DIV",
+            "vec_subkind": "VEC"
+          },
+          "group": "Division",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.DIV"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_kind": "VEC_FP",
+            "vec_subkind": "VEC"
+          },
+          "group": "Floating Point Arithmetic",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.FABS"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_kind": "VEC_FP",
+            "vec_subkind": "VEC"
+          },
+          "group": "Floating Point Arithmetic",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.FCLASS"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_kind": "VEC_FP",
+            "vec_subkind": "VEC"
+          },
+          "group": "Floating Point Arithmetic",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.FEXP"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_kind": "VEC_FP",
+            "vec_subkind": "VEC"
+          },
+          "group": "Floating Point Arithmetic",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.FRECIP"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_kind": "VEC_FP",
+            "vec_subkind": "VEC"
+          },
+          "group": "Floating Point Arithmetic",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.FSQRT"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_kind": "VEC_SEL",
+            "vec_subkind": "VEC"
           },
           "group": "Three Source Integer",
           "length_bits": [
             64
           ],
           "mnemonic": "V.PSEL"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "VEC"
+          },
+          "group": "Reduce Operation with Register",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.RDADD"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "VEC"
+          },
+          "group": "Reduce Operation with Register",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.RDAND"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "VEC"
+          },
+          "group": "Reduce Operation with Register",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.RDFADD"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "VEC"
+          },
+          "group": "Reduce Operation with Register",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.RDFMAX"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "VEC"
+          },
+          "group": "Reduce Operation with Register",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.RDFMIN"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "VEC"
+          },
+          "group": "Reduce Operation with Register",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.RDMAX"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "VEC"
+          },
+          "group": "Reduce Operation with Register",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.RDMIN"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "VEC"
+          },
+          "group": "Reduce Operation with Register",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.RDOR"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "VEC"
+          },
+          "group": "Reduce Operation with Register",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.RDXOR"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_kind": "VEC_DIV",
+            "vec_subkind": "VEC"
+          },
+          "group": "Division",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.REM"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "VEC"
+          },
+          "group": "Shuffle",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SHFL.BFLY"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "VEC"
+          },
+          "group": "Shuffle",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SHFL.DOWN"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "VEC"
+          },
+          "group": "Shuffle",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SHFL.IDX"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "VEC"
+          },
+          "group": "Shuffle",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SHFL.UP"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "VEC"
+          },
+          "group": "Shuffle",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SHFLI.BFLY"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "VEC"
+          },
+          "group": "Shuffle",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SHFLI.DOWN"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "VEC"
+          },
+          "group": "Shuffle",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SHFLI.IDX"
+        },
+        {
+          "class": {
+            "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+            "source": "override",
+            "uop_kind": "VEC",
+            "vec_subkind": "VEC"
+          },
+          "group": "Shuffle",
+          "length_bits": [
+            64
+          ],
+          "mnemonic": "V.SHFLI.UP"
         }
       ]
     }
   },
   "deprecated": true,
-  "deprecation_note": "Use the directory tree split; this monolithic file is kept only for compatibility and will be removed.",
-  "note": "Golden uop classification organized as big_kind -> sub_kind -> instructions.",
-  "replacement": "docs/architecture/golden/uop_classification_v0.3/",
-  "sources": {
-    "group_rules": "workspace/linxisa_v03_group_to_uopkind_draft.json",
-    "isa": "isa/v0.3/linxisa-v0.3.json",
-    "mnemonic_overrides": "workspace/linxisa_v03_mnemonic_to_uopkind_overrides.json"
-  },
+  "replacement": "docs/bringup/golden/uop_classification_v0.3/",
   "stats": {
-    "needs_override": 0,
-    "total_mnemonics": 710,
-    "unmapped": 0
+    "total_mnemonics": 710
   },
   "version": "v0.3"
 }

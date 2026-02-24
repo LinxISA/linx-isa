@@ -1,6 +1,6 @@
 {
   "big_kind": "ALU",
-  "count": 28,
+  "count": 26,
   "instructions": [
     {
       "class": {
@@ -313,30 +313,6 @@
         32
       ],
       "mnemonic": "REMW"
-    },
-    {
-      "class": {
-        "alu_kind": "ALU_MULTI_CYCLE",
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Multi-Cycle ALU",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.MADD"
-    },
-    {
-      "class": {
-        "alu_kind": "ALU_MULTI_CYCLE",
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Multi-Cycle ALU",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.MUL"
     }
   ],
   "sub_kind": "ALU_MULTI_CYCLE"

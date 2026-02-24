@@ -53,9 +53,6 @@
     "FSU": [
       "DEFAULT"
     ],
-    "RSV": [
-      "DEFAULT"
-    ],
     "SYS": [
       "CACHE_MAINT",
       "SSR",
@@ -63,22 +60,14 @@
       "TRAP"
     ],
     "VEC": [
-      "VEC",
-      "VEC_DIV",
-      "VEC_FP",
-      "VEC_SEL"
+      "AGU",
+      "ALU",
+      "AMO",
+      "BRU",
+      "FSU",
+      "VEC"
     ]
   },
-  "note": "Directory tree split of uop_classification_v0.3.json: big_kind/sub_kind/*.json",
-  "sources": {
-    "group_rules": "workspace/linxisa_v03_group_to_uopkind_draft.json",
-    "isa": "isa/v0.3/linxisa-v0.3.json",
-    "mnemonic_overrides": "workspace/linxisa_v03_mnemonic_to_uopkind_overrides.json"
-  },
-  "stats": {
-    "needs_override": 0,
-    "total_mnemonics": 710,
-    "unmapped": 0
-  },
+  "note": "Bring-up golden uop classification tree (big/sub).",
   "version": "v0.3"
 }
