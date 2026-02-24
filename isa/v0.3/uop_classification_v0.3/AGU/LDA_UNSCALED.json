@@ -1,0 +1,91 @@
+{
+  "big_kind": "AGU",
+  "count": 6,
+  "instructions": [
+    {
+      "class": {
+        "addr_mode": "UNSCALED",
+        "agu_kind": "LDA",
+        "note": "User confirmed all loads are AGU/LDA",
+        "source": "group_rule",
+        "uop_kind": "AGU"
+      },
+      "group": "Load UnScaled",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "LDI.U"
+    },
+    {
+      "class": {
+        "addr_mode": "UNSCALED",
+        "agu_kind": "LDA",
+        "note": "User confirmed all loads are AGU/LDA",
+        "source": "group_rule",
+        "uop_kind": "AGU"
+      },
+      "group": "Load UnScaled",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "LHI.U"
+    },
+    {
+      "class": {
+        "addr_mode": "UNSCALED",
+        "agu_kind": "LDA",
+        "note": "User confirmed all loads are AGU/LDA",
+        "source": "group_rule",
+        "uop_kind": "AGU"
+      },
+      "group": "Load UnScaled",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "LHUI.U"
+    },
+    {
+      "class": {
+        "addr_mode": "UNSCALED",
+        "agu_kind": "LDA",
+        "note": "User confirmed all loads are AGU/LDA",
+        "source": "group_rule",
+        "uop_kind": "AGU"
+      },
+      "group": "Load UnScaled",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "LWI.U"
+    },
+    {
+      "class": {
+        "addr_mode": "UNSCALED",
+        "agu_kind": "LDA",
+        "note": "User confirmed all loads are AGU/LDA",
+        "source": "group_rule",
+        "uop_kind": "AGU"
+      },
+      "group": "Load UnScaled",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "LWUI.U"
+    },
+    {
+      "class": {
+        "addr_mode": "UNSCALED",
+        "agu_kind": "LDA",
+        "note": "User confirmed all loads are AGU/LDA",
+        "source": "group_rule",
+        "uop_kind": "AGU"
+      },
+      "group": "Load UnScaled",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "PRFI.U"
+    }
+  ],
+  "sub_kind": "LDA/UNSCALED"
+}

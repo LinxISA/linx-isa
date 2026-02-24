@@ -1,0 +1,231 @@
+{
+  "big_kind": "VEC",
+  "count": 16,
+  "instructions": [
+    {
+      "class": {
+        "bru_kind": "CMP",
+        "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "BRU"
+      },
+      "group": "Compare Instruction",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.CMP.AND"
+    },
+    {
+      "class": {
+        "bru_kind": "CMP",
+        "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "BRU"
+      },
+      "group": "Compare Instruction",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.CMP.ANDI"
+    },
+    {
+      "class": {
+        "bru_kind": "CMP",
+        "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "BRU"
+      },
+      "group": "Compare Instruction",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.CMP.EQ"
+    },
+    {
+      "class": {
+        "bru_kind": "CMP",
+        "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "BRU"
+      },
+      "group": "Compare Instruction",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.CMP.EQI"
+    },
+    {
+      "class": {
+        "bru_kind": "CMP",
+        "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "BRU"
+      },
+      "group": "Compare Instruction",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.CMP.GE"
+    },
+    {
+      "class": {
+        "bru_kind": "CMP",
+        "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "BRU"
+      },
+      "group": "Compare Instruction",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.CMP.GEI"
+    },
+    {
+      "class": {
+        "bru_kind": "CMP",
+        "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "BRU"
+      },
+      "group": "Compare Instruction",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.CMP.GEU"
+    },
+    {
+      "class": {
+        "bru_kind": "CMP",
+        "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "BRU"
+      },
+      "group": "Compare Instruction",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.CMP.GEUI"
+    },
+    {
+      "class": {
+        "bru_kind": "CMP",
+        "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "BRU"
+      },
+      "group": "Compare Instruction",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.CMP.LT"
+    },
+    {
+      "class": {
+        "bru_kind": "CMP",
+        "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "BRU"
+      },
+      "group": "Compare Instruction",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.CMP.LTI"
+    },
+    {
+      "class": {
+        "bru_kind": "CMP",
+        "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "BRU"
+      },
+      "group": "Compare Instruction",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.CMP.LTU"
+    },
+    {
+      "class": {
+        "bru_kind": "CMP",
+        "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "BRU"
+      },
+      "group": "Compare Instruction",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.CMP.LTUI"
+    },
+    {
+      "class": {
+        "bru_kind": "CMP",
+        "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "BRU"
+      },
+      "group": "Compare Instruction",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.CMP.NE"
+    },
+    {
+      "class": {
+        "bru_kind": "CMP",
+        "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "BRU"
+      },
+      "group": "Compare Instruction",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.CMP.NEI"
+    },
+    {
+      "class": {
+        "bru_kind": "CMP",
+        "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "BRU"
+      },
+      "group": "Compare Instruction",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.CMP.OR"
+    },
+    {
+      "class": {
+        "bru_kind": "CMP",
+        "note": "vector-prefix override: dispatch to VEC (subkind=BRU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "BRU"
+      },
+      "group": "Compare Instruction",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.CMP.ORI"
+    }
+  ],
+  "sub_kind": "BRU"
+}
