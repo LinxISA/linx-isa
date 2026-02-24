@@ -115,3 +115,16 @@ Decision (Kevin):
 Notes:
 - `B.Z`/`B.NZ` are vec-engine-only (scalar blocks executing them trap with `TRAPNUM=4`).
 - Any mirroring of `p` into architectural BARG/EBARG is vec-engine/profile-defined; scalar-only components must not assume it.
+
+---
+
+## 2026-02-25 — CSEL SrcRType handling
+
+Topic:
+- `CSEL` assembly syntax allows `SrcR<.neg>` but encoding includes 2-bit `SrcRType`.
+
+Decision (Kevin):
+- Treat `SrcRType=11` as `.neg`; treat all other values as `00` (no modifier).
+
+Notes:
+- This mirrors the "restricted SrcRType" philosophy used elsewhere: prefer deterministic sanitization over new traps.

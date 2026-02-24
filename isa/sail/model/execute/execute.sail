@@ -834,13 +834,15 @@ function exec_c_setret(uimm5 : bits(5)) -> unit = {
 
 function exec_csel(RegDst : bits(5), SrcP : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   // Decision (review): if Read(SrcP) != 0 then select SrcL else select SrcR.
+  // Strict v0.3: SrcRType encodes optional .neg; other values are treated as 00.
   let p = read_reg5(SrcP);
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  let b = match SrcRType {
+  let t = if (SrcRType == 0b11) then 0b11 else 0b00;
+  let b = match t {
     0b00 => b0,
     0b11 => (0x0000_0000_0000_0000 - b0),
-    _ => { unimplemented("CSEL: SrcRType must be 00 (none) or 11 (.neg)"); b0 }
+    _ => b0
   };
   let r = if p != 0x0000_0000_0000_0000 then a else b;
   write_regdst(RegDst, r)
