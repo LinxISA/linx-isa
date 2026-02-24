@@ -38,7 +38,7 @@ SAMPLES: dict[str, dict[str, str]] = {
         "pass": "MUSL_CPP17_PASS",
     },
     "ebarg_timer": {
-        "src": "tests/15_ebarg_init.c",
+        "src": "15_ebarg_init.c",
         "start": "EBARG_INIT_START",
         "pass": "[linx] EBARG selftest: PASS",
     },
@@ -345,6 +345,10 @@ def main(argv: list[str]) -> int:
     out_dir = Path(os.path.expanduser(args.out_dir)).resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
     selected_samples = _select_samples(args.sample)
+    if "ebarg_timer" in selected_samples and "linx_ebarg_selftest=" not in args.append:
+        args.append = f"{args.append} linx_ebarg_selftest=1".strip()
+    if "ebarg_timer" in selected_samples and "loglevel=1" in args.append and "loglevel=2" not in args.append:
+        args.append = f"{args.append} loglevel=2".strip()
     args.clang = str(clang)
     args.clangxx = str(clangxx)
     args.lld = str(lld)
@@ -604,10 +608,14 @@ def main(argv: list[str]) -> int:
                 str(sample_obj),
             ]
 
+            # When we link PIE (-pie) we must use the matching startup object:
+            # - `rcrt1.o` for static PIE (self-relocating crt1; fills RELATIVE relocations)
+            # - `Scrt1.o` for dynamic/PIE
+            # Fall back to `crt1.o` only if the preferred object is unavailable.
             crt1_order = (
-                ["crt1.o", "rcrt1.o", "Scrt1.o"]
+                ["rcrt1.o", "crt1.o", "Scrt1.o"]
                 if link_mode == "static"
-                else ["Scrt1.o", "rcrt1.o", "crt1.o"]
+                else ["Scrt1.o", "crt1.o", "rcrt1.o"]
             )
             crt1_obj = _find_first_file([sysroot / "lib" / n for n in crt1_order])
             if crt1_obj is None:
