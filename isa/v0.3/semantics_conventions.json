@@ -76,7 +76,8 @@
           "offset_unit_bytes": 2,
           "rule": "target = base + (SignExtend(offset) << 1)",
           "base": "TPC (current instruction TPC)",
-          "note": "Base choice (current vs next TPC) must be kept consistent with assembler/relocs once confirmed."
+          "note": "Base choice (current vs next TPC) must be kept consistent with assembler/relocs once confirmed.",
+          "jr_rule": "JR target = SrcL + (SignExtend(simm12) << 1)"
         },
         "predicate_register": {
           "name": "p",

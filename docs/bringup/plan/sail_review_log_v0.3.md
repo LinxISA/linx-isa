@@ -88,6 +88,7 @@ Follow-ups:
 
 Decision (Kevin):
 - Immediate offsets are **halfword-scaled**: `target = base + (SignExtend(simm) << 1)`.
+- `JR SrcL, label` also uses halfword-scaled immediate: `target = SrcL + (SignExtend(simm12) << 1)`.
 
 ---
 
