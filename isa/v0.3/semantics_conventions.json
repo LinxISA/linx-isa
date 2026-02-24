@@ -87,6 +87,14 @@
             "bi": 1,
             "traparg0": "faulting TPC (VA)",
             "note": "Use E_BLOCK(EC_BFETCH) for non-MMU body fetch faults (alignment)."
+          },
+          "tpc_invalid_target_fault": {
+            "trapnum": 5,
+            "name": "BLOCK_TRAP",
+            "e_block": "EC_BFETCH (0x3)",
+            "bi": 1,
+            "traparg0": "faulting target VA",
+            "note": "Vec-engine BRU targets that are outside the vec-body fetchable region (or otherwise not fetchable) are treated as body-fetch faults (not CFI)."
           }
         },
         "predicate_register": {

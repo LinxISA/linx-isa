@@ -94,6 +94,7 @@ Decision (Kevin):
 - `JR` does **not** force 2-byte alignment; odd targets are permitted and are handled by the normal fetch/alignment-fault machinery.
 - If the resulting `TPC` is misaligned at fetch/execute time, it is reported as `E_BLOCK(EC_BFETCH)` (TRAPNUM=5) with `TRAPARG0` = faulting `TPC`.
 - `JR` encoding includes a `SrcZero` field; strict v0.3 **ignores it** (treat as 0). If the computed target ends up at VA=0, subsequent fetch will fault (body-fetch error).
+- If `JR` targets an address that is not a valid vec-body fetch location (out-of-body / unmapped / otherwise not fetchable), report as `E_BLOCK(EC_BFETCH)`.
 
 ---
 
