@@ -714,3 +714,63 @@ function exec_c_setc_ne(SrcL : bits(5), SrcR : bits(5)) -> unit = {
   let b = read_reg5(SrcR);
   set_commit_argument(bool_to_u64(a != b))
 }
+
+
+// -----------------------------------------------------------------------------
+// BRU: control-transfer (vec-engine scalar lane; updates TPC)
+
+function tpc_rel_target_from_imm12(simm12 : bits(12)) -> bits(64) = {
+  let off = sext12_to64(simm12) << 1;
+  read_tpc() + off
+}
+
+function tpc_rel_target_from_imm22(simm22 : bits(22)) -> bits(64) = {
+  let off = sext22_to64(simm22) << 1;
+  read_tpc() + off
+}
+
+function exec_b_eq(SrcL : bits(5), SrcR : bits(5), simm12 : bits(12)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  if a == b then write_tpc(tpc_rel_target_from_imm12(simm12)) else ()
+}
+
+function exec_b_ne(SrcL : bits(5), SrcR : bits(5), simm12 : bits(12)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  if a != b then write_tpc(tpc_rel_target_from_imm12(simm12)) else ()
+}
+
+function exec_b_lt(SrcL : bits(5), SrcR : bits(5), simm12 : bits(12)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  if signed(a) < signed(b) then write_tpc(tpc_rel_target_from_imm12(simm12)) else ()
+}
+
+function exec_b_ge(SrcL : bits(5), SrcR : bits(5), simm12 : bits(12)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  if signed(a) >= signed(b) then write_tpc(tpc_rel_target_from_imm12(simm12)) else ()
+}
+
+function exec_b_ltu(SrcL : bits(5), SrcR : bits(5), simm12 : bits(12)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  if unsigned(a) < unsigned(b) then write_tpc(tpc_rel_target_from_imm12(simm12)) else ()
+}
+
+function exec_b_geu(SrcL : bits(5), SrcR : bits(5), simm12 : bits(12)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  if unsigned(a) >= unsigned(b) then write_tpc(tpc_rel_target_from_imm12(simm12)) else ()
+}
+
+function exec_j(simm22 : bits(22)) -> unit = {
+  write_tpc(tpc_rel_target_from_imm22(simm22))
+}
+
+function exec_jr(SrcL : bits(5), simm12 : bits(12)) -> unit = {
+  let base = read_reg5(SrcL);
+  let off = sext12_to64(simm12) << 1;
+  write_tpc(base + off)
+}

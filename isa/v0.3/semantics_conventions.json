@@ -72,7 +72,13 @@
       },
       "vec_engine_scalar_lane": {
         "pc_domain": "TPC",
-        "note": "When executed in the vec engine scalar lane, BRU control-transfer updates the body-local TPC (not architectural global PC). Target computation details are recorded in the Sail review log and must be made explicit once confirmed."
+        "pc_relative": {
+          "offset_unit_bytes": 2,
+          "rule": "target = base + (SignExtend(offset) << 1)",
+          "base": "TPC (current instruction TPC)",
+          "note": "Base choice (current vs next TPC) must be kept consistent with assembler/relocs once confirmed."
+        },
+        "note": "When executed in the vec engine scalar lane, BRU control-transfer updates the body-local TPC (not architectural global PC)."
       }
     }
   },

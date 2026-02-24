@@ -85,3 +85,6 @@ Decision (Kevin):
 
 Follow-ups:
 - Define the immediate/label target computation relative to TPC (byte vs halfword scaling) for `B.*`/`J`/`JR`.
+
+Decision (Kevin):
+- Immediate offsets are **halfword-scaled**: `target = base + (SignExtend(simm) << 1)`.

@@ -107,3 +107,13 @@ HL.SETC.ORI
 # Compressed (16-bit)
 C.SETC.EQ
 C.SETC.NE
+
+# BRU control-transfer (vec engine scalar lane)
+B.EQ
+B.NE
+B.LT
+B.GE
+B.LTU
+B.GEU
+J
+JR

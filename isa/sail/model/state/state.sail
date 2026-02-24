@@ -15,8 +15,23 @@ function write_regdst(RegDst : bits(5), v : bits(64)) -> unit = {
   unimplemented("write_regdst")
 }
 
+// Temporary PC (TPC) accessors (stub).
+function read_tpc() -> bits(64) = {
+  unimplemented("read_tpc");
+  0x0000_0000_0000_0000
+}
+
+function write_tpc(v : bits(64)) -> unit = {
+  unimplemented("write_tpc")
+}
+
 // Block-control predicate / commit-argument (BARG.CARG) update (stub).
 function set_commit_argument(v : bits(64)) -> unit = {
   unimplemented("set_commit_argument")
+}
+
+function read_commit_argument() -> bits(64) = {
+  unimplemented("read_commit_argument");
+  0x0000_0000_0000_0000
 }
 
