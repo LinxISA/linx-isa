@@ -78,7 +78,15 @@
           "base": "TPC (current instruction TPC)",
           "note": "Base choice (current vs next TPC) must be kept consistent with assembler/relocs once confirmed.",
           "jr_rule": "JR target = SrcL + (SignExtend(simm12) << 1)",
-          "jr_alignment": "No forced alignment; odd target is permitted (subsequent fetch may fault)."
+          "jr_alignment": "No forced alignment; odd target is permitted (subsequent fetch may fault).",
+          "tpc_misalignment_fault": {
+            "trapnum": 5,
+            "name": "BLOCK_TRAP",
+            "e_block": "EC_BFETCH (0x3)",
+            "bi": 1,
+            "traparg0": "faulting TPC (VA)",
+            "note": "Use E_BLOCK(EC_BFETCH) for non-MMU body fetch faults (alignment)."
+          }
         },
         "predicate_register": {
           "name": "p",
