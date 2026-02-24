@@ -87,6 +87,7 @@ Follow-ups:
 - Define the immediate/label target computation relative to TPC (byte vs halfword scaling) for `B.*`/`J`/`JR`.
 
 Decision (Kevin):
+- Base for PC-relative targets is the **current instruction TPC**.
 - Immediate offsets are **halfword-scaled**: `target = base + (SignExtend(simm) << 1)`.
 - `JR SrcL, label` also uses halfword-scaled immediate: `target = SrcL + (SignExtend(simm12) << 1)`.
 - `JR` does **not** force 2-byte alignment; odd targets are permitted and are handled by the normal fetch/alignment-fault machinery.
