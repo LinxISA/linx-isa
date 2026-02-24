@@ -96,6 +96,10 @@
           "bnz": "taken iff p != 0",
           "note": "The predicate domain is vec-engine-defined; any architectural mirroring through BARG/EBARG is profile-defined and should not be assumed by scalar-only components."
         },
+        "register_domain": {
+          "description": "Vec engine scalar-lane BRU reads base registers from the scalar-lane GPR file (not ClockHands queues).",
+          "jr_base": "scalar_lane_gpr"
+        },
         "note": "When executed in the vec engine scalar lane, BRU control-transfer updates the body-local TPC (not architectural global PC)."
       }
     }
