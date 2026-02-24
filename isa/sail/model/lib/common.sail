@@ -40,6 +40,14 @@ function sext12_to64(imm12 : bits(12)) -> bits(64) = {
   if imm12[11] == 1b1 then (0xFFFF_FFFF_FFFF_F000 | imm12) else (0x0000_0000_0000_0000 | imm12)
 }
 
+function zext24_to64(imm24 : bits(24)) -> bits(64) = {
+  0x0000_0000_0000_0000 | imm24
+}
+
+function sext24_to64(imm24 : bits(24)) -> bits(64) = {
+  if imm24[23] == 1b1 then (0xFFFF_FFFF_FF00_0000 | imm24) else (0x0000_0000_0000_0000 | imm24)
+}
+
 function mask_shamt64(x : bits(64)) -> bits(6) = {
   x[5..0]
 }

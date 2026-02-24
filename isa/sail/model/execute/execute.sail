@@ -355,3 +355,393 @@ function exec_rev(RegDst : bits(5), SrcL : bits(5), Nminus1 : bits(6), M : bits(
     write_regdst(RegDst, r)
   }
 }
+
+// -----------------------------------------------------------------------------
+// BRU: comparisons and commit-argument setting (strict v0.3 staged).
+//
+// NOTE: these are scalar boolean results (0/1) written via RegDst or to the
+// block-control commit-argument domain (BARG.CARG).
+
+function bool_to_u64(b : bool) -> bits(64) = {
+  if b then 0x0000_0000_0000_0001 else 0x0000_0000_0000_0000
+}
+
+function exec_cmp_eq(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b0 = read_reg5(SrcR);
+  if SrcRType == 0b11 then unimplemented("CMP.EQ: SrcRType=11 reserved")
+  else {
+    let b = apply_srcrtype_arith64(SrcRType, b0);
+    write_regdst(RegDst, bool_to_u64(a == b))
+  }
+}
+
+function exec_cmp_ne(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b0 = read_reg5(SrcR);
+  if SrcRType == 0b11 then unimplemented("CMP.NE: SrcRType=11 reserved")
+  else {
+    let b = apply_srcrtype_arith64(SrcRType, b0);
+    write_regdst(RegDst, bool_to_u64(a != b))
+  }
+}
+
+function exec_cmp_lt(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b0 = read_reg5(SrcR);
+  if SrcRType == 0b11 then unimplemented("CMP.LT: SrcRType=11 reserved")
+  else {
+    let b = apply_srcrtype_arith64(SrcRType, b0);
+    write_regdst(RegDst, bool_to_u64(signed(a) < signed(b)))
+  }
+}
+
+function exec_cmp_ge(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b0 = read_reg5(SrcR);
+  if SrcRType == 0b11 then unimplemented("CMP.GE: SrcRType=11 reserved")
+  else {
+    let b = apply_srcrtype_arith64(SrcRType, b0);
+    write_regdst(RegDst, bool_to_u64(signed(a) >= signed(b)))
+  }
+}
+
+function exec_cmp_ltu(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b0 = read_reg5(SrcR);
+  if SrcRType == 0b11 then unimplemented("CMP.LTU: SrcRType=11 reserved")
+  else {
+    let b = apply_srcrtype_arith64(SrcRType, b0);
+    write_regdst(RegDst, bool_to_u64(unsigned(a) < unsigned(b)))
+  }
+}
+
+function exec_cmp_geu(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b0 = read_reg5(SrcR);
+  if SrcRType == 0b11 then unimplemented("CMP.GEU: SrcRType=11 reserved")
+  else {
+    let b = apply_srcrtype_arith64(SrcRType, b0);
+    write_regdst(RegDst, bool_to_u64(unsigned(a) >= unsigned(b)))
+  }
+}
+
+function exec_cmp_and(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b0 = read_reg5(SrcR);
+  let b = apply_srcrtype_logic64(SrcRType, b0);
+  write_regdst(RegDst, bool_to_u64((a & b) != 0x0000_0000_0000_0000))
+}
+
+function exec_cmp_or(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b0 = read_reg5(SrcR);
+  let b = apply_srcrtype_logic64(SrcRType, b0);
+  write_regdst(RegDst, bool_to_u64((a | b) != 0x0000_0000_0000_0000))
+}
+
+// Immediate-compare variants.
+
+function exec_cmp_eqi(RegDst : bits(5), SrcL : bits(5), simm12 : bits(12)) -> unit = {
+  let a = read_reg5(SrcL);
+  let imm = sext12_to64(simm12);
+  write_regdst(RegDst, bool_to_u64(a == imm))
+}
+
+function exec_cmp_nei(RegDst : bits(5), SrcL : bits(5), simm12 : bits(12)) -> unit = {
+  let a = read_reg5(SrcL);
+  let imm = sext12_to64(simm12);
+  write_regdst(RegDst, bool_to_u64(a != imm))
+}
+
+function exec_cmp_lti(RegDst : bits(5), SrcL : bits(5), simm12 : bits(12)) -> unit = {
+  let a = read_reg5(SrcL);
+  let imm = sext12_to64(simm12);
+  write_regdst(RegDst, bool_to_u64(signed(a) < signed(imm)))
+}
+
+function exec_cmp_gei(RegDst : bits(5), SrcL : bits(5), simm12 : bits(12)) -> unit = {
+  let a = read_reg5(SrcL);
+  let imm = sext12_to64(simm12);
+  write_regdst(RegDst, bool_to_u64(signed(a) >= signed(imm)))
+}
+
+function exec_cmp_ltui(RegDst : bits(5), SrcL : bits(5), uimm12 : bits(12)) -> unit = {
+  let a = read_reg5(SrcL);
+  let imm = zext12_to64(uimm12);
+  write_regdst(RegDst, bool_to_u64(unsigned(a) < unsigned(imm)))
+}
+
+function exec_cmp_geui(RegDst : bits(5), SrcL : bits(5), uimm12 : bits(12)) -> unit = {
+  let a = read_reg5(SrcL);
+  let imm = zext12_to64(uimm12);
+  write_regdst(RegDst, bool_to_u64(unsigned(a) >= unsigned(imm)))
+}
+
+function exec_cmp_andi(RegDst : bits(5), SrcL : bits(5), simm12 : bits(12)) -> unit = {
+  let a = read_reg5(SrcL);
+  let imm = sext12_to64(simm12);
+  write_regdst(RegDst, bool_to_u64((a & imm) != 0x0000_0000_0000_0000))
+}
+
+function exec_cmp_ori(RegDst : bits(5), SrcL : bits(5), simm12 : bits(12)) -> unit = {
+  let a = read_reg5(SrcL);
+  let imm = sext12_to64(simm12);
+  write_regdst(RegDst, bool_to_u64((a | imm) != 0x0000_0000_0000_0000))
+}
+
+// HL (48-bit) compare-immediate forms: same boolean semantics with 24-bit immediates.
+
+function exec_hl_cmp_eqi(RegDst : bits(5), SrcL : bits(5), simm24 : bits(24)) -> unit = {
+  let a = read_reg5(SrcL);
+  let imm = sext24_to64(simm24);
+  write_regdst(RegDst, bool_to_u64(a == imm))
+}
+
+function exec_hl_cmp_nei(RegDst : bits(5), SrcL : bits(5), simm24 : bits(24)) -> unit = {
+  let a = read_reg5(SrcL);
+  let imm = sext24_to64(simm24);
+  write_regdst(RegDst, bool_to_u64(a != imm))
+}
+
+function exec_hl_cmp_lti(RegDst : bits(5), SrcL : bits(5), simm24 : bits(24)) -> unit = {
+  let a = read_reg5(SrcL);
+  let imm = sext24_to64(simm24);
+  write_regdst(RegDst, bool_to_u64(signed(a) < signed(imm)))
+}
+
+function exec_hl_cmp_gei(RegDst : bits(5), SrcL : bits(5), simm24 : bits(24)) -> unit = {
+  let a = read_reg5(SrcL);
+  let imm = sext24_to64(simm24);
+  write_regdst(RegDst, bool_to_u64(signed(a) >= signed(imm)))
+}
+
+function exec_hl_cmp_ltui(RegDst : bits(5), SrcL : bits(5), uimm24 : bits(24)) -> unit = {
+  let a = read_reg5(SrcL);
+  let imm = zext24_to64(uimm24);
+  write_regdst(RegDst, bool_to_u64(unsigned(a) < unsigned(imm)))
+}
+
+function exec_hl_cmp_geui(RegDst : bits(5), SrcL : bits(5), uimm24 : bits(24)) -> unit = {
+  let a = read_reg5(SrcL);
+  let imm = zext24_to64(uimm24);
+  write_regdst(RegDst, bool_to_u64(unsigned(a) >= unsigned(imm)))
+}
+
+function exec_hl_cmp_andi(RegDst : bits(5), SrcL : bits(5), simm24 : bits(24)) -> unit = {
+  let a = read_reg5(SrcL);
+  let imm = sext24_to64(simm24);
+  write_regdst(RegDst, bool_to_u64((a & imm) != 0x0000_0000_0000_0000))
+}
+
+function exec_hl_cmp_ori(RegDst : bits(5), SrcL : bits(5), simm24 : bits(24)) -> unit = {
+  let a = read_reg5(SrcL);
+  let imm = sext24_to64(simm24);
+  write_regdst(RegDst, bool_to_u64((a | imm) != 0x0000_0000_0000_0000))
+}
+
+// SETC: write to commit-argument domain (BARG.CARG).
+
+function exec_setc_eq(SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b0 = read_reg5(SrcR);
+  if SrcRType == 0b11 then unimplemented("SETC.EQ: SrcRType=11 reserved")
+  else {
+    let b = apply_srcrtype_arith64(SrcRType, b0);
+    set_commit_argument(bool_to_u64(a == b))
+  }
+}
+
+function exec_setc_ne(SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b0 = read_reg5(SrcR);
+  if SrcRType == 0b11 then unimplemented("SETC.NE: SrcRType=11 reserved")
+  else {
+    let b = apply_srcrtype_arith64(SrcRType, b0);
+    set_commit_argument(bool_to_u64(a != b))
+  }
+}
+
+function exec_setc_lt(SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b0 = read_reg5(SrcR);
+  if SrcRType == 0b11 then unimplemented("SETC.LT: SrcRType=11 reserved")
+  else {
+    let b = apply_srcrtype_arith64(SrcRType, b0);
+    set_commit_argument(bool_to_u64(signed(a) < signed(b)))
+  }
+}
+
+function exec_setc_ge(SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b0 = read_reg5(SrcR);
+  if SrcRType == 0b11 then unimplemented("SETC.GE: SrcRType=11 reserved")
+  else {
+    let b = apply_srcrtype_arith64(SrcRType, b0);
+    set_commit_argument(bool_to_u64(signed(a) >= signed(b)))
+  }
+}
+
+function exec_setc_ltu(SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b0 = read_reg5(SrcR);
+  if SrcRType == 0b11 then unimplemented("SETC.LTU: SrcRType=11 reserved")
+  else {
+    let b = apply_srcrtype_arith64(SrcRType, b0);
+    set_commit_argument(bool_to_u64(unsigned(a) < unsigned(b)))
+  }
+}
+
+function exec_setc_geu(SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b0 = read_reg5(SrcR);
+  if SrcRType == 0b11 then unimplemented("SETC.GEU: SrcRType=11 reserved")
+  else {
+    let b = apply_srcrtype_arith64(SrcRType, b0);
+    set_commit_argument(bool_to_u64(unsigned(a) >= unsigned(b)))
+  }
+}
+
+function exec_setc_and(SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b0 = read_reg5(SrcR);
+  let b = apply_srcrtype_logic64(SrcRType, b0);
+  set_commit_argument(bool_to_u64((a & b) != 0x0000_0000_0000_0000))
+}
+
+function exec_setc_or(SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b0 = read_reg5(SrcR);
+  let b = apply_srcrtype_logic64(SrcRType, b0);
+  set_commit_argument(bool_to_u64((a | b) != 0x0000_0000_0000_0000))
+}
+
+// SETC immediate variants (with encoded shamt): imm = (sext/zext(imm) << shamt).
+
+function exec_setc_eqi(SrcL : bits(5), shamt : bits(5), simm12 : bits(12)) -> unit = {
+  let a = read_reg5(SrcL);
+  let sh : int = unsigned(shamt);
+  let imm = sext12_to64(simm12) << sh;
+  set_commit_argument(bool_to_u64(a == imm))
+}
+
+function exec_setc_nei(SrcL : bits(5), shamt : bits(5), simm12 : bits(12)) -> unit = {
+  let a = read_reg5(SrcL);
+  let sh : int = unsigned(shamt);
+  let imm = sext12_to64(simm12) << sh;
+  set_commit_argument(bool_to_u64(a != imm))
+}
+
+function exec_setc_lti(SrcL : bits(5), shamt : bits(5), simm12 : bits(12)) -> unit = {
+  let a = read_reg5(SrcL);
+  let sh : int = unsigned(shamt);
+  let imm = sext12_to64(simm12) << sh;
+  set_commit_argument(bool_to_u64(signed(a) < signed(imm)))
+}
+
+function exec_setc_gei(SrcL : bits(5), shamt : bits(5), simm12 : bits(12)) -> unit = {
+  let a = read_reg5(SrcL);
+  let sh : int = unsigned(shamt);
+  let imm = sext12_to64(simm12) << sh;
+  set_commit_argument(bool_to_u64(signed(a) >= signed(imm)))
+}
+
+function exec_setc_ltui(SrcL : bits(5), shamt : bits(5), uimm12 : bits(12)) -> unit = {
+  let a = read_reg5(SrcL);
+  let sh : int = unsigned(shamt);
+  let imm = zext12_to64(uimm12) << sh;
+  set_commit_argument(bool_to_u64(unsigned(a) < unsigned(imm)))
+}
+
+function exec_setc_geui(SrcL : bits(5), shamt : bits(5), uimm12 : bits(12)) -> unit = {
+  let a = read_reg5(SrcL);
+  let sh : int = unsigned(shamt);
+  let imm = zext12_to64(uimm12) << sh;
+  set_commit_argument(bool_to_u64(unsigned(a) >= unsigned(imm)))
+}
+
+function exec_setc_andi(SrcL : bits(5), shamt : bits(5), simm12 : bits(12)) -> unit = {
+  let a = read_reg5(SrcL);
+  let sh : int = unsigned(shamt);
+  let imm = sext12_to64(simm12) << sh;
+  set_commit_argument(bool_to_u64((a & imm) != 0x0000_0000_0000_0000))
+}
+
+function exec_setc_ori(SrcL : bits(5), shamt : bits(5), simm12 : bits(12)) -> unit = {
+  let a = read_reg5(SrcL);
+  let sh : int = unsigned(shamt);
+  let imm = sext12_to64(simm12) << sh;
+  set_commit_argument(bool_to_u64((a | imm) != 0x0000_0000_0000_0000))
+}
+
+// HL (48-bit) SETC.*I forms: same semantics, but with 24-bit immediates.
+
+function exec_hl_setc_eqi(SrcL : bits(5), shamt : bits(5), simm24 : bits(24)) -> unit = {
+  let a = read_reg5(SrcL);
+  let sh : int = unsigned(shamt);
+  let imm = sext24_to64(simm24) << sh;
+  set_commit_argument(bool_to_u64(a == imm))
+}
+
+function exec_hl_setc_nei(SrcL : bits(5), shamt : bits(5), simm24 : bits(24)) -> unit = {
+  let a = read_reg5(SrcL);
+  let sh : int = unsigned(shamt);
+  let imm = sext24_to64(simm24) << sh;
+  set_commit_argument(bool_to_u64(a != imm))
+}
+
+function exec_hl_setc_lti(SrcL : bits(5), shamt : bits(5), simm24 : bits(24)) -> unit = {
+  let a = read_reg5(SrcL);
+  let sh : int = unsigned(shamt);
+  let imm = sext24_to64(simm24) << sh;
+  set_commit_argument(bool_to_u64(signed(a) < signed(imm)))
+}
+
+function exec_hl_setc_gei(SrcL : bits(5), shamt : bits(5), simm24 : bits(24)) -> unit = {
+  let a = read_reg5(SrcL);
+  let sh : int = unsigned(shamt);
+  let imm = sext24_to64(simm24) << sh;
+  set_commit_argument(bool_to_u64(signed(a) >= signed(imm)))
+}
+
+function exec_hl_setc_ltui(SrcL : bits(5), shamt : bits(5), uimm24 : bits(24)) -> unit = {
+  let a = read_reg5(SrcL);
+  let sh : int = unsigned(shamt);
+  let imm = zext24_to64(uimm24) << sh;
+  set_commit_argument(bool_to_u64(unsigned(a) < unsigned(imm)))
+}
+
+function exec_hl_setc_geui(SrcL : bits(5), shamt : bits(5), uimm24 : bits(24)) -> unit = {
+  let a = read_reg5(SrcL);
+  let sh : int = unsigned(shamt);
+  let imm = zext24_to64(uimm24) << sh;
+  set_commit_argument(bool_to_u64(unsigned(a) >= unsigned(imm)))
+}
+
+function exec_hl_setc_andi(SrcL : bits(5), shamt : bits(5), simm24 : bits(24)) -> unit = {
+  let a = read_reg5(SrcL);
+  let sh : int = unsigned(shamt);
+  let imm = sext24_to64(simm24) << sh;
+  set_commit_argument(bool_to_u64((a & imm) != 0x0000_0000_0000_0000))
+}
+
+function exec_hl_setc_ori(SrcL : bits(5), shamt : bits(5), simm24 : bits(24)) -> unit = {
+  let a = read_reg5(SrcL);
+  let sh : int = unsigned(shamt);
+  let imm = sext24_to64(simm24) << sh;
+  set_commit_argument(bool_to_u64((a | imm) != 0x0000_0000_0000_0000))
+}
+
+// Compressed SETC (16-bit) forms.
+
+function exec_c_setc_eq(SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  set_commit_argument(bool_to_u64(a == b))
+}
+
+function exec_c_setc_ne(SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  set_commit_argument(bool_to_u64(a != b))
+}

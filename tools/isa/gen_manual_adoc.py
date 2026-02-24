@@ -837,10 +837,36 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
                 "GEU": "Read(SrcL) >= Read(SrcR)  // unsigned",
             }
             return [f"result = ({expr_map[sub]}) ? 1 : 0", "Write(Dst, result)"]
-        if sub in {"EQI", "NEI", "LTI", "GEI", "LTUI", "GEUI"}:
-            return ["result = CompareImmediate(/* per suffix */) ? 1 : 0", "Write(Dst, result)"]
+        if sub in {"EQI", "NEI", "LTI", "GEI"}:
+            expr_map = {
+                "EQI": "Read(SrcL) == imm",
+                "NEI": "Read(SrcL) != imm",
+                "LTI": "Read(SrcL) < imm  // signed",
+                "GEI": "Read(SrcL) >= imm  // signed",
+            }
+            return ["imm = SignExtend(simm)", f"result = ({expr_map[sub]}) ? 1 : 0", "Write(Dst, result)"]
+        if sub in {"LTUI", "GEUI"}:
+            expr_map = {
+                "LTUI": "Read(SrcL) < imm  // unsigned",
+                "GEUI": "Read(SrcL) >= imm  // unsigned",
+            }
+            return ["imm = ZeroExtend(uimm)", f"result = ({expr_map[sub]}) ? 1 : 0", "Write(Dst, result)"]
         if sub in {"AND", "OR"}:
-            return ["result = (SrcL AND/OR SrcR) ? 1 : 0", "Write(Dst, result)"]
+            op = "&" if sub == "AND" else "|"
+            return [
+                "lhs = Read(SrcL)",
+                "rhs = Read(SrcR)  // apply SrcRType modifiers (.sw/.uw/.not) as encoded",
+                f"result = ((lhs {op} rhs) != 0) ? 1 : 0",
+                "Write(Dst, result)",
+            ]
+        if sub in {"ANDI", "ORI"}:
+            op = "&" if sub == "ANDI" else "|"
+            return [
+                "lhs = Read(SrcL)",
+                "imm = SignExtend(simm)",
+                f"result = ((lhs {op} imm) != 0) ? 1 : 0",
+                "Write(Dst, result)",
+            ]
         return ["result = Compare(/* per mnemonic */)", "Write(Dst, result)"]
 
     if root == "SETC" and sub and sub != "TGT":
@@ -854,6 +880,44 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
                 "GEU": "Read(SrcL) >= Read(SrcR)  // unsigned",
             }
             return [f"commit_arg = ({expr_map[sub]}) ? 1 : 0", "SetCommitArgument(commit_arg)"]
+        if sub in {"AND", "OR"}:
+            op = "&" if sub == "AND" else "|"
+            return [
+                "lhs = Read(SrcL)",
+                "rhs = Read(SrcR)  // apply SrcRType modifiers (.sw/.uw/.not) as encoded",
+                f"commit_arg = ((lhs {op} rhs) != 0) ? 1 : 0",
+                "SetCommitArgument(commit_arg)",
+            ]
+        if sub in {"EQI", "NEI", "LTI", "GEI"}:
+            expr_map = {
+                "EQI": "Read(SrcL) == imm",
+                "NEI": "Read(SrcL) != imm",
+                "LTI": "Read(SrcL) < imm  // signed",
+                "GEI": "Read(SrcL) >= imm  // signed",
+            }
+            return [
+                "imm = (SignExtend(simm) << shamt)",
+                f"commit_arg = ({expr_map[sub]}) ? 1 : 0",
+                "SetCommitArgument(commit_arg)",
+            ]
+        if sub in {"LTUI", "GEUI"}:
+            expr_map = {
+                "LTUI": "Read(SrcL) < imm  // unsigned",
+                "GEUI": "Read(SrcL) >= imm  // unsigned",
+            }
+            return [
+                "imm = (ZeroExtend(uimm) << shamt)",
+                f"commit_arg = ({expr_map[sub]}) ? 1 : 0",
+                "SetCommitArgument(commit_arg)",
+            ]
+        if sub in {"ANDI", "ORI"}:
+            op = "&" if sub == "ANDI" else "|"
+            return [
+                "lhs = Read(SrcL)",
+                "imm = (SignExtend(simm) << shamt)",
+                f"commit_arg = ((lhs {op} imm) != 0) ? 1 : 0",
+                "SetCommitArgument(commit_arg)",
+            ]
         return ["commit_arg = EvaluateCondition(/* per mnemonic */)", "SetCommitArgument(commit_arg)"]
 
     # Arithmetic / ALU fallbacks.

@@ -36,6 +36,7 @@ compressed forms.
 The draft ISA tables use several common conventions:
 
 * `.sw` / `.uw` suffixes annotate sign/zero extension or “use as signed/unsigned word” in mixed-width operations.
+* Some immediate forms (notably `SETC.*I`) use a **split immediate** encoding (`simm/uimm` plus an encoded `shamt`). Assembly syntax prints a single immediate; architecturally the value is interpreted as `imm = (SignExtend(simm) << shamt)` (or `ZeroExtend(uimm) << shamt`).
 * Bracketed memory operands take the form `[...]` with base + offset, or base + index with optional shift.
 
 Refer to `instructions[].asm` in `isa/v0.3/linxisa-v0.3.json` for the full syntax used by each instruction form.
