@@ -89,6 +89,7 @@ Follow-ups:
 Decision (Kevin):
 - Immediate offsets are **halfword-scaled**: `target = base + (SignExtend(simm) << 1)`.
 - `JR SrcL, label` also uses halfword-scaled immediate: `target = SrcL + (SignExtend(simm12) << 1)`.
+- `JR` does **not** force 2-byte alignment; odd targets are permitted and are handled by the normal fetch/alignment-fault machinery.
 
 ---
 

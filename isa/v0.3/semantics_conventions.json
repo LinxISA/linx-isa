@@ -77,7 +77,8 @@
           "rule": "target = base + (SignExtend(offset) << 1)",
           "base": "TPC (current instruction TPC)",
           "note": "Base choice (current vs next TPC) must be kept consistent with assembler/relocs once confirmed.",
-          "jr_rule": "JR target = SrcL + (SignExtend(simm12) << 1)"
+          "jr_rule": "JR target = SrcL + (SignExtend(simm12) << 1)",
+          "jr_alignment": "No forced alignment; odd target is permitted (subsequent fetch may fault)."
         },
         "predicate_register": {
           "name": "p",
