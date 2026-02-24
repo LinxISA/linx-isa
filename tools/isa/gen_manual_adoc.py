@@ -680,6 +680,16 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
             return ["AnnotateBlockText(/* label/offset as encoded */)"]
         return ["UpdateBlockMetadata(/* fields as encoded */)"]
 
+    # Conditional select.
+    if root == "CSEL":
+        return [
+            "p = Read(SrcP)",
+            "lhs = Read(SrcL)",
+            "rhs = Read(SrcR)  // apply optional .neg as encoded",
+            "result = (p != 0) ? lhs : rhs",
+            "Write(Dst, result)",
+        ]
+
     # Template instructions.
     if root in {"FENTRY", "FEXIT"} or m.startswith("FRET"):
         return ["AdjustSPAndSaveRestoreRange(/* register range + uimm */)"]

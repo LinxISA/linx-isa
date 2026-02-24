@@ -827,3 +827,21 @@ function exec_c_setret(uimm5 : bits(5)) -> unit = {
   let off = (0x0000_0000_0000_0000 | uimm5) << 1;
   write_regdst(0b01010, base + off)  // RA
 }
+
+
+// -----------------------------------------------------------------------------
+// Compound ops
+
+function exec_csel(RegDst : bits(5), SrcP : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  // Decision (review): if Read(SrcP) != 0 then select SrcL else select SrcR.
+  let p = read_reg5(SrcP);
+  let a = read_reg5(SrcL);
+  let b0 = read_reg5(SrcR);
+  let b = match SrcRType {
+    0b00 => b0,
+    0b11 => (0x0000_0000_0000_0000 - b0),
+    _ => { unimplemented("CSEL: SrcRType must be 00 (none) or 11 (.neg)"); b0 }
+  };
+  let r = if p != 0x0000_0000_0000_0000 then a else b;
+  write_regdst(RegDst, r)
+}

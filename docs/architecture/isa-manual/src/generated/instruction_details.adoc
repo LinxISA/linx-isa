@@ -5930,7 +5930,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+p = Read(SrcP)
+lhs = Read(SrcL)
+rhs = Read(SrcR)  // apply optional .neg as encoded
+result = (p != 0) ? lhs : rhs
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu]]
@@ -13782,7 +13786,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+p = Read(SrcP)
+lhs = Read(SrcL)
+rhs = Read(SrcR)  // apply optional .neg as encoded
+result = (p != 0) ? lhs : rhs
+Write(Dst, result)
 ----
 
 [[insndesc-three-source-integer-v-psel]]
