@@ -1,0 +1,73 @@
+{
+  "big_kinds": {
+    "AGU": [
+      "LDA",
+      "LDA/BASE_IMM",
+      "LDA/BASE_REG",
+      "LDA/LONG",
+      "LDA/PAIR",
+      "LDA/PC_REL",
+      "LDA/POST_INDEX",
+      "LDA/PRE_INDEX",
+      "LDA/UNSCALED",
+      "STA",
+      "STA/BASE_IMM",
+      "STA/BASE_REG",
+      "STA/LONG",
+      "STA/PAIR",
+      "STA/PC_REL",
+      "STA/POST_INDEX",
+      "STA/PRE_INDEX"
+    ],
+    "ALU": [
+      "ALU",
+      "ALU_MULTI_CYCLE",
+      "BARREL_CCAT",
+      "SHIFT"
+    ],
+    "AMO": [
+      "AMO",
+      "CAS"
+    ],
+    "BBD": [
+      "BSTART"
+    ],
+    "BRU": [
+      "BRU",
+      "CMP",
+      "SETC"
+    ],
+    "CMD": [
+      "BLOCK_ARGUMENT",
+      "BLOCK_DIMENSION",
+      "BLOCK_IO",
+      "BLOCK_SPLIT",
+      "DESC_B_ATTR",
+      "DESC_B_HINT",
+      "DESC_B_TEXT",
+      "Q_MANAGE",
+      "Q_POP",
+      "Q_PUSH",
+      "VEC_ENGINE_CMD engine=VEC"
+    ],
+    "FSU": [
+      "DEFAULT"
+    ],
+    "SYS": [
+      "CACHE_MAINT",
+      "SSR",
+      "SYS",
+      "TRAP"
+    ],
+    "VEC": [
+      "AGU",
+      "ALU",
+      "AMO",
+      "BRU",
+      "FSU",
+      "VEC"
+    ]
+  },
+  "note": "Golden uop classification tree (big/sub).",
+  "version": "v0.3"
+}

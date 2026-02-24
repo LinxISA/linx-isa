@@ -1,0 +1,881 @@
+// Generated file; do not edit by hand.
+
+[[uop-index]]
+=== Uop classification index
+
+This index groups unique mnemonics in the v0.3 catalog by the unified uop taxonomy used for cross-checking architecture semantics against the LinxCore micro-architecture contracts.
+
+==== AGU
+
+===== LDA
+
+* <<insndesc-prefetch-hl-prf,HL.PRF>>
+* <<insndesc-prefetch-hl-prf-a,HL.PRF.A>>
+* <<insndesc-prefetch-hl-prfi-u,HL.PRFI.U>>
+* <<insndesc-prefetch-hl-prfi-ua,HL.PRFI.UA>>
+* <<insndesc-load-symbol-lb-pcr,LB.PCR>>
+* <<insndesc-load-symbol-lbu-pcr,LBU.PCR>>
+* <<insndesc-load-symbol-ld-pcr,LD.PCR>>
+* <<insndesc-load-symbol-lh-pcr,LH.PCR>>
+* <<insndesc-load-symbol-lhu-pcr,LHU.PCR>>
+* <<insndesc-load-symbol-lw-pcr,LW.PCR>>
+* <<insndesc-load-symbol-lwu-pcr,LWU.PCR>>
+
+===== LDA/BASE_IMM
+
+* <<insndesc-load-immediate-offset-c-ldi,C.LDI>>
+* <<insndesc-load-immediate-offset-c-lwi,C.LWI>>
+* <<insndesc-load-immediate-offset-lbi,LBI>>
+* <<insndesc-load-immediate-offset-lbui,LBUI>>
+* <<insndesc-load-immediate-offset-ldi,LDI>>
+* <<insndesc-load-immediate-offset-lhi,LHI>>
+* <<insndesc-load-immediate-offset-lhui,LHUI>>
+* <<insndesc-load-immediate-offset-lwi,LWI>>
+* <<insndesc-load-immediate-offset-lwui,LWUI>>
+
+===== LDA/BASE_REG
+
+* <<insndesc-load-register-offset-lb,LB>>
+* <<insndesc-load-register-offset-lbu,LBU>>
+* <<insndesc-load-register-offset-ld,LD>>
+* <<insndesc-load-register-offset-lh,LH>>
+* <<insndesc-load-register-offset-lhu,LHU>>
+* <<insndesc-load-register-offset-lw,LW>>
+* <<insndesc-load-register-offset-lwu,LWU>>
+* <<insndesc-load-register-offset-prf,PRF>>
+
+===== LDA/LONG
+
+* <<insndesc-load-long-offset-hl-lbi,HL.LBI>>
+* <<insndesc-load-long-offset-hl-lbui,HL.LBUI>>
+* <<insndesc-load-long-offset-hl-ldi,HL.LDI>>
+* <<insndesc-load-long-offset-hl-ldi-u,HL.LDI.U>>
+* <<insndesc-load-long-offset-hl-lhi,HL.LHI>>
+* <<insndesc-load-long-offset-hl-lhi-u,HL.LHI.U>>
+* <<insndesc-load-long-offset-hl-lhui,HL.LHUI>>
+* <<insndesc-load-long-offset-hl-lhui-u,HL.LHUI.U>>
+* <<insndesc-load-long-offset-hl-lwi,HL.LWI>>
+* <<insndesc-load-long-offset-hl-lwi-u,HL.LWI.U>>
+* <<insndesc-load-long-offset-hl-lwui,HL.LWUI>>
+* <<insndesc-load-long-offset-hl-lwui-u,HL.LWUI.U>>
+
+===== LDA/PAIR
+
+* <<insndesc-load-pair-hl-lbip,HL.LBIP>>
+* <<insndesc-load-pair-hl-lbp,HL.LBP>>
+* <<insndesc-load-pair-hl-lbuip,HL.LBUIP>>
+* <<insndesc-load-pair-hl-lbup,HL.LBUP>>
+* <<insndesc-load-pair-hl-ldip,HL.LDIP>>
+* <<insndesc-load-pair-hl-ldip-u,HL.LDIP.U>>
+* <<insndesc-load-pair-hl-ldp,HL.LDP>>
+* <<insndesc-load-pair-hl-lhip,HL.LHIP>>
+* <<insndesc-load-pair-hl-lhip-u,HL.LHIP.U>>
+* <<insndesc-load-pair-hl-lhp,HL.LHP>>
+* <<insndesc-load-pair-hl-lhuip,HL.LHUIP>>
+* <<insndesc-load-pair-hl-lhuip-u,HL.LHUIP.U>>
+* <<insndesc-load-pair-hl-lhup,HL.LHUP>>
+* <<insndesc-load-pair-hl-lwip,HL.LWIP>>
+* <<insndesc-load-pair-hl-lwip-u,HL.LWIP.U>>
+* <<insndesc-load-pair-hl-lwp,HL.LWP>>
+* <<insndesc-load-pair-hl-lwuip,HL.LWUIP>>
+* <<insndesc-load-pair-hl-lwuip-u,HL.LWUIP.U>>
+* <<insndesc-load-pair-hl-lwup,HL.LWUP>>
+
+===== LDA/PC_REL
+
+* <<insndesc-load-pc-relative-hl-lb-pcr,HL.LB.PCR>>
+* <<insndesc-load-pc-relative-hl-lbu-pcr,HL.LBU.PCR>>
+* <<insndesc-load-pc-relative-hl-ld-pcr,HL.LD.PCR>>
+* <<insndesc-load-pc-relative-hl-lh-pcr,HL.LH.PCR>>
+* <<insndesc-load-pc-relative-hl-lhu-pcr,HL.LHU.PCR>>
+* <<insndesc-load-pc-relative-hl-lw-pcr,HL.LW.PCR>>
+* <<insndesc-load-pc-relative-hl-lwu-pcr,HL.LWU.PCR>>
+
+===== LDA/POST_INDEX
+
+* <<insndesc-load-post-index-hl-lb-po,HL.LB.PO>>
+* <<insndesc-load-post-index-hl-lbi-po,HL.LBI.PO>>
+* <<insndesc-load-post-index-hl-lbu-po,HL.LBU.PO>>
+* <<insndesc-load-post-index-hl-lbui-po,HL.LBUI.PO>>
+* <<insndesc-load-post-index-hl-ld-po,HL.LD.PO>>
+* <<insndesc-load-post-index-hl-ldi-po,HL.LDI.PO>>
+* <<insndesc-load-post-index-hl-ldi-upo,HL.LDI.UPO>>
+* <<insndesc-load-post-index-hl-lh-po,HL.LH.PO>>
+* <<insndesc-load-post-index-hl-lhi-po,HL.LHI.PO>>
+* <<insndesc-load-post-index-hl-lhi-upo,HL.LHI.UPO>>
+* <<insndesc-load-post-index-hl-lhu-po,HL.LHU.PO>>
+* <<insndesc-load-post-index-hl-lhui-po,HL.LHUI.PO>>
+* <<insndesc-load-post-index-hl-lhui-upo,HL.LHUI.UPO>>
+* <<insndesc-load-post-index-hl-lw-po,HL.LW.PO>>
+* <<insndesc-load-post-index-hl-lwi-po,HL.LWI.PO>>
+* <<insndesc-load-post-index-hl-lwi-upo,HL.LWI.UPO>>
+* <<insndesc-load-post-index-hl-lwu-po,HL.LWU.PO>>
+* <<insndesc-load-post-index-hl-lwui-po,HL.LWUI.PO>>
+* <<insndesc-load-post-index-hl-lwui-upo,HL.LWUI.UPO>>
+
+===== LDA/PRE_INDEX
+
+* <<insndesc-load-pre-index-hl-lb-pr,HL.LB.PR>>
+* <<insndesc-load-pre-index-hl-lbi-pr,HL.LBI.PR>>
+* <<insndesc-load-pre-index-hl-lbu-pr,HL.LBU.PR>>
+* <<insndesc-load-pre-index-hl-lbui-pr,HL.LBUI.PR>>
+* <<insndesc-load-pre-index-hl-ld-pr,HL.LD.PR>>
+* <<insndesc-load-pre-index-hl-ldi-pr,HL.LDI.PR>>
+* <<insndesc-load-pre-index-hl-ldi-upr,HL.LDI.UPR>>
+* <<insndesc-load-pre-index-hl-lh-pr,HL.LH.PR>>
+* <<insndesc-load-pre-index-hl-lhi-pr,HL.LHI.PR>>
+* <<insndesc-load-pre-index-hl-lhi-upr,HL.LHI.UPR>>
+* <<insndesc-load-pre-index-hl-lhu-pr,HL.LHU.PR>>
+* <<insndesc-load-pre-index-hl-lhui-pr,HL.LHUI.PR>>
+* <<insndesc-load-pre-index-hl-lhui-upr,HL.LHUI.UPR>>
+* <<insndesc-load-pre-index-hl-lw-pr,HL.LW.PR>>
+* <<insndesc-load-pre-index-hl-lwi-pr,HL.LWI.PR>>
+* <<insndesc-load-pre-index-hl-lwi-upr,HL.LWI.UPR>>
+* <<insndesc-load-pre-index-hl-lwu-pr,HL.LWU.PR>>
+* <<insndesc-load-pre-index-hl-lwui-pr,HL.LWUI.PR>>
+* <<insndesc-load-pre-index-hl-lwui-upr,HL.LWUI.UPR>>
+
+===== LDA/UNSCALED
+
+* <<insndesc-load-unscaled-ldi-u,LDI.U>>
+* <<insndesc-load-unscaled-lhi-u,LHI.U>>
+* <<insndesc-load-unscaled-lhui-u,LHUI.U>>
+* <<insndesc-load-unscaled-lwi-u,LWI.U>>
+* <<insndesc-load-unscaled-lwui-u,LWUI.U>>
+* <<insndesc-load-unscaled-prfi-u,PRFI.U>>
+
+===== STA
+
+* <<insndesc-store-symbol-sb-pcr,SB.PCR>>
+* <<insndesc-store-symbol-sd-pcr,SD.PCR>>
+* <<insndesc-store-symbol-sh-pcr,SH.PCR>>
+* <<insndesc-store-symbol-sw-pcr,SW.PCR>>
+
+===== STA/BASE_IMM
+
+* <<insndesc-store-immediate-offset-c-sdi,C.SDI>>
+* <<insndesc-store-immediate-offset-c-swi,C.SWI>>
+* <<insndesc-store-immediate-offset-sbi,SBI>>
+* <<insndesc-store-immediate-offset-sdi,SDI>>
+* <<insndesc-store-immediate-offset-sdi-u,SDI.U>>
+* <<insndesc-store-immediate-offset-shi,SHI>>
+* <<insndesc-store-immediate-offset-shi-u,SHI.U>>
+* <<insndesc-store-immediate-offset-swi,SWI>>
+* <<insndesc-store-immediate-offset-swi-u,SWI.U>>
+
+===== STA/BASE_REG
+
+* <<insndesc-store-register-offset-sb,SB>>
+* <<insndesc-store-register-offset-sd,SD>>
+* <<insndesc-store-register-offset-sd-u,SD.U>>
+* <<insndesc-store-register-offset-sh,SH>>
+* <<insndesc-store-register-offset-sh-u,SH.U>>
+* <<insndesc-store-register-offset-sw,SW>>
+* <<insndesc-store-register-offset-sw-u,SW.U>>
+
+===== STA/LONG
+
+* <<insndesc-store-long-offset-hl-sbi,HL.SBI>>
+* <<insndesc-store-long-offset-hl-sdi,HL.SDI>>
+* <<insndesc-store-long-offset-hl-sdi-u,HL.SDI.U>>
+* <<insndesc-store-long-offset-hl-shi,HL.SHI>>
+* <<insndesc-store-long-offset-hl-shi-u,HL.SHI.U>>
+* <<insndesc-store-long-offset-hl-swi,HL.SWI>>
+* <<insndesc-store-long-offset-hl-swi-u,HL.SWI.U>>
+
+===== STA/PAIR
+
+* <<insndesc-store-pair-hl-sbip,HL.SBIP>>
+* <<insndesc-store-pair-hl-sbp,HL.SBP>>
+* <<insndesc-store-pair-hl-sdip,HL.SDIP>>
+* <<insndesc-store-pair-hl-sdip-u,HL.SDIP.U>>
+* <<insndesc-store-pair-hl-sdp,HL.SDP>>
+* <<insndesc-store-pair-hl-sdp-u,HL.SDP.U>>
+* <<insndesc-store-pair-hl-ship,HL.SHIP>>
+* <<insndesc-store-pair-hl-ship-u,HL.SHIP.U>>
+* <<insndesc-store-pair-hl-shp,HL.SHP>>
+* <<insndesc-store-pair-hl-shp-u,HL.SHP.U>>
+* <<insndesc-store-pair-hl-swip,HL.SWIP>>
+* <<insndesc-store-pair-hl-swip-u,HL.SWIP.U>>
+* <<insndesc-store-pair-hl-swp,HL.SWP>>
+* <<insndesc-store-pair-hl-swp-u,HL.SWP.U>>
+
+===== STA/PC_REL
+
+* <<insndesc-store-pc-relative-hl-sb-pcr,HL.SB.PCR>>
+* <<insndesc-store-pc-relative-hl-sd-pcr,HL.SD.PCR>>
+* <<insndesc-store-pc-relative-hl-sh-pcr,HL.SH.PCR>>
+* <<insndesc-store-pc-relative-hl-sw-pcr,HL.SW.PCR>>
+
+===== STA/POST_INDEX
+
+* <<insndesc-store-post-index-hl-sb-po,HL.SB.PO>>
+* <<insndesc-store-post-index-hl-sbi-po,HL.SBI.PO>>
+* <<insndesc-store-post-index-hl-sd-po,HL.SD.PO>>
+* <<insndesc-store-post-index-hl-sd-upo,HL.SD.UPO>>
+* <<insndesc-store-post-index-hl-sdi-po,HL.SDI.PO>>
+* <<insndesc-store-post-index-hl-sdi-upo,HL.SDI.UPO>>
+* <<insndesc-store-post-index-hl-sh-po,HL.SH.PO>>
+* <<insndesc-store-post-index-hl-sh-upo,HL.SH.UPO>>
+* <<insndesc-store-post-index-hl-shi-po,HL.SHI.PO>>
+* <<insndesc-store-post-index-hl-shi-upo,HL.SHI.UPO>>
+* <<insndesc-store-post-index-hl-sw-po,HL.SW.PO>>
+* <<insndesc-store-post-index-hl-sw-upo,HL.SW.UPO>>
+* <<insndesc-store-post-index-hl-swi-po,HL.SWI.PO>>
+* <<insndesc-store-post-index-hl-swi-upo,HL.SWI.UPO>>
+
+===== STA/PRE_INDEX
+
+* <<insndesc-store-pre-index-hl-sb-pr,HL.SB.PR>>
+* <<insndesc-store-pre-index-hl-sbi-pr,HL.SBI.PR>>
+* <<insndesc-store-pre-index-hl-sd-pr,HL.SD.PR>>
+* <<insndesc-store-pre-index-hl-sd-upr,HL.SD.UPR>>
+* <<insndesc-store-pre-index-hl-sdi-pr,HL.SDI.PR>>
+* <<insndesc-store-pre-index-hl-sdi-upr,HL.SDI.UPR>>
+* <<insndesc-store-pre-index-hl-sh-pr,HL.SH.PR>>
+* <<insndesc-store-pre-index-hl-sh-upr,HL.SH.UPR>>
+* <<insndesc-store-pre-index-hl-shi-pr,HL.SHI.PR>>
+* <<insndesc-store-pre-index-hl-shi-upr,HL.SHI.UPR>>
+* <<insndesc-store-pre-index-hl-sw-pr,HL.SW.PR>>
+* <<insndesc-store-pre-index-hl-sw-upr,HL.SW.UPR>>
+* <<insndesc-store-pre-index-hl-swi-pr,HL.SWI.PR>>
+* <<insndesc-store-pre-index-hl-swi-upr,HL.SWI.UPR>>
+
+==== ALU
+
+===== ALU
+
+* <<insndesc-arithmetic-operation-64bit-add,ADD>>
+* <<insndesc-arithmetic-operation-64bit-addi,ADDI>>
+* <<insndesc-arithmetic-operation-32bit-addiw,ADDIW>>
+* <<insndesc-arithmetic-operation-32bit-addw,ADDW>>
+* <<insndesc-arithmetic-operation-64bit-and,AND>>
+* <<insndesc-arithmetic-operation-64bit-andi,ANDI>>
+* <<insndesc-arithmetic-operation-32bit-andiw,ANDIW>>
+* <<insndesc-arithmetic-operation-32bit-andw,ANDW>>
+* <<insndesc-bit-operation-bcnt,BCNT>>
+* <<insndesc-bit-operation-bic,BIC>>
+* <<insndesc-bit-operation-bis,BIS>>
+* <<insndesc-bit-operation-bxs,BXS>>
+* <<insndesc-bit-operation-bxu,BXU>>
+* <<insndesc-arithmetic-operation-c-add,C.ADD>>
+* <<insndesc-arithmetic-c-addi,C.ADDI>>
+* <<insndesc-arithmetic-operation-c-and,C.AND>>
+* <<insndesc-move-c-movi,C.MOVI>>
+* <<insndesc-move-c-movr,C.MOVR>>
+* <<insndesc-arithmetic-operation-c-or,C.OR>>
+* <<insndesc-c-unary-c-setc-tgt,C.SETC.TGT>>
+* <<insndesc-move-c-setret,C.SETRET>>
+* <<insndesc-c-unary-c-sext-b,C.SEXT.B>>
+* <<insndesc-c-unary-c-sext-h,C.SEXT.H>>
+* <<insndesc-c-unary-c-sext-w,C.SEXT.W>>
+* <<insndesc-arithmetic-operation-c-sub,C.SUB>>
+* <<insndesc-c-unary-c-zext-b,C.ZEXT.B>>
+* <<insndesc-c-unary-c-zext-h,C.ZEXT.H>>
+* <<insndesc-c-unary-c-zext-w,C.ZEXT.W>>
+* <<insndesc-bit-operation-clz,CLZ>>
+* <<insndesc-compound-operation-csel,CSEL>>
+* <<insndesc-bit-operation-ctz,CTZ>>
+* <<insndesc-arithmetic-operation-64bit-hl-addi,HL.ADDI>>
+* <<insndesc-arithmetic-operation-32bit-hl-addiw,HL.ADDIW>>
+* <<insndesc-arithmetic-operation-64bit-hl-andi,HL.ANDI>>
+* <<insndesc-arithmetic-operation-32bit-hl-andiw,HL.ANDIW>>
+* <<insndesc-reserve-hl-bfi,HL.BFI>>
+* <<insndesc-long-immediate-hl-lis,HL.LIS>>
+* <<insndesc-long-immediate-hl-liu,HL.LIU>>
+* <<insndesc-immediate-hl-lui,HL.LUI>>
+* <<insndesc-reserve-hl-miadd,HL.MIADD>>
+* <<insndesc-reserve-hl-misub,HL.MISUB>>
+* <<insndesc-arithmetic-operation-64bit-hl-ori,HL.ORI>>
+* <<insndesc-arithmetic-operation-32bit-hl-oriw,HL.ORIW>>
+* <<insndesc-arithmetic-operation-64bit-hl-subi,HL.SUBI>>
+* <<insndesc-arithmetic-operation-32bit-hl-subiw,HL.SUBIW>>
+* <<insndesc-arithmetic-operation-64bit-hl-xori,HL.XORI>>
+* <<insndesc-arithmetic-operation-32bit-hl-xoriw,HL.XORIW>>
+* <<insndesc-immediate-lui,LUI>>
+* <<insndesc-max-min-max,MAX>>
+* <<insndesc-max-min-maxu,MAXU>>
+* <<insndesc-max-min-min,MIN>>
+* <<insndesc-max-min-minu,MINU>>
+* <<insndesc-arithmetic-operation-64bit-or,OR>>
+* <<insndesc-arithmetic-operation-64bit-ori,ORI>>
+* <<insndesc-arithmetic-operation-32bit-oriw,ORIW>>
+* <<insndesc-arithmetic-operation-32bit-orw,ORW>>
+* <<insndesc-bit-operation-rev,REV>>
+* <<insndesc-bit-operation-ror,ROR>>
+* <<insndesc-arithmetic-operation-64bit-sll,SLL>>
+* <<insndesc-arithmetic-operation-64bit-slli,SLLI>>
+* <<insndesc-arithmetic-operation-32bit-slliw,SLLIW>>
+* <<insndesc-arithmetic-operation-32bit-sllw,SLLW>>
+* <<insndesc-arithmetic-operation-64bit-sra,SRA>>
+* <<insndesc-arithmetic-operation-64bit-srai,SRAI>>
+* <<insndesc-arithmetic-operation-32bit-sraiw,SRAIW>>
+* <<insndesc-arithmetic-operation-32bit-sraw,SRAW>>
+* <<insndesc-arithmetic-operation-64bit-srl,SRL>>
+* <<insndesc-arithmetic-operation-64bit-srli,SRLI>>
+* <<insndesc-arithmetic-operation-32bit-srliw,SRLIW>>
+* <<insndesc-arithmetic-operation-32bit-srlw,SRLW>>
+* <<insndesc-arithmetic-operation-64bit-sub,SUB>>
+* <<insndesc-arithmetic-operation-64bit-subi,SUBI>>
+* <<insndesc-arithmetic-operation-32bit-subiw,SUBIW>>
+* <<insndesc-arithmetic-operation-32bit-subw,SUBW>>
+* <<insndesc-arithmetic-operation-64bit-xor,XOR>>
+* <<insndesc-arithmetic-operation-64bit-xori,XORI>>
+* <<insndesc-arithmetic-operation-32bit-xoriw,XORIW>>
+* <<insndesc-arithmetic-operation-32bit-xorw,XORW>>
+
+===== ALU_MULTI_CYCLE
+
+* <<insndesc-multi-cycle-alu-div,DIV>>
+* <<insndesc-multi-cycle-alu-divu,DIVU>>
+* <<insndesc-multi-cycle-alu-divuw,DIVUW>>
+* <<insndesc-multi-cycle-alu-divw,DIVW>>
+* <<insndesc-multi-cycle-alu-hl-div,HL.DIV>>
+* <<insndesc-multi-cycle-alu-hl-divu,HL.DIVU>>
+* <<insndesc-multi-cycle-alu-hl-divuw,HL.DIVUW>>
+* <<insndesc-multi-cycle-alu-hl-divw,HL.DIVW>>
+* <<insndesc-multi-cycle-alu-hl-madd,HL.MADD>>
+* <<insndesc-multi-cycle-alu-hl-maddw,HL.MADDW>>
+* <<insndesc-multi-cycle-alu-hl-mul,HL.MUL>>
+* <<insndesc-multi-cycle-alu-hl-mulu,HL.MULU>>
+* <<insndesc-multi-cycle-alu-hl-rem,HL.REM>>
+* <<insndesc-multi-cycle-alu-hl-remu,HL.REMU>>
+* <<insndesc-multi-cycle-alu-hl-remuw,HL.REMUW>>
+* <<insndesc-multi-cycle-alu-hl-remw,HL.REMW>>
+* <<insndesc-multi-cycle-alu-madd,MADD>>
+* <<insndesc-multi-cycle-alu-maddw,MADDW>>
+* <<insndesc-multi-cycle-alu-mul,MUL>>
+* <<insndesc-multi-cycle-alu-mulu,MULU>>
+* <<insndesc-multi-cycle-alu-muluw,MULUW>>
+* <<insndesc-multi-cycle-alu-mulw,MULW>>
+* <<insndesc-multi-cycle-alu-rem,REM>>
+* <<insndesc-multi-cycle-alu-remu,REMU>>
+* <<insndesc-multi-cycle-alu-remuw,REMUW>>
+* <<insndesc-multi-cycle-alu-remw,REMW>>
+
+===== BARREL_CCAT
+
+* <<insndesc-concat-hl-ccat,HL.CCAT>>
+* <<insndesc-concat-hl-ccatw,HL.CCATW>>
+
+===== SHIFT
+
+* <<insndesc-c-tinst-c-slli,C.SLLI>>
+* <<insndesc-c-tinst-c-srli,C.SRLI>>
+
+==== AMO
+
+===== AMO
+
+* <<insndesc-atomic-operation-ld-add,LD.ADD>>
+* <<insndesc-atomic-operation-ld-and,LD.AND>>
+* <<insndesc-atomic-operation-ld-or,LD.OR>>
+* <<insndesc-atomic-operation-ld-smax,LD.SMAX>>
+* <<insndesc-atomic-operation-ld-smin,LD.SMIN>>
+* <<insndesc-atomic-operation-ld-umax,LD.UMAX>>
+* <<insndesc-atomic-operation-ld-umin,LD.UMIN>>
+* <<insndesc-atomic-operation-ld-xor,LD.XOR>>
+* <<insndesc-atomic-operation-lr-b,LR.B>>
+* <<insndesc-atomic-operation-lr-d,LR.D>>
+* <<insndesc-atomic-operation-lr-h,LR.H>>
+* <<insndesc-atomic-operation-lr-w,LR.W>>
+* <<insndesc-atomic-operation-lw-add,LW.ADD>>
+* <<insndesc-atomic-operation-lw-and,LW.AND>>
+* <<insndesc-atomic-operation-lw-or,LW.OR>>
+* <<insndesc-atomic-operation-lw-smax,LW.SMAX>>
+* <<insndesc-atomic-operation-lw-smin,LW.SMIN>>
+* <<insndesc-atomic-operation-lw-umax,LW.UMAX>>
+* <<insndesc-atomic-operation-lw-umin,LW.UMIN>>
+* <<insndesc-atomic-operation-lw-xor,LW.XOR>>
+* <<insndesc-atomic-operation-sc-b,SC.B>>
+* <<insndesc-atomic-operation-sc-d,SC.D>>
+* <<insndesc-atomic-operation-sc-h,SC.H>>
+* <<insndesc-atomic-operation-sc-w,SC.W>>
+* <<insndesc-atomic-operation-sd-add,SD.ADD>>
+* <<insndesc-atomic-operation-sd-and,SD.AND>>
+* <<insndesc-atomic-operation-sd-or,SD.OR>>
+* <<insndesc-atomic-operation-sd-smax,SD.SMAX>>
+* <<insndesc-atomic-operation-sd-smin,SD.SMIN>>
+* <<insndesc-atomic-operation-sd-umax,SD.UMAX>>
+* <<insndesc-atomic-operation-sd-umin,SD.UMIN>>
+* <<insndesc-atomic-operation-sd-xor,SD.XOR>>
+* <<insndesc-atomic-operation-sw-add,SW.ADD>>
+* <<insndesc-atomic-operation-sw-and,SW.AND>>
+* <<insndesc-atomic-operation-sw-or,SW.OR>>
+* <<insndesc-atomic-operation-sw-smax,SW.SMAX>>
+* <<insndesc-atomic-operation-sw-smin,SW.SMIN>>
+* <<insndesc-atomic-operation-sw-umax,SW.UMAX>>
+* <<insndesc-atomic-operation-sw-umin,SW.UMIN>>
+* <<insndesc-atomic-operation-sw-xor,SW.XOR>>
+* <<insndesc-atomic-operation-swapb,SWAPB>>
+* <<insndesc-atomic-operation-swapd,SWAPD>>
+* <<insndesc-atomic-operation-swaph,SWAPH>>
+* <<insndesc-atomic-operation-swapw,SWAPW>>
+
+===== CAS
+
+* <<insndesc-atomic-hl-casb,HL.CASB>>
+* <<insndesc-atomic-hl-casd,HL.CASD>>
+* <<insndesc-atomic-hl-cash,HL.CASH>>
+* <<insndesc-atomic-hl-casw,HL.CASW>>
+
+==== BBD
+
+===== BSTART
+
+* <<insndesc-bstart-bstart-call,BSTART CALL>>
+* <<insndesc-c-bstart-c-bstart-fp,C.BSTART.FP>>
+* <<insndesc-c-bstart-c-bstart-mpar,C.BSTART.MPAR>>
+* <<insndesc-c-bstart-c-bstart-mseq,C.BSTART.MSEQ>>
+* <<insndesc-c-bstart-c-bstart-std,C.BSTART.STD>>
+* <<insndesc-c-bstart-c-bstart-sys,C.BSTART.SYS>>
+* <<insndesc-c-bstart-c-bstart-vpar,C.BSTART.VPAR>>
+* <<insndesc-c-bstart-c-bstart-vseq,C.BSTART.VSEQ>>
+* <<insndesc-bstart-hl-bstart-call,HL.BSTART CALL>>
+* <<insndesc-bstart-hl-bstart-fp,HL.BSTART.FP>>
+* <<insndesc-bstart-hl-bstart-std,HL.BSTART.STD>>
+* <<insndesc-bstart-hl-bstart-sys,HL.BSTART.SYS>>
+
+==== BRU
+
+===== BRU
+
+* <<insndesc-pc-relative-addtpc,ADDTPC>>
+* <<insndesc-branch-b-eq,B.EQ>>
+* <<insndesc-branch-b-ge,B.GE>>
+* <<insndesc-branch-b-geu,B.GEU>>
+* <<insndesc-branch-b-lt,B.LT>>
+* <<insndesc-branch-b-ltu,B.LTU>>
+* <<insndesc-branch-b-ne,B.NE>>
+* <<insndesc-branch-b-nz,B.NZ>>
+* <<insndesc-branch-b-z,B.Z>>
+* <<insndesc-pc-relative-hl-addtpc,HL.ADDTPC>>
+* <<insndesc-pc-relative-hl-setret,HL.SETRET>>
+* <<insndesc-branch-j,J>>
+* <<insndesc-branch-jr,JR>>
+* <<insndesc-pc-relative-setret,SETRET>>
+
+===== CMP
+
+* <<insndesc-c-tinst-c-cmp-eqi,C.CMP.EQI>>
+* <<insndesc-c-tinst-c-cmp-nei,C.CMP.NEI>>
+* <<insndesc-compare-instruction-cmp-and,CMP.AND>>
+* <<insndesc-compare-instruction-cmp-andi,CMP.ANDI>>
+* <<insndesc-compare-instruction-cmp-eq,CMP.EQ>>
+* <<insndesc-compare-instruction-cmp-eqi,CMP.EQI>>
+* <<insndesc-compare-instruction-cmp-ge,CMP.GE>>
+* <<insndesc-compare-instruction-cmp-gei,CMP.GEI>>
+* <<insndesc-compare-instruction-cmp-geu,CMP.GEU>>
+* <<insndesc-compare-instruction-cmp-geui,CMP.GEUI>>
+* <<insndesc-compare-instruction-cmp-lt,CMP.LT>>
+* <<insndesc-compare-instruction-cmp-lti,CMP.LTI>>
+* <<insndesc-compare-instruction-cmp-ltu,CMP.LTU>>
+* <<insndesc-compare-instruction-cmp-ltui,CMP.LTUI>>
+* <<insndesc-compare-instruction-cmp-ne,CMP.NE>>
+* <<insndesc-compare-instruction-cmp-nei,CMP.NEI>>
+* <<insndesc-compare-instruction-cmp-or,CMP.OR>>
+* <<insndesc-compare-instruction-cmp-ori,CMP.ORI>>
+* <<insndesc-compare-instruction-hl-cmp-andi,HL.CMP.ANDI>>
+* <<insndesc-compare-instruction-hl-cmp-eqi,HL.CMP.EQI>>
+* <<insndesc-compare-instruction-hl-cmp-gei,HL.CMP.GEI>>
+* <<insndesc-compare-instruction-hl-cmp-geui,HL.CMP.GEUI>>
+* <<insndesc-compare-instruction-hl-cmp-lti,HL.CMP.LTI>>
+* <<insndesc-compare-instruction-hl-cmp-ltui,HL.CMP.LTUI>>
+* <<insndesc-compare-instruction-hl-cmp-nei,HL.CMP.NEI>>
+* <<insndesc-compare-instruction-hl-cmp-ori,HL.CMP.ORI>>
+
+===== SETC
+
+* <<insndesc-set-commit-argument-c-setc-eq,C.SETC.EQ>>
+* <<insndesc-set-commit-argument-c-setc-ne,C.SETC.NE>>
+* <<insndesc-set-commit-argument-hl-setc-andi,HL.SETC.ANDI>>
+* <<insndesc-set-commit-argument-hl-setc-eqi,HL.SETC.EQI>>
+* <<insndesc-set-commit-argument-hl-setc-gei,HL.SETC.GEI>>
+* <<insndesc-set-commit-argument-hl-setc-geui,HL.SETC.GEUI>>
+* <<insndesc-set-commit-argument-hl-setc-lti,HL.SETC.LTI>>
+* <<insndesc-set-commit-argument-hl-setc-ltui,HL.SETC.LTUI>>
+* <<insndesc-set-commit-argument-hl-setc-nei,HL.SETC.NEI>>
+* <<insndesc-set-commit-argument-hl-setc-ori,HL.SETC.ORI>>
+* <<insndesc-set-commit-argument-setc-and,SETC.AND>>
+* <<insndesc-set-commit-argument-setc-andi,SETC.ANDI>>
+* <<insndesc-set-commit-argument-setc-eq,SETC.EQ>>
+* <<insndesc-set-commit-argument-setc-eqi,SETC.EQI>>
+* <<insndesc-set-commit-argument-setc-ge,SETC.GE>>
+* <<insndesc-set-commit-argument-setc-gei,SETC.GEI>>
+* <<insndesc-set-commit-argument-setc-geu,SETC.GEU>>
+* <<insndesc-set-commit-argument-setc-geui,SETC.GEUI>>
+* <<insndesc-set-commit-argument-setc-lt,SETC.LT>>
+* <<insndesc-set-commit-argument-setc-lti,SETC.LTI>>
+* <<insndesc-set-commit-argument-setc-ltu,SETC.LTU>>
+* <<insndesc-set-commit-argument-setc-ltui,SETC.LTUI>>
+* <<insndesc-set-commit-argument-setc-ne,SETC.NE>>
+* <<insndesc-set-commit-argument-setc-nei,SETC.NEI>>
+* <<insndesc-set-commit-argument-setc-or,SETC.OR>>
+* <<insndesc-set-commit-argument-setc-ori,SETC.ORI>>
+
+==== CMD
+
+===== BLOCK_ARGUMENT
+
+* <<insndesc-block-argument-b-arg,B.ARG>>
+* <<insndesc-block-argument-b-dim,B.DIM>>
+
+===== BLOCK_DIMENSION
+
+* <<insndesc-block-dimension-c-b-dim,C.B.DIM>>
+* <<insndesc-block-dimension-c-b-dimi,C.B.DIMI>>
+
+===== BLOCK_IO
+
+* <<insndesc-block-input-output-b-iod,B.IOD>>
+* <<insndesc-block-input-output-b-ior,B.IOR>>
+* <<insndesc-block-input-output-b-iot,B.IOT>>
+* <<insndesc-block-input-output-b-ioti,B.IOTI>>
+
+===== BLOCK_SPLIT
+
+* <<insndesc-block-split-bstart,BSTART>>
+* <<insndesc-block-split-bstart-acccvt,BSTART.ACCCVT>>
+* <<insndesc-block-split-bstart-cube,BSTART.CUBE>>
+* <<insndesc-block-split-bstart-fixp,BSTART.FIXP>>
+* <<insndesc-block-split-bstart-fp,BSTART.FP>>
+* <<insndesc-block-split-bstart-mpar,BSTART.MPAR>>
+* <<insndesc-block-split-bstart-mseq,BSTART.MSEQ>>
+* <<insndesc-block-split-bstart-std,BSTART.STD>>
+* <<insndesc-block-split-bstart-sys,BSTART.SYS>>
+* <<insndesc-block-split-bstart-tepl,BSTART.TEPL>>
+* <<insndesc-block-split-bstart-tload,BSTART.TLOAD>>
+* <<insndesc-block-split-bstart-tma,BSTART.TMA>>
+* <<insndesc-block-split-bstart-tmatmul,BSTART.TMATMUL>>
+* <<insndesc-block-split-bstart-tmatmul-acc,BSTART.TMATMUL.ACC>>
+* <<insndesc-block-split-bstart-tmov,BSTART.TMOV>>
+* <<insndesc-block-split-bstart-tstore,BSTART.TSTORE>>
+* <<insndesc-block-split-bstart-vpar,BSTART.VPAR>>
+* <<insndesc-block-split-bstart-vseq,BSTART.VSEQ>>
+* <<insndesc-block-split-bstop,BSTOP>>
+* <<insndesc-block-split-c-bstart,C.BSTART>>
+* <<insndesc-block-split-c-bstop,C.BSTOP>>
+* <<insndesc-block-split-ercov,ERCOV>>
+* <<insndesc-block-split-esave,ESAVE>>
+* <<insndesc-block-split-fentry,FENTRY>>
+* <<insndesc-block-split-fexit,FEXIT>>
+* <<insndesc-block-split-fret-ra,FRET.RA>>
+* <<insndesc-block-split-fret-stk,FRET.STK>>
+* <<insndesc-block-split-mcopy,MCOPY>>
+* <<insndesc-block-split-mset,MSET>>
+* <<insndesc-block-split-xb,XB>>
+
+===== DESC_B_ATTR
+
+* <<insndesc-block-attribute-b-attr,B.ATTR>>
+
+===== DESC_B_HINT
+
+* <<insndesc-block-hint-b-hint,B.HINT>>
+
+===== DESC_B_TEXT
+
+* <<insndesc-block-offset-b-text,B.TEXT>>
+
+===== Q_MANAGE
+
+* <<insndesc-general-hl-qmt,HL.QMT>>
+
+===== Q_POP
+
+* <<insndesc-general-hl-qpop,HL.QPOP>>
+
+===== Q_PUSH
+
+* <<insndesc-general-hl-qpush,HL.QPUSH>>
+
+===== VEC_ENGINE_CMD engine=VEC
+
+* <<insndesc-general-manager-v-qpop,V.QPOP>>
+* <<insndesc-general-manager-v-qpush,V.QPUSH>>
+
+==== FSU
+
+===== DEFAULT
+
+* <<insndesc-floating-point-arithmetic-fabs,FABS>>
+* <<insndesc-floating-point-arithmetic-fadd,FADD>>
+* <<insndesc-format-convert-fcvt,FCVT>>
+* <<insndesc-format-convert-fcvta,FCVTA>>
+* <<insndesc-format-convert-fcvtm,FCVTM>>
+* <<insndesc-format-convert-fcvtn,FCVTN>>
+* <<insndesc-format-convert-fcvtp,FCVTP>>
+* <<insndesc-format-convert-fcvtz,FCVTZ>>
+* <<insndesc-floating-point-arithmetic-fdiv,FDIV>>
+* <<insndesc-floating-point-compare-feq,FEQ>>
+* <<insndesc-floating-point-compare-feqs,FEQS>>
+* <<insndesc-floating-point-arithmetic-fexp,FEXP>>
+* <<insndesc-floating-point-compare-fge,FGE>>
+* <<insndesc-floating-point-compare-fges,FGES>>
+* <<insndesc-floating-point-compare-flt,FLT>>
+* <<insndesc-floating-point-compare-flts,FLTS>>
+* <<insndesc-floating-point-arithmetic-fmadd,FMADD>>
+* <<insndesc-max-min-fmax,FMAX>>
+* <<insndesc-max-min-fmin,FMIN>>
+* <<insndesc-floating-point-arithmetic-fmsub,FMSUB>>
+* <<insndesc-floating-point-arithmetic-fmul,FMUL>>
+* <<insndesc-floating-point-compare-fne,FNE>>
+* <<insndesc-floating-point-compare-fnes,FNES>>
+* <<insndesc-floating-point-arithmetic-fnmadd,FNMADD>>
+* <<insndesc-floating-point-arithmetic-fnmsub,FNMSUB>>
+* <<insndesc-floating-point-arithmetic-frecip,FRECIP>>
+* <<insndesc-floating-point-arithmetic-fsqrt,FSQRT>>
+* <<insndesc-floating-point-arithmetic-fsub,FSUB>>
+* <<insndesc-format-convert-scvtf,SCVTF>>
+* <<insndesc-format-convert-ucvtf,UCVTF>>
+
+==== SYS
+
+===== CACHE_MAINT
+
+* <<insndesc-cache-maintain-bc-iall,BC.IALL>>
+* <<insndesc-cache-maintain-bc-iva,BC.IVA>>
+* <<insndesc-cache-maintain-dc-cisw,DC.CISW>>
+* <<insndesc-cache-maintain-dc-civa,DC.CIVA>>
+* <<insndesc-cache-maintain-dc-csw,DC.CSW>>
+* <<insndesc-cache-maintain-dc-cva,DC.CVA>>
+* <<insndesc-cache-maintain-dc-iall,DC.IALL>>
+* <<insndesc-cache-maintain-dc-isw,DC.ISW>>
+* <<insndesc-cache-maintain-dc-iva,DC.IVA>>
+* <<insndesc-cache-maintain-dc-zva,DC.ZVA>>
+* <<insndesc-cache-maintain-ic-iall,IC.IALL>>
+* <<insndesc-cache-maintain-ic-iva,IC.IVA>>
+* <<insndesc-cache-maintain-tlb-ia,TLB.IA>>
+* <<insndesc-cache-maintain-tlb-iall,TLB.IALL>>
+* <<insndesc-cache-maintain-tlb-iav,TLB.IAV>>
+* <<insndesc-cache-maintain-tlb-iv,TLB.IV>>
+
+===== SSR
+
+* <<insndesc-c-tinst-c-ssrget,C.SSRGET>>
+* <<insndesc-ssr-access-hl-ssrget,HL.SSRGET>>
+* <<insndesc-ssr-access-hl-ssrset,HL.SSRSET>>
+* <<insndesc-ssr-access-lsrget,LSRGET>>
+* <<insndesc-ssr-access-setc-tgt,SETC.TGT>>
+* <<insndesc-ssr-access-ssrget,SSRGET>>
+* <<insndesc-ssr-access-ssrset,SSRSET>>
+* <<insndesc-ssr-access-ssrswap,SSRSWAP>>
+
+===== SYS
+
+* <<insndesc-execution-control-acrc,ACRC>>
+* <<insndesc-execution-control-acre,ACRE>>
+* <<insndesc-execution-control-assert,ASSERT>>
+* <<insndesc-execution-control-bse,BSE>>
+* <<insndesc-execution-control-bwe,BWE>>
+* <<insndesc-execution-control-bwi,BWI>>
+* <<insndesc-execution-control-bwt,BWT>>
+* <<insndesc-execution-control-ebreak,EBREAK>>
+* <<insndesc-execution-control-fence-d,FENCE.D>>
+* <<insndesc-execution-control-fence-i,FENCE.I>>
+
+===== TRAP
+
+* <<insndesc-c-tinst-c-ebreak,C.EBREAK>>
+
+==== VEC
+
+===== AGU
+
+* <<insndesc-load-register-offset-v-lb,V.LB>>
+* <<insndesc-load-register-offset-v-lb-brg,V.LB.BRG>>
+* <<insndesc-load-immediate-offset-v-lbi,V.LBI>>
+* <<insndesc-load-immediate-offset-v-lbi-brg,V.LBI.BRG>>
+* <<insndesc-load-register-offset-v-lbu,V.LBU>>
+* <<insndesc-load-register-offset-v-lbu-brg,V.LBU.BRG>>
+* <<insndesc-load-immediate-offset-v-lbui,V.LBUI>>
+* <<insndesc-load-immediate-offset-v-lbui-brg,V.LBUI.BRG>>
+* <<insndesc-load-register-offset-v-ld,V.LD>>
+* <<insndesc-load-register-offset-v-ld-brg,V.LD.BRG>>
+* <<insndesc-load-immediate-offset-v-ldi,V.LDI>>
+* <<insndesc-load-immediate-offset-v-ldi-brg,V.LDI.BRG>>
+* <<insndesc-load-unscaled-v-ldi-u,V.LDI.U>>
+* <<insndesc-load-unscaled-v-ldi-u-brg,V.LDI.U.BRG>>
+* <<insndesc-load-register-offset-v-lh,V.LH>>
+* <<insndesc-load-register-offset-v-lh-brg,V.LH.BRG>>
+* <<insndesc-load-immediate-offset-v-lhi,V.LHI>>
+* <<insndesc-load-immediate-offset-v-lhi-brg,V.LHI.BRG>>
+* <<insndesc-load-unscaled-v-lhi-u,V.LHI.U>>
+* <<insndesc-load-unscaled-v-lhi-u-brg,V.LHI.U.BRG>>
+* <<insndesc-load-register-offset-v-lhu,V.LHU>>
+* <<insndesc-load-register-offset-v-lhu-brg,V.LHU.BRG>>
+* <<insndesc-load-immediate-offset-v-lhui,V.LHUI>>
+* <<insndesc-load-immediate-offset-v-lhui-brg,V.LHUI.BRG>>
+* <<insndesc-load-unscaled-v-lhui-u,V.LHUI.U>>
+* <<insndesc-load-unscaled-v-lhui-u-brg,V.LHUI.U.BRG>>
+* <<insndesc-load-register-offset-v-lw,V.LW>>
+* <<insndesc-load-register-offset-v-lw-brg,V.LW.BRG>>
+* <<insndesc-load-immediate-offset-v-lwi,V.LWI>>
+* <<insndesc-load-immediate-offset-v-lwi-brg,V.LWI.BRG>>
+* <<insndesc-load-unscaled-v-lwi-u,V.LWI.U>>
+* <<insndesc-load-unscaled-v-lwi-u-brg,V.LWI.U.BRG>>
+* <<insndesc-load-register-offset-v-lwu,V.LWU>>
+* <<insndesc-load-register-offset-v-lwu-brg,V.LWU.BRG>>
+* <<insndesc-load-immediate-offset-v-lwui,V.LWUI>>
+* <<insndesc-load-immediate-offset-v-lwui-brg,V.LWUI.BRG>>
+* <<insndesc-load-unscaled-v-lwui-u,V.LWUI.U>>
+* <<insndesc-load-unscaled-v-lwui-u-brg,V.LWUI.U.BRG>>
+* <<insndesc-store-register-offset-v-sb,V.SB>>
+* <<insndesc-store-register-offset-v-sb-brg,V.SB.BRG>>
+* <<insndesc-store-offset-v-sbi,V.SBI>>
+* <<insndesc-store-offset-v-sbi-brg,V.SBI.BRG>>
+* <<insndesc-store-register-offset-v-sd,V.SD>>
+* <<insndesc-store-register-offset-v-sd-brg,V.SD.BRG>>
+* <<insndesc-store-register-offset-v-sd-u,V.SD.U>>
+* <<insndesc-store-register-offset-v-sd-u-brg,V.SD.U.BRG>>
+* <<insndesc-store-offset-v-sdi,V.SDI>>
+* <<insndesc-store-offset-v-sdi-brg,V.SDI.BRG>>
+* <<insndesc-store-offset-v-sdi-u,V.SDI.U>>
+* <<insndesc-store-offset-v-sdi-u-brg,V.SDI.U.BRG>>
+* <<insndesc-store-register-offset-v-sh,V.SH>>
+* <<insndesc-store-register-offset-v-sh-brg,V.SH.BRG>>
+* <<insndesc-store-register-offset-v-sh-u,V.SH.U>>
+* <<insndesc-store-register-offset-v-sh-u-brg,V.SH.U.BRG>>
+* <<insndesc-store-offset-v-shi,V.SHI>>
+* <<insndesc-store-offset-v-shi-brg,V.SHI.BRG>>
+* <<insndesc-store-offset-v-shi-u,V.SHI.U>>
+* <<insndesc-store-offset-v-shi-u-brg,V.SHI.U.BRG>>
+* <<insndesc-store-register-offset-v-sw,V.SW>>
+* <<insndesc-store-register-offset-v-sw-brg,V.SW.BRG>>
+* <<insndesc-store-register-offset-v-sw-u,V.SW.U>>
+* <<insndesc-store-register-offset-v-sw-u-brg,V.SW.U.BRG>>
+* <<insndesc-store-offset-v-swi,V.SWI>>
+* <<insndesc-store-offset-v-swi-brg,V.SWI.BRG>>
+* <<insndesc-store-offset-v-swi-u,V.SWI.U>>
+* <<insndesc-store-offset-v-swi-u-brg,V.SWI.U.BRG>>
+
+===== ALU
+
+* <<insndesc-arithmetic-operation-v-add,V.ADD>>
+* <<insndesc-arithmetic-operation-v-addi,V.ADDI>>
+* <<insndesc-arithmetic-operation-v-and,V.AND>>
+* <<insndesc-arithmetic-operation-v-andi,V.ANDI>>
+* <<insndesc-bit-manipulation-v-bcnt,V.BCNT>>
+* <<insndesc-bit-manipulation-v-bic,V.BIC>>
+* <<insndesc-bit-manipulation-v-bis,V.BIS>>
+* <<insndesc-bit-manipulation-v-bxs,V.BXS>>
+* <<insndesc-bit-manipulation-v-bxu,V.BXU>>
+* <<insndesc-bit-manipulation-v-clz,V.CLZ>>
+* <<insndesc-bit-manipulation-v-ctz,V.CTZ>>
+* <<insndesc-multi-cycle-alu-v-madd,V.MADD>>
+* <<insndesc-multi-cycle-alu-v-mul,V.MUL>>
+* <<insndesc-arithmetic-operation-v-or,V.OR>>
+* <<insndesc-arithmetic-operation-v-ori,V.ORI>>
+* <<insndesc-bit-manipulation-v-rev,V.REV>>
+* <<insndesc-arithmetic-operation-v-sll,V.SLL>>
+* <<insndesc-arithmetic-operation-v-slli,V.SLLI>>
+* <<insndesc-arithmetic-operation-v-sra,V.SRA>>
+* <<insndesc-arithmetic-operation-v-srai,V.SRAI>>
+* <<insndesc-arithmetic-operation-v-srl,V.SRL>>
+* <<insndesc-arithmetic-operation-v-srli,V.SRLI>>
+* <<insndesc-arithmetic-operation-v-sub,V.SUB>>
+* <<insndesc-arithmetic-operation-v-subi,V.SUBI>>
+* <<insndesc-arithmetic-operation-v-xor,V.XOR>>
+* <<insndesc-arithmetic-operation-v-xori,V.XORI>>
+
+===== AMO
+
+* <<insndesc-atomic-operation-v-ld-add,V.LD.ADD>>
+* <<insndesc-atomic-operation-v-ld-and,V.LD.AND>>
+* <<insndesc-atomic-operation-v-ld-max,V.LD.MAX>>
+* <<insndesc-atomic-operation-v-ld-min,V.LD.MIN>>
+* <<insndesc-atomic-operation-v-ld-or,V.LD.OR>>
+* <<insndesc-atomic-operation-v-ld-xor,V.LD.XOR>>
+* <<insndesc-atomic-operation-v-lw-add,V.LW.ADD>>
+* <<insndesc-atomic-operation-v-lw-and,V.LW.AND>>
+* <<insndesc-atomic-operation-v-lw-max,V.LW.MAX>>
+* <<insndesc-atomic-operation-v-lw-min,V.LW.MIN>>
+* <<insndesc-atomic-operation-v-lw-or,V.LW.OR>>
+* <<insndesc-atomic-operation-v-lw-xor,V.LW.XOR>>
+* <<insndesc-atomic-operation-v-sd-add,V.SD.ADD>>
+* <<insndesc-atomic-operation-v-sd-and,V.SD.AND>>
+* <<insndesc-atomic-operation-v-sd-max,V.SD.MAX>>
+* <<insndesc-atomic-operation-v-sd-min,V.SD.MIN>>
+* <<insndesc-atomic-operation-v-sd-or,V.SD.OR>>
+* <<insndesc-atomic-operation-v-sd-xor,V.SD.XOR>>
+* <<insndesc-atomic-operation-v-sw-add,V.SW.ADD>>
+* <<insndesc-atomic-operation-v-sw-and,V.SW.AND>>
+* <<insndesc-atomic-operation-v-sw-max,V.SW.MAX>>
+* <<insndesc-atomic-operation-v-sw-min,V.SW.MIN>>
+* <<insndesc-atomic-operation-v-sw-or,V.SW.OR>>
+* <<insndesc-atomic-operation-v-sw-xor,V.SW.XOR>>
+
+===== BRU
+
+* <<insndesc-compare-instruction-v-cmp-and,V.CMP.AND>>
+* <<insndesc-compare-instruction-v-cmp-andi,V.CMP.ANDI>>
+* <<insndesc-compare-instruction-v-cmp-eq,V.CMP.EQ>>
+* <<insndesc-compare-instruction-v-cmp-eqi,V.CMP.EQI>>
+* <<insndesc-compare-instruction-v-cmp-ge,V.CMP.GE>>
+* <<insndesc-compare-instruction-v-cmp-gei,V.CMP.GEI>>
+* <<insndesc-compare-instruction-v-cmp-geu,V.CMP.GEU>>
+* <<insndesc-compare-instruction-v-cmp-geui,V.CMP.GEUI>>
+* <<insndesc-compare-instruction-v-cmp-lt,V.CMP.LT>>
+* <<insndesc-compare-instruction-v-cmp-lti,V.CMP.LTI>>
+* <<insndesc-compare-instruction-v-cmp-ltu,V.CMP.LTU>>
+* <<insndesc-compare-instruction-v-cmp-ltui,V.CMP.LTUI>>
+* <<insndesc-compare-instruction-v-cmp-ne,V.CMP.NE>>
+* <<insndesc-compare-instruction-v-cmp-nei,V.CMP.NEI>>
+* <<insndesc-compare-instruction-v-cmp-or,V.CMP.OR>>
+* <<insndesc-compare-instruction-v-cmp-ori,V.CMP.ORI>>
+
+===== FSU
+
+* <<insndesc-three-source-floating-point-v-fadd,V.FADD>>
+* <<insndesc-format-convert-v-fcvt,V.FCVT>>
+* <<insndesc-format-convert-v-fcvti,V.FCVTI>>
+* <<insndesc-three-source-floating-point-v-fdiv,V.FDIV>>
+* <<insndesc-two-source-floating-point-v-feq,V.FEQ>>
+* <<insndesc-two-source-floating-point-v-feqs,V.FEQS>>
+* <<insndesc-two-source-floating-point-v-fge,V.FGE>>
+* <<insndesc-two-source-floating-point-v-fges,V.FGES>>
+* <<insndesc-two-source-floating-point-v-flt,V.FLT>>
+* <<insndesc-two-source-floating-point-v-flts,V.FLTS>>
+* <<insndesc-three-source-floating-point-v-fmadd,V.FMADD>>
+* <<insndesc-two-source-floating-point-v-fmax,V.FMAX>>
+* <<insndesc-two-source-floating-point-v-fmin,V.FMIN>>
+* <<insndesc-three-source-floating-point-v-fmsub,V.FMSUB>>
+* <<insndesc-three-source-floating-point-v-fmul,V.FMUL>>
+* <<insndesc-two-source-floating-point-v-fne,V.FNE>>
+* <<insndesc-two-source-floating-point-v-fnes,V.FNES>>
+* <<insndesc-three-source-floating-point-v-fnmadd,V.FNMADD>>
+* <<insndesc-three-source-floating-point-v-fnmsub,V.FNMSUB>>
+* <<insndesc-three-source-floating-point-v-fsub,V.FSUB>>
+* <<insndesc-format-convert-v-icvt,V.ICVT>>
+* <<insndesc-format-convert-v-icvtf,V.ICVTF>>
+* <<insndesc-two-source-floating-point-v-max,V.MAX>>
+* <<insndesc-two-source-floating-point-v-min,V.MIN>>
+
+===== VEC
+
+* <<insndesc-three-source-integer-v-csel,V.CSEL>>
+* <<insndesc-division-v-div,V.DIV>>
+* <<insndesc-floating-point-arithmetic-2-v-fabs,V.FABS>>
+* <<insndesc-floating-point-arithmetic-2-v-fclass,V.FCLASS>>
+* <<insndesc-floating-point-arithmetic-2-v-fexp,V.FEXP>>
+* <<insndesc-floating-point-arithmetic-2-v-frecip,V.FRECIP>>
+* <<insndesc-floating-point-arithmetic-2-v-fsqrt,V.FSQRT>>
+* <<insndesc-three-source-integer-v-psel,V.PSEL>>
+* <<insndesc-reduce-operation-with-register-v-rdadd,V.RDADD>>
+* <<insndesc-reduce-operation-with-register-v-rdand,V.RDAND>>
+* <<insndesc-reduce-operation-with-register-v-rdfadd,V.RDFADD>>
+* <<insndesc-reduce-operation-with-register-v-rdfmax,V.RDFMAX>>
+* <<insndesc-reduce-operation-with-register-v-rdfmin,V.RDFMIN>>
+* <<insndesc-reduce-operation-with-register-v-rdmax,V.RDMAX>>
+* <<insndesc-reduce-operation-with-register-v-rdmin,V.RDMIN>>
+* <<insndesc-reduce-operation-with-register-v-rdor,V.RDOR>>
+* <<insndesc-reduce-operation-with-register-v-rdxor,V.RDXOR>>
+* <<insndesc-division-v-rem,V.REM>>
+* <<insndesc-shuffle-v-shfl-bfly,V.SHFL.BFLY>>
+* <<insndesc-shuffle-v-shfl-down,V.SHFL.DOWN>>
+* <<insndesc-shuffle-v-shfl-idx,V.SHFL.IDX>>
+* <<insndesc-shuffle-v-shfl-up,V.SHFL.UP>>
+* <<insndesc-shuffle-v-shfli-bfly,V.SHFLI.BFLY>>
+* <<insndesc-shuffle-v-shfli-down,V.SHFLI.DOWN>>
+* <<insndesc-shuffle-v-shfli-idx,V.SHFLI.IDX>>
+* <<insndesc-shuffle-v-shfli-up,V.SHFLI.UP>>
