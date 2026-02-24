@@ -1,6 +1,6 @@
 {
   "checked_at_utc": "2026-02-23 11:21:50Z",
-  "checklists_root": "/Users/zhoubot/linx-isa/docs/bringup/agent_runs/checklists",
+  "checklists_root": "${LINXISA_ROOT}/docs/bringup/agent_runs/checklists",
   "errors": [
     {
       "code": "E_REPORT_RUN_NOT_FOUND",
@@ -10,10 +10,10 @@
     }
   ],
   "lane": "pin",
-  "manifest": "/Users/zhoubot/linx-isa/docs/bringup/agent_runs/manifest.yaml",
+  "manifest": "${LINXISA_ROOT}/docs/bringup/agent_runs/manifest.yaml",
   "mode": "runtime",
   "ok": false,
-  "report": "/Users/zhoubot/linx-isa/docs/bringup/gates/latest.json",
+  "report": "${LINXISA_ROOT}/docs/bringup/gates/latest.json",
   "run_id": "2026-02-23-r6-pin-linux-stability-fix",
   "runtime_stats": {},
   "static_stats": {
@@ -24,6 +24,6 @@
     "waivers": 0
   },
   "strict_always": true,
-  "waivers": "/Users/zhoubot/linx-isa/docs/bringup/agent_runs/waivers.yaml",
+  "waivers": "${LINXISA_ROOT}/docs/bringup/agent_runs/waivers.yaml",
   "warnings": []
 }

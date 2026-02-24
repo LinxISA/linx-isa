@@ -30,7 +30,7 @@ Canonical libc sources:
 
 The current musl build fails with:
 ```
-error: failed to compile compiler-rt source: /Users/zhoubot/linx-isa/compiler/llvm/compiler-rt/lib/builtins/adddf3.c
+error: failed to compile compiler-rt source: ${LINXISA_ROOT}/compiler/llvm/compiler-rt/lib/builtins/adddf3.c
 ```
 
 This blocks all musl runtime gates (M1, M2, M3, R1, R2).
