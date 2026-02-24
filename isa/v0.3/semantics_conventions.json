@@ -95,6 +95,10 @@
             "bi": 1,
             "traparg0": "faulting target VA",
             "note": "Vec-engine BRU targets that are outside the vec-body fetchable region (or otherwise not fetchable) are treated as body-fetch faults (not CFI)."
+          },
+          "body_range": {
+            "policy": "implicit",
+            "note": "No explicit architectural [BodyTPC, BodyEnd) range is defined for vec bodies in strict v0.3; fetchability is operational (if fetch fails => EC_BFETCH)."
           }
         },
         "predicate_register": {
