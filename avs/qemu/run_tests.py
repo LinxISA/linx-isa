@@ -5,8 +5,10 @@ from __future__ import annotations
 import argparse
 import os
 import re
+import select
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 
@@ -167,6 +169,135 @@ def _tail(data: bytes, max_bytes: int = 4000) -> bytes:
     return data[-max_bytes:]
 
 
+def _run_qemu_with_heartbeat(
+    cmd: list[str],
+    *,
+    verbose: bool,
+    timeout: float,
+    heartbeat_sec: float,
+    no_progress_timeout: float,
+) -> tuple[subprocess.CompletedProcess[bytes], bool, bool]:
+    if verbose:
+        print("+", " ".join(cmd), file=sys.stderr)
+
+    proc = subprocess.Popen(
+        cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+
+    stdout_chunks: list[bytes] = []
+    stderr_chunks: list[bytes] = []
+    stdout_bytes = 0
+    stderr_bytes = 0
+
+    start = time.monotonic()
+    last_activity = start
+    next_heartbeat = start + heartbeat_sec if heartbeat_sec > 0 else float("inf")
+
+    fd_kind: dict[int, str] = {}
+    if proc.stdout is not None:
+        fd_kind[proc.stdout.fileno()] = "stdout"
+    if proc.stderr is not None:
+        fd_kind[proc.stderr.fileno()] = "stderr"
+
+    timed_out = False
+    stalled = False
+
+    while fd_kind:
+        now = time.monotonic()
+        elapsed = now - start
+        if elapsed >= timeout:
+            timed_out = True
+            break
+
+        idle = now - last_activity
+        if no_progress_timeout > 0 and idle >= no_progress_timeout:
+            stalled = True
+            break
+
+        wait_for = min(0.5, timeout - elapsed)
+        if heartbeat_sec > 0:
+            wait_for = min(wait_for, max(0.0, next_heartbeat - now))
+        if no_progress_timeout > 0:
+            wait_for = min(wait_for, max(0.0, no_progress_timeout - idle))
+
+        readable, _, _ = select.select(list(fd_kind.keys()), [], [], wait_for)
+        if readable:
+            for fd in readable:
+                kind = fd_kind.get(fd)
+                if kind is None:
+                    continue
+                try:
+                    chunk = os.read(fd, 4096)
+                except OSError:
+                    chunk = b""
+                if not chunk:
+                    fd_kind.pop(fd, None)
+                    continue
+
+                if kind == "stdout":
+                    stdout_chunks.append(chunk)
+                    stdout_bytes += len(chunk)
+                    if verbose:
+                        sys.stdout.buffer.write(chunk)
+                        sys.stdout.buffer.flush()
+                else:
+                    stderr_chunks.append(chunk)
+                    stderr_bytes += len(chunk)
+                    if verbose:
+                        sys.stderr.buffer.write(chunk)
+                        sys.stderr.buffer.flush()
+                last_activity = time.monotonic()
+
+        now = time.monotonic()
+        if heartbeat_sec > 0 and now >= next_heartbeat:
+            hb_elapsed = now - start
+            hb_idle = now - last_activity
+            sys.stderr.write(
+                "LINX_QEMU_HEARTBEAT "
+                f"elapsed={hb_elapsed:.1f}s "
+                f"idle={hb_idle:.1f}s "
+                f"stdout_bytes={stdout_bytes} "
+                f"stderr_bytes={stderr_bytes}\n"
+            )
+            while next_heartbeat <= now:
+                next_heartbeat += heartbeat_sec
+
+        if proc.poll() is not None and not fd_kind:
+            break
+
+    if timed_out or stalled:
+        proc.kill()
+
+    extra_out = b""
+    extra_err = b""
+    try:
+        extra_out, extra_err = proc.communicate(timeout=1.0)
+    except subprocess.TimeoutExpired:
+        proc.kill()
+        extra_out, extra_err = proc.communicate()
+
+    if extra_out:
+        stdout_chunks.append(extra_out)
+        if verbose:
+            sys.stdout.buffer.write(extra_out)
+            sys.stdout.buffer.flush()
+    if extra_err:
+        stderr_chunks.append(extra_err)
+        if verbose:
+            sys.stderr.buffer.write(extra_err)
+            sys.stderr.buffer.flush()
+
+    completed = subprocess.CompletedProcess(
+        cmd,
+        proc.returncode if proc.returncode is not None else -1,
+        b"".join(stdout_chunks),
+        b"".join(stderr_chunks),
+    )
+    return completed, timed_out, stalled
+
+
 def _suite_selection(args: argparse.Namespace) -> list[str]:
     if args.all:
         return [s for s in SUITES.keys() if s not in EXPERIMENTAL_SUITES]
@@ -206,6 +337,18 @@ def main(argv: list[str]) -> int:
     )
     parser.add_argument("--out-dir", default=str(SCRIPT_DIR / "out"), help="Output directory")
     parser.add_argument("--timeout", type=float, default=5.0, help="QEMU timeout in seconds")
+    parser.add_argument(
+        "--heartbeat-sec",
+        type=float,
+        default=float(os.environ.get("LINX_QEMU_HEARTBEAT_SEC", "10")),
+        help="Emit heartbeat while waiting for QEMU output (0 to disable).",
+    )
+    parser.add_argument(
+        "--no-progress-timeout",
+        type=float,
+        default=float(os.environ.get("LINX_QEMU_NO_PROGRESS_TIMEOUT", "0")),
+        help="Fail if no QEMU stdout/stderr output is seen for this many seconds (0 to disable).",
+    )
     parser.add_argument("--compile-only", action="store_true", help="Only compile/link; do not run QEMU")
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
     parser.add_argument("--list-suites", action="store_true", help="List available suites and exit")
@@ -225,6 +368,13 @@ def main(argv: list[str]) -> int:
         help="Require UART evidence of test_start for this uint32 test id (hex/dec)",
     )
     args = parser.parse_args(argv)
+
+    if args.timeout <= 0:
+        raise SystemExit("error: --timeout must be > 0")
+    if args.heartbeat_sec < 0:
+        raise SystemExit("error: --heartbeat-sec must be >= 0")
+    if args.no_progress_timeout < 0:
+        raise SystemExit("error: --no-progress-timeout must be >= 0")
 
     if args.list_suites:
         for name, meta in SUITES.items():
@@ -393,17 +543,17 @@ def main(argv: list[str]) -> int:
         *args.qemu_arg,
     ]
 
-    try:
-        p = _run(
-            qemu_cmd,
-            verbose=args.verbose,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            timeout=args.timeout,
-        )
-    except subprocess.TimeoutExpired as e:
-        stdout = e.stdout or b""
-        stderr = e.stderr or b""
+    p, timed_out, stalled = _run_qemu_with_heartbeat(
+        qemu_cmd,
+        verbose=args.verbose,
+        timeout=args.timeout,
+        heartbeat_sec=args.heartbeat_sec,
+        no_progress_timeout=args.no_progress_timeout,
+    )
+
+    if timed_out:
+        stdout = p.stdout or b""
+        stderr = p.stderr or b""
         sys.stderr.write(f"error: QEMU timeout after {args.timeout:.1f}s\n")
         if stdout:
             sys.stderr.write("---- guest stdout (tail) ----\n")
@@ -415,11 +565,20 @@ def main(argv: list[str]) -> int:
             sys.stderr.write("\n")
         return 124
 
-    if args.verbose or p.returncode != 0:
+    if stalled:
+        sys.stderr.write(
+            f"error: QEMU produced no output for {args.no_progress_timeout:.1f}s "
+            "(no-progress timeout)\n"
+        )
         if p.stdout:
-            sys.stdout.buffer.write(p.stdout)
+            sys.stderr.write("---- guest stdout (tail) ----\n")
+            sys.stderr.buffer.write(_tail(p.stdout))
+            sys.stderr.write("\n")
         if p.stderr:
-            sys.stderr.buffer.write(p.stderr)
+            sys.stderr.write("---- qemu stderr (tail) ----\n")
+            sys.stderr.buffer.write(_tail(p.stderr))
+            sys.stderr.write("\n")
+        return 125
 
     if p.returncode == 0:
         if b"REGRESSION PASSED" not in p.stdout:

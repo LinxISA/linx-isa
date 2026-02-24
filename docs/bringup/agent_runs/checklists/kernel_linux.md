@@ -3,12 +3,12 @@
 - [x] ID: LINUX-001 Boot initramfs smoke on Linx QEMU.
   Command: `python3 kernel/linux/tools/linxisa/initramfs/smoke.py`
   Done means: smoke boot reaches expected userspace marker without trap loop.
-  Status: ✅ PASS (2026-02-23) - timer-on smoke passes in run `2026-02-23-r4-checklist-push` (log: `docs/bringup/gates/logs/2026-02-23-r4-checklist-push/pin/kernel_smoke_final2.log`). Diagnostics split remains: `ctx_ri_step_trap_smoke.py` passes, `ctx_tq_irq_smoke.py` still fails (logs: `kernel_ctx_ri_step_trap_smoke_final.log`, `kernel_ctx_tq_irq_smoke_final.log`).
+  Status: ✅ PASS (2026-02-23) - timer-on smoke is stable after kernel trap-return fix: `smoke.py` loop recheck is `8/8` pass (summary: `docs/bringup/gates/logs/2026-02-23-r6-pin-linux-stability-fix/pin/kernel_stability_summary.txt`, per-loop logs: `docs/bringup/gates/logs/2026-02-23-r6-pin-linux-stability-fix/pin/smoke_loop_1.log` ... `smoke_loop_8.log`). Diagnostic smokes also pass in the same run (`kernel_ctx_tq_irq_smoke.log`, `kernel_ctx_ri_step_trap_smoke.log`).
 
 - [x] ID: LINUX-002 Boot full initramfs scenario on Linx QEMU.
   Command: `python3 kernel/linux/tools/linxisa/initramfs/full_boot.py`
   Done means: full boot reaches expected completion marker.
-  Status: ✅ PASS (2026-02-23) - timer-on full boot passes in run `2026-02-23-r4-checklist-push` (log: `docs/bringup/gates/logs/2026-02-23-r4-checklist-push/pin/kernel_full_boot_final2.log`).
+  Status: ✅ PASS (2026-02-23) - timer-on full boot recheck is `6/6` pass after trap-return fix (summary: `docs/bringup/gates/logs/2026-02-23-r6-pin-linux-stability-fix/pin/kernel_stability_summary.txt`, per-loop logs: `docs/bringup/gates/logs/2026-02-23-r6-pin-linux-stability-fix/pin/full_loop_1.log` ... `full_loop_6.log`).
 
 - [ ] ID: LINUX-003 Keep `linxisa_virt_defconfig` compatible with 9p/virtfs SPEC workflows.
   Done means: kernel config includes required 9p + virtio-mmio options and still boots.
@@ -17,4 +17,4 @@
 - [ ] ID: LINUX-004 Boot BusyBox rootfs from virtio-blk and reach userspace `/sbin/init`.
   Command: `python3 kernel/linux/tools/linxisa/busybox_rootfs/boot.py`
   Done means: BusyBox rootfs boots from `/dev/vda`, shell commands run, and poweroff path works.
-  Status: ⚠️ BLOCKED (2026-02-23) - Python typing compatibility is fixed, but host dependency still blocks closure: `busybox_rootfs/build_rootfs.sh` fails with `mkfs.ext4/mke2fs not found` (log: `docs/bringup/gates/logs/2026-02-23-r3-pin-qemu-llvm-linux-fix/pin/kernel_busybox_rootfs.log`).
+  Status: ❌ FAIL (2026-02-23) - BusyBox rootfs remains unstable in run `2026-02-23-r6-pin-linux-stability-fix`: userspace marker is missing and failure signature includes `_start -> start_kernel()` re-entry / corrupted hartid output before rootfs handoff completes. Same failure reproduces with timer IRQ disabled (`kernel_busybox_rootfs_timeroff.log`), so this is not only timer-on coupling (logs: `docs/bringup/gates/logs/2026-02-23-r6-pin-linux-stability-fix/pin/kernel_busybox_rootfs.log`, `docs/bringup/gates/logs/2026-02-23-r6-pin-linux-stability-fix/pin/kernel_busybox_rootfs_timeroff.log`, `docs/bringup/gates/logs/2026-02-23-r6-pin-linux-stability-fix/pin/reg_strict_cross_repo.log`). Some hosts are also blocked building the rootfs due to missing `mkfs.ext4/mke2fs` (see `docs/bringup/gates/logs/2026-02-23-r3-pin-qemu-llvm-linux-fix/pin/kernel_busybox_rootfs.log`).

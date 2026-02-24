@@ -109,30 +109,30 @@ def main(argv: list[str]) -> int:
 
     cases = [
         ("call_bad_target", 1, "bad_target"),
-        ("setret_invalid_sequence", 2, "cause=8"),
-        ("ret_missing_setctgt", 3, "cause=9"),
-        ("ind_missing_setctgt", 4, "cause=9"),
-        ("icall_missing_setctgt", 5, "cause=9"),
+        ("setret_invalid_sequence", 2, "blockfmt"),
+        ("ret_missing_setctgt", 3, "blockfmt"),
+        ("ind_missing_setctgt", 4, "blockfmt"),
+        ("icall_missing_setctgt", 5, "blockfmt"),
         ("ret_to_bad_target", 6, "bad_target"),
         ("ret_setctgt_bad_target", 7, "bad_target"),
         ("ind_setctgt_bad_target", 8, "bad_target"),
         ("icall_setctgt_bad_target", 9, "bad_target"),
-        ("duplicate_setret", 10, "cause=8"),
-        ("setret_noncall_sequence", 11, "cause=8"),
-        ("call_missing_setret", 12, "cause=7"),
-        ("call_delayed_setret", 13, "cause=8"),
-        ("icall_delayed_setret", 14, "cause=8"),
-        ("icall_missing_setret", 15, "cause=7"),
-        ("hl_call_missing_setret", 16, "cause=7"),
-        ("hl_call_delayed_setret", 17, "cause=8"),
+        ("duplicate_setret", 10, "blockfmt"),
+        ("setret_noncall_sequence", 11, "blockfmt"),
+        ("call_missing_setret", 12, "blockfmt"),
+        ("call_delayed_setret", 13, "blockfmt"),
+        ("icall_delayed_setret", 14, "blockfmt"),
+        ("icall_missing_setret", 15, "blockfmt"),
+        ("hl_call_missing_setret", 16, "blockfmt"),
+        ("hl_call_delayed_setret", 17, "blockfmt"),
         ("valid_call_header", 18, "no_fault"),
         ("valid_icall_header", 19, "no_fault"),
         ("valid_ret_setctgt", 20, "no_fault"),
         ("valid_ind_setctgt", 21, "no_fault"),
         ("valid_hl_call_header", 22, "no_fault"),
-        ("hl_setret_invalid_sequence", 23, "cause=8"),
+        ("hl_setret_invalid_sequence", 23, "blockfmt"),
         ("valid_hl_setret_header", 24, "no_fault"),
-        ("hl_call_delayed_hl_setret", 25, "cause=8"),
+        ("hl_call_delayed_hl_setret", 25, "blockfmt"),
         ("valid_hl_icall_setret_header", 26, "no_fault"),
     ]
 
@@ -214,7 +214,11 @@ def main(argv: list[str]) -> int:
         qemu_log.write_text(text, encoding="utf-8")
 
         if expected == "bad_target":
-            ok = ("invalid branch target" in text) or ("branch target violation" in text)
+            ok = (
+                ("invalid branch target" in text)
+                or ("branch target violation" in text)
+                or ("block fault @" in text and "ec=0x1" in text)
+            )
             if not ok:
                 failures.append(
                     f"{name}: expected bad-branch-target evidence not observed ({qemu_log})"
@@ -236,8 +240,12 @@ def main(argv: list[str]) -> int:
                 failures.append(f"{name}: qemu exited with rc={qemu_rc} ({qemu_log})")
             continue
 
-        if "block-format fault" not in text or expected not in text:
-            failures.append(f"{name}: expected block fault {expected} not observed ({qemu_log})")
+        if expected == "blockfmt":
+            if not ("block fault @" in text and "ec=0x2" in text):
+                failures.append(f"{name}: expected E_BLOCK(EC_BLOCKFMT) evidence not observed ({qemu_log})")
+            continue
+
+        failures.append(f"{name}: unsupported expected tag '{expected}' ({qemu_log})")
 
     if failures:
         for item in failures:

@@ -319,6 +319,13 @@ def main(argv: list[str]) -> int:
         default=str(REPO_ROOT / "avs" / "qemu" / "out" / "musl-smoke"),
     )
     args = parser.parse_args(argv)
+    disable_timer_irq = os.environ.get("LINX_DISABLE_TIMER_IRQ", "").lower() in {
+        "1",
+        "true",
+        "yes",
+    }
+    if disable_timer_irq and "linx_disable_timer_irq=" not in args.append:
+        args.append = f"{args.append} linx_disable_timer_irq=1".strip()
 
     linux_root = Path(os.path.expanduser(args.linux_root)).resolve()
     musl_root = Path(os.path.expanduser(args.musl_root)).resolve()
@@ -592,6 +599,25 @@ def main(argv: list[str]) -> int:
                 str(sample_obj),
             ]
 
+            crt1_order = (
+                ["crt1.o", "rcrt1.o", "Scrt1.o"]
+                if link_mode == "static"
+                else ["Scrt1.o", "rcrt1.o", "crt1.o"]
+            )
+            crt1_obj = _find_first_file([sysroot / "lib" / n for n in crt1_order])
+            if crt1_obj is None:
+                add_stage(
+                    f"sample-compile[{sample_name}:{link_mode}]",
+                    "fail",
+                    "missing startup CRT object (crt1/Scrt1/rcrt1)",
+                )
+                summary["result"] = {
+                    "ok": False,
+                    "classification": f"{sample_name}_{link_mode}_crt_startup_missing",
+                }
+                _write_summary(summary_path, summary)
+                return 2
+
             if link_mode == "static":
                 if is_cpp:
                     link_cmd = [
@@ -608,7 +634,7 @@ def main(argv: list[str]) -> int:
                         "-unwindlib=" + cpp_unwindlib,
                         "-fuse-ld=lld",
                         "-nostdlib",
-                        str(sysroot / "lib" / "Scrt1.o"),
+                        str(crt1_obj),
                         str(sysroot / "lib" / "crti.o"),
                         str(sample_obj),
                         str(runtime_lib),
@@ -630,7 +656,7 @@ def main(argv: list[str]) -> int:
                         "-Wl,-pie",
                         "-fuse-ld=lld",
                         "-nostdlib",
-                        str(sysroot / "lib" / "Scrt1.o"),
+                        str(crt1_obj),
                         str(sysroot / "lib" / "crti.o"),
                         str(sample_obj),
                         str(runtime_lib),
@@ -667,7 +693,7 @@ def main(argv: list[str]) -> int:
                         "-unwindlib=" + cpp_unwindlib,
                         "-fuse-ld=lld",
                         "-nostdlib",
-                        str(sysroot / "lib" / "Scrt1.o"),
+                        str(crt1_obj),
                         str(sysroot / "lib" / "crti.o"),
                         str(sample_obj),
                         str(runtime_lib),
@@ -691,7 +717,7 @@ def main(argv: list[str]) -> int:
                         "-Wl,-pie",
                         "-fuse-ld=lld",
                         "-nostdlib",
-                        str(sysroot / "lib" / "Scrt1.o"),
+                        str(crt1_obj),
                         str(sysroot / "lib" / "crti.o"),
                         str(sample_obj),
                         str(runtime_lib),

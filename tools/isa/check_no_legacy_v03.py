@@ -139,6 +139,17 @@ def _scan_root(
         for label, pat, allow in checks:
             if any(path.resolve() == a.resolve() for a in allow):
                 continue
+            if label == "legacy vector mnemonic family" and path.suffix in {
+                ".c",
+                ".cc",
+                ".cpp",
+                ".h",
+                ".hpp",
+                ".py",
+            }:
+                # In implementation sources, tokens like `L.ends_with(...)`
+                # are C++ member calls rather than ISA mnemonics.
+                continue
             for m in pat.finditer(text):
                 line = text.count("\n", 0, m.start()) + 1
                 failures.append(f"{scan_root.name}/{rel}:{line}: {label}: {m.group(0)!r}")
@@ -168,7 +179,7 @@ def main() -> int:
     checks: List[Tuple[str, Pattern[str], List[Path]]] = [
         (
             "legacy vector mnemonic family",
-            re.compile(r"\b[Ll]\.[A-Za-z0-9_.]+\b"),
+            re.compile(r"\b(?:L\.[A-Z][A-Za-z0-9_.]*|l\.[A-Za-z0-9_.]+)\b"),
             [
                 root / "tools" / "isa" / "reconcile_v03_raw.py",
                 root / "tools" / "isa" / "normalize_v03_example_asm.py",

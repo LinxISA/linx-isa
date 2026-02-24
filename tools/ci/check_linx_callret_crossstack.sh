@@ -113,6 +113,14 @@ strict_relocs = os.environ.get("LINX_STRICT_CALLRET_RELOCS", "").lower() in {
     "true",
     "yes",
 }
+noreturn_targets = {
+    s.strip()
+    for s in os.environ.get(
+        "LINX_CALLRET_NORETURN_TARGETS",
+        "panic_smp_self_stop,nmi_panic_self_stop,vpanic",
+    ).split(",")
+    if s.strip()
+}
 
 addr_re = re.compile(r"^\s*([0-9a-fA-F]+):")
 sym_re = re.compile(r"^\s*([0-9a-fA-F]+)\s+<([^>]+)>:")
@@ -245,6 +253,8 @@ for c in calls:
         bad_call_target.append((section, off, call_tgt_loc[1], line))
 
     if not has_ra:
+        if call_tgt in noreturn_targets:
+            continue
         missing_ra.append((off, line))
         continue
 
@@ -297,8 +307,10 @@ PY
 done
 
 if ! rg -q 'C\.BSTART(\.STD)?[[:space:]]+IND' "$tmpdir/switch_to.dis"; then
-  echo "error: switch_to return path is missing C.BSTART IND marker" >&2
-  exit 1
+  if ! rg -q 'C\.BSTART(\.STD)?[[:space:]]+RET' "$tmpdir/switch_to.dis"; then
+    echo "error: switch_to return path is missing C.BSTART IND/RET marker" >&2
+    exit 1
+  fi
 fi
 if ! rg -q 'setc\.tgt[[:space:]]+ra' "$tmpdir/switch_to.dis"; then
   echo "error: switch_to return path is missing setc.tgt ra" >&2

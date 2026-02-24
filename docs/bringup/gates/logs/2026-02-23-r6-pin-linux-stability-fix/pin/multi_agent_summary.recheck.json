@@ -1,0 +1,29 @@
+{
+  "checked_at_utc": "2026-02-23 11:21:50Z",
+  "checklists_root": "/Users/zhoubot/linx-isa/docs/bringup/agent_runs/checklists",
+  "errors": [
+    {
+      "code": "E_REPORT_RUN_NOT_FOUND",
+      "lane": "pin",
+      "message": "requested lane/run_id not found in report",
+      "run_id": "2026-02-23-r6-pin-linux-stability-fix"
+    }
+  ],
+  "lane": "pin",
+  "manifest": "/Users/zhoubot/linx-isa/docs/bringup/agent_runs/manifest.yaml",
+  "mode": "runtime",
+  "ok": false,
+  "report": "/Users/zhoubot/linx-isa/docs/bringup/gates/latest.json",
+  "run_id": "2026-02-23-r6-pin-linux-stability-fix",
+  "runtime_stats": {},
+  "static_stats": {
+    "agents": 6,
+    "assignments": 18,
+    "declared_checklist_ids": 32,
+    "declared_checklists": 6,
+    "waivers": 0
+  },
+  "strict_always": true,
+  "waivers": "/Users/zhoubot/linx-isa/docs/bringup/agent_runs/waivers.yaml",
+  "warnings": []
+}

@@ -15,9 +15,9 @@ LINX_EMU_DISABLE_TIMER_IRQ="$LINX_EMU_DISABLE_TIMER_IRQ" bash "$ROOT/tools/regre
 
 QEMU_BIN="${QEMU_BIN:-${QEMU:-}}"
 if [[ -z "${QEMU_BIN:-}" ]]; then
-  for cand in "$HOME/qemu/build/qemu-system-linx64" \
-              "$HOME/qemu/build-tci/qemu-system-linx64" \
-              "$HOME/qemu/build-linx/qemu-system-linx64"; do
+  for cand in "$ROOT/emulator/qemu/build/qemu-system-linx64" \
+              "$ROOT/emulator/qemu/build-tci/qemu-system-linx64" \
+              "$ROOT/emulator/qemu/build-linx/qemu-system-linx64"; do
     if [[ -x "$cand" ]]; then
       QEMU_BIN="$cand"
       break
@@ -60,7 +60,7 @@ else
   echo "note: skipping LLVM lit (LLVM_ROOT missing: $LLVM_ROOT)"
 fi
 
-LINUX_ROOT="${LINUX_ROOT:-$HOME/linux}"
+LINUX_ROOT="${LINUX_ROOT:-$ROOT/kernel/linux}"
 if [[ -d "$LINUX_ROOT/tools/linxisa/initramfs" ]]; then
   echo
   echo "-- Linux initramfs userspace boot (smoke/full)"
