@@ -3574,7 +3574,8 @@ Operation (informative)::
 +
 [source]
 ----
-result = CompareImmediate(/* per suffix */) ? 1 : 0
+imm = SignExtend(simm)
+result = (Read(SrcL) == imm) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -3593,7 +3594,8 @@ Operation (informative)::
 +
 [source]
 ----
-result = CompareImmediate(/* per suffix */) ? 1 : 0
+imm = SignExtend(simm)
+result = (Read(SrcL) != imm) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -4500,7 +4502,9 @@ Operation (informative)::
 +
 [source]
 ----
-commit_arg = EvaluateCondition(/* per mnemonic */)
+lhs = Read(SrcL)
+imm = (SignExtend(simm) << shamt)
+commit_arg = ((lhs & imm) != 0) ? 1 : 0
 SetCommitArgument(commit_arg)
 ----
 
@@ -4519,7 +4523,8 @@ Operation (informative)::
 +
 [source]
 ----
-commit_arg = EvaluateCondition(/* per mnemonic */)
+imm = (SignExtend(simm) << shamt)
+commit_arg = (Read(SrcL) == imm) ? 1 : 0
 SetCommitArgument(commit_arg)
 ----
 
@@ -4538,7 +4543,8 @@ Operation (informative)::
 +
 [source]
 ----
-commit_arg = EvaluateCondition(/* per mnemonic */)
+imm = (SignExtend(simm) << shamt)
+commit_arg = (Read(SrcL) >= imm  // signed) ? 1 : 0
 SetCommitArgument(commit_arg)
 ----
 
@@ -4557,7 +4563,8 @@ Operation (informative)::
 +
 [source]
 ----
-commit_arg = EvaluateCondition(/* per mnemonic */)
+imm = (ZeroExtend(uimm) << shamt)
+commit_arg = (Read(SrcL) >= imm  // unsigned) ? 1 : 0
 SetCommitArgument(commit_arg)
 ----
 
@@ -4576,7 +4583,8 @@ Operation (informative)::
 +
 [source]
 ----
-commit_arg = EvaluateCondition(/* per mnemonic */)
+imm = (SignExtend(simm) << shamt)
+commit_arg = (Read(SrcL) < imm  // signed) ? 1 : 0
 SetCommitArgument(commit_arg)
 ----
 
@@ -4595,7 +4603,8 @@ Operation (informative)::
 +
 [source]
 ----
-commit_arg = EvaluateCondition(/* per mnemonic */)
+imm = (ZeroExtend(uimm) << shamt)
+commit_arg = (Read(SrcL) < imm  // unsigned) ? 1 : 0
 SetCommitArgument(commit_arg)
 ----
 
@@ -4614,7 +4623,8 @@ Operation (informative)::
 +
 [source]
 ----
-commit_arg = EvaluateCondition(/* per mnemonic */)
+imm = (SignExtend(simm) << shamt)
+commit_arg = (Read(SrcL) != imm) ? 1 : 0
 SetCommitArgument(commit_arg)
 ----
 
@@ -4633,7 +4643,9 @@ Operation (informative)::
 +
 [source]
 ----
-commit_arg = EvaluateCondition(/* per mnemonic */)
+lhs = Read(SrcL)
+imm = (SignExtend(simm) << shamt)
+commit_arg = ((lhs | imm) != 0) ? 1 : 0
 SetCommitArgument(commit_arg)
 ----
 
@@ -4652,7 +4664,9 @@ Operation (informative)::
 +
 [source]
 ----
-commit_arg = EvaluateCondition(/* per mnemonic */)
+lhs = Read(SrcL)
+rhs = Read(SrcR)  // apply SrcRType modifiers (.sw/.uw/.not) as encoded
+commit_arg = ((lhs & rhs) != 0) ? 1 : 0
 SetCommitArgument(commit_arg)
 ----
 
@@ -4671,7 +4685,9 @@ Operation (informative)::
 +
 [source]
 ----
-commit_arg = EvaluateCondition(/* per mnemonic */)
+lhs = Read(SrcL)
+imm = (SignExtend(simm) << shamt)
+commit_arg = ((lhs & imm) != 0) ? 1 : 0
 SetCommitArgument(commit_arg)
 ----
 
@@ -4709,7 +4725,8 @@ Operation (informative)::
 +
 [source]
 ----
-commit_arg = EvaluateCondition(/* per mnemonic */)
+imm = (SignExtend(simm) << shamt)
+commit_arg = (Read(SrcL) == imm) ? 1 : 0
 SetCommitArgument(commit_arg)
 ----
 
@@ -4747,7 +4764,8 @@ Operation (informative)::
 +
 [source]
 ----
-commit_arg = EvaluateCondition(/* per mnemonic */)
+imm = (SignExtend(simm) << shamt)
+commit_arg = (Read(SrcL) >= imm  // signed) ? 1 : 0
 SetCommitArgument(commit_arg)
 ----
 
@@ -4785,7 +4803,8 @@ Operation (informative)::
 +
 [source]
 ----
-commit_arg = EvaluateCondition(/* per mnemonic */)
+imm = (ZeroExtend(uimm) << shamt)
+commit_arg = (Read(SrcL) >= imm  // unsigned) ? 1 : 0
 SetCommitArgument(commit_arg)
 ----
 
@@ -4823,7 +4842,8 @@ Operation (informative)::
 +
 [source]
 ----
-commit_arg = EvaluateCondition(/* per mnemonic */)
+imm = (SignExtend(simm) << shamt)
+commit_arg = (Read(SrcL) < imm  // signed) ? 1 : 0
 SetCommitArgument(commit_arg)
 ----
 
@@ -4861,7 +4881,8 @@ Operation (informative)::
 +
 [source]
 ----
-commit_arg = EvaluateCondition(/* per mnemonic */)
+imm = (ZeroExtend(uimm) << shamt)
+commit_arg = (Read(SrcL) < imm  // unsigned) ? 1 : 0
 SetCommitArgument(commit_arg)
 ----
 
@@ -4899,7 +4920,8 @@ Operation (informative)::
 +
 [source]
 ----
-commit_arg = EvaluateCondition(/* per mnemonic */)
+imm = (SignExtend(simm) << shamt)
+commit_arg = (Read(SrcL) != imm) ? 1 : 0
 SetCommitArgument(commit_arg)
 ----
 
@@ -4918,7 +4940,9 @@ Operation (informative)::
 +
 [source]
 ----
-commit_arg = EvaluateCondition(/* per mnemonic */)
+lhs = Read(SrcL)
+rhs = Read(SrcR)  // apply SrcRType modifiers (.sw/.uw/.not) as encoded
+commit_arg = ((lhs | rhs) != 0) ? 1 : 0
 SetCommitArgument(commit_arg)
 ----
 
@@ -4937,7 +4961,9 @@ Operation (informative)::
 +
 [source]
 ----
-commit_arg = EvaluateCondition(/* per mnemonic */)
+lhs = Read(SrcL)
+imm = (SignExtend(simm) << shamt)
+commit_arg = ((lhs | imm) != 0) ? 1 : 0
 SetCommitArgument(commit_arg)
 ----
 
@@ -5088,7 +5114,9 @@ Operation (informative)::
 +
 [source]
 ----
-result = (SrcL AND/OR SrcR) ? 1 : 0
+lhs = Read(SrcL)
+rhs = Read(SrcR)  // apply SrcRType modifiers (.sw/.uw/.not) as encoded
+result = ((lhs & rhs) != 0) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5107,7 +5135,9 @@ Operation (informative)::
 +
 [source]
 ----
-result = Compare(/* per mnemonic */)
+lhs = Read(SrcL)
+imm = SignExtend(simm)
+result = ((lhs & imm) != 0) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5145,7 +5175,8 @@ Operation (informative)::
 +
 [source]
 ----
-result = CompareImmediate(/* per suffix */) ? 1 : 0
+imm = SignExtend(simm)
+result = (Read(SrcL) == imm) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5183,7 +5214,8 @@ Operation (informative)::
 +
 [source]
 ----
-result = CompareImmediate(/* per suffix */) ? 1 : 0
+imm = SignExtend(simm)
+result = (Read(SrcL) >= imm  // signed) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5221,7 +5253,8 @@ Operation (informative)::
 +
 [source]
 ----
-result = CompareImmediate(/* per suffix */) ? 1 : 0
+imm = ZeroExtend(uimm)
+result = (Read(SrcL) >= imm  // unsigned) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5259,7 +5292,8 @@ Operation (informative)::
 +
 [source]
 ----
-result = CompareImmediate(/* per suffix */) ? 1 : 0
+imm = SignExtend(simm)
+result = (Read(SrcL) < imm  // signed) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5297,7 +5331,8 @@ Operation (informative)::
 +
 [source]
 ----
-result = CompareImmediate(/* per suffix */) ? 1 : 0
+imm = ZeroExtend(uimm)
+result = (Read(SrcL) < imm  // unsigned) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5335,7 +5370,8 @@ Operation (informative)::
 +
 [source]
 ----
-result = CompareImmediate(/* per suffix */) ? 1 : 0
+imm = SignExtend(simm)
+result = (Read(SrcL) != imm) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5354,7 +5390,9 @@ Operation (informative)::
 +
 [source]
 ----
-result = (SrcL AND/OR SrcR) ? 1 : 0
+lhs = Read(SrcL)
+rhs = Read(SrcR)  // apply SrcRType modifiers (.sw/.uw/.not) as encoded
+result = ((lhs | rhs) != 0) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5373,7 +5411,9 @@ Operation (informative)::
 +
 [source]
 ----
-result = Compare(/* per mnemonic */)
+lhs = Read(SrcL)
+imm = SignExtend(simm)
+result = ((lhs | imm) != 0) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5392,7 +5432,9 @@ Operation (informative)::
 +
 [source]
 ----
-result = Compare(/* per mnemonic */)
+lhs = Read(SrcL)
+imm = SignExtend(simm)
+result = ((lhs & imm) != 0) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5411,7 +5453,8 @@ Operation (informative)::
 +
 [source]
 ----
-result = CompareImmediate(/* per suffix */) ? 1 : 0
+imm = SignExtend(simm)
+result = (Read(SrcL) == imm) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5430,7 +5473,8 @@ Operation (informative)::
 +
 [source]
 ----
-result = CompareImmediate(/* per suffix */) ? 1 : 0
+imm = SignExtend(simm)
+result = (Read(SrcL) >= imm  // signed) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5449,7 +5493,8 @@ Operation (informative)::
 +
 [source]
 ----
-result = CompareImmediate(/* per suffix */) ? 1 : 0
+imm = ZeroExtend(uimm)
+result = (Read(SrcL) >= imm  // unsigned) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5468,7 +5513,8 @@ Operation (informative)::
 +
 [source]
 ----
-result = CompareImmediate(/* per suffix */) ? 1 : 0
+imm = SignExtend(simm)
+result = (Read(SrcL) < imm  // signed) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5487,7 +5533,8 @@ Operation (informative)::
 +
 [source]
 ----
-result = CompareImmediate(/* per suffix */) ? 1 : 0
+imm = ZeroExtend(uimm)
+result = (Read(SrcL) < imm  // unsigned) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5506,7 +5553,8 @@ Operation (informative)::
 +
 [source]
 ----
-result = CompareImmediate(/* per suffix */) ? 1 : 0
+imm = SignExtend(simm)
+result = (Read(SrcL) != imm) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5525,7 +5573,9 @@ Operation (informative)::
 +
 [source]
 ----
-result = Compare(/* per mnemonic */)
+lhs = Read(SrcL)
+imm = SignExtend(simm)
+result = ((lhs | imm) != 0) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5544,7 +5594,9 @@ Operation (informative)::
 +
 [source]
 ----
-result = (SrcL AND/OR SrcR) ? 1 : 0
+lhs = Read(SrcL)
+rhs = Read(SrcR)  // apply SrcRType modifiers (.sw/.uw/.not) as encoded
+result = ((lhs & rhs) != 0) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5563,7 +5615,9 @@ Operation (informative)::
 +
 [source]
 ----
-result = Compare(/* per mnemonic */)
+lhs = Read(SrcL)
+imm = SignExtend(simm)
+result = ((lhs & imm) != 0) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5601,7 +5655,8 @@ Operation (informative)::
 +
 [source]
 ----
-result = CompareImmediate(/* per suffix */) ? 1 : 0
+imm = SignExtend(simm)
+result = (Read(SrcL) == imm) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5639,7 +5694,8 @@ Operation (informative)::
 +
 [source]
 ----
-result = CompareImmediate(/* per suffix */) ? 1 : 0
+imm = SignExtend(simm)
+result = (Read(SrcL) >= imm  // signed) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5677,7 +5733,8 @@ Operation (informative)::
 +
 [source]
 ----
-result = CompareImmediate(/* per suffix */) ? 1 : 0
+imm = ZeroExtend(uimm)
+result = (Read(SrcL) >= imm  // unsigned) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5715,7 +5772,8 @@ Operation (informative)::
 +
 [source]
 ----
-result = CompareImmediate(/* per suffix */) ? 1 : 0
+imm = SignExtend(simm)
+result = (Read(SrcL) < imm  // signed) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5753,7 +5811,8 @@ Operation (informative)::
 +
 [source]
 ----
-result = CompareImmediate(/* per suffix */) ? 1 : 0
+imm = ZeroExtend(uimm)
+result = (Read(SrcL) < imm  // unsigned) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5791,7 +5850,8 @@ Operation (informative)::
 +
 [source]
 ----
-result = CompareImmediate(/* per suffix */) ? 1 : 0
+imm = SignExtend(simm)
+result = (Read(SrcL) != imm) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5810,7 +5870,9 @@ Operation (informative)::
 +
 [source]
 ----
-result = (SrcL AND/OR SrcR) ? 1 : 0
+lhs = Read(SrcL)
+rhs = Read(SrcR)  // apply SrcRType modifiers (.sw/.uw/.not) as encoded
+result = ((lhs | rhs) != 0) ? 1 : 0
 Write(Dst, result)
 ----
 
@@ -5829,7 +5891,9 @@ Operation (informative)::
 +
 [source]
 ----
-result = Compare(/* per mnemonic */)
+lhs = Read(SrcL)
+imm = SignExtend(simm)
+result = ((lhs | imm) != 0) ? 1 : 0
 Write(Dst, result)
 ----
 

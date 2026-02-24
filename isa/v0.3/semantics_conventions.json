@@ -48,6 +48,15 @@
       "word32": "mask shift amount to SrcR[4:0] (mod 32)"
     }
   },
+  "setc_immediates": {
+    "description": "Immediate-compare conventions for SETC.*I forms with an encoded shamt field.",
+    "encoding": "SETC.*I encodes simm/uimm plus a 5-bit shamt (bits[11:7] in 32-bit forms, analogous position in HL forms).",
+    "semantics": {
+      "signed": "imm = SignExtend(simm) << shamt",
+      "unsigned": "imm = ZeroExtend(uimm) << shamt"
+    },
+    "assembly": "Assembly syntax elides shamt (prints a single immediate). Assembler/tooling may choose shamt to represent larger aligned constants when encodable."
+  },
   "bitfields": {
     "description": "Bitfield operations (BXS/BXU/CLZ/CTZ/BCNT/BIC/BIS/REV) parameter mapping and wrap-around semantics.",
     "mapping": {
