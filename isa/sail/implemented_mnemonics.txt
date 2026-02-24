@@ -1,3 +1,51 @@
 # One mnemonic per line.
 # Keep this list synchronized with implemented Sail semantics.
 
+# ALU (initial bring-up subset)
+ADD
+ADDW
+ADDI
+ADDIW
+SUB
+SUBW
+SUBI
+SUBIW
+AND
+ANDW
+ANDI
+ANDIW
+OR
+ORW
+ORI
+XOR
+XORW
+XORI
+
+# Shifts
+SLL
+SLLI
+SLLIW
+SLLW
+SRL
+SRLI
+SRLIW
+SRLW
+SRA
+SRAI
+SRAIW
+SRAW
+
+# Compressed shifts
+C.SLLI
+C.SRLI
+
+# Bit operations (bitfield wrap-around)
+BXS
+BXU
+ROR
+CLZ
+CTZ
+BCNT
+BIC
+BIS
+REV

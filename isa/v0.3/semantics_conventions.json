@@ -1,0 +1,68 @@
+{
+  "version": "v0.3",
+  "notes": [
+    "This file records staged bring-up semantics conventions that are consumed by the Sail formal model and referenced by the manual.",
+    "These conventions are normative for the strict-v0.3 bring-up profile unless overridden by a later revision."
+  ],
+  "regdst_writeback": {
+    "description": "Destination selector semantics for RegDst-like fields that can target GPRs or ClockHands pushes.",
+    "no_output": {
+      "codes": [
+        0,
+        [24, 29]
+      ],
+      "behavior": "No architectural output is produced (silent drop). No exception is raised."
+    },
+    "gpr": {
+      "codes": [
+        [1, 23]
+      ],
+      "behavior": "Write the selected GPR (R1..R23)."
+    },
+    "clockhands": {
+      "u_selector": {
+        "code": 30,
+        "behavior": "Push result into U-hand queue (u#1..u#4)."
+      },
+      "t_selector": {
+        "code": 31,
+        "behavior": "Push result into T-hand queue (t#1..t#4)."
+      }
+    }
+  },
+  "srcrtype": {
+    "description": "2-bit SrcRType mapping and evaluation order.",
+    "mapping": {
+      "00": "none",
+      "01": "sw (sext32)",
+      "10": "uw (zext32)",
+      "11": "neg (arithmetic families) / not (logical families)"
+    },
+    "order": "Apply SrcRType first, then apply any explicit shift (e.g. <<<shamt or <<shamt in addressing).",
+    "word_ops": "For *W (32-bit) operations, apply modifiers at 32-bit width, compute a 32-bit result, then sign-extend to 64-bit."
+  },
+  "shifts": {
+    "description": "Shift amount masking conventions.",
+    "reg_shifts": {
+      "xlen64": "mask shift amount to SrcR[5:0] (mod 64)",
+      "word32": "mask shift amount to SrcR[4:0] (mod 32)"
+    }
+  },
+  "bitfields": {
+    "description": "Bitfield operations (BXS/BXU/CLZ/CTZ/BCNT/BIC/BIS/REV) parameter mapping and wrap-around semantics.",
+    "mapping": {
+      "M": "imms (or immr for REV)",
+      "Nminus1": "imml",
+      "N": "imml + 1 (range 1..64)"
+    },
+    "wrap_around": "Bit ranges are defined on a 64-bit ring. For i=0..N-1, field[i] = SrcL[(M + i) mod 64]. Equivalent: field = ROR64(SrcL, M) & mask_low(N).",
+    "alias": {
+      "ROR": "Alias of BXU with Nminus1=63 (N=64): ROR64(SrcL, M)."
+    },
+    "rev": {
+      "description": "REV performs byte-order reversal on the selected bitfield.",
+      "operation": "field = bitfield_wrap(SrcL, M, N); if (N % 8) != 0 then result=0 else reverse byte order of low N bits; high bits are zero.",
+      "invalid_n": "If N is not a multiple of 8, the result is 0 (silent)."
+    }
+  }
+}
