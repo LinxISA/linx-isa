@@ -78,6 +78,7 @@
           "base": "TPC (current instruction TPC)",
           "note": "Base is current-instruction TPC (not next-TPC).",
           "jr_rule": "JR target = SrcL + (SignExtend(simm12) << 1)",
+          "jr_srczero": "The encoded SrcZero field is ignored (treated as 0) in strict v0.3.",
           "jr_alignment": "No forced alignment; odd target is permitted (subsequent fetch may fault).",
           "tpc_misalignment_fault": {
             "trapnum": 5,

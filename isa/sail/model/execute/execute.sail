@@ -780,6 +780,7 @@ function exec_b_z(simm22 : bits(22)) -> unit = {
 }
 
 function exec_jr(SrcL : bits(5), simm12 : bits(12)) -> unit = {
+  // NOTE: JR encoding also contains a SrcZero field; strict v0.3 ignores it.
   let base = read_reg5(SrcL);
   let off = sext12_to64(simm12) << 1;
   write_tpc(base + off)
