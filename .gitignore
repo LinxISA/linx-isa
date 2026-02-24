@@ -62,6 +62,8 @@ workloads/ctuning/out_single/
 
 # SPEC CPU2017 (too large for upstream)
 workloads/spec2017/
+workloads/speccpu2017/
+workloads/cpu2017v118_x64_gcc12_avx2.zip
 tools/spec2017/
 
 # Local migration / timer debug scratch
