@@ -22,6 +22,11 @@ SAMPLES: dict[str, dict[str, str]] = {
         "start": "MUSL_SMOKE_START",
         "pass": "MUSL_SMOKE_PASS",
     },
+    "hello": {
+        "src": "linux_musl_hello.c",
+        "start": "HELLO_WORLD_START",
+        "pass": "HELLO_WORLD_PASS",
+    },
     "callret": {
         "src": "linux_musl_callret_matrix.c",
         "start": "MUSL_CALLRET_START",
