@@ -61,6 +61,17 @@
     },
     "assembly": "Assembly syntax elides shamt (prints a single immediate). Assembler/tooling may choose shamt to represent larger aligned constants when encodable."
   },
+  "block_legality": {
+    "description": "Legality conventions for which instruction families may appear as payload in coupled scalar blocks vs engine bodies.",
+    "bru_control_transfer": {
+      "description": "BRU control-transfer instructions (B.* / J / JR / etc.) are not legal payload in coupled scalar blocks; they are vec-engine scalar-lane-only.",
+      "on_scalar_block_execute": {
+        "trapnum": 4,
+        "name": "ILLEGAL_INST",
+        "note": "Cause/arg payload TBD; strict profile at minimum traps with TRAPNUM=4."
+      }
+    }
+  },
   "bitfields": {
     "description": "Bitfield operations (BXS/BXU/CLZ/CTZ/BCNT/BIC/BIS/REV) parameter mapping and wrap-around semantics.",
     "mapping": {

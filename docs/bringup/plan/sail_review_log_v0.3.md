@@ -58,3 +58,17 @@ Rationale:
 Follow-ups:
 - Record in `isa/v0.3/semantics_conventions.json` under `srcrtype.restricted_forms`.
 - Update Sail semantics for the restricted CMP/SETC forms to sanitize 11→00.
+
+---
+
+## 2026-02-25 — BRU control-transfer legality in scalar blocks
+
+Topic:
+- BRU control-transfer instructions (`B.*`, `J`, `JR`, and related direct control-transfer forms) are not legal payload instructions in coupled scalar blocks.
+- They are only executed on the **vec engine scalar lane**; if encountered in a scalar block, strict profile must trap.
+
+Decision (Kevin):
+- Misuse in scalar block raises **ILLEGAL_INST**: `TRAPNUM=4`.
+
+Open details:
+- Whether `TRAPARG0` should be populated (and with which PC) is still TBD.
