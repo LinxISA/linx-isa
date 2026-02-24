@@ -769,6 +769,16 @@ function exec_j(simm22 : bits(22)) -> unit = {
   write_tpc(tpc_rel_target_from_imm22(simm22))
 }
 
+function exec_b_nz(simm22 : bits(22)) -> unit = {
+  let p = read_commit_argument();
+  if p != 0x0000_0000_0000_0000 then write_tpc(tpc_rel_target_from_imm22(simm22)) else ()
+}
+
+function exec_b_z(simm22 : bits(22)) -> unit = {
+  let p = read_commit_argument();
+  if p == 0x0000_0000_0000_0000 then write_tpc(tpc_rel_target_from_imm22(simm22)) else ()
+}
+
 function exec_jr(SrcL : bits(5), simm12 : bits(12)) -> unit = {
   let base = read_reg5(SrcL);
   let off = sext12_to64(simm12) << 1;

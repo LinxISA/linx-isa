@@ -78,6 +78,13 @@
           "base": "TPC (current instruction TPC)",
           "note": "Base choice (current vs next TPC) must be kept consistent with assembler/relocs once confirmed."
         },
+        "predicate_register": {
+          "name": "p",
+          "source": "BARG.CARG (commit-argument / block-control predicate domain)",
+          "truth_rule": "p != 0",
+          "bz": "taken iff p == 0",
+          "bnz": "taken iff p != 0"
+        },
         "note": "When executed in the vec engine scalar lane, BRU control-transfer updates the body-local TPC (not architectural global PC)."
       }
     }

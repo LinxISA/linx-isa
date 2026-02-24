@@ -115,5 +115,7 @@ B.LT
 B.GE
 B.LTU
 B.GEU
+B.NZ
+B.Z
 J
 JR

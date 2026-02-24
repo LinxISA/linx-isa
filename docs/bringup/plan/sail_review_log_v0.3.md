@@ -88,3 +88,16 @@ Follow-ups:
 
 Decision (Kevin):
 - Immediate offsets are **halfword-scaled**: `target = base + (SignExtend(simm) << 1)`.
+
+---
+
+## 2026-02-25 — B.Z / B.NZ predicate source
+
+Topic:
+- `B.Z`/`B.NZ` have no source operands; they branch based on a predicate value.
+
+Decision (Kevin):
+- They read the **predicate register `p`** and test whether it is all-zero vs non-zero.
+- For Sail/staged bring-up we model `p` as the block-control predicate domain (`BARG.CARG` / commit-argument):
+  - `B.Z` taken iff `p == 0`
+  - `B.NZ` taken iff `p != 0`
