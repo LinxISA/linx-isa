@@ -72,3 +72,16 @@ Decision (Kevin):
 
 Open details:
 - Whether `TRAPARG0` should be populated (and with which PC) is still TBD.
+
+---
+
+## 2026-02-25 — Vec engine scalar-lane BRU PC domain
+
+Topic:
+- When BRU control-transfer instructions execute on the vec engine scalar lane, which PC domain do they update?
+
+Decision (Kevin):
+- Update **TPC** (body-local PC), not the architectural global PC.
+
+Follow-ups:
+- Define the immediate/label target computation relative to TPC (byte vs halfword scaling) for `B.*`/`J`/`JR`.
