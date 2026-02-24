@@ -718,6 +718,14 @@ function exec_c_setc_ne(SrcL : bits(5), SrcR : bits(5)) -> unit = {
 
 // -----------------------------------------------------------------------------
 // BRU: control-transfer (vec-engine scalar lane; updates TPC)
+//
+// Contract summary (strict v0.3 staged):
+// - Vec-engine scalar-lane only (scalar blocks executing these trap: TRAPNUM=4).
+// - Updates TPC (body-local PC), not architectural global PC.
+// - PC-relative base is *current instruction* TPC.
+// - Immediate offsets are halfword-scaled: target = base + (sext(offset) << 1).
+// - B.Z/B.NZ consult predicate register p (modeled via read_predicate_p()).
+// - Misaligned/unfetchable targets are reported as E_BLOCK(EC_BFETCH) by the fetch machinery.
 
 function tpc_rel_target_from_imm12(simm12 : bits(12)) -> bits(64) = {
   let off = sext12_to64(simm12) << 1;

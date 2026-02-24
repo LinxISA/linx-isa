@@ -114,6 +114,17 @@
           "jr_base": "scalar_lane_gpr",
           "branch_operands": "scalar_lane_gpr"
         },
+        "contract_summary": [
+          "Scope: vec-engine scalar-lane only (illegal in coupled scalar blocks => TRAPNUM=4 ILLEGAL_INST).",
+          "PC domain: updates TPC (body-local PC).",
+          "PC-relative base: current-instruction TPC.",
+          "PC-relative scaling: offset is halfword-scaled (target = base + (sext(offset) << 1)).",
+          "JR: target = SrcL + (sext(simm12) << 1); SrcZero field ignored.",
+          "Predicate: B.Z/B.NZ test vec predicate register p (all-zero vs non-zero).",
+          "Faults: misaligned/unfetchable targets => E_BLOCK(EC_BFETCH), BI=1, TRAPARG0=faulting VA.",
+          "Body range: implicit/operational (no explicit architectural [BodyTPC,BodyEnd) boundary).",
+          "Operand registers: read scalar-lane GPR domain (not ClockHands)."
+        ],
         "note": "When executed in the vec engine scalar lane, BRU control-transfer updates the body-local TPC (not architectural global PC)."
       }
     }
