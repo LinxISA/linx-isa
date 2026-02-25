@@ -713,7 +713,7 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
 
     # Execution control.
     if root == "ASSERT":
-        return ["if (ExceptionsEnabled() && Read(SrcL) == 0): Trap(ASSERT_FAIL)"]
+        return ["if (EConfig[3] && Read(SrcL) == 0): Trap(ASSERT_FAIL)"]
 
     # Block markers.
     if root == "BSTOP":

@@ -176,6 +176,7 @@ Decisions (Kevin):
 - `ASSERT` failures participate in the same fixup routing when they occur inside an unmanaged fixup block.
 - `ASSERT_FAIL` reserves `TRAPNUM=52`.
 - `ASSERT` is only legal in `.SYS` blocks; elsewhere it traps as `TRAPNUM=4 ILLEGAL_INST`.
+- Global exception enable is `EConfig[3]` (when 0: ASSERT is NOP).
 - For `ASSERT_FAIL`, `TRAPNO.CAUSE = 0`.
 
 Open questions:
