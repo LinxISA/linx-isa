@@ -289,5 +289,33 @@
         "fmin": "when both inputs are zeros, return -0 iff any input is -0"
       }
     }
+  },
+  "fixup_blocks": {
+    "description": "Unmanaged fixup block routing rules (strict v0.3).",
+    "unmanaged_fixup_block": {
+      "definition": "BSTART.SYS FALL<, fixup_label (SYS block with explicit fixup_label)",
+      "has_fixup_label": true
+    },
+    "exception_routing": {
+      "when": "synchronous exception occurs while executing inside an unmanaged fixup block",
+      "vector_base": "fixup_label (replaces EVBASE)",
+      "write_trap_envelope": [
+        "TRAPNO",
+        "TRAPARG0",
+        "ECSTATE"
+      ],
+      "write_ebarg_optional": true,
+      "privilege_switch": "none",
+      "acr_switch": "none"
+    },
+    "fixup_label_addressing": {
+      "base": "BPC (block start PC)",
+      "offset_unit_bytes": 2,
+      "rule": "target = BPC + (SignExtend(fixup_label) << 1)"
+    },
+    "assert": {
+      "participates": true,
+      "trapnum": "ASSERT_FAIL (52)"
+    }
   }
 }

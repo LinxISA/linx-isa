@@ -158,6 +158,28 @@ Decision:
 
 ---
 
+## 2026-02-25 — Fixup blocks (unmanaged fixup)
+
+Topic:
+- Define behavior of unmanaged fixup blocks and how exceptions are routed to `fixup_label`.
+
+Decisions (Kevin):
+- An unmanaged fixup block is **only** a `.SYS` block with an explicit `fixup_label`:
+  - `BSTART.SYS FALL<, fixup_label`
+- If a synchronous exception occurs in an unmanaged fixup block:
+  - Write trap envelope registers: `TRAPNO/TRAPARG0/ECSTATE` (EBARG optional)
+  - Vector to the `fixup_label` handler **instead of EVBASE**
+  - `fixup_label` target is PC-relative from the block start PC (BPC), halfword-scaled:
+    - `target = BPC + (SignExtend(fixup_label) << 1)`
+  - No privilege/ACR switch occurs (remain in current execution context)
+- `ASSERT` failures participate in the same fixup routing when they occur inside an unmanaged fixup block.
+- `ASSERT_FAIL` reserves `TRAPNUM=52`.
+
+Open questions:
+- Exact `TRAPARG0` contents for ASSERT vs other faults in fixup context (PC vs fault VA) and whether `CAUSE` is used.
+
+---
+
 ## 2026-02-25 — Prefetch (PRF/PRFI)
 
 Topic:
