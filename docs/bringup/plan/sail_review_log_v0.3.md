@@ -145,6 +145,18 @@ Decision:
 
 ---
 
+## 2026-02-25 — Prefetch (PRF/PRFI)
+
+Topic:
+- Define architectural semantics for prefetch/hint instructions and whether they may fault.
+
+Decision (Kevin):
+- Prefetch is a **non-faulting hint**: address translation, permission, and alignment errors are suppressed (no trap).
+- `HL.PRF.A` / `HL.PRFI.UA` additionally return the computed effective address:
+  - `Rd = EA`
+
+---
+
 ## 2026-02-25 — DIV/REM edge cases (ARM-like semantics)
 
 Topic:

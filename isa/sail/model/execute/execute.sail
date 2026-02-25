@@ -1262,3 +1262,47 @@ function exec_hl_xoriw(RegDst : bits(5), SrcL : bits(5), simm24 : bits(24)) -> u
   let r32 : bits(32) = a32 ^ imm32;
   write_regdst(RegDst, sext32_from32(r32))
 }
+
+
+// -----------------------------------------------------------------------------
+// Prefetch (non-faulting hints)
+
+function ea_base_reg(srcl : bits(5), srcr : bits(5), srcrtype : bits(2), shamt5 : bits(5)) -> bits(64) = {
+  let base = read_reg5(srcl);
+  let idx = apply_srcrtype_arith64(srcrtype, read_reg5(srcr));
+  let sh : int = unsigned(shamt5);
+  base + (idx << sh)
+}
+
+function exec_prf(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2), shamt : bits(5)) -> unit = {
+  // RegDst is encoded but architecturally unused for PRF.
+  let _ea = ea_base_reg(SrcL, SrcR, SrcRType, shamt);
+  // Non-faulting hint: no architectural effect.
+  ()
+}
+
+function exec_prfi_u(RegDst : bits(5), SrcL : bits(5), simm12 : bits(12)) -> unit = {
+  let _ea = read_reg5(SrcL) + sext12_to64(simm12);
+  ()
+}
+
+function exec_hl_prf(SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2), model : bits(5), shamt : bits(5)) -> unit = {
+  let _ea = ea_base_reg(SrcL, SrcR, SrcRType, shamt);
+  ()
+}
+
+function exec_hl_prf_a(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2), model : bits(5), shamt : bits(5)) -> unit = {
+  let ea = ea_base_reg(SrcL, SrcR, SrcRType, shamt);
+  // .A form returns EA
+  write_regdst(RegDst, ea)
+}
+
+function exec_hl_prfi_u(SrcL : bits(5), model : bits(5), simm17 : bits(17)) -> unit = {
+  let _ea = read_reg5(SrcL) + sext17_to64(simm17);
+  ()
+}
+
+function exec_hl_prfi_ua(RegDst : bits(5), SrcL : bits(5), model : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = read_reg5(SrcL) + sext17_to64(simm17);
+  write_regdst(RegDst, ea)
+}

@@ -9,13 +9,19 @@
     "no_output": {
       "codes": [
         0,
-        [24, 29]
+        [
+          24,
+          29
+        ]
       ],
       "behavior": "No architectural output is produced (silent drop). No exception is raised."
     },
     "gpr": {
       "codes": [
-        [1, 23]
+        [
+          1,
+          23
+        ]
       ],
       "behavior": "Write the selected GPR (R1..R23)."
     },
@@ -124,7 +130,12 @@
     "word_writeback": {
       "description": "For *W variants, compute in 32-bit domain then sign-extend result to 64-bit.",
       "policy": "sign_extend_all_w_results",
-      "applies_to": ["DIVW", "DIVUW", "REMW", "REMUW"]
+      "applies_to": [
+        "DIVW",
+        "DIVUW",
+        "REMW",
+        "REMUW"
+      ]
     },
     "hl_two_dest": {
       "description": "HL.* multi-cycle ALU two-destination encodings.",
@@ -142,7 +153,10 @@
     "word_writeback": {
       "description": "For *W variants, compute in 32-bit domain then sign-extend result to 64-bit.",
       "policy": "sign_extend_all_w_results",
-      "applies_to": ["MULW", "MULUW"]
+      "applies_to": [
+        "MULW",
+        "MULUW"
+      ]
     },
     "hl_two_dest": {
       "description": "HL.MUL/HL.MULU return the full 128-bit product split across two destinations.",
@@ -241,5 +255,14 @@
       "operation": "field = bitfield_wrap(SrcL, M, N); if (N % 8) != 0 then result=0 else reverse byte order of low N bits; high bits are zero.",
       "invalid_n": "If N is not a multiple of 8, the result is 0 (silent)."
     }
+  },
+  "prefetch": {
+    "description": "Prefetch / cache hint instructions (PRF/PRFI and HL variants).",
+    "faults": "suppressed (non-faulting hint)",
+    "address_writeback": {
+      "hl_prf_a": "Rd = EA",
+      "hl_prfi_ua": "Rd = EA"
+    },
+    "note": "Prefetch provides a performance hint only; it must not architecturally fault in strict v0.3."
   }
 }

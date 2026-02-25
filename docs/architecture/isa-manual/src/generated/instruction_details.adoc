@@ -9538,7 +9538,8 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+EA = Read(SrcL) + (ApplySrcRType(SrcRType, Read(SrcR)) << shamt)
+PrefetchHint(EA)  // non-faulting
 ----
 
 [[insndesc-prefetch-hl-prf-a]]
@@ -9556,7 +9557,9 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+EA = Read(SrcL) + (ApplySrcRType(SrcRType, Read(SrcR)) << shamt)
+PrefetchHint(EA)  // non-faulting
+Write(Dst, EA)
 ----
 
 [[insndesc-prefetch-hl-prfi-u]]
@@ -9574,7 +9577,8 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+EA = Read(SrcL) + SignExtend(simm17)
+PrefetchHint(EA)  // non-faulting
 ----
 
 [[insndesc-prefetch-hl-prfi-ua]]
@@ -9592,7 +9596,9 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+EA = Read(SrcL) + SignExtend(simm17)
+PrefetchHint(EA)  // non-faulting
+Write(Dst, EA)
 ----
 
 [[insndesc-general]]
@@ -11088,9 +11094,8 @@ Operation (informative)::
 +
 [source]
 ----
-addr = ComputeAddress(/* per syntax */)
-value = Load(addr)
-Write(Dst, value)
+EA = Read(SrcL) + (ApplySrcRType(SrcRType, Read(SrcR)) << shamt)
+PrefetchHint(EA)  // non-faulting
 ----
 
 [[insndesc-load-register-offset-v-lb]]
@@ -13147,9 +13152,8 @@ Operation (informative)::
 +
 [source]
 ----
-addr = ComputeAddress(/* per syntax */)
-value = Load(addr)
-Write(Dst, value)
+EA = Read(SrcL) + SignExtend(simm12)
+PrefetchHint(EA)  // non-faulting
 ----
 
 [[insndesc-load-unscaled-v-ldi-u]]

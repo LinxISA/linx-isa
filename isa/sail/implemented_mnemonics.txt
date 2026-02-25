@@ -170,6 +170,14 @@ HL.ANDIW
 HL.ORIW
 HL.XORIW
 
+# Prefetch (non-faulting hints)
+PRF
+PRFI.U
+HL.PRF
+HL.PRF.A
+HL.PRFI.U
+HL.PRFI.UA
+
 # HL multi-cycle ALU (two-destination)
 HL.DIV
 HL.DIVU

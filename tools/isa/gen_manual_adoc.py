@@ -658,6 +658,21 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
                 return [f"if ({pred}):", f"  TPC = {target}"]
             return [f"if (branch condition holds):", f"  TPC = {target}"]
 
+    # Prefetch.
+    if root in {"PRF", "PRFI"}:
+        if root == "PRF":
+            addr = "Read(SrcL) + (ApplySrcRType(SrcRType, Read(SrcR)) << shamt)"
+            if enc == "HL" and sub == "A":
+                return [f"EA = {addr}", "PrefetchHint(EA)  // non-faulting", "Write(Dst, EA)"]
+            return [f"EA = {addr}", "PrefetchHint(EA)  // non-faulting"]
+
+        # PRFI.U / HL.PRFI.U / HL.PRFI.UA
+        imm = "SignExtend(simm12)" if enc == "" else "SignExtend(simm17)"
+        addr = f"Read(SrcL) + {imm}"
+        if enc == "HL" and sub == "UA":
+            return [f"EA = {addr}", "PrefetchHint(EA)  // non-faulting", "Write(Dst, EA)"]
+        return [f"EA = {addr}", "PrefetchHint(EA)  // non-faulting"]
+
     # Block markers.
     if root == "BSTOP":
         return ["EndBlock()"]
