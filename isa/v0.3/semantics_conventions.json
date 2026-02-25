@@ -320,7 +320,9 @@
     },
     "assert": {
       "participates": true,
-      "trapnum": "ASSERT_FAIL (52)"
+      "trapnum": "ASSERT_FAIL (52)",
+      "cause": 0,
+      "cause_note": "TRAPNO.CAUSE is populated; for ASSERT_FAIL it is fixed to 0."
     },
     "traparg0": {
       "assert_fail": "faulting PC/TPC",

@@ -175,6 +175,7 @@ Decisions (Kevin):
   - No privilege/ACR switch occurs (remain in current execution context)
 - `ASSERT` failures participate in the same fixup routing when they occur inside an unmanaged fixup block.
 - `ASSERT_FAIL` reserves `TRAPNUM=52`.
+- For `ASSERT_FAIL`, `TRAPNO.CAUSE = 0`.
 
 Open questions:
 - Whether `CAUSE` is used/required in fixup context beyond `TRAPNUM`.
