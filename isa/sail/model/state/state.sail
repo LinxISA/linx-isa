@@ -63,7 +63,7 @@ function trap_assert_fail(traparg0 : bits(64)) -> unit = {
   raise_trap(to_bits(6, 52), to_bits(24, 0), traparg0, 0b0)
 }
 
-// EConfig (execution config) accessors (stub). In strict v0.3, EConfig[3] is the global exception enable.
+// ECONFIG (execution config) accessors (stub). In strict v0.3, ECONFIG[3] is the global exception enable.
 function read_econfig() -> bits(64) = {
   unimplemented("read_econfig");
   0x0000_0000_0000_0000

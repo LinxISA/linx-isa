@@ -329,8 +329,9 @@
       "illegal_elsewhere": "TRAPNUM=4 ILLEGAL_INST",
       "masking": {
         "policy": "masked_by_global_exception_enable",
-        "enable_bit": "EConfig[3]",
-        "when_disabled": "ASSERT is treated as NOP (no trap, no trap-envelope update)"
+        "enable_bit": "ECONFIG[3]",
+        "when_disabled": "ASSERT is treated as NOP (no trap, no trap-envelope update)",
+        "scope": "ASSERT_FAIL only (other synchronous exceptions are unaffected)"
       }
     },
     "traparg0": {

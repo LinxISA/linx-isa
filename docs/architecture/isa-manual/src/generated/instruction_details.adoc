@@ -74,7 +74,7 @@ Operation (informative)::
 +
 [source]
 ----
-if (EConfig[3] && Read(SrcL) == 0): Trap(ASSERT_FAIL)
+if (ECONFIG[3] && Read(SrcL) == 0): Trap(ASSERT_FAIL)
 ----
 
 [[insndesc-execution-control-bse]]
