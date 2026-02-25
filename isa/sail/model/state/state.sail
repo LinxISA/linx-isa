@@ -73,3 +73,9 @@ function read_econfig() -> bits(64) = {
 function exceptions_enabled() -> bool = {
   read_econfig()[3] == 1b1
 }
+
+
+function trap_sw_breakpoint(traparg0 : bits(64)) -> unit = {
+  // TRAPNUM_SW_BREAKPOINT = 50, CAUSE=0, BI=0
+  raise_trap(to_bits(6, 50), to_bits(24, 0), traparg0, 0b0)
+}

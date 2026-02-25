@@ -714,6 +714,17 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
     # Execution control.
     if root == "ASSERT":
         return ["if (ECONFIG[3] && Read(SrcL) == 0): Trap(ASSERT_FAIL)"]
+    if root == "EBREAK":
+        return ["Trap(SW_BREAKPOINT)"]
+    if root in {"FENCE"}:
+        if sub == "I":
+            return ["FenceI()  // instruction-cache fence"]
+        if sub == "D":
+            return ["FenceD()  // data-cache fence"]
+
+    # Block split / transform hints.
+    if root in {"BWT", "BWI", "BWE", "BSE"}:
+        return ["BlockHint()  // front-end metadata; no architectural effect"]
 
     # Block markers.
     if root == "BSTOP":

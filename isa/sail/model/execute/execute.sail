@@ -1524,3 +1524,25 @@ function exec_assert(SrcL : bits(5)) -> unit = {
   let v = read_reg5(SrcL);
   if exceptions_enabled() & (v == 0x0000_0000_0000_0000) then trap_assert_fail(read_pc_or_tpc()) else ()
 }
+
+
+function exec_fence_i() -> unit = {
+  // Instruction cache fence; architecturally no-op in staged Sail.
+  ()
+}
+
+function exec_fence_d() -> unit = {
+  // Data cache fence; architecturally no-op in staged Sail.
+  ()
+}
+
+function exec_ebreak() -> unit = {
+  // Software breakpoint.
+  trap_sw_breakpoint(read_pc_or_tpc())
+}
+
+// Block split / transform hints (front-end metadata; no architectural effect).
+function exec_bwt() -> unit = { () }
+function exec_bwi() -> unit = { () }
+function exec_bwe() -> unit = { () }
+function exec_bse() -> unit = { () }

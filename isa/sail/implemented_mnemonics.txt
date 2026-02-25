@@ -195,6 +195,15 @@ FABS
 
 # Execution control
 ASSERT
+EBREAK
+FENCE.I
+FENCE.D
+
+# Block split / transform hints
+BWT
+BWI
+BWE
+BSE
 
 # HL multi-cycle ALU (two-destination)
 HL.DIV

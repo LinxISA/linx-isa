@@ -97,7 +97,7 @@ Operation (informative)::
 +
 [source]
 ----
-WaitEventOrInterrupt(Read(SrcL))
+BlockHint()  // front-end metadata; no architectural effect
 ----
 
 [[insndesc-execution-control-bwe]]
@@ -120,7 +120,7 @@ Operation (informative)::
 +
 [source]
 ----
-WaitEventOrInterrupt(Read(SrcL))
+BlockHint()  // front-end metadata; no architectural effect
 ----
 
 [[insndesc-execution-control-bwi]]
@@ -143,7 +143,7 @@ Operation (informative)::
 +
 [source]
 ----
-WaitEventOrInterrupt(Read(SrcL))
+BlockHint()  // front-end metadata; no architectural effect
 ----
 
 [[insndesc-execution-control-bwt]]
@@ -166,7 +166,7 @@ Operation (informative)::
 +
 [source]
 ----
-Sleep(duration=Read(SrcL))
+BlockHint()  // front-end metadata; no architectural effect
 ----
 
 [[insndesc-execution-control-ebreak]]
@@ -189,7 +189,7 @@ Operation (informative)::
 +
 [source]
 ----
-Trap(EBREAK)  // debugger break / environment break
+Trap(SW_BREAKPOINT)
 ----
 
 [[insndesc-execution-control-fence-d]]
@@ -207,7 +207,7 @@ Operation (informative)::
 +
 [source]
 ----
-FenceD(pred_imm, succ_imm)  // memory ordering fence
+FenceD()  // data-cache fence
 ----
 
 [[insndesc-execution-control-fence-i]]
@@ -225,7 +225,7 @@ Operation (informative)::
 +
 [source]
 ----
-FenceI()  // synchronize instruction fetch with prior stores
+FenceI()  // instruction-cache fence
 ----
 
 [[insndesc-arithmetic-operation-64bit]]
@@ -3645,7 +3645,7 @@ Operation (informative)::
 +
 [source]
 ----
-Trap(EBREAK)  // debugger break / environment break
+Trap(SW_BREAKPOINT)
 ----
 
 [[insndesc-c-tinst-c-slli]]
