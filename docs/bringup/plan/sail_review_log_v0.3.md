@@ -148,3 +148,4 @@ Decision (Kevin):
 - For *W variants, writeback is **sign-extend from bit 31** to 64-bit for ALL of DIVW/DIVUW/REMW/REMUW.
 - For HL DIV/REM two-destination forms: `Dst0 = quotient`, `Dst1 = remainder`.
 - For HL MUL/MULU two-destination forms: `Dst0 = low64(full_product)`, `Dst1 = high64(full_product)`.
+- For HL MADD/MADDW two-destination forms: treat as 128-bit accumulator `acc = (SrcL*SrcR + SrcD)` (signed multiply/add), then `Dst0 = low64(acc)`, `Dst1 = high64(acc)`.

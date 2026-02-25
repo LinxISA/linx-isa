@@ -1114,3 +1114,33 @@ function exec_maddw(RegDst : bits(5), SrcD : bits(5), SrcL : bits(5), SrcR : bit
   let r32 : bits(32) = to_bits(32, ri);
   write_regdst(RegDst, sext32_from32(r32))
 }
+
+
+// -----------------------------------------------------------------------------
+// HL (48-bit) multi-cycle ALU: two-destination multiply-add
+// Convention: Dst0 = low64(acc); Dst1 = high64(acc), where acc is 128-bit.
+
+function exec_hl_madd(RegDst0 : bits(5), RegDst1 : bits(5), SrcD : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let d = read_reg5(SrcD);
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  let pi : int = signed(a) * signed(b);
+  let di : int = signed(d);
+  let acc : int = pi + di;
+  let acc128 : bits(128) = to_bits(128, acc);
+  write_regdst(RegDst0, acc128[63..0]);
+  write_regdst(RegDst1, acc128[127..64])
+}
+
+function exec_hl_maddw(RegDst0 : bits(5), RegDst1 : bits(5), SrcD : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let d32 : bits(32) = read_reg5(SrcD)[31..0];
+  let a32 : bits(32) = read_reg5(SrcL)[31..0];
+  let b32 : bits(32) = read_reg5(SrcR)[31..0];
+  let di : int = signed(sext32_from32(d32));
+  let ai : int = signed(sext32_from32(a32));
+  let bi : int = signed(sext32_from32(b32));
+  let acc : int = (ai * bi) + di;
+  let acc128 : bits(128) = to_bits(128, acc);
+  write_regdst(RegDst0, acc128[63..0]);
+  write_regdst(RegDst1, acc128[127..64])
+}
