@@ -50,3 +50,15 @@ function read_predicate_p() -> bits(64) = {
   0x0000_0000_0000_0000
 }
 
+
+
+// Trap raising (stubs). In a complete model these update TRAPNO/TRAPARG0/ECSTATE
+// and transfer control. In staged bring-up we keep these as explicit markers.
+function raise_trap(trapnum : bits(6), cause : bits(24), traparg0 : bits(64), bi : bits(1)) -> unit = {
+  unimplemented("raise_trap")
+}
+
+function trap_assert_fail(traparg0 : bits(64)) -> unit = {
+  // TRAPNUM_ASSERT_FAIL = 52, CAUSE=0, BI=0
+  raise_trap(to_bits(6, 52), to_bits(24, 0), traparg0, 0b0)
+}

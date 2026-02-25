@@ -193,6 +193,9 @@ FMAX
 FMIN
 FABS
 
+# Execution control
+ASSERT
+
 # HL multi-cycle ALU (two-destination)
 HL.DIV
 HL.DIVU
