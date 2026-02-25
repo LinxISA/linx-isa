@@ -298,7 +298,10 @@
     },
     "exception_routing": {
       "when": "synchronous exception occurs while executing inside an unmanaged fixup block",
-      "vector_base": "fixup_target (computed from fixup_label; replaces EVBASE)",
+      "handler_pc": "fixup_target (computed from fixup_label; replaces EVBASE)",
+      "entry_style": "new_block (try/catch)",
+      "requires_fixup_target_is_block_start": true,
+      "fixup_block_type": "any",
       "write_trap_envelope": [
         "TRAPNO",
         "TRAPARG0",
@@ -307,14 +310,13 @@
       "write_ebarg_optional": true,
       "privilege_switch": "none",
       "acr_switch": "none",
-      "entry_style": "new_block",
-      "next_block_target": "fixup_target"
+      "ecstate_bi": 0,
+      "fault_visibility": "precise to instruction: all prior instructions commit; faulting instruction has no architectural side effects"
     },
     "fixup_label_addressing": {
       "base": "BPC (block start PC)",
       "offset_unit_bytes": 2,
-      "rule": "target = BPC + (SignExtend(fixup_label) << 1)",
-      "name": "fixup_target"
+      "rule": "fixup_target = BPC + (SignExtend(fixup_label) << 1)"
     },
     "assert": {
       "participates": true,
@@ -325,8 +327,9 @@
       "other_sync_exceptions": "faulting VA"
     },
     "trapno": {
-      "E": "0 (sync only)",
-      "ARGV": "1 (TRAPARG0 always valid for fixup-routed exceptions)"
+      "E": 0,
+      "ARGV": 1,
+      "CAUSE": "populated (profile-defined per TRAPNUM)"
     }
   }
 }
