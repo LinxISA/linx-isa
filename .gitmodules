@@ -43,3 +43,6 @@
 	path = skills/linx-skills
 	url = https://github.com/LinxISA/linx-skills.git
 	branch = main
+[submodule "lib/mesa3d"]
+	path = lib/mesa3d
+	url = https://github.com/LinxISA/mesa3d.git
