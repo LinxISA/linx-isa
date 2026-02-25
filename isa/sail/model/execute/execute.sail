@@ -1064,3 +1064,29 @@ function exec_muluw(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = 
   // *W writeback convention: sign-extend low 32 bits.
   write_regdst(RegDst, sext32_from32(p32))
 }
+
+// -----------------------------------------------------------------------------
+// HL (48-bit) multi-cycle ALU: two-destination multiply
+// Convention: Dst0 = low 64 bits of full product; Dst1 = high 64 bits.
+
+function exec_hl_mul(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  let pi : int = signed(a) * signed(b);
+  let p128 : bits(128) = to_bits(128, pi);
+  let lo : bits(64) = p128[63..0];
+  let hi : bits(64) = p128[127..64];
+  write_regdst(RegDst0, lo);
+  write_regdst(RegDst1, hi)
+}
+
+function exec_hl_mulu(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  let pi : int = unsigned(a) * unsigned(b);
+  let p128 : bits(128) = to_bits(128, pi);
+  let lo : bits(64) = p128[63..0];
+  let hi : bits(64) = p128[127..64];
+  write_regdst(RegDst0, lo);
+  write_regdst(RegDst1, hi)
+}

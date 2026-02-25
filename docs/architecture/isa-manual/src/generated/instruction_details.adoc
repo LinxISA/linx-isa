@@ -6078,11 +6078,14 @@ Operation (informative)::
 a = Read(SrcL)
 b = Read(SrcR)
 if (b == 0):
-  result = 0
+  q = 0
+  r = a
 else:
   // signed overflow: MIN_INT / -1
-  result = TruncTowardZeroDiv(a, b)
-Write(Dst, result)
+  q = TruncTowardZeroDiv(a, b)
+  r = a - q*b
+Write(Dst0, q)
+Write(Dst1, r)
 ----
 
 [[insndesc-multi-cycle-alu-hl-divu]]
@@ -6103,10 +6106,13 @@ Operation (informative)::
 a = Read(SrcL)
 b = Read(SrcR)
 if (b == 0):
-  result = 0
+  q = 0
+  r = a
 else:
-  result = TruncTowardZeroDiv(a, b)
-Write(Dst, result)
+  q = TruncTowardZeroDiv(a, b)
+  r = a - q*b
+Write(Dst0, q)
+Write(Dst1, r)
 ----
 
 [[insndesc-multi-cycle-alu-hl-divuw]]
@@ -6127,11 +6133,15 @@ Operation (informative)::
 a = Read(SrcL)[31:0]
 b = Read(SrcR)[31:0]
 if (b == 0):
-  result = 0
+  q = 0
+  r = a
 else:
-  result = TruncTowardZeroDiv(a, b)
-  result = SignExtend32(result)
-Write(Dst, result)
+  q = TruncTowardZeroDiv(a, b)
+  r = a - q*b
+  q = SignExtend32(q)
+  r = SignExtend32(r)
+Write(Dst0, q)
+Write(Dst1, r)
 ----
 
 [[insndesc-multi-cycle-alu-hl-divw]]
@@ -6152,12 +6162,16 @@ Operation (informative)::
 a = Read(SrcL)[31:0]
 b = Read(SrcR)[31:0]
 if (b == 0):
-  result = 0
+  q = 0
+  r = a
 else:
   // signed overflow: MIN_INT / -1
-  result = TruncTowardZeroDiv(a, b)
-  result = SignExtend32(result)
-Write(Dst, result)
+  q = TruncTowardZeroDiv(a, b)
+  r = a - q*b
+  q = SignExtend32(q)
+  r = SignExtend32(r)
+Write(Dst0, q)
+Write(Dst1, r)
 ----
 
 [[insndesc-multi-cycle-alu-hl-madd]]
@@ -6213,8 +6227,11 @@ Operation (informative)::
 ----
 a = Read(SrcL)
 b = Read(SrcR)
-result = LowProduct(a, b)
-Write(Dst, result)
+prod = FullProduct(a, b)
+lo = prod[63:0]
+hi = prod[127:64]
+Write(Dst0, lo)
+Write(Dst1, hi)
 ----
 
 [[insndesc-multi-cycle-alu-hl-mulu]]
@@ -6234,8 +6251,11 @@ Operation (informative)::
 ----
 a = Read(SrcL)
 b = Read(SrcR)
-result = LowProduct(a, b)
-Write(Dst, result)
+prod = FullProduct(a, b)
+lo = prod[63:0]
+hi = prod[127:64]
+Write(Dst0, lo)
+Write(Dst1, hi)
 ----
 
 [[insndesc-multi-cycle-alu-hl-rem]]
@@ -6256,12 +6276,14 @@ Operation (informative)::
 a = Read(SrcL)
 b = Read(SrcR)
 if (b == 0):
-  result = a
+  q = 0
+  r = a
 else:
   // signed overflow: MIN_INT / -1
   q = TruncTowardZeroDiv(a, b)
-  result = a - q*b
-Write(Dst, result)
+  r = a - q*b
+Write(Dst0, q)
+Write(Dst1, r)
 ----
 
 [[insndesc-multi-cycle-alu-hl-remu]]
@@ -6282,11 +6304,13 @@ Operation (informative)::
 a = Read(SrcL)
 b = Read(SrcR)
 if (b == 0):
-  result = a
+  q = 0
+  r = a
 else:
   q = TruncTowardZeroDiv(a, b)
-  result = a - q*b
-Write(Dst, result)
+  r = a - q*b
+Write(Dst0, q)
+Write(Dst1, r)
 ----
 
 [[insndesc-multi-cycle-alu-hl-remuw]]
@@ -6307,12 +6331,15 @@ Operation (informative)::
 a = Read(SrcL)[31:0]
 b = Read(SrcR)[31:0]
 if (b == 0):
-  result = a
+  q = 0
+  r = a
 else:
   q = TruncTowardZeroDiv(a, b)
-  result = a - q*b
-  result = SignExtend32(result)
-Write(Dst, result)
+  r = a - q*b
+  q = SignExtend32(q)
+  r = SignExtend32(r)
+Write(Dst0, q)
+Write(Dst1, r)
 ----
 
 [[insndesc-multi-cycle-alu-hl-remw]]
@@ -6333,13 +6360,16 @@ Operation (informative)::
 a = Read(SrcL)[31:0]
 b = Read(SrcR)[31:0]
 if (b == 0):
-  result = a
+  q = 0
+  r = a
 else:
   // signed overflow: MIN_INT / -1
   q = TruncTowardZeroDiv(a, b)
-  result = a - q*b
-  result = SignExtend32(result)
-Write(Dst, result)
+  r = a - q*b
+  q = SignExtend32(q)
+  r = SignExtend32(r)
+Write(Dst0, q)
+Write(Dst1, r)
 ----
 
 [[insndesc-multi-cycle-alu-madd]]

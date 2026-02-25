@@ -697,39 +697,39 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
         is_rem = root.startswith("REM")
         lines = []
         if w:
-            lines += [
-                "a = Read(SrcL)[31:0]",
-                "b = Read(SrcR)[31:0]",
-            ]
+            lines += ["a = Read(SrcL)[31:0]", "b = Read(SrcR)[31:0]"]
         else:
-            lines += [
-                "a = Read(SrcL)",
-                "b = Read(SrcR)",
-            ]
+            lines += ["a = Read(SrcL)", "b = Read(SrcR)"]
 
         # ARM-like convention: div-by-zero yields q=0; remainder yields a.
+        if enc == "HL":
+            lines += ["if (b == 0):", "  q = 0", "  r = a", "else:"]
+            if not unsigned_op:
+                lines += ["  // signed overflow: MIN_INT / -1"]
+            lines += ["  q = TruncTowardZeroDiv(a, b)", "  r = a - q*b"]
+            if w:
+                lines += ["  q = SignExtend32(q)", "  r = SignExtend32(r)"]
+            lines += ["Write(Dst0, q)", "Write(Dst1, r)"]
+            return lines
+
         lines += ["if (b == 0):"]
         if is_rem:
             lines += ["  result = a"]
         else:
             lines += ["  result = 0"]
         lines += ["else:"]
-
         if (not unsigned_op) and (root in {"DIV", "DIVW", "REM", "REMW"}):
             lines += ["  // signed overflow: MIN_INT / -1"]
-
         if is_rem:
             lines += ["  q = TruncTowardZeroDiv(a, b)", "  result = a - q*b"]
         else:
             lines += ["  result = TruncTowardZeroDiv(a, b)"]
-
         if w:
             lines += ["  result = SignExtend32(result)"]
-
         lines += ["Write(Dst, result)"]
         return lines
 
-    # Multi-cycle ALU: multiplication (low-part).
+    # Multi-cycle ALU: multiplication.
     if root in {"MUL", "MULU", "MULW", "MULUW"}:
         w = root.endswith("W")
         lines = []
@@ -737,29 +737,15 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
             lines += ["a = Read(SrcL)[31:0]", "b = Read(SrcR)[31:0]"]
         else:
             lines += ["a = Read(SrcL)", "b = Read(SrcR)"]
+
+        if enc == "HL":
+            lines += ["prod = FullProduct(a, b)", "lo = prod[63:0]", "hi = prod[127:64]", "Write(Dst0, lo)", "Write(Dst1, hi)"]
+            return lines
+
         lines += ["result = LowProduct(a, b)"]
         if w:
             lines += ["result = SignExtend32(result)"]
         lines += ["Write(Dst, result)"]
-        return lines
-
-    if root in {"HL.DIV", "HL.DIVU", "HL.DIVW", "HL.DIVUW", "HL.REM", "HL.REMU", "HL.REMW", "HL.REMUW"}:
-        # Convention: Dst0=quotient, Dst1=remainder.
-        # HL.REM* are treated as aliases returning the same pair.
-        w = root.endswith("W")
-        unsigned_op = root in {"HL.DIVU", "HL.DIVUW", "HL.REMU", "HL.REMUW"}
-        lines = []
-        if w:
-            lines += ["a = Read(SrcL)[31:0]", "b = Read(SrcR)[31:0]"]
-        else:
-            lines += ["a = Read(SrcL)", "b = Read(SrcR)"]
-        lines += ["if (b == 0):", "  q = 0", "  r = a", "else:"]
-        if not unsigned_op:
-            lines += ["  // signed overflow: MIN_INT / -1"]
-        lines += ["  q = TruncTowardZeroDiv(a, b)", "  r = a - q*b"]
-        if w:
-            lines += ["  q = SignExtend32(q)", "  r = SignExtend32(r)"]
-        lines += ["Write(Dst0, q)", "Write(Dst1, r)"]
         return lines
 
     # Template instructions.

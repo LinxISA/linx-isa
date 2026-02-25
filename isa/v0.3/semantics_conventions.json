@@ -113,6 +113,24 @@
       "dst1": "remainder"
     }
   },
+  "multiplication": {
+    "description": "MUL family conventions (strict v0.3 staged).",
+    "scalar": {
+      "model": "low_part",
+      "note": "Scalar MUL/MULU return the low 64 bits of the full product."
+    },
+    "word_writeback": {
+      "description": "For *W variants, compute in 32-bit domain then sign-extend result to 64-bit.",
+      "policy": "sign_extend_all_w_results",
+      "applies_to": ["MULW", "MULUW"]
+    },
+    "hl_two_dest": {
+      "description": "HL.MUL/HL.MULU return the full 128-bit product split across two destinations.",
+      "policy": "dst0_low64_dst1_high64",
+      "dst0": "low64(full_product)",
+      "dst1": "high64(full_product)"
+    }
+  },
   "block_legality": {
     "description": "Legality conventions for which instruction families may appear as payload in coupled scalar blocks vs engine bodies.",
     "bru_control_transfer": {
