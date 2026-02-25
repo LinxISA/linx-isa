@@ -1498,3 +1498,20 @@ function exec_fmin(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : b
     write_regdst(RegDst, r)
   }
 }
+
+
+// -----------------------------------------------------------------------------
+// Floating-point bitwise ops
+
+function exec_fabs(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
+  let a64 = read_reg5(SrcL);
+  let is_fs = (SrcType == 0b01);
+  if is_fs then {
+    let a32 = a64[31..0];
+    let r32 = a32 & 0x7FFF_FFFF;
+    write_regdst(RegDst, zext32_from32(r32))
+  } else {
+    let r = a64 & 0x7FFF_FFFF_FFFF_FFFF;
+    write_regdst(RegDst, r)
+  }
+}

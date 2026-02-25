@@ -191,6 +191,7 @@ FNES
 # Floating-point max/min (ordered)
 FMAX
 FMIN
+FABS
 
 # HL multi-cycle ALU (two-destination)
 HL.DIV

@@ -6761,7 +6761,10 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+// clear sign bit (fd: bit63; fs: bit31 in low word)
+result = Abs(a)
+Write(Dst, result)
 ----
 
 [[insndesc-floating-point-arithmetic-fadd]]
@@ -14167,7 +14170,10 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+// clear sign bit (fd: bit63; fs: bit31 in low word)
+result = Abs(a)
+Write(Dst, result)
 ----
 
 [[insndesc-floating-point-arithmetic-2-v-fclass]]

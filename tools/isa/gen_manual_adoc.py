@@ -703,6 +703,14 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
             "Write(Dst, result)",
         ]
 
+    if root == "FABS":
+        return [
+            "a = Read(SrcL)",
+            "// clear sign bit (fd: bit63; fs: bit31 in low word)",
+            "result = Abs(a)",
+            "Write(Dst, result)",
+        ]
+
     # Block markers.
     if root == "BSTOP":
         return ["EndBlock()"]
