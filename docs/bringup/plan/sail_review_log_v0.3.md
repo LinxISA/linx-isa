@@ -176,7 +176,12 @@ Decisions (Kevin):
 - `ASSERT_FAIL` reserves `TRAPNUM=52`.
 
 Open questions:
-- Exact `TRAPARG0` contents for ASSERT vs other faults in fixup context (PC vs fault VA) and whether `CAUSE` is used.
+- Whether `CAUSE` is used/required in fixup context beyond `TRAPNUM`.
+
+Decision (Kevin):
+- `TRAPARG0` mapping in fixup context:
+  - For `ASSERT_FAIL`: `TRAPARG0 = faulting PC/TPC`
+  - For other synchronous exceptions: `TRAPARG0 = faulting VA` (e.g., data/page fault address)
 
 ---
 

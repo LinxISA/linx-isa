@@ -316,6 +316,10 @@
     "assert": {
       "participates": true,
       "trapnum": "ASSERT_FAIL (52)"
+    },
+    "traparg0": {
+      "assert_fail": "faulting PC/TPC",
+      "other_sync_exceptions": "faulting VA"
     }
   }
 }
