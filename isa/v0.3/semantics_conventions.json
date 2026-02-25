@@ -322,7 +322,11 @@
       "participates": true,
       "trapnum": "ASSERT_FAIL (52)",
       "cause": 0,
-      "cause_note": "TRAPNO.CAUSE is populated; for ASSERT_FAIL it is fixed to 0."
+      "cause_note": "TRAPNO.CAUSE is populated; for ASSERT_FAIL it is fixed to 0.",
+      "legal_blocks": [
+        "SYS"
+      ],
+      "illegal_elsewhere": "TRAPNUM=4 ILLEGAL_INST"
     },
     "traparg0": {
       "assert_fail": "faulting PC/TPC",
