@@ -90,6 +90,22 @@ Execution families:
 - `MSEQ/MPAR`: may use bridged global memory (`*.brg`) via the tile/TMA path.
 - `VSEQ/VPAR`: **tile-only** (must not use `*.brg`).
 
+### 2.1.1 Proposed LinxGPGPU group (warp-like) microarchitecture
+Assumption (from current design direction):
+- One **group** (≈ NVIDIA warp concept) consists of:
+  - **64 vector lanes**, each lane is primarily **32-bit** datapath
+  - **1 scalar-uniform lane** (per group), **64-bit** datapath
+  - a **64-bit predicate/mask** used by the scalar lane to control the group’s control flow / lane activity
+
+Mapping to LinxISA semantics:
+- Set `LB0 = 64` for `lane_count`.
+- Use `lc0` as the lane id in `[0..63]`.
+- Use `lc1` as the group id (warp id) when multiple groups are dispatched (`LB1 = group_count`).
+
+Important contract alignment:
+- This is consistent with strict v0.3’s “scalar-uniform per group” rule.
+- We must explicitly define how the **64-bit lane mask** interacts with v0.3’s inactive-lane policy (`merge` vs `zero`) and how it is set/updated by the shader compiler/runtime.
+
 ### 2.2 `LB0` lane_count policy & VEC width
 Critical decisions (implementation policy; ISA allows variability):
 - Choose a **lane_count policy** (`LB0`, lanes per group). Common candidates: 8/16/32/64.
