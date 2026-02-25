@@ -120,7 +120,8 @@
       { "trapnum": 44, "name": "INTERRUPT", "description": "Interrupt class (E=1, TRAPARG0=irq_id)." },
       { "trapnum": 49, "name": "HW_BREAKPOINT", "description": "Hardware breakpoint trap." },
       { "trapnum": 50, "name": "SW_BREAKPOINT", "description": "Software breakpoint trap (EBREAK)." },
-      { "trapnum": 51, "name": "HW_WATCHPOINT", "description": "Hardware watchpoint trap." }
+      { "trapnum": 51, "name": "HW_WATCHPOINT", "description": "Hardware watchpoint trap." },
+      { "trapnum": 52, "name": "ASSERT_FAIL", "description": "ASSERT failure trap (bring-up / fixup-aware)." }
     ]
   }
 }
