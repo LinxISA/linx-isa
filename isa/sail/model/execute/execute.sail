@@ -1306,3 +1306,163 @@ function exec_hl_prfi_ua(RegDst : bits(5), SrcL : bits(5), model : bits(5), simm
   let ea = read_reg5(SrcL) + sext17_to64(simm17);
   write_regdst(RegDst, ea)
 }
+
+
+// -----------------------------------------------------------------------------
+// Floating-point compares (ordered; NaN => false)
+//
+// Note: staged model treats FP values as raw IEEE754 bit patterns.
+// SrcType (2-bit) selects format: 0=fd (64-bit), 1=fs (32-bit in low bits).
+// Other SrcType values are treated as fd.
+
+function fp64_is_nan(x : bits(64)) -> bool = {
+  let exp : bits(11) = x[62..52];
+  let frac : bits(52) = x[51..0];
+  (exp == to_bits(11, 0x7FF)) & (frac != to_bits(52, 0))
+}
+
+function fp64_is_zero(x : bits(64)) -> bool = {
+  (x & 0x7FFF_FFFF_FFFF_FFFF) == 0x0000_0000_0000_0000
+}
+
+function fp64_key(x : bits(64)) -> bits(64) = {
+  // Total-order key for non-NaNs (matches LinxCore RTL ordering trick).
+  if x[63] == 1b1 then ~x else (x ^ 0x8000_0000_0000_0000)
+}
+
+function fp64_eq(a : bits(64), b : bits(64)) -> bool = {
+  let nan = fp64_is_nan(a) | fp64_is_nan(b);
+  let both_zero = fp64_is_zero(a) & fp64_is_zero(b);
+  (~nan) & ((a == b) | both_zero)
+}
+
+function fp64_lt(a : bits(64), b : bits(64)) -> bool = {
+  let nan = fp64_is_nan(a) | fp64_is_nan(b);
+  let both_zero = fp64_is_zero(a) & fp64_is_zero(b);
+  (~nan) & (~both_zero) & (unsigned(fp64_key(a)) < unsigned(fp64_key(b)))
+}
+
+function fp64_ge(a : bits(64), b : bits(64)) -> bool = {
+  let nan = fp64_is_nan(a) | fp64_is_nan(b);
+  let both_zero = fp64_is_zero(a) & fp64_is_zero(b);
+  (~nan) & (both_zero | (unsigned(fp64_key(a)) >= unsigned(fp64_key(b))))
+}
+
+function fp32_is_nan(x : bits(32)) -> bool = {
+  let exp : bits(8) = x[30..23];
+  let frac : bits(23) = x[22..0];
+  (exp == to_bits(8, 0xFF)) & (frac != to_bits(23, 0))
+}
+
+function fp32_is_zero(x : bits(32)) -> bool = {
+  (x & 0x7FFF_FFFF) == 0x0000_0000
+}
+
+function fp32_key(x : bits(32)) -> bits(32) = {
+  if x[31] == 1b1 then ~x else (x ^ 0x8000_0000)
+}
+
+function fp32_eq(a : bits(32), b : bits(32)) -> bool = {
+  let nan = fp32_is_nan(a) | fp32_is_nan(b);
+  let both_zero = fp32_is_zero(a) & fp32_is_zero(b);
+  (~nan) & ((a == b) | both_zero)
+}
+
+function fp32_lt(a : bits(32), b : bits(32)) -> bool = {
+  let nan = fp32_is_nan(a) | fp32_is_nan(b);
+  let both_zero = fp32_is_zero(a) & fp32_is_zero(b);
+  (~nan) & (~both_zero) & (unsigned(fp32_key(a)) < unsigned(fp32_key(b)))
+}
+
+function fp32_ge(a : bits(32), b : bits(32)) -> bool = {
+  let nan = fp32_is_nan(a) | fp32_is_nan(b);
+  let both_zero = fp32_is_zero(a) & fp32_is_zero(b);
+  (~nan) & (both_zero | (unsigned(fp32_key(a)) >= unsigned(fp32_key(b))))
+}
+
+function exec_feq(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
+  let a64 = read_reg5(SrcL);
+  let b64 = read_reg5(SrcR);
+  let is_fs = (SrcType == 0b01);
+  let r = if is_fs then bool_to_u64(fp32_eq(a64[31..0], b64[31..0])) else bool_to_u64(fp64_eq(a64, b64));
+  write_regdst(RegDst, r)
+}
+
+function exec_flt(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
+  let a64 = read_reg5(SrcL);
+  let b64 = read_reg5(SrcR);
+  let is_fs = (SrcType == 0b01);
+  let r = if is_fs then bool_to_u64(fp32_lt(a64[31..0], b64[31..0])) else bool_to_u64(fp64_lt(a64, b64));
+  write_regdst(RegDst, r)
+}
+
+function exec_fge(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
+  let a64 = read_reg5(SrcL);
+  let b64 = read_reg5(SrcR);
+  let is_fs = (SrcType == 0b01);
+  let r = if is_fs then bool_to_u64(fp32_ge(a64[31..0], b64[31..0])) else bool_to_u64(fp64_ge(a64, b64));
+  write_regdst(RegDst, r)
+}
+
+// S-variants: currently modeled as aliases (no FP exception signaling modeled in staged Sail).
+function exec_feqs(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
+  exec_feq(RegDst, SrcL, SrcR, SrcType)
+}
+
+function exec_flts(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
+  exec_flt(RegDst, SrcL, SrcR, SrcType)
+}
+
+function exec_fges(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
+  exec_fge(RegDst, SrcL, SrcR, SrcType)
+}
+
+
+function exec_fne(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
+  // Ordered not-equal: NaN => false.
+  let a64 = read_reg5(SrcL);
+  let b64 = read_reg5(SrcR);
+  let is_fs = (SrcType == 0b01);
+  let eq = if is_fs then fp32_eq(a64[31..0], b64[31..0]) else fp64_eq(a64, b64);
+  write_regdst(RegDst, bool_to_u64((~eq)))
+}
+
+function exec_fnes(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
+  exec_fne(RegDst, SrcL, SrcR, SrcType)
+}
+
+function exec_fmax(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
+  // Note: ordered comparisons; if either is NaN, return SrcL (consistent, deterministic).
+  let a64 = read_reg5(SrcL);
+  let b64 = read_reg5(SrcR);
+  let is_fs = (SrcType == 0b01);
+  if is_fs then {
+    let a32 = a64[31..0];
+    let b32 = b64[31..0];
+    let nan = fp32_is_nan(a32) | fp32_is_nan(b32);
+    let r32 = if nan then a32 else (fp32_ge(a32, b32) ? a32 : b32);
+    write_regdst(RegDst, zext32_from32(r32))
+  } else {
+    let nan = fp64_is_nan(a64) | fp64_is_nan(b64);
+    let r = if nan then a64 else (fp64_ge(a64, b64) ? a64 : b64);
+    write_regdst(RegDst, r)
+  }
+}
+
+function exec_fmin(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
+  // Note: ordered comparisons; if either is NaN, return SrcL (consistent, deterministic).
+  let a64 = read_reg5(SrcL);
+  let b64 = read_reg5(SrcR);
+  let is_fs = (SrcType == 0b01);
+  if is_fs then {
+    let a32 = a64[31..0];
+    let b32 = b64[31..0];
+    let nan = fp32_is_nan(a32) | fp32_is_nan(b32);
+    let r32 = if nan then a32 else (fp32_lt(a32, b32) ? a32 : b32);
+    write_regdst(RegDst, zext32_from32(r32))
+  } else {
+    let nan = fp64_is_nan(a64) | fp64_is_nan(b64);
+    let r = if nan then a64 else (fp64_lt(a64, b64) ? a64 : b64);
+    write_regdst(RegDst, r)
+  }
+}

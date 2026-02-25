@@ -7299,7 +7299,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedEq(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-floating-point-compare-feqs]]
@@ -7322,7 +7326,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedEq(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-floating-point-compare-fge]]
@@ -7345,7 +7353,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedGe(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-floating-point-compare-fges]]
@@ -7368,7 +7380,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedGe(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-floating-point-compare-flt]]
@@ -7391,7 +7407,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedLt(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-floating-point-compare-flts]]
@@ -7414,7 +7434,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedLt(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-floating-point-compare-fne]]
@@ -7437,7 +7461,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedNe(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-floating-point-compare-fnes]]
@@ -7460,7 +7488,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedNe(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-max-min]]
@@ -7486,7 +7518,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// Ordered select; if either is NaN, return SrcL
+result = OrderedMax(a, b)
+Write(Dst, result)
 ----
 
 [[insndesc-max-min-fmin]]
@@ -7509,7 +7545,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// Ordered select; if either is NaN, return SrcL
+result = OrderedMin(a, b)
+Write(Dst, result)
 ----
 
 [[insndesc-max-min-max]]
@@ -14367,7 +14407,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedEq(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-two-source-floating-point-v-feqs]]
@@ -14385,7 +14429,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedEq(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-two-source-floating-point-v-fge]]
@@ -14403,7 +14451,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedGe(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-two-source-floating-point-v-fges]]
@@ -14421,7 +14473,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedGe(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-two-source-floating-point-v-flt]]
@@ -14439,7 +14495,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedLt(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-two-source-floating-point-v-flts]]
@@ -14457,7 +14517,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedLt(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-two-source-floating-point-v-fmax]]
@@ -14475,7 +14539,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// Ordered select; if either is NaN, return SrcL
+result = OrderedMax(a, b)
+Write(Dst, result)
 ----
 
 [[insndesc-two-source-floating-point-v-fmin]]
@@ -14493,7 +14561,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// Ordered select; if either is NaN, return SrcL
+result = OrderedMin(a, b)
+Write(Dst, result)
 ----
 
 [[insndesc-two-source-floating-point-v-fne]]
@@ -14511,7 +14583,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedNe(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-two-source-floating-point-v-fnes]]
@@ -14529,7 +14605,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedNe(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-two-source-floating-point-v-max]]

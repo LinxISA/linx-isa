@@ -673,6 +673,36 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
             return [f"EA = {addr}", "PrefetchHint(EA)  // non-faulting", "Write(Dst, EA)"]
         return [f"EA = {addr}", "PrefetchHint(EA)  // non-faulting"]
 
+    # Floating-point compares (ordered; NaN => false).
+    if root in {"FEQ", "FEQS", "FNE", "FNES", "FLT", "FLTS", "FGE", "FGES"}:
+        pred = {
+            "FEQ": "OrderedEq(a, b)",
+            "FEQS": "OrderedEq(a, b)",
+            "FNE": "OrderedNe(a, b)",
+            "FNES": "OrderedNe(a, b)",
+            "FLT": "OrderedLt(a, b)",
+            "FLTS": "OrderedLt(a, b)",
+            "FGE": "OrderedGe(a, b)",
+            "FGES": "OrderedGe(a, b)",
+        }[root]
+        return [
+            "a = Read(SrcL)  // fd: full 64b; fs: low 32b",
+            "b = Read(SrcR)",
+            "// SrcType selects fd/fs; NaNs make predicate false",
+            f"result = {pred} ? 1 : 0",
+            "Write(Dst, result)",
+        ]
+
+    if root in {"FMAX", "FMIN"}:
+        which = "Max" if root == "FMAX" else "Min"
+        return [
+            "a = Read(SrcL)  // fd: full 64b; fs: low 32b",
+            "b = Read(SrcR)",
+            "// Ordered select; if either is NaN, return SrcL",
+            f"result = Ordered{which}(a, b)",
+            "Write(Dst, result)",
+        ]
+
     # Block markers.
     if root == "BSTOP":
         return ["EndBlock()"]

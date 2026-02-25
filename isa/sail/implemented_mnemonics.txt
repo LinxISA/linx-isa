@@ -178,6 +178,20 @@ HL.PRF.A
 HL.PRFI.U
 HL.PRFI.UA
 
+# Floating-point compare (ordered)
+FEQ
+FEQS
+FLT
+FLTS
+FGE
+FGES
+FNE
+FNES
+
+# Floating-point max/min (ordered)
+FMAX
+FMIN
+
 # HL multi-cycle ALU (two-destination)
 HL.DIV
 HL.DIVU

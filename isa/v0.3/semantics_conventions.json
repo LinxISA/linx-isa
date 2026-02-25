@@ -264,5 +264,19 @@
       "hl_prfi_ua": "Rd = EA"
     },
     "note": "Prefetch provides a performance hint only; it must not architecturally fault in strict v0.3."
+  },
+  "floating_point_compare": {
+    "description": "Scalar floating-point compare conventions (FEQ/FLT/FGE and S-variants).",
+    "nan_behavior": "ordered (NaN => predicate false)",
+    "zero_behavior": "+0 and -0 compare equal",
+    "format_select": {
+      "field": "SrcType",
+      "mapping": {
+        "0": "fd (64-bit)",
+        "1": "fs (32-bit in low bits)"
+      },
+      "other_values": "treated as fd"
+    },
+    "s_variants": "modeled as aliases (no FP exception signaling modeled in staged Sail)"
   }
 }
