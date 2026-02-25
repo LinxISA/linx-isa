@@ -298,7 +298,7 @@
     },
     "exception_routing": {
       "when": "synchronous exception occurs while executing inside an unmanaged fixup block",
-      "vector_base": "fixup_label (replaces EVBASE)",
+      "vector_base": "fixup_target (computed from fixup_label; replaces EVBASE)",
       "write_trap_envelope": [
         "TRAPNO",
         "TRAPARG0",
@@ -306,12 +306,15 @@
       ],
       "write_ebarg_optional": true,
       "privilege_switch": "none",
-      "acr_switch": "none"
+      "acr_switch": "none",
+      "entry_style": "new_block",
+      "next_block_target": "fixup_target"
     },
     "fixup_label_addressing": {
       "base": "BPC (block start PC)",
       "offset_unit_bytes": 2,
-      "rule": "target = BPC + (SignExtend(fixup_label) << 1)"
+      "rule": "target = BPC + (SignExtend(fixup_label) << 1)",
+      "name": "fixup_target"
     },
     "assert": {
       "participates": true,

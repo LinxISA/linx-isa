@@ -168,9 +168,10 @@ Decisions (Kevin):
   - `BSTART.SYS FALL<, fixup_label`
 - If a synchronous exception occurs in an unmanaged fixup block:
   - Write trap envelope registers: `TRAPNO/TRAPARG0/ECSTATE` (EBARG optional)
-  - Vector to the `fixup_label` handler **instead of EVBASE**
-  - `fixup_label` target is PC-relative from the block start PC (BPC), halfword-scaled:
-    - `target = BPC + (SignExtend(fixup_label) << 1)`
+    - `TRAPNO.E = 0` (sync) and `TRAPNO.ARGV = 1`
+  - Route control-flow to the fixup handler **instead of EVBASE**, entering it as a **new block** (try/catch):
+    - `fixup_target = BPC + (SignExtend(fixup_label) << 1)`
+    - next-block target PC is set to `fixup_target`
   - No privilege/ACR switch occurs (remain in current execution context)
 - `ASSERT` failures participate in the same fixup routing when they occur inside an unmanaged fixup block.
 - `ASSERT_FAIL` reserves `TRAPNUM=52`.
