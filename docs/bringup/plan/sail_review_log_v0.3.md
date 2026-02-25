@@ -118,6 +118,19 @@ Notes:
 
 ---
 
+## 2026-02-25 — Floating-point min/max NaN behavior
+
+Topic:
+- `FMAX/FMIN` NaN handling semantics.
+
+Decision (Kevin):
+- IEEE/ARM-style `maxNum/minNum` behavior:
+  - if exactly one operand is NaN: return the non-NaN operand
+  - if both operands are NaN: return canonical qNaN
+  - signed zeros: FMAX returns +0 when both are zeros; FMIN returns -0 iff either operand is -0.
+
+---
+
 ## 2026-02-25 — CSEL SrcRType handling
 
 Topic:

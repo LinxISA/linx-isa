@@ -7520,8 +7520,8 @@ Operation (informative)::
 ----
 a = Read(SrcL)  // fd: full 64b; fs: low 32b
 b = Read(SrcR)
-// Ordered select; if either is NaN, return SrcL
-result = OrderedMax(a, b)
+// maxNum/minNum: one NaN => other; both NaN => canonical qNaN
+result = FPMaxNum(a, b)
 Write(Dst, result)
 ----
 
@@ -7547,8 +7547,8 @@ Operation (informative)::
 ----
 a = Read(SrcL)  // fd: full 64b; fs: low 32b
 b = Read(SrcR)
-// Ordered select; if either is NaN, return SrcL
-result = OrderedMin(a, b)
+// maxNum/minNum: one NaN => other; both NaN => canonical qNaN
+result = FPMinNum(a, b)
 Write(Dst, result)
 ----
 
@@ -14541,8 +14541,8 @@ Operation (informative)::
 ----
 a = Read(SrcL)  // fd: full 64b; fs: low 32b
 b = Read(SrcR)
-// Ordered select; if either is NaN, return SrcL
-result = OrderedMax(a, b)
+// maxNum/minNum: one NaN => other; both NaN => canonical qNaN
+result = FPMaxNum(a, b)
 Write(Dst, result)
 ----
 
@@ -14563,8 +14563,8 @@ Operation (informative)::
 ----
 a = Read(SrcL)  // fd: full 64b; fs: low 32b
 b = Read(SrcR)
-// Ordered select; if either is NaN, return SrcL
-result = OrderedMin(a, b)
+// maxNum/minNum: one NaN => other; both NaN => canonical qNaN
+result = FPMinNum(a, b)
 Write(Dst, result)
 ----
 

@@ -1432,37 +1432,69 @@ function exec_fnes(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : b
 }
 
 function exec_fmax(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
-  // Note: ordered comparisons; if either is NaN, return SrcL (consistent, deterministic).
+  // ARM/IEEE maxNum-style: if exactly one operand is NaN, return the other; if both NaN, return canonical qNaN.
+  // For signed zeros: if both are zero, return +0 for FMAX.
   let a64 = read_reg5(SrcL);
   let b64 = read_reg5(SrcR);
   let is_fs = (SrcType == 0b01);
   if is_fs then {
     let a32 = a64[31..0];
     let b32 = b64[31..0];
-    let nan = fp32_is_nan(a32) | fp32_is_nan(b32);
-    let r32 = if nan then a32 else (fp32_ge(a32, b32) ? a32 : b32);
+    let nan_a = fp32_is_nan(a32);
+    let nan_b = fp32_is_nan(b32);
+    let both_zero = fp32_is_zero(a32) & fp32_is_zero(b32);
+    let r32 =
+      if nan_a & nan_b then 0x7FC0_0000
+      else if nan_a then b32
+      else if nan_b then a32
+      else if both_zero then 0x0000_0000
+      else if fp32_ge(a32, b32) then a32 else b32;
     write_regdst(RegDst, zext32_from32(r32))
   } else {
-    let nan = fp64_is_nan(a64) | fp64_is_nan(b64);
-    let r = if nan then a64 else (fp64_ge(a64, b64) ? a64 : b64);
+    let nan_a = fp64_is_nan(a64);
+    let nan_b = fp64_is_nan(b64);
+    let both_zero = fp64_is_zero(a64) & fp64_is_zero(b64);
+    let r =
+      if nan_a & nan_b then 0x7FF8_0000_0000_0000
+      else if nan_a then b64
+      else if nan_b then a64
+      else if both_zero then 0x0000_0000_0000_0000
+      else if fp64_ge(a64, b64) then a64 else b64;
     write_regdst(RegDst, r)
   }
 }
 
 function exec_fmin(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
-  // Note: ordered comparisons; if either is NaN, return SrcL (consistent, deterministic).
+  // ARM/IEEE minNum-style: if exactly one operand is NaN, return the other; if both NaN, return canonical qNaN.
+  // For signed zeros: if both are zero, return -0 iff either operand is -0.
   let a64 = read_reg5(SrcL);
   let b64 = read_reg5(SrcR);
   let is_fs = (SrcType == 0b01);
   if is_fs then {
     let a32 = a64[31..0];
     let b32 = b64[31..0];
-    let nan = fp32_is_nan(a32) | fp32_is_nan(b32);
-    let r32 = if nan then a32 else (fp32_lt(a32, b32) ? a32 : b32);
+    let nan_a = fp32_is_nan(a32);
+    let nan_b = fp32_is_nan(b32);
+    let both_zero = fp32_is_zero(a32) & fp32_is_zero(b32);
+    let neg0 = (a32[31] == 1b1) | (b32[31] == 1b1);
+    let r32 =
+      if nan_a & nan_b then 0x7FC0_0000
+      else if nan_a then b32
+      else if nan_b then a32
+      else if both_zero then (if neg0 then 0x8000_0000 else 0x0000_0000)
+      else if fp32_lt(a32, b32) then a32 else b32;
     write_regdst(RegDst, zext32_from32(r32))
   } else {
-    let nan = fp64_is_nan(a64) | fp64_is_nan(b64);
-    let r = if nan then a64 else (fp64_lt(a64, b64) ? a64 : b64);
+    let nan_a = fp64_is_nan(a64);
+    let nan_b = fp64_is_nan(b64);
+    let both_zero = fp64_is_zero(a64) & fp64_is_zero(b64);
+    let neg0 = (a64[63] == 1b1) | (b64[63] == 1b1);
+    let r =
+      if nan_a & nan_b then 0x7FF8_0000_0000_0000
+      else if nan_a then b64
+      else if nan_b then a64
+      else if both_zero then (if neg0 then 0x8000_0000_0000_0000 else 0x0000_0000_0000_0000)
+      else if fp64_lt(a64, b64) then a64 else b64;
     write_regdst(RegDst, r)
   }
 }

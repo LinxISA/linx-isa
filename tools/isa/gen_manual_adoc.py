@@ -698,8 +698,8 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
         return [
             "a = Read(SrcL)  // fd: full 64b; fs: low 32b",
             "b = Read(SrcR)",
-            "// Ordered select; if either is NaN, return SrcL",
-            f"result = Ordered{which}(a, b)",
+            "// maxNum/minNum: one NaN => other; both NaN => canonical qNaN",
+            f"result = FP{which}Num(a, b)",
             "Write(Dst, result)",
         ]
 

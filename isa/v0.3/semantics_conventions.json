@@ -277,6 +277,17 @@
       },
       "other_values": "treated as fd"
     },
-    "s_variants": "modeled as aliases (no FP exception signaling modeled in staged Sail)"
+    "s_variants": "modeled as aliases (no FP exception signaling modeled in staged Sail)",
+    "minmax": {
+      "nan_behavior": "maxNum/minNum (one NaN => other; both NaN => canonical qNaN)",
+      "canonical_qnan": {
+        "fd": "0x7ff8_0000_0000_0000",
+        "fs": "0x7fc0_0000"
+      },
+      "signed_zero": {
+        "fmax": "when both inputs are zeros, return +0",
+        "fmin": "when both inputs are zeros, return -0 iff any input is -0"
+      }
+    }
   }
 }
