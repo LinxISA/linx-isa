@@ -690,6 +690,21 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
             "Write(Dst, result)",
         ]
 
+    # Max/min.
+    if root in {"MAX", "MAXU", "MIN", "MINU"}:
+        cmp = {
+            "MAX": "signed(a) >= signed(b)",
+            "MAXU": "unsigned(a) >= unsigned(b)",
+            "MIN": "signed(a) <= signed(b)",
+            "MINU": "unsigned(a) <= unsigned(b)",
+        }[root]
+        return [
+            "a = Read(SrcL)",
+            "b = Read(SrcR)",
+            f"result = ({cmp}) ? a : b",
+            "Write(Dst, result)",
+        ]
+
     # Multi-cycle ALU: division and remainder.
     if root in {"DIV", "DIVU", "DIVW", "DIVUW", "REM", "REMU", "REMW", "REMUW"}:
         w = root.endswith("W")

@@ -1144,3 +1144,35 @@ function exec_hl_maddw(RegDst0 : bits(5), RegDst1 : bits(5), SrcD : bits(5), Src
   write_regdst(RegDst0, acc128[63..0]);
   write_regdst(RegDst1, acc128[127..64])
 }
+
+
+// -----------------------------------------------------------------------------
+// Max/Min
+
+function exec_max(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  let r = if signed(a) >= signed(b) then a else b;
+  write_regdst(RegDst, r)
+}
+
+function exec_maxu(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  let r = if unsigned(a) >= unsigned(b) then a else b;
+  write_regdst(RegDst, r)
+}
+
+function exec_min(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  let r = if signed(a) <= signed(b) then a else b;
+  write_regdst(RegDst, r)
+}
+
+function exec_minu(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  let r = if unsigned(a) <= unsigned(b) then a else b;
+  write_regdst(RegDst, r)
+}

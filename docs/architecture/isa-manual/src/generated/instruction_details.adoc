@@ -7508,7 +7508,10 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+result = (signed(a) >= signed(b)) ? a : b
+Write(Dst, result)
 ----
 
 [[insndesc-max-min-maxu]]
@@ -7531,7 +7534,10 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+result = (unsigned(a) >= unsigned(b)) ? a : b
+Write(Dst, result)
 ----
 
 [[insndesc-max-min-min]]
@@ -7554,7 +7560,10 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+result = (signed(a) <= signed(b)) ? a : b
+Write(Dst, result)
 ----
 
 [[insndesc-max-min-minu]]
@@ -7577,7 +7586,10 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+result = (unsigned(a) <= unsigned(b)) ? a : b
+Write(Dst, result)
 ----
 
 [[insndesc-reserve]]
@@ -14503,7 +14515,10 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+result = (signed(a) >= signed(b)) ? a : b
+Write(Dst, result)
 ----
 
 [[insndesc-two-source-floating-point-v-min]]
@@ -14521,7 +14536,10 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+result = (signed(a) <= signed(b)) ? a : b
+Write(Dst, result)
 ----
 
 [[insndesc-general-manager]]

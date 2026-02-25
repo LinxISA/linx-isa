@@ -146,6 +146,12 @@ MULUW
 MADD
 MADDW
 
+# Max/Min
+MAX
+MAXU
+MIN
+MINU
+
 # HL multi-cycle ALU (two-destination)
 HL.DIV
 HL.DIVU
