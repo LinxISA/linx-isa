@@ -139,6 +139,10 @@ REM
 REMU
 REMW
 REMUW
+MUL
+MULU
+MULW
+MULUW
 
 # HL multi-cycle ALU (two-destination)
 HL.DIV

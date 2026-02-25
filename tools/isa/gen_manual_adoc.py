@@ -729,6 +729,20 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
         lines += ["Write(Dst, result)"]
         return lines
 
+    # Multi-cycle ALU: multiplication (low-part).
+    if root in {"MUL", "MULU", "MULW", "MULUW"}:
+        w = root.endswith("W")
+        lines = []
+        if w:
+            lines += ["a = Read(SrcL)[31:0]", "b = Read(SrcR)[31:0]"]
+        else:
+            lines += ["a = Read(SrcL)", "b = Read(SrcR)"]
+        lines += ["result = LowProduct(a, b)"]
+        if w:
+            lines += ["result = SignExtend32(result)"]
+        lines += ["Write(Dst, result)"]
+        return lines
+
     if root in {"HL.DIV", "HL.DIVU", "HL.DIVW", "HL.DIVUW", "HL.REM", "HL.REMU", "HL.REMW", "HL.REMUW"}:
         # Convention: Dst0=quotient, Dst1=remainder.
         # HL.REM* are treated as aliases returning the same pair.

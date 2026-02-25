@@ -6211,7 +6211,10 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+result = LowProduct(a, b)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-hl-mulu]]
@@ -6229,7 +6232,10 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+result = LowProduct(a, b)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-hl-rem]]
@@ -6402,7 +6408,10 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+result = LowProduct(a, b)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-mulu]]
@@ -6425,7 +6434,10 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+result = LowProduct(a, b)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-muluw]]
@@ -6448,7 +6460,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+b = Read(SrcR)[31:0]
+result = LowProduct(a, b)
+result = SignExtend32(result)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-mulw]]
@@ -6471,7 +6487,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+b = Read(SrcR)[31:0]
+result = LowProduct(a, b)
+result = SignExtend32(result)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-rem]]
@@ -6631,7 +6651,10 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+result = LowProduct(a, b)
+Write(Dst, result)
 ----
 
 [[insndesc-floating-point-arithmetic]]

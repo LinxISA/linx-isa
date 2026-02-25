@@ -1029,3 +1029,38 @@ function exec_hl_remw(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR
 function exec_hl_remuw(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
   exec_hl_divuw(RegDst0, RegDst1, SrcL, SrcR)
 }
+
+
+// -----------------------------------------------------------------------------
+// Multi-cycle ALU: multiplication (low-part; *W sign-extends from bit31)
+
+function exec_mul(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  let pi : int = signed(a) * signed(b);
+  write_regdst(RegDst, to_bits(64, pi))
+}
+
+function exec_mulu(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  let pi : int = unsigned(a) * unsigned(b);
+  write_regdst(RegDst, to_bits(64, pi))
+}
+
+function exec_mulw(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a32 : bits(32) = read_reg5(SrcL)[31..0];
+  let b32 : bits(32) = read_reg5(SrcR)[31..0];
+  let pi : int = signed(sext32_from32(a32)) * signed(sext32_from32(b32));
+  let p32 : bits(32) = to_bits(32, pi);
+  write_regdst(RegDst, sext32_from32(p32))
+}
+
+function exec_muluw(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a32 : bits(32) = read_reg5(SrcL)[31..0];
+  let b32 : bits(32) = read_reg5(SrcR)[31..0];
+  let pi : int = unsigned(zext32_from32(a32)) * unsigned(zext32_from32(b32));
+  let p32 : bits(32) = to_bits(32, pi);
+  // *W writeback convention: sign-extend low 32 bits.
+  write_regdst(RegDst, sext32_from32(p32))
+}
