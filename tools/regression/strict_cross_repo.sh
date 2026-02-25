@@ -27,6 +27,10 @@ RUN_MODEL_DIFF="${RUN_MODEL_DIFF-}"
 RUN_CPP_GATES="${RUN_CPP_GATES-}" # 0|1
 CPP_MODE="${CPP_MODE:-phase-b}"
 RUN_CONSISTENCY_CHECKS="${RUN_CONSISTENCY_CHECKS:-1}" # 0|1 (nested runtime-convergence calls set 0)
+RUN_AVS_MATRIX_AUDIT="${RUN_AVS_MATRIX_AUDIT-}" # 0|1
+RUN_QEMU_OPCODE_SYNC_AUDIT="${RUN_QEMU_OPCODE_SYNC_AUDIT-}" # 0|1
+RUN_QEMU_ISA_COVERAGE_AUDIT="${RUN_QEMU_ISA_COVERAGE_AUDIT-}" # 0|1
+RUN_LINUX_DEFCONFIG_AUDIT="${RUN_LINUX_DEFCONFIG_AUDIT-}" # 0|1
 MULTI_AGENT_MANIFEST="${MULTI_AGENT_MANIFEST:-$ROOT/docs/bringup/agent_runs/manifest.yaml}"
 MULTI_AGENT_WAIVERS="${MULTI_AGENT_WAIVERS:-$ROOT/docs/bringup/agent_runs/waivers.yaml}"
 MULTI_AGENT_CHECKLISTS_ROOT="${MULTI_AGENT_CHECKLISTS_ROOT:-$ROOT/docs/bringup/agent_runs/checklists}"
@@ -41,12 +45,20 @@ if [[ "$LINX_BRINGUP_PROFILE" == "release-strict" ]]; then
   [[ -n "$ALLOW_GLIBC_G1_BLOCKED" ]] || ALLOW_GLIBC_G1_BLOCKED=0
   [[ -n "$RUN_MODEL_DIFF" ]] || RUN_MODEL_DIFF=0
   [[ -n "$RUN_CPP_GATES" ]] || RUN_CPP_GATES=0
+  [[ -n "$RUN_AVS_MATRIX_AUDIT" ]] || RUN_AVS_MATRIX_AUDIT=1
+  [[ -n "$RUN_QEMU_OPCODE_SYNC_AUDIT" ]] || RUN_QEMU_OPCODE_SYNC_AUDIT=1
+  [[ -n "$RUN_QEMU_ISA_COVERAGE_AUDIT" ]] || RUN_QEMU_ISA_COVERAGE_AUDIT=1
+  [[ -n "$RUN_LINUX_DEFCONFIG_AUDIT" ]] || RUN_LINUX_DEFCONFIG_AUDIT=1
 else
   [[ -n "$RUN_GLIBC_G1B" ]] || RUN_GLIBC_G1B=0
   [[ -n "$GLIBC_G1B_ALLOW_BLOCKED" ]] || GLIBC_G1B_ALLOW_BLOCKED=1
   [[ -n "$ALLOW_GLIBC_G1_BLOCKED" ]] || ALLOW_GLIBC_G1_BLOCKED=0
   [[ -n "$RUN_MODEL_DIFF" ]] || RUN_MODEL_DIFF=0
   [[ -n "$RUN_CPP_GATES" ]] || RUN_CPP_GATES=0
+  [[ -n "$RUN_AVS_MATRIX_AUDIT" ]] || RUN_AVS_MATRIX_AUDIT=0
+  [[ -n "$RUN_QEMU_OPCODE_SYNC_AUDIT" ]] || RUN_QEMU_OPCODE_SYNC_AUDIT=0
+  [[ -n "$RUN_QEMU_ISA_COVERAGE_AUDIT" ]] || RUN_QEMU_ISA_COVERAGE_AUDIT=0
+  [[ -n "$RUN_LINUX_DEFCONFIG_AUDIT" ]] || RUN_LINUX_DEFCONFIG_AUDIT=0
 fi
 
 if [[ "$LINX_BRINGUP_PROFILE" == "release-strict" ]]; then
@@ -171,10 +183,20 @@ echo "info: Linux runtime IRQ policy LINX_DISABLE_TIMER_IRQ=$LINX_DISABLE_TIMER_
 echo "info: Emulator/system IRQ policy LINX_EMU_DISABLE_TIMER_IRQ=$LINX_EMU_DISABLE_TIMER_IRQ"
 echo "info: release controls RUN_GLIBC_G1B=$RUN_GLIBC_G1B GLIBC_G1B_ALLOW_BLOCKED=$GLIBC_G1B_ALLOW_BLOCKED ALLOW_GLIBC_G1_BLOCKED=$ALLOW_GLIBC_G1_BLOCKED RUN_MODEL_DIFF=$RUN_MODEL_DIFF"
 echo "info: C++ controls RUN_CPP_GATES=$RUN_CPP_GATES CPP_MODE=$CPP_MODE"
+echo "info: maturity audits AVS=$RUN_AVS_MATRIX_AUDIT QEMU_SYNC=$RUN_QEMU_OPCODE_SYNC_AUDIT QEMU_COVERAGE=$RUN_QEMU_ISA_COVERAGE_AUDIT LINUX_DEFCONFIG=$RUN_LINUX_DEFCONFIG_AUDIT"
 
 echo
 echo "-- Compiler AVS gate"
 (cd "$ROOT/avs/compiler/linx-llvm/tests" && CLANG="$CLANG" ./run.sh)
+
+if [[ "$RUN_AVS_MATRIX_AUDIT" == "1" ]]; then
+  echo
+  echo "-- AVS matrix status artifact audit"
+  python3 "$ROOT/tools/bringup/check_avs_matrix_status.py" \
+    --matrix "$ROOT/avs/linx_avs_v1_test_matrix.yaml" \
+    --status "$ROOT/avs/linx_avs_v1_test_matrix_status.json" \
+    --report-out "$ROOT/docs/bringup/gates/avs_matrix_status_audit.json"
+fi
 
 echo
 echo "-- Handwritten asm t/u target audit"
@@ -202,6 +224,26 @@ echo
 echo "-- QEMU strict system gate"
 (cd "$ROOT/avs/qemu" && LINX_DISABLE_TIMER_IRQ="$LINX_EMU_DISABLE_TIMER_IRQ" CLANG="$CLANG" LLD="$LLD" QEMU="$QEMU" ./check_system_strict.sh)
 
+if [[ "$RUN_QEMU_OPCODE_SYNC_AUDIT" == "1" ]]; then
+  echo
+  echo "-- QEMU opcode meta/id sync audit"
+  python3 "$ROOT/tools/bringup/check_qemu_opcode_meta_sync.py" \
+    --qemu-root "$ROOT/emulator/qemu" \
+    --allowlist "$ROOT/docs/bringup/qemu_opcode_sync_allowlist.json" \
+    --report-out "$ROOT/docs/bringup/gates/qemu_opcode_sync_latest.json" \
+    --out-md "$ROOT/docs/bringup/gates/qemu_opcode_sync_latest.md"
+fi
+
+if [[ "$RUN_QEMU_ISA_COVERAGE_AUDIT" == "1" ]]; then
+  echo
+  echo "-- ISA vs QEMU coverage report"
+  python3 "$ROOT/tools/bringup/report_qemu_isa_coverage.py" \
+    --spec "$ROOT/isa/v0.3/linxisa-v0.3.json" \
+    --qemu-meta "$ROOT/emulator/qemu/target/linx/linx_opcode_meta_gen.h" \
+    --report-out "$ROOT/docs/bringup/gates/qemu_isa_coverage_latest.json" \
+    --out-md "$ROOT/docs/bringup/gates/qemu_isa_coverage_latest.md"
+fi
+
 LINUX_ROOT="${LINUX_ROOT:-$ROOT/kernel/linux}"
 if [[ ! -d "$LINUX_ROOT/tools/linxisa/initramfs" ]]; then
   echo "error: Linux initramfs tooling not found at $LINUX_ROOT/tools/linxisa/initramfs" >&2
@@ -210,6 +252,14 @@ fi
 if [[ ! -f "$LINUX_ROOT/tools/linxisa/busybox_rootfs/boot.py" ]]; then
   echo "error: Linux busybox rootfs tooling not found at $LINUX_ROOT/tools/linxisa/busybox_rootfs/boot.py" >&2
   exit 1
+fi
+
+if [[ "$RUN_LINUX_DEFCONFIG_AUDIT" == "1" ]]; then
+  echo
+  echo "-- Linux defconfig 9p/virtio compatibility audit"
+  python3 "$ROOT/tools/bringup/check_linx_virt_defconfig_spec.py" \
+    --defconfig "$LINUX_ROOT/arch/linx/configs/linxisa_virt_defconfig" \
+    --report-out "$ROOT/docs/bringup/gates/linxisa_virt_defconfig_audit.json"
 fi
 
 echo
@@ -377,11 +427,16 @@ if [[ "$LINX_BRINGUP_PROFILE" == "release-strict" && "$RUN_CONSISTENCY_CHECKS" =
     --progress "$ROOT/docs/bringup/PROGRESS.md" \
     --gate-status "$ROOT/docs/bringup/GATE_STATUS.md" \
     --libc-status "$ROOT/docs/bringup/libc_status.md" \
+    --avs-matrix-audit "$ROOT/docs/bringup/gates/avs_matrix_status_audit.json" \
+    --qemu-opcode-sync "$ROOT/docs/bringup/gates/qemu_opcode_sync_latest.json" \
+    --qemu-isa-coverage "$ROOT/docs/bringup/gates/qemu_isa_coverage_latest.json" \
+    --linux-defconfig-audit "$ROOT/docs/bringup/gates/linxisa_virt_defconfig_audit.json" \
+    --require-maturity-artifacts \
     --profile "$LINX_BRINGUP_PROFILE" \
     --lane-policy "${LINX_LANE_POLICY:-external+pin-required}" \
     --trace-schema-version "${LINX_TRACE_SCHEMA_VERSION:-1.0}" \
     --max-age-hours "${LINX_GATE_MAX_AGE_HOURS:-24}" \
-    "${CONSISTENCY_MULTI_AGENT_ARGS[@]}"
+    ${CONSISTENCY_MULTI_AGENT_ARGS[@]+"${CONSISTENCY_MULTI_AGENT_ARGS[@]}"}
 fi
 
 echo

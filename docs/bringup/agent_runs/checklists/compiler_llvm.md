@@ -20,6 +20,6 @@
   Done means: runtime overlay artifacts are present and linkable in the sysroot.
   Status: ✅ PASS (2026-02-23) - C++ runtime overlay build completes with `ok: Linx C++ runtimes ready` (log: `docs/bringup/gates/logs/2026-02-23-r2-pin-reassess/pin/compiler_cpp_runtime_phasec.log`).
 
-- [ ] ID: LLVM-005 Record commit SHA and submodule bump evidence for LLVM changes.
+- [x] ID: LLVM-005 Record commit SHA and submodule bump evidence for LLVM changes.
   Done means: SHA is captured in gate report lane manifest and referenced in change notes.
-  Status: ⚠️ NOT TESTED (2026-02-23) - checklist-side change-note linkage was not re-audited this round.
+  Status: ✅ PASS (2026-02-25) - strict run `2026-02-25-r2-pin-lanefix` captures LLVM SHA in `docs/bringup/gates/latest.json` (`runs[-1].sha_manifest.llvm.sha`) and rendered lane manifest in `docs/bringup/GATE_STATUS.md`.

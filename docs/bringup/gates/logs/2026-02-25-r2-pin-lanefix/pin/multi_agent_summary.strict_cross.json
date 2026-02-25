@@ -1,0 +1,31 @@
+{
+  "checked_at_utc": "2026-02-25 12:41:58Z",
+  "checklists_root": "/Users/zhoubot/linx-isa/docs/bringup/agent_runs/checklists",
+  "errors": [],
+  "lane": "pin",
+  "manifest": "/Users/zhoubot/linx-isa/docs/bringup/agent_runs/manifest.yaml",
+  "mode": "runtime",
+  "ok": true,
+  "report": "/Users/zhoubot/linx-isa/docs/bringup/gates/latest.json",
+  "run_id": "2026-02-25-r2-pin-lanefix",
+  "runtime_stats": {
+    "lane": "pin",
+    "profile": "release-strict",
+    "required_failed": 0,
+    "required_gates_total": 13,
+    "required_pass": 13,
+    "required_waived": 0,
+    "run_id": "2026-02-25-r2-pin-lanefix",
+    "waiver_matches": 0
+  },
+  "static_stats": {
+    "agents": 6,
+    "assignments": 18,
+    "declared_checklist_ids": 32,
+    "declared_checklists": 6,
+    "waivers": 0
+  },
+  "strict_always": true,
+  "waivers": "/Users/zhoubot/linx-isa/docs/bringup/agent_runs/waivers.yaml",
+  "warnings": []
+}
