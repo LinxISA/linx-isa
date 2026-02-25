@@ -143,6 +143,8 @@ MUL
 MULU
 MULW
 MULUW
+MADD
+MADDW
 
 # HL multi-cycle ALU (two-destination)
 HL.DIV

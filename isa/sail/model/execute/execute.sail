@@ -1090,3 +1090,27 @@ function exec_hl_mulu(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR
   write_regdst(RegDst0, lo);
   write_regdst(RegDst1, hi)
 }
+
+
+// -----------------------------------------------------------------------------
+// Multi-cycle ALU: multiply-add (three-source)
+
+function exec_madd(RegDst : bits(5), SrcD : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let d = read_reg5(SrcD);
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  let ri : int = signed(a) * signed(b) + signed(d);
+  write_regdst(RegDst, to_bits(64, ri))
+}
+
+function exec_maddw(RegDst : bits(5), SrcD : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let d32 : bits(32) = read_reg5(SrcD)[31..0];
+  let a32 : bits(32) = read_reg5(SrcL)[31..0];
+  let b32 : bits(32) = read_reg5(SrcR)[31..0];
+  let di : int = signed(sext32_from32(d32));
+  let ai : int = signed(sext32_from32(a32));
+  let bi : int = signed(sext32_from32(b32));
+  let ri : int = ai * bi + di;
+  let r32 : bits(32) = to_bits(32, ri);
+  write_regdst(RegDst, sext32_from32(r32))
+}

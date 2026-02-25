@@ -6189,7 +6189,14 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+d = Read(SrcD)
+acc = FullProduct(a, b) + SignExtend(d)
+lo = acc[63:0]
+hi = acc[127:64]
+Write(Dst0, lo)
+Write(Dst1, hi)
 ----
 
 [[insndesc-multi-cycle-alu-hl-maddw]]
@@ -6207,7 +6214,14 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+b = Read(SrcR)[31:0]
+d = Read(SrcD)[31:0]
+acc = FullProduct(a, b) + SignExtend(d)
+lo = acc[63:0]
+hi = acc[127:64]
+Write(Dst0, lo)
+Write(Dst1, hi)
 ----
 
 [[insndesc-multi-cycle-alu-hl-mul]]
@@ -6227,9 +6241,9 @@ Operation (informative)::
 ----
 a = Read(SrcL)
 b = Read(SrcR)
-prod = FullProduct(a, b)
-lo = prod[63:0]
-hi = prod[127:64]
+acc = FullProduct(a, b)
+lo = acc[63:0]
+hi = acc[127:64]
 Write(Dst0, lo)
 Write(Dst1, hi)
 ----
@@ -6251,9 +6265,9 @@ Operation (informative)::
 ----
 a = Read(SrcL)
 b = Read(SrcR)
-prod = FullProduct(a, b)
-lo = prod[63:0]
-hi = prod[127:64]
+acc = FullProduct(a, b)
+lo = acc[63:0]
+hi = acc[127:64]
 Write(Dst0, lo)
 Write(Dst1, hi)
 ----
@@ -6392,7 +6406,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+d = Read(SrcD)
+result = LowProduct(a, b) + d
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-maddw]]
@@ -6415,7 +6433,12 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+b = Read(SrcR)[31:0]
+d = Read(SrcD)[31:0]
+result = LowProduct(a, b) + d
+result = SignExtend32(result)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-mul]]
@@ -6663,7 +6686,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+d = Read(SrcD)
+result = LowProduct(a, b) + d
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-v-mul]]

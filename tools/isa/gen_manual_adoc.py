@@ -730,19 +730,32 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
         return lines
 
     # Multi-cycle ALU: multiplication.
-    if root in {"MUL", "MULU", "MULW", "MULUW"}:
+    if root in {"MUL", "MULU", "MULW", "MULUW", "MADD", "MADDW"}:
         w = root.endswith("W")
+        is_madd = root.startswith("MADD")
         lines = []
         if w:
             lines += ["a = Read(SrcL)[31:0]", "b = Read(SrcR)[31:0]"]
+            if is_madd:
+                lines += ["d = Read(SrcD)[31:0]"]
         else:
             lines += ["a = Read(SrcL)", "b = Read(SrcR)"]
+            if is_madd:
+                lines += ["d = Read(SrcD)"]
 
         if enc == "HL":
-            lines += ["prod = FullProduct(a, b)", "lo = prod[63:0]", "hi = prod[127:64]", "Write(Dst0, lo)", "Write(Dst1, hi)"]
+            if is_madd:
+                lines += ["acc = FullProduct(a, b) + SignExtend(d)"]
+            else:
+                lines += ["acc = FullProduct(a, b)"]
+            lines += ["lo = acc[63:0]", "hi = acc[127:64]", "Write(Dst0, lo)", "Write(Dst1, hi)"]
             return lines
 
-        lines += ["result = LowProduct(a, b)"]
+        if is_madd:
+            lines += ["result = LowProduct(a, b) + d"]
+        else:
+            lines += ["result = LowProduct(a, b)"]
+
         if w:
             lines += ["result = SignExtend32(result)"]
         lines += ["Write(Dst, result)"]
