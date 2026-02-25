@@ -162,6 +162,28 @@ HL.LIU
 ORIW
 XORIW
 
+# Integer ALU
+ADD
+SUB
+AND
+OR
+XOR
+ADDI
+SUBI
+ANDI
+ORI
+XORI
+
+# Integer ALU (word)
+ADDW
+SUBW
+ANDW
+ORW
+XORW
+ADDIW
+SUBIW
+ANDIW
+
 # HL extended-immediate logical
 HL.ANDI
 HL.ORI
