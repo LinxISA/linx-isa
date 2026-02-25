@@ -1176,3 +1176,28 @@ function exec_minu(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
   let r = if unsigned(a) <= unsigned(b) then a else b;
   write_regdst(RegDst, r)
 }
+
+
+// -----------------------------------------------------------------------------
+// Immediate materialization
+
+function exec_lui(RegDst : bits(5), imm20 : bits(20)) -> unit = {
+  // Load upper immediate: sign-extend imm20 then shift left by 12.
+  let imm = sext20_to64(imm20) << 12;
+  write_regdst(RegDst, imm)
+}
+
+function exec_hl_lui(RegDst : bits(5), imm32 : bits(32)) -> unit = {
+  // HL.LUI: load a 32-bit immediate and sign-extend to 64-bit (no <<12).
+  write_regdst(RegDst, sext32_from32(imm32))
+}
+
+function exec_hl_lis(RegDst : bits(5), simm32 : bits(32)) -> unit = {
+  // HL.LIS: load signed 32-bit immediate.
+  write_regdst(RegDst, sext32_from32(simm32))
+}
+
+function exec_hl_liu(RegDst : bits(5), uimm32 : bits(32)) -> unit = {
+  // HL.LIU: load unsigned 32-bit immediate.
+  write_regdst(RegDst, zext32_from32(uimm32))
+}

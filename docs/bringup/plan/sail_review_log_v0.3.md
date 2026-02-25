@@ -131,6 +131,20 @@ Notes:
 
 ---
 
+## 2026-02-25 — Immediate materialization (LUI / HL.LUI / HL.LIS / HL.LIU)
+
+Topic:
+- Define constant materialization semantics for LUI and HL immediate-load forms.
+
+Decision:
+- Follow RTL decode conventions:
+  - `LUI imm20` materializes `SignExtend(imm20) << 12`.
+  - `HL.LUI imm32` materializes `SignExtend(imm32)` (no `<< 12`).
+  - `HL.LIS simm32` materializes `SignExtend(imm32)`.
+  - `HL.LIU uimm32` materializes `ZeroExtend(imm32)`.
+
+---
+
 ## 2026-02-25 — DIV/REM edge cases (ARM-like semantics)
 
 Topic:

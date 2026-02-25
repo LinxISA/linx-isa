@@ -152,6 +152,12 @@ MAXU
 MIN
 MINU
 
+# Immediate materialization
+LUI
+HL.LUI
+HL.LIS
+HL.LIU
+
 # HL multi-cycle ALU (two-destination)
 HL.DIV
 HL.DIVU

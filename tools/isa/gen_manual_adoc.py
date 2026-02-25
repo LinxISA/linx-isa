@@ -607,6 +607,17 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
     lb1_rhs = next((_note_rhs(n, "LB1") for n in notes if _note_rhs(n, "LB1")), None)
     lb2_rhs = next((_note_rhs(n, "LB2") for n in notes if _note_rhs(n, "LB2")), None)
 
+    # Immediate materialization.
+    if root == "LUI":
+        if enc == "HL":
+            return ["imm = SignExtend(imm32)", "Write(RegDst, imm)"]
+        return ["imm = (SignExtend(imm20) << 12)", "Write(RegDst, imm)"]
+
+    # Long immediate.
+    if enc == "HL" and root in {"LIS", "LIU"}:
+        ext = "SignExtend" if root == "LIS" else "ZeroExtend"
+        return [f"imm = {ext}(imm32)", "Write(RegDst, imm)"]
+
     # PC-relative / return-address materialization.
     if root == "ADDTPC":
         # Convention: PC-relative base is current PC/TPC; offset is halfword-scaled.

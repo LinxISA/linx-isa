@@ -88,6 +88,26 @@
       "hl.setret": "uses imm32 with ZeroExtend, then <<1"
     }
   },
+  "immediate_materialization": {
+    "description": "Constant materialization conventions.",
+    "lui": {
+      "imm_kind": "signed",
+      "rule": "Write(RegDst, SignExtend(imm20) << 12)"
+    },
+    "hl_lui": {
+      "imm_kind": "signed",
+      "rule": "Write(RegDst, SignExtend(imm32))",
+      "note": "No <<12 in HL.LUI."
+    },
+    "hl_lis": {
+      "imm_kind": "signed",
+      "rule": "Write(RegDst, SignExtend(imm32))"
+    },
+    "hl_liu": {
+      "imm_kind": "unsigned",
+      "rule": "Write(RegDst, ZeroExtend(imm32))"
+    }
+  },
   "division": {
     "description": "DIV/REM family conventions (strict v0.3 staged).",
     "model": "ARM-like (non-trapping, defined results)",

@@ -9427,7 +9427,8 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+imm = SignExtend(imm32)
+Write(RegDst, imm)
 ----
 
 [[insndesc-long-immediate-hl-liu]]
@@ -9445,7 +9446,8 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+imm = ZeroExtend(imm32)
+Write(RegDst, imm)
 ----
 
 [[insndesc-immediate]]
@@ -9466,7 +9468,8 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+imm = SignExtend(imm32)
+Write(RegDst, imm)
 ----
 
 [[insndesc-immediate-lui]]
@@ -9489,7 +9492,8 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+imm = (SignExtend(imm20) << 12)
+Write(RegDst, imm)
 ----
 
 [[insndesc-prefetch]]
