@@ -945,3 +945,87 @@ function exec_remuw(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = 
   let r32 : bits(32) = to_bits(32, ri);
   write_regdst(RegDst, sext32_from32(r32))
 }
+
+
+// -----------------------------------------------------------------------------
+// HL (48-bit) multi-cycle ALU: two-destination div/rem
+// Convention: Dst0=quotient, Dst1=remainder.
+
+function exec_hl_div(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  let ai : int = signed(a);
+  let bi : int = signed(b);
+  let qi : int =
+    if b == 0x0000_0000_0000_0000 then 0
+    else if (a == 0x8000_0000_0000_0000) & (b == 0xFFFF_FFFF_FFFF_FFFF) then ai
+    else (ai / bi);
+  let ri : int =
+    if b == 0x0000_0000_0000_0000 then ai
+    else if (a == 0x8000_0000_0000_0000) & (b == 0xFFFF_FFFF_FFFF_FFFF) then 0
+    else (ai - (qi * bi));
+  write_regdst(RegDst0, to_bits(64, qi));
+  write_regdst(RegDst1, to_bits(64, ri))
+}
+
+function exec_hl_divu(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  let ai : int = unsigned(a);
+  let bi : int = unsigned(b);
+  let qi : int = if b == 0x0000_0000_0000_0000 then 0 else (ai / bi);
+  let ri : int = if b == 0x0000_0000_0000_0000 then ai else (ai - (qi * bi));
+  write_regdst(RegDst0, to_bits(64, qi));
+  write_regdst(RegDst1, to_bits(64, ri))
+}
+
+function exec_hl_divw(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a32 : bits(32) = read_reg5(SrcL)[31..0];
+  let b32 : bits(32) = read_reg5(SrcR)[31..0];
+  let a = sext32_from32(a32);
+  let b = sext32_from32(b32);
+  let ai : int = signed(a);
+  let bi : int = signed(b);
+  let qi : int =
+    if b32 == 0x0000_0000 then 0
+    else if (a32 == 0x8000_0000) & (b32 == 0xFFFF_FFFF) then ai
+    else (ai / bi);
+  let ri : int =
+    if b32 == 0x0000_0000 then ai
+    else if (a32 == 0x8000_0000) & (b32 == 0xFFFF_FFFF) then 0
+    else (ai - (qi * bi));
+  let q32 : bits(32) = to_bits(32, qi);
+  let r32 : bits(32) = to_bits(32, ri);
+  write_regdst(RegDst0, sext32_from32(q32));
+  write_regdst(RegDst1, sext32_from32(r32))
+}
+
+function exec_hl_divuw(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a32 : bits(32) = read_reg5(SrcL)[31..0];
+  let b32 : bits(32) = read_reg5(SrcR)[31..0];
+  let ai : int = unsigned(zext32_from32(a32));
+  let bi : int = unsigned(zext32_from32(b32));
+  let qi : int = if b32 == 0x0000_0000 then 0 else (ai / bi);
+  let ri : int = if b32 == 0x0000_0000 then ai else (ai - (qi * bi));
+  let q32 : bits(32) = to_bits(32, qi);
+  let r32 : bits(32) = to_bits(32, ri);
+  write_regdst(RegDst0, sext32_from32(q32));
+  write_regdst(RegDst1, sext32_from32(r32))
+}
+
+function exec_hl_rem(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  // Alias: returns same pair as HL.DIV (quotient in Dst0, remainder in Dst1).
+  exec_hl_div(RegDst0, RegDst1, SrcL, SrcR)
+}
+
+function exec_hl_remu(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  exec_hl_divu(RegDst0, RegDst1, SrcL, SrcR)
+}
+
+function exec_hl_remw(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  exec_hl_divw(RegDst0, RegDst1, SrcL, SrcR)
+}
+
+function exec_hl_remuw(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  exec_hl_divuw(RegDst0, RegDst1, SrcL, SrcR)
+}

@@ -146,3 +146,4 @@ Decision (Kevin):
     * REM/REMW => remainder = 0
   - Division rounds toward zero; remainder computed as `a - q*b`.
 - For *W variants, writeback is **sign-extend from bit 31** to 64-bit for ALL of DIVW/DIVUW/REMW/REMUW.
+- For HL two-destination forms: `Dst0 = quotient`, `Dst1 = remainder`.

@@ -105,6 +105,12 @@
       "description": "For *W variants, compute in 32-bit domain then sign-extend result to 64-bit.",
       "policy": "sign_extend_all_w_results",
       "applies_to": ["DIVW", "DIVUW", "REMW", "REMUW"]
+    },
+    "hl_two_dest": {
+      "description": "HL.* multi-cycle ALU two-destination encodings.",
+      "policy": "dst0_is_quotient_dst1_is_remainder",
+      "dst0": "quotient",
+      "dst1": "remainder"
     }
   },
   "block_legality": {

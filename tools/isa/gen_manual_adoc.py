@@ -729,6 +729,25 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
         lines += ["Write(Dst, result)"]
         return lines
 
+    if root in {"HL.DIV", "HL.DIVU", "HL.DIVW", "HL.DIVUW", "HL.REM", "HL.REMU", "HL.REMW", "HL.REMUW"}:
+        # Convention: Dst0=quotient, Dst1=remainder.
+        # HL.REM* are treated as aliases returning the same pair.
+        w = root.endswith("W")
+        unsigned_op = root in {"HL.DIVU", "HL.DIVUW", "HL.REMU", "HL.REMUW"}
+        lines = []
+        if w:
+            lines += ["a = Read(SrcL)[31:0]", "b = Read(SrcR)[31:0]"]
+        else:
+            lines += ["a = Read(SrcL)", "b = Read(SrcR)"]
+        lines += ["if (b == 0):", "  q = 0", "  r = a", "else:"]
+        if not unsigned_op:
+            lines += ["  // signed overflow: MIN_INT / -1"]
+        lines += ["  q = TruncTowardZeroDiv(a, b)", "  r = a - q*b"]
+        if w:
+            lines += ["  q = SignExtend32(q)", "  r = SignExtend32(r)"]
+        lines += ["Write(Dst0, q)", "Write(Dst1, r)"]
+        return lines
+
     # Template instructions.
     if root in {"FENTRY", "FEXIT"} or m.startswith("FRET"):
         return ["AdjustSPAndSaveRestoreRange(/* register range + uimm */)"]
