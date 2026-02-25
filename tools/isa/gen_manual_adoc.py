@@ -716,6 +716,34 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
             "Write(Dst, result)",
         ]
 
+    # Logical-immediate (12-bit) and HL extended-immediate (24-bit) forms.
+    if root in {"ANDI", "ORI", "XORI"}:
+        op = {"ANDI": "&", "ORI": "|", "XORI": "^"}[root]
+        if enc == "HL":
+            return [
+                "a = Read(SrcL)",
+                "imm = SignExtend(simm24)",
+                f"result = a {op} imm",
+                "Write(Dst, result)",
+            ]
+        return [
+            "a = Read(SrcL)",
+            "imm = SignExtend(simm12)",
+            f"result = a {op} imm",
+            "Write(Dst, result)",
+        ]
+
+    if root in {"ANDIW", "ORIW", "XORIW"}:
+        op = {"ANDIW": "&", "ORIW": "|", "XORIW": "^"}[root]
+        imm_name = "simm24" if enc == "HL" else "simm12"
+        return [
+            "a = Read(SrcL)[31:0]",
+            f"imm = SignExtend({imm_name})[31:0]",
+            f"result32 = a {op} imm",
+            "result = SignExtend32(result32)",
+            "Write(Dst, result)",
+        ]
+
     # Multi-cycle ALU: division and remainder.
     if root in {"DIV", "DIVU", "DIVW", "DIVUW", "REM", "REMU", "REMW", "REMUW"}:
         w = root.endswith("W")

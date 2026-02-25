@@ -330,9 +330,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs & rhs
+a = Read(SrcL)
+imm = SignExtend(simm12)
+result = a & imm
 Write(Dst, result)
 ----
 
@@ -372,9 +372,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs & rhs
+a = Read(SrcL)
+imm = SignExtend(simm24)
+result = a & imm
 Write(Dst, result)
 ----
 
@@ -393,9 +393,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs | rhs
+a = Read(SrcL)
+imm = SignExtend(simm24)
+result = a | imm
 Write(Dst, result)
 ----
 
@@ -435,9 +435,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs ^ rhs
+a = Read(SrcL)
+imm = SignExtend(simm24)
+result = a ^ imm
 Write(Dst, result)
 ----
 
@@ -487,9 +487,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs | rhs
+a = Read(SrcL)
+imm = SignExtend(simm12)
+result = a | imm
 Write(Dst, result)
 ----
 
@@ -747,9 +747,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs ^ rhs
+a = Read(SrcL)
+imm = SignExtend(simm12)
+result = a ^ imm
 Write(Dst, result)
 ----
 
@@ -822,7 +822,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+imm = SignExtend(simm12)[31:0]
+result32 = a & imm
+result = SignExtend32(result32)
+Write(Dst, result)
 ----
 
 [[insndesc-arithmetic-operation-32bit-andw]]
@@ -881,7 +885,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+imm = SignExtend(simm24)[31:0]
+result32 = a & imm
+result = SignExtend32(result32)
+Write(Dst, result)
 ----
 
 [[insndesc-arithmetic-operation-32bit-hl-oriw]]
@@ -899,7 +907,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+imm = SignExtend(simm24)[31:0]
+result32 = a | imm
+result = SignExtend32(result32)
+Write(Dst, result)
 ----
 
 [[insndesc-arithmetic-operation-32bit-hl-subiw]]
@@ -935,7 +947,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+imm = SignExtend(simm24)[31:0]
+result32 = a ^ imm
+result = SignExtend32(result32)
+Write(Dst, result)
 ----
 
 [[insndesc-arithmetic-operation-32bit-oriw]]
@@ -958,7 +974,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+imm = SignExtend(simm12)[31:0]
+result32 = a | imm
+result = SignExtend32(result32)
+Write(Dst, result)
 ----
 
 [[insndesc-arithmetic-operation-32bit-orw]]
@@ -1188,7 +1208,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+imm = SignExtend(simm12)[31:0]
+result32 = a ^ imm
+result = SignExtend32(result32)
+Write(Dst, result)
 ----
 
 [[insndesc-arithmetic-operation-32bit-xorw]]
@@ -3107,9 +3131,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs & rhs
+a = Read(SrcL)
+imm = SignExtend(simm12)
+result = a & imm
 Write(Dst, result)
 ----
 
@@ -3149,9 +3173,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs | rhs
+a = Read(SrcL)
+imm = SignExtend(simm12)
+result = a | imm
 Write(Dst, result)
 ----
 
@@ -3359,9 +3383,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs ^ rhs
+a = Read(SrcL)
+imm = SignExtend(simm12)
+result = a ^ imm
 Write(Dst, result)
 ----
 

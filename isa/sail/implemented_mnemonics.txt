@@ -158,6 +158,18 @@ HL.LUI
 HL.LIS
 HL.LIU
 
+# Word-immediate logical
+ORIW
+XORIW
+
+# HL extended-immediate logical
+HL.ANDI
+HL.ORI
+HL.XORI
+HL.ANDIW
+HL.ORIW
+HL.XORIW
+
 # HL multi-cycle ALU (two-destination)
 HL.DIV
 HL.DIVU

@@ -1201,3 +1201,64 @@ function exec_hl_liu(RegDst : bits(5), uimm32 : bits(32)) -> unit = {
   // HL.LIU: load unsigned 32-bit immediate.
   write_regdst(RegDst, zext32_from32(uimm32))
 }
+
+
+// -----------------------------------------------------------------------------
+// Word (32-bit) immediate logical ops
+
+function exec_oriw(RegDst : bits(5), SrcL : bits(5), simm12 : bits(12)) -> unit = {
+  let a32 : bits(32) = read_reg5(SrcL)[31..0];
+  let imm32 : bits(32) = sext12_to64(simm12)[31..0];
+  let r32 : bits(32) = a32 | imm32;
+  write_regdst(RegDst, sext32_from32(r32))
+}
+
+function exec_xoriw(RegDst : bits(5), SrcL : bits(5), simm12 : bits(12)) -> unit = {
+  let a32 : bits(32) = read_reg5(SrcL)[31..0];
+  let imm32 : bits(32) = sext12_to64(simm12)[31..0];
+  let r32 : bits(32) = a32 ^ imm32;
+  write_regdst(RegDst, sext32_from32(r32))
+}
+
+
+// -----------------------------------------------------------------------------
+// HL (48-bit) extended-immediate logical ops (simm24)
+
+function exec_hl_andi(RegDst : bits(5), SrcL : bits(5), simm24 : bits(24)) -> unit = {
+  let a = read_reg5(SrcL);
+  let imm = sext24_to64(simm24);
+  write_regdst(RegDst, a & imm)
+}
+
+function exec_hl_ori(RegDst : bits(5), SrcL : bits(5), simm24 : bits(24)) -> unit = {
+  let a = read_reg5(SrcL);
+  let imm = sext24_to64(simm24);
+  write_regdst(RegDst, a | imm)
+}
+
+function exec_hl_xori(RegDst : bits(5), SrcL : bits(5), simm24 : bits(24)) -> unit = {
+  let a = read_reg5(SrcL);
+  let imm = sext24_to64(simm24);
+  write_regdst(RegDst, a ^ imm)
+}
+
+function exec_hl_andiw(RegDst : bits(5), SrcL : bits(5), simm24 : bits(24)) -> unit = {
+  let a32 : bits(32) = read_reg5(SrcL)[31..0];
+  let imm32 : bits(32) = sext24_to64(simm24)[31..0];
+  let r32 : bits(32) = a32 & imm32;
+  write_regdst(RegDst, sext32_from32(r32))
+}
+
+function exec_hl_oriw(RegDst : bits(5), SrcL : bits(5), simm24 : bits(24)) -> unit = {
+  let a32 : bits(32) = read_reg5(SrcL)[31..0];
+  let imm32 : bits(32) = sext24_to64(simm24)[31..0];
+  let r32 : bits(32) = a32 | imm32;
+  write_regdst(RegDst, sext32_from32(r32))
+}
+
+function exec_hl_xoriw(RegDst : bits(5), SrcL : bits(5), simm24 : bits(24)) -> unit = {
+  let a32 : bits(32) = read_reg5(SrcL)[31..0];
+  let imm32 : bits(32) = sext24_to64(simm24)[31..0];
+  let r32 : bits(32) = a32 ^ imm32;
+  write_regdst(RegDst, sext32_from32(r32))
+}
