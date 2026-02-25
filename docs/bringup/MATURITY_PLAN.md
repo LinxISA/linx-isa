@@ -1,56 +1,90 @@
-# LinxISA Maturity Plan (strict v0.3 track)
+# LinxISA Maturity Plan (Tier-1 Track vs ARM/x86)
 
-Last updated: 2026-02-17
+Last updated: 2026-02-25
 
-## Baseline policy
+## Baseline
 
-- `isa/v0.3/linxisa-v0.3.json` is the default architectural contract.
-- `v0.2` remains available only as explicit legacy compatibility.
-- 26 checks in `docs/bringup/check26_contract.yaml` are mandatory and machine-gated.
+- Strict baseline run: `2026-02-25-r2-pin-lanefix` (`2026-02-25 12:41:30Z`)
+- Canonical report: `docs/bringup/gates/latest.json`
+- Current strict required gates are green across compiler, emulator, kernel, libc, model diff, and regression.
 
-## Levels
+## Gap Snapshot
 
-### Level 0 (achieved): Bring-up stable
+- Bring-up closure is complete for core strict gates.
+- Remaining maturity gap is depth and breadth:
+  - AVS breadth (current status file: `13/39` implemented).
+  - ISA-vs-QEMU implementation breadth (`311/710` mapped mnemonics; tracked in machine report).
+  - SPEC hosted workload closure (`SPEC-*` checklist still open).
+  - ABI/unwind/TLS runtime hardening gates (checklist exists; executable gating expansion still pending).
+  - Privileged/MMU/debug completeness beyond current release-strict subset.
 
-Required evidence:
+## Milestones
 
-- `bash tools/regression/full_stack.sh` passes.
-- `bash tools/regression/run.sh` passes.
-- `python3 tools/bringup/check26_contract.py --root .` passes.
-- `python3 tools/isa/check_no_legacy_v03.py --root . --extra-root emulator/qemu --extra-root kernel/linux --extra-root compiler/llvm` passes.
-  - If using external trees, point `--extra-root` at those checkouts instead.
-- Linux userspace QEMU boot scripts pass (smoke/full/virtio).
-- LLVM Linx MC+CodeGen test suites pass.
-- pyCircuit/Janus cpp tests and QEMU-vs-pyCircuit trace diff pass.
+### M1 (1-2 weeks): Gate hygiene and open non-SPEC checklist closure
 
-### Level 1 (next): Differential architecture closure
+Status: In progress (closure artifacts landed in this workspace update)
 
-Required:
+- Close open non-SPEC checklist IDs:
+  - `LLVM-005`
+  - `QEMU-003`
+  - `QEMU-005`
+  - `LINUX-003`
+- Keep cross-doc truth aligned:
+  - `docs/bringup/gates/latest.json`
+  - `docs/bringup/GATE_STATUS.md`
+  - `docs/bringup/ALIGNMENT_MATRIX.md`
+- Added machine artifacts for this milestone:
+  - `docs/bringup/gates/linxisa_virt_defconfig_audit.json`
+  - `docs/bringup/gates/qemu_opcode_sync_latest.json`
+  - `docs/bringup/gates/qemu_isa_coverage_latest.json`
 
-- Expand QEMU-vs-model difftest coverage from scalar/basic tile to full v0.3 vector/tile scenarios.
-- Add contract-tagged tests for every check26 clause lacking explicit directed test IDs.
-- Pin trace-schema compatibility gates for both Linx and Janus paths.
-- Enforce release-strict profile (no required-gate waivers).
+### M2 (3-6 weeks): AVS core coverage expansion
 
-### Level 2 (next): Linux/system robustness
+Status: Planned
 
-Required:
+- Implement missing core AVS IDs first: `DEC/BLK/BR/MEM/ALU/ATOM`.
+- Implement `FP` and `VEC` IDs next.
+- Promote AVS matrix status validation as strict maturity artifact:
+  - checker: `tools/bringup/check_avs_matrix_status.py`
+  - artifact: `docs/bringup/gates/avs_matrix_status_audit.json`
 
-- Promote current Linux arch/linx checks from boot smoke to sustained userspace workloads.
-- Add focused selftests for restartable tile-page-fault and bridged vector-memory behavior.
-- Keep trap ABI baseline compatibility while extending v0.3-only behavior under explicit feature gates.
+### M3 (4-8 weeks): Emulator/model completeness gates
 
-### Level 3 (next): Performance and packaging
+Status: Started (coverage reporting landed; suite expansion pending)
 
-Required:
+- Keep canonical ISA-vs-QEMU coverage report machine-generated:
+  - `tools/bringup/report_qemu_isa_coverage.py`
+- Expand `run_model_diff_suite.py` required coverage from scalar/basic to vector/tile + restart/fault scenarios.
+- Keep unsupported instructions deterministic via explicit illegal traps until implemented.
 
-- Stabilize benchmark methodology and archive reproducible reports under `workloads/generated/`.
-- Add CI-like orchestration for full stack regressions across all 5 repos.
-- Finalize skills docs as executable operational runbooks for v0.3.
+### M4 (4-10 weeks): Hosted toolchain/runtime workload maturity
 
-## Immediate backlog
+Status: Planned
 
-- Land a passing `pin` lane release-strict runtime convergence snapshot with `lane_policy=external+pin-required`.
-- Bring pyCircuit toolchain (`pyc-compile`) online in the execution environment used by release-strict model gates.
-- Resolve tile differential fixture runtime timeout (`MODEL-TILE-*` currently times out under QEMU in strict model suite).
-- Promote vector-lane differential fixture from placeholder to directed, passing vector-body workload.
+- Close `SPEC-001..SPEC-007` in `docs/bringup/agent_runs/checklists/specint_qemu.md`.
+- Keep 9p/virtfs compatibility (`LINUX-003`) as hard prerequisite for SPEC lane.
+- Evolve C++ runtime policy beyond current no-EH/no-RTTI baseline once dual-lane evidence is stable.
+- Convert ABI/unwind/TLS checklist into executable runtime gates.
+
+### M5 (6-12 weeks): Privileged/MMU/debug parity
+
+Status: Planned
+
+- Close privileged/MMU/debug gaps in `docs/bringup/ISA_GAP_ANALYSIS.md`.
+- Add Linux selftests for restartable tile faults and bridged memory ordering.
+- Define minimal debug architecture contract (single-step, breakpoints/watchpoints, privilege interactions).
+
+### M6 (ongoing): Performance and release-grade parity
+
+Status: Planned
+
+- Keep benchmark methodology and artifact discipline under `workloads/generated/`.
+- Track static/dynamic instruction trends and optimization roadmap closure.
+- Expand CI-like orchestration for full-stack, cross-repo reproducibility.
+
+## Required Policy Defaults
+
+- No new waivers by default for required strict gates.
+- Dual-lane promotion remains required (`pin` + `external`).
+- Existing strict green gates remain mandatory while maturity gates are added incrementally.
+

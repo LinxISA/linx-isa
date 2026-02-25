@@ -76,6 +76,16 @@
       "checklist_ids": ["QEMU-002"]
     },
     {
+      "gate_key": "Emulator::QEMU opcode meta/id sync audit",
+      "agent": "qemu",
+      "checklist_ids": ["QEMU-003"]
+    },
+    {
+      "gate_key": "Emulator::ISA vs QEMU coverage report",
+      "agent": "qemu",
+      "checklist_ids": ["QEMU-005"]
+    },
+    {
       "gate_key": "Kernel::Linux initramfs smoke",
       "agent": "linux",
       "checklist_ids": ["LINUX-001"]
@@ -89,6 +99,11 @@
       "gate_key": "Kernel::Linux busybox rootfs boot",
       "agent": "linux",
       "checklist_ids": ["LINUX-004"]
+    },
+    {
+      "gate_key": "Kernel::Linux initramfs virtio disk smoke",
+      "agent": "linux",
+      "checklist_ids": ["LINUX-003"]
     },
     {
       "gate_key": "Library::musl runtime static+shared",

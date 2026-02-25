@@ -121,6 +121,19 @@ def _find_exe(cands: list[Path], env_name: str) -> Path:
     raise SystemExit(f"error: no executable found for {env_name}; tried: {', '.join(str(c) for c in cands)}")
 
 
+def _find_path(cands: list[Path], env_name: str) -> Path:
+    env = os.environ.get(env_name)
+    if env:
+        p = Path(env)
+        if p.exists():
+            return p
+        raise SystemExit(f"error: {env_name}={env} does not exist")
+    for cand in cands:
+        if cand.exists():
+            return cand
+    raise SystemExit(f"error: no path found for {env_name}; tried: {', '.join(str(c) for c in cands)}")
+
+
 def _run(
     cmd: list[str],
     *,
@@ -287,10 +300,34 @@ def main(argv: list[str]) -> int:
         "PYC_COMPILE",
     )
 
-    pyc_runner = root / "tools" / "pyCircuit" / "tools" / "run_linx_cpu_pyc_cpp.sh"
-    if not (pyc_runner.exists() and os.access(pyc_runner, os.X_OK)):
-        raise SystemExit(f"error: missing executable pyCircuit runner: {pyc_runner}")
-    diff_tool = root / "tools" / "pyCircuit" / "tools" / "linx_trace_diff.py"
+    pyc_runner = _find_exe(
+        [
+            root
+            / "tools"
+            / "pyCircuit"
+            / "contrib"
+            / "linx"
+            / "flows"
+            / "tools"
+            / "run_linx_cpu_pyc_cpp.sh",
+            root / "tools" / "pyCircuit" / "tools" / "run_linx_cpu_pyc_cpp.sh",
+        ],
+        "PYC_RUNNER",
+    )
+    diff_tool = _find_path(
+        [
+            root
+            / "tools"
+            / "pyCircuit"
+            / "contrib"
+            / "linx"
+            / "flows"
+            / "tools"
+            / "linx_trace_diff.py",
+            root / "tools" / "pyCircuit" / "tools" / "linx_trace_diff.py",
+        ],
+        "PYC_TRACE_DIFF",
+    )
     schema_tool = root / "tools" / "bringup" / "validate_trace_schema.py"
     if not diff_tool.exists():
         raise SystemExit(f"error: missing diff tool: {diff_tool}")

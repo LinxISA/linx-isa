@@ -123,6 +123,34 @@ def main(argv: list[str]) -> int:
         action="store_true",
         help="Fail if --multi-agent-summary is not provided.",
     )
+    ap.add_argument(
+        "--avs-matrix-audit",
+        default="",
+        help="Optional AVS matrix status audit JSON artifact path.",
+    )
+    ap.add_argument(
+        "--qemu-opcode-sync",
+        default="",
+        help="Optional QEMU opcode sync audit JSON artifact path.",
+    )
+    ap.add_argument(
+        "--qemu-isa-coverage",
+        default="",
+        help="Optional ISA-vs-QEMU coverage JSON artifact path.",
+    )
+    ap.add_argument(
+        "--linux-defconfig-audit",
+        default="",
+        help="Optional Linux defconfig 9p/virtio audit JSON artifact path.",
+    )
+    ap.add_argument(
+        "--require-maturity-artifacts",
+        action="store_true",
+        help=(
+            "Require AVS/QEMU/Linux maturity artifacts (--avs-matrix-audit, --qemu-opcode-sync, "
+            "--qemu-isa-coverage, --linux-defconfig-audit) and enforce result.ok=true."
+        ),
+    )
     args = ap.parse_args(argv)
 
     report_path = Path(args.report)
@@ -130,6 +158,10 @@ def main(argv: list[str]) -> int:
     gate_status_path = Path(args.gate_status)
     libc_status_path = Path(args.libc_status)
     multi_agent_summary_path = Path(args.multi_agent_summary) if args.multi_agent_summary else None
+    avs_matrix_audit_path = Path(args.avs_matrix_audit) if args.avs_matrix_audit else None
+    qemu_opcode_sync_path = Path(args.qemu_opcode_sync) if args.qemu_opcode_sync else None
+    qemu_isa_coverage_path = Path(args.qemu_isa_coverage) if args.qemu_isa_coverage else None
+    linux_defconfig_audit_path = Path(args.linux_defconfig_audit) if args.linux_defconfig_audit else None
 
     report = json.loads(report_path.read_text(encoding="utf-8"))
     schema_version = report.get("schema_version")
@@ -212,6 +244,49 @@ def main(argv: list[str]) -> int:
         raise SystemExit(f"error: {libc_status_path} missing strict pass line for musl runtime R2")
     if re.search(r"musl runtime `R2[^`]*`:\s+fail", libc_text, flags=re.I):
         raise SystemExit(f"error: {libc_status_path} still reports failing musl R2 status")
+
+    maturity_artifacts = [
+        ("AVS matrix audit", avs_matrix_audit_path),
+        ("QEMU opcode sync audit", qemu_opcode_sync_path),
+        ("ISA-vs-QEMU coverage", qemu_isa_coverage_path),
+        ("Linux defconfig audit", linux_defconfig_audit_path),
+    ]
+    if args.require_maturity_artifacts:
+        missing_required = [label for label, path in maturity_artifacts if path is None]
+        if missing_required:
+            raise SystemExit(
+                "error: --require-maturity-artifacts set but required paths missing for: "
+                + ", ".join(missing_required)
+            )
+
+    for label, path in maturity_artifacts:
+        if path is None:
+            continue
+        if not path.exists():
+            raise SystemExit(f"error: {label} artifact not found: {path}")
+        try:
+            artifact = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            raise SystemExit(f"error: failed to parse {label} artifact JSON: {path}") from exc
+        if not isinstance(artifact, dict):
+            raise SystemExit(f"error: {label} artifact must decode to object: {path}")
+        result = artifact.get("result")
+        if not isinstance(result, dict):
+            raise SystemExit(f"error: {label} artifact missing result object: {path}")
+        if not bool(result.get("ok", False)):
+            classification = str(result.get("classification", "unknown"))
+            raise SystemExit(
+                f"error: {label} artifact reports non-passing state ({classification}): {path}"
+            )
+        artifact_ts_raw = str(artifact.get("generated_at_utc", "")).strip()
+        if artifact_ts_raw:
+            artifact_ts = _parse_utc(artifact_ts_raw, field=f"{label}.generated_at_utc")
+            artifact_age_hours = (now - artifact_ts).total_seconds() / 3600.0
+            if artifact_age_hours > args.max_age_hours:
+                raise SystemExit(
+                    f"error: {label} artifact is stale ({artifact_age_hours:.2f}h old, "
+                    f"max {args.max_age_hours:.2f}h): {path}"
+                )
 
     if args.require_multi_agent_summary and multi_agent_summary_path is None:
         raise SystemExit("error: --require-multi-agent-summary set but --multi-agent-summary not provided")

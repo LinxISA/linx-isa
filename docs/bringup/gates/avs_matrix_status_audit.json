@@ -1,0 +1,16 @@
+{
+  "extra_status_entries": [],
+  "generated_at_utc": "2026-02-25 13:12:47Z",
+  "implemented_count": 13,
+  "matrix": "/Users/zhoubot/linx-isa/avs/linx_avs_v1_test_matrix.yaml",
+  "matrix_test_count": 39,
+  "missing_status_entries": [],
+  "result": {
+    "classification": "avs_matrix_status_ok",
+    "ok": true
+  },
+  "status": "/Users/zhoubot/linx-isa/avs/linx_avs_v1_test_matrix_status.json",
+  "status_entry_count": 39,
+  "unknown_validated_entries": [],
+  "validated_pass_count": 13
+}

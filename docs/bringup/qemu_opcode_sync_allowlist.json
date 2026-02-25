@@ -1,0 +1,24 @@
+{
+  "decode_only_allow": [
+    "hl_lwi_upr",
+    "hl_lwip_u",
+    "hl_lwui_po",
+    "hl_lwui_upo",
+    "hl_lwui_upr",
+    "hl_lwuip_u",
+    "hl_swi_upr",
+    "v_fabs",
+    "v_mul"
+  ],
+  "meta_only_allow": [
+    "hl_sbip",
+    "hl_sdi",
+    "hl_sdi_u",
+    "hl_ship",
+    "hl_ship_u",
+    "internal_c_bstart_std",
+    "internal_c_setret",
+    "internal_invalid"
+  ]
+}
+
