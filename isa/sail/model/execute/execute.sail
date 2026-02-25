@@ -1522,5 +1522,5 @@ function exec_fabs(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit 
 
 function exec_assert(SrcL : bits(5)) -> unit = {
   let v = read_reg5(SrcL);
-  if v == 0x0000_0000_0000_0000 then trap_assert_fail(read_pc_or_tpc()) else ()
+  if exceptions_enabled() & (v == 0x0000_0000_0000_0000) then trap_assert_fail(read_pc_or_tpc()) else ()
 }

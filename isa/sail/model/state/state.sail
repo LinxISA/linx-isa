@@ -62,3 +62,9 @@ function trap_assert_fail(traparg0 : bits(64)) -> unit = {
   // TRAPNUM_ASSERT_FAIL = 52, CAUSE=0, BI=0
   raise_trap(to_bits(6, 52), to_bits(24, 0), traparg0, 0b0)
 }
+
+// Global exception enable (profile-defined). When disabled, ASSERT is treated as a no-op.
+function exceptions_enabled() -> bool = {
+  unimplemented("exceptions_enabled");
+  true
+}

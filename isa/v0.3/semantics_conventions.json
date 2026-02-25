@@ -326,7 +326,11 @@
       "legal_blocks": [
         "SYS"
       ],
-      "illegal_elsewhere": "TRAPNUM=4 ILLEGAL_INST"
+      "illegal_elsewhere": "TRAPNUM=4 ILLEGAL_INST",
+      "masking": {
+        "policy": "masked_by_global_exception_enable",
+        "when_disabled": "ASSERT is treated as NOP (no trap, no trap-envelope update)"
+      }
     },
     "traparg0": {
       "assert_fail": "faulting PC/TPC",
