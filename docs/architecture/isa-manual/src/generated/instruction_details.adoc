@@ -5960,7 +5960,14 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+if (b == 0):
+  result = 0
+else:
+  // signed overflow: MIN_INT / -1
+  result = TruncTowardZeroDiv(a, b)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-divu]]
@@ -5983,7 +5990,13 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+if (b == 0):
+  result = 0
+else:
+  result = TruncTowardZeroDiv(a, b)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-divuw]]
@@ -6006,7 +6019,14 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+b = Read(SrcR)[31:0]
+if (b == 0):
+  result = 0
+else:
+  result = TruncTowardZeroDiv(a, b)
+  result = SignExtend32(result)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-divw]]
@@ -6029,7 +6049,15 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+b = Read(SrcR)[31:0]
+if (b == 0):
+  result = 0
+else:
+  // signed overflow: MIN_INT / -1
+  result = TruncTowardZeroDiv(a, b)
+  result = SignExtend32(result)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-hl-div]]
@@ -6047,7 +6075,14 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+if (b == 0):
+  result = 0
+else:
+  // signed overflow: MIN_INT / -1
+  result = TruncTowardZeroDiv(a, b)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-hl-divu]]
@@ -6065,7 +6100,13 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+if (b == 0):
+  result = 0
+else:
+  result = TruncTowardZeroDiv(a, b)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-hl-divuw]]
@@ -6083,7 +6124,14 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+b = Read(SrcR)[31:0]
+if (b == 0):
+  result = 0
+else:
+  result = TruncTowardZeroDiv(a, b)
+  result = SignExtend32(result)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-hl-divw]]
@@ -6101,7 +6149,15 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+b = Read(SrcR)[31:0]
+if (b == 0):
+  result = 0
+else:
+  // signed overflow: MIN_INT / -1
+  result = TruncTowardZeroDiv(a, b)
+  result = SignExtend32(result)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-hl-madd]]
@@ -6191,7 +6247,15 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+if (b == 0):
+  result = a
+else:
+  // signed overflow: MIN_INT / -1
+  q = TruncTowardZeroDiv(a, b)
+  result = a - q*b
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-hl-remu]]
@@ -6209,7 +6273,14 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+if (b == 0):
+  result = a
+else:
+  q = TruncTowardZeroDiv(a, b)
+  result = a - q*b
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-hl-remuw]]
@@ -6227,7 +6298,15 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+b = Read(SrcR)[31:0]
+if (b == 0):
+  result = a
+else:
+  q = TruncTowardZeroDiv(a, b)
+  result = a - q*b
+  result = SignExtend32(result)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-hl-remw]]
@@ -6245,7 +6324,16 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+b = Read(SrcR)[31:0]
+if (b == 0):
+  result = a
+else:
+  // signed overflow: MIN_INT / -1
+  q = TruncTowardZeroDiv(a, b)
+  result = a - q*b
+  result = SignExtend32(result)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-madd]]
@@ -6406,7 +6494,15 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+if (b == 0):
+  result = a
+else:
+  // signed overflow: MIN_INT / -1
+  q = TruncTowardZeroDiv(a, b)
+  result = a - q*b
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-remu]]
@@ -6429,7 +6525,14 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+if (b == 0):
+  result = a
+else:
+  q = TruncTowardZeroDiv(a, b)
+  result = a - q*b
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-remuw]]
@@ -6452,7 +6555,15 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+b = Read(SrcR)[31:0]
+if (b == 0):
+  result = a
+else:
+  q = TruncTowardZeroDiv(a, b)
+  result = a - q*b
+  result = SignExtend32(result)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-remw]]
@@ -6475,7 +6586,16 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+b = Read(SrcR)[31:0]
+if (b == 0):
+  result = a
+else:
+  // signed overflow: MIN_INT / -1
+  q = TruncTowardZeroDiv(a, b)
+  result = a - q*b
+  result = SignExtend32(result)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-v-madd]]
@@ -13829,7 +13949,14 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+if (b == 0):
+  result = 0
+else:
+  // signed overflow: MIN_INT / -1
+  result = TruncTowardZeroDiv(a, b)
+Write(Dst, result)
 ----
 
 [[insndesc-division-v-rem]]
@@ -13847,7 +13974,15 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+if (b == 0):
+  result = a
+else:
+  // signed overflow: MIN_INT / -1
+  q = TruncTowardZeroDiv(a, b)
+  result = a - q*b
+Write(Dst, result)
 ----
 
 [[insndesc-floating-point-arithmetic-2]]

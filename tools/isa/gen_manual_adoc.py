@@ -690,6 +690,45 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
             "Write(Dst, result)",
         ]
 
+    # Multi-cycle ALU: division and remainder.
+    if root in {"DIV", "DIVU", "DIVW", "DIVUW", "REM", "REMU", "REMW", "REMUW"}:
+        w = root.endswith("W")
+        unsigned_op = root in {"DIVU", "DIVUW", "REMU", "REMUW"}
+        is_rem = root.startswith("REM")
+        lines = []
+        if w:
+            lines += [
+                "a = Read(SrcL)[31:0]",
+                "b = Read(SrcR)[31:0]",
+            ]
+        else:
+            lines += [
+                "a = Read(SrcL)",
+                "b = Read(SrcR)",
+            ]
+
+        # ARM-like convention: div-by-zero yields q=0; remainder yields a.
+        lines += ["if (b == 0):"]
+        if is_rem:
+            lines += ["  result = a"]
+        else:
+            lines += ["  result = 0"]
+        lines += ["else:"]
+
+        if (not unsigned_op) and (root in {"DIV", "DIVW", "REM", "REMW"}):
+            lines += ["  // signed overflow: MIN_INT / -1"]
+
+        if is_rem:
+            lines += ["  q = TruncTowardZeroDiv(a, b)", "  result = a - q*b"]
+        else:
+            lines += ["  result = TruncTowardZeroDiv(a, b)"]
+
+        if w:
+            lines += ["  result = SignExtend32(result)"]
+
+        lines += ["Write(Dst, result)"]
+        return lines
+
     # Template instructions.
     if root in {"FENTRY", "FEXIT"} or m.startswith("FRET"):
         return ["AdjustSPAndSaveRestoreRange(/* register range + uimm */)"]

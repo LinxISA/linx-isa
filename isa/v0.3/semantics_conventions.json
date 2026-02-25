@@ -88,6 +88,25 @@
       "hl.setret": "uses imm32 with ZeroExtend, then <<1"
     }
   },
+  "division": {
+    "description": "DIV/REM family conventions (strict v0.3 staged).",
+    "model": "ARM-like (non-trapping, defined results)",
+    "rounding": "toward_zero",
+    "div_by_zero": {
+      "quotient": 0,
+      "remainder": "dividend"
+    },
+    "signed_overflow": {
+      "case": "MIN_INT / -1",
+      "quotient": "MIN_INT",
+      "remainder": 0
+    },
+    "word_writeback": {
+      "description": "For *W variants, compute in 32-bit domain then sign-extend result to 64-bit.",
+      "policy": "sign_extend_all_w_results",
+      "applies_to": ["DIVW", "DIVUW", "REMW", "REMUW"]
+    }
+  },
   "block_legality": {
     "description": "Legality conventions for which instruction families may appear as payload in coupled scalar blocks vs engine bodies.",
     "bru_control_transfer": {

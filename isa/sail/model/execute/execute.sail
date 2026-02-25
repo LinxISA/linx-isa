@@ -847,3 +847,101 @@ function exec_csel(RegDst : bits(5), SrcP : bits(5), SrcL : bits(5), SrcR : bits
   let r = if p != 0x0000_0000_0000_0000 then a else b;
   write_regdst(RegDst, r)
 }
+
+
+// -----------------------------------------------------------------------------
+// Multi-cycle ALU: division and remainder (ARM-like non-trapping conventions)
+
+function exec_div(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  let qi : int =
+    if b == 0x0000_0000_0000_0000 then 0
+    else if (a == 0x8000_0000_0000_0000) & (b == 0xFFFF_FFFF_FFFF_FFFF) then signed(a)
+    else (signed(a) / signed(b));
+  write_regdst(RegDst, to_bits(64, qi))
+}
+
+function exec_divu(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  let qi : int = if b == 0x0000_0000_0000_0000 then 0 else (unsigned(a) / unsigned(b));
+  write_regdst(RegDst, to_bits(64, qi))
+}
+
+function exec_rem(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  let ai : int = signed(a);
+  let bi : int = signed(b);
+  let qi : int =
+    if b == 0x0000_0000_0000_0000 then 0
+    else if (a == 0x8000_0000_0000_0000) & (b == 0xFFFF_FFFF_FFFF_FFFF) then ai
+    else (ai / bi);
+  let ri : int = if b == 0x0000_0000_0000_0000 then ai else (ai - (qi * bi));
+  write_regdst(RegDst, to_bits(64, ri))
+}
+
+function exec_remu(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  let ai : int = unsigned(a);
+  let bi : int = unsigned(b);
+  let qi : int = if b == 0x0000_0000_0000_0000 then 0 else (ai / bi);
+  let ri : int = if b == 0x0000_0000_0000_0000 then ai else (ai - (qi * bi));
+  write_regdst(RegDst, to_bits(64, ri))
+}
+
+// Word (32-bit) variants: compute in 32-bit domain, then sign-extend to 64-bit for writeback.
+
+function exec_divw(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a32 : bits(32) = read_reg5(SrcL)[31..0];
+  let b32 : bits(32) = read_reg5(SrcR)[31..0];
+  let a = sext32_from32(a32);
+  let b = sext32_from32(b32);
+  let ai : int = signed(a);
+  let bi : int = signed(b);
+  let qi : int =
+    if b32 == 0x0000_0000 then 0
+    else if (a32 == 0x8000_0000) & (b32 == 0xFFFF_FFFF) then ai
+    else (ai / bi);
+  let q32 : bits(32) = to_bits(32, qi);
+  write_regdst(RegDst, sext32_from32(q32))
+}
+
+function exec_divuw(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a32 : bits(32) = read_reg5(SrcL)[31..0];
+  let b32 : bits(32) = read_reg5(SrcR)[31..0];
+  let ai : int = unsigned(zext32_from32(a32));
+  let bi : int = unsigned(zext32_from32(b32));
+  let qi : int = if b32 == 0x0000_0000 then 0 else (ai / bi);
+  let q32 : bits(32) = to_bits(32, qi);
+  write_regdst(RegDst, sext32_from32(q32))
+}
+
+function exec_remw(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a32 : bits(32) = read_reg5(SrcL)[31..0];
+  let b32 : bits(32) = read_reg5(SrcR)[31..0];
+  let a = sext32_from32(a32);
+  let b = sext32_from32(b32);
+  let ai : int = signed(a);
+  let bi : int = signed(b);
+  let qi : int =
+    if b32 == 0x0000_0000 then 0
+    else if (a32 == 0x8000_0000) & (b32 == 0xFFFF_FFFF) then ai
+    else (ai / bi);
+  let ri : int = if b32 == 0x0000_0000 then ai else (ai - (qi * bi));
+  let r32 : bits(32) = to_bits(32, ri);
+  write_regdst(RegDst, sext32_from32(r32))
+}
+
+function exec_remuw(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a32 : bits(32) = read_reg5(SrcL)[31..0];
+  let b32 : bits(32) = read_reg5(SrcR)[31..0];
+  let ai : int = unsigned(zext32_from32(a32));
+  let bi : int = unsigned(zext32_from32(b32));
+  let qi : int = if b32 == 0x0000_0000 then 0 else (ai / bi);
+  let ri : int = if b32 == 0x0000_0000 then ai else (ai - (qi * bi));
+  let r32 : bits(32) = to_bits(32, ri);
+  write_regdst(RegDst, sext32_from32(r32))
+}

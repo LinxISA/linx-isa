@@ -129,3 +129,13 @@ C.SETRET
 
 # Compound ops
 CSEL
+
+# Multi-cycle ALU
+DIV
+DIVU
+DIVW
+DIVUW
+REM
+REMU
+REMW
+REMUW

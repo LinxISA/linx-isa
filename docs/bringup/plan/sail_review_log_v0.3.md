@@ -128,3 +128,21 @@ Decision (Kevin):
 
 Notes:
 - This mirrors the "restricted SrcRType" philosophy used elsewhere: prefer deterministic sanitization over new traps.
+
+---
+
+## 2026-02-25 — DIV/REM edge cases (ARM-like semantics)
+
+Topic:
+- Define non-trapping behavior for divide-by-zero and signed overflow for DIV/REM families.
+
+Decision (Kevin):
+- Follow ARM-style behavior (non-trapping, defined results):
+  - If divisor == 0:
+    * DIV/DIVU/DIVW/DIVUW => quotient = 0
+    * REM/REMU/REMW/REMUW => remainder = dividend
+  - If signed overflow (MIN_INT / -1):
+    * DIV/DIVW => quotient = MIN_INT
+    * REM/REMW => remainder = 0
+  - Division rounds toward zero; remainder computed as `a - q*b`.
+- For *W variants, writeback is **sign-extend from bit 31** to 64-bit for ALL of DIVW/DIVUW/REMW/REMUW.
