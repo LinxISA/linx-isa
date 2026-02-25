@@ -184,6 +184,20 @@ ADDIW
 SUBIW
 ANDIW
 
+# Shifts
+SLL
+SRL
+SRA
+SLLI
+SRLI
+SRAI
+SLLW
+SRLW
+SRAW
+SLLIW
+SRLIW
+SRAIW
+
 # HL extended-immediate logical
 HL.ANDI
 HL.ORI

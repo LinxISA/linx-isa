@@ -801,6 +801,44 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
             "Write(Dst, result)",
         ]
 
+    if root in {"SLL", "SRL", "SRA"}:
+        op = {"SLL":"<<", "SRL":">>", "SRA":">> (arith)"}[root]
+        return [
+            "a = Read(SrcL)",
+            "sh = Read(SrcR) & 63",
+            f"result = a {op} sh",
+            "Write(Dst, result)",
+        ]
+
+    if root in {"SLLI", "SRLI", "SRAI"}:
+        op = {"SLLI":"<<", "SRLI":">>", "SRAI":">> (arith)"}[root]
+        return [
+            "a = Read(SrcL)",
+            "sh = shamt",
+            f"result = a {op} sh",
+            "Write(Dst, result)",
+        ]
+
+    if root in {"SLLW", "SRLW", "SRAW"}:
+        op = {"SLLW":"<<", "SRLW":">>", "SRAW":">> (arith)"}[root]
+        return [
+            "a = Read(SrcL)[31:0]",
+            "sh = Read(SrcR) & 31",
+            f"result32 = a {op} sh",
+            "result = SignExtend32(result32)",
+            "Write(Dst, result)",
+        ]
+
+    if root in {"SLLIW", "SRLIW", "SRAIW"}:
+        op = {"SLLIW":"<<", "SRLIW":">>", "SRAIW":">> (arith)"}[root]
+        return [
+            "a = Read(SrcL)[31:0]",
+            "sh = shamt",
+            f"result32 = a {op} sh",
+            "result = SignExtend32(result32)",
+            "Write(Dst, result)",
+        ]
+
     if root in {"ANDIW", "ORIW", "XORIW"}:
         op = {"ANDIW": "&", "ORIW": "|", "XORIW": "^"}[root]
         imm_name = "simm24" if enc == "HL" else "simm12"

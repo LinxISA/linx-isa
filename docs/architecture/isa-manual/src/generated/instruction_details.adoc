@@ -512,9 +512,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = Read(SrcR)  // apply modifiers/shift as encoded
-result = lhs << rhs
+a = Read(SrcL)
+sh = Read(SrcR) & 63
+result = a << sh
 Write(Dst, result)
 ----
 
@@ -538,9 +538,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs << rhs
+a = Read(SrcL)
+sh = shamt
+result = a << sh
 Write(Dst, result)
 ----
 
@@ -564,9 +564,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = Read(SrcR)  // apply modifiers/shift as encoded
-result = lhs >> rhs
+a = Read(SrcL)
+sh = Read(SrcR) & 63
+result = a >> (arith) sh
 Write(Dst, result)
 ----
 
@@ -590,9 +590,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs >> rhs
+a = Read(SrcL)
+sh = shamt
+result = a >> (arith) sh
 Write(Dst, result)
 ----
 
@@ -616,9 +616,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = Read(SrcR)  // apply modifiers/shift as encoded
-result = lhs >> rhs
+a = Read(SrcL)
+sh = Read(SrcR) & 63
+result = a >> sh
 Write(Dst, result)
 ----
 
@@ -642,9 +642,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs >> rhs
+a = Read(SrcL)
+sh = shamt
+result = a >> sh
 Write(Dst, result)
 ----
 
@@ -1023,7 +1023,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+sh = shamt
+result32 = a << sh
+result = SignExtend32(result32)
+Write(Dst, result)
 ----
 
 [[insndesc-arithmetic-operation-32bit-sllw]]
@@ -1046,7 +1050,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+sh = Read(SrcR) & 31
+result32 = a << sh
+result = SignExtend32(result32)
+Write(Dst, result)
 ----
 
 [[insndesc-arithmetic-operation-32bit-sraiw]]
@@ -1069,7 +1077,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+sh = shamt
+result32 = a >> (arith) sh
+result = SignExtend32(result32)
+Write(Dst, result)
 ----
 
 [[insndesc-arithmetic-operation-32bit-sraw]]
@@ -1092,7 +1104,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+sh = Read(SrcR) & 31
+result32 = a >> (arith) sh
+result = SignExtend32(result32)
+Write(Dst, result)
 ----
 
 [[insndesc-arithmetic-operation-32bit-srliw]]
@@ -1115,7 +1131,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+sh = shamt
+result32 = a >> sh
+result = SignExtend32(result32)
+Write(Dst, result)
 ----
 
 [[insndesc-arithmetic-operation-32bit-srlw]]
@@ -1138,7 +1158,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+sh = Read(SrcR) & 31
+result32 = a >> sh
+result = SignExtend32(result32)
+Write(Dst, result)
 ----
 
 [[insndesc-arithmetic-operation-32bit-subiw]]
@@ -3193,9 +3217,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = Read(SrcR)  // apply modifiers/shift as encoded
-result = lhs << rhs
+a = Read(SrcL)
+sh = Read(SrcR) & 63
+result = a << sh
 Write(Dst, result)
 ----
 
@@ -3214,9 +3238,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs << rhs
+a = Read(SrcL)
+sh = shamt
+result = a << sh
 Write(Dst, result)
 ----
 
@@ -3235,9 +3259,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = Read(SrcR)  // apply modifiers/shift as encoded
-result = lhs >> rhs
+a = Read(SrcL)
+sh = Read(SrcR) & 63
+result = a >> (arith) sh
 Write(Dst, result)
 ----
 
@@ -3256,9 +3280,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs >> rhs
+a = Read(SrcL)
+sh = shamt
+result = a >> (arith) sh
 Write(Dst, result)
 ----
 
@@ -3277,9 +3301,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = Read(SrcR)  // apply modifiers/shift as encoded
-result = lhs >> rhs
+a = Read(SrcL)
+sh = Read(SrcR) & 63
+result = a >> sh
 Write(Dst, result)
 ----
 
@@ -3298,9 +3322,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs >> rhs
+a = Read(SrcL)
+sh = shamt
+result = a >> sh
 Write(Dst, result)
 ----
 
@@ -3663,9 +3687,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs << rhs
+a = Read(SrcL)
+sh = shamt
+result = a << sh
 Write(Dst, result)
 ----
 
@@ -3684,9 +3708,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs >> rhs
+a = Read(SrcL)
+sh = shamt
+result = a >> sh
 Write(Dst, result)
 ----
 
