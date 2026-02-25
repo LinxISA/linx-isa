@@ -320,6 +320,10 @@
     "traparg0": {
       "assert_fail": "faulting PC/TPC",
       "other_sync_exceptions": "faulting VA"
+    },
+    "trapno": {
+      "E": "0 (sync only)",
+      "ARGV": "1 (TRAPARG0 always valid for fixup-routed exceptions)"
     }
   }
 }
