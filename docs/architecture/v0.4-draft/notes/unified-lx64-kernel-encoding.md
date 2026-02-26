@@ -33,7 +33,7 @@ Given the any-operand rule:
 - Per-lane operands (`vt/vu/vm/vn`) remain lane-specific.
 
 ## Remaining TODOs
-1) When a `v.*` instruction targets a scalar destination (if allowed), what does it mean (illegal? lane0? reduction?)
+1) `v.*` writing scalar/group-domain destinations is **not allowed**; any cross-lane aggregation must use an explicit reduction primitive (`V.RD*`) or other explicitly defined cross-lane op.
 2) The register-id ranges / numeric encodings for special domains (`ri*`, `p`, `TA/TB/TO/TS`, `vt/vu/vm/vn`).
 3) For `.brg` loads/stores: whether the address formation differs between `v.*.brg` and `l.*.brg` (implicit `lc0` or not), or whether both share the same rules.
 
