@@ -3,6 +3,11 @@
 ## Context / goal
 We want the full rendering pipeline to be decomposable into small, composable **PTO** units.
 
+Programming model direction (chosen):
+- **Hybrid TAU**: PTOs may be expressed as either:
+  - TEPL/TileOp10 header-only ops (preferred for common/stable units)
+  - TAU micro-kernels (for complex or evolving units)
+
 Architecture direction:
 - **VEC**: compute shading + fallback for anything not hardened.
 - **TAU**: the primary hardening substrate.
