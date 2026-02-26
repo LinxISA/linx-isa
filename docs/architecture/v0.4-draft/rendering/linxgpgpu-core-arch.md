@@ -55,5 +55,6 @@ Design direction:
 
 ## 6) Open items to decide next
 - Rendering pipeline style: **tile-based preferred**. Linx “tile” is defined as **general-purpose intermediate state storage** for cross-engine communication and shared working sets (it is not inherently a screen-space tile; screen-space tiling is built on top).
+- Binning staging: initial binning is built by **BCC scalar-block software logic**; later we can migrate to MPAR kernels / hardened binner if ROI proves out.
 - Vulkan command buffer mapping: **BCC-led expansion** (command buffers are lowered/expanded into Linx blocks by BCC/runtime rather than a heavy on-GPU CP parser).
 - Memory/cache/coherence policy for `.brg` vs CPU.

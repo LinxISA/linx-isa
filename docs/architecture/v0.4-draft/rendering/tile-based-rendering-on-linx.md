@@ -16,8 +16,10 @@ Chosen direction:
    - Relationship to tile register sizes (512B..4KB) and data formats.
 
 3) **Where does binning live?**
-   - software binning in MPAR kernels?
-   - later: harden a binning/tiler engine?
+
+Chosen staging:
+- First implementation uses **BCC / scalar-block software logic** to build tile lists/binning structures.
+- Future: migrate hot paths to MPAR kernels and/or a hardened tiler/binner engine once measured.
 
 4) **Pass structure mapping**
    - Vulkan renderpass/subpass boundaries → which blocks/engines?
