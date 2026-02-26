@@ -37,18 +37,22 @@ Draft execution rule (chosen direction):
 
 ### D) Containment and safety
 To preserve CFI and avoid arbitrary jumps:
-- All control-flow targets inside a kernel body MUST remain within the kernel’s declared text region.
+- The kernel text region is **implicitly bounded** by terminator markers.
+  - The body is considered fetchable/executable starting at `B.TEXT` entry.
+  - The kernel ends on the **first terminator marker encountered** in the body stream.
+  - Terminators: `BSTOP`/`C.BSTOP` and any `BSTART.*`/`C.BSTART.*` (first terminator wins; anything after is unreachable).
+- In-body control-flow targets (branches/jumps) MUST NOT escape the body’s fetchable region; escaping targets fault as body-fetch faults (consistent with existing vec-engine BRU conventions).
 - No architectural control flow may jump **into** the middle of a kernel from outside (same as v0.3 `B.TEXT` rule).
-- Kernel returns to the header continuation point via a dedicated termination mechanism (e.g. `BSTOP`/`C.BSTOP` or a v0.4-defined `KSTOP`).
+- Kernel returns to the header continuation point by reaching the terminator.
 
 ### E) Calls (optional)
 - v0.4 may still prohibit call/return inside kernel bodies initially (to simplify bring-up), even if branches are allowed.
 
 ## Open questions
 1) How do we **declare the kernel text region** (start/end) for containment checks?
-   - fixed-size in descriptor?
-   - terminator scanning?
-   - side-table metadata in driver/runtime?
+   - chosen direction: **terminator markers** (first `BSTOP/C.BSTOP` or any `BSTART.*` ends the kernel)
+   - (defer) fixed-size in descriptor?
+   - (defer) side-table metadata in driver/runtime?
 
 2) How is the **lane mask** represented architecturally?
    - reuse vec-engine scalar-lane predicate register `p` as EXEC (preferred by current direction)
