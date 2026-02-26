@@ -6,8 +6,10 @@
 
 ## What we must define (Linx-specific)
 1) **What is a tile?**
-   - Is a tile primarily a *working-set region* for color/depth/stencil?
-   - Or a generic accelerator-local scratchpad (not necessarily screen tiles)?
+
+Chosen direction:
+- A tile is **general-purpose intermediate state storage**: the shared medium for data exchange and state handoff across heterogeneous engines/blocks (shader kernels, DMA/clear, future texture/ROP/tiler engines, etc.).
+- It is **not inherently a screen-space tile**; screen-space tiling is a higher-level rendering strategy built on top of this general tile storage.
 
 2) **Tile size(s) and shapes**
    - Screen-space tile sizes (e.g. 8x8, 16x16, 32x32 pixels)?
