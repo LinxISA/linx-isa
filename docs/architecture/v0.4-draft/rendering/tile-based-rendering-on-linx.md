@@ -1,8 +1,12 @@
 # v0.4 draft: Tile-based rendering on Linx (open design)
 
-## Decision
-- Prefer **tile-based rendering** overall.
-- Caveat: Linx “tile” (tile registers, TA/TB/TO/TS bases, TLOAD/TSTORE, etc.) may not map 1:1 onto conventional TBDR tiles.
+## Positioning
+- Tile-based rendering is **one optional strategy** we want to support.
+- We also want to support **desktop/immediate-mode** style rendering.
+- Linx “tile” is **general-purpose intermediate state storage**; screen-space tiling is built on top of it when we choose the tile-based strategy.
+
+Caveat:
+- Linx “tile” (tile registers, TA/TB/TO/TS bases, TLOAD/TSTORE, etc.) may not map 1:1 onto conventional TBDR tiles.
 
 ## What we must define (Linx-specific)
 1) **What is a tile?**

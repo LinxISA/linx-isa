@@ -3,9 +3,13 @@
 This document is the working architectural spec for a **GPU-SM-like core** (“LinxGPGPU core”), scaling out to many cores to form a GPGPU suitable for rendering + compute.
 
 ## 1) System philosophy
+- **CPU (BCC) + Shader Core** as the primary composition model:
+  - CPU/BCC performs command lowering, orchestration, and software fallbacks.
+  - Shader core runs kernels (MPAR) for the parallel parts.
 - **Limited hardening**: only high-ROI units become fixed-function engines.
 - **VEC/SIMT kernel fallback**: everything must be runnable as MPAR kernels.
-- **BCC scheduling + heterogeneous blocks**: the machine is a composition of blocks targeting different engines, with out-of-order execution allowed but retired/visible under LinxCore’s block/BID rules.
+- **Heterogeneous blocks + out-of-order**: the machine is a composition of blocks targeting different engines, allowed to run out-of-order, but retiring/visibility is managed by LinxCore block/BID rules.
+- **Tile is general intermediate state storage** for cross-engine communication; rendering may be tile-based *or* immediate-mode.
 
 ## 2) Execution model (kernel body)
 ### 2.1 Group/warp
@@ -54,7 +58,9 @@ Design direction:
 - Optional future engines: texture/sampler, raster/tiler/binning, ROP.
 
 ## 6) Open items to decide next
-- Rendering pipeline style: **tile-based preferred**. Linx “tile” is defined as **general-purpose intermediate state storage** for cross-engine communication and shared working sets (it is not inherently a screen-space tile; screen-space tiling is built on top).
-- Binning staging: initial binning is built by **BCC scalar-block software logic**; later we can migrate to MPAR kernels / hardened binner if ROI proves out.
+- Rendering pipeline modes: support both **immediate-mode (desktop-style)** and **tile-based** approaches.
+  - Linx “tile” remains **general-purpose intermediate state storage**; screen-space tiling is an optional strategy.
+- What work is on **CPU/BCC** vs **shader core** in each pipeline mode (stage-by-stage split).
+- If/when we introduce binning: stage-1 binning can be built by **BCC scalar-block software logic**; later migrate to MPAR kernels / hardened binner if ROI proves out.
 - Vulkan command buffer mapping: **BCC-led expansion** (command buffers are lowered/expanded into Linx blocks by BCC/runtime rather than a heavy on-GPU CP parser).
 - Memory/cache/coherence policy for `.brg` vs CPU.
