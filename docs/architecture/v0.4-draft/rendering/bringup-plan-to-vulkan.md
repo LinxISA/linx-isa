@@ -64,7 +64,7 @@ Why this stage matters:
 Suggested baseline Vulkan driver:
 - Mesa **lavapipe (lvp)** as the reference software Vulkan implementation.
 
-Gates (in increasing strength):
+Gates (required):
 1) `vulkaninfo` runs and enumerates 1 physical device.
 2) A headless Vulkan sample runs:
    - create instance/device
