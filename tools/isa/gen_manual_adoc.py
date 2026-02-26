@@ -607,7 +607,31 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
     lb1_rhs = next((_note_rhs(n, "LB1") for n in notes if _note_rhs(n, "LB1")), None)
     lb2_rhs = next((_note_rhs(n, "LB2") for n in notes if _note_rhs(n, "LB2")), None)
 
+    # Immediate materialization.
+    if root == "LUI":
+        if enc == "HL":
+            return ["imm = SignExtend(imm32)", "Write(RegDst, imm)"]
+        return ["imm = (SignExtend(imm20) << 12)", "Write(RegDst, imm)"]
+
+    # Long immediate.
+    if enc == "HL" and root in {"LIS", "LIU"}:
+        ext = "SignExtend" if root == "LIS" else "ZeroExtend"
+        return [f"imm = {ext}(imm32)", "Write(RegDst, imm)"]
+
     # PC-relative / return-address materialization.
+    if root == "ADDTPC":
+        # Convention: PC-relative base is current PC/TPC; offset is halfword-scaled.
+        if enc == "HL":
+            return ["base = CurrentPC()", "off = (SignExtend(imm32) << 1)", "Write(RegDst, base + off)"]
+        return ["base = CurrentPC()", "off = (SignExtend(imm20) << 1)", "Write(RegDst, base + off)"]
+
+    if root == "SETRET":
+        if enc == "C":
+            return ["base = CurrentPC()", "off = (ZeroExtend(uimm5) << 1)", "ra = base + off"]
+        if enc == "HL":
+            return ["base = CurrentPC()", "off = (ZeroExtend(imm32) << 1)", "ra = base + off"]
+        return ["base = CurrentPC()", "off = (ZeroExtend(imm20) << 1)", "ra = base + off"]
+
     if ra_rhs:
         return [f"ra = {ra_rhs}"]
     if regdst_rhs and root in {"ADDTPC", "HL.ADDTPC"}:
@@ -633,6 +657,82 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
                     pred = "Read(SrcL) < Read(SrcR)  // unsigned" if sub == "LTU" else "Read(SrcL) >= Read(SrcR)  // unsigned"
                 return [f"if ({pred}):", f"  TPC = {target}"]
             return [f"if (branch condition holds):", f"  TPC = {target}"]
+
+    # Prefetch.
+    if root in {"PRF", "PRFI"}:
+        if root == "PRF":
+            addr = "Read(SrcL) + (ApplySrcRType(SrcRType, Read(SrcR)) << shamt)"
+            if enc == "HL" and sub == "A":
+                return [f"EA = {addr}", "PrefetchHint(EA)  // non-faulting", "Write(Dst, EA)"]
+            return [f"EA = {addr}", "PrefetchHint(EA)  // non-faulting"]
+
+        # PRFI.U / HL.PRFI.U / HL.PRFI.UA
+        imm = "SignExtend(simm12)" if enc == "" else "SignExtend(simm17)"
+        addr = f"Read(SrcL) + {imm}"
+        if enc == "HL" and sub == "UA":
+            return [f"EA = {addr}", "PrefetchHint(EA)  // non-faulting", "Write(Dst, EA)"]
+        return [f"EA = {addr}", "PrefetchHint(EA)  // non-faulting"]
+
+    # Floating-point compares (ordered; NaN => false).
+    if root in {"FEQ", "FEQS", "FNE", "FNES", "FLT", "FLTS", "FGE", "FGES"}:
+        pred = {
+            "FEQ": "OrderedEq(a, b)",
+            "FEQS": "OrderedEq(a, b)",
+            "FNE": "OrderedNe(a, b)",
+            "FNES": "OrderedNe(a, b)",
+            "FLT": "OrderedLt(a, b)",
+            "FLTS": "OrderedLt(a, b)",
+            "FGE": "OrderedGe(a, b)",
+            "FGES": "OrderedGe(a, b)",
+        }[root]
+        return [
+            "a = Read(SrcL)  // fd: full 64b; fs: low 32b",
+            "b = Read(SrcR)",
+            "// SrcType selects fd/fs; NaNs make predicate false",
+            f"result = {pred} ? 1 : 0",
+            "Write(Dst, result)",
+        ]
+
+    if root in {"FMAX", "FMIN"}:
+        which = "Max" if root == "FMAX" else "Min"
+        return [
+            "a = Read(SrcL)  // fd: full 64b; fs: low 32b",
+            "b = Read(SrcR)",
+            "// maxNum/minNum: one NaN => other; both NaN => canonical qNaN",
+            f"result = FP{which}Num(a, b)",
+            "Write(Dst, result)",
+        ]
+
+    if root == "FABS":
+        return [
+            "a = Read(SrcL)",
+            "// clear sign bit (fd: bit63; fs: bit31 in low word)",
+            "result = Abs(a)",
+            "Write(Dst, result)",
+        ]
+
+    if root == "FNEG":
+        return [
+            "a = Read(SrcL)",
+            "// flip sign bit (fd: bit63; fs: bit31 in low word)",
+            "result = Neg(a)",
+            "Write(Dst, result)",
+        ]
+
+    # Execution control.
+    if root == "ASSERT":
+        return ["if (ECONFIG[3] && Read(SrcL) == 0): Trap(ASSERT_FAIL)"]
+    if root == "EBREAK":
+        return ["Trap(SW_BREAKPOINT)"]
+    if root in {"FENCE"}:
+        if sub == "I":
+            return ["FenceI()  // instruction-cache fence"]
+        if sub == "D":
+            return ["FenceD()  // data-cache fence"]
+
+    # Block split / transform hints.
+    if root in {"BWT", "BWI", "BWE", "BSE"}:
+        return ["BlockHint()  // front-end metadata; no architectural effect"]
 
     # Block markers.
     if root == "BSTOP":
@@ -666,6 +766,168 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
         if sub == "TEXT":
             return ["AnnotateBlockText(/* label/offset as encoded */)"]
         return ["UpdateBlockMetadata(/* fields as encoded */)"]
+
+    # Conditional select.
+    if root == "CSEL":
+        return [
+            "p = Read(SrcP)",
+            "lhs = Read(SrcL)",
+            "rhs = Read(SrcR)  // apply optional .neg as encoded",
+            "result = (p != 0) ? lhs : rhs",
+            "Write(Dst, result)",
+        ]
+
+    # Max/min.
+    if root in {"MAX", "MAXU", "MIN", "MINU"}:
+        cmp = {
+            "MAX": "signed(a) >= signed(b)",
+            "MAXU": "unsigned(a) >= unsigned(b)",
+            "MIN": "signed(a) <= signed(b)",
+            "MINU": "unsigned(a) <= unsigned(b)",
+        }[root]
+        return [
+            "a = Read(SrcL)",
+            "b = Read(SrcR)",
+            f"result = ({cmp}) ? a : b",
+            "Write(Dst, result)",
+        ]
+
+    # Logical-immediate (12-bit) and HL extended-immediate (24-bit) forms.
+    if root in {"ANDI", "ORI", "XORI"}:
+        op = {"ANDI": "&", "ORI": "|", "XORI": "^"}[root]
+        if enc == "HL":
+            return [
+                "a = Read(SrcL)",
+                "imm = SignExtend(simm24)",
+                f"result = a {op} imm",
+                "Write(Dst, result)",
+            ]
+        return [
+            "a = Read(SrcL)",
+            "imm = SignExtend(simm12)",
+            f"result = a {op} imm",
+            "Write(Dst, result)",
+        ]
+
+    if root in {"SLL", "SRL", "SRA"}:
+        op = {"SLL":"<<", "SRL":">>", "SRA":">> (arith)"}[root]
+        return [
+            "a = Read(SrcL)",
+            "sh = Read(SrcR) & 63",
+            f"result = a {op} sh",
+            "Write(Dst, result)",
+        ]
+
+    if root in {"SLLI", "SRLI", "SRAI"}:
+        op = {"SLLI":"<<", "SRLI":">>", "SRAI":">> (arith)"}[root]
+        return [
+            "a = Read(SrcL)",
+            "sh = shamt",
+            f"result = a {op} sh",
+            "Write(Dst, result)",
+        ]
+
+    if root in {"SLLW", "SRLW", "SRAW"}:
+        op = {"SLLW":"<<", "SRLW":">>", "SRAW":">> (arith)"}[root]
+        return [
+            "a = Read(SrcL)[31:0]",
+            "sh = Read(SrcR) & 31",
+            f"result32 = a {op} sh",
+            "result = SignExtend32(result32)",
+            "Write(Dst, result)",
+        ]
+
+    if root in {"SLLIW", "SRLIW", "SRAIW"}:
+        op = {"SLLIW":"<<", "SRLIW":">>", "SRAIW":">> (arith)"}[root]
+        return [
+            "a = Read(SrcL)[31:0]",
+            "sh = shamt",
+            f"result32 = a {op} sh",
+            "result = SignExtend32(result32)",
+            "Write(Dst, result)",
+        ]
+
+    if root in {"ANDIW", "ORIW", "XORIW"}:
+        op = {"ANDIW": "&", "ORIW": "|", "XORIW": "^"}[root]
+        imm_name = "simm24" if enc == "HL" else "simm12"
+        return [
+            "a = Read(SrcL)[31:0]",
+            f"imm = SignExtend({imm_name})[31:0]",
+            f"result32 = a {op} imm",
+            "result = SignExtend32(result32)",
+            "Write(Dst, result)",
+        ]
+
+    # Multi-cycle ALU: division and remainder.
+    if root in {"DIV", "DIVU", "DIVW", "DIVUW", "REM", "REMU", "REMW", "REMUW"}:
+        w = root.endswith("W")
+        unsigned_op = root in {"DIVU", "DIVUW", "REMU", "REMUW"}
+        is_rem = root.startswith("REM")
+        lines = []
+        if w:
+            lines += ["a = Read(SrcL)[31:0]", "b = Read(SrcR)[31:0]"]
+        else:
+            lines += ["a = Read(SrcL)", "b = Read(SrcR)"]
+
+        # ARM-like convention: div-by-zero yields q=0; remainder yields a.
+        if enc == "HL":
+            lines += ["if (b == 0):", "  q = 0", "  r = a", "else:"]
+            if not unsigned_op:
+                lines += ["  // signed overflow: MIN_INT / -1"]
+            lines += ["  q = TruncTowardZeroDiv(a, b)", "  r = a - q*b"]
+            if w:
+                lines += ["  q = SignExtend32(q)", "  r = SignExtend32(r)"]
+            lines += ["Write(Dst0, q)", "Write(Dst1, r)"]
+            return lines
+
+        lines += ["if (b == 0):"]
+        if is_rem:
+            lines += ["  result = a"]
+        else:
+            lines += ["  result = 0"]
+        lines += ["else:"]
+        if (not unsigned_op) and (root in {"DIV", "DIVW", "REM", "REMW"}):
+            lines += ["  // signed overflow: MIN_INT / -1"]
+        if is_rem:
+            lines += ["  q = TruncTowardZeroDiv(a, b)", "  result = a - q*b"]
+        else:
+            lines += ["  result = TruncTowardZeroDiv(a, b)"]
+        if w:
+            lines += ["  result = SignExtend32(result)"]
+        lines += ["Write(Dst, result)"]
+        return lines
+
+    # Multi-cycle ALU: multiplication.
+    if root in {"MUL", "MULU", "MULW", "MULUW", "MADD", "MADDW"}:
+        w = root.endswith("W")
+        is_madd = root.startswith("MADD")
+        lines = []
+        if w:
+            lines += ["a = Read(SrcL)[31:0]", "b = Read(SrcR)[31:0]"]
+            if is_madd:
+                lines += ["d = Read(SrcD)[31:0]"]
+        else:
+            lines += ["a = Read(SrcL)", "b = Read(SrcR)"]
+            if is_madd:
+                lines += ["d = Read(SrcD)"]
+
+        if enc == "HL":
+            if is_madd:
+                lines += ["acc = FullProduct(a, b) + SignExtend(d)"]
+            else:
+                lines += ["acc = FullProduct(a, b)"]
+            lines += ["lo = acc[63:0]", "hi = acc[127:64]", "Write(Dst0, lo)", "Write(Dst1, hi)"]
+            return lines
+
+        if is_madd:
+            lines += ["result = LowProduct(a, b) + d"]
+        else:
+            lines += ["result = LowProduct(a, b)"]
+
+        if w:
+            lines += ["result = SignExtend32(result)"]
+        lines += ["Write(Dst, result)"]
+        return lines
 
     # Template instructions.
     if root in {"FENTRY", "FEXIT"} or m.startswith("FRET"):

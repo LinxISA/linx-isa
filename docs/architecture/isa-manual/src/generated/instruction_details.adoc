@@ -74,8 +74,7 @@ Operation (informative)::
 +
 [source]
 ----
-if (Read(SrcL) == 0):
-  Trap(ASSERT)
+if (ECONFIG[3] && Read(SrcL) == 0): Trap(ASSERT_FAIL)
 ----
 
 [[insndesc-execution-control-bse]]
@@ -98,7 +97,7 @@ Operation (informative)::
 +
 [source]
 ----
-WaitEventOrInterrupt(Read(SrcL))
+BlockHint()  // front-end metadata; no architectural effect
 ----
 
 [[insndesc-execution-control-bwe]]
@@ -121,7 +120,7 @@ Operation (informative)::
 +
 [source]
 ----
-WaitEventOrInterrupt(Read(SrcL))
+BlockHint()  // front-end metadata; no architectural effect
 ----
 
 [[insndesc-execution-control-bwi]]
@@ -144,7 +143,7 @@ Operation (informative)::
 +
 [source]
 ----
-WaitEventOrInterrupt(Read(SrcL))
+BlockHint()  // front-end metadata; no architectural effect
 ----
 
 [[insndesc-execution-control-bwt]]
@@ -167,7 +166,7 @@ Operation (informative)::
 +
 [source]
 ----
-Sleep(duration=Read(SrcL))
+BlockHint()  // front-end metadata; no architectural effect
 ----
 
 [[insndesc-execution-control-ebreak]]
@@ -190,7 +189,7 @@ Operation (informative)::
 +
 [source]
 ----
-Trap(EBREAK)  // debugger break / environment break
+Trap(SW_BREAKPOINT)
 ----
 
 [[insndesc-execution-control-fence-d]]
@@ -208,7 +207,7 @@ Operation (informative)::
 +
 [source]
 ----
-FenceD(pred_imm, succ_imm)  // memory ordering fence
+FenceD()  // data-cache fence
 ----
 
 [[insndesc-execution-control-fence-i]]
@@ -226,7 +225,7 @@ Operation (informative)::
 +
 [source]
 ----
-FenceI()  // synchronize instruction fetch with prior stores
+FenceI()  // instruction-cache fence
 ----
 
 [[insndesc-arithmetic-operation-64bit]]
@@ -330,9 +329,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs & rhs
+a = Read(SrcL)
+imm = SignExtend(simm12)
+result = a & imm
 Write(Dst, result)
 ----
 
@@ -372,9 +371,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs & rhs
+a = Read(SrcL)
+imm = SignExtend(simm24)
+result = a & imm
 Write(Dst, result)
 ----
 
@@ -393,9 +392,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs | rhs
+a = Read(SrcL)
+imm = SignExtend(simm24)
+result = a | imm
 Write(Dst, result)
 ----
 
@@ -435,9 +434,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs ^ rhs
+a = Read(SrcL)
+imm = SignExtend(simm24)
+result = a ^ imm
 Write(Dst, result)
 ----
 
@@ -487,9 +486,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs | rhs
+a = Read(SrcL)
+imm = SignExtend(simm12)
+result = a | imm
 Write(Dst, result)
 ----
 
@@ -513,9 +512,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = Read(SrcR)  // apply modifiers/shift as encoded
-result = lhs << rhs
+a = Read(SrcL)
+sh = Read(SrcR) & 63
+result = a << sh
 Write(Dst, result)
 ----
 
@@ -539,9 +538,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs << rhs
+a = Read(SrcL)
+sh = shamt
+result = a << sh
 Write(Dst, result)
 ----
 
@@ -565,9 +564,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = Read(SrcR)  // apply modifiers/shift as encoded
-result = lhs >> rhs
+a = Read(SrcL)
+sh = Read(SrcR) & 63
+result = a >> (arith) sh
 Write(Dst, result)
 ----
 
@@ -591,9 +590,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs >> rhs
+a = Read(SrcL)
+sh = shamt
+result = a >> (arith) sh
 Write(Dst, result)
 ----
 
@@ -617,9 +616,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = Read(SrcR)  // apply modifiers/shift as encoded
-result = lhs >> rhs
+a = Read(SrcL)
+sh = Read(SrcR) & 63
+result = a >> sh
 Write(Dst, result)
 ----
 
@@ -643,9 +642,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs >> rhs
+a = Read(SrcL)
+sh = shamt
+result = a >> sh
 Write(Dst, result)
 ----
 
@@ -747,9 +746,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs ^ rhs
+a = Read(SrcL)
+imm = SignExtend(simm12)
+result = a ^ imm
 Write(Dst, result)
 ----
 
@@ -822,7 +821,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+imm = SignExtend(simm12)[31:0]
+result32 = a & imm
+result = SignExtend32(result32)
+Write(Dst, result)
 ----
 
 [[insndesc-arithmetic-operation-32bit-andw]]
@@ -881,7 +884,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+imm = SignExtend(simm24)[31:0]
+result32 = a & imm
+result = SignExtend32(result32)
+Write(Dst, result)
 ----
 
 [[insndesc-arithmetic-operation-32bit-hl-oriw]]
@@ -899,7 +906,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+imm = SignExtend(simm24)[31:0]
+result32 = a | imm
+result = SignExtend32(result32)
+Write(Dst, result)
 ----
 
 [[insndesc-arithmetic-operation-32bit-hl-subiw]]
@@ -935,7 +946,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+imm = SignExtend(simm24)[31:0]
+result32 = a ^ imm
+result = SignExtend32(result32)
+Write(Dst, result)
 ----
 
 [[insndesc-arithmetic-operation-32bit-oriw]]
@@ -958,7 +973,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+imm = SignExtend(simm12)[31:0]
+result32 = a | imm
+result = SignExtend32(result32)
+Write(Dst, result)
 ----
 
 [[insndesc-arithmetic-operation-32bit-orw]]
@@ -1004,7 +1023,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+sh = shamt
+result32 = a << sh
+result = SignExtend32(result32)
+Write(Dst, result)
 ----
 
 [[insndesc-arithmetic-operation-32bit-sllw]]
@@ -1027,7 +1050,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+sh = Read(SrcR) & 31
+result32 = a << sh
+result = SignExtend32(result32)
+Write(Dst, result)
 ----
 
 [[insndesc-arithmetic-operation-32bit-sraiw]]
@@ -1050,7 +1077,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+sh = shamt
+result32 = a >> (arith) sh
+result = SignExtend32(result32)
+Write(Dst, result)
 ----
 
 [[insndesc-arithmetic-operation-32bit-sraw]]
@@ -1073,7 +1104,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+sh = Read(SrcR) & 31
+result32 = a >> (arith) sh
+result = SignExtend32(result32)
+Write(Dst, result)
 ----
 
 [[insndesc-arithmetic-operation-32bit-srliw]]
@@ -1096,7 +1131,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+sh = shamt
+result32 = a >> sh
+result = SignExtend32(result32)
+Write(Dst, result)
 ----
 
 [[insndesc-arithmetic-operation-32bit-srlw]]
@@ -1119,7 +1158,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+sh = Read(SrcR) & 31
+result32 = a >> sh
+result = SignExtend32(result32)
+Write(Dst, result)
 ----
 
 [[insndesc-arithmetic-operation-32bit-subiw]]
@@ -1188,7 +1231,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+imm = SignExtend(simm12)[31:0]
+result32 = a ^ imm
+result = SignExtend32(result32)
+Write(Dst, result)
 ----
 
 [[insndesc-arithmetic-operation-32bit-xorw]]
@@ -1237,7 +1284,9 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+base = CurrentPC()
+off = (SignExtend(imm20) << 1)
+Write(RegDst, base + off)
 ----
 
 [[insndesc-pc-relative-hl-addtpc]]
@@ -1255,7 +1304,9 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+base = CurrentPC()
+off = (SignExtend(imm32) << 1)
+Write(RegDst, base + off)
 ----
 
 [[insndesc-pc-relative-hl-setret]]
@@ -1273,7 +1324,9 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+base = CurrentPC()
+off = (ZeroExtend(imm32) << 1)
+ra = base + off
 ----
 
 [[insndesc-pc-relative-setret]]
@@ -1296,7 +1349,9 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+base = CurrentPC()
+off = (ZeroExtend(imm20) << 1)
+ra = base + off
 ----
 
 [[insndesc-block-argument]]
@@ -3099,9 +3154,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs & rhs
+a = Read(SrcL)
+imm = SignExtend(simm12)
+result = a & imm
 Write(Dst, result)
 ----
 
@@ -3141,9 +3196,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs | rhs
+a = Read(SrcL)
+imm = SignExtend(simm12)
+result = a | imm
 Write(Dst, result)
 ----
 
@@ -3162,9 +3217,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = Read(SrcR)  // apply modifiers/shift as encoded
-result = lhs << rhs
+a = Read(SrcL)
+sh = Read(SrcR) & 63
+result = a << sh
 Write(Dst, result)
 ----
 
@@ -3183,9 +3238,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs << rhs
+a = Read(SrcL)
+sh = shamt
+result = a << sh
 Write(Dst, result)
 ----
 
@@ -3204,9 +3259,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = Read(SrcR)  // apply modifiers/shift as encoded
-result = lhs >> rhs
+a = Read(SrcL)
+sh = Read(SrcR) & 63
+result = a >> (arith) sh
 Write(Dst, result)
 ----
 
@@ -3225,9 +3280,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs >> rhs
+a = Read(SrcL)
+sh = shamt
+result = a >> (arith) sh
 Write(Dst, result)
 ----
 
@@ -3246,9 +3301,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = Read(SrcR)  // apply modifiers/shift as encoded
-result = lhs >> rhs
+a = Read(SrcL)
+sh = Read(SrcR) & 63
+result = a >> sh
 Write(Dst, result)
 ----
 
@@ -3267,9 +3322,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs >> rhs
+a = Read(SrcL)
+sh = shamt
+result = a >> sh
 Write(Dst, result)
 ----
 
@@ -3351,9 +3406,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs ^ rhs
+a = Read(SrcL)
+imm = SignExtend(simm12)
+result = a ^ imm
 Write(Dst, result)
 ----
 
@@ -3614,7 +3669,7 @@ Operation (informative)::
 +
 [source]
 ----
-Trap(EBREAK)  // debugger break / environment break
+Trap(SW_BREAKPOINT)
 ----
 
 [[insndesc-c-tinst-c-slli]]
@@ -3632,9 +3687,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs << rhs
+a = Read(SrcL)
+sh = shamt
+result = a << sh
 Write(Dst, result)
 ----
 
@@ -3653,9 +3708,9 @@ Operation (informative)::
 +
 [source]
 ----
-lhs = Read(SrcL)
-rhs = imm  // immediate as encoded
-result = lhs >> rhs
+a = Read(SrcL)
+sh = shamt
+result = a >> sh
 Write(Dst, result)
 ----
 
@@ -4249,7 +4304,9 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+base = CurrentPC()
+off = (ZeroExtend(uimm5) << 1)
+ra = base + off
 ----
 
 [[insndesc-store-immediate-offset]]
@@ -5920,7 +5977,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+p = Read(SrcP)
+lhs = Read(SrcL)
+rhs = Read(SrcR)  // apply optional .neg as encoded
+result = (p != 0) ? lhs : rhs
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu]]
@@ -5946,7 +6007,14 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+if (b == 0):
+  result = 0
+else:
+  // signed overflow: MIN_INT / -1
+  result = TruncTowardZeroDiv(a, b)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-divu]]
@@ -5969,7 +6037,13 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+if (b == 0):
+  result = 0
+else:
+  result = TruncTowardZeroDiv(a, b)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-divuw]]
@@ -5992,7 +6066,14 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+b = Read(SrcR)[31:0]
+if (b == 0):
+  result = 0
+else:
+  result = TruncTowardZeroDiv(a, b)
+  result = SignExtend32(result)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-divw]]
@@ -6015,7 +6096,15 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+b = Read(SrcR)[31:0]
+if (b == 0):
+  result = 0
+else:
+  // signed overflow: MIN_INT / -1
+  result = TruncTowardZeroDiv(a, b)
+  result = SignExtend32(result)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-hl-div]]
@@ -6033,7 +6122,17 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+if (b == 0):
+  q = 0
+  r = a
+else:
+  // signed overflow: MIN_INT / -1
+  q = TruncTowardZeroDiv(a, b)
+  r = a - q*b
+Write(Dst0, q)
+Write(Dst1, r)
 ----
 
 [[insndesc-multi-cycle-alu-hl-divu]]
@@ -6051,7 +6150,16 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+if (b == 0):
+  q = 0
+  r = a
+else:
+  q = TruncTowardZeroDiv(a, b)
+  r = a - q*b
+Write(Dst0, q)
+Write(Dst1, r)
 ----
 
 [[insndesc-multi-cycle-alu-hl-divuw]]
@@ -6069,7 +6177,18 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+b = Read(SrcR)[31:0]
+if (b == 0):
+  q = 0
+  r = a
+else:
+  q = TruncTowardZeroDiv(a, b)
+  r = a - q*b
+  q = SignExtend32(q)
+  r = SignExtend32(r)
+Write(Dst0, q)
+Write(Dst1, r)
 ----
 
 [[insndesc-multi-cycle-alu-hl-divw]]
@@ -6087,7 +6206,19 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+b = Read(SrcR)[31:0]
+if (b == 0):
+  q = 0
+  r = a
+else:
+  // signed overflow: MIN_INT / -1
+  q = TruncTowardZeroDiv(a, b)
+  r = a - q*b
+  q = SignExtend32(q)
+  r = SignExtend32(r)
+Write(Dst0, q)
+Write(Dst1, r)
 ----
 
 [[insndesc-multi-cycle-alu-hl-madd]]
@@ -6105,7 +6236,14 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+d = Read(SrcD)
+acc = FullProduct(a, b) + SignExtend(d)
+lo = acc[63:0]
+hi = acc[127:64]
+Write(Dst0, lo)
+Write(Dst1, hi)
 ----
 
 [[insndesc-multi-cycle-alu-hl-maddw]]
@@ -6123,7 +6261,14 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+b = Read(SrcR)[31:0]
+d = Read(SrcD)[31:0]
+acc = FullProduct(a, b) + SignExtend(d)
+lo = acc[63:0]
+hi = acc[127:64]
+Write(Dst0, lo)
+Write(Dst1, hi)
 ----
 
 [[insndesc-multi-cycle-alu-hl-mul]]
@@ -6141,7 +6286,13 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+acc = FullProduct(a, b)
+lo = acc[63:0]
+hi = acc[127:64]
+Write(Dst0, lo)
+Write(Dst1, hi)
 ----
 
 [[insndesc-multi-cycle-alu-hl-mulu]]
@@ -6159,7 +6310,13 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+acc = FullProduct(a, b)
+lo = acc[63:0]
+hi = acc[127:64]
+Write(Dst0, lo)
+Write(Dst1, hi)
 ----
 
 [[insndesc-multi-cycle-alu-hl-rem]]
@@ -6177,7 +6334,17 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+if (b == 0):
+  q = 0
+  r = a
+else:
+  // signed overflow: MIN_INT / -1
+  q = TruncTowardZeroDiv(a, b)
+  r = a - q*b
+Write(Dst0, q)
+Write(Dst1, r)
 ----
 
 [[insndesc-multi-cycle-alu-hl-remu]]
@@ -6195,7 +6362,16 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+if (b == 0):
+  q = 0
+  r = a
+else:
+  q = TruncTowardZeroDiv(a, b)
+  r = a - q*b
+Write(Dst0, q)
+Write(Dst1, r)
 ----
 
 [[insndesc-multi-cycle-alu-hl-remuw]]
@@ -6213,7 +6389,18 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+b = Read(SrcR)[31:0]
+if (b == 0):
+  q = 0
+  r = a
+else:
+  q = TruncTowardZeroDiv(a, b)
+  r = a - q*b
+  q = SignExtend32(q)
+  r = SignExtend32(r)
+Write(Dst0, q)
+Write(Dst1, r)
 ----
 
 [[insndesc-multi-cycle-alu-hl-remw]]
@@ -6231,7 +6418,19 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+b = Read(SrcR)[31:0]
+if (b == 0):
+  q = 0
+  r = a
+else:
+  // signed overflow: MIN_INT / -1
+  q = TruncTowardZeroDiv(a, b)
+  r = a - q*b
+  q = SignExtend32(q)
+  r = SignExtend32(r)
+Write(Dst0, q)
+Write(Dst1, r)
 ----
 
 [[insndesc-multi-cycle-alu-madd]]
@@ -6254,7 +6453,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+d = Read(SrcD)
+result = LowProduct(a, b) + d
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-maddw]]
@@ -6277,7 +6480,12 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+b = Read(SrcR)[31:0]
+d = Read(SrcD)[31:0]
+result = LowProduct(a, b) + d
+result = SignExtend32(result)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-mul]]
@@ -6300,7 +6508,10 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+result = LowProduct(a, b)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-mulu]]
@@ -6323,7 +6534,10 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+result = LowProduct(a, b)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-muluw]]
@@ -6346,7 +6560,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+b = Read(SrcR)[31:0]
+result = LowProduct(a, b)
+result = SignExtend32(result)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-mulw]]
@@ -6369,7 +6587,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+b = Read(SrcR)[31:0]
+result = LowProduct(a, b)
+result = SignExtend32(result)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-rem]]
@@ -6392,7 +6614,15 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+if (b == 0):
+  result = a
+else:
+  // signed overflow: MIN_INT / -1
+  q = TruncTowardZeroDiv(a, b)
+  result = a - q*b
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-remu]]
@@ -6415,7 +6645,14 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+if (b == 0):
+  result = a
+else:
+  q = TruncTowardZeroDiv(a, b)
+  result = a - q*b
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-remuw]]
@@ -6438,7 +6675,15 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+b = Read(SrcR)[31:0]
+if (b == 0):
+  result = a
+else:
+  q = TruncTowardZeroDiv(a, b)
+  result = a - q*b
+  result = SignExtend32(result)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-remw]]
@@ -6461,7 +6706,16 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)[31:0]
+b = Read(SrcR)[31:0]
+if (b == 0):
+  result = a
+else:
+  // signed overflow: MIN_INT / -1
+  q = TruncTowardZeroDiv(a, b)
+  result = a - q*b
+  result = SignExtend32(result)
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-v-madd]]
@@ -6479,7 +6733,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+d = Read(SrcD)
+result = LowProduct(a, b) + d
+Write(Dst, result)
 ----
 
 [[insndesc-multi-cycle-alu-v-mul]]
@@ -6497,7 +6755,10 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+result = LowProduct(a, b)
+Write(Dst, result)
 ----
 
 [[insndesc-floating-point-arithmetic]]
@@ -6523,7 +6784,10 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+// clear sign bit (fd: bit63; fs: bit31 in low word)
+result = Abs(a)
+Write(Dst, result)
 ----
 
 [[insndesc-floating-point-arithmetic-fadd]]
@@ -7061,7 +7325,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedEq(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-floating-point-compare-feqs]]
@@ -7084,7 +7352,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedEq(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-floating-point-compare-fge]]
@@ -7107,7 +7379,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedGe(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-floating-point-compare-fges]]
@@ -7130,7 +7406,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedGe(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-floating-point-compare-flt]]
@@ -7153,7 +7433,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedLt(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-floating-point-compare-flts]]
@@ -7176,7 +7460,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedLt(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-floating-point-compare-fne]]
@@ -7199,7 +7487,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedNe(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-floating-point-compare-fnes]]
@@ -7222,7 +7514,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedNe(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-max-min]]
@@ -7248,7 +7544,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// maxNum/minNum: one NaN => other; both NaN => canonical qNaN
+result = FPMaxNum(a, b)
+Write(Dst, result)
 ----
 
 [[insndesc-max-min-fmin]]
@@ -7271,7 +7571,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// maxNum/minNum: one NaN => other; both NaN => canonical qNaN
+result = FPMinNum(a, b)
+Write(Dst, result)
 ----
 
 [[insndesc-max-min-max]]
@@ -7294,7 +7598,10 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+result = (signed(a) >= signed(b)) ? a : b
+Write(Dst, result)
 ----
 
 [[insndesc-max-min-maxu]]
@@ -7317,7 +7624,10 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+result = (unsigned(a) >= unsigned(b)) ? a : b
+Write(Dst, result)
 ----
 
 [[insndesc-max-min-min]]
@@ -7340,7 +7650,10 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+result = (signed(a) <= signed(b)) ? a : b
+Write(Dst, result)
 ----
 
 [[insndesc-max-min-minu]]
@@ -7363,7 +7676,10 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+result = (unsigned(a) <= unsigned(b)) ? a : b
+Write(Dst, result)
 ----
 
 [[insndesc-reserve]]
@@ -9201,7 +9517,8 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+imm = SignExtend(imm32)
+Write(RegDst, imm)
 ----
 
 [[insndesc-long-immediate-hl-liu]]
@@ -9219,7 +9536,8 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+imm = ZeroExtend(imm32)
+Write(RegDst, imm)
 ----
 
 [[insndesc-immediate]]
@@ -9240,7 +9558,8 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+imm = SignExtend(imm32)
+Write(RegDst, imm)
 ----
 
 [[insndesc-immediate-lui]]
@@ -9263,7 +9582,8 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+imm = (SignExtend(imm20) << 12)
+Write(RegDst, imm)
 ----
 
 [[insndesc-prefetch]]
@@ -9284,7 +9604,8 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+EA = Read(SrcL) + (ApplySrcRType(SrcRType, Read(SrcR)) << shamt)
+PrefetchHint(EA)  // non-faulting
 ----
 
 [[insndesc-prefetch-hl-prf-a]]
@@ -9302,7 +9623,9 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+EA = Read(SrcL) + (ApplySrcRType(SrcRType, Read(SrcR)) << shamt)
+PrefetchHint(EA)  // non-faulting
+Write(Dst, EA)
 ----
 
 [[insndesc-prefetch-hl-prfi-u]]
@@ -9320,7 +9643,8 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+EA = Read(SrcL) + SignExtend(simm17)
+PrefetchHint(EA)  // non-faulting
 ----
 
 [[insndesc-prefetch-hl-prfi-ua]]
@@ -9338,7 +9662,9 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+EA = Read(SrcL) + SignExtend(simm17)
+PrefetchHint(EA)  // non-faulting
+Write(Dst, EA)
 ----
 
 [[insndesc-general]]
@@ -10834,9 +11160,8 @@ Operation (informative)::
 +
 [source]
 ----
-addr = ComputeAddress(/* per syntax */)
-value = Load(addr)
-Write(Dst, value)
+EA = Read(SrcL) + (ApplySrcRType(SrcRType, Read(SrcR)) << shamt)
+PrefetchHint(EA)  // non-faulting
 ----
 
 [[insndesc-load-register-offset-v-lb]]
@@ -12893,9 +13218,8 @@ Operation (informative)::
 +
 [source]
 ----
-addr = ComputeAddress(/* per syntax */)
-value = Load(addr)
-Write(Dst, value)
+EA = Read(SrcL) + SignExtend(simm12)
+PrefetchHint(EA)  // non-faulting
 ----
 
 [[insndesc-load-unscaled-v-ldi-u]]
@@ -13772,7 +14096,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+p = Read(SrcP)
+lhs = Read(SrcL)
+rhs = Read(SrcR)  // apply optional .neg as encoded
+result = (p != 0) ? lhs : rhs
+Write(Dst, result)
 ----
 
 [[insndesc-three-source-integer-v-psel]]
@@ -13811,7 +14139,14 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+if (b == 0):
+  result = 0
+else:
+  // signed overflow: MIN_INT / -1
+  result = TruncTowardZeroDiv(a, b)
+Write(Dst, result)
 ----
 
 [[insndesc-division-v-rem]]
@@ -13829,7 +14164,15 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+if (b == 0):
+  result = a
+else:
+  // signed overflow: MIN_INT / -1
+  q = TruncTowardZeroDiv(a, b)
+  result = a - q*b
+Write(Dst, result)
 ----
 
 [[insndesc-floating-point-arithmetic-2]]
@@ -13850,7 +14193,10 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+// clear sign bit (fd: bit63; fs: bit31 in low word)
+result = Abs(a)
+Write(Dst, result)
 ----
 
 [[insndesc-floating-point-arithmetic-2-v-fclass]]
@@ -14090,7 +14436,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedEq(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-two-source-floating-point-v-feqs]]
@@ -14108,7 +14458,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedEq(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-two-source-floating-point-v-fge]]
@@ -14126,7 +14480,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedGe(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-two-source-floating-point-v-fges]]
@@ -14144,7 +14502,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedGe(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-two-source-floating-point-v-flt]]
@@ -14162,7 +14524,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedLt(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-two-source-floating-point-v-flts]]
@@ -14180,7 +14546,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedLt(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-two-source-floating-point-v-fmax]]
@@ -14198,7 +14568,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// maxNum/minNum: one NaN => other; both NaN => canonical qNaN
+result = FPMaxNum(a, b)
+Write(Dst, result)
 ----
 
 [[insndesc-two-source-floating-point-v-fmin]]
@@ -14216,7 +14590,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// maxNum/minNum: one NaN => other; both NaN => canonical qNaN
+result = FPMinNum(a, b)
+Write(Dst, result)
 ----
 
 [[insndesc-two-source-floating-point-v-fne]]
@@ -14234,7 +14612,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedNe(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-two-source-floating-point-v-fnes]]
@@ -14252,7 +14634,11 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)  // fd: full 64b; fs: low 32b
+b = Read(SrcR)
+// SrcType selects fd/fs; NaNs make predicate false
+result = OrderedNe(a, b) ? 1 : 0
+Write(Dst, result)
 ----
 
 [[insndesc-two-source-floating-point-v-max]]
@@ -14270,7 +14656,10 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+result = (signed(a) >= signed(b)) ? a : b
+Write(Dst, result)
 ----
 
 [[insndesc-two-source-floating-point-v-min]]
@@ -14288,7 +14677,10 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+a = Read(SrcL)
+b = Read(SrcR)
+result = (signed(a) <= signed(b)) ? a : b
+Write(Dst, result)
 ----
 
 [[insndesc-general-manager]]

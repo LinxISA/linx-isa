@@ -107,3 +107,150 @@ HL.SETC.ORI
 # Compressed (16-bit)
 C.SETC.EQ
 C.SETC.NE
+
+# BRU control-transfer (vec engine scalar lane)
+B.EQ
+B.NE
+B.LT
+B.GE
+B.LTU
+B.GEU
+B.NZ
+B.Z
+J
+JR
+
+# PC-relative
+ADDTPC
+HL.ADDTPC
+SETRET
+HL.SETRET
+C.SETRET
+
+# Compound ops
+CSEL
+
+# Multi-cycle ALU
+DIV
+DIVU
+DIVW
+DIVUW
+REM
+REMU
+REMW
+REMUW
+MUL
+MULU
+MULW
+MULUW
+MADD
+MADDW
+
+# Max/Min
+MAX
+MAXU
+MIN
+MINU
+
+# Immediate materialization
+LUI
+HL.LUI
+HL.LIS
+HL.LIU
+
+# Word-immediate logical
+ORIW
+XORIW
+
+# Integer ALU
+ADD
+SUB
+AND
+OR
+XOR
+ADDI
+SUBI
+ANDI
+ORI
+XORI
+
+# Integer ALU (word)
+ADDW
+SUBW
+ANDW
+ORW
+XORW
+ADDIW
+SUBIW
+ANDIW
+
+# Shifts
+SLL
+SRL
+SRA
+SLLI
+SRLI
+SRAI
+SLLW
+SRLW
+SRAW
+SLLIW
+SRLIW
+SRAIW
+
+# HL extended-immediate logical
+HL.ANDI
+HL.ORI
+HL.XORI
+HL.ANDIW
+HL.ORIW
+HL.XORIW
+
+# Prefetch (non-faulting hints)
+PRF
+PRFI.U
+HL.PRF
+HL.PRF.A
+HL.PRFI.U
+HL.PRFI.UA
+
+# Floating-point compare (ordered)
+FEQ
+FEQS
+FLT
+FLTS
+FGE
+FGES
+FNE
+FNES
+
+# Floating-point max/min (ordered)
+FMAX
+FMIN
+FABS
+
+# Execution control
+ASSERT
+EBREAK
+FENCE.I
+FENCE.D
+
+# Block split / transform hints
+BWT
+BWI
+BWE
+BSE
+
+# HL multi-cycle ALU (two-destination)
+HL.DIV
+HL.DIVU
+HL.DIVW
+HL.DIVUW
+HL.REM
+HL.REMU
+HL.REMW
+HL.REMUW
+HL.MUL
+HL.MULU
+HL.MADD
+HL.MADDW

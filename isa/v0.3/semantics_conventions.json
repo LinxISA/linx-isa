@@ -9,13 +9,19 @@
     "no_output": {
       "codes": [
         0,
-        [24, 29]
+        [
+          24,
+          29
+        ]
       ],
       "behavior": "No architectural output is produced (silent drop). No exception is raised."
     },
     "gpr": {
       "codes": [
-        [1, 23]
+        [
+          1,
+          23
+        ]
       ],
       "behavior": "Write the selected GPR (R1..R23)."
     },
@@ -39,7 +45,15 @@
       "11": "neg (arithmetic families) / not (logical families)"
     },
     "order": "Apply SrcRType first, then apply any explicit shift (e.g. <<<shamt or <<shamt in addressing).",
-    "word_ops": "For *W (32-bit) operations, apply modifiers at 32-bit width, compute a 32-bit result, then sign-extend to 64-bit."
+    "word_ops": "For *W (32-bit) operations, apply modifiers at 32-bit width, compute a 32-bit result, then sign-extend to 64-bit.",
+    "restricted_forms": {
+      "description": "For forms whose assembly syntax only allows {.sw,.uw} (e.g. CMP.{EQ,NE,LT,GE,LTU,GEU} and SETC.{EQ,NE,LT,GE,LTU,GEU}), SrcRType=11 is treated as 00 (no modifier) in strict v0.3.",
+      "policy": "11_as_00"
+    },
+    "csel": {
+      "description": "CSEL encodes an optional .neg on SrcR; other SrcRType values are treated as 00.",
+      "policy": "11_as_neg_else_00"
+    }
   },
   "shifts": {
     "description": "Shift amount masking conventions.",
@@ -57,6 +71,174 @@
     },
     "assembly": "Assembly syntax elides shamt (prints a single immediate). Assembler/tooling may choose shamt to represent larger aligned constants when encodable."
   },
+  "pc_relative": {
+    "description": "PC-relative immediate conventions (ADDTPC/SETRET and variants).",
+    "base": "current instruction PC (scalar blocks) or current instruction TPC (vec bodies); the instruction description says PC/TPC.",
+    "offset_unit_bytes": 2,
+    "rule": "target = base + (Extend(imm) << 1)",
+    "addtpc": {
+      "imm_kind": "signed",
+      "extend": "SignExtend",
+      "note": "ADDTPC uses a signed immediate (addtpc simm)."
+    },
+    "setret": {
+      "imm_kind": "unsigned",
+      "extend": "ZeroExtend",
+      "note": "SETRET uses an unsigned immediate (setret uimm)."
+    },
+    "compressed": {
+      "c.setret": "uses uimm5 with ZeroExtend, then <<1"
+    },
+    "hl48": {
+      "hl.addtpc": "uses imm32 with SignExtend, then <<1",
+      "hl.setret": "uses imm32 with ZeroExtend, then <<1"
+    }
+  },
+  "immediate_materialization": {
+    "description": "Constant materialization conventions.",
+    "lui": {
+      "imm_kind": "signed",
+      "rule": "Write(RegDst, SignExtend(imm20) << 12)"
+    },
+    "hl_lui": {
+      "imm_kind": "signed",
+      "rule": "Write(RegDst, SignExtend(imm32))",
+      "note": "No <<12 in HL.LUI."
+    },
+    "hl_lis": {
+      "imm_kind": "signed",
+      "rule": "Write(RegDst, SignExtend(imm32))"
+    },
+    "hl_liu": {
+      "imm_kind": "unsigned",
+      "rule": "Write(RegDst, ZeroExtend(imm32))"
+    }
+  },
+  "division": {
+    "description": "DIV/REM family conventions (strict v0.3 staged).",
+    "model": "ARM-like (non-trapping, defined results)",
+    "rounding": "toward_zero",
+    "div_by_zero": {
+      "quotient": 0,
+      "remainder": "dividend"
+    },
+    "signed_overflow": {
+      "case": "MIN_INT / -1",
+      "quotient": "MIN_INT",
+      "remainder": 0
+    },
+    "word_writeback": {
+      "description": "For *W variants, compute in 32-bit domain then sign-extend result to 64-bit.",
+      "policy": "sign_extend_all_w_results",
+      "applies_to": [
+        "DIVW",
+        "DIVUW",
+        "REMW",
+        "REMUW"
+      ]
+    },
+    "hl_two_dest": {
+      "description": "HL.* multi-cycle ALU two-destination encodings.",
+      "policy": "dst0_is_quotient_dst1_is_remainder",
+      "dst0": "quotient",
+      "dst1": "remainder"
+    }
+  },
+  "multiplication": {
+    "description": "MUL family conventions (strict v0.3 staged).",
+    "scalar": {
+      "model": "low_part",
+      "note": "Scalar MUL/MULU return the low 64 bits of the full product."
+    },
+    "word_writeback": {
+      "description": "For *W variants, compute in 32-bit domain then sign-extend result to 64-bit.",
+      "policy": "sign_extend_all_w_results",
+      "applies_to": [
+        "MULW",
+        "MULUW"
+      ]
+    },
+    "hl_two_dest": {
+      "description": "HL.MUL/HL.MULU return the full 128-bit product split across two destinations.",
+      "policy": "dst0_low64_dst1_high64",
+      "dst0": "low64(full_product)",
+      "dst1": "high64(full_product)"
+    },
+    "hl_madd": {
+      "description": "HL.MADD/HL.MADDW return a 128-bit accumulator split across two destinations.",
+      "acc_rule": "acc = (signed_mul(SrcL, SrcR) + signed_add(SrcD))",
+      "dst0": "low64(acc)",
+      "dst1": "high64(acc)"
+    }
+  },
+  "block_legality": {
+    "description": "Legality conventions for which instruction families may appear as payload in coupled scalar blocks vs engine bodies.",
+    "bru_control_transfer": {
+      "description": "BRU control-transfer instructions (B.* / J / JR / etc.) are not legal payload in coupled scalar blocks; they are vec-engine scalar-lane-only.",
+      "on_scalar_block_execute": {
+        "trapnum": 4,
+        "name": "ILLEGAL_INST",
+        "note": "Cause/arg payload TBD; strict profile at minimum traps with TRAPNUM=4."
+      },
+      "vec_engine_scalar_lane": {
+        "pc_domain": "TPC",
+        "pc_relative": {
+          "offset_unit_bytes": 2,
+          "rule": "target = base + (SignExtend(offset) << 1)",
+          "base": "TPC (current instruction TPC)",
+          "note": "Base is current-instruction TPC (not next-TPC).",
+          "jr_rule": "JR target = SrcL + (SignExtend(simm12) << 1)",
+          "jr_srczero": "The encoded SrcZero field is ignored (treated as 0) in strict v0.3.",
+          "jr_alignment": "No forced alignment; odd target is permitted (subsequent fetch may fault).",
+          "tpc_misalignment_fault": {
+            "trapnum": 5,
+            "name": "BLOCK_TRAP",
+            "e_block": "EC_BFETCH (0x3)",
+            "bi": 1,
+            "traparg0": "faulting TPC (VA)",
+            "note": "Use E_BLOCK(EC_BFETCH) for non-MMU body fetch faults (alignment)."
+          },
+          "tpc_invalid_target_fault": {
+            "trapnum": 5,
+            "name": "BLOCK_TRAP",
+            "e_block": "EC_BFETCH (0x3)",
+            "bi": 1,
+            "traparg0": "faulting target VA",
+            "note": "Vec-engine BRU targets that are outside the vec-body fetchable region (or otherwise not fetchable) are treated as body-fetch faults (not CFI)."
+          },
+          "body_range": {
+            "policy": "implicit",
+            "note": "No explicit architectural [BodyTPC, BodyEnd) range is defined for vec bodies in strict v0.3; fetchability is operational (if fetch fails => EC_BFETCH)."
+          }
+        },
+        "predicate_register": {
+          "name": "p",
+          "domain": "vec engine predicate register",
+          "truth_rule": "p != 0",
+          "bz": "taken iff p == 0",
+          "bnz": "taken iff p != 0",
+          "note": "The predicate domain is vec-engine-defined; any architectural mirroring through BARG/EBARG is profile-defined and should not be assumed by scalar-only components."
+        },
+        "register_domain": {
+          "description": "Vec engine scalar-lane BRU reads operands from the scalar-lane GPR file (not ClockHands queues).",
+          "jr_base": "scalar_lane_gpr",
+          "branch_operands": "scalar_lane_gpr"
+        },
+        "contract_summary": [
+          "Scope: vec-engine scalar-lane only (illegal in coupled scalar blocks => TRAPNUM=4 ILLEGAL_INST).",
+          "PC domain: updates TPC (body-local PC).",
+          "PC-relative base: current-instruction TPC.",
+          "PC-relative scaling: offset is halfword-scaled (target = base + (sext(offset) << 1)).",
+          "JR: target = SrcL + (sext(simm12) << 1); SrcZero field ignored.",
+          "Predicate: B.Z/B.NZ test vec predicate register p (all-zero vs non-zero).",
+          "Faults: misaligned/unfetchable targets => E_BLOCK(EC_BFETCH), BI=1, TRAPARG0=faulting VA.",
+          "Body range: implicit/operational (no explicit architectural [BodyTPC,BodyEnd) boundary).",
+          "Operand registers: read scalar-lane GPR domain (not ClockHands)."
+        ],
+        "note": "When executed in the vec engine scalar lane, BRU control-transfer updates the body-local TPC (not architectural global PC)."
+      }
+    }
+  },
   "bitfields": {
     "description": "Bitfield operations (BXS/BXU/CLZ/CTZ/BCNT/BIC/BIS/REV) parameter mapping and wrap-around semantics.",
     "mapping": {
@@ -72,6 +254,94 @@
       "description": "REV performs byte-order reversal on the selected bitfield.",
       "operation": "field = bitfield_wrap(SrcL, M, N); if (N % 8) != 0 then result=0 else reverse byte order of low N bits; high bits are zero.",
       "invalid_n": "If N is not a multiple of 8, the result is 0 (silent)."
+    }
+  },
+  "prefetch": {
+    "description": "Prefetch / cache hint instructions (PRF/PRFI and HL variants).",
+    "faults": "suppressed (non-faulting hint)",
+    "address_writeback": {
+      "hl_prf_a": "Rd = EA",
+      "hl_prfi_ua": "Rd = EA"
+    },
+    "note": "Prefetch provides a performance hint only; it must not architecturally fault in strict v0.3."
+  },
+  "floating_point_compare": {
+    "description": "Scalar floating-point compare conventions (FEQ/FLT/FGE and S-variants).",
+    "nan_behavior": "ordered (NaN => predicate false)",
+    "zero_behavior": "+0 and -0 compare equal",
+    "format_select": {
+      "field": "SrcType",
+      "mapping": {
+        "0": "fd (64-bit)",
+        "1": "fs (32-bit in low bits)"
+      },
+      "other_values": "treated as fd"
+    },
+    "s_variants": "modeled as aliases (no FP exception signaling modeled in staged Sail)",
+    "minmax": {
+      "nan_behavior": "maxNum/minNum (one NaN => other; both NaN => canonical qNaN)",
+      "canonical_qnan": {
+        "fd": "0x7ff8_0000_0000_0000",
+        "fs": "0x7fc0_0000"
+      },
+      "signed_zero": {
+        "fmax": "when both inputs are zeros, return +0",
+        "fmin": "when both inputs are zeros, return -0 iff any input is -0"
+      }
+    }
+  },
+  "fixup_blocks": {
+    "description": "Unmanaged fixup block routing rules (strict v0.3).",
+    "unmanaged_fixup_block": {
+      "definition": "BSTART.SYS FALL<, fixup_label (SYS block with explicit fixup_label)",
+      "has_fixup_label": true
+    },
+    "exception_routing": {
+      "when": "synchronous exception occurs while executing inside an unmanaged fixup block",
+      "handler_pc": "fixup_target (computed from fixup_label; replaces EVBASE)",
+      "entry_style": "new_block (try/catch)",
+      "requires_fixup_target_is_block_start": true,
+      "fixup_block_type": "any",
+      "write_trap_envelope": [
+        "TRAPNO",
+        "TRAPARG0",
+        "ECSTATE"
+      ],
+      "write_ebarg_optional": true,
+      "privilege_switch": "none",
+      "acr_switch": "none",
+      "ecstate_bi": 0,
+      "fault_visibility": "precise to instruction: all prior instructions commit; faulting instruction has no architectural side effects"
+    },
+    "fixup_label_addressing": {
+      "base": "BPC (block start PC)",
+      "offset_unit_bytes": 2,
+      "rule": "fixup_target = BPC + (SignExtend(fixup_label) << 1)"
+    },
+    "assert": {
+      "participates": true,
+      "trapnum": "ASSERT_FAIL (52)",
+      "cause": 0,
+      "cause_note": "TRAPNO.CAUSE is populated; for ASSERT_FAIL it is fixed to 0.",
+      "legal_blocks": [
+        "SYS"
+      ],
+      "illegal_elsewhere": "TRAPNUM=4 ILLEGAL_INST",
+      "masking": {
+        "policy": "masked_by_global_exception_enable",
+        "enable_bit": "ECONFIG[3]",
+        "when_disabled": "ASSERT is treated as NOP (no trap, no trap-envelope update)",
+        "scope": "ASSERT_FAIL only (other synchronous exceptions are unaffected)"
+      }
+    },
+    "traparg0": {
+      "assert_fail": "faulting PC/TPC",
+      "other_sync_exceptions": "faulting VA"
+    },
+    "trapno": {
+      "E": 0,
+      "ARGV": 1,
+      "CAUSE": "populated (profile-defined per TRAPNUM)"
     }
   }
 }
