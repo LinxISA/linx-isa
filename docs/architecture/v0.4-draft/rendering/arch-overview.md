@@ -7,6 +7,7 @@ This document will host the **rendering-driven** architectural requirements that
 - Shaders/compute compile to Linx SIMT kernel bodies, executed on a multi-core LinxGPGPU.
 - Group model: 64-lane vector + 1 scalar lane controlling group-level control flow.
 - Default kernel launch form: `BSTART.MPAR`.
+- Kernel global memory access: allowed via `*.brg` (bridged path).
 
 ## Topics to fill in
 - Pipeline stages expressed as kernels vs hardened engines (raster/tex/ROP/etc).
