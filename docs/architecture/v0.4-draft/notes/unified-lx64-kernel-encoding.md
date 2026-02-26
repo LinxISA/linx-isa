@@ -26,10 +26,14 @@ This enables:
 - uniform control-flow and uniform global-memory access via the bridged path in kernel bodies (no BCC scalar memory)
 - natural shader lowering with per-lane compute + scalar control + explicit EXEC mask `p`
 
-## TODOs to specify (must be nailed down)
-1) The exact **mixed-class semantics** once we use the any-operand rule.
-   - When executing a `v.*` instruction, how are scalar operands (`t/u/ri/p/TA..`) provided to lanes (broadcast?)
-   - When a `v.*` instruction targets a scalar destination (if allowed), what does it mean (illegal? lane0? reduction?)
+## Chosen mixed-class semantics (initial)
+
+Given the any-operand rule:
+- In a `v.*` instruction, any scalar/group-domain source operand (`t/u/ri/p/TA/TB/TO/TS/...`) is **broadcast** to all active lanes.
+- Per-lane operands (`vt/vu/vm/vn`) remain lane-specific.
+
+## Remaining TODOs
+1) When a `v.*` instruction targets a scalar destination (if allowed), what does it mean (illegal? lane0? reduction?)
 2) The register-id ranges / numeric encodings for special domains (`ri*`, `p`, `TA/TB/TO/TS`, `vt/vu/vm/vn`).
 3) For `.brg` loads/stores: whether the address formation differs between `v.*.brg` and `l.*.brg` (implicit `lc0` or not), or whether both share the same rules.
 
