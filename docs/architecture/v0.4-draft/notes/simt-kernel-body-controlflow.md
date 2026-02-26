@@ -26,7 +26,10 @@ The kernel body must allow **full structured control flow** (if/else/loops), but
 
 Draft anchoring in existing v0.3 conventions:
 - v0.3 semantics conventions already define a **vec-engine scalar-lane predicate register** named `p`, with `B.Z/B.NZ` testing `p==0` / `p!=0`.
-- In v0.4, we can reuse `p` as the **group EXEC mask (64-bit)**, provided we define how it is written/read and how it affects vector lane execution.
+- In v0.4, we reuse `p` as the **group EXEC mask (64-bit)**.
+
+Draft access rule (chosen direction):
+- `p` is treated as a scalar-lane 64-bit register that can be used as a **normal source/destination** in scalar-lane instructions inside the kernel body (i.e. allow `->p` destinations and `p` as an operand in scalar-lane ALU/bitwise/compare as needed).
 
 ### D) Containment and safety
 To preserve CFI and avoid arbitrary jumps:
