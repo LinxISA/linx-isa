@@ -28,6 +28,12 @@
      - common, stable PTOs are **header-only TEPL-like ops** (TileOp10 space)
      - complex/evolving units can use a **TAU micro-kernel** model
 
+TAU micro-kernel I/O contract (chosen direction):
+- Micro-kernels use the **standard tile-block descriptor interface**:
+  - tiles via `B.IOT/B.IOTI`
+  - small params via `B.ARG`
+  - external tables/pointers via `B.IOR` (`ri*`)
+
 3) **Tile payload layout for rendering**
    - how pixels/fragments/attributes are packed into tile registers
    - how many channels and formats are supported in the first profile
