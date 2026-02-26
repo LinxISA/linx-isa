@@ -54,6 +54,6 @@ Design direction:
 - Optional future engines: texture/sampler, raster/tiler/binning, ROP.
 
 ## 6) Open items to decide next
-- Rendering pipeline style: tile-based vs immediate-mode (how much to leverage tile regs + VPAR/VSEQ tile-only blocks).
-- Command processor responsibilities: how Vulkan command buffers map to block commands.
+- Rendering pipeline style: **tile-based preferred** (note: Linx tile semantics may differ from conventional TBDR; we must specify the exact meaning of a “tile” in Linx terms).
+- Vulkan command buffer mapping: **BCC-led expansion** (command buffers are lowered/expanded into Linx blocks by BCC/runtime rather than a heavy on-GPU CP parser).
 - Memory/cache/coherence policy for `.brg` vs CPU.
