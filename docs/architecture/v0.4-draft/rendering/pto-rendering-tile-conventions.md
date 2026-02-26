@@ -15,17 +15,16 @@ Sources:
 
 ## 1) Canonical rendering tile profile (initial)
 
-We pick a simple, uniform initial profile that matches existing PTO kernel style:
+We pick a simple, uniform initial profile aligned with the current rendering direction:
 
-- **Tile element grid:** `32 x 32 = 1024` elements
+- **Tile element grid:** `1024 x 1 = 1024` elements (single-column)
 - **Tile byte size:** `4096B`
 - **Layout tag:** `RowMajor`
 
 Rationale:
-- Works for `float32` channels: `32*32*4B = 4096B`
-- Works for packed RGBA8 as `uint32_t` per pixel: `32*32*4B = 4096B`
-
-This profile is *not* claiming screen-space tiling; it is just a convenient micro-batch size.
+- Works for `float32` channels: `1024*4B = 4096B`
+- Works for packed RGBA8 as `uint32_t` per pixel: `1024*4B = 4096B`
+- Keeps the data structure **list-like** and avoids binding semantics to screen-space tiling.
 
 ## 2) Data structures (recommended SoA)
 
@@ -58,7 +57,9 @@ Future (later): add explicit pack/unpack PTOs for sRGB, R11G11B10F, D24S8, etc.
 
 ## 4) Indexing convention
 
-Define `elem = row * 32 + col`.
+Define `elem = row * kTileW + col`.
+
+For the initial `1024x1` profile, this reduces to `elem = row`.
 
 Open item: whether `(row,col)` should correspond to:
 - a screen-space micro-tile, or
