@@ -17,17 +17,19 @@ For the rendering/GPGPU kernel-body direction, we assume a different (more GPU-l
   - operations targeting/using per-lane tile/value registers (`vt/vu/vm/vn`) are treated as **vector-lane** execution (`v.*`)
   - operations targeting/using scalar/group resources (`t/u/ri/p/TA/TB/TO/TS/...`) are treated as **scalar-uniform lane** execution (`l.*`)
 
-(Exact derivation rule TBD: likely keyed primarily off the destination register class; see open questions below.)
+Chosen derivation rule: **any-operand rule**
+- If any operand (src or dst) names a per-lane register (`vt/vu/vm/vn`), the instruction is treated as **vector-lane** execution (`v.*`).
+- Otherwise it is treated as **scalar-uniform lane** execution (`l.*`).
+
 
 This enables:
 - uniform control-flow and uniform global-memory access via the bridged path in kernel bodies (no BCC scalar memory)
 - natural shader lowering with per-lane compute + scalar control + explicit EXEC mask `p`
 
 ## TODOs to specify (must be nailed down)
-1) The exact **derivation rule** for `l.*` vs `v.*` when multiple register classes appear in one instruction.
-   - is it determined by destination class?
-   - for stores/branches (no dst), is it determined by the data source class?
-   - are mixed-class instructions legal, and if so what are the broadcast/merge rules?
+1) The exact **mixed-class semantics** once we use the any-operand rule.
+   - When executing a `v.*` instruction, how are scalar operands (`t/u/ri/p/TA..`) provided to lanes (broadcast?)
+   - When a `v.*` instruction targets a scalar destination (if allowed), what does it mean (illegal? lane0? reduction?)
 2) The register-id ranges / numeric encodings for special domains (`ri*`, `p`, `TA/TB/TO/TS`, `vt/vu/vm/vn`).
 3) For `.brg` loads/stores: whether the address formation differs between `v.*.brg` and `l.*.brg` (implicit `lc0` or not), or whether both share the same rules.
 
