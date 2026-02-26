@@ -60,5 +60,9 @@ To preserve CFI and avoid arbitrary jumps:
    - or add explicit `PSET/PGET` ops
    - or model `p` as an SSR (SSRGET/SSRSET)
 
-4) Interaction with `MPAR/MSEQ` retirement ordering and traps/restartability.
+4) How do we set `p` from per-lane conditions?
+   - chosen direction: allow **vector compare instructions** to write an EXEC mask: `V.CMP.* ->p`
+   - need to specify inactive lane behavior during `V.CMP.* ->p` (e.g. force bit=0 when lane inactive)
+
+5) Interaction with `MPAR/MSEQ` retirement ordering and traps/restartability.
 
