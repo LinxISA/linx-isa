@@ -105,6 +105,6 @@ Out of scope for “Vulkan runs”, but the next step:
 ---
 
 ## Open questions
-- Where do we want to land the Mesa install prefix for the emulator rootfs?
-- Build mode: cross-compile on host vs native build inside emulator?
+- Mesa install prefix in emulator rootfs: **`/opt/mesa`** (chosen).
+- Build mode: **cross-compile on host** (chosen).
 - Do we need OpenGL at all after Vulkan is up, or keep it for debugging/regression?
