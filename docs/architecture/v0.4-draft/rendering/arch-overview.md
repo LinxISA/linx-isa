@@ -14,3 +14,12 @@ This document will host the **rendering-driven** architectural requirements that
 - Memory model expectations for GPU workloads (queues, barriers, caches).
 - Shader compiler contract (SPIR-V/NIR lowering strategy).
 
+## Draft memory-mode rule for shader kernels (MCALL-like)
+
+Carry forward the v0.3 staged memory-channel model into the v0.4 shader-kernel story:
+- Treat `BSTART.MPAR/MSEQ` shader kernels as entering a **MCALL-like** mode.
+- Entry boundary: acquire-style ordering before MTC-only execution begins.
+- Exit boundary: release-style ordering before subsequent scalar blocks execute.
+- While active: scalar memory issue (BCC channel) is architecturally closed; global memory traffic is via the bridged path (`*.brg`).
+- Non-speculative start: do not begin side-effecting execution until declared input dependencies (`B.IOT/B.IOTI`) are resolved.
+
