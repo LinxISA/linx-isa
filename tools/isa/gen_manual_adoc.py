@@ -711,6 +711,14 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
             "Write(Dst, result)",
         ]
 
+    if root == "FNEG":
+        return [
+            "a = Read(SrcL)",
+            "// flip sign bit (fd: bit63; fs: bit31 in low word)",
+            "result = Neg(a)",
+            "Write(Dst, result)",
+        ]
+
     # Execution control.
     if root == "ASSERT":
         return ["if (ECONFIG[3] && Read(SrcL) == 0): Trap(ASSERT_FAIL)"]

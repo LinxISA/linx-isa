@@ -1546,3 +1546,17 @@ function exec_bwt() -> unit = { () }
 function exec_bwi() -> unit = { () }
 function exec_bwe() -> unit = { () }
 function exec_bse() -> unit = { () }
+
+
+function exec_fneg(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
+  // Bitwise sign flip (fd/fs).
+  let a64 = read_reg5(SrcL);
+  let is_fs = (SrcType == 0b01);
+  if is_fs then {
+    let a32 = a64[31..0];
+    let r32 = a32 ^ 0x8000_0000;
+    write_regdst(RegDst, zext32_from32(r32))
+  } else {
+    write_regdst(RegDst, a64 ^ 0x8000_0000_0000_0000)
+  }
+}
