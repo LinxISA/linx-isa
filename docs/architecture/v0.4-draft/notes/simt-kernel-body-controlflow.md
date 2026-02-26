@@ -24,6 +24,10 @@ The kernel body must allow **full structured control flow** (if/else/loops), but
 - Inactive lane behavior must be deterministic and compatible with the architectural inactive-lane policy (merge vs zero).
 - The kernel/compiler is responsible for updating the lane mask around divergent regions.
 
+Draft anchoring in existing v0.3 conventions:
+- v0.3 semantics conventions already define a **vec-engine scalar-lane predicate register** named `p`, with `B.Z/B.NZ` testing `p==0` / `p!=0`.
+- In v0.4, we can reuse `p` as the **group EXEC mask (64-bit)**, provided we define how it is written/read and how it affects vector lane execution.
+
 ### D) Containment and safety
 To preserve CFI and avoid arbitrary jumps:
 - All control-flow targets inside a kernel body MUST remain within the kernel’s declared text region.
@@ -40,8 +44,14 @@ To preserve CFI and avoid arbitrary jumps:
    - side-table metadata in driver/runtime?
 
 2) How is the **lane mask** represented architecturally?
-   - implicit (microarchitectural) with compiler conventions?
-   - explicit register/SSR?
+   - reuse vec-engine scalar-lane predicate register `p` as EXEC (preferred by current direction)
+   - implicit (microarchitectural) with compiler conventions
+   - explicit SSR or dedicated register file
 
-3) Interaction with `MPAR/MSEQ` retirement ordering and traps/restartability.
+3) If we reuse `p` as EXEC: what are the **read/write mechanisms**?
+   - allow scalar ALU ops to write `->p` (destination form)
+   - or add explicit `PSET/PGET` ops
+   - or model `p` as an SSR (SSRGET/SSRSET)
+
+4) Interaction with `MPAR/MSEQ` retirement ordering and traps/restartability.
 
