@@ -23,9 +23,10 @@
    - whole shader stage to TAU?
    - or partial offload: replace subgraphs/regions with TAU ops and run the rest on VEC?
 
-2) **TAU op programming model**
-   - header-only TEPL-like ops (TileOp10 space)
-   - or a microcoded TAU kernel model
+2) **TAU op programming model** (chosen direction)
+   - **Hybrid**:
+     - common, stable PTOs are **header-only TEPL-like ops** (TileOp10 space)
+     - complex/evolving units can use a **TAU micro-kernel** model
 
 3) **Tile payload layout for rendering**
    - how pixels/fragments/attributes are packed into tile registers
