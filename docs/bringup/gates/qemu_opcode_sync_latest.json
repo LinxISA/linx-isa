@@ -1,0 +1,41 @@
+{
+  "allowlist": "/Users/zhoubot/linx-isa/docs/bringup/qemu_opcode_sync_allowlist.json",
+  "decode_only": [
+    "hl_lwi_upr",
+    "hl_lwip_u",
+    "hl_lwui_po",
+    "hl_lwui_upo",
+    "hl_lwui_upr",
+    "hl_lwuip_u",
+    "hl_swi_upr",
+    "v_fabs",
+    "v_mul"
+  ],
+  "decode_only_unexpected": [],
+  "decode_only_unexpected_count": 0,
+  "decode_unique_patterns": 326,
+  "generated_at_utc": "2026-02-25 13:12:47Z",
+  "id_mismatch": [],
+  "id_mismatch_count": 0,
+  "meta_internal_names": [
+    "internal_c_bstart_std",
+    "internal_c_setret",
+    "internal_invalid"
+  ],
+  "meta_only": [
+    "hl_sbip",
+    "hl_sdi",
+    "hl_sdi_u",
+    "hl_ship",
+    "hl_ship_u"
+  ],
+  "meta_only_unexpected": [],
+  "meta_only_unexpected_count": 0,
+  "meta_unique_decode_patterns": 322,
+  "meta_unique_non_internal": 322,
+  "qemu_root": "/Users/zhoubot/linx-isa/emulator/qemu",
+  "result": {
+    "classification": "qemu_opcode_meta_sync_ok",
+    "ok": true
+  }
+}

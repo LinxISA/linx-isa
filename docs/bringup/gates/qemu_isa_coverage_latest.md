@@ -1,0 +1,399 @@
+# ISA vs QEMU Coverage Snapshot
+
+- Generated (UTC): `2026-02-25 13:12:48Z`
+- Spec unique mnemonics: `710`
+- QEMU unique decode mnemonics (non-internal): `322`
+- QEMU mapped spec mnemonics: `311`
+- Coverage: `311/710` (`43.8%`)
+- Missing spec mnemonics: `399`
+- Unmapped QEMU mnemonics: `0`
+
+## Coverage By Prefix
+
+- `ACRC`: `1`
+- `ACRE`: `1`
+- `ADD`: `1`
+- `ADDI`: `1`
+- `ADDIW`: `1`
+- `ADDTPC`: `1`
+- `ADDW`: `1`
+- `AND`: `1`
+- `ANDI`: `1`
+- `ANDIW`: `1`
+- `ANDW`: `1`
+- `B`: `10`
+- `BCNT`: `1`
+- `BIC`: `1`
+- `BIS`: `1`
+- `BSTART`: `14`
+- `BSTOP`: `1`
+- `BXS`: `1`
+- `BXU`: `1`
+- `C`: `27`
+- `CLZ`: `1`
+- `CMP`: `16`
+- `CSEL`: `1`
+- `CTZ`: `1`
+- `DIV`: `1`
+- `DIVU`: `1`
+- `DIVUW`: `1`
+- `DIVW`: `1`
+- `EBREAK`: `1`
+- `ERCOV`: `1`
+- `ESAVE`: `1`
+- `FABS`: `1`
+- `FADD`: `1`
+- `FCVT`: `1`
+- `FCVTZ`: `1`
+- `FDIV`: `1`
+- `FENCE`: `2`
+- `FENTRY`: `1`
+- `FEQ`: `1`
+- `FEXIT`: `1`
+- `FGE`: `1`
+- `FLT`: `1`
+- `FMUL`: `1`
+- `FRET`: `2`
+- `FSUB`: `1`
+- `HL`: `63`
+- `LB`: `2`
+- `LBI`: `1`
+- `LBU`: `2`
+- `LBUI`: `1`
+- `LD`: `3`
+- `LDI`: `1`
+- `LH`: `2`
+- `LHI`: `1`
+- `LHU`: `2`
+- `LHUI`: `1`
+- `LR`: `2`
+- `LUI`: `1`
+- `LW`: `3`
+- `LWI`: `1`
+- `LWU`: `2`
+- `LWUI`: `1`
+- `MADD`: `1`
+- `MADDW`: `1`
+- `MAX`: `1`
+- `MAXU`: `1`
+- `MCOPY`: `1`
+- `MIN`: `1`
+- `MINU`: `1`
+- `MSET`: `1`
+- `MUL`: `1`
+- `MULW`: `1`
+- `OR`: `1`
+- `ORI`: `1`
+- `ORIW`: `1`
+- `ORW`: `1`
+- `REM`: `1`
+- `REMU`: `1`
+- `REMUW`: `1`
+- `REMW`: `1`
+- `REV`: `1`
+- `SB`: `2`
+- `SBI`: `1`
+- `SC`: `2`
+- `SCVTF`: `1`
+- `SD`: `3`
+- `SDI`: `1`
+- `SETC`: `17`
+- `SETRET`: `1`
+- `SH`: `3`
+- `SHI`: `1`
+- `SLL`: `1`
+- `SLLI`: `1`
+- `SLLIW`: `1`
+- `SLLW`: `1`
+- `SRA`: `1`
+- `SRAI`: `1`
+- `SRAIW`: `1`
+- `SRAW`: `1`
+- `SRL`: `1`
+- `SRLI`: `1`
+- `SRLIW`: `1`
+- `SRLW`: `1`
+- `SSRGET`: `1`
+- `SSRSET`: `1`
+- `SSRSWAP`: `1`
+- `SUB`: `1`
+- `SUBI`: `1`
+- `SUBIW`: `1`
+- `SUBW`: `1`
+- `SW`: `3`
+- `SWAPD`: `1`
+- `SWAPW`: `1`
+- `SWI`: `1`
+- `TLB`: `1`
+- `UCVTF`: `1`
+- `V`: `30`
+- `XOR`: `1`
+- `XORI`: `1`
+- `XORIW`: `1`
+- `XORW`: `1`
+
+## Missing By Prefix
+
+- `ASSERT`: `1`
+- `B`: `7`
+- `BC`: `2`
+- `BSE`: `1`
+- `BSTART`: `6`
+- `BWE`: `1`
+- `BWI`: `1`
+- `BWT`: `1`
+- `C`: `11`
+- `DC`: `8`
+- `FCVTA`: `1`
+- `FCVTM`: `1`
+- `FCVTN`: `1`
+- `FCVTP`: `1`
+- `FEQS`: `1`
+- `FEXP`: `1`
+- `FGES`: `1`
+- `FLTS`: `1`
+- `FMADD`: `1`
+- `FMAX`: `1`
+- `FMIN`: `1`
+- `FMSUB`: `1`
+- `FNE`: `1`
+- `FNES`: `1`
+- `FNMADD`: `1`
+- `FNMSUB`: `1`
+- `FRECIP`: `1`
+- `FSQRT`: `1`
+- `HL`: `131`
+- `IC`: `2`
+- `J`: `1`
+- `JR`: `1`
+- `LD`: `7`
+- `LDI`: `1`
+- `LHI`: `1`
+- `LHUI`: `1`
+- `LR`: `2`
+- `LSRGET`: `1`
+- `LW`: `7`
+- `LWI`: `1`
+- `LWUI`: `1`
+- `MULU`: `1`
+- `MULUW`: `1`
+- `PRF`: `1`
+- `PRFI`: `1`
+- `SC`: `2`
+- `SD`: `8`
+- `SDI`: `1`
+- `SHI`: `1`
+- `SW`: `8`
+- `SWAPB`: `1`
+- `SWAPH`: `1`
+- `SWI`: `1`
+- `TLB`: `3`
+- `V`: `154`
+- `XB`: `1`
+
+## Unmapped QEMU Mnemonics
+
+- none
+
+## Missing Spec Mnemonics (First 200)
+
+- `ASSERT`
+- `B.EQ`
+- `B.GE`
+- `B.GEU`
+- `B.IOD`
+- `B.LT`
+- `B.LTU`
+- `B.NE`
+- `BC.IALL`
+- `BC.IVA`
+- `BSE`
+- `BSTART.FIXP`
+- `BSTART.FP`
+- `BSTART.STD`
+- `BSTART.SYS`
+- `BSTART.TEPL`
+- `BSTART.TMOV`
+- `BWE`
+- `BWI`
+- `BWT`
+- `C.B.DIM`
+- `C.BSTART`
+- `C.BSTART.FP`
+- `C.BSTART.MPAR`
+- `C.BSTART.MSEQ`
+- `C.BSTART.SYS`
+- `C.BSTART.VPAR`
+- `C.BSTART.VSEQ`
+- `C.EBREAK`
+- `C.SETRET`
+- `C.SSRGET`
+- `DC.CISW`
+- `DC.CIVA`
+- `DC.CSW`
+- `DC.CVA`
+- `DC.IALL`
+- `DC.ISW`
+- `DC.IVA`
+- `DC.ZVA`
+- `FCVTA`
+- `FCVTM`
+- `FCVTN`
+- `FCVTP`
+- `FEQS`
+- `FEXP`
+- `FGES`
+- `FLTS`
+- `FMADD`
+- `FMAX`
+- `FMIN`
+- `FMSUB`
+- `FNE`
+- `FNES`
+- `FNMADD`
+- `FNMSUB`
+- `FRECIP`
+- `FSQRT`
+- `HL.BFI`
+- `HL.BSTART.FP`
+- `HL.BSTART.SYS`
+- `HL.CASB`
+- `HL.CASD`
+- `HL.CASH`
+- `HL.CASW`
+- `HL.CCAT`
+- `HL.CCATW`
+- `HL.DIV`
+- `HL.DIVU`
+- `HL.DIVUW`
+- `HL.DIVW`
+- `HL.LB.PO`
+- `HL.LB.PR`
+- `HL.LBI`
+- `HL.LBI.PO`
+- `HL.LBI.PR`
+- `HL.LBIP`
+- `HL.LBP`
+- `HL.LBU.PO`
+- `HL.LBU.PR`
+- `HL.LBUI`
+- `HL.LBUI.PO`
+- `HL.LBUI.PR`
+- `HL.LBUIP`
+- `HL.LBUP`
+- `HL.LD.PO`
+- `HL.LD.PR`
+- `HL.LDI`
+- `HL.LDI.U`
+- `HL.LDP`
+- `HL.LH.PO`
+- `HL.LH.PR`
+- `HL.LHI`
+- `HL.LHI.PO`
+- `HL.LHI.PR`
+- `HL.LHI.U`
+- `HL.LHI.UPO`
+- `HL.LHI.UPR`
+- `HL.LHIP`
+- `HL.LHIP.U`
+- `HL.LHP`
+- `HL.LHU.PO`
+- `HL.LHU.PR`
+- `HL.LHUI`
+- `HL.LHUI.PO`
+- `HL.LHUI.PR`
+- `HL.LHUI.U`
+- `HL.LHUI.UPO`
+- `HL.LHUI.UPR`
+- `HL.LHUIP`
+- `HL.LHUIP.U`
+- `HL.LHUP`
+- `HL.LIS`
+- `HL.LIU`
+- `HL.LW.PO`
+- `HL.LW.PR`
+- `HL.LWI`
+- `HL.LWI.U`
+- `HL.LWI.UPR`
+- `HL.LWIP.U`
+- `HL.LWP`
+- `HL.LWU.PO`
+- `HL.LWU.PR`
+- `HL.LWUI`
+- `HL.LWUI.PO`
+- `HL.LWUI.U`
+- `HL.LWUI.UPO`
+- `HL.LWUI.UPR`
+- `HL.LWUIP.U`
+- `HL.LWUP`
+- `HL.MADD`
+- `HL.MADDW`
+- `HL.MIADD`
+- `HL.MISUB`
+- `HL.MUL`
+- `HL.MULU`
+- `HL.PRF`
+- `HL.PRF.A`
+- `HL.PRFI.U`
+- `HL.PRFI.UA`
+- `HL.QMT`
+- `HL.QPOP`
+- `HL.QPUSH`
+- `HL.REM`
+- `HL.REMU`
+- `HL.REMUW`
+- `HL.REMW`
+- `HL.SB.PO`
+- `HL.SB.PR`
+- `HL.SBI`
+- `HL.SBI.PO`
+- `HL.SBI.PR`
+- `HL.SBP`
+- `HL.SD.PO`
+- `HL.SD.PR`
+- `HL.SD.UPO`
+- `HL.SD.UPR`
+- `HL.SDP`
+- `HL.SDP.U`
+- `HL.SETC.ANDI`
+- `HL.SETC.EQI`
+- `HL.SETC.GEI`
+- `HL.SETC.GEUI`
+- `HL.SETC.LTI`
+- `HL.SETC.LTUI`
+- `HL.SETC.NEI`
+- `HL.SETC.ORI`
+- `HL.SETRET`
+- `HL.SH.PO`
+- `HL.SH.PR`
+- `HL.SH.UPO`
+- `HL.SH.UPR`
+- `HL.SHI`
+- `HL.SHI.PO`
+- `HL.SHI.PR`
+- `HL.SHI.U`
+- `HL.SHI.UPO`
+- `HL.SHI.UPR`
+- `HL.SHP`
+- `HL.SHP.U`
+- `HL.SW.PO`
+- `HL.SW.PR`
+- `HL.SW.UPO`
+- `HL.SW.UPR`
+- `HL.SWI`
+- `HL.SWI.U`
+- `HL.SWI.UPR`
+- `HL.SWP`
+- `HL.SWP.U`
+- `IC.IALL`
+- `IC.IVA`
+- `J`
+- `JR`
+- `LD.AND`
+- `LD.OR`
+- `LD.SMAX`
+- `LD.SMIN`
+- `LD.UMAX`
+- `LD.UMIN`
+- `LD.XOR`
+- `LDI.U`

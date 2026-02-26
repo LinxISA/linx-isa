@@ -1,0 +1,11 @@
+{
+  "defconfig": "/Users/zhoubot/linx-isa/kernel/linux/arch/linx/configs/linxisa_virt_defconfig",
+  "generated_at_utc": "2026-02-25 13:12:48Z",
+  "mismatched": [],
+  "missing": [],
+  "required_option_count": 10,
+  "result": {
+    "classification": "linxisa_virt_defconfig_spec_compatible",
+    "ok": true
+  }
+}
