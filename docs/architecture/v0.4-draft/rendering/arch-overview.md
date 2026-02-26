@@ -20,6 +20,9 @@ Carry forward the v0.3 staged memory-channel model into the v0.4 shader-kernel s
 - Treat `BSTART.MPAR/MSEQ` shader kernels as entering a **MCALL-like** mode.
 - Entry boundary: acquire-style ordering before MTC-only execution begins.
 - Exit boundary: release-style ordering before subsequent scalar blocks execute.
-- While active: scalar memory issue (BCC channel) is architecturally closed; global memory traffic is via the bridged path (`*.brg`).
+- While active: **BCC scalar memory issue is closed** (no normal scalar `load/store/atomic/fence`).
+  - Global memory traffic is via the bridged path (`*.brg`):
+    - vector lanes: `v.*.brg`
+    - scalar lane (uniform): `l.*.brg` (v0.4 draft requirement / alias family)
 - Non-speculative start: do not begin side-effecting execution until declared input dependencies (`B.IOT/B.IOTI`) are resolved.
 
