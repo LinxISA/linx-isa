@@ -31,6 +31,10 @@ Draft anchoring in existing v0.3 conventions:
 Draft access rule (chosen direction):
 - `p` is treated as a scalar-lane 64-bit register that can be used as a **normal source/destination** in scalar-lane instructions inside the kernel body (i.e. allow `->p` destinations and `p` as an operand in scalar-lane ALU/bitwise/compare as needed).
 
+Draft execution rule (chosen direction):
+- `p` is the **EXEC mask**: for each vector instruction, lane `i` is active iff `p[i] == 1`.
+- For inactive lanes, destination writeback behavior follows the architected inactive-lane policy (**merge** vs **zero**).
+
 ### D) Containment and safety
 To preserve CFI and avoid arbitrary jumps:
 - All control-flow targets inside a kernel body MUST remain within the kernel’s declared text region.
