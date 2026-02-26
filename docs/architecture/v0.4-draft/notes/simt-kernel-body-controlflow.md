@@ -62,7 +62,7 @@ To preserve CFI and avoid arbitrary jumps:
 
 4) How do we set `p` from per-lane conditions?
    - chosen direction: allow **vector compare instructions** to write an EXEC mask: `V.CMP.* ->p`
-   - need to specify inactive lane behavior during `V.CMP.* ->p` (e.g. force bit=0 when lane inactive)
+   - inactive lane rule (chosen): when executing `V.CMP.* ->p`, any lane that is inactive under the current EXEC mask is treated as producing **0** (bit cleared).
 
 5) Interaction with `MPAR/MSEQ` retirement ordering and traps/restartability.
 
