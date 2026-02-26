@@ -38,7 +38,7 @@ TAU micro-kernel I/O contract (chosen direction):
    - how pixels/fragments/attributes are packed into tile registers
    - how many channels and formats are supported in the first profile
 
-4) Memory interactions
-   - which ops may touch `.brg` directly (if any)
-   - or require explicit TMA/DMA steps
+4) Memory interactions (chosen direction)
+   - TAU micro-kernels and TEPL PTOs are **tile→tile only**.
+   - No direct `.brg` access from TAU; any global-memory interaction is via explicit TMA/DMA blocks or VEC fallback.
 
