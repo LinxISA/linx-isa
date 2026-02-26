@@ -6,8 +6,9 @@ Support both:
 - **tile-based** rendering pipelines
 
 The architectural direction is **CPU (BCC) + shader core** composition:
-- CPU/BCC builds and schedules work (command buffer lowering, binning/raster tasks, software fallbacks).
-- Shader core runs MPAR kernels for parallel stages (shading/compute and selected raster stages if desired).
+- CPU/BCC builds and schedules work (command buffer lowering, raster/binning software scaffolding, fallbacks).
+- **VEC shader core** runs MPAR kernels for parallel stages (compute shading + fallback execution).
+- **TAU** hosts hardened shader-like ops/accelerators; handoff state lives in **tile registers**.
 
 ## Common building blocks
 - **Tiles**: general-purpose intermediate state storage for cross-engine communication and shared working sets.

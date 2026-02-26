@@ -45,17 +45,20 @@ Design direction:
 - Normal BCC scalar memory issue is closed while in MCALL-like MPAR/MSEQ mode; `l.*.brg` is treated as part of the bridged/MTC-like domain.
 
 ## 5) Hardware partitioning (core + engines)
-### 5.1 Per-core units (SM-like)
-- Wave/group scheduler: issues 64-lane groups.
-- Scalar lane pipeline (control + address + mask ops).
-- Vector ALU pipelines for per-lane ops.
-- `.brg` memory interface + coalescing.
-- Tile/local storage interfaces (`TA/TB/TO/TS` + tile regs) for tile-oriented stages.
 
-### 5.2 Chip-level engines (limited hardening, optional)
-- CP / submission engine (block command ingestion).
-- DMA/BLT/Clear engine.
-- Optional future engines: texture/sampler, raster/tiler/binning, ROP.
+### 5.1 Core roles
+- **VEC (shader core)**: runs MPAR kernels for compute shading and serves as the **fallback path** for any feature not supported by hardening.
+- **TAU (tile arithmetic unit)**: is the primary substrate for **hardening** “shader-like” operations and other accelerators.
+  - TAU/accelerators communicate via **tile registers** (general intermediate state storage).
+  - Hardening should be expressed as TAU-facing operations so state handoff stays in tiles.
+
+### 5.2 Engine set (current LinxCore decomposition)
+- BCC + block fabric dispatch to engines by block type.
+- Engines include: **TMA**, **CUBE**, **VEC**, **TAU** (plus DMA/clear as needed).
+
+### 5.3 State handoff
+- The primary inter-engine handoff medium is the **tile register file**.
+- BCC orchestrates pipelines by issuing heterogeneous blocks whose inputs/outputs are tiles.
 
 ## 6) Open items to decide next
 - Rendering pipeline modes: support both **immediate-mode (desktop-style)** and **tile-based** approaches.
