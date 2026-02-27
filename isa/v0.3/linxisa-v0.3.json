@@ -30613,7 +30613,7 @@
       "uid": "c0ba9a54c8e0"
     },
     {
-      "asm": "hl.lb.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lb.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -30834,7 +30834,7 @@
       "uid": "5c7f5c82b186"
     },
     {
-      "asm": "hl.lb.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lb.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -31801,7 +31801,7 @@
       "uid": "70a5767aff16"
     },
     {
-      "asm": "hl.lbp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lbp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -32167,7 +32167,7 @@
       "uid": "504b34c0ec9d"
     },
     {
-      "asm": "hl.lbu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lbu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -32388,7 +32388,7 @@
       "uid": "5c8a5b39e6c5"
     },
     {
-      "asm": "hl.lbu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lbu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -33355,7 +33355,7 @@
       "uid": "ad419fc474c0"
     },
     {
-      "asm": "hl.lbup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lbup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -33721,7 +33721,7 @@
       "uid": "703673c266da"
     },
     {
-      "asm": "hl.ld.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.ld.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -33942,7 +33942,7 @@
       "uid": "870e30995d10"
     },
     {
-      "asm": "hl.ld.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.ld.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -35655,7 +35655,7 @@
       "uid": "6813f4fdce5c"
     },
     {
-      "asm": "hl.ldp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.ldp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -36021,7 +36021,7 @@
       "uid": "37df3cfe0d6e"
     },
     {
-      "asm": "hl.lh.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lh.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -36242,7 +36242,7 @@
       "uid": "7ca3e8b77906"
     },
     {
-      "asm": "hl.lh.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lh.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -37955,7 +37955,7 @@
       "uid": "e37e98d63bfd"
     },
     {
-      "asm": "hl.lhp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lhp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -38321,7 +38321,7 @@
       "uid": "444cb4ddde1d"
     },
     {
-      "asm": "hl.lhu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lhu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -38542,7 +38542,7 @@
       "uid": "c57c3b4a74e8"
     },
     {
-      "asm": "hl.lhu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lhu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -40255,7 +40255,7 @@
       "uid": "11a0e580caf1"
     },
     {
-      "asm": "hl.lhup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lhup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -41026,7 +41026,7 @@
       "uid": "00cf25e2ac36"
     },
     {
-      "asm": "hl.lw.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lw.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -41247,7 +41247,7 @@
       "uid": "ff2c6de58064"
     },
     {
-      "asm": "hl.lw.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lw.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -42960,7 +42960,7 @@
       "uid": "c9aca369eab2"
     },
     {
-      "asm": "hl.lwp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lwp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -43326,7 +43326,7 @@
       "uid": "95ba33b7b68c"
     },
     {
-      "asm": "hl.lwu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lwu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -43547,7 +43547,7 @@
       "uid": "98730d2ddead"
     },
     {
-      "asm": "hl.lwu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lwu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -45260,7 +45260,7 @@
       "uid": "0fed3b8c43b6"
     },
     {
-      "asm": "hl.lwup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lwup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -47005,7 +47005,7 @@
       "uid": "17673d186249"
     },
     {
-      "asm": "hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>]",
+      "asm": "hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -47218,7 +47218,7 @@
       "uid": "39641863bb21"
     },
     {
-      "asm": "hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
+      "asm": "hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -49573,7 +49573,7 @@
       "uid": "d0ba4b6e0f54"
     },
     {
-      "asm": "hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
+      "asm": "hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -49786,7 +49786,7 @@
       "uid": "c21837f2c14d"
     },
     {
-      "asm": "hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
+      "asm": "hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -50801,7 +50801,7 @@
       "uid": "48a212ee655e"
     },
     {
-      "asm": "hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]",
+      "asm": "hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -51173,7 +51173,7 @@
       "uid": "8ed6bb942a78"
     },
     {
-      "asm": "hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw}><<3], ->{t, u, Rd}",
+      "asm": "hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -51386,7 +51386,7 @@
       "uid": "9ced722101a8"
     },
     {
-      "asm": "hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<3], ->{t, u, Rd}",
+      "asm": "hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -51599,7 +51599,7 @@
       "uid": "4f96249f5efe"
     },
     {
-      "asm": "hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
+      "asm": "hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -51812,7 +51812,7 @@
       "uid": "ba930fbec5c7"
     },
     {
-      "asm": "hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
+      "asm": "hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -53629,7 +53629,7 @@
       "uid": "3260b03bb762"
     },
     {
-      "asm": "hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<3]",
+      "asm": "hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<3]",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -53842,7 +53842,7 @@
       "uid": "5884c49a7e55"
     },
     {
-      "asm": "hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]",
+      "asm": "hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -55645,7 +55645,7 @@
       "uid": "705ea4062d0b"
     },
     {
-      "asm": "hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw}><<1], ->{t, u, Rd}",
+      "asm": "hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -55858,7 +55858,7 @@
       "uid": "e0b543d5b724"
     },
     {
-      "asm": "hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<1], ->{t, u, Rd}",
+      "asm": "hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -56071,7 +56071,7 @@
       "uid": "40ab17f5a580"
     },
     {
-      "asm": "hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
+      "asm": "hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -56284,7 +56284,7 @@
       "uid": "5bfb8ea0c992"
     },
     {
-      "asm": "hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
+      "asm": "hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -58101,7 +58101,7 @@
       "uid": "fa5e1d981a8a"
     },
     {
-      "asm": "hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<1]",
+      "asm": "hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<1]",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -58314,7 +58314,7 @@
       "uid": "ccc507e71a27"
     },
     {
-      "asm": "hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]",
+      "asm": "hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -59322,7 +59322,7 @@
       "uid": "8f8900dfac6b"
     },
     {
-      "asm": "hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw}><<2], ->{t, u, Rd}",
+      "asm": "hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -59535,7 +59535,7 @@
       "uid": "84cf0cd97fde"
     },
     {
-      "asm": "hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<2], ->{t, u, Rd}",
+      "asm": "hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -59748,7 +59748,7 @@
       "uid": "d80424b0a9cb"
     },
     {
-      "asm": "hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
+      "asm": "hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -59961,7 +59961,7 @@
       "uid": "59be7b468f8a"
     },
     {
-      "asm": "hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
+      "asm": "hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -61778,7 +61778,7 @@
       "uid": "e2dc917c8505"
     },
     {
-      "asm": "hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<2]",
+      "asm": "hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<2]",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -61991,7 +61991,7 @@
       "uid": "d0efe96e09f0"
     },
     {
-      "asm": "hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]",
+      "asm": "hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -63033,7 +63033,7 @@
       "uid": "c4128e843b05"
     },
     {
-      "asm": "lb [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
+      "asm": "lb [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 32,
         "parts": [
@@ -63432,7 +63432,7 @@
       "uid": "9af2cdbeb38f"
     },
     {
-      "asm": "lbu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
+      "asm": "lbu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 32,
         "parts": [
@@ -63831,7 +63831,7 @@
       "uid": "c39b9aa11f02"
     },
     {
-      "asm": "ld [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
+      "asm": "ld [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 32,
         "parts": [
@@ -65885,7 +65885,7 @@
       "uid": "111bb521a439"
     },
     {
-      "asm": "lh [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
+      "asm": "lh [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 32,
         "parts": [
@@ -66411,7 +66411,7 @@
       "uid": "bb0c81c6e61d"
     },
     {
-      "asm": "lhu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
+      "asm": "lhu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 32,
         "parts": [
@@ -67919,7 +67919,7 @@
       "uid": "982113b541d6"
     },
     {
-      "asm": "lw [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
+      "asm": "lw [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 32,
         "parts": [
@@ -69973,7 +69973,7 @@
       "uid": "4a7426a70f10"
     },
     {
-      "asm": "lwu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
+      "asm": "lwu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 32,
         "parts": [
@@ -72859,7 +72859,7 @@
       "uid": "84f7ac2ed68f"
     },
     {
-      "asm": "prf [SrcL, SrcR<{.sw,.uw}><<<shamt>]",
+      "asm": "prf [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]",
       "encoding": {
         "length_bits": 32,
         "parts": [
@@ -73842,7 +73842,7 @@
       "uid": "58badc109d49"
     },
     {
-      "asm": "sb SrcD, [SrcL, SrcR<{.sw,.uw}>]",
+      "asm": "sb SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]",
       "encoding": {
         "length_bits": 32,
         "parts": [
@@ -75184,7 +75184,7 @@
       "uid": "01861bbd5ef2"
     },
     {
-      "asm": "sd SrcD, [SrcL, SrcR<{.sw,.uw}><<3]",
+      "asm": "sd SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3]",
       "encoding": {
         "length_bits": 32,
         "parts": [
@@ -76339,7 +76339,7 @@
       "uid": "188d93125032"
     },
     {
-      "asm": "sd.u SrcD, [SrcL, SrcR<{.sw,.uw}>]",
+      "asm": "sd.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]",
       "encoding": {
         "length_bits": 32,
         "parts": [
@@ -79699,7 +79699,7 @@
       "uid": "72003dcf3b59"
     },
     {
-      "asm": "sh SrcD, [SrcL, SrcR<{.sw,.uw}><<1]",
+      "asm": "sh SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1]",
       "encoding": {
         "length_bits": 32,
         "parts": [
@@ -79979,7 +79979,7 @@
       "uid": "14ba505eb3c2"
     },
     {
-      "asm": "sh.u SrcD, [SrcL, SrcR<{.sw,.uw}>]",
+      "asm": "sh.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]",
       "encoding": {
         "length_bits": 32,
         "parts": [
@@ -83069,7 +83069,7 @@
       "uid": "3a8d45653c98"
     },
     {
-      "asm": "sw SrcD, [SrcL, SrcR<{.sw,.uw}><<2]",
+      "asm": "sw SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2]",
       "encoding": {
         "length_bits": 32,
         "parts": [
@@ -84224,7 +84224,7 @@
       "uid": "773e7d83b011"
     },
     {
-      "asm": "sw.u SrcD, [SrcL, SrcR<{.sw,.uw}>]",
+      "asm": "sw.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]",
       "encoding": {
         "length_bits": 32,
         "parts": [
@@ -148293,6 +148293,11 @@
             "description": "Hardware watchpoint trap.",
             "name": "HW_WATCHPOINT",
             "trapnum": 51
+          },
+          {
+            "description": "ASSERT failure trap (bring-up / fixup-aware).",
+            "name": "ASSERT_FAIL",
+            "trapnum": 52
           }
         ],
         "fields": [

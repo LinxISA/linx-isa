@@ -79,3 +79,16 @@ function trap_sw_breakpoint(traparg0 : bits(64)) -> unit = {
   // TRAPNUM_SW_BREAKPOINT = 50, CAUSE=0, BI=0
   raise_trap(to_bits(6, 50), to_bits(24, 0), traparg0, 0b0)
 }
+
+// Memory accessors (stubs).
+// In a complete model these perform translation, permission checks, and fault reporting.
+// For staged bring-up we keep them explicit and do not guess the MMU/privilege behavior.
+
+function read_mem8(ea : bits(64)) -> bits(8) = {
+  unimplemented("read_mem8");
+  0x00
+}
+
+function write_mem8(ea : bits(64), v : bits(8)) -> unit = {
+  unimplemented("write_mem8")
+}
