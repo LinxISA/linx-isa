@@ -230,3 +230,16 @@ function apply_srcrtype_logic32(t : srcrtype, x : bits(64)) -> bits(32) = {
     0b11 => ~w
   }
 }
+
+// Load/store extension helpers.
+function sext8_from8(b : bits(8)) -> bits(64) = {
+  if b[7] == 1b1 then (0xFFFF_FFFF_FFFF_FF00 | b) else (0x0000_0000_0000_0000 | b)
+}
+
+function zext16_from16(h : bits(16)) -> bits(64) = {
+  0x0000_0000_0000_0000 | h
+}
+
+function sext16_from16(h : bits(16)) -> bits(64) = {
+  if h[15] == 1b1 then (0xFFFF_FFFF_FFFF_0000 | h) else (0x0000_0000_0000_0000 | h)
+}
