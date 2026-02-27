@@ -1565,6 +1565,324 @@ function exec_fneg(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit 
 // AGU / Load-Store (staged bring-up; strict v0.3 conventions)
 // ============================================================
 
+// -----------------------------------------------------------------------------
+// Atomic RMW ops (LW/LD/SW/SD .ADD/.AND/.OR/.XOR/.SMIN/.SMAX/.UMIN/.UMAX)
+//
+// Staged Sail model notes:
+//   - aq/rl/f modifiers are parsed but currently not modeled (no memory ordering)
+//   - FAR is treated as a hint only (no special fault-avoid behavior modeled)
+//   - Operations are modeled as read-modify-write on the addressed word/dword.
+//   - LW.* returns the *old* memory value sign-extended to 64-bit (like LW).
+//   - LD.* returns the *old* memory value (64-bit).
+
+function rmw32_add(a : bits(32), b : bits(32)) -> bits(32) = { a + b }
+function rmw32_and(a : bits(32), b : bits(32)) -> bits(32) = { a & b }
+function rmw32_or(a : bits(32), b : bits(32)) -> bits(32) = { a | b }
+function rmw32_xor(a : bits(32), b : bits(32)) -> bits(32) = { a ^ b }
+
+function rmw32_smax(a : bits(32), b : bits(32)) -> bits(32) = { if (signed(a) >= signed(b)) then a else b }
+function rmw32_smin(a : bits(32), b : bits(32)) -> bits(32) = { if (signed(a) <= signed(b)) then a else b }
+function rmw32_umax(a : bits(32), b : bits(32)) -> bits(32) = { if (unsigned(a) >= unsigned(b)) then a else b }
+function rmw32_umin(a : bits(32), b : bits(32)) -> bits(32) = { if (unsigned(a) <= unsigned(b)) then a else b }
+
+function rmw64_add(a : bits(64), b : bits(64)) -> bits(64) = { a + b }
+function rmw64_and(a : bits(64), b : bits(64)) -> bits(64) = { a & b }
+function rmw64_or(a : bits(64), b : bits(64)) -> bits(64) = { a | b }
+function rmw64_xor(a : bits(64), b : bits(64)) -> bits(64) = { a ^ b }
+
+function rmw64_smax(a : bits(64), b : bits(64)) -> bits(64) = { if (signed(a) >= signed(b)) then a else b }
+function rmw64_smin(a : bits(64), b : bits(64)) -> bits(64) = { if (signed(a) <= signed(b)) then a else b }
+function rmw64_umax(a : bits(64), b : bits(64)) -> bits(64) = { if (unsigned(a) >= unsigned(b)) then a else b }
+function rmw64_umin(a : bits(64), b : bits(64)) -> bits(64) = { if (unsigned(a) <= unsigned(b)) then a else b }
+
+function exec_lw_add(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(32) = mem_load32_le(ea);
+  let b : bits(32) = read_reg5(SrcR)[31..0];
+  mem_store32_le(ea, rmw32_add(old, b));
+  write_regdst(RegDst, sext32_from32(old))
+}
+
+function exec_lw_and(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(32) = mem_load32_le(ea);
+  let b : bits(32) = read_reg5(SrcR)[31..0];
+  mem_store32_le(ea, rmw32_and(old, b));
+  write_regdst(RegDst, sext32_from32(old))
+}
+
+function exec_lw_or(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(32) = mem_load32_le(ea);
+  let b : bits(32) = read_reg5(SrcR)[31..0];
+  mem_store32_le(ea, rmw32_or(old, b));
+  write_regdst(RegDst, sext32_from32(old))
+}
+
+function exec_lw_xor(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(32) = mem_load32_le(ea);
+  let b : bits(32) = read_reg5(SrcR)[31..0];
+  mem_store32_le(ea, rmw32_xor(old, b));
+  write_regdst(RegDst, sext32_from32(old))
+}
+
+function exec_lw_smax(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(32) = mem_load32_le(ea);
+  let b : bits(32) = read_reg5(SrcR)[31..0];
+  mem_store32_le(ea, rmw32_smax(old, b));
+  write_regdst(RegDst, sext32_from32(old))
+}
+
+function exec_lw_smin(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(32) = mem_load32_le(ea);
+  let b : bits(32) = read_reg5(SrcR)[31..0];
+  mem_store32_le(ea, rmw32_smin(old, b));
+  write_regdst(RegDst, sext32_from32(old))
+}
+
+function exec_lw_umax(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(32) = mem_load32_le(ea);
+  let b : bits(32) = read_reg5(SrcR)[31..0];
+  mem_store32_le(ea, rmw32_umax(old, b));
+  write_regdst(RegDst, sext32_from32(old))
+}
+
+function exec_lw_umin(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(32) = mem_load32_le(ea);
+  let b : bits(32) = read_reg5(SrcR)[31..0];
+  mem_store32_le(ea, rmw32_umin(old, b));
+  write_regdst(RegDst, sext32_from32(old))
+}
+
+function exec_ld_add(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(64) = mem_load64_le(ea);
+  let b : bits(64) = read_reg5(SrcR);
+  mem_store64_le(ea, rmw64_add(old, b));
+  write_regdst(RegDst, old)
+}
+
+function exec_ld_and(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(64) = mem_load64_le(ea);
+  let b : bits(64) = read_reg5(SrcR);
+  mem_store64_le(ea, rmw64_and(old, b));
+  write_regdst(RegDst, old)
+}
+
+function exec_ld_or(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(64) = mem_load64_le(ea);
+  let b : bits(64) = read_reg5(SrcR);
+  mem_store64_le(ea, rmw64_or(old, b));
+  write_regdst(RegDst, old)
+}
+
+function exec_ld_xor(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(64) = mem_load64_le(ea);
+  let b : bits(64) = read_reg5(SrcR);
+  mem_store64_le(ea, rmw64_xor(old, b));
+  write_regdst(RegDst, old)
+}
+
+function exec_ld_smax(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(64) = mem_load64_le(ea);
+  let b : bits(64) = read_reg5(SrcR);
+  mem_store64_le(ea, rmw64_smax(old, b));
+  write_regdst(RegDst, old)
+}
+
+function exec_ld_smin(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(64) = mem_load64_le(ea);
+  let b : bits(64) = read_reg5(SrcR);
+  mem_store64_le(ea, rmw64_smin(old, b));
+  write_regdst(RegDst, old)
+}
+
+function exec_ld_umax(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(64) = mem_load64_le(ea);
+  let b : bits(64) = read_reg5(SrcR);
+  mem_store64_le(ea, rmw64_umax(old, b));
+  write_regdst(RegDst, old)
+}
+
+function exec_ld_umin(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(64) = mem_load64_le(ea);
+  let b : bits(64) = read_reg5(SrcR);
+  mem_store64_le(ea, rmw64_umin(old, b));
+  write_regdst(RegDst, old)
+}
+
+function exec_sw_add(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(32) = mem_load32_le(ea);
+  let b : bits(32) = read_reg5(SrcR)[31..0];
+  mem_store32_le(ea, rmw32_add(old, b));
+  ()
+}
+
+function exec_sw_and(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(32) = mem_load32_le(ea);
+  let b : bits(32) = read_reg5(SrcR)[31..0];
+  mem_store32_le(ea, rmw32_and(old, b));
+  ()
+}
+
+function exec_sw_or(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(32) = mem_load32_le(ea);
+  let b : bits(32) = read_reg5(SrcR)[31..0];
+  mem_store32_le(ea, rmw32_or(old, b));
+  ()
+}
+
+function exec_sw_xor(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(32) = mem_load32_le(ea);
+  let b : bits(32) = read_reg5(SrcR)[31..0];
+  mem_store32_le(ea, rmw32_xor(old, b));
+  ()
+}
+
+function exec_sw_smax(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(32) = mem_load32_le(ea);
+  let b : bits(32) = read_reg5(SrcR)[31..0];
+  mem_store32_le(ea, rmw32_smax(old, b));
+  ()
+}
+
+function exec_sw_smin(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(32) = mem_load32_le(ea);
+  let b : bits(32) = read_reg5(SrcR)[31..0];
+  mem_store32_le(ea, rmw32_smin(old, b));
+  ()
+}
+
+function exec_sw_umax(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(32) = mem_load32_le(ea);
+  let b : bits(32) = read_reg5(SrcR)[31..0];
+  mem_store32_le(ea, rmw32_umax(old, b));
+  ()
+}
+
+function exec_sw_umin(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(32) = mem_load32_le(ea);
+  let b : bits(32) = read_reg5(SrcR)[31..0];
+  mem_store32_le(ea, rmw32_umin(old, b));
+  ()
+}
+
+function exec_sd_add(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(64) = mem_load64_le(ea);
+  let b : bits(64) = read_reg5(SrcR);
+  mem_store64_le(ea, rmw64_add(old, b));
+  ()
+}
+
+function exec_sd_and(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(64) = mem_load64_le(ea);
+  let b : bits(64) = read_reg5(SrcR);
+  mem_store64_le(ea, rmw64_and(old, b));
+  ()
+}
+
+function exec_sd_or(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(64) = mem_load64_le(ea);
+  let b : bits(64) = read_reg5(SrcR);
+  mem_store64_le(ea, rmw64_or(old, b));
+  ()
+}
+
+function exec_sd_xor(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(64) = mem_load64_le(ea);
+  let b : bits(64) = read_reg5(SrcR);
+  mem_store64_le(ea, rmw64_xor(old, b));
+  ()
+}
+
+function exec_sd_smax(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(64) = mem_load64_le(ea);
+  let b : bits(64) = read_reg5(SrcR);
+  mem_store64_le(ea, rmw64_smax(old, b));
+  ()
+}
+
+function exec_sd_smin(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(64) = mem_load64_le(ea);
+  let b : bits(64) = read_reg5(SrcR);
+  mem_store64_le(ea, rmw64_smin(old, b));
+  ()
+}
+
+function exec_sd_umax(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(64) = mem_load64_le(ea);
+  let b : bits(64) = read_reg5(SrcR);
+  mem_store64_le(ea, rmw64_umax(old, b));
+  ()
+}
+
+function exec_sd_umin(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(64) = mem_load64_le(ea);
+  let b : bits(64) = read_reg5(SrcR);
+  mem_store64_le(ea, rmw64_umin(old, b));
+  ()
+}
+
 function mem_load16_le(ea : bits(64)) -> bits(16) = {
   let b0 : bits(8) = read_mem8(ea);
   let b1 : bits(8) = read_mem8(ea + 0x1);
