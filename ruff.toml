@@ -1,0 +1,18 @@
+target-version = "py311"
+
+extend-exclude = [
+  "compiler/llvm",
+  "emulator/qemu",
+  "kernel/linux",
+  "rtl/LinxCore",
+  "tools/pyCircuit",
+  "lib/glibc",
+  "lib/musl",
+  "workloads/pto_kernels",
+  "out",
+  "target",
+]
+
+[lint]
+select = ["E9", "F63", "F7", "F82"]
+

@@ -1,0 +1,19 @@
+name: Documentation request
+description: Request a docs improvement or report a docs bug.
+title: "[Docs] "
+labels: ["docs"]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: Page
+      description: Link to the page or file path under `docs/`.
+    validations:
+      required: true
+  - type: textarea
+    id: change
+    attributes:
+      label: What should change?
+    validations:
+      required: true
+

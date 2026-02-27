@@ -1,0 +1,16 @@
+* @LinxISA/maintainers
+
+/.github/ @LinxISA/maintainers
+
+/isa/ @LinxISA/isa
+/docs/ @LinxISA/docs
+/avs/ @LinxISA/avs
+/tools/ @LinxISA/tools
+/workloads/ @LinxISA/workloads
+
+/compiler/ @LinxISA/compiler
+/emulator/ @LinxISA/emulator
+/kernel/ @LinxISA/kernel
+/rtl/ @LinxISA/rtl
+/lib/ @LinxISA/lib
+
