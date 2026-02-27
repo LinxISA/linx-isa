@@ -1,5 +1,6 @@
 # Workspace output artifacts (do not check in)
 out/
+site/
 
 # Generated test artifacts
 avs/compiler/linx-llvm/tests/out/

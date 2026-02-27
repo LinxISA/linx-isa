@@ -143,6 +143,7 @@ bash tools/regression/strict_cross_repo.sh
 
 ## Documentation
 
+- **Website**: https://linxisa.github.io/
 - **[Getting Started](docs/bringup/GETTING_STARTED.md)** - Onboarding guide
 - **[Architecture Contract](docs/architecture/v0.3-architecture-contract.md)** - ISA v0.3 specification
 - **[Bring-up Progress](docs/bringup/PROGRESS.md)** - Current status tracking

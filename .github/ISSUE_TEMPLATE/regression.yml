@@ -1,0 +1,33 @@
+name: Regression / CI failure
+description: Report a regression found by a bring-up gate or CI.
+title: "[Regression] "
+labels: ["regression"]
+body:
+  - type: input
+    id: gate
+    attributes:
+      label: Gate / workflow
+      description: E.g. `CI / check26`, `public-v03-guards`, `tools/regression/run.sh`.
+    validations:
+      required: true
+  - type: input
+    id: link
+    attributes:
+      label: Link to failing run/logs
+      description: GitHub Actions run URL or pasted log excerpt.
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      description: What is blocked (release, bring-up, submodule sync)?
+    validations:
+      required: false
+  - type: textarea
+    id: bisect
+    attributes:
+      label: Suspected commit(s) / bisect info
+    validations:
+      required: false
+

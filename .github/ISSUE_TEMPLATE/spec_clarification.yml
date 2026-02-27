@@ -1,0 +1,27 @@
+name: Spec clarification
+description: Request clarification or report an ambiguity in the ISA spec/contract.
+title: "[Spec] "
+labels: ["spec"]
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Spec location
+      description: Link to the relevant doc/section (e.g. `docs/architecture/v0.3-architecture-contract.md#...`).
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: Question / ambiguity
+      description: What is unclear or inconsistent?
+    validations:
+      required: true
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Proposed resolution (optional)
+      description: If you have a suggested wording or rule, include it.
+    validations:
+      required: false
+

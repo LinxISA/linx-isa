@@ -1,0 +1,58 @@
+name: Bug report
+description: Report a defect in the LinxISA superproject.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting! Please include enough context to reproduce locally or in CI.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - isa
+        - compiler/llvm
+        - emulator/qemu
+        - kernel/linux
+        - rtl/LinxCore
+        - lib/glibc
+        - lib/musl
+        - tools
+        - avs
+        - workloads
+        - docs
+        - other
+    validations:
+      required: true
+  - type: input
+    id: commit
+    attributes:
+      label: Commit (superproject)
+      description: Output of `git rev-parse HEAD` (or a GitHub URL).
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Include the observed behavior and why it is wrong.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction steps
+      description: Minimal steps/command to reproduce.
+      render: shell
+    validations:
+      required: false
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / output
+      render: shell
+    validations:
+      required: false
+

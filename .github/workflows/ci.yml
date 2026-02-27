@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  guards:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Enforce Public v0.3 Guard
+        run: bash tools/ci/check_public_v03.sh
+      - name: Enforce Repository Layout
+        run: bash tools/ci/check_repo_layout.sh
+
+  check26:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deps
+        run: python -m pip install --upgrade pip pyyaml
+      - name: Run check26 contract gate
+        run: python3 tools/bringup/check26_contract.py --root .
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deps
+        run: python -m pip install --upgrade pip mkdocs-material
+      - name: Build docs (MkDocs)
+        run: mkdocs build --strict
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install python lint deps
+        run: python -m pip install --upgrade pip ruff
+      - name: Ruff (hard errors only)
+        run: ruff check --config ruff.toml --force-exclude .
+      - name: Install shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+      - name: Shellcheck
+        shell: bash
+        run: |
+          shopt -s nullglob
+          files=( $(git ls-files '*.sh') )
+          if [[ ${#files[@]} -eq 0 ]]; then
+            echo "No shell scripts found."
+            exit 0
+          fi
+          shellcheck -x -S error "${files[@]}"

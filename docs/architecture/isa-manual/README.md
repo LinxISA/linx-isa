@@ -18,6 +18,11 @@ make pdf
 Outputs:
 - `build/linxisa-isa-manual.pdf`
 
+## Prebuilt PDF
+
+- v0.3.0: [`linxisa-isa-manual-v0.3.0.pdf`](https://github.com/LinxISA/linx-isa/releases/download/v0.3.0/linxisa-isa-manual-v0.3.0.pdf)
+- Latest release page: https://github.com/LinxISA/linx-isa/releases/latest
+
 ## Regenerate generated sections
 
 The manual includes generated AsciiDoc derived from the canonical spec:
@@ -28,3 +33,5 @@ Regenerate:
 ```bash
 make gen
 ```
+
+Note: `build/` is gitignored; local build outputs are not committed to the repository.

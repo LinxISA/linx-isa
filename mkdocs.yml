@@ -1,0 +1,64 @@
+site_name: LinxISA
+site_description: Linx Instruction Set Architecture
+site_url: https://linxisa.github.io/
+
+repo_url: https://github.com/LinxISA/linx-isa
+repo_name: LinxISA/linx-isa
+edit_uri: edit/main/docs/
+
+exclude_docs: |
+  /README.md
+  architecture/isa-manual/.bundle/**
+  architecture/isa-manual/build/**
+  architecture/isa-manual/vendor/**
+
+theme:
+  name: material
+  logo: architecture/isa-manual/src/images/linxisa-logo.svg
+  favicon: architecture/isa-manual/src/images/linxisa-logo.svg
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - search.highlight
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - footnotes
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.highlight
+  - pymdownx.superfences
+
+nav:
+  - Home: index.md
+  - Getting Started: bringup/GETTING_STARTED.md
+  - Architecture:
+      - Overview: architecture/README.md
+      - v0.3 Contract: architecture/v0.3-architecture-contract.md
+      - ISA Manual (AsciiDoc): architecture/isa-manual/README.md
+      - v0.4 Draft: architecture/v0.4-draft/README.md
+  - Bring-up:
+      - Overview: bringup/README.md
+      - Progress: bringup/PROGRESS.md
+      - Gate Status: bringup/GATE_STATUS.md
+      - Check26 Contract: bringup/CHECK26_CONTRACT.md
+      - Maturity Plan: bringup/MATURITY_PLAN.md
+  - Reference:
+      - Overview: reference/README.md
+      - Assembly Guide: reference/linxisa-assembly-agent-guide.md
+      - Call/Ret Contract: reference/linxisa-call-ret-contract.md
+      - Encoding Space Report: reference/encoding_space_report.md
+      - Examples: reference/examples/README.md
+  - Releases:
+      - v0.3.0: releases/v0.3.0.md
+  - Project:
+      - Overview: project/README.md
+      - Navigation: project/navigation.md
+      - Repository Flow: project/repository-flow.md
