@@ -1566,6 +1566,165 @@ function exec_fneg(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit 
 // ============================================================
 
 // -----------------------------------------------------------------------------
+// Exclusive load/store + swap + CAS (ARM-style)
+//
+// Staged semantics:
+// - LR.* sets a local exclusive reservation (64B cacheline).
+// - SC.* succeeds if reservation matches, stores, and returns status (0=success, 1=failure).
+// - SWAP* always swaps and returns the old memory value.
+// - CAS* compares memory against SrcR, stores SrcD if equal, returns old memory value.
+// - aq/rl/f/far modifiers are parsed but not modeled.
+
+function exec_lr_b(RegDst : bits(5), SrcL : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old8 : bits(8) = read_mem8(ea);
+  excl_set(ea);
+  write_regdst(RegDst, zext8_from8(old8))
+}
+
+function exec_lr_h(RegDst : bits(5), SrcL : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old16 : bits(16) = mem_load16_le(ea);
+  excl_set(ea);
+  write_regdst(RegDst, zext16_from16(old16))
+}
+
+function exec_lr_w(RegDst : bits(5), SrcL : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old32 : bits(32) = mem_load32_le(ea);
+  excl_set(ea);
+  write_regdst(RegDst, sext32_from32(old32))
+}
+
+function exec_lr_d(RegDst : bits(5), SrcL : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old64 : bits(64) = mem_load64_le(ea);
+  excl_set(ea);
+  write_regdst(RegDst, old64)
+}
+
+function exec_sc_b(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let v8 : bits(8) = read_reg5(SrcL)[7..0];
+  let ea = read_reg5(SrcR);
+  let ok = excl_check(ea);
+  if ok then write_mem8(ea, v8) else ();
+  excl_clear();
+  write_regdst(RegDst, if ok then 0x0 else 0x1)
+}
+
+function exec_sc_h(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let v16 : bits(16) = read_reg5(SrcL)[15..0];
+  let ea = read_reg5(SrcR);
+  let ok = excl_check(ea);
+  if ok then mem_store16_le(ea, v16) else ();
+  excl_clear();
+  write_regdst(RegDst, if ok then 0x0 else 0x1)
+}
+
+function exec_sc_w(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let v32 : bits(32) = read_reg5(SrcL)[31..0];
+  let ea = read_reg5(SrcR);
+  let ok = excl_check(ea);
+  if ok then mem_store32_le(ea, v32) else ();
+  excl_clear();
+  write_regdst(RegDst, if ok then 0x0 else 0x1)
+}
+
+function exec_sc_d(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let v64 : bits(64) = read_reg5(SrcL);
+  let ea = read_reg5(SrcR);
+  let ok = excl_check(ea);
+  if ok then mem_store64_le(ea, v64) else ();
+  excl_clear();
+  write_regdst(RegDst, if ok then 0x0 else 0x1)
+}
+
+function exec_swapb(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old8 : bits(8) = read_mem8(ea);
+  let v8 : bits(8) = read_reg5(SrcR)[7..0];
+  write_mem8(ea, v8);
+  write_regdst(RegDst, zext8_from8(old8))
+}
+
+function exec_swaph(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old16 : bits(16) = mem_load16_le(ea);
+  let v16 : bits(16) = read_reg5(SrcR)[15..0];
+  mem_store16_le(ea, v16);
+  write_regdst(RegDst, zext16_from16(old16))
+}
+
+function exec_swapw(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old32 : bits(32) = mem_load32_le(ea);
+  let v32 : bits(32) = read_reg5(SrcR)[31..0];
+  mem_store32_le(ea, v32);
+  write_regdst(RegDst, sext32_from32(old32))
+}
+
+function exec_swapd(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old64 : bits(64) = mem_load64_le(ea);
+  let v64 : bits(64) = read_reg5(SrcR);
+  mem_store64_le(ea, v64);
+  write_regdst(RegDst, old64)
+}
+
+function exec_hl_casb(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcD : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old8 : bits(8) = read_mem8(ea);
+  let exp8 : bits(8) = read_reg5(SrcR)[7..0];
+  let new8 : bits(8) = read_reg5(SrcD)[7..0];
+  if old8 == exp8 then write_mem8(ea, new8) else ();
+  write_regdst(RegDst, zext8_from8(old8))
+}
+
+function exec_hl_cash(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcD : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old16 : bits(16) = mem_load16_le(ea);
+  let exp16 : bits(16) = read_reg5(SrcR)[15..0];
+  let new16 : bits(16) = read_reg5(SrcD)[15..0];
+  if old16 == exp16 then mem_store16_le(ea, new16) else ();
+  write_regdst(RegDst, zext16_from16(old16))
+}
+
+function exec_hl_casw(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcD : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old32 : bits(32) = mem_load32_le(ea);
+  let exp32 : bits(32) = read_reg5(SrcR)[31..0];
+  let new32 : bits(32) = read_reg5(SrcD)[31..0];
+  if old32 == exp32 then mem_store32_le(ea, new32) else ();
+  write_regdst(RegDst, sext32_from32(old32))
+}
+
+function exec_hl_casd(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcD : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+  let _ = aq; let _ = far; let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old64 : bits(64) = mem_load64_le(ea);
+  let exp64 : bits(64) = read_reg5(SrcR);
+  let new64 : bits(64) = read_reg5(SrcD);
+  if old64 == exp64 then mem_store64_le(ea, new64) else ();
+  write_regdst(RegDst, old64)
+}
+
+
+// -----------------------------------------------------------------------------
 // Atomic RMW ops (LW/LD/SW/SD .ADD/.AND/.OR/.XOR/.SMIN/.SMAX/.UMIN/.UMAX)
 //
 // Staged Sail model notes:
