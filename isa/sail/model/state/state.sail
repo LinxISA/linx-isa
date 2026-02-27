@@ -80,6 +80,37 @@ function trap_sw_breakpoint(traparg0 : bits(64)) -> unit = {
   raise_trap(to_bits(6, 50), to_bits(24, 0), traparg0, 0b0)
 }
 
+// -----------------------------------------------------------------------------
+// Exclusive monitor (LR/SC) - staged model
+//
+// We approximate ARM-style exclusive monitor with a single local reservation
+// tracked at cacheline granularity (64B).
+//
+// Limitations (staged):
+//   - Other cores/agents are not modeled, so conflicting writes are not observed.
+//   - Non-exclusive stores in this model do not automatically clear the monitor.
+
+register excl_valid : bool = false
+register excl_line  : bits(64) = 0x0000_0000_0000_0000
+
+function excl_line_addr(ea : bits(64)) -> bits(64) = {
+  ea & 0xFFFF_FFFF_FFFF_FFC0
+}
+
+function excl_set(ea : bits(64)) -> unit = {
+  excl_valid = true;
+  excl_line = excl_line_addr(ea)
+}
+
+function excl_clear() -> unit = {
+  excl_valid = false
+}
+
+function excl_check(ea : bits(64)) -> bool = {
+  excl_valid & (excl_line == excl_line_addr(ea))
+}
+
+
 // Memory accessors (stubs).
 // In a complete model these perform translation, permission checks, and fault reporting.
 // For staged bring-up we keep them explicit and do not guess the MMU/privilege behavior.

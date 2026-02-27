@@ -358,3 +358,21 @@ SD.SMAX
 SD.SMIN
 SD.UMAX
 SD.UMIN
+
+# Exclusive load/store + swap + CAS (ARM-style staged)
+LR.B
+LR.H
+LR.W
+LR.D
+SC.B
+SC.H
+SC.W
+SC.D
+SWAPB
+SWAPH
+SWAPW
+SWAPD
+HL.CASB
+HL.CASH
+HL.CASW
+HL.CASD
