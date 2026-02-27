@@ -72,5 +72,4 @@ jobs:
             echo "No shell scripts found."
             exit 0
           fi
-          shellcheck -x "${files[@]}"
-
+          shellcheck -x -S error "${files[@]}"
