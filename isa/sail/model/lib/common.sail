@@ -40,6 +40,14 @@ function sext12_to64(imm12 : bits(12)) -> bits(64) = {
   if imm12[11] == 1b1 then (0xFFFF_FFFF_FFFF_F000 | imm12) else (0x0000_0000_0000_0000 | imm12)
 }
 
+function zext5_to64(imm5 : bits(5)) -> bits(64) = {
+  0x0000_0000_0000_0000 | imm5
+}
+
+function sext5_to64(imm5 : bits(5)) -> bits(64) = {
+  if imm5[4] == 1b1 then (0xFFFF_FFFF_FFFF_FFE0 | imm5) else (0x0000_0000_0000_0000 | imm5)
+}
+
 function zext24_to64(imm24 : bits(24)) -> bits(64) = {
   0x0000_0000_0000_0000 | imm24
 }

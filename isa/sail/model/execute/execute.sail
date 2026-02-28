@@ -275,6 +275,108 @@ function exec_c_srli(RegDst : bits(5), SrcL : bits(5), imm5 : bits(5)) -> unit =
   write_regdst(RegDst, a >> sh)
 }
 
+// -----------------------------------------------------------------------------
+// Compressed (C16) ALU / unary / TINST helpers.
+//
+// Register conventions used by the assembler templates:
+//   - `t`   is a fixed architectural register alias (reg5 code 31).
+//   - `t#1` is a fixed architectural register alias (reg5 code 24).
+//
+// We keep these explicit here so the semantics are readable.
+
+function reg_t() -> bits(5) = { 0b11111 }
+function reg_t1() -> bits(5) = { 0b11000 }
+
+function exec_c_add(SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  write_regdst(reg_t(), a + b)
+}
+
+function exec_c_sub(SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  write_regdst(reg_t(), a - b)
+}
+
+function exec_c_and(SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  write_regdst(reg_t(), a & b)
+}
+
+function exec_c_or(SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  write_regdst(reg_t(), a | b)
+}
+
+function exec_c_addi(SrcL : bits(5), simm5 : bits(5)) -> unit = {
+  let a = read_reg5(SrcL);
+  let imm = sext5_to64(simm5);
+  write_regdst(reg_t(), a + imm)
+}
+
+function exec_c_movi(RegDst : bits(5), simm5 : bits(5)) -> unit = {
+  let imm = sext5_to64(simm5);
+  write_regdst(RegDst, imm)
+}
+
+function exec_c_movr(RegDst : bits(5), SrcL : bits(5)) -> unit = {
+  write_regdst(RegDst, read_reg5(SrcL))
+}
+
+function exec_c_cmp_eqi(simm5 : bits(5)) -> unit = {
+  let a = read_reg5(reg_t1());
+  let imm = sext5_to64(simm5);
+  write_regdst(reg_t(), bool_to_u64(a == imm))
+}
+
+function exec_c_cmp_nei(simm5 : bits(5)) -> unit = {
+  let a = read_reg5(reg_t1());
+  let imm = sext5_to64(simm5);
+  write_regdst(reg_t(), bool_to_u64(a != imm))
+}
+
+function exec_c_ebreak(imm5 : bits(5)) -> unit = {
+  // Semantics are identical to EBREAK; imm is for debugger patching heuristics.
+  let _ = imm5;
+  exec_ebreak()
+}
+
+function exec_c_sext_b(SrcL : bits(5)) -> unit = {
+  let a = read_reg5(SrcL)[7..0];
+  // Sign-extend from bit 7.
+  if a[7] == 1b1 then write_regdst(reg_t(), 0xFFFF_FFFF_FFFF_FF00 | a)
+  else write_regdst(reg_t(), 0x0000_0000_0000_0000 | a)
+}
+
+function exec_c_sext_h(SrcL : bits(5)) -> unit = {
+  let a = read_reg5(SrcL)[15..0];
+  if a[15] == 1b1 then write_regdst(reg_t(), 0xFFFF_FFFF_FFFF_0000 | a)
+  else write_regdst(reg_t(), 0x0000_0000_0000_0000 | a)
+}
+
+function exec_c_sext_w(SrcL : bits(5)) -> unit = {
+  let a = read_reg5(SrcL)[31..0];
+  write_regdst(reg_t(), sext32_from32(a))
+}
+
+function exec_c_zext_b(SrcL : bits(5)) -> unit = {
+  let a = read_reg5(SrcL)[7..0];
+  write_regdst(reg_t(), 0x0000_0000_0000_0000 | a)
+}
+
+function exec_c_zext_h(SrcL : bits(5)) -> unit = {
+  let a = read_reg5(SrcL)[15..0];
+  write_regdst(reg_t(), 0x0000_0000_0000_0000 | a)
+}
+
+function exec_c_zext_w(SrcL : bits(5)) -> unit = {
+  let a = read_reg5(SrcL)[31..0];
+  write_regdst(reg_t(), zext32_from32(a))
+}
+
 // Bitfield operations (wrap-around on 64-bit ring).
 
 function exec_bxu(RegDst : bits(5), SrcL : bits(5), Nminus1 : bits(6), M : bits(6)) -> unit = {
