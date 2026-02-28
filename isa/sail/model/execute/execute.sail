@@ -817,6 +817,17 @@ function exec_c_setc_ne(SrcL : bits(5), SrcR : bits(5)) -> unit = {
   set_commit_argument(bool_to_u64(a != b))
 }
 
+function exec_setc_tgt(SrcL : bits(5), SrcRType : bits(2)) -> unit = {
+  // Select a register-based next-target for RET/IND-class transitions.
+  // Only the register identity matters; SrcRType is ignored.
+  let _ = SrcRType;
+  set_commit_target_reg(SrcL)
+}
+
+function exec_c_setc_tgt(SrcL : bits(5)) -> unit = {
+  set_commit_target_reg(SrcL)
+}
+
 
 // -----------------------------------------------------------------------------
 // BRU: control-transfer (vec-engine scalar lane; updates TPC)
