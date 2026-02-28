@@ -64,6 +64,54 @@ function raise_trap(trapnum : bits(6), cause : bits(24), traparg0 : bits(64), bi
   unimplemented("raise_trap")
 }
 
+// -----------------------------------------------------------------------------
+// BLOCK_TRAP / E_BLOCK helpers (v0.3 bring-up contract)
+//
+// Normative sources:
+// - docs/architecture/isa-manual/src/chapters/09_system_and_privilege.adoc
+// - docs/bringup/plan/isa_clarifications.md
+//
+// TRAPNUM major class:
+//   BLOCK_TRAP = 5
+// E_BLOCK cause space:
+//   EC_CFI      = 0x1 (with EC_CFI_KIND in CAUSE[3:0])
+//   EC_BLOCKFMT = 0x2
+//   EC_BFETCH   = 0x3
+//
+// NOTE: The manual defines EC and subcause fields within TRAPNO.CAUSE. The Sail model
+// passes a single 24-bit `cause` to raise_trap(). We pack it as:
+//   cause[15:8] = EC_* (E_BLOCK subcause class)
+//   cause[7:0]  = detail/subcause (for EC_CFI: CAUSE[3:0]=EC_CFI_KIND, CAUSE[7:4]=0)
+// This matches the documented low-bit requirements and keeps the encoding explicit.
+
+function trapnum_block_trap() -> bits(6) = { to_bits(6, 5) }
+
+function e_block_cause(ec : bits(8), detail : bits(8)) -> bits(24) = {
+  // Zero-extend into the 24-bit TRAPNO.CAUSE field.
+  let c16 : bits(16) = (ec << 8) | detail;
+  0x000000 | c16
+}
+
+function trap_block_cfi(ec_cfi_kind : bits(4), src_pc_or_tpc : bits(64)) -> unit = {
+  // E_BLOCK(EC_CFI) is precise, BI=0, TRAPARG0=source PC/TPC.
+  // detail[3:0]=kind, detail[7:4]=0.
+  let detail : bits(8) = 0x00 | ec_cfi_kind;
+  raise_trap(trapnum_block_trap(), e_block_cause(0x01, detail), src_pc_or_tpc, 0b0)
+}
+
+function trap_blockfmt(missing_desc_family : bits(8), missing_detail : bits(8), src_pc_or_tpc : bits(64)) -> unit = {
+  // E_BLOCK(EC_BLOCKFMT): BI=0, TRAPARG0 encodes missing/invalid descriptor.
+  // Clarifications: TRAPARG0[7:0]=MissingDescFamily, TRAPARG0[15:8]=MissingDetail.
+  let traparg0 = (0x0000_0000_0000_0000 | missing_desc_family)
+              | (0x0000_0000_0000_0000 | (missing_detail << 8));
+  raise_trap(trapnum_block_trap(), e_block_cause(0x02, 0x00), traparg0, 0b0)
+}
+
+function trap_bfetch(fault_va : bits(64)) -> unit = {
+  // E_BLOCK(EC_BFETCH): BI=1, TRAPARG0=faulting VA.
+  raise_trap(trapnum_block_trap(), e_block_cause(0x03, 0x00), fault_va, 0b1)
+}
+
 function trap_assert_fail(traparg0 : bits(64)) -> unit = {
   // TRAPNUM_ASSERT_FAIL = 52, CAUSE=0, BI=0
   raise_trap(to_bits(6, 52), to_bits(24, 0), traparg0, 0b0)
