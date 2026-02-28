@@ -2691,3 +2691,708 @@ function exec_hl_sd_po(RegDst : bits(5), SrcD : bits(5), SrcL : bits(5), SrcR : 
   let new_base = base + off;
   write_regdst(RegDst, new_base)
 }
+
+// -----------------------------------------------------------------------------
+// HL (48-bit) PC-relative / immediate / pair addressing.
+//
+// Conventions:
+// - .PCR uses EA = align4(PC/TPC) + (sext17(simm17) << 2)
+// - *I uses long immediate simm22 with scaled offset by element size.
+// - *I.U uses unscaled immediate simm22.
+// - *I.PR/*I.PO use simm17 with writeback to Dst1 (per PR/PO contract).
+// - *I.UPR/*I.UPO are unscaled pre/post-index (simm17) with writeback.
+// - *IP/*P are pair forms: Dst0=mem[EA], Dst1=mem[EA+elem_size]. No writeback.
+
+function hl_pc_aligned4() -> bits(64) = {
+  let pc0 = read_pc_or_tpc();
+  pc0 & 0xFFFF_FFFF_FFFF_FFFC
+}
+
+function hl_ea_pcr(simm17 : bits(17)) -> bits(64) = {
+  hl_pc_aligned4() + (sext17_to64(simm17) << 2)
+}
+
+function hl_ea_imm_scaled(base : bits(64), simm22 : bits(22), scale : int) -> bits(64) = {
+  let off = sext22_to64(simm22);
+  base + (off << scale)
+}
+
+function hl_ea_imm_unscaled(base : bits(64), simm22 : bits(22)) -> bits(64) = {
+  base + sext22_to64(simm22)
+}
+
+function hl_ea_imm17_scaled(base : bits(64), simm17 : bits(17), scale : int) -> bits(64) = {
+  let off = sext17_to64(simm17);
+  base + (off << scale)
+}
+
+function hl_ea_imm17_unscaled(base : bits(64), simm17 : bits(17)) -> bits(64) = {
+  base + sext17_to64(simm17)
+}
+
+// ---- HL loads: PCR ----
+function exec_hl_lb_pcr(RegDst : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_pcr(simm17);
+  let b : bits(8) = read_mem8(ea);
+  write_regdst(RegDst, sext8_from8(b))
+}
+function exec_hl_lbu_pcr(RegDst : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_pcr(simm17);
+  let b : bits(8) = read_mem8(ea);
+  write_regdst(RegDst, zext8_from8(b))
+}
+function exec_hl_lh_pcr(RegDst : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_pcr(simm17);
+  let h : bits(16) = mem_load16_le(ea);
+  write_regdst(RegDst, sext16_from16(h))
+}
+function exec_hl_lhu_pcr(RegDst : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_pcr(simm17);
+  let h : bits(16) = mem_load16_le(ea);
+  write_regdst(RegDst, zext16_from16(h))
+}
+function exec_hl_lw_pcr(RegDst : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_pcr(simm17);
+  let w : bits(32) = mem_load32_le(ea);
+  write_regdst(RegDst, sext32_from32(w))
+}
+function exec_hl_lwu_pcr(RegDst : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_pcr(simm17);
+  let w : bits(32) = mem_load32_le(ea);
+  write_regdst(RegDst, zext32_from32(w))
+}
+function exec_hl_ld_pcr(RegDst : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_pcr(simm17);
+  let d : bits(64) = mem_load64_le(ea);
+  write_regdst(RegDst, d)
+}
+
+// ---- HL loads: long immediate (simm22) ----
+function exec_hl_lbi(RegDst : bits(5), SrcL : bits(5), simm22 : bits(22)) -> unit = {
+  let ea = hl_ea_imm_scaled(read_reg5(SrcL), simm22, 0);
+  let b : bits(8) = read_mem8(ea);
+  write_regdst(RegDst, sext8_from8(b))
+}
+function exec_hl_lbui(RegDst : bits(5), SrcL : bits(5), simm22 : bits(22)) -> unit = {
+  let ea = hl_ea_imm_scaled(read_reg5(SrcL), simm22, 0);
+  let b : bits(8) = read_mem8(ea);
+  write_regdst(RegDst, zext8_from8(b))
+}
+function exec_hl_lhi(RegDst : bits(5), SrcL : bits(5), simm22 : bits(22)) -> unit = {
+  let ea = hl_ea_imm_scaled(read_reg5(SrcL), simm22, 1);
+  let h : bits(16) = mem_load16_le(ea);
+  write_regdst(RegDst, sext16_from16(h))
+}
+function exec_hl_lhi_u(RegDst : bits(5), SrcL : bits(5), simm22 : bits(22)) -> unit = {
+  let ea = hl_ea_imm_unscaled(read_reg5(SrcL), simm22);
+  let h : bits(16) = mem_load16_le(ea);
+  write_regdst(RegDst, sext16_from16(h))
+}
+function exec_hl_lhui(RegDst : bits(5), SrcL : bits(5), simm22 : bits(22)) -> unit = {
+  let ea = hl_ea_imm_scaled(read_reg5(SrcL), simm22, 1);
+  let h : bits(16) = mem_load16_le(ea);
+  write_regdst(RegDst, zext16_from16(h))
+}
+function exec_hl_lhui_u(RegDst : bits(5), SrcL : bits(5), simm22 : bits(22)) -> unit = {
+  let ea = hl_ea_imm_unscaled(read_reg5(SrcL), simm22);
+  let h : bits(16) = mem_load16_le(ea);
+  write_regdst(RegDst, zext16_from16(h))
+}
+function exec_hl_lwi(RegDst : bits(5), SrcL : bits(5), simm22 : bits(22)) -> unit = {
+  let ea = hl_ea_imm_scaled(read_reg5(SrcL), simm22, 2);
+  let w : bits(32) = mem_load32_le(ea);
+  write_regdst(RegDst, sext32_from32(w))
+}
+function exec_hl_lwi_u(RegDst : bits(5), SrcL : bits(5), simm22 : bits(22)) -> unit = {
+  let ea = hl_ea_imm_unscaled(read_reg5(SrcL), simm22);
+  let w : bits(32) = mem_load32_le(ea);
+  write_regdst(RegDst, sext32_from32(w))
+}
+function exec_hl_lwui(RegDst : bits(5), SrcL : bits(5), simm22 : bits(22)) -> unit = {
+  let ea = hl_ea_imm_scaled(read_reg5(SrcL), simm22, 2);
+  let w : bits(32) = mem_load32_le(ea);
+  write_regdst(RegDst, zext32_from32(w))
+}
+function exec_hl_lwui_u(RegDst : bits(5), SrcL : bits(5), simm22 : bits(22)) -> unit = {
+  let ea = hl_ea_imm_unscaled(read_reg5(SrcL), simm22);
+  let w : bits(32) = mem_load32_le(ea);
+  write_regdst(RegDst, zext32_from32(w))
+}
+function exec_hl_ldi(RegDst : bits(5), SrcL : bits(5), simm22 : bits(22)) -> unit = {
+  let ea = hl_ea_imm_scaled(read_reg5(SrcL), simm22, 3);
+  let d : bits(64) = mem_load64_le(ea);
+  write_regdst(RegDst, d)
+}
+function exec_hl_ldi_u(RegDst : bits(5), SrcL : bits(5), simm22 : bits(22)) -> unit = {
+  let ea = hl_ea_imm_unscaled(read_reg5(SrcL), simm22);
+  let d : bits(64) = mem_load64_le(ea);
+  write_regdst(RegDst, d)
+}
+
+// ---- HL loads: immediate PR/PO (simm17) with writeback ----
+function exec_hl_lbi_pr(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcL);
+  let ea = hl_ea_imm17_scaled(base, simm17, 0);
+  let b : bits(8) = read_mem8(ea);
+  write_regdst(RegDst0, sext8_from8(b));
+  write_regdst(RegDst1, ea)
+}
+function exec_hl_lbi_po(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcL);
+  let b : bits(8) = read_mem8(base);
+  let ea = hl_ea_imm17_scaled(base, simm17, 0);
+  write_regdst(RegDst0, sext8_from8(b));
+  write_regdst(RegDst1, ea)
+}
+function exec_hl_lbui_pr(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcL);
+  let ea = hl_ea_imm17_scaled(base, simm17, 0);
+  let b : bits(8) = read_mem8(ea);
+  write_regdst(RegDst0, zext8_from8(b));
+  write_regdst(RegDst1, ea)
+}
+function exec_hl_lbui_po(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcL);
+  let b : bits(8) = read_mem8(base);
+  let ea = hl_ea_imm17_scaled(base, simm17, 0);
+  write_regdst(RegDst0, zext8_from8(b));
+  write_regdst(RegDst1, ea)
+}
+function exec_hl_lhi_pr(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcL);
+  let ea = hl_ea_imm17_scaled(base, simm17, 1);
+  let h : bits(16) = mem_load16_le(ea);
+  write_regdst(RegDst0, sext16_from16(h));
+  write_regdst(RegDst1, ea)
+}
+function exec_hl_lhi_po(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcL);
+  let h : bits(16) = mem_load16_le(base);
+  let ea = hl_ea_imm17_scaled(base, simm17, 1);
+  write_regdst(RegDst0, sext16_from16(h));
+  write_regdst(RegDst1, ea)
+}
+function exec_hl_lhi_upr(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcL);
+  let ea = hl_ea_imm17_unscaled(base, simm17);
+  let h : bits(16) = mem_load16_le(ea);
+  write_regdst(RegDst0, sext16_from16(h));
+  write_regdst(RegDst1, ea)
+}
+function exec_hl_lhi_upo(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcL);
+  let h : bits(16) = mem_load16_le(base);
+  let ea = hl_ea_imm17_unscaled(base, simm17);
+  write_regdst(RegDst0, sext16_from16(h));
+  write_regdst(RegDst1, ea)
+}
+function exec_hl_lhui_pr(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcL);
+  let ea = hl_ea_imm17_scaled(base, simm17, 1);
+  let h : bits(16) = mem_load16_le(ea);
+  write_regdst(RegDst0, zext16_from16(h));
+  write_regdst(RegDst1, ea)
+}
+function exec_hl_lhui_po(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcL);
+  let h : bits(16) = mem_load16_le(base);
+  let ea = hl_ea_imm17_scaled(base, simm17, 1);
+  write_regdst(RegDst0, zext16_from16(h));
+  write_regdst(RegDst1, ea)
+}
+function exec_hl_lhui_upr(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcL);
+  let ea = hl_ea_imm17_unscaled(base, simm17);
+  let h : bits(16) = mem_load16_le(ea);
+  write_regdst(RegDst0, zext16_from16(h));
+  write_regdst(RegDst1, ea)
+}
+function exec_hl_lhui_upo(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcL);
+  let h : bits(16) = mem_load16_le(base);
+  let ea = hl_ea_imm17_unscaled(base, simm17);
+  write_regdst(RegDst0, zext16_from16(h));
+  write_regdst(RegDst1, ea)
+}
+function exec_hl_lwi_pr(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcL);
+  let ea = hl_ea_imm17_scaled(base, simm17, 2);
+  let w : bits(32) = mem_load32_le(ea);
+  write_regdst(RegDst0, sext32_from32(w));
+  write_regdst(RegDst1, ea)
+}
+function exec_hl_lwi_po(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcL);
+  let w : bits(32) = mem_load32_le(base);
+  let ea = hl_ea_imm17_scaled(base, simm17, 2);
+  write_regdst(RegDst0, sext32_from32(w));
+  write_regdst(RegDst1, ea)
+}
+function exec_hl_lwi_upr(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcL);
+  let ea = hl_ea_imm17_unscaled(base, simm17);
+  let w : bits(32) = mem_load32_le(ea);
+  write_regdst(RegDst0, sext32_from32(w));
+  write_regdst(RegDst1, ea)
+}
+function exec_hl_lwi_upo(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcL);
+  let w : bits(32) = mem_load32_le(base);
+  let ea = hl_ea_imm17_unscaled(base, simm17);
+  write_regdst(RegDst0, sext32_from32(w));
+  write_regdst(RegDst1, ea)
+}
+function exec_hl_lwui_pr(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcL);
+  let ea = hl_ea_imm17_scaled(base, simm17, 2);
+  let w : bits(32) = mem_load32_le(ea);
+  write_regdst(RegDst0, zext32_from32(w));
+  write_regdst(RegDst1, ea)
+}
+function exec_hl_lwui_po(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcL);
+  let w : bits(32) = mem_load32_le(base);
+  let ea = hl_ea_imm17_scaled(base, simm17, 2);
+  write_regdst(RegDst0, zext32_from32(w));
+  write_regdst(RegDst1, ea)
+}
+function exec_hl_lwui_upr(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcL);
+  let ea = hl_ea_imm17_unscaled(base, simm17);
+  let w : bits(32) = mem_load32_le(ea);
+  write_regdst(RegDst0, zext32_from32(w));
+  write_regdst(RegDst1, ea)
+}
+function exec_hl_lwui_upo(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcL);
+  let w : bits(32) = mem_load32_le(base);
+  let ea = hl_ea_imm17_unscaled(base, simm17);
+  write_regdst(RegDst0, zext32_from32(w));
+  write_regdst(RegDst1, ea)
+}
+function exec_hl_ldi_pr(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcL);
+  let ea = hl_ea_imm17_scaled(base, simm17, 3);
+  let d : bits(64) = mem_load64_le(ea);
+  write_regdst(RegDst0, d);
+  write_regdst(RegDst1, ea)
+}
+function exec_hl_ldi_po(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcL);
+  let d : bits(64) = mem_load64_le(base);
+  let ea = hl_ea_imm17_scaled(base, simm17, 3);
+  write_regdst(RegDst0, d);
+  write_regdst(RegDst1, ea)
+}
+function exec_hl_ldi_upr(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcL);
+  let ea = hl_ea_imm17_unscaled(base, simm17);
+  let d : bits(64) = mem_load64_le(ea);
+  write_regdst(RegDst0, d);
+  write_regdst(RegDst1, ea)
+}
+function exec_hl_ldi_upo(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcL);
+  let d : bits(64) = mem_load64_le(base);
+  let ea = hl_ea_imm17_unscaled(base, simm17);
+  write_regdst(RegDst0, d);
+  write_regdst(RegDst1, ea)
+}
+
+// ---- HL load pair: immediate simm17 ----
+function exec_hl_lbip(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_imm17_scaled(read_reg5(SrcL), simm17, 0);
+  let v0 : bits(8) = read_mem8(ea);
+  let v1 : bits(8) = read_mem8(ea + 0x1);
+  write_regdst(RegDst0, sext8_from8(v0));
+  write_regdst(RegDst1, sext8_from8(v1))
+}
+function exec_hl_lbuip(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_imm17_scaled(read_reg5(SrcL), simm17, 0);
+  let v0 : bits(8) = read_mem8(ea);
+  let v1 : bits(8) = read_mem8(ea + 0x1);
+  write_regdst(RegDst0, zext8_from8(v0));
+  write_regdst(RegDst1, zext8_from8(v1))
+}
+function exec_hl_lhip(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_imm17_scaled(read_reg5(SrcL), simm17, 1);
+  let v0 : bits(16) = mem_load16_le(ea);
+  let v1 : bits(16) = mem_load16_le(ea + 0x2);
+  write_regdst(RegDst0, sext16_from16(v0));
+  write_regdst(RegDst1, sext16_from16(v1))
+}
+function exec_hl_lhip_u(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_imm17_unscaled(read_reg5(SrcL), simm17);
+  let v0 : bits(16) = mem_load16_le(ea);
+  let v1 : bits(16) = mem_load16_le(ea + 0x2);
+  write_regdst(RegDst0, sext16_from16(v0));
+  write_regdst(RegDst1, sext16_from16(v1))
+}
+function exec_hl_lhuip(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_imm17_scaled(read_reg5(SrcL), simm17, 1);
+  let v0 : bits(16) = mem_load16_le(ea);
+  let v1 : bits(16) = mem_load16_le(ea + 0x2);
+  write_regdst(RegDst0, zext16_from16(v0));
+  write_regdst(RegDst1, zext16_from16(v1))
+}
+function exec_hl_lhuip_u(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_imm17_unscaled(read_reg5(SrcL), simm17);
+  let v0 : bits(16) = mem_load16_le(ea);
+  let v1 : bits(16) = mem_load16_le(ea + 0x2);
+  write_regdst(RegDst0, zext16_from16(v0));
+  write_regdst(RegDst1, zext16_from16(v1))
+}
+function exec_hl_lwip(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_imm17_scaled(read_reg5(SrcL), simm17, 2);
+  let v0 : bits(32) = mem_load32_le(ea);
+  let v1 : bits(32) = mem_load32_le(ea + 0x4);
+  write_regdst(RegDst0, sext32_from32(v0));
+  write_regdst(RegDst1, sext32_from32(v1))
+}
+function exec_hl_lwip_u(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_imm17_unscaled(read_reg5(SrcL), simm17);
+  let v0 : bits(32) = mem_load32_le(ea);
+  let v1 : bits(32) = mem_load32_le(ea + 0x4);
+  write_regdst(RegDst0, sext32_from32(v0));
+  write_regdst(RegDst1, sext32_from32(v1))
+}
+function exec_hl_lwuip(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_imm17_scaled(read_reg5(SrcL), simm17, 2);
+  let v0 : bits(32) = mem_load32_le(ea);
+  let v1 : bits(32) = mem_load32_le(ea + 0x4);
+  write_regdst(RegDst0, zext32_from32(v0));
+  write_regdst(RegDst1, zext32_from32(v1))
+}
+function exec_hl_lwuip_u(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_imm17_unscaled(read_reg5(SrcL), simm17);
+  let v0 : bits(32) = mem_load32_le(ea);
+  let v1 : bits(32) = mem_load32_le(ea + 0x4);
+  write_regdst(RegDst0, zext32_from32(v0));
+  write_regdst(RegDst1, zext32_from32(v1))
+}
+function exec_hl_ldip(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_imm17_scaled(read_reg5(SrcL), simm17, 3);
+  let v0 : bits(64) = mem_load64_le(ea);
+  let v1 : bits(64) = mem_load64_le(ea + 0x8);
+  write_regdst(RegDst0, v0);
+  write_regdst(RegDst1, v1)
+}
+function exec_hl_ldip_u(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_imm17_unscaled(read_reg5(SrcL), simm17);
+  let v0 : bits(64) = mem_load64_le(ea);
+  let v1 : bits(64) = mem_load64_le(ea + 0x8);
+  write_regdst(RegDst0, v0);
+  write_regdst(RegDst1, v1)
+}
+
+// ---- HL load pair: reg+reg+shamt ----
+function exec_hl_lbp(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2), shamt : bits(5)) -> unit = {
+  let ea = read_reg5(SrcL) + hl_off_shamt(SrcR, SrcRType, shamt);
+  let v0 : bits(8) = read_mem8(ea);
+  let v1 : bits(8) = read_mem8(ea + 0x1);
+  write_regdst(RegDst0, sext8_from8(v0));
+  write_regdst(RegDst1, sext8_from8(v1))
+}
+function exec_hl_lbup(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2), shamt : bits(5)) -> unit = {
+  let ea = read_reg5(SrcL) + hl_off_shamt(SrcR, SrcRType, shamt);
+  let v0 : bits(8) = read_mem8(ea);
+  let v1 : bits(8) = read_mem8(ea + 0x1);
+  write_regdst(RegDst0, zext8_from8(v0));
+  write_regdst(RegDst1, zext8_from8(v1))
+}
+function exec_hl_lhp(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2), shamt : bits(5)) -> unit = {
+  let ea = read_reg5(SrcL) + hl_off_shamt(SrcR, SrcRType, shamt);
+  let v0 : bits(16) = mem_load16_le(ea);
+  let v1 : bits(16) = mem_load16_le(ea + 0x2);
+  write_regdst(RegDst0, sext16_from16(v0));
+  write_regdst(RegDst1, sext16_from16(v1))
+}
+function exec_hl_lhup(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2), shamt : bits(5)) -> unit = {
+  let ea = read_reg5(SrcL) + hl_off_shamt(SrcR, SrcRType, shamt);
+  let v0 : bits(16) = mem_load16_le(ea);
+  let v1 : bits(16) = mem_load16_le(ea + 0x2);
+  write_regdst(RegDst0, zext16_from16(v0));
+  write_regdst(RegDst1, zext16_from16(v1))
+}
+function exec_hl_lwp(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2), shamt : bits(5)) -> unit = {
+  let ea = read_reg5(SrcL) + hl_off_shamt(SrcR, SrcRType, shamt);
+  let v0 : bits(32) = mem_load32_le(ea);
+  let v1 : bits(32) = mem_load32_le(ea + 0x4);
+  write_regdst(RegDst0, sext32_from32(v0));
+  write_regdst(RegDst1, sext32_from32(v1))
+}
+function exec_hl_lwup(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2), shamt : bits(5)) -> unit = {
+  let ea = read_reg5(SrcL) + hl_off_shamt(SrcR, SrcRType, shamt);
+  let v0 : bits(32) = mem_load32_le(ea);
+  let v1 : bits(32) = mem_load32_le(ea + 0x4);
+  write_regdst(RegDst0, zext32_from32(v0));
+  write_regdst(RegDst1, zext32_from32(v1))
+}
+function exec_hl_ldp(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2), shamt : bits(5)) -> unit = {
+  let ea = read_reg5(SrcL) + hl_off_shamt(SrcR, SrcRType, shamt);
+  let v0 : bits(64) = mem_load64_le(ea);
+  let v1 : bits(64) = mem_load64_le(ea + 0x8);
+  write_regdst(RegDst0, v0);
+  write_regdst(RegDst1, v1)
+}
+
+// ---- HL stores: PCR ----
+function exec_hl_sb_pcr(SrcD : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_pcr(simm17);
+  let v : bits(8) = read_reg5(SrcD)[7..0];
+  write_mem8(ea, v)
+}
+function exec_hl_sh_pcr(SrcD : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_pcr(simm17);
+  let v : bits(16) = read_reg5(SrcD)[15..0];
+  mem_store16_le(ea, v)
+}
+function exec_hl_sw_pcr(SrcD : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_pcr(simm17);
+  let v : bits(32) = read_reg5(SrcD)[31..0];
+  mem_store32_le(ea, v)
+}
+function exec_hl_sd_pcr(SrcD : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_pcr(simm17);
+  let v : bits(64) = read_reg5(SrcD);
+  mem_store64_le(ea, v)
+}
+
+// ---- HL stores: long immediate (simm22) ----
+function exec_hl_sbi(SrcD : bits(5), SrcR : bits(5), simm22 : bits(22)) -> unit = {
+  let ea = hl_ea_imm_scaled(read_reg5(SrcR), simm22, 0);
+  let v : bits(8) = read_reg5(SrcD)[7..0];
+  write_mem8(ea, v)
+}
+function exec_hl_shi(SrcD : bits(5), SrcR : bits(5), simm22 : bits(22)) -> unit = {
+  let ea = hl_ea_imm_scaled(read_reg5(SrcR), simm22, 1);
+  let v : bits(16) = read_reg5(SrcD)[15..0];
+  mem_store16_le(ea, v)
+}
+function exec_hl_shi_u(SrcD : bits(5), SrcR : bits(5), simm22 : bits(22)) -> unit = {
+  let ea = hl_ea_imm_unscaled(read_reg5(SrcR), simm22);
+  let v : bits(16) = read_reg5(SrcD)[15..0];
+  mem_store16_le(ea, v)
+}
+function exec_hl_swi(SrcD : bits(5), SrcR : bits(5), simm22 : bits(22)) -> unit = {
+  let ea = hl_ea_imm_scaled(read_reg5(SrcR), simm22, 2);
+  let v : bits(32) = read_reg5(SrcD)[31..0];
+  mem_store32_le(ea, v)
+}
+function exec_hl_swi_u(SrcD : bits(5), SrcR : bits(5), simm22 : bits(22)) -> unit = {
+  let ea = hl_ea_imm_unscaled(read_reg5(SrcR), simm22);
+  let v : bits(32) = read_reg5(SrcD)[31..0];
+  mem_store32_le(ea, v)
+}
+function exec_hl_sdi(SrcD : bits(5), SrcR : bits(5), simm22 : bits(22)) -> unit = {
+  let ea = hl_ea_imm_scaled(read_reg5(SrcR), simm22, 3);
+  let v : bits(64) = read_reg5(SrcD);
+  mem_store64_le(ea, v)
+}
+function exec_hl_sdi_u(SrcD : bits(5), SrcR : bits(5), simm22 : bits(22)) -> unit = {
+  let ea = hl_ea_imm_unscaled(read_reg5(SrcR), simm22);
+  let v : bits(64) = read_reg5(SrcD);
+  mem_store64_le(ea, v)
+}
+
+// ---- HL stores: immediate PR/PO (simm17) with writeback (Rd gets updated base) ----
+function exec_hl_sbi_pr(RegDst : bits(5), SrcD : bits(5), SrcR : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcR);
+  let ea = hl_ea_imm17_scaled(base, simm17, 0);
+  let v : bits(8) = read_reg5(SrcD)[7..0];
+  write_mem8(ea, v);
+  write_regdst(RegDst, ea)
+}
+function exec_hl_sbi_po(RegDst : bits(5), SrcD : bits(5), SrcR : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcR);
+  let v : bits(8) = read_reg5(SrcD)[7..0];
+  write_mem8(base, v);
+  let ea = hl_ea_imm17_scaled(base, simm17, 0);
+  write_regdst(RegDst, ea)
+}
+function exec_hl_shi_pr(RegDst : bits(5), SrcD : bits(5), SrcR : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcR);
+  let ea = hl_ea_imm17_scaled(base, simm17, 1);
+  let v : bits(16) = read_reg5(SrcD)[15..0];
+  mem_store16_le(ea, v);
+  write_regdst(RegDst, ea)
+}
+function exec_hl_shi_po(RegDst : bits(5), SrcD : bits(5), SrcR : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcR);
+  let v : bits(16) = read_reg5(SrcD)[15..0];
+  mem_store16_le(base, v);
+  let ea = hl_ea_imm17_scaled(base, simm17, 1);
+  write_regdst(RegDst, ea)
+}
+function exec_hl_shi_upr(RegDst : bits(5), SrcD : bits(5), SrcR : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcR);
+  let ea = hl_ea_imm17_unscaled(base, simm17);
+  let v : bits(16) = read_reg5(SrcD)[15..0];
+  mem_store16_le(ea, v);
+  write_regdst(RegDst, ea)
+}
+function exec_hl_shi_upo(RegDst : bits(5), SrcD : bits(5), SrcR : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcR);
+  let v : bits(16) = read_reg5(SrcD)[15..0];
+  mem_store16_le(base, v);
+  let ea = hl_ea_imm17_unscaled(base, simm17);
+  write_regdst(RegDst, ea)
+}
+function exec_hl_swi_pr(RegDst : bits(5), SrcD : bits(5), SrcR : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcR);
+  let ea = hl_ea_imm17_scaled(base, simm17, 2);
+  let v : bits(32) = read_reg5(SrcD)[31..0];
+  mem_store32_le(ea, v);
+  write_regdst(RegDst, ea)
+}
+function exec_hl_swi_po(RegDst : bits(5), SrcD : bits(5), SrcR : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcR);
+  let v : bits(32) = read_reg5(SrcD)[31..0];
+  mem_store32_le(base, v);
+  let ea = hl_ea_imm17_scaled(base, simm17, 2);
+  write_regdst(RegDst, ea)
+}
+function exec_hl_swi_upr(RegDst : bits(5), SrcD : bits(5), SrcR : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcR);
+  let ea = hl_ea_imm17_unscaled(base, simm17);
+  let v : bits(32) = read_reg5(SrcD)[31..0];
+  mem_store32_le(ea, v);
+  write_regdst(RegDst, ea)
+}
+function exec_hl_swi_upo(RegDst : bits(5), SrcD : bits(5), SrcR : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcR);
+  let v : bits(32) = read_reg5(SrcD)[31..0];
+  mem_store32_le(base, v);
+  let ea = hl_ea_imm17_unscaled(base, simm17);
+  write_regdst(RegDst, ea)
+}
+function exec_hl_sdi_pr(RegDst : bits(5), SrcD : bits(5), SrcR : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcR);
+  let ea = hl_ea_imm17_scaled(base, simm17, 3);
+  let v : bits(64) = read_reg5(SrcD);
+  mem_store64_le(ea, v);
+  write_regdst(RegDst, ea)
+}
+function exec_hl_sdi_po(RegDst : bits(5), SrcD : bits(5), SrcR : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcR);
+  let v : bits(64) = read_reg5(SrcD);
+  mem_store64_le(base, v);
+  let ea = hl_ea_imm17_scaled(base, simm17, 3);
+  write_regdst(RegDst, ea)
+}
+function exec_hl_sdi_upr(RegDst : bits(5), SrcD : bits(5), SrcR : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcR);
+  let ea = hl_ea_imm17_unscaled(base, simm17);
+  let v : bits(64) = read_reg5(SrcD);
+  mem_store64_le(ea, v);
+  write_regdst(RegDst, ea)
+}
+function exec_hl_sdi_upo(RegDst : bits(5), SrcD : bits(5), SrcR : bits(5), simm17 : bits(17)) -> unit = {
+  let base = read_reg5(SrcR);
+  let v : bits(64) = read_reg5(SrcD);
+  mem_store64_le(base, v);
+  let ea = hl_ea_imm17_unscaled(base, simm17);
+  write_regdst(RegDst, ea)
+}
+
+// ---- HL store pair: immediate simm17 ----
+function exec_hl_sbip(SrcD0 : bits(5), SrcD1 : bits(5), SrcR : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_imm17_scaled(read_reg5(SrcR), simm17, 0);
+  let v0 : bits(8) = read_reg5(SrcD0)[7..0];
+  let v1 : bits(8) = read_reg5(SrcD1)[7..0];
+  write_mem8(ea, v0);
+  write_mem8(ea + 0x1, v1)
+}
+function exec_hl_ship(SrcD0 : bits(5), SrcD1 : bits(5), SrcR : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_imm17_scaled(read_reg5(SrcR), simm17, 1);
+  let v0 : bits(16) = read_reg5(SrcD0)[15..0];
+  let v1 : bits(16) = read_reg5(SrcD1)[15..0];
+  mem_store16_le(ea, v0);
+  mem_store16_le(ea + 0x2, v1)
+}
+function exec_hl_ship_u(SrcD0 : bits(5), SrcD1 : bits(5), SrcR : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_imm17_unscaled(read_reg5(SrcR), simm17);
+  let v0 : bits(16) = read_reg5(SrcD0)[15..0];
+  let v1 : bits(16) = read_reg5(SrcD1)[15..0];
+  mem_store16_le(ea, v0);
+  mem_store16_le(ea + 0x2, v1)
+}
+function exec_hl_swip(SrcD0 : bits(5), SrcD1 : bits(5), SrcR : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_imm17_scaled(read_reg5(SrcR), simm17, 2);
+  let v0 : bits(32) = read_reg5(SrcD0)[31..0];
+  let v1 : bits(32) = read_reg5(SrcD1)[31..0];
+  mem_store32_le(ea, v0);
+  mem_store32_le(ea + 0x4, v1)
+}
+function exec_hl_swip_u(SrcD0 : bits(5), SrcD1 : bits(5), SrcR : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_imm17_unscaled(read_reg5(SrcR), simm17);
+  let v0 : bits(32) = read_reg5(SrcD0)[31..0];
+  let v1 : bits(32) = read_reg5(SrcD1)[31..0];
+  mem_store32_le(ea, v0);
+  mem_store32_le(ea + 0x4, v1)
+}
+function exec_hl_sdip(SrcD0 : bits(5), SrcD1 : bits(5), SrcR : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_imm17_scaled(read_reg5(SrcR), simm17, 3);
+  let v0 : bits(64) = read_reg5(SrcD0);
+  let v1 : bits(64) = read_reg5(SrcD1);
+  mem_store64_le(ea, v0);
+  mem_store64_le(ea + 0x8, v1)
+}
+function exec_hl_sdip_u(SrcD0 : bits(5), SrcD1 : bits(5), SrcR : bits(5), simm17 : bits(17)) -> unit = {
+  let ea = hl_ea_imm17_unscaled(read_reg5(SrcR), simm17);
+  let v0 : bits(64) = read_reg5(SrcD0);
+  let v1 : bits(64) = read_reg5(SrcD1);
+  mem_store64_le(ea, v0);
+  mem_store64_le(ea + 0x8, v1)
+}
+
+// ---- HL store pair: reg+reg addressing ----
+function exec_hl_sbp(SrcD0 : bits(5), SrcD1 : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let ea = read_reg5(SrcL) + hl_off_scale(SrcR, SrcRType, 0);
+  let v0 : bits(8) = read_reg5(SrcD0)[7..0];
+  let v1 : bits(8) = read_reg5(SrcD1)[7..0];
+  write_mem8(ea, v0);
+  write_mem8(ea + 0x1, v1)
+}
+function exec_hl_shp(SrcD0 : bits(5), SrcD1 : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let ea = read_reg5(SrcL) + hl_off_scale(SrcR, SrcRType, 1);
+  let v0 : bits(16) = read_reg5(SrcD0)[15..0];
+  let v1 : bits(16) = read_reg5(SrcD1)[15..0];
+  mem_store16_le(ea, v0);
+  mem_store16_le(ea + 0x2, v1)
+}
+function exec_hl_shp_u(SrcD0 : bits(5), SrcD1 : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let ea = read_reg5(SrcL) + apply_srcrtype_arith64(SrcRType, read_reg5(SrcR));
+  let v0 : bits(16) = read_reg5(SrcD0)[15..0];
+  let v1 : bits(16) = read_reg5(SrcD1)[15..0];
+  mem_store16_le(ea, v0);
+  mem_store16_le(ea + 0x2, v1)
+}
+function exec_hl_swp(SrcD0 : bits(5), SrcD1 : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let ea = read_reg5(SrcL) + hl_off_scale(SrcR, SrcRType, 2);
+  let v0 : bits(32) = read_reg5(SrcD0)[31..0];
+  let v1 : bits(32) = read_reg5(SrcD1)[31..0];
+  mem_store32_le(ea, v0);
+  mem_store32_le(ea + 0x4, v1)
+}
+function exec_hl_swp_u(SrcD0 : bits(5), SrcD1 : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let ea = read_reg5(SrcL) + apply_srcrtype_arith64(SrcRType, read_reg5(SrcR));
+  let v0 : bits(32) = read_reg5(SrcD0)[31..0];
+  let v1 : bits(32) = read_reg5(SrcD1)[31..0];
+  mem_store32_le(ea, v0);
+  mem_store32_le(ea + 0x4, v1)
+}
+function exec_hl_sdp(SrcD0 : bits(5), SrcD1 : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let ea = read_reg5(SrcL) + hl_off_scale(SrcR, SrcRType, 3);
+  let v0 : bits(64) = read_reg5(SrcD0);
+  let v1 : bits(64) = read_reg5(SrcD1);
+  mem_store64_le(ea, v0);
+  mem_store64_le(ea + 0x8, v1)
+}
+function exec_hl_sdp_u(SrcD0 : bits(5), SrcD1 : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let ea = read_reg5(SrcL) + apply_srcrtype_arith64(SrcRType, read_reg5(SrcR));
+  let v0 : bits(64) = read_reg5(SrcD0);
+  let v1 : bits(64) = read_reg5(SrcD1);
+  mem_store64_le(ea, v0);
+  mem_store64_le(ea + 0x8, v1)
+}
