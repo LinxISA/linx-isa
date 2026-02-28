@@ -39,6 +39,24 @@ SRAW
 C.SLLI
 C.SRLI
 
+# Compressed ALU/unary/move (C16)
+C.ADD
+C.ADDI
+C.SUB
+C.AND
+C.OR
+C.MOVI
+C.MOVR
+C.CMP.EQI
+C.CMP.NEI
+C.EBREAK
+C.SEXT.B
+C.SEXT.H
+C.SEXT.W
+C.ZEXT.B
+C.ZEXT.H
+C.ZEXT.W
+
 # Bit operations (bitfield wrap-around)
 BXS
 BXU
