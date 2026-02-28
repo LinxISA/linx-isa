@@ -29,26 +29,32 @@
   Done means: markdown timestamp matches report timestamp.
   Status: ✅ PASS (2026-02-25) - timestamp check passes: `latest.json` and `GATE_STATUS.md` both report `2026-02-25 12:41:30Z`.
 
-- [ ] ID: INT-007 Enforce explicit agent module ownership and canonical skill names.
+- [x] ID: INT-007 Enforce explicit agent module ownership and canonical skill names.
   Command: `python3 tools/bringup/check_multi_agent_gates.py --strict-always --mode static`
   Done means: every agent declares `modules[]` + `skill`, and `skill` is in canonical list.
+  Status: ✅ PASS (2026-02-28) - static validator passes in run `2026-02-28-r1-phase-next-skills` (log: `docs/bringup/gates/logs/2026-02-28-r1-phase-next-skills/pin/int_007_008_check_multi_agent.log`).
 
-- [ ] ID: INT-008 Allow multi-module ownership only for approved cross-module agents.
+- [x] ID: INT-008 Allow multi-module ownership only for approved cross-module agents.
   Command: `python3 tools/bringup/check_multi_agent_gates.py --strict-always --mode static`
   Done means: agents with multiple modules are explicitly listed in `cross_module_agents`.
+  Status: ✅ PASS (2026-02-28) - same static validation confirms only approved cross-module agents carry multi-module scope (log: `docs/bringup/gates/logs/2026-02-28-r1-phase-next-skills/pin/int_007_008_check_multi_agent.log`).
 
-- [ ] ID: INT-009 Sync installed skills from canonical map and prune deprecated aliases.
+- [x] ID: INT-009 Sync installed skills from canonical map and prune deprecated aliases.
   Command: `bash skills/linx-skills/scripts/install_canonical_skills.sh`
   Done means: local `$CODEX_HOME/skills` keeps only canonical `linx-*` skills (plus protected utility skills).
+  Status: ✅ PASS (2026-02-28) - canonical installer sync completed in run `2026-02-28-r1-phase-next-skills` (log: `docs/bringup/gates/logs/2026-02-28-r1-phase-next-skills/pin/int_009_install_canonical_skills.log`).
 
-- [ ] ID: INT-010 Pull latest skills submodule before each bring-up cycle.
+- [x] ID: INT-010 Pull latest skills submodule before each bring-up cycle.
   Command: `bash tools/bringup/sync_canonical_skills.sh --pull-latest`
   Done means: `skills/linx-skills` is on latest `origin/main` and installed into Codex skills.
+  Status: ✅ PASS (2026-02-28) - sync script pulled `skills/linx-skills` to `2f9341826d636ab5a429bf6df572bce1aaeb9eed` and emitted summary JSON (log: `docs/bringup/gates/logs/2026-02-28-r1-phase-next-skills/pin/int_010_sync_canonical_skills.log`, artifact: `docs/bringup/agent_runs/skills_evolution/latest.json`).
 
-- [ ] ID: INT-011 Summarize evolved skills after bring-up work.
+- [x] ID: INT-011 Summarize evolved skills after bring-up work.
   Command: `bash tools/bringup/finalize_skill_updates.sh --base origin/main`
   Done means: summary markdown exists in `docs/bringup/agent_runs/skills_evolution/` with touched skills + SHA + rationale.
+  Status: ✅ PASS (2026-02-28) - finalize script produced summary with explicit no-change decision for this run (log: `docs/bringup/gates/logs/2026-02-28-r1-phase-next-skills/pin/int_011_finalize_skill_updates.log`, artifact: `docs/bringup/agent_runs/skills_evolution/summary-2026-02-28-r1-phase-next-skills.md`).
 
-- [ ] ID: INT-012 Guard against destructive skill churn before skill commit.
+- [x] ID: INT-012 Guard against destructive skill churn before skill commit.
   Command: `python3 skills/linx-skills/scripts/check_skill_change_scope.py --repo-root skills/linx-skills --base origin/main`
   Done means: change scope guard passes and only intended skill directories changed.
+  Status: ✅ PASS (2026-02-28) - scope guard reports `changed=0, removed=0` for run `2026-02-28-r1-phase-next-skills` (log: `docs/bringup/gates/logs/2026-02-28-r1-phase-next-skills/pin/int_012_skill_scope_guard.log`).
