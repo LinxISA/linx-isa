@@ -124,6 +124,107 @@ def _validate_static(
             enforcement=policy.get("enforcement"),
         )
 
+    agent_scope_policy = manifest.get("agent_scope_policy")
+    if agent_scope_policy is None:
+        agent_scope_policy = {}
+    elif not isinstance(agent_scope_policy, dict):
+        _err(errors, "E_AGENT_SCOPE_POLICY", "manifest.agent_scope_policy must be an object")
+        agent_scope_policy = {}
+
+    explicit_modules_required = bool(agent_scope_policy.get("explicit_modules_required", False))
+    allow_multi_module_agents = bool(agent_scope_policy.get("allow_multi_module_agents", False))
+
+    max_modules_raw = agent_scope_policy.get("max_modules_per_agent", 1)
+    if not isinstance(max_modules_raw, int) or max_modules_raw < 1:
+        _err(
+            errors,
+            "E_SCOPE_MAX_MODULES",
+            "agent_scope_policy.max_modules_per_agent must be an integer >= 1",
+            value=max_modules_raw,
+        )
+        max_modules_per_agent = 1
+    else:
+        max_modules_per_agent = max_modules_raw
+
+    allowed_modules_raw = agent_scope_policy.get("allowed_modules", [])
+    allowed_modules: set[str] = set()
+    if not isinstance(allowed_modules_raw, list):
+        _err(errors, "E_SCOPE_ALLOWED_MODULES", "agent_scope_policy.allowed_modules must be a list")
+    else:
+        for module in allowed_modules_raw:
+            if not isinstance(module, str) or not module.strip():
+                _err(
+                    errors,
+                    "E_SCOPE_ALLOWED_MODULE_VALUE",
+                    "allowed module must be non-empty string",
+                    module=module,
+                )
+                continue
+            allowed_modules.add(module.strip())
+
+    canonical_skills_raw = agent_scope_policy.get("canonical_skill_names", [])
+    canonical_skills: set[str] = set()
+    if not isinstance(canonical_skills_raw, list):
+        _err(errors, "E_SCOPE_CANONICAL_SKILLS", "agent_scope_policy.canonical_skill_names must be a list")
+    else:
+        for skill in canonical_skills_raw:
+            if not isinstance(skill, str) or not skill.strip():
+                _err(
+                    errors,
+                    "E_SCOPE_CANONICAL_SKILL_VALUE",
+                    "canonical skill name must be non-empty string",
+                    skill=skill,
+                )
+                continue
+            canonical_skills.add(skill.strip())
+
+    cross_module_agents_raw = agent_scope_policy.get("cross_module_agents", [])
+    cross_module_agents: set[str] = set()
+    if not isinstance(cross_module_agents_raw, list):
+        _err(errors, "E_SCOPE_CROSS_MODULE_AGENTS", "agent_scope_policy.cross_module_agents must be a list")
+    else:
+        for agent in cross_module_agents_raw:
+            if not isinstance(agent, str) or not agent.strip():
+                _err(
+                    errors,
+                    "E_SCOPE_CROSS_MODULE_AGENT_VALUE",
+                    "cross-module agent id must be non-empty string",
+                    agent=agent,
+                )
+                continue
+            cross_module_agents.add(agent.strip())
+
+    domain_module_map_raw = agent_scope_policy.get("domain_module_map", {})
+    domain_module_map: dict[str, set[str]] = {}
+    if not isinstance(domain_module_map_raw, dict):
+        _err(errors, "E_SCOPE_DOMAIN_MAP", "agent_scope_policy.domain_module_map must be an object")
+    else:
+        for domain, modules in domain_module_map_raw.items():
+            if not isinstance(domain, str) or not domain.strip():
+                _err(errors, "E_SCOPE_DOMAIN_KEY", "domain map key must be a non-empty string", domain=domain)
+                continue
+            if not isinstance(modules, list) or not modules:
+                _err(
+                    errors,
+                    "E_SCOPE_DOMAIN_MODULES",
+                    "domain map value must be non-empty list",
+                    domain=domain,
+                )
+                continue
+            module_set: set[str] = set()
+            for module in modules:
+                if not isinstance(module, str) or not module.strip():
+                    _err(
+                        errors,
+                        "E_SCOPE_DOMAIN_MODULE_VALUE",
+                        "domain map module must be non-empty string",
+                        domain=domain,
+                        module=module,
+                    )
+                    continue
+                module_set.add(module.strip())
+            domain_module_map[domain.strip()] = module_set
+
     agents = manifest.get("agents")
     if not isinstance(agents, dict) or not agents:
         _err(errors, "E_AGENTS", "manifest.agents must be a non-empty object")
@@ -231,6 +332,8 @@ def _validate_static(
             )
 
     agent_checklist: dict[str, str] = {}
+    agent_modules: dict[str, set[str]] = {}
+    multi_module_agent_count = 0
     for agent_id, meta in agents.items():
         if not isinstance(agent_id, str) or not agent_id.strip():
             _err(errors, "E_AGENT_KEY", "agent key must be a non-empty string", agent=agent_id)
@@ -256,12 +359,117 @@ def _validate_static(
                 checklist=checklist_norm,
             )
 
+        modules = meta.get("modules")
+        modules_norm: list[str] = []
+        if explicit_modules_required or modules is not None:
+            if not isinstance(modules, list) or not modules:
+                _err(
+                    errors,
+                    "E_AGENT_MODULES",
+                    "agent.modules must be a non-empty list when explicit_modules_required is enabled",
+                    agent=agent_id,
+                )
+            else:
+                for module in modules:
+                    if not isinstance(module, str) or not module.strip():
+                        _err(
+                            errors,
+                            "E_AGENT_MODULE_VALUE",
+                            "agent module must be non-empty string",
+                            agent=agent_id,
+                            module=module,
+                        )
+                        continue
+                    module_norm = module.strip()
+                    modules_norm.append(module_norm)
+                    if allowed_modules and module_norm not in allowed_modules:
+                        _err(
+                            errors,
+                            "E_AGENT_MODULE_UNKNOWN",
+                            "agent module must be listed in agent_scope_policy.allowed_modules",
+                            agent=agent_id,
+                            module=module_norm,
+                        )
+
+        if modules_norm:
+            module_set = set(modules_norm)
+            if len(module_set) != len(modules_norm):
+                _err(
+                    errors,
+                    "E_AGENT_MODULE_DUP",
+                    "agent.modules must not contain duplicates",
+                    agent=agent_id,
+                )
+            agent_modules[agent_id] = module_set
+
+            if len(module_set) > max_modules_per_agent:
+                _err(
+                    errors,
+                    "E_AGENT_MODULE_COUNT",
+                    "agent.modules exceeds max_modules_per_agent",
+                    agent=agent_id,
+                    modules=sorted(module_set),
+                    max_modules=max_modules_per_agent,
+                )
+
+            if len(module_set) > 1:
+                multi_module_agent_count += 1
+                if not allow_multi_module_agents:
+                    _err(
+                        errors,
+                        "E_AGENT_MULTI_MODULE_DISABLED",
+                        "agent has multiple modules but allow_multi_module_agents is false",
+                        agent=agent_id,
+                        modules=sorted(module_set),
+                    )
+                elif agent_id not in cross_module_agents:
+                    _err(
+                        errors,
+                        "E_AGENT_MULTI_MODULE_UNAUTHORIZED",
+                        "multi-module agent must be listed in cross_module_agents",
+                        agent=agent_id,
+                        modules=sorted(module_set),
+                    )
+
+        skill = meta.get("skill")
+        if canonical_skills or skill is not None:
+            if not isinstance(skill, str) or not skill.strip():
+                _err(errors, "E_AGENT_SKILL", "agent.skill must be non-empty", agent=agent_id)
+            else:
+                skill_norm = skill.strip()
+                if re.match(r"^linx-[a-z0-9][a-z0-9-]*$", skill_norm) is None:
+                    _err(
+                        errors,
+                        "E_AGENT_SKILL_FORMAT",
+                        "agent.skill must follow canonical linx-<module> naming",
+                        agent=agent_id,
+                        skill=skill_norm,
+                    )
+                if canonical_skills and skill_norm not in canonical_skills:
+                    _err(
+                        errors,
+                        "E_AGENT_SKILL_UNKNOWN",
+                        "agent.skill must be present in canonical_skill_names",
+                        agent=agent_id,
+                        skill=skill_norm,
+                    )
+
+    for agent_id in sorted(cross_module_agents):
+        if agent_id not in agents:
+            _err(
+                errors,
+                "E_SCOPE_CROSS_MODULE_AGENT_UNKNOWN",
+                "cross_module_agents entry is not a known agent",
+                agent=agent_id,
+            )
+
     assignments = manifest.get("gate_assignments")
     if not isinstance(assignments, list) or not assignments:
         _err(errors, "E_ASSIGNMENTS", "manifest.gate_assignments must be a non-empty list")
         assignments = []
 
     assignment_map: dict[str, dict[str, Any]] = {}
+    assignment_domains: set[str] = set()
     for idx, item in enumerate(assignments):
         if not isinstance(item, dict):
             _err(errors, "E_ASSIGNMENT_TYPE", "gate assignment must be an object", index=idx)
@@ -317,6 +525,32 @@ def _validate_static(
             agent_checklist_name = ""
             agent_id_set = set()
 
+        domain = gate_key.split("::", 1)[0].strip()
+        assignment_domains.add(domain)
+        scoped_modules = domain_module_map.get(domain)
+        if scoped_modules is not None:
+            modules_for_agent = agent_modules.get(agent, set())
+            if not modules_for_agent:
+                _err(
+                    errors,
+                    "E_ASSIGNMENT_AGENT_MODULES_MISSING",
+                    "assignment agent is missing modules required by domain scope policy",
+                    gate_key=gate_key,
+                    agent=agent,
+                    domain=domain,
+                )
+            elif modules_for_agent.isdisjoint(scoped_modules):
+                _err(
+                    errors,
+                    "E_ASSIGNMENT_AGENT_MODULE_SCOPE",
+                    "assignment agent modules do not match domain scope",
+                    gate_key=gate_key,
+                    agent=agent,
+                    domain=domain,
+                    agent_modules=sorted(modules_for_agent),
+                    expected_modules=sorted(scoped_modules),
+                )
+
         for cid in checklist_ids:
             if not isinstance(cid, str) or not cid.strip():
                 _err(
@@ -348,6 +582,16 @@ def _validate_static(
                 )
 
         assignment_map[gate_key] = item
+
+    if domain_module_map:
+        missing_domains = sorted(assignment_domains - set(domain_module_map.keys()))
+        if missing_domains:
+            _err(
+                errors,
+                "E_SCOPE_DOMAIN_MAP_MISSING",
+                "domain_module_map must cover all assignment domains",
+                missing_domains=missing_domains,
+            )
 
     waivers_version = waivers_doc.get("version")
     if waivers_version != 1:
@@ -499,12 +743,17 @@ def _validate_static(
         "declared_checklists": len(declared_path_ids),
         "declared_checklist_ids": len(declared_ids_global),
         "waivers": len(waivers),
+        "agent_scope_explicit_modules_required": explicit_modules_required,
+        "agent_scope_allow_multi_module_agents": allow_multi_module_agents,
+        "agent_scope_cross_module_agents": len(cross_module_agents),
+        "agent_scope_multi_module_agents": multi_module_agent_count,
     }
 
     return errors, warnings, {
         "agents": agents,
         "assignments": assignment_map,
         "waivers": waivers,
+        "agent_scope_policy": agent_scope_policy,
         "stats": stats,
     }
 
