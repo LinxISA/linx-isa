@@ -37,6 +37,12 @@ function set_commit_argument(v : bits(64)) -> unit = {
   unimplemented("set_commit_argument")
 }
 
+// Block next-target selector (BARG.TGT) update (stub).
+// SETC.TGT / C.SETC.TGT select the register-based target for RET/IND-class transitions.
+function set_commit_target_reg(r : bits(5)) -> unit = {
+  unimplemented("set_commit_target_reg")
+}
+
 function read_commit_argument() -> bits(64) = {
   // Legacy/staged name: commit-argument / block-control predicate domain.
   unimplemented("read_commit_argument");
