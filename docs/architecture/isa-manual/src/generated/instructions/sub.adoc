@@ -7,10 +7,14 @@
 
 *Syntax:* sub SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}
 
-*Description:* Subtract source register or immediate from register.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_sub.svg[SUB encoding,width=800]
 
-*Group:* ALU
+*Uop-Class:* ALU
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"source": "group_rule", "uop_kind": "ALU"}`

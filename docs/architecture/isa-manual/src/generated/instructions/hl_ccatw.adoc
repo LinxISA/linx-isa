@@ -7,10 +7,14 @@
 
 *Syntax:* hl.ccatw SrcL, SrcR, shamt, ->Dst0, Dst1
 
-*Description:* Long immediate variant supporting extended immediate range.
+*Description:* Long (48-bit) instruction encoding.
 
 *Encoding:*
 
 image::../generated/encodings/enc_hl_ccatw.svg[HL.CCATW encoding,width=800]
 
-*Group:* BARREL_CCAT
+*Uop-Class:* ALU
+
+*Compression:* HL48 (len=48)
+
+*Uop-Class payload:* `{"alu_kind": "BARREL_CCAT", "note": "User confirmed A; double-output implemented as 2 ALU uops (macro_uid bound)", "source": "group_rule", "split": ["ALU", "ALU"], "uop_kind": "ALU"}`

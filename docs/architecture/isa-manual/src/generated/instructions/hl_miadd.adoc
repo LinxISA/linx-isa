@@ -7,10 +7,14 @@
 
 *Syntax:* hl.miadd SrcL, SrcR, uimm, ->{t, u, Rd}
 
-*Description:* Multiply-Add Indexed: multiplies and adds with indexed operation.
+*Description:* Long (48-bit) instruction encoding.
 
 *Encoding:*
 
 image::../generated/encodings/enc_hl_miadd.svg[HL.MIADD encoding,width=800]
 
-*Group:* RSV/DEFAULT
+*Uop-Class:* ALU
+
+*Compression:* HL48 (len=48)
+
+*Uop-Class payload:* `{"note": "override: RSV category removed; HL.BFI/HL.MIADD/HL.MISUB are ALU", "source": "override", "uop_kind": "ALU"}`

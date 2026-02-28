@@ -7,10 +7,14 @@
 
 *Syntax:* v.fexp SrcL.<T>, ->Dst.<W>
 
-*Description:* Vector Floating-point Exponential.
+*Description:* Vector instruction (VEC engine).
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_fexp_part1.svg[V.FEXP encoding,width=800]
+image::../generated/encodings/enc_v_fexp.svg[V.FEXP encoding,width=800]
 
-*Group:* VEC/VEC_FP
+*Uop-Class:* VEC
+
+*Compression:* L64 (len=64)
+
+*Uop-Class payload:* `{"note": "vector-prefix override: dispatch to VEC (subkind=VEC)", "source": "override", "uop_kind": "VEC", "vec_kind": "VEC_FP", "vec_subkind": "VEC"}`

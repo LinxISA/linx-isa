@@ -7,10 +7,14 @@
 
 *Syntax:* lhu.pcr [symbol], ->{t, u, Rd}
 
-*Description:* Load unsigned 16-bit halfword from memory.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_lhu_pcr.svg[LHU.PCR encoding,width=800]
 
-*Group:* LDA
+*Uop-Class:* LDA
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"agu_kind": "LDA", "note": "User confirmed A", "source": "group_rule", "uop_kind": "AGU"}`

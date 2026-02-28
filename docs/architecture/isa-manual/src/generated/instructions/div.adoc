@@ -7,10 +7,14 @@
 
 *Syntax:* div SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* Divide registers. Unsigned variant for DIVU.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_div.svg[DIV encoding,width=800]
 
-*Group:* ALU_MULTI_CYCLE
+*Uop-Class:* ALU
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"alu_kind": "ALU_MULTI_CYCLE", "source": "group_rule", "uop_kind": "ALU"}`

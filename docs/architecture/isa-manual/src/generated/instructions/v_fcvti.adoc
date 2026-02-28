@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_fcvti]]
+==== V.FCVTI
+
+*Syntax:* v.fcvti.{st2dt} SrcL.<T>, ->Dst.<W>
+
+*Description:* Vector instruction (VEC engine).
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_fcvti.svg[V.FCVTI encoding,width=800]
+
+*Uop-Class:* VEC
+
+*Compression:* L64 (len=64)
+
+*Uop-Class payload:* `{"note": "vector-prefix override: dispatch to VEC (subkind=FSU)", "source": "override", "uop_kind": "VEC", "vec_subkind": "FSU"}`

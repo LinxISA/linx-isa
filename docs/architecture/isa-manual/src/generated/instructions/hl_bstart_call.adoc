@@ -7,10 +7,14 @@
 
 *Syntax:* HL.BSTART.CALL, <br_label>, <rt_label>, -> ra
 
-*Description:* Block Start with CALL: marks entry point for a function/block that may be called.
+*Description:* Long (48-bit) instruction encoding.
 
 *Encoding:*
 
 image::../generated/encodings/enc_hl_bstart_call.svg[HL.BSTART CALL encoding,width=800]
 
-*Group:* BBD/BSTART
+*Uop-Class:* BBD
+
+*Compression:* HL48 (len=48)
+
+*Uop-Class payload:* `{"bbd_kind": "BSTART", "note": "User confirmed A", "source": "group_rule", "uop_kind": "BBD"}`

@@ -5,12 +5,16 @@
 [[inst_sd_u]]
 ==== SD.U
 
-*Syntax:* sd.u SrcD, [SrcL, SrcR<{.sw,.uw}>]
+*Syntax:* sd.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]
 
-*Description:* Store 8-bit value to memory.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_sd_u.svg[SD.U encoding,width=800]
 
-*Group:* STA/BASE_REG
+*Uop-Class:* STA/BASE_REG
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"addr_mode": "BASE_REG", "agu_kind": "STA", "note": "User confirmed all stores are AGU/STA + STD", "source": "group_rule", "split": ["AGU", "STD"], "uop_kind": "AGU"}`

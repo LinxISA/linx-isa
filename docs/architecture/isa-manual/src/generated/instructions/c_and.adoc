@@ -13,4 +13,8 @@
 
 image::../generated/encodings/enc_c_and.svg[C.AND encoding,width=800]
 
-*Group:* ALU
+*Uop-Class:* ALU
+
+*Compression:* C16 (len=16)
+
+*Uop-Class payload:* `{"source": "group_rule", "uop_kind": "ALU"}`

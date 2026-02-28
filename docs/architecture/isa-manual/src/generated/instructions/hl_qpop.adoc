@@ -7,10 +7,14 @@
 
 *Syntax:* hl.qpop.{e,r,er} SrcL, ->Dst0, Dst1
 
-*Description:* Queue Management: pop from queue.
+*Description:* Long (48-bit) instruction encoding.
 
 *Encoding:*
 
 image::../generated/encodings/enc_hl_qpop.svg[HL.QPOP encoding,width=800]
 
-*Group:* CMD/Q_POP
+*Uop-Class:* CMD
+
+*Compression:* HL48 (len=48)
+
+*Uop-Class payload:* `{"cmd_kind": "Q_POP", "note": "general queue manager", "source": "override", "uop_kind": "CMD"}`

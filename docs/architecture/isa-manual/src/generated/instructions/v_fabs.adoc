@@ -7,10 +7,14 @@
 
 *Syntax:* v.fabs SrcL.<T>, ->Dst.<W>
 
-*Description:* Vector Floating-point Absolute Value.
+*Description:* Vector instruction (VEC engine).
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_fabs_part1.svg[V.FABS encoding,width=800]
+image::../generated/encodings/enc_v_fabs.svg[V.FABS encoding,width=800]
 
-*Group:* VEC/VEC_FP
+*Uop-Class:* VEC
+
+*Compression:* L64 (len=64)
+
+*Uop-Class payload:* `{"note": "vector-prefix override: dispatch to VEC (subkind=VEC)", "source": "override", "uop_kind": "VEC", "vec_kind": "VEC_FP", "vec_subkind": "VEC"}`

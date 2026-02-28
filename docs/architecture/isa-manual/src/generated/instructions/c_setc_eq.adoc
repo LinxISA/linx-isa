@@ -7,10 +7,14 @@
 
 *Syntax:* c.setc.eq srcL, srcR
 
-*Description:* Compressed Set Condition.
+*Description:* Compressed instruction variant (16-bit encoding).
 
 *Encoding:*
 
 image::../generated/encodings/enc_c_setc_eq.svg[C.SETC.EQ encoding,width=800]
 
-*Group:* BRU/SETC
+*Uop-Class:* BRU
+
+*Compression:* C16 (len=16)
+
+*Uop-Class payload:* `{"bru_kind": "SETC", "note": "User confirmed A", "source": "group_rule", "uop_kind": "BRU"}`

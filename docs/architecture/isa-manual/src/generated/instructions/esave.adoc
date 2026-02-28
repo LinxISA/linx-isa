@@ -7,10 +7,14 @@
 
 *Syntax:* ESAVE [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]
 
-*Description:* Exit Context: restore context on block exit.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_esave.svg[ESAVE encoding,width=800]
 
-*Group:* CMD/BLOCK_SPLIT
+*Uop-Class:* CMD
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "User corrected to A", "source": "group_rule", "uop_kind": "CMD"}`

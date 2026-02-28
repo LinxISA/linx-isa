@@ -7,10 +7,14 @@
 
 *Syntax:* hl.cash<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}
 
-*Description:* Compare and Swap: atomic 16-bit compare-and-swap operation.
+*Description:* Long (48-bit) instruction encoding.
 
 *Encoding:*
 
 image::../generated/encodings/enc_hl_cash.svg[HL.CASH encoding,width=800]
 
-*Group:* AMO/CAS
+*Uop-Class:* AMO
+
+*Compression:* HL48 (len=48)
+
+*Uop-Class payload:* `{"amo_kind": "CAS", "note": "User confirmed A", "source": "group_rule", "uop_kind": "AMO"}`

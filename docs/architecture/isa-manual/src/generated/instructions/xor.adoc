@@ -7,10 +7,14 @@
 
 *Syntax:* xor SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}
 
-*Description:* Bitwise XOR (exclusive OR) operation.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_xor.svg[XOR encoding,width=800]
 
-*Group:* ALU
+*Uop-Class:* ALU
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"source": "group_rule", "uop_kind": "ALU"}`

@@ -7,10 +7,14 @@
 
 *Syntax:* oriw SrcL, simm, ->{t, u, Rd}
 
-*Description:* ALU operation.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_oriw.svg[ORIW encoding,width=800]
 
-*Group:* ALU
+*Uop-Class:* ALU
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"source": "group_rule", "uop_kind": "ALU"}`

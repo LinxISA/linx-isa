@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_lhui_u]]
+==== V.LHUI.U
+
+*Syntax:* v.lhui.u<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>
+
+*Description:* Vector instruction (VEC engine).
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_lhui_u.svg[V.LHUI.U encoding,width=800]
+
+*Uop-Class:* VEC
+
+*Compression:* L64 (len=64)
+
+*Uop-Class payload:* `{"addr_mode": "UNSCALED", "agu_kind": "LDA", "note": "vector-prefix override: dispatch to VEC (subkind=AGU)", "source": "override", "uop_kind": "VEC", "vec_subkind": "AGU"}`

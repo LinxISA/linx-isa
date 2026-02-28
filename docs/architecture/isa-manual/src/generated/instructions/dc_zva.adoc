@@ -7,10 +7,14 @@
 
 *Syntax:* dc.zva SrcL
 
-*Description:* Data Cache maintenance: zero by virtual address
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_dc_zva.svg[DC.ZVA encoding,width=800]
 
-*Group:* SYS/CACHE_MAINT
+*Uop-Class:* SYS
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"note": "User confirmed A", "source": "group_rule", "sys_kind": "CACHE_MAINT", "uop_kind": "SYS"}`

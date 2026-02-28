@@ -7,10 +7,14 @@
 
 *Syntax:* lw.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}
 
-*Description:* Atomic And operation: memory value is atomically anded with register.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_lw_and.svg[LW.AND encoding,width=800]
 
-*Group:* AMO/AMO
+*Uop-Class:* AMO
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"note": "User confirmed A: atomic ops execute in AMO class", "source": "group_rule", "uop_kind": "AMO"}`

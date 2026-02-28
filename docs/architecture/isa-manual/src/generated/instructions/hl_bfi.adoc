@@ -7,10 +7,14 @@
 
 *Syntax:* hl.bfi SrcL, SrcR, M, N, ->{t, u, Rd}
 
-*Description:* Bit Field Insert: inserts a bit field from source into destination.
+*Description:* Long (48-bit) instruction encoding.
 
 *Encoding:*
 
 image::../generated/encodings/enc_hl_bfi.svg[HL.BFI encoding,width=800]
 
-*Group:* RSV/DEFAULT
+*Uop-Class:* ALU
+
+*Compression:* HL48 (len=48)
+
+*Uop-Class payload:* `{"note": "override: RSV category removed; HL.BFI/HL.MIADD/HL.MISUB are ALU", "source": "override", "uop_kind": "ALU"}`

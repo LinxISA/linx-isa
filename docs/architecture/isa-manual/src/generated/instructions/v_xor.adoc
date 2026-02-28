@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_xor]]
+==== V.XOR
+
+*Syntax:* v.xor SrcL.<T>, SrcR.<T><.not><<<shamt>, ->Dst.<W>
+
+*Description:* Vector instruction (VEC engine).
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_xor.svg[V.XOR encoding,width=800]
+
+*Uop-Class:* VEC
+
+*Compression:* L64 (len=64)
+
+*Uop-Class payload:* `{"note": "vector-prefix override: dispatch to VEC (subkind=ALU)", "source": "override", "uop_kind": "VEC", "vec_subkind": "ALU"}`

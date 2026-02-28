@@ -7,10 +7,14 @@
 
 *Syntax:* lwui.u [SrcL, simm], ->{t, u, Rd}
 
-*Description:* Load 32-bit word from memory.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_lwui_u.svg[LWUI.U encoding,width=800]
 
-*Group:* LDA/UNSCALED
+*Uop-Class:* LDA/UNSCALED
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"addr_mode": "UNSCALED", "agu_kind": "LDA", "note": "User confirmed all loads are AGU/LDA", "source": "group_rule", "uop_kind": "AGU"}`

@@ -5,12 +5,16 @@
 [[inst_hl_prf]]
 ==== HL.PRF
 
-*Syntax:* hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>]
+*Syntax:* hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]
 
-*Description:* Prefetch instruction for cache hint. Provides a hint to the processor that the specified memory location is likely to be accessed soon.
+*Description:* Long (48-bit) instruction encoding.
 
 *Encoding:*
 
 image::../generated/encodings/enc_hl_prf.svg[HL.PRF encoding,width=800]
 
-*Group:* LDA
+*Uop-Class:* LDA
+
+*Compression:* HL48 (len=48)
+
+*Uop-Class payload:* `{"agu_kind": "LDA", "note": "User confirmed A", "source": "group_rule", "uop_kind": "AGU"}`

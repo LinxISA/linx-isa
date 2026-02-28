@@ -13,4 +13,8 @@
 
 image::../generated/encodings/enc_c_slli.svg[C.SLLI encoding,width=800]
 
-*Group:* SHIFT
+*Uop-Class:* ALU
+
+*Compression:* C16 (len=16)
+
+*Uop-Class payload:* `{"alu_kind": "SHIFT", "note": "C.TINST split", "source": "override", "uop_kind": "ALU"}`

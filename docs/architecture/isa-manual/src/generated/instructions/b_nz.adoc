@@ -7,10 +7,14 @@
 
 *Syntax:* b.nz label
 
-*Description:* Branch if not zero: conditional branch based on condition flags.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_b_nz.svg[B.NZ encoding,width=800]
 
-*Group:* BRU/BRU
+*Uop-Class:* BRU
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"source": "group_rule", "uop_kind": "BRU"}`

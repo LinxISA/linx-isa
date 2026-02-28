@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_lw_or]]
+==== V.LW.OR
+
+*Syntax:* v.lw.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>
+
+*Description:* Vector instruction (VEC engine).
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_lw_or.svg[V.LW.OR encoding,width=800]
+
+*Uop-Class:* VEC
+
+*Compression:* L64 (len=64)
+
+*Uop-Class payload:* `{"note": "vector-prefix override: dispatch to VEC (subkind=AMO)", "source": "override", "uop_kind": "VEC", "vec_subkind": "AMO"}`

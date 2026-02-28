@@ -7,10 +7,14 @@
 
 *Syntax:* j label
 
-*Description:* Unconditional jump to target address.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_j.svg[J encoding,width=800]
 
-*Group:* BRU/BRU
+*Uop-Class:* BRU
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"source": "group_rule", "uop_kind": "BRU"}`

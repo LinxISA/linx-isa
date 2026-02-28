@@ -7,10 +7,14 @@
 
 *Syntax:* sc.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], {->t, ->u, ->Rd}
 
-*Description:* Store Conditional: store only if the location is still reserved.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_sc_w.svg[SC.W encoding,width=800]
 
-*Group:* AMO/AMO
+*Uop-Class:* AMO
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"note": "User confirmed A: atomic ops execute in AMO class", "source": "group_rule", "uop_kind": "AMO"}`

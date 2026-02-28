@@ -7,10 +7,14 @@
 
 *Syntax:* hl.oriw SrcL, simm, ->{t, u, Rd}
 
-*Description:* Long immediate variant supporting extended immediate range.
+*Description:* Long (48-bit) instruction encoding.
 
 *Encoding:*
 
 image::../generated/encodings/enc_hl_oriw.svg[HL.ORIW encoding,width=800]
 
-*Group:* ALU
+*Uop-Class:* ALU
+
+*Compression:* HL48 (len=48)
+
+*Uop-Class payload:* `{"source": "group_rule", "uop_kind": "ALU"}`

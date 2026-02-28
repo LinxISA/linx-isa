@@ -7,10 +7,14 @@
 
 *Syntax:* sh.pcr SrcL, [symbol]
 
-*Description:* Store 8-bit value to memory.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_sh_pcr.svg[SH.PCR encoding,width=800]
 
-*Group:* STA
+*Uop-Class:* STA
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"agu_kind": "STA", "note": "User confirmed A", "source": "group_rule", "split": ["AGU", "STD"], "uop_kind": "AGU"}`

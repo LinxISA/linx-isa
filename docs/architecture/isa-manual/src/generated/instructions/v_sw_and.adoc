@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_sw_and]]
+==== V.SW.AND
+
+*Syntax:* v.sw.and<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>
+
+*Description:* Vector instruction (VEC engine).
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_sw_and.svg[V.SW.AND encoding,width=800]
+
+*Uop-Class:* VEC
+
+*Compression:* L64 (len=64)
+
+*Uop-Class payload:* `{"note": "vector-prefix override: dispatch to VEC (subkind=AMO)", "source": "override", "uop_kind": "VEC", "vec_subkind": "AMO"}`

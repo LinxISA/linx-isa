@@ -7,10 +7,14 @@
 
 *Syntax:* c.break imm
 
-*Description:* Breakpoint: triggers a debug breakpoint exception.
+*Description:* Compressed instruction variant (16-bit encoding).
 
 *Encoding:*
 
 image::../generated/encodings/enc_c_ebreak.svg[C.EBREAK encoding,width=800]
 
-*Group:* SYS/TRAP
+*Uop-Class:* SYS
+
+*Compression:* C16 (len=16)
+
+*Uop-Class payload:* `{"note": "C.TINST split", "source": "override", "sys_kind": "TRAP", "uop_kind": "SYS"}`

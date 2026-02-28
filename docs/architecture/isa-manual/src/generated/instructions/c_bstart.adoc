@@ -5,12 +5,16 @@
 [[inst_c_bstart]]
 ==== C.BSTART
 
-*Syntax:* C.BSTART COND,  label
+*Syntax:* C.BSTART DIRECT, label
 
-*Description:* Block control instruction.
+*Description:* Compressed instruction variant (16-bit encoding).
 
 *Encoding:*
 
 image::../generated/encodings/enc_c_bstart.svg[C.BSTART encoding,width=800]
 
-*Group:* CMD/BLOCK_SPLIT
+*Uop-Class:* CMD
+
+*Compression:* C16 (len=16)
+
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "User corrected to A", "source": "group_rule", "uop_kind": "CMD"}`

@@ -7,10 +7,14 @@
 
 *Syntax:* c.cmp.nei t#1, simm, ->t
 
-*Description:* Compressed compare immediate.
+*Description:* Compressed instruction variant (16-bit encoding).
 
 *Encoding:*
 
 image::../generated/encodings/enc_c_cmp_nei.svg[C.CMP.NEI encoding,width=800]
 
-*Group:* BRU/CMP
+*Uop-Class:* BRU
+
+*Compression:* C16 (len=16)
+
+*Uop-Class payload:* `{"bru_kind": "CMP", "note": "C.TINST split", "source": "override", "uop_kind": "BRU"}`

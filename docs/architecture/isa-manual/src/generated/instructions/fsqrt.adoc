@@ -7,10 +7,14 @@
 
 *Syntax:* fsqrt.{T} SrcL, ->{t, u, Rd}
 
-*Description:* Floating-point Square Root.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_fsqrt.svg[FSQRT encoding,width=800]
 
-*Group:* FSU/DEFAULT
+*Uop-Class:* FSU
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"note": "User: FP groups are FSU type and must be implemented", "source": "group_rule", "uop_kind": "FSU"}`

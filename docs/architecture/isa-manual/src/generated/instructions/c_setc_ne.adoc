@@ -7,10 +7,14 @@
 
 *Syntax:* c.setc.ne srcL, srcR
 
-*Description:* Compressed Set Condition.
+*Description:* Compressed instruction variant (16-bit encoding).
 
 *Encoding:*
 
 image::../generated/encodings/enc_c_setc_ne.svg[C.SETC.NE encoding,width=800]
 
-*Group:* BRU/SETC
+*Uop-Class:* BRU
+
+*Compression:* C16 (len=16)
+
+*Uop-Class payload:* `{"bru_kind": "SETC", "note": "User confirmed A", "source": "group_rule", "uop_kind": "BRU"}`

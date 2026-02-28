@@ -7,10 +7,14 @@
 
 *Syntax:* v.rdxor SrcL.<T>, ->Dst<.W>
 
-*Description:* Reduce: performs xor operation across all vector elements.
+*Description:* Vector instruction (VEC engine).
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_rdxor_part1.svg[V.RDXOR encoding,width=800]
+image::../generated/encodings/enc_v_rdxor.svg[V.RDXOR encoding,width=800]
 
-*Group:* VEC/VEC
+*Uop-Class:* VEC
+
+*Compression:* L64 (len=64)
+
+*Uop-Class payload:* `{"note": "vector-prefix override: dispatch to VEC (subkind=VEC)", "source": "override", "uop_kind": "VEC", "vec_subkind": "VEC"}`

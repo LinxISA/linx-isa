@@ -5,12 +5,16 @@
 [[inst_hl_bstart_std]]
 ==== HL.BSTART.STD
 
-*Syntax:* HL.BSTART.STD CALL, <label>
+*Syntax:* HL.BSTART.STD DIRECT, <label>
 
-*Description:* Block Start for STandard: marks entry point for standard execution block.
+*Description:* Long (48-bit) instruction encoding.
 
 *Encoding:*
 
 image::../generated/encodings/enc_hl_bstart_std.svg[HL.BSTART.STD encoding,width=800]
 
-*Group:* BBD/BSTART
+*Uop-Class:* BBD
+
+*Compression:* HL48 (len=48)
+
+*Uop-Class payload:* `{"bbd_kind": "BSTART", "note": "User confirmed A", "source": "group_rule", "uop_kind": "BBD"}`

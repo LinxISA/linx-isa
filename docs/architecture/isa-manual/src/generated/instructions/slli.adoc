@@ -7,10 +7,14 @@
 
 *Syntax:* slli SrcL, shamt, ->{t, u, Rd}
 
-*Description:* Shift Left Logical by register or immediate amount.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_slli.svg[SLLI encoding,width=800]
 
-*Group:* ALU
+*Uop-Class:* ALU
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"source": "group_rule", "uop_kind": "ALU"}`
