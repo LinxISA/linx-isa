@@ -34,7 +34,8 @@
       "linx-core",
       "linx-pycircuit",
       "linx-lib",
-      "linx-isa"
+      "linx-isa",
+      "linx-skills-submodule"
     ],
     "domain_module_map": {
       "ISA": ["isa", "docs", "superproject"],
@@ -204,7 +205,7 @@
     "kernel_linux.md": ["LINUX-001", "LINUX-002", "LINUX-003", "LINUX-004"],
     "libc_runtime.md": ["LIBC-001", "LIBC-002", "LIBC-003", "LIBC-004"],
     "specint_qemu.md": ["SPEC-001", "SPEC-002", "SPEC-003", "SPEC-004", "SPEC-005", "SPEC-006", "SPEC-007"],
-    "integration_release.md": ["INT-001", "INT-002", "INT-003", "INT-004", "INT-005", "INT-006", "INT-007", "INT-008", "INT-009"]
+    "integration_release.md": ["INT-001", "INT-002", "INT-003", "INT-004", "INT-005", "INT-006", "INT-007", "INT-008", "INT-009", "INT-010", "INT-011", "INT-012"]
   },
   "spec_policy": {
     "stage_a_subset": ["999.specrand_ir", "505.mcf_r", "531.deepsjeng_r"],
