@@ -40,3 +40,15 @@
 - [ ] ID: INT-009 Sync installed skills from canonical map and prune deprecated aliases.
   Command: `bash skills/linx-skills/scripts/install_canonical_skills.sh`
   Done means: local `$CODEX_HOME/skills` keeps only canonical `linx-*` skills (plus protected utility skills).
+
+- [ ] ID: INT-010 Pull latest skills submodule before each bring-up cycle.
+  Command: `bash tools/bringup/sync_canonical_skills.sh --pull-latest`
+  Done means: `skills/linx-skills` is on latest `origin/main` and installed into Codex skills.
+
+- [ ] ID: INT-011 Summarize evolved skills after bring-up work.
+  Command: `bash tools/bringup/finalize_skill_updates.sh --base origin/main`
+  Done means: summary markdown exists in `docs/bringup/agent_runs/skills_evolution/` with touched skills + SHA + rationale.
+
+- [ ] ID: INT-012 Guard against destructive skill churn before skill commit.
+  Command: `python3 skills/linx-skills/scripts/check_skill_change_scope.py --repo-root skills/linx-skills --base origin/main`
+  Done means: change scope guard passes and only intended skill directories changed.
