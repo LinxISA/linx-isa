@@ -45,4 +45,5 @@ Bring-up trap classes:
 |`0b110001` |49 |`HW_BREAKPOINT` |Hardware breakpoint trap.
 |`0b110010` |50 |`SW_BREAKPOINT` |Software breakpoint trap (EBREAK).
 |`0b110011` |51 |`HW_WATCHPOINT` |Hardware watchpoint trap.
+|`0b110100` |52 |`ASSERT_FAIL` |ASSERT failure trap (bring-up / fixup-aware).
 |===
