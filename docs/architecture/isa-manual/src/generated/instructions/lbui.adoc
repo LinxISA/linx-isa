@@ -7,10 +7,14 @@
 
 *Syntax:* lbui [SrcL, simm], ->{t, u, Rd}
 
-*Description:* Load 8-bit unsigned byte from memory at effective address.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_lbui.svg[LBUI encoding,width=800]
 
-*Group:* LDA/BASE_IMM
+*Uop-Class:* LDA/BASE_IMM
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"addr_mode": "BASE_IMM", "agu_kind": "LDA", "note": "User confirmed all loads are AGU/LDA", "source": "group_rule", "uop_kind": "AGU"}`

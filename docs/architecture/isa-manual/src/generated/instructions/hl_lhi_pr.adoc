@@ -7,10 +7,14 @@
 
 *Syntax:* hl.lhi.pr [SrcL, simm], ->Dst0, Dst1
 
-*Description:* Long immediate variant supporting extended address range (48-bit).
+*Description:* Long (48-bit) instruction encoding.
 
 *Encoding:*
 
 image::../generated/encodings/enc_hl_lhi_pr.svg[HL.LHI.PR encoding,width=800]
 
-*Group:* LDA/PRE_INDEX
+*Uop-Class:* LDA/PRE_INDEX
+
+*Compression:* HL48 (len=48)
+
+*Uop-Class payload:* `{"addr_mode": "PRE_INDEX", "agu_kind": "LDA", "note": "User confirmed all loads are AGU/LDA", "source": "group_rule", "uop_kind": "AGU"}`

@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_qpop]]
+==== V.QPOP
+
+*Syntax:* v.qpop SrcL.ud, ->Dst
+
+*Description:* Vector instruction (VEC engine).
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_qpop.svg[V.QPOP encoding,width=800]
+
+*Uop-Class:* CMD
+
+*Compression:* L64 (len=64)
+
+*Uop-Class payload:* `{"cmd_kind": "VEC_ENGINE_CMD", "engine_target": "VEC", "note": "User: vec engine cmd", "source": "group_rule", "uop_kind": "CMD"}`

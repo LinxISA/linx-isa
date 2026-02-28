@@ -677,23 +677,23 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`HL.LB.PO` |48 |- |`hl.lb.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1` |-
+|`HL.LB.PO` |48 |- |`hl.lb.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |-
 |`HL.LBI.PO` |48 |- |`hl.lbi.po [SrcL, simm], ->Dst0, Dst1` |-
-|`HL.LBU.PO` |48 |- |`hl.lbu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1` |-
+|`HL.LBU.PO` |48 |- |`hl.lbu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |-
 |`HL.LBUI.PO` |48 |- |`hl.lbui.po [SrcL, simm], ->Dst0, Dst1` |-
-|`HL.LD.PO` |48 |- |`hl.ld.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1` |-
+|`HL.LD.PO` |48 |- |`hl.ld.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |-
 |`HL.LDI.PO` |48 |- |`hl.ldi.po [SrcL, simm], ->Dst0, Dst1` |-
 |`HL.LDI.UPO` |48 |- |`hl.ldi.upo [SrcL, simm], ->Dst0, Dst1` |-
-|`HL.LH.PO` |48 |- |`hl.lh.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1` |-
+|`HL.LH.PO` |48 |- |`hl.lh.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |-
 |`HL.LHI.PO` |48 |- |`hl.lhi.po [SrcL, simm], ->Dst0, Dst1` |-
 |`HL.LHI.UPO` |48 |- |`hl.lhi.upo [SrcL, simm], ->Dst0, Dst1` |-
-|`HL.LHU.PO` |48 |- |`hl.lhu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1` |-
+|`HL.LHU.PO` |48 |- |`hl.lhu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |-
 |`HL.LHUI.PO` |48 |- |`hl.lhui.po [SrcL, simm], ->Dst0, Dst1` |-
 |`HL.LHUI.UPO` |48 |- |`hl.lhui.upo [SrcL, simm], ->Dst0, Dst1` |-
-|`HL.LW.PO` |48 |- |`hl.lw.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1` |-
+|`HL.LW.PO` |48 |- |`hl.lw.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |-
 |`HL.LWI.PO` |48 |- |`hl.lwi.po [SrcL, simm], ->Dst0, Dst1` |-
 |`HL.LWI.UPO` |48 |- |`hl.lwi.upo [SrcL, simm], ->Dst0, Dst1` |-
-|`HL.LWU.PO` |48 |- |`hl.lwu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1` |-
+|`HL.LWU.PO` |48 |- |`hl.lwu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |-
 |`HL.LWUI.PO` |48 |- |`hl.lwui.po [SrcL, simm], ->Dst0, Dst1` |-
 |`HL.LWUI.UPO` |48 |- |`hl.lwui.upo [SrcL, simm], ->Dst0, Dst1` |-
 |===
@@ -704,23 +704,23 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`HL.LB.PR` |48 |- |`hl.lb.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1` |-
+|`HL.LB.PR` |48 |- |`hl.lb.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |-
 |`HL.LBI.PR` |48 |- |`hl.lbi.pr [SrcL, simm], ->Dst0, Dst1` |-
-|`HL.LBU.PR` |48 |- |`hl.lbu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1` |-
+|`HL.LBU.PR` |48 |- |`hl.lbu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |-
 |`HL.LBUI.PR` |48 |- |`hl.lbui.pr [SrcL, simm], ->Dst0, Dst1` |-
-|`HL.LD.PR` |48 |- |`hl.ld.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1` |-
+|`HL.LD.PR` |48 |- |`hl.ld.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |-
 |`HL.LDI.PR` |48 |- |`hl.ldi.pr [SrcL, simm], ->Dst0, Dst1` |-
 |`HL.LDI.UPR` |48 |- |`hl.ldi.upr [SrcL, simm], ->Dst0, Dst1` |-
-|`HL.LH.PR` |48 |- |`hl.lh.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1` |-
+|`HL.LH.PR` |48 |- |`hl.lh.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |-
 |`HL.LHI.PR` |48 |- |`hl.lhi.pr [SrcL, simm], ->Dst0, Dst1` |-
 |`HL.LHI.UPR` |48 |- |`hl.lhi.upr [SrcL, simm], ->Dst0, Dst1` |-
-|`HL.LHU.PR` |48 |- |`hl.lhu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1` |-
+|`HL.LHU.PR` |48 |- |`hl.lhu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |-
 |`HL.LHUI.PR` |48 |- |`hl.lhui.pr [SrcL, simm], ->Dst0, Dst1` |-
 |`HL.LHUI.UPR` |48 |- |`hl.lhui.upr [SrcL, simm], ->Dst0, Dst1` |-
-|`HL.LW.PR` |48 |- |`hl.lw.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1` |-
+|`HL.LW.PR` |48 |- |`hl.lw.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |-
 |`HL.LWI.PR` |48 |- |`hl.lwi.pr [SrcL, simm], ->Dst0, Dst1` |-
 |`HL.LWI.UPR` |48 |- |`hl.lwi.upr [SrcL, simm], ->Dst0, Dst1` |-
-|`HL.LWU.PR` |48 |- |`hl.lwu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1` |-
+|`HL.LWU.PR` |48 |- |`hl.lwu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |-
 |`HL.LWUI.PR` |48 |- |`hl.lwui.pr [SrcL, simm], ->Dst0, Dst1` |-
 |`HL.LWUI.UPR` |48 |- |`hl.lwui.upr [SrcL, simm], ->Dst0, Dst1` |-
 |===
@@ -752,24 +752,24 @@
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`HL.LBIP` |48 |- |`hl.lbip [SrcL, simm], ->Dst0, Dst1` |-
-|`HL.LBP` |48 |- |`hl.lbp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1` |-
+|`HL.LBP` |48 |- |`hl.lbp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |-
 |`HL.LBUIP` |48 |- |`hl.lbuip [SrcL, simm], ->Dst0, Dst1` |-
-|`HL.LBUP` |48 |- |`hl.lbup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1` |-
+|`HL.LBUP` |48 |- |`hl.lbup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |-
 |`HL.LDIP` |48 |- |`hl.ldip [SrcL, simm], ->Dst0, Dst1` |-
 |`HL.LDIP.U` |48 |- |`hl.ldip.u [SrcL, simm], ->Dst0, Dst1` |-
-|`HL.LDP` |48 |- |`hl.ldp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1` |-
+|`HL.LDP` |48 |- |`hl.ldp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |-
 |`HL.LHIP` |48 |- |`hl.lhip [SrcL, simm], ->Dst0, Dst1` |-
 |`HL.LHIP.U` |48 |- |`hl.lhip.u [SrcL, simm], ->Dst0, Dst1` |-
-|`HL.LHP` |48 |- |`hl.lhp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1` |-
+|`HL.LHP` |48 |- |`hl.lhp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |-
 |`HL.LHUIP` |48 |- |`hl.lhuip [SrcL, simm], ->Dst0, Dst1` |-
 |`HL.LHUIP.U` |48 |- |`hl.lhuip.u [SrcL, simm], ->Dst0, Dst1` |-
-|`HL.LHUP` |48 |- |`hl.lhup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1` |-
+|`HL.LHUP` |48 |- |`hl.lhup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |-
 |`HL.LWIP` |48 |- |`hl.lwip [SrcL, simm], ->Dst0, Dst1` |-
 |`HL.LWIP.U` |48 |- |`hl.lwip.u [SrcL, simm], ->Dst0, Dst1` |-
-|`HL.LWP` |48 |- |`hl.lwp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1` |-
+|`HL.LWP` |48 |- |`hl.lwp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |-
 |`HL.LWUIP` |48 |- |`hl.lwuip [SrcL, simm], ->Dst0, Dst1` |-
 |`HL.LWUIP.U` |48 |- |`hl.lwuip.u [SrcL, simm], ->Dst0, Dst1` |-
-|`HL.LWUP` |48 |- |`hl.lwup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1` |-
+|`HL.LWUP` |48 |- |`hl.lwup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |-
 |===
 
 [[insnref-long-immediate]]
@@ -798,8 +798,8 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`HL.PRF` |48 |- |`hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>]` |-
-|`HL.PRF.A` |48 |- |`hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}` |-
+|`HL.PRF` |48 |- |`hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]` |-
+|`HL.PRF.A` |48 |- |`hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |-
 |`HL.PRFI.U` |48 |- |`hl.prfi.u{.l1,.l2,.l3} [SrcL, simm]` |-
 |`HL.PRFI.UA` |48 |- |`hl.prfi.ua{.l1,.l2,.l3} [SrcL, simm], ->{t, u, Rd}` |-
 |===
@@ -833,18 +833,18 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`HL.SB.PO` |48 |- |`hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}` |-
+|`HL.SB.PO` |48 |- |`hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` |-
 |`HL.SBI.PO` |48 |- |`hl.sbi.po SrcD, [SrcR, simm], ->{t, u, Rd}` |-
-|`HL.SD.PO` |48 |- |`hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw}><<3], ->{t, u, Rd}` |-
-|`HL.SD.UPO` |48 |- |`hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}` |-
+|`HL.SD.PO` |48 |- |`hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd}` |-
+|`HL.SD.UPO` |48 |- |`hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` |-
 |`HL.SDI.PO` |48 |- |`hl.sdi.po SrcD, [SrcR, simm], ->{t, u, Rd}` |-
 |`HL.SDI.UPO` |48 |- |`hl.sdi.upo SrcD, [SrcR, simm], ->{t, u, Rd}` |-
-|`HL.SH.PO` |48 |- |`hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw}><<1], ->{t, u, Rd}` |-
-|`HL.SH.UPO` |48 |- |`hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}` |-
+|`HL.SH.PO` |48 |- |`hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd}` |-
+|`HL.SH.UPO` |48 |- |`hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` |-
 |`HL.SHI.PO` |48 |- |`hl.shi.po SrcD, [SrcR, simm], ->{t, u, Rd}` |-
 |`HL.SHI.UPO` |48 |- |`hl.shi.upo SrcD, [SrcR, simm], ->{t, u, Rd}` |-
-|`HL.SW.PO` |48 |- |`hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw}><<2], ->{t, u, Rd}` |-
-|`HL.SW.UPO` |48 |- |`hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}` |-
+|`HL.SW.PO` |48 |- |`hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd}` |-
+|`HL.SW.UPO` |48 |- |`hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` |-
 |`HL.SWI.PO` |48 |- |`hl.swi.po SrcD, [SrcR, simm], ->{t, u, Rd}` |-
 |`HL.SWI.UPO` |48 |- |`hl.swi.upo SrcD, [SrcR, simm], ->{t, u, Rd}` |-
 |===
@@ -855,18 +855,18 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`HL.SB.PR` |48 |- |`hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}` |-
+|`HL.SB.PR` |48 |- |`hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` |-
 |`HL.SBI.PR` |48 |- |`hl.sbi.pr SrcD, [SrcR, simm], ->{t, u, Rd}` |-
-|`HL.SD.PR` |48 |- |`hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<3], ->{t, u, Rd}` |-
-|`HL.SD.UPR` |48 |- |`hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}` |-
+|`HL.SD.PR` |48 |- |`hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd}` |-
+|`HL.SD.UPR` |48 |- |`hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` |-
 |`HL.SDI.PR` |48 |- |`hl.sdi.pr SrcD, [SrcR, simm], ->{t, u, Rd}` |-
 |`HL.SDI.UPR` |48 |- |`hl.sdi.upr SrcD, [SrcR, simm], ->{t, u, Rd}` |-
-|`HL.SH.PR` |48 |- |`hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<1], ->{t, u, Rd}` |-
-|`HL.SH.UPR` |48 |- |`hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}` |-
+|`HL.SH.PR` |48 |- |`hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd}` |-
+|`HL.SH.UPR` |48 |- |`hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` |-
 |`HL.SHI.PR` |48 |- |`hl.shi.pr SrcD, [SrcR, simm], ->{t, u, Rd}` |-
 |`HL.SHI.UPR` |48 |- |`hl.shi.upr SrcD, [SrcR, simm], ->{t, u, Rd}` |-
-|`HL.SW.PR` |48 |- |`hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<2], ->{t, u, Rd}` |-
-|`HL.SW.UPR` |48 |- |`hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}` |-
+|`HL.SW.PR` |48 |- |`hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd}` |-
+|`HL.SW.UPR` |48 |- |`hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` |-
 |`HL.SWI.PR` |48 |- |`hl.swi.pr SrcD, [SrcR, simm], ->{t, u, Rd}` |-
 |`HL.SWI.UPR` |48 |- |`hl.swi.upr SrcD, [SrcR, simm], ->{t, u, Rd}` |-
 |===
@@ -893,19 +893,19 @@
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`HL.SBIP` |48 |- |`hl.sbip SrcD, SrcD1, [SrcR, simm]` |-
-|`HL.SBP` |48 |- |`hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]` |-
+|`HL.SBP` |48 |- |`hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]` |-
 |`HL.SDIP` |48 |- |`hl.sdip SrcD, SrcD1, [SrcR, simm]` |-
 |`HL.SDIP.U` |48 |- |`hl.sdip.u SrcD, SrcD1, [SrcR, simm]` |-
-|`HL.SDP` |48 |- |`hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<3]` |-
-|`HL.SDP.U` |48 |- |`hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]` |-
+|`HL.SDP` |48 |- |`hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<3]` |-
+|`HL.SDP.U` |48 |- |`hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]` |-
 |`HL.SHIP` |48 |- |`hl.ship SrcD, SrcD1, [SrcR, simm]` |-
 |`HL.SHIP.U` |48 |- |`hl.ship.u SrcD, SrcD1, [SrcR, simm]` |-
-|`HL.SHP` |48 |- |`hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<1]` |-
-|`HL.SHP.U` |48 |- |`hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]` |-
+|`HL.SHP` |48 |- |`hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<1]` |-
+|`HL.SHP.U` |48 |- |`hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]` |-
 |`HL.SWIP` |48 |- |`hl.swip SrcD, SrcD1, [SrcR, simm]` |-
 |`HL.SWIP.U` |48 |- |`hl.swip.u SrcD, SrcD1, [SrcR, simm]` |-
-|`HL.SWP` |48 |- |`hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<2]` |-
-|`HL.SWP.U` |48 |- |`hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]` |-
+|`HL.SWP` |48 |- |`hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<2]` |-
+|`HL.SWP.U` |48 |- |`hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]` |-
 |===
 
 [[insnref-ssr-access]]
@@ -929,14 +929,14 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`LB` |32 |- |`lb [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}` |-
-|`LBU` |32 |- |`lbu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}` |-
-|`LD` |32 |- |`ld [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}` |-
-|`LH` |32 |- |`lh [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}` |-
-|`LHU` |32 |- |`lhu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}` |-
-|`LW` |32 |- |`lw [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}` |-
-|`LWU` |32 |- |`lwu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}` |-
-|`PRF` |32 |- |`prf [SrcL, SrcR<{.sw,.uw}><<<shamt>]` |-
+|`LB` |32 |- |`lb [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |-
+|`LBU` |32 |- |`lbu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |-
+|`LD` |32 |- |`ld [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |-
+|`LH` |32 |- |`lh [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |-
+|`LHU` |32 |- |`lhu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |-
+|`LW` |32 |- |`lw [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |-
+|`LWU` |32 |- |`lwu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |-
+|`PRF` |32 |- |`prf [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]` |-
 |`V.LB` |64 |- |`v.lb<.local> [SrcL<.ud>, <lc0>, SrcR.<T><<<shamt>], ->Dst.<W>` |-
 |`V.LB.BRG` |64 |- |`v.lb.brg<.local> [SrcL<.ud>, <lc0>, SrcR.<T><<<shamt>], ->Dst.<W>` |-
 |`V.LBU` |64 |- |`v.lbu<.local> [SrcL<.ud>, <lc0>, SrcR.<T><<<shamt>], ->Dst.<W>` |-
@@ -1074,13 +1074,13 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`SB` |32 |- |`sb SrcD, [SrcL, SrcR<{.sw,.uw}>]` |-
-|`SD` |32 |- |`sd SrcD, [SrcL, SrcR<{.sw,.uw}><<3]` |-
-|`SD.U` |32 |- |`sd.u SrcD, [SrcL, SrcR<{.sw,.uw}>]` |-
-|`SH` |32 |- |`sh SrcD, [SrcL, SrcR<{.sw,.uw}><<1]` |-
-|`SH.U` |32 |- |`sh.u SrcD, [SrcL, SrcR<{.sw,.uw}>]` |-
-|`SW` |32 |- |`sw SrcD, [SrcL, SrcR<{.sw,.uw}><<2]` |-
-|`SW.U` |32 |- |`sw.u SrcD, [SrcL, SrcR<{.sw,.uw}>]` |-
+|`SB` |32 |- |`sb SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]` |-
+|`SD` |32 |- |`sd SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3]` |-
+|`SD.U` |32 |- |`sd.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]` |-
+|`SH` |32 |- |`sh SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1]` |-
+|`SH.U` |32 |- |`sh.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]` |-
+|`SW` |32 |- |`sw SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2]` |-
+|`SW.U` |32 |- |`sw.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]` |-
 |`V.SB` |64 |- |`v.sb<.local> SrcD.<T1>, [SrcL<.ud>, <lc0>, SrcR.<T2><<<shamt>]` |-
 |`V.SB.BRG` |64 |- |`v.sb.brg<.local> SrcD.<T1>, [SrcL<.ud>, <lc0>, SrcR.<T2><<<shamt>]` |-
 |`V.SD` |64 |- |`v.sd<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<3>, SrcR.<T2><<(3+shamt)]` |-

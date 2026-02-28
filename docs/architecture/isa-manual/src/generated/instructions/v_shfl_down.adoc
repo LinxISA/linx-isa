@@ -7,10 +7,14 @@
 
 *Syntax:* v.shfl.down SrcL.<T>, SrcR.<T>, SrcP.<T>, ->Dst.<W>
 
-*Description:* Shuffle (down): permutes vector elements using register indices.
+*Description:* Vector instruction (VEC engine).
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_shfl_down_part1.svg[V.SHFL.DOWN encoding,width=800]
+image::../generated/encodings/enc_v_shfl_down.svg[V.SHFL.DOWN encoding,width=800]
 
-*Group:* VEC/VEC
+*Uop-Class:* VEC
+
+*Compression:* L64 (len=64)
+
+*Uop-Class payload:* `{"note": "vector-prefix override: dispatch to VEC (subkind=VEC)", "source": "override", "uop_kind": "VEC", "vec_subkind": "VEC"}`

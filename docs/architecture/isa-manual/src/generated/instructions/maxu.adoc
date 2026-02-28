@@ -7,10 +7,14 @@
 
 *Syntax:* maxu SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* Maximum (unsigned comparison).
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_maxu.svg[MAXU encoding,width=800]
 
-*Group:* ALU
+*Uop-Class:* ALU
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"note": "User confirmed A", "source": "group_rule", "uop_kind": "ALU"}`

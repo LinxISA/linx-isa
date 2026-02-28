@@ -7,10 +7,14 @@
 
 *Syntax:* hl.qmt.{i,e,s,r,ie,is,ir,es,er,ies,ier} SrcL, SrcR, ->{t, u}
 
-*Description:* Queue Management: manage queue.
+*Description:* Long (48-bit) instruction encoding.
 
 *Encoding:*
 
 image::../generated/encodings/enc_hl_qmt.svg[HL.QMT encoding,width=800]
 
-*Group:* CMD/Q_MANAGE
+*Uop-Class:* CMD
+
+*Compression:* HL48 (len=48)
+
+*Uop-Class payload:* `{"cmd_kind": "Q_MANAGE", "note": "general queue manager", "source": "override", "uop_kind": "CMD"}`

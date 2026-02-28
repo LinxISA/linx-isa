@@ -7,10 +7,14 @@
 
 *Syntax:* B.IOR [RegSrc0, RegSrc1, RegSrc2],[RegDst]
 
-*Description:* Block I/O: performs input/output operations at block level.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_b_ior.svg[B.IOR encoding,width=800]
 
-*Group:* CMD/BLOCK_IO
+*Uop-Class:* CMD
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_IO", "note": "User confirmed A", "source": "group_rule", "uop_kind": "CMD"}`

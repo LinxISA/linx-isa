@@ -7,10 +7,14 @@
 
 *Syntax:* v.div SrcL.<T>, SrcR.<T>, ->Dst.<W>
 
-*Description:* Vector Divide: divides elements.
+*Description:* Vector instruction (VEC engine).
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_div_part1.svg[V.DIV encoding,width=800]
+image::../generated/encodings/enc_v_div.svg[V.DIV encoding,width=800]
 
-*Group:* VEC/VEC_DIV
+*Uop-Class:* VEC
+
+*Compression:* L64 (len=64)
+
+*Uop-Class payload:* `{"note": "vector-prefix override: dispatch to VEC (subkind=VEC)", "source": "override", "uop_kind": "VEC", "vec_kind": "VEC_DIV", "vec_subkind": "VEC"}`

@@ -7,10 +7,14 @@
 
 *Syntax:* hl.prfi.u{.l1,.l2,.l3} [SrcL, simm]
 
-*Description:* Prefetch instruction for cache hint. Provides a hint to the processor that the specified memory location is likely to be accessed soon.
+*Description:* Long (48-bit) instruction encoding.
 
 *Encoding:*
 
 image::../generated/encodings/enc_hl_prfi_u.svg[HL.PRFI.U encoding,width=800]
 
-*Group:* LDA
+*Uop-Class:* LDA
+
+*Compression:* HL48 (len=48)
+
+*Uop-Class payload:* `{"agu_kind": "LDA", "note": "User confirmed A", "source": "group_rule", "uop_kind": "AGU"}`

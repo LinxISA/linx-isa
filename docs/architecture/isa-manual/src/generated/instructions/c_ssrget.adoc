@@ -7,10 +7,14 @@
 
 *Syntax:* c.ssrget SSR-ID, ->t
 
-*Description:* Get Special Security Register value.
+*Description:* Compressed instruction variant (16-bit encoding).
 
 *Encoding:*
 
 image::../generated/encodings/enc_c_ssrget.svg[C.SSRGET encoding,width=800]
 
-*Group:* SYS/SSR
+*Uop-Class:* SYS
+
+*Compression:* C16 (len=16)
+
+*Uop-Class payload:* `{"note": "C.TINST split", "source": "override", "sys_kind": "SSR", "uop_kind": "SYS"}`

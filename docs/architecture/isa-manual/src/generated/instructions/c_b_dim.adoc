@@ -7,10 +7,14 @@
 
 *Syntax:* C.B.DIM RegSrc, ->{LB0, LB1, LB2}
 
-*Description:* Block Dimension: specifies the dimensions for block execution.
+*Description:* Compressed instruction variant (16-bit encoding).
 
 *Encoding:*
 
 image::../generated/encodings/enc_c_b_dim.svg[C.B.DIM encoding,width=800]
 
-*Group:* CMD/BLOCK_DIMENSION
+*Uop-Class:* CMD
+
+*Compression:* C16 (len=16)
+
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_DIMENSION", "note": "User confirmed A", "source": "group_rule", "uop_kind": "CMD"}`

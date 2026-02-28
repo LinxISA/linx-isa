@@ -7,10 +7,14 @@
 
 *Syntax:* bwe SrcL
 
-*Description:* Memory Barrier/ fence: Store Exclusive
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_bwe.svg[BWE encoding,width=800]
 
-*Group:* SYS/SYS
+*Uop-Class:* SYS
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"note": "User confirmed A", "source": "group_rule", "uop_kind": "SYS"}`

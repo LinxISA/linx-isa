@@ -7,10 +7,14 @@
 
 *Syntax:* hl.addi SrcL, uimm, ->{t, u, Rd}
 
-*Description:* Long immediate variant supporting extended immediate range.
+*Description:* Long (48-bit) instruction encoding.
 
 *Encoding:*
 
 image::../generated/encodings/enc_hl_addi.svg[HL.ADDI encoding,width=800]
 
-*Group:* ALU
+*Uop-Class:* ALU
+
+*Compression:* HL48 (len=48)
+
+*Uop-Class payload:* `{"source": "group_rule", "uop_kind": "ALU"}`

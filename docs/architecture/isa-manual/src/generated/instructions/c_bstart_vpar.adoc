@@ -7,10 +7,14 @@
 
 *Syntax:* C.BSTART.VPAR FALL
 
-*Description:* Block Start for Vector-PARallel: marks entry point for vector-parallel block.
+*Description:* Compressed instruction variant (16-bit encoding).
 
 *Encoding:*
 
 image::../generated/encodings/enc_c_bstart_vpar.svg[C.BSTART.VPAR encoding,width=800]
 
-*Group:* BBD/BSTART
+*Uop-Class:* BBD
+
+*Compression:* C16 (len=16)
+
+*Uop-Class payload:* `{"bbd_kind": "BSTART", "note": "User confirmed A (compressed boundary)", "source": "group_rule", "uop_kind": "BBD"}`

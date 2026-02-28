@@ -7,10 +7,14 @@
 
 *Syntax:* fence.d pred_imm, succ_imm
 
-*Description:* Fence (Data): ensures memory ordering for data accesses.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_fence_d.svg[FENCE.D encoding,width=800]
 
-*Group:* SYS/SYS
+*Uop-Class:* SYS
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"note": "User confirmed A", "source": "group_rule", "uop_kind": "SYS"}`

@@ -5,12 +5,16 @@
 [[inst_hl_sb_po]]
 ==== HL.SB.PO
 
-*Syntax:* hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}
+*Syntax:* hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}
 
-*Description:* Long immediate variant supporting extended address range (48-bit).
+*Description:* Long (48-bit) instruction encoding.
 
 *Encoding:*
 
 image::../generated/encodings/enc_hl_sb_po.svg[HL.SB.PO encoding,width=800]
 
-*Group:* STA/POST_INDEX
+*Uop-Class:* STA/POST_INDEX
+
+*Compression:* HL48 (len=48)
+
+*Uop-Class payload:* `{"addr_mode": "POST_INDEX", "agu_kind": "STA", "note": "User confirmed all stores are AGU/STA + STD", "source": "group_rule", "split": ["AGU", "STD"], "uop_kind": "AGU"}`

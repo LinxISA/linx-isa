@@ -5,12 +5,16 @@
 [[inst_lw]]
 ==== LW
 
-*Syntax:* lw [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}
+*Syntax:* lw [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}
 
-*Description:* Load 32-bit word from memory.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_lw.svg[LW encoding,width=800]
 
-*Group:* LDA/BASE_REG
+*Uop-Class:* LDA/BASE_REG
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"addr_mode": "BASE_REG", "agu_kind": "LDA", "note": "User confirmed all loads are AGU/LDA", "source": "group_rule", "uop_kind": "AGU"}`

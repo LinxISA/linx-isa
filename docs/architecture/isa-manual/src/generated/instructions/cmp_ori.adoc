@@ -7,10 +7,14 @@
 
 *Syntax:* cmp.ori SrcL, simm, ->{t, u, Rd}
 
-*Description:* Compare: performs comparison and sets condition flags.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_cmp_ori.svg[CMP.ORI encoding,width=800]
 
-*Group:* BRU/CMP
+*Uop-Class:* BRU
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"bru_kind": "CMP", "source": "group_rule", "uop_kind": "BRU"}`

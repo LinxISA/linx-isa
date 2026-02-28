@@ -7,10 +7,14 @@
 
 *Syntax:* MCOPY [RegSrc0, RegSrc1, RegSrc2]
 
-*Description:* Memory Copy block.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_mcopy.svg[MCOPY encoding,width=800]
 
-*Group:* CMD/BLOCK_SPLIT
+*Uop-Class:* CMD
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "User corrected to A", "source": "group_rule", "uop_kind": "CMD"}`

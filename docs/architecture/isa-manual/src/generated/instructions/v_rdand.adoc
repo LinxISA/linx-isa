@@ -7,10 +7,14 @@
 
 *Syntax:* v.rdand SrcL.<T>, ->Dst<.W>
 
-*Description:* Reduce: performs and operation across all vector elements.
+*Description:* Vector instruction (VEC engine).
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_rdand_part1.svg[V.RDAND encoding,width=800]
+image::../generated/encodings/enc_v_rdand.svg[V.RDAND encoding,width=800]
 
-*Group:* VEC/VEC
+*Uop-Class:* VEC
+
+*Compression:* L64 (len=64)
+
+*Uop-Class payload:* `{"note": "vector-prefix override: dispatch to VEC (subkind=VEC)", "source": "override", "uop_kind": "VEC", "vec_subkind": "VEC"}`

@@ -5,12 +5,16 @@
 [[inst_hl_bstart_fp]]
 ==== HL.BSTART.FP
 
-*Syntax:* HL.BSTART.FP COND, <label>
+*Syntax:* HL.BSTART.FP DIRECT, <label>
 
-*Description:* Block Start for Floating-point: marks entry point for FP-intensive block.
+*Description:* Long (48-bit) instruction encoding.
 
 *Encoding:*
 
 image::../generated/encodings/enc_hl_bstart_fp.svg[HL.BSTART.FP encoding,width=800]
 
-*Group:* BBD/BSTART
+*Uop-Class:* BBD
+
+*Compression:* HL48 (len=48)
+
+*Uop-Class payload:* `{"bbd_kind": "BSTART", "note": "User confirmed A", "source": "group_rule", "uop_kind": "BBD"}`

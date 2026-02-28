@@ -13,4 +13,8 @@
 
 image::../generated/encodings/enc_c_movr.svg[C.MOVR encoding,width=800]
 
-*Group:* ALU
+*Uop-Class:* ALU
+
+*Compression:* C16 (len=16)
+
+*Uop-Class payload:* `{"note": "User confirmed A", "source": "group_rule", "uop_kind": "ALU"}`

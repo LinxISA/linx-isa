@@ -7,10 +7,14 @@
 
 *Syntax:* lhui.u [SrcL, simm], ->{t, u, Rd}
 
-*Description:* Load unsigned 16-bit halfword from memory.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_lhui_u.svg[LHUI.U encoding,width=800]
 
-*Group:* LDA/UNSCALED
+*Uop-Class:* LDA/UNSCALED
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"addr_mode": "UNSCALED", "agu_kind": "LDA", "note": "User confirmed all loads are AGU/LDA", "source": "group_rule", "uop_kind": "AGU"}`

@@ -7,10 +7,14 @@
 
 *Syntax:* lsrget LSR_ID, ->{t, u, Rd}
 
-*Description:* Get Local Status Register value.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_lsrget.svg[LSRGET encoding,width=800]
 
-*Group:* SYS/SSR
+*Uop-Class:* SYS
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"note": "User confirmed A", "source": "group_rule", "sys_kind": "SSR", "uop_kind": "SYS"}`

@@ -7,10 +7,14 @@
 
 *Syntax:* ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}
 
-*Description:* Atomic Xor operation: memory value is atomically xored with register.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_ld_xor.svg[LD.XOR encoding,width=800]
 
-*Group:* AMO/AMO
+*Uop-Class:* AMO
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"note": "User confirmed A: atomic ops execute in AMO class", "source": "group_rule", "uop_kind": "AMO"}`

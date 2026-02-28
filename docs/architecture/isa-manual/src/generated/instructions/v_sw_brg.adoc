@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_sw_brg]]
+==== V.SW.BRG
+
+*Syntax:* v.sw.brg<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<2>, SrcR.<T2><<(2+shamt)]
+
+*Description:* Vector instruction (VEC engine).
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_sw_brg.svg[V.SW.BRG encoding,width=800]
+
+*Uop-Class:* VEC
+
+*Compression:* L64 (len=64)
+
+*Uop-Class payload:* `{"addr_mode": "BASE_REG", "agu_kind": "STA", "note": "vector-prefix override: dispatch to VEC (subkind=AGU)", "source": "override", "split": ["AGU", "STD"], "uop_kind": "VEC", "vec_subkind": "AGU"}`

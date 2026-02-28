@@ -7,10 +7,14 @@
 
 *Syntax:* ssrset SrcL, SSR_ID
 
-*Description:* Set System Status Register value.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_ssrset.svg[SSRSET encoding,width=800]
 
-*Group:* SYS/SSR
+*Uop-Class:* SYS
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"note": "User confirmed A", "source": "group_rule", "sys_kind": "SSR", "uop_kind": "SYS"}`

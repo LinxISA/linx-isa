@@ -7,10 +7,14 @@
 
 *Syntax:* csel SrcP, SrcL, SrcR<.neg>, ->{t, u, Rd}
 
-*Description:* Conditional Select: select destination based on condition codes.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_csel.svg[CSEL encoding,width=800]
 
-*Group:* ALU
+*Uop-Class:* ALU
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"note": "User confirmed A", "source": "group_rule", "uop_kind": "ALU"}`

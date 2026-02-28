@@ -7,10 +7,14 @@
 
 *Syntax:* C.BSTART.VSEQ FALL
 
-*Description:* Block Start for Vector-SEQuential: marks entry point for vector-sequential block.
+*Description:* Compressed instruction variant (16-bit encoding).
 
 *Encoding:*
 
 image::../generated/encodings/enc_c_bstart_vseq.svg[C.BSTART.VSEQ encoding,width=800]
 
-*Group:* BBD/BSTART
+*Uop-Class:* BBD
+
+*Compression:* C16 (len=16)
+
+*Uop-Class payload:* `{"bbd_kind": "BSTART", "note": "User confirmed A (compressed boundary)", "source": "group_rule", "uop_kind": "BBD"}`

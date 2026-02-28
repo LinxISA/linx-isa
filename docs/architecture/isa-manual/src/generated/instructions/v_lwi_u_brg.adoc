@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_lwi_u_brg]]
+==== V.LWI.U.BRG
+
+*Syntax:* v.lwi.u.brg<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>
+
+*Description:* Vector instruction (VEC engine).
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_lwi_u_brg.svg[V.LWI.U.BRG encoding,width=800]
+
+*Uop-Class:* VEC
+
+*Compression:* L64 (len=64)
+
+*Uop-Class payload:* `{"addr_mode": "UNSCALED", "agu_kind": "LDA", "note": "vector-prefix override: dispatch to VEC (subkind=AGU)", "source": "override", "uop_kind": "VEC", "vec_subkind": "AGU"}`

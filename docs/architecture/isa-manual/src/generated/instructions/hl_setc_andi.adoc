@@ -7,10 +7,14 @@
 
 *Syntax:* hl.setc.andi SrcL, simm
 
-*Description:* Set Condition with long immediate.
+*Description:* Long (48-bit) instruction encoding.
 
 *Encoding:*
 
 image::../generated/encodings/enc_hl_setc_andi.svg[HL.SETC.ANDI encoding,width=800]
 
-*Group:* BRU/SETC
+*Uop-Class:* BRU
+
+*Compression:* HL48 (len=48)
+
+*Uop-Class payload:* `{"bru_kind": "SETC", "note": "User confirmed A", "source": "group_rule", "uop_kind": "BRU"}`

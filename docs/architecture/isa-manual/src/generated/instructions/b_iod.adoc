@@ -7,10 +7,14 @@
 
 *Syntax:* B.IOD DepSrc0, DepSrc1, DepSrc2, ->DepDst
 
-*Description:* Block I/O: performs input/output operations at block level.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_b_iod.svg[B.IOD encoding,width=800]
 
-*Group:* CMD/BLOCK_IO
+*Uop-Class:* CMD
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_IO", "note": "User confirmed A", "source": "group_rule", "uop_kind": "CMD"}`

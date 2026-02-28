@@ -7,10 +7,14 @@
 
 *Syntax:* B.ATTR {trap, atomic, <aq, rl, aqrl>, far, DataLayout.{canon, normal}, SrcType, PadValue, DR}
 
-*Description:* Block Attribute descriptor.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_b_attr.svg[B.ATTR encoding,width=800]
 
-*Group:* CMD/DESC_B_ATTR
+*Uop-Class:* CMD
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"cmd_kind": "DESC_B_ATTR", "note": "User confirmed A", "source": "group_rule", "uop_kind": "CMD"}`

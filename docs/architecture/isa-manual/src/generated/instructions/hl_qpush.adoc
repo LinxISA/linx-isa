@@ -7,10 +7,14 @@
 
 *Syntax:* hl.qpush.{h,e,r,he,hr,er,her} SrcL, SrcR, ->{t, u}
 
-*Description:* Queue Management: push to queue.
+*Description:* Long (48-bit) instruction encoding.
 
 *Encoding:*
 
 image::../generated/encodings/enc_hl_qpush.svg[HL.QPUSH encoding,width=800]
 
-*Group:* CMD/Q_PUSH
+*Uop-Class:* CMD
+
+*Compression:* HL48 (len=48)
+
+*Uop-Class payload:* `{"cmd_kind": "Q_PUSH", "note": "general queue manager", "source": "override", "uop_kind": "CMD"}`

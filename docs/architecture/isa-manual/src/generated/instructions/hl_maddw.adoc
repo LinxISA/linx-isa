@@ -7,10 +7,14 @@
 
 *Syntax:* hl.maddw SrcL, SrcR, SrcD, ->Dst0, Dst1
 
-*Description:* Long immediate variant supporting extended immediate range.
+*Description:* Long (48-bit) instruction encoding.
 
 *Encoding:*
 
 image::../generated/encodings/enc_hl_maddw.svg[HL.MADDW encoding,width=800]
 
-*Group:* ALU_MULTI_CYCLE
+*Uop-Class:* ALU
+
+*Compression:* HL48 (len=48)
+
+*Uop-Class payload:* `{"alu_kind": "ALU_MULTI_CYCLE", "source": "group_rule", "uop_kind": "ALU"}`

@@ -7,10 +7,14 @@
 
 *Syntax:* HL.BSTART.SYS FALL<, fixup_label>
 
-*Description:* Block Start for SYScall: marks entry point for system call block.
+*Description:* Long (48-bit) instruction encoding.
 
 *Encoding:*
 
 image::../generated/encodings/enc_hl_bstart_sys.svg[HL.BSTART.SYS encoding,width=800]
 
-*Group:* BBD/BSTART
+*Uop-Class:* BBD
+
+*Compression:* HL48 (len=48)
+
+*Uop-Class payload:* `{"bbd_kind": "BSTART", "note": "User confirmed A", "source": "group_rule", "uop_kind": "BBD"}`

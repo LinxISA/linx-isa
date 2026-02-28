@@ -7,10 +7,14 @@
 
 *Syntax:* addtpc simm, ->{t, u, Rd}
 
-*Description:* Add to PC: PC-relative address calculation for branch targets.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_addtpc.svg[ADDTPC encoding,width=800]
 
-*Group:* BRU/BRU
+*Uop-Class:* BRU
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"note": "User confirmed C (pc read is BRU)", "source": "group_rule", "uop_kind": "BRU"}`

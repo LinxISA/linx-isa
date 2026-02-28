@@ -7,10 +7,14 @@
 
 *Syntax:* hl.setret imm, ->Ra
 
-*Description:* Set Return: set return address (used for function returns).
+*Description:* Long (48-bit) instruction encoding.
 
 *Encoding:*
 
 image::../generated/encodings/enc_hl_setret.svg[HL.SETRET encoding,width=800]
 
-*Group:* BRU/BRU
+*Uop-Class:* BRU
+
+*Compression:* HL48 (len=48)
+
+*Uop-Class payload:* `{"note": "User confirmed C (pc read is BRU)", "source": "group_rule", "uop_kind": "BRU"}`

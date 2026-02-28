@@ -127,6 +127,71 @@ def _pattern_to_mask_match(pattern: str) -> Tuple[int, int]:
     return mask, match
 
 
+def _load_uop_class_map(uop_root: Path) -> Dict[str, Dict[str, Any]]:
+    out: Dict[str, Dict[str, Any]] = {}
+    if not uop_root.exists():
+        return out
+    for p in sorted(uop_root.rglob("*.json")):
+        if p.name in {"index.json", "_index.json"}:
+            continue
+        obj = _read_json(p)
+        big = str(obj.get("big_kind") or "").strip()
+        for it in obj.get("instructions", []) or []:
+            m = str(it.get("mnemonic") or "").strip()
+            if not m:
+                continue
+            out[m] = {
+                "big_kind": big,
+                "class": it.get("class") or {},
+                "group": str(it.get("group") or "").strip(),
+            }
+    return out
+
+
+def _uop_group_str(u: Dict[str, Any]) -> str:
+    big = str(u.get("big_kind") or "").strip() or "-"
+    cls = u.get("class") or {}
+    if big == "AGU":
+        agu_kind = str(cls.get("agu_kind") or "").strip()
+        addr_mode = str(cls.get("addr_mode") or "").strip()
+        if agu_kind and addr_mode:
+            return f"{agu_kind}/{addr_mode}"
+        if agu_kind:
+            return agu_kind
+    uk = str(cls.get("uop_kind") or "").strip()
+    if uk and uk != big:
+        return f"{big}/{uk}"
+    return big
+
+
+def _augment_with_uop_classification(in_dir: Path, instructions: List[Dict[str, Any]]) -> None:
+    # Profile convention: isa/v0.3/uop_classification_v0.3/
+    uop_root = in_dir / "uop_classification_v0.3"
+    uop_map = _load_uop_class_map(uop_root)
+    for inst in instructions:
+        m = str(inst.get("mnemonic") or "").strip()
+        u = uop_map.get(m)
+        if not u:
+            continue
+        inst["uop_class"] = u.get("class") or {}
+        inst["uop_big_kind"] = str(u.get("big_kind") or "").strip()
+        inst["uop_group"] = _uop_group_str(u)
+
+
+def _augment_with_compression_kind(instructions: List[Dict[str, Any]]) -> None:
+    for inst in instructions:
+        m = str(inst.get("mnemonic") or "").strip()
+        l = int(inst.get("length_bits") or 0)
+        if l == 16 or m.startswith("C."):
+            inst["encoding_kind"] = "C16"
+        elif l == 48 or m.startswith("HL."):
+            inst["encoding_kind"] = "HL48"
+        elif l == 64:
+            inst["encoding_kind"] = "L64"
+        else:
+            inst["encoding_kind"] = "L32"
+
+
 def _augment_with_encoding(instructions: List[Dict[str, Any]]) -> None:
     """
     Derive `encoding` (mask/match/pattern and field pieces) from raw segments.
@@ -537,6 +602,10 @@ def build(in_dir: Path) -> Dict[str, Any]:
 
     _augment_with_encoding(instructions)
     _assign_stable_ids(instructions)
+
+    # Attach uop classification + compression kind (documentation + downstream decoders).
+    _augment_with_uop_classification(in_dir, instructions)
+    _augment_with_compression_kind(instructions)
 
     # strip internal fields
     for inst in instructions:

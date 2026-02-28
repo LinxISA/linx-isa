@@ -7,10 +7,14 @@
 
 *Syntax:* lr.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], {->t, ->u, ->Rd}
 
-*Description:* Load Reserved: load and reserve the memory location.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_lr_b.svg[LR.B encoding,width=800]
 
-*Group:* AMO/AMO
+*Uop-Class:* AMO
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"note": "User confirmed A: atomic ops execute in AMO class", "source": "group_rule", "uop_kind": "AMO"}`

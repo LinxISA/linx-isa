@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_cmp_geui]]
+==== V.CMP.GEUI
+
+*Syntax:* v.cmp.geui SrcL.<T>, uimm, ->Dst.<W>
+
+*Description:* Vector instruction (VEC engine).
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_cmp_geui.svg[V.CMP.GEUI encoding,width=800]
+
+*Uop-Class:* VEC
+
+*Compression:* L64 (len=64)
+
+*Uop-Class payload:* `{"bru_kind": "CMP", "note": "vector-prefix override: dispatch to VEC (subkind=BRU)", "source": "override", "uop_kind": "VEC", "vec_subkind": "BRU"}`

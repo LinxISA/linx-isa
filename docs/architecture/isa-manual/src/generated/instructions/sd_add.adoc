@@ -7,10 +7,14 @@
 
 *Syntax:* sd.add<.{rl, f, rlf}> [SrcL], SrcR
 
-*Description:* Atomic Add operation: memory value is atomically added with register.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_sd_add.svg[SD.ADD encoding,width=800]
 
-*Group:* AMO/AMO
+*Uop-Class:* AMO
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"note": "User confirmed A: atomic ops execute in AMO class", "source": "group_rule", "uop_kind": "AMO"}`

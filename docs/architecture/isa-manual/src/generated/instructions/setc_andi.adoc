@@ -7,10 +7,14 @@
 
 *Syntax:* setc.andi SrcL, simm
 
-*Description:* Set Condition: sets condition flags based on comparison.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_setc_andi.svg[SETC.ANDI encoding,width=800]
 
-*Group:* BRU/SETC
+*Uop-Class:* BRU
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"bru_kind": "SETC", "note": "User confirmed A", "source": "group_rule", "uop_kind": "BRU"}`

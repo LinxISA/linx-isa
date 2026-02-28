@@ -7,10 +7,14 @@
 
 *Syntax:* hl.cmp.eqi SrcL, simm, ->{t, u, Rd}
 
-*Description:* Long immediate compare with extended range.
+*Description:* Long (48-bit) instruction encoding.
 
 *Encoding:*
 
 image::../generated/encodings/enc_hl_cmp_eqi.svg[HL.CMP.EQI encoding,width=800]
 
-*Group:* BRU/CMP
+*Uop-Class:* BRU
+
+*Compression:* HL48 (len=48)
+
+*Uop-Class payload:* `{"bru_kind": "CMP", "source": "group_rule", "uop_kind": "BRU"}`

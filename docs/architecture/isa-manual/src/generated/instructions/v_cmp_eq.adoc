@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_cmp_eq]]
+==== V.CMP.EQ
+
+*Syntax:* v.cmp.eq SrcL.<T>, SrcR.<T>, ->Dst.<W>
+
+*Description:* Vector instruction (VEC engine).
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_cmp_eq.svg[V.CMP.EQ encoding,width=800]
+
+*Uop-Class:* VEC
+
+*Compression:* L64 (len=64)
+
+*Uop-Class payload:* `{"bru_kind": "CMP", "note": "vector-prefix override: dispatch to VEC (subkind=BRU)", "source": "override", "uop_kind": "VEC", "vec_subkind": "BRU"}`

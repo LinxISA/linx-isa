@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_ldi_u]]
+==== V.LDI.U
+
+*Syntax:* v.ldi.u<.local> [SrcL<.ud>, <lc0<<3>, simm], ->Dst.<W>
+
+*Description:* Vector instruction (VEC engine).
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_ldi_u.svg[V.LDI.U encoding,width=800]
+
+*Uop-Class:* VEC
+
+*Compression:* L64 (len=64)
+
+*Uop-Class payload:* `{"addr_mode": "UNSCALED", "agu_kind": "LDA", "note": "vector-prefix override: dispatch to VEC (subkind=AGU)", "source": "override", "uop_kind": "VEC", "vec_subkind": "AGU"}`

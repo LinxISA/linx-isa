@@ -7,10 +7,14 @@
 
 *Syntax:* hl.ld.pcr [<symbol>], ->{t, u, Rd}
 
-*Description:* Long immediate variant supporting extended address range (48-bit).
+*Description:* Long (48-bit) instruction encoding.
 
 *Encoding:*
 
 image::../generated/encodings/enc_hl_ld_pcr.svg[HL.LD.PCR encoding,width=800]
 
-*Group:* LDA/PC_REL
+*Uop-Class:* LDA/PC_REL
+
+*Compression:* HL48 (len=48)
+
+*Uop-Class payload:* `{"addr_mode": "PC_REL", "agu_kind": "LDA", "note": "User confirmed A", "source": "group_rule", "uop_kind": "AGU"}`

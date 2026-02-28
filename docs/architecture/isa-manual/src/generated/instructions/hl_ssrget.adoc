@@ -7,10 +7,14 @@
 
 *Syntax:* hl.ssrget SSR_ID, ->{t, u, Rd}
 
-*Description:* Get Special Security Register value.
+*Description:* Long (48-bit) instruction encoding.
 
 *Encoding:*
 
 image::../generated/encodings/enc_hl_ssrget.svg[HL.SSRGET encoding,width=800]
 
-*Group:* SYS/SSR
+*Uop-Class:* SYS
+
+*Compression:* HL48 (len=48)
+
+*Uop-Class payload:* `{"note": "User confirmed A", "source": "group_rule", "sys_kind": "SSR", "uop_kind": "SYS"}`

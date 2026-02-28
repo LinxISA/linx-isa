@@ -7,10 +7,14 @@
 
 *Syntax:* prfi.u [SrcL, simm]
 
-*Description:* Load/store instruction with LDA/UNSCALED addressing mode.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_prfi_u.svg[PRFI.U encoding,width=800]
 
-*Group:* LDA/UNSCALED
+*Uop-Class:* LDA/UNSCALED
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"addr_mode": "UNSCALED", "agu_kind": "LDA", "note": "User confirmed all loads are AGU/LDA", "source": "group_rule", "uop_kind": "AGU"}`

@@ -7,10 +7,14 @@
 
 *Syntax:* v.psel  SrcP, SrcL.<T>, SrcR.<T><.neg>, ->Dst.<W>
 
-*Description:* Vector Pairwise Select.
+*Description:* Vector instruction (VEC engine).
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_psel_part1.svg[V.PSEL encoding,width=800]
+image::../generated/encodings/enc_v_psel.svg[V.PSEL encoding,width=800]
 
-*Group:* VEC/VEC_SEL
+*Uop-Class:* VEC
+
+*Compression:* L64 (len=64)
+
+*Uop-Class payload:* `{"note": "vector-prefix override: dispatch to VEC (subkind=VEC)", "source": "override", "uop_kind": "VEC", "vec_kind": "VEC_SEL", "vec_subkind": "VEC"}`

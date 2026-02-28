@@ -3,14 +3,18 @@
 // Do not edit by hand
 
 [[inst_bstart_par]]
-==== BSTART.TEPL
+==== BSTART.PAR
 
-*Syntax:* BSTART.TEPL TileOp10, DataType
+*Syntax:* BSTART.PAR TileOp10, DataType
 
-*Description:* Canonical TEPL typed block start form.
+*Description:* -
 
 *Encoding:*
 
-image::../generated/encodings/enc_bstart_tepl.svg[BSTART.TEPL encoding,width=800]
+image::../generated/encodings/enc_bstart_par.svg[BSTART.PAR encoding,width=800]
 
-*Group:* CMD/BLOCK_SPLIT
+*Uop-Class:* CMD
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "User corrected to A", "source": "group_rule", "uop_kind": "CMD"}`

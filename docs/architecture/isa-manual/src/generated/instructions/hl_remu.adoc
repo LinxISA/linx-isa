@@ -7,10 +7,14 @@
 
 *Syntax:* hl.remu SrcL, SrcR, ->Dst0, Dst1
 
-*Description:* Remainder of division operation.
+*Description:* Long (48-bit) instruction encoding.
 
 *Encoding:*
 
 image::../generated/encodings/enc_hl_remu.svg[HL.REMU encoding,width=800]
 
-*Group:* ALU_MULTI_CYCLE
+*Uop-Class:* ALU
+
+*Compression:* HL48 (len=48)
+
+*Uop-Class payload:* `{"alu_kind": "ALU_MULTI_CYCLE", "source": "group_rule", "uop_kind": "ALU"}`

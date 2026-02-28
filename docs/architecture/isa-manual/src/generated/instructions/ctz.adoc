@@ -7,10 +7,14 @@
 
 *Syntax:* ctz SrcL,  M, N, ->{t, u, Rd}
 
-*Description:* Count Trailing Zeros: counts the number of trailing zero bits.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_ctz.svg[CTZ encoding,width=800]
 
-*Group:* ALU
+*Uop-Class:* ALU
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"note": "User confirmed A", "source": "group_rule", "uop_kind": "ALU"}`

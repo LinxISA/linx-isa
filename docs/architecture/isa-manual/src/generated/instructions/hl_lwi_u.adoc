@@ -7,10 +7,14 @@
 
 *Syntax:* hl.lwi.u [SrcL, simm], ->{t, u, Rd}
 
-*Description:* Long immediate variant supporting extended address range (48-bit).
+*Description:* Long (48-bit) instruction encoding.
 
 *Encoding:*
 
 image::../generated/encodings/enc_hl_lwi_u.svg[HL.LWI.U encoding,width=800]
 
-*Group:* LDA/LONG
+*Uop-Class:* LDA/LONG
+
+*Compression:* HL48 (len=48)
+
+*Uop-Class payload:* `{"addr_mode": "LONG", "agu_kind": "LDA", "note": "User confirmed all loads are AGU/LDA", "source": "group_rule", "uop_kind": "AGU"}`

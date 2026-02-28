@@ -5,12 +5,16 @@
 [[inst_b_ioti]]
 ==== B.IOTI
 
-*Syntax:* B.IOTI [SrcTile0<.reuse>, SrcTile1<.reuse>],  group=0, ->DstTile<Size>
+*Syntax:* B.IOTI [SrcTile0<.reuse>, SrcTile1<.reuse>],  group=1, ->DstTile<Size>
 
-*Description:* Block I/O: performs input/output operations at block level.
+*Description:* -
 
 *Encoding:*
 
 image::../generated/encodings/enc_b_ioti.svg[B.IOTI encoding,width=800]
 
-*Group:* CMD/BLOCK_IO
+*Uop-Class:* CMD
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_IO", "note": "User confirmed A", "source": "group_rule", "uop_kind": "CMD"}`

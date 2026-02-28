@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_bxu]]
+==== V.BXU
+
+*Syntax:* v.bxu SrcL.<T>, M, N, ->Dst.<W>
+
+*Description:* Vector instruction (VEC engine).
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_bxu.svg[V.BXU encoding,width=800]
+
+*Uop-Class:* VEC
+
+*Compression:* L64 (len=64)
+
+*Uop-Class payload:* `{"note": "vector-prefix override: dispatch to VEC (subkind=ALU)", "source": "override", "uop_kind": "VEC", "vec_subkind": "ALU"}`

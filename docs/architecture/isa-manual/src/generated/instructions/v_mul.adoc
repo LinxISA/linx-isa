@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_v_mul]]
+==== V.MUL
+
+*Syntax:* v.mul SrcL.<T>, SrcR.<T>, ->Dst.<W>
+
+*Description:* Vector instruction (VEC engine).
+
+*Encoding:*
+
+image::../generated/encodings/enc_v_mul.svg[V.MUL encoding,width=800]
+
+*Uop-Class:* VEC
+
+*Compression:* L64 (len=64)
+
+*Uop-Class payload:* `{"alu_kind": "ALU_MULTI_CYCLE", "note": "vector-prefix override: dispatch to VEC (subkind=ALU)", "source": "override", "uop_kind": "VEC", "vec_subkind": "ALU"}`
