@@ -44,6 +44,8 @@ Last updated: 2026-02-22
 
 ## Latest command log
 
+- virtio-9p over virtio-mmio: **debug in progress** (currently EPROTO -71); see `docs/bringup/virtio_9p_debug.md`
+
 - `MODE=phase-b lib/musl/tools/linx/build_linx64_musl.sh` ✅ (`M1/M2/M3` pass)
 - `python3 avs/qemu/run_musl_smoke.py --mode phase-b` ✅ (`runtime_pass`)
 - `bash lib/glibc/tools/linx/build_linx64_glibc.sh` ✅ (`G1a`: configure + `csu/subdir_lib` + `crt1.o`)
