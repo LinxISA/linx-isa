@@ -7,36 +7,88 @@
     "canonical_report": "docs/bringup/gates/latest.json",
     "blocker_policy": "documented_waiver_only"
   },
+  "agent_scope_policy": {
+    "explicit_modules_required": true,
+    "allow_multi_module_agents": true,
+    "max_modules_per_agent": 3,
+    "cross_module_agents": ["libc", "integration"],
+    "allowed_modules": [
+      "superproject",
+      "skills/linx-skills",
+      "compiler/llvm",
+      "emulator/qemu",
+      "kernel/linux",
+      "lib/glibc",
+      "lib/musl",
+      "workloads/spec2017",
+      "isa",
+      "docs",
+      "rtl/LinxCore",
+      "tools/pyCircuit"
+    ],
+    "canonical_skill_names": [
+      "linx-superproject",
+      "linx-compiler",
+      "linx-qemu",
+      "linx-linux",
+      "linx-core",
+      "linx-pycircuit",
+      "linx-lib",
+      "linx-isa"
+    ],
+    "domain_module_map": {
+      "ISA": ["isa", "docs", "superproject"],
+      "Compiler": ["compiler/llvm"],
+      "Emulator": ["emulator/qemu"],
+      "Kernel": ["kernel/linux"],
+      "Library": ["lib/glibc", "lib/musl"],
+      "SPEC": ["workloads/spec2017"],
+      "Model": ["tools/pyCircuit", "emulator/qemu", "superproject"],
+      "Regression": ["superproject"]
+    }
+  },
   "agents": {
     "llvm": {
       "owner": "compiler",
       "checklist": "compiler_llvm.md",
-      "description": "Linx LLVM toolchain and compile-gate owner"
+      "description": "Linx LLVM toolchain and compile-gate owner",
+      "modules": ["compiler/llvm"],
+      "skill": "linx-compiler"
     },
     "qemu": {
       "owner": "emulator",
       "checklist": "emulator_qemu.md",
-      "description": "Linx QEMU runtime and strict-system owner"
+      "description": "Linx QEMU runtime and strict-system owner",
+      "modules": ["emulator/qemu"],
+      "skill": "linx-qemu"
     },
     "linux": {
       "owner": "kernel",
       "checklist": "kernel_linux.md",
-      "description": "Linx Linux boot/initramfs/9p owner"
+      "description": "Linx Linux boot/initramfs/9p owner",
+      "modules": ["kernel/linux"],
+      "skill": "linx-linux"
     },
     "libc": {
       "owner": "library",
       "checklist": "libc_runtime.md",
-      "description": "musl/glibc runtime and sysroot owner"
+      "description": "musl/glibc runtime and sysroot owner",
+      "modules": ["lib/glibc", "lib/musl"],
+      "skill": "linx-lib"
     },
     "spec": {
       "owner": "spec",
       "checklist": "specint_qemu.md",
-      "description": "SPEC2017 intrate build+run owner"
+      "description": "SPEC2017 intrate build+run owner",
+      "modules": ["workloads/spec2017"],
+      "skill": "linx-superproject"
     },
     "integration": {
       "owner": "bringup",
       "checklist": "integration_release.md",
-      "description": "cross-repo closure and release gate owner"
+      "description": "cross-repo closure and release gate owner",
+      "modules": ["superproject", "skills/linx-skills", "docs"],
+      "skill": "linx-superproject"
     }
   },
   "gate_assignments": [
@@ -152,7 +204,7 @@
     "kernel_linux.md": ["LINUX-001", "LINUX-002", "LINUX-003", "LINUX-004"],
     "libc_runtime.md": ["LIBC-001", "LIBC-002", "LIBC-003", "LIBC-004"],
     "specint_qemu.md": ["SPEC-001", "SPEC-002", "SPEC-003", "SPEC-004", "SPEC-005", "SPEC-006", "SPEC-007"],
-    "integration_release.md": ["INT-001", "INT-002", "INT-003", "INT-004", "INT-005", "INT-006"]
+    "integration_release.md": ["INT-001", "INT-002", "INT-003", "INT-004", "INT-005", "INT-006", "INT-007", "INT-008", "INT-009"]
   },
   "spec_policy": {
     "stage_a_subset": ["999.specrand_ir", "505.mcf_r", "531.deepsjeng_r"],

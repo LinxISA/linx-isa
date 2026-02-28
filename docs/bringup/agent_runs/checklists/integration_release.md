@@ -28,3 +28,15 @@
   Command: `python3 tools/bringup/gate_report.py render --report docs/bringup/gates/latest.json --out-md docs/bringup/GATE_STATUS.md`
   Done means: markdown timestamp matches report timestamp.
   Status: ✅ PASS (2026-02-25) - timestamp check passes: `latest.json` and `GATE_STATUS.md` both report `2026-02-25 12:41:30Z`.
+
+- [ ] ID: INT-007 Enforce explicit agent module ownership and canonical skill names.
+  Command: `python3 tools/bringup/check_multi_agent_gates.py --strict-always --mode static`
+  Done means: every agent declares `modules[]` + `skill`, and `skill` is in canonical list.
+
+- [ ] ID: INT-008 Allow multi-module ownership only for approved cross-module agents.
+  Command: `python3 tools/bringup/check_multi_agent_gates.py --strict-always --mode static`
+  Done means: agents with multiple modules are explicitly listed in `cross_module_agents`.
+
+- [ ] ID: INT-009 Sync installed skills from canonical map and prune deprecated aliases.
+  Command: `bash skills/linx-skills/scripts/install_canonical_skills.sh`
+  Done means: local `$CODEX_HOME/skills` keeps only canonical `linx-*` skills (plus protected utility skills).
