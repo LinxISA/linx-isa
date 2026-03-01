@@ -112,6 +112,63 @@ function trap_bfetch(fault_va : bits(64)) -> unit = {
   raise_trap(trapnum_block_trap(), e_block_cause(0x03, 0x00), fault_va, 0b1)
 }
 
+// -----------------------------------------------------------------------------
+// Block boundary + BARG state (staged; contracts defined in ISA manual)
+//
+// These interfaces are used by BSTART/BSTOP semantics. A complete model will:
+// - reset/initialize BARG at block start;
+// - accumulate SETC/B.ATTR/B.* updates into BARG during the block;
+// - at block commit (BSTOP or next BSTART), consult BARG and update architectural PC/privilege/etc.
+//
+// For now we keep these as explicit stubs and do not guess microarchitectural details.
+
+typedef block_type = bits(4)
+typedef block_xfer_kind = bits(4)
+
+function barg_reset_at_block_start() -> unit = {
+  unimplemented("barg_reset_at_block_start")
+}
+
+function barg_set_block_type(bt : block_type) -> unit = {
+  unimplemented("barg_set_block_type")
+}
+
+function barg_set_xfer_kind(k : block_xfer_kind) -> unit = {
+  unimplemented("barg_set_xfer_kind")
+}
+
+function barg_set_next_pc_target(tgt : bits(64)) -> unit = {
+  unimplemented("barg_set_next_pc_target")
+}
+
+function block_commit_boundary() -> unit = {
+  unimplemented("block_commit_boundary")
+}
+
+// Decoded immediate/target helpers for block markers.
+// The decoder/fetch layer is responsible for computing the architectural target address
+// (e.g. PC-relative label resolved to an address).
+function decoded_block_target_pc() -> bits(64) = {
+  unimplemented("decoded_block_target_pc");
+  0x0000_0000_0000_0000
+}
+
+function decoded_block_type() -> block_type = {
+  unimplemented("decoded_block_type");
+  0b0000
+}
+
+function decoded_block_xfer_kind() -> block_xfer_kind = {
+  unimplemented("decoded_block_xfer_kind");
+  0b0000
+}
+
+// CFI check hook: return true iff `addr` is a legal block start marker.
+function is_block_start_marker(addr : bits(64)) -> bool = {
+  unimplemented("is_block_start_marker");
+  false
+}
+
 function trap_assert_fail(traparg0 : bits(64)) -> unit = {
   // TRAPNUM_ASSERT_FAIL = 52, CAUSE=0, BI=0
   raise_trap(to_bits(6, 52), to_bits(24, 0), traparg0, 0b0)
