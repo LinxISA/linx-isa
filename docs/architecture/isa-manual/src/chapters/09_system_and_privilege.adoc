@@ -558,6 +558,54 @@ DMA-style engines (including `TMA` engines) MUST perform address translation usi
 IOMMU translation faults MUST raise a synchronous `E_DATA` exception with `TRAPARG0_ACRm` set to the faulting IOVA. In
 the v0.2 bring-up profile, implementations SHOULD report `CAUSE=IOMMU_PF`.
 
+==== TLB maintenance (`tlb.*`, v0.2)
+
+The following TLB maintenance instructions are provided:
+
+* `tlb.iv SrcL`
+* `tlb.iav SrcL`
+* `tlb.ia SrcL`
+* `tlb.iall`
+
+v0.2 contract (ARM-inspired):
+
+* TLB entries are tagged with a 16-bit ASID.
+* ASID selection follows `TCR_ACR1.A1`. In the v0.2 bring-up profile, `A1=0`, so the active ASID is taken from `TTBR0_ACR1[63:48]` for `TTBR0` translations (and `TTBR1` ASID is ignored).
+* `tlb.*` instructions invalidate the matching cached translation entries.
+  - Scope: implementations MUST broadcast the invalidation to all LXCPUs in the same platform-defined *TLB share-domain*.
+  - `tlb.*` is **not** a completion/synchronization point. Software MUST use appropriate `FENCE.D` sequences (or stronger platform-defined mechanisms) to guarantee the required ordering/completion.
+
+Operand encoding (v0.2):
+
+* `tlb.iv SrcL`: `SrcL` contains the VA to invalidate. Implementations MUST ignore low page-offset bits (`VA[11:0]`) and invalidate at 4 KiB granularity (unaligned VAs are permitted). This operation is global with respect to ASID (i.e. matches any ASID).
+* `tlb.iav SrcL`: `SrcL` contains the VA to invalidate (4 KiB granularity; low bits ignored; unaligned VAs are permitted), and the active ASID is selected per `TCR_ACR1.A1`. This operation matches only the selected ASID.
+* `tlb.ia SrcL`: `SrcL[15:0]` contains the ASID to invalidate; `SrcL[63:16]` MUST be zero.
+* `tlb.iall`: no operands.
+
+Fault behavior (v0.2):
+
+* For `tlb.iv` / `tlb.iav`, a non-canonical VA in `SrcL` MUST raise a translation fault (treated as `MMU_PF`).
+* For `tlb.ia`, any non-zero reserved bit in `SrcL[63:16]` MUST trap as `E_INST(EC_ILLEGAL)`.
+* Executing any `tlb.*` instruction from an unprivileged managing ring (bring-up: `ACR2`) MUST trap as `E_INST` with a cause indicating *privileged instruction*.
+
+Recommended software sequences (ordering + completion):
+
+The `tlb.*` instructions are not synchronization points, so software MUST surround them with fences sufficient to:
+(1) ensure page-table writes are visible before invalidation takes effect, and
+(2) ensure that subsequent accesses do not use stale translations.
+
+* Data-side page-table updates (no impact to instruction fetch):
+  . `FENCE.D RW,RW`
+  . `tlb.iav SrcL` (preferred when invalidating one VA within the active ASID) OR `tlb.ia SrcL` / `tlb.iall` as appropriate
+  . `FENCE.D RW,RW`
+
+* Page-table updates that may impact instruction fetch (e.g., changing `X`, remapping executable pages, or changing fetch-relevant attributes):
+  . `FENCE.D RW,RW`
+  . `tlb.*` as appropriate
+  . `FENCE.D I,I`
+
+NOTE: For per-VA invalidation, software SHOULD prefer `tlb.iav` over `tlb.iv` to avoid invalidating translations for other ASIDs.
+
 [[system-timers]]
 === Timers and counters
 
