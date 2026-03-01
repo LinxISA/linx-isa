@@ -182,6 +182,24 @@ B.IOD
 C.B.DIM
 C.B.DIMI
 
+# Cache / barrier / TLB maintenance (staged; functional no-op, with required operand validation)
+DC.IALL
+DC.IVA
+DC.ISW
+DC.ZVA
+DC.CVA
+DC.CIVA
+DC.CSW
+DC.CISW
+IC.IALL
+IC.IVA
+BC.IALL
+BC.IVA
+TLB.IV
+TLB.IAV
+TLB.IA
+TLB.IALL
+
 
 # BRU control-transfer (vec engine scalar lane)
 B.EQ
