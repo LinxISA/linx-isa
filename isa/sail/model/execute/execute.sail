@@ -1649,6 +1649,68 @@ function exec_fence_d() -> unit = {
   ()
 }
 
+// -----------------------------------------------------------------------------
+// Cache + TLB maintenance (staged)
+//
+// The Sail model does not currently model caches/TLB structures. We still provide
+// these instructions with explicit operand validation where architecturally
+// required by the ISA manual, and otherwise treat them as functional no-ops.
+
+function is_canonical_va48(va : bits(64)) -> bool = {
+  // 48-bit canonical address: bits[63:48] must equal sign-extension of bit 47.
+  let sign = va[47];
+  if sign == 0b0 then va[63..48] == 0x0000 else va[63..48] == 0xFFFF
+}
+
+function exec_tlb_iv(SrcL : bits(5)) -> unit = {
+  let va = read_reg5(SrcL);
+  if not(is_canonical_va48(va)) then {
+    // Manual: must raise translation fault (treated as MMU_PF).
+    // Trap wiring is still staged, so keep the failure explicit.
+    unimplemented("tlb.iv: non-canonical VA => E_DATA(MMU_PF)")
+  } else {
+    ()
+  }
+}
+
+function exec_tlb_iav(SrcL : bits(5)) -> unit = {
+  let va = read_reg5(SrcL);
+  if not(is_canonical_va48(va)) then {
+    unimplemented("tlb.iav: non-canonical VA => E_DATA(MMU_PF)")
+  } else {
+    ()
+  }
+}
+
+function exec_tlb_ia(SrcL : bits(5)) -> unit = {
+  let x = read_reg5(SrcL);
+  // Manual: SrcL[63:16] must be zero.
+  if x[63..16] != 0x0000_0000_0000 then {
+    unimplemented("tlb.ia: reserved bits nonzero => E_INST(EC_ILLEGAL)")
+  } else {
+    ()
+  }
+}
+
+function exec_tlb_iall() -> unit = {
+  ()
+}
+
+function exec_dc_iall() -> unit = { () }
+function exec_dc_iva(SrcL : bits(5)) -> unit = { () }
+function exec_dc_isw(SrcL : bits(5)) -> unit = { () }
+function exec_dc_zva(SrcL : bits(5)) -> unit = { () }
+function exec_dc_cva(SrcL : bits(5)) -> unit = { () }
+function exec_dc_civa(SrcL : bits(5)) -> unit = { () }
+function exec_dc_csw(SrcL : bits(5)) -> unit = { () }
+function exec_dc_cisw(SrcL : bits(5)) -> unit = { () }
+
+function exec_ic_iall() -> unit = { () }
+function exec_ic_iva(SrcL : bits(5)) -> unit = { () }
+
+function exec_bc_iall() -> unit = { () }
+function exec_bc_iva(SrcL : bits(5)) -> unit = { () }
+
 function exec_ebreak() -> unit = {
   // Software breakpoint.
   trap_sw_breakpoint(read_pc_or_tpc())
