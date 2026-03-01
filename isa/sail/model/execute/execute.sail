@@ -1660,6 +1660,76 @@ function exec_bwi() -> unit = { () }
 function exec_bwe() -> unit = { () }
 function exec_bse() -> unit = { () }
 
+// -----------------------------------------------------------------------------
+// CMD: Block boundary markers (BSTART/BSTOP)
+//
+// Normative: docs/architecture/isa-manual/src/chapters/04_block_isa.adoc and
+// docs/architecture/isa-manual/src/chapters/09_system_and_privilege.adoc.
+//
+// Architectural rule: every control-flow target must land on a block start marker;
+// violations trap with E_BLOCK(EC_CFI), kind=CFI_BAD_TARGET.
+
+function exec_bstart() -> unit = {
+  // Generic BSTART (COND, <label>) form.
+  // - Terminates previous block (commit boundary).
+  // - Starts a new block and initializes BARG.
+  // - Records block type/xfer kind/next target for commit.
+  //
+  // Decoder provides block metadata and target.
+  let tgt = decoded_block_target_pc();
+  if not(is_block_start_marker(tgt)) then {
+    // EC_CFI_KIND=1 (CFI_BAD_TARGET)
+    trap_block_cfi(0x1, read_pc_or_tpc())
+  } else {
+    block_commit_boundary();
+    barg_reset_at_block_start();
+    barg_set_block_type(decoded_block_type());
+    barg_set_xfer_kind(decoded_block_xfer_kind());
+    barg_set_next_pc_target(tgt)
+  }
+}
+
+// Typed 32/48-bit BSTART variants share the same boundary semantics; the decoder
+// distinguishes the specific block type/xfer kind encoding.
+function exec_bstart_std() -> unit = { exec_bstart() }
+function exec_bstart_fp() -> unit = { exec_bstart() }
+function exec_bstart_sys() -> unit = { exec_bstart() }
+function exec_bstart_mpar() -> unit = { exec_bstart() }
+function exec_bstart_mseq() -> unit = { exec_bstart() }
+function exec_bstart_vpar() -> unit = { exec_bstart() }
+function exec_bstart_vseq() -> unit = { exec_bstart() }
+function exec_bstart_par() -> unit = { exec_bstart() }
+function exec_bstart_cube() -> unit = { exec_bstart() }
+function exec_bstart_tma() -> unit = { exec_bstart() }
+function exec_bstart_tepl() -> unit = { exec_bstart() }
+function exec_bstart_fixp() -> unit = { exec_bstart() }
+function exec_bstart_tload() -> unit = { exec_bstart() }
+function exec_bstart_tstore() -> unit = { exec_bstart() }
+function exec_bstart_tmov() -> unit = { exec_bstart() }
+function exec_bstart_tmatmul() -> unit = { exec_bstart() }
+function exec_bstart_tmatmul_acc() -> unit = { exec_bstart() }
+function exec_bstart_acccvt() -> unit = { exec_bstart() }
+function exec_bstart_call() -> unit = { exec_bstart() }
+
+function exec_hl_bstart_std() -> unit = { exec_bstart() }
+function exec_hl_bstart_fp() -> unit = { exec_bstart() }
+
+function exec_c_bstart() -> unit = { exec_bstart() }
+function exec_c_bstart_std() -> unit = { exec_bstart() }
+function exec_c_bstart_fp() -> unit = { exec_bstart() }
+function exec_c_bstart_sys() -> unit = { exec_bstart() }
+function exec_c_bstart_mpar() -> unit = { exec_bstart() }
+function exec_c_bstart_mseq() -> unit = { exec_bstart() }
+function exec_c_bstart_vpar() -> unit = { exec_bstart() }
+function exec_c_bstart_vseq() -> unit = { exec_bstart() }
+
+function exec_bstop() -> unit = {
+  // Explicit block terminator. Commits current block boundary.
+  block_commit_boundary()
+}
+
+function exec_c_bstop() -> unit = { exec_bstop() }
+
 
 function exec_fneg(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
   // Bitwise sign flip (fd/fs).
