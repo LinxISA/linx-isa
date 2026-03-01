@@ -1756,6 +1756,34 @@ function exec_b_attr() -> unit = { () }
 function exec_b_hint() -> unit = { () }
 function exec_b_iod() -> unit = { () }
 
+// -----------------------------------------------------------------------------
+// C16: quick bring-up stubs for compressed misc ops referenced by coverage gates.
+// These will be refined once the corresponding decode + architectural effects are staged.
+
+function exec_c_lwi() -> unit = { unimplemented("exec_c_lwi"); () }
+function exec_c_ldi() -> unit = { unimplemented("exec_c_ldi"); () }
+function exec_c_swi() -> unit = { unimplemented("exec_c_swi"); () }
+function exec_c_sdi() -> unit = { unimplemented("exec_c_sdi"); () }
+function exec_c_ssrget() -> unit = { unimplemented("exec_c_ssrget"); () }
+
+// -----------------------------------------------------------------------------
+// Cache / barrier maintenance (staged): architecturally no-op in Sail bring-up.
+
+function exec_dc_iall() -> unit = { () }
+function exec_dc_iva() -> unit = { () }
+function exec_dc_isw() -> unit = { () }
+function exec_dc_zva() -> unit = { () }
+function exec_dc_cva() -> unit = { () }
+function exec_dc_civa() -> unit = { () }
+function exec_dc_csw() -> unit = { () }
+function exec_dc_cisw() -> unit = { () }
+
+function exec_ic_iall() -> unit = { () }
+function exec_ic_iva() -> unit = { () }
+
+function exec_bc_iall() -> unit = { () }
+function exec_bc_iva() -> unit = { () }
+
 
 function exec_fneg(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
   // Bitwise sign flip (fd/fs).

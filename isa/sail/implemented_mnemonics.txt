@@ -182,6 +182,27 @@ B.IOD
 C.B.DIM
 C.B.DIMI
 
+# C16 loads/stores + CSR read helper
+C.LWI
+C.LDI
+C.SWI
+C.SDI
+C.SSRGET
+
+# Cache / barrier maintenance
+DC.IALL
+DC.IVA
+DC.ISW
+DC.ZVA
+DC.CVA
+DC.CIVA
+DC.CSW
+DC.CISW
+IC.IALL
+IC.IVA
+BC.IALL
+BC.IVA
+
 # BRU control-transfer (vec engine scalar lane)
 B.EQ
 B.NE
