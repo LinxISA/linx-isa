@@ -1683,6 +1683,8 @@ function exec_bstart() -> unit = {
   } else {
     block_commit_boundary();
     barg_reset_at_block_start();
+    // Reset descriptor-seen state for the new block header.
+    bdesc_reset();
     barg_set_block_type(decoded_block_type());
     barg_set_xfer_kind(decoded_block_xfer_kind());
     barg_set_next_pc_target(tgt)
@@ -1724,11 +1726,63 @@ function exec_c_bstart_vpar() -> unit = { exec_bstart() }
 function exec_c_bstart_vseq() -> unit = { exec_bstart() }
 
 function exec_bstop() -> unit = {
-  // Explicit block terminator. Commits current block boundary.
+  // Explicit block terminator.
+  // For staged tile/vector headers, perform mandatory-descriptor validation at
+  // the end of the header stream before committing the boundary.
+  bdesc_validate_header_end(read_pc_or_tpc());
   block_commit_boundary()
 }
 
 function exec_c_bstop() -> unit = { exec_bstop() }
+
+// -----------------------------------------------------------------------------
+// B.* header descriptors (staged)
+//
+// In the staged model we track descriptor-family presence for mandatory header
+// validation (E_BLOCK(EC_BLOCKFMT)). Full descriptor field semantics (tile
+// binding, sizes, LB0..LB2 writes, etc.) are brought up incrementally.
+
+function exec_b_dim() -> unit = { bdesc_mark_dim() }
+function exec_c_b_dim() -> unit = { bdesc_mark_dim() }
+function exec_c_b_dimi() -> unit = { bdesc_mark_dim() }
+
+function exec_b_text() -> unit = { bdesc_mark_text() }
+function exec_b_arg() -> unit = { bdesc_mark_arg() }
+function exec_b_ior() -> unit = { bdesc_mark_ior() }
+function exec_b_iot() -> unit = { bdesc_mark_iot() }
+function exec_b_ioti() -> unit = { bdesc_mark_iot() }
+
+function exec_b_attr() -> unit = { () }
+function exec_b_hint() -> unit = { () }
+function exec_b_iod() -> unit = { () }
+
+// -----------------------------------------------------------------------------
+// C16: quick bring-up stubs for compressed misc ops referenced by coverage gates.
+// These will be refined once the corresponding decode + architectural effects are staged.
+
+function exec_c_lwi() -> unit = { unimplemented("exec_c_lwi"); () }
+function exec_c_ldi() -> unit = { unimplemented("exec_c_ldi"); () }
+function exec_c_swi() -> unit = { unimplemented("exec_c_swi"); () }
+function exec_c_sdi() -> unit = { unimplemented("exec_c_sdi"); () }
+function exec_c_ssrget() -> unit = { unimplemented("exec_c_ssrget"); () }
+
+// -----------------------------------------------------------------------------
+// Cache / barrier maintenance (staged): architecturally no-op in Sail bring-up.
+
+function exec_dc_iall() -> unit = { () }
+function exec_dc_iva() -> unit = { () }
+function exec_dc_isw() -> unit = { () }
+function exec_dc_zva() -> unit = { () }
+function exec_dc_cva() -> unit = { () }
+function exec_dc_civa() -> unit = { () }
+function exec_dc_csw() -> unit = { () }
+function exec_dc_cisw() -> unit = { () }
+
+function exec_ic_iall() -> unit = { () }
+function exec_ic_iva() -> unit = { () }
+
+function exec_bc_iall() -> unit = { () }
+function exec_bc_iva() -> unit = { () }
 
 
 function exec_fneg(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
