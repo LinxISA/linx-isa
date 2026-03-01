@@ -169,6 +169,110 @@ function is_block_start_marker(addr : bits(64)) -> bool = {
   false
 }
 
+// -----------------------------------------------------------------------------
+// Block header descriptor validation (B.* stream)
+//
+// We model the mandatory-descriptor contracts for tile/vector headers as a
+// fail-fast validation at the end of the header stream (at BSTOP / next BSTART).
+//
+// Normative sources:
+// - docs/architecture/isa-manual/src/chapters/07_tile_blocks.adoc
+// - docs/architecture/isa-manual/src/chapters/09_system_and_privilege.adoc
+// - docs/bringup/plan/isa_clarifications.md
+//
+// MissingDescFamily IDs (TRAPARG0[7:0]):
+//   1=B.DIM, 2=B.TEXT, 3=B.ARG, 4=B.IOR, 5=B.IOT/B.IOTI
+// MissingDetail (TRAPARG0[15:8]):
+//   0x00 missing, 0x01 invalid/out-of-range, 0x02 illegal combination
+
+register bdesc_seen_dim : bool = false
+register bdesc_seen_text : bool = false
+register bdesc_seen_arg : bool = false
+register bdesc_seen_ior : bool = false
+register bdesc_seen_iot : bool = false
+
+function bdesc_reset() -> unit = {
+  bdesc_seen_dim = false;
+  bdesc_seen_text = false;
+  bdesc_seen_arg = false;
+  bdesc_seen_ior = false;
+  bdesc_seen_iot = false
+}
+
+function bdesc_mark_dim() -> unit = { bdesc_seen_dim = true }
+function bdesc_mark_text() -> unit = { bdesc_seen_text = true }
+function bdesc_mark_arg() -> unit = { bdesc_seen_arg = true }
+function bdesc_mark_ior() -> unit = { bdesc_seen_ior = true }
+function bdesc_mark_iot() -> unit = { bdesc_seen_iot = true }
+
+// Block type classification for mandatory-descriptor contracts.
+// The decoder provides a stable classification string for the staged model.
+function decoded_block_contract_kind() -> bits(4) = {
+  // 0=none/unspecified, 1=VEC (VPAR/VSEQ/MPAR/MSEQ), 2=TMA (TLOAD/TSTORE),
+  // 3=TMOV, 4=CUBE (TMATMUL/TMATMUL.ACC), 5=ACCCVT, 6=HDRDRV (TEPL/FIXP/TMA-other)
+  unimplemented("decoded_block_contract_kind");
+  0b0000
+}
+
+function bdesc_require_or_trap(family : bits(8), present : bool, src_pc_or_tpc : bits(64)) -> unit = {
+  if present then () else trap_blockfmt(family, 0x00, src_pc_or_tpc)
+}
+
+function bdesc_illegal_combo_or_trap(family : bits(8), src_pc_or_tpc : bits(64)) -> unit = {
+  trap_blockfmt(family, 0x02, src_pc_or_tpc)
+}
+
+function bdesc_validate_header_end(src_pc_or_tpc : bits(64)) -> unit = {
+  // Enforce mandatory descriptor families per tile/vector block type.
+  // If multiple are missing, report exactly one using the priority order:
+  //   B.ARG > B.TEXT > B.IOT > B.IOR > B.DIM
+  let k = decoded_block_contract_kind();
+  match k {
+    // VEC: SIMT vector blocks (VPAR/VSEQ/MPAR/MSEQ): require DIM + TEXT.
+    0b0001 => {
+      if not(bdesc_seen_text) then trap_blockfmt(0x02, 0x00, src_pc_or_tpc)
+      else if not(bdesc_seen_dim) then trap_blockfmt(0x01, 0x00, src_pc_or_tpc)
+      else ()
+    },
+    // TMA: TLOAD/TSTORE: require ARG + IOR + IOT; TEXT illegal.
+    0b0010 => {
+      if bdesc_seen_text then bdesc_illegal_combo_or_trap(0x02, src_pc_or_tpc)
+      else if not(bdesc_seen_arg) then trap_blockfmt(0x03, 0x00, src_pc_or_tpc)
+      else if not(bdesc_seen_iot) then trap_blockfmt(0x05, 0x00, src_pc_or_tpc)
+      else if not(bdesc_seen_ior) then trap_blockfmt(0x04, 0x00, src_pc_or_tpc)
+      else ()
+    },
+    // TMOV: require IOT; TEXT illegal.
+    0b0011 => {
+      if bdesc_seen_text then bdesc_illegal_combo_or_trap(0x02, src_pc_or_tpc)
+      else if not(bdesc_seen_iot) then trap_blockfmt(0x05, 0x00, src_pc_or_tpc)
+      else ()
+    },
+    // CUBE: require DIM + IOT + ARG; TEXT illegal.
+    0b0100 => {
+      if bdesc_seen_text then bdesc_illegal_combo_or_trap(0x02, src_pc_or_tpc)
+      else if not(bdesc_seen_arg) then trap_blockfmt(0x03, 0x00, src_pc_or_tpc)
+      else if not(bdesc_seen_iot) then trap_blockfmt(0x05, 0x00, src_pc_or_tpc)
+      else if not(bdesc_seen_dim) then trap_blockfmt(0x01, 0x00, src_pc_or_tpc)
+      else ()
+    },
+    // ACCCVT: require DIM + IOT + ARG + IOR; TEXT illegal.
+    0b0101 => {
+      if bdesc_seen_text then bdesc_illegal_combo_or_trap(0x02, src_pc_or_tpc)
+      else if not(bdesc_seen_arg) then trap_blockfmt(0x03, 0x00, src_pc_or_tpc)
+      else if not(bdesc_seen_iot) then trap_blockfmt(0x05, 0x00, src_pc_or_tpc)
+      else if not(bdesc_seen_ior) then trap_blockfmt(0x04, 0x00, src_pc_or_tpc)
+      else if not(bdesc_seen_dim) then trap_blockfmt(0x01, 0x00, src_pc_or_tpc)
+      else ()
+    },
+    // HDRDRV: header-driven engine ops: TEXT illegal; mandatory families are op-specific.
+    0b0110 => {
+      if bdesc_seen_text then bdesc_illegal_combo_or_trap(0x02, src_pc_or_tpc) else ()
+    },
+    _ => ()
+  }
+}
+
 function trap_assert_fail(traparg0 : bits(64)) -> unit = {
   // TRAPNUM_ASSERT_FAIL = 52, CAUSE=0, BI=0
   raise_trap(to_bits(6, 52), to_bits(24, 0), traparg0, 0b0)

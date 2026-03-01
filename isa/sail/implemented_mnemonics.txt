@@ -167,6 +167,21 @@ C.BSTOP
 HL.BSTART.STD
 HL.BSTART.FP
 
+# Block header descriptors (B.*)
+B.DIM
+B.TEXT
+B.ARG
+B.IOR
+B.IOT
+B.IOTI
+B.ATTR
+B.HINT
+B.IOD
+
+# Compressed block header descriptors
+C.B.DIM
+C.B.DIMI
+
 # BRU control-transfer (vec engine scalar lane)
 B.EQ
 B.NE
