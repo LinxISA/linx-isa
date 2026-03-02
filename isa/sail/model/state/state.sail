@@ -326,6 +326,37 @@ function excl_check(ea : bits(64)) -> bool = {
 }
 
 
+// -----------------------------------------------------------------------------
+// System register (SSR) file (staged)
+//
+// The architectural SSR namespace is large; in the staged Sail model we represent it
+// as a sparse key/value store. This provides concrete semantics for SSRGET/SSRSET
+// without guessing platform-specific register behavior.
+//
+// Key: SSR_ID (24-bit for v0.3 catalog; some encodings provide fewer bits and are
+// zero-extended).
+
+register ssr_kv : list((bits(24), bits(64))) = []
+
+function ssr_lookup(id : bits(24), kv : list((bits(24), bits(64)))) -> bits(64) = {
+  match kv {
+    [] => 0x0000_0000_0000_0000,
+    (k,v) :: tl => if k == id then v else ssr_lookup(id, tl)
+  }
+}
+
+function ssr_update(id : bits(24), val : bits(64), kv : list((bits(24), bits(64)))) -> list((bits(24), bits(64))) = {
+  match kv {
+    [] => [(id, val)],
+    (k,v) :: tl => if k == id then (id, val) :: tl else (k, v) :: ssr_update(id, val, tl)
+  }
+}
+
+function ssr_read(id : bits(24)) -> bits(64) = { ssr_lookup(id, ssr_kv) }
+
+function ssr_write(id : bits(24), val : bits(64)) -> unit = { ssr_kv = ssr_update(id, val, ssr_kv) }
+
+
 // Memory accessors (stubs).
 // In a complete model these perform translation, permission checks, and fault reporting.
 // For staged bring-up we keep them explicit and do not guess the MMU/privilege behavior.

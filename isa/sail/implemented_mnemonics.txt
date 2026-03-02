@@ -187,7 +187,14 @@ C.LWI
 C.LDI
 C.SWI
 C.SDI
-# C.SSRGET remains missing until SSR state is staged.
+C.SSRGET
+
+# SSR access
+SSRGET
+SSRSET
+SSRSWAP
+HL.SSRGET
+HL.SSRSET
 
 # Cache / barrier / TLB maintenance (staged; functional no-op, with required operand validation)
 DC.IALL
