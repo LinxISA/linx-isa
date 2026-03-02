@@ -1666,6 +1666,51 @@ function exec_fabs(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit 
 
 
 // -----------------------------------------------------------------------------
+// System register access (SSR/LSR)
+//
+// Normative sources:
+// - docs/architecture/isa-manual/src/generated/system_registers_ssr.adoc
+// - docs/architecture/isa-manual/src/generated/instruction_details.adoc (SSRGET/SSRSET/SSRSWAP)
+//
+// Note: legality (E_ISSR routing, RO/WO enforcement, ACR-scoped families) is
+// intentionally left to the state layer. The current staged state only backs a
+// small subset of base SSRs.
+
+function exec_ssrget(RegDst : bits(5), ssr_id12 : bits(12)) -> unit = {
+  let id24 : bits(24) = 0x000000 | ssr_id12;
+  let v = read_system_register(id24);
+  write_regdst(RegDst, v)
+}
+
+function exec_ssrset(SrcL : bits(5), ssr_id12 : bits(12)) -> unit = {
+  let id24 : bits(24) = 0x000000 | ssr_id12;
+  write_system_register(id24, read_reg5(SrcL))
+}
+
+function exec_ssrswap(RegDst : bits(5), SrcL : bits(5), ssr_id12 : bits(12)) -> unit = {
+  let id24 : bits(24) = 0x000000 | ssr_id12;
+  let old = swap_system_register(id24, read_reg5(SrcL));
+  write_regdst(RegDst, old)
+}
+
+function exec_hl_ssrget(RegDst : bits(5), ssr_id24 : bits(24)) -> unit = {
+  let v = read_system_register(ssr_id24);
+  write_regdst(RegDst, v)
+}
+
+function exec_hl_ssrset(SrcL : bits(5), ssr_id24 : bits(24)) -> unit = {
+  write_system_register(ssr_id24, read_reg5(SrcL))
+}
+
+function exec_lsrget(RegDst : bits(5), lsr_id12 : bits(12)) -> unit = {
+  // LSR is a system register namespace distinct from SSR.
+  // Staged model: treat as unimplemented until LSR set is specified.
+  let _ = RegDst;
+  let _ = lsr_id12;
+  unimplemented("lsrget")
+}
+
+// -----------------------------------------------------------------------------
 // Execution control
 
 function exec_assert(SrcL : bits(5)) -> unit = {
