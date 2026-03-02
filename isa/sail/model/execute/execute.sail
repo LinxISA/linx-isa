@@ -2961,6 +2961,24 @@ function exec_hl_sh_po(RegDst : bits(5), SrcD : bits(5), SrcL : bits(5), SrcR : 
   write_regdst(RegDst, new_base)
 }
 
+function exec_hl_sh_upr(RegDst : bits(5), SrcD : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let base = read_reg5(SrcL);
+  let off = hl_off_scale(SrcR, SrcRType, 0);
+  let new_base = base + off;
+  let v : bits(16) = read_reg5(SrcD)[15..0];
+  mem_store16_le(new_base, v);
+  write_regdst(RegDst, new_base)
+}
+
+function exec_hl_sh_upo(RegDst : bits(5), SrcD : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let base = read_reg5(SrcL);
+  let v : bits(16) = read_reg5(SrcD)[15..0];
+  mem_store16_le(base, v);
+  let off = hl_off_scale(SrcR, SrcRType, 0);
+  let new_base = base + off;
+  write_regdst(RegDst, new_base)
+}
+
 function exec_hl_sw_pr(RegDst : bits(5), SrcD : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let base = read_reg5(SrcL);
   let off = hl_off_scale(SrcR, SrcRType, 2);
@@ -2979,6 +2997,24 @@ function exec_hl_sw_po(RegDst : bits(5), SrcD : bits(5), SrcL : bits(5), SrcR : 
   write_regdst(RegDst, new_base)
 }
 
+function exec_hl_sw_upr(RegDst : bits(5), SrcD : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let base = read_reg5(SrcL);
+  let off = hl_off_scale(SrcR, SrcRType, 0);
+  let new_base = base + off;
+  let v : bits(32) = read_reg5(SrcD)[31..0];
+  mem_store32_le(new_base, v);
+  write_regdst(RegDst, new_base)
+}
+
+function exec_hl_sw_upo(RegDst : bits(5), SrcD : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let base = read_reg5(SrcL);
+  let v : bits(32) = read_reg5(SrcD)[31..0];
+  mem_store32_le(base, v);
+  let off = hl_off_scale(SrcR, SrcRType, 0);
+  let new_base = base + off;
+  write_regdst(RegDst, new_base)
+}
+
 function exec_hl_sd_pr(RegDst : bits(5), SrcD : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let base = read_reg5(SrcL);
   let off = hl_off_scale(SrcR, SrcRType, 3);
@@ -2993,6 +3029,24 @@ function exec_hl_sd_po(RegDst : bits(5), SrcD : bits(5), SrcL : bits(5), SrcR : 
   let v : bits(64) = read_reg5(SrcD);
   mem_store64_le(base, v);
   let off = hl_off_scale(SrcR, SrcRType, 3);
+  let new_base = base + off;
+  write_regdst(RegDst, new_base)
+}
+
+function exec_hl_sd_upr(RegDst : bits(5), SrcD : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let base = read_reg5(SrcL);
+  let off = hl_off_scale(SrcR, SrcRType, 0);
+  let new_base = base + off;
+  let v : bits(64) = read_reg5(SrcD);
+  mem_store64_le(new_base, v);
+  write_regdst(RegDst, new_base)
+}
+
+function exec_hl_sd_upo(RegDst : bits(5), SrcD : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
+  let base = read_reg5(SrcL);
+  let v : bits(64) = read_reg5(SrcD);
+  mem_store64_le(base, v);
+  let off = hl_off_scale(SrcR, SrcRType, 0);
   let new_base = base + off;
   write_regdst(RegDst, new_base)
 }
