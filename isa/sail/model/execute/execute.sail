@@ -430,6 +430,20 @@ function exec_bxs(RegDst : bits(5), SrcL : bits(5), Nminus1 : bits(6), M : bits(
   write_regdst(RegDst, sext_low_n(f, n))
 }
 
+// HL.BFI: bitfield insert using the same wrap-around bitfield model as BXU/BXS.
+// Insert a field extracted from SrcR (wrap field at {m,n}) into SrcL at the same wrap position.
+function exec_hl_bfi(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), immr : bits(6), imms : bits(6)) -> unit = {
+  let x = read_reg5(SrcL);
+  let y = read_reg5(SrcR);
+  let n : int = unsigned(imms) + 1;
+  let m : int = unsigned(immr);
+  let field = bitfield_wrap(y, m, n);
+  // Clear the destination field in x at {m,n} and insert.
+  let xr = ror64(x, m);
+  let ins = (xr & (~mask_low_n(n))) | field;
+  write_regdst(RegDst, rol64(ins, m))
+}
+
 function exec_ror(RegDst : bits(5), SrcL : bits(5), M : bits(6)) -> unit = {
   let x = read_reg5(SrcL);
   let m : int = unsigned(M);
