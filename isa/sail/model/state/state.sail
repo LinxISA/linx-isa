@@ -49,19 +49,250 @@ function read_commit_argument() -> bits(64) = {
   0x0000_0000_0000_0000
 }
 
-// Vec engine predicate register (p). In strict v0.3, `B.Z`/`B.NZ` consult this
-// predicate domain when executed in the vec engine scalar lane.
-function read_predicate_p() -> bits(64) = {
-  unimplemented("read_predicate_p");
+// -----------------------------------------------------------------------------
+// Vector engine block-local state (staged bring-up)
+//
+// This models the second-layer (vector block internal) architectural state that is
+// visible to vector instructions.
+
+// Vec engine predicate register (p).
+// - Block-local, initialized from B.DIM/B.ATTR state on block dispatch.
+// - Inactive lanes are typically treated as don't-care by most V.* ops; explicit
+//   merge is performed via V.PSEL.
+register vec_p : bits(64) = 0xFFFF_FFFF_FFFF_FFFF
+
+function read_predicate_p() -> bits(64) = { vec_p }
+function write_predicate_p(v : bits(64)) -> unit = { vec_p = v }
+
+// Decoder-provided helpers for staged block-descriptor execution.
+// The decoder/fetch layer must provide the already-decoded immediate/register
+// values for B.DIM/B.ATTR. These hooks avoid guessing operand formats here.
+function decoded_bdim_index() -> bits(2) = {
+  // 0=LB0, 1=LB1, 2=LB2
+  unimplemented("decoded_bdim_index");
+  0b00
+}
+
+function decoded_bdim_value() -> bits(64) = {
+  unimplemented("decoded_bdim_value");
   0x0000_0000_0000_0000
 }
 
+function decoded_battr_raw() -> bits(64) = {
+  // Full 64-bit attribute word as encoded by B.ATTR.
+  unimplemented("decoded_battr_raw");
+  0x0000_0000_0000_0000
+}
+
+// Latched B.ATTR state relevant to VEC bring-up.
+register battr_raw : bits(64) = 0x0000_0000_0000_0000
+function battr_dr() -> bool = { battr_raw[26] == 0b1 }
+
+// LCFR (core feature) (staged): only LaneNum is currently consulted.
+// LaneNum is encoded in LCFR[19:16] and represents log2(vec_length).
+// Storage is provided via SSR_ID 0x0024 (ssr_lcfr).
+
+function vec_length_from_lcfr() -> int = {
+  let ln : int = unsigned(ssr_lcfr[19..16]);
+  1 << ln
+}
+
+function vec_all1_mask(n : int) -> bits(64) = {
+  if n >= 64 then 0xFFFF_FFFF_FFFF_FFFF else (to_bits(64, (1 << n) - 1))
+}
+
+function vec_init_p_for_group(lc1 : bits(64)) -> unit = {
+  let vw : int = vec_length_from_lcfr();
+  let lb0_i : int = unsigned(ssr_lb0[31..0]);
+  let lb1_i : int = unsigned(ssr_lb1[31..0]);
+  let lb2_i : int = unsigned(ssr_lb2[31..0]);
+  if not(battr_dr()) then {
+    // DR=0: LB0 is the effective lane_count for this group.
+    if lb0_i >= vw then write_predicate_p(vec_all1_mask(vw))
+    else write_predicate_p(vec_all1_mask(lb0_i))
+  } else {
+    // DR=1: strip-mine total iteration space across vec_length.
+    let total : int = lb0_i * (if lb1_i == 0 then 1 else lb1_i) * (if lb2_i == 0 then 1 else lb2_i);
+    let groups : int = (total + vw - 1) / vw;
+    let g : int = unsigned(lc1[31..0]);
+    let rem : int = total % vw;
+    if g == (groups - 1) then {
+      if rem == 0 then write_predicate_p(vec_all1_mask(vw)) else write_predicate_p(vec_all1_mask(rem))
+    } else {
+      write_predicate_p(vec_all1_mask(vw))
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Vector lane register file (staged)
+//
+// We model vt#0..vt#7 as 64 lanes of 32-bit each, packed in a 2048-bit register.
+// Other namespaces (vu/vm/vn) are left for later bring-up.
+
+typedef vec_reg64x32 = bits(2048)
+
+register vt0 : vec_reg64x32 = 0x0
+register vt1 : vec_reg64x32 = 0x0
+register vt2 : vec_reg64x32 = 0x0
+register vt3 : vec_reg64x32 = 0x0
+register vt4 : vec_reg64x32 = 0x0
+register vt5 : vec_reg64x32 = 0x0
+register vt6 : vec_reg64x32 = 0x0
+register vt7 : vec_reg64x32 = 0x0
+
+function read_vt(k : bits(3)) -> vec_reg64x32 = {
+  match k {
+    0b000 => vt0,
+    0b001 => vt1,
+    0b010 => vt2,
+    0b011 => vt3,
+    0b100 => vt4,
+    0b101 => vt5,
+    0b110 => vt6,
+    0b111 => vt7
+  }
+}
+
+function write_vt(k : bits(3), v : vec_reg64x32) -> unit = {
+  match k {
+    0b000 => vt0 = v,
+    0b001 => vt1 = v,
+    0b010 => vt2 = v,
+    0b011 => vt3 = v,
+    0b100 => vt4 = v,
+    0b101 => vt5 = v,
+    0b110 => vt6 = v,
+    0b111 => vt7 = v
+  }
+}
+
+function vec_get_lane32(v : vec_reg64x32, lane : int) -> bits(32) = {
+  let hi : int = lane * 32 + 31;
+  let lo : int = lane * 32;
+  v[hi..lo]
+}
+
+function vec_set_lane32(v : vec_reg64x32, lane : int, x : bits(32)) -> vec_reg64x32 = {
+  let hi : int = lane * 32 + 31;
+  let lo : int = lane * 32;
+  v[hi..lo] = x
+}
 
 
 // Trap raising (stubs). In a complete model these update TRAPNO/TRAPARG0/ECSTATE
 // and transfer control. In staged bring-up we keep these as explicit markers.
 function raise_trap(trapnum : bits(6), cause : bits(24), traparg0 : bits(64), bi : bits(1)) -> unit = {
   unimplemented("raise_trap")
+}
+
+// -----------------------------------------------------------------------------
+// System Status Registers (SSR) - bring-up state model
+//
+// Normative sources:
+// - docs/architecture/isa-manual/src/generated/system_registers_ssr.adoc
+// - docs/architecture/isa-manual/src/chapters/09_system_and_privilege.adoc (E_ISSR)
+//
+// NOTE: This staged model only provides concrete storage for a subset of base SSRs
+// that are used by early software (TP/GP and bring-up loop regs). All other SSR IDs
+// are routed to explicit `unimplemented(...)` until the privilege + trap envelope is
+// wired into the Sail state.
+
+register ssr_tp     : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0000
+register ssr_gp     : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0001
+register ssr_cstate : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0020
+register ssr_lcfr   : bits(64) = 0x0000_0000_0006_0000 // SSR_ID 0x0024 (RO): LaneNum=6 => vec_length=64 (bring-up)
+
+register ssr_lb0 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0050
+register ssr_lb1 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0051
+register ssr_lb2 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0052
+
+register ssr_lc0 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0053
+register ssr_lc1 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0054
+register ssr_lc2 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0055
+
+function trap_illegal_inst(traparg0 : bits(64)) -> unit = {
+  // TRAPNUM_ILLEGAL_INST = 4, CAUSE=0, BI=0 (bring-up).
+  raise_trap(to_bits(6, 4), to_bits(24, 0), traparg0, 0b0)
+}
+
+function trap_illegal_ssr() -> unit = {
+  // For now, illegal SSR access is modeled as ILLEGAL_INST (manual: "illegal SSR").
+  // TODO: when E_ISSR is fully wired, route to that trap class with a structured CAUSE.
+  trap_illegal_inst(read_pc_or_tpc())
+}
+
+function read_system_register(id24 : bits(24)) -> bits(64) = {
+  // Base SSR namespace is 12-bit for 32-bit forms.
+  let id : bits(12) = id24[11..0];
+  match id {
+    0x000 => ssr_tp,
+    0x001 => ssr_gp,
+    0x020 => ssr_cstate,
+    0x024 => ssr_lcfr,
+    0x050 => ssr_lb0,
+    0x051 => ssr_lb1,
+    0x052 => ssr_lb2,
+    0x053 => ssr_lc0,
+    0x054 => ssr_lc1,
+    0x055 => ssr_lc2,
+    _ => {
+      trap_illegal_ssr();
+      0x0000_0000_0000_0000
+    }
+  }
+}
+
+function write_system_register(id24 : bits(24), v : bits(64)) -> unit = {
+  let id : bits(12) = id24[11..0];
+  match id {
+    0x000 => ssr_tp = v,
+    0x001 => ssr_gp = v,
+    0x020 => ssr_cstate = v,
+    0x024 => { trap_illegal_inst(read_pc_or_tpc()) },
+    0x050 => ssr_lb0 = v,
+    0x051 => ssr_lb1 = v,
+    0x052 => ssr_lb2 = v,
+    0x053 => ssr_lc0 = v,
+    0x054 => ssr_lc1 = v,
+    0x055 => ssr_lc2 = v,
+    _ => trap_illegal_ssr()
+  }
+}
+
+function swap_system_register(id24 : bits(24), v : bits(64)) -> bits(64) = {
+  let old = read_system_register(id24);
+  write_system_register(id24, v);
+  old
+}
+
+// -----------------------------------------------------------------------------
+// CSTATE floating-point control/status fields (v0.3 staged profile)
+//
+// Architectural contract (per user + spec alignment):
+// - CSTATE.FFLAGS[36:32] are IEEE754 sticky exception flags: NV/DZ/OF/UF/NX
+// - CSTATE.FRM[39:37] is rounding mode; only low 4 encodings used initially.
+//
+// Flag bits within CSTATE:
+//   bit32 NV, bit33 DZ, bit34 OF, bit35 UF, bit36 NX
+//
+// Rounding mode encodings (low 4):
+//   0=RNE, 1=RDN, 2=RUP, 3=RTZ
+// FCVTA uses ties-away (RMM) as an explicit override even though FRM doesn't
+// currently expose an encoding for it.
+
+function cstate_get_fflags() -> bits(5) = { ssr_cstate[36..32] }
+function cstate_set_fflags(f : bits(5)) -> unit = {
+  ssr_cstate[36..32] = f
+}
+
+function cstate_or_fflags(f : bits(5)) -> unit = {
+  cstate_set_fflags(cstate_get_fflags() | f)
+}
+
+function cstate_get_frm() -> bits(3) = { ssr_cstate[39..37] }
+function cstate_set_frm(rm : bits(3)) -> unit = {
+  ssr_cstate[39..37] = rm
 }
 
 // -----------------------------------------------------------------------------
@@ -232,7 +463,10 @@ function bdesc_validate_header_end(src_pc_or_tpc : bits(64)) -> unit = {
     0b0001 => {
       if not(bdesc_seen_text) then trap_blockfmt(0x02, 0x00, src_pc_or_tpc)
       else if not(bdesc_seen_dim) then trap_blockfmt(0x01, 0x00, src_pc_or_tpc)
-      else ()
+      else {
+        // Staged vector bring-up: initialize lane predicate mask for group 0.
+        vec_init_p_for_group(ssr_lc1)
+      }
     },
     // TMA: TLOAD/TSTORE: require ARG + IOR + IOT; TEXT illegal.
     0b0010 => {

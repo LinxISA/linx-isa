@@ -1666,6 +1666,192 @@ function exec_fabs(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit 
 
 
 // -----------------------------------------------------------------------------
+// System register access (SSR/LSR)
+//
+// Normative sources:
+// - docs/architecture/isa-manual/src/generated/system_registers_ssr.adoc
+// - docs/architecture/isa-manual/src/generated/instruction_details.adoc (SSRGET/SSRSET/SSRSWAP)
+//
+// Note: legality (E_ISSR routing, RO/WO enforcement, ACR-scoped families) is
+// intentionally left to the state layer. The current staged state only backs a
+// small subset of base SSRs.
+
+function exec_ssrget(RegDst : bits(5), ssr_id12 : bits(12)) -> unit = {
+  let id24 : bits(24) = 0x000000 | ssr_id12;
+  let v = read_system_register(id24);
+  write_regdst(RegDst, v)
+}
+
+function exec_ssrset(SrcL : bits(5), ssr_id12 : bits(12)) -> unit = {
+  let id24 : bits(24) = 0x000000 | ssr_id12;
+  write_system_register(id24, read_reg5(SrcL))
+}
+
+function exec_ssrswap(RegDst : bits(5), SrcL : bits(5), ssr_id12 : bits(12)) -> unit = {
+  let id24 : bits(24) = 0x000000 | ssr_id12;
+  let old = swap_system_register(id24, read_reg5(SrcL));
+  write_regdst(RegDst, old)
+}
+
+function exec_hl_ssrget(RegDst : bits(5), ssr_id24 : bits(24)) -> unit = {
+  let v = read_system_register(ssr_id24);
+  write_regdst(RegDst, v)
+}
+
+function exec_hl_ssrset(SrcL : bits(5), ssr_id24 : bits(24)) -> unit = {
+  write_system_register(ssr_id24, read_reg5(SrcL))
+}
+
+function exec_c_ssrget(ssrid : bits(5)) -> unit = {
+  // C.SSRGET encodes a small SSR_ID domain directly in the low bits (no remap).
+  // SSR_ID[4:0] = SSRID.
+  let id12 : bits(12) = (to_bits(7, 0) @ ssrid);
+  let id24 : bits(24) = 0x000000 | id12;
+  let v = read_system_register(id24);
+  write_regdst(reg_t(), v)
+}
+
+function exec_lsrget(RegDst : bits(5), lsr_id12 : bits(12)) -> unit = {
+  // Engine-specific: LSR reads BARG/engine state. Not architecturally specified yet.
+  let _ = RegDst;
+  let _ = lsr_id12;
+  unimplemented("lsrget")
+}
+
+// -----------------------------------------------------------------------------
+// Floating-point arithmetic (FSU) - staged bring-up
+//
+// Normative sources:
+// - docs/architecture/isa-manual/src/chapters/02_programming_model.adoc (CSTATE.FRM/FFLAGS)
+// - docs/architecture/isa-manual/src/chapters/12_fsu.adoc
+//
+// POLICY: Do not guess FP numeric behavior until the FP library + CSTATE.FRM/FFLAGS semantics are
+// fully wired. For now, we explicitly mark these operations as unimplemented.
+// We still write a deterministic placeholder value to the destination to keep
+// downstream execution deterministic in staged environments.
+
+function fp_unimpl_result(RegDst : bits(5), mnemonic : string) -> unit = {
+  let _ = mnemonic;
+  unimplemented(mnemonic);
+  write_regdst(RegDst, 0x0000_0000_0000_0000)
+}
+
+function exec_fadd(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = SrcL; let _ = SrcR; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FADD")
+}
+
+function exec_fsub(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = SrcL; let _ = SrcR; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FSUB")
+}
+
+function exec_fmul(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = SrcL; let _ = SrcR; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FMUL")
+}
+
+function exec_fdiv(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = SrcL; let _ = SrcR; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FDIV")
+}
+
+function exec_fsqrt(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = SrcL; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FSQRT")
+}
+
+function exec_frecip(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = SrcL; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FRECIP")
+}
+
+function exec_fexp(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = SrcL; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FEXP")
+}
+
+function exec_fmadd(RegDst : bits(5), SrcA : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = SrcA; let _ = SrcL; let _ = SrcR; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FMADD")
+}
+
+function exec_fmsub(RegDst : bits(5), SrcA : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = SrcA; let _ = SrcL; let _ = SrcR; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FMSUB")
+}
+
+function exec_fnmadd(RegDst : bits(5), SrcA : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = SrcA; let _ = SrcL; let _ = SrcR; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FNMADD")
+}
+
+function exec_fnmsub(RegDst : bits(5), SrcA : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = SrcA; let _ = SrcL; let _ = SrcR; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FNMSUB")
+}
+
+function exec_fcvt(DstType : bits(5), RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = DstType; let _ = SrcL; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FCVT")
+}
+
+function exec_fcvta(DstType : bits(5), RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = DstType; let _ = SrcL; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FCVTA")
+}
+
+function exec_fcvtm(DstType : bits(5), RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = DstType; let _ = SrcL; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FCVTM")
+}
+
+function exec_fcvtn(DstType : bits(5), RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = DstType; let _ = SrcL; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FCVTN")
+}
+
+function exec_fcvtp(DstType : bits(5), RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = DstType; let _ = SrcL; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FCVTP")
+}
+
+function exec_fcvtz(DstType : bits(5), RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = DstType; let _ = SrcL; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FCVTZ")
+}
+
+function exec_scvtf(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = SrcL; let _ = SrcType;
+  fp_unimpl_result(RegDst, "SCVTF")
+}
+
+function exec_ucvtf(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = SrcL; let _ = SrcType;
+  fp_unimpl_result(RegDst, "UCVTF")
+}
+
+function exec_fentry(SrcBegin : bits(5), SrcEnd : bits(5), uimm15 : bits(15)) -> unit = {
+  let _ = SrcBegin; let _ = SrcEnd; let _ = uimm15;
+  unimplemented("FENTRY")
+}
+
+function exec_fexit(DstBegin : bits(5), DstEnd : bits(5), uimm15 : bits(15)) -> unit = {
+  let _ = DstBegin; let _ = DstEnd; let _ = uimm15;
+  unimplemented("FEXIT")
+}
+
+function exec_fret_ra(DstBegin : bits(5), DstEnd : bits(5), uimm15 : bits(15)) -> unit = {
+  let _ = DstBegin; let _ = DstEnd; let _ = uimm15;
+  unimplemented("FRET.RA")
+}
+
+function exec_fret_stk(DstBegin : bits(5), DstEnd : bits(5), uimm15 : bits(15)) -> unit = {
+  let _ = DstBegin; let _ = DstEnd; let _ = uimm15;
+  unimplemented("FRET.STK")
+}
+
+// -----------------------------------------------------------------------------
 // Execution control
 
 function exec_assert(SrcL : bits(5)) -> unit = {
@@ -1839,9 +2025,20 @@ function exec_c_bstop() -> unit = { exec_bstop() }
 // validation (E_BLOCK(EC_BLOCKFMT)). Full descriptor field semantics (tile
 // binding, sizes, LB0..LB2 writes, etc.) are brought up incrementally.
 
-function exec_b_dim() -> unit = { bdesc_mark_dim() }
-function exec_c_b_dim() -> unit = { bdesc_mark_dim() }
-function exec_c_b_dimi() -> unit = { bdesc_mark_dim() }
+function exec_b_dim() -> unit = {
+  // Staged semantics: mark presence and update LB0..LB2 using decoder-provided decoded value.
+  let idx = decoded_bdim_index();
+  let v = decoded_bdim_value();
+  match idx {
+    0b00 => ssr_lb0 = v,
+    0b01 => ssr_lb1 = v,
+    0b10 => ssr_lb2 = v,
+    _ => ()
+  };
+  bdesc_mark_dim()
+}
+function exec_c_b_dim() -> unit = { exec_b_dim() }
+function exec_c_b_dimi() -> unit = { exec_b_dim() }
 
 function exec_b_text() -> unit = { bdesc_mark_text() }
 function exec_b_arg() -> unit = { bdesc_mark_arg() }
@@ -1849,9 +2046,55 @@ function exec_b_ior() -> unit = { bdesc_mark_ior() }
 function exec_b_iot() -> unit = { bdesc_mark_iot() }
 function exec_b_ioti() -> unit = { bdesc_mark_iot() }
 
-function exec_b_attr() -> unit = { () }
+function exec_b_attr() -> unit = {
+  // Staged semantics: latch raw attribute word so DR (bit 26) can be consulted.
+  battr_raw = decoded_battr_raw()
+}
 function exec_b_hint() -> unit = { () }
 function exec_b_iod() -> unit = { () }
+
+// -----------------------------------------------------------------------------
+// V.* vector instructions (staged bring-up)
+//
+// Current staged conventions (per bring-up notes):
+// - vec_length = 1 << LCFR[19:16]
+// - lane element width is 32-bit for integer ALU forms.
+// - predication: p[i]=1 lanes are computed; p[i]=0 lanes produce unspecified values.
+// - explicit merge is performed via V.PSEL.
+
+function exec_v_add(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
+  let vw : int = vec_length_from_lcfr();
+  let pm = read_predicate_p();
+  let lhs = read_vt(SrcL_k);
+  let rhs = read_vt(SrcR_k);
+  var out = read_vt(Dst_k);
+  foreach (i from 0 to (vw - 1)) {
+    let active = pm[i] == 0b1;
+    let a : bits(32) = vec_get_lane32(lhs, i);
+    let b : bits(32) = vec_get_lane32(rhs, i);
+    let r : bits(32) = if active then (a + b) else undefined_bitvector(32);
+    out = vec_set_lane32(out, i, r)
+  };
+  write_vt(Dst_k, out)
+}
+
+function exec_v_psel(SrcP_k : bits(3), SrcL_k : bits(3), SrcR_k : bits(3), neg : bits(1), Dst_k : bits(3)) -> unit = {
+  let vw : int = vec_length_from_lcfr();
+  let pvec = read_vt(SrcP_k);
+  let lhs = read_vt(SrcL_k);
+  let rhs0 = read_vt(SrcR_k);
+  var out = read_vt(Dst_k);
+  foreach (i from 0 to (vw - 1)) {
+    let pv : bits(32) = vec_get_lane32(pvec, i);
+    let take_l = pv != 0x0000_0000;
+    let a : bits(32) = vec_get_lane32(lhs, i);
+    let b0 : bits(32) = vec_get_lane32(rhs0, i);
+    let b : bits(32) = if neg == 0b1 then (0x0000_0000 - b0) else b0;
+    let r : bits(32) = if take_l then a else b;
+    out = vec_set_lane32(out, i, r)
+  };
+  write_vt(Dst_k, out)
+}
 
 function exec_fneg(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
   // Bitwise sign flip (fd/fs).
