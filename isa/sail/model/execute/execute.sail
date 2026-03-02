@@ -1253,6 +1253,21 @@ function exec_hl_mulu(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR
   write_regdst(RegDst1, hi)
 }
 
+// HL.MIADD / HL.MISUB (user-confirmed): dst = SrcL ± (SrcR * uimm19), 64-bit wraparound.
+function exec_hl_miadd(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), uimm19 : bits(19)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  let imm = zext19_to64(uimm19);
+  write_regdst(RegDst, a + (b * imm))
+}
+
+function exec_hl_misub(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), uimm19 : bits(19)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  let imm = zext19_to64(uimm19);
+  write_regdst(RegDst, a - (b * imm))
+}
+
 
 // -----------------------------------------------------------------------------
 // Multi-cycle ALU: multiply-add (three-source)
