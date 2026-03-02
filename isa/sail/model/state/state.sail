@@ -87,6 +87,17 @@ register ssr_lc0 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0053
 register ssr_lc1 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0054
 register ssr_lc2 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0055
 
+function trap_illegal_inst(traparg0 : bits(64)) -> unit = {
+  // TRAPNUM_ILLEGAL_INST = 4, CAUSE=0, BI=0 (bring-up).
+  raise_trap(to_bits(6, 4), to_bits(24, 0), traparg0, 0b0)
+}
+
+function trap_illegal_ssr() -> unit = {
+  // For now, illegal SSR access is modeled as ILLEGAL_INST (manual: "illegal SSR").
+  // TODO: when E_ISSR is fully wired, route to that trap class with a structured CAUSE.
+  trap_illegal_inst(read_pc_or_tpc())
+}
+
 function read_system_register(id24 : bits(24)) -> bits(64) = {
   // Base SSR namespace is 12-bit for 32-bit forms.
   let id : bits(12) = id24[11..0];
@@ -100,7 +111,7 @@ function read_system_register(id24 : bits(24)) -> bits(64) = {
     0x054 => ssr_lc1,
     0x055 => ssr_lc2,
     _ => {
-      unimplemented("read_system_register");
+      trap_illegal_ssr();
       0x0000_0000_0000_0000
     }
   }
@@ -117,7 +128,7 @@ function write_system_register(id24 : bits(24), v : bits(64)) -> unit = {
     0x053 => ssr_lc0 = v,
     0x054 => ssr_lc1 = v,
     0x055 => ssr_lc2 = v,
-    _ => unimplemented("write_system_register")
+    _ => trap_illegal_ssr()
   }
 }
 

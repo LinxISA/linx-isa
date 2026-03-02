@@ -187,7 +187,7 @@ C.LWI
 C.LDI
 C.SWI
 C.SDI
-# C.SSRGET remains missing until C.SSRGET SSRID remap is specified.
+C.SSRGET
 
 # SSR access (system registers)
 SSRGET

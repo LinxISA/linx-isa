@@ -1702,9 +1702,17 @@ function exec_hl_ssrset(SrcL : bits(5), ssr_id24 : bits(24)) -> unit = {
   write_system_register(ssr_id24, read_reg5(SrcL))
 }
 
+function exec_c_ssrget(ssrid : bits(5)) -> unit = {
+  // C.SSRGET encodes a small SSR_ID domain directly in the low bits (no remap).
+  // SSR_ID[4:0] = SSRID.
+  let id12 : bits(12) = (to_bits(7, 0) @ ssrid);
+  let id24 : bits(24) = 0x000000 | id12;
+  let v = read_system_register(id24);
+  write_regdst(reg_t(), v)
+}
+
 function exec_lsrget(RegDst : bits(5), lsr_id12 : bits(12)) -> unit = {
-  // LSR is a system register namespace distinct from SSR.
-  // Staged model: treat as unimplemented until LSR set is specified.
+  // Engine-specific: LSR reads BARG/engine state. Not architecturally specified yet.
   let _ = RegDst;
   let _ = lsr_id12;
   unimplemented("lsrget")
