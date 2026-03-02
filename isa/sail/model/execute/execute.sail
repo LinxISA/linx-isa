@@ -430,6 +430,20 @@ function exec_bxs(RegDst : bits(5), SrcL : bits(5), Nminus1 : bits(6), M : bits(
   write_regdst(RegDst, sext_low_n(f, n))
 }
 
+// HL.BFI: bitfield insert using the same wrap-around bitfield model as BXU/BXS.
+// Insert a field extracted from SrcR (wrap field at {m,n}) into SrcL at the same wrap position.
+function exec_hl_bfi(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), immr : bits(6), imms : bits(6)) -> unit = {
+  let x = read_reg5(SrcL);
+  let y = read_reg5(SrcR);
+  let n : int = unsigned(imms) + 1;
+  let m : int = unsigned(immr);
+  let field = bitfield_wrap(y, m, n);
+  // Clear the destination field in x at {m,n} and insert.
+  let xr = ror64(x, m);
+  let ins = (xr & (~mask_low_n(n))) | field;
+  write_regdst(RegDst, rol64(ins, m))
+}
+
 function exec_ror(RegDst : bits(5), SrcL : bits(5), M : bits(6)) -> unit = {
   let x = read_reg5(SrcL);
   let m : int = unsigned(M);
@@ -1237,6 +1251,46 @@ function exec_hl_mulu(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR
   let hi : bits(64) = p128[127..64];
   write_regdst(RegDst0, lo);
   write_regdst(RegDst1, hi)
+}
+
+// HL.MIADD / HL.MISUB (user-confirmed): dst = SrcL ± (SrcR * uimm19), 64-bit wraparound.
+function exec_hl_miadd(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), uimm19 : bits(19)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  let imm = zext19_to64(uimm19);
+  write_regdst(RegDst, a + (b * imm))
+}
+
+function exec_hl_misub(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), uimm19 : bits(19)) -> unit = {
+  let a = read_reg5(SrcL);
+  let b = read_reg5(SrcR);
+  let imm = zext19_to64(uimm19);
+  write_regdst(RegDst, a - (b * imm))
+}
+
+// -----------------------------------------------------------------------------
+// HL (48-bit) concat/barrel ops: 128-bit concat then shift-left (user-confirmed)
+//
+// Semantics (confirmed):
+//   X128 = (SrcL << 64) | SrcR
+//   Y128 = X128 << shamt
+//   Dst0 = low64(Y128)
+//   Dst1 = high64(Y128)
+
+function exec_hl_ccat(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR : bits(5), shamt : bits(7)) -> unit = {
+  let hi : bits(64) = read_reg5(SrcL);
+  let lo : bits(64) = read_reg5(SrcR);
+  let x128 : bits(128) = (zext64_to128(hi) << 64) | zext64_to128(lo);
+  let s : int = unsigned(shamt);
+  let y128 : bits(128) = if s == 0 then x128 else (x128 << s);
+  write_regdst(RegDst0, y128[63..0]);
+  write_regdst(RegDst1, y128[127..64])
+}
+
+function exec_hl_ccatw(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR : bits(5), shamt : bits(7)) -> unit = {
+  // For now CCATW shares the same 128-bit barrel-concat semantics as CCAT.
+  // If a future spec defines lane/word-specific behavior, refine here.
+  exec_hl_ccat(RegDst0, RegDst1, SrcL, SrcR, shamt)
 }
 
 
