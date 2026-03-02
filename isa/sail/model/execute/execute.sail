@@ -1722,10 +1722,10 @@ function exec_lsrget(RegDst : bits(5), lsr_id12 : bits(12)) -> unit = {
 // Floating-point arithmetic (FSU) - staged bring-up
 //
 // Normative sources:
-// - docs/architecture/isa-manual/src/chapters/02_programming_model.adoc (FCSR layout)
+// - docs/architecture/isa-manual/src/chapters/02_programming_model.adoc (CSTATE.FRM/FFLAGS)
 // - docs/architecture/isa-manual/src/chapters/12_fsu.adoc
 //
-// POLICY: Do not guess FP numeric behavior until the FP library + FCSR semantics are
+// POLICY: Do not guess FP numeric behavior until the FP library + CSTATE.FRM/FFLAGS semantics are
 // fully wired. For now, we explicitly mark these operations as unimplemented.
 // We still write a deterministic placeholder value to the destination to keep
 // downstream execution deterministic in staged environments.
@@ -2025,9 +2025,20 @@ function exec_c_bstop() -> unit = { exec_bstop() }
 // validation (E_BLOCK(EC_BLOCKFMT)). Full descriptor field semantics (tile
 // binding, sizes, LB0..LB2 writes, etc.) are brought up incrementally.
 
-function exec_b_dim() -> unit = { bdesc_mark_dim() }
-function exec_c_b_dim() -> unit = { bdesc_mark_dim() }
-function exec_c_b_dimi() -> unit = { bdesc_mark_dim() }
+function exec_b_dim() -> unit = {
+  // Staged semantics: mark presence and update LB0..LB2 using decoder-provided decoded value.
+  let idx = decoded_bdim_index();
+  let v = decoded_bdim_value();
+  match idx {
+    0b00 => ssr_lb0 = v,
+    0b01 => ssr_lb1 = v,
+    0b10 => ssr_lb2 = v,
+    _ => ()
+  };
+  bdesc_mark_dim()
+}
+function exec_c_b_dim() -> unit = { exec_b_dim() }
+function exec_c_b_dimi() -> unit = { exec_b_dim() }
 
 function exec_b_text() -> unit = { bdesc_mark_text() }
 function exec_b_arg() -> unit = { bdesc_mark_arg() }
@@ -2035,9 +2046,55 @@ function exec_b_ior() -> unit = { bdesc_mark_ior() }
 function exec_b_iot() -> unit = { bdesc_mark_iot() }
 function exec_b_ioti() -> unit = { bdesc_mark_iot() }
 
-function exec_b_attr() -> unit = { () }
+function exec_b_attr() -> unit = {
+  // Staged semantics: latch raw attribute word so DR (bit 26) can be consulted.
+  battr_raw = decoded_battr_raw()
+}
 function exec_b_hint() -> unit = { () }
 function exec_b_iod() -> unit = { () }
+
+// -----------------------------------------------------------------------------
+// V.* vector instructions (staged bring-up)
+//
+// Current staged conventions (per bring-up notes):
+// - vec_length = 1 << LCFR[19:16]
+// - lane element width is 32-bit for integer ALU forms.
+// - predication: p[i]=1 lanes are computed; p[i]=0 lanes produce unspecified values.
+// - explicit merge is performed via V.PSEL.
+
+function exec_v_add(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
+  let vw : int = vec_length_from_lcfr();
+  let pm = read_predicate_p();
+  let lhs = read_vt(SrcL_k);
+  let rhs = read_vt(SrcR_k);
+  var out = read_vt(Dst_k);
+  foreach (i from 0 to (vw - 1)) {
+    let active = pm[i] == 0b1;
+    let a : bits(32) = vec_get_lane32(lhs, i);
+    let b : bits(32) = vec_get_lane32(rhs, i);
+    let r : bits(32) = if active then (a + b) else undefined_bitvector(32);
+    out = vec_set_lane32(out, i, r)
+  };
+  write_vt(Dst_k, out)
+}
+
+function exec_v_psel(SrcP_k : bits(3), SrcL_k : bits(3), SrcR_k : bits(3), neg : bits(1), Dst_k : bits(3)) -> unit = {
+  let vw : int = vec_length_from_lcfr();
+  let pvec = read_vt(SrcP_k);
+  let lhs = read_vt(SrcL_k);
+  let rhs0 = read_vt(SrcR_k);
+  var out = read_vt(Dst_k);
+  foreach (i from 0 to (vw - 1)) {
+    let pv : bits(32) = vec_get_lane32(pvec, i);
+    let take_l = pv != 0x0000_0000;
+    let a : bits(32) = vec_get_lane32(lhs, i);
+    let b0 : bits(32) = vec_get_lane32(rhs0, i);
+    let b : bits(32) = if neg == 0b1 then (0x0000_0000 - b0) else b0;
+    let r : bits(32) = if take_l then a else b;
+    out = vec_set_lane32(out, i, r)
+  };
+  write_vt(Dst_k, out)
+}
 
 function exec_fneg(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
   // Bitwise sign flip (fd/fs).

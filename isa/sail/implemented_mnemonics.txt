@@ -625,3 +625,8 @@ HL.SWP
 HL.SWP.U
 HL.SDP
 HL.SDP.U
+
+# Vector (staged bring-up subset)
+V.ADD
+V.PSEL
+
