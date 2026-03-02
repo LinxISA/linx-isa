@@ -182,6 +182,13 @@ B.IOD
 C.B.DIM
 C.B.DIMI
 
+# C16 loads/stores + CSR read helper
+C.LWI
+C.LDI
+C.SWI
+C.SDI
+# C.SSRGET remains missing until SSR state is staged.
+
 # Cache / barrier / TLB maintenance (staged; functional no-op, with required operand validation)
 DC.IALL
 DC.IVA

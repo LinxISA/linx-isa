@@ -317,6 +317,41 @@ function exec_c_addi(SrcL : bits(5), simm5 : bits(5)) -> unit = {
   write_regdst(reg_t(), a + imm)
 }
 
+// Compressed base+imm loads/stores.
+// These map onto the corresponding 32-bit LWI/LDI/SWI/SDI addressing: sign-extended immediate
+// scaled by access size.
+function exec_c_lwi(SrcL : bits(5), simm5 : bits(5)) -> unit = {
+  let base = read_reg5(SrcL);
+  let off = sext5_to64(simm5);
+  let ea = base + (off << 2);
+  let w : bits(32) = mem_load32_le(ea);
+  write_regdst(reg_t(), sext32_from32(w))
+}
+
+function exec_c_ldi(SrcL : bits(5), simm5 : bits(5)) -> unit = {
+  let base = read_reg5(SrcL);
+  let off = sext5_to64(simm5);
+  let ea = base + (off << 3);
+  let d : bits(64) = mem_load64_le(ea);
+  write_regdst(reg_t(), d)
+}
+
+function exec_c_swi(SrcL : bits(5), simm5 : bits(5)) -> unit = {
+  let base = read_reg5(SrcL);
+  let off = sext5_to64(simm5);
+  let ea = base + (off << 2);
+  let v : bits(32) = read_reg5(reg_t1())[31..0];
+  mem_store32_le(ea, v)
+}
+
+function exec_c_sdi(SrcL : bits(5), simm5 : bits(5)) -> unit = {
+  let base = read_reg5(SrcL);
+  let off = sext5_to64(simm5);
+  let ea = base + (off << 3);
+  let v : bits(64) = read_reg5(reg_t1());
+  mem_store64_le(ea, v)
+}
+
 function exec_c_movi(RegDst : bits(5), simm5 : bits(5)) -> unit = {
   let imm = sext5_to64(simm5);
   write_regdst(RegDst, imm)
