@@ -420,10 +420,16 @@ HL.SB.PR
 HL.SB.PO
 HL.SH.PR
 HL.SH.PO
+HL.SH.UPR
+HL.SH.UPO
 HL.SW.PR
 HL.SW.PO
+HL.SW.UPR
+HL.SW.UPO
 HL.SD.PR
 HL.SD.PO
+HL.SD.UPR
+HL.SD.UPO
 
 # Atomic operations (staged as RMW; aq/rl/f modifiers ignored)
 LW.ADD
