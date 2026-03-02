@@ -76,6 +76,34 @@ function exec_subi(RegDst : bits(5), SrcL : bits(5), uimm12 : bits(12)) -> unit 
   write_regdst(RegDst, a - imm)
 }
 
+// HL (48-bit) arithmetic-immediate forms: same arithmetic semantics with 24-bit unsigned immediates.
+
+function exec_hl_addi(RegDst : bits(5), SrcL : bits(5), uimm24 : bits(24)) -> unit = {
+  let a = read_reg5(SrcL);
+  let imm = zext24_to64(uimm24);
+  write_regdst(RegDst, a + imm)
+}
+
+function exec_hl_subi(RegDst : bits(5), SrcL : bits(5), uimm24 : bits(24)) -> unit = {
+  let a = read_reg5(SrcL);
+  let imm = zext24_to64(uimm24);
+  write_regdst(RegDst, a - imm)
+}
+
+function exec_hl_addiw(RegDst : bits(5), SrcL : bits(5), uimm24 : bits(24)) -> unit = {
+  let a : bits(32) = read_reg5(SrcL)[31..0];
+  let imm : bits(32) = zext24_to64(uimm24)[31..0];
+  let r : bits(32) = a + imm;
+  write_regdst(RegDst, sext32_from32(r))
+}
+
+function exec_hl_subiw(RegDst : bits(5), SrcL : bits(5), uimm24 : bits(24)) -> unit = {
+  let a : bits(32) = read_reg5(SrcL)[31..0];
+  let imm : bits(32) = zext24_to64(uimm24)[31..0];
+  let r : bits(32) = a - imm;
+  write_regdst(RegDst, sext32_from32(r))
+}
+
 function exec_andi(RegDst : bits(5), SrcL : bits(5), simm12 : bits(12)) -> unit = {
   let a = read_reg5(SrcL);
   let imm = sext12_to64(simm12);
