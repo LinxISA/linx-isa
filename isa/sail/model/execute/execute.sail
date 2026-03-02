@@ -76,6 +76,34 @@ function exec_subi(RegDst : bits(5), SrcL : bits(5), uimm12 : bits(12)) -> unit 
   write_regdst(RegDst, a - imm)
 }
 
+// HL (48-bit) arithmetic-immediate forms: same arithmetic semantics with 24-bit unsigned immediates.
+
+function exec_hl_addi(RegDst : bits(5), SrcL : bits(5), uimm24 : bits(24)) -> unit = {
+  let a = read_reg5(SrcL);
+  let imm = zext24_to64(uimm24);
+  write_regdst(RegDst, a + imm)
+}
+
+function exec_hl_subi(RegDst : bits(5), SrcL : bits(5), uimm24 : bits(24)) -> unit = {
+  let a = read_reg5(SrcL);
+  let imm = zext24_to64(uimm24);
+  write_regdst(RegDst, a - imm)
+}
+
+function exec_hl_addiw(RegDst : bits(5), SrcL : bits(5), uimm24 : bits(24)) -> unit = {
+  let a : bits(32) = read_reg5(SrcL)[31..0];
+  let imm : bits(32) = zext24_to64(uimm24)[31..0];
+  let r : bits(32) = a + imm;
+  write_regdst(RegDst, sext32_from32(r))
+}
+
+function exec_hl_subiw(RegDst : bits(5), SrcL : bits(5), uimm24 : bits(24)) -> unit = {
+  let a : bits(32) = read_reg5(SrcL)[31..0];
+  let imm : bits(32) = zext24_to64(uimm24)[31..0];
+  let r : bits(32) = a - imm;
+  write_regdst(RegDst, sext32_from32(r))
+}
+
 function exec_andi(RegDst : bits(5), SrcL : bits(5), simm12 : bits(12)) -> unit = {
   let a = read_reg5(SrcL);
   let imm = sext12_to64(simm12);
@@ -1745,6 +1773,40 @@ function exec_ic_iva(SrcL : bits(5)) -> unit = { () }
 
 function exec_bc_iall() -> unit = { () }
 function exec_bc_iva(SrcL : bits(5)) -> unit = { () }
+
+// -----------------------------------------------------------------------------
+// SSR access (staged)
+
+function exec_ssrget(RegDst : bits(5), SSR_ID : bits(12)) -> unit = {
+  let id : bits(24) = 0x000000 | SSR_ID;
+  write_regdst(RegDst, ssr_read(id))
+}
+
+function exec_ssrset(SrcL : bits(5), SSR_ID : bits(12)) -> unit = {
+  let id : bits(24) = 0x000000 | SSR_ID;
+  ssr_write(id, read_reg5(SrcL))
+}
+
+function exec_ssrswap(RegDst : bits(5), SrcL : bits(5), SSR_ID : bits(12)) -> unit = {
+  let id : bits(24) = 0x000000 | SSR_ID;
+  let oldv = ssr_read(id);
+  ssr_write(id, read_reg5(SrcL));
+  write_regdst(RegDst, oldv)
+}
+
+function exec_hl_ssrget(RegDst : bits(5), SSR_ID : bits(24)) -> unit = {
+  write_regdst(RegDst, ssr_read(SSR_ID))
+}
+
+function exec_hl_ssrset(SrcL : bits(5), SSR_ID : bits(24)) -> unit = {
+  ssr_write(SSR_ID, read_reg5(SrcL))
+}
+
+function exec_c_ssrget(SSRID : bits(5)) -> unit = {
+  // C16 encoding carries a small SSR-ID field; zero-extend.
+  let id : bits(24) = 0x000000 | SSRID;
+  write_regdst(reg_t(), ssr_read(id))
+}
 
 function exec_ebreak() -> unit = {
   // Software breakpoint.
