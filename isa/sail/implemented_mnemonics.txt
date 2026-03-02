@@ -104,6 +104,7 @@ SETC.ANDI
 SETC.ORI
 
 # HL (48-bit) immediate forms
+HL.BFI
 HL.CMP.EQI
 HL.CMP.NEI
 HL.CMP.LTI
