@@ -1719,6 +1719,139 @@ function exec_lsrget(RegDst : bits(5), lsr_id12 : bits(12)) -> unit = {
 }
 
 // -----------------------------------------------------------------------------
+// Floating-point arithmetic (FSU) - staged bring-up
+//
+// Normative sources:
+// - docs/architecture/isa-manual/src/chapters/02_programming_model.adoc (FCSR layout)
+// - docs/architecture/isa-manual/src/chapters/12_fsu.adoc
+//
+// POLICY: Do not guess FP numeric behavior until the FP library + FCSR semantics are
+// fully wired. For now, we explicitly mark these operations as unimplemented.
+// We still write a deterministic placeholder value to the destination to keep
+// downstream execution deterministic in staged environments.
+
+function fp_unimpl_result(RegDst : bits(5), mnemonic : string) -> unit = {
+  let _ = mnemonic;
+  unimplemented(mnemonic);
+  write_regdst(RegDst, 0x0000_0000_0000_0000)
+}
+
+function exec_fadd(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = SrcL; let _ = SrcR; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FADD")
+}
+
+function exec_fsub(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = SrcL; let _ = SrcR; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FSUB")
+}
+
+function exec_fmul(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = SrcL; let _ = SrcR; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FMUL")
+}
+
+function exec_fdiv(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = SrcL; let _ = SrcR; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FDIV")
+}
+
+function exec_fsqrt(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = SrcL; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FSQRT")
+}
+
+function exec_frecip(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = SrcL; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FRECIP")
+}
+
+function exec_fexp(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = SrcL; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FEXP")
+}
+
+function exec_fmadd(RegDst : bits(5), SrcA : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = SrcA; let _ = SrcL; let _ = SrcR; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FMADD")
+}
+
+function exec_fmsub(RegDst : bits(5), SrcA : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = SrcA; let _ = SrcL; let _ = SrcR; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FMSUB")
+}
+
+function exec_fnmadd(RegDst : bits(5), SrcA : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = SrcA; let _ = SrcL; let _ = SrcR; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FNMADD")
+}
+
+function exec_fnmsub(RegDst : bits(5), SrcA : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = SrcA; let _ = SrcL; let _ = SrcR; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FNMSUB")
+}
+
+function exec_fcvt(DstType : bits(5), RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = DstType; let _ = SrcL; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FCVT")
+}
+
+function exec_fcvta(DstType : bits(5), RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = DstType; let _ = SrcL; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FCVTA")
+}
+
+function exec_fcvtm(DstType : bits(5), RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = DstType; let _ = SrcL; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FCVTM")
+}
+
+function exec_fcvtn(DstType : bits(5), RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = DstType; let _ = SrcL; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FCVTN")
+}
+
+function exec_fcvtp(DstType : bits(5), RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = DstType; let _ = SrcL; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FCVTP")
+}
+
+function exec_fcvtz(DstType : bits(5), RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = DstType; let _ = SrcL; let _ = SrcType;
+  fp_unimpl_result(RegDst, "FCVTZ")
+}
+
+function exec_scvtf(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = SrcL; let _ = SrcType;
+  fp_unimpl_result(RegDst, "SCVTF")
+}
+
+function exec_ucvtf(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
+  let _ = SrcL; let _ = SrcType;
+  fp_unimpl_result(RegDst, "UCVTF")
+}
+
+function exec_fentry(SrcBegin : bits(5), SrcEnd : bits(5), uimm15 : bits(15)) -> unit = {
+  let _ = SrcBegin; let _ = SrcEnd; let _ = uimm15;
+  unimplemented("FENTRY")
+}
+
+function exec_fexit(DstBegin : bits(5), DstEnd : bits(5), uimm15 : bits(15)) -> unit = {
+  let _ = DstBegin; let _ = DstEnd; let _ = uimm15;
+  unimplemented("FEXIT")
+}
+
+function exec_fret_ra(DstBegin : bits(5), DstEnd : bits(5), uimm15 : bits(15)) -> unit = {
+  let _ = DstBegin; let _ = DstEnd; let _ = uimm15;
+  unimplemented("FRET.RA")
+}
+
+function exec_fret_stk(DstBegin : bits(5), DstEnd : bits(5), uimm15 : bits(15)) -> unit = {
+  let _ = DstBegin; let _ = DstEnd; let _ = uimm15;
+  unimplemented("FRET.STK")
+}
+
+// -----------------------------------------------------------------------------
 // Execution control
 
 function exec_assert(SrcL : bits(5)) -> unit = {

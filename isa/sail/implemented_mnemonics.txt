@@ -196,6 +196,31 @@ SSRSWAP
 HL.SSRGET
 HL.SSRSET
 
+# Floating-point (FSU) - staged placeholders
+FADD
+FSUB
+FMUL
+FDIV
+FSQRT
+FRECIP
+FEXP
+FMADD
+FMSUB
+FNMADD
+FNMSUB
+FCVT
+FCVTA
+FCVTM
+FCVTN
+FCVTP
+FCVTZ
+SCVTF
+UCVTF
+FENTRY
+FEXIT
+FRET.RA
+FRET.STK
+
 # Cache / barrier / TLB maintenance (staged; functional no-op, with required operand validation)
 DC.IALL
 DC.IVA
