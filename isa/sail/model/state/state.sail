@@ -65,6 +65,80 @@ function raise_trap(trapnum : bits(6), cause : bits(24), traparg0 : bits(64), bi
 }
 
 // -----------------------------------------------------------------------------
+// System Status Registers (SSR) - bring-up state model
+//
+// Normative sources:
+// - docs/architecture/isa-manual/src/generated/system_registers_ssr.adoc
+// - docs/architecture/isa-manual/src/chapters/09_system_and_privilege.adoc (E_ISSR)
+//
+// NOTE: This staged model only provides concrete storage for a subset of base SSRs
+// that are used by early software (TP/GP and bring-up loop regs). All other SSR IDs
+// are routed to explicit `unimplemented(...)` until the privilege + trap envelope is
+// wired into the Sail state.
+
+register ssr_tp  : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0000
+register ssr_gp  : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0001
+
+register ssr_lb0 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0050
+register ssr_lb1 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0051
+register ssr_lb2 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0052
+
+register ssr_lc0 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0053
+register ssr_lc1 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0054
+register ssr_lc2 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0055
+
+function trap_illegal_inst(traparg0 : bits(64)) -> unit = {
+  // TRAPNUM_ILLEGAL_INST = 4, CAUSE=0, BI=0 (bring-up).
+  raise_trap(to_bits(6, 4), to_bits(24, 0), traparg0, 0b0)
+}
+
+function trap_illegal_ssr() -> unit = {
+  // For now, illegal SSR access is modeled as ILLEGAL_INST (manual: "illegal SSR").
+  // TODO: when E_ISSR is fully wired, route to that trap class with a structured CAUSE.
+  trap_illegal_inst(read_pc_or_tpc())
+}
+
+function read_system_register(id24 : bits(24)) -> bits(64) = {
+  // Base SSR namespace is 12-bit for 32-bit forms.
+  let id : bits(12) = id24[11..0];
+  match id {
+    0x000 => ssr_tp,
+    0x001 => ssr_gp,
+    0x050 => ssr_lb0,
+    0x051 => ssr_lb1,
+    0x052 => ssr_lb2,
+    0x053 => ssr_lc0,
+    0x054 => ssr_lc1,
+    0x055 => ssr_lc2,
+    _ => {
+      trap_illegal_ssr();
+      0x0000_0000_0000_0000
+    }
+  }
+}
+
+function write_system_register(id24 : bits(24), v : bits(64)) -> unit = {
+  let id : bits(12) = id24[11..0];
+  match id {
+    0x000 => ssr_tp = v,
+    0x001 => ssr_gp = v,
+    0x050 => ssr_lb0 = v,
+    0x051 => ssr_lb1 = v,
+    0x052 => ssr_lb2 = v,
+    0x053 => ssr_lc0 = v,
+    0x054 => ssr_lc1 = v,
+    0x055 => ssr_lc2 = v,
+    _ => trap_illegal_ssr()
+  }
+}
+
+function swap_system_register(id24 : bits(24), v : bits(64)) -> bits(64) = {
+  let old = read_system_register(id24);
+  write_system_register(id24, v);
+  old
+}
+
+// -----------------------------------------------------------------------------
 // BLOCK_TRAP / E_BLOCK helpers (v0.3 bring-up contract)
 //
 // Normative sources:

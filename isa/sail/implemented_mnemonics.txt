@@ -187,7 +187,39 @@ C.LWI
 C.LDI
 C.SWI
 C.SDI
-# C.SSRGET remains missing until SSR state is staged.
+C.SSRGET
+
+# SSR access (system registers)
+SSRGET
+SSRSET
+SSRSWAP
+HL.SSRGET
+HL.SSRSET
+
+# Floating-point (FSU) - staged placeholders
+FADD
+FSUB
+FMUL
+FDIV
+FSQRT
+FRECIP
+FEXP
+FMADD
+FMSUB
+FNMADD
+FNMSUB
+FCVT
+FCVTA
+FCVTM
+FCVTN
+FCVTP
+FCVTZ
+SCVTF
+UCVTF
+FENTRY
+FEXIT
+FRET.RA
+FRET.STK
 
 # Cache / barrier / TLB maintenance (staged; functional no-op, with required operand validation)
 DC.IALL
@@ -375,9 +407,13 @@ SD.U
 LBI
 LBUI
 LHI
+LHI.U
 LHUI
+LHUI.U
 LWI
+LWI.U
 LWUI
+LWUI.U
 LDI
 LDI.U
 SBI
