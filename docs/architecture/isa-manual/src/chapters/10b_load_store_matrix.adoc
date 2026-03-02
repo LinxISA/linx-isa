@@ -1,0 +1,246 @@
+// Load/Store instruction matrix
+// Auto-generated from isa/sail/implemented_mnemonics.txt (coverage view)
+// NOTE: This is a coverage-oriented listing of mnemonics with Sail execution semantics.
+
+[[load-store-matrix]]
+=== Load/Store & AMO Coverage Matrix (Sail)
+
+This table enumerates all mnemonics currently marked as implemented in the Sail model that belong to load/store/prefetch/AMO families.
+
+Columns are derived mechanically from mnemonic spelling (suffixes like `.PCR`, `.PR`, `.PO`, `.U`, `IP/P`), and should be treated as *informative*.
+
+[cols="1,1,1,2,1,1,1,1,1",options="header"]
+|===
+|Mnemonic |Encoding |Kind |Addressing mode |Width (bits) |Ext |Writeback |Unscaled |Pair
+|`C.LWI`|C16|LOAD|IMM-OFFSET|32|sext|no|no|no
+|`C.LDI`|C16|LOAD|IMM-OFFSET|64||no|no|no
+|`C.SWI`|C16|STORE|IMM-OFFSET|32||no|no|no
+|`C.SDI`|C16|STORE|IMM-OFFSET|64||no|no|no
+|`PRF`|BASE32|PREFETCH|REG+REG||||no|no
+|`PRFI.U`|BASE32|PREFETCH|REG+REG||||yes|no
+|`HL.PRF`|HL48|PREFETCH|REG+REG||||no|no
+|`HL.PRF.A`|HL48|PREFETCH|REG+REG||||no|no
+|`HL.PRFI.U`|HL48|PREFETCH|REG+REG||||yes|no
+|`HL.PRFI.UA`|HL48|PREFETCH|REG+REG||||yes|no
+|`LB`|BASE32|LOAD|REG+REG|8|sext|no|no|no
+|`LBU`|BASE32|LOAD|REG+REG|8|zext|no|no|no
+|`LH`|BASE32|LOAD|REG+REG|16|sext|no|no|no
+|`LHU`|BASE32|LOAD|REG+REG|16|zext|no|no|no
+|`LW`|BASE32|LOAD|REG+REG|32|sext|no|no|no
+|`LWU`|BASE32|LOAD|REG+REG|32|zext|no|no|no
+|`LD`|BASE32|LOAD|REG+REG|64||no|no|no
+|`SB`|BASE32|STORE|REG+REG|8||no|no|no
+|`SH`|BASE32|STORE|REG+REG|16||no|no|no
+|`SW`|BASE32|STORE|REG+REG|32||no|no|no
+|`SD`|BASE32|STORE|REG+REG|64||no|no|no
+|`SH.U`|BASE32|STORE|REG+REG|16||no|yes|no
+|`SW.U`|BASE32|STORE|REG+REG|32||no|yes|no
+|`SD.U`|BASE32|STORE|REG+REG|64||no|yes|no
+|`LBI`|BASE32|LOAD|IMM-OFFSET|8|sext|no|no|no
+|`LBUI`|BASE32|LOAD|IMM-OFFSET|8|zext|no|no|no
+|`LHI`|BASE32|LOAD|IMM-OFFSET|16|sext|no|no|no
+|`LHI.U`|BASE32|LOAD|IMM-OFFSET|16|sext|no|yes|no
+|`LHUI`|BASE32|LOAD|IMM-OFFSET|16|zext|no|no|no
+|`LHUI.U`|BASE32|LOAD|IMM-OFFSET|16|zext|no|yes|no
+|`LWI`|BASE32|LOAD|IMM-OFFSET|32|sext|no|no|no
+|`LWI.U`|BASE32|LOAD|IMM-OFFSET|32|sext|no|yes|no
+|`LWUI`|BASE32|LOAD|IMM-OFFSET|32|zext|no|no|no
+|`LWUI.U`|BASE32|LOAD|IMM-OFFSET|32|zext|no|yes|no
+|`LDI`|BASE32|LOAD|IMM-OFFSET|64||no|no|no
+|`LDI.U`|BASE32|LOAD|IMM-OFFSET|64||no|yes|no
+|`SBI`|BASE32|STORE|IMM-OFFSET|8||no|no|no
+|`SHI`|BASE32|STORE|IMM-OFFSET|16||no|no|no
+|`SHI.U`|BASE32|STORE|IMM-OFFSET|16||no|yes|no
+|`SWI`|BASE32|STORE|IMM-OFFSET|32||no|no|no
+|`SWI.U`|BASE32|STORE|IMM-OFFSET|32||no|yes|no
+|`SDI`|BASE32|STORE|IMM-OFFSET|64||no|no|no
+|`SDI.U`|BASE32|STORE|IMM-OFFSET|64||no|yes|no
+|`LB.PCR`|BASE32|LOAD|PCR|8|sext|no|no|no
+|`LBU.PCR`|BASE32|LOAD|PCR|8|zext|no|no|no
+|`LH.PCR`|BASE32|LOAD|PCR|16|sext|no|no|no
+|`LHU.PCR`|BASE32|LOAD|PCR|16|zext|no|no|no
+|`LW.PCR`|BASE32|LOAD|PCR|32|sext|no|no|no
+|`LWU.PCR`|BASE32|LOAD|PCR|32|zext|no|no|no
+|`LD.PCR`|BASE32|LOAD|PCR|64||no|no|no
+|`SB.PCR`|BASE32|STORE|PCR|8||no|no|no
+|`SH.PCR`|BASE32|STORE|PCR|16||no|no|no
+|`SW.PCR`|BASE32|STORE|PCR|32||no|no|no
+|`SD.PCR`|BASE32|STORE|PCR|64||no|no|no
+|`HL.LB.PR`|HL48|LOAD|PRE-INDEX|8|sext|yes|no|no
+|`HL.LB.PO`|HL48|LOAD|POST-INDEX|8|sext|yes|no|no
+|`HL.LBU.PR`|HL48|LOAD|PRE-INDEX|8|zext|yes|no|no
+|`HL.LBU.PO`|HL48|LOAD|POST-INDEX|8|zext|yes|no|no
+|`HL.LH.PR`|HL48|LOAD|PRE-INDEX|16|sext|yes|no|no
+|`HL.LH.PO`|HL48|LOAD|POST-INDEX|16|sext|yes|no|no
+|`HL.LHU.PR`|HL48|LOAD|PRE-INDEX|16|zext|yes|no|no
+|`HL.LHU.PO`|HL48|LOAD|POST-INDEX|16|zext|yes|no|no
+|`HL.LW.PR`|HL48|LOAD|PRE-INDEX|32|sext|yes|no|no
+|`HL.LW.PO`|HL48|LOAD|POST-INDEX|32|sext|yes|no|no
+|`HL.LWU.PR`|HL48|LOAD|PRE-INDEX|32|zext|yes|no|no
+|`HL.LWU.PO`|HL48|LOAD|POST-INDEX|32|zext|yes|no|no
+|`HL.LD.PR`|HL48|LOAD|PRE-INDEX|64||yes|no|no
+|`HL.LD.PO`|HL48|LOAD|POST-INDEX|64||yes|no|no
+|`HL.SB.PR`|HL48|STORE|PRE-INDEX|8||yes|no|no
+|`HL.SB.PO`|HL48|STORE|POST-INDEX|8||yes|no|no
+|`HL.SH.PR`|HL48|STORE|PRE-INDEX|16||yes|no|no
+|`HL.SH.PO`|HL48|STORE|POST-INDEX|16||yes|no|no
+|`HL.SH.UPR`|HL48|STORE|PRE-INDEX (unscaled)|16||yes|yes|no
+|`HL.SH.UPO`|HL48|STORE|POST-INDEX (unscaled)|16||yes|yes|no
+|`HL.SW.PR`|HL48|STORE|PRE-INDEX|32||yes|no|no
+|`HL.SW.PO`|HL48|STORE|POST-INDEX|32||yes|no|no
+|`HL.SW.UPR`|HL48|STORE|PRE-INDEX (unscaled)|32||yes|yes|no
+|`HL.SW.UPO`|HL48|STORE|POST-INDEX (unscaled)|32||yes|yes|no
+|`HL.SD.PR`|HL48|STORE|PRE-INDEX|64||yes|no|no
+|`HL.SD.PO`|HL48|STORE|POST-INDEX|64||yes|no|no
+|`HL.SD.UPR`|HL48|STORE|PRE-INDEX (unscaled)|64||yes|yes|no
+|`HL.SD.UPO`|HL48|STORE|POST-INDEX (unscaled)|64||yes|yes|no
+|`LW.ADD`|BASE32|AMO|REG+REG|32|||no|no
+|`LW.AND`|BASE32|AMO|REG+REG|32|||no|no
+|`LW.OR`|BASE32|AMO|REG+REG|32|||no|no
+|`LW.XOR`|BASE32|AMO|REG+REG|32|||no|no
+|`LW.SMAX`|BASE32|AMO|REG+REG|32|||no|no
+|`LW.SMIN`|BASE32|AMO|REG+REG|32|||no|no
+|`LW.UMAX`|BASE32|AMO|REG+REG|32|||yes|no
+|`LW.UMIN`|BASE32|AMO|REG+REG|32|||yes|no
+|`LD.ADD`|BASE32|AMO|REG+REG|64|||no|no
+|`LD.AND`|BASE32|AMO|REG+REG|64|||no|no
+|`LD.OR`|BASE32|AMO|REG+REG|64|||no|no
+|`LD.XOR`|BASE32|AMO|REG+REG|64|||no|no
+|`LD.SMAX`|BASE32|AMO|REG+REG|64|||no|no
+|`LD.SMIN`|BASE32|AMO|REG+REG|64|||no|no
+|`LD.UMAX`|BASE32|AMO|REG+REG|64|||yes|no
+|`LD.UMIN`|BASE32|AMO|REG+REG|64|||yes|no
+|`SW.ADD`|BASE32|AMO|REG+REG|32|||no|no
+|`SW.AND`|BASE32|AMO|REG+REG|32|||no|no
+|`SW.OR`|BASE32|AMO|REG+REG|32|||no|no
+|`SW.XOR`|BASE32|AMO|REG+REG|32|||no|no
+|`SW.SMAX`|BASE32|AMO|REG+REG|32|||no|no
+|`SW.SMIN`|BASE32|AMO|REG+REG|32|||no|no
+|`SW.UMAX`|BASE32|AMO|REG+REG|32|||yes|no
+|`SW.UMIN`|BASE32|AMO|REG+REG|32|||yes|no
+|`SD.ADD`|BASE32|AMO|REG+REG|64|||no|no
+|`SD.AND`|BASE32|AMO|REG+REG|64|||no|no
+|`SD.OR`|BASE32|AMO|REG+REG|64|||no|no
+|`SD.XOR`|BASE32|AMO|REG+REG|64|||no|no
+|`SD.SMAX`|BASE32|AMO|REG+REG|64|||no|no
+|`SD.SMIN`|BASE32|AMO|REG+REG|64|||no|no
+|`SD.UMAX`|BASE32|AMO|REG+REG|64|||yes|no
+|`SD.UMIN`|BASE32|AMO|REG+REG|64|||yes|no
+|`LR.B`|BASE32|AMO|REG+REG|8|||no|no
+|`LR.H`|BASE32|AMO|REG+REG|16|||no|no
+|`LR.W`|BASE32|AMO|REG+REG|32|||no|no
+|`LR.D`|BASE32|AMO|REG+REG|64|||no|no
+|`SC.B`|BASE32|AMO|REG+REG|8|||no|no
+|`SC.H`|BASE32|AMO|REG+REG|16|||no|no
+|`SC.W`|BASE32|AMO|REG+REG|32|||no|no
+|`SC.D`|BASE32|AMO|REG+REG|64|||no|no
+|`SWAPB`|BASE32|AMO|REG+REG|8|||no|no
+|`SWAPH`|BASE32|AMO|REG+REG|16|||no|no
+|`SWAPW`|BASE32|AMO|REG+REG|32|||no|no
+|`SWAPD`|BASE32|AMO|REG+REG|64|||no|no
+|`HL.CASB`|HL48|AMO|REG+REG|8|||no|no
+|`HL.CASH`|HL48|AMO|REG+REG|16|||no|no
+|`HL.CASW`|HL48|AMO|REG+REG|32|||no|no
+|`HL.CASD`|HL48|AMO|REG+REG|64|||no|no
+|`HL.LB.PCR`|HL48|LOAD|PCR|8|sext|no|no|no
+|`HL.LBU.PCR`|HL48|LOAD|PCR|8|zext|no|no|no
+|`HL.LH.PCR`|HL48|LOAD|PCR|16|sext|no|no|no
+|`HL.LHU.PCR`|HL48|LOAD|PCR|16|zext|no|no|no
+|`HL.LW.PCR`|HL48|LOAD|PCR|32|sext|no|no|no
+|`HL.LWU.PCR`|HL48|LOAD|PCR|32|zext|no|no|no
+|`HL.LD.PCR`|HL48|LOAD|PCR|64||no|no|no
+|`HL.LBI`|HL48|LOAD|IMM-OFFSET|8|sext|no|no|no
+|`HL.LBUI`|HL48|LOAD|IMM-OFFSET|8|zext|no|no|no
+|`HL.LHI`|HL48|LOAD|IMM-OFFSET|16|sext|no|no|no
+|`HL.LHI.U`|HL48|LOAD|IMM-OFFSET|16|sext|no|yes|no
+|`HL.LHUI`|HL48|LOAD|IMM-OFFSET|16|zext|no|no|no
+|`HL.LHUI.U`|HL48|LOAD|IMM-OFFSET|16|zext|no|yes|no
+|`HL.LWI`|HL48|LOAD|IMM-OFFSET|32|sext|no|no|no
+|`HL.LWI.U`|HL48|LOAD|IMM-OFFSET|32|sext|no|yes|no
+|`HL.LWUI`|HL48|LOAD|IMM-OFFSET|32|zext|no|no|no
+|`HL.LWUI.U`|HL48|LOAD|IMM-OFFSET|32|zext|no|yes|no
+|`HL.LDI`|HL48|LOAD|IMM-OFFSET|64||no|no|no
+|`HL.LDI.U`|HL48|LOAD|IMM-OFFSET|64||no|yes|no
+|`HL.LBI.PR`|HL48|LOAD|PRE-INDEX|8|sext|yes|no|no
+|`HL.LBI.PO`|HL48|LOAD|POST-INDEX|8|sext|yes|no|no
+|`HL.LBUI.PR`|HL48|LOAD|PRE-INDEX|8|zext|yes|no|no
+|`HL.LBUI.PO`|HL48|LOAD|POST-INDEX|8|zext|yes|no|no
+|`HL.LHI.PR`|HL48|LOAD|PRE-INDEX|16|sext|yes|no|no
+|`HL.LHI.PO`|HL48|LOAD|POST-INDEX|16|sext|yes|no|no
+|`HL.LHI.UPR`|HL48|LOAD|PRE-INDEX (unscaled)|16|sext|yes|yes|no
+|`HL.LHI.UPO`|HL48|LOAD|POST-INDEX (unscaled)|16|sext|yes|yes|no
+|`HL.LHUI.PR`|HL48|LOAD|PRE-INDEX|16|zext|yes|no|no
+|`HL.LHUI.PO`|HL48|LOAD|POST-INDEX|16|zext|yes|no|no
+|`HL.LHUI.UPR`|HL48|LOAD|PRE-INDEX (unscaled)|16|zext|yes|yes|no
+|`HL.LHUI.UPO`|HL48|LOAD|POST-INDEX (unscaled)|16|zext|yes|yes|no
+|`HL.LWI.PR`|HL48|LOAD|PRE-INDEX|32|sext|yes|no|no
+|`HL.LWI.PO`|HL48|LOAD|POST-INDEX|32|sext|yes|no|no
+|`HL.LWI.UPR`|HL48|LOAD|PRE-INDEX (unscaled)|32|sext|yes|yes|no
+|`HL.LWI.UPO`|HL48|LOAD|POST-INDEX (unscaled)|32|sext|yes|yes|no
+|`HL.LWUI.PR`|HL48|LOAD|PRE-INDEX|32|zext|yes|no|no
+|`HL.LWUI.PO`|HL48|LOAD|POST-INDEX|32|zext|yes|no|no
+|`HL.LWUI.UPR`|HL48|LOAD|PRE-INDEX (unscaled)|32|zext|yes|yes|no
+|`HL.LWUI.UPO`|HL48|LOAD|POST-INDEX (unscaled)|32|zext|yes|yes|no
+|`HL.LDI.PR`|HL48|LOAD|PRE-INDEX|64||yes|no|no
+|`HL.LDI.PO`|HL48|LOAD|POST-INDEX|64||yes|no|no
+|`HL.LDI.UPR`|HL48|LOAD|PRE-INDEX (unscaled)|64||yes|yes|no
+|`HL.LDI.UPO`|HL48|LOAD|POST-INDEX (unscaled)|64||yes|yes|no
+|`HL.LBIP`|HL48|LOAD|PAIR|8|sext|no (2 dst)|no|yes
+|`HL.LBUIP`|HL48|LOAD|PAIR|8|zext|no (2 dst)|no|yes
+|`HL.LHIP`|HL48|LOAD|PAIR|16|sext|no (2 dst)|no|yes
+|`HL.LHIP.U`|HL48|LOAD|PAIR|16|sext|no (2 dst)|yes|yes
+|`HL.LHUIP`|HL48|LOAD|PAIR|16|zext|no (2 dst)|no|yes
+|`HL.LHUIP.U`|HL48|LOAD|PAIR|16|zext|no (2 dst)|yes|yes
+|`HL.LWIP`|HL48|LOAD|PAIR|32|sext|no (2 dst)|no|yes
+|`HL.LWIP.U`|HL48|LOAD|PAIR|32|sext|no (2 dst)|yes|yes
+|`HL.LWUIP`|HL48|LOAD|PAIR|32|zext|no (2 dst)|no|yes
+|`HL.LWUIP.U`|HL48|LOAD|PAIR|32|zext|no (2 dst)|yes|yes
+|`HL.LDIP`|HL48|LOAD|PAIR|64||no (2 dst)|no|yes
+|`HL.LDIP.U`|HL48|LOAD|PAIR|64||no (2 dst)|yes|yes
+|`HL.LBP`|HL48|LOAD|PAIR|8|sext|no (2 dst)|no|yes
+|`HL.LBUP`|HL48|LOAD|PAIR|8|zext|no (2 dst)|no|yes
+|`HL.LHP`|HL48|LOAD|PAIR|16|sext|no (2 dst)|no|yes
+|`HL.LHUP`|HL48|LOAD|PAIR|16|zext|no (2 dst)|no|yes
+|`HL.LWP`|HL48|LOAD|PAIR|32|sext|no (2 dst)|no|yes
+|`HL.LWUP`|HL48|LOAD|PAIR|32|zext|no (2 dst)|no|yes
+|`HL.LDP`|HL48|LOAD|PAIR|64||no (2 dst)|no|yes
+|`HL.SB.PCR`|HL48|STORE|PCR|8||no|no|no
+|`HL.SH.PCR`|HL48|STORE|PCR|16||no|no|no
+|`HL.SW.PCR`|HL48|STORE|PCR|32||no|no|no
+|`HL.SD.PCR`|HL48|STORE|PCR|64||no|no|no
+|`HL.SBI`|HL48|STORE|IMM-OFFSET|8||no|no|no
+|`HL.SHI`|HL48|STORE|IMM-OFFSET|16||no|no|no
+|`HL.SHI.U`|HL48|STORE|IMM-OFFSET|16||no|yes|no
+|`HL.SWI`|HL48|STORE|IMM-OFFSET|32||no|no|no
+|`HL.SWI.U`|HL48|STORE|IMM-OFFSET|32||no|yes|no
+|`HL.SDI`|HL48|STORE|IMM-OFFSET|64||no|no|no
+|`HL.SDI.U`|HL48|STORE|IMM-OFFSET|64||no|yes|no
+|`HL.SBI.PR`|HL48|STORE|PRE-INDEX|8||yes|no|no
+|`HL.SBI.PO`|HL48|STORE|POST-INDEX|8||yes|no|no
+|`HL.SHI.PR`|HL48|STORE|PRE-INDEX|16||yes|no|no
+|`HL.SHI.PO`|HL48|STORE|POST-INDEX|16||yes|no|no
+|`HL.SHI.UPR`|HL48|STORE|PRE-INDEX (unscaled)|16||yes|yes|no
+|`HL.SHI.UPO`|HL48|STORE|POST-INDEX (unscaled)|16||yes|yes|no
+|`HL.SWI.PR`|HL48|STORE|PRE-INDEX|32||yes|no|no
+|`HL.SWI.PO`|HL48|STORE|POST-INDEX|32||yes|no|no
+|`HL.SWI.UPR`|HL48|STORE|PRE-INDEX (unscaled)|32||yes|yes|no
+|`HL.SWI.UPO`|HL48|STORE|POST-INDEX (unscaled)|32||yes|yes|no
+|`HL.SDI.PR`|HL48|STORE|PRE-INDEX|64||yes|no|no
+|`HL.SDI.PO`|HL48|STORE|POST-INDEX|64||yes|no|no
+|`HL.SDI.UPR`|HL48|STORE|PRE-INDEX (unscaled)|64||yes|yes|no
+|`HL.SDI.UPO`|HL48|STORE|POST-INDEX (unscaled)|64||yes|yes|no
+|`HL.SBIP`|HL48|STORE|PAIR|8||no (2 dst)|no|yes
+|`HL.SHIP`|HL48|STORE|PAIR|16||no (2 dst)|no|yes
+|`HL.SHIP.U`|HL48|STORE|PAIR|16||no (2 dst)|yes|yes
+|`HL.SWIP`|HL48|STORE|PAIR|32||no (2 dst)|no|yes
+|`HL.SWIP.U`|HL48|STORE|PAIR|32||no (2 dst)|yes|yes
+|`HL.SDIP`|HL48|STORE|PAIR|64||no (2 dst)|no|yes
+|`HL.SDIP.U`|HL48|STORE|PAIR|64||no (2 dst)|yes|yes
+|`HL.SBP`|HL48|STORE|PAIR|8||no (2 dst)|no|yes
+|`HL.SHP`|HL48|STORE|PAIR|16||no (2 dst)|no|yes
+|`HL.SHP.U`|HL48|STORE|PAIR|16||no (2 dst)|yes|yes
+|`HL.SWP`|HL48|STORE|PAIR|32||no (2 dst)|no|yes
+|`HL.SWP.U`|HL48|STORE|PAIR|32||no (2 dst)|yes|yes
+|`HL.SDP`|HL48|STORE|PAIR|64||no (2 dst)|no|yes
+|`HL.SDP.U`|HL48|STORE|PAIR|64||no (2 dst)|yes|yes
+|===
