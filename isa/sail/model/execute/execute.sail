@@ -1746,6 +1746,40 @@ function exec_ic_iva(SrcL : bits(5)) -> unit = { () }
 function exec_bc_iall() -> unit = { () }
 function exec_bc_iva(SrcL : bits(5)) -> unit = { () }
 
+// -----------------------------------------------------------------------------
+// SSR access (staged)
+
+function exec_ssrget(RegDst : bits(5), SSR_ID : bits(12)) -> unit = {
+  let id : bits(24) = 0x000000 | SSR_ID;
+  write_regdst(RegDst, ssr_read(id))
+}
+
+function exec_ssrset(SrcL : bits(5), SSR_ID : bits(12)) -> unit = {
+  let id : bits(24) = 0x000000 | SSR_ID;
+  ssr_write(id, read_reg5(SrcL))
+}
+
+function exec_ssrswap(RegDst : bits(5), SrcL : bits(5), SSR_ID : bits(12)) -> unit = {
+  let id : bits(24) = 0x000000 | SSR_ID;
+  let oldv = ssr_read(id);
+  ssr_write(id, read_reg5(SrcL));
+  write_regdst(RegDst, oldv)
+}
+
+function exec_hl_ssrget(RegDst : bits(5), SSR_ID : bits(24)) -> unit = {
+  write_regdst(RegDst, ssr_read(SSR_ID))
+}
+
+function exec_hl_ssrset(SrcL : bits(5), SSR_ID : bits(24)) -> unit = {
+  ssr_write(SSR_ID, read_reg5(SrcL))
+}
+
+function exec_c_ssrget(SSRID : bits(5)) -> unit = {
+  // C16 encoding carries a small SSR-ID field; zero-extend.
+  let id : bits(24) = 0x000000 | SSRID;
+  write_regdst(reg_t(), ssr_read(id))
+}
+
 function exec_ebreak() -> unit = {
   // Software breakpoint.
   trap_sw_breakpoint(read_pc_or_tpc())
