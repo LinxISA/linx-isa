@@ -156,7 +156,7 @@ def _generate_instruction_def(inst: Dict[str, Any], inst_index: int) -> str:
     if pattern:
         # Convert pattern to TableGen format
         pattern_td = pattern.replace('.', '?')
-        lines.append(f'  [(set (i32 0), (i32 0))],  // TODO: proper pattern')
+        lines.append(f'  [(set (i32 0), (i32 0))],  // placeholder pattern until semantic lowering is modeled')
     
     # Add encoding
     lines.append(f'  [(InstField mask={mask}, value={match})]')
@@ -185,7 +185,7 @@ def _generate_tablegen_file(spec: Dict[str, Any], output_path: Path) -> None:
     groups = _group_instructions_by_category(instructions)
     
     lines = []
-    lines.append('// Auto-generated from isa/v0.3/linxisa-v0.3.json')
+    lines.append('// Auto-generated from isa/v0.4/linxisa-v0.4.json')
     lines.append('// DO NOT EDIT: run `python3 tools/isa/gen_llvm_tablegen.py` to regenerate.')
     lines.append('')
     lines.append('// This file contains instruction definitions for LLVM TableGen.')
@@ -224,8 +224,8 @@ def main() -> int:
     parser.add_argument(
         '--spec',
         type=Path,
-        default=Path(__file__).resolve().parents[3] / 'isa/v0.3/linxisa-v0.3.json',
-        help='Path to linxisa-v0.3.json'
+        default=Path(__file__).resolve().parents[3] / 'isa/v0.4/linxisa-v0.4.json',
+        help='Path to linxisa-v0.4.json'
     )
     parser.add_argument(
         '--out',

@@ -1,0 +1,7 @@
+{
+  "metric": "coremark_crosscheck_1000_commits_per_sec",
+  "value": 1.0,
+  "unit": "normalized",
+  "updated_at_utc": "2026-02-28 00:00:00Z",
+  "source": "bootstrap placeholder; replace with nightly measurement artifact"
+}

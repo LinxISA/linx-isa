@@ -1,8 +1,8 @@
 [[insnref]]
 == Instruction reference (catalog)
 
-This chapter is generated from `isa/v0.3/linxisa-v0.3.json` and is intended to be a complete listing of *encodable
-instruction forms* in the v0.2 catalog.
+This chapter is generated from `isa/v0.4/linxisa-v0.4.json` and is intended to be a complete listing of *encodable
+instruction forms* in the live v0.4 catalog.
 
 include::../generated/instruction_group_summary.adoc[]
 include::../generated/mnemonic_index.adoc[]

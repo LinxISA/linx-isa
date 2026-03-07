@@ -18,7 +18,7 @@ In-repo compile validation assets are centralized under AVS:
 
 ## Required invariants
 
-- Encodings and decode assumptions must match `isa/v0.3/linxisa-v0.3.json`.
+- Encodings and decode assumptions must match `isa/v0.4/linxisa-v0.4.json`.
 - Block ISA control-flow invariants must hold.
 - Call header adjacency rule (`BSTART CALL` + `SETRET`) must hold.
 

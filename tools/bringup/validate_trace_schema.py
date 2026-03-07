@@ -16,6 +16,7 @@ DEFAULT_REQUIRED_FIELDS = [
     "cycle",
     "pc",
     "insn",
+    "len",
     "wb_valid",
     "wb_rd",
     "wb_data",

@@ -7,7 +7,7 @@ for inclusion in the ISA manual. It creates clean, readable diagrams showing
 the bit layout of each instruction encoding.
 
 Usage:
-    python3 gen_encoding_svg.py --spec isa/v0.3/linxisa-v0.3.json --out-dir docs/architecture/isa-manual/src/generated/encodings
+    python3 gen_encoding_svg.py --spec isa/v0.4/linxisa-v0.4.json --out-dir docs/architecture/isa-manual/src/generated/encodings
 """
 
 from __future__ import annotations

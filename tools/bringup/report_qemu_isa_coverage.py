@@ -120,7 +120,7 @@ def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description="Generate ISA-vs-QEMU coverage report")
     ap.add_argument(
         "--spec",
-        default="isa/v0.3/linxisa-v0.3.json",
+        default="isa/v0.4/linxisa-v0.4.json",
         help="Path to compiled ISA JSON",
     )
     ap.add_argument(
@@ -226,4 +226,3 @@ def main(argv: list[str]) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main(sys.argv[1:]))
-

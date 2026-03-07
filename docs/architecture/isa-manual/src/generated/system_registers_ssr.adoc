@@ -1,5 +1,5 @@
 // Generated file. Do not edit by hand.
-// Source: linxisa-v0.3.json (state.system_registers)
+// Source: linxisa-v0.4.json (state.system_registers)
 [[ssr-table]]
 ==== System Status Registers (SSR)
 
@@ -73,7 +73,7 @@ Use `HL.SSRGET/HL.SSRSET` when the full `SSR_ID` does not fit in 12 bits.
 |===
 
 [[ssr-ebarg]]
-==== EBARG group (v0.3)
+==== EBARG group (v0.4)
 
 EBARG is the authoritative trap/context snapshot for v0.2. EBARG words are ACR-scoped manager-family SSRs (0xnf40+).
 
@@ -98,10 +98,11 @@ EBARG is the authoritative trap/context snapshot for v0.2. EBARG words are ACR-s
 |`0xnf4E` |`EBARG_LC_ACRn` |RW |Packed LC0..LC2 as 16-bit each (low bits).
 |`0xnf4F` |`EBARG_EXTCTX_PTR_ACRn` |RW |Pointer to extended-context buffer for ESAVE/ERCOV.
 |`0xnf50` |`EBARG_EXTCTX_META_ACRn` |RW |Extended-context metadata (kind/version/length/checksum; profile-defined).
+|`0xnf51` |`EBARG_TPLFLAGS_ACRn` |RW |Template replay flags: bit0 TPL_VALID, bit1 TPL_ID_PRESENT, bits11:2 TPL_ID, bits13:12 TPL_PHASE, bit14 TPL_DIRTY, bit15 TPL_REDO_OK, bit16 TPL_RESUME_OK; all higher bits reserved zero.
 |===
 
 [[ssr-debug]]
-==== Debug SSRs (v0.3 bring-up)
+==== Debug SSRs (v0.4 bring-up)
 
 v0.2 bring-up debug SSRs (breakpoints/watchpoints with optional linking).
 

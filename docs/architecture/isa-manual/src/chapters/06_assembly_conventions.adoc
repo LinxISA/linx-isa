@@ -1,0 +1,46 @@
+[[asm]]
+== Assembly conventions
+
+[[asm-register-names]]
+=== Register names and aliases
+
+The assembler/disassembler uses ABI-style spellings for GPRs (e.g. `sp`, `a0`, `s0`, `ra`) and also exposes
+ClockHands temporaries (`t#1`, `u#1`, …) and queue-push pseudo-destinations (`->t`, `->u`).
+
+NOTE: `t` and `u` are *destination selectors* (used only as `->t` / `->u`). ClockHands reads must use `t#k` / `u#k`.
+
+[[asm-dests]]
+=== Destination arrows and queue pushes
+
+Many arithmetic and load instructions have destinations described as `->{t, u, Rd}` in the draft tables, indicating:
+
+* a normal architectural destination register (`Rd`), and/or
+* a push into the T-hand queue (`->t`), and/or
+* a push into the U-hand queue (`->u`)
+
+Actual allowed combinations are defined per instruction form in the catalog.
+
+[[asm-compressed-constraints]]
+=== Compressed-form operand constraints
+
+Some 16-bit instruction forms intentionally restrict operands to reduce encoding space. For example:
+
+* `C.CMP.EQI` / `C.CMP.NEI` take **`t#1`** as the fixed left source and write the result to **`->t`**.
+
+Toolchains may apply canonicalizations (e.g. condition flipping or operand swapping when legal) to make use of these
+compressed forms.
+
+[[asm-operands]]
+=== Operand qualifiers and addressing forms
+
+The draft ISA tables use several common conventions:
+
+* `.sw` / `.uw` suffixes annotate sign/zero extension or “use as signed/unsigned word” in mixed-width operations.
+* Some immediate forms (notably `SETC.*I`) use a **split immediate** encoding (`simm/uimm` plus an encoded `shamt`). Assembly syntax prints a single immediate; architecturally the value is interpreted as `imm = (SignExtend(simm) << shamt)` (or `ZeroExtend(uimm) << shamt`).
+* Bracketed memory operands take the form `[...]` with base + offset, or base + index with optional shift.
+* In canonical v0.4 shader kernels, bridged global-memory forms spell the access domain explicitly: `l.*.brg` or `v.*.brg`.
+
+Refer to `instructions[].asm` in `isa/v0.4/linxisa-v0.4.json` for the full syntax used by each instruction form.
+
+NOTE: The toolchain may fold common bit-manipulation idioms (such as paired shifts used for `zext/sext-in-reg`) into
+`BXU`/`BXS` bitfield extracts.

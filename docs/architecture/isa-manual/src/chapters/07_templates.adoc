@@ -1,0 +1,111 @@
+[[templates]]
+== Template blocks (hardware macro blocks)
+
+Linx defines several **template blocks** used to compact common sequences. These map to special hardware acceleration
+inside the LinxCPU and conceptually expand to a larger sequence of micro-operations.
+
+Template blocks are **standalone blocks**: they form their own basic block and must not be merged with adjacent
+non-template instructions by the toolchain.
+
+[[templates-restart]]
+=== Restartability (template-step execution)
+
+[[templates-tplid]]
+==== Template mnemonic IDs (`TPL_ID`)
+
+Bring-up trap/replay uses `EBARG_TPLFLAGS_ACRm.TPL_ID` to identify template blocks.
+
+For `TemplateKind.class=0` (marker/template opcodes), the following mnemonic-enum mapping is normative:
+
+* `1 = FENTRY`
+* `2 = FEXIT`
+* `3 = FRET_RA`
+* `4 = FRET_STK`
+* `5 = MCOPY`
+* `6 = MSET`
+* `7 = ESAVE`
+* `8 = ERCOV`
+* `9..255` reserved
+
+NOTE: For `TemplateKind.class=1` (TEPL templates), identification uses the tile opcode selector (`TileOpcode`), not this enum.
+
+Template blocks execute via a **code-template generator** that emits a sequence of internal micro-operations
+(*micro-ops*) based on architectural register inputs.
+
+Restartability contract (v0.2 bring-up profile):
+
+* A template block MUST be **restartable**: interrupts and exceptions MAY be taken between generated micro-ops.
+* When a trap is taken during template micro-op execution, the trap-save logic MUST record progress in
+  `BSTATE.Template` and save it to `EBSTATE` as needed (see <<system-bstate-ebstate>>).
+* On `ACRE RRAT_RESTORE`, the template MUST resume from the recorded progress point without repeating any micro-op
+  effects that were already committed before the trap.
+* If a synchronous exception is raised by a micro-op (e.g. a page fault during `MCOPY`), the exception is precise
+  with respect to that micro-op: on resume, the faulting micro-op is retried, and earlier committed micro-ops are not
+  re-executed.
+
+The internal generator state is considered part of `BSTATE` for the purposes of context switching. Implementations
+MUST NOT lose generator progress across traps when `RRAT_RESTORE` is requested.
+
+In current bring-up, the toolchain uses the following frame template blocks around function entry/exit:
+
+* `FENTRY [RegSrc0 ~ RegSrcn], sp!, uimm`
+* `FEXIT  [RegDst0 ~ RegDstn], sp!, uimm`
+* `FRET.RA  [RegDst0 ~ RegDstn], sp!, uimm`
+* `FRET.STK [RegDst0 ~ RegDstn], sp!, uimm`
+
+These forms encode:
+
+* a contiguous register range (`*Begin`..`*End` fields in the catalog), and
+* an immediate stack adjustment (`uimm`)
+
+Additional macro blocks appear in the draft catalog for future use (examples):
+
+* `MCOPY [RegSrc0, RegSrc1, RegSrc2]` (bulk copy)
+* `MSET  [RegSrc0, RegSrc1, RegSrc2]` (bulk set)
+* `ESAVE` / `ERCOV` extended-context save/restore template blocks (v0.2 bring-up)
+
+Typical usage patterns in this repo:
+
+* `FENTRY` at function entry to allocate stack space and save a callee-save range (often including `ra`).
+* `FEXIT` to restore state and continue with an explicit control-flow block transition (e.g. tail call / indirect jump).
+* `FRET.*` to restore state and return (exact return mechanism depends on the chosen form and toolchain convention).
+
+[[templates-example]]
+=== Example (startup sequence)
+
+The minimal libc startup in `avs/runtime/freestanding/src/crt0.s` uses `FENTRY` + `FRET.STK` around a direct call:
+
+[source,asm]
+----
+FENTRY    [ra ~ s2], sp!, 16
+BSTART    CALL, main
+c.setret  .L_after_main, ->ra
+.L_after_main:
+FRET.STK  [ra ~ s2], sp!, 16
+----
+
+The precise memory layout and ordering of the save/restore operation is defined by the architectural specification
+golden sources (`isa/v0.4/`) and the canonical catalog (`isa/v0.4/linxisa-v0.4.json`).
+
+[[templates-esave]]
+=== Extended context save/restore (`ESAVE` / `ERCOV`) (v0.2 bring-up)
+
+The v0.2 bring-up profile defines two template blocks used to save/restore **extended local state** (vector/tile/mcall
+local registers, group state, and other large block-local state) across traps and context switches.
+
+Assembly syntax:
+
+* `ESAVE [BasePtr, LenBytes, Kind]`
+* `ERCOV [BasePtr, LenBytes, Kind]`
+
+Where:
+
+* `BasePtr` is a pointer to a software-owned buffer,
+* `LenBytes` is the buffer size in bytes, and
+* `Kind` selects the profile-defined extended-state schema to use.
+
+`ESAVE` serializes the extended local state into `[BasePtr, BasePtr+LenBytes)`. `ERCOV` restores it.
+
+Both `ESAVE` and `ERCOV` are **restartable template blocks**: traps may occur between internal micro-ops. When a trap is
+taken during `ESAVE`/`ERCOV` micro-op execution, progress MUST be recorded in `BSTATE`/`EBSTATE` so that execution can
+resume without double-committing any already-completed micro-ops (see <<templates-restart>> and <<system-bstate-ebstate>>).

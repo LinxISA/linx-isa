@@ -1,0 +1,319 @@
+{
+  "big_kind": "VEC",
+  "count": 24,
+  "instructions": [
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "FSU"
+      },
+      "group": "Three-Source Floating Point",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.FADD"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "FSU"
+      },
+      "group": "Format Convert",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.FCVT"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "FSU"
+      },
+      "group": "Format Convert",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.FCVTI"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "FSU"
+      },
+      "group": "Three-Source Floating Point",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.FDIV"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "FSU"
+      },
+      "group": "Two-Source Floating Point",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.FEQ"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "FSU"
+      },
+      "group": "Two-Source Floating Point",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.FEQS"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "FSU"
+      },
+      "group": "Two-Source Floating Point",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.FGE"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "FSU"
+      },
+      "group": "Two-Source Floating Point",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.FGES"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "FSU"
+      },
+      "group": "Two-Source Floating Point",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.FLT"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "FSU"
+      },
+      "group": "Two-Source Floating Point",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.FLTS"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "FSU"
+      },
+      "group": "Three-Source Floating Point",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.FMADD"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "FSU"
+      },
+      "group": "Two-Source Floating Point",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.FMAX"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "FSU"
+      },
+      "group": "Two-Source Floating Point",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.FMIN"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "FSU"
+      },
+      "group": "Three-Source Floating Point",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.FMSUB"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "FSU"
+      },
+      "group": "Three-Source Floating Point",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.FMUL"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "FSU"
+      },
+      "group": "Two-Source Floating Point",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.FNE"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "FSU"
+      },
+      "group": "Two-Source Floating Point",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.FNES"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "FSU"
+      },
+      "group": "Three-Source Floating Point",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.FNMADD"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "FSU"
+      },
+      "group": "Three-Source Floating Point",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.FNMSUB"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "FSU"
+      },
+      "group": "Three-Source Floating Point",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.FSUB"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "FSU"
+      },
+      "group": "Format Convert",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.ICVT"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "FSU"
+      },
+      "group": "Format Convert",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.ICVTF"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "FSU"
+      },
+      "group": "Two-Source Floating Point",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.MAX"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=FSU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "FSU"
+      },
+      "group": "Two-Source Floating Point",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.MIN"
+    }
+  ],
+  "sub_kind": "FSU"
+}

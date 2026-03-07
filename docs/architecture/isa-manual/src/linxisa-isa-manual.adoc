@@ -1,4 +1,4 @@
-= Linx Instruction Set Architecture Manual (v0.3)
+= Linx Instruction Set Architecture Manual (v0.4)
 :doctype: book
 :toc: left
 :toclevels: 4
@@ -19,33 +19,29 @@
 :imagesdir: images
 
 // Manual metadata (override when publishing).
-:revnumber: v0.3
+:revnumber: v0.4
 :revdate: {localdate}
 
 include::chapters/00_preamble.adoc[]
 include::chapters/01_introduction.adoc[]
-include::chapters/02_programming_model.adoc[]
+include::chapters/02_isa_overview.adoc[]
+include::chapters/03_programming_model.adoc[]
 include::chapters/03_encoding_and_formats.adoc[]
 include::chapters/04_block_isa.adoc[]
-include::chapters/05_assembly_conventions.adoc[]
-include::chapters/05b_regid10_operand_encoding.adoc[]
-include::chapters/05c_convert_type_encoding.adoc[]
-include::chapters/06_templates.adoc[]
-include::chapters/07_tile_blocks.adoc[]
-include::chapters/07b_isa_overview.adoc[]
-include::chapters/08_memory_operations.adoc[]
-include::chapters/09_system_and_privilege.adoc[]
-include::chapters/09b_xb_system_call_block.adoc[]
-include::chapters/10_agu.adoc[]
-include::chapters/11_alu.adoc[]
-include::chapters/12_fsu.adoc[]
-include::chapters/13_amo.adoc[]
-include::chapters/14_bbd.adoc[]
-include::chapters/15_bru.adoc[]
-include::chapters/16_cmd.adoc[]
-include::chapters/16b_queue_ops.adoc[]
-include::chapters/18_sys.adoc[]
-include::chapters/19_vec.adoc[]
+include::chapters/06_assembly_conventions.adoc[]
+include::chapters/07_templates.adoc[]
+include::chapters/08_tile_blocks.adoc[]
+include::chapters/09_memory_operations.adoc[]
+include::chapters/10_system_and_privilege.adoc[]
+include::chapters/11_agu.adoc[]
+include::chapters/12_alu.adoc[]
+include::chapters/13_fsu.adoc[]
+include::chapters/14_amo.adoc[]
+include::chapters/15_bbd.adoc[]
+include::chapters/16_bru.adoc[]
+include::chapters/17_cmd.adoc[]
+include::chapters/18_rsv.adoc[]
+include::chapters/19_sys.adoc[]
+include::chapters/20_vec.adoc[]
 include::chapters/90_instruction_reference.adoc[]
-include::chapters/91_instruction_block_isa.adoc[]
 include::chapters/99_appendix_spec.adoc[]

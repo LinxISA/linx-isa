@@ -12,13 +12,13 @@ Scope policy:
 
 `isa/sail/coverage.json` is generated from:
 
-- the compiled ISA catalog: `isa/v0.3/linxisa-v0.3.json`
+- the compiled ISA catalog: `isa/v0.4/linxisa-v0.4.json`
 - the list of implemented instruction mnemonics: `isa/sail/implemented_mnemonics.txt`
 
 Regenerate:
 
 ```bash
-python3 tools/isa/sail_coverage.py --spec isa/v0.3/linxisa-v0.3.json --implemented isa/sail/implemented_mnemonics.txt --out isa/sail/coverage.json
+python3 tools/isa/sail_coverage.py --spec isa/v0.4/linxisa-v0.4.json --implemented isa/sail/implemented_mnemonics.txt --out isa/sail/coverage.json
 ```
 
 ## Layout

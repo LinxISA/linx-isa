@@ -5,7 +5,7 @@
 [[inst_bstart_par]]
 ==== BSTART.PAR
 
-*Syntax:* BSTART.PAR TileOp10, DataType
+*Syntax:* BSTART.PAR TileOpcode, DataType
 
 *Description:* -
 

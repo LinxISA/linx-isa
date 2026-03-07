@@ -8,11 +8,12 @@ All differential validation paths must emit a common architectural trace schema.
 
 - Schema version format is `MAJOR.MINOR`.
 - `MAJOR` mismatch is not allowed and must fail-fast.
+- Breaking schema changes MUST increment `MAJOR` and run migration compatibility checks.
 - `MINOR` is forward-compatible within the same `MAJOR`:
   - consumer `X.Y` accepts producer `X.Z` when `Z >= Y`;
   - producer `X.Z` with `Z < Y` must be rejected.
 - Producers may emit an explicit per-row `schema_version`; if omitted, gate tooling
-  must use profile default (`1.0` for strict v0.3).
+  must use the active profile default (`1.0` in the current v0.4 strict baseline).
 
 ## Mandatory fields per commit/event
 
@@ -21,6 +22,7 @@ Scalar/base required fields:
 - `cycle`
 - `pc`
 - `insn`
+- `len`
 - `wb_valid`
 - `wb_rd`
 - `wb_data`

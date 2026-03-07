@@ -7,7 +7,7 @@ Last updated: 2026-02-22
 | Phase | Status | Evidence |
 | --- | --- | --- |
 | 1. Contract freeze (26 checks) | ✅ Passed | `python3 tools/bringup/check26_contract.py --root .` |
-| 2. linxisa v0.3 cutover | ✅ Passed | `bash tools/regression/run.sh` |
+| 2. linxisa v0.4 canonicalization | ✅ Passed | `bash tools/regression/run.sh` |
 | 3. LLVM MC/CodeGen alignment | ✅ Passed | `llvm-lit llvm/test/MC/LinxISA llvm/test/CodeGen/LinxISA` |
 | 4. QEMU runtime/system alignment | ✅ Passed | `avs/qemu/check_system_strict.sh`; `avs/qemu/run_tests.sh --all` |
 | 5. Linux userspace boot path | ✅ Passed | `python3 ${LINUX_ROOT}/tools/linxisa/initramfs/smoke.py`; `python3 ${LINUX_ROOT}/tools/linxisa/initramfs/full_boot.py` |

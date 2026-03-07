@@ -1,299 +1,299 @@
 ops:
-- tileop10: 0
+- tile_opcode: 0
   name: TADD
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 1
+- tile_opcode: 1
   name: TSUB
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 2
+- tile_opcode: 2
   name: TMUL
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 3
+- tile_opcode: 3
   name: TDIV
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 4
+- tile_opcode: 4
   name: TMAX
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 5
+- tile_opcode: 5
   name: TMIN
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 6
+- tile_opcode: 6
   name: TAND
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 7
+- tile_opcode: 7
   name: TOR
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 8
+- tile_opcode: 8
   name: TXOR
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 9
+- tile_opcode: 9
   name: TSHL
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 10
+- tile_opcode: 10
   name: TSHR
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 13
+- tile_opcode: 11
   name: TRELU
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 14
+- tile_opcode: 12
   name: TPRELU
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 15
+- tile_opcode: 13
   name: TCVT
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 32
+- tile_opcode: 18
   name: TROWMAX
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 33
+- tile_opcode: 19
   name: TROWMIN
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 34
+- tile_opcode: 20
   name: TROWSUM
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 36
+- tile_opcode: 21
   name: TCOLMAX
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 37
+- tile_opcode: 22
   name: TCOLMIN
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 38
+- tile_opcode: 23
   name: TCOLSUM
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 64
+- tile_opcode: 14
   name: TEXP
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: '0x040'
+- tile_opcode: 32
   name: TADDS
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 65
+- tile_opcode: 15
   name: TLOG
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: '0x041'
+- tile_opcode: 33
   name: TSUBS
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 66
+- tile_opcode: 16
   name: TSQRT
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: '0x042'
+- tile_opcode: 34
   name: TMULS
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 67
+- tile_opcode: 17
   name: TRSQRT
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: '0x043'
+- tile_opcode: 35
   name: TDIVS
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 68
+- tile_opcode: 24
   name: TRECIP
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: '0x044'
+- tile_opcode: 36
   name: TMAXS
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: '0x045'
+- tile_opcode: 37
   name: TMINS
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: '0x045'
+- tile_opcode: 25
   name: TEXPANDS
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: '0x046'
+- tile_opcode: 38
   name: TANDS
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: '0x047'
+- tile_opcode: 39
   name: TORS
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: '0x048'
+- tile_opcode: 40
   name: TXORS
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: '0x049'
+- tile_opcode: 41
   name: TSHLS
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: '0x04A'
+- tile_opcode: 42
   name: TSHRS
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 96
+- tile_opcode: 26
   name: TGATHER
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 97
+- tile_opcode: 27
   name: TSCATTER
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 98
+- tile_opcode: 28
   name: TRESHAPE
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: 99
+- tile_opcode: 29
   name: TTRANSPOSE
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: '0x0C0'
+- tile_opcode: 30
   name: TCOLEXPAND
   implemented_in: []
   status: unimplemented
   gates: []
   owner: ''
   notes: ''
-- tileop10: '0x0C1'
+- tile_opcode: 31
   name: TROWEXPAND
   implemented_in: []
   status: unimplemented

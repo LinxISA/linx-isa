@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "metric": "coremark_crosscheck_1000_commits_per_sec",
+  "max_regression_percent": 10.0,
+  "baseline": {
+    "value": 1.0,
+    "unit": "normalized",
+    "source": "set by integration owner on first green nightly"
+  }
+}

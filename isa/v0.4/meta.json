@@ -1,0 +1,17 @@
+{
+  "isa": "LinxISA",
+  "version": "0.4",
+  "status": "canonical",
+  "instruction_lengths_bits": [
+    16,
+    32,
+    48,
+    64
+  ],
+  "notes": [
+    "This directory is the authoritative staged golden ISA definition for v0.4.",
+    "v0.4 is the live canonical LinxISA profile for this repository.",
+    "v0.4 preserves the v0.2 encoding baseline while promoting the unified shader-kernel and rendering-profile contracts.",
+    "Canonical v0.4 artifacts keep typed BSTART forms, V.* families, and reserve contradictory legacy fragments instead of deferring them."
+  ]
+}

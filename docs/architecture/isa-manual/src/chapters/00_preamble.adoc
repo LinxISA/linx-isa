@@ -1,26 +1,27 @@
 [[preamble]]
 = Preamble
 
-**Document Version**: v0.3 |
-**Architecture**: Block-Structured LinxISA |
+**Document Version**: v0.4 |
+**Architecture**: Block-Structured LinxISA with unified shader-kernel execution |
 **Classification**: Public Specification
 
 '''
 
-This document is the canonical manual for the **block-structured Linx Instruction Set Architecture (Linx ISA)**, version **v0.3**.
+This document is the canonical manual for the **block-structured Linx Instruction Set Architecture (Linx ISA)**, version **v0.4**.
 
 == Authority and Source of Truth
 
-The single source of truth for instruction encodings in this repository is:
+The live source of truth for this repository is:
 
-* `isa/v0.3/linxisa-v0.3.json` (machine-readable catalog built from `isa/v0.3/`)
-* `isa/generated/codecs/` (generated encode/decode tables derived from the JSON)
+* `isa/v0.4/linxisa-v0.4.json` (compiled canonical catalog)
+* `isa/v0.4/state/{kernel_execution,rendering_profile,memory_model,system_registers}.json` (normative machine-readable state contracts)
+* `isa/generated/codecs/` (generated encode/decode tables derived from the v0.4 catalog)
 
-Where this manual and the machine-readable catalog disagree, the JSON catalog MUST be treated as authoritative.
+Where this manual and the machine-readable catalog disagree, the compiled v0.4 catalog and referenced state files MUST be treated as authoritative.
 
 [IMPORTANT]
 ====
-v0.3 unifies the previous v0.2 bring-up profile with v0.3 staged extensions. All architectural contracts are now defined in v0.3.
+`v0.4` is the only live canonical ISA profile in this repository. Historical `v0.3` material is retained for traceability only and must not be used as the active contract.
 ====
 
 [[preamble-brand-mark]]
@@ -33,23 +34,28 @@ The LinxISA brand mark is a stylized **Lingxi** form that preserves the original
 [[preamble-scope]]
 == Scope and Maturity
 
-This manual describes the **v0.3 Linx ISA** — a production-ready architecture that incorporates:
+This manual describes the live **v0.4 Linx ISA** profile:
 
-* The v0.2 bring-up baseline (privileged architecture, block-structured control flow, template blocks)
-* v0.3 staged extensions (vector/tile operations, SIMD lane policy, MCALL modes)
+* the v0.2 privilege/MMU baseline and block-structured control-flow model,
+* structured `MPAR`/`MSEQ` shader kernels selected by `B.TEXT`,
+* `p` as the architectural 64-bit EXEC mask with `V.CMP.* ->p` mask generation,
+* one unified `lx64` kernel encoding space where `l.*` versus `v.*` is derived from operand class,
+* canonical bridged kernel memory through `l.*.brg` and `v.*.brg`,
+* the first frozen rendering profile: 4KB `1024x1` row-major SoA fragment/state carriers, TAU tile-to-tile only, and descriptor-vs-StateTile state placement rules.
 
 The LinxISA project maintains alignment between:
 
-* The machine-readable catalog (`isa/v0.3/linxisa-v0.3.json`)
+* The machine-readable catalog (`isa/v0.4/linxisa-v0.4.json`)
 * The LLVM backend (`compiler/llvm/llvm/lib/Target/Linx/`)
 * The QEMU emulator (`emulator/qemu/target/linx/`)
+* The LinxCore architecture contract (`docs/architecture/linxcore/`)
 * This manual
 
 This manual focuses on:
 
-* Architectural state and assembly conventions
-* The block-structured control-flow model (`BSTART/BSTOP` and `BARG`)
-* Template instructions (e.g. `FENTRY`, `FRET.*`) used by toolchains
-* A complete instruction reference generated from the catalog
-* Privileged architecture (ACR, SSR, trap envelope)
-* Vector/tile extensions (v0.3 staged)
+* architectural state and assembly conventions,
+* the block-structured control-flow model (`BSTART/BSTOP` and `BARG`),
+* template instructions (for example `FENTRY`, `FRET.*`) used by toolchains,
+* the canonical shader-kernel and rendering-profile contracts,
+* privileged architecture (ACR, SSR, trap envelope), and
+* a complete instruction reference generated from the v0.4 catalog.

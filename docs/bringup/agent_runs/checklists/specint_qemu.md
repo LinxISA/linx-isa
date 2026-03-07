@@ -10,14 +10,19 @@
   Done means: headers report `Machine: Linx`.
   Status: ⚠️ NOT TESTED (2026-02-23)
 
-- [ ] ID: SPEC-003 Stage A fast subset run under QEMU (9p/virtfs).
+- [ ] ID: SPEC-003 Stage A fast subset run under QEMU matrix (9p + initramfs).
   Benches: `999.specrand_ir`, `505.mcf_r`, `531.deepsjeng_r`
-  Done means: all subset jobs complete with host-side specdiff pass.
+  Command: `python3 tools/spec2017/run_stage_qemu_matrix.py --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 --stage a --input-set test --transports 9p,initramfs --strict --out-dir workloads/generated/spec2017/stage_a_xcheck/qemu_matrix`
+  Done means: both transports pass Stage-A subset and aggregate summary reports `ok=true`.
   Status: ⚠️ NOT TESTED (2026-02-23)
 
-- [ ] ID: SPEC-004 Stage A summary artifact is written.
-  Artifact: `workloads/spec2017/.../tmp/linx-qemu-results/stage_a_summary.json`
-  Done means: qemu exit, trap detection, and specdiff verdict are recorded per benchmark.
+- [ ] ID: SPEC-004 Stage A matrix summary artifacts are written.
+  Artifacts:
+    - `.../qemu_matrix/qemu_matrix_summary.json`
+    - `.../qemu_matrix/qemu_matrix_summary.md`
+    - `.../qemu_matrix/9p/stage_a_summary.json`
+    - `.../qemu_matrix/initramfs/stage_a_summary.json`
+  Done means: aggregate and per-transport qemu/specdiff verdicts are recorded per benchmark.
   Status: ⚠️ NOT TESTED (2026-02-23)
 
 - [ ] ID: SPEC-005 Stage B full int-rate run under QEMU (excluding Fortran policy exclusions).

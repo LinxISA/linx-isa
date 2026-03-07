@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 """check_tepl_encoding.py
 
-Verify that TEPL TileOp10 encodings are consistent across:
+Verify that TEPL tile opcode encodings are consistent across:
 
-- ISA manual canonical map (04_block_isa.adoc)
+- ISA canonical engine-op catalog (`isa/v0.4/state/engine_ops.json`)
 - PTO-Kernel constants (include/common/pto_tileop.hpp) if available
 - Optional other consumers (LLVM/QEMU) *if present* in the superproject
 
 Policy:
-- The ISA manual map is treated as the canonical encoding contract.
+- The v0.4 engine-op catalog is treated as the canonical encoding contract.
 - Other sources may omit ops (unimplemented), but MUST NOT disagree on any op they define.
-- Other sources MUST NOT define TEPL ops that are absent from the manual map.
+- Other sources MUST NOT define TEPL ops that are absent from the canonical catalog.
 
 Exit code:
 - 0 on success
@@ -20,6 +20,7 @@ Exit code:
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import subprocess
 import sys
@@ -55,28 +56,38 @@ def _run_git_show(repo_dir: Path, spec: str) -> str:
     return proc.stdout
 
 
-def _parse_manual_map(text: str) -> dict[str, int]:
-    # The manual includes non-canonical legacy notes later in the file; we must
-    # scope parsing to the canonical map section only.
-    start_marker = "Strict-v0.3 TEPL `TileOp10` assignment (current canonical map):"
-    end_marker = "Non-canonical legacy note:"
+def _load_engine_ops_map(path: Path) -> dict[str, int]:
+    obj = json.loads(path.read_text(encoding="utf-8"))
+    tepl = obj.get("tepl")
+    if not isinstance(tepl, dict):
+        raise RuntimeError(f"{path}: missing top-level tepl object")
+    ops = tepl.get("ops")
+    if not isinstance(ops, list):
+        raise RuntimeError(f"{path}: tepl.ops must be a list")
 
-    start = text.find(start_marker)
-    if start < 0:
-        raise RuntimeError(f"failed to locate TEPL canonical map start marker: {start_marker!r}")
-    end = text.find(end_marker, start)
-    if end < 0:
-        raise RuntimeError(f"failed to locate TEPL canonical map end marker: {end_marker!r}")
-
-    section = text[start:end]
-
-    pairs = RE_MANUAL_PAIR.findall(section)
-    if not pairs:
-        raise RuntimeError("failed to find any TEPL TileOp10 assignments in manual section")
     out: dict[str, int] = {}
-    for name, hx in pairs:
-        out[name] = int(hx, 16)
+    for idx, op in enumerate(ops):
+        if not isinstance(op, dict):
+            raise RuntimeError(f"{path}: tepl.ops[{idx}] must be an object")
+        name = op.get("name")
+        if not isinstance(name, str) or not name.strip():
+            raise RuntimeError(f"{path}: tepl.ops[{idx}] missing non-empty name")
+        raw = op.get("tile_opcode")
+        if isinstance(raw, int):
+            selector = raw
+        elif isinstance(raw, str):
+            selector = int(raw.strip(), 0)
+        else:
+            raise RuntimeError(f"{path}: tepl.ops[{idx}] missing tile_opcode")
+        out[name.strip()] = selector
     return out
+
+
+def _read_worktree_or_git(repo_dir: Path, rel_path: str) -> str:
+    worktree_path = repo_dir / rel_path
+    if worktree_path.is_file():
+        return worktree_path.read_text(encoding="utf-8", errors="ignore")
+    return _run_git_show(repo_dir, f"HEAD:{rel_path}")
 
 
 def _parse_pto_constants(text: str) -> dict[str, int]:
@@ -97,15 +108,19 @@ def _parse_qemu_tepl_constants(text: str) -> dict[str, int]:
 
 def _parse_llvm_tepl_tileop_cases(text: str) -> dict[str, int]:
     """
-    Parse LLVM TEPL TileOp10 keyword table.
+    Parse LLVM TEPL tile opcode keyword table.
 
     We intentionally scope this to the `parseTEPLTileOpKeyword` helper so we
     don't accidentally treat other `.Case(...)` tables as TEPL encodings.
     """
 
     # Best-effort slice to the TEPL table to avoid false positives.
-    marker = "parseTEPLTileOpKeyword"
-    i = text.find(marker)
+    marker_candidates = ("parseTEPLTileOpcodeKeyword", "parseTEPLTileOpKeyword")
+    i = -1
+    for marker in marker_candidates:
+        i = text.find(marker)
+        if i >= 0:
+            break
     if i < 0:
         return {}
     window = text[i : i + 16_384]  # enough to cover the full switch table
@@ -123,20 +138,20 @@ def _report_diff(canonical: SourceMap, other: SourceMap) -> tuple[int, list[str]
     for name, code in other.items.items():
         if name not in canonical.items:
             errs += 1
-            notes.append(f"ERROR: {other.name} defines {name}=0x{code:03X} but manual has no assignment")
+            notes.append(f"ERROR: {other.name} defines {name}=0x{code:03X} but canonical catalog has no assignment")
             continue
         want = canonical.items[name]
         if want != code:
             errs += 1
             notes.append(
-                f"ERROR: {other.name} defines {name}=0x{code:03X} but manual requires 0x{want:03X}"
+                f"ERROR: {other.name} defines {name}=0x{code:03X} but canonical catalog requires 0x{want:03X}"
             )
 
     # Missing entries are informational (unimplemented).
     missing = [n for n in canonical.items.keys() if n not in other.items]
     if missing:
         notes.append(
-            f"NOTE: {other.name} does not define {len(missing)}/{len(canonical.items)} manual TEPL ops (treated as unimplemented)."
+            f"NOTE: {other.name} does not define {len(missing)}/{len(canonical.items)} canonical TEPL ops (treated as unimplemented)."
         )
     return errs, notes
 
@@ -156,12 +171,12 @@ def _find_optional_text(paths: Iterable[Path], pattern: str) -> tuple[Path | Non
 
 
 def main(argv: list[str]) -> int:
-    ap = argparse.ArgumentParser(description="Check TEPL TileOp10 encoding consistency")
+    ap = argparse.ArgumentParser(description="Check TEPL tile opcode encoding consistency")
     ap.add_argument("--root", default=".", help="repo root")
     ap.add_argument(
-        "--manual",
-        default="docs/architecture/isa-manual/src/chapters/04_block_isa.adoc",
-        help="path to ISA manual chapter containing TEPL map",
+        "--engine-ops",
+        default="isa/v0.4/state/engine_ops.json",
+        help="path to canonical v0.4 TEPL engine-op catalog",
     )
     ap.add_argument(
         "--pto-submodule",
@@ -171,36 +186,35 @@ def main(argv: list[str]) -> int:
     ap.add_argument(
         "--pto-const-path",
         default="include/common/pto_tileop.hpp",
-        help="path inside PTO-Kernel repo for TileOp10 constants",
+        help="path inside PTO-Kernel repo for tile opcode constants",
     )
     args = ap.parse_args(argv)
 
     root = Path(args.root).resolve()
-    manual_path = root / args.manual
-    if not manual_path.exists():
-        print(f"error: manual file not found: {manual_path}", file=sys.stderr)
+    engine_ops_path = root / args.engine_ops
+    if not engine_ops_path.exists():
+        print(f"error: engine-op catalog not found: {engine_ops_path}", file=sys.stderr)
         return 2
 
-    manual_text = manual_path.read_text(encoding="utf-8")
-    # We parse the whole file but only match the TEPL assignment style pairs.
-    manual_map = _parse_manual_map(manual_text)
-    canonical = SourceMap("manual(04_block_isa.adoc)", manual_map)
+    canonical_map = _load_engine_ops_map(engine_ops_path)
+    canonical = SourceMap(f"engine_ops({engine_ops_path.relative_to(root)})", canonical_map)
 
-    print(f"manual TEPL ops: {len(canonical.items)}")
+    print(f"canonical TEPL ops: {len(canonical.items)}")
 
-    # PTO-Kernel constants (via git show so we don't depend on checkout state).
+    total_errs = 0
+
+    # PTO-Kernel constants (prefer working tree; fall back to git HEAD if absent).
     pto_dir = root / args.pto_submodule
     pto_items: dict[str, int] = {}
     if pto_dir.exists():
         try:
-            pto_text = _run_git_show(pto_dir, f"HEAD:{args.pto_const_path}")
+            pto_text = _read_worktree_or_git(pto_dir, args.pto_const_path)
             pto_items = _parse_pto_constants(pto_text)
             other = SourceMap("PTO-Kernel(include/common/pto_tileop.hpp)", pto_items)
             errs, notes = _report_diff(canonical, other)
             for line in notes:
                 print(line)
-            if errs:
-                return 1
+            total_errs += errs
         except RuntimeError as exc:
             print(f"NOTE: skipping PTO-Kernel check: {exc}")
 
@@ -213,8 +227,7 @@ def main(argv: list[str]) -> int:
             errs, notes = _report_diff(canonical, other)
             for line in notes:
                 print(line)
-            if errs:
-                return 1
+            total_errs += errs
         else:
             print(f"NOTE: QEMU TEPL consumer present but no constants parsed: {qemu_consumer}")
     else:
@@ -240,12 +253,15 @@ def main(argv: list[str]) -> int:
             errs, notes = _report_diff(canonical, other)
             for line in notes:
                 print(line)
-            if errs:
-                return 1
+            total_errs += errs
         else:
             print(f"NOTE: LLVM TEPL consumer present but no tileop cases parsed: {llvm_consumer}")
     else:
         print("NOTE: no LLVM TEPL consumer file detected under compiler/llvm; skipped optional check.")
+
+    if total_errs:
+        print(f"FAIL: detected {total_errs} TEPL tile opcode mismatches", file=sys.stderr)
+        return 1
 
     print("OK")
     return 0

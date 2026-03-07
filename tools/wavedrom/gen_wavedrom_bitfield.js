@@ -6,7 +6,7 @@
  * Uses a color palette inspired by WaveDrom's default skin with light, pastel colors.
  * 
  * Usage:
- *   node gen_wavedrom_bitfield.js --spec isa/v0.3/linxisa-v0.3.json --out-dir docs/architecture/isa-manual/src/generated/encodings
+ *   node gen_wavedrom_bitfield.js --spec isa/v0.4/linxisa-v0.4.json --out-dir docs/architecture/isa-manual/src/generated/encodings
  */
 
 const fs = require('fs');

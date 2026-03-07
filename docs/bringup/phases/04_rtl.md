@@ -4,7 +4,7 @@ Primary RTL notes: `rtl/README.md`
 
 ## Scope and source of truth
 
-- Architecture/spec authority: `linxisa` (`isa/v0.3/`, `isa/v0.3/linxisa-v0.3.json`, `isa/generated/codecs/`).
+- Architecture/spec authority: `linxisa` (`isa/v0.4/`, `isa/v0.4/linxisa-v0.4.json`, `isa/generated/codecs/`).
 - RTL/model generation authority:
   - pinned submodule: `tools/pyCircuit` (recommended for reproducibility)
   - or an external checkout (set `PYCIRCUIT_ROOT=/path/to/pyCircuit`).
@@ -55,7 +55,7 @@ One sprint = one feature slice (instruction/CSR/exception/pipeline rule):
 ### Exit criteria
 
 - Smoke suite passes in both C++ and RTL simulation.
-- No unresolved divergence against QEMU in supported instruction subsets.
+- No deterministic divergence against QEMU in supported instruction subsets.
 - Artifacts are reproducible and script-generated (no manual edits).
 
 ## Workstream B: Janus Core stabilization
@@ -91,7 +91,7 @@ One sprint = one feature slice (instruction/CSR/exception/pipeline rule):
 `linxisa` stores planning, contracts, and validation outcomes. When needed, stage generated integration collateral into:
 
 - `rtl/` for integration wrappers or snapshots
-- `models/` for model wrappers and trace adapters
+- `tools/pyCircuit/` for model sources and wrappers
 - `tools/` for reproducible import/check scripts
 
 Direct authoring remains in pyCircuit (pinned `tools/pyCircuit` or external `$PYCIRCUIT_ROOT`); copied artifacts in `linxisa` must be script-derived.

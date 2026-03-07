@@ -5,7 +5,7 @@
 [[inst_bstart_tepl]]
 ==== BSTART.TEPL
 
-*Syntax:* BSTART.TEPL TileOp10, DataType
+*Syntax:* BSTART.TEPL TileOpcode, DataType
 
 *Description:* -
 

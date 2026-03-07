@@ -14,8 +14,8 @@ echo "profile: $LINX_BRINGUP_PROFILE"
 echo
 echo "-- ISA golden checks"
 python3 "$ROOT/tools/isa/lint_no_cjk.py" --repo-root "$ROOT"
-python3 "$ROOT/tools/isa/build_golden.py" --profile v0.3 --check
-python3 "$ROOT/tools/isa/validate_spec.py" --profile v0.3
+python3 "$ROOT/tools/isa/build_golden.py" --profile v0.4 --check
+python3 "$ROOT/tools/isa/validate_spec.py" --profile v0.4
 python3 "$ROOT/tools/bringup/check26_contract.py" --root "$ROOT"
 python3 "$ROOT/tools/bringup/check_avs_matrix_status.py" --matrix "$ROOT/avs/linx_avs_v1_test_matrix.yaml" --status "$ROOT/avs/linx_avs_v1_test_matrix_status.json"
 python3 "$ROOT/tools/bringup/check_check26_coverage.py" \
@@ -31,37 +31,19 @@ python3 "$ROOT/tools/bringup/check_multi_agent_gates.py" \
   --waivers "$ROOT/docs/bringup/agent_runs/waivers.yaml" \
   --checklists-root "$ROOT/docs/bringup/agent_runs/checklists"
 
-LEGACY_SCAN_ARGS=()
-if [[ "${ENABLE_CROSS_REPO_SCAN:-0}" == "1" ]]; then
-  DEFAULT_LINUX_ROOT="$ROOT/kernel/linux"
-  DEFAULT_QEMU_ROOT="$ROOT/emulator/qemu"
-  DEFAULT_LLVM_ROOT="$ROOT/compiler/llvm"
-  [[ -d "$DEFAULT_LLVM_ROOT" ]] || DEFAULT_LLVM_ROOT="$HOME/llvm-project"
+python3 "$ROOT/tools/isa/check_canonical_v04.py" --root "$ROOT"
 
-  LINUX_ROOT="${LINUX_ROOT:-$DEFAULT_LINUX_ROOT}"
-  QEMU_ROOT_CHECK="${QEMU_ROOT_CHECK:-$DEFAULT_QEMU_ROOT}"
-  LLVM_ROOT="${LLVM_ROOT:-$DEFAULT_LLVM_ROOT}"
-  [[ -d "$LINUX_ROOT" ]] && LEGACY_SCAN_ARGS+=(--extra-root "$LINUX_ROOT")
-  [[ -d "$QEMU_ROOT_CHECK" ]] && LEGACY_SCAN_ARGS+=(--extra-root "$QEMU_ROOT_CHECK")
-  [[ -d "$LLVM_ROOT" ]] && LEGACY_SCAN_ARGS+=(--extra-root "$LLVM_ROOT")
-fi
-if (( ${#LEGACY_SCAN_ARGS[@]} )); then
-  python3 "$ROOT/tools/isa/check_no_legacy_v03.py" --root "$ROOT" "${LEGACY_SCAN_ARGS[@]}"
-else
-  python3 "$ROOT/tools/isa/check_no_legacy_v03.py" --root "$ROOT"
-fi
-
-python3 "$ROOT/tools/isa/report_encoding_space.py" --spec "$ROOT/isa/v0.3/linxisa-v0.3.json" --out "$ROOT/docs/reference/encoding_space_report.md" --check
-python3 "$ROOT/tools/isa/gen_qemu_codec.py" --spec "$ROOT/isa/v0.3/linxisa-v0.3.json" --out-dir "$ROOT/isa/generated/codecs" --check
-python3 "$ROOT/tools/isa/gen_c_codec.py" --spec "$ROOT/isa/v0.3/linxisa-v0.3.json" --out-dir "$ROOT/isa/generated/codecs" --check
-python3 "$ROOT/tools/isa/gen_manual_adoc.py" --spec "$ROOT/isa/v0.3/linxisa-v0.3.json" --out-dir "$ROOT/docs/architecture/isa-manual/src/generated" --check
-python3 "$ROOT/tools/isa/gen_ssr_adoc.py" --spec "$ROOT/isa/v0.3/linxisa-v0.3.json" --out-dir "$ROOT/docs/architecture/isa-manual/src/generated" --check
+python3 "$ROOT/tools/isa/report_encoding_space.py" --spec "$ROOT/isa/v0.4/linxisa-v0.4.json" --out "$ROOT/docs/reference/encoding_space_report.md" --check
+python3 "$ROOT/tools/isa/gen_qemu_codec.py" --spec "$ROOT/isa/v0.4/linxisa-v0.4.json" --out-dir "$ROOT/isa/generated/codecs" --check
+python3 "$ROOT/tools/isa/gen_c_codec.py" --spec "$ROOT/isa/v0.4/linxisa-v0.4.json" --out-dir "$ROOT/isa/generated/codecs" --check
+python3 "$ROOT/tools/isa/gen_manual_adoc.py" --spec "$ROOT/isa/v0.4/linxisa-v0.4.json" --out-dir "$ROOT/docs/architecture/isa-manual/src/generated" --check
+python3 "$ROOT/tools/isa/gen_ssr_adoc.py" --spec "$ROOT/isa/v0.4/linxisa-v0.4.json" --out-dir "$ROOT/docs/architecture/isa-manual/src/generated" --check
 SAIL_COVERAGE_POLICY="${SAIL_COVERAGE_POLICY:-refresh}" # refresh|check
 if [[ "$SAIL_COVERAGE_POLICY" == "check" ]]; then
-  python3 "$ROOT/tools/isa/sail_coverage.py" --spec "$ROOT/isa/v0.3/linxisa-v0.3.json" --implemented "$ROOT/isa/sail/implemented_mnemonics.txt" --out "$ROOT/isa/sail/coverage.json" --check
+  python3 "$ROOT/tools/isa/sail_coverage.py" --spec "$ROOT/isa/v0.4/linxisa-v0.4.json" --implemented "$ROOT/isa/sail/implemented_mnemonics.txt" --out "$ROOT/isa/sail/coverage.json" --check
 else
-  python3 "$ROOT/tools/isa/sail_coverage.py" --spec "$ROOT/isa/v0.3/linxisa-v0.3.json" --implemented "$ROOT/isa/sail/implemented_mnemonics.txt" --out "$ROOT/isa/sail/coverage.json"
-  python3 "$ROOT/tools/isa/sail_coverage.py" --spec "$ROOT/isa/v0.3/linxisa-v0.3.json" --implemented "$ROOT/isa/sail/implemented_mnemonics.txt" --out "$ROOT/isa/sail/coverage.json" --check
+  python3 "$ROOT/tools/isa/sail_coverage.py" --spec "$ROOT/isa/v0.4/linxisa-v0.4.json" --implemented "$ROOT/isa/sail/implemented_mnemonics.txt" --out "$ROOT/isa/sail/coverage.json"
+  python3 "$ROOT/tools/isa/sail_coverage.py" --spec "$ROOT/isa/v0.4/linxisa-v0.4.json" --implemented "$ROOT/isa/sail/implemented_mnemonics.txt" --out "$ROOT/isa/sail/coverage.json" --check
 fi
 
 # Allow callers to override tool locations.
