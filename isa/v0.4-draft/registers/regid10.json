@@ -1,0 +1,147 @@
+{
+  "name": "regid10",
+  "description": "RegId10 operand encoding namespaces for v0.4-draft. Provides decoding rules for RegId10[9:0] used by several instruction forms.",
+  "bits": 10,
+  "fields": [
+    {
+      "name": "st",
+      "bits": [9],
+      "description": "Signed-or-type selector (s/t). Interpretation depends on opcode family (e.g. v.add: 0=unsigned,1=signed; v.fadd: 0=float,1=reserved)."
+    },
+    {
+      "name": "width",
+      "bits": [8, 7],
+      "description": "Element width tag.",
+      "encoding": {
+        "00": "d",
+        "01": "w",
+        "10": "h",
+        "11": "b"
+      }
+    },
+    {
+      "name": "class",
+      "bits": [6, 5],
+      "description": "Register namespace selector.",
+      "encoding": {
+        "00": "vec",
+        "01": "global_or_scalar_hand",
+        "10": "loop_tile_misc",
+        "11": "vec_reuse"
+      }
+    },
+    {
+      "name": "index",
+      "bits": [4, 3, 2, 1, 0],
+      "description": "Index within the selected class."
+    }
+  ],
+  "namespaces": [
+    {
+      "class": "00",
+      "name": "vec",
+      "description": "Vector operand namespace (VT/VU/VM/VN families).",
+      "entries": [
+        { "index": 0, "asm": "VT#1", "notes": "push to VT queue" },
+        { "index": 1, "asm": "VT#2", "notes": "push to VU queue" },
+        { "index": 2, "asm": "VT#3", "notes": "push to VM queue" },
+        { "index": 3, "asm": "VT#4", "notes": "push to VN queue" },
+        { "index": 8, "asm": "VU#1" },
+        { "index": 9, "asm": "VU#2" },
+        { "index": 10, "asm": "VU#3" },
+        { "index": 11, "asm": "VU#4" },
+        { "index": 16, "asm": "VM#1" },
+        { "index": 17, "asm": "VM#2" },
+        { "index": 18, "asm": "VM#3" },
+        { "index": 19, "asm": "VM#4" },
+        { "index": 24, "asm": "VN#1" },
+        { "index": 25, "asm": "VN#2" },
+        { "index": 26, "asm": "VN#3" },
+        { "index": 27, "asm": "VN#4" }
+      ]
+    },
+    {
+      "class": "11",
+      "name": "vec_reuse",
+      "description": "Vector operand namespace with .REUSE hint. Architectural register read is the corresponding non-REUSE vector register (same family and index).",
+      "hint": { "reuse": true },
+      "entries": [
+        { "index": 0, "asm": "VT#1.REUSE", "maps_to": "VT#1" },
+        { "index": 1, "asm": "VT#2.REUSE", "maps_to": "VT#2" },
+        { "index": 2, "asm": "VT#3.REUSE", "maps_to": "VT#3" },
+        { "index": 3, "asm": "VT#4.REUSE", "maps_to": "VT#4" },
+        { "index": 8, "asm": "VU#1.REUSE", "maps_to": "VU#1" },
+        { "index": 9, "asm": "VU#2.REUSE", "maps_to": "VU#2" },
+        { "index": 10, "asm": "VU#3.REUSE", "maps_to": "VU#3" },
+        { "index": 11, "asm": "VU#4.REUSE", "maps_to": "VU#4" },
+        { "index": 16, "asm": "VM#1.REUSE", "maps_to": "VM#1" },
+        { "index": 17, "asm": "VM#2.REUSE", "maps_to": "VM#2" },
+        { "index": 18, "asm": "VM#3.REUSE", "maps_to": "VM#3" },
+        { "index": 19, "asm": "VM#4.REUSE", "maps_to": "VM#4" },
+        { "index": 24, "asm": "VN#1.REUSE", "maps_to": "VN#1" },
+        { "index": 25, "asm": "VN#2.REUSE", "maps_to": "VN#2" },
+        { "index": 26, "asm": "VN#3.REUSE", "maps_to": "VN#3" },
+        { "index": 27, "asm": "VN#4.REUSE", "maps_to": "VN#4" }
+      ]
+    },
+    {
+      "class": "01",
+      "name": "global_or_scalar_hand",
+      "description": "Global inputs (RI*) or scalar hands (T/U).",
+      "entries": [
+        { "index": 0, "asm": "RI0", "alt": "RO0" },
+        { "index": 1, "asm": "RI1", "alt": "RO1" },
+        { "index": 2, "asm": "RI2", "alt": "RO2" },
+        { "index": 3, "asm": "RI3", "alt": "RO3" },
+        { "index": 4, "asm": "RI4" },
+        { "index": 5, "asm": "RI5" },
+        { "index": 6, "asm": "RI6" },
+        { "index": 7, "asm": "RI7" },
+        { "index": 8, "asm": "RI8" },
+        { "index": 9, "asm": "RI9" },
+        { "index": 10, "asm": "RI10" },
+        { "index": 11, "asm": "RI11" },
+        { "index": 24, "asm": "T#1" },
+        { "index": 25, "asm": "T#2" },
+        { "index": 26, "asm": "T#3" },
+        { "index": 27, "asm": "T#4" },
+        { "index": 28, "asm": "U#1" },
+        { "index": 29, "asm": "U#2" },
+        { "index": 30, "asm": "U#3" },
+        { "index": 31, "asm": "U#4" }
+      ]
+    },
+    {
+      "class": "10",
+      "name": "loop_tile_misc",
+      "description": "Loop counters/bounds, tile in/out/base, predicate and zero.",
+      "entries": [
+        { "index": 0, "asm": "LC0" },
+        { "index": 1, "asm": "LB0" },
+        { "index": 4, "asm": "LC1" },
+        { "index": 5, "asm": "LB1" },
+        { "index": 8, "asm": "LC2" },
+        { "index": 9, "asm": "LB2" },
+
+        { "index": 16, "asm": "TA" },
+        { "index": 17, "asm": "TB" },
+        { "index": 18, "asm": "TC" },
+        { "index": 19, "asm": "TD" },
+        { "index": 20, "asm": "TE" },
+        { "index": 21, "asm": "TF" },
+        { "index": 22, "asm": "TG" },
+        { "index": 23, "asm": "TH" },
+        { "index": 24, "asm": "TO" },
+        { "index": 25, "asm": "TO1", "alt": "TS" },
+        { "index": 26, "asm": "TO2" },
+        { "index": 27, "asm": "TO3" },
+        { "index": 28, "asm": "P" },
+        { "index": 31, "asm": "ZERO", "notes": "no output" }
+      ]
+    }
+  ],
+  "notes": [
+    "This file encodes v0.4-draft mapping extracted from v0.4-draft notes (message.txt) and is intended to be cross-checked against the compiled instruction catalog (linxisa-v0.4-draft.json).",
+    "Entries not listed are reserved unless specified by the ISA manual or catalog."
+  ]
+}

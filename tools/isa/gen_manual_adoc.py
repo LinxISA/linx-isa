@@ -777,6 +777,17 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
             "Write(Dst, result)",
         ]
 
+    # Vector predicate select (lane-wise).
+    if root == "PSEL":
+        return [
+            "p = Read(SrcP)  // vector predicate lane values",
+            "lhs = Read(SrcL)",
+            "rhs = Read(SrcR)  // apply optional .neg as encoded",
+            "// lane-wise select: p[i] != 0 chooses lhs[i]",
+            "result = (p != 0) ? lhs : rhs",
+            "Write(Dst, result)",
+        ]
+
     # Max/min.
     if root in {"MAX", "MAXU", "MIN", "MINU"}:
         cmp = {

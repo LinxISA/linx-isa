@@ -483,6 +483,25 @@ Bring-up execution model (normative for strict v0.3):
 ** the linear lane index is `lc0 + lc1 * lane_count`.
 * Scalar instructions in vector bodies are **uniform per group** (one scalar-uniform lane context per group replay).
 
+Vector width and lane mask (`p`) (normative for strict v0.3 bring-up)::
++
+* Hardware vector length (`vec_length`) is reported in `LCFR[19:16]` as `LaneNum = log2(vec_length)`.
+  (`vec_length = 1 << LaneNum`).
+* Vector blocks maintain a block-local lane execution mask `p` (one bit per lane of the hardware vector length).
+* `p` is initialized from `B.DIM/B.DIMI`+`B.ATTR` header state when the block command is dispatched to the vector engine.
+  The `DR` (dimension reduction) attribute is `B.ATTR[26]`.
+** If `DR=0`:
+*** If `LB0 >= vec_length`, initialize `p = all-ones`.
+*** If `LB0 < vec_length`, initialize `p` to `LB0` low bits set (strip-mining tail mask).
+** If `DR=1`:
+*** Let `total = LB0 * LB1 * LB2` and `rem = total mod vec_length`.
+*** Non-tail groups initialize `p = all-ones`.
+*** The tail group initializes `p = all-ones` when `rem==0`, otherwise `p = (1<<rem)-1`.
++
+NOTE: In the strict-v0.3 bring-up profile, most `V.*` ALU/memory operations are predicated by `p`, but inactive lanes
+(`p[i]=0`) do not have an architectural merge policy: results are **unspecified/don't-care**. Compilers MUST use `V.PSEL`
+(or equivalent explicit select) to construct merged results when required.
+
 Decoupled body form (bring-up constraint):
 
 * The header MUST contain exactly one `B.TEXT <tpc>` selecting an out-of-line **linear** body.

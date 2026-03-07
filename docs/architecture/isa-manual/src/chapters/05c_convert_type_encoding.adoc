@@ -1,0 +1,76 @@
+// v0.4-draft notes promoted into isa-manual (spec-quality).
+
+[[sec-convert-type-encoding]]
+== Convert instruction type fields (SrcType/DstType)
+
+The Convert instruction family uses two 5-bit type descriptor fields:
+
+* ``SrcType``: describes the *source* data type.
+* ``DstType``: describes the *destination* data type.
+
+Both fields are interpreted according to the instruction mnemonic:
+
+* ``V.FCVT``: ``SrcType`` and ``DstType`` use the *floating-point* type table.
+* ``V.FCVTI``: ``SrcType`` uses the *floating-point* type table; ``DstType`` uses the *integer* type table.
+* ``V.ICVT``: ``SrcType`` and ``DstType`` use the *integer* type table.
+* ``V.ICVTF``: ``SrcType`` uses the *integer* type table; ``DstType`` uses the *floating-point* type table.
+
+Illegal encodings::
++
++If either ``SrcType`` or ``DstType`` is a reserved encoding for the relevant table, the instruction encoding is *illegal*.
+Software must not generate illegal encodings.
+
+NOTE: Convert instructions are defined as *value conversions* (numeric conversions), not bit reinterpretations.
+
+=== Floating-point type encoding (Type[4:0])
+
+[cols="1,1,4",options="header"]
+|===
+|Type[4:0] |Asm |Definition
+|``5'b00000`` |``FP64`` |64-bit double-precision floating-point
+|``5'b00001`` |``FP32`` |32-bit single-precision floating-point
+|``5'b00010`` |``TF32`` |19-bit TensorFloat (1 sign + 8 exponent + 10 mantissa)
+|``5'b00011`` |``HF32`` |32-bit hybrid float format
+|``5'b00100`` |``FP16`` |16-bit half-precision floating-point
+|``5'b00101`` |``BF16`` |16-bit bfloat16
+|``5'b00110`` |``HiF8`` |8-bit high-precision low-width float format
+|``5'b00111`` |``e4m3`` |8-bit float: 1 sign + 4 exponent + 3 mantissa
+|``5'b01000`` |``e5m2`` |8-bit float: 1 sign + 5 exponent + 2 mantissa
+|``5'b01001`` |``e3m2`` |6-bit float: 1 sign + 3 exponent + 2 mantissa
+|``5'b01010`` |``e2m3`` |6-bit float: 1 sign + 2 exponent + 3 mantissa
+|``5'b01011`` |``e2m1`` |4-bit float: 1 sign + 2 exponent + 1 mantissa
+|``5'b01100`` |``e1m2`` |4-bit float: 1 sign + 1 exponent + 2 mantissa
+|``5'b01101`` |``e3m4`` |8-bit float: 1 sign + 3 exponent + 4 mantissa
+|``5'b01110`` |``e8m0`` |9-bit float: 1 sign + 8 exponent + 0 mantissa
+|``5'b01111``..``5'b11111`` |``reserve`` |Reserved (illegal)
+|===
+
+=== Integer type encoding (Type[4:0])
+
+[cols="1,1,3",options="header"]
+|===
+|Type[4:0] |Asm |Definition
+|``5'b00000`` |``u64`` |64-bit unsigned integer
+|``5'b00001`` |``u32`` |32-bit unsigned integer
+|``5'b00010`` |``u16`` |16-bit unsigned integer
+|``5'b00011`` |``u8``  |8-bit unsigned integer
+|``5'b00100`` |``u4``  |4-bit unsigned integer
+|``5'b00101`` |``u2``  |2-bit unsigned integer
+|``5'b00110`` |``u1``  |1-bit unsigned integer
+|``5'b00111`` |``bool``|1-bit logical boolean
+|``5'b01000`` |``s64`` |64-bit signed integer
+|``5'b01001`` |``s32`` |32-bit signed integer
+|``5'b01010`` |``s16`` |16-bit signed integer
+|``5'b01011`` |``s8``  |8-bit signed integer
+|``5'b01100`` |``s4``  |4-bit signed integer
+|``5'b01101`` |``s2``  |2-bit signed integer
+|``5'b01110`` |``s1``  |1-bit signed integer
+|``5'b01111``..``5'b11111`` |``reserve`` |Reserved (illegal)
+|===
+
+=== Unified conversion intent (staged)
+
+* If destination width > source width: widening conversion.
+* If destination width < source width: narrowing conversion.
+* Integer↔integer conversions use *numeric* semantics (sign/zero extension and truncation), not bit reinterpretation.
+* Float↔integer and float↔float special cases (NaN/Inf/Subnormal; rounding and exception flags) are defined by the FSU/CSTATE rules.
