@@ -1,0 +1,319 @@
+{
+  "big_kind": "VEC",
+  "count": 24,
+  "instructions": [
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.LD.ADD"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.LD.AND"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.LD.MAX"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.LD.MIN"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.LD.OR"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.LD.XOR"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.LW.ADD"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.LW.AND"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.LW.MAX"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.LW.MIN"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.LW.OR"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.LW.XOR"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SD.ADD"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SD.AND"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SD.MAX"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SD.MIN"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SD.OR"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SD.XOR"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SW.ADD"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SW.AND"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SW.MAX"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SW.MIN"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SW.OR"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=AMO)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SW.XOR"
+    }
+  ],
+  "sub_kind": "AMO"
+}

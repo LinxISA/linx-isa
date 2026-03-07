@@ -1,11 +1,11 @@
 # ISA vs QEMU Coverage Snapshot
 
-- Generated (UTC): `2026-02-25 13:12:48Z`
+- Generated (UTC): `2026-03-07 02:48:58Z`
 - Spec unique mnemonics: `710`
-- QEMU unique decode mnemonics (non-internal): `322`
-- QEMU mapped spec mnemonics: `311`
-- Coverage: `311/710` (`43.8%`)
-- Missing spec mnemonics: `399`
+- QEMU unique decode mnemonics (non-internal): `326`
+- QEMU mapped spec mnemonics: `315`
+- Coverage: `315/710` (`44.37%`)
+- Missing spec mnemonics: `395`
 - Unmapped QEMU mnemonics: `0`
 
 ## Coverage By Prefix
@@ -55,7 +55,7 @@
 - `FMUL`: `1`
 - `FRET`: `2`
 - `FSUB`: `1`
-- `HL`: `63`
+- `HL`: `65`
 - `LB`: `2`
 - `LBI`: `1`
 - `LBU`: `2`
@@ -126,7 +126,7 @@
 - `SWI`: `1`
 - `TLB`: `1`
 - `UCVTF`: `1`
-- `V`: `30`
+- `V`: `32`
 - `XOR`: `1`
 - `XORI`: `1`
 - `XORIW`: `1`
@@ -162,7 +162,7 @@
 - `FNMSUB`: `1`
 - `FRECIP`: `1`
 - `FSQRT`: `1`
-- `HL`: `131`
+- `HL`: `129`
 - `IC`: `2`
 - `J`: `1`
 - `JR`: `1`
@@ -188,7 +188,7 @@
 - `SWAPH`: `1`
 - `SWI`: `1`
 - `TLB`: `3`
-- `V`: `154`
+- `V`: `152`
 - `XB`: `1`
 
 ## Unmapped QEMU Mnemonics
@@ -314,17 +314,11 @@
 - `HL.LW.PR`
 - `HL.LWI`
 - `HL.LWI.U`
-- `HL.LWI.UPR`
-- `HL.LWIP.U`
 - `HL.LWP`
 - `HL.LWU.PO`
 - `HL.LWU.PR`
 - `HL.LWUI`
-- `HL.LWUI.PO`
 - `HL.LWUI.U`
-- `HL.LWUI.UPO`
-- `HL.LWUI.UPR`
-- `HL.LWUIP.U`
 - `HL.LWUP`
 - `HL.MADD`
 - `HL.MADDW`
@@ -348,11 +342,14 @@
 - `HL.SBI`
 - `HL.SBI.PO`
 - `HL.SBI.PR`
+- `HL.SBIP`
 - `HL.SBP`
 - `HL.SD.PO`
 - `HL.SD.PR`
 - `HL.SD.UPO`
 - `HL.SD.UPR`
+- `HL.SDI`
+- `HL.SDI.U`
 - `HL.SDP`
 - `HL.SDP.U`
 - `HL.SETC.ANDI`
@@ -374,6 +371,8 @@
 - `HL.SHI.U`
 - `HL.SHI.UPO`
 - `HL.SHI.UPR`
+- `HL.SHIP`
+- `HL.SHIP.U`
 - `HL.SHP`
 - `HL.SHP.U`
 - `HL.SW.PO`
@@ -382,7 +381,6 @@
 - `HL.SW.UPR`
 - `HL.SWI`
 - `HL.SWI.U`
-- `HL.SWI.UPR`
 - `HL.SWP`
 - `HL.SWP.U`
 - `IC.IALL`
@@ -397,3 +395,5 @@
 - `LD.UMIN`
 - `LD.XOR`
 - `LDI.U`
+- `LHI.U`
+- `LHUI.U`

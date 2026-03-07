@@ -1,0 +1,102 @@
+{
+  "notes": [
+    "Strict v0.4 current profile uses TSO as the architectural memory model.",
+    "The TSO contract applies to both scalar (BCC) and tile-memory (MTC/TMA) channels.",
+    "A single LXCPU must not reorder committed stores (including TSTORE beats) ahead of older stores.",
+    "Shader-kernel bridged accesses (`l.*.brg` and `v.*.brg`) participate in the same architectural TSO domain."
+  ],
+  "model": {
+    "endianness": "little",
+    "default_memory_type": "Normal",
+    "coherence": {
+      "per_location_total_order": true,
+      "scope": "Normal"
+    },
+    "ordering": {
+      "base_load_store": "TSO",
+      "channel_contract": {
+        "bcc": "Scalar load/store/atomic/fence channel",
+        "mtc": "Tile memory channel (TLOAD/TSTORE and bridged MPAR/MSEQ shader-kernel flows)",
+        "rule": "BCC and MTC operations participate in one TSO architectural ordering domain for a single LXCPU."
+      },
+      "tso_axioms": [
+        "Program-order store->store ordering is preserved for all addresses.",
+        "A younger load may read from memory before an older unrelated store becomes globally visible (store buffer behavior).",
+        "Store->load reordering is only visible as allowed by TSO; fence/aq/rl tighten ordering.",
+        "No operation may observe a younger store from the same LXCPU before an older store."
+      ],
+      "atomic_qualifiers": {
+        "aq": "Acquire",
+        "rl": "Release",
+        "aqrl": "AcquireRelease"
+      },
+      "tma": {
+        "ops": [
+          "TLOAD",
+          "TSTORE"
+        ],
+        "domain": "Normal",
+        "footprint": {
+          "kind": "2D bounding rectangle",
+          "gm_corners": {
+            "top_left": "Base",
+            "top_right_exclusive": "Base + LB0 * element_size",
+            "bottom_left_exclusive": "Base + LB1 * Stride",
+            "bottom_right_exclusive": "Base + LB0 * element_size + LB1 * Stride"
+          }
+        },
+        "semantics": [
+          "TLOAD/TSTORE are architectural memory operations in the same TSO domain as scalar load/store.",
+          "TLOAD/TSTORE participate in aq/rl/fence ordering and must not violate store->store ordering.",
+          "A single TLOAD/TSTORE may decompose into multiple internal beats and is architecturally non-atomic to external observers.",
+          "Internal beats within one TLOAD/TSTORE have implementation-defined issue order; software must not infer row/element beat order from one architectural operation.",
+          "Page faults during TLOAD/TSTORE are precise and restartable by software."
+        ],
+        "archived_legacy": [
+          "Raw TPREFETCH text exists in Janus-era material, but canonical v0.4 does not assign it an encoded header or selector."
+        ]
+      },
+      "simt_lane_policy": {
+        "inactive_lane_modes": [
+          "merge",
+          "zero"
+        ],
+        "scope": "Vector/tile execution blocks (e.g. BSTART.VPAR/BSTART.VSEQ)",
+        "rule": "Inactive-lane behavior is explicit and deterministic; implementations must not mix merge/zero semantics within one architectural mode."
+      },
+      "shader_kernel_domain": {
+        "block_types": [
+          "MPAR",
+          "MSEQ"
+        ],
+        "bridged_forms": [
+          "l.*.brg",
+          "v.*.brg"
+        ],
+        "entry_boundary": "acquire-style ordering point before kernel-side memory issue begins",
+        "exit_boundary": "release-style ordering point before subsequent scalar blocks execute",
+        "bcc_scalar_memory": "closed while a shader kernel is active"
+      }
+    },
+    "fences": {
+      "FENCE.D": {
+        "pred_succ_bitmap_bits": [
+          "R (normal reads)",
+          "W (normal writes)",
+          "O (device/MMIO)",
+          "I (instruction fetch visibility)"
+        ],
+        "semantics": [
+          "Orders memory operations of classes selected by pred_imm before operations selected by succ_imm in program order for the current LXCPU.",
+          "Under TSO, FENCE.D is required to order with device/MMIO domains and to create stronger cross-domain ordering points."
+        ]
+      },
+      "FENCE.I": {
+        "semantics": [
+          "Ensures instruction fetch observes prior stores from the current LXCPU to memory that may be executed as code.",
+          "Defines the architectural boundary for self-modifying code and code generation."
+        ]
+      }
+    }
+  }
+}

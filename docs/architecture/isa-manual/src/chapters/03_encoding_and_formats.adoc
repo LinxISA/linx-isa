@@ -24,7 +24,7 @@ Code generation and tooling should assume at least 16-bit alignment for instruct
 [[encoding-prefix-suffix]]
 === Prefix/suffix composition (48-bit and 64-bit forms)
 
-The draft encoding defines:
+The v0.4 encoding model defines:
 
 * **Main** instructions: standalone instructions with their own semantics (16-bit or 32-bit).
 * **Prefix** instructions: do not have standalone semantics; they *augment* the following main/postfix instruction.
@@ -45,13 +45,20 @@ The codec generators pack multi-part instructions in *instruction-stream order*:
 [[encoding-namespaces]]
 === Mnemonic namespaces (C./HL./V.)
 
-In the v0.2 catalog, mnemonic prefixes are used to distinguish families of encodings:
+Mnemonic prefixes are used to distinguish families of encodings:
 
 * `C.*`: 16-bit compressed forms
 * `HL.*`: 48-bit “high-level” (extended immediate / address) forms
 * `V.*`: 64-bit vector forms (often represented as prefix + main parts in the catalog)
 
 The base scalar ISA uses unprefixed mnemonics (e.g. `add`, `ld`, `setc.*`, `bstart.*`).
+
+Within canonical `MPAR`/`MSEQ` shader-kernel bodies, v0.4 adds a unified `lx64` execution rule:
+
+* if any operand names `vt`/`vu`/`vm`/`vn`, the instruction executes in the per-lane `v.*` domain,
+* otherwise it executes in the scalar-uniform `l.*` domain,
+* scalar/group-domain source operands broadcast to all active lanes when consumed by `v.*`,
+* writes back into scalar/group-domain destinations are illegal unless explicitly defined by a reduction or mask-producing form.
 
 [[encoding-format-tags]]
 === Decode format tags (Type A… / C.Type …)
@@ -157,7 +164,7 @@ late-stage optimization:
 [[encoding-json]]
 === The machine-readable catalog
 
-The authoritative encoding details live in `isa/v0.3/linxisa-v0.3.json`:
+The authoritative encoding details live in `isa/v0.4/linxisa-v0.4.json`:
 
 * Each instruction form has `parts[].segments[]` describing `[msb:lsb]` bit ranges.
 * Each form includes derived `encoding` fields (`mask`, `match`, `pattern`, `fields`) suitable for generating

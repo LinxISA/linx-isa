@@ -1,4 +1,4 @@
-# Auto-generated from isa/v0.3/linxisa-v0.3.json
+# Auto-generated from isa/v0.4/linxisa-v0.4.json
 # DO NOT EDIT: run `python3 tools/isa/gen_qemu_codec.py` to regenerate.
 
 # Fields
@@ -58,7 +58,7 @@
 %SrcType 25:2
 %SrcZero 20:5
 %T 19:1
-%TileOp10 15:10
+%TileOpcode 15:10
 %V 15:1
 %aq_16_1 16:1
 %aq_26_1 26:1
@@ -275,8 +275,8 @@ bstart_mpar_32_2d163417c615 0000 0..0 0000 0000 0001 0001 1000 0001 %Mode
 # BSTART.MSEQ | BSTART.MSEQ <VS8, VS16> | opcodes/lx_32.opc:76
 bstart_mseq_32_39343a456ec5 0000 0..0 0000 0000 1001 0001 1000 0001 %Mode
 
-# BSTART.PAR | BSTART.PAR TileOp10, DataType | opcodes/lx_32.opc:85
-bstart_par_32_49c201a27bd2 .... .01. .... .... .001 0001 1000 0001 DataType=%DataType_27_5 %TileOp10
+# BSTART.PAR | BSTART.PAR TileOpcode, DataType | opcodes/lx_32.opc:85
+bstart_par_32_5e3ad571b492 .... .01. .... .... .001 0001 1000 0001 DataType=%DataType_27_5 %TileOpcode
 
 # BSTART.STD | BSTART.STD COND, <label> | opcodes/lx_32.opc:77
 bstart_std_32_1ef99c4cedcb .... .... .... .... .011 0000 0000 0001 %simm17
@@ -302,8 +302,8 @@ bstart_std_32_c1de85e06878 .... .... .... .... .010 0000 0000 0001 %simm17
 # BSTART.SYS | BSTART.SYS FALL<, fixup_label> | opcodes/lx_32.opc:84
 bstart_sys_32_762d9d84a6d8 .... .... .... .... .001 0000 1000 0001 %simm17
 
-# BSTART.TEPL | BSTART.TEPL TileOp10, DataType | opcodes/lx_32.opc:86
-bstart_tepl_32_2299f6725e2a .... .01. .... .... .001 0001 1000 0001 DataType=%DataType_27_5 %TileOp10
+# BSTART.TEPL | BSTART.TEPL TileOpcode, DataType | opcodes/lx_32.opc:86
+bstart_tepl_32_d022db6dacb3 .... .01. .... .... .001 0001 1000 0001 DataType=%DataType_27_5 %TileOpcode
 
 # BSTART.TLOAD | BSTART.TLOAD DataType | opcodes/lx_32.opc:87
 bstart_tload_32_d0c18bb0ab15 .... .000 0000 0001 0001 0001 1000 0001 DataType=%DataType_27_5
@@ -563,7 +563,7 @@ j_32_a303cf05af42 .... .... .... .... .000 .... .011 0111 %simm22
 # JR | jr SrcL, label | opcodes/lx_32.opc:170
 jr_32_c4128e843b05 .... .... .... .... .110 .... .010 0111 %SrcL %SrcZero simm12=%simm12_7_s5_25_7
 
-# LB | lb [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd} | opcodes/lx_32.opc:171
+# LB | lb [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd} | opcodes/lx_32.opc:171
 lb_32_b718aa88e28f .... .... .... .... .000 .... .000 1001 %RegDst %SrcL %SrcR %SrcRType shamt=%shamt_27_5
 
 # LB.PCR | lb.pcr [symbol], ->{t, u, Rd} | opcodes/lx_32.opc:172
@@ -572,7 +572,7 @@ lb_pcr_32_3fa2540b22d0 .... .... .... .... .000 .... .011 1001 %RegDst %simm17
 # LBI | lbi [SrcL, simm], ->{t, u, Rd} | opcodes/lx_32.opc:173
 lbi_32_9af2cdbeb38f .... .... .... .... .000 .... .001 1001 %RegDst %SrcL simm12=%simm12_20_s12
 
-# LBU | lbu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd} | opcodes/lx_32.opc:174
+# LBU | lbu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd} | opcodes/lx_32.opc:174
 lbu_32_a9a58ab4ea22 .... .... .... .... .100 .... .000 1001 %RegDst %SrcL %SrcR %SrcRType shamt=%shamt_27_5
 
 # LBU.PCR | lbu.pcr [symbol], ->{t, u, Rd} | opcodes/lx_32.opc:175
@@ -581,7 +581,7 @@ lbu_pcr_32_5b571b0c8dc2 .... .... .... .... .100 .... .011 1001 %RegDst %simm17
 # LBUI | lbui [SrcL, simm], ->{t, u, Rd} | opcodes/lx_32.opc:176
 lbui_32_c39b9aa11f02 .... .... .... .... .100 .... .001 1001 %RegDst %SrcL simm12=%simm12_20_s12
 
-# LD | ld [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd} | opcodes/lx_32.opc:177
+# LD | ld [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd} | opcodes/lx_32.opc:177
 ld_32_7c48838bc4e6 .... .... .... .... .011 .... .000 1001 %RegDst %SrcL %SrcR %SrcRType shamt=%shamt_27_5
 
 # LD.ADD | ld.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd} | opcodes/lx_32.opc:178
@@ -617,7 +617,7 @@ ldi_32_d82a643f7a2b .... .... .... .... .011 .... .001 1001 %RegDst %SrcL simm12
 # LDI.U | ldi.u [SrcL, simm], ->{t, u, Rd} | opcodes/lx_32.opc:188
 ldi_u_32_111bb521a439 .... .... .... .... .011 .... .010 1001 %RegDst %SrcL simm12=%simm12_20_s12
 
-# LH | lh [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd} | opcodes/lx_32.opc:189
+# LH | lh [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd} | opcodes/lx_32.opc:189
 lh_32_d0f04d7d7696 .... .... .... .... .001 .... .000 1001 %RegDst %SrcL %SrcR %SrcRType shamt=%shamt_27_5
 
 # LH.PCR | lh.pcr [symbol], ->{t, u, Rd} | opcodes/lx_32.opc:190
@@ -629,7 +629,7 @@ lhi_32_46a45ec7074d .... .... .... .... .001 .... .001 1001 %RegDst %SrcL simm12
 # LHI.U | lhi.u [SrcL, simm], ->{t, u, Rd} | opcodes/lx_32.opc:192
 lhi_u_32_bb0c81c6e61d .... .... .... .... .001 .... .010 1001 %RegDst %SrcL simm12=%simm12_20_s12
 
-# LHU | lhu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd} | opcodes/lx_32.opc:193
+# LHU | lhu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd} | opcodes/lx_32.opc:193
 lhu_32_730caf67ecd1 .... .... .... .... .101 .... .000 1001 %RegDst %SrcL %SrcR %SrcRType shamt=%shamt_27_5
 
 # LHU.PCR | lhu.pcr [symbol], ->{t, u, Rd} | opcodes/lx_32.opc:194
@@ -659,7 +659,7 @@ lsrget_32_448b17d7c20a .... .... .... 0000 0011 .... .011 1011 %LSR_ID %RegDst
 # LUI | lui simm, ->{t, u, Rd} | opcodes/lx_32.opc:202
 lui_32_982113b541d6 .... .... .... .... .... .... .001 0111 %RegDst %imm20
 
-# LW | lw [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd} | opcodes/lx_32.opc:203
+# LW | lw [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd} | opcodes/lx_32.opc:203
 lw_32_3a77ffafcb34 .... .... .... .... .010 .... .000 1001 %RegDst %SrcL %SrcR %SrcRType shamt=%shamt_27_5
 
 # LW.ADD | lw.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd} | opcodes/lx_32.opc:204
@@ -695,7 +695,7 @@ lwi_32_7085c98058fa .... .... .... .... .010 .... .001 1001 %RegDst %SrcL simm12
 # LWI.U | lwi.u [SrcL, simm], ->{t, u, Rd} | opcodes/lx_32.opc:214
 lwi_u_32_4a7426a70f10 .... .... .... .... .010 .... .010 1001 %RegDst %SrcL simm12=%simm12_20_s12
 
-# LWU | lwu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd} | opcodes/lx_32.opc:215
+# LWU | lwu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd} | opcodes/lx_32.opc:215
 lwu_32_678935925636 .... .... .... .... .110 .... .000 1001 %RegDst %SrcL %SrcR %SrcRType shamt=%shamt_27_5
 
 # LWU.PCR | lwu.pcr [symbol], ->{t, u, Rd} | opcodes/lx_32.opc:216
@@ -755,7 +755,7 @@ oriw_32_91608caf1ba6 .... .... .... .... .011 .... .011 0101 %RegDst %SrcL simm1
 # ORW | orw SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd} | opcodes/lx_32.opc:236
 orw_32_84f7ac2ed68f .... .... .... .... .011 .... .010 0101 %RegDst %SrcL %SrcR %SrcRType shamt=%shamt_27_5
 
-# PRF | prf [SrcL, SrcR<{.sw,.uw}><<<shamt>] | opcodes/lx_32.opc:237
+# PRF | prf [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>] | opcodes/lx_32.opc:237
 prf_32_30e6dfe4e3ce .... .... .... .... .111 .... .000 1001 %RegDst %SrcL %SrcR %SrcRType shamt=%shamt_27_5
 
 # PRFI.U | prfi.u [SrcL, simm] | opcodes/lx_32.opc:238
@@ -776,7 +776,7 @@ remw_32_22659af46ec0 0000 000. .... .... .110 .... .101 0111 %RegDst %SrcL %SrcR
 # REV | rev SrcL,  M, N, ->{t, u, Rd} | opcodes/lx_32.opc:243
 rev_32_58badc109d49 .... .... .... .... .111 .... .110 0111 %RegDst %SrcL %imml %immr
 
-# SB | sb SrcD, [SrcL, SrcR<{.sw,.uw}>] | opcodes/lx_32.opc:244
+# SB | sb SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>] | opcodes/lx_32.opc:244
 sb_32_43c106ae3749 .... .... .... .... .000 0000 0100 1001 %SrcD %SrcL %SrcR %SrcRType
 
 # SB.PCR | sb.pcr SrcL, [symbol] | opcodes/lx_32.opc:245
@@ -800,7 +800,7 @@ sc_w_32_14b238f02bfd 0010 .... .... .... .001 .... .000 1011 %RegDst %SrcL %SrcR
 # SCVTF | scvtf.{srcT2dstT} SrcL, ->{t, u, Rd} | opcodes/lx_32.opc:251
 scvtf_32_01861bbd5ef2 .... ...0 0000 .... .110 .... .110 1011 %DstType %RegDst %SrcL %SrcType
 
-# SD | sd SrcD, [SrcL, SrcR<{.sw,.uw}><<3] | opcodes/lx_32.opc:252
+# SD | sd SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3] | opcodes/lx_32.opc:252
 sd_32_9dbc40328653 .... .... .... .... .011 0000 0100 1001 %SrcD %SrcL %SrcR %SrcRType
 
 # SD.ADD | sd.add<.{rl, f, rlf}> [SrcL], SrcR | opcodes/lx_32.opc:253
@@ -821,7 +821,7 @@ sd_smax_32_e59bf90b50c3 0100 .0.. .... .... .101 0000 0000 1011 %SrcL %SrcR far=
 # SD.SMIN | sd.smin<.{rl, f, rlf}> [SrcL], SrcR | opcodes/lx_32.opc:258
 sd_smin_32_188d93125032 0101 .0.. .... .... .101 0000 0000 1011 %SrcL %SrcR far=%far_27_1 rl=%rl_25_1
 
-# SD.U | sd.u SrcD, [SrcL, SrcR<{.sw,.uw}>] | opcodes/lx_32.opc:259
+# SD.U | sd.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>] | opcodes/lx_32.opc:259
 sd_u_32_1602c58c2031 .... .... .... .... .111 0000 0100 1001 %SrcD %SrcL %SrcR %SrcRType
 
 # SD.UMAX | sd.umax<.{rl, f, rlf}> [SrcL], SrcR | opcodes/lx_32.opc:260
@@ -893,13 +893,13 @@ setc_tgt_32_c02656d3a2b8 0000 0000 0000 .... .100 0000 0011 1011 %SrcL
 # SETRET | setret uimm, ->Ra | opcodes/lx_32.opc:282
 setret_32_72003dcf3b59 .... .... .... .... .... 0101 0000 0111 %imm20
 
-# SH | sh SrcD, [SrcL, SrcR<{.sw,.uw}><<1] | opcodes/lx_32.opc:283
+# SH | sh SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1] | opcodes/lx_32.opc:283
 sh_32_bc7d4a7dea28 .... .... .... .... .001 0000 0100 1001 %SrcD %SrcL %SrcR %SrcRType
 
 # SH.PCR | sh.pcr SrcL, [symbol] | opcodes/lx_32.opc:284
 sh_pcr_32_14ba505eb3c2 .... .... .... .... .001 .... .110 1001 %SrcL %simm
 
-# SH.U | sh.u SrcD, [SrcL, SrcR<{.sw,.uw}>] | opcodes/lx_32.opc:285
+# SH.U | sh.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>] | opcodes/lx_32.opc:285
 sh_u_32_fa87afbf8f24 .... .... .... .... .101 0000 0100 1001 %SrcD %SrcL %SrcR %SrcRType
 
 # SHI | shi SrcL, [SrcR, simm] | opcodes/lx_32.opc:286
@@ -965,7 +965,7 @@ subiw_32_51019ff77d0a .... .... .... .... .001 .... .011 0101 %RegDst %SrcL %uim
 # SUBW | subw SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd} | opcodes/lx_32.opc:306
 subw_32_3a8d45653c98 .... .... .... .... .001 .... .010 0101 %RegDst %SrcL %SrcR %SrcRType shamt=%shamt_27_5
 
-# SW | sw SrcD, [SrcL, SrcR<{.sw,.uw}><<2] | opcodes/lx_32.opc:307
+# SW | sw SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2] | opcodes/lx_32.opc:307
 sw_32_28ad317b1b41 .... .... .... .... .010 0000 0100 1001 %SrcD %SrcL %SrcR %SrcRType
 
 # SW.ADD | sw.add<.{rl, f, rlf}> [SrcL], SrcR | opcodes/lx_32.opc:308
@@ -986,7 +986,7 @@ sw_smax_32_8bab38a878d7 0100 .0.. .... .... .011 0000 0000 1011 %SrcL %SrcR far=
 # SW.SMIN | sw.smin<.{rl, f, rlf}> [SrcL], SrcR | opcodes/lx_32.opc:313
 sw_smin_32_773e7d83b011 0101 .0.. .... .... .011 0000 0000 1011 %SrcL %SrcR far=%far_27_1 rl=%rl_25_1
 
-# SW.U | sw.u SrcD, [SrcL, SrcR<{.sw,.uw}>] | opcodes/lx_32.opc:314
+# SW.U | sw.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>] | opcodes/lx_32.opc:314
 sw_u_32_718a61f75d33 .... .... .... .... .110 0000 0100 1001 %SrcD %SrcL %SrcR %SrcRType
 
 # SW.UMAX | sw.umax<.{rl, f, rlf}> [SrcL], SrcR | opcodes/lx_32.opc:315

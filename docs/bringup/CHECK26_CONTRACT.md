@@ -1,8 +1,8 @@
-# LinxISA Strict 26-Check Contract (v0.3 current)
+# LinxISA Strict 26-Check Contract (v0.4 current)
 
 Last updated: 2026-02-12
 
-This document freezes the architectural contract from `docs/architecture/v0.3-architecture-contract.md` into a machine-checkable
+This document freezes the architectural contract from `docs/architecture/v0.4-architecture-contract.md` into a machine-checkable
 ledger used by bring-up gates.
 
 Machine-readable source:
@@ -31,20 +31,19 @@ The gate enforces:
 
 1. exactly 26 checks with contiguous IDs `1..26`,
 2. no empty clauses/owners/tests,
-3. every required pattern exists in canonical v0.3 artifacts.
+3. every required pattern exists in canonical v0.4 artifacts.
 
 ## Required canonical artifacts
 
-Pattern scanning is restricted to the strict v0.3 source-of-truth artifacts:
+Pattern scanning is restricted to the strict v0.4 source-of-truth artifacts:
 
-- `./isa/v0.3/opcodes/lx_32.opc`
-- `./isa/v0.3/state/memory_model.json`
-- `./docs/architecture/isa-manual/src/chapters/02_programming_model.adoc`
+- `./isa/v0.4/opcodes/lx_32.opc`
+- `./isa/v0.4/state/memory_model.json`
+- `./docs/architecture/isa-manual/src/chapters/03_programming_model.adoc`
 - `./docs/architecture/isa-manual/src/chapters/04_block_isa.adoc`
-- `./docs/architecture/isa-manual/src/chapters/08_memory_operations.adoc`
-- `./docs/architecture/isa-manual/src/chapters/09_system_and_privilege.adoc`
+- `./docs/architecture/isa-manual/src/chapters/09_memory_operations.adoc`
+- `./docs/architecture/isa-manual/src/chapters/10_system_and_privilege.adoc`
 
 ## Exit criteria
 
 - `python3 ./tools/bringup/check26_contract.py --root .` returns `OK`.
-

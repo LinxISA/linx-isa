@@ -74,7 +74,8 @@ linx-isa/
 │   └── pto_kernels/     # PTO accelerator kernels (submodule)
 │
 ├── isa/                   # ISA specification sources
-│   ├── v0.3/            # v0.3 ISA definition
+│   ├── v0.4/            # live canonical ISA definition
+│   ├── v0.3/            # archived v0.3 ISA definition
 │   └── generated/        # Generated encodings/decoders
 │
 └── docs/                  # Architecture & bring-up documentation
@@ -145,7 +146,7 @@ bash tools/regression/strict_cross_repo.sh
 
 - **Website**: https://linxisa.github.io/
 - **[Getting Started](docs/bringup/GETTING_STARTED.md)** - Onboarding guide
-- **[Architecture Contract](docs/architecture/v0.3-architecture-contract.md)** - ISA v0.3 specification
+- **[Architecture Contract](docs/architecture/v0.4-architecture-contract.md)** - ISA v0.4 specification
 - **[Bring-up Progress](docs/bringup/PROGRESS.md)** - Current status tracking
 - **[Navigation Guide](docs/project/navigation.md)** - Repository layout policy
 - **[ISA Manual](docs/architecture/isa-manual/README.md)** - Complete ISA documentation
@@ -154,7 +155,7 @@ bash tools/regression/strict_cross_repo.sh
 
 ## Versioning
 
-- **ISA Version**: v0.3 (current)
+- **ISA Version**: v0.4 (current)
 - **Repository**: This superproject pins specific commits of all ecosystem repos
 - **Release Notes**: See [docs/releases/](docs/releases/) for version history
 

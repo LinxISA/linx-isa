@@ -1,0 +1,36 @@
+{
+  "notes": [
+    "This file freezes the first rendering-oriented v0.4 profile.",
+    "Tiles remain general-purpose intermediate-state storage; screen-space tiling is optional and not baked into the ISA."
+  ],
+  "tile_profile": {
+    "carrier_bytes": 4096,
+    "element_grid": "1024x1",
+    "layout": "RowMajor",
+    "role": "fragment-list and state-carrier storage"
+  },
+  "data_model": {
+    "style": "SoA",
+    "fragment_tiles": [
+      "pos_x",
+      "pos_y",
+      "pos_z",
+      "pos_w",
+      "coverage",
+      "color_r",
+      "color_g",
+      "color_b",
+      "color_a"
+    ],
+    "coverage_encoding": "uint32_t 0/1 per element",
+    "packed_output": "RGBA8_UNORM may be packed as one uint32_t per element"
+  },
+  "state_placement": {
+    "descriptor_state": "small or rarely-changing values use B.ARG and B.IOR",
+    "state_tiles": "large or hot rendering state uses dedicated StateTiles in the tile register file"
+  },
+  "tau_policy": {
+    "memory_access": "TAU is tile-to-tile only",
+    "fallback": "VEC MPAR kernels are the required functional fallback for rendering PTOs"
+  }
+}

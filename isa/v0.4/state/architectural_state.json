@@ -1,0 +1,161 @@
+{
+  "notes": [
+    "Architectural state is intentionally minimal here: this repo treats the compiled catalog as the primary machine-readable source.",
+    "v0.4 keeps the v0.2 architectural baseline and promotes the canonical shader-kernel and rendering contracts.",
+    "Contradictory raw legacy fragments are archived history only and are reserved/illegal in canonical v0.4."
+  ],
+  "state": {
+    "block_control_predicate": {
+      "name": "BARG.CARG",
+      "producer": [
+        "SETC.*",
+        "C.SETC.*"
+      ],
+      "consumer": [
+        "BSTART COND",
+        "BWE",
+        "BWI"
+      ],
+      "domain": "block-control"
+    },
+    "kernel_exec_mask": {
+      "name": "p",
+      "width_bits": 64,
+      "producer": [
+        "V.CMP.* ->p"
+      ],
+      "consumer": [
+        "implicit vector predication",
+        "in-body B.Z/B.NZ control flow"
+      ],
+      "inactive_lane_rule": "inactive lanes follow the selected architectural merge/zero policy",
+      "inactive_lane_result_for_mask_producer": "inactive lanes clear their destination bit to 0"
+    },
+    "vector_lane_predicate": {
+      "producer": [
+        "V.CMP.*",
+        "V.FEQ",
+        "V.FNE",
+        "V.FLT",
+        "V.FGE",
+        "V.FEQS",
+        "V.FNES",
+        "V.FLTS",
+        "V.FGES"
+      ],
+      "consumer": [
+        "V.CSEL"
+      ],
+      "storage": "vector queue registers (vt/vu/vm/vn)",
+      "truth_rule": "lane_value != 0"
+    },
+    "vector_body_mixed_execution": {
+      "applies_to_block_types": [
+        "MSEQ",
+        "MPAR",
+        "VSEQ",
+        "VPAR"
+      ],
+      "replay": "body executes as a structured instruction stream with one scalar-uniform control context per group",
+      "scalar_instructions": {
+        "allowed": true,
+        "state_access": [
+          "GPR",
+          "t/u",
+          "p",
+          "scalar condition state"
+        ]
+      },
+      "vector_instruction_operand_contract": {
+        "scalar_inputs": "must be imported via B.IOR and consumed as ri0..ri11 or other defined scalar/group operand classes",
+        "direct_scalar_gpr_names": "illegal",
+        "exception": "zero literal allowed where encoding permits",
+        "any_operand_rule": "if any operand names vt/vu/vm/vn the instruction executes as v.*; otherwise it executes as l.*",
+        "vector_broadcast_rule": "scalar/group-domain source operands broadcast to all active lanes when consumed by v.*",
+        "cross_domain_write_rule": "v.* may not write scalar/group-domain destinations except through explicitly defined reduction or mask-producing instructions"
+      },
+      "operand_namespace": {
+        "scalar_imports": {
+          "form": "ri0..ri11",
+          "binding_rule": "allocated from repeated B.IOR descriptors in header order, then RegSrc0/RegSrc1/RegSrc2 within each descriptor"
+        },
+        "group_scalars": [
+          "lc0",
+          "lc1",
+          "lc2",
+          "lb0",
+          "lb1",
+          "lb2"
+        ],
+        "tile_bases": {
+          "input": [
+            "TA",
+            "TB",
+            "TC",
+            "TD"
+          ],
+          "output": [
+            "TO"
+          ],
+          "scratch": [
+            "TS"
+          ],
+          "reserved_legacy": [
+            "TE",
+            "TF",
+            "TG",
+            "TH",
+            "TO1",
+            "TO2",
+            "TO3"
+          ]
+        },
+        "special": [
+          "p",
+          "zero"
+        ]
+      }
+    },
+    "simt_group_model": {
+      "grouping_rule": "group_count = ceil(total_lanes / lane_count)",
+      "compiler_1d_profile": {
+        "lane_count_field": "LB0",
+        "group_count_field": "LB1",
+        "lb2_default": 1,
+        "lane_counter_roles": {
+          "lc0": "lane index within current group",
+          "lc1": "group index",
+          "lc2": "optional third-dimension group index"
+        }
+      },
+      "group_execution_mode": {
+        "MSEQ": "groups/lanes retire in lexicographic LC order",
+        "MPAR": "groups/lanes may execute in parallel but must preserve architectural ordering guarantees"
+      },
+      "scalar_uniform_lane": "each group has one scalar-uniform lane context; scalar body instructions execute once per group replay"
+    },
+    "vector_reduction_contract": {
+      "mnemonics": [
+        "V.RDADD",
+        "V.RDAND",
+        "V.RDFADD",
+        "V.RDFMAX",
+        "V.RDFMIN",
+        "V.RDMAX",
+        "V.RDMIN",
+        "V.RDOR",
+        "V.RDXOR"
+      ],
+      "scope": "reduce lane values to a scalar destination",
+      "destinations": {
+        "group_local": "t/u and block-local scalar destinations",
+        "inter_group": "R0..R23 global scalar registers"
+      },
+      "compiler_staged_lowering": {
+        "liveout_bridge": "for strict bring-up, compiler may materialize reduction live-out through `V.RD*` followed by a bridged scratch store (`V.SW.BRG` via ri* binding)",
+        "identity_requirement": "staged reduction lowering requires identity initializer for the selected reduction operation"
+      },
+      "mp_ar_compiler_rule": "compiler emits MPAR reduction only when dependence-safe (associative/commutative or explicit programmer parallel hint)"
+    }
+  }
+}

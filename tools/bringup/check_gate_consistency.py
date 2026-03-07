@@ -144,11 +144,24 @@ def main(argv: list[str]) -> int:
         help="Optional Linux defconfig 9p/virtio audit JSON artifact path.",
     )
     ap.add_argument(
+        "--linxcore-perf-floor",
+        default="",
+        help="Optional LinxCore performance floor JSON artifact path.",
+    )
+    ap.add_argument(
         "--require-maturity-artifacts",
         action="store_true",
         help=(
             "Require AVS/QEMU/Linux maturity artifacts (--avs-matrix-audit, --qemu-opcode-sync, "
             "--qemu-isa-coverage, --linux-defconfig-audit) and enforce result.ok=true."
+        ),
+    )
+    ap.add_argument(
+        "--require-perf-floor-artifact",
+        action="store_true",
+        help=(
+            "Require --linxcore-perf-floor artifact and enforce ok=true "
+            "(used for strict nightly performance-floor closure)."
         ),
     )
     args = ap.parse_args(argv)
@@ -162,6 +175,7 @@ def main(argv: list[str]) -> int:
     qemu_opcode_sync_path = Path(args.qemu_opcode_sync) if args.qemu_opcode_sync else None
     qemu_isa_coverage_path = Path(args.qemu_isa_coverage) if args.qemu_isa_coverage else None
     linux_defconfig_audit_path = Path(args.linux_defconfig_audit) if args.linux_defconfig_audit else None
+    linxcore_perf_floor_path = Path(args.linxcore_perf_floor) if args.linxcore_perf_floor else None
 
     report = json.loads(report_path.read_text(encoding="utf-8"))
     schema_version = report.get("schema_version")
@@ -277,6 +291,31 @@ def main(argv: list[str]) -> int:
             classification = str(result.get("classification", "unknown"))
             raise SystemExit(
                 f"error: {label} artifact reports non-passing state ({classification}): {path}"
+            )
+
+    if args.require_perf_floor_artifact and linxcore_perf_floor_path is None:
+        raise SystemExit(
+            "error: --require-perf-floor-artifact set but --linxcore-perf-floor path missing"
+        )
+
+    if linxcore_perf_floor_path is not None:
+        if not linxcore_perf_floor_path.exists():
+            raise SystemExit(f"error: LinxCore perf-floor artifact not found: {linxcore_perf_floor_path}")
+        try:
+            perf_artifact = json.loads(linxcore_perf_floor_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            raise SystemExit(
+                f"error: failed to parse LinxCore perf-floor artifact JSON: {linxcore_perf_floor_path}"
+            ) from exc
+        if not isinstance(perf_artifact, dict):
+            raise SystemExit(
+                f"error: LinxCore perf-floor artifact must decode to object: {linxcore_perf_floor_path}"
+            )
+        if not bool(perf_artifact.get("ok", False)):
+            classification = str(perf_artifact.get("classification", "unknown"))
+            raise SystemExit(
+                f"error: LinxCore perf-floor artifact reports non-passing state "
+                f"({classification}): {linxcore_perf_floor_path}"
             )
         artifact_ts_raw = str(artifact.get("generated_at_utc", "")).strip()
         if artifact_ts_raw:

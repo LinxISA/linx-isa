@@ -31,7 +31,7 @@ def _canon_mnemonic(mnem: str) -> str:
 
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--spec", type=Path, required=True, help="Path to compiled ISA catalog JSON (for example isa/v0.3/linxisa-v0.3.json)")
+    ap.add_argument("--spec", type=Path, required=True, help="Path to compiled ISA catalog JSON (for example isa/v0.4/linxisa-v0.4.json)")
     ap.add_argument("--out", type=Path, required=True, help="Output assembly file")
     args = ap.parse_args(argv)
 

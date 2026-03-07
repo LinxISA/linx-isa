@@ -1,5 +1,6 @@
 {
   "version": 1,
   "policy": "explicit_waivers_only",
+  "waiver_mode": "phase_bound_expiry",
   "waivers": []
 }

@@ -1,6 +1,6 @@
 # Linx Instruction Set Architecture Manual (AsciiDoc)
 
-This directory contains a draft ISA manual for the **Linx Instruction Set Architecture (Linx ISA)**, written in
+This directory contains the live v0.4 ISA manual for the **Linx Instruction Set Architecture (Linx ISA)**, written in
 **AsciiDoc** and built to **PDF** using
 `asciidoctor-pdf` (via Bundler).
 
@@ -18,15 +18,15 @@ make pdf
 Outputs:
 - `build/linxisa-isa-manual.pdf`
 
-## Prebuilt PDF
+## Release artifacts
 
-- v0.3.0: [`linxisa-isa-manual-v0.3.0.pdf`](https://github.com/LinxISA/linx-isa/releases/download/v0.3.0/linxisa-isa-manual-v0.3.0.pdf)
+- Current release notes: `docs/releases/v0.4.0.md`
 - Latest release page: https://github.com/LinxISA/linx-isa/releases/latest
 
 ## Regenerate generated sections
 
 The manual includes generated AsciiDoc derived from the canonical spec:
-- `isa/v0.3/linxisa-v0.3.json`
+- `isa/v0.4/linxisa-v0.4.json`
 
 Regenerate:
 

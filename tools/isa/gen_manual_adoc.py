@@ -1522,9 +1522,9 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument(
         "--profile",
-        choices=["v0.3"],
-        default="v0.3",
-        help="ISA profile for default --spec path (v0.3 only)",
+        choices=["v0.3", "v0.4"],
+        default="v0.4",
+        help="ISA profile for default --spec path (v0.4 is canonical)",
     )
     ap.add_argument("--spec", default=None, help="Path to ISA catalog JSON")
     ap.add_argument(
@@ -1540,7 +1540,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--check", action="store_true", help="Fail if outputs are not up-to-date")
     args = ap.parse_args(argv)
 
-    spec_path = args.spec or "isa/v0.3/linxisa-v0.3.json"
+    spec_path = args.spec or "isa/v0.4/linxisa-v0.4.json"
     spec = _read_json(spec_path)
     spec_version = str(spec.get("version") or "").strip() or "?"
     golden_hint = f"isa/v{spec_version}/" if spec_version != "?" else "isa/v*/"

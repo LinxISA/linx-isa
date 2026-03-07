@@ -16,7 +16,7 @@
   Done means: opcode audit reports no unexpected decode/meta drift and no enum/meta op-id mismatch.
   Status: ✅ PASS (2026-02-25) - opcode sync audit returns `qemu_opcode_meta_sync_ok` with `decode_only_unexpected=0`, `meta_only_unexpected=0`, and `id_mismatch_count=0` (artifacts: `docs/bringup/gates/qemu_opcode_sync_latest.json`, `docs/bringup/gates/qemu_opcode_sync_latest.md`).
 
-- [x] ID: QEMU-004 Validate trap semantics match strict v0.3 clarifications for CFI/BLOCKFMT/BFETCH.
+- [x] ID: QEMU-004 Validate trap semantics match the live v0.4 clarifications for CFI/BLOCKFMT/BFETCH.
   Done means: no conflicting trap behavior is observed in strict-system and model-diff gates.
   Status: ✅ PASS (2026-02-25) - strict system and model-diff are both green in run `2026-02-25-r2-pin-lanefix` (logs: `docs/bringup/gates/logs/2026-02-25-r2-pin-lanefix/pin/emu_strict_system.log`, `docs/bringup/gates/logs/2026-02-25-r2-pin-lanefix/pin/model_diff_suite.log`).
 

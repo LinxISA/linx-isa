@@ -20,7 +20,7 @@ Comparable to Arm/x86/RISC-V maturity means:
 ## Current Strengths (Evidence in Repo)
 
 - Golden opcode database and generated JSON catalog:
-  - `isa/v0.3/` -> `isa/v0.3/linxisa-v0.3.json`
+  - `isa/v0.4/` -> `isa/v0.4/linxisa-v0.4.json`
 - Encoding conflict checks and hole reporting:
   - `python3 tools/isa/report_encoding_space.py --check`
   - Report: `docs/reference/encoding_space_report.md`
@@ -35,7 +35,7 @@ Comparable to Arm/x86/RISC-V maturity means:
   - Missing or under-specified: trap causes, trap priority, precise state capture,
     CSR reset values, and which fields are WARL vs fixed.
   - Required artifacts:
-    - Expand manual: `docs/architecture/isa-manual/src/chapters/09_system_and_privilege.adoc`
+    - Expand manual: `docs/architecture/isa-manual/src/chapters/10_system_and_privilege.adoc`
     - AVS coverage: `avs/matrix_v1.md` (SYS area)
 
 - MMU and memory attributes:
@@ -57,9 +57,9 @@ Comparable to Arm/x86/RISC-V maturity means:
 
 ## Gaps: Memory Model and Fences
 
-- The repo now documents a weak model, but many "sharp edges" still need closure:
+  - The repo now documents a weak model, but many "sharp edges" still need closure:
   - Device vs Normal ordering, cumulative fence intent, and exact `.aq/.rl` scope.
-  - Reference chapter: `docs/architecture/isa-manual/src/chapters/08_memory_operations.adoc`
+  - Reference chapter: `docs/architecture/isa-manual/src/chapters/09_memory_operations.adoc`
   - Required validation:
     - Litmus tests for message passing and fence ordering (AVS-ATOM-010/011).
 

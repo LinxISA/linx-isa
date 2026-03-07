@@ -323,16 +323,16 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--profile",
-        choices=["v0.3"],
-        default="v0.3",
-        help="ISA profile for default --spec path (v0.3 only)",
+        choices=["v0.3", "v0.4"],
+        default="v0.4",
+        help="ISA profile for default --spec path (v0.4 is canonical)",
     )
     ap.add_argument("--spec", default=None, help="Path to the ISA spec JSON")
     ap.add_argument("--out-dir", default="isa/generated/codecs", help="Output directory")
     ap.add_argument("--check", action="store_true", help="Fail if outputs are not up-to-date")
     args = ap.parse_args()
 
-    default_spec = "isa/v0.3/linxisa-v0.3.json"
+    default_spec = "isa/v0.4/linxisa-v0.4.json"
     spec_path = args.spec or default_spec
 
     with open(spec_path, "r", encoding="utf-8") as f:

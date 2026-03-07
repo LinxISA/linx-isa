@@ -1,0 +1,55 @@
+profile: v0.4
+commit: 36c45461f934ddb693a21d31fa84a4f7429edefd
+generated_at: 2026-02-14T05:53:06Z
+entries:
+  - path: docs/reference/examples/v0.4/curated/disasm_example.s
+    source: docs/reference/examples/v0.4/legacy-reference/disasm_example.s
+    generation: manual-curation
+  - path: docs/reference/examples/v0.4/curated/linxisa-v0.4-normalized.asm
+    source: docs/reference/examples/v0.4/curated/linxisa-v0.4-normalized.asm
+    generation: manual-curation
+  - path: docs/reference/examples/v0.4/scratch-legacy/simple.s
+    source: avs/scratch/simple.s
+    generation: migrated-allowlist
+  - path: docs/reference/examples/v0.4/scratch-legacy/test_asm_call.S
+    source: avs/scratch/test_asm_call.S
+    generation: migrated-allowlist
+  - path: docs/reference/examples/v0.4/scratch-legacy/test_branch.s
+    source: avs/scratch/test_branch.s
+    generation: migrated-allowlist
+  - path: docs/reference/examples/v0.4/scratch-legacy/test_branch2.s
+    source: avs/scratch/test_branch2.s
+    generation: migrated-allowlist
+  - path: docs/reference/examples/v0.4/scratch-legacy/test_csel.s
+    source: avs/scratch/test_csel.s
+    generation: migrated-allowlist
+  - path: docs/reference/examples/v0.4/scratch-legacy/test_or.s
+    source: avs/scratch/test_or.s
+    generation: migrated-allowlist
+  - path: docs/reference/examples/v0.4/scratch-legacy/test_regs.s
+    source: avs/scratch/test_regs.s
+    generation: migrated-allowlist
+  - path: docs/reference/examples/v0.4/scratch-legacy/test_simple.s
+    source: avs/scratch/test_simple.s
+    generation: migrated-allowlist
+  - path: docs/reference/examples/v0.4/scratch-legacy/test_simple_fixed.s
+    source: avs/scratch/test_simple_fixed.s
+    generation: migrated-allowlist
+  - path: docs/reference/examples/v0.4/generated/flash_attention.s
+    source: workloads/pto_kernels/kernels/flash_attention.cpp
+    generation: RUN_QEMU_TILE=0 bash workloads/pto_kernels/tools/run_pto_to_linx.sh
+  - path: docs/reference/examples/v0.4/generated/flash_attention_masked.s
+    source: workloads/pto_kernels/kernels/flash_attention_masked.cpp
+    generation: RUN_QEMU_TILE=0 bash workloads/pto_kernels/tools/run_pto_to_linx.sh
+  - path: docs/reference/examples/v0.4/generated/gemm.s
+    source: workloads/pto_kernels/kernels/gemm.cpp
+    generation: RUN_QEMU_TILE=0 bash workloads/pto_kernels/tools/run_pto_to_linx.sh
+  - path: docs/reference/examples/v0.4/generated/mamulb.s
+    source: workloads/pto_kernels/kernels/mamulb.cpp
+    generation: RUN_QEMU_TILE=0 bash workloads/pto_kernels/tools/run_pto_to_linx.sh
+  - path: docs/reference/examples/v0.4/generated/tload_store.s
+    source: workloads/pto_kernels/kernels/tload_store.cpp
+    generation: RUN_QEMU_TILE=0 bash workloads/pto_kernels/tools/run_pto_to_linx.sh
+  - path: docs/reference/examples/v0.4/generated/tmatmul_acc.s
+    source: workloads/pto_kernels/kernels/tmatmul_acc.cpp
+    generation: RUN_QEMU_TILE=0 bash workloads/pto_kernels/tools/run_pto_to_linx.sh

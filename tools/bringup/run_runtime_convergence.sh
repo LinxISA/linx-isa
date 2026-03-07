@@ -23,18 +23,58 @@ STRICT_CROSS_ALLOW_G1_BLOCKED="${STRICT_CROSS_ALLOW_G1_BLOCKED-}"
 MULTI_AGENT_MANIFEST="${MULTI_AGENT_MANIFEST:-$ROOT/docs/bringup/agent_runs/manifest.yaml}"
 MULTI_AGENT_WAIVERS="${MULTI_AGENT_WAIVERS:-$ROOT/docs/bringup/agent_runs/waivers.yaml}"
 MULTI_AGENT_CHECKLISTS_ROOT="${MULTI_AGENT_CHECKLISTS_ROOT:-$ROOT/docs/bringup/agent_runs/checklists}"
+MULTI_AGENT_ACTIVE_PHASE="${MULTI_AGENT_ACTIVE_PHASE:-}"
+LINX_GATE_TIER="${LINX_GATE_TIER:-pr}" # pr|nightly
+RUN_ARCH_DOCS_GATES="${RUN_ARCH_DOCS_GATES-}" # 0|1
+RUN_LINXCORE_PR_GATES="${RUN_LINXCORE_PR_GATES-}" # 0|1
+RUN_TESTBENCH_PR_GATES="${RUN_TESTBENCH_PR_GATES-}" # 0|1
+RUN_PYC_PR_GATES="${RUN_PYC_PR_GATES-}" # 0|1
+RUN_TRACE_PR_GATES="${RUN_TRACE_PR_GATES-}" # 0|1
+RUN_LINXCORE_NIGHTLY_GATES="${RUN_LINXCORE_NIGHTLY_GATES-}" # 0|1
+RUN_PYC_NIGHTLY_GATES="${RUN_PYC_NIGHTLY_GATES-}" # 0|1
+RUN_TRACE_NIGHTLY_GATES="${RUN_TRACE_NIGHTLY_GATES-}" # 0|1
+RUN_PERF_FLOOR_GATES="${RUN_PERF_FLOOR_GATES-}" # 0|1
+PERF_MAX_REGRESSION="${PERF_MAX_REGRESSION:-10.0}"
+
+if [[ "$LINX_GATE_TIER" != "pr" && "$LINX_GATE_TIER" != "nightly" ]]; then
+  echo "error: LINX_GATE_TIER must be pr|nightly (got: $LINX_GATE_TIER)" >&2
+  exit 2
+fi
+
 if [[ "$LINX_BRINGUP_PROFILE" == "release-strict" ]]; then
   [[ -n "$RUN_GLIBC_G1B" ]] || RUN_GLIBC_G1B=1
   [[ -n "$GLIBC_G1B_ALLOW_BLOCKED" ]] || GLIBC_G1B_ALLOW_BLOCKED=0
   [[ -n "$RUN_MODEL_DIFF" ]] || RUN_MODEL_DIFF=1
   [[ -n "$RUN_CPP_GATES" ]] || RUN_CPP_GATES=0
   [[ -n "$STRICT_CROSS_ALLOW_G1_BLOCKED" ]] || STRICT_CROSS_ALLOW_G1_BLOCKED=0
+  [[ -n "$RUN_ARCH_DOCS_GATES" ]] || RUN_ARCH_DOCS_GATES=1
+  [[ -n "$RUN_LINXCORE_PR_GATES" ]] || RUN_LINXCORE_PR_GATES=1
+  [[ -n "$RUN_TESTBENCH_PR_GATES" ]] || RUN_TESTBENCH_PR_GATES=1
+  [[ -n "$RUN_PYC_PR_GATES" ]] || RUN_PYC_PR_GATES=1
+  [[ -n "$RUN_TRACE_PR_GATES" ]] || RUN_TRACE_PR_GATES=1
 else
   [[ -n "$RUN_GLIBC_G1B" ]] || RUN_GLIBC_G1B=1
   [[ -n "$GLIBC_G1B_ALLOW_BLOCKED" ]] || GLIBC_G1B_ALLOW_BLOCKED=1
   [[ -n "$RUN_MODEL_DIFF" ]] || RUN_MODEL_DIFF=0
   [[ -n "$RUN_CPP_GATES" ]] || RUN_CPP_GATES=0
   [[ -n "$STRICT_CROSS_ALLOW_G1_BLOCKED" ]] || STRICT_CROSS_ALLOW_G1_BLOCKED=1
+  [[ -n "$RUN_ARCH_DOCS_GATES" ]] || RUN_ARCH_DOCS_GATES=1
+  [[ -n "$RUN_LINXCORE_PR_GATES" ]] || RUN_LINXCORE_PR_GATES=1
+  [[ -n "$RUN_TESTBENCH_PR_GATES" ]] || RUN_TESTBENCH_PR_GATES=1
+  [[ -n "$RUN_PYC_PR_GATES" ]] || RUN_PYC_PR_GATES=1
+  [[ -n "$RUN_TRACE_PR_GATES" ]] || RUN_TRACE_PR_GATES=1
+fi
+
+if [[ "$LINX_GATE_TIER" == "nightly" ]]; then
+  [[ -n "$RUN_LINXCORE_NIGHTLY_GATES" ]] || RUN_LINXCORE_NIGHTLY_GATES=1
+  [[ -n "$RUN_PYC_NIGHTLY_GATES" ]] || RUN_PYC_NIGHTLY_GATES=1
+  [[ -n "$RUN_TRACE_NIGHTLY_GATES" ]] || RUN_TRACE_NIGHTLY_GATES=1
+  [[ -n "$RUN_PERF_FLOOR_GATES" ]] || RUN_PERF_FLOOR_GATES=1
+else
+  [[ -n "$RUN_LINXCORE_NIGHTLY_GATES" ]] || RUN_LINXCORE_NIGHTLY_GATES=0
+  [[ -n "$RUN_PYC_NIGHTLY_GATES" ]] || RUN_PYC_NIGHTLY_GATES=0
+  [[ -n "$RUN_TRACE_NIGHTLY_GATES" ]] || RUN_TRACE_NIGHTLY_GATES=0
+  [[ -n "$RUN_PERF_FLOOR_GATES" ]] || RUN_PERF_FLOOR_GATES=0
 fi
 
 if [[ "$LINX_BRINGUP_PROFILE" == "release-strict" ]]; then
@@ -77,10 +117,13 @@ Options:
 
 Environment:
   LINX_BRINGUP_PROFILE=dev|release-strict   (default: release-strict)
+  LINX_GATE_TIER=pr|nightly                 (default: pr)
   TRACE_SCHEMA_VERSION=MAJOR.MINOR          (default: 1.0)
   RUN_MODEL_DIFF=0|1                        (default: 1 in release-strict)
   RUN_CPP_GATES=0|1                         (default: 0)
   CPP_MODE=phase-b|...                      (default: phase-b)
+  RUN_*_GATES=0|1                           (override PR/nightly domain gate defaults)
+  MULTI_AGENT_ACTIVE_PHASE=G0..G5           (optional phase override for waiver checks)
 USAGE
 }
 
@@ -247,12 +290,18 @@ fi
 RUN_LOG_DIR="$OUT_BASE/$RUN_ID/$LANE"
 mkdir -p "$RUN_LOG_DIR"
 
+STATIC_PHASE_ARGS=()
+if [[ -n "$MULTI_AGENT_ACTIVE_PHASE" ]]; then
+  STATIC_PHASE_ARGS+=(--active-phase "$MULTI_AGENT_ACTIVE_PHASE")
+fi
+
 python3 "$ROOT/tools/bringup/check_multi_agent_gates.py" \
   --strict-always \
   --mode static \
   --manifest "$MULTI_AGENT_MANIFEST" \
   --waivers "$MULTI_AGENT_WAIVERS" \
-  --checklists-root "$MULTI_AGENT_CHECKLISTS_ROOT"
+  --checklists-root "$MULTI_AGENT_CHECKLISTS_ROOT" \
+  ${STATIC_PHASE_ARGS[@]+"${STATIC_PHASE_ARGS[@]}"}
 
 python3 "$ROOT/tools/bringup/gate_report.py" capture-sha \
   --report "$REPORT" \
@@ -277,6 +326,12 @@ echo "info: Linux runtime IRQ policy LINX_DISABLE_TIMER_IRQ=$LINX_DISABLE_TIMER_
 echo "info: Emulator/system IRQ policy LINX_EMU_DISABLE_TIMER_IRQ=$LINX_EMU_DISABLE_TIMER_IRQ"
 echo "info: glibc G1b gate RUN_GLIBC_G1B=$RUN_GLIBC_G1B GLIBC_G1B_ALLOW_BLOCKED=$GLIBC_G1B_ALLOW_BLOCKED"
 echo "info: C++ gates RUN_CPP_GATES=$RUN_CPP_GATES CPP_MODE=$CPP_MODE"
+echo "info: gate tier LINX_GATE_TIER=$LINX_GATE_TIER"
+echo "info: PR gates ARCH=$RUN_ARCH_DOCS_GATES LINXCORE=$RUN_LINXCORE_PR_GATES TESTBENCH=$RUN_TESTBENCH_PR_GATES PYC=$RUN_PYC_PR_GATES TRACE=$RUN_TRACE_PR_GATES"
+echo "info: nightly gates LINXCORE=$RUN_LINXCORE_NIGHTLY_GATES PYC=$RUN_PYC_NIGHTLY_GATES TRACE=$RUN_TRACE_NIGHTLY_GATES PERF=$RUN_PERF_FLOOR_GATES"
+if [[ -n "$MULTI_AGENT_ACTIVE_PHASE" ]]; then
+  echo "info: active phase override MULTI_AGENT_ACTIVE_PHASE=$MULTI_AGENT_ACTIVE_PHASE"
+fi
 echo "info: logs=$RUN_LOG_DIR"
 
 FAIL_COUNT=0
@@ -331,6 +386,8 @@ run_gate() {
   local pass_class="$4"
   local fail_class="$5"
   local slug="$6"
+  local required="${7:-yes}"
+  local owner="${8:-bringup}"
 
   local log="$RUN_LOG_DIR/${slug}.log"
   echo
@@ -342,14 +399,34 @@ run_gate() {
   set -e
 
   if [[ $rc -eq 0 ]]; then
-    record_gate "$domain" "$gate" "$command" "pass" "$pass_class" "log:$log"
+    record_gate "$domain" "$gate" "$command" "pass" "$pass_class" "log:$log" "$required" "no" "$owner"
     echo "ok: $gate (log: $log)"
   else
-    record_gate "$domain" "$gate" "$command" "fail" "$fail_class" "log:$log"
+    record_gate "$domain" "$gate" "$command" "fail" "$fail_class" "log:$log" "$required" "no" "$owner"
     echo "error: $gate failed (rc=$rc, log: $log)" >&2
     tail -n 40 "$log" >&2 || true
     FAIL_COUNT=$((FAIL_COUNT + 1))
   fi
+}
+
+record_skipped_gate() {
+  local domain="$1"
+  local gate="$2"
+  local command="$3"
+  local reason="$4"
+  local owner="${5:-bringup}"
+  local required="${6:-no}"
+  record_gate \
+    "$domain" \
+    "$gate" \
+    "$command" \
+    "not_run" \
+    "skipped_by_policy" \
+    "note: $reason" \
+    "$required" \
+    "no" \
+    "$owner" \
+    "note"
 }
 
 run_glibc_g1b_gate() {
@@ -419,6 +496,43 @@ run_gate \
   "contract_fail" \
   "isa_check26"
 
+if [[ "$RUN_ARCH_DOCS_GATES" == "1" ]]; then
+  run_gate \
+    "Architecture" \
+    "LinxCore architecture contract lint" \
+    "python3 $ROOT/tools/bringup/check_linxcore_arch_contract.py --root $ROOT --strict --out $RUN_LOG_DIR/arch_contract_report.json" \
+    "arch_contract_pass" \
+    "arch_contract_fail" \
+    "arch_contract" \
+    "yes" \
+    "arch"
+
+  run_gate \
+    "Architecture" \
+    "mkdocs architecture nav/docs" \
+    "python3 $ROOT/tools/bringup/check_linxcore_arch_contract.py --root $ROOT --strict --require-mkdocs --out $RUN_LOG_DIR/arch_mkdocs_report.json" \
+    "arch_mkdocs_pass" \
+    "arch_mkdocs_fail" \
+    "arch_mkdocs" \
+    "yes" \
+    "arch"
+else
+  record_skipped_gate \
+    "Architecture" \
+    "LinxCore architecture contract lint" \
+    "python3 $ROOT/tools/bringup/check_linxcore_arch_contract.py --root $ROOT --strict --out $RUN_LOG_DIR/arch_contract_report.json" \
+    "RUN_ARCH_DOCS_GATES=0" \
+    "arch" \
+    "no"
+  record_skipped_gate \
+    "Architecture" \
+    "mkdocs architecture nav/docs" \
+    "python3 $ROOT/tools/bringup/check_linxcore_arch_contract.py --root $ROOT --strict --require-mkdocs --out $RUN_LOG_DIR/arch_mkdocs_report.json" \
+    "RUN_ARCH_DOCS_GATES=0" \
+    "arch" \
+    "no"
+fi
+
 run_gate \
   "Compiler" \
   "AVS compile suites (linx64)" \
@@ -466,6 +580,152 @@ run_gate \
   "all_suites_pass" \
   "all_suites_fail_or_timeout" \
   "emu_all_suites"
+
+if [[ "$RUN_LINXCORE_PR_GATES" == "1" ]]; then
+  run_gate \
+    "LinxCore" \
+    "stage/connectivity lint" \
+    "bash $ROOT/rtl/LinxCore/tests/test_stage_connectivity.sh" \
+    "linxcore_stage_connectivity_pass" \
+    "linxcore_stage_connectivity_fail" \
+    "linxcore_stage_connectivity" \
+    "yes" \
+    "linxcore"
+  run_gate \
+    "LinxCore" \
+    "opcode parity" \
+    "bash $ROOT/rtl/LinxCore/tests/test_opcode_parity.sh" \
+    "linxcore_opcode_parity_pass" \
+    "linxcore_opcode_parity_fail" \
+    "linxcore_opcode_parity" \
+    "yes" \
+    "linxcore"
+  run_gate \
+    "LinxCore" \
+    "runner protocol" \
+    "bash $ROOT/rtl/LinxCore/tests/test_runner_protocol.sh" \
+    "linxcore_runner_protocol_pass" \
+    "linxcore_runner_protocol_fail" \
+    "linxcore_runner_protocol" \
+    "yes" \
+    "linxcore"
+  run_gate \
+    "LinxCore" \
+    "trace schema and memory smoke" \
+    "bash $ROOT/rtl/LinxCore/tests/test_trace_schema_and_mem.sh" \
+    "linxcore_trace_mem_smoke_pass" \
+    "linxcore_trace_mem_smoke_fail" \
+    "linxcore_trace_mem_smoke" \
+    "yes" \
+    "linxcore"
+  run_gate \
+    "LinxCore" \
+    "cosim smoke" \
+    "bash $ROOT/rtl/LinxCore/tests/test_cosim_smoke.sh" \
+    "linxcore_cosim_smoke_pass" \
+    "linxcore_cosim_smoke_fail" \
+    "linxcore_cosim_smoke" \
+    "yes" \
+    "linxcore"
+else
+  record_skipped_gate "LinxCore" "stage/connectivity lint" "bash $ROOT/rtl/LinxCore/tests/test_stage_connectivity.sh" "RUN_LINXCORE_PR_GATES=0" "linxcore" "no"
+  record_skipped_gate "LinxCore" "opcode parity" "bash $ROOT/rtl/LinxCore/tests/test_opcode_parity.sh" "RUN_LINXCORE_PR_GATES=0" "linxcore" "no"
+  record_skipped_gate "LinxCore" "runner protocol" "bash $ROOT/rtl/LinxCore/tests/test_runner_protocol.sh" "RUN_LINXCORE_PR_GATES=0" "linxcore" "no"
+  record_skipped_gate "LinxCore" "trace schema and memory smoke" "bash $ROOT/rtl/LinxCore/tests/test_trace_schema_and_mem.sh" "RUN_LINXCORE_PR_GATES=0" "linxcore" "no"
+  record_skipped_gate "LinxCore" "cosim smoke" "bash $ROOT/rtl/LinxCore/tests/test_cosim_smoke.sh" "RUN_LINXCORE_PR_GATES=0" "linxcore" "no"
+fi
+
+if [[ "$RUN_TESTBENCH_PR_GATES" == "1" ]]; then
+  run_gate \
+    "Testbench" \
+    "ROB bookkeeping" \
+    "bash $ROOT/rtl/LinxCore/tests/test_rob_bookkeeping.sh" \
+    "testbench_rob_bookkeeping_pass" \
+    "testbench_rob_bookkeeping_fail" \
+    "testbench_rob_bookkeeping" \
+    "yes" \
+    "testbench"
+  run_gate \
+    "Testbench" \
+    "block struct pyc flow smoke" \
+    "bash $ROOT/rtl/LinxCore/tests/test_block_struct_pyc_flow.sh" \
+    "testbench_block_struct_pyc_pass" \
+    "testbench_block_struct_pyc_fail" \
+    "testbench_block_struct_pyc" \
+    "yes" \
+    "testbench"
+else
+  record_skipped_gate "Testbench" "ROB bookkeeping" "bash $ROOT/rtl/LinxCore/tests/test_rob_bookkeeping.sh" "RUN_TESTBENCH_PR_GATES=0" "testbench" "no"
+  record_skipped_gate "Testbench" "block struct pyc flow smoke" "bash $ROOT/rtl/LinxCore/tests/test_block_struct_pyc_flow.sh" "RUN_TESTBENCH_PR_GATES=0" "testbench" "no"
+fi
+
+if [[ "$RUN_PYC_PR_GATES" == "1" ]]; then
+  run_gate \
+    "pyCircuit" \
+    "CPU C++ smoke" \
+    "bash $ROOT/tools/pyCircuit/contrib/linx/flows/tools/run_linx_cpu_pyc_cpp.sh" \
+    "pyc_cpu_cpp_smoke_pass" \
+    "pyc_cpu_cpp_smoke_fail" \
+    "pyc_cpu_cpp_smoke" \
+    "yes" \
+    "pycircuit"
+  run_gate \
+    "pyCircuit" \
+    "QEMU vs pyCircuit trace diff" \
+    "bash $ROOT/tools/pyCircuit/contrib/linx/flows/tools/run_linx_qemu_vs_pyc.sh" \
+    "pyc_trace_diff_pass" \
+    "pyc_trace_diff_fail" \
+    "pyc_trace_diff" \
+    "yes" \
+    "pycircuit"
+  run_gate \
+    "pyCircuit" \
+    "interface contract gate" \
+    "python3 $ROOT/tools/bringup/check_pycircuit_interface_contract.py --root $ROOT --strict --out $RUN_LOG_DIR/pyc_interface_contract_report.json" \
+    "pyc_interface_contract_pass" \
+    "pyc_interface_contract_fail" \
+    "pyc_interface_contract" \
+    "yes" \
+    "pycircuit"
+else
+  record_skipped_gate "pyCircuit" "CPU C++ smoke" "bash $ROOT/tools/pyCircuit/contrib/linx/flows/tools/run_linx_cpu_pyc_cpp.sh" "RUN_PYC_PR_GATES=0" "pycircuit" "no"
+  record_skipped_gate "pyCircuit" "QEMU vs pyCircuit trace diff" "bash $ROOT/tools/pyCircuit/contrib/linx/flows/tools/run_linx_qemu_vs_pyc.sh" "RUN_PYC_PR_GATES=0" "pycircuit" "no"
+  record_skipped_gate "pyCircuit" "interface contract gate" "python3 $ROOT/tools/bringup/check_pycircuit_interface_contract.py --root $ROOT --strict --out $RUN_LOG_DIR/pyc_interface_contract_report.json" "RUN_PYC_PR_GATES=0" "pycircuit" "no"
+fi
+
+if [[ "$RUN_TRACE_PR_GATES" == "1" ]]; then
+  run_gate \
+    "LinxTrace" \
+    "contract sync lint" \
+    "python3 $ROOT/rtl/LinxCore/tools/linxcoresight/lint_trace_contract_sync.py" \
+    "linxtrace_contract_sync_pass" \
+    "linxtrace_contract_sync_fail" \
+    "linxtrace_contract_sync" \
+    "yes" \
+    "trace"
+  run_gate \
+    "LinxTrace" \
+    "sample trace lint" \
+    "bash $ROOT/rtl/LinxCore/tests/test_konata_sanity.sh" \
+    "linxtrace_sample_lint_pass" \
+    "linxtrace_sample_lint_fail" \
+    "linxtrace_sample_lint" \
+    "yes" \
+    "trace"
+  run_gate \
+    "LinxTrace" \
+    "semver compatibility gate" \
+    "python3 $ROOT/tools/bringup/check_trace_semver_compat.py --root $ROOT --strict --out $RUN_LOG_DIR/trace_semver_report.json" \
+    "linxtrace_semver_pass" \
+    "linxtrace_semver_fail" \
+    "linxtrace_semver" \
+    "yes" \
+    "trace"
+else
+  record_skipped_gate "LinxTrace" "contract sync lint" "python3 $ROOT/rtl/LinxCore/tools/linxcoresight/lint_trace_contract_sync.py" "RUN_TRACE_PR_GATES=0" "trace" "no"
+  record_skipped_gate "LinxTrace" "sample trace lint" "bash $ROOT/rtl/LinxCore/tests/test_konata_sanity.sh" "RUN_TRACE_PR_GATES=0" "trace" "no"
+  record_skipped_gate "LinxTrace" "semver compatibility gate" "python3 $ROOT/tools/bringup/check_trace_semver_compat.py --root $ROOT --strict --out $RUN_LOG_DIR/trace_semver_report.json" "RUN_TRACE_PR_GATES=0" "trace" "no"
+fi
 
 if [[ $SKIP_LINUX -eq 0 ]]; then
   run_gate \
@@ -551,6 +811,108 @@ else
     "note"
 fi
 
+if [[ "$RUN_LINXCORE_NIGHTLY_GATES" == "1" ]]; then
+  run_gate \
+    "LinxCore" \
+    "CoreMark crosscheck 1000" \
+    "bash $ROOT/rtl/LinxCore/tests/test_coremark_crosscheck_1000.sh" \
+    "linxcore_coremark_crosscheck_pass" \
+    "linxcore_coremark_crosscheck_fail" \
+    "linxcore_coremark_crosscheck" \
+    "yes" \
+    "linxcore"
+  run_gate \
+    "LinxCore" \
+    "CBSTOP inflation guard" \
+    "bash $ROOT/rtl/LinxCore/tests/test_cbstop_inflation_guard.sh" \
+    "linxcore_cbstop_guard_pass" \
+    "linxcore_cbstop_guard_fail" \
+    "linxcore_cbstop_guard" \
+    "yes" \
+    "linxcore"
+else
+  record_skipped_gate "LinxCore" "CoreMark crosscheck 1000" "bash $ROOT/rtl/LinxCore/tests/test_coremark_crosscheck_1000.sh" "RUN_LINXCORE_NIGHTLY_GATES=0" "linxcore" "no"
+  record_skipped_gate "LinxCore" "CBSTOP inflation guard" "bash $ROOT/rtl/LinxCore/tests/test_cbstop_inflation_guard.sh" "RUN_LINXCORE_NIGHTLY_GATES=0" "linxcore" "no"
+fi
+
+if [[ "$RUN_PYC_NIGHTLY_GATES" == "1" ]]; then
+  run_gate \
+    "pyCircuit" \
+    "examples regression" \
+    "bash $ROOT/tools/pyCircuit/flows/scripts/run_examples.sh" \
+    "pyc_examples_pass" \
+    "pyc_examples_fail" \
+    "pyc_examples" \
+    "yes" \
+    "pycircuit"
+  run_gate \
+    "pyCircuit" \
+    "simulation regression" \
+    "bash $ROOT/tools/pyCircuit/flows/scripts/run_sims.sh" \
+    "pyc_sims_pass" \
+    "pyc_sims_fail" \
+    "pyc_sims" \
+    "yes" \
+    "pycircuit"
+  run_gate \
+    "pyCircuit" \
+    "nightly simulation regression" \
+    "bash $ROOT/tools/pyCircuit/flows/scripts/run_sims_nightly.sh" \
+    "pyc_sims_nightly_pass" \
+    "pyc_sims_nightly_fail" \
+    "pyc_sims_nightly" \
+    "yes" \
+    "pycircuit"
+else
+  record_skipped_gate "pyCircuit" "examples regression" "bash $ROOT/tools/pyCircuit/flows/scripts/run_examples.sh" "RUN_PYC_NIGHTLY_GATES=0" "pycircuit" "no"
+  record_skipped_gate "pyCircuit" "simulation regression" "bash $ROOT/tools/pyCircuit/flows/scripts/run_sims.sh" "RUN_PYC_NIGHTLY_GATES=0" "pycircuit" "no"
+  record_skipped_gate "pyCircuit" "nightly simulation regression" "bash $ROOT/tools/pyCircuit/flows/scripts/run_sims_nightly.sh" "RUN_PYC_NIGHTLY_GATES=0" "pycircuit" "no"
+fi
+
+if [[ "$RUN_TRACE_NIGHTLY_GATES" == "1" ]]; then
+  run_gate \
+    "LinxTrace" \
+    "DFX trace smoke" \
+    "bash $ROOT/rtl/LinxCore/tests/test_konata_dfx_pipeview.sh" \
+    "linxtrace_dfx_pass" \
+    "linxtrace_dfx_fail" \
+    "linxtrace_dfx" \
+    "yes" \
+    "trace"
+  run_gate \
+    "LinxTrace" \
+    "template trace smoke" \
+    "bash $ROOT/rtl/LinxCore/tests/test_konata_template_pipeview.sh" \
+    "linxtrace_template_pass" \
+    "linxtrace_template_fail" \
+    "linxtrace_template" \
+    "yes" \
+    "trace"
+else
+  record_skipped_gate "LinxTrace" "DFX trace smoke" "bash $ROOT/rtl/LinxCore/tests/test_konata_dfx_pipeview.sh" "RUN_TRACE_NIGHTLY_GATES=0" "trace" "no"
+  record_skipped_gate "LinxTrace" "template trace smoke" "bash $ROOT/rtl/LinxCore/tests/test_konata_template_pipeview.sh" "RUN_TRACE_NIGHTLY_GATES=0" "trace" "no"
+fi
+
+if [[ "$RUN_PERF_FLOOR_GATES" == "1" ]]; then
+  run_gate \
+    "Integration" \
+    "LinxCore performance floor" \
+    "python3 $ROOT/tools/bringup/check_linxcore_perf_floor.py --root $ROOT --max-regression $PERF_MAX_REGRESSION --out $RUN_LOG_DIR/linxcore_perf_floor_report.json" \
+    "linxcore_perf_floor_pass" \
+    "linxcore_perf_floor_fail" \
+    "linxcore_perf_floor" \
+    "yes" \
+    "integration"
+else
+  record_skipped_gate \
+    "Integration" \
+    "LinxCore performance floor" \
+    "python3 $ROOT/tools/bringup/check_linxcore_perf_floor.py --root $ROOT --max-regression $PERF_MAX_REGRESSION --out $RUN_LOG_DIR/linxcore_perf_floor_report.json" \
+    "RUN_PERF_FLOOR_GATES=0" \
+    "integration" \
+    "no"
+fi
+
 if [[ "$RUN_MODEL_DIFF" == "1" ]]; then
   run_gate \
     "Model" \
@@ -583,7 +945,7 @@ if [[ $SKIP_STRICT_CROSS -eq 0 ]]; then
   run_gate \
     "Regression" \
     "strict_cross_repo.sh" \
-    "cd $ROOT && SKIP_BUILD=1 TOOLCHAIN_LANE=$TOOLCHAIN_LANE_VALUE QEMU_LANE=$QEMU_LANE_VALUE QEMU=$QEMU_BIN LINX_DISABLE_TIMER_IRQ=$LINX_DISABLE_TIMER_IRQ LINX_EMU_DISABLE_TIMER_IRQ=$LINX_EMU_DISABLE_TIMER_IRQ RUN_GLIBC_G1=0 RUN_GLIBC_G1B=$RUN_GLIBC_G1B RUN_MODEL_DIFF=$RUN_MODEL_DIFF RUN_CPP_GATES=$RUN_CPP_GATES CPP_MODE=$CPP_MODE RUN_CONSISTENCY_CHECKS=0 ALLOW_GLIBC_G1_BLOCKED=$STRICT_CROSS_ALLOW_G1_BLOCKED GLIBC_G1B_ALLOW_BLOCKED=$GLIBC_G1B_ALLOW_BLOCKED MULTI_AGENT_MANIFEST=$MULTI_AGENT_MANIFEST MULTI_AGENT_WAIVERS=$MULTI_AGENT_WAIVERS MULTI_AGENT_CHECKLISTS_ROOT=$MULTI_AGENT_CHECKLISTS_ROOT MULTI_AGENT_REPORT=$REPORT MULTI_AGENT_LANE=$LANE MULTI_AGENT_RUN_ID=$RUN_ID MULTI_AGENT_OUT=$RUN_LOG_DIR/multi_agent_summary.strict_cross.json bash tools/regression/strict_cross_repo.sh" \
+    "cd $ROOT && SKIP_BUILD=1 TOOLCHAIN_LANE=$TOOLCHAIN_LANE_VALUE QEMU_LANE=$QEMU_LANE_VALUE QEMU=$QEMU_BIN LINX_DISABLE_TIMER_IRQ=$LINX_DISABLE_TIMER_IRQ LINX_EMU_DISABLE_TIMER_IRQ=$LINX_EMU_DISABLE_TIMER_IRQ RUN_GLIBC_G1=0 RUN_GLIBC_G1B=$RUN_GLIBC_G1B RUN_MODEL_DIFF=$RUN_MODEL_DIFF RUN_CPP_GATES=$RUN_CPP_GATES CPP_MODE=$CPP_MODE RUN_CONSISTENCY_CHECKS=0 ALLOW_GLIBC_G1_BLOCKED=$STRICT_CROSS_ALLOW_G1_BLOCKED GLIBC_G1B_ALLOW_BLOCKED=$GLIBC_G1B_ALLOW_BLOCKED RUN_EXTENDED_CROSS_GATES=0 LINX_GATE_TIER=$LINX_GATE_TIER RUN_ARCH_DOCS_GATES=$RUN_ARCH_DOCS_GATES RUN_LINXCORE_PR_GATES=$RUN_LINXCORE_PR_GATES RUN_TESTBENCH_PR_GATES=$RUN_TESTBENCH_PR_GATES RUN_PYC_PR_GATES=$RUN_PYC_PR_GATES RUN_TRACE_PR_GATES=$RUN_TRACE_PR_GATES RUN_LINXCORE_NIGHTLY_GATES=$RUN_LINXCORE_NIGHTLY_GATES RUN_PYC_NIGHTLY_GATES=$RUN_PYC_NIGHTLY_GATES RUN_TRACE_NIGHTLY_GATES=$RUN_TRACE_NIGHTLY_GATES RUN_PERF_FLOOR_GATES=$RUN_PERF_FLOOR_GATES PERF_MAX_REGRESSION=$PERF_MAX_REGRESSION MULTI_AGENT_ACTIVE_PHASE=$MULTI_AGENT_ACTIVE_PHASE MULTI_AGENT_MANIFEST=$MULTI_AGENT_MANIFEST MULTI_AGENT_WAIVERS=$MULTI_AGENT_WAIVERS MULTI_AGENT_CHECKLISTS_ROOT=$MULTI_AGENT_CHECKLISTS_ROOT MULTI_AGENT_REPORT=$REPORT MULTI_AGENT_LANE=$LANE MULTI_AGENT_RUN_ID=$RUN_ID MULTI_AGENT_OUT=$RUN_LOG_DIR/multi_agent_summary.strict_cross.json bash tools/regression/strict_cross_repo.sh" \
     "strict_cross_repo_pass" \
     "strict_cross_repo_fail" \
     "reg_strict_cross_repo"
@@ -591,7 +953,7 @@ else
   record_gate \
     "Regression" \
     "strict_cross_repo.sh" \
-    "cd $ROOT && SKIP_BUILD=1 TOOLCHAIN_LANE=$LANE QEMU_LANE=$LANE QEMU=$QEMU_BIN LINX_DISABLE_TIMER_IRQ=$LINX_DISABLE_TIMER_IRQ LINX_EMU_DISABLE_TIMER_IRQ=$LINX_EMU_DISABLE_TIMER_IRQ RUN_GLIBC_G1=0 RUN_GLIBC_G1B=$RUN_GLIBC_G1B RUN_MODEL_DIFF=$RUN_MODEL_DIFF RUN_CPP_GATES=$RUN_CPP_GATES CPP_MODE=$CPP_MODE RUN_CONSISTENCY_CHECKS=0 ALLOW_GLIBC_G1_BLOCKED=$STRICT_CROSS_ALLOW_G1_BLOCKED GLIBC_G1B_ALLOW_BLOCKED=$GLIBC_G1B_ALLOW_BLOCKED bash tools/regression/strict_cross_repo.sh" \
+    "cd $ROOT && SKIP_BUILD=1 TOOLCHAIN_LANE=$LANE QEMU_LANE=$LANE QEMU=$QEMU_BIN LINX_DISABLE_TIMER_IRQ=$LINX_DISABLE_TIMER_IRQ LINX_EMU_DISABLE_TIMER_IRQ=$LINX_EMU_DISABLE_TIMER_IRQ RUN_GLIBC_G1=0 RUN_GLIBC_G1B=$RUN_GLIBC_G1B RUN_MODEL_DIFF=$RUN_MODEL_DIFF RUN_CPP_GATES=$RUN_CPP_GATES CPP_MODE=$CPP_MODE RUN_CONSISTENCY_CHECKS=0 ALLOW_GLIBC_G1_BLOCKED=$STRICT_CROSS_ALLOW_G1_BLOCKED GLIBC_G1B_ALLOW_BLOCKED=$GLIBC_G1B_ALLOW_BLOCKED RUN_EXTENDED_CROSS_GATES=0 LINX_GATE_TIER=$LINX_GATE_TIER RUN_ARCH_DOCS_GATES=$RUN_ARCH_DOCS_GATES RUN_LINXCORE_PR_GATES=$RUN_LINXCORE_PR_GATES RUN_TESTBENCH_PR_GATES=$RUN_TESTBENCH_PR_GATES RUN_PYC_PR_GATES=$RUN_PYC_PR_GATES RUN_TRACE_PR_GATES=$RUN_TRACE_PR_GATES RUN_LINXCORE_NIGHTLY_GATES=$RUN_LINXCORE_NIGHTLY_GATES RUN_PYC_NIGHTLY_GATES=$RUN_PYC_NIGHTLY_GATES RUN_TRACE_NIGHTLY_GATES=$RUN_TRACE_NIGHTLY_GATES RUN_PERF_FLOOR_GATES=$RUN_PERF_FLOOR_GATES PERF_MAX_REGRESSION=$PERF_MAX_REGRESSION MULTI_AGENT_ACTIVE_PHASE=$MULTI_AGENT_ACTIVE_PHASE bash tools/regression/strict_cross_repo.sh" \
     "not_run" \
     "skipped_by_flag" \
     "note: --skip-strict-cross" \
@@ -604,6 +966,10 @@ fi
 python3 "$ROOT/tools/bringup/gate_report.py" render --report "$REPORT" --out-md "$ROOT/docs/bringup/GATE_STATUS.md"
 
 MULTI_AGENT_SUMMARY="$RUN_LOG_DIR/multi_agent_summary.json"
+RUNTIME_PHASE_ARGS=()
+if [[ -n "$MULTI_AGENT_ACTIVE_PHASE" ]]; then
+  RUNTIME_PHASE_ARGS+=(--active-phase "$MULTI_AGENT_ACTIVE_PHASE")
+fi
 set +e
 python3 "$ROOT/tools/bringup/check_multi_agent_gates.py" \
   --strict-always \
@@ -614,7 +980,8 @@ python3 "$ROOT/tools/bringup/check_multi_agent_gates.py" \
   --report "$REPORT" \
   --lane "$LANE" \
   --run-id "$RUN_ID" \
-  --out "$MULTI_AGENT_SUMMARY"
+  --out "$MULTI_AGENT_SUMMARY" \
+  ${RUNTIME_PHASE_ARGS[@]+"${RUNTIME_PHASE_ARGS[@]}"}
 MULTI_AGENT_RC=$?
 set -e
 if [[ "$MULTI_AGENT_RC" -ne 0 ]]; then
@@ -625,6 +992,13 @@ else
 fi
 
 if [[ "$LINX_BRINGUP_PROFILE" == "release-strict" ]]; then
+  CONSISTENCY_PERF_ARGS=()
+  if [[ "$RUN_PERF_FLOOR_GATES" == "1" ]]; then
+    CONSISTENCY_PERF_ARGS+=(
+      --linxcore-perf-floor "$RUN_LOG_DIR/linxcore_perf_floor_report.json"
+      --require-perf-floor-artifact
+    )
+  fi
   python3 "$ROOT/tools/bringup/check_gate_consistency.py" \
     --report "$REPORT" \
     --progress "$ROOT/docs/bringup/PROGRESS.md" \
@@ -634,7 +1008,8 @@ if [[ "$LINX_BRINGUP_PROFILE" == "release-strict" ]]; then
     --lane-policy "external+pin-required" \
     --trace-schema-version "$TRACE_SCHEMA_VERSION" \
     --multi-agent-summary "$MULTI_AGENT_SUMMARY" \
-    --max-age-hours "${LINX_GATE_MAX_AGE_HOURS:-24}"
+    --max-age-hours "${LINX_GATE_MAX_AGE_HOURS:-24}" \
+    ${CONSISTENCY_PERF_ARGS[@]+"${CONSISTENCY_PERF_ARGS[@]}"}
 fi
 
 if [[ $FAIL_COUNT -ne 0 ]]; then

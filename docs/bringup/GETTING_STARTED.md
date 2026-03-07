@@ -100,7 +100,7 @@ git commit -m "chore(submodules): bump ecosystem revisions"
 - Freestanding libc support used by AVS: `avs/runtime/freestanding/`
 - Linux libc source forks: `lib/glibc/`, `lib/musl/`
 - PTO kernel headers: `workloads/pto_kernels/include/`
-- Assembly sample pack: `docs/reference/examples/v0.3/`
+- Assembly sample pack: `docs/reference/examples/v0.4/`
 
 ## 6. Coordination References
 

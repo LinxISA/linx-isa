@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Build the compiled LinxISA v0.3 catalog from the multi-file golden sources.
+Build the compiled LinxISA v0.4 catalog from the multi-file golden sources.
 
 Golden sources live under:
-  isa/v0.3/
+  isa/v0.4/
 
 Compiled output is checked in at:
-  isa/v0.3/linxisa-v0.3.json
+  isa/v0.4/linxisa-v0.4.json
 
 This builder is intentionally deterministic:
   - no timestamps
@@ -165,8 +165,9 @@ def _uop_group_str(u: Dict[str, Any]) -> str:
 
 
 def _augment_with_uop_classification(in_dir: Path, instructions: List[Dict[str, Any]]) -> None:
-    # Profile convention: isa/v0.3/uop_classification_v0.3/
-    uop_root = in_dir / "uop_classification_v0.3"
+    # Profile convention: isa/<profile>/uop_classification_<profile>/
+    profile_name = in_dir.name
+    uop_root = in_dir / f"uop_classification_{profile_name}"
     uop_map = _load_uop_class_map(uop_root)
     for inst in instructions:
         m = str(inst.get("mnemonic") or "").strip()
@@ -667,16 +668,16 @@ def _canonical_json(obj: Any) -> str:
 
 
 def _profile_defaults() -> Tuple[str, str]:
-    return "isa/v0.3", "isa/v0.3/linxisa-v0.3.json"
+    return "isa/v0.4", "isa/v0.4/linxisa-v0.4.json"
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--profile",
-        choices=["v0.3"],
-        default="v0.3",
-        help="ISA profile for default in/out paths (v0.3 only)",
+        choices=["v0.3", "v0.4"],
+        default="v0.4",
+        help="ISA profile for default in/out paths (v0.4 is canonical)",
     )
     ap.add_argument("--in", dest="in_dir", default=None, help="Golden source directory")
     ap.add_argument("--out", default=None, help="Output catalog JSON path")

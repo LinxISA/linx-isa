@@ -39,13 +39,46 @@
     ],
     "domain_module_map": {
       "ISA": ["isa", "docs", "superproject"],
+      "Architecture": ["docs", "isa", "superproject"],
       "Compiler": ["compiler/llvm"],
       "Emulator": ["emulator/qemu"],
       "Kernel": ["kernel/linux"],
       "Library": ["lib/glibc", "lib/musl"],
+      "LinxCore": ["rtl/LinxCore"],
+      "Testbench": ["rtl/LinxCore"],
+      "pyCircuit": ["tools/pyCircuit"],
+      "LinxTrace": ["rtl/LinxCore", "docs", "superproject"],
+      "Integration": ["superproject", "skills/linx-skills", "docs"],
       "SPEC": ["workloads/spec2017"],
       "Model": ["tools/pyCircuit", "emulator/qemu", "superproject"],
       "Regression": ["superproject"]
+    }
+  },
+  "phase_policy": {
+    "phases": ["G0", "G1", "G2", "G3", "G4", "G5"],
+    "active_phase": "G0",
+    "waiver_mode": "phase_bound_expiry",
+    "require_phase_bound_waivers": true
+  },
+  "phase_gate_requirements": {
+    "G0": {
+      "required_gate_keys": [
+        "Architecture::LinxCore architecture contract lint",
+        "Architecture::mkdocs architecture nav/docs",
+        "LinxCore::stage/connectivity lint",
+        "LinxCore::opcode parity",
+        "LinxCore::runner protocol",
+        "LinxCore::trace schema and memory smoke",
+        "LinxCore::cosim smoke",
+        "Testbench::ROB bookkeeping",
+        "Testbench::block struct pyc flow smoke",
+        "pyCircuit::CPU C++ smoke",
+        "pyCircuit::QEMU vs pyCircuit trace diff",
+        "pyCircuit::interface contract gate",
+        "LinxTrace::contract sync lint",
+        "LinxTrace::sample trace lint",
+        "LinxTrace::semver compatibility gate"
+      ]
     }
   },
   "agents": {
@@ -84,6 +117,41 @@
       "modules": ["workloads/spec2017"],
       "skill": "linx-superproject"
     },
+    "arch": {
+      "owner": "architecture",
+      "checklist": "architecture_docs.md",
+      "description": "LinxArch architecture-contract and docs-gate owner",
+      "modules": ["docs"],
+      "skill": "linx-isa"
+    },
+    "linxcore": {
+      "owner": "rtl",
+      "checklist": "linxcore_rtl.md",
+      "description": "LinxCore RTL superscalar bring-up owner",
+      "modules": ["rtl/LinxCore"],
+      "skill": "linx-core"
+    },
+    "testbench": {
+      "owner": "verification",
+      "checklist": "testbench_verif.md",
+      "description": "LinxCore testbench and verification matrix owner",
+      "modules": ["rtl/LinxCore"],
+      "skill": "linx-core"
+    },
+    "pycircuit": {
+      "owner": "model",
+      "checklist": "pycircuit_model.md",
+      "description": "pyCircuit model and flow owner",
+      "modules": ["tools/pyCircuit"],
+      "skill": "linx-pycircuit"
+    },
+    "trace": {
+      "owner": "trace",
+      "checklist": "trace_linxtrace.md",
+      "description": "LinxTrace and viewer-contract owner",
+      "modules": ["rtl/LinxCore"],
+      "skill": "linx-core"
+    },
     "integration": {
       "owner": "bringup",
       "checklist": "integration_release.md",
@@ -97,6 +165,16 @@
       "gate_key": "ISA::check26 contract",
       "agent": "integration",
       "checklist_ids": ["INT-001"]
+    },
+    {
+      "gate_key": "Architecture::LinxCore architecture contract lint",
+      "agent": "arch",
+      "checklist_ids": ["ARCH-001", "ARCH-002"]
+    },
+    {
+      "gate_key": "Architecture::mkdocs architecture nav/docs",
+      "agent": "arch",
+      "checklist_ids": ["ARCH-001"]
     },
     {
       "gate_key": "Compiler::AVS compile suites (linx64)",
@@ -169,6 +247,106 @@
       "checklist_ids": ["LIBC-004"]
     },
     {
+      "gate_key": "LinxCore::stage/connectivity lint",
+      "agent": "linxcore",
+      "checklist_ids": ["LC-001"]
+    },
+    {
+      "gate_key": "LinxCore::opcode parity",
+      "agent": "linxcore",
+      "checklist_ids": ["LC-002"]
+    },
+    {
+      "gate_key": "LinxCore::runner protocol",
+      "agent": "linxcore",
+      "checklist_ids": ["LC-003"]
+    },
+    {
+      "gate_key": "LinxCore::trace schema and memory smoke",
+      "agent": "linxcore",
+      "checklist_ids": ["LC-004"]
+    },
+    {
+      "gate_key": "LinxCore::cosim smoke",
+      "agent": "linxcore",
+      "checklist_ids": ["LC-005"]
+    },
+    {
+      "gate_key": "LinxCore::CoreMark crosscheck 1000",
+      "agent": "linxcore",
+      "checklist_ids": ["LC-006"]
+    },
+    {
+      "gate_key": "LinxCore::CBSTOP inflation guard",
+      "agent": "linxcore",
+      "checklist_ids": ["LC-007"]
+    },
+    {
+      "gate_key": "Testbench::ROB bookkeeping",
+      "agent": "testbench",
+      "checklist_ids": ["TB-001"]
+    },
+    {
+      "gate_key": "Testbench::block struct pyc flow smoke",
+      "agent": "testbench",
+      "checklist_ids": ["TB-002"]
+    },
+    {
+      "gate_key": "pyCircuit::CPU C++ smoke",
+      "agent": "pycircuit",
+      "checklist_ids": ["PYC-001"]
+    },
+    {
+      "gate_key": "pyCircuit::QEMU vs pyCircuit trace diff",
+      "agent": "pycircuit",
+      "checklist_ids": ["PYC-002"]
+    },
+    {
+      "gate_key": "pyCircuit::interface contract gate",
+      "agent": "pycircuit",
+      "checklist_ids": ["PYC-003"]
+    },
+    {
+      "gate_key": "pyCircuit::examples regression",
+      "agent": "pycircuit",
+      "checklist_ids": ["PYC-004"]
+    },
+    {
+      "gate_key": "pyCircuit::simulation regression",
+      "agent": "pycircuit",
+      "checklist_ids": ["PYC-005"]
+    },
+    {
+      "gate_key": "pyCircuit::nightly simulation regression",
+      "agent": "pycircuit",
+      "checklist_ids": ["PYC-006"]
+    },
+    {
+      "gate_key": "LinxTrace::contract sync lint",
+      "agent": "trace",
+      "checklist_ids": ["TRACE-001"]
+    },
+    {
+      "gate_key": "LinxTrace::sample trace lint",
+      "agent": "trace",
+      "checklist_ids": ["TRACE-002"]
+    },
+    {
+      "gate_key": "LinxTrace::semver compatibility gate",
+      "agent": "trace",
+      "checklist_ids": ["TRACE-003"]
+    },
+    {
+      "gate_key": "LinxTrace::DFX trace smoke",
+      "agent": "trace",
+      "checklist_ids": ["TRACE-004"]
+    },
+    {
+      "gate_key": "LinxTrace::template trace smoke",
+      "agent": "trace",
+      "checklist_ids": ["TRACE-005"]
+    },
+    {
       "gate_key": "Model::QEMU vs model differential suite",
       "agent": "integration",
       "checklist_ids": ["INT-003"]
@@ -177,6 +355,11 @@
       "gate_key": "Regression::strict_cross_repo.sh",
       "agent": "integration",
       "checklist_ids": ["INT-004"]
+    },
+    {
+      "gate_key": "Integration::LinxCore performance floor",
+      "agent": "integration",
+      "checklist_ids": ["INT-015"]
     },
     {
       "gate_key": "SPEC::SPEC int-rate build phase-c",
@@ -200,12 +383,17 @@
     }
   ],
   "checklist_id_map": {
+    "architecture_docs.md": ["ARCH-001", "ARCH-002", "ARCH-003", "ARCH-004"],
     "compiler_llvm.md": ["LLVM-001", "LLVM-002", "LLVM-003", "LLVM-004", "LLVM-005"],
     "emulator_qemu.md": ["QEMU-001", "QEMU-002", "QEMU-003", "QEMU-004", "QEMU-005", "QEMU-006"],
     "kernel_linux.md": ["LINUX-001", "LINUX-002", "LINUX-003", "LINUX-004"],
     "libc_runtime.md": ["LIBC-001", "LIBC-002", "LIBC-003", "LIBC-004"],
+    "linxcore_rtl.md": ["LC-001", "LC-002", "LC-003", "LC-004", "LC-005", "LC-006", "LC-007", "LC-008", "LC-009"],
+    "pycircuit_model.md": ["PYC-001", "PYC-002", "PYC-003", "PYC-004", "PYC-005", "PYC-006", "PYC-007"],
     "specint_qemu.md": ["SPEC-001", "SPEC-002", "SPEC-003", "SPEC-004", "SPEC-005", "SPEC-006", "SPEC-007"],
-    "integration_release.md": ["INT-001", "INT-002", "INT-003", "INT-004", "INT-005", "INT-006", "INT-007", "INT-008", "INT-009", "INT-010", "INT-011", "INT-012"]
+    "testbench_verif.md": ["TB-001", "TB-002", "TB-003", "TB-004"],
+    "trace_linxtrace.md": ["TRACE-001", "TRACE-002", "TRACE-003", "TRACE-004", "TRACE-005", "TRACE-006"],
+    "integration_release.md": ["INT-001", "INT-002", "INT-003", "INT-004", "INT-005", "INT-006", "INT-007", "INT-008", "INT-009", "INT-010", "INT-011", "INT-012", "INT-013", "INT-014", "INT-015"]
   },
   "spec_policy": {
     "stage_a_subset": ["999.specrand_ir", "505.mcf_r", "531.deepsjeng_r"],

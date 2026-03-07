@@ -39,26 +39,27 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Getting Started: bringup/GETTING_STARTED.md
-  - Architecture:
-      - Overview: architecture/README.md
-      - v0.3 Contract: architecture/v0.3-architecture-contract.md
-      - ISA Manual (AsciiDoc): architecture/isa-manual/README.md
-      - v0.4 Draft: architecture/v0.4-draft/README.md
-  - Bring-up:
-      - Overview: bringup/README.md
-      - Progress: bringup/PROGRESS.md
-      - Gate Status: bringup/GATE_STATUS.md
-      - Check26 Contract: bringup/CHECK26_CONTRACT.md
-      - Maturity Plan: bringup/MATURITY_PLAN.md
-  - Reference:
-      - Overview: reference/README.md
+  - ISA Specification:
+      - Architecture Framework: architecture/README.md
+      - v0.4 Contract & Guarantees: architecture/v0.4-architecture-contract.md
       - Assembly Guide: reference/linxisa-assembly-agent-guide.md
-      - Call/Ret Contract: reference/linxisa-call-ret-contract.md
-      - Encoding Space Report: reference/encoding_space_report.md
-      - Examples: reference/examples/README.md
-  - Releases:
-      - v0.3.0: releases/v0.3.0.md
-  - Project:
-      - Overview: project/README.md
-      - Navigation: project/navigation.md
-      - Repository Flow: project/repository-flow.md
+      - Call/Ret Contract (ABI): reference/linxisa-call-ret-contract.md
+      - Encoding Space Analysis: reference/encoding_space_report.md
+      - Full ISA Manual (AsciiDoc): architecture/isa-manual/README.md
+  - Hardware (LinxCore RTL):
+      - Overview: architecture/linxcore/overview.md
+      - Microarchitecture: architecture/linxcore/microarchitecture.md
+      - Interfaces: architecture/linxcore/interfaces.md
+      - Verification Matrix: architecture/linxcore/verification-matrix.md
+  - Bring-up & Ecosystem:
+      - Bring-up Overview: bringup/README.md
+      - Progress & Status: bringup/PROGRESS.md
+      - Validation Gates: bringup/GATE_STATUS.md
+      - CI/CD Contract Check: bringup/CHECK26_CONTRACT.md
+      - Ecosystem Maturity: bringup/MATURITY_PLAN.md
+      - Reference Examples: reference/examples/README.md
+  - Project Structure:
+      - Project Overview: project/README.md
+      - Canonical Navigation: project/navigation.md
+      - Workflow & Governance: project/repository-flow.md
+      - Releases: releases/v0.4.0.md

@@ -38,3 +38,4 @@ If using an external checkout, prefix those paths with `$PYCIRCUIT_ROOT/` instea
 - Generated artifacts copied/staged into `linxisa` must come from scripts, not manual edits.
 - Every bring-up gate must record the command used and artifact origin.
 - If generator versions change, note the version/commit in gate notes.
+- Interface compatibility with LinxCore must be versioned via `docs/bringup/contracts/pyc_linxcore_interface_contract.json`.

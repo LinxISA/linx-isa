@@ -225,6 +225,44 @@ def _validate_static(
                 module_set.add(module.strip())
             domain_module_map[domain.strip()] = module_set
 
+    phase_policy = manifest.get("phase_policy")
+    if phase_policy is None:
+        phase_policy = {}
+    elif not isinstance(phase_policy, dict):
+        _err(errors, "E_PHASE_POLICY", "manifest.phase_policy must be an object when present")
+        phase_policy = {}
+
+    phases_raw = phase_policy.get("phases", [])
+    active_phase = str(phase_policy.get("active_phase", "")).strip()
+    require_phase_bound_waivers = bool(phase_policy.get("require_phase_bound_waivers", False))
+
+    phases: list[str] = []
+    phase_set: set[str] = set()
+    if phases_raw:
+        if not isinstance(phases_raw, list):
+            _err(errors, "E_PHASE_POLICY_PHASES", "phase_policy.phases must be a list")
+        else:
+            for phase in phases_raw:
+                if not isinstance(phase, str) or not phase.strip():
+                    _err(errors, "E_PHASE_POLICY_PHASE", "phase_policy phase entries must be non-empty strings")
+                    continue
+                norm = phase.strip()
+                if norm in phase_set:
+                    _err(errors, "E_PHASE_POLICY_DUP_PHASE", "phase_policy phase entries must be unique", phase=norm)
+                    continue
+                phase_set.add(norm)
+                phases.append(norm)
+    if active_phase:
+        if active_phase not in phase_set:
+            _err(
+                errors,
+                "E_PHASE_POLICY_ACTIVE",
+                "phase_policy.active_phase must be listed in phase_policy.phases",
+                active_phase=active_phase,
+            )
+    elif phase_set:
+        _err(errors, "E_PHASE_POLICY_ACTIVE", "phase_policy.active_phase must be non-empty when phases are declared")
+
     agents = manifest.get("agents")
     if not isinstance(agents, dict) or not agents:
         _err(errors, "E_AGENTS", "manifest.agents must be a non-empty object")
@@ -593,6 +631,93 @@ def _validate_static(
                 missing_domains=missing_domains,
             )
 
+    phase_gate_requirements_raw = manifest.get("phase_gate_requirements")
+    phase_gate_requirements: dict[str, dict[str, Any]] = {}
+    if phase_gate_requirements_raw is None:
+        phase_gate_requirements_raw = {}
+    if not isinstance(phase_gate_requirements_raw, dict):
+        _err(
+            errors,
+            "E_PHASE_GATE_REQUIREMENTS",
+            "manifest.phase_gate_requirements must be an object when present",
+        )
+        phase_gate_requirements_raw = {}
+
+    for phase_name, req in phase_gate_requirements_raw.items():
+        if not isinstance(phase_name, str) or not phase_name.strip():
+            _err(
+                errors,
+                "E_PHASE_GATE_REQUIREMENT_PHASE",
+                "phase_gate_requirements key must be non-empty phase name",
+                phase=phase_name,
+            )
+            continue
+        phase_name_norm = phase_name.strip()
+        if phase_set and phase_name_norm not in phase_set:
+            _err(
+                errors,
+                "E_PHASE_GATE_REQUIREMENT_UNKNOWN_PHASE",
+                "phase_gate_requirements phase must be listed in phase_policy.phases",
+                phase=phase_name_norm,
+            )
+
+        if not isinstance(req, dict):
+            _err(
+                errors,
+                "E_PHASE_GATE_REQUIREMENT_TYPE",
+                "phase_gate_requirements phase entry must be an object",
+                phase=phase_name_norm,
+            )
+            continue
+
+        required_gate_keys_raw = req.get("required_gate_keys")
+        if not isinstance(required_gate_keys_raw, list) or not required_gate_keys_raw:
+            _err(
+                errors,
+                "E_PHASE_GATE_REQUIREMENT_KEYS",
+                "phase_gate_requirements.required_gate_keys must be a non-empty list",
+                phase=phase_name_norm,
+            )
+            continue
+
+        required_gate_keys: list[str] = []
+        seen_gate_keys: set[str] = set()
+        for gate_key in required_gate_keys_raw:
+            if not isinstance(gate_key, str) or not gate_key.strip():
+                _err(
+                    errors,
+                    "E_PHASE_GATE_REQUIREMENT_KEY_VALUE",
+                    "phase required gate key must be non-empty string",
+                    phase=phase_name_norm,
+                    gate_key=gate_key,
+                )
+                continue
+            gate_key_norm = gate_key.strip()
+            if gate_key_norm in seen_gate_keys:
+                _err(
+                    errors,
+                    "E_PHASE_GATE_REQUIREMENT_KEY_DUP",
+                    "phase required gate keys must be unique",
+                    phase=phase_name_norm,
+                    gate_key=gate_key_norm,
+                )
+                continue
+            seen_gate_keys.add(gate_key_norm)
+            if gate_key_norm not in assignment_map:
+                _err(
+                    errors,
+                    "E_PHASE_GATE_REQUIREMENT_KEY_UNKNOWN",
+                    "phase required gate key must exist in gate_assignments",
+                    phase=phase_name_norm,
+                    gate_key=gate_key_norm,
+                )
+                continue
+            required_gate_keys.append(gate_key_norm)
+
+        if required_gate_keys:
+            phase_gate_requirements[phase_name_norm] = {
+                "required_gate_keys": required_gate_keys,
+            }
     waivers_version = waivers_doc.get("version")
     if waivers_version != 1:
         _err(errors, "E_WAIVER_VERSION", "waivers.version must be 1", version=waivers_version)
@@ -617,6 +742,7 @@ def _validate_static(
         expires_utc = waiver.get("expires_utc")
         lanes = waiver.get("lanes")
         profiles = waiver.get("profiles")
+        waiver_phase = waiver.get("phase")
 
         if not isinstance(wid, str) or not wid.strip():
             _err(errors, "E_WAIVER_ID", "waiver.id must be non-empty", index=idx)
@@ -669,6 +795,27 @@ def _validate_static(
 
         if not isinstance(profiles, list) or not profiles:
             _err(errors, "E_WAIVER_PROFILES", "waiver.profiles must be non-empty list", id=wid)
+
+        if require_phase_bound_waivers:
+            if not isinstance(waiver_phase, str) or not waiver_phase.strip():
+                _err(errors, "E_WAIVER_PHASE", "waiver.phase must be non-empty under phase-bound policy", id=wid)
+            elif phase_set and waiver_phase.strip() not in phase_set:
+                _err(
+                    errors,
+                    "E_WAIVER_PHASE_VALUE",
+                    "waiver.phase must be one of phase_policy.phases",
+                    id=wid,
+                    phase=waiver_phase,
+                )
+        elif isinstance(waiver_phase, str) and waiver_phase.strip():
+            if phase_set and waiver_phase.strip() not in phase_set:
+                _err(
+                    errors,
+                    "E_WAIVER_PHASE_VALUE",
+                    "waiver.phase must be one of phase_policy.phases when provided",
+                    id=wid,
+                    phase=waiver_phase,
+                )
 
         if not isinstance(expires_utc, str) or not expires_utc.strip():
             _err(errors, "E_WAIVER_EXPIRES", "waiver.expires_utc must be non-empty", id=wid)
@@ -747,6 +894,9 @@ def _validate_static(
         "agent_scope_allow_multi_module_agents": allow_multi_module_agents,
         "agent_scope_cross_module_agents": len(cross_module_agents),
         "agent_scope_multi_module_agents": multi_module_agent_count,
+        "phases": len(phases),
+        "active_phase": active_phase,
+        "phase_gate_requirement_phases": len(phase_gate_requirements),
     }
 
     return errors, warnings, {
@@ -754,6 +904,12 @@ def _validate_static(
         "assignments": assignment_map,
         "waivers": waivers,
         "agent_scope_policy": agent_scope_policy,
+        "phase_policy": {
+            "phases": phases,
+            "active_phase": active_phase,
+            "require_phase_bound_waivers": require_phase_bound_waivers,
+        },
+        "phase_gate_requirements": phase_gate_requirements,
         "stats": stats,
     }
 
@@ -766,6 +922,7 @@ def _waiver_is_active(
     status: str,
     lane: str,
     profile: str,
+    active_phase: str,
     now: datetime,
 ) -> tuple[bool, str]:
     w_domain = str(waiver.get("domain", "")).strip()
@@ -784,6 +941,13 @@ def _waiver_is_active(
     profiles = waiver.get("profiles", [])
     if not isinstance(profiles, list) or (profile not in profiles and "*" not in profiles):
         return False, "profile_not_allowed"
+
+    waiver_phase = str(waiver.get("phase", "")).strip()
+    if active_phase:
+        if not waiver_phase:
+            return False, "missing_phase"
+        if waiver_phase != active_phase:
+            return False, "phase_not_active"
 
     expires_raw = str(waiver.get("expires_utc", "")).strip()
     if not expires_raw:
@@ -804,8 +968,10 @@ def _run_runtime(
     *,
     lane: str,
     run_id: str,
+    active_phase: str,
     assignment_map: dict[str, dict[str, Any]],
     waivers: list[dict[str, Any]],
+    phase_gate_requirements: dict[str, dict[str, Any]],
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
     errors: list[dict[str, Any]] = []
     warnings: list[dict[str, Any]] = []
@@ -838,6 +1004,18 @@ def _run_runtime(
     if not isinstance(gates, list):
         _err(errors, "E_REPORT_GATES", "selected run has invalid gates list", lane=lane, run_id=run_id)
         return errors, warnings, {}
+
+    run_gate_map: dict[str, dict[str, Any]] = {}
+    for gate in gates:
+        if not isinstance(gate, dict):
+            continue
+        domain = str(gate.get("domain", "")).strip()
+        gate_name = str(gate.get("gate", "")).strip()
+        if not domain or not gate_name:
+            continue
+        gate_key = _norm_gate_key(domain, gate_name)
+        if gate_key not in run_gate_map:
+            run_gate_map[gate_key] = gate
 
     now = _utc_now()
     required_total = 0
@@ -898,22 +1076,30 @@ def _run_runtime(
                 status=status,
                 lane=lane,
                 profile=profile,
+                active_phase=active_phase,
                 now=now,
             )
             if active:
                 matched_waiver = waiver
                 waiver_hits += 1
                 break
-            if reason == "expired" and _norm_gate_key(
+            if reason in {"expired", "phase_not_active"} and _norm_gate_key(
                 str(waiver.get("domain", "")).strip(),
                 str(waiver.get("gate", "")).strip(),
             ) == gate_key:
+                warn_code = "W_RUNTIME_WAIVER_EXPIRED" if reason == "expired" else "W_RUNTIME_WAIVER_PHASE"
+                warn_message = (
+                    "waiver exists for gate but is expired"
+                    if reason == "expired"
+                    else "waiver exists for gate but is outside active phase"
+                )
                 _warn(
                     warnings,
-                    "W_RUNTIME_WAIVER_EXPIRED",
-                    "waiver exists for gate but is expired",
+                    warn_code,
+                    warn_message,
                     gate_key=gate_key,
                     waiver_id=waiver.get("id"),
+                    active_phase=active_phase,
                 )
 
         if matched_waiver is None:
@@ -939,15 +1125,63 @@ def _run_runtime(
             run_id=run_id,
         )
 
+    phase_required_gate_keys: list[str] = []
+    phase_missing_gate_keys: list[str] = []
+    phase_owner_mismatches: list[dict[str, Any]] = []
+    if active_phase:
+        phase_req = phase_gate_requirements.get(active_phase, {})
+        if isinstance(phase_req, dict):
+            req_keys_raw = phase_req.get("required_gate_keys", [])
+            if isinstance(req_keys_raw, list):
+                phase_required_gate_keys = [str(x).strip() for x in req_keys_raw if str(x).strip()]
+
+    for gate_key in phase_required_gate_keys:
+        gate_row = run_gate_map.get(gate_key)
+        if gate_row is None:
+            phase_missing_gate_keys.append(gate_key)
+            continue
+        expected_agent = str(assignment_map.get(gate_key, {}).get("agent", "")).strip()
+        actual_owner = str(gate_row.get("owner", "")).strip()
+        if expected_agent and actual_owner != expected_agent:
+            phase_owner_mismatches.append(
+                {
+                    "gate_key": gate_key,
+                    "expected_owner": expected_agent,
+                    "actual_owner": actual_owner or "<empty>",
+                }
+            )
+
+    if phase_missing_gate_keys:
+        _err(
+            errors,
+            "E_RUNTIME_PHASE_REQUIRED_GATE_MISSING",
+            "active-phase required gate rows are missing from selected run",
+            active_phase=active_phase,
+            missing_gate_keys=sorted(phase_missing_gate_keys),
+        )
+
+    if phase_owner_mismatches:
+        _err(
+            errors,
+            "E_RUNTIME_PHASE_GATE_OWNER_MISMATCH",
+            "active-phase required gate rows must use assigned agent owner tags",
+            active_phase=active_phase,
+            mismatches=phase_owner_mismatches,
+        )
+
     stats = {
         "required_gates_total": required_total,
         "required_pass": required_pass,
         "required_waived": required_waived,
         "required_failed": required_failed,
         "waiver_matches": waiver_hits,
+        "phase_required_gates_total": len(phase_required_gate_keys),
+        "phase_required_gates_missing": len(phase_missing_gate_keys),
+        "phase_required_gate_owner_mismatches": len(phase_owner_mismatches),
         "profile": profile,
         "lane": lane,
         "run_id": run_id,
+        "active_phase": active_phase,
     }
     return errors, warnings, stats
 
@@ -967,6 +1201,7 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--report", default="docs/bringup/gates/latest.json")
     ap.add_argument("--lane", choices=["pin", "external"])
     ap.add_argument("--run-id")
+    ap.add_argument("--active-phase", default="", help="Optional active phase override for waiver checks")
     ap.add_argument("--out", help="optional JSON summary output path")
     args = ap.parse_args(argv)
 
@@ -1004,6 +1239,23 @@ def main(argv: list[str]) -> int:
     errors.extend(static_errors)
     warnings.extend(static_warnings)
 
+    if args.active_phase and not errors:
+        phase_policy = state.get("phase_policy", {})
+        if not isinstance(phase_policy, dict):
+            phase_policy = {}
+        phases = phase_policy.get("phases", [])
+        active_override = str(args.active_phase).strip()
+        if isinstance(phases, list):
+            phase_set = {str(x).strip() for x in phases if str(x).strip()}
+            if phase_set and active_override not in phase_set:
+                _err(
+                    errors,
+                    "E_ACTIVE_PHASE_OVERRIDE",
+                    "--active-phase is not listed in manifest.phase_policy.phases",
+                    active_phase=active_override,
+                    phases=sorted(phase_set),
+                )
+
     if args.mode == "runtime" and not errors:
         report_path = (root / args.report).resolve()
         try:
@@ -1013,12 +1265,38 @@ def main(argv: list[str]) -> int:
             report = {}
 
         if not errors:
+            phase_policy = state.get("phase_policy", {})
+            if not isinstance(phase_policy, dict):
+                phase_policy = {}
+            active_phase = str(args.active_phase or phase_policy.get("active_phase", "")).strip()
+            if bool(phase_policy.get("require_phase_bound_waivers", False)) and not active_phase:
+                _err(
+                    errors,
+                    "E_RUNTIME_ACTIVE_PHASE",
+                    "phase-bound waiver policy requires active phase (set manifest.phase_policy.active_phase or --active-phase)",
+                )
+            if not errors and active_phase:
+                phases = phase_policy.get("phases", [])
+                if isinstance(phases, list):
+                    phase_set = {str(x).strip() for x in phases if str(x).strip()}
+                    if phase_set and active_phase not in phase_set:
+                        _err(
+                            errors,
+                            "E_RUNTIME_ACTIVE_PHASE_VALUE",
+                            "active phase is not listed in manifest.phase_policy.phases",
+                            active_phase=active_phase,
+                            phases=sorted(phase_set),
+                        )
+
+        if not errors:
             rt_errors, rt_warnings, rt_stats = _run_runtime(
                 report,
                 lane=str(args.lane),
                 run_id=str(args.run_id),
+                active_phase=active_phase,
                 assignment_map=state["assignments"],
                 waivers=state["waivers"],
+                phase_gate_requirements=state.get("phase_gate_requirements", {}),
             )
             errors.extend(rt_errors)
             warnings.extend(rt_warnings)
@@ -1041,6 +1319,7 @@ def main(argv: list[str]) -> int:
         summary["report"] = str((Path(".").resolve() / args.report).resolve())
         summary["lane"] = args.lane
         summary["run_id"] = args.run_id
+        summary["active_phase"] = str(args.active_phase).strip()
         summary["runtime_stats"] = runtime_stats
 
     if args.out:

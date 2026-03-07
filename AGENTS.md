@@ -33,7 +33,7 @@ lib/         # Standard libraries (glibc, musl)
 | Freestanding libc | `avs/runtime/freestanding/` |
 | pyCircuit model | `tools/pyCircuit/` (submodule) |
 | PTO kernels | `workloads/pto_kernels/` (submodule) |
-| Assembly examples | `docs/reference/examples/v0.3/` |
+| Assembly examples | `docs/reference/examples/v0.4/` |
 
 ---
 

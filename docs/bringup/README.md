@@ -1,6 +1,6 @@
-# LinxISA Bring-up (Public v0.3)
+# LinxISA Bring-up (Public v0.4)
 
-This directory tracks v0.3 architecture/implementation alignment and public bring-up checkpoints.
+This directory tracks v0.4 architecture/implementation alignment and public bring-up checkpoints.
 
 ## Start Here
 
@@ -8,7 +8,7 @@ This directory tracks v0.3 architecture/implementation alignment and public brin
 
 ## Normative Contract
 
-- Architecture contract: `docs/architecture/v0.3-architecture-contract.md`
+- Architecture contract: `docs/architecture/v0.4-architecture-contract.md`
 - check26 contract file: `docs/bringup/check26_contract.yaml`
 - contract gate: `python3 tools/bringup/check26_contract.py --root .`
 

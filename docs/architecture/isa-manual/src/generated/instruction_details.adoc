@@ -3,7 +3,7 @@
 [[insnref-details]]
 === Instruction descriptions (by mnemonic)
 
-This section provides per-mnemonic descriptions. The tables above remain the authoritative listing of encodable forms and decode layouts in the v0.3 catalog. Descriptions and pseudocode here are derived from mnemonic naming conventions plus catalog assembly templates/notes and are intended to be *informative*.
+This section provides per-mnemonic descriptions. The tables above remain the authoritative listing of encodable forms and decode layouts in the v0.4 catalog. Descriptions and pseudocode here are derived from mnemonic naming conventions plus catalog assembly templates/notes and are intended to be *informative*.
 
 [[insndesc-execution-control]]
 ==== Execution Control
@@ -2376,6 +2376,29 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
+[[insndesc-block-split-bstart-par]]
+===== BSTART.PAR
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.PAR TileOpcode, DataType`
+
+Encoding notes (informative)::
++
+* Legacy compatibility TEPL spelling; canonical strict-v0.4 output uses BSTART.TEPL TileOpcode, DataType.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
 [[insndesc-block-split-bstart-std]]
 ===== BSTART.STD
 
@@ -2429,11 +2452,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `BSTART.TEPL TileOp10, DataType`
+* `BSTART.TEPL TileOpcode, DataType`
 
 Encoding notes (informative)::
 +
-* TileOp10 selects PTO template ops (for example TADD TSUB TROWMAX). Unassigned TileOp10 values are reserved for future template extension.
+* Tile opcode selects PTO template ops. Canonical v0.4 standardized assignments require TileOpcode[9:6]=0 and pack TileOpcode[5]=Mode with TileOpcode[4:0]=Function; unassigned values remain reserved for future template extension.
 
 Operation (informative)::
 +
@@ -2479,7 +2502,7 @@ Assembly forms::
 
 Encoding notes (informative)::
 +
-* Generic TMA selector form. Function=0/1/2 are emitted as BSTART.TLOAD/BSTART.TSTORE/BSTART.TMOV aliases; 3..31 are reserved in strict v0.3 (architecturally illegal/UNPREDICTABLE): software must not generate them and implementations must not assign ad-hoc semantics.
+* Generic TMA selector form. Function=0/1/2 are emitted as BSTART.TLOAD/BSTART.TSTORE/BSTART.TMOV aliases; 3..31 are reserved in strict v0.4 (architecturally illegal/UNPREDICTABLE): software must not generate them and implementations must not assign ad-hoc semantics.
 
 Operation (informative)::
 +

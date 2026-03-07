@@ -1,0 +1,37 @@
+{
+  "version": "1.0",
+  "trace_schema_version": "1.0",
+  "required_commit_fields": [
+    "cycle",
+    "pc",
+    "insn",
+    "len",
+    "wb_valid",
+    "wb_rd",
+    "wb_data",
+    "mem_valid",
+    "mem_addr",
+    "mem_wdata",
+    "mem_rdata",
+    "mem_size",
+    "trap_valid",
+    "trap_cause",
+    "next_pc"
+  ],
+  "required_env": [
+    "PYC_COMMIT_TRACE",
+    "PYC_BOOT_PC",
+    "PYC_MEM_BYTES",
+    "PYC_MAX_CYCLES"
+  ],
+  "producer_scripts": [
+    "tools/pyCircuit/contrib/linx/flows/tools/run_linx_cpu_pyc_cpp.sh",
+    "tools/pyCircuit/contrib/linx/flows/tools/run_linx_qemu_vs_pyc.sh",
+    "tools/pyCircuit/contrib/linx/flows/tools/linx_trace_diff.py"
+  ],
+  "compatibility": {
+    "policy": "semver",
+    "major_breaking": true,
+    "minor_additive": true
+  }
+}

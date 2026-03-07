@@ -38,6 +38,45 @@ MULTI_AGENT_REPORT="${MULTI_AGENT_REPORT:-}"
 MULTI_AGENT_LANE="${MULTI_AGENT_LANE:-}"
 MULTI_AGENT_RUN_ID="${MULTI_AGENT_RUN_ID:-}"
 MULTI_AGENT_OUT="${MULTI_AGENT_OUT:-}"
+MULTI_AGENT_ACTIVE_PHASE="${MULTI_AGENT_ACTIVE_PHASE:-}"
+
+RUN_EXTENDED_CROSS_GATES="${RUN_EXTENDED_CROSS_GATES:-0}" # 0|1
+LINX_GATE_TIER="${LINX_GATE_TIER:-pr}" # pr|nightly
+RUN_ARCH_DOCS_GATES="${RUN_ARCH_DOCS_GATES-}" # 0|1
+RUN_LINXCORE_PR_GATES="${RUN_LINXCORE_PR_GATES-}" # 0|1
+RUN_TESTBENCH_PR_GATES="${RUN_TESTBENCH_PR_GATES-}" # 0|1
+RUN_PYC_PR_GATES="${RUN_PYC_PR_GATES-}" # 0|1
+RUN_TRACE_PR_GATES="${RUN_TRACE_PR_GATES-}" # 0|1
+RUN_LINXCORE_NIGHTLY_GATES="${RUN_LINXCORE_NIGHTLY_GATES-}" # 0|1
+RUN_PYC_NIGHTLY_GATES="${RUN_PYC_NIGHTLY_GATES-}" # 0|1
+RUN_TRACE_NIGHTLY_GATES="${RUN_TRACE_NIGHTLY_GATES-}" # 0|1
+RUN_PERF_FLOOR_GATES="${RUN_PERF_FLOOR_GATES-}" # 0|1
+PERF_MAX_REGRESSION="${PERF_MAX_REGRESSION:-10.0}"
+RUN_SPEC_PR_GATES="${RUN_SPEC_PR_GATES:-0}" # 0|1
+RUN_SPEC_NIGHTLY_GATES="${RUN_SPEC_NIGHTLY_GATES:-0}" # 0|1
+SPEC_NIGHTLY_REPORT_ONLY="${SPEC_NIGHTLY_REPORT_ONLY:-1}" # 0|1
+SPEC_INPUT_SET="${SPEC_INPUT_SET:-test}" # test|refrate
+
+if [[ "$LINX_GATE_TIER" != "pr" && "$LINX_GATE_TIER" != "nightly" ]]; then
+  echo "error: LINX_GATE_TIER must be pr|nightly (got: $LINX_GATE_TIER)" >&2
+  exit 2
+fi
+
+for toggle in \
+  "$RUN_SPEC_PR_GATES" \
+  "$RUN_SPEC_NIGHTLY_GATES" \
+  "$SPEC_NIGHTLY_REPORT_ONLY"
+do
+  if [[ "$toggle" != "0" && "$toggle" != "1" ]]; then
+    echo "error: SPEC toggles must be 0|1 (got: $toggle)" >&2
+    exit 2
+  fi
+done
+
+if [[ "$SPEC_INPUT_SET" != "test" && "$SPEC_INPUT_SET" != "refrate" ]]; then
+  echo "error: SPEC_INPUT_SET must be test|refrate (got: $SPEC_INPUT_SET)" >&2
+  exit 2
+fi
 
 if [[ "$LINX_BRINGUP_PROFILE" == "release-strict" ]]; then
   [[ -n "$RUN_GLIBC_G1B" ]] || RUN_GLIBC_G1B=1
@@ -59,6 +98,35 @@ else
   [[ -n "$RUN_QEMU_OPCODE_SYNC_AUDIT" ]] || RUN_QEMU_OPCODE_SYNC_AUDIT=0
   [[ -n "$RUN_QEMU_ISA_COVERAGE_AUDIT" ]] || RUN_QEMU_ISA_COVERAGE_AUDIT=0
   [[ -n "$RUN_LINUX_DEFCONFIG_AUDIT" ]] || RUN_LINUX_DEFCONFIG_AUDIT=0
+fi
+
+if [[ "$RUN_EXTENDED_CROSS_GATES" == "1" ]]; then
+  [[ -n "$RUN_ARCH_DOCS_GATES" ]] || RUN_ARCH_DOCS_GATES=1
+  [[ -n "$RUN_LINXCORE_PR_GATES" ]] || RUN_LINXCORE_PR_GATES=1
+  [[ -n "$RUN_TESTBENCH_PR_GATES" ]] || RUN_TESTBENCH_PR_GATES=1
+  [[ -n "$RUN_PYC_PR_GATES" ]] || RUN_PYC_PR_GATES=1
+  [[ -n "$RUN_TRACE_PR_GATES" ]] || RUN_TRACE_PR_GATES=1
+  if [[ "$LINX_GATE_TIER" == "nightly" ]]; then
+    [[ -n "$RUN_LINXCORE_NIGHTLY_GATES" ]] || RUN_LINXCORE_NIGHTLY_GATES=1
+    [[ -n "$RUN_PYC_NIGHTLY_GATES" ]] || RUN_PYC_NIGHTLY_GATES=1
+    [[ -n "$RUN_TRACE_NIGHTLY_GATES" ]] || RUN_TRACE_NIGHTLY_GATES=1
+    [[ -n "$RUN_PERF_FLOOR_GATES" ]] || RUN_PERF_FLOOR_GATES=1
+  else
+    [[ -n "$RUN_LINXCORE_NIGHTLY_GATES" ]] || RUN_LINXCORE_NIGHTLY_GATES=0
+    [[ -n "$RUN_PYC_NIGHTLY_GATES" ]] || RUN_PYC_NIGHTLY_GATES=0
+    [[ -n "$RUN_TRACE_NIGHTLY_GATES" ]] || RUN_TRACE_NIGHTLY_GATES=0
+    [[ -n "$RUN_PERF_FLOOR_GATES" ]] || RUN_PERF_FLOOR_GATES=0
+  fi
+else
+  RUN_ARCH_DOCS_GATES=0
+  RUN_LINXCORE_PR_GATES=0
+  RUN_TESTBENCH_PR_GATES=0
+  RUN_PYC_PR_GATES=0
+  RUN_TRACE_PR_GATES=0
+  RUN_LINXCORE_NIGHTLY_GATES=0
+  RUN_PYC_NIGHTLY_GATES=0
+  RUN_TRACE_NIGHTLY_GATES=0
+  RUN_PERF_FLOOR_GATES=0
 fi
 
 if [[ "$LINX_BRINGUP_PROFILE" == "release-strict" ]]; then
@@ -85,12 +153,17 @@ fi
 
 echo
 echo "-- Multi-agent static checklist gate"
+STATIC_PHASE_ARGS=()
+if [[ -n "$MULTI_AGENT_ACTIVE_PHASE" ]]; then
+  STATIC_PHASE_ARGS+=(--active-phase "$MULTI_AGENT_ACTIVE_PHASE")
+fi
 python3 "$ROOT/tools/bringup/check_multi_agent_gates.py" \
   --strict-always \
   --mode static \
   --manifest "$MULTI_AGENT_MANIFEST" \
   --waivers "$MULTI_AGENT_WAIVERS" \
-  --checklists-root "$MULTI_AGENT_CHECKLISTS_ROOT"
+  --checklists-root "$MULTI_AGENT_CHECKLISTS_ROOT" \
+  ${STATIC_PHASE_ARGS[@]+"${STATIC_PHASE_ARGS[@]}"}
 
 if [[ -z "$CLANG" ]]; then
   clang_candidates=()
@@ -184,6 +257,9 @@ echo "info: Emulator/system IRQ policy LINX_EMU_DISABLE_TIMER_IRQ=$LINX_EMU_DISA
 echo "info: release controls RUN_GLIBC_G1B=$RUN_GLIBC_G1B GLIBC_G1B_ALLOW_BLOCKED=$GLIBC_G1B_ALLOW_BLOCKED ALLOW_GLIBC_G1_BLOCKED=$ALLOW_GLIBC_G1_BLOCKED RUN_MODEL_DIFF=$RUN_MODEL_DIFF"
 echo "info: C++ controls RUN_CPP_GATES=$RUN_CPP_GATES CPP_MODE=$CPP_MODE"
 echo "info: maturity audits AVS=$RUN_AVS_MATRIX_AUDIT QEMU_SYNC=$RUN_QEMU_OPCODE_SYNC_AUDIT QEMU_COVERAGE=$RUN_QEMU_ISA_COVERAGE_AUDIT LINUX_DEFCONFIG=$RUN_LINUX_DEFCONFIG_AUDIT"
+echo "info: extended cross gates RUN_EXTENDED_CROSS_GATES=$RUN_EXTENDED_CROSS_GATES tier=$LINX_GATE_TIER"
+echo "info: extended gate toggles ARCH=$RUN_ARCH_DOCS_GATES LINXCORE=$RUN_LINXCORE_PR_GATES TESTBENCH=$RUN_TESTBENCH_PR_GATES PYC=$RUN_PYC_PR_GATES TRACE=$RUN_TRACE_PR_GATES N_LINXCORE=$RUN_LINXCORE_NIGHTLY_GATES N_PYC=$RUN_PYC_NIGHTLY_GATES N_TRACE=$RUN_TRACE_NIGHTLY_GATES PERF=$RUN_PERF_FLOOR_GATES"
+echo "info: spec toggles PR=$RUN_SPEC_PR_GATES NIGHTLY=$RUN_SPEC_NIGHTLY_GATES NIGHTLY_REPORT_ONLY=$SPEC_NIGHTLY_REPORT_ONLY INPUT_SET=$SPEC_INPUT_SET"
 
 echo
 echo "-- Compiler AVS gate"
@@ -224,6 +300,53 @@ echo
 echo "-- QEMU strict system gate"
 (cd "$ROOT/avs/qemu" && LINX_DISABLE_TIMER_IRQ="$LINX_EMU_DISABLE_TIMER_IRQ" CLANG="$CLANG" LLD="$LLD" QEMU="$QEMU" ./check_system_strict.sh)
 
+if [[ "$RUN_ARCH_DOCS_GATES" == "1" ]]; then
+  echo
+  echo "-- Architecture contract gates"
+  python3 "$ROOT/tools/bringup/check_linxcore_arch_contract.py" --root "$ROOT" --strict
+  python3 "$ROOT/tools/bringup/check_linxcore_arch_contract.py" --root "$ROOT" --strict --require-mkdocs
+fi
+
+if [[ "$RUN_LINXCORE_PR_GATES" == "1" ]]; then
+  echo
+  echo "-- LinxCore PR gates"
+  bash "$ROOT/rtl/LinxCore/tests/test_stage_connectivity.sh"
+  bash "$ROOT/rtl/LinxCore/tests/test_opcode_parity.sh"
+  bash "$ROOT/rtl/LinxCore/tests/test_runner_protocol.sh"
+  bash "$ROOT/rtl/LinxCore/tests/test_trace_schema_and_mem.sh"
+  bash "$ROOT/rtl/LinxCore/tests/test_cosim_smoke.sh"
+fi
+
+if [[ "$RUN_TESTBENCH_PR_GATES" == "1" ]]; then
+  echo
+  echo "-- Testbench PR gates"
+  bash "$ROOT/rtl/LinxCore/tests/test_rob_bookkeeping.sh"
+  bash "$ROOT/rtl/LinxCore/tests/test_block_struct_pyc_flow.sh"
+fi
+
+if [[ "$RUN_PYC_PR_GATES" == "1" ]]; then
+  echo
+  echo "-- pyCircuit PR gates"
+  bash "$ROOT/tools/pyCircuit/contrib/linx/flows/tools/run_linx_cpu_pyc_cpp.sh"
+  bash "$ROOT/tools/pyCircuit/contrib/linx/flows/tools/run_linx_qemu_vs_pyc.sh"
+  python3 "$ROOT/tools/bringup/check_pycircuit_interface_contract.py" --root "$ROOT" --strict
+fi
+
+if [[ "$RUN_TRACE_PR_GATES" == "1" ]]; then
+  echo
+  echo "-- LinxTrace PR gates"
+  python3 "$ROOT/rtl/LinxCore/tools/linxcoresight/lint_trace_contract_sync.py"
+  bash "$ROOT/rtl/LinxCore/tests/test_konata_sanity.sh"
+  python3 "$ROOT/tools/bringup/check_trace_semver_compat.py" --root "$ROOT" --strict
+fi
+
+if [[ "$RUN_SPEC_PR_GATES" == "1" ]]; then
+  echo
+  echo "-- SPEC PR gates (Stage-A xcheck)"
+  SPEC_INPUT_SET="$SPEC_INPUT_SET" \
+    bash "$ROOT/rtl/LinxCore/tests/test_specint_stage_a_xcheck.sh"
+fi
+
 if [[ "$RUN_QEMU_OPCODE_SYNC_AUDIT" == "1" ]]; then
   echo
   echo "-- QEMU opcode meta/id sync audit"
@@ -238,7 +361,7 @@ if [[ "$RUN_QEMU_ISA_COVERAGE_AUDIT" == "1" ]]; then
   echo
   echo "-- ISA vs QEMU coverage report"
   python3 "$ROOT/tools/bringup/report_qemu_isa_coverage.py" \
-    --spec "$ROOT/isa/v0.3/linxisa-v0.3.json" \
+    --spec "$ROOT/isa/v0.4/linxisa-v0.4.json" \
     --qemu-meta "$ROOT/emulator/qemu/target/linx/linx_opcode_meta_gen.h" \
     --report-out "$ROOT/docs/bringup/gates/qemu_isa_coverage_latest.json" \
     --out-md "$ROOT/docs/bringup/gates/qemu_isa_coverage_latest.md"
@@ -381,6 +504,45 @@ if [[ "$RUN_GLIBC_G1B" == "1" ]]; then
   fi
 fi
 
+if [[ "$RUN_LINXCORE_NIGHTLY_GATES" == "1" ]]; then
+  echo
+  echo "-- LinxCore nightly gates"
+  bash "$ROOT/rtl/LinxCore/tests/test_coremark_crosscheck_1000.sh"
+  bash "$ROOT/rtl/LinxCore/tests/test_cbstop_inflation_guard.sh"
+fi
+
+if [[ "$RUN_SPEC_NIGHTLY_GATES" == "1" ]]; then
+  echo
+  echo "-- SPEC nightly gates (full xcheck)"
+  SPEC_INPUT_SET="$SPEC_INPUT_SET" \
+  SPEC_NIGHTLY_REPORT_ONLY="$SPEC_NIGHTLY_REPORT_ONLY" \
+    bash "$ROOT/rtl/LinxCore/tests/test_specint_full_xcheck_nightly.sh"
+fi
+
+if [[ "$RUN_PYC_NIGHTLY_GATES" == "1" ]]; then
+  echo
+  echo "-- pyCircuit nightly gates"
+  bash "$ROOT/tools/pyCircuit/flows/scripts/run_examples.sh"
+  bash "$ROOT/tools/pyCircuit/flows/scripts/run_sims.sh"
+  bash "$ROOT/tools/pyCircuit/flows/scripts/run_sims_nightly.sh"
+fi
+
+if [[ "$RUN_TRACE_NIGHTLY_GATES" == "1" ]]; then
+  echo
+  echo "-- LinxTrace nightly gates"
+  bash "$ROOT/rtl/LinxCore/tests/test_konata_dfx_pipeview.sh"
+  bash "$ROOT/rtl/LinxCore/tests/test_konata_template_pipeview.sh"
+fi
+
+if [[ "$RUN_PERF_FLOOR_GATES" == "1" ]]; then
+  echo
+  echo "-- LinxCore performance floor gate"
+  python3 "$ROOT/tools/bringup/check_linxcore_perf_floor.py" \
+    --root "$ROOT" \
+    --max-regression "$PERF_MAX_REGRESSION" \
+    --out "$ROOT/docs/bringup/gates/linxcore_perf_floor_latest.json"
+fi
+
 if [[ "$RUN_MODEL_DIFF" == "1" ]]; then
   echo
   echo "-- QEMU vs model differential suite"
@@ -401,6 +563,10 @@ if [[ -n "$MULTI_AGENT_REPORT" && -n "$MULTI_AGENT_LANE" && -n "$MULTI_AGENT_RUN
   fi
   echo
   echo "-- Multi-agent runtime closure gate"
+  RUNTIME_PHASE_ARGS=()
+  if [[ -n "$MULTI_AGENT_ACTIVE_PHASE" ]]; then
+    RUNTIME_PHASE_ARGS+=(--active-phase "$MULTI_AGENT_ACTIVE_PHASE")
+  fi
   python3 "$ROOT/tools/bringup/check_multi_agent_gates.py" \
     --strict-always \
     --mode runtime \
@@ -410,7 +576,8 @@ if [[ -n "$MULTI_AGENT_REPORT" && -n "$MULTI_AGENT_LANE" && -n "$MULTI_AGENT_RUN
     --report "$MULTI_AGENT_REPORT" \
     --lane "$MULTI_AGENT_LANE" \
     --run-id "$MULTI_AGENT_RUN_ID" \
-    --out "$MULTI_AGENT_SUMMARY_PATH"
+    --out "$MULTI_AGENT_SUMMARY_PATH" \
+    ${RUNTIME_PHASE_ARGS[@]+"${RUNTIME_PHASE_ARGS[@]}"}
 else
   echo "note: skipping multi-agent runtime closure gate (report context unavailable)"
 fi
@@ -419,8 +586,15 @@ if [[ "$LINX_BRINGUP_PROFILE" == "release-strict" && "$RUN_CONSISTENCY_CHECKS" =
   echo
   echo "-- bring-up consistency/freshness checks"
   CONSISTENCY_MULTI_AGENT_ARGS=()
+  CONSISTENCY_PERF_ARGS=()
   if [[ -n "$MULTI_AGENT_SUMMARY_PATH" ]]; then
     CONSISTENCY_MULTI_AGENT_ARGS+=(--multi-agent-summary "$MULTI_AGENT_SUMMARY_PATH")
+  fi
+  if [[ "$RUN_PERF_FLOOR_GATES" == "1" ]]; then
+    CONSISTENCY_PERF_ARGS+=(
+      --linxcore-perf-floor "$ROOT/docs/bringup/gates/linxcore_perf_floor_latest.json"
+      --require-perf-floor-artifact
+    )
   fi
   python3 "$ROOT/tools/bringup/check_gate_consistency.py" \
     --report "$ROOT/docs/bringup/gates/latest.json" \
@@ -436,6 +610,7 @@ if [[ "$LINX_BRINGUP_PROFILE" == "release-strict" && "$RUN_CONSISTENCY_CHECKS" =
     --lane-policy "${LINX_LANE_POLICY:-external+pin-required}" \
     --trace-schema-version "${LINX_TRACE_SCHEMA_VERSION:-1.0}" \
     --max-age-hours "${LINX_GATE_MAX_AGE_HOURS:-24}" \
+    ${CONSISTENCY_PERF_ARGS[@]+"${CONSISTENCY_PERF_ARGS[@]}"} \
     ${CONSISTENCY_MULTI_AGENT_ARGS[@]+"${CONSISTENCY_MULTI_AGENT_ARGS[@]}"}
 fi
 

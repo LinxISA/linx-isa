@@ -155,8 +155,8 @@ def _emit_fragment(inst: Dict[str, Any], uop: Optional[Dict[str, Any]], out_dir:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--spec", default="isa/v0.3/linxisa-v0.3.json")
-    ap.add_argument("--uop-root", default="isa/v0.3/uop_classification_v0.3")
+    ap.add_argument("--spec", default="isa/v0.4/linxisa-v0.4.json")
+    ap.add_argument("--uop-root", default="isa/v0.4/uop_classification_v0.4")
     ap.add_argument(
         "--out-dir",
         default="docs/architecture/isa-manual/src/generated/instructions",

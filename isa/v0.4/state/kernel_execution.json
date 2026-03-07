@@ -1,0 +1,116 @@
+{
+  "notes": [
+    "This file is normative for the v0.4 shader-kernel execution model.",
+    "MPAR and MSEQ are the canonical shader-kernel block types in v0.4.",
+    "Contradictory legacy body-execution fragments are not promoted into v0.4 semantics."
+  ],
+  "kernel_body": {
+    "block_types": [
+      "MPAR",
+      "MSEQ"
+    ],
+    "body_kind": "structured instruction stream",
+    "entry_source": "B.TEXT",
+    "termination_rule": "first terminator marker encountered in the body stream ends the kernel",
+    "terminators": [
+      "BSTOP",
+      "C.BSTOP",
+      "BSTART.*",
+      "C.BSTART.*",
+      "HL.BSTART.*"
+    ],
+    "containment": {
+      "external_entry": "architectural control flow into the middle of a kernel is illegal and must raise E_BLOCK(EC_CFI)",
+      "escaping_target": "in-body control flow that resolves outside the fetchable kernel region faults as E_BLOCK(EC_BFETCH)",
+      "resume_target": "kernel completion resumes at the header continuation point"
+    }
+  },
+  "exec_mask": {
+    "name": "p",
+    "width_bits": 64,
+    "domain": "scalar-uniform lane register",
+    "read_write": "architectural source and destination inside kernel bodies",
+    "vector_predication": "vector instructions are implicitly predicated by p",
+    "inactive_lane_rule": "inactive lanes follow the selected architectural merge/zero policy",
+    "mask_generation": {
+      "producer": "V.CMP.* ->p",
+      "inactive_lane_result": "inactive lanes clear their destination bit to 0"
+    }
+  },
+  "instruction_domain": {
+    "encoding_space": "unified_lx64_kernel",
+    "derivation_rule": "if any operand names vt/vu/vm/vn the instruction executes as v.*; otherwise it executes as l.*",
+    "broadcast_rule": "scalar/group-domain source operands broadcast to all active lanes when used by v.*",
+    "cross_domain_write_rule": "v.* may not write scalar/group-domain destinations except through explicit reduction or mask-producing instructions"
+  },
+  "operand_namespace": {
+    "scalar_imports": {
+      "form": "ri0..ri11",
+      "binding_rule": "allocated from repeated B.IOR descriptors in header order, then RegSrc0/RegSrc1/RegSrc2 within each descriptor"
+    },
+    "lane_counters": [
+      "lc0",
+      "lc1",
+      "lc2"
+    ],
+    "lane_bounds": [
+      "lb0",
+      "lb1",
+      "lb2"
+    ],
+    "tile_bases": {
+      "input": [
+        "TA",
+        "TB",
+        "TC",
+        "TD"
+      ],
+      "output": [
+        "TO"
+      ],
+      "scratch": [
+        "TS"
+      ],
+      "reserved_legacy": [
+        "TE",
+        "TF",
+        "TG",
+        "TH",
+        "TO1",
+        "TO2",
+        "TO3"
+      ]
+    },
+    "special": [
+      "p",
+      "zero"
+    ]
+  },
+  "bridged_memory": {
+    "forms": [
+      "l.*.brg",
+      "v.*.brg"
+    ],
+    "ordering_domain": "shared TSO domain with BCC and TMA/MTC operations",
+    "kernel_policy": "normal BCC scalar memory issue is closed while a shader kernel is active"
+  },
+  "local_memory": {
+    "forms": [
+      "load.local",
+      "store.local"
+    ],
+    "base_operands": [
+      "TA",
+      "TB",
+      "TC",
+      "TD",
+      "TO",
+      "TS"
+    ],
+    "store_targets": [
+      "TO",
+      "TS"
+    ],
+    "bounds_rule": "access must remain within the tracked size of the bound tile base"
+  }
+}

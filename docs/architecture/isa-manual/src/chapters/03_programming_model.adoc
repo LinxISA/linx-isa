@@ -1,0 +1,265 @@
+[[progmodel]]
+== Programming model
+
+[[progmodel-lxcpu]]
+=== LXCPU execution context
+
+An **LXCPU** is the architectural execution context that fetches, decodes, and executes Linx instructions. Each LXCPU
+has independent architectural state (GPRs, system registers, and per-block ClockHands queues).
+
+Linx is a **block-structured** instruction set architecture with two architectural state layers:
+
+* **GSTATE** (first layer, shared architectural contract):
+** 24 architectural GPRs (`R0..R23`) used by software-visible scalar state
+** 32 architectural tile registers
+** SSR/system state
+* **BSTATE** (second layer, block-local architectural contract):
+** scalar/vector/template block-local state with block-type-dependent structure
+
+[[progmodel-pc]]
+=== Program counters (TPC / BPC)
+
+Linx uses two program-counter concepts:
+
+* **TPC (Temporary PC):** the byte address of the next instruction to execute/fetch for the current LXCPU.
+  - Note: when a block executes an out-of-line body (decoupled blocks via `B.TEXT`, or SIMT vector bodies), the body-entry address is
+    the initial `TPC` value for that body execution context (manual prose may refer to this as `BodyTPC`).
+* **BPC (Block PC):** the byte address of the current block start marker (a `BSTART.*`/`C.BSTART.*`/`HL.BSTART.*` or
+  a template block such as `FENTRY`/`FRET.*`).
+
+Bring-up conventions:
+
+* At the start of a block, `BPC == TPC` and points at the block start marker.
+* Within a block, `TPC` advances by the encoded instruction length(s) while `BPC` remains the start address of the
+  block.
+* PC-relative immediates in this manual and in the ISA catalog use **TPC** as the base unless stated otherwise. For a
+  multi-part instruction, the base address is the address of the first part.
+
+Address translation (v0.4 current profile, preserving the v0.2 MMU baseline):
+
+* When `TCR_ACR1.MME = 0`, instruction fetch and data accesses treat addresses as physical (identity translation).
+* When `TCR_ACR1.MME = 1`, `TPC`/`BPC` and all instruction/data addresses are virtual and translated by the CPU MMU
+  defined in <<system-mm>>.
+
+The privileged SSR state uses `EBARG` as the authoritative trap/context capture (see <<ssr-acr-scoped>>):
+
+* `EBARG_BPC_CUR_ACRn` captures the current block PC (`BPC`).
+* `EBARG_TPC_ACRn` captures the resume/fault PC for body execution (`BI=1`).
+* Legacy trap-save singleton naming from pre-v0.2 drafts is not part of canonical v0.4 artifacts.
+
+[[progmodel-gpr]]
+=== General-purpose registers (GPRs)
+
+Linx uses a 5-bit register encoding (32 codes). The canonical mapping of codes to names/aliases is published in the
+JSON catalog (`registers.reg5`).
+
+include::../generated/registers_reg5.adoc[]
+
+NOTE: The v0.4 `reg5` table also includes special spellings used by the assembler/disassembler for queue operations
+(e.g. destination selectors `t`/`u` used as `->t` / `->u`). These are not general-purpose
+architectural registers in the same sense as `a0`, `s0`, etc.
+
+Strict profile note: while the encoding space has 32 codes, the software architectural GSTATE set is constrained to
+24 GPRs (`R0..R23`) by the bring-up profile contract.
+
+[[progmodel-clockhands]]
+=== Block-local temporaries (ClockHands)
+
+Linx provides two independent private result queues per basic block:
+
+* **T-hand queue:** depth 4 (`t#1..t#4`), written by `->t`
+* **U-hand queue:** depth 4 (`u#1..u#4`), written by `->u`
+
+Rules (bring-up convention):
+
+* Each push shifts the queue and *kills* the oldest value.
+* Code generation must not reference killed entries; if an older value is needed later, copy it out before it expires.
+* Current bring-up assumes at most **one T read** and **one U read** per instruction form.
+
+Guidance:
+
+* Prefer ClockHands for **block-private dataflow** (values that do not cross a block boundary).
+* Use GPRs (`r1`–`r23`) for **block-shared values** (values live across blocks).
+
+[[progmodel-lb]]
+=== Loop-bound registers (LB0–LB2)
+
+Linx defines three 64-bit *loop-bound* registers: **LB0**, **LB1**, and **LB2**.
+
+They are written by `B.DIM` / `C.B.DIM*` and are intended to carry block-local loop bounds and accelerator metadata.
+
+Rules (bring-up convention):
+
+* LB registers are initialized at block start and used within the current block.
+* LB registers are part of the LXCPU architectural state and must be preserved across context switches.
+* Accelerator-style blocks (e.g. tile blocks) may use LB0–LB2 to pass dimensions and valid masks.
+
+[[progmodel-lane-policy]]
+=== Shader-kernel lane policy (v0.4 current)
+
+For canonical shader-kernel execution (`BSTART.MPAR` / `BSTART.MSEQ`), v0.4 locks an explicit inactive-lane policy:
+
+* **merge mode**: inactive lanes preserve the previous destination value.
+* **zero mode**: inactive lanes write zero.
+* Lane policy is architecturally selected by block/vector mode state and must be deterministic across LLVM, QEMU, and RTL.
+
+[[progmodel-vpred]]
+=== Block-control predicate and kernel EXEC mask (v0.4)
+
+v0.4 defines two predicate domains and keeps them distinct:
+
+* **Block-control predicate** (`BARG.CARG`): produced by `SETC.*` / `C.SETC.*`, consumed by block-control forms (`BSTART COND`,
+  `BWE`, `BWI`, etc.) at block commit.
+* **Kernel EXEC mask** (`p`): a 64-bit architectural source/destination used inside `MPAR`/`MSEQ` kernel bodies.
+  Vector instructions are implicitly predicated by `p`, and in-kernel `B.Z` / `B.NZ` test `p==0` / `p!=0`.
+
+Kernel mask generation contract:
+
+* `V.CMP.* ->p` is the normative mask-producing rule.
+* When `V.CMP.* ->p` executes under an existing EXEC mask, inactive lanes clear their destination bit to `0`.
+
+Mixed scalar/vector kernel-body execution rules (for `BSTART.MSEQ` / `BSTART.MPAR`):
+
+* Each group executes a structured kernel body using one scalar-uniform control-flow context plus a lane mask `p`.
+* Scalar-uniform body instructions may read/write `GPR`, `t/u`, `p`, and other architecturally defined scalar block-local state.
+* The unified `lx64` any-operand rule applies: if any operand names `vt`/`vu`/`vm`/`vn`, the instruction executes as `v.*`;
+  otherwise it executes as `l.*`.
+* Scalar/group-domain inputs used by `v.*` broadcast to all active lanes.
+* Direct writes from `v.*` into scalar/group-domain destinations are illegal unless the instruction is an explicitly defined
+  reduction or mask-producing form.
+* Canonical shader-kernel global-memory accesses use bridged forms only: `l.*.brg` and `v.*.brg`.
+* Canonical imported scalar arguments are exposed as an ordered `ri0..ri11` namespace.
+  - Repeated `B.IOR` descriptors allocate that namespace in header order, and within each descriptor in `RegSrc0`,
+    `RegSrc1`, `RegSrc2` order.
+  - Direct scalar GPR names are not part of the canonical `v.*` operand namespace.
+* Canonical shader-kernel special operands are:
+  - `lc0..lc2` / `lb0..lb2` for lane/group replay state,
+  - `TA/TB/TC/TD` for bound input-tile bases,
+  - `TO` / `TS` for output and scratch tile bases,
+  - `p` and `zero`.
+* Archived raw operand names `TE..TH` and `TO1/TO2/TO3` are not assigned meaning in canonical v0.4 and remain
+  reserved/unassigned.
+
+SIMT group model (v0.4 current profile):
+
+* The lane space is partitioned into **groups**.
+* For the canonical 1-D compiler lowering profile:
+** `LB0` is the vector lane count per group.
+** `LB1` is the group count (`ceil(total_lanes / LB0)`; strict compiler paths use exact integer groups where enabled).
+** `LB2` defaults to `1`.
+* `lc0` is the lane index within a group; `lc1` is the group index.
+* Each group has one scalar-uniform execution context; scalar instructions in the body execute once per group control-flow step.
+
+Vector reduction contract (`V.RD*` family):
+
+* `V.RD*` instructions reduce lane values to one scalar destination.
+* Group-local reduce destinations use block/scalar local destinations (`t/u` and profile-defined block-local scalar state).
+* Inter-group reduce destinations use global scalar registers (`R0..R23`) when selected by the destination encoding.
+* Compiler policy:
+** `MSEQ` is always legal for reductions.
+** `MPAR` reductions are emitted only when dependence-safe by analysis or when an explicit programmer parallel hint is present.
+* Bring-up staged lowering for reduction live-out may bridge through memory (`V.RD*` + `V.SW.BRG` to `ri*`-bound scratch).
+* Staged lowering requires identity initialization for the selected reduction operation.
+
+[[progmodel-tile]]
+=== Tile registers (TAU)
+
+Linx defines a tile register file used by accelerator-oriented *tile blocks* (e.g. `BSTART.TMA`, `BSTART.CUBE`,
+`BSTART.MPAR`, `BSTART.MSEQ`, `BSTART.VPAR`, `BSTART.VSEQ`).
+
+Bring-up model:
+
+* 32 architectural tile registers, organized as **4 hands × 8 depth**.
+* Each tile register has a tracked architectural size in the closed range **512B..4KB**.
+* The architectural tile-state capacity is **128KB** (`32 × 4KB`).
+* Implementations MAY internally provision a larger backing store per tile register, but MUST preserve the architectural
+  behavior that operations only read/write within the currently allocated size for each tile.
+* Each hand is architecturally treated as a **tile register queue** addressed by `hand#k` references:
+  - `hand#1` is the most recent definition,
+  - tile-producing ops allocate by pushing a new `hand#1`,
+  - `.reuse` is a staged hint bit carried on inputs (see <<blockisa-tile>>).
+* Tile blocks bind tile inputs/outputs using block descriptors (`B.IOT`/`B.IOTI` for tiles, `B.IOR` for GPRs).
+* Canonical disassembly prints the destination kind plus the allocation size (for example `->t<4KB>`).
+
+[[progmodel-barg]]
+=== Block argument register (BARG)
+
+Linx defines a per-block architectural state called the **Block Argument Register** (**BARG**).
+
+BARG is initialized at block start and is consulted at block commit to determine:
+
+* the current block's type and control-flow kind,
+* the next block target (direct/conditional/indirect/call/return), and
+* per-block commit metadata (e.g. output register mapping for split blocks).
+
+Bring-up conventions (v0.4 current profile, with the v0.2 trap ABI baseline):
+
+* `BARG.BPC` records the current block start address (**BPC**).
+* `BARG.BPCN` records the selected next block address (**BPCN**).
+* `SETC.*` updates condition/predicate-related fields of BARG (e.g. the `TAKEN`/predicate state consulted by `COND`
+  blocks).
+* `SETC.TGT` updates the next-target fields used by `IND`/`ICALL`/`RET`-class blocks.
+* At block commit (`BSTOP` or the next block start marker), the execution engine consults BARG and commits block-to-
+  block control flow (see <<blockisa>>).
+
+BARG is part of the LXCPU architectural state and MUST be preserved across context switches. On trap entry, BARG is
+captured in `EBARG_ACRm` (see <<ssr-acr-scoped>>).
+
+[[progmodel-system-registers]]
+=== System registers (SSR / ACR)
+
+Linx defines a set of **System Status Registers (SSR)** for threading/runtime state (e.g. `TP`, `GP`) and machine
+control.
+
+[[progmodel-acr]]
+==== Access Control Rings (ACR)
+
+Linx partitions privileged state using **Access Control Rings (ACR)**. The architecture defines up to **16** rings
+named **ACR0..ACR15**, which are organized as a tree rooted at **ACR0** (see <<system-acr-tree>>). In the v0.4 current
+profile:
+
+* **ACR0 is the most privileged** (root management privilege).
+* ACR`n` (`n=0..2`) MUST be implemented by all profiles; higher-numbered rings are optional and extension-defined.
+
+Some SSRs are **ACR-scoped** (banked per ring). In the ISA catalog these appear as patterned IDs `0x n f xx` and are named
+with an `*_ACRn` suffix in this manual.
+
+Privilege transitions are requested with the control-flow instructions:
+
+* `ACRE` — request `ACR_ENTER` (management-to-managed handoff / recovery)
+* `ACRC` — request `SERVICE_REQUEST` (managed-to-management trap)
+
+Both `ACRE` and `ACRC` may trap if executed without sufficient privilege or if the requested transition is not
+permitted by the platform security policy. See <<system-transitions>>.
+
+SSR registers are accessed using the SSR access instructions:
+
+* `SSRGET` — read SSR value to a destination (`->Rd` / `->t` / `->u`)
+* `SSRSET` — write SSR value from a source register
+* `SSRSWAP` — atomically swap an SSR value with a source register value
+
+include::../generated/system_registers_ssr.adoc[]
+include::../generated/trapno_encoding.adoc[]
+
+[[progmodel-fcsr]]
+=== Floating-point control and status (FCSR)
+
+Linx defines a floating-point control and status register, **FCSR**, that controls rounding and records floating-point
+exceptions for floating-point instructions.
+
+NOTE: In the v0.4 current profile (same as the v0.2 baseline), floating-point exceptions do **not** trap; they only update sticky flags in `FCSR`
+(and `CSTATE` mirrors as defined by the platform).
+
+For bring-up, Linx uses the following layout (32-bit):
+
+* `FCSR[4:0]` — **exception flags** (sticky): `NV`, `DZ`, `OF`, `UF`, `NX`
+* `FCSR[7:5]` — reserved (must be zero)
+* `FCSR[10:8]` — **rounding mode** (`RM`):
+** `0`: round to nearest, ties to even (RNE)
+** `1`: round toward −∞ (RDN)
+** `2`: round toward +∞ (RUP)
+** `3`: round toward 0 (RTZ)
+** `4`: round to nearest, ties away (RMM)
+
+FCSR is part of the LXCPU architectural state and must be preserved across context switches. If not explicitly
+programmed, the initial state is `FCSR = 0` (RNE, flags clear).

@@ -282,7 +282,7 @@ def main() -> int:
     parser.add_argument(
         "--spec",
         type=Path,
-        default=Path(__file__).resolve().parents[4] / "isa/v0.3/linxisa-v0.3.json",
+        default=Path(__file__).resolve().parents[4] / "isa/v0.4/linxisa-v0.4.json",
         help="Path to ISA spec JSON"
     )
     parser.add_argument(

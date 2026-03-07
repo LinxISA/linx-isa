@@ -117,8 +117,8 @@ def _bucket_opc_path(inst: Dict[str, Any], out_dir: Path) -> Path:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--spec", default="isa/v0.3/linxisa-v0.3.json", help="Compiled spec JSON path")
-    ap.add_argument("--out", default="isa/v0.3", help="Golden output directory")
+    ap.add_argument("--spec", default="isa/v0.4/linxisa-v0.4.json", help="Compiled spec JSON path")
+    ap.add_argument("--out", default="isa/v0.4", help="Golden output directory")
     args = ap.parse_args()
 
     spec_path = Path(args.spec)

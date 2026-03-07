@@ -16,7 +16,7 @@ if [[ ! -d "$DEST_DIR" ]]; then
 fi
 if [[ ! -f "$SRC_C" || ! -f "$SRC_H" ]]; then
   echo "error: generated opcode tables missing under isa/generated/codecs" >&2
-  echo "hint: run: python3 tools/isa/gen_c_codec.py --spec isa/v0.3/linxisa-v0.3.json --out-dir isa/generated/codecs" >&2
+  echo "hint: run: python3 tools/isa/gen_c_codec.py --spec isa/v0.4/linxisa-v0.4.json --out-dir isa/generated/codecs" >&2
   exit 1
 fi
 
