@@ -301,6 +301,37 @@ Software may choose how execution resumes when it later uses `ACRE` to return:
 
 The bring-up profile defines the following default managing ring selection for synchronous exceptions:
 
+[[system-trap-cause-encoding]]
+==== Trap cause encoding (bring-up)
+
+`TRAPNO` reports a 6-bit major class (`TRAPNUM`) and a 24-bit subcause field (`CAUSE`).
+The `CAUSE` encoding is **trap-class specific**.
+
+Instruction-related traps (`E_INST`)::
++
++Bring-up uses `TRAPNUM = ILLEGAL_INST (4)` to report illegal instruction encodings, invalid parameter encodings, and permission-policy violations.
++
++`E_INST` cause packing (bring-up normative)::
++
++* `TRAPNO.CAUSE[15:8]` = `EC_*` (8-bit subcause class)
++* `TRAPNO.CAUSE[7:0]` = `detail` (8-bit detail; `0` unless specified)
++
++`E_INST` subcause classes (bring-up normative)::
++
++[%header,cols="2,1,5"]
++|===
++|Name |EC |Meaning
++
++|`EC_ILLEGAL` |`0x01` |Illegal instruction encoding / reserved values.
++|`EC_PARAM`   |`0x02` |Invalid parameter / out-of-range / invalid combination.
++|`EC_PERM`    |`0x03` |Permission / ACR policy violation.
++|`EC_XBID`    |`0x10` |`XB` ID/index invalid (illegal `acr-id` encoding or `c-id` out of range).
++|`EC_XBDEF`   |`0x11` |`XB` definition invalid (`CAC_TABLE` entry missing/invalid, bad `B.TEXT`, etc.).
++|===
++
++NOTE: v0.3 text previously used `E_INST(EC_ILLEGAL)` and `E_INST(EC_PARAM)` informally without allocating numeric encodings. v0.4-draft allocates concrete `EC_*` values above.
++
+
 [%header,cols="2,1,1,1,1"]
 |===
 |Exception class |Trap number |If executing in ACR0 |If executing in ACR1 |If executing in ACR2

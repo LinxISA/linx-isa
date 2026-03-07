@@ -1,0 +1,86 @@
+[[system-xb]]
+=== System-call blocks (`XB`) and `CAC_TABLE` (v0.4-draft)
+
+This section defines the architectural contract for the cross-block dispatcher instruction `XB` and the table-driven
+call mechanism used to locate and start a system-call block.
+
+NOTE: This mechanism is part of the privileged architecture. Many details are platform-defined; this manual
+standardizes the encoding, legality rules, and the normative *shape* of the lookup table.
+
+==== Overview
+
+`XB {acr-id}, {c-id}` is a *controlled block call entry*.
+It does not embed a block header directly; instead, it selects a **target ACR** and a **call ID**.
+The processor looks up the call definition in the selected ACR's `CAC_TABLE` and then starts execution of the
+corresponding block (either a coupled in-table body or a decoupled out-of-line block via `B.TEXT`).
+
+==== Operands
+
+* `{acr-id}`: target ACR ID.
+* `{c-id}`: call ID / `CAC_TABLE` index.
+
+Ranges (bring-up):
+
+* `{c-id}` is 7 bits and indexes `0..127`.
+* Implementations MUST treat out-of-range or reserved encodings as illegal (see <<system-trap-cause-encoding>>).
+
+==== Permission rule (bring-up)
+
+Let the current ACR be `cur` and the target ACR be `tgt`.
+
+* The `XB` request MUST satisfy: `tgt` is **not more privileged** than `cur`.
+  In the linear ACR0/1/2 bring-up profile this is equivalent to: `tgt >= cur`.
+* If the permission rule is violated, the instruction MUST trap with `E_INST(EC_PERM)`.
+
+==== `XBINFO` and `CAC_TABLE`
+
+Each ACR maintains an independent call table, `CAC_TABLE`, with the following fixed shape:
+
+* Entry count: 128.
+* Entry size: 32 bytes.
+* Table size: 4096 bytes.
+
+`XBINFO` provides the base address of the `CAC_TABLE` for a given ACR.
+
+`XBINFO` architectural exposure (bring-up)::
++
++In the v0.4-draft bring-up contract, `XBINFO` is an **ACR-scoped SSR** with index `0xF30`.
++The full 16-bit `SSR_ID` is `0x nF30` for ACR`n`.
++
++* Name: `XBINFO_ACRn`
++* Access: `RW`
++* Value: base address of the `CAC_TABLE` for ACR`n` (0 indicates "not configured")
+
+==== `CAC_TABLE` entry intent
+
+A `CAC_TABLE` entry describes the *definition of a callable block*.
+An entry provides:
+
+* block attributes (conceptually `B.ATTR`),
+* input/output register bindings (conceptually `B.IOR`),
+* either:
+  - a coupled in-table block body descriptor, or
+  - a decoupled body entrypoint pointer (conceptually `B.TEXT`).
+
+The exact binary layout of the 32-byte entry is platform-defined.
+
+Illegal definitions::
++
++If `XBINFO` for the selected ACR is not configured, or the selected `CAC_TABLE` entry is missing/invalid, hardware MUST
++trap with `E_INST(EC_XBDEF)`.
++
++If `{acr-id}` or `{c-id}` is an illegal encoding, hardware MUST trap with `E_INST(EC_XBID)`.
+
+==== Execution (informative)
+
+[source]
+----
+XB(acr_id, c_id):
+  cur := CSTATE.ACR
+  tgt := acr_id
+  if tgt more-privileged-than cur: Trap(E_INST(EC_PERM))
+  base := XBINFO[tgt]
+  if base == 0 or entry invalid: Trap(E_INST(EC_XBDEF))
+  entry := CAC_TABLE[tgt][c_id]
+  StartBlock(entry)   // coupled or decoupled per entry
+----

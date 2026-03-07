@@ -1,0 +1,16 @@
+{
+  "isa": "LinxISA",
+  "version": "0.4-draft",
+  "status": "draft",
+  "instruction_lengths_bits": [
+    16,
+    32,
+    48,
+    64
+  ],
+  "notes": [
+    "This directory is the authoritative staged golden ISA definition for v0.4-draft.",
+    "v0.4-draft extends v0.3 with kernel IO + operand namespace encoding clarifications (RegId10 domain mapping, SrcRType semantics, etc.).",
+    "Vector encodings remain 64-bit: 32-bit prefix carries only Reg*[9:5] + prefix identification; main part retains scalar opcode semantics."
+  ]
+}

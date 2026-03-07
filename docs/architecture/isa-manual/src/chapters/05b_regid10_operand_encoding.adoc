@@ -1,0 +1,57 @@
+// v0.4-draft notes promoted into isa-manual (spec-quality).
+
+[[sec-regid10-operand-encoding]]
+== RegId10 Operand Encoding (v0.4-draft)
+
+This section specifies the 10-bit register identifier encoding (``RegId10``) used by several instruction forms to encode source and destination operands, especially in tile/vector and block IO paths.
+
+NOTE: ``RegId10`` is an *encoding-level* concept. Architectural semantics are determined by the decoded register class and the instruction semantics. In particular, ``*.REUSE`` is a performance hint and does not change architectural results.
+
+=== Bit layout
+
+``RegId10`` is encoded as:
+
+* ``RegId10[9]``: ``s/t`` (signed-or-type selector). Interpretation depends on opcode class.
+** For integer vector ops (e.g. ``v.add``): ``0`` = unsigned, ``1`` = signed.
+** For floating vector ops (e.g. ``v.fadd``): ``0`` = float, ``1`` = reserved (future).
+* ``RegId10[8:7]``: ``width`` (element width tag)
+** ``00`` = ``d`` (64-bit)
+** ``01`` = ``w`` (32-bit)
+** ``10`` = ``h`` (16-bit)
+** ``11`` = ``b`` (8-bit)
++
++Concrete assembly suffix mapping (strict bring-up)::
++
++* Integer vector ops interpret ``RegId10[9]`` as ``s`` (signedness):
++** ``s=0``: unsigned integer operand (`ud/uw/uh/ub`)
++** ``s=1``: signed integer operand (`sd/sw/sh/sb`)
++* Floating vector ops interpret ``RegId10[9]`` as ``t`` (type selector):
++** ``t=0``: floating operand (`fd/fs/fh/fb`)
++** ``t=1``: reserved (future)
++
++The ``width`` tag selects the element width for both integer and float operands:
++
++* ``00``: ``d`` = 64-bit (`ud/sd/fd`)
++* ``01``: ``w`` = 32-bit (`uw/sw/fs`)
++* ``10``: ``h`` = 16-bit (`uh/sh/fh`)
++* ``11``: ``b`` = 8-bit (`ub/sb/fb`)
+* ``RegId10[6:5]``: register class (namespace selector)
+** ``00`` = vector registers (``VT/VU/VM/VN``)
+** ``01`` = global input registers (``RI*``) or scalar hands (``T/U``)
+** ``10`` = loop/tile/misc (loop bounds/counters, tile in/out/base, predicate, zero)
+** ``11`` = vector registers with ``.REUSE`` hint (``VT/VU/VM/VN``)
+* ``RegId10[4:0]``: index within the selected class.
+
+=== ``.REUSE`` semantics
+
+A register name with suffix ``.REUSE`` (for example ``VT#1.REUSE``) denotes a *REUSE hint* on that source operand:
+
+* If a source operand is encoded using the ``RegId10[6:5]=2'b11`` namespace, the decoded register is the corresponding non-REUSE vector register (same family and index), and the instruction carries ``reuse_hint=true`` for that operand.
+* The hint indicates that subsequent instructions are expected to read the same register again.
+* The hint does **not** change architectural state or the value read.
+
+=== Interaction with ``SrcRType``
+
+``SrcRType`` is a separate encoding field used in non-``v.*`` instruction classes (e.g. ``AU/LU/CMP/AND/OR/SETC`` families) to express additional source operand transformations (such as ``sw/uw/neg/not``).
+
+For ``v.*`` instruction families, operand typing is expressed via ``RegId10.width`` and ``RegId10.s/t``. ``SrcRType`` is not applied.
