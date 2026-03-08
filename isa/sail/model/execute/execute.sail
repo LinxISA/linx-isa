@@ -3625,7 +3625,7 @@ function exec_v_lb(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bi
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let idx32 : bits(32) = vec_get_lane32(idxv, i);
-    let ea : bits(64) = vec_compute_ea(base, unsigned(ssr_lc0[31..0]), vec_off_from_idx32(idx32, shamt));
+    let ea : bits(64) = vec_compute_ea(base, i, vec_off_from_idx32(idx32, shamt));
     let b : bits(8) = read_mem8(ea);
     let r32 : bits(32) = if active then sext_low_n32(sail_zero_extend(b, 32), 8) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r32)
@@ -3644,7 +3644,7 @@ function exec_v_lbu(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : b
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let idx32 : bits(32) = vec_get_lane32(idxv, i);
-    let ea : bits(64) = vec_compute_ea(base, unsigned(ssr_lc0[31..0]), vec_off_from_idx32(idx32, shamt));
+    let ea : bits(64) = vec_compute_ea(base, i, vec_off_from_idx32(idx32, shamt));
     let b : bits(8) = read_mem8(ea);
     let r32 : bits(32) = if active then sail_zero_extend(b, 32) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r32)
@@ -3663,7 +3663,7 @@ function exec_v_lh(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bi
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let idx32 : bits(32) = vec_get_lane32(idxv, i);
-    let ea : bits(64) = vec_compute_ea(base, 2 * unsigned(ssr_lc0[31..0]), vec_off_from_idx32(idx32, shamt));
+    let ea : bits(64) = vec_compute_ea(base, 2 * i, vec_off_from_idx32(idx32, shamt));
     let h : bits(16) = mem_load16_le(ea);
     let r32 : bits(32) = if active then sext_low_n32(sail_zero_extend(h, 32), 16) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r32)
@@ -3682,7 +3682,7 @@ function exec_v_lhu(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : b
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let idx32 : bits(32) = vec_get_lane32(idxv, i);
-    let ea : bits(64) = vec_compute_ea(base, 2 * unsigned(ssr_lc0[31..0]), vec_off_from_idx32(idx32, shamt));
+    let ea : bits(64) = vec_compute_ea(base, 2 * i, vec_off_from_idx32(idx32, shamt));
     let h : bits(16) = mem_load16_le(ea);
     let r32 : bits(32) = if active then sail_zero_extend(h, 32) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r32)
@@ -3701,7 +3701,7 @@ function exec_v_lw(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bi
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let idx32 : bits(32) = vec_get_lane32(idxv, i);
-    let ea : bits(64) = vec_compute_ea(base, 4 * unsigned(ssr_lc0[31..0]), vec_off_from_idx32(idx32, shamt));
+    let ea : bits(64) = vec_compute_ea(base, 4 * i, vec_off_from_idx32(idx32, shamt));
     let w : bits(32) = mem_load32_le(ea);
     let r32 : bits(32) = if active then w else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r32)
@@ -3721,7 +3721,7 @@ function exec_v_ld(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bi
     assert((0 <= i) & (i < 32));
     let active = bitvector_access(pm, 2*i) == 0b1;
     let idx32 : bits(32) = vec_get_lane32(idxv, i);
-    let ea : bits(64) = vec_compute_ea(base, 8 * unsigned(ssr_lc0[31..0]), vec_off_from_idx32(idx32, shamt));
+    let ea : bits(64) = vec_compute_ea(base, 8 * i, vec_off_from_idx32(idx32, shamt));
     let d : bits(64) = mem_load64_le(ea);
     if active then out = vec_store64_packed(out, i, d) else ()
   };
@@ -3742,16 +3742,20 @@ function exec_v_lbi(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : 
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let off : bits(64) = sext24_to64(simm24);
-  let ea : bits(64) = vec_compute_ea(base, unsigned(ssr_lc0[31..0]), off);
-  let b : bits(8) = read_mem8(ea);
-  let r32 : bits(32) = sext_low_n32(sail_zero_extend(b, 32), 8);
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
-    out = vec_set_lane32(out, i, if active then r32 else undefined_bitvector(32))
+    if active then {
+      let ea : bits(64) = vec_compute_ea(base, i, off);
+      let b : bits(8) = read_mem8(ea);
+      let r32 : bits(32) = sext_low_n32(sail_zero_extend(b, 32), 8);
+      out = vec_set_lane32(out, i, r32)
+    } else {
+      out = vec_set_lane32(out, i, undefined_bitvector(32))
+    }
   };
   write_vt(Dst_k, out)
 }
@@ -3760,16 +3764,20 @@ function exec_v_lbui(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local :
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let off : bits(64) = sext24_to64(simm24);
-  let ea : bits(64) = vec_compute_ea(base, unsigned(ssr_lc0[31..0]), off);
-  let b : bits(8) = read_mem8(ea);
-  let r32 : bits(32) = sail_zero_extend(b, 32);
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
-    out = vec_set_lane32(out, i, if active then r32 else undefined_bitvector(32))
+    if active then {
+      let ea : bits(64) = vec_compute_ea(base, i, off);
+      let b : bits(8) = read_mem8(ea);
+      let r32 : bits(32) = sail_zero_extend(b, 32);
+      out = vec_set_lane32(out, i, r32)
+    } else {
+      out = vec_set_lane32(out, i, undefined_bitvector(32))
+    }
   };
   write_vt(Dst_k, out)
 }
@@ -3778,8 +3786,6 @@ function exec_v_ldi(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : 
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let off : bits(64) = sext24_to64(simm24);
-  let ea : bits(64) = vec_compute_ea(base, 8 * unsigned(ssr_lc0[31..0]), off);
-  let d : bits(64) = mem_load64_le(ea);
   let vw32 : int = vec_length_from_lcfr();
   let vw : int = tdiv_int(vw32, 2);
   let pm = read_predicate_p();
@@ -3787,7 +3793,11 @@ function exec_v_ldi(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : 
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 32));
     let active = bitvector_access(pm, 2*i) == 0b1;
-    if active then out = vec_store64_packed(out, i, d) else ()
+    if active then {
+      let ea : bits(64) = vec_compute_ea(base, 8 * i, off);
+      let d : bits(64) = mem_load64_le(ea);
+      out = vec_store64_packed(out, i, d)
+    } else ()
   };
   write_vt(Dst_k, out)
 }
@@ -3826,16 +3836,20 @@ function exec_v_lhi(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : 
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let off : bits(64) = sext24_to64(simm24);
-  let ea : bits(64) = vec_compute_ea(base, 2 * unsigned(ssr_lc0[31..0]), off);
-  let h : bits(16) = mem_load16_le(ea);
-  let r32 : bits(32) = sext_low_n32(sail_zero_extend(h, 32), 16);
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
-    out = vec_set_lane32(out, i, if active then r32 else undefined_bitvector(32))
+    if active then {
+      let ea : bits(64) = vec_compute_ea(base, 2 * i, off);
+      let h : bits(16) = mem_load16_le(ea);
+      let r32 : bits(32) = sext_low_n32(sail_zero_extend(h, 32), 16);
+      out = vec_set_lane32(out, i, r32)
+    } else {
+      out = vec_set_lane32(out, i, undefined_bitvector(32))
+    }
   };
   write_vt(Dst_k, out)
 }
@@ -3848,16 +3862,20 @@ function exec_v_lhui(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local :
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let off : bits(64) = sext24_to64(simm24);
-  let ea : bits(64) = vec_compute_ea(base, 2 * unsigned(ssr_lc0[31..0]), off);
-  let h : bits(16) = mem_load16_le(ea);
-  let r32 : bits(32) = sail_zero_extend(h, 32);
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
-    out = vec_set_lane32(out, i, if active then r32 else undefined_bitvector(32))
+    if active then {
+      let ea : bits(64) = vec_compute_ea(base, 2 * i, off);
+      let h : bits(16) = mem_load16_le(ea);
+      let r32 : bits(32) = sail_zero_extend(h, 32);
+      out = vec_set_lane32(out, i, r32)
+    } else {
+      out = vec_set_lane32(out, i, undefined_bitvector(32))
+    }
   };
   write_vt(Dst_k, out)
 }
@@ -3870,16 +3888,19 @@ function exec_v_lwi(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : 
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let off : bits(64) = sext24_to64(simm24);
-  let ea : bits(64) = vec_compute_ea(base, 4 * unsigned(ssr_lc0[31..0]), off);
-  let w : bits(32) = mem_load32_le(ea);
-  let r32 : bits(32) = w;
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
-    out = vec_set_lane32(out, i, if active then r32 else undefined_bitvector(32))
+    if active then {
+      let ea : bits(64) = vec_compute_ea(base, 4 * i, off);
+      let w : bits(32) = mem_load32_le(ea);
+      out = vec_set_lane32(out, i, w)
+    } else {
+      out = vec_set_lane32(out, i, undefined_bitvector(32))
+    }
   };
   write_vt(Dst_k, out)
 }
@@ -5311,13 +5332,15 @@ function exec_v_shi(SrcL_k : bits(5), SrcR : bits(5), simm24 : bits(24), local :
   let _ = local;
   let base : bits(64) = read_reg5(SrcR);
   let off  : bits(64) = sext24_to64(simm24);
-  let ea   : bits(64) = vec_compute_ea(base, 2 * unsigned(ssr_lc0[31..0]), off);
   let data = read_vt(SrcL_k);
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
-    if bitvector_access(pm, i) == 0b1 then mem_store16_le(ea, vec_get_lane32(data, i)[15..0]) else ()
+    if bitvector_access(pm, i) == 0b1 then {
+      let ea : bits(64) = vec_compute_ea(base, 2 * i, off);
+      mem_store16_le(ea, vec_get_lane32(data, i)[15..0])
+    } else ()
   }
 }
 
@@ -5344,7 +5367,7 @@ function exec_v_sb(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : b
     assert((0 <= i) & (i < 64));
     if bitvector_access(pm, i) == 0b1 then {
       let idx32 : bits(32) = vec_get_lane32(idxv, i);
-      let ea : bits(64) = vec_compute_ea(base, unsigned(ssr_lc0[31..0]), vec_off_from_idx32(idx32, shamt));
+      let ea : bits(64) = vec_compute_ea(base, i, vec_off_from_idx32(idx32, shamt));
       let b : bits(8) = vec_get_lane32(data, i)[7..0];
       write_mem8(ea, b)
     } else ()
@@ -5363,7 +5386,7 @@ function exec_v_sw(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : b
     assert((0 <= i) & (i < 64));
     if bitvector_access(pm, i) == 0b1 then {
       let idx32 : bits(32) = vec_get_lane32(idxv, i);
-      let ea : bits(64) = vec_compute_ea(base, 4 * unsigned(ssr_lc0[31..0]), vec_off_from_idx32(idx32, shamt));
+      let ea : bits(64) = vec_compute_ea(base, 4 * i, vec_off_from_idx32(idx32, shamt));
       let w : bits(32) = vec_get_lane32(data, i);
       mem_store32_le(ea, w)
     } else ()
@@ -5386,13 +5409,15 @@ function exec_v_swi(SrcL_k : bits(5), SrcR : bits(5), simm24 : bits(24), local :
   let _ = local;
   let base : bits(64) = read_reg5(SrcR);
   let off  : bits(64) = sext24_to64(simm24);
-  let ea   : bits(64) = vec_compute_ea(base, 4 * unsigned(ssr_lc0[31..0]), off);
   let data = read_vt(SrcL_k);
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
-    if bitvector_access(pm, i) == 0b1 then mem_store32_le(ea, vec_get_lane32(data, i)) else ()
+    if bitvector_access(pm, i) == 0b1 then {
+      let ea : bits(64) = vec_compute_ea(base, 4 * i, off);
+      mem_store32_le(ea, vec_get_lane32(data, i))
+    } else ()
   }
 }
 
@@ -5422,7 +5447,7 @@ function exec_v_sh(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : b
     assert((0 <= i) & (i < 64));
     if bitvector_access(pm, i) == 0b1 then {
       let idx32 : bits(32) = vec_get_lane32(idxv, i);
-      let ea : bits(64) = vec_compute_ea(base, 2 * unsigned(ssr_lc0[31..0]), vec_off_from_idx32(idx32, shamt));
+      let ea : bits(64) = vec_compute_ea(base, 2 * i, vec_off_from_idx32(idx32, shamt));
       let h : bits(16) = vec_get_lane32(data, i)[15..0];
       mem_store16_le(ea, h)
     } else ()
@@ -5453,7 +5478,7 @@ function exec_v_sd(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : b
     assert((0 <= i) & (i < 32));
     if bitvector_access(pm, 2*i) == 0b1 then {
       let idx32 : bits(32) = vec_get_lane32(idxv, i);
-      let ea : bits(64) = vec_compute_ea(base, 8 * unsigned(ssr_lc0[31..0]), vec_off_from_idx32(idx32, shamt));
+      let ea : bits(64) = vec_compute_ea(base, 8 * i, vec_off_from_idx32(idx32, shamt));
       let lo : bits(32) = vec_get_lane32(data, 2*i);
       let hi : bits(32) = vec_get_lane32(data, 2*i + 1);
       let d : bits(64) = hi @ lo;
@@ -5477,13 +5502,15 @@ function exec_v_sbi(SrcL_k : bits(5), SrcR : bits(5), simm24 : bits(24), local :
   let _ = local;
   let base : bits(64) = read_reg5(SrcR);
   let off : bits(64) = sext24_to64(simm24);
-  let ea : bits(64) = vec_compute_ea(base, unsigned(ssr_lc0[31..0]), off);
   let data = read_vt(SrcL_k);
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
-    if bitvector_access(pm, i) == 0b1 then write_mem8(ea, vec_get_lane32(data, i)[7..0]) else ()
+    if bitvector_access(pm, i) == 0b1 then {
+      let ea : bits(64) = vec_compute_ea(base, i, off);
+      write_mem8(ea, vec_get_lane32(data, i)[7..0])
+    } else ()
   }
 }
 
@@ -5495,7 +5522,6 @@ function exec_v_sdi(SrcL_k : bits(5), SrcR : bits(5), simm24 : bits(24), local :
   let _ = local;
   let base : bits(64) = read_reg5(SrcR);
   let off : bits(64) = sext24_to64(simm24);
-  let ea : bits(64) = vec_compute_ea(base, 8 * unsigned(ssr_lc0[31..0]), off);
   let data = read_vt(SrcL_k);
   let vw32 : int = vec_length_from_lcfr();
   let vw : int = tdiv_int(vw32, 2);
@@ -5503,6 +5529,7 @@ function exec_v_sdi(SrcL_k : bits(5), SrcR : bits(5), simm24 : bits(24), local :
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 32));
     if bitvector_access(pm, 2*i) == 0b1 then {
+      let ea : bits(64) = vec_compute_ea(base, 8 * i, off);
       let lo : bits(32) = vec_get_lane32(data, 2*i);
       let hi : bits(32) = vec_get_lane32(data, 2*i + 1);
       mem_store64_le(ea, (hi @ lo))

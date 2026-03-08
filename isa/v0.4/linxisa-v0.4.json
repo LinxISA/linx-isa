@@ -154956,6 +154956,7 @@
           "l.*.brg",
           "v.*.brg"
         ],
+        "implementation_note": "hardware may coalesce per-lane addresses as an optimization, but architectural semantics remain per-lane",
         "kernel_policy": "normal BCC scalar memory issue is closed while a shader kernel is active",
         "meaning": ".brg selects global memory access regardless of whether the instruction executes in l.* or v.* domain",
         "ordering_domain": "shared TSO domain with BCC and TMA/MTC operations",
@@ -154978,7 +154979,8 @@
         "cross_domain_write_rule": "v.* may not write scalar/group-domain destinations except through explicit reduction or mask-producing instructions",
         "derivation_rule": "if any operand names vt/vu/vm/vn the instruction executes as v.*; otherwise it executes as l.*",
         "encoding_space": "unified_lx64_kernel",
-        "vector_memory_addressing_rule": "when a v.* memory form names lc0/lc1/lc2 on the source side, those lane-counter terms belong to the vector SIMT addressing grammar itself rather than being implied by .brg"
+        "vector_memory_addressing_rule": "when a v.* memory form names lc0/lc1/lc2 on the source side, those lane-counter terms belong to the vector SIMT addressing grammar itself rather than being implied by .brg",
+        "vector_memory_lane_rule": "vector memory instructions form addresses independently per active lane, or per packed lane-pair for 64-bit vector data forms"
       },
       "kernel_body": {
         "block_types": [
