@@ -26,10 +26,23 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          submodules: recursive
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - name: Init top-level LinxISA submodules
+        run: |
+          git submodule sync --recursive
+          git submodule update --init \
+            compiler/llvm \
+            emulator/qemu \
+            kernel/linux \
+            rtl/LinxCore \
+            tools/pyCircuit \
+            lib/glibc \
+            lib/musl \
+            lib/mesa3d \
+            workloads/pto_kernels \
+            skills/linx-skills
       - name: Install deps
         run: python -m pip install --upgrade pip pyyaml
       - name: Run AVS contract gate
