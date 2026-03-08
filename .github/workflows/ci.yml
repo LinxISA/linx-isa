@@ -31,18 +31,8 @@ jobs:
           python-version: "3.11"
       - name: Init top-level LinxISA submodules
         run: |
-          git submodule sync --recursive
-          git submodule update --init \
-            compiler/llvm \
-            emulator/qemu \
-            kernel/linux \
-            rtl/LinxCore \
-            tools/pyCircuit \
-            lib/glibc \
-            lib/musl \
-            lib/mesa3d \
-            workloads/pto_kernels \
-            skills/linx-skills
+          git submodule sync -- workloads/pto_kernels
+          git submodule update --init workloads/pto_kernels
       - name: Install deps
         run: python -m pip install --upgrade pip pyyaml
       - name: Run AVS contract gate
