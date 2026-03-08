@@ -1,6 +1,6 @@
-# LinxCore Unified AI + Rendering (GPU-class) Co-Design Draft
+# LinxCore Unified AI + Rendering (GPU-class) Co-Design
 
-> Status: draft / working doc
+> Status: align-to-v0.4 working design note
 > 
 > Goal: define a software+hardware co-design that lets **LinxISA + LinxCore** run
 > - AI applications (inference first, training later)
@@ -68,43 +68,51 @@ This enables:
 
 ---
 
-## 2. Execution model: build on LinxISA v0.3 SIMT vector blocks
+## 2. Execution model: build on LinxISA v0.4 kernel bodies
 
-LinxISA already defines SIMT-style execution via **vector block types** (`MSEQ/MPAR/VSEQ/VPAR`) rather than a separate “GPU mode”.
+LinxISA v0.4 defines SIMT-style execution through decoupled kernel bodies selected by `B.TEXT` under the vector block families (`MSEQ/MPAR/VSEQ/VPAR`), rather than through a separate “GPU mode”.
 
-Reference notes: `docs/architecture/research/linxisa-v0.3-simt-vector-model.md`
+Primary normative references:
+- `docs/architecture/v0.4-architecture-contract.md`
+- `docs/architecture/isa-manual/src/chapters/03_programming_model.adoc`
+- `docs/architecture/isa-manual/src/chapters/04_block_isa.adoc`
+- `docs/architecture/isa-manual/src/chapters/09_memory_operations.adoc`
 
 ### 2.1 The core idea (ISA-grounded)
-- Programmer-visible model: **SIMT** expressed as a *one-lane body* replayed over a lane space.
-- Hardware backend: implement that replay efficiently on **VEC** pipelines.
+- Programmer-visible model: a structured kernel body entered via `B.TEXT` and executed by one scalar-uniform control context plus a vector lane domain.
+- Hardware backend: implement that body efficiently on **VEC** pipelines plus the existing block/BID machine.
 
-Architectural mapping (strict v0.3):
-- Lane space is defined by `LB0..LB2` (written by `B.DIM`), with lane counters `lc0..lc2` visible in the body.
+Architectural mapping (strict v0.4):
+- `B.DIM` defines the lane space through 16-bit architectural `LB0..LB2`, with 16-bit lane counters `lc0..lc2` visible to the body.
 - Canonical 1-D lowering:
   - `LB0 = lane_count` (lanes per group)
   - `LB1 = group_count`
   - linear lane index = `lc0 + lc1 * lane_count`
-- Scalar instructions in a vector body are **uniform per group** (execute once per group replay), while vector instructions operate in the lane domain.
+- The body is entered at `B.TEXT` and is not modeled as a separate static code region.
+- Kernel execution ends only when dynamic execution reaches a terminator marker (`BSTOP/C.BSTOP/BSTART.*`).
+- Scalar-uniform `l.*` execution is per-group and remains architecturally active even when `p==0`.
+- Vector `v.*` execution is implicitly predicated by the architectural EXEC mask `p`.
 
 Execution families:
-- `MSEQ/MPAR`: may use bridged global memory (`*.brg`) via the tile/TMA path.
-- `VSEQ/VPAR`: **tile-only** (must not use `*.brg`).
+- `MSEQ/MPAR`: memory-capable kernel families. `.brg` forms access global memory; corresponding non-`.brg` forms access local/tile memory.
+- `VSEQ/VPAR`: tile-only kernel families and must not perform architectural memory access.
 
 ### 2.1.1 Proposed LinxGPGPU group (warp-like) microarchitecture
 Assumption (from current design direction):
 - One **group** (≈ NVIDIA warp concept) consists of:
   - **64 vector lanes**, each lane is primarily **32-bit** datapath
   - **1 scalar-uniform lane** (per group), **64-bit** datapath
-  - a **64-bit predicate/mask** used by the scalar lane to control the group’s control flow / lane activity
+  - a **64-bit EXEC mask `p`** used to predicate `v.*` lane activity
 
 Mapping to LinxISA semantics:
 - Set `LB0 = 64` for `lane_count`.
 - Use `lc0` as the lane id in `[0..63]`.
-- Use `lc1` as the group id (warp id) when multiple groups are dispatched (`LB1 = group_count`).
+- Use `lc1` as the group id when multiple groups are dispatched (`LB1 = group_count`).
 
 Important contract alignment:
-- This is consistent with strict v0.3’s “scalar-uniform per group” rule.
-- We must explicitly define how the **64-bit lane mask** interacts with v0.3’s inactive-lane policy (`merge` vs `zero`) and how it is set/updated by the shader compiler/runtime.
+- This matches the v0.4 split between scalar-uniform `l.*` execution and per-lane `v.*` execution inside one unified kernel body.
+- `p` predicates `v.*` only; it does not implicitly mask scalar-uniform `l.*` execution, and scalar instructions may directly read/write `p`.
+- Inactive `v.*` lanes follow the architectural inactive-lane policy; current canonical clarification is merge-on-load for inactive lanes.
 
 ### 2.2 `LB0` lane_count policy & VEC width
 Critical decisions (implementation policy; ISA allows variability):
@@ -115,17 +123,21 @@ Rules of thumb:
 - Larger `LB0` amortizes scalar-uniform work and improves reduction/shuffle efficiency, but increases pressure from lane divergence that must be handled via **predication** (lane predicate values + `V.CSEL`/`V.PSEL`).
 - VEC width should align with the `.brg` memory bridge/coalescing granularity and the tile-register banking scheme.
 
-### 2.3 Memory execution reality: `.local` vs `.brg`
-Architecturally, vector memory operations split into:
-- **`.local`**: tile/local direction accesses (base: `TA/TB/TO/TS`), suitable for tile engines + scratch.
-- **`.brg`**: bridged global memory accesses (base: `ri*` imported via `B.IOR`).
+### 2.3 Memory execution reality: local vs `.brg`
+Architecturally, kernel memory-space selection is orthogonal to `l.*` versus `v.*`:
+- **non-`.brg`**: local/tile direction accesses.
+- **`.brg`**: bridged global-memory accesses (base namespace `ri*` in the canonical contract).
 
 Bring-up constraints:
-- `VPAR/VSEQ` are tile-only and MUST NOT use `.brg`.
-- `MSEQ/MPAR` may use `.brg` but the path is **bridged through tile/TMA**, so the “shader core” microarchitecture must treat global memory as an engine/bridge, not a free LSU.
+- `VPAR/VSEQ` are tile-only and MUST NOT perform architectural memory access.
+- `MSEQ/MPAR` may use both local and `.brg` memory forms.
+- `l.*.brg` is scalar-uniform / per-group memory (address evaluated once per group).
+- `v.*.brg` is per-lane memory under the current EXEC mask.
 
 Implementation goal:
-- coalesce `.brg` accesses across lanes/groups (merge cacheline requests, handle scatter/gather efficiently, and define per-lane fault/disable behavior consistently with the restartability contracts).
+- treat global memory as a bridged engine-facing path rather than a free scalar LSU,
+- coalesce `v.*.brg` traffic across lanes/groups when profitable without changing architectural per-lane semantics,
+- keep local/tile traffic aligned with the tile-register and local-storage contracts.
 
 ---
 
@@ -189,7 +201,7 @@ Create/choose an internal IR that makes the **Linx vector-block model** explicit
 - subgroup ops: shuffles (`V.SHFL*`) and reductions (`V.RD*`)
 - `.local`/`.brg` memory selection and coalescing strategy for the bridged path
 
-Note: an **exec-mask** may still exist as a *microarchitectural* optimization, but it is not the primary architectural programming model in strict v0.3; the compiler should be correct using lane predicate values.
+Note: in v0.4, the EXEC mask `p` is architectural rather than merely microarchitectural. The compiler may still lower divergence through predication/select patterns when profitable, but the hardware/software contract must model `p` explicitly and preserve the scalar-uniform + per-lane split defined by the v0.4 kernel-body rules.
 
 Then lower to a machine model:
 - scalar ops (address calc, control)

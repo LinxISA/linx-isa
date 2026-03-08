@@ -109,19 +109,25 @@ For canonical shader-kernel execution (`BSTART.MPAR` / `BSTART.MSEQ`), v0.4 lock
 v0.4 defines two predicate domains and keeps them distinct:
 
 * **Block-control predicate** (`BARG.CARG`): produced by `SETC.*` / `C.SETC.*`, consumed by block-control forms (`BSTART COND`,
-  `BWE`, `BWI`, etc.) at block commit.
+  `BWE`, `BWI`, etc.) at block commit. In the current v0.4 kernel-body contract, `SETC.*` / `C.SETC.*` are not used inside
+  canonical kernel bodies.
 * **Kernel EXEC mask** (`p`): a 64-bit architectural source/destination used inside `MPAR`/`MSEQ` kernel bodies.
-  Vector instructions are implicitly predicated by `p`, and in-kernel `B.Z` / `B.NZ` test `p==0` / `p!=0`.
+  Vector instructions are implicitly predicated by `p`. In-kernel `B.Z` / `B.NZ` are explicit EXEC-mask tests (`p==0` /
+  `p!=0`), while scalar conditional control flow uses the normal scalar branch forms with explicit operands (`B.EQ` /
+  `B.NE` / `B.LT` / `B.GE` / ...). Scalar-uniform instructions may read and write `p` directly.
+  `p` predicates `v.*` execution only; scalar-uniform `l.*` execution is not implicitly masked by `p`.
+  `p==0` does **not** by itself terminate the kernel; the scalar-uniform lane remains architecturally active.
 
 Kernel mask generation contract:
 
-* `V.CMP.* ->p` is the normative mask-producing rule.
+* `V.CMP.* ->p` is the normative vector-lane mask-producing rule, but not the only architectural way to update `p`.
 * When `V.CMP.* ->p` executes under an existing EXEC mask, inactive lanes clear their destination bit to `0`.
 
 Mixed scalar/vector kernel-body execution rules (for `BSTART.MSEQ` / `BSTART.MPAR`):
 
 * Each group executes a structured kernel body using one scalar-uniform control-flow context plus a lane mask `p`.
 * Scalar-uniform body instructions may read/write `GPR`, `t/u`, `p`, and other architecturally defined scalar block-local state.
+* Even when `p==0`, scalar-uniform body execution may continue; only `v.*` vector-lane execution is fully masked off.
 * The unified `lx64` any-operand rule applies: if any operand names `vt`/`vu`/`vm`/`vn`, the instruction executes as `v.*`;
   otherwise it executes as `l.*`.
 * Scalar/group-domain inputs used by `v.*` broadcast to all active lanes.

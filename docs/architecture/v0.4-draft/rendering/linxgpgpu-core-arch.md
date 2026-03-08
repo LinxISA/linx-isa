@@ -23,13 +23,22 @@ This document is the working architectural spec for a **GPU-SM-like core** (“L
 - `p` is the **EXEC mask** (64-bit).
 
 ### 2.2 Control flow in kernel body
-- Kernel body is a normal instruction stream (branches/loops allowed).
+- Kernel body is a normal instruction stream (direct branches/direct jumps/loops allowed, including self-loops / non-terminating loops).
 - Control-flow instructions update body-local `TPC` and are evaluated at **group granularity** using the scalar-uniform lane.
+- Indirect jump (`JR`) is outside the canonical kernel-body control-flow subset in the current bring-up contract.
+- Ordinary scalar conditional control flow uses the normal explicit-operand scalar branch forms (`B.EQ/B.NE/B.LT/B.GE/...`).
+- `B.Z/B.NZ` are explicit tests of the EXEC mask `p` (`p==0` / `p!=0`), not the default carrier for ordinary scalar conditions.
+- `SETC.*` / `C.SETC.*` are outside the canonical kernel-body control-flow subset in the current bring-up contract.
 - Kernel terminates on the first terminator marker (`BSTOP/C.BSTOP` or any `BSTART.*`).
+- A direct branch/jump that targets `BSTOP/C.BSTOP` is a legal early-exit path with normal kernel-termination semantics.
+- A direct branch/jump that targets `BSTART.*` is a legal early-exit path; the reached `BSTART.*` terminates the current kernel and is not executed as a nested block start.
+- Falling through or fetching past valid body code without first reaching a terminator is malformed and traps as a body-fetch fault.
 
 ### 2.3 EXEC mask rules
 - Vector instructions are implicitly predicated by `p` (lane active iff `p[lane]==1`).
-- `V.CMP.* ->p` is used to generate masks.
+- `p` predicates `v.*` only; scalar-uniform `l.*` execution is not implicitly masked by `p`.
+- `p==0` does not automatically terminate kernel execution; the scalar-uniform lane may continue control flow and scalar work.
+- `V.CMP.* ->p` is the normative vector-lane way to generate masks, but scalar-uniform kernel instructions may also read/write `p` directly.
   - Inactive lanes during `V.CMP.* ->p` produce 0 bits.
 
 ## 3) Unified 64-bit kernel encoding and l/v derivation
@@ -43,8 +52,8 @@ Design direction:
 
 ## 4) Global memory access inside kernels
 - Kernel global memory accesses go through the **bridged path** (`*.brg`).
-  - vector lanes: `v.*.brg`
-  - scalar lane (uniform): `l.*.brg`
+  - vector lanes: `v.*.brg` (per-lane under the current EXEC mask)
+  - scalar lane (uniform): `l.*.brg` (address evaluated once per group)
 - Normal BCC scalar memory issue is closed while in MCALL-like MPAR/MSEQ mode; `l.*.brg` is treated as part of the bridged/MTC-like domain.
 
 ## 5) Hardware partitioning (core + engines)

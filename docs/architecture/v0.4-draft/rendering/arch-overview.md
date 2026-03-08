@@ -24,5 +24,6 @@ Carry forward the v0.3 staged memory-channel model into the v0.4 shader-kernel s
   - Global memory traffic is via the bridged path (`*.brg`):
     - vector lanes: `v.*.brg`
     - scalar lane (uniform): `l.*.brg` (v0.4 draft requirement / alias family)
+  - Corresponding non-`.brg` kernel memory forms remain local accesses, independently of whether the instruction executes as `l.*` or `v.*`.
 - Non-speculative start: do not begin side-effecting execution until declared input dependencies (`B.IOT/B.IOTI`) are resolved.
 

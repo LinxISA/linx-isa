@@ -49,6 +49,23 @@ Current LinxCore alignment details:
 - block queues and block-engine rollback remain BID-based: keep `bid <= flush_bid`,
   kill `bid > flush_bid`
 
+Architectural block-completion abstraction:
+
+- For block completion semantics, LinxCore follows the ISA-visible canonical block-type domain
+  `{STD, FP, SYS, MPAR, MSEQ, VPAR, VSEQ, TMA, CUBE, TEPL}`.
+  Legacy compatibility spellings and selector aliases are not separate completion classes.
+- `STD`, `FP`, and `SYS` are equivalent in the two-layer completion model.
+- Dynamic block instances collapse to exactly one of three architectural participant sets:
+  - `{}` for empty/control-only scalar-family instances,
+  - `{scalar}` for scalar-family instances with a real scalar body,
+  - `{non-scalar}` for canonical non-scalar block types.
+- Dynamic degeneration to `{}` is allowed only for scalar/control-family block types (`STD`/`FP`/`SYS`).
+  Canonical non-scalar block types (`MPAR`/`MSEQ`/`VPAR`/`VSEQ`/`TMA`/`CUBE`/`TEPL`) always carry
+  `{non-scalar}` completion obligation.
+- The architectural `{non-scalar}` participant has single-point resolve semantics: BROB/retirement observes
+  one `non-scalar-done` event per block instance. Any finer engine fan-in or multi-engine join remains
+  microarchitectural.
+
 Rendering- and accelerator-facing consequence:
 
 - engine-backed work such as TAU-oriented rendering hardening must remain

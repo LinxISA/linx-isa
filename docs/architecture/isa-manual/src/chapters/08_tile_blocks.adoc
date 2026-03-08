@@ -48,6 +48,7 @@ Vector body termination:
 
 * The out-of-line SIMT body stream terminates on the first terminator marker encountered.
 * Valid terminators are `BSTOP`/`C.BSTOP` and `BSTART.*`/`C.BSTART.*`.
+* If a `BSTART.*` is reached during body execution, it acts only as an implicit terminator for the current kernel; it is not executed as a nested block start.
 
 If a mandatory descriptor is missing, hardware MUST trap with `E_BLOCK(EC_BLOCKFMT)` and report the missing descriptor family in `TRAPARG0` (see System/Privilege trap reporting).
 

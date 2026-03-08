@@ -25,8 +25,9 @@ Chosen derivation rule: **any-operand rule**
 
 
 This enables:
-- uniform control-flow and uniform global-memory access via the bridged path in kernel bodies (no BCC scalar memory)
-- natural shader lowering with per-lane compute + scalar control + explicit EXEC mask `p`
+- uniform control-flow and, for `M*` kernels, uniform global-memory access via the bridged path in kernel bodies (no BCC scalar memory)
+- a clean split between memory-capable `M*` kernels and memory-free `V*` tile-only kernels
+- natural general-purpose kernel lowering with per-lane compute + scalar control + explicit EXEC mask `p`
 
 ## Chosen mixed-class semantics (initial)
 

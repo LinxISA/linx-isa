@@ -26,12 +26,12 @@ SSR access instructions:
 |`0x0023` |`VERSION` |RO |Core version.
 |`0x0024` |`LCFR` |RO |Core feature description (includes LaneNum).
 |`0x0025` |`LCFR_EN` |RW |Core feature enable.
-|`0x0050` |`LB0` |RW |Loop/lane boundary register 0 (bring-up).
-|`0x0051` |`LB1` |RW |Loop/lane boundary register 1 (bring-up).
-|`0x0052` |`LB2` |RW |Loop/lane boundary register 2 (bring-up).
-|`0x0053` |`LC0` |RW |Loop/lane counter register 0 (bring-up).
-|`0x0054` |`LC1` |RW |Loop/lane counter register 1 (bring-up).
-|`0x0055` |`LC2` |RW |Loop/lane counter register 2 (bring-up).
+|`0x0050` |`LB0` |RW |16-bit loop/lane boundary register 0 (bring-up).
+|`0x0051` |`LB1` |RW |16-bit loop/lane boundary register 1 (bring-up).
+|`0x0052` |`LB2` |RW |16-bit loop/lane boundary register 2 (bring-up).
+|`0x0053` |`LC0` |RW |16-bit loop/lane counter register 0 (bring-up).
+|`0x0054` |`LC1` |RW |16-bit loop/lane counter register 1 (bring-up).
+|`0x0055` |`LC2` |RW |16-bit loop/lane counter register 2 (bring-up).
 |`0x0C00` |`CYCLE` |RO |Cycle counter (bring-up may model as instruction count).
 |===
 

@@ -18,12 +18,12 @@
       { "id": "0x0024", "name": "LCFR", "width_bits": 64, "access": "RO", "description": "Core feature description (includes LaneNum)." },
       { "id": "0x0025", "name": "LCFR_EN", "width_bits": 64, "access": "RW", "description": "Core feature enable." },
 
-      { "id": "0x0050", "name": "LB0", "width_bits": 64, "access": "RW", "description": "Loop/lane boundary register 0 (bring-up)." },
-      { "id": "0x0051", "name": "LB1", "width_bits": 64, "access": "RW", "description": "Loop/lane boundary register 1 (bring-up)." },
-      { "id": "0x0052", "name": "LB2", "width_bits": 64, "access": "RW", "description": "Loop/lane boundary register 2 (bring-up)." },
-      { "id": "0x0053", "name": "LC0", "width_bits": 64, "access": "RW", "description": "Loop/lane counter register 0 (bring-up)." },
-      { "id": "0x0054", "name": "LC1", "width_bits": 64, "access": "RW", "description": "Loop/lane counter register 1 (bring-up)." },
-      { "id": "0x0055", "name": "LC2", "width_bits": 64, "access": "RW", "description": "Loop/lane counter register 2 (bring-up)." }
+      { "id": "0x0050", "name": "LB0", "width_bits": 16, "access": "RW", "description": "16-bit loop/lane boundary register 0 (bring-up)." },
+      { "id": "0x0051", "name": "LB1", "width_bits": 16, "access": "RW", "description": "16-bit loop/lane boundary register 1 (bring-up)." },
+      { "id": "0x0052", "name": "LB2", "width_bits": 16, "access": "RW", "description": "16-bit loop/lane boundary register 2 (bring-up)." },
+      { "id": "0x0053", "name": "LC0", "width_bits": 16, "access": "RW", "description": "16-bit loop/lane counter register 0 (bring-up)." },
+      { "id": "0x0054", "name": "LC1", "width_bits": 16, "access": "RW", "description": "16-bit loop/lane counter register 1 (bring-up)." },
+      { "id": "0x0055", "name": "LC2", "width_bits": 16, "access": "RW", "description": "16-bit loop/lane counter register 2 (bring-up)." }
     ],
     "manager_acr_family": {
       "id_pattern": "0xnfxx",

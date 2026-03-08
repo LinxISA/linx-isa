@@ -73,8 +73,8 @@ actual instruction body is placed elsewhere.
 *Body form (required structure):*
 
 * The body begins at `BodyTPC` (from the header's `B.TEXT`).
-* For block types other than canonical shader kernels (`BSTART.MPAR` / `BSTART.MSEQ`), the body MUST be a **linear**
-  snippet unless that block type defines a different contract.
+* For block types other than canonical SIMT kernel forms (`BSTART.MPAR` / `BSTART.MSEQ` / `BSTART.VPAR` / `BSTART.VSEQ`),
+  the body MUST be a **linear** snippet unless that block type defines a different contract.
 * Generic linear bodies MUST NOT contain:
 ** any `BSTART.*` / `C.BSTART.*` / `HL.BSTART.*`,
 ** any template block (`FENTRY`/`FEXIT`/`FRET.*`/`MCOPY`/`MSET`),
@@ -82,15 +82,18 @@ actual instruction body is placed elsewhere.
 ** any `B.*` header descriptor.
 * A generic linear body MUST terminate at `BSTOP`/`C.BSTOP`. A body containing only `BSTOP`/`C.BSTOP` is a valid
   empty body.
-* For `BSTART.MPAR` / `BSTART.MSEQ`, the body is instead a **structured instruction stream**:
-** branches, jumps, and other in-body architectural control transfers are legal and execute at group granularity through
-   the scalar-uniform lane context,
-** the kernel ends at the **first terminator marker** encountered in the body stream,
+* For `BSTART.MPAR` / `BSTART.MSEQ` / `BSTART.VPAR` / `BSTART.VSEQ`, the body is instead a **structured instruction stream**:
+** direct branches and direct jumps are legal and execute at group granularity through the scalar-uniform lane context,
+** in-body indirect jump (`JR`) and in-body call/return are reserved and not part of the current bring-up contract,
+** `BodyTPC` is the kernel entrypoint; the kernel is not modeled as a separately declared static region,
 ** valid terminators are `BSTOP`, `C.BSTOP`, `BSTART.*`, `C.BSTART.*`, and `HL.BSTART.*`,
+** dynamic kernel execution ends when execution reaches the first such terminator marker,
 ** `p` is the architectural 64-bit EXEC mask for the body, and `V.CMP.* ->p` is the normative mask-generation rule,
 ** the unified `lx64` any-operand rule applies: if any operand names `vt`/`vu`/`vm`/`vn`, the instruction executes as
    `v.*`; otherwise it executes as `l.*`,
-** canonical kernel global-memory access uses bridged forms only: `l.*.brg` and `v.*.brg`.
+** `M*` kernels (`MPAR`/`MSEQ`) are memory-capable and may access global memory only through bridged forms (`l.*.brg`
+   and `v.*.brg`) while also accessing tile-register/local-tile state,
+** `V*` kernels (`VPAR`/`VSEQ`) are memory-free tile-only kernels and MUST NOT perform architectural memory access.
 
 *Header→body→return execution:*
 
@@ -99,8 +102,8 @@ actual instruction body is placed elsewhere.
 * On body termination, execution resumes at the header continuation address:
 ** if the header ended with `BSTOP`/`C.BSTOP`: continuation is the instruction address immediately after that stop,
 ** if the header ended implicitly: continuation is the address of the next block start marker in the linear stream.
-* For `MPAR`/`MSEQ`, reaching the first terminator marker in the body is the kernel completion event that returns to the
-  header continuation point.
+* For `MPAR`/`MSEQ`/`VPAR`/`VSEQ`, reaching the first terminator marker in the body is the kernel completion event that
+  returns to the header continuation point.
 
 *Safety rule interaction (`B.TEXT`):*
 
@@ -111,8 +114,8 @@ actual instruction body is placed elsewhere.
   Precision: `E_BLOCK(EC_CFI)` is **precise** — no architectural state changes from the offending control-flow instruction are
   committed. Targets that are invalid encodings but are not *interior-entry* CFI violations remain `E_INST(EC_ILLEGAL)` unless
   otherwise specified.)
-* In-body control-flow targets that escape the fetchable kernel/body region MUST fault as `E_BLOCK(EC_BFETCH)` rather
-  than as an external CFI violation.
+* `B.TEXT` supplies the entrypoint for entering body execution; the current bring-up contract does not define an additional
+  kernel-specific static-region containment rule beyond normal instruction fetch/decode legality.
 
 [[blockisa-forms-template]]
 ==== Template blocks (standalone blocks)
@@ -186,7 +189,7 @@ Additional bring-up fields used by tooling and trap recovery include:
 The bring-up profile constrains certain combinations (examples):
 
 * `.SYS` blocks fall through only (`FALL`), optionally with a fixup label.
-* `.MPAR` / `.MSEQ` are the canonical v0.4 shader-kernel launch forms and select memory-parallel versus
+* `.MPAR` / `.MSEQ` are the canonical v0.4 memory-capable kernel launch forms and select memory-parallel versus
   memory-sequential execution modes.
 * `.FP` blocks mirror `.STD` transitions but mark a floating-point execution context.
 
@@ -505,8 +508,8 @@ an out-of-line SIMT body selected by `B.TEXT`.
 
 Bring-up execution model (normative for v0.4):
 
-* `LB0..LB2` are written by `B.DIM` / `C.B.DIM*` in the block header.
-* Hardware exposes lane counters `lc0..lc2` to the block body; on block entry they are initialized to `0`.
+* `LB0..LB2` are written by `B.DIM` / `C.B.DIM*` in the block header; in canonical v0.4 bring-up they are 16-bit architectural loop/lane boundary registers.
+* Hardware exposes lane counters `lc0..lc2` to the block body; in canonical v0.4 bring-up they are 16-bit architectural loop/lane counters and are initialized to `0` on block entry.
 * The body is executed for each lane tuple `(lc0, lc1, lc2)` with:
 ** `lc0` iterating fastest: `0 .. (LB0-1)`
 ** `lc1`: `0 .. (max(LB1,1)-1)`
@@ -525,11 +528,16 @@ Decoupled body form (v0.4 canonical constraint):
 * The header MUST contain exactly one `B.TEXT <tpc>` selecting an out-of-line body.
 * The body MUST terminate at a block terminator marker. Valid terminators are `BSTOP` / `C.BSTOP` and `BSTART.*` / `C.BSTART.*`.
   - First terminator wins (anything after is unreachable).
-  - Any `BSTART` encountered inside the body stream acts as both the terminator trigger and the next architectural block start
-    after the kernel returns to the header continuation point.
+  - Any `BSTART` encountered during body execution acts only as an implicit terminator for the current kernel; it is not
+    executed as a nested block start within the body.
+  - Explicit direct branch/jump to `BSTOP` / `C.BSTOP` is legal and has normal kernel-termination semantics.
+  - Explicit direct branch/jump to such a `BSTART.*` / `C.BSTART.*` target is legal and has the same early-exit effect.
+  - If execution falls through or fetches past valid body code without reaching a terminator marker, the body is malformed and MUST fault as `E_BLOCK(EC_BFETCH)` rather than terminating implicitly.
 * The body MUST NOT contain any `B.*` header descriptors.
-* For canonical `MPAR` / `MSEQ` shader kernels, the body is a structured instruction stream; in-body branches and jumps are legal,
-  and the scalar-uniform lane uses `p` as the architectural EXEC mask.
+* For canonical `MPAR` / `MSEQ` / `VPAR` / `VSEQ` SIMT kernels, the body is a structured instruction stream; in-body direct
+  branches and direct jumps are legal, while in-body indirect jump (`JR`) and call/return remain reserved in the current
+  bring-up contract. Self-loops and other non-terminating loops are architecturally legal; the ISA does not guarantee that
+  body execution eventually reaches a terminator. The scalar-uniform lane uses `p` as the architectural EXEC mask.
 
 Example (2-D nested loop using `MSEQ`):
 
@@ -577,7 +585,7 @@ Execution/ordering rules:
 [[blockisa-v04-bridge]]
 === Kernel memory-bridge naming (canonical profile)
 
-For canonical shader kernels, bridge operands and mnemonic families are:
+For canonical memory-capable `M*` kernels, bridge operands and mnemonic families are:
 
 * `load.local` / `store.local`: tile/local direction accesses.
 * `load.brg` / `store.brg`: bridged global-memory accesses.
@@ -591,7 +599,7 @@ Encoding/mnemonic mapping (normative):
 
 * `load.local` / `store.local` correspond to tile-local access forms.
 * `load.brg` / `store.brg` correspond to bridged global-memory access forms.
-* In the unified `lx64` kernel space, both scalar-uniform `l.*` forms and per-lane `v.*` forms may use `.brg`.
+* In the unified `lx64` kernel space, memory-space selection remains orthogonal to `l.*` versus `v.*`: both scalar-uniform `l.*` forms and per-lane `v.*` forms may use either `.brg` (global) or the corresponding non-`.brg` local form, subject to the selected form's operand rules.
 
 Bring-up operand constraints (strict profile):
 
@@ -600,7 +608,11 @@ Bring-up operand constraints (strict profile):
 * `.local` accesses MUST remain within the tracked byte-size of the referenced bound tile; out-of-range tile-local access is illegal.
 * `.local` stores MUST target output/scratch bases only (`TO` or `TS`). `TA/TB/TC/TD` are read-only input bases in
   canonical v0.4.
-* `VSEQ`/`VPAR` remain tile-only vector execution forms; canonical shader-kernel global-memory issue uses `MPAR`/`MSEQ`.
+* `VSEQ`/`VPAR` remain tile-only, memory-free vector execution forms.
+* `MPAR`/`MSEQ` are the memory-capable kernel forms and are the only SIMT families that may issue canonical bridged
+  global-memory accesses.
+* Because in-body call/return is currently reserved, all currently supported in-body control flow is branch/jump-based;
+  kernel execution returns to the header continuation point only when a terminator marker is reached.
 
 Bring-up tile-base binding for `.local` ops (normative for v0.4):
 
@@ -617,8 +629,8 @@ Vector block bodies may mix scalar-uniform and vector instructions; scalar-unifo
 
 Predicate and replay semantics for mixed bodies:
 
-* `SETC.*` in the body updates the scalar block-control predicate domain (`BARG.CARG`); it does not directly mask vector lanes.
-* `p` is the architectural EXEC mask for canonical `MPAR` / `MSEQ` kernels, and `V.CMP.* ->p` is the normative mask producer.
+* `SETC.*` / `C.SETC.*` are not supported inside canonical kernel bodies; body control flow instead uses explicit scalar branch forms and explicit `p` tests.
+* `p` is the architectural EXEC mask for canonical `MPAR` / `MSEQ` / `VPAR` / `VSEQ` kernels; scalar-uniform body instructions may read/write `p` directly, and `V.CMP.* ->p` is the normative vector-lane mask producer.
 * The body is replayed once per `LC` tuple. Scalar instructions execute on every replay iteration in program order together
   with vector instructions.
 * Vector instructions MUST import scalar inputs through `B.IOR`/`ri*` (except `zero` where encoding permits). Direct scalar

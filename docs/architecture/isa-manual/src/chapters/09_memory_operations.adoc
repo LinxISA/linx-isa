@@ -157,6 +157,7 @@ Canonical shader-kernel behavior is expressed through `.MPAR` / `.MSEQ` executio
   requirement).
 * Canonical kernel global-memory accesses use bridged forms only: `l.*.brg` and `v.*.brg`.
 * Memory space selection is orthogonal to the `l.*` versus `v.*` execution-domain split: `.brg` selects global memory, and the corresponding non-`.brg` form selects local memory.
+* Accordingly, in memory-capable `M*` kernels, both scalar-uniform `l.*` forms and per-lane `v.*` forms may use either the bridged global-memory space (`*.brg`) or the corresponding local-memory space (non-`.brg`), subject to the operand/addressing rules of the selected form.
 * Archived VREG-only raw local-register fragments are not part of canonical v0.4 behavior.
 
 Bridged address-formation contract (canonical v0.4):
