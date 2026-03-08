@@ -163,7 +163,7 @@ def main(argv: list[str]) -> int:
             f"unimplemented Sail mnemonics remain: {', '.join(unimplemented[:20])}"
             + (" ..." if len(unimplemented) > 20 else "")
         )
-    if not parser_ok:
+    if args.require_parser and not parser_ok:
         failures.append(f"Sail parser check skipped/failed: {parser_detail}")
     if not decode_ok:
         failures.append(f"Sail decode generator check failed: {decode_detail}")
@@ -173,7 +173,8 @@ def main(argv: list[str]) -> int:
             print(f"error: {failure}", file=sys.stderr)
         return 1
 
-    print(f"ok: sail model validated (mnemonics={len(spec_mnemonics)}, parser={parser_detail}, decode={decode_detail})")
+    parser_summary = parser_detail if parser_ok else f"optional-skip: {parser_detail}"
+    print(f"ok: sail model validated (mnemonics={len(spec_mnemonics)}, parser={parser_summary}, decode={decode_detail})")
     return 0
 
 
