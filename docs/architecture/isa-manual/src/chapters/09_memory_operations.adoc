@@ -164,7 +164,10 @@ Bridged address-formation contract (canonical v0.4):
 * `l.*.brg` and `v.*.brg` use the same architectural addressing grammar.
 * The effective address is formed only from the explicitly encoded base, index, immediate, and shift terms of the
   selected instruction form.
-* There is no implicit extra lane-index term added merely because the operation is `v.*.brg`.
+* For `v.*` memory forms, lane-counter terms such as `lc0/lc1/lc2` are part of the vector SIMT source-side addressing
+  grammar itself, exactly as written by the selected instruction form.
+* `.brg` does not inject any additional hidden lane term beyond that explicit `v.*` grammar; it only selects the
+  global-memory space instead of the corresponding local-memory space.
 * `ri*` remains the required base namespace for `.brg` kernel memory ops.
 * When a `v.*.brg` form names lane-varying operands, those operands are evaluated per active lane under the current
   EXEC mask; when an `l.*.brg` form names only scalar/group-domain operands, the address is evaluated once per group.

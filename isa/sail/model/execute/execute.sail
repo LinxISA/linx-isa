@@ -3728,65 +3728,16 @@ function exec_v_ld(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bi
   write_vt(Dst_k, out)
 }
 
-// Broadcast variants (BRG): compute address from lane0 offset and broadcast.
+// Bridged variants (BRG): same vector addressing/dataflow as the matching non-BRG form; only the memory space differs architecturally.
 function exec_v_lb_brg(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bits(5), local : bits(1)) -> unit = {
-  let _ = local;
-  let base : bits(64) = read_reg5(SrcL);
-  let idxv = read_vt(SrcR_k);
-  let idx0 : bits(32) = vec_get_lane32(idxv, 0);
-  let ea0 : bits(64) = vec_compute_ea(base, unsigned(ssr_lc0[31..0]), vec_off_from_idx32(idx0, shamt));
-  let b : bits(8) = read_mem8(ea0);
-  let r32 : bits(32) = sext_low_n32(sail_zero_extend(b, 32), 8);
-  let vw : int = vec_length_from_lcfr();
-  let pm = read_predicate_p();
-  var out = read_vt(Dst_k);
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 64));
-    let active = bitvector_access(pm, i) == 0b1;
-    out = vec_set_lane32(out, i, if active then r32 else undefined_bitvector(32))
-  };
-  write_vt(Dst_k, out)
+  exec_v_lb(SrcL, SrcR_k, shamt, Dst_k, local)
 }
-
 function exec_v_lbu_brg(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bits(5), local : bits(1)) -> unit = {
-  let _ = local;
-  let base : bits(64) = read_reg5(SrcL);
-  let idxv = read_vt(SrcR_k);
-  let idx0 : bits(32) = vec_get_lane32(idxv, 0);
-  let ea0 : bits(64) = vec_compute_ea(base, unsigned(ssr_lc0[31..0]), vec_off_from_idx32(idx0, shamt));
-  let b : bits(8) = read_mem8(ea0);
-  let r32 : bits(32) = sail_zero_extend(b, 32);
-  let vw : int = vec_length_from_lcfr();
-  let pm = read_predicate_p();
-  var out = read_vt(Dst_k);
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 64));
-    let active = bitvector_access(pm, i) == 0b1;
-    out = vec_set_lane32(out, i, if active then r32 else undefined_bitvector(32))
-  };
-  write_vt(Dst_k, out)
+  exec_v_lbu(SrcL, SrcR_k, shamt, Dst_k, local)
 }
-
 function exec_v_ld_brg(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bits(5), local : bits(1)) -> unit = {
-  let _ = local;
-  let base : bits(64) = read_reg5(SrcL);
-  let idxv = read_vt(SrcR_k);
-  let idx0 : bits(32) = vec_get_lane32(idxv, 0);
-  let ea0 : bits(64) = vec_compute_ea(base, 8 * unsigned(ssr_lc0[31..0]), vec_off_from_idx32(idx0, shamt));
-  let d : bits(64) = mem_load64_le(ea0);
-  let vw32 : int = vec_length_from_lcfr();
-  let vw : int = tdiv_int(vw32, 2);
-  let pm = read_predicate_p();
-  var out = read_vt(Dst_k);
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 32));
-    let active = bitvector_access(pm, 2*i) == 0b1;
-    if active then out = vec_store64_packed(out, i, d) else ()
-  };
-  write_vt(Dst_k, out)
+  exec_v_ld(SrcL, SrcR_k, shamt, Dst_k, local)
 }
-
-// Immediate offset forms.
 function exec_v_lbi(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
@@ -3855,72 +3806,22 @@ function exec_v_ldi_brg(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), loca
 
 // More BRG variants.
 function exec_v_lh_brg(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bits(5), local : bits(1)) -> unit = {
-  let _ = local;
-  let base : bits(64) = read_reg5(SrcL);
-  let idxv = read_vt(SrcR_k);
-  let idx0 : bits(32) = vec_get_lane32(idxv, 0);
-  let ea0 : bits(64) = vec_compute_ea(base, 2 * unsigned(ssr_lc0[31..0]), vec_off_from_idx32(idx0, shamt));
-  let h : bits(16) = mem_load16_le(ea0);
-  let r32 : bits(32) = sext_low_n32(sail_zero_extend(h, 32), 16);
-  let vw : int = vec_length_from_lcfr();
-  let pm = read_predicate_p();
-  var out = read_vt(Dst_k);
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 64));
-    let active = bitvector_access(pm, i) == 0b1;
-    out = vec_set_lane32(out, i, if active then r32 else undefined_bitvector(32))
-  };
-  write_vt(Dst_k, out)
+  exec_v_lh(SrcL, SrcR_k, shamt, Dst_k, local)
 }
-
 function exec_v_lhu_brg(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bits(5), local : bits(1)) -> unit = {
-  let _ = local;
-  let base : bits(64) = read_reg5(SrcL);
-  let idxv = read_vt(SrcR_k);
-  let idx0 : bits(32) = vec_get_lane32(idxv, 0);
-  let ea0 : bits(64) = vec_compute_ea(base, 2 * unsigned(ssr_lc0[31..0]), vec_off_from_idx32(idx0, shamt));
-  let h : bits(16) = mem_load16_le(ea0);
-  let r32 : bits(32) = sail_zero_extend(h, 32);
-  let vw : int = vec_length_from_lcfr();
-  let pm = read_predicate_p();
-  var out = read_vt(Dst_k);
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 64));
-    let active = bitvector_access(pm, i) == 0b1;
-    out = vec_set_lane32(out, i, if active then r32 else undefined_bitvector(32))
-  };
-  write_vt(Dst_k, out)
+  exec_v_lhu(SrcL, SrcR_k, shamt, Dst_k, local)
 }
-
 function exec_v_lw_brg(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bits(5), local : bits(1)) -> unit = {
-  let _ = local;
-  let base : bits(64) = read_reg5(SrcL);
-  let idxv = read_vt(SrcR_k);
-  let idx0 : bits(32) = vec_get_lane32(idxv, 0);
-  let ea0 : bits(64) = vec_compute_ea(base, 4 * unsigned(ssr_lc0[31..0]), vec_off_from_idx32(idx0, shamt));
-  let w : bits(32) = mem_load32_le(ea0);
-  let r32 : bits(32) = w;
-  let vw : int = vec_length_from_lcfr();
-  let pm = read_predicate_p();
-  var out = read_vt(Dst_k);
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 64));
-    let active = bitvector_access(pm, i) == 0b1;
-    out = vec_set_lane32(out, i, if active then r32 else undefined_bitvector(32))
-  };
-  write_vt(Dst_k, out)
+  exec_v_lw(SrcL, SrcR_k, shamt, Dst_k, local)
 }
-
 function exec_v_lwu(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bits(5), local : bits(1)) -> unit = {
   // 32-bit load, zero-extended; in 32-bit lanes this is a direct write.
   exec_v_lw(SrcL, SrcR_k, shamt, Dst_k, local)
 }
 
 function exec_v_lwu_brg(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bits(5), local : bits(1)) -> unit = {
-  exec_v_lw_brg(SrcL, SrcR_k, shamt, Dst_k, local)
+  exec_v_lwu(SrcL, SrcR_k, shamt, Dst_k, local)
 }
-
-// Immediate-offset loads (I) for 16/32.
 function exec_v_lhi(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
@@ -5470,16 +5371,8 @@ function exec_v_sw(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : b
 }
 
 function exec_v_sw_brg(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : bits(5), local : bits(1)) -> unit = {
-  // BRG: lane0 address + lane0 data.
-  let _ = local;
-  let base : bits(64) = read_reg5(SrcL);
-  let idxv = read_vt(SrcR_k);
-  let data = read_vt(SrcD_k);
-  let idx0 : bits(32) = vec_get_lane32(idxv, 0);
-  let ea0 : bits(64) = vec_compute_ea(base, 4 * unsigned(ssr_lc0[31..0]), vec_off_from_idx32(idx0, shamt));
-  mem_store32_le(ea0, vec_get_lane32(data, 0))
+  exec_v_sw(SrcL, SrcR_k, shamt, SrcD_k, local)
 }
-
 function exec_v_sw_u(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : bits(5), local : bits(1)) -> unit = {
   // Unscaled: staged model treats same as scaled.
   exec_v_sw(SrcL, SrcR_k, shamt, SrcD_k, local)
@@ -5516,17 +5409,8 @@ function exec_v_swi_u_brg(SrcL_k : bits(5), SrcR : bits(5), simm24 : bits(24), l
 }
 
 function exec_v_sb_brg(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : bits(5), local : bits(1)) -> unit = {
-  // BRG: use lane0 address and store lane0 data.
-  let _ = local;
-  let base : bits(64) = read_reg5(SrcL);
-  let idxv = read_vt(SrcR_k);
-  let data = read_vt(SrcD_k);
-  let idx0 : bits(32) = vec_get_lane32(idxv, 0);
-  let ea0 : bits(64) = vec_compute_ea(base, unsigned(ssr_lc0[31..0]), vec_off_from_idx32(idx0, shamt));
-  let b0 : bits(8) = vec_get_lane32(data, 0)[7..0];
-  write_mem8(ea0, b0)
+  exec_v_sb(SrcL, SrcR_k, shamt, SrcD_k, local)
 }
-
 function exec_v_sh(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : bits(5), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
@@ -5546,16 +5430,8 @@ function exec_v_sh(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : b
 }
 
 function exec_v_sh_brg(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : bits(5), local : bits(1)) -> unit = {
-  let _ = local;
-  let base : bits(64) = read_reg5(SrcL);
-  let idxv = read_vt(SrcR_k);
-  let data = read_vt(SrcD_k);
-  let idx0 : bits(32) = vec_get_lane32(idxv, 0);
-  let ea0 : bits(64) = vec_compute_ea(base, 2 * unsigned(ssr_lc0[31..0]), vec_off_from_idx32(idx0, shamt));
-  let h0 : bits(16) = vec_get_lane32(data, 0)[15..0];
-  mem_store16_le(ea0, h0)
+  exec_v_sh(SrcL, SrcR_k, shamt, SrcD_k, local)
 }
-
 function exec_v_sh_u(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : bits(5), local : bits(1)) -> unit = {
   exec_v_sh(SrcL, SrcR_k, shamt, SrcD_k, local)
 }
@@ -5587,17 +5463,8 @@ function exec_v_sd(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : b
 }
 
 function exec_v_sd_brg(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : bits(5), local : bits(1)) -> unit = {
-  let _ = local;
-  let base : bits(64) = read_reg5(SrcL);
-  let idxv = read_vt(SrcR_k);
-  let data = read_vt(SrcD_k);
-  let idx0 : bits(32) = vec_get_lane32(idxv, 0);
-  let ea0 : bits(64) = vec_compute_ea(base, 8 * unsigned(ssr_lc0[31..0]), vec_off_from_idx32(idx0, shamt));
-  let lo : bits(32) = vec_get_lane32(data, 0);
-  let hi : bits(32) = vec_get_lane32(data, 1);
-  mem_store64_le(ea0, (hi @ lo))
+  exec_v_sd(SrcL, SrcR_k, shamt, SrcD_k, local)
 }
-
 function exec_v_sd_u(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : bits(5), local : bits(1)) -> unit = {
   exec_v_sd(SrcL, SrcR_k, shamt, SrcD_k, local)
 }
