@@ -7,7 +7,7 @@ body:
     id: gate
     attributes:
       label: Gate / workflow
-      description: E.g. `CI / check26`, `public-v03-guards`, `tools/regression/run.sh`.
+      description: E.g. `CI / avs-contract`, `CI / docs`, `public-v03-guards`, `tools/regression/run.sh`.
     validations:
       required: true
   - type: input
@@ -30,4 +30,3 @@ body:
       label: Suspected commit(s) / bisect info
     validations:
       required: false
-

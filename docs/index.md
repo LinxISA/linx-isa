@@ -14,5 +14,5 @@ This site is built from the LinxISA superproject repository: [LinxISA/linx-isa](
 - [AVS Contract](bringup/AVS_CONTRACT.md)
 - [Rendering Bring-up](bringup/rendering_vulkan_bringup.md)
 - [Bring-up Progress](bringup/PROGRESS.md)
-- [ISA Manual (Build Artifact)](architecture/isa-manual/build/linxisa-isa-manual.pdf)
+- [ISA Manual Source Tree](https://github.com/LinxISA/linx-isa/tree/main/docs/architecture/isa-manual/src)
 - [Release Notes](releases/v0.4.0.md)

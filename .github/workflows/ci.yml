@@ -20,7 +20,7 @@ jobs:
       - name: Enforce Repository Layout
         run: bash tools/ci/check_repo_layout.sh
 
-  check26:
+  avs-contract:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -31,8 +31,10 @@ jobs:
           python-version: "3.11"
       - name: Install deps
         run: python -m pip install --upgrade pip pyyaml
-      - name: Run check26 contract gate
-        run: python3 tools/bringup/check26_contract.py --root .
+      - name: Run AVS contract gate
+        run: python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml
+      - name: Run Sail model gate
+        run: python3 tools/bringup/check_sail_model.py
 
   docs:
     runs-on: ubuntu-latest
@@ -44,7 +46,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install deps
-        run: python -m pip install --upgrade pip mkdocs-material
+        run: python -m pip install --upgrade pip "mkdocs<2" mkdocs-material
       - name: Build docs (MkDocs)
         run: mkdocs build --strict
 
