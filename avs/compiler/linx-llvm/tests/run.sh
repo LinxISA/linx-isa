@@ -25,6 +25,7 @@ if [[ -z "$CLANG" ]]; then
 fi
 
 TOOL_DIR="$(cd "$(dirname "$CLANG")" && pwd)"
+LLVMMC="${LLVMMC:-$TOOL_DIR/llvm-mc}"
 OBJDUMP="${OBJDUMP:-$TOOL_DIR/llvm-objdump}"
 OBJCOPY="${OBJCOPY:-$TOOL_DIR/llvm-objcopy}"
 READOBJ="${READOBJ:-$TOOL_DIR/llvm-readobj}"
@@ -32,6 +33,10 @@ LLD="${LLD:-$TOOL_DIR/ld.lld}"
 
 if [[ ! -x "$OBJDUMP" ]]; then
   echo "error: llvm-objdump not found next to clang; set OBJDUMP=..." >&2
+  exit 1
+fi
+if [[ ! -x "$LLVMMC" ]]; then
+  echo "error: llvm-mc not found next to clang; set LLVMMC=..." >&2
   exit 1
 fi
 if [[ ! -x "$OBJCOPY" ]]; then
@@ -201,8 +206,10 @@ fi
 
 SPEC="${SPEC:-$ROOT/../../../../isa/v0.4/linxisa-v0.4.json}"
 GEN_VECTORS="$ROOT/gen_disasm_vectors.py"
+ROUNDTRIP_CHECK="$ROOT/check_disasm_roundtrip.py"
+SPEC_ROUNDTRIP_POLICY="${SPEC_ROUNDTRIP_POLICY:-audit}" # audit|strict
 
-if [[ -f "$SPEC" && -f "$GEN_VECTORS" ]]; then
+if [[ -f "$SPEC" && -f "$GEN_VECTORS" && -f "$ROUNDTRIP_CHECK" ]]; then
   BASE="99_spec_decode"
   OUT="$OUT_DIR/$BASE"
   mkdir -p "$OUT"
@@ -214,8 +221,57 @@ if [[ -f "$SPEC" && -f "$GEN_VECTORS" ]]; then
   "$LLD" --entry=0 -o "$OUT/$BASE.elf" "$OUT/$BASE.o"
   "$OBJCOPY" --only-section=.text -O binary "$OUT/$BASE.elf" "$OUT/$BASE.bin"
   wc -c "$OUT/$BASE.bin" >"$OUT/$BASE.bin.size"
+  python3 "$ROUNDTRIP_CHECK" \
+    --input-objdump "$OUT/$BASE.objdump" \
+    --asm-out "$OUT/$BASE.roundtrip.s" \
+    --roundtrip-obj "$OUT/$BASE.roundtrip.o" \
+    --roundtrip-objdump "$OUT/$BASE.roundtrip.objdump" \
+    --report-out "$OUT/$BASE.roundtrip.json" \
+    --mc "$LLVMMC" \
+    --objdump "$OBJDUMP" \
+    --triple "$TARGET"
+  if [[ "$SPEC_ROUNDTRIP_POLICY" == "strict" ]]; then
+    python3 "$ROUNDTRIP_CHECK" \
+      --input-objdump "$OUT/$BASE.objdump" \
+      --asm-out "$OUT/$BASE.roundtrip.strict.s" \
+      --roundtrip-obj "$OUT/$BASE.roundtrip.strict.o" \
+      --roundtrip-objdump "$OUT/$BASE.roundtrip.strict.objdump" \
+      --report-out "$OUT/$BASE.roundtrip.strict.json" \
+      --mc "$LLVMMC" \
+      --objdump "$OBJDUMP" \
+      --triple "$TARGET" \
+      --require-all
+  fi
 else
-  echo "warning: spec decode vectors skipped (missing $SPEC or $GEN_VECTORS)" >&2
+  echo "warning: spec decode vectors skipped (missing $SPEC, $GEN_VECTORS, or $ROUNDTRIP_CHECK)" >&2
+fi
+
+NEG_DIR="$ROOT/neg"
+if [[ -d "$NEG_DIR" ]]; then
+  NEG_OUT="$OUT_DIR/_neg"
+  mkdir -p "$NEG_OUT"
+
+  echo "[neg] legacy alias rejection"
+  if "$LLVMMC" -triple="$TARGET" -filetype=obj "$NEG_DIR/legacy_alias_l_bstop.s" -o /dev/null 2>"$NEG_OUT/legacy_alias_l_bstop.err"; then
+    echo "error: legacy alias negative test unexpectedly assembled" >&2
+    exit 1
+  fi
+  if ! grep -Eq "canonical v0\\.4|strict-v0\\.3|not allowed in v0\\.3" "$NEG_OUT/legacy_alias_l_bstop.err"; then
+    echo "error: legacy alias negative test did not report the expected rejection" >&2
+    cat "$NEG_OUT/legacy_alias_l_bstop.err" >&2
+    exit 1
+  fi
+
+  echo "[neg] TEPL tileop range rejection"
+  if "$LLVMMC" -triple="$TARGET" -filetype=obj "$NEG_DIR/tepl_tileop_range.s" -o /dev/null 2>"$NEG_OUT/tepl_tileop_range.err"; then
+    echo "error: TEPL range negative test unexpectedly assembled" >&2
+    exit 1
+  fi
+  if ! grep -Eq "TileOp10 must be in range 0\\.\\.1023|TileOpcode must be in range 0\\.\\.1023" "$NEG_OUT/tepl_tileop_range.err"; then
+    echo "error: TEPL range negative test did not report TileOp10 range failure" >&2
+    cat "$NEG_OUT/tepl_tileop_range.err" >&2
+    exit 1
+  fi
 fi
 
 if [[ -n "$READOBJ" ]]; then

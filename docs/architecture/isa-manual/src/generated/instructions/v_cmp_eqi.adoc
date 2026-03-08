@@ -5,7 +5,7 @@
 [[inst_v_cmp_eqi]]
 ==== V.CMP.EQI
 
-*Syntax:* v.cmp.eqi SrcL.<T>, simm, ->Dst.<W>
+*Syntax:* v.cmp.eqi SrcL, simm, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

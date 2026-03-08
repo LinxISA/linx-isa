@@ -165,6 +165,10 @@ python3 "$ROOT/tools/bringup/check_multi_agent_gates.py" \
   --checklists-root "$MULTI_AGENT_CHECKLISTS_ROOT" \
   ${STATIC_PHASE_ARGS[@]+"${STATIC_PHASE_ARGS[@]}"}
 
+echo
+echo "-- Sail model status gate"
+python3 "$ROOT/tools/bringup/check_sail_model.py"
+
 if [[ -z "$CLANG" ]]; then
   clang_candidates=()
   case "$TOOLCHAIN_LANE" in
@@ -267,11 +271,9 @@ echo "-- Compiler AVS gate"
 
 if [[ "$RUN_AVS_MATRIX_AUDIT" == "1" ]]; then
   echo
-  echo "-- AVS matrix status artifact audit"
-  python3 "$ROOT/tools/bringup/check_avs_matrix_status.py" \
-    --matrix "$ROOT/avs/linx_avs_v1_test_matrix.yaml" \
-    --status "$ROOT/avs/linx_avs_v1_test_matrix_status.json" \
-    --report-out "$ROOT/docs/bringup/gates/avs_matrix_status_audit.json"
+  echo "-- AVS contract audit"
+  python3 "$ROOT/tools/bringup/check_avs_contract.py" \
+    --matrix "$ROOT/avs/linx_avs_v1_test_matrix.yaml"
 fi
 
 echo
@@ -364,7 +366,8 @@ if [[ "$RUN_QEMU_ISA_COVERAGE_AUDIT" == "1" ]]; then
     --spec "$ROOT/isa/v0.4/linxisa-v0.4.json" \
     --qemu-meta "$ROOT/emulator/qemu/target/linx/linx_opcode_meta_gen.h" \
     --report-out "$ROOT/docs/bringup/gates/qemu_isa_coverage_latest.json" \
-    --out-md "$ROOT/docs/bringup/gates/qemu_isa_coverage_latest.md"
+    --out-md "$ROOT/docs/bringup/gates/qemu_isa_coverage_latest.md" \
+    --require-full
 fi
 
 LINUX_ROOT="${LINUX_ROOT:-$ROOT/kernel/linux}"
@@ -504,6 +507,66 @@ if [[ "$RUN_GLIBC_G1B" == "1" ]]; then
   fi
 fi
 
+WORKLOAD_TARGET="${WORKLOAD_TARGET:-linx64-unknown-linux-musl}"
+WORKLOAD_SYSROOT="${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b}"
+WORKLOAD_OUT_DIR="${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}"
+TSVC_STRICT_FAIL_UNDER="${TSVC_STRICT_FAIL_UNDER:-151}"
+LINX_CTUNING_LIMIT="${LINX_CTUNING_LIMIT:-5}"
+LINX_SPEC_DIR="${LINX_SPEC_DIR:-$ROOT/workloads/spec2017/cpu2017v118_x64_gcc12_avx2}"
+
+echo
+echo "-- Workload and benchmark gates"
+python3 "$ROOT/workloads/run_benchmarks.py" \
+  --cc "$CLANG" \
+  --target "$WORKLOAD_TARGET" \
+  --sysroot "$WORKLOAD_SYSROOT" \
+  --json-out "$WORKLOAD_OUT_DIR/benchmarks_result.json"
+python3 "$ROOT/workloads/run_polybench.py" \
+  --cc "$CLANG" \
+  --target "$WORKLOAD_TARGET" \
+  --sysroot "$WORKLOAD_SYSROOT" \
+  --json-out "$WORKLOAD_OUT_DIR/polybench_result.json"
+python3 "$ROOT/workloads/run_portfolio.py" \
+  --cc "$CLANG" \
+  --target "$WORKLOAD_TARGET" \
+  --sysroot "$WORKLOAD_SYSROOT" \
+  --polybench \
+  --ctuning-limit "$LINX_CTUNING_LIMIT" \
+  --json-out "$WORKLOAD_OUT_DIR/portfolio_report.json"
+python3 "$ROOT/workloads/tsvc/run_tsvc.py" \
+  --clang "$CLANG" \
+  --lld "$LLD" \
+  --qemu "$QEMU" \
+  --vector-mode auto \
+  --strict-fail-under "$TSVC_STRICT_FAIL_UNDER" \
+  --source-policy linx-v03-parity \
+  --out-dir "$WORKLOAD_OUT_DIR"
+python3 "$ROOT/workloads/pto_kernels/tools/run_pto_kernel_parity.py" \
+  --out-dir "$WORKLOAD_OUT_DIR"
+python3 "$ROOT/workloads/ctuning/run_milepost_codelets.py" \
+  --ctuning-root "$ROOT/workloads/ctuning" \
+  --target "$WORKLOAD_TARGET" \
+  --clang "$CLANG" \
+  --lld "$LLD" \
+  --qemu "$QEMU" \
+  --limit "$LINX_CTUNING_LIMIT" \
+  --run \
+  --summary-json "$WORKLOAD_OUT_DIR/ctuning_result.json"
+python3 "$ROOT/tools/spec2017/run_stage_qemu_matrix.py" \
+  --spec-dir "$LINX_SPEC_DIR" \
+  --stage a \
+  --input-set "$SPEC_INPUT_SET" \
+  --strict \
+  --out-dir "$WORKLOAD_OUT_DIR/spec_stage_a"
+if [[ "$LINX_GATE_TIER" == "nightly" ]]; then
+  python3 "$ROOT/tools/spec2017/run_stage_qemu_matrix.py" \
+    --spec-dir "$LINX_SPEC_DIR" \
+    --stage b \
+    --input-set "$SPEC_INPUT_SET" \
+    --strict \
+    --out-dir "$WORKLOAD_OUT_DIR/spec_stage_b"
+fi
+
 if [[ "$RUN_LINXCORE_NIGHTLY_GATES" == "1" ]]; then
   echo
   echo "-- LinxCore nightly gates"
@@ -552,6 +615,24 @@ if [[ "$RUN_MODEL_DIFF" == "1" ]]; then
     --profile "$LINX_BRINGUP_PROFILE" \
     --trace-schema-version "${LINX_TRACE_SCHEMA_VERSION:-1.0}" \
     --report-out "$ROOT/docs/bringup/gates/model_diff_summary.json"
+fi
+
+if [[ "$RUN_AVS_MATRIX_AUDIT" == "1" ]]; then
+  echo
+  echo "-- AVS status and tier closure audit"
+  python3 "$ROOT/tools/bringup/gen_avs_matrix_status.py" \
+    --matrix "$ROOT/avs/linx_avs_v1_test_matrix.yaml" \
+    --source-status "$ROOT/avs/linx_avs_v1_test_matrix_status.json" \
+    --out "$ROOT/avs/linx_avs_v1_test_matrix_status.json"
+  python3 "$ROOT/tools/bringup/check_avs_matrix_status.py" \
+    --matrix "$ROOT/avs/linx_avs_v1_test_matrix.yaml" \
+    --status "$ROOT/avs/linx_avs_v1_test_matrix_status.json" \
+    --report-out "$ROOT/docs/bringup/gates/avs_matrix_status_audit.json"
+  python3 "$ROOT/tools/bringup/check_avs_profile_closure.py" \
+    --matrix "$ROOT/avs/linx_avs_v1_test_matrix.yaml" \
+    --status "$ROOT/avs/linx_avs_v1_test_matrix_status.json" \
+    --tier "${LINX_GATE_TIER}" \
+    --report-out "$ROOT/docs/bringup/gates/avs_tier_closure_${LINX_GATE_TIER}.json"
 fi
 
 MULTI_AGENT_SUMMARY_PATH=""

@@ -5,7 +5,7 @@
 [[inst_v_fmax]]
 ==== V.FMAX
 
-*Syntax:* v.fmax SrcL.<T>, SrcR.<T>, ->Dst.<W>
+*Syntax:* v.fmax SrcL, SrcR, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

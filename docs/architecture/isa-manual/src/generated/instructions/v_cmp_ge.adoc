@@ -5,7 +5,7 @@
 [[inst_v_cmp_ge]]
 ==== V.CMP.GE
 
-*Syntax:* v.cmp.ge SrcL.<T>, SrcR.<T>, ->Dst.<W>
+*Syntax:* v.cmp.ge SrcL, SrcR, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

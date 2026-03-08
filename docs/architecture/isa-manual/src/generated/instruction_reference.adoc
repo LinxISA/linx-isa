@@ -287,22 +287,22 @@
 |`C.AND` |16 |- |`c.and srcL, srcR, ->t` |-
 |`C.OR` |16 |- |`c.or srcL, srcR, ->t` |-
 |`C.SUB` |16 |- |`c.sub srcL, srcR, ->t` |-
-|`V.ADD` |64 |- |`v.add SrcL.<T>, SrcR.<T><.neg><<<shamt>, ->Dst.<W>` |-
-|`V.ADDI` |64 |- |`v.addi SrcL.<T>, uimm, ->Dst.<W>` |-
-|`V.AND` |64 |- |`v.and SrcL.<T>, SrcR.<T><.not><<<shamt>, ->Dst.<W>` |-
-|`V.ANDI` |64 |- |`v.andi SrcL.<T>, simm, ->Dst.<W>` |-
-|`V.OR` |64 |- |`v.or SrcL.<T>, SrcR.<T><.not><<<shamt>, ->Dst.<W>` |-
-|`V.ORI` |64 |- |`v.ori SrcL.<T>, simm, ->Dst.<W>` |-
-|`V.SLL` |64 |- |`v.sll SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
-|`V.SLLI` |64 |- |`v.slli SrcL.<T>, shamt, ->Dst.<W>` |-
-|`V.SRA` |64 |- |`v.sra SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
-|`V.SRAI` |64 |- |`v.srai SrcL.<T>, shamt, ->Dst.<W>` |-
-|`V.SRL` |64 |- |`v.srl SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
-|`V.SRLI` |64 |- |`v.srli SrcL.<T>, shamt, ->Dst.<W>` |-
-|`V.SUB` |64 |- |`v.sub SrcL.<T>, SrcR.<T><.neg><<<shamt>, ->Dst.<W>` |-
-|`V.SUBI` |64 |- |`v.subi SrcL.<T>, uimm, ->Dst.<W>` |-
-|`V.XOR` |64 |- |`v.xor SrcL.<T>, SrcR.<T><.not><<<shamt>, ->Dst.<W>` |-
-|`V.XORI` |64 |- |`v.xori SrcL.<T>, simm, ->Dst.<W>` |-
+|`V.ADD` |64 |- |`v.add SrcL, SrcR<.neg><<<shamt>, ->Dst` |-
+|`V.ADDI` |64 |- |`v.addi SrcL, uimm, ->Dst` |-
+|`V.AND` |64 |- |`v.and SrcL, SrcR<.not><<<shamt>, ->Dst` |-
+|`V.ANDI` |64 |- |`v.andi SrcL, simm, ->Dst` |-
+|`V.OR` |64 |- |`v.or SrcL, SrcR<.not><<<shamt>, ->Dst` |-
+|`V.ORI` |64 |- |`v.ori SrcL, simm, ->Dst` |-
+|`V.SLL` |64 |- |`v.sll SrcL, SrcR, ->Dst` |-
+|`V.SLLI` |64 |- |`v.slli SrcL, shamt, ->Dst` |-
+|`V.SRA` |64 |- |`v.sra SrcL, SrcR, ->Dst` |-
+|`V.SRAI` |64 |- |`v.srai SrcL, shamt, ->Dst` |-
+|`V.SRL` |64 |- |`v.srl SrcL, SrcR, ->Dst` |-
+|`V.SRLI` |64 |- |`v.srli SrcL, shamt, ->Dst` |-
+|`V.SUB` |64 |- |`v.sub SrcL, SrcR<.neg><<<shamt>, ->Dst` |-
+|`V.SUBI` |64 |- |`v.subi SrcL, uimm, ->Dst` |-
+|`V.XOR` |64 |- |`v.xor SrcL, SrcR<.not><<<shamt>, ->Dst` |-
+|`V.XORI` |64 |- |`v.xori SrcL, simm, ->Dst` |-
 |===
 
 [[insnref-arithmetic]]
@@ -368,20 +368,20 @@
 |`LHUI` |32 |- |`lhui [SrcL, simm], ->{t, u, Rd}` |-
 |`LWI` |32 |- |`lwi [SrcL, simm], ->{t, u, Rd}` |-
 |`LWUI` |32 |- |`lwui [SrcL, simm], ->{t, u, Rd}` |-
-|`V.LBI` |64 |- |`v.lbi<.local> [SrcL<.ud>, <lc0>, simm], ->Dst.<W>` |-
-|`V.LBI.BRG` |64 |- |`v.lbi.brg<.local> [SrcL<.ud>, <lc0>, simm], ->Dst.<W>` |-
-|`V.LBUI` |64 |- |`v.lbui<.local> [SrcL<.ud>, <lc0>, simm], ->Dst.<W>` |-
-|`V.LBUI.BRG` |64 |- |`v.lbui.brg<.local> [SrcL<.ud>, <lc0>, simm], ->Dst.<W>` |-
-|`V.LDI` |64 |- |`v.ldi<.local> [SrcL<.ud>, <lc0<<3>, simm], ->Dst.<W>` |-
-|`V.LDI.BRG` |64 |- |`v.ldi.brg<.local> [SrcL<.ud>, <lc0<<3>, simm], ->Dst.<W>` |-
-|`V.LHI` |64 |- |`v.lhi<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>` |-
-|`V.LHI.BRG` |64 |- |`v.lhi.brg<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>` |-
-|`V.LHUI` |64 |- |`v.lhui<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>` |-
-|`V.LHUI.BRG` |64 |- |`v.lhui.brg<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>` |-
-|`V.LWI` |64 |- |`v.lwi<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>` |-
-|`V.LWI.BRG` |64 |- |`v.lwi.brg<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>` |-
-|`V.LWUI` |64 |- |`v.lwui<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>` |-
-|`V.LWUI.BRG` |64 |- |`v.lwui.brg<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>` |-
+|`V.LBI` |64 |- |`v.lbi<.local> [SrcL, <lc0>, simm], ->Dst` |-
+|`V.LBI.BRG` |64 |- |`v.lbi.brg<.local> [SrcL, <lc0>, simm], ->Dst` |-
+|`V.LBUI` |64 |- |`v.lbui<.local> [SrcL, <lc0>, simm], ->Dst` |-
+|`V.LBUI.BRG` |64 |- |`v.lbui.brg<.local> [SrcL, <lc0>, simm], ->Dst` |-
+|`V.LDI` |64 |- |`v.ldi<.local> [SrcL, <lc0<<3>, simm], ->Dst` |-
+|`V.LDI.BRG` |64 |- |`v.ldi.brg<.local> [SrcL, <lc0<<3>, simm], ->Dst` |-
+|`V.LHI` |64 |- |`v.lhi<.local> [SrcL, <lc0<<1>, simm], ->Dst` |-
+|`V.LHI.BRG` |64 |- |`v.lhi.brg<.local> [SrcL, <lc0<<1>, simm], ->Dst` |-
+|`V.LHUI` |64 |- |`v.lhui<.local> [SrcL, <lc0<<1>, simm], ->Dst` |-
+|`V.LHUI.BRG` |64 |- |`v.lhui.brg<.local> [SrcL, <lc0<<1>, simm], ->Dst` |-
+|`V.LWI` |64 |- |`v.lwi<.local> [SrcL, <lc0<<2>, simm], ->Dst` |-
+|`V.LWI.BRG` |64 |- |`v.lwi.brg<.local> [SrcL, <lc0<<2>, simm], ->Dst` |-
+|`V.LWUI` |64 |- |`v.lwui<.local> [SrcL, <lc0<<2>, simm], ->Dst` |-
+|`V.LWUI.BRG` |64 |- |`v.lwui.brg<.local> [SrcL, <lc0<<2>, simm], ->Dst` |-
 |===
 
 [[insnref-move]]
@@ -491,22 +491,22 @@
 |`HL.CMP.LTUI` |48 |- |`hl.cmp.ltui SrcL, uimm, ->{t, u, Rd}` |-
 |`HL.CMP.NEI` |48 |- |`hl.cmp.nei SrcL, simm, ->{t, u, Rd}` |-
 |`HL.CMP.ORI` |48 |- |`hl.cmp.ori SrcL, simm, ->{t, u, Rd}` |-
-|`V.CMP.AND` |64 |- |`v.cmp.and SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
-|`V.CMP.ANDI` |64 |- |`v.cmp.andi SrcL.<T>, simm, ->Dst.<W>` |-
-|`V.CMP.EQ` |64 |- |`v.cmp.eq SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
-|`V.CMP.EQI` |64 |- |`v.cmp.eqi SrcL.<T>, simm, ->Dst.<W>` |-
-|`V.CMP.GE` |64 |- |`v.cmp.ge SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
-|`V.CMP.GEI` |64 |- |`v.cmp.gei SrcL.<T>, simm, ->Dst.<W>` |-
-|`V.CMP.GEU` |64 |- |`v.cmp.geu SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
-|`V.CMP.GEUI` |64 |- |`v.cmp.geui SrcL.<T>, uimm, ->Dst.<W>` |-
-|`V.CMP.LT` |64 |- |`v.cmp.lt SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
-|`V.CMP.LTI` |64 |- |`v.cmp.lti SrcL.<T>, simm, ->Dst.<W>` |-
-|`V.CMP.LTU` |64 |- |`v.cmp.ltu SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
-|`V.CMP.LTUI` |64 |- |`v.cmp.ltui SrcL.<T>, uimm, ->Dst.<W>` |-
-|`V.CMP.NE` |64 |- |`v.cmp.ne SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
-|`V.CMP.NEI` |64 |- |`v.cmp.nei SrcL.<T>, simm, ->Dst.<W>` |-
-|`V.CMP.OR` |64 |- |`v.cmp.or SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
-|`V.CMP.ORI` |64 |- |`v.cmp.ori SrcL.<T>, simm, ->Dst.<W>` |-
+|`V.CMP.AND` |64 |- |`v.cmp.and SrcL, SrcR, ->Dst` |-
+|`V.CMP.ANDI` |64 |- |`v.cmp.andi SrcL, simm, ->Dst` |-
+|`V.CMP.EQ` |64 |- |`v.cmp.eq SrcL, SrcR, ->Dst` |-
+|`V.CMP.EQI` |64 |- |`v.cmp.eqi SrcL, simm, ->Dst` |-
+|`V.CMP.GE` |64 |- |`v.cmp.ge SrcL, SrcR, ->Dst` |-
+|`V.CMP.GEI` |64 |- |`v.cmp.gei SrcL, simm, ->Dst` |-
+|`V.CMP.GEU` |64 |- |`v.cmp.geu SrcL, SrcR, ->Dst` |-
+|`V.CMP.GEUI` |64 |- |`v.cmp.geui SrcL, uimm, ->Dst` |-
+|`V.CMP.LT` |64 |- |`v.cmp.lt SrcL, SrcR, ->Dst` |-
+|`V.CMP.LTI` |64 |- |`v.cmp.lti SrcL, simm, ->Dst` |-
+|`V.CMP.LTU` |64 |- |`v.cmp.ltu SrcL, SrcR, ->Dst` |-
+|`V.CMP.LTUI` |64 |- |`v.cmp.ltui SrcL, uimm, ->Dst` |-
+|`V.CMP.NE` |64 |- |`v.cmp.ne SrcL, SrcR, ->Dst` |-
+|`V.CMP.NEI` |64 |- |`v.cmp.nei SrcL, simm, ->Dst` |-
+|`V.CMP.OR` |64 |- |`v.cmp.or SrcL, SrcR, ->Dst` |-
+|`V.CMP.ORI` |64 |- |`v.cmp.ori SrcL, simm, ->Dst` |-
 |===
 
 [[insnref-compound-operation]]
@@ -550,8 +550,8 @@
 |`REMU` |32 |- |`remu SrcL, SrcR, ->{t, u, Rd}` |-
 |`REMUW` |32 |- |`remuw SrcL, SrcR, ->{t, u, Rd}` |-
 |`REMW` |32 |- |`remw SrcL, SrcR, ->{t, u, Rd}` |-
-|`V.MADD` |64 |- |`v.madd SrcL.<T>, SrcR.<T>, SrcD.<T>, ->Dst.<W>` |-
-|`V.MUL` |64 |- |`v.mul SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
+|`V.MADD` |64 |- |`v.madd SrcL, SrcR, SrcD, ->Dst` |-
+|`V.MUL` |64 |- |`v.mul SrcL, SrcR, ->Dst` |-
 |===
 
 [[insnref-floating-point-arithmetic]]
@@ -588,10 +588,10 @@
 |`FCVTZ` |32 |- |`fcvtz.{srcT2dstT} SrcL, ->{t, u, Rd}` |-
 |`SCVTF` |32 |- |`scvtf.{srcT2dstT} SrcL, ->{t, u, Rd}` |-
 |`UCVTF` |32 |- |`ucvtf.{srcT2dstT} SrcL, ->{t, u, Rd}` |-
-|`V.FCVT` |64 |- |`v.fcvt.{st2dt} SrcL.<T>, ->Dst.<W>` |-
-|`V.FCVTI` |64 |- |`v.fcvti.{st2dt} SrcL.<T>, ->Dst.<W>` |-
-|`V.ICVT` |64 |- |`v.icvt.{st2dt} SrcL.<T>, ->Dst.<W>` |-
-|`V.ICVTF` |64 |- |`v.icvtf.{st2dt} SrcL.<T>, ->Dst.<W>` |-
+|`V.FCVT` |64 |- |`v.fcvt.{st2dt} SrcL, ->Dst` |-
+|`V.FCVTI` |64 |- |`v.fcvti.{st2dt} SrcL, ->Dst` |-
+|`V.ICVT` |64 |- |`v.icvt.{st2dt} SrcL, ->Dst` |-
+|`V.ICVTF` |64 |- |`v.icvtf.{st2dt} SrcL, ->Dst` |-
 |===
 
 [[insnref-floating-point-compare]]
@@ -938,20 +938,20 @@
 |`LW` |32 |- |`lw [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |-
 |`LWU` |32 |- |`lwu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |-
 |`PRF` |32 |- |`prf [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]` |-
-|`V.LB` |64 |- |`v.lb<.local> [SrcL<.ud>, <lc0>, SrcR.<T><<<shamt>], ->Dst.<W>` |-
-|`V.LB.BRG` |64 |- |`v.lb.brg<.local> [SrcL<.ud>, <lc0>, SrcR.<T><<<shamt>], ->Dst.<W>` |-
-|`V.LBU` |64 |- |`v.lbu<.local> [SrcL<.ud>, <lc0>, SrcR.<T><<<shamt>], ->Dst.<W>` |-
-|`V.LBU.BRG` |64 |- |`v.lbu.brg<.local> [SrcL<.ud>, <lc0>, SrcR.<T><<<shamt>], ->Dst.<W>` |-
-|`V.LD` |64 |- |`v.ld<.local> [SrcL<.ud>, <lc0<<3>, SrcR.<T><<<shamt>], ->Dst.<W>` |-
-|`V.LD.BRG` |64 |- |`v.ld.brg<.local> [SrcL<.ud>, <lc0<<3>, SrcR.<T><<<shamt>], ->Dst.<W>` |-
-|`V.LH` |64 |- |`v.lh<.local> [SrcL<.ud>, <lc0<<1>, SrcR.<T><<<shamt>], ->Dst.<W>` |-
-|`V.LH.BRG` |64 |- |`v.lh.brg<.local> [SrcL<.ud>, <lc0<<1>, SrcR.<T><<<shamt>], ->Dst.<W>` |-
-|`V.LHU` |64 |- |`v.lhu<.local> [SrcL<.ud>, <lc0<<1>, SrcR.<T><<<shamt>], ->Dst.<W>` |-
-|`V.LHU.BRG` |64 |- |`v.lhu.brg<.local> [SrcL<.ud>, <lc0<<1>, SrcR.<T><<<shamt>], ->Dst.<W>` |-
-|`V.LW` |64 |- |`v.lw<.local> [SrcL<.ud>, <lc0<<2>, SrcR.<T><<<shamt>], ->Dst.<W>` |-
-|`V.LW.BRG` |64 |- |`v.lw.brg<.local> [SrcL<.ud>, <lc0<<2>, SrcR.<T><<<shamt>], ->Dst.<W>` |-
-|`V.LWU` |64 |- |`v.lwu<.local> [SrcL<.ud>, <lc0<<2>, SrcR.<T><<<shamt>], ->Dst.<W>` |-
-|`V.LWU.BRG` |64 |- |`v.lwu.brg<.local> [SrcL<.ud>, <lc0<<2>, SrcR.<T><<<shamt>], ->Dst.<W>` |-
+|`V.LB` |64 |- |`v.lb<.local> [SrcL, <lc0>, SrcR<<<shamt>], ->Dst` |-
+|`V.LB.BRG` |64 |- |`v.lb.brg<.local> [SrcL, <lc0>, SrcR<<<shamt>], ->Dst` |-
+|`V.LBU` |64 |- |`v.lbu<.local> [SrcL, <lc0>, SrcR<<<shamt>], ->Dst` |-
+|`V.LBU.BRG` |64 |- |`v.lbu.brg<.local> [SrcL, <lc0>, SrcR<<<shamt>], ->Dst` |-
+|`V.LD` |64 |- |`v.ld<.local> [SrcL, <lc0<<3>, SrcR<<<shamt>], ->Dst` |-
+|`V.LD.BRG` |64 |- |`v.ld.brg<.local> [SrcL, <lc0<<3>, SrcR<<<shamt>], ->Dst` |-
+|`V.LH` |64 |- |`v.lh<.local> [SrcL, <lc0<<1>, SrcR<<<shamt>], ->Dst` |-
+|`V.LH.BRG` |64 |- |`v.lh.brg<.local> [SrcL, <lc0<<1>, SrcR<<<shamt>], ->Dst` |-
+|`V.LHU` |64 |- |`v.lhu<.local> [SrcL, <lc0<<1>, SrcR<<<shamt>], ->Dst` |-
+|`V.LHU.BRG` |64 |- |`v.lhu.brg<.local> [SrcL, <lc0<<1>, SrcR<<<shamt>], ->Dst` |-
+|`V.LW` |64 |- |`v.lw<.local> [SrcL, <lc0<<2>, SrcR<<<shamt>], ->Dst` |-
+|`V.LW.BRG` |64 |- |`v.lw.brg<.local> [SrcL, <lc0<<2>, SrcR<<<shamt>], ->Dst` |-
+|`V.LWU` |64 |- |`v.lwu<.local> [SrcL, <lc0<<2>, SrcR<<<shamt>], ->Dst` |-
+|`V.LWU.BRG` |64 |- |`v.lwu.brg<.local> [SrcL, <lc0<<2>, SrcR<<<shamt>], ->Dst` |-
 |===
 
 [[insnref-load-symbol]]
@@ -1019,30 +1019,30 @@
 |`SWAPD` |32 |- |`swapd<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
 |`SWAPH` |32 |- |`swaph<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
 |`SWAPW` |32 |- |`swapw<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
-|`V.LD.ADD` |64 |- |`v.ld.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>` |-
-|`V.LD.AND` |64 |- |`v.ld.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>` |-
-|`V.LD.MAX` |64 |- |`v.ld.max<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>` |-
-|`V.LD.MIN` |64 |- |`v.ld.min<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>` |-
-|`V.LD.OR` |64 |- |`v.ld.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>` |-
-|`V.LD.XOR` |64 |- |`v.ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>` |-
-|`V.LW.ADD` |64 |- |`v.lw.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>` |-
-|`V.LW.AND` |64 |- |`v.lw.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>` |-
-|`V.LW.MAX` |64 |- |`v.lw.max<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>` |-
-|`V.LW.MIN` |64 |- |`v.lw.min<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>` |-
-|`V.LW.OR` |64 |- |`v.lw.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>` |-
-|`V.LW.XOR` |64 |- |`v.lw.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>` |-
-|`V.SD.ADD` |64 |- |`v.sd.add<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>` |-
-|`V.SD.AND` |64 |- |`v.sd.and<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>` |-
-|`V.SD.MAX` |64 |- |`v.sd.max<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>` |-
-|`V.SD.MIN` |64 |- |`v.sd.min<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>` |-
-|`V.SD.OR` |64 |- |`v.sd.or<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>` |-
-|`V.SD.XOR` |64 |- |`v.sd.xor<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>` |-
-|`V.SW.ADD` |64 |- |`v.sw.add<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>` |-
-|`V.SW.AND` |64 |- |`v.sw.and<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>` |-
-|`V.SW.MAX` |64 |- |`v.sw.max<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>` |-
-|`V.SW.MIN` |64 |- |`v.sw.min<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>` |-
-|`V.SW.OR` |64 |- |`v.sw.or<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>` |-
-|`V.SW.XOR` |64 |- |`v.sw.xor<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>` |-
+|`V.LD.ADD` |64 |- |`v.ld.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
+|`V.LD.AND` |64 |- |`v.ld.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
+|`V.LD.MAX` |64 |- |`v.ld.max<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
+|`V.LD.MIN` |64 |- |`v.ld.min<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
+|`V.LD.OR` |64 |- |`v.ld.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
+|`V.LD.XOR` |64 |- |`v.ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
+|`V.LW.ADD` |64 |- |`v.lw.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
+|`V.LW.AND` |64 |- |`v.lw.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
+|`V.LW.MAX` |64 |- |`v.lw.max<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
+|`V.LW.MIN` |64 |- |`v.lw.min<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
+|`V.LW.OR` |64 |- |`v.lw.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
+|`V.LW.XOR` |64 |- |`v.lw.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
+|`V.SD.ADD` |64 |- |`v.sd.add<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
+|`V.SD.AND` |64 |- |`v.sd.and<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
+|`V.SD.MAX` |64 |- |`v.sd.max<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
+|`V.SD.MIN` |64 |- |`v.sd.min<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
+|`V.SD.OR` |64 |- |`v.sd.or<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
+|`V.SD.XOR` |64 |- |`v.sd.xor<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
+|`V.SW.ADD` |64 |- |`v.sw.add<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
+|`V.SW.AND` |64 |- |`v.sw.and<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
+|`V.SW.MAX` |64 |- |`v.sw.max<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
+|`V.SW.MIN` |64 |- |`v.sw.min<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
+|`V.SW.OR` |64 |- |`v.sw.or<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
+|`V.SW.XOR` |64 |- |`v.sw.xor<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
 |===
 
 [[insnref-load-unscaled]]
@@ -1057,16 +1057,16 @@
 |`LWI.U` |32 |- |`lwi.u [SrcL, simm], ->{t, u, Rd}` |-
 |`LWUI.U` |32 |- |`lwui.u [SrcL, simm], ->{t, u, Rd}` |-
 |`PRFI.U` |32 |- |`prfi.u [SrcL, simm]` |-
-|`V.LDI.U` |64 |- |`v.ldi.u<.local> [SrcL<.ud>, <lc0<<3>, simm], ->Dst.<W>` |-
-|`V.LDI.U.BRG` |64 |- |`v.ldi.u.brg<.local> [SrcL<.ud>, <lc0<<3>, simm], ->Dst.<W>` |-
-|`V.LHI.U` |64 |- |`v.lhi.u<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>` |-
-|`V.LHI.U.BRG` |64 |- |`v.lhi.u.brg<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>` |-
-|`V.LHUI.U` |64 |- |`v.lhui.u<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>` |-
-|`V.LHUI.U.BRG` |64 |- |`v.lhui.u.brg<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>` |-
-|`V.LWI.U` |64 |- |`v.lwi.u<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>` |-
-|`V.LWI.U.BRG` |64 |- |`v.lwi.u.brg<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>` |-
-|`V.LWUI.U` |64 |- |`v.lwui.u<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>` |-
-|`V.LWUI.U.BRG` |64 |- |`v.lwui.u.brg<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>` |-
+|`V.LDI.U` |64 |- |`v.ldi.u<.local> [SrcL, <lc0<<3>, simm], ->Dst` |-
+|`V.LDI.U.BRG` |64 |- |`v.ldi.u.brg<.local> [SrcL, <lc0<<3>, simm], ->Dst` |-
+|`V.LHI.U` |64 |- |`v.lhi.u<.local> [SrcL, <lc0<<1>, simm], ->Dst` |-
+|`V.LHI.U.BRG` |64 |- |`v.lhi.u.brg<.local> [SrcL, <lc0<<1>, simm], ->Dst` |-
+|`V.LHUI.U` |64 |- |`v.lhui.u<.local> [SrcL, <lc0<<1>, simm], ->Dst` |-
+|`V.LHUI.U.BRG` |64 |- |`v.lhui.u.brg<.local> [SrcL, <lc0<<1>, simm], ->Dst` |-
+|`V.LWI.U` |64 |- |`v.lwi.u<.local> [SrcL, <lc0<<2>, simm], ->Dst` |-
+|`V.LWI.U.BRG` |64 |- |`v.lwi.u.brg<.local> [SrcL, <lc0<<2>, simm], ->Dst` |-
+|`V.LWUI.U` |64 |- |`v.lwui.u<.local> [SrcL, <lc0<<2>, simm], ->Dst` |-
+|`V.LWUI.U.BRG` |64 |- |`v.lwui.u.brg<.local> [SrcL, <lc0<<2>, simm], ->Dst` |-
 |===
 
 [[insnref-store-register-offset]]
@@ -1082,20 +1082,20 @@
 |`SH.U` |32 |- |`sh.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]` |-
 |`SW` |32 |- |`sw SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2]` |-
 |`SW.U` |32 |- |`sw.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]` |-
-|`V.SB` |64 |- |`v.sb<.local> SrcD.<T1>, [SrcL<.ud>, <lc0>, SrcR.<T2><<<shamt>]` |-
-|`V.SB.BRG` |64 |- |`v.sb.brg<.local> SrcD.<T1>, [SrcL<.ud>, <lc0>, SrcR.<T2><<<shamt>]` |-
-|`V.SD` |64 |- |`v.sd<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<3>, SrcR.<T2><<(3+shamt)]` |-
-|`V.SD.BRG` |64 |- |`v.sd.brg<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<3>, SrcR.<T2><<(3+shamt)]` |-
-|`V.SD.U` |64 |- |`v.sd.u<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<3>, SrcR.<T2><<<shamt>]` |-
-|`V.SD.U.BRG` |64 |- |`v.sd.u.brg<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<3>, SrcR.<T2><<<shamt>]` |-
-|`V.SH` |64 |- |`v.sh<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<1>, SrcR.<T2><<(1+shamt)]` |-
-|`V.SH.BRG` |64 |- |`v.sh.brg<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<1>, SrcR.<T2><<(1+shamt)]` |-
-|`V.SH.U` |64 |- |`v.sh.u<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<1>, SrcR.<T2><<<shamt>]` |-
-|`V.SH.U.BRG` |64 |- |`v.sh.u.brg<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<1>, SrcR.<T2><<<shamt>]` |-
-|`V.SW` |64 |- |`v.sw<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<2>, SrcR.<T2><<(2+shamt)]` |-
-|`V.SW.BRG` |64 |- |`v.sw.brg<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<2>, SrcR.<T2><<(2+shamt)]` |-
-|`V.SW.U` |64 |- |`v.sw.u<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<2>, SrcR.<T2><<<shamt>]` |-
-|`V.SW.U.BRG` |64 |- |`v.sw.u.brg<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<2>, SrcR.<T2><<<shamt>]` |-
+|`V.SB` |64 |- |`v.sb<.local> SrcD.<T1>, [SrcL, <lc0>, SrcR.<T2><<<shamt>]` |-
+|`V.SB.BRG` |64 |- |`v.sb.brg<.local> SrcD.<T1>, [SrcL, <lc0>, SrcR.<T2><<<shamt>]` |-
+|`V.SD` |64 |- |`v.sd<.local> SrcD.<T1>, [SrcL, <lc0<<3>, SrcR.<T2><<(3+shamt)]` |-
+|`V.SD.BRG` |64 |- |`v.sd.brg<.local> SrcD.<T1>, [SrcL, <lc0<<3>, SrcR.<T2><<(3+shamt)]` |-
+|`V.SD.U` |64 |- |`v.sd.u<.local> SrcD.<T1>, [SrcL, <lc0<<3>, SrcR.<T2><<<shamt>]` |-
+|`V.SD.U.BRG` |64 |- |`v.sd.u.brg<.local> SrcD.<T1>, [SrcL, <lc0<<3>, SrcR.<T2><<<shamt>]` |-
+|`V.SH` |64 |- |`v.sh<.local> SrcD.<T1>, [SrcL, <lc0<<1>, SrcR.<T2><<(1+shamt)]` |-
+|`V.SH.BRG` |64 |- |`v.sh.brg<.local> SrcD.<T1>, [SrcL, <lc0<<1>, SrcR.<T2><<(1+shamt)]` |-
+|`V.SH.U` |64 |- |`v.sh.u<.local> SrcD.<T1>, [SrcL, <lc0<<1>, SrcR.<T2><<<shamt>]` |-
+|`V.SH.U.BRG` |64 |- |`v.sh.u.brg<.local> SrcD.<T1>, [SrcL, <lc0<<1>, SrcR.<T2><<<shamt>]` |-
+|`V.SW` |64 |- |`v.sw<.local> SrcD.<T1>, [SrcL, <lc0<<2>, SrcR.<T2><<(2+shamt)]` |-
+|`V.SW.BRG` |64 |- |`v.sw.brg<.local> SrcD.<T1>, [SrcL, <lc0<<2>, SrcR.<T2><<(2+shamt)]` |-
+|`V.SW.U` |64 |- |`v.sw.u<.local> SrcD.<T1>, [SrcL, <lc0<<2>, SrcR.<T2><<<shamt>]` |-
+|`V.SW.U.BRG` |64 |- |`v.sw.u.brg<.local> SrcD.<T1>, [SrcL, <lc0<<2>, SrcR.<T2><<<shamt>]` |-
 |===
 
 [[insnref-store-symbol]]
@@ -1116,14 +1116,14 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`V.BCNT` |64 |- |`v.bcnt SrcL.<T>, Nminus1, M, ->Dst.<W>` |-
-|`V.BIC` |64 |- |`v.bic SrcL.<T>, Nminus1, M, ->Dst.<W>` |-
-|`V.BIS` |64 |- |`v.bis SrcL.<T>, Nminus1, M, ->Dst.<W>` |-
-|`V.BXS` |64 |- |`v.bxs SrcL.<T>, Nminus1, M, ->Dst.<W>` |-
-|`V.BXU` |64 |- |`v.bxu SrcL.<T>, Nminus1, M, ->Dst.<W>` |-
-|`V.CLZ` |64 |- |`v.clz SrcL.<T>, Nminus1, M, ->Dst.<W>` |-
-|`V.CTZ` |64 |- |`v.ctz SrcL.<T>, Nminus1, M, ->Dst.<W>` |-
-|`V.REV` |64 |- |`v.rev SrcL.<T>, M, N, ->Dst.<W>` |-
+|`V.BCNT` |64 |- |`v.bcnt SrcL, Nminus1, M, ->Dst` |-
+|`V.BIC` |64 |- |`v.bic SrcL, Nminus1, M, ->Dst` |-
+|`V.BIS` |64 |- |`v.bis SrcL, Nminus1, M, ->Dst` |-
+|`V.BXS` |64 |- |`v.bxs SrcL, Nminus1, M, ->Dst` |-
+|`V.BXU` |64 |- |`v.bxu SrcL, Nminus1, M, ->Dst` |-
+|`V.CLZ` |64 |- |`v.clz SrcL, Nminus1, M, ->Dst` |-
+|`V.CTZ` |64 |- |`v.ctz SrcL, Nminus1, M, ->Dst` |-
+|`V.REV` |64 |- |`v.rev SrcL, M, N, ->Dst` |-
 |===
 
 [[insnref-three-source-integer]]
@@ -1132,8 +1132,8 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`V.CSEL` |64 |- |`v.csel SrcP.<T>, SrcL.<T>, SrcR.<T><.neg>, ->Dst.<W>` |-
-|`V.PSEL` |64 |- |`v.psel SrcP, SrcL.<T>, SrcR.<T><.neg>, ->Dst.<W>` |-
+|`V.CSEL` |64 |- |`v.csel SrcP, SrcL, SrcR<.neg>, ->Dst` |-
+|`V.PSEL` |64 |- |`v.psel SrcP, SrcL, SrcR<.neg>, ->Dst` |-
 |===
 
 [[insnref-division]]
@@ -1142,8 +1142,8 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`V.DIV` |64 |- |`v.div SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
-|`V.REM` |64 |- |`v.rem SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
+|`V.DIV` |64 |- |`v.div SrcL, SrcR, ->Dst` |-
+|`V.REM` |64 |- |`v.rem SrcL, SrcR, ->Dst` |-
 |===
 
 [[insnref-floating-point-arithmetic-2]]
@@ -1152,11 +1152,11 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`V.FABS` |64 |- |`v.fabs SrcL.<T>, ->Dst.<W>` |-
-|`V.FCLASS` |64 |- |`v.fclass SrcL.<T>, ->Dst.<W>` |-
-|`V.FEXP` |64 |- |`v.fexp SrcL.<T>, ->Dst.<W>` |-
-|`V.FRECIP` |64 |- |`v.frecip SrcL.<T>, ->Dst.<W>` |-
-|`V.FSQRT` |64 |- |`v.fsqrt SrcL.<T>, ->Dst.<W>` |-
+|`V.FABS` |64 |- |`v.fabs SrcL, ->Dst` |-
+|`V.FCLASS` |64 |- |`v.fclass SrcL, ->Dst` |-
+|`V.FEXP` |64 |- |`v.fexp SrcL, ->Dst` |-
+|`V.FRECIP` |64 |- |`v.frecip SrcL, ->Dst` |-
+|`V.FSQRT` |64 |- |`v.fsqrt SrcL, ->Dst` |-
 |===
 
 [[insnref-three-source-floating-point]]
@@ -1165,14 +1165,14 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`V.FADD` |64 |- |`v.fadd SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
-|`V.FDIV` |64 |- |`v.fdiv SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
-|`V.FMADD` |64 |- |`v.fmadd SrcL.<T>, SrcR.<T>, SrcA.<T>, ->Dst.<W>` |-
-|`V.FMSUB` |64 |- |`v.fmsub SrcL.<T>, SrcR.<T>, SrcA.<T>, ->Dst.<W>` |-
-|`V.FMUL` |64 |- |`v.fmul SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
-|`V.FNMADD` |64 |- |`v.fnmadd SrcL.<T>, SrcR.<T>, SrcA.<T>, ->Dst.<W>` |-
-|`V.FNMSUB` |64 |- |`v.fnmsub SrcL.<T>, SrcR.<T>, SrcA.<T>, ->Dst.<W>` |-
-|`V.FSUB` |64 |- |`v.fsub SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
+|`V.FADD` |64 |- |`v.fadd SrcL, SrcR, ->Dst` |-
+|`V.FDIV` |64 |- |`v.fdiv SrcL, SrcR, ->Dst` |-
+|`V.FMADD` |64 |- |`v.fmadd SrcL, SrcR, SrcA, ->Dst` |-
+|`V.FMSUB` |64 |- |`v.fmsub SrcL, SrcR, SrcA, ->Dst` |-
+|`V.FMUL` |64 |- |`v.fmul SrcL, SrcR, ->Dst` |-
+|`V.FNMADD` |64 |- |`v.fnmadd SrcL, SrcR, SrcA, ->Dst` |-
+|`V.FNMSUB` |64 |- |`v.fnmsub SrcL, SrcR, SrcA, ->Dst` |-
+|`V.FSUB` |64 |- |`v.fsub SrcL, SrcR, ->Dst` |-
 |===
 
 [[insnref-two-source-floating-point]]
@@ -1181,18 +1181,18 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`V.FEQ` |64 |- |`v.feq SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
-|`V.FEQS` |64 |- |`v.feqs SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
-|`V.FGE` |64 |- |`v.fge SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
-|`V.FGES` |64 |- |`v.fges SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
-|`V.FLT` |64 |- |`v.flt SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
-|`V.FLTS` |64 |- |`v.flts SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
-|`V.FMAX` |64 |- |`v.fmax SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
-|`V.FMIN` |64 |- |`v.fmin SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
-|`V.FNE` |64 |- |`v.fne SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
-|`V.FNES` |64 |- |`v.fnes SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
-|`V.MAX` |64 |- |`v.max SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
-|`V.MIN` |64 |- |`v.min SrcL.<T>, SrcR.<T>, ->Dst.<W>` |-
+|`V.FEQ` |64 |- |`v.feq SrcL, SrcR, ->Dst` |-
+|`V.FEQS` |64 |- |`v.feqs SrcL, SrcR, ->Dst` |-
+|`V.FGE` |64 |- |`v.fge SrcL, SrcR, ->Dst` |-
+|`V.FGES` |64 |- |`v.fges SrcL, SrcR, ->Dst` |-
+|`V.FLT` |64 |- |`v.flt SrcL, SrcR, ->Dst` |-
+|`V.FLTS` |64 |- |`v.flts SrcL, SrcR, ->Dst` |-
+|`V.FMAX` |64 |- |`v.fmax SrcL, SrcR, ->Dst` |-
+|`V.FMIN` |64 |- |`v.fmin SrcL, SrcR, ->Dst` |-
+|`V.FNE` |64 |- |`v.fne SrcL, SrcR, ->Dst` |-
+|`V.FNES` |64 |- |`v.fnes SrcL, SrcR, ->Dst` |-
+|`V.MAX` |64 |- |`v.max SrcL, SrcR, ->Dst` |-
+|`V.MIN` |64 |- |`v.min SrcL, SrcR, ->Dst` |-
 |===
 
 [[insnref-general-manager]]
@@ -1211,15 +1211,15 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`V.RDADD` |64 |- |`v.rdadd SrcL.<T>, ->Dst<.W>` |-
-|`V.RDAND` |64 |- |`v.rdand SrcL.<T>, ->Dst<.W>` |-
-|`V.RDFADD` |64 |- |`v.rdfadd SrcL.<T>, ->Dst<.W>` |-
-|`V.RDFMAX` |64 |- |`v.rdfmax SrcL.<T>, ->Dst<.W>` |-
-|`V.RDFMIN` |64 |- |`v.rdfmin SrcL.<T>, ->Dst<.W>` |-
-|`V.RDMAX` |64 |- |`v.rdmax SrcL.<T>, ->Dst<.W>` |-
-|`V.RDMIN` |64 |- |`v.rdmin SrcL.<T>, ->Dst<.W>` |-
-|`V.RDOR` |64 |- |`v.rdor SrcL.<T>, ->Dst<.W>` |-
-|`V.RDXOR` |64 |- |`v.rdxor SrcL.<T>, ->Dst<.W>` |-
+|`V.RDADD` |64 |- |`v.rdadd SrcL, ->Dst` |-
+|`V.RDAND` |64 |- |`v.rdand SrcL, ->Dst` |-
+|`V.RDFADD` |64 |- |`v.rdfadd SrcL, ->Dst` |-
+|`V.RDFMAX` |64 |- |`v.rdfmax SrcL, ->Dst` |-
+|`V.RDFMIN` |64 |- |`v.rdfmin SrcL, ->Dst` |-
+|`V.RDMAX` |64 |- |`v.rdmax SrcL, ->Dst` |-
+|`V.RDMIN` |64 |- |`v.rdmin SrcL, ->Dst` |-
+|`V.RDOR` |64 |- |`v.rdor SrcL, ->Dst` |-
+|`V.RDXOR` |64 |- |`v.rdxor SrcL, ->Dst` |-
 |===
 
 [[insnref-store-offset]]
@@ -1228,20 +1228,20 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`V.SBI` |64 |- |`v.sbi<.local> SrcL.<T>, [SrcR<.ud>, <lc0>, simm]` |-
-|`V.SBI.BRG` |64 |- |`v.sbi.brg<.local> SrcL.<T>, [SrcR<.ud>, <lc0>, simm]` |-
-|`V.SDI` |64 |- |`v.sdi<.local> SrcL.<T>, [SrcR<.ud>, <lc0<3>, simm]` |-
-|`V.SDI.BRG` |64 |- |`v.sdi.brg<.local> SrcL.<T>, [SrcR<.ud>, <lc0<<3>, simm]` |-
-|`V.SDI.U` |64 |- |`v.sdi.u<.local> SrcL.<T>, [SrcR<.ud>, <lc0<<3>, simm]` |-
-|`V.SDI.U.BRG` |64 |- |`v.sdi.u.brg<.local> SrcL.<T>, [SrcR<.ud>, <lc0<<3>, simm]` |-
-|`V.SHI` |64 |- |`v.shi<.local> SrcL.<T>, [SrcR<.ud>, <lc0<<1>, simm]` |-
-|`V.SHI.BRG` |64 |- |`v.shi.brg<.local> SrcL.<T>, [SrcR<.ud>, <lc0<<1>, simm]` |-
-|`V.SHI.U` |64 |- |`v.shi.u<.local> SrcL.<T>, [SrcR<.ud>, <lc0<<1>, simm]` |-
-|`V.SHI.U.BRG` |64 |- |`v.shi.u.brg<.local> SrcL.<T>, [SrcR<.ud>, <lc0<<1>, simm]` |-
-|`V.SWI` |64 |- |`v.swi<.local> SrcL.<T>, [SrcR<.ud>, <lc0<<2>, simm]` |-
-|`V.SWI.BRG` |64 |- |`v.swi.brg<.local> SrcL.<T>, [SrcR<.ud>, <lc0<<2>, simm]` |-
-|`V.SWI.U` |64 |- |`v.swi.u<.local> SrcL.<T>, [SrcR<.ud>, <lc0<<2>, simm]` |-
-|`V.SWI.U.BRG` |64 |- |`v.swi.u.brg<.local> SrcL.<T>, [SrcR<.ud>, <lc0<<2>, simm]` |-
+|`V.SBI` |64 |- |`v.sbi<.local> SrcL, [SrcR, <lc0>, simm]` |-
+|`V.SBI.BRG` |64 |- |`v.sbi.brg<.local> SrcL, [SrcR, <lc0>, simm]` |-
+|`V.SDI` |64 |- |`v.sdi<.local> SrcL, [SrcR, <lc0<3>, simm]` |-
+|`V.SDI.BRG` |64 |- |`v.sdi.brg<.local> SrcL, [SrcR, <lc0<<3>, simm]` |-
+|`V.SDI.U` |64 |- |`v.sdi.u<.local> SrcL, [SrcR, <lc0<<3>, simm]` |-
+|`V.SDI.U.BRG` |64 |- |`v.sdi.u.brg<.local> SrcL, [SrcR, <lc0<<3>, simm]` |-
+|`V.SHI` |64 |- |`v.shi<.local> SrcL, [SrcR, <lc0<<1>, simm]` |-
+|`V.SHI.BRG` |64 |- |`v.shi.brg<.local> SrcL, [SrcR, <lc0<<1>, simm]` |-
+|`V.SHI.U` |64 |- |`v.shi.u<.local> SrcL, [SrcR, <lc0<<1>, simm]` |-
+|`V.SHI.U.BRG` |64 |- |`v.shi.u.brg<.local> SrcL, [SrcR, <lc0<<1>, simm]` |-
+|`V.SWI` |64 |- |`v.swi<.local> SrcL, [SrcR, <lc0<<2>, simm]` |-
+|`V.SWI.BRG` |64 |- |`v.swi.brg<.local> SrcL, [SrcR, <lc0<<2>, simm]` |-
+|`V.SWI.U` |64 |- |`v.swi.u<.local> SrcL, [SrcR, <lc0<<2>, simm]` |-
+|`V.SWI.U.BRG` |64 |- |`v.swi.u.brg<.local> SrcL, [SrcR, <lc0<<2>, simm]` |-
 |===
 
 [[insnref-shuffle]]
@@ -1250,12 +1250,12 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`V.SHFL.BFLY` |64 |- |`v.shfl.bfly SrcL.<T>, SrcP.<T>, ->Dst.<W>` |-
-|`V.SHFL.DOWN` |64 |- |`v.shfl.down SrcL.<T>, SrcR.<T>, SrcP.<T>, ->Dst.<W>` |-
-|`V.SHFL.IDX` |64 |- |`v.shfl.idx SrcL.<T>, SrcR.<T>, SrcP.<T>, ->Dst.<W>` |-
-|`V.SHFL.UP` |64 |- |`v.shfl.up SrcL.<T>, SrcR.<T>, SrcP.<T>, ->Dst.<W>` |-
-|`V.SHFLI.BFLY` |64 |- |`v.shfli.bfly SrcL.<T>, imm, ->Dst.<W>` |-
-|`V.SHFLI.DOWN` |64 |- |`v.shfli.down SrcL.<T>, SrcR.<T>, imm, ->Dst.<W>` |-
-|`V.SHFLI.IDX` |64 |- |`v.shfli.idx SrcL.<T>, SrcR.<T>, imm, ->Dst.<W>` |-
-|`V.SHFLI.UP` |64 |- |`v.shfli.up SrcL.<T>, SrcR.<T>, imm, ->Dst.<W>` |-
+|`V.SHFL.BFLY` |64 |- |`v.shfl.bfly SrcL, SrcP, ->Dst` |-
+|`V.SHFL.DOWN` |64 |- |`v.shfl.down SrcL, SrcR, SrcP, ->Dst` |-
+|`V.SHFL.IDX` |64 |- |`v.shfl.idx SrcL, SrcR, SrcP, ->Dst` |-
+|`V.SHFL.UP` |64 |- |`v.shfl.up SrcL, SrcR, SrcP, ->Dst` |-
+|`V.SHFLI.BFLY` |64 |- |`v.shfli.bfly SrcL, imm, ->Dst` |-
+|`V.SHFLI.DOWN` |64 |- |`v.shfli.down SrcL, SrcR, imm, ->Dst` |-
+|`V.SHFLI.IDX` |64 |- |`v.shfli.idx SrcL, SrcR, imm, ->Dst` |-
+|`V.SHFLI.UP` |64 |- |`v.shfli.up SrcL, SrcR, imm, ->Dst` |-
 |===

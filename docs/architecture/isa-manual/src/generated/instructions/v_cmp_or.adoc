@@ -5,7 +5,7 @@
 [[inst_v_cmp_or]]
 ==== V.CMP.OR
 
-*Syntax:* v.cmp.or SrcL.<T>, SrcR.<T>, ->Dst.<W>
+*Syntax:* v.cmp.or SrcL, SrcR, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

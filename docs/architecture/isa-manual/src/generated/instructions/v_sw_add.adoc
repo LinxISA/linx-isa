@@ -5,7 +5,7 @@
 [[inst_v_sw_add]]
 ==== V.SW.ADD
 
-*Syntax:* v.sw.add<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>
+*Syntax:* v.sw.add<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR
 
 *Description:* Vector instruction (VEC engine).
 

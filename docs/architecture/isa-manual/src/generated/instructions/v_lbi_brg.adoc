@@ -5,7 +5,7 @@
 [[inst_v_lbi_brg]]
 ==== V.LBI.BRG
 
-*Syntax:* v.lbi.brg<.local> [SrcL<.ud>, <lc0>, simm], ->Dst.<W>
+*Syntax:* v.lbi.brg<.local> [SrcL, <lc0>, simm], ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

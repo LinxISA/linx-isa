@@ -5,7 +5,7 @@
 [[inst_v_sd_min]]
 ==== V.SD.MIN
 
-*Syntax:* v.sd.min<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>
+*Syntax:* v.sd.min<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR
 
 *Description:* Vector instruction (VEC engine).
 

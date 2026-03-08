@@ -1,14 +1,19 @@
 # ISA vs QEMU Coverage Snapshot
 
-- Generated (UTC): `2026-03-07 02:48:58Z`
+- Generated (UTC): `2026-03-07 15:39:01Z`
 - Spec unique mnemonics: `710`
-- QEMU unique decode mnemonics (non-internal): `326`
-- QEMU mapped spec mnemonics: `315`
-- Coverage: `315/710` (`44.37%`)
-- Missing spec mnemonics: `395`
+- QEMU unique decode mnemonics (non-internal): `541`
+- QEMU mapped spec mnemonics: `524`
+- Mnemonic coverage: `524/710` (`73.8%`)
+- Spec legal forms: `740`
+- QEMU mapped spec forms: `521`
+- Form coverage: `521/740` (`70.41%`)
+- Missing spec mnemonics: `186`
+- Missing spec forms: `219`
+- Reserved spec forms: `0`
 - Unmapped QEMU mnemonics: `0`
 
-## Coverage By Prefix
+## Mnemonic Coverage By Prefix
 
 - `ACRC`: `1`
 - `ACRE`: `1`
@@ -21,19 +26,26 @@
 - `ANDI`: `1`
 - `ANDIW`: `1`
 - `ANDW`: `1`
-- `B`: `10`
+- `ASSERT`: `1`
+- `B`: `17`
+- `BC`: `2`
 - `BCNT`: `1`
 - `BIC`: `1`
 - `BIS`: `1`
-- `BSTART`: `14`
+- `BSE`: `1`
+- `BSTART`: `20`
 - `BSTOP`: `1`
+- `BWE`: `1`
+- `BWI`: `1`
+- `BWT`: `1`
 - `BXS`: `1`
 - `BXU`: `1`
-- `C`: `27`
+- `C`: `37`
 - `CLZ`: `1`
 - `CMP`: `16`
 - `CSEL`: `1`
 - `CTZ`: `1`
+- `DC`: `8`
 - `DIV`: `1`
 - `DIVU`: `1`
 - `DIVUW`: `1`
@@ -55,23 +67,27 @@
 - `FMUL`: `1`
 - `FRET`: `2`
 - `FSUB`: `1`
-- `HL`: `65`
+- `HL`: `180`
+- `IC`: `2`
+- `J`: `1`
+- `JR`: `1`
 - `LB`: `2`
 - `LBI`: `1`
 - `LBU`: `2`
 - `LBUI`: `1`
-- `LD`: `3`
-- `LDI`: `1`
+- `LD`: `10`
+- `LDI`: `2`
 - `LH`: `2`
-- `LHI`: `1`
+- `LHI`: `2`
 - `LHU`: `2`
-- `LHUI`: `1`
-- `LR`: `2`
+- `LHUI`: `2`
+- `LR`: `4`
+- `LSRGET`: `1`
 - `LUI`: `1`
-- `LW`: `3`
-- `LWI`: `1`
+- `LW`: `10`
+- `LWI`: `2`
 - `LWU`: `2`
-- `LWUI`: `1`
+- `LWUI`: `2`
 - `MADD`: `1`
 - `MADDW`: `1`
 - `MAX`: `1`
@@ -81,11 +97,15 @@
 - `MINU`: `1`
 - `MSET`: `1`
 - `MUL`: `1`
+- `MULU`: `1`
+- `MULUW`: `1`
 - `MULW`: `1`
 - `OR`: `1`
 - `ORI`: `1`
 - `ORIW`: `1`
 - `ORW`: `1`
+- `PRF`: `1`
+- `PRFI`: `1`
 - `REM`: `1`
 - `REMU`: `1`
 - `REMUW`: `1`
@@ -93,14 +113,14 @@
 - `REV`: `1`
 - `SB`: `2`
 - `SBI`: `1`
-- `SC`: `2`
+- `SC`: `4`
 - `SCVTF`: `1`
-- `SD`: `3`
-- `SDI`: `1`
+- `SD`: `11`
+- `SDI`: `2`
 - `SETC`: `17`
 - `SETRET`: `1`
 - `SH`: `3`
-- `SHI`: `1`
+- `SHI`: `2`
 - `SLL`: `1`
 - `SLLI`: `1`
 - `SLLIW`: `1`
@@ -120,11 +140,13 @@
 - `SUBI`: `1`
 - `SUBIW`: `1`
 - `SUBW`: `1`
-- `SW`: `3`
+- `SW`: `11`
+- `SWAPB`: `1`
 - `SWAPD`: `1`
+- `SWAPH`: `1`
 - `SWAPW`: `1`
-- `SWI`: `1`
-- `TLB`: `1`
+- `SWI`: `2`
+- `TLB`: `4`
 - `UCVTF`: `1`
 - `V`: `32`
 - `XOR`: `1`
@@ -132,18 +154,9 @@
 - `XORIW`: `1`
 - `XORW`: `1`
 
-## Missing By Prefix
+## Missing Mnemonics By Prefix
 
-- `ASSERT`: `1`
-- `B`: `7`
-- `BC`: `2`
-- `BSE`: `1`
-- `BSTART`: `6`
-- `BWE`: `1`
-- `BWI`: `1`
-- `BWT`: `1`
-- `C`: `11`
-- `DC`: `8`
+- `C`: `1`
 - `FCVTA`: `1`
 - `FCVTM`: `1`
 - `FCVTN`: `1`
@@ -162,33 +175,178 @@
 - `FNMSUB`: `1`
 - `FRECIP`: `1`
 - `FSQRT`: `1`
-- `HL`: `129`
+- `HL`: `14`
+- `V`: `152`
+- `XB`: `1`
+
+## Form Coverage By Prefix
+
+- `ACRC`: `1`
+- `ACRE`: `1`
+- `ADD`: `1`
+- `ADDI`: `1`
+- `ADDIW`: `1`
+- `ADDTPC`: `1`
+- `ADDW`: `1`
+- `AND`: `1`
+- `ANDI`: `1`
+- `ANDIW`: `1`
+- `ANDW`: `1`
+- `ASSERT`: `1`
+- `B`: `18`
+- `BC`: `2`
+- `BCNT`: `1`
+- `BIC`: `1`
+- `BIS`: `1`
+- `BSE`: `1`
+- `BSTART`: `19`
+- `BSTOP`: `1`
+- `BWE`: `1`
+- `BWI`: `1`
+- `BWT`: `1`
+- `BXS`: `1`
+- `BXU`: `1`
+- `C`: `37`
+- `CLZ`: `1`
+- `CMP`: `16`
+- `CSEL`: `1`
+- `CTZ`: `1`
+- `DC`: `6`
+- `DIV`: `1`
+- `DIVU`: `1`
+- `DIVUW`: `1`
+- `DIVW`: `1`
+- `EBREAK`: `1`
+- `ERCOV`: `1`
+- `ESAVE`: `1`
+- `FABS`: `1`
+- `FADD`: `1`
+- `FCVT`: `1`
+- `FCVTZ`: `1`
+- `FDIV`: `1`
+- `FENCE`: `2`
+- `FENTRY`: `1`
+- `FEQ`: `1`
+- `FEXIT`: `1`
+- `FGE`: `1`
+- `FLT`: `1`
+- `FMUL`: `1`
+- `FRET`: `2`
+- `FSUB`: `1`
+- `HL`: `183`
 - `IC`: `2`
 - `J`: `1`
 - `JR`: `1`
-- `LD`: `7`
-- `LDI`: `1`
-- `LHI`: `1`
-- `LHUI`: `1`
+- `LB`: `2`
+- `LBI`: `1`
+- `LBU`: `2`
+- `LBUI`: `1`
+- `LD`: `10`
+- `LDI`: `2`
+- `LH`: `2`
+- `LHI`: `2`
+- `LHU`: `2`
+- `LHUI`: `2`
 - `LR`: `2`
 - `LSRGET`: `1`
-- `LW`: `7`
-- `LWI`: `1`
-- `LWUI`: `1`
+- `LUI`: `1`
+- `LW`: `10`
+- `LWI`: `2`
+- `LWU`: `2`
+- `LWUI`: `2`
+- `MADD`: `1`
+- `MADDW`: `1`
+- `MAX`: `1`
+- `MAXU`: `1`
+- `MCOPY`: `1`
+- `MIN`: `1`
+- `MINU`: `1`
+- `MSET`: `1`
+- `MUL`: `1`
 - `MULU`: `1`
 - `MULUW`: `1`
+- `MULW`: `1`
+- `OR`: `1`
+- `ORI`: `1`
+- `ORIW`: `1`
+- `ORW`: `1`
 - `PRF`: `1`
 - `PRFI`: `1`
-- `SC`: `2`
-- `SD`: `8`
-- `SDI`: `1`
-- `SHI`: `1`
-- `SW`: `8`
+- `REM`: `1`
+- `REMU`: `1`
+- `REMUW`: `1`
+- `REMW`: `1`
+- `REV`: `1`
+- `SB`: `2`
+- `SBI`: `1`
+- `SC`: `4`
+- `SCVTF`: `1`
+- `SD`: `11`
+- `SDI`: `2`
+- `SETC`: `17`
+- `SETRET`: `1`
+- `SH`: `3`
+- `SHI`: `2`
+- `SLL`: `1`
+- `SLLI`: `1`
+- `SLLIW`: `1`
+- `SLLW`: `1`
+- `SRA`: `1`
+- `SRAI`: `1`
+- `SRAIW`: `1`
+- `SRAW`: `1`
+- `SRL`: `1`
+- `SRLI`: `1`
+- `SRLIW`: `1`
+- `SRLW`: `1`
+- `SSRGET`: `1`
+- `SSRSET`: `1`
+- `SSRSWAP`: `1`
+- `SUB`: `1`
+- `SUBI`: `1`
+- `SUBIW`: `1`
+- `SUBW`: `1`
+- `SW`: `11`
 - `SWAPB`: `1`
+- `SWAPD`: `1`
 - `SWAPH`: `1`
-- `SWI`: `1`
-- `TLB`: `3`
-- `V`: `152`
+- `SWAPW`: `1`
+- `SWI`: `2`
+- `TLB`: `4`
+- `UCVTF`: `1`
+- `V`: `30`
+- `XOR`: `1`
+- `XORI`: `1`
+- `XORIW`: `1`
+- `XORW`: `1`
+
+## Missing Forms By Prefix
+
+- `B`: `9`
+- `BSTART`: `14`
+- `C`: `2`
+- `DC`: `2`
+- `FCVTA`: `1`
+- `FCVTM`: `1`
+- `FCVTN`: `1`
+- `FCVTP`: `1`
+- `FEQS`: `1`
+- `FEXP`: `1`
+- `FGES`: `1`
+- `FLTS`: `1`
+- `FMADD`: `1`
+- `FMAX`: `1`
+- `FMIN`: `1`
+- `FMSUB`: `1`
+- `FNE`: `1`
+- `FNES`: `1`
+- `FNMADD`: `1`
+- `FNMSUB`: `1`
+- `FRECIP`: `1`
+- `FSQRT`: `1`
+- `HL`: `17`
+- `LR`: `2`
+- `V`: `154`
 - `XB`: `1`
 
 ## Unmapped QEMU Mnemonics
@@ -197,45 +355,7 @@
 
 ## Missing Spec Mnemonics (First 200)
 
-- `ASSERT`
-- `B.EQ`
-- `B.GE`
-- `B.GEU`
-- `B.IOD`
-- `B.LT`
-- `B.LTU`
-- `B.NE`
-- `BC.IALL`
-- `BC.IVA`
-- `BSE`
-- `BSTART.FIXP`
-- `BSTART.FP`
-- `BSTART.STD`
-- `BSTART.SYS`
-- `BSTART.TEPL`
-- `BSTART.TMOV`
-- `BWE`
-- `BWI`
-- `BWT`
-- `C.B.DIM`
-- `C.BSTART`
-- `C.BSTART.FP`
-- `C.BSTART.MPAR`
-- `C.BSTART.MSEQ`
-- `C.BSTART.SYS`
-- `C.BSTART.VPAR`
-- `C.BSTART.VSEQ`
-- `C.EBREAK`
 - `C.SETRET`
-- `C.SSRGET`
-- `DC.CISW`
-- `DC.CIVA`
-- `DC.CSW`
-- `DC.CVA`
-- `DC.IALL`
-- `DC.ISW`
-- `DC.IVA`
-- `DC.ZVA`
 - `FCVTA`
 - `FCVTM`
 - `FCVTN`
@@ -254,146 +374,373 @@
 - `FNMSUB`
 - `FRECIP`
 - `FSQRT`
-- `HL.BFI`
-- `HL.BSTART.FP`
-- `HL.BSTART.SYS`
-- `HL.CASB`
-- `HL.CASD`
-- `HL.CASH`
-- `HL.CASW`
-- `HL.CCAT`
-- `HL.CCATW`
 - `HL.DIV`
 - `HL.DIVU`
 - `HL.DIVUW`
 - `HL.DIVW`
-- `HL.LB.PO`
-- `HL.LB.PR`
-- `HL.LBI`
-- `HL.LBI.PO`
-- `HL.LBI.PR`
-- `HL.LBIP`
-- `HL.LBP`
-- `HL.LBU.PO`
-- `HL.LBU.PR`
-- `HL.LBUI`
-- `HL.LBUI.PO`
-- `HL.LBUI.PR`
-- `HL.LBUIP`
-- `HL.LBUP`
-- `HL.LD.PO`
-- `HL.LD.PR`
-- `HL.LDI`
-- `HL.LDI.U`
-- `HL.LDP`
-- `HL.LH.PO`
-- `HL.LH.PR`
-- `HL.LHI`
-- `HL.LHI.PO`
-- `HL.LHI.PR`
-- `HL.LHI.U`
-- `HL.LHI.UPO`
-- `HL.LHI.UPR`
-- `HL.LHIP`
-- `HL.LHIP.U`
-- `HL.LHP`
-- `HL.LHU.PO`
-- `HL.LHU.PR`
-- `HL.LHUI`
-- `HL.LHUI.PO`
-- `HL.LHUI.PR`
-- `HL.LHUI.U`
-- `HL.LHUI.UPO`
-- `HL.LHUI.UPR`
-- `HL.LHUIP`
-- `HL.LHUIP.U`
-- `HL.LHUP`
-- `HL.LIS`
-- `HL.LIU`
-- `HL.LW.PO`
-- `HL.LW.PR`
-- `HL.LWI`
-- `HL.LWI.U`
-- `HL.LWP`
-- `HL.LWU.PO`
-- `HL.LWU.PR`
-- `HL.LWUI`
-- `HL.LWUI.U`
-- `HL.LWUP`
 - `HL.MADD`
 - `HL.MADDW`
-- `HL.MIADD`
-- `HL.MISUB`
 - `HL.MUL`
 - `HL.MULU`
-- `HL.PRF`
-- `HL.PRF.A`
-- `HL.PRFI.U`
-- `HL.PRFI.UA`
-- `HL.QMT`
-- `HL.QPOP`
-- `HL.QPUSH`
 - `HL.REM`
 - `HL.REMU`
 - `HL.REMUW`
 - `HL.REMW`
-- `HL.SB.PO`
-- `HL.SB.PR`
-- `HL.SBI`
-- `HL.SBI.PO`
-- `HL.SBI.PR`
-- `HL.SBIP`
-- `HL.SBP`
-- `HL.SD.PO`
-- `HL.SD.PR`
-- `HL.SD.UPO`
-- `HL.SD.UPR`
-- `HL.SDI`
-- `HL.SDI.U`
-- `HL.SDP`
-- `HL.SDP.U`
 - `HL.SETC.ANDI`
-- `HL.SETC.EQI`
-- `HL.SETC.GEI`
-- `HL.SETC.GEUI`
-- `HL.SETC.LTI`
-- `HL.SETC.LTUI`
-- `HL.SETC.NEI`
 - `HL.SETC.ORI`
-- `HL.SETRET`
-- `HL.SH.PO`
-- `HL.SH.PR`
-- `HL.SH.UPO`
-- `HL.SH.UPR`
-- `HL.SHI`
-- `HL.SHI.PO`
-- `HL.SHI.PR`
-- `HL.SHI.U`
-- `HL.SHI.UPO`
-- `HL.SHI.UPR`
-- `HL.SHIP`
-- `HL.SHIP.U`
-- `HL.SHP`
-- `HL.SHP.U`
-- `HL.SW.PO`
-- `HL.SW.PR`
-- `HL.SW.UPO`
-- `HL.SW.UPR`
-- `HL.SWI`
-- `HL.SWI.U`
-- `HL.SWP`
-- `HL.SWP.U`
-- `IC.IALL`
-- `IC.IVA`
-- `J`
-- `JR`
-- `LD.AND`
-- `LD.OR`
-- `LD.SMAX`
-- `LD.SMIN`
-- `LD.UMAX`
-- `LD.UMIN`
-- `LD.XOR`
-- `LDI.U`
-- `LHI.U`
-- `LHUI.U`
+- `V.ADDI`
+- `V.AND`
+- `V.ANDI`
+- `V.BCNT`
+- `V.BIC`
+- `V.BIS`
+- `V.BXS`
+- `V.BXU`
+- `V.CLZ`
+- `V.CMP.AND`
+- `V.CMP.ANDI`
+- `V.CMP.EQI`
+- `V.CMP.GEI`
+- `V.CMP.GEUI`
+- `V.CMP.LTI`
+- `V.CMP.LTUI`
+- `V.CMP.NEI`
+- `V.CMP.OR`
+- `V.CMP.ORI`
+- `V.CTZ`
+- `V.DIV`
+- `V.FCLASS`
+- `V.FCVT`
+- `V.FCVTI`
+- `V.FEQS`
+- `V.FEXP`
+- `V.FGES`
+- `V.FLTS`
+- `V.FMADD`
+- `V.FMAX`
+- `V.FMIN`
+- `V.FMSUB`
+- `V.FNES`
+- `V.FNMADD`
+- `V.FNMSUB`
+- `V.FRECIP`
+- `V.FSQRT`
+- `V.ICVT`
+- `V.ICVTF`
+- `V.LB`
+- `V.LB.BRG`
+- `V.LBI`
+- `V.LBI.BRG`
+- `V.LBU`
+- `V.LBU.BRG`
+- `V.LBUI`
+- `V.LBUI.BRG`
+- `V.LD`
+- `V.LD.ADD`
+- `V.LD.AND`
+- `V.LD.BRG`
+- `V.LD.MAX`
+- `V.LD.MIN`
+- `V.LD.OR`
+- `V.LD.XOR`
+- `V.LDI`
+- `V.LDI.BRG`
+- `V.LDI.U`
+- `V.LDI.U.BRG`
+- `V.LH`
+- `V.LH.BRG`
+- `V.LHI`
+- `V.LHI.BRG`
+- `V.LHI.U`
+- `V.LHI.U.BRG`
+- `V.LHU`
+- `V.LHU.BRG`
+- `V.LHUI`
+- `V.LHUI.BRG`
+- `V.LHUI.U`
+- `V.LHUI.U.BRG`
+- `V.LW.ADD`
+- `V.LW.AND`
+- `V.LW.MAX`
+- `V.LW.MIN`
+- `V.LW.OR`
+- `V.LW.XOR`
+- `V.LWI`
+- `V.LWI.BRG`
+- `V.LWI.U`
+- `V.LWI.U.BRG`
+- `V.LWU`
+- `V.LWU.BRG`
+- `V.LWUI`
+- `V.LWUI.BRG`
+- `V.LWUI.U`
+- `V.LWUI.U.BRG`
+- `V.MADD`
+- `V.MAX`
+- `V.MIN`
+- `V.OR`
+- `V.ORI`
+- `V.PSEL`
+- `V.QPOP`
+- `V.QPUSH`
+- `V.REM`
+- `V.REV`
+- `V.SB`
+- `V.SB.BRG`
+- `V.SBI`
+- `V.SBI.BRG`
+- `V.SD`
+- `V.SD.ADD`
+- `V.SD.AND`
+- `V.SD.BRG`
+- `V.SD.MAX`
+- `V.SD.MIN`
+- `V.SD.OR`
+- `V.SD.U`
+- `V.SD.U.BRG`
+- `V.SD.XOR`
+- `V.SDI`
+- `V.SDI.BRG`
+- `V.SDI.U`
+- `V.SDI.U.BRG`
+- `V.SH`
+- `V.SH.BRG`
+- `V.SH.U`
+- `V.SH.U.BRG`
+- `V.SHFL.BFLY`
+- `V.SHFL.DOWN`
+- `V.SHFL.IDX`
+- `V.SHFL.UP`
+- `V.SHFLI.BFLY`
+- `V.SHFLI.DOWN`
+- `V.SHFLI.IDX`
+- `V.SHFLI.UP`
+- `V.SHI`
+- `V.SHI.BRG`
+- `V.SHI.U`
+- `V.SHI.U.BRG`
+- `V.SLL`
+- `V.SLLI`
+- `V.SRA`
+- `V.SRAI`
+- `V.SRL`
+- `V.SRLI`
+- `V.SUBI`
+- `V.SW.ADD`
+- `V.SW.AND`
+- `V.SW.MAX`
+- `V.SW.MIN`
+- `V.SW.OR`
+- `V.SW.U`
+- `V.SW.U.BRG`
+- `V.SW.XOR`
+- `V.SWI`
+- `V.SWI.BRG`
+- `V.SWI.U`
+- `V.SWI.U.BRG`
+- `V.XOR`
+- `V.XORI`
+- `XB`
+
+## Missing Spec Forms (First 200)
+
+- `B.ARG [len=32 mask=0xffffffff match=0x1800a4a3]`
+- `B.ARG [len=32 mask=0xffffffff match=0x180221a3]`
+- `B.ARG [len=32 mask=0xffffffff match=0x18022423]`
+- `B.ARG [len=32 mask=0xffffffff match=0x20fae23]`
+- `B.ARG [len=32 mask=0xffffffff match=0xfa023]`
+- `B.IOT [len=32 mask=0x707f match=0x4013]`
+- `B.IOT [len=32 mask=0x707f match=0x5013]`
+- `B.IOTI [len=32 mask=0x707f match=0x6013]`
+- `B.IOTI [len=32 mask=0x707f match=0x7013]`
+- `BSTART CALL [len=32 mask=0xf83f000f match=0x50160002]`
+- `BSTART [len=32 mask=0x7f match=0x11]`
+- `BSTART [len=32 mask=0x7f match=0x21]`
+- `BSTART.ACCCVT [len=32 mask=0x7ffffff match=0x831181]`
+- `BSTART.MPAR [len=32 mask=0xf9ffffff match=0x1181]`
+- `BSTART.MSEQ [len=32 mask=0xf9ffffff match=0x9181]`
+- `BSTART.STD [len=32 mask=0x7fff match=0x1001]`
+- `BSTART.TLOAD [len=32 mask=0x7ffffff match=0x11181]`
+- `BSTART.TMATMUL [len=32 mask=0x7ffffff match=0x31181]`
+- `BSTART.TMATMUL.ACC [len=32 mask=0x7ffffff match=0x231181]`
+- `BSTART.TMOV [len=32 mask=0x7ffffff match=0x211181]`
+- `BSTART.TSTORE [len=32 mask=0x7ffffff match=0x111181]`
+- `BSTART.VPAR [len=32 mask=0xf9ffffff match=0x21181]`
+- `BSTART.VSEQ [len=32 mask=0xf9ffffff match=0x29181]`
+- `C.BSTART.STD [len=16 mask=0xc7ff match=0x0]`
+- `C.SETRET [len=16 mask=0xf83f match=0x5016]`
+- `DC.ISW [len=32 mask=0xfff07fff match=0x40602b]`
+- `DC.ZVA [len=32 mask=0xfff07fff match=0x70602b]`
+- `FCVTA [len=32 mask=0x1f0707f match=0x106b]`
+- `FCVTM [len=32 mask=0x1f0707f match=0x206b]`
+- `FCVTN [len=32 mask=0x1f0707f match=0x306b]`
+- `FCVTP [len=32 mask=0x1f0707f match=0x406b]`
+- `FEQS [len=32 mask=0xf800707f match=0x800005b]`
+- `FEXP [len=32 mask=0xf9f0707f match=0x307b]`
+- `FGES [len=32 mask=0xf800707f match=0x800305b]`
+- `FLTS [len=32 mask=0xf800707f match=0x800205b]`
+- `FMADD [len=32 mask=0x707f match=0x404b]`
+- `FMAX [len=32 mask=0xf800707f match=0x605b]`
+- `FMIN [len=32 mask=0xf800707f match=0x705b]`
+- `FMSUB [len=32 mask=0x707f match=0x504b]`
+- `FNE [len=32 mask=0xf800707f match=0x105b]`
+- `FNES [len=32 mask=0xf800707f match=0x800105b]`
+- `FNMADD [len=32 mask=0x707f match=0x604b]`
+- `FNMSUB [len=32 mask=0x707f match=0x704b]`
+- `FRECIP [len=32 mask=0xf9f0707f match=0x207b]`
+- `FSQRT [len=32 mask=0xf9f0707f match=0x107b]`
+- `HL.BSTART CALL [len=64 mask=0xfffff83f0000007f match=0x501600000011]`
+- `HL.BSTART.STD [len=64 mask=0xffff00007fff000f match=0x4001000e]`
+- `HL.DIV [len=64 mask=0xfffffe00707f07ff match=0x57000e]`
+- `HL.DIVU [len=64 mask=0xfffffe00707f07ff match=0x1057000e]`
+- `HL.DIVUW [len=64 mask=0xfffffe00707f07ff match=0x3057000e]`
+- `HL.DIVW [len=64 mask=0xfffffe00707f07ff match=0x2057000e]`
+- `HL.MADD [len=64 mask=0xffff0600707f07ff match=0x6047000e]`
+- `HL.MADDW [len=64 mask=0xffff0600707f07ff match=0x7047000e]`
+- `HL.MUL [len=64 mask=0xfffffe00707f07ff match=0x47000e]`
+- `HL.MULU [len=64 mask=0xfffffe00707f07ff match=0x1047000e]`
+- `HL.PRF [len=64 mask=0xffff00007fff07ff match=0x7009000e]`
+- `HL.REM [len=64 mask=0xfffffe00707f07ff match=0x4057000e]`
+- `HL.REMU [len=64 mask=0xfffffe00707f07ff match=0x5057000e]`
+- `HL.REMUW [len=64 mask=0xfffffe00707f07ff match=0x7057000e]`
+- `HL.REMW [len=64 mask=0xfffffe00707f07ff match=0x6057000e]`
+- `HL.SETC.ANDI [len=64 mask=0xffff0000707f000f match=0x2075000e]`
+- `HL.SETC.ORI [len=64 mask=0xffff0000707f000f match=0x3075000e]`
+- `LR.D [len=32 mask=0xf000707f match=0x3000000b]`
+- `LR.W [len=32 mask=0xf000707f match=0x2000000b]`
+- `V.ADDI [len=64 mask=0x707ffff0707f match=0x150000007f]`
+- `V.AND [len=64 mask=0x707ffe00707f match=0x20050000007f]`
+- `V.ANDI [len=64 mask=0x707ffff0707f match=0x20150000007f]`
+- `V.BCNT [len=64 mask=0x707ffff0707f match=0x60670000007f]`
+- `V.BIC [len=64 mask=0x707ffff0707f match=0x20670000007f]`
+- `V.BIS [len=64 mask=0x707ffff0707f match=0x30670000007f]`
+- `V.BXS [len=64 mask=0x707ffff0707f match=0x670000007f]`
+- `V.BXU [len=64 mask=0x707ffff0707f match=0x10670000007f]`
+- `V.CLZ [len=64 mask=0x707ffff0707f match=0x50670000007f]`
+- `V.CMP.AND [len=64 mask=0xfe00707ffe00707f match=0x20450000007f]`
+- `V.CMP.ANDI [len=64 mask=0x707ffff0707f match=0x20550000007f]`
+- `V.CMP.EQI [len=64 mask=0x707ffff0707f match=0x550000007f]`
+- `V.CMP.GEI [len=64 mask=0x707ffff0707f match=0x50550000007f]`
+- `V.CMP.GEUI [len=64 mask=0x707ffff0707f match=0x70550000007f]`
+- `V.CMP.LTI [len=64 mask=0x707ffff0707f match=0x40550000007f]`
+- `V.CMP.LTUI [len=64 mask=0x707ffff0707f match=0x60550000007f]`
+- `V.CMP.NEI [len=64 mask=0x707ffff0707f match=0x10550000007f]`
+- `V.CMP.OR [len=64 mask=0xfe00707ffe00707f match=0x30450000007f]`
+- `V.CMP.ORI [len=64 mask=0x707ffff0707f match=0x30550000007f]`
+- `V.CTZ [len=64 mask=0x707ffff0707f match=0x40670000007f]`
+- `V.DIV [len=64 mask=0xfe00707ffe00707f match=0x570000007f]`
+- `V.FABS [len=64 mask=0xfff0707ffff0707f match=0x7b0000007f]`
+- `V.FCLASS [len=64 mask=0xfff0707ffff0707f match=0x707b0000007f]`
+- `V.FCVT [len=64 mask=0x600707ffff0707f match=0x6b0000007f]`
+- `V.FCVTI [len=64 mask=0x600707ffff0707f match=0x106b0000007f]`
+- `V.FEQS [len=64 mask=0xfe00707ffe00707f match=0x405b0000007f]`
+- `V.FEXP [len=64 mask=0xfff0707ffff0707f match=0x307b0000007f]`
+- `V.FGES [len=64 mask=0xfe00707ffe00707f match=0x705b0000007f]`
+- `V.FLTS [len=64 mask=0xfe00707ffe00707f match=0x605b0000007f]`
+- `V.FMADD [len=64 mask=0x600707f0600707f match=0x404b0000007f]`
+- `V.FMAX [len=64 mask=0xfe00707ffe00707f match=0x205b0000107f]`
+- `V.FMIN [len=64 mask=0xfe00707ffe00707f match=0x305b0000107f]`
+- `V.FMSUB [len=64 mask=0x600707f0600707f match=0x504b0000007f]`
+- `V.FNES [len=64 mask=0xfe00707ffe00707f match=0x505b0000007f]`
+- `V.FNMADD [len=64 mask=0x600707f0600707f match=0x604b0000007f]`
+- `V.FNMSUB [len=64 mask=0x600707f0600707f match=0x704b0000007f]`
+- `V.FRECIP [len=64 mask=0xfff0707ffff0707f match=0x207b0000007f]`
+- `V.FSQRT [len=64 mask=0xfff0707ffff0707f match=0x107b0000007f]`
+- `V.ICVT [len=64 mask=0x600707ffff0707f match=0x606b0000007f]`
+- `V.ICVTF [len=64 mask=0x600707ffff0707f match=0x706b0000007f]`
+- `V.LB [len=64 mask=0x600707ffe00207f match=0x90000007f]`
+- `V.LB.BRG [len=64 mask=0x600707ffe00207f match=0x90000207f]`
+- `V.LBI [len=64 mask=0x707f0000207f match=0x190000007f]`
+- `V.LBI.BRG [len=64 mask=0x707f0000207f match=0x190000207f]`
+- `V.LBU [len=64 mask=0x600707ffe00207f match=0x40090000007f]`
+- `V.LBU.BRG [len=64 mask=0x600707ffe00207f match=0x40090000207f]`
+- `V.LBUI [len=64 mask=0x707f0000207f match=0x40190000007f]`
+- `V.LBUI.BRG [len=64 mask=0x707f0000207f match=0x40190000207f]`
+- `V.LD [len=64 mask=0x600707ffe00207f match=0x30090000007f]`
+- `V.LD.ADD [len=64 mask=0xf800707ffc00707f match=0xb0000207f]`
+- `V.LD.AND [len=64 mask=0xf800707ffc00707f match=0x100b0000207f]`
+- `V.LD.BRG [len=64 mask=0x600707ffe00207f match=0x30090000207f]`
+- `V.LD.MAX [len=64 mask=0xf800707ffc00707f match=0x400b0000207f]`
+- `V.LD.MIN [len=64 mask=0xf800707ffc00707f match=0x500b0000207f]`
+- `V.LD.OR [len=64 mask=0xf800707ffc00707f match=0x200b0000207f]`
+- `V.LD.XOR [len=64 mask=0xf800707ffc00707f match=0x300b0000207f]`
+- `V.LDI [len=64 mask=0x707f0000207f match=0x30190000007f]`
+- `V.LDI.BRG [len=64 mask=0x707f0000207f match=0x30190000207f]`
+- `V.LDI.U [len=64 mask=0x707f0000207f match=0x30290000007f]`
+- `V.LDI.U.BRG [len=64 mask=0x707f0000207f match=0x30290000207f]`
+- `V.LH [len=64 mask=0x600707ffe00207f match=0x10090000007f]`
+- `V.LH.BRG [len=64 mask=0x600707ffe00207f match=0x10090000207f]`
+- `V.LHI [len=64 mask=0x707f0000207f match=0x10190000007f]`
+- `V.LHI.BRG [len=64 mask=0x707f0000207f match=0x10190000207f]`
+- `V.LHI.U [len=64 mask=0x707f0000207f match=0x10290000007f]`
+- `V.LHI.U.BRG [len=64 mask=0x707f0000207f match=0x10290000207f]`
+- `V.LHU [len=64 mask=0x600707ffe00207f match=0x50090000007f]`
+- `V.LHU.BRG [len=64 mask=0x600707ffe00207f match=0x50090000207f]`
+- `V.LHUI [len=64 mask=0x707f0000207f match=0x50190000007f]`
+- `V.LHUI.BRG [len=64 mask=0x707f0000207f match=0x50190000207f]`
+- `V.LHUI.U [len=64 mask=0x707f0000207f match=0x50290000007f]`
+- `V.LHUI.U.BRG [len=64 mask=0x707f0000207f match=0x50290000207f]`
+- `V.LW.ADD [len=64 mask=0xf800707ffc00707f match=0xb0000007f]`
+- `V.LW.AND [len=64 mask=0xf800707ffc00707f match=0x100b0000007f]`
+- `V.LW.MAX [len=64 mask=0xf800707ffc00707f match=0x400b0000007f]`
+- `V.LW.MIN [len=64 mask=0xf800707ffc00707f match=0x500b0000007f]`
+- `V.LW.OR [len=64 mask=0xf800707ffc00707f match=0x200b0000007f]`
+- `V.LW.XOR [len=64 mask=0xf800707ffc00707f match=0x300b0000007f]`
+- `V.LWI [len=64 mask=0x707f0000207f match=0x20190000007f]`
+- `V.LWI.BRG [len=64 mask=0x707f0000207f match=0x20190000207f]`
+- `V.LWI.U [len=64 mask=0x707f0000207f match=0x20290000007f]`
+- `V.LWI.U.BRG [len=64 mask=0x707f0000207f match=0x20290000207f]`
+- `V.LWU [len=64 mask=0x600707ffe00207f match=0x60090000007f]`
+- `V.LWU.BRG [len=64 mask=0x600707ffe00207f match=0x60090000207f]`
+- `V.LWUI [len=64 mask=0x707f0000207f match=0x60190000007f]`
+- `V.LWUI.BRG [len=64 mask=0x707f0000207f match=0x60190000207f]`
+- `V.LWUI.U [len=64 mask=0x707f0000207f match=0x60290000007f]`
+- `V.LWUI.U.BRG [len=64 mask=0x707f0000207f match=0x60290000207f]`
+- `V.MADD [len=64 mask=0x600707f0600707f match=0x60470000007f]`
+- `V.MAX [len=64 mask=0xfe00707ffe00707f match=0x5b0000107f]`
+- `V.MIN [len=64 mask=0xfe00707ffe00707f match=0x105b0000107f]`
+- `V.MUL [len=64 mask=0xfe00707ffe00707f match=0x470000007f]`
+- `V.OR [len=64 mask=0x707ffe00707f match=0x30050000007f]`
+- `V.ORI [len=64 mask=0x707ffff0707f match=0x30150000007f]`
+- `V.PSEL [len=64 mask=0x707f0600707f match=0x10770000007f]`
+- `V.QPOP [len=64 mask=0xfff0707ffff0707f match=0x207d0000007f]`
+- `V.QPUSH [len=64 mask=0xfe00707ffe00707f match=0x107d0000007f]`
+- `V.REM [len=64 mask=0xfe00707ffe00707f match=0x40570000007f]`
+- `V.REV [len=64 mask=0x707ffff0707f match=0x70670000007f]`
+- `V.SB [len=64 mask=0x6007fff0600207f match=0x490000007f]`
+- `V.SB.BRG [len=64 mask=0x6007fff0600207f match=0x490000207f]`
+- `V.SBI [len=64 mask=0x707f0000207f match=0x590000007f]`
+- `V.SBI.BRG [len=64 mask=0x707f0000207f match=0x590000207f]`
+- `V.SD [len=64 mask=0x6007fff0600207f match=0x30490000007f]`
+- `V.SD.ADD [len=64 mask=0xfc007ffff8007fff match=0xb0000307f]`
+- `V.SD.AND [len=64 mask=0xfc007ffff8007fff match=0x100b0000307f]`
+- `V.SD.BRG [len=64 mask=0x6007fff0600207f match=0x30490000207f]`
+- `V.SD.MAX [len=64 mask=0xfc007ffff8007fff match=0x400b0000307f]`
+- `V.SD.MIN [len=64 mask=0xfc007ffff8007fff match=0x500b0000307f]`
+- `V.SD.OR [len=64 mask=0xfc007ffff8007fff match=0x200b0000307f]`
+- `V.SD.U [len=64 mask=0x6007fff0600207f match=0x70490000007f]`
+- `V.SD.U.BRG [len=64 mask=0x6007fff0600207f match=0x70490000207f]`
+- `V.SD.XOR [len=64 mask=0xfc007ffff8007fff match=0x300b0000307f]`
+- `V.SDI [len=64 mask=0x707f0000207f match=0x30590000007f]`
+- `V.SDI.BRG [len=64 mask=0x707f0000207f match=0x30590000207f]`
+- `V.SDI.U [len=64 mask=0x707f0000207f match=0x70590000007f]`
+- `V.SDI.U.BRG [len=64 mask=0x707f0000207f match=0x70590000207f]`
+- `V.SH [len=64 mask=0x6007fff0600207f match=0x10490000007f]`
+- `V.SH.BRG [len=64 mask=0x6007fff0600207f match=0x10490000207f]`
+- `V.SH.U [len=64 mask=0x6007fff0600207f match=0x50490000007f]`
+- `V.SH.U.BRG [len=64 mask=0x6007fff0600207f match=0x50490000207f]`
+- `V.SHFL.BFLY [len=64 mask=0x7f0707f07f0707f match=0x201d0000007f]`
+- `V.SHFL.DOWN [len=64 mask=0x600707f0600707f match=0x101d0000007f]`
+- `V.SHFL.IDX [len=64 mask=0x600707f0600707f match=0x301d0000007f]`
+- `V.SHFL.UP [len=64 mask=0x600707f0600707f match=0x1d0000007f]`
+- `V.SHFLI.BFLY [len=64 mask=0x1f0707f01f0707f match=0x602d0000007f]`
+- `V.SHFLI.DOWN [len=64 mask=0x707f0000707f match=0x502d0000007f]`
+- `V.SHFLI.IDX [len=64 mask=0x707f0000707f match=0x702d0000007f]`
+- `V.SHFLI.UP [len=64 mask=0x707f0000707f match=0x402d0000007f]`
+- `V.SHI [len=64 mask=0x707f0000207f match=0x10590000007f]`
+- `V.SHI.BRG [len=64 mask=0x707f0000207f match=0x10590000207f]`
+- `V.SHI.U [len=64 mask=0x707f0000207f match=0x50590000007f]`
+- `V.SHI.U.BRG [len=64 mask=0x707f0000207f match=0x50590000207f]`
+- `V.SLL [len=64 mask=0xfe00707ffe00707f match=0x70050000007f]`
+- `V.SLLI [len=64 mask=0xfc00707ffff0707f match=0x70150000007f]`
+- `V.SRA [len=64 mask=0xfe00707ffe00707f match=0x60050000007f]`

@@ -5,7 +5,7 @@
 [[inst_v_madd]]
 ==== V.MADD
 
-*Syntax:* v.madd SrcL.<T>, SrcR.<T>, SrcD.<T>, ->Dst.<W>
+*Syntax:* v.madd SrcL, SrcR, SrcD, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

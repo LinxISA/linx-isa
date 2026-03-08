@@ -15,6 +15,8 @@ Closure target:
 ## Normative links
 
 - Base ISA architecture contract: `docs/architecture/v0.4-architecture-contract.md`
+- Workload-to-engine model: `docs/architecture/v0.4-workload-engine-model.md`
+- Rendering command model: `docs/architecture/v0.4-rendering-command-contract.md`
 - LinxCore microarchitecture contract: `docs/architecture/linxcore/microarchitecture.md`
 - LinxCore interface contract: `docs/architecture/linxcore/interfaces.md`
 - LinxCore gate traceability matrix: `docs/architecture/linxcore/verification-matrix.md`
@@ -24,6 +26,19 @@ Closure target:
 - Canonical governance + architecture contract: `linx-isa` superproject docs
 - Canonical implementation lane: pinned submodules in `linx-isa`
 - Standalone trees (for example `/Users/zhoubot/LinxCore`) are mirror lanes, not contract authority
+
+## Execution Composition
+
+LinxCore is the block-ordered execution substrate for the current `v0.4`
+multi-workload model.
+
+- BCC and the block fabric remain the architectural control and orchestration
+  path.
+- `VEC`, `TMA`, `CUBE`, and `TAU` are integrated engines within that same
+  block/BID-ordered machine.
+- Engine-backed work does not define a separate retirement or command language;
+  it remains subordinate to the same recovery, completion, and observability
+  rules described by the live architecture contract.
 
 ## Program phases (gate-based)
 

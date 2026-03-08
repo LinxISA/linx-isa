@@ -5,7 +5,7 @@
 [[inst_v_feqs]]
 ==== V.FEQS
 
-*Syntax:* v.feqs SrcL.<T>, SrcR.<T>, ->Dst.<W>
+*Syntax:* v.feqs SrcL, SrcR, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

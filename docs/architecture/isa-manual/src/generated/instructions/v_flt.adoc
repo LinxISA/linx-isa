@@ -5,7 +5,7 @@
 [[inst_v_flt]]
 ==== V.FLT
 
-*Syntax:* v.flt SrcL.<T>, SrcR.<T>, ->Dst.<W>
+*Syntax:* v.flt SrcL, SrcR, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

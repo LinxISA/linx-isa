@@ -1,57 +1,83 @@
-// v0.4-draft notes promoted into isa-manual (spec-quality).
+// Pre-canonical notes promoted into the live isa-manual.
 
 [[sec-regid10-operand-encoding]]
-== RegId10 Operand Encoding (v0.4-draft)
+== RegId10 Operand Encoding
 
-This section specifies the 10-bit register identifier encoding (``RegId10``) used by several instruction forms to encode source and destination operands, especially in tile/vector and block IO paths.
+This section specifies the 10-bit register identifier encoding (``RegId10``) used by vector, tile-memory, and block-IO instruction forms in the canonical `v0.4` profile.
 
-NOTE: ``RegId10`` is an *encoding-level* concept. Architectural semantics are determined by the decoded register class and the instruction semantics. In particular, ``*.REUSE`` is a performance hint and does not change architectural results.
+`RegId10` is an encoding-level namespace selector. Architectural semantics come from:
+
+* the decoded register class and index,
+* the consuming instruction family, and
+* any explicit type fields carried elsewhere in the instruction.
+
+`RegId10` itself does *not* encode element width, signedness, or floating-point format in the live `v0.4` profile.
 
 === Bit layout
 
-``RegId10`` is encoded as:
+`RegId10` is encoded as:
 
-* ``RegId10[9]``: ``s/t`` (signed-or-type selector). Interpretation depends on opcode class.
-** For integer vector ops (e.g. ``v.add``): ``0`` = unsigned, ``1`` = signed.
-** For floating vector ops (e.g. ``v.fadd``): ``0`` = float, ``1`` = reserved (future).
-* ``RegId10[8:7]``: ``width`` (element width tag)
-** ``00`` = ``d`` (64-bit)
-** ``01`` = ``w`` (32-bit)
-** ``10`` = ``h`` (16-bit)
-** ``11`` = ``b`` (8-bit)
-+
-+Concrete assembly suffix mapping (strict bring-up)::
-+
-+* Integer vector ops interpret ``RegId10[9]`` as ``s`` (signedness):
-+** ``s=0``: unsigned integer operand (`ud/uw/uh/ub`)
-+** ``s=1``: signed integer operand (`sd/sw/sh/sb`)
-+* Floating vector ops interpret ``RegId10[9]`` as ``t`` (type selector):
-+** ``t=0``: floating operand (`fd/fs/fh/fb`)
-+** ``t=1``: reserved (future)
-+
-+The ``width`` tag selects the element width for both integer and float operands:
-+
-+* ``00``: ``d`` = 64-bit (`ud/sd/fd`)
-+* ``01``: ``w`` = 32-bit (`uw/sw/fs`)
-+* ``10``: ``h`` = 16-bit (`uh/sh/fh`)
-+* ``11``: ``b`` = 8-bit (`ub/sb/fb`)
-* ``RegId10[6:5]``: register class (namespace selector)
-** ``00`` = vector registers (``VT/VU/VM/VN``)
-** ``01`` = global input registers (``RI*``) or scalar hands (``T/U``)
-** ``10`` = loop/tile/misc (loop bounds/counters, tile in/out/base, predicate, zero)
-** ``11`` = vector registers with ``.REUSE`` hint (``VT/VU/VM/VN``)
-* ``RegId10[4:0]``: index within the selected class.
+* `RegId10[9:5]`: register class
+* `RegId10[4:0]`: register index within that class
 
-=== ``.REUSE`` semantics
+=== Register classes
 
-A register name with suffix ``.REUSE`` (for example ``VT#1.REUSE``) denotes a *REUSE hint* on that source operand:
+[cols="1,1,4",options="header"]
+|===
+|`RegId10[9:5]` |Namespace |Definition
+|`5'b00000` |Base scalar namespace |Reuses the architectural 5-bit scalar register code space (`zero` / GPR namespace, plus instruction-family-specific legacy aliases where allowed).
+|`5'b00001` |`ri*` |Imported scalar kernel arguments (`ri0..ri31`). Only the descriptor-bound subset is architecturally valid in a given kernel instance.
+|`5'b00010` |Reserved |Reserved in canonical `v0.4`.
+|`5'b00011` |`lc*` |Loop/lane counters (`lc0..lc2`). Indices `3..31` are reserved.
+|`5'b00100` |`vt*` |Vector T queue bank (`vt`, `vt#1..vt#31`). Index `0` is the architectural push selector.
+|`5'b00101` |`vu*` |Vector U queue bank (`vu`, `vu#1..vu#31`). Index `0` is the architectural push selector.
+|`5'b00110` |`vm*` |Vector M queue bank (`vm`, `vm#1..vm#31`). Index `0` is the architectural push selector.
+|`5'b00111` |`vn*` |Vector N queue bank (`vn`, `vn#1..vn#31`). Index `0` is the architectural push selector.
+|`5'b01000` |Tile-base namespace |`ta`, `tb`, `tc`, `td`, `to`, `ts` selected by index `0..5`. Indices `6..31` are reserved.
+|`5'b01001`..`5'b11111` |Reserved |Reserved in canonical `v0.4`.
+|===
 
-* If a source operand is encoded using the ``RegId10[6:5]=2'b11`` namespace, the decoded register is the corresponding non-REUSE vector register (same family and index), and the instruction carries ``reuse_hint=true`` for that operand.
-* The hint indicates that subsequent instructions are expected to read the same register again.
-* The hint does **not** change architectural state or the value read.
+=== Base scalar namespace
 
-=== Interaction with ``SrcRType``
+Class `5'b00000` intentionally reuses the base 5-bit scalar code space so vector bodies can reference scalar architectural state directly when the consuming instruction allows it.
 
-``SrcRType`` is a separate encoding field used in non-``v.*`` instruction classes (e.g. ``AU/LU/CMP/AND/OR/SETC`` families) to express additional source operand transformations (such as ``sw/uw/neg/not``).
+The exact printable alias for a low 5-bit code is instruction-family-specific:
 
-For ``v.*`` instruction families, operand typing is expressed via ``RegId10.width`` and ``RegId10.s/t``. ``SrcRType`` is not applied.
+* `zero` and the GPR names are always canonical.
+* Legacy aliases that share the same low 5-bit code are only valid where the consuming instruction family defines them.
+* `RegId10` does not create a second independent encoding for those aliases.
+
+=== Tile-base index mapping
+
+Within class `5'b01000`, the low 5-bit index is interpreted as:
+
+* `0`: `ta`
+* `1`: `tb`
+* `2`: `tc`
+* `3`: `td`
+* `4`: `to`
+* `5`: `ts`
+* `6..31`: reserved
+
+=== Interaction with type fields
+
+`RegId10` does not carry `SrcType` or `DstType`.
+
+* Convert-class vector instructions (`V.FCVT`, `V.FCVTI`, `V.ICVT`, `V.ICVTF`) use the explicit type fields defined in <<sec-convert-type-encoding>>.
+* Other `v.*` forms use mnemonic-defined default type rules or profile-defined lane-shape rules, but those rules are *not* encoded in `RegId10`.
+* In the canonical `v0.4` strict profile, non-convert integer `v.*` families default to decoded `u32` or `s32` semantics by instruction class:
+  `V.DIV`/`V.REM`/`V.MAX`/`V.MIN`/`V.CMP.LT`/`V.CMP.GE`/`V.SRA` and their immediate, reduction, and atomic max/min relatives use `s32`;
+  other non-convert integer/vector carrier families use `u32` modulo/bitwise carrier semantics unless the instruction defines a narrower field width directly.
+* In the current strict bring-up profile, vector registers remain 32-bit lane carriers even when instruction semantics conceptually widen or narrow values during execution.
+
+=== `.reuse` is not part of `RegId10`
+
+The `.reuse` hint belongs to `B.IOT` / `B.IOTI` tile-descriptor operands only.
+
+It is *not* encoded as a `RegId10` class variant, and forms such as `vt#1.reuse` are not part of the canonical `v0.4` `RegId10` operand grammar.
+
+=== Interaction with `SrcRType`
+
+`SrcRType` is a separate scalar/vector instruction field used by specific instruction families for source transformation modifiers such as `.sw`, `.uw`, `.neg`, and `.not`.
+
+`SrcRType` is not a `RegId10` subfield and does not extend the `RegId10` namespace.

@@ -5,7 +5,7 @@
 [[inst_v_sd_or]]
 ==== V.SD.OR
 
-*Syntax:* v.sd.or<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>
+*Syntax:* v.sd.or<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR
 
 *Description:* Vector instruction (VEC engine).
 

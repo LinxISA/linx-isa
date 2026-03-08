@@ -5,7 +5,7 @@
 [[inst_v_ld_min]]
 ==== V.LD.MIN
 
-*Syntax:* v.ld.min<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>
+*Syntax:* v.ld.min<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

@@ -1,61 +1,57 @@
 # Bring-up Progress (v0.4 workspace)
 
-Last updated: 2026-02-22
+Last updated: 2026-03-07
+
+## Closure Snapshot
+
+- `v0.4` golden/spec is canonical and validated.
+- AVS is now the only live public bring-up contract.
+- Tier closure is not complete yet: `20/54` active AVS entries are currently marked `pass`.
+- Checked-in QEMU decode coverage is `524/710` unique legal `v0.4` mnemonics (`73.80%`) and `521/740` legal forms (`70.41%`).
+- Sail strict verification is now closed at the parser/status-gate level: the active model parses through the real top-level entry and the stale stub list has been removed.
 
 ## Phase status
 
 | Phase | Status | Evidence |
 | --- | --- | --- |
-| 1. Contract freeze (26 checks) | ✅ Passed | `python3 tools/bringup/check26_contract.py --root .` |
-| 2. linxisa v0.4 canonicalization | ✅ Passed | `bash tools/regression/run.sh` |
-| 3. LLVM MC/CodeGen alignment | ✅ Passed | `llvm-lit llvm/test/MC/LinxISA llvm/test/CodeGen/LinxISA` |
-| 4. QEMU runtime/system alignment | ✅ Passed | `avs/qemu/check_system_strict.sh`; `avs/qemu/run_tests.sh --all` |
-| 5. Linux userspace boot path | ✅ Passed | `python3 ${LINUX_ROOT}/tools/linxisa/initramfs/smoke.py`; `python3 ${LINUX_ROOT}/tools/linxisa/initramfs/full_boot.py` |
-| 6. pyCircuit + Janus model alignment | ✅ Bring-up scope complete | pyCircuit/Janus run scripts |
-| 7. Skills/docs sync + full stack regression | ✅ Passed | `CLANG=${LLVM_ROOT}/build-linxisa-clang/bin/clang LLD=${LLVM_ROOT}/build-linxisa-clang/bin/ld.lld LLVM_ROOT=compiler/llvm QEMU=${QEMU_ROOT}/build/qemu-system-linx64 LINUX_ROOT=${LINUX_ROOT} LINX_DISABLE_TIMER_IRQ=1 LINX_EMU_DISABLE_TIMER_IRQ=0 bash tools/regression/full_stack.sh` |
-| 8. musl Linux runtime bring-up | ✅ Phase-B runtime pass | `MODE=phase-b lib/musl/tools/linx/build_linx64_musl.sh`; `python3 avs/qemu/run_musl_smoke.py --mode phase-b` |
+| 1. Canonical `v0.4` golden + manual freeze | ✅ Passed | `python3 tools/isa/build_golden.py --profile v0.4 --check`; `python3 tools/isa/validate_spec.py --profile v0.4` |
+| 2. AVS public contract cutover | ✅ Source complete | `python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml` |
+| 3. LLVM MC/CodeGen baseline alignment | ✅ Baseline pass | `avs/compiler/linx-llvm/tests/run.sh`; `analyze_coverage.py --fail-under 100` |
+| 4. QEMU runtime/system baseline | ✅ Baseline pass | `avs/qemu/check_system_strict.sh`; `avs/qemu/run_tests.sh --all` |
+| 5. Linux userspace boot path | ✅ Baseline pass | `python3 ${LINUX_ROOT}/tools/linxisa/initramfs/smoke.py`; `python3 ${LINUX_ROOT}/tools/linxisa/initramfs/full_boot.py` |
+| 6. musl/glibc baseline runtime | ✅ Baseline pass | `python3 avs/qemu/run_musl_smoke.py --mode phase-b --link both`; `bash lib/glibc/tools/linx/build_linx64_glibc.sh` |
+| 7. Sail strict verification | ✅ Passed | `python3 tools/bringup/check_sail_model.py --require-parser` |
+| 8. AVS tier closure | 🚧 In progress | `python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier pr` |
+| 9. Full QEMU decode-spectrum closure | 🚧 In progress | `python3 tools/bringup/report_qemu_isa_coverage.py --report-out docs/bringup/gates/qemu_isa_coverage_latest.json --out-md docs/bringup/gates/qemu_isa_coverage_latest.md --require-full` |
+| 10. Workload and SPEC hard closure | 🚧 In progress | AVS workload/SPEC entries are active but not yet all validated |
 
-## Level 1 closure activation (2026-02-17)
-
-- Release-strict gating now enforces:
-  - check26 directed coverage linkage (including `Model` domain tests),
-  - QEMU-vs-model differential suite as a required gate,
-  - trace schema version compatibility checks,
-  - external/pin lane parity checks for required gate sets,
-  - strict multi-agent manifest/checklist/waiver validation.
-- Current blockers are tracked in `docs/bringup/MATURITY_PLAN.md` immediate backlog.
-
-## Gate snapshot
+## Gate Snapshot
 
 | Gate | Status | Command |
 | --- | --- | --- |
-| AVS compile-only (`linx64`/`linx32`) | ✅ | `./avs/compiler/linx-llvm/tests/run.sh` |
-| AVS runtime suites | ✅ | `./avs/qemu/run_tests.sh --all` |
-| Strict system gate | ✅ | `./avs/qemu/check_system_strict.sh` |
-| Multi-agent strict checklist gate | ✅ Policy enabled | `python3 tools/bringup/check_multi_agent_gates.py --strict-always --mode static --manifest docs/bringup/agent_runs/manifest.yaml --waivers docs/bringup/agent_runs/waivers.yaml --checklists-root docs/bringup/agent_runs/checklists` |
-| Main regression | ✅ | `bash tools/regression/run.sh` |
+| Golden/spec validation | ✅ | `python3 tools/isa/build_golden.py --profile v0.4 --check`; `python3 tools/isa/validate_spec.py --profile v0.4` |
+| AVS contract schema | ✅ | `python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml` |
+| AVS matrix status audit | ✅ | `python3 tools/bringup/check_avs_matrix_status.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json` |
+| AVS tier closure | ❌ Open work | `python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier pr` |
+| Sail model status | ✅ | `python3 tools/bringup/check_sail_model.py --require-parser` |
+| Compiler AVS (`linx64`/`linx32`) | ✅ | `./avs/compiler/linx-llvm/tests/run.sh` |
+| Compiler coverage (`linx64`/`linx32`) | ✅ | `python3 avs/compiler/linx-llvm/tests/analyze_coverage.py --fail-under 100` |
+| QEMU runtime suites | ✅ Baseline | `./avs/qemu/run_tests.sh --all` |
+| QEMU decode coverage | ❌ Open work | `python3 tools/bringup/report_qemu_isa_coverage.py --report-out docs/bringup/gates/qemu_isa_coverage_latest.json --out-md docs/bringup/gates/qemu_isa_coverage_latest.md --require-full` |
 | Linux initramfs smoke/full | ✅ | `python3 ${LINUX_ROOT}/tools/linxisa/initramfs/smoke.py`; `python3 ${LINUX_ROOT}/tools/linxisa/initramfs/full_boot.py` |
-| glibc `G1a` | ✅ (`configure` + `csu/subdir_lib`) | `bash lib/glibc/tools/linx/build_linx64_glibc.sh` |
-| musl `M1` | ✅ | `MODE=phase-b lib/musl/tools/linx/build_linx64_musl.sh` |
-| musl `M2` | ✅ (phase-b strict) | `out/libc/musl/logs/phase-b-summary.txt` |
-| musl `M3` | ✅ (phase-b strict) | `out/libc/musl/logs/phase-b-summary.txt`; `out/libc/musl/logs/phase-b-m3-shared.log` |
-| musl runtime `R1` | ✅ | `avs/qemu/out/musl-smoke/compile.log` |
-| musl runtime `R2` | ✅ | `avs/qemu/out/musl-smoke/qemu.log` |
+| musl runtime (`R1`/`R2`) | ✅ | `python3 avs/qemu/run_musl_smoke.py --mode phase-b --link both` |
+| glibc (`G1a`/`G1b`) | ✅ | `bash lib/glibc/tools/linx/build_linx64_glibc.sh`; `bash lib/glibc/tools/linx/build_linx64_glibc_g1b.sh` |
 
-## Latest command log
+## Current Closure Blockers
 
-- virtio-9p over virtio-mmio: **debug in progress** (currently EPROTO -71); see `docs/bringup/virtio_9p_debug.md`
+- AVS tier status shows only `20/54` active entries validated.
+- QEMU full-decode closure is still at `524/710` mnemonics and `521/740` forms; mnemonic-level and per-form closure are not complete.
+- Workload, PolyBench, TSVC, PTO parity, curated ctuning, and SPEC entries are present in AVS but not all validated in machine-readable form.
+- Pre-canonical architecture notebook migration remains open; notebook deletion is blocked until each retained note has a canonical destination or an explicit historical disposition.
 
-- `MODE=phase-b lib/musl/tools/linx/build_linx64_musl.sh` ✅ (`M1/M2/M3` pass)
-- `python3 avs/qemu/run_musl_smoke.py --mode phase-b` ✅ (`runtime_pass`)
-- `bash lib/glibc/tools/linx/build_linx64_glibc.sh` ✅ (`G1a`: configure + `csu/subdir_lib` + `crt1.o`)
-- `python3 ${LINUX_ROOT}/tools/linxisa/initramfs/smoke.py` ✅
-- `python3 ${LINUX_ROOT}/tools/linxisa/initramfs/full_boot.py` ✅
-- `python3 tools/bringup/check_multi_agent_gates.py --strict-always --mode static --manifest docs/bringup/agent_runs/manifest.yaml --waivers docs/bringup/agent_runs/waivers.yaml --checklists-root docs/bringup/agent_runs/checklists` ✅
-- `bash tools/regression/strict_cross_repo.sh` ✅
-- `CLANG=${LLVM_ROOT}/build-linxisa-clang/bin/clang LLD=${LLVM_ROOT}/build-linxisa-clang/bin/ld.lld LLVM_ROOT=compiler/llvm QEMU=${QEMU_ROOT}/build/qemu-system-linx64 LINUX_ROOT=${LINUX_ROOT} LINX_DISABLE_TIMER_IRQ=1 LINX_EMU_DISABLE_TIMER_IRQ=0 bash tools/regression/full_stack.sh` ✅
+## Canonical Gate Artifacts
 
-## Canonical Gate Table
-
-- `docs/bringup/gates/latest.json` is the source-of-truth gate artifact (lane + SHA + command + result).
-- `docs/bringup/GATE_STATUS.md` is generated from the JSON gate artifact.
+- `avs/linx_avs_v1_test_matrix.yaml` is the public contract source.
+- `avs/linx_avs_v1_test_matrix_status.json` is the canonical AVS status artifact.
+- `docs/bringup/gates/qemu_isa_coverage_latest.json` records the latest checked-in QEMU decode coverage snapshot, including mnemonic and per-form gaps.
+- `docs/bringup/gates/latest.json` remains the per-run multi-gate evidence artifact and must be refreshed by a full strict run before it is treated as release evidence.

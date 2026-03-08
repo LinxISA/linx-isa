@@ -1,5 +1,7 @@
 # v0.4 draft: PTO (Parallel Tile Ops) for rendering
 
+Canonical destination: `docs/architecture/v0.4-rendering-pto-contract.md`
+
 ## Context / goal
 We want the full rendering pipeline to be decomposable into small, composable **PTO** units.
 

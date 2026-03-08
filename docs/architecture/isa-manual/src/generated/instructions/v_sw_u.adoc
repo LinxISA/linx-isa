@@ -5,7 +5,7 @@
 [[inst_v_sw_u]]
 ==== V.SW.U
 
-*Syntax:* v.sw.u<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<2>, SrcR.<T2><<<shamt>]
+*Syntax:* v.sw.u<.local> SrcD.<T1>, [SrcL, <lc0<<2>, SrcR.<T2><<<shamt>]
 
 *Description:* Vector instruction (VEC engine).
 

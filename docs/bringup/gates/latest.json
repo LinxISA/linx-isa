@@ -171,13 +171,13 @@
         },
         {
           "classification": "contract_ok",
-          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check26_contract.py --root ${LINXISA_ROOT}",
+          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check_avs_contract.py --matrix ${LINXISA_ROOT}/avs/linx_avs_v1_test_matrix.yaml",
           "domain": "ISA",
           "evidence": [
-            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-17-r1-external-phase2c/external/isa_check26.log"
+            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-17-r1-external-phase2c/external/isa_avs_contract.log"
           ],
           "evidence_type": "log",
-          "gate": "check26 contract",
+          "gate": "AVS contract",
           "owner": "unowned",
           "required": true,
           "status": "pass",
@@ -365,13 +365,13 @@
         },
         {
           "classification": "contract_ok",
-          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check26_contract.py --root ${LINXISA_ROOT}",
+          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check_avs_contract.py --matrix ${LINXISA_ROOT}/avs/linx_avs_v1_test_matrix.yaml",
           "domain": "ISA",
           "evidence": [
-            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-17-r1-external-phase3/external/isa_check26.log"
+            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-17-r1-external-phase3/external/isa_avs_contract.log"
           ],
           "evidence_type": "log",
-          "gate": "check26 contract",
+          "gate": "AVS contract",
           "owner": "unowned",
           "required": true,
           "status": "pass",
@@ -573,13 +573,13 @@
         },
         {
           "classification": "contract_ok",
-          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check26_contract.py --root ${LINXISA_ROOT}",
+          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check_avs_contract.py --matrix ${LINXISA_ROOT}/avs/linx_avs_v1_test_matrix.yaml",
           "domain": "ISA",
           "evidence": [
-            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-17-r1-external-phase4/external/isa_check26.log"
+            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-17-r1-external-phase4/external/isa_avs_contract.log"
           ],
           "evidence_type": "log",
-          "gate": "check26 contract",
+          "gate": "AVS contract",
           "owner": "unowned",
           "required": true,
           "status": "pass",
@@ -781,13 +781,13 @@
         },
         {
           "classification": "contract_ok",
-          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check26_contract.py --root ${LINXISA_ROOT}",
+          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check_avs_contract.py --matrix ${LINXISA_ROOT}/avs/linx_avs_v1_test_matrix.yaml",
           "domain": "ISA",
           "evidence": [
-            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-17-r1-external-phase4b/external/isa_check26.log"
+            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-17-r1-external-phase4b/external/isa_avs_contract.log"
           ],
           "evidence_type": "log",
-          "gate": "check26 contract",
+          "gate": "AVS contract",
           "owner": "unowned",
           "required": true,
           "status": "pass",
@@ -1004,13 +1004,13 @@
         },
         {
           "classification": "contract_ok",
-          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check26_contract.py --root ${LINXISA_ROOT}",
+          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check_avs_contract.py --matrix ${LINXISA_ROOT}/avs/linx_avs_v1_test_matrix.yaml",
           "domain": "ISA",
           "evidence": [
-            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-17-r1-pin/pin/isa_check26.log"
+            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-17-r1-pin/pin/isa_avs_contract.log"
           ],
           "evidence_type": "log",
-          "gate": "check26 contract",
+          "gate": "AVS contract",
           "owner": "bringup",
           "required": true,
           "status": "pass",
@@ -1231,13 +1231,13 @@
         },
         {
           "classification": "contract_ok",
-          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check26_contract.py --root ${LINXISA_ROOT}",
+          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check_avs_contract.py --matrix ${LINXISA_ROOT}/avs/linx_avs_v1_test_matrix.yaml",
           "domain": "ISA",
           "evidence": [
-            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-17-r1-pin-phase2/pin/isa_check26.log"
+            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-17-r1-pin-phase2/pin/isa_avs_contract.log"
           ],
           "evidence_type": "log",
-          "gate": "check26 contract",
+          "gate": "AVS contract",
           "owner": "unowned",
           "required": true,
           "status": "pass",
@@ -1429,13 +1429,13 @@
         },
         {
           "classification": "contract_ok",
-          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check26_contract.py --root ${LINXISA_ROOT}",
+          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check_avs_contract.py --matrix ${LINXISA_ROOT}/avs/linx_avs_v1_test_matrix.yaml",
           "domain": "ISA",
           "evidence": [
-            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-17-r1-pin-phase2b/pin/isa_check26.log"
+            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-17-r1-pin-phase2b/pin/isa_avs_contract.log"
           ],
           "evidence_type": "log",
-          "gate": "check26 contract",
+          "gate": "AVS contract",
           "owner": "unowned",
           "required": true,
           "status": "pass",
@@ -1613,13 +1613,13 @@
         },
         {
           "classification": "contract_ok",
-          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check26_contract.py --root ${LINXISA_ROOT}",
+          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check_avs_contract.py --matrix ${LINXISA_ROOT}/avs/linx_avs_v1_test_matrix.yaml",
           "domain": "ISA",
           "evidence": [
-            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-17-r1-pin-phase2c/pin/isa_check26.log"
+            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-17-r1-pin-phase2c/pin/isa_avs_contract.log"
           ],
           "evidence_type": "log",
-          "gate": "check26 contract",
+          "gate": "AVS contract",
           "owner": "unowned",
           "required": true,
           "status": "pass",
@@ -1811,13 +1811,13 @@
         },
         {
           "classification": "contract_ok",
-          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check26_contract.py --root ${LINXISA_ROOT}",
+          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check_avs_contract.py --matrix ${LINXISA_ROOT}/avs/linx_avs_v1_test_matrix.yaml",
           "domain": "ISA",
           "evidence": [
-            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-17-r1-pin-phase3/pin/isa_check26.log"
+            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-17-r1-pin-phase3/pin/isa_avs_contract.log"
           ],
           "evidence_type": "log",
-          "gate": "check26 contract",
+          "gate": "AVS contract",
           "owner": "unowned",
           "required": true,
           "status": "pass",
@@ -2023,13 +2023,13 @@
         },
         {
           "classification": "contract_ok",
-          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check26_contract.py --root ${LINXISA_ROOT}",
+          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check_avs_contract.py --matrix ${LINXISA_ROOT}/avs/linx_avs_v1_test_matrix.yaml",
           "domain": "ISA",
           "evidence": [
-            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-17-r1-pin-phase4/pin/isa_check26.log"
+            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-17-r1-pin-phase4/pin/isa_avs_contract.log"
           ],
           "evidence_type": "log",
-          "gate": "check26 contract",
+          "gate": "AVS contract",
           "owner": "unowned",
           "required": true,
           "status": "pass",
@@ -2235,13 +2235,13 @@
         },
         {
           "classification": "contract_ok",
-          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check26_contract.py --root ${LINXISA_ROOT}",
+          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check_avs_contract.py --matrix ${LINXISA_ROOT}/avs/linx_avs_v1_test_matrix.yaml",
           "domain": "ISA",
           "evidence": [
-            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-17-r1-pin-phase4b/pin/isa_check26.log"
+            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-17-r1-pin-phase4b/pin/isa_avs_contract.log"
           ],
           "evidence_type": "log",
-          "gate": "check26 contract",
+          "gate": "AVS contract",
           "owner": "unowned",
           "required": true,
           "status": "pass",
@@ -2448,13 +2448,13 @@
         },
         {
           "classification": "contract_ok",
-          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check26_contract.py --root ${LINXISA_ROOT}",
+          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check_avs_contract.py --matrix ${LINXISA_ROOT}/avs/linx_avs_v1_test_matrix.yaml",
           "domain": "ISA",
           "evidence": [
-            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-17-r1-pin-stable/pin/isa_check26.log"
+            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-17-r1-pin-stable/pin/isa_avs_contract.log"
           ],
           "evidence_type": "log",
-          "gate": "check26 contract",
+          "gate": "AVS contract",
           "owner": "unowned",
           "required": true,
           "status": "pass",
@@ -2646,13 +2646,13 @@
         },
         {
           "classification": "contract_ok",
-          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check26_contract.py --root ${LINXISA_ROOT}",
+          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check_avs_contract.py --matrix ${LINXISA_ROOT}/avs/linx_avs_v1_test_matrix.yaml",
           "domain": "ISA",
           "evidence": [
-            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-23-r2-pin-reassess/pin/isa_check26.log"
+            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-23-r2-pin-reassess/pin/isa_avs_contract.log"
           ],
           "evidence_type": "log",
-          "gate": "check26 contract",
+          "gate": "AVS contract",
           "owner": "bringup",
           "required": true,
           "status": "pass",
@@ -2887,13 +2887,13 @@
         },
         {
           "classification": "contract_ok",
-          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check26_contract.py --root ${LINXISA_ROOT}",
+          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check_avs_contract.py --matrix ${LINXISA_ROOT}/avs/linx_avs_v1_test_matrix.yaml",
           "domain": "ISA",
           "evidence": [
-            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-23-r4-pin-qemu-linux-ctxfix/pin/isa_check26.log"
+            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-23-r4-pin-qemu-linux-ctxfix/pin/isa_avs_contract.log"
           ],
           "evidence_type": "log",
-          "gate": "check26 contract",
+          "gate": "AVS contract",
           "owner": "bringup",
           "required": true,
           "status": "pass",
@@ -3128,13 +3128,13 @@
         },
         {
           "classification": "contract_ok",
-          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check26_contract.py --root ${LINXISA_ROOT}",
+          "command": "python3 ${LINXISA_ROOT}/tools/bringup/check_avs_contract.py --matrix ${LINXISA_ROOT}/avs/linx_avs_v1_test_matrix.yaml",
           "domain": "ISA",
           "evidence": [
-            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-23-r5-pin-ctx-rootfs/pin/isa_check26.log"
+            "log:${LINXISA_ROOT}/docs/bringup/gates/logs/2026-02-23-r5-pin-ctx-rootfs/pin/isa_avs_contract.log"
           ],
           "evidence_type": "log",
-          "gate": "check26 contract",
+          "gate": "AVS contract",
           "owner": "bringup",
           "required": true,
           "status": "pass",
@@ -3369,13 +3369,13 @@
         },
         {
           "classification": "contract_ok",
-          "command": "python3 /Users/zhoubot/linx-isa/tools/bringup/check26_contract.py --root /Users/zhoubot/linx-isa",
+          "command": "python3 /Users/zhoubot/linx-isa/tools/bringup/check_avs_contract.py --matrix /Users/zhoubot/linx-isa/avs/linx_avs_v1_test_matrix.yaml",
           "domain": "ISA",
           "evidence": [
-            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-24-r1-pin-timeron/pin/isa_check26.log"
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-24-r1-pin-timeron/pin/isa_avs_contract.log"
           ],
           "evidence_type": "log",
-          "gate": "check26 contract",
+          "gate": "AVS contract",
           "owner": "bringup",
           "required": true,
           "status": "pass",
@@ -3610,13 +3610,13 @@
         },
         {
           "classification": "contract_ok",
-          "command": "python3 /Users/zhoubot/linx-isa/tools/bringup/check26_contract.py --root /Users/zhoubot/linx-isa",
+          "command": "python3 /Users/zhoubot/linx-isa/tools/bringup/check_avs_contract.py --matrix /Users/zhoubot/linx-isa/avs/linx_avs_v1_test_matrix.yaml",
           "domain": "ISA",
           "evidence": [
-            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-25-r2-pin-lanefix/pin/isa_check26.log"
+            "log:/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-02-25-r2-pin-lanefix/pin/isa_avs_contract.log"
           ],
           "evidence_type": "log",
-          "gate": "check26 contract",
+          "gate": "AVS contract",
           "owner": "bringup",
           "required": true,
           "status": "pass",

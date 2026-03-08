@@ -5,7 +5,7 @@
 [[inst_v_lh_brg]]
 ==== V.LH.BRG
 
-*Syntax:* v.lh.brg<.local> [SrcL<.ud>,  <lc0<<1>, SrcR.<T><<<shamt>], ->Dst.<W>
+*Syntax:* v.lh.brg<.local> [SrcL,  <lc0<<1>, SrcR<<<shamt>], ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

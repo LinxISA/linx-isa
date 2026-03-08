@@ -1,5 +1,7 @@
 # v0.4 draft: BCC-led Vulkan command buffer lowering
 
+Canonical destination: `docs/architecture/v0.4-rendering-command-contract.md`
+
 ## Decision
 Vulkan command buffers are **lowered/expanded by BCC (or a BCC-adjacent runtime)** into a sequence of Linx blocks.
 
@@ -21,4 +23,3 @@ Rationale:
 2) How to represent state bundles (PSO) efficiently to avoid bloating block streams?
 3) How to handle secondary command buffers / multi-thread recording?
 4) How to map Vulkan sync primitives (timeline semaphores) to block/BID fences.
-

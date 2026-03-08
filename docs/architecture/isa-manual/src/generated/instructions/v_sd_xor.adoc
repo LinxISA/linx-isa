@@ -5,7 +5,7 @@
 [[inst_v_sd_xor]]
 ==== V.SD.XOR
 
-*Syntax:* v.sd.xor<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>
+*Syntax:* v.sd.xor<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR
 
 *Description:* Vector instruction (VEC engine).
 

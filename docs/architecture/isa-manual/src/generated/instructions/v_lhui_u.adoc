@@ -5,7 +5,7 @@
 [[inst_v_lhui_u]]
 ==== V.LHUI.U
 
-*Syntax:* v.lhui.u<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>
+*Syntax:* v.lhui.u<.local> [SrcL, <lc0<<1>, simm], ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

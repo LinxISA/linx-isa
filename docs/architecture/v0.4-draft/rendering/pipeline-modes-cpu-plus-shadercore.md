@@ -1,5 +1,8 @@
 # v0.4 draft: Rendering pipeline modes (CPU + Shader Core)
 
+Canonical destinations: `docs/architecture/v0.4-rendering-command-contract.md`, `docs/architecture/v0.4-rendering-kernel-authoring.md`
+Related live LinxCore contract: `docs/architecture/linxcore/microarchitecture.md`
+
 ## Goal
 Support both:
 - **desktop / immediate-mode** rendering pipelines

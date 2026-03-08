@@ -5,7 +5,7 @@
 [[inst_v_fsqrt]]
 ==== V.FSQRT
 
-*Syntax:* v.fsqrt SrcL.<T>, ->Dst.<W>
+*Syntax:* v.fsqrt SrcL, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

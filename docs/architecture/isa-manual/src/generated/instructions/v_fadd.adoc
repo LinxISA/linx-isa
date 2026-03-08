@@ -5,7 +5,7 @@
 [[inst_v_fadd]]
 ==== V.FADD
 
-*Syntax:* v.fadd SrcL.<T>, SrcR.<T>, ->Dst.<W>
+*Syntax:* v.fadd SrcL, SrcR, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

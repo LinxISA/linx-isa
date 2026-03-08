@@ -5,7 +5,7 @@
 [[inst_v_cmp_ne]]
 ==== V.CMP.NE
 
-*Syntax:* v.cmp.ne SrcL.<T>, SrcR.<T>, ->Dst.<W>
+*Syntax:* v.cmp.ne SrcL, SrcR, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

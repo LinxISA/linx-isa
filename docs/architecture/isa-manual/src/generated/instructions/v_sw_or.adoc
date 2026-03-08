@@ -5,7 +5,7 @@
 [[inst_v_sw_or]]
 ==== V.SW.OR
 
-*Syntax:* v.sw.or<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>
+*Syntax:* v.sw.or<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR
 
 *Description:* Vector instruction (VEC engine).
 

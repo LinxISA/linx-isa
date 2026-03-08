@@ -5,7 +5,7 @@
 [[inst_v_min]]
 ==== V.MIN
 
-*Syntax:* v.min SrcL.<T>, SrcR.<T>, ->Dst.<W>
+*Syntax:* v.min SrcL, SrcR, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

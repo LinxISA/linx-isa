@@ -5,7 +5,7 @@
 [[inst_v_rem]]
 ==== V.REM
 
-*Syntax:* v.rem SrcL.<T>, SrcR.<T>, ->Dst.<W>
+*Syntax:* v.rem SrcL, SrcR, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

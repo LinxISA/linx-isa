@@ -5,7 +5,7 @@
 [[inst_v_fcvt]]
 ==== V.FCVT
 
-*Syntax:* v.fcvt.{st2dt} SrcL.<T>, ->Dst.<W>
+*Syntax:* v.fcvt.{st2dt} SrcL, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

@@ -42,6 +42,11 @@ nav:
   - ISA Specification:
       - Architecture Framework: architecture/README.md
       - v0.4 Contract & Guarantees: architecture/v0.4-architecture-contract.md
+      - v0.4 Hardening Policy: architecture/v0.4-hardening-policy.md
+      - v0.4 Workload Engine Model: architecture/v0.4-workload-engine-model.md
+      - v0.4 Rendering Kernel Guide: architecture/v0.4-rendering-kernel-authoring.md
+      - v0.4 Rendering PTO Contract: architecture/v0.4-rendering-pto-contract.md
+      - v0.4 Rendering Command Contract: architecture/v0.4-rendering-command-contract.md
       - Assembly Guide: reference/linxisa-assembly-agent-guide.md
       - Call/Ret Contract (ABI): reference/linxisa-call-ret-contract.md
       - Encoding Space Analysis: reference/encoding_space_report.md
@@ -53,9 +58,10 @@ nav:
       - Verification Matrix: architecture/linxcore/verification-matrix.md
   - Bring-up & Ecosystem:
       - Bring-up Overview: bringup/README.md
+      - AVS Contract: bringup/AVS_CONTRACT.md
+      - Rendering Bring-up: bringup/rendering_vulkan_bringup.md
       - Progress & Status: bringup/PROGRESS.md
       - Validation Gates: bringup/GATE_STATUS.md
-      - CI/CD Contract Check: bringup/CHECK26_CONTRACT.md
       - Ecosystem Maturity: bringup/MATURITY_PLAN.md
       - Reference Examples: reference/examples/README.md
   - Project Structure:

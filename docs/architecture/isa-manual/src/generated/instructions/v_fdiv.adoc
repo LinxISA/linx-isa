@@ -5,7 +5,7 @@
 [[inst_v_fdiv]]
 ==== V.FDIV
 
-*Syntax:* v.fdiv SrcL.<T>, SrcR.<T>, ->Dst.<W>
+*Syntax:* v.fdiv SrcL, SrcR, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

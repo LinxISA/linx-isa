@@ -3108,7 +3108,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.add SrcL.<T>, SrcR.<T><.neg><<<shamt>, ->Dst.<W>`
+* `v.add SrcL, SrcR<.neg><<<shamt>, ->Dst`
 
 Operation (informative)::
 +
@@ -3129,7 +3129,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.addi SrcL.<T>, uimm, ->Dst.<W>`
+* `v.addi SrcL, uimm, ->Dst`
 
 Operation (informative)::
 +
@@ -3150,7 +3150,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.and SrcL.<T>, SrcR.<T><.not><<<shamt>, ->Dst.<W>`
+* `v.and SrcL, SrcR<.not><<<shamt>, ->Dst`
 
 Operation (informative)::
 +
@@ -3171,7 +3171,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.andi SrcL.<T>, simm, ->Dst.<W>`
+* `v.andi SrcL, simm, ->Dst`
 
 Operation (informative)::
 +
@@ -3192,7 +3192,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.or SrcL.<T>, SrcR.<T><.not><<<shamt>, ->Dst.<W>`
+* `v.or SrcL, SrcR<.not><<<shamt>, ->Dst`
 
 Operation (informative)::
 +
@@ -3213,7 +3213,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.ori SrcL.<T>, simm, ->Dst.<W>`
+* `v.ori SrcL, simm, ->Dst`
 
 Operation (informative)::
 +
@@ -3234,7 +3234,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sll SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.sll SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -3255,7 +3255,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.slli SrcL.<T>, shamt, ->Dst.<W>`
+* `v.slli SrcL, shamt, ->Dst`
 
 Operation (informative)::
 +
@@ -3276,7 +3276,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sra SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.sra SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -3297,7 +3297,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.srai SrcL.<T>, shamt, ->Dst.<W>`
+* `v.srai SrcL, shamt, ->Dst`
 
 Operation (informative)::
 +
@@ -3318,7 +3318,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.srl SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.srl SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -3339,7 +3339,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.srli SrcL.<T>, shamt, ->Dst.<W>`
+* `v.srli SrcL, shamt, ->Dst`
 
 Operation (informative)::
 +
@@ -3360,7 +3360,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sub SrcL.<T>, SrcR.<T><.neg><<<shamt>, ->Dst.<W>`
+* `v.sub SrcL, SrcR<.neg><<<shamt>, ->Dst`
 
 Operation (informative)::
 +
@@ -3381,7 +3381,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.subi SrcL.<T>, uimm, ->Dst.<W>`
+* `v.subi SrcL, uimm, ->Dst`
 
 Operation (informative)::
 +
@@ -3402,7 +3402,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.xor SrcL.<T>, SrcR.<T><.not><<<shamt>, ->Dst.<W>`
+* `v.xor SrcL, SrcR<.not><<<shamt>, ->Dst`
 
 Operation (informative)::
 +
@@ -3423,7 +3423,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.xori SrcL.<T>, simm, ->Dst.<W>`
+* `v.xori SrcL, simm, ->Dst`
 
 Operation (informative)::
 +
@@ -3990,7 +3990,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lbi<.local> [SrcL<.ud>, <lc0>, simm], ->Dst.<W>`
+* `v.lbi<.local> [SrcL, <lc0>, simm], ->Dst`
 
 Operation (informative)::
 +
@@ -4011,7 +4011,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lbi.brg<.local> [SrcL<.ud>, <lc0>, simm], ->Dst.<W>`
+* `v.lbi.brg<.local> [SrcL, <lc0>, simm], ->Dst`
 
 Operation (informative)::
 +
@@ -4032,7 +4032,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lbui<.local> [SrcL<.ud>, <lc0>, simm], ->Dst.<W>`
+* `v.lbui<.local> [SrcL, <lc0>, simm], ->Dst`
 
 Operation (informative)::
 +
@@ -4053,7 +4053,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lbui.brg<.local> [SrcL<.ud>, <lc0>, simm], ->Dst.<W>`
+* `v.lbui.brg<.local> [SrcL, <lc0>, simm], ->Dst`
 
 Operation (informative)::
 +
@@ -4074,7 +4074,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.ldi<.local> [SrcL<.ud>, <lc0<<3>, simm], ->Dst.<W>`
+* `v.ldi<.local> [SrcL, <lc0<<3>, simm], ->Dst`
 
 Operation (informative)::
 +
@@ -4094,7 +4094,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.ldi.brg<.local> [SrcL<.ud>, <lc0<<3>, simm], ->Dst.<W>`
+* `v.ldi.brg<.local> [SrcL, <lc0<<3>, simm], ->Dst`
 
 Operation (informative)::
 +
@@ -4114,7 +4114,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lhi<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>`
+* `v.lhi<.local> [SrcL, <lc0<<1>, simm], ->Dst`
 
 Operation (informative)::
 +
@@ -4135,7 +4135,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lhi.brg<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>`
+* `v.lhi.brg<.local> [SrcL, <lc0<<1>, simm], ->Dst`
 
 Operation (informative)::
 +
@@ -4156,7 +4156,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lhui<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>`
+* `v.lhui<.local> [SrcL, <lc0<<1>, simm], ->Dst`
 
 Operation (informative)::
 +
@@ -4177,7 +4177,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lhui.brg<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>`
+* `v.lhui.brg<.local> [SrcL, <lc0<<1>, simm], ->Dst`
 
 Operation (informative)::
 +
@@ -4198,7 +4198,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lwi<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>`
+* `v.lwi<.local> [SrcL, <lc0<<2>, simm], ->Dst`
 
 Operation (informative)::
 +
@@ -4219,7 +4219,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lwi.brg<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>`
+* `v.lwi.brg<.local> [SrcL, <lc0<<2>, simm], ->Dst`
 
 Operation (informative)::
 +
@@ -4240,7 +4240,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lwui<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>`
+* `v.lwui<.local> [SrcL, <lc0<<2>, simm], ->Dst`
 
 Operation (informative)::
 +
@@ -4261,7 +4261,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lwui.brg<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>`
+* `v.lwui.brg<.local> [SrcL, <lc0<<2>, simm], ->Dst`
 
 Operation (informative)::
 +
@@ -5668,7 +5668,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.cmp.and SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.cmp.and SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -5689,7 +5689,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.cmp.andi SrcL.<T>, simm, ->Dst.<W>`
+* `v.cmp.andi SrcL, simm, ->Dst`
 
 Operation (informative)::
 +
@@ -5710,7 +5710,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.cmp.eq SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.cmp.eq SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -5729,7 +5729,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.cmp.eqi SrcL.<T>, simm, ->Dst.<W>`
+* `v.cmp.eqi SrcL, simm, ->Dst`
 
 Operation (informative)::
 +
@@ -5749,7 +5749,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.cmp.ge SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.cmp.ge SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -5768,7 +5768,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.cmp.gei SrcL.<T>, simm, ->Dst.<W>`
+* `v.cmp.gei SrcL, simm, ->Dst`
 
 Operation (informative)::
 +
@@ -5788,7 +5788,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.cmp.geu SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.cmp.geu SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -5807,7 +5807,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.cmp.geui SrcL.<T>, uimm, ->Dst.<W>`
+* `v.cmp.geui SrcL, uimm, ->Dst`
 
 Operation (informative)::
 +
@@ -5827,7 +5827,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.cmp.lt SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.cmp.lt SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -5846,7 +5846,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.cmp.lti SrcL.<T>, simm, ->Dst.<W>`
+* `v.cmp.lti SrcL, simm, ->Dst`
 
 Operation (informative)::
 +
@@ -5866,7 +5866,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.cmp.ltu SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.cmp.ltu SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -5885,7 +5885,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.cmp.ltui SrcL.<T>, uimm, ->Dst.<W>`
+* `v.cmp.ltui SrcL, uimm, ->Dst`
 
 Operation (informative)::
 +
@@ -5905,7 +5905,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.cmp.ne SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.cmp.ne SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -5924,7 +5924,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.cmp.nei SrcL.<T>, simm, ->Dst.<W>`
+* `v.cmp.nei SrcL, simm, ->Dst`
 
 Operation (informative)::
 +
@@ -5944,7 +5944,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.cmp.or SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.cmp.or SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -5965,7 +5965,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.cmp.ori SrcL.<T>, simm, ->Dst.<W>`
+* `v.cmp.ori SrcL, simm, ->Dst`
 
 Operation (informative)::
 +
@@ -6750,7 +6750,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.madd SrcL.<T>, SrcR.<T>, SrcD.<T>, ->Dst.<W>`
+* `v.madd SrcL, SrcR, SrcD, ->Dst`
 
 Operation (informative)::
 +
@@ -6772,7 +6772,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.mul SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.mul SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -7262,7 +7262,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.fcvt.{st2dt} SrcL.<T>, ->Dst.<W>`
+* `v.fcvt.{st2dt} SrcL, ->Dst`
 
 Operation (informative)::
 +
@@ -7280,7 +7280,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.fcvti.{st2dt} SrcL.<T>, ->Dst.<W>`
+* `v.fcvti.{st2dt} SrcL, ->Dst`
 
 Operation (informative)::
 +
@@ -7298,7 +7298,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.icvt.{st2dt} SrcL.<T>, ->Dst.<W>`
+* `v.icvt.{st2dt} SrcL, ->Dst`
 
 Operation (informative)::
 +
@@ -7316,7 +7316,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.icvtf.{st2dt} SrcL.<T>, ->Dst.<W>`
+* `v.icvtf.{st2dt} SrcL, ->Dst`
 
 Operation (informative)::
 +
@@ -11196,7 +11196,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lb<.local> [SrcL<.ud>, <lc0>, SrcR.<T><<<shamt>], ->Dst.<W>`
+* `v.lb<.local> [SrcL, <lc0>, SrcR<<<shamt>], ->Dst`
 
 Operation (informative)::
 +
@@ -11217,7 +11217,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lb.brg<.local> [SrcL<.ud>, <lc0>, SrcR.<T><<<shamt>], ->Dst.<W>`
+* `v.lb.brg<.local> [SrcL, <lc0>, SrcR<<<shamt>], ->Dst`
 
 Operation (informative)::
 +
@@ -11238,7 +11238,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lbu<.local> [SrcL<.ud>, <lc0>, SrcR.<T><<<shamt>], ->Dst.<W>`
+* `v.lbu<.local> [SrcL, <lc0>, SrcR<<<shamt>], ->Dst`
 
 Operation (informative)::
 +
@@ -11259,7 +11259,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lbu.brg<.local> [SrcL<.ud>, <lc0>, SrcR.<T><<<shamt>], ->Dst.<W>`
+* `v.lbu.brg<.local> [SrcL, <lc0>, SrcR<<<shamt>], ->Dst`
 
 Operation (informative)::
 +
@@ -11280,7 +11280,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.ld<.local> [SrcL<.ud>, <lc0<<3>, SrcR.<T><<<shamt>], ->Dst.<W>`
+* `v.ld<.local> [SrcL, <lc0<<3>, SrcR<<<shamt>], ->Dst`
 
 Operation (informative)::
 +
@@ -11300,7 +11300,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.ld.brg<.local> [SrcL<.ud>, <lc0<<3>, SrcR.<T><<<shamt>], ->Dst.<W>`
+* `v.ld.brg<.local> [SrcL, <lc0<<3>, SrcR<<<shamt>], ->Dst`
 
 Operation (informative)::
 +
@@ -11320,7 +11320,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lh<.local> [SrcL<.ud>, <lc0<<1>, SrcR.<T><<<shamt>], ->Dst.<W>`
+* `v.lh<.local> [SrcL, <lc0<<1>, SrcR<<<shamt>], ->Dst`
 
 Operation (informative)::
 +
@@ -11341,7 +11341,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lh.brg<.local> [SrcL<.ud>, <lc0<<1>, SrcR.<T><<<shamt>], ->Dst.<W>`
+* `v.lh.brg<.local> [SrcL, <lc0<<1>, SrcR<<<shamt>], ->Dst`
 
 Operation (informative)::
 +
@@ -11362,7 +11362,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lhu<.local> [SrcL<.ud>, <lc0<<1>, SrcR.<T><<<shamt>], ->Dst.<W>`
+* `v.lhu<.local> [SrcL, <lc0<<1>, SrcR<<<shamt>], ->Dst`
 
 Operation (informative)::
 +
@@ -11383,7 +11383,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lhu.brg<.local> [SrcL<.ud>, <lc0<<1>, SrcR.<T><<<shamt>], ->Dst.<W>`
+* `v.lhu.brg<.local> [SrcL, <lc0<<1>, SrcR<<<shamt>], ->Dst`
 
 Operation (informative)::
 +
@@ -11404,7 +11404,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lw<.local> [SrcL<.ud>, <lc0<<2>, SrcR.<T><<<shamt>], ->Dst.<W>`
+* `v.lw<.local> [SrcL, <lc0<<2>, SrcR<<<shamt>], ->Dst`
 
 Operation (informative)::
 +
@@ -11425,7 +11425,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lw.brg<.local> [SrcL<.ud>, <lc0<<2>, SrcR.<T><<<shamt>], ->Dst.<W>`
+* `v.lw.brg<.local> [SrcL, <lc0<<2>, SrcR<<<shamt>], ->Dst`
 
 Operation (informative)::
 +
@@ -11446,7 +11446,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lwu<.local> [SrcL<.ud>, <lc0<<2>, SrcR.<T><<<shamt>], ->Dst.<W>`
+* `v.lwu<.local> [SrcL, <lc0<<2>, SrcR<<<shamt>], ->Dst`
 
 Operation (informative)::
 +
@@ -11467,7 +11467,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lwu.brg<.local> [SrcL<.ud>, <lc0<<2>, SrcR.<T><<<shamt>], ->Dst.<W>`
+* `v.lwu.brg<.local> [SrcL, <lc0<<2>, SrcR<<<shamt>], ->Dst`
 
 Operation (informative)::
 +
@@ -12588,7 +12588,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.ld.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>`
+* `v.ld.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -12611,7 +12611,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.ld.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>`
+* `v.ld.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -12634,7 +12634,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.ld.max<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>`
+* `v.ld.max<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -12657,7 +12657,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.ld.min<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>`
+* `v.ld.min<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -12680,7 +12680,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.ld.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>`
+* `v.ld.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -12703,7 +12703,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>`
+* `v.ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -12726,7 +12726,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lw.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>`
+* `v.lw.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -12749,7 +12749,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lw.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>`
+* `v.lw.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -12772,7 +12772,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lw.max<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>`
+* `v.lw.max<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -12795,7 +12795,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lw.min<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>`
+* `v.lw.min<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -12818,7 +12818,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lw.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>`
+* `v.lw.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -12841,7 +12841,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lw.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>`
+* `v.lw.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -12864,7 +12864,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sd.add<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>`
+* `v.sd.add<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
 
 Operation (informative)::
 +
@@ -12886,7 +12886,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sd.and<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>`
+* `v.sd.and<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
 
 Operation (informative)::
 +
@@ -12908,7 +12908,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sd.max<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>`
+* `v.sd.max<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
 
 Operation (informative)::
 +
@@ -12930,7 +12930,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sd.min<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>`
+* `v.sd.min<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
 
 Operation (informative)::
 +
@@ -12952,7 +12952,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sd.or<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>`
+* `v.sd.or<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
 
 Operation (informative)::
 +
@@ -12974,7 +12974,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sd.xor<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>`
+* `v.sd.xor<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
 
 Operation (informative)::
 +
@@ -12996,7 +12996,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sw.add<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>`
+* `v.sw.add<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
 
 Operation (informative)::
 +
@@ -13018,7 +13018,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sw.and<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>`
+* `v.sw.and<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
 
 Operation (informative)::
 +
@@ -13040,7 +13040,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sw.max<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>`
+* `v.sw.max<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
 
 Operation (informative)::
 +
@@ -13062,7 +13062,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sw.min<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>`
+* `v.sw.min<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
 
 Operation (informative)::
 +
@@ -13084,7 +13084,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sw.or<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>`
+* `v.sw.or<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
 
 Operation (informative)::
 +
@@ -13106,7 +13106,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sw.xor<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>`
+* `v.sw.xor<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
 
 Operation (informative)::
 +
@@ -13254,7 +13254,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.ldi.u<.local> [SrcL<.ud>, <lc0<<3>, simm], ->Dst.<W>`
+* `v.ldi.u<.local> [SrcL, <lc0<<3>, simm], ->Dst`
 
 Operation (informative)::
 +
@@ -13274,7 +13274,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.ldi.u.brg<.local> [SrcL<.ud>, <lc0<<3>, simm], ->Dst.<W>`
+* `v.ldi.u.brg<.local> [SrcL, <lc0<<3>, simm], ->Dst`
 
 Operation (informative)::
 +
@@ -13294,7 +13294,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lhi.u<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>`
+* `v.lhi.u<.local> [SrcL, <lc0<<1>, simm], ->Dst`
 
 Operation (informative)::
 +
@@ -13315,7 +13315,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lhi.u.brg<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>`
+* `v.lhi.u.brg<.local> [SrcL, <lc0<<1>, simm], ->Dst`
 
 Operation (informative)::
 +
@@ -13336,7 +13336,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lhui.u<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>`
+* `v.lhui.u<.local> [SrcL, <lc0<<1>, simm], ->Dst`
 
 Operation (informative)::
 +
@@ -13357,7 +13357,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lhui.u.brg<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>`
+* `v.lhui.u.brg<.local> [SrcL, <lc0<<1>, simm], ->Dst`
 
 Operation (informative)::
 +
@@ -13378,7 +13378,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lwi.u<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>`
+* `v.lwi.u<.local> [SrcL, <lc0<<2>, simm], ->Dst`
 
 Operation (informative)::
 +
@@ -13399,7 +13399,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lwi.u.brg<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>`
+* `v.lwi.u.brg<.local> [SrcL, <lc0<<2>, simm], ->Dst`
 
 Operation (informative)::
 +
@@ -13420,7 +13420,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lwui.u<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>`
+* `v.lwui.u<.local> [SrcL, <lc0<<2>, simm], ->Dst`
 
 Operation (informative)::
 +
@@ -13441,7 +13441,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.lwui.u.brg<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>`
+* `v.lwui.u.brg<.local> [SrcL, <lc0<<2>, simm], ->Dst`
 
 Operation (informative)::
 +
@@ -13618,7 +13618,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sb<.local> SrcD.<T1>, [SrcL<.ud>, <lc0>, SrcR.<T2><<<shamt>]`
+* `v.sb<.local> SrcD.<T1>, [SrcL, <lc0>, SrcR.<T2><<<shamt>]`
 
 Operation (informative)::
 +
@@ -13637,7 +13637,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sb.brg<.local> SrcD.<T1>, [SrcL<.ud>, <lc0>, SrcR.<T2><<<shamt>]`
+* `v.sb.brg<.local> SrcD.<T1>, [SrcL, <lc0>, SrcR.<T2><<<shamt>]`
 
 Operation (informative)::
 +
@@ -13656,7 +13656,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sd<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<3>, SrcR.<T2><<(3+shamt)]`
+* `v.sd<.local> SrcD.<T1>, [SrcL, <lc0<<3>, SrcR.<T2><<(3+shamt)]`
 
 Operation (informative)::
 +
@@ -13675,7 +13675,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sd.brg<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<3>, SrcR.<T2><<(3+shamt)]`
+* `v.sd.brg<.local> SrcD.<T1>, [SrcL, <lc0<<3>, SrcR.<T2><<(3+shamt)]`
 
 Operation (informative)::
 +
@@ -13694,7 +13694,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sd.u<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<3>, SrcR.<T2><<<shamt>]`
+* `v.sd.u<.local> SrcD.<T1>, [SrcL, <lc0<<3>, SrcR.<T2><<<shamt>]`
 
 Operation (informative)::
 +
@@ -13713,7 +13713,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sd.u.brg<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<3>, SrcR.<T2><<<shamt>]`
+* `v.sd.u.brg<.local> SrcD.<T1>, [SrcL, <lc0<<3>, SrcR.<T2><<<shamt>]`
 
 Operation (informative)::
 +
@@ -13732,7 +13732,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sh<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<1>, SrcR.<T2><<(1+shamt)]`
+* `v.sh<.local> SrcD.<T1>, [SrcL, <lc0<<1>, SrcR.<T2><<(1+shamt)]`
 
 Operation (informative)::
 +
@@ -13751,7 +13751,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sh.brg<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<1>, SrcR.<T2><<(1+shamt)]`
+* `v.sh.brg<.local> SrcD.<T1>, [SrcL, <lc0<<1>, SrcR.<T2><<(1+shamt)]`
 
 Operation (informative)::
 +
@@ -13770,7 +13770,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sh.u<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<1>, SrcR.<T2><<<shamt>]`
+* `v.sh.u<.local> SrcD.<T1>, [SrcL, <lc0<<1>, SrcR.<T2><<<shamt>]`
 
 Operation (informative)::
 +
@@ -13789,7 +13789,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sh.u.brg<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<1>, SrcR.<T2><<<shamt>]`
+* `v.sh.u.brg<.local> SrcD.<T1>, [SrcL, <lc0<<1>, SrcR.<T2><<<shamt>]`
 
 Operation (informative)::
 +
@@ -13808,7 +13808,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sw<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<2>, SrcR.<T2><<(2+shamt)]`
+* `v.sw<.local> SrcD.<T1>, [SrcL, <lc0<<2>, SrcR.<T2><<(2+shamt)]`
 
 Operation (informative)::
 +
@@ -13827,7 +13827,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sw.brg<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<2>, SrcR.<T2><<(2+shamt)]`
+* `v.sw.brg<.local> SrcD.<T1>, [SrcL, <lc0<<2>, SrcR.<T2><<(2+shamt)]`
 
 Operation (informative)::
 +
@@ -13846,7 +13846,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sw.u<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<2>, SrcR.<T2><<<shamt>]`
+* `v.sw.u<.local> SrcD.<T1>, [SrcL, <lc0<<2>, SrcR.<T2><<<shamt>]`
 
 Operation (informative)::
 +
@@ -13865,7 +13865,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sw.u.brg<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<2>, SrcR.<T2><<<shamt>]`
+* `v.sw.u.brg<.local> SrcD.<T1>, [SrcL, <lc0<<2>, SrcR.<T2><<<shamt>]`
 
 Operation (informative)::
 +
@@ -13966,7 +13966,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.bcnt SrcL.<T>, Nminus1, M, ->Dst.<W>`
+* `v.bcnt SrcL, Nminus1, M, ->Dst`
 
 Operation (informative)::
 +
@@ -13984,7 +13984,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.bic SrcL.<T>, Nminus1, M, ->Dst.<W>`
+* `v.bic SrcL, Nminus1, M, ->Dst`
 
 Operation (informative)::
 +
@@ -14002,7 +14002,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.bis SrcL.<T>, Nminus1, M, ->Dst.<W>`
+* `v.bis SrcL, Nminus1, M, ->Dst`
 
 Operation (informative)::
 +
@@ -14020,7 +14020,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.bxs SrcL.<T>, Nminus1, M, ->Dst.<W>`
+* `v.bxs SrcL, Nminus1, M, ->Dst`
 
 Operation (informative)::
 +
@@ -14038,7 +14038,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.bxu SrcL.<T>, Nminus1, M, ->Dst.<W>`
+* `v.bxu SrcL, Nminus1, M, ->Dst`
 
 Operation (informative)::
 +
@@ -14056,7 +14056,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.clz SrcL.<T>, Nminus1, M, ->Dst.<W>`
+* `v.clz SrcL, Nminus1, M, ->Dst`
 
 Operation (informative)::
 +
@@ -14074,7 +14074,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.ctz SrcL.<T>, Nminus1, M, ->Dst.<W>`
+* `v.ctz SrcL, Nminus1, M, ->Dst`
 
 Operation (informative)::
 +
@@ -14092,7 +14092,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.rev SrcL.<T>, M, N, ->Dst.<W>`
+* `v.rev SrcL, M, N, ->Dst`
 
 Operation (informative)::
 +
@@ -14113,7 +14113,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.csel SrcP.<T>, SrcL.<T>, SrcR.<T><.neg>, ->Dst.<W>`
+* `v.csel SrcP, SrcL, SrcR<.neg>, ->Dst`
 
 Operation (informative)::
 +
@@ -14135,7 +14135,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.psel SrcP, SrcL.<T>, SrcR.<T><.neg>, ->Dst.<W>`
+* `v.psel SrcP, SrcL, SrcR<.neg>, ->Dst`
 
 Operation (informative)::
 +
@@ -14161,7 +14161,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.div SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.div SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -14186,7 +14186,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.rem SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.rem SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -14215,7 +14215,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.fabs SrcL.<T>, ->Dst.<W>`
+* `v.fabs SrcL, ->Dst`
 
 Operation (informative)::
 +
@@ -14236,7 +14236,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.fclass SrcL.<T>, ->Dst.<W>`
+* `v.fclass SrcL, ->Dst`
 
 Operation (informative)::
 +
@@ -14254,7 +14254,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.fexp SrcL.<T>, ->Dst.<W>`
+* `v.fexp SrcL, ->Dst`
 
 Operation (informative)::
 +
@@ -14272,7 +14272,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.frecip SrcL.<T>, ->Dst.<W>`
+* `v.frecip SrcL, ->Dst`
 
 Operation (informative)::
 +
@@ -14290,7 +14290,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.fsqrt SrcL.<T>, ->Dst.<W>`
+* `v.fsqrt SrcL, ->Dst`
 
 Operation (informative)::
 +
@@ -14311,7 +14311,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.fadd SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.fadd SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -14329,7 +14329,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.fdiv SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.fdiv SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -14347,7 +14347,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.fmadd SrcL.<T>, SrcR.<T>, SrcA.<T>, ->Dst.<W>`
+* `v.fmadd SrcL, SrcR, SrcA, ->Dst`
 
 Operation (informative)::
 +
@@ -14365,7 +14365,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.fmsub SrcL.<T>, SrcR.<T>, SrcA.<T>, ->Dst.<W>`
+* `v.fmsub SrcL, SrcR, SrcA, ->Dst`
 
 Operation (informative)::
 +
@@ -14383,7 +14383,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.fmul SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.fmul SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -14401,7 +14401,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.fnmadd SrcL.<T>, SrcR.<T>, SrcA.<T>, ->Dst.<W>`
+* `v.fnmadd SrcL, SrcR, SrcA, ->Dst`
 
 Operation (informative)::
 +
@@ -14419,7 +14419,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.fnmsub SrcL.<T>, SrcR.<T>, SrcA.<T>, ->Dst.<W>`
+* `v.fnmsub SrcL, SrcR, SrcA, ->Dst`
 
 Operation (informative)::
 +
@@ -14437,7 +14437,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.fsub SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.fsub SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -14458,7 +14458,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.feq SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.feq SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -14480,7 +14480,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.feqs SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.feqs SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -14502,7 +14502,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.fge SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.fge SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -14524,7 +14524,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.fges SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.fges SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -14546,7 +14546,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.flt SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.flt SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -14568,7 +14568,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.flts SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.flts SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -14590,7 +14590,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.fmax SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.fmax SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -14612,7 +14612,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.fmin SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.fmin SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -14634,7 +14634,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.fne SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.fne SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -14656,7 +14656,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.fnes SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.fnes SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -14678,7 +14678,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.max SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.max SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -14699,7 +14699,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.min SrcL.<T>, SrcR.<T>, ->Dst.<W>`
+* `v.min SrcL, SrcR, ->Dst`
 
 Operation (informative)::
 +
@@ -14762,7 +14762,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.rdadd SrcL.<T>, ->Dst<.W>`
+* `v.rdadd SrcL, ->Dst`
 
 Operation (informative)::
 +
@@ -14780,7 +14780,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.rdand SrcL.<T>, ->Dst<.W>`
+* `v.rdand SrcL, ->Dst`
 
 Operation (informative)::
 +
@@ -14798,7 +14798,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.rdfadd SrcL.<T>, ->Dst<.W>`
+* `v.rdfadd SrcL, ->Dst`
 
 Operation (informative)::
 +
@@ -14816,7 +14816,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.rdfmax SrcL.<T>, ->Dst<.W>`
+* `v.rdfmax SrcL, ->Dst`
 
 Operation (informative)::
 +
@@ -14834,7 +14834,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.rdfmin SrcL.<T>, ->Dst<.W>`
+* `v.rdfmin SrcL, ->Dst`
 
 Operation (informative)::
 +
@@ -14852,7 +14852,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.rdmax SrcL.<T>, ->Dst<.W>`
+* `v.rdmax SrcL, ->Dst`
 
 Operation (informative)::
 +
@@ -14870,7 +14870,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.rdmin SrcL.<T>, ->Dst<.W>`
+* `v.rdmin SrcL, ->Dst`
 
 Operation (informative)::
 +
@@ -14888,7 +14888,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.rdor SrcL.<T>, ->Dst<.W>`
+* `v.rdor SrcL, ->Dst`
 
 Operation (informative)::
 +
@@ -14906,7 +14906,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.rdxor SrcL.<T>, ->Dst<.W>`
+* `v.rdxor SrcL, ->Dst`
 
 Operation (informative)::
 +
@@ -14927,7 +14927,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sbi<.local> SrcL.<T>, [SrcR<.ud>, <lc0>, simm]`
+* `v.sbi<.local> SrcL, [SrcR, <lc0>, simm]`
 
 Operation (informative)::
 +
@@ -14946,7 +14946,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sbi.brg<.local> SrcL.<T>, [SrcR<.ud>, <lc0>, simm]`
+* `v.sbi.brg<.local> SrcL, [SrcR, <lc0>, simm]`
 
 Operation (informative)::
 +
@@ -14965,7 +14965,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sdi<.local> SrcL.<T>, [SrcR<.ud>, <lc0<3>, simm]`
+* `v.sdi<.local> SrcL, [SrcR, <lc0<3>, simm]`
 
 Operation (informative)::
 +
@@ -14984,7 +14984,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sdi.brg<.local> SrcL.<T>, [SrcR<.ud>, <lc0<<3>, simm]`
+* `v.sdi.brg<.local> SrcL, [SrcR, <lc0<<3>, simm]`
 
 Operation (informative)::
 +
@@ -15003,7 +15003,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sdi.u<.local> SrcL.<T>, [SrcR<.ud>, <lc0<<3>, simm]`
+* `v.sdi.u<.local> SrcL, [SrcR, <lc0<<3>, simm]`
 
 Operation (informative)::
 +
@@ -15022,7 +15022,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.sdi.u.brg<.local> SrcL.<T>, [SrcR<.ud>, <lc0<<3>, simm]`
+* `v.sdi.u.brg<.local> SrcL, [SrcR, <lc0<<3>, simm]`
 
 Operation (informative)::
 +
@@ -15041,7 +15041,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.shi<.local> SrcL.<T>, [SrcR<.ud>, <lc0<<1>, simm]`
+* `v.shi<.local> SrcL, [SrcR, <lc0<<1>, simm]`
 
 Operation (informative)::
 +
@@ -15060,7 +15060,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.shi.brg<.local> SrcL.<T>, [SrcR<.ud>, <lc0<<1>, simm]`
+* `v.shi.brg<.local> SrcL, [SrcR, <lc0<<1>, simm]`
 
 Operation (informative)::
 +
@@ -15079,7 +15079,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.shi.u<.local> SrcL.<T>, [SrcR<.ud>, <lc0<<1>, simm]`
+* `v.shi.u<.local> SrcL, [SrcR, <lc0<<1>, simm]`
 
 Operation (informative)::
 +
@@ -15098,7 +15098,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.shi.u.brg<.local> SrcL.<T>, [SrcR<.ud>, <lc0<<1>, simm]`
+* `v.shi.u.brg<.local> SrcL, [SrcR, <lc0<<1>, simm]`
 
 Operation (informative)::
 +
@@ -15117,7 +15117,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.swi<.local> SrcL.<T>, [SrcR<.ud>, <lc0<<2>, simm]`
+* `v.swi<.local> SrcL, [SrcR, <lc0<<2>, simm]`
 
 Operation (informative)::
 +
@@ -15136,7 +15136,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.swi.brg<.local> SrcL.<T>, [SrcR<.ud>, <lc0<<2>, simm]`
+* `v.swi.brg<.local> SrcL, [SrcR, <lc0<<2>, simm]`
 
 Operation (informative)::
 +
@@ -15155,7 +15155,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.swi.u<.local> SrcL.<T>, [SrcR<.ud>, <lc0<<2>, simm]`
+* `v.swi.u<.local> SrcL, [SrcR, <lc0<<2>, simm]`
 
 Operation (informative)::
 +
@@ -15174,7 +15174,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.swi.u.brg<.local> SrcL.<T>, [SrcR<.ud>, <lc0<<2>, simm]`
+* `v.swi.u.brg<.local> SrcL, [SrcR, <lc0<<2>, simm]`
 
 Operation (informative)::
 +
@@ -15196,7 +15196,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.shfl.bfly SrcL.<T>, SrcP.<T>, ->Dst.<W>`
+* `v.shfl.bfly SrcL, SrcP, ->Dst`
 
 Operation (informative)::
 +
@@ -15214,7 +15214,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.shfl.down SrcL.<T>, SrcR.<T>, SrcP.<T>, ->Dst.<W>`
+* `v.shfl.down SrcL, SrcR, SrcP, ->Dst`
 
 Operation (informative)::
 +
@@ -15232,7 +15232,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.shfl.idx SrcL.<T>, SrcR.<T>, SrcP.<T>, ->Dst.<W>`
+* `v.shfl.idx SrcL, SrcR, SrcP, ->Dst`
 
 Operation (informative)::
 +
@@ -15250,7 +15250,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.shfl.up SrcL.<T>, SrcR.<T>, SrcP.<T>, ->Dst.<W>`
+* `v.shfl.up SrcL, SrcR, SrcP, ->Dst`
 
 Operation (informative)::
 +
@@ -15268,7 +15268,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.shfli.bfly SrcL.<T>, imm, ->Dst.<W>`
+* `v.shfli.bfly SrcL, imm, ->Dst`
 
 Operation (informative)::
 +
@@ -15286,7 +15286,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.shfli.down SrcL.<T>, SrcR.<T>, imm, ->Dst.<W>`
+* `v.shfli.down SrcL, SrcR, imm, ->Dst`
 
 Operation (informative)::
 +
@@ -15304,7 +15304,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.shfli.idx SrcL.<T>, SrcR.<T>, imm, ->Dst.<W>`
+* `v.shfli.idx SrcL, SrcR, imm, ->Dst`
 
 Operation (informative)::
 +
@@ -15322,7 +15322,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.shfli.up SrcL.<T>, SrcR.<T>, imm, ->Dst.<W>`
+* `v.shfli.up SrcL, SrcR, imm, ->Dst`
 
 Operation (informative)::
 +

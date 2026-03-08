@@ -5,7 +5,7 @@
 [[inst_v_rev]]
 ==== V.REV
 
-*Syntax:* v.rev SrcL.<T>, M, N, ->Dst.<W>
+*Syntax:* v.rev SrcL, M, N, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

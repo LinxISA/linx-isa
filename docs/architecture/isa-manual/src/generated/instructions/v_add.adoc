@@ -5,7 +5,7 @@
 [[inst_v_add]]
 ==== V.ADD
 
-*Syntax:* v.add SrcL.<T>, SrcR.<T><.neg><<<shamt>, ->Dst.<W>
+*Syntax:* v.add SrcL, SrcR<.neg><<<shamt>, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

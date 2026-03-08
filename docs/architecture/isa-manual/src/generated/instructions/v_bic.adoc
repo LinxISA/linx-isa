@@ -5,7 +5,7 @@
 [[inst_v_bic]]
 ==== V.BIC
 
-*Syntax:* v.bic SrcL.<T>, M, N, ->Dst.<W>
+*Syntax:* v.bic SrcL, M, N, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

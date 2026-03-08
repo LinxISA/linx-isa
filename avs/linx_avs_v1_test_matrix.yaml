@@ -1,370 +1,669 @@
-version: linx-avs-v1
-status: draft
-last_updated: "2026-02-17"
+version: linx-avs-v0.4
+status: canonical
+last_updated: "2026-03-07"
 
 profiles:
   LNX-S32: "Scalar 32-bit, freestanding, little-endian, no MMU"
   LNX-S64: "Scalar 64-bit, freestanding, little-endian, no MMU"
   LNX-PRIV: "Adds ACR/SSR trap envelope behavior (no full OS/MMU required)"
-  LNX-ATOM: "Adds atomics + ordering qualifiers"
-  LNX-FP: "Adds scalar FP + FCSR behavior"
-  LNX-VPAR: "Enables vector blocks (BSTART.VPAR)"
-  LNX-VSEQ: "Enables vector blocks (BSTART.VSEQ)"
-  LNX-TILE: "Enables tile blocks / TAU (not required for v1 pass)"
+  LNX-ATOM: "Adds atomics and ordering qualifiers"
+  LNX-FP: "Adds scalar and vector floating-point behavior"
+  LNX-VPAR: "Enables vector parallel blocks"
+  LNX-VSEQ: "Enables vector sequential blocks"
+  LNX-TILE: "Enables tile blocks and TAU execution"
+  LNX-LINUX: "Linux runtime and privileged execution under QEMU"
+  LNX-LIBC: "musl/glibc runtime and loader behavior"
+  LNX-WORKLOAD: "Benchmarks and maintained workload runners on QEMU"
+  LNX-SPEC: "SPEC stage execution under Linx Linux/QEMU"
+
+tiers:
+  pr: "Required in normal strict closure."
+  nightly: "Required in extended/nightly strict closure."
 
 pass_fail_rules:
   pass: "Expected architectural effects observed; no unexpected traps."
-  fail: "Unexpected trap, wrong architectural result, or Block ISA invariant violation."
-  trap_expected_pass: "Correct trap class/cause and precise PC capture (BPC/TPC) with no partial side effects."
+  fail: "Unexpected trap, wrong architectural result, or contract violation."
+  trap_expected_pass: "Correct trap class/cause and precise PC capture with no partial side effects."
 
 tests:
   - id: AVS-DEC-001
+    state: active
     area: DEC
     domain: Emulator
     profiles: [LNX-S32, LNX-S64]
-    must_pass_in_profile: [dev]
-    check26_ids: [1]
-    requirement: "Any encoding not matched by the ISA catalog traps as illegal instruction."
-    pass_fail: "QEMU and RTL (when available) trap on the same byte sequence at the same TPC; no partial side effects."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/architecture/v0.4-architecture-contract.md
+      - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
+    requirement: "Any encoding not matched by the canonical ISA catalog traps as illegal instruction."
+    pass_fail: "QEMU and reference decode vectors trap on the same byte sequence with no partial side effects."
 
   - id: AVS-DEC-002
+    state: active
     area: DEC
     domain: Emulator
     profiles: [LNX-S32, LNX-S64]
-    must_pass_in_profile: [dev]
-    check26_ids: [12]
-    requirement: "All-zero 16-bit encoding (0x0000) is handled intentionally as C.BSTOP (or defined illegal), consistently."
-    pass_fail: "Executing 0x0000 at a valid TPC produces the defined behavior."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
+      - isa/v0.4/linxisa-v0.4.json
+    requirement: "All-zero 16-bit encoding (0x0000) is handled intentionally as C.BSTOP or defined illegal, consistently."
+    pass_fail: "Executing 0x0000 at a valid TPC produces the architecturally defined behavior."
 
   - id: AVS-TOOL-001
+    state: active
     area: TOOL
     domain: Compiler
-    profiles: [LNX-S32, LNX-S64, LNX-PRIV, LNX-ATOM, LNX-FP, LNX-VPAR, LNX-VSEQ]
-    must_pass_in_profile: [dev, release-strict]
-    check26_ids: [1, 2, 3, 5, 11, 12, 14, 20]
-    requirement: "llvm-objdump recognizes and prints a mnemonic token for every spec mnemonic."
+    profiles: [LNX-S32, LNX-S64, LNX-PRIV, LNX-ATOM, LNX-FP, LNX-VPAR, LNX-VSEQ, LNX-TILE]
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - isa/v0.4/linxisa-v0.4.json
+      - docs/architecture/isa-manual/src/generated/instruction_reference.adoc
+    requirement: "llvm-objdump recognizes and prints a mnemonic token for every canonical v0.4 spec mnemonic."
     pass_fail: "python3 avs/compiler/linx-llvm/tests/analyze_coverage.py --fail-under 100 exits 0."
 
   - id: AVS-TOOL-010
+    state: active
     area: TOOL
     domain: Compiler
     profiles: [LNX-S32, LNX-S64]
-    must_pass_in_profile: [dev]
-    check26_ids: [10]
-    requirement: "llvm-mc asm/disasm round-trip for curated canonical instruction forms."
-    pass_fail: "Assemble -> disassemble -> map mnemonic back to same spec entry for curated set."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - isa/v0.4/linxisa-v0.4.json
+      - docs/architecture/isa-manual/src/chapters/06_assembly_conventions.adoc
+    requirement: "llvm-mc asm/disasm round-trip for canonical instruction forms matches the v0.4 catalog."
+    pass_fail: "Assemble, disassemble, and remap mnemonic back to the same canonical spec entry for the generated vector set."
 
   - id: AVS-TOOL-011
+    state: active
     area: TOOL
     domain: Compiler
     profiles: [LNX-S32, LNX-S64]
-    must_pass_in_profile: [dev, release-strict]
-    check26_ids: [10, 15, 26]
-    requirement: "Spec decode vectors (99_spec_decode) disassemble with 100% mnemonic coverage."
-    pass_fail: "analyze_coverage.py (auto-detected out-linx*) reports 100% coverage."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - isa/v0.4/linxisa-v0.4.json
+      - docs/reference/encoding_space_report.md
+    requirement: "Generated spec decode vectors disassemble with 100% canonical mnemonic coverage."
+    pass_fail: "99_spec_decode objdump coverage remains 100% for linx32 and linx64."
 
   - id: AVS-BLK-001
+    state: active
     area: BLK
     domain: Emulator
     profiles: [LNX-S32, LNX-S64]
-    must_pass_in_profile: [dev]
-    check26_ids: [8]
-    requirement: "Safety rule: control-flow targets must land on a block start marker."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/architecture/v0.4-architecture-contract.md
+      - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
+    requirement: "Control-flow targets must land on block start markers."
     pass_fail: "Jumping into the middle of a block traps with correct BPC/TPC capture."
 
   - id: AVS-BLK-002
+    state: active
     area: BLK
     domain: Emulator
     profiles: [LNX-S32, LNX-S64]
-    must_pass_in_profile: [dev]
-    check26_ids: [6, 7, 9, 21]
-    requirement: "Block boundary commit rules: blocks end at BSTOP/C.BSTOP or implicitly at next BSTART.*; BARG consulted at commit."
-    pass_fail: "Directed programs show correct transitions with/without explicit BSTOP."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
+      - docs/architecture/isa-manual/src/chapters/03_programming_model.adoc
+    requirement: "Block boundary commit rules and implicit boundary transitions follow the v0.4 manual."
+    pass_fail: "Directed programs show correct transitions with and without explicit BSTOP."
 
   - id: AVS-BLK-003
+    state: active
     area: BLK
     domain: Emulator
     profiles: [LNX-S32, LNX-S64]
-    must_pass_in_profile: [dev]
-    check26_ids: [3]
-    requirement: "SETC.* validity: executing SETC.* before any block start is illegal or traps as block-format error."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
+    requirement: "SETC.* before any block start is illegal or traps as block-format error."
     pass_fail: "SETC.* at reset TPC traps; SETC.* after a BSTART.* behaves correctly."
 
   - id: AVS-BLK-004
+    state: active
     area: BLK
     domain: Emulator
     profiles: [LNX-S32, LNX-S64]
-    must_pass_in_profile: [dev, release-strict]
-    check26_ids: [6, 7, 8, 9, 13, 16, 17]
-    requirement: "Call header adjacency: BSTART CALL and SETRET/C.SETRET are adjacent; violations trap or are rejected by toolchain."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
+      - docs/reference/linxisa-call-ret-contract.md
+    requirement: "Call header adjacency remains mandatory for legal call/return sequences."
     pass_fail: "Non-adjacent sequence triggers specified failure; compliant call returns correctly."
 
   - id: AVS-BLK-005
+    state: active
     area: BLK
     domain: Emulator
     profiles: [LNX-VPAR, LNX-VSEQ]
-    must_pass_in_profile: [dev]
-    check26_ids: [18, 26]
-    requirement: "Vector block types are BSTART.VPAR and BSTART.VSEQ; BSTART.VEC does not appear in golden/manual."
-    pass_fail: "Repo contains no BSTART.VEC strings except as a negative requirement in AVS."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
+      - docs/architecture/v0.4-architecture-contract.md
+    requirement: "Canonical vector block types are BSTART.VPAR and BSTART.VSEQ only."
+    pass_fail: "Repo and runtime suites contain no live BSTART.VEC behavior."
 
   - id: AVS-ALU-001
+    state: active
     area: ALU
     domain: Emulator
     profiles: [LNX-S32, LNX-S64]
-    must_pass_in_profile: [dev]
-    check26_ids: [1]
-    requirement: "ADD/ADDI/SUB/SUBI basic correctness including edge cases."
-    pass_fail: "Directed tests cover 0, -1, INT_MIN/INT_MAX, mixed sign; results match spec."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/architecture/isa-manual/src/chapters/12_alu.adoc
+      - isa/v0.4/linxisa-v0.4.json
+    requirement: "ADD/ADDI/SUB/SUBI correctness includes edge cases."
+    pass_fail: "Directed tests cover 0, -1, INT_MIN/INT_MAX, and mixed-sign behavior."
 
   - id: AVS-ALU-002
+    state: active
     area: ALU
     domain: Emulator
     profiles: [LNX-S32, LNX-S64]
-    must_pass_in_profile: [dev]
-    check26_ids: [1]
-    requirement: "MUL/DIV/REM correctness including signedness and divide-by-zero behavior."
-    pass_fail: "Directed tests cover DIV/DIVU/REM/REMU and *W forms; defined outcomes observed."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/architecture/isa-manual/src/chapters/12_alu.adoc
+      - isa/v0.4/linxisa-v0.4.json
+    requirement: "MUL/DIV/REM correctness includes signedness and divide-by-zero behavior."
+    pass_fail: "Directed tests cover DIV/DIVU/REM/REMU and *W forms with defined outcomes."
 
   - id: AVS-BR-001
+    state: active
     area: BR
     domain: Emulator
     profiles: [LNX-S32, LNX-S64]
-    must_pass_in_profile: [dev]
-    check26_ids: [8]
-    requirement: "PC-relative target scaling uses halfword scaling (imm << 1) where defined."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/architecture/isa-manual/src/chapters/16_bru.adoc
+      - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
+    requirement: "PC-relative target scaling uses the defined halfword scaling."
     pass_fail: "Directed tests validate exact target addresses including negative offsets."
 
   - id: AVS-BR-002
+    state: active
     area: BR
     domain: Emulator
     profiles: [LNX-S32, LNX-S64]
-    must_pass_in_profile: [dev]
-    check26_ids: [7]
-    requirement: "Indirect transitions consult SETC.TGT as specified."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/architecture/isa-manual/src/chapters/16_bru.adoc
+      - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
+    requirement: "Indirect transitions consult SETC.TGT exactly as specified."
     pass_fail: "Directed tests set different targets and observe correct dispatch."
 
   - id: AVS-MEM-001
+    state: active
     area: MEM
     domain: Emulator
     profiles: [LNX-S32, LNX-S64]
-    must_pass_in_profile: [dev]
-    check26_ids: [23]
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/architecture/isa-manual/src/chapters/09_memory_operations.adoc
     requirement: "Endianness is little-endian."
-    pass_fail: "Store a multi-byte pattern and confirm byte/halfword/word loads observe expected ordering."
+    pass_fail: "Store a multi-byte pattern and confirm byte, halfword, word, and dword loads observe expected ordering."
 
   - id: AVS-MEM-002
+    state: active
     area: MEM
     domain: Emulator
     profiles: [LNX-S32, LNX-S64]
-    must_pass_in_profile: [dev]
-    check26_ids: [24]
-    requirement: "Alignment behavior (trap vs split) is specified and consistent for the profile."
-    pass_fail: "Misaligned accesses match defined outcome across QEMU and RTL."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/architecture/isa-manual/src/chapters/09_memory_operations.adoc
+      - docs/architecture/isa-manual/src/chapters/10_system_and_privilege.adoc
+    requirement: "Alignment behavior matches the defined profile outcome."
+    pass_fail: "Misaligned accesses match the defined behavior across QEMU and other model lanes."
 
   - id: AVS-MEM-003
+    state: active
     area: MEM
     domain: Emulator
     profiles: [LNX-S32, LNX-S64]
-    must_pass_in_profile: [dev]
-    check26_ids: [25]
-    requirement: "Scaled vs unscaled immediate offsets (.U) compute correct addresses."
-    pass_fail: "Directed tests validate exact addresses touched by scaled and .U families."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/architecture/isa-manual/src/chapters/09_memory_operations.adoc
+      - isa/v0.4/state/memory_model.json
+    requirement: "Scaled versus unscaled immediate offsets compute exact addresses."
+    pass_fail: "Directed tests validate addresses touched by scaled and .U families."
 
   - id: AVS-ATOM-001
+    state: active
     area: ATOM
     domain: Emulator
     profiles: [LNX-ATOM]
-    must_pass_in_profile: [dev]
-    check26_ids: [23]
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - isa/v0.4/state/memory_model.json
+      - docs/architecture/isa-manual/src/chapters/14_amo.adoc
     requirement: "Atomic .aq/.rl qualifiers enforce acquire/release ordering as specified."
-    pass_fail: "Litmus tests show forbidden outcomes do not occur when qualifiers are used."
+    pass_fail: "Litmus tests exclude forbidden outcomes when qualifiers are used."
 
   - id: AVS-ATOM-002
+    state: active
     area: ATOM
     domain: Emulator
     profiles: [LNX-ATOM]
-    must_pass_in_profile: [dev]
-    check26_ids: [23]
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - isa/v0.4/state/memory_model.json
+      - docs/architecture/isa-manual/src/chapters/14_amo.adoc
     requirement: "FENCE.D pred,succ orders the specified operation classes."
-    pass_fail: "Litmus tests and microbench confirm ordering and no-op cases."
+    pass_fail: "Litmus tests and microbenchmarks confirm ordering and no-op cases."
 
   - id: AVS-ATOM-003
+    state: active
     area: ATOM
     domain: Emulator
     profiles: [LNX-ATOM]
-    must_pass_in_profile: [dev]
-    check26_ids: [23]
-    requirement: "FENCE.I synchronizes instruction fetch with prior stores that modify executable code."
-    pass_fail: "Self-modifying-code test behaves as specified (or traps if unsupported; behavior must be defined)."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - isa/v0.4/state/memory_model.json
+      - docs/architecture/isa-manual/src/chapters/14_amo.adoc
+    requirement: "FENCE.I synchronizes instruction fetch with prior executable stores."
+    pass_fail: "Self-modifying-code test behaves as specified or traps only when the spec says it may."
 
   - id: AVS-ATOM-010
+    state: active
     area: ATOM
     domain: Emulator
     profiles: [LNX-ATOM]
-    must_pass_in_profile: [dev]
-    check26_ids: [23]
-    requirement: "Message passing requires acquire/release or fence to forbid r1=1,r2=0 outcome."
-    pass_fail: "Litmus harness observes allowed/forbidden outcome sets per requirement."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - isa/v0.4/state/memory_model.json
+      - docs/architecture/isa-manual/src/chapters/14_amo.adoc
+    requirement: "Message passing requires acquire/release or fence to forbid the weak outcome."
+    pass_fail: "Litmus harness observes allowed and forbidden outcome sets per requirement."
 
   - id: AVS-ATOM-011
+    state: active
     area: ATOM
     domain: Emulator
     profiles: [LNX-ATOM]
-    must_pass_in_profile: [dev]
-    check26_ids: [23]
-    requirement: "FENCE.D orders MMIO and Normal memory when O selected."
-    pass_fail: "Directed test with MMIO model observes ordering consistent with fence definition."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - isa/v0.4/state/memory_model.json
+      - docs/architecture/isa-manual/src/chapters/14_amo.adoc
+    requirement: "FENCE.D orders MMIO and Normal memory when O is selected."
+    pass_fail: "Directed tests with the MMIO model observe ordering consistent with the fence definition."
 
   - id: AVS-SYS-001
+    state: active
     area: SYS
     domain: Emulator
     profiles: [LNX-PRIV]
-    must_pass_in_profile: [dev, release-strict]
-    check26_ids: [4, 24]
-    requirement: "ACRC is last in block and routes/traps as specified."
-    pass_fail: "Placement violation triggers defined trap; valid requests route to managing ring vector."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/architecture/isa-manual/src/chapters/10_system_and_privilege.adoc
+      - docs/architecture/v0.4-architecture-contract.md
+    requirement: "ACRC is last in a block and routes or traps as specified."
+    pass_fail: "Placement violations trigger the defined trap; valid requests route to the managing ring vector."
 
   - id: AVS-SYS-002
+    state: active
     area: SYS
     domain: Emulator
     profiles: [LNX-PRIV]
-    must_pass_in_profile: [dev, release-strict]
-    check26_ids: [18, 21, 22]
-    requirement: "ACRE restores state per manual (CSTATE, BPC, and optionally BSTATE/BARG)."
-    pass_fail: "Trap handler returns and execution resumes at expected block start."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/architecture/isa-manual/src/chapters/10_system_and_privilege.adoc
+      - isa/v0.4/state/kernel_execution.json
+    requirement: "ACRE restores state per the manual."
+    pass_fail: "Trap handler returns and execution resumes at the expected block start."
 
   - id: AVS-ABI-001
+    state: active
     area: ABI
     domain: Regression
     profiles: [LNX-S32, LNX-S64]
-    must_pass_in_profile: [dev, release-strict]
-    check26_ids: [19]
-    requirement: "Calling convention correctness for leaf/non-leaf functions."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/reference/linxisa-call-ret-contract.md
+      - docs/architecture/isa-manual/src/chapters/06_assembly_conventions.adoc
+    requirement: "Calling convention correctness holds for leaf and non-leaf functions."
     pass_fail: "C tests validate callee-saved regs, stack alignment, and return values."
 
   - id: AVS-ABI-002
+    state: active
     area: ABI
     domain: Regression
     profiles: [LNX-S32, LNX-S64]
-    must_pass_in_profile: [dev, release-strict]
-    check26_ids: [25]
-    requirement: "Varargs correctness for integers and (if enabled) floating-point."
-    pass_fail: "Runtime tests match expected sums/prints and do not corrupt caller state."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/reference/linxisa-call-ret-contract.md
+      - docs/architecture/isa-manual/src/chapters/06_assembly_conventions.adoc
+    requirement: "Varargs correctness covers integer and enabled floating-point paths."
+    pass_fail: "Runtime tests match expected sums and prints without corrupting caller state."
 
   - id: AVS-CPP-001
+    state: active
     area: CPP
     domain: Compiler
-    profiles: [LNX-S64]
-    must_pass_in_profile: [dev]
-    check26_ids: [19]
+    profiles: [LNX-S64, LNX-LIBC]
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/bringup/CPP_BRINGUP_CONTRACT.md
+      - docs/architecture/isa-manual/src/chapters/06_assembly_conventions.adoc
     requirement: "C++17 hosted compile lane finds libc++ headers and compiles no-EH/no-RTTI samples for linx64 musl."
     pass_fail: "avs/compiler/linx-llvm/tests/run_cpp.sh compiles all C++ samples with -fno-exceptions -fno-rtti."
 
   - id: AVS-CPP-002
+    state: active
     area: CPP
     domain: Compiler
-    profiles: [LNX-S64]
-    must_pass_in_profile: [dev]
-    check26_ids: [19, 23]
-    requirement: "Linx clang++ default link policy is cross-correct for musl and does not route through host g++/ld."
-    pass_fail: "clang driver tests confirm Linx defaults: ld.lld + libc++ + compiler-rt; no host g++ fallback."
+    profiles: [LNX-S64, LNX-LIBC]
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/bringup/CPP_BRINGUP_CONTRACT.md
+      - docs/architecture/isa-manual/src/chapters/06_assembly_conventions.adoc
+    requirement: "clang++ default link policy is cross-correct for Linx musl and does not route through host g++/ld."
+    pass_fail: "clang driver tests confirm ld.lld plus libc++ plus compiler-rt defaults without host fallback."
 
   - id: AVS-CPP-003
+    state: active
     area: CPP
     domain: Library
-    profiles: [LNX-S64]
-    must_pass_in_profile: [dev]
-    check26_ids: [19]
-    requirement: "LLVM runtime overlay (libunwind/libc++abi/libc++) installs into Linx musl sysroot in deterministic layout."
-    pass_fail: "tools/build_linx_llvm_cpp_runtimes.sh installs headers/libs and emits a machine-readable summary."
+    profiles: [LNX-S64, LNX-LIBC]
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/bringup/CPP_BRINGUP_CONTRACT.md
+      - docs/bringup/libc_status.md
+    requirement: "LLVM runtime overlay installs into the Linx musl sysroot in deterministic layout."
+    pass_fail: "tools/build_linx_llvm_cpp_runtimes.sh installs headers and libraries and emits a machine-readable summary."
 
   - id: AVS-CPP-010
+    state: active
     area: CPP
     domain: Regression
-    profiles: [LNX-S64]
-    must_pass_in_profile: [dev]
-    check26_ids: [19, 23]
-    requirement: "C++17 no-EH/no-RTTI runtime smoke passes in both static and shared musl modes under QEMU."
-    pass_fail: "avs/qemu/run_musl_smoke.py --sample cpp17_smoke --link both observes start/pass markers in both modes."
+    profiles: [LNX-S64, LNX-LIBC]
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/bringup/CPP_BRINGUP_CONTRACT.md
+      - docs/bringup/libc_status.md
+    requirement: "C++17 no-EH/no-RTTI runtime smoke passes in static and shared musl modes under QEMU."
+    pass_fail: "avs/qemu/run_musl_smoke.py --sample cpp17_smoke --link both observes pass markers in both modes."
 
   - id: AVS-FP-001
+    state: active
     area: FP
     domain: Emulator
     profiles: [LNX-FP]
-    must_pass_in_profile: [dev]
-    check26_ids: [15]
-    requirement: "Scalar FP ops match IEEE-754 rounding and FCSR flag behavior."
-    pass_fail: "Directed tests cover NaNs, +/-0, infinities, and flag setting/clearing."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/architecture/isa-manual/src/chapters/13_fsu.adoc
+      - isa/sail/semantics_status.json
+    requirement: "Scalar FP ops match the v0.4 numeric and FCSR rules."
+    pass_fail: "Directed tests cover NaNs, signed zero, infinities, and flag setting or clearing."
 
   - id: AVS-FP-002
+    state: active
     area: FP
     domain: Emulator
     profiles: [LNX-FP]
-    must_pass_in_profile: [dev]
-    check26_ids: [15]
-    requirement: "FP<->int conversions match spec for edge cases."
-    pass_fail: "Directed tests validate exact bit patterns and trap/flag behavior."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/architecture/isa-manual/src/chapters/13_fsu.adoc
+      - isa/sail/semantics_status.json
+    requirement: "FP to int and int to FP conversions match the spec for edge cases."
+    pass_fail: "Directed tests validate exact bit patterns plus trap or flag behavior."
 
   - id: AVS-VEC-001
+    state: active
     area: VEC
     domain: Emulator
     profiles: [LNX-VPAR, LNX-VSEQ]
-    must_pass_in_profile: [dev]
-    check26_ids: [16, 22]
-    requirement: "Vector ops that require a vector block trap when executed outside a vector block."
-    pass_fail: "Vector op outside header traps; inside correct header executes and updates state."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/architecture/v0.4-architecture-contract.md
+      - docs/architecture/isa-manual/src/chapters/20_vec.adoc
+    requirement: "Vector ops that require vector blocks trap when executed outside vector blocks."
+    pass_fail: "Vector op outside the correct header traps; inside the header it executes and updates state."
 
   - id: AVS-VEC-002
+    state: active
     area: VEC
     domain: Emulator
     profiles: [LNX-VPAR, LNX-VSEQ]
-    must_pass_in_profile: [dev]
-    check26_ids: [17, 18]
-    requirement: "VPAR vs VSEQ legality is enforced for block-restricted ops."
-    pass_fail: "VPAR-only op in VSEQ (and vice versa) triggers defined failure."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/architecture/isa-manual/src/chapters/20_vec.adoc
+      - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
+    requirement: "VPAR versus VSEQ legality is enforced for block-restricted vector ops."
+    pass_fail: "VPAR-only ops in VSEQ and VSEQ-only ops in VPAR trigger the defined failure."
 
   - id: AVS-VEC-003
+    state: active
     area: VEC
     domain: Emulator
     profiles: [LNX-VPAR, LNX-VSEQ]
-    must_pass_in_profile: [dev]
-    check26_ids: [26]
-    requirement: "C.BSTART.VPAR/VSEQ compressed fall-through markers begin new vector blocks."
-    pass_fail: "Directed program uses compressed marker and subsequent vector ops execute."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/architecture/isa-manual/src/chapters/20_vec.adoc
+      - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
+    requirement: "Compressed vector block start markers begin new vector blocks."
+    pass_fail: "Directed programs use compressed markers and subsequent vector ops execute."
 
   - id: AVS-EMU-001
+    state: active
     area: EMU
     domain: Emulator
     profiles: [LNX-S32, LNX-S64]
-    must_pass_in_profile: [dev, release-strict]
-    check26_ids: [23]
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/architecture/v0.4-architecture-contract.md
+      - docs/architecture/isa-manual/src/chapters/10_system_and_privilege.adoc
     requirement: "Illegal encodings trap deterministically with no partial state committed."
-    pass_fail: "Negative tests validate trap PC/cause and unchanged regs/memory."
+    pass_fail: "Negative tests validate trap PC and cause plus unchanged regs and memory."
 
   - id: AVS-EMU-010
+    state: active
     area: EMU
     domain: Emulator
-    profiles: [LNX-S32, LNX-S64]
-    must_pass_in_profile: [dev]
-    check26_ids: [23]
-    requirement: "Dynamic instruction histogram total is close to LINX_INSN_COUNT and both are reported."
-    pass_fail: "run_benchmarks.py --dynamic-hist reports both totals and uses plugin total for percentages."
+    profiles: [LNX-S32, LNX-S64, LNX-WORKLOAD]
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/bringup/ALIGNMENT_MATRIX.md
+      - docs/reference/encoding_space_report.md
+    requirement: "Dynamic instruction histogram totals are reported consistently with LINX_INSN_COUNT."
+    pass_fail: "Benchmark and workload runners emit deterministic instruction-count summaries and histogram totals."
 
   - id: AVS-MODEL-001
+    state: active
     area: MODEL
     domain: Model
     profiles: [LNX-S64]
-    must_pass_in_profile: [dev]
-    check26_ids: [16, 17]
-    requirement: "QEMU and model commit traces match for deterministic scalar fixture suite."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - avs/model/linx_model_diff_suite.yaml
+      - docs/bringup/ALIGNMENT_MATRIX.md
+    requirement: "QEMU and the model commit traces match for the deterministic scalar fixture suite."
     pass_fail: "tools/bringup/run_model_diff_suite.py passes required fixtures with trace schema checks."
 
   - id: AVS-MODEL-002
+    state: active
     area: MODEL
     domain: Model
     profiles: [LNX-S64, LNX-PRIV]
-    must_pass_in_profile: [dev]
-    check26_ids: [18]
-    requirement: "Trace schema version compatibility is enforced for both producer and consumer paths."
-    pass_fail: "tools/bringup/validate_trace_schema.py validates schema compatibility on QEMU+model traces."
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/bringup/ALIGNMENT_MATRIX.md
+      - docs/bringup/agent_runs/manifest.yaml
+    requirement: "Trace schema version compatibility is enforced for producer and consumer paths."
+    pass_fail: "Trace schema validators accept only compatible QEMU and model traces."
+
+  - id: AVS-LINUX-001
+    state: active
+    area: LINUX
+    domain: Kernel
+    profiles: [LNX-LINUX]
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/bringup/GETTING_STARTED.md
+      - docs/bringup/libc_status.md
+    requirement: "Linux initramfs smoke boots successfully under QEMU with the pinned kernel."
+    pass_fail: "kernel/linux/tools/linxisa/initramfs/smoke.py exits 0."
+
+  - id: AVS-LINUX-002
+    state: active
+    area: LINUX
+    domain: Kernel
+    profiles: [LNX-LINUX]
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/bringup/GETTING_STARTED.md
+      - docs/bringup/libc_status.md
+    requirement: "Linux initramfs full boot completes successfully under QEMU."
+    pass_fail: "kernel/linux/tools/linxisa/initramfs/full_boot.py exits 0."
+
+  - id: AVS-LINUX-003
+    state: active
+    area: LINUX
+    domain: Kernel
+    profiles: [LNX-LINUX]
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/bringup/GETTING_STARTED.md
+      - docs/bringup/libc_status.md
+    requirement: "Busybox rootfs boot path succeeds under QEMU."
+    pass_fail: "kernel/linux/tools/linxisa/busybox_rootfs/boot.py exits 0."
+
+  - id: AVS-LINUX-010
+    state: active
+    area: LINUX
+    domain: Kernel
+    profiles: [LNX-LINUX, LNX-SPEC, LNX-WORKLOAD]
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/bringup/ALIGNMENT_MATRIX.md
+      - docs/bringup/libc_status.md
+    requirement: "Linux provides the 9p/spec mount path plus spawn, exec, and wait flows used by SPEC and workload runners."
+    pass_fail: "SPEC and workload launchers observe correct mount and child-process lifecycle behavior."
+
+  - id: AVS-LIBC-001
+    state: active
+    area: LIBC
+    domain: Library
+    profiles: [LNX-LIBC]
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/bringup/libc_status.md
+    requirement: "musl static runtime smoke passes under QEMU."
+    pass_fail: "avs/qemu/run_musl_smoke.py summary_static.json reports ok=true."
+
+  - id: AVS-LIBC-002
+    state: active
+    area: LIBC
+    domain: Library
+    profiles: [LNX-LIBC]
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/bringup/libc_status.md
+    requirement: "musl shared runtime smoke passes under QEMU."
+    pass_fail: "avs/qemu/run_musl_smoke.py summary_shared.json reports ok=true."
+
+  - id: AVS-LIBC-003
+    state: active
+    area: LIBC
+    domain: Library
+    profiles: [LNX-LIBC]
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/bringup/libc_status.md
+    requirement: "glibc G1a build gate passes."
+    pass_fail: "lib/glibc/tools/linx/build_linx64_glibc.sh produces a passing summary."
+
+  - id: AVS-LIBC-004
+    state: active
+    area: LIBC
+    domain: Library
+    profiles: [LNX-LIBC]
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/bringup/libc_status.md
+    requirement: "glibc G1b shared libc.so gate passes."
+    pass_fail: "lib/glibc/tools/linx/build_linx64_glibc_g1b.sh produces a passing summary."
+
+  - id: AVS-WORK-001
+    state: active
+    area: WORK
+    domain: Regression
+    profiles: [LNX-WORKLOAD]
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - workloads/README.md
+      - docs/bringup/ALIGNMENT_MATRIX.md
+    requirement: "CoreMark and Dhrystone build and execute under QEMU."
+    pass_fail: "workloads/run_benchmarks.py emits machine-readable success for both benchmarks."
+
+  - id: AVS-WORK-002
+    state: active
+    area: WORK
+    domain: Regression
+    profiles: [LNX-WORKLOAD]
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - workloads/README.md
+      - docs/bringup/ALIGNMENT_MATRIX.md
+    requirement: "PolyBench kernels build and execute under QEMU."
+    pass_fail: "workloads/run_polybench.py emits machine-readable success for the configured kernel set."
+
+  - id: AVS-WORK-003
+    state: active
+    area: WORK
+    domain: Regression
+    profiles: [LNX-WORKLOAD]
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - workloads/README.md
+      - docs/bringup/ALIGNMENT_MATRIX.md
+    requirement: "The consolidated benchmark portfolio completes under QEMU."
+    pass_fail: "workloads/run_portfolio.py emits machine-readable success for all enabled steps."
+
+  - id: AVS-WORK-004
+    state: active
+    area: WORK
+    domain: Regression
+    profiles: [LNX-WORKLOAD, LNX-VPAR, LNX-VSEQ]
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - workloads/README.md
+      - docs/bringup/ALIGNMENT_MATRIX.md
+    requirement: "TSVC executes under QEMU and preserves baseline checksum parity."
+    pass_fail: "workloads/tsvc/run_tsvc.py emits pass summaries for the required vector modes."
+
+  - id: AVS-WORK-005
+    state: active
+    area: WORK
+    domain: Regression
+    profiles: [LNX-WORKLOAD, LNX-TILE]
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - workloads/pto_kernels/docs
+      - docs/bringup/ALIGNMENT_MATRIX.md
+    requirement: "PTO host-vs-QEMU parity passes for the maintained kernel set."
+    pass_fail: "workloads/pto_kernels/tools/run_pto_kernel_parity.py exits 0 with parity evidence."
+
+  - id: AVS-WORK-006
+    state: active
+    area: WORK
+    domain: Regression
+    profiles: [LNX-WORKLOAD]
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - workloads/ctuning/README.md
+      - docs/bringup/ALIGNMENT_MATRIX.md
+    requirement: "Curated ctuning codelets build and execute under QEMU without home-directory dependencies."
+    pass_fail: "workloads/ctuning/run_milepost_codelets.py succeeds against the checked-in curated corpus."
+
+  - id: AVS-SPEC-001
+    state: active
+    area: SPEC
+    domain: Regression
+    profiles: [LNX-SPEC]
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - docs/bringup/ALIGNMENT_MATRIX.md
+      - docs/bringup/libc_status.md
+    requirement: "SPEC stage execution under Linx Linux and QEMU completes for the required stage set."
+    pass_fail: "tools/spec2017 stage runners emit machine-readable pass summaries for the required subset."

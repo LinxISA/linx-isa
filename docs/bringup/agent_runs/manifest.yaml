@@ -162,9 +162,14 @@
   },
   "gate_assignments": [
     {
-      "gate_key": "ISA::check26 contract",
+      "gate_key": "ISA::AVS contract",
       "agent": "integration",
       "checklist_ids": ["INT-001"]
+    },
+    {
+      "gate_key": "ISA::AVS profile closure",
+      "agent": "integration",
+      "checklist_ids": ["INT-016"]
     },
     {
       "gate_key": "Architecture::LinxCore architecture contract lint",
@@ -393,7 +398,7 @@
     "specint_qemu.md": ["SPEC-001", "SPEC-002", "SPEC-003", "SPEC-004", "SPEC-005", "SPEC-006", "SPEC-007"],
     "testbench_verif.md": ["TB-001", "TB-002", "TB-003", "TB-004"],
     "trace_linxtrace.md": ["TRACE-001", "TRACE-002", "TRACE-003", "TRACE-004", "TRACE-005", "TRACE-006"],
-    "integration_release.md": ["INT-001", "INT-002", "INT-003", "INT-004", "INT-005", "INT-006", "INT-007", "INT-008", "INT-009", "INT-010", "INT-011", "INT-012", "INT-013", "INT-014", "INT-015"]
+    "integration_release.md": ["INT-001", "INT-002", "INT-003", "INT-004", "INT-005", "INT-006", "INT-007", "INT-008", "INT-009", "INT-010", "INT-011", "INT-012", "INT-013", "INT-014", "INT-015", "INT-016"]
   },
   "spec_policy": {
     "stage_a_subset": ["999.specrand_ir", "505.mcf_r", "531.deepsjeng_r"],

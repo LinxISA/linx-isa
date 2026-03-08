@@ -71,10 +71,11 @@ export QEMU=$PWD/emulator/qemu/build/qemu-system-linx64
 bash tools/regression/run.sh
 ```
 
-Run contract gate:
+Run contract gates:
 
 ```bash
-python3 tools/bringup/check26_contract.py --root .
+python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml
+python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier pr
 ```
 
 ## 4. Daily Workflow
@@ -105,6 +106,7 @@ git commit -m "chore(submodules): bump ecosystem revisions"
 ## 6. Coordination References
 
 - Bring-up progress: `docs/bringup/PROGRESS.md`
-- Contract checkpoint: `docs/bringup/CHECK26_CONTRACT.md`
+- Contract checkpoint: `docs/bringup/AVS_CONTRACT.md`
+- Rendering userspace bring-up: `docs/bringup/rendering_vulkan_bringup.md`
 - Migration map: `docs/migration/path-map-v0.4.0.md`
 - Navigation guide: `docs/project/navigation.md`

@@ -5,7 +5,7 @@
 [[inst_v_rdfadd]]
 ==== V.RDFADD
 
-*Syntax:* v.rdfadd SrcL.<T>, ->Dst<.W>
+*Syntax:* v.rdfadd SrcL, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

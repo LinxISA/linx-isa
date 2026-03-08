@@ -49,6 +49,15 @@ Current LinxCore alignment details:
 - block queues and block-engine rollback remain BID-based: keep `bid <= flush_bid`,
   kill `bid > flush_bid`
 
+Rendering- and accelerator-facing consequence:
+
+- engine-backed work such as TAU-oriented rendering hardening must remain
+  block-visible and BID-visible,
+- engine dispatch must compose with the same boundary-authoritative recovery
+  model as scalar and VEC work,
+- younger engine work must be cancellable under the normal flush and redirect
+  rules rather than requiring a separate rollback domain.
+
 ## Privilege/trap contract (LC-MA-PRV-001)
 
 - U->S trap entry and `SRET` return must preserve architected control/state transitions.
@@ -73,6 +82,17 @@ Current LinxCore alignment details:
 - Memory visibility at commit must remain consistent with recorded trace/memory metadata.
 - Ordering checks must include block and redirect interactions.
 
+## Engine integration contract (LC-MA-ENG-001)
+
+- Engine-backed execution must remain architecturally visible through the
+  lowered block stream.
+- Engine completion must compose with precise retirement and the existing
+  block-engine completion model.
+- Engine-local work must not create hidden global-memory side effects outside
+  architecturally visible memory operations and committed block boundaries.
+- Tile-oriented engines such as TAU must preserve the current tile-to-tile
+  contract unless a future canonical architecture update changes that rule.
+
 ## Forward-progress contract (LC-MA-FWD-001)
 
 - Branch/flush/load-miss/replay/interrupt interactions must not deadlock.
@@ -87,6 +107,7 @@ Current LinxCore alignment details:
 | `LC-MA-BLK-001` | `LinxCore::runner protocol`, `Testbench::block struct pyc flow smoke` |
 | `LC-MA-PRV-001` | `pyCircuit::QEMU vs pyCircuit trace diff`, `LinxCore::cosim smoke` |
 | `LC-MA-MMU-001` | `pyCircuit::QEMU vs pyCircuit trace diff`, `LinxCore::cosim smoke` |
+| `LC-MA-ENG-001` | `LinxCore::runner protocol`, `Testbench::block struct pyc flow smoke`, `pyCircuit::QEMU vs pyCircuit trace diff` |
 | `LC-MA-IRQ-001` | `LinxCore::cosim smoke`, `LinxCore::runner protocol` |
 | `LC-MA-MEM-001` | `LinxCore::trace schema and memory smoke`, `pyCircuit::QEMU vs pyCircuit trace diff` |
 | `LC-MA-FWD-001` | `Testbench::ROB bookkeeping`, `LinxCore::runner protocol` |

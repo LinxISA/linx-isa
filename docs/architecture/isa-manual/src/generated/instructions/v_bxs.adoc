@@ -5,7 +5,7 @@
 [[inst_v_bxs]]
 ==== V.BXS
 
-*Syntax:* v.bxs SrcL.<T>, M, N, ->Dst.<W>
+*Syntax:* v.bxs SrcL, M, N, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

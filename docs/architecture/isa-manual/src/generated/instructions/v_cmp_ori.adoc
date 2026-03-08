@@ -5,7 +5,7 @@
 [[inst_v_cmp_ori]]
 ==== V.CMP.ORI
 
-*Syntax:* v.cmp.ori SrcL.<T>, simm, ->Dst.<W>
+*Syntax:* v.cmp.ori SrcL, simm, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

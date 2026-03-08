@@ -5,7 +5,7 @@
 [[inst_v_rdxor]]
 ==== V.RDXOR
 
-*Syntax:* v.rdxor SrcL.<T>, ->Dst<.W>
+*Syntax:* v.rdxor SrcL, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

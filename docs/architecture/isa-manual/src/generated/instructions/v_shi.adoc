@@ -5,7 +5,7 @@
 [[inst_v_shi]]
 ==== V.SHI
 
-*Syntax:* v.shi<.local> SrcL.<T>, [SrcR<.ud>, <lc0<<1>, simm]
+*Syntax:* v.shi<.local> SrcL, [SrcR, <lc0<<1>, simm]
 
 *Description:* Vector instruction (VEC engine).
 

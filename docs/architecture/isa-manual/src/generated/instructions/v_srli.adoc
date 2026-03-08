@@ -5,7 +5,7 @@
 [[inst_v_srli]]
 ==== V.SRLI
 
-*Syntax:* v.srli SrcL.<T>, shamt, ->Dst.<W>
+*Syntax:* v.srli SrcL, shamt, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

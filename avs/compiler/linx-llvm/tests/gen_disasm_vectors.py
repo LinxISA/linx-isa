@@ -6,10 +6,11 @@ encoding in the LinxISA spec.
 This is meant for regression:
 - Assemble the output as raw bytes in `.text`.
 - Disassemble with `llvm-objdump -d` and verify that the LLVM disassembler
-  recognizes the full spec (or at least doesn't regress).
+  recognizes the full canonical spec without collapsing too many forms onto
+  all-zero operands.
 
-The emitted bytes are derived from each form's `match` value with all variable
-fields set to zero.
+The emitted bytes start from each form's `match` value and then seed variable
+fields with stable non-zero defaults that respect simple encoding constraints.
 """
 
 from __future__ import annotations
@@ -17,6 +18,12 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+
+
+NAMED_VALUES = {
+    "ZERO": 0,
+    "RA": 1,
+}
 
 
 def _parse_int(s: str) -> int:
@@ -27,6 +34,109 @@ def _parse_int(s: str) -> int:
 def _canon_mnemonic(mnem: str) -> str:
     # Spec includes a tiny number of mnemonics with spaces ("BSTART CALL").
     return str(mnem).strip().replace(" ", ".")
+
+
+def _normalize_length(length_bits: int) -> int:
+    return 64 if length_bits == 48 else length_bits
+
+
+def _field_width(field: dict[str, object]) -> int:
+    return sum(int(piece.get("width", 0) or 0) for piece in field.get("pieces", []))
+
+
+def _default_field_value(field_name: str, width: int, mnemonic: str) -> int:
+    lower = field_name.lower()
+    upper_mnemonic = mnemonic.upper()
+    if width > 5:
+        if lower == "regdst":
+            value = (4 << 5) | 1  # vt#1
+        elif lower == "srcl":
+            value = (3 << 5) | 0  # lc0
+        elif lower == "srcr":
+            value = (1 << 5) | 0 if ".BRG" in upper_mnemonic else ((4 << 5) | 1)
+        elif lower == "srcd":
+            value = (4 << 5) | 1
+        else:
+            value = (4 << 5) | 1
+    elif lower == "regdst":
+        value = 2
+    elif lower == "srcl":
+        value = 3
+    elif lower == "srcr":
+        value = 4
+    elif lower == "srcd":
+        value = 5
+    elif lower == "function":
+        value = 3
+    elif lower == "tileopcode":
+        value = 1
+    elif lower == "loopnest":
+        value = 1
+    elif lower == "brtype":
+        value = 1
+    elif "imm" in lower or "offset" in lower or "shamt" in lower:
+        value = 1
+    elif lower in {"c", "l"}:
+        value = 1
+    else:
+        value = 1
+    if width <= 0:
+        return 0
+    return min(value, (1 << width) - 1)
+
+
+def _apply_constraints(field_name: str, value: int, width: int, constraints: list[dict[str, object]]) -> int:
+    max_value = (1 << width) - 1 if width > 0 else 0
+    chosen = value
+    for constraint in constraints:
+        if str(constraint.get("field", "")) != field_name:
+            continue
+        op = str(constraint.get("op", ""))
+        raw = str(constraint.get("value", "0"))
+        rhs = NAMED_VALUES.get(raw, int(raw, 0) if raw.isdigit() or raw.startswith("0x") else 0)
+        if op == "!=" and chosen == rhs:
+            chosen = min(rhs + 1, max_value)
+        elif op == ">=" and chosen < rhs:
+            chosen = min(rhs, max_value)
+    return chosen
+
+
+def _insert_field_value(word: int, field: dict[str, object], value: int, part_offset_bits: int) -> int:
+    for piece in field.get("pieces", []):
+        width = int(piece.get("width", 0) or 0)
+        if width <= 0:
+            continue
+        lsb = int(piece.get("insn_lsb", 0) or 0) + part_offset_bits
+        mask = ((1 << width) - 1) << lsb
+        value_lsb = int(piece.get("value_lsb", 0) or 0)
+        piece_value = (value >> value_lsb) & ((1 << width) - 1)
+        word = (word & ~mask) | (piece_value << lsb)
+    return word
+
+
+def _seed_instruction_bits(inst: dict[str, object], length_bits: int, parts: list[dict[str, object]]) -> int:
+    norm_length = _normalize_length(length_bits)
+    if norm_length == 64 and len(parts) == 2 and length_bits == 64:
+        word = (_parse_int(parts[1].get("match", "0")) << 32) | _parse_int(parts[0].get("match", "0"))
+    else:
+        word = _parse_int(parts[0].get("match", "0"))
+
+    constraints = []
+    for part in parts:
+        constraints.extend(list(part.get("constraints", [])))
+
+    for part in parts:
+        part_offset_bits = int(part.get("index", 0) or 0) * 32
+        for field in part.get("fields", []):
+            width = _field_width(field)
+            if width <= 0:
+                continue
+            name = str(field.get("name", ""))
+            value = _default_field_value(name, width, str(inst.get("mnemonic", "")))
+            value = _apply_constraints(name, value, width, constraints)
+            word = _insert_field_value(word, field, value, part_offset_bits)
+
+    return word & ((1 << norm_length) - 1)
 
 
 def main(argv: list[str]) -> int:
@@ -59,23 +169,23 @@ def main(argv: list[str]) -> int:
 
         out.append(f"    # {mnem} ({inst_id}) [{length_bits}]")
 
+        val = _seed_instruction_bits(inst, length_bits, parts)
+
         if length_bits == 16:
-            val = _parse_int(parts[0].get("match", "0")) & 0xFFFF
+            val &= 0xFFFF
             out.append(f"    .2byte 0x{val:04x}")
         elif length_bits == 32:
-            val = _parse_int(parts[0].get("match", "0")) & 0xFFFFFFFF
+            val &= 0xFFFFFFFF
             out.append(f"    .4byte 0x{val:08x}")
         elif length_bits == 48:
-            val = _parse_int(parts[0].get("match", "0")) & ((1 << 48) - 1)
+            val &= ((1 << 48) - 1)
             lo = val & 0xFFFFFFFF
             hi = (val >> 32) & 0xFFFF
             out.append(f"    .4byte 0x{lo:08x}")
             out.append(f"    .2byte 0x{hi:04x}")
         elif length_bits == 64:
-            if len(parts) != 2:
-                continue
-            lo = _parse_int(parts[0].get("match", "0")) & 0xFFFFFFFF
-            hi = _parse_int(parts[1].get("match", "0")) & 0xFFFFFFFF
+            lo = val & 0xFFFFFFFF
+            hi = (val >> 32) & 0xFFFFFFFF
             out.append(f"    .4byte 0x{lo:08x}")
             out.append(f"    .4byte 0x{hi:08x}")
 

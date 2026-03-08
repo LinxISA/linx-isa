@@ -5,7 +5,7 @@
 [[inst_v_sd_max]]
 ==== V.SD.MAX
 
-*Syntax:* v.sd.max<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>
+*Syntax:* v.sd.max<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR
 
 *Description:* Vector instruction (VEC engine).
 

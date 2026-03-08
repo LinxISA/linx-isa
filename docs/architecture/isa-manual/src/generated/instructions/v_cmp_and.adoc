@@ -5,7 +5,7 @@
 [[inst_v_cmp_and]]
 ==== V.CMP.AND
 
-*Syntax:* v.cmp.and SrcL.<T>, SrcR.<T>, ->Dst.<W>
+*Syntax:* v.cmp.and SrcL, SrcR, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

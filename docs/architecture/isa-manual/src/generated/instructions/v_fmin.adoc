@@ -5,7 +5,7 @@
 [[inst_v_fmin]]
 ==== V.FMIN
 
-*Syntax:* v.fmin SrcL.<T>, SrcR.<T>, ->Dst.<W>
+*Syntax:* v.fmin SrcL, SrcR, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

@@ -5,7 +5,7 @@
 [[inst_v_rdfmax]]
 ==== V.RDFMAX
 
-*Syntax:* v.rdfmax SrcL.<T>, ->Dst<.W>
+*Syntax:* v.rdfmax SrcL, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

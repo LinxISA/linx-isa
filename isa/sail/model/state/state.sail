@@ -1,14 +1,15 @@
-// LinxISA architectural state (skeleton).
-// TODO: define register files, PC/TPC, CARG/BARG, privilege state, and exceptions.
+// LinxISA architectural state model for canonical v0.4.
+// The state model grows incrementally while strict legality and execution coverage expand.
 //
-// NOTE: In the staged bring-up model we keep execute semantics growing while state/exception
-// wiring is still under construction. Provide minimal stubs so the Sail project remains
-// syntactically complete, but do NOT guess behavior.
+// NOTE: The current bring-up model still relies on decoder shadow metadata for some
+// block/header fields, but the architectural state and execute layers carry concrete
+// behavior for active v0.4 instructions.
 
 $include <prelude.sail>
 $include <arith.sail>
 $include <vector.sail>
-$include "memory.sail"
+$include "../lib/common.sail"
+$include <string.sail>
 
 // -----------------------------------------------------------------------------
 // GPR file + PC/TPC (minimal concrete state)
@@ -136,21 +137,24 @@ function read_pc_or_tpc() -> bits(64) = {
   pc
 }
 
-// Block-control predicate / commit-argument (BARG.CARG) update (stub).
+// Block-control predicate / commit-argument (BARG.CARG).
+register barg_carg : bits(64) = 0x0000_0000_0000_0000
+register barg_tgt_reg_valid : bool = false
+register barg_tgt_reg : bits(5) = 0b00000
+
 function set_commit_argument(v : bits(64)) -> unit = {
-  unimplemented("set_commit_argument")
+  barg_carg = v
 }
 
-// Block next-target selector (BARG.TGT) update (stub).
-// SETC.TGT / C.SETC.TGT select the register-based target for RET/IND-class transitions.
+// Block next-target selector (BARG.TGT).
+// SETC.TGT / C.SETC.TGT select the register-based target for RET/IND/ICALL-class transitions.
 function set_commit_target_reg(r : bits(5)) -> unit = {
-  unimplemented("set_commit_target_reg")
+  barg_tgt_reg_valid = true;
+  barg_tgt_reg = r
 }
 
 function read_commit_argument() -> bits(64) = {
-  // Legacy/staged name: commit-argument / block-control predicate domain.
-  unimplemented("read_commit_argument");
-  0x0000_0000_0000_0000
+  barg_carg
 }
 
 // -----------------------------------------------------------------------------
@@ -170,23 +174,41 @@ function read_predicate_p() -> bits(64) = { vec_p }
 function write_predicate_p(v : bits(64)) -> unit = { vec_p = v }
 
 // Decoder-provided helpers for staged block-descriptor execution.
-// The decoder/fetch layer must provide the already-decoded immediate/register
-// values for B.DIM/B.ATTR. These hooks avoid guessing operand formats here.
+// The Sail model stores these in shadow registers so tests / a future decode
+// layer can preload the already-decoded values without baking an ad hoc parser
+// into the execution rules.
+register decoded_bdim_index_shadow : bits(2) = 0b00
+register decoded_bdim_value_shadow : bits(64) = 0x0000_0000_0000_0000
+register decoded_battr_raw_shadow : bits(64) = 0x0000_0000_0000_0000
+register decoded_bior_regsrc0_shadow : bits(5) = 0b00000
+register decoded_bior_regsrc1_shadow : bits(5) = 0b00000
+register decoded_bior_regsrc2_shadow : bits(5) = 0b00000
+register decoded_bior_regdst_shadow  : bits(5) = 0b00000
+
 function decoded_bdim_index() -> bits(2) = {
   // 0=LB0, 1=LB1, 2=LB2
-  unimplemented("decoded_bdim_index");
-  0b00
+  decoded_bdim_index_shadow
 }
 
 function decoded_bdim_value() -> bits(64) = {
-  unimplemented("decoded_bdim_value");
-  0x0000_0000_0000_0000
+  decoded_bdim_value_shadow
 }
 
 function decoded_battr_raw() -> bits(64) = {
   // Full 64-bit attribute word as encoded by B.ATTR.
-  unimplemented("decoded_battr_raw");
-  0x0000_0000_0000_0000
+  decoded_battr_raw_shadow
+}
+
+function decoded_bior_regsrc0() -> bits(5) = { decoded_bior_regsrc0_shadow }
+function decoded_bior_regsrc1() -> bits(5) = { decoded_bior_regsrc1_shadow }
+function decoded_bior_regsrc2() -> bits(5) = { decoded_bior_regsrc2_shadow }
+function decoded_bior_regdst()  -> bits(5) = { decoded_bior_regdst_shadow }
+
+function set_decoded_bior(regsrc0 : bits(5), regsrc1 : bits(5), regsrc2 : bits(5), regdst : bits(5)) -> unit = {
+  decoded_bior_regsrc0_shadow = regsrc0;
+  decoded_bior_regsrc1_shadow = regsrc1;
+  decoded_bior_regsrc2_shadow = regsrc2;
+  decoded_bior_regdst_shadow = regdst
 }
 
 // Latched B.ATTR state relevant to VEC bring-up.
@@ -203,6 +225,9 @@ register ssr_lcfr : bits(64) = 0x0000_0000_0006_0000 // SSR_ID 0x0024 (RO): Lane
 register ssr_lb0  : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0050
 register ssr_lb1  : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0051
 register ssr_lb2  : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0052
+register ssr_lc0  : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0053
+register ssr_lc1  : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0054
+register ssr_lc2  : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0055
 
 function vec_length_from_lcfr() -> int = {
   let ln : int = unsigned(ssr_lcfr[19..16]);
@@ -239,45 +264,473 @@ function vec_init_p_for_group(lc1 : bits(64)) -> unit = {
 }
 
 // -----------------------------------------------------------------------------
-// Vector lane register file (staged)
+// Vector lane register file (canonical v0.4 decode carrier)
 //
-// We model vt#0..vt#7 as 64 lanes of 32-bit each, packed in a 2048-bit register.
-// Other namespaces (vu/vm/vn) are left for later bring-up.
+// Live LLVM/QEMU v0.4 uses a class/index RegId10 encoding:
+//   (Class << 5) | Index
+//   Class 1 = ri*    (ordered B.IOR import namespace)
+//   Class 3 = lc*    (lane/group counters)
+//   Class 4 = vt / vt#n
+//   Class 5 = vu / vu#n
+//   Class 6 = vm / vm#n
+//   Class 7 = vn / vn#n
+//   Class 8 = ta/tb/tc/td/to/ts
+//
+// Vector register classes 4..7 map into a unified 32-entry carrier file:
+//   0..7   = VT#0..VT#7
+//   8..15  = VU#0..VU#7
+//   16..23 = VM#0..VM#7
+//   24..31 = VN#0..VN#7
+//
+// Every vector register is modeled as 64 lanes of 32-bit carriers. The live
+// encoding does not carry an explicit RegId10 lane type field. Convert-class
+// instructions use explicit SrcType/DstType, while non-convert integer/FP
+// families receive mnemonic-defined default decoded type shadows and execute by
+// numeric cast/cvt from the 32-bit carrier domain.
 
 type vec_reg64x32 = bits(2048)
 
-register vt0 : vec_reg64x32 = sail_zeros(2048)
-register vt1 : vec_reg64x32 = sail_zeros(2048)
-register vt2 : vec_reg64x32 = sail_zeros(2048)
-register vt3 : vec_reg64x32 = sail_zeros(2048)
-register vt4 : vec_reg64x32 = sail_zeros(2048)
-register vt5 : vec_reg64x32 = sail_zeros(2048)
-register vt6 : vec_reg64x32 = sail_zeros(2048)
-register vt7 : vec_reg64x32 = sail_zeros(2048)
+register vreg0  : vec_reg64x32 = sail_zeros(2048)
+register vreg1  : vec_reg64x32 = sail_zeros(2048)
+register vreg2  : vec_reg64x32 = sail_zeros(2048)
+register vreg3  : vec_reg64x32 = sail_zeros(2048)
+register vreg4  : vec_reg64x32 = sail_zeros(2048)
+register vreg5  : vec_reg64x32 = sail_zeros(2048)
+register vreg6  : vec_reg64x32 = sail_zeros(2048)
+register vreg7  : vec_reg64x32 = sail_zeros(2048)
+register vreg8  : vec_reg64x32 = sail_zeros(2048)
+register vreg9  : vec_reg64x32 = sail_zeros(2048)
+register vreg10 : vec_reg64x32 = sail_zeros(2048)
+register vreg11 : vec_reg64x32 = sail_zeros(2048)
+register vreg12 : vec_reg64x32 = sail_zeros(2048)
+register vreg13 : vec_reg64x32 = sail_zeros(2048)
+register vreg14 : vec_reg64x32 = sail_zeros(2048)
+register vreg15 : vec_reg64x32 = sail_zeros(2048)
+register vreg16 : vec_reg64x32 = sail_zeros(2048)
+register vreg17 : vec_reg64x32 = sail_zeros(2048)
+register vreg18 : vec_reg64x32 = sail_zeros(2048)
+register vreg19 : vec_reg64x32 = sail_zeros(2048)
+register vreg20 : vec_reg64x32 = sail_zeros(2048)
+register vreg21 : vec_reg64x32 = sail_zeros(2048)
+register vreg22 : vec_reg64x32 = sail_zeros(2048)
+register vreg23 : vec_reg64x32 = sail_zeros(2048)
+register vreg24 : vec_reg64x32 = sail_zeros(2048)
+register vreg25 : vec_reg64x32 = sail_zeros(2048)
+register vreg26 : vec_reg64x32 = sail_zeros(2048)
+register vreg27 : vec_reg64x32 = sail_zeros(2048)
+register vreg28 : vec_reg64x32 = sail_zeros(2048)
+register vreg29 : vec_reg64x32 = sail_zeros(2048)
+register vreg30 : vec_reg64x32 = sail_zeros(2048)
+register vreg31 : vec_reg64x32 = sail_zeros(2048)
 
-function read_vt(k : bits(3)) -> vec_reg64x32 = {
+function read_vt(k : bits(5)) -> vec_reg64x32 = {
   match k {
-    0b000 => vt0,
-    0b001 => vt1,
-    0b010 => vt2,
-    0b011 => vt3,
-    0b100 => vt4,
-    0b101 => vt5,
-    0b110 => vt6,
-    0b111 => vt7
+    0b00000 => vreg0,
+    0b00001 => vreg1,
+    0b00010 => vreg2,
+    0b00011 => vreg3,
+    0b00100 => vreg4,
+    0b00101 => vreg5,
+    0b00110 => vreg6,
+    0b00111 => vreg7,
+    0b01000 => vreg8,
+    0b01001 => vreg9,
+    0b01010 => vreg10,
+    0b01011 => vreg11,
+    0b01100 => vreg12,
+    0b01101 => vreg13,
+    0b01110 => vreg14,
+    0b01111 => vreg15,
+    0b10000 => vreg16,
+    0b10001 => vreg17,
+    0b10010 => vreg18,
+    0b10011 => vreg19,
+    0b10100 => vreg20,
+    0b10101 => vreg21,
+    0b10110 => vreg22,
+    0b10111 => vreg23,
+    0b11000 => vreg24,
+    0b11001 => vreg25,
+    0b11010 => vreg26,
+    0b11011 => vreg27,
+    0b11100 => vreg28,
+    0b11101 => vreg29,
+    0b11110 => vreg30,
+    0b11111 => vreg31
   }
 }
 
-function write_vt(k : bits(3), v : vec_reg64x32) -> unit = {
+function write_vt(k : bits(5), v : vec_reg64x32) -> unit = {
   match k {
-    0b000 => vt0 = v,
-    0b001 => vt1 = v,
-    0b010 => vt2 = v,
-    0b011 => vt3 = v,
-    0b100 => vt4 = v,
-    0b101 => vt5 = v,
-    0b110 => vt6 = v,
-    0b111 => vt7 = v
+    0b00000 => vreg0 = v,
+    0b00001 => vreg1 = v,
+    0b00010 => vreg2 = v,
+    0b00011 => vreg3 = v,
+    0b00100 => vreg4 = v,
+    0b00101 => vreg5 = v,
+    0b00110 => vreg6 = v,
+    0b00111 => vreg7 = v,
+    0b01000 => vreg8 = v,
+    0b01001 => vreg9 = v,
+    0b01010 => vreg10 = v,
+    0b01011 => vreg11 = v,
+    0b01100 => vreg12 = v,
+    0b01101 => vreg13 = v,
+    0b01110 => vreg14 = v,
+    0b01111 => vreg15 = v,
+    0b10000 => vreg16 = v,
+    0b10001 => vreg17 = v,
+    0b10010 => vreg18 = v,
+    0b10011 => vreg19 = v,
+    0b10100 => vreg20 = v,
+    0b10101 => vreg21 = v,
+    0b10110 => vreg22 = v,
+    0b10111 => vreg23 = v,
+    0b11000 => vreg24 = v,
+    0b11001 => vreg25 = v,
+    0b11010 => vreg26 = v,
+    0b11011 => vreg27 = v,
+    0b11100 => vreg28 = v,
+    0b11101 => vreg29 = v,
+    0b11110 => vreg30 = v,
+    0b11111 => vreg31 = v
+  }
+}
+
+// Ordered scalar imports (`ri*`) are allocated from B.IOR headers in descriptor order.
+register ri_alloc_count : bits(6) = 0b00_0000
+
+register ri_select0  : bits(5) = 0b00000
+register ri_select1  : bits(5) = 0b00000
+register ri_select2  : bits(5) = 0b00000
+register ri_select3  : bits(5) = 0b00000
+register ri_select4  : bits(5) = 0b00000
+register ri_select5  : bits(5) = 0b00000
+register ri_select6  : bits(5) = 0b00000
+register ri_select7  : bits(5) = 0b00000
+register ri_select8  : bits(5) = 0b00000
+register ri_select9  : bits(5) = 0b00000
+register ri_select10 : bits(5) = 0b00000
+register ri_select11 : bits(5) = 0b00000
+register ri_select12 : bits(5) = 0b00000
+register ri_select13 : bits(5) = 0b00000
+register ri_select14 : bits(5) = 0b00000
+register ri_select15 : bits(5) = 0b00000
+register ri_select16 : bits(5) = 0b00000
+register ri_select17 : bits(5) = 0b00000
+register ri_select18 : bits(5) = 0b00000
+register ri_select19 : bits(5) = 0b00000
+register ri_select20 : bits(5) = 0b00000
+register ri_select21 : bits(5) = 0b00000
+register ri_select22 : bits(5) = 0b00000
+register ri_select23 : bits(5) = 0b00000
+register ri_select24 : bits(5) = 0b00000
+register ri_select25 : bits(5) = 0b00000
+register ri_select26 : bits(5) = 0b00000
+register ri_select27 : bits(5) = 0b00000
+register ri_select28 : bits(5) = 0b00000
+register ri_select29 : bits(5) = 0b00000
+register ri_select30 : bits(5) = 0b00000
+register ri_select31 : bits(5) = 0b00000
+
+register ri_valid0  : bool = false
+register ri_valid1  : bool = false
+register ri_valid2  : bool = false
+register ri_valid3  : bool = false
+register ri_valid4  : bool = false
+register ri_valid5  : bool = false
+register ri_valid6  : bool = false
+register ri_valid7  : bool = false
+register ri_valid8  : bool = false
+register ri_valid9  : bool = false
+register ri_valid10 : bool = false
+register ri_valid11 : bool = false
+register ri_valid12 : bool = false
+register ri_valid13 : bool = false
+register ri_valid14 : bool = false
+register ri_valid15 : bool = false
+register ri_valid16 : bool = false
+register ri_valid17 : bool = false
+register ri_valid18 : bool = false
+register ri_valid19 : bool = false
+register ri_valid20 : bool = false
+register ri_valid21 : bool = false
+register ri_valid22 : bool = false
+register ri_valid23 : bool = false
+register ri_valid24 : bool = false
+register ri_valid25 : bool = false
+register ri_valid26 : bool = false
+register ri_valid27 : bool = false
+register ri_valid28 : bool = false
+register ri_valid29 : bool = false
+register ri_valid30 : bool = false
+register ri_valid31 : bool = false
+
+function ri_binding_reg(idx : bits(5)) -> bits(5) = {
+  match idx {
+    0b00000 => ri_select0,
+    0b00001 => ri_select1,
+    0b00010 => ri_select2,
+    0b00011 => ri_select3,
+    0b00100 => ri_select4,
+    0b00101 => ri_select5,
+    0b00110 => ri_select6,
+    0b00111 => ri_select7,
+    0b01000 => ri_select8,
+    0b01001 => ri_select9,
+    0b01010 => ri_select10,
+    0b01011 => ri_select11,
+    0b01100 => ri_select12,
+    0b01101 => ri_select13,
+    0b01110 => ri_select14,
+    0b01111 => ri_select15,
+    0b10000 => ri_select16,
+    0b10001 => ri_select17,
+    0b10010 => ri_select18,
+    0b10011 => ri_select19,
+    0b10100 => ri_select20,
+    0b10101 => ri_select21,
+    0b10110 => ri_select22,
+    0b10111 => ri_select23,
+    0b11000 => ri_select24,
+    0b11001 => ri_select25,
+    0b11010 => ri_select26,
+    0b11011 => ri_select27,
+    0b11100 => ri_select28,
+    0b11101 => ri_select29,
+    0b11110 => ri_select30,
+    0b11111 => ri_select31
+  }
+}
+
+function ri_binding_present(idx : bits(5)) -> bool = {
+  match idx {
+    0b00000 => ri_valid0,
+    0b00001 => ri_valid1,
+    0b00010 => ri_valid2,
+    0b00011 => ri_valid3,
+    0b00100 => ri_valid4,
+    0b00101 => ri_valid5,
+    0b00110 => ri_valid6,
+    0b00111 => ri_valid7,
+    0b01000 => ri_valid8,
+    0b01001 => ri_valid9,
+    0b01010 => ri_valid10,
+    0b01011 => ri_valid11,
+    0b01100 => ri_valid12,
+    0b01101 => ri_valid13,
+    0b01110 => ri_valid14,
+    0b01111 => ri_valid15,
+    0b10000 => ri_valid16,
+    0b10001 => ri_valid17,
+    0b10010 => ri_valid18,
+    0b10011 => ri_valid19,
+    0b10100 => ri_valid20,
+    0b10101 => ri_valid21,
+    0b10110 => ri_valid22,
+    0b10111 => ri_valid23,
+    0b11000 => ri_valid24,
+    0b11001 => ri_valid25,
+    0b11010 => ri_valid26,
+    0b11011 => ri_valid27,
+    0b11100 => ri_valid28,
+    0b11101 => ri_valid29,
+    0b11110 => ri_valid30,
+    0b11111 => ri_valid31
+  }
+}
+
+function set_ri_binding(idx : bits(5), reg : bits(5)) -> unit = {
+  match idx {
+    0b00000 => { ri_select0 = reg; ri_valid0 = true },
+    0b00001 => { ri_select1 = reg; ri_valid1 = true },
+    0b00010 => { ri_select2 = reg; ri_valid2 = true },
+    0b00011 => { ri_select3 = reg; ri_valid3 = true },
+    0b00100 => { ri_select4 = reg; ri_valid4 = true },
+    0b00101 => { ri_select5 = reg; ri_valid5 = true },
+    0b00110 => { ri_select6 = reg; ri_valid6 = true },
+    0b00111 => { ri_select7 = reg; ri_valid7 = true },
+    0b01000 => { ri_select8 = reg; ri_valid8 = true },
+    0b01001 => { ri_select9 = reg; ri_valid9 = true },
+    0b01010 => { ri_select10 = reg; ri_valid10 = true },
+    0b01011 => { ri_select11 = reg; ri_valid11 = true },
+    0b01100 => { ri_select12 = reg; ri_valid12 = true },
+    0b01101 => { ri_select13 = reg; ri_valid13 = true },
+    0b01110 => { ri_select14 = reg; ri_valid14 = true },
+    0b01111 => { ri_select15 = reg; ri_valid15 = true },
+    0b10000 => { ri_select16 = reg; ri_valid16 = true },
+    0b10001 => { ri_select17 = reg; ri_valid17 = true },
+    0b10010 => { ri_select18 = reg; ri_valid18 = true },
+    0b10011 => { ri_select19 = reg; ri_valid19 = true },
+    0b10100 => { ri_select20 = reg; ri_valid20 = true },
+    0b10101 => { ri_select21 = reg; ri_valid21 = true },
+    0b10110 => { ri_select22 = reg; ri_valid22 = true },
+    0b10111 => { ri_select23 = reg; ri_valid23 = true },
+    0b11000 => { ri_select24 = reg; ri_valid24 = true },
+    0b11001 => { ri_select25 = reg; ri_valid25 = true },
+    0b11010 => { ri_select26 = reg; ri_valid26 = true },
+    0b11011 => { ri_select27 = reg; ri_valid27 = true },
+    0b11100 => { ri_select28 = reg; ri_valid28 = true },
+    0b11101 => { ri_select29 = reg; ri_valid29 = true },
+    0b11110 => { ri_select30 = reg; ri_valid30 = true },
+    0b11111 => { ri_select31 = reg; ri_valid31 = true }
+  }
+}
+
+function clear_ri_bindings() -> unit = {
+  ri_alloc_count = 0b00_0000;
+  ri_valid0 = false;
+  ri_valid1 = false;
+  ri_valid2 = false;
+  ri_valid3 = false;
+  ri_valid4 = false;
+  ri_valid5 = false;
+  ri_valid6 = false;
+  ri_valid7 = false;
+  ri_valid8 = false;
+  ri_valid9 = false;
+  ri_valid10 = false;
+  ri_valid11 = false;
+  ri_valid12 = false;
+  ri_valid13 = false;
+  ri_valid14 = false;
+  ri_valid15 = false;
+  ri_valid16 = false;
+  ri_valid17 = false;
+  ri_valid18 = false;
+  ri_valid19 = false;
+  ri_valid20 = false;
+  ri_valid21 = false;
+  ri_valid22 = false;
+  ri_valid23 = false;
+  ri_valid24 = false;
+  ri_valid25 = false;
+  ri_valid26 = false;
+  ri_valid27 = false;
+  ri_valid28 = false;
+  ri_valid29 = false;
+  ri_valid30 = false;
+  ri_valid31 = false
+}
+
+function allocate_ri_binding(reg : bits(5)) -> unit = {
+  if ri_alloc_count == 0b10_0000 then {
+    ()
+  } else {
+    set_ri_binding(ri_alloc_count[4..0], reg);
+    ri_alloc_count = ri_alloc_count + 0b00_0001
+  }
+}
+
+function read_ri_value(idx : bits(5)) -> bits(64) = {
+  if ri_binding_present(idx) then {
+    read_reg5(ri_binding_reg(idx))
+  } else {
+    0x0000_0000_0000_0000
+  }
+}
+
+// Decode-provided vector operand raw RegId10 shadows.
+register decoded_vec_srcl_regid_shadow : bits(10) = 0b00_0000_0000
+register decoded_vec_srcr_regid_shadow : bits(10) = 0b00_0000_0000
+register decoded_vec_srca_regid_shadow : bits(10) = 0b00_0000_0000
+register decoded_vec_srcp_regid_shadow : bits(10) = 0b00_0000_0000
+register decoded_vec_dst_regid_shadow  : bits(10) = 0b00_0000_0000
+
+function decoded_vec_srcl_regid() -> bits(10) = { decoded_vec_srcl_regid_shadow }
+function decoded_vec_srcr_regid() -> bits(10) = { decoded_vec_srcr_regid_shadow }
+function decoded_vec_srca_regid() -> bits(10) = { decoded_vec_srca_regid_shadow }
+function decoded_vec_srcp_regid() -> bits(10) = { decoded_vec_srcp_regid_shadow }
+function decoded_vec_dst_regid()  -> bits(10) = { decoded_vec_dst_regid_shadow }
+
+function set_decoded_vec_regids(srcl : bits(10), srcr : bits(10), srca : bits(10), srcp : bits(10), dst : bits(10)) -> unit = {
+  decoded_vec_srcl_regid_shadow = srcl;
+  decoded_vec_srcr_regid_shadow = srcr;
+  decoded_vec_srca_regid_shadow = srca;
+  decoded_vec_srcp_regid_shadow = srcp;
+  decoded_vec_dst_regid_shadow = dst
+}
+
+// Decode-provided vector operand typing shadows.
+//
+// In the strict v0.4 bring-up profile, RegId10 itself only carries class/index.
+// These shadows therefore come from explicit instruction type fields when present,
+// or from the current default carrier-domain rules for the consuming opcode family.
+register decoded_vec_srcl_type_shadow : bits(5) = 0b00001
+register decoded_vec_srcr_type_shadow : bits(5) = 0b00001
+register decoded_vec_srca_type_shadow : bits(5) = 0b00001
+register decoded_vec_srcp_type_shadow : bits(5) = 0b00001
+register decoded_vec_dst_type_shadow  : bits(5) = 0b00001
+
+function decoded_vec_srcl_type() -> bits(5) = { decoded_vec_srcl_type_shadow }
+function decoded_vec_srcr_type() -> bits(5) = { decoded_vec_srcr_type_shadow }
+function decoded_vec_srca_type() -> bits(5) = { decoded_vec_srca_type_shadow }
+function decoded_vec_srcp_type() -> bits(5) = { decoded_vec_srcp_type_shadow }
+function decoded_vec_dst_type()  -> bits(5) = { decoded_vec_dst_type_shadow }
+
+function set_decoded_vec_types(srcl_t : bits(5), srcr_t : bits(5), srca_t : bits(5), srcp_t : bits(5), dst_t : bits(5)) -> unit = {
+  decoded_vec_srcl_type_shadow = srcl_t;
+  decoded_vec_srcr_type_shadow = srcr_t;
+  decoded_vec_srca_type_shadow = srca_t;
+  decoded_vec_srcp_type_shadow = srcp_t;
+  decoded_vec_dst_type_shadow = dst_t
+}
+
+function regid10_class(regid : bits(10)) -> bits(5) = {
+  regid[9..5]
+}
+
+function regid10_index(regid : bits(10)) -> bits(5) = {
+  regid[4..0]
+}
+
+function regid10_vector_namespace_ok(regid : bits(10)) -> bool = {
+  let cls : bits(5) = regid10_class(regid);
+  (cls == 0b00000) |
+  (cls == 0b00001) |
+  (cls == 0b00011) |
+  (cls == 0b00100) |
+  (cls == 0b00101) |
+  (cls == 0b00110) |
+  (cls == 0b00111) |
+  (cls == 0b01000)
+}
+
+function regid10_vector_selector(regid : bits(10)) -> bits(5) = {
+  let cls : bits(5) = regid10_class(regid);
+  let idx : bits(5) = regid10_index(regid);
+  if cls == 0b00100 then idx
+  else if cls == 0b00101 then 0b01000 + idx
+  else if cls == 0b00110 then 0b10000 + idx
+  else if cls == 0b00111 then 0b11000 + idx
+  else idx
+}
+
+function regid10_vector_int_type(regid : bits(10)) -> bits(5) = {
+  let _ = regid;
+  // Current strict profile default for non-convert integer/vector carrier ops.
+  0b00001
+}
+
+function regid10_vector_fp_type(regid : bits(10)) -> bits(5) = {
+  let _ = regid;
+  // Current strict profile default for non-convert floating/vector carrier ops.
+  0b00001
+}
+
+function regid10_is_vector_register(regid : bits(10)) -> bool = {
+  let cls : bits(5) = regid10_class(regid);
+  (cls == 0b00100) | (cls == 0b00101) | (cls == 0b00110) | (cls == 0b00111)
+}
+
+function read_lc_value(idx : bits(5)) -> bits(64) = {
+  match idx {
+    0b00000 => ssr_lc0,
+    0b00001 => ssr_lc1,
+    0b00010 => ssr_lc2,
+    _ => {
+      0x0000_0000_0000_0000
+    }
   }
 }
 
@@ -297,9 +750,63 @@ function vec_set_lane32(v : vec_reg64x32, lane : int, x : bits(32)) -> vec_reg64
   cleared | ins
 }
 
+function read_vec_operand_lane32(regid : bits(10), lane : int) -> bits(32) = {
+  let cls : bits(5) = regid10_class(regid);
+  let idx : bits(5) = regid10_index(regid);
+  if cls == 0b00000 then {
+    read_reg5(idx)[31..0]
+  } else if cls == 0b00001 then {
+    read_ri_value(idx)[31..0]
+  } else if cls == 0b00011 then {
+    read_lc_value(idx)[31..0]
+  } else if regid10_is_vector_register(regid) then {
+    vec_get_lane32(read_vt(regid10_vector_selector(regid)), lane)
+  } else if cls == 0b01000 then {
+    sail_zero_extend(idx, 32)
+  } else {
+    undefined_bitvector(32)
+  }
+}
 
-// Trap raising (stubs). In a complete model these update TRAPNO/TRAPARG0/ECSTATE
-// and transfer control. In staged bring-up we keep these as explicit markers.
+function read_vec_operand_scalar64(regid : bits(10)) -> bits(64) = {
+  let cls : bits(5) = regid10_class(regid);
+  let idx : bits(5) = regid10_index(regid);
+  if cls == 0b00000 then {
+    read_reg5(idx)
+  } else if cls == 0b00001 then {
+    read_ri_value(idx)
+  } else if cls == 0b00011 then {
+    read_lc_value(idx)
+  } else if regid10_is_vector_register(regid) then {
+    zext32_from32(vec_get_lane32(read_vt(regid10_vector_selector(regid)), 0))
+  } else if cls == 0b01000 then {
+    sail_zero_extend(idx, 64)
+  } else {
+    0x0000_0000_0000_0000
+  }
+}
+
+function read_vec_dest_value(regid : bits(10), fallback_k : bits(5)) -> vec_reg64x32 = {
+  if regid10_is_vector_register(regid) then {
+    read_vt(regid10_vector_selector(regid))
+  } else if regid == 0b00_0000_0000 then {
+    sail_zeros(2048)
+  } else {
+    read_vt(fallback_k)
+  }
+}
+
+function write_vec_dest_value(regid : bits(10), fallback_k : bits(5), v : vec_reg64x32) -> unit = {
+  if regid10_is_vector_register(regid) then {
+    write_vt(regid10_vector_selector(regid), v)
+  } else if regid == 0b00_0000_0000 then {
+    ()
+  } else {
+    write_vt(fallback_k, v)
+  }
+}
+
+
 // Minimal trap plumbing for bring-up.
 // Record the last trap request so tests can observe it.
 register last_trapnum  : bits(6)  = sail_zeros(6)
@@ -321,18 +828,38 @@ function raise_trap(trapnum : bits(6), cause : bits(24), traparg0 : bits(64), bi
 // - docs/architecture/isa-manual/src/generated/system_registers_ssr.adoc
 // - docs/architecture/isa-manual/src/chapters/09_system_and_privilege.adoc (E_ISSR)
 //
-// NOTE: This staged model only provides concrete storage for a subset of base SSRs
-// that are used by early software (TP/GP and bring-up loop regs). All other SSR IDs
-// are routed to explicit `unimplemented(...)` until the privilege + trap envelope is
-// wired into the Sail state.
+// NOTE: This staged model only provides concrete storage for the subset of base SSRs
+// needed by current software and gates. Unknown/unsupported SSR IDs trap through the
+// architectural illegal-SSR path.
 
 register ssr_tp     : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0000
 register ssr_gp     : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0001
 register ssr_cstate : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0020
+register ssr_ecstate_acr0 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0F00 (low nibble = target ACR, bit4 = BI)
+register ssr_ecstate_acr1 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x1F00
+register ssr_ecstate_acr2 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x2F00
+register ssr_econfig_acr0 : bits(64) = 0x0000_0000_0000_0008 // SSR_ID 0x0F07
+register ssr_econfig_acr1 : bits(64) = 0x0000_0000_0000_0008 // SSR_ID 0x1F07
+register ssr_econfig_acr2 : bits(64) = 0x0000_0000_0000_0008 // SSR_ID 0x2F07
+register ssr_ebarg_bpc_cur_acr0 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0F41
+register ssr_ebarg_bpc_cur_acr1 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x1F41
+register ssr_ebarg_bpc_cur_acr2 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x2F41
+register ssr_ebarg_bpc_tgt_acr0 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0F42
+register ssr_ebarg_bpc_tgt_acr1 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x1F42
+register ssr_ebarg_bpc_tgt_acr2 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x2F42
+register ssr_ebarg_tpc_acr0 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0F43
+register ssr_ebarg_tpc_acr1 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x1F43
+register ssr_ebarg_tpc_acr2 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x2F43
+register ssr_ebarg_extctx_ptr_acr0 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0F4F
+register ssr_ebarg_extctx_ptr_acr1 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x1F4F
+register ssr_ebarg_extctx_ptr_acr2 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x2F4F
+register ssr_ebarg_extctx_meta_acr0 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0F50
+register ssr_ebarg_extctx_meta_acr1 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x1F50
+register ssr_ebarg_extctx_meta_acr2 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x2F50
 // (ssr_lcfr/ssr_lb0..2 declared earlier for vec bring-up)
 
 // -----------------------------------------------------------------------------
-// XBINFO / CAC_TABLE (v0.4-draft bring-up)
+// XBINFO / CAC_TABLE (current v0.4 bring-up profile)
 //
 // XBINFO provides the base address of the CAC_TABLE for a given target ACR.
 // The full system-call-block mechanism is platform-defined; the staged Sail model
@@ -346,6 +873,17 @@ register xbinfo_acr0 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0F30
 register xbinfo_acr1 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x1F30
 register xbinfo_acr2 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x2F30
 
+// Resolved XB dispatch request.
+// The generic v0.4 architecture standardizes legality, permission, and
+// CAC-table selection, but the binary entry layout remains platform-defined.
+// The Sail model therefore records the resolved dispatch request instead of
+// inventing a non-canonical in-entry block-header decoder.
+register xb_dispatch_valid : bool = false
+register xb_dispatch_acr : bits(4) = 0x0
+register xb_dispatch_cid : bits(7) = 0b0000000
+register xb_dispatch_entry_ea : bits(64) = 0x0000_0000_0000_0000
+register xb_dispatch_entry_word0 : bits(64) = 0x0000_0000_0000_0000
+
 function read_xbinfo_for_acr(acr : bits(4)) -> bits(64) = {
   if acr == 0x0 then xbinfo_acr0
   else if acr == 0x1 then xbinfo_acr1
@@ -353,12 +891,105 @@ function read_xbinfo_for_acr(acr : bits(4)) -> bits(64) = {
   else 0x0000_0000_0000_0000
 }
 
-register ssr_lc0 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0053
-register ssr_lc1 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0054
-register ssr_lc2 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0055
+function current_acr_id() -> bits(4) = { ssr_cstate[3..0] }
+
+function read_ecstate_for_acr(acr : bits(4)) -> bits(64) = {
+  if acr == 0x0 then ssr_ecstate_acr0
+  else if acr == 0x1 then ssr_ecstate_acr1
+  else if acr == 0x2 then ssr_ecstate_acr2
+  else 0x0000_0000_0000_0000
+}
+
+function write_ecstate_for_acr(acr : bits(4), v : bits(64)) -> unit = {
+  if acr == 0x0 then ssr_ecstate_acr0 = v
+  else if acr == 0x1 then ssr_ecstate_acr1 = v
+  else if acr == 0x2 then ssr_ecstate_acr2 = v
+  else ()
+}
+
+function read_ebarg_bpc_cur_for_acr(acr : bits(4)) -> bits(64) = {
+  if acr == 0x0 then ssr_ebarg_bpc_cur_acr0
+  else if acr == 0x1 then ssr_ebarg_bpc_cur_acr1
+  else if acr == 0x2 then ssr_ebarg_bpc_cur_acr2
+  else 0x0000_0000_0000_0000
+}
+
+function write_ebarg_bpc_cur_for_acr(acr : bits(4), v : bits(64)) -> unit = {
+  if acr == 0x0 then ssr_ebarg_bpc_cur_acr0 = v
+  else if acr == 0x1 then ssr_ebarg_bpc_cur_acr1 = v
+  else if acr == 0x2 then ssr_ebarg_bpc_cur_acr2 = v
+  else ()
+}
+
+function read_ebarg_bpc_tgt_for_acr(acr : bits(4)) -> bits(64) = {
+  if acr == 0x0 then ssr_ebarg_bpc_tgt_acr0
+  else if acr == 0x1 then ssr_ebarg_bpc_tgt_acr1
+  else if acr == 0x2 then ssr_ebarg_bpc_tgt_acr2
+  else 0x0000_0000_0000_0000
+}
+
+function write_ebarg_bpc_tgt_for_acr(acr : bits(4), v : bits(64)) -> unit = {
+  if acr == 0x0 then ssr_ebarg_bpc_tgt_acr0 = v
+  else if acr == 0x1 then ssr_ebarg_bpc_tgt_acr1 = v
+  else if acr == 0x2 then ssr_ebarg_bpc_tgt_acr2 = v
+  else ()
+}
+
+function read_ebarg_tpc_for_acr(acr : bits(4)) -> bits(64) = {
+  if acr == 0x0 then ssr_ebarg_tpc_acr0
+  else if acr == 0x1 then ssr_ebarg_tpc_acr1
+  else if acr == 0x2 then ssr_ebarg_tpc_acr2
+  else 0x0000_0000_0000_0000
+}
+
+function write_ebarg_tpc_for_acr(acr : bits(4), v : bits(64)) -> unit = {
+  if acr == 0x0 then ssr_ebarg_tpc_acr0 = v
+  else if acr == 0x1 then ssr_ebarg_tpc_acr1 = v
+  else if acr == 0x2 then ssr_ebarg_tpc_acr2 = v
+  else ()
+}
+
+function read_ebarg_extctx_ptr_for_acr(acr : bits(4)) -> bits(64) = {
+  if acr == 0x0 then ssr_ebarg_extctx_ptr_acr0
+  else if acr == 0x1 then ssr_ebarg_extctx_ptr_acr1
+  else if acr == 0x2 then ssr_ebarg_extctx_ptr_acr2
+  else 0x0000_0000_0000_0000
+}
+
+function write_ebarg_extctx_ptr_for_acr(acr : bits(4), v : bits(64)) -> unit = {
+  if acr == 0x0 then ssr_ebarg_extctx_ptr_acr0 = v
+  else if acr == 0x1 then ssr_ebarg_extctx_ptr_acr1 = v
+  else if acr == 0x2 then ssr_ebarg_extctx_ptr_acr2 = v
+  else ()
+}
+
+function read_ebarg_extctx_meta_for_acr(acr : bits(4)) -> bits(64) = {
+  if acr == 0x0 then ssr_ebarg_extctx_meta_acr0
+  else if acr == 0x1 then ssr_ebarg_extctx_meta_acr1
+  else if acr == 0x2 then ssr_ebarg_extctx_meta_acr2
+  else 0x0000_0000_0000_0000
+}
+
+function write_ebarg_extctx_meta_for_acr(acr : bits(4), v : bits(64)) -> unit = {
+  if acr == 0x0 then ssr_ebarg_extctx_meta_acr0 = v
+  else if acr == 0x1 then ssr_ebarg_extctx_meta_acr1 = v
+  else if acr == 0x2 then ssr_ebarg_extctx_meta_acr2 = v
+  else ()
+}
+
+function ecstate_target_acr(v : bits(64)) -> bits(4) = { v[3..0] }
+function ecstate_bi(v : bits(64)) -> bool = { v[4] == 0b1 }
+
+function record_xb_dispatch(acr : bits(4), cid : bits(7), entry_ea : bits(64), word0 : bits(64)) -> unit = {
+  xb_dispatch_valid = true;
+  xb_dispatch_acr = acr;
+  xb_dispatch_cid = cid;
+  xb_dispatch_entry_ea = entry_ea;
+  xb_dispatch_entry_word0 = word0
+}
 
 // -----------------------------------------------------------------------------
-// ILLEGAL_INST / E_INST helpers (v0.4-draft bring-up contract)
+// ILLEGAL_INST / E_INST helpers (current v0.4 bring-up contract)
 //
 // TRAPNUM major class:
 //   ILLEGAL_INST = 4
@@ -374,6 +1005,7 @@ register ssr_lc2 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0055
 //   EC_XBDEF   = 0x11  (XB definition invalid / CAC_TABLE entry invalid)
 
 function trapnum_illegal_inst() -> bits(6) = { (sail_zeros(6) + 4) }
+function trapnum_data_page_fault() -> bits(6) = { (sail_zeros(6) + 35) }
 
 function e_inst_cause(ec : bits(8), detail : bits(8)) -> bits(24) = {
   let c16 : bits(16) = ec @ detail;
@@ -387,6 +1019,12 @@ function trap_e_inst(ec : bits(8), detail : bits(8), traparg0 : bits(64)) -> uni
 function trap_illegal_inst(traparg0 : bits(64)) -> unit = {
   // Legacy helper: map to E_INST(EC_ILLEGAL) with detail=0.
   trap_e_inst(0x01, 0x00, traparg0)
+}
+
+function trap_data_page_fault(fault_va : bits(64)) -> unit = {
+  // Bring-up profile: use DATA_PAGE_FAULT for MMU/IOMMU translation faults.
+  // CAUSE remains profile-defined; keep it zeroed in the staged Sail model.
+  raise_trap(trapnum_data_page_fault(), sail_zeros(24), fault_va, 0b0)
 }
 
 function trap_illegal_ssr() -> unit = {
@@ -409,6 +1047,19 @@ function read_system_register(id24 : bits(24)) -> bits(64) = {
     0x053 => ssr_lc0,
     0x054 => ssr_lc1,
     0x055 => ssr_lc2,
+    0xF00 => read_ecstate_for_acr(current_acr_id()),
+    0xF07 => {
+      let cur_acr : bits(4) = current_acr_id();
+      if cur_acr == 0x0 then ssr_econfig_acr0
+      else if cur_acr == 0x1 then ssr_econfig_acr1
+      else if cur_acr == 0x2 then ssr_econfig_acr2
+      else 0x0000_0000_0000_0000
+    },
+    0xF41 => read_ebarg_bpc_cur_for_acr(current_acr_id()),
+    0xF42 => read_ebarg_bpc_tgt_for_acr(current_acr_id()),
+    0xF43 => read_ebarg_tpc_for_acr(current_acr_id()),
+    0xF4F => read_ebarg_extctx_ptr_for_acr(current_acr_id()),
+    0xF50 => read_ebarg_extctx_meta_for_acr(current_acr_id()),
 
     // XBINFO (ACR-scoped by bring-up convention). Indexed at 0xF30.
     // We select the bank by the current active ACR in CSTATE.
@@ -440,9 +1091,22 @@ function write_system_register(id24 : bits(24), v : bits(64)) -> unit = {
     0x053 => ssr_lc0 = v,
     0x054 => ssr_lc1 = v,
     0x055 => ssr_lc2 = v,
+    0xF00 => write_ecstate_for_acr(current_acr_id(), v),
+    0xF07 => {
+      let cur_acr : bits(4) = current_acr_id();
+      if cur_acr == 0x0 then ssr_econfig_acr0 = v
+      else if cur_acr == 0x1 then ssr_econfig_acr1 = v
+      else if cur_acr == 0x2 then ssr_econfig_acr2 = v
+      else trap_illegal_ssr()
+    },
+    0xF41 => write_ebarg_bpc_cur_for_acr(current_acr_id(), v),
+    0xF42 => write_ebarg_bpc_tgt_for_acr(current_acr_id(), v),
+    0xF43 => write_ebarg_tpc_for_acr(current_acr_id(), v),
+    0xF4F => write_ebarg_extctx_ptr_for_acr(current_acr_id(), v),
+    0xF50 => write_ebarg_extctx_meta_for_acr(current_acr_id(), v),
 
     0xF30 => {
-      let cur_acr : bits(4) = ssr_cstate[3..0];
+      let cur_acr : bits(4) = current_acr_id();
       if cur_acr == 0x0 then xbinfo_acr0 = v
       else if cur_acr == 0x1 then xbinfo_acr1 = v
       else if cur_acr == 0x2 then xbinfo_acr2 = v
@@ -537,60 +1201,123 @@ function trap_bfetch(fault_va : bits(64)) -> unit = {
 }
 
 // -----------------------------------------------------------------------------
-// Block boundary + BARG state (staged; contracts defined in ISA manual)
+// Block boundary + BARG state (current v0.4 bring-up contract)
 //
-// These interfaces are used by BSTART/BSTOP semantics. A complete model will:
-// - reset/initialize BARG at block start;
-// - accumulate SETC/B.ATTR/B.* updates into BARG during the block;
-// - at block commit (BSTOP or next BSTART), consult BARG and update architectural PC/privilege/etc.
-//
-// For now we keep these as explicit stubs and do not guess microarchitectural details.
+// The Sail model keeps an explicit architectural BARG shadow so block-control
+// instructions have concrete semantics even before fetch/decode is fully wired.
+// Decoder/fetch-specific details (branch-kind decode, resolved target labels,
+// descriptor immediates) are supplied through shadow registers below.
 
 type block_type = bits(4)
 type block_xfer_kind = bits(4)
 
+register barg_valid : bool = false
+register barg_block_type_cur : block_type = 0b0000
+register barg_xfer_kind_cur : block_xfer_kind = 0b0000
+register barg_bpc_cur : bits(64) = 0x0000_0000_0000_0000
+register barg_bpc_tgt : bits(64) = 0x0000_0000_0000_0000
+register barg_last_committed_bpc : bits(64) = 0x0000_0000_0000_0000
+register barg_last_committed_target : bits(64) = 0x0000_0000_0000_0000
+register barg_commit_seqno : bits(64) = 0x0000_0000_0000_0000
+
+function block_xfer_fall() -> block_xfer_kind = { 0b0000 }
+function block_xfer_direct() -> block_xfer_kind = { 0b0001 }
+function block_xfer_cond() -> block_xfer_kind = { 0b0010 }
+function block_xfer_call() -> block_xfer_kind = { 0b0011 }
+function block_xfer_ind() -> block_xfer_kind = { 0b0100 }
+function block_xfer_icall() -> block_xfer_kind = { 0b0101 }
+function block_xfer_ret() -> block_xfer_kind = { 0b0110 }
+
 function barg_reset_at_block_start() -> unit = {
-  unimplemented("barg_reset_at_block_start")
+  barg_valid = true;
+  barg_block_type_cur = 0b0000;
+  barg_xfer_kind_cur = block_xfer_fall();
+  barg_bpc_cur = read_pc_or_tpc();
+  barg_bpc_tgt = 0x0000_0000_0000_0000;
+  barg_carg = 0x0000_0000_0000_0000;
+  barg_tgt_reg_valid = false;
+  barg_tgt_reg = 0b00000
 }
 
 function barg_set_block_type(bt : block_type) -> unit = {
-  unimplemented("barg_set_block_type")
+  barg_block_type_cur = bt
 }
 
 function barg_set_xfer_kind(k : block_xfer_kind) -> unit = {
-  unimplemented("barg_set_xfer_kind")
+  barg_xfer_kind_cur = k
 }
 
 function barg_set_next_pc_target(tgt : bits(64)) -> unit = {
-  unimplemented("barg_set_next_pc_target")
+  barg_bpc_tgt = tgt
 }
 
 function block_commit_boundary() -> unit = {
-  unimplemented("block_commit_boundary")
+  if barg_valid then {
+    var take_target : bool = false;
+    var target_pc : bits(64) = barg_bpc_tgt;
+
+    if barg_xfer_kind_cur == block_xfer_direct() then {
+      take_target = true
+    } else if barg_xfer_kind_cur == block_xfer_call() then {
+      take_target = true
+    } else if barg_xfer_kind_cur == block_xfer_cond() then {
+      take_target = barg_carg != 0x0000_0000_0000_0000
+    } else if (barg_xfer_kind_cur == block_xfer_ind()) | (barg_xfer_kind_cur == block_xfer_icall()) | (barg_xfer_kind_cur == block_xfer_ret()) then {
+      if barg_tgt_reg_valid then {
+        take_target = true;
+        target_pc = read_reg5(barg_tgt_reg)
+      } else ()
+    } else ();
+
+    barg_last_committed_bpc = barg_bpc_cur;
+    barg_last_committed_target = if take_target then target_pc else barg_bpc_cur;
+    barg_commit_seqno = barg_commit_seqno + 0x0000_0000_0000_0001;
+
+    if take_target then {
+      pc = target_pc;
+      tpc = target_pc
+    } else ();
+
+    barg_valid = false
+  } else ()
 }
 
 // Decoded immediate/target helpers for block markers.
 // The decoder/fetch layer is responsible for computing the architectural target address
 // (e.g. PC-relative label resolved to an address).
+register decoded_block_target_pc_shadow : bits(64) = 0x0000_0000_0000_0000
+register decoded_block_type_shadow : block_type = 0b0000
+register decoded_block_xfer_kind_shadow : block_xfer_kind = 0b0000
+register decoded_block_contract_kind_shadow : bits(4) = 0b0000
+register block_marker_strict : bool = false
+register block_marker0_valid : bool = false
+register block_marker0_pc : bits(64) = 0x0000_0000_0000_0000
+register block_marker1_valid : bool = false
+register block_marker1_pc : bits(64) = 0x0000_0000_0000_0000
+register block_marker2_valid : bool = false
+register block_marker2_pc : bits(64) = 0x0000_0000_0000_0000
+register block_marker3_valid : bool = false
+register block_marker3_pc : bits(64) = 0x0000_0000_0000_0000
+
 function decoded_block_target_pc() -> bits(64) = {
-  unimplemented("decoded_block_target_pc");
-  0x0000_0000_0000_0000
+  decoded_block_target_pc_shadow
 }
 
 function decoded_block_type() -> block_type = {
-  unimplemented("decoded_block_type");
-  0b0000
+  decoded_block_type_shadow
 }
 
 function decoded_block_xfer_kind() -> block_xfer_kind = {
-  unimplemented("decoded_block_xfer_kind");
-  0b0000
+  decoded_block_xfer_kind_shadow
 }
 
 // CFI check hook: return true iff `addr` is a legal block start marker.
 function is_block_start_marker(addr : bits(64)) -> bool = {
-  unimplemented("is_block_start_marker");
-  false
+  if not_bool(block_marker_strict) then addr[0] == 0b0
+  else ((block_marker0_valid & (block_marker0_pc == addr))
+     |  (block_marker1_valid & (block_marker1_pc == addr))
+     |  (block_marker2_valid & (block_marker2_pc == addr))
+     |  (block_marker3_valid & (block_marker3_pc == addr)))
 }
 
 // -----------------------------------------------------------------------------
@@ -620,7 +1347,8 @@ function bdesc_reset() -> unit = {
   bdesc_seen_text = false;
   bdesc_seen_arg = false;
   bdesc_seen_ior = false;
-  bdesc_seen_iot = false
+  bdesc_seen_iot = false;
+  clear_ri_bindings()
 }
 
 function bdesc_mark_dim() -> unit = { bdesc_seen_dim = true }
@@ -634,8 +1362,7 @@ function bdesc_mark_iot() -> unit = { bdesc_seen_iot = true }
 function decoded_block_contract_kind() -> bits(4) = {
   // 0=none/unspecified, 1=VEC (VPAR/VSEQ/MPAR/MSEQ), 2=TMA (TLOAD/TSTORE),
   // 3=TMOV, 4=CUBE (TMATMUL/TMATMUL.ACC), 5=ACCCVT, 6=HDRDRV (TEPL/FIXP/TMA-other)
-  unimplemented("decoded_block_contract_kind");
-  0b0000
+  decoded_block_contract_kind_shadow
 }
 
 function bdesc_require_or_trap(family : bits(8), present : bool, src_pc_or_tpc : bits(64)) -> unit = {
@@ -705,10 +1432,12 @@ function trap_assert_fail(traparg0 : bits(64)) -> unit = {
   raise_trap((sail_zeros(6) + 52), (sail_zeros(24) + 0), traparg0, 0b0)
 }
 
-// ECONFIG (execution config) accessors (stub). In strict v0.3, ECONFIG[3] is the global exception enable.
 function read_econfig() -> bits(64) = {
-  unimplemented("read_econfig");
-  0x0000_0000_0000_0000
+  let cur_acr : bits(4) = ssr_cstate[3..0];
+  if cur_acr == 0x0 then ssr_econfig_acr0
+  else if cur_acr == 0x1 then ssr_econfig_acr1
+  else if cur_acr == 0x2 then ssr_econfig_acr2
+  else 0x0000_0000_0000_0000
 }
 
 // Global exception enable (profile-defined). When disabled, ASSERT is treated as a no-op.
@@ -753,9 +1482,18 @@ function excl_check(ea : bits(64)) -> bool = {
 }
 
 
-// Memory accessors (stubs).
-// In a complete model these perform translation, permission checks, and fault reporting.
-// For staged bring-up we keep them explicit and do not guess the MMU/privilege behavior.
+// Memory accessors (host hooks).
+// Translation, permission checks, and detailed fault behavior are provided by the
+// host integration used to execute the Sail model.
+
+val mem_read8 = impure "linx_mem_read8" : bits(64) -> bits(8)
+val mem_write8 = impure "linx_mem_write8" : (bits(64), bits(8)) -> unit
+val mem_load16_le = impure "linx_mem_load16_le" : bits(64) -> bits(16)
+val mem_load32_le = impure "linx_mem_load32_le" : bits(64) -> bits(32)
+val mem_load64_le = impure "linx_mem_load64_le" : bits(64) -> bits(64)
+val mem_store16_le = impure "linx_mem_store16_le" : (bits(64), bits(16)) -> unit
+val mem_store32_le = impure "linx_mem_store32_le" : (bits(64), bits(32)) -> unit
+val mem_store64_le = impure "linx_mem_store64_le" : (bits(64), bits(64)) -> unit
 
 function read_mem8(ea : bits(64)) -> bits(8) = {
   mem_read8(ea)

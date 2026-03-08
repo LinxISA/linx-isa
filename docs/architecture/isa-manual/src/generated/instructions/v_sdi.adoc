@@ -5,7 +5,7 @@
 [[inst_v_sdi]]
 ==== V.SDI
 
-*Syntax:* v.sdi<.local> SrcL.<T>, [SrcR<.ud>, <lc0<3>, simm]
+*Syntax:* v.sdi<.local> SrcL, [SrcR, <lc0<3>, simm]
 
 *Description:* Vector instruction (VEC engine).
 

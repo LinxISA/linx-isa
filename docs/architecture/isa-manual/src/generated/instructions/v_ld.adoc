@@ -5,7 +5,7 @@
 [[inst_v_ld]]
 ==== V.LD
 
-*Syntax:* v.ld<.local> [SrcL<.ud>, <lc0<<3>, SrcR.<T><<<shamt>], ->Dst.<W>
+*Syntax:* v.ld<.local> [SrcL, <lc0<<3>, SrcR<<<shamt>], ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

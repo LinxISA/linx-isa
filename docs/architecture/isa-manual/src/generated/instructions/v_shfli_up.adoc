@@ -5,7 +5,7 @@
 [[inst_v_shfli_up]]
 ==== V.SHFLI.UP
 
-*Syntax:* v.shfli.up SrcL.<T>, SrcR.<T>, imm, ->Dst.<W>
+*Syntax:* v.shfli.up SrcL, SrcR, imm, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

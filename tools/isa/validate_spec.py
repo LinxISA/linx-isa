@@ -11,8 +11,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from collections import defaultdict
+from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 
@@ -305,6 +307,52 @@ def validate(path: str) -> List[str]:
     return errors
 
 
+LEGACY_CONTRACT_TOKEN = "check" + "26"
+
+
+ACTIVE_SURFACE_PATTERNS = [
+    (
+        "removed legacy contract citation",
+        re.compile(
+            rf"(?:{LEGACY_CONTRACT_TOKEN}|{LEGACY_CONTRACT_TOKEN}_contract\.py|{LEGACY_CONTRACT_TOKEN}_contract\.yaml|CHECK26_CONTRACT\.md)"
+        ),
+    ),
+    ("pre-canonical draft citation", re.compile(r"\bv0\.4-draft\b")),
+    ("stale Sail/docs wording", re.compile(r"\b(?:skeleton|placeholder)\b", re.IGNORECASE)),
+]
+
+
+def validate_active_surfaces(root: Path) -> List[str]:
+    files = [
+        root / "README.md",
+        root / "docs" / "README.md",
+        root / "docs" / "index.md",
+        root / "docs" / "architecture" / "README.md",
+        root / "docs" / "architecture" / "v0.4-architecture-contract.md",
+        root / "docs" / "bringup" / "README.md",
+        root / "docs" / "bringup" / "AVS_CONTRACT.md",
+        root / "docs" / "bringup" / "GETTING_STARTED.md",
+        root / "docs" / "bringup" / "PROGRESS.md",
+        root / "docs" / "bringup" / "GATE_STATUS.md",
+        root / "isa" / "README.md",
+        root / "isa" / "sail" / "README.md",
+        root / "isa" / "sail" / "model" / "decode" / "decode.sail",
+        root / "isa" / "sail" / "model" / "state" / "state.sail",
+        root / "isa" / "sail" / "model" / "linxisa.sail_project",
+    ]
+    errors: List[str] = []
+    for path in files:
+        if not path.is_file():
+            errors.append(f"active surface missing: {path}")
+            continue
+        text = path.read_text(encoding="utf-8", errors="replace")
+        for label, pattern in ACTIVE_SURFACE_PATTERNS:
+            for idx, line in enumerate(text.splitlines(), start=1):
+                if pattern.search(line):
+                    errors.append(f"{path}:{idx}: {label}: {line.strip()!r}")
+    return errors
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
@@ -322,6 +370,7 @@ def main() -> int:
 
     default_spec = "isa/v0.4/linxisa-v0.4.json"
     errors = validate(args.spec or default_spec)
+    errors.extend(validate_active_surfaces(Path(".")))
     if errors:
         for e in errors[:200]:
             print(e, file=sys.stderr)

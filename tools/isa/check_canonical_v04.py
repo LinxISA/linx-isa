@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import subprocess
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -56,9 +57,10 @@ def _local_targets(root: Path) -> List[Path]:
         root / "docs" / "bringup" / "GETTING_STARTED.md",
         root / "docs" / "bringup" / "PROGRESS.md",
         root / "docs" / "bringup" / "ALIGNMENT_MATRIX.md",
-        root / "docs" / "bringup" / "CHECK26_CONTRACT.md",
-        root / "docs" / "bringup" / "check26_contract.yaml",
+        root / "docs" / "bringup" / "GATE_STATUS.md",
         root / "docs" / "bringup" / "agent_runs" / "checklists",
+        root / "avs" / "linx_avs_v1_test_matrix.yaml",
+        root / "avs" / "linx_avs_v1_test_matrix_status.json",
         root / "docs" / "bringup" / "gates" / "qemu_isa_coverage_latest.json",
         root / "docs" / "bringup" / "gates" / "qemu_isa_coverage_latest.md",
         root / "docs" / "project" / "README.md",
@@ -341,6 +343,44 @@ def _scan_root(root: Path, targets: Sequence[Path], checks: Sequence[Tuple[str, 
     return failures
 
 
+def _check_generated_manual_surfaces(root: Path) -> List[str]:
+    checks = [
+        (
+            "instruction_reference.adoc",
+            [
+                sys.executable,
+                "tools/isa/gen_manual_adoc.py",
+                "--profile",
+                "v0.4",
+                "--out-dir",
+                "docs/architecture/isa-manual/src/generated",
+                "--check",
+            ],
+        ),
+        (
+            "instruction fragments",
+            [
+                sys.executable,
+                "tools/isa/gen_instruction_fragments.py",
+                "--profile",
+                "v0.4",
+                "--out-dir",
+                "docs/architecture/isa-manual/src/generated/instructions",
+                "--check",
+            ],
+        ),
+    ]
+    failures: List[str] = []
+    for label, cmd in checks:
+        proc = subprocess.run(cmd, cwd=root, text=True, capture_output=True)
+        if proc.returncode == 0:
+            continue
+        detail = (proc.stderr or proc.stdout or "").strip()
+        detail = detail.splitlines()[0] if detail else "generator check failed"
+        failures.append(f"{label}: {detail}")
+    return failures
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default=".", help="Repo root")
@@ -354,7 +394,11 @@ def main() -> int:
         ),
         (
             "pre-canonical draft citation",
-            re.compile(r"docs/architecture/v0\.4-draft/"),
+            re.compile(r"(?:docs/architecture/v0\.4-draft/|\bv0\.4-draft\b)"),
+        ),
+        (
+            "removed check26 citation",
+            re.compile(r"(?:check26|check26_contract\.py|check26_contract\.yaml|CHECK26_CONTRACT\.md)"),
         ),
         (
             "obsolete manual chapter path",
@@ -372,6 +416,7 @@ def main() -> int:
 
     failures = _scan_root(root, _local_targets(root), checks)
     failures.extend(_check_tepl_catalog_alignment(root))
+    failures.extend(_check_generated_manual_surfaces(root))
     if failures:
         for failure in failures[:200]:
             print(failure, file=sys.stderr)

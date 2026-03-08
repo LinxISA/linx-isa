@@ -1,5 +1,8 @@
 # v0.4 draft: TAU as the hardening substrate (render-first)
 
+Canonical destination: `docs/architecture/v0.4-hardening-policy.md`
+Related live microarchitecture contract: `docs/architecture/linxcore/microarchitecture.md`
+
 ## Decision direction
 - **VEC** is the general-purpose kernel engine (compute shading + fallback).
 - **TAU (Tile Arithmetic Unit)** is the primary target for *limited hardening*:
@@ -41,4 +44,3 @@ TAU micro-kernel I/O contract (chosen direction):
 4) Memory interactions (chosen direction)
    - TAU micro-kernels and TEPL PTOs are **tile→tile only**.
    - No direct `.brg` access from TAU; any global-memory interaction is via explicit TMA/DMA blocks or VEC fallback.
-

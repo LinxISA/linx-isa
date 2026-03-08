@@ -16,14 +16,13 @@ echo "-- ISA golden checks"
 python3 "$ROOT/tools/isa/lint_no_cjk.py" --repo-root "$ROOT"
 python3 "$ROOT/tools/isa/build_golden.py" --profile v0.4 --check
 python3 "$ROOT/tools/isa/validate_spec.py" --profile v0.4
-python3 "$ROOT/tools/bringup/check26_contract.py" --root "$ROOT"
+python3 "$ROOT/tools/bringup/check_avs_contract.py" --matrix "$ROOT/avs/linx_avs_v1_test_matrix.yaml"
 python3 "$ROOT/tools/bringup/check_avs_matrix_status.py" --matrix "$ROOT/avs/linx_avs_v1_test_matrix.yaml" --status "$ROOT/avs/linx_avs_v1_test_matrix_status.json"
-python3 "$ROOT/tools/bringup/check_check26_coverage.py" \
+python3 "$ROOT/tools/bringup/check_avs_profile_closure.py" \
   --matrix "$ROOT/avs/linx_avs_v1_test_matrix.yaml" \
-  --contract "$ROOT/docs/bringup/check26_contract.yaml" \
   --status "$ROOT/avs/linx_avs_v1_test_matrix_status.json" \
-  --profile "$LINX_BRINGUP_PROFILE" \
-  --report-out "$ROOT/docs/bringup/gates/check26_coverage_${LINX_BRINGUP_PROFILE}.json"
+  --tier "${LINX_GATE_TIER:-pr}" \
+  --report-out "$ROOT/docs/bringup/gates/avs_profile_closure_${LINX_BRINGUP_PROFILE}_${LINX_GATE_TIER:-pr}.json"
 python3 "$ROOT/tools/bringup/check_multi_agent_gates.py" \
   --strict-always \
   --mode static \
@@ -32,6 +31,7 @@ python3 "$ROOT/tools/bringup/check_multi_agent_gates.py" \
   --checklists-root "$ROOT/docs/bringup/agent_runs/checklists"
 
 python3 "$ROOT/tools/isa/check_canonical_v04.py" --root "$ROOT"
+python3 "$ROOT/tools/bringup/check_sail_model.py"
 
 python3 "$ROOT/tools/isa/report_encoding_space.py" --spec "$ROOT/isa/v0.4/linxisa-v0.4.json" --out "$ROOT/docs/reference/encoding_space_report.md" --check
 python3 "$ROOT/tools/isa/gen_qemu_codec.py" --spec "$ROOT/isa/v0.4/linxisa-v0.4.json" --out-dir "$ROOT/isa/generated/codecs" --check
@@ -40,10 +40,10 @@ python3 "$ROOT/tools/isa/gen_manual_adoc.py" --spec "$ROOT/isa/v0.4/linxisa-v0.4
 python3 "$ROOT/tools/isa/gen_ssr_adoc.py" --spec "$ROOT/isa/v0.4/linxisa-v0.4.json" --out-dir "$ROOT/docs/architecture/isa-manual/src/generated" --check
 SAIL_COVERAGE_POLICY="${SAIL_COVERAGE_POLICY:-refresh}" # refresh|check
 if [[ "$SAIL_COVERAGE_POLICY" == "check" ]]; then
-  python3 "$ROOT/tools/isa/sail_coverage.py" --spec "$ROOT/isa/v0.4/linxisa-v0.4.json" --implemented "$ROOT/isa/sail/implemented_mnemonics.txt" --out "$ROOT/isa/sail/coverage.json" --check
+  python3 "$ROOT/tools/isa/sail_coverage.py" --spec "$ROOT/isa/v0.4/linxisa-v0.4.json" --status "$ROOT/isa/sail/semantics_status.json" --out "$ROOT/isa/sail/coverage.json" --check
 else
-  python3 "$ROOT/tools/isa/sail_coverage.py" --spec "$ROOT/isa/v0.4/linxisa-v0.4.json" --implemented "$ROOT/isa/sail/implemented_mnemonics.txt" --out "$ROOT/isa/sail/coverage.json"
-  python3 "$ROOT/tools/isa/sail_coverage.py" --spec "$ROOT/isa/v0.4/linxisa-v0.4.json" --implemented "$ROOT/isa/sail/implemented_mnemonics.txt" --out "$ROOT/isa/sail/coverage.json" --check
+  python3 "$ROOT/tools/isa/sail_coverage.py" --spec "$ROOT/isa/v0.4/linxisa-v0.4.json" --status "$ROOT/isa/sail/semantics_status.json" --out "$ROOT/isa/sail/coverage.json"
+  python3 "$ROOT/tools/isa/sail_coverage.py" --spec "$ROOT/isa/v0.4/linxisa-v0.4.json" --status "$ROOT/isa/sail/semantics_status.json" --out "$ROOT/isa/sail/coverage.json" --check
 fi
 
 # Allow callers to override tool locations.
@@ -194,6 +194,15 @@ fi
 echo
 echo "-- QEMU strict system gate (ACR/IRQ/exception coverage + noise check)"
 (cd "$ROOT/avs/qemu" && LINX_DISABLE_TIMER_IRQ="$LINX_EMU_DISABLE_TIMER_IRQ" CLANG="$CLANG" LLD="$LLD" QEMU="$QEMU" ./check_system_strict.sh)
+
+echo
+echo "-- QEMU decode coverage gate"
+python3 "$ROOT/tools/bringup/report_qemu_isa_coverage.py" \
+  --spec "$ROOT/isa/v0.4/linxisa-v0.4.json" \
+  --qemu-meta "$ROOT/emulator/qemu/target/linx/linx_opcode_meta_gen.h" \
+  --report-out "$ROOT/docs/bringup/gates/qemu_isa_coverage_latest.json" \
+  --out-md "$ROOT/docs/bringup/gates/qemu_isa_coverage_latest.md" \
+  --require-full
 
 echo
 echo "-- QEMU runtime tests"

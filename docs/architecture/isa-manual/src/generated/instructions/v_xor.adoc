@@ -5,7 +5,7 @@
 [[inst_v_xor]]
 ==== V.XOR
 
-*Syntax:* v.xor SrcL.<T>, SrcR.<T><.not><<<shamt>, ->Dst.<W>
+*Syntax:* v.xor SrcL, SrcR<.not><<<shamt>, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

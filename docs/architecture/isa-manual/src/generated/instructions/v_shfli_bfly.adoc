@@ -5,7 +5,7 @@
 [[inst_v_shfli_bfly]]
 ==== V.SHFLI.BFLY
 
-*Syntax:* v.shfli.bfly SrcL.<T>, imm, ->Dst.<W>
+*Syntax:* v.shfli.bfly SrcL, imm, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

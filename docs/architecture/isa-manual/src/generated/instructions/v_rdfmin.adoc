@@ -5,7 +5,7 @@
 [[inst_v_rdfmin]]
 ==== V.RDFMIN
 
-*Syntax:* v.rdfmin SrcL.<T>, ->Dst<.W>
+*Syntax:* v.rdfmin SrcL, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

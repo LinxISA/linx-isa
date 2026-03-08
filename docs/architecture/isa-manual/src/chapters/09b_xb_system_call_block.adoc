@@ -1,5 +1,5 @@
 [[system-xb]]
-=== System-call blocks (`XB`) and `CAC_TABLE` (v0.4-draft)
+=== System-call blocks (`XB`) and `CAC_TABLE`
 
 This section defines the architectural contract for the cross-block dispatcher instruction `XB` and the table-driven
 call mechanism used to locate and start a system-call block.
@@ -44,7 +44,7 @@ Each ACR maintains an independent call table, `CAC_TABLE`, with the following fi
 
 `XBINFO` architectural exposure (bring-up)::
 +
-+In the v0.4-draft bring-up contract, `XBINFO` is an **ACR-scoped SSR** with index `0xF30`.
++In the current `v0.4` bring-up contract, `XBINFO` is an **ACR-scoped SSR** with index `0xF30`.
 +The full 16-bit `SSR_ID` is `0x nF30` for ACR`n`.
 +
 +* Name: `XBINFO_ACRn`

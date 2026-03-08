@@ -5,7 +5,7 @@
 [[inst_v_shfl_idx]]
 ==== V.SHFL.IDX
 
-*Syntax:* v.shfl.idx SrcL.<T>, SrcR.<T>, SrcP.<T>, ->Dst.<W>
+*Syntax:* v.shfl.idx SrcL, SrcR, SrcP, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

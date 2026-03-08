@@ -1,5 +1,7 @@
 # v0.4 draft: Rendering bring-up plan (Mesa → emulator → Vulkan runs)
 
+Canonical destination: `docs/bringup/rendering_vulkan_bringup.md`
+
 Goal: **in the Linx emulator**, reach a state where we can run **Vulkan applications** (at least headless/offscreen) using Mesa’s software Vulkan backend as the initial reference, and then iterate toward LinxGPGPU acceleration.
 
 Assumptions (current direction):

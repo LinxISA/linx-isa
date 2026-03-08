@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import shlex
 import subprocess
@@ -193,6 +194,33 @@ def _write_report(path: Path, results: list[BuildResult], *, target: str, cc: Pa
     path.write_text("\n".join(lines), encoding="utf-8")
 
 
+def _write_json(path: Path, results: list[BuildResult], *, target: str, cc: Path, run_command: str | None) -> bool:
+    payload = {
+        "generated_at_utc": __import__("datetime").datetime.now(__import__("datetime").timezone.utc)
+        .replace(microsecond=0)
+        .isoformat()
+        .replace("+00:00", "Z"),
+        "target": target,
+        "compiler": str(cc),
+        "run_command": run_command,
+        "results": [
+            {
+                "name": r.name,
+                "executable": str(r.exe),
+                "ran": r.exit_code is not None,
+                "exit_code": r.exit_code,
+                "stdout": str(r.stdout) if r.stdout else None,
+                "stderr": str(r.stderr) if r.stderr else None,
+            }
+            for r in results
+        ],
+    }
+    ok = all(r.exit_code in (None, 0) for r in results)
+    payload["all_pass"] = ok
+    path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    return ok
+
+
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(
         description=(
@@ -215,6 +243,7 @@ def main(argv: list[str]) -> int:
     )
     ap.add_argument("--timeout", type=float, default=120.0, help="Execution timeout seconds")
     ap.add_argument("--out-dir", default=str(GENERATED_DIR / "benchmarks"), help="Output directory")
+    ap.add_argument("--json-out", default=None, help="Optional machine-readable summary path")
     ap.add_argument("--verbose", "-v", action="store_true")
     args = ap.parse_args(argv)
 
@@ -271,7 +300,13 @@ def main(argv: list[str]) -> int:
 
     report = out_dir / "report.md"
     _write_report(report, results, target=args.target, cc=cc, run_command=args.run_command)
+    json_out = Path(os.path.expanduser(args.json_out)) if args.json_out else (out_dir / "result.json")
+    ok = _write_json(json_out, results, target=args.target, cc=cc, run_command=args.run_command)
     print(f"ok: wrote {report}")
+    print(f"ok: wrote {json_out}")
+    if not ok:
+        print("error: one or more benchmark runs exited nonzero", file=sys.stderr)
+        return 1
     return 0
 
 

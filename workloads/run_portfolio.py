@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import shlex
 import subprocess
@@ -21,6 +22,7 @@ class StepResult:
     name: str
     command: list[str]
     return_code: int
+    summary_json: str | None = None
 
 
 def _run(cmd: list[str], *, verbose: bool = False) -> subprocess.CompletedProcess[bytes]:
@@ -36,6 +38,11 @@ def _resolve_cc(arg_cc: str | None) -> str:
     return cc
 
 
+def _has_ctuning_corpus(root: Path) -> bool:
+    candidates = [root / "program", root / "out", root]
+    return any(candidate.exists() and any(candidate.glob("milepost-codelet-*")) for candidate in candidates)
+
+
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description="Run benchmark portfolio (CoreMark/Dhrystone + optional PolyBench/ctuning).")
     ap.add_argument("--cc", default=None, help="Compiler path (or set CC)")
@@ -44,13 +51,18 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--run-command", default=None, help="Optional runtime wrapper command (supports {exe})")
     ap.add_argument("--polybench", action="store_true", help="Include PolyBench kernels")
     ap.add_argument("--polybench-kernels", default="gemm,jacobi-2d")
-    ap.add_argument("--ctuning-root", default=str(Path.home() / "ctuning-programs"))
+    ap.add_argument("--ctuning-root", default=str(BENCH_DIR / "ctuning"))
     ap.add_argument("--ctuning-limit", type=int, default=0, help="Codelet count (0 disables ctuning)")
+    ap.add_argument("--json-out", default=str(GENERATED_DIR / "portfolio_report.json"), help="Portfolio machine-readable summary")
     ap.add_argument("--verbose", "-v", action="store_true")
     args = ap.parse_args(argv)
 
     cc = _resolve_cc(args.cc)
     results: list[StepResult] = []
+    GENERATED_DIR.mkdir(parents=True, exist_ok=True)
+    benchmarks_json = GENERATED_DIR / "benchmarks_result.json"
+    polybench_json = GENERATED_DIR / "polybench_result.json"
+    ctuning_json = GENERATED_DIR / "ctuning_result.json"
 
     run_bench_cmd = [
         sys.executable,
@@ -59,6 +71,8 @@ def main(argv: list[str]) -> int:
         cc,
         "--target",
         args.target,
+        "--json-out",
+        str(benchmarks_json),
     ]
     if args.sysroot:
         run_bench_cmd += ["--sysroot", args.sysroot]
@@ -70,7 +84,14 @@ def main(argv: list[str]) -> int:
     p = _run(run_bench_cmd, verbose=args.verbose)
     sys.stdout.buffer.write(p.stdout)
     sys.stderr.buffer.write(p.stderr)
-    results.append(StepResult(name="coremark+dhrystone", command=run_bench_cmd, return_code=p.returncode))
+    results.append(
+        StepResult(
+            name="coremark+dhrystone",
+            command=run_bench_cmd,
+            return_code=p.returncode,
+            summary_json=str(benchmarks_json),
+        )
+    )
     if p.returncode != 0:
         raise SystemExit("error: run_benchmarks.py failed")
 
@@ -84,6 +105,8 @@ def main(argv: list[str]) -> int:
             args.target,
             "--kernels",
             args.polybench_kernels,
+            "--json-out",
+            str(polybench_json),
         ]
         if args.sysroot:
             run_poly_cmd += ["--sysroot", args.sysroot]
@@ -95,13 +118,20 @@ def main(argv: list[str]) -> int:
         p = _run(run_poly_cmd, verbose=args.verbose)
         sys.stdout.buffer.write(p.stdout)
         sys.stderr.buffer.write(p.stderr)
-        results.append(StepResult(name="polybench", command=run_poly_cmd, return_code=p.returncode))
+        results.append(
+            StepResult(
+                name="polybench",
+                command=run_poly_cmd,
+                return_code=p.returncode,
+                summary_json=str(polybench_json),
+            )
+        )
         if p.returncode != 0:
             raise SystemExit("error: run_polybench.py failed")
 
     if args.ctuning_limit > 0:
         ctuning_root = Path(os.path.expanduser(args.ctuning_root))
-        if not (ctuning_root / "program").exists():
+        if not _has_ctuning_corpus(ctuning_root):
             print(f"note: skipping ctuning; root not found: {ctuning_root}")
         elif "clang" not in Path(cc).name:
             print("note: skipping ctuning; --cc is not clang, and ctuning runner requires clang/ld.lld")
@@ -123,6 +153,8 @@ def main(argv: list[str]) -> int:
                 "--limit",
                 str(args.ctuning_limit),
                 "--compile-only",
+                "--summary-json",
+                str(ctuning_json),
             ]
             if qemu and args.run_command:
                 # Allow explicit run by setting --run-command and QEMU env together.
@@ -134,7 +166,14 @@ def main(argv: list[str]) -> int:
             p = _run(ct_cmd, verbose=args.verbose)
             sys.stdout.buffer.write(p.stdout)
             sys.stderr.buffer.write(p.stderr)
-            results.append(StepResult(name="ctuning", command=ct_cmd, return_code=p.returncode))
+            results.append(
+                StepResult(
+                    name="ctuning",
+                    command=ct_cmd,
+                    return_code=p.returncode,
+                    summary_json=str(ctuning_json),
+                )
+            )
             if p.returncode != 0:
                 raise SystemExit("error: ctuning runner failed")
 
@@ -145,7 +184,31 @@ def main(argv: list[str]) -> int:
         cmd = " ".join(shlex.quote(c) for c in r.command)
         lines.append(f"| `{r.name}` | {r.return_code} | `{cmd}` |")
     report.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    payload = {
+        "generated_at_utc": __import__("datetime").datetime.now(__import__("datetime").timezone.utc)
+        .replace(microsecond=0)
+        .isoformat()
+        .replace("+00:00", "Z"),
+        "target": args.target,
+        "compiler": cc,
+        "run_command": args.run_command,
+        "polybench_enabled": args.polybench,
+        "ctuning_limit": args.ctuning_limit,
+        "steps": [
+            {
+                "name": r.name,
+                "return_code": r.return_code,
+                "command": r.command,
+                "summary_json": r.summary_json,
+            }
+            for r in results
+        ],
+        "all_pass": all(r.return_code == 0 for r in results),
+    }
+    json_out = Path(os.path.expanduser(args.json_out))
+    json_out.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     print(f"ok: wrote {report}")
+    print(f"ok: wrote {json_out}")
 
     return 0
 

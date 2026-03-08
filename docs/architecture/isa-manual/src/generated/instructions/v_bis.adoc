@@ -5,7 +5,7 @@
 [[inst_v_bis]]
 ==== V.BIS
 
-*Syntax:* v.bis SrcL.<T>, M, N, ->Dst.<W>
+*Syntax:* v.bis SrcL, M, N, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

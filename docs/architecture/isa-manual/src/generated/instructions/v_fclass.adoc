@@ -5,7 +5,7 @@
 [[inst_v_fclass]]
 ==== V.FCLASS
 
-*Syntax:* v.fclass SrcL.<T>, ->Dst.<W>
+*Syntax:* v.fclass SrcL, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

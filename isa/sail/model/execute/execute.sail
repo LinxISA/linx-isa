@@ -1,16 +1,14 @@
-// LinxISA execute semantics (bring-up; v0.3).
+// LinxISA execute semantics for the canonical v0.4 model.
 
-// This file will be grown incrementally. For now, it provides helpers and a
-// minimal ALU subset.
+// This file holds the live execute semantics used by the strict v0.4 Sail gate.
+// Coverage is incomplete in some units, but active mnemonics are tracked in
+// semantics_status.json rather than via staged placeholder wording here.
 
 // NOTE: Baseline policy (per user): implement semantics according to the
 // current manual + golden, and leave ambiguous behavior unimplemented until
 // confirmed.
 
-// include state + common helpers
-
-$include "../lib/common.sail"
-$include "../state/state.sail"
+// State and common helpers are provided by the top-level model entry.
 
 // ALU helpers.
 
@@ -35,7 +33,7 @@ function exec_sub(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : b
   let b1 = apply_srcrtype_arith64(SrcRType, b0);
   let sh : int = unsigned(shamt);
   let b = sail_shiftleft(b1, sh);
-  let r = a - b;
+  let r = sub_bits(a, b);
   write_regdst(RegDst, r)
 }
 
@@ -65,7 +63,7 @@ function exec_xor(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : b
   let b1 = apply_srcrtype_logic64(SrcRType, b0);
   let sh : int = unsigned(shamt);
   let b = sail_shiftleft(b1, sh);
-  let r = a ^ b;
+  let r = xor_vec(a, b);
   write_regdst(RegDst, r)
 }
 
@@ -78,7 +76,7 @@ function exec_addi(RegDst : bits(5), SrcL : bits(5), uimm12 : bits(12)) -> unit 
 function exec_subi(RegDst : bits(5), SrcL : bits(5), uimm12 : bits(12)) -> unit = {
   let a = read_reg5(SrcL);
   let imm = zext12_to64(uimm12);
-  write_regdst(RegDst, a - imm)
+  write_regdst(RegDst, sub_bits(a, imm))
 }
 
 function exec_andi(RegDst : bits(5), SrcL : bits(5), simm12 : bits(12)) -> unit = {
@@ -96,7 +94,7 @@ function exec_ori(RegDst : bits(5), SrcL : bits(5), simm12 : bits(12)) -> unit =
 function exec_xori(RegDst : bits(5), SrcL : bits(5), simm12 : bits(12)) -> unit = {
   let a = read_reg5(SrcL);
   let imm = sext12_to64(simm12);
-  write_regdst(RegDst, a ^ imm)
+  write_regdst(RegDst, xor_vec(a, imm))
 }
 
 // Word (32-bit) variants: operate in 32-bit, then sext32 to 64-bit.
@@ -117,7 +115,7 @@ function exec_subw(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : 
   let b1 : bits(32) = apply_srcrtype_arith32(SrcRType, b0);
   let sh : int = unsigned(shamt);
   let b : bits(32) = sail_shiftleft(b1, sh);
-  let r : bits(32) = a - b;
+  let r : bits(32) = sub_bits(a, b);
   write_regdst(RegDst, sext32_from32(r))
 }
 
@@ -147,7 +145,7 @@ function exec_xorw(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : 
   let b1 : bits(32) = apply_srcrtype_logic32(SrcRType, b0);
   let sh : int = unsigned(shamt);
   let b : bits(32) = sail_shiftleft(b1, sh);
-  let r : bits(32) = a ^ b;
+  let r : bits(32) = xor_vec(a, b);
   write_regdst(RegDst, sext32_from32(r))
 }
 
@@ -161,7 +159,7 @@ function exec_addiw(RegDst : bits(5), SrcL : bits(5), uimm12 : bits(12)) -> unit
 function exec_subiw(RegDst : bits(5), SrcL : bits(5), uimm12 : bits(12)) -> unit = {
   let a : bits(32) = read_reg5(SrcL)[31..0];
   let imm : bits(32) = sail_zero_extend(uimm12, 32);
-  let r : bits(32) = a - imm;
+  let r : bits(32) = sub_bits(a, imm);
   write_regdst(RegDst, sext32_from32(r))
 }
 
@@ -184,7 +182,7 @@ function exec_hl_addi(RegDst : bits(5), SrcL : bits(5), uimm24 : bits(24)) -> un
 function exec_hl_subi(RegDst : bits(5), SrcL : bits(5), uimm24 : bits(24)) -> unit = {
   let a = read_reg5(SrcL);
   let imm = zext24_to64(uimm24);
-  write_regdst(RegDst, a - imm)
+  write_regdst(RegDst, sub_bits(a, imm))
 }
 
 function exec_hl_addiw(RegDst : bits(5), SrcL : bits(5), uimm24 : bits(24)) -> unit = {
@@ -197,7 +195,7 @@ function exec_hl_addiw(RegDst : bits(5), SrcL : bits(5), uimm24 : bits(24)) -> u
 function exec_hl_subiw(RegDst : bits(5), SrcL : bits(5), uimm24 : bits(24)) -> unit = {
   let a : bits(32) = read_reg5(SrcL)[31..0];
   let imm : bits(32) = sail_zero_extend(uimm24, 32);
-  let r : bits(32) = a - imm;
+  let r : bits(32) = sub_bits(a, imm);
   write_regdst(RegDst, sext32_from32(r))
 }
 
@@ -269,7 +267,7 @@ function exec_hl_misub(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), uimm19 
   let b : bits(64) = read_reg5(SrcR);
   let m : int = unsigned(uimm19);
   let prod : int = unsigned(b) * m;
-  write_regdst(RegDst, a - (sail_zeros(64) + prod))
+  write_regdst(RegDst, sub_bits(a, sail_zeros(64) + prod))
 }
 
 // Queue ops (QMT/QPUSH/QPOP): reserved.
@@ -311,7 +309,7 @@ function exec_orizw(RegDst : bits(5), SrcL : bits(5), simm12 : bits(12)) -> unit
 function exec_xoriw(RegDst : bits(5), SrcL : bits(5), simm12 : bits(12)) -> unit = {
   let a : bits(32) = read_reg5(SrcL)[31..0];
   let imm : bits(32) = sext12_to64(simm12)[31..0];
-  let r : bits(32) = a ^ imm;
+  let r : bits(32) = xor_vec(a, imm);
   write_regdst(RegDst, sext32_from32(r))
 }
 
@@ -430,7 +428,7 @@ function exec_c_add(SrcL : bits(5), SrcR : bits(5)) -> unit = {
 function exec_c_sub(SrcL : bits(5), SrcR : bits(5)) -> unit = {
   let a = read_reg5(SrcL);
   let b = read_reg5(SrcR);
-  write_regdst(reg_t(), a - b)
+  write_regdst(reg_t(), sub_bits(a, b))
 }
 
 function exec_c_and(SrcL : bits(5), SrcR : bits(5)) -> unit = {
@@ -1508,7 +1506,7 @@ function exec_hl_ori(RegDst : bits(5), SrcL : bits(5), simm24 : bits(24)) -> uni
 function exec_hl_xori(RegDst : bits(5), SrcL : bits(5), simm24 : bits(24)) -> unit = {
   let a = read_reg5(SrcL);
   let imm = sext24_to64(simm24);
-  write_regdst(RegDst, a ^ imm)
+  write_regdst(RegDst, xor_vec(a, imm))
 }
 
 function exec_hl_andiw(RegDst : bits(5), SrcL : bits(5), simm24 : bits(24)) -> unit = {
@@ -1528,7 +1526,7 @@ function exec_hl_oriw(RegDst : bits(5), SrcL : bits(5), simm24 : bits(24)) -> un
 function exec_hl_xoriw(RegDst : bits(5), SrcL : bits(5), simm24 : bits(24)) -> unit = {
   let a32 : bits(32) = read_reg5(SrcL)[31..0];
   let imm32 : bits(32) = sext24_to64(simm24)[31..0];
-  let r32 : bits(32) = a32 ^ imm32;
+  let r32 : bits(32) = xor_vec(a32, imm32);
   write_regdst(RegDst, sext32_from32(r32))
 }
 
@@ -1596,7 +1594,7 @@ function fp64_is_zero(x : bits(64)) -> bool = {
 
 function fp64_key(x : bits(64)) -> bits(64) = {
   // Total-order key for non-NaNs (matches LinxCore RTL ordering trick).
-  if x[63] == 0b1 then not_vec(x) else (x ^ 0x8000_0000_0000_0000)
+  if x[63] == 0b1 then not_vec(x) else xor_vec(x, 0x8000_0000_0000_0000)
 }
 
 function fp64_eq(a : bits(64), b : bits(64)) -> bool = {
@@ -1628,7 +1626,7 @@ function fp32_is_zero(x : bits(32)) -> bool = {
 }
 
 function fp32_key(x : bits(32)) -> bits(32) = {
-  if x[31] == 0b1 then not_vec(x) else (x ^ 0x8000_0000)
+  if x[31] == 0b1 then not_vec(x) else xor_vec(x, 0x8000_0000)
 }
 
 function fp32_eq(a : bits(32), b : bits(32)) -> bool = {
@@ -1647,6 +1645,119 @@ function fp32_ge(a : bits(32), b : bits(32)) -> bool = {
   let nan = fp32_is_nan(a) | fp32_is_nan(b);
   let both_zero = fp32_is_zero(a) & fp32_is_zero(b);
   not_bool(nan) & (both_zero | (unsigned(fp32_key(a)) >= unsigned(fp32_key(b))))
+}
+
+function fp32_is_snan(x : bits(32)) -> bool = {
+  let exp : bits(8) = x[30..23];
+  let frac : bits(23) = x[22..0];
+  (exp == (sail_zeros(8) + 255)) & (frac != sail_zeros(23)) & (frac[22] == 0b0)
+}
+
+function fp64_is_snan(x : bits(64)) -> bool = {
+  let exp : bits(11) = x[62..52];
+  let frac : bits(52) = x[51..0];
+  (exp == (sail_zeros(11) + 2047)) & (frac != sail_zeros(52)) & (frac[51] == 0b0)
+}
+
+function fp32_class_mask(x : bits(32)) -> bits(32) = {
+  let exp : bits(8) = x[30..23];
+  let frac : bits(23) = x[22..0];
+  let sign : bits(1) = x[31];
+  if (exp == sail_zeros(8)) & (frac == sail_zeros(23)) then {
+    if sign == 0b1 then 0x0000_0008 else 0x0000_0010
+  } else if exp == sail_zeros(8) then {
+    if sign == 0b1 then 0x0000_0004 else 0x0000_0020
+  } else if (exp == (sail_zeros(8) + 255)) & (frac == sail_zeros(23)) then {
+    if sign == 0b1 then 0x0000_0001 else 0x0000_0080
+  } else if exp == (sail_zeros(8) + 255) then {
+    if fp32_is_snan(x) then 0x0000_0100 else 0x0000_0200
+  } else {
+    if sign == 0b1 then 0x0000_0002 else 0x0000_0040
+  }
+}
+
+function fp64_class_mask(x : bits(64)) -> bits(32) = {
+  let exp : bits(11) = x[62..52];
+  let frac : bits(52) = x[51..0];
+  let sign : bits(1) = x[63];
+  if (exp == sail_zeros(11)) & (frac == sail_zeros(52)) then {
+    if sign == 0b1 then 0x0000_0008 else 0x0000_0010
+  } else if exp == sail_zeros(11) then {
+    if sign == 0b1 then 0x0000_0004 else 0x0000_0020
+  } else if (exp == (sail_zeros(11) + 2047)) & (frac == sail_zeros(52)) then {
+    if sign == 0b1 then 0x0000_0001 else 0x0000_0080
+  } else if exp == (sail_zeros(11) + 2047) then {
+    if fp64_is_snan(x) then 0x0000_0100 else 0x0000_0200
+  } else {
+    if sign == 0b1 then 0x0000_0002 else 0x0000_0040
+  }
+}
+
+val linx_fp_add = pure "linx_fp_add" : (bits(3), bits(5), bits(64), bits(64)) -> (bits(64), bits(5))
+val linx_fp_sub = pure "linx_fp_sub" : (bits(3), bits(5), bits(64), bits(64)) -> (bits(64), bits(5))
+val linx_fp_mul = pure "linx_fp_mul" : (bits(3), bits(5), bits(64), bits(64)) -> (bits(64), bits(5))
+val linx_fp_div = pure "linx_fp_div" : (bits(3), bits(5), bits(64), bits(64)) -> (bits(64), bits(5))
+val linx_fp_sqrt = pure "linx_fp_sqrt" : (bits(3), bits(5), bits(64)) -> (bits(64), bits(5))
+val linx_fp_recip = pure "linx_fp_recip" : (bits(3), bits(5), bits(64)) -> (bits(64), bits(5))
+val linx_fp_exp = pure "linx_fp_exp" : (bits(3), bits(5), bits(64)) -> (bits(64), bits(5))
+val linx_fp_fmadd = pure "linx_fp_fmadd" : (bits(3), bits(5), bits(64), bits(64), bits(64)) -> (bits(64), bits(5))
+val linx_fp_fmsub = pure "linx_fp_fmsub" : (bits(3), bits(5), bits(64), bits(64), bits(64)) -> (bits(64), bits(5))
+val linx_fp_fnmadd = pure "linx_fp_fnmadd" : (bits(3), bits(5), bits(64), bits(64), bits(64)) -> (bits(64), bits(5))
+val linx_fp_fnmsub = pure "linx_fp_fnmsub" : (bits(3), bits(5), bits(64), bits(64), bits(64)) -> (bits(64), bits(5))
+val linx_fp_to_fp = pure "linx_fp_to_fp" : (bits(3), bits(5), bits(5), bits(64)) -> (bits(64), bits(5))
+val linx_fp_to_int = pure "linx_fp_to_int" : (bits(3), bits(5), bits(5), bits(64)) -> (bits(64), bits(5))
+val linx_int_to_fp = pure "linx_int_to_fp" : (bits(3), bits(5), bits(5), bits(64)) -> (bits(64), bits(5))
+
+function fp_active_rm() -> bits(3) = {
+  let frm = cstate_get_frm();
+  if unsigned(frm) <= 4 then frm else 0b000
+}
+
+function vec_fp_from_carrier32(carrier : bits(32), src_t : bits(5)) -> (bits(64), bits(5)) = {
+  if src_t == 0b00001 then {
+    (zext32_from32(carrier), 0b00000)
+  } else {
+    linx_fp_to_fp(fp_active_rm(), src_t, 0b00001, zext32_from32(carrier))
+  }
+}
+
+function vec_fp_to_carrier32(raw : bits(64), src_t : bits(5)) -> (bits(32), bits(5)) = {
+  if src_t == 0b00001 then {
+    (raw[31..0], 0b00000)
+  } else {
+    let (carrier, flags) = linx_fp_to_fp(fp_active_rm(), 0b00001, src_t, raw);
+    (carrier[31..0], flags)
+  }
+}
+
+function vec_fp_result_to_carrier32(raw : bits(64), src_t : bits(5), dst_t : bits(5)) -> (bits(32), bits(5)) = {
+  if dst_t == src_t then {
+    vec_fp_to_carrier32(raw, dst_t)
+  } else {
+    let (dst_raw, flags0) = linx_fp_to_fp(fp_active_rm(), dst_t, src_t, raw);
+    let (carrier, flags1) = vec_fp_to_carrier32(dst_raw, dst_t);
+    (carrier, flags0 | flags1)
+  }
+}
+
+function vec_fp_to_fp64_norm(carrier : bits(32), src_t : bits(5)) -> (bits(64), bits(5)) = {
+  let (typed, flags0) = vec_fp_from_carrier32(carrier, src_t);
+  if src_t == 0b00000 then {
+    (typed, flags0)
+  } else {
+    let (norm, flags1) = linx_fp_to_fp(fp_active_rm(), 0b00000, src_t, typed);
+    (norm, flags0 | flags1)
+  }
+}
+
+function vec_fp_qnan_in_type(src_t : bits(5)) -> (bits(64), bits(5)) = {
+  if src_t == 0b00000 then {
+    (0x7FF8_0000_0000_0000, 0b00000)
+  } else if src_t == 0b00001 then {
+    (0x0000_0000_7FC0_0000, 0b00000)
+  } else {
+    linx_fp_to_fp(fp_active_rm(), src_t, 0b00000, 0x7FF8_0000_0000_0000)
+  }
 }
 
 function exec_feq(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
@@ -1843,118 +1954,330 @@ function exec_lsrget(RegDst : bits(5), lsr_id12 : bits(12)) -> unit = {
 }
 
 // -----------------------------------------------------------------------------
-// Floating-point arithmetic (FSU) - staged bring-up
+// Floating-point arithmetic (FSU)
 //
-// Normative sources:
-// - docs/architecture/isa-manual/src/chapters/02_programming_model.adoc (CSTATE.FRM/FFLAGS)
-// - docs/architecture/isa-manual/src/chapters/12_fsu.adoc
+// Architectural contract:
+// - `SrcType` selects scalar FP source width: `0=FP64`, `1=FP32`; all other
+//   encodings are illegal for the scalar FSU forms.
+// - `DstType` for convert-class ops uses the canonical floating/integer type
+//   tables from chapter 05c.
+// - `CSTATE.FRM` selects the active rounding mode and `CSTATE.FFLAGS` is the
+//   sticky IEEE-754 flag mirror used by the current bring-up profile.
+// - Narrow FP results are written into the low bits of the destination GPR and
+//   zero-extended to 64 bits.
 //
-// POLICY: Do not guess FP numeric behavior until the FP library + CSTATE.FRM/FFLAGS semantics are
-// fully wired. For now, we explicitly mark these operations as unimplemented.
-// We still write a deterministic placeholder value to the destination to keep
-// downstream execution deterministic in staged environments.
+// Numeric behavior is delegated to typed helper hooks so the Sail model can
+// carry architecturally precise inputs/outputs/flag effects without hard-coding
+// one host FP implementation into the source.
 
-function fp_unimpl_result(RegDst : bits(5), mnemonic : string) -> unit = {
-  // Staged shim: deterministic placeholder result.
-  // IMPORTANT: do not call `unimplemented` here; these mnemonics are counted as
-  // implemented shims in coverage.
-  let _ = mnemonic;
-  write_regdst(RegDst, 0x0000_0000_0000_0000)
+function fp_record_flags(flags : bits(5)) -> unit = {
+  cstate_or_fflags(flags)
+}
+
+function scalar_fp_type_code(SrcType : bits(2)) -> bits(5) = {
+  if SrcType == 0b00 then 0b00000
+  else if SrcType == 0b01 then 0b00001
+  else 0b11111
+}
+
+function scalar_signed_int_type_code(SrcType : bits(2)) -> bits(5) = {
+  if SrcType == 0b00 then 0b01000
+  else if SrcType == 0b01 then 0b01001
+  else 0b11111
+}
+
+function scalar_unsigned_int_type_code(SrcType : bits(2)) -> bits(5) = {
+  if SrcType == 0b00 then 0b00000
+  else if SrcType == 0b01 then 0b00001
+  else 0b11111
+}
+
+function fp_type_code_supported(t : bits(5)) -> bool = {
+  unsigned(t) <= 14
+}
+
+function int_type_code_supported(t : bits(5)) -> bool = {
+  unsigned(t) <= 14
+}
+
+function int_type_width(t : bits(5)) -> int = {
+  if t == 0b00000 | t == 0b01000 then 64
+  else if t == 0b00001 | t == 0b01001 then 32
+  else if t == 0b00010 | t == 0b01010 then 16
+  else if t == 0b00011 | t == 0b01011 then 8
+  else if t == 0b00100 | t == 0b01100 then 4
+  else if t == 0b00101 | t == 0b01101 then 2
+  else if t == 0b00110 | t == 0b00111 | t == 0b01110 then 1
+  else 0
+}
+
+function float_type_width(t : bits(5)) -> int = {
+  if t == 0b00000 then 64
+  else if t == 0b00001 | t == 0b00011 then 32
+  else if t == 0b00010 then 19
+  else if t == 0b00100 | t == 0b00101 then 16
+  else if t == 0b00110 | t == 0b00111 | t == 0b01000 | t == 0b01101 then 8
+  else if t == 0b01001 | t == 0b01010 then 6
+  else if t == 0b01011 | t == 0b01100 then 4
+  else if t == 0b01110 then 9
+  else 0
+}
+
+function fp_scalar_value(raw : bits(64), fp_type : bits(5)) -> bits(64) = {
+  if fp_type == 0b00001 then zext32_from32(raw[31..0]) else raw
+}
+
+function scalar_int_value(raw : bits(64), int_type : bits(5)) -> bits(64) = {
+  if int_type == 0b00001 then zext32_from32(raw[31..0])
+  else if int_type == 0b01001 then sext32_from32(raw[31..0])
+  else raw
+}
+
+function fp_write_result(RegDst : bits(5), result : bits(64), flags : bits(5)) -> unit = {
+  fp_record_flags(flags);
+  write_regdst(RegDst, result)
+}
+
+function pack_low_bits_into_lane32(value : bits(64), width : int) -> bits(32) = {
+  if width == 32 then value[31..0]
+  else if width == 19 then sail_zeros(13) @ value[18..0]
+  else if width == 16 then sail_zeros(16) @ value[15..0]
+  else if width == 9 then sail_zeros(23) @ value[8..0]
+  else if width == 8 then sail_zeros(24) @ value[7..0]
+  else if width == 6 then sail_zeros(26) @ value[5..0]
+  else if width == 4 then sail_zeros(28) @ value[3..0]
+  else 0x0000_0000
+}
+
+function pack_low_int_bits_into_lane32(value : bits(64), width : int) -> bits(32) = {
+  if width >= 32 then value[31..0]
+  else if width == 16 then sail_zeros(16) @ value[15..0]
+  else if width == 8 then sail_zeros(24) @ value[7..0]
+  else if width == 4 then sail_zeros(28) @ value[3..0]
+  else if width == 2 then sail_zeros(30) @ value[1..0]
+  else if width == 1 then sail_zeros(31) @ value[0..0]
+  else 0x0000_0000
+}
+
+function int_type_is_signed(t : bits(5)) -> bool = {
+  unsigned(t) >= 8
+}
+
+function mask_low_n64(n : int) -> bits(64) = {
+  let ones : bits(64) = 0xFFFF_FFFF_FFFF_FFFF;
+  if n >= 64 then ones
+  else sail_shiftright(ones, 64 - n)
+}
+
+function low_n64(x : bits(64), n : int) -> bits(64) = {
+  if n >= 64 then x else x & mask_low_n64(n)
+}
+
+function sext_low_n64(field : bits(64), n : int) -> bits(64) = {
+  if n >= 64 then field
+  else {
+    let sign1 : bits(64) = sail_shiftright(field, n - 1);
+    let sign : bits(1) = sign1[0..0];
+    let low : bits(64) = low_n64(field, n);
+    if sign == 0b1 then (low | (not_vec(mask_low_n64(n)))) else low
+  }
+}
+
+function vec_int_effective_width(t : bits(5)) -> int = {
+  let w : int = int_type_width(t);
+  if w == 0 then 32 else w
+}
+
+function vec_int_bits_from_carrier32(carrier : bits(32), t : bits(5)) -> bits(64) = {
+  let w : int = vec_int_effective_width(t);
+  let base : bits(64) = zext32_from32(carrier);
+  if w > 32 then base else low_n64(base, w)
+}
+
+function vec_int_numeric_from_carrier32(carrier : bits(32), t : bits(5)) -> bits(64) = {
+  let w : int = vec_int_effective_width(t);
+  let base : bits(64) = zext32_from32(carrier);
+  if int_type_is_signed(t) then {
+    if w > 32 then sext_low_n64(base, 32) else sext_low_n64(base, w)
+  } else {
+    if w > 32 then base else low_n64(base, w)
+  }
+}
+
+function vec_int_bits_from_value64(value : bits(64), t : bits(5)) -> bits(64) = {
+  let w : int = vec_int_effective_width(t);
+  if w >= 64 then value else low_n64(value, w)
+}
+
+function vec_int_numeric_from_value64(value : bits(64), t : bits(5)) -> bits(64) = {
+  let w : int = vec_int_effective_width(t);
+  if int_type_is_signed(t) then {
+    if w >= 64 then value else sext_low_n64(value, w)
+  } else {
+    if w >= 64 then value else low_n64(value, w)
+  }
+}
+
+function vec_int_pack_carrier32(value : bits(64), t : bits(5)) -> bits(32) = {
+  pack_low_int_bits_into_lane32(value, vec_int_effective_width(t))
+}
+
+function vec_int_shift_amount(carrier : bits(32), t : bits(5)) -> int = {
+  let width : int = vec_int_effective_width(t);
+  if width <= 1 then 0
+  else tmod_int(unsigned(carrier[5..0]), if width > 64 then 64 else width)
 }
 
 function exec_fadd(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
-  let _ = SrcL; let _ = SrcR; let _ = SrcType;
-  fp_unimpl_result(RegDst, "FADD")
+  let fp_t = scalar_fp_type_code(SrcType);
+  if not_bool(fp_type_code_supported(fp_t)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let (result, flags) = linx_fp_add(fp_active_rm(), fp_t, fp_scalar_value(read_reg5(SrcL), fp_t), fp_scalar_value(read_reg5(SrcR), fp_t));
+    fp_write_result(RegDst, result, flags)
+  }
 }
 
 function exec_fsub(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
-  let _ = SrcL; let _ = SrcR; let _ = SrcType;
-  fp_unimpl_result(RegDst, "FSUB")
+  let fp_t = scalar_fp_type_code(SrcType);
+  if not_bool(fp_type_code_supported(fp_t)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let (result, flags) = linx_fp_sub(fp_active_rm(), fp_t, fp_scalar_value(read_reg5(SrcL), fp_t), fp_scalar_value(read_reg5(SrcR), fp_t));
+    fp_write_result(RegDst, result, flags)
+  }
 }
 
 function exec_fmul(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
-  let _ = SrcL; let _ = SrcR; let _ = SrcType;
-  fp_unimpl_result(RegDst, "FMUL")
+  let fp_t = scalar_fp_type_code(SrcType);
+  if not_bool(fp_type_code_supported(fp_t)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let (result, flags) = linx_fp_mul(fp_active_rm(), fp_t, fp_scalar_value(read_reg5(SrcL), fp_t), fp_scalar_value(read_reg5(SrcR), fp_t));
+    fp_write_result(RegDst, result, flags)
+  }
 }
 
 function exec_fdiv(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
-  let _ = SrcL; let _ = SrcR; let _ = SrcType;
-  fp_unimpl_result(RegDst, "FDIV")
+  let fp_t = scalar_fp_type_code(SrcType);
+  if not_bool(fp_type_code_supported(fp_t)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let (result, flags) = linx_fp_div(fp_active_rm(), fp_t, fp_scalar_value(read_reg5(SrcL), fp_t), fp_scalar_value(read_reg5(SrcR), fp_t));
+    fp_write_result(RegDst, result, flags)
+  }
 }
 
 function exec_fsqrt(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
-  let _ = SrcL; let _ = SrcType;
-  fp_unimpl_result(RegDst, "FSQRT")
+  let fp_t = scalar_fp_type_code(SrcType);
+  if not_bool(fp_type_code_supported(fp_t)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let (result, flags) = linx_fp_sqrt(fp_active_rm(), fp_t, fp_scalar_value(read_reg5(SrcL), fp_t));
+    fp_write_result(RegDst, result, flags)
+  }
 }
 
 function exec_frecip(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
-  let _ = SrcL; let _ = SrcType;
-  fp_unimpl_result(RegDst, "FRECIP")
+  let fp_t = scalar_fp_type_code(SrcType);
+  if not_bool(fp_type_code_supported(fp_t)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let (result, flags) = linx_fp_recip(fp_active_rm(), fp_t, fp_scalar_value(read_reg5(SrcL), fp_t));
+    fp_write_result(RegDst, result, flags)
+  }
 }
 
 function exec_fexp(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
-  let _ = SrcL; let _ = SrcType;
-  fp_unimpl_result(RegDst, "FEXP")
+  let fp_t = scalar_fp_type_code(SrcType);
+  if not_bool(fp_type_code_supported(fp_t)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let (result, flags) = linx_fp_exp(fp_active_rm(), fp_t, fp_scalar_value(read_reg5(SrcL), fp_t));
+    fp_write_result(RegDst, result, flags)
+  }
 }
 
 function exec_fmadd(RegDst : bits(5), SrcA : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
-  let _ = SrcA; let _ = SrcL; let _ = SrcR; let _ = SrcType;
-  fp_unimpl_result(RegDst, "FMADD")
+  let fp_t = scalar_fp_type_code(SrcType);
+  if not_bool(fp_type_code_supported(fp_t)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let (result, flags) = linx_fp_fmadd(fp_active_rm(), fp_t, fp_scalar_value(read_reg5(SrcL), fp_t), fp_scalar_value(read_reg5(SrcR), fp_t), fp_scalar_value(read_reg5(SrcA), fp_t));
+    fp_write_result(RegDst, result, flags)
+  }
 }
 
 function exec_fmsub(RegDst : bits(5), SrcA : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
-  let _ = SrcA; let _ = SrcL; let _ = SrcR; let _ = SrcType;
-  fp_unimpl_result(RegDst, "FMSUB")
+  let fp_t = scalar_fp_type_code(SrcType);
+  if not_bool(fp_type_code_supported(fp_t)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let (result, flags) = linx_fp_fmsub(fp_active_rm(), fp_t, fp_scalar_value(read_reg5(SrcL), fp_t), fp_scalar_value(read_reg5(SrcR), fp_t), fp_scalar_value(read_reg5(SrcA), fp_t));
+    fp_write_result(RegDst, result, flags)
+  }
 }
 
 function exec_fnmadd(RegDst : bits(5), SrcA : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
-  let _ = SrcA; let _ = SrcL; let _ = SrcR; let _ = SrcType;
-  fp_unimpl_result(RegDst, "FNMADD")
+  let fp_t = scalar_fp_type_code(SrcType);
+  if not_bool(fp_type_code_supported(fp_t)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let (result, flags) = linx_fp_fnmadd(fp_active_rm(), fp_t, fp_scalar_value(read_reg5(SrcL), fp_t), fp_scalar_value(read_reg5(SrcR), fp_t), fp_scalar_value(read_reg5(SrcA), fp_t));
+    fp_write_result(RegDst, result, flags)
+  }
 }
 
 function exec_fnmsub(RegDst : bits(5), SrcA : bits(5), SrcL : bits(5), SrcR : bits(5), SrcType : bits(2)) -> unit = {
-  let _ = SrcA; let _ = SrcL; let _ = SrcR; let _ = SrcType;
-  fp_unimpl_result(RegDst, "FNMSUB")
+  let fp_t = scalar_fp_type_code(SrcType);
+  if not_bool(fp_type_code_supported(fp_t)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let (result, flags) = linx_fp_fnmsub(fp_active_rm(), fp_t, fp_scalar_value(read_reg5(SrcL), fp_t), fp_scalar_value(read_reg5(SrcR), fp_t), fp_scalar_value(read_reg5(SrcA), fp_t));
+    fp_write_result(RegDst, result, flags)
+  }
 }
 
 function exec_fcvt(DstType : bits(5), RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
-  let _ = DstType; let _ = SrcL; let _ = SrcType;
-  fp_unimpl_result(RegDst, "FCVT")
+  let src_fp_type = scalar_fp_type_code(SrcType);
+  if not_bool(fp_type_code_supported(src_fp_type) & fp_type_code_supported(DstType)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let (result, flags) = linx_fp_to_fp(fp_active_rm(), DstType, src_fp_type, fp_scalar_value(read_reg5(SrcL), src_fp_type));
+    fp_write_result(RegDst, result, flags)
+  }
 }
 
 function exec_fcvta(DstType : bits(5), RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
-  let _ = DstType; let _ = SrcL; let _ = SrcType;
-  fp_unimpl_result(RegDst, "FCVTA")
+  let src_fp_type = scalar_fp_type_code(SrcType);
+  if not_bool(fp_type_code_supported(src_fp_type) & int_type_code_supported(DstType)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let (result, flags) = linx_fp_to_int(0b100, DstType, src_fp_type, fp_scalar_value(read_reg5(SrcL), src_fp_type));
+    fp_write_result(RegDst, result, flags)
+  }
 }
 
 function exec_fcvtm(DstType : bits(5), RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
-  let _ = DstType; let _ = SrcL; let _ = SrcType;
-  fp_unimpl_result(RegDst, "FCVTM")
+  let src_fp_type = scalar_fp_type_code(SrcType);
+  if not_bool(fp_type_code_supported(src_fp_type) & int_type_code_supported(DstType)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let (result, flags) = linx_fp_to_int(0b001, DstType, src_fp_type, fp_scalar_value(read_reg5(SrcL), src_fp_type));
+    fp_write_result(RegDst, result, flags)
+  }
 }
 
 function exec_fcvtn(DstType : bits(5), RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
-  let _ = DstType; let _ = SrcL; let _ = SrcType;
-  fp_unimpl_result(RegDst, "FCVTN")
+  let src_fp_type = scalar_fp_type_code(SrcType);
+  if not_bool(fp_type_code_supported(src_fp_type) & int_type_code_supported(DstType)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let (result, flags) = linx_fp_to_int(0b000, DstType, src_fp_type, fp_scalar_value(read_reg5(SrcL), src_fp_type));
+    fp_write_result(RegDst, result, flags)
+  }
 }
 
 function exec_fcvtp(DstType : bits(5), RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
-  let _ = DstType; let _ = SrcL; let _ = SrcType;
-  fp_unimpl_result(RegDst, "FCVTP")
+  let src_fp_type = scalar_fp_type_code(SrcType);
+  if not_bool(fp_type_code_supported(src_fp_type) & int_type_code_supported(DstType)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let (result, flags) = linx_fp_to_int(0b010, DstType, src_fp_type, fp_scalar_value(read_reg5(SrcL), src_fp_type));
+    fp_write_result(RegDst, result, flags)
+  }
 }
 
 function exec_fcvtz(DstType : bits(5), RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
-  let _ = DstType; let _ = SrcL; let _ = SrcType;
-  fp_unimpl_result(RegDst, "FCVTZ")
+  let src_fp_type = scalar_fp_type_code(SrcType);
+  if not_bool(fp_type_code_supported(src_fp_type) & int_type_code_supported(DstType)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let (result, flags) = linx_fp_to_int(0b011, DstType, src_fp_type, fp_scalar_value(read_reg5(SrcL), src_fp_type));
+    fp_write_result(RegDst, result, flags)
+  }
 }
 
-function exec_scvtf(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
-  let _ = SrcL; let _ = SrcType;
-  fp_unimpl_result(RegDst, "SCVTF")
+function exec_scvtf(DstType : bits(5), RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
+  let src_int_type = scalar_signed_int_type_code(SrcType);
+  if not_bool(int_type_code_supported(src_int_type) & fp_type_code_supported(DstType)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let (result, flags) = linx_int_to_fp(fp_active_rm(), src_int_type, DstType, scalar_int_value(read_reg5(SrcL), src_int_type));
+    fp_write_result(RegDst, result, flags)
+  }
 }
 
-function exec_ucvtf(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
-  let _ = SrcL; let _ = SrcType;
-  fp_unimpl_result(RegDst, "UCVTF")
+function exec_ucvtf(DstType : bits(5), RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit = {
+  let src_int_type = scalar_unsigned_int_type_code(SrcType);
+  if not_bool(int_type_code_supported(src_int_type) & fp_type_code_supported(DstType)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let (result, flags) = linx_int_to_fp(fp_active_rm(), src_int_type, DstType, scalar_int_value(read_reg5(SrcL), src_int_type));
+    fp_write_result(RegDst, result, flags)
+  }
 }
 
 // Template blocks: FENTRY/FEXIT/FRET.*
@@ -2009,7 +2332,7 @@ function exec_fentry(SrcBegin : bits(5), SrcEnd : bits(5), uimm15 : bits(15)) ->
   let e : int = unsigned(SrcEnd);
   let nregs : int = if e >= b then (e - b + 1) else 0;
   let frame : int = uimm + 8*nregs;
-  let sp1 : bits(64) = sp0 - (sail_zeros(64) + frame);
+  let sp1 : bits(64) = sub_bits(sp0, sail_zeros(64) + frame);
   write_reg5(template_sp(), sp1);
   template_save_range(sp1, SrcBegin, SrcEnd, uimm)
 }
@@ -2065,16 +2388,39 @@ function exec_mset(RegSrc0 : bits(5), RegSrc1 : bits(5), RegSrc2 : bits(5)) -> u
 }
 
 // Extended context save/restore (v0.2 bring-up).
-// We do not yet model extended state; treat as no-ops for now (but keep explicit
-// to allow template blocks to execute).
+// The precise external format is profile-defined. The Sail model writes and restores
+// a minimal architectural snapshot through the canonical EBARG_EXTCTX pointer/meta
+// registers so ESAVE/ERCOV are executable and testable.
 function exec_esave(RegSrc0 : bits(5), RegSrc1 : bits(5), RegSrc2 : bits(5)) -> unit = {
-  let _ = RegSrc0; let _ = RegSrc1; let _ = RegSrc2;
-  ()
+  let cur_acr : bits(4) = current_acr_id();
+  let base : bits(64) = read_reg5(RegSrc0);
+  let kind : bits(64) = read_reg5(RegSrc1);
+  let len  : bits(64) = read_reg5(RegSrc2);
+  write_ebarg_extctx_ptr_for_acr(cur_acr, base);
+  write_ebarg_extctx_meta_for_acr(cur_acr, sail_shiftleft((kind & 0x0000_0000_FFFF_FFFF), 32) | (len & 0x0000_0000_FFFF_FFFF));
+  if unsigned(len) >= 8 then mem_store64_le(base + 0x0000_0000_0000_0000, ssr_cstate) else ();
+  if unsigned(len) >= 16 then mem_store64_le(base + 0x0000_0000_0000_0008, pc) else ();
+  if unsigned(len) >= 24 then mem_store64_le(base + 0x0000_0000_0000_0010, tpc) else ();
+  if unsigned(len) >= 32 then mem_store64_le(base + 0x0000_0000_0000_0018, barg_bpc_cur) else ();
+  if unsigned(len) >= 40 then mem_store64_le(base + 0x0000_0000_0000_0020, barg_bpc_tgt) else ();
+  if unsigned(len) >= 48 then mem_store64_le(base + 0x0000_0000_0000_0028, barg_carg) else ()
 }
 
 function exec_ercov(RegSrc0 : bits(5), RegSrc1 : bits(5), RegSrc2 : bits(5)) -> unit = {
-  let _ = RegSrc0; let _ = RegSrc1; let _ = RegSrc2;
-  ()
+  let _ = RegSrc1;
+  let cur_acr : bits(4) = current_acr_id();
+  let base0 : bits(64) = read_reg5(RegSrc0);
+  let base : bits(64) = if base0 == 0x0000_0000_0000_0000 then read_ebarg_extctx_ptr_for_acr(cur_acr) else base0;
+  let len0 : bits(64) = read_reg5(RegSrc2);
+  let meta : bits(64) = read_ebarg_extctx_meta_for_acr(cur_acr);
+  let len  : bits(64) = if len0 == 0x0000_0000_0000_0000 then (sail_zeros(32) @ meta[31..0]) else len0;
+  if unsigned(len) >= 8 then ssr_cstate = mem_load64_le(base + 0x0000_0000_0000_0000) else ();
+  if unsigned(len) >= 16 then pc = mem_load64_le(base + 0x0000_0000_0000_0008) else ();
+  if unsigned(len) >= 24 then tpc = mem_load64_le(base + 0x0000_0000_0000_0010) else ();
+  if unsigned(len) >= 32 then barg_bpc_cur = mem_load64_le(base + 0x0000_0000_0000_0018) else ();
+  if unsigned(len) >= 40 then barg_bpc_tgt = mem_load64_le(base + 0x0000_0000_0000_0020) else ();
+  if unsigned(len) >= 48 then barg_carg = mem_load64_le(base + 0x0000_0000_0000_0028) else ();
+  barg_valid = true
 }
 
 // -----------------------------------------------------------------------------
@@ -2090,16 +2436,54 @@ function exec_ercov(RegSrc0 : bits(5), RegSrc1 : bits(5), RegSrc2 : bits(5)) -> 
 //   - BI = 1 (treat as body-interrupting service request)
 //   - CAUSE encodes request_type in low bits (profile-defined; we record it for software).
 function exec_acrc(RST_Type : bits(4)) -> unit = {
+  let cur_acr : bits(4) = current_acr_id();
+  let ecstate : bits(64) = (ssr_cstate & 0xFFFF_FFFF_FFFF_FFE0) | sail_zero_extend(cur_acr, 64) | 0x0000_0000_0000_0010;
+  write_ecstate_for_acr(cur_acr, ecstate);
+  write_ebarg_bpc_cur_for_acr(cur_acr, barg_bpc_cur);
+  write_ebarg_bpc_tgt_for_acr(cur_acr, barg_bpc_tgt);
+  write_ebarg_tpc_for_acr(cur_acr, tpc);
   let trapnum = (sail_zeros(6) + 6); // SCALL
   let cause : bits(24) = sail_zero_extend(RST_Type, 24);
   raise_trap(trapnum, cause, read_pc_or_tpc(), 0b1)
 }
 
 // `ACRE`: ACR enter request taken at block commit in the full model.
-// We do not yet model privilege rings / EVBASE / EBARG replay in Sail; treat as a no-op.
+// The Sail bring-up model restores the architecturally visible CSTATE/BPC/TPC/EXTCTX
+// subset from the active manager-bank shadows.
 function exec_acre(RRA_Type : bits(4)) -> unit = {
-  let _ = RRA_Type;
-  ()
+  let cur_acr : bits(4) = current_acr_id();
+  let ecstate : bits(64) = read_ecstate_for_acr(cur_acr);
+  let target_acr : bits(4) = ecstate_target_acr(ecstate);
+  if not_bool((RRA_Type == 0x0) | (RRA_Type == 0x1)) then {
+    trap_illegal_inst(read_pc_or_tpc())
+  } else if not_bool(unsigned(target_acr) >= unsigned(cur_acr)) then {
+    trap_e_inst(0x02, 0x00, read_pc_or_tpc())
+  } else {
+    ssr_cstate = ecstate;
+    barg_valid = true;
+    barg_bpc_cur = read_ebarg_bpc_cur_for_acr(cur_acr);
+    barg_bpc_tgt = read_ebarg_bpc_tgt_for_acr(cur_acr);
+    if ecstate_bi(ecstate) then {
+      pc = barg_bpc_cur;
+      tpc = read_ebarg_tpc_for_acr(cur_acr)
+    } else {
+      pc = barg_bpc_cur;
+      tpc = barg_bpc_cur
+    };
+    if RRA_Type == 0x1 then {
+      let ext_base : bits(64) = read_ebarg_extctx_ptr_for_acr(cur_acr);
+      let ext_meta : bits(64) = read_ebarg_extctx_meta_for_acr(cur_acr);
+      let ext_len : bits(64) = sail_zeros(32) @ ext_meta[31..0];
+      if ext_base != 0x0000_0000_0000_0000 then {
+        if unsigned(ext_len) >= 8 then ssr_cstate = mem_load64_le(ext_base + 0x0000_0000_0000_0000) else ();
+        if unsigned(ext_len) >= 16 then pc = mem_load64_le(ext_base + 0x0000_0000_0000_0008) else ();
+        if unsigned(ext_len) >= 24 then tpc = mem_load64_le(ext_base + 0x0000_0000_0000_0010) else ();
+        if unsigned(ext_len) >= 32 then barg_bpc_cur = mem_load64_le(ext_base + 0x0000_0000_0000_0018) else ();
+        if unsigned(ext_len) >= 40 then barg_bpc_tgt = mem_load64_le(ext_base + 0x0000_0000_0000_0020) else ();
+        if unsigned(ext_len) >= 48 then barg_carg = mem_load64_le(ext_base + 0x0000_0000_0000_0028) else ()
+      } else ()
+    } else ()
+  }
 }
 
 function exec_assert(SrcL : bits(5)) -> unit = {
@@ -2131,12 +2515,16 @@ function is_canonical_va48(va : bits(64)) -> bool = {
   if sign == 0b0 then va[63..48] == 0x0000 else va[63..48] == 0xFFFF
 }
 
+function tlb_is_unprivileged_manager() -> bool = {
+  ssr_cstate[3..0] == 0x2
+}
+
 function exec_tlb_iv(SrcL : bits(5)) -> unit = {
   let va = read_reg5(SrcL);
-  if not_bool(is_canonical_va48(va)) then {
-    // Manual: must raise translation fault (treated as MMU_PF).
-    // Trap wiring is still staged, so keep the failure explicit.
-    unimplemented("tlb.iv: non-canonical VA => E_DATA(MMU_PF)")
+  if tlb_is_unprivileged_manager() then {
+    trap_e_inst(0x03, 0x01, read_pc_or_tpc())
+  } else if not_bool(is_canonical_va48(va)) then {
+    trap_data_page_fault(va)
   } else {
     ()
   }
@@ -2144,8 +2532,10 @@ function exec_tlb_iv(SrcL : bits(5)) -> unit = {
 
 function exec_tlb_iav(SrcL : bits(5)) -> unit = {
   let va = read_reg5(SrcL);
-  if not_bool(is_canonical_va48(va)) then {
-    unimplemented("tlb.iav: non-canonical VA => E_DATA(MMU_PF)")
+  if tlb_is_unprivileged_manager() then {
+    trap_e_inst(0x03, 0x01, read_pc_or_tpc())
+  } else if not_bool(is_canonical_va48(va)) then {
+    trap_data_page_fault(va)
   } else {
     ()
   }
@@ -2153,16 +2543,18 @@ function exec_tlb_iav(SrcL : bits(5)) -> unit = {
 
 function exec_tlb_ia(SrcL : bits(5)) -> unit = {
   let x = read_reg5(SrcL);
-  // Manual: SrcL[63:16] must be zero.
-  if x[63..16] != 0x0000_0000_0000 then {
-    unimplemented("tlb.ia: reserved bits nonzero => E_INST(EC_ILLEGAL)")
+  if tlb_is_unprivileged_manager() then {
+    trap_e_inst(0x03, 0x01, read_pc_or_tpc())
+  } else if x[63..16] != 0x0000_0000_0000 then {
+    // Manual: SrcL[63:16] must be zero.
+    trap_illegal_inst(read_pc_or_tpc())
   } else {
     ()
   }
 }
 
 function exec_tlb_iall() -> unit = {
-  ()
+  if tlb_is_unprivileged_manager() then trap_e_inst(0x03, 0x01, read_pc_or_tpc()) else ()
 }
 
 function exec_dc_iall() -> unit = { () }
@@ -2288,7 +2680,18 @@ function exec_c_b_dimi() -> unit = { exec_b_dim() }
 
 function exec_b_text() -> unit = { bdesc_mark_text() }
 function exec_b_arg() -> unit = { bdesc_mark_arg() }
-function exec_b_ior() -> unit = { bdesc_mark_ior() }
+function exec_b_ior() -> unit = {
+  let src0 : bits(5) = decoded_bior_regsrc0();
+  let src1 : bits(5) = decoded_bior_regsrc1();
+  let src2 : bits(5) = decoded_bior_regsrc2();
+  let _dst : bits(5) = decoded_bior_regdst();
+  // Live v0.4 bring-up follows the shipped LLVM/QEMU ordering for ri* capture:
+  // RegSrc1, then RegSrc0, then RegSrc2; zero-valued GPR slots are skipped.
+  if src1 != 0b00000 then allocate_ri_binding(src1) else ();
+  if src0 != 0b00000 then allocate_ri_binding(src0) else ();
+  if src2 != 0b00000 then allocate_ri_binding(src2) else ();
+  bdesc_mark_ior()
+}
 function exec_b_iot() -> unit = { bdesc_mark_iot() }
 function exec_b_ioti() -> unit = { bdesc_mark_iot() }
 
@@ -2366,167 +2769,202 @@ function popcount_low_n32(field : bits(32), n : int) -> int = {
   c
 }
 
-function exec_v_add(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_add(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
   let rhs = read_vt(SrcR_k);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let srcr_t : bits(5) = decoded_vec_srcr_type();
+  let dst_t  : bits(5) = decoded_vec_dst_type();
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a : bits(32) = vec_get_lane32(lhs, i);
     let b : bits(32) = vec_get_lane32(rhs, i);
-    let r : bits(32) = if active then (a + b) else undefined_bitvector(32);
+    let r64 : bits(64) = vec_int_bits_from_carrier32(a, srcl_t) + vec_int_bits_from_carrier32(b, srcr_t);
+    let r : bits(32) = if active then vec_int_pack_carrier32(r64, dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
 }
 
-function exec_v_sub(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_sub(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
   let rhs = read_vt(SrcR_k);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let srcr_t : bits(5) = decoded_vec_srcr_type();
+  let dst_t  : bits(5) = decoded_vec_dst_type();
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a : bits(32) = vec_get_lane32(lhs, i);
     let b : bits(32) = vec_get_lane32(rhs, i);
-    let r : bits(32) = if active then (a - b) else undefined_bitvector(32);
+    let r64 : bits(64) = sub_bits(vec_int_bits_from_carrier32(a, srcl_t), vec_int_bits_from_carrier32(b, srcr_t));
+    let r : bits(32) = if active then vec_int_pack_carrier32(r64, dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
 }
 
-function exec_v_and(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_and(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
   let rhs = read_vt(SrcR_k);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let srcr_t : bits(5) = decoded_vec_srcr_type();
+  let dst_t  : bits(5) = decoded_vec_dst_type();
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a : bits(32) = vec_get_lane32(lhs, i);
     let b : bits(32) = vec_get_lane32(rhs, i);
-    let r : bits(32) = if active then (a & b) else undefined_bitvector(32);
+    let r64 : bits(64) = vec_int_bits_from_carrier32(a, srcl_t) & vec_int_bits_from_carrier32(b, srcr_t);
+    let r : bits(32) = if active then vec_int_pack_carrier32(r64, dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
 }
 
-function exec_v_or(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_or(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
   let rhs = read_vt(SrcR_k);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let srcr_t : bits(5) = decoded_vec_srcr_type();
+  let dst_t  : bits(5) = decoded_vec_dst_type();
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a : bits(32) = vec_get_lane32(lhs, i);
     let b : bits(32) = vec_get_lane32(rhs, i);
-    let r : bits(32) = if active then (a | b) else undefined_bitvector(32);
+    let r64 : bits(64) = vec_int_bits_from_carrier32(a, srcl_t) | vec_int_bits_from_carrier32(b, srcr_t);
+    let r : bits(32) = if active then vec_int_pack_carrier32(r64, dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
 }
 
-function exec_v_xor(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_xor(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
   let rhs = read_vt(SrcR_k);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let srcr_t : bits(5) = decoded_vec_srcr_type();
+  let dst_t  : bits(5) = decoded_vec_dst_type();
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a : bits(32) = vec_get_lane32(lhs, i);
     let b : bits(32) = vec_get_lane32(rhs, i);
-    let r : bits(32) = if active then (a ^ b) else undefined_bitvector(32);
+    let r64 : bits(64) = xor_vec(vec_int_bits_from_carrier32(a, srcl_t), vec_int_bits_from_carrier32(b, srcr_t));
+    let r : bits(32) = if active then vec_int_pack_carrier32(r64, dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
 }
 
 // Immediate forms: operate on 32-bit lanes with sign/zero extension per form.
-function exec_v_addi(SrcL_k : bits(3), uimm12 : bits(12), Dst_k : bits(3)) -> unit = {
+function exec_v_addi(SrcL_k : bits(5), uimm12 : bits(12), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
-  let imm : bits(32) = sail_zero_extend(uimm12, 32);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let dst_t  : bits(5) = decoded_vec_dst_type();
+  let imm : bits(64) = sail_zero_extend(uimm12, 64);
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a : bits(32) = vec_get_lane32(lhs, i);
-    let r : bits(32) = if active then (a + imm) else undefined_bitvector(32);
+    let r64 : bits(64) = vec_int_bits_from_carrier32(a, srcl_t) + vec_int_bits_from_value64(imm, srcl_t);
+    let r : bits(32) = if active then vec_int_pack_carrier32(r64, dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
 }
 
-function exec_v_subi(SrcL_k : bits(3), uimm12 : bits(12), Dst_k : bits(3)) -> unit = {
+function exec_v_subi(SrcL_k : bits(5), uimm12 : bits(12), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
-  let imm : bits(32) = sail_zero_extend(uimm12, 32);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let dst_t  : bits(5) = decoded_vec_dst_type();
+  let imm : bits(64) = sail_zero_extend(uimm12, 64);
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a : bits(32) = vec_get_lane32(lhs, i);
-    let r : bits(32) = if active then (a - imm) else undefined_bitvector(32);
+    let r64 : bits(64) = sub_bits(vec_int_bits_from_carrier32(a, srcl_t), vec_int_bits_from_value64(imm, srcl_t));
+    let r : bits(32) = if active then vec_int_pack_carrier32(r64, dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
 }
 
-function exec_v_andi(SrcL_k : bits(3), simm12 : bits(12), Dst_k : bits(3)) -> unit = {
+function exec_v_andi(SrcL_k : bits(5), simm12 : bits(12), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
-  let imm : bits(32) = sext12_to64(simm12)[31..0];
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let dst_t  : bits(5) = decoded_vec_dst_type();
+  let imm : bits(64) = sext12_to64(simm12);
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a : bits(32) = vec_get_lane32(lhs, i);
-    let r : bits(32) = if active then (a & imm) else undefined_bitvector(32);
+    let r64 : bits(64) = vec_int_bits_from_carrier32(a, srcl_t) & vec_int_bits_from_value64(imm, srcl_t);
+    let r : bits(32) = if active then vec_int_pack_carrier32(r64, dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
 }
 
-function exec_v_ori(SrcL_k : bits(3), simm12 : bits(12), Dst_k : bits(3)) -> unit = {
+function exec_v_ori(SrcL_k : bits(5), simm12 : bits(12), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
-  let imm : bits(32) = sext12_to64(simm12)[31..0];
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let dst_t  : bits(5) = decoded_vec_dst_type();
+  let imm : bits(64) = sext12_to64(simm12);
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a : bits(32) = vec_get_lane32(lhs, i);
-    let r : bits(32) = if active then (a | imm) else undefined_bitvector(32);
+    let r64 : bits(64) = vec_int_bits_from_carrier32(a, srcl_t) | vec_int_bits_from_value64(imm, srcl_t);
+    let r : bits(32) = if active then vec_int_pack_carrier32(r64, dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
 }
 
-function exec_v_xori(SrcL_k : bits(3), simm12 : bits(12), Dst_k : bits(3)) -> unit = {
+function exec_v_xori(SrcL_k : bits(5), simm12 : bits(12), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
-  let imm : bits(32) = sext12_to64(simm12)[31..0];
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let dst_t  : bits(5) = decoded_vec_dst_type();
+  let imm : bits(64) = sext12_to64(simm12);
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a : bits(32) = vec_get_lane32(lhs, i);
-    let r : bits(32) = if active then (a ^ imm) else undefined_bitvector(32);
+    let r64 : bits(64) = xor_vec(vec_int_bits_from_carrier32(a, srcl_t), vec_int_bits_from_value64(imm, srcl_t));
+    let r : bits(32) = if active then vec_int_pack_carrier32(r64, dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
@@ -2535,195 +2973,215 @@ function exec_v_xori(SrcL_k : bits(3), simm12 : bits(12), Dst_k : bits(3)) -> un
 // Compare ops: write lane predicate values (0 or 1).
 function vec_bool32(b : bool) -> bits(32) = { if b then 0x0000_0001 else 0x0000_0000 }
 
-function exec_v_cmp_eq(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_cmp_eq(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
   let rhs = read_vt(SrcR_k);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let srcr_t : bits(5) = decoded_vec_srcr_type();
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a = vec_get_lane32(lhs, i);
     let b = vec_get_lane32(rhs, i);
-    let r : bits(32) = if active then vec_bool32(a == b) else undefined_bitvector(32);
+    let eq : bool = vec_int_bits_from_carrier32(a, srcl_t) == vec_int_bits_from_carrier32(b, srcr_t);
+    let r : bits(32) = if active then vec_bool32(eq) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   }; write_vt(Dst_k, out)
 }
 
-function exec_v_cmp_ne(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_cmp_ne(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
   let rhs = read_vt(SrcR_k);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let srcr_t : bits(5) = decoded_vec_srcr_type();
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a = vec_get_lane32(lhs, i);
     let b = vec_get_lane32(rhs, i);
-    let r : bits(32) = if active then vec_bool32(a != b) else undefined_bitvector(32);
+    let ne : bool = vec_int_bits_from_carrier32(a, srcl_t) != vec_int_bits_from_carrier32(b, srcr_t);
+    let r : bits(32) = if active then vec_bool32(ne) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   }; write_vt(Dst_k, out)
 }
 
-function exec_v_cmp_lt(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_cmp_lt(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
   let rhs = read_vt(SrcR_k);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let srcr_t : bits(5) = decoded_vec_srcr_type();
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a = vec_get_lane32(lhs, i);
     let b = vec_get_lane32(rhs, i);
-    let r : bits(32) = if active then vec_bool32(signed(a) < signed(b)) else undefined_bitvector(32);
+    let r : bits(32) = if active then vec_bool32(signed(vec_int_numeric_from_carrier32(a, srcl_t)) < signed(vec_int_numeric_from_carrier32(b, srcr_t))) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   }; write_vt(Dst_k, out)
 }
 
-function exec_v_cmp_ge(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_cmp_ge(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
   let rhs = read_vt(SrcR_k);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let srcr_t : bits(5) = decoded_vec_srcr_type();
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a = vec_get_lane32(lhs, i);
     let b = vec_get_lane32(rhs, i);
-    let r : bits(32) = if active then vec_bool32(signed(a) >= signed(b)) else undefined_bitvector(32);
+    let r : bits(32) = if active then vec_bool32(signed(vec_int_numeric_from_carrier32(a, srcl_t)) >= signed(vec_int_numeric_from_carrier32(b, srcr_t))) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   }; write_vt(Dst_k, out)
 }
 
-function exec_v_cmp_ltu(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_cmp_ltu(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
   let rhs = read_vt(SrcR_k);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let srcr_t : bits(5) = decoded_vec_srcr_type();
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a = vec_get_lane32(lhs, i);
     let b = vec_get_lane32(rhs, i);
-    let r : bits(32) = if active then vec_bool32(unsigned(a) < unsigned(b)) else undefined_bitvector(32);
+    let r : bits(32) = if active then vec_bool32(unsigned(vec_int_bits_from_carrier32(a, srcl_t)) < unsigned(vec_int_bits_from_carrier32(b, srcr_t))) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   }; write_vt(Dst_k, out)
 }
 
-function exec_v_cmp_geu(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_cmp_geu(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
   let rhs = read_vt(SrcR_k);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let srcr_t : bits(5) = decoded_vec_srcr_type();
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a = vec_get_lane32(lhs, i);
     let b = vec_get_lane32(rhs, i);
-    let r : bits(32) = if active then vec_bool32(unsigned(a) >= unsigned(b)) else undefined_bitvector(32);
+    let r : bits(32) = if active then vec_bool32(unsigned(vec_int_bits_from_carrier32(a, srcl_t)) >= unsigned(vec_int_bits_from_carrier32(b, srcr_t))) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   }; write_vt(Dst_k, out)
 }
 
 // Compare immediate forms.
-function exec_v_cmp_eqi(SrcL_k : bits(3), simm12 : bits(12), Dst_k : bits(3)) -> unit = {
+function exec_v_cmp_eqi(SrcL_k : bits(5), simm12 : bits(12), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
-  let imm : bits(32) = sext12_to64(simm12)[31..0];
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let imm : bits(64) = sext12_to64(simm12);
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a = vec_get_lane32(lhs, i);
-    let r : bits(32) = if active then vec_bool32(a == imm) else undefined_bitvector(32);
+    let r : bits(32) = if active then vec_bool32(vec_int_bits_from_carrier32(a, srcl_t) == vec_int_bits_from_value64(imm, srcl_t)) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   }; write_vt(Dst_k, out)
 }
 
-function exec_v_cmp_nei(SrcL_k : bits(3), simm12 : bits(12), Dst_k : bits(3)) -> unit = {
+function exec_v_cmp_nei(SrcL_k : bits(5), simm12 : bits(12), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
-  let imm : bits(32) = sext12_to64(simm12)[31..0];
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let imm : bits(64) = sext12_to64(simm12);
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a = vec_get_lane32(lhs, i);
-    let r : bits(32) = if active then vec_bool32(a != imm) else undefined_bitvector(32);
+    let r : bits(32) = if active then vec_bool32(vec_int_bits_from_carrier32(a, srcl_t) != vec_int_bits_from_value64(imm, srcl_t)) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   }; write_vt(Dst_k, out)
 }
 
-function exec_v_cmp_lti(SrcL_k : bits(3), simm12 : bits(12), Dst_k : bits(3)) -> unit = {
+function exec_v_cmp_lti(SrcL_k : bits(5), simm12 : bits(12), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
-  let imm : bits(32) = sext12_to64(simm12)[31..0];
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let imm : bits(64) = sext12_to64(simm12);
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a = vec_get_lane32(lhs, i);
-    let r : bits(32) = if active then vec_bool32(signed(a) < signed(imm)) else undefined_bitvector(32);
+    let r : bits(32) = if active then vec_bool32(signed(vec_int_numeric_from_carrier32(a, srcl_t)) < signed(vec_int_numeric_from_value64(imm, srcl_t))) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   }; write_vt(Dst_k, out)
 }
 
-function exec_v_cmp_gei(SrcL_k : bits(3), simm12 : bits(12), Dst_k : bits(3)) -> unit = {
+function exec_v_cmp_gei(SrcL_k : bits(5), simm12 : bits(12), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
-  let imm : bits(32) = sext12_to64(simm12)[31..0];
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let imm : bits(64) = sext12_to64(simm12);
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a = vec_get_lane32(lhs, i);
-    let r : bits(32) = if active then vec_bool32(signed(a) >= signed(imm)) else undefined_bitvector(32);
+    let r : bits(32) = if active then vec_bool32(signed(vec_int_numeric_from_carrier32(a, srcl_t)) >= signed(vec_int_numeric_from_value64(imm, srcl_t))) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   }; write_vt(Dst_k, out)
 }
 
-function exec_v_cmp_ltui(SrcL_k : bits(3), uimm12 : bits(12), Dst_k : bits(3)) -> unit = {
+function exec_v_cmp_ltui(SrcL_k : bits(5), uimm12 : bits(12), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
-  let imm : bits(32) = sail_zero_extend(uimm12, 32);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let imm : bits(64) = sail_zero_extend(uimm12, 64);
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a = vec_get_lane32(lhs, i);
-    let r : bits(32) = if active then vec_bool32(unsigned(a) < unsigned(imm)) else undefined_bitvector(32);
+    let r : bits(32) = if active then vec_bool32(unsigned(vec_int_bits_from_carrier32(a, srcl_t)) < unsigned(vec_int_bits_from_value64(imm, srcl_t))) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   }; write_vt(Dst_k, out)
 }
 
-function exec_v_cmp_geui(SrcL_k : bits(3), uimm12 : bits(12), Dst_k : bits(3)) -> unit = {
+function exec_v_cmp_geui(SrcL_k : bits(5), uimm12 : bits(12), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
-  let imm : bits(32) = sail_zero_extend(uimm12, 32);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let imm : bits(64) = sail_zero_extend(uimm12, 64);
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a = vec_get_lane32(lhs, i);
-    let r : bits(32) = if active then vec_bool32(unsigned(a) >= unsigned(imm)) else undefined_bitvector(32);
+    let r : bits(32) = if active then vec_bool32(unsigned(vec_int_bits_from_carrier32(a, srcl_t)) >= unsigned(vec_int_bits_from_value64(imm, srcl_t))) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   }; write_vt(Dst_k, out)
 }
 
 // Boolean combines (treat non-zero as true; produce 0/1).
-function exec_v_cmp_and(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_cmp_and(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
@@ -2739,7 +3197,7 @@ function exec_v_cmp_and(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> 
   }; write_vt(Dst_k, out)
 }
 
-function exec_v_cmp_or(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_cmp_or(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
@@ -2755,7 +3213,7 @@ function exec_v_cmp_or(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> u
   }; write_vt(Dst_k, out)
 }
 
-function exec_v_cmp_andi(SrcL_k : bits(3), simm12 : bits(12), Dst_k : bits(3)) -> unit = {
+function exec_v_cmp_andi(SrcL_k : bits(5), simm12 : bits(12), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
@@ -2771,7 +3229,7 @@ function exec_v_cmp_andi(SrcL_k : bits(3), simm12 : bits(12), Dst_k : bits(3)) -
   }; write_vt(Dst_k, out)
 }
 
-function exec_v_cmp_ori(SrcL_k : bits(3), simm12 : bits(12), Dst_k : bits(3)) -> unit = {
+function exec_v_cmp_ori(SrcL_k : bits(5), simm12 : bits(12), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
@@ -2788,7 +3246,7 @@ function exec_v_cmp_ori(SrcL_k : bits(3), simm12 : bits(12), Dst_k : bits(3)) ->
 }
 
 // Vector conditional select: Dst = (SrcP != 0) ? SrcL : SrcR
-function exec_v_csel(SrcP_k : bits(3), SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_csel(SrcP_k : bits(5), SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let pvec = read_vt(SrcP_k);
@@ -2808,10 +3266,11 @@ function exec_v_csel(SrcP_k : bits(3), SrcL_k : bits(3), SrcR_k : bits(3), Dst_k
 }
 
 // Bit manipulation (lane-local) using bitfield-wrap (M=lsb, Nminus1=width-1).
-function exec_v_bcnt(SrcL_k : bits(3), Nminus1 : bits(6), M : bits(6), Dst_k : bits(3)) -> unit = {
+function exec_v_bcnt(SrcL_k : bits(5), Nminus1 : bits(6), M : bits(6), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
+  let dst_t : bits(5) = decoded_vec_dst_type();
   let n0 : int = unsigned(Nminus1) + 1;
   let n : int = if n0 > 32 then 32 else n0;
   let m : int = unsigned(M);
@@ -2822,16 +3281,17 @@ function exec_v_bcnt(SrcL_k : bits(3), Nminus1 : bits(6), M : bits(6), Dst_k : b
     let x : bits(32) = vec_get_lane32(lhs, i);
     let f : bits(32) = bitfield_wrap32(x, m, n);
     let c : int = popcount_low_n32(f, n);
-    let r : bits(32) = if active then (sail_zeros(32) + c) else undefined_bitvector(32);
+    let r : bits(32) = if active then vec_int_pack_carrier32(sail_zeros(64) + c, dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
 }
 
-function exec_v_clz(SrcL_k : bits(3), Nminus1 : bits(6), M : bits(6), Dst_k : bits(3)) -> unit = {
+function exec_v_clz(SrcL_k : bits(5), Nminus1 : bits(6), M : bits(6), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
+  let dst_t : bits(5) = decoded_vec_dst_type();
   let n0 : int = unsigned(Nminus1) + 1;
   let n : int = if n0 > 32 then 32 else n0;
   let m : int = unsigned(M);
@@ -2842,16 +3302,17 @@ function exec_v_clz(SrcL_k : bits(3), Nminus1 : bits(6), M : bits(6), Dst_k : bi
     let x : bits(32) = vec_get_lane32(lhs, i);
     let f : bits(32) = bitfield_wrap32(x, m, n);
     let c : int = clz_low_n32(f, n);
-    let r : bits(32) = if active then (sail_zeros(32) + c) else undefined_bitvector(32);
+    let r : bits(32) = if active then vec_int_pack_carrier32(sail_zeros(64) + c, dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
 }
 
-function exec_v_ctz(SrcL_k : bits(3), Nminus1 : bits(6), M : bits(6), Dst_k : bits(3)) -> unit = {
+function exec_v_ctz(SrcL_k : bits(5), Nminus1 : bits(6), M : bits(6), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
+  let dst_t : bits(5) = decoded_vec_dst_type();
   let n0 : int = unsigned(Nminus1) + 1;
   let n : int = if n0 > 32 then 32 else n0;
   let m : int = unsigned(M);
@@ -2862,16 +3323,17 @@ function exec_v_ctz(SrcL_k : bits(3), Nminus1 : bits(6), M : bits(6), Dst_k : bi
     let x : bits(32) = vec_get_lane32(lhs, i);
     let f : bits(32) = bitfield_wrap32(x, m, n);
     let c : int = ctz_low_n32(f, n);
-    let r : bits(32) = if active then (sail_zeros(32) + c) else undefined_bitvector(32);
+    let r : bits(32) = if active then vec_int_pack_carrier32(sail_zeros(64) + c, dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
 }
 
-function exec_v_bxu(SrcL_k : bits(3), Nminus1 : bits(6), M : bits(6), Dst_k : bits(3)) -> unit = {
+function exec_v_bxu(SrcL_k : bits(5), Nminus1 : bits(6), M : bits(6), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
+  let dst_t : bits(5) = decoded_vec_dst_type();
   let n0 : int = unsigned(Nminus1) + 1;
   let n : int = if n0 > 32 then 32 else n0;
   let m : int = unsigned(M);
@@ -2881,16 +3343,17 @@ function exec_v_bxu(SrcL_k : bits(3), Nminus1 : bits(6), M : bits(6), Dst_k : bi
     let active = bitvector_access(pm, i) == 0b1;
     let x : bits(32) = vec_get_lane32(lhs, i);
     let f : bits(32) = bitfield_wrap32(x, m, n);
-    let r : bits(32) = if active then f else undefined_bitvector(32);
+    let r : bits(32) = if active then vec_int_pack_carrier32(zext32_from32(f), dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
 }
 
-function exec_v_bxs(SrcL_k : bits(3), Nminus1 : bits(6), M : bits(6), Dst_k : bits(3)) -> unit = {
+function exec_v_bxs(SrcL_k : bits(5), Nminus1 : bits(6), M : bits(6), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
+  let dst_t : bits(5) = decoded_vec_dst_type();
   let n0 : int = unsigned(Nminus1) + 1;
   let n : int = if n0 > 32 then 32 else n0;
   let m : int = unsigned(M);
@@ -2901,16 +3364,17 @@ function exec_v_bxs(SrcL_k : bits(3), Nminus1 : bits(6), M : bits(6), Dst_k : bi
     let x : bits(32) = vec_get_lane32(lhs, i);
     let f : bits(32) = bitfield_wrap32(x, m, n);
     let sx : bits(32) = sext_low_n32(f, n);
-    let r : bits(32) = if active then sx else undefined_bitvector(32);
+    let r : bits(32) = if active then vec_int_pack_carrier32(zext32_from32(sx), dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
 }
 
-function exec_v_bic(SrcL_k : bits(3), Nminus1 : bits(6), M : bits(6), Dst_k : bits(3)) -> unit = {
+function exec_v_bic(SrcL_k : bits(5), Nminus1 : bits(6), M : bits(6), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
+  let dst_t : bits(5) = decoded_vec_dst_type();
   let n0 : int = unsigned(Nminus1) + 1;
   let n : int = if n0 > 32 then 32 else n0;
   let m : int = unsigned(M);
@@ -2922,16 +3386,17 @@ function exec_v_bic(SrcL_k : bits(3), Nminus1 : bits(6), M : bits(6), Dst_k : bi
     let r0 : bits(32) = ror32bits(x, m);
     let cleared : bits(32) = r0 & (not_vec(mask_low_n32(n)));
     let y : bits(32) = rol32bits(cleared, m);
-    let r : bits(32) = if active then y else undefined_bitvector(32);
+    let r : bits(32) = if active then vec_int_pack_carrier32(zext32_from32(y), dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
 }
 
-function exec_v_bis(SrcL_k : bits(3), Nminus1 : bits(6), M : bits(6), Dst_k : bits(3)) -> unit = {
+function exec_v_bis(SrcL_k : bits(5), Nminus1 : bits(6), M : bits(6), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
+  let dst_t : bits(5) = decoded_vec_dst_type();
   let n0 : int = unsigned(Nminus1) + 1;
   let n : int = if n0 > 32 then 32 else n0;
   let m : int = unsigned(M);
@@ -2943,7 +3408,7 @@ function exec_v_bis(SrcL_k : bits(3), Nminus1 : bits(6), M : bits(6), Dst_k : bi
     let r0 : bits(32) = ror32bits(x, m);
     let setv : bits(32) = r0 | mask_low_n32(n);
     let y : bits(32) = rol32bits(setv, m);
-    let r : bits(32) = if active then y else undefined_bitvector(32);
+    let r : bits(32) = if active then vec_int_pack_carrier32(zext32_from32(y), dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
@@ -2951,22 +3416,24 @@ function exec_v_bis(SrcL_k : bits(3), Nminus1 : bits(6), M : bits(6), Dst_k : bi
 
 // For V.BXU/BXS we already use the bitfield wrap helpers above.
 
-function exec_v_div(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
-  // Signed 32-bit lane divide; div-by-zero yields 0 (match scalar exec_div convention).
+function exec_v_div(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
   let rhs = read_vt(SrcR_k);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let srcr_t : bits(5) = decoded_vec_srcr_type();
+  let dst_t  : bits(5) = decoded_vec_dst_type();
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a : bits(32) = vec_get_lane32(lhs, i);
     let b : bits(32) = vec_get_lane32(rhs, i);
-    let ai : int = signed(sext32_from32(a));
-    let bi : int = signed(sext32_from32(b));
+    let ai : int = signed(vec_int_numeric_from_carrier32(a, srcl_t));
+    let bi : int = signed(vec_int_numeric_from_carrier32(b, srcr_t));
     let qi : int = if b == 0x0000_0000 then 0 else (tdiv_int(ai, bi));
-    let r : bits(32) = if active then (sail_zeros(32) + qi) else undefined_bitvector(32);
+    let r : bits(32) = if active then vec_int_pack_carrier32(sail_zeros(64) + qi, dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
@@ -2988,30 +3455,37 @@ function bit_reverse32(x : bits(32)) -> bits(32) = {
   r
 }
 
-function exec_v_mul(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_mul(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
   let rhs = read_vt(SrcR_k);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let srcr_t : bits(5) = decoded_vec_srcr_type();
+  let dst_t  : bits(5) = decoded_vec_dst_type();
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a : bits(32) = vec_get_lane32(lhs, i);
     let b : bits(32) = vec_get_lane32(rhs, i);
-    let prod : int = unsigned(a) * unsigned(b);
-    let r : bits(32) = if active then (sail_zeros(32) + prod) else undefined_bitvector(32);
+    let prod : int = unsigned(vec_int_bits_from_carrier32(a, srcl_t)) * unsigned(vec_int_bits_from_carrier32(b, srcr_t));
+    let r : bits(32) = if active then vec_int_pack_carrier32(sail_zeros(64) + prod, dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
 }
 
-function exec_v_madd(SrcL_k : bits(3), SrcR_k : bits(3), SrcD_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_madd(SrcL_k : bits(5), SrcR_k : bits(5), SrcD_k : bits(5), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
   let rhs = read_vt(SrcR_k);
   let add = read_vt(SrcD_k);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let srcr_t : bits(5) = decoded_vec_srcr_type();
+  let srca_t : bits(5) = decoded_vec_srca_type();
+  let dst_t  : bits(5) = decoded_vec_dst_type();
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
@@ -3019,69 +3493,84 @@ function exec_v_madd(SrcL_k : bits(3), SrcR_k : bits(3), SrcD_k : bits(3), Dst_k
     let a : bits(32) = vec_get_lane32(lhs, i);
     let b : bits(32) = vec_get_lane32(rhs, i);
     let d : bits(32) = vec_get_lane32(add, i);
-    let prod : int = unsigned(a) * unsigned(b);
-    let sum  : int = prod + unsigned(d);
-    let r : bits(32) = if active then (sail_zeros(32) + sum) else undefined_bitvector(32);
+    let prod : int = unsigned(vec_int_bits_from_carrier32(a, srcl_t)) * unsigned(vec_int_bits_from_carrier32(b, srcr_t));
+    let sum  : int = prod + unsigned(vec_int_bits_from_carrier32(d, srca_t));
+    let r : bits(32) = if active then vec_int_pack_carrier32(sail_zeros(64) + sum, dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
 }
 
-function exec_v_max(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_max(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
   let rhs = read_vt(SrcR_k);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let srcr_t : bits(5) = decoded_vec_srcr_type();
+  let dst_t  : bits(5) = decoded_vec_dst_type();
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a : bits(32) = vec_get_lane32(lhs, i);
     let b : bits(32) = vec_get_lane32(rhs, i);
-    let r : bits(32) = if active then (if signed(a) >= signed(b) then a else b) else undefined_bitvector(32);
+    let r64 : bits(64) = if signed(vec_int_numeric_from_carrier32(a, srcl_t)) >= signed(vec_int_numeric_from_carrier32(b, srcr_t))
+      then vec_int_numeric_from_carrier32(a, srcl_t)
+      else vec_int_numeric_from_carrier32(b, srcr_t);
+    let r : bits(32) = if active then vec_int_pack_carrier32(r64, dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
 }
 
-function exec_v_min(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_min(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
   let rhs = read_vt(SrcR_k);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let srcr_t : bits(5) = decoded_vec_srcr_type();
+  let dst_t  : bits(5) = decoded_vec_dst_type();
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a : bits(32) = vec_get_lane32(lhs, i);
     let b : bits(32) = vec_get_lane32(rhs, i);
-    let r : bits(32) = if active then (if signed(a) <= signed(b) then a else b) else undefined_bitvector(32);
+    let r64 : bits(64) = if signed(vec_int_numeric_from_carrier32(a, srcl_t)) <= signed(vec_int_numeric_from_carrier32(b, srcr_t))
+      then vec_int_numeric_from_carrier32(a, srcl_t)
+      else vec_int_numeric_from_carrier32(b, srcr_t);
+    let r : bits(32) = if active then vec_int_pack_carrier32(r64, dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
 }
 
-function exec_v_rem(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_rem(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let lhs = read_vt(SrcL_k);
   let rhs = read_vt(SrcR_k);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let srcr_t : bits(5) = decoded_vec_srcr_type();
+  let dst_t  : bits(5) = decoded_vec_dst_type();
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let a : bits(32) = vec_get_lane32(lhs, i);
     let b : bits(32) = vec_get_lane32(rhs, i);
-    let ai : int = signed(sext32_from32(a));
-    let bi : int = signed(sext32_from32(b));
+    let ai : int = signed(vec_int_numeric_from_carrier32(a, srcl_t));
+    let bi : int = signed(vec_int_numeric_from_carrier32(b, srcr_t));
     let ri : int = if b == 0x0000_0000 then ai else (ai - (tdiv_int(ai, bi) * bi));
-    let r : bits(32) = if active then (sail_zeros(32) + ri) else undefined_bitvector(32);
+    let r : bits(32) = if active then vec_int_pack_carrier32(sail_zeros(64) + ri, dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
 }
 
-function exec_v_rev(SrcL_k : bits(3), immr : bits(6), imml : bits(6), Dst_k : bits(3)) -> unit = {
+function exec_v_rev(SrcL_k : bits(5), immr : bits(6), imml : bits(6), Dst_k : bits(5)) -> unit = {
   // Strict v0.3: per-lane byte-swap of 32-bit elements (bswap32).
   // immr/imml currently ignored in strict bring-up.
   let _ = immr; let _ = imml;
@@ -3125,7 +3614,7 @@ function vec_off_from_idx32(idx32 : bits(32), shamt : bits(5)) -> bits(64) = {
   sail_shiftleft(sext32_from32(idx32), unsigned(shamt))
 }
 
-function exec_v_lb(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lb(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bits(5), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let idxv = read_vt(SrcR_k);
@@ -3144,7 +3633,7 @@ function exec_v_lb(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), Dst_k : bi
   write_vt(Dst_k, out)
 }
 
-function exec_v_lbu(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lbu(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bits(5), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let idxv = read_vt(SrcR_k);
@@ -3163,7 +3652,7 @@ function exec_v_lbu(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), Dst_k : b
   write_vt(Dst_k, out)
 }
 
-function exec_v_lh(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lh(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bits(5), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let idxv = read_vt(SrcR_k);
@@ -3182,7 +3671,7 @@ function exec_v_lh(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), Dst_k : bi
   write_vt(Dst_k, out)
 }
 
-function exec_v_lhu(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lhu(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bits(5), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let idxv = read_vt(SrcR_k);
@@ -3201,7 +3690,7 @@ function exec_v_lhu(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), Dst_k : b
   write_vt(Dst_k, out)
 }
 
-function exec_v_lw(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lw(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bits(5), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let idxv = read_vt(SrcR_k);
@@ -3220,7 +3709,7 @@ function exec_v_lw(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), Dst_k : bi
   write_vt(Dst_k, out)
 }
 
-function exec_v_ld(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_ld(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bits(5), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let idxv = read_vt(SrcR_k);
@@ -3240,7 +3729,7 @@ function exec_v_ld(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), Dst_k : bi
 }
 
 // Broadcast variants (BRG): compute address from lane0 offset and broadcast.
-function exec_v_lb_brg(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lb_brg(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bits(5), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let idxv = read_vt(SrcR_k);
@@ -3259,7 +3748,7 @@ function exec_v_lb_brg(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), Dst_k 
   write_vt(Dst_k, out)
 }
 
-function exec_v_lbu_brg(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lbu_brg(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bits(5), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let idxv = read_vt(SrcR_k);
@@ -3278,7 +3767,7 @@ function exec_v_lbu_brg(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), Dst_k
   write_vt(Dst_k, out)
 }
 
-function exec_v_ld_brg(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_ld_brg(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bits(5), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let idxv = read_vt(SrcR_k);
@@ -3298,7 +3787,7 @@ function exec_v_ld_brg(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), Dst_k 
 }
 
 // Immediate offset forms.
-function exec_v_lbi(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lbi(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let off : bits(64) = sext24_to64(simm24);
@@ -3316,7 +3805,7 @@ function exec_v_lbi(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : 
   write_vt(Dst_k, out)
 }
 
-function exec_v_lbui(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lbui(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let off : bits(64) = sext24_to64(simm24);
@@ -3334,7 +3823,7 @@ function exec_v_lbui(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local :
   write_vt(Dst_k, out)
 }
 
-function exec_v_ldi(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_ldi(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let off : bits(64) = sext24_to64(simm24);
@@ -3352,20 +3841,20 @@ function exec_v_ldi(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : 
   write_vt(Dst_k, out)
 }
 
-function exec_v_lbi_brg(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lbi_brg(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : bits(1)) -> unit = {
   exec_v_lbi(SrcL, simm24, Dst_k, local)
 }
 
-function exec_v_lbui_brg(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lbui_brg(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : bits(1)) -> unit = {
   exec_v_lbui(SrcL, simm24, Dst_k, local)
 }
 
-function exec_v_ldi_brg(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_ldi_brg(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : bits(1)) -> unit = {
   exec_v_ldi(SrcL, simm24, Dst_k, local)
 }
 
 // More BRG variants.
-function exec_v_lh_brg(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lh_brg(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bits(5), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let idxv = read_vt(SrcR_k);
@@ -3384,7 +3873,7 @@ function exec_v_lh_brg(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), Dst_k 
   write_vt(Dst_k, out)
 }
 
-function exec_v_lhu_brg(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lhu_brg(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bits(5), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let idxv = read_vt(SrcR_k);
@@ -3403,7 +3892,7 @@ function exec_v_lhu_brg(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), Dst_k
   write_vt(Dst_k, out)
 }
 
-function exec_v_lw_brg(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lw_brg(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bits(5), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let idxv = read_vt(SrcR_k);
@@ -3422,17 +3911,17 @@ function exec_v_lw_brg(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), Dst_k 
   write_vt(Dst_k, out)
 }
 
-function exec_v_lwu(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lwu(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bits(5), local : bits(1)) -> unit = {
   // 32-bit load, zero-extended; in 32-bit lanes this is a direct write.
   exec_v_lw(SrcL, SrcR_k, shamt, Dst_k, local)
 }
 
-function exec_v_lwu_brg(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lwu_brg(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), Dst_k : bits(5), local : bits(1)) -> unit = {
   exec_v_lw_brg(SrcL, SrcR_k, shamt, Dst_k, local)
 }
 
 // Immediate-offset loads (I) for 16/32.
-function exec_v_lhi(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lhi(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let off : bits(64) = sext24_to64(simm24);
@@ -3450,11 +3939,11 @@ function exec_v_lhi(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : 
   write_vt(Dst_k, out)
 }
 
-function exec_v_lhi_brg(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lhi_brg(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : bits(1)) -> unit = {
   exec_v_lhi(SrcL, simm24, Dst_k, local)
 }
 
-function exec_v_lhui(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lhui(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let off : bits(64) = sext24_to64(simm24);
@@ -3472,11 +3961,11 @@ function exec_v_lhui(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local :
   write_vt(Dst_k, out)
 }
 
-function exec_v_lhui_brg(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lhui_brg(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : bits(1)) -> unit = {
   exec_v_lhui(SrcL, simm24, Dst_k, local)
 }
 
-function exec_v_lwi(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lwi(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let off : bits(64) = sext24_to64(simm24);
@@ -3494,56 +3983,56 @@ function exec_v_lwi(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : 
   write_vt(Dst_k, out)
 }
 
-function exec_v_lwi_brg(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lwi_brg(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : bits(1)) -> unit = {
   exec_v_lwi(SrcL, simm24, Dst_k, local)
 }
 
-function exec_v_lwui(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lwui(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : bits(1)) -> unit = {
   exec_v_lwi(SrcL, simm24, Dst_k, local)
 }
 
-function exec_v_lwui_brg(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lwui_brg(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : bits(1)) -> unit = {
   exec_v_lwi(SrcL, simm24, Dst_k, local)
 }
 
 // Unscaled (.U) forms: staged model currently treats these the same as the scaled forms.
-function exec_v_ldi_u(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_ldi_u(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : bits(1)) -> unit = {
   exec_v_ldi(SrcL, simm24, Dst_k, local)
 }
 
-function exec_v_ldi_u_brg(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_ldi_u_brg(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : bits(1)) -> unit = {
   exec_v_ldi(SrcL, simm24, Dst_k, local)
 }
 
-function exec_v_lhi_u(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lhi_u(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : bits(1)) -> unit = {
   exec_v_lhi(SrcL, simm24, Dst_k, local)
 }
 
-function exec_v_lhi_u_brg(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lhi_u_brg(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : bits(1)) -> unit = {
   exec_v_lhi(SrcL, simm24, Dst_k, local)
 }
 
-function exec_v_lhui_u(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lhui_u(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : bits(1)) -> unit = {
   exec_v_lhui(SrcL, simm24, Dst_k, local)
 }
 
-function exec_v_lhui_u_brg(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lhui_u_brg(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : bits(1)) -> unit = {
   exec_v_lhui(SrcL, simm24, Dst_k, local)
 }
 
-function exec_v_lwi_u(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lwi_u(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : bits(1)) -> unit = {
   exec_v_lwi(SrcL, simm24, Dst_k, local)
 }
 
-function exec_v_lwi_u_brg(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lwi_u_brg(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : bits(1)) -> unit = {
   exec_v_lwi(SrcL, simm24, Dst_k, local)
 }
 
-function exec_v_lwui_u(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lwui_u(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : bits(1)) -> unit = {
   exec_v_lwi(SrcL, simm24, Dst_k, local)
 }
 
-function exec_v_lwui_u_brg(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_lwui_u_brg(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(5), local : bits(1)) -> unit = {
   exec_v_lwi(SrcL, simm24, Dst_k, local)
 }
 
@@ -3555,121 +4044,143 @@ function exec_v_lwui_u_brg(SrcL : bits(5), simm24 : bits(24), Dst_k : bits(3), l
 // Staged note: We do not model atomicity between lanes/cores; we implement the
 // informative Read/Modify/Write sequence on memory.
 
-function exec_v_lw_add(RegDst_k : bits(3), SrcL : bits(5), SrcR_k : bits(3), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+function exec_v_lw_add(RegDst_k : bits(5), SrcL : bits(5), SrcR_k : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
   let _ = aq; let _ = far; let _ = rl;
   let ea : bits(64) = read_reg5(SrcL);
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let src = read_vt(SrcR_k);
+  let src_t : bits(5) = decoded_vec_srcr_type();
+  let dst_t : bits(5) = decoded_vec_dst_type();
   var out = read_vt(RegDst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     if bitvector_access(pm, i) == 0b1 then {
       let old : bits(32) = mem_load32_le(ea);
       let b   : bits(32) = vec_get_lane32(src, i);
-      mem_store32_le(ea, old + b);
-      out = vec_set_lane32(out, i, old)
+      let next : bits(64) = vec_int_bits_from_carrier32(old, dst_t) + vec_int_bits_from_carrier32(b, src_t);
+      mem_store32_le(ea, vec_int_pack_carrier32(next, dst_t));
+      out = vec_set_lane32(out, i, vec_int_pack_carrier32(vec_int_bits_from_carrier32(old, dst_t), dst_t))
     } else ()
   };
   write_vt(RegDst_k, out)
 }
 
-function exec_v_lw_and(RegDst_k : bits(3), SrcL : bits(5), SrcR_k : bits(3), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+function exec_v_lw_and(RegDst_k : bits(5), SrcL : bits(5), SrcR_k : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
   let _ = aq; let _ = far; let _ = rl;
   let ea : bits(64) = read_reg5(SrcL);
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let src = read_vt(SrcR_k);
+  let src_t : bits(5) = decoded_vec_srcr_type();
+  let dst_t : bits(5) = decoded_vec_dst_type();
   var out = read_vt(RegDst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     if bitvector_access(pm, i) == 0b1 then {
       let old : bits(32) = mem_load32_le(ea);
       let b   : bits(32) = vec_get_lane32(src, i);
-      mem_store32_le(ea, old & b);
-      out = vec_set_lane32(out, i, old)
+      let next : bits(64) = vec_int_bits_from_carrier32(old, dst_t) & vec_int_bits_from_carrier32(b, src_t);
+      mem_store32_le(ea, vec_int_pack_carrier32(next, dst_t));
+      out = vec_set_lane32(out, i, vec_int_pack_carrier32(vec_int_bits_from_carrier32(old, dst_t), dst_t))
     } else ()
   };
   write_vt(RegDst_k, out)
 }
 
-function exec_v_lw_or(RegDst_k : bits(3), SrcL : bits(5), SrcR_k : bits(3), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+function exec_v_lw_or(RegDst_k : bits(5), SrcL : bits(5), SrcR_k : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
   let _ = aq; let _ = far; let _ = rl;
   let ea : bits(64) = read_reg5(SrcL);
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let src = read_vt(SrcR_k);
+  let src_t : bits(5) = decoded_vec_srcr_type();
+  let dst_t : bits(5) = decoded_vec_dst_type();
   var out = read_vt(RegDst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     if bitvector_access(pm, i) == 0b1 then {
       let old : bits(32) = mem_load32_le(ea);
       let b   : bits(32) = vec_get_lane32(src, i);
-      mem_store32_le(ea, old | b);
-      out = vec_set_lane32(out, i, old)
+      let next : bits(64) = vec_int_bits_from_carrier32(old, dst_t) | vec_int_bits_from_carrier32(b, src_t);
+      mem_store32_le(ea, vec_int_pack_carrier32(next, dst_t));
+      out = vec_set_lane32(out, i, vec_int_pack_carrier32(vec_int_bits_from_carrier32(old, dst_t), dst_t))
     } else ()
   };
   write_vt(RegDst_k, out)
 }
 
-function exec_v_lw_xor(RegDst_k : bits(3), SrcL : bits(5), SrcR_k : bits(3), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+function exec_v_lw_xor(RegDst_k : bits(5), SrcL : bits(5), SrcR_k : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
   let _ = aq; let _ = far; let _ = rl;
   let ea : bits(64) = read_reg5(SrcL);
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let src = read_vt(SrcR_k);
+  let src_t : bits(5) = decoded_vec_srcr_type();
+  let dst_t : bits(5) = decoded_vec_dst_type();
   var out = read_vt(RegDst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     if bitvector_access(pm, i) == 0b1 then {
       let old : bits(32) = mem_load32_le(ea);
       let b   : bits(32) = vec_get_lane32(src, i);
-      mem_store32_le(ea, old ^ b);
-      out = vec_set_lane32(out, i, old)
+      let next : bits(64) = xor_vec(vec_int_bits_from_carrier32(old, dst_t), vec_int_bits_from_carrier32(b, src_t));
+      mem_store32_le(ea, vec_int_pack_carrier32(next, dst_t));
+      out = vec_set_lane32(out, i, vec_int_pack_carrier32(vec_int_bits_from_carrier32(old, dst_t), dst_t))
     } else ()
   };
   write_vt(RegDst_k, out)
 }
 
-function exec_v_lw_max(RegDst_k : bits(3), SrcL : bits(5), SrcR_k : bits(3), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+function exec_v_lw_max(RegDst_k : bits(5), SrcL : bits(5), SrcR_k : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
   let _ = aq; let _ = far; let _ = rl;
   let ea : bits(64) = read_reg5(SrcL);
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let src = read_vt(SrcR_k);
+  let src_t : bits(5) = decoded_vec_srcr_type();
+  let dst_t : bits(5) = decoded_vec_dst_type();
   var out = read_vt(RegDst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     if bitvector_access(pm, i) == 0b1 then {
       let old : bits(32) = mem_load32_le(ea);
       let b   : bits(32) = vec_get_lane32(src, i);
-      mem_store32_le(ea, if (signed(old) >= signed(b)) then old else b);
-      out = vec_set_lane32(out, i, old)
+      let old64 : bits(64) = vec_int_numeric_from_carrier32(old, dst_t);
+      let b64   : bits(64) = vec_int_numeric_from_carrier32(b, src_t);
+      let next  : bits(64) = if signed(old64) >= signed(b64) then old64 else b64;
+      mem_store32_le(ea, vec_int_pack_carrier32(next, dst_t));
+      out = vec_set_lane32(out, i, vec_int_pack_carrier32(old64, dst_t))
     } else ()
   };
   write_vt(RegDst_k, out)
 }
 
-function exec_v_lw_min(RegDst_k : bits(3), SrcL : bits(5), SrcR_k : bits(3), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+function exec_v_lw_min(RegDst_k : bits(5), SrcL : bits(5), SrcR_k : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
   let _ = aq; let _ = far; let _ = rl;
   let ea : bits(64) = read_reg5(SrcL);
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let src = read_vt(SrcR_k);
+  let src_t : bits(5) = decoded_vec_srcr_type();
+  let dst_t : bits(5) = decoded_vec_dst_type();
   var out = read_vt(RegDst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     if bitvector_access(pm, i) == 0b1 then {
       let old : bits(32) = mem_load32_le(ea);
       let b   : bits(32) = vec_get_lane32(src, i);
-      mem_store32_le(ea, if (signed(old) <= signed(b)) then old else b);
-      out = vec_set_lane32(out, i, old)
+      let old64 : bits(64) = vec_int_numeric_from_carrier32(old, dst_t);
+      let b64   : bits(64) = vec_int_numeric_from_carrier32(b, src_t);
+      let next  : bits(64) = if signed(old64) <= signed(b64) then old64 else b64;
+      mem_store32_le(ea, vec_int_pack_carrier32(next, dst_t));
+      out = vec_set_lane32(out, i, vec_int_pack_carrier32(old64, dst_t))
     } else ()
   };
   write_vt(RegDst_k, out)
 }
 
-function exec_v_ld_add(RegDst_k : bits(3), SrcL : bits(5), SrcR_k : bits(3), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+function exec_v_ld_add(RegDst_k : bits(5), SrcL : bits(5), SrcR_k : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
   let _ = aq; let _ = far; let _ = rl;
   let ea : bits(64) = read_reg5(SrcL);
   let vw32 : int = vec_length_from_lcfr();
@@ -3691,7 +4202,7 @@ function exec_v_ld_add(RegDst_k : bits(3), SrcL : bits(5), SrcR_k : bits(3), aq 
   write_vt(RegDst_k, out)
 }
 
-function exec_v_ld_and(RegDst_k : bits(3), SrcL : bits(5), SrcR_k : bits(3), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+function exec_v_ld_and(RegDst_k : bits(5), SrcL : bits(5), SrcR_k : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
   let _ = aq; let _ = far; let _ = rl;
   let ea : bits(64) = read_reg5(SrcL);
   let vw32 : int = vec_length_from_lcfr();
@@ -3713,7 +4224,7 @@ function exec_v_ld_and(RegDst_k : bits(3), SrcL : bits(5), SrcR_k : bits(3), aq 
   write_vt(RegDst_k, out)
 }
 
-function exec_v_ld_or(RegDst_k : bits(3), SrcL : bits(5), SrcR_k : bits(3), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+function exec_v_ld_or(RegDst_k : bits(5), SrcL : bits(5), SrcR_k : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
   let _ = aq; let _ = far; let _ = rl;
   let ea : bits(64) = read_reg5(SrcL);
   let vw32 : int = vec_length_from_lcfr();
@@ -3735,7 +4246,7 @@ function exec_v_ld_or(RegDst_k : bits(3), SrcL : bits(5), SrcR_k : bits(3), aq :
   write_vt(RegDst_k, out)
 }
 
-function exec_v_ld_xor(RegDst_k : bits(3), SrcL : bits(5), SrcR_k : bits(3), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+function exec_v_ld_xor(RegDst_k : bits(5), SrcL : bits(5), SrcR_k : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
   let _ = aq; let _ = far; let _ = rl;
   let ea : bits(64) = read_reg5(SrcL);
   let vw32 : int = vec_length_from_lcfr();
@@ -3750,14 +4261,14 @@ function exec_v_ld_xor(RegDst_k : bits(3), SrcL : bits(5), SrcR_k : bits(3), aq 
       let lo : bits(32) = vec_get_lane32(src, 2*i);
       let hi : bits(32) = vec_get_lane32(src, 2*i + 1);
       let b  : bits(64) = hi @ lo;
-      mem_store64_le(ea, old ^ b);
+      mem_store64_le(ea, xor_vec(old, b));
       out = vec_store64_packed(out, i, old)
     } else ()
   };
   write_vt(RegDst_k, out)
 }
 
-function exec_v_ld_max(RegDst_k : bits(3), SrcL : bits(5), SrcR_k : bits(3), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+function exec_v_ld_max(RegDst_k : bits(5), SrcL : bits(5), SrcR_k : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
   let _ = aq; let _ = far; let _ = rl;
   let ea : bits(64) = read_reg5(SrcL);
   let vw32 : int = vec_length_from_lcfr();
@@ -3779,7 +4290,7 @@ function exec_v_ld_max(RegDst_k : bits(3), SrcL : bits(5), SrcR_k : bits(3), aq 
   write_vt(RegDst_k, out)
 }
 
-function exec_v_ld_min(RegDst_k : bits(3), SrcL : bits(5), SrcR_k : bits(3), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
+function exec_v_ld_min(RegDst_k : bits(5), SrcL : bits(5), SrcR_k : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
   let _ = aq; let _ = far; let _ = rl;
   let ea : bits(64) = read_reg5(SrcL);
   let vw32 : int = vec_length_from_lcfr();
@@ -3807,7 +4318,7 @@ function exec_v_ld_min(RegDst_k : bits(3), SrcL : bits(5), SrcR_k : bits(3), aq 
 // Spec: docs/architecture/isa-manual/src/generated/instruction_details.adoc
 // Staged note: do not model ordering/atomicity; just Read/Modify/Write.
 
-function exec_v_sd_add(SrcL : bits(5), SrcR_k : bits(3), rl : bits(1), far : bits(1), rd : bits(1)) -> unit = {
+function exec_v_sd_add(SrcL : bits(5), SrcR_k : bits(5), rl : bits(1), far : bits(1), rd : bits(1)) -> unit = {
   let _ = rl; let _ = far; let _ = rd;
   let ea : bits(64) = read_reg5(SrcL);
   let vw32 : int = vec_length_from_lcfr();
@@ -3826,7 +4337,7 @@ function exec_v_sd_add(SrcL : bits(5), SrcR_k : bits(3), rl : bits(1), far : bit
   }
 }
 
-function exec_v_sd_and(SrcL : bits(5), SrcR_k : bits(3), rl : bits(1), far : bits(1), rd : bits(1)) -> unit = {
+function exec_v_sd_and(SrcL : bits(5), SrcR_k : bits(5), rl : bits(1), far : bits(1), rd : bits(1)) -> unit = {
   let _ = rl; let _ = far; let _ = rd;
   let ea : bits(64) = read_reg5(SrcL);
   let vw32 : int = vec_length_from_lcfr();
@@ -3845,7 +4356,7 @@ function exec_v_sd_and(SrcL : bits(5), SrcR_k : bits(3), rl : bits(1), far : bit
   }
 }
 
-function exec_v_sd_or(SrcL : bits(5), SrcR_k : bits(3), rl : bits(1), far : bits(1), rd : bits(1)) -> unit = {
+function exec_v_sd_or(SrcL : bits(5), SrcR_k : bits(5), rl : bits(1), far : bits(1), rd : bits(1)) -> unit = {
   let _ = rl; let _ = far; let _ = rd;
   let ea : bits(64) = read_reg5(SrcL);
   let vw32 : int = vec_length_from_lcfr();
@@ -3864,7 +4375,7 @@ function exec_v_sd_or(SrcL : bits(5), SrcR_k : bits(3), rl : bits(1), far : bits
   }
 }
 
-function exec_v_sd_xor(SrcL : bits(5), SrcR_k : bits(3), rl : bits(1), far : bits(1), rd : bits(1)) -> unit = {
+function exec_v_sd_xor(SrcL : bits(5), SrcR_k : bits(5), rl : bits(1), far : bits(1), rd : bits(1)) -> unit = {
   let _ = rl; let _ = far; let _ = rd;
   let ea : bits(64) = read_reg5(SrcL);
   let vw32 : int = vec_length_from_lcfr();
@@ -3878,12 +4389,12 @@ function exec_v_sd_xor(SrcL : bits(5), SrcR_k : bits(3), rl : bits(1), far : bit
       let lo : bits(32) = vec_get_lane32(src, 2*i);
       let hi : bits(32) = vec_get_lane32(src, 2*i + 1);
       let b  : bits(64) = hi @ lo;
-      mem_store64_le(ea, old ^ b)
+      mem_store64_le(ea, xor_vec(old, b))
     } else ()
   }
 }
 
-function exec_v_sd_max(SrcL : bits(5), SrcR_k : bits(3), rl : bits(1), far : bits(1), rd : bits(1)) -> unit = {
+function exec_v_sd_max(SrcL : bits(5), SrcR_k : bits(5), rl : bits(1), far : bits(1), rd : bits(1)) -> unit = {
   let _ = rl; let _ = far; let _ = rd;
   let ea : bits(64) = read_reg5(SrcL);
   let vw32 : int = vec_length_from_lcfr();
@@ -3903,7 +4414,7 @@ function exec_v_sd_max(SrcL : bits(5), SrcR_k : bits(3), rl : bits(1), far : bit
   }
 }
 
-function exec_v_sd_min(SrcL : bits(5), SrcR_k : bits(3), rl : bits(1), far : bits(1), rd : bits(1)) -> unit = {
+function exec_v_sd_min(SrcL : bits(5), SrcR_k : bits(5), rl : bits(1), far : bits(1), rd : bits(1)) -> unit = {
   let _ = rl; let _ = far; let _ = rd;
   let ea : bits(64) = read_reg5(SrcL);
   let vw32 : int = vec_length_from_lcfr();
@@ -3923,100 +4434,110 @@ function exec_v_sd_min(SrcL : bits(5), SrcR_k : bits(3), rl : bits(1), far : bit
   }
 }
 
-function exec_v_sw_add(SrcL : bits(5), SrcR_k : bits(3), rl : bits(1), far : bits(1), rd : bits(1)) -> unit = {
+function exec_v_sw_add(SrcL : bits(5), SrcR_k : bits(5), rl : bits(1), far : bits(1), rd : bits(1)) -> unit = {
   let _ = rl; let _ = far; let _ = rd;
   let ea : bits(64) = read_reg5(SrcL);
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let src = read_vt(SrcR_k);
+  let src_t : bits(5) = decoded_vec_srcr_type();
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     if bitvector_access(pm, i) == 0b1 then {
       let old : bits(32) = mem_load32_le(ea);
       let b   : bits(32) = vec_get_lane32(src, i);
-      mem_store32_le(ea, old + b)
+      mem_store32_le(ea, vec_int_pack_carrier32(vec_int_bits_from_carrier32(old, src_t) + vec_int_bits_from_carrier32(b, src_t), src_t))
     } else ()
   }
 }
 
-function exec_v_sw_and(SrcL : bits(5), SrcR_k : bits(3), rl : bits(1), far : bits(1), rd : bits(1)) -> unit = {
+function exec_v_sw_and(SrcL : bits(5), SrcR_k : bits(5), rl : bits(1), far : bits(1), rd : bits(1)) -> unit = {
   let _ = rl; let _ = far; let _ = rd;
   let ea : bits(64) = read_reg5(SrcL);
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let src = read_vt(SrcR_k);
+  let src_t : bits(5) = decoded_vec_srcr_type();
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     if bitvector_access(pm, i) == 0b1 then {
       let old : bits(32) = mem_load32_le(ea);
       let b   : bits(32) = vec_get_lane32(src, i);
-      mem_store32_le(ea, old & b)
+      mem_store32_le(ea, vec_int_pack_carrier32(vec_int_bits_from_carrier32(old, src_t) & vec_int_bits_from_carrier32(b, src_t), src_t))
     } else ()
   }
 }
 
-function exec_v_sw_or(SrcL : bits(5), SrcR_k : bits(3), rl : bits(1), far : bits(1), rd : bits(1)) -> unit = {
+function exec_v_sw_or(SrcL : bits(5), SrcR_k : bits(5), rl : bits(1), far : bits(1), rd : bits(1)) -> unit = {
   let _ = rl; let _ = far; let _ = rd;
   let ea : bits(64) = read_reg5(SrcL);
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let src = read_vt(SrcR_k);
+  let src_t : bits(5) = decoded_vec_srcr_type();
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     if bitvector_access(pm, i) == 0b1 then {
       let old : bits(32) = mem_load32_le(ea);
       let b   : bits(32) = vec_get_lane32(src, i);
-      mem_store32_le(ea, old | b)
+      mem_store32_le(ea, vec_int_pack_carrier32(vec_int_bits_from_carrier32(old, src_t) | vec_int_bits_from_carrier32(b, src_t), src_t))
     } else ()
   }
 }
 
-function exec_v_sw_xor(SrcL : bits(5), SrcR_k : bits(3), rl : bits(1), far : bits(1), rd : bits(1)) -> unit = {
+function exec_v_sw_xor(SrcL : bits(5), SrcR_k : bits(5), rl : bits(1), far : bits(1), rd : bits(1)) -> unit = {
   let _ = rl; let _ = far; let _ = rd;
   let ea : bits(64) = read_reg5(SrcL);
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let src = read_vt(SrcR_k);
+  let src_t : bits(5) = decoded_vec_srcr_type();
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     if bitvector_access(pm, i) == 0b1 then {
       let old : bits(32) = mem_load32_le(ea);
       let b   : bits(32) = vec_get_lane32(src, i);
-      mem_store32_le(ea, old ^ b)
+      mem_store32_le(ea, vec_int_pack_carrier32(xor_vec(vec_int_bits_from_carrier32(old, src_t), vec_int_bits_from_carrier32(b, src_t)), src_t))
     } else ()
   }
 }
 
-function exec_v_sw_max(SrcL : bits(5), SrcR_k : bits(3), rl : bits(1), far : bits(1), rd : bits(1)) -> unit = {
+function exec_v_sw_max(SrcL : bits(5), SrcR_k : bits(5), rl : bits(1), far : bits(1), rd : bits(1)) -> unit = {
   let _ = rl; let _ = far; let _ = rd;
   let ea : bits(64) = read_reg5(SrcL);
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let src = read_vt(SrcR_k);
+  let src_t : bits(5) = decoded_vec_srcr_type();
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     if bitvector_access(pm, i) == 0b1 then {
       let old : bits(32) = mem_load32_le(ea);
       let b   : bits(32) = vec_get_lane32(src, i);
-      let n   : bits(32) = if (signed(old) >= signed(b)) then old else b;
-      mem_store32_le(ea, n)
+      let old64 : bits(64) = vec_int_numeric_from_carrier32(old, src_t);
+      let b64   : bits(64) = vec_int_numeric_from_carrier32(b, src_t);
+      let n     : bits(64) = if signed(old64) >= signed(b64) then old64 else b64;
+      mem_store32_le(ea, vec_int_pack_carrier32(n, src_t))
     } else ()
   }
 }
 
-function exec_v_sw_min(SrcL : bits(5), SrcR_k : bits(3), rl : bits(1), far : bits(1), rd : bits(1)) -> unit = {
+function exec_v_sw_min(SrcL : bits(5), SrcR_k : bits(5), rl : bits(1), far : bits(1), rd : bits(1)) -> unit = {
   let _ = rl; let _ = far; let _ = rd;
   let ea : bits(64) = read_reg5(SrcL);
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let src = read_vt(SrcR_k);
+  let src_t : bits(5) = decoded_vec_srcr_type();
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     if bitvector_access(pm, i) == 0b1 then {
       let old : bits(32) = mem_load32_le(ea);
       let b   : bits(32) = vec_get_lane32(src, i);
-      let n   : bits(32) = if (signed(old) <= signed(b)) then old else b;
-      mem_store32_le(ea, n)
+      let old64 : bits(64) = vec_int_numeric_from_carrier32(old, src_t);
+      let b64   : bits(64) = vec_int_numeric_from_carrier32(b, src_t);
+      let n     : bits(64) = if signed(old64) <= signed(b64) then old64 else b64;
+      mem_store32_le(ea, vec_int_pack_carrier32(n, src_t))
     } else ()
   }
 }
@@ -4025,9 +4546,12 @@ function exec_v_sw_min(SrcL : bits(5), SrcR_k : bits(3), rl : bits(1), far : bit
 // Vector shifts (staged)
 // Spec: docs/architecture/isa-manual/src/generated/instruction_details.adoc
 
-function exec_v_sll(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_sll(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
   let a = read_vt(SrcL_k);
   let b = read_vt(SrcR_k);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let srcr_t : bits(5) = decoded_vec_srcr_type();
+  let dst_t  : bits(5) = decoded_vec_dst_type();
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   var out = read_vt(Dst_k);
@@ -4036,32 +4560,39 @@ function exec_v_sll(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit
     let active = bitvector_access(pm, i) == 0b1;
     let av : bits(32) = vec_get_lane32(a, i);
     let bv : bits(32) = vec_get_lane32(b, i);
-    let sh : int = unsigned(bv[5..0]);
-    let r  : bits(32) = if active then sail_shiftleft(av, sh) else undefined_bitvector(32);
+    let sh : int = vec_int_shift_amount(bv, srcr_t);
+    let r64 : bits(64) = sail_shiftleft(vec_int_bits_from_carrier32(av, srcl_t), sh);
+    let r  : bits(32) = if active then vec_int_pack_carrier32(r64, dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
 }
 
-function exec_v_slli(SrcL_k : bits(3), shamt : bits(6), Dst_k : bits(3)) -> unit = {
+function exec_v_slli(SrcL_k : bits(5), shamt : bits(6), Dst_k : bits(5)) -> unit = {
   let a = read_vt(SrcL_k);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let dst_t  : bits(5) = decoded_vec_dst_type();
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
-  let sh : int = unsigned(shamt);
+  let sh : int = tmod_int(unsigned(shamt), if vec_int_effective_width(srcl_t) > 64 then 64 else vec_int_effective_width(srcl_t));
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let av : bits(32) = vec_get_lane32(a, i);
-    let r  : bits(32) = if active then sail_shiftleft(av, sh) else undefined_bitvector(32);
+    let r64 : bits(64) = sail_shiftleft(vec_int_bits_from_carrier32(av, srcl_t), sh);
+    let r  : bits(32) = if active then vec_int_pack_carrier32(r64, dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
 }
 
-function exec_v_sra(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_sra(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
   let a = read_vt(SrcL_k);
   let b = read_vt(SrcR_k);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let srcr_t : bits(5) = decoded_vec_srcr_type();
+  let dst_t  : bits(5) = decoded_vec_dst_type();
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   var out = read_vt(Dst_k);
@@ -4070,32 +4601,39 @@ function exec_v_sra(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit
     let active = bitvector_access(pm, i) == 0b1;
     let av : bits(32) = vec_get_lane32(a, i);
     let bv : bits(32) = vec_get_lane32(b, i);
-    let sh : int = unsigned(bv[5..0]);
-    let r  : bits(32) = if active then sail_arith_shiftright(av, sh) else undefined_bitvector(32);
+    let sh : int = vec_int_shift_amount(bv, srcr_t);
+    let r64 : bits(64) = sail_arith_shiftright(vec_int_numeric_from_carrier32(av, srcl_t), sh);
+    let r  : bits(32) = if active then vec_int_pack_carrier32(r64, dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
 }
 
-function exec_v_srai(SrcL_k : bits(3), shamt : bits(6), Dst_k : bits(3)) -> unit = {
+function exec_v_srai(SrcL_k : bits(5), shamt : bits(6), Dst_k : bits(5)) -> unit = {
   let a = read_vt(SrcL_k);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let dst_t  : bits(5) = decoded_vec_dst_type();
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
-  let sh : int = unsigned(shamt);
+  let sh : int = tmod_int(unsigned(shamt), if vec_int_effective_width(srcl_t) > 64 then 64 else vec_int_effective_width(srcl_t));
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let av : bits(32) = vec_get_lane32(a, i);
-    let r  : bits(32) = if active then sail_arith_shiftright(av, sh) else undefined_bitvector(32);
+    let r64 : bits(64) = sail_arith_shiftright(vec_int_numeric_from_carrier32(av, srcl_t), sh);
+    let r  : bits(32) = if active then vec_int_pack_carrier32(r64, dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
 }
 
-function exec_v_srl(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_srl(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
   let a = read_vt(SrcL_k);
   let b = read_vt(SrcR_k);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let srcr_t : bits(5) = decoded_vec_srcr_type();
+  let dst_t  : bits(5) = decoded_vec_dst_type();
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   var out = read_vt(Dst_k);
@@ -4104,24 +4642,28 @@ function exec_v_srl(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit
     let active = bitvector_access(pm, i) == 0b1;
     let av : bits(32) = vec_get_lane32(a, i);
     let bv : bits(32) = vec_get_lane32(b, i);
-    let sh : int = unsigned(bv[5..0]);
-    let r  : bits(32) = if active then sail_shiftright(av, sh) else undefined_bitvector(32);
+    let sh : int = vec_int_shift_amount(bv, srcr_t);
+    let r64 : bits(64) = sail_shiftright(vec_int_bits_from_carrier32(av, srcl_t), sh);
+    let r  : bits(32) = if active then vec_int_pack_carrier32(r64, dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
 }
 
-function exec_v_srli(SrcL_k : bits(3), shamt : bits(6), Dst_k : bits(3)) -> unit = {
+function exec_v_srli(SrcL_k : bits(5), shamt : bits(6), Dst_k : bits(5)) -> unit = {
   let a = read_vt(SrcL_k);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let dst_t  : bits(5) = decoded_vec_dst_type();
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
-  let sh : int = unsigned(shamt);
+  let sh : int = tmod_int(unsigned(shamt), if vec_int_effective_width(srcl_t) > 64 then 64 else vec_int_effective_width(srcl_t));
   var out = read_vt(Dst_k);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     let active = bitvector_access(pm, i) == 0b1;
     let av : bits(32) = vec_get_lane32(a, i);
-    let r  : bits(32) = if active then sail_shiftright(av, sh) else undefined_bitvector(32);
+    let r64 : bits(64) = sail_shiftright(vec_int_bits_from_carrier32(av, srcl_t), sh);
+    let r  : bits(32) = if active then vec_int_pack_carrier32(r64, dst_t) else undefined_bitvector(32);
     out = vec_set_lane32(out, i, r)
   };
   write_vt(Dst_k, out)
@@ -4151,7 +4693,7 @@ function int_xor_nonneg(a : int, b : int) -> int = {
   }
 }
 
-function exec_v_shfl_bfly(SrcL_k : bits(3), SrcP_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_shfl_bfly(SrcL_k : bits(5), SrcP_k : bits(5), Dst_k : bits(5)) -> unit = {
   // Strict v0.3 group-local shuffle. BFLY variant.
   // range is fixed to lanenum (whole group); delt from SrcP; src_id = laneid XOR delt.
   let vw : int = vec_length_from_lcfr();
@@ -4174,7 +4716,7 @@ function exec_v_shfl_bfly(SrcL_k : bits(3), SrcP_k : bits(3), Dst_k : bits(3)) -
   write_vt(Dst_k, out)
 }
 
-function exec_v_shfl_down(SrcL_k : bits(3), SrcR_k : bits(3), SrcP_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_shfl_down(SrcL_k : bits(5), SrcR_k : bits(5), SrcP_k : bits(5), Dst_k : bits(5)) -> unit = {
   // Strict v0.3 group-local shuffle. DOWN variant.
   let vw : int = vec_length_from_lcfr();
   let lb0_i : int = unsigned(ssr_lb0[31..0]);
@@ -4200,7 +4742,7 @@ function exec_v_shfl_down(SrcL_k : bits(3), SrcR_k : bits(3), SrcP_k : bits(3), 
   write_vt(Dst_k, out)
 }
 
-function exec_v_shfl_idx(SrcL_k : bits(3), SrcR_k : bits(3), SrcP_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_shfl_idx(SrcL_k : bits(5), SrcR_k : bits(5), SrcP_k : bits(5), Dst_k : bits(5)) -> unit = {
   // Strict v0.3 group-local shuffle. IDX variant.
   // range from SrcR; idx from SrcP; out-of-segment falls back to self.
   let vw : int = vec_length_from_lcfr();
@@ -4227,7 +4769,7 @@ function exec_v_shfl_idx(SrcL_k : bits(3), SrcR_k : bits(3), SrcP_k : bits(3), D
   write_vt(Dst_k, out)
 }
 
-function exec_v_shfl_up(SrcL_k : bits(3), SrcR_k : bits(3), SrcP_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_shfl_up(SrcL_k : bits(5), SrcR_k : bits(5), SrcP_k : bits(5), Dst_k : bits(5)) -> unit = {
   // Strict v0.3 group-local shuffle. UP variant.
   let vw : int = vec_length_from_lcfr();
   let lb0_i : int = unsigned(ssr_lb0[31..0]);
@@ -4252,7 +4794,7 @@ function exec_v_shfl_up(SrcL_k : bits(3), SrcR_k : bits(3), SrcP_k : bits(3), Ds
   write_vt(Dst_k, out)
 }
 
-function exec_v_shfli_bfly(SrcL_k : bits(3), imm7 : bits(7), Dst_k : bits(3)) -> unit = {
+function exec_v_shfli_bfly(SrcL_k : bits(5), imm7 : bits(14), Dst_k : bits(5)) -> unit = {
   // Immediate BFLY: mask from imm7; range fixed to lanenum.
   let vw : int = vec_length_from_lcfr();
   let lb0_i : int = unsigned(ssr_lb0[31..0]);
@@ -4273,7 +4815,7 @@ function exec_v_shfli_bfly(SrcL_k : bits(3), imm7 : bits(7), Dst_k : bits(3)) ->
   write_vt(Dst_k, out)
 }
 
-function exec_v_shfli_down(SrcL_k : bits(3), SrcR_k : bits(3), imm7 : bits(7), Dst_k : bits(3)) -> unit = {
+function exec_v_shfli_down(SrcL_k : bits(5), SrcR_k : bits(5), imm7 : bits(14), Dst_k : bits(5)) -> unit = {
   // Immediate DOWN: offset from imm7, range from SrcR.
   let vw : int = vec_length_from_lcfr();
   let lb0_i : int = unsigned(ssr_lb0[31..0]);
@@ -4297,7 +4839,7 @@ function exec_v_shfli_down(SrcL_k : bits(3), SrcR_k : bits(3), imm7 : bits(7), D
   write_vt(Dst_k, out)
 }
 
-function exec_v_shfli_idx(SrcL_k : bits(3), SrcR_k : bits(3), imm7 : bits(7), Dst_k : bits(3)) -> unit = {
+function exec_v_shfli_idx(SrcL_k : bits(5), SrcR_k : bits(5), imm7 : bits(14), Dst_k : bits(5)) -> unit = {
   // Immediate IDX: idx from imm7, range from SrcR.
   let vw : int = vec_length_from_lcfr();
   let lb0_i : int = unsigned(ssr_lb0[31..0]);
@@ -4321,7 +4863,7 @@ function exec_v_shfli_idx(SrcL_k : bits(3), SrcR_k : bits(3), imm7 : bits(7), Ds
   write_vt(Dst_k, out)
 }
 
-function exec_v_shfli_up(SrcL_k : bits(3), SrcR_k : bits(3), imm7 : bits(7), Dst_k : bits(3)) -> unit = {
+function exec_v_shfli_up(SrcL_k : bits(5), SrcR_k : bits(5), imm7 : bits(14), Dst_k : bits(5)) -> unit = {
   // Immediate UP: offset from imm7, range from SrcR.
   let vw : int = vec_length_from_lcfr();
   let lb0_i : int = unsigned(ssr_lb0[31..0]);
@@ -4348,7 +4890,7 @@ function exec_v_shfli_up(SrcL_k : bits(3), SrcR_k : bits(3), imm7 : bits(7), Dst
 // -----------------------------------------------------------------------------
 // Vector queue ops / reductions / format-convert shims (staged)
 
-function exec_v_qpush(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_qpush(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
   // Strict v0.3 memory-queue push.
   // Per active lane (P=1):
   //   base = SrcL[lane] (u32 address)
@@ -4403,7 +4945,7 @@ function exec_v_qpush(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> un
   write_vt(Dst_k, out)
 }
 
-function exec_v_qpop(SrcL_k : bits(3), Dst_k : bits(3)) -> unit = {
+function exec_v_qpop(SrcL_k : bits(5), Dst_k : bits(5)) -> unit = {
   // Strict v0.3 memory-queue pop.
   // Per active lane (P=1):
   //   base = SrcL[lane] (u32 address)
@@ -4450,102 +4992,124 @@ function exec_v_qpop(SrcL_k : bits(3), Dst_k : bits(3)) -> unit = {
   write_vt(Dst_k, out)
 }
 
-function vrd_unimpl(mnemonic : string) -> unit = { let _ = mnemonic; () }
-
-function exec_v_rdadd(RegDst : bits(5), SrcL_k : bits(3)) -> unit = {
-  vrd_unimpl("V.RDADD");
+function exec_v_rdadd(RegDst : bits(5), SrcL_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let a = read_vt(SrcL_k);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
   var acc : bits(64) = 0x0000_0000_0000_0000;
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
-    if bitvector_access(pm, i) == 0b1 then acc = acc + zext32_from32(vec_get_lane32(a, i)) else ()
+    if bitvector_access(pm, i) == 0b1 then acc = acc + vec_int_numeric_from_carrier32(vec_get_lane32(a, i), srcl_t) else ()
   };
   write_regdst(RegDst, acc)
 }
 
-function exec_v_rdand(RegDst : bits(5), SrcL_k : bits(3)) -> unit = {
-  vrd_unimpl("V.RDAND");
+function exec_v_rdand(RegDst : bits(5), SrcL_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let a = read_vt(SrcL_k);
-  var acc : bits(32) = 0xFFFF_FFFF;
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let width : int = vec_int_effective_width(srcl_t);
+  var acc : bits(64) = vec_int_bits_from_value64(0xFFFF_FFFF_FFFF_FFFF, srcl_t);
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
-    if bitvector_access(pm, i) == 0b1 then acc = acc & vec_get_lane32(a, i) else ()
+    if bitvector_access(pm, i) == 0b1 then acc = acc & vec_int_bits_from_carrier32(vec_get_lane32(a, i), srcl_t) else ()
   };
-  write_regdst(RegDst, zext32_from32(acc))
+  write_regdst(RegDst, vec_int_bits_from_value64(acc, if width > 32 then 0b00000 else srcl_t))
 }
 
-function exec_v_rdor(RegDst : bits(5), SrcL_k : bits(3)) -> unit = {
-  vrd_unimpl("V.RDOR");
+function exec_v_rdor(RegDst : bits(5), SrcL_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let a = read_vt(SrcL_k);
-  var acc : bits(32) = 0x0000_0000;
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let width : int = vec_int_effective_width(srcl_t);
+  var acc : bits(64) = 0x0000_0000_0000_0000;
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
-    if bitvector_access(pm, i) == 0b1 then acc = acc | vec_get_lane32(a, i) else ()
+    if bitvector_access(pm, i) == 0b1 then acc = acc | vec_int_bits_from_carrier32(vec_get_lane32(a, i), srcl_t) else ()
   };
-  write_regdst(RegDst, zext32_from32(acc))
+  write_regdst(RegDst, vec_int_bits_from_value64(acc, if width > 32 then 0b00000 else srcl_t))
 }
 
-function exec_v_rdxor(RegDst : bits(5), SrcL_k : bits(3)) -> unit = {
-  vrd_unimpl("V.RDXOR");
+function exec_v_rdxor(RegDst : bits(5), SrcL_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let a = read_vt(SrcL_k);
-  var acc : bits(32) = 0x0000_0000;
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  let width : int = vec_int_effective_width(srcl_t);
+  var acc : bits(64) = 0x0000_0000_0000_0000;
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
-    if bitvector_access(pm, i) == 0b1 then acc = acc ^ vec_get_lane32(a, i) else ()
+    if bitvector_access(pm, i) == 0b1 then acc = xor_vec(acc, vec_int_bits_from_carrier32(vec_get_lane32(a, i), srcl_t)) else ()
   };
-  write_regdst(RegDst, zext32_from32(acc))
+  write_regdst(RegDst, vec_int_bits_from_value64(acc, if width > 32 then 0b00000 else srcl_t))
 }
 
-function exec_v_rdmax(RegDst : bits(5), SrcL_k : bits(3)) -> unit = {
-  vrd_unimpl("V.RDMAX");
+function exec_v_rdmax(RegDst : bits(5), SrcL_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
   let a = read_vt(SrcL_k);
-  var acc : bits(32) = 0x8000_0000;
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 64));
-    if bitvector_access(pm, i) == 0b1 then {
-      let x = vec_get_lane32(a, i);
-      acc = if signed(acc) >= signed(x) then acc else x
-    } else ()
-  };
-  write_regdst(RegDst, zext32_from32(acc))
-}
-
-function exec_v_rdmin(RegDst : bits(5), SrcL_k : bits(3)) -> unit = {
-  vrd_unimpl("V.RDMIN");
-  let vw : int = vec_length_from_lcfr();
-  let pm = read_predicate_p();
-  let a = read_vt(SrcL_k);
-  var acc : bits(32) = 0x7FFF_FFFF;
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  var any : bool = false;
+  var acc : bits(64) = 0x0000_0000_0000_0000;
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
     if bitvector_access(pm, i) == 0b1 then {
-      let x = vec_get_lane32(a, i);
-      acc = if signed(acc) <= signed(x) then acc else x
+      let x = vec_int_numeric_from_carrier32(vec_get_lane32(a, i), srcl_t);
+      if not_bool(any) then { acc = x; any = true }
+      else acc = if signed(acc) >= signed(x) then acc else x
     } else ()
   };
-  write_regdst(RegDst, zext32_from32(acc))
+  write_regdst(RegDst, if any then acc else 0x0000_0000_0000_0000)
 }
 
-function exec_v_rdfadd(RegDst : bits(5), SrcL_k : bits(3)) -> unit = {
-  // Staged strict bring-up shim:
-  // - The ISA manual leaves RDF* operations as "selected by encoded modifiers".
-  // - Full floating-point numeric behavior (rounding/flags, f16/f64 packing) is not modeled.
-  // For now we return a deterministic placeholder (0) to keep execution deterministic.
-  let _ = SrcL_k;
-  write_regdst(RegDst, 0x0000_0000_0000_0000)
+function exec_v_rdmin(RegDst : bits(5), SrcL_k : bits(5)) -> unit = {
+  let vw : int = vec_length_from_lcfr();
+  let pm = read_predicate_p();
+  let a = read_vt(SrcL_k);
+  let srcl_t : bits(5) = decoded_vec_srcl_type();
+  var any : bool = false;
+  var acc : bits(64) = 0x0000_0000_0000_0000;
+  foreach (i from 0 to (vw - 1)) {
+    assert((0 <= i) & (i < 64));
+    if bitvector_access(pm, i) == 0b1 then {
+      let x = vec_int_numeric_from_carrier32(vec_get_lane32(a, i), srcl_t);
+      if not_bool(any) then { acc = x; any = true }
+      else acc = if signed(acc) <= signed(x) then acc else x
+    } else ()
+  };
+  write_regdst(RegDst, if any then acc else 0x0000_0000_0000_0000)
 }
 
-function exec_v_rdfmax(RegDst : bits(5), SrcL_k : bits(3)) -> unit = {
+function exec_v_rdfadd(RegDst : bits(5), SrcL_k : bits(5)) -> unit = {
+  // Reduce add over active lanes, interpreting lanes as FP32 bitpatterns.
+  let vw : int = vec_length_from_lcfr();
+  let pm = read_predicate_p();
+  let a = read_vt(SrcL_k);
+  var any : bool = false;
+  var acc : bits(32) = 0x0000_0000;
+  var flags : bits(5) = 0b00000;
+  foreach (i from 0 to (vw - 1)) {
+    assert((0 <= i) & (i < 64));
+    if bitvector_access(pm, i) == 0b1 then {
+      let x : bits(32) = vec_get_lane32(a, i);
+      if not_bool(any) then {
+        any = true;
+        acc = x
+      } else {
+        let (sum, step_flags) = linx_fp_add(fp_active_rm(), 0b00001, zext32_from32(acc), zext32_from32(x));
+        acc = sum[31..0];
+        flags = flags | step_flags
+      }
+    } else ()
+  };
+  fp_record_flags(flags);
+  write_regdst(RegDst, if any then zext32_from32(acc) else 0x0000_0000_0000_0000)
+}
+
+function exec_v_rdfmax(RegDst : bits(5), SrcL_k : bits(5)) -> unit = {
   // Reduce max over active lanes, interpreting lanes as FP32 bitpatterns.
   // NaN policy matches exec_fmax (maxNum-style, canonical qNaN if all NaN).
   let vw : int = vec_length_from_lcfr();
@@ -4574,7 +5138,7 @@ function exec_v_rdfmax(RegDst : bits(5), SrcL_k : bits(3)) -> unit = {
   write_regdst(RegDst, zext32_from32(acc))
 }
 
-function exec_v_rdfmin(RegDst : bits(5), SrcL_k : bits(3)) -> unit = {
+function exec_v_rdfmin(RegDst : bits(5), SrcL_k : bits(5)) -> unit = {
   // Reduce min over active lanes, interpreting lanes as FP32 bitpatterns.
   // NaN policy matches exec_fmin (minNum-style, canonical qNaN if all NaN).
   let vw : int = vec_length_from_lcfr();
@@ -4604,14 +5168,14 @@ function exec_v_rdfmin(RegDst : bits(5), SrcL_k : bits(3)) -> unit = {
   write_regdst(RegDst, zext32_from32(acc))
 }
 
-function exec_v_icvt(SrcL_k : bits(3), SrcType : bits(5), DstType : bits(5), Dst_k : bits(3)) -> unit = {
+function exec_v_icvt(SrcL_k : bits(5), SrcType : bits(5), DstType : bits(5), Dst_k : bits(5)) -> unit = {
   // Strict bring-up: format conversion selected by 5-bit SrcType/DstType codes.
   // The manual table (see RegId10 operand encoding + convert tables) defines these codes.
   // This Sail model currently implements a conservative subset:
   // - Integer types: u64/u32/u16/u8 and s64/s32/s16/s8
   //   * narrowing: truncate low bits
   //   * widening: sign-extend if src signed, else zero-extend
-  // - Other/packed/experimental types: deterministic 0 result (staged).
+  // - Other/packed/experimental types: deterministic 0 result in the staged model.
   // Vector RF is 32-bit lanes; 64-bit elements are packed {hi,lo} into adjacent lanes (2*i,2*i+1).
   let vw32 : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
@@ -4721,50 +5285,57 @@ function exec_v_icvt(SrcL_k : bits(3), SrcType : bits(5), DstType : bits(5), Dst
   write_vt(Dst_k, out)
 }
 
-function exec_v_icvtf(SrcL_k : bits(3), SrcType : bits(5), DstType : bits(5), Dst_k : bits(3)) -> unit = {
-  // Staged bring-up shim:
-  // - This instruction uses the same SrcType/DstType code space as other convert-class ops.
-  // - Full float<->int numeric conversions (rounding/flags) are not modeled here.
-  // Policy for now:
-  //   * Implement integer -> float only as a deterministic placeholder with correct width packing.
-  //   * For illegal/reserved encodings: trap ILLEGAL_INST.
-  let src_is_int : bool = (SrcType == 0b00000) | (SrcType == 0b00001) | (SrcType == 0b00010) | (SrcType == 0b00011) |
-                          (SrcType == 0b01000) | (SrcType == 0b01001) | (SrcType == 0b01010) | (SrcType == 0b01011) |
-                          (SrcType == 0b00100) | (SrcType == 0b00101) | (SrcType == 0b00110) | (SrcType == 0b00111) |
-                          (SrcType == 0b01100) | (SrcType == 0b01101) | (SrcType == 0b01110);
-
-  // Float type codes (subset): FP64/FP32/FP16/BF16/HiF8/e4m3/e5m2.
-  let dst_is_float : bool = (DstType == 0b00000) | (DstType == 0b00001) | (DstType == 0b00100) | (DstType == 0b00101) |
-                            (DstType == 0b00110) | (DstType == 0b00111) | (DstType == 0b01000);
-
-  if not_bool(src_is_int & dst_is_float) then {
+function exec_v_icvtf(SrcL_k : bits(5), SrcType : bits(5), DstType : bits(5), Dst_k : bits(5)) -> unit = {
+  // Numeric integer -> floating conversion selected by the same 5-bit SrcType /
+  // DstType tables used by the convert-class scalar instructions.
+  if not_bool(int_type_code_supported(SrcType) & fp_type_code_supported(DstType)) then {
     trap_illegal_inst(read_pc_or_tpc())
   } else {
-    let dst_bits : int = if DstType == 0b00000 then 64
-                         else if DstType == 0b00001 then 32
-                         else if (DstType == 0b00100) | (DstType == 0b00101) then 16
-                         else 8;
+    let src_bits : int = int_type_width(SrcType);
+    let dst_bits : int = float_type_width(DstType);
+    let src_is_d : bool = src_bits == 64;
     let dst_is_d : bool = dst_bits == 64;
 
     let vw32 : int = vec_length_from_lcfr();
-    let vw : int = if dst_is_d then tdiv_int(vw32, 2) else vw32;
+    let src_elems : int = if src_is_d then tdiv_int(vw32, 2) else vw32;
+    let dst_elems : int = if dst_is_d then tdiv_int(vw32, 2) else vw32;
+    let n : int = if src_elems < dst_elems then src_elems else dst_elems;
     let pm = read_predicate_p();
+    let a = read_vt(SrcL_k);
     var out = read_vt(Dst_k);
-    foreach (i from 0 to (vw - 1)) {
+    var flags : bits(5) = 0b00000;
+    foreach (i from 0 to (n - 1)) {
       assert((0 <= i) & (i < 64));
-      let pidx : int = if dst_is_d then 2*i else i;
-      if dst_is_d then assert(i < 32) else ();
+      let wide : bool = src_is_d | dst_is_d;
+      if wide then assert(i < 32) else ();
+      let pidx : int = if wide then 2*i else i;
       assert((0 <= pidx) & (pidx < 64));
       let active = bitvector_access(pm, pidx) == 0b1;
       if active then {
-        // Placeholder numeric conversion: produce +0 in target format.
+        let x64 : bits(64) =
+          if src_is_d then {
+            let lo : bits(32) = vec_get_lane32(a, 2*i);
+            let hi : bits(32) = vec_get_lane32(a, 2*i + 1);
+            hi @ lo
+          } else {
+            zext32_from32(vec_get_lane32(a, i))
+          };
+
+        let y64 : bits(64) =
+          if src_bits == 64 then x64
+          else if src_bits == 32 then sail_zeros(32) @ x64[31..0]
+          else if src_bits == 16 then sail_zeros(48) @ x64[15..0]
+          else if src_bits == 8 then sail_zeros(56) @ x64[7..0]
+          else if src_bits == 4 then sail_zeros(60) @ x64[3..0]
+          else if src_bits == 2 then sail_zeros(62) @ x64[1..0]
+          else sail_zeros(63) @ x64[0..0];
+
+        let (result, step_flags) = linx_int_to_fp(fp_active_rm(), SrcType, DstType, y64);
+        flags = flags | step_flags;
         if dst_is_d then {
-          out = vec_store64_packed(out, i, 0x0000_0000_0000_0000)
+          out = vec_store64_packed(out, i, result)
         } else {
-          let r32 : bits(32) = if dst_bits == 32 then 0x0000_0000
-                               else if dst_bits == 16 then 0x0000_0000
-                               else 0x0000_0000;
-          out = vec_set_lane32(out, i, r32)
+          out = vec_set_lane32(out, i, pack_low_bits_into_lane32(result, dst_bits))
         }
       } else {
         if dst_is_d then {
@@ -4775,14 +5346,16 @@ function exec_v_icvtf(SrcL_k : bits(3), SrcType : bits(5), DstType : bits(5), Ds
         }
       }
     };
+    fp_record_flags(flags);
     write_vt(Dst_k, out)
   }
 }
 
 function exec_xb(acr_id : bits(12), cross_bid : bits(8)) -> unit = {
-  // Strict bring-up (v0.4-draft): XB is a controlled cross-block call dispatcher.
-  // The full CAC_TABLE lookup / coupled-vs-decoupled execution is not modeled yet.
-  // We DO enforce architectural legality checks and encode them in E_INST cause codes.
+  // Strict bring-up: XB is a controlled cross-block call dispatcher.
+  // The generic v0.4 contract standardizes legality, permission, and lookup.
+  // The binary entry layout remains platform-defined, so the model records the
+  // resolved dispatch request instead of decoding a non-canonical block body.
   //
   // Encoding notes:
   // - Catalog encodes ACR-ID (10b) and C-ID/CROSS-BID (7b). The Sail decoder passes wider fields;
@@ -4820,12 +5393,12 @@ function exec_xb(acr_id : bits(12), cross_bid : bits(8)) -> unit = {
     let off : bits(64) = sail_zero_extend(cid @ 0b00000, 64); // cid * 32
     let ea : bits(64) = base + off;
     let w0 : bits(64) = mem_load64_le(ea);
-    if w0 == 0x0000_0000_0000_0000 then trap_e_inst(0x11, 0x00, read_pc_or_tpc()) else ()
+    if w0 == 0x0000_0000_0000_0000 then {
+      trap_e_inst(0x11, 0x00, read_pc_or_tpc())
+    } else {
+      record_xb_dispatch(target_acr, cid, ea, w0)
+    }
   };
-
-  // 5) staged behavior: no-op (dispatch not modeled)
-  let _ = cross_bid;
-  ()
 }
 
 // -----------------------------------------------------------------------------
@@ -4833,7 +5406,7 @@ function exec_xb(acr_id : bits(12), cross_bid : bits(8)) -> unit = {
 //
 // Spec: docs/architecture/isa-manual/src/generated/instruction_details.adoc
 
-function exec_v_shi(SrcL_k : bits(3), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
+function exec_v_shi(SrcL_k : bits(5), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcR);
   let off  : bits(64) = sext24_to64(simm24);
@@ -4847,19 +5420,19 @@ function exec_v_shi(SrcL_k : bits(3), SrcR : bits(5), simm24 : bits(24), local :
   }
 }
 
-function exec_v_shi_brg(SrcL_k : bits(3), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
+function exec_v_shi_brg(SrcL_k : bits(5), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
   exec_v_shi(SrcL_k, SrcR, simm24, local)
 }
 
-function exec_v_shi_u(SrcL_k : bits(3), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
+function exec_v_shi_u(SrcL_k : bits(5), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
   exec_v_shi(SrcL_k, SrcR, simm24, local)
 }
 
-function exec_v_shi_u_brg(SrcL_k : bits(3), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
+function exec_v_shi_u_brg(SrcL_k : bits(5), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
   exec_v_shi(SrcL_k, SrcR, simm24, local)
 }
 
-function exec_v_sb(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), SrcD_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_sb(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : bits(5), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let idxv = read_vt(SrcR_k);
@@ -4877,7 +5450,7 @@ function exec_v_sb(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), SrcD_k : b
   }
 }
 
-function exec_v_sw(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), SrcD_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_sw(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : bits(5), local : bits(1)) -> unit = {
   // Store32 register-offset.
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
@@ -4896,7 +5469,7 @@ function exec_v_sw(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), SrcD_k : b
   }
 }
 
-function exec_v_sw_brg(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), SrcD_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_sw_brg(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : bits(5), local : bits(1)) -> unit = {
   // BRG: lane0 address + lane0 data.
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
@@ -4907,16 +5480,16 @@ function exec_v_sw_brg(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), SrcD_k
   mem_store32_le(ea0, vec_get_lane32(data, 0))
 }
 
-function exec_v_sw_u(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), SrcD_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_sw_u(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : bits(5), local : bits(1)) -> unit = {
   // Unscaled: staged model treats same as scaled.
   exec_v_sw(SrcL, SrcR_k, shamt, SrcD_k, local)
 }
 
-function exec_v_sw_u_brg(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), SrcD_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_sw_u_brg(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : bits(5), local : bits(1)) -> unit = {
   exec_v_sw_brg(SrcL, SrcR_k, shamt, SrcD_k, local)
 }
 
-function exec_v_swi(SrcL_k : bits(3), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
+function exec_v_swi(SrcL_k : bits(5), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcR);
   let off  : bits(64) = sext24_to64(simm24);
@@ -4930,19 +5503,19 @@ function exec_v_swi(SrcL_k : bits(3), SrcR : bits(5), simm24 : bits(24), local :
   }
 }
 
-function exec_v_swi_brg(SrcL_k : bits(3), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
+function exec_v_swi_brg(SrcL_k : bits(5), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
   exec_v_swi(SrcL_k, SrcR, simm24, local)
 }
 
-function exec_v_swi_u(SrcL_k : bits(3), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
+function exec_v_swi_u(SrcL_k : bits(5), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
   exec_v_swi(SrcL_k, SrcR, simm24, local)
 }
 
-function exec_v_swi_u_brg(SrcL_k : bits(3), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
+function exec_v_swi_u_brg(SrcL_k : bits(5), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
   exec_v_swi(SrcL_k, SrcR, simm24, local)
 }
 
-function exec_v_sb_brg(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), SrcD_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_sb_brg(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : bits(5), local : bits(1)) -> unit = {
   // BRG: use lane0 address and store lane0 data.
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
@@ -4954,7 +5527,7 @@ function exec_v_sb_brg(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), SrcD_k
   write_mem8(ea0, b0)
 }
 
-function exec_v_sh(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), SrcD_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_sh(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : bits(5), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let idxv = read_vt(SrcR_k);
@@ -4972,7 +5545,7 @@ function exec_v_sh(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), SrcD_k : b
   }
 }
 
-function exec_v_sh_brg(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), SrcD_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_sh_brg(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : bits(5), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let idxv = read_vt(SrcR_k);
@@ -4983,15 +5556,15 @@ function exec_v_sh_brg(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), SrcD_k
   mem_store16_le(ea0, h0)
 }
 
-function exec_v_sh_u(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), SrcD_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_sh_u(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : bits(5), local : bits(1)) -> unit = {
   exec_v_sh(SrcL, SrcR_k, shamt, SrcD_k, local)
 }
 
-function exec_v_sh_u_brg(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), SrcD_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_sh_u_brg(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : bits(5), local : bits(1)) -> unit = {
   exec_v_sh_brg(SrcL, SrcR_k, shamt, SrcD_k, local)
 }
 
-function exec_v_sd(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), SrcD_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_sd(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : bits(5), local : bits(1)) -> unit = {
   // Store packed 64-bit: read lo/hi from two lanes.
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
@@ -5013,7 +5586,7 @@ function exec_v_sd(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), SrcD_k : b
   }
 }
 
-function exec_v_sd_brg(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), SrcD_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_sd_brg(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : bits(5), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcL);
   let idxv = read_vt(SrcR_k);
@@ -5025,15 +5598,15 @@ function exec_v_sd_brg(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), SrcD_k
   mem_store64_le(ea0, (hi @ lo))
 }
 
-function exec_v_sd_u(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), SrcD_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_sd_u(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : bits(5), local : bits(1)) -> unit = {
   exec_v_sd(SrcL, SrcR_k, shamt, SrcD_k, local)
 }
 
-function exec_v_sd_u_brg(SrcL : bits(5), SrcR_k : bits(3), shamt : bits(5), SrcD_k : bits(3), local : bits(1)) -> unit = {
+function exec_v_sd_u_brg(SrcL : bits(5), SrcR_k : bits(5), shamt : bits(5), SrcD_k : bits(5), local : bits(1)) -> unit = {
   exec_v_sd_brg(SrcL, SrcR_k, shamt, SrcD_k, local)
 }
 
-function exec_v_sbi(SrcL_k : bits(3), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
+function exec_v_sbi(SrcL_k : bits(5), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcR);
   let off : bits(64) = sext24_to64(simm24);
@@ -5047,11 +5620,11 @@ function exec_v_sbi(SrcL_k : bits(3), SrcR : bits(5), simm24 : bits(24), local :
   }
 }
 
-function exec_v_sbi_brg(SrcL_k : bits(3), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
+function exec_v_sbi_brg(SrcL_k : bits(5), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
   exec_v_sbi(SrcL_k, SrcR, simm24, local)
 }
 
-function exec_v_sdi(SrcL_k : bits(3), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
+function exec_v_sdi(SrcL_k : bits(5), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
   let _ = local;
   let base : bits(64) = read_reg5(SrcR);
   let off : bits(64) = sext24_to64(simm24);
@@ -5070,370 +5643,641 @@ function exec_v_sdi(SrcL_k : bits(3), SrcR : bits(5), simm24 : bits(24), local :
   }
 }
 
-function exec_v_sdi_brg(SrcL_k : bits(3), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
+function exec_v_sdi_brg(SrcL_k : bits(5), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
   exec_v_sdi(SrcL_k, SrcR, simm24, local)
 }
 
-function exec_v_sdi_u(SrcL_k : bits(3), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
+function exec_v_sdi_u(SrcL_k : bits(5), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
   exec_v_sdi(SrcL_k, SrcR, simm24, local)
 }
 
-function exec_v_sdi_u_brg(SrcL_k : bits(3), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
+function exec_v_sdi_u_brg(SrcL_k : bits(5), SrcR : bits(5), simm24 : bits(24), local : bits(1)) -> unit = {
   exec_v_sdi(SrcL_k, SrcR, simm24, local)
 }
 
 // -----------------------------------------------------------------------------
-// V.F* vector floating-point (FSU) - staged bring-up
+// V.F* vector floating-point (FSU)
 //
-// POLICY: follow scalar FSU behavior for now.
-// - For arithmetic/conversion/classify: keep as unimplemented with deterministic 0 result.
-// - For compares and min/max: we can reuse the staged bit-pattern IEEE rules already
-//   used by scalar exec_feq/exec_flt/exec_fge/exec_fmin/exec_fmax.
+// Canonical Sail rule:
+// - every architectural vector lane stores a 32-bit carrier,
+// - decode supplies the semantic type when the encoding has one,
+// - execution numerically converts carrier -> semantic type -> result -> carrier.
+// Non-convert V.F* forms currently default to the live encoded FP32 carrier domain.
 
-function vfp_unimpl(mnemonic : string) -> unit = {
-  // Vector FSU shim: keep deterministic but do not raise `unimplemented`.
-  let _ = mnemonic;
-  ()
+function exec_v_fadd(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
+  let _ = SrcL_k;
+  let _ = SrcR_k;
+  let src_t : bits(5) = decoded_vec_srcl_type();
+  let dst_t : bits(5) = decoded_vec_dst_type();
+  if not_bool(fp_type_code_supported(src_t) & fp_type_code_supported(dst_t) & (src_t == decoded_vec_srcr_type())) then {
+    trap_illegal_inst(read_pc_or_tpc())
+  } else {
+    let vw : int = vec_length_from_lcfr();
+    let pm = read_predicate_p();
+    var out = read_vec_dest_value(decoded_vec_dst_regid(), Dst_k);
+    var flags : bits(5) = 0b00000;
+    foreach (i from 0 to (vw - 1)) {
+      assert((0 <= i) & (i < 64));
+      if bitvector_access(pm, i) == 0b1 then {
+        let (a_raw, f0) = vec_fp_from_carrier32(read_vec_operand_lane32(decoded_vec_srcl_regid(), i), src_t);
+        let (b_raw, f1) = vec_fp_from_carrier32(read_vec_operand_lane32(decoded_vec_srcr_regid(), i), src_t);
+        let (sum_raw, f2) = linx_fp_add(fp_active_rm(), src_t, a_raw, b_raw);
+        let (carrier, f3) = vec_fp_result_to_carrier32(sum_raw, src_t, dst_t);
+        flags = flags | f0 | f1 | f2 | f3;
+        out = vec_set_lane32(out, i, carrier)
+      } else ()
+    };
+    fp_record_flags(flags);
+    write_vec_dest_value(decoded_vec_dst_regid(), Dst_k, out)
+  }
 }
 
-function exec_v_fadd(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
-  vfp_unimpl("V.FADD");
+function exec_v_fsub(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
+  let _ = SrcL_k;
+  let _ = SrcR_k;
+  let src_t : bits(5) = decoded_vec_srcl_type();
+  let dst_t : bits(5) = decoded_vec_dst_type();
+  if not_bool(fp_type_code_supported(src_t) & fp_type_code_supported(dst_t) & (src_t == decoded_vec_srcr_type())) then {
+    trap_illegal_inst(read_pc_or_tpc())
+  } else {
+    let vw : int = vec_length_from_lcfr();
+    let pm = read_predicate_p();
+    var out = read_vec_dest_value(decoded_vec_dst_regid(), Dst_k);
+    var flags : bits(5) = 0b00000;
+    foreach (i from 0 to (vw - 1)) {
+      assert((0 <= i) & (i < 64));
+      if bitvector_access(pm, i) == 0b1 then {
+        let (a_raw, f0) = vec_fp_from_carrier32(read_vec_operand_lane32(decoded_vec_srcl_regid(), i), src_t);
+        let (b_raw, f1) = vec_fp_from_carrier32(read_vec_operand_lane32(decoded_vec_srcr_regid(), i), src_t);
+        let (diff_raw, f2) = linx_fp_sub(fp_active_rm(), src_t, a_raw, b_raw);
+        let (carrier, f3) = vec_fp_result_to_carrier32(diff_raw, src_t, dst_t);
+        flags = flags | f0 | f1 | f2 | f3;
+        out = vec_set_lane32(out, i, carrier)
+      } else ()
+    };
+    fp_record_flags(flags);
+    write_vec_dest_value(decoded_vec_dst_regid(), Dst_k, out)
+  }
+}
+
+function exec_v_fmul(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
+  let _ = SrcL_k;
+  let _ = SrcR_k;
+  let src_t : bits(5) = decoded_vec_srcl_type();
+  let dst_t : bits(5) = decoded_vec_dst_type();
+  if not_bool(fp_type_code_supported(src_t) & fp_type_code_supported(dst_t) & (src_t == decoded_vec_srcr_type())) then {
+    trap_illegal_inst(read_pc_or_tpc())
+  } else {
+    let vw : int = vec_length_from_lcfr();
+    let pm = read_predicate_p();
+    var out = read_vec_dest_value(decoded_vec_dst_regid(), Dst_k);
+    var flags : bits(5) = 0b00000;
+    foreach (i from 0 to (vw - 1)) {
+      assert((0 <= i) & (i < 64));
+      if bitvector_access(pm, i) == 0b1 then {
+        let (a_raw, f0) = vec_fp_from_carrier32(read_vec_operand_lane32(decoded_vec_srcl_regid(), i), src_t);
+        let (b_raw, f1) = vec_fp_from_carrier32(read_vec_operand_lane32(decoded_vec_srcr_regid(), i), src_t);
+        let (prod_raw, f2) = linx_fp_mul(fp_active_rm(), src_t, a_raw, b_raw);
+        let (carrier, f3) = vec_fp_result_to_carrier32(prod_raw, src_t, dst_t);
+        flags = flags | f0 | f1 | f2 | f3;
+        out = vec_set_lane32(out, i, carrier)
+      } else ()
+    };
+    fp_record_flags(flags);
+    write_vec_dest_value(decoded_vec_dst_regid(), Dst_k, out)
+  }
+}
+
+function exec_v_fdiv(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
+  let _ = SrcL_k;
+  let _ = SrcR_k;
+  let src_t : bits(5) = decoded_vec_srcl_type();
+  let dst_t : bits(5) = decoded_vec_dst_type();
+  if not_bool(fp_type_code_supported(src_t) & fp_type_code_supported(dst_t) & (src_t == decoded_vec_srcr_type())) then {
+    trap_illegal_inst(read_pc_or_tpc())
+  } else {
+    let vw : int = vec_length_from_lcfr();
+    let pm = read_predicate_p();
+    var out = read_vec_dest_value(decoded_vec_dst_regid(), Dst_k);
+    var flags : bits(5) = 0b00000;
+    foreach (i from 0 to (vw - 1)) {
+      assert((0 <= i) & (i < 64));
+      if bitvector_access(pm, i) == 0b1 then {
+        let (a_raw, f0) = vec_fp_from_carrier32(read_vec_operand_lane32(decoded_vec_srcl_regid(), i), src_t);
+        let (b_raw, f1) = vec_fp_from_carrier32(read_vec_operand_lane32(decoded_vec_srcr_regid(), i), src_t);
+        let (quot_raw, f2) = linx_fp_div(fp_active_rm(), src_t, a_raw, b_raw);
+        let (carrier, f3) = vec_fp_result_to_carrier32(quot_raw, src_t, dst_t);
+        flags = flags | f0 | f1 | f2 | f3;
+        out = vec_set_lane32(out, i, carrier)
+      } else ()
+    };
+    fp_record_flags(flags);
+    write_vec_dest_value(decoded_vec_dst_regid(), Dst_k, out)
+  }
+}
+
+function exec_v_fsqrt(SrcL_k : bits(5), Dst_k : bits(5)) -> unit = {
+  let _ = SrcL_k;
+  let src_t : bits(5) = decoded_vec_srcl_type();
+  let dst_t : bits(5) = decoded_vec_dst_type();
+  if not_bool(fp_type_code_supported(src_t) & fp_type_code_supported(dst_t)) then {
+    trap_illegal_inst(read_pc_or_tpc())
+  } else {
+    let vw : int = vec_length_from_lcfr();
+    let pm = read_predicate_p();
+    var out = read_vec_dest_value(decoded_vec_dst_regid(), Dst_k);
+    var flags : bits(5) = 0b00000;
+    foreach (i from 0 to (vw - 1)) {
+      assert((0 <= i) & (i < 64));
+      if bitvector_access(pm, i) == 0b1 then {
+        let (a_raw, f0) = vec_fp_from_carrier32(read_vec_operand_lane32(decoded_vec_srcl_regid(), i), src_t);
+        let (res_raw, f1) = linx_fp_sqrt(fp_active_rm(), src_t, a_raw);
+        let (carrier, f2) = vec_fp_result_to_carrier32(res_raw, src_t, dst_t);
+        flags = flags | f0 | f1 | f2;
+        out = vec_set_lane32(out, i, carrier)
+      } else ()
+    };
+    fp_record_flags(flags);
+    write_vec_dest_value(decoded_vec_dst_regid(), Dst_k, out)
+  }
+}
+
+function exec_v_frecip(SrcL_k : bits(5), Dst_k : bits(5)) -> unit = {
+  let _ = SrcL_k;
+  let src_t : bits(5) = decoded_vec_srcl_type();
+  let dst_t : bits(5) = decoded_vec_dst_type();
+  if not_bool(fp_type_code_supported(src_t) & fp_type_code_supported(dst_t)) then {
+    trap_illegal_inst(read_pc_or_tpc())
+  } else {
+    let vw : int = vec_length_from_lcfr();
+    let pm = read_predicate_p();
+    var out = read_vec_dest_value(decoded_vec_dst_regid(), Dst_k);
+    var flags : bits(5) = 0b00000;
+    foreach (i from 0 to (vw - 1)) {
+      assert((0 <= i) & (i < 64));
+      if bitvector_access(pm, i) == 0b1 then {
+        let (a_raw, f0) = vec_fp_from_carrier32(read_vec_operand_lane32(decoded_vec_srcl_regid(), i), src_t);
+        let (res_raw, f1) = linx_fp_recip(fp_active_rm(), src_t, a_raw);
+        let (carrier, f2) = vec_fp_result_to_carrier32(res_raw, src_t, dst_t);
+        flags = flags | f0 | f1 | f2;
+        out = vec_set_lane32(out, i, carrier)
+      } else ()
+    };
+    fp_record_flags(flags);
+    write_vec_dest_value(decoded_vec_dst_regid(), Dst_k, out)
+  }
+}
+
+function exec_v_fexp(SrcL_k : bits(5), Dst_k : bits(5)) -> unit = {
+  let _ = SrcL_k;
+  let src_t : bits(5) = decoded_vec_srcl_type();
+  let dst_t : bits(5) = decoded_vec_dst_type();
+  if not_bool(fp_type_code_supported(src_t) & fp_type_code_supported(dst_t)) then {
+    trap_illegal_inst(read_pc_or_tpc())
+  } else {
+    let vw : int = vec_length_from_lcfr();
+    let pm = read_predicate_p();
+    var out = read_vec_dest_value(decoded_vec_dst_regid(), Dst_k);
+    var flags : bits(5) = 0b00000;
+    foreach (i from 0 to (vw - 1)) {
+      assert((0 <= i) & (i < 64));
+      if bitvector_access(pm, i) == 0b1 then {
+        let (a_raw, f0) = vec_fp_from_carrier32(read_vec_operand_lane32(decoded_vec_srcl_regid(), i), src_t);
+        let (res_raw, f1) = linx_fp_exp(fp_active_rm(), src_t, a_raw);
+        let (carrier, f2) = vec_fp_result_to_carrier32(res_raw, src_t, dst_t);
+        flags = flags | f0 | f1 | f2;
+        out = vec_set_lane32(out, i, carrier)
+      } else ()
+    };
+    fp_record_flags(flags);
+    write_vec_dest_value(decoded_vec_dst_regid(), Dst_k, out)
+  }
+}
+
+function exec_v_fabs(SrcL_k : bits(5), Dst_k : bits(5)) -> unit = {
+  let _ = SrcL_k;
+  let src_t : bits(5) = decoded_vec_srcl_type();
+  let dst_t : bits(5) = decoded_vec_dst_type();
+  if not_bool(fp_type_code_supported(src_t) & fp_type_code_supported(dst_t)) then {
+    trap_illegal_inst(read_pc_or_tpc())
+  } else {
+    let vw : int = vec_length_from_lcfr();
+    let pm = read_predicate_p();
+    var out = read_vec_dest_value(decoded_vec_dst_regid(), Dst_k);
+    var flags : bits(5) = 0b00000;
+    foreach (i from 0 to (vw - 1)) {
+      assert((0 <= i) & (i < 64));
+      if bitvector_access(pm, i) == 0b1 then {
+        let carrier_in : bits(32) = read_vec_operand_lane32(decoded_vec_srcl_regid(), i);
+        let (norm, f0) = vec_fp_to_fp64_norm(carrier_in, src_t);
+        let abs_norm : bits(64) = norm & 0x7FFF_FFFF_FFFF_FFFF;
+        let (abs_raw, f1) =
+          if src_t == 0b00000 then (abs_norm, 0b00000)
+          else linx_fp_to_fp(fp_active_rm(), src_t, 0b00000, abs_norm);
+        let (carrier, f2) = vec_fp_result_to_carrier32(abs_raw, src_t, dst_t);
+        flags = flags | f0 | f1 | f2;
+        out = vec_set_lane32(out, i, carrier)
+      } else ()
+    };
+    fp_record_flags(flags);
+    write_vec_dest_value(decoded_vec_dst_regid(), Dst_k, out)
+  }
+}
+
+function exec_v_fclass(SrcL_k : bits(5), Dst_k : bits(5)) -> unit = {
+  let _ = SrcL_k;
   let vw : int = vec_length_from_lcfr();
   let pm = read_predicate_p();
-  var out = read_vt(Dst_k);
+  let src_t : bits(5) = decoded_vec_srcl_type();
+  var out = read_vec_dest_value(decoded_vec_dst_regid(), Dst_k);
+  var flags : bits(5) = 0b00000;
   foreach (i from 0 to (vw - 1)) {
     assert((0 <= i) & (i < 64));
-    let active = bitvector_access(pm, i) == 0b1;
-    let r : bits(32) = if active then 0x0000_0000 else undefined_bitvector(32);
-    out = vec_set_lane32(out, i, r)
+    if bitvector_access(pm, i) == 0b1 then {
+      let (norm, f0) = vec_fp_to_fp64_norm(read_vec_operand_lane32(decoded_vec_srcl_regid(), i), src_t);
+      flags = flags | f0;
+      out = vec_set_lane32(out, i, fp64_class_mask(norm))
+    } else ()
   };
-  write_vt(Dst_k, out)
+  fp_record_flags(flags);
+  write_vec_dest_value(decoded_vec_dst_regid(), Dst_k, out)
 }
 
-function exec_v_fsub(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
-  vfp_unimpl("V.FSUB");
-  let vw : int = vec_length_from_lcfr();
-  let pm = read_predicate_p();
-  var out = read_vt(Dst_k);
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 64));
-    let active = bitvector_access(pm, i) == 0b1;
-    let r : bits(32) = if active then 0x0000_0000 else undefined_bitvector(32);
-    out = vec_set_lane32(out, i, r)
-  };
-  write_vt(Dst_k, out)
+function exec_v_fcvt(SrcL_k : bits(5), SrcType : bits(5), DstType : bits(5), Dst_k : bits(5)) -> unit = {
+  let _ = SrcL_k;
+  if not_bool(fp_type_code_supported(SrcType) & fp_type_code_supported(DstType)) then {
+    trap_illegal_inst(read_pc_or_tpc())
+  } else {
+    let vw : int = vec_length_from_lcfr();
+    let pm = read_predicate_p();
+    var out = read_vec_dest_value(decoded_vec_dst_regid(), Dst_k);
+    var flags : bits(5) = 0b00000;
+    foreach (i from 0 to (vw - 1)) {
+      assert((0 <= i) & (i < 64));
+      if bitvector_access(pm, i) == 0b1 then {
+        let (src_raw, f0) = vec_fp_from_carrier32(read_vec_operand_lane32(decoded_vec_srcl_regid(), i), SrcType);
+        let (dst_raw, f1) = linx_fp_to_fp(fp_active_rm(), DstType, SrcType, src_raw);
+        let (carrier, f2) = vec_fp_to_carrier32(dst_raw, DstType);
+        flags = flags | f0 | f1 | f2;
+        out = vec_set_lane32(out, i, carrier)
+      } else ()
+    };
+    fp_record_flags(flags);
+    write_vec_dest_value(decoded_vec_dst_regid(), Dst_k, out)
+  }
 }
 
-function exec_v_fmul(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
-  vfp_unimpl("V.FMUL");
-  let vw : int = vec_length_from_lcfr();
-  let pm = read_predicate_p();
-  var out = read_vt(Dst_k);
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 64));
-    let active = bitvector_access(pm, i) == 0b1;
-    let r : bits(32) = if active then 0x0000_0000 else undefined_bitvector(32);
-    out = vec_set_lane32(out, i, r)
-  };
-  write_vt(Dst_k, out)
+function exec_v_fcvti(SrcL_k : bits(5), SrcType : bits(5), DstType : bits(5), Dst_k : bits(5)) -> unit = {
+  let _ = SrcL_k;
+  if not_bool(fp_type_code_supported(SrcType) & int_type_code_supported(DstType)) then {
+    trap_illegal_inst(read_pc_or_tpc())
+  } else {
+    let vw : int = vec_length_from_lcfr();
+    let pm = read_predicate_p();
+    var out = read_vec_dest_value(decoded_vec_dst_regid(), Dst_k);
+    var flags : bits(5) = 0b00000;
+    foreach (i from 0 to (vw - 1)) {
+      assert((0 <= i) & (i < 64));
+      if bitvector_access(pm, i) == 0b1 then {
+        let (src_raw, f0) = vec_fp_from_carrier32(read_vec_operand_lane32(decoded_vec_srcl_regid(), i), SrcType);
+        let (dst_raw, f1) = linx_fp_to_int(fp_active_rm(), DstType, SrcType, src_raw);
+        let carrier : bits(32) = pack_low_int_bits_into_lane32(dst_raw, int_type_width(DstType));
+        flags = flags | f0 | f1;
+        out = vec_set_lane32(out, i, carrier)
+      } else ()
+    };
+    fp_record_flags(flags);
+    write_vec_dest_value(decoded_vec_dst_regid(), Dst_k, out)
+  }
 }
 
-function exec_v_fdiv(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
-  vfp_unimpl("V.FDIV");
-  let vw : int = vec_length_from_lcfr();
-  let pm = read_predicate_p();
-  var out = read_vt(Dst_k);
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 64));
-    let active = bitvector_access(pm, i) == 0b1;
-    let r : bits(32) = if active then 0x0000_0000 else undefined_bitvector(32);
-    out = vec_set_lane32(out, i, r)
-  };
-  write_vt(Dst_k, out)
+function exec_v_fmadd(SrcL_k : bits(5), SrcR_k : bits(5), SrcA_k : bits(5), Dst_k : bits(5)) -> unit = {
+  let _ = SrcL_k;
+  let _ = SrcR_k;
+  let _ = SrcA_k;
+  let src_t : bits(5) = decoded_vec_srcl_type();
+  let dst_t : bits(5) = decoded_vec_dst_type();
+  if not_bool(fp_type_code_supported(src_t) & fp_type_code_supported(dst_t) & (src_t == decoded_vec_srcr_type()) & (src_t == decoded_vec_srca_type())) then {
+    trap_illegal_inst(read_pc_or_tpc())
+  } else {
+    let vw : int = vec_length_from_lcfr();
+    let pm = read_predicate_p();
+    var out = read_vec_dest_value(decoded_vec_dst_regid(), Dst_k);
+    var flags : bits(5) = 0b00000;
+    foreach (i from 0 to (vw - 1)) {
+      assert((0 <= i) & (i < 64));
+      if bitvector_access(pm, i) == 0b1 then {
+        let (a_raw, f0) = vec_fp_from_carrier32(read_vec_operand_lane32(decoded_vec_srcl_regid(), i), src_t);
+        let (b_raw, f1) = vec_fp_from_carrier32(read_vec_operand_lane32(decoded_vec_srcr_regid(), i), src_t);
+        let (c_raw, f2) = vec_fp_from_carrier32(read_vec_operand_lane32(decoded_vec_srca_regid(), i), src_t);
+        let (res_raw, f3) = linx_fp_fmadd(fp_active_rm(), src_t, a_raw, b_raw, c_raw);
+        let (carrier, f4) = vec_fp_result_to_carrier32(res_raw, src_t, dst_t);
+        flags = flags | f0 | f1 | f2 | f3 | f4;
+        out = vec_set_lane32(out, i, carrier)
+      } else ()
+    };
+    fp_record_flags(flags);
+    write_vec_dest_value(decoded_vec_dst_regid(), Dst_k, out)
+  }
 }
 
-function exec_v_fsqrt(SrcL_k : bits(3), Dst_k : bits(3)) -> unit = {
-  vfp_unimpl("V.FSQRT");
-  let vw : int = vec_length_from_lcfr();
-  let pm = read_predicate_p();
-  var out = read_vt(Dst_k);
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 64));
-    let active = bitvector_access(pm, i) == 0b1;
-    let r : bits(32) = if active then 0x0000_0000 else undefined_bitvector(32);
-    out = vec_set_lane32(out, i, r)
-  };
-  write_vt(Dst_k, out)
+function exec_v_fmsub(SrcL_k : bits(5), SrcR_k : bits(5), SrcA_k : bits(5), Dst_k : bits(5)) -> unit = {
+  let _ = SrcL_k;
+  let _ = SrcR_k;
+  let _ = SrcA_k;
+  let src_t : bits(5) = decoded_vec_srcl_type();
+  let dst_t : bits(5) = decoded_vec_dst_type();
+  if not_bool(fp_type_code_supported(src_t) & fp_type_code_supported(dst_t) & (src_t == decoded_vec_srcr_type()) & (src_t == decoded_vec_srca_type())) then {
+    trap_illegal_inst(read_pc_or_tpc())
+  } else {
+    let vw : int = vec_length_from_lcfr();
+    let pm = read_predicate_p();
+    var out = read_vec_dest_value(decoded_vec_dst_regid(), Dst_k);
+    var flags : bits(5) = 0b00000;
+    foreach (i from 0 to (vw - 1)) {
+      assert((0 <= i) & (i < 64));
+      if bitvector_access(pm, i) == 0b1 then {
+        let (a_raw, f0) = vec_fp_from_carrier32(read_vec_operand_lane32(decoded_vec_srcl_regid(), i), src_t);
+        let (b_raw, f1) = vec_fp_from_carrier32(read_vec_operand_lane32(decoded_vec_srcr_regid(), i), src_t);
+        let (c_raw, f2) = vec_fp_from_carrier32(read_vec_operand_lane32(decoded_vec_srca_regid(), i), src_t);
+        let (res_raw, f3) = linx_fp_fmsub(fp_active_rm(), src_t, a_raw, b_raw, c_raw);
+        let (carrier, f4) = vec_fp_result_to_carrier32(res_raw, src_t, dst_t);
+        flags = flags | f0 | f1 | f2 | f3 | f4;
+        out = vec_set_lane32(out, i, carrier)
+      } else ()
+    };
+    fp_record_flags(flags);
+    write_vec_dest_value(decoded_vec_dst_regid(), Dst_k, out)
+  }
 }
 
-function exec_v_frecip(SrcL_k : bits(3), Dst_k : bits(3)) -> unit = {
-  vfp_unimpl("V.FRECIP");
-  let vw : int = vec_length_from_lcfr();
-  let pm = read_predicate_p();
-  var out = read_vt(Dst_k);
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 64));
-    let active = bitvector_access(pm, i) == 0b1;
-    let r : bits(32) = if active then 0x0000_0000 else undefined_bitvector(32);
-    out = vec_set_lane32(out, i, r)
-  };
-  write_vt(Dst_k, out)
+function exec_v_fnmadd(SrcL_k : bits(5), SrcR_k : bits(5), SrcA_k : bits(5), Dst_k : bits(5)) -> unit = {
+  let _ = SrcL_k;
+  let _ = SrcR_k;
+  let _ = SrcA_k;
+  let src_t : bits(5) = decoded_vec_srcl_type();
+  let dst_t : bits(5) = decoded_vec_dst_type();
+  if not_bool(fp_type_code_supported(src_t) & fp_type_code_supported(dst_t) & (src_t == decoded_vec_srcr_type()) & (src_t == decoded_vec_srca_type())) then {
+    trap_illegal_inst(read_pc_or_tpc())
+  } else {
+    let vw : int = vec_length_from_lcfr();
+    let pm = read_predicate_p();
+    var out = read_vec_dest_value(decoded_vec_dst_regid(), Dst_k);
+    var flags : bits(5) = 0b00000;
+    foreach (i from 0 to (vw - 1)) {
+      assert((0 <= i) & (i < 64));
+      if bitvector_access(pm, i) == 0b1 then {
+        let (a_raw, f0) = vec_fp_from_carrier32(read_vec_operand_lane32(decoded_vec_srcl_regid(), i), src_t);
+        let (b_raw, f1) = vec_fp_from_carrier32(read_vec_operand_lane32(decoded_vec_srcr_regid(), i), src_t);
+        let (c_raw, f2) = vec_fp_from_carrier32(read_vec_operand_lane32(decoded_vec_srca_regid(), i), src_t);
+        let (res_raw, f3) = linx_fp_fnmadd(fp_active_rm(), src_t, a_raw, b_raw, c_raw);
+        let (carrier, f4) = vec_fp_result_to_carrier32(res_raw, src_t, dst_t);
+        flags = flags | f0 | f1 | f2 | f3 | f4;
+        out = vec_set_lane32(out, i, carrier)
+      } else ()
+    };
+    fp_record_flags(flags);
+    write_vec_dest_value(decoded_vec_dst_regid(), Dst_k, out)
+  }
 }
 
-function exec_v_fexp(SrcL_k : bits(3), Dst_k : bits(3)) -> unit = {
-  vfp_unimpl("V.FEXP");
-  let vw : int = vec_length_from_lcfr();
-  let pm = read_predicate_p();
-  var out = read_vt(Dst_k);
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 64));
-    let active = bitvector_access(pm, i) == 0b1;
-    let r : bits(32) = if active then 0x0000_0000 else undefined_bitvector(32);
-    out = vec_set_lane32(out, i, r)
-  };
-  write_vt(Dst_k, out)
+function exec_v_fnmsub(SrcL_k : bits(5), SrcR_k : bits(5), SrcA_k : bits(5), Dst_k : bits(5)) -> unit = {
+  let _ = SrcL_k;
+  let _ = SrcR_k;
+  let _ = SrcA_k;
+  let src_t : bits(5) = decoded_vec_srcl_type();
+  let dst_t : bits(5) = decoded_vec_dst_type();
+  if not_bool(fp_type_code_supported(src_t) & fp_type_code_supported(dst_t) & (src_t == decoded_vec_srcr_type()) & (src_t == decoded_vec_srca_type())) then {
+    trap_illegal_inst(read_pc_or_tpc())
+  } else {
+    let vw : int = vec_length_from_lcfr();
+    let pm = read_predicate_p();
+    var out = read_vec_dest_value(decoded_vec_dst_regid(), Dst_k);
+    var flags : bits(5) = 0b00000;
+    foreach (i from 0 to (vw - 1)) {
+      assert((0 <= i) & (i < 64));
+      if bitvector_access(pm, i) == 0b1 then {
+        let (a_raw, f0) = vec_fp_from_carrier32(read_vec_operand_lane32(decoded_vec_srcl_regid(), i), src_t);
+        let (b_raw, f1) = vec_fp_from_carrier32(read_vec_operand_lane32(decoded_vec_srcr_regid(), i), src_t);
+        let (c_raw, f2) = vec_fp_from_carrier32(read_vec_operand_lane32(decoded_vec_srca_regid(), i), src_t);
+        let (res_raw, f3) = linx_fp_fnmsub(fp_active_rm(), src_t, a_raw, b_raw, c_raw);
+        let (carrier, f4) = vec_fp_result_to_carrier32(res_raw, src_t, dst_t);
+        flags = flags | f0 | f1 | f2 | f3 | f4;
+        out = vec_set_lane32(out, i, carrier)
+      } else ()
+    };
+    fp_record_flags(flags);
+    write_vec_dest_value(decoded_vec_dst_regid(), Dst_k, out)
+  }
 }
 
-function exec_v_fabs(SrcL_k : bits(3), Dst_k : bits(3)) -> unit = {
-  vfp_unimpl("V.FABS");
-  let vw : int = vec_length_from_lcfr();
-  let pm = read_predicate_p();
-  var out = read_vt(Dst_k);
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 64));
-    let active = bitvector_access(pm, i) == 0b1;
-    let r : bits(32) = if active then 0x0000_0000 else undefined_bitvector(32);
-    out = vec_set_lane32(out, i, r)
-  };
-  write_vt(Dst_k, out)
+// Vector FP compares: ordered; NaN => false. Results are 0/1 carriers in each lane.
+function exec_v_feq(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
+  let _ = SrcL_k;
+  let _ = SrcR_k;
+  let src_t : bits(5) = decoded_vec_srcl_type();
+  if not_bool(fp_type_code_supported(src_t) & (src_t == decoded_vec_srcr_type())) then {
+    trap_illegal_inst(read_pc_or_tpc())
+  } else {
+    let vw : int = vec_length_from_lcfr();
+    let pm = read_predicate_p();
+    var out = read_vec_dest_value(decoded_vec_dst_regid(), Dst_k);
+    var flags : bits(5) = 0b00000;
+    foreach (i from 0 to (vw - 1)) {
+      assert((0 <= i) & (i < 64));
+      if bitvector_access(pm, i) == 0b1 then {
+        let (a64, f0) = vec_fp_to_fp64_norm(read_vec_operand_lane32(decoded_vec_srcl_regid(), i), src_t);
+        let (b64, f1) = vec_fp_to_fp64_norm(read_vec_operand_lane32(decoded_vec_srcr_regid(), i), src_t);
+        flags = flags | f0 | f1;
+        out = vec_set_lane32(out, i, vec_bool32(fp64_eq(a64, b64)))
+      } else ()
+    };
+    fp_record_flags(flags);
+    write_vec_dest_value(decoded_vec_dst_regid(), Dst_k, out)
+  }
 }
 
-function exec_v_fclass(SrcL_k : bits(3), Dst_k : bits(3)) -> unit = {
-  vfp_unimpl("V.FCLASS");
-  let vw : int = vec_length_from_lcfr();
-  let pm = read_predicate_p();
-  var out = read_vt(Dst_k);
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 64));
-    let active = bitvector_access(pm, i) == 0b1;
-    let r : bits(32) = if active then 0x0000_0000 else undefined_bitvector(32);
-    out = vec_set_lane32(out, i, r)
-  };
-  write_vt(Dst_k, out)
+function exec_v_flt(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
+  let _ = SrcL_k;
+  let _ = SrcR_k;
+  let src_t : bits(5) = decoded_vec_srcl_type();
+  if not_bool(fp_type_code_supported(src_t) & (src_t == decoded_vec_srcr_type())) then {
+    trap_illegal_inst(read_pc_or_tpc())
+  } else {
+    let vw : int = vec_length_from_lcfr();
+    let pm = read_predicate_p();
+    var out = read_vec_dest_value(decoded_vec_dst_regid(), Dst_k);
+    var flags : bits(5) = 0b00000;
+    foreach (i from 0 to (vw - 1)) {
+      assert((0 <= i) & (i < 64));
+      if bitvector_access(pm, i) == 0b1 then {
+        let (a64, f0) = vec_fp_to_fp64_norm(read_vec_operand_lane32(decoded_vec_srcl_regid(), i), src_t);
+        let (b64, f1) = vec_fp_to_fp64_norm(read_vec_operand_lane32(decoded_vec_srcr_regid(), i), src_t);
+        flags = flags | f0 | f1;
+        out = vec_set_lane32(out, i, vec_bool32(fp64_lt(a64, b64)))
+      } else ()
+    };
+    fp_record_flags(flags);
+    write_vec_dest_value(decoded_vec_dst_regid(), Dst_k, out)
+  }
 }
 
-function exec_v_fcvt(SrcL_k : bits(3), Dst_k : bits(3)) -> unit = {
-  vfp_unimpl("V.FCVT");
-  let vw : int = vec_length_from_lcfr();
-  let pm = read_predicate_p();
-  var out = read_vt(Dst_k);
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 64));
-    let active = bitvector_access(pm, i) == 0b1;
-    let r : bits(32) = if active then 0x0000_0000 else undefined_bitvector(32);
-    out = vec_set_lane32(out, i, r)
-  };
-  write_vt(Dst_k, out)
+function exec_v_fge(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
+  let _ = SrcL_k;
+  let _ = SrcR_k;
+  let src_t : bits(5) = decoded_vec_srcl_type();
+  if not_bool(fp_type_code_supported(src_t) & (src_t == decoded_vec_srcr_type())) then {
+    trap_illegal_inst(read_pc_or_tpc())
+  } else {
+    let vw : int = vec_length_from_lcfr();
+    let pm = read_predicate_p();
+    var out = read_vec_dest_value(decoded_vec_dst_regid(), Dst_k);
+    var flags : bits(5) = 0b00000;
+    foreach (i from 0 to (vw - 1)) {
+      assert((0 <= i) & (i < 64));
+      if bitvector_access(pm, i) == 0b1 then {
+        let (a64, f0) = vec_fp_to_fp64_norm(read_vec_operand_lane32(decoded_vec_srcl_regid(), i), src_t);
+        let (b64, f1) = vec_fp_to_fp64_norm(read_vec_operand_lane32(decoded_vec_srcr_regid(), i), src_t);
+        flags = flags | f0 | f1;
+        out = vec_set_lane32(out, i, vec_bool32(fp64_ge(a64, b64)))
+      } else ()
+    };
+    fp_record_flags(flags);
+    write_vec_dest_value(decoded_vec_dst_regid(), Dst_k, out)
+  }
 }
 
-function exec_v_fcvti(SrcL_k : bits(3), Dst_k : bits(3)) -> unit = {
-  vfp_unimpl("V.FCVTI");
-  let vw : int = vec_length_from_lcfr();
-  let pm = read_predicate_p();
-  var out = read_vt(Dst_k);
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 64));
-    let active = bitvector_access(pm, i) == 0b1;
-    let r : bits(32) = if active then 0x0000_0000 else undefined_bitvector(32);
-    out = vec_set_lane32(out, i, r)
-  };
-  write_vt(Dst_k, out)
+function exec_v_fne(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
+  let _ = SrcL_k;
+  let _ = SrcR_k;
+  let src_t : bits(5) = decoded_vec_srcl_type();
+  if not_bool(fp_type_code_supported(src_t) & (src_t == decoded_vec_srcr_type())) then {
+    trap_illegal_inst(read_pc_or_tpc())
+  } else {
+    let vw : int = vec_length_from_lcfr();
+    let pm = read_predicate_p();
+    var out = read_vec_dest_value(decoded_vec_dst_regid(), Dst_k);
+    var flags : bits(5) = 0b00000;
+    foreach (i from 0 to (vw - 1)) {
+      assert((0 <= i) & (i < 64));
+      if bitvector_access(pm, i) == 0b1 then {
+        let (a64, f0) = vec_fp_to_fp64_norm(read_vec_operand_lane32(decoded_vec_srcl_regid(), i), src_t);
+        let (b64, f1) = vec_fp_to_fp64_norm(read_vec_operand_lane32(decoded_vec_srcr_regid(), i), src_t);
+        flags = flags | f0 | f1;
+        out = vec_set_lane32(out, i, vec_bool32(not_bool(fp64_eq(a64, b64))))
+      } else ()
+    };
+    fp_record_flags(flags);
+    write_vec_dest_value(decoded_vec_dst_regid(), Dst_k, out)
+  }
 }
 
-function exec_v_fmadd(SrcL_k : bits(3), SrcR_k : bits(3), SrcA_k : bits(3), Dst_k : bits(3)) -> unit = {
-  vfp_unimpl("V.FMADD");
-  let vw : int = vec_length_from_lcfr();
-  let pm = read_predicate_p();
-  var out = read_vt(Dst_k);
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 64));
-    let active = bitvector_access(pm, i) == 0b1;
-    let r : bits(32) = if active then 0x0000_0000 else undefined_bitvector(32);
-    out = vec_set_lane32(out, i, r)
-  };
-  write_vt(Dst_k, out)
+// S-variants are aliases.
+function exec_v_feqs(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = { exec_v_feq(SrcL_k, SrcR_k, Dst_k) }
+function exec_v_flts(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = { exec_v_flt(SrcL_k, SrcR_k, Dst_k) }
+function exec_v_fges(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = { exec_v_fge(SrcL_k, SrcR_k, Dst_k) }
+function exec_v_fnes(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = { exec_v_fne(SrcL_k, SrcR_k, Dst_k) }
+
+function exec_v_fmax(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
+  let _ = SrcL_k;
+  let _ = SrcR_k;
+  let src_t : bits(5) = decoded_vec_srcl_type();
+  let dst_t : bits(5) = decoded_vec_dst_type();
+  if not_bool(fp_type_code_supported(src_t) & fp_type_code_supported(dst_t) & (src_t == decoded_vec_srcr_type())) then {
+    trap_illegal_inst(read_pc_or_tpc())
+  } else {
+    let vw : int = vec_length_from_lcfr();
+    let pm = read_predicate_p();
+    var out = read_vec_dest_value(decoded_vec_dst_regid(), Dst_k);
+    var flags : bits(5) = 0b00000;
+    foreach (i from 0 to (vw - 1)) {
+      assert((0 <= i) & (i < 64));
+      if bitvector_access(pm, i) == 0b1 then {
+        let a_carrier : bits(32) = read_vec_operand_lane32(decoded_vec_srcl_regid(), i);
+        let b_carrier : bits(32) = read_vec_operand_lane32(decoded_vec_srcr_regid(), i);
+        let (a_raw, f0) = vec_fp_from_carrier32(a_carrier, src_t);
+        let (b_raw, f1) = vec_fp_from_carrier32(b_carrier, src_t);
+        let (a64, f2) = vec_fp_to_fp64_norm(a_carrier, src_t);
+        let (b64, f3) = vec_fp_to_fp64_norm(b_carrier, src_t);
+        let nan_a = fp64_is_nan(a64);
+        let nan_b = fp64_is_nan(b64);
+        let both_zero = fp64_is_zero(a64) & fp64_is_zero(b64);
+        let (qnan_raw, f4) = vec_fp_qnan_in_type(src_t);
+        let (zero_raw, f5) =
+          if src_t == 0b00000 then (0x0000_0000_0000_0000, 0b00000)
+          else linx_fp_to_fp(fp_active_rm(), src_t, 0b00000, 0x0000_0000_0000_0000);
+        let chosen_raw : bits(64) =
+          if nan_a & nan_b then qnan_raw
+          else if nan_a then b_raw
+          else if nan_b then a_raw
+          else if both_zero then zero_raw
+          else if fp64_ge(a64, b64) then a_raw else b_raw;
+        let (carrier, f6) = vec_fp_result_to_carrier32(chosen_raw, src_t, dst_t);
+        flags = flags | f0 | f1 | f2 | f3 | f4 | f5 | f6;
+        out = vec_set_lane32(out, i, carrier)
+      } else ()
+    };
+    fp_record_flags(flags);
+    write_vec_dest_value(decoded_vec_dst_regid(), Dst_k, out)
+  }
 }
 
-function exec_v_fmsub(SrcL_k : bits(3), SrcR_k : bits(3), SrcA_k : bits(3), Dst_k : bits(3)) -> unit = {
-  vfp_unimpl("V.FMSUB");
-  let vw : int = vec_length_from_lcfr();
-  let pm = read_predicate_p();
-  var out = read_vt(Dst_k);
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 64));
-    let active = bitvector_access(pm, i) == 0b1;
-    let r : bits(32) = if active then 0x0000_0000 else undefined_bitvector(32);
-    out = vec_set_lane32(out, i, r)
-  };
-  write_vt(Dst_k, out)
-}
-
-function exec_v_fnmadd(SrcL_k : bits(3), SrcR_k : bits(3), SrcA_k : bits(3), Dst_k : bits(3)) -> unit = {
-  vfp_unimpl("V.FNMADD");
-  let vw : int = vec_length_from_lcfr();
-  let pm = read_predicate_p();
-  var out = read_vt(Dst_k);
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 64));
-    let active = bitvector_access(pm, i) == 0b1;
-    let r : bits(32) = if active then 0x0000_0000 else undefined_bitvector(32);
-    out = vec_set_lane32(out, i, r)
-  };
-  write_vt(Dst_k, out)
-}
-
-function exec_v_fnmsub(SrcL_k : bits(3), SrcR_k : bits(3), SrcA_k : bits(3), Dst_k : bits(3)) -> unit = {
-  vfp_unimpl("V.FNMSUB");
-  let vw : int = vec_length_from_lcfr();
-  let pm = read_predicate_p();
-  var out = read_vt(Dst_k);
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 64));
-    let active = bitvector_access(pm, i) == 0b1;
-    let r : bits(32) = if active then 0x0000_0000 else undefined_bitvector(32);
-    out = vec_set_lane32(out, i, r)
-  };
-  write_vt(Dst_k, out)
-}
-
-// Vector FP compares: ordered; NaN => false. Results are 0/1 in each lane.
-function exec_v_feq(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
-  let vw : int = vec_length_from_lcfr();
-  let pm = read_predicate_p();
-  let lhs = read_vt(SrcL_k);
-  let rhs = read_vt(SrcR_k);
-  var out = read_vt(Dst_k);
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 64));
-    let active = bitvector_access(pm, i) == 0b1;
-    let a = vec_get_lane32(lhs, i);
-    let b = vec_get_lane32(rhs, i);
-    let r : bits(32) = if active then vec_bool32(fp32_eq(a, b)) else undefined_bitvector(32);
-    out = vec_set_lane32(out, i, r)
-  }; write_vt(Dst_k, out)
-}
-
-function exec_v_flt(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
-  let vw : int = vec_length_from_lcfr();
-  let pm = read_predicate_p();
-  let lhs = read_vt(SrcL_k);
-  let rhs = read_vt(SrcR_k);
-  var out = read_vt(Dst_k);
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 64));
-    let active = bitvector_access(pm, i) == 0b1;
-    let a = vec_get_lane32(lhs, i);
-    let b = vec_get_lane32(rhs, i);
-    let r : bits(32) = if active then vec_bool32(fp32_lt(a, b)) else undefined_bitvector(32);
-    out = vec_set_lane32(out, i, r)
-  }; write_vt(Dst_k, out)
-}
-
-function exec_v_fge(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
-  let vw : int = vec_length_from_lcfr();
-  let pm = read_predicate_p();
-  let lhs = read_vt(SrcL_k);
-  let rhs = read_vt(SrcR_k);
-  var out = read_vt(Dst_k);
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 64));
-    let active = bitvector_access(pm, i) == 0b1;
-    let a = vec_get_lane32(lhs, i);
-    let b = vec_get_lane32(rhs, i);
-    let r : bits(32) = if active then vec_bool32(fp32_ge(a, b)) else undefined_bitvector(32);
-    out = vec_set_lane32(out, i, r)
-  }; write_vt(Dst_k, out)
-}
-
-function exec_v_fne(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
-  let vw : int = vec_length_from_lcfr();
-  let pm = read_predicate_p();
-  let lhs = read_vt(SrcL_k);
-  let rhs = read_vt(SrcR_k);
-  var out = read_vt(Dst_k);
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 64));
-    let active = bitvector_access(pm, i) == 0b1;
-    let a = vec_get_lane32(lhs, i);
-    let b = vec_get_lane32(rhs, i);
-    let eq = fp32_eq(a, b);
-    let r : bits(32) = if active then vec_bool32(not_bool(eq)) else undefined_bitvector(32);
-    out = vec_set_lane32(out, i, r)
-  }; write_vt(Dst_k, out)
-}
-
-// S-variants are aliases (no exception signaling modeled).
-function exec_v_feqs(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = { exec_v_feq(SrcL_k, SrcR_k, Dst_k) }
-function exec_v_flts(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = { exec_v_flt(SrcL_k, SrcR_k, Dst_k) }
-function exec_v_fges(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = { exec_v_fge(SrcL_k, SrcR_k, Dst_k) }
-function exec_v_fnes(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = { exec_v_fne(SrcL_k, SrcR_k, Dst_k) }
-
-function exec_v_fmax(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
-  // Match scalar exec_fmax logic for fs lanes.
-  let vw : int = vec_length_from_lcfr();
-  let pm = read_predicate_p();
-  let lhs = read_vt(SrcL_k);
-  let rhs = read_vt(SrcR_k);
-  var out = read_vt(Dst_k);
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 64));
-    let active = bitvector_access(pm, i) == 0b1;
-    let a32 = vec_get_lane32(lhs, i);
-    let b32 = vec_get_lane32(rhs, i);
-    let nan_a = fp32_is_nan(a32);
-    let nan_b = fp32_is_nan(b32);
-    let both_zero = fp32_is_zero(a32) & fp32_is_zero(b32);
-    let r32 =
-      if nan_a & nan_b then 0x7FC0_0000
-      else if nan_a then b32
-      else if nan_b then a32
-      else if both_zero then 0x0000_0000
-      else if fp32_ge(a32, b32) then a32 else b32;
-    let r : bits(32) = if active then r32 else undefined_bitvector(32);
-    out = vec_set_lane32(out, i, r)
-  }; write_vt(Dst_k, out)
-}
-
-function exec_v_fmin(SrcL_k : bits(3), SrcR_k : bits(3), Dst_k : bits(3)) -> unit = {
-  // Match scalar exec_fmin logic for fs lanes.
-  let vw : int = vec_length_from_lcfr();
-  let pm = read_predicate_p();
-  let lhs = read_vt(SrcL_k);
-  let rhs = read_vt(SrcR_k);
-  var out = read_vt(Dst_k);
-  foreach (i from 0 to (vw - 1)) {
-    assert((0 <= i) & (i < 64));
-    let active = bitvector_access(pm, i) == 0b1;
-    let a32 = vec_get_lane32(lhs, i);
-    let b32 = vec_get_lane32(rhs, i);
-    let nan_a = fp32_is_nan(a32);
-    let nan_b = fp32_is_nan(b32);
-    let both_zero = fp32_is_zero(a32) & fp32_is_zero(b32);
-    let neg0 = (a32[31] == 0b1) | (b32[31] == 0b1);
-    let r32 =
-      if nan_a & nan_b then 0x7FC0_0000
-      else if nan_a then b32
-      else if nan_b then a32
-      else if both_zero then (if neg0 then 0x8000_0000 else 0x0000_0000)
-      else if fp32_lt(a32, b32) then a32 else b32;
-    let r : bits(32) = if active then r32 else undefined_bitvector(32);
-    out = vec_set_lane32(out, i, r)
-  }; write_vt(Dst_k, out)
+function exec_v_fmin(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
+  let _ = SrcL_k;
+  let _ = SrcR_k;
+  let src_t : bits(5) = decoded_vec_srcl_type();
+  let dst_t : bits(5) = decoded_vec_dst_type();
+  if not_bool(fp_type_code_supported(src_t) & fp_type_code_supported(dst_t) & (src_t == decoded_vec_srcr_type())) then {
+    trap_illegal_inst(read_pc_or_tpc())
+  } else {
+    let vw : int = vec_length_from_lcfr();
+    let pm = read_predicate_p();
+    var out = read_vec_dest_value(decoded_vec_dst_regid(), Dst_k);
+    var flags : bits(5) = 0b00000;
+    foreach (i from 0 to (vw - 1)) {
+      assert((0 <= i) & (i < 64));
+      if bitvector_access(pm, i) == 0b1 then {
+        let a_carrier : bits(32) = read_vec_operand_lane32(decoded_vec_srcl_regid(), i);
+        let b_carrier : bits(32) = read_vec_operand_lane32(decoded_vec_srcr_regid(), i);
+        let (a_raw, f0) = vec_fp_from_carrier32(a_carrier, src_t);
+        let (b_raw, f1) = vec_fp_from_carrier32(b_carrier, src_t);
+        let (a64, f2) = vec_fp_to_fp64_norm(a_carrier, src_t);
+        let (b64, f3) = vec_fp_to_fp64_norm(b_carrier, src_t);
+        let nan_a = fp64_is_nan(a64);
+        let nan_b = fp64_is_nan(b64);
+        let both_zero = fp64_is_zero(a64) & fp64_is_zero(b64);
+        let neg0 = (a64[63] == 0b1) | (b64[63] == 0b1);
+        let (qnan_raw, f4) = vec_fp_qnan_in_type(src_t);
+        let (zero_raw, f5) =
+          if src_t == 0b00000 then {
+            (if neg0 then 0x8000_0000_0000_0000 else 0x0000_0000_0000_0000, 0b00000)
+          } else {
+            linx_fp_to_fp(
+              fp_active_rm(),
+              src_t,
+              0b00000,
+              if neg0 then 0x8000_0000_0000_0000 else 0x0000_0000_0000_0000
+            )
+          };
+        let chosen_raw : bits(64) =
+          if nan_a & nan_b then qnan_raw
+          else if nan_a then b_raw
+          else if nan_b then a_raw
+          else if both_zero then zero_raw
+          else if fp64_lt(a64, b64) then a_raw else b_raw;
+        let (carrier, f6) = vec_fp_result_to_carrier32(chosen_raw, src_t, dst_t);
+        flags = flags | f0 | f1 | f2 | f3 | f4 | f5 | f6;
+        out = vec_set_lane32(out, i, carrier)
+      } else ()
+    };
+    fp_record_flags(flags);
+    write_vec_dest_value(decoded_vec_dst_regid(), Dst_k, out)
+  }
 }
 
 // (32-bit helpers defined earlier near V.* block)
 
-function exec_v_psel(SrcP_k : bits(3), SrcL_k : bits(3), SrcR_k : bits(3), neg : bits(1), Dst_k : bits(3)) -> unit = {
+function exec_v_psel(SrcP_k : bits(5), SrcL_k : bits(5), SrcR_k : bits(5), neg : bits(1), Dst_k : bits(5)) -> unit = {
   let vw : int = vec_length_from_lcfr();
   let pvec = read_vt(SrcP_k);
   let lhs = read_vt(SrcL_k);
@@ -5444,7 +6288,7 @@ function exec_v_psel(SrcP_k : bits(3), SrcL_k : bits(3), SrcR_k : bits(3), neg :
     let take_l = pv != 0x0000_0000;
     let a : bits(32) = vec_get_lane32(lhs, i);
     let b0 : bits(32) = vec_get_lane32(rhs0, i);
-    let b : bits(32) = if neg == 0b1 then (0x0000_0000 - b0) else b0;
+    let b : bits(32) = if neg == 0b1 then sub_bits(0x0000_0000, b0) else b0;
     let r : bits(32) = if take_l then a else b;
     out = vec_set_lane32(out, i, r)
   };
@@ -5457,10 +6301,10 @@ function exec_fneg(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit 
   let is_fs = (SrcType == 0b01);
   if is_fs then {
     let a32 = a64[31..0];
-    let r32 = a32 ^ 0x8000_0000;
+    let r32 = xor_vec(a32, 0x8000_0000);
     write_regdst(RegDst, zext32_from32(r32))
   } else {
-    write_regdst(RegDst, a64 ^ 0x8000_0000_0000_0000)
+    write_regdst(RegDst, xor_vec(a64, 0x8000_0000_0000_0000))
   }
 }
 
@@ -5640,7 +6484,7 @@ function exec_hl_casd(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcD : b
 function rmw32_add(a : bits(32), b : bits(32)) -> bits(32) = { a + b }
 function rmw32_and(a : bits(32), b : bits(32)) -> bits(32) = { a & b }
 function rmw32_or(a : bits(32), b : bits(32)) -> bits(32) = { a | b }
-function rmw32_xor(a : bits(32), b : bits(32)) -> bits(32) = { a ^ b }
+function rmw32_xor(a : bits(32), b : bits(32)) -> bits(32) = { xor_vec(a, b) }
 
 function rmw32_smax(a : bits(32), b : bits(32)) -> bits(32) = { if (signed(a) >= signed(b)) then a else b }
 function rmw32_smin(a : bits(32), b : bits(32)) -> bits(32) = { if (signed(a) <= signed(b)) then a else b }
@@ -5650,7 +6494,7 @@ function rmw32_umin(a : bits(32), b : bits(32)) -> bits(32) = { if (unsigned(a) 
 function rmw64_add(a : bits(64), b : bits(64)) -> bits(64) = { a + b }
 function rmw64_and(a : bits(64), b : bits(64)) -> bits(64) = { a & b }
 function rmw64_or(a : bits(64), b : bits(64)) -> bits(64) = { a | b }
-function rmw64_xor(a : bits(64), b : bits(64)) -> bits(64) = { a ^ b }
+function rmw64_xor(a : bits(64), b : bits(64)) -> bits(64) = { xor_vec(a, b) }
 
 function rmw64_smax(a : bits(64), b : bits(64)) -> bits(64) = { if (signed(a) >= signed(b)) then a else b }
 function rmw64_smin(a : bits(64), b : bits(64)) -> bits(64) = { if (signed(a) <= signed(b)) then a else b }
@@ -6597,8 +7441,8 @@ function hl_pc_aligned4() -> bits(64) = {
   pc0 & 0xFFFF_FFFF_FFFF_FFFC
 }
 
-function hl_ea_pcr(simm17 : bits(17)) -> bits(64) = {
-  hl_pc_aligned4() + sail_shiftleft(sext17_to64(simm17), 2)
+function hl_ea_pcr(simm17 : bits(29)) -> bits(64) = {
+  hl_pc_aligned4() + sail_shiftleft(sext29_to64(simm17), 2)
 }
 
 function hl_ea_imm_scaled(base : bits(64), simm22 : bits(22), scale : int) -> bits(64) = {
@@ -6620,37 +7464,37 @@ function hl_ea_imm17_unscaled(base : bits(64), simm17 : bits(17)) -> bits(64) = 
 }
 
 // ---- HL loads: PCR ----
-function exec_hl_lb_pcr(RegDst : bits(5), simm17 : bits(17)) -> unit = {
+function exec_hl_lb_pcr(RegDst : bits(5), simm17 : bits(29)) -> unit = {
   let ea = hl_ea_pcr(simm17);
   let b : bits(8) = read_mem8(ea);
   write_regdst(RegDst, sext8_from8(b))
 }
-function exec_hl_lbu_pcr(RegDst : bits(5), simm17 : bits(17)) -> unit = {
+function exec_hl_lbu_pcr(RegDst : bits(5), simm17 : bits(29)) -> unit = {
   let ea = hl_ea_pcr(simm17);
   let b : bits(8) = read_mem8(ea);
   write_regdst(RegDst, zext8_from8(b))
 }
-function exec_hl_lh_pcr(RegDst : bits(5), simm17 : bits(17)) -> unit = {
+function exec_hl_lh_pcr(RegDst : bits(5), simm17 : bits(29)) -> unit = {
   let ea = hl_ea_pcr(simm17);
   let h : bits(16) = mem_load16_le(ea);
   write_regdst(RegDst, sext16_from16(h))
 }
-function exec_hl_lhu_pcr(RegDst : bits(5), simm17 : bits(17)) -> unit = {
+function exec_hl_lhu_pcr(RegDst : bits(5), simm17 : bits(29)) -> unit = {
   let ea = hl_ea_pcr(simm17);
   let h : bits(16) = mem_load16_le(ea);
   write_regdst(RegDst, zext16_from16(h))
 }
-function exec_hl_lw_pcr(RegDst : bits(5), simm17 : bits(17)) -> unit = {
+function exec_hl_lw_pcr(RegDst : bits(5), simm17 : bits(29)) -> unit = {
   let ea = hl_ea_pcr(simm17);
   let w : bits(32) = mem_load32_le(ea);
   write_regdst(RegDst, sext32_from32(w))
 }
-function exec_hl_lwu_pcr(RegDst : bits(5), simm17 : bits(17)) -> unit = {
+function exec_hl_lwu_pcr(RegDst : bits(5), simm17 : bits(29)) -> unit = {
   let ea = hl_ea_pcr(simm17);
   let w : bits(32) = mem_load32_le(ea);
   write_regdst(RegDst, zext32_from32(w))
 }
-function exec_hl_ld_pcr(RegDst : bits(5), simm17 : bits(17)) -> unit = {
+function exec_hl_ld_pcr(RegDst : bits(5), simm17 : bits(29)) -> unit = {
   let ea = hl_ea_pcr(simm17);
   let d : bits(64) = mem_load64_le(ea);
   write_regdst(RegDst, d)
@@ -7026,22 +7870,22 @@ function exec_hl_ldp(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR 
 }
 
 // ---- HL stores: PCR ----
-function exec_hl_sb_pcr(SrcD : bits(5), simm17 : bits(17)) -> unit = {
+function exec_hl_sb_pcr(SrcD : bits(5), simm17 : bits(29)) -> unit = {
   let ea = hl_ea_pcr(simm17);
   let v : bits(8) = read_reg5(SrcD)[7..0];
   write_mem8(ea, v)
 }
-function exec_hl_sh_pcr(SrcD : bits(5), simm17 : bits(17)) -> unit = {
+function exec_hl_sh_pcr(SrcD : bits(5), simm17 : bits(29)) -> unit = {
   let ea = hl_ea_pcr(simm17);
   let v : bits(16) = read_reg5(SrcD)[15..0];
   mem_store16_le(ea, v)
 }
-function exec_hl_sw_pcr(SrcD : bits(5), simm17 : bits(17)) -> unit = {
+function exec_hl_sw_pcr(SrcD : bits(5), simm17 : bits(29)) -> unit = {
   let ea = hl_ea_pcr(simm17);
   let v : bits(32) = read_reg5(SrcD)[31..0];
   mem_store32_le(ea, v)
 }
-function exec_hl_sd_pcr(SrcD : bits(5), simm17 : bits(17)) -> unit = {
+function exec_hl_sd_pcr(SrcD : bits(5), simm17 : bits(29)) -> unit = {
   let ea = hl_ea_pcr(simm17);
   let v : bits(64) = read_reg5(SrcD);
   mem_store64_le(ea, v)

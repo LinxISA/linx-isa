@@ -5,7 +5,7 @@
 [[inst_v_lhi]]
 ==== V.LHI
 
-*Syntax:* v.lhi<.local> [SrcL<.ud>, <lc0<<1>, simm], ->Dst.<W>
+*Syntax:* v.lhi<.local> [SrcL, <lc0<<1>, simm], ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

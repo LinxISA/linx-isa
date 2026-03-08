@@ -5,7 +5,7 @@
 [[inst_v_fges]]
 ==== V.FGES
 
-*Syntax:* v.fges SrcL.<T>, SrcR.<T>, ->Dst.<W>
+*Syntax:* v.fges SrcL, SrcR, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

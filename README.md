@@ -39,8 +39,11 @@ git submodule update --init --recursive
 ### Run Validation Gates
 
 ```bash
-# ISA contract validation (mandatory)
-python3 tools/bringup/check26_contract.py --root .
+# Canonical ISA + AVS contract validation
+python3 tools/isa/build_golden.py --profile v0.4 --check
+python3 tools/isa/validate_spec.py --profile v0.4
+python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml
+python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier pr
 
 # Full regression suite
 bash tools/regression/run.sh
@@ -122,7 +125,9 @@ bash tools/ci/check_repo_layout.sh
 
 | Gate | Command | Description |
 |------|---------|-------------|
-| **check26 Contract** | `python3 tools/bringup/check26_contract.py --root .` | ISA specification compliance |
+| **AVS Contract** | `python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml` | Public `v0.4` bring-up contract schema + reference validation |
+| **AVS Closure** | `python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier pr` | Tier-scoped AVS closure status |
+| **Sail Model** | `python3 tools/bringup/check_sail_model.py` | Sail wording, status, and parser/typecheck gate |
 | **Compiler AVS** | `cd avs/compiler/linx-llvm/tests && ./run.sh` | LLVM code generation tests |
 | **QEMU Runtime** | `cd avs/qemu && ./run_tests.sh --all` | Emulator execution tests |
 | **Linux Boot** | `python3 kernel/linux/tools/linxisa/initramfs/smoke.py` | Kernel boot validation |

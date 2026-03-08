@@ -5,7 +5,7 @@
 [[inst_v_sra]]
 ==== V.SRA
 
-*Syntax:* v.sra SrcL.<T>, SrcR.<T>, ->Dst.<W>
+*Syntax:* v.sra SrcL, SrcR, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

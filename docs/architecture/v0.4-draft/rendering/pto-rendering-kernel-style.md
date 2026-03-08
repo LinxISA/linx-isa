@@ -1,5 +1,7 @@
 # v0.4 draft: Rendering PTO kernel writing style (recommended)
 
+Canonical destination: `docs/architecture/v0.4-rendering-kernel-authoring.md`
+
 This is a practical coding style guide for writing rendering-related kernels in `workloads/pto_kernels`.
 
 ## 1) Keep the same conventions as existing PTO kernels

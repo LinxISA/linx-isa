@@ -5,7 +5,7 @@
 [[inst_v_cmp_andi]]
 ==== V.CMP.ANDI
 
-*Syntax:* v.cmp.andi SrcL.<T>, simm, ->Dst.<W>
+*Syntax:* v.cmp.andi SrcL, simm, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

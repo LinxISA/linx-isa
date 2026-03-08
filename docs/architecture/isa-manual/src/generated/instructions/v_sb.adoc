@@ -5,7 +5,7 @@
 [[inst_v_sb]]
 ==== V.SB
 
-*Syntax:* v.sb<.local> SrcD.<T1>, [SrcL<.ud>, <lc0>, SrcR.<T2><<<shamt>]
+*Syntax:* v.sb<.local> SrcD.<T1>, [SrcL, <lc0>, SrcR.<T2><<<shamt>]
 
 *Description:* Vector instruction (VEC engine).
 

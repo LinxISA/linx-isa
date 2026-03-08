@@ -5,7 +5,7 @@
 [[inst_v_fnes]]
 ==== V.FNES
 
-*Syntax:* v.fnes SrcL.<T>, SrcR.<T>, ->Dst.<W>
+*Syntax:* v.fnes SrcL, SrcR, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

@@ -5,7 +5,7 @@
 [[inst_v_csel]]
 ==== V.CSEL
 
-*Syntax:* v.csel SrcP.<T>, SrcL.<T>, SrcR.<T><.neg>, ->Dst.<W>
+*Syntax:* v.csel SrcP, SrcL, SrcR<.neg>, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

@@ -5,7 +5,7 @@
 [[inst_v_fmadd]]
 ==== V.FMADD
 
-*Syntax:* v.fmadd SrcL.<T>, SrcR.<T>, SrcA.<T>, ->Dst.<W>
+*Syntax:* v.fmadd SrcL, SrcR, SrcA, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

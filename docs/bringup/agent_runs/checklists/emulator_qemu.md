@@ -14,7 +14,7 @@
   Command: `python3 tools/bringup/check_qemu_opcode_meta_sync.py --allowlist docs/bringup/qemu_opcode_sync_allowlist.json --report-out docs/bringup/gates/qemu_opcode_sync_latest.json --out-md docs/bringup/gates/qemu_opcode_sync_latest.md`
   Files: `emulator/qemu/target/linx/linx_opcode_ids_gen.h`, `emulator/qemu/target/linx/linx_opcode_meta_gen.h`
   Done means: opcode audit reports no unexpected decode/meta drift and no enum/meta op-id mismatch.
-  Status: ✅ PASS (2026-02-25) - opcode sync audit returns `qemu_opcode_meta_sync_ok` with `decode_only_unexpected=0`, `meta_only_unexpected=0`, and `id_mismatch_count=0` (artifacts: `docs/bringup/gates/qemu_opcode_sync_latest.json`, `docs/bringup/gates/qemu_opcode_sync_latest.md`).
+  Status: ✅ PASS (2026-03-07) - opcode sync audit returns `qemu_opcode_meta_sync_ok` with `decode_only_unexpected=0`, `meta_only_unexpected=0`, and `id_mismatch_count=0` after regenerating the LinxCore/QEMU opcode tables from the normalized `insn48.decode` catalog (artifacts: `docs/bringup/gates/qemu_opcode_sync_latest.json`, `docs/bringup/gates/qemu_opcode_sync_latest.md`).
 
 - [x] ID: QEMU-004 Validate trap semantics match the live v0.4 clarifications for CFI/BLOCKFMT/BFETCH.
   Done means: no conflicting trap behavior is observed in strict-system and model-diff gates.
@@ -22,8 +22,8 @@
 
 - [x] ID: QEMU-005 ISA spec vs QEMU implementation gap analysis.
   Command: `python3 tools/bringup/report_qemu_isa_coverage.py --report-out docs/bringup/gates/qemu_isa_coverage_latest.json --out-md docs/bringup/gates/qemu_isa_coverage_latest.md`
-  Done means: Canonical machine-generated coverage report is refreshed and captures missing spec mnemonics.
-  Status: ✅ PASS (2026-02-25) - coverage report generated with `coverage=311/710`, `missing=399`, and explicit missing/unmapped lists (artifacts: `docs/bringup/gates/qemu_isa_coverage_latest.json`, `docs/bringup/gates/qemu_isa_coverage_latest.md`).
+  Done means: Canonical machine-generated coverage report is refreshed and captures missing spec mnemonics and forms.
+  Status: ✅ PASS (2026-03-07) - coverage report generated with `mnemonics=524/710`, `forms=521/740`, `missing_mnemonics=186`, and explicit missing/unmapped lists (artifacts: `docs/bringup/gates/qemu_isa_coverage_latest.json`, `docs/bringup/gates/qemu_isa_coverage_latest.md`).
 
 - [x] ID: QEMU-006 QEMU can boot full Linux with complete runtime APIs.
   Done means: Linux kernel boots with timer interrupts working, full syscalls available.
@@ -35,11 +35,12 @@
 
 ### Summary
 - ISA spec: 710 unique mnemonics
-- QEMU mapped spec coverage: 311 unique mnemonics
-- Gap: 399 mnemonics currently outside mapped QEMU decode coverage
+- QEMU mapped spec coverage: 524 unique mnemonics
+- QEMU mapped spec forms: 521 legal forms
+- Gap: 186 mnemonics and 219 forms currently outside mapped QEMU decode coverage
 
 ### Categories of Missing Instructions
-1. **Vector instructions (`V.*`)**: large uncovered set remains
+1. **Vector instructions (`V.*`)**: large uncovered set remains, especially at per-form granularity
 2. **Compressed/HL variants**: many `C.*` and `HL.*` forms remain uncovered
 3. **Block/tile families**: additional `BSTART.*`, tile/template forms remain uncovered
 4. **MMU/debug/system breadth**: privileged/system families beyond current bring-up subset remain uncovered
@@ -49,4 +50,4 @@
 - Block control flow (BSTART/BSTOP) is implemented
 - Atomic operations (AMO) are implemented
 - System instructions (ACRC, ACRE, SSRGET/SRRSET) are implemented
-- Vector and tile operations are largely missing
+- Vector and tile operations remain the dominant decode-spectrum gap

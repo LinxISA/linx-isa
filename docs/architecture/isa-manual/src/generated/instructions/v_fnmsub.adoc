@@ -5,7 +5,7 @@
 [[inst_v_fnmsub]]
 ==== V.FNMSUB
 
-*Syntax:* v.fnmsub SrcL.<T>, SrcR.<T>, SrcA.<T>, ->Dst.<W>
+*Syntax:* v.fnmsub SrcL, SrcR, SrcA, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

@@ -5,7 +5,7 @@
 [[inst_v_lwui]]
 ==== V.LWUI
 
-*Syntax:* v.lwui<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>
+*Syntax:* v.lwui<.local> [SrcL, <lc0<<2>, simm], ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

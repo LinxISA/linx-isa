@@ -1,7 +1,12 @@
 {
-  "coverage_count": 315,
-  "coverage_ratio_percent": 44.37,
-  "generated_at_utc": "2026-03-07 02:48:58Z",
+  "coverage_count": 524,
+  "coverage_ratio_percent": 73.8,
+  "form_coverage_count": 521,
+  "form_coverage_ratio_percent": 70.41,
+  "form_missing_count": 219,
+  "generated_at_utc": "2026-03-07 15:39:01Z",
+  "legal_form_count": 740,
+  "legal_mnemonic_count": 710,
   "mapped_by_prefix": {
     "ACRC": 1,
     "ACRE": 1,
@@ -14,19 +19,26 @@
     "ANDI": 1,
     "ANDIW": 1,
     "ANDW": 1,
-    "B": 10,
+    "ASSERT": 1,
+    "B": 17,
+    "BC": 2,
     "BCNT": 1,
     "BIC": 1,
     "BIS": 1,
-    "BSTART": 14,
+    "BSE": 1,
+    "BSTART": 20,
     "BSTOP": 1,
+    "BWE": 1,
+    "BWI": 1,
+    "BWT": 1,
     "BXS": 1,
     "BXU": 1,
-    "C": 27,
+    "C": 37,
     "CLZ": 1,
     "CMP": 16,
     "CSEL": 1,
     "CTZ": 1,
+    "DC": 8,
     "DIV": 1,
     "DIVU": 1,
     "DIVUW": 1,
@@ -48,23 +60,27 @@
     "FMUL": 1,
     "FRET": 2,
     "FSUB": 1,
-    "HL": 65,
+    "HL": 180,
+    "IC": 2,
+    "J": 1,
+    "JR": 1,
     "LB": 2,
     "LBI": 1,
     "LBU": 2,
     "LBUI": 1,
-    "LD": 3,
-    "LDI": 1,
+    "LD": 10,
+    "LDI": 2,
     "LH": 2,
-    "LHI": 1,
+    "LHI": 2,
     "LHU": 2,
-    "LHUI": 1,
-    "LR": 2,
+    "LHUI": 2,
+    "LR": 4,
+    "LSRGET": 1,
     "LUI": 1,
-    "LW": 3,
-    "LWI": 1,
+    "LW": 10,
+    "LWI": 2,
     "LWU": 2,
-    "LWUI": 1,
+    "LWUI": 2,
     "MADD": 1,
     "MADDW": 1,
     "MAX": 1,
@@ -74,11 +90,15 @@
     "MINU": 1,
     "MSET": 1,
     "MUL": 1,
+    "MULU": 1,
+    "MULUW": 1,
     "MULW": 1,
     "OR": 1,
     "ORI": 1,
     "ORIW": 1,
     "ORW": 1,
+    "PRF": 1,
+    "PRFI": 1,
     "REM": 1,
     "REMU": 1,
     "REMUW": 1,
@@ -86,14 +106,14 @@
     "REV": 1,
     "SB": 2,
     "SBI": 1,
-    "SC": 2,
+    "SC": 4,
     "SCVTF": 1,
-    "SD": 3,
-    "SDI": 1,
+    "SD": 11,
+    "SDI": 2,
     "SETC": 17,
     "SETRET": 1,
     "SH": 3,
-    "SHI": 1,
+    "SHI": 2,
     "SLL": 1,
     "SLLI": 1,
     "SLLIW": 1,
@@ -113,11 +133,13 @@
     "SUBI": 1,
     "SUBIW": 1,
     "SUBW": 1,
-    "SW": 3,
+    "SW": 11,
+    "SWAPB": 1,
     "SWAPD": 1,
+    "SWAPH": 1,
     "SWAPW": 1,
-    "SWI": 1,
-    "TLB": 1,
+    "SWI": 2,
+    "TLB": 4,
     "UCVTF": 1,
     "V": 32,
     "XOR": 1,
@@ -125,345 +147,1807 @@
     "XORIW": 1,
     "XORW": 1
   },
-  "mapped_qemu_to_spec": {
-    "acrc": "ACRC",
-    "acre": "ACRE",
-    "add": "ADD",
-    "addi": "ADDI",
-    "addiw": "ADDIW",
-    "addtpc": "ADDTPC",
-    "addw": "ADDW",
-    "and": "AND",
-    "andi": "ANDI",
-    "andiw": "ANDIW",
-    "andw": "ANDW",
-    "b_arg": "B.ARG",
-    "b_attr": "B.ATTR",
-    "b_dim_lb0": "B.DIM",
-    "b_dim_lb1": "B.DIM",
-    "b_dim_lb2": "B.DIM",
-    "b_hint": "B.HINT",
-    "b_hint_trace": "B.HINT",
-    "b_ior": "B.IOR",
-    "b_iot": "B.IOT",
-    "b_ioti": "B.IOTI",
-    "b_nz": "B.NZ",
-    "b_text": "B.TEXT",
-    "b_z": "B.Z",
-    "bcnt": "BCNT",
-    "bic": "BIC",
-    "bis": "BIS",
-    "bstart_call": "BSTART CALL",
-    "bstart_cond": "BSTART",
-    "bstart_cube": "BSTART.CUBE",
-    "bstart_direct": "BSTART",
-    "bstart_icall": "BSTART",
-    "bstart_ind": "BSTART",
-    "bstart_mpar": "BSTART.MPAR",
-    "bstart_mseq": "BSTART.MSEQ",
-    "bstart_par_acccvt": "BSTART.ACCCVT",
-    "bstart_par_compat163": "BSTART.PAR",
-    "bstart_par_mamulb": "BSTART.TMATMUL",
-    "bstart_par_mamulb_acc": "BSTART.TMATMUL.ACC",
-    "bstart_par_tload": "BSTART.TLOAD",
-    "bstart_par_tstore": "BSTART.TSTORE",
-    "bstart_par_vcall": "BSTART.PAR",
-    "bstart_ret": "BSTART",
-    "bstart_tma": "BSTART.TMA",
-    "bstart_vpar": "BSTART.VPAR",
-    "bstart_vseq": "BSTART.VSEQ",
-    "bstop": "BSTOP",
-    "bxs": "BXS",
-    "bxu": "BXU",
-    "c_add": "C.ADD",
-    "c_addi": "C.ADDI",
-    "c_and": "C.AND",
-    "c_b_dimi": "C.B.DIMI",
-    "c_bstart_cond": "C.BSTART.STD",
-    "c_bstart_direct": "C.BSTART.STD",
-    "c_bstop": "C.BSTOP",
-    "c_cmp_eqi": "C.CMP.EQI",
-    "c_cmp_nei": "C.CMP.NEI",
-    "c_ldi": "C.LDI",
-    "c_lwi": "C.LWI",
-    "c_movi": "C.MOVI",
-    "c_movr": "C.MOVR",
-    "c_or": "C.OR",
-    "c_sdi": "C.SDI",
-    "c_setc_eq": "C.SETC.EQ",
-    "c_setc_ne": "C.SETC.NE",
-    "c_setc_tgt": "C.SETC.TGT",
-    "c_sext_b": "C.SEXT.B",
-    "c_sext_h": "C.SEXT.H",
-    "c_sext_w": "C.SEXT.W",
-    "c_slli": "C.SLLI",
-    "c_srli": "C.SRLI",
-    "c_sub": "C.SUB",
-    "c_swi": "C.SWI",
-    "c_zext_b": "C.ZEXT.B",
-    "c_zext_h": "C.ZEXT.H",
-    "c_zext_w": "C.ZEXT.W",
-    "clz": "CLZ",
-    "cmp_and": "CMP.AND",
-    "cmp_andi": "CMP.ANDI",
-    "cmp_eq": "CMP.EQ",
-    "cmp_eqi": "CMP.EQI",
-    "cmp_ge": "CMP.GE",
-    "cmp_gei": "CMP.GEI",
-    "cmp_geu": "CMP.GEU",
-    "cmp_geui": "CMP.GEUI",
-    "cmp_lt": "CMP.LT",
-    "cmp_lti": "CMP.LTI",
-    "cmp_ltu": "CMP.LTU",
-    "cmp_ltui": "CMP.LTUI",
-    "cmp_ne": "CMP.NE",
-    "cmp_nei": "CMP.NEI",
-    "cmp_or": "CMP.OR",
-    "cmp_ori": "CMP.ORI",
-    "csel": "CSEL",
-    "ctz": "CTZ",
-    "div": "DIV",
-    "divu": "DIVU",
-    "divuw": "DIVUW",
-    "divw": "DIVW",
-    "ebreak": "EBREAK",
-    "ercov": "ERCOV",
-    "esave": "ESAVE",
-    "fabs": "FABS",
-    "fadd": "FADD",
-    "fcvt": "FCVT",
-    "fcvtz": "FCVTZ",
-    "fdiv": "FDIV",
-    "fence_d": "FENCE.D",
-    "fence_i": "FENCE.I",
-    "fentry": "FENTRY",
-    "feq": "FEQ",
-    "fexit": "FEXIT",
-    "fge": "FGE",
-    "flt": "FLT",
-    "fmul": "FMUL",
-    "fret_ra": "FRET.RA",
-    "fret_stk": "FRET.STK",
-    "fsub": "FSUB",
-    "hl_addi": "HL.ADDI",
-    "hl_addiw": "HL.ADDIW",
-    "hl_addtpc": "HL.ADDTPC",
-    "hl_andi": "HL.ANDI",
-    "hl_andiw": "HL.ANDIW",
-    "hl_bstart_std_call": "HL.BSTART CALL",
-    "hl_bstart_std_cond": "HL.BSTART.STD",
-    "hl_bstart_std_direct": "HL.BSTART.STD",
-    "hl_bstart_std_fall": "HL.BSTART.STD",
-    "hl_cmp_andi": "HL.CMP.ANDI",
-    "hl_cmp_eqi": "HL.CMP.EQI",
-    "hl_cmp_gei": "HL.CMP.GEI",
-    "hl_cmp_geui": "HL.CMP.GEUI",
-    "hl_cmp_lti": "HL.CMP.LTI",
-    "hl_cmp_ltui": "HL.CMP.LTUI",
-    "hl_cmp_nei": "HL.CMP.NEI",
-    "hl_cmp_ori": "HL.CMP.ORI",
-    "hl_lb_pcr": "HL.LB.PCR",
-    "hl_lbu_pcr": "HL.LBU.PCR",
-    "hl_ld_pcr": "HL.LD.PCR",
-    "hl_ldi_po": "HL.LDI.PO",
-    "hl_ldi_pr": "HL.LDI.PR",
-    "hl_ldi_upo": "HL.LDI.UPO",
-    "hl_ldi_upr": "HL.LDI.UPR",
-    "hl_ldip": "HL.LDIP",
-    "hl_ldip_u": "HL.LDIP.U",
-    "hl_lh_pcr": "HL.LH.PCR",
-    "hl_lhu_pcr": "HL.LHU.PCR",
-    "hl_lui": "HL.LUI",
-    "hl_lw_pcr": "HL.LW.PCR",
-    "hl_lwi_po": "HL.LWI.PO",
-    "hl_lwi_pr": "HL.LWI.PR",
-    "hl_lwi_upo": "HL.LWI.UPO",
-    "hl_lwi_upr": "HL.LWI.UPR",
-    "hl_lwip": "HL.LWIP",
-    "hl_lwip_u": "HL.LWIP.U",
-    "hl_lwu_pcr": "HL.LWU.PCR",
-    "hl_lwui_po": "HL.LWUI.PO",
-    "hl_lwui_pr": "HL.LWUI.PR",
-    "hl_lwui_upo": "HL.LWUI.UPO",
-    "hl_lwui_upr": "HL.LWUI.UPR",
-    "hl_lwuip": "HL.LWUIP",
-    "hl_lwuip_u": "HL.LWUIP.U",
-    "hl_ori": "HL.ORI",
-    "hl_oriw": "HL.ORIW",
-    "hl_sb_pcr": "HL.SB.PCR",
-    "hl_sd_pcr": "HL.SD.PCR",
-    "hl_sdi_po": "HL.SDI.PO",
-    "hl_sdi_pr": "HL.SDI.PR",
-    "hl_sdi_upo": "HL.SDI.UPO",
-    "hl_sdi_upr": "HL.SDI.UPR",
-    "hl_sdip": "HL.SDIP",
-    "hl_sdip_u": "HL.SDIP.U",
-    "hl_sh_pcr": "HL.SH.PCR",
-    "hl_ssrget": "HL.SSRGET",
-    "hl_ssrset": "HL.SSRSET",
-    "hl_subi": "HL.SUBI",
-    "hl_subiw": "HL.SUBIW",
-    "hl_sw_pcr": "HL.SW.PCR",
-    "hl_swi_po": "HL.SWI.PO",
-    "hl_swi_pr": "HL.SWI.PR",
-    "hl_swi_upo": "HL.SWI.UPO",
-    "hl_swi_upr": "HL.SWI.UPR",
-    "hl_swip": "HL.SWIP",
-    "hl_swip_u": "HL.SWIP.U",
-    "hl_xori": "HL.XORI",
-    "hl_xoriw": "HL.XORIW",
-    "lb": "LB",
-    "lb_pcr": "LB.PCR",
-    "lbi": "LBI",
-    "lbu": "LBU",
-    "lbu_pcr": "LBU.PCR",
-    "lbui": "LBUI",
-    "ld": "LD",
-    "ld_add": "LD.ADD",
-    "ld_pcr": "LD.PCR",
-    "ldi": "LDI",
-    "lh": "LH",
-    "lh_pcr": "LH.PCR",
-    "lhi": "LHI",
-    "lhu": "LHU",
-    "lhu_pcr": "LHU.PCR",
-    "lhui": "LHUI",
-    "lr_d": "LR.D",
-    "lr_w": "LR.W",
-    "lui": "LUI",
-    "lw": "LW",
-    "lw_add": "LW.ADD",
-    "lw_pcr": "LW.PCR",
-    "lwi": "LWI",
-    "lwu": "LWU",
-    "lwu_pcr": "LWU.PCR",
-    "lwui": "LWUI",
-    "madd": "MADD",
-    "maddw": "MADDW",
-    "max": "MAX",
-    "maxu": "MAXU",
-    "mcopy": "MCOPY",
-    "min": "MIN",
-    "minu": "MINU",
-    "mset": "MSET",
-    "mul": "MUL",
-    "mulw": "MULW",
-    "or": "OR",
-    "ori": "ORI",
-    "oriw": "ORIW",
-    "orw": "ORW",
-    "rem": "REM",
-    "remu": "REMU",
-    "remuw": "REMUW",
-    "remw": "REMW",
-    "rev": "REV",
-    "sb": "SB",
-    "sb_pcr": "SB.PCR",
-    "sbi": "SBI",
-    "sc_d": "SC.D",
-    "sc_w": "SC.W",
-    "scvtf": "SCVTF",
-    "sd": "SD",
-    "sd_pcr": "SD.PCR",
-    "sd_u": "SD.U",
-    "sdi": "SDI",
-    "setc_and": "SETC.AND",
-    "setc_andi": "SETC.ANDI",
-    "setc_eq": "SETC.EQ",
-    "setc_eqi": "SETC.EQI",
-    "setc_ge": "SETC.GE",
-    "setc_gei": "SETC.GEI",
-    "setc_geu": "SETC.GEU",
-    "setc_geui": "SETC.GEUI",
-    "setc_lt": "SETC.LT",
-    "setc_lti": "SETC.LTI",
-    "setc_ltu": "SETC.LTU",
-    "setc_ltui": "SETC.LTUI",
-    "setc_ne": "SETC.NE",
-    "setc_nei": "SETC.NEI",
-    "setc_or": "SETC.OR",
-    "setc_ori": "SETC.ORI",
-    "setc_tgt": "SETC.TGT",
-    "setret": "SETRET",
-    "sh": "SH",
-    "sh_pcr": "SH.PCR",
-    "sh_u": "SH.U",
-    "shi": "SHI",
-    "sll": "SLL",
-    "slli": "SLLI",
-    "slliw": "SLLIW",
-    "sllw": "SLLW",
-    "sra": "SRA",
-    "srai": "SRAI",
-    "sraiw": "SRAIW",
-    "sraw": "SRAW",
-    "srl": "SRL",
-    "srli": "SRLI",
-    "srliw": "SRLIW",
-    "srlw": "SRLW",
-    "ssrget": "SSRGET",
-    "ssrset": "SSRSET",
-    "ssrswap": "SSRSWAP",
-    "sub": "SUB",
-    "subi": "SUBI",
-    "subiw": "SUBIW",
-    "subw": "SUBW",
-    "sw": "SW",
-    "sw_pcr": "SW.PCR",
-    "sw_u": "SW.U",
-    "swapd": "SWAPD",
-    "swapw": "SWAPW",
-    "swi": "SWI",
-    "tlb_iall": "TLB.IALL",
-    "ucvtf": "UCVTF",
-    "v_add": "V.ADD",
-    "v_cmp_eq": "V.CMP.EQ",
-    "v_cmp_ge": "V.CMP.GE",
-    "v_cmp_geu": "V.CMP.GEU",
-    "v_cmp_lt": "V.CMP.LT",
-    "v_cmp_ltu": "V.CMP.LTU",
-    "v_cmp_ne": "V.CMP.NE",
-    "v_csel": "V.CSEL",
-    "v_fabs": "V.FABS",
-    "v_fadd": "V.FADD",
-    "v_fdiv": "V.FDIV",
-    "v_feq": "V.FEQ",
-    "v_fge": "V.FGE",
-    "v_flt": "V.FLT",
-    "v_fmul": "V.FMUL",
-    "v_fne": "V.FNE",
-    "v_fsub": "V.FSUB",
-    "v_lw": "V.LW",
-    "v_lw_brg": "V.LW.BRG",
-    "v_mul": "V.MUL",
-    "v_rdadd": "V.RDADD",
-    "v_rdand": "V.RDAND",
-    "v_rdfadd": "V.RDFADD",
-    "v_rdfmax": "V.RDFMAX",
-    "v_rdfmin": "V.RDFMIN",
-    "v_rdmax": "V.RDMAX",
-    "v_rdmin": "V.RDMIN",
-    "v_rdor": "V.RDOR",
-    "v_rdxor": "V.RDXOR",
-    "v_sub": "V.SUB",
-    "v_sw": "V.SW",
-    "v_sw_brg": "V.SW.BRG",
-    "xor": "XOR",
-    "xori": "XORI",
-    "xoriw": "XORIW",
-    "xorw": "XORW"
-  },
-  "missing_by_prefix": {
+  "mapped_forms_by_prefix": {
+    "ACRC": 1,
+    "ACRE": 1,
+    "ADD": 1,
+    "ADDI": 1,
+    "ADDIW": 1,
+    "ADDTPC": 1,
+    "ADDW": 1,
+    "AND": 1,
+    "ANDI": 1,
+    "ANDIW": 1,
+    "ANDW": 1,
     "ASSERT": 1,
-    "B": 7,
+    "B": 18,
     "BC": 2,
+    "BCNT": 1,
+    "BIC": 1,
+    "BIS": 1,
     "BSE": 1,
-    "BSTART": 6,
+    "BSTART": 19,
+    "BSTOP": 1,
     "BWE": 1,
     "BWI": 1,
     "BWT": 1,
-    "C": 11,
-    "DC": 8,
+    "BXS": 1,
+    "BXU": 1,
+    "C": 37,
+    "CLZ": 1,
+    "CMP": 16,
+    "CSEL": 1,
+    "CTZ": 1,
+    "DC": 6,
+    "DIV": 1,
+    "DIVU": 1,
+    "DIVUW": 1,
+    "DIVW": 1,
+    "EBREAK": 1,
+    "ERCOV": 1,
+    "ESAVE": 1,
+    "FABS": 1,
+    "FADD": 1,
+    "FCVT": 1,
+    "FCVTZ": 1,
+    "FDIV": 1,
+    "FENCE": 2,
+    "FENTRY": 1,
+    "FEQ": 1,
+    "FEXIT": 1,
+    "FGE": 1,
+    "FLT": 1,
+    "FMUL": 1,
+    "FRET": 2,
+    "FSUB": 1,
+    "HL": 183,
+    "IC": 2,
+    "J": 1,
+    "JR": 1,
+    "LB": 2,
+    "LBI": 1,
+    "LBU": 2,
+    "LBUI": 1,
+    "LD": 10,
+    "LDI": 2,
+    "LH": 2,
+    "LHI": 2,
+    "LHU": 2,
+    "LHUI": 2,
+    "LR": 2,
+    "LSRGET": 1,
+    "LUI": 1,
+    "LW": 10,
+    "LWI": 2,
+    "LWU": 2,
+    "LWUI": 2,
+    "MADD": 1,
+    "MADDW": 1,
+    "MAX": 1,
+    "MAXU": 1,
+    "MCOPY": 1,
+    "MIN": 1,
+    "MINU": 1,
+    "MSET": 1,
+    "MUL": 1,
+    "MULU": 1,
+    "MULUW": 1,
+    "MULW": 1,
+    "OR": 1,
+    "ORI": 1,
+    "ORIW": 1,
+    "ORW": 1,
+    "PRF": 1,
+    "PRFI": 1,
+    "REM": 1,
+    "REMU": 1,
+    "REMUW": 1,
+    "REMW": 1,
+    "REV": 1,
+    "SB": 2,
+    "SBI": 1,
+    "SC": 4,
+    "SCVTF": 1,
+    "SD": 11,
+    "SDI": 2,
+    "SETC": 17,
+    "SETRET": 1,
+    "SH": 3,
+    "SHI": 2,
+    "SLL": 1,
+    "SLLI": 1,
+    "SLLIW": 1,
+    "SLLW": 1,
+    "SRA": 1,
+    "SRAI": 1,
+    "SRAIW": 1,
+    "SRAW": 1,
+    "SRL": 1,
+    "SRLI": 1,
+    "SRLIW": 1,
+    "SRLW": 1,
+    "SSRGET": 1,
+    "SSRSET": 1,
+    "SSRSWAP": 1,
+    "SUB": 1,
+    "SUBI": 1,
+    "SUBIW": 1,
+    "SUBW": 1,
+    "SW": 11,
+    "SWAPB": 1,
+    "SWAPD": 1,
+    "SWAPH": 1,
+    "SWAPW": 1,
+    "SWI": 2,
+    "TLB": 4,
+    "UCVTF": 1,
+    "V": 30,
+    "XOR": 1,
+    "XORI": 1,
+    "XORIW": 1,
+    "XORW": 1
+  },
+  "mapped_qemu_to_spec": {
+    "acrc": [
+      "ACRC"
+    ],
+    "acre": [
+      "ACRE"
+    ],
+    "add": [
+      "ADD"
+    ],
+    "addi": [
+      "ADDI"
+    ],
+    "addiw": [
+      "ADDIW"
+    ],
+    "addtpc": [
+      "ADDTPC"
+    ],
+    "addw": [
+      "ADDW"
+    ],
+    "and": [
+      "AND"
+    ],
+    "andi": [
+      "ANDI"
+    ],
+    "andiw": [
+      "ANDIW"
+    ],
+    "andw": [
+      "ANDW"
+    ],
+    "assert": [
+      "ASSERT"
+    ],
+    "b_arg": [
+      "B.ARG"
+    ],
+    "b_attr": [
+      "B.ATTR"
+    ],
+    "b_dim_lb0": [
+      "B.DIM"
+    ],
+    "b_dim_lb1": [
+      "B.DIM"
+    ],
+    "b_dim_lb2": [
+      "B.DIM"
+    ],
+    "b_eq": [
+      "B.EQ"
+    ],
+    "b_ge": [
+      "B.GE"
+    ],
+    "b_geu": [
+      "B.GEU"
+    ],
+    "b_hint": [
+      "B.HINT"
+    ],
+    "b_hint_trace": [
+      "B.HINT"
+    ],
+    "b_iod": [
+      "B.IOD"
+    ],
+    "b_ior": [
+      "B.IOR"
+    ],
+    "b_iot": [
+      "B.IOT"
+    ],
+    "b_ioti": [
+      "B.IOTI"
+    ],
+    "b_lt": [
+      "B.LT"
+    ],
+    "b_ltu": [
+      "B.LTU"
+    ],
+    "b_ne": [
+      "B.NE"
+    ],
+    "b_nz": [
+      "B.NZ"
+    ],
+    "b_text": [
+      "B.TEXT"
+    ],
+    "b_z": [
+      "B.Z"
+    ],
+    "bc_iall": [
+      "BC.IALL"
+    ],
+    "bc_iva": [
+      "BC.IVA"
+    ],
+    "bcnt": [
+      "BCNT"
+    ],
+    "bic": [
+      "BIC"
+    ],
+    "bis": [
+      "BIS"
+    ],
+    "bse": [
+      "BSE"
+    ],
+    "bstart_call": [
+      "BSTART CALL",
+      "BSTART.STD"
+    ],
+    "bstart_cond": [
+      "BSTART",
+      "BSTART.STD"
+    ],
+    "bstart_cube": [
+      "BSTART.CUBE"
+    ],
+    "bstart_direct": [
+      "BSTART",
+      "BSTART.STD"
+    ],
+    "bstart_fixp": [
+      "BSTART.FIXP"
+    ],
+    "bstart_fp_call": [
+      "BSTART.FP"
+    ],
+    "bstart_fp_cond": [
+      "BSTART.FP"
+    ],
+    "bstart_fp_direct": [
+      "BSTART.FP"
+    ],
+    "bstart_fp_fall": [
+      "BSTART.FP"
+    ],
+    "bstart_fp_icall": [
+      "BSTART.FP"
+    ],
+    "bstart_fp_ind": [
+      "BSTART.FP"
+    ],
+    "bstart_fp_ret": [
+      "BSTART.FP"
+    ],
+    "bstart_icall": [
+      "BSTART",
+      "BSTART.STD"
+    ],
+    "bstart_ind": [
+      "BSTART",
+      "BSTART.STD"
+    ],
+    "bstart_mpar": [
+      "BSTART.MPAR"
+    ],
+    "bstart_mseq": [
+      "BSTART.MSEQ"
+    ],
+    "bstart_ret": [
+      "BSTART",
+      "BSTART.STD"
+    ],
+    "bstart_sys": [
+      "BSTART.SYS"
+    ],
+    "bstart_tepl": [
+      "BSTART.TEPL",
+      "BSTART.PAR",
+      "BSTART.TLOAD",
+      "BSTART.TSTORE",
+      "BSTART.TMATMUL",
+      "BSTART.TMATMUL.ACC",
+      "BSTART.ACCCVT"
+    ],
+    "bstart_tma": [
+      "BSTART.TMA",
+      "BSTART.TMOV"
+    ],
+    "bstart_vpar": [
+      "BSTART.VPAR"
+    ],
+    "bstart_vseq": [
+      "BSTART.VSEQ"
+    ],
+    "bstop": [
+      "BSTOP"
+    ],
+    "bwe": [
+      "BWE"
+    ],
+    "bwi": [
+      "BWI"
+    ],
+    "bwt": [
+      "BWT"
+    ],
+    "bxs": [
+      "BXS"
+    ],
+    "bxu": [
+      "BXU"
+    ],
+    "c_add": [
+      "C.ADD"
+    ],
+    "c_addi": [
+      "C.ADDI"
+    ],
+    "c_and": [
+      "C.AND"
+    ],
+    "c_b_dim": [
+      "C.B.DIM"
+    ],
+    "c_b_dimi": [
+      "C.B.DIMI"
+    ],
+    "c_bstart_cond": [
+      "C.BSTART"
+    ],
+    "c_bstart_direct": [
+      "C.BSTART"
+    ],
+    "c_bstart_fp": [
+      "C.BSTART.FP"
+    ],
+    "c_bstart_mpar": [
+      "C.BSTART.MPAR"
+    ],
+    "c_bstart_mseq": [
+      "C.BSTART.MSEQ"
+    ],
+    "c_bstart_std_call": [
+      "C.BSTART.STD"
+    ],
+    "c_bstart_std_cond": [
+      "C.BSTART.STD"
+    ],
+    "c_bstart_std_direct": [
+      "C.BSTART.STD"
+    ],
+    "c_bstart_std_fall": [
+      "C.BSTART.STD"
+    ],
+    "c_bstart_std_icall": [
+      "C.BSTART.STD"
+    ],
+    "c_bstart_std_ind": [
+      "C.BSTART.STD"
+    ],
+    "c_bstart_std_ret": [
+      "C.BSTART.STD"
+    ],
+    "c_bstart_sys": [
+      "C.BSTART.SYS"
+    ],
+    "c_bstart_vpar": [
+      "C.BSTART.VPAR"
+    ],
+    "c_bstart_vseq": [
+      "C.BSTART.VSEQ"
+    ],
+    "c_bstop": [
+      "C.BSTOP"
+    ],
+    "c_cmp_eqi": [
+      "C.CMP.EQI"
+    ],
+    "c_cmp_nei": [
+      "C.CMP.NEI"
+    ],
+    "c_ebreak": [
+      "C.EBREAK"
+    ],
+    "c_ldi": [
+      "C.LDI"
+    ],
+    "c_lwi": [
+      "C.LWI"
+    ],
+    "c_movi": [
+      "C.MOVI"
+    ],
+    "c_movr": [
+      "C.MOVR"
+    ],
+    "c_or": [
+      "C.OR"
+    ],
+    "c_sdi": [
+      "C.SDI"
+    ],
+    "c_setc_eq": [
+      "C.SETC.EQ"
+    ],
+    "c_setc_ne": [
+      "C.SETC.NE"
+    ],
+    "c_setc_tgt": [
+      "C.SETC.TGT"
+    ],
+    "c_sext_b": [
+      "C.SEXT.B"
+    ],
+    "c_sext_h": [
+      "C.SEXT.H"
+    ],
+    "c_sext_w": [
+      "C.SEXT.W"
+    ],
+    "c_slli": [
+      "C.SLLI"
+    ],
+    "c_srli": [
+      "C.SRLI"
+    ],
+    "c_ssrget": [
+      "C.SSRGET"
+    ],
+    "c_sub": [
+      "C.SUB"
+    ],
+    "c_swi": [
+      "C.SWI"
+    ],
+    "c_zext_b": [
+      "C.ZEXT.B"
+    ],
+    "c_zext_h": [
+      "C.ZEXT.H"
+    ],
+    "c_zext_w": [
+      "C.ZEXT.W"
+    ],
+    "clz": [
+      "CLZ"
+    ],
+    "cmp_and": [
+      "CMP.AND"
+    ],
+    "cmp_andi": [
+      "CMP.ANDI"
+    ],
+    "cmp_eq": [
+      "CMP.EQ"
+    ],
+    "cmp_eqi": [
+      "CMP.EQI"
+    ],
+    "cmp_ge": [
+      "CMP.GE"
+    ],
+    "cmp_gei": [
+      "CMP.GEI"
+    ],
+    "cmp_geu": [
+      "CMP.GEU"
+    ],
+    "cmp_geui": [
+      "CMP.GEUI"
+    ],
+    "cmp_lt": [
+      "CMP.LT"
+    ],
+    "cmp_lti": [
+      "CMP.LTI"
+    ],
+    "cmp_ltu": [
+      "CMP.LTU"
+    ],
+    "cmp_ltui": [
+      "CMP.LTUI"
+    ],
+    "cmp_ne": [
+      "CMP.NE"
+    ],
+    "cmp_nei": [
+      "CMP.NEI"
+    ],
+    "cmp_or": [
+      "CMP.OR"
+    ],
+    "cmp_ori": [
+      "CMP.ORI"
+    ],
+    "csel": [
+      "CSEL"
+    ],
+    "ctz": [
+      "CTZ"
+    ],
+    "dc_cisw": [
+      "DC.CISW"
+    ],
+    "dc_civa": [
+      "DC.CIVA"
+    ],
+    "dc_csw": [
+      "DC.CSW"
+    ],
+    "dc_cva": [
+      "DC.CVA"
+    ],
+    "dc_iall": [
+      "DC.IALL"
+    ],
+    "dc_isw": [
+      "DC.ISW"
+    ],
+    "dc_iva": [
+      "DC.IVA"
+    ],
+    "dc_zva": [
+      "DC.ZVA"
+    ],
+    "div": [
+      "DIV"
+    ],
+    "divu": [
+      "DIVU"
+    ],
+    "divuw": [
+      "DIVUW"
+    ],
+    "divw": [
+      "DIVW"
+    ],
+    "ebreak": [
+      "EBREAK"
+    ],
+    "ercov": [
+      "ERCOV"
+    ],
+    "esave": [
+      "ESAVE"
+    ],
+    "fabs": [
+      "FABS"
+    ],
+    "fadd": [
+      "FADD"
+    ],
+    "fcvt": [
+      "FCVT"
+    ],
+    "fcvtz": [
+      "FCVTZ"
+    ],
+    "fdiv": [
+      "FDIV"
+    ],
+    "fence_d": [
+      "FENCE.D"
+    ],
+    "fence_i": [
+      "FENCE.I"
+    ],
+    "fentry": [
+      "FENTRY"
+    ],
+    "feq": [
+      "FEQ"
+    ],
+    "fexit": [
+      "FEXIT"
+    ],
+    "fge": [
+      "FGE"
+    ],
+    "flt": [
+      "FLT"
+    ],
+    "fmul": [
+      "FMUL"
+    ],
+    "fret_ra": [
+      "FRET.RA"
+    ],
+    "fret_stk": [
+      "FRET.STK"
+    ],
+    "fsub": [
+      "FSUB"
+    ],
+    "hl_addi": [
+      "HL.ADDI"
+    ],
+    "hl_addiw": [
+      "HL.ADDIW"
+    ],
+    "hl_addtpc": [
+      "HL.ADDTPC"
+    ],
+    "hl_andi": [
+      "HL.ANDI"
+    ],
+    "hl_andiw": [
+      "HL.ANDIW"
+    ],
+    "hl_bfi": [
+      "HL.BFI"
+    ],
+    "hl_bstart_fp_call": [
+      "HL.BSTART.FP"
+    ],
+    "hl_bstart_fp_cond": [
+      "HL.BSTART.FP"
+    ],
+    "hl_bstart_fp_direct": [
+      "HL.BSTART.FP"
+    ],
+    "hl_bstart_fp_fall": [
+      "HL.BSTART.FP"
+    ],
+    "hl_bstart_std_call": [
+      "HL.BSTART CALL"
+    ],
+    "hl_bstart_std_cond": [
+      "HL.BSTART.STD"
+    ],
+    "hl_bstart_std_direct": [
+      "HL.BSTART.STD"
+    ],
+    "hl_bstart_std_fall": [
+      "HL.BSTART.STD"
+    ],
+    "hl_bstart_sys": [
+      "HL.BSTART.SYS"
+    ],
+    "hl_casb": [
+      "HL.CASB"
+    ],
+    "hl_casd": [
+      "HL.CASD"
+    ],
+    "hl_cash": [
+      "HL.CASH"
+    ],
+    "hl_casw": [
+      "HL.CASW"
+    ],
+    "hl_ccat": [
+      "HL.CCAT"
+    ],
+    "hl_ccatw": [
+      "HL.CCATW"
+    ],
+    "hl_cmp_andi": [
+      "HL.CMP.ANDI"
+    ],
+    "hl_cmp_eqi": [
+      "HL.CMP.EQI"
+    ],
+    "hl_cmp_gei": [
+      "HL.CMP.GEI"
+    ],
+    "hl_cmp_geui": [
+      "HL.CMP.GEUI"
+    ],
+    "hl_cmp_lti": [
+      "HL.CMP.LTI"
+    ],
+    "hl_cmp_ltui": [
+      "HL.CMP.LTUI"
+    ],
+    "hl_cmp_nei": [
+      "HL.CMP.NEI"
+    ],
+    "hl_cmp_ori": [
+      "HL.CMP.ORI"
+    ],
+    "hl_lb_pcr": [
+      "HL.LB.PCR"
+    ],
+    "hl_lb_po": [
+      "HL.LB.PO"
+    ],
+    "hl_lb_pr": [
+      "HL.LB.PR"
+    ],
+    "hl_lbi": [
+      "HL.LBI"
+    ],
+    "hl_lbi_po": [
+      "HL.LBI.PO"
+    ],
+    "hl_lbi_pr": [
+      "HL.LBI.PR"
+    ],
+    "hl_lbip": [
+      "HL.LBIP"
+    ],
+    "hl_lbp": [
+      "HL.LBP"
+    ],
+    "hl_lbu_pcr": [
+      "HL.LBU.PCR"
+    ],
+    "hl_lbu_po": [
+      "HL.LBU.PO"
+    ],
+    "hl_lbu_pr": [
+      "HL.LBU.PR"
+    ],
+    "hl_lbui": [
+      "HL.LBUI"
+    ],
+    "hl_lbui_po": [
+      "HL.LBUI.PO"
+    ],
+    "hl_lbui_pr": [
+      "HL.LBUI.PR"
+    ],
+    "hl_lbuip": [
+      "HL.LBUIP"
+    ],
+    "hl_lbup": [
+      "HL.LBUP"
+    ],
+    "hl_ld_pcr": [
+      "HL.LD.PCR"
+    ],
+    "hl_ld_po": [
+      "HL.LD.PO"
+    ],
+    "hl_ld_pr": [
+      "HL.LD.PR"
+    ],
+    "hl_ldi": [
+      "HL.LDI"
+    ],
+    "hl_ldi_po": [
+      "HL.LDI.PO",
+      "HL.LD.PO"
+    ],
+    "hl_ldi_pr": [
+      "HL.LDI.PR",
+      "HL.LD.PR"
+    ],
+    "hl_ldi_u": [
+      "HL.LDI.U"
+    ],
+    "hl_ldi_upo": [
+      "HL.LDI.UPO"
+    ],
+    "hl_ldi_upr": [
+      "HL.LDI.UPR"
+    ],
+    "hl_ldip": [
+      "HL.LDIP",
+      "HL.LDP"
+    ],
+    "hl_ldip_u": [
+      "HL.LDIP.U"
+    ],
+    "hl_ldp": [
+      "HL.LDP"
+    ],
+    "hl_lh_pcr": [
+      "HL.LH.PCR"
+    ],
+    "hl_lh_po": [
+      "HL.LH.PO"
+    ],
+    "hl_lh_pr": [
+      "HL.LH.PR"
+    ],
+    "hl_lhi": [
+      "HL.LHI"
+    ],
+    "hl_lhi_po": [
+      "HL.LHI.PO"
+    ],
+    "hl_lhi_pr": [
+      "HL.LHI.PR"
+    ],
+    "hl_lhi_u": [
+      "HL.LHI.U"
+    ],
+    "hl_lhi_upo": [
+      "HL.LHI.UPO"
+    ],
+    "hl_lhi_upr": [
+      "HL.LHI.UPR"
+    ],
+    "hl_lhip": [
+      "HL.LHIP"
+    ],
+    "hl_lhip_u": [
+      "HL.LHIP.U"
+    ],
+    "hl_lhp": [
+      "HL.LHP"
+    ],
+    "hl_lhu_pcr": [
+      "HL.LHU.PCR"
+    ],
+    "hl_lhu_po": [
+      "HL.LHU.PO"
+    ],
+    "hl_lhu_pr": [
+      "HL.LHU.PR"
+    ],
+    "hl_lhui": [
+      "HL.LHUI"
+    ],
+    "hl_lhui_po": [
+      "HL.LHUI.PO"
+    ],
+    "hl_lhui_pr": [
+      "HL.LHUI.PR"
+    ],
+    "hl_lhui_u": [
+      "HL.LHUI.U"
+    ],
+    "hl_lhui_upo": [
+      "HL.LHUI.UPO"
+    ],
+    "hl_lhui_upr": [
+      "HL.LHUI.UPR"
+    ],
+    "hl_lhuip": [
+      "HL.LHUIP"
+    ],
+    "hl_lhuip_u": [
+      "HL.LHUIP.U"
+    ],
+    "hl_lhup": [
+      "HL.LHUP"
+    ],
+    "hl_lis": [
+      "HL.LIS"
+    ],
+    "hl_liu": [
+      "HL.LIU"
+    ],
+    "hl_lui": [
+      "HL.LUI"
+    ],
+    "hl_lw_pcr": [
+      "HL.LW.PCR"
+    ],
+    "hl_lw_po": [
+      "HL.LW.PO"
+    ],
+    "hl_lw_pr": [
+      "HL.LW.PR"
+    ],
+    "hl_lwi": [
+      "HL.LWI"
+    ],
+    "hl_lwi_po": [
+      "HL.LWI.PO",
+      "HL.LW.PO"
+    ],
+    "hl_lwi_pr": [
+      "HL.LWI.PR",
+      "HL.LW.PR"
+    ],
+    "hl_lwi_u": [
+      "HL.LWI.U"
+    ],
+    "hl_lwi_upo": [
+      "HL.LWI.UPO"
+    ],
+    "hl_lwi_upr": [
+      "HL.LWI.UPR"
+    ],
+    "hl_lwip": [
+      "HL.LWIP",
+      "HL.LWP"
+    ],
+    "hl_lwip_u": [
+      "HL.LWIP.U"
+    ],
+    "hl_lwp": [
+      "HL.LWP"
+    ],
+    "hl_lwu_pcr": [
+      "HL.LWU.PCR"
+    ],
+    "hl_lwu_po": [
+      "HL.LWU.PO"
+    ],
+    "hl_lwu_pr": [
+      "HL.LWU.PR"
+    ],
+    "hl_lwui": [
+      "HL.LWUI"
+    ],
+    "hl_lwui_po": [
+      "HL.LWUI.PO",
+      "HL.LWU.PO"
+    ],
+    "hl_lwui_pr": [
+      "HL.LWUI.PR",
+      "HL.LWU.PR"
+    ],
+    "hl_lwui_u": [
+      "HL.LWUI.U"
+    ],
+    "hl_lwui_upo": [
+      "HL.LWUI.UPO"
+    ],
+    "hl_lwui_upr": [
+      "HL.LWUI.UPR"
+    ],
+    "hl_lwuip": [
+      "HL.LWUIP",
+      "HL.LWUP"
+    ],
+    "hl_lwuip_u": [
+      "HL.LWUIP.U"
+    ],
+    "hl_lwup": [
+      "HL.LWUP"
+    ],
+    "hl_miadd": [
+      "HL.MIADD"
+    ],
+    "hl_misub": [
+      "HL.MISUB"
+    ],
+    "hl_ori": [
+      "HL.ORI"
+    ],
+    "hl_oriw": [
+      "HL.ORIW"
+    ],
+    "hl_prf": [
+      "HL.PRF"
+    ],
+    "hl_prf_a": [
+      "HL.PRF.A"
+    ],
+    "hl_prfi_u": [
+      "HL.PRFI.U"
+    ],
+    "hl_prfi_ua": [
+      "HL.PRFI.UA"
+    ],
+    "hl_qmt": [
+      "HL.QMT"
+    ],
+    "hl_qpop": [
+      "HL.QPOP"
+    ],
+    "hl_qpush": [
+      "HL.QPUSH"
+    ],
+    "hl_sb_pcr": [
+      "HL.SB.PCR"
+    ],
+    "hl_sb_po": [
+      "HL.SB.PO"
+    ],
+    "hl_sb_pr": [
+      "HL.SB.PR"
+    ],
+    "hl_sbi": [
+      "HL.SBI"
+    ],
+    "hl_sbi_po": [
+      "HL.SBI.PO"
+    ],
+    "hl_sbi_pr": [
+      "HL.SBI.PR"
+    ],
+    "hl_sbip": [
+      "HL.SBIP"
+    ],
+    "hl_sbp": [
+      "HL.SBP"
+    ],
+    "hl_sd_pcr": [
+      "HL.SD.PCR"
+    ],
+    "hl_sd_po": [
+      "HL.SD.PO"
+    ],
+    "hl_sd_pr": [
+      "HL.SD.PR"
+    ],
+    "hl_sd_upo": [
+      "HL.SD.UPO"
+    ],
+    "hl_sd_upr": [
+      "HL.SD.UPR"
+    ],
+    "hl_sdi": [
+      "HL.SDI"
+    ],
+    "hl_sdi_po": [
+      "HL.SDI.PO",
+      "HL.SD.PO"
+    ],
+    "hl_sdi_pr": [
+      "HL.SDI.PR",
+      "HL.SD.PR"
+    ],
+    "hl_sdi_u": [
+      "HL.SDI.U"
+    ],
+    "hl_sdi_upo": [
+      "HL.SDI.UPO",
+      "HL.SD.UPO"
+    ],
+    "hl_sdi_upr": [
+      "HL.SDI.UPR",
+      "HL.SD.UPR"
+    ],
+    "hl_sdip": [
+      "HL.SDIP",
+      "HL.SDP"
+    ],
+    "hl_sdip_u": [
+      "HL.SDIP.U",
+      "HL.SDP.U"
+    ],
+    "hl_sdp": [
+      "HL.SDP"
+    ],
+    "hl_sdp_u": [
+      "HL.SDP.U"
+    ],
+    "hl_setc_eqi": [
+      "HL.SETC.EQI"
+    ],
+    "hl_setc_gei": [
+      "HL.SETC.GEI"
+    ],
+    "hl_setc_geui": [
+      "HL.SETC.GEUI"
+    ],
+    "hl_setc_lti": [
+      "HL.SETC.LTI"
+    ],
+    "hl_setc_ltui": [
+      "HL.SETC.LTUI"
+    ],
+    "hl_setc_nei": [
+      "HL.SETC.NEI"
+    ],
+    "hl_setret": [
+      "HL.SETRET"
+    ],
+    "hl_sh_pcr": [
+      "HL.SH.PCR"
+    ],
+    "hl_sh_po": [
+      "HL.SH.PO"
+    ],
+    "hl_sh_pr": [
+      "HL.SH.PR"
+    ],
+    "hl_sh_upo": [
+      "HL.SH.UPO"
+    ],
+    "hl_sh_upr": [
+      "HL.SH.UPR"
+    ],
+    "hl_shi": [
+      "HL.SHI"
+    ],
+    "hl_shi_po": [
+      "HL.SHI.PO"
+    ],
+    "hl_shi_pr": [
+      "HL.SHI.PR"
+    ],
+    "hl_shi_u": [
+      "HL.SHI.U"
+    ],
+    "hl_shi_upo": [
+      "HL.SHI.UPO"
+    ],
+    "hl_shi_upr": [
+      "HL.SHI.UPR"
+    ],
+    "hl_ship": [
+      "HL.SHIP"
+    ],
+    "hl_ship_u": [
+      "HL.SHIP.U"
+    ],
+    "hl_shp": [
+      "HL.SHP"
+    ],
+    "hl_shp_u": [
+      "HL.SHP.U"
+    ],
+    "hl_ssrget": [
+      "HL.SSRGET"
+    ],
+    "hl_ssrset": [
+      "HL.SSRSET"
+    ],
+    "hl_subi": [
+      "HL.SUBI"
+    ],
+    "hl_subiw": [
+      "HL.SUBIW"
+    ],
+    "hl_sw_pcr": [
+      "HL.SW.PCR"
+    ],
+    "hl_sw_po": [
+      "HL.SW.PO"
+    ],
+    "hl_sw_pr": [
+      "HL.SW.PR"
+    ],
+    "hl_sw_upo": [
+      "HL.SW.UPO"
+    ],
+    "hl_sw_upr": [
+      "HL.SW.UPR"
+    ],
+    "hl_swi": [
+      "HL.SWI"
+    ],
+    "hl_swi_po": [
+      "HL.SWI.PO",
+      "HL.SW.PO"
+    ],
+    "hl_swi_pr": [
+      "HL.SWI.PR",
+      "HL.SW.PR"
+    ],
+    "hl_swi_u": [
+      "HL.SWI.U"
+    ],
+    "hl_swi_upo": [
+      "HL.SWI.UPO",
+      "HL.SW.UPO"
+    ],
+    "hl_swi_upr": [
+      "HL.SWI.UPR",
+      "HL.SW.UPR"
+    ],
+    "hl_swip": [
+      "HL.SWIP",
+      "HL.SWP"
+    ],
+    "hl_swip_u": [
+      "HL.SWIP.U",
+      "HL.SWP.U"
+    ],
+    "hl_swp": [
+      "HL.SWP"
+    ],
+    "hl_swp_u": [
+      "HL.SWP.U"
+    ],
+    "hl_xori": [
+      "HL.XORI"
+    ],
+    "hl_xoriw": [
+      "HL.XORIW"
+    ],
+    "ic_iall": [
+      "IC.IALL"
+    ],
+    "ic_iva": [
+      "IC.IVA"
+    ],
+    "j": [
+      "J"
+    ],
+    "jr": [
+      "JR"
+    ],
+    "lb": [
+      "LB"
+    ],
+    "lb_pcr": [
+      "LB.PCR"
+    ],
+    "lbi": [
+      "LBI"
+    ],
+    "lbu": [
+      "LBU"
+    ],
+    "lbu_pcr": [
+      "LBU.PCR"
+    ],
+    "lbui": [
+      "LBUI"
+    ],
+    "ld": [
+      "LD"
+    ],
+    "ld_add": [
+      "LD.ADD"
+    ],
+    "ld_and": [
+      "LD.AND"
+    ],
+    "ld_or": [
+      "LD.OR"
+    ],
+    "ld_pcr": [
+      "LD.PCR"
+    ],
+    "ld_smax": [
+      "LD.SMAX"
+    ],
+    "ld_smin": [
+      "LD.SMIN"
+    ],
+    "ld_umax": [
+      "LD.UMAX"
+    ],
+    "ld_umin": [
+      "LD.UMIN"
+    ],
+    "ld_xor": [
+      "LD.XOR"
+    ],
+    "ldi": [
+      "LDI"
+    ],
+    "ldi_u": [
+      "LDI.U"
+    ],
+    "lh": [
+      "LH"
+    ],
+    "lh_pcr": [
+      "LH.PCR"
+    ],
+    "lhi": [
+      "LHI"
+    ],
+    "lhi_u": [
+      "LHI.U"
+    ],
+    "lhu": [
+      "LHU"
+    ],
+    "lhu_pcr": [
+      "LHU.PCR"
+    ],
+    "lhui": [
+      "LHUI"
+    ],
+    "lhui_u": [
+      "LHUI.U"
+    ],
+    "lr_b": [
+      "LR.B"
+    ],
+    "lr_d": [
+      "LR.D"
+    ],
+    "lr_h": [
+      "LR.H"
+    ],
+    "lr_w": [
+      "LR.W"
+    ],
+    "lsrget": [
+      "LSRGET"
+    ],
+    "lui": [
+      "LUI"
+    ],
+    "lw": [
+      "LW"
+    ],
+    "lw_add": [
+      "LW.ADD"
+    ],
+    "lw_and": [
+      "LW.AND"
+    ],
+    "lw_or": [
+      "LW.OR"
+    ],
+    "lw_pcr": [
+      "LW.PCR"
+    ],
+    "lw_smax": [
+      "LW.SMAX"
+    ],
+    "lw_smin": [
+      "LW.SMIN"
+    ],
+    "lw_umax": [
+      "LW.UMAX"
+    ],
+    "lw_umin": [
+      "LW.UMIN"
+    ],
+    "lw_xor": [
+      "LW.XOR"
+    ],
+    "lwi": [
+      "LWI"
+    ],
+    "lwi_u": [
+      "LWI.U"
+    ],
+    "lwu": [
+      "LWU"
+    ],
+    "lwu_pcr": [
+      "LWU.PCR"
+    ],
+    "lwui": [
+      "LWUI"
+    ],
+    "lwui_u": [
+      "LWUI.U"
+    ],
+    "madd": [
+      "MADD"
+    ],
+    "maddw": [
+      "MADDW"
+    ],
+    "max": [
+      "MAX"
+    ],
+    "maxu": [
+      "MAXU"
+    ],
+    "mcopy": [
+      "MCOPY"
+    ],
+    "min": [
+      "MIN"
+    ],
+    "minu": [
+      "MINU"
+    ],
+    "mset": [
+      "MSET"
+    ],
+    "mul": [
+      "MUL"
+    ],
+    "mulu": [
+      "MULU"
+    ],
+    "muluw": [
+      "MULUW"
+    ],
+    "mulw": [
+      "MULW"
+    ],
+    "or": [
+      "OR"
+    ],
+    "ori": [
+      "ORI"
+    ],
+    "oriw": [
+      "ORIW"
+    ],
+    "orw": [
+      "ORW"
+    ],
+    "prf": [
+      "PRF"
+    ],
+    "prfi_u": [
+      "PRFI.U"
+    ],
+    "rem": [
+      "REM"
+    ],
+    "remu": [
+      "REMU"
+    ],
+    "remuw": [
+      "REMUW"
+    ],
+    "remw": [
+      "REMW"
+    ],
+    "rev": [
+      "REV"
+    ],
+    "sb": [
+      "SB"
+    ],
+    "sb_pcr": [
+      "SB.PCR"
+    ],
+    "sbi": [
+      "SBI"
+    ],
+    "sc_b": [
+      "SC.B"
+    ],
+    "sc_d": [
+      "SC.D"
+    ],
+    "sc_h": [
+      "SC.H"
+    ],
+    "sc_w": [
+      "SC.W"
+    ],
+    "scvtf": [
+      "SCVTF"
+    ],
+    "sd": [
+      "SD"
+    ],
+    "sd_add": [
+      "SD.ADD"
+    ],
+    "sd_and": [
+      "SD.AND"
+    ],
+    "sd_or": [
+      "SD.OR"
+    ],
+    "sd_pcr": [
+      "SD.PCR"
+    ],
+    "sd_smax": [
+      "SD.SMAX"
+    ],
+    "sd_smin": [
+      "SD.SMIN"
+    ],
+    "sd_u": [
+      "SD.U"
+    ],
+    "sd_umax": [
+      "SD.UMAX"
+    ],
+    "sd_umin": [
+      "SD.UMIN"
+    ],
+    "sd_xor": [
+      "SD.XOR"
+    ],
+    "sdi": [
+      "SDI"
+    ],
+    "sdi_u": [
+      "SDI.U"
+    ],
+    "setc_and": [
+      "SETC.AND"
+    ],
+    "setc_andi": [
+      "SETC.ANDI"
+    ],
+    "setc_eq": [
+      "SETC.EQ"
+    ],
+    "setc_eqi": [
+      "SETC.EQI"
+    ],
+    "setc_ge": [
+      "SETC.GE"
+    ],
+    "setc_gei": [
+      "SETC.GEI"
+    ],
+    "setc_geu": [
+      "SETC.GEU"
+    ],
+    "setc_geui": [
+      "SETC.GEUI"
+    ],
+    "setc_lt": [
+      "SETC.LT"
+    ],
+    "setc_lti": [
+      "SETC.LTI"
+    ],
+    "setc_ltu": [
+      "SETC.LTU"
+    ],
+    "setc_ltui": [
+      "SETC.LTUI"
+    ],
+    "setc_ne": [
+      "SETC.NE"
+    ],
+    "setc_nei": [
+      "SETC.NEI"
+    ],
+    "setc_or": [
+      "SETC.OR"
+    ],
+    "setc_ori": [
+      "SETC.ORI"
+    ],
+    "setc_tgt": [
+      "SETC.TGT"
+    ],
+    "setret": [
+      "SETRET"
+    ],
+    "sh": [
+      "SH"
+    ],
+    "sh_pcr": [
+      "SH.PCR"
+    ],
+    "sh_u": [
+      "SH.U"
+    ],
+    "shi": [
+      "SHI"
+    ],
+    "shi_u": [
+      "SHI.U"
+    ],
+    "sll": [
+      "SLL"
+    ],
+    "slli": [
+      "SLLI"
+    ],
+    "slliw": [
+      "SLLIW"
+    ],
+    "sllw": [
+      "SLLW"
+    ],
+    "sra": [
+      "SRA"
+    ],
+    "srai": [
+      "SRAI"
+    ],
+    "sraiw": [
+      "SRAIW"
+    ],
+    "sraw": [
+      "SRAW"
+    ],
+    "srl": [
+      "SRL"
+    ],
+    "srli": [
+      "SRLI"
+    ],
+    "srliw": [
+      "SRLIW"
+    ],
+    "srlw": [
+      "SRLW"
+    ],
+    "ssrget": [
+      "SSRGET"
+    ],
+    "ssrset": [
+      "SSRSET"
+    ],
+    "ssrswap": [
+      "SSRSWAP"
+    ],
+    "sub": [
+      "SUB"
+    ],
+    "subi": [
+      "SUBI"
+    ],
+    "subiw": [
+      "SUBIW"
+    ],
+    "subw": [
+      "SUBW"
+    ],
+    "sw": [
+      "SW"
+    ],
+    "sw_add": [
+      "SW.ADD"
+    ],
+    "sw_and": [
+      "SW.AND"
+    ],
+    "sw_or": [
+      "SW.OR"
+    ],
+    "sw_pcr": [
+      "SW.PCR"
+    ],
+    "sw_smax": [
+      "SW.SMAX"
+    ],
+    "sw_smin": [
+      "SW.SMIN"
+    ],
+    "sw_u": [
+      "SW.U"
+    ],
+    "sw_umax": [
+      "SW.UMAX"
+    ],
+    "sw_umin": [
+      "SW.UMIN"
+    ],
+    "sw_xor": [
+      "SW.XOR"
+    ],
+    "swapb": [
+      "SWAPB"
+    ],
+    "swapd": [
+      "SWAPD"
+    ],
+    "swaph": [
+      "SWAPH"
+    ],
+    "swapw": [
+      "SWAPW"
+    ],
+    "swi": [
+      "SWI"
+    ],
+    "swi_u": [
+      "SWI.U"
+    ],
+    "tlb_ia": [
+      "TLB.IA"
+    ],
+    "tlb_iall": [
+      "TLB.IALL"
+    ],
+    "tlb_iav": [
+      "TLB.IAV"
+    ],
+    "tlb_iv": [
+      "TLB.IV"
+    ],
+    "ucvtf": [
+      "UCVTF"
+    ],
+    "v_add": [
+      "V.ADD"
+    ],
+    "v_cmp_eq": [
+      "V.CMP.EQ"
+    ],
+    "v_cmp_ge": [
+      "V.CMP.GE"
+    ],
+    "v_cmp_geu": [
+      "V.CMP.GEU"
+    ],
+    "v_cmp_lt": [
+      "V.CMP.LT"
+    ],
+    "v_cmp_ltu": [
+      "V.CMP.LTU"
+    ],
+    "v_cmp_ne": [
+      "V.CMP.NE"
+    ],
+    "v_csel": [
+      "V.CSEL"
+    ],
+    "v_fabs": [
+      "V.FABS"
+    ],
+    "v_fadd": [
+      "V.FADD"
+    ],
+    "v_fdiv": [
+      "V.FDIV"
+    ],
+    "v_feq": [
+      "V.FEQ"
+    ],
+    "v_fge": [
+      "V.FGE"
+    ],
+    "v_flt": [
+      "V.FLT"
+    ],
+    "v_fmul": [
+      "V.FMUL"
+    ],
+    "v_fne": [
+      "V.FNE"
+    ],
+    "v_fsub": [
+      "V.FSUB"
+    ],
+    "v_lw": [
+      "V.LW"
+    ],
+    "v_lw_brg": [
+      "V.LW.BRG"
+    ],
+    "v_mul": [
+      "V.MUL"
+    ],
+    "v_rdadd": [
+      "V.RDADD"
+    ],
+    "v_rdand": [
+      "V.RDAND"
+    ],
+    "v_rdfadd": [
+      "V.RDFADD"
+    ],
+    "v_rdfmax": [
+      "V.RDFMAX"
+    ],
+    "v_rdfmin": [
+      "V.RDFMIN"
+    ],
+    "v_rdmax": [
+      "V.RDMAX"
+    ],
+    "v_rdmin": [
+      "V.RDMIN"
+    ],
+    "v_rdor": [
+      "V.RDOR"
+    ],
+    "v_rdxor": [
+      "V.RDXOR"
+    ],
+    "v_sub": [
+      "V.SUB"
+    ],
+    "v_sw": [
+      "V.SW"
+    ],
+    "v_sw_brg": [
+      "V.SW.BRG"
+    ],
+    "xor": [
+      "XOR"
+    ],
+    "xori": [
+      "XORI"
+    ],
+    "xoriw": [
+      "XORIW"
+    ],
+    "xorw": [
+      "XORW"
+    ]
+  },
+  "missing_by_prefix": {
+    "C": 1,
     "FCVTA": 1,
     "FCVTM": 1,
     "FCVTN": 1,
@@ -482,76 +1966,262 @@
     "FNMSUB": 1,
     "FRECIP": 1,
     "FSQRT": 1,
-    "HL": 129,
-    "IC": 2,
-    "J": 1,
-    "JR": 1,
-    "LD": 7,
-    "LDI": 1,
-    "LHI": 1,
-    "LHUI": 1,
-    "LR": 2,
-    "LSRGET": 1,
-    "LW": 7,
-    "LWI": 1,
-    "LWUI": 1,
-    "MULU": 1,
-    "MULUW": 1,
-    "PRF": 1,
-    "PRFI": 1,
-    "SC": 2,
-    "SD": 8,
-    "SDI": 1,
-    "SHI": 1,
-    "SW": 8,
-    "SWAPB": 1,
-    "SWAPH": 1,
-    "SWI": 1,
-    "TLB": 3,
+    "HL": 14,
     "V": 152,
     "XB": 1
   },
-  "missing_count": 395,
+  "missing_count": 186,
+  "missing_forms_by_prefix": {
+    "B": 9,
+    "BSTART": 14,
+    "C": 2,
+    "DC": 2,
+    "FCVTA": 1,
+    "FCVTM": 1,
+    "FCVTN": 1,
+    "FCVTP": 1,
+    "FEQS": 1,
+    "FEXP": 1,
+    "FGES": 1,
+    "FLTS": 1,
+    "FMADD": 1,
+    "FMAX": 1,
+    "FMIN": 1,
+    "FMSUB": 1,
+    "FNE": 1,
+    "FNES": 1,
+    "FNMADD": 1,
+    "FNMSUB": 1,
+    "FRECIP": 1,
+    "FSQRT": 1,
+    "HL": 17,
+    "LR": 2,
+    "V": 154,
+    "XB": 1
+  },
+  "missing_spec_forms": [
+    "B.ARG [len=32 mask=0xffffffff match=0x1800a4a3]",
+    "B.ARG [len=32 mask=0xffffffff match=0x180221a3]",
+    "B.ARG [len=32 mask=0xffffffff match=0x18022423]",
+    "B.ARG [len=32 mask=0xffffffff match=0x20fae23]",
+    "B.ARG [len=32 mask=0xffffffff match=0xfa023]",
+    "B.IOT [len=32 mask=0x707f match=0x4013]",
+    "B.IOT [len=32 mask=0x707f match=0x5013]",
+    "B.IOTI [len=32 mask=0x707f match=0x6013]",
+    "B.IOTI [len=32 mask=0x707f match=0x7013]",
+    "BSTART CALL [len=32 mask=0xf83f000f match=0x50160002]",
+    "BSTART [len=32 mask=0x7f match=0x11]",
+    "BSTART [len=32 mask=0x7f match=0x21]",
+    "BSTART.ACCCVT [len=32 mask=0x7ffffff match=0x831181]",
+    "BSTART.MPAR [len=32 mask=0xf9ffffff match=0x1181]",
+    "BSTART.MSEQ [len=32 mask=0xf9ffffff match=0x9181]",
+    "BSTART.STD [len=32 mask=0x7fff match=0x1001]",
+    "BSTART.TLOAD [len=32 mask=0x7ffffff match=0x11181]",
+    "BSTART.TMATMUL [len=32 mask=0x7ffffff match=0x31181]",
+    "BSTART.TMATMUL.ACC [len=32 mask=0x7ffffff match=0x231181]",
+    "BSTART.TMOV [len=32 mask=0x7ffffff match=0x211181]",
+    "BSTART.TSTORE [len=32 mask=0x7ffffff match=0x111181]",
+    "BSTART.VPAR [len=32 mask=0xf9ffffff match=0x21181]",
+    "BSTART.VSEQ [len=32 mask=0xf9ffffff match=0x29181]",
+    "C.BSTART.STD [len=16 mask=0xc7ff match=0x0]",
+    "C.SETRET [len=16 mask=0xf83f match=0x5016]",
+    "DC.ISW [len=32 mask=0xfff07fff match=0x40602b]",
+    "DC.ZVA [len=32 mask=0xfff07fff match=0x70602b]",
+    "FCVTA [len=32 mask=0x1f0707f match=0x106b]",
+    "FCVTM [len=32 mask=0x1f0707f match=0x206b]",
+    "FCVTN [len=32 mask=0x1f0707f match=0x306b]",
+    "FCVTP [len=32 mask=0x1f0707f match=0x406b]",
+    "FEQS [len=32 mask=0xf800707f match=0x800005b]",
+    "FEXP [len=32 mask=0xf9f0707f match=0x307b]",
+    "FGES [len=32 mask=0xf800707f match=0x800305b]",
+    "FLTS [len=32 mask=0xf800707f match=0x800205b]",
+    "FMADD [len=32 mask=0x707f match=0x404b]",
+    "FMAX [len=32 mask=0xf800707f match=0x605b]",
+    "FMIN [len=32 mask=0xf800707f match=0x705b]",
+    "FMSUB [len=32 mask=0x707f match=0x504b]",
+    "FNE [len=32 mask=0xf800707f match=0x105b]",
+    "FNES [len=32 mask=0xf800707f match=0x800105b]",
+    "FNMADD [len=32 mask=0x707f match=0x604b]",
+    "FNMSUB [len=32 mask=0x707f match=0x704b]",
+    "FRECIP [len=32 mask=0xf9f0707f match=0x207b]",
+    "FSQRT [len=32 mask=0xf9f0707f match=0x107b]",
+    "HL.BSTART CALL [len=64 mask=0xfffff83f0000007f match=0x501600000011]",
+    "HL.BSTART.STD [len=64 mask=0xffff00007fff000f match=0x4001000e]",
+    "HL.DIV [len=64 mask=0xfffffe00707f07ff match=0x57000e]",
+    "HL.DIVU [len=64 mask=0xfffffe00707f07ff match=0x1057000e]",
+    "HL.DIVUW [len=64 mask=0xfffffe00707f07ff match=0x3057000e]",
+    "HL.DIVW [len=64 mask=0xfffffe00707f07ff match=0x2057000e]",
+    "HL.MADD [len=64 mask=0xffff0600707f07ff match=0x6047000e]",
+    "HL.MADDW [len=64 mask=0xffff0600707f07ff match=0x7047000e]",
+    "HL.MUL [len=64 mask=0xfffffe00707f07ff match=0x47000e]",
+    "HL.MULU [len=64 mask=0xfffffe00707f07ff match=0x1047000e]",
+    "HL.PRF [len=64 mask=0xffff00007fff07ff match=0x7009000e]",
+    "HL.REM [len=64 mask=0xfffffe00707f07ff match=0x4057000e]",
+    "HL.REMU [len=64 mask=0xfffffe00707f07ff match=0x5057000e]",
+    "HL.REMUW [len=64 mask=0xfffffe00707f07ff match=0x7057000e]",
+    "HL.REMW [len=64 mask=0xfffffe00707f07ff match=0x6057000e]",
+    "HL.SETC.ANDI [len=64 mask=0xffff0000707f000f match=0x2075000e]",
+    "HL.SETC.ORI [len=64 mask=0xffff0000707f000f match=0x3075000e]",
+    "LR.D [len=32 mask=0xf000707f match=0x3000000b]",
+    "LR.W [len=32 mask=0xf000707f match=0x2000000b]",
+    "V.ADDI [len=64 mask=0x707ffff0707f match=0x150000007f]",
+    "V.AND [len=64 mask=0x707ffe00707f match=0x20050000007f]",
+    "V.ANDI [len=64 mask=0x707ffff0707f match=0x20150000007f]",
+    "V.BCNT [len=64 mask=0x707ffff0707f match=0x60670000007f]",
+    "V.BIC [len=64 mask=0x707ffff0707f match=0x20670000007f]",
+    "V.BIS [len=64 mask=0x707ffff0707f match=0x30670000007f]",
+    "V.BXS [len=64 mask=0x707ffff0707f match=0x670000007f]",
+    "V.BXU [len=64 mask=0x707ffff0707f match=0x10670000007f]",
+    "V.CLZ [len=64 mask=0x707ffff0707f match=0x50670000007f]",
+    "V.CMP.AND [len=64 mask=0xfe00707ffe00707f match=0x20450000007f]",
+    "V.CMP.ANDI [len=64 mask=0x707ffff0707f match=0x20550000007f]",
+    "V.CMP.EQI [len=64 mask=0x707ffff0707f match=0x550000007f]",
+    "V.CMP.GEI [len=64 mask=0x707ffff0707f match=0x50550000007f]",
+    "V.CMP.GEUI [len=64 mask=0x707ffff0707f match=0x70550000007f]",
+    "V.CMP.LTI [len=64 mask=0x707ffff0707f match=0x40550000007f]",
+    "V.CMP.LTUI [len=64 mask=0x707ffff0707f match=0x60550000007f]",
+    "V.CMP.NEI [len=64 mask=0x707ffff0707f match=0x10550000007f]",
+    "V.CMP.OR [len=64 mask=0xfe00707ffe00707f match=0x30450000007f]",
+    "V.CMP.ORI [len=64 mask=0x707ffff0707f match=0x30550000007f]",
+    "V.CTZ [len=64 mask=0x707ffff0707f match=0x40670000007f]",
+    "V.DIV [len=64 mask=0xfe00707ffe00707f match=0x570000007f]",
+    "V.FABS [len=64 mask=0xfff0707ffff0707f match=0x7b0000007f]",
+    "V.FCLASS [len=64 mask=0xfff0707ffff0707f match=0x707b0000007f]",
+    "V.FCVT [len=64 mask=0x600707ffff0707f match=0x6b0000007f]",
+    "V.FCVTI [len=64 mask=0x600707ffff0707f match=0x106b0000007f]",
+    "V.FEQS [len=64 mask=0xfe00707ffe00707f match=0x405b0000007f]",
+    "V.FEXP [len=64 mask=0xfff0707ffff0707f match=0x307b0000007f]",
+    "V.FGES [len=64 mask=0xfe00707ffe00707f match=0x705b0000007f]",
+    "V.FLTS [len=64 mask=0xfe00707ffe00707f match=0x605b0000007f]",
+    "V.FMADD [len=64 mask=0x600707f0600707f match=0x404b0000007f]",
+    "V.FMAX [len=64 mask=0xfe00707ffe00707f match=0x205b0000107f]",
+    "V.FMIN [len=64 mask=0xfe00707ffe00707f match=0x305b0000107f]",
+    "V.FMSUB [len=64 mask=0x600707f0600707f match=0x504b0000007f]",
+    "V.FNES [len=64 mask=0xfe00707ffe00707f match=0x505b0000007f]",
+    "V.FNMADD [len=64 mask=0x600707f0600707f match=0x604b0000007f]",
+    "V.FNMSUB [len=64 mask=0x600707f0600707f match=0x704b0000007f]",
+    "V.FRECIP [len=64 mask=0xfff0707ffff0707f match=0x207b0000007f]",
+    "V.FSQRT [len=64 mask=0xfff0707ffff0707f match=0x107b0000007f]",
+    "V.ICVT [len=64 mask=0x600707ffff0707f match=0x606b0000007f]",
+    "V.ICVTF [len=64 mask=0x600707ffff0707f match=0x706b0000007f]",
+    "V.LB [len=64 mask=0x600707ffe00207f match=0x90000007f]",
+    "V.LB.BRG [len=64 mask=0x600707ffe00207f match=0x90000207f]",
+    "V.LBI [len=64 mask=0x707f0000207f match=0x190000007f]",
+    "V.LBI.BRG [len=64 mask=0x707f0000207f match=0x190000207f]",
+    "V.LBU [len=64 mask=0x600707ffe00207f match=0x40090000007f]",
+    "V.LBU.BRG [len=64 mask=0x600707ffe00207f match=0x40090000207f]",
+    "V.LBUI [len=64 mask=0x707f0000207f match=0x40190000007f]",
+    "V.LBUI.BRG [len=64 mask=0x707f0000207f match=0x40190000207f]",
+    "V.LD [len=64 mask=0x600707ffe00207f match=0x30090000007f]",
+    "V.LD.ADD [len=64 mask=0xf800707ffc00707f match=0xb0000207f]",
+    "V.LD.AND [len=64 mask=0xf800707ffc00707f match=0x100b0000207f]",
+    "V.LD.BRG [len=64 mask=0x600707ffe00207f match=0x30090000207f]",
+    "V.LD.MAX [len=64 mask=0xf800707ffc00707f match=0x400b0000207f]",
+    "V.LD.MIN [len=64 mask=0xf800707ffc00707f match=0x500b0000207f]",
+    "V.LD.OR [len=64 mask=0xf800707ffc00707f match=0x200b0000207f]",
+    "V.LD.XOR [len=64 mask=0xf800707ffc00707f match=0x300b0000207f]",
+    "V.LDI [len=64 mask=0x707f0000207f match=0x30190000007f]",
+    "V.LDI.BRG [len=64 mask=0x707f0000207f match=0x30190000207f]",
+    "V.LDI.U [len=64 mask=0x707f0000207f match=0x30290000007f]",
+    "V.LDI.U.BRG [len=64 mask=0x707f0000207f match=0x30290000207f]",
+    "V.LH [len=64 mask=0x600707ffe00207f match=0x10090000007f]",
+    "V.LH.BRG [len=64 mask=0x600707ffe00207f match=0x10090000207f]",
+    "V.LHI [len=64 mask=0x707f0000207f match=0x10190000007f]",
+    "V.LHI.BRG [len=64 mask=0x707f0000207f match=0x10190000207f]",
+    "V.LHI.U [len=64 mask=0x707f0000207f match=0x10290000007f]",
+    "V.LHI.U.BRG [len=64 mask=0x707f0000207f match=0x10290000207f]",
+    "V.LHU [len=64 mask=0x600707ffe00207f match=0x50090000007f]",
+    "V.LHU.BRG [len=64 mask=0x600707ffe00207f match=0x50090000207f]",
+    "V.LHUI [len=64 mask=0x707f0000207f match=0x50190000007f]",
+    "V.LHUI.BRG [len=64 mask=0x707f0000207f match=0x50190000207f]",
+    "V.LHUI.U [len=64 mask=0x707f0000207f match=0x50290000007f]",
+    "V.LHUI.U.BRG [len=64 mask=0x707f0000207f match=0x50290000207f]",
+    "V.LW.ADD [len=64 mask=0xf800707ffc00707f match=0xb0000007f]",
+    "V.LW.AND [len=64 mask=0xf800707ffc00707f match=0x100b0000007f]",
+    "V.LW.MAX [len=64 mask=0xf800707ffc00707f match=0x400b0000007f]",
+    "V.LW.MIN [len=64 mask=0xf800707ffc00707f match=0x500b0000007f]",
+    "V.LW.OR [len=64 mask=0xf800707ffc00707f match=0x200b0000007f]",
+    "V.LW.XOR [len=64 mask=0xf800707ffc00707f match=0x300b0000007f]",
+    "V.LWI [len=64 mask=0x707f0000207f match=0x20190000007f]",
+    "V.LWI.BRG [len=64 mask=0x707f0000207f match=0x20190000207f]",
+    "V.LWI.U [len=64 mask=0x707f0000207f match=0x20290000007f]",
+    "V.LWI.U.BRG [len=64 mask=0x707f0000207f match=0x20290000207f]",
+    "V.LWU [len=64 mask=0x600707ffe00207f match=0x60090000007f]",
+    "V.LWU.BRG [len=64 mask=0x600707ffe00207f match=0x60090000207f]",
+    "V.LWUI [len=64 mask=0x707f0000207f match=0x60190000007f]",
+    "V.LWUI.BRG [len=64 mask=0x707f0000207f match=0x60190000207f]",
+    "V.LWUI.U [len=64 mask=0x707f0000207f match=0x60290000007f]",
+    "V.LWUI.U.BRG [len=64 mask=0x707f0000207f match=0x60290000207f]",
+    "V.MADD [len=64 mask=0x600707f0600707f match=0x60470000007f]",
+    "V.MAX [len=64 mask=0xfe00707ffe00707f match=0x5b0000107f]",
+    "V.MIN [len=64 mask=0xfe00707ffe00707f match=0x105b0000107f]",
+    "V.MUL [len=64 mask=0xfe00707ffe00707f match=0x470000007f]",
+    "V.OR [len=64 mask=0x707ffe00707f match=0x30050000007f]",
+    "V.ORI [len=64 mask=0x707ffff0707f match=0x30150000007f]",
+    "V.PSEL [len=64 mask=0x707f0600707f match=0x10770000007f]",
+    "V.QPOP [len=64 mask=0xfff0707ffff0707f match=0x207d0000007f]",
+    "V.QPUSH [len=64 mask=0xfe00707ffe00707f match=0x107d0000007f]",
+    "V.REM [len=64 mask=0xfe00707ffe00707f match=0x40570000007f]",
+    "V.REV [len=64 mask=0x707ffff0707f match=0x70670000007f]",
+    "V.SB [len=64 mask=0x6007fff0600207f match=0x490000007f]",
+    "V.SB.BRG [len=64 mask=0x6007fff0600207f match=0x490000207f]",
+    "V.SBI [len=64 mask=0x707f0000207f match=0x590000007f]",
+    "V.SBI.BRG [len=64 mask=0x707f0000207f match=0x590000207f]",
+    "V.SD [len=64 mask=0x6007fff0600207f match=0x30490000007f]",
+    "V.SD.ADD [len=64 mask=0xfc007ffff8007fff match=0xb0000307f]",
+    "V.SD.AND [len=64 mask=0xfc007ffff8007fff match=0x100b0000307f]",
+    "V.SD.BRG [len=64 mask=0x6007fff0600207f match=0x30490000207f]",
+    "V.SD.MAX [len=64 mask=0xfc007ffff8007fff match=0x400b0000307f]",
+    "V.SD.MIN [len=64 mask=0xfc007ffff8007fff match=0x500b0000307f]",
+    "V.SD.OR [len=64 mask=0xfc007ffff8007fff match=0x200b0000307f]",
+    "V.SD.U [len=64 mask=0x6007fff0600207f match=0x70490000007f]",
+    "V.SD.U.BRG [len=64 mask=0x6007fff0600207f match=0x70490000207f]",
+    "V.SD.XOR [len=64 mask=0xfc007ffff8007fff match=0x300b0000307f]",
+    "V.SDI [len=64 mask=0x707f0000207f match=0x30590000007f]",
+    "V.SDI.BRG [len=64 mask=0x707f0000207f match=0x30590000207f]",
+    "V.SDI.U [len=64 mask=0x707f0000207f match=0x70590000007f]",
+    "V.SDI.U.BRG [len=64 mask=0x707f0000207f match=0x70590000207f]",
+    "V.SH [len=64 mask=0x6007fff0600207f match=0x10490000007f]",
+    "V.SH.BRG [len=64 mask=0x6007fff0600207f match=0x10490000207f]",
+    "V.SH.U [len=64 mask=0x6007fff0600207f match=0x50490000007f]",
+    "V.SH.U.BRG [len=64 mask=0x6007fff0600207f match=0x50490000207f]",
+    "V.SHFL.BFLY [len=64 mask=0x7f0707f07f0707f match=0x201d0000007f]",
+    "V.SHFL.DOWN [len=64 mask=0x600707f0600707f match=0x101d0000007f]",
+    "V.SHFL.IDX [len=64 mask=0x600707f0600707f match=0x301d0000007f]",
+    "V.SHFL.UP [len=64 mask=0x600707f0600707f match=0x1d0000007f]",
+    "V.SHFLI.BFLY [len=64 mask=0x1f0707f01f0707f match=0x602d0000007f]",
+    "V.SHFLI.DOWN [len=64 mask=0x707f0000707f match=0x502d0000007f]",
+    "V.SHFLI.IDX [len=64 mask=0x707f0000707f match=0x702d0000007f]",
+    "V.SHFLI.UP [len=64 mask=0x707f0000707f match=0x402d0000007f]",
+    "V.SHI [len=64 mask=0x707f0000207f match=0x10590000007f]",
+    "V.SHI.BRG [len=64 mask=0x707f0000207f match=0x10590000207f]",
+    "V.SHI.U [len=64 mask=0x707f0000207f match=0x50590000007f]",
+    "V.SHI.U.BRG [len=64 mask=0x707f0000207f match=0x50590000207f]",
+    "V.SLL [len=64 mask=0xfe00707ffe00707f match=0x70050000007f]",
+    "V.SLLI [len=64 mask=0xfc00707ffff0707f match=0x70150000007f]",
+    "V.SRA [len=64 mask=0xfe00707ffe00707f match=0x60050000007f]",
+    "V.SRAI [len=64 mask=0xfc00707ffff0707f match=0x60150000007f]",
+    "V.SRL [len=64 mask=0xfe00707ffe00707f match=0x50050000007f]",
+    "V.SRLI [len=64 mask=0xfc00707ffff0707f match=0x50150000007f]",
+    "V.SUBI [len=64 mask=0x707ffff0707f match=0x10150000007f]",
+    "V.SW.ADD [len=64 mask=0xfc007ffff8007fff match=0xb0000107f]",
+    "V.SW.AND [len=64 mask=0xfc007ffff8007fff match=0x100b0000107f]",
+    "V.SW.MAX [len=64 mask=0xfc007ffff8007fff match=0x400b0000107f]",
+    "V.SW.MIN [len=64 mask=0xfc007ffff8007fff match=0x500b0000107f]",
+    "V.SW.OR [len=64 mask=0xfc007ffff8007fff match=0x200b0000107f]",
+    "V.SW.U [len=64 mask=0x6007fff0600207f match=0x60490000007f]",
+    "V.SW.U.BRG [len=64 mask=0x6007fff0600207f match=0x60490000207f]",
+    "V.SW.XOR [len=64 mask=0xfc007ffff8007fff match=0x300b0000107f]",
+    "V.SWI [len=64 mask=0x707f0000207f match=0x20590000007f]",
+    "V.SWI.BRG [len=64 mask=0x707f0000207f match=0x20590000207f]",
+    "V.SWI.U [len=64 mask=0x707f0000207f match=0x60590000007f]",
+    "V.SWI.U.BRG [len=64 mask=0x707f0000207f match=0x60590000207f]",
+    "V.XOR [len=64 mask=0x707ffe00707f match=0x40050000007f]",
+    "V.XORI [len=64 mask=0x707ffff0707f match=0x40150000007f]",
+    "XB [len=32 mask=0x7fff match=0x6f81]"
+  ],
   "missing_spec_mnemonics": [
-    "ASSERT",
-    "B.EQ",
-    "B.GE",
-    "B.GEU",
-    "B.IOD",
-    "B.LT",
-    "B.LTU",
-    "B.NE",
-    "BC.IALL",
-    "BC.IVA",
-    "BSE",
-    "BSTART.FIXP",
-    "BSTART.FP",
-    "BSTART.STD",
-    "BSTART.SYS",
-    "BSTART.TEPL",
-    "BSTART.TMOV",
-    "BWE",
-    "BWI",
-    "BWT",
-    "C.B.DIM",
-    "C.BSTART",
-    "C.BSTART.FP",
-    "C.BSTART.MPAR",
-    "C.BSTART.MSEQ",
-    "C.BSTART.SYS",
-    "C.BSTART.VPAR",
-    "C.BSTART.VSEQ",
-    "C.EBREAK",
     "C.SETRET",
-    "C.SSRGET",
-    "DC.CISW",
-    "DC.CIVA",
-    "DC.CSW",
-    "DC.CVA",
-    "DC.IALL",
-    "DC.ISW",
-    "DC.IVA",
-    "DC.ZVA",
     "FCVTA",
     "FCVTM",
     "FCVTN",
@@ -570,191 +2240,20 @@
     "FNMSUB",
     "FRECIP",
     "FSQRT",
-    "HL.BFI",
-    "HL.BSTART.FP",
-    "HL.BSTART.SYS",
-    "HL.CASB",
-    "HL.CASD",
-    "HL.CASH",
-    "HL.CASW",
-    "HL.CCAT",
-    "HL.CCATW",
     "HL.DIV",
     "HL.DIVU",
     "HL.DIVUW",
     "HL.DIVW",
-    "HL.LB.PO",
-    "HL.LB.PR",
-    "HL.LBI",
-    "HL.LBI.PO",
-    "HL.LBI.PR",
-    "HL.LBIP",
-    "HL.LBP",
-    "HL.LBU.PO",
-    "HL.LBU.PR",
-    "HL.LBUI",
-    "HL.LBUI.PO",
-    "HL.LBUI.PR",
-    "HL.LBUIP",
-    "HL.LBUP",
-    "HL.LD.PO",
-    "HL.LD.PR",
-    "HL.LDI",
-    "HL.LDI.U",
-    "HL.LDP",
-    "HL.LH.PO",
-    "HL.LH.PR",
-    "HL.LHI",
-    "HL.LHI.PO",
-    "HL.LHI.PR",
-    "HL.LHI.U",
-    "HL.LHI.UPO",
-    "HL.LHI.UPR",
-    "HL.LHIP",
-    "HL.LHIP.U",
-    "HL.LHP",
-    "HL.LHU.PO",
-    "HL.LHU.PR",
-    "HL.LHUI",
-    "HL.LHUI.PO",
-    "HL.LHUI.PR",
-    "HL.LHUI.U",
-    "HL.LHUI.UPO",
-    "HL.LHUI.UPR",
-    "HL.LHUIP",
-    "HL.LHUIP.U",
-    "HL.LHUP",
-    "HL.LIS",
-    "HL.LIU",
-    "HL.LW.PO",
-    "HL.LW.PR",
-    "HL.LWI",
-    "HL.LWI.U",
-    "HL.LWP",
-    "HL.LWU.PO",
-    "HL.LWU.PR",
-    "HL.LWUI",
-    "HL.LWUI.U",
-    "HL.LWUP",
     "HL.MADD",
     "HL.MADDW",
-    "HL.MIADD",
-    "HL.MISUB",
     "HL.MUL",
     "HL.MULU",
-    "HL.PRF",
-    "HL.PRF.A",
-    "HL.PRFI.U",
-    "HL.PRFI.UA",
-    "HL.QMT",
-    "HL.QPOP",
-    "HL.QPUSH",
     "HL.REM",
     "HL.REMU",
     "HL.REMUW",
     "HL.REMW",
-    "HL.SB.PO",
-    "HL.SB.PR",
-    "HL.SBI",
-    "HL.SBI.PO",
-    "HL.SBI.PR",
-    "HL.SBIP",
-    "HL.SBP",
-    "HL.SD.PO",
-    "HL.SD.PR",
-    "HL.SD.UPO",
-    "HL.SD.UPR",
-    "HL.SDI",
-    "HL.SDI.U",
-    "HL.SDP",
-    "HL.SDP.U",
     "HL.SETC.ANDI",
-    "HL.SETC.EQI",
-    "HL.SETC.GEI",
-    "HL.SETC.GEUI",
-    "HL.SETC.LTI",
-    "HL.SETC.LTUI",
-    "HL.SETC.NEI",
     "HL.SETC.ORI",
-    "HL.SETRET",
-    "HL.SH.PO",
-    "HL.SH.PR",
-    "HL.SH.UPO",
-    "HL.SH.UPR",
-    "HL.SHI",
-    "HL.SHI.PO",
-    "HL.SHI.PR",
-    "HL.SHI.U",
-    "HL.SHI.UPO",
-    "HL.SHI.UPR",
-    "HL.SHIP",
-    "HL.SHIP.U",
-    "HL.SHP",
-    "HL.SHP.U",
-    "HL.SW.PO",
-    "HL.SW.PR",
-    "HL.SW.UPO",
-    "HL.SW.UPR",
-    "HL.SWI",
-    "HL.SWI.U",
-    "HL.SWP",
-    "HL.SWP.U",
-    "IC.IALL",
-    "IC.IVA",
-    "J",
-    "JR",
-    "LD.AND",
-    "LD.OR",
-    "LD.SMAX",
-    "LD.SMIN",
-    "LD.UMAX",
-    "LD.UMIN",
-    "LD.XOR",
-    "LDI.U",
-    "LHI.U",
-    "LHUI.U",
-    "LR.B",
-    "LR.H",
-    "LSRGET",
-    "LW.AND",
-    "LW.OR",
-    "LW.SMAX",
-    "LW.SMIN",
-    "LW.UMAX",
-    "LW.UMIN",
-    "LW.XOR",
-    "LWI.U",
-    "LWUI.U",
-    "MULU",
-    "MULUW",
-    "PRF",
-    "PRFI.U",
-    "SC.B",
-    "SC.H",
-    "SD.ADD",
-    "SD.AND",
-    "SD.OR",
-    "SD.SMAX",
-    "SD.SMIN",
-    "SD.UMAX",
-    "SD.UMIN",
-    "SD.XOR",
-    "SDI.U",
-    "SHI.U",
-    "SW.ADD",
-    "SW.AND",
-    "SW.OR",
-    "SW.SMAX",
-    "SW.SMIN",
-    "SW.UMAX",
-    "SW.UMIN",
-    "SW.XOR",
-    "SWAPB",
-    "SWAPH",
-    "SWI.U",
-    "TLB.IA",
-    "TLB.IAV",
-    "TLB.IV",
     "V.ADDI",
     "V.AND",
     "V.ANDI",
@@ -909,14 +2408,23 @@
     "V.XORI",
     "XB"
   ],
-  "qemu_mapped_spec_mnemonics": 315,
+  "qemu_mapped_spec_forms": 521,
+  "qemu_mapped_spec_mnemonics": 524,
+  "qemu_meta_mnemonics": 541,
   "qemu_meta_path": "/Users/zhoubot/linx-isa/emulator/qemu/target/linx/linx_opcode_meta_gen.h",
-  "qemu_unique_mnemonics": 326,
+  "qemu_root": "/Users/zhoubot/linx-isa/emulator/qemu",
+  "qemu_source_kind": "decode",
+  "qemu_unique_forms": 541,
+  "qemu_unique_mnemonics": 541,
+  "reserved_form_count": 0,
+  "reserved_mnemonic_count": 0,
   "result": {
     "classification": "qemu_isa_coverage_report_generated",
     "ok": true
   },
+  "schema_version": "qemu-isa-coverage-v2",
   "spec_path": "/Users/zhoubot/linx-isa/isa/v0.4/linxisa-v0.4.json",
+  "spec_total_forms": 740,
   "spec_unique_mnemonics": 710,
   "unmapped_qemu_mnemonics": []
 }

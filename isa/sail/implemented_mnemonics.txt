@@ -212,7 +212,7 @@ SSRSWAP
 HL.SSRGET
 HL.SSRSET
 
-# Floating-point (FSU) - staged placeholders
+# Floating-point (FSU) - staged zero-result shims
 FADD
 FSUB
 FMUL

@@ -5,7 +5,7 @@
 [[inst_v_addi]]
 ==== V.ADDI
 
-*Syntax:* v.addi SrcL.<T>, uimm, ->Dst.<W>
+*Syntax:* v.addi SrcL, uimm, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

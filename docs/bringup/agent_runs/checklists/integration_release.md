@@ -1,9 +1,12 @@
 # Integration / Release Checklist
 
-- [x] ID: INT-001 Validate ISA check26 contract before cross-repo runtime gates.
-  Command: `python3 tools/bringup/check26_contract.py --root .`
-  Done means: contract gate passes and canonical patterns are present.
-  Status: ✅ PASS (2026-02-25) - `check26_contract.py` is pass in run `2026-02-25-r2-pin-lanefix` (log: `docs/bringup/gates/logs/2026-02-25-r2-pin-lanefix/pin/isa_check26.log`).
+- [ ] ID: INT-001 Validate the canonical AVS contract before cross-repo runtime gates.
+  Command: `python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml`
+  Done means: the AVS schema is canonical, all active entries carry `spec_refs` and tier metadata, and no legacy contract tokens remain.
+
+- [ ] ID: INT-016 Require AVS tier closure before strict runtime signoff.
+  Command: `python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier pr`
+  Done means: every active AVS entry required for PR closure is implemented and validated with machine-readable evidence.
 
 - [x] ID: INT-002 Verify all required gate rows are assigned to a known agent checklist.
   Done means: multi-agent static validator reports no unassigned required gate keys.

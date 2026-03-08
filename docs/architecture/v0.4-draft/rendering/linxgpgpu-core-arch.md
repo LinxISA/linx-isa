@@ -1,5 +1,8 @@
 # v0.4 draft: LinxGPGPU core architecture (render-first)
 
+Canonical destinations: `docs/architecture/v0.4-workload-engine-model.md`, `docs/architecture/v0.4-architecture-contract.md`, `docs/architecture/v0.4-rendering-command-contract.md`
+Related live LinxCore contracts: `docs/architecture/linxcore/overview.md`, `docs/architecture/linxcore/microarchitecture.md`
+
 This document is the working architectural spec for a **GPU-SM-like core** (“LinxGPGPU core”), scaling out to many cores to form a GPGPU suitable for rendering + compute.
 
 ## 1) System philosophy

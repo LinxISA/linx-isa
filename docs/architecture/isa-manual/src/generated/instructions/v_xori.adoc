@@ -5,7 +5,7 @@
 [[inst_v_xori]]
 ==== V.XORI
 
-*Syntax:* v.xori SrcL.<T>, simm, ->Dst.<W>
+*Syntax:* v.xori SrcL, simm, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

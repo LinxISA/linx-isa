@@ -337,7 +337,7 @@ Instruction-related traps (`E_INST`)::
 +|`EC_XBDEF`   |`0x11` |`XB` definition invalid (`CAC_TABLE` entry missing/invalid, bad `B.TEXT`, etc.).
 +|===
 +
-+NOTE: v0.3 text previously used `E_INST(EC_ILLEGAL)` and `E_INST(EC_PARAM)` informally without allocating numeric encodings. v0.4-draft allocates concrete `EC_*` values above.
++NOTE: v0.3 text previously used `E_INST(EC_ILLEGAL)` and `E_INST(EC_PARAM)` informally without allocating numeric encodings. Canonical `v0.4` allocates concrete `EC_*` values above.
 +
 
 [%header,cols="2,1,1,1,1"]

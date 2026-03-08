@@ -5,7 +5,7 @@
 [[inst_v_fmul]]
 ==== V.FMUL
 
-*Syntax:* v.fmul SrcL.<T>, SrcR.<T>, ->Dst.<W>
+*Syntax:* v.fmul SrcL, SrcR, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

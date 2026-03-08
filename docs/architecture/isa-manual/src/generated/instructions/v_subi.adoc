@@ -5,7 +5,7 @@
 [[inst_v_subi]]
 ==== V.SUBI
 
-*Syntax:* v.subi SrcL.<T>, uimm, ->Dst.<W>
+*Syntax:* v.subi SrcL, uimm, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

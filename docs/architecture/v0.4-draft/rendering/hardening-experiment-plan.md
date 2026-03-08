@@ -1,5 +1,7 @@
 # v0.4 draft: Limited hardening experiment plan (render + AI)
 
+Canonical destination: `docs/architecture/v0.4-hardening-policy.md`
+
 ## Principle
 - **Hardening is limited**: only the most common + best ROI + easiest-to-verify units become fixed-function engines.
 - Everything else must have a **VEC-kernel fallback** (MPAR shader kernels) orchestrated by the command processor / BCC scheduling.

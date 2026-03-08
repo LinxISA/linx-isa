@@ -4,8 +4,6 @@ Generate a Sail semantics coverage report.
 
 Coverage is computed as:
   implemented mnemonics / total instruction forms in the compiled catalog.
-
-This intentionally treats semantics as absent unless explicitly listed.
 """
 
 from __future__ import annotations
@@ -22,16 +20,14 @@ def _read_json(path: Path) -> Dict[str, Any]:
         return json.load(f)
 
 
-def _read_implemented(path: Path) -> Set[str]:
-    out: Set[str] = set()
-    if not path.exists():
-        return out
-    for line in path.read_text(encoding="utf-8", errors="strict").splitlines():
-        s = line.strip()
-        if not s or s.startswith("#"):
-            continue
-        out.add(s)
-    return out
+def _read_implemented(status_path: Path) -> Set[str]:
+    if not status_path.exists():
+        return set()
+    status = _read_json(status_path)
+    mnemonics = status.get("mnemonics")
+    if not isinstance(mnemonics, dict):
+        raise SystemExit(f"error: {status_path} missing object field 'mnemonics'")
+    return {name for name, state in mnemonics.items() if str(state).strip() == "implemented"}
 
 
 def _write_json(path: Path, obj: Any, pretty: bool) -> None:
@@ -58,9 +54,9 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--spec", default="isa/v0.4/linxisa-v0.4.json", help="Compiled ISA catalog JSON")
     ap.add_argument(
-        "--implemented",
-        default="isa/sail/implemented_mnemonics.txt",
-        help="Text file listing mnemonics with implemented semantics",
+        "--status",
+        default="isa/sail/semantics_status.json",
+        help="Semantic status JSON mapping mnemonics to implemented|stubbed|unimplemented",
     )
     ap.add_argument("--out", default="isa/sail/coverage.json", help="Output JSON path")
     ap.add_argument("--pretty", action="store_true", help="Pretty-print JSON")
@@ -69,7 +65,7 @@ def main() -> int:
 
     repo_root = Path(__file__).resolve().parents[2]
     spec = _read_json(Path(args.spec))
-    implemented = _read_implemented(Path(args.implemented))
+    implemented = _read_implemented(Path(args.status))
 
     insts: List[Dict[str, Any]] = list(spec.get("instructions", []))
     total_forms = len(insts)
@@ -80,7 +76,7 @@ def main() -> int:
     out_obj = {
         # Keep the report deterministic: avoid embedding absolute paths.
         "spec": _relpath_in_repo(Path(args.spec), repo_root),
-        "implemented_list": _relpath_in_repo(Path(args.implemented), repo_root),
+        "semantic_status": _relpath_in_repo(Path(args.status), repo_root),
         "total_forms": total_forms,
         "implemented_forms": len(implemented_forms),
         "missing_forms": len(missing_forms),

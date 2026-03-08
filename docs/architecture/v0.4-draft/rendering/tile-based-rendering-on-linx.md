@@ -1,5 +1,8 @@
 # v0.4 draft: Tile-based rendering on Linx (open design)
 
+Canonical destinations: `docs/architecture/v0.4-rendering-command-contract.md`, `docs/architecture/v0.4-rendering-kernel-authoring.md`
+Related live profile/state: `isa/v0.4/state/rendering_profile.json`
+
 ## Positioning
 - Tile-based rendering is **one optional strategy** we want to support.
 - We also want to support **desktop/immediate-mode** style rendering.
@@ -40,4 +43,3 @@ Chosen staging:
   - shades a tile in MPAR kernel using tile-local working set
   - resolves/writes out via `.brg`
 - Only then decide what to harden.
-

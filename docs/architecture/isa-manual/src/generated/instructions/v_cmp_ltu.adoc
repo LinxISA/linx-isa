@@ -5,7 +5,7 @@
 [[inst_v_cmp_ltu]]
 ==== V.CMP.LTU
 
-*Syntax:* v.cmp.ltu SrcL.<T>, SrcR.<T>, ->Dst.<W>
+*Syntax:* v.cmp.ltu SrcL, SrcR, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

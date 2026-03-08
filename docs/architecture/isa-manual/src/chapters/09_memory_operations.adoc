@@ -158,6 +158,26 @@ Canonical shader-kernel behavior is expressed through `.MPAR` / `.MSEQ` executio
 * Canonical kernel global-memory accesses use bridged forms only: `l.*.brg` and `v.*.brg`.
 * Archived VREG-only raw local-register fragments are not part of canonical v0.4 behavior.
 
+Bridged address-formation contract (canonical v0.4):
+
+* `l.*.brg` and `v.*.brg` use the same architectural addressing grammar.
+* The effective address is formed only from the explicitly encoded base, index, immediate, and shift terms of the
+  selected instruction form.
+* There is no implicit extra lane-index term added merely because the operation is `v.*.brg`.
+* `ri*` remains the required base namespace for `.brg` kernel memory ops.
+* When a `v.*.brg` form names lane-varying operands, those operands are evaluated per active lane under the current
+  EXEC mask; when an `l.*.brg` form names only scalar/group-domain operands, the address is evaluated once per group.
+* Scalar/group-domain source operands used by `v.*.brg` continue to broadcast under the unified `lx64` kernel rule.
+
+Examples:
+
+* `l.lw.brg ->t, [ri0, 16]`
+** one scalar-uniform bridged access using `ri0 + 16`.
+* `v.sw.brg vt#1, [ri0, lc0<<2, lc1<<10]`
+** per-lane bridged stores where the base rule is still explicit-only:
+** `ri0 + (lc0 << 2) + (lc1 << 10)`
+** no additional implicit `lc0` term is injected by the `.brg` domain itself.
+
 [[memory-types]]
 ==== Memory types (Normal vs Device)
 

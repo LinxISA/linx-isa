@@ -5,7 +5,7 @@
 [[inst_v_fsub]]
 ==== V.FSUB
 
-*Syntax:* v.fsub SrcL.<T>, SrcR.<T>, ->Dst.<W>
+*Syntax:* v.fsub SrcL, SrcR, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

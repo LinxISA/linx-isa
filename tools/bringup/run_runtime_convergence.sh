@@ -490,11 +490,19 @@ run_glibc_g1b_gate() {
 
 run_gate \
   "ISA" \
-  "check26 contract" \
-  "python3 $ROOT/tools/bringup/check26_contract.py --root $ROOT" \
-  "contract_ok" \
-  "contract_fail" \
-  "isa_check26"
+  "AVS contract" \
+  "python3 $ROOT/tools/bringup/check_avs_contract.py --matrix $ROOT/avs/linx_avs_v1_test_matrix.yaml" \
+  "avs_contract_ok" \
+  "avs_contract_fail" \
+  "isa_avs_contract"
+
+run_gate \
+  "ISA" \
+  "AVS status normalize" \
+  "python3 $ROOT/tools/bringup/gen_avs_matrix_status.py --matrix $ROOT/avs/linx_avs_v1_test_matrix.yaml --source-status $ROOT/avs/linx_avs_v1_test_matrix_status.json --out $ROOT/avs/linx_avs_v1_test_matrix_status.json" \
+  "avs_status_generated" \
+  "avs_status_generate_fail" \
+  "isa_avs_status"
 
 if [[ "$RUN_ARCH_DOCS_GATES" == "1" ]]; then
   run_gate \
@@ -811,6 +819,72 @@ else
     "note"
 fi
 
+run_gate \
+  "Regression" \
+  "Workload benchmarks" \
+  "python3 $ROOT/workloads/run_benchmarks.py --cc $CLANG_BIN --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --json-out ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/benchmarks_result.json" \
+  "workload_benchmarks_pass" \
+  "workload_benchmarks_fail" \
+  "workload_benchmarks"
+
+run_gate \
+  "Regression" \
+  "Workload polybench" \
+  "python3 $ROOT/workloads/run_polybench.py --cc $CLANG_BIN --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --json-out ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/polybench_result.json" \
+  "workload_polybench_pass" \
+  "workload_polybench_fail" \
+  "workload_polybench"
+
+run_gate \
+  "Regression" \
+  "Workload portfolio" \
+  "python3 $ROOT/workloads/run_portfolio.py --cc $CLANG_BIN --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --polybench --ctuning-limit ${LINX_CTUNING_LIMIT:-5} --json-out ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/portfolio_report.json" \
+  "workload_portfolio_pass" \
+  "workload_portfolio_fail" \
+  "workload_portfolio"
+
+run_gate \
+  "Regression" \
+  "TSVC QEMU gate" \
+  "python3 $ROOT/workloads/tsvc/run_tsvc.py --clang $CLANG_BIN --lld $LLD_BIN --qemu $QEMU_BIN --vector-mode auto --strict-fail-under ${TSVC_STRICT_FAIL_UNDER:-151} --source-policy linx-v03-parity --out-dir ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}" \
+  "workload_tsvc_pass" \
+  "workload_tsvc_fail" \
+  "workload_tsvc"
+
+run_gate \
+  "Regression" \
+  "PTO kernel parity" \
+  "python3 $ROOT/workloads/pto_kernels/tools/run_pto_kernel_parity.py --out-dir ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}" \
+  "workload_pto_parity_pass" \
+  "workload_pto_parity_fail" \
+  "workload_pto_parity"
+
+run_gate \
+  "Regression" \
+  "ctuning curated subset" \
+  "python3 $ROOT/workloads/ctuning/run_milepost_codelets.py --ctuning-root $ROOT/workloads/ctuning --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --clang $CLANG_BIN --lld $LLD_BIN --qemu $QEMU_BIN --limit ${LINX_CTUNING_LIMIT:-5} --run --summary-json ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/ctuning_result.json" \
+  "workload_ctuning_pass" \
+  "workload_ctuning_fail" \
+  "workload_ctuning"
+
+run_gate \
+  "Regression" \
+  "SPEC stage A QEMU matrix" \
+  "python3 $ROOT/tools/spec2017/run_stage_qemu_matrix.py --spec-dir ${LINX_SPEC_DIR:-$ROOT/workloads/spec2017/cpu2017v118_x64_gcc12_avx2} --stage a --input-set ${SPEC_INPUT_SET:-test} --strict --out-dir ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/spec_stage_a" \
+  "workload_spec_stage_a_pass" \
+  "workload_spec_stage_a_fail" \
+  "workload_spec_stage_a"
+
+if [[ "$LINX_GATE_TIER" == "nightly" ]]; then
+  run_gate \
+    "Regression" \
+    "SPEC stage B QEMU matrix" \
+    "python3 $ROOT/tools/spec2017/run_stage_qemu_matrix.py --spec-dir ${LINX_SPEC_DIR:-$ROOT/workloads/spec2017/cpu2017v118_x64_gcc12_avx2} --stage b --input-set ${SPEC_INPUT_SET:-test} --strict --out-dir ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/spec_stage_b" \
+    "workload_spec_stage_b_pass" \
+    "workload_spec_stage_b_fail" \
+    "workload_spec_stage_b"
+fi
+
 if [[ "$RUN_LINXCORE_NIGHTLY_GATES" == "1" ]]; then
   run_gate \
     "LinxCore" \
@@ -934,6 +1008,22 @@ else
     "model" \
     "note"
 fi
+
+run_gate \
+  "ISA" \
+  "AVS matrix status audit" \
+  "python3 $ROOT/tools/bringup/check_avs_matrix_status.py --matrix $ROOT/avs/linx_avs_v1_test_matrix.yaml --status $ROOT/avs/linx_avs_v1_test_matrix_status.json --report-out $RUN_LOG_DIR/avs_matrix_status_audit.json" \
+  "avs_matrix_status_ok" \
+  "avs_matrix_status_fail" \
+  "isa_avs_matrix_status"
+
+run_gate \
+  "ISA" \
+  "AVS tier closure" \
+  "python3 $ROOT/tools/bringup/check_avs_profile_closure.py --matrix $ROOT/avs/linx_avs_v1_test_matrix.yaml --status $ROOT/avs/linx_avs_v1_test_matrix_status.json --tier ${LINX_GATE_TIER:-pr} --report-out $RUN_LOG_DIR/avs_tier_closure_${LINX_GATE_TIER:-pr}.json" \
+  "avs_tier_closure_ok" \
+  "avs_tier_closure_fail" \
+  "isa_avs_tier_closure"
 
 if [[ $SKIP_STRICT_CROSS -eq 0 ]]; then
   QEMU_LANE_VALUE="external"

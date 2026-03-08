@@ -5,7 +5,7 @@
 [[inst_v_mul]]
 ==== V.MUL
 
-*Syntax:* v.mul SrcL.<T>, SrcR.<T>, ->Dst.<W>
+*Syntax:* v.mul SrcL, SrcR, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

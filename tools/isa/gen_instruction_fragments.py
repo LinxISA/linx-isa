@@ -26,6 +26,7 @@ import argparse
 import json
 import os
 import re
+import tempfile
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -153,10 +154,34 @@ def _emit_fragment(inst: Dict[str, Any], uop: Optional[Dict[str, Any]], out_dir:
     out_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def _emit_all(spec_path: Path, uop_root: Path, out_dir: Path, enc_rel_dir: str) -> List[str]:
+    spec = _read_json(spec_path)
+    insts = list(spec.get("instructions", []))
+
+    uop_map = _load_uop_class_map(uop_root)
+
+    _mkdirp(out_dir)
+    expected_names: List[str] = []
+    for inst in insts:
+        m = str(inst.get("mnemonic") or "").strip()
+        if not m:
+            continue
+        expected_names.append(f"{_slug(m)}.adoc")
+        uop = uop_map.get(m)
+        _emit_fragment(inst, uop, out_dir, enc_rel_dir)
+    return sorted(set(expected_names))
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--spec", default="isa/v0.4/linxisa-v0.4.json")
-    ap.add_argument("--uop-root", default="isa/v0.4/uop_classification_v0.4")
+    ap.add_argument(
+        "--profile",
+        choices=["v0.3", "v0.4"],
+        default="v0.4",
+        help="ISA profile for default --spec and --uop-root paths",
+    )
+    ap.add_argument("--spec", default=None, help="Path to ISA catalog JSON")
+    ap.add_argument("--uop-root", default=None, help="Path to uop classification directory")
     ap.add_argument(
         "--out-dir",
         default="docs/architecture/isa-manual/src/generated/instructions",
@@ -167,20 +192,42 @@ def main() -> int:
         default="../generated/encodings",
         help="Relative path from instructions/ to encodings/ for image:: includes",
     )
+    ap.add_argument("--check", action="store_true", help="Fail if outputs are not up-to-date")
     args = ap.parse_args()
 
-    spec = _read_json(Path(args.spec))
-    insts = list(spec.get("instructions", []))
-
-    uop_map = _load_uop_class_map(Path(args.uop_root))
-
+    profile = args.profile
+    spec_path = Path(args.spec or f"isa/{profile}/linxisa-{profile}.json")
+    uop_root = Path(args.uop_root or f"isa/{profile}/uop_classification_{profile}")
     out_dir = Path(args.out_dir)
-    _mkdirp(out_dir)
 
-    for inst in insts:
-        m = str(inst.get("mnemonic") or "").strip()
-        uop = uop_map.get(m)
-        _emit_fragment(inst, uop, out_dir, args.enc_rel_dir)
+    if args.check:
+        with tempfile.TemporaryDirectory() as td:
+            tmp_out = Path(td)
+            expected_names = _emit_all(spec_path, uop_root, tmp_out, args.enc_rel_dir)
+            want_names = sorted(p.name for p in out_dir.glob("*.adoc"))
+            if want_names != expected_names:
+                missing = sorted(set(expected_names) - set(want_names))
+                extra = sorted(set(want_names) - set(expected_names))
+                if missing:
+                    raise SystemExit(
+                        f"MISSING {len(missing)} instruction fragments under {out_dir} "
+                        f"(first: {missing[0]}; run gen_instruction_fragments.py)"
+                    )
+                raise SystemExit(
+                    f"EXTRA {len(extra)} instruction fragments under {out_dir} "
+                    f"(first: {extra[0]}; run gen_instruction_fragments.py)"
+                )
+            for name in expected_names:
+                want = (out_dir / name).read_text(encoding="utf-8")
+                got = (tmp_out / name).read_text(encoding="utf-8")
+                if want != got:
+                    raise SystemExit(
+                        f"OUTDATED {out_dir / name} (regenerate with gen_instruction_fragments.py)"
+                    )
+        print("OK")
+        return 0
+
+    _emit_all(spec_path, uop_root, out_dir, args.enc_rel_dir)
 
     return 0
 

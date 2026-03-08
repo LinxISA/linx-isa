@@ -13,7 +13,7 @@ Last updated: 2026-02-25
 - Bring-up closure is complete for core strict gates.
 - Remaining maturity gap is depth and breadth:
   - AVS breadth (current status file: `13/39` implemented).
-  - ISA-vs-QEMU implementation breadth (`311/710` mapped mnemonics; tracked in machine report).
+  - ISA-vs-QEMU implementation breadth (`524/710` mapped mnemonics; tracked in machine report).
   - SPEC hosted workload closure (`SPEC-*` checklist still open).
   - ABI/unwind/TLS runtime hardening gates (checklist exists; executable gating expansion still pending).
   - Privileged/MMU/debug completeness beyond current release-strict subset.
@@ -87,4 +87,3 @@ Status: Planned
 - No new waivers by default for required strict gates.
 - Dual-lane promotion remains required (`pin` + `external`).
 - Existing strict green gates remain mandatory while maturity gates are added incrementally.
-

@@ -5,7 +5,7 @@
 [[inst_v_sbi]]
 ==== V.SBI
 
-*Syntax:* v.sbi<.local> SrcL.<T>, [SrcR<.ud>, <lc0>, simm]
+*Syntax:* v.sbi<.local> SrcL, [SrcR, <lc0>, simm]
 
 *Description:* Vector instruction (VEC engine).
 

@@ -5,7 +5,7 @@
 [[inst_v_cmp_nei]]
 ==== V.CMP.NEI
 
-*Syntax:* v.cmp.nei SrcL.<T>, simm, ->Dst.<W>
+*Syntax:* v.cmp.nei SrcL, simm, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

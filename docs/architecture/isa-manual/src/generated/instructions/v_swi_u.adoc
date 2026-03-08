@@ -5,7 +5,7 @@
 [[inst_v_swi_u]]
 ==== V.SWI.U
 
-*Syntax:* v.swi.u<.local> SrcL.<T>, [SrcR<.ud>, <lc0<<2>, simm]
+*Syntax:* v.swi.u<.local> SrcL, [SrcR, <lc0<<2>, simm]
 
 *Description:* Vector instruction (VEC engine).
 

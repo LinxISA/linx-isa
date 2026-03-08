@@ -5,7 +5,7 @@
 [[inst_v_clz]]
 ==== V.CLZ
 
-*Syntax:* v.clz SrcL.<T>, M, N, ->Dst.<W>
+*Syntax:* v.clz SrcL, M, N, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

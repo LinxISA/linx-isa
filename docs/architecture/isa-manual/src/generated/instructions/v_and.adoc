@@ -5,7 +5,7 @@
 [[inst_v_and]]
 ==== V.AND
 
-*Syntax:* v.and SrcL.<T>, SrcR.<T><.not><<<shamt>, ->Dst.<W>
+*Syntax:* v.and SrcL, SrcR<.not><<<shamt>, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

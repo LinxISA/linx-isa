@@ -5,7 +5,7 @@
 [[inst_v_rdand]]
 ==== V.RDAND
 
-*Syntax:* v.rdand SrcL.<T>, ->Dst<.W>
+*Syntax:* v.rdand SrcL, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

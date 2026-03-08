@@ -5,7 +5,7 @@
 [[inst_v_psel]]
 ==== V.PSEL
 
-*Syntax:* v.psel  SrcP, SrcL.<T>, SrcR.<T><.neg>, ->Dst.<W>
+*Syntax:* v.psel  SrcP, SrcL, SrcR<.neg>, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

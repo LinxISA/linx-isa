@@ -5,7 +5,7 @@
 [[inst_v_rdor]]
 ==== V.RDOR
 
-*Syntax:* v.rdor SrcL.<T>,  ->Dst<.W>
+*Syntax:* v.rdor SrcL,  ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

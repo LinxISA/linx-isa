@@ -1,5 +1,7 @@
 # v0.4 draft: Rendering bring-up using Mesa softpipe/llvmpipe (scaffold)
 
+Canonical destination: `docs/bringup/rendering_vulkan_bringup.md`
+
 ## Intent
 Use Mesa’s **software rasterizers** as scaffolding to:
 - validate the Linx Linux+libc runtime can run real-world rendering stacks in the emulator
@@ -39,4 +41,3 @@ These software backends are **not** the end goal; they are the baseline/referenc
 - Upstream Mesa driver locations:
   - `src/gallium/drivers/softpipe/`
   - `src/gallium/drivers/llvmpipe/`
-

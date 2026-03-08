@@ -140,6 +140,22 @@ Mixed scalar/vector kernel-body execution rules (for `BSTART.MSEQ` / `BSTART.MPA
 * Archived raw operand names `TE..TH` and `TO1/TO2/TO3` are not assigned meaning in canonical v0.4 and remain
   reserved/unassigned.
 
+Canonical mixed-class examples:
+
+* Scalar-uniform control and address setup remain `l.*` when no per-lane operand is named.
+  Example:
+** `l.add ri0, t#1, ->u`
+** This executes once per group and produces one scalar/group-domain result.
+* Vector-lane execution is selected as soon as any operand names `vt`/`vu`/`vm`/`vn`.
+  Example:
+** `v.add vt#1, ri0, ->vt`
+** `ri0` broadcasts to each active lane while `vt#1` remains lane-local.
+* Direct `v.*` writes into scalar/group-domain destinations remain illegal unless the instruction is an explicitly
+  defined reduction or mask-producing form.
+  Example:
+** `v.add vt#1, ri0, ->t` is illegal in canonical v0.4.
+** `v.rdadd vt#1, ->t` is legal because `V.RD*` is an explicit reduction family.
+
 SIMT group model (v0.4 current profile):
 
 * The lane space is partitioned into **groups**.

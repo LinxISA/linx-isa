@@ -5,7 +5,7 @@
 [[inst_v_sh_brg]]
 ==== V.SH.BRG
 
-*Syntax:* v.sh.brg<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<1>, SrcR.<T2><<(1+shamt)]
+*Syntax:* v.sh.brg<.local> SrcD.<T1>, [SrcL, <lc0<<1>, SrcR.<T2><<(1+shamt)]
 
 *Description:* Vector instruction (VEC engine).
 

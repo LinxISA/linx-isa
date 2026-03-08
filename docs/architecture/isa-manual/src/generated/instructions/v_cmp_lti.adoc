@@ -5,7 +5,7 @@
 [[inst_v_cmp_lti]]
 ==== V.CMP.LTI
 
-*Syntax:* v.cmp.lti SrcL.<T>, simm, ->Dst.<W>
+*Syntax:* v.cmp.lti SrcL, simm, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

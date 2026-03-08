@@ -5,7 +5,7 @@
 [[inst_v_shi_brg]]
 ==== V.SHI.BRG
 
-*Syntax:* v.shi.brg<.local> SrcL.<T>, [SrcR<.ud>, <lc0<<1>, simm]
+*Syntax:* v.shi.brg<.local> SrcL, [SrcR, <lc0<<1>, simm]
 
 *Description:* Vector instruction (VEC engine).
 

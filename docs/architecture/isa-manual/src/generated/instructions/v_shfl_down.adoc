@@ -5,7 +5,7 @@
 [[inst_v_shfl_down]]
 ==== V.SHFL.DOWN
 
-*Syntax:* v.shfl.down SrcL.<T>, SrcR.<T>, SrcP.<T>, ->Dst.<W>
+*Syntax:* v.shfl.down SrcL, SrcR, SrcP, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

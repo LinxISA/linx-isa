@@ -5,7 +5,7 @@
 [[inst_v_ld_xor]]
 ==== V.LD.XOR
 
-*Syntax:* v.ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL<.ud>], SrcR.<T>, ->Dst.<W>
+*Syntax:* v.ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

@@ -5,7 +5,7 @@
 [[inst_v_ldi_u]]
 ==== V.LDI.U
 
-*Syntax:* v.ldi.u<.local> [SrcL<.ud>, <lc0<<3>, simm], ->Dst.<W>
+*Syntax:* v.ldi.u<.local> [SrcL, <lc0<<3>, simm], ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

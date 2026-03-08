@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import re
 import subprocess
@@ -76,8 +77,23 @@ def _parse_linx_insn_count(stdout: bytes, stderr: bytes) -> int | None:
     return int(m.group(1), 10)
 
 
+def _codelet_base_dir(ctuning_root: Path) -> Path | None:
+    candidates = [
+        ctuning_root / "program",
+        ctuning_root / "out",
+        ctuning_root,
+    ]
+    for candidate in candidates:
+        if candidate.exists() and any(candidate.glob("milepost-codelet-*")):
+            return candidate
+    return None
+
+
 def _collect_codelet_dirs(ctuning_root: Path) -> list[Path]:
-    dirs = sorted((ctuning_root / "program").glob("milepost-codelet-*"))
+    base_dir = _codelet_base_dir(ctuning_root)
+    if base_dir is None:
+        return []
+    dirs = sorted(base_dir.glob("milepost-codelet-*"))
     return [d for d in dirs if d.is_dir()]
 
 
@@ -175,7 +191,7 @@ def main(argv: list[str]) -> int:
             "Build and optionally run ctuning Milepost codelets with explicit cross-target settings."
         )
     )
-    parser.add_argument("--ctuning-root", default=str(Path.home() / "ctuning-programs"))
+    parser.add_argument("--ctuning-root", default=str(REPO_ROOT / "workloads" / "ctuning"))
     parser.add_argument("--out-dir", default=str(REPO_ROOT / "workloads" / "ctuning" / "out"))
     parser.add_argument("--target", required=True)
     parser.add_argument("--clang", default=None)
@@ -207,10 +223,15 @@ def main(argv: list[str]) -> int:
         default=None,
         help="Directory to write per-codelet dynamic hist JSON (requires --insn-hist-plugin).",
     )
+    parser.add_argument(
+        "--summary-json",
+        default=None,
+        help="Write a machine-readable execution summary (default: <out-dir>/result.json).",
+    )
     args = parser.parse_args(argv)
 
     ctuning_root = Path(os.path.expanduser(args.ctuning_root))
-    if not (ctuning_root / "program").exists():
+    if _codelet_base_dir(ctuning_root) is None:
         raise SystemExit(f"error: ctuning root does not look valid: {ctuning_root}")
 
     clang = Path(os.path.expanduser(args.clang)) if args.clang else (_default_clang() or None)
@@ -272,11 +293,13 @@ def main(argv: list[str]) -> int:
 
     passed = 0
     failed = 0
+    summary_rows: list[dict[str, object]] = []
 
     for d in codelet_dirs:
         codelets, wrappers = _find_sources(d)
         if not wrappers or not codelets:
             print(f"[skip] {d.name} (missing wrapper/codelet sources)", file=sys.stderr)
+            summary_rows.append({"codelet": d.name, "status": "skipped_missing_sources"})
             continue
 
         out_dir = out_root / d.name
@@ -325,6 +348,7 @@ def main(argv: list[str]) -> int:
             sys.stderr.buffer.write(p.stderr)
             print(f"[fail] {d.name} (link)", file=sys.stderr)
             failed += 1
+            summary_rows.append({"codelet": d.name, "status": "link_failed", "return_code": p.returncode})
             continue
 
         print(f"[ok] build {d.name}")
@@ -345,6 +369,7 @@ def main(argv: list[str]) -> int:
 
         if not do_run:
             passed += 1
+            summary_rows.append({"codelet": d.name, "status": "built", "object": str(out_obj)})
             continue
 
         assert qemu is not None
@@ -380,6 +405,7 @@ def main(argv: list[str]) -> int:
                 sys.stderr.buffer.write(e.stderr[-4000:])
                 sys.stderr.write("\n")
             failed += 1
+            summary_rows.append({"codelet": d.name, "status": "timeout", "timeout_s": args.timeout})
             continue
 
         if p.returncode != 0:
@@ -393,6 +419,7 @@ def main(argv: list[str]) -> int:
                 sys.stderr.buffer.write(p.stderr[-4000:])
                 sys.stderr.write("\n")
             failed += 1
+            summary_rows.append({"codelet": d.name, "status": "run_failed", "return_code": p.returncode})
             continue
 
         insn_count = _parse_linx_insn_count(p.stdout or b"", p.stderr or b"")
@@ -406,11 +433,37 @@ def main(argv: list[str]) -> int:
             counts_fp.write(f"{d.name},{insn_count if insn_count is not None else ''}\n")
 
         passed += 1
+        summary_rows.append(
+            {
+                "codelet": d.name,
+                "status": "passed",
+                "object": str(out_obj),
+                "insn_count": insn_count,
+            }
+        )
 
     print(f"summary: passed={passed} failed={failed}")
     if counts_fp:
         counts_fp.close()
         print(f"wrote: {counts_path}")
+    summary_path = Path(os.path.expanduser(args.summary_json)) if args.summary_json else (out_root / "result.json")
+    summary_payload = {
+        "generated_at_utc": __import__("datetime").datetime.now(__import__("datetime").timezone.utc)
+        .replace(microsecond=0)
+        .isoformat()
+        .replace("+00:00", "Z"),
+        "ctuning_root": str(ctuning_root),
+        "target": args.target,
+        "compile_only": args.compile_only,
+        "run": args.run,
+        "selected_codelets": len(codelet_dirs),
+        "passed": passed,
+        "failed": failed,
+        "results": summary_rows,
+        "all_pass": failed == 0,
+    }
+    summary_path.write_text(json.dumps(summary_payload, indent=2) + "\n", encoding="utf-8")
+    print(f"wrote: {summary_path}")
     return 0 if failed == 0 else 1
 
 

@@ -1,18 +1,216 @@
 {
-  "generated_at_utc": "2026-02-17 23:40:00Z",
+  "coverage_profile_summaries": {
+    "LNX-ATOM": {
+      "implemented": 1,
+      "pass": 1,
+      "tests": 6
+    },
+    "LNX-FP": {
+      "implemented": 1,
+      "pass": 1,
+      "tests": 3
+    },
+    "LNX-LIBC": {
+      "implemented": 7,
+      "pass": 7,
+      "tests": 8
+    },
+    "LNX-LINUX": {
+      "implemented": 3,
+      "pass": 3,
+      "tests": 4
+    },
+    "LNX-PRIV": {
+      "implemented": 4,
+      "pass": 4,
+      "tests": 4
+    },
+    "LNX-S32": {
+      "implemented": 6,
+      "pass": 6,
+      "tests": 20
+    },
+    "LNX-S64": {
+      "implemented": 11,
+      "pass": 11,
+      "tests": 26
+    },
+    "LNX-SPEC": {
+      "implemented": 0,
+      "pass": 0,
+      "tests": 2
+    },
+    "LNX-TILE": {
+      "implemented": 1,
+      "pass": 1,
+      "tests": 2
+    },
+    "LNX-VPAR": {
+      "implemented": 1,
+      "pass": 1,
+      "tests": 6
+    },
+    "LNX-VSEQ": {
+      "implemented": 1,
+      "pass": 1,
+      "tests": 6
+    },
+    "LNX-WORKLOAD": {
+      "implemented": 0,
+      "pass": 0,
+      "tests": 8
+    }
+  },
+  "evidence_catalog": {
+    "ev-0001": {
+      "exists": true,
+      "kind": "path",
+      "path": "avs/compiler/linx-llvm/tests/analyze_coverage.py",
+      "source": "avs/compiler/linx-llvm/tests/analyze_coverage.py --fail-under 100"
+    },
+    "ev-0002": {
+      "kind": "note",
+      "source": "99_spec_decode generated vector coverage remains 100%"
+    },
+    "ev-0003": {
+      "kind": "note",
+      "source": "call/ret adjacency and relocation/template checks pass in compiler and qemu gates"
+    },
+    "ev-0004": {
+      "exists": true,
+      "kind": "path",
+      "path": "avs/qemu/check_system_strict.sh",
+      "source": "avs/qemu/check_system_strict.sh PASS"
+    },
+    "ev-0005": {
+      "exists": true,
+      "kind": "path",
+      "path": "avs/qemu/check_system_strict.sh",
+      "source": "avs/qemu/check_system_strict.sh PASS"
+    },
+    "ev-0006": {
+      "exists": true,
+      "kind": "path",
+      "path": "avs/qemu/run_tests.py",
+      "source": "avs/qemu/run_tests.py --suite callret PASS"
+    },
+    "ev-0007": {
+      "exists": true,
+      "kind": "path",
+      "path": "avs/qemu/tests/09_varargs.c",
+      "source": "avs/qemu/tests/09_varargs.c in AVS runtime suites"
+    },
+    "ev-0008": {
+      "exists": true,
+      "kind": "path",
+      "path": "avs/compiler/linx-llvm/tests/run_cpp.sh",
+      "source": "avs/compiler/linx-llvm/tests/run_cpp.sh"
+    },
+    "ev-0009": {
+      "exists": true,
+      "kind": "path",
+      "path": "tools/regression/run.sh",
+      "source": "tools/regression/run.sh with RUN_CPP_GATES=1"
+    },
+    "ev-0010": {
+      "exists": true,
+      "kind": "path",
+      "path": "tools/build_linx_llvm_cpp_runtimes.sh",
+      "source": "tools/build_linx_llvm_cpp_runtimes.sh --mode phase-b"
+    },
+    "ev-0011": {
+      "kind": "note",
+      "source": "out/cpp-runtime/musl-cxx17-noeh/summary_phase-b.json"
+    },
+    "ev-0012": {
+      "exists": true,
+      "kind": "path",
+      "path": "avs/qemu/run_musl_smoke.py",
+      "source": "avs/qemu/run_musl_smoke.py --mode phase-b --sample cpp17_smoke --link both"
+    },
+    "ev-0013": {
+      "kind": "note",
+      "source": "avs/qemu/out/musl-smoke-cpp/summary_static.json"
+    },
+    "ev-0014": {
+      "kind": "note",
+      "source": "avs/qemu/out/musl-smoke-cpp/summary_shared.json"
+    },
+    "ev-0015": {
+      "exists": true,
+      "kind": "path",
+      "path": "avs/qemu/run_callret_contract.py",
+      "source": "avs/qemu/run_callret_contract.py negative matrix PASS"
+    },
+    "ev-0016": {
+      "exists": true,
+      "kind": "path",
+      "path": "tools/bringup/run_model_diff_suite.py",
+      "source": "tools/bringup/run_model_diff_suite.py --suite avs/model/linx_model_diff_suite.yaml"
+    },
+    "ev-0017": {
+      "exists": true,
+      "kind": "path",
+      "path": "tools/bringup/check_trace_semver_compat.py",
+      "source": "tools/bringup/check_trace_semver_compat.py --root . --strict"
+    },
+    "ev-0018": {
+      "exists": true,
+      "kind": "path",
+      "path": "kernel/linux/tools/linxisa/initramfs/smoke.py",
+      "source": "kernel/linux/tools/linxisa/initramfs/smoke.py"
+    },
+    "ev-0019": {
+      "exists": true,
+      "kind": "path",
+      "path": "kernel/linux/tools/linxisa/initramfs/full_boot.py",
+      "source": "kernel/linux/tools/linxisa/initramfs/full_boot.py"
+    },
+    "ev-0020": {
+      "exists": true,
+      "kind": "path",
+      "path": "kernel/linux/tools/linxisa/busybox_rootfs/boot.py",
+      "source": "kernel/linux/tools/linxisa/busybox_rootfs/boot.py"
+    },
+    "ev-0021": {
+      "exists": true,
+      "kind": "path",
+      "path": "avs/qemu/out/musl-smoke/summary_static.json",
+      "source": "avs/qemu/out/musl-smoke/summary_static.json"
+    },
+    "ev-0022": {
+      "exists": true,
+      "kind": "path",
+      "path": "avs/qemu/out/musl-smoke/summary_shared.json",
+      "source": "avs/qemu/out/musl-smoke/summary_shared.json"
+    },
+    "ev-0023": {
+      "exists": true,
+      "kind": "path",
+      "path": "out/libc/glibc/logs/summary.txt",
+      "source": "out/libc/glibc/logs/summary.txt"
+    },
+    "ev-0024": {
+      "exists": true,
+      "kind": "path",
+      "path": "out/libc/glibc/logs/g1b-summary.txt",
+      "source": "out/libc/glibc/logs/g1b-summary.txt"
+    }
+  },
+  "generated_at_utc": "2026-03-07 13:35:27Z",
   "matrix_file": "avs/linx_avs_v1_test_matrix.yaml",
-  "schema_version": "linx-avs-v1-status-v1",
+  "schema_version": "linx-avs-v0.4-status-v3",
   "statuses": {
     "AVS-ABI-001": {
       "evidence": [
-        "avs/qemu/run_tests.py --suite callret PASS"
+        "ev-0006"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-ABI-002": {
       "evidence": [
-        "avs/qemu/tests/09_varargs.c in AVS runtime suites"
+        "ev-0007"
       ],
       "implemented": true,
       "validated": "pass"
@@ -69,7 +267,7 @@
     },
     "AVS-BLK-004": {
       "evidence": [
-        "call/ret adjacency and relocation/template checks pass in compiler+qemu gates"
+        "ev-0003"
       ],
       "implemented": true,
       "validated": "pass"
@@ -91,32 +289,30 @@
     },
     "AVS-CPP-001": {
       "evidence": [
-        "avs/compiler/linx-llvm/tests/run_cpp.sh (C++17 no-EH/no-RTTI compile lane)",
-        "tools/regression/run.sh with RUN_CPP_GATES=1"
+        "ev-0008",
+        "ev-0009"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-CPP-002": {
-      "evidence": [
-        "compiler/llvm/clang/test/Driver/linx-toolchain.c"
-      ],
+      "evidence": [],
       "implemented": false,
       "validated": "not_run"
     },
     "AVS-CPP-003": {
       "evidence": [
-        "tools/build_linx_llvm_cpp_runtimes.sh --mode phase-b",
-        "out/cpp-runtime/musl-cxx17-noeh/summary_phase-b.json"
+        "ev-0010",
+        "ev-0011"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-CPP-010": {
       "evidence": [
-        "avs/qemu/run_musl_smoke.py --mode phase-b --sample cpp17_smoke --link both --out-dir avs/qemu/out/musl-smoke-cpp",
-        "avs/qemu/out/musl-smoke-cpp/summary_static.json",
-        "avs/qemu/out/musl-smoke-cpp/summary_shared.json"
+        "ev-0012",
+        "ev-0013",
+        "ev-0014"
       ],
       "implemented": true,
       "validated": "pass"
@@ -133,7 +329,7 @@
     },
     "AVS-EMU-001": {
       "evidence": [
-        "avs/qemu/run_callret_contract.py 11-case negative matrix PASS"
+        "ev-0015"
       ],
       "implemented": true,
       "validated": "pass"
@@ -149,6 +345,60 @@
       "validated": "not_run"
     },
     "AVS-FP-002": {
+      "evidence": [],
+      "implemented": false,
+      "validated": "not_run"
+    },
+    "AVS-LIBC-001": {
+      "evidence": [
+        "ev-0021"
+      ],
+      "implemented": true,
+      "validated": "pass"
+    },
+    "AVS-LIBC-002": {
+      "evidence": [
+        "ev-0022"
+      ],
+      "implemented": true,
+      "validated": "pass"
+    },
+    "AVS-LIBC-003": {
+      "evidence": [
+        "ev-0023"
+      ],
+      "implemented": true,
+      "validated": "pass"
+    },
+    "AVS-LIBC-004": {
+      "evidence": [
+        "ev-0024"
+      ],
+      "implemented": true,
+      "validated": "pass"
+    },
+    "AVS-LINUX-001": {
+      "evidence": [
+        "ev-0018"
+      ],
+      "implemented": true,
+      "validated": "pass"
+    },
+    "AVS-LINUX-002": {
+      "evidence": [
+        "ev-0019"
+      ],
+      "implemented": true,
+      "validated": "pass"
+    },
+    "AVS-LINUX-003": {
+      "evidence": [
+        "ev-0020"
+      ],
+      "implemented": true,
+      "validated": "pass"
+    },
+    "AVS-LINUX-010": {
       "evidence": [],
       "implemented": false,
       "validated": "not_run"
@@ -170,38 +420,40 @@
     },
     "AVS-MODEL-001": {
       "evidence": [
-        "tools/bringup/run_model_diff_suite.py --suite avs/model/linx_model_diff_suite.yaml --profile dev --report-out docs/bringup/gates/model_diff_dev.json",
-        "docs/bringup/gates/model_diff_dev.json"
+        "ev-0016"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-MODEL-002": {
       "evidence": [
-        "tools/bringup/validate_trace_schema.py validates qemu/model traces inside run_model_diff_suite.py",
-        "docs/bringup/gates/model_diff_work/00_MODEL-SCALAR-COMMIT-SMOKE_seed1001/qemu.jsonl",
-        "docs/bringup/gates/model_diff_work/00_MODEL-SCALAR-COMMIT-SMOKE_seed1001/pyc.jsonl"
+        "ev-0017"
       ],
       "implemented": true,
       "validated": "pass"
     },
+    "AVS-SPEC-001": {
+      "evidence": [],
+      "implemented": false,
+      "validated": "not_run"
+    },
     "AVS-SYS-001": {
       "evidence": [
-        "avs/qemu/check_system_strict.sh PASS (all system IDs 0x1100..0x110E)"
+        "ev-0004"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-SYS-002": {
       "evidence": [
-        "avs/qemu/check_system_strict.sh PASS; TESTID_ACRE_BAD_TARGET (0x110C) PASS"
+        "ev-0005"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-TOOL-001": {
       "evidence": [
-        "avs/compiler/linx-llvm/tests/analyze_coverage.py --fail-under 100 (704/704)"
+        "ev-0001"
       ],
       "implemented": true,
       "validated": "pass"
@@ -213,7 +465,7 @@
     },
     "AVS-TOOL-011": {
       "evidence": [
-        "avs/compiler/linx-llvm/tests/analyze_coverage.py --fail-under 100 (decode vectors covered)"
+        "ev-0002"
       ],
       "implemented": true,
       "validated": "pass"
@@ -232,6 +484,48 @@
       "evidence": [],
       "implemented": false,
       "validated": "not_run"
+    },
+    "AVS-WORK-001": {
+      "evidence": [],
+      "implemented": false,
+      "validated": "not_run"
+    },
+    "AVS-WORK-002": {
+      "evidence": [],
+      "implemented": false,
+      "validated": "not_run"
+    },
+    "AVS-WORK-003": {
+      "evidence": [],
+      "implemented": false,
+      "validated": "not_run"
+    },
+    "AVS-WORK-004": {
+      "evidence": [],
+      "implemented": false,
+      "validated": "not_run"
+    },
+    "AVS-WORK-005": {
+      "evidence": [],
+      "implemented": false,
+      "validated": "not_run"
+    },
+    "AVS-WORK-006": {
+      "evidence": [],
+      "implemented": false,
+      "validated": "not_run"
+    }
+  },
+  "tier_summaries": {
+    "nightly": {
+      "implemented": 20,
+      "pass": 20,
+      "tests": 54
+    },
+    "pr": {
+      "implemented": 20,
+      "pass": 20,
+      "tests": 54
     }
   }
 }

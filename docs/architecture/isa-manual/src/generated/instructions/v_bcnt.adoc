@@ -5,7 +5,7 @@
 [[inst_v_bcnt]]
 ==== V.BCNT
 
-*Syntax:* v.bcnt SrcL.<T>, M, N, ->Dst.<W>
+*Syntax:* v.bcnt SrcL, M, N, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

@@ -5,7 +5,7 @@
 [[inst_v_lwui_brg]]
 ==== V.LWUI.BRG
 
-*Syntax:* v.lwui.brg<.local> [SrcL<.ud>, <lc0<<2>, simm], ->Dst.<W>
+*Syntax:* v.lwui.brg<.local> [SrcL, <lc0<<2>, simm], ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

@@ -5,7 +5,7 @@
 [[inst_v_sub]]
 ==== V.SUB
 
-*Syntax:* v.sub SrcL.<T>, SrcR.<T><.neg><<<shamt>, ->Dst.<W>
+*Syntax:* v.sub SrcL, SrcR<.neg><<<shamt>, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

@@ -31,6 +31,7 @@ Generate manual fragments:
 
 ```bash
 python3 tools/isa/gen_manual_adoc.py --profile v0.4 --out-dir docs/architecture/isa-manual/src/generated
+python3 tools/isa/gen_instruction_fragments.py --profile v0.4 --out-dir docs/architecture/isa-manual/src/generated/instructions
 python3 tools/isa/gen_ssr_adoc.py --profile v0.4 --out-dir docs/architecture/isa-manual/src/generated
 ```
 

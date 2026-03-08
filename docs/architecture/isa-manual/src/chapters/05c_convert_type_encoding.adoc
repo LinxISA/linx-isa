@@ -1,4 +1,4 @@
-// v0.4-draft notes promoted into isa-manual (spec-quality).
+// Pre-canonical notes promoted into the live isa-manual.
 
 [[sec-convert-type-encoding]]
 == Convert instruction type fields (SrcType/DstType)
@@ -21,6 +21,13 @@ Illegal encodings::
 Software must not generate illegal encodings.
 
 NOTE: Convert instructions are defined as *value conversions* (numeric conversions), not bit reinterpretations.
+
+NOTE: For the current `v0.4` bring-up profile, these explicit `SrcType` / `DstType`
+fields are the only canonical encoded vector type selectors. Non-convert `v.*`
+forms do not obtain type information from `RegId10`; instead they use
+mnemonic-defined default decoded type shadows over the 32-bit vector carrier
+file (`u32` or `s32` for non-convert integer families, and the agreed default
+carrier-domain FP rule for non-convert `V.F*` families).
 
 === Floating-point type encoding (Type[4:0])
 

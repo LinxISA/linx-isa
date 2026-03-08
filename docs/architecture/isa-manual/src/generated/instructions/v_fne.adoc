@@ -5,7 +5,7 @@
 [[inst_v_fne]]
 ==== V.FNE
 
-*Syntax:* v.fne SrcL.<T>, SrcR.<T>, ->Dst.<W>
+*Syntax:* v.fne SrcL, SrcR, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

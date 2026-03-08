@@ -1,11 +1,11 @@
-# LinxISA Sail Model (Skeleton)
+# LinxISA Sail Model (v0.4)
 
-This directory is the starting point for a **Sail** formal/executable ISA model for LinxISA.
+This directory contains the active **Sail** formal and executable model for canonical LinxISA `v0.4`.
 
 Scope policy:
 
-- The Sail model is a reference direction for semantics.
-- Missing semantics MUST be explicit (no guessed behavior). Use `unimplemented("MNEMONIC")`-style traps.
+- The Sail model is an executable reference for `v0.4` semantics and legality checks.
+- Semantic readiness is tracked only in `isa/sail/semantics_status.json`.
 - Coverage is tracked as data in `isa/sail/coverage.json`.
 
 ## Coverage report
@@ -13,18 +13,20 @@ Scope policy:
 `isa/sail/coverage.json` is generated from:
 
 - the compiled ISA catalog: `isa/v0.4/linxisa-v0.4.json`
-- the list of implemented instruction mnemonics: `isa/sail/implemented_mnemonics.txt`
+- the semantic status map: `isa/sail/semantics_status.json`
 
 Regenerate:
 
 ```bash
-python3 tools/isa/sail_coverage.py --spec isa/v0.4/linxisa-v0.4.json --implemented isa/sail/implemented_mnemonics.txt --out isa/sail/coverage.json
+python3 tools/bringup/check_sail_model.py --require-parser
 ```
 
 ## Layout
 
-- `isa/sail/model/linxisa.sail_project`: Sail project entry (placeholder)
-- `isa/sail/model/lib/`: shared helpers (placeholder)
-- `isa/sail/model/state/`: architectural state definitions (placeholder)
-- `isa/sail/model/decode/`: decode model stubs (placeholder)
-- `isa/sail/model/execute/`: per-unit execute semantics (placeholder)
+- `isa/sail/model/linxisa.sail`: top-level canonical Sail entry
+- `isa/sail/model/linxisa.sail_project`: project wrapper pointing at the canonical entry
+- `isa/sail/model/lib/`: shared helpers
+- `isa/sail/model/state/`: architectural state definitions
+- `isa/sail/model/decode/`: decode model
+- `isa/sail/model/execute/`: per-unit execute semantics
+- `isa/sail/semantics_status.json`: machine-readable semantic readiness status

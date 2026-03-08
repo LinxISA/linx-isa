@@ -5,7 +5,7 @@
 [[inst_v_andi]]
 ==== V.ANDI
 
-*Syntax:* v.andi SrcL.<T>, simm, ->Dst.<W>
+*Syntax:* v.andi SrcL, simm, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

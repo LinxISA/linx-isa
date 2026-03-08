@@ -5,7 +5,7 @@
 [[inst_v_fabs]]
 ==== V.FABS
 
-*Syntax:* v.fabs SrcL.<T>, ->Dst.<W>
+*Syntax:* v.fabs SrcL, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

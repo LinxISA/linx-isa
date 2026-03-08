@@ -97,3 +97,57 @@ Scope: `isa.txt.txt`, `/Users/zhoubot/linxisa-v0.3.txt`, and `docs/bringup/check
    Gate update:
    - `python3 tools/bringup/check_tepl_encoding.py --root .` now reads the workspace copy of PTO headers first, so the
      superproject gate validates the actual checked-out migration state instead of stale submodule `HEAD`.
+
+9. Sail semantic closure is materially stronger, and the canonical decode layer is now live.
+   Current state:
+   - `isa/sail/model/state/state.sail` now has concrete BARG/commit state, decoder shadow registers, manager-ACR SSR
+     shadows for `ECSTATE`/`ECONFIG`/`EBARG_*`, and executable `ACRC`/`ACRE`/`ESAVE`/`ERCOV` plumbing.
+   - The vector register file is now decoded as the live RegId10 class/index space (`base scalar` / `ri*` / `lc*` /
+     `vt*` / `vu*` / `vm*` / `vn*` / tile-base) with 32-bit lane carriers, and decode now latches per-operand type
+     shadows from explicit instruction type fields when present and current carrier-domain defaults otherwise.
+   - `isa/sail/model/execute/execute.sail` now implements the remaining vector reduction and vector FP batches
+     (`V.FADD`/`V.FSUB`/`V.FMUL`/`V.FDIV`/`V.FSQRT`/`V.FRECIP`/`V.FEXP`/`V.FABS`/`V.FCLASS`/`V.FCVT`/`V.FCVTI`/
+     `V.FMADD`/`V.FMSUB`/`V.FNMADD`/`V.FNMSUB`) instead of deterministic zero shims.
+   - `isa/sail/model/decode/decode.sail` is now generated from the compiled `isa/v0.4/linxisa-v0.4.json` catalog and
+     provides real bit-level decode/dispatch for all `710` legal canonical mnemonics; `check_sail_model.py` now also
+     enforces generator freshness via `tools/isa/gen_sail_decode.py --check`.
+   - `tools/bringup/check_sail_model.py --require-parser` now fails on active `linx_unimplemented(...)` / `vfp_unimpl`
+     / `vrd_unimpl` placeholders in the live Sail model files.
+   Remaining gaps:
+   - The following execute functions remain architecturally modeled as intentional no-ops in the current Sail lane,
+     per the canonical `v0.4` decision:
+     `DC.IALL`, `IC.IALL`, `BC.IALL`, `BWT`, `BWI`, `BWE`, `BSE`, `B.HINT`, `B.IOD`.
+   - Resolved: the live `v0.4` opcode/manual surface no longer advertises synthetic `.<T>` / `.<W>` selectors on
+     non-convert `v.*` forms, and the generated per-instruction manual fragments are now checked as part of the
+     canonical `v0.4` gate.
+   - Resolved: non-convert integer `V.*` arithmetic, compare, shift, reduction, and 32-bit atomic-RMW paths now
+     consume mnemonic-defined decoded `u32` / `s32` type shadows and execute as numeric cast/cvt over the 32-bit
+     vector carrier file instead of operating as untyped raw carriers.
+
+10. QEMU `v0.4` decode closure has advanced, but full emulator closure is still open.
+   Current state:
+   - `target/linx/insn16.decode`, `insn32.decode`, `insn48.decode`, and `translate.c` now include the promoted
+     canonical `v0.4` block-header/system tranche added during this bring-up step:
+     compact `C.BSTART.{FP,MPAR,MSEQ,SYS,VPAR,VSEQ}`, canonical `BSTART.{FP,SYS,FIXP,TEPL}`,
+     compare-and-branch `B.{EQ,NE,LT,GE,LTU,GEU}`, and the selected maintenance/TLB/hint forms.
+   - `tools/bringup/report_qemu_isa_coverage.py` now measures coverage from QEMU decodetree sources first, not only
+     from `linx_opcode_meta_gen.h`, and it credits canonical alias families where one QEMU decode surface implements
+     multiple public spec mnemonics (for example `BSTART` vs `BSTART.STD`, `BSTART.TEPL` vs the archived PAR aliases,
+     and several `HL.{LD/LW/SD/SW}` alias pairs).
+   - `rtl/LinxCore/src/common/opcode_catalog.yaml`,
+     `rtl/LinxCore/src/common/opcode_{ids,meta}_gen.py`,
+     `emulator/qemu/target/linx/linx_opcode_{ids,meta}_gen.h`
+     are resynchronized with the current QEMU decode files; `check_decode_parity.py` and
+     `check_qemu_opcode_meta_sync.py --strict` now pass again.
+   Coverage status:
+   - `tools/bringup/report_qemu_isa_coverage.py` now reports `378/710` legal `v0.4` mnemonics covered from the live
+     QEMU decode surface (up from the earlier `315/710` pre-cutover baseline).
+   Remaining gaps:
+   - The dominant uncovered families are still real implementation gaps, not reporting drift:
+     `V.*` (`152`), `HL.*` (`106`), `SD.*` atomics (`8`), `SW.*` atomics (`8`), `LD.*` atomics (`7`),
+     `LW.*` atomics (`7`), compact/system leftovers (`C.*`, `LR.*`, `SC.*`), and a few scalar FP rounding ops.
+   Environment note:
+   - The decodetree generation layer is now clean, but the local QEMU object compile is currently blocked by the
+     workspace toolchain environment (`glib.h` missing from the configured Homebrew include path) rather than by an
+     additional Linx decode/translator error. The next semantic bring-up step should therefore focus on the remaining
+     uncovered instruction families, not on the already-fixed block-header decode conflicts.

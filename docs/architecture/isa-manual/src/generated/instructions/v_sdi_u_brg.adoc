@@ -5,7 +5,7 @@
 [[inst_v_sdi_u_brg]]
 ==== V.SDI.U.BRG
 
-*Syntax:* v.sdi.u.brg<.local> SrcL.<T>, [SrcR<.ud>, <lc0<<3>, simm]
+*Syntax:* v.sdi.u.brg<.local> SrcL, [SrcR, <lc0<<3>, simm]
 
 *Description:* Vector instruction (VEC engine).
 

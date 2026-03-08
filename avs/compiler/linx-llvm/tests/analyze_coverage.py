@@ -174,6 +174,10 @@ def analyze_coverage(
         if a in spec_mnems and b in spec_mnems and (a in covered_spec or b in covered_spec):
             covered_spec.add(a)
             covered_spec.add(b)
+    for a, b in (("BSTART.MPAR", "C.BSTART.MPAR"), ("BSTART.MSEQ", "C.BSTART.MSEQ")):
+        if a in spec_mnems and b in spec_mnems and (a in covered_spec or b in covered_spec):
+            covered_spec.add(a)
+            covered_spec.add(b)
     if any(
         m in covered_spec
         for m in ("BSTART.TMA", "BSTART.CUBE", "BSTART.VPAR", "BSTART.VSEQ", "BSTART.MPAR", "BSTART.MSEQ")

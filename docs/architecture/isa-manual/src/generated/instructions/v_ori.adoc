@@ -5,7 +5,7 @@
 [[inst_v_ori]]
 ==== V.ORI
 
-*Syntax:* v.ori SrcL.<T>, simm, ->Dst.<W>
+*Syntax:* v.ori SrcL, simm, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

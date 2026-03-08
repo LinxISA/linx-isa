@@ -5,7 +5,7 @@
 [[inst_v_sd]]
 ==== V.SD
 
-*Syntax:* v.sd<.local> SrcD.<T1>, [SrcL<.ud>, <lc0<<3>, SrcR.<T2><<(3+shamt)]
+*Syntax:* v.sd<.local> SrcD.<T1>, [SrcL, <lc0<<3>, SrcR.<T2><<(3+shamt)]
 
 *Description:* Vector instruction (VEC engine).
 

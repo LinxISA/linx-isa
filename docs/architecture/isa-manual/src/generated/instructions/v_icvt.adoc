@@ -5,7 +5,7 @@
 [[inst_v_icvt]]
 ==== V.ICVT
 
-*Syntax:* v.icvt.{st2dt} SrcL.<T>, ->Dst.<W>
+*Syntax:* v.icvt.{st2dt} SrcL, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

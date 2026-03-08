@@ -5,7 +5,7 @@
 [[inst_v_frecip]]
 ==== V.FRECIP
 
-*Syntax:* v.frecip SrcL.<T>, ->Dst.<W>
+*Syntax:* v.frecip SrcL, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

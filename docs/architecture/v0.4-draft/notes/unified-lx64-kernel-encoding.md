@@ -1,5 +1,7 @@
 # v0.4 draft note: Unified lx64 kernel encoding (scalar lane + vector lane)
 
+Canonical destinations: `isa/v0.4/state/kernel_execution.json`, `docs/architecture/isa-manual/src/chapters/03_programming_model.adoc`, `docs/architecture/isa-manual/src/chapters/05b_regid10_operand_encoding.adoc`, `docs/architecture/isa-manual/src/chapters/06_assembly_conventions.adoc`, `docs/architecture/isa-manual/src/chapters/09_memory_operations.adoc`
+
 ## Context
 
 The strict v0.3 manual currently documents a split between "scalar" instruction families (often 16/32-bit) and "vector" instruction families (`V.*`, 64-bit prefix+main), with additional operand restrictions in vector bodies.
@@ -36,4 +38,3 @@ Given the any-operand rule:
 1) `v.*` writing scalar/group-domain destinations is **not allowed**; any cross-lane aggregation must use an explicit reduction primitive (`V.RD*`) or other explicitly defined cross-lane op.
 2) The register-id ranges / numeric encodings for special domains (`ri*`, `p`, `TA/TB/TO/TS`, `vt/vu/vm/vn`).
 3) For `.brg` loads/stores: whether the address formation differs between `v.*.brg` and `l.*.brg` (implicit `lc0` or not), or whether both share the same rules.
-

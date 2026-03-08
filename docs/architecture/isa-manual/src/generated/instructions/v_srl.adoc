@@ -5,7 +5,7 @@
 [[inst_v_srl]]
 ==== V.SRL
 
-*Syntax:* v.srl SrcL.<T>, SrcR.<T>, ->Dst.<W>
+*Syntax:* v.srl SrcL, SrcR, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

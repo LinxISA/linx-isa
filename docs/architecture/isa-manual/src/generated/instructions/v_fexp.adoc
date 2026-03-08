@@ -5,7 +5,7 @@
 [[inst_v_fexp]]
 ==== V.FEXP
 
-*Syntax:* v.fexp SrcL.<T>, ->Dst.<W>
+*Syntax:* v.fexp SrcL, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

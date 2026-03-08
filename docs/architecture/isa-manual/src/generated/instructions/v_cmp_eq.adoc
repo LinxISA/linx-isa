@@ -5,7 +5,7 @@
 [[inst_v_cmp_eq]]
 ==== V.CMP.EQ
 
-*Syntax:* v.cmp.eq SrcL.<T>, SrcR.<T>, ->Dst.<W>
+*Syntax:* v.cmp.eq SrcL, SrcR, ->Dst
 
 *Description:* Vector instruction (VEC engine).
 

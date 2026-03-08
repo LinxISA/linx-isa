@@ -1,6 +1,6 @@
 # LinxISA Bring-up (Public v0.4)
 
-This directory tracks v0.4 architecture/implementation alignment and public bring-up checkpoints.
+This directory tracks `v0.4` architecture and implementation alignment, with AVS as the only live public bring-up contract.
 
 ## Start Here
 
@@ -9,12 +9,15 @@ This directory tracks v0.4 architecture/implementation alignment and public brin
 ## Normative Contract
 
 - Architecture contract: `docs/architecture/v0.4-architecture-contract.md`
-- check26 contract file: `docs/bringup/check26_contract.yaml`
-- contract gate: `python3 tools/bringup/check26_contract.py --root .`
+- AVS contract page: `docs/bringup/AVS_CONTRACT.md`
+- canonical AVS matrix: `avs/linx_avs_v1_test_matrix.yaml`
+- contract gate: `python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml`
+- closure gate: `python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier ${LINX_GATE_TIER:-pr}`
 
 ## Key References
 
-- `docs/bringup/CHECK26_CONTRACT.md`
+- `docs/bringup/AVS_CONTRACT.md`
+- `docs/bringup/rendering_vulkan_bringup.md`
 - `docs/bringup/CPP_BRINGUP_CONTRACT.md`
 - `docs/bringup/PROGRESS.md`
 - `docs/bringup/gates/latest.json` (canonical machine-readable gate report)
@@ -30,7 +33,7 @@ This directory tracks v0.4 architecture/implementation alignment and public brin
 
 ## Path Variables in Gate Reports (portable)
 
-Checked-in gate reports under `docs/bringup/gates/` use `${...}` placeholders
+Checked-in gate reports under `docs/bringup/gates/` use `${...}` variables
 instead of machine-specific absolute paths.
 
 Recommended defaults for an in-tree (pinned) checkout:
@@ -61,10 +64,12 @@ Multi-agent strict runtime closure gate (per lane/run):
 
 Release-strict bring-up consistency checks:
 
-- `python3 tools/bringup/check_check26_coverage.py --matrix avs/linx_avs_v1_test_matrix.yaml --contract docs/bringup/check26_contract.yaml --status avs/linx_avs_v1_test_matrix_status.json --profile release-strict`
+- `python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml`
 - `python3 tools/bringup/run_model_diff_suite.py --root . --suite avs/model/linx_model_diff_suite.yaml --profile release-strict --trace-schema-version 1.0 --report-out docs/bringup/gates/model_diff_summary.json`
 - `python3 tools/bringup/check_avs_matrix_status.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --report-out docs/bringup/gates/avs_matrix_status_audit.json`
+- `python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier ${LINX_GATE_TIER:-pr}`
+- `python3 tools/bringup/check_sail_model.py`
 - `python3 tools/bringup/check_qemu_opcode_meta_sync.py --allowlist docs/bringup/qemu_opcode_sync_allowlist.json --report-out docs/bringup/gates/qemu_opcode_sync_latest.json --out-md docs/bringup/gates/qemu_opcode_sync_latest.md`
-- `python3 tools/bringup/report_qemu_isa_coverage.py --report-out docs/bringup/gates/qemu_isa_coverage_latest.json --out-md docs/bringup/gates/qemu_isa_coverage_latest.md`
+- `python3 tools/bringup/report_qemu_isa_coverage.py --report-out docs/bringup/gates/qemu_isa_coverage_latest.json --out-md docs/bringup/gates/qemu_isa_coverage_latest.md --require-full` (mnemonic + per-form closure)
 - `python3 tools/bringup/check_linx_virt_defconfig_spec.py --report-out docs/bringup/gates/linxisa_virt_defconfig_audit.json`
 - `python3 tools/bringup/check_gate_consistency.py --report docs/bringup/gates/latest.json --progress docs/bringup/PROGRESS.md --gate-status docs/bringup/GATE_STATUS.md --libc-status docs/bringup/libc_status.md --avs-matrix-audit docs/bringup/gates/avs_matrix_status_audit.json --qemu-opcode-sync docs/bringup/gates/qemu_opcode_sync_latest.json --qemu-isa-coverage docs/bringup/gates/qemu_isa_coverage_latest.json --linux-defconfig-audit docs/bringup/gates/linxisa_virt_defconfig_audit.json --require-maturity-artifacts --profile release-strict --lane-policy external+pin-required --trace-schema-version 1.0 --multi-agent-summary docs/bringup/gates/logs/<run-id>/<lane>/multi_agent_summary.json --max-age-hours 24`

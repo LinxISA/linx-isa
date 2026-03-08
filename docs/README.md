@@ -7,13 +7,19 @@ This directory contains the complete documentation suite for LinxISA.
 ```
 docs/
 ├── architecture/           # ISA specification and manual
-│   ├── v0.3-architecture-contract.md    # ISA v0.3 contract
+│   ├── v0.4-architecture-contract.md    # ISA v0.4 contract
+│   ├── v0.4-hardening-policy.md         # Hardening selection and fallback policy
+│   ├── v0.4-workload-engine-model.md    # Workload-class to engine mapping
+│   ├── v0.4-rendering-kernel-authoring.md # Rendering kernel authoring guide
+│   ├── v0.4-rendering-pto-contract.md   # Rendering PTO carrier and selector contract
+│   ├── v0.4-rendering-command-contract.md # Rendering command lowering contract
 │   └── isa-manual/                      # Full ISA manual (AsciiDoc)
 │
 ├── bringup/               # Bring-up and validation
 │   ├── GETTING_STARTED.md              # Onboarding guide
+│   ├── rendering_vulkan_bringup.md     # Rendering userspace bring-up plan
 │   ├── PROGRESS.md                     # Bring-up status tracker
-│   ├── CHECK26_CONTRACT.md             # 26-point ISA contract
+│   ├── AVS_CONTRACT.md                 # AVS public contract
 │   ├── MATURITY_PLAN.md               # Long-term roadmap
 │   ├── agent_runs/                     # Multi-agent gate manifests
 │   │   ├── manifest.yaml              # Gate ownership map
@@ -41,7 +47,14 @@ docs/
 | Topic | File |
 |-------|------|
 | **New Contributors** | [bringup/GETTING_STARTED.md](bringup/GETTING_STARTED.md) |
-| **ISA Specification** | [architecture/v0.3-architecture-contract.md](architecture/v0.3-architecture-contract.md) |
+| **ISA Specification** | [architecture/v0.4-architecture-contract.md](architecture/v0.4-architecture-contract.md) |
+| **Hardening Policy** | [architecture/v0.4-hardening-policy.md](architecture/v0.4-hardening-policy.md) |
+| **Workload Engine Model** | [architecture/v0.4-workload-engine-model.md](architecture/v0.4-workload-engine-model.md) |
+| **Rendering Kernel Guide** | [architecture/v0.4-rendering-kernel-authoring.md](architecture/v0.4-rendering-kernel-authoring.md) |
+| **Rendering PTO Contract** | [architecture/v0.4-rendering-pto-contract.md](architecture/v0.4-rendering-pto-contract.md) |
+| **Rendering Command Contract** | [architecture/v0.4-rendering-command-contract.md](architecture/v0.4-rendering-command-contract.md) |
+| **AVS Contract** | [bringup/AVS_CONTRACT.md](bringup/AVS_CONTRACT.md) |
+| **Rendering Bring-up** | [bringup/rendering_vulkan_bringup.md](bringup/rendering_vulkan_bringup.md) |
 | **Current Status** | [bringup/PROGRESS.md](bringup/PROGRESS.md) |
 | **Navigation Policy** | [project/navigation.md](project/navigation.md) |
 
@@ -51,8 +64,8 @@ docs/
 
 The bring-up uses a gate-based validation system:
 
-- **check26**: 26-point ISA contract validation
-- **AVS (Architecture Validation Suite)**: Compile and runtime tests
+- **AVS Contract**: canonical matrix + profile/tier closure checks
+- **AVS (Architecture Validation Suite)**: Compile, runtime, Linux, libc, workload, and SPEC tests
 - **Model Differential**: QEMU vs pyCircuit trace comparison
 - **Multi-agent**: Cross-repo closure validation
 
@@ -60,7 +73,7 @@ See [bringup/PROGRESS.md](bringup/PROGRESS.md) for current gate status.
 
 ### Architecture Contract
 
-The ISA v0.3 contract defines mandatory behaviors:
+The ISA v0.4 contract defines mandatory behaviors:
 
 1. Block-structured execution is mandatory
 2. Control-flow targets MUST resolve to legal block boundaries
@@ -69,5 +82,6 @@ The ISA v0.3 contract defines mandatory behaviors:
 
 Run validation:
 ```bash
-python3 tools/bringup/check26_contract.py --root .
+python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml
+python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier pr
 ```

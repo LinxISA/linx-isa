@@ -5,7 +5,7 @@
 [[inst_v_sw_and]]
 ==== V.SW.AND
 
-*Syntax:* v.sw.and<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL<.ud>], SrcR.<T>
+*Syntax:* v.sw.and<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR
 
 *Description:* Vector instruction (VEC engine).
 
