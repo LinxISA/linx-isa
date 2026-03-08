@@ -1,8 +1,9 @@
 # Integration / Release Checklist
 
-- [ ] ID: INT-001 Validate the canonical AVS contract before cross-repo runtime gates.
+- [x] ID: INT-001 Validate the canonical AVS contract before cross-repo runtime gates.
   Command: `python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml`
   Done means: the AVS schema is canonical, all active entries carry `spec_refs` and tier metadata, and no legacy contract tokens remain.
+  Status: ✅ PASS (2026-03-08) - `check_avs_contract.py` validates the canonical matrix with `tests=54` and `active=54` before the merged submodule repin cycle.
 
 - [ ] ID: INT-016 Require AVS tier closure before strict runtime signoff.
   Command: `python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier pr`
@@ -44,17 +45,19 @@
   Command: `bash skills/linx-skills/scripts/install_canonical_skills.sh`
   Done means: local `$CODEX_HOME/skills` keeps only canonical `linx-*` skills (plus protected utility skills).
 
-- [ ] ID: INT-010 Pull latest skills submodule before each bring-up cycle.
+- [x] ID: INT-010 Pull latest skills submodule before each bring-up cycle.
   Command: `bash tools/bringup/sync_canonical_skills.sh --pull-latest`
   Done means: `skills/linx-skills` is on latest `origin/main` and installed into Codex skills.
+  Status: ✅ PASS (2026-03-08) - `sync_canonical_skills.sh --pull-latest` advanced `skills/linx-skills` to merged commit `5b4799f` and refreshed `/Users/zhoubot/.codex/skills`.
 
 - [ ] ID: INT-011 Summarize evolved skills after bring-up work.
   Command: `bash tools/bringup/finalize_skill_updates.sh --base origin/main`
   Done means: summary markdown exists in `docs/bringup/agent_runs/skills_evolution/` with touched skills + SHA + rationale.
 
-- [ ] ID: INT-012 Guard against destructive skill churn before skill commit.
+- [x] ID: INT-012 Guard against destructive skill churn before skill commit.
   Command: `python3 skills/linx-skills/scripts/check_skill_change_scope.py --repo-root skills/linx-skills --base origin/main`
   Done means: change scope guard passes and only intended skill directories changed.
+  Status: ✅ PASS (2026-03-08) - scope guard reports `changed=0, removed=0` after the merged skills PR was pulled back into the superproject workspace.
 - [ ] ID: INT-013 Enforce phase-bound waiver policy in runtime closure.
   Command: `python3 tools/bringup/check_multi_agent_gates.py --strict-always --mode runtime ...`
   Done means: waivers are active only within the manifest active phase and expire automatically after phase transition.
