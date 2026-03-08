@@ -91,6 +91,7 @@
       "l.*.brg",
       "v.*.brg"
     ],
+    "meaning": ".brg selects global memory access regardless of whether the instruction executes in l.* or v.* domain",
     "ordering_domain": "shared TSO domain with BCC and TMA/MTC operations",
     "kernel_policy": "normal BCC scalar memory issue is closed while a shader kernel is active"
   },
@@ -99,6 +100,7 @@
       "load.local",
       "store.local"
     ],
+    "meaning": "the corresponding non-.brg kernel memory forms select local memory regardless of whether the instruction executes in l.* or v.* domain",
     "base_operands": [
       "TA",
       "TB",

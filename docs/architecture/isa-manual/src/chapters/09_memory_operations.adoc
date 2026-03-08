@@ -156,6 +156,7 @@ Canonical shader-kernel behavior is expressed through `.MPAR` / `.MSEQ` executio
 * Prior side-effecting tile stores must be globally ordered before kernel-side memory issue starts (TSO-preserving barrier
   requirement).
 * Canonical kernel global-memory accesses use bridged forms only: `l.*.brg` and `v.*.brg`.
+* Memory space selection is orthogonal to the `l.*` versus `v.*` execution-domain split: `.brg` selects global memory, and the corresponding non-`.brg` form selects local memory.
 * Archived VREG-only raw local-register fragments are not part of canonical v0.4 behavior.
 
 Bridged address-formation contract (canonical v0.4):
