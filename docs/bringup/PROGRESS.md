@@ -1,11 +1,12 @@
 # Bring-up Progress (v0.4 workspace)
 
-Last updated: 2026-03-07
+Last updated: 2026-03-08
 
 ## Closure Snapshot
 
 - `v0.4` golden/spec is canonical and validated.
 - AVS is now the only live public bring-up contract.
+- Pinned build closure is now green for the current propagation workspace: compiler AVS stays at 100% for `linx64`/`linx32`, QEMU builds, Linux produces `build-linx-fixed/vmlinux`, musl phase-b passes, and glibc G1a/G1b pass.
 - Tier closure is not complete yet: `20/54` active AVS entries are currently marked `pass`.
 - Checked-in QEMU decode coverage is `524/710` unique legal `v0.4` mnemonics (`73.80%`) and `521/740` legal forms (`70.41%`).
 - Sail strict verification is now closed at the parser/status-gate level: the active model parses through the real top-level entry and the stale stub list has been removed.
@@ -36,9 +37,13 @@ Last updated: 2026-03-07
 | Sail model status | ✅ | `python3 tools/bringup/check_sail_model.py --require-parser` |
 | Compiler AVS (`linx64`/`linx32`) | ✅ | `./avs/compiler/linx-llvm/tests/run.sh` |
 | Compiler coverage (`linx64`/`linx32`) | ✅ | `python3 avs/compiler/linx-llvm/tests/analyze_coverage.py --fail-under 100` |
+| LLVM auxiliary tool suite (`llvm-ar`/`llvm-nm`/`llvm-readelf`/`llvm-strip`) | ✅ | `ninja -C compiler/llvm/build-linxisa-clang llvm-ar llvm-nm llvm-strip llvm-readelf` |
 | QEMU runtime suites | ✅ Baseline | `./avs/qemu/run_tests.sh --all` |
+| QEMU pinned binary build | ✅ | `ninja -C emulator/qemu/build qemu-system-linx64` |
 | QEMU decode coverage | ❌ Open work | `python3 tools/bringup/report_qemu_isa_coverage.py --report-out docs/bringup/gates/qemu_isa_coverage_latest.json --out-md docs/bringup/gates/qemu_isa_coverage_latest.md --require-full` |
+| Linux `vmlinux` build closure | ✅ | `env PATH=$PWD/compiler/llvm/build-linxisa-clang/bin:$PATH /opt/homebrew/bin/gmake -C kernel/linux ARCH=linx LLVM=$PWD/compiler/llvm/build-linxisa-clang/bin/ 'CC=$PWD/compiler/llvm/build-linxisa-clang/bin/clang --target=linx64-unknown-linux-gnu -fintegrated-as' HOSTCC=/usr/bin/clang HOSTCXX=/usr/bin/clang++ O=$PWD/kernel/linux/build-linx-fixed vmlinux` |
 | Linux initramfs smoke/full | ✅ | `python3 ${LINUX_ROOT}/tools/linxisa/initramfs/smoke.py`; `python3 ${LINUX_ROOT}/tools/linxisa/initramfs/full_boot.py` |
+| musl build closure (`phase-b`) | ✅ | `MODE=phase-b lib/musl/tools/linx/build_linx64_musl.sh` |
 | musl runtime (`R1`/`R2`) | ✅ | `python3 avs/qemu/run_musl_smoke.py --mode phase-b --link both` |
 | glibc (`G1a`/`G1b`) | ✅ | `bash lib/glibc/tools/linx/build_linx64_glibc.sh`; `bash lib/glibc/tools/linx/build_linx64_glibc_g1b.sh` |
 
