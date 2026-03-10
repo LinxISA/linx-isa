@@ -29,6 +29,11 @@
   Done means: Linux kernel boots with timer interrupts working, full syscalls available.
   Status: ✅ PASS (2026-02-25) - full-OS closure gate is green in run `2026-02-25-r2-pin-lanefix` (`strict_cross_repo.sh` pass and BusyBox rootfs boot pass evidence in `kernel_busybox_rootfs.log`).
 
+- [x] ID: QEMU-007 Build pinned `qemu-system-linx64` after v0.4 decode/translate propagation.
+  Command: `ninja -C emulator/qemu/build qemu-system-linx64`
+  Done means: the pinned QEMU workspace compiles the Linx system emulator binary with the current decode/translator state.
+  Status: ✅ PASS (2026-03-08) - pinned QEMU `043390f788da` builds `emulator/qemu/build/qemu-system-linx64` successfully after the v0.4 propagation fixes and opcode-sync refresh.
+
 ---
 
 ## ISA vs QEMU Implementation Gap Analysis
