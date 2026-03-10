@@ -55,6 +55,7 @@ fi
 REPO_ROOT="$(cd "$ROOT/../../../../" && pwd)"
 LIBC_DIR="$REPO_ROOT/avs/runtime/freestanding"
 LIBC_INCLUDE="$LIBC_DIR/include"
+CLANG_HEADERS_DIR="$REPO_ROOT/compiler/llvm/clang/lib/Headers"
 SOFTFP_SRC="$LIBC_DIR/src/softfp/softfp.c"
 SOFTFP_STUBS_SRC="$ROOT/support/softfp_stubs.c"
 ATOMIC_BUILTINS_SRC="$LIBC_DIR/src/atomic/atomic_builtins.c"
@@ -71,18 +72,24 @@ fi
 echo "[rt] building test runtime"
 "$CLANG" -target "$TARGET" -O2 -ffreestanding -fno-builtin -fno-stack-protector \
   -fno-asynchronous-unwind-tables -fno-unwind-tables -fno-exceptions -fno-jump-tables \
+  "-I$CLANG_HEADERS_DIR" \
+  "-I$LIBC_INCLUDE" \
   -c "$SUPPORT_SYMBOLS_SRC" -o "$RUNTIME_OUT/support_symbols.o"
 "$CLANG" -target "$TARGET" -O2 -ffreestanding -fno-builtin -fno-stack-protector \
   -fno-asynchronous-unwind-tables -fno-unwind-tables -fno-exceptions -fno-jump-tables \
+  "-I$CLANG_HEADERS_DIR" \
+  "-I$LIBC_INCLUDE" \
   -c "$ATOMIC_BUILTINS_SRC" -o "$RUNTIME_OUT/atomic_builtins.o"
 SOFTFP_IMPL_SRC="$SOFTFP_SRC"
 SOFTFP_CFLAGS=(-target "$TARGET" -O0 -ffreestanding -fno-builtin -fno-stack-protector \
   -fno-asynchronous-unwind-tables -fno-unwind-tables -fno-exceptions -fno-jump-tables \
+  "-I$CLANG_HEADERS_DIR" \
   "-I$LIBC_INCLUDE")
 if [[ "$TARGET" == linx32-* ]]; then
   SOFTFP_IMPL_SRC="$SOFTFP_STUBS_SRC"
   SOFTFP_CFLAGS=(-target "$TARGET" -O2 -ffreestanding -fno-builtin -fno-stack-protector \
-    -fno-asynchronous-unwind-tables -fno-unwind-tables -fno-exceptions -fno-jump-tables)
+    -fno-asynchronous-unwind-tables -fno-unwind-tables -fno-exceptions -fno-jump-tables \
+    "-I$CLANG_HEADERS_DIR")
 fi
 if [[ ! -f "$SOFTFP_IMPL_SRC" ]]; then
   echo "error: missing soft-fp runtime source: $SOFTFP_IMPL_SRC" >&2
@@ -94,6 +101,8 @@ COMMON_FLAGS=(
   -target "$TARGET"
   -O2
   -ffreestanding
+  "-I$CLANG_HEADERS_DIR"
+  "-I$LIBC_INCLUDE"
   -fno-builtin
   -fno-stack-protector
   -fno-asynchronous-unwind-tables

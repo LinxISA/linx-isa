@@ -40,6 +40,40 @@ multi-workload model.
   it remains subordinate to the same recovery, completion, and observability
   rules described by the live architecture contract.
 
+## Current architecture closure slice
+
+The current architecture-writing pass covers the promoted frontend/decode,
+post-rename dispatch, and baseline issue/wakeup slice from `IFU/F0` through
+`W1`.
+
+Stage lineup in this pass:
+
+- `F0`: PC-select stage; chooses the next fetch PC from multiple candidate PCs
+  and presents a registered `F0->F1` boundary.
+- `F1`: I-cache lookup stage; architecture-facing control remains per-thread,
+  while the current physical implementation arbitrates a single I-cache read
+  port across threads.
+- `F2`: I-cache data staging and ECC check; forwards only ECC-clean raw cache
+  data and thread/PC context.
+- `F3`: variable-length stitch/assembly, static prediction, block-boundary
+  annotation, and template recognition/expansion control.
+- `IB`: per-thread instruction-buffer banks feeding aligned decode groups.
+- `D1`: decode, contiguous-group formation, and `RID/BID/LSID` allocation.
+- `D2`: rename request/translation stage.
+- `D3`: renamed-uop latch point.
+- `S1`: post-rename dispatch preparation (routing + ready query).
+- `S2`: actual `IQ` entry write.
+- `P1`: `IQ` pick stage.
+- `I1`: operand-read planning and RF read-port arbitration.
+- `I2`: issue-confirm / `IQ` deallocation boundary.
+- `E1`: first execute stage.
+- `W1`: baseline late wakeup / resolve stage.
+
+This pass is intentionally focused on architectural stage ownership and
+interface shape. More detailed unit-internal execute/bypass topologies and
+full commit machinery still remain under the later bring-up contracts until
+those contracts are promoted in the same style.
+
 ## Program phases (gate-based)
 
 - G0: governance and gate wiring
