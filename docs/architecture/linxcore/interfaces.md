@@ -64,6 +64,26 @@ The following must stay synchronized when trace/pipeline contracts change:
 
 Viewer-side contract sync is validated through LinxTrace gates.
 
+## Scope boundary
+
+This document covers **external** LinxCore interface governance only:
+
+- pyCircuit contract
+- trace schema contract
+- cross-tool synchronization rules
+
+Detailed LinxCore **microarchitectural** interface contracts (two-layer block machine, BROB-facing resolve,
+raw engine fabric, engine/block-type mapping) belong under:
+
+- `rtl/LinxCore/docs/architecture/`
+- `docs/architecture/linxcore/microarchitecture.md`
+
+For the current architecture-writing pass, the promoted stage contracts from
+`F0` through the baseline issue/wakeup slice (`S1/S2/P1/I1/I2/E1/W1`) are
+captured normatively in `docs/architecture/linxcore/microarchitecture.md`,
+while this document remains limited to external/tool-facing interface
+governance.
+
 ## Interface change control
 
 - Interface-visible changes must update contract artifacts first.
