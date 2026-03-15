@@ -46,3 +46,7 @@
 [submodule "lib/mesa3d"]
 	path = lib/mesa3d
 	url = https://github.com/LinxISA/mesa3d.git
+[submodule "tools/LinxCoreModel"]
+	path = tools/LinxCoreModel
+	url = https://github.com/LinxISA/LinxCoreModel.git
+	branch = main
