@@ -79,3 +79,25 @@ jobs:
             exit 0
           fi
           shellcheck -x -S error "${files[@]}"
+
+  model:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Init tools/model submodule
+        run: |
+          git submodule sync -- tools/model
+          git submodule update --init tools/model
+      - name: Install build deps
+        run: sudo apt-get update && sudo apt-get install -y ninja-build
+      - name: Configure tools/model
+        run: cmake -S tools/model -B tools/model/build-ci -G Ninja
+      - name: Build tools/model
+        run: cmake --build tools/model/build-ci
+      - name: Run tools/model tests
+        run: ctest --test-dir tools/model/build-ci --output-on-failure
