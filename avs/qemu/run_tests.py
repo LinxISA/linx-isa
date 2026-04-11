@@ -14,6 +14,72 @@ from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parents[1]
+PTO_KERNEL_ROOT = REPO_ROOT / "workloads" / "pto_kernels" / "kernels"
+PTO_KERNEL_CATALOG = PTO_KERNEL_ROOT / "catalog.txt"
+
+
+def _load_pto_kernel_catalog() -> dict[str, str]:
+    catalog: dict[str, str] = {}
+    for raw_line in PTO_KERNEL_CATALOG.read_text(encoding="utf-8").splitlines():
+        entry = raw_line.strip()
+        if not entry or entry.startswith("#"):
+            continue
+        name = Path(entry).stem
+        if name in catalog:
+            raise SystemExit(f"error: duplicate PTO kernel name in catalog: {name}")
+        catalog[name] = entry
+    return catalog
+
+
+PTO_KERNEL_PATHS = _load_pto_kernel_catalog()
+
+
+def _pto_kernel_src(name: str) -> str:
+    rel_path = PTO_KERNEL_PATHS.get(name)
+    if rel_path is None:
+        raise SystemExit(f"error: missing PTO kernel in catalog: {name}")
+    return str(Path("workloads") / "pto_kernels" / "kernels" / rel_path)
+
+
+PTO_TILE_KERNEL_NAMES = [
+    "tload_store",
+    "mamulb",
+    "tmatmul_acc",
+    "gemm",
+    "flash_attention",
+    "flash_attention_masked",
+]
+
+PTO_PARITY_KERNEL_NAMES = [
+    "tload_store",
+    "mamulb",
+    "tmatmul_acc",
+    "gemm",
+    "gemm_basic",
+    "gemm_demo",
+    "gemm_performance",
+    "add_custom",
+    "flash_attention",
+    "flash_attention_demo",
+    "flash_attention_masked",
+    "fa_performance",
+    "mla_attention_demo",
+    "flash_attention_cube_fp16",
+    "flash_attention_vec_fp32",
+    "flash_attention_vec_fp16",
+    "gqa_fp16",
+    "sparse_attention_local_fp16",
+    "rmsnorm_fp16",
+    "gelu_fp32",
+    "argmax_fp32",
+    "gather_fp32",
+    "concat_fp32",
+    "scatter_fp32",
+    "permute_nhwc_nchw_fp32",
+    "transpose_large_fp32",
+    "unsorted_segment_sum_fp32",
+    "unique_i32",
+]
 
 
 SUITES: dict[str, dict[str, str]] = {
@@ -34,6 +100,18 @@ SUITES: dict[str, dict[str, str]] = {
         "src": "tests/13_v03_vector_ops_matrix.c",
         "macro": "LINX_TEST_ENABLE_V03_VECTOR_OPS",
     },
+    "v03_vector_body_fault": {
+        "src": "tests/18_v03_vector_body_fault.c",
+        "macro": "LINX_TEST_ENABLE_V03_VECTOR_BODY_FAULT",
+    },
+    "v04_vector_ops": {
+        "src": "tests/17_v04_vector_ops_matrix.c",
+        "macro": "LINX_TEST_ENABLE_V04_VECTOR_OPS",
+    },
+    "simt_autovec": {
+        "src": "tests/19_simt_autovec.c",
+        "macro": "LINX_TEST_ENABLE_SIMT_AUTOVEC",
+    },
     "callret": {"src": "tests/14_callret.c", "macro": "LINX_TEST_ENABLE_CALLRET"},
 }
 
@@ -45,46 +123,54 @@ COMPILE_ONLY_SUITE_SOURCE_OVERRIDE: dict[str, str] = {
 }
 
 EXTRA_SOURCES_BY_SUITE: dict[str, list[str]] = {
-    "tile": [
-        "workloads/pto_kernels/kernels/tload_store.cpp",
-        "workloads/pto_kernels/kernels/mamulb.cpp",
-        "workloads/pto_kernels/kernels/tmatmul_acc.cpp",
-        "workloads/pto_kernels/kernels/gemm.cpp",
-        "workloads/pto_kernels/kernels/flash_attention.cpp",
-        "workloads/pto_kernels/kernels/flash_attention_masked.cpp",
-    ],
+    "tile": [_pto_kernel_src(name) for name in PTO_TILE_KERNEL_NAMES],
     "callret": [
         "avs/qemu/tests/14_callret_templates.S",
     ],
+    "pto_parity": [_pto_kernel_src(name) for name in PTO_PARITY_KERNEL_NAMES],
+}
+
+LLC_PIPELINE_SUITES: set[str] = set()
+
+EXTRA_CFLAGS_BY_SUITE: dict[str, list[str]] = {
     "pto_parity": [
-        "workloads/pto_kernels/kernels/tload_store.cpp",
-        "workloads/pto_kernels/kernels/mamulb.cpp",
-        "workloads/pto_kernels/kernels/tmatmul_acc.cpp",
-        "workloads/pto_kernels/kernels/gemm.cpp",
-        "workloads/pto_kernels/kernels/gemm_basic.cpp",
-        "workloads/pto_kernels/kernels/gemm_demo.cpp",
-        "workloads/pto_kernels/kernels/gemm_performance.cpp",
-        "workloads/pto_kernels/kernels/add_custom.cpp",
-        "workloads/pto_kernels/kernels/flash_attention.cpp",
-        "workloads/pto_kernels/kernels/flash_attention_demo.cpp",
-        "workloads/pto_kernels/kernels/flash_attention_masked.cpp",
-        "workloads/pto_kernels/kernels/fa_performance.cpp",
-        "workloads/pto_kernels/kernels/mla_attention_demo.cpp",
-        "workloads/pto_kernels/kernels/flash_attention_cube_fp16.cpp",
-        "workloads/pto_kernels/kernels/flash_attention_vec_fp32.cpp",
-        "workloads/pto_kernels/kernels/flash_attention_vec_fp16.cpp",
-        "workloads/pto_kernels/kernels/gqa_fp16.cpp",
-        "workloads/pto_kernels/kernels/sparse_attention_local_fp16.cpp",
-        "workloads/pto_kernels/kernels/rmsnorm_fp16.cpp",
-        "workloads/pto_kernels/kernels/gelu_fp32.cpp",
-        "workloads/pto_kernels/kernels/argmax_fp32.cpp",
-        "workloads/pto_kernels/kernels/gather_fp32.cpp",
-        "workloads/pto_kernels/kernels/concat_fp32.cpp",
-        "workloads/pto_kernels/kernels/scatter_fp32.cpp",
-        "workloads/pto_kernels/kernels/permute_nhwc_nchw_fp32.cpp",
-        "workloads/pto_kernels/kernels/transpose_large_fp32.cpp",
-        "workloads/pto_kernels/kernels/unsorted_segment_sum_fp32.cpp",
-        "workloads/pto_kernels/kernels/unique_i32.cpp",
+        "-DPTO_USE_MIXED_TILE_SIMT=1",
+    ],
+    "simt_autovec": [
+        "-mllvm",
+        "-linx-simt-autovec=1",
+        "-mllvm",
+        "-linx-simt-autovec-mode=mseq",
+        "-mllvm",
+        "-linx-simt-autovec-layout=grouped",
+        "-mllvm",
+        "-linx-simt-autovec-lanes=32",
+    ],
+}
+
+EXTRA_LLCFLAGS_BY_SUITE: dict[str, list[str]] = {
+}
+
+OBJDUMP_ASSERTS_BY_SUITE: dict[str, list[str]] = {
+    "simt_autovec": [
+        r"(?s)<search_store_index_grouped_boundary>:.*?\bBSTART\.MSEQ\b.*?\bB\.TEXT\b.*?B\.IOTI.*?B\.IOTI.*?C\.B\.DIMI\s+32,\s+->lb0.*?C\.B\.DIMI\s+2,\s+->lb1.*?\bv\.sw\.brg\.local\b.*?\bv\.lw\.brg\b.*?->p.*?\bb\.nz\b.*?\bj\b.*?\bv\.sw\.brg\b",
+        r"(?s)<search_store_index_split_addrs_autovec>:.*?\bBSTART\.MSEQ\b.*?\bB\.TEXT\b.*?C\.B\.DIMI\s+32,\s+->lb0.*?C\.B\.DIMI\s+2,\s+->lb1.*?\bv\.psel\s+p,.*?\bv\.sw\.brg\b.*?\bv\.sw\.brg\b.*?\bv\.cmp\.ne\b",
+        r"(?s)<running_sum_store>:.*?\bBSTART\.MSEQ\b.*?\bB\.TEXT\b.*?C\.B\.DIMI\s+32,\s+->lb0.*?C\.B\.DIMI\s+2,\s+->lb1.*?\bv\.fadd\b.*?\bv\.sw\.brg\b.*?\bv\.sw\.brg\b",
+        r"(?s)<running_sum_liveout>:.*?\bBSTART\.MSEQ\b.*?\bB\.TEXT\b.*?C\.B\.DIMI\s+32,\s+->lb0.*?C\.B\.DIMI\s+2,\s+->lb1.*?\bv\.fadd\b.*?\bv\.sw\.brg\b",
+        r"(?s)<reduction_sum_liveout>:.*?\bBSTART\.MSEQ\b.*?\bB\.TEXT\b.*?B\.IOTI.*?B\.IOTI.*?C\.B\.DIMI\s+32,\s+->lb0.*?C\.B\.DIMI\s+2,\s+->lb1.*?\bv\.rdfadd\b.*?\bv\.sw\.brg\.local\b.*?\bv\.lw\.brg\.local\b.*?\bv\.sw\.brg\b",
+        r"(?s)<copy_and_last_value_liveout>:.*?\bBSTART\.MSEQ\b.*?\bB\.TEXT\b.*?C\.B\.DIMI\s+32,\s+->lb0.*?C\.B\.DIMI\s+2,\s+->lb1.*?\bv\.lw\.brg\b.*?\bv\.sw\.brg\b.*?\bv\.sw\.brg\b",
+        r"(?s)<vector_nested_if_ifcvt>:.*?\bBSTART\.MSEQ\b.*?\bB\.TEXT\b.*?C\.B\.DIMI\s+32,\s+->lb0.*?C\.B\.DIMI\s+2,\s+->lb1.*?\bv\.flt\b.*?\bv\.csel\b.*?\bv\.csel\b.*?\bv\.sw\.brg\b",
+        r"(?s)<vector_min_select_store>:.*?\bBSTART\.MSEQ\b.*?\bB\.TEXT\b.*?C\.B\.DIMI\s+32,\s+->lb0.*?C\.B\.DIMI\s+2,\s+->lb1.*?\bv\.flt\b.*?\bv\.csel\b.*?\bv\.sw\.brg\b",
+        r"(?s)<vector_shifted_out_store>:.*?\bBSTART\.MSEQ\b.*?\bB\.TEXT\b.*?C\.B\.DIMI\s+32,\s+->lb0.*?C\.B\.DIMI\s+1,\s+->lb1.*?\bv\.fadd\b.*?\bv\.sw\.brg\b",
+        r"(?s)<fill_i32_autovec>:.*?\bBSTART\.MSEQ\b.*?\bB\.TEXT\b.*?C\.B\.DIMI\s+32,\s+->lb0.*?C\.B\.DIMI\s+2,\s+->lb1.*?\bv\.add\s+zero,\s+ri[0-9]+(?:\.sw)?,\s+->vt(?:#[0-9]+)?(?:\.w)?\b.*?\bv\.sw\.brg\b",
+        r"(?s)<fill_i8_autovec>:.*?\bBSTART\.MSEQ\b.*?\bB\.TEXT\b.*?C\.B\.DIMI\s+32,\s+->lb0.*?C\.B\.DIMI\s+2,\s+->lb1.*?\bv\.add\s+zero,\s+ri[0-9]+(?:\.sw)?,\s+->vt(?:#[0-9]+)?(?:\.w)?\b.*?\bv\.sb\.brg\b",
+        r"(?s)<fill_i16_autovec>:.*?\bBSTART\.MSEQ\b.*?\bB\.TEXT\b.*?C\.B\.DIMI\s+32,\s+->lb0.*?C\.B\.DIMI\s+2,\s+->lb1.*?\bv\.add\s+zero,\s+ri[0-9]+(?:\.sw)?,\s+->vt(?:#[0-9]+)?(?:\.w)?\b.*?\bv\.sh\.brg\b",
+        r"(?s)<copy_u8_autovec>:.*?\bBSTART\.MSEQ\b.*?\bB\.TEXT\b.*?C\.B\.DIMI\s+32,\s+->lb0.*?C\.B\.DIMI\s+2,\s+->lb1.*?\bv\.lbu\.brg\b.*?\bv\.sb\.brg\b",
+        r"(?s)<copy_u16_autovec>:.*?\bBSTART\.MSEQ\b.*?\bB\.TEXT\b.*?C\.B\.DIMI\s+32,\s+->lb0.*?C\.B\.DIMI\s+2,\s+->lb1.*?\bv\.lhu\.brg\b.*?\bv\.sh\.brg\b",
+        r"(?s)<widen_i8_to_i32_autovec>:.*?\bBSTART\.MSEQ\b.*?\bB\.TEXT\b.*?C\.B\.DIMI\s+32,\s+->lb0.*?C\.B\.DIMI\s+2,\s+->lb1.*?\bv\.lb\.brg\b.*?\bv\.sw\.brg\b",
+        r"(?s)<widen_i16_to_i32_autovec>:.*?\bBSTART\.MSEQ\b.*?\bB\.TEXT\b.*?C\.B\.DIMI\s+32,\s+->lb0.*?C\.B\.DIMI\s+2,\s+->lb1.*?\bv\.lh\.brg\b.*?\bv\.sw\.brg\b",
+        r"(?s)<sign_classify_i8_autovec>:.*?\bBSTART\.MSEQ\b.*?\bB\.TEXT\b.*?C\.B\.DIMI\s+32,\s+->lb0.*?C\.B\.DIMI\s+2,\s+->lb1.*?\bv\.lb\.brg\b.*?\bv\.cmp\.lt\b.*?\bv\.csel\b.*?\bv\.sw\.brg\b",
+        r"(?s)<sign_classify_i16_autovec>:.*?\bBSTART\.MSEQ\b.*?\bB\.TEXT\b.*?C\.B\.DIMI\s+32,\s+->lb0.*?C\.B\.DIMI\s+2,\s+->lb1.*?\bv\.lh\.brg\b.*?\bv\.cmp\.lt\b.*?\bv\.csel\b.*?\bv\.sw\.brg\b",
     ],
 }
 
@@ -92,6 +178,8 @@ EXPERIMENTAL_SUITES: set[str] = {
     # Requires tile builtin-enabled clang and PTO kernel headers.
     "tile",
     "pto_parity",
+    # Standalone negative trap regression; not a normal smoke lane.
+    "v03_vector_body_fault",
 }
 
 CORE_SUITES: list[str] = [
@@ -151,6 +239,69 @@ def _default_lld(clang: Path | None) -> Path | None:
     return None
 
 
+def _default_llvm_objdump(clang: Path | None) -> Path | None:
+    env = os.environ.get("LLVM_OBJDUMP")
+    if env:
+        return Path(os.path.expanduser(env))
+    if clang:
+        cand = clang.parent / "llvm-objdump"
+        if cand.exists():
+            return cand
+    cands = [
+        REPO_ROOT / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "llvm-objdump",
+        Path.home() / "llvm-project" / "build-linxisa-clang" / "bin" / "llvm-objdump",
+    ]
+    for cand in cands:
+        if cand.exists():
+            return cand
+    return None
+
+
+def _default_llc(clang: Path | None) -> Path | None:
+    env = os.environ.get("LLC")
+    if env:
+        return Path(os.path.expanduser(env))
+    if clang:
+        cand = clang.parent / "llc"
+        if cand.exists():
+            return cand
+    cands = [
+        REPO_ROOT / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "llc",
+        Path.home() / "llvm-project" / "build-linxisa-clang" / "bin" / "llc",
+    ]
+    for cand in cands:
+        if cand.exists():
+            return cand
+    return None
+
+
+def _clang_builtin_include_dir(clang: Path | None) -> Path | None:
+    env = os.environ.get("CLANG_HEADERS_DIR")
+    if env:
+        cand = Path(os.path.expanduser(env))
+        return cand if (cand / "stdint.h").exists() else None
+
+    cands = [REPO_ROOT / "compiler" / "llvm" / "clang" / "lib" / "Headers"]
+    if clang is not None:
+        try:
+            resource_dir = subprocess.run(
+                [str(clang), "-print-resource-dir"],
+                check=False,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.DEVNULL,
+                text=True,
+            ).stdout.strip()
+        except OSError:
+            resource_dir = ""
+        if resource_dir:
+            cands.insert(0, Path(resource_dir) / "include")
+
+    for cand in cands:
+        if (cand / "stdint.h").exists():
+            return cand
+    return None
+
+
 def _default_qemu() -> Path | None:
     env = os.environ.get("QEMU")
     if env:
@@ -176,6 +327,37 @@ def _run(cmd: list[str], *, verbose: bool, **kwargs) -> subprocess.CompletedProc
     if verbose:
         print("+", " ".join(cmd), file=sys.stderr)
     return subprocess.run(cmd, check=False, **kwargs)
+
+
+def _verify_objdump_shape(
+    llvm_objdump: Path,
+    obj: Path,
+    *,
+    suite: str,
+    verbose: bool,
+) -> None:
+    patterns = OBJDUMP_ASSERTS_BY_SUITE.get(suite)
+    if not patterns:
+        return
+
+    p = _run(
+        [str(llvm_objdump), "-d", str(obj)],
+        verbose=verbose,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    if p.returncode != 0:
+        sys.stderr.buffer.write(p.stderr)
+        raise SystemExit(f"error: llvm-objdump failed for {obj}")
+
+    text = p.stdout.decode("utf-8", errors="replace")
+    missing = [pat for pat in patterns if re.search(pat, text) is None]
+    if missing:
+        sys.stderr.write(
+            f"error: missing expected objdump patterns for suite {suite}: {missing}\n"
+        )
+        sys.stderr.write(text)
+        raise SystemExit(f"error: object shape verification failed: {obj}")
 
 
 def _tail(data: bytes, max_bytes: int = 4000) -> bytes:
@@ -344,6 +526,8 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--clang", default=None, help="Path to clang (env: CLANG)")
     parser.add_argument("--clangxx", default=None, help="Path to clang++ (env: CLANGXX)")
     parser.add_argument("--lld", default=None, help="Path to ld.lld (env: LLD)")
+    parser.add_argument("--llvm-objdump", default=None, help="Path to llvm-objdump (env: LLVM_OBJDUMP)")
+    parser.add_argument("--llc", default=None, help="Path to llc (env: LLC)")
     parser.add_argument("--qemu", default=None, help="Path to qemu-system-linx64 (env: QEMU)")
     parser.add_argument(
         "--target",
@@ -404,20 +588,36 @@ def main(argv: list[str]) -> int:
     lld = _path_or_none(args.lld) or _default_lld(clang)
     if not lld:
         raise SystemExit("error: ld.lld not found; set --lld or LLD")
+    llvm_objdump = _path_or_none(args.llvm_objdump) or _default_llvm_objdump(clang)
+    llc = _path_or_none(args.llc) or _default_llc(clang)
     qemu = _path_or_none(args.qemu) or _default_qemu()
+    clang_builtin_include_dir = _clang_builtin_include_dir(clang)
     if not qemu and not args.compile_only:
         raise SystemExit("error: qemu-system-linx64 not found; set --qemu or QEMU")
+    if clang_builtin_include_dir is None:
+        raise SystemExit(
+            "error: unable to locate clang builtin headers; "
+            "set CLANG_HEADERS_DIR=/path/to/clang/lib/Headers"
+        )
 
     _check_exe(clang, "clang")
     if clangxx:
         _check_exe(clangxx, "clang++")
     _check_exe(lld, "ld.lld")
+    if llvm_objdump:
+        _check_exe(llvm_objdump, "llvm-objdump")
+    if llc:
+        _check_exe(llc, "llc")
     if qemu:
         _check_exe(qemu, "qemu-system-linx64")
 
     selected = _suite_selection(args)
     if args.all_suites:
         selected = list(SUITES.keys())
+    if any(s in LLC_PIPELINE_SUITES for s in selected) and not llc:
+        raise SystemExit("error: llc not found; set --llc or LLC")
+    if any(s in OBJDUMP_ASSERTS_BY_SUITE for s in selected) and not llvm_objdump:
+        raise SystemExit("error: llvm-objdump not found; set --llvm-objdump or LLVM_OBJDUMP")
     required_test_ids = [_parse_test_id(t) for t in args.require_test_id]
 
     out_dir = Path(os.path.expanduser(args.out_dir))
@@ -463,6 +663,7 @@ def main(argv: list[str]) -> int:
         sources.append(path)
 
     add_source(SCRIPT_DIR / "tests" / "main.c")
+    add_source(REPO_ROOT / "avs" / "runtime" / "freestanding" / "src" / "string" / "mem.c")
     for suite in selected:
         rel = SUITES[suite]["src"]
         if args.compile_only:
@@ -471,9 +672,18 @@ def main(argv: list[str]) -> int:
     for suite in selected:
         for rel in EXTRA_SOURCES_BY_SUITE.get(suite, []):
             add_source(REPO_ROOT / rel)
-    softfp_suites = {"float", "v03_vector", "v03_vector_ops", "tile", "pto_parity"}
+    softfp_suites = {
+        "float",
+        "v03_vector",
+        "v03_vector_ops",
+        "v04_vector_ops",
+        "simt_autovec",
+        "tile",
+        "pto_parity",
+    }
     if any(s in softfp_suites for s in selected):
         add_source(REPO_ROOT / "avs" / "runtime" / "freestanding" / "src" / "softfp" / "softfp.c")
+        add_source(REPO_ROOT / "avs" / "runtime" / "freestanding" / "src" / "math" / "math.c")
 
     suite_macros: list[str] = []
     for name, meta in SUITES.items():
@@ -492,6 +702,7 @@ def main(argv: list[str]) -> int:
         "-fno-exceptions",
         "-fno-jump-tables",
         "-nostdlib",
+        f"-I{clang_builtin_include_dir}",
         f"-I{include_dir}",
         f"-I{libc_include_dir}",
         *suite_macros,
@@ -505,6 +716,9 @@ def main(argv: list[str]) -> int:
         # Runtime policy: migrated PTO kernels run in smoke profile under QEMU.
         # Full-profile coverage remains in compile/objdump gates.
         common_cflags += ["-DPTO_QEMU_SMOKE=1"]
+    if "pto_parity" in selected:
+        # Keep host parity and QEMU parity on the same mixed tile/SIMT path.
+        common_cflags += ["-DPTO_USE_MIXED_TILE_SIMT=1"]
     if pto_kernel_include_dir is not None:
         common_cflags.append(f"-I{pto_kernel_include_dir}")
     if pto_include_dir:
@@ -514,6 +728,18 @@ def main(argv: list[str]) -> int:
     for src in sources:
         obj = obj_dir / (src.stem + ".o")
         cflags = list(common_cflags)
+        src_suite: str | None = None
+        try:
+            src_rel = src.relative_to(SCRIPT_DIR).as_posix()
+        except ValueError:
+            src_rel = None
+        if src_rel is not None:
+            for suite_name, meta in SUITES.items():
+                if meta["src"] == src_rel:
+                    src_suite = suite_name
+                    break
+        if src_suite is not None:
+            cflags.extend(EXTRA_CFLAGS_BY_SUITE.get(src_suite, []))
         tool = clang
         if src.suffix in {".cc", ".cpp", ".cxx"}:
             if not clangxx:
@@ -527,11 +753,42 @@ def main(argv: list[str]) -> int:
         # Jump table/indirect branch coverage requires allowing jump tables.
         if src.name == "08_jumptable.c":
             cflags = [f for f in cflags if f != "-fno-jump-tables"]
-        cmd = [str(tool), *cflags, "-c", str(src), "-o", str(obj)]
-        p = _run(cmd, verbose=args.verbose, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        if p.returncode != 0:
-            sys.stderr.buffer.write(p.stderr)
-            raise SystemExit(f"error: compile failed: {src}")
+        if src_suite in LLC_PIPELINE_SUITES:
+            if not llc:
+                raise SystemExit("error: llc not found; set --llc or LLC")
+            ir = obj_dir / (src.stem + ".ll")
+            clang_cmd = [str(tool), *cflags, "-S", "-emit-llvm", str(src), "-o", str(ir)]
+            p = _run(clang_cmd, verbose=args.verbose, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            if p.returncode != 0:
+                sys.stderr.buffer.write(p.stderr)
+                raise SystemExit(f"error: IR compile failed: {src}")
+            llc_cmd = [
+                str(llc),
+                f"-mtriple={args.target}",
+                "-O2",
+                "-filetype=obj",
+                *EXTRA_LLCFLAGS_BY_SUITE.get(src_suite, []),
+                str(ir),
+                "-o",
+                str(obj),
+            ]
+            p = _run(llc_cmd, verbose=args.verbose, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            if p.returncode != 0:
+                sys.stderr.buffer.write(p.stderr)
+                raise SystemExit(f"error: llc failed: {src}")
+        else:
+            cmd = [str(tool), *cflags, "-c", str(src), "-o", str(obj)]
+            p = _run(cmd, verbose=args.verbose, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            if p.returncode != 0:
+                sys.stderr.buffer.write(p.stderr)
+                raise SystemExit(f"error: compile failed: {src}")
+        if src_suite in OBJDUMP_ASSERTS_BY_SUITE:
+            _verify_objdump_shape(
+                llvm_objdump,
+                obj,
+                suite=src_suite,
+                verbose=args.verbose,
+            )
         objects.append(obj)
 
     out_obj = out_dir / "linx-qemu-tests.o"

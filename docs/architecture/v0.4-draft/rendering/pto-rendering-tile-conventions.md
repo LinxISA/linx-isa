@@ -11,7 +11,7 @@ Principle: **tile is generic storage** (4KB `RawTile` carrier). Rendering define
 
 Sources:
 - `workloads/pto_kernels/include/pto/linx/impl/backend.hpp` (RawTile)
-- `workloads/pto_kernels/kernels/add_custom.cpp` (4KB tile convention)
+- `workloads/pto_kernels/kernels/elementwise/add_custom.cpp` (4KB tile convention)
 
 ## 1) Canonical rendering tile profile (initial)
 
