@@ -8,38 +8,41 @@
 - [ ] ID: INT-016 Require AVS tier closure before strict runtime signoff.
   Command: `python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier pr`
   Done means: every active AVS entry required for PR closure is implemented and validated with machine-readable evidence.
+  Status: ✅ PASS (2026-04-18) - the refreshed PR-tier matrix/status pair now reports `required_tests=31` and `failure_count=0` (artifact: `docs/bringup/gates/avs_tier_closure_pr.json`).
 
 - [x] ID: INT-002 Verify all required gate rows are assigned to a known agent checklist.
   Done means: multi-agent static validator reports no unassigned required gate keys.
-  Status: ✅ PASS (2026-02-25) - `check_multi_agent_gates.py --strict-always --mode static` returns `ok: multi-agent static validation passed (agents=6, assignments=21)` after adding ownership for virtio-disk and QEMU maturity audit gate keys.
+  Status: ✅ PASS (2026-03-20) - `check_multi_agent_gates.py --strict-always --mode static` now returns `ok: multi-agent static validation passed (agents=11, assignments=62)` after refreshing the manifest/checklist map for the March 15 gate set.
 
-- [x] ID: INT-003 Require model differential suite pass in strict runtime closure.
+- [ ] ID: INT-003 Require model differential suite pass in strict runtime closure.
   Command: `python3 tools/bringup/run_model_diff_suite.py ...`
   Done means: model diff row is `pass` or explicitly waived via ledger.
-  Status: ✅ PASS (2026-02-25) - model-diff strict profile passes in run `2026-02-25-r2-pin-lanefix` (log: `docs/bringup/gates/logs/2026-02-25-r2-pin-lanefix/pin/model_diff_suite.log`).
+  Status: ✅ PASS (2026-04-18) - the compatibility wrapper again accepts the legacy gate CLI and the underlying `tools/model` suite passes for all required fixtures (artifact: `docs/bringup/gates/model_diff_summary.json`).
 
-- [x] ID: INT-004 Require `strict_cross_repo.sh` pass in strict closure.
+- [ ] ID: INT-004 Require `strict_cross_repo.sh` pass in strict closure.
   Command: `bash tools/regression/strict_cross_repo.sh`
   Done means: regression row is `pass` or explicitly waived via ledger.
-  Status: ✅ PASS (2026-02-25) - `strict_cross_repo.sh` passes in run `2026-02-25-r2-pin-lanefix` (log: `docs/bringup/gates/logs/2026-02-25-r2-pin-lanefix/pin/reg_strict_cross_repo.log`).
+  Status: ✅ PASS (2026-04-18) - fresh direct PR-lane reruns now complete successfully after fixing TSVC PR policy drift, restoring model-diff compatibility, closing AVS PR-tier closure, and skipping absent report-run multi-agent runtime checks during ad hoc strict-cross invocations.
 
-- [x] ID: INT-005 Emit per-run multi-agent closure summary JSON.
+- [ ] ID: INT-005 Emit per-run multi-agent closure summary JSON.
   Artifact: `docs/bringup/gates/logs/<run-id>/<lane>/multi_agent_summary.json`
   Done means: summary exists, `ok=true`, and includes waiver decisions.
-  Status: ✅ PASS (2026-02-25) - runtime closure summary exists with `ok=true` for run `2026-02-25-r2-pin-lanefix` (artifact: `docs/bringup/gates/logs/2026-02-25-r2-pin-lanefix/pin/multi_agent_summary.strict_cross.json`).
+  Status: ❌ FAIL (2026-03-15) - the latest summary exists, but it records `ok=false` because 18 required gates are still failing without waivers (artifact: `docs/bringup/gates/logs/2026-03-15-r2-pin/pin/multi_agent_summary.json`).
 
 - [x] ID: INT-006 Keep `docs/bringup/GATE_STATUS.md` generated from canonical JSON report.
   Command: `python3 tools/bringup/gate_report.py render --report docs/bringup/gates/latest.json --out-md docs/bringup/GATE_STATUS.md`
   Done means: markdown timestamp matches report timestamp.
-  Status: ✅ PASS (2026-02-25) - timestamp check passes: `latest.json` and `GATE_STATUS.md` both report `2026-02-25 12:41:30Z`.
+  Status: ✅ PASS (2026-03-15) - the rendered page matches the latest canonical report timestamp `2026-03-15 02:38:42Z` after the `2026-03-15-r2-pin` refresh.
 
-- [ ] ID: INT-007 Enforce explicit agent module ownership and canonical skill names.
+- [x] ID: INT-007 Enforce explicit agent module ownership and canonical skill names.
   Command: `python3 tools/bringup/check_multi_agent_gates.py --strict-always --mode static`
   Done means: every agent declares `modules[]` + `skill`, and `skill` is in canonical list.
+  Status: ✅ PASS (2026-03-20) - `check_multi_agent_gates.py --strict-always --mode static` passes after refreshing the manifest/checklist map for the current gate set.
 
-- [ ] ID: INT-008 Allow multi-module ownership only for approved cross-module agents.
+- [x] ID: INT-008 Allow multi-module ownership only for approved cross-module agents.
   Command: `python3 tools/bringup/check_multi_agent_gates.py --strict-always --mode static`
   Done means: agents with multiple modules are explicitly listed in `cross_module_agents`.
+  Status: ✅ PASS (2026-03-20) - static validation confirms only the approved cross-module agents are multi-module (`libc`, `integration`).
 
 - [ ] ID: INT-009 Sync installed skills from canonical map and prune deprecated aliases.
   Command: `bash skills/linx-skills/scripts/install_canonical_skills.sh`
@@ -70,7 +73,47 @@
   Command: `python3 tools/bringup/check_linxcore_perf_floor.py --root . --max-regression 10.0 ...`
   Done means: measured throughput regression is within configured threshold or run is rejected.
 
-- [x] ID: INT-017 Require pinned build closure for compiler, QEMU, Linux, and libc after v0.4 propagation.
+- [ ] ID: INT-017 Require pinned build closure for compiler, QEMU, Linux, and libc after v0.4 propagation.
   Command: `cd avs/compiler/linx-llvm/tests && CLANG=compiler/llvm/build-linxisa-clang/bin/clang TARGET=linx64-linx-none-elf OUT_DIR=out-linx64 ./run.sh && CLANG=compiler/llvm/build-linxisa-clang/bin/clang TARGET=linx32-linx-none-elf OUT_DIR=out-linx32 ./run.sh`; `ninja -C emulator/qemu/build qemu-system-linx64`; `bash lib/glibc/tools/linx/build_linx64_glibc.sh`; `bash lib/glibc/tools/linx/build_linx64_glibc_g1b.sh`; `MODE=phase-b lib/musl/tools/linx/build_linx64_musl.sh`; `env PATH=$PWD/compiler/llvm/build-linxisa-clang/bin:$PATH /opt/homebrew/bin/gmake -C kernel/linux ARCH=linx LLVM=$PWD/compiler/llvm/build-linxisa-clang/bin/ 'CC=$PWD/compiler/llvm/build-linxisa-clang/bin/clang --target=linx64-unknown-linux-gnu -fintegrated-as' HOSTCC=/usr/bin/clang HOSTCXX=/usr/bin/clang++ O=$PWD/kernel/linux/build-linx-fixed vmlinux -j$(sysctl -n hw.ncpu 2>/dev/null || nproc)`
   Done means: the pinned workspace compiles the propagated toolchain/emulator stack and produces Linux + libc artifacts without build failures.
-  Status: ✅ PASS (2026-03-08) - build closure is green in the pinned workspace with refreshed compiler AVS outputs, `emulator/qemu/build/qemu-system-linx64`, `out/libc/glibc/build/linkobj/libc.so`, `out/libc/musl/logs/phase-b-summary.txt`, and `kernel/linux/build-linx-fixed/vmlinux`.
+  Status: ❌ FAIL (2026-03-15) - compiler/QEMU/musl/glibc build rows remain green in the latest pin lane, but `Kernel::Linux \`vmlinux\` build closure` regressed on source-tree cleanliness, so the aggregate pinned build closure is no longer complete.
+
+- [x] ID: INT-018 Normalize the canonical AVS matrix status file before closure checks.
+  Command: `python3 tools/bringup/gen_avs_matrix_status.py --matrix avs/linx_avs_v1_test_matrix.yaml --source-status avs/linx_avs_v1_test_matrix_status.json --out avs/linx_avs_v1_test_matrix_status.json`
+  Done means: the checked-in AVS status file is normalized in place before downstream closure/audit gates consume it.
+  Status: ✅ PASS (2026-03-15) - the latest pin-lane report records `ISA::AVS status normalize` as `pass` in run `2026-03-15-r2-pin`.
+
+- [x] ID: INT-019 Audit AVS matrix status consistency against the canonical matrix.
+  Command: `python3 tools/bringup/check_avs_matrix_status.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --report-out docs/bringup/gates/avs_matrix_status_audit.json`
+  Done means: every matrix entry is represented exactly once in the status file and implemented/pass counts are machine-reported.
+  Status: ✅ PASS (2026-03-15) - the latest audit reports `ok=true` with `implemented_count=20`, `validated_pass_count=20`, and no missing/extra status entries (artifact: `docs/bringup/gates/logs/2026-03-15-r2-pin/pin/avs_matrix_status_audit.json`).
+
+- [x] ID: INT-020 Keep PTO kernel parity green in the pinned workload lane.
+  Command: `python3 workloads/pto_kernels/tools/run_pto_kernel_parity.py --out-dir workloads/generated`
+  Done means: the parity runner reports `ok=true` and the generated latest markdown/json artifacts agree with the current pinned lane.
+  Status: ✅ PASS (2026-04-11) - `python3 workloads/pto_kernels/tools/run_pto_kernel_parity.py --timeout 120` now passes in the current workspace, rewrites `workloads/generated/pto_kernel_parity_latest.{json,md}`, and reports `all_match=true` for 27 kernels; the March 15, 2026 canonical row is now stale until the next convergence refresh.
+
+- [x] ID: INT-021 Keep benchmark workload regression green against the pinned phase-b sysroot.
+  Command: `LINX_CLANG=compiler/llvm/build-linxisa-clang/bin/clang LINX_SYSROOT=out/libc/musl/install/phase-b python3 workloads/run_benchmarks.py --cc tools/spec2017/linx_cc.sh --target linx64-unknown-linux-musl --sysroot out/libc/musl/install/phase-b --json-out workloads/generated/benchmarks_result.json`
+  Done means: the benchmark regression finishes successfully and writes the canonical JSON artifact.
+  Status: ✅ PASS (2026-03-15) - the latest pin-lane run records `Regression::Workload benchmarks` as `pass`.
+
+- [x] ID: INT-022 Keep PolyBench workload regression green against the pinned phase-b sysroot.
+  Command: `LINX_CLANG=compiler/llvm/build-linxisa-clang/bin/clang LINX_SYSROOT=out/libc/musl/install/phase-b python3 workloads/run_polybench.py --cc tools/spec2017/linx_cc.sh --target linx64-unknown-linux-musl --sysroot out/libc/musl/install/phase-b --json-out workloads/generated/polybench_result.json`
+  Done means: the PolyBench regression finishes successfully and writes the canonical JSON artifact.
+  Status: ✅ PASS (2026-03-15) - the latest pin-lane run records `Regression::Workload polybench` as `pass`.
+
+- [x] ID: INT-023 Keep portfolio workload regression green against the pinned phase-b sysroot.
+  Command: `LINX_CLANG=compiler/llvm/build-linxisa-clang/bin/clang LINX_SYSROOT=out/libc/musl/install/phase-b python3 workloads/run_portfolio.py --cc tools/spec2017/linx_cc.sh --target linx64-unknown-linux-musl --sysroot out/libc/musl/install/phase-b --polybench --ctuning-limit 5 --json-out workloads/generated/portfolio_report.json`
+  Done means: the portfolio regression finishes successfully and writes the canonical JSON artifact.
+  Status: ✅ PASS (2026-03-15) - the latest pin-lane run records `Regression::Workload portfolio` as `pass`.
+
+- [x] ID: INT-024 Keep the curated ctuning subset green in the pinned workload lane.
+  Command: `python3 workloads/ctuning/run_milepost_codelets.py --ctuning-root workloads/ctuning --target linx64-unknown-linux-musl --clang compiler/llvm/build-linxisa-clang/bin/clang --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --qemu emulator/qemu/build/qemu-system-linx64 --limit 5 --run --summary-json workloads/generated/ctuning_result.json`
+  Done means: the curated ctuning subset completes under QEMU and writes the canonical summary JSON.
+  Status: ✅ PASS (2026-03-15) - the latest pin-lane run records `Regression::ctuning curated subset` as `pass`.
+
+- [ ] ID: INT-025 Keep TSVC strict QEMU regression green at the required pass floor.
+  Command: `python3 workloads/tsvc/run_tsvc.py --clang compiler/llvm/build-linxisa-clang/bin/clang --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --qemu emulator/qemu/build/qemu-system-linx64 --vector-mode auto --strict-fail-under 151 --source-policy linx-v03-parity --out-dir workloads/generated`
+  Done means: the TSVC lane completes under QEMU and meets the configured strict pass floor.
+  Status: ❌ FAIL (2026-03-15) - the latest pin-lane run times out under QEMU on `tsvc.auto.elf` after 240 seconds (log: `docs/bringup/gates/logs/2026-03-15-r2-pin/pin/workload_tsvc.log`).

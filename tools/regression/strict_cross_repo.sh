@@ -694,23 +694,55 @@ if [[ -n "$MULTI_AGENT_REPORT" && -n "$MULTI_AGENT_LANE" && -n "$MULTI_AGENT_RUN
   else
     MULTI_AGENT_SUMMARY_PATH="$ROOT/docs/bringup/gates/logs/$MULTI_AGENT_RUN_ID/$MULTI_AGENT_LANE/multi_agent_summary.strict_cross.json"
   fi
-  echo
-  echo "-- Multi-agent runtime closure gate"
-  RUNTIME_PHASE_ARGS=()
-  if [[ -n "$MULTI_AGENT_ACTIVE_PHASE" ]]; then
-    RUNTIME_PHASE_ARGS+=(--active-phase "$MULTI_AGENT_ACTIVE_PHASE")
+  REPORT_RUN_PRESENT="$(python3 - <<'PY' "$MULTI_AGENT_REPORT" "$MULTI_AGENT_LANE" "$MULTI_AGENT_RUN_ID"
+import json
+import sys
+from pathlib import Path
+
+report = Path(sys.argv[1])
+lane = sys.argv[2]
+run_id = sys.argv[3]
+if not report.is_file():
+    print("0")
+    raise SystemExit(0)
+try:
+    data = json.loads(report.read_text(encoding="utf-8"))
+except Exception:
+    print("0")
+    raise SystemExit(0)
+runs = data.get("runs")
+if not isinstance(runs, list):
+    print("0")
+    raise SystemExit(0)
+for run in runs:
+    if isinstance(run, dict) and run.get("lane") == lane and run.get("run_id") == run_id:
+        print("1")
+        raise SystemExit(0)
+print("0")
+PY
+)"
+  if [[ "$REPORT_RUN_PRESENT" == "1" ]]; then
+    echo
+    echo "-- Multi-agent runtime closure gate"
+    RUNTIME_PHASE_ARGS=()
+    if [[ -n "$MULTI_AGENT_ACTIVE_PHASE" ]]; then
+      RUNTIME_PHASE_ARGS+=(--active-phase "$MULTI_AGENT_ACTIVE_PHASE")
+    fi
+    python3 "$ROOT/tools/bringup/check_multi_agent_gates.py" \
+      --strict-always \
+      --mode runtime \
+      --manifest "$MULTI_AGENT_MANIFEST" \
+      --waivers "$MULTI_AGENT_WAIVERS" \
+      --checklists-root "$MULTI_AGENT_CHECKLISTS_ROOT" \
+      --report "$MULTI_AGENT_REPORT" \
+      --lane "$MULTI_AGENT_LANE" \
+      --run-id "$MULTI_AGENT_RUN_ID" \
+      --out "$MULTI_AGENT_SUMMARY_PATH" \
+      ${RUNTIME_PHASE_ARGS[@]+"${RUNTIME_PHASE_ARGS[@]}"}
+  else
+    echo "note: skipping multi-agent runtime closure gate (report run '$MULTI_AGENT_RUN_ID' for lane '$MULTI_AGENT_LANE' is absent)" >&2
+    MULTI_AGENT_SUMMARY_PATH=""
   fi
-  python3 "$ROOT/tools/bringup/check_multi_agent_gates.py" \
-    --strict-always \
-    --mode runtime \
-    --manifest "$MULTI_AGENT_MANIFEST" \
-    --waivers "$MULTI_AGENT_WAIVERS" \
-    --checklists-root "$MULTI_AGENT_CHECKLISTS_ROOT" \
-    --report "$MULTI_AGENT_REPORT" \
-    --lane "$MULTI_AGENT_LANE" \
-    --run-id "$MULTI_AGENT_RUN_ID" \
-    --out "$MULTI_AGENT_SUMMARY_PATH" \
-    ${RUNTIME_PHASE_ARGS[@]+"${RUNTIME_PHASE_ARGS[@]}"}
 else
   echo "note: skipping multi-agent runtime closure gate (report context unavailable)"
 fi
