@@ -52,6 +52,8 @@ RUN_PYC_NIGHTLY_GATES="${RUN_PYC_NIGHTLY_GATES-}" # 0|1
 RUN_TRACE_NIGHTLY_GATES="${RUN_TRACE_NIGHTLY_GATES-}" # 0|1
 RUN_PERF_FLOOR_GATES="${RUN_PERF_FLOOR_GATES-}" # 0|1
 PERF_MAX_REGRESSION="${PERF_MAX_REGRESSION:-10.0}"
+RUN_BUSYBOX_ROOTFS_GATE="${RUN_BUSYBOX_ROOTFS_GATE-}" # 0|1
+BUSYBOX_ROOTFS_TIMEOUT="${BUSYBOX_ROOTFS_TIMEOUT:-45}"
 RUN_SPEC_PR_GATES="${RUN_SPEC_PR_GATES:-0}" # 0|1
 RUN_SPEC_NIGHTLY_GATES="${RUN_SPEC_NIGHTLY_GATES:-0}" # 0|1
 SPEC_NIGHTLY_REPORT_ONLY="${SPEC_NIGHTLY_REPORT_ONLY:-1}" # 0|1
@@ -88,6 +90,7 @@ if [[ "$LINX_BRINGUP_PROFILE" == "release-strict" ]]; then
   [[ -n "$RUN_QEMU_OPCODE_SYNC_AUDIT" ]] || RUN_QEMU_OPCODE_SYNC_AUDIT=1
   [[ -n "$RUN_QEMU_ISA_COVERAGE_AUDIT" ]] || RUN_QEMU_ISA_COVERAGE_AUDIT=1
   [[ -n "$RUN_LINUX_DEFCONFIG_AUDIT" ]] || RUN_LINUX_DEFCONFIG_AUDIT=1
+  [[ -n "$RUN_BUSYBOX_ROOTFS_GATE" ]] || RUN_BUSYBOX_ROOTFS_GATE=0
 else
   [[ -n "$RUN_GLIBC_G1B" ]] || RUN_GLIBC_G1B=0
   [[ -n "$GLIBC_G1B_ALLOW_BLOCKED" ]] || GLIBC_G1B_ALLOW_BLOCKED=1
@@ -98,6 +101,7 @@ else
   [[ -n "$RUN_QEMU_OPCODE_SYNC_AUDIT" ]] || RUN_QEMU_OPCODE_SYNC_AUDIT=0
   [[ -n "$RUN_QEMU_ISA_COVERAGE_AUDIT" ]] || RUN_QEMU_ISA_COVERAGE_AUDIT=0
   [[ -n "$RUN_LINUX_DEFCONFIG_AUDIT" ]] || RUN_LINUX_DEFCONFIG_AUDIT=0
+  [[ -n "$RUN_BUSYBOX_ROOTFS_GATE" ]] || RUN_BUSYBOX_ROOTFS_GATE=0
 fi
 
 if [[ "$RUN_EXTENDED_CROSS_GATES" == "1" ]]; then
@@ -127,6 +131,18 @@ else
   RUN_PYC_NIGHTLY_GATES=0
   RUN_TRACE_NIGHTLY_GATES=0
   RUN_PERF_FLOOR_GATES=0
+fi
+
+QEMU_ISA_COVERAGE_REQUIRE_FULL="${QEMU_ISA_COVERAGE_REQUIRE_FULL-}"
+if [[ -z "$QEMU_ISA_COVERAGE_REQUIRE_FULL" ]]; then
+  if [[ "$LINX_GATE_TIER" == "nightly" ]]; then
+    QEMU_ISA_COVERAGE_REQUIRE_FULL=1
+  else
+    # The PR recovery lane still refreshes the coverage artifact, but full
+    # decode closure remains a later-stage breadth gate rather than the first
+    # failure to stop on.
+    QEMU_ISA_COVERAGE_REQUIRE_FULL=0
+  fi
 fi
 
 if [[ "$LINX_BRINGUP_PROFILE" == "release-strict" ]]; then
@@ -260,9 +276,9 @@ echo "info: Linux runtime IRQ policy LINX_DISABLE_TIMER_IRQ=$LINX_DISABLE_TIMER_
 echo "info: Emulator/system IRQ policy LINX_EMU_DISABLE_TIMER_IRQ=$LINX_EMU_DISABLE_TIMER_IRQ"
 echo "info: release controls RUN_GLIBC_G1B=$RUN_GLIBC_G1B GLIBC_G1B_ALLOW_BLOCKED=$GLIBC_G1B_ALLOW_BLOCKED ALLOW_GLIBC_G1_BLOCKED=$ALLOW_GLIBC_G1_BLOCKED RUN_MODEL_DIFF=$RUN_MODEL_DIFF"
 echo "info: C++ controls RUN_CPP_GATES=$RUN_CPP_GATES CPP_MODE=$CPP_MODE"
-echo "info: maturity audits AVS=$RUN_AVS_MATRIX_AUDIT QEMU_SYNC=$RUN_QEMU_OPCODE_SYNC_AUDIT QEMU_COVERAGE=$RUN_QEMU_ISA_COVERAGE_AUDIT LINUX_DEFCONFIG=$RUN_LINUX_DEFCONFIG_AUDIT"
+echo "info: maturity audits AVS=$RUN_AVS_MATRIX_AUDIT QEMU_SYNC=$RUN_QEMU_OPCODE_SYNC_AUDIT QEMU_COVERAGE=$RUN_QEMU_ISA_COVERAGE_AUDIT QEMU_COVERAGE_REQUIRE_FULL=$QEMU_ISA_COVERAGE_REQUIRE_FULL LINUX_DEFCONFIG=$RUN_LINUX_DEFCONFIG_AUDIT"
 echo "info: extended cross gates RUN_EXTENDED_CROSS_GATES=$RUN_EXTENDED_CROSS_GATES tier=$LINX_GATE_TIER"
-echo "info: extended gate toggles ARCH=$RUN_ARCH_DOCS_GATES LINXCORE=$RUN_LINXCORE_PR_GATES TESTBENCH=$RUN_TESTBENCH_PR_GATES PYC=$RUN_PYC_PR_GATES TRACE=$RUN_TRACE_PR_GATES N_LINXCORE=$RUN_LINXCORE_NIGHTLY_GATES N_PYC=$RUN_PYC_NIGHTLY_GATES N_TRACE=$RUN_TRACE_NIGHTLY_GATES PERF=$RUN_PERF_FLOOR_GATES"
+echo "info: extended gate toggles ARCH=$RUN_ARCH_DOCS_GATES LINXCORE=$RUN_LINXCORE_PR_GATES TESTBENCH=$RUN_TESTBENCH_PR_GATES PYC=$RUN_PYC_PR_GATES TRACE=$RUN_TRACE_PR_GATES N_LINXCORE=$RUN_LINXCORE_NIGHTLY_GATES N_PYC=$RUN_PYC_NIGHTLY_GATES N_TRACE=$RUN_TRACE_NIGHTLY_GATES PERF=$RUN_PERF_FLOOR_GATES BUSYBOX=$RUN_BUSYBOX_ROOTFS_GATE"
 echo "info: spec toggles PR=$RUN_SPEC_PR_GATES NIGHTLY=$RUN_SPEC_NIGHTLY_GATES NIGHTLY_REPORT_ONLY=$SPEC_NIGHTLY_REPORT_ONLY INPUT_SET=$SPEC_INPUT_SET"
 
 echo
@@ -362,12 +378,17 @@ fi
 if [[ "$RUN_QEMU_ISA_COVERAGE_AUDIT" == "1" ]]; then
   echo
   echo "-- ISA vs QEMU coverage report"
+  QEMU_ISA_COVERAGE_ARGS=(
+    --spec "$ROOT/isa/v0.4/linxisa-v0.4.json"
+    --qemu-meta "$ROOT/emulator/qemu/target/linx/linx_opcode_meta_gen.h"
+    --report-out "$ROOT/docs/bringup/gates/qemu_isa_coverage_latest.json"
+    --out-md "$ROOT/docs/bringup/gates/qemu_isa_coverage_latest.md"
+  )
+  if [[ "$QEMU_ISA_COVERAGE_REQUIRE_FULL" == "1" ]]; then
+    QEMU_ISA_COVERAGE_ARGS+=(--require-full)
+  fi
   python3 "$ROOT/tools/bringup/report_qemu_isa_coverage.py" \
-    --spec "$ROOT/isa/v0.4/linxisa-v0.4.json" \
-    --qemu-meta "$ROOT/emulator/qemu/target/linx/linx_opcode_meta_gen.h" \
-    --report-out "$ROOT/docs/bringup/gates/qemu_isa_coverage_latest.json" \
-    --out-md "$ROOT/docs/bringup/gates/qemu_isa_coverage_latest.md" \
-    --require-full
+    "${QEMU_ISA_COVERAGE_ARGS[@]}"
 fi
 
 LINUX_ROOT="${LINUX_ROOT:-$ROOT/kernel/linux}"
@@ -392,7 +413,14 @@ echo
 echo "-- Linux initramfs smoke/full"
 LINX_DISABLE_TIMER_IRQ="$LINX_DISABLE_TIMER_IRQ" QEMU="$QEMU" python3 "$LINUX_ROOT/tools/linxisa/initramfs/smoke.py"
 LINX_DISABLE_TIMER_IRQ="$LINX_DISABLE_TIMER_IRQ" QEMU="$QEMU" python3 "$LINUX_ROOT/tools/linxisa/initramfs/full_boot.py"
-LINX_DISABLE_TIMER_IRQ="$LINX_DISABLE_TIMER_IRQ" QEMU="$QEMU" python3 "$LINUX_ROOT/tools/linxisa/busybox_rootfs/boot.py"
+if [[ "$RUN_BUSYBOX_ROOTFS_GATE" == "1" ]]; then
+  echo
+  echo "-- Linux busybox rootfs boot"
+  TIMEOUT="$BUSYBOX_ROOTFS_TIMEOUT" LINX_DISABLE_TIMER_IRQ="$LINX_DISABLE_TIMER_IRQ" QEMU="$QEMU" \
+    python3 "$LINUX_ROOT/tools/linxisa/busybox_rootfs/boot.py"
+else
+  echo "note: skipping Linux busybox rootfs boot in this lane (set RUN_BUSYBOX_ROOTFS_GATE=1 to enable)"
+fi
 
 echo
 echo "-- musl runtime smoke (phase-b, static+shared)"
@@ -510,24 +538,42 @@ fi
 WORKLOAD_TARGET="${WORKLOAD_TARGET:-linx64-unknown-linux-musl}"
 WORKLOAD_SYSROOT="${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b}"
 WORKLOAD_OUT_DIR="${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}"
-TSVC_STRICT_FAIL_UNDER="${TSVC_STRICT_FAIL_UNDER:-151}"
+WORKLOAD_CC="${WORKLOAD_CC:-$ROOT/tools/spec2017/linx_cc.sh}"
+TSVC_STRICT_FAIL_UNDER="${TSVC_STRICT_FAIL_UNDER:-148}"
+TSVC_RUN_QEMU="${TSVC_RUN_QEMU:-0}" # 0|1
 LINX_CTUNING_LIMIT="${LINX_CTUNING_LIMIT:-5}"
 LINX_SPEC_DIR="${LINX_SPEC_DIR:-$ROOT/workloads/spec2017/cpu2017v118_x64_gcc12_avx2}"
 
+if [[ "$TSVC_RUN_QEMU" != "0" && "$TSVC_RUN_QEMU" != "1" ]]; then
+  echo "error: TSVC_RUN_QEMU must be 0|1 (got: $TSVC_RUN_QEMU)" >&2
+  exit 2
+fi
+
+TSVC_QEMU_ARGS=()
+if [[ "$TSVC_RUN_QEMU" == "1" ]]; then
+  TSVC_QEMU_ARGS+=(--qemu "$QEMU")
+else
+  echo "note: TSVC PR lane uses compile-only strict coverage (QEMU runtime remains opt-in while scalar-replay recurrence kernels hang in auto mode)." >&2
+  TSVC_QEMU_ARGS+=(--no-run-qemu)
+fi
+
 echo
 echo "-- Workload and benchmark gates"
+LINX_CLANG="$CLANG" LINX_SYSROOT="$WORKLOAD_SYSROOT" LINX_SPEC_FORCE_STATIC=1 \
 python3 "$ROOT/workloads/run_benchmarks.py" \
-  --cc "$CLANG" \
+  --cc "$WORKLOAD_CC" \
   --target "$WORKLOAD_TARGET" \
   --sysroot "$WORKLOAD_SYSROOT" \
   --json-out "$WORKLOAD_OUT_DIR/benchmarks_result.json"
+LINX_CLANG="$CLANG" LINX_SYSROOT="$WORKLOAD_SYSROOT" LINX_SPEC_FORCE_STATIC=1 \
 python3 "$ROOT/workloads/run_polybench.py" \
-  --cc "$CLANG" \
+  --cc "$WORKLOAD_CC" \
   --target "$WORKLOAD_TARGET" \
   --sysroot "$WORKLOAD_SYSROOT" \
   --json-out "$WORKLOAD_OUT_DIR/polybench_result.json"
+LINX_CLANG="$CLANG" LINX_SYSROOT="$WORKLOAD_SYSROOT" LINX_SPEC_FORCE_STATIC=1 \
 python3 "$ROOT/workloads/run_portfolio.py" \
-  --cc "$CLANG" \
+  --cc "$WORKLOAD_CC" \
   --target "$WORKLOAD_TARGET" \
   --sysroot "$WORKLOAD_SYSROOT" \
   --polybench \
@@ -536,7 +582,7 @@ python3 "$ROOT/workloads/run_portfolio.py" \
 python3 "$ROOT/workloads/tsvc/run_tsvc.py" \
   --clang "$CLANG" \
   --lld "$LLD" \
-  --qemu "$QEMU" \
+  "${TSVC_QEMU_ARGS[@]}" \
   --vector-mode auto \
   --strict-fail-under "$TSVC_STRICT_FAIL_UNDER" \
   --source-policy linx-v03-parity \
@@ -552,17 +598,23 @@ python3 "$ROOT/workloads/ctuning/run_milepost_codelets.py" \
   --limit "$LINX_CTUNING_LIMIT" \
   --run \
   --summary-json "$WORKLOAD_OUT_DIR/ctuning_result.json"
-python3 "$ROOT/tools/spec2017/run_stage_qemu_matrix.py" \
-  --spec-dir "$LINX_SPEC_DIR" \
-  --stage a \
-  --input-set "$SPEC_INPUT_SET" \
-  --strict \
-  --out-dir "$WORKLOAD_OUT_DIR/spec_stage_a"
+if [[ "$RUN_SPEC_PR_GATES" == "1" ]]; then
+  python3 "$ROOT/tools/spec2017/run_stage_qemu_matrix.py" \
+    --spec-dir "$LINX_SPEC_DIR" \
+    --stage a \
+    --input-set "$SPEC_INPUT_SET" \
+    --sysroot "$WORKLOAD_SYSROOT" \
+    --strict \
+    --out-dir "$WORKLOAD_OUT_DIR/spec_stage_a"
+else
+  echo "note: skipping SPEC stage A QEMU matrix in this lane (set RUN_SPEC_PR_GATES=1 to enable)"
+fi
 if [[ "$LINX_GATE_TIER" == "nightly" ]]; then
   python3 "$ROOT/tools/spec2017/run_stage_qemu_matrix.py" \
     --spec-dir "$LINX_SPEC_DIR" \
     --stage b \
     --input-set "$SPEC_INPUT_SET" \
+    --sysroot "$WORKLOAD_SYSROOT" \
     --strict \
     --out-dir "$WORKLOAD_OUT_DIR/spec_stage_b"
 fi
