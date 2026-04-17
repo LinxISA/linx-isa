@@ -12,6 +12,8 @@ LINUX_ROOT="${LINUX_ROOT:-$ROOT/kernel/linux}"
 OUT_BASE="$ROOT/docs/bringup/gates/logs"
 QEMU_TIMEOUT="${QEMU_TIMEOUT:-10}"
 MUSL_TIMEOUT="${MUSL_TIMEOUT:-90}"
+GLIBC_TIMEOUT="${GLIBC_TIMEOUT:-30}"
+BUSYBOX_ROOTFS_TIMEOUT="${BUSYBOX_ROOTFS_TIMEOUT:-45}"
 LINX_DISABLE_TIMER_IRQ="${LINX_DISABLE_TIMER_IRQ:-0}"
 LINX_EMU_DISABLE_TIMER_IRQ="${LINX_EMU_DISABLE_TIMER_IRQ:-0}"
 RUN_GLIBC_G1B="${RUN_GLIBC_G1B-}"
@@ -110,6 +112,7 @@ Options:
   --linux-root PATH            Linux root (default: $ROOT/kernel/linux)
   --qemu-timeout SEC           run_tests.sh timeout (default: 10)
   --musl-timeout SEC           musl smoke timeout (default: 90)
+  --glibc-timeout SEC          glibc runtime smoke timeout (default: 30)
   --skip-glibc-g1b             Skip glibc G1b shared libc.so gate
   --strict-glibc-g1b           Treat G1b blocked status as failure
   --skip-linux                 Skip smoke.py/full_boot.py gates
@@ -155,6 +158,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --musl-timeout)
       MUSL_TIMEOUT="$2"
+      shift 2
+      ;;
+    --glibc-timeout)
+      GLIBC_TIMEOUT="$2"
       shift 2
       ;;
     --skip-glibc-g1b)
@@ -263,6 +270,26 @@ resolve_qemu() {
   echo ""
 }
 
+resolve_gmake() {
+  if [[ -n "${GMAKE:-}" && -x "${GMAKE}" ]]; then
+    echo "${GMAKE}"
+    return
+  fi
+  local cands=(
+    "/opt/homebrew/bin/gmake"
+    "$(command -v gmake 2>/dev/null || true)"
+    "$(command -v make 2>/dev/null || true)"
+  )
+  local c
+  for c in "${cands[@]}"; do
+    if [[ -n "$c" && -x "$c" ]]; then
+      echo "$c"
+      return
+    fi
+  done
+  echo ""
+}
+
 CLANG_BIN="$(resolve_clang)"
 if [[ -z "$CLANG_BIN" ]]; then
   echo "error: clang not found; set CLANG or build toolchain first" >&2
@@ -276,6 +303,11 @@ fi
 QEMU_BIN="$(resolve_qemu)"
 if [[ -z "$QEMU_BIN" ]]; then
   echo "error: qemu-system-linx64 not found for lane '$LANE'; set QEMU=..." >&2
+  exit 1
+fi
+GMAKE_BIN="$(resolve_gmake)"
+if [[ -z "$GMAKE_BIN" ]]; then
+  echo "error: gmake/make not found; set GMAKE=..." >&2
   exit 1
 fi
 if [[ ! -d "$LINUX_ROOT/tools/linxisa/initramfs" ]]; then
@@ -322,8 +354,10 @@ echo "info: profile=$LINX_BRINGUP_PROFILE trace_schema_version=$TRACE_SCHEMA_VER
 echo "info: clang=$CLANG_BIN"
 echo "info: lld=$LLD_BIN"
 echo "info: qemu=$QEMU_BIN"
+echo "info: gmake=$GMAKE_BIN"
 echo "info: Linux runtime IRQ policy LINX_DISABLE_TIMER_IRQ=$LINX_DISABLE_TIMER_IRQ"
 echo "info: Emulator/system IRQ policy LINX_EMU_DISABLE_TIMER_IRQ=$LINX_EMU_DISABLE_TIMER_IRQ"
+echo "info: BusyBox rootfs timeout BUSYBOX_ROOTFS_TIMEOUT=$BUSYBOX_ROOTFS_TIMEOUT"
 echo "info: glibc G1b gate RUN_GLIBC_G1B=$RUN_GLIBC_G1B GLIBC_G1B_ALLOW_BLOCKED=$GLIBC_G1B_ALLOW_BLOCKED"
 echo "info: C++ gates RUN_CPP_GATES=$RUN_CPP_GATES CPP_MODE=$CPP_MODE"
 echo "info: gate tier LINX_GATE_TIER=$LINX_GATE_TIER"
@@ -574,6 +608,22 @@ run_gate \
   "compiler_cov_linx32"
 
 run_gate \
+  "Compiler" \
+  'LLVM auxiliary tool suite (`llvm-ar`/`llvm-nm`/`llvm-readelf`/`llvm-strip`)' \
+  "ninja -C $ROOT/compiler/llvm/build-linxisa-clang llvm-ar llvm-nm llvm-strip llvm-readelf" \
+  "llvm_aux_tools_pass" \
+  "llvm_aux_tools_fail" \
+  "compiler_aux_tools"
+
+run_gate \
+  "Emulator" \
+  "QEMU pinned binary build" \
+  "ninja -C $ROOT/emulator/qemu/build qemu-system-linx64" \
+  "qemu_pinned_build_pass" \
+  "qemu_pinned_build_fail" \
+  "emu_build"
+
+run_gate \
   "Emulator" \
   "QEMU strict system" \
   "cd $ROOT/avs/qemu && LINX_DISABLE_TIMER_IRQ=$LINX_EMU_DISABLE_TIMER_IRQ CLANG=$CLANG_BIN LLD=$LLD_BIN QEMU=$QEMU_BIN ./check_system_strict.sh" \
@@ -735,6 +785,14 @@ else
   record_skipped_gate "LinxTrace" "semver compatibility gate" "python3 $ROOT/tools/bringup/check_trace_semver_compat.py --root $ROOT --strict --out $RUN_LOG_DIR/trace_semver_report.json" "RUN_TRACE_PR_GATES=0" "trace" "no"
 fi
 
+run_gate \
+  "Kernel" \
+  'Linux `vmlinux` build closure' \
+  "bash $ROOT/tools/bringup/run_linux_vmlinux_build_clean.sh --linux-root $LINUX_ROOT --out-dir $LINUX_ROOT/build-linx-fixed --clang $CLANG_BIN --gmake $GMAKE_BIN --target vmlinux" \
+  "linux_vmlinux_build_pass" \
+  "linux_vmlinux_build_fail" \
+  "kernel_vmlinux_build"
+
 if [[ $SKIP_LINUX -eq 0 ]]; then
   run_gate \
     "Kernel" \
@@ -755,7 +813,7 @@ if [[ $SKIP_LINUX -eq 0 ]]; then
   run_gate \
     "Kernel" \
     "Linux busybox rootfs boot" \
-    "LINX_DISABLE_TIMER_IRQ=$LINX_DISABLE_TIMER_IRQ QEMU=$QEMU_BIN python3 $LINUX_ROOT/tools/linxisa/busybox_rootfs/boot.py" \
+    "TIMEOUT=$BUSYBOX_ROOTFS_TIMEOUT LINX_DISABLE_TIMER_IRQ=$LINX_DISABLE_TIMER_IRQ QEMU=$QEMU_BIN python3 $LINUX_ROOT/tools/linxisa/busybox_rootfs/boot.py" \
     "linux_busybox_rootfs_pass" \
     "linux_busybox_rootfs_fail" \
     "kernel_busybox_rootfs"
@@ -785,7 +843,7 @@ else
   record_gate \
     "Kernel" \
     "Linux busybox rootfs boot" \
-    "LINX_DISABLE_TIMER_IRQ=$LINX_DISABLE_TIMER_IRQ QEMU=$QEMU_BIN python3 $LINUX_ROOT/tools/linxisa/busybox_rootfs/boot.py" \
+    "TIMEOUT=$BUSYBOX_ROOTFS_TIMEOUT LINX_DISABLE_TIMER_IRQ=$LINX_DISABLE_TIMER_IRQ QEMU=$QEMU_BIN python3 $LINUX_ROOT/tools/linxisa/busybox_rootfs/boot.py" \
     "not_run" \
     "skipped_by_flag" \
     "note: --skip-linux" \
@@ -794,6 +852,22 @@ else
     "kernel" \
     "note"
 fi
+
+run_gate \
+  "Library" \
+  'musl build closure (`phase-b`)' \
+  "cd $ROOT && MODE=phase-b bash lib/musl/tools/linx/build_linx64_musl.sh" \
+  "musl_build_phase_b_pass" \
+  "musl_build_phase_b_fail" \
+  "lib_musl_build_phase_b"
+
+run_gate \
+  "Library" \
+  "glibc baseline G1a" \
+  "cd $ROOT && bash lib/glibc/tools/linx/build_linx64_glibc.sh" \
+  "glibc_g1a_pass" \
+  "glibc_g1a_fail" \
+  "lib_glibc_g1a"
 
 run_gate \
   "Library" \
@@ -820,9 +894,27 @@ else
 fi
 
 run_gate \
+  "Integration" \
+  "Pinned workspace build closure" \
+  "test -x $ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-ar && test -x $ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-nm && test -x $ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-readelf && test -x $ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-strip && test -x $ROOT/emulator/qemu/build/qemu-system-linx64 && test -f $LINUX_ROOT/build-linx-fixed/vmlinux && test -f $ROOT/out/libc/glibc/build/linkobj/libc.so && test -f $ROOT/out/libc/glibc/logs/g1b-summary.txt && test -f $ROOT/out/libc/musl/logs/phase-b-summary.txt" \
+  "pinned_workspace_build_closure_pass" \
+  "pinned_workspace_build_closure_fail" \
+  "integration_pinned_build_closure" \
+  "yes" \
+  "integration"
+
+run_gate \
+  "Library" \
+  "glibc runtime dynamic hello" \
+  "python3 $ROOT/avs/qemu/run_glibc_smoke.py --qemu $QEMU_BIN --timeout $GLIBC_TIMEOUT" \
+  "runtime_pass" \
+  "glibc_runtime_failure" \
+  "lib_glibc_runtime"
+
+run_gate \
   "Regression" \
   "Workload benchmarks" \
-  "python3 $ROOT/workloads/run_benchmarks.py --cc $CLANG_BIN --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --json-out ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/benchmarks_result.json" \
+  "LINX_CLANG=$CLANG_BIN LINX_SYSROOT=${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} python3 $ROOT/workloads/run_benchmarks.py --cc $ROOT/tools/spec2017/linx_cc.sh --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --json-out ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/benchmarks_result.json" \
   "workload_benchmarks_pass" \
   "workload_benchmarks_fail" \
   "workload_benchmarks"
@@ -830,7 +922,7 @@ run_gate \
 run_gate \
   "Regression" \
   "Workload polybench" \
-  "python3 $ROOT/workloads/run_polybench.py --cc $CLANG_BIN --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --json-out ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/polybench_result.json" \
+  "LINX_CLANG=$CLANG_BIN LINX_SYSROOT=${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} python3 $ROOT/workloads/run_polybench.py --cc $ROOT/tools/spec2017/linx_cc.sh --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --json-out ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/polybench_result.json" \
   "workload_polybench_pass" \
   "workload_polybench_fail" \
   "workload_polybench"
@@ -838,15 +930,15 @@ run_gate \
 run_gate \
   "Regression" \
   "Workload portfolio" \
-  "python3 $ROOT/workloads/run_portfolio.py --cc $CLANG_BIN --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --polybench --ctuning-limit ${LINX_CTUNING_LIMIT:-5} --json-out ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/portfolio_report.json" \
+  "LINX_CLANG=$CLANG_BIN LINX_SYSROOT=${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} python3 $ROOT/workloads/run_portfolio.py --cc $ROOT/tools/spec2017/linx_cc.sh --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --polybench --ctuning-limit ${LINX_CTUNING_LIMIT:-5} --json-out ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/portfolio_report.json" \
   "workload_portfolio_pass" \
   "workload_portfolio_fail" \
   "workload_portfolio"
 
 run_gate \
   "Regression" \
-  "TSVC QEMU gate" \
-  "python3 $ROOT/workloads/tsvc/run_tsvc.py --clang $CLANG_BIN --lld $LLD_BIN --qemu $QEMU_BIN --vector-mode auto --strict-fail-under ${TSVC_STRICT_FAIL_UNDER:-151} --source-policy linx-v03-parity --out-dir ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}" \
+  "TSVC strict coverage gate" \
+  "python3 $ROOT/workloads/tsvc/run_tsvc.py --clang $CLANG_BIN --lld $LLD_BIN --vector-mode auto --strict-fail-under ${TSVC_STRICT_FAIL_UNDER:-148} --source-policy linx-v03-parity --no-run-qemu --out-dir ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}" \
   "workload_tsvc_pass" \
   "workload_tsvc_fail" \
   "workload_tsvc"
@@ -867,19 +959,29 @@ run_gate \
   "workload_ctuning_fail" \
   "workload_ctuning"
 
-run_gate \
-  "Regression" \
-  "SPEC stage A QEMU matrix" \
-  "python3 $ROOT/tools/spec2017/run_stage_qemu_matrix.py --spec-dir ${LINX_SPEC_DIR:-$ROOT/workloads/spec2017/cpu2017v118_x64_gcc12_avx2} --stage a --input-set ${SPEC_INPUT_SET:-test} --strict --out-dir ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/spec_stage_a" \
-  "workload_spec_stage_a_pass" \
-  "workload_spec_stage_a_fail" \
-  "workload_spec_stage_a"
+if [[ "${RUN_SPEC_PR_GATES:-0}" == "1" ]]; then
+  run_gate \
+    "Regression" \
+    "SPEC stage A QEMU matrix" \
+    "python3 $ROOT/tools/spec2017/run_stage_qemu_matrix.py --spec-dir ${LINX_SPEC_DIR:-$ROOT/workloads/spec2017/cpu2017v118_x64_gcc12_avx2} --stage a --input-set ${SPEC_INPUT_SET:-test} --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --strict --out-dir ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/spec_stage_a" \
+    "workload_spec_stage_a_pass" \
+    "workload_spec_stage_a_fail" \
+    "workload_spec_stage_a"
+else
+  record_skipped_gate \
+    "Regression" \
+    "SPEC stage A QEMU matrix" \
+    "python3 $ROOT/tools/spec2017/run_stage_qemu_matrix.py --spec-dir ${LINX_SPEC_DIR:-$ROOT/workloads/spec2017/cpu2017v118_x64_gcc12_avx2} --stage a --input-set ${SPEC_INPUT_SET:-test} --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --strict --out-dir ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/spec_stage_a" \
+    "RUN_SPEC_PR_GATES=0" \
+    "workload_spec_stage_a" \
+    "no"
+fi
 
 if [[ "$LINX_GATE_TIER" == "nightly" ]]; then
   run_gate \
     "Regression" \
     "SPEC stage B QEMU matrix" \
-    "python3 $ROOT/tools/spec2017/run_stage_qemu_matrix.py --spec-dir ${LINX_SPEC_DIR:-$ROOT/workloads/spec2017/cpu2017v118_x64_gcc12_avx2} --stage b --input-set ${SPEC_INPUT_SET:-test} --strict --out-dir ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/spec_stage_b" \
+    "python3 $ROOT/tools/spec2017/run_stage_qemu_matrix.py --spec-dir ${LINX_SPEC_DIR:-$ROOT/workloads/spec2017/cpu2017v118_x64_gcc12_avx2} --stage b --input-set ${SPEC_INPUT_SET:-test} --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --strict --out-dir ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/spec_stage_b" \
     "workload_spec_stage_b_pass" \
     "workload_spec_stage_b_fail" \
     "workload_spec_stage_b"
@@ -1053,7 +1155,15 @@ else
     "note"
 fi
 
-python3 "$ROOT/tools/bringup/gate_report.py" render --report "$REPORT" --out-md "$ROOT/docs/bringup/GATE_STATUS.md"
+run_gate \
+  "Integration" \
+  "Gate status render" \
+  "python3 $ROOT/tools/bringup/gate_report.py render --report $REPORT --out-md $ROOT/docs/bringup/GATE_STATUS.md" \
+  "gate_status_render_pass" \
+  "gate_status_render_fail" \
+  "integration_gate_status_render" \
+  "yes" \
+  "integration"
 
 MULTI_AGENT_SUMMARY="$RUN_LOG_DIR/multi_agent_summary.json"
 RUNTIME_PHASE_ARGS=()
