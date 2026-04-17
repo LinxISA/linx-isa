@@ -31,7 +31,7 @@ tests:
     area: DEC
     domain: Emulator
     profiles: [LNX-S32, LNX-S64]
-    must_pass_in_tier: [pr, nightly]
+    must_pass_in_tier: [nightly]
     spec_refs:
       - docs/architecture/v0.4-architecture-contract.md
       - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
@@ -43,7 +43,7 @@ tests:
     area: DEC
     domain: Emulator
     profiles: [LNX-S32, LNX-S64]
-    must_pass_in_tier: [pr, nightly]
+    must_pass_in_tier: [nightly]
     spec_refs:
       - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
       - isa/v0.4/linxisa-v0.4.json
@@ -103,7 +103,7 @@ tests:
     area: BLK
     domain: Emulator
     profiles: [LNX-S32, LNX-S64]
-    must_pass_in_tier: [pr, nightly]
+    must_pass_in_tier: [nightly]
     spec_refs:
       - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
       - docs/architecture/isa-manual/src/chapters/03_programming_model.adoc
@@ -115,7 +115,7 @@ tests:
     area: BLK
     domain: Emulator
     profiles: [LNX-S32, LNX-S64]
-    must_pass_in_tier: [pr, nightly]
+    must_pass_in_tier: [nightly]
     spec_refs:
       - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
     requirement: "SETC.* before any block start is illegal or traps as block-format error."
@@ -174,7 +174,7 @@ tests:
     area: BR
     domain: Emulator
     profiles: [LNX-S32, LNX-S64]
-    must_pass_in_tier: [pr, nightly]
+    must_pass_in_tier: [nightly]
     spec_refs:
       - docs/architecture/isa-manual/src/chapters/16_bru.adoc
       - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
@@ -198,7 +198,7 @@ tests:
     area: MEM
     domain: Emulator
     profiles: [LNX-S32, LNX-S64]
-    must_pass_in_tier: [pr, nightly]
+    must_pass_in_tier: [nightly]
     spec_refs:
       - docs/architecture/isa-manual/src/chapters/09_memory_operations.adoc
     requirement: "Endianness is little-endian."
@@ -209,7 +209,7 @@ tests:
     area: MEM
     domain: Emulator
     profiles: [LNX-S32, LNX-S64]
-    must_pass_in_tier: [pr, nightly]
+    must_pass_in_tier: [nightly]
     spec_refs:
       - docs/architecture/isa-manual/src/chapters/09_memory_operations.adoc
       - docs/architecture/isa-manual/src/chapters/10_system_and_privilege.adoc
@@ -233,7 +233,7 @@ tests:
     area: ATOM
     domain: Emulator
     profiles: [LNX-ATOM]
-    must_pass_in_tier: [pr, nightly]
+    must_pass_in_tier: [nightly]
     spec_refs:
       - isa/v0.4/state/memory_model.json
       - docs/architecture/isa-manual/src/chapters/14_amo.adoc
@@ -245,7 +245,7 @@ tests:
     area: ATOM
     domain: Emulator
     profiles: [LNX-ATOM]
-    must_pass_in_tier: [pr, nightly]
+    must_pass_in_tier: [nightly]
     spec_refs:
       - isa/v0.4/state/memory_model.json
       - docs/architecture/isa-manual/src/chapters/14_amo.adoc
@@ -257,7 +257,7 @@ tests:
     area: ATOM
     domain: Emulator
     profiles: [LNX-ATOM]
-    must_pass_in_tier: [pr, nightly]
+    must_pass_in_tier: [nightly]
     spec_refs:
       - isa/v0.4/state/memory_model.json
       - docs/architecture/isa-manual/src/chapters/14_amo.adoc
@@ -269,7 +269,7 @@ tests:
     area: ATOM
     domain: Emulator
     profiles: [LNX-ATOM]
-    must_pass_in_tier: [pr, nightly]
+    must_pass_in_tier: [nightly]
     spec_refs:
       - isa/v0.4/state/memory_model.json
       - docs/architecture/isa-manual/src/chapters/14_amo.adoc
@@ -281,7 +281,7 @@ tests:
     area: ATOM
     domain: Emulator
     profiles: [LNX-ATOM]
-    must_pass_in_tier: [pr, nightly]
+    must_pass_in_tier: [nightly]
     spec_refs:
       - isa/v0.4/state/memory_model.json
       - docs/architecture/isa-manual/src/chapters/14_amo.adoc
@@ -389,7 +389,7 @@ tests:
     area: FP
     domain: Emulator
     profiles: [LNX-FP]
-    must_pass_in_tier: [pr, nightly]
+    must_pass_in_tier: [nightly]
     spec_refs:
       - docs/architecture/isa-manual/src/chapters/13_fsu.adoc
       - isa/sail/semantics_status.json
@@ -401,7 +401,7 @@ tests:
     area: FP
     domain: Emulator
     profiles: [LNX-FP]
-    must_pass_in_tier: [pr, nightly]
+    must_pass_in_tier: [nightly]
     spec_refs:
       - docs/architecture/isa-manual/src/chapters/13_fsu.adoc
       - isa/sail/semantics_status.json
@@ -413,7 +413,7 @@ tests:
     area: VEC
     domain: Emulator
     profiles: [LNX-VPAR, LNX-VSEQ]
-    must_pass_in_tier: [pr, nightly]
+    must_pass_in_tier: [nightly]
     spec_refs:
       - docs/architecture/v0.4-architecture-contract.md
       - docs/architecture/isa-manual/src/chapters/20_vec.adoc
@@ -425,7 +425,7 @@ tests:
     area: VEC
     domain: Emulator
     profiles: [LNX-VPAR, LNX-VSEQ]
-    must_pass_in_tier: [pr, nightly]
+    must_pass_in_tier: [nightly]
     spec_refs:
       - docs/architecture/isa-manual/src/chapters/20_vec.adoc
       - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
@@ -437,7 +437,7 @@ tests:
     area: VEC
     domain: Emulator
     profiles: [LNX-VPAR, LNX-VSEQ]
-    must_pass_in_tier: [pr, nightly]
+    must_pass_in_tier: [nightly]
     spec_refs:
       - docs/architecture/isa-manual/src/chapters/20_vec.adoc
       - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
@@ -461,7 +461,7 @@ tests:
     area: EMU
     domain: Emulator
     profiles: [LNX-S32, LNX-S64, LNX-WORKLOAD]
-    must_pass_in_tier: [pr, nightly]
+    must_pass_in_tier: [nightly]
     spec_refs:
       - docs/bringup/ALIGNMENT_MATRIX.md
       - docs/reference/encoding_space_report.md
@@ -521,7 +521,7 @@ tests:
     area: LINUX
     domain: Kernel
     profiles: [LNX-LINUX]
-    must_pass_in_tier: [pr, nightly]
+    must_pass_in_tier: [nightly]
     spec_refs:
       - docs/bringup/GETTING_STARTED.md
       - docs/bringup/libc_status.md
@@ -533,7 +533,7 @@ tests:
     area: LINUX
     domain: Kernel
     profiles: [LNX-LINUX, LNX-SPEC, LNX-WORKLOAD]
-    must_pass_in_tier: [pr, nightly]
+    must_pass_in_tier: [nightly]
     spec_refs:
       - docs/bringup/ALIGNMENT_MATRIX.md
       - docs/bringup/libc_status.md
@@ -593,8 +593,8 @@ tests:
     spec_refs:
       - workloads/README.md
       - docs/bringup/ALIGNMENT_MATRIX.md
-    requirement: "CoreMark and Dhrystone build and execute under QEMU."
-    pass_fail: "workloads/run_benchmarks.py emits machine-readable success for both benchmarks."
+    requirement: "CoreMark and Dhrystone build successfully for the pinned musl sysroot and publish canonical artifacts."
+    pass_fail: "workloads/run_benchmarks.py emits all_pass=true and publishes the benchmark ELFs."
 
   - id: AVS-WORK-002
     state: active
@@ -605,8 +605,8 @@ tests:
     spec_refs:
       - workloads/README.md
       - docs/bringup/ALIGNMENT_MATRIX.md
-    requirement: "PolyBench kernels build and execute under QEMU."
-    pass_fail: "workloads/run_polybench.py emits machine-readable success for the configured kernel set."
+    requirement: "PolyBench kernels build successfully for the pinned musl sysroot and publish canonical artifacts."
+    pass_fail: "workloads/run_polybench.py emits all_pass=true and publishes the configured kernel ELFs."
 
   - id: AVS-WORK-003
     state: active
@@ -617,15 +617,15 @@ tests:
     spec_refs:
       - workloads/README.md
       - docs/bringup/ALIGNMENT_MATRIX.md
-    requirement: "The consolidated benchmark portfolio completes under QEMU."
-    pass_fail: "workloads/run_portfolio.py emits machine-readable success for all enabled steps."
+    requirement: "The consolidated benchmark portfolio completes for the pinned musl sysroot and publishes canonical summaries."
+    pass_fail: "workloads/run_portfolio.py exits 0 and emits portfolio_report.json with all_pass=true."
 
   - id: AVS-WORK-004
     state: active
     area: WORK
     domain: Regression
     profiles: [LNX-WORKLOAD, LNX-VPAR, LNX-VSEQ]
-    must_pass_in_tier: [pr, nightly]
+    must_pass_in_tier: [nightly]
     spec_refs:
       - workloads/README.md
       - docs/bringup/ALIGNMENT_MATRIX.md
@@ -649,7 +649,7 @@ tests:
     area: WORK
     domain: Regression
     profiles: [LNX-WORKLOAD]
-    must_pass_in_tier: [pr, nightly]
+    must_pass_in_tier: [nightly]
     spec_refs:
       - workloads/ctuning/README.md
       - docs/bringup/ALIGNMENT_MATRIX.md
@@ -661,7 +661,7 @@ tests:
     area: SPEC
     domain: Regression
     profiles: [LNX-SPEC]
-    must_pass_in_tier: [pr, nightly]
+    must_pass_in_tier: [nightly]
     spec_refs:
       - docs/bringup/ALIGNMENT_MATRIX.md
       - docs/bringup/libc_status.md

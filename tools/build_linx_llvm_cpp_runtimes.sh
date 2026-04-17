@@ -202,12 +202,30 @@ RANLIB="${RANLIB:-$LLVM_BIN/llvm-ranlib}"
 NM="${NM:-$LLVM_BIN/llvm-nm}"
 STRIP="${STRIP:-$LLVM_BIN/llvm-strip}"
 
-for exe in "$CLANGXX" "$LLD" "$AR" "$RANLIB" "$NM" "$STRIP"; do
+[[ -x "$AR" ]] || AR="$(command -v llvm-ar || command -v ar || true)"
+[[ -x "$RANLIB" ]] || RANLIB="$(command -v llvm-ranlib || command -v ranlib || true)"
+[[ -x "$NM" ]] || NM="$(command -v llvm-nm || command -v nm || true)"
+[[ -x "$STRIP" ]] || STRIP="$(command -v llvm-strip || command -v strip || true)"
+
+RANLIB_CONFIG="$RANLIB"
+RANLIB_CMAKE="$RANLIB"
+if [[ "$(uname -s)" == "Darwin" ]] && [[ "$(basename "$AR")" == "llvm-ar" ]] &&
+   [[ "$(basename "$RANLIB")" == "ranlib" ]]; then
+  # Host ranlib can rewrite foreign archives incorrectly on macOS. llvm-ar can
+  # refresh the archive symbol table itself via `s`.
+  RANLIB_CONFIG="$AR s"
+fi
+
+for exe in "$CLANGXX" "$LLD" "$AR" "$NM" "$STRIP"; do
   if [[ ! -x "$exe" ]]; then
     echo "error: missing executable tool: $exe" >&2
     exit 2
   fi
 done
+if [[ -z "$RANLIB_CONFIG" ]]; then
+  echo "error: missing executable tool: $RANLIB" >&2
+  exit 2
+fi
 
 LLVM_CONFIG_DIR="$LLVM_HOST_BUILD_ROOT/lib/cmake/llvm"
 CLANG_CONFIG_DIR="$LLVM_HOST_BUILD_ROOT/lib/cmake/clang"
@@ -227,6 +245,18 @@ SUMMARY="$OUT_ROOT/summary_${MODE}.json"
 
 rm -rf "$BUILD_DIR"
 mkdir -p "$BUILD_DIR" "$INSTALL_DIR" "$LOG_DIR"
+
+if [[ "$RANLIB_CONFIG" != "$RANLIB" ]]; then
+  TOOL_WRAPPER_DIR="$OUT_ROOT/tool-wrappers"
+  mkdir -p "$TOOL_WRAPPER_DIR"
+  RANLIB_CMAKE="$TOOL_WRAPPER_DIR/llvm-ranlib-wrapper.sh"
+  cat >"$RANLIB_CMAKE" <<EOF
+#!/usr/bin/env bash
+set -euo pipefail
+exec "$AR" s "\$@"
+EOF
+  chmod +x "$RANLIB_CMAKE"
+fi
 
 configure_log="$LOG_DIR/configure_${MODE}.log"
 build_log="$LOG_DIR/build_${MODE}.log"
@@ -306,7 +336,7 @@ CMAKE_COMMON=(
   -DCMAKE_CXX_COMPILER_TARGET="$TARGET"
   -DCMAKE_ASM_COMPILER_TARGET="$TARGET"
   -DCMAKE_AR="$AR"
-  -DCMAKE_RANLIB="$RANLIB"
+  -DCMAKE_RANLIB="$RANLIB_CMAKE"
   -DCMAKE_NM="$NM"
   -DCMAKE_STRIP="$STRIP"
   -DCMAKE_SYSROOT="$MUSL_SYSROOT"
