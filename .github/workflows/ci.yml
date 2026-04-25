@@ -15,8 +15,11 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - name: Enforce Public v0.3 Guard
-        run: bash tools/ci/check_public_v03.sh
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+      - name: Enforce Public v0.56 Guard
+        run: python3 tools/bringup/check26_contract.py --root .
       - name: Enforce Repository Layout
         run: bash tools/ci/check_repo_layout.sh
 

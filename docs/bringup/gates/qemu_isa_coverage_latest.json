@@ -1,10 +1,10 @@
 {
-  "coverage_count": 524,
-  "coverage_ratio_percent": 73.8,
-  "form_coverage_count": 521,
-  "form_coverage_ratio_percent": 70.41,
-  "form_missing_count": 219,
-  "generated_at_utc": "2026-03-08 10:51:25Z",
+  "coverage_count": 618,
+  "coverage_ratio_percent": 87.04,
+  "form_coverage_count": 613,
+  "form_coverage_ratio_percent": 82.84,
+  "form_missing_count": 127,
+  "generated_at_utc": "2026-04-24 00:09:48Z",
   "legal_form_count": 740,
   "legal_mnemonic_count": 710,
   "mapped_by_prefix": {
@@ -49,18 +49,36 @@
     "FABS": 1,
     "FADD": 1,
     "FCVT": 1,
+    "FCVTA": 1,
+    "FCVTM": 1,
+    "FCVTN": 1,
+    "FCVTP": 1,
     "FCVTZ": 1,
     "FDIV": 1,
     "FENCE": 2,
     "FENTRY": 1,
     "FEQ": 1,
+    "FEQS": 1,
     "FEXIT": 1,
+    "FEXP": 1,
     "FGE": 1,
+    "FGES": 1,
     "FLT": 1,
+    "FLTS": 1,
+    "FMADD": 1,
+    "FMAX": 1,
+    "FMIN": 1,
+    "FMSUB": 1,
     "FMUL": 1,
+    "FNE": 1,
+    "FNES": 1,
+    "FNMADD": 1,
+    "FNMSUB": 1,
+    "FRECIP": 1,
     "FRET": 2,
+    "FSQRT": 1,
     "FSUB": 1,
-    "HL": 180,
+    "HL": 194,
     "IC": 2,
     "J": 1,
     "JR": 1,
@@ -141,7 +159,7 @@
     "SWI": 2,
     "TLB": 4,
     "UCVTF": 1,
-    "V": 32,
+    "V": 94,
     "XOR": 1,
     "XORI": 1,
     "XORIW": 1,
@@ -189,18 +207,36 @@
     "FABS": 1,
     "FADD": 1,
     "FCVT": 1,
+    "FCVTA": 1,
+    "FCVTM": 1,
+    "FCVTN": 1,
+    "FCVTP": 1,
     "FCVTZ": 1,
     "FDIV": 1,
     "FENCE": 2,
     "FENTRY": 1,
     "FEQ": 1,
+    "FEQS": 1,
     "FEXIT": 1,
+    "FEXP": 1,
     "FGE": 1,
+    "FGES": 1,
     "FLT": 1,
+    "FLTS": 1,
+    "FMADD": 1,
+    "FMAX": 1,
+    "FMIN": 1,
+    "FMSUB": 1,
     "FMUL": 1,
+    "FNE": 1,
+    "FNES": 1,
+    "FNMADD": 1,
+    "FNMSUB": 1,
+    "FRECIP": 1,
     "FRET": 2,
+    "FSQRT": 1,
     "FSUB": 1,
-    "HL": 183,
+    "HL": 195,
     "IC": 2,
     "J": 1,
     "JR": 1,
@@ -281,7 +317,7 @@
     "SWI": 2,
     "TLB": 4,
     "UCVTF": 1,
-    "V": 30,
+    "V": 92,
     "XOR": 1,
     "XORI": 1,
     "XORIW": 1,
@@ -742,6 +778,18 @@
     "fcvt": [
       "FCVT"
     ],
+    "fcvta": [
+      "FCVTA"
+    ],
+    "fcvtm": [
+      "FCVTM"
+    ],
+    "fcvtn": [
+      "FCVTN"
+    ],
+    "fcvtp": [
+      "FCVTP"
+    ],
     "fcvtz": [
       "FCVTZ"
     ],
@@ -760,23 +808,65 @@
     "feq": [
       "FEQ"
     ],
+    "feqs": [
+      "FEQS"
+    ],
     "fexit": [
       "FEXIT"
+    ],
+    "fexp": [
+      "FEXP"
     ],
     "fge": [
       "FGE"
     ],
+    "fges": [
+      "FGES"
+    ],
     "flt": [
       "FLT"
     ],
+    "flts": [
+      "FLTS"
+    ],
+    "fmadd": [
+      "FMADD"
+    ],
+    "fmax": [
+      "FMAX"
+    ],
+    "fmin": [
+      "FMIN"
+    ],
+    "fmsub": [
+      "FMSUB"
+    ],
     "fmul": [
       "FMUL"
+    ],
+    "fne": [
+      "FNE"
+    ],
+    "fnes": [
+      "FNES"
+    ],
+    "fnmadd": [
+      "FNMADD"
+    ],
+    "fnmsub": [
+      "FNMSUB"
+    ],
+    "frecip": [
+      "FRECIP"
     ],
     "fret_ra": [
       "FRET.RA"
     ],
     "fret_stk": [
       "FRET.STK"
+    ],
+    "fsqrt": [
+      "FSQRT"
     ],
     "fsub": [
       "FSUB"
@@ -867,6 +957,18 @@
     ],
     "hl_cmp_ori": [
       "HL.CMP.ORI"
+    ],
+    "hl_div": [
+      "HL.DIV"
+    ],
+    "hl_divu": [
+      "HL.DIVU"
+    ],
+    "hl_divuw": [
+      "HL.DIVUW"
+    ],
+    "hl_divw": [
+      "HL.DIVW"
     ],
     "hl_lb_pcr": [
       "HL.LB.PCR"
@@ -1114,11 +1216,23 @@
     "hl_lwup": [
       "HL.LWUP"
     ],
+    "hl_madd": [
+      "HL.MADD"
+    ],
+    "hl_maddw": [
+      "HL.MADDW"
+    ],
     "hl_miadd": [
       "HL.MIADD"
     ],
     "hl_misub": [
       "HL.MISUB"
+    ],
+    "hl_mul": [
+      "HL.MUL"
+    ],
+    "hl_mulu": [
+      "HL.MULU"
     ],
     "hl_ori": [
       "HL.ORI"
@@ -1146,6 +1260,18 @@
     ],
     "hl_qpush": [
       "HL.QPUSH"
+    ],
+    "hl_rem": [
+      "HL.REM"
+    ],
+    "hl_remu": [
+      "HL.REMU"
+    ],
+    "hl_remuw": [
+      "HL.REMUW"
+    ],
+    "hl_remw": [
+      "HL.REMW"
     ],
     "hl_sb_pcr": [
       "HL.SB.PCR"
@@ -1222,6 +1348,9 @@
     "hl_sdp_u": [
       "HL.SDP.U"
     ],
+    "hl_setc_andi": [
+      "HL.SETC.ANDI"
+    ],
     "hl_setc_eqi": [
       "HL.SETC.EQI"
     ],
@@ -1239,6 +1368,9 @@
     ],
     "hl_setc_nei": [
       "HL.SETC.NEI"
+    ],
+    "hl_setc_ori": [
+      "HL.SETC.ORI"
     ],
     "hl_setret": [
       "HL.SETRET"
@@ -1840,26 +1972,89 @@
     "v_add": [
       "V.ADD"
     ],
+    "v_addi": [
+      "V.ADDI"
+    ],
+    "v_and": [
+      "V.AND"
+    ],
+    "v_andi": [
+      "V.ANDI"
+    ],
+    "v_bcnt": [
+      "V.BCNT"
+    ],
+    "v_bic": [
+      "V.BIC"
+    ],
+    "v_bis": [
+      "V.BIS"
+    ],
+    "v_bxs": [
+      "V.BXS"
+    ],
+    "v_bxu": [
+      "V.BXU"
+    ],
+    "v_clz": [
+      "V.CLZ"
+    ],
+    "v_cmp_and": [
+      "V.CMP.AND"
+    ],
+    "v_cmp_andi": [
+      "V.CMP.ANDI"
+    ],
     "v_cmp_eq": [
       "V.CMP.EQ"
+    ],
+    "v_cmp_eqi": [
+      "V.CMP.EQI"
     ],
     "v_cmp_ge": [
       "V.CMP.GE"
     ],
+    "v_cmp_gei": [
+      "V.CMP.GEI"
+    ],
     "v_cmp_geu": [
       "V.CMP.GEU"
+    ],
+    "v_cmp_geui": [
+      "V.CMP.GEUI"
     ],
     "v_cmp_lt": [
       "V.CMP.LT"
     ],
+    "v_cmp_lti": [
+      "V.CMP.LTI"
+    ],
     "v_cmp_ltu": [
       "V.CMP.LTU"
+    ],
+    "v_cmp_ltui": [
+      "V.CMP.LTUI"
     ],
     "v_cmp_ne": [
       "V.CMP.NE"
     ],
+    "v_cmp_nei": [
+      "V.CMP.NEI"
+    ],
+    "v_cmp_or": [
+      "V.CMP.OR"
+    ],
+    "v_cmp_ori": [
+      "V.CMP.ORI"
+    ],
     "v_csel": [
       "V.CSEL"
+    ],
+    "v_ctz": [
+      "V.CTZ"
+    ],
+    "v_div": [
+      "V.DIV"
     ],
     "v_fabs": [
       "V.FABS"
@@ -1867,17 +2062,50 @@
     "v_fadd": [
       "V.FADD"
     ],
+    "v_fclass": [
+      "V.FCLASS"
+    ],
+    "v_fcvt": [
+      "V.FCVT"
+    ],
+    "v_fcvti": [
+      "V.FCVTI"
+    ],
     "v_fdiv": [
       "V.FDIV"
     ],
     "v_feq": [
       "V.FEQ"
     ],
+    "v_feqs": [
+      "V.FEQS"
+    ],
+    "v_fexp": [
+      "V.FEXP"
+    ],
     "v_fge": [
       "V.FGE"
     ],
+    "v_fges": [
+      "V.FGES"
+    ],
     "v_flt": [
       "V.FLT"
+    ],
+    "v_flts": [
+      "V.FLTS"
+    ],
+    "v_fmadd": [
+      "V.FMADD"
+    ],
+    "v_fmax": [
+      "V.FMAX"
+    ],
+    "v_fmin": [
+      "V.FMIN"
+    ],
+    "v_fmsub": [
+      "V.FMSUB"
     ],
     "v_fmul": [
       "V.FMUL"
@@ -1885,8 +2113,41 @@
     "v_fne": [
       "V.FNE"
     ],
+    "v_fnes": [
+      "V.FNES"
+    ],
+    "v_fnmadd": [
+      "V.FNMADD"
+    ],
+    "v_fnmsub": [
+      "V.FNMSUB"
+    ],
+    "v_frecip": [
+      "V.FRECIP"
+    ],
+    "v_fsqrt": [
+      "V.FSQRT"
+    ],
     "v_fsub": [
       "V.FSUB"
+    ],
+    "v_icvt": [
+      "V.ICVT"
+    ],
+    "v_icvtf": [
+      "V.ICVTF"
+    ],
+    "v_lb_brg": [
+      "V.LB.BRG"
+    ],
+    "v_lbu_brg": [
+      "V.LBU.BRG"
+    ],
+    "v_lh_brg": [
+      "V.LH.BRG"
+    ],
+    "v_lhu_brg": [
+      "V.LHU.BRG"
     ],
     "v_lw": [
       "V.LW"
@@ -1894,8 +2155,26 @@
     "v_lw_brg": [
       "V.LW.BRG"
     ],
+    "v_madd": [
+      "V.MADD"
+    ],
+    "v_max": [
+      "V.MAX"
+    ],
+    "v_min": [
+      "V.MIN"
+    ],
     "v_mul": [
       "V.MUL"
+    ],
+    "v_or": [
+      "V.OR"
+    ],
+    "v_ori": [
+      "V.ORI"
+    ],
+    "v_psel": [
+      "V.PSEL"
     ],
     "v_rdadd": [
       "V.RDADD"
@@ -1924,14 +2203,53 @@
     "v_rdxor": [
       "V.RDXOR"
     ],
+    "v_rem": [
+      "V.REM"
+    ],
+    "v_rev": [
+      "V.REV"
+    ],
+    "v_sb_brg": [
+      "V.SB.BRG"
+    ],
+    "v_sh_brg": [
+      "V.SH.BRG"
+    ],
+    "v_sll": [
+      "V.SLL"
+    ],
+    "v_slli": [
+      "V.SLLI"
+    ],
+    "v_sra": [
+      "V.SRA"
+    ],
+    "v_srai": [
+      "V.SRAI"
+    ],
+    "v_srl": [
+      "V.SRL"
+    ],
+    "v_srli": [
+      "V.SRLI"
+    ],
     "v_sub": [
       "V.SUB"
+    ],
+    "v_subi": [
+      "V.SUBI"
     ],
     "v_sw": [
       "V.SW"
     ],
     "v_sw_brg": [
       "V.SW.BRG"
+    ],
+    "v_xor": [
+      "V.XOR"
+    ],
+    "v_xori": [
+      "V.XORI"
     ],
     "xor": [
       "XOR"
@@ -1948,55 +2266,18 @@
   },
   "missing_by_prefix": {
     "C": 1,
-    "FCVTA": 1,
-    "FCVTM": 1,
-    "FCVTN": 1,
-    "FCVTP": 1,
-    "FEQS": 1,
-    "FEXP": 1,
-    "FGES": 1,
-    "FLTS": 1,
-    "FMADD": 1,
-    "FMAX": 1,
-    "FMIN": 1,
-    "FMSUB": 1,
-    "FNE": 1,
-    "FNES": 1,
-    "FNMADD": 1,
-    "FNMSUB": 1,
-    "FRECIP": 1,
-    "FSQRT": 1,
-    "HL": 14,
-    "V": 152,
+    "V": 90,
     "XB": 1
   },
-  "missing_count": 186,
+  "missing_count": 92,
   "missing_forms_by_prefix": {
     "B": 9,
     "BSTART": 14,
     "C": 2,
     "DC": 2,
-    "FCVTA": 1,
-    "FCVTM": 1,
-    "FCVTN": 1,
-    "FCVTP": 1,
-    "FEQS": 1,
-    "FEXP": 1,
-    "FGES": 1,
-    "FLTS": 1,
-    "FMADD": 1,
-    "FMAX": 1,
-    "FMIN": 1,
-    "FMSUB": 1,
-    "FNE": 1,
-    "FNES": 1,
-    "FNMADD": 1,
-    "FNMSUB": 1,
-    "FRECIP": 1,
-    "FSQRT": 1,
-    "HL": 17,
+    "HL": 5,
     "LR": 2,
-    "V": 154,
+    "V": 92,
     "XB": 1
   },
   "missing_spec_forms": [
@@ -2027,89 +2308,18 @@
     "C.SETRET [len=16 mask=0xf83f match=0x5016]",
     "DC.ISW [len=32 mask=0xfff07fff match=0x40602b]",
     "DC.ZVA [len=32 mask=0xfff07fff match=0x70602b]",
-    "FCVTA [len=32 mask=0x1f0707f match=0x106b]",
-    "FCVTM [len=32 mask=0x1f0707f match=0x206b]",
-    "FCVTN [len=32 mask=0x1f0707f match=0x306b]",
-    "FCVTP [len=32 mask=0x1f0707f match=0x406b]",
-    "FEQS [len=32 mask=0xf800707f match=0x800005b]",
-    "FEXP [len=32 mask=0xf9f0707f match=0x307b]",
-    "FGES [len=32 mask=0xf800707f match=0x800305b]",
-    "FLTS [len=32 mask=0xf800707f match=0x800205b]",
-    "FMADD [len=32 mask=0x707f match=0x404b]",
-    "FMAX [len=32 mask=0xf800707f match=0x605b]",
-    "FMIN [len=32 mask=0xf800707f match=0x705b]",
-    "FMSUB [len=32 mask=0x707f match=0x504b]",
-    "FNE [len=32 mask=0xf800707f match=0x105b]",
-    "FNES [len=32 mask=0xf800707f match=0x800105b]",
-    "FNMADD [len=32 mask=0x707f match=0x604b]",
-    "FNMSUB [len=32 mask=0x707f match=0x704b]",
-    "FRECIP [len=32 mask=0xf9f0707f match=0x207b]",
-    "FSQRT [len=32 mask=0xf9f0707f match=0x107b]",
     "HL.BSTART CALL [len=64 mask=0xfffff83f0000007f match=0x501600000011]",
     "HL.BSTART.STD [len=64 mask=0xffff00007fff000f match=0x4001000e]",
-    "HL.DIV [len=64 mask=0xfffffe00707f07ff match=0x57000e]",
-    "HL.DIVU [len=64 mask=0xfffffe00707f07ff match=0x1057000e]",
-    "HL.DIVUW [len=64 mask=0xfffffe00707f07ff match=0x3057000e]",
-    "HL.DIVW [len=64 mask=0xfffffe00707f07ff match=0x2057000e]",
-    "HL.MADD [len=64 mask=0xffff0600707f07ff match=0x6047000e]",
-    "HL.MADDW [len=64 mask=0xffff0600707f07ff match=0x7047000e]",
-    "HL.MUL [len=64 mask=0xfffffe00707f07ff match=0x47000e]",
-    "HL.MULU [len=64 mask=0xfffffe00707f07ff match=0x1047000e]",
+    "HL.CCAT [len=64 mask=0xffff0000707f07ff match=0x105d000e]",
+    "HL.CCATW [len=64 mask=0xffff0000707f07ff match=0x205d000e]",
     "HL.PRF [len=64 mask=0xffff00007fff07ff match=0x7009000e]",
-    "HL.REM [len=64 mask=0xfffffe00707f07ff match=0x4057000e]",
-    "HL.REMU [len=64 mask=0xfffffe00707f07ff match=0x5057000e]",
-    "HL.REMUW [len=64 mask=0xfffffe00707f07ff match=0x7057000e]",
-    "HL.REMW [len=64 mask=0xfffffe00707f07ff match=0x6057000e]",
-    "HL.SETC.ANDI [len=64 mask=0xffff0000707f000f match=0x2075000e]",
-    "HL.SETC.ORI [len=64 mask=0xffff0000707f000f match=0x3075000e]",
     "LR.D [len=32 mask=0xf000707f match=0x3000000b]",
     "LR.W [len=32 mask=0xf000707f match=0x2000000b]",
-    "V.ADDI [len=64 mask=0x707ffff0707f match=0x150000007f]",
-    "V.AND [len=64 mask=0x707ffe00707f match=0x20050000007f]",
-    "V.ANDI [len=64 mask=0x707ffff0707f match=0x20150000007f]",
-    "V.BCNT [len=64 mask=0x707ffff0707f match=0x60670000007f]",
-    "V.BIC [len=64 mask=0x707ffff0707f match=0x20670000007f]",
-    "V.BIS [len=64 mask=0x707ffff0707f match=0x30670000007f]",
-    "V.BXS [len=64 mask=0x707ffff0707f match=0x670000007f]",
-    "V.BXU [len=64 mask=0x707ffff0707f match=0x10670000007f]",
-    "V.CLZ [len=64 mask=0x707ffff0707f match=0x50670000007f]",
-    "V.CMP.AND [len=64 mask=0xfe00707ffe00707f match=0x20450000007f]",
-    "V.CMP.ANDI [len=64 mask=0x707ffff0707f match=0x20550000007f]",
-    "V.CMP.EQI [len=64 mask=0x707ffff0707f match=0x550000007f]",
-    "V.CMP.GEI [len=64 mask=0x707ffff0707f match=0x50550000007f]",
-    "V.CMP.GEUI [len=64 mask=0x707ffff0707f match=0x70550000007f]",
-    "V.CMP.LTI [len=64 mask=0x707ffff0707f match=0x40550000007f]",
-    "V.CMP.LTUI [len=64 mask=0x707ffff0707f match=0x60550000007f]",
-    "V.CMP.NEI [len=64 mask=0x707ffff0707f match=0x10550000007f]",
-    "V.CMP.OR [len=64 mask=0xfe00707ffe00707f match=0x30450000007f]",
-    "V.CMP.ORI [len=64 mask=0x707ffff0707f match=0x30550000007f]",
-    "V.CTZ [len=64 mask=0x707ffff0707f match=0x40670000007f]",
-    "V.DIV [len=64 mask=0xfe00707ffe00707f match=0x570000007f]",
     "V.FABS [len=64 mask=0xfff0707ffff0707f match=0x7b0000007f]",
-    "V.FCLASS [len=64 mask=0xfff0707ffff0707f match=0x707b0000007f]",
-    "V.FCVT [len=64 mask=0x600707ffff0707f match=0x6b0000007f]",
-    "V.FCVTI [len=64 mask=0x600707ffff0707f match=0x106b0000007f]",
-    "V.FEQS [len=64 mask=0xfe00707ffe00707f match=0x405b0000007f]",
-    "V.FEXP [len=64 mask=0xfff0707ffff0707f match=0x307b0000007f]",
-    "V.FGES [len=64 mask=0xfe00707ffe00707f match=0x705b0000007f]",
-    "V.FLTS [len=64 mask=0xfe00707ffe00707f match=0x605b0000007f]",
-    "V.FMADD [len=64 mask=0x600707f0600707f match=0x404b0000007f]",
-    "V.FMAX [len=64 mask=0xfe00707ffe00707f match=0x205b0000107f]",
-    "V.FMIN [len=64 mask=0xfe00707ffe00707f match=0x305b0000107f]",
-    "V.FMSUB [len=64 mask=0x600707f0600707f match=0x504b0000007f]",
-    "V.FNES [len=64 mask=0xfe00707ffe00707f match=0x505b0000007f]",
-    "V.FNMADD [len=64 mask=0x600707f0600707f match=0x604b0000007f]",
-    "V.FNMSUB [len=64 mask=0x600707f0600707f match=0x704b0000007f]",
-    "V.FRECIP [len=64 mask=0xfff0707ffff0707f match=0x207b0000007f]",
-    "V.FSQRT [len=64 mask=0xfff0707ffff0707f match=0x107b0000007f]",
-    "V.ICVT [len=64 mask=0x600707ffff0707f match=0x606b0000007f]",
-    "V.ICVTF [len=64 mask=0x600707ffff0707f match=0x706b0000007f]",
     "V.LB [len=64 mask=0x600707ffe00207f match=0x90000007f]",
-    "V.LB.BRG [len=64 mask=0x600707ffe00207f match=0x90000207f]",
     "V.LBI [len=64 mask=0x707f0000207f match=0x190000007f]",
     "V.LBI.BRG [len=64 mask=0x707f0000207f match=0x190000207f]",
     "V.LBU [len=64 mask=0x600707ffe00207f match=0x40090000007f]",
-    "V.LBU.BRG [len=64 mask=0x600707ffe00207f match=0x40090000207f]",
     "V.LBUI [len=64 mask=0x707f0000207f match=0x40190000007f]",
     "V.LBUI.BRG [len=64 mask=0x707f0000207f match=0x40190000207f]",
     "V.LD [len=64 mask=0x600707ffe00207f match=0x30090000007f]",
@@ -2125,13 +2335,11 @@
     "V.LDI.U [len=64 mask=0x707f0000207f match=0x30290000007f]",
     "V.LDI.U.BRG [len=64 mask=0x707f0000207f match=0x30290000207f]",
     "V.LH [len=64 mask=0x600707ffe00207f match=0x10090000007f]",
-    "V.LH.BRG [len=64 mask=0x600707ffe00207f match=0x10090000207f]",
     "V.LHI [len=64 mask=0x707f0000207f match=0x10190000007f]",
     "V.LHI.BRG [len=64 mask=0x707f0000207f match=0x10190000207f]",
     "V.LHI.U [len=64 mask=0x707f0000207f match=0x10290000007f]",
     "V.LHI.U.BRG [len=64 mask=0x707f0000207f match=0x10290000207f]",
     "V.LHU [len=64 mask=0x600707ffe00207f match=0x50090000007f]",
-    "V.LHU.BRG [len=64 mask=0x600707ffe00207f match=0x50090000207f]",
     "V.LHUI [len=64 mask=0x707f0000207f match=0x50190000007f]",
     "V.LHUI.BRG [len=64 mask=0x707f0000207f match=0x50190000207f]",
     "V.LHUI.U [len=64 mask=0x707f0000207f match=0x50290000007f]",
@@ -2152,19 +2360,10 @@
     "V.LWUI.BRG [len=64 mask=0x707f0000207f match=0x60190000207f]",
     "V.LWUI.U [len=64 mask=0x707f0000207f match=0x60290000007f]",
     "V.LWUI.U.BRG [len=64 mask=0x707f0000207f match=0x60290000207f]",
-    "V.MADD [len=64 mask=0x600707f0600707f match=0x60470000007f]",
-    "V.MAX [len=64 mask=0xfe00707ffe00707f match=0x5b0000107f]",
-    "V.MIN [len=64 mask=0xfe00707ffe00707f match=0x105b0000107f]",
     "V.MUL [len=64 mask=0xfe00707ffe00707f match=0x470000007f]",
-    "V.OR [len=64 mask=0x707ffe00707f match=0x30050000007f]",
-    "V.ORI [len=64 mask=0x707ffff0707f match=0x30150000007f]",
-    "V.PSEL [len=64 mask=0x707f0600707f match=0x10770000007f]",
     "V.QPOP [len=64 mask=0xfff0707ffff0707f match=0x207d0000007f]",
     "V.QPUSH [len=64 mask=0xfe00707ffe00707f match=0x107d0000007f]",
-    "V.REM [len=64 mask=0xfe00707ffe00707f match=0x40570000007f]",
-    "V.REV [len=64 mask=0x707ffff0707f match=0x70670000007f]",
     "V.SB [len=64 mask=0x6007fff0600207f match=0x490000007f]",
-    "V.SB.BRG [len=64 mask=0x6007fff0600207f match=0x490000207f]",
     "V.SBI [len=64 mask=0x707f0000207f match=0x590000007f]",
     "V.SBI.BRG [len=64 mask=0x707f0000207f match=0x590000207f]",
     "V.SD [len=64 mask=0x6007fff0600207f match=0x30490000007f]",
@@ -2182,7 +2381,6 @@
     "V.SDI.U [len=64 mask=0x707f0000207f match=0x70590000007f]",
     "V.SDI.U.BRG [len=64 mask=0x707f0000207f match=0x70590000207f]",
     "V.SH [len=64 mask=0x6007fff0600207f match=0x10490000007f]",
-    "V.SH.BRG [len=64 mask=0x6007fff0600207f match=0x10490000207f]",
     "V.SH.U [len=64 mask=0x6007fff0600207f match=0x50490000007f]",
     "V.SH.U.BRG [len=64 mask=0x6007fff0600207f match=0x50490000207f]",
     "V.SHFL.BFLY [len=64 mask=0x7f0707f07f0707f match=0x201d0000007f]",
@@ -2197,13 +2395,6 @@
     "V.SHI.BRG [len=64 mask=0x707f0000207f match=0x10590000207f]",
     "V.SHI.U [len=64 mask=0x707f0000207f match=0x50590000007f]",
     "V.SHI.U.BRG [len=64 mask=0x707f0000207f match=0x50590000207f]",
-    "V.SLL [len=64 mask=0xfe00707ffe00707f match=0x70050000007f]",
-    "V.SLLI [len=64 mask=0xfc00707ffff0707f match=0x70150000007f]",
-    "V.SRA [len=64 mask=0xfe00707ffe00707f match=0x60050000007f]",
-    "V.SRAI [len=64 mask=0xfc00707ffff0707f match=0x60150000007f]",
-    "V.SRL [len=64 mask=0xfe00707ffe00707f match=0x50050000007f]",
-    "V.SRLI [len=64 mask=0xfc00707ffff0707f match=0x50150000007f]",
-    "V.SUBI [len=64 mask=0x707ffff0707f match=0x10150000007f]",
     "V.SW.ADD [len=64 mask=0xfc007ffff8007fff match=0xb0000107f]",
     "V.SW.AND [len=64 mask=0xfc007ffff8007fff match=0x100b0000107f]",
     "V.SW.MAX [len=64 mask=0xfc007ffff8007fff match=0x400b0000107f]",
@@ -2216,89 +2407,14 @@
     "V.SWI.BRG [len=64 mask=0x707f0000207f match=0x20590000207f]",
     "V.SWI.U [len=64 mask=0x707f0000207f match=0x60590000007f]",
     "V.SWI.U.BRG [len=64 mask=0x707f0000207f match=0x60590000207f]",
-    "V.XOR [len=64 mask=0x707ffe00707f match=0x40050000007f]",
-    "V.XORI [len=64 mask=0x707ffff0707f match=0x40150000007f]",
     "XB [len=32 mask=0x7fff match=0x6f81]"
   ],
   "missing_spec_mnemonics": [
     "C.SETRET",
-    "FCVTA",
-    "FCVTM",
-    "FCVTN",
-    "FCVTP",
-    "FEQS",
-    "FEXP",
-    "FGES",
-    "FLTS",
-    "FMADD",
-    "FMAX",
-    "FMIN",
-    "FMSUB",
-    "FNE",
-    "FNES",
-    "FNMADD",
-    "FNMSUB",
-    "FRECIP",
-    "FSQRT",
-    "HL.DIV",
-    "HL.DIVU",
-    "HL.DIVUW",
-    "HL.DIVW",
-    "HL.MADD",
-    "HL.MADDW",
-    "HL.MUL",
-    "HL.MULU",
-    "HL.REM",
-    "HL.REMU",
-    "HL.REMUW",
-    "HL.REMW",
-    "HL.SETC.ANDI",
-    "HL.SETC.ORI",
-    "V.ADDI",
-    "V.AND",
-    "V.ANDI",
-    "V.BCNT",
-    "V.BIC",
-    "V.BIS",
-    "V.BXS",
-    "V.BXU",
-    "V.CLZ",
-    "V.CMP.AND",
-    "V.CMP.ANDI",
-    "V.CMP.EQI",
-    "V.CMP.GEI",
-    "V.CMP.GEUI",
-    "V.CMP.LTI",
-    "V.CMP.LTUI",
-    "V.CMP.NEI",
-    "V.CMP.OR",
-    "V.CMP.ORI",
-    "V.CTZ",
-    "V.DIV",
-    "V.FCLASS",
-    "V.FCVT",
-    "V.FCVTI",
-    "V.FEQS",
-    "V.FEXP",
-    "V.FGES",
-    "V.FLTS",
-    "V.FMADD",
-    "V.FMAX",
-    "V.FMIN",
-    "V.FMSUB",
-    "V.FNES",
-    "V.FNMADD",
-    "V.FNMSUB",
-    "V.FRECIP",
-    "V.FSQRT",
-    "V.ICVT",
-    "V.ICVTF",
     "V.LB",
-    "V.LB.BRG",
     "V.LBI",
     "V.LBI.BRG",
     "V.LBU",
-    "V.LBU.BRG",
     "V.LBUI",
     "V.LBUI.BRG",
     "V.LD",
@@ -2314,13 +2430,11 @@
     "V.LDI.U",
     "V.LDI.U.BRG",
     "V.LH",
-    "V.LH.BRG",
     "V.LHI",
     "V.LHI.BRG",
     "V.LHI.U",
     "V.LHI.U.BRG",
     "V.LHU",
-    "V.LHU.BRG",
     "V.LHUI",
     "V.LHUI.BRG",
     "V.LHUI.U",
@@ -2341,18 +2455,9 @@
     "V.LWUI.BRG",
     "V.LWUI.U",
     "V.LWUI.U.BRG",
-    "V.MADD",
-    "V.MAX",
-    "V.MIN",
-    "V.OR",
-    "V.ORI",
-    "V.PSEL",
     "V.QPOP",
     "V.QPUSH",
-    "V.REM",
-    "V.REV",
     "V.SB",
-    "V.SB.BRG",
     "V.SBI",
     "V.SBI.BRG",
     "V.SD",
@@ -2370,7 +2475,6 @@
     "V.SDI.U",
     "V.SDI.U.BRG",
     "V.SH",
-    "V.SH.BRG",
     "V.SH.U",
     "V.SH.U.BRG",
     "V.SHFL.BFLY",
@@ -2385,13 +2489,6 @@
     "V.SHI.BRG",
     "V.SHI.U",
     "V.SHI.U.BRG",
-    "V.SLL",
-    "V.SLLI",
-    "V.SRA",
-    "V.SRAI",
-    "V.SRL",
-    "V.SRLI",
-    "V.SUBI",
     "V.SW.ADD",
     "V.SW.AND",
     "V.SW.MAX",
@@ -2404,18 +2501,16 @@
     "V.SWI.BRG",
     "V.SWI.U",
     "V.SWI.U.BRG",
-    "V.XOR",
-    "V.XORI",
     "XB"
   ],
-  "qemu_mapped_spec_forms": 521,
-  "qemu_mapped_spec_mnemonics": 524,
-  "qemu_meta_mnemonics": 541,
+  "qemu_mapped_spec_forms": 613,
+  "qemu_mapped_spec_mnemonics": 618,
+  "qemu_meta_mnemonics": 640,
   "qemu_meta_path": "/Users/zhoubot/linx-isa/emulator/qemu/target/linx/linx_opcode_meta_gen.h",
   "qemu_root": "/Users/zhoubot/linx-isa/emulator/qemu",
   "qemu_source_kind": "decode",
-  "qemu_unique_forms": 541,
-  "qemu_unique_mnemonics": 541,
+  "qemu_unique_forms": 640,
+  "qemu_unique_mnemonics": 640,
   "reserved_form_count": 0,
   "reserved_mnemonic_count": 0,
   "result": {
@@ -2426,5 +2521,11 @@
   "spec_path": "/Users/zhoubot/linx-isa/isa/v0.4/linxisa-v0.4.json",
   "spec_total_forms": 740,
   "spec_unique_mnemonics": 710,
-  "unmapped_qemu_mnemonics": []
+  "unmapped_qemu_mnemonics": [
+    "b_arg_dn2nz",
+    "b_arg_dn2zn",
+    "b_arg_nd2zn",
+    "b_arg_norm",
+    "b_arg_nz2dn"
+  ]
 }

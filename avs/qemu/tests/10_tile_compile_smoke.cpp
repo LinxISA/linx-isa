@@ -1,14 +1,7 @@
 #include "linx_test.h"
 
 #include <stdint.h>
-
-extern "C" void tload_store_i32(int *src, int *dst);
-extern "C" void mamulb_i32(int *lhs, int *rhs, int *dst);
-extern "C" void tmatmul_acc_i32(int *lhs, int *rhs, int *acc_dst);
-extern "C" void gemm_i32(int *lhs, int *rhs, int *dst);
-extern "C" void flash_attention_i32(int *query, int *key, int *value, int *dst);
-extern "C" void flash_attention_masked_f32(float *out_ptr, float *q_ptr,
-                                           float *k_ptr, float *v_ptr);
+#include <common/runtime/kernel_api.hpp>
 
 extern "C" void run_tile_tests(void) {
   test_suite_begin(0x0000000A);
@@ -33,12 +26,12 @@ extern "C" void run_tile_tests(void) {
   alignas(16) static float FM_V[1024];
   alignas(16) static float FM_O[1024];
 
-  tload_store_i32(A, C);
-  mamulb_i32(A, B, C);
-  tmatmul_acc_i32(A, B, C);
-  gemm_i32(GEMM_A, GEMM_B, GEMM_O);
-  flash_attention_i32(FLASH_Q, FLASH_K, FLASH_V, FLASH_O);
-  flash_attention_masked_f32(FM_O, FM_Q, FM_K, FM_V);
+  pto::kernels::pto_tload_store(C, A, nullptr);
+  pto::kernels::pto_mamulb(C, A, B, nullptr);
+  pto::kernels::pto_tmatmul_acc(C, A, B, nullptr);
+  pto::kernels::pto_gemm(GEMM_O, GEMM_A, GEMM_B, nullptr);
+  pto::kernels::pto_flash_attention(FLASH_O, FLASH_Q, FLASH_K, FLASH_V, nullptr);
+  pto::kernels::pto_flash_attention_masked(FM_O, FM_Q, FM_K, FM_V, nullptr);
 
   test_pass();
 }

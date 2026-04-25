@@ -1,6 +1,6 @@
 # pyCircuit ↔ LinxCore Interface Contract
 
-Version: `1.0`
+Version: `2.0`
 
 ## Scope
 
@@ -37,15 +37,30 @@ Current scalar/base required set:
 - `insn`
 - `len`
 - `next_pc`
+- `src0_valid`
+- `src0_reg`
+- `src0_data`
+- `src1_valid`
+- `src1_reg`
+- `src1_data`
+- `dst_valid`
+- `dst_reg`
+- `dst_data`
 - `wb_valid`
 - `wb_rd`
 - `wb_data`
 - `mem_valid`
+- `mem_is_store`
 - `mem_addr`
 - `mem_wdata`
 - `mem_rdata`
 - `mem_size`
 - `trap_valid`
 - `trap_cause`
+- `traparg0`
+
+Version `2.0` makes committed source/destination correlation mandatory. Producer
+and consumer paths must treat missing source, destination, memory-direction, or
+trap-argument fields as contract failures rather than optional debug metadata.
 
 Any producer-side changes must update contract version and migration notes.

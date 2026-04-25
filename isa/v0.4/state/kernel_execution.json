@@ -11,7 +11,7 @@
     ],
     "body_kind": "structured instruction stream",
     "entry_source": "B.TEXT",
-    "termination_rule": "first terminator marker encountered in the body stream ends the kernel",
+    "termination_rule": "kernel completion occurs when control reaches a legal body terminator along the taken in-body control-flow path",
     "terminators": [
       "BSTOP",
       "C.BSTOP",
@@ -21,7 +21,7 @@
     ],
     "containment": {
       "external_entry": "architectural control flow into the middle of a kernel is illegal and must raise E_BLOCK(EC_CFI)",
-      "escaping_target": "in-body control flow that resolves outside the fetchable kernel region faults as E_BLOCK(EC_BFETCH)",
+      "escaping_target": "in-body control flow that resolves outside the current B.TEXT body region faults as E_BLOCK(EC_BFETCH)",
       "resume_target": "kernel completion resumes at the header continuation point"
     }
   },

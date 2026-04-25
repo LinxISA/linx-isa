@@ -95,7 +95,7 @@ def _build_kernel(
     out_kernel.mkdir(parents=True, exist_ok=True)
     exe = out_kernel / f"{kernel}.elf"
 
-    cmd = [str(cc), "--target", target, opt]
+    cmd = [str(cc), "-target", target, opt]
     if sysroot:
         cmd.append(f"--sysroot={sysroot}")
     cmd += [

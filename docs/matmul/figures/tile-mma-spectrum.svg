@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="320" viewBox="0 0 980 320">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L10,3 L0,6 Z" fill="#1f2937"/>
+    </marker>
+    <style>
+      .title { font: 700 24px Helvetica, Arial, sans-serif; fill: #111827; }
+      .label { font: 18px Helvetica, Arial, sans-serif; fill: #111827; }
+      .small { font: 15px Helvetica, Arial, sans-serif; fill: #374151; }
+      .left { fill: #ecfeff; stroke: #0891b2; stroke-width: 2; rx: 12; }
+      .mid { fill: #fff7ed; stroke: #c2410c; stroke-width: 2; rx: 12; }
+      .right { fill: #eef2ff; stroke: #4f46e5; stroke-width: 2; rx: 12; }
+      .arrow { stroke: #1f2937; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+      .line { stroke: #9ca3af; stroke-width: 2; }
+    </style>
+  </defs>
+
+  <text x="30" y="38" class="title">Matrix Primitive Spectrum</text>
+  <line x1="110" y1="170" x2="870" y2="170" class="line"/>
+  <path d="M160 170 L305 170" class="arrow"/>
+  <path d="M430 170 L575 170" class="arrow"/>
+  <path d="M700 170 L845 170" class="arrow"/>
+
+  <rect x="70" y="95" width="180" height="130" class="left"/>
+  <text x="118" y="130" class="label">Explicit</text>
+  <text x="100" y="160" class="label">Outer Product</text>
+  <text x="116" y="195" class="small">Arm SME</text>
+
+  <rect x="325" y="95" width="220" height="130" class="mid"/>
+  <text x="395" y="130" class="label">Tile MMA</text>
+  <text x="355" y="162" class="small">Tensor Core / CUBE</text>
+  <text x="345" y="192" class="small">block update hidden inside</text>
+
+  <rect x="620" y="95" width="220" height="130" class="right"/>
+  <text x="690" y="130" class="label">Explicit</text>
+  <text x="695" y="160" class="label">Dot Product</text>
+  <text x="703" y="195" class="small">Intel AMX</text>
+
+  <text x="118" y="265" class="small">updates many C elements</text>
+  <text x="385" y="265" class="small">software sees D = A x B + C</text>
+  <text x="665" y="265" class="small">reduces along local K first</text>
+</svg>

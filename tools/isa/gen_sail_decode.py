@@ -244,8 +244,18 @@ def bitwidth_from_field(field: dict) -> int:
     return width
 
 
-def popcount(hex_string: str) -> int:
-    return int(hex_string, 16).bit_count()
+def parse_hexish(value: str | int) -> int:
+    if isinstance(value, int):
+        return value
+    return int(value, 16)
+
+
+def popcount(hexish: str | int) -> int:
+    value = parse_hexish(hexish)
+    bit_count = getattr(value, "bit_count", None)
+    if bit_count is not None:
+        return bit_count()
+    return bin(value).count("1")
 
 
 def piece_expr(piece: dict, width: int) -> str:
@@ -295,9 +305,9 @@ def field_map(inst: dict) -> dict[str, tuple[str, int]]:
     return mapping
 
 
-def hex_const(value: str, width: int) -> str:
+def hex_const(value: str | int, width: int) -> str:
     digits = width // 4
-    return f"0x{int(value, 16):0{digits}x}"
+    return f"0x{parse_hexish(value):0{digits}x}"
 
 
 def bit_const(width: int, value: int) -> str:

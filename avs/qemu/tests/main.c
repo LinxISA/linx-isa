@@ -47,11 +47,20 @@
 #ifndef LINX_TEST_ENABLE_V03_VECTOR_OPS
 #define LINX_TEST_ENABLE_V03_VECTOR_OPS 0
 #endif
+#ifndef LINX_TEST_ENABLE_V04_VECTOR_OPS
+#define LINX_TEST_ENABLE_V04_VECTOR_OPS 0
+#endif
+#ifndef LINX_TEST_ENABLE_V03_VECTOR_BODY_FAULT
+#define LINX_TEST_ENABLE_V03_VECTOR_BODY_FAULT 0
+#endif
 #ifndef LINX_TEST_ENABLE_CALLRET
 #define LINX_TEST_ENABLE_CALLRET 0
 #endif
 #ifndef LINX_TEST_ENABLE_PTO_PARITY
 #define LINX_TEST_ENABLE_PTO_PARITY 0
+#endif
+#ifndef LINX_TEST_ENABLE_SIMT_AUTOVEC
+#define LINX_TEST_ENABLE_SIMT_AUTOVEC 0
 #endif
 
 /* Forward declarations for test suite functions */
@@ -94,11 +103,20 @@ void run_v03_vector_tile_tests(void);
 #if LINX_TEST_ENABLE_V03_VECTOR_OPS
 void run_v03_vector_ops_matrix_tests(void);
 #endif
+#if LINX_TEST_ENABLE_V04_VECTOR_OPS
+void run_v04_vector_ops_matrix_tests(void);
+#endif
+#if LINX_TEST_ENABLE_V03_VECTOR_BODY_FAULT
+void run_v03_vector_body_fault_tests(void);
+#endif
 #if LINX_TEST_ENABLE_CALLRET
 void run_callret_tests(void);
 #endif
 #if LINX_TEST_ENABLE_PTO_PARITY
 void run_pto_parity_tests(void);
+#endif
+#if LINX_TEST_ENABLE_SIMT_AUTOVEC
+void run_simt_autovec_tests(void);
 #endif
 
 /* Test counters */
@@ -173,11 +191,20 @@ void _start(void) {
 #if LINX_TEST_ENABLE_V03_VECTOR_OPS
     uart_puts(" v0.3-vector-ops");
 #endif
+#if LINX_TEST_ENABLE_V04_VECTOR_OPS
+    uart_puts(" v0.4-vector-ops");
+#endif
+#if LINX_TEST_ENABLE_V03_VECTOR_BODY_FAULT
+    uart_puts(" v0.3-vector-body-fault");
+#endif
 #if LINX_TEST_ENABLE_CALLRET
     uart_puts(" callret");
 #endif
 #if LINX_TEST_ENABLE_PTO_PARITY
     uart_puts(" pto-parity");
+#endif
+#if LINX_TEST_ENABLE_SIMT_AUTOVEC
+    uart_puts(" simt-autovec");
 #endif
     uart_puts("\r\n");
     uart_puts("\r\n");
@@ -224,11 +251,20 @@ void _start(void) {
 #if LINX_TEST_ENABLE_V03_VECTOR_OPS
     run_suite_with_stats("v0.3 Vector Operation Matrix Tests", run_v03_vector_ops_matrix_tests);
 #endif
+#if LINX_TEST_ENABLE_V04_VECTOR_OPS
+    run_suite_with_stats("v0.4 Vector Operation Matrix Tests", run_v04_vector_ops_matrix_tests);
+#endif
+#if LINX_TEST_ENABLE_V03_VECTOR_BODY_FAULT
+    run_suite_with_stats("v0.3 Vector Body Fault Tests", run_v03_vector_body_fault_tests);
+#endif
 #if LINX_TEST_ENABLE_CALLRET
     run_suite_with_stats("Call/Ret Conformance Tests", run_callret_tests);
 #endif
 #if LINX_TEST_ENABLE_PTO_PARITY
     run_suite_with_stats("PTO Kernel Parity Tests", run_pto_parity_tests);
+#endif
+#if LINX_TEST_ENABLE_SIMT_AUTOVEC
+    run_suite_with_stats("SIMT Autovec Tests", run_simt_autovec_tests);
 #endif
     
     /* Print final summary */

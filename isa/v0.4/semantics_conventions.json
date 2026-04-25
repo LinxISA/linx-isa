@@ -209,7 +209,7 @@
           },
           "body_range": {
             "policy": "implicit",
-            "note": "The fetchable body region starts at BodyTPC and ends at the first terminator marker encountered in the body stream (`BSTOP`/`C.BSTOP` or any `BSTART.*` family marker). Targets that escape that fetchable region fault as `E_BLOCK(EC_BFETCH)`."
+            "note": "The fetchable body region starts at BodyTPC and spans the compiler-authored out-of-line body selected by `B.TEXT`. `BSTOP`/`C.BSTOP` and `BSTART.*`/`C.BSTART.*` remain legal body terminators when control reaches them, but an earlier lexical terminator does not by itself truncate the body if group-internal control flow branches to a later label in the same body. Targets that escape the current `B.TEXT` body region fault as `E_BLOCK(EC_BFETCH)`."
           }
         },
         "predicate_register": {

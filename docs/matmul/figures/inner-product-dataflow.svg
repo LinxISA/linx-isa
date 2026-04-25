@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="320" viewBox="0 0 860 320">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L10,3 L0,6 Z" fill="#1f2937"/>
+    </marker>
+    <style>
+      .title { font: 700 24px Helvetica, Arial, sans-serif; fill: #111827; }
+      .label { font: 18px Helvetica, Arial, sans-serif; fill: #111827; }
+      .small { font: 15px Helvetica, Arial, sans-serif; fill: #374151; }
+      .box { fill: #f9fafb; stroke: #111827; stroke-width: 2; rx: 10; }
+      .psum { fill: #fff7ed; stroke: #c2410c; stroke-width: 2; rx: 10; }
+      .kbox { fill: #eff6ff; stroke: #2563eb; stroke-width: 2; rx: 10; }
+      .arrow { stroke: #1f2937; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <text x="30" y="38" class="title">Inner-Product View</text>
+
+  <rect x="40" y="90" width="210" height="70" class="box"/>
+  <text x="70" y="132" class="label">Row of A : A[i, 0:K]</text>
+
+  <rect x="40" y="190" width="210" height="70" class="box"/>
+  <text x="57" y="232" class="label">Column of B : B[0:K, j]</text>
+
+  <path d="M260 125 L355 125" class="arrow"/>
+  <path d="M260 225 L355 225" class="arrow"/>
+
+  <rect x="365" y="100" width="150" height="150" class="kbox"/>
+  <text x="401" y="142" class="label">Multiply</text>
+  <text x="395" y="173" class="label">along K</text>
+  <text x="388" y="208" class="small">a[i,k] * b[k,j]</text>
+
+  <path d="M525 175 L620 175" class="arrow"/>
+
+  <rect x="630" y="100" width="180" height="150" class="psum"/>
+  <text x="688" y="140" class="label">Accumulator</text>
+  <text x="676" y="176" class="label">sum over k</text>
+  <text x="664" y="212" class="small">one output C[i,j]</text>
+
+  <text x="40" y="290" class="small">Key idea: each output element reduces one row of A with one column of B.</text>
+</svg>

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import shutil
 import json
 import os
 import shlex
@@ -14,6 +15,7 @@ from pathlib import Path
 
 WORKLOADS_DIR = Path(__file__).resolve().parent
 GENERATED_DIR = WORKLOADS_DIR / "generated"
+DEFAULT_PUBLISH_ELF_DIR = GENERATED_DIR / "elf"
 
 
 @dataclass(frozen=True)
@@ -48,11 +50,72 @@ def _resolve_cc(arg_cc: str | None) -> Path:
 
 
 def _common_flags(*, target: str, sysroot: str | None, opt: str, extra_cflags: list[str]) -> list[str]:
-    flags: list[str] = ["--target", target, opt]
+    flags: list[str] = ["-target", target, opt]
     if sysroot:
         flags.append(f"--sysroot={sysroot}")
     flags.extend(extra_cflags)
     return flags
+
+
+def _resolve_runtime_lib(*, sysroot: str | None, runtime_lib: str | None) -> Path:
+    if runtime_lib:
+        path = Path(os.path.expanduser(runtime_lib))
+        if not path.exists():
+            raise SystemExit(f"error: runtime lib not found: {path}")
+        return path
+    if not sysroot:
+        raise SystemExit("error: --sysroot is required for musl-static link mode")
+    sysroot_path = Path(os.path.expanduser(sysroot))
+    for candidate in (
+        sysroot_path / "lib" / "liblinx_builtin_rt.a",
+        sysroot_path / "lib" / "libclang_rt.builtins-linx64.a",
+    ):
+        if candidate.exists():
+            return candidate
+    raise SystemExit(f"error: no runtime lib found under {sysroot_path / 'lib'}")
+
+
+def _static_link_flags(*, sysroot: str | None, runtime_lib: str | None, image_base: str | None) -> list[str]:
+    if not sysroot:
+        raise SystemExit("error: --sysroot is required for musl-static link mode")
+    sysroot_path = Path(os.path.expanduser(sysroot))
+    lib_dir = sysroot_path / "lib"
+    crt1 = lib_dir / "rcrt1.o"
+    if not crt1.exists():
+        crt1 = lib_dir / "crt1.o"
+    if not crt1.exists():
+        raise SystemExit(f"error: missing static startup object under {lib_dir}")
+    crti = lib_dir / "crti.o"
+    crtn = lib_dir / "crtn.o"
+    libc = lib_dir / "libc.a"
+    for required in (crti, crtn, libc):
+        if not required.exists():
+            raise SystemExit(f"error: missing musl static runtime object: {required}")
+    rt_archive = _resolve_runtime_lib(sysroot=sysroot, runtime_lib=runtime_lib)
+    flags = [
+        "-fuse-ld=lld",
+        "-static",
+        "-Wl,-pie",
+        "-nostdlib",
+        str(crt1),
+        str(crti),
+        str(rt_archive),
+        str(libc),
+        str(crtn),
+    ]
+    if image_base:
+        flags.append(f"-Wl,--image-base={image_base}")
+    return flags
+
+
+def _publish_executable(exe: Path, published_name: str, publish_dir: Path | None) -> Path | None:
+    if publish_dir is None:
+        return None
+    publish_dir.mkdir(parents=True, exist_ok=True)
+    dst = publish_dir / published_name
+    shutil.copy2(exe, dst)
+    dst.chmod(dst.stat().st_mode | 0o111)
+    return dst
 
 
 def _build_coremark(
@@ -65,6 +128,9 @@ def _build_coremark(
     out_dir: Path,
     port: str,
     iterations: int,
+    link_mode: str,
+    runtime_lib: str | None,
+    image_base: str | None,
     verbose: bool,
 ) -> Path:
     core_up = WORKLOADS_DIR / "coremark" / "upstream"
@@ -86,6 +152,10 @@ def _build_coremark(
     exe = core_out / "coremark.elf"
 
     flags = _common_flags(target=target, sysroot=sysroot, opt=opt, extra_cflags=extra_cflags)
+    link_flags = []
+    if link_mode == "musl-static":
+        link_flags = _static_link_flags(sysroot=sysroot, runtime_lib=runtime_lib, image_base=image_base)
+
     cmd = [
         str(cc),
         *flags,
@@ -96,6 +166,7 @@ def _build_coremark(
         f"-I{core_up}",
         f"-I{port_dir}",
         *[str(s) for s in srcs],
+        *link_flags,
         "-o",
         str(exe),
     ]
@@ -116,6 +187,9 @@ def _build_dhrystone(
     extra_cflags: list[str],
     out_dir: Path,
     runs: int,
+    link_mode: str,
+    runtime_lib: str | None,
+    image_base: str | None,
     verbose: bool,
 ) -> Path:
     dhry = WORKLOADS_DIR / "dhrystone" / "upstream"
@@ -126,15 +200,21 @@ def _build_dhrystone(
     exe = out / "dhrystone.elf"
 
     flags = _common_flags(target=target, sysroot=sysroot, opt=opt, extra_cflags=extra_cflags)
+    link_flags = []
+    if link_mode == "musl-static":
+        link_flags = _static_link_flags(sysroot=sysroot, runtime_lib=runtime_lib, image_base=image_base)
+
     cmd = [
         str(cc),
         *flags,
         "-std=gnu89",
+        "-DTIME",
         "-Wno-implicit-int",
         "-Wno-return-type",
         "-Wno-implicit-function-declaration",
         f"-DDHRY_ITERS={runs}",
         *[str(s) for s in srcs],
+        *link_flags,
         "-o",
         str(exe),
     ]
@@ -237,12 +317,25 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--coremark-iterations", type=int, default=1)
     ap.add_argument("--dhrystone-runs", type=int, default=1000)
     ap.add_argument(
+        "--link-mode",
+        choices=["default", "musl-static"],
+        default="default",
+        help="Link mode for direct clang invocations (default: default)",
+    )
+    ap.add_argument("--runtime-lib", default=None, help="Optional builtins runtime archive for musl-static mode")
+    ap.add_argument("--image-base", default=None, help="Optional image base passed to the linker")
+    ap.add_argument(
         "--run-command",
         default=None,
         help="Optional execution wrapper command. Use {exe} placeholder or the executable is appended.",
     )
     ap.add_argument("--timeout", type=float, default=120.0, help="Execution timeout seconds")
     ap.add_argument("--out-dir", default=str(GENERATED_DIR / "benchmarks"), help="Output directory")
+    ap.add_argument(
+        "--publish-elf-dir",
+        default=str(DEFAULT_PUBLISH_ELF_DIR),
+        help="Optional canonical ELF publish directory (use none to disable)",
+    )
     ap.add_argument("--json-out", default=None, help="Optional machine-readable summary path")
     ap.add_argument("--verbose", "-v", action="store_true")
     args = ap.parse_args(argv)
@@ -250,6 +343,9 @@ def main(argv: list[str]) -> int:
     cc = _resolve_cc(args.cc)
     out_dir = Path(os.path.expanduser(args.out_dir))
     out_dir.mkdir(parents=True, exist_ok=True)
+    publish_dir = None
+    if str(args.publish_elf_dir).lower() not in ("", "none", "null"):
+        publish_dir = Path(os.path.expanduser(args.publish_elf_dir))
 
     coremark_exe = _build_coremark(
         cc=cc,
@@ -260,6 +356,9 @@ def main(argv: list[str]) -> int:
         out_dir=out_dir,
         port=args.coremark_port,
         iterations=args.coremark_iterations,
+        link_mode=args.link_mode,
+        runtime_lib=args.runtime_lib,
+        image_base=args.image_base,
         verbose=args.verbose,
     )
     dhrystone_exe = _build_dhrystone(
@@ -270,8 +369,14 @@ def main(argv: list[str]) -> int:
         extra_cflags=args.cflag,
         out_dir=out_dir,
         runs=args.dhrystone_runs,
+        link_mode=args.link_mode,
+        runtime_lib=args.runtime_lib,
+        image_base=args.image_base,
         verbose=args.verbose,
     )
+
+    published_coremark = _publish_executable(coremark_exe, "coremark.elf", publish_dir)
+    published_dhrystone = _publish_executable(dhrystone_exe, "dhrystone.elf", publish_dir)
 
     logs_dir = out_dir / "logs"
     logs_dir.mkdir(parents=True, exist_ok=True)
@@ -304,6 +409,10 @@ def main(argv: list[str]) -> int:
     ok = _write_json(json_out, results, target=args.target, cc=cc, run_command=args.run_command)
     print(f"ok: wrote {report}")
     print(f"ok: wrote {json_out}")
+    if published_coremark:
+        print(f"ok: published {published_coremark}")
+    if published_dhrystone:
+        print(f"ok: published {published_dhrystone}")
     if not ok:
         print("error: one or more benchmark runs exited nonzero", file=sys.stderr)
         return 1

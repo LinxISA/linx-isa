@@ -37,6 +37,10 @@ RUN_PYC_NIGHTLY_GATES="${RUN_PYC_NIGHTLY_GATES-}" # 0|1
 RUN_TRACE_NIGHTLY_GATES="${RUN_TRACE_NIGHTLY_GATES-}" # 0|1
 RUN_PERF_FLOOR_GATES="${RUN_PERF_FLOOR_GATES-}" # 0|1
 PERF_MAX_REGRESSION="${PERF_MAX_REGRESSION:-10.0}"
+QEMU_CLEAN_BUILD="${QEMU_CLEAN_BUILD-}" # 0|1
+QEMU_CLEAN_OUT_DIR="${QEMU_CLEAN_OUT_DIR:-/tmp/linx-qemu-clean-build}"
+LINUX_BUSYBOX_ROOTFS_CLEAN_BUILD="${LINUX_BUSYBOX_ROOTFS_CLEAN_BUILD-}" # 0|1
+LINUX_BUSYBOX_ROOTFS_CLEAN_OUT_DIR="${LINUX_BUSYBOX_ROOTFS_CLEAN_OUT_DIR:-/tmp/linx-linux-rootfs-clean-out}"
 
 if [[ "$LINX_GATE_TIER" != "pr" && "$LINX_GATE_TIER" != "nightly" ]]; then
   echo "error: LINX_GATE_TIER must be pr|nightly (got: $LINX_GATE_TIER)" >&2
@@ -77,6 +81,14 @@ else
   [[ -n "$RUN_PYC_NIGHTLY_GATES" ]] || RUN_PYC_NIGHTLY_GATES=0
   [[ -n "$RUN_TRACE_NIGHTLY_GATES" ]] || RUN_TRACE_NIGHTLY_GATES=0
   [[ -n "$RUN_PERF_FLOOR_GATES" ]] || RUN_PERF_FLOOR_GATES=0
+fi
+
+if [[ "$LANE" == "pin" ]]; then
+  [[ -n "$QEMU_CLEAN_BUILD" ]] || QEMU_CLEAN_BUILD=1
+  [[ -n "$LINUX_BUSYBOX_ROOTFS_CLEAN_BUILD" ]] || LINUX_BUSYBOX_ROOTFS_CLEAN_BUILD=1
+else
+  [[ -n "$QEMU_CLEAN_BUILD" ]] || QEMU_CLEAN_BUILD=0
+  [[ -n "$LINUX_BUSYBOX_ROOTFS_CLEAN_BUILD" ]] || LINUX_BUSYBOX_ROOTFS_CLEAN_BUILD=0
 fi
 
 if [[ "$LINX_BRINGUP_PROFILE" == "release-strict" ]]; then
@@ -300,15 +312,25 @@ if [[ -z "$LLD_BIN" ]]; then
   echo "error: ld.lld not found; set LLD or build toolchain first" >&2
   exit 1
 fi
-QEMU_BIN="$(resolve_qemu)"
-if [[ -z "$QEMU_BIN" ]]; then
-  echo "error: qemu-system-linx64 not found for lane '$LANE'; set QEMU=..." >&2
-  exit 1
-fi
 GMAKE_BIN="$(resolve_gmake)"
 if [[ -z "$GMAKE_BIN" ]]; then
   echo "error: gmake/make not found; set GMAKE=..." >&2
   exit 1
+fi
+if [[ "$QEMU_CLEAN_BUILD" == "1" ]]; then
+  QEMU_BIN="$(bash "$ROOT/tools/bringup/run_qemu_build_clean.sh" --qemu-root "$ROOT/emulator/qemu" --out-dir "$QEMU_CLEAN_OUT_DIR" --target qemu-system-linx64)"
+  QEMU_BUILD_CMD="bash $ROOT/tools/bringup/run_qemu_build_clean.sh --qemu-root $ROOT/emulator/qemu --out-dir $QEMU_CLEAN_OUT_DIR --target qemu-system-linx64 >/dev/null"
+else
+  QEMU_BIN="$(resolve_qemu)"
+  if [[ -z "$QEMU_BIN" ]]; then
+    echo "error: qemu-system-linx64 not found for lane '$LANE'; set QEMU=..." >&2
+    exit 1
+  fi
+  if [[ "$LANE" == "pin" ]]; then
+    QEMU_BUILD_CMD="ninja -C $ROOT/emulator/qemu/build qemu-system-linx64"
+  else
+    QEMU_BUILD_CMD="test -x $QEMU_BIN"
+  fi
 fi
 if [[ ! -d "$LINUX_ROOT/tools/linxisa/initramfs" ]]; then
   echo "error: linux initramfs tooling missing: $LINUX_ROOT/tools/linxisa/initramfs" >&2
@@ -354,6 +376,8 @@ echo "info: profile=$LINX_BRINGUP_PROFILE trace_schema_version=$TRACE_SCHEMA_VER
 echo "info: clang=$CLANG_BIN"
 echo "info: lld=$LLD_BIN"
 echo "info: qemu=$QEMU_BIN"
+echo "info: qemu_clean_build=$QEMU_CLEAN_BUILD"
+echo "info: linux_busybox_rootfs_clean_build=$LINUX_BUSYBOX_ROOTFS_CLEAN_BUILD"
 echo "info: gmake=$GMAKE_BIN"
 echo "info: Linux runtime IRQ policy LINX_DISABLE_TIMER_IRQ=$LINX_DISABLE_TIMER_IRQ"
 echo "info: Emulator/system IRQ policy LINX_EMU_DISABLE_TIMER_IRQ=$LINX_EMU_DISABLE_TIMER_IRQ"
@@ -618,7 +642,7 @@ run_gate \
 run_gate \
   "Emulator" \
   "QEMU pinned binary build" \
-  "ninja -C $ROOT/emulator/qemu/build qemu-system-linx64" \
+  "$QEMU_BUILD_CMD" \
   "qemu_pinned_build_pass" \
   "qemu_pinned_build_fail" \
   "emu_build"
@@ -813,7 +837,7 @@ if [[ $SKIP_LINUX -eq 0 ]]; then
   run_gate \
     "Kernel" \
     "Linux busybox rootfs boot" \
-    "TIMEOUT=$BUSYBOX_ROOTFS_TIMEOUT LINX_DISABLE_TIMER_IRQ=$LINX_DISABLE_TIMER_IRQ QEMU=$QEMU_BIN python3 $LINUX_ROOT/tools/linxisa/busybox_rootfs/boot.py" \
+    "TIMEOUT=$BUSYBOX_ROOTFS_TIMEOUT LINX_DISABLE_TIMER_IRQ=$LINX_DISABLE_TIMER_IRQ ROOTFS_IMG=\$(if [[ \"$LINUX_BUSYBOX_ROOTFS_CLEAN_BUILD\" == \"1\" ]]; then bash $ROOT/tools/bringup/run_linux_busybox_rootfs_build_clean.sh --linux-root $LINUX_ROOT --out-dir $LINUX_BUSYBOX_ROOTFS_CLEAN_OUT_DIR --llvm-build $ROOT/compiler/llvm/build-linxisa-clang; else printf '%s' $LINUX_ROOT/build-linx-fixed/linx-busybox-rootfs/rootfs.ext2; fi) SKIP_BUILD=1 QEMU=$QEMU_BIN python3 $LINUX_ROOT/tools/linxisa/busybox_rootfs/boot.py" \
     "linux_busybox_rootfs_pass" \
     "linux_busybox_rootfs_fail" \
     "kernel_busybox_rootfs"
@@ -843,7 +867,7 @@ else
   record_gate \
     "Kernel" \
     "Linux busybox rootfs boot" \
-    "TIMEOUT=$BUSYBOX_ROOTFS_TIMEOUT LINX_DISABLE_TIMER_IRQ=$LINX_DISABLE_TIMER_IRQ QEMU=$QEMU_BIN python3 $LINUX_ROOT/tools/linxisa/busybox_rootfs/boot.py" \
+    "TIMEOUT=$BUSYBOX_ROOTFS_TIMEOUT LINX_DISABLE_TIMER_IRQ=$LINX_DISABLE_TIMER_IRQ ROOTFS_IMG=\$(if [[ \"$LINUX_BUSYBOX_ROOTFS_CLEAN_BUILD\" == \"1\" ]]; then bash $ROOT/tools/bringup/run_linux_busybox_rootfs_build_clean.sh --linux-root $LINUX_ROOT --out-dir $LINUX_BUSYBOX_ROOTFS_CLEAN_OUT_DIR --llvm-build $ROOT/compiler/llvm/build-linxisa-clang; else printf '%s' $LINUX_ROOT/build-linx-fixed/linx-busybox-rootfs/rootfs.ext2; fi) SKIP_BUILD=1 QEMU=$QEMU_BIN python3 $LINUX_ROOT/tools/linxisa/busybox_rootfs/boot.py" \
     "not_run" \
     "skipped_by_flag" \
     "note: --skip-linux" \

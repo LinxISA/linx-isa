@@ -493,7 +493,11 @@ __attribute__((noreturn)) static void linx_dbg_wp_user(void)
 __attribute__((noreturn)) static void linx_acr2_ri_step_trap_user(void)
 {
     const uint64_t out_base = (uint64_t)(uintptr_t)&STEP_RI_OUT[0];
-    const uint64_t out_stride = 4u;
+    /*
+     * V.SW.BRG uses SrcR << (2 + shamt) for word stores, so a one-word
+     * stride is encoded as index 1 rather than byte offset 4.
+     */
+    const uint64_t out_stride = 1u;
     const uint64_t filler2 = 0x11112222u;
     const uint64_t filler3 = 0x33334444u;
     const uint64_t filler4 = 0x55556666u;

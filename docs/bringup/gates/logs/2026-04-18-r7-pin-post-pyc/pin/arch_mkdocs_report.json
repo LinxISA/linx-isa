@@ -1,0 +1,21 @@
+{
+  "checked_docs": [
+    "docs/architecture/README.md",
+    "docs/architecture/v0.4-architecture-contract.md",
+    "rtl/LinxCore/docs/architecture/overview.md",
+    "rtl/LinxCore/docs/architecture/microarchitecture.md",
+    "rtl/LinxCore/docs/architecture/interfaces.md",
+    "rtl/LinxCore/docs/architecture/verification-matrix.md",
+    "rtl/LinxCore/docs/architecture/module-catalog.md",
+    "rtl/LinxCore/docs/architecture/pipeline-stage-catalog.md",
+    "docs/architecture/linxcore/overview.md",
+    "docs/architecture/linxcore/microarchitecture.md",
+    "docs/architecture/linxcore/interfaces.md",
+    "docs/architecture/linxcore/verification-matrix.md",
+    "docs/architecture/linxcore/module-catalog.md",
+    "docs/architecture/linxcore/pipeline-stage-catalog.md"
+  ],
+  "errors": [],
+  "ok": true,
+  "warnings": []
+}

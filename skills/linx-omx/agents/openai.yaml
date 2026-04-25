@@ -1,0 +1,4 @@
+interface:
+  display_name: "Linx OMX"
+  short_description: "OMX routing and closure discipline for the LinxISA superproject"
+  default_prompt: "Use $linx-omx to route a LinxISA task through the right OMX workflow, lock module scope and evidence, and keep leaf fixes, repins, and strict closure in the correct order."

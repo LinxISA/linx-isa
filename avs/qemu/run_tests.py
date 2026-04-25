@@ -56,29 +56,44 @@ PTO_PARITY_KERNEL_NAMES = [
     "tmatmul_acc",
     "gemm",
     "gemm_basic",
-    "gemm_demo",
+    "gemm_scaled",
     "gemm_performance",
     "add_custom",
+    "relu",
+    "sigmoid",
+    "silu",
+    "tanh",
+    "softmax",
+    "swiglu",
     "flash_attention",
-    "flash_attention_demo",
+    "flash_attention_softmax",
     "flash_attention_masked",
     "fa_performance",
-    "mla_attention_demo",
-    "flash_attention_cube_fp16",
-    "flash_attention_vec_fp32",
-    "flash_attention_vec_fp16",
-    "gqa_fp16",
-    "sparse_attention_local_fp16",
-    "rmsnorm_fp16",
-    "gelu_fp32",
-    "argmax_fp32",
-    "gather_fp32",
-    "concat_fp32",
-    "scatter_fp32",
-    "permute_nhwc_nchw_fp32",
-    "transpose_large_fp32",
-    "unsorted_segment_sum_fp32",
-    "unique_i32",
+    "mla_attention",
+    "flash_attention_cube",
+    "flash_attention_vec",
+    "gqa",
+    "sparse_attention_local",
+    "rmsnorm",
+    "batchnorm",
+    "layernorm",
+    "gelu",
+    "argmax",
+    "gather",
+    "where",
+    "slice",
+    "concat",
+    "flatten",
+    "reshape",
+    "scatter",
+    "squeeze",
+    "unsqueeze",
+    "stack",
+    "split",
+    "permute_nhwc_nchw",
+    "transpose",
+    "unsorted_segment_sum",
+    "unique",
 ]
 
 
@@ -723,6 +738,16 @@ def main(argv: list[str]) -> int:
         common_cflags.append(f"-I{pto_kernel_include_dir}")
     if pto_include_dir:
         common_cflags.append(f"-I{pto_include_dir}")
+    if "pto_parity" in selected:
+        parity_gen = REPO_ROOT / "workloads" / "pto_kernels" / "tools" / "generate_pto_parity_shape_header.py"
+        parity_header = REPO_ROOT / "workloads" / "generated" / "pto_parity_shape_config.generated.hpp"
+        p = _run([sys.executable, str(parity_gen), "--out", str(parity_header)],
+                 verbose=args.verbose, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if p.returncode != 0:
+            sys.stderr.buffer.write(p.stdout)
+            sys.stderr.buffer.write(p.stderr)
+            raise SystemExit("error: failed to generate PTO parity shape header")
+        common_cflags.append(f"-I{parity_header.parent}")
 
     objects: list[Path] = []
     for src in sources:

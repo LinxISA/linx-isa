@@ -1,48 +1,40 @@
 # LinxISA Maturity Plan (Tier-1 Track vs ARM/x86)
 
-Last updated: 2026-04-18
+Last updated: 2026-04-25
 
 ## Baseline
 
-- Latest canonical run: `2026-03-15-r2-pin` (`2026-03-15 02:38:42Z`)
+- Latest canonical run: `2026-04-18-r9-pin-linuxlibc-refresh`
+- Latest canonical report generation: `2026-04-18 02:11:34Z`
 - Canonical report: `docs/bringup/gates/latest.json`
-- The latest checked-in canonical report is still the stale `2026-03-15-r2-pin` snapshot, but fresh April 18, 2026 local recovery evidence now clears the PR-lane false blockers: AVS PR tier closure is green, model-diff passes again, and direct `strict_cross_repo.sh` PR reruns complete successfully.
-- Two April 11, 2026 spot checks supersede stale March 15 failure narratives:
-  - `python3 tools/bringup/check_sail_model.py --require-parser` and `python3 tools/isa/gen_sail_decode.py --check` are both green again.
-  - `python3 workloads/pto_kernels/tools/run_pto_kernel_parity.py --timeout 120` is green again and reports `all_match=true` for 27 kernels.
+- The checked-in canonical report now includes the April 18 pin-lane recovery evidence. It clears the stale March false blockers for AVS PR-tier closure, model-diff, LinxCore/Testbench/Trace/pyCircuit leaf PR gates, glibc runtime, musl runtime, PTO parity, and TSVC compile-only PR coverage.
+- Active governance phase remains `G0`; `docs/bringup/agent_runs/waivers.yaml` contains no waivers.
 
 ## Gap Snapshot
 
-- AVS PR-tier closure is now complete (`31/31` required tests pass), while nightly breadth remains `31/54`.
-- The current recovery work is infrastructure-first:
-  - kernel tree hygiene for out-of-tree `vmlinux` builds,
-  - glibc smoke asset packaging,
-  - LinxCore fallback benchmark assets,
-  - LinxCore `workspace_paths.sh` restore,
-  - pyCircuit `pycc`/`pyc-compile` availability in the pinned workspace,
-  - fresh strict-closure rerun after clearing the stale Sail decode first-failure narrative.
+- AVS PR-tier closure is now complete (`31/31` required tests pass), while nightly breadth remains `32/54`.
+- The current recovery work is now narrowed to Linux/userspace runtime closure:
+  - Linux BusyBox rootfs still fails after `/sbin/init` even with a clean pinned QEMU build and clean rootfs build helper,
+  - `strict_cross_repo.sh` remains red only because the required BusyBox rootfs row is red in the latest canonical run,
+  - canonical runtime evidence is otherwise refreshed through `2026-04-18-r9-pin-linuxlibc-refresh`.
 - Hosted workload hardening is now split cleanly by tier:
-  - PR lane: benchmark/polybench/portfolio artifact publication and PTO parity are green.
-  - Nightly/runtime lane: SPEC Stage A and TSVC QEMU runtime remain blocked.
-- ISA-vs-QEMU implementation breadth, ABI/unwind/TLS hardening, privileged/MMU/debug scope, and SIMT/compiler maturity still remain after the current recovery lane.
+  - PR lane: benchmark/polybench/portfolio/ctuning artifact publication, PTO parity, and TSVC compile-only strict coverage are green.
+  - Nightly/runtime lane: SPEC Stage A and TSVC QEMU runtime remain blocked or opt-in.
+- Remaining superproject work: BusyBox rootfs Linux runtime, SPEC Stage A over 9p/initramfs, TSVC runtime, AVS nightly breadth, QEMU decode coverage, ABI/unwind/TLS hardening, privileged/MMU/debug scope, and SIMT/compiler maturity.
 
 ## Immediate Recovery Lane (March-April 2026)
 
 Status: Active
 
-1. Refresh the checked-in canonical report so it matches the April 18, 2026 local PR-lane recovery evidence.
-2. Restore shared prerequisites for LinxCore/Testbench/Trace/pyCircuit follow-up lanes:
-   - recover `rtl/LinxCore/tools/lib/workspace_paths.sh`,
-   - restore fallback `.memh` assets for runner/trace smoke gates,
-   - build or point the pinned workspace at `pycc` and `pyc-compile`.
-3. Re-close kernel/libc integration basics:
-   - restore clean-source-tree handling for `Kernel::Linux \`vmlinux\` build closure`,
-   - restore the missing glibc wrapper asset for `Library::glibc runtime dynamic hello`.
-4. Re-run the runtime-heavy workload lanes that still block nightly closure:
+1. Keep the April 18, 2026 checked-in canonical report as the current PR-lane baseline.
+2. Close the remaining kernel/userspace runtime blocker:
+   - fix the BusyBox rootfs runtime regression (current signal: kernel `E_BLOCK` after `/sbin/init`; the same failure reproduces against a clean pinned QEMU build and currently lands in `__submit_bio` on `FRET.STK` with `ra=0`, while a clean-worktree `switch_to` EBARG rollback only stabilizes verbose boot),
+   - refresh the canonical convergence report after BusyBox rootfs passes so `Regression::strict_cross_repo.sh` can turn green without a waiver.
+3. Re-run the runtime-heavy workload lanes that still block nightly closure:
    - re-run SPEC Stage A QEMU matrix,
    - re-run the TSVC strict QEMU gate,
    - reclassify the next Linux/userspace runtime fault after each fix.
-5. Resume nightly AVS breadth work on decode/block edge cases, atomics, FP, vector runtime, and Linux workload launch semantics.
+4. Resume nightly AVS breadth work on decode/block edge cases, atomics, FP, vector runtime, and Linux workload launch semantics.
 
 ## Milestones
 
@@ -53,16 +45,11 @@ Status: In progress
 - Completed in this refresh:
   - checklist/manifest ownership now includes AVS normalize/audit plus the workload regression rows recorded in the March 15 canonical report.
   - the execution-order runbook now lives in `docs/bringup/SUPERPROJECT_BRINGUP_CHECKLIST.md`.
-  - the April 11, 2026 PTO parity spot check is green again, so `INT-020` is no longer an active engineering blocker pending canonical report refresh.
+  - the April 18 canonical report captures PR-tier AVS closure, model-diff recovery, PTO parity, TSVC compile-only coverage, glibc/musl runtime recovery, and LinxCore/Testbench/Trace/pyCircuit leaf recovery.
 - Remaining for M1:
-  - canonical report refresh via `run_runtime_convergence.sh`,
-  - `LINUX-005`,
-  - `LIBC-006`,
-  - `LC-001`, `LC-003`, `LC-004`, `LC-005`,
-  - `TB-001`, `TB-002`,
-  - `TRACE-001`, `TRACE-002`,
-  - `PYC-001`, `PYC-002`,
-  - nightly/runtime follow-up for `INT-025`, `SPEC-003`, `SPEC-004`.
+  - `LINUX-004`,
+  - `INT-004` through the BusyBox-dependent strict closure row,
+  - nightly/runtime follow-up for SPEC Stage A, TSVC runtime, and AVS nightly breadth.
 
 ### M2 (3-6 weeks): AVS core coverage expansion
 
@@ -96,7 +83,7 @@ Status: Started (coverage reporting landed; PR-lane compatibility wrapper restor
 Status: Planned (PR compile/artifact lanes green; runtime execution lanes still open)
 
 - Close `SPEC-001..SPEC-007` in `docs/bringup/agent_runs/checklists/specint_qemu.md`.
-- Refresh the canonical workload report so the April 11, 2026 PTO parity recovery is reflected in `docs/bringup/gates/latest.json`.
+- Keep the canonical workload report current; PTO parity is reflected as green in `2026-04-18-r9-pin-linuxlibc-refresh`.
 - Keep 9p/virtfs compatibility (`LINUX-003`) as hard prerequisite for SPEC lane.
 - Evolve C++ runtime policy beyond current no-EH/no-RTTI baseline once dual-lane evidence is stable.
 - Convert ABI/unwind/TLS checklist into executable runtime gates.

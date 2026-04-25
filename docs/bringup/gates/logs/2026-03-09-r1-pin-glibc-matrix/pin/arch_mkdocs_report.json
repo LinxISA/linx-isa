@@ -1,0 +1,13 @@
+{
+  "checked_docs": [
+    "docs/architecture/README.md",
+    "docs/architecture/v0.4-architecture-contract.md",
+    "docs/architecture/linxcore/overview.md",
+    "docs/architecture/linxcore/microarchitecture.md",
+    "docs/architecture/linxcore/interfaces.md",
+    "docs/architecture/linxcore/verification-matrix.md"
+  ],
+  "errors": [],
+  "ok": true,
+  "warnings": []
+}

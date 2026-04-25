@@ -1,0 +1,203 @@
+{
+  "active_phase": "",
+  "checked_at_utc": "2026-03-15 02:38:42Z",
+  "checklists_root": "/Users/zhoubot/linx-isa/docs/bringup/agent_runs/checklists",
+  "errors": [
+    {
+      "code": "E_RUNTIME_UNASSIGNED_GATE",
+      "gate_key": "ISA::AVS matrix status audit",
+      "message": "required gate is not assigned in manifest",
+      "status": "pass"
+    },
+    {
+      "code": "E_RUNTIME_UNASSIGNED_GATE",
+      "gate_key": "ISA::AVS status normalize",
+      "message": "required gate is not assigned in manifest",
+      "status": "pass"
+    },
+    {
+      "code": "E_RUNTIME_UNWAIVED_GATE",
+      "gate_key": "ISA::AVS tier closure",
+      "message": "required gate is not pass and has no active waiver",
+      "report_waived": false,
+      "status": "fail"
+    },
+    {
+      "code": "E_RUNTIME_UNWAIVED_GATE",
+      "gate_key": "Kernel::Linux `vmlinux` build closure",
+      "message": "required gate is not pass and has no active waiver",
+      "report_waived": false,
+      "status": "fail"
+    },
+    {
+      "code": "E_RUNTIME_UNWAIVED_GATE",
+      "gate_key": "Library::glibc runtime dynamic hello",
+      "message": "required gate is not pass and has no active waiver",
+      "report_waived": false,
+      "status": "fail"
+    },
+    {
+      "code": "E_RUNTIME_UNWAIVED_GATE",
+      "gate_key": "LinxCore::cosim smoke",
+      "message": "required gate is not pass and has no active waiver",
+      "report_waived": false,
+      "status": "fail"
+    },
+    {
+      "code": "E_RUNTIME_UNWAIVED_GATE",
+      "gate_key": "LinxCore::runner protocol",
+      "message": "required gate is not pass and has no active waiver",
+      "report_waived": false,
+      "status": "fail"
+    },
+    {
+      "code": "E_RUNTIME_UNWAIVED_GATE",
+      "gate_key": "LinxCore::stage/connectivity lint",
+      "message": "required gate is not pass and has no active waiver",
+      "report_waived": false,
+      "status": "fail"
+    },
+    {
+      "code": "E_RUNTIME_UNWAIVED_GATE",
+      "gate_key": "LinxCore::trace schema and memory smoke",
+      "message": "required gate is not pass and has no active waiver",
+      "report_waived": false,
+      "status": "fail"
+    },
+    {
+      "code": "E_RUNTIME_UNWAIVED_GATE",
+      "gate_key": "LinxTrace::contract sync lint",
+      "message": "required gate is not pass and has no active waiver",
+      "report_waived": false,
+      "status": "fail"
+    },
+    {
+      "code": "E_RUNTIME_UNWAIVED_GATE",
+      "gate_key": "LinxTrace::sample trace lint",
+      "message": "required gate is not pass and has no active waiver",
+      "report_waived": false,
+      "status": "fail"
+    },
+    {
+      "code": "E_RUNTIME_UNWAIVED_GATE",
+      "gate_key": "Model::QEMU vs model differential suite",
+      "message": "required gate is not pass and has no active waiver",
+      "report_waived": false,
+      "status": "fail"
+    },
+    {
+      "code": "E_RUNTIME_UNASSIGNED_GATE",
+      "gate_key": "Regression::PTO kernel parity",
+      "message": "required gate is not assigned in manifest",
+      "status": "fail"
+    },
+    {
+      "code": "E_RUNTIME_UNASSIGNED_GATE",
+      "gate_key": "Regression::SPEC stage A QEMU matrix",
+      "message": "required gate is not assigned in manifest",
+      "status": "fail"
+    },
+    {
+      "code": "E_RUNTIME_UNASSIGNED_GATE",
+      "gate_key": "Regression::TSVC QEMU gate",
+      "message": "required gate is not assigned in manifest",
+      "status": "fail"
+    },
+    {
+      "code": "E_RUNTIME_UNASSIGNED_GATE",
+      "gate_key": "Regression::Workload benchmarks",
+      "message": "required gate is not assigned in manifest",
+      "status": "pass"
+    },
+    {
+      "code": "E_RUNTIME_UNASSIGNED_GATE",
+      "gate_key": "Regression::Workload polybench",
+      "message": "required gate is not assigned in manifest",
+      "status": "pass"
+    },
+    {
+      "code": "E_RUNTIME_UNASSIGNED_GATE",
+      "gate_key": "Regression::Workload portfolio",
+      "message": "required gate is not assigned in manifest",
+      "status": "pass"
+    },
+    {
+      "code": "E_RUNTIME_UNASSIGNED_GATE",
+      "gate_key": "Regression::ctuning curated subset",
+      "message": "required gate is not assigned in manifest",
+      "status": "pass"
+    },
+    {
+      "code": "E_RUNTIME_UNWAIVED_GATE",
+      "gate_key": "Regression::strict_cross_repo.sh",
+      "message": "required gate is not pass and has no active waiver",
+      "report_waived": false,
+      "status": "fail"
+    },
+    {
+      "code": "E_RUNTIME_UNWAIVED_GATE",
+      "gate_key": "Testbench::ROB bookkeeping",
+      "message": "required gate is not pass and has no active waiver",
+      "report_waived": false,
+      "status": "fail"
+    },
+    {
+      "code": "E_RUNTIME_UNWAIVED_GATE",
+      "gate_key": "Testbench::block struct pyc flow smoke",
+      "message": "required gate is not pass and has no active waiver",
+      "report_waived": false,
+      "status": "fail"
+    },
+    {
+      "code": "E_RUNTIME_UNWAIVED_GATE",
+      "gate_key": "pyCircuit::CPU C++ smoke",
+      "message": "required gate is not pass and has no active waiver",
+      "report_waived": false,
+      "status": "fail"
+    },
+    {
+      "code": "E_RUNTIME_UNWAIVED_GATE",
+      "gate_key": "pyCircuit::QEMU vs pyCircuit trace diff",
+      "message": "required gate is not pass and has no active waiver",
+      "report_waived": false,
+      "status": "fail"
+    }
+  ],
+  "lane": "pin",
+  "manifest": "/Users/zhoubot/linx-isa/docs/bringup/agent_runs/manifest.yaml",
+  "mode": "runtime",
+  "ok": false,
+  "report": "/Users/zhoubot/linx-isa/docs/bringup/gates/latest.json",
+  "run_id": "2026-03-15-r2-pin",
+  "runtime_stats": {
+    "active_phase": "G0",
+    "lane": "pin",
+    "phase_required_gate_owner_mismatches": 0,
+    "phase_required_gates_missing": 0,
+    "phase_required_gates_total": 15,
+    "profile": "release-strict",
+    "required_failed": 24,
+    "required_gates_total": 47,
+    "required_pass": 23,
+    "required_waived": 0,
+    "run_id": "2026-03-15-r2-pin",
+    "waiver_matches": 0
+  },
+  "static_stats": {
+    "active_phase": "G0",
+    "agent_scope_allow_multi_module_agents": true,
+    "agent_scope_cross_module_agents": 2,
+    "agent_scope_explicit_modules_required": true,
+    "agent_scope_multi_module_agents": 2,
+    "agents": 11,
+    "assignments": 53,
+    "declared_checklist_ids": 78,
+    "declared_checklists": 11,
+    "phase_gate_requirement_phases": 1,
+    "phases": 6,
+    "waivers": 0
+  },
+  "strict_always": true,
+  "waivers": "/Users/zhoubot/linx-isa/docs/bringup/agent_runs/waivers.yaml",
+  "warnings": []
+}

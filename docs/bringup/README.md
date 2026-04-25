@@ -5,6 +5,7 @@ This directory tracks `v0.4` architecture and implementation alignment, with AVS
 ## Start Here
 
 - Onboarding and workspace setup: `docs/bringup/GETTING_STARTED.md`
+- Execution-order blocker runbook: `docs/bringup/SUPERPROJECT_BRINGUP_CHECKLIST.md`
 
 ## Normative Contract
 
@@ -17,6 +18,10 @@ This directory tracks `v0.4` architecture and implementation alignment, with AVS
 ## Key References
 
 - `docs/bringup/AVS_CONTRACT.md`
+- `docs/bringup/SUPERPROJECT_BRINGUP_CHECKLIST.md`
+- `docs/bringup/MATURITY_PLAN.md`
+- `docs/bringup/SIMT_COMPILER_MATURITY_PLAN.md`
+- `docs/bringup/SIMT_COMPILER_SUPPORTED_SUBSET.md`
 - `docs/bringup/rendering_vulkan_bringup.md`
 - `docs/bringup/CPP_BRINGUP_CONTRACT.md`
 - `docs/bringup/PROGRESS.md`

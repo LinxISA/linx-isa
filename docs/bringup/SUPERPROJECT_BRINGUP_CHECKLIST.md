@@ -1,14 +1,14 @@
 # LinxISA Superproject Bringup Blocker Checklist
 
 Use this runbook for the current **red-gate recovery lane** in the `linx-isa`
-superproject.
+superproject. It reflects the checked-in April 18, 2026 canonical gate report,
+not the older March 15 baseline.
 
 It is intentionally narrower than the full maturity plan:
 
 - it focuses on the latest blocking bringup work in execution order;
 - it assumes the per-domain owner checklists remain canonical for module detail;
-- it does not try to solve unrelated red gates in libc runtime, LinxCore,
-  Testbench, Trace, or pyCircuit.
+- it names nightly/runtime follow-up lanes without trying to close them here.
 
 Detailed owner checklists still live under
 `docs/bringup/agent_runs/checklists/`.
@@ -17,43 +17,45 @@ checklists for the module-specific closure criteria.
 
 ## Baseline
 
-- Canonical baseline: [`docs/bringup/gates/latest.json`](gates/latest.json)
-  from pin-lane run `2026-03-15-r2-pin` (`2026-03-15 02:38:42Z`).
-- Fresher spot checks from **2026-04-11** override two stale March rows:
-  - `python3 tools/bringup/check_sail_model.py --require-parser` is green.
-  - `python3 workloads/pto_kernels/tools/run_pto_kernel_parity.py --timeout 120`
-    is green, and `workloads/generated/pto_kernel_parity_latest.json` reports
-    `all_match=true` for 27 kernels.
+- Canonical baseline: [`docs/bringup/gates/latest.json`](gates/latest.json),
+  generated `2026-04-18 02:11:34Z`, latest pin-lane run
+  `2026-04-18-r9-pin-linuxlibc-refresh`.
+- The April 18 report supersedes the stale March rows for Sail/model, PTO
+  parity, AVS PR-tier closure, glibc/musl runtime, LinxCore/Testbench/Trace,
+  pyCircuit, and TSVC compile-only PR coverage.
 - Scope for this checklist:
-  - `LINUX-005`
-  - `INT-016`
-  - `INT-020`
-  - `INT-025`
+  - `LINUX-004`
   - `INT-004`
+  - `INT-016`
+  - `INT-025`
+  - `SPEC-003` / `SPEC-004` as nightly/runtime follow-up
 
 ## Current Blocker Map
 
 | Area | Gate / ID | Current state | Triage note |
 | --- | --- | --- | --- |
-| Kernel | `Kernel::Linux \`vmlinux\` build closure` / `LINUX-005` | Active blocker | `kernel/linux` is git-clean, but source-tree generated state such as `kernel/linux/include/generated` still trips the Kbuild `mrproper` guard. |
-| LLVM Linx target | `Compiler::AVS compile suites` + coverage | Not blocked | `linx32`, `linx64`, and coverage are already green in the March 15 canonical run. |
-| Strict closure | `Regression::strict_cross_repo.sh` / `INT-004` | Active blocker, stale first-failure diagnosis | The March 15 Sail decode failure is stale; rerun strict closure and capture the next real first failure. |
-| Mixed tile + SIMT workloads | `Regression::PTO kernel parity` / `INT-020` | Stale blocker | March 15 is red, but the 2026-04-11 spot check is green for all 27 kernels, including `flash_attention_cube`, `gqa`, `sparse_attention_local`, and `rmsnorm`. |
-| SIMT autovec | `Regression::TSVC QEMU gate` / `INT-025` | Active blocker | `tsvc.auto.elf` currently times out after 240 seconds under QEMU. This is the main LLVM/SIMT blocker in the current lane. |
-| QEMU baseline | `Emulator::QEMU all suites` + `QEMU strict system` | Not blocked | Baseline runtime/system gates are green; the remaining QEMU issue for this lane is TSVC reproduction, not broad decode expansion. |
-| Superproject breadth | `ISA::AVS tier closure` / `INT-016` | Active blocker | PR-tier closure is still only `20/54` active entries implemented/pass. This remains the top-level breadth blocker after subsystem fixes are rerun. |
+| Kernel | `Kernel::Linux busybox rootfs boot` / `LINUX-004` | Active blocker | Clean pinned QEMU/rootfs helpers run, but boot still trips kernel `E_BLOCK` after `/sbin/init`, currently at `__submit_bio` on `FRET.STK` with `ra=0`. |
+| Kernel | `Kernel::Linux \`vmlinux\` build closure` / `LINUX-005` | Not blocked | The clean-build helper passes in the April 18 canonical run. |
+| LLVM Linx target | `Compiler::AVS compile suites` + coverage | Not blocked | `linx32`, `linx64`, and coverage are green in the latest canonical run. |
+| Strict closure | `Regression::strict_cross_repo.sh` / `INT-004` | Active blocker | The row fails because the required BusyBox rootfs gate fails in the same run. Do not revive the stale March Sail decode diagnosis unless it reproduces. |
+| Mixed tile + SIMT workloads | `Regression::PTO kernel parity` / `INT-020` | Not blocked | The April 18 canonical run records PTO parity as pass. |
+| SIMT autovec | `Regression::TSVC strict coverage gate` / `INT-025` | PR not blocked | PR closure uses compile-only strict coverage at `148/151`; QEMU runtime remains a separate nightly/runtime follow-up. |
+| QEMU baseline | `Emulator::QEMU all suites` + `QEMU strict system` | Not blocked | Baseline runtime/system gates are green; the remaining QEMU issue for this lane is TSVC runtime reproduction, not broad decode expansion. |
+| Superproject breadth | `ISA::AVS tier closure` / `INT-016` | PR not blocked | PR-tier closure is green at `31/31`; nightly breadth remains `32/54`. |
+| SPEC runtime | `Regression::SPEC stage A QEMU matrix` / `SPEC-003` | Nightly/runtime blocker | The PR run leaves this row opt-in; known follow-up remains 9p `E_BLOCK` in `___slab_alloc` and initramfs child-startup failure. |
 
-## 1. Refresh Stale Red-Gate Truth
+## 1. Keep Gate Truth Current
 
-- [ ] Re-run the stale spot checks first:
+- [x] Treat the stale March 15 Sail decode and PTO parity failures as replaced
+      by the April 18 canonical report.
+- [x] Re-render gate status markdown from the refreshed JSON report:
 
   ```bash
-  python3 tools/bringup/check_sail_model.py --require-parser
-  python3 workloads/pto_kernels/tools/run_pto_kernel_parity.py --timeout 120
+  python3 tools/bringup/gate_report.py render \
+    --report docs/bringup/gates/latest.json \
+    --out-md docs/bringup/GATE_STATUS.md
   ```
 
-- [ ] Treat the March 15, 2026 Sail decode and PTO parity red rows as **stale**
-      unless they reproduce under current workspace state.
 - [ ] If you need to publish a refreshed canonical report, run a new convergence
       pass instead of only editing markdown:
 
@@ -62,62 +64,57 @@ checklists for the module-specific closure criteria.
   bash tools/bringup/run_runtime_convergence.sh --lane pin --run-id <run-id>
   ```
 
-- [ ] Re-render gate status markdown from the refreshed JSON report:
-
-  ```bash
-  python3 tools/bringup/gate_report.py render \
-    --report docs/bringup/gates/latest.json \
-    --out-md docs/bringup/GATE_STATUS.md
-  ```
-
 - [ ] Do not keep “Sail decode generator broken” or `INT-020` as active blockers
-      in prose once the rerun evidence is refreshed.
+      in prose unless they reproduce again under current workspace state.
 
 Exit criteria:
 
-- Sail/model status is green under the current workspace.
-- PTO kernel parity is either reproduced as failing now, or explicitly treated
-  as a stale March row pending canonical report refresh.
+- Sail/model status and PTO parity are green in the current canonical report.
+- Gate status markdown is generated from `docs/bringup/gates/latest.json`.
 
-## 2. Restore Kernel Build Closure (`LINUX-005`)
+## 2. Restore BusyBox Rootfs Runtime (`LINUX-004`)
 
-- [ ] Apply the kernel hygiene rule before any new `vmlinux` build attempt:
-  - either run `make ARCH=linx mrproper` in `kernel/linux` before the pinned
-    out-of-tree build,
-  - or build from a fresh clean source export;
-  - do not mix source-tree generated state with `O=...` builds.
-- [ ] Re-run the pinned `vmlinux` gate command:
+- [x] Keep `LINUX-005` closed through the clean `vmlinux` helper:
 
   ```bash
-  env PATH=$PWD/compiler/llvm/build-linxisa-clang/bin:$PATH \
-    /opt/homebrew/bin/gmake -C kernel/linux \
-    ARCH=linx \
-    LLVM=$PWD/compiler/llvm/build-linxisa-clang/bin/ \
-    'CC=$PWD/compiler/llvm/build-linxisa-clang/bin/clang --target=linx64-unknown-linux-gnu -fintegrated-as' \
-    HOSTCC=/usr/bin/clang \
-    HOSTCXX=/usr/bin/clang++ \
-    O=$PWD/kernel/linux/build-linx-fixed \
-    vmlinux -j"$(sysctl -n hw.ncpu 2>/dev/null || nproc)"
+  bash tools/bringup/run_linux_vmlinux_build_clean.sh \
+    --linux-root "$PWD/kernel/linux" \
+    --out-dir "$PWD/kernel/linux/build-linx-fixed" \
+    --clang "$PWD/compiler/llvm/build-linxisa-clang/bin/clang" \
+    --gmake /opt/homebrew/bin/gmake \
+    --target vmlinux
   ```
 
-- [ ] After `vmlinux` succeeds, rerun the Linux runtime smoke/full-boot gates:
+- [ ] Reproduce the current BusyBox rootfs failure with the clean helper path:
+
+  ```bash
+  QEMU="$(bash tools/bringup/run_qemu_build_clean.sh \
+    --qemu-root "$PWD/emulator/qemu" \
+    --out-dir /tmp/linx-qemu-clean-build \
+    --target qemu-system-linx64)" \
+  ROOTFS_IMG="$(bash tools/bringup/run_linux_busybox_rootfs_build_clean.sh \
+    --linux-root "$PWD/kernel/linux" \
+    --out-dir /tmp/linx-linux-rootfs-clean-out \
+    --llvm-build "$PWD/compiler/llvm/build-linxisa-clang")" \
+  SKIP_BUILD=1 QEMU="$QEMU" \
+    python3 kernel/linux/tools/linxisa/busybox_rootfs/boot.py
+  ```
+
+- [ ] Keep initramfs smoke/full boot green while iterating:
 
   ```bash
   python3 kernel/linux/tools/linxisa/initramfs/smoke.py
   python3 kernel/linux/tools/linxisa/initramfs/full_boot.py
   ```
 
-- [ ] Record the refreshed build and boot logs under the active run directory in
-      `docs/bringup/gates/logs/<run-id>/pin/`.
-
 Exit criteria:
 
-- `LINUX-005` is green with fresh evidence.
-- Smoke and full boot remain green after the build-closure fix.
+- `LINUX-004` reaches BusyBox userspace and powers off cleanly.
+- `LINUX-005`, smoke, and full boot remain green.
 
 ## 3. Re-run Strict Closure To First Real Failure (`INT-004`)
 
-- [ ] After Step 1 and Step 2 are complete, rerun strict closure.
+- [ ] After Step 2 is complete, rerun strict closure.
 - [ ] Prefer the canonical convergence wrapper when refreshing checked-in gate
       truth:
 
@@ -130,8 +127,8 @@ Exit criteria:
       `Regression::strict_cross_repo.sh` command recorded in
       [`docs/bringup/gates/latest.json`](gates/latest.json) for the active run
       shape, so the environment matches the failing row.
-- [ ] Replace the stale March Sail first-failure diagnosis with the new first
-      failing gate or command window from the rerun.
+- [x] Replace the stale March Sail first-failure diagnosis with the current
+      BusyBox-rootfs-driven strict closure failure.
 - [ ] Do not preserve “Sail decode generator broken” as the active `INT-004`
       narrative unless it reproduces again under the current workspace.
 
@@ -142,22 +139,9 @@ Exit criteria:
 - The rerun has a new run ID, updated log paths, and a refreshed multi-agent
   summary.
 
-## 4. Close The TSVC / Autovec Blocker (`INT-025`)
+## 4. Keep TSVC PR Coverage Separate From Runtime Follow-Up (`INT-025`)
 
-- [ ] Reproduce the timeout with the pinned toolchain/QEMU command:
-
-  ```bash
-  python3 workloads/tsvc/run_tsvc.py \
-    --clang compiler/llvm/build-linxisa-clang/bin/clang \
-    --lld compiler/llvm/build-linxisa-clang/bin/ld.lld \
-    --vector-mode auto \
-    --strict-fail-under 148 \
-    --source-policy linx-v03-parity \
-    --no-run-qemu \
-    --out-dir workloads/generated
-  ```
-
-- [ ] Keep the PR lane on compile-only strict coverage until the auto-runtime
+- [x] Keep the PR lane on compile-only strict coverage until the auto-runtime
       hangs are closed. Dedicated runtime triage should still classify the
       first hanging kernel against
       [`docs/bringup/SIMT_COMPILER_SUPPORTED_SUBSET.md`](SIMT_COMPILER_SUPPORTED_SUBSET.md)
@@ -165,11 +149,11 @@ Exit criteria:
   - within the documented supported subset;
   - intentional scalar fallback;
   - blocked on missing grouped EXEC-mask save/restore support.
-- [ ] Keep the current architecture boundary explicit during triage:
+- [ ] Keep the current architecture boundary explicit during runtime triage:
   - grouped single-block if-converted and active-replay shapes are valid work;
   - raw grouped multi-block divergence is still intentionally unclosed because
     the canonical surface lacks a first-class `p` save/restore carrier.
-- [ ] Only promote support inside the documented subset. If the timed-out shape
+- [ ] Only promote support inside the documented subset. If a timed-out shape
       falls outside that subset, treat the issue as workload-policy or coverage
       scope, not as proof that grouped divergent closure is already required.
 
@@ -189,27 +173,7 @@ Exit criteria:
   ROOT=$PWD
   ```
 
-- [ ] Re-run the LLVM compile baseline if the TSVC investigation touched codegen:
-
-  ```bash
-  ROOT=$PWD
-  cd "$ROOT/avs/compiler/linx-llvm/tests"
-  CLANG="$ROOT/compiler/llvm/build-linxisa-clang/bin/clang" TARGET=linx64-linx-none-elf OUT_DIR="$PWD/out-linx64" ./run.sh
-  CLANG="$ROOT/compiler/llvm/build-linxisa-clang/bin/clang" TARGET=linx32-linx-none-elf OUT_DIR="$PWD/out-linx32" ./run.sh
-  python3 analyze_coverage.py --out-dir "$PWD/out-linx64" --fail-under 100
-  python3 analyze_coverage.py --out-dir "$PWD/out-linx32" --fail-under 100
-  ```
-
-- [ ] Re-run QEMU baseline audits:
-
-  ```bash
-  ROOT=$PWD
-  cd "$ROOT/avs/qemu"
-  LINX_DISABLE_TIMER_IRQ=0 CLANG="$ROOT/compiler/llvm/build-linxisa-clang/bin/clang" LLD="$ROOT/compiler/llvm/build-linxisa-clang/bin/ld.lld" QEMU="$ROOT/emulator/qemu/build/qemu-system-linx64" ./run_tests.sh --all --timeout 10
-  LINX_DISABLE_TIMER_IRQ=0 CLANG="$ROOT/compiler/llvm/build-linxisa-clang/bin/clang" LLD="$ROOT/compiler/llvm/build-linxisa-clang/bin/ld.lld" QEMU="$ROOT/emulator/qemu/build/qemu-system-linx64" ./check_system_strict.sh
-  ```
-
-- [ ] Re-run the current workload blockers:
+- [ ] Re-run the current workload PR checks after relevant changes:
 
   ```bash
   python3 workloads/pto_kernels/tools/run_pto_kernel_parity.py --timeout 120
@@ -225,7 +189,7 @@ Exit criteria:
     --tier pr
   ```
 
-- [ ] Re-run strict closure after the targeted fixes:
+- [ ] Re-run strict closure after the BusyBox fix:
   - canonical report refresh: `tools/bringup/run_runtime_convergence.sh`
   - focused iteration: exact `strict_cross_repo.sh` command from the current
     gate report row
@@ -234,8 +198,8 @@ Exit criteria:
 Exit criteria:
 
 - stale blockers have been replaced by current evidence;
-- `LINUX-005` is resolved or reclassified with fresh logs;
-- `INT-025` has a current owner and first-failure diagnosis;
+- `LINUX-005` is resolved and `LINUX-004` carries the current failing logs;
+- `INT-025` remains a PR compile-coverage gate with runtime tracked separately;
 - `INT-016` and `INT-004` reflect current rerun evidence, not March carryover.
 
 ## Assumptions And Defaults
@@ -243,10 +207,8 @@ Exit criteria:
 - This page is limited to the current superproject blocker slice for kernel,
   LLVM/SIMT autovec, mixed tile/SIMT workloads, QEMU baseline, and strict
   closure.
-- The March 15, 2026 canonical report remains the checked-in baseline until a
-  new canonical run replaces it.
-- The 2026-04-11 Sail and PTO parity spot checks are authoritative for stale
-  blocker cleanup even before the next canonical report refresh.
-- Owner-specific red gates in glibc runtime, LinxCore, Testbench, Trace, and
-  pyCircuit remain separate follow-on lanes after this blocker slice is
-  refreshed.
+- The April 18, 2026 canonical report is the checked-in baseline until a newer
+  canonical run replaces it.
+- Owner-specific PR gates in glibc runtime, LinxCore, Testbench, Trace, and
+  pyCircuit are green in the current baseline; their nightly breadth remains
+  separate follow-up work.

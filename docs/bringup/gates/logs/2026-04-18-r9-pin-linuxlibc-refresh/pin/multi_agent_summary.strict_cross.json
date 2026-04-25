@@ -1,0 +1,51 @@
+{
+  "active_phase": "",
+  "checked_at_utc": "2026-04-18 02:11:34Z",
+  "checklists_root": "/Users/zhoubot/linx-isa/docs/bringup/agent_runs/checklists",
+  "errors": [
+    {
+      "code": "E_RUNTIME_UNWAIVED_GATE",
+      "gate_key": "Kernel::Linux busybox rootfs boot",
+      "message": "required gate is not pass and has no active waiver",
+      "report_waived": false,
+      "status": "fail"
+    }
+  ],
+  "lane": "pin",
+  "manifest": "/Users/zhoubot/linx-isa/docs/bringup/agent_runs/manifest.yaml",
+  "mode": "runtime",
+  "ok": false,
+  "report": "/Users/zhoubot/linx-isa/docs/bringup/gates/latest.json",
+  "run_id": "2026-04-18-r9-pin-linuxlibc-refresh",
+  "runtime_stats": {
+    "active_phase": "G0",
+    "lane": "pin",
+    "phase_required_gate_owner_mismatches": 0,
+    "phase_required_gates_missing": 0,
+    "phase_required_gates_total": 15,
+    "profile": "release-strict",
+    "required_failed": 1,
+    "required_gates_total": 44,
+    "required_pass": 43,
+    "required_waived": 0,
+    "run_id": "2026-04-18-r9-pin-linuxlibc-refresh",
+    "waiver_matches": 0
+  },
+  "static_stats": {
+    "active_phase": "G0",
+    "agent_scope_allow_multi_module_agents": true,
+    "agent_scope_cross_module_agents": 2,
+    "agent_scope_explicit_modules_required": true,
+    "agent_scope_multi_module_agents": 2,
+    "agents": 11,
+    "assignments": 63,
+    "declared_checklist_ids": 87,
+    "declared_checklists": 11,
+    "phase_gate_requirement_phases": 1,
+    "phases": 6,
+    "waivers": 0
+  },
+  "strict_always": true,
+  "waivers": "/Users/zhoubot/linx-isa/docs/bringup/agent_runs/waivers.yaml",
+  "warnings": []
+}

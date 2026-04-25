@@ -1,16 +1,90 @@
 {
+  "coverage_profile_summaries": {
+    "LNX-ATOM": {
+      "implemented": 1,
+      "pass": 1,
+      "tests": 6
+    },
+    "LNX-FP": {
+      "implemented": 1,
+      "pass": 1,
+      "tests": 3
+    },
+    "LNX-LIBC": {
+      "implemented": 8,
+      "pass": 8,
+      "tests": 8
+    },
+    "LNX-LINUX": {
+      "implemented": 3,
+      "pass": 3,
+      "tests": 4
+    },
+    "LNX-PRIV": {
+      "implemented": 4,
+      "pass": 4,
+      "tests": 4
+    },
+    "LNX-S32": {
+      "implemented": 12,
+      "pass": 12,
+      "tests": 20
+    },
+    "LNX-S64": {
+      "implemented": 18,
+      "pass": 18,
+      "tests": 26
+    },
+    "LNX-SPEC": {
+      "implemented": 0,
+      "pass": 0,
+      "tests": 2
+    },
+    "LNX-TILE": {
+      "implemented": 2,
+      "pass": 2,
+      "tests": 2
+    },
+    "LNX-VPAR": {
+      "implemented": 2,
+      "pass": 2,
+      "tests": 6
+    },
+    "LNX-VSEQ": {
+      "implemented": 2,
+      "pass": 2,
+      "tests": 6
+    },
+    "LNX-WORKLOAD": {
+      "implemented": 4,
+      "pass": 4,
+      "tests": 8
+    }
+  },
   "extra_status_entries": [],
-  "generated_at_utc": "2026-02-25 13:12:47Z",
-  "implemented_count": 13,
+  "generated_at_utc": "2026-04-24 00:10:42Z",
+  "implemented_count": 32,
   "matrix": "/Users/zhoubot/linx-isa/avs/linx_avs_v1_test_matrix.yaml",
-  "matrix_test_count": 39,
+  "matrix_test_count": 54,
   "missing_status_entries": [],
   "result": {
     "classification": "avs_matrix_status_ok",
     "ok": true
   },
   "status": "/Users/zhoubot/linx-isa/avs/linx_avs_v1_test_matrix_status.json",
-  "status_entry_count": 39,
+  "status_entry_count": 54,
+  "tier_summaries": {
+    "nightly": {
+      "implemented": 32,
+      "pass": 32,
+      "tests": 54
+    },
+    "pr": {
+      "implemented": 31,
+      "pass": 31,
+      "tests": 31
+    }
+  },
   "unknown_validated_entries": [],
-  "validated_pass_count": 13
+  "validated_pass_count": 32
 }

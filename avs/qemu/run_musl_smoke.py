@@ -220,6 +220,8 @@ def _run_split_link_modes(args: argparse.Namespace, out_dir: Path, selected_samp
             "--out-dir",
             str(out_dir),
         ]
+        if args.disable_timer_irq:
+            cmd.append("--disable-timer-irq")
         for sample in selected_samples:
             cmd.extend(["--sample", sample])
 
@@ -320,11 +322,16 @@ def main(argv: list[str]) -> int:
         help="Kernel command line used for QEMU runtime boot.",
     )
     parser.add_argument(
+        "--disable-timer-irq",
+        action="store_true",
+        help="Append `linx_disable_timer_irq=1` to the kernel command line.",
+    )
+    parser.add_argument(
         "--out-dir",
         default=str(REPO_ROOT / "avs" / "qemu" / "out" / "musl-smoke"),
     )
     args = parser.parse_args(argv)
-    disable_timer_irq = os.environ.get("LINX_DISABLE_TIMER_IRQ", "").lower() in {
+    disable_timer_irq = args.disable_timer_irq or os.environ.get("LINX_DISABLE_TIMER_IRQ", "").lower() in {
         "1",
         "true",
         "yes",

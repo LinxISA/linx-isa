@@ -55,3 +55,8 @@
 	path = tools/LinxCoreModel
 	url = https://github.com/LinxISA/LinxCoreModel.git
 	branch = main
+[submodule "tools/model"]
+	path = tools/model
+	url = https://github.com/LinxISA/linx-model.git
+	branch = main
+	update = checkout

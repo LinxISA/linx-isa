@@ -84,9 +84,11 @@ actual instruction body is placed elsewhere.
   empty body.
 * For `BSTART.MPAR` / `BSTART.MSEQ`, the body is instead a **structured instruction stream**:
 ** branches, jumps, and other in-body architectural control transfers are legal and execute at group granularity through
-   the scalar-uniform lane context,
-** the kernel ends at the **first terminator marker** encountered in the body stream,
+   the architectural group PC plus the current EXEC mask,
 ** valid terminators are `BSTOP`, `C.BSTOP`, `BSTART.*`, `C.BSTART.*`, and `HL.BSTART.*`,
+** a terminator completes the current body execution only when control reaches it,
+** an earlier lexical terminator does not by itself truncate the body if in-body control flow branches to a later label
+   within the same `B.TEXT` body,
 ** `p` is the architectural 64-bit EXEC mask for the body, and `V.CMP.* ->p` is the normative mask-generation rule,
 ** the unified `lx64` any-operand rule applies: if any operand names `vt`/`vu`/`vm`/`vn`, the instruction executes as
    `v.*`; otherwise it executes as `l.*`,
@@ -99,8 +101,8 @@ actual instruction body is placed elsewhere.
 * On body termination, execution resumes at the header continuation address:
 ** if the header ended with `BSTOP`/`C.BSTOP`: continuation is the instruction address immediately after that stop,
 ** if the header ended implicitly: continuation is the address of the next block start marker in the linear stream.
-* For `MPAR`/`MSEQ`, reaching the first terminator marker in the body is the kernel completion event that returns to the
-  header continuation point.
+* For `MPAR`/`MSEQ`, reaching a legal body terminator along the taken in-body control-flow path is the kernel completion
+  event that returns to the header continuation point.
 
 *Safety rule interaction (`B.TEXT`):*
 
@@ -497,28 +499,35 @@ Normative notes:
 [[blockisa-simt]]
 === SIMT-style vector blocks (`MSEQ`/`MPAR`/`VSEQ`/`VPAR`)
 
-Linx vector execution is SIMT-style: a vector block body specifies **one lane** of computation, and hardware repeats
-that body across a multi-dimensional lane space defined by `LB0..LB2`.
+Linx vector execution is SIMT-style: a vector block body is a **group-granular kernel body** executed across the lane/group
+space defined by `LB0..LB2`.
 
 `TVEC` is not a v0.4 header mnemonic. TVEC-style execution is represented by `BSTART.VPAR`/`BSTART.VSEQ` with
 an out-of-line SIMT body selected by `B.TEXT`.
 
-Bring-up execution model (normative for v0.4):
+Execution model (normative for v0.4):
 
 * `LB0..LB2` are written by `B.DIM` / `C.B.DIM*` in the block header.
-* Hardware exposes lane counters `lc0..lc2` to the block body; on block entry they are initialized to `0`.
-* The body is executed for each lane tuple `(lc0, lc1, lc2)` with:
-** `lc0` iterating fastest: `0 .. (LB0-1)`
-** `lc1`: `0 .. (max(LB1,1)-1)`
-** `lc2`: `0 .. (max(LB2,1)-1)`
-* `MSEQ` / `VSEQ`: lanes are committed in lexicographic order (`lc0` inner-most, then `lc1`, then `lc2`).
-* `MPAR` / `VPAR`: lanes are conceptually parallel; an implementation MAY commit lanes in any order, but MUST be
+* Hardware exposes lane/group counters `lc0..lc2` to the block body.
+* For the canonical 1-D kernel profile:
+** `lc0` is the lane index within a group,
+** `lc1` is the group index,
+** `lc2` is `0` unless a higher-dimensional profile is selected.
+* Each group instance enters the body once with:
+** one architectural group PC,
+** one architectural EXEC mask `p`,
+** `LB0` lanes available in the group.
+* `MSEQ` / `VSEQ`: group-visible effects are committed in lexicographic group order.
+* `MPAR` / `VPAR`: groups are conceptually parallel; an implementation MAY commit groups in any order, but MUST be
   observationally equivalent to some interleaving consistent with the architectural memory-order rules.
 * Group interpretation for canonical 1-D lowering:
 ** `LB0` denotes lanes per group (`lane_count`),
 ** `LB1` denotes group count (`group_count`),
 ** the linear lane index is `lc0 + lc1 * lane_count`.
-* Scalar instructions in vector bodies are **uniform per group** (one scalar-uniform lane context per group control-flow step).
+* Scalar instructions in vector bodies are **uniform per group** (one scalar-uniform control step per group PC step).
+* Vector instructions execute across the currently active lanes selected by `p`.
+* Divergent control flow is represented by explicit updates to `p` inside the body; canonical `v0.4` does not require a hidden
+  per-lane architectural PC.
 
 Decoupled body form (v0.4 canonical constraint):
 
@@ -529,7 +538,10 @@ Decoupled body form (v0.4 canonical constraint):
     after the kernel returns to the header continuation point.
 * The body MUST NOT contain any `B.*` header descriptors.
 * For canonical `MPAR` / `MSEQ` shader kernels, the body is a structured instruction stream; in-body branches and jumps are legal,
-  and the scalar-uniform lane uses `p` as the architectural EXEC mask.
+  control flow is group-internal, and `p` is the architectural EXEC mask.
+* In-body control transfers MUST remain within the current body region selected by `B.TEXT`.
+* Divergent regions are represented by explicit management of `p`; join points are explicit points in the body stream where the
+  intended EXEC mask is restored.
 
 Example (2-D nested loop using `MSEQ`):
 
@@ -615,12 +627,14 @@ Bring-up tile-base binding for `.local` ops (normative for v0.4):
 Vector block bodies may mix scalar-uniform and vector instructions; scalar-uniform forms use scalar block-local state
 (`GPR`, `t/u`, block-condition state), while vector forms use vector/tile-local namespaces.
 
-Predicate and replay semantics for mixed bodies:
+Predicate and divergence semantics for mixed bodies:
 
 * `SETC.*` in the body updates the scalar block-control predicate domain (`BARG.CARG`); it does not directly mask vector lanes.
 * `p` is the architectural EXEC mask for canonical `MPAR` / `MSEQ` kernels, and `V.CMP.* ->p` is the normative mask producer.
-* The body is replayed once per `LC` tuple. Scalar instructions execute on every replay iteration in program order together
-  with vector instructions.
+* Scalar instructions execute once per group control-flow step in program order together with vector instructions.
+* Vector instructions execute for the currently active lanes selected by `p`.
+* Divergent control flow narrows, restores, or otherwise updates `p` under the current group PC; canonical `v0.4` does not rely on
+  a hidden architectural lane-PC stack.
 * Vector instructions MUST import scalar inputs through `B.IOR`/`ri*` (except `zero` where encoding permits). Direct scalar
   GPR operand names in `V.*` forms are illegal in canonical kernel bodies.
 

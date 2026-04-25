@@ -64,6 +64,8 @@ static __attribute__((noinline)) uint64_t frame_heavy_leaf(uint64_t x) { return 
 
 extern uint64_t callret_tpl_fret_stk_slot_redirect(uint64_t x);
 extern uint64_t callret_tpl_fret_ra_slot_redirect(uint64_t x);
+extern uint64_t callret_tpl_ret_error_trailer_success(uint64_t x);
+extern uint64_t callret_tpl_cond_ret_error_trailer_taken(uint64_t x);
 
 static __attribute__((noinline)) uint64_t frame_heavy(uint64_t x) {
     volatile uint64_t s0 = x + 1;
@@ -153,6 +155,16 @@ static void test_fret_ra_uses_snapshot_ra(void) {
     TEST_EQ64(r, 0x33, 0x140c);
 }
 
+static void test_ret_error_trailer_returns_via_ra(void) {
+    uint64_t r = callret_tpl_ret_error_trailer_success(0x1234);
+    TEST_EQ64(r, 0x1234, 0x140d);
+}
+
+static void test_cond_ret_error_trailer_taken_path(void) {
+    uint64_t r = callret_tpl_cond_ret_error_trailer_taken(0);
+    TEST_EQ64(r, 0x66, 0x140e);
+}
+
 void run_callret_tests(void) {
     test_suite_begin(0x1400);
     RUN_TEST(test_direct_calls, 0x1401);
@@ -167,5 +179,7 @@ void run_callret_tests(void) {
     RUN_TEST(test_frame_heavy_return, 0x140a);
     RUN_TEST(test_fret_stk_uses_stack_ra, 0x140b);
     RUN_TEST(test_fret_ra_uses_snapshot_ra, 0x140c);
-    test_suite_end(12, 12);
+    RUN_TEST(test_ret_error_trailer_returns_via_ra, 0x140d);
+    RUN_TEST(test_cond_ret_error_trailer_taken_path, 0x140e);
+    test_suite_end(14, 14);
 }

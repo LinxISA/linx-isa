@@ -1,0 +1,12 @@
+{
+  "contract_version": "1.0",
+  "defaults": {
+    "run_linx_qemu_vs_pyc": "1.0",
+    "run_runtime_convergence": "1.0",
+    "strict_cross_repo": "1.0",
+    "validate_trace_schema_assume": "1.0",
+    "validate_trace_schema_expected": "1.0"
+  },
+  "errors": [],
+  "ok": true
+}

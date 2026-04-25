@@ -18,8 +18,13 @@
 - [x] ID: LIBC-003 Pass musl runtime smoke for static and shared modes.
   Command: `python3 avs/qemu/run_musl_smoke.py --mode phase-b --link both`
   Done means: summary json for static/shared reports `ok=true`.
-  Status: ✅ PASS (2026-02-25) - phase-b combined runtime smoke passes in run `2026-02-25-r2-pin-lanefix` (log: `docs/bringup/gates/logs/2026-02-25-r2-pin-lanefix/pin/lib_musl_both.log`; summary: `avs/qemu/out/musl-smoke/summary.json`).
+  Status: ✅ PASS (2026-03-15) - musl static/shared runtime smoke remains green in the latest pin-lane report `2026-03-15-r2-pin`.
 
 - [x] ID: LIBC-004 Keep runtime status evidence updated in bring-up gate artifacts.
   Done means: gate report rows include evidence links for musl/glibc runtime checks.
-  Status: ✅ PASS (2026-02-25) - `docs/bringup/gates/latest.json` includes refreshed runtime evidence for run `2026-02-25-r2-pin-lanefix` (`Library::musl runtime static+shared`, `Library::glibc G1b shared libc.so`).
+  Status: ✅ PASS (2026-03-15) - `docs/bringup/gates/latest.json` includes refreshed musl/glibc runtime evidence for the latest pin-lane run, including the regressed `Library::glibc runtime dynamic hello` row and its log path.
+
+- [x] ID: LIBC-006 Close glibc dynamic runtime on Linux/QEMU with full hello matrix.
+  Command: `python3 avs/qemu/run_glibc_smoke.py --qemu /tmp/linx-qemu-clean-build/qemu-system-linx64 --timeout 30`
+  Done means: every tracked glibc runtime variant in the current hello matrix reaches `main` under the Linux/QEMU lane without wrapper-side entry bypasses and without loader fatal errors.
+  Status: ✅ PASS (2026-04-18) - the wrapper no longer reopens `/dev/console`, emits markers over the virt UART, and the full `entry_main`/`shared`/`startup`/`startup_norpath` hello matrix now passes against the clean pinned QEMU artifact (`avs/qemu/out/glibc-smoke/summary.json`).

@@ -51,7 +51,7 @@
       "Integration": ["superproject", "skills/linx-skills", "docs"],
       "SPEC": ["workloads/spec2017"],
       "Model": ["tools/pyCircuit", "emulator/qemu", "superproject"],
-      "Regression": ["superproject"]
+      "Regression": ["superproject", "workloads/spec2017"]
     }
   },
   "phase_policy": {
@@ -167,9 +167,19 @@
       "checklist_ids": ["INT-001"]
     },
     {
-      "gate_key": "ISA::AVS profile closure",
+      "gate_key": "ISA::AVS tier closure",
       "agent": "integration",
       "checklist_ids": ["INT-016"]
+    },
+    {
+      "gate_key": "ISA::AVS status normalize",
+      "agent": "integration",
+      "checklist_ids": ["INT-018"]
+    },
+    {
+      "gate_key": "ISA::AVS matrix status audit",
+      "agent": "integration",
+      "checklist_ids": ["INT-019"]
     },
     {
       "gate_key": "Architecture::LinxCore architecture contract lint",
@@ -202,6 +212,11 @@
       "checklist_ids": ["LLVM-002"]
     },
     {
+      "gate_key": "Compiler::LLVM auxiliary tool suite (`llvm-ar`/`llvm-nm`/`llvm-readelf`/`llvm-strip`)",
+      "agent": "llvm",
+      "checklist_ids": ["LLVM-006"]
+    },
+    {
       "gate_key": "Emulator::QEMU strict system",
       "agent": "qemu",
       "checklist_ids": ["QEMU-001"]
@@ -220,6 +235,16 @@
       "gate_key": "Emulator::ISA vs QEMU coverage report",
       "agent": "qemu",
       "checklist_ids": ["QEMU-005"]
+    },
+    {
+      "gate_key": "Emulator::QEMU pinned binary build",
+      "agent": "qemu",
+      "checklist_ids": ["QEMU-007"]
+    },
+    {
+      "gate_key": "Kernel::Linux `vmlinux` build closure",
+      "agent": "linux",
+      "checklist_ids": ["LINUX-005"]
     },
     {
       "gate_key": "Kernel::Linux initramfs smoke",
@@ -242,14 +267,39 @@
       "checklist_ids": ["LINUX-003"]
     },
     {
+      "gate_key": "Library::musl build closure (`phase-b`)",
+      "agent": "libc",
+      "checklist_ids": ["LIBC-001"]
+    },
+    {
+      "gate_key": "Library::glibc baseline G1a",
+      "agent": "libc",
+      "checklist_ids": ["LIBC-005"]
+    },
+    {
       "gate_key": "Library::musl runtime static+shared",
       "agent": "libc",
       "checklist_ids": ["LIBC-003"]
     },
     {
+      "gate_key": "Integration::Pinned workspace build closure",
+      "agent": "integration",
+      "checklist_ids": ["INT-017"]
+    },
+    {
+      "gate_key": "Integration::Gate status render",
+      "agent": "integration",
+      "checklist_ids": ["INT-006"]
+    },
+    {
       "gate_key": "Library::glibc G1b shared libc.so",
       "agent": "libc",
-      "checklist_ids": ["LIBC-004"]
+      "checklist_ids": ["LIBC-002"]
+    },
+    {
+      "gate_key": "Library::glibc runtime dynamic hello",
+      "agent": "libc",
+      "checklist_ids": ["LIBC-006"]
     },
     {
       "gate_key": "LinxCore::stage/connectivity lint",
@@ -362,6 +412,41 @@
       "checklist_ids": ["INT-004"]
     },
     {
+      "gate_key": "Regression::PTO kernel parity",
+      "agent": "integration",
+      "checklist_ids": ["INT-020"]
+    },
+    {
+      "gate_key": "Regression::Workload benchmarks",
+      "agent": "integration",
+      "checklist_ids": ["INT-021"]
+    },
+    {
+      "gate_key": "Regression::Workload polybench",
+      "agent": "integration",
+      "checklist_ids": ["INT-022"]
+    },
+    {
+      "gate_key": "Regression::Workload portfolio",
+      "agent": "integration",
+      "checklist_ids": ["INT-023"]
+    },
+    {
+      "gate_key": "Regression::ctuning curated subset",
+      "agent": "integration",
+      "checklist_ids": ["INT-024"]
+    },
+    {
+      "gate_key": "Regression::TSVC strict coverage gate",
+      "agent": "integration",
+      "checklist_ids": ["INT-025"]
+    },
+    {
+      "gate_key": "Regression::TSVC QEMU gate",
+      "agent": "integration",
+      "checklist_ids": ["INT-026"]
+    },
+    {
       "gate_key": "Integration::LinxCore performance floor",
       "agent": "integration",
       "checklist_ids": ["INT-015"]
@@ -373,6 +458,11 @@
     },
     {
       "gate_key": "SPEC::SPEC int-rate Stage A subset (qemu+specdiff)",
+      "agent": "spec",
+      "checklist_ids": ["SPEC-003", "SPEC-004"]
+    },
+    {
+      "gate_key": "Regression::SPEC stage A QEMU matrix",
       "agent": "spec",
       "checklist_ids": ["SPEC-003", "SPEC-004"]
     },
@@ -389,16 +479,16 @@
   ],
   "checklist_id_map": {
     "architecture_docs.md": ["ARCH-001", "ARCH-002", "ARCH-003", "ARCH-004"],
-    "compiler_llvm.md": ["LLVM-001", "LLVM-002", "LLVM-003", "LLVM-004", "LLVM-005"],
-    "emulator_qemu.md": ["QEMU-001", "QEMU-002", "QEMU-003", "QEMU-004", "QEMU-005", "QEMU-006"],
-    "kernel_linux.md": ["LINUX-001", "LINUX-002", "LINUX-003", "LINUX-004"],
-    "libc_runtime.md": ["LIBC-001", "LIBC-002", "LIBC-003", "LIBC-004"],
+    "compiler_llvm.md": ["LLVM-001", "LLVM-002", "LLVM-003", "LLVM-004", "LLVM-005", "LLVM-006"],
+    "emulator_qemu.md": ["QEMU-001", "QEMU-002", "QEMU-003", "QEMU-004", "QEMU-005", "QEMU-006", "QEMU-007"],
+    "kernel_linux.md": ["LINUX-001", "LINUX-002", "LINUX-003", "LINUX-004", "LINUX-005"],
+    "libc_runtime.md": ["LIBC-001", "LIBC-002", "LIBC-003", "LIBC-004", "LIBC-005", "LIBC-006"],
     "linxcore_rtl.md": ["LC-001", "LC-002", "LC-003", "LC-004", "LC-005", "LC-006", "LC-007", "LC-008", "LC-009"],
     "pycircuit_model.md": ["PYC-001", "PYC-002", "PYC-003", "PYC-004", "PYC-005", "PYC-006", "PYC-007"],
     "specint_qemu.md": ["SPEC-001", "SPEC-002", "SPEC-003", "SPEC-004", "SPEC-005", "SPEC-006", "SPEC-007"],
     "testbench_verif.md": ["TB-001", "TB-002", "TB-003", "TB-004"],
     "trace_linxtrace.md": ["TRACE-001", "TRACE-002", "TRACE-003", "TRACE-004", "TRACE-005", "TRACE-006"],
-    "integration_release.md": ["INT-001", "INT-002", "INT-003", "INT-004", "INT-005", "INT-006", "INT-007", "INT-008", "INT-009", "INT-010", "INT-011", "INT-012", "INT-013", "INT-014", "INT-015", "INT-016"]
+    "integration_release.md": ["INT-001", "INT-002", "INT-003", "INT-004", "INT-005", "INT-006", "INT-007", "INT-008", "INT-009", "INT-010", "INT-011", "INT-012", "INT-013", "INT-014", "INT-015", "INT-016", "INT-017", "INT-018", "INT-019", "INT-020", "INT-021", "INT-022", "INT-023", "INT-024", "INT-025", "INT-026"]
   },
   "spec_policy": {
     "stage_a_subset": ["999.specrand_ir", "505.mcf_r", "531.deepsjeng_r"],

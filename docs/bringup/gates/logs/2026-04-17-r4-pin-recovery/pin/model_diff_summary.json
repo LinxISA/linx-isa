@@ -1,0 +1,489 @@
+{
+  "cases": [
+    {
+      "id": "MODEL-SCALAR-COMMIT-SMOKE",
+      "mismatch": {
+        "fields": {
+          "next_pc": {
+            "other": 34,
+            "ref": 32
+          }
+        },
+        "index": 9,
+        "other": {
+          "block_kind": "scalar",
+          "dst0_data": 0,
+          "dst0_kind": 0,
+          "dst0_valid": 0,
+          "dst0_value": 0,
+          "form_id": "c4e238a9227a",
+          "insn": 340,
+          "lane_id": -1,
+          "len": 16,
+          "lifecycle": "retired",
+          "mem_addr": 0,
+          "mem_is_load": 0,
+          "mem_is_store": 0,
+          "mem_rdata": 0,
+          "mem_size": 0,
+          "mem_valid": 0,
+          "mem_wdata": 0,
+          "mnemonic": "C.BSTART",
+          "next_pc": 34,
+          "opcode_class": "system",
+          "pc": 32,
+          "src0_data": 0,
+          "src0_kind": 0,
+          "src0_valid": 0,
+          "src0_value": 0,
+          "src1_data": 0,
+          "src1_kind": 0,
+          "src1_valid": 0,
+          "src1_value": 0,
+          "trap_cause": 0,
+          "trap_valid": 0,
+          "traparg0": 0
+        },
+        "ref": {
+          "block_kind": "scalar",
+          "dst0_data": 0,
+          "dst0_kind": 0,
+          "dst0_valid": 0,
+          "dst0_value": 0,
+          "form_id": "c4e238a9227a",
+          "insn": 340,
+          "lane_id": -1,
+          "len": 16,
+          "lifecycle": "retired",
+          "mem_addr": 0,
+          "mem_is_load": 0,
+          "mem_is_store": 0,
+          "mem_rdata": 0,
+          "mem_size": 0,
+          "mem_valid": 0,
+          "mem_wdata": 0,
+          "mnemonic": "C.BSTART",
+          "next_pc": 32,
+          "opcode_class": "system",
+          "pc": 32,
+          "src0_data": 0,
+          "src0_kind": 0,
+          "src0_valid": 0,
+          "src0_value": 0,
+          "src1_data": 0,
+          "src1_kind": 0,
+          "src1_valid": 0,
+          "src1_value": 0,
+          "trap_cause": 0,
+          "trap_valid": 0,
+          "traparg0": 0
+        }
+      },
+      "stage": "trace_diff",
+      "status": "fail"
+    },
+    {
+      "id": "MODEL-SCALAR-MCOPY-MSET",
+      "mismatch": {
+        "fields": {
+          "next_pc": {
+            "other": 34,
+            "ref": 32
+          }
+        },
+        "index": 9,
+        "other": {
+          "block_kind": "scalar",
+          "dst0_data": 0,
+          "dst0_kind": 0,
+          "dst0_valid": 0,
+          "dst0_value": 0,
+          "form_id": "c4e238a9227a",
+          "insn": 340,
+          "lane_id": -1,
+          "len": 16,
+          "lifecycle": "retired",
+          "mem_addr": 0,
+          "mem_is_load": 0,
+          "mem_is_store": 0,
+          "mem_rdata": 0,
+          "mem_size": 0,
+          "mem_valid": 0,
+          "mem_wdata": 0,
+          "mnemonic": "C.BSTART",
+          "next_pc": 34,
+          "opcode_class": "system",
+          "pc": 32,
+          "src0_data": 0,
+          "src0_kind": 0,
+          "src0_valid": 0,
+          "src0_value": 0,
+          "src1_data": 0,
+          "src1_kind": 0,
+          "src1_valid": 0,
+          "src1_value": 0,
+          "trap_cause": 0,
+          "trap_valid": 0,
+          "traparg0": 0
+        },
+        "ref": {
+          "block_kind": "scalar",
+          "dst0_data": 0,
+          "dst0_kind": 0,
+          "dst0_valid": 0,
+          "dst0_value": 0,
+          "form_id": "c4e238a9227a",
+          "insn": 340,
+          "lane_id": -1,
+          "len": 16,
+          "lifecycle": "retired",
+          "mem_addr": 0,
+          "mem_is_load": 0,
+          "mem_is_store": 0,
+          "mem_rdata": 0,
+          "mem_size": 0,
+          "mem_valid": 0,
+          "mem_wdata": 0,
+          "mnemonic": "C.BSTART",
+          "next_pc": 32,
+          "opcode_class": "system",
+          "pc": 32,
+          "src0_data": 0,
+          "src0_kind": 0,
+          "src0_valid": 0,
+          "src0_value": 0,
+          "src1_data": 0,
+          "src1_kind": 0,
+          "src1_valid": 0,
+          "src1_value": 0,
+          "trap_cause": 0,
+          "trap_valid": 0,
+          "traparg0": 0
+        }
+      },
+      "stage": "trace_diff",
+      "status": "fail"
+    },
+    {
+      "id": "MODEL-VECTOR-LANE-CONTROL",
+      "mismatch": {
+        "fields": {
+          "block_kind": {
+            "other": "scalar",
+            "ref": "vseq"
+          },
+          "dst0_kind": {
+            "other": 1,
+            "ref": 0
+          },
+          "dst0_valid": {
+            "other": 1,
+            "ref": 0
+          },
+          "dst0_value": {
+            "other": 2,
+            "ref": 0
+          },
+          "form_id": {
+            "other": "2decd0a93a0a",
+            "ref": "8b40f078c14a"
+          },
+          "insn": {
+            "other": 277,
+            "ref": 2048
+          },
+          "lane_id": {
+            "other": -1,
+            "ref": 0
+          },
+          "len": {
+            "other": 32,
+            "ref": 16
+          },
+          "mnemonic": {
+            "other": "ADDI",
+            "ref": "C.BSTART.STD"
+          },
+          "opcode_class": {
+            "other": "int",
+            "ref": "invalid"
+          },
+          "pc": {
+            "other": 10,
+            "ref": 8
+          },
+          "src0_kind": {
+            "other": 1,
+            "ref": 0
+          },
+          "src0_valid": {
+            "other": 1,
+            "ref": 0
+          }
+        },
+        "index": 5,
+        "other": {
+          "block_kind": "scalar",
+          "dst0_data": 0,
+          "dst0_kind": 1,
+          "dst0_valid": 1,
+          "dst0_value": 2,
+          "form_id": "2decd0a93a0a",
+          "insn": 277,
+          "lane_id": -1,
+          "len": 32,
+          "lifecycle": "retired",
+          "mem_addr": 0,
+          "mem_is_load": 0,
+          "mem_is_store": 0,
+          "mem_rdata": 0,
+          "mem_size": 0,
+          "mem_valid": 0,
+          "mem_wdata": 0,
+          "mnemonic": "ADDI",
+          "opcode_class": "int",
+          "pc": 10,
+          "src0_data": 0,
+          "src0_kind": 1,
+          "src0_valid": 1,
+          "src0_value": 0,
+          "src1_data": 0,
+          "src1_kind": 0,
+          "src1_valid": 0,
+          "src1_value": 0,
+          "trap_cause": 0,
+          "trap_valid": 0,
+          "traparg0": 0
+        },
+        "ref": {
+          "block_kind": "vseq",
+          "dst0_data": 0,
+          "dst0_kind": 0,
+          "dst0_valid": 0,
+          "dst0_value": 0,
+          "form_id": "8b40f078c14a",
+          "insn": 2048,
+          "lane_id": 0,
+          "len": 16,
+          "lifecycle": "retired",
+          "mem_addr": 0,
+          "mem_is_load": 0,
+          "mem_is_store": 0,
+          "mem_rdata": 0,
+          "mem_size": 0,
+          "mem_valid": 0,
+          "mem_wdata": 0,
+          "mnemonic": "C.BSTART.STD",
+          "opcode_class": "invalid",
+          "pc": 8,
+          "src0_data": 0,
+          "src0_kind": 0,
+          "src0_valid": 0,
+          "src0_value": 0,
+          "src1_data": 0,
+          "src1_kind": 0,
+          "src1_valid": 0,
+          "src1_value": 0,
+          "trap_cause": 0,
+          "trap_valid": 0,
+          "traparg0": 0
+        }
+      },
+      "stage": "trace_diff",
+      "status": "fail"
+    },
+    {
+      "id": "MODEL-TILE-DESCRIPTOR-LEGALITY",
+      "mismatch": {
+        "fields": {
+          "block_kind": {
+            "other": "scalar",
+            "ref": "tma"
+          },
+          "pc": {
+            "other": 12,
+            "ref": 10
+          }
+        },
+        "index": 4,
+        "other": {
+          "block_kind": "scalar",
+          "dst0_data": 0,
+          "dst0_kind": 0,
+          "dst0_valid": 0,
+          "dst0_value": 0,
+          "form_id": "8b40f078c14a",
+          "insn": 2048,
+          "lane_id": -1,
+          "len": 16,
+          "lifecycle": "retired",
+          "mem_addr": 0,
+          "mem_is_load": 0,
+          "mem_is_store": 0,
+          "mem_rdata": 0,
+          "mem_size": 0,
+          "mem_valid": 0,
+          "mem_wdata": 0,
+          "mnemonic": "C.BSTART.STD",
+          "opcode_class": "invalid",
+          "pc": 12,
+          "src0_data": 0,
+          "src0_kind": 0,
+          "src0_valid": 0,
+          "src0_value": 0,
+          "src1_data": 0,
+          "src1_kind": 0,
+          "src1_valid": 0,
+          "src1_value": 0,
+          "trap_cause": 0,
+          "trap_valid": 0,
+          "traparg0": 0
+        },
+        "ref": {
+          "block_kind": "tma",
+          "dst0_data": 0,
+          "dst0_kind": 0,
+          "dst0_valid": 0,
+          "dst0_value": 0,
+          "form_id": "8b40f078c14a",
+          "insn": 2048,
+          "lane_id": -1,
+          "len": 16,
+          "lifecycle": "retired",
+          "mem_addr": 0,
+          "mem_is_load": 0,
+          "mem_is_store": 0,
+          "mem_rdata": 0,
+          "mem_size": 0,
+          "mem_valid": 0,
+          "mem_wdata": 0,
+          "mnemonic": "C.BSTART.STD",
+          "opcode_class": "invalid",
+          "pc": 10,
+          "src0_data": 0,
+          "src0_kind": 0,
+          "src0_valid": 0,
+          "src0_value": 0,
+          "src1_data": 0,
+          "src1_kind": 0,
+          "src1_valid": 0,
+          "src1_value": 0,
+          "trap_cause": 0,
+          "trap_valid": 0,
+          "traparg0": 0
+        }
+      },
+      "stage": "trace_diff",
+      "status": "fail"
+    },
+    {
+      "id": "MODEL-TILE-CONTROL-FLOW",
+      "mismatch": {
+        "fields": {
+          "block_kind": {
+            "other": "tma",
+            "ref": "scalar"
+          },
+          "form_id": {
+            "other": "d0c18bb0ab15",
+            "ref": "8b40f078c14a"
+          },
+          "insn": {
+            "other": 2281771393,
+            "ref": 2048
+          },
+          "len": {
+            "other": 32,
+            "ref": 16
+          },
+          "mnemonic": {
+            "other": "BSTART.TLOAD",
+            "ref": "C.BSTART.STD"
+          },
+          "opcode_class": {
+            "other": "system",
+            "ref": "invalid"
+          },
+          "pc": {
+            "other": 10,
+            "ref": 8
+          }
+        },
+        "index": 5,
+        "other": {
+          "block_kind": "tma",
+          "dst0_data": 0,
+          "dst0_kind": 0,
+          "dst0_valid": 0,
+          "dst0_value": 0,
+          "form_id": "d0c18bb0ab15",
+          "insn": 2281771393,
+          "lane_id": -1,
+          "len": 32,
+          "lifecycle": "retired",
+          "mem_addr": 0,
+          "mem_is_load": 0,
+          "mem_is_store": 0,
+          "mem_rdata": 0,
+          "mem_size": 0,
+          "mem_valid": 0,
+          "mem_wdata": 0,
+          "mnemonic": "BSTART.TLOAD",
+          "opcode_class": "system",
+          "pc": 10,
+          "src0_data": 0,
+          "src0_kind": 0,
+          "src0_valid": 0,
+          "src0_value": 0,
+          "src1_data": 0,
+          "src1_kind": 0,
+          "src1_valid": 0,
+          "src1_value": 0,
+          "trap_cause": 0,
+          "trap_valid": 0,
+          "traparg0": 0
+        },
+        "ref": {
+          "block_kind": "scalar",
+          "dst0_data": 0,
+          "dst0_kind": 0,
+          "dst0_valid": 0,
+          "dst0_value": 0,
+          "form_id": "8b40f078c14a",
+          "insn": 2048,
+          "lane_id": -1,
+          "len": 16,
+          "lifecycle": "retired",
+          "mem_addr": 0,
+          "mem_is_load": 0,
+          "mem_is_store": 0,
+          "mem_rdata": 0,
+          "mem_size": 0,
+          "mem_valid": 0,
+          "mem_wdata": 0,
+          "mnemonic": "C.BSTART.STD",
+          "opcode_class": "invalid",
+          "pc": 8,
+          "src0_data": 0,
+          "src0_kind": 0,
+          "src0_valid": 0,
+          "src0_value": 0,
+          "src1_data": 0,
+          "src1_kind": 0,
+          "src1_valid": 0,
+          "src1_value": 0,
+          "trap_cause": 0,
+          "trap_valid": 0,
+          "traparg0": 0
+        }
+      },
+      "stage": "trace_diff",
+      "status": "fail"
+    },
+    {
+      "id": "MODEL-PRIVILEGED-EXCEPTION-EDGE",
+      "status": "pass"
+    }
+  ],
+  "suite": "/Users/zhoubot/linx-isa/avs/model/linx_model_diff_suite.yaml"
+}

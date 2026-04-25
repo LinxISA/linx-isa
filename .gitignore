@@ -73,3 +73,4 @@ tools/spec2017/
 # Local migration / timer debug scratch
 out/submodule_migration_backup_*
 out/timer_on_qemu*.txt
+.omx/

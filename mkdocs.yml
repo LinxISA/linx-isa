@@ -51,13 +51,17 @@ nav:
       - Call/Ret Contract (ABI): reference/linxisa-call-ret-contract.md
       - Encoding Space Analysis: reference/encoding_space_report.md
       - Full ISA Manual (AsciiDoc): architecture/isa-manual/README.md
+  # Published LinxCore pages are synced from rtl/LinxCore/docs/architecture/.
   - Hardware (LinxCore RTL):
       - Overview: architecture/linxcore/overview.md
       - Microarchitecture: architecture/linxcore/microarchitecture.md
+      - Module Catalog: architecture/linxcore/module-catalog.md
+      - Pipeline Stage Catalog: architecture/linxcore/pipeline-stage-catalog.md
       - Interfaces: architecture/linxcore/interfaces.md
       - Verification Matrix: architecture/linxcore/verification-matrix.md
   - Bring-up & Ecosystem:
       - Bring-up Overview: bringup/README.md
+      - Superproject Blocker Checklist: bringup/SUPERPROJECT_BRINGUP_CHECKLIST.md
       - AVS Contract: bringup/AVS_CONTRACT.md
       - Rendering Bring-up: bringup/rendering_vulkan_bringup.md
       - Progress & Status: bringup/PROGRESS.md

@@ -27,7 +27,7 @@ This section specifies the 10-bit register identifier encoding (``RegId10``) use
 |`RegId10[9:5]` |Namespace |Definition
 |`5'b00000` |Base scalar namespace |Reuses the architectural 5-bit scalar register code space (`zero` / GPR namespace, plus instruction-family-specific legacy aliases where allowed).
 |`5'b00001` |`ri*` |Imported scalar kernel arguments (`ri0..ri31`). Only the descriptor-bound subset is architecturally valid in a given kernel instance.
-|`5'b00010` |Reserved |Reserved in canonical `v0.4`.
+|`5'b00010` |Predicate namespace |Index `28` is `p`, the kernel EXEC mask. All other indices in this class are reserved in canonical `v0.4`.
 |`5'b00011` |`lc*` |Loop/lane counters (`lc0..lc2`). Indices `3..31` are reserved.
 |`5'b00100` |`vt*` |Vector T queue bank (`vt`, `vt#1..vt#31`). Index `0` is the architectural push selector.
 |`5'b00101` |`vu*` |Vector U queue bank (`vu`, `vu#1..vu#31`). Index `0` is the architectural push selector.

@@ -120,7 +120,7 @@ Kernel mask generation contract:
 
 Mixed scalar/vector kernel-body execution rules (for `BSTART.MSEQ` / `BSTART.MPAR`):
 
-* Each group executes a structured kernel body using one scalar-uniform control-flow context plus a lane mask `p`.
+* Each group executes a structured kernel body using one architectural group PC plus a lane mask `p`.
 * Scalar-uniform body instructions may read/write `GPR`, `t/u`, `p`, and other architecturally defined scalar block-local state.
 * The unified `lx64` any-operand rule applies: if any operand names `vt`/`vu`/`vm`/`vn`, the instruction executes as `v.*`;
   otherwise it executes as `l.*`.
@@ -133,12 +133,22 @@ Mixed scalar/vector kernel-body execution rules (for `BSTART.MSEQ` / `BSTART.MPA
     `RegSrc1`, `RegSrc2` order.
   - Direct scalar GPR names are not part of the canonical `v.*` operand namespace.
 * Canonical shader-kernel special operands are:
-  - `lc0..lc2` / `lb0..lb2` for lane/group replay state,
+  - `lc0..lc2` / `lb0..lb2` for lane/group state,
   - `TA/TB/TC/TD` for bound input-tile bases,
   - `TO` / `TS` for output and scratch tile bases,
   - `p` and `zero`.
 * Archived raw operand names `TE..TH` and `TO1/TO2/TO3` are not assigned meaning in canonical v0.4 and remain
   reserved/unassigned.
+
+Canonical divergence rule:
+
+* Kernel-body control flow is **group-granular**.
+* There is no hidden architectural per-lane PC. Divergence is represented by explicit changes to `p` under one group PC.
+* Compiler/runtime may narrow, save, restore, and merge `p` around divergent regions so long as all in-body targets remain
+  inside the current `B.TEXT` body region.
+* Reconvergence occurs when control reaches a join point and the intended EXEC mask is restored.
+* Scalar instructions execute once per group control-flow step; vector instructions execute for the currently active lanes
+  selected by `p`.
 
 Canonical mixed-class examples:
 
@@ -164,7 +174,10 @@ SIMT group model (v0.4 current profile):
 ** `LB1` is the group count (`ceil(total_lanes / LB0)`; strict compiler paths use exact integer groups where enabled).
 ** `LB2` defaults to `1`.
 * `lc0` is the lane index within a group; `lc1` is the group index.
-* Each group has one scalar-uniform execution context; scalar instructions in the body execute once per group control-flow step.
+* Each group has one scalar-uniform execution context and one architectural group PC; scalar instructions in the body execute
+  once per group control-flow step.
+* Canonical compilers must preserve the meanings `LB0 = lanes per group` and `LB1 = group count`; `LB0` is not reinterpreted
+  as total logical threads in canonical `v0.4`.
 
 Vector reduction contract (`V.RD*` family):
 

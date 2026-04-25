@@ -35,9 +35,22 @@ docs/
 │   ├── linxisa-call-ret-contract.md   # ABI contract
 │   └── encoding_space_report.md       # Encoding analysis
 │
+├── matmul/                 # Matrix multiplication implementation notes
+│   ├── README.md                         # Directory index
+│   └── low-precision-inner-vs-outer-product.md # Low-precision dataflow tradeoff study
+│
 ├── project/                # Repository governance
 │   ├── navigation.md      # Canonical path map
-│   └── repository-flow.md # Development workflow
+│   ├── repository-flow.md # Development workflow
+│   ├── omx-linxisa-playbook.md # OMX operator playbook for LinxISA
+│   ├── omx-linxisa-prompt-templates.md # Reusable OMX prompt templates for LinxISA
+│   ├── new-agent-sop.md   # Short SOP for new agents
+│   ├── maintainer-repin-checklist.md # Repin checklist for maintainers
+│   ├── linxisa-superproject-methodology-zh.tex # Chinese LaTeX manual source
+│   ├── linxisa-superproject-methodology-zh.pdf # Chinese PDF manual
+│   ├── superproject-whitepaper-zh.tex # Chinese methodology whitepaper source
+│   ├── superproject-whitepaper-zh.pdf # Chinese methodology whitepaper PDF
+│   └── superproject-bringup-methodology.md # Superproject bring-up methodology and runbook
 │
 └── migration/             # Historical path maps
 ```
@@ -53,10 +66,18 @@ docs/
 | **Rendering Kernel Guide** | [architecture/v0.4-rendering-kernel-authoring.md](architecture/v0.4-rendering-kernel-authoring.md) |
 | **Rendering PTO Contract** | [architecture/v0.4-rendering-pto-contract.md](architecture/v0.4-rendering-pto-contract.md) |
 | **Rendering Command Contract** | [architecture/v0.4-rendering-command-contract.md](architecture/v0.4-rendering-command-contract.md) |
+| **Matmul Research** | [matmul/low-precision-inner-vs-outer-product.md](matmul/low-precision-inner-vs-outer-product.md) |
 | **AVS Contract** | [bringup/AVS_CONTRACT.md](bringup/AVS_CONTRACT.md) |
 | **Rendering Bring-up** | [bringup/rendering_vulkan_bringup.md](bringup/rendering_vulkan_bringup.md) |
 | **Current Status** | [bringup/PROGRESS.md](bringup/PROGRESS.md) |
 | **Navigation Policy** | [project/navigation.md](project/navigation.md) |
+| **OMX Playbook** | [project/omx-linxisa-playbook.md](project/omx-linxisa-playbook.md) |
+| **OMX Prompt Templates** | [project/omx-linxisa-prompt-templates.md](project/omx-linxisa-prompt-templates.md) |
+| **Superproject Methodology** | [project/superproject-bringup-methodology.md](project/superproject-bringup-methodology.md) |
+| **New Agent SOP** | [project/new-agent-sop.md](project/new-agent-sop.md) |
+| **Maintainer Repin Checklist** | [project/maintainer-repin-checklist.md](project/maintainer-repin-checklist.md) |
+| **中文 PDF 手册** | [project/linxisa-superproject-methodology-zh.pdf](project/linxisa-superproject-methodology-zh.pdf) |
+| **中文白皮书** | [project/superproject-whitepaper-zh.pdf](project/superproject-whitepaper-zh.pdf) |
 
 ## Key Concepts
 

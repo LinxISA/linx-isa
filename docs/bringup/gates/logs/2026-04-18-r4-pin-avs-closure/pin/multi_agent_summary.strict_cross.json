@@ -1,0 +1,37 @@
+{
+  "active_phase": "",
+  "checked_at_utc": "2026-04-17 17:03:40Z",
+  "checklists_root": "/Users/zhoubot/linx-isa/docs/bringup/agent_runs/checklists",
+  "errors": [
+    {
+      "code": "E_REPORT_RUN_NOT_FOUND",
+      "lane": "pin",
+      "message": "requested lane/run_id not found in report",
+      "run_id": "2026-04-18-r4-pin-avs-closure"
+    }
+  ],
+  "lane": "pin",
+  "manifest": "/Users/zhoubot/linx-isa/docs/bringup/agent_runs/manifest.yaml",
+  "mode": "runtime",
+  "ok": false,
+  "report": "/Users/zhoubot/linx-isa/docs/bringup/gates/latest.json",
+  "run_id": "2026-04-18-r4-pin-avs-closure",
+  "runtime_stats": {},
+  "static_stats": {
+    "active_phase": "G0",
+    "agent_scope_allow_multi_module_agents": true,
+    "agent_scope_cross_module_agents": 2,
+    "agent_scope_explicit_modules_required": true,
+    "agent_scope_multi_module_agents": 2,
+    "agents": 11,
+    "assignments": 62,
+    "declared_checklist_ids": 86,
+    "declared_checklists": 11,
+    "phase_gate_requirement_phases": 1,
+    "phases": 6,
+    "waivers": 0
+  },
+  "strict_always": true,
+  "waivers": "/Users/zhoubot/linx-isa/docs/bringup/agent_runs/waivers.yaml",
+  "warnings": []
+}

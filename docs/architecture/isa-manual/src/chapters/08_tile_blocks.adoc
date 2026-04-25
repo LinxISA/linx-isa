@@ -25,15 +25,17 @@ Tile/vector block headers use the standard descriptor families:
 * `B.ARG`  — layout and per-op argument payload (layout defaults may exist per-op)
 * `B.IOR`  — stride/base/scalar register bindings (memory addressing)
 * `B.IOT` / `B.IOTI` — tile binding and tile size (strict range `512B..4KB`)
-* `B.TEXT` — body pointer for SIMT vector blocks (one-lane body)
+* `B.TEXT` — body pointer for SIMT vector blocks (group-granular kernel body)
 
 [[tileblocks-vvec]]
 === SIMT vector blocks (`VPAR`/`VSEQ`, `MPAR`/`MSEQ`)
 
 These blocks execute a SIMT-style body:
 
-* The body specifies **one lane** of computation.
-* The engine repeats it according to loop counters.
+* The body is a **group-granular kernel body**.
+* Each group executes the body under one group PC and one EXEC mask `p`.
+* Divergence inside the body is group-internal and expressed by explicit `p`
+  updates.
 
 Mandatory header descriptors:
 
@@ -46,8 +48,14 @@ Mandatory header descriptors:
 
 Vector body termination:
 
-* The out-of-line SIMT body stream terminates on the first terminator marker encountered.
-* Valid terminators are `BSTOP`/`C.BSTOP` and `BSTART.*`/`C.BSTART.*`.
+* Valid body terminators are `BSTOP`/`C.BSTOP` and `BSTART.*`/`C.BSTART.*`.
+* A terminator ends the current body execution only when control reaches that
+  terminator.
+* An earlier lexical terminator does **not** truncate the body if group-local
+  control flow branches to a later label within the same out-of-line `B.TEXT`
+  body.
+* In-body control-flow targets remain group-internal and MUST stay within the
+  current body region selected by `B.TEXT`.
 
 If a mandatory descriptor is missing, hardware MUST trap with `E_BLOCK(EC_BLOCKFMT)` and report the missing descriptor family in `TRAPARG0` (see System/Privilege trap reporting).
 

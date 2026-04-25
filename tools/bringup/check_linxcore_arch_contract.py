@@ -11,13 +11,27 @@ import sys
 from pathlib import Path
 
 
-REQUIRED_ARCH_DOCS = [
+REQUIRED_TOPLEVEL_DOCS = [
     "docs/architecture/README.md",
     "docs/architecture/v0.4-architecture-contract.md",
+]
+
+CANONICAL_ARCH_DOCS = [
+    "rtl/LinxCore/docs/architecture/overview.md",
+    "rtl/LinxCore/docs/architecture/microarchitecture.md",
+    "rtl/LinxCore/docs/architecture/interfaces.md",
+    "rtl/LinxCore/docs/architecture/verification-matrix.md",
+    "rtl/LinxCore/docs/architecture/module-catalog.md",
+    "rtl/LinxCore/docs/architecture/pipeline-stage-catalog.md",
+]
+
+PUBLISHED_ARCH_DOCS = [
     "docs/architecture/linxcore/overview.md",
     "docs/architecture/linxcore/microarchitecture.md",
     "docs/architecture/linxcore/interfaces.md",
     "docs/architecture/linxcore/verification-matrix.md",
+    "docs/architecture/linxcore/module-catalog.md",
+    "docs/architecture/linxcore/pipeline-stage-catalog.md",
 ]
 
 REQUIRED_MATRIX_GATE_NAMES = [
@@ -60,6 +74,28 @@ def _load_text(path: Path) -> str:
     return path.read_text(encoding="utf-8", errors="replace")
 
 
+def _render_expected_mirror(rel: str, source_text: str) -> str:
+    name = Path(rel).name
+    lines = source_text.splitlines()
+    header = [
+        "<!-- AUTO-GENERATED FILE. DO NOT EDIT DIRECTLY. -->",
+        f"<!-- Source: rtl/LinxCore/docs/architecture/{name} -->",
+        "",
+    ]
+    if not lines:
+        return "\n".join(header)
+    first = lines[0]
+    rest = lines[1:]
+    note = [
+        first,
+        "",
+        "> This published page mirrors the canonical LinxCore source in",
+        f"> `rtl/LinxCore/docs/architecture/{name}`.",
+        "",
+    ]
+    return "\n".join(header + note + rest) + "\n"
+
+
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description="Validate LinxCore architecture contract docs")
     ap.add_argument("--root", default=".", help="Repository root")
@@ -72,7 +108,7 @@ def main(argv: list[str]) -> int:
     errors: list[str] = []
     warnings: list[str] = []
 
-    for rel in REQUIRED_ARCH_DOCS:
+    for rel in REQUIRED_TOPLEVEL_DOCS + CANONICAL_ARCH_DOCS + PUBLISHED_ARCH_DOCS:
         path = root / rel
         if not path.is_file():
             errors.append(f"missing required architecture doc: {rel}")
@@ -83,9 +119,18 @@ def main(argv: list[str]) -> int:
         return 1
 
     arch_readme = _load_text(root / "docs/architecture/README.md")
-    for rel in REQUIRED_ARCH_DOCS[2:]:
+    for rel in PUBLISHED_ARCH_DOCS:
         if rel not in arch_readme and rel.replace("docs/", "") not in arch_readme:
             warnings.append(f"architecture README does not mention {rel}")
+    if "rtl/LinxCore/docs/architecture/overview.md" not in arch_readme:
+        warnings.append("architecture README does not mention canonical submodule LinxCore docs")
+
+    for canonical_rel, published_rel in zip(CANONICAL_ARCH_DOCS, PUBLISHED_ARCH_DOCS):
+        canonical_text = _load_text(root / canonical_rel)
+        published_text = _load_text(root / published_rel)
+        expected_text = _render_expected_mirror(published_rel, canonical_text)
+        if published_text != expected_text:
+            errors.append(f"published LinxCore mirror is out of sync: {published_rel}")
 
     if args.require_mkdocs:
         mkdocs_text = _load_text(root / "mkdocs.yml")
@@ -94,6 +139,8 @@ def main(argv: list[str]) -> int:
             "architecture/linxcore/microarchitecture.md",
             "architecture/linxcore/interfaces.md",
             "architecture/linxcore/verification-matrix.md",
+            "architecture/linxcore/module-catalog.md",
+            "architecture/linxcore/pipeline-stage-catalog.md",
         ]
         for nav_path in required_nav_entries:
             if nav_path not in mkdocs_text:
@@ -101,12 +148,12 @@ def main(argv: list[str]) -> int:
 
     if args.strict:
         heading_requirements = {
-            "docs/architecture/linxcore/overview.md": [
+            "rtl/LinxCore/docs/architecture/overview.md": [
                 "# LinxCore v0.4 Superscalar Bring-up Overview",
                 "## Scope",
                 "## Normative links",
             ],
-            "docs/architecture/linxcore/microarchitecture.md": [
+            "rtl/LinxCore/docs/architecture/microarchitecture.md": [
                 "# LinxCore v0.4 Microarchitecture Contract",
                 "## Baseline superscalar contract",
                 "## Pipeline contract (LC-MA-PIPE-001)",
@@ -116,7 +163,7 @@ def main(argv: list[str]) -> int:
                 "## Interrupt contract (LC-MA-IRQ-001)",
                 "## Memory-ordering contract (LC-MA-MEM-001)",
             ],
-            "docs/architecture/linxcore/interfaces.md": [
+            "rtl/LinxCore/docs/architecture/interfaces.md": [
                 "# LinxCore External Interface Contracts",
                 "## pyCircuit-LinxCore interface contract (LC-IF-PYC-001)",
                 "## Required commit payload contract (LC-IF-PYC-002)",
@@ -124,7 +171,7 @@ def main(argv: list[str]) -> int:
                 "## Trace compatibility contract (LC-IF-TRACE-002)",
                 "## Cross-tool synchronization contract (LC-IF-SYNC-001)",
             ],
-            "docs/architecture/linxcore/verification-matrix.md": [
+            "rtl/LinxCore/docs/architecture/verification-matrix.md": [
                 "# LinxCore v0.4 Verification Matrix",
                 "## G1 contract rows (normative)",
                 "## Gate-to-contract traceability (required PR gates)",
@@ -141,11 +188,11 @@ def main(argv: list[str]) -> int:
         if "docs/architecture/linxcore/overview.md" not in v04_contract:
             errors.append("v0.4 architecture contract missing LinxCore overview cross-link")
 
-        overview = _load_text(root / "docs/architecture/linxcore/overview.md")
+        overview = _load_text(root / "rtl/LinxCore/docs/architecture/overview.md")
         if "docs/architecture/v0.4-architecture-contract.md" not in overview:
             errors.append("LinxCore overview missing v0.4 architecture contract cross-link")
 
-        matrix_text = _load_text(root / "docs/architecture/linxcore/verification-matrix.md")
+        matrix_text = _load_text(root / "rtl/LinxCore/docs/architecture/verification-matrix.md")
         for gate_key in REQUIRED_MATRIX_GATE_NAMES:
             if gate_key not in matrix_text:
                 errors.append(f"verification matrix missing gate key: {gate_key}")
@@ -157,7 +204,7 @@ def main(argv: list[str]) -> int:
         "ok": len(errors) == 0,
         "errors": errors,
         "warnings": warnings,
-        "checked_docs": REQUIRED_ARCH_DOCS,
+        "checked_docs": REQUIRED_TOPLEVEL_DOCS + CANONICAL_ARCH_DOCS + PUBLISHED_ARCH_DOCS,
     }
 
     if args.out:

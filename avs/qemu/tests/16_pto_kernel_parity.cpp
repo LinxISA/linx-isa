@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <common/linx_lowp_types.hpp>
+#include <common/runtime/kernel_api.hpp>
 
 #if defined(PTO_HOST_SIM)
 #include <stdio.h>
@@ -11,64 +12,113 @@ using usize = __SIZE_TYPE__;
 using pto::float_to_fp16;
 using pto::fp16_t;
 
-extern "C" void tload_store_i32(int *src_ptr, int *dst_ptr);
-extern "C" void mamulb_i32(int *lhs_ptr, int *rhs_ptr, int *dst_ptr);
-extern "C" void tmatmul_acc_i32(int *lhs_ptr, int *rhs_ptr, int *dst_ptr);
-extern "C" void gemm_i32(int *lhs_ptr, int *rhs_ptr, int *dst_ptr);
-extern "C" void gemm_basic_f32(float *lhs_ptr, float *rhs_ptr, float *dst_ptr);
-extern "C" void gemm_demo_f32(float *out_ptr, float *a_ptr, float *b_ptr);
-extern "C" void gemm_performance_f32(float *lhs_ptr, float *rhs_ptr,
-                                        float *dst_ptr, int repeat_tiles);
-extern "C" void add_custom_f32(float *x_ptr, float *y_ptr, float *z_ptr);
-extern "C" void flash_attention_i32(int *q_ptr, int *k_ptr, int *v_ptr,
-                                       int *out_ptr);
-extern "C" void flash_attention_demo_f32(float *out_ptr, float *q_ptr,
-                                           float *k_ptr, float *v_ptr);
-extern "C" void flash_attention_masked_f32(float *out_ptr, float *q_ptr,
-                                             float *k_ptr, float *v_ptr);
-extern "C" void fa_performance_f32(float *out_ptr, float *q_ptr,
-                                     float *k_ptr, float *v_ptr,
-                                     int repeat_passes);
-extern "C" void mla_attention_demo_f32(float *out_ptr, float *q_ptr,
-                                         float *k_ptr, float *v_ptr,
-                                         float *wq_ptr, float *wk_ptr,
-                                         float *wv_ptr, float *wo_ptr);
-extern "C" void flash_attention_cube_f16(fp16_t *out_ptr, fp16_t *q_ptr,
-                                         fp16_t *k_ptr, fp16_t *v_ptr);
-extern "C" void flash_attention_vec_f32(float *out_ptr, float *q_ptr,
-                                        float *k_ptr, float *v_ptr);
-extern "C" void flash_attention_vec_f16(fp16_t *out_ptr, fp16_t *q_ptr,
-                                        fp16_t *k_ptr, fp16_t *v_ptr);
-extern "C" void gqa_f16(fp16_t *out_ptr, fp16_t *q_ptr, fp16_t *k_ptr,
-                        fp16_t *v_ptr);
-extern "C" void sparse_attention_local_f16(fp16_t *out_ptr, fp16_t *q_ptr,
-                                           fp16_t *k_ptr, fp16_t *v_ptr,
-                                           int window);
-extern "C" void rmsnorm_f16(fp16_t *out_ptr, fp16_t *x_ptr, fp16_t *gamma_ptr,
-                            float eps);
-extern "C" void gelu_f32(float *out_ptr, float *x_ptr, int n);
-extern "C" void argmax_f32(int *idx_ptr, float *x_ptr, int rows, int cols);
-extern "C" void gather_f32(float *out_ptr, float *in_ptr, int *indices_ptr,
-                           int n);
-extern "C" void concat_f32(float *out_ptr, float *a_ptr, float *b_ptr, int n_a,
-                           int n_b);
-extern "C" void scatter_f32(float *out_ptr, float *in_ptr, int *indices_ptr,
-                            float *updates_ptr, int n);
-extern "C" void permute_nhwc_nchw_f32(float *out_ptr, float *in_ptr, int n,
-                                      int h, int w, int c);
-extern "C" void transpose_large_f32(float *out_ptr, float *in_ptr, int rows,
-                                    int cols);
-extern "C" void unsorted_segment_sum_f32(float *out_ptr, int *segment_ids_ptr,
-                                         float *data_ptr, int n,
-                                         int num_segments);
-extern "C" void unique_i32(int *out_values_ptr, int *out_count_ptr,
-                           int *in_values_ptr, int n);
-
 #ifndef PTO_QEMU_SMOKE
 #define PTO_QEMU_SMOKE 0
 #endif
 
+#if __has_include("pto_parity_shape_config.generated.hpp")
+#include "pto_parity_shape_config.generated.hpp"
+#endif
+
+#ifndef PTO_PARITY_GELU_N
+#define PTO_PARITY_GELU_N 256
+#endif
+#ifndef PTO_PARITY_FLASH_CUBE_SEQ
+#define PTO_PARITY_FLASH_CUBE_SEQ 16
+#endif
+#ifndef PTO_PARITY_FLASH_CUBE_MAX_SEQ
+#define PTO_PARITY_FLASH_CUBE_MAX_SEQ 64
+#endif
+#ifndef PTO_PARITY_FLASH_CUBE_DIM
+#define PTO_PARITY_FLASH_CUBE_DIM 16
+#endif
+#ifndef PTO_PARITY_GQA_SEQ
+#define PTO_PARITY_GQA_SEQ 16
+#endif
+#ifndef PTO_PARITY_GQA_Q_HEADS
+#define PTO_PARITY_GQA_Q_HEADS 4
+#endif
+#ifndef PTO_PARITY_GQA_KV_HEADS
+#define PTO_PARITY_GQA_KV_HEADS 1
+#endif
+#ifndef PTO_PARITY_GQA_DIM
+#define PTO_PARITY_GQA_DIM 16
+#endif
+#ifndef PTO_PARITY_SPARSE_SEQ
+#define PTO_PARITY_SPARSE_SEQ 16
+#endif
+#ifndef PTO_PARITY_SPARSE_HEADS
+#define PTO_PARITY_SPARSE_HEADS 4
+#endif
+#ifndef PTO_PARITY_SPARSE_DIM
+#define PTO_PARITY_SPARSE_DIM 16
+#endif
+#ifndef PTO_PARITY_SPARSE_WINDOW
+#define PTO_PARITY_SPARSE_WINDOW 16
+#endif
+#ifndef PTO_PARITY_RMS_TOKENS
+#define PTO_PARITY_RMS_TOKENS 16
+#endif
+#ifndef PTO_PARITY_RMS_CHANNELS
+#define PTO_PARITY_RMS_CHANNELS 16
+#endif
+#ifndef PTO_PARITY_RMS_EPS
+#define PTO_PARITY_RMS_EPS 1.0e-5f
+#endif
+#ifndef PTO_PARITY_ARGMAX_ROWS
+#define PTO_PARITY_ARGMAX_ROWS 14
+#endif
+#ifndef PTO_PARITY_ARGMAX_COLS
+#define PTO_PARITY_ARGMAX_COLS 14
+#endif
+#ifndef PTO_PARITY_GATHER_N
+#define PTO_PARITY_GATHER_N 64
+#endif
+#ifndef PTO_PARITY_GATHER_TABLE
+#define PTO_PARITY_GATHER_TABLE 97
+#endif
+#ifndef PTO_PARITY_CONCAT_NA
+#define PTO_PARITY_CONCAT_NA 128
+#endif
+#ifndef PTO_PARITY_CONCAT_NB
+#define PTO_PARITY_CONCAT_NB 128
+#endif
+#ifndef PTO_PARITY_SCATTER_N
+#define PTO_PARITY_SCATTER_N 128
+#endif
+#ifndef PTO_PARITY_PERMUTE_N
+#define PTO_PARITY_PERMUTE_N 1
+#endif
+#ifndef PTO_PARITY_PERMUTE_H
+#define PTO_PARITY_PERMUTE_H 8
+#endif
+#ifndef PTO_PARITY_PERMUTE_W
+#define PTO_PARITY_PERMUTE_W 8
+#endif
+#ifndef PTO_PARITY_PERMUTE_C
+#define PTO_PARITY_PERMUTE_C 8
+#endif
+#ifndef PTO_PARITY_TRANSPOSE_ROWS
+#define PTO_PARITY_TRANSPOSE_ROWS 16
+#endif
+#ifndef PTO_PARITY_TRANSPOSE_COLS
+#define PTO_PARITY_TRANSPOSE_COLS 3
+#endif
+#ifndef PTO_PARITY_UNSORTED_SEGMENTS
+#define PTO_PARITY_UNSORTED_SEGMENTS 152
+#endif
+#ifndef PTO_PARITY_UNSORTED_N
+#define PTO_PARITY_UNSORTED_N 256
+#endif
+#ifndef PTO_PARITY_UNIQUE_N
+#define PTO_PARITY_UNIQUE_N 256
+#endif
+
 namespace {
+
+using namespace pto::kernels;
+
+constexpr usize max_usize(usize a, usize b) { return a > b ? a : b; }
 
 static inline uint64_t fnv1a_bytes(const void *ptr, usize bytes) {
   const uint8_t *p = static_cast<const uint8_t *>(ptr);
@@ -157,6 +207,114 @@ static void emit_stage(const char *name) {
 #endif
 
 static void run_all_kernels_emit_digest() {
+  const pto_memory_config mem_i32_cfg{
+      pto_dtype::i32, static_cast<int>(PTO_QEMU_SMOKE ? 32u * 32u : 1024u * 1024u),
+      PTO_QEMU_SMOKE ? 32 : 1024, PTO_QEMU_SMOKE ? 32 : 1024,
+      presets::kNoTiling};
+  const pto_matmul_config matmul_i32_cfg{
+      pto_dtype::i32, pto_dtype::i32, pto_dtype::i32, pto_dtype::i32,
+      PTO_QEMU_SMOKE ? 16 : 256, PTO_QEMU_SMOKE ? 16 : 256,
+      PTO_QEMU_SMOKE ? 16 : 256, 1, presets::kGemmParityTiling};
+  const pto_matmul_config matmul_f32_cfg{
+      pto_dtype::f32, pto_dtype::f32, pto_dtype::f32, pto_dtype::f32,
+      PTO_QEMU_SMOKE ? 16 : 256, PTO_QEMU_SMOKE ? 16 : 256,
+      PTO_QEMU_SMOKE ? 16 : 256, 1, presets::kGemmParityTiling};
+  const pto_matmul_config matmul_perf_cfg{
+      pto_dtype::f32, pto_dtype::f32, pto_dtype::f32, pto_dtype::f32,
+      PTO_QEMU_SMOKE ? 16 : 256, PTO_QEMU_SMOKE ? 16 : 256,
+      PTO_QEMU_SMOKE ? 16 : 256, PTO_QEMU_SMOKE ? 1 : 2,
+      presets::kGemmParityTiling};
+  const pto_elementwise_config add_cfg{
+      pto_dtype::f32, pto_dtype::f32, pto_dtype::f32, pto_dtype::f32,
+      static_cast<int>(PTO_QEMU_SMOKE ? 32u * 32u : 1024u * 1024u), 0, 0, 0.0f, 0.0f};
+  const pto_elementwise_config unary_cfg{
+      pto_dtype::f32, pto_dtype::invalid, pto_dtype::f32, pto_dtype::f32,
+      PTO_QEMU_SMOKE ? 64 : 256, 0, 0, 0.0f, 0.0f};
+  const pto_elementwise_config softmax_cfg{
+      pto_dtype::f32, pto_dtype::invalid, pto_dtype::f32, pto_dtype::f32,
+      0, PTO_QEMU_SMOKE ? 8 : 32, PTO_QEMU_SMOKE ? 8 : 32, 0.0f, 0.0f};
+  const pto_elementwise_config swiglu_cfg{
+      pto_dtype::f32, pto_dtype::f32, pto_dtype::f32, pto_dtype::f32,
+      PTO_QEMU_SMOKE ? 64 : 256, 0, 0, 0.0f, 0.0f};
+  const pto_attention_config flash_cube_cfg{
+      pto_dtype::f16, pto_dtype::f16, pto_dtype::f32, PTO_PARITY_FLASH_CUBE_SEQ,
+      PTO_PARITY_FLASH_CUBE_DIM, PTO_PARITY_FLASH_CUBE_DIM, 1, 1,
+      PTO_PARITY_FLASH_CUBE_MAX_SEQ, PTO_PARITY_FLASH_CUBE_MAX_SEQ,
+      0, 0, 0, 0, 1, PTO_ATTN_FLAG_CAUSAL, presets::kFlashCubeParityTiling};
+  const pto_attention_config flash_vec_f32_cfg{
+      pto_dtype::f32, pto_dtype::f32, pto_dtype::f32, 16, 16, 16, 1, 1, 0, 0,
+      0, 0, 0, 0, 1, 0u, presets::kFlashVecParityTiling};
+  const pto_attention_config flash_vec_f16_cfg{
+      pto_dtype::f16, pto_dtype::f16, pto_dtype::f32, 16, 16, 16, 1, 1, 0, 0,
+      0, 0, 0, 0, 1, 0u, presets::kFlashVecParityTiling};
+  const pto_attention_config gqa_cfg{
+      pto_dtype::f16, pto_dtype::f16, pto_dtype::f32,
+      PTO_PARITY_GQA_SEQ, PTO_PARITY_GQA_DIM, PTO_PARITY_GQA_DIM,
+      PTO_PARITY_GQA_Q_HEADS, PTO_PARITY_GQA_KV_HEADS, 0, 0, 0, 0, 0, 0, 1, 0u,
+      presets::kFlashCubeParityTiling};
+  const pto_attention_config sparse_local_cfg{
+      pto_dtype::f16, pto_dtype::f16, pto_dtype::f32,
+      PTO_PARITY_SPARSE_SEQ, PTO_PARITY_SPARSE_DIM, PTO_PARITY_SPARSE_DIM,
+      PTO_PARITY_SPARSE_HEADS, PTO_PARITY_SPARSE_HEADS, 0, 0,
+      PTO_PARITY_SPARSE_WINDOW, 0, 0, 0, 1, 0u,
+      pto_tiling_config{16, 0, 16, 1, 1, 1, 0}};
+  const pto_normalization_config rms_cfg{
+      pto_dtype::f16, pto_dtype::f16, pto_dtype::f16, pto_dtype::f32,
+      PTO_PARITY_RMS_TOKENS, PTO_PARITY_RMS_CHANNELS, PTO_PARITY_RMS_EPS,
+      presets::kRmsnormParityTiling};
+  const pto_normalization_config batchnorm_cfg{
+      pto_dtype::f32, pto_dtype::f32, pto_dtype::f32, pto_dtype::f32,
+      PTO_QEMU_SMOKE ? 8 : 32, PTO_QEMU_SMOKE ? 8 : 16, 1.0e-5f,
+      presets::kNoTiling};
+  const pto_normalization_config layernorm_cfg{
+      pto_dtype::f32, pto_dtype::f32, pto_dtype::f32, pto_dtype::f32,
+      PTO_QEMU_SMOKE ? 8 : 32, PTO_QEMU_SMOKE ? 8 : 16, 1.0e-5f,
+      presets::kNoTiling};
+  const pto_elementwise_config gelu_cfg{
+      pto_dtype::f32, pto_dtype::invalid, pto_dtype::f32, pto_dtype::f32,
+      PTO_PARITY_GELU_N, 0, 0, 0.0f, 0.0f};
+  const pto_indexing_config argmax_cfg{
+      pto_dtype::f32, pto_dtype::invalid, pto_dtype::i32, pto_dtype::f32,
+      0, PTO_PARITY_ARGMAX_ROWS, PTO_PARITY_ARGMAX_COLS, 0};
+  const pto_indexing_config gather_cfg{
+      pto_dtype::f32, pto_dtype::i32, pto_dtype::f32, pto_dtype::f32,
+      PTO_PARITY_GATHER_N, 0, 0, 0};
+  const pto_indexing_config where_cfg{
+      pto_dtype::f32, pto_dtype::f32, pto_dtype::f32, pto_dtype::f32,
+      PTO_QEMU_SMOKE ? 64 : 256, 0, 0, 0};
+  const pto_indexing_config slice_cfg{
+      pto_dtype::f32, pto_dtype::invalid, pto_dtype::f32, pto_dtype::f32,
+      PTO_QEMU_SMOKE ? 32 : 128, 0, 0, 0, PTO_QEMU_SMOKE ? 5 : 17,
+      PTO_QEMU_SMOKE ? 32 : 128, 0};
+  const pto_layout_config concat_cfg{
+      pto_dtype::f32, 0, 0, 0, 0, 0, 0,
+      PTO_PARITY_CONCAT_NA, PTO_PARITY_CONCAT_NB};
+  const pto_layout_config unary_layout_cfg{
+      pto_dtype::f32, PTO_QEMU_SMOKE ? 64 : 256, 0, 0, 0, 0, 0, 0, 0};
+  const pto_layout_config stack_cfg{
+      pto_dtype::f32, static_cast<int>((PTO_QEMU_SMOKE ? 64u : 256u) / 2u), 0,
+      0, 0, 0, 0,
+      static_cast<int>((PTO_QEMU_SMOKE ? 64u : 256u) / 2u),
+      static_cast<int>((PTO_QEMU_SMOKE ? 64u : 256u) / 2u)};
+  const pto_layout_config split_cfg{
+      pto_dtype::f32, 0, 0, 0, 0, 0, 0,
+      static_cast<int>((PTO_QEMU_SMOKE ? 64u : 256u) / 2u),
+      static_cast<int>((PTO_QEMU_SMOKE ? 64u : 256u) / 2u)};
+  const pto_indexing_config scatter_cfg{
+      pto_dtype::f32, pto_dtype::i32, pto_dtype::f32, pto_dtype::f32,
+      PTO_PARITY_SCATTER_N, 0, 0, 0};
+  const pto_layout_config permute_cfg{
+      pto_dtype::f32, PTO_PARITY_PERMUTE_N, PTO_PARITY_PERMUTE_H,
+      PTO_PARITY_PERMUTE_W, PTO_PARITY_PERMUTE_C, 0, 0, 0, 0};
+  const pto_layout_config transpose_cfg{
+      pto_dtype::f32, 0, 0, 0, 0, PTO_PARITY_TRANSPOSE_ROWS,
+      PTO_PARITY_TRANSPOSE_COLS, 0, 0};
+  const pto_indexing_config segment_cfg{
+      pto_dtype::f32, pto_dtype::i32, pto_dtype::f32, pto_dtype::f32,
+      PTO_PARITY_UNSORTED_N, 0, 0, PTO_PARITY_UNSORTED_SEGMENTS};
+  const pto_indexing_config unique_cfg{
+      pto_dtype::i32, pto_dtype::invalid, pto_dtype::i32, pto_dtype::i32,
+      PTO_PARITY_UNIQUE_N, 0, 0, 0};
   emit_stage("begin");
   constexpr usize kMatElems = PTO_QEMU_SMOKE ? 16u * 16u : 256u * 256u;
   constexpr usize kVecElems = PTO_QEMU_SMOKE ? 32u * 32u : 1024u * 1024u;
@@ -176,24 +334,49 @@ static void run_all_kernels_emit_digest() {
   constexpr usize kMlaW = 16u * 4u;
   constexpr usize kMlaWo = 4u * 16u;
   constexpr usize kMlaO = PTO_QEMU_SMOKE ? 16u * 16u : 256u * 16u;
-  constexpr usize kLowpFlashElems = PTO_QEMU_SMOKE ? 16u * 16u : 128u * 16u;
-  constexpr usize kGqaQElems = PTO_QEMU_SMOKE ? 2u * 16u * 16u : 4u * 128u * 16u;
-  constexpr usize kGqaKVElems = PTO_QEMU_SMOKE ? 1u * 16u * 16u : 2u * 128u * 16u;
-  constexpr usize kRmsElems = PTO_QEMU_SMOKE ? 16u * 16u : 128u * 16u;
-  constexpr usize kRmsGammaElems = 16u;
-  constexpr usize kSmallVec = PTO_QEMU_SMOKE ? 64u : 1024u;
-  constexpr usize kSmallTable = PTO_QEMU_SMOKE ? 97u : 2048u;
-  constexpr usize kSegments = PTO_QEMU_SMOKE ? 8u : 64u;
-  constexpr usize kUniqueN = PTO_QEMU_SMOKE ? 64u : 1024u;
-  constexpr int kGeluN = PTO_QEMU_SMOKE ? 64 : 256;
-  constexpr int kArgmaxRows = PTO_QEMU_SMOKE ? 8 : 32;
-  constexpr int kArgmaxCols = PTO_QEMU_SMOKE ? 8 : 32;
-  constexpr int kPermuteN = PTO_QEMU_SMOKE ? 1 : 2;
-  constexpr int kPermuteH = PTO_QEMU_SMOKE ? 4 : 8;
-  constexpr int kPermuteW = PTO_QEMU_SMOKE ? 4 : 8;
-  constexpr int kPermuteC = PTO_QEMU_SMOKE ? 4 : 8;
-  constexpr int kTransposeRows = PTO_QEMU_SMOKE ? 8 : 32;
-  constexpr int kTransposeCols = PTO_QEMU_SMOKE ? 8 : 32;
+  constexpr usize kFlashCubeElems =
+      static_cast<usize>(PTO_PARITY_FLASH_CUBE_SEQ) *
+      static_cast<usize>(PTO_PARITY_FLASH_CUBE_DIM);
+  constexpr usize kFlashVecElems = PTO_QEMU_SMOKE ? 16u * 16u : 128u * 16u;
+  constexpr usize kGqaQElems =
+      static_cast<usize>(PTO_PARITY_GQA_Q_HEADS) *
+      static_cast<usize>(PTO_PARITY_GQA_SEQ) *
+      static_cast<usize>(PTO_PARITY_GQA_DIM);
+  constexpr usize kGqaKVElems =
+      static_cast<usize>(PTO_PARITY_GQA_KV_HEADS) *
+      static_cast<usize>(PTO_PARITY_GQA_SEQ) *
+      static_cast<usize>(PTO_PARITY_GQA_DIM);
+  constexpr usize kSparseElems =
+      static_cast<usize>(PTO_PARITY_SPARSE_HEADS) *
+      static_cast<usize>(PTO_PARITY_SPARSE_SEQ) *
+      static_cast<usize>(PTO_PARITY_SPARSE_DIM);
+  constexpr usize kRmsElems =
+      static_cast<usize>(PTO_PARITY_RMS_TOKENS) *
+      static_cast<usize>(PTO_PARITY_RMS_CHANNELS);
+  constexpr usize kRmsGammaElems = static_cast<usize>(PTO_PARITY_RMS_CHANNELS);
+  constexpr usize kSmallVec = PTO_QEMU_SMOKE ? 512u : 2048u;
+  constexpr usize kSmallTable = PTO_QEMU_SMOKE ? 512u : 4096u;
+  constexpr usize kSegments = static_cast<usize>(PTO_PARITY_UNSORTED_SEGMENTS);
+  constexpr usize kUniqueN = static_cast<usize>(PTO_PARITY_UNIQUE_N);
+  constexpr int kGeluN = PTO_PARITY_GELU_N;
+  constexpr int kUnaryN = PTO_QEMU_SMOKE ? 64 : 256;
+  constexpr int kSoftmaxRows = PTO_QEMU_SMOKE ? 8 : 32;
+  constexpr int kSoftmaxCols = PTO_QEMU_SMOKE ? 8 : 32;
+  constexpr int kNormTokens = PTO_QEMU_SMOKE ? 8 : 32;
+  constexpr int kNormChannels = PTO_QEMU_SMOKE ? 8 : 16;
+  constexpr int kSliceStart = PTO_QEMU_SMOKE ? 5 : 17;
+  constexpr int kSliceLen = PTO_QEMU_SMOKE ? 32 : 128;
+  constexpr int kStackN = PTO_QEMU_SMOKE ? 32 : 128;
+  constexpr usize kNormElems =
+      static_cast<usize>(kNormTokens) * static_cast<usize>(kNormChannels);
+  constexpr int kArgmaxRows = PTO_PARITY_ARGMAX_ROWS;
+  constexpr int kArgmaxCols = PTO_PARITY_ARGMAX_COLS;
+  constexpr int kPermuteN = PTO_PARITY_PERMUTE_N;
+  constexpr int kPermuteH = PTO_PARITY_PERMUTE_H;
+  constexpr int kPermuteW = PTO_PARITY_PERMUTE_W;
+  constexpr int kPermuteC = PTO_PARITY_PERMUTE_C;
+  constexpr int kTransposeRows = PTO_PARITY_TRANSPOSE_ROWS;
+  constexpr int kTransposeCols = PTO_PARITY_TRANSPOSE_COLS;
 
   alignas(64) static int iA[kMatElems];
   alignas(64) static int iB[kMatElems];
@@ -231,33 +414,40 @@ static void run_all_kernels_emit_digest() {
   alignas(64) static float mlaWv[kMlaW];
   alignas(64) static float mlaWo[kMlaWo];
   alignas(64) static float mlaO[kMlaO];
-  alignas(64) static fp16_t flashCubeQ[kLowpFlashElems];
-  alignas(64) static fp16_t flashCubeK[kLowpFlashElems];
-  alignas(64) static fp16_t flashCubeV[kLowpFlashElems];
-  alignas(64) static fp16_t flashCubeO[kLowpFlashElems];
-  alignas(64) static fp16_t flashVecQ[kLowpFlashElems];
-  alignas(64) static fp16_t flashVecK[kLowpFlashElems];
-  alignas(64) static fp16_t flashVecV[kLowpFlashElems];
-  alignas(64) static fp16_t flashVecO[kLowpFlashElems];
+  alignas(64) static fp16_t flashCubeQ[kFlashCubeElems];
+  alignas(64) static fp16_t flashCubeK[kFlashCubeElems];
+  alignas(64) static fp16_t flashCubeV[kFlashCubeElems];
+  alignas(64) static fp16_t flashCubeO[kFlashCubeElems];
+  alignas(64) static fp16_t flashVecQ[kFlashVecElems];
+  alignas(64) static fp16_t flashVecK[kFlashVecElems];
+  alignas(64) static fp16_t flashVecV[kFlashVecElems];
+  alignas(64) static fp16_t flashVecO[kFlashVecElems];
   alignas(64) static fp16_t gqaQ[kGqaQElems];
   alignas(64) static fp16_t gqaK[kGqaKVElems];
   alignas(64) static fp16_t gqaV[kGqaKVElems];
   alignas(64) static fp16_t gqaO[kGqaQElems];
-  alignas(64) static fp16_t sparseQ[kLowpFlashElems];
-  alignas(64) static fp16_t sparseK[kLowpFlashElems];
-  alignas(64) static fp16_t sparseV[kLowpFlashElems];
-  alignas(64) static fp16_t sparseO[kLowpFlashElems];
+  alignas(64) static fp16_t sparseQ[kSparseElems];
+  alignas(64) static fp16_t sparseK[kSparseElems];
+  alignas(64) static fp16_t sparseV[kSparseElems];
+  alignas(64) static fp16_t sparseO[kSparseElems];
   alignas(64) static fp16_t rmsX[kRmsElems];
   alignas(64) static fp16_t rmsGamma[kRmsGammaElems];
   alignas(64) static fp16_t rmsO[kRmsElems];
   alignas(64) static float smallIn[kSmallTable];
   alignas(64) static float smallOut[kSmallVec];
   alignas(64) static float smallAux[kSmallVec];
+  alignas(64) static float smallOutB[kSmallVec];
   alignas(64) static int smallIdx[kSmallVec];
   alignas(64) static int argmaxOut[kSmallVec];
   alignas(64) static float segData[kSmallVec];
   alignas(64) static int segIds[kSmallVec];
   alignas(64) static float segOut[kSegments];
+  alignas(64) static float normIn[kNormElems];
+  alignas(64) static float normOut[kNormElems];
+  alignas(64) static float normMean[kNormChannels];
+  alignas(64) static float normVar[kNormChannels];
+  alignas(64) static float normGamma[kNormChannels];
+  alignas(64) static float normBeta[kNormChannels];
   alignas(64) static int uniqueIn[kUniqueN];
   alignas(64) static int uniqueOut[kUniqueN];
   alignas(64) static int uniqueCount[1];
@@ -300,33 +490,42 @@ static void run_all_kernels_emit_digest() {
   seed_f32(mlaWv, kMlaW, 0x6006u);
   seed_f32(mlaWo, kMlaWo, 0x6007u);
   zero_f32(mlaO, kMlaO);
-  seed_fp16(flashCubeQ, kLowpFlashElems, 0x7001u);
-  seed_fp16(flashCubeK, kLowpFlashElems, 0x7002u);
-  seed_fp16(flashCubeV, kLowpFlashElems, 0x7003u);
-  zero_fp16(flashCubeO, kLowpFlashElems);
-  seed_fp16(flashVecQ, kLowpFlashElems, 0x7004u);
-  seed_fp16(flashVecK, kLowpFlashElems, 0x7005u);
-  seed_fp16(flashVecV, kLowpFlashElems, 0x7006u);
-  zero_fp16(flashVecO, kLowpFlashElems);
+  seed_fp16(flashCubeQ, kFlashCubeElems, 0x7001u);
+  seed_fp16(flashCubeK, kFlashCubeElems, 0x7002u);
+  seed_fp16(flashCubeV, kFlashCubeElems, 0x7003u);
+  zero_fp16(flashCubeO, kFlashCubeElems);
+  seed_fp16(flashVecQ, kFlashVecElems, 0x7004u);
+  seed_fp16(flashVecK, kFlashVecElems, 0x7005u);
+  seed_fp16(flashVecV, kFlashVecElems, 0x7006u);
+  zero_fp16(flashVecO, kFlashVecElems);
   seed_fp16(gqaQ, kGqaQElems, 0x7007u);
   seed_fp16(gqaK, kGqaKVElems, 0x7008u);
   seed_fp16(gqaV, kGqaKVElems, 0x7009u);
   zero_fp16(gqaO, kGqaQElems);
-  seed_fp16(sparseQ, kLowpFlashElems, 0x700Au);
-  seed_fp16(sparseK, kLowpFlashElems, 0x700Bu);
-  seed_fp16(sparseV, kLowpFlashElems, 0x700Cu);
-  zero_fp16(sparseO, kLowpFlashElems);
+  seed_fp16(sparseQ, kSparseElems, 0x700Au);
+  seed_fp16(sparseK, kSparseElems, 0x700Bu);
+  seed_fp16(sparseV, kSparseElems, 0x700Cu);
+  zero_fp16(sparseO, kSparseElems);
   seed_fp16(rmsX, kRmsElems, 0x700Du);
   seed_fp16(rmsGamma, kRmsGammaElems, 0x700Eu);
   zero_fp16(rmsO, kRmsElems);
   seed_f32(smallIn, kSmallTable, 0x700Fu);
   zero_f32(smallOut, kSmallVec);
   seed_f32(smallAux, kSmallVec, 0x7010u);
+  zero_f32(smallOutB, kSmallVec);
   seed_index_range(smallIdx, kSmallVec, static_cast<int>(kSmallVec), 0x7011u);
   zero_i32(argmaxOut, kSmallVec);
   seed_f32(segData, kSmallVec, 0x7012u);
   seed_index_range(segIds, kSmallVec, static_cast<int>(kSegments), 0x7013u);
   zero_f32(segOut, kSegments);
+  seed_f32(normIn, kNormElems, 0x7014u);
+  zero_f32(normOut, kNormElems);
+  seed_f32(normMean, kNormChannels, 0x7015u);
+  seed_f32(normVar, kNormChannels, 0x7016u);
+  seed_f32(normGamma, kNormChannels, 0x7017u);
+  seed_f32(normBeta, kNormChannels, 0x7018u);
+  for (int i = 0; i < kNormChannels; ++i)
+    normVar[i] = normVar[i] * normVar[i] + 0.25f;
   for (usize i = 0; i < kUniqueN; ++i)
     uniqueIn[i] = static_cast<int>((i * 7u) % 23u);
   zero_i32(uniqueOut, kUniqueN);
@@ -334,157 +533,285 @@ static void run_all_kernels_emit_digest() {
   emit_stage("seed_done");
 
   emit_stage("tload_store");
-  tload_store_i32(iX, iY);
+  pto_tload_store(iY, iX, &mem_i32_cfg);
   emit_digest("tload_store", fnv1a_bytes(iY, sizeof(iY)));
 
   emit_stage("mamulb");
-  mamulb_i32(iA, iB, iC);
+  pto_mamulb(iC, iA, iB, &matmul_i32_cfg);
   emit_digest("mamulb", fnv1a_bytes(iC, sizeof(iC)));
 
   zero_i32(iC, kMatElems);
   emit_stage("tmatmul_acc");
-  tmatmul_acc_i32(iA, iB, iC);
+  pto_tmatmul_acc(iC, iA, iB, &matmul_i32_cfg);
   emit_digest("tmatmul_acc", fnv1a_bytes(iC, sizeof(iC)));
 
   zero_i32(iC, kMatElems);
   emit_stage("gemm");
-  gemm_i32(iA, iB, iC);
+  pto_gemm(iC, iA, iB, &matmul_i32_cfg);
   emit_digest("gemm", fnv1a_bytes(iC, sizeof(iC)));
 
   zero_f32(fC, kMatElems);
   emit_stage("gemm_basic");
-  gemm_basic_f32(fA, fB, fC);
+  pto_gemm_basic(fC, fA, fB, &matmul_f32_cfg);
   emit_digest("gemm_basic", fnv1a_bytes(fC, sizeof(fC)));
 
   zero_f32(fC, kMatElems);
-  emit_stage("gemm_demo");
-  gemm_demo_f32(fC, fA, fB);
-  emit_digest("gemm_demo", fnv1a_bytes(fC, sizeof(fC)));
+  emit_stage("gemm_scaled");
+  pto_gemm_scaled(fC, fA, fB, &matmul_f32_cfg);
+  emit_digest("gemm_scaled", fnv1a_bytes(fC, sizeof(fC)));
 
   zero_f32(fC, kMatElems);
   emit_stage("gemm_performance");
-  gemm_performance_f32(fA, fB, fC, PTO_QEMU_SMOKE ? 1 : 2);
+  pto_gemm_performance(fC, fA, fB, &matmul_perf_cfg);
   emit_digest("gemm_performance", fnv1a_bytes(fC, sizeof(fC)));
 
   emit_stage("pre_add_zero");
   zero_f32(fZ, kVecElems);
   emit_stage("add_custom");
-  add_custom_f32(fX, fY, fZ);
+  pto_add_custom(fZ, fX, fY, &add_cfg);
   emit_digest("add_custom", fnv1a_bytes(fZ, sizeof(fZ)));
+
+  zero_f32(smallOut, kSmallVec);
+  emit_stage("relu");
+  pto_relu(smallOut, smallAux, &unary_cfg);
+  emit_digest("relu",
+              fnv1a_bytes(smallOut,
+                          static_cast<usize>(kUnaryN) * sizeof(float)));
+
+  zero_f32(smallOut, kSmallVec);
+  emit_stage("sigmoid");
+  pto_sigmoid(smallOut, smallAux, &unary_cfg);
+  emit_digest("sigmoid",
+              fnv1a_bytes(smallOut,
+                          static_cast<usize>(kUnaryN) * sizeof(float)));
+
+  zero_f32(smallOut, kSmallVec);
+  emit_stage("silu");
+  pto_silu(smallOut, smallAux, &unary_cfg);
+  emit_digest("silu",
+              fnv1a_bytes(smallOut,
+                          static_cast<usize>(kUnaryN) * sizeof(float)));
+
+  zero_f32(smallOut, kSmallVec);
+  emit_stage("tanh");
+  pto_tanh(smallOut, smallAux, &unary_cfg);
+  emit_digest("tanh",
+              fnv1a_bytes(smallOut,
+                          static_cast<usize>(kUnaryN) * sizeof(float)));
+
+  zero_f32(smallOut, kSmallVec);
+  emit_stage("softmax");
+  pto_softmax(smallOut, smallIn, &softmax_cfg);
+  emit_digest("softmax",
+              fnv1a_bytes(smallOut,
+                          static_cast<usize>(kSoftmaxRows * kSoftmaxCols) *
+                              sizeof(float)));
+
+  zero_f32(smallOut, kSmallVec);
+  emit_stage("swiglu");
+  pto_swiglu(smallOut, smallIn, smallAux, &swiglu_cfg);
+  emit_digest("swiglu",
+              fnv1a_bytes(smallOut,
+                          static_cast<usize>(kUnaryN) * sizeof(float)));
 
   emit_stage("pre_flash_attention");
   emit_stage("flash_attention");
-  flash_attention_i32(flashQ, flashK, flashV, flashO);
+  pto_flash_attention(flashO, flashQ, flashK, flashV, nullptr);
   emit_digest("flash_attention", fnv1a_bytes(flashO, sizeof(flashO)));
 
-  emit_stage("flash_attention_demo");
-  flash_attention_demo_f32(flashOf, flashQf, flashKf, flashVf);
-  emit_digest("flash_attention_demo", fnv1a_bytes(flashOf, sizeof(flashOf)));
+  emit_stage("flash_attention_softmax");
+  pto_flash_attention_softmax(flashOf, flashQf, flashKf, flashVf, nullptr);
+  emit_digest("flash_attention_softmax", fnv1a_bytes(flashOf, sizeof(flashOf)));
 
   emit_stage("flash_attention_masked");
-  flash_attention_masked_f32(flashMaskO, flashMaskQ, flashMaskK, flashMaskV);
+  pto_flash_attention_masked(flashMaskO, flashMaskQ, flashMaskK, flashMaskV,
+                             nullptr);
   emit_digest("flash_attention_masked", fnv1a_bytes(flashMaskO, sizeof(flashMaskO)));
 
   zero_f32(flashOf, kFlashF32O);
   emit_stage("fa_performance");
-  fa_performance_f32(flashOf, flashQf, flashKf, flashVf, PTO_QEMU_SMOKE ? 1 : 2);
+  pto_attention_config flash_perf_cfg{
+      pto_dtype::f32, pto_dtype::f32, pto_dtype::f32, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, PTO_QEMU_SMOKE ? 1 : 2, 0u, presets::kNoTiling, 0.0f, 0u};
+  pto_fa_performance(flashOf, flashQf, flashKf, flashVf, &flash_perf_cfg);
   emit_digest("fa_performance", fnv1a_bytes(flashOf, sizeof(flashOf)));
 
-  emit_stage("mla_attention_demo");
-  mla_attention_demo_f32(mlaO, mlaQ, mlaK, mlaV, mlaWq, mlaWk, mlaWv, mlaWo);
-  emit_digest("mla_attention_demo", fnv1a_bytes(mlaO, sizeof(mlaO)));
+  emit_stage("mla_attention");
+  pto_mla_attention(mlaO, mlaQ, mlaK, mlaV, mlaWq, mlaWk, mlaWv, mlaWo, nullptr);
+  emit_digest("mla_attention", fnv1a_bytes(mlaO, sizeof(mlaO)));
 
-  emit_stage("flash_attention_cube_fp16");
-  flash_attention_cube_f16(flashCubeO, flashCubeQ, flashCubeK, flashCubeV);
-  emit_digest("flash_attention_cube_fp16",
+  emit_stage("flash_attention_cube");
+  pto_flash_attention_cube(flashCubeO, flashCubeQ, flashCubeK, flashCubeV,
+                           &flash_cube_cfg);
+  emit_digest("flash_attention_cube",
               fnv1a_bytes(flashCubeO, sizeof(flashCubeO)));
 
   zero_f32(flashOf, kFlashF32O);
-  emit_stage("flash_attention_vec_fp32");
-  flash_attention_vec_f32(flashOf, flashQf, flashKf, flashVf);
-  emit_digest("flash_attention_vec_fp32",
-              fnv1a_bytes(flashOf, sizeof(flashOf)));
+  emit_stage("flash_attention_vec");
+  pto_flash_attention_vec(flashOf, flashQf, flashKf, flashVf,
+                          &flash_vec_f32_cfg);
+  pto_flash_attention_vec(flashVecO, flashVecQ, flashVecK, flashVecV,
+                          &flash_vec_f16_cfg);
+  emit_digest("flash_attention_vec",
+              fnv1a_bytes(flashOf, sizeof(flashOf)) ^
+                  fnv1a_bytes(flashVecO, sizeof(flashVecO)));
 
-  emit_stage("flash_attention_vec_fp16");
-  flash_attention_vec_f16(flashVecO, flashVecQ, flashVecK, flashVecV);
-  emit_digest("flash_attention_vec_fp16",
-              fnv1a_bytes(flashVecO, sizeof(flashVecO)));
+  emit_stage("gqa");
+  pto_gqa(gqaO, gqaQ, gqaK, gqaV, &gqa_cfg);
+  emit_digest("gqa", fnv1a_bytes(gqaO, sizeof(gqaO)));
 
-  emit_stage("gqa_fp16");
-  gqa_f16(gqaO, gqaQ, gqaK, gqaV);
-  emit_digest("gqa_fp16", fnv1a_bytes(gqaO, sizeof(gqaO)));
-
-  emit_stage("sparse_attention_local_fp16");
-  sparse_attention_local_f16(sparseO, sparseQ, sparseK, sparseV,
-                             PTO_QEMU_SMOKE ? 4 : 32);
-  emit_digest("sparse_attention_local_fp16",
+  emit_stage("sparse_attention_local");
+  pto_sparse_attention_local(sparseO, sparseQ, sparseK, sparseV,
+                             &sparse_local_cfg);
+  emit_digest("sparse_attention_local",
               fnv1a_bytes(sparseO, sizeof(sparseO)));
 
-  emit_stage("rmsnorm_fp16");
-  rmsnorm_f16(rmsO, rmsX, rmsGamma, 1e-5f);
-  emit_digest("rmsnorm_fp16", fnv1a_bytes(rmsO, sizeof(rmsO)));
+  emit_stage("rmsnorm");
+  pto_rmsnorm(rmsO, rmsX, rmsGamma, &rms_cfg);
+  emit_digest("rmsnorm", fnv1a_bytes(rmsO, sizeof(rmsO)));
+
+  zero_f32(normOut, kNormElems);
+  emit_stage("batchnorm");
+  pto_batchnorm(normOut, normIn, normMean, normVar, normGamma, normBeta,
+                &batchnorm_cfg);
+  emit_digest("batchnorm",
+              fnv1a_bytes(normOut,
+                          static_cast<usize>(kNormElems) * sizeof(float)));
+
+  zero_f32(normOut, kNormElems);
+  emit_stage("layernorm");
+  pto_layernorm(normOut, normIn, normGamma, normBeta, &layernorm_cfg);
+  emit_digest("layernorm",
+              fnv1a_bytes(normOut,
+                          static_cast<usize>(kNormElems) * sizeof(float)));
 
   zero_f32(smallOut, kSmallVec);
-  emit_stage("gelu_fp32");
-  gelu_f32(smallOut, smallAux, kGeluN);
-  emit_digest("gelu_fp32",
+  emit_stage("gelu");
+  pto_gelu(smallOut, smallAux, &gelu_cfg);
+  emit_digest("gelu",
               fnv1a_bytes(smallOut,
                           static_cast<usize>(kGeluN) * sizeof(float)));
 
   zero_i32(argmaxOut, kSmallVec);
-  emit_stage("argmax_fp32");
-  argmax_f32(argmaxOut, smallIn, kArgmaxRows, kArgmaxCols);
-  emit_digest("argmax_fp32",
+  emit_stage("argmax");
+  pto_argmax(argmaxOut, smallIn, &argmax_cfg);
+  emit_digest("argmax",
               fnv1a_bytes(argmaxOut,
                           static_cast<usize>(kArgmaxRows) * sizeof(int)));
 
   zero_f32(smallOut, kSmallVec);
-  emit_stage("gather_fp32");
-  gather_f32(smallOut, smallIn, smallIdx, static_cast<int>(kSmallVec));
-  emit_digest("gather_fp32", fnv1a_bytes(smallOut, sizeof(smallOut)));
+  emit_stage("gather");
+  pto_gather(smallOut, smallIn, smallIdx, &gather_cfg);
+  emit_digest("gather",
+              fnv1a_bytes(smallOut,
+                          static_cast<usize>(gather_cfg.n) * sizeof(float)));
 
   zero_f32(smallOut, kSmallVec);
-  emit_stage("concat_fp32");
-  concat_f32(smallOut, smallIn, smallAux, static_cast<int>(kSmallVec / 2u),
-             static_cast<int>(kSmallVec / 2u));
-  emit_digest("concat_fp32", fnv1a_bytes(smallOut, sizeof(smallOut)));
+  emit_stage("where");
+  pto_where(smallOut, smallAux, smallIn, fX, &where_cfg);
+  emit_digest("where",
+              fnv1a_bytes(smallOut,
+                          static_cast<usize>(where_cfg.n) * sizeof(float)));
 
   zero_f32(smallOut, kSmallVec);
-  emit_stage("scatter_fp32");
-  scatter_f32(smallOut, smallAux, smallIdx, smallIn, static_cast<int>(kSmallVec));
-  emit_digest("scatter_fp32", fnv1a_bytes(smallOut, sizeof(smallOut)));
+  emit_stage("slice");
+  pto_slice(smallOut, smallIn, &slice_cfg);
+  emit_digest("slice",
+              fnv1a_bytes(smallOut,
+                          static_cast<usize>(kSliceLen) * sizeof(float)));
 
   zero_f32(smallOut, kSmallVec);
-  emit_stage("permute_nhwc_nchw_fp32");
-  permute_nhwc_nchw_f32(smallOut, smallIn, kPermuteN, kPermuteH, kPermuteW,
-                        kPermuteC);
-  emit_digest("permute_nhwc_nchw_fp32",
+  emit_stage("concat");
+  pto_concat(smallOut, smallIn, smallAux, &concat_cfg);
+  emit_digest("concat",
+              fnv1a_bytes(smallOut,
+                          static_cast<usize>(concat_cfg.n_a + concat_cfg.n_b) *
+                              sizeof(float)));
+
+  zero_f32(smallOut, kSmallVec);
+  emit_stage("flatten");
+  pto_flatten(smallOut, smallIn, &unary_layout_cfg);
+  emit_digest("flatten",
+              fnv1a_bytes(smallOut,
+                          static_cast<usize>(unary_layout_cfg.n) * sizeof(float)));
+
+  zero_f32(smallOut, kSmallVec);
+  emit_stage("reshape");
+  pto_reshape(smallOut, smallIn, &unary_layout_cfg);
+  emit_digest("reshape",
+              fnv1a_bytes(smallOut,
+                          static_cast<usize>(unary_layout_cfg.n) * sizeof(float)));
+
+  zero_f32(smallOut, kSmallVec);
+  emit_stage("scatter");
+  pto_scatter(smallOut, smallAux, smallIdx, smallIn, &scatter_cfg);
+  emit_digest("scatter",
+              fnv1a_bytes(smallOut,
+                          static_cast<usize>(scatter_cfg.n) * sizeof(float)));
+
+  zero_f32(smallOut, kSmallVec);
+  emit_stage("squeeze");
+  pto_squeeze(smallOut, smallIn, &unary_layout_cfg);
+  emit_digest("squeeze",
+              fnv1a_bytes(smallOut,
+                          static_cast<usize>(unary_layout_cfg.n) * sizeof(float)));
+
+  zero_f32(smallOut, kSmallVec);
+  emit_stage("unsqueeze");
+  pto_unsqueeze(smallOut, smallIn, &unary_layout_cfg);
+  emit_digest("unsqueeze",
+              fnv1a_bytes(smallOut,
+                          static_cast<usize>(unary_layout_cfg.n) * sizeof(float)));
+
+  zero_f32(smallOut, kSmallVec);
+  emit_stage("stack");
+  pto_stack(smallOut, smallIn, smallAux, &stack_cfg);
+  emit_digest("stack",
+              fnv1a_bytes(smallOut,
+                          static_cast<usize>(kStackN * 2) * sizeof(float)));
+
+  zero_f32(smallOut, kSmallVec);
+  zero_f32(smallOutB, kSmallVec);
+  emit_stage("split");
+  pto_split(smallOut, smallOutB, smallIn, &split_cfg);
+  emit_digest("split",
+              fnv1a_bytes(smallOut,
+                          static_cast<usize>(split_cfg.n_a) * sizeof(float)) ^
+                  fnv1a_bytes(smallOutB,
+                              static_cast<usize>(split_cfg.n_b) * sizeof(float)));
+
+  zero_f32(smallOut, kSmallVec);
+  emit_stage("permute_nhwc_nchw");
+  pto_permute_nhwc_nchw(smallOut, smallIn, &permute_cfg);
+  emit_digest("permute_nhwc_nchw",
               fnv1a_bytes(smallOut,
                           static_cast<usize>(kPermuteN * kPermuteH * kPermuteW *
                                              kPermuteC) *
                               sizeof(float)));
 
   zero_f32(smallOut, kSmallVec);
-  emit_stage("transpose_large_fp32");
-  transpose_large_f32(smallOut, smallIn, kTransposeRows, kTransposeCols);
-  emit_digest("transpose_large_fp32",
+  emit_stage("transpose");
+  pto_transpose(smallOut, smallIn, &transpose_cfg);
+  emit_digest("transpose",
               fnv1a_bytes(smallOut,
                           static_cast<usize>(kTransposeRows * kTransposeCols) *
                               sizeof(float)));
 
   zero_f32(segOut, kSegments);
-  emit_stage("unsorted_segment_sum_fp32");
-  unsorted_segment_sum_f32(segOut, segIds, segData, static_cast<int>(kSmallVec),
-                           static_cast<int>(kSegments));
-  emit_digest("unsorted_segment_sum_fp32",
-              fnv1a_bytes(segOut, sizeof(segOut)));
+  emit_stage("unsorted_segment_sum");
+  pto_unsorted_segment_sum(segOut, segIds, segData, &segment_cfg);
+  emit_digest("unsorted_segment_sum",
+              fnv1a_bytes(segOut,
+                          static_cast<usize>(segment_cfg.num_segments) *
+                              sizeof(float)));
 
   zero_i32(uniqueOut, kUniqueN);
   uniqueCount[0] = 0;
-  emit_stage("unique_i32");
-  unique_i32(uniqueOut, uniqueCount, uniqueIn, static_cast<int>(kUniqueN));
-  emit_digest("unique_i32",
-              fnv1a_bytes(uniqueOut, sizeof(uniqueOut)) ^
+  emit_stage("unique");
+  pto_unique(uniqueOut, uniqueCount, uniqueIn, &unique_cfg);
+  emit_digest("unique",
+              fnv1a_bytes(uniqueOut,
+                          static_cast<usize>(unique_cfg.n) * sizeof(int)) ^
                   fnv1a_bytes(uniqueCount, sizeof(uniqueCount)));
   emit_stage("done");
 }
