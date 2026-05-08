@@ -1,12 +1,12 @@
-# AVS Contract (v0.4)
+# AVS Contract (v0.56)
 
-`avs/linx_avs_v1_test_matrix.yaml` is the only live public bring-up contract for LinxISA `v0.4`.
+`avs/linx_avs_v1_test_matrix.yaml` is the only live public bring-up contract for LinxISA `v0.56`.
 
 ## Canonical Files
 
 - Matrix: `avs/linx_avs_v1_test_matrix.yaml`
 - Status: `avs/linx_avs_v1_test_matrix_status.json`
-- Architecture contract: `docs/architecture/v0.4-architecture-contract.md`
+- Architecture contract: `docs/architecture/v0.56-architecture-contract.md`
 
 ## Required Entry Metadata
 
@@ -15,7 +15,7 @@ Every AVS entry in the canonical matrix carries:
 - `state`: `active` or `archived`
 - `profiles`: architecture or subsystem coverage buckets
 - `must_pass_in_tier`: gate tiers such as `pr` and `nightly`
-- `spec_refs`: canonical `v0.4` spec, manual, or state references
+- `spec_refs`: canonical `v0.56` spec, manual, or state references
 - `requirement` and `pass_fail`: normative closure statements
 
 Only `state: active` entries participate in tier closure.

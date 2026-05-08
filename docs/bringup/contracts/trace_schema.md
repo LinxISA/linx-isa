@@ -13,7 +13,7 @@ All differential validation paths must emit a common architectural trace schema.
   - consumer `X.Y` accepts producer `X.Z` when `Z >= Y`;
   - producer `X.Z` with `Z < Y` must be rejected.
 - Producers may emit an explicit per-row `schema_version`; if omitted, gate tooling
-  must use the active profile default (`1.0` in the current v0.4 strict baseline).
+  must use the active profile default (`1.0` in the current v0.56 strict baseline).
 
 ## Mandatory fields per commit/event
 

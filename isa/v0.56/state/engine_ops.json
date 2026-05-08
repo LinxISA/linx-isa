@@ -1,0 +1,1229 @@
+{
+  "$schema": "https://docs.openclaw.ai/schemas/linxisa/engine_ops.v0.json",
+  "data_types_v056": {
+    "compare_modes": {
+      "0": "EQ",
+      "1": "NE",
+      "2": "LT",
+      "3": "GT",
+      "4": "LE",
+      "5": "GE",
+      "6": "reserve",
+      "7": "reserve"
+    },
+    "cube_bstart_datatype": {
+      "0": "FP64",
+      "1": "FP32",
+      "10": "E2M3",
+      "11": "E2M1x2",
+      "12": "E1M2x2",
+      "13": "E8M0",
+      "14": "HiF4x2",
+      "15": "reserve",
+      "16": "S64",
+      "17": "S32",
+      "18": "S16",
+      "19": "S8",
+      "2": "TF32",
+      "20": "S4x2",
+      "21": "reserve",
+      "22": "reserve",
+      "23": "reserve",
+      "24": "U64",
+      "25": "U32",
+      "26": "U16",
+      "27": "U8",
+      "28": "U4x2",
+      "29": "reserve",
+      "3": "HF32",
+      "30": "reserve",
+      "31": "invalid",
+      "4": "FP16",
+      "5": "BF16",
+      "6": "HiF8",
+      "7": "E4M3",
+      "8": "E5M2",
+      "9": "E3M2"
+    },
+    "float_convert_type_u5": {
+      "0": "fp64",
+      "1": "fp32",
+      "10": "e2m3",
+      "11": "e2m1x2",
+      "12": "e1m2x2",
+      "13": "hif4x2",
+      "14": "e8m0",
+      "15": "reserve",
+      "16": "fp16x2",
+      "17": "e4m3x4",
+      "2": "tf32",
+      "3": "hf32",
+      "4": "fp16",
+      "5": "bf16",
+      "6": "hif8",
+      "7": "e4m3",
+      "8": "e5m2",
+      "9": "e3m2"
+    },
+    "integer_convert_type_u5": {
+      "0": "u64",
+      "1": "u32",
+      "10": "s16",
+      "11": "s8",
+      "12": "s4x2",
+      "13": "s16x2",
+      "14": "s8x4",
+      "2": "u16",
+      "3": "u8",
+      "4": "u4x2",
+      "5": "u16x2",
+      "6": "u8x4",
+      "7": "reserve",
+      "8": "s64",
+      "9": "s32"
+    },
+    "round_modes": {
+      "0": "RNONE",
+      "1": "RNE",
+      "2": "RTZ",
+      "3": "RDN",
+      "4": "RUP",
+      "5": "RNA",
+      "6": "RTO",
+      "7": "RHB"
+    }
+  },
+  "note": "Authoritative semantic catalog for accelerator engine ops in LinxISA v0.56.2.",
+  "profile": "v0.56",
+  "tepl": {
+    "kind": "TileOpcode",
+    "ops": [
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TADD",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 2,
+        "tile_opcode": 0
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TSUB",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 2,
+        "tile_opcode": 1
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TMUL",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 2,
+        "tile_opcode": 2
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "div_by_zero_result": "0",
+        "div_overflow_result": "0",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TDIV",
+        "optional_scalar_status": true,
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "requires_b_ior": true,
+        "requires_b_iot": true,
+        "resume_ok": false,
+        "scalar_status_flags": [
+          "DIV_BY_ZERO_SEEN",
+          "DIV_OVERFLOW_SEEN",
+          "NAN_SEEN"
+        ],
+        "scalar_status_reduce": "or",
+        "src_tiles": 2,
+        "status_absent_behavior": "flags_dropped",
+        "tile_opcode": 3
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TMAX",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 2,
+        "tile_opcode": 4
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TMIN",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 2,
+        "tile_opcode": 5
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TAND",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 2,
+        "tile_opcode": 6
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TOR",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 2,
+        "tile_opcode": 7
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TXOR",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 2,
+        "tile_opcode": 8
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TSHL",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 2,
+        "tile_opcode": 9
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TSHR",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 2,
+        "tile_opcode": 10
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TRELU",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 1,
+        "tile_opcode": 11
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TPRELU",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 2,
+        "tile_opcode": 12
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "missing_required_attr_desc_family": "B.CATR/B.DATR",
+        "missing_required_attr_detail": "0x00",
+        "missing_required_attr_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "missing_required_ior_desc_family": "B.IOR",
+        "missing_required_ior_detail": "0x00",
+        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "name": "TCVT",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "requires_b_arg": true,
+        "requires_b_attr": true,
+        "requires_b_ior": true,
+        "requires_b_iot": true,
+        "resume_ok": false,
+        "src_tiles": 1,
+        "tile_opcode": 13
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TEXP",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "tile_opcode": 14
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TLOG",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "tile_opcode": 15
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TSQRT",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "tile_opcode": 16
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TRSQRT",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "tile_opcode": 17
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TROWMAX",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 1,
+        "tile_opcode": 18
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TROWMIN",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 1,
+        "tile_opcode": 19
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TROWSUM",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 1,
+        "tile_opcode": 20
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TCOLMAX",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 1,
+        "tile_opcode": 21
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TCOLMIN",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 1,
+        "tile_opcode": 22
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TCOLSUM",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 1,
+        "tile_opcode": 23
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TRECIP",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "tile_opcode": 24
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "missing_required_ior_desc_family": "B.IOR",
+        "missing_required_ior_detail": "0x00",
+        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "name": "TEXPANDS",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "requires_b_ior": true,
+        "requires_b_iot": true,
+        "resume_ok": false,
+        "scalar_rhs_broadcast": true,
+        "scalar_rhs_extract": "truncate_low_bits",
+        "scalar_rhs_mixed_signedness": false,
+        "scalar_rhs_signedness": "match_tile_dtype",
+        "scalar_rhs_type": "tile_element_dtype",
+        "src_tiles": 0,
+        "tile_opcode": 25
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": true,
+        "index_range_rule": "unpredictable",
+        "name": "TGATHER",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "tile_opcode": 26
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": true,
+        "index_range_rule": "unpredictable",
+        "name": "TSCATTER",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "tile_opcode": 27
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TRESHAPE",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 1,
+        "tile_opcode": 28
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TTRANSPOSE",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 1,
+        "tile_opcode": 29
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TCOLEXPAND",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 1,
+        "tile_opcode": 30
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TROWEXPAND",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 1,
+        "tile_opcode": 31
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "missing_required_ior_desc_family": "B.IOR",
+        "missing_required_ior_detail": "0x00",
+        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "name": "TADDS",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "requires_b_ior": true,
+        "resume_ok": false,
+        "scalar_rhs_broadcast": true,
+        "scalar_rhs_extract": "truncate_low_bits",
+        "scalar_rhs_mixed_signedness": false,
+        "scalar_rhs_signedness": "match_tile_dtype",
+        "scalar_rhs_type": "tile_element_dtype",
+        "src_tiles": 1,
+        "tile_opcode": 32
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "missing_required_ior_desc_family": "B.IOR",
+        "missing_required_ior_detail": "0x00",
+        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "name": "TSUBS",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "requires_b_ior": true,
+        "resume_ok": false,
+        "scalar_rhs_broadcast": true,
+        "scalar_rhs_extract": "truncate_low_bits",
+        "scalar_rhs_mixed_signedness": false,
+        "scalar_rhs_signedness": "match_tile_dtype",
+        "scalar_rhs_type": "tile_element_dtype",
+        "src_tiles": 1,
+        "tile_opcode": 33
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "missing_required_ior_desc_family": "B.IOR",
+        "missing_required_ior_detail": "0x00",
+        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "name": "TMULS",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "requires_b_ior": true,
+        "resume_ok": false,
+        "scalar_rhs_broadcast": true,
+        "scalar_rhs_extract": "truncate_low_bits",
+        "scalar_rhs_mixed_signedness": false,
+        "scalar_rhs_signedness": "match_tile_dtype",
+        "scalar_rhs_type": "tile_element_dtype",
+        "src_tiles": 1,
+        "tile_opcode": 34
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "missing_required_ior_desc_family": "B.IOR",
+        "missing_required_ior_detail": "0x00",
+        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "name": "TDIVS",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "requires_b_ior": true,
+        "resume_ok": false,
+        "scalar_rhs_broadcast": true,
+        "scalar_rhs_extract": "truncate_low_bits",
+        "scalar_rhs_mixed_signedness": false,
+        "scalar_rhs_signedness": "match_tile_dtype",
+        "scalar_rhs_type": "tile_element_dtype",
+        "src_tiles": 1,
+        "tile_opcode": 35
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "missing_required_ior_desc_family": "B.IOR",
+        "missing_required_ior_detail": "0x00",
+        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "name": "TMAXS",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "requires_b_ior": true,
+        "resume_ok": false,
+        "scalar_rhs_broadcast": true,
+        "scalar_rhs_extract": "truncate_low_bits",
+        "scalar_rhs_mixed_signedness": false,
+        "scalar_rhs_signedness": "match_tile_dtype",
+        "scalar_rhs_type": "tile_element_dtype",
+        "src_tiles": 1,
+        "tile_opcode": 36
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "missing_required_ior_desc_family": "B.IOR",
+        "missing_required_ior_detail": "0x00",
+        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "name": "TMINS",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "requires_b_ior": true,
+        "resume_ok": false,
+        "scalar_rhs_broadcast": true,
+        "scalar_rhs_extract": "truncate_low_bits",
+        "scalar_rhs_mixed_signedness": false,
+        "scalar_rhs_signedness": "match_tile_dtype",
+        "scalar_rhs_type": "tile_element_dtype",
+        "src_tiles": 1,
+        "tile_opcode": 37
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "missing_required_ior_desc_family": "B.IOR",
+        "missing_required_ior_detail": "0x00",
+        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "name": "TANDS",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "requires_b_ior": true,
+        "resume_ok": false,
+        "scalar_rhs_broadcast": true,
+        "scalar_rhs_extract": "truncate_low_bits",
+        "scalar_rhs_mixed_signedness": false,
+        "scalar_rhs_signedness": "match_tile_dtype",
+        "scalar_rhs_type": "tile_element_dtype",
+        "src_tiles": 1,
+        "tile_opcode": 38
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "missing_required_ior_desc_family": "B.IOR",
+        "missing_required_ior_detail": "0x00",
+        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "name": "TORS",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "requires_b_ior": true,
+        "resume_ok": false,
+        "scalar_rhs_broadcast": true,
+        "scalar_rhs_extract": "truncate_low_bits",
+        "scalar_rhs_mixed_signedness": false,
+        "scalar_rhs_signedness": "match_tile_dtype",
+        "scalar_rhs_type": "tile_element_dtype",
+        "src_tiles": 1,
+        "tile_opcode": 39
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "missing_required_ior_desc_family": "B.IOR",
+        "missing_required_ior_detail": "0x00",
+        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "name": "TXORS",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "requires_b_ior": true,
+        "resume_ok": false,
+        "scalar_rhs_broadcast": true,
+        "scalar_rhs_extract": "truncate_low_bits",
+        "scalar_rhs_mixed_signedness": false,
+        "scalar_rhs_signedness": "match_tile_dtype",
+        "scalar_rhs_type": "tile_element_dtype",
+        "src_tiles": 1,
+        "tile_opcode": 40
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "missing_required_ior_desc_family": "B.IOR",
+        "missing_required_ior_detail": "0x00",
+        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "name": "TSHLS",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "requires_b_ior": true,
+        "resume_ok": false,
+        "scalar_rhs_broadcast": true,
+        "scalar_rhs_extract": "truncate_low_bits",
+        "scalar_rhs_mixed_signedness": false,
+        "scalar_rhs_signedness": "match_tile_dtype",
+        "scalar_rhs_type": "tile_element_dtype",
+        "src_tiles": 1,
+        "tile_opcode": 41
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "missing_required_ior_desc_family": "B.IOR",
+        "missing_required_ior_detail": "0x00",
+        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "name": "TSHRS",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "requires_b_ior": true,
+        "resume_ok": false,
+        "scalar_rhs_broadcast": true,
+        "scalar_rhs_extract": "truncate_low_bits",
+        "scalar_rhs_mixed_signedness": false,
+        "scalar_rhs_signedness": "match_tile_dtype",
+        "scalar_rhs_type": "tile_element_dtype",
+        "src_tiles": 1,
+        "tile_opcode": 42
+      }
+    ],
+    "packing": {
+      "function_field_bits": [
+        0,
+        4
+      ],
+      "kind": "mode_function_u6",
+      "mode_field_bits": [
+        5,
+        5
+      ],
+      "modes": [
+        {
+          "function_names": [
+            "TADD",
+            "TSUB",
+            "TMUL",
+            "TDIV",
+            "TMAX",
+            "TMIN",
+            "TAND",
+            "TOR",
+            "TXOR",
+            "TSHL",
+            "TSHR",
+            "TRELU",
+            "TPRELU",
+            "TCVT",
+            "TEXP",
+            "TLOG",
+            "TSQRT",
+            "TRSQRT",
+            "TROWMAX",
+            "TROWMIN",
+            "TROWSUM",
+            "TCOLMAX",
+            "TCOLMIN",
+            "TCOLSUM",
+            "TRECIP",
+            "TEXPANDS",
+            "TGATHER",
+            "TSCATTER",
+            "TRESHAPE",
+            "TTRANSPOSE",
+            "TCOLEXPAND",
+            "TROWEXPAND"
+          ],
+          "mode": 0,
+          "name": "base32"
+        },
+        {
+          "function_names": [
+            "TADDS",
+            "TSUBS",
+            "TMULS",
+            "TDIVS",
+            "TMAXS",
+            "TMINS",
+            "TANDS",
+            "TORS",
+            "TXORS",
+            "TSHLS",
+            "TSHRS"
+          ],
+          "mode": 1,
+          "name": "scalar_rhs_ext",
+          "reserved_function_range": [
+            11,
+            31
+          ]
+        }
+      ],
+      "reserved_high_bits_zero": true,
+      "tile_opcode_formula": "(mode << 5) | function"
+    },
+    "range": [
+      0,
+      1023
+    ]
+  },
+  "tile_capacity_model": {
+    "b_iot_size_imm4_bytes": [
+      0,
+      32,
+      64,
+      128,
+      256,
+      512,
+      1024,
+      2048,
+      4096,
+      8192,
+      16384,
+      32768,
+      65536,
+      131072,
+      262144,
+      524288
+    ],
+    "empty_tile_bytes": 0,
+    "kind": "dynamic_per_descriptor",
+    "normal_tile_max_bytes": 262144,
+    "normal_tile_min_bytes": 256,
+    "physical_contiguity": "required",
+    "thread_total_active_bytes_max": 524288
+  }
+}

@@ -1,7 +1,7 @@
 [[isa-overview]]
 == Instruction set overview
 
-This chapter provides a narrative overview of the major instruction families in the v0.4 catalog. The complete,
+This chapter provides a narrative overview of the major instruction families in the v0.56 catalog. The complete,
 generated listing is in <<insnref>>.
 
 [[isa-overview-scalar]]
@@ -38,7 +38,7 @@ case compact.
 [[isa-overview-vector]]
 === Unified shader-kernel `lx64` space (`l.*` / `v.*`)
 
-The canonical shader-kernel body space in v0.4 is a unified 64-bit `lx64` encoding space used by `MPAR` and `MSEQ`
+The canonical shader-kernel body space in v0.56 is a unified 64-bit `lx64` encoding space used by `MPAR` and `MSEQ`
 kernel bodies:
 
 * if any operand names a per-lane register class (`vt`/`vu`/`vm`/`vn`), the instruction executes as `v.*`,
@@ -50,7 +50,7 @@ kernel bodies:
 
 Both `l.*.brg` and `v.*.brg` are canonical kernel memory forms.
 
-The instruction reference chapter enumerates the encodings present in the v0.4 catalog.
+The instruction reference chapter enumerates the encodings present in the v0.56 catalog.
 
 [[isa-overview-templates]]
 === Template blocks
@@ -65,7 +65,7 @@ The catalog also defines header-driven accelerator families:
 
 * `BSTART.TMA` selector forms and aliases such as `BSTART.TLOAD`, `BSTART.TSTORE`, `BSTART.TMOV`,
 * `BSTART.CUBE` selector forms and aliases such as `BSTART.TMATMUL`, `BSTART.TMATMUL.ACC`, `BSTART.ACCCVT`,
-* `BSTART.TEPL` with `TileOpcode` as the first generic accelerator/template-op selector field; the canonical v0.4
+* `BSTART.TEPL` with `TileOpcode` as the first generic accelerator/template-op selector field; the canonical v0.56
   profile packs TEPL `mode/function` into `TileOpcode[5:0]` and reserves `TileOpcode[9:6]=0`.
 
-Selector values that are not explicitly assigned by the v0.4 catalog are reserved and must not acquire ad hoc semantics.
+Selector values that are not explicitly assigned by the v0.56 catalog are reserved and must not acquire ad hoc semantics.

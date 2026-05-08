@@ -3,7 +3,7 @@
 [[sec-regid10-operand-encoding]]
 == RegId10 Operand Encoding
 
-This section specifies the 10-bit register identifier encoding (``RegId10``) used by vector, tile-memory, and block-IO instruction forms in the canonical `v0.4` profile.
+This section specifies the 10-bit register identifier encoding (``RegId10``) used by vector, tile-memory, and block-IO instruction forms in the canonical `v0.56` profile.
 
 `RegId10` is an encoding-level namespace selector. Architectural semantics come from:
 
@@ -11,7 +11,7 @@ This section specifies the 10-bit register identifier encoding (``RegId10``) use
 * the consuming instruction family, and
 * any explicit type fields carried elsewhere in the instruction.
 
-`RegId10` itself does *not* encode element width, signedness, or floating-point format in the live `v0.4` profile.
+`RegId10` itself does *not* encode element width, signedness, or floating-point format in the live `v0.56` profile.
 
 === Bit layout
 
@@ -27,14 +27,14 @@ This section specifies the 10-bit register identifier encoding (``RegId10``) use
 |`RegId10[9:5]` |Namespace |Definition
 |`5'b00000` |Base scalar namespace |Reuses the architectural 5-bit scalar register code space (`zero` / GPR namespace, plus instruction-family-specific legacy aliases where allowed).
 |`5'b00001` |`ri*` |Imported scalar kernel arguments (`ri0..ri31`). Only the descriptor-bound subset is architecturally valid in a given kernel instance.
-|`5'b00010` |Predicate namespace |Index `28` is `p`, the kernel EXEC mask. All other indices in this class are reserved in canonical `v0.4`.
+|`5'b00010` |Predicate namespace |Index `28` is `p`, the kernel EXEC mask. All other indices in this class are reserved in canonical `v0.56`.
 |`5'b00011` |`lc*` |Loop/lane counters (`lc0..lc2`). Indices `3..31` are reserved.
 |`5'b00100` |`vt*` |Vector T queue bank (`vt`, `vt#1..vt#31`). Index `0` is the architectural push selector.
 |`5'b00101` |`vu*` |Vector U queue bank (`vu`, `vu#1..vu#31`). Index `0` is the architectural push selector.
 |`5'b00110` |`vm*` |Vector M queue bank (`vm`, `vm#1..vm#31`). Index `0` is the architectural push selector.
 |`5'b00111` |`vn*` |Vector N queue bank (`vn`, `vn#1..vn#31`). Index `0` is the architectural push selector.
 |`5'b01000` |Tile-base namespace |`ta`, `tb`, `tc`, `td`, `to`, `ts` selected by index `0..5`. Indices `6..31` are reserved.
-|`5'b01001`..`5'b11111` |Reserved |Reserved in canonical `v0.4`.
+|`5'b01001`..`5'b11111` |Reserved |Reserved in canonical `v0.56`.
 |===
 
 === Base scalar namespace
@@ -65,16 +65,16 @@ Within class `5'b01000`, the low 5-bit index is interpreted as:
 
 * Convert-class vector instructions (`V.FCVT`, `V.FCVTI`, `V.ICVT`, `V.ICVTF`) use the explicit type fields defined in <<sec-convert-type-encoding>>.
 * Other `v.*` forms use mnemonic-defined default type rules or profile-defined lane-shape rules, but those rules are *not* encoded in `RegId10`.
-* In the canonical `v0.4` strict profile, non-convert integer `v.*` families default to decoded `u32` or `s32` semantics by instruction class:
+* In the canonical `v0.56` strict profile, non-convert integer `v.*` families default to decoded `u32` or `s32` semantics by instruction class:
   `V.DIV`/`V.REM`/`V.MAX`/`V.MIN`/`V.CMP.LT`/`V.CMP.GE`/`V.SRA` and their immediate, reduction, and atomic max/min relatives use `s32`;
   other non-convert integer/vector carrier families use `u32` modulo/bitwise carrier semantics unless the instruction defines a narrower field width directly.
 * In the current strict bring-up profile, vector registers remain 32-bit lane carriers even when instruction semantics conceptually widen or narrow values during execution.
 
 === `.reuse` is not part of `RegId10`
 
-The `.reuse` hint belongs to `B.IOT` / `B.IOTI` tile-descriptor operands only.
+The `.reuse` hint belongs to `B.IOT` / `B.IOT` tile-descriptor operands only.
 
-It is *not* encoded as a `RegId10` class variant, and forms such as `vt#1.reuse` are not part of the canonical `v0.4` `RegId10` operand grammar.
+It is *not* encoded as a `RegId10` class variant, and forms such as `vt#1.reuse` are not part of the canonical `v0.56` `RegId10` operand grammar.
 
 === Interaction with `SrcRType`
 

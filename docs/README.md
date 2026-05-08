@@ -7,12 +7,12 @@ This directory contains the complete documentation suite for LinxISA.
 ```
 docs/
 ├── architecture/           # ISA specification and manual
-│   ├── v0.4-architecture-contract.md    # ISA v0.4 contract
-│   ├── v0.4-hardening-policy.md         # Hardening selection and fallback policy
-│   ├── v0.4-workload-engine-model.md    # Workload-class to engine mapping
-│   ├── v0.4-rendering-kernel-authoring.md # Rendering kernel authoring guide
-│   ├── v0.4-rendering-pto-contract.md   # Rendering PTO carrier and selector contract
-│   ├── v0.4-rendering-command-contract.md # Rendering command lowering contract
+│   ├── v0.56-architecture-contract.md    # ISA v0.56 contract
+│   ├── v0.56-hardening-policy.md         # Hardening selection and fallback policy
+│   ├── v0.56-workload-engine-model.md    # Workload-class to engine mapping
+│   ├── v0.56-rendering-kernel-authoring.md # Rendering kernel authoring guide
+│   ├── v0.56-rendering-pto-contract.md   # Rendering PTO carrier and selector contract
+│   ├── v0.56-rendering-command-contract.md # Rendering command lowering contract
 │   └── isa-manual/                      # Full ISA manual (AsciiDoc)
 │
 ├── bringup/               # Bring-up and validation
@@ -31,7 +31,7 @@ docs/
 │   └── phases/                         # Phased bring-up plans
 │
 ├── reference/              # Examples and guides
-│   ├── examples/v0.3/     # Assembly sample pack
+│   ├── examples/v0.56/    # Assembly sample pack
 │   ├── linxisa-call-ret-contract.md   # ABI contract
 │   └── encoding_space_report.md       # Encoding analysis
 │
@@ -60,12 +60,12 @@ docs/
 | Topic | File |
 |-------|------|
 | **New Contributors** | [bringup/GETTING_STARTED.md](bringup/GETTING_STARTED.md) |
-| **ISA Specification** | [architecture/v0.4-architecture-contract.md](architecture/v0.4-architecture-contract.md) |
-| **Hardening Policy** | [architecture/v0.4-hardening-policy.md](architecture/v0.4-hardening-policy.md) |
-| **Workload Engine Model** | [architecture/v0.4-workload-engine-model.md](architecture/v0.4-workload-engine-model.md) |
-| **Rendering Kernel Guide** | [architecture/v0.4-rendering-kernel-authoring.md](architecture/v0.4-rendering-kernel-authoring.md) |
-| **Rendering PTO Contract** | [architecture/v0.4-rendering-pto-contract.md](architecture/v0.4-rendering-pto-contract.md) |
-| **Rendering Command Contract** | [architecture/v0.4-rendering-command-contract.md](architecture/v0.4-rendering-command-contract.md) |
+| **ISA Specification** | [architecture/v0.56-architecture-contract.md](architecture/v0.56-architecture-contract.md) |
+| **Hardening Policy** | [architecture/v0.56-hardening-policy.md](architecture/v0.56-hardening-policy.md) |
+| **Workload Engine Model** | [architecture/v0.56-workload-engine-model.md](architecture/v0.56-workload-engine-model.md) |
+| **Rendering Kernel Guide** | [architecture/v0.56-rendering-kernel-authoring.md](architecture/v0.56-rendering-kernel-authoring.md) |
+| **Rendering PTO Contract** | [architecture/v0.56-rendering-pto-contract.md](architecture/v0.56-rendering-pto-contract.md) |
+| **Rendering Command Contract** | [architecture/v0.56-rendering-command-contract.md](architecture/v0.56-rendering-command-contract.md) |
 | **Matmul Research** | [matmul/low-precision-inner-vs-outer-product.md](matmul/low-precision-inner-vs-outer-product.md) |
 | **AVS Contract** | [bringup/AVS_CONTRACT.md](bringup/AVS_CONTRACT.md) |
 | **Rendering Bring-up** | [bringup/rendering_vulkan_bringup.md](bringup/rendering_vulkan_bringup.md) |
@@ -76,8 +76,8 @@ docs/
 | **Superproject Methodology** | [project/superproject-bringup-methodology.md](project/superproject-bringup-methodology.md) |
 | **New Agent SOP** | [project/new-agent-sop.md](project/new-agent-sop.md) |
 | **Maintainer Repin Checklist** | [project/maintainer-repin-checklist.md](project/maintainer-repin-checklist.md) |
-| **中文 PDF 手册** | [project/linxisa-superproject-methodology-zh.pdf](project/linxisa-superproject-methodology-zh.pdf) |
-| **中文白皮书** | [project/superproject-whitepaper-zh.pdf](project/superproject-whitepaper-zh.pdf) |
+| **Chinese PDF Manual** | [project/linxisa-superproject-methodology-zh.pdf](project/linxisa-superproject-methodology-zh.pdf) |
+| **Chinese White Paper** | [project/superproject-whitepaper-zh.pdf](project/superproject-whitepaper-zh.pdf) |
 
 ## Key Concepts
 
@@ -94,7 +94,7 @@ See [bringup/PROGRESS.md](bringup/PROGRESS.md) for current gate status.
 
 ### Architecture Contract
 
-The ISA v0.4 contract defines mandatory behaviors:
+The ISA v0.56 contract defines mandatory behaviors:
 
 1. Block-structured execution is mandatory
 2. Control-flow targets MUST resolve to legal block boundaries

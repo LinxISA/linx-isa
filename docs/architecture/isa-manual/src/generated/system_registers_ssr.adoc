@@ -1,5 +1,5 @@
 // Generated file. Do not edit by hand.
-// Source: linxisa-v0.4.json (state.system_registers)
+// Source: linxisa-v0.56.json (state.system_registers)
 [[ssr-table]]
 ==== System Status Registers (SSR)
 
@@ -26,12 +26,8 @@ SSR access instructions:
 |`0x0023` |`VERSION` |RO |Core version.
 |`0x0024` |`LCFR` |RO |Core feature description (includes LaneNum).
 |`0x0025` |`LCFR_EN` |RW |Core feature enable.
-|`0x0050` |`LB0` |RW |Loop/lane boundary register 0 (bring-up).
-|`0x0051` |`LB1` |RW |Loop/lane boundary register 1 (bring-up).
-|`0x0052` |`LB2` |RW |Loop/lane boundary register 2 (bring-up).
-|`0x0053` |`LC0` |RW |Loop/lane counter register 0 (bring-up).
-|`0x0054` |`LC1` |RW |Loop/lane counter register 1 (bring-up).
-|`0x0055` |`LC2` |RW |Loop/lane counter register 2 (bring-up).
+|`0x0050` |`BLOCKNUM` |RO |Block Number. Configured by system controller before kernel launch; identifies total logical blocks participating in a parallel task.
+|`0x0051` |`BLOCKID` |RO |Block ID. Configured by system controller before kernel launch; identifies the current logical block for debug, trace, and block-level parallel programming.
 |`0x0C00` |`CYCLE` |RO |Cycle counter (bring-up may model as instruction count).
 |===
 
@@ -73,7 +69,7 @@ Use `HL.SSRGET/HL.SSRSET` when the full `SSR_ID` does not fit in 12 bits.
 |===
 
 [[ssr-ebarg]]
-==== EBARG group (v0.4)
+==== EBARG group (v0.56)
 
 EBARG is the authoritative trap/context snapshot for v0.2. EBARG words are ACR-scoped manager-family SSRs (0xnf40+).
 
@@ -102,7 +98,7 @@ EBARG is the authoritative trap/context snapshot for v0.2. EBARG words are ACR-s
 |===
 
 [[ssr-debug]]
-==== Debug SSRs (v0.4 bring-up)
+==== Debug SSRs (v0.56 bring-up)
 
 v0.2 bring-up debug SSRs (breakpoints/watchpoints with optional linking).
 

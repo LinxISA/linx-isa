@@ -24,7 +24,7 @@ Code generation and tooling should assume at least 16-bit alignment for instruct
 [[encoding-prefix-suffix]]
 === Prefix/suffix composition (48-bit and 64-bit forms)
 
-The v0.4 encoding model defines:
+The v0.56 encoding model defines:
 
 * **Main** instructions: standalone instructions with their own semantics (16-bit or 32-bit).
 * **Prefix** instructions: do not have standalone semantics; they *augment* the following main/postfix instruction.
@@ -53,7 +53,7 @@ Mnemonic prefixes are used to distinguish families of encodings:
 
 The base scalar ISA uses unprefixed mnemonics (e.g. `add`, `ld`, `setc.*`, `bstart.*`).
 
-Within canonical `MPAR`/`MSEQ` shader-kernel bodies, v0.4 adds a unified `lx64` execution rule:
+Within canonical `MPAR`/`MSEQ` shader-kernel bodies, v0.56 adds a unified `lx64` execution rule:
 
 * if any operand names `vt`/`vu`/`vm`/`vn`, the instruction executes in the per-lane `v.*` domain,
 * otherwise it executes in the scalar-uniform `l.*` domain,
@@ -164,7 +164,7 @@ late-stage optimization:
 [[encoding-json]]
 === The machine-readable catalog
 
-The authoritative encoding details live in `isa/v0.4/linxisa-v0.4.json`:
+The authoritative encoding details live in `isa/v0.56/linxisa-v0.56.json`:
 
 * Each instruction form has `parts[].segments[]` describing `[msb:lsb]` bit ranges.
 * Each form includes derived `encoding` fields (`mask`, `match`, `pattern`, `fields`) suitable for generating

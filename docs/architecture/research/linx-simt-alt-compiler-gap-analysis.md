@@ -5,7 +5,7 @@
 This note analyzes the alternative-compiler output in `/Users/zhoubot/linx-simt.s` against:
 
 - the source intent in `/Users/zhoubot/linx-simt.c`
-- the canonical `v0.4` ISA manual
+- the canonical `v0.56` ISA manual
 - the current LLVM Linx SIMT lowering in `compiler/llvm/llvm/lib/Target/LinxISA/LinxISASIMTAutoVectorize.cpp`
 - the current QEMU Linx vector-body execution model in `emulator/qemu/target/linx/translate.c`
 
@@ -52,7 +52,7 @@ These are not the main missing pieces:
   - The body is full of data-dependent exits and re-entry points: `b.ne` / `j` split the body into many internal blocks (`/Users/zhoubot/linx-simt.s:71-72`, `/Users/zhoubot/linx-simt.s:95-96`, `/Users/zhoubot/linx-simt.s:173-174`, `/Users/zhoubot/linx-simt.s:191-192`, `/Users/zhoubot/linx-simt.s:233-234`).
   - The compiler keeps lane state alive across those splits with `v.psel`, repeated `v.cmp.* ->p`, and many `.local` spills/reloads (`/Users/zhoubot/linx-simt.s:154-173`, `/Users/zhoubot/linx-simt.s:178-210`, `/Users/zhoubot/linx-simt.s:239-257`).
 - Current canonical design:
-  - The `v0.4` manual defines one scalar-uniform control-flow context per group plus EXEC mask `p` (`docs/architecture/isa-manual/src/chapters/03_programming_model.adoc:121-167`).
+  - The `v0.56` manual defines one scalar-uniform control-flow context per group plus EXEC mask `p` (`docs/architecture/isa-manual/src/chapters/03_programming_model.adoc:121-167`).
   - SIMT bodies are defined as one-lane bodies replayed over `lc0..lc2` tuples (`docs/architecture/isa-manual/src/chapters/04_block_isa.adoc:500-521`).
 - Why this is a gap:
   - That contract is enough for replay-style vector loops.
@@ -75,7 +75,7 @@ These are not the main missing pieces:
   - The body repeatedly turns vector conditions into `p`, then materializes `p` back into scalar temporaries, then branches (`/Users/zhoubot/linx-simt.s:68-71`, `/Users/zhoubot/linx-simt.s:88-96`, `/Users/zhoubot/linx-simt.s:163-173`, `/Users/zhoubot/linx-simt.s:184-191`).
   - It also uses `v.psel` to manually merge per-lane state (`/Users/zhoubot/linx-simt.s:154-160`).
 - Current canonical design:
-  - `v0.4` explicitly separates block-control predicate state (`BARG.CARG`) from kernel EXEC mask `p` (`docs/architecture/isa-manual/src/chapters/03_programming_model.adoc:109-119`).
+  - `v0.56` explicitly separates block-control predicate state (`BARG.CARG`) from kernel EXEC mask `p` (`docs/architecture/isa-manual/src/chapters/03_programming_model.adoc:109-119`).
   - `SETC.*` does not mask vector lanes; `V.CMP.* ->p` is the normative mask producer (`docs/architecture/isa-manual/src/chapters/04_block_isa.adoc:618-625`).
 - Why this is a gap:
   - The current model gives a mask register, but not a full mask-control algebra for divergent execution.
@@ -93,7 +93,7 @@ These are not the main missing pieces:
     - mask query operations (`any`, `all`, `none`)
     - mask save/restore or stack operations
     - explicit convergence semantics for inner branches
-  - If that is too large for `v0.4`, then codify a strict predication-only subset and ban code shapes like this from canonical lowering.
+  - If that is too large for `v0.56`, then codify a strict predication-only subset and ban code shapes like this from canonical lowering.
 
 #### Gap 3: Launch geometry and group width are under-specified for alternative SIMT compilers
 
@@ -252,7 +252,7 @@ These are not the main missing pieces:
 
 ## Overall Assessment
 
-The alternative compiler is not primarily exposing missing single instructions. It is exposing that the current `v0.4` SIMT story is still a partially hardened replay model, while this hash-table kernel wants a more explicit GPU-like execution contract.
+The alternative compiler is not primarily exposing missing single instructions. It is exposing that the current `v0.56` SIMT story is still a partially hardened replay model, while this hash-table kernel wants a more explicit GPU-like execution contract.
 
 The deepest missing pieces are architectural:
 

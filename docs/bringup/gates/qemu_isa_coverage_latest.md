@@ -1,17 +1,17 @@
 # ISA vs QEMU Coverage Snapshot
 
-- Generated (UTC): `2026-04-24 00:09:48Z`
+- Generated (UTC): `2026-05-08 15:41:23Z`
 - Spec unique mnemonics: `710`
 - QEMU unique decode mnemonics (non-internal): `640`
-- QEMU mapped spec mnemonics: `618`
-- Mnemonic coverage: `618/710` (`87.04%`)
+- QEMU mapped spec mnemonics: `616`
+- Mnemonic coverage: `616/710` (`86.76%`)
 - Spec legal forms: `740`
-- QEMU mapped spec forms: `613`
-- Form coverage: `613/740` (`82.84%`)
-- Missing spec mnemonics: `92`
-- Missing spec forms: `127`
+- QEMU mapped spec forms: `612`
+- Form coverage: `612/740` (`82.7%`)
+- Missing spec mnemonics: `94`
+- Missing spec forms: `128`
 - Reserved spec forms: `0`
-- Unmapped QEMU mnemonics: `5`
+- Unmapped QEMU mnemonics: `7`
 
 ## Mnemonic Coverage By Prefix
 
@@ -27,7 +27,7 @@
 - `ANDIW`: `1`
 - `ANDW`: `1`
 - `ASSERT`: `1`
-- `B`: `17`
+- `B`: `15`
 - `BC`: `2`
 - `BCNT`: `1`
 - `BIC`: `1`
@@ -174,6 +174,7 @@
 
 ## Missing Mnemonics By Prefix
 
+- `B`: `2`
 - `C`: `1`
 - `V`: `90`
 - `XB`: `1`
@@ -192,7 +193,7 @@
 - `ANDIW`: `1`
 - `ANDW`: `1`
 - `ASSERT`: `1`
-- `B`: `18`
+- `B`: `17`
 - `BC`: `2`
 - `BCNT`: `1`
 - `BIC`: `1`
@@ -339,7 +340,7 @@
 
 ## Missing Forms By Prefix
 
-- `B`: `9`
+- `B`: `10`
 - `BSTART`: `14`
 - `C`: `2`
 - `DC`: `2`
@@ -355,9 +356,13 @@
 - `b_arg_nd2zn`
 - `b_arg_norm`
 - `b_arg_nz2dn`
+- `b_attr`
+- `b_ioti`
 
 ## Missing Spec Mnemonics (First 200)
 
+- `B.CATR`
+- `B.DATR`
 - `C.SETRET`
 - `V.LB`
 - `V.LBI`
@@ -458,10 +463,11 @@
 - `B.ARG [len=32 mask=0xffffffff match=0x18022423]`
 - `B.ARG [len=32 mask=0xffffffff match=0x20fae23]`
 - `B.ARG [len=32 mask=0xffffffff match=0xfa023]`
+- `B.CATR [len=32 mask=0x7fff match=0x23]`
+- `B.DATR [len=32 mask=0x707f match=0x1023]`
 - `B.IOT [len=32 mask=0x707f match=0x4013]`
-- `B.IOT [len=32 mask=0x707f match=0x5013]`
-- `B.IOTI [len=32 mask=0x707f match=0x6013]`
-- `B.IOTI [len=32 mask=0x707f match=0x7013]`
+- `B.IOT [len=32 mask=0x803f707f match=0x5013]`
+- `B.IOT [len=32 mask=0xc03fffff match=0x6013]`
 - `BSTART CALL [len=32 mask=0xf83f000f match=0x50160002]`
 - `BSTART [len=32 mask=0x7f match=0x11]`
 - `BSTART [len=32 mask=0x7f match=0x21]`

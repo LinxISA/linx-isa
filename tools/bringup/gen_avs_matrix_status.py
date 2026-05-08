@@ -129,7 +129,7 @@ def main(argv: list[str]) -> int:
                     slot["pass"] += 1
 
     payload = {
-        "schema_version": "linx-avs-v0.4-status-v3",
+        "schema_version": "linx-avs-v0.56-status-v3",
         "generated_at_utc": _utc_now(),
         "matrix_file": str(Path(args.matrix)),
         "coverage_profile_summaries": coverage_profile_summaries,

@@ -10,7 +10,7 @@
   Done means: both coverage checks pass with no missing mnemonics.
   Status: ✅ PASS (2026-03-08) - `analyze_coverage.py --fail-under 100` reports `Coverage: 100.0%` for both `out-linx64` and `out-linx32`.
 
-- [x] ID: LLVM-003 Confirm canonical v0.4 TEPL tile opcodes in LLVM stay aligned with the manual and other consumers.
+- [x] ID: LLVM-003 Confirm canonical v0.56 TEPL tile opcodes in LLVM stay aligned with the manual and other consumers.
   Command: `python3 tools/bringup/check_tepl_encoding.py --root .`
   Done means: script returns `OK` and no legacy TEPL encoding is present.
   Status: ✅ PASS (2026-02-23) - `check_tepl_encoding.py` returns `OK` (log: `docs/bringup/gates/logs/2026-02-23-r2-pin-reassess/pin/compiler_tepl.log`).

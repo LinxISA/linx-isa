@@ -75,13 +75,13 @@ def main() -> int:
     args = ap.parse_args()
 
     repo_root = Path(args.repo_root).resolve()
-    allow_prefixes = [p.rstrip("/") + "/" for p in args.allow_prefix]
+    allow_paths = [p.rstrip("/") for p in args.allow_prefix]
 
     failures: List[str] = []
     for rel in _git_ls_files(repo_root):
         if _skip_extension(rel):
             continue
-        if any(rel.startswith(p) for p in allow_prefixes):
+        if any(rel == p or rel.startswith(p + "/") or rel.startswith(p + ".") for p in allow_paths):
             continue
         p = repo_root / rel
         try:
@@ -110,4 +110,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

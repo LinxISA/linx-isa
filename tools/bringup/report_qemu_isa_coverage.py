@@ -313,7 +313,7 @@ def _render_markdown(report: dict[str, object], out_path: Path) -> None:
 
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description="Generate ISA-vs-QEMU coverage report")
-    ap.add_argument("--spec", default="isa/v0.4/linxisa-v0.4.json", help="Path to compiled ISA JSON")
+    ap.add_argument("--spec", default="isa/v0.56/linxisa-v0.56.json", help="Path to compiled ISA JSON")
     ap.add_argument(
         "--qemu-root",
         default="emulator/qemu",

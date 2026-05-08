@@ -1,4 +1,4 @@
-version: linx-avs-v0.4
+version: linx-avs-v0.56
 status: canonical
 last_updated: "2026-03-07"
 
@@ -33,7 +33,7 @@ tests:
     profiles: [LNX-S32, LNX-S64]
     must_pass_in_tier: [nightly]
     spec_refs:
-      - docs/architecture/v0.4-architecture-contract.md
+      - docs/architecture/v0.56-architecture-contract.md
       - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
     requirement: "Any encoding not matched by the canonical ISA catalog traps as illegal instruction."
     pass_fail: "QEMU and reference decode vectors trap on the same byte sequence with no partial side effects."
@@ -46,7 +46,7 @@ tests:
     must_pass_in_tier: [nightly]
     spec_refs:
       - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
-      - isa/v0.4/linxisa-v0.4.json
+      - isa/v0.56/linxisa-v0.56.json
     requirement: "All-zero 16-bit encoding (0x0000) is handled intentionally as C.BSTOP or defined illegal, consistently."
     pass_fail: "Executing 0x0000 at a valid TPC produces the architecturally defined behavior."
 
@@ -57,9 +57,9 @@ tests:
     profiles: [LNX-S32, LNX-S64, LNX-PRIV, LNX-ATOM, LNX-FP, LNX-VPAR, LNX-VSEQ, LNX-TILE]
     must_pass_in_tier: [pr, nightly]
     spec_refs:
-      - isa/v0.4/linxisa-v0.4.json
+      - isa/v0.56/linxisa-v0.56.json
       - docs/architecture/isa-manual/src/generated/instruction_reference.adoc
-    requirement: "llvm-objdump recognizes and prints a mnemonic token for every canonical v0.4 spec mnemonic."
+    requirement: "llvm-objdump recognizes and prints a mnemonic token for every canonical v0.56 spec mnemonic."
     pass_fail: "python3 avs/compiler/linx-llvm/tests/analyze_coverage.py --fail-under 100 exits 0."
 
   - id: AVS-TOOL-010
@@ -69,9 +69,9 @@ tests:
     profiles: [LNX-S32, LNX-S64]
     must_pass_in_tier: [pr, nightly]
     spec_refs:
-      - isa/v0.4/linxisa-v0.4.json
+      - isa/v0.56/linxisa-v0.56.json
       - docs/architecture/isa-manual/src/chapters/06_assembly_conventions.adoc
-    requirement: "llvm-mc asm/disasm round-trip for canonical instruction forms matches the v0.4 catalog."
+    requirement: "llvm-mc asm/disasm round-trip for canonical instruction forms matches the v0.56 catalog."
     pass_fail: "Assemble, disassemble, and remap mnemonic back to the same canonical spec entry for the generated vector set."
 
   - id: AVS-TOOL-011
@@ -81,7 +81,7 @@ tests:
     profiles: [LNX-S32, LNX-S64]
     must_pass_in_tier: [pr, nightly]
     spec_refs:
-      - isa/v0.4/linxisa-v0.4.json
+      - isa/v0.56/linxisa-v0.56.json
       - docs/reference/encoding_space_report.md
     requirement: "Generated spec decode vectors disassemble with 100% canonical mnemonic coverage."
     pass_fail: "99_spec_decode objdump coverage remains 100% for linx32 and linx64."
@@ -93,7 +93,7 @@ tests:
     profiles: [LNX-S32, LNX-S64]
     must_pass_in_tier: [pr, nightly]
     spec_refs:
-      - docs/architecture/v0.4-architecture-contract.md
+      - docs/architecture/v0.56-architecture-contract.md
       - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
     requirement: "Control-flow targets must land on block start markers."
     pass_fail: "Jumping into the middle of a block traps with correct BPC/TPC capture."
@@ -107,7 +107,7 @@ tests:
     spec_refs:
       - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
       - docs/architecture/isa-manual/src/chapters/03_programming_model.adoc
-    requirement: "Block boundary commit rules and implicit boundary transitions follow the v0.4 manual."
+    requirement: "Block boundary commit rules and implicit boundary transitions follow the v0.56 manual."
     pass_fail: "Directed programs show correct transitions with and without explicit BSTOP."
 
   - id: AVS-BLK-003
@@ -141,7 +141,7 @@ tests:
     must_pass_in_tier: [pr, nightly]
     spec_refs:
       - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
-      - docs/architecture/v0.4-architecture-contract.md
+      - docs/architecture/v0.56-architecture-contract.md
     requirement: "Canonical vector block types are BSTART.VPAR and BSTART.VSEQ only."
     pass_fail: "Repo and runtime suites contain no live BSTART.VEC behavior."
 
@@ -153,7 +153,7 @@ tests:
     must_pass_in_tier: [pr, nightly]
     spec_refs:
       - docs/architecture/isa-manual/src/chapters/12_alu.adoc
-      - isa/v0.4/linxisa-v0.4.json
+      - isa/v0.56/linxisa-v0.56.json
     requirement: "ADD/ADDI/SUB/SUBI correctness includes edge cases."
     pass_fail: "Directed tests cover 0, -1, INT_MIN/INT_MAX, and mixed-sign behavior."
 
@@ -165,7 +165,7 @@ tests:
     must_pass_in_tier: [pr, nightly]
     spec_refs:
       - docs/architecture/isa-manual/src/chapters/12_alu.adoc
-      - isa/v0.4/linxisa-v0.4.json
+      - isa/v0.56/linxisa-v0.56.json
     requirement: "MUL/DIV/REM correctness includes signedness and divide-by-zero behavior."
     pass_fail: "Directed tests cover DIV/DIVU/REM/REMU and *W forms with defined outcomes."
 
@@ -224,7 +224,7 @@ tests:
     must_pass_in_tier: [pr, nightly]
     spec_refs:
       - docs/architecture/isa-manual/src/chapters/09_memory_operations.adoc
-      - isa/v0.4/state/memory_model.json
+      - isa/v0.56/state/memory_model.json
     requirement: "Scaled versus unscaled immediate offsets compute exact addresses."
     pass_fail: "Directed tests validate addresses touched by scaled and .U families."
 
@@ -235,7 +235,7 @@ tests:
     profiles: [LNX-ATOM]
     must_pass_in_tier: [nightly]
     spec_refs:
-      - isa/v0.4/state/memory_model.json
+      - isa/v0.56/state/memory_model.json
       - docs/architecture/isa-manual/src/chapters/14_amo.adoc
     requirement: "Atomic .aq/.rl qualifiers enforce acquire/release ordering as specified."
     pass_fail: "Litmus tests exclude forbidden outcomes when qualifiers are used."
@@ -247,7 +247,7 @@ tests:
     profiles: [LNX-ATOM]
     must_pass_in_tier: [nightly]
     spec_refs:
-      - isa/v0.4/state/memory_model.json
+      - isa/v0.56/state/memory_model.json
       - docs/architecture/isa-manual/src/chapters/14_amo.adoc
     requirement: "FENCE.D pred,succ orders the specified operation classes."
     pass_fail: "Litmus tests and microbenchmarks confirm ordering and no-op cases."
@@ -259,7 +259,7 @@ tests:
     profiles: [LNX-ATOM]
     must_pass_in_tier: [nightly]
     spec_refs:
-      - isa/v0.4/state/memory_model.json
+      - isa/v0.56/state/memory_model.json
       - docs/architecture/isa-manual/src/chapters/14_amo.adoc
     requirement: "FENCE.I synchronizes instruction fetch with prior executable stores."
     pass_fail: "Self-modifying-code test behaves as specified or traps only when the spec says it may."
@@ -271,7 +271,7 @@ tests:
     profiles: [LNX-ATOM]
     must_pass_in_tier: [nightly]
     spec_refs:
-      - isa/v0.4/state/memory_model.json
+      - isa/v0.56/state/memory_model.json
       - docs/architecture/isa-manual/src/chapters/14_amo.adoc
     requirement: "Message passing requires acquire/release or fence to forbid the weak outcome."
     pass_fail: "Litmus harness observes allowed and forbidden outcome sets per requirement."
@@ -283,7 +283,7 @@ tests:
     profiles: [LNX-ATOM]
     must_pass_in_tier: [nightly]
     spec_refs:
-      - isa/v0.4/state/memory_model.json
+      - isa/v0.56/state/memory_model.json
       - docs/architecture/isa-manual/src/chapters/14_amo.adoc
     requirement: "FENCE.D orders MMIO and Normal memory when O is selected."
     pass_fail: "Directed tests with the MMIO model observe ordering consistent with the fence definition."
@@ -296,7 +296,7 @@ tests:
     must_pass_in_tier: [pr, nightly]
     spec_refs:
       - docs/architecture/isa-manual/src/chapters/10_system_and_privilege.adoc
-      - docs/architecture/v0.4-architecture-contract.md
+      - docs/architecture/v0.56-architecture-contract.md
     requirement: "ACRC is last in a block and routes or traps as specified."
     pass_fail: "Placement violations trigger the defined trap; valid requests route to the managing ring vector."
 
@@ -308,7 +308,7 @@ tests:
     must_pass_in_tier: [pr, nightly]
     spec_refs:
       - docs/architecture/isa-manual/src/chapters/10_system_and_privilege.adoc
-      - isa/v0.4/state/kernel_execution.json
+      - isa/v0.56/state/kernel_execution.json
     requirement: "ACRE restores state per the manual."
     pass_fail: "Trap handler returns and execution resumes at the expected block start."
 
@@ -393,7 +393,7 @@ tests:
     spec_refs:
       - docs/architecture/isa-manual/src/chapters/13_fsu.adoc
       - isa/sail/semantics_status.json
-    requirement: "Scalar FP ops match the v0.4 numeric and FCSR rules."
+    requirement: "Scalar FP ops match the v0.56 numeric and FCSR rules."
     pass_fail: "Directed tests cover NaNs, signed zero, infinities, and flag setting or clearing."
 
   - id: AVS-FP-002
@@ -415,7 +415,7 @@ tests:
     profiles: [LNX-VPAR, LNX-VSEQ]
     must_pass_in_tier: [nightly]
     spec_refs:
-      - docs/architecture/v0.4-architecture-contract.md
+      - docs/architecture/v0.56-architecture-contract.md
       - docs/architecture/isa-manual/src/chapters/20_vec.adoc
     requirement: "Vector ops that require vector blocks trap when executed outside vector blocks."
     pass_fail: "Vector op outside the correct header traps; inside the header it executes and updates state."
@@ -451,7 +451,7 @@ tests:
     profiles: [LNX-S32, LNX-S64]
     must_pass_in_tier: [pr, nightly]
     spec_refs:
-      - docs/architecture/v0.4-architecture-contract.md
+      - docs/architecture/v0.56-architecture-contract.md
       - docs/architecture/isa-manual/src/chapters/10_system_and_privilege.adoc
     requirement: "Illegal encodings trap deterministically with no partial state committed."
     pass_fail: "Negative tests validate trap PC and cause plus unchanged regs and memory."

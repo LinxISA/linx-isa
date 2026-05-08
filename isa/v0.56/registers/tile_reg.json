@@ -1,0 +1,411 @@
+{
+  "allocation_model": "dynamic_per_descriptor",
+  "count": 64,
+  "depth_per_hand": 16,
+  "description": "LinxISA v0.56.2 tile registers. 64 logical tiles organized as T/U/M/N hands with 16 queue entries per hand; each active tile has dynamic descriptor-defined capacity under the per-thread total-capacity limit.",
+  "entries": [
+    {
+      "code": 0,
+      "hand": "T",
+      "index": 1,
+      "name": "T#1"
+    },
+    {
+      "code": 1,
+      "hand": "T",
+      "index": 2,
+      "name": "T#2"
+    },
+    {
+      "code": 2,
+      "hand": "T",
+      "index": 3,
+      "name": "T#3"
+    },
+    {
+      "code": 3,
+      "hand": "T",
+      "index": 4,
+      "name": "T#4"
+    },
+    {
+      "code": 4,
+      "hand": "T",
+      "index": 5,
+      "name": "T#5"
+    },
+    {
+      "code": 5,
+      "hand": "T",
+      "index": 6,
+      "name": "T#6"
+    },
+    {
+      "code": 6,
+      "hand": "T",
+      "index": 7,
+      "name": "T#7"
+    },
+    {
+      "code": 7,
+      "hand": "T",
+      "index": 8,
+      "name": "T#8"
+    },
+    {
+      "code": 8,
+      "hand": "T",
+      "index": 9,
+      "name": "T#9"
+    },
+    {
+      "code": 9,
+      "hand": "T",
+      "index": 10,
+      "name": "T#10"
+    },
+    {
+      "code": 10,
+      "hand": "T",
+      "index": 11,
+      "name": "T#11"
+    },
+    {
+      "code": 11,
+      "hand": "T",
+      "index": 12,
+      "name": "T#12"
+    },
+    {
+      "code": 12,
+      "hand": "T",
+      "index": 13,
+      "name": "T#13"
+    },
+    {
+      "code": 13,
+      "hand": "T",
+      "index": 14,
+      "name": "T#14"
+    },
+    {
+      "code": 14,
+      "hand": "T",
+      "index": 15,
+      "name": "T#15"
+    },
+    {
+      "code": 15,
+      "hand": "T",
+      "index": 16,
+      "name": "T#16"
+    },
+    {
+      "code": 16,
+      "hand": "U",
+      "index": 1,
+      "name": "U#1"
+    },
+    {
+      "code": 17,
+      "hand": "U",
+      "index": 2,
+      "name": "U#2"
+    },
+    {
+      "code": 18,
+      "hand": "U",
+      "index": 3,
+      "name": "U#3"
+    },
+    {
+      "code": 19,
+      "hand": "U",
+      "index": 4,
+      "name": "U#4"
+    },
+    {
+      "code": 20,
+      "hand": "U",
+      "index": 5,
+      "name": "U#5"
+    },
+    {
+      "code": 21,
+      "hand": "U",
+      "index": 6,
+      "name": "U#6"
+    },
+    {
+      "code": 22,
+      "hand": "U",
+      "index": 7,
+      "name": "U#7"
+    },
+    {
+      "code": 23,
+      "hand": "U",
+      "index": 8,
+      "name": "U#8"
+    },
+    {
+      "code": 24,
+      "hand": "U",
+      "index": 9,
+      "name": "U#9"
+    },
+    {
+      "code": 25,
+      "hand": "U",
+      "index": 10,
+      "name": "U#10"
+    },
+    {
+      "code": 26,
+      "hand": "U",
+      "index": 11,
+      "name": "U#11"
+    },
+    {
+      "code": 27,
+      "hand": "U",
+      "index": 12,
+      "name": "U#12"
+    },
+    {
+      "code": 28,
+      "hand": "U",
+      "index": 13,
+      "name": "U#13"
+    },
+    {
+      "code": 29,
+      "hand": "U",
+      "index": 14,
+      "name": "U#14"
+    },
+    {
+      "code": 30,
+      "hand": "U",
+      "index": 15,
+      "name": "U#15"
+    },
+    {
+      "code": 31,
+      "hand": "U",
+      "index": 16,
+      "name": "U#16"
+    },
+    {
+      "code": 32,
+      "hand": "M",
+      "index": 1,
+      "name": "M#1"
+    },
+    {
+      "code": 33,
+      "hand": "M",
+      "index": 2,
+      "name": "M#2"
+    },
+    {
+      "code": 34,
+      "hand": "M",
+      "index": 3,
+      "name": "M#3"
+    },
+    {
+      "code": 35,
+      "hand": "M",
+      "index": 4,
+      "name": "M#4"
+    },
+    {
+      "code": 36,
+      "hand": "M",
+      "index": 5,
+      "name": "M#5"
+    },
+    {
+      "code": 37,
+      "hand": "M",
+      "index": 6,
+      "name": "M#6"
+    },
+    {
+      "code": 38,
+      "hand": "M",
+      "index": 7,
+      "name": "M#7"
+    },
+    {
+      "code": 39,
+      "hand": "M",
+      "index": 8,
+      "name": "M#8"
+    },
+    {
+      "code": 40,
+      "hand": "M",
+      "index": 9,
+      "name": "M#9"
+    },
+    {
+      "code": 41,
+      "hand": "M",
+      "index": 10,
+      "name": "M#10"
+    },
+    {
+      "code": 42,
+      "hand": "M",
+      "index": 11,
+      "name": "M#11"
+    },
+    {
+      "code": 43,
+      "hand": "M",
+      "index": 12,
+      "name": "M#12"
+    },
+    {
+      "code": 44,
+      "hand": "M",
+      "index": 13,
+      "name": "M#13"
+    },
+    {
+      "code": 45,
+      "hand": "M",
+      "index": 14,
+      "name": "M#14"
+    },
+    {
+      "code": 46,
+      "hand": "M",
+      "index": 15,
+      "name": "M#15"
+    },
+    {
+      "code": 47,
+      "hand": "M",
+      "index": 16,
+      "name": "M#16"
+    },
+    {
+      "code": 48,
+      "hand": "N",
+      "index": 1,
+      "name": "N#1"
+    },
+    {
+      "code": 49,
+      "hand": "N",
+      "index": 2,
+      "name": "N#2"
+    },
+    {
+      "code": 50,
+      "hand": "N",
+      "index": 3,
+      "name": "N#3"
+    },
+    {
+      "code": 51,
+      "hand": "N",
+      "index": 4,
+      "name": "N#4"
+    },
+    {
+      "code": 52,
+      "hand": "N",
+      "index": 5,
+      "name": "N#5"
+    },
+    {
+      "code": 53,
+      "hand": "N",
+      "index": 6,
+      "name": "N#6"
+    },
+    {
+      "code": 54,
+      "hand": "N",
+      "index": 7,
+      "name": "N#7"
+    },
+    {
+      "code": 55,
+      "hand": "N",
+      "index": 8,
+      "name": "N#8"
+    },
+    {
+      "code": 56,
+      "hand": "N",
+      "index": 9,
+      "name": "N#9"
+    },
+    {
+      "code": 57,
+      "hand": "N",
+      "index": 10,
+      "name": "N#10"
+    },
+    {
+      "code": 58,
+      "hand": "N",
+      "index": 11,
+      "name": "N#11"
+    },
+    {
+      "code": 59,
+      "hand": "N",
+      "index": 12,
+      "name": "N#12"
+    },
+    {
+      "code": 60,
+      "hand": "N",
+      "index": 13,
+      "name": "N#13"
+    },
+    {
+      "code": 61,
+      "hand": "N",
+      "index": 14,
+      "name": "N#14"
+    },
+    {
+      "code": 62,
+      "hand": "N",
+      "index": 15,
+      "name": "N#15"
+    },
+    {
+      "code": 63,
+      "hand": "N",
+      "index": 16,
+      "name": "N#16"
+    }
+  ],
+  "hands": [
+    "T",
+    "U",
+    "M",
+    "N"
+  ],
+  "max_size_bytes": 262144,
+  "min_size_bytes": 256,
+  "name": "tile_reg",
+  "notes": [
+    "v0.56.2 architectural tile register file: 64 logical tiles (T/U/M/N hands x depth 16).",
+    "Source tile fields in B.IOT are 6-bit values: T#1..T#16=0..15, U#1..U#16=16..31, M#1..M#16=32..47, N#1..N#16=48..63.",
+    "Single active tile capacity is descriptor-defined in the range 256B..256KB for normal non-empty tiles; imm4=0 denotes an empty 0B output tile.",
+    "All active tiles in one thread must fit within 512KB total tile capacity.",
+    "The legacy zero-based tile names names are not canonical in v0.56.2."
+  ],
+  "physical_contiguity": "each active tile occupies contiguous physical storage",
+  "source": "/Users/zhoubot/Documents/linxisa.csv plus LinxISA 0.56/0.56.1/0.56.2 changelog",
+  "total_active_bytes_max": 524288
+}

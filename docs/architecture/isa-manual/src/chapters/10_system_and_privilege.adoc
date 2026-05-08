@@ -1,7 +1,7 @@
 [[system]]
-== System and privileged architecture (v0.4)
+== System and privileged architecture (v0.56)
 
-This chapter defines the v0.4 privileged architecture: Access Control Rings (ACR), privileged system registers
+This chapter defines the v0.56 privileged architecture: Access Control Rings (ACR), privileged system registers
 (SSR), and the trap envelope for exceptions and interrupts.
 
 Where platform-specific details are required, the chapter notes this with [PLATFORM] markers. See Linux bring-up status for implementation progress.
@@ -12,7 +12,7 @@ Where platform-specific details are required, the chapter notes this with [PLATF
 Linx partitions privileged state using **Access Control Rings** (**ACR**). The architecture defines up to **16**
 rings, named **ACR0..ACR15**.
 
-Bring-up conventions (v0.4 current profile):
+Bring-up conventions (v0.56 current profile):
 
 * On reset, an LXCPU starts executing in **ACR0**.
 * **ACR0 is the root / most privileged** ring. Rings with larger numeric IDs MAY be used for progressively less
@@ -21,7 +21,7 @@ Bring-up conventions (v0.4 current profile):
 * Some privileged SSRs are **ACR-scoped** (banked per ring). In this manual those registers are written with an
   `*_ACRn` suffix.
 
-Informative software role mapping (v0.4 current profile):
+Informative software role mapping (v0.56 current profile):
 
 [%header,cols="1,4"]
 |===
@@ -218,16 +218,7 @@ Routing (bring-up):
 +* Precision: `E_BLOCK(EC_CFI)` is **precise** — no architectural state changes from the offending control-flow instruction are committed.
 +* Resume PC: `EBARG_TPC_ACRm` is profile-defined/handler-defined for `E_BLOCK(EC_CFI)`.
 +
-+* Template replay flags (bring-up): implementations SHOULD expose a single EBARG register `EBARG_TPLFLAGS_ACRm` with template trap/replay flags.
-+  - Bit allocation is fixed by the canonical v0.4 system-register catalog:
-+    * bit `0`: `TPL_VALID`
-+    * bit `1`: `TPL_ID_PRESENT`
-+    * bits `11:2`: `TPL_ID`
-+    * bits `13:12`: `TPL_PHASE`
-+    * bit `14`: `TPL_DIRTY`
-+    * bit `15`: `TPL_REDO_OK`
-+    * bit `16`: `TPL_RESUME_OK`
-+    * bits `63:17`: reserved `0`
++* Template replay flags (bring-up): implementations SHOULD expose a single EBARG register `EBARG_TPLFLAGS_ACRm` with template trap/replay flags. The bit layout is defined in <<ssr-ebarg>> (see `EBARG_TPLFLAGS_ACRn`).
     - `TPL_ID` for marker templates (`TemplateKind.class=0`) uses the mnemonic-enum mapping in <<templates-tplid>>.
     - For marker templates (`TemplateKind.class=0`), `TPL_ID_PRESENT` MUST be `1` (reporting is required).
     - For TEPL templates (`TemplateKind.class=1`), `TPL_ID_PRESENT` MUST be `1` and `TPL_ID` MUST carry the raw tile opcode selector (`TileOpcode`).
@@ -272,7 +263,7 @@ NOTE: Restartable body-fetch faults are represented by the underlying MMU transl
       - `2 = B.TEXT`
       - `3 = B.ARG`
       - `4 = B.IOR`
-      - `5 = B.IOT/B.IOTI`
+      - `5 = B.IOT`
     - `TRAPARG0[15:8] = MissingDetail` (standard meanings):
       - `0x00`: family missing
       - `0x01`: family present but value invalid/out-of-range
@@ -283,7 +274,7 @@ NOTE: Restartable body-fetch faults are represented by the underlying MMU transl
     The reporting priority order is:
     1. `B.ARG`
     2. `B.TEXT`
-    3. `B.IOT/B.IOTI`
+    3. `B.IOT`
     4. `B.IOR`
     5. `B.DIM`
   - Validation timing: missing/invalid mandatory descriptors MUST be detected during header validation before any block
@@ -337,19 +328,19 @@ Instruction-related traps (`E_INST`)::
 +|`EC_XBDEF`   |`0x11` |`XB` definition invalid (`CAC_TABLE` entry missing/invalid, bad `B.TEXT`, etc.).
 +|===
 +
-+NOTE: v0.3 text previously used `E_INST(EC_ILLEGAL)` and `E_INST(EC_PARAM)` informally without allocating numeric encodings. Canonical `v0.4` allocates concrete `EC_*` values above.
++NOTE: earlier draft text previously used `E_INST(EC_ILLEGAL)` and `E_INST(EC_PARAM)` informally without allocating numeric encodings. Canonical `v0.56` allocates concrete `EC_*` values above.
 +
 
 [%header,cols="2,1,1,1,1"]
 |===
 |Exception class |Trap number |If executing in ACR0 |If executing in ACR1 |If executing in ACR2
 
-|Instruction-related |`E_INST` |ACR0 |ACR1 |ACR1
-|Data access-related |`E_DATA` |ACR0 |ACR1 |ACR1
-|Block-format-related |`E_BLOCK` |ACR0 |ACR1 |ACR1
-|Assert |`E_ASSERT` |ACR0 |ACR1 |ACR1
-|Breakpoint |`E_BREAKPOINT` |ACR0 |ACR1 |ACR1
-|Illegal SSR access |`E_ISSR` |ACR0 |ACR1 |ACR1
+|`E_INST` (illegal instruction / illegal SSR) |`ILLEGAL_INST` (4) |ACR0 |ACR1 |ACR1
+|`E_DATA` (data access) |`DATA_ALIGN_FAULT` / `DATA_PAGE_FAULT` (34/35) |ACR0 |ACR1 |ACR1
+|`E_BLOCK` (block-format / CFI / body-fetch) |`BLOCK_TRAP` (5) |ACR0 |ACR1 |ACR1
+|`E_ASSERT` (assertion failure) |`ASSERT_FAIL` (52) |ACR0 |ACR1 |ACR1
+|`E_BREAKPOINT` |`SW_BREAKPOINT` / `HW_BREAKPOINT` (50/49) |ACR0 |ACR1 |ACR1
+|`E_ISSR` (illegal SSR access) |`ILLEGAL_INST` (4) |ACR0 |ACR1 |ACR1
 |===
 
 For system calls (`TRAPNUM=SCALL` in v0.2), routing is defined by the `ACRC` `request_type` rules above.
@@ -669,6 +660,6 @@ The following items require platform-specific or profile-specific definition for
 
 [NOTE]
 ====
-These items remain platform-specific policy inputs on top of the canonical v0.4 privileged architecture.
+These items remain platform-specific policy inputs on top of the canonical v0.56 privileged architecture.
 See `docs/bringup/PROGRESS.md` for current implementation status in this repository.
 ====

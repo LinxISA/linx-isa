@@ -3,7 +3,7 @@
 [[mnemonic-index]]
 === Mnemonic index
 
-This table lists unique mnemonics in the v0.4 catalog. Each mnemonic may have multiple encodable forms (different lengths, operand layouts, or suffix variants).
+This table lists unique mnemonics in the v0.56.2 catalog. Each mnemonic may have multiple encodable forms (different lengths, operand layouts, or suffix variants).
 
 [cols="2,3,1,1",options="header"]
 |===
@@ -21,7 +21,8 @@ This table lists unique mnemonics in the v0.4 catalog. Each mnemonic may have mu
 |`ANDW` |Arithmetic Operation 32bit |32 |1
 |`ASSERT` |Execution Control |32 |1
 |`B.ARG` |Block Argument |32 |6
-|`B.ATTR` |Block Attribute |32 |1
+|`B.CATR` |Block Control Attribute |32 |1
+|`B.DATR` |Block Data Attribute |32 |1
 |`B.DIM` |Block Argument |32 |3
 |`B.EQ` |Branch |32 |1
 |`B.GE` |Branch |32 |1
@@ -29,8 +30,7 @@ This table lists unique mnemonics in the v0.4 catalog. Each mnemonic may have mu
 |`B.HINT` |Block Hint |32 |2
 |`B.IOD` |Block Input & Output |32 |1
 |`B.IOR` |Block Input & Output |32 |1
-|`B.IOT` |Block Input & Output |32 |2
-|`B.IOTI` |Block Input & Output |32 |2
+|`B.IOT` |Block Input & Output |32 |3
 |`B.LT` |Branch |32 |1
 |`B.LTU` |Branch |32 |1
 |`B.NE` |Branch |32 |1

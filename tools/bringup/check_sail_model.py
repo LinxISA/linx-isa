@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Validate the Sail model status and active-surface wording for v0.4.
+Validate the Sail model status and active-surface wording for v0.56.
 """
 
 from __future__ import annotations
@@ -93,8 +93,8 @@ def _collect_impl_gap_hits(paths: list[Path]) -> list[str]:
 
 
 def main(argv: list[str]) -> int:
-    ap = argparse.ArgumentParser(description="Validate Sail model status for canonical v0.4")
-    ap.add_argument("--spec", default="isa/v0.4/linxisa-v0.4.json")
+    ap = argparse.ArgumentParser(description="Validate Sail model status for canonical v0.56")
+    ap.add_argument("--spec", default="isa/v0.56/linxisa-v0.56.json")
     ap.add_argument("--status", default="isa/sail/semantics_status.json")
     ap.add_argument("--entry", default="isa/sail/model/linxisa.sail")
     ap.add_argument("--require-parser", action="store_true", help="Fail if the sail binary is unavailable")
@@ -108,8 +108,8 @@ def main(argv: list[str]) -> int:
         raise SystemExit(f"error: malformed spec file: {args.spec}")
     spec_mnemonics = sorted({str(inst.get("mnemonic", "")).strip() for inst in instructions if str(inst.get("mnemonic", "")).strip()})
 
-    if str(status.get("schema_version", "")).strip() != "linx-sail-status-v0.4":
-        raise SystemExit("error: semantics_status.schema_version must be 'linx-sail-status-v0.4'")
+    if str(status.get("schema_version", "")).strip() != "linx-sail-status-v0.56":
+        raise SystemExit("error: semantics_status.schema_version must be 'linx-sail-status-v0.56'")
     mnemonic_statuses = status.get("mnemonics")
     if not isinstance(mnemonic_statuses, dict):
         raise SystemExit("error: semantics_status.mnemonics must be an object")

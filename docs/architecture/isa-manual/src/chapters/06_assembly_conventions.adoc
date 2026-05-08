@@ -12,7 +12,7 @@ NOTE: `t` and `u` are *destination selectors* (used only as `->t` / `->u`). Cloc
 [[asm-dests]]
 === Destination arrows and queue pushes
 
-Many arithmetic and load instructions have destinations described as `->{t, u, Rd}` in the draft tables, indicating:
+Many arithmetic and load instructions have destinations described as `->{t, u, Rd}` in the v0.56 catalog, indicating:
 
 * a normal architectural destination register (`Rd`), and/or
 * a push into the T-hand queue (`->t`), and/or
@@ -33,14 +33,14 @@ compressed forms.
 [[asm-operands]]
 === Operand qualifiers and addressing forms
 
-The draft ISA tables use several common conventions:
+The v0.56 ISA tables use several common conventions:
 
 * `.sw` / `.uw` suffixes annotate sign/zero extension or “use as signed/unsigned word” in mixed-width operations.
 * Some immediate forms (notably `SETC.*I`) use a **split immediate** encoding (`simm/uimm` plus an encoded `shamt`). Assembly syntax prints a single immediate; architecturally the value is interpreted as `imm = (SignExtend(simm) << shamt)` (or `ZeroExtend(uimm) << shamt`).
 * Bracketed memory operands take the form `[...]` with base + offset, or base + index with optional shift.
-* In canonical v0.4 shader kernels, bridged global-memory forms spell the access domain explicitly: `l.*.brg` or `v.*.brg`.
+* In canonical v0.56 shader kernels, bridged global-memory forms spell the access domain explicitly: `l.*.brg` or `v.*.brg`.
 
-Refer to `instructions[].asm` in `isa/v0.4/linxisa-v0.4.json` for the full syntax used by each instruction form.
+Refer to `instructions[].asm` in `isa/v0.56/linxisa-v0.56.json` for the full syntax used by each instruction form.
 
 NOTE: The toolchain may fold common bit-manipulation idioms (such as paired shifts used for `zext/sext-in-reg`) into
 `BXU`/`BXS` bitfield extracts.

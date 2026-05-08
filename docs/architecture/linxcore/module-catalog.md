@@ -8,7 +8,7 @@
 
 
 This chapter defines the canonical module structure for LinxCore under the live
-`v0.4` superscalar contract.
+`v0.56` superscalar contract.
 
 It freezes which module families own architectural behavior, which files are
 the canonical owners of those behaviors, and how those modules compose into the

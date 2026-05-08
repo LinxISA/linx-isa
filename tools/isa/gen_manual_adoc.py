@@ -1233,7 +1233,7 @@ def _write_registers_reg5(spec: Dict[str, Any], out_path: str, source_comment: s
     lines.append("")
     lines.append('[cols="1,1,2,4",options="header"]')
     lines.append("|===")
-    lines.append("|Code |Draft name |Preferred asm |Accepted spellings")
+    lines.append("|Code |Name |Preferred asm |Accepted spellings")
 
     for e in sorted(entries, key=lambda x: int(x.get("code", 0))):
         code = int(e.get("code", 0))
@@ -1522,9 +1522,9 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument(
         "--profile",
-        choices=["v0.3", "v0.4"],
-        default="v0.4",
-        help="ISA profile for default --spec path (v0.4 is canonical)",
+        choices=["v0.56"],
+        default="v0.56",
+        help="ISA profile for default --spec path (v0.56 is canonical)",
     )
     ap.add_argument("--spec", default=None, help="Path to ISA catalog JSON")
     ap.add_argument(
@@ -1540,7 +1540,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--check", action="store_true", help="Fail if outputs are not up-to-date")
     args = ap.parse_args(argv)
 
-    spec_path = args.spec or "isa/v0.4/linxisa-v0.4.json"
+    spec_path = args.spec or "isa/v0.56/linxisa-v0.56.json"
     spec = _read_json(spec_path)
     spec_version = str(spec.get("version") or "").strip() or "?"
     golden_hint = f"isa/v{spec_version}/" if spec_version != "?" else "isa/v*/"

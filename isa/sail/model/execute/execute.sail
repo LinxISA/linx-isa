@@ -1,6 +1,6 @@
-// LinxISA execute semantics for the canonical v0.4 model.
+// LinxISA execute semantics for the canonical v0.56 model.
 
-// This file holds the live execute semantics used by the strict v0.4 Sail gate.
+// This file holds the live execute semantics used by the v0.56 Sail gate.
 // Coverage is incomplete in some units, but active mnemonics are tracked in
 // semantics_status.json rather than via staged placeholder wording here.
 
@@ -272,7 +272,7 @@ function exec_hl_misub(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), uimm19 
 
 // Queue ops (QMT/QPUSH/QPOP): reserved.
 // These interact with block-local queue state (ClockHands / TQ/UQ) but are not
-// architecturally specified in v0.3 semantics yet.
+// architecturally specified in v0.56 semantics yet.
 //
 // Bring-up policy: treat them as no-ops with deterministic register results,
 // so the interpreter can run larger tests without tripping "unimplemented".
@@ -631,7 +631,7 @@ function exec_rev(RegDst : bits(5), SrcL : bits(5), Nminus1 : bits(6), M : bits(
 }
 
 // -----------------------------------------------------------------------------
-// BRU: comparisons and commit-argument setting (strict v0.3 staged).
+// BRU: comparisons and commit-argument setting (strict v0.56 staged).
 //
 // NOTE: these are scalar boolean results (0/1) written via RegDst or to the
 // block-control commit-argument domain (BARG.CARG).
@@ -639,7 +639,7 @@ function exec_rev(RegDst : bits(5), SrcL : bits(5), Nminus1 : bits(6), M : bits(
 // (bool_to_u64 defined near top of file)
 
 function sanitize_srcrtype_swuw(t : bits(2)) -> bits(2) = {
-  // For forms whose assembly only allows {.sw,.uw}, strict v0.3 treats 11 as 00.
+  // For forms whose assembly only allows {.sw,.uw}, strict v0.56 treats 11 as 00.
   if t == 0b11 then 0b00 else t
 }
 
@@ -1002,7 +1002,7 @@ function exec_c_setc_tgt(SrcL : bits(5)) -> unit = {
 // -----------------------------------------------------------------------------
 // BRU: control-transfer (vec-engine scalar lane; updates TPC)
 //
-// Contract summary (strict v0.3 staged):
+// Contract summary (strict v0.56 staged):
 // - Vec-engine scalar-lane only (scalar blocks executing these trap: TRAPNUM=4).
 // - Updates TPC (body-local PC), not architectural global PC.
 // - PC-relative base is *current instruction* TPC.
@@ -1071,7 +1071,7 @@ function exec_b_z(simm22 : bits(22)) -> unit = {
 }
 
 function exec_jr(SrcL : bits(5), simm12 : bits(12)) -> unit = {
-  // NOTE: JR encoding also contains a SrcZero field; strict v0.3 ignores it.
+  // NOTE: JR encoding also contains a SrcZero field; strict v0.56 ignores it.
   let base = read_reg5(SrcL);
   let off = sail_shiftleft(sext12_to64(simm12), 1);
   write_tpc(base + off)
@@ -1117,7 +1117,7 @@ function exec_c_setret(uimm5 : bits(5)) -> unit = {
 
 function exec_csel(RegDst : bits(5), SrcP : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   // Decision (review): if Read(SrcP) != 0 then select SrcL else select SrcR.
-  // Strict v0.3: SrcRType encodes optional .neg; other values are treated as 00.
+  // Strict v0.56: SrcRType encodes optional .neg; other values are treated as 00.
   let p = read_reg5(SrcP);
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
@@ -2685,7 +2685,7 @@ function exec_b_ior() -> unit = {
   let src1 : bits(5) = decoded_bior_regsrc1();
   let src2 : bits(5) = decoded_bior_regsrc2();
   let _dst : bits(5) = decoded_bior_regdst();
-  // Live v0.4 bring-up follows the shipped LLVM/QEMU ordering for ri* capture:
+  // Live v0.56 bring-up follows the shipped LLVM/QEMU ordering for ri* capture:
   // RegSrc1, then RegSrc0, then RegSrc2; zero-valued GPR slots are skipped.
   if src1 != 0b00000 then allocate_ri_binding(src1) else ();
   if src0 != 0b00000 then allocate_ri_binding(src0) else ();
@@ -2693,11 +2693,15 @@ function exec_b_ior() -> unit = {
   bdesc_mark_ior()
 }
 function exec_b_iot() -> unit = { bdesc_mark_iot() }
-function exec_b_ioti() -> unit = { bdesc_mark_iot() }
 
-function exec_b_attr() -> unit = {
-  // Staged semantics: latch raw attribute word so DR (bit 26) can be consulted.
-  battr_raw = decoded_battr_raw()
+function exec_b_catr() -> unit = {
+  // Staged semantics: latch raw control-attribute word so DR (bit 26) can be consulted.
+  bcatr_raw = decoded_bcatr_raw()
+}
+
+function exec_b_datr() -> unit = {
+  // Staged semantics: latch raw data-attribute word so datatype/layout/rmode/sat can be consulted.
+  bdatr_raw = decoded_bdatr_raw()
 }
 function exec_b_hint() -> unit = { () }
 function exec_b_iod() -> unit = { () }
@@ -3571,7 +3575,7 @@ function exec_v_rem(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit
 }
 
 function exec_v_rev(SrcL_k : bits(5), immr : bits(6), imml : bits(6), Dst_k : bits(5)) -> unit = {
-  // Strict v0.3: per-lane byte-swap of 32-bit elements (bswap32).
+  // Strict v0.56: per-lane byte-swap of 32-bit elements (bswap32).
   // immr/imml currently ignored in strict bring-up.
   let _ = immr; let _ = imml;
   let vw : int = vec_length_from_lcfr();
@@ -4694,7 +4698,7 @@ function int_xor_nonneg(a : int, b : int) -> int = {
 }
 
 function exec_v_shfl_bfly(SrcL_k : bits(5), SrcP_k : bits(5), Dst_k : bits(5)) -> unit = {
-  // Strict v0.3 group-local shuffle. BFLY variant.
+  // Strict v0.56 group-local shuffle. BFLY variant.
   // range is fixed to lanenum (whole group); delt from SrcP; src_id = laneid XOR delt.
   let vw : int = vec_length_from_lcfr();
   let lb0_i : int = unsigned(ssr_lb0[31..0]);
@@ -4717,7 +4721,7 @@ function exec_v_shfl_bfly(SrcL_k : bits(5), SrcP_k : bits(5), Dst_k : bits(5)) -
 }
 
 function exec_v_shfl_down(SrcL_k : bits(5), SrcR_k : bits(5), SrcP_k : bits(5), Dst_k : bits(5)) -> unit = {
-  // Strict v0.3 group-local shuffle. DOWN variant.
+  // Strict v0.56 group-local shuffle. DOWN variant.
   let vw : int = vec_length_from_lcfr();
   let lb0_i : int = unsigned(ssr_lb0[31..0]);
   let lanenum : int = if lb0_i == 0 then vw else (if lb0_i < vw then lb0_i else vw);
@@ -4743,7 +4747,7 @@ function exec_v_shfl_down(SrcL_k : bits(5), SrcR_k : bits(5), SrcP_k : bits(5), 
 }
 
 function exec_v_shfl_idx(SrcL_k : bits(5), SrcR_k : bits(5), SrcP_k : bits(5), Dst_k : bits(5)) -> unit = {
-  // Strict v0.3 group-local shuffle. IDX variant.
+  // Strict v0.56 group-local shuffle. IDX variant.
   // range from SrcR; idx from SrcP; out-of-segment falls back to self.
   let vw : int = vec_length_from_lcfr();
   let lb0_i : int = unsigned(ssr_lb0[31..0]);
@@ -4770,7 +4774,7 @@ function exec_v_shfl_idx(SrcL_k : bits(5), SrcR_k : bits(5), SrcP_k : bits(5), D
 }
 
 function exec_v_shfl_up(SrcL_k : bits(5), SrcR_k : bits(5), SrcP_k : bits(5), Dst_k : bits(5)) -> unit = {
-  // Strict v0.3 group-local shuffle. UP variant.
+  // Strict v0.56 group-local shuffle. UP variant.
   let vw : int = vec_length_from_lcfr();
   let lb0_i : int = unsigned(ssr_lb0[31..0]);
   let lanenum : int = if lb0_i == 0 then vw else (if lb0_i < vw then lb0_i else vw);
@@ -4891,7 +4895,7 @@ function exec_v_shfli_up(SrcL_k : bits(5), SrcR_k : bits(5), imm7 : bits(14), Ds
 // Vector queue ops / reductions / format-convert shims (staged)
 
 function exec_v_qpush(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
-  // Strict v0.3 memory-queue push.
+  // Strict v0.56 memory-queue push.
   // Per active lane (P=1):
   //   base = SrcL[lane] (u32 address)
   //   val  = SrcR[lane]
@@ -4946,7 +4950,7 @@ function exec_v_qpush(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> un
 }
 
 function exec_v_qpop(SrcL_k : bits(5), Dst_k : bits(5)) -> unit = {
-  // Strict v0.3 memory-queue pop.
+  // Strict v0.56 memory-queue pop.
   // Per active lane (P=1):
   //   base = SrcL[lane] (u32 address)
   // If empty: Dst[lane]=0 and queue not modified.
@@ -5353,7 +5357,7 @@ function exec_v_icvtf(SrcL_k : bits(5), SrcType : bits(5), DstType : bits(5), Ds
 
 function exec_xb(acr_id : bits(12), cross_bid : bits(8)) -> unit = {
   // Strict bring-up: XB is a controlled cross-block call dispatcher.
-  // The generic v0.4 contract standardizes legality, permission, and lookup.
+  // The generic v0.56 contract standardizes legality, permission, and lookup.
   // The binary entry layout remains platform-defined, so the model records the
   // resolved dispatch request instead of decoding a non-canonical block body.
   //
@@ -5384,7 +5388,7 @@ function exec_xb(acr_id : bits(12), cross_bid : bits(8)) -> unit = {
   //    - If base == 0 => definition missing.
   //    - Otherwise, read first 64-bit word of CAC_TABLE[c-id] (entry size 32B).
   //      If the word is 0 => treat as missing/invalid definition.
-  // Full entry parsing (B.ATTR/B.IOR/B.TEXT) is deferred.
+  // Full entry parsing (B.CATR/B.DATR/B.IOR/B.TEXT) is deferred.
   let base : bits(64) = read_xbinfo_for_acr(target_acr);
   if base == 0x0000_0000_0000_0000 then {
     trap_e_inst(0x11, 0x00, read_pc_or_tpc()) // EC_XBDEF
@@ -6309,7 +6313,7 @@ function exec_fneg(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit 
 }
 
 // ============================================================
-// AGU / Load-Store (staged bring-up; strict v0.3 conventions)
+// AGU / Load-Store (staged bring-up; strict v0.56 conventions)
 // ============================================================
 
 // -----------------------------------------------------------------------------

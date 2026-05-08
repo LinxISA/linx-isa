@@ -141,7 +141,7 @@ def _validate_tepl_packing(
     for name, selector in sorted(selector_by_name.items()):
         if selector > 0x03F:
             errors.append(
-                f"state.engine_ops.tepl: {name}=0x{selector:03X} uses reserved high tile-opcode bits outside the packed v0.4 profile"
+                f"state.engine_ops.tepl: {name}=0x{selector:03X} uses reserved high tile-opcode bits outside the packed v0.56 profile"
             )
         if name not in expected_by_name:
             errors.append(
@@ -328,7 +328,7 @@ def validate_active_surfaces(root: Path) -> List[str]:
         root / "docs" / "README.md",
         root / "docs" / "index.md",
         root / "docs" / "architecture" / "README.md",
-        root / "docs" / "architecture" / "v0.4-architecture-contract.md",
+        root / "docs" / "architecture" / "v0.56-architecture-contract.md",
         root / "docs" / "bringup" / "README.md",
         root / "docs" / "bringup" / "AVS_CONTRACT.md",
         root / "docs" / "bringup" / "GETTING_STARTED.md",
@@ -357,9 +357,9 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--profile",
-        choices=["v0.3", "v0.4"],
-        default="v0.4",
-        help="ISA profile for default --spec path (v0.4 is canonical)",
+        choices=["v0.56"],
+        default="v0.56",
+        help="ISA profile for default --spec path (v0.56 is canonical)",
     )
     ap.add_argument(
         "--spec",
@@ -368,7 +368,7 @@ def main() -> int:
     )
     args = ap.parse_args()
 
-    default_spec = "isa/v0.4/linxisa-v0.4.json"
+    default_spec = "isa/v0.56/linxisa-v0.56.json"
     errors = validate(args.spec or default_spec)
     errors.extend(validate_active_surfaces(Path(".")))
     if errors:

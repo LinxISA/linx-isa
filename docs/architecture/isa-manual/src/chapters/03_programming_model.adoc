@@ -35,7 +35,7 @@ Bring-up conventions:
 * PC-relative immediates in this manual and in the ISA catalog use **TPC** as the base unless stated otherwise. For a
   multi-part instruction, the base address is the address of the first part.
 
-Address translation (v0.4 current profile, preserving the v0.2 MMU baseline):
+Address translation (v0.56 current profile, preserving the v0.2 MMU baseline):
 
 * When `TCR_ACR1.MME = 0`, instruction fetch and data accesses treat addresses as physical (identity translation).
 * When `TCR_ACR1.MME = 1`, `TPC`/`BPC` and all instruction/data addresses are virtual and translated by the CPU MMU
@@ -45,7 +45,7 @@ The privileged SSR state uses `EBARG` as the authoritative trap/context capture 
 
 * `EBARG_BPC_CUR_ACRn` captures the current block PC (`BPC`).
 * `EBARG_TPC_ACRn` captures the resume/fault PC for body execution (`BI=1`).
-* Legacy trap-save singleton naming from pre-v0.2 drafts is not part of canonical v0.4 artifacts.
+* Legacy trap-save singleton naming from pre-v0.2 drafts is not part of canonical v0.56 artifacts.
 
 [[progmodel-gpr]]
 === General-purpose registers (GPRs)
@@ -55,7 +55,7 @@ JSON catalog (`registers.reg5`).
 
 include::../generated/registers_reg5.adoc[]
 
-NOTE: The v0.4 `reg5` table also includes special spellings used by the assembler/disassembler for queue operations
+NOTE: The v0.56 `reg5` table also includes special spellings used by the assembler/disassembler for queue operations
 (e.g. destination selectors `t`/`u` used as `->t` / `->u`). These are not general-purpose
 architectural registers in the same sense as `a0`, `s0`, etc.
 
@@ -95,18 +95,18 @@ Rules (bring-up convention):
 * Accelerator-style blocks (e.g. tile blocks) may use LB0–LB2 to pass dimensions and valid masks.
 
 [[progmodel-lane-policy]]
-=== Shader-kernel lane policy (v0.4 current)
+=== Shader-kernel lane policy (v0.56 current)
 
-For canonical shader-kernel execution (`BSTART.MPAR` / `BSTART.MSEQ`), v0.4 locks an explicit inactive-lane policy:
+For canonical shader-kernel execution (`BSTART.MPAR` / `BSTART.MSEQ`), v0.56 locks an explicit inactive-lane policy:
 
 * **merge mode**: inactive lanes preserve the previous destination value.
 * **zero mode**: inactive lanes write zero.
 * Lane policy is architecturally selected by block/vector mode state and must be deterministic across LLVM, QEMU, and RTL.
 
 [[progmodel-vpred]]
-=== Block-control predicate and kernel EXEC mask (v0.4)
+=== Block-control predicate and kernel EXEC mask (v0.56)
 
-v0.4 defines two predicate domains and keeps them distinct:
+v0.56 defines two predicate domains and keeps them distinct:
 
 * **Block-control predicate** (`BARG.CARG`): produced by `SETC.*` / `C.SETC.*`, consumed by block-control forms (`BSTART COND`,
   `BWE`, `BWI`, etc.) at block commit.
@@ -137,7 +137,7 @@ Mixed scalar/vector kernel-body execution rules (for `BSTART.MSEQ` / `BSTART.MPA
   - `TA/TB/TC/TD` for bound input-tile bases,
   - `TO` / `TS` for output and scratch tile bases,
   - `p` and `zero`.
-* Archived raw operand names `TE..TH` and `TO1/TO2/TO3` are not assigned meaning in canonical v0.4 and remain
+* Archived raw operand names `TE..TH` and `TO1/TO2/TO3` are not assigned meaning in canonical v0.56 and remain
   reserved/unassigned.
 
 Canonical divergence rule:
@@ -163,10 +163,10 @@ Canonical mixed-class examples:
 * Direct `v.*` writes into scalar/group-domain destinations remain illegal unless the instruction is an explicitly
   defined reduction or mask-producing form.
   Example:
-** `v.add vt#1, ri0, ->t` is illegal in canonical v0.4.
+** `v.add vt#1, ri0, ->t` is illegal in canonical v0.56.
 ** `v.rdadd vt#1, ->t` is legal because `V.RD*` is an explicit reduction family.
 
-SIMT group model (v0.4 current profile):
+SIMT group model (v0.56 current profile):
 
 * The lane space is partitioned into **groups**.
 * For the canonical 1-D compiler lowering profile:
@@ -177,7 +177,7 @@ SIMT group model (v0.4 current profile):
 * Each group has one scalar-uniform execution context and one architectural group PC; scalar instructions in the body execute
   once per group control-flow step.
 * Canonical compilers must preserve the meanings `LB0 = lanes per group` and `LB1 = group count`; `LB0` is not reinterpreted
-  as total logical threads in canonical `v0.4`.
+  as total logical threads in canonical `v0.56`.
 
 Vector reduction contract (`V.RD*` family):
 
@@ -199,7 +199,7 @@ Linx defines a tile register file used by accelerator-oriented *tile blocks* (e.
 Bring-up model:
 
 * 32 architectural tile registers, organized as **4 hands × 8 depth**.
-* Each tile register has a tracked architectural size in the closed range **512B..4KB**.
+* Each tile register has a tracked architectural size in the closed range **0B..512KB**.
 * The architectural tile-state capacity is **128KB** (`32 × 4KB`).
 * Implementations MAY internally provision a larger backing store per tile register, but MUST preserve the architectural
   behavior that operations only read/write within the currently allocated size for each tile.
@@ -207,7 +207,7 @@ Bring-up model:
   - `hand#1` is the most recent definition,
   - tile-producing ops allocate by pushing a new `hand#1`,
   - `.reuse` is a staged hint bit carried on inputs (see <<blockisa-tile>>).
-* Tile blocks bind tile inputs/outputs using block descriptors (`B.IOT`/`B.IOTI` for tiles, `B.IOR` for GPRs).
+* Tile blocks bind tile inputs/outputs using block descriptors (`B.IOT`/`B.IOT` for tiles, `B.IOR` for GPRs).
 * Canonical disassembly prints the destination kind plus the allocation size (for example `->t<4KB>`).
 
 [[progmodel-barg]]
@@ -221,7 +221,7 @@ BARG is initialized at block start and is consulted at block commit to determine
 * the next block target (direct/conditional/indirect/call/return), and
 * per-block commit metadata (e.g. output register mapping for split blocks).
 
-Bring-up conventions (v0.4 current profile, with the v0.2 trap ABI baseline):
+Bring-up conventions (v0.56 current profile, with the v0.2 trap ABI baseline):
 
 * `BARG.BPC` records the current block start address (**BPC**).
 * `BARG.BPCN` records the selected next block address (**BPCN**).
@@ -244,7 +244,7 @@ control.
 ==== Access Control Rings (ACR)
 
 Linx partitions privileged state using **Access Control Rings (ACR)**. The architecture defines up to **16** rings
-named **ACR0..ACR15**, which are organized as a tree rooted at **ACR0** (see <<system-acr-tree>>). In the v0.4 current
+named **ACR0..ACR15**, which are organized as a tree rooted at **ACR0** (see <<system-acr-tree>>). In the v0.56 current
 profile:
 
 * **ACR0 is the most privileged** (root management privilege).
@@ -276,7 +276,7 @@ include::../generated/trapno_encoding.adoc[]
 Linx defines a floating-point control and status register, **FCSR**, that controls rounding and records floating-point
 exceptions for floating-point instructions.
 
-NOTE: In the v0.4 current profile (same as the v0.2 baseline), floating-point exceptions do **not** trap; they only update sticky flags in `FCSR`
+NOTE: In the v0.56 current profile (same as the v0.2 baseline), floating-point exceptions do **not** trap; they only update sticky flags in `FCSR`
 (and `CSTATE` mirrors as defined by the platform).
 
 For bring-up, Linx uses the following layout (32-bit):

@@ -11,10 +11,11 @@
 |Arithmetic Operation 32bit |21 |21
 |PC-Relative |4 |4
 |Block Argument |9 |2
-|Block Attribute |1 |1
+|Block Control Attribute |1 |1
+|Block Data Attribute |1 |1
 |Branch |10 |10
 |Block Hint |2 |1
-|Block Input & Output |6 |4
+|Block Input & Output |5 |3
 |Block Offset |1 |1
 |Cache Maintain |16 |16
 |Bit Operation |8 |8

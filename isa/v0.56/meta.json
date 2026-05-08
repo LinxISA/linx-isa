@@ -1,0 +1,17 @@
+{
+  "instruction_lengths_bits": [
+    16,
+    32,
+    48,
+    64
+  ],
+  "isa": "LinxISA",
+  "notes": [
+    "This directory is the authoritative staged golden ISA definition for v0.56.2.",
+    "v0.56.2 is the live canonical LinxISA profile for this repository.",
+    "v0.56.2 expands tile register depth to 16 per hand, uses dynamic tile capacity descriptors, and replaces B.IOT/B.CATR/B.DATR with B.IOT plus B.CATR/B.DATR.",
+    "Historical pre-v0.56 profile material is removed from active repository surfaces after this profile validates."
+  ],
+  "status": "canonical",
+  "version": "0.56.2"
+}

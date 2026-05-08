@@ -16,7 +16,7 @@
   Done means: opcode audit reports no unexpected decode/meta drift and no enum/meta op-id mismatch.
   Status: ✅ PASS (2026-03-07) - opcode sync audit returns `qemu_opcode_meta_sync_ok` with `decode_only_unexpected=0`, `meta_only_unexpected=0`, and `id_mismatch_count=0` after regenerating the LinxCore/QEMU opcode tables from the normalized `insn48.decode` catalog (artifacts: `docs/bringup/gates/qemu_opcode_sync_latest.json`, `docs/bringup/gates/qemu_opcode_sync_latest.md`).
 
-- [x] ID: QEMU-004 Validate trap semantics match the live v0.4 clarifications for CFI/BLOCKFMT/BFETCH.
+- [x] ID: QEMU-004 Validate trap semantics match the live v0.56 clarifications for CFI/BLOCKFMT/BFETCH.
   Done means: no conflicting trap behavior is observed in strict-system and model-diff gates.
   Status: ✅ PASS (2026-02-25) - strict system and model-diff are both green in run `2026-02-25-r2-pin-lanefix` (logs: `docs/bringup/gates/logs/2026-02-25-r2-pin-lanefix/pin/emu_strict_system.log`, `docs/bringup/gates/logs/2026-02-25-r2-pin-lanefix/pin/model_diff_suite.log`).
 
@@ -29,10 +29,10 @@
   Done means: Linux kernel boots with timer interrupts working, full syscalls available.
   Status: ✅ PASS (2026-02-25) - full-OS closure gate is green in run `2026-02-25-r2-pin-lanefix` (`strict_cross_repo.sh` pass and BusyBox rootfs boot pass evidence in `kernel_busybox_rootfs.log`).
 
-- [x] ID: QEMU-007 Build pinned `qemu-system-linx64` after v0.4 decode/translate propagation.
+- [x] ID: QEMU-007 Build pinned `qemu-system-linx64` after v0.56 decode/translate propagation.
   Command: `ninja -C emulator/qemu/build qemu-system-linx64`
   Done means: the pinned QEMU workspace compiles the Linx system emulator binary with the current decode/translator state.
-  Status: ✅ PASS (2026-03-08) - pinned QEMU `043390f788da` builds `emulator/qemu/build/qemu-system-linx64` successfully after the v0.4 propagation fixes and opcode-sync refresh.
+  Status: ✅ PASS (2026-03-08) - pinned QEMU `043390f788da` builds `emulator/qemu/build/qemu-system-linx64` successfully after the v0.56 propagation fixes and opcode-sync refresh.
 
 ---
 

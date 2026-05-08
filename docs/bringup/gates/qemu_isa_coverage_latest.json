@@ -1,10 +1,10 @@
 {
-  "coverage_count": 618,
-  "coverage_ratio_percent": 87.04,
-  "form_coverage_count": 613,
-  "form_coverage_ratio_percent": 82.84,
-  "form_missing_count": 127,
-  "generated_at_utc": "2026-04-24 00:09:48Z",
+  "coverage_count": 616,
+  "coverage_ratio_percent": 86.76,
+  "form_coverage_count": 612,
+  "form_coverage_ratio_percent": 82.7,
+  "form_missing_count": 128,
+  "generated_at_utc": "2026-05-08 15:41:23Z",
   "legal_form_count": 740,
   "legal_mnemonic_count": 710,
   "mapped_by_prefix": {
@@ -20,7 +20,7 @@
     "ANDIW": 1,
     "ANDW": 1,
     "ASSERT": 1,
-    "B": 17,
+    "B": 15,
     "BC": 2,
     "BCNT": 1,
     "BIC": 1,
@@ -178,7 +178,7 @@
     "ANDIW": 1,
     "ANDW": 1,
     "ASSERT": 1,
-    "B": 18,
+    "B": 17,
     "BC": 2,
     "BCNT": 1,
     "BIC": 1,
@@ -363,9 +363,6 @@
     "b_arg": [
       "B.ARG"
     ],
-    "b_attr": [
-      "B.ATTR"
-    ],
     "b_dim_lb0": [
       "B.DIM"
     ],
@@ -398,9 +395,6 @@
     ],
     "b_iot": [
       "B.IOT"
-    ],
-    "b_ioti": [
-      "B.IOTI"
     ],
     "b_lt": [
       "B.LT"
@@ -2265,13 +2259,14 @@
     ]
   },
   "missing_by_prefix": {
+    "B": 2,
     "C": 1,
     "V": 90,
     "XB": 1
   },
-  "missing_count": 92,
+  "missing_count": 94,
   "missing_forms_by_prefix": {
-    "B": 9,
+    "B": 10,
     "BSTART": 14,
     "C": 2,
     "DC": 2,
@@ -2286,10 +2281,11 @@
     "B.ARG [len=32 mask=0xffffffff match=0x18022423]",
     "B.ARG [len=32 mask=0xffffffff match=0x20fae23]",
     "B.ARG [len=32 mask=0xffffffff match=0xfa023]",
+    "B.CATR [len=32 mask=0x7fff match=0x23]",
+    "B.DATR [len=32 mask=0x707f match=0x1023]",
     "B.IOT [len=32 mask=0x707f match=0x4013]",
-    "B.IOT [len=32 mask=0x707f match=0x5013]",
-    "B.IOTI [len=32 mask=0x707f match=0x6013]",
-    "B.IOTI [len=32 mask=0x707f match=0x7013]",
+    "B.IOT [len=32 mask=0x803f707f match=0x5013]",
+    "B.IOT [len=32 mask=0xc03fffff match=0x6013]",
     "BSTART CALL [len=32 mask=0xf83f000f match=0x50160002]",
     "BSTART [len=32 mask=0x7f match=0x11]",
     "BSTART [len=32 mask=0x7f match=0x21]",
@@ -2410,6 +2406,8 @@
     "XB [len=32 mask=0x7fff match=0x6f81]"
   ],
   "missing_spec_mnemonics": [
+    "B.CATR",
+    "B.DATR",
     "C.SETRET",
     "V.LB",
     "V.LBI",
@@ -2503,8 +2501,8 @@
     "V.SWI.U.BRG",
     "XB"
   ],
-  "qemu_mapped_spec_forms": 613,
-  "qemu_mapped_spec_mnemonics": 618,
+  "qemu_mapped_spec_forms": 612,
+  "qemu_mapped_spec_mnemonics": 616,
   "qemu_meta_mnemonics": 640,
   "qemu_meta_path": "/Users/zhoubot/linx-isa/emulator/qemu/target/linx/linx_opcode_meta_gen.h",
   "qemu_root": "/Users/zhoubot/linx-isa/emulator/qemu",
@@ -2518,7 +2516,7 @@
     "ok": true
   },
   "schema_version": "qemu-isa-coverage-v2",
-  "spec_path": "/Users/zhoubot/linx-isa/isa/v0.4/linxisa-v0.4.json",
+  "spec_path": "/Users/zhoubot/linx-isa/isa/v0.56/linxisa-v0.56.json",
   "spec_total_forms": 740,
   "spec_unique_mnemonics": 710,
   "unmapped_qemu_mnemonics": [
@@ -2526,6 +2524,8 @@
     "b_arg_dn2zn",
     "b_arg_nd2zn",
     "b_arg_norm",
-    "b_arg_nz2dn"
+    "b_arg_nz2dn",
+    "b_attr",
+    "b_ioti"
   ]
 }

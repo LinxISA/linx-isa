@@ -7,7 +7,7 @@
 //===----------------------------------------------------------------------===//
 //
 // This file contains the Linx instruction definitions in TableGen format.
-// Generated from isa/v0.3/linxisa-v0.3.json
+// Generated from isa/v0.56/linxisa-v0.56.json
 //
 //===----------------------------------------------------------------------===//
 

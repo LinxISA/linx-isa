@@ -27,7 +27,7 @@ That is a reasonable bring-up baseline. It is not yet a mature compiler for
 branch-heavy, lane-divergent SIMT kernels.
 
 The architecture direction is now frozen in
-`docs/architecture/v0.4-simt-compiler-contract.md`: canonical `v0.4` kernels
+`docs/architecture/v0.56-simt-compiler-contract.md`: canonical `v0.56` kernels
 are group-granular divergent SIMT kernels driven by explicit `p` management.
 The remaining work is therefore implementation maturity, not architecture
 direction-finding.
@@ -70,7 +70,7 @@ Required evidence:
 Exit criteria:
 
 - compiler users can tell whether a rejected loop is “not yet mature” or
-  “outside canonical `v0.4`”.
+  “outside canonical `v0.56`”.
 
 ### S1: Make Grouped-Lane Lowering Explicit
 
@@ -183,7 +183,7 @@ Status:
     partially-active continuation or reconvergence across lane subsets
   - runtime/QEMU closure for mask-stack-like in-body branch subsets
   - a canonical scalar/group-domain carrier for `p` save/restore is still not
-    available in the current assembler-visible `v0.4` surface: plain scalar
+    available in the current assembler-visible `v0.56` surface: plain scalar
     forms only accept 5-bit regs, while canonical parsing rejects legacy
     `l.*` syntax. This blocks first-class architectural EXEC-mask save/restore
     lowering even though the SIMT contract allows it when an encoding exists.
@@ -308,7 +308,7 @@ Exit criteria:
 ## Dependency Rules
 
 This maturity plan depends on the architecture plan in
-`docs/architecture/v0.4-simt-compiler-contract-plan.md`.
+`docs/architecture/v0.56-simt-compiler-contract-plan.md`.
 
 Compiler implementation must stop and escalate if it reaches any of these
 unfrozen questions:

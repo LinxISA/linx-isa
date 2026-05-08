@@ -1,6 +1,6 @@
 # Architecture Validation Suite (AVS)
 
-This directory contains the canonical **Architecture Validation Suite** for LinxISA v0.3.
+This directory contains the canonical **Architecture Validation Suite** for LinxISA v0.56.
 
 ## Overview
 

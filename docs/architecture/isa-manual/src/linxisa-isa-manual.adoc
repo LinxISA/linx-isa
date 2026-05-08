@@ -1,4 +1,4 @@
-= Linx Instruction Set Architecture Manual (v0.4)
+= Linx Instruction Set Architecture Manual (v0.56.2)
 :doctype: book
 :toc: left
 :toclevels: 4
@@ -19,7 +19,7 @@
 :imagesdir: images
 
 // Manual metadata (override when publishing).
-:revnumber: v0.4
+:revnumber: v0.56.2
 :revdate: {localdate}
 
 include::chapters/00_preamble.adoc[]
@@ -27,11 +27,14 @@ include::chapters/01_introduction.adoc[]
 include::chapters/02_isa_overview.adoc[]
 include::chapters/03_programming_model.adoc[]
 include::chapters/03_encoding_and_formats.adoc[]
+include::chapters/05b_regid10_operand_encoding.adoc[]
+include::chapters/05c_convert_type_encoding.adoc[]
 include::chapters/04_block_isa.adoc[]
 include::chapters/06_assembly_conventions.adoc[]
 include::chapters/07_templates.adoc[]
 include::chapters/08_tile_blocks.adoc[]
 include::chapters/09_memory_operations.adoc[]
+include::chapters/09b_xb_system_call_block.adoc[]
 include::chapters/10_system_and_privilege.adoc[]
 include::chapters/11_agu.adoc[]
 include::chapters/12_alu.adoc[]

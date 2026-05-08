@@ -1,10 +1,10 @@
-# Bring-up Progress (v0.4 workspace)
+# Bring-up Progress (v0.56 workspace)
 
 Last updated: 2026-04-25
 
 ## Closure Snapshot
 
-- `v0.4` golden/spec is canonical and validated.
+- `v0.56` golden/spec is canonical and validated.
 - AVS is now the only live public bring-up contract.
 - The latest checked-in canonical report is `docs/bringup/gates/latest.json` generated at `2026-04-18 02:11:34Z`; its latest run is `2026-04-18-r9-pin-linuxlibc-refresh`.
 - Active governance phase remains `G0`, and `docs/bringup/agent_runs/waivers.yaml` still carries zero waivers.
@@ -30,7 +30,7 @@ Last updated: 2026-04-25
 
 | Phase | Status | Evidence |
 | --- | --- | --- |
-| 1. Canonical `v0.4` golden + manual freeze | ✅ Passed | `python3 tools/isa/build_golden.py --profile v0.4 --check`; `python3 tools/isa/validate_spec.py --profile v0.4` |
+| 1. Canonical `v0.56` golden + manual freeze | ✅ Passed | `python3 tools/isa/build_golden.py --profile v0.56 --check`; `python3 tools/isa/validate_spec.py --profile v0.56` |
 | 2. AVS public contract cutover | ✅ Source complete | `python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml` |
 | 3. LLVM MC/CodeGen baseline alignment | ✅ Current pin pass | `avs/compiler/linx-llvm/tests/run.sh`; `analyze_coverage.py --fail-under 100`; `ninja -C compiler/llvm/build-linxisa-clang llvm-ar llvm-nm llvm-strip llvm-readelf` |
 | 4. QEMU runtime/system baseline | ✅ Current pin pass | `avs/qemu/check_system_strict.sh`; `avs/qemu/run_tests.sh --all`; `ninja -C emulator/qemu/build qemu-system-linx64` |
@@ -45,7 +45,7 @@ Last updated: 2026-04-25
 
 | Gate | Status | Command |
 | --- | --- | --- |
-| Golden/spec validation | ✅ | `python3 tools/isa/build_golden.py --profile v0.4 --check`; `python3 tools/isa/validate_spec.py --profile v0.4` |
+| Golden/spec validation | ✅ | `python3 tools/isa/build_golden.py --profile v0.56 --check`; `python3 tools/isa/validate_spec.py --profile v0.56` |
 | AVS contract schema | ✅ | `python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml` |
 | AVS matrix status audit | ✅ | `python3 tools/bringup/check_avs_matrix_status.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json` |
 | AVS tier closure | ✅ PR subset green (`31/31` required) | `python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier pr` |

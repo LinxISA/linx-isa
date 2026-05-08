@@ -22,7 +22,7 @@ Software must not generate illegal encodings.
 
 NOTE: Convert instructions are defined as *value conversions* (numeric conversions), not bit reinterpretations.
 
-NOTE: For the current `v0.4` bring-up profile, these explicit `SrcType` / `DstType`
+NOTE: For the current `v0.56` bring-up profile, these explicit `SrcType` / `DstType`
 fields are the only canonical encoded vector type selectors. Non-convert `v.*`
 forms do not obtain type information from `RegId10`; instead they use
 mnemonic-defined default decoded type shadows over the 32-bit vector carrier

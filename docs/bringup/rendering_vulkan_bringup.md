@@ -1,7 +1,7 @@
 # Rendering and Vulkan Bring-up
 
 This document defines the live bring-up plan for rendering-capable userspace on
-canonical `v0.4` systems.
+canonical `v0.56` systems.
 
 The initial goal is not immediate hardware acceleration. The first closure
 target is a reproducible software-backed graphics and Vulkan stack running under
@@ -30,7 +30,7 @@ does not freeze final hardware acceleration architecture.
 
 ## Mesa Software Scaffolding Policy
 
-Mesa software backends are the canonical early rendering scaffold for `v0.4`
+Mesa software backends are the canonical early rendering scaffold for `v0.56`
 bring-up under QEMU.
 
 Their purpose is to:
@@ -257,8 +257,8 @@ These are intentionally deferred:
 ## Relationship to Other Canonical Pages
 
 - Architectural submission ownership is defined in
-  `docs/architecture/v0.4-rendering-command-contract.md`.
+  `docs/architecture/v0.56-rendering-command-contract.md`.
 - Shader-kernel semantics remain defined by the ISA contract, manual, and
-  `isa/v0.4/state/` canonical state files.
+  `isa/v0.56/state/` canonical state files.
 - Workload and gate closure status remain tracked through AVS and the bring-up
   status pages.

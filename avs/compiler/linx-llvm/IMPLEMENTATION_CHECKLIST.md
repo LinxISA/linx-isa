@@ -207,7 +207,7 @@ This checklist tracks the implementation of the LinxISA LLVM backend. Use this t
 ```bash
 # Generate TableGen patterns
 python3 tools/isa/gen_llvm_tablegen.py \
-  --spec isa/v0.3/linxisa-v0.3.json \
+  --spec removed-pre-v056-profile/removed-pre-v056-catalog.json \
   --out avs/compiler/linx-llvm/LinxInstrInfo.td
 
 # Run tests

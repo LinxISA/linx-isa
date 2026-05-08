@@ -13,7 +13,7 @@ from pathlib import Path
 
 REQUIRED_TOPLEVEL_DOCS = [
     "docs/architecture/README.md",
-    "docs/architecture/v0.4-architecture-contract.md",
+    "docs/architecture/v0.56-architecture-contract.md",
 ]
 
 CANONICAL_ARCH_DOCS = [
@@ -149,12 +149,12 @@ def main(argv: list[str]) -> int:
     if args.strict:
         heading_requirements = {
             "rtl/LinxCore/docs/architecture/overview.md": [
-                "# LinxCore v0.4 Superscalar Bring-up Overview",
+                "# LinxCore v0.56 Superscalar Bring-up Overview",
                 "## Scope",
                 "## Normative links",
             ],
             "rtl/LinxCore/docs/architecture/microarchitecture.md": [
-                "# LinxCore v0.4 Microarchitecture Contract",
+                "# LinxCore v0.56 Microarchitecture Contract",
                 "## Baseline superscalar contract",
                 "## Pipeline contract (LC-MA-PIPE-001)",
                 "## Hazard and replay contract (LC-MA-HAZ-001)",
@@ -172,7 +172,7 @@ def main(argv: list[str]) -> int:
                 "## Cross-tool synchronization contract (LC-IF-SYNC-001)",
             ],
             "rtl/LinxCore/docs/architecture/verification-matrix.md": [
-                "# LinxCore v0.4 Verification Matrix",
+                "# LinxCore v0.56 Verification Matrix",
                 "## G1 contract rows (normative)",
                 "## Gate-to-contract traceability (required PR gates)",
                 "## PR mandatory matrix",
@@ -184,13 +184,13 @@ def main(argv: list[str]) -> int:
                 if token not in text:
                     errors.append(f"{rel} missing required token: {token}")
 
-        v04_contract = _load_text(root / "docs/architecture/v0.4-architecture-contract.md")
-        if "docs/architecture/linxcore/overview.md" not in v04_contract:
-            errors.append("v0.4 architecture contract missing LinxCore overview cross-link")
+        v056_contract = _load_text(root / "docs/architecture/v0.56-architecture-contract.md")
+        if "docs/architecture/linxcore/overview.md" not in v056_contract:
+            errors.append("v0.56 architecture contract missing LinxCore overview cross-link")
 
         overview = _load_text(root / "rtl/LinxCore/docs/architecture/overview.md")
-        if "docs/architecture/v0.4-architecture-contract.md" not in overview:
-            errors.append("LinxCore overview missing v0.4 architecture contract cross-link")
+        if "docs/architecture/v0.56-architecture-contract.md" not in overview:
+            errors.append("LinxCore overview missing v0.56 architecture contract cross-link")
 
         matrix_text = _load_text(root / "rtl/LinxCore/docs/architecture/verification-matrix.md")
         for gate_key in REQUIRED_MATRIX_GATE_NAMES:

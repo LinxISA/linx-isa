@@ -186,16 +186,16 @@ void _start(void) {
     uart_puts(" System");
 #endif
 #if LINX_TEST_ENABLE_V03_VECTOR
-    uart_puts(" v0.3-vector");
+    uart_puts(" v0.56-vector");
 #endif
 #if LINX_TEST_ENABLE_V03_VECTOR_OPS
-    uart_puts(" v0.3-vector-ops");
+    uart_puts(" v0.56-vector-ops");
 #endif
 #if LINX_TEST_ENABLE_V04_VECTOR_OPS
-    uart_puts(" v0.4-vector-ops");
+    uart_puts(" v0.56-vector-ops");
 #endif
 #if LINX_TEST_ENABLE_V03_VECTOR_BODY_FAULT
-    uart_puts(" v0.3-vector-body-fault");
+    uart_puts(" v0.56-vector-body-fault");
 #endif
 #if LINX_TEST_ENABLE_CALLRET
     uart_puts(" callret");
@@ -246,16 +246,16 @@ void _start(void) {
     run_suite_with_stats("System & Privilege Tests", run_system_tests);
 #endif
 #if LINX_TEST_ENABLE_V03_VECTOR
-    run_suite_with_stats("v0.3 Vector/Tile Marker Tests", run_v03_vector_tile_tests);
+    run_suite_with_stats("v0.56 Vector/Tile Marker Tests", run_v03_vector_tile_tests);
 #endif
 #if LINX_TEST_ENABLE_V03_VECTOR_OPS
-    run_suite_with_stats("v0.3 Vector Operation Matrix Tests", run_v03_vector_ops_matrix_tests);
+    run_suite_with_stats("v0.56 Vector Operation Matrix Tests", run_v03_vector_ops_matrix_tests);
 #endif
 #if LINX_TEST_ENABLE_V04_VECTOR_OPS
-    run_suite_with_stats("v0.4 Vector Operation Matrix Tests", run_v04_vector_ops_matrix_tests);
+    run_suite_with_stats("v0.56 Vector Operation Matrix Tests", run_v04_vector_ops_matrix_tests);
 #endif
 #if LINX_TEST_ENABLE_V03_VECTOR_BODY_FAULT
-    run_suite_with_stats("v0.3 Vector Body Fault Tests", run_v03_vector_body_fault_tests);
+    run_suite_with_stats("v0.56 Vector Body Fault Tests", run_v03_vector_body_fault_tests);
 #endif
 #if LINX_TEST_ENABLE_CALLRET
     run_suite_with_stats("Call/Ret Conformance Tests", run_callret_tests);

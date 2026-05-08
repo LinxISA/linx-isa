@@ -1,5 +1,5 @@
 /*
- * v0.3 Vector/Tile Block-Start Smoke Tests (strict profile)
+ * v0.56 Vector/Tile Block-Start Smoke Tests (strict profile)
  *
  * Bring-up goal:
  * - Ensure typed block-start markers exist as executable encodings in the toolchain
@@ -7,7 +7,7 @@
  *
  * NOTE:
  * This suite includes a minimal SIMT/vector body replay smoke test (v.add + v.sw.brg)
- * to validate the v0.3 bring-up execution model for MSEQ blocks.
+ * to validate the v0.56 bring-up execution model for MSEQ blocks.
  */
 
 #include "linx_test.h"
@@ -371,7 +371,7 @@ static void test_vseq_local_tile_store(void)
     __asm__ volatile(
         "BSTART.VSEQ 0\n"
         "B.TEXT __linx_v03_simt_tile_body\n"
-        "B.IOTI [], last ->t<4KB>\n"
+        "B.IOT [], last ->t<4KB>\n"
         "C.B.DIMI 16, ->lb0\n"
         "C.B.DIMI 16, ->lb1\n"
         "C.BSTART\n"
@@ -384,7 +384,7 @@ static void test_vseq_local_tile_store(void)
         "BSTART.TSTORE 0\n"
         "B.ARG NORM.normal\n"
         "B.IOR [%0],[]\n"
-        "B.IOTI [t#1], last ->t<4KB>\n"
+        "B.IOT [t#1], last ->t<4KB>\n"
         "C.BSTART\n"
         :
         : "r"(out_base)
@@ -804,105 +804,105 @@ static void test_mseq_grouped_active_state_runtime(void)
 void run_v03_vector_tile_tests(void)
 {
     test_start(0x1200);
-    uart_puts("v0.3 typed BSTART.* smoke ... ");
+    uart_puts("v0.56 typed BSTART.* smoke ... ");
 
     test_typed_block_starts_smoke();
 
     test_pass();
 
     test_start(0x1201);
-    uart_puts("v0.3 MSEQ SIMT store ... ");
+    uart_puts("v0.56 MSEQ SIMT store ... ");
 
     test_mseq_simt_store();
 
     test_pass();
 
     test_start(0x1210);
-    uart_puts("v0.3 MSEQ SIMT copy ... ");
+    uart_puts("v0.56 MSEQ SIMT copy ... ");
 
     test_mseq_simt_copy();
 
     test_pass();
 
     test_start(0x1220);
-    uart_puts("v0.3 VSEQ local tile store ... ");
+    uart_puts("v0.56 VSEQ local tile store ... ");
 
     test_vseq_local_tile_store();
 
     test_pass();
 
     test_start(0x1230);
-    uart_puts("v0.3 MSEQ SIMT f32 smoke ... ");
+    uart_puts("v0.56 MSEQ SIMT f32 smoke ... ");
 
     test_mseq_simt_f32_smoke();
 
     test_pass();
 
     test_start(0x1240);
-    uart_puts("v0.3 MSEQ RI-order guard ... ");
+    uart_puts("v0.56 MSEQ RI-order guard ... ");
 
     test_mseq_ri_order_guard();
 
     test_pass();
 
     test_start(0x1260);
-    uart_puts("v0.3 MSEQ body b.nz on p ... ");
+    uart_puts("v0.56 MSEQ body b.nz on p ... ");
 
     test_mseq_branch_nz_on_p();
 
     test_pass();
 
     test_start(0x1270);
-    uart_puts("v0.3 MSEQ body b.z on p ... ");
+    uart_puts("v0.56 MSEQ body b.z on p ... ");
 
     test_mseq_branch_z_on_p();
 
     test_pass();
 
     test_start(0x1290);
-    uart_puts("v0.3 MSEQ nested body branches on p ... ");
+    uart_puts("v0.56 MSEQ nested body branches on p ... ");
 
     test_mseq_nested_branch_on_p();
 
     test_pass();
 
     test_start(0x12A0);
-    uart_puts("v0.3 MSEQ active-replay break/skip runtime ... ");
+    uart_puts("v0.56 MSEQ active-replay break/skip runtime ... ");
 
     test_mseq_active_replay_break_runtime();
 
     test_pass();
 
     test_start(0x12B0);
-    uart_puts("v0.3 MSEQ active-replay else/rejoin runtime ... ");
+    uart_puts("v0.56 MSEQ active-replay else/rejoin runtime ... ");
 
     test_mseq_active_replay_else_rejoin_runtime();
 
     test_pass();
 
     test_start(0x12C0);
-    uart_puts("v0.3 MSEQ grouped else/rejoin runtime ... ");
+    uart_puts("v0.56 MSEQ grouped else/rejoin runtime ... ");
 
     test_mseq_grouped_else_rejoin_runtime();
 
     test_pass();
 
     test_start(0x12D0);
-    uart_puts("v0.3 MSEQ grouped nested rejoin runtime ... ");
+    uart_puts("v0.56 MSEQ grouped nested rejoin runtime ... ");
 
     test_mseq_grouped_nested_rejoin_runtime();
 
     test_pass();
 
     test_start(0x12E0);
-    uart_puts("v0.3 MSEQ grouped backward-loop runtime ... ");
+    uart_puts("v0.56 MSEQ grouped backward-loop runtime ... ");
 
     test_mseq_grouped_backward_loop_runtime();
 
     test_pass();
 
     test_start(0x12F0);
-    uart_puts("v0.3 MSEQ grouped active-state runtime ... ");
+    uart_puts("v0.56 MSEQ grouped active-state runtime ... ");
 
     test_mseq_grouped_active_state_runtime();
 

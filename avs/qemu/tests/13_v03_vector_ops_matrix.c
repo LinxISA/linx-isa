@@ -1,5 +1,5 @@
 /*
- * v0.3 Vector operation matrix tests (MSEQ body execution path).
+ * v0.56 Vector operation matrix tests (MSEQ body execution path).
  *
  * Coverage intent:
  * - Integer vector ALU + bridged path: v.add / v.sub + v.lw.brg / v.sw.brg
@@ -152,17 +152,17 @@ static void test_v_mixed_scalar_vector_predicate(void)
 void run_v03_vector_ops_matrix_tests(void)
 {
     test_start(0x1300);
-    uart_puts("v0.3 vector add/sub matrix ... ");
+    uart_puts("v0.56 vector add/sub matrix ... ");
     test_v_add_sub_matrix();
     test_pass();
 
     test_start(0x1310);
-    uart_puts("v0.3 vector float matrix ... ");
+    uart_puts("v0.56 vector float matrix ... ");
     test_v_float_matrix();
     test_pass();
 
     test_start(0x1320);
-    uart_puts("v0.3 mixed scalar/vector predicate ... ");
+    uart_puts("v0.56 mixed scalar/vector predicate ... ");
     test_v_mixed_scalar_vector_predicate();
     test_pass();
 }

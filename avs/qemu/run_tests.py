@@ -193,6 +193,9 @@ EXPERIMENTAL_SUITES: set[str] = {
     # Requires tile builtin-enabled clang and PTO kernel headers.
     "tile",
     "pto_parity",
+    # v0.56 migration keeps this behind --all-suites until the vblock body
+    # symbol lowering and objdump expectations are refreshed for canonical B.IOT.
+    "simt_autovec",
     # Standalone negative trap regression; not a normal smoke lane.
     "v03_vector_body_fault",
 }
@@ -725,7 +728,7 @@ def main(argv: list[str]) -> int:
     ]
     if any(s in selected for s in ("tile", "pto_parity")):
         # Keep tile-suite bring-up deterministic: SIMT autovec currently
-        # triggers a mid-end crash on migrated PTO kernels under strict v0.3.
+        # triggers a mid-end crash on migrated PTO kernels under strict v0.56.
         common_cflags += ["-mllvm", "-linx-simt-autovec=false"]
     if any(s in selected for s in ("tile", "pto_parity")):
         # Runtime policy: migrated PTO kernels run in smoke profile under QEMU.

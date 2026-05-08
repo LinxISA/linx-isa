@@ -68,17 +68,17 @@ This enables:
 
 ---
 
-## 2. Execution model: build on LinxISA v0.3 SIMT vector blocks
+## 2. Execution model: build on LinxISA v0.56 SIMT vector blocks
 
 LinxISA already defines SIMT-style execution via **vector block types** (`MSEQ/MPAR/VSEQ/VPAR`) rather than a separate “GPU mode”.
 
-Reference notes: `docs/architecture/research/linxisa-v0.3-simt-vector-model.md`
+Reference contract: `docs/architecture/v0.56-simt-compiler-contract.md`
 
 ### 2.1 The core idea (ISA-grounded)
 - Programmer-visible model: **SIMT** expressed as a *one-lane body* replayed over a lane space.
 - Hardware backend: implement that replay efficiently on **VEC** pipelines.
 
-Architectural mapping (strict v0.3):
+Architectural mapping (strict v0.56):
 - Lane space is defined by `LB0..LB2` (written by `B.DIM`), with lane counters `lc0..lc2` visible in the body.
 - Canonical 1-D lowering:
   - `LB0 = lane_count` (lanes per group)
@@ -103,8 +103,8 @@ Mapping to LinxISA semantics:
 - Use `lc1` as the group id (warp id) when multiple groups are dispatched (`LB1 = group_count`).
 
 Important contract alignment:
-- This is consistent with strict v0.3’s “scalar-uniform per group” rule.
-- We must explicitly define how the **64-bit lane mask** interacts with v0.3’s inactive-lane policy (`merge` vs `zero`) and how it is set/updated by the shader compiler/runtime.
+- This is consistent with strict v0.56’s scalar-uniform per group rule.
+- We must explicitly define how the **64-bit lane mask** interacts with v0.56’s inactive-lane policy (`merge` vs `zero`) and how it is set/updated by the shader compiler/runtime.
 
 ### 2.2 `LB0` lane_count policy & VEC width
 Critical decisions (implementation policy; ISA allows variability):
@@ -189,7 +189,7 @@ Create/choose an internal IR that makes the **Linx vector-block model** explicit
 - subgroup ops: shuffles (`V.SHFL*`) and reductions (`V.RD*`)
 - `.local`/`.brg` memory selection and coalescing strategy for the bridged path
 
-Note: an **exec-mask** may still exist as a *microarchitectural* optimization, but it is not the primary architectural programming model in strict v0.3; the compiler should be correct using lane predicate values.
+Note: an **exec-mask** may still exist as a *microarchitectural* optimization, but it is not the primary architectural programming model in strict v0.56; the compiler should be correct using lane predicate values.
 
 Then lower to a machine model:
 - scalar ops (address calc, control)

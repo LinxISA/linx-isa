@@ -5,7 +5,7 @@
 [[inst_b_iot]]
 ==== B.IOT
 
-*Syntax:* B.IOT [SrcTile0<.reuse>, SrcTile1<.reuse>],  group=0, ->DstTile<RegSrc>
+*Syntax:* B.IOT <last>, ->DstTile<Size>
 
 *Description:* -
 

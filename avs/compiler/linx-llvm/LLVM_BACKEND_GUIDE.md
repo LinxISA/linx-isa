@@ -31,7 +31,7 @@ Use the tool in this repo to generate TableGen instruction patterns:
 
 ```bash
 python3 tools/isa/gen_llvm_tablegen.py \
-  --spec isa/v0.3/linxisa-v0.3.json \
+  --spec removed-pre-v056-profile/removed-pre-v056-catalog.json \
   --out avs/compiler/linx-llvm/LinxISAInstrInfo.td
 ```
 
@@ -157,7 +157,7 @@ python3 avs/compiler/linx-llvm/tests/analyze_coverage.py --verbose
 
 ## Resources
 
-- ISA Spec: `isa/v0.3/linxisa-v0.3.json`
+- ISA Spec: `removed-pre-v056-profile/removed-pre-v056-catalog.json`
 - Codec Tables: `isa/generated/codecs/linxisa*.decode`
 - Test Programs: `avs/compiler/linx-llvm/tests/c/*.c`
 - Coverage Tool: `avs/compiler/linx-llvm/tests/analyze_coverage.py`

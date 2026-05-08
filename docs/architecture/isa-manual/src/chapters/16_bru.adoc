@@ -1,5 +1,5 @@
 // Generated file; do not edit by hand.
-// Auto-generated from isa/v0.4/linxisa-v0.4.json and uop_classification_v0.4.json
+// Auto-generated from isa/v0.56/linxisa-v0.56.json and uop_classification_v0.56.json
 
 [[chapter_bru]]
 == BRU - Branch and Compare

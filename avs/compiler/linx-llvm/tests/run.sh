@@ -213,7 +213,7 @@ if [[ $FAILED -ne 0 ]]; then
   exit 1
 fi
 
-SPEC="${SPEC:-$ROOT/../../../../isa/v0.4/linxisa-v0.4.json}"
+SPEC="${SPEC:-$ROOT/../../../../isa/v0.56/linxisa-v0.56.json}"
 GEN_VECTORS="$ROOT/gen_disasm_vectors.py"
 ROUNDTRIP_CHECK="$ROOT/check_disasm_roundtrip.py"
 SPEC_ROUNDTRIP_POLICY="${SPEC_ROUNDTRIP_POLICY:-audit}" # audit|strict

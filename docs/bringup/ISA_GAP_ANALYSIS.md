@@ -20,7 +20,7 @@ Comparable to Arm/x86/RISC-V maturity means:
 ## Current Strengths (Evidence in Repo)
 
 - Golden opcode database and generated JSON catalog:
-  - `isa/v0.4/` -> `isa/v0.4/linxisa-v0.4.json`
+  - `isa/v0.56/` -> `isa/v0.56/linxisa-v0.56.json`
 - Encoding conflict checks and hole reporting:
   - `python3 tools/isa/report_encoding_space.py --check`
   - Report: `docs/reference/encoding_space_report.md`

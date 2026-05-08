@@ -2,7 +2,7 @@
 //
 // This suite exercises the builtin-based PTO→LinxISA tile lowering (no inline
 // assembly / no raw-encoding stubs):
-// - BSTART.TMA + B.IOT/B.IOTI: TLOAD/TSTORE
+// - BSTART.TMA + B.IOT: TLOAD/TSTORE
 // - BSTART.CUBE(MAMULB/ACCCVT) + B.DIM + B.IOT: 8x8 i32 matmul in QEMU (TAU emulation)
 
 #include "linx_test.h"
@@ -196,7 +196,7 @@ static void run_base_tile_tests()
     auto tA_acc = pto::linx::tload<kTileSizeCode>(A);
     auto tB_acc = pto::linx::tload<kTileSizeCode>(B);
 
-    // v0.3 bring-up: the implicit accumulator is seeded by a preceding MAMULB.
+    // v0.56 bring-up: the implicit accumulator is seeded by a preceding MAMULB.
     // The ACC operand of tmatmul_acc is currently a SSA dependency carrier.
     auto tSeed = pto::linx::mamulb<8, 8, 8>(tA_acc, tB_acc);
     auto tOut = pto::linx::tmatmul_acc<8, 8, 8>(tSeed, tA_acc, tB_acc);
@@ -557,7 +557,7 @@ static void run_tma_layout_and_padding_tests()
 static void run_tso_store_store_order_smoke()
 {
     /*
-     * Strict v0.3 contract requires one architectural TSO ordering domain for
+     * Strict v0.56 contract requires one architectural TSO ordering domain for
      * scalar (BCC) and tile-memory (TMA/MTC) channels. This is a bring-up smoke
      * test that the observable store order is preserved across one scalar store
      * followed by one TSTORE.

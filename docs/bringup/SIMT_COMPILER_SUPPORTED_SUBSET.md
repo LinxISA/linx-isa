@@ -8,7 +8,7 @@ lowering centered on
 
 It is an implementation-status page, not the architectural contract. The live
 architecture direction is defined by
-`docs/architecture/v0.4-simt-compiler-contract.md`.
+`docs/architecture/v0.56-simt-compiler-contract.md`.
 
 ## Purpose
 
@@ -53,7 +53,7 @@ Its default posture is:
 This means the pass is currently best understood as:
 
 - a usable SIMT kernel generator for a narrow canonical loop subset,
-- plus an experimental bridge toward the newly frozen divergent `v0.4` SIMT
+- plus an experimental bridge toward the newly frozen divergent `v0.56` SIMT
   contract.
 
 ## Current Accepted Loop Shape
@@ -118,7 +118,7 @@ correctness:
 - the logical thread index remains `lc0 + lc1 * LB0` when the grouped layout
   uses more than one group.
 
-This is implementation status, not the final intended `v0.4` SIMT contract.
+This is implementation status, not the final intended `v0.56` SIMT contract.
 
 ## Current Inner Control-Flow Behavior
 
@@ -171,7 +171,7 @@ shape:
   the compiler/materialization explicitly stores that state outside `p`.
 
 Direct `->p` branch transfer remains covered by the existing dedicated
-`v0.3 MSEQ body b.nz/b.z on p` and nested-branch runtime regressions.
+dedicated MSEQ body b.nz/b.z-on-p and nested-branch runtime regressions.
 
 The compiler-side boundary has moved as well: simple active-replay loops with a
 derived max tripcount and unit-stride memory now lower under grouped layout,
@@ -222,7 +222,7 @@ local `p`-branch/jump control flow. The guarded positive cases are:
 
 Those extra positives line up with a standard SIMT compiler technique: when
 earlier scalar optimization can if-convert a simple diamond into predicate and
-select form, the grouped kernel can stay within the current canonical `v0.4`
+select form, the grouped kernel can stay within the current canonical `v0.56`
 body contract (`BSTART.MSEQ`, `B.TEXT`, grouped `LB0/LB1`, vector compare, and
 select) without needing first-class EXEC-mask save/restore or split/rejoin
 reconvergence.
@@ -275,7 +275,7 @@ carrier for that operation:
 
 - plain scalar `add p, zero, ->t` / `add t, zero, ->p` fails because the
   scalar form only carries 5-bit register fields,
-- canonical `v0.4` parsing rejects `l.add ...` legacy syntax,
+- canonical `v0.56` parsing rejects `l.add ...` legacy syntax,
 - so there is currently no accepted canonical asm shape for group-domain
   `p` save/restore through a scalar carrier.
 
@@ -546,9 +546,9 @@ For now, a kernel should be considered within the supported subset when it:
 ## Relationship To Other Pages
 
 - Architecture contract:
-  `docs/architecture/v0.4-simt-compiler-contract.md`
+  `docs/architecture/v0.56-simt-compiler-contract.md`
 - Architecture planning:
-  `docs/architecture/v0.4-simt-compiler-contract-plan.md`
+  `docs/architecture/v0.56-simt-compiler-contract-plan.md`
 - Compiler maturity roadmap:
   `docs/bringup/SIMT_COMPILER_MATURITY_PLAN.md`
 

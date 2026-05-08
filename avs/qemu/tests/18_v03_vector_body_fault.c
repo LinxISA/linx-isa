@@ -5,7 +5,7 @@
  * Dedicated negative regression for in-body branch containment.
  *
  * This suite intentionally uses a no-return trap/exit chain, so keep it as a
- * standalone lane rather than folding it into the normal v0.3 vector smoke.
+ * standalone lane rather than folding it into the normal v0.56 vector smoke.
  */
 
 enum {
@@ -126,7 +126,7 @@ __asm__(
 void run_v03_vector_body_fault_tests(void)
 {
     test_start(TESTID_V03_BODY_BFETCH);
-    uart_puts("v0.3 in-body branch escape traps E_BLOCK(EC_BFETCH) ... ");
+    uart_puts("v0.56 in-body branch escape traps E_BLOCK(EC_BFETCH) ... ");
 
     ssrset_uimm(SSR_LAST_TRAPNO, 0);
     ssrset_uimm(SSR_LAST_TRAPARG0, 0);

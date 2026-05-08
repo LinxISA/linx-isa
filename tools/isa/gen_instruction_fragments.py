@@ -176,8 +176,8 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--profile",
-        choices=["v0.3", "v0.4"],
-        default="v0.4",
+        choices=["v0.56"],
+        default="v0.56",
         help="ISA profile for default --spec and --uop-root paths",
     )
     ap.add_argument("--spec", default=None, help="Path to ISA catalog JSON")

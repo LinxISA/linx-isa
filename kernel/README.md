@@ -11,7 +11,7 @@ This directory hosts the **Linux kernel port** for LinxISA.
 
 | Topic | Path |
 |-------|------|
-| ISA specification | `isa/v0.3/linxisa-v0.3.json` |
+| ISA specification | `isa/v0.56/linxisa-v0.56.json` |
 | Linux bring-up scripts | `kernel/linux/tools/linxisa/initramfs/` |
 | Linux bring-up phase | `docs/bringup/phases/06_linux_on_janus.md` |
 

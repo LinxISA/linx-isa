@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Build the compiled LinxISA v0.4 catalog from the multi-file golden sources.
+Build the compiled LinxISA v0.56 catalog from the multi-file golden sources.
 
 Golden sources live under:
-  isa/v0.4/
+  isa/v0.56/
 
 Compiled output is checked in at:
-  isa/v0.4/linxisa-v0.4.json
+  isa/v0.56/linxisa-v0.56.json
 
 This builder is intentionally deterministic:
   - no timestamps
@@ -667,17 +667,17 @@ def _canonical_json(obj: Any) -> str:
     return json.dumps(obj, sort_keys=True, separators=(",", ":"))
 
 
-def _profile_defaults() -> Tuple[str, str]:
-    return "isa/v0.4", "isa/v0.4/linxisa-v0.4.json"
+def _profile_defaults(profile: str = "v0.56") -> Tuple[str, str]:
+    return f"isa/{profile}", f"isa/{profile}/linxisa-{profile}.json"
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--profile",
-        choices=["v0.3", "v0.4"],
-        default="v0.4",
-        help="ISA profile for default in/out paths (v0.4 is canonical)",
+        choices=["v0.56"],
+        default="v0.56",
+        help="ISA profile for default in/out paths (v0.56 is canonical)",
     )
     ap.add_argument("--in", dest="in_dir", default=None, help="Golden source directory")
     ap.add_argument("--out", default=None, help="Output catalog JSON path")
@@ -685,7 +685,7 @@ def main() -> int:
     ap.add_argument("--check", action="store_true", help="Verify output is up-to-date without writing")
     args = ap.parse_args()
 
-    default_in, default_out = _profile_defaults()
+    default_in, default_out = _profile_defaults(args.profile)
     in_dir = Path(args.in_dir or default_in)
     out_path = Path(args.out or default_out)
 

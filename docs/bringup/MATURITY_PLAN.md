@@ -107,7 +107,7 @@ Status: Planned
 ## SIMT-Specific Planning Pages
 
 - Architecture detail plan:
-  `docs/architecture/v0.4-simt-compiler-contract-plan.md`
+  `docs/architecture/v0.56-simt-compiler-contract-plan.md`
 - Compiler maturation plan:
   `docs/bringup/SIMT_COMPILER_MATURITY_PLAN.md`
 

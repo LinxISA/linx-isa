@@ -1,9 +1,9 @@
 # Scratch Tests (Legacy Pointer)
 
-This directory no longer stores ad-hoc scratch sources in public v0.4.
+This directory no longer stores ad-hoc scratch sources in public v0.56.
 
 Use the canonical public assembly sample pack instead:
 
-- `docs/reference/examples/v0.3/scratch-legacy/`
-- `docs/reference/examples/v0.3/curated/`
-- `docs/reference/examples/v0.3/generated/`
+- `removed-pre-v056-examples/scratch-legacy/`
+- `removed-pre-v056-examples/curated/`
+- `removed-pre-v056-examples/generated/`

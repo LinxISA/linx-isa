@@ -131,7 +131,9 @@ def analyze_coverage(
     out_dir: Path,
     llvm_backend_path: Path = None
 ) -> Dict:
-    objdump_files = sorted(out_dir.glob("**/*.objdump"))
+    objdump_files = sorted(
+        p for p in out_dir.glob("**/*.objdump") if "_roundtrip_probe" not in p.parts
+    )
     if not objdump_files:
         raise SystemExit(f"error: no *.objdump files found under {out_dir}")
 
@@ -286,7 +288,7 @@ def main() -> int:
     parser.add_argument(
         "--spec",
         type=Path,
-        default=Path(__file__).resolve().parents[4] / "isa/v0.4/linxisa-v0.4.json",
+        default=Path(__file__).resolve().parents[4] / "isa/v0.56/linxisa-v0.56.json",
         help="Path to ISA spec JSON"
     )
     parser.add_argument(

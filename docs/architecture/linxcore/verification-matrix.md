@@ -1,7 +1,7 @@
 <!-- AUTO-GENERATED FILE. DO NOT EDIT DIRECTLY. -->
 <!-- Source: rtl/LinxCore/docs/architecture/verification-matrix.md -->
 
-# LinxCore v0.4 Verification Matrix
+# LinxCore v0.56 Verification Matrix
 
 > This published page mirrors the canonical LinxCore source in
 > `rtl/LinxCore/docs/architecture/verification-matrix.md`.

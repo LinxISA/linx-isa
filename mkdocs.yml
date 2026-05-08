@@ -41,12 +41,12 @@ nav:
   - Getting Started: bringup/GETTING_STARTED.md
   - ISA Specification:
       - Architecture Framework: architecture/README.md
-      - v0.4 Contract & Guarantees: architecture/v0.4-architecture-contract.md
-      - v0.4 Hardening Policy: architecture/v0.4-hardening-policy.md
-      - v0.4 Workload Engine Model: architecture/v0.4-workload-engine-model.md
-      - v0.4 Rendering Kernel Guide: architecture/v0.4-rendering-kernel-authoring.md
-      - v0.4 Rendering PTO Contract: architecture/v0.4-rendering-pto-contract.md
-      - v0.4 Rendering Command Contract: architecture/v0.4-rendering-command-contract.md
+      - v0.56 Contract & Guarantees: architecture/v0.56-architecture-contract.md
+      - v0.56 Hardening Policy: architecture/v0.56-hardening-policy.md
+      - v0.56 Workload Engine Model: architecture/v0.56-workload-engine-model.md
+      - v0.56 Rendering Kernel Guide: architecture/v0.56-rendering-kernel-authoring.md
+      - v0.56 Rendering PTO Contract: architecture/v0.56-rendering-pto-contract.md
+      - v0.56 Rendering Command Contract: architecture/v0.56-rendering-command-contract.md
       - Assembly Guide: reference/linxisa-assembly-agent-guide.md
       - Call/Ret Contract (ABI): reference/linxisa-call-ret-contract.md
       - Encoding Space Analysis: reference/encoding_space_report.md
@@ -72,4 +72,4 @@ nav:
       - Project Overview: project/README.md
       - Canonical Navigation: project/navigation.md
       - Workflow & Governance: project/repository-flow.md
-      - Releases: releases/v0.4.0.md
+      - Releases: releases/v0.56.2.md

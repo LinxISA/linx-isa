@@ -1,9 +1,9 @@
 // Generated file; do not edit by hand.
-// Source: linxisa-v0.4.json (built from isa/v0.4/)
+// Source: linxisa-v0.56.json (built from isa/v0.56.2/)
 
 [cols="1,1,2,4",options="header"]
 |===
-|Code |Draft name |Preferred asm |Accepted spellings
+|Code |Name |Preferred asm |Accepted spellings
 |0
 |`R0`
 |`zero`

@@ -1,0 +1,18 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_b_catr]]
+==== B.CATR
+
+*Syntax:* B.CATR {trap, atomic, <aq, rl, aqrl>, far, dr}
+
+*Description:* -
+
+*Encoding:*
+
+image::../generated/encodings/enc_b_catr.svg[B.CATR encoding,width=800]
+
+*Uop-Class:* -
+
+*Compression:* L32 (len=32)

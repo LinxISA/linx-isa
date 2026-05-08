@@ -1,6 +1,6 @@
-# LinxISA Bring-up (Public v0.4)
+# LinxISA Bring-up (Public v0.56)
 
-This directory tracks `v0.4` architecture and implementation alignment, with AVS as the only live public bring-up contract.
+This directory tracks `v0.56` architecture and implementation alignment, with AVS as the only live public bring-up contract.
 
 ## Start Here
 
@@ -9,7 +9,7 @@ This directory tracks `v0.4` architecture and implementation alignment, with AVS
 
 ## Normative Contract
 
-- Architecture contract: `docs/architecture/v0.4-architecture-contract.md`
+- Architecture contract: `docs/architecture/v0.56-architecture-contract.md`
 - AVS contract page: `docs/bringup/AVS_CONTRACT.md`
 - canonical AVS matrix: `avs/linx_avs_v1_test_matrix.yaml`
 - contract gate: `python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml`
@@ -26,6 +26,7 @@ This directory tracks `v0.4` architecture and implementation alignment, with AVS
 - `docs/bringup/CPP_BRINGUP_CONTRACT.md`
 - `docs/bringup/PROGRESS.md`
 - `docs/bringup/gates/latest.json` (canonical machine-readable gate report)
+- `docs/bringup/gate_registry.json` (canonical profile/tier gate registry)
 - `docs/bringup/GATE_STATUS.md` (generated from gate report JSON)
 - `docs/bringup/LINX_ASM_ABI_UNWIND_CONTEXT_CHECKLIST.md`
 - `docs/bringup/CROSSSTACK_SKILLS_SUMMARY.md`
@@ -58,6 +59,18 @@ if you intentionally keep toolchains outside the superproject.
 Gate status markdown refresh command:
 
 `python3 tools/bringup/gate_report.py render --report docs/bringup/gates/latest.json --out-md docs/bringup/GATE_STATUS.md`
+
+Canonical profile/tier runner:
+
+`python3 tools/bringup/run_gates.py --profile release-strict --tier pr`
+
+Compatibility entrypoints:
+
+- `bash tools/regression/run.sh`
+- `bash tools/regression/strict_cross_repo.sh`
+
+Use `LINX_GATE_DRY_RUN=1` with either wrapper to inspect the selected gate
+commands without running toolchain, emulator, or Linux boot work.
 
 Multi-agent strict static checklist gate:
 

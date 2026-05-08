@@ -237,7 +237,7 @@
   },
   "generated_at_utc": "2026-04-24 00:10:42Z",
   "matrix_file": "/Users/zhoubot/linx-isa/avs/linx_avs_v1_test_matrix.yaml",
-  "schema_version": "linx-avs-v0.4-status-v3",
+  "schema_version": "linx-avs-v0.56-status-v3",
   "statuses": {
     "AVS-ABI-001": {
       "evidence": [

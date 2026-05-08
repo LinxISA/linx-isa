@@ -1,7 +1,7 @@
 {
   "checked_docs": [
     "docs/architecture/README.md",
-    "docs/architecture/v0.4-architecture-contract.md",
+    "docs/architecture/v0.56-architecture-contract.md",
     "rtl/LinxCore/docs/architecture/overview.md",
     "rtl/LinxCore/docs/architecture/microarchitecture.md",
     "rtl/LinxCore/docs/architecture/interfaces.md",

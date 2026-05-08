@@ -81,7 +81,7 @@ Unless stated otherwise, tests apply to both `LNX-S32` and `LNX-S64`.
 - Profile: all (bring-up gate)
 - Requirement:
   - `llvm-objdump -d` MUST be able to decode and print a mnemonic token for
-    every mnemonic enumerated in `isa/v0.3/linxisa-v0.3.json` when fed
+    every mnemonic enumerated in `removed-pre-v056-profile/removed-pre-v056-catalog.json` when fed
     the generated decode vectors (`avs/compiler/linx-llvm/tests/gen_disasm_vectors.py`).
 - Pass criteria:
   - `python3 avs/compiler/linx-llvm/tests/analyze_coverage.py --fail-under 100` exits 0.

@@ -58,7 +58,7 @@ These forms encode:
 * a contiguous register range (`*Begin`..`*End` fields in the catalog), and
 * an immediate stack adjustment (`uimm`)
 
-Additional macro blocks appear in the draft catalog for future use (examples):
+Additional macro blocks appear in the v0.56 catalog for future use (examples):
 
 * `MCOPY [RegSrc0, RegSrc1, RegSrc2]` (bulk copy)
 * `MSET  [RegSrc0, RegSrc1, RegSrc2]` (bulk set)
@@ -85,7 +85,7 @@ FRET.STK  [ra ~ s2], sp!, 16
 ----
 
 The precise memory layout and ordering of the save/restore operation is defined by the architectural specification
-golden sources (`isa/v0.4/`) and the canonical catalog (`isa/v0.4/linxisa-v0.4.json`).
+golden sources (`isa/v0.56/`) and the canonical catalog (`isa/v0.56/linxisa-v0.56.json`).
 
 [[templates-esave]]
 === Extended context save/restore (`ESAVE` / `ERCOV`) (v0.2 bring-up)

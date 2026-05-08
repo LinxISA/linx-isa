@@ -1,0 +1,18 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_b_datr]]
+==== B.DATR
+
+*Syntax:* B.DATR {layout.{canon, normal}, datatype, padvalue, cmode, rmode, sat}
+
+*Description:* -
+
+*Encoding:*
+
+image::../generated/encodings/enc_b_datr.svg[B.DATR encoding,width=800]
+
+*Uop-Class:* -
+
+*Compression:* L32 (len=32)

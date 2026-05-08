@@ -73,7 +73,7 @@
   Command: `python3 tools/bringup/check_linxcore_perf_floor.py --root . --max-regression 10.0 ...`
   Done means: measured throughput regression is within configured threshold or run is rejected.
 
-- [ ] ID: INT-017 Require pinned build closure for compiler, QEMU, Linux, and libc after v0.4 propagation.
+- [ ] ID: INT-017 Require pinned build closure for compiler, QEMU, Linux, and libc after v0.56 propagation.
   Command: `cd avs/compiler/linx-llvm/tests && CLANG=compiler/llvm/build-linxisa-clang/bin/clang TARGET=linx64-linx-none-elf OUT_DIR=out-linx64 ./run.sh && CLANG=compiler/llvm/build-linxisa-clang/bin/clang TARGET=linx32-linx-none-elf OUT_DIR=out-linx32 ./run.sh`; `ninja -C emulator/qemu/build qemu-system-linx64`; `bash lib/glibc/tools/linx/build_linx64_glibc.sh`; `bash lib/glibc/tools/linx/build_linx64_glibc_g1b.sh`; `MODE=phase-b lib/musl/tools/linx/build_linx64_musl.sh`; `env PATH=$PWD/compiler/llvm/build-linxisa-clang/bin:$PATH /opt/homebrew/bin/gmake -C kernel/linux ARCH=linx LLVM=$PWD/compiler/llvm/build-linxisa-clang/bin/ 'CC=$PWD/compiler/llvm/build-linxisa-clang/bin/clang --target=linx64-unknown-linux-gnu -fintegrated-as' HOSTCC=/usr/bin/clang HOSTCXX=/usr/bin/clang++ O=$PWD/kernel/linux/build-linx-fixed vmlinux -j$(sysctl -n hw.ncpu 2>/dev/null || nproc)`
   Done means: the pinned workspace compiles the propagated toolchain/emulator stack and produces Linux + libc artifacts without build failures.
   Status: ✅ PASS (2026-04-18) - the latest pin-lane run records compiler, QEMU, musl, glibc, and clean-helper Linux `vmlinux` build closure as pass.

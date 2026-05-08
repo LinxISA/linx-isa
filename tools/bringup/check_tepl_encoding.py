@@ -3,12 +3,12 @@
 
 Verify that TEPL tile opcode encodings are consistent across:
 
-- ISA canonical engine-op catalog (`isa/v0.4/state/engine_ops.json`)
+- ISA canonical engine-op catalog (`isa/v0.56/state/engine_ops.json`)
 - PTO-Kernel constants (include/common/pto_tileop.hpp) if available
 - Optional other consumers (LLVM/QEMU) *if present* in the superproject
 
 Policy:
-- The v0.4 engine-op catalog is treated as the canonical encoding contract.
+- The v0.56 engine-op catalog is treated as the canonical encoding contract.
 - Other sources may omit ops (unimplemented), but MUST NOT disagree on any op they define.
 - Other sources MUST NOT define TEPL ops that are absent from the canonical catalog.
 
@@ -175,8 +175,8 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--root", default=".", help="repo root")
     ap.add_argument(
         "--engine-ops",
-        default="isa/v0.4/state/engine_ops.json",
-        help="path to canonical v0.4 TEPL engine-op catalog",
+        default="isa/v0.56/state/engine_ops.json",
+        help="path to canonical v0.56 TEPL engine-op catalog",
     )
     ap.add_argument(
         "--pto-submodule",

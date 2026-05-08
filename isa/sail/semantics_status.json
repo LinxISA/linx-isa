@@ -14,7 +14,8 @@
     "ANDW": "implemented",
     "ASSERT": "implemented",
     "B.ARG": "implemented",
-    "B.ATTR": "implemented",
+    "B.CATR": "implemented",
+    "B.DATR": "implemented",
     "B.DIM": "implemented",
     "B.EQ": "implemented",
     "B.GE": "implemented",
@@ -23,7 +24,6 @@
     "B.IOD": "implemented",
     "B.IOR": "implemented",
     "B.IOT": "implemented",
-    "B.IOTI": "implemented",
     "B.LT": "implemented",
     "B.LTU": "implemented",
     "B.NE": "implemented",
@@ -712,5 +712,5 @@
     "XORIW": "implemented",
     "XORW": "implemented"
   },
-  "schema_version": "linx-sail-status-v0.4"
+  "schema_version": "linx-sail-status-v0.56"
 }

@@ -141,7 +141,7 @@ def _seed_instruction_bits(inst: dict[str, object], length_bits: int, parts: lis
 
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--spec", type=Path, required=True, help="Path to compiled ISA catalog JSON (for example isa/v0.4/linxisa-v0.4.json)")
+    ap.add_argument("--spec", type=Path, required=True, help="Path to compiled ISA catalog JSON (for example isa/v0.56/linxisa-v0.56.json)")
     ap.add_argument("--out", type=Path, required=True, help="Output assembly file")
     args = ap.parse_args(argv)
 

@@ -11,10 +11,10 @@ Repository-level process, governance, and navigation policies.
 - **[superproject-bringup-methodology.md](superproject-bringup-methodology.md)** - Agent-friendly superproject bring-up methodology and operator runbook
 - **[new-agent-sop.md](new-agent-sop.md)** - Short SOP for a new agent working inside the superproject
 - **[maintainer-repin-checklist.md](maintainer-repin-checklist.md)** - Maintainer checklist for safe submodule repins
-- **[linxisa-superproject-methodology-zh.tex](linxisa-superproject-methodology-zh.tex)** - 中文 LaTeX 手册源文件
-- **[linxisa-superproject-methodology-zh.pdf](linxisa-superproject-methodology-zh.pdf)** - 中文 PDF 手册
-- **[superproject-whitepaper-zh.tex](superproject-whitepaper-zh.tex)** - 中文白皮书 LaTeX 源文件
-- **[superproject-whitepaper-zh.pdf](superproject-whitepaper-zh.pdf)** - 中文方法学白皮书 PDF
+- **[linxisa-superproject-methodology-zh.tex](linxisa-superproject-methodology-zh.tex)** - Chinese LaTeX manual source
+- **[linxisa-superproject-methodology-zh.pdf](linxisa-superproject-methodology-zh.pdf)** - Chinese PDF manual
+- **[superproject-whitepaper-zh.tex](superproject-whitepaper-zh.tex)** - Chinese white paper LaTeX source
+- **[superproject-whitepaper-zh.pdf](superproject-whitepaper-zh.pdf)** - Chinese methodology white paper PDF
 
 ## Navigation Policy
 
@@ -34,7 +34,7 @@ This workspace follows a strict navigation contract. See [navigation.md](navigat
 | Freestanding libc | `avs/runtime/freestanding/` |
 | Linux libc sources | `lib/glibc/`, `lib/musl/` |
 | PTO kernel headers | `workloads/pto_kernels/include/` |
-| Assembly examples | `docs/reference/examples/v0.4/` |
+| Assembly examples | `docs/reference/examples/v0.56/` |
 
 ## CI Validation
 

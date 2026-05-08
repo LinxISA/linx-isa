@@ -1,0 +1,184 @@
+{
+  "notes": [
+    "Architectural state is intentionally minimal here: this repo treats the compiled catalog as the primary machine-readable source.",
+    "v0.56 keeps the v0.2 architectural baseline and promotes the canonical shader-kernel and rendering contracts.",
+    "Contradictory raw legacy fragments are archived history only and are reserved/illegal in canonical v0.56.",
+    "v0.56.2 updates PRED so each lane carries plen[1:0] plus p0..p3 mask bits.",
+    "v0.56.2 replaces the fixed 32-tile/4KB model with 64 logical tiles and dynamic capacity descriptors."
+  ],
+  "state": {
+    "block_control_predicate": {
+      "consumer": [
+        "BSTART COND",
+        "BWE",
+        "BWI"
+      ],
+      "domain": "block-control",
+      "name": "BARG.CARG",
+      "producer": [
+        "SETC.*",
+        "C.SETC.*"
+      ]
+    },
+    "kernel_exec_mask": {
+      "consumer": [
+        "implicit vector predication",
+        "in-body B.Z/B.NZ control flow"
+      ],
+      "inactive_lane_result_for_mask_producer": "inactive lanes clear their destination bit to 0",
+      "inactive_lane_rule": "inactive lanes follow the selected architectural merge/zero policy",
+      "lane_count": 64,
+      "lane_layout": {
+        "p_bits": [
+          "p0",
+          "p1",
+          "p2",
+          "p3"
+        ],
+        "plen_bits": [
+          1,
+          0
+        ]
+      },
+      "lane_mask_width_bits": 6,
+      "name": "p",
+      "packed_lane_rule": "packed convert/compare operations update plen and p0..p3 according to the number of logical elements carried in each lane",
+      "plen_encoding": {
+        "0": "no mask bits valid",
+        "1": "p0 valid",
+        "2": "p0..p1 valid",
+        "3": "p0..p3 valid"
+      },
+      "producer": [
+        "V.CMP.* ->p"
+      ],
+      "width_bits": 64
+    },
+    "simt_group_model": {
+      "compiler_1d_profile": {
+        "group_count_field": "LB1",
+        "lane_count_field": "LB0",
+        "lane_counter_roles": {
+          "lc0": "lane index within current group",
+          "lc1": "group index",
+          "lc2": "optional third-dimension group index"
+        },
+        "lb2_default": 1
+      },
+      "group_execution_mode": {
+        "MPAR": "groups/lanes may execute in parallel but must preserve architectural ordering guarantees",
+        "MSEQ": "groups/lanes retire in lexicographic LC order"
+      },
+      "grouping_rule": "group_count = ceil(total_lanes / lane_count)",
+      "scalar_uniform_lane": "each group has one scalar-uniform lane context; scalar body instructions execute once per group replay"
+    },
+    "vector_body_mixed_execution": {
+      "applies_to_block_types": [
+        "MSEQ",
+        "MPAR",
+        "VSEQ",
+        "VPAR"
+      ],
+      "operand_namespace": {
+        "group_scalars": [
+          "lc0",
+          "lc1",
+          "lc2",
+          "lb0",
+          "lb1",
+          "lb2"
+        ],
+        "scalar_imports": {
+          "binding_rule": "allocated from repeated B.IOR descriptors in header order, then RegSrc0/RegSrc1/RegSrc2 within each descriptor",
+          "form": "ri0..ri11"
+        },
+        "special": [
+          "p",
+          "zero"
+        ],
+        "tile_bases": {
+          "input": [
+            "TA",
+            "TB",
+            "TC",
+            "TD"
+          ],
+          "output": [
+            "TO"
+          ],
+          "reserved_legacy": [
+            "TE",
+            "TF",
+            "TG",
+            "TH",
+            "TO1",
+            "TO2",
+            "TO3"
+          ],
+          "scratch": [
+            "TS"
+          ]
+        }
+      },
+      "replay": "body executes as a structured instruction stream with one scalar-uniform control context per group",
+      "scalar_instructions": {
+        "allowed": true,
+        "state_access": [
+          "GPR",
+          "t/u",
+          "p",
+          "scalar condition state"
+        ]
+      },
+      "vector_instruction_operand_contract": {
+        "any_operand_rule": "if any operand names vt/vu/vm/vn the instruction executes as v.*; otherwise it executes as l.*",
+        "cross_domain_write_rule": "v.* may not write scalar/group-domain destinations except through explicitly defined reduction or mask-producing instructions",
+        "direct_scalar_gpr_names": "illegal",
+        "exception": "zero literal allowed where encoding permits",
+        "scalar_inputs": "must be imported via B.IOR and consumed as ri0..ri11 or other defined scalar/group operand classes",
+        "vector_broadcast_rule": "scalar/group-domain source operands broadcast to all active lanes when consumed by v.*"
+      }
+    },
+    "vector_lane_predicate": {
+      "consumer": [
+        "V.CSEL"
+      ],
+      "producer": [
+        "V.CMP.*",
+        "V.FEQ",
+        "V.FNE",
+        "V.FLT",
+        "V.FGE",
+        "V.FEQS",
+        "V.FNES",
+        "V.FLTS",
+        "V.FGES"
+      ],
+      "storage": "vector queue registers (vt/vu/vm/vn)",
+      "truth_rule": "lane_value != 0"
+    },
+    "vector_reduction_contract": {
+      "compiler_staged_lowering": {
+        "identity_requirement": "staged reduction lowering requires identity initializer for the selected reduction operation",
+        "liveout_bridge": "for strict bring-up, compiler may materialize reduction live-out through `V.RD*` followed by a bridged scratch store (`V.SW.BRG` via ri* binding)"
+      },
+      "destinations": {
+        "group_local": "t/u and block-local scalar destinations",
+        "inter_group": "R0..R23 global scalar registers"
+      },
+      "mnemonics": [
+        "V.RDADD",
+        "V.RDAND",
+        "V.RDFADD",
+        "V.RDFMAX",
+        "V.RDFMIN",
+        "V.RDMAX",
+        "V.RDMIN",
+        "V.RDOR",
+        "V.RDXOR"
+      ],
+      "mp_ar_compiler_rule": "compiler emits MPAR reduction only when dependence-safe (associative/commutative or explicit programmer parallel hint)",
+      "scope": "reduce lane values to a scalar destination"
+    }
+  }
+}

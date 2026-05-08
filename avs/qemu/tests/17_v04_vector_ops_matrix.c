@@ -1,5 +1,5 @@
 /*
- * v0.4 vector operation matrix tests.
+ * v0.56 vector operation matrix tests.
  *
  * Coverage intent:
  * - Integer vector ALU/imm/shift/minmax/div/rem/madd/psel execution.
@@ -674,47 +674,47 @@ static void test_v_convert_rev_matrix(void)
 void run_v04_vector_ops_matrix_tests(void)
 {
     test_start(0x1700);
-    uart_puts("v0.4 vector logic/imm ... ");
+    uart_puts("v0.56 vector logic/imm ... ");
     test_v_logic_imm_matrix();
     test_pass();
 
     test_start(0x1800);
-    uart_puts("v0.4 vector shifts/minmax ... ");
+    uart_puts("v0.56 vector shifts/minmax ... ");
     test_v_shift_minmax_matrix();
     test_pass();
 
     test_start(0x1900);
-    uart_puts("v0.4 vector div/rem/madd/psel ... ");
+    uart_puts("v0.56 vector div/rem/madd/psel ... ");
     test_v_div_madd_psel_matrix();
     test_pass();
 
     test_start(0x1A00);
-    uart_puts("v0.4 vector fp minmax/cmp ... ");
+    uart_puts("v0.56 vector fp minmax/cmp ... ");
     test_v_fp_cmp_matrix();
     test_pass();
 
     test_start(0x1B00);
-    uart_puts("v0.4 vector fp fma ... ");
+    uart_puts("v0.56 vector fp fma ... ");
     test_v_fp_fma_matrix();
     test_pass();
 
     test_start(0x1B80);
-    uart_puts("v0.4 vector fp unary/class ... ");
+    uart_puts("v0.56 vector fp unary/class ... ");
     test_v_fp_unary_class_matrix();
     test_pass();
 
     test_start(0x1C00);
-    uart_puts("v0.4 vector cmp misc ... ");
+    uart_puts("v0.56 vector cmp misc ... ");
     test_v_cmp_misc_matrix();
     test_pass();
 
     test_start(0x1D40);
-    uart_puts("v0.4 vector bitfield ... ");
+    uart_puts("v0.56 vector bitfield ... ");
     test_v_bitfield_matrix();
     test_pass();
 
     test_start(0x1E20);
-    uart_puts("v0.4 vector convert/rev ... ");
+    uart_puts("v0.56 vector convert/rev ... ");
     test_v_convert_rev_matrix();
     test_pass();
 }

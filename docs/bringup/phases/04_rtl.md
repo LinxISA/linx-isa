@@ -4,7 +4,7 @@ Primary RTL notes: `rtl/README.md`
 
 ## Scope and source of truth
 
-- Architecture/spec authority: `linxisa` (`isa/v0.4/`, `isa/v0.4/linxisa-v0.4.json`, `isa/generated/codecs/`).
+- Architecture/spec authority: `linxisa` (`isa/v0.56/`, `isa/v0.56/linxisa-v0.56.json`, `isa/generated/codecs/`).
 - RTL/model generation authority:
   - pinned submodule: `tools/pyCircuit` (recommended for reproducibility)
   - or an external checkout (set `PYCIRCUIT_ROOT=/path/to/pyCircuit`).

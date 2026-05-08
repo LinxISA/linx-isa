@@ -40,8 +40,8 @@ git submodule update --init --recursive
 
 ```bash
 # Canonical ISA + AVS contract validation
-python3 tools/isa/build_golden.py --profile v0.4 --check
-python3 tools/isa/validate_spec.py --profile v0.4
+python3 tools/isa/build_golden.py --profile v0.56 --check
+python3 tools/isa/validate_spec.py --profile v0.56
 python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml
 python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier pr
 
@@ -77,9 +77,8 @@ linx-isa/
 │   └── pto_kernels/     # PTO accelerator kernels (submodule)
 │
 ├── isa/                   # ISA specification sources
-│   ├── v0.4/            # live canonical ISA definition
-│   ├── v0.3/            # archived v0.3 ISA definition
-│   └── generated/        # Generated encodings/decoders
+│   ├── v0.56/            # live canonical ISA definition
+││   └── generated/        # Generated encodings/decoders
 │
 └── docs/                  # Architecture & bring-up documentation
     ├── architecture/      # ISA manual and references
@@ -125,7 +124,7 @@ bash tools/ci/check_repo_layout.sh
 
 | Gate | Command | Description |
 |------|---------|-------------|
-| **AVS Contract** | `python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml` | Public `v0.4` bring-up contract schema + reference validation |
+| **AVS Contract** | `python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml` | Public `v0.56` bring-up contract schema + reference validation |
 | **AVS Closure** | `python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier pr` | Tier-scoped AVS closure status |
 | **Sail Model** | `python3 tools/bringup/check_sail_model.py` | Sail wording, status, and parser/typecheck gate |
 | **Compiler AVS** | `cd avs/compiler/linx-llvm/tests && ./run.sh` | LLVM code generation tests |
@@ -151,7 +150,7 @@ bash tools/regression/strict_cross_repo.sh
 
 - **Website**: https://linxisa.github.io/
 - **[Getting Started](docs/bringup/GETTING_STARTED.md)** - Onboarding guide
-- **[Architecture Contract](docs/architecture/v0.4-architecture-contract.md)** - ISA v0.4 specification
+- **[Architecture Contract](docs/architecture/v0.56-architecture-contract.md)** - ISA v0.56 specification
 - **[Bring-up Progress](docs/bringup/PROGRESS.md)** - Current status tracking
 - **[Navigation Guide](docs/project/navigation.md)** - Repository layout policy
 - **[ISA Manual](docs/architecture/isa-manual/README.md)** - Complete ISA documentation
@@ -160,7 +159,7 @@ bash tools/regression/strict_cross_repo.sh
 
 ## Versioning
 
-- **ISA Version**: v0.4 (current)
+- **ISA Version**: v0.56 (current)
 - **Repository**: This superproject pins specific commits of all ecosystem repos
 - **Release Notes**: See [docs/releases/](docs/releases/) for version history
 

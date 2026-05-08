@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Validate the canonical AVS matrix used as the public v0.4 bring-up contract.
+Validate the canonical AVS matrix used as the public v0.56 bring-up contract.
 """
 
 from __future__ import annotations
@@ -30,7 +30,7 @@ REQUIRED_TOP_LEVEL_PROFILES = {
 ALLOWED_DOMAINS = {"Compiler", "Emulator", "ISA", "Kernel", "Library", "Regression", "Model"}
 ALLOWED_STATES = {"active", "archived"}
 ALLOWED_TIERS = {"pr", "nightly"}
-FORBIDDEN_TOKENS = ("check26", "v0.4-draft")
+FORBIDDEN_TOKENS = ("check26", "-draft/")
 
 
 def _load_yaml_or_json(path: Path) -> dict[str, Any]:
@@ -68,7 +68,7 @@ def _validate_spec_ref(repo_root: Path, spec_ref: str, *, ctx: str) -> None:
     ref_path = repo_root / spec_ref
     if not ref_path.exists():
         raise SystemExit(f"error: {ctx} path does not exist: {spec_ref}")
-    if "/docs/architecture/v0.4-draft/" in f"/{spec_ref}" or spec_ref.startswith("docs/architecture/v0.4-draft/"):
+    if "-draft/" in f"/{spec_ref}":
         raise SystemExit(f"error: {ctx} points at archived draft material: {spec_ref}")
 
 
@@ -84,8 +84,8 @@ def main(argv: list[str]) -> int:
 
     data = _load_yaml_or_json(matrix_path)
     version = str(data.get("version", "")).strip()
-    if version != "linx-avs-v0.4":
-        raise SystemExit(f"error: matrix.version must be 'linx-avs-v0.4' (got {version!r})")
+    if version != "linx-avs-v0.56":
+        raise SystemExit(f"error: matrix.version must be 'linx-avs-v0.56' (got {version!r})")
     status = str(data.get("status", "")).strip()
     if status != "canonical":
         raise SystemExit(f"error: matrix.status must be 'canonical' (got {status!r})")

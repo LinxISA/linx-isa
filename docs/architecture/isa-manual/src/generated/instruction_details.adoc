@@ -3,7 +3,7 @@
 [[insnref-details]]
 === Instruction descriptions (by mnemonic)
 
-This section provides per-mnemonic descriptions. The tables above remain the authoritative listing of encodable forms and decode layouts in the v0.4 catalog. Descriptions and pseudocode here are derived from mnemonic naming conventions plus catalog assembly templates/notes and are intended to be *informative*.
+This section provides per-mnemonic descriptions. The tables above remain the authoritative listing of encodable forms and decode layouts in the v0.56.2 catalog. Descriptions and pseudocode here are derived from mnemonic naming conventions plus catalog assembly templates/notes and are intended to be *informative*.
 
 [[insndesc-execution-control]]
 ==== Execution Control
@@ -1400,25 +1400,54 @@ Operation (informative)::
 LBx = Read(RegSrc) + uimm  // x selected by encoding (LB0/LB1/LB2)
 ----
 
-[[insndesc-block-attribute]]
-==== Block Attribute
+[[insndesc-block-control-attribute]]
+==== Block Control Attribute
 
-[[insndesc-block-attribute-b-attr]]
-===== B.ATTR
+[[insndesc-block-control-attribute-b-catr]]
+===== B.CATR
 
-Sets block attributes (e.g., ordering/atomic qualifiers such as aq/rl) as encoded by the operands.
+Block metadata instruction (sub-operation selected by the mnemonic suffix).
 
 Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `B.ATTR {trap, atomic, <aq, rl, aqrl>, far, DataLayout.{canon, normal}, SrcType, PadValue, DR}`
+* `B.CATR {trap, atomic, <aq, rl, aqrl>, far, dr}`
+
+Encoding notes (informative)::
++
+* v0.56 split of legacy B.CATR/B.DATR control fields.
 
 Operation (informative)::
 +
 [source]
 ----
-SetBlockAttributes(/* fields as encoded */)
+UpdateBlockMetadata(/* fields as encoded */)
+----
+
+[[insndesc-block-data-attribute]]
+==== Block Data Attribute
+
+[[insndesc-block-data-attribute-b-datr]]
+===== B.DATR
+
+Block metadata instruction (sub-operation selected by the mnemonic suffix).
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `B.DATR {layout.{canon, normal}, datatype, padvalue, cmode, rmode, sat}`
+
+Encoding notes (informative)::
++
+* v0.56 split of legacy B.CATR/B.DATR data fields. CMode is 3 bits; RMode is 3 bits; Sat is bit 31.
+
+Operation (informative)::
++
+[source]
+----
+UpdateBlockMetadata(/* fields as encoded */)
 ----
 
 [[insndesc-branch]]
@@ -1688,31 +1717,19 @@ DeclareBlockGprIO(/* GPR IO bindings as encoded */)
 
 Declares block input/output bindings for registers/tiles (header metadata for accelerated blocks; tooling and scheduling metadata).
 
-Catalog forms:: 2 form(s) (32 bits).
+Catalog forms:: 3 form(s) (32 bits).
 
 Assembly forms::
 +
-* `B.IOT [SrcTile0<.reuse>, SrcTile1<.reuse>], group=1, ->DstTile<RegSrc>`
-* `B.IOT [SrcTile0<.reuse>, SrcTile1<.reuse>], group=0, ->DstTile<RegSrc>`
+* `B.IOT SrcTile0<.reuse>, <last>, ->DstTile<Size>`
+* `B.IOT SrcTile0<.reuse>, SrcTile1<.reuse>, <last>, ->DstTile<Size>`
+* `B.IOT <last>, ->DstTile<Size>`
 
-Operation (informative)::
+Encoding notes (informative)::
 +
-[source]
-----
-DeclareBlockTileIO(/* tile IO bindings as encoded */)
-----
-
-[[insndesc-block-input-output-b-ioti]]
-===== B.IOTI
-
-Declares block input/output bindings for registers/tiles (header metadata for accelerated blocks; tooling and scheduling metadata).
-
-Catalog forms:: 2 form(s) (32 bits).
-
-Assembly forms::
-+
-* `B.IOTI [SrcTile0<.reuse>, SrcTile1<.reuse>], group=0, ->DstTile<Size>`
-* `B.IOTI [SrcTile0<.reuse>, SrcTile1<.reuse>], group=1, ->DstTile<Size>`
+* v0.56 one-input immediate-size tile descriptor; function=101 means only SrcTile0 is valid.
+* v0.56 two-input immediate-size tile descriptor. SrcTile0/1 are independent 6-bit fields; imm4 encodes 0B..512KB.
+* v0.56 no-input immediate-size tile descriptor; function=110 means only the destination allocation is valid.
 
 Operation (informative)::
 +
@@ -2389,7 +2406,7 @@ Assembly forms::
 
 Encoding notes (informative)::
 +
-* Legacy compatibility TEPL spelling; canonical strict-v0.4 output uses BSTART.TEPL TileOpcode, DataType.
+* Legacy compatibility TEPL spelling; canonical v0.56 output uses BSTART.TEPL TileOpcode, DataType.
 
 Operation (informative)::
 +
@@ -2456,7 +2473,7 @@ Assembly forms::
 
 Encoding notes (informative)::
 +
-* Tile opcode selects PTO template ops. Canonical v0.4 standardized assignments require TileOpcode[9:6]=0 and pack TileOpcode[5]=Mode with TileOpcode[4:0]=Function; unassigned values remain reserved for future template extension.
+* Tile opcode selects PTO template ops. Canonical v0.56 standardized assignments require TileOpcode[9:6]=0 and pack TileOpcode[5]=Mode with TileOpcode[4:0]=Function; unassigned values remain reserved for future template extension.
 
 Operation (informative)::
 +
@@ -2479,7 +2496,7 @@ Assembly forms::
 
 Encoding notes (informative)::
 +
-* Alias of BSTART.TMA Function=0. Requires B.ARG layout/pad and B.IOR stride/base plus B.IOT/B.IOTI tile binding.
+* Alias of BSTART.TMA Function=0. Requires B.ARG layout/pad and B.IOR stride/base plus B.IOT tile binding.
 
 Operation (informative)::
 +
@@ -2502,7 +2519,7 @@ Assembly forms::
 
 Encoding notes (informative)::
 +
-* Generic TMA selector form. Function=0/1/2 are emitted as BSTART.TLOAD/BSTART.TSTORE/BSTART.TMOV aliases; 3..31 are reserved in strict v0.4 (architecturally illegal/UNPREDICTABLE): software must not generate them and implementations must not assign ad-hoc semantics.
+* Generic TMA selector form. Function=0/1/2 are emitted as BSTART.TLOAD/BSTART.TSTORE/BSTART.TMOV aliases; 3..31 are reserved in v0.56 (architecturally illegal/UNPREDICTABLE): software must not generate them and implementations must not assign ad-hoc semantics.
 
 Operation (informative)::
 +
@@ -2525,7 +2542,7 @@ Assembly forms::
 
 Encoding notes (informative)::
 +
-* Alias of BSTART.CUBE Function=0. Requires B.DIM (LB0/LB1/LB2 as m,n,k) and tile bindings via B.IOT/B.IOTI.
+* Alias of BSTART.CUBE Function=0. Requires B.DIM (LB0/LB1/LB2 as m,n,k) and tile bindings via B.IOT.
 
 Operation (informative)::
 +
@@ -2548,7 +2565,7 @@ Assembly forms::
 
 Encoding notes (informative)::
 +
-* Alias of BSTART.CUBE Function=2. Requires B.DIM (LB0/LB1/LB2 as m,n,k) and tile bindings via B.IOT/B.IOTI.
+* Alias of BSTART.CUBE Function=2. Requires B.DIM (LB0/LB1/LB2 as m,n,k) and tile bindings via B.IOT.
 
 Operation (informative)::
 +
@@ -2594,7 +2611,7 @@ Assembly forms::
 
 Encoding notes (informative)::
 +
-* Alias of BSTART.TMA Function=1. Requires B.ARG layout/pad and B.IOR stride/base plus B.IOT/B.IOTI tile binding.
+* Alias of BSTART.TMA Function=1. Requires B.ARG layout/pad and B.IOR stride/base plus B.IOT tile binding.
 
 Operation (informative)::
 +

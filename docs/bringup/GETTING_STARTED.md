@@ -101,12 +101,12 @@ git commit -m "chore(submodules): bump ecosystem revisions"
 - Freestanding libc support used by AVS: `avs/runtime/freestanding/`
 - Linux libc source forks: `lib/glibc/`, `lib/musl/`
 - PTO kernel headers: `workloads/pto_kernels/include/`
-- Assembly sample pack: `docs/reference/examples/v0.4/`
+- Assembly sample pack: `docs/reference/examples/v0.56/`
 
 ## 6. Coordination References
 
 - Bring-up progress: `docs/bringup/PROGRESS.md`
 - Contract checkpoint: `docs/bringup/AVS_CONTRACT.md`
 - Rendering userspace bring-up: `docs/bringup/rendering_vulkan_bringup.md`
-- Migration map: `docs/migration/path-map-v0.4.0.md`
+- Canonical gate registry: `docs/bringup/gate_registry.json`
 - Navigation guide: `docs/project/navigation.md`

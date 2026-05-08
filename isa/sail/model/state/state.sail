@@ -1,9 +1,9 @@
-// LinxISA architectural state model for canonical v0.4.
+// LinxISA architectural state model for canonical v0.56.
 // The state model grows incrementally while strict legality and execution coverage expand.
 //
 // NOTE: The current bring-up model still relies on decoder shadow metadata for some
 // block/header fields, but the architectural state and execute layers carry concrete
-// behavior for active v0.4 instructions.
+// behavior for active v0.56 instructions.
 
 $include <prelude.sail>
 $include <arith.sail>
@@ -165,7 +165,7 @@ function read_commit_argument() -> bits(64) = {
 // visible to vector instructions.
 
 // Vec engine predicate register (p).
-// - Block-local, initialized from B.DIM/B.ATTR state on block dispatch.
+// - Block-local, initialized from B.DIM/B.DATR state on block dispatch.
 // - Inactive lanes are typically treated as don't-care by most V.* ops; explicit
 //   merge is performed via V.PSEL.
 register vec_p : bits(64) = 0xFFFF_FFFF_FFFF_FFFF
@@ -179,7 +179,8 @@ function write_predicate_p(v : bits(64)) -> unit = { vec_p = v }
 // into the execution rules.
 register decoded_bdim_index_shadow : bits(2) = 0b00
 register decoded_bdim_value_shadow : bits(64) = 0x0000_0000_0000_0000
-register decoded_battr_raw_shadow : bits(64) = 0x0000_0000_0000_0000
+register decoded_bcatr_raw_shadow : bits(64) = 0x0000_0000_0000_0000
+register decoded_bdatr_raw_shadow : bits(64) = 0x0000_0000_0000_0000
 register decoded_bior_regsrc0_shadow : bits(5) = 0b00000
 register decoded_bior_regsrc1_shadow : bits(5) = 0b00000
 register decoded_bior_regsrc2_shadow : bits(5) = 0b00000
@@ -194,9 +195,14 @@ function decoded_bdim_value() -> bits(64) = {
   decoded_bdim_value_shadow
 }
 
-function decoded_battr_raw() -> bits(64) = {
-  // Full 64-bit attribute word as encoded by B.ATTR.
-  decoded_battr_raw_shadow
+function decoded_bcatr_raw() -> bits(64) = {
+  // Full 64-bit control-attribute word as encoded by B.CATR.
+  decoded_bcatr_raw_shadow
+}
+
+function decoded_bdatr_raw() -> bits(64) = {
+  // Full 64-bit data-attribute word as encoded by B.DATR.
+  decoded_bdatr_raw_shadow
 }
 
 function decoded_bior_regsrc0() -> bits(5) = { decoded_bior_regsrc0_shadow }
@@ -211,9 +217,11 @@ function set_decoded_bior(regsrc0 : bits(5), regsrc1 : bits(5), regsrc2 : bits(5
   decoded_bior_regdst_shadow = regdst
 }
 
-// Latched B.ATTR state relevant to VEC bring-up.
-register battr_raw : bits(64) = 0x0000_0000_0000_0000
-function battr_dr() -> bool = { battr_raw[26] == 0b1 }
+// Latched B.CATR/B.DATR state relevant to VEC bring-up.
+register bcatr_raw : bits(64) = 0x0000_0000_0000_0000
+register bdatr_raw : bits(64) = 0x0000_0000_0000_0000
+function bcatr_dr() -> bool = { bcatr_raw[26] == 0b1 }
+function bdatr_sat() -> bool = { bdatr_raw[31] == 0b1 }
 
 // LCFR (core feature) (staged): only LaneNum is currently consulted.
 // LaneNum is encoded in LCFR[19:16] and represents log2(vec_length).
@@ -245,7 +253,7 @@ function vec_init_p_for_group(lc1 : bits(64)) -> unit = {
   let lb0_i : int = unsigned(ssr_lb0[31..0]);
   let lb1_i : int = unsigned(ssr_lb1[31..0]);
   let lb2_i : int = unsigned(ssr_lb2[31..0]);
-  if not_bool(battr_dr()) then {
+  if not_bool(bcatr_dr()) then {
     // DR=0: LB0 is the effective lane_count for this group.
     if lb0_i >= vw then write_predicate_p(vec_all1_mask(vw))
     else write_predicate_p(vec_all1_mask(lb0_i))
@@ -264,9 +272,9 @@ function vec_init_p_for_group(lc1 : bits(64)) -> unit = {
 }
 
 // -----------------------------------------------------------------------------
-// Vector lane register file (canonical v0.4 decode carrier)
+// Vector lane register file (canonical v0.56 decode carrier)
 //
-// Live LLVM/QEMU v0.4 uses a class/index RegId10 encoding:
+// Live LLVM/QEMU v0.56 uses a class/index RegId10 encoding:
 //   (Class << 5) | Index
 //   Class 1 = ri*    (ordered B.IOR import namespace)
 //   Class 3 = lc*    (lane/group counters)
@@ -653,7 +661,7 @@ function set_decoded_vec_regids(srcl : bits(10), srcr : bits(10), srca : bits(10
 
 // Decode-provided vector operand typing shadows.
 //
-// In the strict v0.4 bring-up profile, RegId10 itself only carries class/index.
+// In the v0.56 bring-up profile, RegId10 itself only carries class/index.
 // These shadows therefore come from explicit instruction type fields when present,
 // or from the current default carrier-domain rules for the consuming opcode family.
 register decoded_vec_srcl_type_shadow : bits(5) = 0b00001
@@ -859,7 +867,7 @@ register ssr_ebarg_extctx_meta_acr2 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID
 // (ssr_lcfr/ssr_lb0..2 declared earlier for vec bring-up)
 
 // -----------------------------------------------------------------------------
-// XBINFO / CAC_TABLE (current v0.4 bring-up profile)
+// XBINFO / CAC_TABLE (current v0.56 bring-up profile)
 //
 // XBINFO provides the base address of the CAC_TABLE for a given target ACR.
 // The full system-call-block mechanism is platform-defined; the staged Sail model
@@ -874,7 +882,7 @@ register xbinfo_acr1 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x1F30
 register xbinfo_acr2 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x2F30
 
 // Resolved XB dispatch request.
-// The generic v0.4 architecture standardizes legality, permission, and
+// The generic v0.56 architecture standardizes legality, permission, and
 // CAC-table selection, but the binary entry layout remains platform-defined.
 // The Sail model therefore records the resolved dispatch request instead of
 // inventing a non-canonical in-entry block-header decoder.
@@ -989,7 +997,7 @@ function record_xb_dispatch(acr : bits(4), cid : bits(7), entry_ea : bits(64), w
 }
 
 // -----------------------------------------------------------------------------
-// ILLEGAL_INST / E_INST helpers (current v0.4 bring-up contract)
+// ILLEGAL_INST / E_INST helpers (current v0.56 bring-up contract)
 //
 // TRAPNUM major class:
 //   ILLEGAL_INST = 4
@@ -1124,7 +1132,7 @@ function swap_system_register(id24 : bits(24), v : bits(64)) -> bits(64) = {
 }
 
 // -----------------------------------------------------------------------------
-// CSTATE floating-point control/status fields (v0.3 staged profile)
+// CSTATE floating-point control/status fields (v0.56 staged profile)
 //
 // Architectural contract (per user + spec alignment):
 // - CSTATE.FFLAGS[36:32] are IEEE754 sticky exception flags: NV/DZ/OF/UF/NX
@@ -1153,7 +1161,7 @@ function cstate_set_frm(rm : bits(3)) -> unit = {
 }
 
 // -----------------------------------------------------------------------------
-// BLOCK_TRAP / E_BLOCK helpers (v0.3 bring-up contract)
+// BLOCK_TRAP / E_BLOCK helpers (v0.56 bring-up contract)
 //
 // Normative sources:
 // - docs/architecture/isa-manual/src/chapters/09_system_and_privilege.adoc
@@ -1201,7 +1209,7 @@ function trap_bfetch(fault_va : bits(64)) -> unit = {
 }
 
 // -----------------------------------------------------------------------------
-// Block boundary + BARG state (current v0.4 bring-up contract)
+// Block boundary + BARG state (current v0.56 bring-up contract)
 //
 // The Sail model keeps an explicit architectural BARG shadow so block-control
 // instructions have concrete semantics even before fetch/decode is fully wired.
@@ -1332,7 +1340,7 @@ function is_block_start_marker(addr : bits(64)) -> bool = {
 // - docs/bringup/plan/isa_clarifications.md
 //
 // MissingDescFamily IDs (TRAPARG0[7:0]):
-//   1=B.DIM, 2=B.TEXT, 3=B.ARG, 4=B.IOR, 5=B.IOT/B.IOTI
+//   1=B.DIM, 2=B.TEXT, 3=B.ARG, 4=B.IOR, 5=B.IOT
 // MissingDetail (TRAPARG0[15:8]):
 //   0x00 missing, 0x01 invalid/out-of-range, 0x02 illegal combination
 
