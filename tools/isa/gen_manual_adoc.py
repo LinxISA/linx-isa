@@ -20,6 +20,7 @@ import argparse
 import json
 import os
 import re
+import sys
 import tempfile
 from collections import Counter, OrderedDict
 from typing import Any, Dict, Iterable, List, Optional, Tuple
@@ -1223,6 +1224,7 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
 def _write_registers_reg5(spec: Dict[str, Any], out_path: str, source_comment: str) -> None:
     """Delegate to the dedicated registers generator subprocess."""
     import subprocess
+
     script = os.path.join(os.path.dirname(__file__), "gen_registers_reg5.py")
     result = subprocess.run(
         [sys.executable, script, "--out-dir", os.path.dirname(out_path)],
@@ -1231,6 +1233,31 @@ def _write_registers_reg5(spec: Dict[str, Any], out_path: str, source_comment: s
     if result.returncode != 0:
         sys.stderr.write(result.stderr)
         raise SystemExit(result.returncode)
+
+
+def _write_instruction_group_summary(groups: "OrderedDict[str, List[Dict[str, Any]]]", out_path: str) -> None:
+    lines: List[str] = []
+    lines.append("// Generated file; do not edit by hand.")
+    lines.append("")
+    lines.append("[[insnref-groups]]")
+    lines.append("=== Instruction groups")
+    lines.append("")
+    lines.append('[cols="3,1,1",options="header"]')
+    lines.append("|===")
+    lines.append("|Group |Forms |Unique mnemonics")
+    for group, insts in groups.items():
+        mnemonics = {
+            str(inst.get("mnemonic", "")).strip()
+            for inst in insts
+            if str(inst.get("mnemonic", "")).strip()
+        }
+        lines.append(f"|{group} |{len(insts)} |{len(mnemonics)}")
+    lines.append("|===")
+    lines.append("")
+    with open(out_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines))
+
+
 def _write_instruction_reference(groups: "OrderedDict[str, List[Dict[str, Any]]]", out_path: str) -> None:
     lines: List[str] = []
     lines.append("// Generated file; do not edit by hand.")
