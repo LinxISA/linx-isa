@@ -355,7 +355,7 @@ def main(argv: list[str]) -> int:
                 "--glob",
                 "**/*.objdump.txt*",
                 "--spec",
-                str(REPO_ROOT / "isa" / "v0.4" / "linxisa-v0.4.json"),
+                str(REPO_ROOT / "isa" / "v0.56" / "linxisa-v0.56.json"),
                 "--out-md",
                 str(static_md),
                 "--out-json",
