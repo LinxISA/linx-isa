@@ -7,7 +7,7 @@
 
 *Syntax:* remu SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Remainder: Dst0 = remainder, Dst1 = quotient.
 
 *Encoding:*
 

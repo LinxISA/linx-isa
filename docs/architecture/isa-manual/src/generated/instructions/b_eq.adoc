@@ -7,7 +7,7 @@
 
 *Syntax:* b.eq SrcL, SrcR, label
 
-*Description:* -
+*Description:* Conditional branch: take branch if eq.
 
 *Encoding:*
 

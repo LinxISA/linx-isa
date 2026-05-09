@@ -7,7 +7,7 @@
 
 *Syntax:* ld [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}
 
-*Description:* -
+*Description:* Load 64-bit signed value from [Rs+offset], result to Rd/t/u.
 
 *Encoding:*
 

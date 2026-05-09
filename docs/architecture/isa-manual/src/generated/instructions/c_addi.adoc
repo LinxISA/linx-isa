@@ -7,7 +7,7 @@
 
 *Syntax:* c.addi srcL, simm, ->t
 
-*Description:* Compressed instruction variant (16-bit encoding).
+*Description:* Compressed 16-bit add immediate: Rd = Rs1 + imm, result to t.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* v.addi SrcL, uimm, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise ADDI of SrcL with immediate, result to Dst.
 
 *Encoding:*
 

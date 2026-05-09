@@ -7,7 +7,7 @@
 
 *Syntax:* hl.qpop.{e,r,er} SrcL, ->Dst0, Dst1
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit queue pop: remove head entry from queue SrcL, result to Dst0 and Dst1.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* ld.pcr [symbol], ->{t, u, Rd}
 
-*Description:* -
+*Description:* Load 64-bit value from [Rs+offset], result to Rd/t/u.
 
 *Encoding:*
 

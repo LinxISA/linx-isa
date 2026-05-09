@@ -7,7 +7,7 @@
 
 *Syntax:* b.ltu SrcL, SrcR, label
 
-*Description:* -
+*Description:* Conditional branch: take branch if ltu.
 
 *Encoding:*
 

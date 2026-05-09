@@ -7,7 +7,7 @@
 
 *Syntax:* v.mul SrcL, SrcR, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise MUL of SrcL with SrcR, result to Dst.
 
 *Encoding:*
 

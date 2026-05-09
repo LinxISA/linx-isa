@@ -7,7 +7,7 @@
 
 *Syntax:* v.rdfadd SrcL, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise reduction (fadd) of SrcL across active lanes, scalar result to Dst.
 
 *Encoding:*
 

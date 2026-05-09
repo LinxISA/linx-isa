@@ -7,7 +7,7 @@
 
 *Syntax:* hl.setc.ltui SrcL, uimm
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit set condition flag: tui of SrcL with operand.
 
 *Encoding:*
 

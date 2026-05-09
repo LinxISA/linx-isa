@@ -7,7 +7,7 @@
 
 *Syntax:* jr SrcL, label
 
-*Description:* -
+*Description:* Unconditional jump to address in register plus PC-relative offset.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* v.fdiv SrcL, SrcR, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise floating-point div of operands, result to Dst.
 
 *Encoding:*
 

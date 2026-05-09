@@ -7,7 +7,7 @@
 
 *Syntax:* v.qpop SrcL.ud, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector queue pop operation on SrcL, result to Dst.
 
 *Encoding:*
 

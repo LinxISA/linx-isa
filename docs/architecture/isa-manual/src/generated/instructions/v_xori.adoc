@@ -7,7 +7,7 @@
 
 *Syntax:* v.xori SrcL, simm, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise bitwise ORI of operands, result to Dst.
 
 *Encoding:*
 

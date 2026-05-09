@@ -7,7 +7,7 @@
 
 *Syntax:* sc.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], {->t, ->u, ->Rd}
 
-*Description:* -
+*Description:* Store-conditional word: store SrcD to [Rd] if reservation valid.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* tlb.ia SrcL
 
-*Description:* -
+*Description:* Cache/TLB maintenance: TLB.IA operation on the specified memory hierarchy.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* v.bic SrcL, M, N, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise bit bic of SrcL controlled by SrcR, result to Dst.
 
 *Encoding:*
 

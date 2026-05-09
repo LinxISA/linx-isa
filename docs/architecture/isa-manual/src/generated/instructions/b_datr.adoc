@@ -7,7 +7,7 @@
 
 *Syntax:* B.DATR {layout.{canon, normal}, datatype, padvalue, cmode, rmode, sat}
 
-*Description:* -
+*Description:* v0.56 split of legacy B.CATR/B.DATR data fields. CMode is 3 bits; RMode is 3 bits; Sat is bit 31.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* fmin.{T} SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Max-Min: FMIN operation.
 
 *Encoding:*
 

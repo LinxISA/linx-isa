@@ -7,7 +7,7 @@
 
 *Syntax:* v.fges SrcL, SrcR, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise floating-point compare ges of SrcL and SrcR, write mask to Dst.
 
 *Encoding:*
 

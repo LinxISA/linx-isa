@@ -7,7 +7,7 @@
 
 *Syntax:* setc.geui SrcL, uimm
 
-*Description:* -
+*Description:* Set block condition flag for eu immediate: consumed by BSTART COND.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* v.div SrcL, SrcR, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise integer div of SrcL by SrcR, result to Dst.
 
 *Encoding:*
 

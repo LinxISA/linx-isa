@@ -7,7 +7,7 @@
 
 *Syntax:* lw.smax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}
 
-*Description:* -
+*Description:* Atomic fetch-and-smax SMAX at address [Rs+RsR]: old value to Rd/t/u, updated memory.
 
 *Encoding:*
 

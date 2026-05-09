@@ -7,7 +7,7 @@
 
 *Syntax:* lw.smin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}
 
-*Description:* -
+*Description:* Atomic fetch-and-smin SMIN at address [Rs+RsR]: old value to Rd/t/u, updated memory.
 
 *Encoding:*
 

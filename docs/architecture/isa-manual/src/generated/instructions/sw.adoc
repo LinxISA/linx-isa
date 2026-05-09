@@ -7,7 +7,7 @@
 
 *Syntax:* sw SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2]
 
-*Description:* -
+*Description:* Store 32-bit signed value to [Rs+offset], result to Rd/t/u.
 
 *Encoding:*
 

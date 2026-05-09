@@ -7,7 +7,7 @@
 
 *Syntax:* v.cmp.ltui SrcL, uimm, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise compare ltui of SrcL with SrcR, write mask to Dst.
 
 *Encoding:*
 

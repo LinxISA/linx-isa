@@ -7,7 +7,7 @@
 
 *Syntax:* v.lw.min<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector instruction (64-bit SIMD lane-by-lane execution).
 
 *Encoding:*
 

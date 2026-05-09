@@ -7,7 +7,7 @@
 
 *Syntax:* prfi.u [SrcL, simm]
 
-*Description:* -
+*Description:* Load 32-bit value from [Rs+offset], result to Rd/t/u.
 
 *Encoding:*
 

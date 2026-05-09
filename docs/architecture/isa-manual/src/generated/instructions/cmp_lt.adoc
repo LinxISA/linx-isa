@@ -7,7 +7,7 @@
 
 *Syntax:* cmp.lt SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Compare lt: set Rd/t/u to 1 if true, else 0.
 
 *Encoding:*
 

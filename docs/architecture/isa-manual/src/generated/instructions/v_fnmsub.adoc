@@ -7,7 +7,7 @@
 
 *Syntax:* v.fnmsub SrcL, SrcR, SrcA, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise fnmsub of operands, result to Dst.
 
 *Encoding:*
 

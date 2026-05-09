@@ -7,7 +7,7 @@
 
 *Syntax:* fsub.{T} SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Floating-point Arithmetic: FSUB floating-point operation.
 
 *Encoding:*
 

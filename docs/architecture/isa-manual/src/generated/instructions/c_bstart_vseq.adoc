@@ -7,7 +7,7 @@
 
 *Syntax:* C.BSTART.VSEQ FALL
 
-*Description:* Compressed instruction variant (16-bit encoding).
+*Description:* Compressed 16-bit block start marker: BSTART.VSEQ (VSEQ SIMT kernel transition).
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* rev SrcL,  M, N, ->{t, u, Rd}
 
-*Description:* -
+*Description:* bit-reverse: Dst = popcount/extract/select bits of SrcL/M/N, result to Rd/t/u.
 
 *Encoding:*
 

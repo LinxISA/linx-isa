@@ -7,7 +7,7 @@
 
 *Syntax:* v.rev SrcL, M, N, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise bit-reversal of SrcL, result to Dst.
 
 *Encoding:*
 

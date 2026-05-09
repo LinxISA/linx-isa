@@ -7,7 +7,7 @@
 
 *Syntax:* B.IOD DepSrc0, DepSrc1, DepSrc2, ->DepDst
 
-*Description:* -
+*Description:* Block block input & output: B.IOD.
 
 *Encoding:*
 

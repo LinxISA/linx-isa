@@ -7,7 +7,7 @@
 
 *Syntax:* c.setc.eq srcL, srcR
 
-*Description:* Compressed instruction variant (16-bit encoding).
+*Description:* Compressed 16-bit set condition flag when Rs1 equal Rs2.
 
 *Encoding:*
 

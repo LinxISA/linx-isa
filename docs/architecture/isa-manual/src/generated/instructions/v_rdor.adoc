@@ -7,7 +7,7 @@
 
 *Syntax:* v.rdor SrcL,  ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise reduction (or) of SrcL across active lanes, scalar result to Dst.
 
 *Encoding:*
 

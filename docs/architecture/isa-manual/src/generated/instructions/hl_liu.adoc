@@ -7,7 +7,7 @@
 
 *Syntax:* hl.liu uimm, ->{t, u, Rd}
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit load immediate unsigned (32-bit zero-extended constant), result to Rd/t/u.
 
 *Encoding:*
 

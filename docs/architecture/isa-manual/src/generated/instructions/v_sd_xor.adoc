@@ -7,7 +7,7 @@
 
 *Syntax:* v.sd.xor<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector instruction (64-bit SIMD lane-by-lane execution).
 
 *Encoding:*
 

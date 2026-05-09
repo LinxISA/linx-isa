@@ -7,7 +7,7 @@
 
 *Syntax:* div SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Divide: Dst0 = quotient, Dst1 = remainder.
 
 *Encoding:*
 

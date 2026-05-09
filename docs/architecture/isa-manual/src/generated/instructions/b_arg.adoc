@@ -7,7 +7,7 @@
 
 *Syntax:* B.ARG DN2NZ.normal, FP32, Null
 
-*Description:* -
+*Description:* Block block argument: B.ARG.
 
 *Encoding:*
 

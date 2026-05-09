@@ -7,7 +7,7 @@
 
 *Syntax:* hl.lis simm, ->{t, u, Rd}
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit load immediate signed (32-bit sign-extended constant), result to Rd/t/u.
 
 *Encoding:*
 

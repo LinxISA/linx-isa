@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.CUBE Function, DataType
 
-*Description:* -
+*Description:* Generic CUBE selector form. Function=0/2/8 are emitted as BSTART.TMATMUL/BSTART.TMATMUL.ACC/BSTART.ACCCVT aliases.
 
 *Encoding:*
 

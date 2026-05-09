@@ -7,7 +7,7 @@
 
 *Syntax:* madd SrcL, SrcR, SrcD, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Multiply: Dst = SrcL * SrcR, high part Dst1.
 
 *Encoding:*
 

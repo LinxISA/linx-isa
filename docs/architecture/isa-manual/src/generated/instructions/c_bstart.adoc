@@ -7,7 +7,7 @@
 
 *Syntax:* C.BSTART DIRECT, label
 
-*Description:* Compressed instruction variant (16-bit encoding).
+*Description:* Compressed 16-bit instruction variant.
 
 *Encoding:*
 

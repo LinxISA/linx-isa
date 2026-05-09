@@ -7,7 +7,7 @@
 
 *Syntax:* v.rdadd SrcL, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise reduction (add) of SrcL across active lanes, scalar result to Dst.
 
 *Encoding:*
 

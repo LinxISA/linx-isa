@@ -7,7 +7,7 @@
 
 *Syntax:* addiw SrcL, uimm, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Add immediate (word operation): Rd/t/u = operand1 op operand2.
 
 *Encoding:*
 

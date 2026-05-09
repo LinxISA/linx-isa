@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.TMATMUL.ACC DataType
 
-*Description:* -
+*Description:* Alias of BSTART.CUBE Function=2. Requires B.DIM (LB0/LB1/LB2 as m,n,k) and tile bindings via B.IOT.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* ic.iall
 
-*Description:* -
+*Description:* Cache/TLB maintenance: IC.IALL operation on the specified memory hierarchy.
 
 *Encoding:*
 

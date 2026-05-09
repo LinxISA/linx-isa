@@ -7,7 +7,7 @@
 
 *Syntax:* B.IOT <last>, ->DstTile<Size>
 
-*Description:* -
+*Description:* v0.56 no-input immediate-size tile descriptor; function=110 means only the destination allocation is valid.
 
 *Encoding:*
 

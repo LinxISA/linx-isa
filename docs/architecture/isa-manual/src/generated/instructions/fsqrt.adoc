@@ -7,7 +7,7 @@
 
 *Syntax:* fsqrt.{T} SrcL, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Floating-point sqrt: Dst = sqrt(SrcL).
 
 *Encoding:*
 

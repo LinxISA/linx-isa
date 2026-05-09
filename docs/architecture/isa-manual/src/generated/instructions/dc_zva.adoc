@@ -7,7 +7,7 @@
 
 *Syntax:* dc.zva SrcL
 
-*Description:* -
+*Description:* Cache/TLB maintenance: DC.ZVA operation on the specified memory hierarchy.
 
 *Encoding:*
 

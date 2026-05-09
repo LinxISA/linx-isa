@@ -7,7 +7,7 @@
 
 *Syntax:* v.andi SrcL, simm, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise bitwise NDI of operands, result to Dst.
 
 *Encoding:*
 

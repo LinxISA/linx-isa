@@ -7,7 +7,7 @@
 
 *Syntax:* v.fadd SrcL, SrcR, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise floating-point add of operands, result to Dst.
 
 *Encoding:*
 

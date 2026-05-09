@@ -7,7 +7,7 @@
 
 *Syntax:* MSET [RegSrc0, RegSrc1, RegSrc2]
 
-*Description:* -
+*Description:* Memory block MSET: bulk memory fill/copy operation.
 
 *Encoding:*
 

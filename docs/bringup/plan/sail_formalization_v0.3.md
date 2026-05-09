@@ -36,7 +36,7 @@ Proposed iteration loop (one PR per small slice):
 
 Initial prioritization (can be adjusted):
 
-- P0: establish a maintainable decode/dispatch path (ideally generated from `isa/v0.3/linxisa-v0.3.json`).
+- P0: establish a maintainable decode/dispatch path (ideally generated from `removed-pre-v056-profile/removed-pre-v056-catalog.json`).
 - P1: integer core missing semantics needed for toolchain/QEMU alignment (compare + setc + branches).
 - P2: loads/stores + cache maintenance (and the associated fault/partial-effect rules).
 - P3: atomics.

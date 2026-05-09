@@ -7,7 +7,7 @@
 
 *Syntax:* v.fexp SrcL, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise exp of SrcL, result to Dst.
 
 *Encoding:*
 

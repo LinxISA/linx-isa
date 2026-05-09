@@ -4,7 +4,22 @@
 [[chapter_agu]]
 == AGU - Address Generation Unit
 
-The Address Generation Unit (AGU) group handles all memory access operations including loads, stores, and prefetches. These instructions operate on the scalar register file and generate effective addresses through various addressing modes.
+The Address Generation Unit (AGU) handles all memory access operations -- loads, stores, and prefetches -- for the scalar execution path.
+Scalar AGU instructions consume operands from the 24-entry GPR file (`R0..R23`) and can write results to a GPR or to the ClockHands result queues (`t#1..t#4`, `u#1..u#4`). The AGU supports a rich set of addressing modes:
+
+* **Register-offset**: `[Rs_base + Rs_index << shamt]` -- the base and index are independent registers; the index is scaled by a shift amount encoded in the instruction.
+* **Immediate-offset**: `[Rs_base + simm]` -- the offset is a signed immediate encoded in the instruction.
+* **PC-relative**: `[TPC + simm]` -- the address is relative to the current TPC.
+* **Post-index** (`.PO`) and **Pre-index** (`.PR`): the base register is updated after (post) or before (pre) the memory access.
+* **Unscaled**: `[Rs_base + simm]` without index scaling -- used for fine-grained address adjustment.
+* **Pair**: load or store two values simultaneously from/to a pair of registers.
+
+Most scalar AGU forms are 32 bits wide. The catalog also provides compressed 16-bit forms (`C.LWI`, `C.SWI`, `C.LDI`, `C.SDI`) for common load/store patterns, and long 48-bit forms (`HL.*`) that carry extended immediates for larger offsets. Vector AGU forms (`V.*`) are documented in <<chapter_vec>>.
+
+[IMPORTANT]
+====
+All scalar memory operations are subject to the address translation rules defined in <<system-mm>>. An access that crosses an architectural boundary or hits a reserved region raises a memory exception. The exact fault encoding depends on the platform profile.
+====
 
 === Load Instructions
 

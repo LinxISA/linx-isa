@@ -7,7 +7,7 @@
 
 *Syntax:* andiw SrcL, simm, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Bitwise and with immediate (word operation): Rd/t/u = operand1 op operand2.
 
 *Encoding:*
 

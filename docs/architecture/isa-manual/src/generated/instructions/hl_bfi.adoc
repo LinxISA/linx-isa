@@ -7,7 +7,7 @@
 
 *Syntax:* hl.bfi SrcL, SrcR, M, N, ->{t, u, Rd}
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit bit-field insert: copy SrcL with bits [M+N-1:M] replaced by SrcR.
 
 *Encoding:*
 

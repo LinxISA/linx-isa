@@ -36,7 +36,7 @@ Rationale:
 - Encoding clearly dedicates bits[11:7] (in 32-bit SETC.*I) to `shamt`, suggesting a widened immediate encoding scheme.
 
 Follow-ups:
-- Document this convention in `isa/v0.3/semantics_conventions.json`.
+- Document this convention in `removed-pre-v056-profile/semantics_conventions.json`.
 - Update auto-generated pseudocode for SETC.*I in the ISA manual generator.
 - Implement the corresponding Sail semantics.
 
@@ -56,7 +56,7 @@ Rationale:
 - Keeps strict profile deterministic without introducing extra illegal encodings for legacy streams.
 
 Follow-ups:
-- Record in `isa/v0.3/semantics_conventions.json` under `srcrtype.restricted_forms`.
+- Record in `removed-pre-v056-profile/semantics_conventions.json` under `srcrtype.restricted_forms`.
 - Update Sail semantics for the restricted CMP/SETC forms to sanitize 11→00.
 
 ---

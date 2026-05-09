@@ -7,7 +7,7 @@
 
 *Syntax:* v.lwui.u<.local> [SrcL, <lc0<<2>, simm], ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector instruction (64-bit SIMD lane-by-lane execution).
 
 *Encoding:*
 

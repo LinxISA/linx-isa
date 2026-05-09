@@ -7,7 +7,7 @@
 
 *Syntax:* hl.lh.pcr [<symbol>], ->{t, u, Rd}
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit store with PC-relative offset (HL.* PCR) or indexed form (.PO/.PR).
 
 *Encoding:*
 

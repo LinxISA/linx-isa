@@ -7,7 +7,7 @@
 
 *Syntax:* fexp.{T} SrcL, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Floating-point exp: Dst = exp(SrcL).
 
 *Encoding:*
 

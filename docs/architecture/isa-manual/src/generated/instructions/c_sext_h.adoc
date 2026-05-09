@@ -7,7 +7,7 @@
 
 *Syntax:* c.sext.h srcL, ->t
 
-*Description:* Compressed instruction variant (16-bit encoding).
+*Description:* Compressed 16-bit sign-extend Rs1 from 16-bit to 64-bit, result to t.
 
 *Encoding:*
 

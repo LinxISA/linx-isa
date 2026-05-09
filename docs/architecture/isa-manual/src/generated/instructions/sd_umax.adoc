@@ -7,7 +7,7 @@
 
 *Syntax:* sd.umax<.{rl, f, rlf}> [SrcL], SrcR
 
-*Description:* -
+*Description:* Atomic fetch-and-umax UMAX at address [Rs+RsR]: old value to Rd/t/u, updated memory.
 
 *Encoding:*
 

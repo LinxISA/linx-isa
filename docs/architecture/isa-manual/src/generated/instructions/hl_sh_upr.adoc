@@ -7,7 +7,7 @@
 
 *Syntax:* hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit store with PC-relative offset or indexed form.
 
 *Encoding:*
 

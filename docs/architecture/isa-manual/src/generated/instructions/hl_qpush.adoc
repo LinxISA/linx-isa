@@ -7,7 +7,7 @@
 
 *Syntax:* hl.qpush.{h,e,r,he,hr,er,her} SrcL, SrcR, ->{t, u}
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit queue push: insert SrcL:SrcR into queue, result to t/u.
 
 *Encoding:*
 

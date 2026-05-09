@@ -7,7 +7,7 @@
 
 *Syntax:* fcvtn.{srcT2dstT} SrcL, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Floating-point format conversion: convert SrcL to destination format, result to Rd/t/u.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* dc.cva SrcL
 
-*Description:* -
+*Description:* Cache/TLB maintenance: DC.CVA operation on the specified memory hierarchy.
 
 *Encoding:*
 

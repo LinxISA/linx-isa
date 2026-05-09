@@ -4,7 +4,13 @@
 [[chapter_rsv]]
 == RSV - Reserved and Indexed Operations
 
-The Reserved (RSV) group contains specialized instructions including indexed multiply operations and bit field manipulation.
+The Reserved (RSV) group contains specialized bit-field and indexed-arithmetic instructions that do not fit the standard ALU model:
+
+* `HL.BFI` (bit-field insert): copies `SrcL` into the destination but replaces bits `[M+N-1:M]` with the low `N` bits of `SrcR`. This is the inverse of an extract-and-extend operation.
+* `HL.MIADD` (indexed multiply-add): `Dst = SrcL + SrcR * imm`. The index multiplier `imm` scales the second operand before addition.
+* `HL.MISUB` (indexed multiply-sub): `Dst = SrcL - SrcR * imm`.
+
+These instructions are primarily used by compiler backends for vectorization and address-generation tricks. All RSV forms are 48-bit (`HL.*`) encodings that carry a 32-bit immediate operand.
 
 === Bit Field and Indexed Operations
 

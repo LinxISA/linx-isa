@@ -7,7 +7,7 @@
 
 *Syntax:* maxu SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Max-Min: MAXU operation.
 
 *Encoding:*
 

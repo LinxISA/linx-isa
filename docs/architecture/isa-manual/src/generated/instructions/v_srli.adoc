@@ -7,7 +7,7 @@
 
 *Syntax:* v.srli SrcL, shamt, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise right logical-shift of SrcL by SrcR/imm bits, result to Dst.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.TMOV DataType
 
-*Description:* -
+*Description:* Alias of BSTART.TMA Function=2. TMOV is tile-state only (no GM memory access) and destination allocation is queue-push only.
 
 *Encoding:*
 

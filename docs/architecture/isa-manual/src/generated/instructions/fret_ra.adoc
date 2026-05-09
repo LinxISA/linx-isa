@@ -7,7 +7,7 @@
 
 *Syntax:* FRET.RA [RegDst0 ~ RegDstn], sp!, uimm
 
-*Description:* -
+*Description:* Template block FRET.RA: compact prologue/epilogue sequence.
 
 *Encoding:*
 

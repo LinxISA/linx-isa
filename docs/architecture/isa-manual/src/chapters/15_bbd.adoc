@@ -4,20 +4,19 @@
 [[chapter_bbd]]
 == BBD - Block Boundary Delimiters
 
-The Block Boundary Delimiters (BBD) group defines the template block structure in Linx ISA. These instructions mark the beginning (BSTART) and end (BSTOP) of code blocks with execution hints.
+The Block Boundary Delimiters (BBD) group defines the instructions that mark the beginning and end of template blocks and carry block-transition metadata. The block-structured control-flow model is defined in <<blockisa>>; this chapter documents the individual instruction forms.
 
-=== BSTART - Block Start
+**Block start** (`BSTART.*`): a `BSTART.*` both terminates the current block and begins the next block. It encodes the target block type (`.STD`, `.SYS`, `.FP`, `.MPAR`, `.MSEQ`, `.VPAR`, `.VSEQ`, `.TMA`, `.CUBE`, `.TEPL`, `.FIXP`) and the transition kind (`FALL`, `DIRECT`, `COND`, `CALL`, `IND`, `ICALL`, `RET`). For `CALL` transitions, `BSTART.CALL` additionally records a branch-label, a return-label, and a return-address destination (`ra`). Compressed `C.BSTART.*` forms encode the most common transitions in 16 bits.
 
-The BSTART instruction marks the beginning of a template block and specifies the execution profile for the block.
+**Block stop** (`BSTOP` / `C.BSTOP`): terminates the current block and commits the block state in `BARG`. For decoupled blocks, this is the point where the PE receives and begins executing the command. Note: `C.BSTOP` is encoded as all-zeros in the 16-bit space; it also serves as an invalid/reserved encoding in some tooling conventions.
 
-include::../generated/instructions/bstart_call.adoc[]
-include::../generated/instructions/hl_bstart_call.adoc[]
-include::../generated/instructions/hl_bstart_fp.adoc[]
-include::../generated/instructions/hl_bstart_std.adoc[]
-include::../generated/instructions/hl_bstart_sys.adoc[]
+**Extended-block-start** (`HL.BSTART.*`): 48-bit forms with 32-bit PC-relative offsets for targets outside the range of the 16-bit compressed offset field. Used for long-range branches in shader kernels and for call/return sequences.
+
+The BBD family also includes template-block markers (`FENTRY`, `FEXIT`, `FRET.RA`, `FRET.STK`) and memory-block operations (`MCOPY`, `MSET`), which are documented in <<templates>>.
 
 === Compressed BSTART
 
+include::../generated/instructions/c_bstart.adoc[]
 include::../generated/instructions/c_bstart_fp.adoc[]
 include::../generated/instructions/c_bstart_mpar.adoc[]
 include::../generated/instructions/c_bstart_mseq.adoc[]

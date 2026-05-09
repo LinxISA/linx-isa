@@ -7,7 +7,7 @@
 
 *Syntax:* v.fsub SrcL, SrcR, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise floating-point sub of operands, result to Dst.
 
 *Encoding:*
 

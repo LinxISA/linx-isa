@@ -7,7 +7,7 @@
 
 *Syntax:* setret uimm, ->Ra
 
-*Description:* -
+*Description:* PC-Relative: SETRET.
 
 *Encoding:*
 

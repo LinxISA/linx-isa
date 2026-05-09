@@ -4,7 +4,20 @@
 [[chapter_alu]]
 == ALU - Arithmetic Logic Unit
 
-The Arithmetic Logic Unit (ALU) group handles all integer arithmetic, logical, and bit manipulation operations.
+The Arithmetic Logic Unit (ALU) covers integer arithmetic, logical operations, shifts, bit manipulation, multiplication, division, and comparison. Scalar ALU instructions read from the GPR file (`R0..R23`) and can write to a GPR or to the ClockHands queues (`t`/`u`). Results are always full 64-bit unless the mnemonic explicitly specifies a word operation (e.g. `ADDW`, `SLLW`).
+
+**Operand modifiers** (where the assembly syntax permits them):
+
+* `.sw` / `.uw` on `SrcR`: treat the register as signed / unsigned word before use.
+* `.neg` on `SrcR`: negate the operand before the operation.
+* `<<shamt` on `SrcR`: logical left shift by the encoded shift amount.
+* `.brg` on memory operands: bridged global-memory access (canonical in kernel bodies).
+
+**Multi-cycle operations** (division, remainder, multiplication with high part) are in the same encoding space as single-cycle ALU operations but may take multiple cycles to complete. There is no architectural guarantee on throughput; implementations may pipeline or stall.
+
+**Compressed forms** (`C.*`, 16-bit) encode the most common operations in a compact form: `C.ADD`, `C.SUB`, `C.AND`, `C.OR`, `C.ADDI`, `C.MOVI`, `C.MOVR`, `C.SLLI`, `C.SRLI`, `C.SETRET`, sign/zero-extend, and condition-target setting. Compressed results write to `t` (the first ClockHands destination).
+
+**Long forms** (`HL.*`, 48-bit) carry 32-bit immediates instead of 12-bit immediates, enabling materialization of larger constants without multi-instruction sequences.
 
 === Basic Arithmetic
 

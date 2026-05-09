@@ -7,7 +7,7 @@
 
 *Syntax:* acrc rst_type
 
-*Description:* -
+*Description:* Access control ring transition: request a change in ACR privilege level.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* b.nz label
 
-*Description:* -
+*Description:* Conditional branch: take branch if not zeroero.
 
 *Encoding:*
 

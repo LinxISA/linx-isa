@@ -7,7 +7,7 @@
 
 *Syntax:* v.fcvt.{st2dt} SrcL, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise floating-point format conversion of SrcL, result to Dst.
 
 *Encoding:*
 

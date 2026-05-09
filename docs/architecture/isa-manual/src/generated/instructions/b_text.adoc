@@ -7,7 +7,7 @@
 
 *Syntax:* B.TEXT <label>
 
-*Description:* -
+*Description:* Block block offset: B.TEXT.
 
 *Encoding:*
 

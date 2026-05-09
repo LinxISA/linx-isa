@@ -7,7 +7,7 @@
 
 *Syntax:* c.setc.tgt srcL
 
-*Description:* Compressed instruction variant (16-bit encoding).
+*Description:* Compressed 16-bit set block target register from Rs1.
 
 *Encoding:*
 

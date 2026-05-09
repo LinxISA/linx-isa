@@ -7,7 +7,7 @@
 
 *Syntax:* minu SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Max-Min: MINU operation.
 
 *Encoding:*
 

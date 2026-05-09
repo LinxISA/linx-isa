@@ -7,7 +7,7 @@
 
 *Syntax:* max SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Max-Min: MAX operation.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* B.CATR {trap, atomic, <aq, rl, aqrl>, far, dr}
 
-*Description:* -
+*Description:* v0.56 split of legacy B.CATR/B.DATR control fields.
 
 *Encoding:*
 

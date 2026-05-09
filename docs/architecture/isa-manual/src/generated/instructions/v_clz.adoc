@@ -7,7 +7,7 @@
 
 *Syntax:* v.clz SrcL, M, N, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise clz of SrcL, result to Dst.
 
 *Encoding:*
 

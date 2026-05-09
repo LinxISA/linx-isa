@@ -7,7 +7,7 @@
 
 *Syntax:* v.xor SrcL, SrcR<.not><<<shamt>, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise bitwise OR of operands, result to Dst.
 
 *Encoding:*
 

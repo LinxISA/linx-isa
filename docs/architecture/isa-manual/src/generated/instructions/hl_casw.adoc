@@ -7,7 +7,7 @@
 
 *Syntax:* hl.casw<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit compare-and-swap word at address [SrcL]: atomically swap with SrcD if SrcR matches.
 
 *Encoding:*
 

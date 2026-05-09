@@ -7,7 +7,7 @@
 
 *Syntax:* hl.mulu SrcL, SrcR, ->Dst0, Dst1
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit MUL: Dst0 = quotient, Dst1 = remainder/multiply-high.
 
 *Encoding:*
 

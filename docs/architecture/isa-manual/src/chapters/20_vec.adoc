@@ -2,9 +2,250 @@
 // Auto-generated from isa/v0.56/linxisa-v0.56.json and uop_classification_v0.56.json
 
 [[chapter_vec]]
-== VEC - Vector Extensions
+== VEC - Vector/SIMD Execution (lx64)
 
-The Vector (VEC) group handles all SIMD/vector operations including reductions, shuffles, and element-wise operations.
+The VEC chapter documents the canonical 64-bit vector instruction space (`V.*`) used inside SIMT kernel bodies launched by `BSTART.MPAR` / `BSTART.MSEQ`. This space follows the unified `lx64` rule: if any operand names a per-lane register (`vt`, `vu`, `vm`, `vn`), the instruction executes as `v.*` (per-lane); otherwise it executes as `l.*` (scalar-uniform). Scalar operands are broadcast to all active lanes.
+
+Vector instructions operate on the architectural 64-bit EXEC mask `p`. Inactive lanes (where `p[i] == 0`) either merge the previous destination value or write zero, depending on the block's lane policy. The mask `p` is produced by `V.CMP.* ->p` and consumed by `B.Z` / `B.NZ`.
+
+All `V.*` forms are 64 bits (two 32-bit parts in the encoding catalog).
+
+The VEC chapter documents the canonical 64-bit vector instruction space (`V.*`) used inside SIMT kernel bodies launched by `BSTART.MPAR` / `BSTART.MSEQ`. This space follows the unified `lx64` rule: if any operand names a per-lane register (`vt`, `vu`, `vm`, `vn`), the instruction executes as `v.*` (per-lane); otherwise it executes as `l.*` (scalar-uniform). Scalar operands are broadcast to all active lanes.
+
+Vector instructions operate on the architectural 64-bit EXEC mask `p`. Inactive lanes (where `p[i] == 0`) either merge the previous destination value or write zero, depending on the block's lane policy. The mask `p` is produced by `V.CMP.* ->p` and consumed by `B.Z` / `B.NZ`.
+
+All `V.*` forms are 64 bits (two 32-bit parts in the encoding catalog).
+
+=== Vector Arithmetic (Integer)
+
+include::../generated/instructions/v_add.adoc[]
+include::../generated/instructions/v_addi.adoc[]
+include::../generated/instructions/v_sub.adoc[]
+include::../generated/instructions/v_subi.adoc[]
+include::../generated/instructions/v_mul.adoc[]
+include::../generated/instructions/v_madd.adoc[]
+
+=== Vector Bitwise
+
+include::../generated/instructions/v_and.adoc[]
+include::../generated/instructions/v_andi.adoc[]
+include::../generated/instructions/v_or.adoc[]
+include::../generated/instructions/v_ori.adoc[]
+include::../generated/instructions/v_xor.adoc[]
+include::../generated/instructions/v_xori.adoc[]
+
+=== Vector Shifts
+
+include::../generated/instructions/v_sll.adoc[]
+include::../generated/instructions/v_slli.adoc[]
+include::../generated/instructions/v_srl.adoc[]
+include::../generated/instructions/v_srli.adoc[]
+include::../generated/instructions/v_sra.adoc[]
+include::../generated/instructions/v_srai.adoc[]
+
+=== Vector Bit Manipulation
+
+include::../generated/instructions/v_bcnt.adoc[]
+include::../generated/instructions/v_bic.adoc[]
+include::../generated/instructions/v_bis.adoc[]
+include::../generated/instructions/v_bxs.adoc[]
+include::../generated/instructions/v_bxu.adoc[]
+include::../generated/instructions/v_clz.adoc[]
+include::../generated/instructions/v_ctz.adoc[]
+include::../generated/instructions/v_rev.adoc[]
+
+=== Vector Loads (Tile-Local)
+
+include::../generated/instructions/v_lbi.adoc[]
+include::../generated/instructions/v_lbui.adoc[]
+include::../generated/instructions/v_lhi.adoc[]
+include::../generated/instructions/v_lhui.adoc[]
+include::../generated/instructions/v_lwi.adoc[]
+include::../generated/instructions/v_lwui.adoc[]
+include::../generated/instructions/v_ldi.adoc[]
+
+=== Vector Loads (Bridged Global)
+
+include::../generated/instructions/v_lbi_brg.adoc[]
+include::../generated/instructions/v_lbui_brg.adoc[]
+include::../generated/instructions/v_lhi_brg.adoc[]
+include::../generated/instructions/v_lhui_brg.adoc[]
+include::../generated/instructions/v_lwi_brg.adoc[]
+include::../generated/instructions/v_lwui_brg.adoc[]
+include::../generated/instructions/v_ldi_brg.adoc[]
+
+=== Vector Stores (Tile-Local)
+
+include::../generated/instructions/v_sbi.adoc[]
+include::../generated/instructions/v_shi.adoc[]
+include::../generated/instructions/v_swi.adoc[]
+include::../generated/instructions/v_sdi.adoc[]
+include::../generated/instructions/v_sd.adoc[]
+
+=== Vector Stores (Bridged Global)
+
+include::../generated/instructions/v_sbi_brg.adoc[]
+include::../generated/instructions/v_shi_brg.adoc[]
+include::../generated/instructions/v_swi_brg.adoc[]
+include::../generated/instructions/v_sdi_brg.adoc[]
+include::../generated/instructions/v_sd_brg.adoc[]
+
+=== Vector Memory with Scalar Base (Register Offset)
+
+Tile-local:
+
+include::../generated/instructions/v_lb.adoc[]
+include::../generated/instructions/v_lbu.adoc[]
+include::../generated/instructions/v_lh.adoc[]
+include::../generated/instructions/v_lhu.adoc[]
+include::../generated/instructions/v_lw.adoc[]
+include::../generated/instructions/v_lwu.adoc[]
+include::../generated/instructions/v_ld.adoc[]
+
+Bridged global:
+
+include::../generated/instructions/v_lb_brg.adoc[]
+include::../generated/instructions/v_lbu_brg.adoc[]
+include::../generated/instructions/v_lh_brg.adoc[]
+include::../generated/instructions/v_lhu_brg.adoc[]
+include::../generated/instructions/v_lw_brg.adoc[]
+include::../generated/instructions/v_lwu_brg.adoc[]
+include::../generated/instructions/v_ld_brg.adoc[]
+
+=== Vector Stores with Scalar Base (Register Offset)
+
+Tile-local:
+
+include::../generated/instructions/v_sb.adoc[]
+include::../generated/instructions/v_sh.adoc[]
+include::../generated/instructions/v_sw.adoc[]
+include::../generated/instructions/v_sd.adoc[]
+
+Bridged global:
+
+include::../generated/instructions/v_sb_brg.adoc[]
+include::../generated/instructions/v_sh_brg.adoc[]
+include::../generated/instructions/v_sw_brg.adoc[]
+include::../generated/instructions/v_sd_brg.adoc[]
+
+=== Vector Immediate Loads (Un scaled)
+
+Tile-local:
+
+include::../generated/instructions/v_ldi_u.adoc[]
+include::../generated/instructions/v_lhi_u.adoc[]
+include::../generated/instructions/v_lhui_u.adoc[]
+include::../generated/instructions/v_lwi_u.adoc[]
+include::../generated/instructions/v_lwui_u.adoc[]
+
+Bridged:
+
+include::../generated/instructions/v_ldi_u_brg.adoc[]
+include::../generated/instructions/v_lhi_u_brg.adoc[]
+include::../generated/instructions/v_lhui_u_brg.adoc[]
+include::../generated/instructions/v_lwi_u_brg.adoc[]
+include::../generated/instructions/v_lwui_u_brg.adoc[]
+
+=== Vector Stores with Unscaled Immediate
+
+Tile-local:
+
+include::../generated/instructions/v_sdi_u.adoc[]
+include::../generated/instructions/v_shi_u.adoc[]
+include::../generated/instructions/v_swi_u.adoc[]
+include::../generated/instructions/v_sd_u.adoc[]
+
+Bridged:
+
+include::../generated/instructions/v_sdi_u_brg.adoc[]
+include::../generated/instructions/v_shi_u_brg.adoc[]
+include::../generated/instructions/v_swi_u_brg.adoc[]
+include::../generated/instructions/v_sd_u_brg.adoc[]
+
+=== Vector Atomic Loads
+
+include::../generated/instructions/v_ld_add.adoc[]
+include::../generated/instructions/v_ld_and.adoc[]
+include::../generated/instructions/v_ld_or.adoc[]
+include::../generated/instructions/v_ld_xor.adoc[]
+include::../generated/instructions/v_ld_max.adoc[]
+include::../generated/instructions/v_ld_min.adoc[]
+
+=== Vector Atomic Stores
+
+include::../generated/instructions/v_sw_add.adoc[]
+include::../generated/instructions/v_sw_and.adoc[]
+include::../generated/instructions/v_sw_or.adoc[]
+include::../generated/instructions/v_sw_xor.adoc[]
+include::../generated/instructions/v_sw_max.adoc[]
+include::../generated/instructions/v_sw_min.adoc[]
+include::../generated/instructions/v_sd_add.adoc[]
+include::../generated/instructions/v_sd_and.adoc[]
+include::../generated/instructions/v_sd_or.adoc[]
+include::../generated/instructions/v_sd_xor.adoc[]
+include::../generated/instructions/v_sd_max.adoc[]
+include::../generated/instructions/v_sd_min.adoc[]
+
+=== Vector Comparison and Mask Generation
+
+include::../generated/instructions/v_cmp_eq.adoc[]
+include::../generated/instructions/v_cmp_eqi.adoc[]
+include::../generated/instructions/v_cmp_ne.adoc[]
+include::../generated/instructions/v_cmp_nei.adoc[]
+include::../generated/instructions/v_cmp_lt.adoc[]
+include::../generated/instructions/v_cmp_lti.adoc[]
+include::../generated/instructions/v_cmp_ltu.adoc[]
+include::../generated/instructions/v_cmp_ltui.adoc[]
+include::../generated/instructions/v_cmp_ge.adoc[]
+include::../generated/instructions/v_cmp_gei.adoc[]
+include::../generated/instructions/v_cmp_geu.adoc[]
+include::../generated/instructions/v_cmp_geui.adoc[]
+include::../generated/instructions/v_cmp_and.adoc[]
+include::../generated/instructions/v_cmp_andi.adoc[]
+include::../generated/instructions/v_cmp_or.adoc[]
+include::../generated/instructions/v_cmp_ori.adoc[]
+
+=== Vector Conditional and Predicated Select
+
+include::../generated/instructions/v_csel.adoc[]
+include::../generated/instructions/v_psel.adoc[]
+
+=== Vector Floating-point Arithmetic
+
+include::../generated/instructions/v_fabs.adoc[]
+include::../generated/instructions/v_fexp.adoc[]
+include::../generated/instructions/v_frecip.adoc[]
+include::../generated/instructions/v_fsqrt.adoc[]
+include::../generated/instructions/v_fclass.adoc[]
+
+=== Vector Floating-point FMA
+
+include::../generated/instructions/v_fadd.adoc[]
+include::../generated/instructions/v_fsub.adoc[]
+include::../generated/instructions/v_fmul.adoc[]
+include::../generated/instructions/v_fdiv.adoc[]
+include::../generated/instructions/v_fmadd.adoc[]
+include::../generated/instructions/v_fmsub.adoc[]
+include::../generated/instructions/v_fnmadd.adoc[]
+include::../generated/instructions/v_fnmsub.adoc[]
+
+=== Vector Floating-point Comparison
+
+include::../generated/instructions/v_feq.adoc[]
+include::../generated/instructions/v_feqs.adoc[]
+include::../generated/instructions/v_fne.adoc[]
+include::../generated/instructions/v_fnes.adoc[]
+include::../generated/instructions/v_flt.adoc[]
+include::../generated/instructions/v_flts.adoc[]
+include::../generated/instructions/v_fge.adoc[]
+include::../generated/instructions/v_fges.adoc[]
+
+=== Vector Floating-point Format Conversion
+
+include::../generated/instructions/v_fcvt.adoc[]
+include::../generated/instructions/v_fcvti.adoc[]
+include::../generated/instructions/v_icvt.adoc[]
+include::../generated/instructions/v_icvtf.adoc[]
 
 === Vector Reductions
 
@@ -18,27 +259,23 @@ include::../generated/instructions/v_rdfadd.adoc[]
 include::../generated/instructions/v_rdfmax.adoc[]
 include::../generated/instructions/v_rdfmin.adoc[]
 
+=== Vector Divide and Remainder
+
+include::../generated/instructions/v_div.adoc[]
+include::../generated/instructions/v_rem.adoc[]
+
 === Vector Shuffles
 
 include::../generated/instructions/v_shfl_bfly.adoc[]
 include::../generated/instructions/v_shfl_down.adoc[]
 include::../generated/instructions/v_shfl_up.adoc[]
 include::../generated/instructions/v_shfl_idx.adoc[]
+include::../generated/instructions/v_shfli_bfly.adoc[]
+include::../generated/instructions/v_shfli_down.adoc[]
+include::../generated/instructions/v_shfli_up.adoc[]
+include::../generated/instructions/v_shfli_idx.adoc[]
 
-=== Vector Divide/Remainder
+=== Vector Queue Operations
 
-include::../generated/instructions/v_div.adoc[]
-include::../generated/instructions/v_rem.adoc[]
-
-=== Vector Floating-point
-
-include::../generated/instructions/v_fabs.adoc[]
-include::../generated/instructions/v_fclass.adoc[]
-include::../generated/instructions/v_fexp.adoc[]
-include::../generated/instructions/v_frecip.adoc[]
-include::../generated/instructions/v_fsqrt.adoc[]
-
-=== Vector Select
-
-include::../generated/instructions/v_csel.adoc[]
-include::../generated/instructions/v_psel.adoc[]
+include::../generated/instructions/v_qpop.adoc[]
+include::../generated/instructions/v_qpush.adoc[]

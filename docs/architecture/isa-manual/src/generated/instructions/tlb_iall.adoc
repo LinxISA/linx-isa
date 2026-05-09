@@ -7,7 +7,7 @@
 
 *Syntax:* tlb.iall
 
-*Description:* -
+*Description:* Cache/TLB maintenance: TLB.IALL operation on the specified memory hierarchy.
 
 *Encoding:*
 

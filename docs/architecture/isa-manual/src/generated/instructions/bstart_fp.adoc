@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.FP FALL<, fixup_label>
 
-*Description:* -
+*Description:* Block start marker: BSTART.FP with split semantics.
 
 *Encoding:*
 

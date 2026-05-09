@@ -7,7 +7,7 @@
 
 *Syntax:* v.shfl.up SrcL, SrcR, SrcP, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise shuffle (up) of SrcL, result to Dst.
 
 *Encoding:*
 

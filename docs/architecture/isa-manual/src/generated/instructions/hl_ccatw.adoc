@@ -7,7 +7,7 @@
 
 *Syntax:* hl.ccatw SrcL, SrcR, shamt, ->Dst0, Dst1
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit barrel-concatenate (word): Dst0:Dst1 = SrcL:SrcR shifted by shamt bits.
 
 *Encoding:*
 

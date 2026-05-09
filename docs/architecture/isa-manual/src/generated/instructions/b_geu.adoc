@@ -7,7 +7,7 @@
 
 *Syntax:* b.geu SrcL, SrcR, label
 
-*Description:* -
+*Description:* Conditional branch: take branch if geu.
 
 *Encoding:*
 

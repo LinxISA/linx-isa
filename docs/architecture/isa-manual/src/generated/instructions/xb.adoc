@@ -7,7 +7,7 @@
 
 *Syntax:* XB ACR-ID, C-ID
 
-*Description:* -
+*Description:* Cross-block call: initiates a block transition with return context.
 
 *Encoding:*
 

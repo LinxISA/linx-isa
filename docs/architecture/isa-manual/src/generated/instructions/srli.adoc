@@ -7,7 +7,7 @@
 
 *Syntax:* srli SrcL, shamt, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Arithmetic Operation 64bit: SRLI operation.
 
 *Encoding:*
 

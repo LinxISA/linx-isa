@@ -7,7 +7,7 @@
 
 *Syntax:* fabs.{T} SrcL, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Floating-point abs: Dst = abs(SrcL).
 
 *Encoding:*
 

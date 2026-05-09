@@ -7,7 +7,7 @@
 
 *Syntax:* lhu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}
 
-*Description:* -
+*Description:* Load 16-bit unsigned value from [Rs+offset], result to Rd/t/u.
 
 *Encoding:*
 

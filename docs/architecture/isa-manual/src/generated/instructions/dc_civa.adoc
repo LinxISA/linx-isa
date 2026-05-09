@@ -7,7 +7,7 @@
 
 *Syntax:* dc.civa SrcL
 
-*Description:* -
+*Description:* Cache/TLB maintenance: DC.CIVA operation on the specified memory hierarchy.
 
 *Encoding:*
 

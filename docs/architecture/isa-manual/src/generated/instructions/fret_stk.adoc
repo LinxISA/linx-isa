@@ -7,7 +7,7 @@
 
 *Syntax:* FRET.STK [RegDst0 ~ RegDstn], sp!, uimm
 
-*Description:* -
+*Description:* Template block FRET.STK: compact prologue/epilogue sequence.
 
 *Encoding:*
 

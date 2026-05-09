@@ -7,7 +7,7 @@
 
 *Syntax:* B.HINT TRACE.{begin, end}
 
-*Description:* -
+*Description:* Block block hint: B.HINT.
 
 *Encoding:*
 

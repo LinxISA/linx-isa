@@ -7,7 +7,7 @@
 
 *Syntax:* hl.shi.upo SrcD, [SrcR, simm], ->{t, u, Rd}
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit instruction encoding (prefix + 32-bit main form).
 
 *Encoding:*
 

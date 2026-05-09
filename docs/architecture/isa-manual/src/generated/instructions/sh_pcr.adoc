@@ -7,7 +7,7 @@
 
 *Syntax:* sh.pcr SrcL, [symbol]
 
-*Description:* -
+*Description:* Store 16-bit value to [Rs+offset], result to Rd/t/u.
 
 *Encoding:*
 

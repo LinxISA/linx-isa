@@ -7,7 +7,7 @@
 
 *Syntax:* hl.sbi SrcD, [SrcR, simm]
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit instruction encoding (prefix + 32-bit main form).
 
 *Encoding:*
 

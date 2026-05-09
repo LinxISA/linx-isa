@@ -7,7 +7,7 @@
 
 *Syntax:* v.cmp.ltu SrcL, SrcR, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise compare ltu of SrcL with SrcR, write mask to Dst.
 
 *Encoding:*
 

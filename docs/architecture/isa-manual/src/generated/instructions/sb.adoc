@@ -7,7 +7,7 @@
 
 *Syntax:* sb SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]
 
-*Description:* -
+*Description:* Store 8-bit signed value to [Rs+offset], result to Rd/t/u.
 
 *Encoding:*
 

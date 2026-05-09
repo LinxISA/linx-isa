@@ -7,7 +7,7 @@
 
 *Syntax:* sra SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Arithmetic Operation 64bit: SRA operation.
 
 *Encoding:*
 

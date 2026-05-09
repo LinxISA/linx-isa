@@ -7,7 +7,7 @@
 
 *Syntax:* hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<2]
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit store register pair to address [base+offset] from Dst0 and Dst1.
 
 *Encoding:*
 

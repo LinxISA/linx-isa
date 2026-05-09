@@ -7,7 +7,7 @@
 
 *Syntax:* hl.qmt.{i,e,s,r,ie,is,ir,es,er,ies,ier} SrcL, SrcR, ->{t, u}
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit queue management/test:SrcL is a queue tag; result pushed to t/u.
 
 *Encoding:*
 

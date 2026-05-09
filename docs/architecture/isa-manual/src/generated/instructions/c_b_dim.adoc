@@ -7,7 +7,7 @@
 
 *Syntax:* C.B.DIM RegSrc, ->{LB0, LB1, LB2}
 
-*Description:* Compressed instruction variant (16-bit encoding).
+*Description:* Compressed 16-bit block dimension: sets LB0/LB1/LB2 from load.
 
 *Encoding:*
 

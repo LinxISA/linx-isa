@@ -7,7 +7,7 @@
 
 *Syntax:* v.flts SrcL, SrcR, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise floating-point compare lts of SrcL and SrcR, write mask to Dst.
 
 *Encoding:*
 

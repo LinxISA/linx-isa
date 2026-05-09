@@ -7,7 +7,7 @@
 
 *Syntax:* swapb<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}
 
-*Description:* -
+*Description:* Atomic swap byte: atomically swap [Rs] with SrcR, result to Rd/t/u.
 
 *Encoding:*
 

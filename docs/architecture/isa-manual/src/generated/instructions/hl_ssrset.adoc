@@ -7,7 +7,7 @@
 
 *Syntax:* hl.ssrset SrcL, SSR_ID
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit SSR write: write SrcL to the selected SSR.
 
 *Encoding:*
 

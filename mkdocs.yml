@@ -50,7 +50,7 @@ nav:
       - Assembly Guide: reference/linxisa-assembly-agent-guide.md
       - Call/Ret Contract (ABI): reference/linxisa-call-ret-contract.md
       - Encoding Space Analysis: reference/encoding_space_report.md
-      - Full ISA Manual (AsciiDoc): architecture/isa-manual/README.md
+      - Full ISA Manual (AsciiDoc/PDF): architecture/isa-manual/README.md
   # Published LinxCore pages are synced from rtl/LinxCore/docs/architecture/.
   - Hardware (LinxCore RTL):
       - Overview: architecture/linxcore/overview.md

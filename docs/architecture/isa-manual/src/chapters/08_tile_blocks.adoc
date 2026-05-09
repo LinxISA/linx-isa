@@ -24,7 +24,7 @@ Tile/vector block headers use the standard descriptor families:
 * `B.DIM`  — dimension/loop counters and/or operand extents
 * `B.ARG`  — layout and per-op argument payload (layout defaults may exist per-op)
 * `B.IOR`  — stride/base/scalar register bindings (memory addressing)
-* `B.IOT` / `B.IOT` — tile binding and tile size (strict range `0B..512KB`)
+* `B.IOT` — tile binding and tile size (strict range `0B..512KB`)
 * `B.TEXT` — body pointer for SIMT vector blocks (group-granular kernel body)
 
 [[tileblocks-vvec]]
@@ -93,7 +93,7 @@ Mandatory header descriptors:
 
 * `B.ARG` is **mandatory** (layout/pad).
 * `B.IOR` is **mandatory** (stride/base).
-* `B.IOT` / `B.IOT` is **mandatory** (tile binding + tile size).
+* `B.IOT` is **mandatory** (tile binding + tile size).
 
 Missing mandatory descriptors MUST trap with `E_BLOCK(EC_BLOCKFMT)` and report the missing descriptor family in `TRAPARG0` (see System/Privilege trap reporting).
 [[tileblocks-tmov]]
@@ -107,7 +107,7 @@ NOTE (header legality): `B.TEXT` is not meaningful for header-driven engine ops 
 
 Mandatory header descriptors:
 
-* `B.IOT` / `B.IOT` is **mandatory** (bind source/destination tiles and tile sizes).
+* `B.IOT` is **mandatory** (bind source/destination tiles and tile sizes).
 
 Optional descriptors:
 
@@ -127,7 +127,7 @@ These blocks do not have a SIMT body (`B.TEXT` is not used).
 Mandatory header descriptors:
 
 * `B.DIM` is **mandatory** and specifies `m/n/k` via `LB0/LB1/LB2`.
-* `B.IOT` / `B.IOT` is **mandatory** (bind operand tiles and sizes).
+* `B.IOT` is **mandatory** (bind operand tiles and sizes).
 * `B.ARG` is **mandatory** (CUBE uses a fixed layout contract for left/right matrices).
 
 ==== `ACCCVT`
@@ -140,5 +140,5 @@ Source operand note:
 Mandatory header descriptors:
 
 * `B.DIM` is **mandatory**.
-* `B.IOT` / `B.IOT` is **mandatory** (bind destination tile + size).
+* `B.IOT` is **mandatory** (bind destination tile + size).
 * `B.ARG` + `B.IOR` are **mandatory** (quantization arguments and scalar bindings).

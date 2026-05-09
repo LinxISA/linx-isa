@@ -7,7 +7,7 @@
 
 *Syntax:* hl.lui imm, ->{t, u, Rd}
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit load upper immediate (32-bit constant), result to Rd/t/u.
 
 *Encoding:*
 

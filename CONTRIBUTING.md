@@ -15,8 +15,8 @@ compiler (LLVM), emulator (QEMU), Linux, RTL, libc, and validation suites.
 
 ```bash
 bash tools/ci/check_repo_layout.sh
-bash tools/ci/check_public_v03.sh
 python3 tools/bringup/check26_contract.py --root .
+python3 tools/isa/check_canonical_v056.py --root .
 mkdocs build --strict
 ```
 
@@ -31,4 +31,3 @@ bash tools/regression/run.sh
 - Use a clear title and include a short motivation/impact summary
 - Keep diffs focused; avoid bundling unrelated submodule bumps
 - Make sure CI is green before requesting review
-

@@ -7,7 +7,7 @@
 
 *Syntax:* v.fmadd SrcL, SrcR, SrcA, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise fused multiply-add: Dst = ±(SrcL * SrcR) ± SrcA, result to Dst.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* assert SrcL
 
-*Description:* -
+*Description:* Assertion trap: raises an illegal-instruction trap if SrcL is zero.
 
 *Encoding:*
 

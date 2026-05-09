@@ -7,7 +7,7 @@
 
 *Syntax:* oriw SrcL, simm, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Arithmetic Operation 32bit: ORIW operation.
 
 *Encoding:*
 

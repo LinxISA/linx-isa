@@ -7,7 +7,7 @@
 
 *Syntax:* prf [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]
 
-*Description:* -
+*Description:* Load 32-bit signed value from [Rs+offset], result to Rd/t/u.
 
 *Encoding:*
 

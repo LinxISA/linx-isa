@@ -7,7 +7,7 @@
 
 *Syntax:* c.setret uimm, - >Ra
 
-*Description:* Compressed instruction variant (16-bit encoding).
+*Description:* Compressed 16-bit set return address; packs ra with a small uimm offset.
 
 *Encoding:*
 

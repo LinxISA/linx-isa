@@ -7,7 +7,7 @@
 
 *Syntax:* v.ld.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector load OR from tile-local address [SrcL+lc0*stride+imm] into Dst.
 
 *Encoding:*
 

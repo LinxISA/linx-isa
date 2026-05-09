@@ -7,7 +7,7 @@
 
 *Syntax:* bxu SrcL, M, N, ->{t, u, Rd}
 
-*Description:* -
+*Description:* bit extract zero-extend: Dst = popcount/extract/select bits of SrcL/M/N, result to Rd/t/u.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* hl.lwu.pcr [<symbol>], ->{t, u, Rd}
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit instruction encoding (prefix + 32-bit main form).
 
 *Encoding:*
 

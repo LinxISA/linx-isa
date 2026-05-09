@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.VSEQ <VS8, VS16>
 
-*Description:* -
+*Description:* TVEC-equivalent sequential SIMT header; requires B.TEXT body target in decoupled form.
 
 *Encoding:*
 

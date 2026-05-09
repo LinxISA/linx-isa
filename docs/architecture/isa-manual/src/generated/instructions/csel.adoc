@@ -7,7 +7,7 @@
 
 *Syntax:* csel SrcP, SrcL, SrcR<.neg>, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Conditional select: Rd/t/u = SrcP ? SrcL : SrcR.
 
 *Encoding:*
 

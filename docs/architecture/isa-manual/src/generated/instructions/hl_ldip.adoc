@@ -7,7 +7,7 @@
 
 *Syntax:* hl.ldip [SrcL, simm], ->Dst0, Dst1
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit instruction encoding (prefix + 32-bit main form).
 
 *Encoding:*
 

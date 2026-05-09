@@ -7,7 +7,7 @@
 
 *Syntax:* v.feqs SrcL, SrcR, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise floating-point compare eqs of SrcL and SrcR, write mask to Dst.
 
 *Encoding:*
 

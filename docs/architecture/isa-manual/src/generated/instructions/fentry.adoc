@@ -7,7 +7,7 @@
 
 *Syntax:* FENTRY [RegSrc0 ~ RegSrcn], sp!, uimm
 
-*Description:* -
+*Description:* Template block FENTRY: compact prologue/epilogue sequence.
 
 *Encoding:*
 

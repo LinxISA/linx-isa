@@ -7,7 +7,7 @@
 
 *Syntax:* dc.iva SrcL
 
-*Description:* -
+*Description:* Cache/TLB maintenance: DC.IVA operation on the specified memory hierarchy.
 
 *Encoding:*
 

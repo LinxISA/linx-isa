@@ -7,7 +7,7 @@
 
 *Syntax:* v.sw.max<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector store MAX to tile-local address from SrcD lane-by-lane.
 
 *Encoding:*
 

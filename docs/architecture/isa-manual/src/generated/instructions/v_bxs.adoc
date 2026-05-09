@@ -7,7 +7,7 @@
 
 *Syntax:* v.bxs SrcL, M, N, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise bit bxs of SrcL controlled by SrcR, result to Dst.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* sraw SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Arithmetic Operation 32bit: SRAW operation.
 
 *Encoding:*
 

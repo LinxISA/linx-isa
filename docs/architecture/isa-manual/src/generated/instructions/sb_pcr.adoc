@@ -7,7 +7,7 @@
 
 *Syntax:* sb.pcr SrcL, [symbol]
 
-*Description:* -
+*Description:* Store 8-bit value to [Rs+offset], result to Rd/t/u.
 
 *Encoding:*
 

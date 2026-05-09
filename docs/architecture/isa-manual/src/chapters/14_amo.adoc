@@ -4,7 +4,21 @@
 [[chapter_amo]]
 == AMO - Atomic Memory Operations
 
-The Atomic Memory Operations (AMO) group handles all atomic read-modify-write operations including load-reserve/store-conditional (LR/SC) and compare-and-swap (CAS).
+The Atomic Memory Operations (AMO) group provides load-reserve/store-conditional (LR/SC) pairs, fetch-and-op atomics, and compare-and-swap (CAS) for synchronization and lock-free data structures.
+
+**Load-Reserve / Store-Conditional** (`LR.*` / `SC.*`): the processor records a physical address reservation on a `LR` to an address. A subsequent `SC` to the same cache line succeeds only if the reservation is still held. If the reservation was lost (another processor touched the line, or a `FENCE` was executed), the `SC` writes zero to the destination and the software must retry.
+
+**Fetch-and-op atomics** (`LD.*` / `LW.*` / `SD.*` / `SW.*`): atomic read-modify-write of a memory location. The memory location is read, the operation is applied, and the old value is written to the destination register (GPR or ClockHands queue) atomically. Supported operations: ADD, AND, OR, XOR, SMAX, SMIN, UMAX, UMIN.
+
+**Atomic ordering qualifiers** are encoded as suffixes on each AMO:
+
+* `.aq` (acquire): subsequent loads and stores must not be reordered before this AMO.
+* `.rl` (release): prior loads and stores must not be reordered after this AMO.
+* `.aqrl`: both acquire and release semantics.
+* `.f`: no ordering constraint beyond what the memory model guarantees (used in explicit store-only forms like `SW.ADD`).
+* `.aqf`, `.rlf`, `.aqrlf`: variants with an additional failure code written to the destination.
+
+**Compare-and-Swap** (`HL.CASB/D/W`): the 48-bit `HL.CAS` forms perform a double-word compare-and-swap. The processor loads the memory location, compares it with `SrcR`, and if equal, writes `SrcD` back to memory -- all atomically. The old value is always written to the destination. CAS always has both `.aq` and `.rl` semantics implicitly.
 
 === Load Reserved / Store Conditional
 

@@ -7,7 +7,7 @@
 
 *Syntax:* sw.and<.{rl, f, rlf}> [SrcL], SrcR
 
-*Description:* -
+*Description:* Atomic fetch-and-and AND at address [Rs+RsR]: old value to Rd/t/u, updated memory.
 
 *Encoding:*
 

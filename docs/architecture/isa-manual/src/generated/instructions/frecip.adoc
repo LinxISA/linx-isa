@@ -7,7 +7,7 @@
 
 *Syntax:* frecip.{T} SrcL, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Floating-point recip: Dst = recip(SrcL).
 
 *Encoding:*
 

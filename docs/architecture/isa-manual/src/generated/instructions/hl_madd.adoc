@@ -7,7 +7,7 @@
 
 *Syntax:* hl.madd SrcL, SrcR, SrcD, ->Dst0, Dst1
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit multiply-add: Dst0 = SrcL*SrcR (+/-) SrcD, Dst1 = high part.
 
 *Encoding:*
 

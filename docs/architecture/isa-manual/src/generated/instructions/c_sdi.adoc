@@ -7,7 +7,7 @@
 
 *Syntax:* c.sdi t#1, [srcL, simm]
 
-*Description:* Compressed instruction variant (16-bit encoding).
+*Description:* Compressed 16-bit store t#1 low 16 bits to [Rs1+imm].
 
 *Encoding:*
 

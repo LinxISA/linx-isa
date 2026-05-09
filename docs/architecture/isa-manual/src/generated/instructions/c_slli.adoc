@@ -7,7 +7,7 @@
 
 *Syntax:* c.slli t#1, uimm, ->t
 
-*Description:* Compressed instruction variant (16-bit encoding).
+*Description:* Compressed 16-bit logical left-shift of t#1 by uimm bits, result to t.
 
 *Encoding:*
 

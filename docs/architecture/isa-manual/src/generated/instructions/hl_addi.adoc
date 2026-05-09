@@ -7,7 +7,7 @@
 
 *Syntax:* hl.addi SrcL, uimm, ->{t, u, Rd}
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit ADDI with 32-bit immediate, result to Rd/t/u.
 
 *Encoding:*
 

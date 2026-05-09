@@ -7,7 +7,7 @@
 
 *Syntax:* v.sub SrcL, SrcR<.neg><<<shamt>, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise SUB of SrcL with SrcR, result to Dst.
 
 *Encoding:*
 

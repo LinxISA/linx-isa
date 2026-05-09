@@ -7,7 +7,7 @@
 
 *Syntax:* v.qpush SrcL.ud, SrcR.ud, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector queue push operation on SrcL, result to Dst.
 
 *Encoding:*
 

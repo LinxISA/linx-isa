@@ -7,7 +7,7 @@
 
 *Syntax:* setc.gei SrcL, simm
 
-*Description:* -
+*Description:* Set block condition flag for e immediate: consumed by BSTART COND.
 
 *Encoding:*
 

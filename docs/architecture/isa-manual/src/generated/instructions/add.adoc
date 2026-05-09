@@ -7,7 +7,7 @@
 
 *Syntax:* add SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Add: Rd/t/u = operand1 op operand2.
 
 *Encoding:*
 

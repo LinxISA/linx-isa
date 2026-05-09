@@ -7,7 +7,7 @@
 
 *Syntax:* srlw SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Arithmetic Operation 32bit: SRLW operation.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.TSTORE DataType
 
-*Description:* -
+*Description:* Alias of BSTART.TMA Function=1. Requires B.ARG layout/pad and B.IOR stride/base plus B.IOT tile binding.
 
 *Encoding:*
 

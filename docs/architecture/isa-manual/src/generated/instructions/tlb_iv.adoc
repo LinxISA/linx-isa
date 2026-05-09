@@ -7,7 +7,7 @@
 
 *Syntax:* tlb.iv SrcL
 
-*Description:* -
+*Description:* Cache/TLB maintenance: TLB.IV operation on the specified memory hierarchy.
 
 *Encoding:*
 

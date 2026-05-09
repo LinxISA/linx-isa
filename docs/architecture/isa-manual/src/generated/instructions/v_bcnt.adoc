@@ -7,7 +7,7 @@
 
 *Syntax:* v.bcnt SrcL, M, N, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise bcnt of SrcL, result to Dst.
 
 *Encoding:*
 

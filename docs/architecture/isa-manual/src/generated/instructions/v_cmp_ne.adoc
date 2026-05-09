@@ -7,7 +7,7 @@
 
 *Syntax:* v.cmp.ne SrcL, SrcR, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise compare ne of SrcL with SrcR, write mask to Dst.
 
 *Encoding:*
 

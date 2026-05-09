@@ -7,7 +7,7 @@
 
 *Syntax:* hl.setc.eqi SrcL, simm
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit set condition flag: qi of SrcL with operand.
 
 *Encoding:*
 

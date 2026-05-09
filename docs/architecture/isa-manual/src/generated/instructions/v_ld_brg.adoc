@@ -7,7 +7,7 @@
 
 *Syntax:* v.ld.brg<.local> [SrcL,  <lc0<<3>, SrcR<<<shamt>], ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector load BRG from bridged global address into Dst.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* setc.tgt SrcL
 
-*Description:* -
+*Description:* Set block target register: BARG.TGT = SrcL, consumed by RET/IND transitions.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* lhi.u [SrcL, simm], ->{t, u, Rd}
 
-*Description:* -
+*Description:* Load 16-bit value from [Rs+offset], result to Rd/t/u.
 
 *Encoding:*
 

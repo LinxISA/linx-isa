@@ -7,7 +7,7 @@
 
 *Syntax:* lbu.pcr [symbol], ->{t, u, Rd}
 
-*Description:* -
+*Description:* Load 8-bit signedvalue from [Rs+offset], result to Rd/t/u.
 
 *Encoding:*
 

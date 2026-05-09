@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.SYS FALL<, fixup_label>
 
-*Description:* -
+*Description:* Block start marker: BSTART.SYS with split semantics.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* C.BSTART.SYS FALL
 
-*Description:* Compressed instruction variant (16-bit encoding).
+*Description:* Compressed 16-bit block start marker: BSTART.SYS (system transition).
 
 *Encoding:*
 

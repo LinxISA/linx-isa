@@ -7,7 +7,7 @@
 
 *Syntax:* B.DIM RegSrc, uimm, ->LB1
 
-*Description:* -
+*Description:* Block block argument: B.DIM.
 
 *Encoding:*
 

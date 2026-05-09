@@ -7,7 +7,7 @@
 
 *Syntax:* v.frecip SrcL, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise recip of SrcL, result to Dst.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* v.madd SrcL, SrcR, SrcD, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector instruction (64-bit SIMD lane-by-lane execution).
 
 *Encoding:*
 

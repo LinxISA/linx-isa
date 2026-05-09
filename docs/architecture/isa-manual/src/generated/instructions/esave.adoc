@@ -7,7 +7,7 @@
 
 *Syntax:* ESAVE [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]
 
-*Description:* -
+*Description:* Block block control: ESAVE.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* fadd.{T} SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Floating-point Arithmetic: FADD floating-point operation.
 
 *Encoding:*
 

@@ -198,15 +198,14 @@ Linx defines a tile register file used by accelerator-oriented *tile blocks* (e.
 
 Bring-up model:
 
-* 32 architectural tile registers, organized as **4 hands × 8 depth**.
-* Each tile register has a tracked architectural size in the closed range **0B..512KB**.
-* The architectural tile-state capacity is **128KB** (`32 × 4KB`).
-* Implementations MAY internally provision a larger backing store per tile register, but MUST preserve the architectural
-  behavior that operations only read/write within the currently allocated size for each tile.
-* Each hand is architecturally treated as a **tile register queue** addressed by `hand#k` references:
+* 64 architectural tile registers, organized as **4 hands × 16 depth** (T, U, M, N).
+* Each hand is architecturally treated as a **result queue** addressed by `hand#k` references:
   - `hand#1` is the most recent definition,
   - tile-producing ops allocate by pushing a new `hand#1`,
-  - `.reuse` is a staged hint bit carried on inputs (see <<blockisa-tile>>).
+  - each hand has depth 16 (`hand#1` through `hand#16`).
+* Implementations MAY internally provision a larger backing store per tile register, but MUST preserve the architectural
+  behavior that operations only read/write within the currently allocated size for each tile.
+* `.reuse` is a staged hint bit carried on inputs (see <<blockisa-tile>>).
 * Tile blocks bind tile inputs/outputs using block descriptors (`B.IOT`/`B.IOT` for tiles, `B.IOR` for GPRs).
 * Canonical disassembly prints the destination kind plus the allocation size (for example `->t<4KB>`).
 

@@ -7,7 +7,7 @@
 
 *Syntax:* BSTOP
 
-*Description:* -
+*Description:* Block stop marker: terminates the current block and commits BARG.
 
 *Encoding:*
 

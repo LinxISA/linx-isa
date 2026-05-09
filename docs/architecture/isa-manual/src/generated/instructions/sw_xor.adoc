@@ -7,7 +7,7 @@
 
 *Syntax:* sw.xor<.{rl, f, rlf}> [SrcL], SrcR
 
-*Description:* -
+*Description:* Atomic fetch-and-xor XOR at address [Rs+RsR]: old value to Rd/t/u, updated memory.
 
 *Encoding:*
 

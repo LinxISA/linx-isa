@@ -7,7 +7,7 @@
 
 *Syntax:* B.IOR [RegSrc0, RegSrc1, RegSrc2],[RegDst]
 
-*Description:* -
+*Description:* Block block input & output: B.IOR.
 
 *Encoding:*
 

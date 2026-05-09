@@ -7,7 +7,7 @@
 
 *Syntax:* C.BSTART.MSEQ FALL
 
-*Description:* Compressed instruction variant (16-bit encoding).
+*Description:* Compressed 16-bit block start marker: BSTART.MSEQ (MSEQ SIMT kernel transition).
 
 *Encoding:*
 

@@ -4,7 +4,33 @@
 [[chapter_sys]]
 == SYS - System Operations
 
-The System (SYS) group handles all system-level operations including cache maintenance, memory barriers, system registers, and traps.
+The System (SYS) group covers memory barriers, traps and debug, access-control ring transitions, and system/status register access. These instructions interact with the privilege and memory-order architecture.
+
+**Memory barriers** order memory accesses:
+
+* `FENCE.D` -- data memory barrier; orders loads and stores according to the `pred_imm`/`succ_imm` mask.
+* `FENCE.I` -- instruction fetch barrier; ensures that all prior stores to instruction memory are visible to subsequent instruction fetches.
+
+**Branch barriers** (`BWE`, `BWI`, `BWT`, `BSE`) manage control-flow speculation. They prevent the hardware from speculating past control-flow boundaries or enforce wait/resume semantics for speculative execution.
+
+**Trap and debug** instructions:
+
+* `EBREAK` -- raises an EBREAK trap. By default this is an architectural breakpoint trap; semihost handling is opt-in via `LINX_SEMIHOST=1`.
+* `ASSERT` -- raises an illegal-instruction trap if `SrcL == 0`. Used by the toolchain to emit static assertions.
+
+**Access Control Ring (ACR) transitions**:
+
+* `ACRE` -- request entry to a more privileged ACR (`ACR_ENTER`).
+* `ACRC` -- request service from a less privileged ACR (`SERVICE_REQUEST`). Both may trap if the transition is not permitted.
+
+**System/Local Status Register access**:
+
+* `SSRGET` / `SSRGET` (32-bit) and `HL.SSRGET` (48-bit extended ID) -- read an SSR into a GPR or ClockHands queue.
+* `SSRSET` / `SSRSET` -- write a GPR value to an SSR.
+* `SSRSWAP` -- atomic read-and-write of an SSR.
+* `LSRGET` -- read a Local Status Register (LSR).
+
+**Cache and TLB maintenance** (`DC.*`, `IC.*`, `TLB.*`, `BC.*`): these operations affect the microarchitectural cache and TLB state. Their architectural effect is defined by the platform profile.
 
 === Memory Barriers
 

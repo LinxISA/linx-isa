@@ -7,7 +7,7 @@
 
 *Syntax:* fdiv.{T} SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Floating-point Arithmetic: FDIV floating-point operation.
 
 *Encoding:*
 

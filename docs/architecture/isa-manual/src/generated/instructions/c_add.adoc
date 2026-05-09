@@ -7,7 +7,7 @@
 
 *Syntax:* c.add srcL, srcR, ->t
 
-*Description:* Compressed instruction variant (16-bit encoding).
+*Description:* Compressed 16-bit register-register addition: Rd = Rs1 + Rs2, result to t.
 
 *Encoding:*
 

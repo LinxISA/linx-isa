@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.ACCCVT DataType
 
-*Description:* -
+*Description:* Alias of BSTART.CUBE Function=8. ACCCVT requires quantization args via B.ARG+B.IOR (scale/zero-point required in strict profile).
 
 *Encoding:*
 

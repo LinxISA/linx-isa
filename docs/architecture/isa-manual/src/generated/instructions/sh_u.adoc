@@ -7,7 +7,7 @@
 
 *Syntax:* sh.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]
 
-*Description:* -
+*Description:* Store 16-bit unsigned value to [Rs+offset], result to Rd/t/u.
 
 *Encoding:*
 

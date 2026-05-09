@@ -207,7 +207,7 @@ Linx defines *tile blocks* for hardware-accelerated tile operations. A tile bloc
 
 Tile blocks operate on **tile registers** (see <<progmodel-tile>>), and use explicit per-block descriptors:
 
-* `B.IOT` / `B.IOT` describe tile inputs/outputs (including relative tile references and transfer sizing)
+* `B.IOT` describes tile inputs/outputs (including relative tile references and transfer sizing)
 * `B.IOR` describes GPR inputs/outputs for the block
 * `B.ARG` carries TMA layout-format selection and pad policy for the block
 * `B.DIM` / `C.B.DIM*` may be used to provide block-local dimensions and valid masks via `LB0..LB2`
@@ -235,7 +235,7 @@ and uses `last` to mark the terminal descriptor in a block header chain. Descrip
 
 Bring-up v0.56 descriptor rules (normative for this bring-up profile):
 
-* `B.IOT` / `B.IOT` *tile references* are printed as `t#k` / `u#k` / `m#k` / `n#k` where `k` is 1-based.
+* `B.IOT` *tile references* are printed as `t#k` / `u#k` / `m#k` / `n#k` where `k` is 1-based.
   The encoded tile-id mapping is:
 ** `t#k` → tile-id `k-1` (0..7)
 ** `u#k` → tile-id `8+(k-1)` (8..15)
@@ -268,7 +268,7 @@ Bring-up v0.56 descriptor rules (normative for this bring-up profile):
 * Canonical shader-kernel scalar imports are the ordered namespace `ri0..ri11`:
 ** bindings are allocated from repeated `B.IOR` descriptors in header order,
 ** within one descriptor, imports are assigned in `RegSrc0`, `RegSrc1`, `RegSrc2` order.
-* Each `B.IOT` / `B.IOT` descriptor carries up to two source-tile references plus one destination tile kind.
+* Each `B.IOT` descriptor carries up to two source-tile references plus one destination tile kind.
 * `MAMULB` / `MAMULB.ACC` use `SrcTile0/SrcTile1` as the two tile inputs; the output is the implicit accumulator (`->acc<...>`).
 * `group=0` means the header descriptor chain continues.
 * `group=1` is the terminal descriptor form in bring-up streams and is rendered as `last` in disassembly.
@@ -367,7 +367,7 @@ v0.56 block split patterns and per-family constraints:
 ** require `B.ARG` for layout/pad selection.
 ** require at least one `B.IOR` binding carrying base/stride arguments (strict profile convention: stride and base are explicit scalar inputs).
 ** strict binding convention is `RegSrc0=stride/ld`, `RegSrc1=base` when both are present.
-** require tile binding via `B.IOT`/`B.IOT`.
+** require tile binding via `B.IOT`.
 ** are header-driven block commands (no SIMT body; do not use `B.TEXT`).
 * `BSTART.TMATMUL` / `BSTART.TMATMUL.ACC` (alias of `BSTART.CUBE Function=0/2`):
 ** require `B.DIM`/`C.B.DIM*` with `LB0/LB1/LB2` bound as `m/n/k`.
@@ -425,7 +425,7 @@ The v0.56 catalog includes the following descriptor families:
 
 * **Block I/O binding**
   - `B.IOR`: binds GPR inputs/outputs for a block.
-  - `B.IOT` / `B.IOT`: binds tile inputs/outputs for a block (including optional input reuse and transfer sizing).
+  - `B.IOT`: binds tile inputs/outputs for a block (including optional input reuse and transfer sizing).
   - `B.IOD`: obsolete compatibility descriptor in canonical v0.56 streams.
 * **Block arguments**
   - `B.ARG`: writes a per-block argument used by TMA tile load/store pipelines (layout format + pad policy).

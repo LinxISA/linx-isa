@@ -7,7 +7,7 @@
 
 *Syntax:* remw SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Remainder (word): Dst0 = remainder, Dst1 = quotient.
 
 *Encoding:*
 

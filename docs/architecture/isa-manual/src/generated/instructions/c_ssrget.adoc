@@ -7,7 +7,7 @@
 
 *Syntax:* c.ssrget SSR-ID, ->t
 
-*Description:* Compressed instruction variant (16-bit encoding).
+*Description:* Compressed 16-bit SSR read: loads the selected SSR into t.
 
 *Encoding:*
 

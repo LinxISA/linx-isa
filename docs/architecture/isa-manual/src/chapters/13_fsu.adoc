@@ -4,7 +4,22 @@
 [[chapter_fsu]]
 == FSU - Floating-point / SIMD Unit
 
-The Floating-point/SIMD Unit (FSU) group handles all floating-point arithmetic and SIMD operations.
+The Floating-point/SIMD Unit (FSU) provides all scalar floating-point operations, floating-point comparisons, format conversions, and mixed-format FMA (fused multiply-add) variants. Floating-point instructions operate on the same GPR file (`R0..R23`) as integer instructions; there is no separate floating-point register file. Results are written to a GPR or ClockHands queue.
+
+**Floating-point control** is managed through the FCSR register (see <<progmodel-fcsr>>):
+
+* Rounding mode is selected by `FCSR[10:8]`. The default is round-to-nearest-even (RNE).
+* Exception flags (`NV`, `DZ`, `OF`, `UF`, `NX`) are sticky and set but do not trap by default in the v0.56 bring-up profile.
+
+**FMA variants** (`FMADD`, `FMSUB`, `FNMADD`, `FNMSUB`) perform a fused multiply-add in a single rounding step:
+`FMADD`: `(+/-(Rs1 * Rs2)) +/- Rs3` -- the sign of the addend follows the instruction variant.
+
+**Format conversions** (`FCVT.*`) convert between supported floating-point formats (FP64, FP32, FP16, FP8, BF16, FP4, FPL8, FPL4) and between integer and floating-point types. The `FCVTZ` / `FCVTN` / `FCVTM` / `FCVTP` / `FCVTA` variants select the rounding mode (toward zero, nearest, floor, ceiling, away). Conversions between integer and floating-point are handled by `SCVTF` (signed integer to FP) and `UCVTF` (unsigned integer to FP).
+
+[NOTE]
+====
+`FABS`, `FEXP`, `FRECIP`, and `FSQRT` are unary floating-point operations. `FCLASS` writes a classification mask (one bit per IEEE 754 class) to the destination register rather than a numeric value.
+====
 
 === Scalar Floating-point Arithmetic
 

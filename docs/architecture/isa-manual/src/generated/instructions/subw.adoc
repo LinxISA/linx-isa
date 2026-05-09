@@ -7,7 +7,7 @@
 
 *Syntax:* subw SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Subtract word (word operation): Rd/t/u = operand1 op operand2.
 
 *Encoding:*
 

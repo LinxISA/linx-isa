@@ -7,7 +7,7 @@
 
 *Syntax:* v.swi<.local> SrcL, [SrcR, <lc0<<2>, simm]
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector instruction (64-bit SIMD lane-by-lane execution).
 
 *Encoding:*
 

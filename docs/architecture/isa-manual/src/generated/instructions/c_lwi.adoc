@@ -7,7 +7,7 @@
 
 *Syntax:* c.lwi [srcL, simm], ->t
 
-*Description:* Compressed instruction variant (16-bit encoding).
+*Description:* Compressed 16-bit load 32-bit word from [Rs1+imm] into t.
 
 *Encoding:*
 

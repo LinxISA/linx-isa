@@ -7,7 +7,7 @@
 
 *Syntax:* orw SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Arithmetic Operation 32bit: ORW operation.
 
 *Encoding:*
 

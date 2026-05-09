@@ -7,7 +7,7 @@
 
 *Syntax:* fmax.{T} SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Max-Min: FMAX operation.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* maddw SrcL, SrcR, SrcD, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Multiply (word): Dst = SrcL * SrcR, high part Dst1.
 
 *Encoding:*
 

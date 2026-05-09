@@ -7,7 +7,7 @@
 
 *Syntax:* bwi SrcL
 
-*Description:* -
+*Description:* Branch barrier/wait: BWI instruction for control-flow speculation management.
 
 *Encoding:*
 

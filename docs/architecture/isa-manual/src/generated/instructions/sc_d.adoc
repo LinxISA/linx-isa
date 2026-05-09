@@ -7,7 +7,7 @@
 
 *Syntax:* sc.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], {->t, ->u, ->Rd}
 
-*Description:* -
+*Description:* Store-conditional doubleword: store SrcD to [Rd] if reservation valid.
 
 *Encoding:*
 

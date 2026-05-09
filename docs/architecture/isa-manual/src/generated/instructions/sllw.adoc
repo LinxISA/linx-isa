@@ -7,7 +7,7 @@
 
 *Syntax:* sllw SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Shift left of SrcL by SrcR/shamt bits, result to Rd/t/u.
 
 *Encoding:*
 

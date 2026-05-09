@@ -7,7 +7,7 @@
 
 *Syntax:* v.cmp.geui SrcL, uimm, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise compare geui of SrcL with SrcR, write mask to Dst.
 
 *Encoding:*
 

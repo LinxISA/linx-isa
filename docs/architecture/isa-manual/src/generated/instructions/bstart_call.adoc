@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.CALL, <br_label>, <rt_label>, -> ra
 
-*Description:* -
+*Description:* BSTART: BSTART CALL operation.
 
 *Encoding:*
 

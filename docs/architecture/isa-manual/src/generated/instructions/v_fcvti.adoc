@@ -7,7 +7,7 @@
 
 *Syntax:* v.fcvti.{st2dt} SrcL, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise conversion of SrcL, result to Dst.
 
 *Encoding:*
 

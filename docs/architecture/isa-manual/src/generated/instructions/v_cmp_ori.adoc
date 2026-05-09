@@ -7,7 +7,7 @@
 
 *Syntax:* v.cmp.ori SrcL, simm, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise compare ori of SrcL with SrcR, write mask to Dst.
 
 *Encoding:*
 

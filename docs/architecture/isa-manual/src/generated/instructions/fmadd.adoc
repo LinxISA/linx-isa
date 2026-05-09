@@ -7,7 +7,7 @@
 
 *Syntax:* fmadd.{T} SrcL, SrcR, SrcA, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Floating-point fused multiply-add: Dst = +(SrcL * SrcR) + SrcA.
 
 *Encoding:*
 

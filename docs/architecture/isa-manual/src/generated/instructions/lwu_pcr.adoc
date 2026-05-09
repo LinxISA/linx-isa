@@ -7,7 +7,7 @@
 
 *Syntax:* lwu.pcr [symbol], ->{t, u, Rd}
 
-*Description:* -
+*Description:* Load 32-bit value from [Rs+offset], result to Rd/t/u.
 
 *Encoding:*
 

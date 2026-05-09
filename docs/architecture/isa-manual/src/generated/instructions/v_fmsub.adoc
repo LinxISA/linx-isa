@@ -7,7 +7,7 @@
 
 *Syntax:* v.fmsub SrcL, SrcR, SrcA, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise fused multiply-subtract: Dst = ±(SrcL * SrcR) ∓ SrcA, result to Dst.
 
 *Encoding:*
 

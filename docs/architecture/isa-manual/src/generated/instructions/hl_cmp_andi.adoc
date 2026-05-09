@@ -7,7 +7,7 @@
 
 *Syntax:* hl.cmp.andi SrcL, simm, ->{t, u, Rd}
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit compare andi with 32-bit immediate, result to Rd/t/u.
 
 *Encoding:*
 

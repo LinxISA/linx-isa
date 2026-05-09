@@ -7,7 +7,7 @@
 
 *Syntax:* ebreak imm
 
-*Description:* -
+*Description:* Environment breakpoint: raises an EBREAK trap for debugging/halt.
 
 *Encoding:*
 

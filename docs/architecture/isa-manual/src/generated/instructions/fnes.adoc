@@ -7,7 +7,7 @@
 
 *Syntax:* fnes.{T} SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Floating-point compare nes: set Rd/t/u to 1 if true, else 0.
 
 *Encoding:*
 

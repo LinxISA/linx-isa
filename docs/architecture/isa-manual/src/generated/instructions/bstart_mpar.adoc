@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.MPAR <VS8, VS16>
 
-*Description:* -
+*Description:* Block start marker: BSTART.MPAR with split semantics.
 
 *Encoding:*
 

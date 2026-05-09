@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.FIXP TileOp, DataType
 
-*Description:* -
+*Description:* Block start marker: BSTART.FIXP with split semantics.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* v.fmax SrcL, SrcR, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise floating-point max of SrcL and SrcR, result to Dst.
 
 *Encoding:*
 

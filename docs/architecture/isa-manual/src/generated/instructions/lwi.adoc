@@ -7,7 +7,7 @@
 
 *Syntax:* lwi [SrcL, simm], ->{t, u, Rd}
 
-*Description:* -
+*Description:* Load 32-bit signedvalue from [Rs+offset], result to Rd/t/u.
 
 *Encoding:*
 

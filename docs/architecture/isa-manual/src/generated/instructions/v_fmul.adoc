@@ -7,7 +7,7 @@
 
 *Syntax:* v.fmul SrcL, SrcR, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise floating-point mul of operands, result to Dst.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.MSEQ <VS8, VS16>
 
-*Description:* -
+*Description:* Block start marker: BSTART.MSEQ with split semantics.
 
 *Encoding:*
 

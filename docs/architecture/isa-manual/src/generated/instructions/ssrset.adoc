@@ -7,7 +7,7 @@
 
 *Syntax:* ssrset SrcL, SSR_ID
 
-*Description:* -
+*Description:* System register access: read/write system status register.
 
 *Encoding:*
 

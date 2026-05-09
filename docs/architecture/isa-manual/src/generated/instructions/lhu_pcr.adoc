@@ -7,7 +7,7 @@
 
 *Syntax:* lhu.pcr [symbol], ->{t, u, Rd}
 
-*Description:* -
+*Description:* Load 16-bit signedvalue from [Rs+offset], result to Rd/t/u.
 
 *Encoding:*
 

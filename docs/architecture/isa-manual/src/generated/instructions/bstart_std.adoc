@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.STD DIRECT, <label>
 
-*Description:* -
+*Description:* Block start marker: BSTART.STD with split semantics.
 
 *Encoding:*
 

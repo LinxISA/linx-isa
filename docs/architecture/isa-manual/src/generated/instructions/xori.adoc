@@ -7,7 +7,7 @@
 
 *Syntax:* xori SrcL, simm, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Bitwise xor with immediate: Rd/t/u = operand1 op operand2.
 
 *Encoding:*
 

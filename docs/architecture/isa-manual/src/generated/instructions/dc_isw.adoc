@@ -7,7 +7,7 @@
 
 *Syntax:* dc.isw SrcL
 
-*Description:* -
+*Description:* Cache/TLB maintenance: DC.ISW operation on the specified memory hierarchy.
 
 *Encoding:*
 

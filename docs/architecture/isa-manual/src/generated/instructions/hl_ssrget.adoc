@@ -7,7 +7,7 @@
 
 *Syntax:* hl.ssrget SSR_ID, ->{t, u, Rd}
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit SSR read with extended SSR_ID range, result to Rd/t/u.
 
 *Encoding:*
 

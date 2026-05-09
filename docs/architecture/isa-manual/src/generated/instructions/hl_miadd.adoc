@@ -7,7 +7,7 @@
 
 *Syntax:* hl.miadd SrcL, SrcR, uimm, ->{t, u, Rd}
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit indexed add: Dst = SrcL +/- SrcR*imm, result to Rd/t/u.
 
 *Encoding:*
 

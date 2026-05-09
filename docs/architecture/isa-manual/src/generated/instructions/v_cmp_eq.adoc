@@ -7,7 +7,7 @@
 
 *Syntax:* v.cmp.eq SrcL, SrcR, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise compare eq of SrcL with SrcR, write mask to Dst.
 
 *Encoding:*
 

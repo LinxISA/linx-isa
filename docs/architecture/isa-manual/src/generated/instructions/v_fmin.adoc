@@ -7,7 +7,7 @@
 
 *Syntax:* v.fmin SrcL, SrcR, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise floating-point min of SrcL and SrcR, result to Dst.
 
 *Encoding:*
 

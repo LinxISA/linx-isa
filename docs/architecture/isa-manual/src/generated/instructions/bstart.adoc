@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART COND, <label>
 
-*Description:* -
+*Description:* Block start marker: terminates the current block and begins the next block.
 
 *Encoding:*
 

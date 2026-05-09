@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.PAR TileOpcode, DataType
 
-*Description:* -
+*Description:* Legacy compatibility TEPL spelling; canonical v0.56 output uses BSTART.TEPL TileOpcode, DataType.
 
 *Encoding:*
 

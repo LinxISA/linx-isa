@@ -7,7 +7,7 @@
 
 *Syntax:* srl SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Arithmetic Operation 64bit: SRL operation.
 
 *Encoding:*
 

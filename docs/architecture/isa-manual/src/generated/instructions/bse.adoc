@@ -7,7 +7,7 @@
 
 *Syntax:* bse SrcL
 
-*Description:* -
+*Description:* Branch barrier/wait: BSE instruction for control-flow speculation management.
 
 *Encoding:*
 

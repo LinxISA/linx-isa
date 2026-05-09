@@ -7,7 +7,7 @@
 
 *Syntax:* cmp.and SrcL, SrcR<.sw, .uw, .not>, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Compare and: set Rd/t/u to 1 if true, else 0.
 
 *Encoding:*
 

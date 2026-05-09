@@ -7,7 +7,7 @@
 
 *Syntax:* hl.cmp.gei SrcL, simm, ->{t, u, Rd}
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit compare gei with 32-bit immediate, result to Rd/t/u.
 
 *Encoding:*
 

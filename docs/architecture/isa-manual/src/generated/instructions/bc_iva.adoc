@@ -7,7 +7,7 @@
 
 *Syntax:* bc.iva SrcL
 
-*Description:* -
+*Description:* Cache/TLB maintenance: BC.IVA operation on the specified memory hierarchy.
 
 *Encoding:*
 

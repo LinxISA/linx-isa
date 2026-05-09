@@ -7,7 +7,7 @@
 
 *Syntax:* xor SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Bitwise xor: Rd/t/u = operand1 op operand2.
 
 *Encoding:*
 

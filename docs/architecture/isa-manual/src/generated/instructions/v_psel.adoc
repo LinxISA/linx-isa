@@ -7,7 +7,7 @@
 
 *Syntax:* v.psel  SrcP, SrcL, SrcR<.neg>, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise conditional select: Dst = SrcP ? SrcL : SrcR.
 
 *Encoding:*
 

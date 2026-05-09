@@ -7,7 +7,7 @@
 
 *Syntax:* hl.cmp.ltui SrcL, uimm, ->{t, u, Rd}
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit compare ltui with 32-bit immediate, result to Rd/t/u.
 
 *Encoding:*
 

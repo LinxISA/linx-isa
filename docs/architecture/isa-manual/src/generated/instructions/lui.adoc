@@ -7,7 +7,7 @@
 
 *Syntax:* lui simm, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Load upper immediate: load a 32-bit constant into the upper bits of Rd/t/u.
 
 *Encoding:*
 

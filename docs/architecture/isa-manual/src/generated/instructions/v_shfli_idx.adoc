@@ -7,7 +7,7 @@
 
 *Syntax:* v.shfli.idx SrcL, SrcR, imm, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise indexed shuffle (idx) of SrcL, result to Dst.
 
 *Encoding:*
 

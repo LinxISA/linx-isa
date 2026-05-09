@@ -7,7 +7,7 @@
 
 *Syntax:* addtpc simm, ->{t, u, Rd}
 
-*Description:* -
+*Description:* Add to temporary PC: TPC = TPC + simm.
 
 *Encoding:*
 

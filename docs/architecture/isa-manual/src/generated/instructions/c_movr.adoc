@@ -7,7 +7,7 @@
 
 *Syntax:* c.movr SrcL, ->{t, u, Rd}
 
-*Description:* Compressed instruction variant (16-bit encoding).
+*Description:* Compressed 16-bit register move: copy Rs1 to destination.
 
 *Encoding:*
 

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 80" width="480" height="80">
+  <text x="0" y="12" font-family="Helvetica Neue,Arial" font-weight="bold" font-size="11" fill="#1a1a1a">Field colour key</text>
+  <rect x="0"   y="18" width="14" height="12" fill="#2E7D32"      rx="1"/><text x="18"  y="28" font-size="9" fill="#333">Rd / RegDst (destination)</text>
+  <rect x="175" y="18" width="14" height="12" fill="#1565C0"     rx="1"/><text x="193" y="28" font-size="9" fill="#333">Rs1 / SrcL (1st source)</text>
+  <rect x="330" y="18" width="14" height="12" fill="#00796B"     rx="1"/><text x="348" y="28" font-size="9" fill="#333">Rs2 / SrcR (2nd source)</text>
+  <rect x="0"   y="34" width="14" height="12" fill="#E65100"     rx="1"/><text x="18"  y="44" font-size="9" fill="#333">Rs3 / SrcD (3rd source)</text>
+  <rect x="175" y="34" width="14" height="12" fill="#6A1B9A"  rx="1"/><text x="193" y="44" font-size="9" fill="#333">funct / opcode</text>
+  <rect x="330" y="34" width="14" height="12" fill="#AD1457"   rx="1"/><text x="348" y="44" font-size="9" fill="#333">shamt</text>
+  <rect x="0"   y="50" width="14" height="12" fill="#C62828"     rx="1"/><text x="18"  y="60" font-size="9" fill="#333">imm / offset</text>
+  <rect x="175" y="50" width="14" height="12" fill="#00695C"    rx="1"/><text x="193" y="60" font-size="9" fill="#333">fence.pred / succ</text>
+  <rect x="330" y="50" width="14" height="12" fill="#90A4AE"   rx="1"/><text x="348" y="60" font-size="9" fill="#333">reserved / const(0)</text>
+</svg>

@@ -7,7 +7,7 @@
 
 *Syntax:* v.rem SrcL, SrcR, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise integer rem of SrcL by SrcR, result to Dst.
 
 *Encoding:*
 

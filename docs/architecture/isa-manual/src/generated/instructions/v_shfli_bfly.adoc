@@ -7,7 +7,7 @@
 
 *Syntax:* v.shfli.bfly SrcL, imm, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise indexed shuffle (bfly) of SrcL, result to Dst.
 
 *Encoding:*
 

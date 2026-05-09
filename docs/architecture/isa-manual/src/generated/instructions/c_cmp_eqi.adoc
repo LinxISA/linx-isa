@@ -7,7 +7,7 @@
 
 *Syntax:* c.cmp.eqi t#1, simm, ->t
 
-*Description:* Compressed instruction variant (16-bit encoding).
+*Description:* Compressed 16-bit compare t#1 equal immediate, result to t.
 
 *Encoding:*
 

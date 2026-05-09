@@ -7,7 +7,7 @@
 
 *Syntax:* bc.iall
 
-*Description:* -
+*Description:* Cache/TLB maintenance: BC.IALL operation on the specified memory hierarchy.
 
 *Encoding:*
 

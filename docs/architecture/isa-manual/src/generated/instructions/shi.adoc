@@ -7,7 +7,7 @@
 
 *Syntax:* shi SrcL, [SrcR, simm]
 
-*Description:* -
+*Description:* Store 16-bit value to [Rs+offset], result to Rd/t/u.
 
 *Encoding:*
 

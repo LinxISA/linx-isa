@@ -7,7 +7,7 @@
 
 *Syntax:* b.z label
 
-*Description:* -
+*Description:* Conditional branch: take branch if zero.
 
 *Encoding:*
 

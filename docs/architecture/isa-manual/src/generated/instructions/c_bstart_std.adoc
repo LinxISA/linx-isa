@@ -7,7 +7,7 @@
 
 *Syntax:* C.BSTART.STD BrType
 
-*Description:* Compressed instruction variant (16-bit encoding).
+*Description:* Compressed 16-bit block start marker: BSTART.STD (standard transition).
 
 *Encoding:*
 

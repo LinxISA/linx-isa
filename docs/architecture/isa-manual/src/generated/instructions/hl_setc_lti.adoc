@@ -7,7 +7,7 @@
 
 *Syntax:* hl.setc.lti SrcL, simm
 
-*Description:* Long (48-bit) instruction encoding.
+*Description:* Long 48-bit set condition flag: ti of SrcL with operand.
 
 *Encoding:*
 

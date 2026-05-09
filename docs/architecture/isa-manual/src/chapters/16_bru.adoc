@@ -4,7 +4,21 @@
 [[chapter_bru]]
 == BRU - Branch and Compare
 
-The Branch and Compare (BRU) group handles all conditional and unconditional branch instructions, comparisons, and condition code setting.
+The Branch and Compare (BRU) group covers all conditional and unconditional branch instructions, comparison operations, and the condition-setting instructions consumed by block control-flow transitions.
+
+**Unconditional branches** transfer control to a target address:
+
+* `J` -- PC-relative jump: target = TPC + (offset `<<` 1).
+* `JR` -- indirect jump: target = Rs_base + (offset `<<` 1).
+* `ADDTPC` -- add a signed immediate to the temporary PC (TPC), used for relative control-flow adjustments.
+
+**Conditional branches** (`B.EQ`, `B.NE`, `B.LT`, `B.GE`, `B.LTU`, `B.GEU`) compare two register values and take the branch if the condition holds. The target is PC-relative. In the block-structured model, the branch condition is produced by `SETC.*` and consumed by `BSTART COND`, rather than being encoded inline on the branch itself.
+
+`B.Z` and `B.NZ` test whether the architectural EXEC mask `p` is zero or non-zero inside a SIMT kernel body.
+
+**Comparison** (`CMP.*`) writes 1 to the destination if the condition is true, 0 otherwise. The destination may be a GPR or a ClockHands queue entry.
+
+**Condition setting** (`SETC.*`) writes to the block-condition state (`BARG.CARG`) rather than to a register. These instructions are consumed by the block commit logic at `BSTOP` / next `BSTART`. The `SETC.TGT` variant sets the block target register used by `RET` and indirect transitions.
 
 === Unconditional Branches
 

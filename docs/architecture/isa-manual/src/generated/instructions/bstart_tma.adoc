@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.TMA Function, DataType
 
-*Description:* -
+*Description:* Generic TMA selector form. Function=0/1/2 are emitted as BSTART.TLOAD/BSTART.TSTORE/BSTART.TMOV aliases; 3..31 are reserved in v0.56 (architecturally illegal/UNPREDICTABLE): software must not generate them and implementations must not assign ad-hoc semantics.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* setc.andi SrcL, simm
 
-*Description:* -
+*Description:* Set block condition flag for nd immediate: consumed by BSTART COND.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* sc.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], {->t, ->u, ->Rd}
 
-*Description:* -
+*Description:* Store-conditional byte: store SrcD to [Rd] if reservation valid.
 
 *Encoding:*
 

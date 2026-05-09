@@ -7,7 +7,7 @@
 
 *Syntax:* v.fnmadd SrcL, SrcR, SrcA, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise fnmadd of operands, result to Dst.
 
 *Encoding:*
 

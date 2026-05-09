@@ -7,7 +7,7 @@
 
 *Syntax:* sw.pcr SrcL, [symbol]
 
-*Description:* -
+*Description:* Store 32-bit value to [Rs+offset], result to Rd/t/u.
 
 *Encoding:*
 

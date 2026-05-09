@@ -152,7 +152,7 @@ For completeness: v0.56 also permits non-memory typed TMA headers `BSTART.TMOV <
 
 Canonical shader-kernel behavior is expressed through `.MPAR` / `.MSEQ` execution modes (`MCALL` is a historical alias):
 
-* Execution is non-speculative until declared input dependencies (`B.IOT`/`B.IOT`) are resolved.
+* Execution is non-speculative until declared input dependencies (`B.IOT`) are resolved.
 * Prior side-effecting tile stores must be globally ordered before kernel-side memory issue starts (TSO-preserving barrier
   requirement).
 * Canonical kernel global-memory accesses use bridged forms only: `l.*.brg` and `v.*.brg`.

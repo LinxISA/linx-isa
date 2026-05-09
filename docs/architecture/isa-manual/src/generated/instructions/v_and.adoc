@@ -7,7 +7,7 @@
 
 *Syntax:* v.and SrcL, SrcR<.not><<<shamt>, ->Dst
 
-*Description:* Vector instruction (VEC engine).
+*Description:* Vector lane-wise bitwise ND of operands, result to Dst.
 
 *Encoding:*
 
