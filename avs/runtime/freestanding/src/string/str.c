@@ -16,6 +16,22 @@ char *strcpy(char *dest, const char *src) {
     return dest;
 }
 
+size_t strlcpy(char *dest, const char *src, size_t size) {
+    size_t src_len = strlen(src);
+    if (size > 0) {
+        size_t copy_len = (src_len >= size) ? size - 1 : src_len;
+        char *d = dest;
+        const char *s = src;
+        size_t i = 0;
+        while (i < copy_len) {
+            d[i] = s[i];
+            i++;
+        }
+        d[copy_len] = '\0';
+    }
+    return src_len;
+}
+
 char *strncpy(char *dest, const char *src, size_t n) {
     char *d = dest;
     size_t i = 0;
