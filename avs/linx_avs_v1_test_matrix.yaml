@@ -86,6 +86,23 @@ tests:
     requirement: "Generated spec decode vectors disassemble with 100% canonical mnemonic coverage."
     pass_fail: "99_spec_decode objdump coverage remains 100% for linx32 and linx64."
 
+  - id: AVS-TOOL-012
+    state: active
+    area: TOOL
+    domain: Compiler
+    profiles: [LNX-S32, LNX-S64, LNX-PRIV, LNX-ATOM, LNX-FP, LNX-VPAR, LNX-VSEQ, LNX-TILE]
+    must_pass_in_tier: [pr, nightly]
+    spec_refs:
+      - isa/v0.56/linxisa-v0.56.json
+      - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
+      - docs/architecture/isa-manual/src/chapters/06_assembly_conventions.adoc
+      - docs/architecture/isa-manual/src/chapters/08_tile_blocks.adoc
+      - docs/architecture/isa-manual/src/chapters/10_system_and_privilege.adoc
+      - docs/architecture/isa-manual/src/chapters/13_fsu.adoc
+      - docs/architecture/isa-manual/src/chapters/14_amo.adoc
+    requirement: "Curated positive assembly vectors cover v0.56 block, tile, vector, system, FSU, and AMO mnemonic families that C lowering may not emit."
+    pass_fail: "run.sh assembles asm/41_v056_isa_forms.s with llvm-mc, disassembles it with llvm-objdump, and check_required_mnemonics.py confirms the required mnemonic set."
+
   - id: AVS-BLK-001
     state: active
     area: BLK

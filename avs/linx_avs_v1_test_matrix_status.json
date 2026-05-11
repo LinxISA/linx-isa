@@ -1,14 +1,14 @@
 {
   "coverage_profile_summaries": {
     "LNX-ATOM": {
-      "implemented": 1,
-      "pass": 1,
-      "tests": 6
+      "implemented": 2,
+      "pass": 2,
+      "tests": 7
     },
     "LNX-FP": {
-      "implemented": 1,
-      "pass": 1,
-      "tests": 3
+      "implemented": 2,
+      "pass": 2,
+      "tests": 4
     },
     "LNX-LIBC": {
       "implemented": 8,
@@ -21,19 +21,19 @@
       "tests": 4
     },
     "LNX-PRIV": {
-      "implemented": 4,
-      "pass": 4,
-      "tests": 4
+      "implemented": 5,
+      "pass": 5,
+      "tests": 5
     },
     "LNX-S32": {
-      "implemented": 12,
-      "pass": 12,
-      "tests": 20
+      "implemented": 13,
+      "pass": 13,
+      "tests": 21
     },
     "LNX-S64": {
-      "implemented": 18,
-      "pass": 18,
-      "tests": 26
+      "implemented": 19,
+      "pass": 19,
+      "tests": 27
     },
     "LNX-SPEC": {
       "implemented": 0,
@@ -41,19 +41,19 @@
       "tests": 2
     },
     "LNX-TILE": {
-      "implemented": 2,
-      "pass": 2,
-      "tests": 2
+      "implemented": 3,
+      "pass": 3,
+      "tests": 3
     },
     "LNX-VPAR": {
-      "implemented": 2,
-      "pass": 2,
-      "tests": 6
+      "implemented": 3,
+      "pass": 3,
+      "tests": 7
     },
     "LNX-VSEQ": {
-      "implemented": 2,
-      "pass": 2,
-      "tests": 6
+      "implemented": 3,
+      "pass": 3,
+      "tests": 7
     },
     "LNX-WORKLOAD": {
       "implemented": 4,
@@ -233,9 +233,27 @@
     "ev-0043": {
       "kind": "note",
       "source": "ev-0043"
+    },
+    "ev-0044": {
+      "exists": true,
+      "kind": "path",
+      "path": "avs/compiler/linx-llvm/tests/asm/41_v056_isa_forms.s",
+      "source": "avs/compiler/linx-llvm/tests/asm/41_v056_isa_forms.s"
+    },
+    "ev-0045": {
+      "exists": true,
+      "kind": "path",
+      "path": "avs/compiler/linx-llvm/tests/run.sh",
+      "source": "avs/compiler/linx-llvm/tests/run.sh positive asm lane"
+    },
+    "ev-0046": {
+      "exists": true,
+      "kind": "path",
+      "path": "avs/compiler/linx-llvm/tests/check_required_mnemonics.py",
+      "source": "avs/compiler/linx-llvm/tests/check_required_mnemonics.py"
     }
   },
-  "generated_at_utc": "2026-04-24 00:10:42Z",
+  "generated_at_utc": "2026-05-11 06:53:09Z",
   "matrix_file": "/Users/zhoubot/linx-isa/avs/linx_avs_v1_test_matrix.yaml",
   "schema_version": "linx-avs-v0.56-status-v3",
   "statuses": {
@@ -531,6 +549,15 @@
       "implemented": true,
       "validated": "pass"
     },
+    "AVS-TOOL-012": {
+      "evidence": [
+        "ev-0044",
+        "ev-0045",
+        "ev-0046"
+      ],
+      "implemented": true,
+      "validated": "pass"
+    },
     "AVS-VEC-001": {
       "evidence": [],
       "implemented": false,
@@ -587,14 +614,14 @@
   },
   "tier_summaries": {
     "nightly": {
-      "implemented": 32,
-      "pass": 32,
-      "tests": 54
+      "implemented": 33,
+      "pass": 33,
+      "tests": 55
     },
     "pr": {
-      "implemented": 31,
-      "pass": 31,
-      "tests": 31
+      "implemented": 32,
+      "pass": 32,
+      "tests": 32
     }
   }
 }

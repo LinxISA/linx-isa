@@ -3,6 +3,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SRC_DIR="$ROOT/c"
+ASM_DIR="$ROOT/asm"
 OUT_DIR="${OUT_DIR:-$ROOT/out}"
 TARGET="${TARGET:-linx64-linx-none-elf}"
 STRICT_CALLRET_RELOCS="${LINX_STRICT_CALLRET_RELOCS:-0}"
@@ -211,6 +212,57 @@ done
 
 if [[ $FAILED -ne 0 ]]; then
   exit 1
+fi
+
+if [[ -d "$ASM_DIR" ]]; then
+  for SRC in "$ASM_DIR"/*.s; do
+    [[ -e "$SRC" ]] || continue
+    BASE="$(basename "$SRC" .s)"
+
+    OUT="$OUT_DIR/$BASE"
+    mkdir -p "$OUT"
+
+    echo "[asm] $BASE"
+    "$LLVMMC" -triple="$TARGET" -filetype=obj "$SRC" -o "$OUT/$BASE.o"
+    "$OBJDUMP" -d --triple="$TARGET" "$OUT/$BASE.o" >"$OUT/$BASE.objdump"
+    "$LLD" --entry=0 -o "$OUT/$BASE.elf" "$OUT/$BASE.o"
+    "$OBJCOPY" --only-section=.text -O binary "$OUT/$BASE.elf" "$OUT/$BASE.bin"
+    wc -c "$OUT/$BASE.bin" >"$OUT/$BASE.bin.size"
+
+    case "$BASE" in
+      41_v056_isa_forms)
+        python3 "$ROOT/check_required_mnemonics.py" \
+          --objdump "$OUT/$BASE.objdump" \
+          --label "$BASE" \
+          --require B.ARG \
+          --require B.DIM \
+          --require B.IOR \
+          --require B.IOT \
+          --require BSTART.ACCCVT \
+          --require BSTART.CUBE \
+          --require BSTART.FIXP \
+          --require BSTART.TLOAD \
+          --require BSTART.TMATMUL \
+          --require BSTART.TMATMUL.ACC \
+          --require BSTART.TMOV \
+          --require BSTART.TSTORE \
+          --require BSTART.VPAR \
+          --require BSTART.VSEQ \
+          --require C.BSTART.MPAR \
+          --require C.BSTART.MSEQ \
+          --require C.BSTART.SYS \
+          --require C.BSTART.VPAR \
+          --require C.BSTART.VSEQ \
+          --require C.SSRGET \
+          --require ERCOV \
+          --require ESAVE \
+          --require FENTRY \
+          --require FRET.STK \
+          --require HL.CASW.AQRLF \
+          --require HL.CASD.AQRLF
+        ;;
+    esac
+  done
 fi
 
 SPEC="${SPEC:-$ROOT/../../../../isa/v0.56/linxisa-v0.56.json}"

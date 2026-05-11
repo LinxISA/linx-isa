@@ -1,9 +1,11 @@
 # Linx clang compile tests
 
 This folder contains small **freestanding C** programs intended to exercise the
-current Linx clang/LLVM backend.
+current Linx clang/LLVM backend plus curated assembly vectors for ISA forms
+that are not naturally emitted by C lowering.
 
 - Sources: `c/*.c`
+- Assembly sources: `asm/*.s`
 - Outputs (generated): `out/<testname>/{<testname>.s,<testname>.o,<testname>.bin,<testname>.objdump,...}`
 
 Run:
@@ -64,9 +66,15 @@ CLANG=/path/to/clang TARGET=linx32-linx-none-elf OUT_DIR=./avs/compiler/linx-llv
 - `39_callret_noreturn.c` — noreturn call headers must still keep fused `ra=` targets
 - `40_callret_hl_setret.c` — explicit `HL.SETRET` call-header form stays fused and reloc-correct
 
+## Curated assembly tests
+
+- `41_v056_isa_forms.s` — positive assembler/disassembler coverage for v0.56 block, tile, vector, system, FSU, and AMO forms that are not guaranteed to appear in C output.
+
 Notes:
 - The runner links each test object with a tiny runtime via `ld.lld` to resolve relocations, then extracts `.text` to
   a raw `.bin`.
+- Assembly tests are assembled with `llvm-mc`, disassembled with `llvm-objdump`,
+  linked, extracted to `.bin`, and checked for required mnemonic spellings.
 - Call/ret tests (`33`-`40`) include a relocation gate:
   `ra=` fused call headers are always required; relocation pairing is enforced when present.
   Enable strict relocation-only mode with `LINX_STRICT_CALLRET_RELOCS=1`.
