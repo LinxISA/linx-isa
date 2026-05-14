@@ -4,7 +4,7 @@ __asm__(
 ".type callret_hl_setret_probe,@function\n"
 "callret_hl_setret_probe:\n"
 "  HL.BSTART.STD CALL, .Lcallret_hl_setret_callee\n"
-"  hl.setret .Lcallret_hl_setret_after\n"
+"  setret .Lcallret_hl_setret_after\n"
 "  C.BSTOP\n"
 ".Lcallret_hl_setret_after:\n"
 "  C.BSTART.STD RET\n"

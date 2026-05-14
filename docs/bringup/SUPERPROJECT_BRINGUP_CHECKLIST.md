@@ -36,7 +36,7 @@ checklists for the module-specific closure criteria.
 | --- | --- | --- | --- |
 | Kernel | `Kernel::Linux busybox rootfs boot` / `LINUX-004` | Active blocker | Clean pinned QEMU/rootfs helpers run, but boot still trips kernel `E_BLOCK` after `/sbin/init`, currently at `__submit_bio` on `FRET.STK` with `ra=0`. |
 | Kernel | `Kernel::Linux \`vmlinux\` build closure` / `LINUX-005` | Not blocked | The clean-build helper passes in the April 18 canonical run. |
-| LLVM Linx target | `Compiler::AVS compile suites` + coverage | Not blocked | `linx32`, `linx64`, and coverage are green in the latest canonical run. |
+| LLVM Linx target | `Compiler::AVS compile suites` + coverage | Not blocked | The active Bisheng compiler surface is `linx64`; the current in-repo compiler AVS lane and coverage are green for that registered target set. |
 | Strict closure | `Regression::strict_cross_repo.sh` / `INT-004` | Active blocker | The row fails because the required BusyBox rootfs gate fails in the same run. Do not revive the stale March Sail decode diagnosis unless it reproduces. |
 | Mixed tile + SIMT workloads | `Regression::PTO kernel parity` / `INT-020` | Not blocked | The April 18 canonical run records PTO parity as pass. |
 | SIMT autovec | `Regression::TSVC strict coverage gate` / `INT-025` | PR not blocked | PR closure uses compile-only strict coverage at `148/151`; QEMU runtime remains a separate nightly/runtime follow-up. |

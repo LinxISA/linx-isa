@@ -82,31 +82,43 @@ static inline void uart_puthex_digit(uint8_t d) {
  * Output a 32-bit hex number
  */
 static inline void uart_puthex32(uint32_t v) {
-    for (int i = 28; i >= 0; i -= 4) {
-        uart_puthex_digit((v >> i) & 0xF);
-    }
+    uart_puthex_digit((v >> 28) & 0xF);
+    uart_puthex_digit((v >> 24) & 0xF);
+    uart_puthex_digit((v >> 20) & 0xF);
+    uart_puthex_digit((v >> 16) & 0xF);
+    uart_puthex_digit((v >> 12) & 0xF);
+    uart_puthex_digit((v >> 8) & 0xF);
+    uart_puthex_digit((v >> 4) & 0xF);
+    uart_puthex_digit(v & 0xF);
 }
 
 /*
  * Output a 64-bit hex number
  */
 static inline void uart_puthex64(uint64_t v) {
-    uart_puthex32((uint32_t)(v >> 32));
-    uart_puthex32((uint32_t)(v & 0xFFFFFFFF));
+    uart_puthex_digit((uint32_t)(v >> 60) & 0xF);
+    uart_puthex_digit((uint32_t)(v >> 56) & 0xF);
+    uart_puthex_digit((uint32_t)(v >> 52) & 0xF);
+    uart_puthex_digit((uint32_t)(v >> 48) & 0xF);
+    uart_puthex_digit((uint32_t)(v >> 44) & 0xF);
+    uart_puthex_digit((uint32_t)(v >> 40) & 0xF);
+    uart_puthex_digit((uint32_t)(v >> 36) & 0xF);
+    uart_puthex_digit((uint32_t)(v >> 32) & 0xF);
+    uart_puthex_digit((uint32_t)(v >> 28) & 0xF);
+    uart_puthex_digit((uint32_t)(v >> 24) & 0xF);
+    uart_puthex_digit((uint32_t)(v >> 20) & 0xF);
+    uart_puthex_digit((uint32_t)(v >> 16) & 0xF);
+    uart_puthex_digit((uint32_t)(v >> 12) & 0xF);
+    uart_puthex_digit((uint32_t)(v >> 8) & 0xF);
+    uart_puthex_digit((uint32_t)(v >> 4) & 0xF);
+    uart_puthex_digit((uint32_t)v & 0xF);
 }
 
 /*
  * Begin a test suite
  */
 static inline void test_suite_begin(uint32_t suite_id) {
-#if !LINX_TEST_QUIET
-    uart_puts("\r\n=== Test Suite ");
-    uart_puts("0x");
-    uart_puthex32(suite_id);
-    uart_puts(" ===\r\n");
-#else
     (void)suite_id;
-#endif
 }
 
 /*
@@ -134,7 +146,7 @@ static inline void test_pass(void) {
 /*
  * Report test fail with details
  */
-static inline void test_fail(uint32_t test_id, uint64_t expected, uint64_t actual) {
+static inline __attribute__((noreturn)) void test_fail(uint32_t test_id, uint64_t expected, uint64_t actual) {
     uart_puts("FAIL\r\n");
     uart_puts("    Test ID:  0x");
     uart_puthex32(test_id);
@@ -232,24 +244,14 @@ static inline void test_fail(uint32_t test_id, uint64_t expected, uint64_t actua
  * End of test suite - print summary
  */
 static inline void test_suite_end(uint32_t total, uint32_t passed) {
-#if !LINX_TEST_QUIET
-    uart_puts("\r\nSuite Results: ");
-    uart_puts("0x");
-    uart_puthex32(passed);
-    uart_puts("/0x");
-    uart_puthex32(total);
-    uart_puts(" passed\r\n");
-    uart_puts("===================\r\n");
-#else
     (void)total;
     (void)passed;
-#endif
 }
 
 /*
  * Exit test suite with final result
  */
-static inline void test_suite_exit(uint32_t passed, uint32_t total) {
+static inline __attribute__((noreturn)) void test_suite_exit(uint32_t passed, uint32_t total) {
     if (passed == total) {
         uart_puts("\r\n*** ALL TESTS PASSED ***\r\n");
         EXIT_CODE = 0;

@@ -6,8 +6,8 @@ callret_tpl_fret_stk_slot_redirect:
 	# FENTRY [ra ~ ra], sp!, 16
 	.4byte 0x04a50041
 	c.movr ra, ->a1
-	addtpc .Lcallret_tpl_fret_stk_redirect, ->a2
-	addi a2, .Lcallret_tpl_fret_stk_redirect, ->a2
+	addtpc %tpcrel_hi(.Lcallret_tpl_fret_stk_redirect), ->a2
+	addi a2, %tpcrel_lo(.Lcallret_tpl_fret_stk_redirect), ->a2
 	sdi a2, [sp, 8]
 	addi zero, 17, ->a0
 	# FRET.STK [ra ~ ra], sp!, 16
@@ -25,8 +25,8 @@ callret_tpl_fret_ra_slot_redirect:
 	# FENTRY [ra ~ ra], sp!, 16
 	.4byte 0x04a50041
 	c.movr ra, ->a1
-	addtpc .Lcallret_tpl_fret_ra_redirect, ->a2
-	addi a2, .Lcallret_tpl_fret_ra_redirect, ->a2
+	addtpc %tpcrel_hi(.Lcallret_tpl_fret_ra_redirect), ->a2
+	addi a2, %tpcrel_lo(.Lcallret_tpl_fret_ra_redirect), ->a2
 	sdi a2, [sp, 8]
 	addi zero, 51, ->a0
 	# FRET.RA [ra ~ ra], sp!, 16

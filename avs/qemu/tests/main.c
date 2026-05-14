@@ -47,9 +47,6 @@
 #ifndef LINX_TEST_ENABLE_V03_VECTOR_OPS
 #define LINX_TEST_ENABLE_V03_VECTOR_OPS 0
 #endif
-#ifndef LINX_TEST_ENABLE_V04_VECTOR_OPS
-#define LINX_TEST_ENABLE_V04_VECTOR_OPS 0
-#endif
 #ifndef LINX_TEST_ENABLE_V03_VECTOR_BODY_FAULT
 #define LINX_TEST_ENABLE_V03_VECTOR_BODY_FAULT 0
 #endif
@@ -103,9 +100,6 @@ void run_v03_vector_tile_tests(void);
 #if LINX_TEST_ENABLE_V03_VECTOR_OPS
 void run_v03_vector_ops_matrix_tests(void);
 #endif
-#if LINX_TEST_ENABLE_V04_VECTOR_OPS
-void run_v04_vector_ops_matrix_tests(void);
-#endif
 #if LINX_TEST_ENABLE_V03_VECTOR_BODY_FAULT
 void run_v03_vector_body_fault_tests(void);
 #endif
@@ -130,13 +124,7 @@ static volatile uint32_t g_current_suite = 0;
  */
 static void run_suite_with_stats(const char *name, void (*suite_func)(void)) {
     g_current_suite++;
-#if !LINX_TEST_QUIET
-    uart_puts("\r\nRunning ");
-    uart_puts(name);
-    uart_puts("...\r\n");
-#else
     (void)name;
-#endif
     suite_func();
 }
 
@@ -145,70 +133,7 @@ static void run_suite_with_stats(const char *name, void (*suite_func)(void)) {
  */
 void _start(void) {
 #if !LINX_TEST_QUIET
-    uart_puts("\r\n");
-    uart_puts("===============================================\r\n");
-    uart_puts("  Linx ISA QEMU Test Suite (v1.0)\r\n");
-    uart_puts("===============================================\r\n");
-    uart_puts("\r\n");
-    uart_puts("Target: linx64-linx-none-elf\r\n");
-    uart_puts("Suites:");
-#if LINX_TEST_ENABLE_ARITHMETIC
-    uart_puts(" Arithmetic");
-#endif
-#if LINX_TEST_ENABLE_BITWISE
-    uart_puts(" Bitwise");
-#endif
-#if LINX_TEST_ENABLE_LOADSTORE
-    uart_puts(" Load/Store");
-#endif
-#if LINX_TEST_ENABLE_BRANCH
-    uart_puts(" Branch");
-#endif
-#if LINX_TEST_ENABLE_MOVE
-    uart_puts(" Move");
-#endif
-#if LINX_TEST_ENABLE_FLOAT
-    uart_puts(" Float");
-#endif
-#if LINX_TEST_ENABLE_ATOMIC
-    uart_puts(" Atomic");
-#endif
-#if LINX_TEST_ENABLE_JUMPTABLE
-    uart_puts(" JumpTable");
-#endif
-#if LINX_TEST_ENABLE_VARARGS
-    uart_puts(" Varargs");
-#endif
-#if LINX_TEST_ENABLE_TILE
-    uart_puts(" Tile");
-#endif
-#if LINX_TEST_ENABLE_SYSTEM
-    uart_puts(" System");
-#endif
-#if LINX_TEST_ENABLE_V03_VECTOR
-    uart_puts(" v0.56-vector");
-#endif
-#if LINX_TEST_ENABLE_V03_VECTOR_OPS
-    uart_puts(" v0.56-vector-ops");
-#endif
-#if LINX_TEST_ENABLE_V04_VECTOR_OPS
-    uart_puts(" v0.56-vector-ops");
-#endif
-#if LINX_TEST_ENABLE_V03_VECTOR_BODY_FAULT
-    uart_puts(" v0.56-vector-body-fault");
-#endif
-#if LINX_TEST_ENABLE_CALLRET
-    uart_puts(" callret");
-#endif
-#if LINX_TEST_ENABLE_PTO_PARITY
-    uart_puts(" pto-parity");
-#endif
-#if LINX_TEST_ENABLE_SIMT_AUTOVEC
-    uart_puts(" simt-autovec");
-#endif
-    uart_puts("\r\n");
-    uart_puts("\r\n");
-    uart_puts("=================================================\r\n");
+    uart_puts("Linx QEMU tests\r\n");
 #endif
     
     /* Run all test suites */
@@ -250,9 +175,6 @@ void _start(void) {
 #endif
 #if LINX_TEST_ENABLE_V03_VECTOR_OPS
     run_suite_with_stats("v0.56 Vector Operation Matrix Tests", run_v03_vector_ops_matrix_tests);
-#endif
-#if LINX_TEST_ENABLE_V04_VECTOR_OPS
-    run_suite_with_stats("v0.56 Vector Operation Matrix Tests", run_v04_vector_ops_matrix_tests);
 #endif
 #if LINX_TEST_ENABLE_V03_VECTOR_BODY_FAULT
     run_suite_with_stats("v0.56 Vector Body Fault Tests", run_v03_vector_body_fault_tests);

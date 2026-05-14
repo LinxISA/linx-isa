@@ -1,6 +1,18 @@
 # LLVM Backend Implementation Checklist
 
-This checklist tracks the implementation of the LinxISA LLVM backend. Use this to track progress and ensure all components are implemented.
+This file is historical planning material for the pre-Bisheng backend bring-up.
+The previous external LLVM compiler plan is obsolete.
+
+Current source of truth:
+
+- compiler implementation: `compiler/llvm`
+- active backend: `compiler/llvm/llvm/lib/Target/LinxV5/`
+- active driver/ABI surface: `compiler/llvm/clang/lib/Driver/ToolChains/LinxV5*`
+- active compiler gate: `avs/compiler/linx-llvm/tests/run.sh` with the in-repo
+  `compiler/llvm/build-linxisa-clang/bin/clang`
+
+Do not use this checklist as an execution plan for new compiler work unless it
+is first rewritten to match the checked-in `LinxV5` branch topology.
 
 ## Phase 1: Core Instruction Support
 
@@ -174,7 +186,7 @@ This checklist tracks the implementation of the LinxISA LLVM backend. Use this t
 
 ## Files to Create/Modify
 
-### Core Files (in `~/llvm-project/llvm/lib/Target/Linx/`)
+### Core Files (historical plan; active code lives in `compiler/llvm/llvm/lib/Target/LinxV5/`)
 - [ ] `Linx.td` - Target definition
 - [ ] `LinxInstrInfo.td` - Instruction definitions
 - [ ] `LinxInstrFormats.td` - Instruction formats
@@ -192,7 +204,7 @@ This checklist tracks the implementation of the LinxISA LLVM backend. Use this t
 - [ ] `LinxBlockFormation.cpp` - Block formation pass (new)
 - [ ] `LinxTileLowering.cpp` - Tile operation lowering (new)
 
-### Clang Files (in `~/llvm-project/clang/lib/`)
+### Clang Files (active code lives in `compiler/llvm/clang/lib/`)
 - [ ] `Basic/Targets/Linx.h` - Target info
 - [ ] `Driver/ToolChains/Linx.cpp` - Toolchain support
 
@@ -212,7 +224,7 @@ python3 tools/isa/gen_llvm_tablegen.py \
 
 # Run tests
 cd avs/compiler/linx-llvm/tests
-CLANG=~/llvm-project/build-linxisa-clang/bin/clang ./run.sh
+CLANG=compiler/llvm/build-linxisa-clang/bin/clang ./run.sh
 
 # Analyze coverage
 python3 avs/compiler/linx-llvm/tests/analyze_coverage.py --verbose
@@ -231,7 +243,7 @@ python3 avs/compiler/linx-llvm/tests/analyze_coverage.py --verbose
 
 ## Notes
 
-- LLVM backend code is in `~/llvm-project/llvm/lib/Target/Linx/`
+- Historical external-tree references are obsolete; use `compiler/llvm/llvm/lib/Target/LinxV5/`
 - Use templates in `avs/compiler/linx-llvm/templates/` as starting points
 - Run tests frequently to catch regressions
 - Update this checklist as you complete items

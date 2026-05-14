@@ -202,16 +202,6 @@
       "checklist_ids": ["LLVM-002"]
     },
     {
-      "gate_key": "Compiler::AVS compile suites (linx32)",
-      "agent": "llvm",
-      "checklist_ids": ["LLVM-001"]
-    },
-    {
-      "gate_key": "Compiler::Coverage 100% (linx32)",
-      "agent": "llvm",
-      "checklist_ids": ["LLVM-002"]
-    },
-    {
       "gate_key": "Compiler::LLVM auxiliary tool suite (`llvm-ar`/`llvm-nm`/`llvm-readelf`/`llvm-strip`)",
       "agent": "llvm",
       "checklist_ids": ["LLVM-006"]

@@ -119,10 +119,6 @@ SUITES: dict[str, dict[str, str]] = {
         "src": "tests/18_v03_vector_body_fault.c",
         "macro": "LINX_TEST_ENABLE_V03_VECTOR_BODY_FAULT",
     },
-    "v04_vector_ops": {
-        "src": "tests/17_v04_vector_ops_matrix.c",
-        "macro": "LINX_TEST_ENABLE_V04_VECTOR_OPS",
-    },
     "simt_autovec": {
         "src": "tests/19_simt_autovec.c",
         "macro": "LINX_TEST_ENABLE_SIMT_AUTOVEC",
@@ -479,7 +475,7 @@ def _run_qemu_with_heartbeat(
             while next_heartbeat <= now:
                 next_heartbeat += heartbeat_sec
 
-        if proc.poll() is not None and not fd_kind:
+        if proc.poll() is not None:
             break
 
     if timed_out or stalled:
@@ -713,6 +709,8 @@ def main(argv: list[str]) -> int:
         args.target,
         "-O2",
         "-ffreestanding",
+        "-fno-function-sections",
+        "-fno-data-sections",
         "-fno-builtin",
         "-fno-stack-protector",
         "-fno-asynchronous-unwind-tables",

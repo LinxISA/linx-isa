@@ -8,7 +8,8 @@
 _start:
 #if CASE == 1
 	# CALL target is not a block-start marker (with valid SETRET present).
-	BSTART CALL, bad_target, ra=after_bad_call
+	BSTART CALL, bad_target
+	setret after_bad_call
 	C.BSTOP
 after_bad_call:
 	C.BSTART.STD
@@ -40,8 +41,9 @@ after_icall:
 	C.BSTART.STD
 	C.BSTOP
 #elif CASE == 6
-	# CALL returns to a non-marker target via explicit ra= label.
-	BSTART CALL, callee, ra=bad_ret
+	# CALL returns to a non-marker target via explicit setret label.
+	BSTART CALL, callee
+	setret bad_ret
 	C.BSTOP
 bad_ret:
 	c.movi 1, ->a0
@@ -53,8 +55,8 @@ callee:
 #elif CASE == 7
 	# RET jumps to a non-marker target.
 	C.BSTART.STD RET
-	addtpc bad_ret_target, ->a0
-	addi a0, bad_ret_target, ->a0
+	addtpc %tpcrel_hi(bad_ret_target), ->a0
+	addi a0, %tpcrel_lo(bad_ret_target), ->a0
 	c.setc.tgt a0
 	C.BSTOP
 bad_ret_target:
@@ -63,8 +65,8 @@ bad_ret_target:
 #elif CASE == 8
 	# IND jumps to a non-marker target.
 	C.BSTART.STD IND
-	addtpc bad_ind_target, ->a0
-	addi a0, bad_ind_target, ->a0
+	addtpc %tpcrel_hi(bad_ind_target), ->a0
+	addi a0, %tpcrel_lo(bad_ind_target), ->a0
 	c.setc.tgt a0
 	C.BSTOP
 bad_ind_target:
@@ -74,8 +76,8 @@ bad_ind_target:
 	# ICALL jumps to a non-marker target.
 	C.BSTART.STD ICALL
 	setret after_icall_target
-	addtpc bad_icall_target, ->a0
-	addi a0, bad_icall_target, ->a0
+	addtpc %tpcrel_hi(bad_icall_target), ->a0
+	addi a0, %tpcrel_lo(bad_icall_target), ->a0
 	c.setc.tgt a0
 	C.BSTOP
 after_icall_target:
@@ -86,7 +88,8 @@ bad_icall_target:
 	C.BSTOP
 #elif CASE == 10
 	# Duplicate SETRET in one CALL header is invalid.
-	BSTART CALL, callee, ra=after_call_1
+	BSTART CALL, callee
+	setret after_call_1
 	setret after_call_2
 	C.BSTOP
 after_call_1:
@@ -165,7 +168,8 @@ callee_hl_delayed_setret:
 	C.BSTOP
 #elif CASE == 18
 	# Valid CALL header adjacency + valid RET target setup must not fault.
-	BSTART CALL, callee_ok, ra=after_call_ok
+	BSTART CALL, callee_ok
+	setret after_call_ok
 	C.BSTOP
 after_call_ok:
 	C.BSTART	DIRECT, after_call_ok
@@ -178,8 +182,8 @@ callee_ok:
 	# Valid ICALL adjacency + setc.tgt target setup must not fault.
 	C.BSTART.STD ICALL
 	setret after_icall_ok
-	addtpc callee_icall_ok, ->a0
-	addi a0, callee_icall_ok, ->a0
+	addtpc %tpcrel_hi(callee_icall_ok), ->a0
+	addi a0, %tpcrel_lo(callee_icall_ok), ->a0
 	c.setc.tgt a0
 	C.BSTOP
 after_icall_ok:
@@ -192,26 +196,27 @@ callee_icall_ok:
 #elif CASE == 20
 	# Valid RET block with setc.tgt must not fault.
 	C.BSTART.STD RET
-	addtpc ret_target_ok, ->a0
-	addi a0, ret_target_ok, ->a0
+	addtpc %tpcrel_hi(ret_target_ok), ->a0
+	addi a0, %tpcrel_lo(ret_target_ok), ->a0
 	c.setc.tgt a0
 	C.BSTOP
 ret_target_ok:
-	C.BSTART	DIRECT, ret_target_ok
+	C.BSTART.STD
 	C.BSTOP
 #elif CASE == 21
 	# Valid IND block with setc.tgt must not fault.
 	C.BSTART.STD IND
-	addtpc ind_target_ok, ->a0
-	addi a0, ind_target_ok, ->a0
+	addtpc %tpcrel_hi(ind_target_ok), ->a0
+	addi a0, %tpcrel_lo(ind_target_ok), ->a0
 	c.setc.tgt a0
 	C.BSTOP
 ind_target_ok:
-	C.BSTART	DIRECT, ind_target_ok
+	C.BSTART.STD
 	C.BSTOP
 #elif CASE == 22
 	# Valid HL.BSTART CALL adjacency must not fault.
-	HL.BSTART.STD CALL, callee_hl_ok, ra=after_hl_call_ok
+	HL.BSTART.STD CALL, callee_hl_ok
+	setret after_hl_call_ok
 	C.BSTOP
 after_hl_call_ok:
 	C.BSTART	DIRECT, after_hl_call_ok
@@ -256,8 +261,8 @@ callee_hl_setret_delayed:
 	# Valid ICALL adjacency with HL.SETRET + setc.tgt must not fault.
 	C.BSTART.STD ICALL
 	hl.setret after_hl_icall_ok
-	addtpc callee_hl_icall_ok, ->a0
-	addi a0, callee_hl_icall_ok, ->a0
+	addtpc %tpcrel_hi(callee_hl_icall_ok), ->a0
+	addi a0, %tpcrel_lo(callee_hl_icall_ok), ->a0
 	c.setc.tgt a0
 	C.BSTOP
 after_hl_icall_ok:

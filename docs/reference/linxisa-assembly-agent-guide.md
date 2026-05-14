@@ -8,6 +8,14 @@ Source of truth:
 
 - `${LINUX_ROOT}/Documentation/linxisa/abi.md`
 
+Current compiler branch note:
+
+- the canonical compiler implementation is the in-repo Bisheng LLVM branch in
+  `compiler/llvm`;
+- the active registered compiler arch names are `linx64` and `linx64be`;
+- use `linx64-linx-none-elf` for baremetal/compiler AVS work and
+  `linx64-unknown-linux-*` for hosted Linux lanes.
+
 Register contract:
 
 - `R0` = `zero` (constant 0)
@@ -98,8 +106,10 @@ C.BSTART.STD
 Setret width guidance:
 
 - Prefer smallest legal form (`c.setret`, then `setret`).
-- Use `hl.setret` when target range/layout cannot be encoded by smaller forms.
-- `hl.setret` is part of normal correctness/relaxation support, not a special-case extension.
+- The current compiler AVS lane validates symbolic `c.setret` / `setret`
+  return-target materialization directly.
+- Treat `hl.setret` as a wider optional form that requires dedicated backend/MC
+  proof before relying on it in portable bring-up code.
 
 Non-returning call form:
 

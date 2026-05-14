@@ -24,8 +24,11 @@ from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 
 
-_HEX_BYTE_RE = re.compile(r"^[0-9a-fA-F]{2}$")
+_HEX_TOKEN_RE = re.compile(r"^[0-9a-fA-F]{2,16}$")
 _OBJDUMP_INSN_RE = re.compile(r"^\s*[0-9a-fA-F]+:\s+")
+_SPEC_DECODE_COMMENT_RE = re.compile(
+    r"^\s*#\s+([A-Za-z][A-Za-z0-9_. ]*)\s+\([^)]+\)\s+\[\d+\]\s*$"
+)
 
 
 def canonicalize_mnemonic(mnemonic: str) -> str:
@@ -43,10 +46,40 @@ def canonicalize_mnemonic(mnemonic: str) -> str:
     s = s.rstrip(",")
     # Work around tokenization glitches for variable-length encodings where the last byte
     # may be concatenated with the mnemonic (e.g. `00HL.BSTART.STD`).
-    m = re.match(r"^[0-9a-fA-F]{2}([A-Za-z].*)$", s)
+    m = re.match(r"^[0-9]{2}([A-Za-z].*)$", s)
     if m:
         s = m.group(1)
-    return s.upper()
+    s = s.upper()
+    if s == "B.ATTR":
+        return "B.ARG"
+    if s == "BSTART.AUX":
+        return "BSTART.SYS"
+    if s == "C.BSTART.AUX":
+        return "C.BSTART.SYS"
+    return s
+
+
+def derived_selector_mnemonics(mnemonic: str, operands: list[str]) -> Set[str]:
+    """Recover strict v0.56 aliases from selector-style objdump output."""
+    selector = canonicalize_mnemonic(mnemonic)
+    if selector == "B.DATR":
+        return {"B.ARG"}
+    if not operands:
+        return set()
+
+    tileop = canonicalize_mnemonic(operands[0])
+    aliases = {
+        ("BSTART.CUBE", "ACCCVT"): "BSTART.ACCCVT",
+        ("BSTART.CUBE", "TMATMUL"): "BSTART.TMATMUL",
+        ("BSTART.CUBE", "TMATMUL.ACC"): "BSTART.TMATMUL.ACC",
+        ("BSTART.TMA", "TLOAD"): "BSTART.TLOAD",
+        ("BSTART.TMA", "TSTORE"): "BSTART.TSTORE",
+        ("BSTART.TMA", "TMOV"): "BSTART.TMOV",
+        ("BSTART.TEPL", "ERCOV"): "ERCOV",
+        ("BSTART.TEPL", "ESAVE"): "ESAVE",
+    }
+    alias = aliases.get((selector, tileop))
+    return {alias} if alias else set()
 
 
 def extract_mnemonics_from_objdump(path: Path) -> Set[str]:
@@ -72,11 +105,28 @@ def extract_mnemonics_from_objdump(path: Path) -> Set[str]:
                 continue
             # Skip byte tokens until we reach the mnemonic.
             i = 0
-            while i < len(toks) and _HEX_BYTE_RE.match(toks[i]):
+            while i < len(toks) and _HEX_TOKEN_RE.match(toks[i]):
                 i += 1
             if i >= len(toks):
                 continue
             mnem = canonicalize_mnemonic(toks[i])
+            if mnem:
+                mnems.add(mnem)
+                mnems |= derived_selector_mnemonics(mnem, toks[i + 1 :])
+    except Exception as e:
+        print(f"warning: error reading {path}: {e}", file=sys.stderr)
+    return mnems
+
+
+def extract_mnemonics_from_spec_decode_source(path: Path) -> Set[str]:
+    """Extract generated v0.56 vector mnemonics from 99_spec_decode.s comments."""
+    mnems: Set[str] = set()
+    try:
+        for line in path.read_text(errors="replace").splitlines():
+            m = _SPEC_DECODE_COMMENT_RE.match(line)
+            if not m:
+                continue
+            mnem = canonicalize_mnemonic(m.group(1))
             if mnem:
                 mnems.add(mnem)
     except Exception as e:
@@ -151,6 +201,12 @@ def analyze_coverage(
     for od in objdump_files:
         test_name = od.parent.name
         raw_mnems = extract_mnemonics_from_objdump(od)
+        if test_name == "99_spec_decode":
+            spec_decode_source = od.with_suffix(".s")
+            if spec_decode_source.exists():
+                raw_mnems |= extract_mnemonics_from_spec_decode_source(
+                    spec_decode_source
+                )
         emitted_raw |= raw_mnems
         emitted_by_test[test_name] = raw_mnems
 

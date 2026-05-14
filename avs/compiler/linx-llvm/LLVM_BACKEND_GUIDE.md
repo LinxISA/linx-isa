@@ -1,47 +1,53 @@
 # LLVM Backend Implementation Guide
 
-This guide helps implement the LinxISA LLVM backend. The backend code is located in `~/llvm-project/llvm/lib/Target/Linx/` (or `LinxISA/` depending on naming).
+This document is now a historical bring-up note. The previous external
+`~/llvm-project`-centric compiler plan is obsolete.
 
-## Directory Structure
+The canonical compiler implementation for this superproject lives in the
+checked-in submodule at:
 
-The LLVM backend should be organized as follows:
+- `compiler/llvm/llvm/lib/Target/LinxV5/`
+- `compiler/llvm/clang/lib/Basic/Targets/LinxV5.*`
+- `compiler/llvm/clang/lib/Driver/ToolChains/LinxV5*`
+
+Use the in-repo compiler branch and its gate surface as source of truth; do not
+route new implementation work to an external `~/llvm-project` checkout.
+
+## Current implementation surface
+
+The active backend is `LinxV5`, not the older `Linx`/`LinxISA` rename plan:
 
 ```
-llvm/lib/Target/Linx/
-├── Linx.td                    # Target definition
-├── LinxInstrInfo.td           # Instruction definitions (TableGen)
-├── LinxRegisterInfo.td         # Register definitions
-├── LinxCallingConv.td          # Calling conventions
-├── LinxSubtarget.h/cpp         # Subtarget features
-├── LinxISelLowering.h/cpp      # Instruction selection lowering
-├── LinxISelDAGToDAG.cpp        # DAG instruction selection
-├── LinxAsmPrinter.cpp          # Assembly printer
-├── LinxInstPrinter.cpp         # Instruction printer
-├── LinxMCInstLower.cpp         # MC instruction lowering
-├── LinxMCCodeEmitter.cpp       # Instruction encoding
-├── LinxAsmBackend.cpp          # Assembler backend
-├── LinxELFObjectWriter.cpp     # ELF object writer
-├── LinxBlockFormation.cpp      # Block formation pass (new)
-└── LinxTileLowering.cpp        # Tile operation lowering (new)
+compiler/llvm/llvm/lib/Target/LinxV5/
+├── LinxV5InstrInfo.td
+├── LinxV5ISelLowering.h/cpp
+├── LinxV5ISelDAGToDAG.cpp
+├── AsmParser/LinxV5AsmParser.cpp
+├── MCTargetDesc/LinxV5*.{cpp,h}
+└── TargetInfo/LinxV5TargetInfo.cpp
 ```
 
 ## Generating Instruction Patterns
 
-Use the tool in this repo to generate TableGen instruction patterns:
+Use the live v0.56 spec and the checked-in compiler tree. Historical references
+to `removed-pre-v056-profile` inputs are obsolete.
+
+TableGen/codegen generation helpers still come from this repo:
 
 ```bash
-python3 tools/isa/gen_llvm_tablegen.py \
-  --spec removed-pre-v056-profile/removed-pre-v056-catalog.json \
-  --out avs/compiler/linx-llvm/LinxISAInstrInfo.td
+python3 tools/isa/gen_c_codec.py \
+  --spec isa/v0.56/linxisa-v0.56.json \
+  --out-dir /tmp/linxisa-llvm-codec-check
 ```
 
-Then integrate the generated patterns into `LinxInstrInfo.td`.
+The active compiler evidence path is AVS plus in-tree LLVM tests, not a
+separate generated `LinxISAInstrInfo.td` staging file.
 
 ## Instruction Selection
 
 ### Arithmetic Operations
 
-Map LLVM IR operations to LinxISA instructions:
+Map LLVM IR operations to the current `LinxV5` backend instructions:
 
 - `add` → `ADD`, `ADDI`, `HL.ADDI` (based on immediate size)
 - `sub` → `SUB`, `SUBI`
@@ -97,11 +103,11 @@ The `MCCodeEmitter` should select the shortest encoding that fits.
 
 ## Testing
 
-Run the test suite:
+Run the current in-repo compiler gate:
 
 ```bash
 cd avs/compiler/linx-llvm/tests
-CLANG=~/llvm-project/build-linxisa-clang/bin/clang ./run.sh
+CLANG=/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/clang ./run.sh
 ```
 
 Analyze coverage:
@@ -112,11 +118,12 @@ python3 avs/compiler/linx-llvm/tests/analyze_coverage.py --verbose
 
 ## Naming Convention
 
-**Important**: The plan specifies renaming "LinxISA" to "Linx" throughout the codebase.
+The previous “rename everything to `Linx`” plan is obsolete for the active
+branch. Follow the checked-in implementation names:
 
-- Class names: `LinxTargetInfo`, `LinxInstrInfo`, etc. (not `LinxISA*`)
-- File names: `Linx*.cpp`, `Linx*.td` (not `LinxISA*`)
-- Comments and strings: Use "Linx" not "LinxISA"
+- backend target family: `LinxV5`
+- architectural/project name in docs/spec: `LinxISA`
+- user-facing baremetal target triple: `linx64-linx-none-elf`
 
 ## Implementation Checklist
 
@@ -157,7 +164,7 @@ python3 avs/compiler/linx-llvm/tests/analyze_coverage.py --verbose
 
 ## Resources
 
-- ISA Spec: `removed-pre-v056-profile/removed-pre-v056-catalog.json`
-- Codec Tables: `isa/generated/codecs/linxisa*.decode`
+- ISA Spec: `isa/v0.56/linxisa-v0.56.json`
+- Active backend: `compiler/llvm/llvm/lib/Target/LinxV5/`
 - Test Programs: `avs/compiler/linx-llvm/tests/c/*.c`
 - Coverage Tool: `avs/compiler/linx-llvm/tests/analyze_coverage.py`
