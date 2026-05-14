@@ -43,10 +43,19 @@ This manual includes guidance and bring-up conventions that are useful for toolc
 
 Two architectural profiles are used by the toolchain in this repository:
 
-* **linx32**: 32-bit pointers (ILP32-style ABI)
 * **linx64**: 64-bit pointers (LP64-style ABI)
+* **linx64be**: 64-bit pointers (LP64-style ABI, big-endian)
 
-The corresponding compiler target triples are `linx32-linx-none-elf` and `linx64-linx-none-elf`.
+The current in-repo compiler branch registers `linx64` and `linx64be`, with
+the active baremetal bring-up triple `linx64-linx-none-elf`.
+
+[NOTE]
+====
+Historical bring-up material may still mention `linx32-linx-none-elf`, but the
+current Bisheng compiler implementation in `compiler/llvm` does not register a
+`linx32` arch and the superproject no longer treats that lane as a required
+compiler gate.
+====
 
 [[intro-organization]]
 == Manual Organization

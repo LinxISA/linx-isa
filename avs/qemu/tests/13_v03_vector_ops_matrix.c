@@ -12,22 +12,22 @@ __asm__(
     ".p2align 3\n"
     ".globl __linx_v03_ops_add_sub_body\n"
     "__linx_v03_ops_add_sub_body:\n"
-    "  v.lw.brg [ri0, lc0<<2, zero], ->vt\n"
-    "  v.lw.brg [ri1, lc0<<2, zero], ->vu\n"
-    "  v.add vt#1, vu#1, ->vm\n"
-    "  v.sub vt#1, vu#1, ->vn\n"
-    "  v.sw.brg vm#1, [ri2, lc0<<2, zero]\n"
-    "  v.sw.brg vn#1, [ri3, lc0<<2, zero]\n"
+    "  v.lw.brg [ri0.sd, lc0<<2, zero.sd], ->vt.w\n"
+    "  v.lw.brg [ri1.sd, lc0<<2, zero.sd], ->vu.w\n"
+    "  v.add vt#1.sw, vu#1.sw, ->vt.w\n"
+    "  v.sw.brg vt#1.sw, [ri2.sd, lc0<<2, zero.sd]\n"
+    "  v.sub vt#1.sw, vu#1.sw, ->vt.w\n"
+    "  v.sw.brg vt#1.sw, [ri3.sd, lc0<<2, zero.sd]\n"
     "  C.BSTOP\n");
 
 __asm__(
     ".p2align 3\n"
     ".globl __linx_v03_ops_float_body\n"
     "__linx_v03_ops_float_body:\n"
-    "  v.lw.brg [ri0, lc0<<2, zero], ->vt\n"
-    "  v.fadd vt#1, ri2, ->vt\n"
-    "  v.fmul vt#1, ri3, ->vt\n"
-    "  v.sw.brg vt#1, [ri1, lc0<<2, zero]\n"
+    "  v.lw.brg [ri0.sd, lc0<<2, zero.sd], ->vt.w\n"
+    "  v.fadd vt#1.fs, ri2.fs, ->vt.w\n"
+    "  v.fmul vt#1.fs, ri3.fs, ->vt.w\n"
+    "  v.sw.brg vt#1.sw, [ri1.sd, lc0<<2, zero.sd]\n"
     "  C.BSTOP\n");
 
 __asm__(
@@ -35,8 +35,8 @@ __asm__(
     ".globl __linx_v03_ops_mixed_pred_body\n"
     "__linx_v03_ops_mixed_pred_body:\n"
     "  addi a7, 1, ->a7\n"
-    "  v.cmp.lt lc0.sw, ri1.sw, ->vm\n"
-    "  v.sw.brg vm#1, [ri0, lc0<<2, zero]\n"
+    "  v.cmp.lt lc0.sw, ri1.sw, ->vt.d\n"
+    "  v.sw.brg vt#1.sd, [ri0.sd, lc0<<2, zero.sd]\n"
     "  C.BSTOP\n");
 
 static void test_v_add_sub_matrix(void)

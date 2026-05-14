@@ -84,7 +84,7 @@ tests:
       - isa/v0.56/linxisa-v0.56.json
       - docs/reference/encoding_space_report.md
     requirement: "Generated spec decode vectors disassemble with 100% canonical mnemonic coverage."
-    pass_fail: "99_spec_decode objdump coverage remains 100% for linx32 and linx64."
+    pass_fail: "99_spec_decode objdump coverage remains 100% for the active registered baremetal compiler profiles."
 
   - id: AVS-TOOL-012
     state: active

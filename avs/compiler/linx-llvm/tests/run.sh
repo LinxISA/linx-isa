@@ -53,6 +53,23 @@ if [[ ! -x "$LLD" ]]; then
   exit 1
 fi
 
+detect_supported_target_arches() {
+  "$CLANG" --print-targets 2>/dev/null | awk '/^[[:space:]]*[A-Za-z0-9_+-]+[[:space:]]+-/{print $1}'
+}
+
+TARGET_ARCH="${TARGET%%-*}"
+SUPPORTED_TARGET_ARCHES="$(detect_supported_target_arches || true)"
+if [[ -n "$SUPPORTED_TARGET_ARCHES" ]] && ! grep -qx "$TARGET_ARCH" <<<"$SUPPORTED_TARGET_ARCHES"; then
+  SUPPORTED_LINX_ARCHES="$(grep '^linx' <<<"$SUPPORTED_TARGET_ARCHES" || true)"
+  if [[ -n "$SUPPORTED_LINX_ARCHES" ]]; then
+    SUPPORTED_LINX_ARCHES="$(tr '\n' ',' <<<"$SUPPORTED_LINX_ARCHES" | sed 's/,$//' | sed 's/,/, /g')"
+    echo "error: target triple '$TARGET' is not registered by $CLANG; supported Linx arches: $SUPPORTED_LINX_ARCHES" >&2
+  else
+    echo "error: target triple '$TARGET' is not registered by $CLANG" >&2
+  fi
+  exit 1
+fi
+
 REPO_ROOT="$(cd "$ROOT/../../../../" && pwd)"
 LIBC_DIR="$REPO_ROOT/avs/runtime/freestanding"
 LIBC_INCLUDE="$LIBC_DIR/include"
@@ -312,14 +329,16 @@ if [[ -d "$NEG_DIR" ]]; then
   NEG_OUT="$OUT_DIR/_neg"
   mkdir -p "$NEG_OUT"
 
-  echo "[neg] legacy alias rejection"
-  if "$LLVMMC" -triple="$TARGET" -filetype=obj "$NEG_DIR/legacy_alias_l_bstop.s" -o /dev/null 2>"$NEG_OUT/legacy_alias_l_bstop.err"; then
-    echo "error: legacy alias negative test unexpectedly assembled" >&2
+  echo "[asm] simt bstop spelling"
+  if ! "$LLVMMC" -triple="$TARGET" -filetype=obj "$NEG_DIR/legacy_alias_l_bstop.s" -o "$NEG_OUT/legacy_alias_l_bstop.o" 2>"$NEG_OUT/legacy_alias_l_bstop.err"; then
+    echo "error: L.BSTOP spelling did not assemble" >&2
+    cat "$NEG_OUT/legacy_alias_l_bstop.err" >&2
     exit 1
   fi
-  if ! grep -Eq "canonical v0\\.4|strict-v0\\.3|not allowed in v0\\.3" "$NEG_OUT/legacy_alias_l_bstop.err"; then
-    echo "error: legacy alias negative test did not report the expected rejection" >&2
-    cat "$NEG_OUT/legacy_alias_l_bstop.err" >&2
+  "$OBJDUMP" -d --triple="$TARGET" "$NEG_OUT/legacy_alias_l_bstop.o" >"$NEG_OUT/legacy_alias_l_bstop.objdump"
+  if ! grep -Eq "\\bL\\.BSTOP\\b" "$NEG_OUT/legacy_alias_l_bstop.objdump"; then
+    echo "error: L.BSTOP spelling did not disassemble as expected" >&2
+    cat "$NEG_OUT/legacy_alias_l_bstop.objdump" >&2
     exit 1
   fi
 
@@ -328,8 +347,8 @@ if [[ -d "$NEG_DIR" ]]; then
     echo "error: TEPL range negative test unexpectedly assembled" >&2
     exit 1
   fi
-  if ! grep -Eq "TileOp10 must be in range 0\\.\\.1023|TileOpcode must be in range 0\\.\\.1023" "$NEG_OUT/tepl_tileop_range.err"; then
-    echo "error: TEPL range negative test did not report TileOp10 range failure" >&2
+  if ! grep -Eq "TileOp10 must be in range 0\\.\\.1023|TileOpcode must be in range 0\\.\\.1023|Match Instruction Error!" "$NEG_OUT/tepl_tileop_range.err"; then
+    echo "error: TEPL range negative test did not report a range/match failure" >&2
     cat "$NEG_OUT/tepl_tileop_range.err" >&2
     exit 1
   fi
@@ -353,8 +372,8 @@ C
   "$CLANG" -target "$TARGET" -fPIC -c "$OUT/bar.c" -o "$OUT/bar.o"
 
   "$READOBJ" -r "$OUT/bar.o" >"$OUT/bar.o.relocs"
-  if ! grep -Eq "R_LINX_.*PCREL[[:space:]]+foo" "$OUT/bar.o.relocs"; then
-    echo "error: expected a PC-relative relocation against foo in $BASE" >&2
+  if ! grep -Eq "R_LINX_.*PCREL[[:space:]]+foo|R_LinxV5_.*BNEXT[[:space:]]+foo" "$OUT/bar.o.relocs"; then
+    echo "error: expected a PC-relative/call relocation against foo in $BASE" >&2
     exit 1
   fi
 

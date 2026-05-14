@@ -12,12 +12,20 @@ from pathlib import Path
 
 
 OBJDUMP_RE = re.compile(
-    r"^\s*(?P<addr>[0-9a-f]+):\s+(?P<bytes>[0-9a-f]{2}(?:\s+[0-9a-f]{2})*)(?:\s{2,}(?P<asm>.*?))?\s*$",
+    r"^\s*(?P<addr>[0-9a-f]+):\s+(?P<bytes>[0-9a-f]{2,16}(?:\s+[0-9a-f]{2,16})*)(?:\s{2,}(?P<asm>.*?))?\s*$",
     re.IGNORECASE,
 )
 HEX_TARGET_RE = re.compile(r"0x([0-9a-fA-F]+)(?!.*0x)")
 HEX_NUMBER_RE = re.compile(r"0x[0-9a-fA-F]+")
 LABEL_TARGET_RE = re.compile(r"\.Lrt_[0-9a-fA-F]+")
+
+
+def _decode_objdump_hex_tokens(raw: str) -> list[int]:
+    bytes_out: list[int] = []
+    for token in raw.split():
+        pairs = [token[i : i + 2] for i in range(0, len(token), 2)]
+        bytes_out.extend(int(part, 16) for part in reversed(pairs))
+    return bytes_out
 
 
 def _extract_instructions(path: Path) -> list[dict[str, object]]:
@@ -26,12 +34,11 @@ def _extract_instructions(path: Path) -> list[dict[str, object]]:
         match = OBJDUMP_RE.match(raw)
         if not match:
             continue
-        asm = match.group("asm").strip()
         out.append(
             {
                 "address": int(match.group("addr"), 16),
-                "bytes": [int(part, 16) for part in match.group("bytes").split()],
-                "asm": asm,
+                "bytes": _decode_objdump_hex_tokens(match.group("bytes")),
+                "asm": (match.group("asm") or "").strip(),
             }
         )
     return out
@@ -139,7 +146,7 @@ def _write_asm(path: Path, instructions: list[dict[str, object]], stable_indexes
                 lines.append(f"    {rewritten}")
                 continue
         bytes_list = [f"0x{byte:02x}" for byte in inst["bytes"]]
-        comment = f"  # preserved: {asm}" if asm else "  # preserved raw bytes"
+        comment = f"  // preserved: {asm}" if asm else "  // preserved raw bytes"
         lines.append(f"    .byte {', '.join(bytes_list)}{comment}")
     lines.append("roundtrip_end:")
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")

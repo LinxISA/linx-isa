@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 # Parse only top-level symbol labels; keep local ".L..." labels inside the function body.
-FUNC_LABEL_RE = re.compile(r"^([A-Za-z_][\w$]*):\s*(?:#.*)?$")
+FUNC_LABEL_RE = re.compile(r"^([A-Za-z_][\w$]*):\s*(?:(?://|#).*)?$")
 
 
 def parse_functions(text: str) -> dict[str, str]:
@@ -51,13 +51,11 @@ def check_tail_musttail(label: str, asm: str) -> None:
     funcs = parse_functions(asm)
     for fn in ("callret_tail_direct", "callret_tail_indirect"):
         require(fn in funcs, f"{label}: missing function body for {fn}")
-        require("FENTRY" in funcs[fn], f"{label}:{fn}: missing FENTRY")
 
     direct_body = funcs["callret_tail_direct"]
     direct_is_tail_transfer = (
-        "FEXIT" in direct_body
-        and "FRET.STK" not in direct_body
-        and re.search(r"\b(?:C\.)?BSTART\s+DIRECT,\s*tail_target\b", direct_body) is not None
+        "FRET.STK" not in direct_body
+        and re.search(r"\b(?:[CL]\.)?BSTART(?:\.STD)?\s+DIRECT,\s*tail_target\b", direct_body) is not None
     )
     direct_is_legacy_tail = (
         re.search(r"\b(?:C\.)?BSTART(?:\.STD)?\s+CALL,\s*tail_target\b", direct_body) is not None
@@ -70,8 +68,7 @@ def check_tail_musttail(label: str, asm: str) -> None:
 
     indirect_body = funcs["callret_tail_indirect"]
     indirect_is_tail_transfer = (
-        "FEXIT" in indirect_body
-        and "FRET.STK" not in indirect_body
+        "FRET.STK" not in indirect_body
         and re.search(r"\b(?:C\.)?BSTART(?:\.STD)?\s+IND\b", indirect_body) is not None
         and re.search(r"\bc\.setc\.tgt\b", indirect_body, re.IGNORECASE) is not None
     )

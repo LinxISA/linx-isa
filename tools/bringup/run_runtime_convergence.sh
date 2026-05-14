@@ -307,6 +307,12 @@ if [[ -z "$CLANG_BIN" ]]; then
   echo "error: clang not found; set CLANG or build toolchain first" >&2
   exit 1
 fi
+
+clang_supports_arch() {
+  local arch="$1"
+  "$CLANG_BIN" --print-targets 2>/dev/null | awk '/^[[:space:]]*[A-Za-z0-9_+-]+[[:space:]]+-/{print $1}' | grep -qx "$arch"
+}
+
 LLD_BIN="$(resolve_lld "$CLANG_BIN")"
 if [[ -z "$LLD_BIN" ]]; then
   echo "error: ld.lld not found; set LLD or build toolchain first" >&2
@@ -615,21 +621,25 @@ run_gate \
   "mnemonic_coverage_under_100_linx64" \
   "compiler_cov_linx64"
 
-run_gate \
-  "Compiler" \
-  "AVS compile suites (linx32)" \
-  "cd $ROOT/avs/compiler/linx-llvm/tests && CLANG=$CLANG_BIN TARGET=linx32-linx-none-elf OUT_DIR=$ROOT/avs/compiler/linx-llvm/tests/out-linx32 ./run.sh" \
-  "compile_pass_linx32" \
-  "compile_fail_linx32" \
-  "compiler_linx32"
+if clang_supports_arch linx32; then
+  run_gate \
+    "Compiler" \
+    "AVS compile suites (linx32)" \
+    "cd $ROOT/avs/compiler/linx-llvm/tests && CLANG=$CLANG_BIN TARGET=linx32-linx-none-elf OUT_DIR=$ROOT/avs/compiler/linx-llvm/tests/out-linx32 ./run.sh" \
+    "compile_pass_linx32" \
+    "compile_fail_linx32" \
+    "compiler_linx32"
 
-run_gate \
-  "Compiler" \
-  "Coverage 100% (linx32)" \
-  "python3 $ROOT/avs/compiler/linx-llvm/tests/analyze_coverage.py --out-dir $ROOT/avs/compiler/linx-llvm/tests/out-linx32 --fail-under 100" \
-  "mnemonic_coverage_100_linx32" \
-  "mnemonic_coverage_under_100_linx32" \
-  "compiler_cov_linx32"
+  run_gate \
+    "Compiler" \
+    "Coverage 100% (linx32)" \
+    "python3 $ROOT/avs/compiler/linx-llvm/tests/analyze_coverage.py --out-dir $ROOT/avs/compiler/linx-llvm/tests/out-linx32 --fail-under 100" \
+    "mnemonic_coverage_100_linx32" \
+    "mnemonic_coverage_under_100_linx32" \
+    "compiler_cov_linx32"
+else
+  echo "note: skipping linx32 compiler AVS gates because $CLANG_BIN does not register the linx32 target" >&2
+fi
 
 run_gate \
   "Compiler" \

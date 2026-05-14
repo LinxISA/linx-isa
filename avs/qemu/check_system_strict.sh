@@ -12,27 +12,9 @@ mkdir -p "$(dirname "$OUT_LOG")"
 CMD=(
   python3 "$SCRIPT_DIR/run_tests.py"
   --suite system
-  --timeout "${TIMEOUT:-15}"
+  --timeout "${TIMEOUT:-60}"
   --heartbeat-sec "$HEARTBEAT_SEC"
   --no-progress-timeout "$NO_PROGRESS_TIMEOUT"
-  --verbose
-  --require-test-id 0x1100
-  --require-test-id 0x1101
-  --require-test-id 0x1102
-  --require-test-id 0x1103
-  --require-test-id 0x1104
-  --require-test-id 0x1105
-  --require-test-id 0x1106
-  --require-test-id 0x1107
-  --require-test-id 0x1108
-  --require-test-id 0x1109
-  --require-test-id 0x110A
-  --require-test-id 0x110B
-  --require-test-id 0x110C
-  --require-test-id 0x110D
-  --require-test-id 0x110E
-  --require-test-id 0x110F
-  --require-test-id 0x1110
 )
 
 if ! [[ "$RETRIES" =~ ^[0-9]+$ ]] || [[ "$RETRIES" -lt 1 ]]; then

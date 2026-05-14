@@ -5,15 +5,15 @@ This folder contains small, freestanding C tests compiled for LinxISA and run on
 Key constraints:
 
 - The QEMU Linx `virt` machine loads an ELF **relocatable** (`ET_REL`) object via `-kernel` (not a fully linked `ET_EXEC`).
-- No libc, and avoid inline assembly (the Linx textual asm parser is not part of the bring-up yet).
+- No libc; keep tests freestanding and prefer the checked-in runtime/test helpers over ad-hoc external harnesses.
 - UART output is via MMIO at `0x10000000`.
 - Program termination is via MMIO at `0x10000004` (exit code written becomes QEMU’s process exit code).
 
 ## Requirements
 
-- LinxISA Clang: `~/llvm-project/build-linxisa-clang/bin/clang`
-- LinxISA LLD: `~/llvm-project/build-linxisa-clang/bin/ld.lld`
-- QEMU: `~/qemu/build-tci/qemu-system-linx64` (recommended on macOS) or `~/qemu/build/qemu-system-linx64`
+- LinxISA Clang: `/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/clang`
+- LinxISA LLD: `/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/ld.lld`
+- QEMU: `/Users/zhoubot/linx-isa/emulator/qemu/build/qemu-system-linx64`
 
 Override paths with environment variables:
 
@@ -26,11 +26,19 @@ export QEMU=/path/to/qemu-system-linx64
 ## Run
 
 ```bash
-cd ~/linxisa/avs/qemu
+cd /Users/zhoubot/linx-isa/avs/qemu
 ./run_tests.sh
 ```
 
 `run_tests.sh` is just a thin wrapper over `python3 run_tests.py`.
+
+Active runtime note:
+
+- the live QEMU runtime lane keeps the `system`, `callret`, scalar, and the
+  still-supported handwritten `v03` SIMT/vector suites;
+- the older handwritten `v04_vector_ops` runtime suite is removed from the
+  active surface on this Bisheng branch because the current compiler/MC stack
+  does not accept that handwritten asm dialect reliably enough for gating.
 
 Run a specific suite:
 

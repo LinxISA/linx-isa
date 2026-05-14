@@ -78,7 +78,15 @@ Setret width selection:
 
 - `c.setret`: short forward range only.
 - `setret`: larger forward range only.
-- `hl.setret`: wide signed range (forward/backward); required when smaller forms cannot encode the return label.
+- `hl.setret`: wide signed range (forward/backward), but it is not part of the
+  current compiler AVS closure surface.
+
+Current compiler branch note:
+
+- the Bisheng `compiler/llvm` branch validates returning call headers through
+  adjacent `c.setret` / `setret` forms;
+- do not assume `hl.setret` is available in portable compiler/runtime flows
+  unless a dedicated MC/backend test for that branch proves it.
 
 ## 4) Indirect Target Setup Rules
 

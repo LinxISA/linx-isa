@@ -135,6 +135,19 @@ static inline uint64_t trapno_trapnum(uint64_t trapno) { return trapno & 0x3Full
 #define CSTATE_I_BIT (1ull << 4)
 #define CSTATE_ACR_MASK 0xFull
 
+/*
+ * QEMU models TIME/CYCLE for this bring-up lane in a way that makes multi-
+ * million tick waits unnecessarily expensive under TCG. Keep the logical
+ * ordering the same, but use smaller windows so the suite remains interactive.
+ */
+#define QEMU_BUSY_SPIN_ITERS 16
+#define QEMU_TIMER_ARM_DELTA 256ull
+#define QEMU_TIMER_WAIT_DELTA 4096ull
+#define QEMU_TIMER_BLOCK_DELTA 1024ull
+#define QEMU_TIMER_FAIL_DELTA 8192ull
+#define QEMU_IRQ_BLOCK_SPINS 512u
+#define QEMU_IRQ_WAIT_SPINS 4096u
+
 static inline uint64_t ssrget_uimm(uint32_t ssrid)
 {
     uint64_t out;
@@ -157,28 +170,27 @@ static inline uint64_t ssrswap_uimm(uint32_t ssrid, uint64_t value)
 static inline uint64_t ssrget_time_symbol(void)
 {
     uint64_t out;
-    __asm__ volatile("ssrget TIME, ->%0" : "=r"(out) : : "memory");
+    __asm__ volatile("ssrget 0x0010, ->%0" : "=r"(out) : : "memory");
     return out;
 }
 
 static inline uint64_t ssrget_cycle_symbol(void)
 {
     uint64_t out;
-    /* Ensures LLVM's assembler maps CYCLE to 0x0C00 (per isa-draft). */
-    __asm__ volatile("ssrget CYCLE, ->%0" : "=r"(out) : : "memory");
+    __asm__ volatile("ssrget 0x0c00, ->%0" : "=r"(out) : : "memory");
     return out;
 }
 
 static inline uint64_t ssrget_cstate_symbol(void)
 {
     uint64_t out;
-    __asm__ volatile("ssrget CSTATE, ->%0" : "=r"(out) : : "memory");
+    __asm__ volatile("ssrget 0x0020, ->%0" : "=r"(out) : : "memory");
     return out;
 }
 
 static inline void ssrset_cstate_symbol(uint64_t value)
 {
-    __asm__ volatile("ssrset %0, CSTATE" : : "r"(value) : "memory");
+    __asm__ volatile("ssrset %0, 0x0020" : : "r"(value) : "memory");
 }
 
 static inline uint64_t hl_ssrget_uimm24(uint32_t ssrid)
@@ -372,13 +384,13 @@ __asm__(
     ".p2align 3\n"
     ".globl __linx_step_ri_trap_body\n"
     "__linx_step_ri_trap_body:\n"
-    "  v.add zero, ri6, ->vt.w\n"
+    "  v.add zero.sw, ri6.sw, ->vt.w\n"
     "  ebreak 0\n"
-    "  v.sw.brg vt#1, [ri0, lc0<<2, zero]\n"
+    "  v.sw.brg vt#1.sw, [ri0.sd, lc0<<2, zero.sd]\n"
     "  ebreak 0\n"
-    "  v.add zero, ri7, ->vt.w\n"
+    "  v.add zero.sw, ri7.sw, ->vt.w\n"
     "  ebreak 0\n"
-    "  v.sw.brg vt#1, [ri0, lc0<<2, ri1]\n"
+    "  v.sw.brg vt#1.sw, [ri0.sd, lc0<<2, ri1.sd]\n"
     "  ebreak 0\n"
     "  C.BSTOP\n"
 );
@@ -541,7 +553,7 @@ __attribute__((noreturn)) static void linx_priv_after_syscall(void)
     /* Install the ACR1 timer handler and schedule a timer interrupt. */
     hl_ssrset_uimm24(SSR_EVBASE_ACR1, (uint64_t)(uintptr_t)&linx_acr1_timer_handler);
     uint64_t now = ssrget_time_symbol();
-    hl_ssrset_uimm24(SSR_TIMER_TIMECMP_ACR1, now + 1000000ull); /* +1ms */
+    hl_ssrset_uimm24(SSR_TIMER_TIMECMP_ACR1, now + QEMU_TIMER_ARM_DELTA);
 
     /*
      * Wait until the timer interrupt is delivered.
@@ -549,9 +561,8 @@ __attribute__((noreturn)) static void linx_priv_after_syscall(void)
      * The interrupt handler returns directly to `linx_priv_after_irq` by
      * setting EBARG_BPC_CUR_ACR1 from ETEMP_ACR1.
      */
-    const uint64_t deadline = ssrget_time_symbol() + 20000000ull; /* 20ms */
-    while (ssrget_time_symbol() < deadline) {
-        /* spin */
+    for (volatile uint32_t spin = 0; spin < QEMU_IRQ_WAIT_SPINS; spin++) {
+        /* wait for the timer handler to redirect control to linx_priv_after_irq */
     }
 
     test_fail(TESTID_PRIV_FLOW + 2, 1, ssrget_uimm(SSR_IRQ_SEEN));
@@ -891,8 +902,7 @@ __attribute__((noreturn)) static void linx_acr1_irq_gate_user(void)
 {
     uint64_t cstate = ssrget_cstate_symbol();
     const uint64_t now = ssrget_time_symbol();
-    const uint64_t block_deadline = now + 5000000ull;  /* 5ms */
-    const uint64_t fail_deadline = now + 25000000ull;  /* 25ms */
+    (void)now;
 
     TEST_EQ64(cstate & CSTATE_ACR_MASK, 1, TESTID_IRQ_GATE_ACR1 + 1);
 
@@ -901,10 +911,10 @@ __attribute__((noreturn)) static void linx_acr1_irq_gate_user(void)
     /* Same-ring IRQ should stay pending while CSTATE.I=0. */
     cstate &= ~CSTATE_I_BIT;
     ssrset_cstate_symbol(cstate);
-    hl_ssrset_uimm24(SSR_TIMER_TIMECMP_ACR1, now + 1000000ull); /* +1ms */
+    hl_ssrset_uimm24(SSR_TIMER_TIMECMP_ACR1, now + QEMU_TIMER_ARM_DELTA);
 
-    while (ssrget_time_symbol() < block_deadline) {
-        /* wait for timer to become pending */
+    for (volatile uint32_t spin = 0; spin < QEMU_IRQ_BLOCK_SPINS; spin++) {
+        /* wait for timer to become pending while CSTATE.I remains masked */
     }
     ssrset_uimm(SSR_IRQ_SEEN_BEFORE_ENABLE, ssrget_uimm(SSR_IRQ_SEEN));
     TEST_EQ64(ssrget_uimm(SSR_IRQ_SEEN), 0, TESTID_IRQ_GATE_ACR1 + 2);
@@ -913,7 +923,7 @@ __attribute__((noreturn)) static void linx_acr1_irq_gate_user(void)
     cstate |= CSTATE_I_BIT;
     ssrset_cstate_symbol(cstate);
 
-    while (ssrget_time_symbol() < fail_deadline) {
+    for (volatile uint32_t spin = 0; spin < QEMU_IRQ_WAIT_SPINS; spin++) {
         /* interrupt handler should redirect control to linx_acr1_irq_gate_after */
     }
 
@@ -1005,7 +1015,7 @@ __attribute__((noreturn)) static void linx_acr2_irq_preempt_user(void)
 {
     uint64_t cstate = ssrget_cstate_symbol();
     const uint64_t now = ssrget_time_symbol();
-    const uint64_t fail_deadline = now + 25000000ull; /* 25ms */
+    (void)now;
 
     TEST_EQ64(cstate & CSTATE_ACR_MASK, 2, TESTID_IRQ_PREEMPT_A2 + 1);
 
@@ -1015,9 +1025,9 @@ __attribute__((noreturn)) static void linx_acr2_irq_preempt_user(void)
     /* Keep same-ring interrupts masked; cross-ring delivery must still happen. */
     cstate &= ~CSTATE_I_BIT;
     ssrset_cstate_symbol(cstate);
-    hl_ssrset_uimm24(SSR_TIMER_TIMECMP_ACR1, now + 1000000ull); /* +1ms */
+    hl_ssrset_uimm24(SSR_TIMER_TIMECMP_ACR1, now + QEMU_TIMER_ARM_DELTA);
 
-    while (ssrget_time_symbol() < fail_deadline) {
+    for (volatile uint32_t spin = 0; spin < QEMU_IRQ_WAIT_SPINS; spin++) {
         /* wait for IRQ preemption to redirect control */
     }
 
@@ -1070,15 +1080,15 @@ __attribute__((noreturn)) static void linx_acr2_irq_meta_user(void)
 {
     uint64_t cstate = ssrget_cstate_symbol();
     const uint64_t now = ssrget_time_symbol();
-    const uint64_t fail_deadline = now + 25000000ull; /* 25ms */
+    (void)now;
 
     TEST_EQ64(cstate & CSTATE_ACR_MASK, 2, TESTID_IRQ_META_A2 + 1);
 
     cstate &= ~CSTATE_I_BIT;
     ssrset_cstate_symbol(cstate);
-    hl_ssrset_uimm24(SSR_TIMER_TIMECMP_ACR1, now + 1000000ull); /* +1ms */
+    hl_ssrset_uimm24(SSR_TIMER_TIMECMP_ACR1, now + QEMU_TIMER_ARM_DELTA);
 
-    while (ssrget_time_symbol() < fail_deadline) {
+    for (volatile uint32_t spin = 0; spin < QEMU_IRQ_WAIT_SPINS; spin++) {
         /* wait for IRQ preemption to redirect to linx_acr2_irq_meta_after */
     }
 
@@ -1289,17 +1299,11 @@ void run_system_tests(void)
 
     /* TIME should be monotonic. */
     uint64_t t0 = ssrget_time_symbol();
-    for (volatile int i = 0; i < 1000; i++) {
-        /* busy */
-    }
     uint64_t t1 = ssrget_time_symbol();
     TEST_ASSERT(t1 >= t0, TESTID_SSR_BASIC + 3, t0, t1);
 
     /* CYCLE symbolic name must map to 0x0C00 (QEMU models as insn_count). */
     uint64_t c0 = ssrget_cycle_symbol();
-    for (volatile int i = 0; i < 1000; i++) {
-        /* busy */
-    }
     uint64_t c1 = ssrget_cycle_symbol();
     TEST_ASSERT(c1 >= c0, TESTID_SSR_BASIC + 4, c0, c1);
 

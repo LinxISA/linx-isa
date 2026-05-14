@@ -13,7 +13,8 @@ In-repo compile validation assets are centralized under AVS:
 - Host compiler binary commonly used:
   - pinned submodule build: `compiler/llvm/build-linxisa-clang/bin/clang`
   - or an external toolchain (set `CLANG=/path/to/clang`)
-- Supported bring-up targets: `linx64-linx-none-elf`, `linx32-linx-none-elf`
+- Supported bring-up target on the current Bisheng branch: `linx64-linx-none-elf`
+- The checked-in compiler currently registers `linx64` / `linx64be`; older `linx32` references are archived bring-up history, not an active required gate.
 - Compile test suite entrypoint: `avs/compiler/linx-llvm/tests/run.sh`
 
 ## Required invariants

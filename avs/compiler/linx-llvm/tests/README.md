@@ -14,11 +14,10 @@ Run:
 CLANG=/path/to/clang ./avs/compiler/linx-llvm/tests/run.sh
 ```
 
-Run (linx32):
-
-```bash
-CLANG=/path/to/clang TARGET=linx32-linx-none-elf OUT_DIR=./avs/compiler/linx-llvm/tests/out-linx32 ./avs/compiler/linx-llvm/tests/run.sh
-```
+Current Bisheng compiler note:
+- the checked-in Bisheng LLVM branch registers `linx64` and `linx64be`;
+- `run.sh` now fails immediately if you request an unregistered target such as `linx32-linx-none-elf`;
+- archived `out-linx32` artifacts may still exist in historical gate evidence, but they are not part of the active branch closure.
 
 ## C test programs
 

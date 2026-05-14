@@ -15,7 +15,8 @@ scripts and reports use one deterministic policy.
 
 ## Triple and lane contract
 
-- Baremetal compile lane: `linx64-linx-none-elf` and `linx32-linx-none-elf`.
+- Baremetal compile lane: `linx64-linx-none-elf`.
+- Current branch note: the pinned Bisheng compiler lane does not register `linx32-linx-none-elf`; older `linx32` references remain historical bring-up evidence only.
 - Hosted Linux musl lane: `linx64-unknown-linux-musl`.
 - Hosted Linux glibc lane (follow-up): `linx64-unknown-linux-gnu`.
 
@@ -97,4 +98,3 @@ Musl C++ runtime smoke gate:
 ```bash
 python3 avs/qemu/run_musl_smoke.py --mode phase-b --link both --sample cpp17_smoke
 ```
-

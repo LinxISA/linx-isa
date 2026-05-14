@@ -125,28 +125,6 @@
       "freshness_hours": 24
     },
     {
-      "gate_key": "Compiler::AVS compile suites linx32",
-      "domain": "Compiler",
-      "owner": "llvm",
-      "command": "cd \"$ROOT/avs/compiler/linx-llvm/tests\" && CLANG=\"$CLANG\" TARGET=\"linx32-linx-none-elf\" OUT_DIR=\"$ROOT/avs/compiler/linx-llvm/tests/out-linx32\" ./run.sh",
-      "profiles": ["release-strict"],
-      "tiers": ["pr", "nightly"],
-      "required": true,
-      "artifacts": ["avs/compiler/linx-llvm/tests/out-linx32"],
-      "freshness_hours": 24
-    },
-    {
-      "gate_key": "Compiler::Coverage 100% linx32",
-      "domain": "Compiler",
-      "owner": "llvm",
-      "command": "python3 \"$ROOT/avs/compiler/linx-llvm/tests/analyze_coverage.py\" --out-dir \"$ROOT/avs/compiler/linx-llvm/tests/out-linx32\" --fail-under \"${COVERAGE_FAIL_UNDER:-100}\"",
-      "profiles": ["release-strict"],
-      "tiers": ["pr", "nightly"],
-      "required": true,
-      "artifacts": ["avs/compiler/linx-llvm/tests/out-linx32/coverage.json"],
-      "freshness_hours": 24
-    },
-    {
       "gate_key": "Emulator::QEMU strict system",
       "domain": "Emulator",
       "owner": "qemu",
