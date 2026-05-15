@@ -19,14 +19,14 @@ This repo expects an LLVM build configured with:
 - `LLVM_EXPERIMENTAL_TARGETS_TO_BUILD=LinxISA`
 - `LLVM_TARGETS_TO_BUILD=AArch64` (host convenience; can be broader)
 
-Example build dir used in this workspace:
+Example build dir:
 
-- `/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang`
+- `compiler/llvm/build-linxisa-clang`
 
 Build:
 
 ```bash
-cmake --build /Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang --target clang llc llvm-objdump llvm-objcopy llvm-readobj -j 12
+cmake --build compiler/llvm/build-linxisa-clang --target clang llc llvm-objdump llvm-objcopy llvm-readobj -j 12
 ```
 
 ## What codegen emits (Block ISA + ClockHands)
@@ -80,7 +80,7 @@ The compile tests live in `avs/compiler/linx-llvm/tests` and generate:
 Run (linx64):
 
 ```bash
-CLANG=/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/clang ./avs/compiler/linx-llvm/tests/run.sh
+CLANG=compiler/llvm/build-linxisa-clang/bin/clang ./avs/compiler/linx-llvm/tests/run.sh
 ```
 
 The AVS runner now validates the requested target up front and errors out immediately if the compiler does not register it.

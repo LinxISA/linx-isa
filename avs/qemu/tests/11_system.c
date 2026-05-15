@@ -20,6 +20,10 @@
 
 /* Scratch SSRs (non-privileged) used for test communication. */
 enum {
+    SSR_TIME = 0x0010,
+    SSR_CSTATE = 0x0020,
+    SSR_CYCLE = 0x0C00,
+
     SSR_SCRATCH0 = 0x0030, /* general R/W */
     SSR_SYSCALL_SEEN = 0x0031,
     SSR_IRQ_SEEN = 0x0032,
@@ -170,27 +174,27 @@ static inline uint64_t ssrswap_uimm(uint32_t ssrid, uint64_t value)
 static inline uint64_t ssrget_time_symbol(void)
 {
     uint64_t out;
-    __asm__ volatile("ssrget 0x0010, ->%0" : "=r"(out) : : "memory");
+    __asm__ volatile("ssrget %1, ->%0" : "=r"(out) : "i"(SSR_TIME) : "memory");
     return out;
 }
 
 static inline uint64_t ssrget_cycle_symbol(void)
 {
     uint64_t out;
-    __asm__ volatile("ssrget 0x0c00, ->%0" : "=r"(out) : : "memory");
+    __asm__ volatile("ssrget %1, ->%0" : "=r"(out) : "i"(SSR_CYCLE) : "memory");
     return out;
 }
 
 static inline uint64_t ssrget_cstate_symbol(void)
 {
     uint64_t out;
-    __asm__ volatile("ssrget 0x0020, ->%0" : "=r"(out) : : "memory");
+    __asm__ volatile("ssrget %1, ->%0" : "=r"(out) : "i"(SSR_CSTATE) : "memory");
     return out;
 }
 
 static inline void ssrset_cstate_symbol(uint64_t value)
 {
-    __asm__ volatile("ssrset %0, 0x0020" : : "r"(value) : "memory");
+    __asm__ volatile("ssrset %0, %1" : : "r"(value), "i"(SSR_CSTATE) : "memory");
 }
 
 static inline uint64_t hl_ssrget_uimm24(uint32_t ssrid)
