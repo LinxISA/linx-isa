@@ -107,7 +107,7 @@ Run the current in-repo compiler gate:
 
 ```bash
 cd avs/compiler/linx-llvm/tests
-CLANG=/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/clang ./run.sh
+CLANG=compiler/llvm/build-linxisa-clang/bin/clang ./run.sh
 ```
 
 Analyze coverage:

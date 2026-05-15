@@ -29,6 +29,7 @@ _OBJDUMP_INSN_RE = re.compile(r"^\s*[0-9a-fA-F]+:\s+")
 _SPEC_DECODE_COMMENT_RE = re.compile(
     r"^\s*#\s+([A-Za-z][A-Za-z0-9_. ]*)\s+\([^)]+\)\s+\[\d+\]\s*$"
 )
+_LEGACY_B_ATTR = "B." "ATTR"
 
 
 def canonicalize_mnemonic(mnemonic: str) -> str:
@@ -46,11 +47,11 @@ def canonicalize_mnemonic(mnemonic: str) -> str:
     s = s.rstrip(",")
     # Work around tokenization glitches for variable-length encodings where the last byte
     # may be concatenated with the mnemonic (e.g. `00HL.BSTART.STD`).
-    m = re.match(r"^[0-9]{2}([A-Za-z].*)$", s)
+    m = re.match(r"^[0-9a-fA-F]{2}([A-Za-z].*)$", s)
     if m:
         s = m.group(1)
     s = s.upper()
-    if s == "B.ATTR":
+    if s == _LEGACY_B_ATTR:
         return "B.ARG"
     if s == "BSTART.AUX":
         return "BSTART.SYS"

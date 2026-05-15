@@ -11,9 +11,9 @@ Key constraints:
 
 ## Requirements
 
-- LinxISA Clang: `/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/clang`
-- LinxISA LLD: `/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/ld.lld`
-- QEMU: `/Users/zhoubot/linx-isa/emulator/qemu/build/qemu-system-linx64`
+- LinxISA Clang: `compiler/llvm/build-linxisa-clang/bin/clang`
+- LinxISA LLD: `compiler/llvm/build-linxisa-clang/bin/ld.lld`
+- QEMU: `emulator/qemu/build/qemu-system-linx64`
 
 Override paths with environment variables:
 
@@ -26,7 +26,7 @@ export QEMU=/path/to/qemu-system-linx64
 ## Run
 
 ```bash
-cd /Users/zhoubot/linx-isa/avs/qemu
+cd avs/qemu
 ./run_tests.sh
 ```
 
