@@ -11,99 +11,99 @@
 |`0`
 |`R0`
 |`zero`
-|常数0  __(zero, r0)__
+|Constant zero  __(zero, r0)__
 |`1`
 |`R1`
 |`sp`
-|栈指针寄存器  __(sp, r1)__
+|Stack pointer register  __(sp, r1)__
 |`2`
 |`R2`
 |`a0`
-|函数参数0  __(a0, r2)__
+|Function argument 0  __(a0, r2)__
 |`3`
 |`R3`
 |`a1`
-|函数参数1  __(a1, r3)__
+|Function argument 1  __(a1, r3)__
 |`4`
 |`R4`
 |`a2`
-|函数参数2  __(a2, r4)__
+|Function argument 2  __(a2, r4)__
 |`5`
 |`R5`
 |`a3`
-|函数参数3  __(a3, r5)__
+|Function argument 3  __(a3, r5)__
 |`6`
 |`R6`
 |`a4`
-|函数参数4  __(a4, r6)__
+|Function argument 4  __(a4, r6)__
 |`7`
 |`R7`
 |`a5`
-|函数参数5  __(a5, r7)__
+|Function argument 5  __(a5, r7)__
 |`8`
 |`R8`
 |`a6`
-|函数参数6  __(a6, r8)__
+|Function argument 6  __(a6, r8)__
 |`9`
 |`R9`
 |`a7`
-|函数参数7  __(a7, r9)__
+|Function argument 7  __(a7, r9)__
 |`10`
 |`R10`
 |`ra`
-|函数返回值  __(ra, r10)__
+|Function return value  __(ra, r10)__
 |`11`
 |`R11`
 |`s0`
-|栈帧寄存器/callee-save寄存器0  __(s0, r11, fp)__
+|Frame pointer / callee-saved register 0  __(s0, r11, fp)__
 |`12`
 |`R12`
 |`s1`
-|callee-save寄存器1  __(s1, r12)__
+|Callee-saved register 1  __(s1, r12)__
 |`13`
 |`R13`
 |`s2`
-|callee-save寄存器2  __(s2, r13)__
+|Callee-saved register 2  __(s2, r13)__
 |`14`
 |`R14`
 |`s3`
-|callee-save寄存器3  __(s3, r14)__
+|Callee-saved register 3  __(s3, r14)__
 |`15`
 |`R15`
 |`s4`
-|callee-save寄存器4  __(s4, r15)__
+|Callee-saved register 4  __(s4, r15)__
 |`16`
 |`R16`
 |`s5`
-|callee-save寄存器5  __(s5, r16)__
+|Callee-saved register 5  __(s5, r16)__
 |`17`
 |`R17`
 |`s6`
-|callee-save寄存器6  __(s6, r17)__
+|Callee-saved register 6  __(s6, r17)__
 |`18`
 |`R18`
 |`s7`
-|callee-save寄存器7  __(s7, r18)__
+|Callee-saved register 7  __(s7, r18)__
 |`19`
 |`R19`
 |`s8`
-|callee-save寄存器8  __(s8, r19)__
+|Callee-saved register 8  __(s8, r19)__
 |`20`
 |`R20`
 |`x0`
-|caller-save寄存器0  __(x0, r20)__
+|Caller-saved register 0  __(x0, r20)__
 |`21`
 |`R21`
 |`x1`
-|caller-save寄存器1  __(x1, r21)__
+|Caller-saved register 1  __(x1, r21)__
 |`22`
 |`R22`
 |`x2`
-|caller-save寄存器2  __(x2, r22)__
+|Caller-saved register 2  __(x2, r22)__
 |`23`
 |`R23`
 |`x3`
-|caller-save寄存器3  __(x3, r23)__
+|Caller-saved register 3  __(x3, r23)__
 |===
 
 [[reg5-tile-registers-t-u-m-n]]
@@ -116,259 +116,259 @@
 |`24`
 |`T#1`
 |`t#1`
-|T结果队列前第1条指令结果  __(t#1)__
+|T result queue entry 1  __(t#1)__
 |`25`
 |`T#2`
 |`t#2`
-|T结果队列前第2条指令结果  __(t#2)__
+|T result queue entry 2  __(t#2)__
 |`26`
 |`T#3`
 |`t#3`
-|T结果队列前第3条指令结果  __(t#3)__
+|T result queue entry 3  __(t#3)__
 |`27`
 |`T#4`
 |`t#4`
-|T结果队列前第4条指令结果  __(t#4)__
+|T result queue entry 4  __(t#4)__
 |`28`
 |`T#5`
 |`t#5`
-|T结果队列前第5条指令结果  __(t#5)__
+|T result queue entry 5  __(t#5)__
 |`29`
 |`T#6`
 |`t#6`
-|T结果队列前第6条指令结果  __(t#6)__
+|T result queue entry 6  __(t#6)__
 |`30`
 |`T#7`
 |`t#7`
-|T结果队列前第7条指令结果  __(t#7)__
+|T result queue entry 7  __(t#7)__
 |`31`
 |`T#8`
 |`t#8`
-|T结果队列前第8条指令结果  __(t#8)__
+|T result queue entry 8  __(t#8)__
 |`32`
 |`T#9`
 |`t#9`
-|T结果队列前第9条指令结果  __(t#9)__
+|T result queue entry 9  __(t#9)__
 |`33`
 |`T#10`
 |`t#10`
-|T结果队列前第10条指令结果  __(t#10)__
+|T result queue entry 10  __(t#10)__
 |`34`
 |`T#11`
 |`t#11`
-|T结果队列前第11条指令结果  __(t#11)__
+|T result queue entry 11  __(t#11)__
 |`35`
 |`T#12`
 |`t#12`
-|T结果队列前第12条指令结果  __(t#12)__
+|T result queue entry 12  __(t#12)__
 |`36`
 |`T#13`
 |`t#13`
-|T结果队列前第13条指令结果  __(t#13)__
+|T result queue entry 13  __(t#13)__
 |`37`
 |`T#14`
 |`t#14`
-|T结果队列前第14条指令结果  __(t#14)__
+|T result queue entry 14  __(t#14)__
 |`38`
 |`T#15`
 |`t#15`
-|T结果队列前第15条指令结果  __(t#15)__
+|T result queue entry 15  __(t#15)__
 |`39`
 |`T#16`
 |`t#16`
-|T结果队列前第16条指令结果  __(t#16)__
+|T result queue entry 16  __(t#16)__
 |`40`
 |`U#1`
 |`u#1`
-|U结果队列前第1条指令结果  __(u#1)__
+|U result queue entry 1  __(u#1)__
 |`41`
 |`U#2`
 |`u#2`
-|U结果队列前第2条指令结果  __(u#2)__
+|U result queue entry 2  __(u#2)__
 |`42`
 |`U#3`
 |`u#3`
-|U结果队列前第3条指令结果  __(u#3)__
+|U result queue entry 3  __(u#3)__
 |`43`
 |`U#4`
 |`u#4`
-|U结果队列前第4条指令结果  __(u#4)__
+|U result queue entry 4  __(u#4)__
 |`44`
 |`U#5`
 |`u#5`
-|U结果队列前第5条指令结果  __(u#5)__
+|U result queue entry 5  __(u#5)__
 |`45`
 |`U#6`
 |`u#6`
-|U结果队列前第6条指令结果  __(u#6)__
+|U result queue entry 6  __(u#6)__
 |`46`
 |`U#7`
 |`u#7`
-|U结果队列前第7条指令结果  __(u#7)__
+|U result queue entry 7  __(u#7)__
 |`47`
 |`U#8`
 |`u#8`
-|U结果队列前第8条指令结果  __(u#8)__
+|U result queue entry 8  __(u#8)__
 |`48`
 |`U#9`
 |`u#9`
-|U结果队列前第9条指令结果  __(u#9)__
+|U result queue entry 9  __(u#9)__
 |`49`
 |`U#10`
 |`u#10`
-|U结果队列前第10条指令结果  __(u#10)__
+|U result queue entry 10  __(u#10)__
 |`50`
 |`U#11`
 |`u#11`
-|U结果队列前第11条指令结果  __(u#11)__
+|U result queue entry 11  __(u#11)__
 |`51`
 |`U#12`
 |`u#12`
-|U结果队列前第12条指令结果  __(u#12)__
+|U result queue entry 12  __(u#12)__
 |`52`
 |`U#13`
 |`u#13`
-|U结果队列前第13条指令结果  __(u#13)__
+|U result queue entry 13  __(u#13)__
 |`53`
 |`U#14`
 |`u#14`
-|U结果队列前第14条指令结果  __(u#14)__
+|U result queue entry 14  __(u#14)__
 |`54`
 |`U#15`
 |`u#15`
-|U结果队列前第15条指令结果  __(u#15)__
+|U result queue entry 15  __(u#15)__
 |`55`
 |`U#16`
 |`u#16`
-|U结果队列前第16条指令结果  __(u#16)__
+|U result queue entry 16  __(u#16)__
 |`56`
 |`M#1`
 |`m#1`
-|M结果队列前第1条指令结果  __(m#1)__
+|M result queue entry 1  __(m#1)__
 |`57`
 |`M#2`
 |`m#2`
-|M结果队列前第2条指令结果  __(m#2)__
+|M result queue entry 2  __(m#2)__
 |`58`
 |`M#3`
 |`m#3`
-|M结果队列前第3条指令结果  __(m#3)__
+|M result queue entry 3  __(m#3)__
 |`59`
 |`M#4`
 |`m#4`
-|M结果队列前第4条指令结果  __(m#4)__
+|M result queue entry 4  __(m#4)__
 |`60`
 |`M#5`
 |`m#5`
-|M结果队列前第5条指令结果  __(m#5)__
+|M result queue entry 5  __(m#5)__
 |`61`
 |`M#6`
 |`m#6`
-|M结果队列前第6条指令结果  __(m#6)__
+|M result queue entry 6  __(m#6)__
 |`62`
 |`M#7`
 |`m#7`
-|M结果队列前第7条指令结果  __(m#7)__
+|M result queue entry 7  __(m#7)__
 |`63`
 |`M#8`
 |`m#8`
-|M结果队列前第8条指令结果  __(m#8)__
+|M result queue entry 8  __(m#8)__
 |`64`
 |`M#9`
 |`m#9`
-|M结果队列前第9条指令结果  __(m#9)__
+|M result queue entry 9  __(m#9)__
 |`65`
 |`M#10`
 |`m#10`
-|M结果队列前第10条指令结果  __(m#10)__
+|M result queue entry 10  __(m#10)__
 |`66`
 |`M#11`
 |`m#11`
-|M结果队列前第11条指令结果  __(m#11)__
+|M result queue entry 11  __(m#11)__
 |`67`
 |`M#12`
 |`m#12`
-|M结果队列前第12条指令结果  __(m#12)__
+|M result queue entry 12  __(m#12)__
 |`68`
 |`M#13`
 |`m#13`
-|M结果队列前第13条指令结果  __(m#13)__
+|M result queue entry 13  __(m#13)__
 |`69`
 |`M#14`
 |`m#14`
-|M结果队列前第14条指令结果  __(m#14)__
+|M result queue entry 14  __(m#14)__
 |`70`
 |`M#15`
 |`m#15`
-|M结果队列前第15条指令结果  __(m#15)__
+|M result queue entry 15  __(m#15)__
 |`71`
 |`M#16`
 |`m#16`
-|M结果队列前第16条指令结果  __(m#16)__
+|M result queue entry 16  __(m#16)__
 |`72`
 |`N#1`
 |`n#1`
-|N结果队列前第1条指令结果  __(n#1)__
+|N result queue entry 1  __(n#1)__
 |`73`
 |`N#2`
 |`n#2`
-|N结果队列前第2条指令结果  __(n#2)__
+|N result queue entry 2  __(n#2)__
 |`74`
 |`N#3`
 |`n#3`
-|N结果队列前第3条指令结果  __(n#3)__
+|N result queue entry 3  __(n#3)__
 |`75`
 |`N#4`
 |`n#4`
-|N结果队列前第4条指令结果  __(n#4)__
+|N result queue entry 4  __(n#4)__
 |`76`
 |`N#5`
 |`n#5`
-|N结果队列前第5条指令结果  __(n#5)__
+|N result queue entry 5  __(n#5)__
 |`77`
 |`N#6`
 |`n#6`
-|N结果队列前第6条指令结果  __(n#6)__
+|N result queue entry 6  __(n#6)__
 |`78`
 |`N#7`
 |`n#7`
-|N结果队列前第7条指令结果  __(n#7)__
+|N result queue entry 7  __(n#7)__
 |`79`
 |`N#8`
 |`n#8`
-|N结果队列前第8条指令结果  __(n#8)__
+|N result queue entry 8  __(n#8)__
 |`80`
 |`N#9`
 |`n#9`
-|N结果队列前第9条指令结果  __(n#9)__
+|N result queue entry 9  __(n#9)__
 |`81`
 |`N#10`
 |`n#10`
-|N结果队列前第10条指令结果  __(n#10)__
+|N result queue entry 10  __(n#10)__
 |`82`
 |`N#11`
 |`n#11`
-|N结果队列前第11条指令结果  __(n#11)__
+|N result queue entry 11  __(n#11)__
 |`83`
 |`N#12`
 |`n#12`
-|N结果队列前第12条指令结果  __(n#12)__
+|N result queue entry 12  __(n#12)__
 |`84`
 |`N#13`
 |`n#13`
-|N结果队列前第13条指令结果  __(n#13)__
+|N result queue entry 13  __(n#13)__
 |`85`
 |`N#14`
 |`n#14`
-|N结果队列前第14条指令结果  __(n#14)__
+|N result queue entry 14  __(n#14)__
 |`86`
 |`N#15`
 |`n#15`
-|N结果队列前第15条指令结果  __(n#15)__
+|N result queue entry 15  __(n#15)__
 |`87`
 |`N#16`
 |`n#16`
-|N结果队列前第16条指令结果  __(n#16)__
+|N result queue entry 16  __(n#16)__
 |===
 
 [[reg5-special-acc-and-s]]
@@ -381,11 +381,11 @@
 |`88`
 |`ACC`
 |`acc`
-|矩阵乘累加寄存器  __(acc)__
+|Matrix multiply-accumulate register  __(acc)__
 |`89`
 |`S`
 |`s`
-|栈空间寄存器  __(s)__
+|Stack-space register  __(s)__
 |===
 
 [[reg5-scalar-block-layer-2-aliases]]
@@ -398,35 +398,35 @@
 |`90`
 |`TR1`
 |`tr1`
-|标量T结果队列前第一条指令结果  __(t#1)__
+|Scalar T result queue alias 1  __(t#1)__
 |`91`
 |`TR2`
 |`tr2`
-|标量T结果队列前第二条指令结果  __(t#2)__
+|Scalar T result queue alias 2  __(t#2)__
 |`92`
 |`TR3`
 |`tr3`
-|标量T结果队列前第三条指令结果  __(t#3)__
+|Scalar T result queue alias 3  __(t#3)__
 |`93`
 |`TR4`
 |`tr4`
-|标量T结果队列前第四条指令结果  __(t#4)__
+|Scalar T result queue alias 4  __(t#4)__
 |`94`
 |`UR1`
 |`ur1`
-|标量U结果队列前第一条指令结果  __(u#1)__
+|Scalar U result queue alias 1  __(u#1)__
 |`95`
 |`UR2`
 |`ur2`
-|标量U结果队列前第二条指令结果  __(u#2)__
+|Scalar U result queue alias 2  __(u#2)__
 |`96`
 |`UR3`
 |`ur3`
-|标量U结果队列前第三条指令结果  __(u#3, u)__
+|Scalar U result queue alias 3  __(u#3, u)__
 |`97`
 |`UR4`
 |`ur4`
-|标量U结果队列前第四条指令结果  __(u#4, t)__
+|Scalar U result queue alias 4  __(u#4, t)__
 |===
 
 [[reg5-data-block-layer-2-aliases]]
@@ -439,67 +439,67 @@
 |`98`
 |`VTR1`
 |`vtr1`
-|向量T结果队列前第一条指令结果  __(vt#1)__
+|Vector T result queue alias 1  __(vt#1)__
 |`99`
 |`VTR2`
 |`vtr2`
-|向量T结果队列前第二条指令结果  __(vt#2)__
+|Vector T result queue alias 2  __(vt#2)__
 |`100`
 |`VTR3`
 |`vtr3`
-|向量T结果队列前第三条指令结果  __(vt#3)__
+|Vector T result queue alias 3  __(vt#3)__
 |`101`
 |`VTR4`
 |`vtr4`
-|向量T结果队列前第四条指令结果  __(vt#4)__
+|Vector T result queue alias 4  __(vt#4)__
 |`102`
 |`VUR1`
 |`vur1`
-|向量U结果队列前第一条指令结果  __(vu#1)__
+|Vector U result queue alias 1  __(vu#1)__
 |`103`
 |`VUR2`
 |`vur2`
-|向量U结果队列前第二条指令结果  __(vu#2)__
+|Vector U result queue alias 2  __(vu#2)__
 |`104`
 |`VUR3`
 |`vur3`
-|向量U结果队列前第三条指令结果  __(vu#3)__
+|Vector U result queue alias 3  __(vu#3)__
 |`105`
 |`VUR4`
 |`vur4`
-|向量U结果队列前第四条指令结果  __(vu#4)__
+|Vector U result queue alias 4  __(vu#4)__
 |`106`
 |`VMR1`
 |`vmr1`
-|向量M结果队列前第一条指令结果  __(vm#1)__
+|Vector M result queue alias 1  __(vm#1)__
 |`107`
 |`VMR2`
 |`vmr2`
-|向量M结果队列前第二条指令结果  __(vm#2)__
+|Vector M result queue alias 2  __(vm#2)__
 |`108`
 |`VMR3`
 |`vmr3`
-|向量M结果队列前第三条指令结果  __(vm#3)__
+|Vector M result queue alias 3  __(vm#3)__
 |`109`
 |`VMR4`
 |`vmr4`
-|向量M结果队列前第四条指令结果  __(vm#4)__
+|Vector M result queue alias 4  __(vm#4)__
 |`110`
 |`VNR1`
 |`vnr1`
-|向量N结果队列前第一条指令结果  __(vn#1)__
+|Vector N result queue alias 1  __(vn#1)__
 |`111`
 |`VNR2`
 |`vnr2`
-|向量N结果队列前第二条指令结果  __(vn#2)__
+|Vector N result queue alias 2  __(vn#2)__
 |`112`
 |`VNR3`
 |`vnr3`
-|向量N结果队列前第三条指令结果  __(vn#3)__
+|Vector N result queue alias 3  __(vn#3)__
 |`113`
 |`VNR4`
 |`vnr4`
-|向量N结果队列前第四条指令结果  __(vn#4)__
+|Vector N result queue alias 4  __(vn#4)__
 |===
 
 [[reg5-io-parameters-shader-kernel-canonical]]
@@ -512,67 +512,67 @@
 |`114`
 |`RI0`
 |`ri0`
-|输入形参寄存器0（标量）  __(ri0)__
+|Scalar input parameter register 0  __(ri0)__
 |`115`
 |`RI1`
 |`ri1`
-|输入形参寄存器1（标量）  __(ri1)__
+|Scalar input parameter register 1  __(ri1)__
 |`116`
 |`RI2`
 |`ri2`
-|输入形参寄存器2（标量）  __(ri2)__
+|Scalar input parameter register 2  __(ri2)__
 |`117`
 |`RI3`
 |`ri3`
-|输入形参寄存器3（标量）  __(ri3)__
+|Scalar input parameter register 3  __(ri3)__
 |`118`
 |`RI4`
 |`ri4`
-|输入形参寄存器4（标量）  __(ri4)__
+|Scalar input parameter register 4  __(ri4)__
 |`119`
 |`RI5`
 |`ri5`
-|输入形参寄存器5（标量）  __(ri5)__
+|Scalar input parameter register 5  __(ri5)__
 |`120`
 |`RI6`
 |`ri6`
-|输入形参寄存器6（标量）  __(ri6)__
+|Scalar input parameter register 6  __(ri6)__
 |`121`
 |`RI7`
 |`ri7`
-|输入形参寄存器7（标量）  __(ri7)__
+|Scalar input parameter register 7  __(ri7)__
 |`122`
 |`RI8`
 |`ri8`
-|输入形参寄存器8（标量）  __(ri8)__
+|Scalar input parameter register 8  __(ri8)__
 |`123`
 |`RI9`
 |`ri9`
-|输入形参寄存器9（标量）  __(ri9)__
+|Scalar input parameter register 9  __(ri9)__
 |`124`
 |`RI10`
 |`ri10`
-|输入形参寄存器10（标量）  __(ri10)__
+|Scalar input parameter register 10  __(ri10)__
 |`125`
 |`RI11`
 |`ri11`
-|输入形参寄存器11（标量）  __(ri11)__
+|Scalar input parameter register 11  __(ri11)__
 |`126`
 |`RO0`
 |`ro0`
-|输出形参寄存器0（标量）  __(ro0)__
+|Scalar output parameter register 0  __(ro0)__
 |`127`
 |`RO1`
 |`ro1`
-|输出形参寄存器1（标量）  __(ro1)__
+|Scalar output parameter register 1  __(ro1)__
 |`128`
 |`RO2`
 |`ro2`
-|输出形参寄存器2（标量）  __(ro2)__
+|Scalar output parameter register 2  __(ro2)__
 |`129`
 |`RO3`
 |`ro3`
-|输出形参寄存器3（标量）  __(ro3)__
+|Scalar output parameter register 3  __(ro3)__
 |===
 
 [[reg5-loop-control]]
@@ -585,27 +585,27 @@
 |`130`
 |`LB0`
 |`lb0`
-|块体迭代上限寄存器0  __(lb0)__
+|Block iteration bound register 0  __(lb0)__
 |`131`
 |`LB1`
 |`lb1`
-|块体迭代上限寄存器1  __(lb1)__
+|Block iteration bound register 1  __(lb1)__
 |`132`
 |`LB2`
 |`lb2`
-|块体迭代上限寄存器2  __(lb2)__
+|Block iteration bound register 2  __(lb2)__
 |`133`
 |`LC0`
 |`lc0`
-|块体迭代次数寄存器0  __(lc0)__
+|Block iteration count register 0  __(lc0)__
 |`134`
 |`LC1`
 |`lc1`
-|块体迭代次数寄存器1  __(lc1)__
+|Block iteration count register 1  __(lc1)__
 |`135`
 |`LC2`
 |`lc2`
-|块体迭代次数寄存器2  __(lc2)__
+|Block iteration count register 2  __(lc2)__
 |===
 
 [[reg5-exec-mask]]
@@ -618,5 +618,5 @@
 |`136`
 |`P`
 |`p`
-|掩码寄存器  __(p)__
+|EXEC mask register  __(p)__
 |===

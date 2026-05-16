@@ -40,6 +40,11 @@ Returning call headers are architecturally fused:
 
 - `BSTART.CALL + C.SETRET` for compressed/direct call headers.
 - `BSTART.CALL + SETRET` for non-compressed forms.
+- Source-level direct-call assembly should use fused `..., ra=<label>` syntax.
+- Lowered object code may still spell that pair as explicit adjacent
+  `setret/c.setret`.
+- Object disassembly may still show the lowered `CALL` plus `setret/c.setret`
+  pair after MC lowering or relaxation.
 
 Adjacency rule for returning calls:
 
@@ -56,15 +61,13 @@ Non-returning call headers:
 Required fused form:
 
 ```asm
-BSTART.CALL, callee
-c.setret .Lret, ->ra
+BSTART.STD CALL, callee, ra=.Lret
 ```
 
 Non-fallthrough return form is valid and common:
 
 ```asm
-BSTART.CALL, callee
-setret .Ljoin, ->ra
+BSTART.STD CALL, callee, ra=.Ljoin
 ... call block body ...
 C.BSTOP
 
@@ -83,8 +86,11 @@ Setret width selection:
 
 Current compiler branch note:
 
-- the Bisheng `compiler/llvm` branch validates returning call headers through
-  adjacent `c.setret` / `setret` forms;
+- the Bisheng `compiler/llvm` branch emits fused `ra=` call headers in textual
+  assembly and preserves the paired return-address relocation in objects;
+- handwritten `ICALL` still does not accept fused `ra=` source syntax on this
+  branch, so explicit adjacent `setret/c.setret` remains the portable source
+  form there;
 - do not assume `hl.setret` is available in portable compiler/runtime flows
   unless a dedicated MC/backend test for that branch proves it.
 

@@ -16,13 +16,11 @@ _start:
 	addi	a1, zero, 0
 	
 	/* Call main */
-	BSTART	CALL, main
-	c.setret	.L_after_main,	->ra
+	BSTART.STD	CALL, main, ra=.L_after_main
 	
 .L_after_main:
 	/* main() returned; a0 holds the exit code. */
-	BSTART	CALL, __linx_exit
-	c.setret	.L_after_exit,	->ra
+	BSTART.STD	CALL, __linx_exit, ra=.L_after_exit
 
 .L_after_exit:
 	/* __linx_exit is noreturn, but if it ever returns, halt. */

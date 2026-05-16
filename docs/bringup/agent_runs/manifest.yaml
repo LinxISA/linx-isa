@@ -469,8 +469,8 @@
   ],
   "checklist_id_map": {
     "architecture_docs.md": ["ARCH-001", "ARCH-002", "ARCH-003", "ARCH-004"],
-    "compiler_llvm.md": ["LLVM-001", "LLVM-002", "LLVM-003", "LLVM-004", "LLVM-005", "LLVM-006"],
-    "emulator_qemu.md": ["QEMU-001", "QEMU-002", "QEMU-003", "QEMU-004", "QEMU-005", "QEMU-006", "QEMU-007"],
+    "compiler_llvm.md": ["LLVM-001", "LLVM-002", "LLVM-003", "LLVM-004", "LLVM-005", "LLVM-006", "LLVM-007"],
+    "emulator_qemu.md": ["QEMU-001", "QEMU-002", "QEMU-003", "QEMU-004", "QEMU-005", "QEMU-006", "QEMU-007", "QEMU-008"],
     "kernel_linux.md": ["LINUX-001", "LINUX-002", "LINUX-003", "LINUX-004", "LINUX-005"],
     "libc_runtime.md": ["LIBC-001", "LIBC-002", "LIBC-003", "LIBC-004", "LIBC-005", "LIBC-006"],
     "linxcore_rtl.md": ["LC-001", "LC-002", "LC-003", "LC-004", "LC-005", "LC-006", "LC-007", "LC-008", "LC-009"],

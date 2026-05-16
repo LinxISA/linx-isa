@@ -696,14 +696,16 @@ invalid/reserved encoding and as the block-stop marker in current conventions.
 
 In the current toolchain bring-up:
 
-* Calls are represented as a block transition (`BSTART CALL, <target>`).
-* The return address in `ra` is materialized using `addpc/hl.addpc` or `setret/c.setret` patterns.
+* Calls are represented as a block transition (`BSTART.STD CALL, <target>`).
+* Source-level direct calls should use the fused form `BSTART.STD CALL, <target>, ra=<return_label>`.
+* Lowered object code may materialize the return address in `ra` using adjacent `addpc/hl.addpc` or `setret/c.setret`
+  patterns.
 * `FRET.STK` is treated as a `ret`-class encoding extension by some tooling (e.g. callgraph analysis).
 
 **Constraint (call header pairing):**
 
 When `SETRET`/`C.SETRET` is used to materialize the return address for a call transition, it must appear **immediately
-after** the call-type block start marker (e.g. `BSTART CALL, <target>` / `C.BSTART CALL`). Tooling and hardware may
+after** the call-type block start marker (e.g. `BSTART.STD CALL, <target>` / `C.BSTART CALL`). Tooling and hardware may
 treat the `BSTART`+`SETRET` pair as a fused call header; no other instruction may be placed between them.
 
 [[blockisa-examples]]
@@ -732,6 +734,5 @@ as `FENTRY`/`FRET.*`). Branching into the interior of another block is invalid a
 
 [source,asm]
 ----
-BSTART    CALL, callee
-c.setret  return_label, ->ra
+BSTART.STD    CALL, callee, ra=return_label
 ----

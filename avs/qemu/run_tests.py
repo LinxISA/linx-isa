@@ -31,11 +31,8 @@ def _load_pto_kernel_catalog() -> dict[str, str]:
     return catalog
 
 
-PTO_KERNEL_PATHS = _load_pto_kernel_catalog()
-
-
 def _pto_kernel_src(name: str) -> str:
-    rel_path = PTO_KERNEL_PATHS.get(name)
+    rel_path = _load_pto_kernel_catalog().get(name)
     if rel_path is None:
         raise SystemExit(f"error: missing PTO kernel in catalog: {name}")
     return str(Path("workloads") / "pto_kernels" / "kernels" / rel_path)
@@ -133,13 +130,16 @@ COMPILE_ONLY_SUITE_SOURCE_OVERRIDE: dict[str, str] = {
     "tile": "tests/10_tile_compile_smoke.cpp",
 }
 
-EXTRA_SOURCES_BY_SUITE: dict[str, list[str]] = {
-    "tile": [_pto_kernel_src(name) for name in PTO_TILE_KERNEL_NAMES],
-    "callret": [
-        "avs/qemu/tests/14_callret_templates.S",
-    ],
-    "pto_parity": [_pto_kernel_src(name) for name in PTO_PARITY_KERNEL_NAMES],
-}
+def _extra_sources_for_suite(suite: str) -> list[str]:
+    if suite == "tile":
+        return [_pto_kernel_src(name) for name in PTO_TILE_KERNEL_NAMES]
+    if suite == "callret":
+        return [
+            "avs/qemu/tests/14_callret_templates.S",
+        ]
+    if suite == "pto_parity":
+        return [_pto_kernel_src(name) for name in PTO_PARITY_KERNEL_NAMES]
+    return []
 
 LLC_PIPELINE_SUITES: set[str] = set()
 
@@ -684,7 +684,7 @@ def main(argv: list[str]) -> int:
             rel = COMPILE_ONLY_SUITE_SOURCE_OVERRIDE.get(suite, rel)
         add_source(SCRIPT_DIR / rel)
     for suite in selected:
-        for rel in EXTRA_SOURCES_BY_SUITE.get(suite, []):
+        for rel in _extra_sources_for_suite(suite):
             add_source(REPO_ROOT / rel)
     softfp_suites = {
         "float",

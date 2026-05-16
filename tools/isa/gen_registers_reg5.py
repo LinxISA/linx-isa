@@ -146,6 +146,77 @@ def _anchor(label: str) -> str:
     return f"reg5-{s}"
 
 
+_GPR_DESCRIPTIONS: Dict[str, str] = {
+    "R0": "Constant zero",
+    "R1": "Stack pointer register",
+    "R2": "Function argument 0",
+    "R3": "Function argument 1",
+    "R4": "Function argument 2",
+    "R5": "Function argument 3",
+    "R6": "Function argument 4",
+    "R7": "Function argument 5",
+    "R8": "Function argument 6",
+    "R9": "Function argument 7",
+    "R10": "Function return value",
+    "R11": "Frame pointer / callee-saved register 0",
+    "R12": "Callee-saved register 1",
+    "R13": "Callee-saved register 2",
+    "R14": "Callee-saved register 3",
+    "R15": "Callee-saved register 4",
+    "R16": "Callee-saved register 5",
+    "R17": "Callee-saved register 6",
+    "R18": "Callee-saved register 7",
+    "R19": "Callee-saved register 8",
+    "R20": "Caller-saved register 0",
+    "R21": "Caller-saved register 1",
+    "R22": "Caller-saved register 2",
+    "R23": "Caller-saved register 3",
+    "ACC": "Matrix multiply-accumulate register",
+    "S": "Stack-space register",
+    "P": "EXEC mask register",
+}
+
+
+def _english_desc(name: str, golden_desc: str) -> str:
+    if name in _GPR_DESCRIPTIONS:
+        return _GPR_DESCRIPTIONS[name]
+
+    m = re.fullmatch(r"([TUMN])#(\d+)", name)
+    if m:
+        bank, idx = m.groups()
+        return f"{bank} result queue entry {idx}"
+
+    m = re.fullmatch(r"([TU])R(\d+)", name)
+    if m:
+        bank, idx = m.groups()
+        return f"Scalar {bank} result queue alias {idx}"
+
+    m = re.fullmatch(r"V([TUMN])R(\d+)", name)
+    if m:
+        bank, idx = m.groups()
+        return f"Vector {bank} result queue alias {idx}"
+
+    m = re.fullmatch(r"RI(\d+)", name)
+    if m:
+        return f"Scalar input parameter register {m.group(1)}"
+
+    m = re.fullmatch(r"RO(\d+)", name)
+    if m:
+        return f"Scalar output parameter register {m.group(1)}"
+
+    m = re.fullmatch(r"LB(\d+)", name)
+    if m:
+        return f"Block iteration bound register {m.group(1)}"
+
+    m = re.fullmatch(r"LC(\d+)", name)
+    if m:
+        return f"Block iteration count register {m.group(1)}"
+
+    if golden_desc and all(ord(ch) < 128 for ch in golden_desc):
+        return golden_desc
+    return ""
+
+
 def generate(out_path: str) -> int:
     lines: List[str] = []
     lines.append("// Generated file; do not edit by hand.")
@@ -164,7 +235,7 @@ def generate(out_path: str) -> int:
         lines.append("")
 
         for name, asm, aliases in entries:
-            desc = _GOLDEN.get(name, "")
+            desc = _english_desc(name, _GOLDEN.get(name, ""))
             aliases_s = ", ".join(aliases)
             lines.append(f"|`{code}`")
             lines.append(f"|`{name}`")

@@ -46,10 +46,16 @@ def canonicalize_mnemonic(mnemonic: str) -> str:
     s = re.sub(r"\{[^}]*\}$", "", s)
     s = s.rstrip(",")
     # Work around tokenization glitches for variable-length encodings where the last byte
-    # may be concatenated with the mnemonic (e.g. `00HL.BSTART.STD`).
+    # may be concatenated with the mnemonic (e.g. `00HL.BSTART.STD` or `00FENTRY`).
+    # Keep the heuristic narrow so real mnemonics like `ACRC`, `ACRE`, and selector
+    # operands like `ACCCVT` are not mangled.
     m = re.match(r"^[0-9a-fA-F]{2}([A-Za-z].*)$", s)
     if m:
-        s = m.group(1)
+        candidate = m.group(1)
+        if "." in candidate or candidate.startswith(
+            ("BSTART", "BSTOP", "FENTRY", "FEXIT", "FRET")
+        ):
+            s = candidate
     s = s.upper()
     if s == _LEGACY_B_ATTR:
         return "B.ARG"

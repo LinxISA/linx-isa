@@ -2,11 +2,12 @@
   "failure_count": 0,
   "failures": [],
   "matrix": "/Users/zhoubot/linx-isa/avs/linx_avs_v1_test_matrix.yaml",
-  "required_count": 31,
+  "required_count": 32,
   "required_tests": [
     "AVS-TOOL-001",
     "AVS-TOOL-010",
     "AVS-TOOL-011",
+    "AVS-TOOL-012",
     "AVS-BLK-001",
     "AVS-BLK-004",
     "AVS-BLK-005",

@@ -1,0 +1,51 @@
+# HL.SWI.PO
+
+<div class="insn-header">
+
+<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/store_post_index.md">Store Post-Index</a> &nbsp;|&nbsp;
+<span class="ch-tag ch-tag-11">Ch 11</span>
+&nbsp; <strong>AGU — Address Generation Unit</strong> &nbsp;|&nbsp;
+**Length:** <code>48</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
+
+</div>
+
+## Assembly Syntax
+
+- `hl.swi.po SrcD, [SrcR, simm], ->{t, u, Rd}`
+
+## Encoding
+
+<div class="enc-diagram">
+
+<figure>
+<img src="../wavedrom/enc_hl_swi_po.svg" alt="HL.SWI.PO encoding" width="100%" />
+<figcaption>Bitfield encoding diagram. MSB is on the left, LSB on the right.</figcaption>
+</figure>
+
+</div>
+
+## Description
+
+[48-bit HL.] Stores a register value to memory.
+
+## Pseudocode (informative)
+
+```c
+Store(/* addr */, rs2);
+```
+
+## Encoding Notes
+
+_No additional encoding notes._
+
+## Full Catalog Forms
+
+| Assembly | Length | Decode |
+|----------|--------|--------|
+| `hl.swi.po SrcD, [SrcR, simm], ->{t, u, Rd}` | 48 | — |
+
+<div class="insn-nav">
+
+← [Store Post-Index](../groups/store_post_index.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+
+</div>

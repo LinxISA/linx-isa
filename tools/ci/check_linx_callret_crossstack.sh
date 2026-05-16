@@ -125,20 +125,25 @@ noreturn_targets = {
 addr_re = re.compile(r"^\s*([0-9a-fA-F]+):")
 sym_re = re.compile(r"^\s*([0-9a-fA-F]+)\s+<([^>]+)>:")
 section_re = re.compile(r"^Disassembly of section (.+):$")
-call_pat = re.compile(r"\b(?:HL\.)?BSTART(?:\.STD)?\s+CALL,")
+call_pat = re.compile(r"\b(?:HL\.|L\.)?BSTART(?:\.STD)?\s+CALL,")
 call_tgt_pat = re.compile(r"\bCALL,\s*([^,\s]+)")
 ra_pat = re.compile(r"\bra=([^,\s]+)")
-rel_re = re.compile(r"^\s*([0-9a-fA-F]+)\s+[0-9a-fA-F]+\s+(R_LINX_[A-Z0-9_]+)\b")
+setret_tgt_pat = re.compile(r"\b(?:hl\.|c\.)?setret\s+([^,\s]+)", re.IGNORECASE)
+rel_re = re.compile(r"^\s*([0-9a-fA-F]+)\s+[0-9a-fA-F]+\s+(R_[A-Za-z0-9_]+)\b")
 
 call_reloc_types = {
     "R_LINX_B17_PCREL",
     "R_LINX_B17_PLT",
     "R_LINX_HL_BSTART30_PCREL",
+    "R_LinxV5_17_BNEXT",
+    "R_LinxV5_48_BNEXT",
+    "R_LinxV5_64_BNEXT",
 }
 setret_reloc_types = {
     "R_LINX_CSETRET5_PCREL",
     "R_LINX_SETRET20_PCREL",
     "R_LINX_HL_SETRET32_PCREL",
+    "R_LinxV5_ADDPC",
 }
 
 local_syms: set[str] = set()
@@ -147,6 +152,7 @@ marker_locs: set[tuple[str, int]] = set()
 marker_index_by_section: dict[str, list[int]] = {}
 insn_sections: list[str] = []
 insn_offsets: list[int] = []
+insn_lines: list[str] = []
 calls = []
 current_section = ""
 for ln in dis_path.read_text(encoding="utf-8", errors="replace").splitlines():
@@ -167,6 +173,7 @@ for ln in dis_path.read_text(encoding="utf-8", errors="replace").splitlines():
     off = int(m.group(1), 16)
     insn_sections.append(current_section)
     insn_offsets.append(off)
+    insn_lines.append(ln.strip())
     low = ln.lower()
     is_marker = ("bstart" in low) or ("fentry" in low) or ("fexit" in low) or ("fret." in low)
     if is_marker:
@@ -215,6 +222,27 @@ def _next_marker_after(call_section: str, call_idx: int) -> tuple[str, int] | No
     return (insn_sections[next_idx], insn_offsets[next_idx])
 
 
+def _setret_reloc_offset(is_hl: bool, line: str) -> int:
+    if is_hl:
+        return 6
+    if "L.BSTART" in line:
+        return 8
+    return 4
+
+
+def _adjacent_setret_after(call_idx: int) -> tuple[str, str] | None:
+    next_idx = call_idx + 1
+    if next_idx >= len(insn_offsets):
+        return None
+    if insn_sections[next_idx] != insn_sections[call_idx]:
+        return None
+    line = insn_lines[next_idx]
+    m = setret_tgt_pat.search(line)
+    if not m:
+        return None
+    return (m.group(1), line)
+
+
 relocs: dict[int, set[str]] = {}
 for ln in rel_path.read_text(encoding="utf-8", errors="replace").splitlines():
     m = rel_re.match(ln)
@@ -226,14 +254,13 @@ for ln in rel_path.read_text(encoding="utf-8", errors="replace").splitlines():
 
 missing_call = []
 missing_setret = []
-missing_ra = []
+missing_return = []
 bad_call_target = []
 resolved_call_without_reloc = 0
 resolved_setret_without_reloc = 0
 for c in calls:
     off = c["off"]
     is_hl = c["is_hl"]
-    has_ra = c["has_ra"]
     idx = c["idx"]
     section = c["section"]
     line = c["line"]
@@ -252,13 +279,16 @@ for c in calls:
     if strict_relocs and call_tgt_loc is not None and call_tgt_loc not in marker_locs:
         bad_call_target.append((section, off, call_tgt_loc[1], line))
 
-    if not has_ra:
+    if not ra_tgt:
         if call_tgt in noreturn_targets:
             continue
-        missing_ra.append((off, line))
-        continue
+        adjacent_setret = _adjacent_setret_after(idx)
+        if adjacent_setret is None:
+            missing_return.append((off, line))
+            continue
+        ra_tgt = adjacent_setret[0]
 
-    setret_off = off + (6 if is_hl else 4)
+    setret_off = off + _setret_reloc_offset(is_hl, line)
     setret_has_reloc = bool(relocs.get(setret_off, set()) & setret_reloc_types)
     ra_tgt_loc = _resolve_target(ra_tgt, section)
     setret_has_resolved_target = ra_tgt_loc is not None
@@ -268,10 +298,10 @@ for c in calls:
         else:
             resolved_setret_without_reloc += 1
 
-if missing_ra or missing_call or missing_setret or bad_call_target:
+if missing_return or missing_call or missing_setret or bad_call_target:
     print(f"error: call/ret contract audit failed in {obj_path}", file=sys.stderr)
-    for off, line in missing_ra[:20]:
-        print(f"  missing fused ra=... @0x{off:x}: {line}", file=sys.stderr)
+    for off, line in missing_return[:20]:
+        print(f"  missing return-target evidence @0x{off:x}: {line}", file=sys.stderr)
     for off, line in missing_call[:20]:
         print(f"  missing call reloc @0x{off:x}: {line}", file=sys.stderr)
     for call_off, setret_off, line in missing_setret[:20]:
@@ -285,7 +315,7 @@ if missing_ra or missing_call or missing_setret or bad_call_target:
             file=sys.stderr,
         )
     if (
-        len(missing_ra) > 20
+        len(missing_return) > 20
         or len(missing_call) > 20
         or len(missing_setret) > 20
         or len(bad_call_target) > 20
@@ -322,11 +352,6 @@ if ! rg -q 'BSTART.*CALL' "$tmpdir/entry.dis"; then
   exit 1
 fi
 
-if rg 'BSTART.*CALL' "$tmpdir/entry.dis" | rg -vq 'ra='; then
-  echo "error: found BSTART CALL without fused return target (ra=...)" >&2
-  exit 1
-fi
-
 if [[ -n "$VMLINUX" && "${LINX_AUDIT_VMLINUX:-0}" == "1" ]]; then
   "$OBJDUMP" -d --triple=linx64 "$VMLINUX" >"$tmpdir/vmlinux.dis"
   if ! python3 - "$tmpdir/vmlinux.dis" <<'PY'
@@ -339,44 +364,47 @@ lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
 
 addr_re = re.compile(r"^\s*([0-9a-fA-F]+):\s+")
 call_re = re.compile(r"\bCALL,\s*0x([0-9a-fA-F]+)\b")
+ra_re = re.compile(r"\bra=([^,\s]+)")
+setret_re = re.compile(r"\b(?:hl\.|c\.)?setret\s+([^,\s]+)", re.IGNORECASE)
 
 marker_addrs: set[int] = set()
-calls: list[tuple[int, int, str]] = []
+insns: list[tuple[int, str]] = []
+calls: list[tuple[int, int, int, bool, str]] = []
 
 for ln in lines:
     m = addr_re.match(ln)
     if not m:
         continue
     addr = int(m.group(1), 16)
+    insns.append((addr, ln.strip()))
     low = ln.lower()
 
     if ("bstart" in low) or ("fentry" in low) or ("fexit" in low) or ("fret." in low):
         marker_addrs.add(addr)
 
     if "bstart" in low and "call" in low and "icall" not in low:
-        if "ra=" not in low:
-            calls.append((addr, -1, ln.strip()))
-            continue
         t = call_re.search(ln)
-        if t:
-            calls.append((addr, int(t.group(1), 16), ln.strip()))
+        if not t:
+            continue
+        calls.append((len(insns) - 1, addr, int(t.group(1), 16), bool(ra_re.search(ln)), ln.strip()))
 
 bad: list[tuple[int, int, str]] = []
-missing_ra: list[tuple[int, str]] = []
-for src, tgt, ln in calls:
-    if tgt < 0:
-        missing_ra.append((src, ln))
-        continue
+missing_return: list[tuple[int, str]] = []
+for insn_idx, src, tgt, has_ra, ln in calls:
+    if not has_ra:
+        if insn_idx + 1 >= len(insns) or not setret_re.search(insns[insn_idx + 1][1]):
+            missing_return.append((src, ln))
+            continue
     if tgt not in marker_addrs:
         bad.append((src, tgt, ln))
 
-if missing_ra or bad:
-    if missing_ra:
-        print("error: CALL headers missing fused ra=... in vmlinux disassembly:", file=sys.stderr)
-        for src, ln in missing_ra[:20]:
+if missing_return or bad:
+    if missing_return:
+        print("error: CALL headers missing return-target evidence in vmlinux disassembly:", file=sys.stderr)
+        for src, ln in missing_return[:20]:
             print(f"  src=0x{src:x} :: {ln}", file=sys.stderr)
-        if len(missing_ra) > 20:
-            print(f"  ... and {len(missing_ra) - 20} more", file=sys.stderr)
+        if len(missing_return) > 20:
+            print(f"  ... and {len(missing_return) - 20} more", file=sys.stderr)
     if bad:
         print("error: CALL targets that are not block-start markers:", file=sys.stderr)
         for src, tgt, ln in bad[:20]:

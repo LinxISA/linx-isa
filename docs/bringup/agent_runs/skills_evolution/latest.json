@@ -1,8 +1,8 @@
 {
   "generated_utc": "2026-05-15 13:55:35Z",
   "skills_submodule": "skills/linx-skills",
-  "skills_sha": "37f7967429b3b0de9b19dc30523ff0e087f00468",
-  "skills_branch": "codex/qemu-skill-evolution",
+  "skills_sha": "9e2afe1712f390b0593372483dedf537f1b22a44",
+  "skills_branch": "main",
   "target_dir": "/Users/zhoubot/.codex/skills",
   "status_short": []
 }

@@ -7,9 +7,8 @@
 	.type _start,@function
 _start:
 #if CASE == 1
-	# CALL target is not a block-start marker (with valid SETRET present).
-	BSTART CALL, bad_target
-	setret after_bad_call
+	# CALL target is not a block-start marker (with a valid fused return label).
+	BSTART.STD CALL, bad_target, ra=after_bad_call
 	C.BSTOP
 after_bad_call:
 	C.BSTART.STD
@@ -41,9 +40,8 @@ after_icall:
 	C.BSTART.STD
 	C.BSTOP
 #elif CASE == 6
-	# CALL returns to a non-marker target via explicit setret label.
-	BSTART CALL, callee
-	setret bad_ret
+	# CALL returns to a non-marker target via fused return label.
+	BSTART.STD CALL, callee, ra=bad_ret
 	C.BSTOP
 bad_ret:
 	c.movi 1, ->a0
@@ -167,9 +165,8 @@ callee_hl_delayed_setret:
 	c.setc.tgt ra
 	C.BSTOP
 #elif CASE == 18
-	# Valid CALL header adjacency + valid RET target setup must not fault.
-	BSTART CALL, callee_ok
-	setret after_call_ok
+	# Valid fused CALL header + valid RET target setup must not fault.
+	BSTART.STD CALL, callee_ok, ra=after_call_ok
 	C.BSTOP
 after_call_ok:
 	C.BSTART	DIRECT, after_call_ok
@@ -214,9 +211,8 @@ ind_target_ok:
 	C.BSTART.STD
 	C.BSTOP
 #elif CASE == 22
-	# Valid HL.BSTART CALL adjacency must not fault.
-	HL.BSTART.STD CALL, callee_hl_ok
-	setret after_hl_call_ok
+	# Valid fused HL.BSTART CALL header must not fault.
+	HL.BSTART.STD CALL, callee_hl_ok, ra=after_hl_call_ok
 	C.BSTOP
 after_hl_call_ok:
 	C.BSTART	DIRECT, after_hl_call_ok

@@ -39,7 +39,7 @@ Current Bisheng compiler note:
 - `15_i32_imms.c` — force `andiw` / `oriw` / `xoriw`
 - `16_andorw.c` — force `andw` / `orw`
 - `17_indexed.c` — indexed addressing (`[base, idx<<shamt]`)
-- `18_setret_relax.c` — force `setret` (relax from `c.setret`)
+- `18_setret_relax.c` — force a fused direct `CALL ..., ra=` header whose lowered return slot relaxes from `c.setret` to `setret`
 - `19_shifted_add.c` — force `add x, y<<shamt` peepholes
 
 ### Extended Operations
@@ -63,7 +63,7 @@ Current Bisheng compiler note:
 - `37_callret_tail_musttail.c` — musttail-focused tail-transfer patterns
 - `38_callret_local_reloc.c` — local-call relocation preservation under linker relaxation
 - `39_callret_noreturn.c` — noreturn call headers must still keep fused `ra=` targets
-- `40_callret_hl_setret.c` — explicit `HL.SETRET` call-header form stays fused and reloc-correct
+- `40_callret_hl_setret.c` — explicit HL call-header source stays fused and reloc-correct
 
 ## Curated assembly tests
 
@@ -75,11 +75,14 @@ Notes:
 - Assembly tests are assembled with `llvm-mc`, disassembled with `llvm-objdump`,
   linked, extracted to `.bin`, and checked for required mnemonic spellings.
 - Call/ret tests (`33`-`40`) include a relocation gate:
-  `ra=` fused call headers are always required; relocation pairing is enforced when present.
+  generated `.s` must keep fused `ra=` direct-call headers; object relocations must still preserve the paired call/return-address fixups when present.
   Enable strict relocation-only mode with `LINX_STRICT_CALLRET_RELOCS=1`.
 - Call/ret tests also include a template-shape gate:
   `33/34/35/36/38` must lower to `FENTRY ... FRET.STK` (no `FEXIT`);
   `37` musttail lowering must emit `FENTRY ... FEXIT` and use `IND + c.setc.tgt` for the indirect path.
+- Current scalar source-closure policy prefers fused direct `CALL ..., ra=...`
+  spellings. Handwritten `ICALL` still uses explicit adjacent `setret/c.setret`
+  on this compiler branch because fused `ICALL ra=` parsing is not yet portable.
 
 ## ISA coverage report
 

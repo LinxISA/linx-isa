@@ -1,6 +1,6 @@
 # LinxISA Gap Analysis (v0.2 -> Tier-1)
 
-Last updated: 2026-02-07
+Last updated: 2026-05-15
 
 This document summarizes what is currently missing or immature in LinxISA (spec,
 toolchain, emulator, validation), flags known inconsistencies, and maps each
@@ -28,6 +28,54 @@ Comparable to Arm/x86/RISC-V maturity means:
   - `python3 avs/compiler/linx-llvm/tests/analyze_coverage.py --out-dir avs/compiler/linx-llvm/tests/out-linx64 --fail-under 100`
 - Benchmark harness exists with static and dynamic instruction statistics:
   - `python3 workloads/run_benchmarks.py --dynamic-hist`
+
+## Closure Categories
+
+### Scalar
+
+- ISA:
+  - scalar block/call/ret semantics are the current first-closure lane
+  - direct-call source examples should use fused `BSTART CALL, <target>, ra=<label>`
+- Compiler:
+  - generic freestanding C coverage is strong and the active LLVM AVS lane is green
+  - direct-call source closure is now expected to stay fused at the asm level,
+    while object code may still lower to adjacent `setret`
+- QEMU:
+  - scalar runtime/system baseline is substantially ahead of SIMT/tile breadth
+  - call/ret correctness is part of the scalar closure lane
+- Remaining scalar gap:
+  - indirect-call fused `ra=` source syntax is not yet portable on the current
+    compiler branch, so handwritten `ICALL` still relies on explicit adjacent
+    `setret/c.setret`
+
+### SIMT
+
+- ISA:
+  - canonical `v0.56` grouped divergence contract is documented, including
+    explicit EXEC-mask (`p`) control
+- Compiler:
+  - only the documented bring-up subset is closed
+  - grouped divergent regions needing true EXEC-mask save/restore remain open
+- QEMU:
+  - runtime evidence exists for a narrow subset, but decode/runtime breadth is
+    still incomplete
+- Remaining SIMT gap:
+  - compiler, emulator, and AVS closure all remain subset-based rather than
+    full-category complete
+
+### Tile
+
+- ISA:
+  - tile/template opcode catalog and TEPL surface exist, but semantic envelope
+    and legality validation still need continued tightening
+- Compiler:
+  - MC/asm coverage and TEPL encoding checks exist, but generic-C tile closure
+    is not claimed
+- QEMU:
+  - tile/template decode coverage and semantics remain materially incomplete
+- Remaining tile gap:
+  - tile closure is still primarily an ISA/MC/decode bring-up lane, not a
+    generic compiler/runtime closure lane yet
 
 ## Gaps: ISA Specification
 

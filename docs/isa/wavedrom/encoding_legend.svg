@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 72" width="680" height="72">
+  <style>text{font-family:"Helvetica Neue",Arial,sans-serif}</style>
+  <text x="0" y="14" font-weight="bold" font-size="11" fill="#1a1a1a">Field colour key</text>
+  <rect x="0" y="19" width="12" height="12" fill="#82C77A" rx="2"/>
+  <text x="16" y="30" font-size="9" fill="#333">Rd / RegDst (destination register)</text>
+  <rect x="170" y="19" width="12" height="12" fill="#6EC9D8" rx="2"/>
+  <text x="186" y="30" font-size="9" fill="#333">Rs1 / SrcL (1st source register)</text>
+  <rect x="340" y="19" width="12" height="12" fill="#5BBFAA" rx="2"/>
+  <text x="356" y="30" font-size="9" fill="#333">Rs2 / SrcR (2nd source register)</text>
+  <rect x="510" y="19" width="12" height="12" fill="#E8976B" rx="2"/>
+  <text x="526" y="30" font-size="9" fill="#333">Rs3 / SrcD (3rd source / FMA operand)</text>
+  <rect x="0" y="41" width="12" height="12" fill="#B39DDB" rx="2"/>
+  <text x="16" y="52" font-size="9" fill="#333">funct / opcode (function/control field)</text>
+  <rect x="170" y="41" width="12" height="12" fill="#E57399" rx="2"/>
+  <text x="186" y="52" font-size="9" fill="#333">shamt (shift amount)</text>
+  <rect x="340" y="41" width="12" height="12" fill="#F4A261" rx="2"/>
+  <text x="356" y="52" font-size="9" fill="#333">imm / offset (immediate value)</text>
+  <rect x="510" y="41" width="12" height="12" fill="#E0E0E0" rx="2"/>
+  <text x="526" y="52" font-size="9" fill="#333">reserved / const(0)</text>
+</svg>

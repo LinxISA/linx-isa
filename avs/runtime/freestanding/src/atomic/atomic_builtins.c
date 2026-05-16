@@ -10,39 +10,43 @@
  * - Memory order arguments are accepted for ABI compatibility but ignored.
  */
 
-#include <stdint.h>
+#ifndef __UINT32_TYPE__
+#error "__UINT32_TYPE__ must be provided by the compiler"
+#endif
 
-uint32_t __atomic_load_4(const volatile uint32_t *ptr, int memorder)
+typedef __UINT32_TYPE__ linx_u32;
+
+linx_u32 __atomic_load_4(const volatile linx_u32 *ptr, int memorder)
 {
     (void)memorder;
     return *ptr;
 }
 
-void __atomic_store_4(volatile uint32_t *ptr, uint32_t val, int memorder)
+void __atomic_store_4(volatile linx_u32 *ptr, linx_u32 val, int memorder)
 {
     (void)memorder;
     *ptr = val;
 }
 
-uint32_t __atomic_exchange_4(volatile uint32_t *ptr, uint32_t val, int memorder)
+linx_u32 __atomic_exchange_4(volatile linx_u32 *ptr, linx_u32 val, int memorder)
 {
     (void)memorder;
-    uint32_t old = *ptr;
+    linx_u32 old = *ptr;
     *ptr = val;
     return old;
 }
 
 int __atomic_compare_exchange_4(
-    volatile uint32_t *ptr,
-    uint32_t *expected,
-    uint32_t desired,
+    volatile linx_u32 *ptr,
+    linx_u32 *expected,
+    linx_u32 desired,
     int success_memorder,
     int failure_memorder)
 {
     (void)success_memorder;
     (void)failure_memorder;
 
-    uint32_t old = *ptr;
+    linx_u32 old = *ptr;
     if (old == *expected) {
         *ptr = desired;
         return 1;
@@ -51,42 +55,42 @@ int __atomic_compare_exchange_4(
     return 0;
 }
 
-uint32_t __atomic_fetch_add_4(volatile uint32_t *ptr, uint32_t val, int memorder)
+linx_u32 __atomic_fetch_add_4(volatile linx_u32 *ptr, linx_u32 val, int memorder)
 {
     (void)memorder;
-    uint32_t old = *ptr;
+    linx_u32 old = *ptr;
     *ptr = old + val;
     return old;
 }
 
-uint32_t __atomic_fetch_sub_4(volatile uint32_t *ptr, uint32_t val, int memorder)
+linx_u32 __atomic_fetch_sub_4(volatile linx_u32 *ptr, linx_u32 val, int memorder)
 {
     (void)memorder;
-    uint32_t old = *ptr;
+    linx_u32 old = *ptr;
     *ptr = old - val;
     return old;
 }
 
-uint32_t __atomic_fetch_and_4(volatile uint32_t *ptr, uint32_t val, int memorder)
+linx_u32 __atomic_fetch_and_4(volatile linx_u32 *ptr, linx_u32 val, int memorder)
 {
     (void)memorder;
-    uint32_t old = *ptr;
+    linx_u32 old = *ptr;
     *ptr = old & val;
     return old;
 }
 
-uint32_t __atomic_fetch_or_4(volatile uint32_t *ptr, uint32_t val, int memorder)
+linx_u32 __atomic_fetch_or_4(volatile linx_u32 *ptr, linx_u32 val, int memorder)
 {
     (void)memorder;
-    uint32_t old = *ptr;
+    linx_u32 old = *ptr;
     *ptr = old | val;
     return old;
 }
 
-uint32_t __atomic_fetch_xor_4(volatile uint32_t *ptr, uint32_t val, int memorder)
+linx_u32 __atomic_fetch_xor_4(volatile linx_u32 *ptr, linx_u32 val, int memorder)
 {
     (void)memorder;
-    uint32_t old = *ptr;
+    linx_u32 old = *ptr;
     *ptr = old ^ val;
     return old;
 }

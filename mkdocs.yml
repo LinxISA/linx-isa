@@ -14,18 +14,57 @@ exclude_docs: |
 
 theme:
   name: material
-  logo: architecture/isa-manual/src/images/linxisa-logo.svg
-  favicon: architecture/isa-manual/src/images/linxisa-logo.svg
+  logo: assets/linxisa-logo.svg
+  favicon: assets/linxisa-favicon.svg
+  custom_dir: docs/overrides
+  palette:
+
+    # ── Light mode (default) ──────────────────────────────
+    - media: "(prefers-color-scheme: light)"
+      primary: cyan
+      accent: amber
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # ── Dark mode ─────────────────────────────────────────
+    - media: "(prefers-color-scheme: dark)"
+      primary: cyan
+      accent: amber
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+  font:
+    text: Inter
+    code: JetBrains Mono
+
   features:
     - navigation.instant
     - navigation.tracking
     - navigation.sections
     - navigation.top
+    - navigation.expand  # expand all section groups
     - search.suggest
     - search.highlight
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - content.tooltips
 
 plugins:
   - search
+
+extra_css:
+  - stylesheets/linxisa.css
+
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/LinxISA/linx-isa
 
 markdown_extensions:
   - admonition
@@ -33,8 +72,15 @@ markdown_extensions:
   - tables
   - toc:
       permalink: true
-  - pymdownx.highlight
+      toc_depth: 3
+  - pymdownx.highlight:
+      anchor_linenums: true
   - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.smartsymbols
+  - attr_list
+  - md_in_html
 
 nav:
   - Home: index.md
@@ -51,6 +97,90 @@ nav:
       - Call/Ret Contract (ABI): reference/linxisa-call-ret-contract.md
       - Encoding Space Analysis: reference/encoding_space_report.md
       - Full ISA Manual (AsciiDoc/PDF): architecture/isa-manual/README.md
+  - Instruction Reference:
+      - Overview: isa/index.md
+      - Encoding Formats: isa/encoding.md
+      - Groups Index: isa/groups/index.md
+      - All Instructions (A-Z): isa/instructions/index.md
+      - Ch 03 — Encoding Formats:
+          - Encoding Formats: isa/encoding.md
+      - Ch 04 — Block ISA:
+          - Block Split (BSTART, BSTOP): isa/groups/block_split.md
+          - BSTART (32-bit): isa/groups/bstart.md
+          - Block Argument (B.ARG, B.DIM): isa/groups/block_argument.md
+          - Block I/O (B.IOR, B.IOT): isa/groups/block_input_output.md
+          - Block Hint (B.HINT): isa/groups/block_hint.md
+          - Block Offset (B.TEXT): isa/groups/block_offset.md
+          - General (BSTART.XB): isa/groups/general.md
+      - Ch 11 — AGU (Loads & Stores):
+          - Load/Store (register offset): isa/groups/load_register_offset.md
+          - Load (immediate offset): isa/groups/load_immediate_offset.md
+          - Load (unscaled): isa/groups/load_unscaled.md
+          - Load (PC-relative): isa/groups/load_pc_relative.md
+          - Load (long offset): isa/groups/load_long_offset.md
+          - Load (pair): isa/groups/load_pair.md
+          - Load (post/pre-index): isa/groups/load_post_index.md
+          - Load (pre-index): isa/groups/load_pre_index.md
+          - Load (symbol): isa/groups/load_symbol.md
+          - Store (register offset): isa/groups/store_register_offset.md
+          - Store (immediate offset): isa/groups/store_immediate_offset.md
+          - Store (PC-relative): isa/groups/store_pc_relative.md
+          - Store (long offset): isa/groups/store_long_offset.md
+          - Store (pair): isa/groups/store_pair.md
+          - Store (post/pre-index): isa/groups/store_post_index.md
+          - Store (pre-index): isa/groups/store_pre_index.md
+          - Store (symbol): isa/groups/store_symbol.md
+          - Store (offset): isa/groups/store_offset.md
+          - Prefetch: isa/groups/prefetch.md
+      - Ch 12 — ALU:
+          - Arithmetic (16-bit C.): isa/groups/arithmetic.md
+          - Arithmetic (32-bit base): isa/groups/arithmetic_operation.md
+          - Arithmetic (32-bit word): isa/groups/arithmetic_operation_32bit.md
+          - Arithmetic (64-bit): isa/groups/arithmetic_operation_64bit.md
+          - Bit Operations: isa/groups/bit_operation.md
+          - Multi-Cycle ALU (DIV, MUL): isa/groups/multi_cycle_alu.md
+          - Immediate (LUI): isa/groups/immediate.md
+          - Long Immediate (HL.LIS): isa/groups/long_immediate.md
+          - Move (C.MOVI, C.MOVR): isa/groups/move.md
+          - C.UNARY (SEXT, ZEXT): isa/groups/c_unary.md
+      - Ch 13 — FSU (Floating-Point):
+          - Floating-Point Arithmetic: isa/groups/floating_point_arithmetic.md
+          - Floating-Point Compare: isa/groups/floating_point_compare.md
+          - Format Convert: isa/groups/format_convert.md
+          - Max/Min: isa/groups/max_min.md
+      - Ch 14 — AMO (Atomics):
+          - Atomic (CAS): isa/groups/atomic.md
+          - Atomic Operations: isa/groups/atomic_operation.md
+      - Ch 15 — BBD (Block Delimiters):
+          - C.BSTART (compressed): isa/groups/c_bstart.md
+          - C.TINST (compressed misc): isa/groups/c_tinst.md
+          - Block Dimension (C.B.DIM): isa/groups/block_dimension.md
+      - Ch 16 — BRU (Branches):
+          - Branch (B.EQ, etc.): isa/groups/branch.md
+          - Compare Instructions: isa/groups/compare_instruction.md
+          - Set Commit Argument (SETC): isa/groups/set_commit_argument.md
+          - PC-Relative (ADDTPC, SETRET): isa/groups/pc_relative.md
+          - Compound (CSEL): isa/groups/compound_operation.md
+      - Ch 17 — CMD (Command & Control):
+          - Block Control Attribute (B.CATR): isa/groups/block_control_attribute.md
+          - Block Data Attribute (B.DATR): isa/groups/block_data_attribute.md
+      - Ch 18 — RSV (Reserved):
+          - RESERVE (HL.BFI, HL.MIADD): isa/groups/reserve.md
+          - Concat (HL.CCAT): isa/groups/concat.md
+      - Ch 19 — SYS (System):
+          - Execution Control: isa/groups/execution_control.md
+          - Cache Maintain (DC.*, IC.*): isa/groups/cache_maintain.md
+          - SSR Access (SSRGET, SSRSET): isa/groups/ssr_access.md
+      - Ch 20 — VEC (Vector/SIMD):
+          - Bit Manipulation (V.BIC, V.BIS): isa/groups/bit_manipulation.md
+          - Shuffle (V.SHFL.*): isa/groups/shuffle.md
+          - Reductions (V.RDADD, etc.): isa/groups/reduce_operation_with_register.md
+          - Three-Source Integer (V.CSEL, V.PSEL): isa/groups/three_source_integer.md
+          - Division (V.DIV, V.REM): isa/groups/division.md
+          - Three-Source FP (V.FADD, V.FMADD): isa/groups/three_source_floating_point.md
+          - Two-Source FP (V.FEQ, V.FMAX): isa/groups/two_source_floating_point.md
+          - Floating-Point (V.*): isa/groups/floating_point_arithmetic.md
+          - General Manager (V.QPOP, V.QPUSH): isa/groups/general_manager.md
   # Published LinxCore pages are synced from rtl/LinxCore/docs/architecture/.
   - Hardware (LinxCore RTL):
       - Overview: architecture/linxcore/overview.md

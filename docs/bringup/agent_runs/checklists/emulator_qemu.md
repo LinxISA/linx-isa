@@ -1,5 +1,46 @@
 # Emulator / QEMU Checklist
 
+## Closure Categories
+
+### Scalar
+
+- Status: active closure lane
+- Scope:
+  - strict-system/runtime AVS baseline
+  - scalar block legality and call/ret contract behavior
+  - generic-C scalar call/ret closure aligned with fused direct `CALL ..., ra=...`
+- Current evidence:
+  - `QEMU-001`, `QEMU-002`, `QEMU-004`, `QEMU-006`, `QEMU-007`
+- Remaining scalar-specific gap:
+  - fused handwritten `ICALL ra=` source syntax is not yet portable on the
+    current compiler branch, so QEMU contract coverage still needs explicit
+    `setret/c.setret` for indirect-call source tests
+
+### SIMT
+
+- Status: partial / subset-only
+- Scope:
+  - runtime support for the currently documented SIMT compiler subset
+  - no claim of full grouped divergent closure
+- Current evidence:
+  - baseline runtime/system gates are green
+  - broader SIMT runtime maturity remains tracked separately in
+    `docs/bringup/SIMT_COMPILER_SUPPORTED_SUBSET.md`
+- Remaining gap:
+  - QEMU runtime breadth for grouped divergent kernels and many `V.*` decode
+    forms remains incomplete
+
+### Tile
+
+- Status: partial
+- Scope:
+  - tile/template decode surface and strict legality/trap behavior
+- Current evidence:
+  - opcode/meta sync is green (`QEMU-003`)
+- Remaining gap:
+  - tile/template decode-spectrum and semantic coverage are still materially
+    behind the spec catalog
+
 - [x] ID: QEMU-001 Pass strict-system gate with timer IRQ policy required by strict runs.
   Command: `cd avs/qemu && LINX_DISABLE_TIMER_IRQ=0 ./check_system_strict.sh`
   Done means: strict system suite passes with no trap-noise regressions.
@@ -23,7 +64,7 @@
 - [x] ID: QEMU-005 ISA spec vs QEMU implementation gap analysis.
   Command: `python3 tools/bringup/report_qemu_isa_coverage.py --report-out docs/bringup/gates/qemu_isa_coverage_latest.json --out-md docs/bringup/gates/qemu_isa_coverage_latest.md`
   Done means: Canonical machine-generated coverage report is refreshed and captures missing spec mnemonics and forms.
-  Status: ✅ PASS (2026-03-07) - coverage report generated with `mnemonics=524/710`, `forms=521/740`, `missing_mnemonics=186`, and explicit missing/unmapped lists (artifacts: `docs/bringup/gates/qemu_isa_coverage_latest.json`, `docs/bringup/gates/qemu_isa_coverage_latest.md`).
+  Status: ✅ PASS (2026-05-08) - coverage report generated with `mnemonics=616/710`, `forms=612/740`, `missing_mnemonics=94`, and explicit missing/unmapped lists (artifacts: `docs/bringup/gates/qemu_isa_coverage_latest.json`, `docs/bringup/gates/qemu_isa_coverage_latest.md`).
 
 - [x] ID: QEMU-006 QEMU can boot full Linux with complete runtime APIs.
   Done means: Linux kernel boots with timer interrupts working, full syscalls available.
@@ -34,20 +75,25 @@
   Done means: the pinned QEMU workspace compiles the Linx system emulator binary with the current decode/translator state.
   Status: ✅ PASS (2026-03-08) - pinned QEMU `043390f788da` builds `emulator/qemu/build/qemu-system-linx64` successfully after the v0.56 propagation fixes and opcode-sync refresh.
 
+- [ ] ID: QEMU-008 Keep scalar call/ret contract coverage aligned with fused direct-call source syntax.
+  Command: `python3 avs/qemu/run_callret_contract.py`
+  Done means: scalar direct-call source cases use fused `CALL ..., ra=...`, malformed or missing setret lowerings still fault, and positive scalar direct-call cases remain no-fault.
+  Status: ✅ PASS (2026-05-15) - `run_callret_contract.py` passed after converting the scalar direct-call source cases to fused `BSTART.STD CALL, ..., ra=...`. Negative malformed/missing setret cases still trapped, and the positive fused direct-call cases remained no-fault.
+
 ---
 
 ## ISA vs QEMU Implementation Gap Analysis
 
 ### Summary
 - ISA spec: 710 unique mnemonics
-- QEMU mapped spec coverage: 524 unique mnemonics
-- QEMU mapped spec forms: 521 legal forms
-- Gap: 186 mnemonics and 219 forms currently outside mapped QEMU decode coverage
+- QEMU mapped spec coverage: 616 unique mnemonics
+- QEMU mapped spec forms: 612 legal forms
+- Gap: 94 mnemonics and 128 forms currently outside mapped QEMU decode coverage
 
 ### Categories of Missing Instructions
-1. **Vector instructions (`V.*`)**: large uncovered set remains, especially at per-form granularity
-2. **Compressed/HL variants**: many `C.*` and `HL.*` forms remain uncovered
-3. **Block/tile families**: additional `BSTART.*`, tile/template forms remain uncovered
+1. **Vector instructions (`V.*`)**: still the largest uncovered set, especially at per-form granularity
+2. **Block/tile families**: additional `BSTART.*`, tile/template forms remain uncovered
+3. **Compressed/HL and accounting drift**: some remaining report gaps are still decode-mapping/reporting issues rather than proven translator absence
 4. **MMU/debug/system breadth**: privileged/system families beyond current bring-up subset remain uncovered
 
 ### Key Findings

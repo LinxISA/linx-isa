@@ -2,8 +2,8 @@
 
 - Generated (UTC): 2026-05-15 13:55:35Z
 - Base ref: origin/main
-- Submodule SHA: 37f7967429b3b0de9b19dc30523ff0e087f00468
-- Submodule branch: codex/qemu-skill-evolution
+- Submodule SHA: 9e2afe1712f390b0593372483dedf537f1b22a44
+- Submodule branch: main
 
 ## Touched skills
 - `linx-qemu`

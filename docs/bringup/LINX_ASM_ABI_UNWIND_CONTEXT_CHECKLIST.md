@@ -20,7 +20,9 @@ Use this checklist when landing Linx64 asm changes in musl/glibc/runtime code.
 
 ## C) Call Header Fusion/Adjacency
 
-- [ ] Returning `CALL` headers use fused form: `BSTART.CALL` + immediate adjacent `SETRET/C.SETRET`.
+- [ ] Returning direct `CALL` sources use fused form: `BSTART.CALL ..., ra=...`.
+- [ ] Lowered objects still keep immediate-adjacent `SETRET/C.SETRET` when the
+      chosen encoding requires it.
 - [ ] No instructions are emitted between call header and setret materialization.
 - [ ] Non-returning `CALL` headers without `SETRET` are explicit/intentional and keep `ra` unchanged.
 

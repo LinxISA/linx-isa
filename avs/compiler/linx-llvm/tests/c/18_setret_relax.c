@@ -1,6 +1,7 @@
-// Force c.setret (uimm5 halfword range) to relax to setret by making the call
-// block large. This keeps the test stable across block placement because the
-// distance is within a single call block.
+// Force a fused direct CALL header whose lowered return-address materialization
+// relaxes from c.setret to setret by making the call block large. This keeps
+// the test stable across block placement because the distance is within a
+// single call block.
 
 __attribute__((noinline)) int callee(int x) { return x + 1; }
 

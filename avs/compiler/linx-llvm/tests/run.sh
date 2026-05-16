@@ -202,6 +202,7 @@ for SRC in "$SRC_DIR"/*.c; do
       33_callret_*|34_callret_*|35_callret_*|36_callret_*|37_callret_*|38_callret_*|39_callret_*|40_callret_*)
         CHECK_RELOCS_CMD=(
           python3 "$ROOT/check_callret_relocs.py"
+          --asm "$OUT/$BASE.s"
           --objdump "$OUT/$BASE.objdump"
           --relocs "$OUT/$BASE.relocs"
           --label "$BASE"

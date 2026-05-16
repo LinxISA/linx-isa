@@ -78,8 +78,7 @@ The minimal libc startup in `avs/runtime/freestanding/src/crt0.s` uses `FENTRY` 
 [source,asm]
 ----
 FENTRY    [ra ~ s2], sp!, 16
-BSTART    CALL, main
-c.setret  .L_after_main, ->ra
+BSTART.STD    CALL, main, ra=.L_after_main
 .L_after_main:
 FRET.STK  [ra ~ s2], sp!, 16
 ----

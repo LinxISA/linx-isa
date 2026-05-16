@@ -22,12 +22,12 @@
 - [ ] ID: INT-004 Require `strict_cross_repo.sh` pass in strict closure.
   Command: `bash tools/regression/strict_cross_repo.sh`
   Done means: regression row is `pass` or explicitly waived via ledger.
-  Status: ❌ FAIL (2026-04-18) - the latest canonical run `2026-04-18-r9-pin-linuxlibc-refresh` still records `Regression::strict_cross_repo.sh` as fail because the required BusyBox rootfs gate fails in the same run. Ad hoc direct reruns that skip the BusyBox blocker are not release evidence.
+  Status: ❌ FAIL (2026-05-15) - the latest canonical run `2026-04-18-r9-pin-linuxlibc-refresh` still records `Regression::strict_cross_repo.sh` as fail because the required BusyBox rootfs gate fails in the same run. A diagnostic rerun that skips BusyBox (`docs/bringup/gates/logs/2026-04-17-r7-pin-recovery/pin/reg_strict_cross_repo.log`) reaches the downstream TSVC QEMU timeout, but that does not replace canonical release evidence.
 
 - [ ] ID: INT-005 Emit per-run multi-agent closure summary JSON.
   Artifact: `docs/bringup/gates/logs/<run-id>/<lane>/multi_agent_summary.json`
   Done means: summary exists, `ok=true`, and includes waiver decisions.
-  Status: ❌ FAIL (2026-04-18) - the latest summary exists, but it records `ok=false` because `Kernel::Linux busybox rootfs boot` is still failing without a waiver (artifact: `docs/bringup/gates/logs/2026-04-18-r9-pin-linuxlibc-refresh/pin/multi_agent_summary.json`).
+  Status: ❌ FAIL (2026-05-15) - the latest canonical summary exists, but it records `ok=false` because `Kernel::Linux busybox rootfs boot` is still failing without a waiver (artifact: `docs/bringup/gates/logs/2026-04-18-r9-pin-linuxlibc-refresh/pin/multi_agent_summary.json`). The later recovery probes did not emit a replacement `multi_agent_summary.json`, so there is still no newer green closure pack.
 
 - [x] ID: INT-006 Keep `docs/bringup/GATE_STATUS.md` generated from canonical JSON report.
   Command: `python3 tools/bringup/gate_report.py render --report docs/bringup/gates/latest.json --out-md docs/bringup/GATE_STATUS.md`
@@ -121,4 +121,4 @@
 - [ ] ID: INT-026 Keep TSVC strict QEMU regression green at the runtime pass floor.
   Command: `python3 workloads/tsvc/run_tsvc.py --clang compiler/llvm/build-linxisa-clang/bin/clang --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --qemu emulator/qemu/build/qemu-system-linx64 --vector-mode auto --strict-fail-under 148 --source-policy linx-v03-parity --out-dir workloads/generated`
   Done means: the TSVC lane completes under QEMU and meets the configured strict pass floor.
-  Status: ❌ FAIL (2026-04-18) - runtime remains blocked on scalar-replay recurrence kernels in `auto` mode; the fresh PR lane only proves compile-only strict coverage.
+  Status: ❌ FAIL (2026-05-15) - no canonical runtime pass exists. The latest diagnostic strict rerun (`docs/bringup/gates/logs/2026-04-17-r7-pin-recovery/pin/reg_strict_cross_repo.log`) reaches TSVC only when BusyBox rootfs is skipped and then times out after 240 seconds on `tsvc.auto.elf`; the canonical April 18 report still proves only compile-only strict coverage.

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{%- block scripts %}
+  {{ super() }}
+  <style>
+    /* Inline critical overrides that need to be here for the Material theme */
+    :root { --md-primary-fg-color: #0891b2; }
+    .md-header { box-shadow: 0 0 8px rgba(0,0,0,0.3) !important; }
+    .md-nav--secondary { border-left: 3px solid #0891b2; }
+  </style>
+{%- endblock %}
+
+{%- block site_meta %}
+  {{ super() }}
+  <meta name="theme-color" content="#0891b2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+{%- endblock %}

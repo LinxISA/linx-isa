@@ -13,7 +13,8 @@ This note summarizes practical skills and review focus for Linx call/ret and lib
 
 ## LLVM
 
-- Enforce call-header adjacency (`BSTART.CALL` followed immediately by setret form).
+- Enforce fused direct-call source headers (`BSTART.CALL ..., ra=...`) and
+  lowered call-header adjacency in objects.
 - Keep musttail lowering on `FEXIT` tail-transfer path; non-tail on `FRET.STK`.
 - Preserve stable MC/disasm fused view (`CALL ..., ra=...`) and relocation legality.
 - Add lit coverage for:
@@ -46,7 +47,8 @@ This note summarizes practical skills and review focus for Linx call/ret and lib
 
 ## Common Review Checklist
 
-1. Call headers: returning calls always have adjacent setret form.
+1. Call headers: returning direct-call sources use fused `..., ra=...`, and
+   lowered objects keep the adjacent setret form when present.
 2. Return/indirect: every `RET/IND/ICALL` path has explicit `setc.tgt`.
 3. Targets: dynamic targets are block starts.
 4. Tail calls: `FENTRY + FEXIT` only on musttail/tail-transfer path.

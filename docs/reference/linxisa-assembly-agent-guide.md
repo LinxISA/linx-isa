@@ -83,17 +83,18 @@ Tail-call form:
 
 Fused call header (returning calls):
 
-- `CALL` is emitted as fused header pair:
-  - `BSTART.CALL`
-  - immediate adjacent `C.SETRET` (or `SETRET` in non-compressed form)
+- Direct `CALL` source should use fused `BSTART.STD CALL, <callee>, ra=<label>`.
+- Object disassembly may still show lowered adjacent `SETRET/C.SETRET`.
 - No instruction may appear between `BSTART.CALL` and `SETRET/C.SETRET`.
 - `SETRET` defines an explicit return block label (`ra` target); do not assume return is lexical fall-through.
+- On the current compiler branch, handwritten `ICALL` still requires explicit
+  adjacent `SETRET/C.SETRET`; fused `ra=` source syntax is not yet portable
+  there.
 
 Non-fallthrough return example:
 
 ```asm
-BSTART.STD CALL, callee
-setret .Lresume, ->ra
+BSTART.STD CALL, callee, ra=.Lresume
 ... call block body ...
 C.BSTOP
 
@@ -105,11 +106,12 @@ C.BSTART.STD
 
 Setret width guidance:
 
-- Prefer smallest legal form (`c.setret`, then `setret`).
-- The current compiler AVS lane validates symbolic `c.setret` / `setret`
-  return-target materialization directly.
-- Treat `hl.setret` as a wider optional form that requires dedicated backend/MC
-  proof before relying on it in portable bring-up code.
+- For direct source-level calls, prefer fused `ra=` syntax and let MC choose the
+  lowered width.
+- The current compiler AVS lane validates fused `ra=` source syntax and the
+  paired object-level return-address relocation.
+- Treat explicit `hl.setret` as a wider optional form that requires dedicated
+  backend/MC proof before relying on it in portable bring-up code.
 
 Non-returning call form:
 
@@ -203,7 +205,7 @@ Patterns to reuse in userspace arch asm:
 Agent checklist before submitting asm:
 
 1. Are block markers legal and balanced?
-2. Are returning `CALL` headers fused (`BSTART.CALL` + adjacent `SETRET/C.SETRET`), and non-returning calls explicitly intentional?
+2. Are returning direct `CALL` headers fused (`..., ra=`), and are any explicit `SETRET/C.SETRET` sequences limited to current `ICALL` or width-specific contract cases?
 3. Do all `RET/IND/ICALL` blocks set target via `setc.tgt`?
 4. Is ABI save/restore set minimal and correct?
 5. Does syscall path use `a7 + acrc 1`?
