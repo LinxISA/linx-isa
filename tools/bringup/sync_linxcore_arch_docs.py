@@ -16,25 +16,7 @@ DOC_NAMES = [
 
 
 def render_mirror_text(name: str, source_text: str) -> str:
-    lines = source_text.splitlines()
-    header = [
-        "<!-- AUTO-GENERATED FILE. DO NOT EDIT DIRECTLY. -->",
-        f"<!-- Source: rtl/LinxCore/docs/architecture/{name} -->",
-        "",
-    ]
-    if not lines:
-        return "\n".join(header)
-
-    first = lines[0]
-    rest = lines[1:]
-    note = [
-        first,
-        "",
-        "> This published page mirrors the canonical LinxCore source in",
-        f"> `rtl/LinxCore/docs/architecture/{name}`.",
-        "",
-    ]
-    return "\n".join(header + note + rest) + "\n"
+    return source_text if source_text.endswith("\n") else source_text + "\n"
 
 
 def main() -> int:

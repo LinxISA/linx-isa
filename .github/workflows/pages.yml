@@ -33,8 +33,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip "mkdocs<2" mkdocs-material
 
-      - name: Build MkDocs site
+      - name: Build English docs
         run: mkdocs build --strict
+
+      - name: Build Chinese docs
+        run: mkdocs build --strict -f mkdocs.zh.yml -d site/zh
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5

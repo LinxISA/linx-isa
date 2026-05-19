@@ -1,0 +1,12 @@
+.md-grid {
+  max-width: 1440px; 
+}
+@font-face {
+  font-family: "Microsoft YaHei";
+  font-style: normal;
+}
+
+code {
+  font-family: "Consolas" "Noto Sans Mono CJK JP", "Courier New", monospace, serif !important;
+  font-size: 1em;
+}

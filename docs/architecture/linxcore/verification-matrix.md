@@ -1,12 +1,4 @@
-<!-- AUTO-GENERATED FILE. DO NOT EDIT DIRECTLY. -->
-<!-- Source: rtl/LinxCore/docs/architecture/verification-matrix.md -->
-
 # LinxCore v0.56 Verification Matrix
-
-> This published page mirrors the canonical LinxCore source in
-> `rtl/LinxCore/docs/architecture/verification-matrix.md`.
-
-
 This matrix ties LinxCore architecture intent to strict required gates.
 
 It is the normative mapping between:

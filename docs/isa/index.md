@@ -1,96 +1,82 @@
-# LinxISA Instruction Reference
+# LinxISA ISA Surface
 
-<!-- Hero Banner -->
 <div class="isa-hero">
 
-**ISA Version:** v0.56.2 &nbsp;·&nbsp; **740 instruction forms** &nbsp;·&nbsp; **66 groups** &nbsp;·&nbsp; **4 encoding formats**
+## Primary Manual + Appendix
 
----
+The ISA section now has two layers:
 
-Browse by chapter, instruction group, or search by mnemonic. Each instruction page includes its encoding diagram, assembly syntax, and description.
+- the **primary manual hierarchy** used by the public site
+  definition, and
+- the **machine-generated appendix reference** preserved from the current v0.56
+  generated docs.
 
-**Jump to:** [Encoding Formats](encoding.md) · [Groups Index](groups/index.md) · [A–Z Index](instructions/index.md)
-
-</div>
-
----
-
-## Browse by Chapter
-
-The LinxISA manual is organized into 12 chapters covering distinct functional units. Click any chapter to jump to its first instruction group.
-
-<div class="chapter-grid">
-
-[![](assets/ch03.svg){: style="width:120px;height:80px"} **Ch 03 — Encoding Formats**{.chapter-card style="--ch03-color:#64748b"}
-: Bit numbering, instruction lengths, decode tags, field colour key
-
-[![](assets/ch04.svg){: style="width:120px;height:80px"} **Ch 04 — Block ISA**{.chapter-card style="--ch04-color:#8b5cf6"}
-: BSTART, BSTOP, B.ARG, B.DIM, tile/SIMT control flow
-
-[![](assets/ch11.svg){: style="width:120px;height:80px"} **Ch 11 — AGU**{.chapter-card style="--ch11-color:#059669"}
-: Loads, stores, prefetch, all addressing modes
-
-[![](assets/ch12.svg){: style="width:120px;height:80px"} **Ch 12 — ALU**{.chapter-card style="--ch12-color:#0891b2"}
-: ADD, SUB, MUL, DIV, shifts, bit manip, LUI, CSEL
-
-[![](assets/ch13.svg){: style="width:120px;height:80px"} **Ch 13 — FSU**{.chapter-card style="--ch13-color:#0ea5e9"}
-: Floating-point arithmetic, FMA, format conversion
-
-[![](assets/ch14.svg){: style="width:120px;height:80px"} **Ch 14 — AMO**{.chapter-card style="--ch14-color:#e11d48"}
-: LR/SC, atomic fetch-op, CAS
-
-[![](assets/ch15.svg){: style="width:120px;height:80px"} **Ch 15 — BBD**{.chapter-card style="--ch15-color:#8b5cf6"}
-: C.BSTART, C.BSTOP, block delimiters
-
-[![](assets/ch16.svg){: style="width:120px;height:80px"} **Ch 16 — BRU**{.chapter-card style="--ch16-color:#7c3aed"}
-: Branches, CMP, SETC, SETRET, ADDTPC
-
-[![](assets/ch17.svg){: style="width:120px;height:80px"} **Ch 17 — CMD**{.chapter-card style="--ch17-color:#6366f1"}
-: B.CATR, B.DATR, B.HINT, block attributes
-
-[![](assets/ch18.svg){: style="width:120px;height:80px"} **Ch 18 — RSV**{.chapter-card style="--ch18-color:#a16207"}
-: HL.BFI, HL.MIADD, HL.MISUB
-
-[![](assets/ch19.svg){: style="width:120px;height:80px"} **Ch 19 — SYS**{.chapter-card style="--ch19-color:#dc2626"}
-: FENCE, barriers, EBREAK, ACR*, cache/TLB maintenance
-
-[![](assets/ch20.svg){: style="width:120px;height:80px"} **Ch 20 — VEC**{.chapter-card style="--ch20-color:#2563eb"}
-: V.* vector forms, shuffles, reductions, division
+Use the imported hierarchy for the published narrative structure. Use the
+appendix for exact mnemonic/group lookup and generated encoding detail.
 
 </div>
 
 ---
 
-## Browse by Group
+## Primary Manual Hierarchy
 
-<div class="group-card-grid">
-[Arithmetic (1)](groups/arithmetic.md){.group-card} [Arithmetic Operation (20)](groups/arithmetic_operation.md){.group-card} [Arithmetic Operation 32bit (21)](groups/arithmetic_operation_32bit.md){.group-card} [Arithmetic Operation 64bit (21)](groups/arithmetic_operation_64bit.md){.group-card}
-[Atomic (4)](groups/atomic.md){.group-card} [Atomic Operation (68)](groups/atomic_operation.md){.group-card} [BSTART (11)](groups/bstart.md){.group-card} [Bit Manipulation (8)](groups/bit_manipulation.md){.group-card}
-[Bit Operation (8)](groups/bit_operation.md){.group-card} [Block Argument (9)](groups/block_argument.md){.group-card} [Block Control Attribute (1)](groups/block_control_attribute.md){.group-card} [Block Data Attribute (1)](groups/block_data_attribute.md){.group-card}
-[Block Dimension (2)](groups/block_dimension.md){.group-card} [Block Hint (2)](groups/block_hint.md){.group-card} [Block Input & Output (5)](groups/block_input_output.md){.group-card} [Block Offset (1)](groups/block_offset.md){.group-card}
-[Block Split (45)](groups/block_split.md){.group-card} [Branch (10)](groups/branch.md){.group-card} [C.BSTART (7)](groups/c_bstart.md){.group-card} [C.TINST (6)](groups/c_tinst.md){.group-card}
-[C.UNARY (7)](groups/c_unary.md){.group-card} [Cache Maintain (16)](groups/cache_maintain.md){.group-card} [Compare Instruction (40)](groups/compare_instruction.md){.group-card} [Compound Operation (1)](groups/compound_operation.md){.group-card}
-[Concat (2)](groups/concat.md){.group-card} [Division (2)](groups/division.md){.group-card} [Execution Control (10)](groups/execution_control.md){.group-card} [Floating Point Arithmetic (5)](groups/floating_point_arithmetic.md){.group-card}
-[Floating-point Arithmetic (12)](groups/floating_point_arithmetic.md){.group-card} [Floating-point Compare (8)](groups/floating_point_compare.md){.group-card} [Format Convert (12)](groups/format_convert.md){.group-card} [General (3)](groups/general.md){.group-card}
-[General Manager (2)](groups/general_manager.md){.group-card} [Immediate (2)](groups/immediate.md){.group-card} [Load Immediate Offset (23)](groups/load_immediate_offset.md){.group-card} [Load Long Offset (12)](groups/load_long_offset.md){.group-card}
-[Load PC-Relative (7)](groups/load_pc_relative.md){.group-card} [Load Pair (19)](groups/load_pair.md){.group-card} [Load Post-Index (19)](groups/load_post_index.md){.group-card} [Load Pre-Index (19)](groups/load_pre_index.md){.group-card}
-[Load Register Offset (22)](groups/load_register_offset.md){.group-card} [Load Symbol (7)](groups/load_symbol.md){.group-card} [Load UnScaled (16)](groups/load_unscaled.md){.group-card} [Long Immediate (2)](groups/long_immediate.md){.group-card}
-[Max-Min (6)](groups/max_min.md){.group-card} [Move (3)](groups/move.md){.group-card} [Multi-Cycle ALU (28)](groups/multi_cycle_alu.md){.group-card} [PC-Relative (4)](groups/pc_relative.md){.group-card}
-[Prefetch (4)](groups/prefetch.md){.group-card} [RESERVE (3)](groups/reserve.md){.group-card} [Reduce Operation with Register (9)](groups/reduce_operation_with_register.md){.group-card} [SSR Access (7)](groups/ssr_access.md){.group-card}
-[Set Commit Argument (26)](groups/set_commit_argument.md){.group-card} [Shuffle (8)](groups/shuffle.md){.group-card} [Store Immediate Offset (9)](groups/store_immediate_offset.md){.group-card} [Store Long Offset (7)](groups/store_long_offset.md){.group-card}
-[Store Offset (14)](groups/store_offset.md){.group-card} [Store PC-Relative (4)](groups/store_pc_relative.md){.group-card} [Store Pair (14)](groups/store_pair.md){.group-card} [Store Post-Index (14)](groups/store_post_index.md){.group-card}
-[Store Pre-Index (14)](groups/store_pre_index.md){.group-card} [Store Register Offset (21)](groups/store_register_offset.md){.group-card} [Store Symbol (4)](groups/store_symbol.md){.group-card} [Three Source Integer (2)](groups/three_source_integer.md){.group-card}
-[Three-Source Floating Point (8)](groups/three_source_floating_point.md){.group-card} [Two-Source Floating Point (12)](groups/two_source_floating_point.md){.group-card}
+<div class="quick-links">
+
+[:fontawesome-solid-sitemap: **Architecture Narrative**](arch/bisa.md) {.quick-link-card}
+: Block definitions, execution model, branching, program order, ACR, and architectural constraints.
+
+[:fontawesome-solid-server: **Architectural State**](register/common/intro.md) {.quick-link-card}
+: GGPR, SSR, BPC, tile state, loop/predicate state, and the layered execution model.
+
+[:fontawesome-solid-cubes: **Data Types**](datatype/intro.md) {.quick-link-card}
+: Floating-point, integer, microscaling, and low-precision format families.
+
+[:fontawesome-solid-layer-group: **Instruction Families**](instset/baseInstrs.md) {.quick-link-card}
+: Base, compressed, standard, half-long, long, vector, tensor, and template instruction families.
+
+[:fontawesome-solid-shapes: **Block-Type Guides**](blockIntro/std_block/intro.md) {.quick-link-card}
+: Scalar, vector, matrix, memory, system, template, and system-call block introductions.
+
+[:fontawesome-solid-code: **Programming Manual**](../compiler/manuals.md) {.quick-link-card}
+: Host/device workflow, kernel offload model, and compiler/toolchain usage.
 
 </div>
 
-See also: [Groups Index (detailed)](groups/index.md) · [All Instructions A–Z](instructions/index.md)
+---
+
+## Appendix Reference
+
+The following pages remain published as the exact generated reference surface:
+
+- [Encoding Formats](encoding.md)
+- [Group Index](groups/index.md)
+- [Instruction A–Z](instructions/index.md)
+
+They are still authoritative for generated encoding diagrams, per-mnemonic
+lookup, and spec-derived appendix detail. They are no longer the top-level ISA
+home page.
 
 ---
 
-## Instruction Quick Index
+## Recommended Reading Order
 
-Use **Ctrl+F** / **Cmd+F** to search, or browse the [full alphabetical list](instructions/index.md).
+1. Start with [background/index.md](../background/index.md) for the rationale.
+2. Read [arch/bisa.md](arch/bisa.md), [arch/execute.md](arch/execute.md), and
+   [arch/constraints.md](arch/constraints.md) for the imported architectural
+   model.
+3. Read [register/common/intro.md](register/common/intro.md) and
+   [datatype/intro.md](datatype/intro.md) for state and type foundations.
+4. Use [instset/baseInstrs.md](instset/baseInstrs.md) and the block-type
+   introduction pages to navigate instruction families.
+5. Use the [appendix reference](instructions/index.md) for exact generated
+   per-instruction detail.
+
+---
+
+## Appendix Quick Index
+
+Use **Ctrl+F** / **Cmd+F** here, or jump directly to the full
+[alphabetical appendix](instructions/index.md).
 
 | Mnemonic | Group | Bits | Description |
 |----------|-------|------|-------------|

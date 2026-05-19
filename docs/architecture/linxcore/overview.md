@@ -1,12 +1,4 @@
-<!-- AUTO-GENERATED FILE. DO NOT EDIT DIRECTLY. -->
-<!-- Source: rtl/LinxCore/docs/architecture/overview.md -->
-
 # LinxCore v0.56 Superscalar Bring-up Overview
-
-> This published page mirrors the canonical LinxCore source in
-> `rtl/LinxCore/docs/architecture/overview.md`.
-
-
 ## Scope
 
 This document is the top-level specification overview for LinxCore under the

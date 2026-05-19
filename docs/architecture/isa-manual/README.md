@@ -7,6 +7,17 @@ This directory contains the live v0.56.2 ISA manual for the **Linx Instruction S
 The content is specific to Linx’s design (block-structured control flow, `BSTART/BSTOP`, ClockHands temporaries,
 template instructions like `FENTRY`, etc).
 
+The docs site also publishes a broader Markdown manual hierarchy for the standalone site. That broader hierarchy is the primary public
+navigation surface, but this English AsciiDoc manual remains the normative
+English manual source for architecture-visible behavior.
+
+Related published pages:
+
+- `docs/background/`
+- `docs/compiler/`
+- `docs/isa/`
+- `docs/zh/` (Chinese edition)
+
 ## Build
 
 From this directory:

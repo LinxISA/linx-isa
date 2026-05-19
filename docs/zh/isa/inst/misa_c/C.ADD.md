@@ -1,0 +1,59 @@
+# C.ADD
+
+## 说明
+
+加法(*ADD*)  
+左源寄存器与右源寄存器相加，结果写到T寄存器队列。
+
+本指令的标准形式请见[ADD](../misa_g/ADD.md)。
+
+## 汇编语法
+
+```asm
+    c.add SrcL, SrcR, ->t
+```
+
+## 汇编符号
+
+- **SrcL**：左源寄存器，可以索引全局寄存器R0-R23和前序1-4条输出至T队列或U队列的指令结果。
+- **SrcR**：右源寄存器，可以索引全局寄存器R0-R23和前序1-4条输出至T队列或U队列的指令结果。
+- **->**：用于指示目的寄存器。
+- **t**：目的寄存器，代表块内的T寄存器队列。
+
+## 编码格式
+
+![c.add](../../../figs/bitfield/svg/Instruction_16bit/C.ADD.svg)
+
+## 执行方式
+
+- 转换为十进制数：[UInt()](../LibPseudoCode.md)
+- 通用寄存器读写：[R\[\]](../LibPseudoCode.md)
+
+```c
+    integer m = UInt(SrcL);
+    integer n = UInt(SrcR);
+    integer DataWidth = 64;
+
+    bits(DataWidth) operand1 = R[m, DataWidth];
+    bits(DataWidth) operand2 = R[n, DataWidth];
+    bits(DataWidth) result = operand1 + operand2;
+    T[id] = result;
+```
+
+## 汇编索引模式
+
+```asm
+    c.add a1, a2,    ->t             /* 双寄存器绝对索引 */
+    c.add a1, t#2,   ->t             /* 双寄存器混合索引 */
+    c.add a1, u#2,   ->t             /* 双寄存器混合索引 */
+    c.add t#1, a2,   ->t             /* 双寄存器混合索引 */
+    c.add t#1, t#2,  ->t             /* 双寄存器相对索引 */
+    c.add t#1, u#2,  ->t             /* 双寄存器相对索引 */
+    c.add u#1, a2,   ->t             /* 双寄存器混合索引 */
+    c.add u#1, t#2,  ->t             /* 双寄存器相对索引 */
+    c.add u#1, u#2,  ->t             /* 双寄存器相对索引 */
+```
+
+## 备注
+
+本指令属于[压缩指令扩展](../../instset/compressInstrs.md)，仅在使能了压缩扩展的处理器中支持使用。

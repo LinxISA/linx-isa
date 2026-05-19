@@ -1,12 +1,4 @@
-<!-- AUTO-GENERATED FILE. DO NOT EDIT DIRECTLY. -->
-<!-- Source: rtl/LinxCore/docs/architecture/module-catalog.md -->
-
 # LinxCore Module Catalog
-
-> This published page mirrors the canonical LinxCore source in
-> `rtl/LinxCore/docs/architecture/module-catalog.md`.
-
-
 This chapter defines the canonical module structure for LinxCore under the live
 `v0.56` superscalar contract.
 

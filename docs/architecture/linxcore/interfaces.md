@@ -1,5 +1,4 @@
 # LinxCore External Interface Contracts
-
 ## pyCircuit-LinxCore interface contract (LC-IF-PYC-001)
 
 The pyCircuit/LinxCore integration contract is versioned and gate-enforced.

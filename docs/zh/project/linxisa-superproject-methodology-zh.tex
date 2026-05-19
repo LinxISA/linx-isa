@@ -1,0 +1,902 @@
+\documentclass[UTF8,11pt,a4paper]{ctexart}
+
+\usepackage[a4paper,margin=2.4cm]{geometry}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{listings}
+\usepackage{fvextra}
+\usepackage{setspace}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  urlcolor=blue!50!black,
+  pdftitle={LinxISA Superproject 管理方法学与操作手册},
+  pdfauthor={OpenAI Codex},
+  pdfsubject={LinxISA bring-up superproject methodology},
+  pdfkeywords={LinxISA, superproject, submodule, bring-up, strict gate, test-driven}
+}
+
+\setmainfont{Times New Roman}
+\setsansfont{Helvetica Neue}
+\setmonofont{Menlo}
+\setCJKmainfont{PingFang SC}
+\setCJKsansfont{PingFang SC}
+\setCJKmonofont{STHeiti}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{LinxISA Superproject 管理方法学与操作手册}
+\rhead{\thepage}
+\setlength{\headheight}{14pt}
+
+\titleformat{\section}{\Large\bfseries}{\thesection}{0.8em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{0.8em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{0.8em}{}
+
+\setlist[itemize]{leftmargin=2em}
+\setlist[enumerate]{leftmargin=2.4em}
+\setstretch{1.18}
+
+\definecolor{codebg}{RGB}{247,248,250}
+\definecolor{codeframe}{RGB}{220,223,228}
+\definecolor{coderule}{RGB}{72,76,86}
+
+\lstdefinestyle{linxcode}{
+  backgroundcolor=\color{codebg},
+  basicstyle=\ttfamily\small,
+  frame=single,
+  rulecolor=\color{codeframe},
+  framerule=0.6pt,
+  columns=fullflexible,
+  breaklines=true,
+  keepspaces=true,
+  showstringspaces=false
+}
+
+\DefineVerbatimEnvironment{CodeBlock}{Verbatim}{
+  fontsize=\small,
+  breaklines=true,
+  breaksymbolleft={},
+  commandchars=\\\{\}
+}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering
+  \vspace*{3.2cm}
+  {\Huge\bfseries LinxISA Superproject\\管理方法学与操作手册\par}
+  \vspace{1.4cm}
+  {\Large 面向 Submodule 治理、Strict Gate、Strict Check 与 Test-Driven Bring-up 的中文手册\par}
+  \vspace{2.4cm}
+  {\large 适用范围：\texttt{linx-isa} bring-up superproject\par}
+  \vspace{0.6cm}
+  {\large 版本：2026-03-14\par}
+  \vfill
+  {\large 依据文档整合自：superproject methodology、new agent SOP、maintainer repin checklist\par}
+  \vspace{1.2cm}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{文档目标}
+
+本文将 LinxISA bring-up superproject 当前的英文方法学文档整理为一份中文手册，
+目的不是重新发明一套流程，而是把仓库中已经存在的治理结构、验证脚本、gate
+纪律和协作约束，压缩成一套适合人和 agent 共同执行的操作方法。
+
+这份手册回答四类问题：
+
+\begin{itemize}
+  \item superproject 到底负责什么，不负责什么；
+  \item 如何管理大量 submodule，避免把集成层变成补丁堆积层；
+  \item 什么叫 strict gate、strict check、test-driven bring-up；
+  \item 新 agent 与 maintainer 在日常工作中各自应该怎么做。
+\end{itemize}
+
+\section{执行摘要}
+
+LinxISA superproject 的核心不是“把所有代码放在一个仓库里统一维护”，而是把
+多个独立模块的 bring-up 结果用统一的 topology、ownership、validation 和
+evidence 机制串起来。
+
+整个方法学可以压缩成七条原则：
+
+\begin{enumerate}
+  \item superproject 是协调层，不是实现倾倒区。
+  \item 叶子模块先修复，superproject 后 repin。
+  \item 所有可宣称的 bring-up 进展都必须落到 gate、test 或 contract 上。
+  \item required 且 non-waived 的 gate 必须通过，不能靠口头解释过关。
+  \item 机器可读证据优先于 markdown 状态页。
+  \item \texttt{pin} 与 \texttt{external} 双 lane 是严格收敛的基础。
+  \item 每次改动都必须能回答：谁负责、证明是什么、证据在哪、是否需要 repin。
+\end{enumerate}
+
+\section{Superproject 的职责边界}
+
+\subsection{Superproject 负责什么}
+
+\texttt{linx-isa} superproject 的职责是跨仓库协调，而不是替代 leaf repo 的实现。
+它负责：
+
+\begin{itemize}
+  \item 维护 root \texttt{.gitmodules} 中的 submodule 拓扑；
+  \item 维护 \texttt{docs/} 和 \texttt{isa/} 中的架构与 bring-up 合同；
+  \item 维护跨模块 gate、strict closure 和 run artifact；
+  \item 维护 gate ownership、waiver ledger 与技能映射；
+  \item 记录被验证过的已知良好 SHA 组合。
+\end{itemize}
+
+\subsection{Superproject 不负责什么}
+
+它不应该做下面这些事：
+
+\begin{itemize}
+  \item 不把 \texttt{compiler/llvm}、\texttt{emulator/qemu}、\texttt{kernel/linux}、
+  \texttt{rtl/LinxCore}、\texttt{tools/pyCircuit}、\texttt{lib/glibc}、
+  \texttt{lib/musl} 变成“只在 superproject 修补”的影子副本；
+  \item 不用 superproject 层 workaround 掩盖 leaf module 的真实缺陷；
+  \item 不把状态 markdown 当作比 canonical JSON 更高的真相源。
+\end{itemize}
+
+\subsection{一个判断准则}
+
+如果 bug 明显属于某个 leaf module，那么修复必须先落在该模块的 owning repo
+中；superproject 只负责 repin、闭环验证和证据发布。
+
+\section{四个控制平面}
+
+LinxISA 之所以能管理这么多模块，是因为它把复杂性拆成四个平面，而不是把所有
+信息混在一个“进度表”里。
+
+\subsection{Topology 平面}
+
+Topology 负责回答：代码应该在哪里、哪些路径允许存在、哪些路径禁止复活。
+
+关键文件：
+
+\begin{itemize}
+  \item \texttt{AGENTS.md}
+  \item \texttt{docs/project/navigation.md}
+  \item \texttt{docs/project/repository-flow.md}
+  \item \texttt{.gitmodules}
+  \item \texttt{tools/ci/check\_repo\_layout.sh}
+\end{itemize}
+
+核心规则：
+
+\begin{itemize}
+  \item 不新增随机顶层目录；
+  \item 不恢复废弃路径，例如 \texttt{tests/}、\texttt{examples/}、
+  \texttt{compiler/linx-llvm}、\texttt{emulator/linx-qemu}；
+  \item Linx 生态的 submodule 链接只存在于 root \texttt{.gitmodules}。
+\end{itemize}
+
+\subsection{Ownership 平面}
+
+Ownership 负责回答：谁负责哪个 gate、agent 能改哪些模块、跨模块权限何时允许。
+
+关键文件：
+
+\begin{itemize}
+  \item \texttt{docs/bringup/agent\_runs/manifest.yaml}
+  \item \texttt{docs/bringup/agent\_runs/checklists/*.md}
+  \item \texttt{docs/bringup/agent\_runs/waivers.yaml}
+\end{itemize}
+
+核心规则：
+
+\begin{itemize}
+  \item 每个 required gate key 都应映射到 checklist owner；
+  \item agent 必须显式声明可操作模块；
+  \item 只有批准过的 cross-module agent 才能跨多个模块工作；
+  \item canonical skill name 是协作合同的一部分。
+\end{itemize}
+
+\subsection{Validation 平面}
+
+Validation 负责回答：什么算通过、哪些检查是 blocker、strict closure 如何定义。
+
+关键入口：
+
+\begin{itemize}
+  \item \texttt{tools/regression/strict\_cross\_repo.sh}
+  \item \texttt{tools/bringup/check\_multi\_agent\_gates.py}
+  \item \texttt{tools/bringup/check\_gate\_consistency.py}
+  \item \texttt{tools/bringup/check\_avs\_contract.py}
+  \item \texttt{tools/bringup/check\_avs\_profile\_closure.py}
+  \item \texttt{tools/bringup/run\_runtime\_convergence.sh}
+\end{itemize}
+
+核心规则：
+
+\begin{itemize}
+  \item 结构性静态校验不通过时，运行时结果不可信；
+  \item runtime closure 必须带 lane 和 run-id；
+  \item release-strict closure 需要 \texttt{pin} 和 \texttt{external} 双 lane。
+\end{itemize}
+
+\subsection{Evidence 平面}
+
+Evidence 负责回答：证据在哪、是否新鲜、是否能重放、是否与状态页一致。
+
+关键工件：
+
+\begin{itemize}
+  \item \texttt{docs/bringup/gates/latest.json}
+  \item \texttt{docs/bringup/GATE\_STATUS.md}
+  \item \texttt{docs/bringup/gates/logs/<run-id>/<lane>/...}
+  \item \texttt{docs/bringup/agent\_runs/skills\_evolution/latest.json}
+\end{itemize}
+
+核心规则：
+
+\begin{itemize}
+  \item 每个 run 都要记录 command、lane、timestamp、result、artifact；
+  \item SHA manifest 必须精确标识测试时的版本；
+  \item 生成的 markdown 视图必须与 canonical JSON 的时间戳一致。
+\end{itemize}
+
+\section{Canonical 模块模型}
+
+Superproject 的扩展性来自一个简单规则：每个大模块先证明自己局部正确，
+superproject 再证明这些局部正确的模块在一起仍然正确。
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.17\textwidth} >{\raggedright\arraybackslash}p{0.27\textwidth} >{\raggedright\arraybackslash}p{0.46\textwidth}}
+\toprule
+域 & Canonical 模块 & 主要 closure surface \\
+\midrule
+\endhead
+ISA / 文档 & \texttt{isa}, \texttt{docs} & contract check、architecture lint、AVS contract \\
+Compiler & \texttt{compiler/llvm} & compile AVS、coverage、tool build closure \\
+Emulator & \texttt{emulator/qemu} & runtime AVS、strict system、opcode sync \\
+Kernel & \texttt{kernel/linux} & initramfs smoke/full boot、\texttt{vmlinux} build closure \\
+Library & \texttt{lib/glibc}, \texttt{lib/musl} & libc stage gates、runtime smoke \\
+RTL & \texttt{rtl/LinxCore} & lint、cosim、perf floor \\
+Model & \texttt{tools/pyCircuit} & model diff、interface contract \\
+Integration & superproject & strict cross-repo closure、dual-lane parity \\
+\bottomrule
+\end{longtable}
+
+这是管理复杂 bring-up 系统的关键：责任边界先明确，再谈集成。
+
+\section{为什么一定要双 Lane}
+
+LinxISA 的严格 bring-up 依赖两个 lane：
+
+\begin{itemize}
+  \item \texttt{pin}：使用 superproject 当前记录的 submodule SHA；
+  \item \texttt{external}：使用当前外部工作树或外部 build。
+\end{itemize}
+
+二者分别回答两个不同问题：
+
+\begin{enumerate}
+  \item 当前 pinned workspace 是否可复现地通过；
+  \item 下一次 repin 后，系统是否仍然会通过。
+\end{enumerate}
+
+只有 \texttt{external} 通过，说明“未来也许能工作”，但 pinned 环境可能还没稳定；
+只有 \texttt{pin} 通过，说明“当前版本可复现”，但你可能还没有看见下一轮集成
+回归。strict closure 要求同时回答这两个问题。
+
+\section{Strict Gate 与 Strict Check}
+
+\subsection{Strict Gate 的定义}
+
+在 LinxISA 里，strict 不是口号，而是可执行约束。strict gate 至少意味着：
+
+\begin{itemize}
+  \item required 且 non-waived 的 gate 必须通过；
+  \item waiver 必须显式记录在 waiver ledger；
+  \item lane、run-id、timestamp 是必填上下文；
+  \item 陈旧工件会被拒绝；
+  \item release-strict 模式不允许 blocked-mode shortcut；
+  \item markdown 状态页不能与 canonical JSON 冲突；
+  \item \texttt{pin} 与 \texttt{external} 两个 lane 的 required gate set 必须一致。
+\end{itemize}
+
+\subsection{Strict Check 的两层结构}
+
+\subsubsection{静态严格检查}
+
+静态检查先验证结构本身是否可信，例如：
+
+\begin{itemize}
+  \item manifest schema；
+  \item enforcement mode；
+  \item checklist ID 完整性；
+  \item gate owner 覆盖率；
+  \item canonical skill names；
+  \item module scope 合法性；
+  \item waiver 的 phase 绑定和过期时间。
+\end{itemize}
+
+核心命令：
+
+\begin{CodeBlock}
+python3 tools/bringup/check_multi_agent_gates.py \
+  --strict-always \
+  --mode static \
+  --manifest docs/bringup/agent_runs/manifest.yaml \
+  --waivers docs/bringup/agent_runs/waivers.yaml \
+  --checklists-root docs/bringup/agent_runs/checklists
+\end{CodeBlock}
+
+\subsubsection{运行时严格检查}
+
+运行时检查验证某个具体 lane/run 是否满足静态策略：
+
+\begin{itemize}
+  \item required runtime row 是否有合法 owner；
+  \item required 且 non-waived row 是否全部为 \texttt{pass}；
+  \item waiver 是否只在 active phase 内有效；
+  \item multi-agent summary JSON 是否存在并与本次 run 对应；
+  \item 证据是否是当前 run 的证据，而不是旧结果。
+\end{itemize}
+
+核心命令形式：
+
+\begin{CodeBlock}
+python3 tools/bringup/check_multi_agent_gates.py \
+  --strict-always \
+  --mode runtime \
+  --manifest docs/bringup/agent_runs/manifest.yaml \
+  --waivers docs/bringup/agent_runs/waivers.yaml \
+  --checklists-root docs/bringup/agent_runs/checklists \
+  --report docs/bringup/gates/latest.json \
+  --lane pin \
+  --run-id <run-id> \
+  --out docs/bringup/gates/logs/<run-id>/pin/multi_agent_summary.json
+\end{CodeBlock}
+
+\section{Test-Driven Bring-up 方法}
+
+LinxISA 的 bring-up 不以“代码已经写出来”为完成条件，而以“正确的 gate 已经
+通过并留下了证据”为完成条件。
+
+推荐闭环如下：
+
+\begin{enumerate}
+  \item 从失败的 contract、test、audit 或 gate 开始；
+  \item 先用最小可复现命令重现问题；
+  \item 识别 owning domain 和 owning module；
+  \item 在 leaf module 中修复；
+  \item 重跑 leaf gate，直到局部证据变绿；
+  \item 如果 leaf repo 版本变了，在 superproject 中 repin；
+  \item 再跑 strict cross-repo closure；
+  \item 发布新的 machine-readable evidence。
+\end{enumerate}
+
+这能避免一种常见失控模式：把 superproject 当成“掩盖叶子模块问题的地方”。
+
+\section{为什么这种方法能管理复杂系统}
+
+当模块很多时，失控往往来自三件事：
+
+\begin{itemize}
+  \item 所有人都能改所有模块，责任边界消失；
+  \item 状态靠文字汇报，而不是靠可执行证据；
+  \item repin 没有 discipline，多个模块被一起“顺手升级”。
+\end{itemize}
+
+LinxISA 通过下面的设计把系统稳定下来：
+
+\begin{enumerate}
+  \item 用 manifest 和 checklist 把 gate ownership 固化；
+  \item 用 static/runtime validator 把流程本身也变成 gate；
+  \item 用 dual-lane 机制把“当前可复现”与“下一次集成风险”分开看；
+  \item 用 evidence pack 把每次 run 变成可审计对象；
+  \item 用 repin discipline 保证集成动作总是建立在 leaf proof 之上。
+\end{enumerate}
+
+\section{新 Agent 简化 SOP}
+
+\subsection{任务目标}
+
+新 agent 的目标不是“把仓库看起来弄绿”，而是：
+
+\begin{enumerate}
+  \item 留在 canonical workspace 和允许的 module scope 内；
+  \item 找到最小失败点；
+  \item 优先修复 owning leaf module；
+  \item 在 leaf proof 变绿后再 repin 和重跑 strict closure；
+  \item 留下机器可读证据。
+\end{enumerate}
+
+\subsection{动手前先做什么}
+
+从仓库根目录运行：
+
+\begin{CodeBlock}
+git submodule sync --recursive
+git submodule update --init --recursive
+bash tools/ci/check_repo_layout.sh
+\end{CodeBlock}
+
+如果 layout check 失败，先停下来修 topology，不要继续解释运行时结果。
+
+\subsection{先读哪些文件}
+
+按下面顺序读取，避免上下文膨胀：
+
+\begin{enumerate}
+  \item \texttt{AGENTS.md}
+  \item \texttt{docs/project/navigation.md}
+  \item \texttt{docs/bringup/agent\_runs/manifest.yaml}
+  \item 你负责的 checklist
+  \item 对应 gate 脚本
+\end{enumerate}
+
+如果任务是架构语义相关，再补读 \texttt{docs/} 或 \texttt{isa/} 中的合同文档。
+
+\subsection{Scope 规则}
+
+\begin{itemize}
+  \item 只在声明过的模块内工作；
+  \item 不创建新的顶层目录；
+  \item 不把工作放进禁止路径；
+  \item 不在 superproject 层修一个明显属于 leaf module 的 bug；
+  \item 不把生成的 markdown 当作最高真相。
+\end{itemize}
+
+\subsection{真相源优先级}
+
+当多个文件相互冲突时，优先级如下：
+
+\begin{enumerate}
+  \item 失败的 test 或 gate command；
+  \item \texttt{isa/} 与 \texttt{docs/architecture/} 中的 canonical contract；
+  \item 机器可读报告，例如 \texttt{docs/bringup/gates/latest.json}；
+  \item 生成的 markdown 视图，例如 \texttt{docs/bringup/GATE\_STATUS.md}。
+\end{enumerate}
+
+\subsection{标准 Agent 闭环}
+
+\begin{enumerate}
+  \item 用最小 gate 重现问题；
+  \item 找到 owning domain 和 module；
+  \item 在 leaf module 内修复；
+  \item 重跑 leaf gate；
+  \item 如有必要，在 superproject repin submodule SHA；
+  \item 运行 strict cross-repo closure；
+  \item 刷新 machine-readable artifact 与派生视图。
+\end{enumerate}
+
+\subsection{最常用命令}
+
+\subsubsection{静态策略检查}
+
+\begin{CodeBlock}
+python3 tools/bringup/check_multi_agent_gates.py \
+  --strict-always \
+  --mode static \
+  --manifest docs/bringup/agent_runs/manifest.yaml \
+  --waivers docs/bringup/agent_runs/waivers.yaml \
+  --checklists-root docs/bringup/agent_runs/checklists
+\end{CodeBlock}
+
+\subsubsection{AVS 合同检查}
+
+\begin{CodeBlock}
+python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml
+python3 tools/bringup/check_avs_profile_closure.py \
+  --matrix avs/linx_avs_v1_test_matrix.yaml \
+  --status avs/linx_avs_v1_test_matrix_status.json \
+  --tier pr
+\end{CodeBlock}
+
+\subsubsection{严格跨仓库闭环}
+
+\begin{CodeBlock}
+LINX_GATE_TIER=pr RUN_EXTENDED_CROSS_GATES=1 \
+bash tools/regression/strict_cross_repo.sh
+\end{CodeBlock}
+
+\subsubsection{双 Lane 收敛}
+
+\begin{CodeBlock}
+LINX_GATE_TIER=pr RUN_EXTENDED_CROSS_GATES=1 \
+bash tools/bringup/run_runtime_convergence.sh --lane pin --run-id <run-id-pin>
+
+LINX_GATE_TIER=pr RUN_EXTENDED_CROSS_GATES=1 \
+bash tools/bringup/run_runtime_convergence.sh --lane external --run-id <run-id-external>
+\end{CodeBlock}
+
+\subsection{按失败面路由到模块}
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.42\textwidth} >{\raggedright\arraybackslash}p{0.46\textwidth}}
+\toprule
+失败面 & 首先进入的模块 \\
+\midrule
+\endhead
+compile AVS、coverage、LLVM binutils & \texttt{compiler/llvm} \\
+runtime AVS、strict system、opcode sync & \texttt{emulator/qemu} \\
+Linux smoke/full boot、\texttt{vmlinux} build & \texttt{kernel/linux} \\
+musl/glibc runtime 或 build closure & \texttt{lib/musl}, \texttt{lib/glibc} \\
+cosim、stage/connectivity、perf floor & \texttt{rtl/LinxCore} \\
+model diff、interface contract & \texttt{tools/pyCircuit} \\
+contract docs、architecture lint、AVS contract & \texttt{isa}, \texttt{docs} \\
+lane parity、gate consistency、evidence packaging & superproject \\
+\bottomrule
+\end{longtable}
+
+\subsection{故障分诊顺序}
+
+始终按这个顺序分诊：
+
+\begin{enumerate}
+  \item topology failure；
+  \item static policy failure；
+  \item leaf-module gate failure；
+  \item integration closure failure；
+  \item evidence freshness 或 report mismatch。
+\end{enumerate}
+
+不要在 leaf gate 还是红的时候先调 dual-lane parity。
+
+\subsection{Waiver 与 Stop Condition}
+
+waiver 只有满足下面条件时才合法：
+
+\begin{itemize}
+  \item 显式记录；
+  \item phase-bound；
+  \item time-limited；
+  \item 出现在 \texttt{docs/bringup/agent\_runs/waivers.yaml}。
+\end{itemize}
+
+当出现以下情况时，agent 应停止并升级：
+
+\begin{itemize}
+  \item 需要越过已声明的 module scope；
+  \item 唯一 workaround 会违反架构合同；
+  \item 两个 canonical source 明显冲突，且无法判断谁是 stale；
+  \item 用户已有修改与当前修复直接冲突。
+\end{itemize}
+
+\subsection{Agent Closeout}
+
+宣布完成前至少确认：
+
+\begin{enumerate}
+  \item 最小相关 leaf gate 已通过；
+  \item 如果涉及集成，strict cross-repo closure 已通过；
+  \item artifact path 存在；
+  \item 已明确给出 repin / no-repin / blocked-with-waiver 决策；
+  \item markdown 视图是从 canonical report 生成，而不是手改。
+\end{enumerate}
+
+\section{Maintainer Repin Checklist}
+
+\subsection{Repin 前置条件}
+
+在开始更新 submodule SHA 前，应确认：
+
+\begin{itemize}
+  \item leaf-module 改动已经存在于 owning repository；
+  \item leaf owner 已跑过该模块的核心 gate；
+  \item repin 原因明确；
+  \item 预期会影响哪些 gate 是已知的。
+\end{itemize}
+
+错误的 repin 方式：
+
+\begin{itemize}
+  \item “上游都变了，所以一起 bump 一下。”
+\end{itemize}
+
+正确的 repin 方式：
+
+\begin{itemize}
+  \item “QEMU strict-system timer 修复已落地，因此 repin
+  \texttt{emulator/qemu}，然后重跑 QEMU 和 integration closure。”
+\end{itemize}
+
+\subsection{Repin 前要写清楚四件事}
+
+在编辑 SHA 前，maintainer 应能写下：
+
+\begin{enumerate}
+  \item 哪些模块将被 repin；
+  \item 每个模块为什么变化；
+  \item 哪些 gate 预计会受影响；
+  \item 这是 leaf-only 还是 cross-module 变更。
+\end{enumerate}
+
+如果这四个问题答不清，说明 repin batch 过于模糊。
+
+\subsection{工作区准备}
+
+\begin{CodeBlock}
+git submodule sync --recursive
+git submodule update --init --recursive
+bash tools/ci/check_repo_layout.sh
+\end{CodeBlock}
+
+新的 bring-up 周期建议先同步 canonical skills：
+
+\begin{CodeBlock}
+bash tools/bringup/sync_canonical_skills.sh --pull-latest
+\end{CodeBlock}
+
+\subsection{静态策略守门}
+
+\begin{CodeBlock}
+python3 tools/bringup/check_multi_agent_gates.py \
+  --strict-always \
+  --mode static \
+  --manifest docs/bringup/agent_runs/manifest.yaml \
+  --waivers docs/bringup/agent_runs/waivers.yaml \
+  --checklists-root docs/bringup/agent_runs/checklists
+\end{CodeBlock}
+
+如果这一步失败，不要继续信任后面的 runtime 结果。
+
+\subsection{Repin 机械步骤}
+
+原则上只更新 intended modules。通用形式如下：
+
+\begin{CodeBlock}
+git submodule update --remote \
+  compiler/llvm \
+  emulator/qemu \
+  kernel/linux \
+  rtl/LinxCore \
+  tools/pyCircuit \
+  lib/glibc \
+  lib/musl \
+  workloads/pto_kernels
+\end{CodeBlock}
+
+实际执行时，应尽量收窄到这次确实需要 repin 的模块。
+
+更新后立刻检查：
+
+\begin{CodeBlock}
+git status
+git diff --submodule
+\end{CodeBlock}
+
+确认：
+
+\begin{itemize}
+  \item 只有 intended submodule 发生 SHA 移动；
+  \item \texttt{.gitmodules} 只在 URL 策略确有变化时才改；
+  \item 没有混入无关工作区噪音。
+\end{itemize}
+
+\subsection{每个模块必须回答的四个问题}
+
+对每个 repinned module，maintainer 至少要回答：
+
+\begin{enumerate}
+  \item 哪个 leaf gate 证明了新 SHA 是健康的；
+  \item 哪个 cross-repo gate 可能因为这次 SHA 移动而回归；
+  \item 这次 repin 只需验证 \texttt{pin}，还是必须验证 \texttt{pin} 与
+  \texttt{external}；
+  \item 是否有 waiver 需要新增、移除或自然过期。
+\end{enumerate}
+
+\subsection{Repin 后的最小 Gate 矩阵}
+
+\subsubsection{默认必跑}
+
+\begin{CodeBlock}
+python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml
+python3 tools/bringup/check_avs_profile_closure.py \
+  --matrix avs/linx_avs_v1_test_matrix.yaml \
+  --status avs/linx_avs_v1_test_matrix_status.json \
+  --tier pr
+LINX_GATE_TIER=pr RUN_EXTENDED_CROSS_GATES=1 \
+bash tools/regression/strict_cross_repo.sh
+\end{CodeBlock}
+
+\subsubsection{当严格集成 parity 很重要时}
+
+\begin{CodeBlock}
+LINX_GATE_TIER=pr RUN_EXTENDED_CROSS_GATES=1 \
+bash tools/bringup/run_runtime_convergence.sh --lane pin --run-id <run-id-pin>
+
+LINX_GATE_TIER=pr RUN_EXTENDED_CROSS_GATES=1 \
+bash tools/bringup/run_runtime_convergence.sh --lane external --run-id <run-id-external>
+\end{CodeBlock}
+
+\subsubsection{当要关闭 release-strict 质量 run 时}
+
+\begin{CodeBlock}
+python3 tools/bringup/check_gate_consistency.py \
+  --report docs/bringup/gates/latest.json \
+  --progress docs/bringup/PROGRESS.md \
+  --gate-status docs/bringup/GATE_STATUS.md \
+  --libc-status docs/bringup/libc_status.md \
+  --profile release-strict \
+  --lane-policy external+pin-required \
+  --trace-schema-version 1.0 \
+  --max-age-hours 24
+\end{CodeBlock}
+
+\subsection{按模块给出的最低证明}
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.30\textwidth} >{\raggedright\arraybackslash}p{0.58\textwidth}}
+\toprule
+模块 & 期望的最低证明 \\
+\midrule
+\endhead
+\texttt{compiler/llvm} & compile AVS、coverage；若关系到 Linux/libc，还要检查辅助 LLVM tool closure \\
+\texttt{emulator/qemu} & strict system、runtime AVS、opcode sync、pinned binary build \\
+\texttt{kernel/linux} & \texttt{vmlinux} build、initramfs smoke/full boot \\
+\texttt{lib/glibc} & 当前 profile 下适用的 G1a/G1b stage gate \\
+\texttt{lib/musl} & build closure 与 runtime smoke \\
+\texttt{rtl/LinxCore} & 当前 phase 下对应的 lint/cosim/perf gate \\
+\texttt{tools/pyCircuit} & interface contract 与 model diff \\
+\texttt{isa}, \texttt{docs} & contract check 和相关生成工件刷新 \\
+\bottomrule
+\end{longtable}
+
+\subsection{证据打包检查表}
+
+在合并 repin 前，maintainer 应能指向：
+
+\begin{itemize}
+  \item run ID；
+  \item lane；
+  \item 精确命令；
+  \item 日志路径；
+  \item \texttt{docs/bringup/gates/latest.json} 中的 SHA manifest entry；
+  \item 必要时刷新过的状态页；
+  \item strict runtime closure 对应的 multi-agent summary JSON。
+\end{itemize}
+
+如果这些项目缺失，repin 就不应合并。
+
+\subsection{Waiver 纪律}
+
+不要通过修改 prose 或依赖隐性共识，把一个红 gate 偷偷带过 repin。
+
+若确实需要 waiver，必须：
+
+\begin{itemize}
+  \item 记录到 \texttt{docs/bringup/agent\_runs/waivers.yaml}；
+  \item 绑定 active phase；
+  \item 指定 owner 和 \texttt{expires\_utc}；
+  \item 确保 runtime validator 能看见它。
+\end{itemize}
+
+如果 waiver 已经不需要了，应在同一维护窗口中移除。
+
+\subsection{合并判据}
+
+repin 只有在下面条件满足时才算 ready：
+
+\begin{itemize}
+  \item 本批次只包含 intended modules 的 SHA 变化；
+  \item required 且 non-waived 的 gates 全绿；
+  \item 证据新鲜且机器可读；
+  \item 目标 closure level 所要求的 lane policy 已满足；
+  \item 生成的 markdown 与 canonical JSON 一致；
+  \item commit message 清楚描述了模块范围与 repin 原因。
+\end{itemize}
+
+\subsection{推荐 Commit 形态}
+
+推荐：
+
+\begin{itemize}
+  \item \texttt{chore(submodule): repin emulator/qemu for strict-system timer fix}
+  \item \texttt{chore(submodules): repin compiler/llvm and kernel/linux for pinned build closure}
+\end{itemize}
+
+避免：
+
+\begin{itemize}
+  \item \texttt{update deps}
+  \item \texttt{sync repos}
+  \item \texttt{latest upstream}
+\end{itemize}
+
+\section{日常操作 Runbook}
+
+\subsection{新一轮 Bring-up 周期的最小流程}
+
+\begin{enumerate}
+  \item 同步 submodule 并验证 layout；
+  \item 同步 canonical skills；
+  \item 运行 static strict checks；
+  \item 跑最小失败 gate；
+  \item 回到 owning leaf module 修复；
+  \item 如有必要 repin 子模块 SHA；
+  \item 跑 PR-tier strict closure；
+  \item 如有必要跑 dual-lane convergence；
+  \item 最后跑 consistency check 并刷新状态页。
+\end{enumerate}
+
+\subsection{建议的命令序列}
+
+\begin{CodeBlock}
+git submodule sync --recursive
+git submodule update --init --recursive
+bash tools/ci/check_repo_layout.sh
+
+bash tools/bringup/sync_canonical_skills.sh --pull-latest
+
+python3 tools/bringup/check_multi_agent_gates.py \
+  --strict-always \
+  --mode static \
+  --manifest docs/bringup/agent_runs/manifest.yaml \
+  --waivers docs/bringup/agent_runs/waivers.yaml \
+  --checklists-root docs/bringup/agent_runs/checklists
+
+python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml
+python3 tools/bringup/check_avs_profile_closure.py \
+  --matrix avs/linx_avs_v1_test_matrix.yaml \
+  --status avs/linx_avs_v1_test_matrix_status.json \
+  --tier pr
+
+LINX_GATE_TIER=pr RUN_EXTENDED_CROSS_GATES=1 \
+bash tools/regression/strict_cross_repo.sh
+\end{CodeBlock}
+
+\section{故障处理顺序}
+
+当整个系统出错时，推荐修复顺序如下：
+
+\begin{enumerate}
+  \item topology failure；
+  \item static policy failure；
+  \item leaf gate failure；
+  \item integration closure failure；
+  \item report freshness / evidence mismatch。
+\end{enumerate}
+
+这条顺序非常重要。很多集成层错误只是 leaf regression 的二次症状，
+如果顺序反了，会浪费大量排障时间。
+
+\section{反模式}
+
+以下做法会迅速破坏大型 bring-up 项目的可维护性，应避免：
+
+\begin{itemize}
+  \item 手改 \texttt{GATE\_STATUS.md} 而不更新 canonical JSON；
+  \item 用 superproject workaround 遮盖 leaf module bug；
+  \item 引入平行但“看起来差不多”的非 canonical 路径；
+  \item 把多个无关 repin 混在一个 speculative batch 里；
+  \item 把 waiver 当成永久政策；
+  \item 在 strict closure 需要双 lane 时只跑一个 lane；
+  \item 让没有明确 module scope 和 checklist ownership 的 agent 参与关键闭环。
+\end{itemize}
+
+\section{结语}
+
+LinxISA 能够把编译器、模拟器、Linux、RTL、模型、libc 等多个模块组织成
+一个可 bring-up、可收敛、可维护的复杂系统，依赖的不是“更多会议”和“更多
+状态汇报”，而是下面这套可执行结构：
+
+\begin{itemize}
+  \item contract 放在 \texttt{isa/} 和 \texttt{docs/}；
+  \item topology 放在 root policy 与 \texttt{.gitmodules}；
+  \item ownership 放在 \texttt{manifest.yaml} 和 checklist；
+  \item integration truth 放在 strict gate；
+  \item release truth 放在 canonical JSON evidence。
+\end{itemize}
+
+这也是它对 agent 友好的地方：agent 不需要依赖大量口口相传的 tribal
+knowledge，只要仓库已经清楚表达：
+
+\begin{itemize}
+  \item 你能改哪里；
+  \item 你要证明什么；
+  \item 失败归谁负责；
+  \item 哪个 artifact 才是权威证据。
+\end{itemize}
+
+\end{document}

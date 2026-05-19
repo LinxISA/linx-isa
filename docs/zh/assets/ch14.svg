@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 80" width="120" height="80">
+  <defs>
+    <linearGradient id="bg14" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e11d48;stop-opacity:0.15"/>
+      <stop offset="100%" style="stop-color:#e11d48;stop-opacity:0.05"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="80" rx="8" fill="url(#bg14)"/>
+  <rect x="0" y="0" width="4" height="80" rx="2" fill="#e11d48"/>
+  <text x="60" y="26" font-family="monospace" font-size="22" font-weight="700"
+        text-anchor="middle" fill="#e11d48">14</text>
+  <text x="60" y="48" font-family="system-ui,sans-serif" font-size="9" font-weight="600"
+        text-anchor="middle" fill="#475569">AMO</text>
+  <text x="60" y="62" font-family="system-ui,sans-serif" font-size="7"
+        text-anchor="middle" fill="#94a3b8">AMO</text>
+</svg>

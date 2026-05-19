@@ -1,0 +1,1 @@
+参见[架构](../../isa/register/common/intro.md)

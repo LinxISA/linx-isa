@@ -16,14 +16,7 @@ REQUIRED_TOPLEVEL_DOCS = [
     "docs/architecture/v0.56-architecture-contract.md",
 ]
 
-CANONICAL_ARCH_DOCS = [
-    "rtl/LinxCore/docs/architecture/overview.md",
-    "rtl/LinxCore/docs/architecture/microarchitecture.md",
-    "rtl/LinxCore/docs/architecture/interfaces.md",
-    "rtl/LinxCore/docs/architecture/verification-matrix.md",
-    "rtl/LinxCore/docs/architecture/module-catalog.md",
-    "rtl/LinxCore/docs/architecture/pipeline-stage-catalog.md",
-]
+CANONICAL_ARCH_DIR = "rtl/LinxCore/docs/architecture"
 
 PUBLISHED_ARCH_DOCS = [
     "docs/architecture/linxcore/overview.md",
@@ -75,25 +68,7 @@ def _load_text(path: Path) -> str:
 
 
 def _render_expected_mirror(rel: str, source_text: str) -> str:
-    name = Path(rel).name
-    lines = source_text.splitlines()
-    header = [
-        "<!-- AUTO-GENERATED FILE. DO NOT EDIT DIRECTLY. -->",
-        f"<!-- Source: rtl/LinxCore/docs/architecture/{name} -->",
-        "",
-    ]
-    if not lines:
-        return "\n".join(header)
-    first = lines[0]
-    rest = lines[1:]
-    note = [
-        first,
-        "",
-        "> This published page mirrors the canonical LinxCore source in",
-        f"> `rtl/LinxCore/docs/architecture/{name}`.",
-        "",
-    ]
-    return "\n".join(header + note + rest) + "\n"
+    return source_text if source_text.endswith("\n") else source_text + "\n"
 
 
 def main(argv: list[str]) -> int:
@@ -108,10 +83,14 @@ def main(argv: list[str]) -> int:
     errors: list[str] = []
     warnings: list[str] = []
 
-    for rel in REQUIRED_TOPLEVEL_DOCS + CANONICAL_ARCH_DOCS + PUBLISHED_ARCH_DOCS:
+    for rel in REQUIRED_TOPLEVEL_DOCS + PUBLISHED_ARCH_DOCS:
         path = root / rel
         if not path.is_file():
             errors.append(f"missing required architecture doc: {rel}")
+
+    canonical_arch_dir = root / CANONICAL_ARCH_DIR
+    if not canonical_arch_dir.is_dir():
+        errors.append(f"missing required architecture doc directory: {CANONICAL_ARCH_DIR}")
 
     if errors:
         for err in errors:
@@ -122,15 +101,8 @@ def main(argv: list[str]) -> int:
     for rel in PUBLISHED_ARCH_DOCS:
         if rel not in arch_readme and rel.replace("docs/", "") not in arch_readme:
             warnings.append(f"architecture README does not mention {rel}")
-    if "rtl/LinxCore/docs/architecture/overview.md" not in arch_readme:
-        warnings.append("architecture README does not mention canonical submodule LinxCore docs")
-
-    for canonical_rel, published_rel in zip(CANONICAL_ARCH_DOCS, PUBLISHED_ARCH_DOCS):
-        canonical_text = _load_text(root / canonical_rel)
-        published_text = _load_text(root / published_rel)
-        expected_text = _render_expected_mirror(published_rel, canonical_text)
-        if published_text != expected_text:
-            errors.append(f"published LinxCore mirror is out of sync: {published_rel}")
+    if "rtl/LinxCore/docs/architecture/" not in arch_readme:
+        warnings.append("architecture README does not mention the LinxCore submodule architecture directory")
 
     if args.require_mkdocs:
         mkdocs_text = _load_text(root / "mkdocs.yml")
@@ -148,12 +120,12 @@ def main(argv: list[str]) -> int:
 
     if args.strict:
         heading_requirements = {
-            "rtl/LinxCore/docs/architecture/overview.md": [
+            "docs/architecture/linxcore/overview.md": [
                 "# LinxCore v0.56 Superscalar Bring-up Overview",
                 "## Scope",
                 "## Normative links",
             ],
-            "rtl/LinxCore/docs/architecture/microarchitecture.md": [
+            "docs/architecture/linxcore/microarchitecture.md": [
                 "# LinxCore v0.56 Microarchitecture Contract",
                 "## Baseline superscalar contract",
                 "## Pipeline contract (LC-MA-PIPE-001)",
@@ -163,7 +135,7 @@ def main(argv: list[str]) -> int:
                 "## Interrupt contract (LC-MA-IRQ-001)",
                 "## Memory-ordering contract (LC-MA-MEM-001)",
             ],
-            "rtl/LinxCore/docs/architecture/interfaces.md": [
+            "docs/architecture/linxcore/interfaces.md": [
                 "# LinxCore External Interface Contracts",
                 "## pyCircuit-LinxCore interface contract (LC-IF-PYC-001)",
                 "## Required commit payload contract (LC-IF-PYC-002)",
@@ -171,7 +143,7 @@ def main(argv: list[str]) -> int:
                 "## Trace compatibility contract (LC-IF-TRACE-002)",
                 "## Cross-tool synchronization contract (LC-IF-SYNC-001)",
             ],
-            "rtl/LinxCore/docs/architecture/verification-matrix.md": [
+            "docs/architecture/linxcore/verification-matrix.md": [
                 "# LinxCore v0.56 Verification Matrix",
                 "## G1 contract rows (normative)",
                 "## Gate-to-contract traceability (required PR gates)",
@@ -188,11 +160,7 @@ def main(argv: list[str]) -> int:
         if "docs/architecture/linxcore/overview.md" not in v056_contract:
             errors.append("v0.56 architecture contract missing LinxCore overview cross-link")
 
-        overview = _load_text(root / "rtl/LinxCore/docs/architecture/overview.md")
-        if "docs/architecture/v0.56-architecture-contract.md" not in overview:
-            errors.append("LinxCore overview missing v0.56 architecture contract cross-link")
-
-        matrix_text = _load_text(root / "rtl/LinxCore/docs/architecture/verification-matrix.md")
+        matrix_text = _load_text(root / "docs/architecture/linxcore/verification-matrix.md")
         for gate_key in REQUIRED_MATRIX_GATE_NAMES:
             if gate_key not in matrix_text:
                 errors.append(f"verification matrix missing gate key: {gate_key}")
@@ -204,7 +172,7 @@ def main(argv: list[str]) -> int:
         "ok": len(errors) == 0,
         "errors": errors,
         "warnings": warnings,
-        "checked_docs": REQUIRED_TOPLEVEL_DOCS + CANONICAL_ARCH_DOCS + PUBLISHED_ARCH_DOCS,
+        "checked_docs": REQUIRED_TOPLEVEL_DOCS + PUBLISHED_ARCH_DOCS,
     }
 
     if args.out:

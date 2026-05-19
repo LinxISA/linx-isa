@@ -1,0 +1,8 @@
+# PE register file
+
+
+The PE register file is a register group at the PE level in Linx Instruction Set Architecture. Its function is to write the operation results of the microinstructions and read the source operands of the microinstructions. Each microinstruction defined in Linx Instruction Set Architecture has its own virtual register. This virtual register does not need to be expressed explicitly, but is bound to the instruction ID within the block. Therefore, we also omit the renaming unit in the microarchitecture, and instead use ROBID to replace the renaming work.
+
+At the same time, in order to make the graph coding more compact, the block instruction set defines that each microinstruction can only index the results of microinstructions 1-8 away from itself. The advantage of this is that microinstructions express an instruction flow graph according to relative distances (within 8), so that the encoding space advantage is greatest. Because in the instruction flow graph, there are very few scenarios where the instruction dependency distance exceeds 8. For scenes where the distance exceeds 8, we can achieve long-distance indexing through copying or chunking.
+
+In the microarchitecture, the PE register file is 64 deep and each register is 64-bit wide. The register file supports 4 writes and 8 reads at the same time. The four execution channels occupy two read ports and one write port respectively.

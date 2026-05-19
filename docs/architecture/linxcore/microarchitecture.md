@@ -1,12 +1,4 @@
-<!-- AUTO-GENERATED FILE. DO NOT EDIT DIRECTLY. -->
-<!-- Source: rtl/LinxCore/docs/architecture/microarchitecture.md -->
-
 # LinxCore v0.56 Microarchitecture Contract
-
-> This published page mirrors the canonical LinxCore source in
-> `rtl/LinxCore/docs/architecture/microarchitecture.md`.
-
-
 ## Baseline superscalar contract
 
 LinxCore is the canonical superscalar out-of-order core for LinxISA `v0.56`.

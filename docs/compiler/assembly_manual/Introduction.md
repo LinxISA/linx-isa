@@ -1,0 +1,2 @@
+# Introduction
+This article describes some syntax and options related to the assembler and linker implemented based on llvm's built-in assembly link tool under Linx Instruction Set Architecture, so that users can better handwrite assembly or use the assembler and linker.

@@ -1,0 +1,572 @@
+# ISA 与 QEMU 覆盖率快照
+
+- 生成（UTC）：`2026-05-08 15:41:23Z`
+- Spec独特助记符：`710`
+- QEMU独特的解码助记符（非内部）：`640`
+- QEMU 映射规范助记符：`616`
+- 助记词覆盖范围：`616/710` (`86.76%`)
+- 规范法律形式：`740`
+- QEMU 映射规格表：`612`
+- 表格覆盖范围：`612/740` (`82.7%`)
+- 缺少规格助记符：`94`
+- 缺少规格表：`128`
+- 预留规格表：`0`
+- 未映射的 QEMU 助记符：`7`
+
+## 前缀助记符覆盖率- `ACRC`：`1`
+- `ACRE`: `1`
+- `ADD`：`1`
+- `ADDI`: `1`
+- `ADDIW`：`1`
+- `ADDTPC`：`1`
+- `ADDW`: `1`
+- `AND`: `1`
+- `ANDI`: `1`
+- `ANDIW`: `1`
+- `ANDW`: `1`
+- `ASSERT`: `1`
+- `B`: `15`
+- `BC`: `2`
+- `BCNT`：`1`
+- `BIC`：`1`
+- `BIS`: `1`
+- `BSE`：`1`
+- `BSTART`：`20`
+- `BSTOP`: `1`
+- `BWE`：`1`
+- `BWI`: `1`
+- `BWT`: `1`
+- `BXS`: `1`
+- `BXU`: `1`
+- `C`：`37`
+- `CLZ`: `1`
+- `CMP`: `16`
+- `CSEL`: `1`
+- `CTZ`: `1`
+- `DC`：`8`
+- `DIV`: `1`
+- `DIVU`: `1`
+- `DIVUW`：`1`
+- `DIVW`: `1`
+- `EBREAK`: `1`
+- `ERCOV`：`1`
+- `ESAVE`: `1`
+- `FABS`: `1`
+- `FADD`: `1`
+- `FCVT`：`1`
+- `FCVTA`: `1`
+- `FCVTM`：`1`
+- `FCVTN`：`1`
+- `FCVTP`：`1`
+- `FCVTZ`: `1`
+- `FDIV`: `1`
+- `FENCE`: `2`
+- `FENTRY`: `1`
+- `FEQ`: `1`
+- `FEQS`: `1`
+- `FEXIT`: `1`
+- `FEXP`: `1`
+- `FGE`: `1`- `FGES`: `1`
+- `FLT`：`1`
+- `FLTS`: `1`
+- `FMADD`: `1`
+- `FMAX`: `1`
+- `FMIN`: `1`
+- `FMSUB`: `1`
+- `FMUL`: `1`
+- `FNE`: `1`
+- `FNES`: `1`
+- `FNMADD`: `1`
+- `FNMSUB`：`1`
+- `FRECIP`: `1`
+- `FRET`: `2`
+- `FSQRT`: `1`
+- `FSUB`: `1`
+- `HL`：`194`
+- `IC`: `2`
+- `J`: `1`
+- `JR`: `1`
+- `LB`: `2`
+- `LBI`: `1`
+- `LBU`: `2`
+- `LBUI`: `1`
+- `LD`: `10`
+- `LDI`：`2`
+- `LH`：`2`
+- `LHI`: `2`
+- `LHU`: `2`
+- `LHUI`: `2`
+- `LR`: `4`
+- `LSRGET`：`1`
+- `LUI`: `1`
+- `LW`: `10`
+- `LWI`: `2`
+- `LWU`：`2`
+- `LWUI`：`2`
+- `MADD`：`1`
+- `MADDW`：`1`
+- `MAX`：`1`
+- `MAXU`：`1`
+- `MCOPY`：`1`
+- `MIN`：`1`
+- `MINU`：`1`
+- `MSET`: `1`
+- `MUL`: `1`
+- `MULU`：`1`
+- `MULUW`: `1`
+- `MULW`: `1`
+- `OR`: `1`
+- `ORI`：`1`- `ORIW`：`1`
+- `ORW`: `1`
+- `PRF`：`1`
+- `PRFI`: `1`
+- `REM`：`1`
+- `REMU`：`1`
+- `REMUW`: `1`
+- `REMW`: `1`
+- `REV`: `1`
+- `SB`：`2`
+- `SBI`：`1`
+- `SC`: `4`
+- `SCVTF`：`1`
+- `SD`: `11`
+- `SDI`: `2`
+- `SETC`：`17`
+- `SETRET`: `1`
+- `SH`: `3`
+- `SHI`: `2`
+- `SLL`: `1`
+- `SLLI`：`1`
+- `SLLIW`: `1`
+- `SLLW`: `1`
+- `SRA`: `1`
+- `SRAI`: `1`
+- `SRAIW`：`1`
+- `SRAW`: `1`
+- `SRL`: `1`
+- `SRLI`: `1`
+- `SRLIW`: `1`
+- `SRLW`：`1`
+- `SSRGET`: `1`
+- `SSRSET`: `1`
+- `SSRSWAP`: `1`
+- `SUB`: `1`
+- `SUBI`：`1`
+- `SUBIW`: `1`
+- `SUBW`：`1`
+- `SW`: `11`
+- `SWAPB`: `1`
+- `SWAPD`：`1`
+- `SWAPH`: `1`
+- `SWAPW`: `1`
+- `SWI`: `2`
+- `TLB`: `4`
+- `UCVTF`: `1`
+- `V`: `94`
+- `XOR`: `1`
+- `XORI`: `1`
+- `XORIW`：`1`
+- `XORW`：`1`## 按前缀丢失的助记符
+
+- `B`: `2`
+- `C`: `1`
+- `V`: `90`
+- `XB`：`1`
+
+## 按前缀形成覆盖率- `ACRC`：`1`
+- `ACRE`: `1`
+- `ADD`: `1`
+- `ADDI`: `1`
+- `ADDIW`：`1`
+- `ADDTPC`：`1`
+- `ADDW`: `1`
+- `AND`: `1`
+- `ANDI`: `1`
+- `ANDIW`：`1`
+- `ANDW`：`1`
+- `ASSERT`: `1`
+- `B`: `17`
+- `BC`: `2`
+- `BCNT`: `1`
+- `BIC`: `1`
+- `BIS`: `1`
+- `BSE`: `1`
+- `BSTART`: `19`
+- `BSTOP`：`1`
+- `BWE`：`1`
+- `BWI`: `1`
+- `BWT`: `1`
+- `BXS`: `1`
+- `BXU`：`1`
+- `C`：`37`
+- `CLZ`: `1`
+- `CMP`: `16`
+- `CSEL`: `1`
+- `CTZ`：`1`
+- `DC`：`6`
+- `DIV`: `1`
+- `DIVU`：`1`
+- `DIVUW`: `1`
+- `DIVW`：`1`
+- `EBREAK`：`1`
+- `ERCOV`：`1`
+- `ESAVE`：`1`
+- `FABS`: `1`
+- `FADD`：`1`
+- `FCVT`：`1`
+- `FCVTA`: `1`
+- `FCVTM`: `1`
+- `FCVTN`: `1`
+- `FCVTP`：`1`
+- `FCVTZ`：`1`
+- `FDIV`: `1`
+- `FENCE`：`2`
+- `FENTRY`：`1`
+- `FEQ`：`1`
+- `FEQS`：`1`- `FEXIT`: `1`
+- `FEXP`：`1`
+- `FGE`：`1`
+- `FGES`：`1`
+- `FLT`：`1`
+- `FLTS`: `1`
+- `FMADD`：`1`
+- `FMAX`：`1`
+- `FMIN`：`1`
+- `FMSUB`：`1`
+- `FMUL`: `1`
+- `FNE`：`1`
+- `FNES`: `1`
+- `FNMADD`：`1`
+- `FNMSUB`：`1`
+- `FRECIP`: `1`
+- `FRET`: `2`
+- `FSQRT`：`1`
+- `FSUB`：`1`
+- `HL`：`195`
+- `IC`：`2`
+- `J`：`1`
+- `JR`：`1`
+- `LB`：`2`
+- `LBI`：`1`
+- `LBU`：`2`
+- `LBUI`：`1`
+- `LD`：`10`
+- `LDI`：`2`
+- `LH`：`2`
+- `LHI`：`2`
+- `LHU`：`2`
+- `LHUI`: `2`
+- `LR`: `2`
+- `LSRGET`: `1`
+- `LUI`: `1`
+- `LW`: `10`
+- `LWI`: `2`
+- `LWU`: `2`
+- `LWUI`: `2`
+- `MADD`: `1`
+- `MADDW`: `1`
+- `MAX`: `1`
+- `MAXU`: `1`
+- `MCOPY`: `1`
+- `MIN`: `1`
+- `MINU`: `1`
+- `MSET`: `1`
+- `MUL`: `1`
+- `MULU`: `1`
+- `MULUW`: `1`- `MULW`: `1`
+- `OR`: `1`
+- `ORI`: `1`
+- `ORIW`: `1`
+- `ORW`: `1`
+- `PRF`: `1`
+- `PRFI`: `1`
+- `REM`: `1`
+- `REMU`: `1`
+- `REMUW`: `1`
+- `REMW`: `1`
+- `REV`: `1`
+- `SB`: `2`
+- `SBI`: `1`
+- `SC`: `4`
+- `SCVTF`: `1`
+- `SD`: `11`
+- `SDI`: `2`
+- `SETC`: `17`
+- `SETRET`: `1`
+- `SH`: `3`
+- `SHI`: `2`
+- `SLL`: `1`
+- `SLLI`：`1`
+- `SLLIW`: `1`
+- `SLLW`: `1`
+- `SRA`: `1`
+- `SRAI`: `1`
+- `SRAIW`: `1`
+- `SRAW`: `1`
+- `SRL`: `1`
+- `SRLI`: `1`
+- `SRLIW`: `1`
+- `SRLW`: `1`
+- `SSRGET`: `1`
+- `SSRSET`: `1`
+- `SSRSWAP`: `1`
+- `SUB`: `1`
+- `SUBI`: `1`
+- `SUBIW`: `1`
+- `SUBW`: `1`
+- `SW`: `11`
+- `SWAPB`: `1`
+- `SWAPD`: `1`
+- `SWAPH`: `1`
+- `SWAPW`: `1`
+- `SWI`: `2`
+- `TLB`: `4`
+- `UCVTF`: `1`
+- `V`: `92`
+- `XOR`: `1`- `XORI`: `1`
+- `XORIW`：`1`
+- `XORW`：`1`
+
+## 按前缀缺失表格
+
+- `B`: `10`
+- `BSTART`: `14`
+- `C`: `2`
+- `DC`: `2`
+- `HL`：`5`
+- `LR`: `2`
+- `V`: `92`
+- `XB`: `1`
+
+## 未映射的 QEMU 助记符
+
+- `b_arg_dn2nz`
+- `b_arg_dn2zn`
+- `b_arg_nd2zn`
+- `b_arg_norm`
+- `b_arg_nz2dn`
+- `b_attr`
+- `b_ioti`
+
+## 缺失规格助记符（前 200 个）- `B.CATR`
+- `B.DATR`
+- `C.SETRET`
+- `V.LB`
+- `V.LBI`
+- `V.LBI.BRG`
+- `V.LBU`
+- `V.LBUI`
+- `V.LBUI.BRG`
+- `V.LD`
+- `V.LD.ADD`
+- `V.LD.AND`
+- `V.LD.BRG`
+- `V.LD.MAX`
+- `V.LD.MIN`
+- `V.LD.OR`
+- `V.LD.XOR`
+- `V.LDI`
+- `V.LDI.BRG`
+- `V.LDI.U`
+- `V.LDI.U.BRG`
+- `V.LH`
+- `V.LHI`
+- `V.LHI.BRG`
+- `V.LHI.U`
+- `V.LHI.U.BRG`
+- `V.LHU`
+- `V.LHUI`
+- `V.LHUI.BRG`
+- `V.LHUI.U`
+- `V.LHUI.U.BRG`
+- `V.LW.ADD`
+- `V.LW.AND`
+- `V.LW.MAX`
+- `V.LW.MIN`
+- `V.LW.OR`
+- `V.LW.XOR`
+- `V.LWI`
+- `V.LWI.BRG`
+- `V.LWI.U`
+- `V.LWI.U.BRG`
+- `V.LWU`
+- `V.LWU.BRG`
+- `V.LWUI`
+- `V.LWUI.BRG`
+- `V.LWUI.U`
+- `V.LWUI.U.BRG`
+- `V.QPOP`
+- `V.QPUSH`
+- `V.SB`
+- `V.SBI`
+- `V.SBI.BRG`
+- `V.SD`
+- `V.SD.ADD`
+- `V.SD.AND`
+- `V.SD.BRG`
+- `V.SD.MAX`
+- `V.SD.MIN`
+- `V.SD.OR`
+- `V.SD.U`
+- `V.SD.U.BRG`
+- `V.SD.XOR`
+- `V.SDI`
+- `V.SDI.BRG`
+- `V.SDI.U`
+- `V.SDI.U.BRG`
+- `V.SH`
+- `V.SH.U`
+- `V.SH.U.BRG`
+- `V.SHFL.BFLY`
+- `V.SHFL.DOWN`
+- `V.SHFL.IDX`
+- `V.SHFL.UP`
+- `V.SHFLI.BFLY`
+- `V.SHFLI.DOWN`
+- `V.SHFLI.IDX`
+- `V.SHFLI.UP`
+- `V.SHI`
+- `V.SHI.BRG`
+- `V.SHI.U`
+- `V.SHI.U.BRG`
+- `V.SW.ADD`
+- `V.SW.AND`
+- `V.SW.MAX`
+- `V.SW.MIN`
+- `V.SW.OR`
+- `V.SW.U`
+- `V.SW.U.BRG`
+- `V.SW.XOR`
+- `V.SWI`
+- `V.SWI.BRG`
+- `V.SWI.U`
+- `V.SWI.U.BRG`
+- `XB`
+
+## 缺少规格表（前 200 个）- `B.ARG [len=32 mask=0xffffffff match=0x1800a4a3]`
+- `B.ARG [len=32 mask=0xffffffff match=0x180221a3]`
+- `B.ARG [len=32 mask=0xffffffff match=0x18022423]`
+- `B.ARG [len=32 mask=0xffffffff match=0x20fae23]`
+- `B.ARG [len=32 mask=0xffffffff match=0xfa023]`
+- `B.CATR [len=32 mask=0x7fff match=0x23]`
+- `B.DATR [len=32 mask=0x707f match=0x1023]`
+- `B.IOT [len=32 mask=0x707f match=0x4013]`
+- `B.IOT [len=32 mask=0x803f707f match=0x5013]`
+- `B.IOT [len=32 mask=0xc03fffff match=0x6013]`
+- `BSTART CALL [len=32 mask=0xf83f000f match=0x50160002]`
+- `BSTART [len=32 mask=0x7f match=0x11]`
+- `BSTART [len=32 mask=0x7f match=0x21]`
+- `BSTART.ACCCVT [len=32 mask=0x7ffffff match=0x831181]`
+- `BSTART.MPAR [len=32 mask=0xf9ffffff match=0x1181]`
+- `BSTART.MSEQ [len=32 mask=0xf9ffffff match=0x9181]`
+- `BSTART.STD [len=32 mask=0x7fff match=0x1001]`
+- `BSTART.TLOAD [len=32 mask=0x7ffffff match=0x11181]`
+- `BSTART.TMATMUL [len=32 mask=0x7ffffff match=0x31181]`
+- `BSTART.TMATMUL.ACC [len=32 mask=0x7ffffff match=0x231181]`
+- `BSTART.TMOV [len=32 mask=0x7ffffff match=0x211181]`
+- `BSTART.TSTORE [len=32 mask=0x7ffffff match=0x111181]`
+- `BSTART.VPAR [len=32 mask=0xf9ffffff match=0x21181]`
+- `BSTART.VSEQ [len=32 mask=0xf9ffffff match=0x29181]`
+- `C.BSTART.STD [len=16 mask=0xc7ff match=0x0]`
+- `C.SETRET [len=16 mask=0xf83f match=0x5016]`
+- `DC.ISW [len=32 mask=0xfff07fff match=0x40602b]`
+- `DC.ZVA [len=32 mask=0xfff07fff match=0x70602b]`
+- `HL.BSTART CALL [len=64 mask=0xfffff83f0000007f match=0x501600000011]`
+- `HL.BSTART.STD [len=64 mask=0xffff00007fff000f match=0x4001000e]`
+- `HL.CCAT [len=64 mask=0xffff0000707f07ff match=0x105d000e]`
+- `HL.CCATW [len=64 mask=0xffff0000707f07ff match=0x205d000e]`
+- `HL.PRF [len=64 mask=0xffff00007fff07ff match=0x7009000e]`
+- `LR.D [len=32 mask=0xf000707f match=0x3000000b]`
+- `LR.W [len=32 mask=0xf000707f match=0x2000000b]`
+- `V.FABS [len=64 mask=0xfff0707ffff0707f match=0x7b0000007f]`
+- `V.LB [len=64 mask=0x600707ffe00207f match=0x90000007f]`
+- `V.LBI [len=64 mask=0x707f0000207f match=0x190000007f]`
+- `V.LBI.BRG [len=64 mask=0x707f0000207f match=0x190000207f]`
+- `V.LBU [len=64 mask=0x600707ffe00207f match=0x40090000007f]`
+- `V.LBUI [len=64 mask=0x707f0000207f match=0x40190000007f]`
+- `V.LBUI.BRG [len=64 mask=0x707f0000207f match=0x40190000207f]`
+- `V.LD [len=64 mask=0x600707ffe00207f match=0x30090000007f]`
+- `V.LD.ADD [len=64 mask=0xf800707ffc00707f match=0xb0000207f]`
+- `V.LD.AND [len=64 mask=0xf800707ffc00707f match=0x100b0000207f]`
+- `V.LD.BRG [len=64 mask=0x600707ffe00207f match=0x30090000207f]`
+- `V.LD.MAX [len=64 mask=0xf800707ffc00707f match=0x400b0000207f]`
+- `V.LD.MIN [len=64 mask=0xf800707ffc00707f match=0x500b0000207f]`
+- `V.LD.OR [len=64 mask=0xf800707ffc00707f match=0x200b0000207f]`
+- `V.LD.XOR [len=64 mask=0xf800707ffc00707f match=0x300b0000207f]`
+- `V.LDI [len=64 mask=0x707f0000207f match=0x30190000007f]`
+- `V.LDI.BRG [len=64 mask=0x707f0000207f match=0x30190000207f]`
+- `V.LDI.U [len=64 mask=0x707f0000207f match=0x30290000007f]`
+- `V.LDI.U.BRG [len=64 mask=0x707f0000207f match=0x30290000207f]`
+- `V.LH [len=64 mask=0x600707ffe00207f match=0x10090000007f]`
+- `V.LHI [len=64 mask=0x707f0000207f match=0x10190000007f]`
+- `V.LHI.BRG [len=64 mask=0x707f0000207f match=0x10190000207f]`
+- `V.LHI.U [len=64 mask=0x707f0000207f match=0x10290000007f]`
+- `V.LHI.U.BRG [len=64 mask=0x707f0000207f match=0x10290000207f]`
+- `V.LHU [len=64 mask=0x600707ffe00207f match=0x50090000007f]`
+- `V.LHUI [len=64 mask=0x707f0000207f match=0x50190000007f]`
+- `V.LHUI.BRG [len=64 mask=0x707f0000207f match=0x50190000207f]`
+- `V.LHUI.U [len=64 mask=0x707f0000207f match=0x50290000007f]`
+- `V.LHUI.U.BRG [len=64 mask=0x707f0000207f match=0x50290000207f]`
+- `V.LW.ADD [len=64 mask=0xf800707ffc00707f match=0xb0000007f]`
+- `V.LW.AND [len=64 mask=0xf800707ffc00707f match=0x100b0000007f]`
+- `V.LW.MAX [len=64 mask=0xf800707ffc00707f match=0x400b0000007f]`
+- `V.LW.MIN [len=64 mask=0xf800707ffc00707f match=0x500b0000007f]`
+- `V.LW.OR [len=64 mask=0xf800707ffc00707f match=0x200b0000007f]`
+- `V.LW.XOR [len=64 mask=0xf800707ffc00707f match=0x300b0000007f]`
+- `V.LWI [len=64 mask=0x707f0000207f match=0x20190000007f]`
+- `V.LWI.BRG [len=64 mask=0x707f0000207f match=0x20190000207f]`
+- `V.LWI.U [len=64 mask=0x707f0000207f match=0x20290000007f]`
+- `V.LWI.U.BRG [len=64 mask=0x707f0000207f match=0x20290000207f]`
+- `V.LWU [len=64 mask=0x600707ffe00207f match=0x60090000007f]`
+- `V.LWU.BRG [len=64 mask=0x600707ffe00207f match=0x60090000207f]`
+- `V.LWUI [len=64 mask=0x707f0000207f match=0x60190000007f]`
+- `V.LWUI.BRG [len=64 mask=0x707f0000207f match=0x60190000207f]`
+- `V.LWUI.U [len=64 mask=0x707f0000207f match=0x60290000007f]`
+- `V.LWUI.U.BRG [len=64 mask=0x707f0000207f match=0x60290000207f]`
+- `V.MUL [len=64 mask=0xfe00707ffe00707f match=0x470000007f]`
+- `V.QPOP [len=64 mask=0xfff0707ffff0707f match=0x207d0000007f]`
+- `V.QPUSH [len=64 mask=0xfe00707ffe00707f match=0x107d0000007f]`
+- `V.SB [len=64 mask=0x6007fff0600207f match=0x490000007f]`
+- `V.SBI [len=64 mask=0x707f0000207f match=0x590000007f]`
+- `V.SBI.BRG [len=64 mask=0x707f0000207f match=0x590000207f]`
+- `V.SD [len=64 mask=0x6007fff0600207f match=0x30490000007f]`
+- `V.SD.ADD [len=64 mask=0xfc007ffff8007fff match=0xb0000307f]`
+- `V.SD.AND [len=64 mask=0xfc007ffff8007fff match=0x100b0000307f]`
+- `V.SD.BRG [len=64 mask=0x6007fff0600207f match=0x30490000207f]`
+- `V.SD.MAX [len=64 mask=0xfc007ffff8007fff match=0x400b0000307f]`
+- `V.SD.MIN [len=64 mask=0xfc007ffff8007fff match=0x500b0000307f]`
+- `V.SD.OR [len=64 mask=0xfc007ffff8007fff match=0x200b0000307f]`
+- `V.SD.U [len=64 mask=0x6007fff0600207f match=0x70490000007f]`
+- `V.SD.U.BRG [len=64 mask=0x6007fff0600207f match=0x70490000207f]`
+- `V.SD.XOR [len=64 mask=0xfc007ffff8007fff match=0x300b0000307f]`
+- `V.SDI [len=64 mask=0x707f0000207f match=0x30590000007f]`
+- `V.SDI.BRG [len=64 mask=0x707f0000207f match=0x30590000207f]`
+- `V.SDI.U [len=64 mask=0x707f0000207f match=0x70590000007f]`
+- `V.SDI.U.BRG [len=64 mask=0x707f0000207f match=0x70590000207f]`- `V.SH [len=64 mask=0x6007fff0600207f match=0x10490000007f]`
+- `V.SH.U [len=64 mask=0x6007fff0600207f match=0x50490000007f]`
+- `V.SH.U.BRG [len=64 mask=0x6007fff0600207f match=0x50490000207f]`
+- `V.SHFL.BFLY [len=64 mask=0x7f0707f07f0707f match=0x201d0000007f]`
+- `V.SHFL.DOWN [len=64 mask=0x600707f0600707f match=0x101d0000007f]`
+- `V.SHFL.IDX [len=64 mask=0x600707f0600707f match=0x301d0000007f]`
+- `V.SHFL.UP [len=64 mask=0x600707f0600707f match=0x1d0000007f]`
+- `V.SHFLI.BFLY [len=64 mask=0x1f0707f01f0707f match=0x602d0000007f]`
+- `V.SHFLI.DOWN [len=64 mask=0x707f0000707f match=0x502d0000007f]`
+- `V.SHFLI.IDX [len=64 mask=0x707f0000707f match=0x702d0000007f]`
+- `V.SHFLI.UP [len=64 mask=0x707f0000707f match=0x402d0000007f]`
+- `V.SHI [len=64 mask=0x707f0000207f match=0x10590000007f]`
+- `V.SHI.BRG [len=64 mask=0x707f0000207f match=0x10590000207f]`
+- `V.SHI.U [len=64 mask=0x707f0000207f match=0x50590000007f]`
+- `V.SHI.U.BRG [len=64 mask=0x707f0000207f match=0x50590000207f]`
+- `V.SW.ADD [len=64 mask=0xfc007ffff8007fff match=0xb0000107f]`
+- `V.SW.AND [len=64 mask=0xfc007ffff8007fff match=0x100b0000107f]`
+- `V.SW.MAX [len=64 mask=0xfc007ffff8007fff match=0x400b0000107f]`
+- `V.SW.MIN [len=64 mask=0xfc007ffff8007fff match=0x500b0000107f]`
+- `V.SW.OR [len=64 mask=0xfc007ffff8007fff match=0x200b0000107f]`
+- `V.SW.U [len=64 mask=0x6007fff0600207f match=0x60490000007f]`
+- `V.SW.U.BRG [len=64 mask=0x6007fff0600207f match=0x60490000207f]`
+- `V.SW.XOR [len=64 mask=0xfc007ffff8007fff match=0x300b0000107f]`
+- `V.SWI [len=64 mask=0x707f0000207f match=0x20590000007f]`
+- `V.SWI.BRG [len=64 mask=0x707f0000207f match=0x20590000207f]`
+- `V.SWI.U [len=64 mask=0x707f0000207f match=0x60590000007f]`
+- `V.SWI.U.BRG [len=64 mask=0x707f0000207f match=0x60590000207f]`
+- `XB [len=32 mask=0x7fff match=0x6f81]`

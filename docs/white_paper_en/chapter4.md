@@ -1,0 +1,27 @@
+# Tomorrow’s Parallelism
+
+There is a significant body of research focused on the granularity of parallelism. For single-threaded applications, the key to high CPU performance is the retrieval of instruction-level parallelism while satisfying the restrictions of processor complexity and memory wall. However, given the memory access latency is not improving, instruction-level-parallelism is becoming less important, because most of the time is spent waiting for memory. Prefetching and run-ahead become more effective while data-dependent branches become more critical than ever.
+
+## MLP yes! ILP no!
+Andrew Glew observed that memory latencies are not improving as fast as processors. This rule still applies in the future, as new layers of memory hierarchies emerges. The future CPU must exploit memory-level parallelism to hide the latencies of accessing memories with different characteristics.
+
+### Simultaneous multi-threaded processors:
+Multithreading and multiprocessing can effectively tolerate memory latencies, but only if there are parallel workloads.  Programmers have to manually parallelize existing code to exploit thread-level parallelism. Since the first generation of multi-threaded processors [Niagara T1 & T2], SMT or hyper-threading have been successful on throughput oriented applications such as databases, data-plane driven applications and network processing. The latest [IBM Power10] processor support SMT8 threads running in a single core. The future processor focusing on throughput-oriented programming will keep the same direction of mixture of SMT and multicore for best utilization of compute resources. 
+
+### Towards Many-In Order Light-Cores:
+In the event of post-moore area, some architects are advocating retreating from out-of-order superscalar processor architecture, and instead building simpler, faster and “dumber” scalar in-order processors with high degrees of speculation. Many existing many-core processors such as [RAW, MIT], [Voltron], [Composable Light-weight processors] focus on building a grid of simpler cores with no cache-coherence between them. These processors can only target specific application domains [IBM Cell, Tilera’s TILE-Gx, Remon RC64] because programming on such processors are difficult. Programmers need to consider spatial placement of computation and communication costs. [MemPool, ETH Zurich] are also building many core RISC-V processors using a shared L1 for energy efficiency and fast inter-core thread communications.
+
+### Towards Kilo-Instruction Instruction Processors:
+The only effective approach for generic workloads is to build wider instruction window with adequate instruction and data supply. For generic workloads, it is essential to enable the processor to speculate on tens of thousands of instructions ahead while avoiding the storage of speculative states and throwing away anything that can be recomputed based on data in registers or cache.
+
+Besides prefetching and prediction techniques covered in previous section, Runahead [Multu et al] execution is an effective approach of continue execution in case of ROB stalling. This can effectively improve instruction window with no significant implementation overheads. Techniques such as vector run-ahead and helper-thread run-ahead can also boost instruction window size in a non-binding way. Speculative state is always discarded in run-ahead mode. The other effective approach is to separate front-end and backend [The Frontend Architecture] and use a decoupled access and execute engines connected with a dedicated queue, which exploits the observation that address generation and launching the memory access is generally cheap and does not impact architectural state.
+
+Another approach to boost instruction window is to adopt block-granule execution. With block/trace/strand abstraction, private register states are hidden inside a block while exposing inter-block communications [BRAID:Patt]. This requires the change of ISA and requires extensive compiler support. Multi-scalar processors relied on the abstraction of tasks and a hardware transactional memory for parallelisation. [TRIPS/EDGE] processor relies on compilers to generate block-structured instruction with predicates. By parallelising 16 or more blocks, such processors are able to speculate on thousands of instructions while still maintaining moderate processor complexity.
+
+The future CPUs built on Block-structured ISA should focus on compilers to form instruction blocks. It should combine decoupled-access-execution and use multiple cheap scalar processors that are fast as possible. The BlockISA processors should focus on dynamic, out-of-order, block-level execution to maximize MLP but simplify it by discarding superscalar ILP as unnecessary.
+
+### Towards Coroutine/Fiber-level Parallelism:
+Single-threaded applications can be modified to use fibers and asynchronous programming to hide IO and memory latencies. Parallelize linked data structure traversals by building skip lists in hardware. This requires the software to convert loops into queue based programming. Multiple fibers can traverse skip lists and push branches into hardware parallel light-weight walkers.
+
+### Towards Function-level Parallelism:
+FunctionFlow focuses on thread-level parallelism using asynchronous programming. The future CPU will support event-driven or message-driven interfaces in the ISA extension to support fast task-communications.

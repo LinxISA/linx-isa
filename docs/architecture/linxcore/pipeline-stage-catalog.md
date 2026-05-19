@@ -1,12 +1,4 @@
-<!-- AUTO-GENERATED FILE. DO NOT EDIT DIRECTLY. -->
-<!-- Source: rtl/LinxCore/docs/architecture/pipeline-stage-catalog.md -->
-
 # LinxCore Pipeline Stage Catalog
-
-> This published page mirrors the canonical LinxCore source in
-> `rtl/LinxCore/docs/architecture/pipeline-stage-catalog.md`.
-
-
 This chapter defines the architecturally visible LinxCore stage set and the
 module that owns each stage.
 

@@ -1,113 +1,83 @@
 # LinxISA Documentation
 
-<!-- Hero Banner -->
 <div class="isa-hero">
 
-## Welcome to LinxISA
+## Published Manual Surface
 
-**Linx** is a modern, GPU-like instruction set architecture designed for rendering and compute workloads. This is the canonical reference documentation site, built from the [linx-isa](https://github.com/LinxISA/linx-isa) superproject.
+This site now uses the imported LinxISA manual hierarchy as the primary public
+surface. English lives at the root, Chinese lives under `/zh/`, and both share
+the same Material theme, information architecture, and language mapping.
 
-### Architecture at a Glance
+### What Changed
 
 | | |
 |---|---|
-| **ISA Version** | v0.56.2 |
-| **Total Instruction Forms** | 740 |
-| **Instruction Groups** | 66 |
-| **Formats** | 16-bit Compressed · 32-bit Base · 48-bit HL · 64-bit Vector |
-| **Specification** | [v0.56 Contract →](architecture/v0.56-architecture-contract.md) |
-| **Release Notes** | [v0.56.2 →](releases/v0.56.2.md) |
+| **Primary doc layout** | Patch-derived manual hierarchy |
+| **Canonical normative source** | [v0.56 contracts + AsciiDoc manual](architecture/README.md) |
+| **Machine-generated appendix** | [ISA appendix reference](isa/index.md) |
+| **Chinese version** | `/zh/` with path parity |
 
 </div>
 
 ---
 
-## Quick Navigation
+## Start Here
 
 <div class="quick-links">
 
-[:fontawesome-solid-microchip: **ISA Reference** — Instruction Reference](isa/index.md) {.quick-link-card}
-: The complete, searchable reference for all 740 instruction forms. Browse by chapter, group, or alphabetically.
+[:fontawesome-solid-circle-info: **Design Background**](background/index.md) {.quick-link-card}
+: Why LinxISA exists, what block instructions are, and how the architecture differs from mainstream CPU and GPU ISA designs.
 
-[:fontawesome-solid-book: **Full ISA Manual** — AsciiDoc/PDF](architecture/isa-manual/README.md) {.quick-link-card}
-: The authoritative human-readable manual with narrative chapters, examples, and design rationale.
+[:fontawesome-solid-diagram-project: **Overall Architecture**](isa/arch/bisa.md) {.quick-link-card}
+: Block structure, execution model, program order, branching, ACR, and exception behavior in the public manual hierarchy.
 
-[:fontawesome-solid-diagram-project: **Architecture Framework** — Concepts & Contracts](architecture/README.md) {.quick-link-card}
-: Understand the AVS contracts, workload engine model, rendering kernel authoring, and PTO guarantees.
+[:fontawesome-solid-memory: **Architectural State**](isa/register/common/intro.md) {.quick-link-card}
+: GGPR, SSR, block-local state, and the layered execution-state model used by LinxISA.
 
-[:fontawesome-solid-layer-group: **LinxCore RTL** — Hardware Implementation](architecture/linxcore/overview.md) {.quick-link-card}
-: LinxCore microarchitecture, module catalog, pipeline stages, and verification matrix.
+[:fontawesome-solid-table-cells-large: **Data Types**](isa/datatype/intro.md) {.quick-link-card}
+: The scalar, vector, floating-point, integer, and microscaling type system used across the ISA.
 
-[:fontawesome-solid-rocket: **Getting Started** — Bring-up Guide](bringup/GETTING_STARTED.md) {.quick-link-card}
-: Set up your development environment, run the QEMU emulator, and compile your first program.
+[:fontawesome-solid-microchip: **Instruction-Set Overview**](isa/instset/baseInstrs.md) {.quick-link-card}
+: The current public view of base, compressed, standard, long, vector, and template instruction families.
 
-[:fontawesome-solid-code: **Assembly Guide** — Authoring Kernels](reference/linxisa-assembly-agent-guide.md) {.quick-link-card}
-: Learn the assembly syntax, calling conventions, block-structured control flow, and call/ret ABI contract.
+[:fontawesome-solid-book-open: **Programming Manual**](compiler/manuals.md) {.quick-link-card}
+: Assembly/programming workflow, heterogeneous execution model, and host/device toolchain guidance.
 
-[:fontawesome-solid-shield-halved: **Call/Ret Contract** — ABI Guarantees](reference/linxisa-call-ret-contract.md) {.quick-link-card}
-: The formal ABI contract for cross-stack calls: callee-saved registers, stack alignment, and return sequence.
+[:fontawesome-solid-book: **Normative Contracts**](architecture/v0.56-architecture-contract.md) {.quick-link-card}
+: The live v0.56 contract pages and the English AsciiDoc manual remain the normative architecture source.
 
-[:fontawesome-solid-chart-line: **Bring-up Progress** — Status & Gates](bringup/PROGRESS.md) {.quick-link-card}
-: Current gate status, integration checklist, ecosystem maturity roadmap, and validation matrix.
-
-</div>
-
----
-
-## Browse Instructions by Chapter
-
-<div class="chapter-grid">
-
-[![](assets/ch03.svg){: style="width:120px;height:80px"} **Ch 03 — Encoding Formats**{.chapter-card style="--ch03-color:#64748b"}
-: Bit numbering, instruction lengths, decode tags, field colour key
-
-[![](assets/ch04.svg){: style="width:120px;height:80px"} **Ch 04 — Block ISA**{.chapter-card style="--ch04-color:#8b5cf6"}
-: BSTART, BSTOP, B.ARG, B.DIM, tile/SIMT control flow
-
-[![](assets/ch11.svg){: style="width:120px;height:80px"} **Ch 11 — AGU**{.chapter-card style="--ch11-color:#059669"}
-: Loads, stores, prefetch, all addressing modes
-
-[![](assets/ch12.svg){: style="width:120px;height:80px"} **Ch 12 — ALU**{.chapter-card style="--ch12-color:#0891b2"}
-: ADD, SUB, MUL, DIV, shifts, bit manip, LUI, CSEL
-
-[![](assets/ch13.svg){: style="width:120px;height:80px"} **Ch 13 — FSU**{.chapter-card style="--ch13-color:#0ea5e9"}
-: Floating-point arithmetic, FMA, format conversion
-
-[![](assets/ch14.svg){: style="width:120px;height:80px"} **Ch 14 — AMO**{.chapter-card style="--ch14-color:#e11d48"}
-: LR/SC, atomic fetch-op, CAS
-
-[![](assets/ch15.svg){: style="width:120px;height:80px"} **Ch 15 — BBD**{.chapter-card style="--ch15-color:#8b5cf6"}
-: C.BSTART, C.BSTOP, block delimiters
-
-[![](assets/ch16.svg){: style="width:120px;height:80px"} **Ch 16 — BRU**{.chapter-card style="--ch16-color:#7c3aed"}
-: Branches, CMP, SETC, SETRET, ADDTPC
-
-[![](assets/ch17.svg){: style="width:120px;height:80px"} **Ch 17 — CMD**{.chapter-card style="--ch17-color:#6366f1"}
-: B.CATR, B.DATR, B.HINT, block attributes
-
-[![](assets/ch18.svg){: style="width:120px;height:80px"} **Ch 18 — RSV**{.chapter-card style="--ch18-color:#a16207"}
-: HL.BFI, HL.MIADD, HL.MISUB
-
-[![](assets/ch19.svg){: style="width:120px;height:80px"} **Ch 19 — SYS**{.chapter-card style="--ch19-color:#dc2626"}
-: FENCE, barriers, EBREAK, ACR\*, cache/TLB maintenance
-
-[![](assets/ch20.svg){: style="width:120px;height:80px"} **Ch 20 — VEC**{.chapter-card style="--ch20-color:#2563eb"}
-: V.\* vector forms, shuffles, reductions, division
+[:fontawesome-solid-list: **ISA Appendix Reference**](isa/index.md) {.quick-link-card}
+: The current machine-generated appendix remains published for exact A–Z instruction, group, and encoding lookup.
 
 </div>
 
 ---
 
-## Key Documentation
+## Reading Model
 
-| | |
+1. Use the public manual hierarchy under `background/`, `compiler/`, and the
+   new `isa/` subsections for the primary published narrative.
+2. Use the [canonical architecture pages](architecture/README.md) and the
+   [AsciiDoc ISA manual](architecture/isa-manual/README.md) for normative
+   English contract text.
+3. Use the [ISA appendix reference](isa/index.md) for exact generated
+   instruction/group detail.
+
+---
+
+## Key Surfaces
+
+| Surface | Purpose |
 |---|---|
-| **ISA Version** | v0.56.2 (see [Hardening Policy](architecture/v0.56-hardening-policy.md)) |
-| **Source** | [github.com/LinxISA/linx-isa](https://github.com/LinxISA/linx-isa) |
-| **ISA Manual Source** | [docs/architecture/isa-manual/src](https://github.com/LinxISA/linx-isa/tree/main/docs/architecture/isa-manual/src) (AsciiDoc) |
-| **QEMU Emulator** | [avs/qemu](https://github.com/LinxISA/linx-isa/tree/main/avs/qemu) |
-| **LLVM Backend** | [avs/compiler/linx-llvm](https://github.com/LinxISA/linx-isa/tree/main/avs/compiler/linx-llvm) |
-| **glibc Port** | [toolchains/glibc](https://github.com/LinxISA/linx-isa/tree/main/toolchains/glibc) |
-| **musl Port** | [toolchains/musl](https://github.com/LinxISA/linx-isa/tree/main/toolchains/musl) |
+| [background/index.md](background/index.md) | High-level rationale and positioning |
+| [isa/arch/bisa.md](isa/arch/bisa.md) | Primary imported architecture narrative |
+| [isa/register/common/intro.md](isa/register/common/intro.md) | Published register/state overview |
+| [isa/datatype/intro.md](isa/datatype/intro.md) | Published data-format overview |
+| [compiler/manuals.md](compiler/manuals.md) | Programming/manual workflow guidance |
+| [architecture/v0.56-architecture-contract.md](architecture/v0.56-architecture-contract.md) | Normative v0.56 contract |
+| [architecture/isa-manual/README.md](architecture/isa-manual/README.md) | Normative English manual source/build |
+| [isa/index.md](isa/index.md) | Generated appendix/reference surface |
 
-> **Note:** This site is generated from `linxisa-v0.56.json`. To edit the ISA specification, update the JSON source; pages regenerate automatically.
+> The root site is intentionally split into a primary manual hierarchy and a
+> generated appendix. The appendix is not retired; it is demoted from “home
+> page” status to “reference backplane” status.
