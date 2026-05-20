@@ -121,7 +121,9 @@ bash tools/bringup/run_runtime_convergence.sh --lane external --run-id <run-id-e
 
 ## 域路由备忘单
 
-如果第一个失败门就在这里，请从此模块开始：|失效面|从这里开始 |
+如果第一个失败门就在这里，请从此模块开始：
+
+|失效面|从这里开始 |
 | --- | --- |
 |编译 AVS、覆盖率、LLVM binutils | `compiler/llvm` |
 |运行时 AVS、严格系统、操作码同步 | `emulator/qemu` |

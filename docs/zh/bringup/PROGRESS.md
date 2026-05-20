@@ -22,7 +22,9 @@
   - TSVC QEMU 运行时在 `auto` 模式下的 标量 重放循环内核上仍然是夜间/运行时阻止程序； PR 闭包在 `148/151` 处使用仅编译严格覆盖。
   - 一些调用/ret 负契约和 C++ 运行时覆盖后续工作仍然在 PR 闭包子集之外。
 
-## 阶段状态|相|状态 |证据|
+## 阶段状态
+
+|相|状态 |证据|
 | --- | --- | --- |
 | 1.Canonical `v0.56` 金色+手动冻结 | ✅ 通过 | `python3 tools/isa/build_golden.py --profile v0.56 --check`; `python3 tools/isa/validate_spec.py --profile v0.56` |
 | 2. AVS公共合约割接 | ✅ 来源完整 | `python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml` |
@@ -30,11 +32,14 @@
 | 4. QEMU 运行时/系统基线 | ✅ 当前密码 | `avs/qemu/check_system_strict.sh`； `avs/qemu/run_tests.sh --all`; `ninja -C emulator/qemu/build qemu-system-linx64` |
 | 5. Linux用户空间启动路径| ⚠️ 恢复正在进行中 | Initramfs 冒烟/满保持绿色。 BusyBox rootfs 需要在合并的 灵犀64 通道上进行无固件 QEMU 启动，并且本地重建工作已经超越了旧的 `bug.h` 内联 asm 阻止程序、早期的 SMP/VDSO 冲突、最初的 灵犀 vDSO 干净构建失败、第一个 灵犀 MM/核心 API 漂移、 `fs/nfs` SelectionDAG 崩溃，`fs/lockd` SelectionDAG 崩溃，以及后续的 `lib/random32.o` 崩溃。当前的停止是稍后在 `lib/hexdump.o` 处的编译器后端稳定性中进行的，然后才能链接新的 `vmlinux`。 |
 | 6. musl/glibc 基线运行时 | ✅ 当前的 clean-QEMU 通行证 | musl build/runtime 和 glibc G1a/G1b 是绿色的，`run_musl_smoke.py` 和 `run_glibc_smoke.py` 现在再次通过干净的固定 QEMU 路径。 |
-| 7. 帆/模型验证 | ✅ 目前的 PR 通行证 |旧的 March Sail 解码生成器故障已被取代；目前PR车道记录model-diff为绿色，4月11日抽查`check_sail_model.py --require-parser`和`gen_sail_decode.py --check`均通过。 || 8. AVS 层关闭 | ✅ 目前的 PR 通行证 | `python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier pr`现报告`required_tests=31`、`failure_count=0`；夜间宽度仍然是`32/54`。 |
+| 7. 帆/模型验证 | ✅ 目前的 PR 通行证 |旧的 March Sail 解码生成器故障已被取代；目前PR车道记录model-diff为绿色，4月11日抽查`check_sail_model.py --require-parser`和`gen_sail_decode.py --check`均通过。 |
+| 8. AVS 层关闭 | ✅ 目前的 PR 通行证 | `python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier pr`现报告`required_tests=31`、`failure_count=0`；夜间宽度仍然是`32/54`。 |
 | 9. 灵犀Core/Testbench/Trace/pyCircuit 关闭 | ✅ 当前密码 |运行程序协议、跟踪模式/内存烟雾、灵犀Trace 健全性、cosim 烟雾、ROB 簿记、块结构 pyc 流和 pyCircuit CPU/QEMU 烟雾在最新的规范引脚运行中传递。 |
 | 10.工作量和SPEC硬闭合| ❌ 夜间/运行时拦截器 | Benchmark/PolyBench/portfolio/ctuning 工件发布、PTO 内核奇偶校验和 TSVC 仅编译 PR 覆盖范围在 PR 通道中为绿色，但 SPEC 阶段 A 仍然依赖于托管共享 musl 打包以及相同的后期 Linux 用户空间通道，并且 TSVC QEMU 运行时仍然单独受阻。 |
 
-## 门快照|门 |状态 |命令 |
+## 门快照
+
+|门 |状态 |命令 |
 | --- | --- | --- |
 |黄金/规格验证 | ✅ | `python3 tools/isa/build_golden.py --profile v0.56 --check`; `python3 tools/isa/validate_spec.py --profile v0.56` |
 | AVS 合约架构 | ✅ | `python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml` |

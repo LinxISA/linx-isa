@@ -13,7 +13,9 @@
 - 所需的验证命令，
 - 用于促销的接受场景。
 
-## G1 合约行（规范）|合约编号 |面积 |规范性声明|
+## G1 合约行（规范）
+
+|合约编号 |面积 |规范性声明|
 |---|---|---|
 | `LC-ARCH-DOC-001` |架构文档 | Canonical 灵犀Core 文档位于 `rtl/ZXTERMEN45QXZCore/docs/architecture` 中，镜像到 `docs/architecture/linxcore` 中，并在 灵犀Arch 文档中保持导航连接 |
 | `LC-MA-PIPE-001` |管道|保留舞台所有权和精确的 super标量 退休 |
@@ -27,7 +29,8 @@
 | `LC-MA-STAGE-001` |舞台所有权|每个记录的管道阶段都映射到专用的所有者文件和 `@module` 边界 |
 | `LC-IF-PYC-001` | pyCircuit 接口版本控制 | pyCircuit-灵犀Core 合约遵循 SemVer，具有门控强制兼容性 |
 | `LC-IF-PYC-002` | pyCircuit 提交有效负载 |必需的提交字段和环境控件与跟踪工具保持兼容 |
-| `LC-IF-TRACE-001` |跟踪模式| 灵犀Trace 模式在生产者和消费者工具之间保持同步 || `LC-IF-TRACE-002` |跟踪兼容性 |破坏跟踪更改需要主要版本碰撞和兼容性检查|
+| `LC-IF-TRACE-001` |跟踪模式| 灵犀Trace 模式在生产者和消费者工具之间保持同步 |
+| `LC-IF-TRACE-002` |跟踪兼容性 |破坏跟踪更改需要主要版本碰撞和兼容性检查|
 | `LC-IF-SYNC-001` |跨工具同步 |发射器、linter 和查看器合约保持同步并经过门验证 |
 
 ## 门到合约的可追溯性（需要 PR 门）
@@ -50,7 +53,9 @@
 | `ZXTERMEN45QXZTrace::sample trace lint` | `LC-IF-TRACE-001`、`LC-IF-SYNC-001` |
 | `ZXTERMEN45QXZTrace::semver compatibility gate` | `LC-IF-TRACE-002`、`LC-IF-TRACE-001` |
 
-## PR 强制矩阵|域名 |门钥匙|命令 |合同意向 |
+## PR 强制矩阵
+
+|域名 |门钥匙|命令 |合同意向 |
 |---|---|---|---|
 |建筑| `Architecture::ZXTERMEN45QXZCore architecture contract lint` | `python3 tools/bringup/check_linxcore_arch_contract.py --root . --strict` |规范子模块文档、镜像和交叉链接均存在并同步 |
 |建筑| `Architecture::mkdocs architecture nav/docs` | `python3 tools/bringup/check_linxcore_arch_contract.py --root . --strict --require-mkdocs` |已发布的文档包括镜像的 灵犀Core 合约页面 |
@@ -65,7 +70,8 @@
 | py电路| `pyCircuit::QEMU vs pyCircuit trace diff` | `bash tools/pyCircuit/contrib/linx/flows/tools/run_linx_qemu_vs_pyc.sh` |建筑痕迹等价|
 | py电路| `pyCircuit::interface contract gate` | `python3 tools/bringup/check_pycircuit_interface_contract.py --root . --strict` |版本化 pyCircuit↔灵犀Core 界面控制 |
 | 灵犀跟踪 | `ZXTERMEN45QXZTrace::contract sync lint` | `python3 rtl/ZXTERMEN45QXZCore/tools/linxcoresight/lint_trace_contract_sync.py` |发射器、linter 和查看器管道合约同步 |
-| 灵犀跟踪 | `ZXTERMEN45QXZTrace::sample trace lint` | `bash rtl/ZXTERMEN45QXZCore/tests/test_konata_sanity.sh` |追踪有效性和舞台存在感|| 灵犀跟踪 | `ZXTERMEN45QXZTrace::semver compatibility gate` | `python3 tools/bringup/check_trace_semver_compat.py --root . --strict` |架构版本兼容性策略实施 |
+| 灵犀跟踪 | `ZXTERMEN45QXZTrace::sample trace lint` | `bash rtl/ZXTERMEN45QXZCore/tests/test_konata_sanity.sh` |追踪有效性和舞台存在感 |
+| 灵犀跟踪 | `ZXTERMEN45QXZTrace::semver compatibility gate` | `python3 tools/bringup/check_trace_semver_compat.py --root . --strict` |架构版本兼容性策略实施 |
 
 ## PR 选择加入扩展
 

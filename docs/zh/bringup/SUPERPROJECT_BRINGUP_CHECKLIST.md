@@ -30,12 +30,15 @@
   - `INT-025`
   - `SPEC-003` / `SPEC-004` 作为夜间/运行时后续
 
-## 当前拦截器地图|面积 |登机口/身份证 |当前状态 |分诊注意事项|
+## 当前拦截器地图
+
+|面积 |登机口/身份证 |当前状态 |分诊注意事项|
 | --- | --- | --- | --- |
 |内核| `Kernel::Linux busybox rootfs boot` / `LINUX-004` |主动拦截器 | rootfs 通道仍然需要无固件启动 (`-bios none`)。本地后续行动现已清除了早期的 灵犀 解析器/VDSO/页表/API 阻止程序，解决了第一个 `fs/nfs` 和 `fs/lockd` SelectionDAG 崩溃以及后续的 `lib/random32.o` 崩溃，并且仍然没有新的 rootfs 判决，因为重建的内核稍后在 `lib/hexdump.o` 停止。 |
-|内核| `Kernel::Linux \`vmlinux\` build closure` / `LINUX-005` |主动依赖| 4 月 18 日的规范运行仍然是最后的绿色证明。当前的本地重新验证远远超出了旧的汇编程序、VDSO 和 MM 胶水阻断程序；当前的确定性停止现在是 `lib/hexdump.o` (`hex_to_bin`) 中相同 灵犀 SelectionDAG 崩溃系列的后续重复，这是针对早期 `fs/nfs`、`fs/lockd` 和 `lib/random32.o` 故障的本地对象范围 向量izer 解决方法之后的重复。 |
+|内核| ``Kernel::Linux `vmlinux` build closure`` / `LINUX-005` |主动依赖| 4 月 18 日的规范运行仍然是最后的绿色证明。当前的本地重新验证远远超出了旧的汇编程序、VDSO 和 MM 胶水阻断程序；当前的确定性停止现在是 `lib/hexdump.o` (`hex_to_bin`) 中相同 灵犀 SelectionDAG 崩溃系列的后续重复，这是针对早期 `fs/nfs`、`fs/lockd` 和 `lib/random32.o` 故障的本地对象范围 向量izer 解决方法之后的重复。 |
 | LLVM 灵犀 目标 | `Compiler::AVS compile suites` + 覆盖 |主动依赖 | AVS/覆盖通道保持绿色，并且针对 `.option push/pop/norelax` 和 `.word/.half/.dword` 解析修复了本地集成汇编器兼容性差距。当前 Linux 闭包的编译器端阻止程序不再是解析器接受；它是 `fs/nfs` 中较大 C 文件的后端代码生成稳定性。 |
-|严格封闭| `Regression::strict_cross_repo.sh` / `INT-004` |主动拦截器 |该行失败是因为所需的 BusyBox rootfs 门在同一运行中失败。除非重现，否则不要恢复过时的 March Sail 解码诊断。 ||混合磁贴 + SIMT 工作负载 | `Regression::PTO kernel parity` / `INT-020` |没有被屏蔽| 4 月 18 日的规范运行记录 PTO 平价为通过。 |
+|严格封闭| `Regression::strict_cross_repo.sh` / `INT-004` |主动拦截器 |该行失败是因为所需的 BusyBox rootfs 门在同一运行中失败。除非重现，否则不要恢复过时的 March Sail 解码诊断。 |
+| 混合磁贴 + SIMT 工作负载 | `Regression::PTO kernel parity` / `INT-020` |没有被屏蔽| 4 月 18 日的规范运行记录 PTO 平价为通过。 |
 | SIMT 自动化 | `Regression::TSVC strict coverage gate` / `INT-025` | PR 未被屏蔽 | PR 闭包在 `148/151` 处使用仅编译严格覆盖； QEMU 运行时仍然是单独的夜间/运行时后续。 |
 | QEMU 基线 | `Emulator::QEMU all suites` + `QEMU strict system` |没有被屏蔽|基线运行时/系统门为绿色；该通道的剩余 QEMU 问题是 TSVC 运行时再现，而不是广泛的解码扩展。 |
 |超级项目广度| `ISA::AVS tier closure` / `INT-016` | PR 未被屏蔽 | PR 层关闭在 `31/31` 处为绿色；夜间宽度仍然是`32/54`。 |
