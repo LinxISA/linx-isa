@@ -4,10 +4,14 @@ This folder contains small, freestanding C tests compiled for LinxISA and run on
 
 Key constraints:
 
-- The QEMU Linx `virt` machine loads an ELF **relocatable** (`ET_REL`) object via `-kernel` (not a fully linked `ET_EXEC`).
+- The checked-in runner first builds a single aggregate `ET_REL` object with
+  `ld.lld -r`, then links a firmwareless direct-boot `ET_EXEC` image at
+  `0x10000` with an exported `__end_init_stack` symbol before invoking QEMU.
 - No libc; keep tests freestanding and prefer the checked-in runtime/test helpers over ad-hoc external harnesses.
 - UART output is via MMIO at `0x10000000`.
-- Program termination is via MMIO at `0x10000004` (exit code written becomes QEMU’s process exit code).
+- Program termination is via the SiFive-style test finisher at `0x10009000`.
+  The low 16 bits carry the finisher status (`0x5555` pass, `0x3333` fail,
+  `0x7777` reset) and the upper 16 bits carry an optional failure code.
 
 ## Requirements
 
@@ -107,7 +111,8 @@ Custom output directory:
 
 ## Outputs
 
-- `out/linx-qemu-tests.o`: single `ET_REL` object built with `ld.lld -r` and passed to QEMU as `-kernel`.
+- `out/linx-qemu-tests.o`: aggregate `ET_REL` object built with `ld.lld -r`.
+- `out/linx-qemu-tests.elf`: firmwareless direct-boot `ET_EXEC` image passed to QEMU as `-kernel`.
 
 ## Linux musl smoke
 
@@ -168,4 +173,4 @@ LINX_AUDIT_VMLINUX=1 python3 avs/qemu/run_musl_smoke.py \
 | `0x00008000` | failure record (`test_result_t`) |
 | `0x00010000` | kernel load base (`.text/.data/...`) |
 | `0x10000000` | UART data register |
-| `0x10000004` | exit register (write → shutdown) |
+| `0x10009000` | test finisher (write pass/fail/reset status) |

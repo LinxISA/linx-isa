@@ -161,11 +161,33 @@
       "gate_key": "Emulator::ISA vs QEMU coverage report",
       "domain": "Emulator",
       "owner": "qemu",
-      "command": "if [[ \"${QEMU_ISA_COVERAGE_REQUIRE_FULL:-0}\" == \"1\" ]]; then extra=--require-full; else extra=; fi; python3 \"$ROOT/tools/bringup/report_qemu_isa_coverage.py\" --spec \"$ROOT/isa/v0.56/linxisa-v0.56.json\" --qemu-meta \"$ROOT/emulator/qemu/target/linx/linx_opcode_meta_gen.h\" --report-out \"$ROOT/docs/bringup/gates/qemu_isa_coverage_latest.json\" --out-md \"$ROOT/docs/bringup/gates/qemu_isa_coverage_latest.md\" $extra",
+      "command": "if [[ \"${QEMU_ISA_COVERAGE_REQUIRE_FULL:-0}\" == \"1\" ]]; then extra=--require-full; else extra=; fi; python3 \"$ROOT/tools/bringup/report_qemu_isa_coverage.py\" --spec \"$ROOT/isa/v0.56/linxisa-v0.56.json\" --report-out \"$ROOT/docs/bringup/gates/qemu_isa_coverage_latest.json\" --out-md \"$ROOT/docs/bringup/gates/qemu_isa_coverage_latest.md\" $extra",
       "profiles": ["release-strict"],
       "tiers": ["pr", "nightly"],
       "required": true,
       "artifacts": ["docs/bringup/gates/qemu_isa_coverage_latest.json"],
+      "freshness_hours": 24
+    },
+    {
+      "gate_key": "Emulator::AVS QEMU translation coverage report",
+      "domain": "Emulator",
+      "owner": "qemu",
+      "command": "cd \"$ROOT/avs/qemu\" && CLANG=\"$CLANG\" CLANGXX=\"$CLANGXX\" LLD=\"$LLD\" LLVM_OBJDUMP=\"$LLVM_OBJDUMP\" python3 run_tests.py --suite translation_corpus --compile-only --out-dir \"$ROOT/avs/qemu/out\" && if [[ \"${QEMU_TRANSLATION_COVERAGE_REQUIRE_FULL:-0}\" == \"1\" ]]; then extra=--require-full; else extra=; fi; python3 \"$ROOT/tools/bringup/report_qemu_translation_coverage.py\" --spec \"$ROOT/isa/v0.56/linxisa-v0.56.json\" --obj-dir \"$ROOT/avs/qemu/out/obj\" --llvm-objdump \"$LLVM_OBJDUMP\" --report-out \"$ROOT/docs/bringup/gates/qemu_translation_coverage_latest.json\" --out-md \"$ROOT/docs/bringup/gates/qemu_translation_coverage_latest.md\" $extra",
+      "profiles": ["release-strict"],
+      "tiers": ["pr", "nightly"],
+      "required": true,
+      "artifacts": ["docs/bringup/gates/qemu_translation_coverage_latest.json"],
+      "freshness_hours": 24
+    },
+    {
+      "gate_key": "Integration::ISA-LLVM-QEMU coverage coherence report",
+      "domain": "Integration",
+      "owner": "integration",
+      "command": "if [[ \"${ISA_LLVM_QEMU_COVERAGE_REQUIRE_COHERENT:-0}\" == \"1\" ]]; then extra=--require-coherent; else extra=; fi; python3 \"$ROOT/tools/bringup/report_isa_llvm_qemu_coverage.py\" --spec \"$ROOT/isa/v0.56/linxisa-v0.56.json\" --compiler-analyzer \"$ROOT/avs/compiler/linx-llvm/tests/analyze_coverage.py\" --compiler-out-dir \"$ROOT/avs/compiler/linx-llvm/tests/out-linx64\" --qemu-isa-report \"$ROOT/docs/bringup/gates/qemu_isa_coverage_latest.json\" --qemu-translation-report \"$ROOT/docs/bringup/gates/qemu_translation_coverage_latest.json\" --report-out \"$ROOT/docs/bringup/gates/isa_llvm_qemu_coverage_latest.json\" --out-md \"$ROOT/docs/bringup/gates/isa_llvm_qemu_coverage_latest.md\" $extra",
+      "profiles": ["release-strict"],
+      "tiers": ["pr", "nightly"],
+      "required": true,
+      "artifacts": ["docs/bringup/gates/isa_llvm_qemu_coverage_latest.json"],
       "freshness_hours": 24
     },
     {

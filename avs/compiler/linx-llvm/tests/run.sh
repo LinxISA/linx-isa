@@ -255,7 +255,6 @@ if [[ -d "$ASM_DIR" ]]; then
           --require B.ARG \
           --require B.DIM \
           --require B.IOR \
-          --require B.IOT \
           --require BSTART.ACCCVT \
           --require BSTART.CUBE \
           --require BSTART.FIXP \
@@ -330,16 +329,14 @@ if [[ -d "$NEG_DIR" ]]; then
   NEG_OUT="$OUT_DIR/_neg"
   mkdir -p "$NEG_OUT"
 
-  echo "[asm] simt bstop spelling"
-  if ! "$LLVMMC" -triple="$TARGET" -filetype=obj "$NEG_DIR/legacy_alias_l_bstop.s" -o "$NEG_OUT/legacy_alias_l_bstop.o" 2>"$NEG_OUT/legacy_alias_l_bstop.err"; then
-    echo "error: L.BSTOP spelling did not assemble" >&2
-    cat "$NEG_OUT/legacy_alias_l_bstop.err" >&2
+  echo "[neg] legacy L.BSTOP rejection"
+  if "$LLVMMC" -triple="$TARGET" -filetype=obj "$NEG_DIR/legacy_alias_l_bstop.s" -o "$NEG_OUT/legacy_alias_l_bstop.o" 2>"$NEG_OUT/legacy_alias_l_bstop.err"; then
+    echo "error: legacy L.BSTOP spelling unexpectedly assembled" >&2
     exit 1
   fi
-  "$OBJDUMP" -d --triple="$TARGET" "$NEG_OUT/legacy_alias_l_bstop.o" >"$NEG_OUT/legacy_alias_l_bstop.objdump"
-  if ! grep -Eq "\\bL\\.BSTOP\\b" "$NEG_OUT/legacy_alias_l_bstop.objdump"; then
-    echo "error: L.BSTOP spelling did not disassemble as expected" >&2
-    cat "$NEG_OUT/legacy_alias_l_bstop.objdump" >&2
+  if ! grep -Eq "legacy alias 'L\\.BSTOP' is not allowed in canonical v0\\.4; use 'C\\.BSTOP'" "$NEG_OUT/legacy_alias_l_bstop.err"; then
+    echo "error: legacy L.BSTOP rejection did not report the canonical spelling guidance" >&2
+    cat "$NEG_OUT/legacy_alias_l_bstop.err" >&2
     exit 1
   fi
 

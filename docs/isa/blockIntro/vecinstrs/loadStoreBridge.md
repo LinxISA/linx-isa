@@ -99,7 +99,7 @@ The instructions are encoded as follows:
 
 The instructions are encoded as follows:
 
-![LoadBridgeInstructionUnScaled](../../../figs/bitfield/svg/Introduction_64bit/LoadBridgeInstructionUnScaledVector.svg)
+> **Note:** Encoding diagram for Load-Bridge-Unscaled forms (V.LB.BRG, V.LBU.BRG, V.LH.BRG, V.LHU.BRG, V.LW.BRG, V.LWU.BRG, V.LD.BRG) follows the same pattern as [LoadRegisterOffsetVector](../bitfield/svg/Introduction_64bit/LoadRegisterOffsetVector.svg) with additional SrcD bridge register fields. See [LoadBridgeRegisterOffsetVector](../bitfield/svg/Introduction_64bit/LoadBridgeRegisterOffsetVector.svg) for the bridge-register variant.
 
 ## Store Bridge command
 

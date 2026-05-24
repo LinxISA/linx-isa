@@ -17,6 +17,9 @@
 /* QEMU virt UART + shutdown MMIO (freestanding profile). */
 #define LINX_UART_BASE      0x10000000u
 #define LINX_EXIT_REG_INDEX 1u
+#define LINX_TEST_FINISHER_MMIO 0x10009000u
+#define LINX_FINISHER_FAIL      0x3333u
+#define LINX_FINISHER_PASS      0x5555u
 
 int errno;
 
@@ -71,9 +74,19 @@ void __linx_puts(const char *s) {
  * This should never return - the program is terminated.
  */
 void __linx_exit(int code) {
-    /* Exit register is at UART base + 0x4 (virt machine). */
-    volatile unsigned int *mmio = (volatile unsigned int *)LINX_UART_BASE;
-    mmio[LINX_EXIT_REG_INDEX] = (unsigned int)code;
+    /*
+     * Keep the legacy model-side exit write for existing local tooling, but
+     * also drive the QEMU virt test finisher that the current system machine
+     * actually wires up for direct-boot termination.
+     */
+    volatile unsigned int *legacy_mmio = (volatile unsigned int *)LINX_UART_BASE;
+    volatile unsigned int *finisher = (volatile unsigned int *)LINX_TEST_FINISHER_MMIO;
+    const unsigned int status = (code == 0) ? LINX_FINISHER_PASS : LINX_FINISHER_FAIL;
+    const unsigned int finisher_word =
+        ((unsigned int)(code & 0xffff) << 16) | status;
+
+    legacy_mmio[LINX_EXIT_REG_INDEX] = (unsigned int)code;
+    *finisher = finisher_word;
 
     /* If exit doesn't halt, loop forever */
     while (1) {

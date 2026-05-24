@@ -4,19 +4,23 @@
 
 This document defines the dual-lane SPEC CPU2017 workflow used for LinxISA/LinxCore validation:
 
-- Stage-A blocking subset: `999.specrand_ir`, `505.mcf_r`, `531.deepsjeng_r`
-- Nightly full SPECint expansion: `spec_policy.stage_b_required` (excluding policy exclusions)
+- Bringup subset: `spec_policy.bringup_subset`
+- Promotion-set expansion: `spec_policy.promotion_required` (excluding policy exclusions)
 - Functional transport policy:
-  - Stage-A: `9p` + `initramfs`
-  - Nightly full set: `9p` only
+  - bringup subset: `9p` + `initramfs`
+  - promotion set: `9p` only
 - XCheck target: first 1,000 commits parity between QEMU trace and LinxCore C++ TB
 
 The flow intentionally separates:
 
-- phase-c build lane (functional checklist)
-- phase-b static image lane (LinxCore image/xcheck)
+- hosted-runtime build lane (current helpers still use `phase-c`)
+- static image lane (current helpers still use `phase-b`)
 
-## Profile A: Stage-A Blocking
+Legacy helper flags `--stage a`, `--stage b`, `phase-b`, and `phase-c` remain
+script implementation details. The canonical planning surface is
+`docs/bringup/SPEC_WORKLOAD_PLAN.md`.
+
+## Profile A: Bringup Subset
 
 Run:
 
@@ -26,13 +30,13 @@ bash rtl/LinxCore/tests/test_specint_stage_a_xcheck.sh
 
 Pipeline:
 
-1. phase-c build for Stage-A benches
+1. hosted-runtime build for bringup-subset benches
 2. QEMU matrix (`9p` + `initramfs`, `--input-set test`, strict)
-3. phase-b static image preparation (`LINX_SPEC_FORCE_STATIC=1`, auto-restore original exes)
+3. static image preparation (`LINX_SPEC_FORCE_STATIC=1`, auto-restore original exes)
 4. suite generation (`linxcore-xcheck-suite-v1`)
 5. xcheck execution (`failfast`, 1K commits)
 
-## Profile B: Full SPECint Nightly (Report Lane)
+## Profile B: Promotion Set Nightly (Report Lane)
 
 Run (report-only default):
 
@@ -42,10 +46,10 @@ SPEC_NIGHTLY_REPORT_ONLY=1 bash rtl/LinxCore/tests/test_specint_full_xcheck_nigh
 
 Pipeline:
 
-1. phase-c build for policy Stage-B benches
+1. hosted-runtime build for promotion-set benches
 2. QEMU matrix (`9p`, `--input-set test`)
-3. phase-b static image preparation
-4. suite generation (stage-b policy set)
+3. static image preparation
+4. suite generation (promotion-set policy)
 5. xcheck execution (`diagnostic`, `--continue-on-fail`, report-only)
 
 Exit behavior:

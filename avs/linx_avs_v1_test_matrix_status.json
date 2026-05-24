@@ -235,54 +235,48 @@
       "source": "ev-0043"
     },
     "ev-0044": {
-      "exists": true,
-      "kind": "path",
-      "path": "avs/compiler/linx-llvm/tests/asm/41_v056_isa_forms.s",
-      "source": "avs/compiler/linx-llvm/tests/asm/41_v056_isa_forms.s"
+      "kind": "note",
+      "source": "ev-0044"
     },
     "ev-0045": {
-      "exists": true,
-      "kind": "path",
-      "path": "avs/compiler/linx-llvm/tests/run.sh",
-      "source": "avs/compiler/linx-llvm/tests/run.sh positive asm lane"
+      "kind": "note",
+      "source": "ev-0045"
     },
     "ev-0046": {
-      "exists": true,
-      "kind": "path",
-      "path": "avs/compiler/linx-llvm/tests/check_required_mnemonics.py",
-      "source": "avs/compiler/linx-llvm/tests/check_required_mnemonics.py"
+      "kind": "note",
+      "source": "ev-0046"
     }
   },
-  "generated_at_utc": "2026-05-11 06:53:09Z",
+  "generated_at_utc": "2026-05-20 08:25:22Z",
   "matrix_file": "/Users/zhoubot/linx-isa/avs/linx_avs_v1_test_matrix.yaml",
   "schema_version": "linx-avs-v0.56-status-v3",
   "statuses": {
     "AVS-ABI-001": {
       "evidence": [
-        "ev-0019"
+        "ev-0022"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-ABI-002": {
       "evidence": [
-        "ev-0020"
+        "ev-0023"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-ALU-001": {
       "evidence": [
-        "ev-0009",
-        "ev-0010"
+        "ev-0012",
+        "ev-0013"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-ALU-002": {
       "evidence": [
-        "ev-0011",
-        "ev-0012"
+        "ev-0014",
+        "ev-0015"
       ],
       "implemented": true,
       "validated": "pass"
@@ -314,8 +308,8 @@
     },
     "AVS-BLK-001": {
       "evidence": [
-        "ev-0005",
-        "ev-0006"
+        "ev-0008",
+        "ev-0009"
       ],
       "implemented": true,
       "validated": "pass"
@@ -332,14 +326,14 @@
     },
     "AVS-BLK-004": {
       "evidence": [
-        "ev-0007"
+        "ev-0010"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-BLK-005": {
       "evidence": [
-        "ev-0008"
+        "ev-0011"
       ],
       "implemented": true,
       "validated": "pass"
@@ -351,41 +345,41 @@
     },
     "AVS-BR-002": {
       "evidence": [
-        "ev-0013",
-        "ev-0014"
+        "ev-0016",
+        "ev-0017"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-CPP-001": {
       "evidence": [
-        "ev-0021",
-        "ev-0022"
+        "ev-0024",
+        "ev-0025"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-CPP-002": {
       "evidence": [
-        "ev-0023",
-        "ev-0024"
+        "ev-0026",
+        "ev-0027"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-CPP-003": {
       "evidence": [
-        "ev-0025",
-        "ev-0026"
+        "ev-0028",
+        "ev-0029"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-CPP-010": {
       "evidence": [
-        "ev-0027",
-        "ev-0028",
-        "ev-0029"
+        "ev-0030",
+        "ev-0031",
+        "ev-0032"
       ],
       "implemented": true,
       "validated": "pass"
@@ -402,7 +396,7 @@
     },
     "AVS-EMU-001": {
       "evidence": [
-        "ev-0030"
+        "ev-0033"
       ],
       "implemented": true,
       "validated": "pass"
@@ -424,49 +418,49 @@
     },
     "AVS-LIBC-001": {
       "evidence": [
-        "ev-0036"
+        "ev-0039"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-LIBC-002": {
       "evidence": [
-        "ev-0037"
+        "ev-0040"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-LIBC-003": {
       "evidence": [
-        "ev-0038"
+        "ev-0041"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-LIBC-004": {
       "evidence": [
-        "ev-0039"
+        "ev-0042"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-LINUX-001": {
       "evidence": [
-        "ev-0033"
+        "ev-0036"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-LINUX-002": {
       "evidence": [
-        "ev-0034"
+        "ev-0037"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-LINUX-003": {
       "evidence": [
-        "ev-0035"
+        "ev-0038"
       ],
       "implemented": true,
       "validated": "pass"
@@ -488,22 +482,22 @@
     },
     "AVS-MEM-003": {
       "evidence": [
-        "ev-0015",
-        "ev-0016"
+        "ev-0018",
+        "ev-0019"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-MODEL-001": {
       "evidence": [
-        "ev-0031"
+        "ev-0034"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-MODEL-002": {
       "evidence": [
-        "ev-0032"
+        "ev-0035"
       ],
       "implemented": true,
       "validated": "pass"
@@ -515,14 +509,14 @@
     },
     "AVS-SYS-001": {
       "evidence": [
-        "ev-0017"
+        "ev-0020"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-SYS-002": {
       "evidence": [
-        "ev-0018"
+        "ev-0021"
       ],
       "implemented": true,
       "validated": "pass"
@@ -551,9 +545,9 @@
     },
     "AVS-TOOL-012": {
       "evidence": [
-        "ev-0044",
-        "ev-0045",
-        "ev-0046"
+        "ev-0005",
+        "ev-0006",
+        "ev-0007"
       ],
       "implemented": true,
       "validated": "pass"
@@ -575,21 +569,21 @@
     },
     "AVS-WORK-001": {
       "evidence": [
-        "ev-0040"
+        "ev-0043"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-WORK-002": {
       "evidence": [
-        "ev-0041"
+        "ev-0044"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-WORK-003": {
       "evidence": [
-        "ev-0042"
+        "ev-0045"
       ],
       "implemented": true,
       "validated": "pass"
@@ -601,7 +595,7 @@
     },
     "AVS-WORK-005": {
       "evidence": [
-        "ev-0043"
+        "ev-0046"
       ],
       "implemented": true,
       "validated": "pass"

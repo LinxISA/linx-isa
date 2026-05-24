@@ -5,7 +5,7 @@
 ## 关闭快照- `v0.56` 黄金/规格是规范且经过验证的。
 - AVS 现在是唯一实时公开的培育合同。
 - 最新签入的规范报告是 `2026-04-18 02:11:34Z` 生成的 `docs/bringup/gates/latest.json`；其最新运行是`2026-04-18-r9-pin-linuxlibc-refresh`。
-- 主动治理阶段仍然是`G0`，并且`docs/bringup/agent_runs/waivers.yaml`仍然具有零豁免。
+- 主动治理阶段仍然是`LINUX-RUNTIME`，并且`docs/bringup/agent_runs/waivers.yaml`仍然具有零豁免。
 - 最新的 pin-lane 运行恢复了架构、编译器、模拟器、Linux `vmlinux`、initramfs Smoke/full boot、musl build/runtime、glibc G1a/G1b/runtime、灵犀Core/Testbench/Trace/pyCircuit leaf PR 门以及工作负载基准/polybench/portfolio/ctuning/PTO/TSVC 编译行。
 - 2026 年 4 月 11 日抽查首次清除了陈旧的 March Sail/PTO 诊断； 4 月 18 日的规范报告现在将模型差异和 PTO 奇偶校验记录为绿色。
 - 2026 年 4 月 18 日规范恢复工作关闭了陈旧的 PR 通道拦截器：
@@ -18,7 +18,8 @@
   - BusyBox rootfs 运行时是刷新的 PR pin 通道中唯一剩余的必需叶子拦截器。
   - `musl` 和 `glibc` 运行时烟雾都再次通过干净固定的 QEMU 路径；过时的 `r8` 故障被 `r9` 重新运行所取代。
 - BusyBox rootfs 仍然是活跃的 Linux 运行时拦截器，但重建内核路径再次向前推进：合并的 灵犀64 QEMU 恢复通道需要无固件启动 (`-bios none`)，`kernel/linux/tools/linxisa/busybox_rootfs/boot.py` 在本地与该通道对齐，仓库内集成汇编器现在接受 灵犀 `.option push/pop/norelax` 加上之前阻止 `arch/linx/include/asm/bug.h` 的 `.word/.half/.dword` 指令和本地后续操作还清除了早期的 SMP/VDSO/page-table/uaccess/ptrace/MM 兼容性不匹配，这些不匹配一直在 灵犀 架构代码中阻止 `vmlinux`。当前的重建内核停止点不再是 灵犀 VDSO/MM/NFS 表面：本地对象范围的 向量izer 解决方法使构建经历了早期的 `fs/nfs` 和 `fs/lockd` SelectionDAG 崩溃以及后续的 `lib/random32.o` 崩溃。最新验证的第一站是 `-O2` 下的 `lib/hexdump.o` (`hex_to_bin`) 中的相同 灵犀 后端崩溃系列。
-  - `Regression::strict_cross_repo.sh` 是红色的，因为 BusyBox rootfs 在规范运行中是红色的。- SPEC Stage A 仍然是夜间/运行时阻止程序（`___slab_alloc` 中的 `9p` 内核 `E_BLOCK`；initramfs 子启动仍然损坏）。
+  - `Regression::strict_cross_repo.sh` 是红色的，因为 BusyBox rootfs 在规范运行中是红色的。
+  - SPEC 工作负载启动子集仍然是夜间/运行时阻止程序；包装器/QEMU 交接错误已修复，但当前第一个未解决里程碑是固件无关的 Linux 用户空间进入路径，而不仅仅是动态 SPEC 打包。
   - TSVC QEMU 运行时在 `auto` 模式下的 标量 重放循环内核上仍然是夜间/运行时阻止程序； PR 闭包在 `148/151` 处使用仅编译严格覆盖。
   - 一些调用/ret 负契约和 C++ 运行时覆盖后续工作仍然在 PR 闭包子集之外。
 
@@ -35,7 +36,7 @@
 | 7. 帆/模型验证 | ✅ 目前的 PR 通行证 |旧的 March Sail 解码生成器故障已被取代；目前PR车道记录model-diff为绿色，4月11日抽查`check_sail_model.py --require-parser`和`gen_sail_decode.py --check`均通过。 |
 | 8. AVS 层关闭 | ✅ 目前的 PR 通行证 | `python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier pr`现报告`required_tests=31`、`failure_count=0`；夜间宽度仍然是`32/54`。 |
 | 9. 灵犀Core/Testbench/Trace/pyCircuit 关闭 | ✅ 当前密码 |运行程序协议、跟踪模式/内存烟雾、灵犀Trace 健全性、cosim 烟雾、ROB 簿记、块结构 pyc 流和 pyCircuit CPU/QEMU 烟雾在最新的规范引脚运行中传递。 |
-| 10.工作量和SPEC硬闭合| ❌ 夜间/运行时拦截器 | Benchmark/PolyBench/portfolio/ctuning 工件发布、PTO 内核奇偶校验和 TSVC 仅编译 PR 覆盖范围在 PR 通道中为绿色，但 SPEC 阶段 A 仍然依赖于托管共享 musl 打包以及相同的后期 Linux 用户空间通道，并且 TSVC QEMU 运行时仍然单独受阻。 |
+| 10.工作量和SPEC硬闭合| ❌ 夜间/运行时拦截器 | Benchmark/PolyBench/portfolio/ctuning 工件发布、PTO 内核奇偶校验和 TSVC 仅编译 PR 覆盖范围在 PR 通道中为绿色，但当前的 SPEC 工作负载计划首先被固件无关的 Linux 用户空间进入路径阻塞，并且 TSVC QEMU 运行时仍然单独受阻。 |
 
 ## 门快照
 
@@ -64,7 +65,7 @@
 - 灵犀Core/Testbench/Trace/pyCircuit 叶子拦截器在最新的规范运行中被清除，使 BusyBox rootfs 成为 `strict_cross_repo.sh` 变绿之前唯一需要的叶子拦截器。
 - BusyBox rootfs 在 Python 包装器中不再失败；现在，即使针对干净固定的 QEMU 构建，它也始终会公开真实的内核 `E_BLOCK`，并且干净工作树 `switch_to` 实验会删除 EBARG 上下文保存/恢复，仅在详细引导下才到达 BusyBox shell。因此，剩余的错误位于 Linux 运行时路径中，而不是包装器或脏模拟器工件中。
 - `Regression::strict_cross_repo.sh` 在 `2026-04-18-r9-pin-linuxlibc-refresh` 中保持红色，因为它包含 BusyBox rootfs 故障。
-- SPEC 阶段 A 仍然是选择加入 PR 门背后的真正运行时阻碍因素：该通道现在应该默认使用无固件 QEMU 启动，但它仍然在托管 `phase-c` 共享 musl 打包（`libc.so` 不存在）和当前阻止 BusyBox 验证的相同后期 Linux 用户空间/rootfs 运行时路径上受到阻止。
+- SPEC 工作负载运行时仍然是选择加入 PR 门背后的真正运行时阻碍因素，但阻止程序已经移动。矩阵包装器/QEMU 交接错误已修复，`phase-b` musl 通过对齐 `arch/linx64/bits/float.h` 与实际编译器 `long double` 模型而恢复，`999.specrand_ir` 也可以重建为 `guest_shared_runtime=false` 的静态 PIE。即便如此，缩小后的静态 SPEC 运行和修正后的静态 hello 控制通道仍然在相同的固件无关 Linux+initramfs 启动路径下零输出停顿，因此当前实时阻止程序是更广泛的 Linux/QEMU initramfs 用户空间进入/运行时路径，而不仅仅是共享 musl 打包。
 - TSVC QEMU 运行时仍然是夜间/运行时阻止程序； PR 通道仅持有 `148/151` 的仅编译严格覆盖合约。
 
 ## 规范之门文物- `avs/linx_avs_v1_test_matrix.yaml` 是公共合约源。

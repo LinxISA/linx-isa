@@ -1,8 +1,7 @@
 {
   "board": "zybo_z7_20",
   "uart_mmio_base": "0x10000000",
-  "exit_mmio_addr": "0x10000004",
+  "exit_mmio_addr": "0x10009000",
   "boot_pc_default": "0x0000000000010000",
   "boot_sp_default": "0x000000000003ff00"
 }
-

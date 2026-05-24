@@ -28,7 +28,7 @@ checklists for the module-specific closure criteria.
   - `INT-004`
   - `INT-016`
   - `INT-025`
-  - `SPEC-003` / `SPEC-004` as nightly/runtime follow-up
+  - `SPEC-M05` as nightly/runtime follow-up
 
 ## Current Blocker Map
 
@@ -39,10 +39,10 @@ checklists for the module-specific closure criteria.
 | LLVM Linx target | `Compiler::AVS compile suites` + coverage | Active dependency | The AVS/coverage lane remains green, and the local integrated-assembler compatibility gap is fixed for `.option push/pop/norelax` plus `.word/.half/.dword` parsing. The current compiler-side blocker for Linux closure is no longer parser acceptance; it is backend codegen stability on larger C files in `fs/nfs`. |
 | Strict closure | `Regression::strict_cross_repo.sh` / `INT-004` | Active blocker | The row fails because the required BusyBox rootfs gate fails in the same run. Do not revive the stale March Sail decode diagnosis unless it reproduces. |
 | Mixed tile + SIMT workloads | `Regression::PTO kernel parity` / `INT-020` | Not blocked | The April 18 canonical run records PTO parity as pass. |
-| SIMT autovec | `Regression::TSVC strict coverage gate` / `INT-025` | PR not blocked | PR closure uses compile-only strict coverage at `148/151`; QEMU runtime remains a separate nightly/runtime follow-up. |
-| QEMU baseline | `Emulator::QEMU all suites` + `QEMU strict system` | Not blocked | Baseline runtime/system gates are green; the remaining QEMU issue for this lane is TSVC runtime reproduction, not broad decode expansion. |
+| SIMT autovec | `Regression::TSVC strict coverage gate` / `INT-025` | Removed from active gates | TSVC is no longer part of the current bring-up gate path; Linux boot closure takes priority. |
+| QEMU baseline | `Emulator::QEMU all suites` + `QEMU strict system` | Active blocker | Baseline QEMU work is now evaluated only against Linux boot/runtime closure, not TSVC follow-up. |
 | Superproject breadth | `ISA::AVS tier closure` / `INT-016` | PR not blocked | PR-tier closure is green at `31/31`; nightly breadth remains `32/54`. |
-| SPEC runtime | `Regression::SPEC stage A QEMU matrix` / `SPEC-003` | Nightly/runtime blocker | The PR run leaves this row opt-in. Current 2026-05-17 non-canonical evidence is split: static `999.specrand_ir` now reaches the same late kernel task-creation stall as smoke bring-up, while dynamic `531.deepsjeng_r` is still blocked earlier because `phase-c` hosted musl packaging has no `libc.so`. |
+| SPEC runtime | `Regression::SPEC stage A QEMU matrix` / `SPEC-M05` | Nightly/runtime blocker | The PR run leaves this row opt-in. The wrapper handoff bug is fixed, but the current bringup subset still does not reach output generation. Static `999.specrand_ir` and the corrected static hello control lane both stall silently under the same firmwareless Linux+initramfs path, so the live blocker is broader than one benchmark or only the dynamic-loader route. |
 
 ## 1. Keep Gate Truth Current
 

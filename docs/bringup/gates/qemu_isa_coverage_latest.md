@@ -1,17 +1,17 @@
 # ISA vs QEMU Coverage Snapshot
 
-- Generated (UTC): `2026-05-08 15:41:23Z`
+- Generated (UTC): `2026-05-21 06:52:33Z`
 - Spec unique mnemonics: `710`
-- QEMU unique decode mnemonics (non-internal): `640`
-- QEMU mapped spec mnemonics: `616`
-- Mnemonic coverage: `616/710` (`86.76%`)
+- QEMU unique decode mnemonics (non-internal): `762`
+- QEMU mapped spec mnemonics: `710`
+- Mnemonic coverage: `710/710` (`100.0%`)
 - Spec legal forms: `740`
-- QEMU mapped spec forms: `612`
-- Form coverage: `612/740` (`82.7%`)
-- Missing spec mnemonics: `94`
-- Missing spec forms: `128`
+- QEMU mapped spec forms: `453`
+- Form coverage: `453/740` (`61.22%`)
+- Missing spec mnemonics: `0`
+- Missing spec forms: `287`
 - Reserved spec forms: `0`
-- Unmapped QEMU mnemonics: `7`
+- Unmapped QEMU mnemonics: `22`
 
 ## Mnemonic Coverage By Prefix
 
@@ -27,7 +27,7 @@
 - `ANDIW`: `1`
 - `ANDW`: `1`
 - `ASSERT`: `1`
-- `B`: `15`
+- `B`: `17`
 - `BC`: `2`
 - `BCNT`: `1`
 - `BIC`: `1`
@@ -40,7 +40,7 @@
 - `BWT`: `1`
 - `BXS`: `1`
 - `BXU`: `1`
-- `C`: `37`
+- `C`: `38`
 - `CLZ`: `1`
 - `CMP`: `16`
 - `CSEL`: `1`
@@ -166,7 +166,8 @@
 - `SWI`: `2`
 - `TLB`: `4`
 - `UCVTF`: `1`
-- `V`: `94`
+- `V`: `184`
+- `XB`: `1`
 - `XOR`: `1`
 - `XORI`: `1`
 - `XORIW`: `1`
@@ -174,10 +175,6 @@
 
 ## Missing Mnemonics By Prefix
 
-- `B`: `2`
-- `C`: `1`
-- `V`: `90`
-- `XB`: `1`
 
 ## Form Coverage By Prefix
 
@@ -193,25 +190,24 @@
 - `ANDIW`: `1`
 - `ANDW`: `1`
 - `ASSERT`: `1`
-- `B`: `17`
+- `B`: `22`
 - `BC`: `2`
 - `BCNT`: `1`
 - `BIC`: `1`
 - `BIS`: `1`
 - `BSE`: `1`
-- `BSTART`: `19`
 - `BSTOP`: `1`
 - `BWE`: `1`
 - `BWI`: `1`
 - `BWT`: `1`
 - `BXS`: `1`
 - `BXU`: `1`
-- `C`: `37`
+- `C`: `30`
 - `CLZ`: `1`
 - `CMP`: `16`
 - `CSEL`: `1`
 - `CTZ`: `1`
-- `DC`: `6`
+- `DC`: `8`
 - `DIV`: `1`
 - `DIVU`: `1`
 - `DIVUW`: `1`
@@ -219,7 +215,6 @@
 - `EBREAK`: `1`
 - `ERCOV`: `1`
 - `ESAVE`: `1`
-- `FABS`: `1`
 - `FADD`: `1`
 - `FCVT`: `1`
 - `FCVTA`: `1`
@@ -233,7 +228,6 @@
 - `FEQ`: `1`
 - `FEQS`: `1`
 - `FEXIT`: `1`
-- `FEXP`: `1`
 - `FGE`: `1`
 - `FGES`: `1`
 - `FLT`: `1`
@@ -247,30 +241,26 @@
 - `FNES`: `1`
 - `FNMADD`: `1`
 - `FNMSUB`: `1`
-- `FRECIP`: `1`
 - `FRET`: `2`
-- `FSQRT`: `1`
 - `FSUB`: `1`
-- `HL`: `195`
+- `HL`: `70`
 - `IC`: `2`
 - `J`: `1`
-- `JR`: `1`
-- `LB`: `2`
+- `LB`: `1`
 - `LBI`: `1`
-- `LBU`: `2`
+- `LBU`: `1`
 - `LBUI`: `1`
-- `LD`: `10`
+- `LD`: `9`
 - `LDI`: `2`
-- `LH`: `2`
+- `LH`: `1`
 - `LHI`: `2`
-- `LHU`: `2`
+- `LHU`: `1`
 - `LHUI`: `2`
-- `LR`: `2`
 - `LSRGET`: `1`
 - `LUI`: `1`
-- `LW`: `10`
+- `LW`: `9`
 - `LWI`: `2`
-- `LWU`: `2`
+- `LWU`: `1`
 - `LWUI`: `2`
 - `MADD`: `1`
 - `MADDW`: `1`
@@ -288,22 +278,20 @@
 - `ORI`: `1`
 - `ORIW`: `1`
 - `ORW`: `1`
-- `PRF`: `1`
-- `PRFI`: `1`
 - `REM`: `1`
 - `REMU`: `1`
 - `REMUW`: `1`
 - `REMW`: `1`
 - `REV`: `1`
-- `SB`: `2`
+- `SB`: `1`
 - `SBI`: `1`
 - `SC`: `4`
 - `SCVTF`: `1`
-- `SD`: `11`
+- `SD`: `10`
 - `SDI`: `2`
 - `SETC`: `17`
 - `SETRET`: `1`
-- `SH`: `3`
+- `SH`: `2`
 - `SHI`: `2`
 - `SLL`: `1`
 - `SLLI`: `1`
@@ -324,7 +312,7 @@
 - `SUBI`: `1`
 - `SUBIW`: `1`
 - `SUBW`: `1`
-- `SW`: `11`
+- `SW`: `10`
 - `SWAPB`: `1`
 - `SWAPD`: `1`
 - `SWAPH`: `1`
@@ -332,7 +320,8 @@
 - `SWI`: `2`
 - `TLB`: `4`
 - `UCVTF`: `1`
-- `V`: `92`
+- `V`: `96`
+- `XB`: `1`
 - `XOR`: `1`
 - `XORI`: `1`
 - `XORIW`: `1`
@@ -340,249 +329,258 @@
 
 ## Missing Forms By Prefix
 
-- `B`: `10`
-- `BSTART`: `14`
-- `C`: `2`
-- `DC`: `2`
-- `HL`: `5`
-- `LR`: `2`
-- `V`: `92`
-- `XB`: `1`
+- `B`: `5`
+- `BSTART`: `33`
+- `C`: `9`
+- `FABS`: `1`
+- `FEXP`: `1`
+- `FRECIP`: `1`
+- `FSQRT`: `1`
+- `HL`: `130`
+- `JR`: `1`
+- `LB`: `1`
+- `LBU`: `1`
+- `LD`: `1`
+- `LH`: `1`
+- `LHU`: `1`
+- `LR`: `4`
+- `LW`: `1`
+- `LWU`: `1`
+- `PRF`: `1`
+- `PRFI`: `1`
+- `SB`: `1`
+- `SD`: `1`
+- `SH`: `1`
+- `SW`: `1`
+- `V`: `88`
 
 ## Unmapped QEMU Mnemonics
 
-- `b_arg_dn2nz`
-- `b_arg_dn2zn`
-- `b_arg_nd2zn`
-- `b_arg_norm`
-- `b_arg_nz2dn`
-- `b_attr`
-- `b_ioti`
+- `blk_dma_32`
+- `blk_invalid_32`
+- `blk_lbl_32`
+- `blk_lbul_32`
+- `blk_ldl_32`
+- `blk_lhl_32`
+- `blk_lhul_32`
+- `blk_lwl_32`
+- `blk_lwul_32`
+- `blk_memmove`
+- `blk_offset_cond`
+- `blk_offset_direct_call`
+- `blk_sbl_32`
+- `blk_sdl_32`
+- `blk_shl_32`
+- `blk_swl_32`
+- `l_casbp`
+- `l_casdp`
+- `l_cashp`
+- `l_caswp`
+- `simt_addli_32`
+- `simt_mov_32`
 
 ## Missing Spec Mnemonics (First 200)
 
-- `B.CATR`
-- `B.DATR`
-- `C.SETRET`
-- `V.LB`
-- `V.LBI`
-- `V.LBI.BRG`
-- `V.LBU`
-- `V.LBUI`
-- `V.LBUI.BRG`
-- `V.LD`
-- `V.LD.ADD`
-- `V.LD.AND`
-- `V.LD.BRG`
-- `V.LD.MAX`
-- `V.LD.MIN`
-- `V.LD.OR`
-- `V.LD.XOR`
-- `V.LDI`
-- `V.LDI.BRG`
-- `V.LDI.U`
-- `V.LDI.U.BRG`
-- `V.LH`
-- `V.LHI`
-- `V.LHI.BRG`
-- `V.LHI.U`
-- `V.LHI.U.BRG`
-- `V.LHU`
-- `V.LHUI`
-- `V.LHUI.BRG`
-- `V.LHUI.U`
-- `V.LHUI.U.BRG`
-- `V.LW.ADD`
-- `V.LW.AND`
-- `V.LW.MAX`
-- `V.LW.MIN`
-- `V.LW.OR`
-- `V.LW.XOR`
-- `V.LWI`
-- `V.LWI.BRG`
-- `V.LWI.U`
-- `V.LWI.U.BRG`
-- `V.LWU`
-- `V.LWU.BRG`
-- `V.LWUI`
-- `V.LWUI.BRG`
-- `V.LWUI.U`
-- `V.LWUI.U.BRG`
-- `V.QPOP`
-- `V.QPUSH`
-- `V.SB`
-- `V.SBI`
-- `V.SBI.BRG`
-- `V.SD`
-- `V.SD.ADD`
-- `V.SD.AND`
-- `V.SD.BRG`
-- `V.SD.MAX`
-- `V.SD.MIN`
-- `V.SD.OR`
-- `V.SD.U`
-- `V.SD.U.BRG`
-- `V.SD.XOR`
-- `V.SDI`
-- `V.SDI.BRG`
-- `V.SDI.U`
-- `V.SDI.U.BRG`
-- `V.SH`
-- `V.SH.U`
-- `V.SH.U.BRG`
-- `V.SHFL.BFLY`
-- `V.SHFL.DOWN`
-- `V.SHFL.IDX`
-- `V.SHFL.UP`
-- `V.SHFLI.BFLY`
-- `V.SHFLI.DOWN`
-- `V.SHFLI.IDX`
-- `V.SHFLI.UP`
-- `V.SHI`
-- `V.SHI.BRG`
-- `V.SHI.U`
-- `V.SHI.U.BRG`
-- `V.SW.ADD`
-- `V.SW.AND`
-- `V.SW.MAX`
-- `V.SW.MIN`
-- `V.SW.OR`
-- `V.SW.U`
-- `V.SW.U.BRG`
-- `V.SW.XOR`
-- `V.SWI`
-- `V.SWI.BRG`
-- `V.SWI.U`
-- `V.SWI.U.BRG`
-- `XB`
 
 ## Missing Spec Forms (First 200)
 
-- `B.ARG [len=32 mask=0xffffffff match=0x1800a4a3]`
-- `B.ARG [len=32 mask=0xffffffff match=0x180221a3]`
-- `B.ARG [len=32 mask=0xffffffff match=0x18022423]`
-- `B.ARG [len=32 mask=0xffffffff match=0x20fae23]`
-- `B.ARG [len=32 mask=0xffffffff match=0xfa023]`
 - `B.CATR [len=32 mask=0x7fff match=0x23]`
 - `B.DATR [len=32 mask=0x707f match=0x1023]`
-- `B.IOT [len=32 mask=0x707f match=0x4013]`
+- `B.IOD [len=32 mask=0x600707f match=0x1013]`
 - `B.IOT [len=32 mask=0x803f707f match=0x5013]`
 - `B.IOT [len=32 mask=0xc03fffff match=0x6013]`
 - `BSTART CALL [len=32 mask=0xf83f000f match=0x50160002]`
 - `BSTART [len=32 mask=0x7f match=0x11]`
 - `BSTART [len=32 mask=0x7f match=0x21]`
 - `BSTART.ACCCVT [len=32 mask=0x7ffffff match=0x831181]`
+- `BSTART.CUBE [len=32 mask=0x60fffff match=0x31181]`
+- `BSTART.FIXP [len=32 mask=0x60fffff match=0x39181]`
+- `BSTART.FP [len=32 mask=0x7fff match=0x1101]`
+- `BSTART.FP [len=32 mask=0x7fff match=0x2101]`
+- `BSTART.FP [len=32 mask=0x7fff match=0x3101]`
+- `BSTART.FP [len=32 mask=0x7fff match=0x4101]`
+- `BSTART.FP [len=32 mask=0x7fff match=0x5101]`
+- `BSTART.FP [len=32 mask=0x7fff match=0x6101]`
+- `BSTART.FP [len=32 mask=0x7fff match=0x7101]`
 - `BSTART.MPAR [len=32 mask=0xf9ffffff match=0x1181]`
 - `BSTART.MSEQ [len=32 mask=0xf9ffffff match=0x9181]`
+- `BSTART.PAR [len=32 mask=0x6007fff match=0x2001181]`
 - `BSTART.STD [len=32 mask=0x7fff match=0x1001]`
+- `BSTART.STD [len=32 mask=0x7fff match=0x2001]`
+- `BSTART.STD [len=32 mask=0x7fff match=0x3001]`
+- `BSTART.STD [len=32 mask=0x7fff match=0x4001]`
+- `BSTART.STD [len=32 mask=0x7fff match=0x5001]`
+- `BSTART.STD [len=32 mask=0x7fff match=0x6001]`
+- `BSTART.STD [len=32 mask=0x7fff match=0x7001]`
+- `BSTART.SYS [len=32 mask=0x7fff match=0x1081]`
+- `BSTART.TEPL [len=32 mask=0x6007fff match=0x2001181]`
 - `BSTART.TLOAD [len=32 mask=0x7ffffff match=0x11181]`
+- `BSTART.TMA [len=32 mask=0x60fffff match=0x11181]`
 - `BSTART.TMATMUL [len=32 mask=0x7ffffff match=0x31181]`
 - `BSTART.TMATMUL.ACC [len=32 mask=0x7ffffff match=0x231181]`
 - `BSTART.TMOV [len=32 mask=0x7ffffff match=0x211181]`
 - `BSTART.TSTORE [len=32 mask=0x7ffffff match=0x111181]`
 - `BSTART.VPAR [len=32 mask=0xf9ffffff match=0x21181]`
 - `BSTART.VSEQ [len=32 mask=0xf9ffffff match=0x29181]`
+- `C.BSTART [len=16 mask=0xf match=0x2]`
+- `C.BSTART [len=16 mask=0xf match=0x4]`
+- `C.BSTART.FP [len=16 mask=0xc7ff match=0x80]`
+- `C.BSTART.MPAR [len=16 mask=0xffff match=0x8c0]`
+- `C.BSTART.MSEQ [len=16 mask=0xffff match=0x48c0]`
 - `C.BSTART.STD [len=16 mask=0xc7ff match=0x0]`
-- `C.SETRET [len=16 mask=0xf83f match=0x5016]`
-- `DC.ISW [len=32 mask=0xfff07fff match=0x40602b]`
-- `DC.ZVA [len=32 mask=0xfff07fff match=0x70602b]`
+- `C.BSTART.SYS [len=16 mask=0xffff match=0x840]`
+- `C.BSTART.VPAR [len=16 mask=0xffff match=0x88c0]`
+- `C.BSTART.VSEQ [len=16 mask=0xffff match=0xc8c0]`
+- `FABS [len=32 mask=0xf9f0707f match=0x7b]`
+- `FEXP [len=32 mask=0xf9f0707f match=0x307b]`
+- `FRECIP [len=32 mask=0xf9f0707f match=0x207b]`
+- `FSQRT [len=32 mask=0xf9f0707f match=0x107b]`
 - `HL.BSTART CALL [len=64 mask=0xfffff83f0000007f match=0x501600000011]`
+- `HL.BSTART.FP [len=64 mask=0xffff00007fff000f match=0x1101000e]`
+- `HL.BSTART.FP [len=64 mask=0xffff00007fff000f match=0x2101000e]`
+- `HL.BSTART.FP [len=64 mask=0xffff00007fff000f match=0x3101000e]`
+- `HL.BSTART.FP [len=64 mask=0xffff00007fff000f match=0x4101000e]`
+- `HL.BSTART.STD [len=64 mask=0xffff00007fff000f match=0x1001000e]`
+- `HL.BSTART.STD [len=64 mask=0xffff00007fff000f match=0x2001000e]`
+- `HL.BSTART.STD [len=64 mask=0xffff00007fff000f match=0x3001000e]`
 - `HL.BSTART.STD [len=64 mask=0xffff00007fff000f match=0x4001000e]`
-- `HL.CCAT [len=64 mask=0xffff0000707f07ff match=0x105d000e]`
-- `HL.CCATW [len=64 mask=0xffff0000707f07ff match=0x205d000e]`
+- `HL.BSTART.SYS [len=64 mask=0xffff00007fff000f match=0x1081000e]`
+- `HL.LB.PO [len=64 mask=0xffff0000707f07ff match=0x9003e]`
+- `HL.LB.PR [len=64 mask=0xffff0000707f07ff match=0x9002e]`
+- `HL.LBI.PO [len=64 mask=0xffff0000707f003f match=0x19003e]`
+- `HL.LBI.PR [len=64 mask=0xffff0000707f003f match=0x19002e]`
+- `HL.LBIP [len=64 mask=0xffff0000707f003f match=0x19001e]`
+- `HL.LBP [len=64 mask=0xffff0000707f07ff match=0x9001e]`
+- `HL.LBU.PO [len=64 mask=0xffff0000707f07ff match=0x4009003e]`
+- `HL.LBU.PR [len=64 mask=0xffff0000707f07ff match=0x4009002e]`
+- `HL.LBUI.PO [len=64 mask=0xffff0000707f003f match=0x4019003e]`
+- `HL.LBUI.PR [len=64 mask=0xffff0000707f003f match=0x4019002e]`
+- `HL.LBUIP [len=64 mask=0xffff0000707f003f match=0x4019001e]`
+- `HL.LBUP [len=64 mask=0xffff0000707f07ff match=0x4009001e]`
+- `HL.LD.PO [len=64 mask=0xffff0000707f07ff match=0x3009003e]`
+- `HL.LD.PR [len=64 mask=0xffff0000707f07ff match=0x3009002e]`
+- `HL.LDI.PO [len=64 mask=0xffff0000707f003f match=0x3019003e]`
+- `HL.LDI.PR [len=64 mask=0xffff0000707f003f match=0x3019002e]`
+- `HL.LDI.UPO [len=64 mask=0xffff0000707f003f match=0x3029003e]`
+- `HL.LDI.UPR [len=64 mask=0xffff0000707f003f match=0x3029002e]`
+- `HL.LDIP [len=64 mask=0xffff0000707f003f match=0x3019001e]`
+- `HL.LDIP.U [len=64 mask=0xffff0000707f003f match=0x3029001e]`
+- `HL.LDP [len=64 mask=0xffff0000707f07ff match=0x3009001e]`
+- `HL.LH.PO [len=64 mask=0xffff0000707f07ff match=0x1009003e]`
+- `HL.LH.PR [len=64 mask=0xffff0000707f07ff match=0x1009002e]`
+- `HL.LHI.PO [len=64 mask=0xffff0000707f003f match=0x1019003e]`
+- `HL.LHI.PR [len=64 mask=0xffff0000707f003f match=0x1019002e]`
+- `HL.LHI.UPO [len=64 mask=0xffff0000707f003f match=0x1029003e]`
+- `HL.LHI.UPR [len=64 mask=0xffff0000707f003f match=0x1029002e]`
+- `HL.LHIP [len=64 mask=0xffff0000707f003f match=0x1019001e]`
+- `HL.LHIP.U [len=64 mask=0xffff0000707f003f match=0x1029001e]`
+- `HL.LHP [len=64 mask=0xffff0000707f07ff match=0x1009001e]`
+- `HL.LHU.PO [len=64 mask=0xffff0000707f07ff match=0x5009003e]`
+- `HL.LHU.PR [len=64 mask=0xffff0000707f07ff match=0x5009002e]`
+- `HL.LHUI.PO [len=64 mask=0xffff0000707f003f match=0x5019003e]`
+- `HL.LHUI.PR [len=64 mask=0xffff0000707f003f match=0x5019002e]`
+- `HL.LHUI.UPO [len=64 mask=0xffff0000707f003f match=0x5029003e]`
+- `HL.LHUI.UPR [len=64 mask=0xffff0000707f003f match=0x5029002e]`
+- `HL.LHUIP [len=64 mask=0xffff0000707f003f match=0x5019001e]`
+- `HL.LHUIP.U [len=64 mask=0xffff0000707f003f match=0x5029001e]`
+- `HL.LHUP [len=64 mask=0xffff0000707f07ff match=0x5009001e]`
+- `HL.LW.PO [len=64 mask=0xffff0000707f07ff match=0x2009003e]`
+- `HL.LW.PR [len=64 mask=0xffff0000707f07ff match=0x2009002e]`
+- `HL.LWI.PO [len=64 mask=0xffff0000707f003f match=0x2019003e]`
+- `HL.LWI.PR [len=64 mask=0xffff0000707f003f match=0x2019002e]`
+- `HL.LWI.UPO [len=64 mask=0xffff0000707f003f match=0x2029003e]`
+- `HL.LWI.UPR [len=64 mask=0xffff0000707f003f match=0x2029002e]`
+- `HL.LWIP [len=64 mask=0xffff0000707f003f match=0x2019001e]`
+- `HL.LWIP.U [len=64 mask=0xffff0000707f003f match=0x2029001e]`
+- `HL.LWP [len=64 mask=0xffff0000707f07ff match=0x2009001e]`
+- `HL.LWU.PO [len=64 mask=0xffff0000707f07ff match=0x6009003e]`
+- `HL.LWU.PR [len=64 mask=0xffff0000707f07ff match=0x6009002e]`
+- `HL.LWUI.PO [len=64 mask=0xffff0000707f003f match=0x6019003e]`
+- `HL.LWUI.PR [len=64 mask=0xffff0000707f003f match=0x6019002e]`
+- `HL.LWUI.UPO [len=64 mask=0xffff0000707f003f match=0x6029003e]`
+- `HL.LWUI.UPR [len=64 mask=0xffff0000707f003f match=0x6029002e]`
+- `HL.LWUIP [len=64 mask=0xffff0000707f003f match=0x6019001e]`
+- `HL.LWUIP.U [len=64 mask=0xffff0000707f003f match=0x6029001e]`
+- `HL.LWUP [len=64 mask=0xffff0000707f07ff match=0x6009001e]`
 - `HL.PRF [len=64 mask=0xffff00007fff07ff match=0x7009000e]`
+- `HL.PRF.A [len=64 mask=0xffff0000707f07ff match=0x7009001e]`
+- `HL.PRFI.U [len=64 mask=0xffff00007fff003f match=0x7029000e]`
+- `HL.PRFI.UA [len=64 mask=0xffff0000707f003f match=0x7029001e]`
+- `HL.QPOP [len=64 mask=0xfffff800707f07ff match=0x207d000e]`
+- `HL.SB.PO [len=64 mask=0xffff00007fff07ff match=0x49003e]`
+- `HL.SB.PR [len=64 mask=0xffff00007fff07ff match=0x49002e]`
+- `HL.SBI [len=64 mask=0xffff0000707f003f match=0x59000e]`
+- `HL.SBI.PO [len=64 mask=0xffff0000707f003f match=0x59003e]`
+- `HL.SBI.PR [len=64 mask=0xffff0000707f003f match=0x59002e]`
+- `HL.SBIP [len=64 mask=0xffff0000707f003f match=0x59001e]`
+- `HL.SBP [len=64 mask=0xffff00007ffff83f match=0x49001e]`
+- `HL.SD.PO [len=64 mask=0xffff00007fff07ff match=0x3049003e]`
+- `HL.SD.PR [len=64 mask=0xffff00007fff07ff match=0x3049002e]`
+- `HL.SD.UPO [len=64 mask=0xffff00007fff07ff match=0x7049003e]`
+- `HL.SD.UPR [len=64 mask=0xffff00007fff07ff match=0x7049002e]`
+- `HL.SDI [len=64 mask=0xffff0000707f003f match=0x3059000e]`
+- `HL.SDI.PO [len=64 mask=0xffff0000707f003f match=0x3059003e]`
+- `HL.SDI.PR [len=64 mask=0xffff0000707f003f match=0x3059002e]`
+- `HL.SDI.U [len=64 mask=0xffff0000707f003f match=0x7059000e]`
+- `HL.SDI.UPO [len=64 mask=0xffff0000707f003f match=0x7059003e]`
+- `HL.SDI.UPR [len=64 mask=0xffff0000707f003f match=0x7059002e]`
+- `HL.SDIP [len=64 mask=0xffff0000707f003f match=0x3059001e]`
+- `HL.SDIP.U [len=64 mask=0xffff0000707f003f match=0x7059001e]`
+- `HL.SDP [len=64 mask=0xffff00007ffff83f match=0x3049001e]`
+- `HL.SDP.U [len=64 mask=0xffff00007ffff83f match=0x7049001e]`
+- `HL.SETC.ANDI [len=64 mask=0xffff0000707f000f match=0x2075000e]`
+- `HL.SETC.EQI [len=64 mask=0xffff0000707f000f match=0x75000e]`
+- `HL.SETC.GEI [len=64 mask=0xffff0000707f000f match=0x5075000e]`
+- `HL.SETC.GEUI [len=64 mask=0xffff0000707f000f match=0x7075000e]`
+- `HL.SETC.LTI [len=64 mask=0xffff0000707f000f match=0x4075000e]`
+- `HL.SETC.LTUI [len=64 mask=0xffff0000707f000f match=0x6075000e]`
+- `HL.SETC.NEI [len=64 mask=0xffff0000707f000f match=0x1075000e]`
+- `HL.SETC.ORI [len=64 mask=0xffff0000707f000f match=0x3075000e]`
+- `HL.SETRET [len=64 mask=0xffff00000fff000f match=0x507000e]`
+- `HL.SH.PO [len=64 mask=0xffff00007fff07ff match=0x1049003e]`
+- `HL.SH.PR [len=64 mask=0xffff00007fff07ff match=0x1049002e]`
+- `HL.SH.UPO [len=64 mask=0xffff00007fff07ff match=0x5049003e]`
+- `HL.SH.UPR [len=64 mask=0xffff00007fff07ff match=0x5049002e]`
+- `HL.SHI [len=64 mask=0xffff0000707f003f match=0x1059000e]`
+- `HL.SHI.PO [len=64 mask=0xffff0000707f003f match=0x1059003e]`
+- `HL.SHI.PR [len=64 mask=0xffff0000707f003f match=0x1059002e]`
+- `HL.SHI.U [len=64 mask=0xffff0000707f003f match=0x5059000e]`
+- `HL.SHI.UPO [len=64 mask=0xffff0000707f003f match=0x5059003e]`
+- `HL.SHI.UPR [len=64 mask=0xffff0000707f003f match=0x5059002e]`
+- `HL.SHIP [len=64 mask=0xffff0000707f003f match=0x1059001e]`
+- `HL.SHIP.U [len=64 mask=0xffff0000707f003f match=0x5059001e]`
+- `HL.SHP [len=64 mask=0xffff00007ffff83f match=0x1049001e]`
+- `HL.SHP.U [len=64 mask=0xffff00007ffff83f match=0x5049001e]`
+- `HL.SW.PO [len=64 mask=0xffff00007fff07ff match=0x2049003e]`
+- `HL.SW.PR [len=64 mask=0xffff00007fff07ff match=0x2049002e]`
+- `HL.SW.UPO [len=64 mask=0xffff00007fff07ff match=0x6049003e]`
+- `HL.SW.UPR [len=64 mask=0xffff00007fff07ff match=0x6049002e]`
+- `HL.SWI [len=64 mask=0xffff0000707f003f match=0x2059000e]`
+- `HL.SWI.PO [len=64 mask=0xffff0000707f003f match=0x2059003e]`
+- `HL.SWI.PR [len=64 mask=0xffff0000707f003f match=0x2059002e]`
+- `HL.SWI.U [len=64 mask=0xffff0000707f003f match=0x6059000e]`
+- `HL.SWI.UPO [len=64 mask=0xffff0000707f003f match=0x6059003e]`
+- `HL.SWI.UPR [len=64 mask=0xffff0000707f003f match=0x6059002e]`
+- `HL.SWIP [len=64 mask=0xffff0000707f003f match=0x2059001e]`
+- `HL.SWIP.U [len=64 mask=0xffff0000707f003f match=0x6059001e]`
+- `HL.SWP [len=64 mask=0xffff00007ffff83f match=0x2049001e]`
+- `HL.SWP.U [len=64 mask=0xffff00007ffff83f match=0x6049001e]`
+- `JR [len=32 mask=0x707f match=0x6027]`
+- `LB.PCR [len=32 mask=0x707f match=0x39]`
+- `LBU.PCR [len=32 mask=0x707f match=0x4039]`
+- `LD.PCR [len=32 mask=0x707f match=0x3039]`
+- `LH.PCR [len=32 mask=0x707f match=0x1039]`
+- `LHU.PCR [len=32 mask=0x707f match=0x5039]`
+- `LR.B [len=32 mask=0xf000707f match=0xb]`
 - `LR.D [len=32 mask=0xf000707f match=0x3000000b]`
+- `LR.H [len=32 mask=0xf000707f match=0x1000000b]`
 - `LR.W [len=32 mask=0xf000707f match=0x2000000b]`
+- `LW.PCR [len=32 mask=0x707f match=0x2039]`
+- `LWU.PCR [len=32 mask=0x707f match=0x6039]`
+- `PRF [len=32 mask=0x707f match=0x7009]`
+- `PRFI.U [len=32 mask=0x707f match=0x7029]`
+- `SB.PCR [len=32 mask=0x707f match=0x69]`
+- `SD.PCR [len=32 mask=0x707f match=0x3069]`
+- `SH.PCR [len=32 mask=0x707f match=0x1069]`
+- `SW.PCR [len=32 mask=0x707f match=0x2069]`
 - `V.FABS [len=64 mask=0xfff0707ffff0707f match=0x7b0000007f]`
-- `V.LB [len=64 mask=0x600707ffe00207f match=0x90000007f]`
-- `V.LBI [len=64 mask=0x707f0000207f match=0x190000007f]`
-- `V.LBI.BRG [len=64 mask=0x707f0000207f match=0x190000207f]`
-- `V.LBU [len=64 mask=0x600707ffe00207f match=0x40090000007f]`
-- `V.LBUI [len=64 mask=0x707f0000207f match=0x40190000007f]`
-- `V.LBUI.BRG [len=64 mask=0x707f0000207f match=0x40190000207f]`
-- `V.LD [len=64 mask=0x600707ffe00207f match=0x30090000007f]`
-- `V.LD.ADD [len=64 mask=0xf800707ffc00707f match=0xb0000207f]`
-- `V.LD.AND [len=64 mask=0xf800707ffc00707f match=0x100b0000207f]`
-- `V.LD.BRG [len=64 mask=0x600707ffe00207f match=0x30090000207f]`
-- `V.LD.MAX [len=64 mask=0xf800707ffc00707f match=0x400b0000207f]`
-- `V.LD.MIN [len=64 mask=0xf800707ffc00707f match=0x500b0000207f]`
-- `V.LD.OR [len=64 mask=0xf800707ffc00707f match=0x200b0000207f]`
-- `V.LD.XOR [len=64 mask=0xf800707ffc00707f match=0x300b0000207f]`
-- `V.LDI [len=64 mask=0x707f0000207f match=0x30190000007f]`
-- `V.LDI.BRG [len=64 mask=0x707f0000207f match=0x30190000207f]`
-- `V.LDI.U [len=64 mask=0x707f0000207f match=0x30290000007f]`
-- `V.LDI.U.BRG [len=64 mask=0x707f0000207f match=0x30290000207f]`
-- `V.LH [len=64 mask=0x600707ffe00207f match=0x10090000007f]`
-- `V.LHI [len=64 mask=0x707f0000207f match=0x10190000007f]`
-- `V.LHI.BRG [len=64 mask=0x707f0000207f match=0x10190000207f]`
-- `V.LHI.U [len=64 mask=0x707f0000207f match=0x10290000007f]`
-- `V.LHI.U.BRG [len=64 mask=0x707f0000207f match=0x10290000207f]`
-- `V.LHU [len=64 mask=0x600707ffe00207f match=0x50090000007f]`
-- `V.LHUI [len=64 mask=0x707f0000207f match=0x50190000007f]`
-- `V.LHUI.BRG [len=64 mask=0x707f0000207f match=0x50190000207f]`
-- `V.LHUI.U [len=64 mask=0x707f0000207f match=0x50290000007f]`
-- `V.LHUI.U.BRG [len=64 mask=0x707f0000207f match=0x50290000207f]`
-- `V.LW.ADD [len=64 mask=0xf800707ffc00707f match=0xb0000007f]`
-- `V.LW.AND [len=64 mask=0xf800707ffc00707f match=0x100b0000007f]`
-- `V.LW.MAX [len=64 mask=0xf800707ffc00707f match=0x400b0000007f]`
-- `V.LW.MIN [len=64 mask=0xf800707ffc00707f match=0x500b0000007f]`
-- `V.LW.OR [len=64 mask=0xf800707ffc00707f match=0x200b0000007f]`
-- `V.LW.XOR [len=64 mask=0xf800707ffc00707f match=0x300b0000007f]`
-- `V.LWI [len=64 mask=0x707f0000207f match=0x20190000007f]`
-- `V.LWI.BRG [len=64 mask=0x707f0000207f match=0x20190000207f]`
-- `V.LWI.U [len=64 mask=0x707f0000207f match=0x20290000007f]`
-- `V.LWI.U.BRG [len=64 mask=0x707f0000207f match=0x20290000207f]`
-- `V.LWU [len=64 mask=0x600707ffe00207f match=0x60090000007f]`
-- `V.LWU.BRG [len=64 mask=0x600707ffe00207f match=0x60090000207f]`
-- `V.LWUI [len=64 mask=0x707f0000207f match=0x60190000007f]`
-- `V.LWUI.BRG [len=64 mask=0x707f0000207f match=0x60190000207f]`
-- `V.LWUI.U [len=64 mask=0x707f0000207f match=0x60290000007f]`
-- `V.LWUI.U.BRG [len=64 mask=0x707f0000207f match=0x60290000207f]`
-- `V.MUL [len=64 mask=0xfe00707ffe00707f match=0x470000007f]`
-- `V.QPOP [len=64 mask=0xfff0707ffff0707f match=0x207d0000007f]`
-- `V.QPUSH [len=64 mask=0xfe00707ffe00707f match=0x107d0000007f]`
-- `V.SB [len=64 mask=0x6007fff0600207f match=0x490000007f]`
-- `V.SBI [len=64 mask=0x707f0000207f match=0x590000007f]`
-- `V.SBI.BRG [len=64 mask=0x707f0000207f match=0x590000207f]`
-- `V.SD [len=64 mask=0x6007fff0600207f match=0x30490000007f]`
-- `V.SD.ADD [len=64 mask=0xfc007ffff8007fff match=0xb0000307f]`
-- `V.SD.AND [len=64 mask=0xfc007ffff8007fff match=0x100b0000307f]`
-- `V.SD.BRG [len=64 mask=0x6007fff0600207f match=0x30490000207f]`
-- `V.SD.MAX [len=64 mask=0xfc007ffff8007fff match=0x400b0000307f]`
-- `V.SD.MIN [len=64 mask=0xfc007ffff8007fff match=0x500b0000307f]`
-- `V.SD.OR [len=64 mask=0xfc007ffff8007fff match=0x200b0000307f]`
-- `V.SD.U [len=64 mask=0x6007fff0600207f match=0x70490000007f]`
-- `V.SD.U.BRG [len=64 mask=0x6007fff0600207f match=0x70490000207f]`
-- `V.SD.XOR [len=64 mask=0xfc007ffff8007fff match=0x300b0000307f]`
-- `V.SDI [len=64 mask=0x707f0000207f match=0x30590000007f]`
-- `V.SDI.BRG [len=64 mask=0x707f0000207f match=0x30590000207f]`
-- `V.SDI.U [len=64 mask=0x707f0000207f match=0x70590000007f]`
-- `V.SDI.U.BRG [len=64 mask=0x707f0000207f match=0x70590000207f]`
-- `V.SH [len=64 mask=0x6007fff0600207f match=0x10490000007f]`
-- `V.SH.U [len=64 mask=0x6007fff0600207f match=0x50490000007f]`
-- `V.SH.U.BRG [len=64 mask=0x6007fff0600207f match=0x50490000207f]`
-- `V.SHFL.BFLY [len=64 mask=0x7f0707f07f0707f match=0x201d0000007f]`
-- `V.SHFL.DOWN [len=64 mask=0x600707f0600707f match=0x101d0000007f]`
-- `V.SHFL.IDX [len=64 mask=0x600707f0600707f match=0x301d0000007f]`
-- `V.SHFL.UP [len=64 mask=0x600707f0600707f match=0x1d0000007f]`
-- `V.SHFLI.BFLY [len=64 mask=0x1f0707f01f0707f match=0x602d0000007f]`
-- `V.SHFLI.DOWN [len=64 mask=0x707f0000707f match=0x502d0000007f]`
-- `V.SHFLI.IDX [len=64 mask=0x707f0000707f match=0x702d0000007f]`
-- `V.SHFLI.UP [len=64 mask=0x707f0000707f match=0x402d0000007f]`
-- `V.SHI [len=64 mask=0x707f0000207f match=0x10590000007f]`
-- `V.SHI.BRG [len=64 mask=0x707f0000207f match=0x10590000207f]`
-- `V.SHI.U [len=64 mask=0x707f0000207f match=0x50590000007f]`
-- `V.SHI.U.BRG [len=64 mask=0x707f0000207f match=0x50590000207f]`
-- `V.SW.ADD [len=64 mask=0xfc007ffff8007fff match=0xb0000107f]`
-- `V.SW.AND [len=64 mask=0xfc007ffff8007fff match=0x100b0000107f]`
-- `V.SW.MAX [len=64 mask=0xfc007ffff8007fff match=0x400b0000107f]`
-- `V.SW.MIN [len=64 mask=0xfc007ffff8007fff match=0x500b0000107f]`
-- `V.SW.OR [len=64 mask=0xfc007ffff8007fff match=0x200b0000107f]`
-- `V.SW.U [len=64 mask=0x6007fff0600207f match=0x60490000007f]`
-- `V.SW.U.BRG [len=64 mask=0x6007fff0600207f match=0x60490000207f]`
-- `V.SW.XOR [len=64 mask=0xfc007ffff8007fff match=0x300b0000107f]`
-- `V.SWI [len=64 mask=0x707f0000207f match=0x20590000007f]`
-- `V.SWI.BRG [len=64 mask=0x707f0000207f match=0x20590000207f]`
-- `V.SWI.U [len=64 mask=0x707f0000207f match=0x60590000007f]`
-- `V.SWI.U.BRG [len=64 mask=0x707f0000207f match=0x60590000207f]`
-- `XB [len=32 mask=0x7fff match=0x6f81]`

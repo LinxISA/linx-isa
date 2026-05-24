@@ -174,6 +174,21 @@ static void test_offset_store(void) {
     TEST_EQ(store_u8[5], 0xFF, 0xC0C1);
 }
 
+static void test_prf_scalar_register_offset(void) {
+    const uintptr_t base = (uintptr_t)u64_data;
+    const uintptr_t offset = 0;
+
+    __asm__ volatile ("prf [%0, %1]" :: "r"(base), "r"(offset) : "memory");
+    TEST_EQ64(u64_data[0], 0x123456789ABCDEF0ULL, 0xC0C2);
+}
+
+static void test_prfi_u_scalar_immediate(void) {
+    const uintptr_t base = (uintptr_t)u64_data;
+
+    __asm__ volatile ("prfi.u [%0, 0]" :: "r"(base) : "memory");
+    TEST_EQ64(u64_data[0], 0x123456789ABCDEF0ULL, 0xC0C3);
+}
+
 /* Test zero extension behavior */
 static void test_zext_byte(void) {
     uint8_t val = u8_data[4];  /* 0x9A */
@@ -412,6 +427,8 @@ void run_loadstore_tests(void) {
     /* Offset addressing */
     RUN_TEST(test_offset_load, 0xC0C0);
     RUN_TEST(test_offset_store, 0xC0C1);
+    RUN_TEST(test_prf_scalar_register_offset, 0xC0C2);
+    RUN_TEST(test_prfi_u_scalar_immediate, 0xC0C3);
     
     /* Zero extension */
     RUN_TEST(test_zext_byte, 0xC0D0);
@@ -428,5 +445,5 @@ void run_loadstore_tests(void) {
     RUN_TEST(test_hl_swip_store_pair, 0xC130);
     RUN_TEST(test_hl_ldip_sdip_pair, 0xC140);
     
-    test_suite_end(32, 32);
+    test_suite_end(34, 34);
 }

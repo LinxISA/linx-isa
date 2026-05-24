@@ -4,19 +4,22 @@
 
 本文档定义了用于 灵犀指令集/灵犀Core 验证的双通道 SPEC CPU2017 工作流程：
 
-- A 阶段阻塞子集：`999.specrand_ir`、`505.mcf_r`、`531.deepsjeng_r`
-- 每晚完整 SPECint 扩展：`spec_policy.stage_b_required`（不包括保单除外）
-- 功能性交通政策：
-  - A阶段：`9p` + `initramfs`
-  - 每晚全套：仅限 `9p`
+- 启动子集：`spec_policy.bringup_subset`
+- 推广集合扩展：`spec_policy.promotion_required`（不包括策略排除项）
+- 功能传输策略：
+  - 启动子集：`9p` + `initramfs`
+  - 推广集合：仅限 `9p`
 - XCheck 目标：前 1,000 个提交 QEMU 跟踪和 灵犀Core C++ TB 之间的奇偶校验
 
 该流程有意分开：
 
-- C 阶段构建通道（功能清单）
-- b阶段静态图像通道（灵犀Core图像/xcheck）
+- 托管运行时构建通道（当前辅助脚本仍使用 `phase-c`）
+- 静态镜像通道（当前辅助脚本仍使用 `phase-b`）
 
-## 配置文件 A：A 阶段阻塞
+旧的 `--stage a`、`--stage b`、`phase-b` 和 `phase-c` 仅保留为脚本实现细节。
+规范规划页面现在是 `docs/bringup/SPEC_WORKLOAD_PLAN.md`。
+
+## 配置文件 A：启动子集
 
 运行：
 
@@ -26,13 +29,13 @@ bash rtl/ZXTERMEN45QXZCore/tests/test_specint_stage_a_xcheck.sh
 
 管道：
 
-1. A 阶段工作台的 C 阶段构建
+1. 启动子集工作台的托管运行时构建
 2.QEMU矩阵（`9p` + `initramfs`、`--input-set test`，严格）
-3.b阶段静态镜像准备（`LINX_SPEC_FORCE_STATIC=1`，自动恢复原始exe）
+3.静态镜像准备（`LINX_SPEC_FORCE_STATIC=1`，自动恢复原始exe）
 4.套件生成（`linxcore-xcheck-suite-v1`）
 5. xcheck执行（`failfast`，1K提交）
 
-## 配置文件 B：每晚完整 SPECint（报告通道）
+## 配置文件 B：推广集合夜间（报告通道）
 
 运行（仅报告默认值）：
 
@@ -42,10 +45,10 @@ SPEC_NIGHTLY_REPORT_ONLY=1 bash rtl/ZXTERMEN45QXZCore/tests/test_specint_full_xc
 
 管道：
 
-1. B阶段政策基准的C阶段建设
+1. 推广集合基准的托管运行时构建
 2.QEMU矩阵（`9p`、`--input-set test`）
-3.b阶段静态图像准备
-4. 套件生成（b 阶段策略集）
+3.静态镜像准备
+4. 套件生成（推广集合策略）
 5. xcheck执行（`diagnostic`、`--continue-on-fail`，仅报告）
 
 退出行为：

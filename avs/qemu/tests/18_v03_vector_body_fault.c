@@ -175,8 +175,5 @@ __attribute__((noreturn)) static void linx_after_v03_body_bfetch_exit(void)
     uart_puts("\r\n");
     uart_puts("All tests completed successfully!\r\n");
     uart_puts("\r\n");
-    uart_puts("*** REGRESSION PASSED ***\r\n");
-    EXIT_CODE = 0;
-    while (1) {
-    }
+    linx_test_exit(0);
 }

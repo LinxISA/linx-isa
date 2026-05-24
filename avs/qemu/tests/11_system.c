@@ -1276,20 +1276,12 @@ __attribute__((noreturn)) static void linx_after_acr0_bad_req_exit(void)
      * Finish in-place instead of tail-calling another helper to avoid
      * block-target validation ambiguity on strict bring-up lanes.
      */
-    uart_puts("*** REGRESSION PASSED ***\r\n");
-    EXIT_CODE = 0;
-    while (1) {
-        /* Exit register should terminate QEMU; keep a safe hard-stop loop. */
-    }
+    linx_test_exit(0);
 }
 
 __attribute__((noreturn)) static void linx_system_done(void)
 {
-    uart_puts("*** REGRESSION PASSED ***\r\n");
-    EXIT_CODE = 0;
-    while (1) {
-        /* If QEMU doesn't exit for some reason, don't fall through. */
-    }
+    linx_test_exit(0);
 }
 
 void run_system_tests(void)

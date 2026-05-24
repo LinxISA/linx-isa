@@ -1,0 +1,14 @@
+{
+  "contract_version": "0.0",
+  "defaults": {
+    "run_linx_qemu_vs_pyc": "0.0",
+    "run_runtime_convergence": "0.0",
+    "strict_cross_repo": "0.0",
+    "validate_trace_schema_assume": "0.0",
+    "validate_trace_schema_expected": "0.0"
+  },
+  "errors": [
+    "missing pattern for strict_cross_repo LINX_TRACE_SCHEMA_VERSION default"
+  ],
+  "ok": false
+}

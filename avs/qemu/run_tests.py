@@ -6,6 +6,7 @@ import argparse
 import os
 import re
 import select
+import shutil
 import subprocess
 import sys
 import time
@@ -16,6 +17,30 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parents[1]
 PTO_KERNEL_ROOT = REPO_ROOT / "workloads" / "pto_kernels" / "kernels"
 PTO_KERNEL_CATALOG = PTO_KERNEL_ROOT / "catalog.txt"
+LLVM_AVS_ROOT = REPO_ROOT / "avs" / "compiler" / "linx-llvm" / "tests"
+LLVM_AVS_DISASM_VECTOR_GEN = LLVM_AVS_ROOT / "gen_disasm_vectors.py"
+LLVM_AVS_V056_FORMS = LLVM_AVS_ROOT / "asm" / "41_v056_isa_forms.s"
+LLVM_AVS_SPEC = REPO_ROOT / "isa" / "v0.56" / "linxisa-v0.56.json"
+DIRECT_BOOT_LINK_SCRIPT = """ENTRY(_start)
+PHDRS {
+  text PT_LOAD FLAGS(5);
+  data PT_LOAD FLAGS(6);
+}
+SECTIONS {
+  . = 0x00010000;
+  .text : { *(.text*) } :text
+  .rodata : { *(.rodata*) } :text
+  . = ALIGN(0x1000);
+  .data : { *(.data*) } :data
+  .bss (NOLOAD) : { *(.bss*) *(COMMON) } :data
+  . = ALIGN(16);
+  .bootstack (NOLOAD) : {
+    __start_init_stack = .;
+    . += 0x4000;
+    __end_init_stack = .;
+  } :data
+}
+"""
 
 
 def _load_pto_kernel_catalog() -> dict[str, str]:
@@ -116,6 +141,10 @@ SUITES: dict[str, dict[str, str]] = {
         "src": "tests/18_v03_vector_body_fault.c",
         "macro": "LINX_TEST_ENABLE_V03_VECTOR_BODY_FAULT",
     },
+    "translation_corpus": {
+        "src": "tests/20_translation_corpus_stub.c",
+        "macro": "LINX_TEST_ENABLE_TRANSLATION_CORPUS",
+    },
     "simt_autovec": {
         "src": "tests/19_simt_autovec.c",
         "macro": "LINX_TEST_ENABLE_SIMT_AUTOVEC",
@@ -194,6 +223,8 @@ EXPERIMENTAL_SUITES: set[str] = {
     "simt_autovec",
     # Standalone negative trap regression; not a normal smoke lane.
     "v03_vector_body_fault",
+    # Compile-only per-instruction translation corpus used by coverage/reporting.
+    "translation_corpus",
 }
 
 CORE_SUITES: list[str] = [
@@ -639,6 +670,38 @@ def main(argv: list[str]) -> int:
     out_dir.mkdir(parents=True, exist_ok=True)
     obj_dir.mkdir(parents=True, exist_ok=True)
 
+    generated_translation_sources: list[Path] = []
+    if "translation_corpus" in selected:
+        if not LLVM_AVS_DISASM_VECTOR_GEN.is_file():
+            raise SystemExit(
+                f"error: missing Linx disasm vector generator: {LLVM_AVS_DISASM_VECTOR_GEN}"
+            )
+        if not LLVM_AVS_SPEC.is_file():
+            raise SystemExit(f"error: missing canonical ISA spec: {LLVM_AVS_SPEC}")
+        generated_dir = out_dir / "generated"
+        generated_dir.mkdir(parents=True, exist_ok=True)
+        generated_spec_decode = generated_dir / "99_spec_decode_qemu.s"
+        p = _run(
+            [
+                sys.executable,
+                str(LLVM_AVS_DISASM_VECTOR_GEN),
+                "--spec",
+                str(LLVM_AVS_SPEC),
+                "--out",
+                str(generated_spec_decode),
+            ],
+            verbose=args.verbose,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        if p.returncode != 0:
+            sys.stderr.buffer.write(p.stdout)
+            sys.stderr.buffer.write(p.stderr)
+            raise SystemExit("error: failed to generate QEMU translation corpus")
+        generated_translation_sources.append(generated_spec_decode)
+        if LLVM_AVS_V056_FORMS.is_file():
+            generated_translation_sources.append(LLVM_AVS_V056_FORMS)
+
     include_dir = SCRIPT_DIR / "lib"
     libc_include_dir = REPO_ROOT / "avs" / "runtime" / "freestanding" / "include"
     pto_kernel_include_dir: Path | None = None
@@ -676,13 +739,19 @@ def main(argv: list[str]) -> int:
         seen_sources.add(path)
         sources.append(path)
 
-    add_source(SCRIPT_DIR / "tests" / "main.c")
-    add_source(REPO_ROOT / "avs" / "runtime" / "freestanding" / "src" / "string" / "mem.c")
+    translation_only = args.compile_only and set(selected) == {"translation_corpus"}
+    if not translation_only:
+        add_source(SCRIPT_DIR / "tests" / "main.c")
+        add_source(REPO_ROOT / "avs" / "runtime" / "freestanding" / "src" / "string" / "mem.c")
     for suite in selected:
         rel = SUITES[suite]["src"]
+        if translation_only and suite == "translation_corpus":
+            continue
         if args.compile_only:
             rel = COMPILE_ONLY_SUITE_SOURCE_OVERRIDE.get(suite, rel)
         add_source(SCRIPT_DIR / rel)
+    for path in generated_translation_sources:
+        add_source(path)
     for suite in selected:
         for rel in _extra_sources_for_suite(suite):
             add_source(REPO_ROOT / rel)
@@ -808,6 +877,9 @@ def main(argv: list[str]) -> int:
             if p.returncode != 0:
                 sys.stderr.buffer.write(p.stderr)
                 raise SystemExit(f"error: compile failed: {src}")
+        if src.suffix.lower() in {".s", ".S"}:
+            sidecar = obj.with_suffix(src.suffix.lower())
+            shutil.copyfile(src, sidecar)
         if src_suite in OBJDUMP_ASSERTS_BY_SUITE:
             _verify_objdump_shape(
                 llvm_objdump,
@@ -828,13 +900,35 @@ def main(argv: list[str]) -> int:
     if args.compile_only:
         return 0
 
+    directboot_linker = out_dir / "linx-qemu-tests-directboot.ld"
+    directboot_elf = out_dir / "linx-qemu-tests.elf"
+    directboot_linker.write_text(DIRECT_BOOT_LINK_SCRIPT, encoding="utf-8")
+    cmd = [
+        str(lld),
+        "-T",
+        str(directboot_linker),
+        "-e",
+        "_start",
+        "-o",
+        str(directboot_elf),
+        str(out_obj),
+    ]
+    p = _run(cmd, verbose=args.verbose, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if p.returncode != 0:
+        sys.stderr.buffer.write(p.stderr)
+        raise SystemExit("error: direct-boot link failed")
+
+    print(f"ok: built {directboot_elf}")
+
     assert qemu is not None
     qemu_cmd = [
         str(qemu),
         "-machine",
         "virt",
+        "-bios",
+        "none",
         "-kernel",
-        str(out_obj),
+        str(directboot_elf),
         "-nographic",
         "-monitor",
         "none",
@@ -879,7 +973,7 @@ def main(argv: list[str]) -> int:
         return 125
 
     if p.returncode == 0:
-        if b"REGRESSION PASSED" not in p.stdout:
+        if emit_test_logs and b"REGRESSION PASSED" not in p.stdout:
             sys.stderr.write("warning: exit=0 but did not see 'REGRESSION PASSED' in UART output\n")
             return 2
         if required_test_ids:

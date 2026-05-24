@@ -149,7 +149,7 @@ The base and offset must be guaranteed to be unchanged within each Group, and th
 - Load 4 bytes: `V.LW [base, lc0<<2, offset]`, lc0 equals 0, 1, 2, 3,...
 - Load 8 bytes: `V.LD [base, lc0<<3, offset]`, lc0 equals 0, 1, 2, 3,...
 
-![](../../../figs/isa/inst/continuous.png){ width="800" }
+![Continuous access: EA(i+1) = EA(i) + E](../figs/isa/inst/continuous.svg){ width="800" }
 
 ## Constraints and implementation details
 

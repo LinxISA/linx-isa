@@ -1,4 +1,11 @@
+<!-- AUTO-GENERATED FILE. DO NOT EDIT DIRECTLY. -->
+<!-- Source: rtl/LinxCore/docs/architecture/interfaces.md -->
+
 # LinxCore External Interface Contracts
+
+> This published page mirrors the canonical LinxCore source in
+> `rtl/LinxCore/docs/architecture/interfaces.md`.
+
 
 ## pyCircuit-LinxCore interface contract (LC-IF-PYC-001)
 

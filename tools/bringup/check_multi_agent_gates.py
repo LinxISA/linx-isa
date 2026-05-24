@@ -830,15 +830,15 @@ def _validate_static(
         _err(errors, "E_SPEC_POLICY", "manifest.spec_policy must be an object")
         spec_policy = {}
 
-    stage_a = spec_policy.get("stage_a_subset")
-    stage_b = spec_policy.get("stage_b_required")
+    stage_a = spec_policy.get("bringup_subset")
+    stage_b = spec_policy.get("promotion_required")
     excluded = spec_policy.get("excluded_benchmarks")
 
     if not isinstance(stage_a, list) or not stage_a:
-        _err(errors, "E_SPEC_STAGE_A", "spec_policy.stage_a_subset must be non-empty list")
+        _err(errors, "E_SPEC_STAGE_A", "spec_policy.bringup_subset must be non-empty list")
         stage_a = []
     if not isinstance(stage_b, list) or not stage_b:
-        _err(errors, "E_SPEC_STAGE_B", "spec_policy.stage_b_required must be non-empty list")
+        _err(errors, "E_SPEC_STAGE_B", "spec_policy.promotion_required must be non-empty list")
         stage_b = []
     if not isinstance(excluded, list):
         _err(errors, "E_SPEC_EXCLUDED", "spec_policy.excluded_benchmarks must be list")
@@ -852,7 +852,7 @@ def _validate_static(
         _err(
             errors,
             "E_SPEC_STAGE_SUBSET",
-            "spec_policy.stage_a_subset must be subset of stage_b_required",
+            "spec_policy.bringup_subset must be subset of promotion_required",
             stage_a_only=sorted(stage_a_set - stage_b_set),
         )
 
@@ -867,7 +867,7 @@ def _validate_static(
         _err(
             errors,
             "E_SPEC_FORTRAN_IN_STAGE_B",
-            "548.exchange2_r must not appear in stage_b_required",
+            "548.exchange2_r must not appear in promotion_required",
         )
 
     required_spec_gates = {

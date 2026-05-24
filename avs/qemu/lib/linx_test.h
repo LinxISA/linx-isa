@@ -5,9 +5,10 @@
  *
  * Conventions:
  * - UART (0x10000000) is used for human-readable output.
- * - EXIT register (0x10000004) is used to request QEMU shutdown with an exit
- *   status code (0 = PASS, non-zero = FAIL). Do not write EXIT_CODE for each
- *   passing test; only write it for final termination (or on failure).
+ * - Test finisher MMIO (0x00100000) is used to request QEMU shutdown. The low
+ *   16 bits carry the finisher status and the upper 16 bits carry an optional
+ *   failure code. Do not write the finisher for each passing test; only use it
+ *   for final termination (or on failure).
  * - On failure, a small debug record is written to TEST_RESULT_LOC
  *   (0x00008000) for automated triage.
  */
@@ -32,11 +33,15 @@
 #define TEST_FAIL     1
 #define TEST_ABORT    2
 
-/* UART and Exit Register addresses */
-#define UART_BASE     0x10000000
-#define EXIT_REG      0x10000004
-#define UART_DR       (*(volatile uint32_t *)(UART_BASE + 0x00))
-#define EXIT_CODE     (*(volatile uint32_t *)(EXIT_REG))
+/* UART and test finisher addresses */
+#define UART_BASE          0x10000000
+#define TEST_FINISHER_MMIO 0x10009000
+#define UART_DR            (*(volatile uint32_t *)(UART_BASE + 0x00))
+#define TEST_FINISHER      (*(volatile uint32_t *)(TEST_FINISHER_MMIO))
+
+#define FINISHER_FAIL  0x3333u
+#define FINISHER_PASS  0x5555u
+#define FINISHER_RESET 0x7777u
 
 /* Magic number for test results: "LXTEST" */
 #define TEST_MAGIC    0x4C58455453UL
@@ -69,6 +74,29 @@ static inline void uart_puts(const char *s) {
     while (*s) {
         uart_putc(*s++);
     }
+}
+
+static inline __attribute__((noreturn)) void linx_test_exit(uint32_t code) {
+    if (code == 0) {
+        __asm__ volatile(
+            "BSTART.STD\n"
+            "lui 65545, ->u\n"
+            "lui 5, ->t\n"
+            "addi t#1, 1365, ->t\n"
+            "c.swi t#1, [u#1, 0]\n"
+            "BSTOP\n"
+            ::: "memory");
+    } else {
+        __asm__ volatile(
+            "BSTART.STD\n"
+            "lui 65545, ->u\n"
+            "lui 19, ->t\n"
+            "addi t#1, 819, ->t\n"
+            "c.swi t#1, [u#1, 0]\n"
+            "BSTOP\n"
+            ::: "memory");
+    }
+    while (1) {}
 }
 
 /*
@@ -165,8 +193,7 @@ static inline __attribute__((noreturn)) void test_fail(uint32_t test_id, uint64_
     g_test_result->expected = expected;
     g_test_result->actual = actual;
     
-    EXIT_CODE = TEST_FAIL;
-    while(1) {} /* Hang on failure */
+    linx_test_exit(TEST_FAIL);
 }
 
 /*
@@ -254,12 +281,11 @@ static inline void test_suite_end(uint32_t total, uint32_t passed) {
 static inline __attribute__((noreturn)) void test_suite_exit(uint32_t passed, uint32_t total) {
     if (passed == total) {
         uart_puts("\r\n*** ALL TESTS PASSED ***\r\n");
-        EXIT_CODE = 0;
+        linx_test_exit(0);
     } else {
         uart_puts("\r\n*** SOME TESTS FAILED ***\r\n");
-        EXIT_CODE = 1;
+        linx_test_exit(1);
     }
-    while(1) {}
 }
 
 /*

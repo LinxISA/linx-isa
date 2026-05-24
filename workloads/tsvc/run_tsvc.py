@@ -20,6 +20,27 @@ WORKLOADS_DIR = TSVC_DIR.parent
 REPO_ROOT = WORKLOADS_DIR.parent
 GENERATED_DIR = WORKLOADS_DIR / "generated"
 
+DIRECT_BOOT_LINK_SCRIPT = """ENTRY(_start)
+PHDRS {
+  text PT_LOAD FLAGS(5);
+  data PT_LOAD FLAGS(6);
+}
+SECTIONS {
+  . = 0x00010000;
+  .text : { *(.text*) } :text
+  .rodata : { *(.rodata*) } :text
+  . = ALIGN(0x1000);
+  .data : { *(.data*) } :data
+  .bss (NOLOAD) : { *(.bss*) *(COMMON) } :data
+  . = ALIGN(16);
+  .bootstack (NOLOAD) : {
+    __start_init_stack = .;
+    . += 0x4000;
+    __end_init_stack = .;
+  } :data
+}
+"""
+
 ANALYZE_SCRIPT = TSVC_DIR / "analyze_tsvc_vectorization.py"
 COMPARE_SCRIPT = TSVC_DIR / "compare_tsvc_checksums.py"
 COMPAT_INCLUDE = TSVC_DIR / "include"
@@ -133,6 +154,7 @@ def _default_qemu() -> Path | None:
     if env:
         return Path(os.path.expanduser(env))
     candidates = [
+        Path("/tmp/linx-qemu-clean-build/qemu-system-linx64"),
         REPO_ROOT / "emulator" / "qemu" / "build" / "qemu-system-linx64",
         REPO_ROOT / "emulator" / "qemu" / "build-tci" / "qemu-system-linx64",
         Path.home() / "qemu" / "build" / "qemu-system-linx64",
@@ -489,7 +511,18 @@ def _link_elf(
     verbose: bool,
 ) -> None:
     out_elf.parent.mkdir(parents=True, exist_ok=True)
-    cmd = [str(lld), "--entry=_start", "-o", str(out_elf), *[str(o) for o in objs]]
+    linker_script = out_elf.with_suffix(".ld")
+    linker_script.write_text(DIRECT_BOOT_LINK_SCRIPT, encoding="utf-8")
+    cmd = [
+        str(lld),
+        "-T",
+        str(linker_script),
+        "-e",
+        "_start",
+        "-o",
+        str(out_elf),
+        *[str(o) for o in objs],
+    ]
     p = _run(cmd, verbose=verbose, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if p.returncode != 0:
         sys.stderr.buffer.write(p.stdout or b"")
@@ -525,6 +558,8 @@ def _run_qemu(
         str(qemu),
         "-machine",
         "virt",
+        "-bios",
+        "none",
         "-kernel",
         str(elf),
         "-nographic",

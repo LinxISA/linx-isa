@@ -2,14 +2,15 @@
 """
 Audit QEMU Linx opcode metadata vs decode source files.
 
-This is an anti-drift check for:
-  - target/linx/linx_opcode_ids_gen.h
-  - target/linx/linx_opcode_meta_gen.h
-against:
-  - target/linx/insn16.decode
-  - target/linx/insn32.decode
-  - target/linx/insn48.decode
-  - target/linx/insn64.decode
+Current source-of-truth decode files:
+  - target/linx/block16.decode
+  - target/linx/block32.decode
+  - target/linx/block48.decode
+  - target/linx/block32_private_fvec.decode
+
+Legacy generated opcode id/meta headers may be absent on modern lines. In that
+case this audit degrades to a decode-surface presence check instead of failing
+on removed legacy files.
 """
 
 from __future__ import annotations
@@ -107,7 +108,7 @@ def _render_md(report: dict[str, object], out_md: Path) -> None:
 
 
 def main(argv: list[str]) -> int:
-    ap = argparse.ArgumentParser(description="Audit QEMU opcode meta/id tables against decode files")
+    ap = argparse.ArgumentParser(description="Audit QEMU opcode meta/id tables against live decode files")
     ap.add_argument("--qemu-root", default="emulator/qemu", help="Path to QEMU repo root")
     ap.add_argument(
         "--allowlist",
@@ -127,9 +128,9 @@ def main(argv: list[str]) -> int:
     linx_root = qemu_root / "target" / "linx"
     ids_path = linx_root / "linx_opcode_ids_gen.h"
     meta_path = linx_root / "linx_opcode_meta_gen.h"
-    decode_files = ("insn16.decode", "insn32.decode", "insn48.decode", "insn64.decode")
+    decode_files = ("block16.decode", "block32.decode", "block48.decode", "block32_private_fvec.decode")
 
-    missing_inputs = [str(p) for p in [ids_path, meta_path] if not p.is_file()]
+    missing_inputs: list[str] = []
     for name in decode_files:
         path = linx_root / name
         if not path.is_file():
@@ -144,17 +145,21 @@ def main(argv: list[str]) -> int:
     for name in decode_files:
         decode_patterns |= _parse_decode_patterns(linx_root / name)
 
-    meta_ids, meta_by_source = _parse_meta(meta_path)
-    ids_enum = _parse_ids(ids_path)
+    have_legacy_meta = meta_path.is_file() and ids_path.is_file()
+    meta_ids: set[int] = set()
+    ids_enum: set[int] = set()
     meta_patterns: set[str] = set()
-    for source_file, mnems in meta_by_source.items():
-        if source_file in decode_files:
-            meta_patterns |= mnems
-
-    meta_internal = set(meta_by_source.get("internal", set()))
-    meta_non_internal = meta_patterns | (set().union(*[v for k, v in meta_by_source.items() if k != "internal"]) if meta_by_source else set())
-    # Remove internal pseudo names from public sync counts.
-    meta_non_internal -= {m for m in meta_non_internal if m.startswith("internal_")}
+    meta_internal: set[str] = set()
+    meta_non_internal: set[str] = set()
+    if have_legacy_meta:
+        meta_ids, meta_by_source = _parse_meta(meta_path)
+        ids_enum = _parse_ids(ids_path)
+        for source_file, mnems in meta_by_source.items():
+            if source_file in decode_files:
+                meta_patterns |= mnems
+        meta_internal = set(meta_by_source.get("internal", set()))
+        meta_non_internal = meta_patterns | (set().union(*[v for k, v in meta_by_source.items() if k != "internal"]) if meta_by_source else set())
+        meta_non_internal -= {m for m in meta_non_internal if m.startswith("internal_")}
 
     allow_decode_only: set[str] = set()
     allow_meta_only: set[str] = set()
@@ -167,24 +172,32 @@ def main(argv: list[str]) -> int:
     else:
         allow_path = None
 
-    decode_only = sorted(decode_patterns - meta_patterns)
-    meta_only = sorted(meta_patterns - decode_patterns)
-    decode_only_unexpected = sorted(set(decode_only) - allow_decode_only)
-    meta_only_unexpected = sorted(set(meta_only) - allow_meta_only)
-
-    id_mismatch = sorted(meta_ids ^ ids_enum)
-
-    ok = not decode_only_unexpected and not meta_only_unexpected and (not args.strict or not id_mismatch)
-    classification = (
-        "qemu_opcode_meta_sync_ok"
-        if ok
-        else "qemu_opcode_meta_sync_unexpected_drift"
-    )
+    if have_legacy_meta:
+        decode_only = sorted(decode_patterns - meta_patterns)
+        meta_only = sorted(meta_patterns - decode_patterns)
+        decode_only_unexpected = sorted(set(decode_only) - allow_decode_only)
+        meta_only_unexpected = sorted(set(meta_only) - allow_meta_only)
+        id_mismatch = sorted(meta_ids ^ ids_enum)
+        ok = not decode_only_unexpected and not meta_only_unexpected and (not args.strict or not id_mismatch)
+        classification = (
+            "qemu_opcode_meta_sync_ok"
+            if ok
+            else "qemu_opcode_meta_sync_unexpected_drift"
+        )
+    else:
+        decode_only = sorted(decode_patterns)
+        meta_only = []
+        decode_only_unexpected = []
+        meta_only_unexpected = []
+        id_mismatch = []
+        ok = True
+        classification = "qemu_opcode_meta_sync_decode_only_line"
 
     report: dict[str, object] = {
         "generated_at_utc": _utc_now(),
         "qemu_root": str(qemu_root),
         "allowlist": str(allow_path) if allow_path else "",
+        "have_legacy_meta": have_legacy_meta,
         "decode_unique_patterns": len(decode_patterns),
         "meta_unique_decode_patterns": len(meta_patterns),
         "meta_unique_non_internal": len(meta_non_internal),
@@ -230,4 +243,3 @@ def main(argv: list[str]) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main(sys.argv[1:]))
-

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 180">
+  <style>
+    .title { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #1a1a1a; }
+    .label { font-family: Arial, sans-serif; font-size: 11px; fill: #333; }
+    .note { font-family: Arial, sans-serif; font-size: 10px; fill: #666; }
+  </style>
+  <text x="400" y="20" text-anchor="middle" class="title">SIMT Reduce Operation</text>
+
+  <!-- Lane registers -->
+  <text x="20" y="55" class="label">Lane 0</text>
+  <rect x="80" y="42" width="60" height="20" fill="#82C77A" rx="3"/>
+  <text x="110" y="56" text-anchor="middle" class="note" fill="#1a4A1C">T/U reg</text>
+
+  <text x="20" y="85" class="label">Lane 1</text>
+  <rect x="80" y="72" width="60" height="20" fill="#82C77A" rx="3"/>
+  <text x="110" y="86" text-anchor="middle" class="note" fill="#1a4A1C">T/U reg</text>
+
+  <text x="20" y="115" class="label">Lane 2</text>
+  <rect x="80" y="102" width="60" height="20" fill="#82C77A" rx="3"/>
+  <text x="110" y="116" text-anchor="middle" class="note" fill="#1a4A1C">T/U reg</text>
+
+  <!-- Reduce arrow -->
+  <line x1="160" y1="82" x2="320" y2="82" stroke="#8b5cf6" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="240" y="75" text-anchor="middle" class="note" fill="#8b5cf6">Reduce op</text>
+
+  <!-- Global register -->
+  <text x="360" y="50" class="label">Global Reg</text>
+  <rect x="440" y="32" width="80" height="28" fill="#f4a261" rx="4"/>
+  <text x="480" y="50" text-anchor="middle" class="note" fill="#3a1a00">Accumulated</text>
+  <text x="480" y="62" text-anchor="middle" class="note" fill="#3a1a00">Result</text>
+
+  <!-- Definitions -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#8b5cf6"/>
+    </marker>
+  </defs>
+</svg>

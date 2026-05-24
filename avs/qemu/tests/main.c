@@ -113,21 +113,6 @@ void run_pto_parity_tests(void);
 void run_simt_autovec_tests(void);
 #endif
 
-/* Test counters */
-static volatile uint32_t g_total_tests = 0;
-static volatile uint32_t g_passed_tests = 0;
-static volatile uint32_t g_failed_tests = 0;
-static volatile uint32_t g_current_suite = 0;
-
-/*
- * Run a test suite and track results
- */
-static void run_suite_with_stats(const char *name, void (*suite_func)(void)) {
-    g_current_suite++;
-    (void)name;
-    suite_func();
-}
-
 /*
  * Main entry point
  */
@@ -138,55 +123,55 @@ void _start(void) {
     
     /* Run all test suites */
 #if LINX_TEST_ENABLE_ARITHMETIC
-    run_suite_with_stats("Arithmetic Tests", run_arithmetic_tests);
+    run_arithmetic_tests();
 #endif
 #if LINX_TEST_ENABLE_BITWISE
-    run_suite_with_stats("Bitwise Tests", run_bitwise_tests);
+    run_bitwise_tests();
 #endif
 #if LINX_TEST_ENABLE_LOADSTORE
-    run_suite_with_stats("Load/Store Tests", run_loadstore_tests);
+    run_loadstore_tests();
 #endif
 #if LINX_TEST_ENABLE_BRANCH
-    run_suite_with_stats("Branch & Control Flow Tests", run_branch_tests);
+    run_branch_tests();
 #endif
 #if LINX_TEST_ENABLE_MOVE
-    run_suite_with_stats("Move & Immediate Tests", run_move_tests);
+    run_move_tests();
 #endif
 #if LINX_TEST_ENABLE_FLOAT
-    run_suite_with_stats("Floating-Point Tests", run_float_tests);
+    run_float_tests();
 #endif
 #if LINX_TEST_ENABLE_ATOMIC
-    run_suite_with_stats("Atomic Operation Tests", run_atomic_tests);
+    run_atomic_tests();
 #endif
 #if LINX_TEST_ENABLE_JUMPTABLE
-    run_suite_with_stats("Jump Table & Indirect Branch Tests", run_jumptable_tests);
+    run_jumptable_tests();
 #endif
 #if LINX_TEST_ENABLE_VARARGS
-    run_suite_with_stats("Varargs ABI Tests", run_varargs_tests);
+    run_varargs_tests();
 #endif
 #if LINX_TEST_ENABLE_TILE
-    run_suite_with_stats("Tile Block Tests", run_tile_tests);
+    run_tile_tests();
 #endif
 #if LINX_TEST_ENABLE_SYSTEM
-    run_suite_with_stats("System & Privilege Tests", run_system_tests);
+    run_system_tests();
 #endif
 #if LINX_TEST_ENABLE_V03_VECTOR
-    run_suite_with_stats("v0.56 Vector/Tile Marker Tests", run_v03_vector_tile_tests);
+    run_v03_vector_tile_tests();
 #endif
 #if LINX_TEST_ENABLE_V03_VECTOR_OPS
-    run_suite_with_stats("v0.56 Vector Operation Matrix Tests", run_v03_vector_ops_matrix_tests);
+    run_v03_vector_ops_matrix_tests();
 #endif
 #if LINX_TEST_ENABLE_V03_VECTOR_BODY_FAULT
-    run_suite_with_stats("v0.56 Vector Body Fault Tests", run_v03_vector_body_fault_tests);
+    run_v03_vector_body_fault_tests();
 #endif
 #if LINX_TEST_ENABLE_CALLRET
-    run_suite_with_stats("Call/Ret Conformance Tests", run_callret_tests);
+    run_callret_tests();
 #endif
 #if LINX_TEST_ENABLE_PTO_PARITY
-    run_suite_with_stats("PTO Kernel Parity Tests", run_pto_parity_tests);
+    run_pto_parity_tests();
 #endif
 #if LINX_TEST_ENABLE_SIMT_AUTOVEC
-    run_suite_with_stats("SIMT Autovec Tests", run_simt_autovec_tests);
+    run_simt_autovec_tests();
 #endif
     
     /* Print final summary */
@@ -203,12 +188,5 @@ void _start(void) {
     uart_puts("\r\n");
 #endif
     
-    /* Exit with success */
-    uart_puts("*** REGRESSION PASSED ***\r\n");
-    EXIT_CODE = 0;
-    
-    /* Loop forever */
-    while (1) {
-        /* If QEMU doesn't exit for some reason, don't fall through. */
-    }
+    linx_test_exit(0);
 }

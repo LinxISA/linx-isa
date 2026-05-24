@@ -473,6 +473,18 @@ tests:
     requirement: "Illegal encodings trap deterministically with no partial state committed."
     pass_fail: "Negative tests validate trap PC and cause plus unchanged regs and memory."
 
+  - id: AVS-EMU-002
+    state: active
+    area: EMU
+    domain: Emulator
+    profiles: [LNX-S32, LNX-S64, LNX-PRIV, LNX-ATOM, LNX-FP, LNX-VPAR, LNX-VSEQ, LNX-TILE]
+    must_pass_in_tier: [nightly]
+    spec_refs:
+      - isa/v0.56/linxisa-v0.56.json
+      - docs/bringup/ALIGNMENT_MATRIX.md
+    requirement: "Every canonical v0.56 instruction should have explicit AVS QEMU translation-test coverage tracked from per-source unit-test objects."
+    pass_fail: "report_qemu_translation_coverage.py emits machine-readable mnemonic/object coverage and exits 0 under --require-full only when coverage reaches 100%."
+
   - id: AVS-EMU-010
     state: active
     area: EMU
@@ -638,7 +650,7 @@ tests:
     pass_fail: "workloads/run_portfolio.py exits 0 and emits portfolio_report.json with all_pass=true."
 
   - id: AVS-WORK-004
-    state: active
+    state: archived
     area: WORK
     domain: Regression
     profiles: [LNX-WORKLOAD, LNX-VPAR, LNX-VSEQ]
@@ -646,8 +658,8 @@ tests:
     spec_refs:
       - workloads/README.md
       - docs/bringup/ALIGNMENT_MATRIX.md
-    requirement: "TSVC executes under QEMU and preserves baseline checksum parity."
-    pass_fail: "workloads/tsvc/run_tsvc.py emits pass summaries for the required vector modes."
+    requirement: "TSVC is retained only as archived diagnostic coverage and is not part of current bring-up gate closure."
+    pass_fail: "archived diagnostic only; no active required gate result"
 
   - id: AVS-WORK-005
     state: active

@@ -23,6 +23,10 @@ Options:
   --hostcc PATH       Host C compiler (default: /usr/bin/clang)
   --hostcxx PATH      Host C++ compiler (default: /usr/bin/clang++)
   --target NAME       Make target (default: vmlinux)
+
+Behavior:
+  Reuses the same O= directory incrementally. It only stashes source-tree
+  generated/config files that would otherwise contaminate the in-tree build.
 USAGE
 }
 

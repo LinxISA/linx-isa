@@ -10,7 +10,7 @@ Specifically, reduce operations typically involve the following steps:
 2. Perform reduction operations on the results of corresponding private registers in different lanes, such as summing, maximizing, minimizing, etc.
 3. Store the reduction result in a global register so that other block instruction can access it.
 
-![reduce](../../../figs/intro/reduce.png){ width = "800" }
+![reduce](../figs/intro/reduce.svg){ width="800" }
 
 Therefore, the reduce instruction has the following restrictions:
 

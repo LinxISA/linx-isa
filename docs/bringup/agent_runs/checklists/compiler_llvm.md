@@ -77,3 +77,8 @@
   Command: `cd avs/compiler/linx-llvm/tests && CLANG=compiler/llvm/build-linxisa-clang/bin/clang TARGET=linx64-linx-none-elf OUT_DIR=avs/compiler/linx-llvm/tests/out-linx64 ./run.sh`
   Done means: scalar direct-call sources and handwritten startup asm use fused `ra=` call headers, while object-level relocation checks still accept the lowered adjacent `setret` pair.
   Status: ✅ PASS (2026-05-15) - `run.sh` passed after converting scalar handwritten direct calls to fused `BSTART.STD CALL, ..., ra=...` source syntax. The relocation/template gates still passed for the call/ret AVS lane, including `18_setret_relax`, `33`-`40`, and `41_v056_isa_forms`.
+
+- [x] ID: LLVM-008 Keep whole-stack coverage coherent with ISA and QEMU.
+  Command: `python3 tools/bringup/report_isa_llvm_qemu_coverage.py --compiler-analyzer avs/compiler/linx-llvm/tests/analyze_coverage.py --compiler-out-dir avs/compiler/linx-llvm/tests/out-linx64 --qemu-isa-report docs/bringup/gates/qemu_isa_coverage_latest.json --qemu-translation-report docs/bringup/gates/qemu_translation_coverage_latest.json --report-out docs/bringup/gates/isa_llvm_qemu_coverage_latest.json --out-md docs/bringup/gates/isa_llvm_qemu_coverage_latest.md --require-coherent`
+  Done means: LLVM coverage, QEMU implementation coverage, and AVS translation coverage are compared against the same canonical ISA set and no mismatch buckets remain.
+  Status: ✅ PASS (2026-05-21) - LLVM coverage, QEMU implementation coverage, and AVS translation coverage now all reach `710/710` canonical mnemonics in the combined coherence report.

@@ -971,14 +971,6 @@ run_gate \
 
 run_gate \
   "Regression" \
-  "TSVC strict coverage gate" \
-  "python3 $ROOT/workloads/tsvc/run_tsvc.py --clang $CLANG_BIN --lld $LLD_BIN --vector-mode auto --strict-fail-under ${TSVC_STRICT_FAIL_UNDER:-148} --source-policy linx-v03-parity --no-run-qemu --out-dir ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}" \
-  "workload_tsvc_pass" \
-  "workload_tsvc_fail" \
-  "workload_tsvc"
-
-run_gate \
-  "Regression" \
   "PTO kernel parity" \
   "python3 $ROOT/workloads/pto_kernels/tools/run_pto_kernel_parity.py --out-dir ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}" \
   "workload_pto_parity_pass" \

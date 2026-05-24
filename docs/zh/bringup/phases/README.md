@@ -1,6 +1,13 @@
-# 启动阶段
+# 启动阶段说明
 
-有序启动阶段计划：
+这些编号文件作为各个领域的历史深入参考页保留，但它们不再是规范的规划分类法。
+
+规范规划页面：
+
+- `docs/bringup/SUPERPROJECT_MILESTONES.md`
+- `docs/bringup/SPEC_WORKLOAD_PLAN.md`
+
+保留的旧编号参考：
 
 1.`docs/bringup/phases/01_compiler.md`
 2.`docs/bringup/phases/02_isa_spec.md`

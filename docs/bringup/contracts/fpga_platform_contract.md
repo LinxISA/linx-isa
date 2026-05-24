@@ -5,7 +5,7 @@ Target board: Xilinx Zynq-7000 based Digilent ZYBO Z7-20.
 ## Fixed platform defaults
 
 - UART MMIO base: `0x10000000`
-- Pass/fail test MMIO register: `0x10000004`
+- Pass/fail test finisher MMIO register: `0x10009000`
 
 These defaults must remain compatible with existing QEMU-oriented software bring-up paths.
 

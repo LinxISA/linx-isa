@@ -53,6 +53,13 @@ nav:
         - 中断异常: isa/arch/exception.md
         - 主动修复: isa/arch/fixup.md
         - 指令集约束: isa/arch/constraints.md
+    - 灵犀Core:
+        - 概览: architecture/linxcore/overview.md
+        - 微架构契约: architecture/linxcore/microarchitecture.md
+        - 外部接口契约: architecture/linxcore/interfaces.md
+        - 验证矩阵: architecture/linxcore/verification-matrix.md
+        - 模块目录: architecture/linxcore/module-catalog.md
+        - 流水线阶段目录: architecture/linxcore/pipeline-stage-catalog.md
     - 访问控制环:
         - 运行特权级: isa/exception/acr.md
         - 特权级切换: isa/exception/acr_switch.md

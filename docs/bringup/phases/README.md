@@ -1,6 +1,14 @@
-# Bring-up Phases
+# Bring-up Phase Notes
 
-Ordered bring-up phase plans:
+These numbered files are retained as legacy deep-reference pages for individual
+domains. They are not the canonical planning taxonomy anymore.
+
+Canonical planning surfaces:
+
+- `docs/bringup/SUPERPROJECT_MILESTONES.md`
+- `docs/bringup/SPEC_WORKLOAD_PLAN.md`
+
+Legacy numbered references:
 
 1. `docs/bringup/phases/01_compiler.md`
 2. `docs/bringup/phases/02_isa_spec.md`

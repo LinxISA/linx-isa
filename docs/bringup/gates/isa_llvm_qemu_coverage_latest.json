@@ -1,0 +1,42 @@
+{
+  "compiler_analyzer": "/Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/analyze_coverage.py",
+  "compiler_out_dir": "/Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/out-linx64",
+  "generated_at_utc": "2026-05-21 05:55:37Z",
+  "inconsistencies": {
+    "compiler_only_vs_qemu_impl": [],
+    "compiler_only_vs_qemu_impl_by_prefix": [],
+    "compiler_only_vs_qemu_impl_count": 0,
+    "compiler_only_vs_translation": [],
+    "compiler_only_vs_translation_by_prefix": [],
+    "compiler_only_vs_translation_count": 0,
+    "qemu_impl_only_vs_translation": [],
+    "qemu_impl_only_vs_translation_by_prefix": [],
+    "qemu_impl_only_vs_translation_count": 0,
+    "translation_without_qemu_impl": [],
+    "translation_without_qemu_impl_count": 0
+  },
+  "llvm": {
+    "coverage_count": 710,
+    "coverage_ratio_percent": 100.0,
+    "missing_count": 0
+  },
+  "qemu_impl": {
+    "coverage_count": 710,
+    "coverage_ratio_percent": 100.0,
+    "missing_count": 0
+  },
+  "qemu_isa_report": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_isa_coverage_latest.json",
+  "qemu_translation": {
+    "coverage_count": 710,
+    "coverage_ratio_percent": 100.0,
+    "missing_count": 0
+  },
+  "qemu_translation_report": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_translation_coverage_latest.json",
+  "result": {
+    "classification": "isa_llvm_qemu_coverage_coherent",
+    "ok": true
+  },
+  "schema_version": "isa-llvm-qemu-coverage-v1",
+  "spec_path": "/Users/zhoubot/linx-isa/isa/v0.56/linxisa-v0.56.json",
+  "spec_unique_mnemonics": 710
+}

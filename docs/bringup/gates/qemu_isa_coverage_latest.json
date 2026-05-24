@@ -1,10 +1,10 @@
 {
-  "coverage_count": 616,
-  "coverage_ratio_percent": 86.76,
-  "form_coverage_count": 612,
-  "form_coverage_ratio_percent": 82.7,
-  "form_missing_count": 128,
-  "generated_at_utc": "2026-05-08 15:41:23Z",
+  "coverage_count": 710,
+  "coverage_ratio_percent": 100.0,
+  "form_coverage_count": 453,
+  "form_coverage_ratio_percent": 61.22,
+  "form_missing_count": 287,
+  "generated_at_utc": "2026-05-21 06:52:33Z",
   "legal_form_count": 740,
   "legal_mnemonic_count": 710,
   "mapped_by_prefix": {
@@ -20,7 +20,7 @@
     "ANDIW": 1,
     "ANDW": 1,
     "ASSERT": 1,
-    "B": 15,
+    "B": 17,
     "BC": 2,
     "BCNT": 1,
     "BIC": 1,
@@ -33,7 +33,7 @@
     "BWT": 1,
     "BXS": 1,
     "BXU": 1,
-    "C": 37,
+    "C": 38,
     "CLZ": 1,
     "CMP": 16,
     "CSEL": 1,
@@ -159,7 +159,8 @@
     "SWI": 2,
     "TLB": 4,
     "UCVTF": 1,
-    "V": 94,
+    "V": 184,
+    "XB": 1,
     "XOR": 1,
     "XORI": 1,
     "XORIW": 1,
@@ -178,25 +179,24 @@
     "ANDIW": 1,
     "ANDW": 1,
     "ASSERT": 1,
-    "B": 17,
+    "B": 22,
     "BC": 2,
     "BCNT": 1,
     "BIC": 1,
     "BIS": 1,
     "BSE": 1,
-    "BSTART": 19,
     "BSTOP": 1,
     "BWE": 1,
     "BWI": 1,
     "BWT": 1,
     "BXS": 1,
     "BXU": 1,
-    "C": 37,
+    "C": 30,
     "CLZ": 1,
     "CMP": 16,
     "CSEL": 1,
     "CTZ": 1,
-    "DC": 6,
+    "DC": 8,
     "DIV": 1,
     "DIVU": 1,
     "DIVUW": 1,
@@ -204,7 +204,6 @@
     "EBREAK": 1,
     "ERCOV": 1,
     "ESAVE": 1,
-    "FABS": 1,
     "FADD": 1,
     "FCVT": 1,
     "FCVTA": 1,
@@ -218,7 +217,6 @@
     "FEQ": 1,
     "FEQS": 1,
     "FEXIT": 1,
-    "FEXP": 1,
     "FGE": 1,
     "FGES": 1,
     "FLT": 1,
@@ -232,30 +230,26 @@
     "FNES": 1,
     "FNMADD": 1,
     "FNMSUB": 1,
-    "FRECIP": 1,
     "FRET": 2,
-    "FSQRT": 1,
     "FSUB": 1,
-    "HL": 195,
+    "HL": 70,
     "IC": 2,
     "J": 1,
-    "JR": 1,
-    "LB": 2,
+    "LB": 1,
     "LBI": 1,
-    "LBU": 2,
+    "LBU": 1,
     "LBUI": 1,
-    "LD": 10,
+    "LD": 9,
     "LDI": 2,
-    "LH": 2,
+    "LH": 1,
     "LHI": 2,
-    "LHU": 2,
+    "LHU": 1,
     "LHUI": 2,
-    "LR": 2,
     "LSRGET": 1,
     "LUI": 1,
-    "LW": 10,
+    "LW": 9,
     "LWI": 2,
-    "LWU": 2,
+    "LWU": 1,
     "LWUI": 2,
     "MADD": 1,
     "MADDW": 1,
@@ -273,22 +267,20 @@
     "ORI": 1,
     "ORIW": 1,
     "ORW": 1,
-    "PRF": 1,
-    "PRFI": 1,
     "REM": 1,
     "REMU": 1,
     "REMUW": 1,
     "REMW": 1,
     "REV": 1,
-    "SB": 2,
+    "SB": 1,
     "SBI": 1,
     "SC": 4,
     "SCVTF": 1,
-    "SD": 11,
+    "SD": 10,
     "SDI": 2,
     "SETC": 17,
     "SETRET": 1,
-    "SH": 3,
+    "SH": 2,
     "SHI": 2,
     "SLL": 1,
     "SLLI": 1,
@@ -309,7 +301,7 @@
     "SUBI": 1,
     "SUBIW": 1,
     "SUBW": 1,
-    "SW": 11,
+    "SW": 10,
     "SWAPB": 1,
     "SWAPD": 1,
     "SWAPH": 1,
@@ -317,2035 +309,2626 @@
     "SWI": 2,
     "TLB": 4,
     "UCVTF": 1,
-    "V": 92,
+    "V": 96,
+    "XB": 1,
     "XOR": 1,
     "XORI": 1,
     "XORIW": 1,
     "XORW": 1
   },
   "mapped_qemu_to_spec": {
-    "acrc": [
+    "blk_acrc_32": [
       "ACRC"
     ],
-    "acre": [
+    "blk_acre_32": [
       "ACRE"
     ],
-    "add": [
+    "blk_add_32": [
       "ADD"
     ],
-    "addi": [
+    "blk_addi_32": [
       "ADDI"
     ],
-    "addiw": [
+    "blk_addi_48": [
+      "HL.ADDI"
+    ],
+    "blk_addiw_32": [
       "ADDIW"
     ],
-    "addtpc": [
+    "blk_addiw_48": [
+      "HL.ADDIW"
+    ],
+    "blk_addtpc_32": [
       "ADDTPC"
     ],
-    "addw": [
+    "blk_addtpc_48": [
+      "HL.ADDTPC",
+      "HL.SETRET"
+    ],
+    "blk_addw_32": [
       "ADDW"
     ],
-    "and": [
+    "blk_and_32": [
       "AND"
     ],
-    "andi": [
+    "blk_andi_32": [
       "ANDI"
     ],
-    "andiw": [
+    "blk_andi_48": [
+      "HL.ANDI"
+    ],
+    "blk_andiw_32": [
       "ANDIW"
     ],
-    "andw": [
+    "blk_andiw_48": [
+      "HL.ANDIW"
+    ],
+    "blk_andw_32": [
       "ANDW"
     ],
-    "assert": [
+    "blk_assert_32": [
       "ASSERT"
     ],
-    "b_arg": [
+    "blk_b_arg_dn2nz_32": [
       "B.ARG"
     ],
-    "b_dim_lb0": [
-      "B.DIM"
+    "blk_b_arg_dn2zn_32": [
+      "B.ARG"
     ],
-    "b_dim_lb1": [
-      "B.DIM"
+    "blk_b_arg_format_32": [
+      "B.ARG"
     ],
-    "b_dim_lb2": [
-      "B.DIM"
+    "blk_b_arg_nd2zn_32": [
+      "B.ARG"
     ],
-    "b_eq": [
+    "blk_b_arg_norm_32": [
+      "B.ARG"
+    ],
+    "blk_b_arg_nz2dn_32": [
+      "B.ARG"
+    ],
+    "blk_b_eq_32": [
       "B.EQ"
     ],
-    "b_ge": [
+    "blk_b_ge_32": [
       "B.GE"
     ],
-    "b_geu": [
+    "blk_b_geu_32": [
       "B.GEU"
     ],
-    "b_hint": [
-      "B.HINT"
-    ],
-    "b_hint_trace": [
-      "B.HINT"
-    ],
-    "b_iod": [
-      "B.IOD"
-    ],
-    "b_ior": [
-      "B.IOR"
-    ],
-    "b_iot": [
-      "B.IOT"
-    ],
-    "b_lt": [
+    "blk_b_lt_32": [
       "B.LT"
     ],
-    "b_ltu": [
+    "blk_b_ltu_32": [
       "B.LTU"
     ],
-    "b_ne": [
+    "blk_b_ne_32": [
       "B.NE"
     ],
-    "b_nz": [
+    "blk_b_nz_32": [
       "B.NZ"
     ],
-    "b_text": [
-      "B.TEXT"
-    ],
-    "b_z": [
+    "blk_b_z_32": [
       "B.Z"
     ],
-    "bc_iall": [
+    "blk_bc_iall_32": [
       "BC.IALL"
     ],
-    "bc_iva": [
+    "blk_bc_iva_32": [
       "BC.IVA"
     ],
-    "bcnt": [
+    "blk_bcnt_32": [
       "BCNT"
     ],
-    "bic": [
+    "blk_bdim_lb0_32": [
+      "B.DIM"
+    ],
+    "blk_bdim_lb1_32": [
+      "B.DIM"
+    ],
+    "blk_bdim_lb2_32": [
+      "B.DIM"
+    ],
+    "blk_bfi_48": [
+      "HL.BFI"
+    ],
+    "blk_bic_32": [
       "BIC"
     ],
-    "bis": [
+    "blk_biod": [
+      "B.IOD"
+    ],
+    "blk_bior": [
+      "B.IOR"
+    ],
+    "blk_biot1": [
+      "B.IOT"
+    ],
+    "blk_biot2": [
+      "B.IOT"
+    ],
+    "blk_biot3": [
+      "B.IOT"
+    ],
+    "blk_bis_32": [
       "BIS"
     ],
-    "bse": [
+    "blk_bse_32": [
       "BSE"
     ],
-    "bstart_call": [
+    "blk_bwa_32": [
+      "BWT"
+    ],
+    "blk_bwe_32": [
+      "BWE"
+    ],
+    "blk_bwi_32": [
+      "BWI"
+    ],
+    "blk_bxs_32": [
+      "BXS"
+    ],
+    "blk_bxu_32": [
+      "BXU"
+    ],
+    "blk_c_add_16": [
+      "C.ADD"
+    ],
+    "blk_c_addi_16": [
+      "C.ADDI"
+    ],
+    "blk_c_and_16": [
+      "C.AND"
+    ],
+    "blk_c_bdim": [
+      "C.B.DIM"
+    ],
+    "blk_c_bdimi": [
+      "C.B.DIMI"
+    ],
+    "blk_c_cmp_eqi_16": [
+      "C.CMP.EQI"
+    ],
+    "blk_c_cmp_nei_16": [
+      "C.CMP.NEI"
+    ],
+    "blk_c_ebreak": [
+      "C.EBREAK"
+    ],
+    "blk_c_ldi_16": [
+      "C.LDI"
+    ],
+    "blk_c_lwi_16": [
+      "C.LWI"
+    ],
+    "blk_c_movi_16": [
+      "C.MOVI"
+    ],
+    "blk_c_movr_16": [
+      "C.MOVR"
+    ],
+    "blk_c_or_16": [
+      "C.OR"
+    ],
+    "blk_c_sdi_16": [
+      "C.SDI"
+    ],
+    "blk_c_setc_eq_16": [
+      "C.SETC.EQ"
+    ],
+    "blk_c_setc_ne_16": [
+      "C.SETC.NE"
+    ],
+    "blk_c_setc_tgt_16": [
+      "C.SETC.TGT"
+    ],
+    "blk_c_setret_16": [
+      "C.SETRET"
+    ],
+    "blk_c_slli_16": [
+      "C.SLLI"
+    ],
+    "blk_c_srli_16": [
+      "C.SRLI"
+    ],
+    "blk_c_ssrget_16": [
+      "C.SSRGET"
+    ],
+    "blk_c_sub_16": [
+      "C.SUB"
+    ],
+    "blk_c_swi_16": [
+      "C.SWI"
+    ],
+    "blk_casb_48": [
+      "HL.CASB"
+    ],
+    "blk_casd_48": [
+      "HL.CASD"
+    ],
+    "blk_cash_48": [
+      "HL.CASH"
+    ],
+    "blk_casw_48": [
+      "HL.CASW"
+    ],
+    "blk_catr": [
+      "B.CATR"
+    ],
+    "blk_ccat_48": [
+      "HL.CCAT"
+    ],
+    "blk_ccatw_48": [
+      "HL.CCATW"
+    ],
+    "blk_clz_32": [
+      "CLZ"
+    ],
+    "blk_cmp_and_32": [
+      "CMP.AND"
+    ],
+    "blk_cmp_andi_32": [
+      "CMP.ANDI"
+    ],
+    "blk_cmp_andi_48": [
+      "HL.CMP.ANDI"
+    ],
+    "blk_cmp_eq_32": [
+      "CMP.EQ"
+    ],
+    "blk_cmp_eqi_32": [
+      "CMP.EQI"
+    ],
+    "blk_cmp_eqi_48": [
+      "HL.CMP.EQI"
+    ],
+    "blk_cmp_ge_32": [
+      "CMP.GE"
+    ],
+    "blk_cmp_gei_32": [
+      "CMP.GEI"
+    ],
+    "blk_cmp_gei_48": [
+      "HL.CMP.GEI"
+    ],
+    "blk_cmp_geu_32": [
+      "CMP.GEU"
+    ],
+    "blk_cmp_geui_32": [
+      "CMP.GEUI"
+    ],
+    "blk_cmp_geui_48": [
+      "HL.CMP.GEUI"
+    ],
+    "blk_cmp_lt_32": [
+      "CMP.LT"
+    ],
+    "blk_cmp_lti_32": [
+      "CMP.LTI"
+    ],
+    "blk_cmp_lti_48": [
+      "HL.CMP.LTI"
+    ],
+    "blk_cmp_ltu_32": [
+      "CMP.LTU"
+    ],
+    "blk_cmp_ltui_32": [
+      "CMP.LTUI"
+    ],
+    "blk_cmp_ltui_48": [
+      "HL.CMP.LTUI"
+    ],
+    "blk_cmp_ne_32": [
+      "CMP.NE"
+    ],
+    "blk_cmp_nei_32": [
+      "CMP.NEI"
+    ],
+    "blk_cmp_nei_48": [
+      "HL.CMP.NEI"
+    ],
+    "blk_cmp_or_32": [
+      "CMP.OR"
+    ],
+    "blk_cmp_ori_32": [
+      "CMP.ORI"
+    ],
+    "blk_cmp_ori_48": [
+      "HL.CMP.ORI"
+    ],
+    "blk_csel_32": [
+      "CSEL"
+    ],
+    "blk_ctz_32": [
+      "CTZ"
+    ],
+    "blk_datr": [
+      "B.DATR"
+    ],
+    "blk_dc_cisw_32": [
+      "DC.CISW"
+    ],
+    "blk_dc_civa_32": [
+      "DC.CIVA"
+    ],
+    "blk_dc_csw_32": [
+      "DC.CSW"
+    ],
+    "blk_dc_cva_32": [
+      "DC.CVA"
+    ],
+    "blk_dc_iall_32": [
+      "DC.IALL"
+    ],
+    "blk_dc_isw_32": [
+      "DC.ISW"
+    ],
+    "blk_dc_iva_32": [
+      "DC.IVA"
+    ],
+    "blk_dc_zva_32": [
+      "DC.ZVA"
+    ],
+    "blk_div_32": [
+      "DIV"
+    ],
+    "blk_div_48": [
+      "HL.DIV"
+    ],
+    "blk_divu_32": [
+      "DIVU"
+    ],
+    "blk_divu_48": [
+      "HL.DIVU"
+    ],
+    "blk_divuw_32": [
+      "DIVUW"
+    ],
+    "blk_divuw_48": [
+      "HL.DIVUW"
+    ],
+    "blk_divw_32": [
+      "DIVW"
+    ],
+    "blk_divw_48": [
+      "HL.DIVW"
+    ],
+    "blk_ebreak": [
+      "EBREAK"
+    ],
+    "blk_ercov_32": [
+      "ERCOV"
+    ],
+    "blk_esave_32": [
+      "ESAVE"
+    ],
+    "blk_fabs_32": [
+      "FABS"
+    ],
+    "blk_fadd_32": [
+      "FADD"
+    ],
+    "blk_fcvt_32": [
+      "FCVT"
+    ],
+    "blk_fcvta_32": [
+      "FCVTA"
+    ],
+    "blk_fcvtm_32": [
+      "FCVTM"
+    ],
+    "blk_fcvtn_32": [
+      "FCVTN"
+    ],
+    "blk_fcvtp_32": [
+      "FCVTP"
+    ],
+    "blk_fcvtz_32": [
+      "FCVTZ"
+    ],
+    "blk_fdiv_32": [
+      "FDIV"
+    ],
+    "blk_fence_d_32": [
+      "FENCE.D"
+    ],
+    "blk_fence_i_32": [
+      "FENCE.I"
+    ],
+    "blk_fentry": [
+      "FENTRY"
+    ],
+    "blk_feq_32": [
+      "FEQ"
+    ],
+    "blk_feqs_32": [
+      "FEQS"
+    ],
+    "blk_fexit": [
+      "FEXIT"
+    ],
+    "blk_fexp_32": [
+      "FEXP"
+    ],
+    "blk_fge_32": [
+      "FGE"
+    ],
+    "blk_fges_32": [
+      "FGES"
+    ],
+    "blk_flt_32": [
+      "FLT"
+    ],
+    "blk_flts_32": [
+      "FLTS"
+    ],
+    "blk_fmadd_32": [
+      "FMADD"
+    ],
+    "blk_fmax_32": [
+      "FMAX"
+    ],
+    "blk_fmin_32": [
+      "FMIN"
+    ],
+    "blk_fmsub_32": [
+      "FMSUB"
+    ],
+    "blk_fmul_32": [
+      "FMUL"
+    ],
+    "blk_fne_32": [
+      "FNE"
+    ],
+    "blk_fnes_32": [
+      "FNES"
+    ],
+    "blk_fnmadd_32": [
+      "FNMADD"
+    ],
+    "blk_fnmsub_32": [
+      "FNMSUB"
+    ],
+    "blk_frecip_32": [
+      "FRECIP"
+    ],
+    "blk_fret_ra": [
+      "FRET.RA"
+    ],
+    "blk_fret_stk": [
+      "FRET.STK"
+    ],
+    "blk_fsqrt_32": [
+      "FSQRT"
+    ],
+    "blk_fsub_32": [
+      "FSUB"
+    ],
+    "blk_hint": [
+      "B.HINT"
+    ],
+    "blk_hint_trace": [
+      "B.HINT"
+    ],
+    "blk_ic_iall_32": [
+      "IC.IALL"
+    ],
+    "blk_ic_iva_32": [
+      "IC.IVA"
+    ],
+    "blk_j_32": [
+      "J"
+    ],
+    "blk_jr_32": [
+      "JR"
+    ],
+    "blk_lb_32": [
+      "LB"
+    ],
+    "blk_lb_i_32": [
+      "LBI"
+    ],
+    "blk_lb_pcr_48": [
+      "HL.LB.PCR"
+    ],
+    "blk_lb_po_48": [
+      "HL.LB.PO"
+    ],
+    "blk_lb_pr_48": [
+      "HL.LB.PR"
+    ],
+    "blk_lbi_po_48": [
+      "HL.LBI",
+      "HL.LBI.PO"
+    ],
+    "blk_lbi_pr_48": [
+      "HL.LBI",
+      "HL.LBI.PR"
+    ],
+    "blk_lbip_po_48": [
+      "HL.LBIP"
+    ],
+    "blk_lbip_pr_48": [
+      "HL.LBIP"
+    ],
+    "blk_lbp_po_48": [
+      "HL.LBP"
+    ],
+    "blk_lbp_pr_48": [
+      "HL.LBP"
+    ],
+    "blk_lbu_32": [
+      "LBU"
+    ],
+    "blk_lbu_i_32": [
+      "LBUI"
+    ],
+    "blk_lbu_pcr_48": [
+      "HL.LBU.PCR"
+    ],
+    "blk_lbu_po_48": [
+      "HL.LBU.PO"
+    ],
+    "blk_lbu_pr_48": [
+      "HL.LBU.PR"
+    ],
+    "blk_lbui_po_48": [
+      "HL.LBUI",
+      "HL.LBUI.PO"
+    ],
+    "blk_lbui_pr_48": [
+      "HL.LBUI",
+      "HL.LBUI.PR"
+    ],
+    "blk_lbuip_po_48": [
+      "HL.LBUIP"
+    ],
+    "blk_lbuip_pr_48": [
+      "HL.LBUIP"
+    ],
+    "blk_lbup_po_48": [
+      "HL.LBUP"
+    ],
+    "blk_lbup_pr_48": [
+      "HL.LBUP"
+    ],
+    "blk_ld_32": [
+      "LD"
+    ],
+    "blk_ld_add_32": [
+      "LD.ADD"
+    ],
+    "blk_ld_and_32": [
+      "LD.AND"
+    ],
+    "blk_ld_i_32": [
+      "LDI"
+    ],
+    "blk_ld_or_32": [
+      "LD.OR"
+    ],
+    "blk_ld_pcr_48": [
+      "HL.LD.PCR"
+    ],
+    "blk_ld_po_48": [
+      "HL.LD.PO"
+    ],
+    "blk_ld_pr_48": [
+      "HL.LD.PR"
+    ],
+    "blk_ld_smax_32": [
+      "LD.SMAX"
+    ],
+    "blk_ld_smin_32": [
+      "LD.SMIN"
+    ],
+    "blk_ld_ui_32": [
+      "LDI.U"
+    ],
+    "blk_ld_umax_32": [
+      "LD.UMAX"
+    ],
+    "blk_ld_umin_32": [
+      "LD.UMIN"
+    ],
+    "blk_ld_xor_32": [
+      "LD.XOR"
+    ],
+    "blk_ldi_po_48": [
+      "HL.LDI",
+      "HL.LDI.PO"
+    ],
+    "blk_ldi_pr_48": [
+      "HL.LDI",
+      "HL.LDI.PR"
+    ],
+    "blk_ldi_upo_48": [
+      "HL.LDI.U",
+      "HL.LDI.UPO"
+    ],
+    "blk_ldi_upr_48": [
+      "HL.LDI.U",
+      "HL.LDI.UPR"
+    ],
+    "blk_ldip_po_48": [
+      "HL.LDIP"
+    ],
+    "blk_ldip_pr_48": [
+      "HL.LDIP"
+    ],
+    "blk_ldip_upo_48": [
+      "HL.LDIP.U"
+    ],
+    "blk_ldip_upr_48": [
+      "HL.LDIP.U"
+    ],
+    "blk_ldp_po_48": [
+      "HL.LDP"
+    ],
+    "blk_ldp_pr_48": [
+      "HL.LDP"
+    ],
+    "blk_lh_32": [
+      "LH"
+    ],
+    "blk_lh_i_32": [
+      "LHI"
+    ],
+    "blk_lh_pcr_48": [
+      "HL.LH.PCR"
+    ],
+    "blk_lh_po_48": [
+      "HL.LH.PO"
+    ],
+    "blk_lh_pr_48": [
+      "HL.LH.PR"
+    ],
+    "blk_lh_ui_32": [
+      "LHI.U"
+    ],
+    "blk_lhi_po_48": [
+      "HL.LHI",
+      "HL.LHI.PO"
+    ],
+    "blk_lhi_pr_48": [
+      "HL.LHI",
+      "HL.LHI.PR"
+    ],
+    "blk_lhi_upo_48": [
+      "HL.LHI.U",
+      "HL.LHI.UPO"
+    ],
+    "blk_lhi_upr_48": [
+      "HL.LHI.U",
+      "HL.LHI.UPR"
+    ],
+    "blk_lhip_po_48": [
+      "HL.LHIP"
+    ],
+    "blk_lhip_pr_48": [
+      "HL.LHIP"
+    ],
+    "blk_lhip_upo_48": [
+      "HL.LHIP.U"
+    ],
+    "blk_lhip_upr_48": [
+      "HL.LHIP.U"
+    ],
+    "blk_lhp_po_48": [
+      "HL.LHP"
+    ],
+    "blk_lhp_pr_48": [
+      "HL.LHP"
+    ],
+    "blk_lhu_32": [
+      "LHU"
+    ],
+    "blk_lhu_i_32": [
+      "LHUI"
+    ],
+    "blk_lhu_pcr_48": [
+      "HL.LHU.PCR"
+    ],
+    "blk_lhu_po_48": [
+      "HL.LHU.PO"
+    ],
+    "blk_lhu_pr_48": [
+      "HL.LHU.PR"
+    ],
+    "blk_lhu_ui_32": [
+      "LHUI.U"
+    ],
+    "blk_lhui_po_48": [
+      "HL.LHUI",
+      "HL.LHUI.PO"
+    ],
+    "blk_lhui_pr_48": [
+      "HL.LHUI",
+      "HL.LHUI.PR"
+    ],
+    "blk_lhui_upo_48": [
+      "HL.LHUI.U",
+      "HL.LHUI.UPO"
+    ],
+    "blk_lhui_upr_48": [
+      "HL.LHUI.U",
+      "HL.LHUI.UPR"
+    ],
+    "blk_lhuip_po_48": [
+      "HL.LHUIP"
+    ],
+    "blk_lhuip_pr_48": [
+      "HL.LHUIP"
+    ],
+    "blk_lhuip_upo_48": [
+      "HL.LHUIP.U"
+    ],
+    "blk_lhuip_upr_48": [
+      "HL.LHUIP.U"
+    ],
+    "blk_lhup_po_48": [
+      "HL.LHUP"
+    ],
+    "blk_lhup_pr_48": [
+      "HL.LHUP"
+    ],
+    "blk_lis_48": [
+      "HL.LIS"
+    ],
+    "blk_liu_48": [
+      "HL.LIU"
+    ],
+    "blk_lr_b_32": [
+      "LR.B"
+    ],
+    "blk_lr_d_32": [
+      "LR.D"
+    ],
+    "blk_lr_h_32": [
+      "LR.H"
+    ],
+    "blk_lr_w_32": [
+      "LR.W"
+    ],
+    "blk_lsrget_32": [
+      "LSRGET"
+    ],
+    "blk_lui_32": [
+      "LUI"
+    ],
+    "blk_lui_48": [
+      "HL.LUI"
+    ],
+    "blk_lw_32": [
+      "LW"
+    ],
+    "blk_lw_add_32": [
+      "LW.ADD"
+    ],
+    "blk_lw_and_32": [
+      "LW.AND"
+    ],
+    "blk_lw_i_32": [
+      "LWI"
+    ],
+    "blk_lw_or_32": [
+      "LW.OR"
+    ],
+    "blk_lw_pcr_48": [
+      "HL.LW.PCR"
+    ],
+    "blk_lw_po_48": [
+      "HL.LW.PO"
+    ],
+    "blk_lw_pr_48": [
+      "HL.LW.PR"
+    ],
+    "blk_lw_smax_32": [
+      "LW.SMAX"
+    ],
+    "blk_lw_smin_32": [
+      "LW.SMIN"
+    ],
+    "blk_lw_ui_32": [
+      "LWI.U"
+    ],
+    "blk_lw_umax_32": [
+      "LW.UMAX"
+    ],
+    "blk_lw_umin_32": [
+      "LW.UMIN"
+    ],
+    "blk_lw_xor_32": [
+      "LW.XOR"
+    ],
+    "blk_lwi_po_48": [
+      "HL.LWI",
+      "HL.LWI.PO"
+    ],
+    "blk_lwi_pr_48": [
+      "HL.LWI",
+      "HL.LWI.PR"
+    ],
+    "blk_lwi_upo_48": [
+      "HL.LWI.U",
+      "HL.LWI.UPO"
+    ],
+    "blk_lwi_upr_48": [
+      "HL.LWI.U",
+      "HL.LWI.UPR"
+    ],
+    "blk_lwip_po_48": [
+      "HL.LWIP"
+    ],
+    "blk_lwip_pr_48": [
+      "HL.LWIP"
+    ],
+    "blk_lwip_upo_48": [
+      "HL.LWIP.U"
+    ],
+    "blk_lwip_upr_48": [
+      "HL.LWIP.U"
+    ],
+    "blk_lwp_po_48": [
+      "HL.LWP"
+    ],
+    "blk_lwp_pr_48": [
+      "HL.LWP"
+    ],
+    "blk_lwu_32": [
+      "LWU"
+    ],
+    "blk_lwu_i_32": [
+      "LWUI"
+    ],
+    "blk_lwu_pcr_48": [
+      "HL.LWU.PCR"
+    ],
+    "blk_lwu_po_48": [
+      "HL.LWU.PO"
+    ],
+    "blk_lwu_pr_48": [
+      "HL.LWU.PR"
+    ],
+    "blk_lwu_ui_32": [
+      "LWUI.U"
+    ],
+    "blk_lwui_po_48": [
+      "HL.LWUI",
+      "HL.LWUI.PO"
+    ],
+    "blk_lwui_pr_48": [
+      "HL.LWUI",
+      "HL.LWUI.PR"
+    ],
+    "blk_lwui_upo_48": [
+      "HL.LWUI.U",
+      "HL.LWUI.UPO"
+    ],
+    "blk_lwui_upr_48": [
+      "HL.LWUI.U",
+      "HL.LWUI.UPR"
+    ],
+    "blk_lwuip_po_48": [
+      "HL.LWUIP"
+    ],
+    "blk_lwuip_pr_48": [
+      "HL.LWUIP"
+    ],
+    "blk_lwuip_upo_48": [
+      "HL.LWUIP.U"
+    ],
+    "blk_lwuip_upr_48": [
+      "HL.LWUIP.U"
+    ],
+    "blk_lwup_po_48": [
+      "HL.LWUP"
+    ],
+    "blk_lwup_pr_48": [
+      "HL.LWUP"
+    ],
+    "blk_madd_32": [
+      "MADD"
+    ],
+    "blk_madd_48": [
+      "HL.MADD"
+    ],
+    "blk_maddw_32": [
+      "MADDW"
+    ],
+    "blk_maddw_48": [
+      "HL.MADDW"
+    ],
+    "blk_max_32": [
+      "MAX"
+    ],
+    "blk_maxu_32": [
+      "MAXU"
+    ],
+    "blk_memcopy": [
+      "MCOPY"
+    ],
+    "blk_memset": [
+      "MSET"
+    ],
+    "blk_miadd_48": [
+      "HL.MIADD"
+    ],
+    "blk_min_32": [
+      "MIN"
+    ],
+    "blk_minu_32": [
+      "MINU"
+    ],
+    "blk_misub_48": [
+      "HL.MISUB"
+    ],
+    "blk_mul_32": [
+      "MUL"
+    ],
+    "blk_mul_48": [
+      "HL.MUL"
+    ],
+    "blk_mulu_32": [
+      "MULU"
+    ],
+    "blk_mulu_48": [
+      "HL.MULU"
+    ],
+    "blk_muluw_32": [
+      "MULUW"
+    ],
+    "blk_mulw_32": [
+      "MULW"
+    ],
+    "blk_offset_btext": [
+      "B.TEXT"
+    ],
+    "blk_or_32": [
+      "OR"
+    ],
+    "blk_ori_32": [
+      "ORI"
+    ],
+    "blk_ori_48": [
+      "HL.ORI"
+    ],
+    "blk_oriw_32": [
+      "ORIW"
+    ],
+    "blk_oriw_48": [
+      "HL.ORIW"
+    ],
+    "blk_orw_32": [
+      "ORW"
+    ],
+    "blk_prf_32": [
+      "PRF"
+    ],
+    "blk_prf_48": [
+      "HL.PRF"
+    ],
+    "blk_prf_a_48": [
+      "HL.PRF.A"
+    ],
+    "blk_prfi_u_32": [
+      "PRFI.U"
+    ],
+    "blk_prfi_u_48": [
+      "HL.PRFI.U"
+    ],
+    "blk_prfi_ua_48": [
+      "HL.PRFI.UA"
+    ],
+    "blk_qmt_48": [
+      "HL.QMT"
+    ],
+    "blk_qpop_48": [
+      "HL.QPOP",
+      "V.QPOP"
+    ],
+    "blk_qpush_48": [
+      "HL.QPUSH",
+      "V.QPUSH"
+    ],
+    "blk_rem_32": [
+      "REM"
+    ],
+    "blk_rem_48": [
+      "HL.REM"
+    ],
+    "blk_remu_32": [
+      "REMU"
+    ],
+    "blk_remu_48": [
+      "HL.REMU"
+    ],
+    "blk_remuw_32": [
+      "REMUW"
+    ],
+    "blk_remuw_48": [
+      "HL.REMUW"
+    ],
+    "blk_remw_32": [
+      "REMW"
+    ],
+    "blk_remw_48": [
+      "HL.REMW"
+    ],
+    "blk_rev_32": [
+      "REV"
+    ],
+    "blk_sb_32": [
+      "SB"
+    ],
+    "blk_sb_i_32": [
+      "SBI"
+    ],
+    "blk_sb_pcr_48": [
+      "HL.SB.PCR"
+    ],
+    "blk_sb_po_48": [
+      "HL.SB.PO"
+    ],
+    "blk_sb_pr_48": [
+      "HL.SB.PR"
+    ],
+    "blk_sbi_po_48": [
+      "HL.SBI",
+      "HL.SBI.PO"
+    ],
+    "blk_sbi_pr_48": [
+      "HL.SBI",
+      "HL.SBI.PR"
+    ],
+    "blk_sbip_po_48": [
+      "HL.SBIP"
+    ],
+    "blk_sbip_pr_48": [
+      "HL.SBIP"
+    ],
+    "blk_sbp_po_48": [
+      "HL.SBP"
+    ],
+    "blk_sbp_pr_48": [
+      "HL.SBP"
+    ],
+    "blk_sc_b_32": [
+      "SC.B"
+    ],
+    "blk_sc_d_32": [
+      "SC.D"
+    ],
+    "blk_sc_h_32": [
+      "SC.H"
+    ],
+    "blk_sc_w_32": [
+      "SC.W"
+    ],
+    "blk_scvtf_32": [
+      "SCVTF"
+    ],
+    "blk_sd_32": [
+      "SD"
+    ],
+    "blk_sd_add_32": [
+      "SD.ADD"
+    ],
+    "blk_sd_and_32": [
+      "SD.AND"
+    ],
+    "blk_sd_i_32": [
+      "SDI"
+    ],
+    "blk_sd_or_32": [
+      "SD.OR"
+    ],
+    "blk_sd_pcr_48": [
+      "HL.SD.PCR"
+    ],
+    "blk_sd_po_48": [
+      "HL.SD.PO"
+    ],
+    "blk_sd_pr_48": [
+      "HL.SD.PR"
+    ],
+    "blk_sd_smax_32": [
+      "SD.SMAX"
+    ],
+    "blk_sd_smin_32": [
+      "SD.SMIN"
+    ],
+    "blk_sd_u_32": [
+      "SD.U"
+    ],
+    "blk_sd_ui_32": [
+      "SDI.U"
+    ],
+    "blk_sd_umax_32": [
+      "SD.UMAX"
+    ],
+    "blk_sd_umin_32": [
+      "SD.UMIN"
+    ],
+    "blk_sd_upo_48": [
+      "HL.SD.UPO"
+    ],
+    "blk_sd_upr_48": [
+      "HL.SD.UPR"
+    ],
+    "blk_sd_xor_32": [
+      "SD.XOR"
+    ],
+    "blk_sdi_po_48": [
+      "HL.SDI",
+      "HL.SDI.PO"
+    ],
+    "blk_sdi_pr_48": [
+      "HL.SDI",
+      "HL.SDI.PR"
+    ],
+    "blk_sdi_upo_48": [
+      "HL.SDI.U",
+      "HL.SDI.UPO"
+    ],
+    "blk_sdi_upr_48": [
+      "HL.SDI.U",
+      "HL.SDI.UPR"
+    ],
+    "blk_sdip_po_48": [
+      "HL.SDIP"
+    ],
+    "blk_sdip_pr_48": [
+      "HL.SDIP"
+    ],
+    "blk_sdip_upo_48": [
+      "HL.SDIP.U"
+    ],
+    "blk_sdip_upr_48": [
+      "HL.SDIP.U"
+    ],
+    "blk_sdp_po_48": [
+      "HL.SDP"
+    ],
+    "blk_sdp_pr_48": [
+      "HL.SDP"
+    ],
+    "blk_sdp_upo_48": [
+      "HL.SDP.U"
+    ],
+    "blk_sdp_upr_48": [
+      "HL.SDP.U"
+    ],
+    "blk_setc_and_32": [
+      "SETC.AND"
+    ],
+    "blk_setc_andi_32": [
+      "SETC.ANDI"
+    ],
+    "blk_setc_andi_48": [
+      "HL.SETC.ANDI"
+    ],
+    "blk_setc_eq_32": [
+      "SETC.EQ"
+    ],
+    "blk_setc_eqi_32": [
+      "SETC.EQI"
+    ],
+    "blk_setc_eqi_48": [
+      "HL.SETC.EQI"
+    ],
+    "blk_setc_ge_32": [
+      "SETC.GE"
+    ],
+    "blk_setc_gei_32": [
+      "SETC.GEI"
+    ],
+    "blk_setc_gei_48": [
+      "HL.SETC.GEI"
+    ],
+    "blk_setc_geu_32": [
+      "SETC.GEU"
+    ],
+    "blk_setc_geui_32": [
+      "SETC.GEUI"
+    ],
+    "blk_setc_geui_48": [
+      "HL.SETC.GEUI"
+    ],
+    "blk_setc_lt_32": [
+      "SETC.LT"
+    ],
+    "blk_setc_lti_32": [
+      "SETC.LTI"
+    ],
+    "blk_setc_lti_48": [
+      "HL.SETC.LTI"
+    ],
+    "blk_setc_ltu_32": [
+      "SETC.LTU"
+    ],
+    "blk_setc_ltui_32": [
+      "SETC.LTUI"
+    ],
+    "blk_setc_ltui_48": [
+      "HL.SETC.LTUI"
+    ],
+    "blk_setc_ne_32": [
+      "SETC.NE"
+    ],
+    "blk_setc_nei_32": [
+      "SETC.NEI"
+    ],
+    "blk_setc_nei_48": [
+      "HL.SETC.NEI"
+    ],
+    "blk_setc_or_32": [
+      "SETC.OR"
+    ],
+    "blk_setc_ori_32": [
+      "SETC.ORI"
+    ],
+    "blk_setc_ori_48": [
+      "HL.SETC.ORI"
+    ],
+    "blk_setc_tgt_32": [
+      "SETC.TGT"
+    ],
+    "blk_setret_32": [
+      "SETRET"
+    ],
+    "blk_sext_b_16": [
+      "C.SEXT.B"
+    ],
+    "blk_sext_h_16": [
+      "C.SEXT.H"
+    ],
+    "blk_sext_w_16": [
+      "C.SEXT.W"
+    ],
+    "blk_sh_32": [
+      "SH"
+    ],
+    "blk_sh_i_32": [
+      "SHI"
+    ],
+    "blk_sh_pcr_48": [
+      "HL.SH.PCR"
+    ],
+    "blk_sh_po_48": [
+      "HL.SH.PO"
+    ],
+    "blk_sh_pr_48": [
+      "HL.SH.PR"
+    ],
+    "blk_sh_u_32": [
+      "SH.U"
+    ],
+    "blk_sh_ui_32": [
+      "SHI.U"
+    ],
+    "blk_sh_upo_48": [
+      "HL.SH.UPO"
+    ],
+    "blk_sh_upr_48": [
+      "HL.SH.UPR"
+    ],
+    "blk_shi_po_48": [
+      "HL.SHI",
+      "HL.SHI.PO"
+    ],
+    "blk_shi_pr_48": [
+      "HL.SHI",
+      "HL.SHI.PR"
+    ],
+    "blk_shi_upo_48": [
+      "HL.SHI.U",
+      "HL.SHI.UPO"
+    ],
+    "blk_shi_upr_48": [
+      "HL.SHI.U",
+      "HL.SHI.UPR"
+    ],
+    "blk_ship_po_48": [
+      "HL.SHIP"
+    ],
+    "blk_ship_pr_48": [
+      "HL.SHIP"
+    ],
+    "blk_ship_upo_48": [
+      "HL.SHIP.U"
+    ],
+    "blk_ship_upr_48": [
+      "HL.SHIP.U"
+    ],
+    "blk_short_head": [
+      "C.BSTART",
+      "C.BSTART.STD",
+      "C.BSTART.FP",
+      "C.BSTART.SYS",
+      "C.BSTART.VPAR",
+      "C.BSTART.VSEQ",
+      "C.BSTART.MPAR",
+      "C.BSTART.MSEQ"
+    ],
+    "blk_shp_po_48": [
+      "HL.SHP"
+    ],
+    "blk_shp_pr_48": [
+      "HL.SHP"
+    ],
+    "blk_shp_upo_48": [
+      "HL.SHP.U"
+    ],
+    "blk_shp_upr_48": [
+      "HL.SHP.U"
+    ],
+    "blk_sll_32": [
+      "SLL"
+    ],
+    "blk_slli_32": [
+      "SLLI"
+    ],
+    "blk_slliw_32": [
+      "SLLIW"
+    ],
+    "blk_sllw_32": [
+      "SLLW"
+    ],
+    "blk_sra_32": [
+      "SRA"
+    ],
+    "blk_srai_32": [
+      "SRAI"
+    ],
+    "blk_sraiw_32": [
+      "SRAIW"
+    ],
+    "blk_sraw_32": [
+      "SRAW"
+    ],
+    "blk_srl_32": [
+      "SRL"
+    ],
+    "blk_srli_32": [
+      "SRLI"
+    ],
+    "blk_srliw_32": [
+      "SRLIW"
+    ],
+    "blk_srlw_32": [
+      "SRLW"
+    ],
+    "blk_ssrget_32": [
+      "SSRGET"
+    ],
+    "blk_ssrget_48": [
+      "HL.SSRGET"
+    ],
+    "blk_ssrset_32": [
+      "SSRSET"
+    ],
+    "blk_ssrset_48": [
+      "HL.SSRSET"
+    ],
+    "blk_ssrswap_32": [
+      "SSRSWAP"
+    ],
+    "blk_start_call": [
       "BSTART CALL",
-      "BSTART.STD"
+      "BSTART.STD",
+      "HL.BSTART CALL",
+      "HL.BSTART.STD"
     ],
-    "bstart_cond": [
+    "blk_start_cond": [
       "BSTART",
-      "BSTART.STD"
-    ],
-    "bstart_cube": [
-      "BSTART.CUBE"
-    ],
-    "bstart_direct": [
-      "BSTART",
-      "BSTART.STD"
-    ],
-    "bstart_fixp": [
-      "BSTART.FIXP"
-    ],
-    "bstart_fp_call": [
-      "BSTART.FP"
-    ],
-    "bstart_fp_cond": [
-      "BSTART.FP"
-    ],
-    "bstart_fp_direct": [
-      "BSTART.FP"
-    ],
-    "bstart_fp_fall": [
-      "BSTART.FP"
-    ],
-    "bstart_fp_icall": [
-      "BSTART.FP"
-    ],
-    "bstart_fp_ind": [
-      "BSTART.FP"
-    ],
-    "bstart_fp_ret": [
-      "BSTART.FP"
-    ],
-    "bstart_icall": [
-      "BSTART",
-      "BSTART.STD"
-    ],
-    "bstart_ind": [
-      "BSTART",
-      "BSTART.STD"
-    ],
-    "bstart_mpar": [
-      "BSTART.MPAR"
-    ],
-    "bstart_mseq": [
-      "BSTART.MSEQ"
-    ],
-    "bstart_ret": [
-      "BSTART",
-      "BSTART.STD"
-    ],
-    "bstart_sys": [
-      "BSTART.SYS"
-    ],
-    "bstart_tepl": [
-      "BSTART.TEPL",
+      "BSTART.STD",
+      "BSTART.FP",
+      "BSTART.SYS",
+      "HL.BSTART.FP",
+      "HL.BSTART.SYS",
+      "BSTART.FIXP",
+      "BSTART.CUBE",
       "BSTART.PAR",
+      "BSTART.TEPL",
+      "BSTART.TMA",
+      "BSTART.VPAR",
+      "BSTART.VSEQ",
+      "BSTART.MPAR",
+      "BSTART.MSEQ",
       "BSTART.TLOAD",
       "BSTART.TSTORE",
+      "BSTART.TMOV",
       "BSTART.TMATMUL",
       "BSTART.TMATMUL.ACC",
       "BSTART.ACCCVT"
     ],
-    "bstart_tma": [
+    "blk_start_direct": [
+      "BSTART",
+      "BSTART.STD",
+      "BSTART.FP",
+      "BSTART.SYS",
+      "HL.BSTART.FP",
+      "HL.BSTART.SYS",
+      "BSTART.FIXP",
+      "BSTART.CUBE",
+      "BSTART.PAR",
+      "BSTART.TEPL",
       "BSTART.TMA",
-      "BSTART.TMOV"
+      "BSTART.VPAR",
+      "BSTART.VSEQ",
+      "BSTART.MPAR",
+      "BSTART.MSEQ",
+      "BSTART.TLOAD",
+      "BSTART.TSTORE",
+      "BSTART.TMOV",
+      "BSTART.TMATMUL",
+      "BSTART.TMATMUL.ACC",
+      "BSTART.ACCCVT"
     ],
-    "bstart_vpar": [
-      "BSTART.VPAR"
+    "blk_start_fall": [
+      "BSTART",
+      "BSTART.STD",
+      "BSTART.FP",
+      "BSTART.SYS",
+      "HL.BSTART.FP",
+      "HL.BSTART.SYS",
+      "BSTART.FIXP",
+      "BSTART.CUBE",
+      "BSTART.PAR",
+      "BSTART.TEPL",
+      "BSTART.TMA",
+      "BSTART.VPAR",
+      "BSTART.VSEQ",
+      "BSTART.MPAR",
+      "BSTART.MSEQ",
+      "BSTART.TLOAD",
+      "BSTART.TSTORE",
+      "BSTART.TMOV",
+      "BSTART.TMATMUL",
+      "BSTART.TMATMUL.ACC",
+      "BSTART.ACCCVT"
     ],
-    "bstart_vseq": [
-      "BSTART.VSEQ"
+    "blk_start_icall": [
+      "BSTART",
+      "BSTART.STD"
     ],
-    "bstop": [
-      "BSTOP"
+    "blk_start_ind": [
+      "BSTART",
+      "BSTART.STD"
     ],
-    "bwe": [
-      "BWE"
+    "blk_start_ret": [
+      "BSTART",
+      "BSTART.STD"
     ],
-    "bwi": [
-      "BWI"
-    ],
-    "bwt": [
-      "BWT"
-    ],
-    "bxs": [
-      "BXS"
-    ],
-    "bxu": [
-      "BXU"
-    ],
-    "c_add": [
-      "C.ADD"
-    ],
-    "c_addi": [
-      "C.ADDI"
-    ],
-    "c_and": [
-      "C.AND"
-    ],
-    "c_b_dim": [
-      "C.B.DIM"
-    ],
-    "c_b_dimi": [
-      "C.B.DIMI"
-    ],
-    "c_bstart_cond": [
-      "C.BSTART"
-    ],
-    "c_bstart_direct": [
-      "C.BSTART"
-    ],
-    "c_bstart_fp": [
-      "C.BSTART.FP"
-    ],
-    "c_bstart_mpar": [
-      "C.BSTART.MPAR"
-    ],
-    "c_bstart_mseq": [
+    "blk_start_simt": [
+      "C.BSTART.FP",
+      "C.BSTART.SYS",
+      "C.BSTART.VPAR",
+      "C.BSTART.VSEQ",
+      "C.BSTART.MPAR",
       "C.BSTART.MSEQ"
     ],
-    "c_bstart_std_call": [
-      "C.BSTART.STD"
-    ],
-    "c_bstart_std_cond": [
-      "C.BSTART.STD"
-    ],
-    "c_bstart_std_direct": [
-      "C.BSTART.STD"
-    ],
-    "c_bstart_std_fall": [
-      "C.BSTART.STD"
-    ],
-    "c_bstart_std_icall": [
-      "C.BSTART.STD"
-    ],
-    "c_bstart_std_ind": [
-      "C.BSTART.STD"
-    ],
-    "c_bstart_std_ret": [
-      "C.BSTART.STD"
-    ],
-    "c_bstart_sys": [
-      "C.BSTART.SYS"
-    ],
-    "c_bstart_vpar": [
-      "C.BSTART.VPAR"
-    ],
-    "c_bstart_vseq": [
-      "C.BSTART.VSEQ"
-    ],
-    "c_bstop": [
+    "blk_start_stop": [
+      "BSTOP",
       "C.BSTOP"
     ],
-    "c_cmp_eqi": [
-      "C.CMP.EQI"
-    ],
-    "c_cmp_nei": [
-      "C.CMP.NEI"
-    ],
-    "c_ebreak": [
-      "C.EBREAK"
-    ],
-    "c_ldi": [
-      "C.LDI"
-    ],
-    "c_lwi": [
-      "C.LWI"
-    ],
-    "c_movi": [
-      "C.MOVI"
-    ],
-    "c_movr": [
-      "C.MOVR"
-    ],
-    "c_or": [
-      "C.OR"
-    ],
-    "c_sdi": [
-      "C.SDI"
-    ],
-    "c_setc_eq": [
-      "C.SETC.EQ"
-    ],
-    "c_setc_ne": [
-      "C.SETC.NE"
-    ],
-    "c_setc_tgt": [
-      "C.SETC.TGT"
-    ],
-    "c_sext_b": [
-      "C.SEXT.B"
-    ],
-    "c_sext_h": [
-      "C.SEXT.H"
-    ],
-    "c_sext_w": [
-      "C.SEXT.W"
-    ],
-    "c_slli": [
-      "C.SLLI"
-    ],
-    "c_srli": [
-      "C.SRLI"
-    ],
-    "c_ssrget": [
-      "C.SSRGET"
-    ],
-    "c_sub": [
-      "C.SUB"
-    ],
-    "c_swi": [
-      "C.SWI"
-    ],
-    "c_zext_b": [
-      "C.ZEXT.B"
-    ],
-    "c_zext_h": [
-      "C.ZEXT.H"
-    ],
-    "c_zext_w": [
-      "C.ZEXT.W"
-    ],
-    "clz": [
-      "CLZ"
-    ],
-    "cmp_and": [
-      "CMP.AND"
-    ],
-    "cmp_andi": [
-      "CMP.ANDI"
-    ],
-    "cmp_eq": [
-      "CMP.EQ"
-    ],
-    "cmp_eqi": [
-      "CMP.EQI"
-    ],
-    "cmp_ge": [
-      "CMP.GE"
-    ],
-    "cmp_gei": [
-      "CMP.GEI"
-    ],
-    "cmp_geu": [
-      "CMP.GEU"
-    ],
-    "cmp_geui": [
-      "CMP.GEUI"
-    ],
-    "cmp_lt": [
-      "CMP.LT"
-    ],
-    "cmp_lti": [
-      "CMP.LTI"
-    ],
-    "cmp_ltu": [
-      "CMP.LTU"
-    ],
-    "cmp_ltui": [
-      "CMP.LTUI"
-    ],
-    "cmp_ne": [
-      "CMP.NE"
-    ],
-    "cmp_nei": [
-      "CMP.NEI"
-    ],
-    "cmp_or": [
-      "CMP.OR"
-    ],
-    "cmp_ori": [
-      "CMP.ORI"
-    ],
-    "csel": [
-      "CSEL"
-    ],
-    "ctz": [
-      "CTZ"
-    ],
-    "dc_cisw": [
-      "DC.CISW"
-    ],
-    "dc_civa": [
-      "DC.CIVA"
-    ],
-    "dc_csw": [
-      "DC.CSW"
-    ],
-    "dc_cva": [
-      "DC.CVA"
-    ],
-    "dc_iall": [
-      "DC.IALL"
-    ],
-    "dc_isw": [
-      "DC.ISW"
-    ],
-    "dc_iva": [
-      "DC.IVA"
-    ],
-    "dc_zva": [
-      "DC.ZVA"
-    ],
-    "div": [
-      "DIV"
-    ],
-    "divu": [
-      "DIVU"
-    ],
-    "divuw": [
-      "DIVUW"
-    ],
-    "divw": [
-      "DIVW"
-    ],
-    "ebreak": [
-      "EBREAK"
-    ],
-    "ercov": [
-      "ERCOV"
-    ],
-    "esave": [
-      "ESAVE"
-    ],
-    "fabs": [
-      "FABS"
-    ],
-    "fadd": [
-      "FADD"
-    ],
-    "fcvt": [
-      "FCVT"
-    ],
-    "fcvta": [
-      "FCVTA"
-    ],
-    "fcvtm": [
-      "FCVTM"
-    ],
-    "fcvtn": [
-      "FCVTN"
-    ],
-    "fcvtp": [
-      "FCVTP"
-    ],
-    "fcvtz": [
-      "FCVTZ"
-    ],
-    "fdiv": [
-      "FDIV"
-    ],
-    "fence_d": [
-      "FENCE.D"
-    ],
-    "fence_i": [
-      "FENCE.I"
-    ],
-    "fentry": [
-      "FENTRY"
-    ],
-    "feq": [
-      "FEQ"
-    ],
-    "feqs": [
-      "FEQS"
-    ],
-    "fexit": [
-      "FEXIT"
-    ],
-    "fexp": [
-      "FEXP"
-    ],
-    "fge": [
-      "FGE"
-    ],
-    "fges": [
-      "FGES"
-    ],
-    "flt": [
-      "FLT"
-    ],
-    "flts": [
-      "FLTS"
-    ],
-    "fmadd": [
-      "FMADD"
-    ],
-    "fmax": [
-      "FMAX"
-    ],
-    "fmin": [
-      "FMIN"
-    ],
-    "fmsub": [
-      "FMSUB"
-    ],
-    "fmul": [
-      "FMUL"
-    ],
-    "fne": [
-      "FNE"
-    ],
-    "fnes": [
-      "FNES"
-    ],
-    "fnmadd": [
-      "FNMADD"
-    ],
-    "fnmsub": [
-      "FNMSUB"
-    ],
-    "frecip": [
-      "FRECIP"
-    ],
-    "fret_ra": [
-      "FRET.RA"
-    ],
-    "fret_stk": [
-      "FRET.STK"
-    ],
-    "fsqrt": [
-      "FSQRT"
-    ],
-    "fsub": [
-      "FSUB"
-    ],
-    "hl_addi": [
-      "HL.ADDI"
-    ],
-    "hl_addiw": [
-      "HL.ADDIW"
-    ],
-    "hl_addtpc": [
-      "HL.ADDTPC"
-    ],
-    "hl_andi": [
-      "HL.ANDI"
-    ],
-    "hl_andiw": [
-      "HL.ANDIW"
-    ],
-    "hl_bfi": [
-      "HL.BFI"
-    ],
-    "hl_bstart_fp_call": [
-      "HL.BSTART.FP"
-    ],
-    "hl_bstart_fp_cond": [
-      "HL.BSTART.FP"
-    ],
-    "hl_bstart_fp_direct": [
-      "HL.BSTART.FP"
-    ],
-    "hl_bstart_fp_fall": [
-      "HL.BSTART.FP"
-    ],
-    "hl_bstart_std_call": [
-      "HL.BSTART CALL"
-    ],
-    "hl_bstart_std_cond": [
-      "HL.BSTART.STD"
-    ],
-    "hl_bstart_std_direct": [
-      "HL.BSTART.STD"
-    ],
-    "hl_bstart_std_fall": [
-      "HL.BSTART.STD"
-    ],
-    "hl_bstart_sys": [
-      "HL.BSTART.SYS"
-    ],
-    "hl_casb": [
-      "HL.CASB"
-    ],
-    "hl_casd": [
-      "HL.CASD"
-    ],
-    "hl_cash": [
-      "HL.CASH"
-    ],
-    "hl_casw": [
-      "HL.CASW"
-    ],
-    "hl_ccat": [
-      "HL.CCAT"
-    ],
-    "hl_ccatw": [
-      "HL.CCATW"
-    ],
-    "hl_cmp_andi": [
-      "HL.CMP.ANDI"
-    ],
-    "hl_cmp_eqi": [
-      "HL.CMP.EQI"
-    ],
-    "hl_cmp_gei": [
-      "HL.CMP.GEI"
-    ],
-    "hl_cmp_geui": [
-      "HL.CMP.GEUI"
-    ],
-    "hl_cmp_lti": [
-      "HL.CMP.LTI"
-    ],
-    "hl_cmp_ltui": [
-      "HL.CMP.LTUI"
-    ],
-    "hl_cmp_nei": [
-      "HL.CMP.NEI"
-    ],
-    "hl_cmp_ori": [
-      "HL.CMP.ORI"
-    ],
-    "hl_div": [
-      "HL.DIV"
-    ],
-    "hl_divu": [
-      "HL.DIVU"
-    ],
-    "hl_divuw": [
-      "HL.DIVUW"
-    ],
-    "hl_divw": [
-      "HL.DIVW"
-    ],
-    "hl_lb_pcr": [
-      "HL.LB.PCR"
-    ],
-    "hl_lb_po": [
-      "HL.LB.PO"
-    ],
-    "hl_lb_pr": [
-      "HL.LB.PR"
-    ],
-    "hl_lbi": [
-      "HL.LBI"
-    ],
-    "hl_lbi_po": [
-      "HL.LBI.PO"
-    ],
-    "hl_lbi_pr": [
-      "HL.LBI.PR"
-    ],
-    "hl_lbip": [
-      "HL.LBIP"
-    ],
-    "hl_lbp": [
-      "HL.LBP"
-    ],
-    "hl_lbu_pcr": [
-      "HL.LBU.PCR"
-    ],
-    "hl_lbu_po": [
-      "HL.LBU.PO"
-    ],
-    "hl_lbu_pr": [
-      "HL.LBU.PR"
-    ],
-    "hl_lbui": [
-      "HL.LBUI"
-    ],
-    "hl_lbui_po": [
-      "HL.LBUI.PO"
-    ],
-    "hl_lbui_pr": [
-      "HL.LBUI.PR"
-    ],
-    "hl_lbuip": [
-      "HL.LBUIP"
-    ],
-    "hl_lbup": [
-      "HL.LBUP"
-    ],
-    "hl_ld_pcr": [
-      "HL.LD.PCR"
-    ],
-    "hl_ld_po": [
-      "HL.LD.PO"
-    ],
-    "hl_ld_pr": [
-      "HL.LD.PR"
-    ],
-    "hl_ldi": [
-      "HL.LDI"
-    ],
-    "hl_ldi_po": [
-      "HL.LDI.PO",
-      "HL.LD.PO"
-    ],
-    "hl_ldi_pr": [
-      "HL.LDI.PR",
-      "HL.LD.PR"
-    ],
-    "hl_ldi_u": [
-      "HL.LDI.U"
-    ],
-    "hl_ldi_upo": [
-      "HL.LDI.UPO"
-    ],
-    "hl_ldi_upr": [
-      "HL.LDI.UPR"
-    ],
-    "hl_ldip": [
-      "HL.LDIP",
-      "HL.LDP"
-    ],
-    "hl_ldip_u": [
-      "HL.LDIP.U"
-    ],
-    "hl_ldp": [
-      "HL.LDP"
-    ],
-    "hl_lh_pcr": [
-      "HL.LH.PCR"
-    ],
-    "hl_lh_po": [
-      "HL.LH.PO"
-    ],
-    "hl_lh_pr": [
-      "HL.LH.PR"
-    ],
-    "hl_lhi": [
-      "HL.LHI"
-    ],
-    "hl_lhi_po": [
-      "HL.LHI.PO"
-    ],
-    "hl_lhi_pr": [
-      "HL.LHI.PR"
-    ],
-    "hl_lhi_u": [
-      "HL.LHI.U"
-    ],
-    "hl_lhi_upo": [
-      "HL.LHI.UPO"
-    ],
-    "hl_lhi_upr": [
-      "HL.LHI.UPR"
-    ],
-    "hl_lhip": [
-      "HL.LHIP"
-    ],
-    "hl_lhip_u": [
-      "HL.LHIP.U"
-    ],
-    "hl_lhp": [
-      "HL.LHP"
-    ],
-    "hl_lhu_pcr": [
-      "HL.LHU.PCR"
-    ],
-    "hl_lhu_po": [
-      "HL.LHU.PO"
-    ],
-    "hl_lhu_pr": [
-      "HL.LHU.PR"
-    ],
-    "hl_lhui": [
-      "HL.LHUI"
-    ],
-    "hl_lhui_po": [
-      "HL.LHUI.PO"
-    ],
-    "hl_lhui_pr": [
-      "HL.LHUI.PR"
-    ],
-    "hl_lhui_u": [
-      "HL.LHUI.U"
-    ],
-    "hl_lhui_upo": [
-      "HL.LHUI.UPO"
-    ],
-    "hl_lhui_upr": [
-      "HL.LHUI.UPR"
-    ],
-    "hl_lhuip": [
-      "HL.LHUIP"
-    ],
-    "hl_lhuip_u": [
-      "HL.LHUIP.U"
-    ],
-    "hl_lhup": [
-      "HL.LHUP"
-    ],
-    "hl_lis": [
-      "HL.LIS"
-    ],
-    "hl_liu": [
-      "HL.LIU"
-    ],
-    "hl_lui": [
-      "HL.LUI"
-    ],
-    "hl_lw_pcr": [
-      "HL.LW.PCR"
-    ],
-    "hl_lw_po": [
-      "HL.LW.PO"
-    ],
-    "hl_lw_pr": [
-      "HL.LW.PR"
-    ],
-    "hl_lwi": [
-      "HL.LWI"
-    ],
-    "hl_lwi_po": [
-      "HL.LWI.PO",
-      "HL.LW.PO"
-    ],
-    "hl_lwi_pr": [
-      "HL.LWI.PR",
-      "HL.LW.PR"
-    ],
-    "hl_lwi_u": [
-      "HL.LWI.U"
-    ],
-    "hl_lwi_upo": [
-      "HL.LWI.UPO"
-    ],
-    "hl_lwi_upr": [
-      "HL.LWI.UPR"
-    ],
-    "hl_lwip": [
-      "HL.LWIP",
-      "HL.LWP"
-    ],
-    "hl_lwip_u": [
-      "HL.LWIP.U"
-    ],
-    "hl_lwp": [
-      "HL.LWP"
-    ],
-    "hl_lwu_pcr": [
-      "HL.LWU.PCR"
-    ],
-    "hl_lwu_po": [
-      "HL.LWU.PO"
-    ],
-    "hl_lwu_pr": [
-      "HL.LWU.PR"
-    ],
-    "hl_lwui": [
-      "HL.LWUI"
-    ],
-    "hl_lwui_po": [
-      "HL.LWUI.PO",
-      "HL.LWU.PO"
-    ],
-    "hl_lwui_pr": [
-      "HL.LWUI.PR",
-      "HL.LWU.PR"
-    ],
-    "hl_lwui_u": [
-      "HL.LWUI.U"
-    ],
-    "hl_lwui_upo": [
-      "HL.LWUI.UPO"
-    ],
-    "hl_lwui_upr": [
-      "HL.LWUI.UPR"
-    ],
-    "hl_lwuip": [
-      "HL.LWUIP",
-      "HL.LWUP"
-    ],
-    "hl_lwuip_u": [
-      "HL.LWUIP.U"
-    ],
-    "hl_lwup": [
-      "HL.LWUP"
-    ],
-    "hl_madd": [
-      "HL.MADD"
-    ],
-    "hl_maddw": [
-      "HL.MADDW"
-    ],
-    "hl_miadd": [
-      "HL.MIADD"
-    ],
-    "hl_misub": [
-      "HL.MISUB"
-    ],
-    "hl_mul": [
-      "HL.MUL"
-    ],
-    "hl_mulu": [
-      "HL.MULU"
-    ],
-    "hl_ori": [
-      "HL.ORI"
-    ],
-    "hl_oriw": [
-      "HL.ORIW"
-    ],
-    "hl_prf": [
-      "HL.PRF"
-    ],
-    "hl_prf_a": [
-      "HL.PRF.A"
-    ],
-    "hl_prfi_u": [
-      "HL.PRFI.U"
-    ],
-    "hl_prfi_ua": [
-      "HL.PRFI.UA"
-    ],
-    "hl_qmt": [
-      "HL.QMT"
-    ],
-    "hl_qpop": [
-      "HL.QPOP"
-    ],
-    "hl_qpush": [
-      "HL.QPUSH"
-    ],
-    "hl_rem": [
-      "HL.REM"
-    ],
-    "hl_remu": [
-      "HL.REMU"
-    ],
-    "hl_remuw": [
-      "HL.REMUW"
-    ],
-    "hl_remw": [
-      "HL.REMW"
-    ],
-    "hl_sb_pcr": [
-      "HL.SB.PCR"
-    ],
-    "hl_sb_po": [
-      "HL.SB.PO"
-    ],
-    "hl_sb_pr": [
-      "HL.SB.PR"
-    ],
-    "hl_sbi": [
-      "HL.SBI"
-    ],
-    "hl_sbi_po": [
-      "HL.SBI.PO"
-    ],
-    "hl_sbi_pr": [
-      "HL.SBI.PR"
-    ],
-    "hl_sbip": [
-      "HL.SBIP"
-    ],
-    "hl_sbp": [
-      "HL.SBP"
-    ],
-    "hl_sd_pcr": [
-      "HL.SD.PCR"
-    ],
-    "hl_sd_po": [
-      "HL.SD.PO"
-    ],
-    "hl_sd_pr": [
-      "HL.SD.PR"
-    ],
-    "hl_sd_upo": [
-      "HL.SD.UPO"
-    ],
-    "hl_sd_upr": [
-      "HL.SD.UPR"
-    ],
-    "hl_sdi": [
-      "HL.SDI"
-    ],
-    "hl_sdi_po": [
-      "HL.SDI.PO",
-      "HL.SD.PO"
-    ],
-    "hl_sdi_pr": [
-      "HL.SDI.PR",
-      "HL.SD.PR"
-    ],
-    "hl_sdi_u": [
-      "HL.SDI.U"
-    ],
-    "hl_sdi_upo": [
-      "HL.SDI.UPO",
-      "HL.SD.UPO"
-    ],
-    "hl_sdi_upr": [
-      "HL.SDI.UPR",
-      "HL.SD.UPR"
-    ],
-    "hl_sdip": [
-      "HL.SDIP",
-      "HL.SDP"
-    ],
-    "hl_sdip_u": [
-      "HL.SDIP.U",
-      "HL.SDP.U"
-    ],
-    "hl_sdp": [
-      "HL.SDP"
-    ],
-    "hl_sdp_u": [
-      "HL.SDP.U"
-    ],
-    "hl_setc_andi": [
-      "HL.SETC.ANDI"
-    ],
-    "hl_setc_eqi": [
-      "HL.SETC.EQI"
-    ],
-    "hl_setc_gei": [
-      "HL.SETC.GEI"
-    ],
-    "hl_setc_geui": [
-      "HL.SETC.GEUI"
-    ],
-    "hl_setc_lti": [
-      "HL.SETC.LTI"
-    ],
-    "hl_setc_ltui": [
-      "HL.SETC.LTUI"
-    ],
-    "hl_setc_nei": [
-      "HL.SETC.NEI"
-    ],
-    "hl_setc_ori": [
-      "HL.SETC.ORI"
-    ],
-    "hl_setret": [
-      "HL.SETRET"
-    ],
-    "hl_sh_pcr": [
-      "HL.SH.PCR"
-    ],
-    "hl_sh_po": [
-      "HL.SH.PO"
-    ],
-    "hl_sh_pr": [
-      "HL.SH.PR"
-    ],
-    "hl_sh_upo": [
-      "HL.SH.UPO"
-    ],
-    "hl_sh_upr": [
-      "HL.SH.UPR"
-    ],
-    "hl_shi": [
-      "HL.SHI"
-    ],
-    "hl_shi_po": [
-      "HL.SHI.PO"
-    ],
-    "hl_shi_pr": [
-      "HL.SHI.PR"
-    ],
-    "hl_shi_u": [
-      "HL.SHI.U"
-    ],
-    "hl_shi_upo": [
-      "HL.SHI.UPO"
-    ],
-    "hl_shi_upr": [
-      "HL.SHI.UPR"
-    ],
-    "hl_ship": [
-      "HL.SHIP"
-    ],
-    "hl_ship_u": [
-      "HL.SHIP.U"
-    ],
-    "hl_shp": [
-      "HL.SHP"
-    ],
-    "hl_shp_u": [
-      "HL.SHP.U"
-    ],
-    "hl_ssrget": [
-      "HL.SSRGET"
-    ],
-    "hl_ssrset": [
-      "HL.SSRSET"
-    ],
-    "hl_subi": [
-      "HL.SUBI"
-    ],
-    "hl_subiw": [
-      "HL.SUBIW"
-    ],
-    "hl_sw_pcr": [
-      "HL.SW.PCR"
-    ],
-    "hl_sw_po": [
-      "HL.SW.PO"
-    ],
-    "hl_sw_pr": [
-      "HL.SW.PR"
-    ],
-    "hl_sw_upo": [
-      "HL.SW.UPO"
-    ],
-    "hl_sw_upr": [
-      "HL.SW.UPR"
-    ],
-    "hl_swi": [
-      "HL.SWI"
-    ],
-    "hl_swi_po": [
-      "HL.SWI.PO",
-      "HL.SW.PO"
-    ],
-    "hl_swi_pr": [
-      "HL.SWI.PR",
-      "HL.SW.PR"
-    ],
-    "hl_swi_u": [
-      "HL.SWI.U"
-    ],
-    "hl_swi_upo": [
-      "HL.SWI.UPO",
-      "HL.SW.UPO"
-    ],
-    "hl_swi_upr": [
-      "HL.SWI.UPR",
-      "HL.SW.UPR"
-    ],
-    "hl_swip": [
-      "HL.SWIP",
-      "HL.SWP"
-    ],
-    "hl_swip_u": [
-      "HL.SWIP.U",
-      "HL.SWP.U"
-    ],
-    "hl_swp": [
-      "HL.SWP"
-    ],
-    "hl_swp_u": [
-      "HL.SWP.U"
-    ],
-    "hl_xori": [
-      "HL.XORI"
-    ],
-    "hl_xoriw": [
-      "HL.XORIW"
-    ],
-    "ic_iall": [
-      "IC.IALL"
-    ],
-    "ic_iva": [
-      "IC.IVA"
-    ],
-    "j": [
-      "J"
-    ],
-    "jr": [
-      "JR"
-    ],
-    "lb": [
-      "LB"
-    ],
-    "lb_pcr": [
-      "LB.PCR"
-    ],
-    "lbi": [
-      "LBI"
-    ],
-    "lbu": [
-      "LBU"
-    ],
-    "lbu_pcr": [
-      "LBU.PCR"
-    ],
-    "lbui": [
-      "LBUI"
-    ],
-    "ld": [
-      "LD"
-    ],
-    "ld_add": [
-      "LD.ADD"
-    ],
-    "ld_and": [
-      "LD.AND"
-    ],
-    "ld_or": [
-      "LD.OR"
-    ],
-    "ld_pcr": [
-      "LD.PCR"
-    ],
-    "ld_smax": [
-      "LD.SMAX"
-    ],
-    "ld_smin": [
-      "LD.SMIN"
-    ],
-    "ld_umax": [
-      "LD.UMAX"
-    ],
-    "ld_umin": [
-      "LD.UMIN"
-    ],
-    "ld_xor": [
-      "LD.XOR"
-    ],
-    "ldi": [
-      "LDI"
-    ],
-    "ldi_u": [
-      "LDI.U"
-    ],
-    "lh": [
-      "LH"
-    ],
-    "lh_pcr": [
-      "LH.PCR"
-    ],
-    "lhi": [
-      "LHI"
-    ],
-    "lhi_u": [
-      "LHI.U"
-    ],
-    "lhu": [
-      "LHU"
-    ],
-    "lhu_pcr": [
-      "LHU.PCR"
-    ],
-    "lhui": [
-      "LHUI"
-    ],
-    "lhui_u": [
-      "LHUI.U"
-    ],
-    "lr_b": [
-      "LR.B"
-    ],
-    "lr_d": [
-      "LR.D"
-    ],
-    "lr_h": [
-      "LR.H"
-    ],
-    "lr_w": [
-      "LR.W"
-    ],
-    "lsrget": [
-      "LSRGET"
-    ],
-    "lui": [
-      "LUI"
-    ],
-    "lw": [
-      "LW"
-    ],
-    "lw_add": [
-      "LW.ADD"
-    ],
-    "lw_and": [
-      "LW.AND"
-    ],
-    "lw_or": [
-      "LW.OR"
-    ],
-    "lw_pcr": [
-      "LW.PCR"
-    ],
-    "lw_smax": [
-      "LW.SMAX"
-    ],
-    "lw_smin": [
-      "LW.SMIN"
-    ],
-    "lw_umax": [
-      "LW.UMAX"
-    ],
-    "lw_umin": [
-      "LW.UMIN"
-    ],
-    "lw_xor": [
-      "LW.XOR"
-    ],
-    "lwi": [
-      "LWI"
-    ],
-    "lwi_u": [
-      "LWI.U"
-    ],
-    "lwu": [
-      "LWU"
-    ],
-    "lwu_pcr": [
-      "LWU.PCR"
-    ],
-    "lwui": [
-      "LWUI"
-    ],
-    "lwui_u": [
-      "LWUI.U"
-    ],
-    "madd": [
-      "MADD"
-    ],
-    "maddw": [
-      "MADDW"
-    ],
-    "max": [
-      "MAX"
-    ],
-    "maxu": [
-      "MAXU"
-    ],
-    "mcopy": [
-      "MCOPY"
-    ],
-    "min": [
-      "MIN"
-    ],
-    "minu": [
-      "MINU"
-    ],
-    "mset": [
-      "MSET"
-    ],
-    "mul": [
-      "MUL"
-    ],
-    "mulu": [
-      "MULU"
-    ],
-    "muluw": [
-      "MULUW"
-    ],
-    "mulw": [
-      "MULW"
-    ],
-    "or": [
-      "OR"
-    ],
-    "ori": [
-      "ORI"
-    ],
-    "oriw": [
-      "ORIW"
-    ],
-    "orw": [
-      "ORW"
-    ],
-    "prf": [
-      "PRF"
-    ],
-    "prfi_u": [
-      "PRFI.U"
-    ],
-    "rem": [
-      "REM"
-    ],
-    "remu": [
-      "REMU"
-    ],
-    "remuw": [
-      "REMUW"
-    ],
-    "remw": [
-      "REMW"
-    ],
-    "rev": [
-      "REV"
-    ],
-    "sb": [
-      "SB"
-    ],
-    "sb_pcr": [
-      "SB.PCR"
-    ],
-    "sbi": [
-      "SBI"
-    ],
-    "sc_b": [
-      "SC.B"
-    ],
-    "sc_d": [
-      "SC.D"
-    ],
-    "sc_h": [
-      "SC.H"
-    ],
-    "sc_w": [
-      "SC.W"
-    ],
-    "scvtf": [
-      "SCVTF"
-    ],
-    "sd": [
-      "SD"
-    ],
-    "sd_add": [
-      "SD.ADD"
-    ],
-    "sd_and": [
-      "SD.AND"
-    ],
-    "sd_or": [
-      "SD.OR"
-    ],
-    "sd_pcr": [
-      "SD.PCR"
-    ],
-    "sd_smax": [
-      "SD.SMAX"
-    ],
-    "sd_smin": [
-      "SD.SMIN"
-    ],
-    "sd_u": [
-      "SD.U"
-    ],
-    "sd_umax": [
-      "SD.UMAX"
-    ],
-    "sd_umin": [
-      "SD.UMIN"
-    ],
-    "sd_xor": [
-      "SD.XOR"
-    ],
-    "sdi": [
-      "SDI"
-    ],
-    "sdi_u": [
-      "SDI.U"
-    ],
-    "setc_and": [
-      "SETC.AND"
-    ],
-    "setc_andi": [
-      "SETC.ANDI"
-    ],
-    "setc_eq": [
-      "SETC.EQ"
-    ],
-    "setc_eqi": [
-      "SETC.EQI"
-    ],
-    "setc_ge": [
-      "SETC.GE"
-    ],
-    "setc_gei": [
-      "SETC.GEI"
-    ],
-    "setc_geu": [
-      "SETC.GEU"
-    ],
-    "setc_geui": [
-      "SETC.GEUI"
-    ],
-    "setc_lt": [
-      "SETC.LT"
-    ],
-    "setc_lti": [
-      "SETC.LTI"
-    ],
-    "setc_ltu": [
-      "SETC.LTU"
-    ],
-    "setc_ltui": [
-      "SETC.LTUI"
-    ],
-    "setc_ne": [
-      "SETC.NE"
-    ],
-    "setc_nei": [
-      "SETC.NEI"
-    ],
-    "setc_or": [
-      "SETC.OR"
-    ],
-    "setc_ori": [
-      "SETC.ORI"
-    ],
-    "setc_tgt": [
-      "SETC.TGT"
-    ],
-    "setret": [
-      "SETRET"
-    ],
-    "sh": [
-      "SH"
-    ],
-    "sh_pcr": [
-      "SH.PCR"
-    ],
-    "sh_u": [
-      "SH.U"
-    ],
-    "shi": [
-      "SHI"
-    ],
-    "shi_u": [
-      "SHI.U"
-    ],
-    "sll": [
-      "SLL"
-    ],
-    "slli": [
-      "SLLI"
-    ],
-    "slliw": [
-      "SLLIW"
-    ],
-    "sllw": [
-      "SLLW"
-    ],
-    "sra": [
-      "SRA"
-    ],
-    "srai": [
-      "SRAI"
-    ],
-    "sraiw": [
-      "SRAIW"
-    ],
-    "sraw": [
-      "SRAW"
-    ],
-    "srl": [
-      "SRL"
-    ],
-    "srli": [
-      "SRLI"
-    ],
-    "srliw": [
-      "SRLIW"
-    ],
-    "srlw": [
-      "SRLW"
-    ],
-    "ssrget": [
-      "SSRGET"
-    ],
-    "ssrset": [
-      "SSRSET"
-    ],
-    "ssrswap": [
-      "SSRSWAP"
-    ],
-    "sub": [
+    "blk_sub_32": [
       "SUB"
     ],
-    "subi": [
+    "blk_subi_32": [
       "SUBI"
     ],
-    "subiw": [
+    "blk_subi_48": [
+      "HL.SUBI"
+    ],
+    "blk_subiw_32": [
       "SUBIW"
     ],
-    "subw": [
+    "blk_subiw_48": [
+      "HL.SUBIW"
+    ],
+    "blk_subw_32": [
       "SUBW"
     ],
-    "sw": [
+    "blk_sw_32": [
       "SW"
     ],
-    "sw_add": [
+    "blk_sw_add_32": [
       "SW.ADD"
     ],
-    "sw_and": [
+    "blk_sw_and_32": [
       "SW.AND"
     ],
-    "sw_or": [
-      "SW.OR"
-    ],
-    "sw_pcr": [
-      "SW.PCR"
-    ],
-    "sw_smax": [
-      "SW.SMAX"
-    ],
-    "sw_smin": [
-      "SW.SMIN"
-    ],
-    "sw_u": [
-      "SW.U"
-    ],
-    "sw_umax": [
-      "SW.UMAX"
-    ],
-    "sw_umin": [
-      "SW.UMIN"
-    ],
-    "sw_xor": [
-      "SW.XOR"
-    ],
-    "swapb": [
-      "SWAPB"
-    ],
-    "swapd": [
-      "SWAPD"
-    ],
-    "swaph": [
-      "SWAPH"
-    ],
-    "swapw": [
-      "SWAPW"
-    ],
-    "swi": [
+    "blk_sw_i_32": [
       "SWI"
     ],
-    "swi_u": [
+    "blk_sw_or_32": [
+      "SW.OR"
+    ],
+    "blk_sw_pcr_48": [
+      "HL.SW.PCR"
+    ],
+    "blk_sw_po_48": [
+      "HL.SW.PO"
+    ],
+    "blk_sw_pr_48": [
+      "HL.SW.PR"
+    ],
+    "blk_sw_smax_32": [
+      "SW.SMAX"
+    ],
+    "blk_sw_smin_32": [
+      "SW.SMIN"
+    ],
+    "blk_sw_u_32": [
+      "SW.U"
+    ],
+    "blk_sw_ui_32": [
       "SWI.U"
     ],
-    "tlb_ia": [
+    "blk_sw_umax_32": [
+      "SW.UMAX"
+    ],
+    "blk_sw_umin_32": [
+      "SW.UMIN"
+    ],
+    "blk_sw_upo_48": [
+      "HL.SW.UPO"
+    ],
+    "blk_sw_upr_48": [
+      "HL.SW.UPR"
+    ],
+    "blk_sw_xor_32": [
+      "SW.XOR"
+    ],
+    "blk_swap_b_32": [
+      "SWAPB"
+    ],
+    "blk_swap_d_32": [
+      "SWAPD"
+    ],
+    "blk_swap_h_32": [
+      "SWAPH"
+    ],
+    "blk_swap_w_32": [
+      "SWAPW"
+    ],
+    "blk_swi_po_48": [
+      "HL.SWI",
+      "HL.SWI.PO"
+    ],
+    "blk_swi_pr_48": [
+      "HL.SWI",
+      "HL.SWI.PR"
+    ],
+    "blk_swi_upo_48": [
+      "HL.SWI.U",
+      "HL.SWI.UPO"
+    ],
+    "blk_swi_upr_48": [
+      "HL.SWI.U",
+      "HL.SWI.UPR"
+    ],
+    "blk_swip_po_48": [
+      "HL.SWIP"
+    ],
+    "blk_swip_pr_48": [
+      "HL.SWIP"
+    ],
+    "blk_swip_upo_48": [
+      "HL.SWIP.U"
+    ],
+    "blk_swip_upr_48": [
+      "HL.SWIP.U"
+    ],
+    "blk_swp_po_48": [
+      "HL.SWP"
+    ],
+    "blk_swp_pr_48": [
+      "HL.SWP"
+    ],
+    "blk_swp_upo_48": [
+      "HL.SWP.U"
+    ],
+    "blk_swp_upr_48": [
+      "HL.SWP.U"
+    ],
+    "blk_tc_ia_32": [
       "TLB.IA"
     ],
-    "tlb_iall": [
+    "blk_tc_iall_32": [
       "TLB.IALL"
     ],
-    "tlb_iav": [
+    "blk_tc_iav_32": [
       "TLB.IAV"
     ],
-    "tlb_iv": [
+    "blk_tc_iv_32": [
       "TLB.IV"
     ],
-    "ucvtf": [
+    "blk_ucvtf_32": [
       "UCVTF"
     ],
-    "v_add": [
-      "V.ADD"
+    "blk_xb": [
+      "XB"
     ],
-    "v_addi": [
-      "V.ADDI"
-    ],
-    "v_and": [
-      "V.AND"
-    ],
-    "v_andi": [
-      "V.ANDI"
-    ],
-    "v_bcnt": [
-      "V.BCNT"
-    ],
-    "v_bic": [
-      "V.BIC"
-    ],
-    "v_bis": [
-      "V.BIS"
-    ],
-    "v_bxs": [
-      "V.BXS"
-    ],
-    "v_bxu": [
-      "V.BXU"
-    ],
-    "v_clz": [
-      "V.CLZ"
-    ],
-    "v_cmp_and": [
-      "V.CMP.AND"
-    ],
-    "v_cmp_andi": [
-      "V.CMP.ANDI"
-    ],
-    "v_cmp_eq": [
-      "V.CMP.EQ"
-    ],
-    "v_cmp_eqi": [
-      "V.CMP.EQI"
-    ],
-    "v_cmp_ge": [
-      "V.CMP.GE"
-    ],
-    "v_cmp_gei": [
-      "V.CMP.GEI"
-    ],
-    "v_cmp_geu": [
-      "V.CMP.GEU"
-    ],
-    "v_cmp_geui": [
-      "V.CMP.GEUI"
-    ],
-    "v_cmp_lt": [
-      "V.CMP.LT"
-    ],
-    "v_cmp_lti": [
-      "V.CMP.LTI"
-    ],
-    "v_cmp_ltu": [
-      "V.CMP.LTU"
-    ],
-    "v_cmp_ltui": [
-      "V.CMP.LTUI"
-    ],
-    "v_cmp_ne": [
-      "V.CMP.NE"
-    ],
-    "v_cmp_nei": [
-      "V.CMP.NEI"
-    ],
-    "v_cmp_or": [
-      "V.CMP.OR"
-    ],
-    "v_cmp_ori": [
-      "V.CMP.ORI"
-    ],
-    "v_csel": [
-      "V.CSEL"
-    ],
-    "v_ctz": [
-      "V.CTZ"
-    ],
-    "v_div": [
-      "V.DIV"
-    ],
-    "v_fabs": [
-      "V.FABS"
-    ],
-    "v_fadd": [
-      "V.FADD"
-    ],
-    "v_fclass": [
-      "V.FCLASS"
-    ],
-    "v_fcvt": [
-      "V.FCVT"
-    ],
-    "v_fcvti": [
-      "V.FCVTI"
-    ],
-    "v_fdiv": [
-      "V.FDIV"
-    ],
-    "v_feq": [
-      "V.FEQ"
-    ],
-    "v_feqs": [
-      "V.FEQS"
-    ],
-    "v_fexp": [
-      "V.FEXP"
-    ],
-    "v_fge": [
-      "V.FGE"
-    ],
-    "v_fges": [
-      "V.FGES"
-    ],
-    "v_flt": [
-      "V.FLT"
-    ],
-    "v_flts": [
-      "V.FLTS"
-    ],
-    "v_fmadd": [
-      "V.FMADD"
-    ],
-    "v_fmax": [
-      "V.FMAX"
-    ],
-    "v_fmin": [
-      "V.FMIN"
-    ],
-    "v_fmsub": [
-      "V.FMSUB"
-    ],
-    "v_fmul": [
-      "V.FMUL"
-    ],
-    "v_fne": [
-      "V.FNE"
-    ],
-    "v_fnes": [
-      "V.FNES"
-    ],
-    "v_fnmadd": [
-      "V.FNMADD"
-    ],
-    "v_fnmsub": [
-      "V.FNMSUB"
-    ],
-    "v_frecip": [
-      "V.FRECIP"
-    ],
-    "v_fsqrt": [
-      "V.FSQRT"
-    ],
-    "v_fsub": [
-      "V.FSUB"
-    ],
-    "v_icvt": [
-      "V.ICVT"
-    ],
-    "v_icvtf": [
-      "V.ICVTF"
-    ],
-    "v_lb_brg": [
-      "V.LB.BRG"
-    ],
-    "v_lbu_brg": [
-      "V.LBU.BRG"
-    ],
-    "v_lh_brg": [
-      "V.LH.BRG"
-    ],
-    "v_lhu_brg": [
-      "V.LHU.BRG"
-    ],
-    "v_lw": [
-      "V.LW"
-    ],
-    "v_lw_brg": [
-      "V.LW.BRG"
-    ],
-    "v_madd": [
-      "V.MADD"
-    ],
-    "v_max": [
-      "V.MAX"
-    ],
-    "v_min": [
-      "V.MIN"
-    ],
-    "v_mul": [
-      "V.MUL"
-    ],
-    "v_or": [
-      "V.OR"
-    ],
-    "v_ori": [
-      "V.ORI"
-    ],
-    "v_psel": [
-      "V.PSEL"
-    ],
-    "v_rdadd": [
-      "V.RDADD"
-    ],
-    "v_rdand": [
-      "V.RDAND"
-    ],
-    "v_rdfadd": [
-      "V.RDFADD"
-    ],
-    "v_rdfmax": [
-      "V.RDFMAX"
-    ],
-    "v_rdfmin": [
-      "V.RDFMIN"
-    ],
-    "v_rdmax": [
-      "V.RDMAX"
-    ],
-    "v_rdmin": [
-      "V.RDMIN"
-    ],
-    "v_rdor": [
-      "V.RDOR"
-    ],
-    "v_rdxor": [
-      "V.RDXOR"
-    ],
-    "v_rem": [
-      "V.REM"
-    ],
-    "v_rev": [
-      "V.REV"
-    ],
-    "v_sb_brg": [
-      "V.SB.BRG"
-    ],
-    "v_sh_brg": [
-      "V.SH.BRG"
-    ],
-    "v_sll": [
-      "V.SLL"
-    ],
-    "v_slli": [
-      "V.SLLI"
-    ],
-    "v_sra": [
-      "V.SRA"
-    ],
-    "v_srai": [
-      "V.SRAI"
-    ],
-    "v_srl": [
-      "V.SRL"
-    ],
-    "v_srli": [
-      "V.SRLI"
-    ],
-    "v_sub": [
-      "V.SUB"
-    ],
-    "v_subi": [
-      "V.SUBI"
-    ],
-    "v_sw": [
-      "V.SW"
-    ],
-    "v_sw_brg": [
-      "V.SW.BRG"
-    ],
-    "v_xor": [
-      "V.XOR"
-    ],
-    "v_xori": [
-      "V.XORI"
-    ],
-    "xor": [
+    "blk_xor_32": [
       "XOR"
     ],
-    "xori": [
+    "blk_xori_32": [
       "XORI"
     ],
-    "xoriw": [
+    "blk_xori_48": [
+      "HL.XORI"
+    ],
+    "blk_xoriw_32": [
       "XORIW"
     ],
-    "xorw": [
+    "blk_xoriw_48": [
+      "HL.XORIW"
+    ],
+    "blk_xorw_32": [
       "XORW"
+    ],
+    "blk_zext_b_16": [
+      "C.ZEXT.B"
+    ],
+    "blk_zext_h_16": [
+      "C.ZEXT.H"
+    ],
+    "blk_zext_w_16": [
+      "C.ZEXT.W"
+    ],
+    "l_lb_pcr": [
+      "LB.PCR"
+    ],
+    "l_lbu_pcr": [
+      "LBU.PCR"
+    ],
+    "l_ld_pcr": [
+      "LD.PCR"
+    ],
+    "l_lh_pcr": [
+      "LH.PCR"
+    ],
+    "l_lhu_pcr": [
+      "LHU.PCR"
+    ],
+    "l_lw_pcr": [
+      "LW.PCR"
+    ],
+    "l_lwu_pcr": [
+      "LWU.PCR"
+    ],
+    "l_sb_pcr": [
+      "SB.PCR"
+    ],
+    "l_sd_pcr": [
+      "SD.PCR"
+    ],
+    "l_sh_pcr": [
+      "SH.PCR"
+    ],
+    "l_sw_pcr": [
+      "SW.PCR"
+    ],
+    "simt_add_32": [
+      "V.ADD"
+    ],
+    "simt_addi_32": [
+      "V.ADDI"
+    ],
+    "simt_and_32": [
+      "V.AND"
+    ],
+    "simt_andi_32": [
+      "V.ANDI"
+    ],
+    "simt_bcnt_32": [
+      "V.BCNT"
+    ],
+    "simt_bic_32": [
+      "V.BIC"
+    ],
+    "simt_bis_32": [
+      "V.BIS"
+    ],
+    "simt_bxs_32": [
+      "V.BXS"
+    ],
+    "simt_bxu_32": [
+      "V.BXU"
+    ],
+    "simt_clz_32": [
+      "V.CLZ"
+    ],
+    "simt_cmp_and_32": [
+      "V.CMP.AND"
+    ],
+    "simt_cmp_andi_32": [
+      "V.CMP.ANDI"
+    ],
+    "simt_cmp_eq_32": [
+      "V.CMP.EQ"
+    ],
+    "simt_cmp_eqi_32": [
+      "V.CMP.EQI"
+    ],
+    "simt_cmp_ge_32": [
+      "V.CMP.GE"
+    ],
+    "simt_cmp_gei_32": [
+      "V.CMP.GEI"
+    ],
+    "simt_cmp_geu_32": [
+      "V.CMP.GEU"
+    ],
+    "simt_cmp_geui_32": [
+      "V.CMP.GEUI"
+    ],
+    "simt_cmp_lt_32": [
+      "V.CMP.LT"
+    ],
+    "simt_cmp_lti_32": [
+      "V.CMP.LTI"
+    ],
+    "simt_cmp_ltu_32": [
+      "V.CMP.LTU"
+    ],
+    "simt_cmp_ltui_32": [
+      "V.CMP.LTUI"
+    ],
+    "simt_cmp_ne_32": [
+      "V.CMP.NE"
+    ],
+    "simt_cmp_nei_32": [
+      "V.CMP.NEI"
+    ],
+    "simt_cmp_or_32": [
+      "V.CMP.OR"
+    ],
+    "simt_cmp_ori_32": [
+      "V.CMP.ORI"
+    ],
+    "simt_csel_32": [
+      "V.CSEL"
+    ],
+    "simt_ctz_32": [
+      "V.CTZ"
+    ],
+    "simt_div_32": [
+      "V.DIV"
+    ],
+    "simt_fabs_32": [
+      "V.FABS"
+    ],
+    "simt_fadd_32": [
+      "V.FADD"
+    ],
+    "simt_fclass_32": [
+      "V.FCLASS"
+    ],
+    "simt_fcvt_32": [
+      "V.FCVT"
+    ],
+    "simt_fcvti_32": [
+      "V.FCVTI"
+    ],
+    "simt_fdiv_32": [
+      "V.FDIV"
+    ],
+    "simt_feq_32": [
+      "V.FEQ"
+    ],
+    "simt_feqs_32": [
+      "V.FEQS"
+    ],
+    "simt_fexp_32": [
+      "V.FEXP"
+    ],
+    "simt_fge_32": [
+      "V.FGE"
+    ],
+    "simt_fges_32": [
+      "V.FGES"
+    ],
+    "simt_flt_32": [
+      "V.FLT"
+    ],
+    "simt_flts_32": [
+      "V.FLTS"
+    ],
+    "simt_fmadd_32": [
+      "V.FMADD"
+    ],
+    "simt_fmax_32": [
+      "V.FMAX"
+    ],
+    "simt_fmin_32": [
+      "V.FMIN"
+    ],
+    "simt_fmsub_32": [
+      "V.FMSUB"
+    ],
+    "simt_fmul_32": [
+      "V.FMUL"
+    ],
+    "simt_fne_32": [
+      "V.FNE"
+    ],
+    "simt_fnes_32": [
+      "V.FNES"
+    ],
+    "simt_fnmadd_32": [
+      "V.FNMADD"
+    ],
+    "simt_fnmsub_32": [
+      "V.FNMSUB"
+    ],
+    "simt_frecip_32": [
+      "V.FRECIP"
+    ],
+    "simt_fsqrt_32": [
+      "V.FSQRT"
+    ],
+    "simt_fsub_32": [
+      "V.FSUB"
+    ],
+    "simt_icvt_32": [
+      "V.ICVT"
+    ],
+    "simt_icvtf_32": [
+      "V.ICVTF"
+    ],
+    "simt_l_lb_brg": [
+      "V.LB.BRG"
+    ],
+    "simt_l_lbi_brg": [
+      "V.LBI.BRG"
+    ],
+    "simt_l_lbu_brg": [
+      "V.LBU.BRG"
+    ],
+    "simt_l_lbui_brg": [
+      "V.LBUI.BRG"
+    ],
+    "simt_l_ld_brg": [
+      "V.LD.BRG"
+    ],
+    "simt_l_ldi_brg": [
+      "V.LDI.BRG"
+    ],
+    "simt_l_ldi_ubrg": [
+      "V.LDI.U.BRG"
+    ],
+    "simt_l_lh_brg": [
+      "V.LH.BRG"
+    ],
+    "simt_l_lhi_brg": [
+      "V.LHI.BRG"
+    ],
+    "simt_l_lhi_ubrg": [
+      "V.LHI.U.BRG"
+    ],
+    "simt_l_lhu_brg": [
+      "V.LHU.BRG"
+    ],
+    "simt_l_lhui_brg": [
+      "V.LHUI.BRG"
+    ],
+    "simt_l_lhui_ubrg": [
+      "V.LHUI.U.BRG"
+    ],
+    "simt_l_lw_brg": [
+      "V.LW.BRG"
+    ],
+    "simt_l_lwi_brg": [
+      "V.LWI.BRG"
+    ],
+    "simt_l_lwi_ubrg": [
+      "V.LWI.U.BRG"
+    ],
+    "simt_l_lwu_brg": [
+      "V.LWU.BRG"
+    ],
+    "simt_l_lwui_brg": [
+      "V.LWUI.BRG"
+    ],
+    "simt_l_lwui_ubrg": [
+      "V.LWUI.U.BRG"
+    ],
+    "simt_l_sb_brg": [
+      "V.SB.BRG"
+    ],
+    "simt_l_sbi_brg": [
+      "V.SBI.BRG"
+    ],
+    "simt_l_sd_brg": [
+      "V.SD.BRG"
+    ],
+    "simt_l_sd_ubrg": [
+      "V.SD.U.BRG"
+    ],
+    "simt_l_sdi_brg": [
+      "V.SDI.BRG"
+    ],
+    "simt_l_sdi_ubrg": [
+      "V.SDI.U.BRG"
+    ],
+    "simt_l_sh_brg": [
+      "V.SH.BRG"
+    ],
+    "simt_l_sh_ubrg": [
+      "V.SH.U.BRG"
+    ],
+    "simt_l_shi_brg": [
+      "V.SHI.BRG"
+    ],
+    "simt_l_shi_ubrg": [
+      "V.SHI.U.BRG"
+    ],
+    "simt_l_sw_brg": [
+      "V.SW.BRG"
+    ],
+    "simt_l_sw_ubrg": [
+      "V.SW.U.BRG"
+    ],
+    "simt_l_swi_brg": [
+      "V.SWI.BRG"
+    ],
+    "simt_l_swi_ubrg": [
+      "V.SWI.U.BRG"
+    ],
+    "simt_lb_32": [
+      "V.LB"
+    ],
+    "simt_lb_i_32": [
+      "V.LBI"
+    ],
+    "simt_lb_i_lc0_32": [
+      "V.LBI"
+    ],
+    "simt_lb_lc0_32": [
+      "V.LB"
+    ],
+    "simt_lbu_32": [
+      "V.LBU"
+    ],
+    "simt_lbu_i_32": [
+      "V.LBUI"
+    ],
+    "simt_lbu_i_lc0_32": [
+      "V.LBUI"
+    ],
+    "simt_lbu_lc0_32": [
+      "V.LBU"
+    ],
+    "simt_ld_32": [
+      "V.LD"
+    ],
+    "simt_ld_add_32": [
+      "V.LD.ADD"
+    ],
+    "simt_ld_and_32": [
+      "V.LD.AND"
+    ],
+    "simt_ld_i_32": [
+      "V.LDI"
+    ],
+    "simt_ld_i_lc0_32": [
+      "V.LDI"
+    ],
+    "simt_ld_lc0_32": [
+      "V.LD"
+    ],
+    "simt_ld_max_32": [
+      "V.LD.MAX"
+    ],
+    "simt_ld_min_32": [
+      "V.LD.MIN"
+    ],
+    "simt_ld_or_32": [
+      "V.LD.OR"
+    ],
+    "simt_ld_ui_32": [
+      "V.LDI.U"
+    ],
+    "simt_ld_ui_lc0_32": [
+      "V.LDI.U"
+    ],
+    "simt_ld_xor_32": [
+      "V.LD.XOR"
+    ],
+    "simt_lh_32": [
+      "V.LH"
+    ],
+    "simt_lh_i_32": [
+      "V.LHI"
+    ],
+    "simt_lh_i_lc0_32": [
+      "V.LHI"
+    ],
+    "simt_lh_lc0_32": [
+      "V.LH"
+    ],
+    "simt_lh_ui_32": [
+      "V.LHI.U"
+    ],
+    "simt_lh_ui_lc0_32": [
+      "V.LHI.U"
+    ],
+    "simt_lhu_32": [
+      "V.LHU"
+    ],
+    "simt_lhu_i_32": [
+      "V.LHUI"
+    ],
+    "simt_lhu_i_lc0_32": [
+      "V.LHUI"
+    ],
+    "simt_lhu_lc0_32": [
+      "V.LHU"
+    ],
+    "simt_lhu_ui_32": [
+      "V.LHUI.U"
+    ],
+    "simt_lhu_ui_lc0_32": [
+      "V.LHUI.U"
+    ],
+    "simt_lw_32": [
+      "V.LW"
+    ],
+    "simt_lw_add_32": [
+      "V.LW.ADD"
+    ],
+    "simt_lw_and_32": [
+      "V.LW.AND"
+    ],
+    "simt_lw_i_32": [
+      "V.LWI"
+    ],
+    "simt_lw_i_lc0_32": [
+      "V.LWI"
+    ],
+    "simt_lw_lc0_32": [
+      "V.LW"
+    ],
+    "simt_lw_max_32": [
+      "V.LW.MAX"
+    ],
+    "simt_lw_min_32": [
+      "V.LW.MIN"
+    ],
+    "simt_lw_or_32": [
+      "V.LW.OR"
+    ],
+    "simt_lw_ui_32": [
+      "V.LWI.U"
+    ],
+    "simt_lw_ui_lc0_32": [
+      "V.LWI.U"
+    ],
+    "simt_lw_xor_32": [
+      "V.LW.XOR"
+    ],
+    "simt_lwu_32": [
+      "V.LWU"
+    ],
+    "simt_lwu_i_32": [
+      "V.LWUI"
+    ],
+    "simt_lwu_i_lc0_32": [
+      "V.LWUI"
+    ],
+    "simt_lwu_lc0_32": [
+      "V.LWU"
+    ],
+    "simt_lwu_ui_32": [
+      "V.LWUI.U"
+    ],
+    "simt_lwu_ui_lc0_32": [
+      "V.LWUI.U"
+    ],
+    "simt_madd_32": [
+      "V.MADD"
+    ],
+    "simt_max_32": [
+      "V.MAX"
+    ],
+    "simt_min_32": [
+      "V.MIN"
+    ],
+    "simt_mul_32": [
+      "V.MUL"
+    ],
+    "simt_or_32": [
+      "V.OR"
+    ],
+    "simt_ori_32": [
+      "V.ORI"
+    ],
+    "simt_psel_32": [
+      "V.PSEL"
+    ],
+    "simt_rdadd_32": [
+      "V.RDADD"
+    ],
+    "simt_rdand_32": [
+      "V.RDAND"
+    ],
+    "simt_rdfadd_32": [
+      "V.RDFADD"
+    ],
+    "simt_rdfmax_32": [
+      "V.RDFMAX"
+    ],
+    "simt_rdfmin_32": [
+      "V.RDFMIN"
+    ],
+    "simt_rdmax_32": [
+      "V.RDMAX"
+    ],
+    "simt_rdmin_32": [
+      "V.RDMIN"
+    ],
+    "simt_rdor_32": [
+      "V.RDOR"
+    ],
+    "simt_rdxor_32": [
+      "V.RDXOR"
+    ],
+    "simt_rem_32": [
+      "V.REM"
+    ],
+    "simt_rev_32": [
+      "V.REV"
+    ],
+    "simt_sb_32": [
+      "V.SB"
+    ],
+    "simt_sb_i_32": [
+      "V.SBI"
+    ],
+    "simt_sb_i_lc0_32": [
+      "V.SBI"
+    ],
+    "simt_sb_lc0_32": [
+      "V.SB"
+    ],
+    "simt_sd_32": [
+      "V.SD"
+    ],
+    "simt_sd_add_32": [
+      "V.SD.ADD"
+    ],
+    "simt_sd_and_32": [
+      "V.SD.AND"
+    ],
+    "simt_sd_i_32": [
+      "V.SDI"
+    ],
+    "simt_sd_i_lc0_32": [
+      "V.SDI"
+    ],
+    "simt_sd_lc0_32": [
+      "V.SD"
+    ],
+    "simt_sd_max_32": [
+      "V.SD.MAX"
+    ],
+    "simt_sd_min_32": [
+      "V.SD.MIN"
+    ],
+    "simt_sd_or_32": [
+      "V.SD.OR"
+    ],
+    "simt_sd_u_32": [
+      "V.SD.U"
+    ],
+    "simt_sd_u_lc0_32": [
+      "V.SD.U"
+    ],
+    "simt_sd_ui_32": [
+      "V.SDI.U"
+    ],
+    "simt_sd_ui_lc0_32": [
+      "V.SDI.U"
+    ],
+    "simt_sd_xor_32": [
+      "V.SD.XOR"
+    ],
+    "simt_sh_32": [
+      "V.SH"
+    ],
+    "simt_sh_i_32": [
+      "V.SHI"
+    ],
+    "simt_sh_i_lc0_32": [
+      "V.SHI"
+    ],
+    "simt_sh_lc0_32": [
+      "V.SH"
+    ],
+    "simt_sh_u_32": [
+      "V.SH.U"
+    ],
+    "simt_sh_u_lc0_32": [
+      "V.SH.U"
+    ],
+    "simt_sh_ui_32": [
+      "V.SHI.U"
+    ],
+    "simt_sh_ui_lc0_32": [
+      "V.SHI.U"
+    ],
+    "simt_shfl_bfly_32": [
+      "V.SHFL.BFLY"
+    ],
+    "simt_shfl_down_32": [
+      "V.SHFL.DOWN"
+    ],
+    "simt_shfl_idx_32": [
+      "V.SHFL.IDX"
+    ],
+    "simt_shfl_up_32": [
+      "V.SHFL.UP"
+    ],
+    "simt_shfli_bfly_32": [
+      "V.SHFLI.BFLY"
+    ],
+    "simt_shfli_down_32": [
+      "V.SHFLI.DOWN"
+    ],
+    "simt_shfli_idx_32": [
+      "V.SHFLI.IDX"
+    ],
+    "simt_shfli_up_32": [
+      "V.SHFLI.UP"
+    ],
+    "simt_sll_32": [
+      "V.SLL"
+    ],
+    "simt_slli_32": [
+      "V.SLLI"
+    ],
+    "simt_sra_32": [
+      "V.SRA"
+    ],
+    "simt_srai_32": [
+      "V.SRAI"
+    ],
+    "simt_srl_32": [
+      "V.SRL"
+    ],
+    "simt_srli_32": [
+      "V.SRLI"
+    ],
+    "simt_sub_32": [
+      "V.SUB"
+    ],
+    "simt_subi_32": [
+      "V.SUBI"
+    ],
+    "simt_sw_32": [
+      "V.SW"
+    ],
+    "simt_sw_add_32": [
+      "V.SW.ADD"
+    ],
+    "simt_sw_and_32": [
+      "V.SW.AND"
+    ],
+    "simt_sw_i_32": [
+      "V.SWI"
+    ],
+    "simt_sw_i_lc0_32": [
+      "V.SWI"
+    ],
+    "simt_sw_lc0_32": [
+      "V.SW"
+    ],
+    "simt_sw_max_32": [
+      "V.SW.MAX"
+    ],
+    "simt_sw_min_32": [
+      "V.SW.MIN"
+    ],
+    "simt_sw_or_32": [
+      "V.SW.OR"
+    ],
+    "simt_sw_u_32": [
+      "V.SW.U"
+    ],
+    "simt_sw_u_lc0_32": [
+      "V.SW.U"
+    ],
+    "simt_sw_ui_32": [
+      "V.SWI.U"
+    ],
+    "simt_sw_ui_lc0_32": [
+      "V.SWI.U"
+    ],
+    "simt_sw_xor_32": [
+      "V.SW.XOR"
+    ],
+    "simt_xor_32": [
+      "V.XOR"
+    ],
+    "simt_xori_32": [
+      "V.XORI"
     ]
   },
-  "missing_by_prefix": {
-    "B": 2,
-    "C": 1,
-    "V": 90,
-    "XB": 1
-  },
-  "missing_count": 94,
+  "missing_by_prefix": {},
+  "missing_count": 0,
   "missing_forms_by_prefix": {
-    "B": 10,
-    "BSTART": 14,
-    "C": 2,
-    "DC": 2,
-    "HL": 5,
-    "LR": 2,
-    "V": 92,
-    "XB": 1
+    "B": 5,
+    "BSTART": 33,
+    "C": 9,
+    "FABS": 1,
+    "FEXP": 1,
+    "FRECIP": 1,
+    "FSQRT": 1,
+    "HL": 130,
+    "JR": 1,
+    "LB": 1,
+    "LBU": 1,
+    "LD": 1,
+    "LH": 1,
+    "LHU": 1,
+    "LR": 4,
+    "LW": 1,
+    "LWU": 1,
+    "PRF": 1,
+    "PRFI": 1,
+    "SB": 1,
+    "SD": 1,
+    "SH": 1,
+    "SW": 1,
+    "V": 88
   },
   "missing_spec_forms": [
-    "B.ARG [len=32 mask=0xffffffff match=0x1800a4a3]",
-    "B.ARG [len=32 mask=0xffffffff match=0x180221a3]",
-    "B.ARG [len=32 mask=0xffffffff match=0x18022423]",
-    "B.ARG [len=32 mask=0xffffffff match=0x20fae23]",
-    "B.ARG [len=32 mask=0xffffffff match=0xfa023]",
     "B.CATR [len=32 mask=0x7fff match=0x23]",
     "B.DATR [len=32 mask=0x707f match=0x1023]",
-    "B.IOT [len=32 mask=0x707f match=0x4013]",
+    "B.IOD [len=32 mask=0x600707f match=0x1013]",
     "B.IOT [len=32 mask=0x803f707f match=0x5013]",
     "B.IOT [len=32 mask=0xc03fffff match=0x6013]",
     "BSTART CALL [len=32 mask=0xf83f000f match=0x50160002]",
     "BSTART [len=32 mask=0x7f match=0x11]",
     "BSTART [len=32 mask=0x7f match=0x21]",
     "BSTART.ACCCVT [len=32 mask=0x7ffffff match=0x831181]",
+    "BSTART.CUBE [len=32 mask=0x60fffff match=0x31181]",
+    "BSTART.FIXP [len=32 mask=0x60fffff match=0x39181]",
+    "BSTART.FP [len=32 mask=0x7fff match=0x1101]",
+    "BSTART.FP [len=32 mask=0x7fff match=0x2101]",
+    "BSTART.FP [len=32 mask=0x7fff match=0x3101]",
+    "BSTART.FP [len=32 mask=0x7fff match=0x4101]",
+    "BSTART.FP [len=32 mask=0x7fff match=0x5101]",
+    "BSTART.FP [len=32 mask=0x7fff match=0x6101]",
+    "BSTART.FP [len=32 mask=0x7fff match=0x7101]",
     "BSTART.MPAR [len=32 mask=0xf9ffffff match=0x1181]",
     "BSTART.MSEQ [len=32 mask=0xf9ffffff match=0x9181]",
+    "BSTART.PAR [len=32 mask=0x6007fff match=0x2001181]",
     "BSTART.STD [len=32 mask=0x7fff match=0x1001]",
+    "BSTART.STD [len=32 mask=0x7fff match=0x2001]",
+    "BSTART.STD [len=32 mask=0x7fff match=0x3001]",
+    "BSTART.STD [len=32 mask=0x7fff match=0x4001]",
+    "BSTART.STD [len=32 mask=0x7fff match=0x5001]",
+    "BSTART.STD [len=32 mask=0x7fff match=0x6001]",
+    "BSTART.STD [len=32 mask=0x7fff match=0x7001]",
+    "BSTART.SYS [len=32 mask=0x7fff match=0x1081]",
+    "BSTART.TEPL [len=32 mask=0x6007fff match=0x2001181]",
     "BSTART.TLOAD [len=32 mask=0x7ffffff match=0x11181]",
+    "BSTART.TMA [len=32 mask=0x60fffff match=0x11181]",
     "BSTART.TMATMUL [len=32 mask=0x7ffffff match=0x31181]",
     "BSTART.TMATMUL.ACC [len=32 mask=0x7ffffff match=0x231181]",
     "BSTART.TMOV [len=32 mask=0x7ffffff match=0x211181]",
     "BSTART.TSTORE [len=32 mask=0x7ffffff match=0x111181]",
     "BSTART.VPAR [len=32 mask=0xf9ffffff match=0x21181]",
     "BSTART.VSEQ [len=32 mask=0xf9ffffff match=0x29181]",
+    "C.BSTART [len=16 mask=0xf match=0x2]",
+    "C.BSTART [len=16 mask=0xf match=0x4]",
+    "C.BSTART.FP [len=16 mask=0xc7ff match=0x80]",
+    "C.BSTART.MPAR [len=16 mask=0xffff match=0x8c0]",
+    "C.BSTART.MSEQ [len=16 mask=0xffff match=0x48c0]",
     "C.BSTART.STD [len=16 mask=0xc7ff match=0x0]",
-    "C.SETRET [len=16 mask=0xf83f match=0x5016]",
-    "DC.ISW [len=32 mask=0xfff07fff match=0x40602b]",
-    "DC.ZVA [len=32 mask=0xfff07fff match=0x70602b]",
+    "C.BSTART.SYS [len=16 mask=0xffff match=0x840]",
+    "C.BSTART.VPAR [len=16 mask=0xffff match=0x88c0]",
+    "C.BSTART.VSEQ [len=16 mask=0xffff match=0xc8c0]",
+    "FABS [len=32 mask=0xf9f0707f match=0x7b]",
+    "FEXP [len=32 mask=0xf9f0707f match=0x307b]",
+    "FRECIP [len=32 mask=0xf9f0707f match=0x207b]",
+    "FSQRT [len=32 mask=0xf9f0707f match=0x107b]",
     "HL.BSTART CALL [len=64 mask=0xfffff83f0000007f match=0x501600000011]",
+    "HL.BSTART.FP [len=64 mask=0xffff00007fff000f match=0x1101000e]",
+    "HL.BSTART.FP [len=64 mask=0xffff00007fff000f match=0x2101000e]",
+    "HL.BSTART.FP [len=64 mask=0xffff00007fff000f match=0x3101000e]",
+    "HL.BSTART.FP [len=64 mask=0xffff00007fff000f match=0x4101000e]",
+    "HL.BSTART.STD [len=64 mask=0xffff00007fff000f match=0x1001000e]",
+    "HL.BSTART.STD [len=64 mask=0xffff00007fff000f match=0x2001000e]",
+    "HL.BSTART.STD [len=64 mask=0xffff00007fff000f match=0x3001000e]",
     "HL.BSTART.STD [len=64 mask=0xffff00007fff000f match=0x4001000e]",
-    "HL.CCAT [len=64 mask=0xffff0000707f07ff match=0x105d000e]",
-    "HL.CCATW [len=64 mask=0xffff0000707f07ff match=0x205d000e]",
+    "HL.BSTART.SYS [len=64 mask=0xffff00007fff000f match=0x1081000e]",
+    "HL.LB.PO [len=64 mask=0xffff0000707f07ff match=0x9003e]",
+    "HL.LB.PR [len=64 mask=0xffff0000707f07ff match=0x9002e]",
+    "HL.LBI.PO [len=64 mask=0xffff0000707f003f match=0x19003e]",
+    "HL.LBI.PR [len=64 mask=0xffff0000707f003f match=0x19002e]",
+    "HL.LBIP [len=64 mask=0xffff0000707f003f match=0x19001e]",
+    "HL.LBP [len=64 mask=0xffff0000707f07ff match=0x9001e]",
+    "HL.LBU.PO [len=64 mask=0xffff0000707f07ff match=0x4009003e]",
+    "HL.LBU.PR [len=64 mask=0xffff0000707f07ff match=0x4009002e]",
+    "HL.LBUI.PO [len=64 mask=0xffff0000707f003f match=0x4019003e]",
+    "HL.LBUI.PR [len=64 mask=0xffff0000707f003f match=0x4019002e]",
+    "HL.LBUIP [len=64 mask=0xffff0000707f003f match=0x4019001e]",
+    "HL.LBUP [len=64 mask=0xffff0000707f07ff match=0x4009001e]",
+    "HL.LD.PO [len=64 mask=0xffff0000707f07ff match=0x3009003e]",
+    "HL.LD.PR [len=64 mask=0xffff0000707f07ff match=0x3009002e]",
+    "HL.LDI.PO [len=64 mask=0xffff0000707f003f match=0x3019003e]",
+    "HL.LDI.PR [len=64 mask=0xffff0000707f003f match=0x3019002e]",
+    "HL.LDI.UPO [len=64 mask=0xffff0000707f003f match=0x3029003e]",
+    "HL.LDI.UPR [len=64 mask=0xffff0000707f003f match=0x3029002e]",
+    "HL.LDIP [len=64 mask=0xffff0000707f003f match=0x3019001e]",
+    "HL.LDIP.U [len=64 mask=0xffff0000707f003f match=0x3029001e]",
+    "HL.LDP [len=64 mask=0xffff0000707f07ff match=0x3009001e]",
+    "HL.LH.PO [len=64 mask=0xffff0000707f07ff match=0x1009003e]",
+    "HL.LH.PR [len=64 mask=0xffff0000707f07ff match=0x1009002e]",
+    "HL.LHI.PO [len=64 mask=0xffff0000707f003f match=0x1019003e]",
+    "HL.LHI.PR [len=64 mask=0xffff0000707f003f match=0x1019002e]",
+    "HL.LHI.UPO [len=64 mask=0xffff0000707f003f match=0x1029003e]",
+    "HL.LHI.UPR [len=64 mask=0xffff0000707f003f match=0x1029002e]",
+    "HL.LHIP [len=64 mask=0xffff0000707f003f match=0x1019001e]",
+    "HL.LHIP.U [len=64 mask=0xffff0000707f003f match=0x1029001e]",
+    "HL.LHP [len=64 mask=0xffff0000707f07ff match=0x1009001e]",
+    "HL.LHU.PO [len=64 mask=0xffff0000707f07ff match=0x5009003e]",
+    "HL.LHU.PR [len=64 mask=0xffff0000707f07ff match=0x5009002e]",
+    "HL.LHUI.PO [len=64 mask=0xffff0000707f003f match=0x5019003e]",
+    "HL.LHUI.PR [len=64 mask=0xffff0000707f003f match=0x5019002e]",
+    "HL.LHUI.UPO [len=64 mask=0xffff0000707f003f match=0x5029003e]",
+    "HL.LHUI.UPR [len=64 mask=0xffff0000707f003f match=0x5029002e]",
+    "HL.LHUIP [len=64 mask=0xffff0000707f003f match=0x5019001e]",
+    "HL.LHUIP.U [len=64 mask=0xffff0000707f003f match=0x5029001e]",
+    "HL.LHUP [len=64 mask=0xffff0000707f07ff match=0x5009001e]",
+    "HL.LW.PO [len=64 mask=0xffff0000707f07ff match=0x2009003e]",
+    "HL.LW.PR [len=64 mask=0xffff0000707f07ff match=0x2009002e]",
+    "HL.LWI.PO [len=64 mask=0xffff0000707f003f match=0x2019003e]",
+    "HL.LWI.PR [len=64 mask=0xffff0000707f003f match=0x2019002e]",
+    "HL.LWI.UPO [len=64 mask=0xffff0000707f003f match=0x2029003e]",
+    "HL.LWI.UPR [len=64 mask=0xffff0000707f003f match=0x2029002e]",
+    "HL.LWIP [len=64 mask=0xffff0000707f003f match=0x2019001e]",
+    "HL.LWIP.U [len=64 mask=0xffff0000707f003f match=0x2029001e]",
+    "HL.LWP [len=64 mask=0xffff0000707f07ff match=0x2009001e]",
+    "HL.LWU.PO [len=64 mask=0xffff0000707f07ff match=0x6009003e]",
+    "HL.LWU.PR [len=64 mask=0xffff0000707f07ff match=0x6009002e]",
+    "HL.LWUI.PO [len=64 mask=0xffff0000707f003f match=0x6019003e]",
+    "HL.LWUI.PR [len=64 mask=0xffff0000707f003f match=0x6019002e]",
+    "HL.LWUI.UPO [len=64 mask=0xffff0000707f003f match=0x6029003e]",
+    "HL.LWUI.UPR [len=64 mask=0xffff0000707f003f match=0x6029002e]",
+    "HL.LWUIP [len=64 mask=0xffff0000707f003f match=0x6019001e]",
+    "HL.LWUIP.U [len=64 mask=0xffff0000707f003f match=0x6029001e]",
+    "HL.LWUP [len=64 mask=0xffff0000707f07ff match=0x6009001e]",
     "HL.PRF [len=64 mask=0xffff00007fff07ff match=0x7009000e]",
+    "HL.PRF.A [len=64 mask=0xffff0000707f07ff match=0x7009001e]",
+    "HL.PRFI.U [len=64 mask=0xffff00007fff003f match=0x7029000e]",
+    "HL.PRFI.UA [len=64 mask=0xffff0000707f003f match=0x7029001e]",
+    "HL.QPOP [len=64 mask=0xfffff800707f07ff match=0x207d000e]",
+    "HL.SB.PO [len=64 mask=0xffff00007fff07ff match=0x49003e]",
+    "HL.SB.PR [len=64 mask=0xffff00007fff07ff match=0x49002e]",
+    "HL.SBI [len=64 mask=0xffff0000707f003f match=0x59000e]",
+    "HL.SBI.PO [len=64 mask=0xffff0000707f003f match=0x59003e]",
+    "HL.SBI.PR [len=64 mask=0xffff0000707f003f match=0x59002e]",
+    "HL.SBIP [len=64 mask=0xffff0000707f003f match=0x59001e]",
+    "HL.SBP [len=64 mask=0xffff00007ffff83f match=0x49001e]",
+    "HL.SD.PO [len=64 mask=0xffff00007fff07ff match=0x3049003e]",
+    "HL.SD.PR [len=64 mask=0xffff00007fff07ff match=0x3049002e]",
+    "HL.SD.UPO [len=64 mask=0xffff00007fff07ff match=0x7049003e]",
+    "HL.SD.UPR [len=64 mask=0xffff00007fff07ff match=0x7049002e]",
+    "HL.SDI [len=64 mask=0xffff0000707f003f match=0x3059000e]",
+    "HL.SDI.PO [len=64 mask=0xffff0000707f003f match=0x3059003e]",
+    "HL.SDI.PR [len=64 mask=0xffff0000707f003f match=0x3059002e]",
+    "HL.SDI.U [len=64 mask=0xffff0000707f003f match=0x7059000e]",
+    "HL.SDI.UPO [len=64 mask=0xffff0000707f003f match=0x7059003e]",
+    "HL.SDI.UPR [len=64 mask=0xffff0000707f003f match=0x7059002e]",
+    "HL.SDIP [len=64 mask=0xffff0000707f003f match=0x3059001e]",
+    "HL.SDIP.U [len=64 mask=0xffff0000707f003f match=0x7059001e]",
+    "HL.SDP [len=64 mask=0xffff00007ffff83f match=0x3049001e]",
+    "HL.SDP.U [len=64 mask=0xffff00007ffff83f match=0x7049001e]",
+    "HL.SETC.ANDI [len=64 mask=0xffff0000707f000f match=0x2075000e]",
+    "HL.SETC.EQI [len=64 mask=0xffff0000707f000f match=0x75000e]",
+    "HL.SETC.GEI [len=64 mask=0xffff0000707f000f match=0x5075000e]",
+    "HL.SETC.GEUI [len=64 mask=0xffff0000707f000f match=0x7075000e]",
+    "HL.SETC.LTI [len=64 mask=0xffff0000707f000f match=0x4075000e]",
+    "HL.SETC.LTUI [len=64 mask=0xffff0000707f000f match=0x6075000e]",
+    "HL.SETC.NEI [len=64 mask=0xffff0000707f000f match=0x1075000e]",
+    "HL.SETC.ORI [len=64 mask=0xffff0000707f000f match=0x3075000e]",
+    "HL.SETRET [len=64 mask=0xffff00000fff000f match=0x507000e]",
+    "HL.SH.PO [len=64 mask=0xffff00007fff07ff match=0x1049003e]",
+    "HL.SH.PR [len=64 mask=0xffff00007fff07ff match=0x1049002e]",
+    "HL.SH.UPO [len=64 mask=0xffff00007fff07ff match=0x5049003e]",
+    "HL.SH.UPR [len=64 mask=0xffff00007fff07ff match=0x5049002e]",
+    "HL.SHI [len=64 mask=0xffff0000707f003f match=0x1059000e]",
+    "HL.SHI.PO [len=64 mask=0xffff0000707f003f match=0x1059003e]",
+    "HL.SHI.PR [len=64 mask=0xffff0000707f003f match=0x1059002e]",
+    "HL.SHI.U [len=64 mask=0xffff0000707f003f match=0x5059000e]",
+    "HL.SHI.UPO [len=64 mask=0xffff0000707f003f match=0x5059003e]",
+    "HL.SHI.UPR [len=64 mask=0xffff0000707f003f match=0x5059002e]",
+    "HL.SHIP [len=64 mask=0xffff0000707f003f match=0x1059001e]",
+    "HL.SHIP.U [len=64 mask=0xffff0000707f003f match=0x5059001e]",
+    "HL.SHP [len=64 mask=0xffff00007ffff83f match=0x1049001e]",
+    "HL.SHP.U [len=64 mask=0xffff00007ffff83f match=0x5049001e]",
+    "HL.SW.PO [len=64 mask=0xffff00007fff07ff match=0x2049003e]",
+    "HL.SW.PR [len=64 mask=0xffff00007fff07ff match=0x2049002e]",
+    "HL.SW.UPO [len=64 mask=0xffff00007fff07ff match=0x6049003e]",
+    "HL.SW.UPR [len=64 mask=0xffff00007fff07ff match=0x6049002e]",
+    "HL.SWI [len=64 mask=0xffff0000707f003f match=0x2059000e]",
+    "HL.SWI.PO [len=64 mask=0xffff0000707f003f match=0x2059003e]",
+    "HL.SWI.PR [len=64 mask=0xffff0000707f003f match=0x2059002e]",
+    "HL.SWI.U [len=64 mask=0xffff0000707f003f match=0x6059000e]",
+    "HL.SWI.UPO [len=64 mask=0xffff0000707f003f match=0x6059003e]",
+    "HL.SWI.UPR [len=64 mask=0xffff0000707f003f match=0x6059002e]",
+    "HL.SWIP [len=64 mask=0xffff0000707f003f match=0x2059001e]",
+    "HL.SWIP.U [len=64 mask=0xffff0000707f003f match=0x6059001e]",
+    "HL.SWP [len=64 mask=0xffff00007ffff83f match=0x2049001e]",
+    "HL.SWP.U [len=64 mask=0xffff00007ffff83f match=0x6049001e]",
+    "JR [len=32 mask=0x707f match=0x6027]",
+    "LB.PCR [len=32 mask=0x707f match=0x39]",
+    "LBU.PCR [len=32 mask=0x707f match=0x4039]",
+    "LD.PCR [len=32 mask=0x707f match=0x3039]",
+    "LH.PCR [len=32 mask=0x707f match=0x1039]",
+    "LHU.PCR [len=32 mask=0x707f match=0x5039]",
+    "LR.B [len=32 mask=0xf000707f match=0xb]",
     "LR.D [len=32 mask=0xf000707f match=0x3000000b]",
+    "LR.H [len=32 mask=0xf000707f match=0x1000000b]",
     "LR.W [len=32 mask=0xf000707f match=0x2000000b]",
+    "LW.PCR [len=32 mask=0x707f match=0x2039]",
+    "LWU.PCR [len=32 mask=0x707f match=0x6039]",
+    "PRF [len=32 mask=0x707f match=0x7009]",
+    "PRFI.U [len=32 mask=0x707f match=0x7029]",
+    "SB.PCR [len=32 mask=0x707f match=0x69]",
+    "SD.PCR [len=32 mask=0x707f match=0x3069]",
+    "SH.PCR [len=32 mask=0x707f match=0x1069]",
+    "SW.PCR [len=32 mask=0x707f match=0x2069]",
     "V.FABS [len=64 mask=0xfff0707ffff0707f match=0x7b0000007f]",
+    "V.FADD [len=64 mask=0xfe00707ffe00707f match=0x4b0000007f]",
+    "V.FCLASS [len=64 mask=0xfff0707ffff0707f match=0x707b0000007f]",
+    "V.FCVT [len=64 mask=0x600707ffff0707f match=0x6b0000007f]",
+    "V.FCVTI [len=64 mask=0x600707ffff0707f match=0x106b0000007f]",
+    "V.FDIV [len=64 mask=0xfe00707ffe00707f match=0x304b0000007f]",
+    "V.FEXP [len=64 mask=0xfff0707ffff0707f match=0x307b0000007f]",
+    "V.FMAX [len=64 mask=0xfe00707ffe00707f match=0x205b0000107f]",
+    "V.FMIN [len=64 mask=0xfe00707ffe00707f match=0x305b0000107f]",
+    "V.FMUL [len=64 mask=0xfe00707ffe00707f match=0x204b0000007f]",
+    "V.FRECIP [len=64 mask=0xfff0707ffff0707f match=0x207b0000007f]",
+    "V.FSQRT [len=64 mask=0xfff0707ffff0707f match=0x107b0000007f]",
+    "V.FSUB [len=64 mask=0xfe00707ffe00707f match=0x104b0000007f]",
+    "V.ICVT [len=64 mask=0x600707ffff0707f match=0x606b0000007f]",
+    "V.ICVTF [len=64 mask=0x600707ffff0707f match=0x706b0000007f]",
     "V.LB [len=64 mask=0x600707ffe00207f match=0x90000007f]",
+    "V.LB.BRG [len=64 mask=0x600707ffe00207f match=0x90000207f]",
     "V.LBI [len=64 mask=0x707f0000207f match=0x190000007f]",
     "V.LBI.BRG [len=64 mask=0x707f0000207f match=0x190000207f]",
     "V.LBU [len=64 mask=0x600707ffe00207f match=0x40090000007f]",
+    "V.LBU.BRG [len=64 mask=0x600707ffe00207f match=0x40090000207f]",
     "V.LBUI [len=64 mask=0x707f0000207f match=0x40190000007f]",
     "V.LBUI.BRG [len=64 mask=0x707f0000207f match=0x40190000207f]",
     "V.LD [len=64 mask=0x600707ffe00207f match=0x30090000007f]",
-    "V.LD.ADD [len=64 mask=0xf800707ffc00707f match=0xb0000207f]",
-    "V.LD.AND [len=64 mask=0xf800707ffc00707f match=0x100b0000207f]",
     "V.LD.BRG [len=64 mask=0x600707ffe00207f match=0x30090000207f]",
-    "V.LD.MAX [len=64 mask=0xf800707ffc00707f match=0x400b0000207f]",
-    "V.LD.MIN [len=64 mask=0xf800707ffc00707f match=0x500b0000207f]",
-    "V.LD.OR [len=64 mask=0xf800707ffc00707f match=0x200b0000207f]",
-    "V.LD.XOR [len=64 mask=0xf800707ffc00707f match=0x300b0000207f]",
     "V.LDI [len=64 mask=0x707f0000207f match=0x30190000007f]",
     "V.LDI.BRG [len=64 mask=0x707f0000207f match=0x30190000207f]",
     "V.LDI.U [len=64 mask=0x707f0000207f match=0x30290000007f]",
     "V.LDI.U.BRG [len=64 mask=0x707f0000207f match=0x30290000207f]",
     "V.LH [len=64 mask=0x600707ffe00207f match=0x10090000007f]",
+    "V.LH.BRG [len=64 mask=0x600707ffe00207f match=0x10090000207f]",
     "V.LHI [len=64 mask=0x707f0000207f match=0x10190000007f]",
     "V.LHI.BRG [len=64 mask=0x707f0000207f match=0x10190000207f]",
     "V.LHI.U [len=64 mask=0x707f0000207f match=0x10290000007f]",
     "V.LHI.U.BRG [len=64 mask=0x707f0000207f match=0x10290000207f]",
     "V.LHU [len=64 mask=0x600707ffe00207f match=0x50090000007f]",
+    "V.LHU.BRG [len=64 mask=0x600707ffe00207f match=0x50090000207f]",
     "V.LHUI [len=64 mask=0x707f0000207f match=0x50190000007f]",
     "V.LHUI.BRG [len=64 mask=0x707f0000207f match=0x50190000207f]",
     "V.LHUI.U [len=64 mask=0x707f0000207f match=0x50290000007f]",
     "V.LHUI.U.BRG [len=64 mask=0x707f0000207f match=0x50290000207f]",
-    "V.LW.ADD [len=64 mask=0xf800707ffc00707f match=0xb0000007f]",
-    "V.LW.AND [len=64 mask=0xf800707ffc00707f match=0x100b0000007f]",
-    "V.LW.MAX [len=64 mask=0xf800707ffc00707f match=0x400b0000007f]",
-    "V.LW.MIN [len=64 mask=0xf800707ffc00707f match=0x500b0000007f]",
-    "V.LW.OR [len=64 mask=0xf800707ffc00707f match=0x200b0000007f]",
-    "V.LW.XOR [len=64 mask=0xf800707ffc00707f match=0x300b0000007f]",
+    "V.LW [len=64 mask=0x600707ffe00207f match=0x20090000007f]",
+    "V.LW.BRG [len=64 mask=0x600707ffe00207f match=0x20090000207f]",
     "V.LWI [len=64 mask=0x707f0000207f match=0x20190000007f]",
     "V.LWI.BRG [len=64 mask=0x707f0000207f match=0x20190000207f]",
     "V.LWI.U [len=64 mask=0x707f0000207f match=0x20290000007f]",
@@ -2356,33 +2939,25 @@
     "V.LWUI.BRG [len=64 mask=0x707f0000207f match=0x60190000207f]",
     "V.LWUI.U [len=64 mask=0x707f0000207f match=0x60290000007f]",
     "V.LWUI.U.BRG [len=64 mask=0x707f0000207f match=0x60290000207f]",
-    "V.MUL [len=64 mask=0xfe00707ffe00707f match=0x470000007f]",
     "V.QPOP [len=64 mask=0xfff0707ffff0707f match=0x207d0000007f]",
     "V.QPUSH [len=64 mask=0xfe00707ffe00707f match=0x107d0000007f]",
     "V.SB [len=64 mask=0x6007fff0600207f match=0x490000007f]",
+    "V.SB.BRG [len=64 mask=0x6007fff0600207f match=0x490000207f]",
     "V.SBI [len=64 mask=0x707f0000207f match=0x590000007f]",
     "V.SBI.BRG [len=64 mask=0x707f0000207f match=0x590000207f]",
     "V.SD [len=64 mask=0x6007fff0600207f match=0x30490000007f]",
-    "V.SD.ADD [len=64 mask=0xfc007ffff8007fff match=0xb0000307f]",
-    "V.SD.AND [len=64 mask=0xfc007ffff8007fff match=0x100b0000307f]",
     "V.SD.BRG [len=64 mask=0x6007fff0600207f match=0x30490000207f]",
-    "V.SD.MAX [len=64 mask=0xfc007ffff8007fff match=0x400b0000307f]",
-    "V.SD.MIN [len=64 mask=0xfc007ffff8007fff match=0x500b0000307f]",
-    "V.SD.OR [len=64 mask=0xfc007ffff8007fff match=0x200b0000307f]",
     "V.SD.U [len=64 mask=0x6007fff0600207f match=0x70490000007f]",
     "V.SD.U.BRG [len=64 mask=0x6007fff0600207f match=0x70490000207f]",
-    "V.SD.XOR [len=64 mask=0xfc007ffff8007fff match=0x300b0000307f]",
     "V.SDI [len=64 mask=0x707f0000207f match=0x30590000007f]",
     "V.SDI.BRG [len=64 mask=0x707f0000207f match=0x30590000207f]",
     "V.SDI.U [len=64 mask=0x707f0000207f match=0x70590000007f]",
     "V.SDI.U.BRG [len=64 mask=0x707f0000207f match=0x70590000207f]",
     "V.SH [len=64 mask=0x6007fff0600207f match=0x10490000007f]",
+    "V.SH.BRG [len=64 mask=0x6007fff0600207f match=0x10490000207f]",
     "V.SH.U [len=64 mask=0x6007fff0600207f match=0x50490000007f]",
     "V.SH.U.BRG [len=64 mask=0x6007fff0600207f match=0x50490000207f]",
     "V.SHFL.BFLY [len=64 mask=0x7f0707f07f0707f match=0x201d0000007f]",
-    "V.SHFL.DOWN [len=64 mask=0x600707f0600707f match=0x101d0000007f]",
-    "V.SHFL.IDX [len=64 mask=0x600707f0600707f match=0x301d0000007f]",
-    "V.SHFL.UP [len=64 mask=0x600707f0600707f match=0x1d0000007f]",
     "V.SHFLI.BFLY [len=64 mask=0x1f0707f01f0707f match=0x602d0000007f]",
     "V.SHFLI.DOWN [len=64 mask=0x707f0000707f match=0x502d0000007f]",
     "V.SHFLI.IDX [len=64 mask=0x707f0000707f match=0x702d0000007f]",
@@ -2391,124 +2966,24 @@
     "V.SHI.BRG [len=64 mask=0x707f0000207f match=0x10590000207f]",
     "V.SHI.U [len=64 mask=0x707f0000207f match=0x50590000007f]",
     "V.SHI.U.BRG [len=64 mask=0x707f0000207f match=0x50590000207f]",
-    "V.SW.ADD [len=64 mask=0xfc007ffff8007fff match=0xb0000107f]",
-    "V.SW.AND [len=64 mask=0xfc007ffff8007fff match=0x100b0000107f]",
-    "V.SW.MAX [len=64 mask=0xfc007ffff8007fff match=0x400b0000107f]",
-    "V.SW.MIN [len=64 mask=0xfc007ffff8007fff match=0x500b0000107f]",
-    "V.SW.OR [len=64 mask=0xfc007ffff8007fff match=0x200b0000107f]",
+    "V.SW [len=64 mask=0x6007fff0600207f match=0x20490000007f]",
+    "V.SW.BRG [len=64 mask=0x6007fff0600207f match=0x20490000207f]",
     "V.SW.U [len=64 mask=0x6007fff0600207f match=0x60490000007f]",
     "V.SW.U.BRG [len=64 mask=0x6007fff0600207f match=0x60490000207f]",
-    "V.SW.XOR [len=64 mask=0xfc007ffff8007fff match=0x300b0000107f]",
     "V.SWI [len=64 mask=0x707f0000207f match=0x20590000007f]",
     "V.SWI.BRG [len=64 mask=0x707f0000207f match=0x20590000207f]",
     "V.SWI.U [len=64 mask=0x707f0000207f match=0x60590000007f]",
-    "V.SWI.U.BRG [len=64 mask=0x707f0000207f match=0x60590000207f]",
-    "XB [len=32 mask=0x7fff match=0x6f81]"
+    "V.SWI.U.BRG [len=64 mask=0x707f0000207f match=0x60590000207f]"
   ],
-  "missing_spec_mnemonics": [
-    "B.CATR",
-    "B.DATR",
-    "C.SETRET",
-    "V.LB",
-    "V.LBI",
-    "V.LBI.BRG",
-    "V.LBU",
-    "V.LBUI",
-    "V.LBUI.BRG",
-    "V.LD",
-    "V.LD.ADD",
-    "V.LD.AND",
-    "V.LD.BRG",
-    "V.LD.MAX",
-    "V.LD.MIN",
-    "V.LD.OR",
-    "V.LD.XOR",
-    "V.LDI",
-    "V.LDI.BRG",
-    "V.LDI.U",
-    "V.LDI.U.BRG",
-    "V.LH",
-    "V.LHI",
-    "V.LHI.BRG",
-    "V.LHI.U",
-    "V.LHI.U.BRG",
-    "V.LHU",
-    "V.LHUI",
-    "V.LHUI.BRG",
-    "V.LHUI.U",
-    "V.LHUI.U.BRG",
-    "V.LW.ADD",
-    "V.LW.AND",
-    "V.LW.MAX",
-    "V.LW.MIN",
-    "V.LW.OR",
-    "V.LW.XOR",
-    "V.LWI",
-    "V.LWI.BRG",
-    "V.LWI.U",
-    "V.LWI.U.BRG",
-    "V.LWU",
-    "V.LWU.BRG",
-    "V.LWUI",
-    "V.LWUI.BRG",
-    "V.LWUI.U",
-    "V.LWUI.U.BRG",
-    "V.QPOP",
-    "V.QPUSH",
-    "V.SB",
-    "V.SBI",
-    "V.SBI.BRG",
-    "V.SD",
-    "V.SD.ADD",
-    "V.SD.AND",
-    "V.SD.BRG",
-    "V.SD.MAX",
-    "V.SD.MIN",
-    "V.SD.OR",
-    "V.SD.U",
-    "V.SD.U.BRG",
-    "V.SD.XOR",
-    "V.SDI",
-    "V.SDI.BRG",
-    "V.SDI.U",
-    "V.SDI.U.BRG",
-    "V.SH",
-    "V.SH.U",
-    "V.SH.U.BRG",
-    "V.SHFL.BFLY",
-    "V.SHFL.DOWN",
-    "V.SHFL.IDX",
-    "V.SHFL.UP",
-    "V.SHFLI.BFLY",
-    "V.SHFLI.DOWN",
-    "V.SHFLI.IDX",
-    "V.SHFLI.UP",
-    "V.SHI",
-    "V.SHI.BRG",
-    "V.SHI.U",
-    "V.SHI.U.BRG",
-    "V.SW.ADD",
-    "V.SW.AND",
-    "V.SW.MAX",
-    "V.SW.MIN",
-    "V.SW.OR",
-    "V.SW.U",
-    "V.SW.U.BRG",
-    "V.SW.XOR",
-    "V.SWI",
-    "V.SWI.BRG",
-    "V.SWI.U",
-    "V.SWI.U.BRG",
-    "XB"
-  ],
-  "qemu_mapped_spec_forms": 612,
-  "qemu_mapped_spec_mnemonics": 616,
-  "qemu_meta_mnemonics": 640,
-  "qemu_meta_path": "/Users/zhoubot/linx-isa/emulator/qemu/target/linx/linx_opcode_meta_gen.h",
+  "missing_spec_mnemonics": [],
+  "qemu_mapped_spec_forms": 453,
+  "qemu_mapped_spec_mnemonics": 710,
+  "qemu_meta_mnemonics": 0,
+  "qemu_meta_path": ".",
   "qemu_root": "/Users/zhoubot/linx-isa/emulator/qemu",
   "qemu_source_kind": "decode",
-  "qemu_unique_forms": 640,
-  "qemu_unique_mnemonics": 640,
+  "qemu_unique_forms": 775,
+  "qemu_unique_mnemonics": 762,
   "reserved_form_count": 0,
   "reserved_mnemonic_count": 0,
   "result": {
@@ -2520,12 +2995,27 @@
   "spec_total_forms": 740,
   "spec_unique_mnemonics": 710,
   "unmapped_qemu_mnemonics": [
-    "b_arg_dn2nz",
-    "b_arg_dn2zn",
-    "b_arg_nd2zn",
-    "b_arg_norm",
-    "b_arg_nz2dn",
-    "b_attr",
-    "b_ioti"
+    "blk_dma_32",
+    "blk_invalid_32",
+    "blk_lbl_32",
+    "blk_lbul_32",
+    "blk_ldl_32",
+    "blk_lhl_32",
+    "blk_lhul_32",
+    "blk_lwl_32",
+    "blk_lwul_32",
+    "blk_memmove",
+    "blk_offset_cond",
+    "blk_offset_direct_call",
+    "blk_sbl_32",
+    "blk_sdl_32",
+    "blk_shl_32",
+    "blk_swl_32",
+    "l_casbp",
+    "l_casdp",
+    "l_cashp",
+    "l_caswp",
+    "simt_addli_32",
+    "simt_mov_32"
   ]
 }

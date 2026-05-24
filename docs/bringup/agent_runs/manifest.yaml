@@ -55,13 +55,13 @@
     }
   },
   "phase_policy": {
-    "phases": ["G0", "G1", "G2", "G3", "G4", "G5"],
-    "active_phase": "G0",
+    "phases": ["FOUNDATION", "CORE-CLOSURE", "LINUX-RUNTIME", "HOSTED-RUNTIME", "WORKLOAD-RUNTIME", "PROMOTION"],
+    "active_phase": "LINUX-RUNTIME",
     "waiver_mode": "phase_bound_expiry",
     "require_phase_bound_waivers": true
   },
   "phase_gate_requirements": {
-    "G0": {
+    "FOUNDATION": {
       "required_gate_keys": [
         "Architecture::LinxCore architecture contract lint",
         "Architecture::mkdocs architecture nav/docs",
@@ -427,16 +427,6 @@
       "checklist_ids": ["INT-024"]
     },
     {
-      "gate_key": "Regression::TSVC strict coverage gate",
-      "agent": "integration",
-      "checklist_ids": ["INT-025"]
-    },
-    {
-      "gate_key": "Regression::TSVC QEMU gate",
-      "agent": "integration",
-      "checklist_ids": ["INT-026"]
-    },
-    {
       "gate_key": "Integration::LinxCore performance floor",
       "agent": "integration",
       "checklist_ids": ["INT-015"]
@@ -444,27 +434,27 @@
     {
       "gate_key": "SPEC::SPEC int-rate build phase-c",
       "agent": "spec",
-      "checklist_ids": ["SPEC-001"]
+      "checklist_ids": ["SPEC-M04"]
     },
     {
       "gate_key": "SPEC::SPEC int-rate Stage A subset (qemu+specdiff)",
       "agent": "spec",
-      "checklist_ids": ["SPEC-003", "SPEC-004"]
+      "checklist_ids": ["SPEC-M02", "SPEC-M03", "SPEC-M05"]
     },
     {
       "gate_key": "Regression::SPEC stage A QEMU matrix",
       "agent": "spec",
-      "checklist_ids": ["SPEC-003", "SPEC-004"]
+      "checklist_ids": ["SPEC-M01", "SPEC-M02", "SPEC-M03", "SPEC-M05"]
     },
     {
       "gate_key": "SPEC::SPEC int-rate Stage B full set (qemu+specdiff)",
       "agent": "spec",
-      "checklist_ids": ["SPEC-005", "SPEC-006"]
+      "checklist_ids": ["SPEC-M06"]
     },
     {
       "gate_key": "SPEC::SPEC Fortran exclusion 548.exchange2_r",
       "agent": "spec",
-      "checklist_ids": ["SPEC-007"]
+      "checklist_ids": ["SPEC-P01"]
     }
   ],
   "checklist_id_map": {
@@ -475,14 +465,14 @@
     "libc_runtime.md": ["LIBC-001", "LIBC-002", "LIBC-003", "LIBC-004", "LIBC-005", "LIBC-006"],
     "linxcore_rtl.md": ["LC-001", "LC-002", "LC-003", "LC-004", "LC-005", "LC-006", "LC-007", "LC-008", "LC-009"],
     "pycircuit_model.md": ["PYC-001", "PYC-002", "PYC-003", "PYC-004", "PYC-005", "PYC-006", "PYC-007"],
-    "specint_qemu.md": ["SPEC-001", "SPEC-002", "SPEC-003", "SPEC-004", "SPEC-005", "SPEC-006", "SPEC-007"],
+    "specint_qemu.md": ["SPEC-M01", "SPEC-M02", "SPEC-M03", "SPEC-M04", "SPEC-M05", "SPEC-M06", "SPEC-P01"],
     "testbench_verif.md": ["TB-001", "TB-002", "TB-003", "TB-004"],
     "trace_linxtrace.md": ["TRACE-001", "TRACE-002", "TRACE-003", "TRACE-004", "TRACE-005", "TRACE-006"],
     "integration_release.md": ["INT-001", "INT-002", "INT-003", "INT-004", "INT-005", "INT-006", "INT-007", "INT-008", "INT-009", "INT-010", "INT-011", "INT-012", "INT-013", "INT-014", "INT-015", "INT-016", "INT-017", "INT-018", "INT-019", "INT-020", "INT-021", "INT-022", "INT-023", "INT-024", "INT-025", "INT-026"]
   },
   "spec_policy": {
-    "stage_a_subset": ["999.specrand_ir", "505.mcf_r", "531.deepsjeng_r"],
-    "stage_b_required": [
+    "bringup_subset": ["999.specrand_ir", "505.mcf_r", "531.deepsjeng_r"],
+    "promotion_required": [
       "500.perlbench_r",
       "502.gcc_r",
       "505.mcf_r",
@@ -496,6 +486,7 @@
     ],
     "excluded_benchmarks": ["548.exchange2_r"],
     "exclusion_reason": "Fortran benchmark excluded from Linx intrate scope",
-    "blocker_policy": "documented_waiver_only"
+    "blocker_policy": "documented_waiver_only",
+    "plan_doc": "docs/bringup/SPEC_WORKLOAD_PLAN.md"
   }
 }

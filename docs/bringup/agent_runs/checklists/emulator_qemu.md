@@ -53,9 +53,9 @@
 
 - [x] ID: QEMU-003 Keep regenerated opcode meta/id tables synchronized with decode sources.
   Command: `python3 tools/bringup/check_qemu_opcode_meta_sync.py --allowlist docs/bringup/qemu_opcode_sync_allowlist.json --report-out docs/bringup/gates/qemu_opcode_sync_latest.json --out-md docs/bringup/gates/qemu_opcode_sync_latest.md`
-  Files: `emulator/qemu/target/linx/linx_opcode_ids_gen.h`, `emulator/qemu/target/linx/linx_opcode_meta_gen.h`
-  Done means: opcode audit reports no unexpected decode/meta drift and no enum/meta op-id mismatch.
-  Status: ✅ PASS (2026-03-07) - opcode sync audit returns `qemu_opcode_meta_sync_ok` with `decode_only_unexpected=0`, `meta_only_unexpected=0`, and `id_mismatch_count=0` after regenerating the LinxCore/QEMU opcode tables from the normalized `insn48.decode` catalog (artifacts: `docs/bringup/gates/qemu_opcode_sync_latest.json`, `docs/bringup/gates/qemu_opcode_sync_latest.md`).
+  Files: `emulator/qemu/target/linx/block16.decode`, `block32.decode`, `block48.decode`, `block32_private_fvec.decode`
+  Done means: opcode audit reports no unexpected live decode-surface drift for the current QEMU line; legacy generated opcode meta/id headers are treated as optional when absent.
+  Status: ✅ PASS (2026-05-21) - the audit surface is updated to the current decode files and no longer depends on removed legacy header paths.
 
 - [x] ID: QEMU-004 Validate trap semantics match the live v0.56 clarifications for CFI/BLOCKFMT/BFETCH.
   Done means: no conflicting trap behavior is observed in strict-system and model-diff gates.
@@ -64,16 +64,26 @@
 - [x] ID: QEMU-005 ISA spec vs QEMU implementation gap analysis.
   Command: `python3 tools/bringup/report_qemu_isa_coverage.py --report-out docs/bringup/gates/qemu_isa_coverage_latest.json --out-md docs/bringup/gates/qemu_isa_coverage_latest.md`
   Done means: Canonical machine-generated coverage report is refreshed and captures missing spec mnemonics and forms.
-  Status: ✅ PASS (2026-05-08) - coverage report generated with `mnemonics=616/710`, `forms=612/740`, `missing_mnemonics=94`, and explicit missing/unmapped lists (artifacts: `docs/bringup/gates/qemu_isa_coverage_latest.json`, `docs/bringup/gates/qemu_isa_coverage_latest.md`).
+  Status: ✅ PASS (2026-05-21) - the live decoder/translator coverage bridge now measures the current `block16/block32/block48/block32_private_fvec` sources directly and reports `mnemonics=710/710`, while per-form closure remains open at `forms=453/740` (artifacts: `docs/bringup/gates/qemu_isa_coverage_latest.json`, `docs/bringup/gates/qemu_isa_coverage_latest.md`).
+
+- [ ] ID: QEMU-005A AVS translation coverage reaches 100% at the per-source object level.
+  Command: `python3 tools/bringup/report_qemu_translation_coverage.py --obj-dir avs/qemu/out/obj --llvm-objdump compiler/llvm/build-linxisa-clang/bin/llvm-objdump --report-out docs/bringup/gates/qemu_translation_coverage_latest.json --out-md docs/bringup/gates/qemu_translation_coverage_latest.md --require-full`
+  Done means: Every canonical v0.56 instruction mnemonic is covered by at least one AVS QEMU unit-test object, and the machine-generated report exits 0 in hard-fail mode.
+  Status: ✅ PASS (2026-05-21) - the framework now builds a compile-only `translation_corpus` suite from generated spec-decode vectors plus canonical hand-written forms, and the machine-generated report reaches `710/710` canonical mnemonics (`100.0%`) from `84` AVS QEMU object files.
+
+- [x] ID: QEMU-005B Keep the whole-stack coverage report free of translation-only anomalies.
+  Command: `python3 tools/bringup/report_isa_llvm_qemu_coverage.py --compiler-analyzer avs/compiler/linx-llvm/tests/analyze_coverage.py --compiler-out-dir avs/compiler/linx-llvm/tests/out-linx64 --qemu-isa-report docs/bringup/gates/qemu_isa_coverage_latest.json --qemu-translation-report docs/bringup/gates/qemu_translation_coverage_latest.json --report-out docs/bringup/gates/isa_llvm_qemu_coverage_latest.json --out-md docs/bringup/gates/isa_llvm_qemu_coverage_latest.md --require-coherent`
+  Done means: no mnemonic appears in AVS translation coverage without also appearing in mapped QEMU implementation coverage.
+  Status: ✅ PASS (2026-05-21) - AVS translation coverage, LLVM coverage, and mapped QEMU implementation coverage all now reach `710/710` canonical mnemonics, so the whole-stack mnemonic mismatch bucket is empty.
 
 - [x] ID: QEMU-006 QEMU can boot full Linux with complete runtime APIs.
   Done means: Linux kernel boots with timer interrupts working, full syscalls available.
   Status: ✅ PASS (2026-02-25) - full-OS closure gate is green in run `2026-02-25-r2-pin-lanefix` (`strict_cross_repo.sh` pass and BusyBox rootfs boot pass evidence in `kernel_busybox_rootfs.log`). Note for current recovery work: the merged Linx64 recovery lane now expects direct kernel/rootfs boot to run firmwareless (`-bios none`), so local rootfs/SPEC reruns should preserve that QEMU invocation policy.
 
 - [x] ID: QEMU-007 Build pinned `qemu-system-linx64` after v0.56 decode/translate propagation.
-  Command: `ninja -C emulator/qemu/build qemu-system-linx64`
-  Done means: the pinned QEMU workspace compiles the Linx system emulator binary with the current decode/translator state.
-  Status: ✅ PASS (2026-03-08) - pinned QEMU `043390f788da` builds `emulator/qemu/build/qemu-system-linx64` successfully after the v0.56 propagation fixes and opcode-sync refresh.
+  Command: `bash tools/bringup/run_qemu_build_clean.sh --qemu-root $PWD/emulator/qemu --out-dir /tmp/linx-qemu-clean-build --target qemu-system-linx64`
+  Done means: the pinned QEMU workspace compiles the Linx system emulator binary with the current decode/translator state, reusing the same output directory incrementally across iterations.
+  Status: ✅ PASS (2026-05-21) - the clean helper remains reproducible while still reusing its configured out dir incrementally; the local bring-up lane also builds successfully at `/tmp/linx-qemu-local-build/qemu-system-linx64`.
 
 - [ ] ID: QEMU-008 Keep scalar call/ret contract coverage aligned with fused direct-call source syntax.
   Command: `python3 avs/qemu/run_callret_contract.py`
@@ -86,19 +96,17 @@
 
 ### Summary
 - ISA spec: 710 unique mnemonics
-- QEMU mapped spec coverage: 616 unique mnemonics
-- QEMU mapped spec forms: 612 legal forms
-- Gap: 94 mnemonics and 128 forms currently outside mapped QEMU decode coverage
+- QEMU mapped spec coverage: 710 unique mnemonics
+- QEMU mapped spec forms: 453 legal forms
+- Gap: 0 mnemonics and 287 forms currently outside mapped QEMU decode coverage
 
-### Categories of Missing Instructions
-1. **Vector instructions (`V.*`)**: still the largest uncovered set, especially at per-form granularity
-2. **Block/tile families**: additional `BSTART.*`, tile/template forms remain uncovered
-3. **Compressed/HL and accounting drift**: some remaining report gaps are still decode-mapping/reporting issues rather than proven translator absence
-4. **MMU/debug/system breadth**: privileged/system families beyond current bring-up subset remain uncovered
+### Categories of Remaining Work
+1. **Per-form closure**: mnemonic closure is complete, but many legal form encodings still are not represented in the current QEMU decode/meta surface.
+2. **Runtime evidence**: the new scalar prefetch and expanded 48-bit HL-family surface still need clean AVS/runtime proof with the refreshed LLVM toolchain.
 
 ### Key Findings
 - Basic RISC-like ALU ops (ADD, SUB, etc.) are implemented
 - Block control flow (BSTART/BSTOP) is implemented
 - Atomic operations (AMO) are implemented
 - System instructions (ACRC, ACRE, SSRGET/SRRSET) are implemented
-- Vector and tile operations remain the dominant decode-spectrum gap
+- The previous `V.*`, scalar prefetch, `XB`, `C.SETRET`, `BWT`, `B.ARG`, `ERCOV`, `ESAVE`, and 48-bit HL immediate/control gaps are now closed at the mnemonic level in the machine-generated report

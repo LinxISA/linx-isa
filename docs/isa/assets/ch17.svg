@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 80">
+  <rect width="120" height="80" rx="6" fill="#6366f1"/>
+  <text x="60" y="28" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="11" fill="white">Ch 17</text>
+  <text x="60" y="44" text-anchor="middle" font-family="Arial" font-size="9" fill="#e0e7ff">CMD</text>
+  <text x="60" y="56" text-anchor="middle" font-family="Arial" font-size="8" fill="#c7d2fe">B.CATR/DATR</text>
+  <rect x="10" y="64" width="100" height="1" fill="#c7d2fe" opacity="0.5"/>
+</svg>

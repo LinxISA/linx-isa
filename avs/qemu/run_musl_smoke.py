@@ -81,6 +81,9 @@ def _default_clangxx(clang: Path) -> Path:
 
 
 def _default_qemu() -> Path:
+    env = os.environ.get("QEMU")
+    if env:
+        return Path(os.path.expanduser(env))
     cands = [
         REPO_ROOT / "emulator" / "qemu" / "build" / "qemu-system-linx64",
         Path("qemu-system-linx64"),
@@ -848,6 +851,8 @@ def main(argv: list[str]) -> int:
                 str(initramfs),
                 "-append",
                 args.append,
+                "-bios",
+                "none",
             ]
 
             text = ""

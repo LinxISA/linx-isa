@@ -10,7 +10,7 @@ The exception status register (Exception State Register) saves the current excep
 
 The software can decide whether to save and restore the state in the block based on whether the BI bit is set.
 
-All other fields have the same definition as the [CSTATE](./ECSTATE.md) register.
+All other fields have the same definition as the [CSTATE](../common/CSTATE.md) register.
 
 ## Address space
 

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200">
+  <style>
+    .label { font-family: Arial, sans-serif; font-size: 12px; fill: #333; }
+    .title { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #1a1a1a; }
+    .note { font-family: Arial, sans-serif; font-size: 10px; fill: #666; }
+  </style>
+  <text x="400" y="20" text-anchor="middle" class="title">Continuous Group Memory Access</text>
+
+  <!-- Lane labels -->
+  <text x="60" y="60" class="label">Lane 0</text>
+  <text x="60" y="100" class="label">Lane 1</text>
+  <text x="60" y="140" class="label">Lane 2</text>
+  <text x="60" y="180" class="label">...</text>
+
+  <!-- EA(i) arrows -->
+  <polygon points="200,52 230,56 230,52 250,56 230,56 230,64" fill="#2563eb"/>
+  <polygon points="200,92 230,96 230,92 250,96 230,96 230,104" fill="#2563eb"/>
+  <polygon points="200,132 230,136 230,132 250,136 230,136 230,144" fill="#2563eb"/>
+
+  <!-- EA(i+1) arrows (shifted by E) -->
+  <polygon points="350,52 380,56 380,52 400,56 380,56 380,64" fill="#dc2626"/>
+  <polygon points="350,92 380,96 380,92 400,96 380,96 380,104" fill="#dc2626"/>
+  <polygon points="350,132 380,136 380,132 400,136 380,136 380,144" fill="#dc2626"/>
+
+  <!-- EA(i+2) arrows -->
+  <polygon points="500,52 530,56 530,52 550,56 530,56 530,64" fill="#059669"/>
+  <polygon points="500,92 530,96 530,92 550,96 530,96 530,104" fill="#059669"/>
+  <polygon points="500,132 530,136 530,132 550,136 530,136 530,144" fill="#059669"/>
+
+  <!-- E step bracket -->
+  <line x1="250" y1="190" x2="350" y2="190" stroke="#333" stroke-width="1"/>
+  <line x1="250" y1="185" x2="250" y2="195" stroke="#333" stroke-width="1"/>
+  <line x1="350" y1="185" x2="350" y2="195" stroke="#333" stroke-width="1"/>
+  <text x="300" y="185" text-anchor="middle" class="note">E (element size)</text>
+
+  <!-- Legend -->
+  <rect x="580" y="40" width="12" height="12" fill="#2563eb"/>
+  <text x="598" y="50" class="note">EA(i)</text>
+  <rect x="580" y="58" width="12" height="12" fill="#dc2626"/>
+  <text x="598" y="68" class="note">EA(i)+E</text>
+  <rect x="580" y="76" width="12" height="12" fill="#059669"/>
+  <text x="598" y="86" class="note">EA(i)+2E</text>
+</svg>

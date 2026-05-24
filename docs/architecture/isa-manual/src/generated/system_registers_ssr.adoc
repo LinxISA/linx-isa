@@ -66,6 +66,8 @@ Use `HL.SSRGET/HL.SSRSET` when the full `SSR_ID` does not fit in 12 bits.
 |`0xnf16` |`IOMAIR_ACR1` |RW |IOMMU memory attribute indirection register (ACR1).
 |`0xnf20` |`TIMER_TIME_ACRn` |RO |Timer register.
 |`0xnf21` |`TIMER_TIMECMP_ACRn` |RW |Timer compare register.
+|`0xnf30` |`XBINFO_ACRn` |RW |Cross-block info register. Provides the CAC_TABLE base address for the selected ACR in the v0.56 bring-up profile.
+|`0xnf31` |`ACR_PARAM_ACRn` |RW |ACR parameter register. Bring-up uses the low bits to advertise EBSTATE capacity and related context limits.
 |===
 
 [[ssr-ebarg]]
