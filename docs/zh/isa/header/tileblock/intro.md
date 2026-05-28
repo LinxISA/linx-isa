@@ -18,8 +18,8 @@ TMA类指令主要用于内存操作，包括数据的加载、存储、复制�
 | 0    | 3        | -                        | 保留 |
 | 0    | 4        | [MGATHER](./MGATHER.md)  | 将离散的内存空间的数据聚集到Tile寄存器中 |
 | 0    | 5        | [MSCATTER](./MSCATTER.md)| 将Tile寄存器中的数据存储到离散的内存空间 |
-| 0    | 6        | [MGATHER.MASK](./MGATHER.MASK.md)  | 带掩码的内存聚集，仅当 MaskTile 中对应标志位为 1 时才执行聚集 |
-| 0    | 7        | [MSCATTER.MASK](./MSCATTER.MASK.md) | 带掩码的内存分散，仅当 MaskTile 中对应标志位为 1 时才执行分散 |
+| 0    | 6        | [MGATHER.MASK](./MGATHER.MASK.md)  | 带掩码的内存聚集，仅当MaskTile中对应标志位为1时才执行聚集 |
+| 0    | 7        | [MSCATTER.MASK](./MSCATTER.MASK.md)| 带掩码的内存分散，仅当MaskTile中对应标志位为1时才执行分散 |
 | 0    | 8-31     | -                        | 保留 |
 
 ---

@@ -1185,9 +1185,7 @@ nav:
             - TSTORE: isa/header/tileblock/TSTORE.md
             - TMOV: isa/header/tileblock/TMOV.md
             - MGATHER: isa/header/tileblock/MGATHER.md
-            - MGATHER.MASK: isa/header/tileblock/MGATHER.MASK.md
             - MSCATTER: isa/header/tileblock/MSCATTER.md
-            - MSCATTER.MASK: isa/header/tileblock/MSCATTER.MASK.md
         - 复杂操作:
             - THISTOGRAM: isa/header/tileblock/THISTOGRAM.md
     - 模版指令集:
