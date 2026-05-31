@@ -1,6 +1,6 @@
 [submodule "compiler/llvm"]
 	path = compiler/llvm
-	url = https://github.com/LinxISA/llvm-project.git
+	url = git@github.com:touzicongbupianren/llvm-project.git
 	branch = main
 	update = checkout
 [submodule "kernel/linux"]
@@ -11,7 +11,7 @@
 	ignore = dirty
 [submodule "emulator/qemu"]
 	path = emulator/qemu
-	url = https://github.com/LinxISA/qemu.git
+	url = git@github.com:touzicongbupianren/qemu.git
 	branch = master
 	update = checkout
 [submodule "tools/pyCircuit"]
@@ -21,7 +21,7 @@
 	update = checkout
 [submodule "lib/glibc"]
 	path = lib/glibc
-	url = https://github.com/LinxISA/glibc.git
+	url = git@github.com:touzicongbupianren/glibc.git
 	branch = master
 	update = checkout
 [submodule "lib/musl"]
