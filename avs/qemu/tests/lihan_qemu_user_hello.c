@@ -9,24 +9,22 @@ enum {
 static __attribute__((always_inline)) inline slong
 linx_syscall3(long nr, ulong a0, ulong a1, ulong a2)
 {
-    slong ret;
+    register ulong r0 __asm__("a0") = a0;
+    register ulong r1 __asm__("a1") = a1;
+    register ulong r2 __asm__("a2") = a2;
+    register ulong r7 __asm__("a7") = (ulong)nr;
 
     __asm__ volatile(
         "c.bstop\n"
         "C.BSTART.SYS\n"
-        "c.movr %1, ->a0\n"
-        "c.movr %2, ->a1\n"
-        "c.movr %3, ->a2\n"
-        "c.movr %4, ->a7\n"
         "acrc 1\n"
         "c.bstop\n"
         "C.BSTART.STD\n"
-        "c.movr a0, ->%0\n"
-        : "=r"(ret)
-        : "r"(a0), "r"(a1), "r"(a2), "r"((ulong)nr)
-        : "a0", "a1", "a2", "a7", "memory");
+        : "+r"(r0)
+        : "r"(r1), "r"(r2), "r"(r7)
+        : "memory");
 
-    return ret;
+    return (slong)r0;
 }
 
 __attribute__((noreturn)) void _start(void)

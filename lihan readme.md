@@ -3062,3 +3062,60 @@ RUNPATH: /lib
 
 - 当前 x86 主机不能直接 `./tmp/.../lihan_cat_glibc_hello` 执行 Linx ELF，除非额外注册 `binfmt_misc`。
 - 因此这里提供的是 `./avs/qemu/tests/lihan_cat_glibc_autolink.sh` 这种验证入口：用户侧仍是 `./`，脚本内部负责调用 qemu-user。
+
+#### PR review cleanup：raw syscall smoke test inline asm 约束修复
+
+审查问题：
+
+- `avs/qemu/tests/lihan_qemu_user_hello.c` 原先在 inline asm 内部手动把输入操作数依次移动到 `a0`、`a1`、`a2`、`a7`。
+- 这些寄存器同时又出现在 clobber list 中，编译器可能把某个输入操作数分配到同一批目标寄存器，导致前面的 `c.movr` 覆盖后面的输入值。
+- GCC/Clang inline asm 也不应该把输入/输出寄存器同时作为 clobber 处理。
+
+修复方式：
+
+- 使用 local register variables 显式绑定 syscall ABI 寄存器：
+  `a0` 保存第一个参数和返回值，`a1`、`a2` 保存后续参数，`a7` 保存 syscall number。
+- asm 模板只保留 Linx syscall block 切换和 `acrc 1`，不再手写 `c.movr`。
+- clobber list 只保留 `memory`，避免与输入/输出约束冲突。
+
+验证方式：
+
+```bash
+compiler/llvm/build-linxisa-clang/bin/clang \
+  --target=linx64-unknown-linux-gnu \
+  -O2 -nostdlib -static -fuse-ld=lld -Wl,-e,_start \
+  -o /tmp/linx-lihan-qemu-user/lihan_qemu_user_hello \
+  avs/qemu/tests/lihan_qemu_user_hello.c
+
+emulator/qemu/build-user/qemu-linx \
+  /tmp/linx-lihan-qemu-user/lihan_qemu_user_hello
+```
+
+验证结果：
+
+```text
+Hello from Linx LLVM + qemu-usermode
+```
+
+同时复跑动态 glibc `printf` 主验证：
+
+```bash
+emulator/qemu/build-user/qemu-linx \
+  -L /home/touzi/linx-isa/out/libc/glibc/sysroot \
+  /tmp/linx-lihan-glibc-user/lihan_glibc_printf
+```
+
+结果：
+
+```text
+Hello from Linx glibc printf: value=42 status=ok
+```
+
+补充检查：
+
+```bash
+git diff --check
+bash tools/ci/check_repo_layout.sh
+```
+
+结果均通过。
