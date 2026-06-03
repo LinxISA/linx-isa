@@ -3038,7 +3038,8 @@ avs/qemu/tests/lihan_cat_glibc_autolink.sh
 
 脚本行为：
 
-- 用 `cat > /tmp/linx-lihan-cat-glibc/lihan_cat_glibc_hello.c` 生成一个简单 C 程序。
+- 默认用 `mktemp -d` 创建唯一临时构建目录，也可以通过 `BUILD_DIR=...` 指定输出目录。
+- 用 `cat > "$BUILD_DIR/lihan_cat_glibc_hello.c"` 生成一个简单 C 程序。
 - 使用 Linx LLVM clang driver 直接编译并动态链接 glibc，不再手写完整 `ld.lld` 命令。
 - 关键链接参数是 `--sysroot=out/libc/glibc/sysroot`、`-B out/libc/glibc/sysroot/usr/lib`、`-rtlib=libgcc`、`-unwindlib=none`、`-pie`、`--dynamic-linker=/lib/ld.so.1`。
 - 最后通过 `emulator/qemu/build-user/qemu-linx -L out/libc/glibc/sysroot` 运行生成的 Linx ELF。
@@ -3046,7 +3047,7 @@ avs/qemu/tests/lihan_cat_glibc_autolink.sh
 验证结果：
 
 ```text
-built: /tmp/linx-lihan-cat-glibc/lihan_cat_glibc_hello
+built: /tmp/linx-lihan-cat-glibc.XXXXXX/lihan_cat_glibc_hello
 Hello from cat-built Linx glibc: value=2026 status=ok
 ```
 

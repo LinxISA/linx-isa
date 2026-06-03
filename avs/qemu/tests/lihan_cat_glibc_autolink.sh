@@ -8,7 +8,11 @@ CLANG="$REPO_ROOT/compiler/llvm/build-linxisa-clang/bin/clang"
 QEMU="$REPO_ROOT/emulator/qemu/build-user/qemu-linx"
 SYSROOT="$REPO_ROOT/out/libc/glibc/sysroot"
 
-BUILD_DIR="${BUILD_DIR:-/tmp/linx-lihan-cat-glibc}"
+if [[ -z "${BUILD_DIR:-}" ]]; then
+  BUILD_DIR=$(mktemp -d -t linx-lihan-cat-glibc.XXXXXX)
+  trap 'rm -rf "$BUILD_DIR"' EXIT
+fi
+
 SRC="$BUILD_DIR/lihan_cat_glibc_hello.c"
 BIN="$BUILD_DIR/lihan_cat_glibc_hello"
 
