@@ -23,7 +23,7 @@ for r in 0..(Rv-1):           // 遍历所有行
 ## 汇编语法
 
 ```asm
-    TSQRT <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, SrcTile<.reuse>, ->DstTile<Size>
+TSQRT <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, SrcTile<.reuse>, ->DstTile<Size>
 ```
 
 ## 汇编符号
@@ -77,7 +77,7 @@ for r in 0..(Rv-1):           // 遍历所有行
 ## 汇编示例
 
 ```asm
-    TSQRT <LB0:30, LB1:16, LB2:32, u16>, U#1.reuse, ->T<1KB>
+TSQRT <LB0:30, LB1:16, LB2:32, u16>, U#1.reuse, ->T<1KB>
 ```
 
 1. **操作内容**  

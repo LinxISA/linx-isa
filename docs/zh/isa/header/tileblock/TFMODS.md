@@ -23,7 +23,7 @@ for r in 0..(Rv-1):           // 遍历所有行
 ## 汇编语法
 
 ```asm
-    TFMODS <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, SrcTile<.reuse>, [RegSrc], ->DstTile<Size>
+TFMODS <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, SrcTile<.reuse>, [RegSrc], ->DstTile<Size>
 ```
 
 ## 汇编符号
@@ -88,7 +88,7 @@ for r in 0..(Rv-1):           // 遍历所有行
 ## 汇编示例
 
 ```asm
-    TFMODS <LB0:16, LB1:32, fp16>, T#4.reuse, [a1], ->T<1KB>
+TFMODS <LB0:16, LB1:32, fp16>, T#4.reuse, [a1], ->T<1KB>
 ```
 
 1. **操作内容**  

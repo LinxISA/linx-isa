@@ -59,6 +59,7 @@ nav:
         - BPC: isa/register/common/bpc.md
         - GGPR: isa/register/common/ggpr.md
         - TILE: isa/register/common/tilereg.md
+        - PT: isa/register/common/PT.md
         - BARG: isa/register/common/barg.md
         - TPC: isa/register/common/tpc.md
         - SGPR: isa/register/common/sgpr.md
@@ -181,7 +182,6 @@ nav:
             - B.TEXT: isa/header/B.TEXT.md
             - B.IOR: isa/header/B.IOR.md
             - B.IOT: isa/header/B.IOT.md
-            - B.IOD: isa/header/B.IOD.md
             - B.DIM: isa/header/B.DIM.md
             - C.B.DIM: isa/header/C.B.DIM.md
             - BSTOP: isa/header/BSTOP.md
@@ -369,7 +369,7 @@ nav:
             - BIC: isa/inst/misa_g/BIC.md
             - BIS: isa/inst/misa_g/BIS.md
             - CTZ: isa/inst/misa_g/CTZ.md
-            - CLZ: isa/inst/misa_g/CLZ.md
+            - CLS: isa/inst/misa_g/CLS.md
             - BCNT: isa/inst/misa_g/BCNT.md
             - REV: isa/inst/misa_g/REV.md
             - HL.BFI: isa/inst/misa_h/HL.BFI.md
@@ -603,10 +603,10 @@ nav:
             - FNE: isa/inst/misa_f/FNE.md
             - FLT: isa/inst/misa_f/FLT.md
             - FGE: isa/inst/misa_f/FGE.md
-            - FEQS: isa/inst/misa_f/FEQS.md
-            - FNES: isa/inst/misa_f/FNES.md
-            - FLTS: isa/inst/misa_f/FLTS.md
-            - FGES: isa/inst/misa_f/FGES.md
+            - FEQU: isa/inst/misa_f/FEQU.md
+            - FNEU: isa/inst/misa_f/FNEU.md
+            - FLTU: isa/inst/misa_f/FLTU.md
+            - FGEU: isa/inst/misa_f/FGEU.md
         - 最大最小值:
             - 简介: isa/blockIntro/fp_block/max_min.md
             - MAX: isa/inst/misa_f/MAX.md
@@ -675,7 +675,7 @@ nav:
             - L.BIC: isa/inst/misa_l/L.BIC.md
             - L.BIS: isa/inst/misa_l/L.BIS.md
             - L.CTZ: isa/inst/misa_l/L.CTZ.md
-            - L.CLZ: isa/inst/misa_l/L.CLZ.md
+            - L.CLS: isa/inst/misa_l/L.CLS.md
             - L.BCNT: isa/inst/misa_l/L.BCNT.md
             - L.REV: isa/inst/misa_l/L.REV.md
         - 访存指令:
@@ -751,23 +751,32 @@ nav:
             - L.FEXP: isa/inst/misa_l/L.FEXP.md
             - L.FRECIP: isa/inst/misa_l/L.FRECIP.md
             - L.FCLASS: isa/inst/misa_l/L.FCLASS.md
+            - L.FLN: isa/inst/misa_l/L.FLN.md
+            - L.FRELU: isa/inst/misa_l/L.FRELU.md
+            - L.FLRELU: isa/inst/misa_l/L.FLRELU.md
         - 浮点比较类:
             - L.FEQ: isa/inst/misa_l/L.FEQ.md
             - L.FNE: isa/inst/misa_l/L.FNE.md
             - L.FLT: isa/inst/misa_l/L.FLT.md
             - L.FGE: isa/inst/misa_l/L.FGE.md
-            - L.FEQS: isa/inst/misa_l/L.FEQS.md
-            - L.FNES: isa/inst/misa_l/L.FNES.md
-            - L.FLTS: isa/inst/misa_l/L.FLTS.md
-            - L.FGES: isa/inst/misa_l/L.FGES.md
+            - L.FEQU: isa/inst/misa_l/L.FEQU.md
+            - L.FNEU: isa/inst/misa_l/L.FNEU.md
+            - L.FLTU: isa/inst/misa_l/L.FLTU.md
+            - L.FGEU: isa/inst/misa_l/L.FGEU.md
         - 最大最小值:
             - L.MAX: isa/inst/misa_l/L.MAX.md
             - L.MIN: isa/inst/misa_l/L.MIN.md
             - L.FMAX: isa/inst/misa_l/L.FMAX.md
             - L.FMIN: isa/inst/misa_l/L.FMIN.md
+        - 整数专用操作:
+            - L.ABS: isa/inst/misa_l/L.ABS.md
+            - L.ABSDIF: isa/inst/misa_l/L.ABSDIF.md
+            - L.RELU: isa/inst/misa_l/L.RELU.md
+            - L.LRELU: isa/inst/misa_l/L.LRELU.md
         - 格式转换类:
             - L.FCVT: isa/inst/misa_l/L.FCVT.md
             - L.FCVTI: isa/inst/misa_l/L.FCVTI.md
+            - L.FRINT: isa/inst/misa_l/L.FRINT.md
             - L.ICVT: isa/inst/misa_l/L.ICVT.md
             - L.ICVTF: isa/inst/misa_l/L.ICVTF.md
         - 队列管理:
@@ -925,7 +934,7 @@ nav:
             - V.BIC: isa/inst/misa_v/V.BIC.md
             - V.BIS: isa/inst/misa_v/V.BIS.md
             - V.CTZ: isa/inst/misa_v/V.CTZ.md
-            - V.CLZ: isa/inst/misa_v/V.CLZ.md
+            - V.CLS: isa/inst/misa_v/V.CLS.md
             - V.BCNT: isa/inst/misa_v/V.BCNT.md
             - V.REV: isa/inst/misa_v/V.REV.md
         - 普通访存指令:
@@ -963,41 +972,6 @@ nav:
             - V.SHI.U: isa/inst/misa_v/V.SHI.U.md
             - V.SWI.U: isa/inst/misa_v/V.SWI.U.md
             - V.SDI.U: isa/inst/misa_v/V.SDI.U.md
-        - 桥接访存指令:
-            - 简介: isa/blockIntro/vecinstrs/loadStoreBridge.md
-            - V.LB.BRG: isa/inst/misa_v/V.LB.BRG.md
-            - V.LH.BRG: isa/inst/misa_v/V.LH.BRG.md
-            - V.LW.BRG: isa/inst/misa_v/V.LW.BRG.md
-            - V.LD.BRG: isa/inst/misa_v/V.LD.BRG.md
-            - V.LBU.BRG: isa/inst/misa_v/V.LBU.BRG.md
-            - V.LHU.BRG: isa/inst/misa_v/V.LHU.BRG.md
-            - V.LWU.BRG: isa/inst/misa_v/V.LWU.BRG.md
-            - V.LBI.BRG: isa/inst/misa_v/V.LBI.BRG.md
-            - V.LHI.BRG: isa/inst/misa_v/V.LHI.BRG.md
-            - V.LWI.BRG: isa/inst/misa_v/V.LWI.BRG.md
-            - V.LDI.BRG: isa/inst/misa_v/V.LDI.BRG.md
-            - V.LBUI.BRG: isa/inst/misa_v/V.LBUI.BRG.md
-            - V.LHUI.BRG: isa/inst/misa_v/V.LHUI.BRG.md
-            - V.LWUI.BRG: isa/inst/misa_v/V.LWUI.BRG.md
-            - V.LHI.U.BRG: isa/inst/misa_v/V.LHI.UBRG.md
-            - V.LWI.U.BRG: isa/inst/misa_v/V.LWI.UBRG.md
-            - V.LDI.U.BRG: isa/inst/misa_v/V.LDI.UBRG.md
-            - V.LHUI.U.BRG: isa/inst/misa_v/V.LHUI.UBRG.md
-            - V.LWUI.U.BRG: isa/inst/misa_v/V.LWUI.UBRG.md
-            - V.SB.BRG: isa/inst/misa_v/V.SB.BRG.md
-            - V.SH.BRG: isa/inst/misa_v/V.SH.BRG.md
-            - V.SW.BRG: isa/inst/misa_v/V.SW.BRG.md
-            - V.SD.BRG: isa/inst/misa_v/V.SD.BRG.md
-            - V.SH.U.BRG: isa/inst/misa_v/V.SH.UBRG.md
-            - V.SW.U.BRG: isa/inst/misa_v/V.SW.UBRG.md
-            - V.SD.U.BRG: isa/inst/misa_v/V.SD.UBRG.md
-            - V.SBI.BRG: isa/inst/misa_v/V.SBI.BRG.md
-            - V.SHI.BRG: isa/inst/misa_v/V.SHI.BRG.md
-            - V.SWI.BRG: isa/inst/misa_v/V.SWI.BRG.md
-            - V.SDI.BRG: isa/inst/misa_v/V.SDI.BRG.md
-            - V.SHI.U.BRG: isa/inst/misa_v/V.SHI.UBRG.md
-            - V.SWI.U.BRG: isa/inst/misa_v/V.SWI.UBRG.md
-            - V.SDI.U.BRG: isa/inst/misa_v/V.SDI.UBRG.md
         - 原子操作:
             - 简介: isa/blockIntro/vecinstrs/atomic.md
             - V.LW.ADD: isa/inst/misa_v/V.LW.ADD.md
@@ -1039,26 +1013,35 @@ nav:
             - V.FEXP: isa/inst/misa_v/V.FEXP.md
             - V.FRECIP: isa/inst/misa_v/V.FRECIP.md
             - V.FCLASS: isa/inst/misa_v/V.FCLASS.md
+            - V.FLN: isa/inst/misa_v/V.FLN.md
+            - V.FRELU: isa/inst/misa_v/V.FRELU.md
+            - V.FLRELU: isa/inst/misa_v/V.FLRELU.md
         - 浮点比较类:
             - 简介: isa/blockIntro/vecinstrs/fp_compare.md
             - V.FEQ: isa/inst/misa_v/V.FEQ.md
             - V.FNE: isa/inst/misa_v/V.FNE.md
             - V.FLT: isa/inst/misa_v/V.FLT.md
             - V.FGE: isa/inst/misa_v/V.FGE.md
-            - V.FEQS: isa/inst/misa_v/V.FEQS.md
-            - V.FNES: isa/inst/misa_v/V.FNES.md
-            - V.FLTS: isa/inst/misa_v/V.FLTS.md
-            - V.FGES: isa/inst/misa_v/V.FGES.md
+            - V.FEQU: isa/inst/misa_v/V.FEQU.md
+            - V.FNEU: isa/inst/misa_v/V.FNEU.md
+            - V.FLTU: isa/inst/misa_v/V.FLTU.md
+            - V.FGEU: isa/inst/misa_v/V.FGEU.md
         - 最大最小值:
             - 简介: isa/blockIntro/vecinstrs/max_min.md
             - V.MAX: isa/inst/misa_v/V.MAX.md
             - V.MIN: isa/inst/misa_v/V.MIN.md
             - V.FMAX: isa/inst/misa_v/V.FMAX.md
             - V.FMIN: isa/inst/misa_v/V.FMIN.md
+        - 整数专用操作:
+            - V.ABS: isa/inst/misa_v/V.ABS.md
+            - V.ABSDIF: isa/inst/misa_v/V.ABSDIF.md
+            - V.RELU: isa/inst/misa_v/V.RELU.md
+            - V.LRELU: isa/inst/misa_v/V.LRELU.md
         - 格式转换类:
             - 简介: isa/blockIntro/vecinstrs/convert.md
             - V.FCVT: isa/inst/misa_v/V.FCVT.md
             - V.FCVTI: isa/inst/misa_v/V.FCVTI.md
+            - V.FRINT: isa/inst/misa_v/V.FRINT.md
             - V.ICVT: isa/inst/misa_v/V.ICVT.md
             - V.ICVTF: isa/inst/misa_v/V.ICVTF.md
         - 归约操作:
@@ -1119,6 +1102,7 @@ nav:
             - TSUBC: isa/header/tileblock/TSUBC.md
             - TSEL: isa/header/tileblock/TSEL.md
             - TCVT: isa/header/tileblock/TCVT.md
+            - TPOW: isa/header/tileblock/TPOW.md
         - 逐元素和标量操作:
             - TADDS: isa/header/tileblock/TADDS.md
             - TSUBS: isa/header/tileblock/TSUBS.md
@@ -1139,6 +1123,7 @@ nav:
             - TSUBSC: isa/header/tileblock/TSUBSC.md
             - TSELS: isa/header/tileblock/TSELS.md
             - TEXPANDS: isa/header/tileblock/TEXPANDS.md
+            - TPOWS: isa/header/tileblock/TPOWS.md
         - 按轴逐元素操作:
             - TROWSUM: isa/header/tileblock/TROWSUM.md
             - TROWMAX: isa/header/tileblock/TROWMAX.md
@@ -1152,6 +1137,8 @@ nav:
             - TROWEXPANDMAX: isa/header/tileblock/TROWEXPANDMAX.md
             - TROWEXPANDMIN: isa/header/tileblock/TROWEXPANDMIN.md
             - TROWEXPANDEXPDIF: isa/header/tileblock/TROWEXPANDEXPDIF.md
+            - TROWARGMAX: isa/header/tileblock/TROWARGMAX.md
+            - TROWARGMIN: isa/header/tileblock/TROWARGMIN.md
             - TCOLSUM: isa/header/tileblock/TCOLSUM.md
             - TCOLMAX: isa/header/tileblock/TCOLMAX.md
             - TCOLMIN: isa/header/tileblock/TCOLMIN.md
@@ -1164,6 +1151,8 @@ nav:
             - TCOLEXPANDMAX: isa/header/tileblock/TCOLEXPANDMAX.md
             - TCOLEXPANDMIN: isa/header/tileblock/TCOLEXPANDMIN.md
             - TCOLEXPANDEXPDIF: isa/header/tileblock/TCOLEXPANDEXPDIF.md
+            - TCOLARGMAX: isa/header/tileblock/TCOLARGMAX.md
+            - TCOLARGMIN: isa/header/tileblock/TCOLARGMIN.md
         - 矩阵乘操作:
             - TMATMUL: isa/header/tileblock/TMATMUL.md
             - TMATMUL.BIAS: isa/header/tileblock/TMATMUL.BIAS.md
@@ -1184,12 +1173,36 @@ nav:
             - TLOAD: isa/header/tileblock/TLOAD.md
             - TSTORE: isa/header/tileblock/TSTORE.md
             - TMOV: isa/header/tileblock/TMOV.md
+            - TPREFETCH: isa/header/tileblock/TPREFETCH.md
+            - TPREFETCH_ASYNC: isa/header/tileblock/TPREFETCH_ASYNC.md
             - MGATHER: isa/header/tileblock/MGATHER.md
-            - MGATHER.MASK: isa/header/tileblock/MGATHER.MASK.md
             - MSCATTER: isa/header/tileblock/MSCATTER.md
-            - MSCATTER.MASK: isa/header/tileblock/MSCATTER.MASK.md
+            - TTRANS: isa/header/tileblock/TTRANS.md
+            - TEXTRACT: isa/header/tileblock/TEXTRACT.md
+            - TIMG2COL: isa/header/tileblock/TIMG2COL.md
+            - TINSERT: isa/header/tileblock/TINSERT.md
+            - TFILLPAD: isa/header/tileblock/TFILLPAD.md
+            - TFILLPAD_EXPAND: isa/header/tileblock/TFILLPAD_EXPAND.md
+            - TRESHAPE: isa/header/tileblock/TRESHAPE.md
+            - TRESHAPE_MASK: isa/header/tileblock/TRESHAPE.MASK.md
+            - TCONCAT: isa/header/tileblock/TCONCAT.md
+            - TGATHER: isa/header/tileblock/TGATHER.md
+            - TGATHERB: isa/header/tileblock/TGATHERB.md
+            - TSCATTER: isa/header/tileblock/TSCATTER.md
         - 复杂操作:
             - THISTOGRAM: isa/header/tileblock/THISTOGRAM.md
+            - TCI: isa/header/tileblock/TCI.md
+            - TTRI: isa/header/tileblock/TTRI.md
+            - TRANDOM: isa/header/tileblock/TRANDOM.md
+            - TQUANT: isa/header/tileblock/TQUANT.md
+            - TSORT32: isa/header/tileblock/TSORT32.md
+            - TMRGSORT: isa/header/tileblock/TMRGSORT.md
+            - TPARTADD: isa/header/tileblock/TPARTADD.md
+            - TPARTMUL: isa/header/tileblock/TPARTMUL.md
+            - TPARTMAX: isa/header/tileblock/TPARTMAX.md
+            - TPARTMIN: isa/header/tileblock/TPARTMIN.md
+            - TPARTARGMAX: isa/header/tileblock/TPARTARGMAX.md
+            - TPARTARGMIN: isa/header/tileblock/TPARTARGMIN.md
     - 模版指令集:
         - 介绍: isa/header/templateblock/intro.md
         - MCOPY: isa/header/templateblock/MCOPY.md

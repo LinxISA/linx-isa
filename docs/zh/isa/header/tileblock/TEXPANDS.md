@@ -23,7 +23,7 @@ for r in 0..(Rv-1):           // 遍历所有行
 ## 汇编语法
 
 ```asm
-    TEXPANDS <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, [RegSrc], ->DstTile<Size>
+TEXPANDS <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, [RegSrc], ->DstTile<Size>
 ```
 
 ## 汇编符号
@@ -78,7 +78,7 @@ for r in 0..(Rv-1):           // 遍历所有行
 ## 汇编示例
 
 ```asm
-    TEXPANDS <LB0:12, LB1:32, LB2:16, fp32, Zero>, [a1], ->T<1KB>
+TEXPANDS <LB0:12, LB1:32, LB2:16, fp32, Zero>, [a1], ->T<1KB>
 ```
 
 1. **操作内容**  

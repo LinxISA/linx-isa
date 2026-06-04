@@ -17,10 +17,10 @@ The floating point comparison instruction compares two inputs based on the condi
 | V.FNE | `v.fne SrcL.{T}, SrcR.{T}, ->Dst.{W}` | Floating point inequality silent comparison | No |
 | V.FLT | `v.flt SrcL.{T}, SrcR.{T}, ->Dst.{W}` | Floating point less than silent comparison | No |
 | V.FGE | `v.fge SrcL.{T}, SrcR.{T}, ->Dst.{W}` | Floating point greater than or equal to silent comparison | No |
-| V.FEQS | `v.feqs SrcL.{T}, SrcR.{T}, ->Dst.{W}` | Floating point equality signal comparison | Yes |
-| V.FNES | `v.fnes SrcL.{T}, SrcR.{T}, ->Dst.{W}` | Floating point unequal signal comparison | Yes |
-| V.FLTS | `v.flts SrcL.{T}, SrcR.{T}, ->Dst.{W}` | Floating point less than signal comparison | Yes |
-| V.FGES | `v.fges SrcL.{T}, SrcR.{T}, ->Dst.{W}` | Floating point greater than or equal to signal comparison | Yes |
+| V.FEQU | `v.fequ SrcL.{T}, SrcR.{T}, ->Dst.{W}` | Floating point equality signal comparison | Yes |
+| V.FNEU | `v.fneu SrcL.{T}, SrcR.{T}, ->Dst.{W}` | Floating point unequal signal comparison | Yes |
+| V.FLTU | `v.fltu SrcL.{T}, SrcR.{T}, ->Dst.{W}` | Floating point less than signal comparison | Yes |
+| V.FGEU | `v.fgeu SrcL.{T}, SrcR.{T}, ->Dst.{W}` | Floating point greater than or equal to signal comparison | Yes |
 
 ## Command encoding
 

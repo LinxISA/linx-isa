@@ -9,8 +9,7 @@
 ## 汇编语法
 
 ```asm
-TLOAD.Layout <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, [RegSrc0, RegSrc1], DepSrc0, DepSrc1, DepSrc2,
-             ->DstTile0<Size>, ..., DstTile7<Size>, DepDst
+TLOAD.Layout <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, [RegSrc0, RegSrc1] ->DstTile0<Size>, ..., DstTile7<Size>
 ```
 
 ## 汇编符号
@@ -28,8 +27,6 @@ TLOAD.Layout <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, [RegSrc0
 | **Size** | B.IOT | 输出Tile寄存器的空间大小（有效范围参见：[Tile寄存器](../../register/common/tilereg.md)）。 | 否 |
 | **RegSrc0** | B.IOR  | 表示搬移的数据块的基地址（BaseAddress），即搬运的第一个元素的地址。 | 否 |
 | **RegSrc1** | B.IOR  | 表示内存中两组数据的首地址间隔Stride（单位：字节）（如果两组数据之间地址是连续的则可缺省） | 是，默认连续 |
-| **DepSrc0 / DepSrc1 / DepSrc2** | B.IOD | 表示本块指令最多显式记录 3 个前序 `D` 依赖槽位。 | 是，默认无依赖 |
-| **DepDst** | B.IOD | 表示本块指令对后序引用该标识的块指令的屏障。 | 是，默认无屏障 |
 
 其中DataType的可选类型如下表：
 
@@ -46,15 +43,14 @@ TLOAD.Layout <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, [RegSrc0
 
 - [BSTART.TMA](../../blockIntro/tma_block/header.md) `TLOAD, DataType`
 - [B.DATR](../../header/B.DATR.md) `Layout, PadValue`
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0`    （注：*ValidCol*）
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`    （注：*ValidRow*）
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB2`    （注：*Col*）
-- [B.IOT](../../header/B.IOT.md) `, ->DstTile0<Size>`
-- [B.IOT](../../header/B.IOT.md) `, ->DstTile1<Size>`
+- [B.DIM](../../header/B.DIM.md) `reg, imm ->LB0`    （注：*ValidCol*）
+- [B.DIM](../../header/B.DIM.md) `reg, imm ->LB1`    （注：*ValidRow*）
+- [B.DIM](../../header/B.DIM.md) `reg, imm ->LB2`    （注：*Col*）
+- [B.IOT](../../header/B.IOT.md) ` ->DstTile0<Size>`
+- [B.IOT](../../header/B.IOT.md) ` ->DstTile1<Size>`
 - ...
-- [B.IOT](../../header/B.IOT.md) `last, ->DstTile7<Size>`
+- [B.IOT](../../header/B.IOT.md) `last ->DstTile7<Size>`
 - [B.IOR](../../header/B.IOR.md) `RegSrc0, RegSrc1`
-- [B.IOD](../../header/B.IOD.md) `DepSrc0, DepSrc1, DepSrc2, ->DepDst`
 
 ## 实现方式
 
@@ -247,8 +243,8 @@ Row = TotalSize / (Col * sizeof(DataType));
 ## 汇编示例
 
 ```asm
-    TLOAD.NORM <LB0:100, LB1:a0, LB2:a1+10, FP16>, [a2], ->T<2KB>         # 通过立即数设置输出Tile的大小
-    TLOAD.ND2NZ <LB0:100, LB1:a0, LB2:a1+10, FP16>, [a2, a0], ->T<a1>     # 通过寄存器设置输出Tile的大小
+TLOAD.NORM <LB0:100, LB1:a0, LB2:a1+10, FP16>, [a2] ->T<2KB>         # 通过立即数设置输出Tile的大小
+TLOAD.ND2NZ <LB0:100, LB1:a0, LB2:a1+10, FP16>, [a2, a0] ->T<a1>     # 通过寄存器设置输出Tile的大小
 ```
 
 ## 注意事项

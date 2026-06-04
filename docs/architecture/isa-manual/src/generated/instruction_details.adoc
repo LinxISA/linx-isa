@@ -2168,8 +2168,8 @@ Operation (informative)::
 Execute operation as selected by the mnemonic and encoded modifiers.
 ----
 
-[[insndesc-bit-operation-clz]]
-===== CLZ
+[[insndesc-bit-operation-cls]]
+===== CLS
 
 Count leading zeros.
 
@@ -2177,11 +2177,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `clz SrcL, Nminus1, M, ->{t, u, Rd}`
+* `cls SrcL, Nminus1, M, ->{t, u, Rd}`
 
 Encoding::
 +
-image::encodings/enc_clz.svg[CLZ encoding diagram,align="center"]
+image::encodings/enc_cls.svg[CLS encoding diagram,align="center"]
 
 
 Operation (informative)::
@@ -14064,8 +14064,8 @@ Operation (informative)::
 Execute operation as selected by the mnemonic and encoded modifiers.
 ----
 
-[[insndesc-bit-manipulation-v-clz]]
-===== V.CLZ
+[[insndesc-bit-manipulation-v-cls]]
+===== V.CLS
 
 This mnemonic has a 64-bit vector encoding (prefix + main). Count leading zeros.
 
@@ -14073,7 +14073,7 @@ Catalog forms:: 1 form(s) (64 bits).
 
 Assembly forms::
 +
-* `v.clz SrcL, Nminus1, M, ->Dst`
+* `v.cls SrcL, Nminus1, M, ->Dst`
 
 Operation (informative)::
 +

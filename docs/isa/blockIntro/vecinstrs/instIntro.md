@@ -75,7 +75,8 @@ Without special instructions, the mapping relationship between this field index 
 | 90 | TO2 | TO2 | The third output Tile register formal parameter |
 | 91 | TO3 | TO3 | The fourth output Tile register parameter |
 | 92 | P | P | Mask register |
-| 93-94 | Reserve | Reserve | Reserve |
+| 93 | TS | TS | Stack space Tile register parameter |
+| 94 | TP | TP | Persistent Tile register parameter |
 | 95 | Zero | Zero | Zero register |
 | 96 | VTR1.REUSE | VT#1.REUSE | The first instruction result before the VT result queue |
 | 97 | VTR2.REUSE | VT#2.REUSE | The second instruction result before the VT result queue |

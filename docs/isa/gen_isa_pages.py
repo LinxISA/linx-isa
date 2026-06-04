@@ -296,7 +296,7 @@ _INSN_DESCRIPTIONS: dict[str, str] = {
     "BXS": "Bit-field extract signed.",
     "BXU": "Bit-field extract unsigned.",
     "BCNT": "Population count. Counts the number of set bits in a register.",
-    "CLZ": "Count leading zeros.",
+    "CLS": "Count leading sign bits.",
     "CTZ": "Count trailing zeros.",
     "REV": "Bit-reversal operation.",
     "BIC": "Bit clear / AND-NOT.",
@@ -382,7 +382,7 @@ def _describe_instruction(mnemonic: str, group: str, asm: str) -> str:
         "DIVU": "Unsigned integer division.",
         "REM": "Signed integer remainder.", "REMU": "Unsigned integer remainder.",
         "NEG": "Integer negate.", "NOT": "Bitwise NOT.",
-        "CLZ": "Count leading zeros.", "CTZ": "Count trailing zeros.",
+        "CLS": "Count leading sign bits.", "CTZ": "Count trailing zeros.",
         "BCNT": "Population count.",
         "REV": "Bit-reversal.",
         "BXS": "Bit-field extract signed.", "BXU": "Bit-field extract unsigned.",
@@ -1068,8 +1068,8 @@ def _derive_pseudocode(mnemonic: str, group: str, asm: str) -> str:
         return "rd = (rs_p != 0) ? rs1 : rs2;"
     if root == "BCNT":
         return "rd = PopCount(rs1);"
-    if root == "CLZ":
-        return "rd = CountLeadingZeros(rs1);"
+    if root == "CLS":
+        return "rd = CountLeadingSignBits(rs1);"
     if root == "CTZ":
         return "rd = CountTrailingZeros(rs1);"
     if root == "B.EQ":

@@ -13,7 +13,7 @@
 | 分类  | 指令列表  |
 |-------|--------------|
 | **浮点运算** | [FADD](../../inst/misa_f/FADD.md), [FSUB](../../inst/misa_f/FSUB.md), [FMUL](../../inst/misa_f/FMUL.md), [FDIV](../../inst/misa_f/FDIV.md), [FMADD](../../inst/misa_f/FMADD.md), [FMSUB](../../inst/misa_f/FMSUB.md), [FNMADD](../../inst/misa_f/FNMADD.md), [FNMSUB](../../inst/misa_f/FNMSUB.md) |
-| **浮点比较** | [FEQ](../../inst/misa_f/FEQ.md), [FNE](../../inst/misa_f/FNE.md), [FLT](../../inst/misa_f/FLT.md), [FGE](../../inst/misa_f/FGE.md), [FEQS](../../inst/misa_f/FEQS.md), [FNES](../../inst/misa_f/FNES.md), [FLTS](../../inst/misa_f/FLTS.md), [FGES](../../inst/misa_f/FGES.md) |
+| **浮点比较** | [FEQ](../../inst/misa_f/FEQ.md), [FNE](../../inst/misa_f/FNE.md), [FLT](../../inst/misa_f/FLT.md), [FGE](../../inst/misa_f/FGE.md), [FEQU](../../inst/misa_f/FEQU.md), [FNEU](../../inst/misa_f/FNEU.md), [FLTU](../../inst/misa_f/FLTU.md), [FGEU](../../inst/misa_f/FGEU.md) |
 | **最大最小值** | [MAX](../../inst/misa_f/MAX.md), [MIN](../../inst/misa_f/MIN.md), [MAXU](../../inst/misa_f/MAXU.md), [MINU](../../inst/misa_f/MINU.md), [FMAX](../../inst/misa_f/FMAX.md), [FMIN](../../inst/misa_f/FMIN.md) |
 | **数据格式转换** | [FCVT](../../inst/misa_f/FCVT.md), [SCVTF](../../inst/misa_f/SCVTF.md), [UCVTF](../../inst/misa_f/UCVTF.md), [FCVTA](../../inst/misa_f/FCVTA.md), [FCVTM](../../inst/misa_f/FCVTM.md), [FCVTN](../../inst/misa_f/FCVTN.md), [FCVTP](../../inst/misa_f/FCVTP.md), [FCVTZ](../../inst/misa_f/FCVTZ.md) |
 | **浮点特殊运算** | [FABS](../../inst/misa_f/FABS.md), [FSQRT](../../inst/misa_f/FSQRT.md), [FRECIP](../../inst/misa_f/FRECIP.md) |

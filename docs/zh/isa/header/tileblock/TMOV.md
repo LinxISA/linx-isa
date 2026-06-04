@@ -23,7 +23,7 @@ for r in 0..(Rv-1):          // 遍历所有行
 ## 汇编语法
 
 ```asm
-    TMOV Layout, <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, SrcTile<.reuse>, ->DstTile<Size>
+TMOV Layout, <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, SrcTile<.reuse>, ->DstTile<Size>
 ```
 
 ## 汇编符号

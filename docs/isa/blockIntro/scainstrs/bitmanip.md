@@ -9,7 +9,7 @@ Bit manipulation instructions include F-type instructions used to intercept or s
 | BIC | bic SrcL, M, N, ->{t,u,Rd} | Set the consecutive `N` bits starting from the `M` bit of the source operand to 0 |
 | BIS | bis SrcL, M, N, ->{t,u,Rd} | Set the consecutive `N` bits starting from the `M` bit of the source operand to 1 |
 | CTZ | ctz SrcL, M, N, ->{t,u,Rd} | Count the number of 0s after the first 1 in the `N` bit of the source operand starting from the `M` bit |
-| CLZ | clz SrcL, M, N, ->{t,u,Rd} | Count the number of 0s starting from the `M` bit of the source operand before the first 1 in the `N` bit |
+| CLS | cls SrcL, M, N, ->{t,u,Rd} | Count the number of bits matching the sign bit from the `M` bit of the source operand in the `N` bit |
 | BCNT | bcnt SrcL, M, N, ->{t,u,Rd} | Count the number of consecutive `N` bits starting from the `M` bit of the source operand that are 1 |
 | REV | rev SrcL, M, N, ->{t,u,Rd} | Flip in units of `N` bits within the range of `M` bits of the source operand |
 

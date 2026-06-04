@@ -9,7 +9,7 @@
 |  BIC  |  bic  SrcL, M, N, ->{t,u,Rd}  |  将源操作数第`M`位开始连续`N`位置位为0  |
 |  BIS  |  bis  SrcL, M, N, ->{t,u,Rd}  |  将源操作数第`M`位开始连续`N`位置位为1  |
 |  CTZ  | ctz SrcL, M, N, ->{t,u,Rd}    |  计数源操作数第`M`位开始连续`N`位第一个1后的0的个数  |
-|  CLZ  | clz SrcL, M, N, ->{t,u,Rd}    |  计数源操作数第`M`位开始连续`N`位第一个1前的0的个数  |
+|  CLS  | cls SrcL, M, N, ->{t,u,Rd}    |  计数源操作数第`M`位开始连续`N`位与符号位相同的连续位数  |
 |  BCNT |  bcnt SrcL, M, N, ->{t,u,Rd}  |  计数源操作数第`M`位开始连续`N`位比特位为1的位数  |
 |  REV  |  rev  SrcL, M, N, ->{t,u,Rd}  |  在源操作数的`M`位的范围内以`N`位为单位进行翻转  |
 

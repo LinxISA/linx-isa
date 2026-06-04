@@ -74,11 +74,12 @@
 | 86      | TG              | TG          | 第七个输入Tile寄存器形参  |
 | 87      | TH              | TH          | 第八个输入Tile寄存器形参  |
 | 88      | TO              | TO          | 第一个输出Tile寄存器形参  |
-| 89      | TO1/TS          | TO1/TS      | 第二个输出Tile寄存器形参  |
+| 89      | TO1             | TO1         | 第二个输出Tile寄存器形参  |
 | 90      | TO2             | TO2         | 第三个输出Tile寄存器形参  |
 | 91      | TO3             | TO3         | 第四个输出Tile寄存器形参  |
 | 92      | P               | P           | 掩码寄存器        |
-| 93-94   | Reserve         | Reserve     | 预留              |
+| 93      | TS              | TS          | 栈空间Tile寄存器形参  |
+| 94      | TP              | TP          | 持久化Tile寄存器形参  |
 | 95      | Zero            | Zero        | 零寄存器          |
 | 96      | VTR1.REUSE      | VT#1.REUSE  | VT结果队列前第一条指令结果     |
 | 97      | VTR2.REUSE      | VT#2.REUSE  | VT结果队列前第二条指令结果     |

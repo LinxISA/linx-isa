@@ -6,13 +6,11 @@ header instruction of the vector data block is used to define the execution mode
 
 header for vector parallel block:
 ```asm
-VPAR .body, <LB0:arg0, LB1:arg1, LB2:arg2, VSize, DR>, SrcTile0<.reuse>, ..., SrcTile7<.reuse>, [BGetList], DepSrc0, DepSrc1, DepSrc2,
-                                          ->DstTile0<TileSize0>, ..., DstTile3<TileSize3>, [BSetList], DepDst
+VPAR .body, <LB0:arg0, LB1:arg1, LB2:arg2, VSize, DR>, SrcTile0<.reuse>, ..., SrcTile7<.reuse>, [BGetList] ->DstTile0<TileSize0>, ..., DstTile3<TileSize3>, [BSetList]
 ```
 header for vector serial block:
 ```asm
-VSEQ .body, <LB0:arg0, LB1:arg1, LB2:arg2, VSize, DR>, SrcTile0<.reuse>, ..., SrcTile7<.reuse>, [BGetList], DepSrc0, DepSrc1, DepSrc2,
-                                          ->DstTile0<TileSize0>, ..., DstTile3<TileSize3>, [BSetList], DepDst
+VSEQ .body, <LB0:arg0, LB1:arg1, LB2:arg2, VSize, DR>, SrcTile0<.reuse>, ..., SrcTile7<.reuse>, [BGetList] ->DstTile0<TileSize0>, ..., DstTile3<TileSize3>, [BSetList]
 ```
 
 Each assembly parameter is described as follows:
@@ -31,23 +29,23 @@ Each assembly parameter is described as follows:
 | **TileSize0, ..., TileSize3** | Indicates the space size of each output Tile register respectively. The parameter can be passed through a `立即数` or `全局寄存器`. | Depends on DstTile |
 | **[BGetList]** | Global register [GGPR](../../register/common/ggpr.md) input list. | Yes |
 | **[BSetList]** | Global register [GGPR](../../register/common/ggpr.md) output list. | Yes |
-| **DepSrc0, DepSrc1, DepSrc2** | Up to three dependency-source slots that refer to previous block-instruction outputs to `D`. | Yes |
-| **DepDst** | Indicates the barrier of this block instruction to the block instruction that references this identifier in subsequent sequences. | Yes |
+| **012** | Up to three dependency-source slots that refer to previous block-instruction outputs to `D`. | Yes |
+| **** | Indicates the barrier of this block instruction to the block instruction that references this identifier in subsequent sequences. | Yes |
 
 ## Encoding method
 
 A complete vector data block instructionheader needs to be split into the following multiple instructions for combined encoding, including:- `BSTART.VPAR` or `BSTART.VSEQ` `VSize`.
 - [B.CATR](../../header/B.CATR.md) `DR`.
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0`.
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`.
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB2`.
-- [B.IOT](../../header/B.IOT.md) `SrcTile0<.reuse>, SrcTile1<.reuse>, ->DstTile0<TileSize0>`.
+- [B.DIM](../../header/B.DIM.md) `reg, imm ->LB0`.
+- [B.DIM](../../header/B.DIM.md) `reg, imm ->LB1`.
+- [B.DIM](../../header/B.DIM.md) `reg, imm ->LB2`.
+- [B.IOT](../../header/B.IOT.md) `SrcTile0<.reuse>, SrcTile1<.reuse> ->DstTile0<TileSize0>`.
 - `...`
-- [B.IOT](../../header/B.IOT.md) `SrcTile6<.reuse>, SrcTile7<.reuse>, last, ->DstTile3<TileSize3>`.
-- [B.IOR](../../header/B.IOR.md) `RegSrc0, RegSrc1, RegSrc2, ->RegDst0`
+- [B.IOT](../../header/B.IOT.md) `SrcTile6<.reuse>, SrcTile7<.reuse>, last ->DstTile3<TileSize3>`.
+- [B.IOR](../../header/B.IOR.md) `RegSrc0, RegSrc1, RegSrc2 ->RegDst0`
 - `...`
-- [B.IOR](../../header/B.IOR.md) `RegSrc9, RegSrc10, RegSrc11, ->RegDst4`
-- [B.IOD](../../header/B.IOD.md) `DepSrc0, DepSrc1, DepSrc2, ->DepDst`.
+- [B.IOR](../../header/B.IOR.md) `RegSrc9, RegSrc10, RegSrc11 ->RegDst4`
+- [B.IOD](../../header/B.IOD.md) `012 ->`.
 
 Among them, the encoding format of the BSTART.VPAR instruction is as follows:
 
@@ -83,33 +81,33 @@ The compressed version of the instruction does not have a VSize field and defaul
 Example 1: Two sets of vector registers are used in the block: vt, vu
 ```asm
 hed:
-    VPAR .foo, <LB0:64, LB1:10, VS8>, T#1.reuse, ->T<8KB>
+    VPAR .foo, <LB0:64, LB1:10, VS8>, T#1.reuse ->T<8KB>
     ...
 .foo:
-    v.lwi [TA, lc0<<2, 0], ->vt.w
-    v.lwi [TA, lc0<<2, 4], ->vt.w
-    v.mul vt#1,.sw, vt#2.sw, ->vt.w
+    v.lwi [TA, lc0<<2, 0] ->vt.w
+    v.lwi [TA, lc0<<2, 4] ->vt.w
+    v.mul vt#1,.sw, vt#2.sw ->vt.w
     v.sw vt#1.sw, [TO, lc0<<2]
     ...
-    v.lwi [a1, lc0<<2, 0], ->vu.w
-    v.lwi [a1, lc0<<2, 4], ->vu.w
-    v.add vu#1,.sw, vu#2.sw, ->vt.w
+    v.lwi [a1, lc0<<2, 0] ->vu.w
+    v.lwi [a1, lc0<<2, 4] ->vu.w
+    v.add vu#1,.sw, vu#2.sw ->vt.w
     v.sw vt#1.sw, [TO, lc0<<2]
 ```
 
 Example 2: Four sets of vector registers are used in the block: vt, vu, vm, vn
 ```asm
 hed:
-    VPAR .foo, <LB0:64, LB1:10, VS8>, T#1.reuse, ->T<8KB>
+    VPAR .foo, <LB0:64, LB1:10, VS8>, T#1.reuse ->T<8KB>
     ...
 .foo:
-    v.lwi [TA, lc0<<2, 0], ->vt.w
-    v.lwi [TA, lc0<<2, 4], ->vu.w
-    v.mul vt#1,.sw, vu#1.sw, ->vt.w
+    v.lwi [TA, lc0<<2, 0] ->vt.w
+    v.lwi [TA, lc0<<2, 4] ->vu.w
+    v.mul vt#1,.sw, vu#1.sw ->vt.w
     v.sw vt#1.sw, [TO, lc0<<2]
     ...
-    v.lwi [a1, lc0<<2, 0], ->vm.w
-    v.lwi [a1, lc0<<2, 4], ->vn.w
-    v.add vm#1,.sw, vn#1.sw, ->vt.w
+    v.lwi [a1, lc0<<2, 0] ->vm.w
+    v.lwi [a1, lc0<<2, 4] ->vn.w
+    v.add vm#1,.sw, vn#1.sw ->vt.w
     v.sw vt#1.sw, [TO, lc0<<2]
 ```

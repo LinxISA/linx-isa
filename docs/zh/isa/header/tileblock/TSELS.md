@@ -22,7 +22,7 @@ for r in 0..(Rv-1):           // 遍历所有行
 ## 汇编语法
 
 ```asm
-    TSELS <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, MaskTile<.reuse>, SrcTile<.reuse>, [RegSrc], ->DstTile<Size>
+TSELS <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, MaskTile<.reuse>, SrcTile<.reuse>, [RegSrc], ->DstTile<Size>
 ```
 
 ## 汇编符号
@@ -88,7 +88,7 @@ for r in 0..(Rv-1):           // 遍历所有行
 ## 汇编示例
 
 ```asm
-    TSELS <LB0:20, LB1:32, LB2:24, fp16>, T#1.reuse, T#2, [a0], ->T<2KB>
+TSELS <LB0:20, LB1:32, LB2:24, fp16>, T#1.reuse, T#2, [a0], ->T<2KB>
 ```
 
 1. **操作内容**  

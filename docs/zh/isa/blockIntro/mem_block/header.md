@@ -6,13 +6,11 @@
 
 访存并行块的块头：
 ```asm
-MPAR .body, <LB0:arg0, LB1:arg1, LB2:arg2, VSize, DR>, SrcTile0<.reuse>, ..., SrcTile7<.reuse>, [BGetList], DepSrc0, DepSrc1, DepSrc2,
-                                          ->DstTile0<TileSize0>, ..., DstTile3<TileSize3>, [BSetList], DepDst
+MPAR .body, <LB0:arg0, LB1:arg1, LB2:arg2, VSize, DR>, SrcTile0<.reuse>, ..., SrcTile7<.reuse>, [BGetList] ->DstTile0<TileSize0>, ..., DstTile3<TileSize3>, [BSetList]
 ```
 访存串行块的块头：
 ```asm
-MSEQ .body, <LB0:arg0, LB1:arg1, LB2:arg2, VSize, DR>, SrcTile0<.reuse>, ..., SrcTile7<.reuse>, [BGetList], DepSrc0, DepSrc1, DepSrc2,
-                                          ->DstTile0<TileSize0>, ..., DstTile3<TileSize3>, [BSetList], DepDst
+MSEQ .body, <LB0:arg0, LB1:arg1, LB2:arg2, VSize, DR>, SrcTile0<.reuse>, ..., SrcTile7<.reuse>, [BGetList] ->DstTile0<TileSize0>, ..., DstTile3<TileSize3>, [BSetList]
 ```
 
 各汇编参数说明如下：
@@ -31,8 +29,8 @@ MSEQ .body, <LB0:arg0, LB1:arg1, LB2:arg2, VSize, DR>, SrcTile0<.reuse>, ..., Sr
 | **TileSize0, ..., TileSize3** | 分别指示每个输出Tile寄存器的空间大小，可以通过一个 `立即数`或者`全局寄存器`传参。 | 取决于DstTile |
 | **[BGetList]** | 全局寄存器[GGPR](../../register/common/ggpr.md)输入列表。 | 是 |
 | **[BSetList]** | 全局寄存器[GGPR](../../register/common/ggpr.md)输出列表。 | 是 |
-| **DepSrc0, DepSrc1, DepSrc2** | 表示本块指令最多显式记录 3 个前序 `D` 依赖槽位。 | 是 |
-| **DepDst** | 表示本块指令对后序引用该标识的块指令的屏障。 | 是 |
+| **012** | 表示本块指令最多显式记录 3 个前序 `D` 依赖槽位。 | 是 |
+| **** | 表示本块指令对后序引用该标识的块指令的屏障。 | 是 |
 
 ## 编码方式
 
@@ -40,16 +38,15 @@ MSEQ .body, <LB0:arg0, LB1:arg1, LB2:arg2, VSize, DR>, SrcTile0<.reuse>, ..., Sr
 
 - `BSTART.MPAR` 或 `BSTART.MSEQ` `VSize`。
 - [B.CATR](../../header/B.CATR.md) `DR`。
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0`。
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`。
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB2`。
-- [B.IOT](../../header/B.IOT.md) `SrcTile0<.reuse>, SrcTile1<.reuse>, ->DstTile0<TileSize0>`。
+- [B.DIM](../../header/B.DIM.md) `reg, imm ->LB0`。
+- [B.DIM](../../header/B.DIM.md) `reg, imm ->LB1`。
+- [B.DIM](../../header/B.DIM.md) `reg, imm ->LB2`。
+- [B.IOT](../../header/B.IOT.md) `SrcTile0<.reuse>, SrcTile1<.reuse> ->DstTile0<TileSize0>`。
 - `...`
-- [B.IOT](../../header/B.IOT.md) `SrcTile6<.reuse>, SrcTile7<.reuse>, last, ->DstTile3<TileSize3>`。
-- [B.IOR](../../header/B.IOR.md) `RegSrc0, RegSrc1, RegSrc2, ->RegDst0`
+- [B.IOT](../../header/B.IOT.md) `SrcTile6<.reuse>, SrcTile7<.reuse>, last ->DstTile3<TileSize3>`。
+- [B.IOR](../../header/B.IOR.md) `RegSrc0, RegSrc1, RegSrc2 ->RegDst0`
 - `...`
-- [B.IOR](../../header/B.IOR.md) `RegSrc9, RegSrc10, RegSrc11, ->RegDst4`
-- [B.IOD](../../header/B.IOD.md) `DepSrc0, DepSrc1, DepSrc2, ->DepDst`。
+- [B.IOR](../../header/B.IOR.md) `RegSrc9, RegSrc10, RegSrc11 ->RegDst4`。
 
 其中，BSTART.MPAR指令的编码格式如下：
 
@@ -85,33 +82,33 @@ C.BSTART.MSEQ指令编码：
 示例1：块内使用到2组向量寄存器: vt, vu
 ```asm
 hed:
-    MPAR .foo, <LB0:64, LB1:10, VS8>, [a0, a1], ->T<8KB>
+    MPAR .foo, <LB0:64, LB1:10, VS8>, [a0, a1] ->T<8KB>
     ...
 .foo:
-    v.lwi [ri0, lc0<<2, 0], ->vt.w
-    v.lwi [ri0, lc0<<2, 4], ->vt.w
-    v.mul vt#1,.sw, vt#2.sw, ->vt.w
+    v.lwi [ri0, lc0<<2, 0] ->vt.w
+    v.lwi [ri0, lc0<<2, 4] ->vt.w
+    v.mul vt#1,.sw, vt#2.sw ->vt.w
     v.sw vt#1.sw, [TO, lc0<<2]
     ...
-    v.lwi [ri1, lc0<<2, 0], ->vu.w
-    v.lwi [ri1, lc0<<2, 4], ->vu.w
-    v.add vu#1,.sw, vu#2.sw, ->vt.w
+    v.lwi [ri1, lc0<<2, 0] ->vu.w
+    v.lwi [ri1, lc0<<2, 4] ->vu.w
+    v.add vu#1,.sw, vu#2.sw ->vt.w
     v.sw vt#1.sw, [TO, lc0<<2]
 ```
 
 示例2：块内使用到4组向量寄存器: vt, vu, vm, vn
 ```asm
 hed:
-    MPAR .foo, <LB0:64, LB1:10, VS8>, [a0], ->T<8KB>
+    MPAR .foo, <LB0:64, LB1:10, VS8>, [a0] ->T<8KB>
     ...
 .foo:
-    v.lwi [ri0, lc0<<2, 0], ->vt.w
-    v.lwi [ri0, lc0<<2, 4], ->vu.w
-    v.mul vt#1,.sw, vu#1.sw, ->vt.w
+    v.lwi [ri0, lc0<<2, 0] ->vt.w
+    v.lwi [ri0, lc0<<2, 4] ->vu.w
+    v.mul vt#1,.sw, vu#1.sw ->vt.w
     v.sw vt#1.sw, [TO, lc0<<2]
     ...
-    v.lwi [ri1, lc0<<2, 0], ->vm.w
-    v.lwi [ri1, lc0<<2, 4], ->vn.w
-    v.add vm#1,.sw, vn#1.sw, ->vt.w
+    v.lwi [ri1, lc0<<2, 0] ->vm.w
+    v.lwi [ri1, lc0<<2, 4] ->vn.w
+    v.add vm#1,.sw, vn#1.sw ->vt.w
     v.sw vt#1.sw, [TO, lc0<<2]
 ```

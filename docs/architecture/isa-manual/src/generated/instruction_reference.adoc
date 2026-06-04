@@ -208,7 +208,7 @@
 |`BIS` |32 |- |`bis SrcL, Nminus1, M, ->{t, u, Rd}` |-
 |`BXS` |32 |- |`bxs SrcL, Nminus1, M, ->{t, u, Rd}` |-
 |`BXU` |32 |- |`bxu SrcL, Nminus1, M, ->{t, u, Rd}` |-
-|`CLZ` |32 |- |`clz SrcL, Nminus1, M, ->{t, u, Rd}` |-
+|`CLS` |32 |- |`cls SrcL, Nminus1, M, ->{t, u, Rd}` |-
 |`CTZ` |32 |- |`ctz SrcL, Nminus1, M, ->{t, u, Rd}` |-
 |`REV` |32 |- |`rev SrcL, M, N, ->{t, u, Rd}` |-
 |===
@@ -1129,7 +1129,7 @@
 |`V.BIS` |64 |- |`v.bis SrcL, Nminus1, M, ->Dst` |-
 |`V.BXS` |64 |- |`v.bxs SrcL, Nminus1, M, ->Dst` |-
 |`V.BXU` |64 |- |`v.bxu SrcL, Nminus1, M, ->Dst` |-
-|`V.CLZ` |64 |- |`v.clz SrcL, Nminus1, M, ->Dst` |-
+|`V.CLS` |64 |- |`v.cls SrcL, Nminus1, M, ->Dst` |-
 |`V.CTZ` |64 |- |`v.ctz SrcL, Nminus1, M, ->Dst` |-
 |`V.REV` |64 |- |`v.rev SrcL, M, N, ->Dst` |-
 |===

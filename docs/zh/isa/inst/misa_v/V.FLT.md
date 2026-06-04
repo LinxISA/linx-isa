@@ -59,7 +59,7 @@ for (laneid = 0; laneid < lanenum; laneid++)
 
 !!! note "注意！"
     
-    如果任意操作数是SNaN，该指令则触发无效操作NV异常。
+    本指令为**有序比较**（Ordered）：若任一操作数为NaN，结果为`0`（False）。若操作数为SNaN，额外触发无效操作NV异常。
 
 ## 备注
 

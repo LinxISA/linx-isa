@@ -57,8 +57,8 @@
 |  循环右移X位  |  ccat SrcL, SrcL, 64-X, ->{t, u, Rd}  | 两输入寄存器相同  |
 |  高低位字交换 |  ccat SrcL, SrcL, 32, ->{t, u, Rd}  | 两输入寄存器相同  |
 |  字节截取替换 |  bfi SrcL, SrcR, M, N, ->{t, u, Rd} | 截取SrcR低位N个字节，替换SrcL的M至M+N-1字节 |
-|  计数前导零  |  clz SrcL, ->{t, u, Rd}  |  用于计算64bit范围内高位连续0的位数 |
-|  计数前导零  |  clzw SrcL, ->{t, u, Rd} |  用于计算低32bit范围内高位连续0的位数 | 
+|  计数前导符号位  |  cls SrcL, ->{t, u, Rd}  |  用于计算与符号位相同的连续位数 |
+|  计数前导符号位  |  clsw SrcL, ->{t, u, Rd} |  用于计算低32bit范围内与符号位相同的连续位数 | 
 |  计数尾随零  |  ctz SrcL, ->{t, u, Rd}  |  用于计算64bit范围内低位连续0的位数 |
 |  计数尾随零  |  ctzw SrcL, ->{t, u, Rd} |  用于计算低32bit范围内低位连续0的位数 | 
 

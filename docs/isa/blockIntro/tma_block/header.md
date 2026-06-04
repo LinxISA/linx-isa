@@ -5,8 +5,7 @@ The header of the data transfer block needs to define which data transfer operat
 ## Assembly format
 
 ```asm
-TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7<.reuse>, DepSrc0, DepSrc1, DepSrc2, [BGetList],  
-                                     ->DstTile0<TileSize0>, ..., DstTile3<TileSize3>, [BSetList], DepDst
+TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7<.reuse> [BGetList] ->DstTile0<TileSize0>, ..., DstTile3<TileSize3>, [BSetList]
 ```
 
 Each parameter is explained as follows:
@@ -24,8 +23,8 @@ Each parameter is explained as follows:
 | **TileSize0, ..., TileSize3** | Indicates the space size of each output Tile register respectively. The parameter can be passed through a `立即数` or `全局寄存器`. | Depends on DstTile |
 | **[BGetList]** | Global register [GGPR](../../register/common/ggpr.md) input list. | Yes |
 | **[BSetList]** | Global register [GGPR](../../register/common/ggpr.md) output list. | Yes |
-| **DepSrc0, DepSrc1, DepSrc2** | Up to three dependency-source slots that refer to previous block-instruction outputs to `D`. | Yes |
-| **DepDst** | Indicates the barrier of this block instruction to the block instruction that references this identifier in subsequent sequences. | Yes |
+| **** | Indicates the dependence of this block instruction on the previous block instruction output to D. | Yes |
+| **** | Indicates the barrier of this block instruction to the block instruction that references this identifier in subsequent sequences. | Yes |
 
 ## Encoding method
 
@@ -33,16 +32,16 @@ A complete data transfer block instructionheader needs to be split into the foll
 
 - `BSTART.TMA TileOp, DataType`
 - [B.DATR](../../header/B.DATR.md) `Layout, PadValue`
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0`
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB2`
-- [B.IOT](../../header/B.IOT.md) `SrcTile0<.reuse>, SrcTile1<.reuse>, ->DstTile0<TileSize0>`
+- [B.DIM](../../header/B.DIM.md) `reg, imm ->LB0`
+- [B.DIM](../../header/B.DIM.md) `reg, imm ->LB1`
+- [B.DIM](../../header/B.DIM.md) `reg, imm ->LB2`
+- [B.IOT](../../header/B.IOT.md) `SrcTile0<.reuse>, SrcTile1<.reuse> ->DstTile0<TileSize0>`
 -...
-- [B.IOT](../../header/B.IOT.md) `SrcTile6<.reuse>, SrcTile7<.reuse>, last, ->DstTile3<TileSize3>`
-- [B.IOR](../../header/B.IOR.md) `RegSrc0, RegSrc1, RegSrc2, ->RegDst0`
+- [B.IOT](../../header/B.IOT.md) `SrcTile6<.reuse>, SrcTile7<.reuse>, last ->DstTile3<TileSize3>`
+- [B.IOR](../../header/B.IOR.md) `RegSrc0, RegSrc1, RegSrc2 ->RegDst0`
 -...
-- [B.IOR](../../header/B.IOR.md) `RegSrc9, RegSrc10, RegSrc11, ->RegDst4`
-- [B.IOD](../../header/B.IOD.md) `DepSrc0, DepSrc1, DepSrc2, ->DepDst`
+- [B.IOR](../../header/B.IOR.md) `RegSrc9, RegSrc10, RegSrc11 ->RegDst4`
+- [B.IOD](../../header/B.IOD.md) ` ->`
 
 Among them, the encoding format of the BSTART.TMA instruction is as follows:![BSTART.TMA](../../../figs/bitfield/svg/BlockHeader_32bit/BSTART.TMA.svg)
 
@@ -56,8 +55,8 @@ Among them, the function field is used to encode specific TileOp information. Th
 | 3 | - | Reserved |
 | 4 | [MGATHER](../../header/tileblock/MGATHER.md) | Gather data in discrete memory space into Tile registers. |
 | 5 | [MSCATTER](../../header/tileblock/MSCATTER.md) | Store the data in the Tile register into discrete memory space.  |
-| 6 | [MGATHER.MASK](../../header/tileblock/MGATHER.MASK.md) | Masked memory gather. Reads only lanes whose mask bit is set. |
-| 7 | [MSCATTER.MASK](../../header/tileblock/MSCATTER.MASK.md) | Masked memory scatter. Writes only lanes whose mask bit is set. |
+| 6 | [MGATHER.MASK](../../header/tileblock/MGATHER.MASK.md) | Masked memory gather, only gathers when the corresponding mask bit is 1. |
+| 7 | [MSCATTER.MASK](../../header/tileblock/MSCATTER.MASK.md) | Masked memory scatter, only scatters when the corresponding mask bit is 1. |
 | 8-31 | Temporarily reserved |
 
 The DataType field is encoded as follows:

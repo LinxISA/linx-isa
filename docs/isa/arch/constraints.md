@@ -153,7 +153,7 @@ In order to ensure the correctness and safety of program execution, LinxISA impo
 | C10 | The values of the M and N parameters of the l.bxs instruction must be smaller than the source register bit width, otherwise the hardware execution result is unknown. |
 | C11 | The values of the M and N parameters of the l.bic instruction must be smaller than the source register bit width, otherwise the hardware execution result is unknown. |
 | C12 | The values of the M and N parameters of the l.bis instruction must be smaller than the source register bit width, otherwise the hardware execution result is unknown. |
-| C13 | The values of the M and N parameters of the l.clz instruction must be smaller than the source register bit width, otherwise the hardware execution result is unknown. |
+| C13 | The values of the M and N parameters of the l.cls instruction must be smaller than the source register bit width, otherwise the hardware execution result is unknown. |
 | C14 | The values of the M and N parameters of the l.ctz instruction must be smaller than the source register bit width, otherwise the hardware execution result is unknown. |
 | C15 | The values of the M and N parameters of the l.bcnt instruction must be smaller than the source register bit width, otherwise the hardware execution result is unknown. |
 | C16 | The values of the M and N parameters of the l.rev instruction must be smaller than the source register bit width, otherwise the hardware execution result is unknown. |

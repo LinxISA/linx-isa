@@ -5,6 +5,8 @@
 立即数算术右移(*Shift Right Arithmetic by Immediate*)<br>
 源寄存器中指定数据类型的操作数算数右移（低位舍弃，高位补符号位）**shamt**位，结果写入目的寄存器。
 
+`vlen` 字段控制指令对 lane 内多个元素的同时操作能力，允许单条指令在一个 lane 内并行处理多个数据元素。
+
 ## 汇编语法
 
 ```asm
@@ -24,6 +26,9 @@
 
 ![V.SRAI](../../../figs/bitfield/svg/Instruction_64bit/V.SRAI.svg)
 
+
+`vlen` 字段控制指令对 lane 内多个元素的同时操作能力，允许单条指令在一个 lane 内并行处理多个数据元素。
+
 ## 执行方式
 
 - 解码输入参数：[DecodeINT](../LibPseudoCode.md#locationL)
@@ -33,6 +38,12 @@
 ```c
 bits(64) pmask = P;   // lane掩码
 // lanenum表示当前Group内lane的数量
+
+// vlen 控制每个 lane 内的有效元素数量
+// vlen=0: 1 元素/lane, vlen=1: 2 元素/lane, vlen=2: 4 元素/lane
+integer elem_per_lane = (vlen == 0) ? 1 : (vlen == 1) ? 2 : (vlen == 2) ? 4 : 1;
+integer elem_width = srcwidth / elem_per_lane;
+
 for (laneid = 0; laneid < lanenum; laneid++)
 {
     integer {m, srctype}  = DecodeINT(SrcL);

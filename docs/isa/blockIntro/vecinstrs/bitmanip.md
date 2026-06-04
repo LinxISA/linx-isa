@@ -11,7 +11,7 @@ Bit operation instructions are used to perform efficient local bit field process
 | V.BIC | `v.bic  SrcL.{T}, M, N, ->Dst.{W}` | Set the consecutive `N` bits starting from the `M` bit of the source operand to 0 |
 | V.BIS | `v.bis  SrcL.{T}, M, N, ->Dst.{W}` | Set the consecutive `N` bits starting from the `M` bit of the source operand to 1 |
 | V.CTZ | `v.ctz  SrcL.{T}, M, N, ->Dst.{W}` | Count the number of 0s after the first 1 in the `N` bit of the source operand starting from the `M` bit |
-| V.CLZ | `v.clz  SrcL.{T}, M, N, ->Dst.{W}` | Count the number of 0s before the first 1 in the `N` bit of the source operand starting from the `M` bit |
+| V.CLS | `v.cls  SrcL.{T}, M, N, ->Dst.{W}` | Count the number of bits matching the sign bit in the `N` bit of the source operand starting from the `M` bit |
 | V.BCNT | `v.bcnt SrcL.{T}, M, N, ->Dst.{W}` | The number of consecutive `N` bits starting from the `M` bit of the count source operand is 1 |
 | V.REV | `v.rev  SrcL.{T}, M, N, ->Dst.{W}` | Toggle in units of `N` bits within the range of `M` bits of the source operand |
 
@@ -22,6 +22,6 @@ Bit operation instructions are used to perform efficient local bit field process
 ## Note on usage and boundaries
 
 - The caller should ensure that the values of M and N do not cross the bounds; out-of-bounds behavior is undefined.
-- For counting instructions (CLZ/CTZ/BCNT), statistics are only performed within the specified N-bit window, regardless of bits outside the window.
+- For counting instructions (CLS/CTZ/BCNT), statistics are only performed within the specified N-bit window, regardless of bits outside the window.
 - For instructions (BIC/BIS) that modify bit fields, only the specified bit fields are affected, and the remaining bits are retained at their original values.
 - Does not involve cross-channel data dependency and synchronization.

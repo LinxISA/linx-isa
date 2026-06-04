@@ -23,7 +23,7 @@ for r in 0..(Rv-1):           // 遍历所有行
 ## 汇编语法
 
 ```asm
-    TADDSC <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, SrcTile0<.reuse>, [RegSrc], SrcTile1<.reuse>, ->DstTile<Size>
+TADDSC <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, SrcTile0<.reuse>, [RegSrc], SrcTile1<.reuse>, ->DstTile<Size>
 ```
 
 ## 汇编符号
@@ -87,7 +87,7 @@ for r in 0..(Rv-1):           // 遍历所有行
 ## 汇编示例
 
 ```asm
-    TADDSC <LB0:20, LB1:32, LB2:24, s16>, T#1, [a0], T#2.reuse, ->T<2KB>
+TADDSC <LB0:20, LB1:32, LB2:24, s16>, T#1, [a0], T#2.reuse, ->T<2KB>
 ```
 
 1. **操作内容**  

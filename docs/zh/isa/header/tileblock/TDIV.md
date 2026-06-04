@@ -23,7 +23,7 @@ for r in 0..(Rv-1):         // 遍历所有行
 ## 汇编语法
 
 ```asm
-    TDIV <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, SrcTile0<.reuse>, SrcTile1<.reuse>, ->DstTile<Size>
+TDIV <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, SrcTile0<.reuse>, SrcTile1<.reuse>, ->DstTile<Size>
 ```
 
 ## 汇编符号
@@ -81,7 +81,7 @@ for r in 0..(Rv-1):         // 遍历所有行
 ## 汇编示例
 
 ```asm
-    TDIV <LB0:100, LB1:a0, LB2:a1+10, fp16>, T#1, T#2.reuse, ->T<2KB>
+TDIV <LB0:100, LB1:a0, LB2:a1+10, fp16>, T#1, T#2.reuse, ->T<2KB>
 ```
 
 1. **操作内容**  

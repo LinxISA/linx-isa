@@ -23,7 +23,7 @@ for r in 0..(Rv-1):           // 遍历所有行
 ## 汇编语法
 
 ```asm
-    TREMS <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, SrcTile<.reuse>, [RegSrc], ->DstTile<Size>
+TREMS <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, SrcTile<.reuse>, [RegSrc], ->DstTile<Size>
 ```
 
 ## 汇编符号
@@ -88,7 +88,7 @@ for r in 0..(Rv-1):           // 遍历所有行
 ## 汇编示例
 
 ```asm
-    TREMS <LB0:16, LB1:32, S16>, T#3.reuse, [a1], ->T<1KB>
+TREMS <LB0:16, LB1:32, S16>, T#3.reuse, [a1], ->T<1KB>
 ```
 
 1. **操作内容**  

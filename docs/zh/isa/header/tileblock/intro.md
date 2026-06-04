@@ -18,9 +18,23 @@ TMA类指令主要用于内存操作，包括数据的加载、存储、复制�
 | 0    | 3        | -                        | 保留 |
 | 0    | 4        | [MGATHER](./MGATHER.md)  | 将离散的内存空间的数据聚集到Tile寄存器中 |
 | 0    | 5        | [MSCATTER](./MSCATTER.md)| 将Tile寄存器中的数据存储到离散的内存空间 |
-| 0    | 6        | [MGATHER.MASK](./MGATHER.MASK.md)  | 带掩码的内存聚集，仅当 MaskTile 中对应标志位为 1 时才执行聚集 |
-| 0    | 7        | [MSCATTER.MASK](./MSCATTER.MASK.md) | 带掩码的内存分散，仅当 MaskTile 中对应标志位为 1 时才执行分散 |
-| 0    | 8-31     | -                        | 保留 |
+| 0    | 6        | [MGATHER.MASK](./MGATHER.MASK.md)  | 带掩码的内存聚集，仅当MaskTile中对应标志位为1时才执行聚集 |
+| 0    | 7        | [MSCATTER.MASK](./MSCATTER.MASK.md)| 带掩码的内存分散，仅当MaskTile中对应标志位为1时才执行分散 |
+| 0    | 8        | [TPREFETCH](./TPREFETCH.md)        | 将数据从全局内存预取到Tile本地缓存 |
+
+| 0    | 10       | [TTRANS](./TTRANS.md)              | 矩阵转置操作 |
+| 0    | 11       | [TEXTRACT](./TEXTRACT.md)          | 从源Tile中提取子Tile |
+| 0    | 12       | [TIMG2COL](./TIMG2COL.md)          | 用于类卷积工作负载的图像到列变换 |
+| 0    | 13       | [TINSERT](./TINSERT.md)            | 在指定偏移处将子Tile插入到目标Tile |
+| 0    | 14       | [TFILLPAD](./TFILLPAD.md)          | 复制Tile并在有效区域外使用填充值填充 |
+| 0    | 15       | [TFILLPADEXPAND](./TFILLPADEXPAND.md) | 填充时允许目标大于源的填充操作 |
+| 0    | 16       | [TRESHAPE](./TRESHAPE.md)          | 将Tile重新解释为另一种形状，保留底层字节 |
+| 0    | 17       | [TRESHAPE.MASK](./TRESHAPE.MASK.md) | 带掩码的数据块重塑，根据src/dst掩码控制元素位置 |
+| 0    | 18       | [TCONCAT](./TCONCAT.md)            | 将两个Tile沿列维度水平拼接 |
+| 0    | 19       | [TGATHER](./TGATHER.md)            | 使用索引Tile从源Tile中收集/选择元素 |
+| 0    | 20       | [TGATHERB](./TGATHERB.md)          | 使用字节偏移量收集元素 |
+| 0    | 21       | [TSCATTER](./TSCATTER.md)          | 使用逐元素行索引将源Tile的行分散到目标Tile |
+| 0    | 22-31    | -                        | 保留 |
 
 ---
 
@@ -99,7 +113,8 @@ TEPL类指令主要用于对Tile数据块进行逐元素操作、标量操作以
 | 0    | 25       | [TSUBC](./TSUBC.md)  | 三元逐元素减法：dst = src0 - src1 + src2 |
 | 0    | 26       | [TSEL](./TSEL.md)   | 使用掩码Tile在两个Tile之间进行选择（逐元素选择） |
 | 0    | 27       | [TCVT](./TCVT.md)   | Tile的逐元素数据格式转换。 |
-| 0    | 28-31    | -      | 保留 |
+| 0    | 28       | [TPOW](./TPOW.md)   | 两个Tile的逐元素幂运算 |
+| 0    | 29-31    | -      | 保留 |
 
 ### **Tile逐元素和标量操作**
 
@@ -120,7 +135,8 @@ TEPL类指令主要用于对Tile数据块进行逐元素操作、标量操作以
 | 1    | 12       | [TMINS](./TMINS.md)  | Tile与标量的逐元素最小值 |
 | 1    | 13       | [TCMPS](./TCMPS.md)  | 将Tile与标量逐元素比较 |
 | 1    | 14       | [TLRELU](./TLRELU.md) | 带标量斜率的LeakyReLU |
-| 1    | 15-23    | -      | 预留编码 |
+| 1    | 15       | [TPOWS](./TPOWS.md)  | Tile逐元素与标量幂运算 |
+| 1    | 16-23    | -      | 预留编码 |
 | 1    | 24       | [TADDSC](./TADDSC.md) | 带标量融合逐元素加法运算：dst = src0 + scalar + src1 |
 | 1    | 25       | [TSUBSC](./TSUBSC.md) | 带标量融合逐元素减法运算：dst = src0 - scalar + src1 |
 | 1    | 26       | [SELS](./TSELS.md)  | 使用掩码Tile在源Tile和标量之间进行选择（源Tile逐元素选择） |
@@ -143,7 +159,9 @@ TEPL类指令主要用于对Tile数据块进行逐元素操作、标量操作以
 | 2    | 9        | [TROWEXPANDMAX](./TROWEXPANDMAX.md)    | 行广播最大值：与每行标量向量取最大值 |
 | 2    | 10       | [TROWEXPANDMIN](./TROWEXPANDMIN.md)    | 行广播最小值：与每行标量向量取最小值 |
 | 2    | 11       | [TROWEXPANDEXPDIF](./TROWEXPANDEXPDIF.md) | 行指数差运算：计算exp(src0 - src1)，其中src1为每行标量 |
-| 2    | 12-15    | -                | 预留编码 |
+| 2    | 12       | [TROWARGMAX](./TROWARGMAX.md)    | 获取每行最大值对应列索引 |
+| 2    | 13       | [TROWARGMIN](./TROWARGMIN.md)    | 获取每行最小值对应列索引 |
+| 2    | 14-15    | -                | 预留编码 |
 | 2    | 16       | [TCOLSUM](./TCOLSUM.md)          | 通过对行求和来归约每一列 |
 | 2    | 17       | [TCOLMAX](./TCOLMAX.md)          | 通过取行间最大值来归约每一列 |
 | 2    | 18       | [TCOLMIN](./TCOLMIN.md)          | 通过取行间最小值来归约每一列 |
@@ -156,7 +174,9 @@ TEPL类指令主要用于对Tile数据块进行逐元素操作、标量操作以
 | 2    | 25       | [TCOLEXPANDMAX](./TCOLEXPANDMAX.md)    | 列广播最大值：与每列标量向量取最大值 |
 | 2    | 26       | [TCOLEXPANDMIN](./TCOLEXPANDMIN.md)    | 列广播最小值：与每列标量向量取最小值 |
 | 2    | 27       | [TCOLEXPANDEXPDIF](./TCOLEXPANDEXPDIF.md) | 列指数差运算：计算exp(src0 - src1)，其中src1为每列标量 |
-| 2    | 28-31    | -                | 预留编码 |
+| 2    | 28       | [TCOLARGMAX](./TCOLARGMAX.md)    | 获取每列最大值对应行索引 |
+| 2    | 29       | [TCOLARGMIN](./TCOLARGMIN.md)    | 获取每列最小值对应行索引 |
+| 2    | 30-31    | -                | 预留编码 |
 
 ### **复杂操作**
 
@@ -164,6 +184,19 @@ TEPL类指令主要用于对Tile数据块进行逐元素操作、标量操作以
 |------|----------|------------------|------|
 | 3    | 0-7      | -                | 预留编码 |
 | 3    | 8        | [THISTOGRAM](./THISTOGRAM.md) | 累积直方图统计指令 |
-| 3    | 9-29     | -                | 预留编码 |
+| 3    | 9        | -                | 预留编码 |
+| 3    | 10       | [TCI](./TCI.md)              | 生成连续整数序列到目标Tile中 |
+| 3    | 11       | [TTRI](./TTRI.md)            | 生成三角（下/上）掩码Tile |
+| 3    | 12       | [TRANDOM](./TRANDOM.md)      | 使用基于计数器的密码算法生成随机数 |
+| 3    | 13       | [TQUANT](./TQUANT.md)        | 量化Tile（如FP32→FP8），生成指数/缩放/最大值输出 |
+| 3    | 14       | [TSORT32](./TSORT32.md)      | 对src每个32元素块与idx对应索引排序 |
+| 3    | 15       | [TMRGSORT](./TMRGSORT.md)    | 多个已排序列表的归并排序 |
+| 3    | 16       | [TPARTADD](./TPARTADD.md)    | 部分逐元素加法，对不匹配区域有实现定义的处理 |
+| 3    | 17       | [TPARTMUL](./TPARTMUL.md)    | 部分逐元素乘法，对不匹配区域有实现定义的处理 |
+| 3    | 18       | [TPARTMAX](./TPARTMAX.md)    | 部分逐元素最大值，对不匹配区域有实现定义的处理 |
+| 3    | 19       | [TPARTMIN](./TPARTMIN.md)    | 部分逐元素最小值，对不匹配区域有实现定义的处理 |
+| 3    | 20       | [TPARTARGMAX](./TPARTARGMAX.md) | 部分逐元素最大值选择并返回对应索引（argmax） |
+| 3    | 21       | [TPARTARGMIN](./TPARTARGMIN.md) | 部分逐元素最小值选择并返回对应索引（argmin） |
+| 3    | 22-29    | -                | 预留编码 |
 | 3    | 30       | [ESAVE](./ESAVE.md)          | 异常保存块，用于保存发生异常的Tile块的块内状态 |
 | 3    | 31       | [ERCOV](./ERCOV.md)          | 异常恢复块，用于恢复发生异常的Tile块的块内状态 |

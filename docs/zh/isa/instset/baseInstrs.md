@@ -10,7 +10,7 @@
 |-----|------|
 | **块起始指令** | [BSTART](../header/BSTART.md), [XB](../header/XB.md) |
 | **块结束指令** | [BSTOP](../header/BSTOP.md) |
-| **块描述指令** | [B.IOR](../header/B.IOR.md), [B.IOT](../header/B.IOT.md), [B.IOD](../header/B.IOD.md), [B.TEXT](../header/B.TEXT.md), [B.CATR](../header/B.CATR.md), [B.DATR](../header/B.DATR.md), [B.HINT](../header/B.HINT.md), [B.DIM](../header/B.DIM.md) |
+| **块描述指令** | [B.IOR](../header/B.IOR.md), [B.IOT](../header/B.IOT.md), [B.TEXT](../header/B.TEXT.md), [B.CATR](../header/B.CATR.md), [B.DATR](../header/B.DATR.md), [B.HINT](../header/B.HINT.md), [B.DIM](../header/B.DIM.md) |
 | **模版块指令** | [MCOPY](../header/templateblock/MCOPY.md), [MSET](../header/templateblock/MSET.md), [FENTRY](../header/templateblock/FENTRY.md), [FRET.RA](../header/templateblock/FRET.RA.md), [FEXIT](../header/templateblock/FEXIT.md), [FRET.STK](../header/templateblock/FRET.STK.md) |
 
 ## <span id="BaseI">微指令</span>
@@ -28,7 +28,7 @@
 | **地址计算** | [ADDTPC](../inst/misa_g/ADDTPC.md), [SETRET](../inst/misa_g/SETRET.md) |
 | **高位立即数加载** | [LUI](../inst/misa_g/LUI.md) |
 | **乘法运算** | [MUL](../inst/misa_g/MUL.md), [MULU](../inst/misa_g/MULU.md), [MULW](../inst/misa_g/MULW.md), [MULUW](../inst/misa_g/MULUW.md), [MADD](../inst/misa_g/MADD.md), [MADDW](../inst/misa_g/MADDW.md) |
-| **比特位操作** | [BXS](../inst/misa_g/BXS.md), [BXU](../inst/misa_g/BXU.md), [BIS](../inst/misa_g/BIS.md), [BIC](../inst/misa_g/BIC.md), [CTZ](../inst/misa_g/CTZ.md), [CLZ](../inst/misa_g/CLZ.md), [BCNT](../inst/misa_g/BCNT.md), [REV](../inst/misa_g/REV.md) |
+| **比特位操作** | [BXS](../inst/misa_g/BXS.md), [BXU](../inst/misa_g/BXU.md), [BIS](../inst/misa_g/BIS.md), [BIC](../inst/misa_g/BIC.md), [CTZ](../inst/misa_g/CTZ.md), [CLS](../inst/misa_g/CLS.md), [BCNT](../inst/misa_g/BCNT.md), [REV](../inst/misa_g/REV.md) |
 | **内存加载·寄存器偏移** | [LB](../inst/misa_g/LB.md), [LH](../inst/misa_g/LH.md), [LW](../inst/misa_g/LW.md), [LD](../inst/misa_g/LD.md), [LBU](../inst/misa_g/LBU.md), [LHU](../inst/misa_g/LHU.md), [LWU](../inst/misa_g/LWU.md) |
 | **内存加载·立即数偏移** | [LBI](../inst/misa_g/LBI.md), [LHI](../inst/misa_g/LHI.md), [LWI](../inst/misa_g/LWI.md), [LDI](../inst/misa_g/LDI.md), [LBUI](../inst/misa_g/LBUI.md), [LHUI](../inst/misa_g/LHUI.md), [LWUI](../inst/misa_g/LWUI.md)<br>[LHI.U](../inst/misa_g/LHI.U.md), [LWI.U](../inst/misa_g/LWI.U.md), [LDI.U](../inst/misa_g/LDI.U.md), [LHUI.U](../inst/misa_g/LHUI.U.md), [LWUI.U](../inst/misa_g/LWUI.U.md) |
 | **内存加载·PC相对寻址** | [LB.PCR](../inst/misa_g/LB.PCR.md), [LH.PCR](../inst/misa_g/LH.PCR.md), [LW.PCR](../inst/misa_g/LW.PCR.md), [LD.PCR](../inst/misa_g/LD.PCR.md), [LBU.PCR](../inst/misa_g/LBU.PCR.md), [LHU.PCR](../inst/misa_g/LHU.PCR.md), [LWU.PCR](../inst/misa_g/LWU.PCR.md) |

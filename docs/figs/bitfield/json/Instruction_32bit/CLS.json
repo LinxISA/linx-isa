@@ -1,0 +1,46 @@
+[
+    {
+        "name": 1,
+        "bits": 1,
+        "attr": "W",
+        "type": 17
+    },
+    {
+        "name": 3,
+        "bits": 3,
+        "attr": "Opcode",
+        "type": 5
+    },
+    {
+        "name": 6,
+        "bits": 3,
+        "attr": "Opc1",
+        "type": 10
+    },
+    {
+        "name": "RegDst",
+        "bits": 5,
+        "type": 3
+    },
+    {
+        "name": 5,
+        "bits": 3,
+        "attr": "Func",
+        "type": 4
+    },
+    {
+        "name": "SrcL",
+        "bits": 5,
+        "type": 23
+    },
+    {
+        "name": "imml",
+        "bits": 6,
+        "type": 24
+    },
+    {
+        "name": "imms",
+        "bits": 6,
+        "type": 15
+    }
+]

@@ -21,7 +21,7 @@ Bit manipulation operations (vector forms).
 | [V.BIS](../instructions/v_bis.md) | `v.bis SrcL, M, N, ->Dst` | 64 | — | [64-bit V.] Bit set. |
 | [V.BXS](../instructions/v_bxs.md) | `v.bxs SrcL, M, N, ->Dst` | 64 | — | [64-bit V.] Bit-field extract signed. |
 | [V.BXU](../instructions/v_bxu.md) | `v.bxu SrcL, M, N, ->Dst` | 64 | — | [64-bit V.] Bit-field extract unsigned. |
-| [V.CLZ](../instructions/v_clz.md) | `v.clz SrcL, M, N, ->Dst` | 64 | — | [64-bit V.] Count leading zeros. |
+| [V.CLS](../instructions/v_cls.md) | `v.cls SrcL, M, N, ->Dst` | 64 | — | [64-bit V.] Count leading sign bits. |
 | [V.CTZ](../instructions/v_ctz.md) | `v.ctz SrcL, M, N, ->Dst` | 64 | — | [64-bit V.] Count trailing zeros. |
 | [V.REV](../instructions/v_rev.md) | `v.rev SrcL, M, N, ->Dst` | 64 | — | [64-bit V.] Bit-reversal. |
 

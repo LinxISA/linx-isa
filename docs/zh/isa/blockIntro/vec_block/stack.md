@@ -42,58 +42,30 @@ l.sd vt#1.ud, [TS, lc0.uh<<3]
 l.ld [TS, lc0.uh<<3], ->vt.d
 ```
 
-## 特殊情况
+## S-Tile 与输出 Tile 的关系
 
-由于块指令的第二个输出Tile与栈空间寄存器（S-Tile）在块内对应同一个形参寄存器TO1/TS，因此多输出且需要使用S寄存器的块指令需要将`B.IOT xx, ->S`放置在第二个输出位置，否则将导致Tile形参寄存器初始化时出现冲突，触发**非法指令异常**。
+TS 是独立的栈空间形参寄存器，与输出形参寄存器（TO~TO3）不再共用槽位。因此 S-Tile 的申请位置不受输出 Tile 的数量和顺序限制，可以任意放置在输出列表中。
 
-错误示例1：
+任意位置申请 S 寄存器的示例：
 ```asm
-# 汇编：
-    VPAR xx, ->S<1KB>, T<1KB>, T<1KB>, ..., T<1KB>
-
-# 展开指令：
-    BSTART.VPAR
-    B.IOT xx, ->S<1KB>    # 栈空间寄存器S与TS(TO1)建立映射关系
-    B.IOT xx, ->T<1KB>    # 第1个输出Tile（T）与TO建立映射关系
-    B.IOT xx, ->T<1KB>    # 第2个输出Tile（T）与TO1建立映射关系，出现冲突
-    ...
-    B.IOT xx, ->T<1KB>    # 第n个输出Tile（T）与TO7建立映射关系
-```
-
-错误示例2：
-```asm
-# 汇编：
-    VPAR xx, ->T<1KB>, T<1KB>, S<1KB>, ..., T<1KB>
-
-# 展开指令：
-    BSTART.VPAR
-    B.IOT xx, ->T<1KB>    # 第1个输出Tile（T）与TO建立映射关系
-    B.IOT xx, ->T<1KB>    # 第2个输出Tile（T）与TO1建立映射关系
-    B.IOT xx, ->S<1KB>    # 栈空间寄存器S与TS(TO1)建立映射关系，出现冲突
-    ...
-    B.IOT xx, ->T<1KB>    # 第n个输出Tile（T）与TO7建立映射关系
-```
-
-正确示例：
-```asm
-# 汇编：
+# 多输出 + 栈空间 — S 可放在任意位置
     VPAR xx, ->T<1KB>, S<1KB>, T<1KB>, ..., T<1KB>
 
 # 展开指令：
     BSTART.VPAR
     B.IOT xx, ->T<1KB>    # 第1个输出Tile（T）与TO建立映射关系
-    B.IOT xx, ->S<1KB>    # 栈空间寄存器S与TS(TO1)建立映射关系
-    B.IOT xx, ->T<1KB>    # 第2个输出Tile（T）与TO2建立映射关系
+    B.IOT xx, ->S<1KB>    # 栈空间寄存器S与TS建立映射关系（独立于输出）
+    B.IOT xx, ->T<1KB>    # 第2个输出Tile（T）与TO1建立映射关系
     ...
-    B.IOT xx, ->T<1KB>    # 第n个输出Tile（T）与TO7建立映射关系
+    B.IOT xx, ->T<1KB>    # 第n个输出Tile（T）与TO3建立映射关系
 ```
 
-如果一个块指令没有输出Tile寄存器，但是需要申请S寄存器空间，那么可以使用如下方式申请：
+无输出仅申请栈空间：
 ```asm
 # 汇编：
     VPAR xx, ->S<1KB>
 
 # 展开指令：
     BSTART.VPAR
-    B.IOT xx, ->S<1KB>    # 栈空间寄存器S与TS(TO1)建立映射关系
+    B.IOT xx, ->S<1KB>    # 栈空间寄存器S与TS建立映射关系
 ```

@@ -10,7 +10,7 @@
 
 ```asm
 TSTORE.Layout <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType>, SrcTile0<.reuse>,..., SrcTile7<.reuse>, 
-              [RegSrc0, RegSrc1], DepSrc0, DepSrc1, DepSrc2, ->DepDst
+              [RegSrc0, RegSrc1] ->
 ```
 
 ## 汇编符号
@@ -26,8 +26,6 @@ TSTORE.Layout <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType>, SrcTile0<.reuse>,
 | **SrcTile0-7** | B.IOT | 指示每个输入Tile Register的类型，可选`T/U/M/N`。（不允许是ACC寄存器） | 否 |
 | **RegSrc0** | B.IOR | 表示搬移的数据块在内存中的目的地址（BaseAddress），即搬运的第一个元素的基地址。 | 否 |
 | **RegSrc1** | B.IOR | 表示内存中两组数据的首地址间隔Stride（单位：字节）（如果两组数据之间地址是连续的则可缺省） | 是，默认连续 |
-| **DepSrc0 / DepSrc1 / DepSrc2** | B.IOD | 表示本块指令最多显式记录 3 个前序 `D` 依赖槽位。 | 是，默认无依赖 |
-| **DepDst** | B.IOD | 表示本块指令对后序引用该标识的块指令的屏障。 | 是，默认无屏障 |
 
 其中，DataType的可选类型见下表：
 
@@ -46,15 +44,14 @@ TSTORE.Layout <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType>, SrcTile0<.reuse>,
 
 - [BSTART.TMA](../../blockIntro/tma_block/header.md) `TSTORE, DataType`
 - [B.DATR](../../header/B.DATR.md) `Layout`
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0`    （注：*ValidCol*）
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`    （注：*ValidRow*）
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB2`    （注：*Col*）
+- [B.DIM](../../header/B.DIM.md) `reg, imm ->LB0`    （注：*ValidCol*）
+- [B.DIM](../../header/B.DIM.md) `reg, imm ->LB1`    （注：*ValidRow*）
+- [B.DIM](../../header/B.DIM.md) `reg, imm ->LB2`    （注：*Col*）
 - [B.IOT](../../header/B.IOT.md) `SrcTile0<.reuse>, SrcTile1<.reuse>`
 - [B.IOT](../../header/B.IOT.md) `SrcTile2<.reuse>, SrcTile3<.reuse>`
 - [B.IOT](../../header/B.IOT.md) `SrcTile4<.reuse>, SrcTile5<.reuse>`
 - [B.IOT](../../header/B.IOT.md) `SrcTile6<.reuse>, SrcTile7<.reuse>, last`
 - [B.IOR](../../header/B.IOR.md) `RegSrc0, RegSrc1`
-- [B.IOD](../../header/B.IOD.md) `DepSrc0, DepSrc1, DepSrc2, ->DepDst`
 
 ## 实现方式
 
@@ -177,8 +174,8 @@ Row = TotalTileSize / (Col * sizeof(DataType));
 ## 汇编示例
 
 ```asm
-    TSTORE.NORM <LB0:100, LB1:a0, LB2:a1+10, FP32>, T#1, [a2]
-    TSTORE.NZ2ND <LB0:100, LB1:a0, LB2:a1+10, FP32>, U#1, [a2, a1]
+TSTORE.NORM <LB0:100, LB1:a0, LB2:a1+10, FP32>, T#1, [a2]
+TSTORE.NZ2ND <LB0:100, LB1:a0, LB2:a1+10, FP32>, U#1, [a2, a1]
 ```
 
 ## 注意事项

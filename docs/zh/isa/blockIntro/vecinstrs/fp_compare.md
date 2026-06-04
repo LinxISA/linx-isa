@@ -17,10 +17,10 @@
 | V.FNE  | `v.fne SrcL.{T}, SrcR.{T}, ->Dst.{W}` |  浮点不等静默比较  |   否  |
 | V.FLT  | `v.flt SrcL.{T}, SrcR.{T}, ->Dst.{W}` |  浮点小于静默比较  |   否  |
 | V.FGE  | `v.fge SrcL.{T}, SrcR.{T}, ->Dst.{W}` |  浮点大于等于静默比较  |   否  |
-| V.FEQS | `v.feqs SrcL.{T}, SrcR.{T}, ->Dst.{W}` |  浮点相等信号比较  |   是  |
-| V.FNES | `v.fnes SrcL.{T}, SrcR.{T}, ->Dst.{W}` |  浮点不等信号比较  |   是  |
-| V.FLTS | `v.flts SrcL.{T}, SrcR.{T}, ->Dst.{W}` |  浮点小于信号比较  |   是  |
-| V.FGES | `v.fges SrcL.{T}, SrcR.{T}, ->Dst.{W}` |  浮点大于等于信号比较  |   是  |
+| V.FEQU | `v.fequ SrcL.{T}, SrcR.{T}, ->Dst.{W}` |  浮点相等信号比较  |   是  |
+| V.FNEU | `v.fneu SrcL.{T}, SrcR.{T}, ->Dst.{W}` |  浮点不等信号比较  |   是  |
+| V.FLTU | `v.fltu SrcL.{T}, SrcR.{T}, ->Dst.{W}` |  浮点小于信号比较  |   是  |
+| V.FGEU | `v.fgeu SrcL.{T}, SrcR.{T}, ->Dst.{W}` |  浮点大于等于信号比较  |   是  |
 
 ## 指令编码
 

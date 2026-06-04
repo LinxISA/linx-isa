@@ -119,7 +119,7 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [C.ZEXT.B](c_zext_b.md) | [C.UNARY](../groups/c_unary.md) | 16 | [16-bit C.] Instruction from the C.UNARY group. |
 | [C.ZEXT.H](c_zext_h.md) | [C.UNARY](../groups/c_unary.md) | 16 | [16-bit C.] Instruction from the C.UNARY group. |
 | [C.ZEXT.W](c_zext_w.md) | [C.UNARY](../groups/c_unary.md) | 16 | [16-bit C.] Instruction from the C.UNARY group. |
-| [CLZ](clz.md) | [Bit Operation](../groups/bit_operation.md) | 32 | Count leading zeros. |
+| [CLS](cls.md) | [Bit Operation](../groups/bit_operation.md) | 32 | Count leading sign bits. |
 | [CMP.AND](cmp_and.md) | [Compare Instruction](../groups/compare_instruction.md) | 32 | Instruction from the Compare Instruction group. |
 | [CMP.ANDI](cmp_andi.md) | [Compare Instruction](../groups/compare_instruction.md) | 32 | Instruction from the Compare Instruction group. |
 | [CMP.EQ](cmp_eq.md) | [Compare Instruction](../groups/compare_instruction.md) | 32 | Compare equal. Sets destination to 1 if operands are equal. |
@@ -625,7 +625,7 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [V.BIS](v_bis.md) | [Bit Manipulation](../groups/bit_manipulation.md) | 64 | [64-bit V.] Bit set. |
 | [V.BXS](v_bxs.md) | [Bit Manipulation](../groups/bit_manipulation.md) | 64 | [64-bit V.] Bit-field extract signed. |
 | [V.BXU](v_bxu.md) | [Bit Manipulation](../groups/bit_manipulation.md) | 64 | [64-bit V.] Bit-field extract unsigned. |
-| [V.CLZ](v_clz.md) | [Bit Manipulation](../groups/bit_manipulation.md) | 64 | [64-bit V.] Count leading zeros. |
+| [V.CLS](v_cls.md) | [Bit Manipulation](../groups/bit_manipulation.md) | 64 | [64-bit V.] Count leading sign bits. |
 | [V.CMP.AND](v_cmp_and.md) | [Compare Instruction](../groups/compare_instruction.md) | 64 | [64-bit V.] Instruction from the Compare Instruction group. |
 | [V.CMP.ANDI](v_cmp_andi.md) | [Compare Instruction](../groups/compare_instruction.md) | 64 | [64-bit V.] Instruction from the Compare Instruction group. |
 | [V.CMP.EQ](v_cmp_eq.md) | [Compare Instruction](../groups/compare_instruction.md) | 64 | [64-bit V.] Instruction from the Compare Instruction group. |

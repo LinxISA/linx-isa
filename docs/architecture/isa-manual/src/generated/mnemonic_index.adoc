@@ -107,7 +107,7 @@ This table lists unique mnemonics in the v0.56.4 catalog. Each mnemonic may have
 |`C.ZEXT.B` |C.UNARY |16 |1
 |`C.ZEXT.H` |C.UNARY |16 |1
 |`C.ZEXT.W` |C.UNARY |16 |1
-|`CLZ` |Bit Operation |32 |1
+|`CLS` |Bit Operation |32 |1
 |`CMP.AND` |Compare Instruction |32 |1
 |`CMP.ANDI` |Compare Instruction |32 |1
 |`CMP.EQ` |Compare Instruction |32 |1
@@ -538,7 +538,7 @@ This table lists unique mnemonics in the v0.56.4 catalog. Each mnemonic may have
 |`V.BIS` |Bit Manipulation |64 |1
 |`V.BXS` |Bit Manipulation |64 |1
 |`V.BXU` |Bit Manipulation |64 |1
-|`V.CLZ` |Bit Manipulation |64 |1
+|`V.CLS` |Bit Manipulation |64 |1
 |`V.CMP.AND` |Compare Instruction |64 |1
 |`V.CMP.ANDI` |Compare Instruction |64 |1
 |`V.CMP.EQ` |Compare Instruction |64 |1

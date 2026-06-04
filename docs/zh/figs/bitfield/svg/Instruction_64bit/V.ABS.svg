@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="120" viewBox="0 0 800 120">
+  <rect width="800" height="120" fill="#f8f8f8" stroke="#ccc" stroke-width="1"/>
+  <text x="400" y="65" text-anchor="middle" font-family="monospace" font-size="14" fill="#666">V.ABS.svg</text>
+  <text x="400" y="85" text-anchor="middle" font-family="monospace" font-size="11" fill="#999">(encoding diagram — pending)</text>
+</svg>

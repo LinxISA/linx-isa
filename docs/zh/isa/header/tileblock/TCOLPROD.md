@@ -22,7 +22,7 @@ for r in 0..(Cv-1):           // 遍历所有列
 ## 汇编语法
 
 ```asm
-    TCOLPROD <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, SrcTile<.reuse>, ->DstTile<Size>
+TCOLPROD <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, SrcTile<.reuse>, ->DstTile<Size>
 ```
 
 ## 汇编符号
@@ -82,7 +82,7 @@ for r in 0..(Cv-1):           // 遍历所有列
 ## 汇编示例
 
 ```asm
-    TCOLPROD <LB0:30, LB1:16, LB2:32, fp16, null>, U#2.reuse, ->T<1KB>
+TCOLPROD <LB0:30, LB1:16, LB2:32, fp16, null>, U#2.reuse, ->T<1KB>
 ```
 
 1. **操作内容**  

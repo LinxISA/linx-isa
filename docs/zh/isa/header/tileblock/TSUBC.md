@@ -23,7 +23,7 @@ for r in 0..(Rv-1):           // 遍历所有行
 ## 汇编语法
 
 ```asm
-    TSUBC <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, SrcTile0<.reuse>, SrcTile1<.reuse>, SrcTile2<.reuse>, ->DstTile<Size>
+TSUBC <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, SrcTile0<.reuse>, SrcTile1<.reuse>, SrcTile2<.reuse>, ->DstTile<Size>
 ```
 
 ## 汇编符号
@@ -83,7 +83,7 @@ for r in 0..(Rv-1):           // 遍历所有行
 ## 汇编示例
 
 ```asm
-    TSUBC <LB0:40, LB1:32, LB2:48, s16>, T#1, T#2.reuse, U#4, ->T<4KB>
+TSUBC <LB0:40, LB1:32, LB2:48, s16>, T#1, T#2.reuse, U#4, ->T<4KB>
 ```
 
 1. **操作内容**  

@@ -23,7 +23,7 @@ for r in 0..(Rv-1):           // 遍历所有行
 ## 汇编语法
 
 ```asm
-    TCMP.CmpMode <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, SrcTile0<.reuse>, SrcTile1<.reuse>, ->DstTile<Size>
+TCMP.CmpMode <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, SrcTile0<.reuse>, SrcTile1<.reuse>, ->DstTile<Size>
 ```
 
 ## 汇编符号
@@ -81,7 +81,7 @@ for r in 0..(Rv-1):           // 遍历所有行
 ## 汇编示例
 
 ```asm
-    TCMP.EQ <LB0:32, LB1:16, LB2:36, fp8>, T#1, T#2.reuse, ->M<1KB>
+TCMP.EQ <LB0:32, LB1:16, LB2:36, fp8>, T#1, T#2.reuse, ->M<1KB>
 ```
 1. **操作内容**  
     - 输入：`T#1` 和 `T#2` Tile寄存器

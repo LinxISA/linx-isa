@@ -17,9 +17,9 @@
 |  FNE    |  fne.{T} SrcL, SrcR, ->{t,u,Rd}   |  浮点不等静默比较  |   否  |
 |  FLT    |  flt.{T} SrcL, SrcR, ->{t,u,Rd}   |  浮点小于静默比较  |   否  |
 |  FGE    |  fge.{T} SrcL, SrcR, ->{t,u,Rd}   |  浮点大于等于静默比较  |   否  |
-|  FEQS   |  feqs.{T} SrcL, SrcR, ->{t,u,Rd}   |  浮点相等发信比较  |   是  |
-|  FNES   |  fnes.{T} SrcL, SrcR, ->{t,u,Rd}   |  浮点不等发信比较  |   是  |
-|  FLTS   |  flts.{T} SrcL, SrcR, ->{t,u,Rd}   |  浮点小于发信比较  |   是  |
-|  FGES   |  fges.{T} SrcL, SrcR, ->{t,u,Rd}   |  浮点大于等于发信比较  |   是  |
+|  FEQU   |  fequ.{T} SrcL, SrcR, ->{t,u,Rd}   |  浮点相等发信比较  |   是  |
+|  FNEU   |  fneu.{T} SrcL, SrcR, ->{t,u,Rd}   |  浮点不等发信比较  |   是  |
+|  FLTU   |  fltu.{T} SrcL, SrcR, ->{t,u,Rd}   |  浮点小于发信比较  |   是  |
+|  FGEU   |  fgeu.{T} SrcL, SrcR, ->{t,u,Rd}   |  浮点大于等于发信比较  |   是  |
 
 ![FloatingPointCompare](../../../figs/bitfield/svg/Introduction_32bit/FloatingPointCompare.svg)

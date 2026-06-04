@@ -17,9 +17,9 @@ The floating point comparison instruction compares two inputs based on the condi
 | FNE | fne.{T} SrcL, SrcR, ->{t,u,Rd} | Floating point inequality silent comparison | No |
 | FLT | flt.{T} SrcL, SrcR, ->{t,u,Rd} | Floating point less than silent comparison | No |
 | FGE | fge.{T} SrcL, SrcR, ->{t,u,Rd} | Floating point greater than or equal to silent comparison | No |
-| FEQS | feqs.{T} SrcL, SrcR, ->{t,u,Rd} | Floating point equality signaling comparison | Yes |
-| FNES | fnes.{T} SrcL, SrcR, ->{t,u,Rd} | Floating point unequal sending comparison | Yes |
-| FLTS | flts.{T} SrcL, SrcR, ->{t,u,Rd} | Floating point is less than sending comparison | Yes |
-| FGES | fges.{T} SrcL, SrcR, ->{t,u,Rd} | Floating point greater than or equal to sending comparison | Yes |
+| FEQU | fequ.{T} SrcL, SrcR, ->{t,u,Rd} | Floating point equality signaling comparison | Yes |
+| FNEU | fneu.{T} SrcL, SrcR, ->{t,u,Rd} | Floating point unequal sending comparison | Yes |
+| FLTU | fltu.{T} SrcL, SrcR, ->{t,u,Rd} | Floating point is less than sending comparison | Yes |
+| FGEU | fgeu.{T} SrcL, SrcR, ->{t,u,Rd} | Floating point greater than or equal to sending comparison | Yes |
 
 ![FloatingPointCompare](../../../figs/bitfield/svg/Introduction_32bit/FloatingPointCompare.svg)

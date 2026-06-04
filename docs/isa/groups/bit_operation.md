@@ -21,7 +21,7 @@ Bit manipulation operations (scalar forms).
 | [BIS](../instructions/bis.md) | `bis SrcL, M, N, ->{t, u, Rd}` | 32 | — | Bit set / OR. |
 | [BXS](../instructions/bxs.md) | `bxs SrcL, M, N, ->{t, u, Rd}` | 32 | — | Bit-field extract signed. |
 | [BXU](../instructions/bxu.md) | `bxu SrcL, M, N, ->{t, u, Rd}` | 32 | — | Bit-field extract unsigned. |
-| [CLZ](../instructions/clz.md) | `clz SrcL,  M, N, ->{t, u, Rd}` | 32 | — | Count leading zeros. |
+| [CLS](../instructions/cls.md) | `cls SrcL,  M, N, ->{t, u, Rd}` | 32 | — | Count leading sign bits. |
 | [CTZ](../instructions/ctz.md) | `ctz SrcL,  M, N, ->{t, u, Rd}` | 32 | — | Count trailing zeros. |
 | [REV](../instructions/rev.md) | `rev SrcL,  M, N, ->{t, u, Rd}` | 32 | — | Bit-reversal operation. |
 

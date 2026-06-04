@@ -5,8 +5,7 @@
 ## 汇编格式
 
 ```asm
-TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7<.reuse>, DepSrc0, DepSrc1, DepSrc2, [BGetList],  
-                                     ->DstTile0<TileSize0>, ..., DstTile3<TileSize3>, [BSetList], DepDst
+TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7<.reuse> [BGetList] ->DstTile0<TileSize0>, ..., DstTile3<TileSize3>, [BSetList]
 ```
 
 各参数说明如下：
@@ -24,8 +23,8 @@ TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7
 | **TileSize0, ..., TileSize3** | 分别指示每个输出Tile寄存器的空间大小，可以通过一个 `立即数`或者`全局寄存器`传参。 | 取决于DstTile |
 | **[BGetList]** | 全局寄存器[GGPR](../../register/common/ggpr.md)输入列表。 | 是 |
 | **[BSetList]** | 全局寄存器[GGPR](../../register/common/ggpr.md)输出列表。 | 是 |
-| **DepSrc0, DepSrc1, DepSrc2** | 表示本块指令最多显式记录 3 个前序 `D` 依赖槽位。 | 是 |
-| **DepDst** | 表示本块指令对后序引用该标识的块指令的屏障。 | 是 |
+| **** | 表示本块指令对前序输出至D的块指令的依赖。 | 是 |
+| **** | 表示本块指令对后序引用该标识的块指令的屏障。 | 是 |
 
 ## 编码方式
 
@@ -33,16 +32,15 @@ TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7
 
 - `BSTART.TMA TileOp, DataType`
 - [B.DATR](../../header/B.DATR.md) `Layout, PadValue`
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0`
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB2`
-- [B.IOT](../../header/B.IOT.md) `SrcTile0<.reuse>, SrcTile1<.reuse>, ->DstTile0<TileSize0>`
+- [B.DIM](../../header/B.DIM.md) `reg, imm ->LB0`
+- [B.DIM](../../header/B.DIM.md) `reg, imm ->LB1`
+- [B.DIM](../../header/B.DIM.md) `reg, imm ->LB2`
+- [B.IOT](../../header/B.IOT.md) `SrcTile0<.reuse>, SrcTile1<.reuse> ->DstTile0<TileSize0>`
 - ...
-- [B.IOT](../../header/B.IOT.md) `SrcTile6<.reuse>, SrcTile7<.reuse>, last, ->DstTile3<TileSize3>`
-- [B.IOR](../../header/B.IOR.md) `RegSrc0, RegSrc1, RegSrc2, ->RegDst0`
+- [B.IOT](../../header/B.IOT.md) `SrcTile6<.reuse>, SrcTile7<.reuse>, last ->DstTile3<TileSize3>`
+- [B.IOR](../../header/B.IOR.md) `RegSrc0, RegSrc1, RegSrc2 ->RegDst0`
 - ...
-- [B.IOR](../../header/B.IOR.md) `RegSrc9, RegSrc10, RegSrc11, ->RegDst4`
-- [B.IOD](../../header/B.IOD.md) `DepSrc0, DepSrc1, DepSrc2, ->DepDst`
+- [B.IOR](../../header/B.IOR.md) `RegSrc9, RegSrc10, RegSrc11 ->RegDst4`
 
 其中，BSTART.TMA指令的编码格式如下：
 
@@ -58,8 +56,8 @@ TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7
 | 3 | -                                          | 保留 |
 | 4 | [MGATHER](../../header/tileblock/MGATHER.md) | 将离散的内存空间中的数据聚集到Tile寄存器中。 |
 | 5 | [MSCATTER](../../header/tileblock/MSCATTER.md) | 将Tile寄存器中的数据存储到离散的内存空间。  |
-| 6 | [MGATHER.MASK](../../header/tileblock/MGATHER.MASK.md) | 带掩码的内存聚集，仅当 MaskTile 中对应标志位为 1 时才执行聚集。 |
-| 7 | [MSCATTER.MASK](../../header/tileblock/MSCATTER.MASK.md) | 带掩码的内存分散，仅当 MaskTile 中对应标志位为 1 时才执行分散。 |
+| 6 | [MGATHER.MASK](../../header/tileblock/MGATHER.MASK.md) | 带掩码的内存聚集，仅当MaskTile中对应标志位为1时才执行聚集。 |
+| 7 | [MSCATTER.MASK](../../header/tileblock/MSCATTER.MASK.md) | 带掩码的内存分散，仅当MaskTile中对应标志位为1时才执行分散。 |
 | 8-31 | 暂时保留 |
 
 DataType字段编码方式如下：

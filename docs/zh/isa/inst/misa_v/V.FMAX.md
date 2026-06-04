@@ -5,6 +5,8 @@
 浮点数最大值(*Floating-point Maximum*)<br>
 比较左源寄存器和右源寄存器中的浮点数，将**较大值**写入目的寄存器中。
 
+`vlen` 字段控制指令对 lane 内多个元素的同时操作能力，允许单条指令在一个 lane 内并行处理多个数据元素。
+
 ## 汇编语法
 
 ```asm
@@ -25,6 +27,9 @@
 
 ![V.FMAX](../../../figs/bitfield/svg/Instruction_64bit/V.FMAX.svg)
 
+
+`vlen` 字段控制指令对 lane 内多个元素的同时操作能力，允许单条指令在一个 lane 内并行处理多个数据元素。
+
 ## 执行方式
 
 - 解码源寄存器域：[DecodeFP](../LibPseudoCode.md#locationM)
@@ -34,6 +39,12 @@
 ```c
 bits(64) pmask = P;   // lane掩码
 // lanenum表示当前Group内lane的数量
+
+// vlen 控制每个 lane 内的有效元素数量
+// vlen=0: 1 元素/lane, vlen=1: 2 元素/lane, vlen=2: 4 元素/lane
+integer elem_per_lane = (vlen == 0) ? 1 : (vlen == 1) ? 2 : (vlen == 2) ? 4 : 1;
+integer elem_width = srcwidth / elem_per_lane;
+
 for (laneid = 0; laneid < lanenum; laneid++)
 {
     integer {m, srctype1} = DecodeFP(SrcL);

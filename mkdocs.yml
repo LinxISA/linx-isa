@@ -193,7 +193,6 @@ nav:
             - B.TEXT: isa/header/B.TEXT.md
             - B.IOR: isa/header/B.IOR.md
             - B.IOT: isa/header/B.IOT.md
-            - B.IOD: isa/header/B.IOD.md
             - B.DIM: isa/header/B.DIM.md
             - C.B.DIM: isa/header/C.B.DIM.md
             - BSTOP: isa/header/BSTOP.md
@@ -381,7 +380,7 @@ nav:
             - BIC: isa/inst/misa_g/BIC.md
             - BIS: isa/inst/misa_g/BIS.md
             - CTZ: isa/inst/misa_g/CTZ.md
-            - CLZ: isa/inst/misa_g/CLZ.md
+            - CLS: isa/inst/misa_g/CLS.md
             - BCNT: isa/inst/misa_g/BCNT.md
             - REV: isa/inst/misa_g/REV.md
             - HL.BFI: isa/inst/misa_h/HL.BFI.md
@@ -615,10 +614,10 @@ nav:
             - FNE: isa/inst/misa_f/FNE.md
             - FLT: isa/inst/misa_f/FLT.md
             - FGE: isa/inst/misa_f/FGE.md
-            - FEQS: isa/inst/misa_f/FEQS.md
-            - FNES: isa/inst/misa_f/FNES.md
-            - FLTS: isa/inst/misa_f/FLTS.md
-            - FGES: isa/inst/misa_f/FGES.md
+            - FEQU: isa/inst/misa_f/FEQU.md
+            - FNEU: isa/inst/misa_f/FNEU.md
+            - FLTU: isa/inst/misa_f/FLTU.md
+            - FGEU: isa/inst/misa_f/FGEU.md
         - 最大最小值:
             - 简介: isa/blockIntro/fp_block/max_min.md
             - MAX: isa/inst/misa_f/MAX.md
@@ -687,7 +686,7 @@ nav:
             - L.BIC: isa/inst/misa_l/L.BIC.md
             - L.BIS: isa/inst/misa_l/L.BIS.md
             - L.CTZ: isa/inst/misa_l/L.CTZ.md
-            - L.CLZ: isa/inst/misa_l/L.CLZ.md
+            - L.CLS: isa/inst/misa_l/L.CLS.md
             - L.BCNT: isa/inst/misa_l/L.BCNT.md
             - L.REV: isa/inst/misa_l/L.REV.md
         - 访存指令:
@@ -768,10 +767,10 @@ nav:
             - L.FNE: isa/inst/misa_l/L.FNE.md
             - L.FLT: isa/inst/misa_l/L.FLT.md
             - L.FGE: isa/inst/misa_l/L.FGE.md
-            - L.FEQS: isa/inst/misa_l/L.FEQS.md
-            - L.FNES: isa/inst/misa_l/L.FNES.md
-            - L.FLTS: isa/inst/misa_l/L.FLTS.md
-            - L.FGES: isa/inst/misa_l/L.FGES.md
+            - L.FEQU: isa/inst/misa_l/L.FEQU.md
+            - L.FNEU: isa/inst/misa_l/L.FNEU.md
+            - L.FLTU: isa/inst/misa_l/L.FLTU.md
+            - L.FGEU: isa/inst/misa_l/L.FGEU.md
         - 最大最小值:
             - L.MAX: isa/inst/misa_l/L.MAX.md
             - L.MIN: isa/inst/misa_l/L.MIN.md
@@ -937,7 +936,7 @@ nav:
             - V.BIC: isa/inst/misa_v/V.BIC.md
             - V.BIS: isa/inst/misa_v/V.BIS.md
             - V.CTZ: isa/inst/misa_v/V.CTZ.md
-            - V.CLZ: isa/inst/misa_v/V.CLZ.md
+            - V.CLS: isa/inst/misa_v/V.CLS.md
             - V.BCNT: isa/inst/misa_v/V.BCNT.md
             - V.REV: isa/inst/misa_v/V.REV.md
         - 普通访存指令:
@@ -975,41 +974,6 @@ nav:
             - V.SHI.U: isa/inst/misa_v/V.SHI.U.md
             - V.SWI.U: isa/inst/misa_v/V.SWI.U.md
             - V.SDI.U: isa/inst/misa_v/V.SDI.U.md
-        - 桥接访存指令:
-            - 简介: isa/blockIntro/vecinstrs/loadStoreBridge.md
-            - V.LB.BRG: isa/inst/misa_v/V.LB.BRG.md
-            - V.LH.BRG: isa/inst/misa_v/V.LH.BRG.md
-            - V.LW.BRG: isa/inst/misa_v/V.LW.BRG.md
-            - V.LD.BRG: isa/inst/misa_v/V.LD.BRG.md
-            - V.LBU.BRG: isa/inst/misa_v/V.LBU.BRG.md
-            - V.LHU.BRG: isa/inst/misa_v/V.LHU.BRG.md
-            - V.LWU.BRG: isa/inst/misa_v/V.LWU.BRG.md
-            - V.LBI.BRG: isa/inst/misa_v/V.LBI.BRG.md
-            - V.LHI.BRG: isa/inst/misa_v/V.LHI.BRG.md
-            - V.LWI.BRG: isa/inst/misa_v/V.LWI.BRG.md
-            - V.LDI.BRG: isa/inst/misa_v/V.LDI.BRG.md
-            - V.LBUI.BRG: isa/inst/misa_v/V.LBUI.BRG.md
-            - V.LHUI.BRG: isa/inst/misa_v/V.LHUI.BRG.md
-            - V.LWUI.BRG: isa/inst/misa_v/V.LWUI.BRG.md
-            - V.LHI.U.BRG: isa/inst/misa_v/V.LHI.UBRG.md
-            - V.LWI.U.BRG: isa/inst/misa_v/V.LWI.UBRG.md
-            - V.LDI.U.BRG: isa/inst/misa_v/V.LDI.UBRG.md
-            - V.LHUI.U.BRG: isa/inst/misa_v/V.LHUI.UBRG.md
-            - V.LWUI.U.BRG: isa/inst/misa_v/V.LWUI.UBRG.md
-            - V.SB.BRG: isa/inst/misa_v/V.SB.BRG.md
-            - V.SH.BRG: isa/inst/misa_v/V.SH.BRG.md
-            - V.SW.BRG: isa/inst/misa_v/V.SW.BRG.md
-            - V.SD.BRG: isa/inst/misa_v/V.SD.BRG.md
-            - V.SH.U.BRG: isa/inst/misa_v/V.SH.UBRG.md
-            - V.SW.U.BRG: isa/inst/misa_v/V.SW.UBRG.md
-            - V.SD.U.BRG: isa/inst/misa_v/V.SD.UBRG.md
-            - V.SBI.BRG: isa/inst/misa_v/V.SBI.BRG.md
-            - V.SHI.BRG: isa/inst/misa_v/V.SHI.BRG.md
-            - V.SWI.BRG: isa/inst/misa_v/V.SWI.BRG.md
-            - V.SDI.BRG: isa/inst/misa_v/V.SDI.BRG.md
-            - V.SHI.U.BRG: isa/inst/misa_v/V.SHI.UBRG.md
-            - V.SWI.U.BRG: isa/inst/misa_v/V.SWI.UBRG.md
-            - V.SDI.U.BRG: isa/inst/misa_v/V.SDI.UBRG.md
         - 原子操作:
             - 简介: isa/blockIntro/vecinstrs/atomic.md
             - V.LW.ADD: isa/inst/misa_v/V.LW.ADD.md
@@ -1057,10 +1021,10 @@ nav:
             - V.FNE: isa/inst/misa_v/V.FNE.md
             - V.FLT: isa/inst/misa_v/V.FLT.md
             - V.FGE: isa/inst/misa_v/V.FGE.md
-            - V.FEQS: isa/inst/misa_v/V.FEQS.md
-            - V.FNES: isa/inst/misa_v/V.FNES.md
-            - V.FLTS: isa/inst/misa_v/V.FLTS.md
-            - V.FGES: isa/inst/misa_v/V.FGES.md
+            - V.FEQU: isa/inst/misa_v/V.FEQU.md
+            - V.FNEU: isa/inst/misa_v/V.FNEU.md
+            - V.FLTU: isa/inst/misa_v/V.FLTU.md
+            - V.FGEU: isa/inst/misa_v/V.FGEU.md
         - 最大最小值:
             - 简介: isa/blockIntro/vecinstrs/max_min.md
             - V.MAX: isa/inst/misa_v/V.MAX.md

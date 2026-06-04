@@ -2,59 +2,95 @@
 
 ## 说明
 
-数据块分散(*Scatter from Tile to Tile*)  
-本指令执行如下操作：将第一个输入数据块内的数据存储到离散的数据块空间中。离散的索引存储在第二个输入Tile中。
+**数据块分散（Tile Scatter）**
+
+`TSCATTER` 使用索引 Tile 将源 Tile 的行分散写入目标 Tile 中。对于源 Tile 中的每个元素，其目标行号由索引 Tile 对应位置的整型索引值指定，目标列号保持不变。
+
+实现伪代码示意如下：
+```pseudocode
+// 基于索引的分散操作
+for r in 0..(ValidRow-1):                              // 遍历所有行
+  for c in 0..(ValidCol-1):                            // 遍历所有列
+    idx = indices[r, c]                                   // 获取目标行索引
+    dst[idx, c] = src[r, c]                               // 将源元素分散到目标行
+```
+
+---
 
 ## 汇编语法
 
 ```asm
-    TSCATTER <Row:arg0, Col:arg1, Dep:arg2, DataType>, SrcTile0<.reuse>, SrcTile1<.reuse>, DepSrc0, DepSrc1, DepSrc2, ->DstTile<TileSize>, DepDst
+TSCATTER <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, SrcTile<.reuse>, IdxTile<.reuse>, ->DstTile<Size>
 ```
 
 ## 汇编符号
 
-- **Row,Col,Dep**：分别表示本指令操作的数据块的`Row-行数`、`Col-列数`和`Dep-深度`等尺寸信息。这些参数可以通过三种方式设置，具体如下：
-    - **reg**：通过全局寄存器R0至R23设置。
-    - **imm**: 通过立即数设置，最大支持16bit值。
-    - **reg+imm**：通过全局寄存器R0至R23加上立即数设置。
-- **DataType**：表示本指令操作的数据块中元素数据格式，可选类型请见下表。
-- **SrcTile0**：指示第一个输入的[Tile 寄存器](../../register/common/tilereg.md)。
-- **SrcTile1**：指示第二个输入的[Tile 寄存器](../../register/common/tilereg.md)。
+- **ValidCol**：输出 Tile 中有效元素的列数。该参数可以通过以下 3 种形式配置到 LB0 寄存器中：
+    - **reg**：通过全局寄存器 [GGPR](../../register/common/ggpr.md) 设置。
+    - **imm**: 使用立即数设置。
+    - **reg+imm**：通过全局寄存器加立即数的形式设置。
+- **ValidRow**：输出 Tile 中有效元素的行数（可缺省，默认值：`1`）。该参数配置到 LB1 寄存器中，配置方式同上。
+- **Col**：目标 Tile 的总列数（可缺省，默认值：等于 `ValidCol`）。该参数配置到 LB2 寄存器中，配置方式同上。
+- **Row**：目标 Tile 的总行数，通过公式计算：`Row = DstTileSize / (Col × sizeof(DataType))`。
+- **DataType**：输入/输出 Tile 元素的数据格式，支持类型见下表。
+- **SrcTile**：输入 Tile 寄存器，支持 `T`/`U`/`M`/`N` 队列输入（参见：[Tile 寄存器](../../register/common/tilereg.md)）。
+- **IdxTile**：索引 Tile 寄存器，元素类型为 `U32` 或 `S32`。
 - **reuse**（后缀）：指示当前指令提交后保留寄存器（若无此标识，允许硬件自动释放）。
-- **DstTile**：指示输出的[Tile 寄存器](../../register/common/tilereg.md)。
-- **TileSize**：指示输出的Tile寄存器的空间大小，可以通过`立即数`或者`全局寄存器`设置。
-- **DepSrc0 / DepSrc1 / DepSrc2**：表示本块指令最多显式记录 3 个前序 `D` 依赖槽位。
-- **DepDst**：表示本块指令对后序引用该标识的块指令的屏障。
+- **DstTile**：输出 Tile 寄存器，支持 `T`/`U`/`M`/`N` 队列输出。
+- **Size**：输出 Tile 寄存器的空间大小（有效范围参见：[Tile 寄存器](../../register/common/tilereg.md)）。
+- **PadValue**：输出 Tile 无效区域的填充值，可选：`Null`、`Zero`、`Max`、`Min`（可缺省，默认值：`Null`）。编码到 [B.DATR](../../header/B.DATR.md) 中。
 
-| DataType | 说明 |
-|----------|-----------|
-| FP64 | 64位双精度浮点数（E11M52）|
-| FP32 | 32位单精度浮点数（E8M23） |
-| FP16 | 16位半精度浮点数（E5M10） |
-| E4M3 | 8位低精度浮点数（E4M3）   |
-| S64  | 64位有符号整型数据        |
-| S32  | 32位有符号整型数据        |
-| S16  | 16位有符号整型数据        |
-| S8   | 8位有符号整型数据         |
-| U64  | 64位无符号整型数据        |
-| U32  | 32位无符号整型数据        |
-| U16  | 16位无符号整型数据        |
-| U8   | 8位无符号整型数据         |
+本指令支持数据类型（DataType）如下表所示：
 
-## 执行模型
+| 数据位宽 | 类型列表 |
+|----------|------------|
+| b64 | S64, U64, FP64 |
+| b32 | S32, U32, FP32, TF32, HF32 |
+| b16 | S16, U16, FP16, BF16 |
+| b8  | S8,  U8,  FP8(E4M3, E5M2) |
 
-本指令执行过程通过伪代码示意如下：
+---
 
-```c
-// dst: 输出 Tile，形状为 [max_index, col]，必须至少支持 indices[i][j] 所指向的行号
-// src: 源 Tile，形状为 [row, col]
-// indices: 索引 Tile，形状为 [row, col]，每个元素是整型索引（如 0~N-1）
-// 该函数直接按行列遍历，将 indices[i][j] 作为 dst 的行索引，复制 src[i][j] 到 dst[idx][j]
-void TScatter(Tile __in__ dst, Tile __in__ src, Tile __in__ indices) {
-  for (int i = 0; i < src.row; i++)
-    for (int j = 0; j < src.col; j++) {
-        int idx = indices[i][j];
-        dst[idx][j] = src[i][j];
-    }
-}
+## 编码格式
+
+该 TileOp 模版块编码为以下指令：
+
+- [BSTART.TMA](../../blockIntro/tma_block/header.md) `TSCATTER, DataType`
+- [B.DATR](../../header/B.DATR.md) `PadValue`
+- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0`   （注：*ValidCol*）
+- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`   （注：*ValidRow*）
+- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB2`   （注：*Col*）
+- [B.IOT](../../header/B.IOT.md) `SrcTile<.reuse>, IdxTile<.reuse>, last, ->DstTile<Size>`
+
+## 约束条件
+
+- **索引范围**：索引值必须小于 `DstTile::Row`，否则结果由硬件实现定义。
+- **写入冲突**：当多个源元素映射到同一个目标位置时，结果由硬件实现定义。
+- **有效边界**：`ValidRow <= Row`，`ValidCol <= Col`
+- **数据类型**：`SrcTile::DataType == DstTile::DataType`；`IdxTile::DataType` 为 `U32` 或 `S32`。
+- **存储布局**：必须是行主序（RowMajor）。
+- **尺寸范围**：Tile 的行列/有效行列等参数大小均必须小于等于 16 bit。
+
+---
+
+## 汇编示例
+
+```asm
+TSCATTER <LB0:32, LB1:16, FP32>, T#1.reuse, U#2.reuse, ->T<2KB>
 ```
+
+1. **操作内容**
+    - 使用 `U#2` 中的索引将 `T#1` 的 16×32 个元素分散到目标 Tile 中
+    - 输出：结果存入 `T` 队列 Tile 寄存器
+2. **数据处理范围**
+    - 源有效列数 `32`
+    - 源有效行数 `16`
+3. **数据格式**
+    - 值使用 `32 位单精度浮点数`（`FP32`）
+    - 索引使用 `U32`
+
+---
+
+## 备注
+
+此指令是 TileOp 模版块，软件只定义块头。

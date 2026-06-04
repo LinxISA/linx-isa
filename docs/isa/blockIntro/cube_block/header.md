@@ -5,8 +5,7 @@ The header of the matrix data block needs to define which type of matrix operati
 ## Assembly format
 
 ```asm
-TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7<.reuse>, DepSrc0, DepSrc1, DepSrc2, 
-                                     ->DstTile0<TileSize0>, ..., DstTile3<TileSize3>, DepDst
+TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7<.reuse> ->DstTile0<TileSize0>, ..., DstTile3<TileSize3>
 ```
 
 Each parameter is explained as follows:
@@ -22,8 +21,8 @@ Each parameter is explained as follows:
 | **reuse** | This flag needs to be added when the corresponding input Tile register is not allowed to be released after the execution of this instruction. If there is no such mark, it means that the hardware is allowed to release this register. | Yes |
 | **DstTile0, ..., DstTile3** | Indicate up to 4 output Tile register types respectively | Optional T, U, M, N or ACC. | Yes |
 | **TileSize0, ..., TileSize3** | Indicates the space size of each output Tile register respectively. The parameter can be passed through a `立即数` or `全局寄存器`. | Depends on DstTile |
-| **DepSrc0, DepSrc1, DepSrc2** | Up to three dependency-source slots that refer to previous block-instruction outputs to `D`. | Yes |
-| **DepDst** | Indicates the barrier of this block instruction to the block instruction that references this identifier in subsequent sequences. | Yes |
+| **012** | Up to three dependency-source slots that refer to previous block-instruction outputs to `D`. | Yes |
+| **** | Indicates the barrier of this block instruction to the block instruction that references this identifier in subsequent sequences. | Yes |
 
 ## Encoding method
 
@@ -31,13 +30,13 @@ A complete matrix data block instructionheader needs to be split into the follow
 
 - BSTART.CUBE TileOp, DataType
 - [B.DATR](../../header/B.DATR.md) Layout.{canon, normal}, DataType
-- [B.DIM](../../header/B.DIM.md) reg, imm, ->LB0
-- [B.DIM](../../header/B.DIM.md) reg, imm, ->LB1
-- [B.DIM](../../header/B.DIM.md) reg, imm, ->LB2
-- [B.IOT](../../header/B.IOT.md) SrcTile0<.reuse>, SrcTile1<.reuse>, ->DstTile0<TileSize0>
+- [B.DIM](../../header/B.DIM.md) reg, imm ->LB0
+- [B.DIM](../../header/B.DIM.md) reg, imm ->LB1
+- [B.DIM](../../header/B.DIM.md) reg, imm ->LB2
+- [B.IOT](../../header/B.IOT.md) SrcTile0<.reuse>, SrcTile1<.reuse> ->DstTile0<TileSize0>
 -...
-- [B.IOT](../../header/B.IOT.md) SrcTile6<.reuse>, SrcTile7<.reuse>, last, ->DstTile3<TileSize3>
-- [B.IOD](../../header/B.IOD.md) DepSrc0, DepSrc1, DepSrc2, ->DepDst
+- [B.IOT](../../header/B.IOT.md) SrcTile6<.reuse>, SrcTile7<.reuse>, last ->DstTile3<TileSize3>
+- [B.IOD](../../header/B.IOD.md) 012 ->
 
 Among them, the encoding format of the BSTART.CUBE instruction is as follows:
 

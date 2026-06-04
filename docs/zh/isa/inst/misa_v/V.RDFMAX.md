@@ -3,12 +3,14 @@
 ## 说明
 
 浮点最大值归约(*Reduce Floating-point Maximum*)<br>
-对当前Group内所有Lane中源寄存器的浮点数比较得到最大值，结果写到目的寄存器中。如果目的寄存器是形参RO寄存器，结果需要与该寄存器中原始值比较得到较大值后再写出。
+对当前Group内的lane进行浮点最大值归约操作。支持两种归约模式：<br>
+- **Workgroup reduce**：当 SrcR 与 imm10 共同指示整个 Group 范围时，将 Group 内所有 lane 的源寄存器浮点数比较得到最大值，结果写到目的寄存器中。如果目的寄存器是形参RO寄存器，结果需要与该寄存器中原始值比较得到较大值后再写出。<br>
+- **Sub-group reduce**：当 SrcR 与 imm10 共同指示子组范围时，将 Group 划分为若干子组，在每个子组内独立执行浮点最大值归约，结果广播到该子组的所有 lane 中。
 
 ## 汇编语法
 
 ```asm
-    v.rdfmax SrcL<.reuse>.{T}, ->Dst.d
+    v.rdfmax SrcL<.reuse>.{T}, SrcR, imm10, ->RegDst<.W>
 ```
 
 ## 汇编符号
@@ -16,9 +18,11 @@
 - **SrcL**：源寄存器，可以索引的寄存器类型请见[向量指令介绍](../../blockIntro/vecinstrs/instIntro.md)。
 - **reuse**：当源寄存器为向量寄存器时可增加本后缀，用于指示当前指令提交后本寄存器不允许被释放。如无此标识，则表示允许硬件释放本寄存器。
 - **T**：指定操作数的数据类型，可选类型包括fb, fh, fs, fd等。
+- **SrcR**：范围寄存器（标量），与 imm10 共同指示 sub-group 归约范围。当 SrcR 与 imm10 共同指示整个 Group 范围时按 workgroup reduce 执行。
+- **imm10**：立即数范围参数，与 SrcR 共同指示 sub-group 归约范围。
 - **->**：用于指示目的寄存器。
-- **RegDst**：目的寄存器，可以索引块内的RO寄存器或T/U寄存器。
-- **.d**：表示目的寄存器为64位双字宽。
+- **RegDst**：目的寄存器。workgroup reduce 时可为标量或向量寄存器；sub-group reduce 时必须为向量寄存器，结果 broadcast 到子组内所有 lane。
+- **.W**：指定目的寄存器的位宽，由数据类型隐式决定。
 
 ## 编码格式
 
@@ -33,24 +37,40 @@
 ```c
 integer {m, srcwidth} = DecodeINT(SrcL);
 integer {d, dstwidth} = DecodeDst(RegDst);
+integer subgroup_size = ComputeRange(SrcR, imm10);
 
-bits(64) maxvalue = MIN_VALUE;  // 初始化为输入类型的最小值
+// SrcR 与 imm10 共同指示整个 Group 范围时按 workgroup reduce
+if (subgroup_size >= lanenum) then
+    subgroup_size = lanenum;
 
-// 目的寄存器是形参RO寄存器则作为初始值
-if 32 <= d and d <= 35 then
-    maxvalue = V[d, dstwidth];
+bits(64) pmask = P;
+integer num_subgroups = lanenum / subgroup_size;
 
-bits(64) pmask = P;   // lane掩码
-// lanenum表示当前Group内lane的数量
-for (laneid = 0; laneid < lanenum; laneid++)
-{
-    if (pmask[laneid] == 1) {
-        bits(64) operand = V[m, srcwidth, laneid];
-        maxvalue = fmax(maxvalue, operand);
+for (sg_id = 0; sg_id < num_subgroups; sg_id++) {
+    bits(64) maxvalue = MIN_VALUE;  // 初始化为输入类型的最小值
+
+    // 目的寄存器是形参RO寄存器则作为初始值
+    if 32 <= d and d <= 35 then
+        maxvalue = V[d, dstwidth];
+
+    integer sg_start = sg_id * subgroup_size;
+    integer sg_end   = sg_start + subgroup_size;
+
+    for (laneid = sg_start; laneid < sg_end; laneid++) {
+        if (pmask[laneid] == 1) {
+            bits(64) operand = V[m, srcwidth, laneid];
+            maxvalue = fmax(maxvalue, operand);
+        }
+    }
+
+    // 广播到子组内所有 lane
+    for (laneid = sg_start; laneid < sg_end; laneid++) {
+        if (pmask[laneid] == 1)
+            V[d, dstwidth, laneid] = maxvalue;
+        else
+            V[d, dstwidth, laneid] = 0;
     }
 }
-
-V[d, dstwidth] = maxvalue;
 ```
 
 ![rdfmax](../../../figs/isa/inst/rdfmax.png){ width="800" }
@@ -58,3 +78,4 @@ V[d, dstwidth] = maxvalue;
 ## 备注
 
 本指令属于[超长指令扩展](../../instset/longInstrs.md)，可用于向量数据块或访存数据块中。
+本指令为0.57版本修改，增加 SrcR 和 imm10 参数以支持 sub-group 归约。

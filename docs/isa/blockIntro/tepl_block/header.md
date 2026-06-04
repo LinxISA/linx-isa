@@ -5,8 +5,7 @@ The header of the template data block needs to define which data operation opera
 ## Assembly format
 
 ```asm
-TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7<.reuse>, [BGetList],  
-                                               ->DstTile0<TileSize0>, ..., DstTile3<TileSize3>, [BSetList]
+TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7<.reuse>, [BGetList] ->DstTile0<TileSize0>, ..., DstTile3<TileSize3>, [BSetList]
 ```
 
 Each parameter is explained as follows:
@@ -31,16 +30,16 @@ A complete data transfer block instructionheader needs to be split into the foll
 
 - `BSTART.TEPL TileOp, DataType`
 - [B.DATR](../../header/B.DATR.md) `Layout, PadValue`
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0`
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB2`
-- [B.IOT](../../header/B.IOT.md) `SrcTile0<.reuse>, SrcTile1<.reuse>, ->DstTile0<TileSize0>`
+- [B.DIM](../../header/B.DIM.md) `reg, imm ->LB0`
+- [B.DIM](../../header/B.DIM.md) `reg, imm ->LB1`
+- [B.DIM](../../header/B.DIM.md) `reg, imm ->LB2`
+- [B.IOT](../../header/B.IOT.md) `SrcTile0<.reuse>, SrcTile1<.reuse> ->DstTile0<TileSize0>`
 -...
-- [B.IOT](../../header/B.IOT.md) `SrcTile6<.reuse>, SrcTile7<.reuse>, last, ->DstTile3<TileSize3>`
-- [B.IOR](../../header/B.IOR.md) `RegSrc0, RegSrc1, RegSrc2, ->RegDst0`
+- [B.IOT](../../header/B.IOT.md) `SrcTile6<.reuse>, SrcTile7<.reuse>, last ->DstTile3<TileSize3>`
+- [B.IOR](../../header/B.IOR.md) `RegSrc0, RegSrc1, RegSrc2 ->RegDst0`
 -...
-- [B.IOR](../../header/B.IOR.md) `RegSrc9, RegSrc10, RegSrc11, ->RegDst4`
-- [B.IOD](../../header/B.IOD.md) `DepSrc0, DepSrc1, DepSrc2, ->DepDst`
+- [B.IOR](../../header/B.IOR.md) `RegSrc9, RegSrc10, RegSrc11 ->RegDst4`
+- [B.IOD](../../header/B.IOD.md) `012 ->`
 
 Among them, the encoding format of the BSTART.TEPL instruction is as follows:
 

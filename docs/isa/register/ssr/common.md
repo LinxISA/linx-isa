@@ -32,7 +32,9 @@ The universal system register is accessible to all ACRs. These SSRs are divided 
 | 0x0024 | [LCFR](./LCFR.md) | Linx Core Features Register | Linx Core Features Register |
 | 0x0025 | [LCFR_EN](./LCFR_EN.md) | Linx Core Feature Enable Register | Linx core feature enable register |
 
-## Dynamic configuration register| SSR ID | Abbreviation | Name | Name |
+## Dynamic configuration register
+
+| SSR ID | Abbreviation | Name | Name |
 |----------|----------|---------------|------------------|
 | 0x0050 | [BLOCKNUM](./BLOCKNUM.md) | Block Number Register | Total number of logical cores register |
 | 0x0051 | [BLOCKID](./BLOCKID.md) | Block ID Register | Logic core ID register |

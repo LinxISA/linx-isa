@@ -1,0 +1,199 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="80" viewBox="0 0 640 80">
+  <g transform="translate(0.5,0.5)" text-anchor="middle" font-size="14" font-family="sans-serif" font-weight="normal">
+    <g transform="translate(4,21)">
+      <g stroke="black" stroke-width="1" stroke-linecap="round">
+        <line x2="631"/>
+        <line y2="41"/>
+        <line x2="631" y1="41" y2="41"/>
+        <line x1="631" x2="631" y2="41"/>
+        <line x1="611" x2="611" y2="5"/>
+        <line x1="611" x2="611" y1="41" y2="36"/>
+        <line x1="592" x2="592" y2="5"/>
+        <line x1="592" x2="592" y1="41" y2="36"/>
+        <line x1="572" x2="572" y2="5"/>
+        <line x1="572" x2="572" y1="41" y2="36"/>
+        <line x1="552" x2="552" y2="41"/>
+        <line x1="532" x2="532" y2="5"/>
+        <line x1="532" x2="532" y1="41" y2="36"/>
+        <line x1="513" x2="513" y2="5"/>
+        <line x1="513" x2="513" y1="41" y2="36"/>
+        <line x1="493" x2="493" y2="41"/>
+        <line x1="473" x2="473" y2="5"/>
+        <line x1="473" x2="473" y1="41" y2="36"/>
+        <line x1="454" x2="454" y2="5"/>
+        <line x1="454" x2="454" y1="41" y2="36"/>
+        <line x1="434" x2="434" y2="5"/>
+        <line x1="434" x2="434" y1="41" y2="36"/>
+        <line x1="414" x2="414" y2="5"/>
+        <line x1="414" x2="414" y1="41" y2="36"/>
+        <line x1="394" x2="394" y2="41"/>
+        <line x1="375" x2="375" y2="5"/>
+        <line x1="375" x2="375" y1="41" y2="36"/>
+        <line x1="355" x2="355" y2="5"/>
+        <line x1="355" x2="355" y1="41" y2="36"/>
+        <line x1="335" x2="335" y2="41"/>
+        <line x1="316" x2="316" y2="5"/>
+        <line x1="316" x2="316" y1="41" y2="36"/>
+        <line x1="296" x2="296" y2="5"/>
+        <line x1="296" x2="296" y1="41" y2="36"/>
+        <line x1="276" x2="276" y2="5"/>
+        <line x1="276" x2="276" y1="41" y2="36"/>
+        <line x1="256" x2="256" y2="5"/>
+        <line x1="256" x2="256" y1="41" y2="36"/>
+        <line x1="237" x2="237" y2="41"/>
+        <line x1="217" x2="217" y2="5"/>
+        <line x1="217" x2="217" y1="41" y2="36"/>
+        <line x1="197" x2="197" y2="5"/>
+        <line x1="197" x2="197" y1="41" y2="36"/>
+        <line x1="177" x2="177" y2="5"/>
+        <line x1="177" x2="177" y1="41" y2="36"/>
+        <line x1="158" x2="158" y2="5"/>
+        <line x1="158" x2="158" y1="41" y2="36"/>
+        <line x1="138" x2="138" y2="5"/>
+        <line x1="138" x2="138" y1="41" y2="36"/>
+        <line x1="118" x2="118" y2="41"/>
+        <line x1="99" x2="99" y2="5"/>
+        <line x1="99" x2="99" y1="41" y2="36"/>
+        <line x1="79" x2="79" y2="5"/>
+        <line x1="79" x2="79" y1="41" y2="36"/>
+        <line x1="59" x2="59" y2="5"/>
+        <line x1="59" x2="59" y1="41" y2="36"/>
+        <line x1="39" x2="39" y2="5"/>
+        <line x1="39" x2="39" y1="41" y2="36"/>
+        <line x1="20" x2="20" y2="5"/>
+        <line x1="20" x2="20" y1="41" y2="36"/>
+      </g>
+      <g>
+        <g>
+          <rect x="552" width="79" height="41" field="7" style="fill-opacity:0.1"/>
+          <rect x="493" width="59" height="41" field="6" style="fill-opacity:0.1;fill:#ffbf00"/>
+          <rect x="394" width="99" height="41" field="RegDst" style="fill-opacity:0.1;fill:#aaff00"/>
+          <rect x="335" width="59" height="41" field="7" style="fill-opacity:0.1;fill:#00ffd5"/>
+          <rect x="237" width="99" height="41" field="SrcL" style="fill-opacity:0.1"/>
+          <rect x="118" width="118" height="41" field="imml" style="fill-opacity:0.1"/>
+          <rect width="118" height="41" field="imms" style="fill-opacity:0.1"/>
+        </g>
+        <g transform="translate(10,-11)">
+          <g transform="translate(611)">
+            <text y="6">0</text>
+          </g>
+          <g transform="translate(552)">
+            <text y="6">3</text>
+          </g>
+          <g transform="translate(532)">
+            <text y="6">4</text>
+          </g>
+          <g transform="translate(493)">
+            <text y="6">6</text>
+          </g>
+          <g transform="translate(473)">
+            <text y="6">7</text>
+          </g>
+          <g transform="translate(394)">
+            <text y="6">11</text>
+          </g>
+          <g transform="translate(375)">
+            <text y="6">12</text>
+          </g>
+          <g transform="translate(335)">
+            <text y="6">14</text>
+          </g>
+          <g transform="translate(316)">
+            <text y="6">15</text>
+          </g>
+          <g transform="translate(237)">
+            <text y="6">19</text>
+          </g>
+          <g transform="translate(217)">
+            <text y="6">20</text>
+          </g>
+          <g transform="translate(118)">
+            <text y="6">25</text>
+          </g>
+          <g transform="translate(99)">
+            <text y="6">26</text>
+          </g>
+          <g transform="translate(0)">
+            <text y="6">31</text>
+          </g>
+        </g>
+        <g transform="translate(10,20)">
+          <g>
+            <g transform="translate(611)">
+              <text y="6">1</text>
+            </g>
+            <g transform="translate(592)">
+              <text y="6">1</text>
+            </g>
+            <g transform="translate(572)">
+              <text y="6">1</text>
+            </g>
+            <g transform="translate(552)">
+              <text y="6">0</text>
+            </g>
+          </g>
+          <g>
+            <g transform="translate(532)">
+              <text y="6">0</text>
+            </g>
+            <g transform="translate(513)">
+              <text y="6">1</text>
+            </g>
+            <g transform="translate(493)">
+              <text y="6">1</text>
+            </g>
+          </g>
+          <g transform="translate(434)">
+            <text y="6">
+              <tspan>RegDst</tspan>
+            </text>
+          </g>
+          <g>
+            <g transform="translate(375)">
+              <text y="6">1</text>
+            </g>
+            <g transform="translate(355)">
+              <text y="6">1</text>
+            </g>
+            <g transform="translate(335)">
+              <text y="6">1</text>
+            </g>
+          </g>
+          <g transform="translate(276)">
+            <text y="6">
+              <tspan>SrcL</tspan>
+            </text>
+          </g>
+          <g transform="translate(168)">
+            <text y="6">
+              <tspan>imml</tspan>
+            </text>
+          </g>
+          <g transform="translate(49)">
+            <text y="6">
+              <tspan>imms</tspan>
+            </text>
+          </g>
+        </g>
+        <g transform="translate(10,49)">
+          <g transform="translate(582)">
+            <text y="6">
+              <tspan>Type</tspan>
+            </text>
+          </g>
+          <g transform="translate(513)">
+            <text y="6">
+              <tspan>Opcode</tspan>
+            </text>
+          </g>
+          <g transform="translate(355)">
+            <text y="6">
+              <tspan>Func</tspan>
+            </text>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
+
