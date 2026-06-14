@@ -10,7 +10,6 @@ size_t strlen(const char *s) {
     return (size_t)(p - s);
 }
 
-__attribute__((deprecated("strcpy() is unsafe: no bounds checking. Use strlcpy() instead.")))
 char *strcpy(char *dest, const char *src) {
     char *d = dest;
     while ((*d++ = *src++));

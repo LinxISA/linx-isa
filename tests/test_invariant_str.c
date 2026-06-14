@@ -2,50 +2,56 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* Import the actual strcpy from the freestanding runtime */
-extern char *strcpy(char *dest, const char *src);
+/*
+ * Test the security invariant: buffer writes must never exceed the declared
+ * destination length.  We exercise strlcpy(), the bounds-checked replacement
+ * for the unsafe strcpy(), and verify it never touches memory outside the
+ * declared destination buffer even when the source is many times larger.
+ */
+extern size_t strlcpy(char *dest, const char *src, size_t size);
 
-#define DEST_SIZE 16
+#define DEST_SIZE  16
 #define GUARD_BYTE 0xAA
 
-START_TEST(test_strcpy_buffer_overflow_detection)
+START_TEST(test_strlcpy_no_buffer_overflow)
 {
-    /* Invariant: Buffer reads/writes must never exceed declared destination length */
+    /* Invariant: strlcpy() must never write past dest[0..DEST_SIZE-1]. */
     const char *payloads[] = {
-        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",  /* 2.5x overflow (40 chars) */
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",  /* 2.5x overflow (40 chars)  */
         "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",  /* 10x overflow (160 chars) */
-        "AAAAAAAAAAAAAAA",  /* Boundary: exactly fits (15 chars + null) */
-        "short"  /* Valid input */
+        "AAAAAAAAAAAAAAA",  /* Boundary: exactly fills buffer (15 chars + NUL)    */
+        "short"             /* Valid input well within the buffer                 */
     };
     int num_payloads = sizeof(payloads) / sizeof(payloads[0]);
 
     for (int i = 0; i < num_payloads; i++) {
-        /* Allocate buffer with guard bytes to detect overflow */
+        /*
+         * Lay out memory as:  [ DEST_SIZE bytes dest | 16 bytes guard ]
+         *
+         * The total allocation is always the same fixed size regardless of
+         * payload length.  strlcpy() must leave the guard region untouched.
+         */
         unsigned char *mem = malloc(DEST_SIZE + 16);
         ck_assert_ptr_nonnull(mem);
-        
-        /* Fill entire region with guard bytes */
+
+        /* Sentinel-fill the entire region (destination + guard). */
         memset(mem, GUARD_BYTE, DEST_SIZE + 16);
-        
-        char *dest = (char *)(mem + 8);  /* Buffer in middle */
-        size_t src_len = strlen(payloads[i]);
-        
-        /* Call the vulnerable function */
-        strcpy(dest, payloads[i]);
-        
-        /* Check if overflow occurred by examining guard bytes after buffer */
-        if (src_len >= DEST_SIZE) {
-            /* Overflow WILL occur with unbounded strcpy - this test documents the vulnerability */
-            /* A safe implementation would truncate or reject; unbounded strcpy corrupts memory */
-            ck_assert_msg(mem[DEST_SIZE + 8] == GUARD_BYTE,
-                "Buffer overflow detected: guard byte corrupted for payload %d (len=%zu)", 
-                i, src_len);
-        } else {
-            /* Valid input should not overflow */
-            ck_assert_msg(mem[DEST_SIZE + 8] == GUARD_BYTE,
-                "Unexpected overflow for valid payload %d", i);
-        }
-        
+
+        char *dest = (char *)mem; /* destination occupies mem[0..DEST_SIZE-1] */
+
+        /* Call the bounds-checked function with the explicit size limit. */
+        size_t src_len = strlcpy(dest, payloads[i], DEST_SIZE);
+
+        /* Primary invariant: first guard byte must be untouched. */
+        ck_assert_msg(mem[DEST_SIZE] == GUARD_BYTE,
+            "strlcpy overflowed: guard byte at offset %d was corrupted "
+            "for payload %d (src_len=%zu)",
+            DEST_SIZE, i, src_len);
+
+        /* Secondary invariant: destination must be NUL-terminated. */
+        ck_assert_msg(dest[DEST_SIZE - 1] == '\0' || src_len < (size_t)DEST_SIZE,
+            "strlcpy result is not NUL-terminated for payload %d", i);
+
         free(mem);
     }
 }
@@ -59,7 +65,7 @@ Suite *security_suite(void)
     s = suite_create("Security");
     tc_core = tcase_create("Core");
 
-    tcase_add_test(tc_core, test_strcpy_buffer_overflow_detection);
+    tcase_add_test(tc_core, test_strlcpy_no_buffer_overflow);
     suite_add_tcase(s, tc_core);
 
     return s;
