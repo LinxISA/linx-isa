@@ -26,27 +26,35 @@ START_TEST(test_strlcpy_no_buffer_overflow)
 
     for (int i = 0; i < num_payloads; i++) {
         /*
-         * Lay out memory as:  [ DEST_SIZE bytes dest | 16 bytes guard ]
+         * Lay out memory as:  [ 8-byte pre-guard | DEST_SIZE bytes dest | post-guard ]
          *
-         * The total allocation is always the same fixed size regardless of
-         * payload length.  strlcpy() must leave the guard region untouched.
+         * Allocate enough space to hold the full source payload so that
+         * strlcpy() itself never causes heap corruption — the bounds check
+         * (DEST_SIZE argument) is what we are testing, not malloc().
+         *
+         * alloc_size = 8 (pre-guard) + max(src_len, DEST_SIZE) + 8 (post-guard)
+         *
+         * strlcpy() must leave the guard regions untouched.
          */
-        unsigned char *mem = malloc(DEST_SIZE + 16);
+        size_t src_len = strlen(payloads[i]);
+        size_t max_len = (src_len > DEST_SIZE) ? src_len : DEST_SIZE;
+        size_t alloc_size = 8 + max_len + 8;
+        unsigned char *mem = malloc(alloc_size);
         ck_assert_ptr_nonnull(mem);
 
-        /* Sentinel-fill the entire region (destination + guard). */
-        memset(mem, GUARD_BYTE, DEST_SIZE + 16);
+        /* Sentinel-fill the entire region (pre-guard + destination + post-guard). */
+        memset(mem, GUARD_BYTE, alloc_size);
 
-        char *dest = (char *)mem; /* destination occupies mem[0..DEST_SIZE-1] */
+        char *dest = (char *)(mem + 8); /* destination occupies mem[8..8+DEST_SIZE-1] */
 
         /* Call the bounds-checked function with the explicit size limit. */
-        size_t src_len = strlcpy(dest, payloads[i], DEST_SIZE);
+        strlcpy(dest, payloads[i], DEST_SIZE);
 
-        /* Primary invariant: first guard byte must be untouched. */
-        ck_assert_msg(mem[DEST_SIZE] == GUARD_BYTE,
+        /* Primary invariant: first post-guard byte must be untouched. */
+        ck_assert_msg(mem[8 + DEST_SIZE] == GUARD_BYTE,
             "strlcpy overflowed: guard byte at offset %d was corrupted "
             "for payload %d (src_len=%zu)",
-            DEST_SIZE, i, src_len);
+            8 + DEST_SIZE, i, src_len);
 
         /* Secondary invariant: destination must be NUL-terminated. */
         ck_assert_msg(dest[DEST_SIZE - 1] == '\0' || src_len < (size_t)DEST_SIZE,
