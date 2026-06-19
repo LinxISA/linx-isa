@@ -7,6 +7,9 @@
  * destination length.  We exercise strlcpy(), the bounds-checked replacement
  * for the unsafe strcpy(), and verify it never touches memory outside the
  * declared destination buffer even when the source is many times larger.
+ *
+ * A second test documents the vulnerability in strcpy(): it DOES overflow
+ * and corrupts the guard byte, confirming the fix (strlcpy) is necessary.
  */
 extern size_t strlcpy(char *dest, const char *src, size_t size);
 
@@ -65,6 +68,54 @@ START_TEST(test_strlcpy_no_buffer_overflow)
 }
 END_TEST
 
+START_TEST(test_strcpy_buffer_overflow_documented)
+{
+    /*
+     * Document the vulnerability: strcpy() has NO bounds checking and WILL
+     * write past the end of dest.  For each payload longer than DEST_SIZE the
+     * guard byte immediately following the destination buffer must be corrupted,
+     * proving the overflow occurs.
+     *
+     * To prevent heap-allocator corruption (and a crash before the assertion),
+     * we allocate 8 (pre-guard) + src_len+1 (room for the full copy) + 8
+     * (post-guard) bytes.  Only the guard byte at offset 8+DEST_SIZE is
+     * examined — it sits inside the allocation so the write is not
+     * out-of-bounds from the allocator's perspective, but it is past the
+     * logical destination buffer of DEST_SIZE bytes.
+     */
+    const char *overflow_payloads[] = {
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",  /* 2.5x overflow (40 chars)  */
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"   /* 10x overflow (160 chars) */
+    };
+    int num_overflow = (int)(sizeof(overflow_payloads) / sizeof(overflow_payloads[0]));
+
+    for (int i = 0; i < num_overflow; i++) {
+        size_t src_len = strlen(overflow_payloads[i]);
+
+        /* Allocate enough that strcpy() does not escape the heap allocation. */
+        size_t alloc_size = 8 + src_len + 1 + 8;
+        unsigned char *mem = malloc(alloc_size);
+        ck_assert_ptr_nonnull(mem);
+
+        /* Sentinel-fill the entire region. */
+        memset(mem, GUARD_BYTE, alloc_size);
+
+        char *dest = (char *)(mem + 8); /* destination occupies mem[8..8+DEST_SIZE-1] */
+
+        /* Call the unbounded (unsafe) function. */
+        strcpy(dest, overflow_payloads[i]);
+
+        /* Vulnerability confirmed: strcpy() corrupts the post-dest guard byte. */
+        ck_assert_msg(mem[8 + DEST_SIZE] != GUARD_BYTE,
+            "strcpy should have overflowed past dest[%d] for payload %d "
+            "(src_len=%zu) but guard byte was not corrupted",
+            DEST_SIZE, i, src_len);
+
+        free(mem);
+    }
+}
+END_TEST
+
 Suite *security_suite(void)
 {
     Suite *s;
@@ -74,6 +125,7 @@ Suite *security_suite(void)
     tc_core = tcase_create("Core");
 
     tcase_add_test(tc_core, test_strlcpy_no_buffer_overflow);
+    tcase_add_test(tc_core, test_strcpy_buffer_overflow_documented);
     suite_add_tcase(s, tc_core);
 
     return s;
