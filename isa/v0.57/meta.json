@@ -9,7 +9,8 @@
   "notes": [
     "This directory is the authoritative staged golden ISA definition for v0.57.0.",
     "v0.57.0 adds 32-bit CAS (Compare-And-Swap) instructions with register reuse pattern.",
-    "New instruction group encoding: 6..4=3'b000, 3..1=3'b110 (avoiding DMA conflict).",
+    "CAS instruction group encoding: 6..4=3'b000, 3..1=3'b101, 14..12=3'b111 (atomic group).",
+    "DMA placeholder uses independent group: 6..4=3'b001, 3..1=3'b101.",
     "Adds CASB, CASH, CASW, CASD to complement existing 48-bit HL.CAS* instructions."
   ],
   "status": "draft",
