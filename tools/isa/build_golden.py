@@ -675,9 +675,9 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--profile",
-        choices=["v0.56"],
+        choices=["v0.56", "v0.57"],
         default="v0.56",
-        help="ISA profile for default in/out paths (v0.56 is canonical)",
+        help="ISA profile for default in/out paths (v0.56 is canonical, v0.57 is draft)",
     )
     ap.add_argument("--in", dest="in_dir", default=None, help="Golden source directory")
     ap.add_argument("--out", default=None, help="Output catalog JSON path")

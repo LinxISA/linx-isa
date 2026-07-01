@@ -357,7 +357,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--profile",
-        choices=["v0.56"],
+        choices=["v0.56", "v0.57"],
         default="v0.56",
         help="ISA profile for default --spec path (v0.56 is canonical)",
     )

@@ -1,0 +1,17 @@
+{
+  "instruction_lengths_bits": [
+    16,
+    32,
+    48,
+    64
+  ],
+  "isa": "LinxISA",
+  "notes": [
+    "This directory is the authoritative staged golden ISA definition for v0.57.0.",
+    "v0.57.0 adds 32-bit CAS (Compare-And-Swap) instructions with register reuse pattern.",
+    "New instruction group encoding: 6..4=3'b000, 3..1=3'b110 (avoiding DMA conflict).",
+    "Adds CASB, CASH, CASW, CASD to complement existing 48-bit HL.CAS* instructions."
+  ],
+  "status": "draft",
+  "version": "0.57.0"
+}

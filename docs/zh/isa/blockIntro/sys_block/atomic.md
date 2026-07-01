@@ -69,26 +69,82 @@ STORE.OP类原子指令需要通过"rl"后缀来添加额外的内存访问顺�
 |  SWAPW   | swapw<{.aq,.rl,.aqrl}> [SrcL], SrcR, ->{t, u, Rd}   |  内存与寄存器交换**字**     |
 |  SWAPD   | swapd<{.aq,.rl,.aqrl}> [SrcL], SrcR, ->{t, u, Rd}   |  内存与寄存器交换**双字**   |
 
-原子交换操作指令可以通过"aq"和"rl"两个后缀来添加额外的内存访问顺序限制，以保证内存访问的一致性。具体定义请见“内存访问限制参数表”。
+原子交换操作指令可以通过”aq”和”rl”两个后缀来添加额外的内存访问顺序限制，以保证内存访问的一致性。具体定义请见”内存访问限制参数表”。
 
 ![AtomicSwap](../../../figs/bitfield/svg/Introduction_32bit/AtomicSwap.svg)
 
-<!-- 
 ## 原子比较交换指令
 
-原子比较交换指令从寄存器SrcL指定的内存位置读取`8,16,32或64位`的值，然后再用这个读出的值和寄存器SrcR比较，如果它们相同的话，就把寄存器SrcD中`8,16,32或64位`的值存入寄存器SrcL指定的内存中。最后不管前面比较的结果相不相同，都把从内存读取的原始值写入目的寄存器中，并且**保证这些步骤都是原子的**。
+原子比较交换指令从寄存器SrcL指定的内存位置读取`8,16,32或64位`的值，然后再用这个读出的值和寄存器SrcR比较，如果它们相同的话，就把目的寄存器（RegDst）中的值作为新值写入内存。最后不管前面比较的结果相不相同，都把从内存读取的原始值写入目的寄存器中，并且**保证这些步骤都是原子的**。
+
+**⚠️ 注意：目的寄存器既作为输入（交换值），也作为输出（旧值），输入值会被覆盖。**
 
 |     微指令    |         汇编格式                          |     描述       |
 |--------------|-------------------------------------------|----------------|
-|  CASB   | casb<{.aq,.rl,.aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}   |  内存与寄存器比较交换**字节**   |
-|  CASH   | cash<{.aq,.rl,.aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}   |  内存与寄存器比较交换**半字**   |
-|  CASW   | casw<{.aq,.rl,.aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}   |  内存与寄存器比较交换**字**     |
-|  CASD   | casd<{.aq,.rl,.aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}   |  内存与寄存器比较交换**双字**   |
+|  CASB   | casb<{.aq,.rl,.f,.aqrl,.aqf,.rlf,.aqrlf}> [SrcL], SrcR, {t, u, Rd}, ->{t, u, Rd}   |  内存与寄存器比较交换**字节**   |
+|  CASH   | cash<{.aq,.rl,.f,.aqrl,.aqf,.rlf,.aqrlf}> [SrcL], SrcR, {t, u, Rd}, ->{t, u, Rd}   |  内存与寄存器比较交换**半字**   |
+|  CASW   | casw<{.aq,.rl,.f,.aqrl,.aqf,.rlf,.aqrlf}> [SrcL], SrcR, {t, u, Rd}, ->{t, u, Rd}   |  内存与寄存器比较交换**字**     |
+|  CASD   | casd<{.aq,.rl,.f,.aqrl,.aqf,.rlf,.aqrlf}> [SrcL], SrcR, {t, u, Rd}, ->{t, u, Rd}   |  内存与寄存器比较交换**双字**   |
+
+### 操作数说明
+
+- **[SrcL]**：内存地址
+- **SrcR**：期望值（expected value），用于与内存中的旧值比较
+- **{t, u, Rd}**：目的寄存器，**同时作为输入和输出**
+  - **输入**：交换值（new value），当比较成功时写入内存
+  - **输出**：内存旧值（old value），无论比较是否成功都返回
+
+### 伪代码
+
+```
+old_value = Mem[SrcL]           // 读取内存旧值
+expected = SrcR                 // 期望值
+new_value = RegDst              // 读取交换值（输入）
+
+if (old_value == expected) {    // 比较
+    Mem[SrcL] = new_value       // 比较成功则写入新值
+}
+
+RegDst = old_value              // 总是返回旧值（覆盖输入）
+```
+
+### 汇编示例
+
+```asm
+# 基本用法
+casb [x5], x6, x7, ->x7         # x7 既是输入也是输出
+
+# 如需保留交换值
+mov x8, x7                      # 先备份交换值
+casb [x5], x6, x7, ->x7         # x7 被覆盖为旧值
+# 此时: x7=旧值, x8=交换值
+
+# 带内存序标志
+casw.aq [x10], x11, x12, ->x12  # acquire 语义
+casd.aqrl [x1], x2, x3, ->x3    # 完整内存屏障
+casb.f [x20], x21, x22, ->x22   # 远程缓存访问
+```
+
+### 与 48-bit HL.CAS 的区别
+
+LinxISA 提供两种 CAS 指令：
+
+| 特性 | 32-bit CAS | 48-bit HL.CAS |
+|------|-----------|---------------|
+| 指令长度 | 32 bits | 48 bits |
+| 寄存器 | 3个（RegDst 复用） | 4个（完全独立） |
+| 交换值 | 被覆盖 | 保留 |
+| 代码密度 | 高 | 低 |
+| 使用场景 | 高频原子操作 | 寄存器压力大的场景 |
+
+**选择建议**：
+- 代码密度优先 → 使用 32-bit CAS
+- 需保留交换值 → 使用 48-bit HL.CAS
+- 高频调用 → 使用 32-bit CAS（更短）
 
 ![AtomicCompareandSwap](../../../figs/bitfield/svg/Introduction_32bit/AtomicCompareandSwap.svg)
 
-原子比较交换指令可以通过"aq"和"rl"两个后缀来添加额外的内存访问顺序限制，以保证内存访问的一致性。具体定义请见“内存访问限制参数表”。
- -->
+原子比较交换指令可以通过”aq”、”rl”和”f”后缀来添加额外的内存访问顺序限制，以保证内存访问的一致性。具体定义请见”内存访问限制参数表”。
 
 ## 内存访问限制参数表
 
