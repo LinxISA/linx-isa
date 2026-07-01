@@ -1,8 +1,8 @@
 {
-  "version": "v0.57",
+  "version": "v0.56",
   "notes": [
     "This file records staged bring-up semantics conventions that are consumed by the Sail formal model and referenced by the manual.",
-    "These conventions are normative for the v0.57 bring-up profile unless overridden by a later revision."
+    "These conventions are normative for the v0.56 bring-up profile unless overridden by a later revision."
   ],
   "regdst_writeback": {
     "description": "Destination selector semantics for RegDst-like fields that can target GPRs or ClockHands pushes.",

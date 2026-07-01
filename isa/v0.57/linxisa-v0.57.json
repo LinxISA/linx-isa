@@ -14722,13 +14722,6 @@
         "length_bits": 32,
         "parts": [
           {
-            "constraints": [
-              {
-                "field": "RegDst",
-                "op": "==",
-                "value": "SrcD"
-              }
-            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -14922,13 +14915,6 @@
         "length_bits": 32,
         "parts": [
           {
-            "constraints": [
-              {
-                "field": "RegDst",
-                "op": "==",
-                "value": "SrcD"
-              }
-            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -15122,13 +15108,6 @@
         "length_bits": 32,
         "parts": [
           {
-            "constraints": [
-              {
-                "field": "RegDst",
-                "op": "==",
-                "value": "SrcD"
-              }
-            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -15322,13 +15301,6 @@
         "length_bits": 32,
         "parts": [
           {
-            "constraints": [
-              {
-                "field": "RegDst",
-                "op": "==",
-                "value": "SrcD"
-              }
-            ],
             "fields": [
               {
                 "name": "RegDst",
