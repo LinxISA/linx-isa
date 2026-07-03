@@ -2729,6 +2729,7 @@ def _run_qemu(
     tlb_fill_trace = _tlb_fill_trace_summary(text)
     mprotect_trace = _mprotect_trace_summary(text)
     heartbeat_stall = classification["heartbeat_stall"]
+    heartbeat_tlb_fill = _heartbeat_tlb_fill_summary(classification["last_heartbeat"])
 
     qemu_info = {
         "command": cmd,
@@ -2759,6 +2760,7 @@ def _run_qemu(
         "heartbeat_stall_threshold": heartbeat_stall["threshold"],
         "heartbeat_stall_bpc": heartbeat_stall["bpc"],
         "heartbeat_stall_status": heartbeat_stall["status"],
+        "heartbeat_tlb_fill": heartbeat_tlb_fill,
         "heartbeat_kernel_symbols": heartbeat_kernel_symbols.get("sites", []),
         "heartbeat_kernel_symbolized": bool(heartbeat_kernel_symbols.get("ok", False)),
         "heartbeat_kernel_panic_loop": bool(heartbeat_kernel_symbols.get("panic_loop", False)),
@@ -3313,6 +3315,29 @@ def _int_or_none(value: str | None) -> int | None:
         return int(value, 0)
     except ValueError:
         return None
+
+
+def _heartbeat_tlb_fill_summary(line: str) -> dict[str, Any]:
+    fields = _heartbeat_fields(line)
+    return {
+        "total": _decimal_or_none(fields.get("tlbf_total")),
+        "fetch": _decimal_or_none(fields.get("tlbf_fetch")),
+        "load": _decimal_or_none(fields.get("tlbf_load")),
+        "store": _decimal_or_none(fields.get("tlbf_store")),
+        "probe": _decimal_or_none(fields.get("tlbf_probe")),
+        "ok": _decimal_or_none(fields.get("tlbf_ok")),
+        "fault": _decimal_or_none(fields.get("tlbf_fault")),
+        "last_count": _decimal_or_none(fields.get("tlbf_last_count")),
+        "last_pc": fields.get("tlbf_last_pc", "").lower(),
+        "last_bpc": fields.get("tlbf_last_bpc", "").lower(),
+        "last_va": fields.get("tlbf_last_va", "").lower(),
+        "last_pa": fields.get("tlbf_last_pa", "").lower(),
+        "last_access": _int_or_none(fields.get("tlbf_last_access")),
+        "last_mmu": _int_or_none(fields.get("tlbf_last_mmu")),
+        "last_prot": _int_or_none(fields.get("tlbf_last_prot")),
+        "last_cause": _int_or_none(fields.get("tlbf_last_cause")),
+        "last_acr": _int_or_none(fields.get("tlbf_last_acr")),
+    }
 
 
 def _fcmp_trace_summary(text: str) -> dict[str, Any]:

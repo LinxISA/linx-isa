@@ -265,6 +265,13 @@ decision. `LINX_TLB_FILL_TRACE_LIMIT` defaults to 64 records. Narrow with
 using it on SPEC rows. Matching `LINX_QEMU_TLB_FILL_TRACE_*` aliases are
 accepted.
 
+For low-overhead aggregate page-walk attribution on long SPEC rows, use
+`LINX_TLB_FILL_STATS=1` or `LINX_QEMU_TLB_FILL_STATS=1` before enabling full
+fill traces. The switch adds `tlbf_total`, fetch/load/store/probe/ok/fault
+counts, and `tlbf_last_*` fields to `LINX_HEARTBEAT`; the SPEC runner records
+the final values under `heartbeat_tlb_fill` and prints compact `tlbf=` liveness
+tags in matrix markdown.
+
 For kernel-space heartbeat timeouts, add `--symbolize-heartbeat` to the SPEC
 runner, or set `LINX_SPEC_SYMBOLIZE_HEARTBEAT=1`. The runner symbolizes recent
 kernel PC/BPC/RA heartbeat sites with `llvm-addr2line` against the active
@@ -2035,6 +2042,35 @@ page-walk cache. First separate startup invalidation cost from steady-state
 SPEC execution cost, then investigate whether Linux can batch or narrow these
 fault-time `TLB.IV` loops, and keep QEMU work focused on the remaining sampled
 TCG load/store MMU path plus template/frame memory traffic.
+
+## 2026-07-03 TLB Fill Counters
+
+The next debug patch adds `LINX_TLB_FILL_STATS=1` /
+`LINX_QEMU_TLB_FILL_STATS=1`, an opt-in aggregate counter path for
+`linx_cpu_tlb_fill()`. Heartbeat records now include total, fetch, load, store,
+probe, ok, fault, and last-fill PC/BPC/VA/PA/access/MMU/prot/cause/ACR fields
+with the `tlbf_` prefix. `tools/spec2017/run_int_rate_qemu.py` parses the final
+heartbeat into `heartbeat_tlb_fill`, and `run_stage_qemu_matrix.py` includes a
+compact `tlbf=<total>/f<fetch>/l<load>/s<store>/p<probe>` tag in matrix
+liveness summaries.
+
+Validation on `/tmp/linx-qemu-hb-build-20260703-r1/qemu-system-linx64`:
+
+| Run | Artifact / command | Result |
+| --- | --- | --- |
+| QEMU rebuild | `ninja -C /tmp/linx-qemu-hb-build-20260703-r1 qemu-system-linx64` | pass; only pre-existing Linx warnings |
+| AVS full QEMU suite | `python3 avs/qemu/run_tests.py --all --timeout 20 --qemu /tmp/linx-qemu-hb-build-20260703-r1/qemu-system-linx64` | pass |
+| strict `999.specrand_ir`, fill stats on | `workloads/generated/specint-999-tlbfill-stats-final-qemu-20260703-r1/` | pass; final `tlbf_total=1861324`, `tlbf_load=1840179`, `tlbf_fault=14` at `508000003` instructions |
+| strict `999.specrand_ir`, default-off | `workloads/generated/specint-999-tlbfill-stats-defaultoff-qemu-20260703-r1/` | pass |
+| `505.mcf_r` train, fill stats on, 120s cap | `workloads/generated/specint-505-tlbfill-stats-final-qemu-20260703-r1/` | live timeout with BPC site progress at `30000000007` instructions; final `tlbf_total=97899663`, `tlbf_fetch=452898`, `tlbf_load=89920690`, `tlbf_store=7526075`, `tlbf_probe=71383`, `tlbf_fault=4793` |
+
+Current conclusion: invalidation counters showed `TLB.IV` is mostly
+startup/fault-path work, but fill counters show demand TLB fills continue
+through the live benchmark window and are data-load dominated on `505.mcf_r`.
+The next QEMU speed lane should test safe soft-TLB capacity or mapping
+granularity experiments and reduce translated data-memory traffic. Do not make
+the experimental page-walk cache default-on without a new timing proof, because
+the previous cache experiment slowed the comparable 505 slice.
 
 ## 2026-07-03 Tile State Helper Inline
 

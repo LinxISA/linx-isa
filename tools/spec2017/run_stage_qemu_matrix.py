@@ -207,6 +207,7 @@ def _transport_failure_details(summary_obj: dict[str, Any]) -> dict[str, dict[st
             "heartbeat_stall_threshold": failed_run.get("heartbeat_stall_threshold"),
             "heartbeat_stall_bpc": str(failed_run.get("heartbeat_stall_bpc") or ""),
             "heartbeat_stall_status": str(failed_run.get("heartbeat_stall_status") or ""),
+            "heartbeat_tlb_fill": failed_run.get("heartbeat_tlb_fill") or {},
             "heartbeat_kernel_symbolized": bool(failed_run.get("heartbeat_kernel_symbolized", False)),
             "heartbeat_kernel_panic_loop": bool(failed_run.get("heartbeat_kernel_panic_loop", False)),
             "heartbeat_kernel_symbol_evidence": str(failed_run.get("heartbeat_kernel_symbol_evidence") or "")[:512],
@@ -244,6 +245,16 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
         tlbfill = ""
         if row.get("tlb_fill_trace_seen"):
             tlbfill = f" tlbfill-trace={row.get('tlb_fill_trace_count')}"
+        tlbfill_stats = ""
+        heartbeat_tlb_fill = row.get("heartbeat_tlb_fill")
+        if isinstance(heartbeat_tlb_fill, dict) and heartbeat_tlb_fill.get("total") is not None:
+            tlbfill_stats = (
+                f" tlbf={heartbeat_tlb_fill.get('total')}"
+                f"/f{heartbeat_tlb_fill.get('fetch')}"
+                f"/l{heartbeat_tlb_fill.get('load')}"
+                f"/s{heartbeat_tlb_fill.get('store')}"
+                f"/p{heartbeat_tlb_fill.get('probe')}"
+            )
         mprotect = ""
         if row.get("mprotect_trace_seen"):
             mprotect = f" mprotect-trace={row.get('mprotect_trace_count')}"
@@ -262,7 +273,7 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
             hb_stall = f" heartbeat-stall={status}:{repeats}/{threshold}"
         parts.append(
             f"{bench}: {running}/{site} {progress}{timeout}{stalled} "
-            f"bpc={bpc}{kernel}{hb_stall}{fcmp}{tlbfill}{mprotect}"
+            f"bpc={bpc}{kernel}{hb_stall}{fcmp}{tlbfill}{tlbfill_stats}{mprotect}"
         )
     return ", ".join(parts)
 
