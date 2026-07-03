@@ -2213,6 +2213,21 @@ closure. The current comparable sequence is:
 | template return fast hit | `workloads/generated/specint-505-template-return-fast-qemu-20260703-r1/` | `34000000007` |
 | FENTRY save probe reuse | `workloads/generated/specint-505-fentry-store-probe-qemu-20260703-r1/` | `34000000007` |
 
+Follow-up negative result: an opt-in restore-side host-TLB-hit experiment kept
+faulting behavior on the existing `cpu_ldq_le_mmuidx_ra()` fallback, but used
+`tlb_vaddr_to_host(..., MMU_DATA_LOAD, ...)` plus `ldq_le_p()` for already
+resident RAM-backed restore slots. The temporary build
+`/tmp/linx-qemu-frame-restore-host-build-20260703-r1/qemu-system-linx64`
+passed the focused system AVS `0x110F`, `run_callret_contract.py`, and strict
+train `999.specrand_ir` under
+`workloads/generated/specint-999-frame-restore-hostfast-qemu-20260703-r1/`.
+It did not improve the focused 505 slice:
+`workloads/generated/specint-505-frame-restore-hostfast-qemu-20260703-r1/`
+timed out live at `34000000008` instructions in the same 120 second,
+1B-heartbeat train shape. Do not add a default-off restore-host branch to the
+hot path without a new profile showing a real win; it preserves correctness but
+does not move the current 505 bottleneck.
+
 `tools/spec2017/profile_qemu_after_spec_start.py` now wraps SPEC/QEMU profiling
 runs so host sampling starts only after the generated QEMU log contains
 `LINX_SPEC_START`, and only after the wrapper finds the executable basename
