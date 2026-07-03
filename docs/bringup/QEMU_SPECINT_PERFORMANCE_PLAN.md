@@ -2957,6 +2957,55 @@ Next work should either combine this cache with the TB/helper-exit lane for
 `523`/`541`, or focus the cache design on the data-load-heavy `505` path before
 retesting promotion.
 
+## 2026-07-04 523 Cache-On Post-Start Profile
+
+`workloads/generated/specint-profile-523-mmucache-qemu-20260704-r1/` profiles
+`523.xalancbmk_r` train after `LINX_SPEC_START` with `LINX_QEMU_MMU_CACHE=1`.
+The wrapper sampled the actual `qemu-system-linx64` child for 30 seconds:
+
+- report:
+  `workloads/generated/specint-profile-523-mmucache-qemu-20260704-r1/profile/qemu-523-mmucache.sample.json`
+- sample:
+  `workloads/generated/specint-profile-523-mmucache-qemu-20260704-r1/profile/qemu-523-mmucache.sample.txt`
+- run summary:
+  `workloads/generated/specint-profile-523-mmucache-qemu-20260704-r1/run/initramfs/stage_b_summary.json`
+
+The row remains a bounded `live-timeout` with `heartbeat_running=true`,
+`heartbeat_site_progress=true`, no panic, and no trap. The final heartbeat was
+`count=15000000000`, `bpc=0xffffffff803e91e4`; the sample itself is valid even
+though profiling overhead lowers the count relative to the no-stats comparison.
+
+Top active QEMU frames from "Sort by top of stack" after excluding parked
+threads:
+
+| Frame | Samples |
+| --- | ---: |
+| `pthread_jit_write_protect_np` | 3815 |
+| `cpu_exec_setjmp` | 1107 |
+| `tb_lookup` | 957 |
+| `qht_lookup_custom` | 671 |
+| `cpu_exec_loop` | 628 |
+| `helper_linx_template_fret_stk` | 597 |
+| `helper_linx_template_fentry` | 566 |
+| `probe_access_internal` | 499 |
+| `mmu_lookup1` | 381 |
+| `linx_frame_restore_commit` | 245 |
+| `probe_access` | 206 |
+| `do_ld8_mmu` | 196 |
+| `mmu_lookup` | 192 |
+| `helper_lookup_tb_ptr` | 160 |
+| `cpu_tb_exec` | 143 |
+| `linx_template_commit_and_exit` | 125 |
+| `linx_is_bstart_at_addr` | 66 |
+| `helper_linx_check_bstart_target` | 56 |
+
+Loop update: for `523` and likely `541`, the next QEMU speed target is not more
+MMU-cache statistics. It is the TCG dispatch/helper-exit lane: reduce
+template-frame helper exits, TB lookup/hash pressure, and macOS JIT
+write-protect transitions. Keep the block-aware MMU cache as an opt-in
+component for comparison, then prototype a frame-template fast path or TB
+lookup/helper-exit reduction with the same post-start profile wrapper.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.
