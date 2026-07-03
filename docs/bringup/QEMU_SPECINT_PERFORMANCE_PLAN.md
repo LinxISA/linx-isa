@@ -2844,6 +2844,53 @@ least `531.deepsjeng_r` and a train-all shard, because the count remains below
 older no-stats best runs and the broader SPEC failures are still bounded
 throughput live-timeouts, not correct completions.
 
+## 2026-07-04 Block-Aware MMU Cache Follow-Up
+
+QEMU was rebuilt cleanly after the cache commit; `qemu-system-linx64 --version`
+reports `v10.2.0-1014-gb37d0a56980`, and generated SPEC summaries record
+`qemu_repo_dirty_tracked=false`.
+
+Focused `531.deepsjeng_r` train comparison in the same 120-second shape:
+
+| Run | Result | Final proof |
+| --- | --- | --- |
+| cache disabled | `workloads/generated/specint-block-mmu-cache-531-off-qemu-20260704-r1/` live-timeout | `count=30000000001`, `bpc=0x155556a8ec`, `mmuc=h0/m0/f0` |
+| cache enabled with cache stats | `workloads/generated/specint-block-mmu-cache-531-on-qemu-20260704-r1/` live-timeout | `count=31000000004`, `bpc=0x1555565068`, `mmuc=h3134641/m4383782/f4207941`, `mmuc_flush=20`, `mmuc_flush_page=3849672` |
+| cache enabled without cache stats | `workloads/generated/specint-block-mmu-cache-531-on-nostats-qemu-20260704-r1/` live-timeout | `count=30000000002`, `bpc=0x155556d7b4` |
+
+The 531 result is neutral without cache-stat increments, so the cache does not
+generalize as a clear 531 speedup. It also does not regress the row in this
+bounded run.
+
+The cache-on train-all shard
+`workloads/generated/specint-train-all-block-mmu-cache-qemu-20260704-r1/`
+uses `LINX_QEMU_MMU_CACHE=1`, `LINX_QEMU_MMU_CACHE_STATS=1`, train input, and
+a 120-second per-row cap. `999.specrand_ir` still passes the strict train hash;
+all other rows remain heartbeat-backed live-timeouts with site progress, no
+panic, and no user trap.
+
+| Benchmark | Transport | Result | Final proof |
+| --- | --- | --- | --- |
+| `500.perlbench_r` | initramfs | `live-timeout` | `count=31000000002`, `bpc=0x15556df8ee`, `mmuc=h1485024/m2064353/f2051579` |
+| `502.gcc_r` | initramfs | `live-timeout` | `count=19000000005`, `bpc=0x1555ec5df8`, `mmuc=h1993232/m2789822/f2744614` |
+| `505.mcf_r` | initramfs | `live-timeout` | `count=29000000002`, `bpc=0x155555cbf4`, `mmuc=h87701676/m7953956/f7949159` |
+| `520.omnetpp_r` | initramfs | `live-timeout` | `count=12000000005`, `bpc=0xffffffff803e91e4`, `mmuc=h4719642/m3200580/f3141636` |
+| `523.xalancbmk_r` | initramfs | `live-timeout` | `count=15000000006`, `bpc=0x155598aea2`, `mmuc=h2405797/m1932869/f1908594` |
+| `525.x264_r` | 9p | `live-timeout` | `count=18000000002`, `bpc=0xffffffff80114874`, `mmuc=h16521/m1853214/f1853187` |
+| `531.deepsjeng_r` | initramfs | `live-timeout` | `count=30000000002`, `bpc=0x15555614fa`, `mmuc=h3053373/m4319527/f4143686` |
+| `541.leela_r` | initramfs | `live-timeout` | `count=12000000001`, `bpc=0x155558e77c`, `mmuc=h35360/m1853834/f1853234` |
+| `557.xz_r` | initramfs | `live-timeout` | `count=27000000000`, `bpc=0x155558d700`, `mmuc=h2656007/m2483381/f2327024` |
+| `999.specrand_ir` | initramfs | pass | strict train hash passes; normal QEMU exit |
+
+Loop update: keep `LINX_QEMU_MMU_CACHE=1` opt-in. It is promising for
+`505.mcf_r` and moderately useful for some parser/C++ rows, but it is neutral
+on focused 531 without stats and nearly unused by `541.leela_r` and the 9p
+`525.x264_r` shard. Do not make it default-on before a no-stats train-all
+comparison shows a clear aggregate win. Next speed work should split by row:
+continue soft-MMU/page-walk work for `505`, route `520`/`523`/`557` through
+combined cache plus TB/helper-exit profiling, and keep `541`/`525` out of the
+generic MMU-cache promotion decision.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.

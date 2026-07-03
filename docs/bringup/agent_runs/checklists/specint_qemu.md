@@ -570,6 +570,13 @@
   Focused `505.mcf_r` train evidence: disabled cache reaches `28000000002` instructions in `workloads/generated/specint-block-mmu-cache-505-off-qemu-20260704-r1/`; cache enabled with stats reaches `29000000001` with `mmuc=h87701206/m7953961/f7949164`, `mmuc_flush=21`, and `mmuc_flush_page=3675648` in `workloads/generated/specint-block-mmu-cache-505-on-qemu-20260704-r1/`; cache enabled without stats reaches `30000000003` in `workloads/generated/specint-block-mmu-cache-505-on-nostats-qemu-20260704-r1/`.
   Loop update: this is a candidate speed feature, not SPEC closure. Keep default-off until `531.deepsjeng_r` and a train-all shard show no regression and the count improvement holds outside a single focused 505 run.
 
+- [x] ID: SPEC-PERF-MMUC-BLOCK-TRAINALL-20260704 Block-aware MMU cache has focused 531 and train-all regression evidence.
+  QEMU provenance: rebuilt `emulator/qemu/build-linx/qemu-system-linx64` reports `v10.2.0-1014-gb37d0a56980`; generated summaries record QEMU head `b37d0a5698092b1c9987582c5a925c446811e042` and `qemu_repo_dirty_tracked=false`.
+  Focused `531.deepsjeng_r` train comparison: cache-off `workloads/generated/specint-block-mmu-cache-531-off-qemu-20260704-r1/` reaches `30000000001` instructions; cache-on with stats `workloads/generated/specint-block-mmu-cache-531-on-qemu-20260704-r1/` reaches `31000000004` with `mmuc=h3134641/m4383782/f4207941`; cache-on without stats `workloads/generated/specint-block-mmu-cache-531-on-nostats-qemu-20260704-r1/` reaches `30000000002`.
+  Train-all cache-on shard: `LINX_QEMU_MMU_CACHE=1 LINX_QEMU_MMU_CACHE_STATS=1 SPECINT_TRAIN_ALL_TIMEOUT=120 ... --profile train ... --out-dir workloads/generated/specint-train-all-block-mmu-cache-qemu-20260704-r1 --continue-on-fail` covers every tracked train row. `999.specrand_ir` passes strict train hash. `500`, `502`, `505`, `520`, `523`, `531`, `541`, and `557` are heartbeat-live initramfs timeouts; `525` is a heartbeat-live 9p timeout. No row shows panic or user trap.
+  Train-all MMU-cache signal: `505.mcf_r` is the dominant cache user (`mmuc=h87701676/m7953956/f7949159`); `520`, `523`, and `557` show moderate hit traffic; `531` is neutral in focused no-stats comparison; `541` and `525` are almost unused by this cache (`541 mmuc=h35360/m1853834/f1853234`, `525 mmuc=h16521/m1853214/f1853187`).
+  Loop update: keep the cache opt-in and default-off. Next speed loop should run a no-stats train-all comparison before default promotion, and should split `541`/`525` away from generic MMU-cache work.
+
 ## Live Blockers (2026-05-21)
 
 - [ ] BLOCK-SPEC-FG-001 Fast SPECint gate must run `test`/`train` before promotion.
