@@ -3134,6 +3134,81 @@ Loop update: keep the switch opt-in. Use it with frame stats when
 considering default promotion. Keep `505` on the user data-memory/TLB lane and
 `525` on the kernel/9p lane until new evidence changes that split.
 
+Follow-up all-row evidence on latest in-tree QEMU `v10.2.0-1016-g8c24b15a343`
+used `LINX_QEMU_TEMPLATE_CHAIN=1`, `--qemu-frame-stats`, and
+`--qemu-frame-restore-host-load`:
+`workloads/generated/specint-train-all-template-chain-frame-hostload-qemu-20260704-r2/`.
+The QEMU submodule was clean at head
+`8c24b15a3437315be80edc09278cf5786cf1a811`, but the run used the in-tree build
+path rather than a `/tmp/linx-qemu-clean-build` marker, so summaries record
+`clean_build_for_head=false`. `999.specrand_ir` still passes strict train hash.
+Every real row remains a heartbeat-backed `live-timeout` with site progress,
+no panic, and no trap.
+
+| Benchmark | Template-chain count | Restore-host count | Delta | Restore host/fallback | Result |
+| --- | ---: | ---: | ---: | --- | --- |
+| `500.perlbench_r` | 36000000003 | 37000000000 | +999999997 | `280847246/0` | `live-timeout` |
+| `502.gcc_r` | 23000000003 | 26000000000 | +2999999997 | `751640543/0` | `live-timeout` |
+| `505.mcf_r` | 34000000008 | 35000000001 | +999999993 | `491237016/0` | `live-timeout` |
+| `520.omnetpp_r` | 16000000012 | 17000000001 | +999999989 | `820149124/0` | `live-timeout` |
+| `523.xalancbmk_r` | 21000000001 | 21000000003 | +2 | `660685206/0` | `live-timeout` |
+| `525.x264_r` | 31000000006 | 31000000001 | -5 | `962859238/0` | `live-timeout`, 9p |
+| `531.deepsjeng_r` | 40000000008 | 38000000002 | -2000000006 | `445834686/0` | `live-timeout` |
+| `541.leela_r` | 19000000007 | 19000000001 | -6 | `929796547/0` | `live-timeout` |
+| `557.xz_r` | 34000000005 | 34000000000 | -5 | `809633794/0` | `live-timeout` |
+| `999.specrand_ir` | pass | pass | 0 | `0/0` | strict hash passes |
+
+This keeps restore-host loads useful as a focused row experiment, but the broad
+frame-stats run is not enough for default promotion. The rows that improved are
+still far from completing train input within the bounded gate, and `531` is
+worse than the prior template-chain count in this all-row shape.
+
+Post-start profile:
+`workloads/generated/specint-profile-531-template-hostload-qemu-20260704-r1/`
+profiles `531.deepsjeng_r` with `LINX_QEMU_TEMPLATE_CHAIN=1`,
+`--qemu-frame-restore-host-load`, frame stats off, guest and QEMU heartbeat off,
+and a 180-second cap. The wrapper sampled the real QEMU PID after
+`LINX_SPEC_START`; the row is red only because heartbeat was intentionally
+disabled for profiling. Top active frames after excluding parked threads:
+
+| Frame | Samples |
+| --- | ---: |
+| `probe_access_internal` | 940 |
+| `helper_linx_tlb_iv` | 828 |
+| `tb_lookup` | 774 |
+| `linx_template_fentry_impl` | 707 |
+| `linx_template_fret_stk_impl` | 676 |
+| `helper_lookup_tb_ptr` | 559 |
+| `linx_frame_restore_prepare` | 475 |
+| `probe_access` | 337 |
+| `linx_get_tb_cpu_state` | 321 |
+| `linx_frame_restore_commit` | 229 |
+| `qht_lookup_custom` | 214 |
+| `tlb_vaddr_to_host` | 159 |
+| `mmu_lookup1` | 54 |
+| `pthread_jit_write_protect_np` | 39 |
+
+Rejected experiment: an uncommitted opt-in QEMU patch tried to route
+`TLB.IV`/`TLB.IAV` through `tlb_flush_page_by_mmuidx()` using an obvious
+user-vs-kernel VA split instead of flushing all QEMU MMU indexes. It preserved
+the default call/ret contract, passed the opt-in call/ret contract, and passed
+strict train `999.specrand_ir` in
+`workloads/generated/specint-999-tlbiv-addrmmu-qemu-20260704-r1/`, but focused
+`531.deepsjeng_r` with template-chain and restore-host loads stayed neutral:
+baseline `workloads/generated/specint-531-template-hostload-baseline-qemu-20260704-r1/`
+reached `count=17000000008`, while
+`workloads/generated/specint-531-template-hostload-tlbiv-addrmmu-qemu-20260704-r1/`
+reached `count=17000000003`. The patch was backed out.
+
+Loop update: do not pursue naive QEMU MMU-index narrowing for `TLB.IV` as the
+next speed patch. The useful next lane is TLB invalidation source reduction or
+batching: profile the Linux eager `local_flush_tlb_page()` call sites in
+`arch/linx/include/asm/pgtable.h` (`update_mmu_cache_range`,
+`ptep_set_wrprotect`) and `arch/linx/mm/fault.c`, then decide whether Linx
+Linux can reduce fault-time/page-aging flush volume without violating the ISA's
+ordering requirement. Keep QEMU work on `probe_access_internal`,
+template-helper dispatch, and `tb_lookup` after that Linux-side evidence.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.
