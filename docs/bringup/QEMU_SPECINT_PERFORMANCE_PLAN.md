@@ -2212,6 +2212,7 @@ closure. The current comparable sequence is:
 | tile helper inline | `workloads/generated/specint-505-inline-tile-qemu-20260703-r1/` | `31000000001` |
 | template return fast hit | `workloads/generated/specint-505-template-return-fast-qemu-20260703-r1/` | `34000000007` |
 | FENTRY save probe reuse | `workloads/generated/specint-505-fentry-store-probe-qemu-20260703-r1/` | `34000000007` |
+| FENTRY same-page range probe | `workloads/generated/specint-505-frame-save-range-qemu-20260703-r1/` | rejected: `32000000004` |
 
 Follow-up negative result: an opt-in restore-side host-TLB-hit experiment kept
 faulting behavior on the existing `cpu_ldq_le_mmuidx_ra()` fallback, but used
@@ -2227,6 +2228,23 @@ timed out live at `34000000008` instructions in the same 120 second,
 1B-heartbeat train shape. Do not add a default-off restore-host branch to the
 hot path without a new profile showing a real win; it preserves correctness but
 does not move the current 505 bottleneck.
+
+Follow-up negative result: a frame-save same-page range-probe experiment
+collapsed adjacent FENTRY save-slot probes into one `probe_write()` call per
+target page, then reused offsets from the returned host pointer for the later
+stores. The temporary build
+`/tmp/linx-qemu-frame-save-range-build-20260703-r1/qemu-system-linx64`
+passed `run_callret_contract.py`, the focused system AVS `0x110F`, and strict
+PR `999.specrand_ir` test/train under
+`workloads/generated/specint-pr-frame-save-range-qemu-20260703-r1/`. It was
+slower on the focused 505 comparison: the clean latest-QEMU baseline
+`workloads/generated/specint-505-clean-qemu-baseline-20260703-r2/` reached
+`34000000002` instructions in 120 seconds, while
+`workloads/generated/specint-505-frame-save-range-qemu-20260703-r1/` reached
+only `32000000004` instructions with the same heartbeat, stack, memory, and
+TLB-fill-stat knobs. The patch was reverted. Do not reintroduce range probing
+as the next frame-template speed lane without a new host profile explaining why
+the larger probe should win.
 
 `tools/spec2017/profile_qemu_after_spec_start.py` now wraps SPEC/QEMU profiling
 runs so host sampling starts only after the generated QEMU log contains
