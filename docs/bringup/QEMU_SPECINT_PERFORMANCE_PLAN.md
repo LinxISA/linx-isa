@@ -2002,6 +2002,40 @@ why `tlb_flush_page()` is so frequent during SPEC rows, split user text/data
 misses from kernel and 9p misses, and reduce template/frame memory traffic that
 drives TCG load/store MMU lookups.
 
+## 2026-07-03 TLB Invalidation Counters
+
+The follow-up debug patch adds `LINX_TLB_STATS=1` /
+`LINX_QEMU_TLB_STATS=1`, an opt-in counter path for TLB invalidation helpers.
+Heartbeat records now include `tlbi_iall`, `tlbi_ia`, `tlbi_iv`,
+`tlbi_iav`, and the last invalidation count/PC/BPC/operand/ACR. The counters
+do not require the experimental MMU cache, so they can quantify invalidation
+pressure without changing page-walk behavior.
+
+Focused evidence on `/tmp/linx-qemu-hb-build-20260703-r1/qemu-system-linx64`:
+
+| Run | Artifact | Result |
+| --- | --- | --- |
+| strict `999.specrand_ir`, stats on, 1M heartbeat | `workloads/generated/specint-999-tlb-stats-qemu-20260703-r1/` | pass in `9.304s`; final `tlbi_iv=3670859` |
+| strict `999.specrand_ir`, stats off/default | `workloads/generated/specint-999-tlb-stats-defaultoff-qemu-20260703-r1/` | pass |
+| `505.mcf_r` train, stats on, 120s cap | `workloads/generated/specint-505-tlb-stats-qemu-20260703-r1/` | live timeout at `26000000004` instructions; final `tlbi_iv=3675648` |
+
+The new data changes the interpretation of the earlier MMU-cache page-flush
+counter. The million-scale `TLB.IV` traffic is largely boot/startup mapping
+work: the strict `999` run already reaches about `3.67M` page invalidations.
+The 505 train slice adds only a few thousand more invalidations while the
+benchmark remains live. The last 505 invalidation site is
+`pc=0xffffffff800db2b6`, `bpc=0xffffffff800db2ac`, symbolized with
+`kernel/linux/build-linx-fixed/vmlinux` to Linux `handle_mm_fault` /
+`memory.c` around a `tlb.iv a3` loop. The strict 999 last site is
+`pc=0xffffffff800d94f4`, `bpc=0xffffffff800d94ea`, symbolized to
+`finish_fault` / `memory.c` around a `tlb.iv a2` loop.
+
+Current conclusion: do not spend the next QEMU speed loop on the direct-mapped
+page-walk cache. First separate startup invalidation cost from steady-state
+SPEC execution cost, then investigate whether Linux can batch or narrow these
+fault-time `TLB.IV` loops, and keep QEMU work focused on the remaining sampled
+TCG load/store MMU path plus template/frame memory traffic.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.
