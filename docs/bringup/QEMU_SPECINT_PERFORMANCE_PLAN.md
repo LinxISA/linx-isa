@@ -2612,6 +2612,74 @@ per-TB dispatch frequency, but route implementation work toward reducing
 dispatch exits, generated helper exits, or soft-MMU load/probe work rather than
 memoizing the Apple wrapper call.
 
+## 2026-07-03 Current-Head All-Train Ledger
+
+Clean QEMU head `193c36d8556b6cb072e8e476d933d756428ab4e4`
+(`v10.2.0-1011-g193c36d8556`) was rebuilt through
+`tools/bringup/run_qemu_build_clean.sh` into
+`/tmp/linx-qemu-clean-build/qemu-system-linx64`. The train gate
+`workloads/generated/specint-train-all-current-head-qemu-20260703-r1/`
+records `qemu_provenance.clean_build_for_head=true`,
+`clean_build_marker_matches_head=true`, and `qemu_repo_dirty_tracked=false`.
+
+Command shape:
+
+```bash
+LINX_QEMU_TLB_FILL_STATS=1 \
+LINX_SPEC_QEMU_TB_STATS=1 \
+SPECINT_TRAIN_ALL_TIMEOUT=300 \
+SPEC_GUEST_HEARTBEAT_SEC=0 \
+SPEC_QEMU_HEARTBEAT_INTERVAL=1000000000 \
+SPEC_NO_PROGRESS_TIMEOUT=180 \
+QEMU_CLEAN_OUT_DIR=/tmp/linx-qemu-clean-build \
+python3 tools/bringup/run_specint_fast_gate.py \
+  --profile train \
+  --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 \
+  --qemu /tmp/linx-qemu-clean-build/qemu-system-linx64 \
+  --sysroot out/libc/musl/install/phase-b \
+  --out-dir workloads/generated/specint-train-all-current-head-qemu-20260703-r1 \
+  --append-extra norandmaps \
+  --heartbeat-sec 30 \
+  --qemu-heartbeat-interval 1000000000 \
+  --guest-heartbeat-sec 0 \
+  --no-progress-timeout 180 \
+  --stack-limit 2G \
+  --continue-on-fail
+```
+
+Result: the gate is red only because the train rows are bounded to 300s.
+`999.specrand_ir` still passes the strict train sentinel. Every other tracked
+C/C++ SPECint row is `live-timeout` with `heartbeat_running=true`,
+`heartbeat_site_progress=true`, `stalled=false`, no panic, and no user trap.
+`525.x264_r` runs in the generated 9p shard and is also live-timeout, not the
+old oversized-initramfs VFS panic.
+
+| Benchmark | Transport | Result | Final BPC / pressure counters |
+| --- | --- | --- | --- |
+| `500.perlbench_r` | initramfs | `live-timeout` | `bpc=0x15556d9620`, `count=87000000002`, `tlbf=5565290`, `tb_lookup=1878886817`, `tb_gen=63743` |
+| `502.gcc_r` | initramfs | `live-timeout` | `bpc=0x1555893e3c`, `count=48000000011`, `tlbf=10101255`, `tb_lookup=3237627725`, `tb_gen=219703` |
+| `505.mcf_r` | initramfs | `live-timeout` | `bpc=0x155555cc06`, `count=79000000004`, `tlbf=211449824`, `tlbf_load=189522075`, `tb_gen=30246` |
+| `520.omnetpp_r` | initramfs | `live-timeout` | `bpc=0x15557cba1e`, `count=32000000028`, `tlbf=14341840`, `tb_hash_hit=652333795`, `tb_gen=70529` |
+| `523.xalancbmk_r` | initramfs | `live-timeout` | `bpc=0x155593291a`, `count=38000000000`, `tlbf=7812653`, `tb_hash_hit=660653977`, `tb_gen=82393` |
+| `525.x264_r` | 9p | `live-timeout` | `bpc=0xffffffff8011612a`, `count=48000000002`, `tlbf=1869627`, `tb_lookup=3930070800`, `tb_gen=30072` |
+| `531.deepsjeng_r` | initramfs | `live-timeout` | `bpc=0x1555559464`, `count=81000000013`, `tlbf=14996831`, `tb_hash_hit=429307975`, `tb_gen=32341` |
+| `541.leela_r` | initramfs | `live-timeout` | `bpc=0x155557308a`, `count=37000000002`, `tlbf=2128107`, `tb_lookup=4885024262`, `tb_gen=39744` |
+| `557.xz_r` | initramfs | `live-timeout` | `bpc=0x1555577064`, `count=84000000012`, `tlbf=26090642`, `tlbf_load=24080262`, `tb_gen=34175` |
+| `999.specrand_ir` | initramfs | pass | strict train hash passes; QEMU exits normally |
+
+Loop update: the all-train current-head sweep continues to split into three
+speed lanes. `505.mcf_r` is the dominant soft-MMU data-load translation case:
+roughly 211M TLB fills, 189M loads, no TB churn, and only about 36 MiB of the
+TCG code buffer used. `520.omnetpp_r`, `523.xalancbmk_r`, `541.leela_r`, and
+part of `531.deepsjeng_r` are more TB-dispatch/hash-lookup shaped than
+TLB-capacity shaped. `525.x264_r` is a kernel/9p transport lane with frozen
+TLB-fill counters after early setup and changing kernel BPCs. The next QEMU
+patch loop should therefore prioritize soft-MMU load/probe lookup
+specialization and generated helper exit reduction for `505`, separately
+profile TB dispatch/hash lookup cost for the C++/game rows, and keep `525` on
+a transport or future block-device lane. Keep strict `999.specrand_ir` train
+as the correctness sentinel after each hot-path experiment.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.

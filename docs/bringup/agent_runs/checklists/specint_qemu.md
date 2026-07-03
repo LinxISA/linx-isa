@@ -2,6 +2,27 @@
 
 ## Live Blockers (2026-07-03)
 
+- [x] ID: SPEC-M05-TRAIN-ALL-CURRENT-HEAD-QEMU-20260703 Clean current-head QEMU train-all run covers every tracked SPECint train row with BPC, TLB-fill, and TB stats.
+  Command: `LINX_QEMU_TLB_FILL_STATS=1 LINX_SPEC_QEMU_TB_STATS=1 SPECINT_TRAIN_ALL_TIMEOUT=300 SPEC_GUEST_HEARTBEAT_SEC=0 SPEC_QEMU_HEARTBEAT_INTERVAL=1000000000 SPEC_NO_PROGRESS_TIMEOUT=180 QEMU_CLEAN_OUT_DIR=/tmp/linx-qemu-clean-build python3 tools/bringup/run_specint_fast_gate.py --profile train --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 --qemu /tmp/linx-qemu-clean-build/qemu-system-linx64 --sysroot out/libc/musl/install/phase-b --out-dir workloads/generated/specint-train-all-current-head-qemu-20260703-r1 --append-extra norandmaps --heartbeat-sec 30 --qemu-heartbeat-interval 1000000000 --guest-heartbeat-sec 0 --no-progress-timeout 180 --stack-limit 2G --continue-on-fail`.
+  QEMU provenance: `workloads/generated/specint-train-all-current-head-qemu-20260703-r1/specint_fast_gate_summary.json` records clean QEMU head `193c36d8556b6cb072e8e476d933d756428ab4e4`, version `v10.2.0-1011-g193c36d8556`, `qemu_repo_dirty_tracked=false`, `clean_build_for_head=true`, and `clean_build_marker_matches_head=true`.
+  SPEC evidence: the gate emits both `train-all/initramfs/stage_b_summary.json` and `train-all-large-9p/9p/stage_b_summary.json`. `999.specrand_ir` passes strict train hash. `500.perlbench_r`, `502.gcc_r`, `505.mcf_r`, `520.omnetpp_r`, `523.xalancbmk_r`, `525.x264_r`, `531.deepsjeng_r`, `541.leela_r`, and `557.xz_r` all classify as `live-timeout` with `heartbeat_running=true`, `heartbeat_site_progress=true`, `stalled=false`, no panic, and no user trap.
+  Current ledger:
+
+  | Benchmark | Transport | Result | Final proof |
+  | --- | --- | --- | --- |
+  | `500.perlbench_r` | initramfs | `live-timeout` | `count=87000000002`, `bpc=0x15556d9620`, `tlbf=5565290`, `tb_gen=63743` |
+  | `502.gcc_r` | initramfs | `live-timeout` | `count=48000000011`, `bpc=0x1555893e3c`, `tlbf=10101255`, `tb_gen=219703` |
+  | `505.mcf_r` | initramfs | `live-timeout` | `count=79000000004`, `bpc=0x155555cc06`, `tlbf=211449824`, `tlbf_load=189522075` |
+  | `520.omnetpp_r` | initramfs | `live-timeout` | `count=32000000028`, `bpc=0x15557cba1e`, `tlbf=14341840`, `tb_hash_hit=652333795` |
+  | `523.xalancbmk_r` | initramfs | `live-timeout` | `count=38000000000`, `bpc=0x155593291a`, `tlbf=7812653`, `tb_hash_hit=660653977` |
+  | `525.x264_r` | 9p | `live-timeout` | `count=48000000002`, `bpc=0xffffffff8011612a`, kernel/9p BPC progress, `tlbf=1869627` |
+  | `531.deepsjeng_r` | initramfs | `live-timeout` | `count=81000000013`, `bpc=0x1555559464`, `tlbf=14996831`, `tb_hash_hit=429307975` |
+  | `541.leela_r` | initramfs | `live-timeout` | `count=37000000002`, `bpc=0x155557308a`, `tlbf=2128107`, `tb_lookup=4885024262` |
+  | `557.xz_r` | initramfs | `live-timeout` | `count=84000000012`, `bpc=0x1555577064`, `tlbf=26090642`, `tlbf_load=24080262` |
+  | `999.specrand_ir` | initramfs | pass | strict train hash passes; normal QEMU exit |
+
+  Loop update: keep this as the current clean-head all-train ledger. `505.mcf_r` is still the strongest soft-MMU data-load target, not a TB-cache-capacity target. `520`, `523`, `541`, and part of `531` need a TB-dispatch/hash-lookup profile lane. `525.x264_r` remains a separate 9p/kernel transport lane rather than an initramfs correctness failure.
+
 - [x] ID: SPEC-QEMU-JIT-GUARD-REJECTED-20260703 A Darwin JIT write-protect state guard preserves correctness but does not improve focused 505 throughput.
   Command: local dirty QEMU experiment cached per-thread `pthread_jit_write_protect_np()` state in `qemu_thread_jit_execute()` / `qemu_thread_jit_write()`; validation used `ninja qemu-system-linx64`, `python3 avs/qemu/run_callret_contract.py --qemu emulator/qemu/build-linx/qemu-system-linx64`, `LINX_VIRT_TEST_FINISHER=1 python3 avs/qemu/run_tests.py --suite system --require-test-id 0x110F --timeout 20 --qemu emulator/qemu/build-linx/qemu-system-linx64`, strict 999 train, and focused 505 train.
   SPEC evidence: strict `999.specrand_ir` train passes in `workloads/generated/specint-jitguard-999-qemu-20260703-r1/`. Focused `505.mcf_r` with TB/TLB stats is heartbeat-live in `workloads/generated/specint-jitguard-505-qemu-20260703-r1/`, final count `31000000008`, BPC `0x155555c482`, `tbs_flush=0`, and `tbs_code_used=36579944/1073725352`. Focused `505.mcf_r` without TB/TLB stats is heartbeat-live in `workloads/generated/specint-jitguard-505-nostats-qemu-20260703-r1/`, final count `30000000007`, BPC `0x155555c482`.
