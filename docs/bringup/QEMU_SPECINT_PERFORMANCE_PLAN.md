@@ -3034,12 +3034,33 @@ enabled:
 | `LINX_QEMU_MMU_CACHE=1`, no template chain | `live-timeout` | `workloads/generated/specint-523-mmucache-focused-baseline-qemu-20260704-r1/`, `count=16000000000`, `bpc=0xffffffff803e91e4`, no panic/trap |
 | `LINX_QEMU_TEMPLATE_CHAIN=1 LINX_QEMU_MMU_CACHE=1` | `live-timeout` | `workloads/generated/specint-template-chain-523-mmucache-qemu-20260704-r1/`, `count=22000000002`, `bpc=0x15559aa4a6`, no panic/trap |
 
-Loop update: the template-chain path is the first strong 523-focused dispatch
-speed result in this lane (`+37.5%` in the focused 120-second shape), but it is
-not default-ready. Next required gate is an all-row train comparison with
-`LINX_QEMU_TEMPLATE_CHAIN=1` alone and then combined with
-`LINX_QEMU_MMU_CACHE=1`, because 505/531/525 may respond differently from the
-523-focused result.
+The follow-up all-row train comparison used `LINX_QEMU_TEMPLATE_CHAIN=1` alone
+with the same 120-second train-all budget, no guest heartbeat, QEMU heartbeat
+every 1B guest instructions, `norandmaps`, and the generated split
+`train-all-large-9p` shard for `525.x264_r`:
+`workloads/generated/specint-train-all-template-chain-qemu-20260704-r1/`.
+The summary records QEMU head `51f42d1726c02584e1646bdcc2ee8ca133e290ff` and
+`qemu_repo_dirty_tracked=false`.
+
+| Benchmark | Baseline no-cache count | MMU-cache count | Template-chain count | Result |
+| --- | ---: | ---: | ---: | --- |
+| `500.perlbench_r` | 32000000000 | 32000000005 | 36000000003 | `live-timeout`, no panic/trap |
+| `502.gcc_r` | 19000000002 | 19000000001 | 23000000003 | `live-timeout`, no panic/trap |
+| `505.mcf_r` | 28000000002 | 30000000009 | 34000000008 | `live-timeout`, no panic/trap |
+| `520.omnetpp_r` | 11000000006 | 11000000006 | 16000000012 | `live-timeout`, no panic/trap |
+| `523.xalancbmk_r` | 15000000000 | 16000000004 | 21000000001 | `live-timeout`, no panic/trap |
+| `525.x264_r` | 18000000003 | 18000000003 | 31000000006 | `live-timeout`, no panic/trap |
+| `531.deepsjeng_r` | 31000000027 | 31000000005 | 40000000008 | `live-timeout`, no panic/trap |
+| `541.leela_r` | 12000000001 | 13000000006 | 19000000007 | `live-timeout`, no panic/trap |
+| `557.xz_r` | 28000000005 | 28000000001 | 34000000005 | `live-timeout`, no panic/trap |
+| `999.specrand_ir` | pass | pass | pass | strict train hash passes |
+
+Loop update: the template-chain path is the first broad dispatch speed result in
+this lane. It improves bounded instruction progress for all nine long train
+rows versus both no-cache and MMU-cache-only 120-second baselines, while the
+`999.specrand_ir` train sentinel still passes. Keep it opt-in until a combined
+`LINX_QEMU_TEMPLATE_CHAIN=1 LINX_QEMU_MMU_CACHE=1` all-row train comparison and
+a longer correctness-oriented test/train gate prove no row-level regression.
 
 ## Validation Targets
 
