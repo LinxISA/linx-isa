@@ -31,12 +31,16 @@ Canonical libc sources:
 - musl `M3`: pass in the current `phase-b` build/runtime lane
 - musl static+shared Linux/QEMU smoke: pass
   (`avs/qemu/out/musl-smoke/summary.json`)
-- active glibc runtime blocker: `ld.so.1` faults in early `_dl_start` before
-  the glibc hello markers. Focused VM trace
-  `avs/qemu/out/glibc-smoke-entry-exec-hello-vmtrace-20260703-r1/qemu_glibc_runtime_entry_main.log`
-  records `LINX_VM_FAULT stage=no-vma` at `tpc=0x0000003fa3aaa7c4`,
-  `bpc=0x0000003fa3aaa7c2`, `addr=0x0000007f4751aa20`, followed by
-  `LINX_USER_TRAP`.
+- active glibc runtime blocker: `ld.so.1` reaches early loader text, but the
+  mapped executable page is wrong. Focused QEMU TLB/PC-watch evidence in
+  `avs/qemu/out/glibc-smoke-tlbfill-20260703-r1/qemu_glibc_runtime_custom.log`
+  shows `LINX_TLB_FILL_TRACE` mapping `va=0x3ff7fe7164` to
+  `pa=0x1f79b164`, and `LINX_PC_WATCH_PHYS` shows the bad PC
+  `0x3ff7fe71f4` reads physical bytes from `pa=0x1f79b1f4`. Those bytes match
+  `ld.so` file offset `0xc000`, but the virtual address is in the loader text
+  region that requires file offset `0x19000`. QEMU is following the installed
+  PTE; the next owner is Linux file mapping/page-cache/VMA state for executable
+  loader pages.
 
 ## Evidence pointers
 
@@ -64,6 +68,7 @@ Canonical libc sources:
 - The PID1 wrapper no longer writes directly to the virt UART MMIO page from
   Linux userspace. Runtime visibility now depends on kernel-mediated stdio and
   terminal Linx trap/panic markers.
-- The active glibc lane needs loader/kernel ELF-startup diagnosis. The current
-  failure is not a QEMU deadlock: the VM trace reaches a concrete loader
-  `no-vma` user trap before glibc user code starts.
+- The active glibc lane needs Linux loader mapping/page-cache diagnosis. The
+  current failure is not a QEMU decode error or deadlock: virtual code bytes
+  and physical memory agree with each other, but they disagree with the ELF
+  file offset that should back that `ld.so` virtual page.

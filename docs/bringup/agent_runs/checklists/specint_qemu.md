@@ -1,5 +1,32 @@
 # SPECint / QEMU Checklist
 
+## Live Blockers (2026-07-03)
+
+- [x] ID: SPEC-M05-TRAIN-ALL-LATEST-QEMU-20260703 All SPECint train rows run on the current instrumented QEMU, including the generated `525.x264_r` 9p shard.
+  Command: `LINX_QEMU_HEARTBEAT_SAME_SITE_WARN=4 SPECINT_TRAIN_ALL_TIMEOUT=180 python3 tools/bringup/run_specint_fast_gate.py --profile train --suite train-all --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 --qemu /tmp/linx-qemu-hb-build-20260703-r1/qemu-system-linx64 --sysroot out/libc/musl/install/phase-b --out-dir workloads/generated/specint-train-all-debug-qemu-20260703-r1 --append-extra "norandmaps ignore_loglevel loglevel=8" --guest-heartbeat-sec 0 --heartbeat-sec 30 --qemu-heartbeat-interval 1000000000 --qemu-heartbeat-same-site-warn 4 --no-progress-timeout 120 --stack-limit 2G --symbolize-heartbeat --continue-on-fail`.
+  Evidence: `workloads/generated/specint-train-all-debug-qemu-20260703-r1/specint_fast_gate_summary.json` covers `train-all` plus generated `train-all-large-9p`. `999.specrand_ir` passes strict train hash `0x973dcfc2`. `500.perlbench_r`, `502.gcc_r`, `505.mcf_r`, `520.omnetpp_r`, `523.xalancbmk_r`, `525.x264_r`, `531.deepsjeng_r`, `541.leela_r`, and `557.xz_r` are all `live-timeout` rows with `LINX_HEARTBEAT` BPC site progress. There are no current train-row user traps, kernel panics, wrapper child-exit failures, or no-progress timeouts in this run.
+  Current ledger:
+
+  | Benchmark | Transport | Result | Final BPC / proof |
+  | --- | --- | --- | --- |
+  | `500.perlbench_r` | initramfs | `live-timeout` | `bpc=0x15556dfd4e`, `progress=site-change` |
+  | `502.gcc_r` | initramfs | `live-timeout` | `bpc=0x155594150a`, `progress=site-change` |
+  | `505.mcf_r` | initramfs | `live-timeout` | `bpc=0x155555cce6`, `progress=site-change` |
+  | `520.omnetpp_r` | initramfs | `live-timeout` | `bpc=0x1555672d44`, `progress=site-change` |
+  | `523.xalancbmk_r` | initramfs | `live-timeout` | `bpc=0x1555678654`, `progress=site-change` |
+  | `525.x264_r` | 9p | `live-timeout` | `bpc=0xffffffff80114242`, `progress=site-change`; 9p transport starts benchmark, no oversized-initramfs VFS panic |
+  | `531.deepsjeng_r` | initramfs | `live-timeout` | `bpc=0x15555640ba`, `progress=site-change`; transient same-site warning recovered |
+  | `541.leela_r` | initramfs | `live-timeout` | `bpc=0x15555846c0`, `progress=site-change` |
+  | `557.xz_r` | initramfs | `live-timeout` | `bpc=0x155558d69c`, `progress=site-change` |
+  | `999.specrand_ir` | initramfs | pass | strict hash `0x973dcfc2` matches expected `0x973dcfc2` |
+
+  Loop update: the current all-train state is a throughput/gate-budget problem, not deadlock or correctness failure. Keep `999.specrand_ir` as the cheap correctness sentinel. Keep `525.x264_r` on the generated 9p shard unless intentionally reproducing initramfs transport limits. For speed work, profile after `LINX_SPEC_START` with guest heartbeat disabled and QEMU heartbeat coarse or off. Prioritize reducing TLB fill/page-walk overhead, template frame memory traffic, and 9p/syscall overhead for `525`.
+
+- [x] ID: SPEC-QEMU-HB-PCPHYS-DBG-20260703 QEMU heartbeat and PC-watch diagnostics now expose enough state to separate deadlock, wrong mapping, and wrong-target symptoms.
+  QEMU evidence: heartbeat records now include `a2` through `a7` alongside `a0`/`a1`, so syscall/helper argument state is visible without enabling full register dumps. `LINX_CALL_TRACE_CALL_COMMIT` now carries the direct branch target in `extra1`, separating fallthrough from branch-target context in call traces. PC-watch gained `LINX_DEBUG_PC_WATCH_DUMP_PHYS=1` and `LINX_DEBUG_PC_WATCH_DUMP_PHYS_BYTES=<n>`, which emit `LINX_PC_WATCH_PHYS` with the debug-translated guest physical address and physical bytes read from memory.
+  glibc evidence: `avs/qemu/out/glibc-smoke-tlbfill-20260703-r1/qemu_glibc_runtime_custom.log` combines `LINX_TLB_FILL_TRACE` and `LINX_PC_WATCH_PHYS` to prove the bad loader PC `0x3ff7fe71f4` reads from physical page `0x1f79b000`. The bytes at that physical address match `ld.so` file offset `0xc000`, while the virtual address needs file offset `0x19000`. QEMU is following the installed PTE; the current glibc runtime blocker is wrong executable page mapping/page-cache/VMA state, not BSTART decode, stale TLB, or a deadlocked emulator.
+  Loop update: for future bad-code-byte cases, use the narrow sequence `LINX_TLB_FILL_TRACE_VA=<bad-va>`, `LINX_DEBUG_PC_WATCH=<bad-pc>`, `LINX_DEBUG_PC_WATCH_DUMP_CODE_BYTES=<n>`, and `LINX_DEBUG_PC_WATCH_DUMP_PHYS=1` before widening QEMU traces. If virtual bytes and physical bytes agree but disagree with the ELF file offset, route to Linux file mapping/page-cache/VMA ownership.
+
 ## Live Blockers (2026-07-02)
 
 - [x] ID: SPEC-M05-500-TEST-RUN2-PIPE-OOPS-20260702 Focused latest-QEMU `500.perlbench_r` test input separates row-1 correctness from a row-2 kernel Oops.

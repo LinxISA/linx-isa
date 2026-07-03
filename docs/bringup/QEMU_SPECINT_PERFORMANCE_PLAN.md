@@ -1904,6 +1904,61 @@ Prioritized QEMU speedups:
    `--guest-heartbeat-sec 0` and a low or zero host heartbeat unless the guest
    is suspected of hanging.
 
+## 2026-07-03 Train-All Profile
+
+Latest bounded train-all evidence:
+
+- Run root:
+  `workloads/generated/specint-train-all-debug-qemu-20260703-r1/`
+- QEMU:
+  `/tmp/linx-qemu-hb-build-20260703-r1/qemu-system-linx64`
+- Top-level summary:
+  `workloads/generated/specint-train-all-debug-qemu-20260703-r1/specint_fast_gate_summary.json`
+- Profile artifact:
+  `workloads/generated/specint-train-all-debug-qemu-20260703-r1/profile/qemu-system-sample-20260703-124459.txt`
+
+The run covers every train SPECint row. `999.specrand_ir` passes strict hash
+`0x973dcfc2`. The remaining nine rows are heartbeat-backed `live-timeout`
+failures, including `525.x264_r` in the generated 9p shard. The final
+heartbeats for the failed rows all report `progress=site-change`, so the
+current train failure class is live throughput/gate budget, not a hard
+deadlock.
+
+The 5 second macOS `sample` taken during a live `505.mcf_r` row shows the CPU
+thread dominated by TCG memory translation and Linx page-table walking rather
+than disabled tracing:
+
+| Frame | Sample count |
+| --- | ---: |
+| `cpu_tb_exec` | 3041 |
+| `do_ld8_mmu` | 485 in one hot stack, 408 in another |
+| `mmu_lookup` | 476 in one hot stack, 404 in another |
+| `mmu_lookup1` | 453 in one hot stack, 391 in another |
+| `tlb_fill_align` | 437 in one hot stack, 381 in another |
+| `linx_cpu_tlb_fill` | 271 in one hot stack, 230 in another |
+| `linx_mmu_translate` | 212 in one hot stack, 185 in another |
+| `helper_linx_template_fret_stk` | 70 |
+
+Current optimization owners:
+
+1. Reduce TLB fill frequency and page-walk cost before further micro-optimizing
+   decode. Candidate work includes larger or better-tagged soft-TLB coverage for
+   SPEC user mappings, avoiding unnecessary invalidation after post-start kernel
+   activity, and adding counters that separate user text/data misses from kernel
+   or 9p misses.
+2. Split page-walk profiling by phase. The current sample was taken during a
+   live benchmark row, but `525.x264_r` over 9p still samples heavily in kernel
+   paths; profile one initramfs live row and one 9p live row separately.
+3. Reduce template/frame load traffic. `helper_linx_template_fret_stk` remains
+   visible below the TCG memory path and should be inspected for common fast
+   cases that can avoid repeated MMU loads or collapse slot reads.
+4. Keep heartbeat coarse for classification and off for profiler comparisons.
+   The 2026-07-03 heartbeat proves liveness, but performance deltas should be
+   collected with `LINX_QEMU_HEARTBEAT_INTERVAL=0` after row class is known.
+5. Keep the split `train-all`/`train-all-large-9p` gate as the breadth loop.
+   The previous 525 oversized-initramfs panic is no longer the default suite
+   result when the wrapper split policy is allowed to run.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.
