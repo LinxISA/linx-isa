@@ -2580,6 +2580,38 @@ and Darwin JIT write-protect transition cost, plus soft-MMU load/probe lookup
 specialization; keep `--qemu-tb-stats` on focused comparisons to prove the
 change does not introduce TB churn.
 
+## 2026-07-03 Rejected Darwin JIT State Guard
+
+A local QEMU experiment cached the current thread's Darwin
+`pthread_jit_write_protect_np()` mode in `qemu_thread_jit_execute()` /
+`qemu_thread_jit_write()` to skip redundant same-state transitions. The change
+compiled and preserved cheap correctness, but it did not improve the current
+SPEC throughput path and was backed out before commit.
+
+Validation on the local dirty guarded binary:
+
+| Check | Artifact | Result |
+| --- | --- | --- |
+| QEMU build | `emulator/qemu/build-linx/qemu-system-linx64` | `ninja qemu-system-linx64` passed; only pre-existing warnings |
+| QEMU call/ret contract | `avs/qemu/out/callret-contract` | pass |
+| QEMU system sentinel `0x110F` | `avs/qemu/out/linx-qemu-tests.elf` | pass |
+| strict `999.specrand_ir` train | `workloads/generated/specint-jitguard-999-qemu-20260703-r1/` | pass |
+| focused `505.mcf_r` train, TB/TLB stats on | `workloads/generated/specint-jitguard-505-qemu-20260703-r1/` | heartbeat-live `live-timeout` at `31000000008` instructions |
+| focused `505.mcf_r` train, no TB/TLB stats | `workloads/generated/specint-jitguard-505-nostats-qemu-20260703-r1/` | heartbeat-live `live-timeout` at `30000000007` instructions |
+
+The no-stats run is the apples-to-apples throughput comparison and is worse
+than the clean no-stats baseline around `34000000002` instructions in the same
+120 second shape. The TB/TLB-stats run improved over the previous stats-heavy
+`28000000000` count, but remained below the no-stats baseline and therefore is
+not a promotion signal.
+
+Loop update: do not retry a simple TLS-state guard around
+`qemu_thread_jit_execute()` / `qemu_thread_jit_write()` as the next SPEC speed
+fix. Keep `pthread_jit_write_protect_np` in the profile as a symptom of
+per-TB dispatch frequency, but route implementation work toward reducing
+dispatch exits, generated helper exits, or soft-MMU load/probe work rather than
+memoizing the Apple wrapper call.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.
