@@ -2036,6 +2036,45 @@ SPEC execution cost, then investigate whether Linux can batch or narrow these
 fault-time `TLB.IV` loops, and keep QEMU work focused on the remaining sampled
 TCG load/store MMU path plus template/frame memory traffic.
 
+## 2026-07-03 Tile State Helper Inline
+
+The next low-risk hot-path cleanup removes two trivial tile-state helper calls
+from translated block setup. `linx_tile_set_attr_const()` now emits direct TCG
+stores for `tile_attr_raw`, `tile_attr_dtype`, and `tile_attr_pad`, while
+`linx_tile_reset_block_inline()` clears the tile descriptor counters and
+argument format directly in `CPULinxState`. The semantic helper implementations
+remain available, but hot block headers and constant `B.ATTR` descriptors no
+longer call `helper_linx_tile_set_attr` or `helper_linx_tile_reset_block`.
+
+Validation on `/tmp/linx-qemu-hb-build-20260703-r1/qemu-system-linx64`:
+
+| Run | Artifact / command | Result |
+| --- | --- | --- |
+| QEMU rebuild | `ninja -C /tmp/linx-qemu-hb-build-20260703-r1 qemu-system-linx64` | pass; only the pre-existing `linx_tile_relreg_to_id` warning |
+| AVS system smoke | `python3 avs/qemu/run_tests.py --suite system --require-test-id 0x110F --timeout 15 --qemu /tmp/linx-qemu-hb-build-20260703-r1/qemu-system-linx64` | pass |
+| AVS tile smoke | `python3 avs/qemu/run_tests.py --suite tile --smoke-source-overrides --timeout 30 --qemu /tmp/linx-qemu-hb-build-20260703-r1/qemu-system-linx64` | pass |
+| strict `999.specrand_ir` train | `workloads/generated/specint-999-inline-tile-qemu-20260703-r1/` | pass with strict initramfs hash validation |
+| `505.mcf_r` train 120s | `workloads/generated/specint-505-inline-tile-qemu-20260703-r1/` | live timeout with site-progress heartbeat at `31000000001` instructions |
+| post-patch delayed profile | `workloads/generated/specint-profile-505-inline-tile-nohb-delayed-20260703-r1/qemu-505-inline-tile-nohb-delayed.sample.txt` | no `helper_linx_tile_set_attr` or `helper_linx_tile_reset_block` samples |
+
+The directly comparable default-off 505 baseline was
+`workloads/generated/specint-505-mmu-cache-defaultoff-qemu-20260703-r1/`, which
+reached `30000000005` instructions in the same 120 second, 1B-heartbeat shape.
+The new run reaches `31000000001`, so this is a small positive throughput
+movement but not enough to close train `505.mcf_r`.
+
+The full tile AVS suite is not used as green evidence for this patch: it still
+times out at the known `PTO tile matmul (8x8 i32)` row under a 120 second cap.
+Keep using `--smoke-source-overrides` as the Tier-0 tile QEMU smoke until the
+full tile workload is promoted separately.
+
+Current conclusion: the trivial tile setup helpers are closed as SPEC profile
+noise. The remaining 505 top-of-stack samples are `pthread_jit_write_protect_np`
+host toggling, `helper_linx_template_fentry`, `helper_linx_template_fret_stk`,
+`helper_linx_check_bstart_target`, TCG soft-TLB lookup, and
+`linx_mmu_translate`. Next QEMU speed work should focus on template frame
+memory traffic and BSTART/TLB lookup cost, not tile reset/set helpers.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.
