@@ -2466,6 +2466,57 @@ same base. The next QEMU speed loop should test user data soft-TLB lookup
 specialization on `505`/`531`, executable probe/BSTART memoization on `520`,
 and a separate kernel/9p transport profile for `525`.
 
+## 2026-07-03 Frame-Template Heartbeat Counters
+
+QEMU now has an opt-in frame-template counter surface for SPEC liveness runs.
+Set `LINX_QEMU_FRAME_STATS=1` directly, or pass `--qemu-frame-stats` through
+`tools/spec2017/run_int_rate_qemu.py` / `run_stage_qemu_matrix.py`. When QEMU
+BPC heartbeat is enabled, the `LINX_HEARTBEAT` line appends:
+
+- `fr_fentry`, `fr_fret_stk`, `fr_fret_ra`, `fr_fexit`
+- `fr_save_probe`, `fr_save_slot`, `fr_save_host`, `fr_save_fallback`
+- `fr_restore_slot`
+- `fr_ret_fast`, `fr_ret_check`
+
+The SPEC runner records these fields under `heartbeat_frame_stats`; matrix
+failure details print a compact `frame=` tag. The counters are off by default,
+so routine runs keep the existing heartbeat surface unless the switch is set.
+
+Validation on `/Users/zhoubot/linx-isa/emulator/qemu/build-linx/qemu-system-linx64`:
+
+| Check | Result |
+| --- | --- |
+| `python3 -m unittest test_run_int_rate_qemu.py` from `tools/spec2017` | pass, 38 tests |
+| `ninja qemu-system-linx64` in `emulator/qemu/build-linx` | pass; only pre-existing helper warnings |
+| `python3 avs/qemu/run_callret_contract.py --qemu emulator/qemu/build-linx/qemu-system-linx64` | pass |
+| `LINX_VIRT_TEST_FINISHER=1 python3 avs/qemu/run_tests.py --suite system --require-test-id 0x110F --timeout 20 --qemu emulator/qemu/build-linx/qemu-system-linx64` | pass |
+| strict `999.specrand_ir` train | `workloads/generated/spec-frame-stats-smoke-clean-20260703-r1/train-999/stage_b_summary.json` passes strict hash on QEMU `v10.2.0-1010-g5937d0a2c27` |
+| focused `505.mcf_r` train 120s | `workloads/generated/spec-frame-stats-505-clean-20260703-r1/train-505/stage_b_summary.json` is heartbeat-live `live-timeout` on the same clean QEMU head |
+
+The strict `999.specrand_ir` train proof reached final heartbeat count
+`508000006` with `fr_fentry=6737765`, `fr_save_slot=21693730`,
+`fr_save_host=21693730`, `fr_save_fallback=0`, `fr_fret_stk=6737678`,
+`fr_restore_slot=21693250`, `fr_ret_fast=6715182`, and
+`fr_ret_check=22496`.
+
+The focused `505.mcf_r` train proof timed out after 120 seconds at heartbeat
+count `30700000007`, BPC `0x158c87d6c6`, with
+`heartbeat_running=true`, `heartbeat_site_progress=true`, seven recent unique
+sites, and no heartbeat stall marker. Its final frame counters are
+`fr_fentry=405793989`, `fr_save_slot=434098855`,
+`fr_save_host=434098855`, `fr_save_fallback=0`,
+`fr_fret_stk=405793915`, `fr_restore_slot=434098433`,
+`fr_ret_fast=405736143`, and `fr_ret_check=57772`.
+
+Loop update: `505.mcf_r` is still a throughput timeout, not a deadlock. The
+new counters show roughly 1.071 save slots per FENTRY and 1.071 restore slots
+per FRET.STK, all save stores using the already-probed host pointer, and a
+99.986% return fast-hit rate. Do not spend the next speed pass on fallback
+frame stores or return BSTART cache misses without fresh contradictory
+evidence. Keep the next QEMU speed loop on generic soft-TLB/probe lookup shape,
+translated frame load cost, and benchmark data-memory traffic; keep `999` as
+the strict correctness sentinel.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.

@@ -713,6 +713,7 @@ def _apply_qemu_debug_env(
     qemu_heartbeat_regs: bool = False,
     qemu_heartbeat_code_bytes: int = 0,
     qemu_heartbeat_same_site_warn: int = 0,
+    qemu_frame_stats: bool = False,
     qemu_fault_trace: bool = False,
     qemu_fault_trace_regs: bool,
     qemu_fault_trace_limit: int,
@@ -726,6 +727,8 @@ def _apply_qemu_debug_env(
         qemu_env["LINX_QEMU_HEARTBEAT_CODE_BYTES"] = str(qemu_heartbeat_code_bytes)
     if qemu_heartbeat_same_site_warn > 0:
         qemu_env["LINX_QEMU_HEARTBEAT_SAME_SITE_WARN"] = str(qemu_heartbeat_same_site_warn)
+    if qemu_frame_stats:
+        qemu_env["LINX_QEMU_FRAME_STATS"] = "1"
     filters = {k: v for k, v in (qemu_fault_trace_filters or {}).items() if str(v).strip()}
     if qemu_fault_trace or qemu_fault_trace_regs or filters:
         qemu_env["LINX_QEMU_FAULT_TRACE"] = "1"
@@ -2505,6 +2508,7 @@ def _run_qemu(
     qemu_heartbeat_regs: bool,
     qemu_heartbeat_code_bytes: int,
     qemu_heartbeat_same_site_warn: int,
+    qemu_frame_stats: bool,
     no_progress_timeout: float,
     append_extra: str,
     symbolize_heartbeat: bool,
@@ -2559,6 +2563,7 @@ def _run_qemu(
         qemu_heartbeat_regs=qemu_heartbeat_regs,
         qemu_heartbeat_code_bytes=qemu_heartbeat_code_bytes,
         qemu_heartbeat_same_site_warn=qemu_heartbeat_same_site_warn,
+        qemu_frame_stats=qemu_frame_stats,
         qemu_fault_trace=qemu_fault_trace,
         qemu_fault_trace_regs=qemu_fault_trace_regs,
         qemu_fault_trace_limit=qemu_fault_trace_limit,
@@ -2735,6 +2740,7 @@ def _run_qemu(
     mprotect_trace = _mprotect_trace_summary(text)
     heartbeat_stall = classification["heartbeat_stall"]
     heartbeat_tlb_fill = _heartbeat_tlb_fill_summary(classification["last_heartbeat"])
+    heartbeat_frame_stats = _heartbeat_frame_stats_summary(classification["last_heartbeat"])
     heartbeat_tlb_fill_hot = _tlb_fill_hot_summary(text)
     bstart_cache_stats = _bstart_cache_stats_summary(text)
 
@@ -2771,6 +2777,7 @@ def _run_qemu(
         "heartbeat_stall_bpc": heartbeat_stall["bpc"],
         "heartbeat_stall_status": heartbeat_stall["status"],
         "heartbeat_tlb_fill": heartbeat_tlb_fill,
+        "heartbeat_frame_stats": heartbeat_frame_stats,
         "heartbeat_tlb_fill_hot": heartbeat_tlb_fill_hot,
         "bstart_cache_stats": bstart_cache_stats,
         "heartbeat_kernel_symbols": heartbeat_kernel_symbols.get("sites", []),
@@ -3361,6 +3368,23 @@ def _heartbeat_tlb_fill_summary(line: str) -> dict[str, Any]:
     }
 
 
+def _heartbeat_frame_stats_summary(line: str) -> dict[str, Any]:
+    fields = _heartbeat_fields(line)
+    return {
+        "fentry": _decimal_or_none(fields.get("fr_fentry")),
+        "save_probe": _decimal_or_none(fields.get("fr_save_probe")),
+        "save_slot": _decimal_or_none(fields.get("fr_save_slot")),
+        "save_host": _decimal_or_none(fields.get("fr_save_host")),
+        "save_fallback": _decimal_or_none(fields.get("fr_save_fallback")),
+        "fexit": _decimal_or_none(fields.get("fr_fexit")),
+        "fret_stk": _decimal_or_none(fields.get("fr_fret_stk")),
+        "fret_ra": _decimal_or_none(fields.get("fr_fret_ra")),
+        "restore_slot": _decimal_or_none(fields.get("fr_restore_slot")),
+        "ret_fast": _decimal_or_none(fields.get("fr_ret_fast")),
+        "ret_check": _decimal_or_none(fields.get("fr_ret_check")),
+    }
+
+
 def _tlb_fill_hot_summary(text: str) -> dict[str, Any]:
     lines = re.findall(r"^LINX_TLB_FILL_HOT .*$", text, flags=re.MULTILINE)
     if not lines:
@@ -3802,6 +3826,12 @@ def main(argv: list[str]) -> int:
         help="Set LINX_QEMU_HEARTBEAT_SAME_SITE_WARN to emit LINX_HEARTBEAT_STALL markers.",
     )
     parser.add_argument(
+        "--qemu-frame-stats",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_FRAME_STATS", False),
+        help="Set LINX_QEMU_FRAME_STATS=1 to append frame-template counters to QEMU heartbeats.",
+    )
+    parser.add_argument(
         "--qemu-fault-trace",
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_FAULT_TRACE", False),
@@ -3977,6 +4007,7 @@ def main(argv: list[str]) -> int:
         "qemu_heartbeat_regs": bool(args.qemu_heartbeat_regs),
         "qemu_heartbeat_code_bytes": args.qemu_heartbeat_code_bytes,
         "qemu_heartbeat_same_site_warn": args.qemu_heartbeat_same_site_warn,
+        "qemu_frame_stats": bool(args.qemu_frame_stats),
         "qemu_fault_trace": bool(args.qemu_fault_trace or qemu_fault_trace_filters),
         "qemu_fault_trace_regs": bool(args.qemu_fault_trace_regs),
         "qemu_fault_trace_limit": args.qemu_fault_trace_limit,
@@ -4079,6 +4110,7 @@ def main(argv: list[str]) -> int:
                     args.qemu_heartbeat_regs,
                     args.qemu_heartbeat_code_bytes,
                     args.qemu_heartbeat_same_site_warn,
+                    args.qemu_frame_stats,
                     args.no_progress_timeout,
                     args.append_extra,
                     args.symbolize_heartbeat,

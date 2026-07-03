@@ -244,6 +244,7 @@ class RunIntRateQemuTests(unittest.TestCase):
             qemu_heartbeat_regs=True,
             qemu_heartbeat_code_bytes=16,
             qemu_heartbeat_same_site_warn=4,
+            qemu_frame_stats=True,
             qemu_fault_trace_regs=True,
             qemu_fault_trace_limit=3,
         )
@@ -252,6 +253,7 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(env["LINX_QEMU_HEARTBEAT_REGS"], "1")
         self.assertEqual(env["LINX_QEMU_HEARTBEAT_CODE_BYTES"], "16")
         self.assertEqual(env["LINX_QEMU_HEARTBEAT_SAME_SITE_WARN"], "4")
+        self.assertEqual(env["LINX_QEMU_FRAME_STATS"], "1")
         self.assertEqual(env["LINX_QEMU_FAULT_TRACE"], "1")
         self.assertEqual(env["LINX_QEMU_FAULT_TRACE_REGS"], "1")
         self.assertEqual(env["LINX_QEMU_FAULT_TRACE_LIMIT"], "3")
@@ -297,6 +299,27 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(summary["kernel_store"], 1)
         self.assertEqual(summary["other"], 1)
         self.assertEqual(summary["last_mmu"], 1)
+
+    def test_heartbeat_frame_stats_summary_parses_template_counts(self) -> None:
+        summary = runner._heartbeat_frame_stats_summary(
+            "LINX_HEARTBEAT count=100 pc=0x1 bpc=0x2 "
+            "fr_fentry=11 fr_save_probe=22 fr_save_slot=21 "
+            "fr_save_host=19 fr_save_fallback=2 fr_fexit=3 "
+            "fr_fret_stk=5 fr_fret_ra=7 fr_restore_slot=13 "
+            "fr_ret_fast=17 fr_ret_check=4"
+        )
+
+        self.assertEqual(summary["fentry"], 11)
+        self.assertEqual(summary["save_probe"], 22)
+        self.assertEqual(summary["save_slot"], 21)
+        self.assertEqual(summary["save_host"], 19)
+        self.assertEqual(summary["save_fallback"], 2)
+        self.assertEqual(summary["fexit"], 3)
+        self.assertEqual(summary["fret_stk"], 5)
+        self.assertEqual(summary["fret_ra"], 7)
+        self.assertEqual(summary["restore_slot"], 13)
+        self.assertEqual(summary["ret_fast"], 17)
+        self.assertEqual(summary["ret_check"], 4)
 
     def test_tlb_fill_hot_summary_parses_top_slots(self) -> None:
         summary = runner._tlb_fill_hot_summary(

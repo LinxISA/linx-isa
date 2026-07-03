@@ -215,6 +215,7 @@ def _transport_failure_details(summary_obj: dict[str, Any]) -> dict[str, dict[st
             "heartbeat_stall_bpc": str(failed_run.get("heartbeat_stall_bpc") or ""),
             "heartbeat_stall_status": str(failed_run.get("heartbeat_stall_status") or ""),
             "heartbeat_tlb_fill": failed_run.get("heartbeat_tlb_fill") or {},
+            "heartbeat_frame_stats": failed_run.get("heartbeat_frame_stats") or {},
             "heartbeat_tlb_fill_hot": failed_run.get("heartbeat_tlb_fill_hot") or {},
             "bstart_cache_stats": failed_run.get("bstart_cache_stats") or {},
             "heartbeat_kernel_symbolized": bool(failed_run.get("heartbeat_kernel_symbolized", False)),
@@ -265,6 +266,20 @@ def _format_bstart_cache_stats(row: dict[str, Any]) -> str:
     )
 
 
+def _format_frame_stats(row: dict[str, Any]) -> str:
+    stats = row.get("heartbeat_frame_stats")
+    if not isinstance(stats, dict) or stats.get("fentry") is None:
+        return ""
+    return (
+        f" frame=fentry{stats.get('fentry')}"
+        f"/save{stats.get('save_slot')}"
+        f"/host{stats.get('save_host')}"
+        f"/fb{stats.get('save_fallback')}"
+        f" restore{stats.get('restore_slot')}"
+        f" ret{stats.get('ret_fast')}/{stats.get('ret_check')}"
+    )
+
+
 def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
     if not details:
         return "-"
@@ -297,6 +312,7 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
                     f"/o{heartbeat_tlb_fill.get('other')}"
                 )
         tlbfill_hot = _format_tlb_fill_hot(row)
+        frame_stats = _format_frame_stats(row)
         bstart_cache = _format_bstart_cache_stats(row)
         mprotect = ""
         if row.get("mprotect_trace_seen"):
@@ -316,7 +332,7 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
             hb_stall = f" heartbeat-stall={status}:{repeats}/{threshold}"
         parts.append(
             f"{bench}: {running}/{site} {progress}{timeout}{stalled} "
-            f"bpc={bpc}{kernel}{hb_stall}{fcmp}{tlbfill}{tlbfill_stats}{tlbfill_hot}{bstart_cache}{mprotect}"
+            f"bpc={bpc}{kernel}{hb_stall}{fcmp}{tlbfill}{tlbfill_stats}{tlbfill_hot}{frame_stats}{bstart_cache}{mprotect}"
         )
     return ", ".join(parts)
 
@@ -354,6 +370,7 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
     lines.append(f"- qemu_heartbeat_regs: `{str(bool(summary.get('qemu_heartbeat_regs', False))).lower()}`")
     lines.append(f"- qemu_heartbeat_code_bytes: `{summary.get('qemu_heartbeat_code_bytes', 0)}`")
     lines.append(f"- qemu_heartbeat_same_site_warn: `{summary.get('qemu_heartbeat_same_site_warn', 0)}`")
+    lines.append(f"- qemu_frame_stats: `{str(bool(summary.get('qemu_frame_stats', False))).lower()}`")
     lines.append(f"- qemu_fault_trace: `{str(bool(summary.get('qemu_fault_trace', False))).lower()}`")
     lines.append(f"- qemu_fault_trace_regs: `{str(bool(summary.get('qemu_fault_trace_regs', False))).lower()}`")
     lines.append(f"- qemu_fault_trace_limit: `{summary.get('qemu_fault_trace_limit', 1)}`")
@@ -483,6 +500,12 @@ def main(argv: list[str]) -> int:
         type=int,
         default=_env_int("LINX_SPEC_QEMU_HEARTBEAT_SAME_SITE_WARN", 0),
         help="QEMU same-site heartbeat warning threshold passed through to the per-transport runner (0 disables).",
+    )
+    ap.add_argument(
+        "--qemu-frame-stats",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_FRAME_STATS", False),
+        help="Pass --qemu-frame-stats to append frame-template counters to QEMU heartbeats.",
     )
     ap.add_argument(
         "--qemu-fault-trace",
@@ -656,6 +679,8 @@ def main(argv: list[str]) -> int:
             cmd.append("--guest-proc-diagnostics")
         if args.qemu_heartbeat_regs:
             cmd.append("--qemu-heartbeat-regs")
+        if args.qemu_frame_stats:
+            cmd.append("--qemu-frame-stats")
         if args.qemu_fault_trace:
             cmd.append("--qemu-fault-trace")
         if args.qemu_fault_trace_regs:
@@ -735,6 +760,7 @@ def main(argv: list[str]) -> int:
         "qemu_heartbeat_regs": bool(args.qemu_heartbeat_regs),
         "qemu_heartbeat_code_bytes": int(args.qemu_heartbeat_code_bytes),
         "qemu_heartbeat_same_site_warn": int(args.qemu_heartbeat_same_site_warn),
+        "qemu_frame_stats": bool(args.qemu_frame_stats),
         "qemu_fault_trace": bool(args.qemu_fault_trace or qemu_fault_trace_filters),
         "qemu_fault_trace_regs": bool(args.qemu_fault_trace_regs),
         "qemu_fault_trace_limit": int(args.qemu_fault_trace_limit),

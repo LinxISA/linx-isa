@@ -313,6 +313,15 @@ per-fill traces. Heartbeats expose aggregate `tlbf_` counters, including
 user/kernel/other split fields on current QEMU, and the SPEC summaries print
 compact `/u<user>/k<kernel>/o<other>` suffixes when those fields are present.
 
+Use `LINX_QEMU_FRAME_STATS=1` or SPEC runner `--qemu-frame-stats` when a
+live-timeout row needs aggregate FENTRY/FRET frame-template attribution without
+full frame slot traces. Current QEMU appends `fr_` counters to
+`LINX_HEARTBEAT`, and SPEC summaries record them as `heartbeat_frame_stats`.
+Use this before reopening frame-store or return-target experiments: the
+2026-07-03 focused `505.mcf_r` probe has `fr_save_fallback=0` and a 99.986%
+return fast-hit rate, so the active frame-related speed question is restore
+load/probe lookup cost, not fallback stores or return-cache misses.
+
 Use `LINX_FENTRY_TRACE=1` or `LINX_QEMU_FENTRY_TRACE=1` only for focused frame
 save windows. Narrow with `LINX_FENTRY_TRACE_PC`, `LINX_FENTRY_TRACE_RA`,
 `LINX_FENTRY_TRACE_SP`, `LINX_FENTRY_TRACE_NEW_SP`, or the `COUNT_LO/HI`
