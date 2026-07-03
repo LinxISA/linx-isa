@@ -2075,6 +2075,46 @@ host toggling, `helper_linx_template_fentry`, `helper_linx_template_fret_stk`,
 `linx_mmu_translate`. Next QEMU speed work should focus on template frame
 memory traffic and BSTART/TLB lookup cost, not tile reset/set helpers.
 
+## 2026-07-03 Template Return Cache-Hit Fast Path
+
+The next low-risk template cleanup keeps the existing restartable frame
+save/restore model, but avoids avoidable helper work around it:
+
+- `linx_template_fret_stk` and `linx_template_fret_ra` now skip the full
+  `linx_check_bstart_target` helper when the return target is already a hot
+  positive BSTART-cache hit.
+- The shortcut is disabled when `LINX_CFI_TRACE`,
+  `LINX_BSTART_CACHE_REVALIDATE`, or `LINX_BSTART_CACHE_STATS` is active, so
+  debug/revalidation/stat modes still enter the full helper.
+- Default-disabled FENTRY/FRET trace checks now return before scanning restored
+  slots or preserving host readback pointers for trace-only diagnostics. The
+  mandatory stack probes and memory loads/stores are unchanged.
+
+Validation on `/tmp/linx-qemu-hb-build-20260703-r1/qemu-system-linx64`:
+
+| Run | Artifact / command | Result |
+| --- | --- | --- |
+| QEMU rebuild | `ninja -C /tmp/linx-qemu-hb-build-20260703-r1 qemu-system-linx64` | pass; only pre-existing warnings |
+| AVS system smoke | `python3 avs/qemu/run_tests.py --suite system --require-test-id 0x110F --timeout 20 --qemu /tmp/linx-qemu-hb-build-20260703-r1/qemu-system-linx64` | pass |
+| AVS call/ret contract | `python3 avs/qemu/run_callret_contract.py --qemu /tmp/linx-qemu-hb-build-20260703-r1/qemu-system-linx64` | pass |
+| AVS all | `python3 avs/qemu/run_tests.py --all --timeout 20 --qemu /tmp/linx-qemu-hb-build-20260703-r1/qemu-system-linx64` | pass |
+| strict `999.specrand_ir` train | `workloads/generated/specint-999-template-return-fast-qemu-20260703-r1/` | pass with strict initramfs hash validation |
+| strict `999.specrand_ir` train with BSTART stats | `workloads/generated/specint-999-template-return-fast-bstart-stats-qemu-20260703-r1/` | pass with strict initramfs hash validation |
+| `505.mcf_r` train 120s | `workloads/generated/specint-505-template-return-fast-qemu-20260703-r1/` | live timeout with site-progress heartbeat at `34000000007` instructions |
+
+The directly comparable 120 second `505.mcf_r` sequence is now:
+
+| QEMU state | Artifact | Final heartbeat count |
+| --- | --- | ---: |
+| page-walk cache default-off baseline | `workloads/generated/specint-505-mmu-cache-defaultoff-qemu-20260703-r1/` | `30000000005` |
+| tile helper inline | `workloads/generated/specint-505-inline-tile-qemu-20260703-r1/` | `31000000001` |
+| template return fast hit | `workloads/generated/specint-505-template-return-fast-qemu-20260703-r1/` | `34000000007` |
+
+Current conclusion: this is a positive SPEC throughput move, but it still does
+not make `505.mcf_r` train complete within the current gate budget. The next
+speed lanes remain TCG soft-TLB/page-walk cost, remaining frame save/restore
+memory traffic, and BSTART cold-target classification/cache churn.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.
