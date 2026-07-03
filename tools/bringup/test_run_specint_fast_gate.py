@@ -85,6 +85,8 @@ class SpecintFastGateTests(unittest.TestCase):
                         "qemu_repo_head": "abc123",
                         "clean_build_for_head": True,
                     },
+                    "qemu_machine_extra": "dumpdtb=/tmp/virt.dtb",
+                    "qemu_extra_args": ["-accel", "tcg,split-wx=off"],
                     "spec_dir": "/spec",
                     "memory_mb": 2048,
                     "stack_limit": "2G",
@@ -102,6 +104,8 @@ class SpecintFastGateTests(unittest.TestCase):
         self.assertIn("qemu_version: `QEMU emulator version 10.2.50`", text)
         self.assertIn("qemu_repo_head: `abc123`", text)
         self.assertIn("qemu_clean_build_for_head: `true`", text)
+        self.assertIn("qemu_machine_extra: `dumpdtb=/tmp/virt.dtb`", text)
+        self.assertIn("qemu_extra_args: `-accel tcg,split-wx=off`", text)
 
     def test_suite_command_forwards_qemu_heartbeat_debug_switches(self) -> None:
         cmd = gate._suite_command(

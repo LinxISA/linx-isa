@@ -2351,6 +2351,49 @@ speed work should test:
    9p/syscall/transport overhead instead of being folded into generic 505 TLB
    work.
 
+## 2026-07-03 SPEC QEMU Extra-Args Provenance And Split-WX Check
+
+The macOS post-start sample included `pthread_jit_write_protect_np`, so the
+next host-side check tested whether forcing TCG split-WX off changes focused
+`505.mcf_r` train throughput. The SPEC runner already forwards
+`LINX_SPEC_QEMU_EXTRA_ARGS` to `qemu-system-linx64`, so the experiment used the
+same 120 second initramfs shape as the clean latest-QEMU baseline:
+
+```bash
+LINX_QEMU_TLB_FILL_STATS=1 \
+LINX_SPEC_QEMU_EXTRA_ARGS='-accel tcg,split-wx=off' \
+python3 tools/spec2017/run_stage_qemu_matrix.py \
+  --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 \
+  --qemu /tmp/linx-qemu-clean-build/qemu-system-linx64 \
+  --stage b --input-set train --transports initramfs --bench 505.mcf_r \
+  --strict --sysroot out/libc/musl/install/phase-b \
+  --out-dir workloads/generated/specint-505-splitwx-off-qemu-20260703-r1 \
+  --timeout 120 --memory-mb 2048 --heartbeat-sec 10 \
+  --qemu-heartbeat-interval 1000000000 --no-progress-timeout 120 \
+  --guest-heartbeat-sec 0 --append-extra norandmaps --stack-limit 2G
+```
+
+Result:
+
+| QEMU state | Artifact | Final heartbeat count | TLB-fill total | Result |
+| --- | --- | ---: | ---: | --- |
+| clean latest baseline | `workloads/generated/specint-505-clean-qemu-baseline-20260703-r2/` | `34000000002` | `107432023` | `live-timeout`; site-progress |
+| `-accel tcg,split-wx=off` | `workloads/generated/specint-505-splitwx-off-qemu-20260703-r1/` | `34000000002` | `107430853` | `live-timeout`; site-progress |
+
+Conclusion: `split-wx=off` is not a SPEC throughput lever on this host/QEMU
+build. Treat the `pthread_jit_write_protect_np` samples as host TCG/JIT
+runtime noise unless a future profile proves a direct Linx hot-path connection.
+Do not spend the next speed iteration on split-WX toggles.
+
+The same investigation exposed a reproducibility gap: earlier SPEC summaries
+recorded QEMU binary provenance but not the actual forwarded QEMU extra args.
+`run_int_rate_qemu.py` now records `qemu_machine`, `qemu_machine_extra`, and
+`qemu_extra_args` in each per-run QEMU object. `run_stage_qemu_matrix.py` and
+`run_specint_fast_gate.py` now propagate top-level `qemu_machine_extra` and
+`qemu_extra_args` into JSON and Markdown summaries. This makes future
+accelerator, device, and debug-option experiments auditable from the generated
+ledger alone.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.

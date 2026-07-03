@@ -13,6 +13,7 @@ import argparse
 import datetime as dt
 import json
 import os
+import shlex
 import subprocess
 import sys
 import time
@@ -216,6 +217,10 @@ def _default_qemu() -> str:
         return str(Path(os.path.expanduser(env)).resolve())
     qemu = default_qemu_binary(REPO_ROOT)
     return str(qemu.resolve())
+
+
+def _qemu_extra_args() -> list[str]:
+    return shlex.split(os.environ.get("LINX_SPEC_QEMU_EXTRA_ARGS", ""))
 
 
 def _runner_supports_option(runner: Path, option: str) -> bool:
@@ -467,6 +472,9 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
         f"- qemu_repo_head: `{(summary.get('qemu_provenance') or {}).get('qemu_repo_head', '-')}`",
         "- qemu_clean_build_for_head: "
         f"`{str(bool((summary.get('qemu_provenance') or {}).get('clean_build_for_head', False))).lower()}`",
+        f"- qemu_machine_extra: `{summary.get('qemu_machine_extra') or '-'}`",
+        "- qemu_extra_args: "
+        f"`{shlex.join([str(arg) for arg in summary.get('qemu_extra_args') or []]) or '-'}`",
         f"- spec_dir: `{summary['spec_dir']}`",
         f"- memory_mb: `{summary['memory_mb']}`",
         f"- stack_limit: `{summary['stack_limit']}`",
@@ -744,6 +752,8 @@ def main(argv: list[str]) -> int:
         "spec_dir": str(spec_dir),
         "qemu": str(qemu),
         "qemu_provenance": qemu_binary_provenance(REPO_ROOT, qemu),
+        "qemu_machine_extra": os.environ.get("LINX_SPEC_QEMU_MACHINE_EXTRA", "").strip(),
+        "qemu_extra_args": _qemu_extra_args(),
         "sysroot": str(sysroot),
         "memory_mb": args.memory_mb,
         "append_extra": args.append_extra,

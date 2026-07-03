@@ -2738,6 +2738,9 @@ def _run_qemu(
 
     qemu_info = {
         "command": cmd,
+        "qemu_machine": machine,
+        "qemu_machine_extra": machine_extra,
+        "qemu_extra_args": qemu_extra,
         "qemu_rc": qemu_rc,
         "timed_out": timed_out,
         "stalled": stalled,

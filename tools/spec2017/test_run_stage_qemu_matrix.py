@@ -27,6 +27,9 @@ class StageQemuMatrixTests(unittest.TestCase):
                         {
                             "failure_class": "user-trap",
                             "failure_evidence": "LINX_USER_TRAP addr=0x3f7fee56880000",
+                            "qemu_machine": "virt,accel=tcg",
+                            "qemu_machine_extra": "dumpdtb=/tmp/virt.dtb",
+                            "qemu_extra_args": ["-accel", "tcg,split-wx=off"],
                             "heartbeat_last_bpc": "0x1555677c50",
                             "heartbeat_last_count": 4000000025,
                             "heartbeat_last_progress": "site-change",
@@ -59,6 +62,12 @@ class StageQemuMatrixTests(unittest.TestCase):
             ],
             "0x1555677c50",
         )
+        self.assertEqual(
+            matrix._transport_failure_details(summary)["500.perlbench_r"][
+                "qemu_extra_args"
+            ],
+            ["-accel", "tcg,split-wx=off"],
+        )
         self.assertTrue(
             matrix._transport_failure_details(summary)["500.perlbench_r"][
                 "heartbeat_kernel_panic_loop"
@@ -83,6 +92,8 @@ class StageQemuMatrixTests(unittest.TestCase):
                 "qemu_repo_head": "abc123",
                 "clean_build_for_head": True,
             },
+            "qemu_machine_extra": "dumpdtb=/tmp/virt.dtb",
+            "qemu_extra_args": ["-accel", "tcg,split-wx=off"],
             "timeout_sec": 180,
             "memory_mb": 2048,
             "stack_limit": "2G",
@@ -117,6 +128,8 @@ class StageQemuMatrixTests(unittest.TestCase):
         self.assertIn("qemu_version: `QEMU emulator version 10.2.50`", text)
         self.assertIn("qemu_repo_head: `abc123`", text)
         self.assertIn("qemu_clean_build_for_head: `true`", text)
+        self.assertIn("qemu_machine_extra: `dumpdtb=/tmp/virt.dtb`", text)
+        self.assertIn("qemu_extra_args: `-accel tcg,split-wx=off`", text)
         self.assertIn("qemu_heartbeat_code_bytes: `16`", text)
         self.assertIn("qemu_heartbeat_same_site_warn: `4`", text)
         self.assertIn("guest_proc_diagnostics: `true`", text)

@@ -40,6 +40,10 @@ def _default_qemu() -> str:
     return str(default_qemu_binary(REPO_ROOT).resolve())
 
 
+def _qemu_extra_args() -> list[str]:
+    return shlex.split(os.environ.get("LINX_SPEC_QEMU_EXTRA_ARGS", ""))
+
+
 def _default_musl_sysroot() -> str:
     env = os.environ.get("LINX_SYSROOT", "").strip()
     if env:
@@ -187,6 +191,9 @@ def _transport_failure_details(summary_obj: dict[str, Any]) -> dict[str, dict[st
         details[str(bench)] = {
             "failure_class": str(failed_run.get("failure_class") or "unclassified"),
             "failure_evidence": str(failed_run.get("failure_evidence") or "")[:512],
+            "qemu_machine": str(failed_run.get("qemu_machine") or ""),
+            "qemu_machine_extra": str(failed_run.get("qemu_machine_extra") or ""),
+            "qemu_extra_args": failed_run.get("qemu_extra_args") or [],
             "timed_out": bool(failed_run.get("timed_out", False)),
             "stalled": bool(failed_run.get("stalled", False)),
             "panic_seen": bool(failed_run.get("panic_seen", False)),
@@ -303,6 +310,11 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
             "- qemu_clean_build_for_head: "
             f"`{str(bool(qemu_provenance.get('clean_build_for_head', False))).lower()}`"
         )
+    qemu_machine_extra = str(summary.get("qemu_machine_extra") or "")
+    qemu_extra_args = summary.get("qemu_extra_args") or []
+    qemu_extra_text = shlex.join([str(arg) for arg in qemu_extra_args]) if qemu_extra_args else "-"
+    lines.append(f"- qemu_machine_extra: `{qemu_machine_extra or '-'}`")
+    lines.append(f"- qemu_extra_args: `{qemu_extra_text}`")
     lines.append(f"- timeout_sec: `{summary['timeout_sec']}`")
     lines.append(f"- fail_9p_timeout: `{str(bool(summary.get('fail_9p_timeout', False))).lower()}`")
     lines.append(f"- memory_mb: `{summary['memory_mb']}`")
@@ -682,6 +694,8 @@ def main(argv: list[str]) -> int:
             REPO_ROOT,
             Path(os.path.expanduser(args.qemu)).resolve(),
         ),
+        "qemu_machine_extra": os.environ.get("LINX_SPEC_QEMU_MACHINE_EXTRA", "").strip(),
+        "qemu_extra_args": _qemu_extra_args(),
         "transports": transports,
         "timeout_sec": int(args.timeout),
         "memory_mb": int(args.memory_mb),
