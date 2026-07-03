@@ -374,10 +374,21 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
                 f"/m{heartbeat_tlb_fill_hot.get('top0_mmu')}"
                 f" evict={heartbeat_tlb_fill_hot.get('evictions')}"
             )
+        bstart_cache = ""
+        bstart_cache_stats = row.get("bstart_cache_stats")
+        if isinstance(bstart_cache_stats, dict) and bstart_cache_stats.get("seen"):
+            bstart_cache = (
+                f" bstart-cache={bstart_cache_stats.get('hits')}/"
+                f"{bstart_cache_stats.get('checks')}"
+                f" hit={bstart_cache_stats.get('hit_pct')}%"
+                f" miss={bstart_cache_stats.get('bstarts')}"
+                f" reset={bstart_cache_stats.get('resets')}/"
+                f"{bstart_cache_stats.get('page_resets')}"
+            )
         mprotect = ""
         if row.get("mprotect_trace_seen"):
             mprotect = f" mprotect-trace={row.get('mprotect_trace_count')}"
-        parts.append(f"{bench}: {running}/{site} {progress} bpc={bpc}{hb_stall}{tlbfill}{mprotect}")
+        parts.append(f"{bench}: {running}/{site} {progress} bpc={bpc}{hb_stall}{tlbfill}{bstart_cache}{mprotect}")
     return ", ".join(parts)
 
 

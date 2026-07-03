@@ -2736,6 +2736,7 @@ def _run_qemu(
     heartbeat_stall = classification["heartbeat_stall"]
     heartbeat_tlb_fill = _heartbeat_tlb_fill_summary(classification["last_heartbeat"])
     heartbeat_tlb_fill_hot = _tlb_fill_hot_summary(text)
+    bstart_cache_stats = _bstart_cache_stats_summary(text)
 
     qemu_info = {
         "command": cmd,
@@ -2771,6 +2772,7 @@ def _run_qemu(
         "heartbeat_stall_status": heartbeat_stall["status"],
         "heartbeat_tlb_fill": heartbeat_tlb_fill,
         "heartbeat_tlb_fill_hot": heartbeat_tlb_fill_hot,
+        "bstart_cache_stats": bstart_cache_stats,
         "heartbeat_kernel_symbols": heartbeat_kernel_symbols.get("sites", []),
         "heartbeat_kernel_symbolized": bool(heartbeat_kernel_symbols.get("ok", False)),
         "heartbeat_kernel_panic_loop": bool(heartbeat_kernel_symbols.get("panic_loop", False)),
@@ -3403,6 +3405,47 @@ def _tlb_fill_hot_summary(text: str) -> dict[str, Any]:
     }
 
 
+def _bstart_cache_stats_summary(text: str) -> dict[str, Any]:
+    lines = [
+        line.strip()
+        for line in re.findall(r"LINX_BSTART_CACHE_STATS [^\n]*(?:\n|$)", text)
+    ]
+    if not lines:
+        return {
+            "seen": False,
+            "line_count": 0,
+            "last": "",
+        }
+
+    fields = _heartbeat_fields(lines[-1])
+    checks = _decimal_or_none(fields.get("checks")) or 0
+    hits = _decimal_or_none(fields.get("hits")) or 0
+    hit_pct = round((hits * 100.0 / checks), 3) if checks else None
+    return {
+        "seen": True,
+        "line_count": len(lines),
+        "last": lines[-1][:512],
+        "count": _decimal_or_none(fields.get("count")),
+        "pc": fields.get("pc", "").lower(),
+        "bpc": fields.get("bpc", "").lower(),
+        "tpc": fields.get("tpc", "").lower(),
+        "checks": checks,
+        "hits": hits,
+        "hit_pct": hit_pct,
+        "revalidations": _decimal_or_none(fields.get("revalidations")),
+        "continuations": _decimal_or_none(fields.get("continuations")),
+        "fallthroughs": _decimal_or_none(fields.get("fallthroughs")),
+        "bstarts": _decimal_or_none(fields.get("bstarts")),
+        "defers": _decimal_or_none(fields.get("defers")),
+        "bad": _decimal_or_none(fields.get("bad")),
+        "inserts": _decimal_or_none(fields.get("inserts")),
+        "resets": _decimal_or_none(fields.get("resets")),
+        "page_resets": _decimal_or_none(fields.get("page_resets")),
+        "page_reset_entries": _decimal_or_none(fields.get("page_reset_entries")),
+        "size": _decimal_or_none(fields.get("size")),
+    }
+
+
 def _fcmp_trace_summary(text: str) -> dict[str, Any]:
     lines = re.findall(r"^LINX_FCMP_TRACE .*$", text, flags=re.MULTILINE)
     samples: list[dict[str, Any]] = []
@@ -3559,8 +3602,22 @@ def _fnv1a32(path: Path) -> tuple[int, int]:
     return len(data), h
 
 
+def _strip_async_qemu_diagnostics(text: str) -> str:
+    for marker in (
+        "LINX_HEARTBEAT_STALL",
+        "LINX_HEARTBEAT",
+        "LINX_BSTART_CACHE_STATS",
+        "LINX_TLB_FILL_HOT",
+        "LINX_TLB_FILL_TRACE",
+        "LINX_FCMP_TRACE",
+        "LINX_MPROTECT",
+    ):
+        text = re.sub(rf"{marker}[^\n]*(?:\n|$)", "", text)
+    return text
+
+
 def _hash_marker_candidates(text: str) -> dict[str, list[tuple[int, int]]]:
-    text = re.sub(r"LINX_HEARTBEAT[^\n]*(?:\n|$)", "", text)
+    text = _strip_async_qemu_diagnostics(text)
     pat = re.compile(r"LINX_SPEC_HASH\s+(\S+)\s+(\d+)")
     markers = list(pat.finditer(text))
     seen: dict[str, list[tuple[int, int]]] = {}
