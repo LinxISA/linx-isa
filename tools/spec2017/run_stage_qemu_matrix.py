@@ -216,6 +216,7 @@ def _transport_failure_details(summary_obj: dict[str, Any]) -> dict[str, dict[st
             "heartbeat_stall_status": str(failed_run.get("heartbeat_stall_status") or ""),
             "heartbeat_tlb_fill": failed_run.get("heartbeat_tlb_fill") or {},
             "heartbeat_frame_stats": failed_run.get("heartbeat_frame_stats") or {},
+            "heartbeat_tb_stats": failed_run.get("heartbeat_tb_stats") or {},
             "heartbeat_tlb_fill_hot": failed_run.get("heartbeat_tlb_fill_hot") or {},
             "bstart_cache_stats": failed_run.get("bstart_cache_stats") or {},
             "heartbeat_kernel_symbolized": bool(failed_run.get("heartbeat_kernel_symbolized", False)),
@@ -280,6 +281,23 @@ def _format_frame_stats(row: dict[str, Any]) -> str:
     )
 
 
+def _format_tb_stats(row: dict[str, Any]) -> str:
+    stats = row.get("heartbeat_tb_stats")
+    if not isinstance(stats, dict) or stats.get("lookup") is None:
+        return ""
+    return (
+        f" tb=exec{stats.get('exec')}"
+        f"/lookup{stats.get('lookup')}"
+        f"/jmp{stats.get('jmp_hit')}"
+        f"/hash{stats.get('hash_hit')}"
+        f"/miss{stats.get('miss')}"
+        f"/gen{stats.get('gen')}"
+        f" flush{stats.get('flush')}"
+        f" inv{stats.get('phys_inv')}"
+        f" code{stats.get('code_used')}/{stats.get('code_size')}"
+    )
+
+
 def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
     if not details:
         return "-"
@@ -313,6 +331,7 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
                 )
         tlbfill_hot = _format_tlb_fill_hot(row)
         frame_stats = _format_frame_stats(row)
+        tb_stats = _format_tb_stats(row)
         bstart_cache = _format_bstart_cache_stats(row)
         mprotect = ""
         if row.get("mprotect_trace_seen"):
@@ -332,7 +351,7 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
             hb_stall = f" heartbeat-stall={status}:{repeats}/{threshold}"
         parts.append(
             f"{bench}: {running}/{site} {progress}{timeout}{stalled} "
-            f"bpc={bpc}{kernel}{hb_stall}{fcmp}{tlbfill}{tlbfill_stats}{tlbfill_hot}{frame_stats}{bstart_cache}{mprotect}"
+            f"bpc={bpc}{kernel}{hb_stall}{fcmp}{tlbfill}{tlbfill_stats}{tlbfill_hot}{frame_stats}{tb_stats}{bstart_cache}{mprotect}"
         )
     return ", ".join(parts)
 
@@ -371,6 +390,7 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
     lines.append(f"- qemu_heartbeat_code_bytes: `{summary.get('qemu_heartbeat_code_bytes', 0)}`")
     lines.append(f"- qemu_heartbeat_same_site_warn: `{summary.get('qemu_heartbeat_same_site_warn', 0)}`")
     lines.append(f"- qemu_frame_stats: `{str(bool(summary.get('qemu_frame_stats', False))).lower()}`")
+    lines.append(f"- qemu_tb_stats: `{str(bool(summary.get('qemu_tb_stats', False))).lower()}`")
     lines.append(f"- qemu_fault_trace: `{str(bool(summary.get('qemu_fault_trace', False))).lower()}`")
     lines.append(f"- qemu_fault_trace_regs: `{str(bool(summary.get('qemu_fault_trace_regs', False))).lower()}`")
     lines.append(f"- qemu_fault_trace_limit: `{summary.get('qemu_fault_trace_limit', 1)}`")
@@ -506,6 +526,12 @@ def main(argv: list[str]) -> int:
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_FRAME_STATS", False),
         help="Pass --qemu-frame-stats to append frame-template counters to QEMU heartbeats.",
+    )
+    ap.add_argument(
+        "--qemu-tb-stats",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_TB_STATS", False),
+        help="Pass --qemu-tb-stats to append TCG TB counters to QEMU heartbeats.",
     )
     ap.add_argument(
         "--qemu-fault-trace",
@@ -681,6 +707,8 @@ def main(argv: list[str]) -> int:
             cmd.append("--qemu-heartbeat-regs")
         if args.qemu_frame_stats:
             cmd.append("--qemu-frame-stats")
+        if args.qemu_tb_stats:
+            cmd.append("--qemu-tb-stats")
         if args.qemu_fault_trace:
             cmd.append("--qemu-fault-trace")
         if args.qemu_fault_trace_regs:
@@ -761,6 +789,7 @@ def main(argv: list[str]) -> int:
         "qemu_heartbeat_code_bytes": int(args.qemu_heartbeat_code_bytes),
         "qemu_heartbeat_same_site_warn": int(args.qemu_heartbeat_same_site_warn),
         "qemu_frame_stats": bool(args.qemu_frame_stats),
+        "qemu_tb_stats": bool(args.qemu_tb_stats),
         "qemu_fault_trace": bool(args.qemu_fault_trace or qemu_fault_trace_filters),
         "qemu_fault_trace_regs": bool(args.qemu_fault_trace_regs),
         "qemu_fault_trace_limit": int(args.qemu_fault_trace_limit),

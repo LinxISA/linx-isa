@@ -714,6 +714,7 @@ def _apply_qemu_debug_env(
     qemu_heartbeat_code_bytes: int = 0,
     qemu_heartbeat_same_site_warn: int = 0,
     qemu_frame_stats: bool = False,
+    qemu_tb_stats: bool = False,
     qemu_fault_trace: bool = False,
     qemu_fault_trace_regs: bool,
     qemu_fault_trace_limit: int,
@@ -729,6 +730,8 @@ def _apply_qemu_debug_env(
         qemu_env["LINX_QEMU_HEARTBEAT_SAME_SITE_WARN"] = str(qemu_heartbeat_same_site_warn)
     if qemu_frame_stats:
         qemu_env["LINX_QEMU_FRAME_STATS"] = "1"
+    if qemu_tb_stats:
+        qemu_env["LINX_QEMU_TB_STATS"] = "1"
     filters = {k: v for k, v in (qemu_fault_trace_filters or {}).items() if str(v).strip()}
     if qemu_fault_trace or qemu_fault_trace_regs or filters:
         qemu_env["LINX_QEMU_FAULT_TRACE"] = "1"
@@ -2509,6 +2512,7 @@ def _run_qemu(
     qemu_heartbeat_code_bytes: int,
     qemu_heartbeat_same_site_warn: int,
     qemu_frame_stats: bool,
+    qemu_tb_stats: bool,
     no_progress_timeout: float,
     append_extra: str,
     symbolize_heartbeat: bool,
@@ -2564,6 +2568,7 @@ def _run_qemu(
         qemu_heartbeat_code_bytes=qemu_heartbeat_code_bytes,
         qemu_heartbeat_same_site_warn=qemu_heartbeat_same_site_warn,
         qemu_frame_stats=qemu_frame_stats,
+        qemu_tb_stats=qemu_tb_stats,
         qemu_fault_trace=qemu_fault_trace,
         qemu_fault_trace_regs=qemu_fault_trace_regs,
         qemu_fault_trace_limit=qemu_fault_trace_limit,
@@ -2741,6 +2746,7 @@ def _run_qemu(
     heartbeat_stall = classification["heartbeat_stall"]
     heartbeat_tlb_fill = _heartbeat_tlb_fill_summary(classification["last_heartbeat"])
     heartbeat_frame_stats = _heartbeat_frame_stats_summary(classification["last_heartbeat"])
+    heartbeat_tb_stats = _heartbeat_tb_stats_summary(classification["last_heartbeat"])
     heartbeat_tlb_fill_hot = _tlb_fill_hot_summary(text)
     bstart_cache_stats = _bstart_cache_stats_summary(text)
 
@@ -2749,6 +2755,7 @@ def _run_qemu(
         "qemu_machine": machine,
         "qemu_machine_extra": machine_extra,
         "qemu_extra_args": qemu_extra,
+        "qemu_tb_stats": bool(qemu_tb_stats),
         "qemu_rc": qemu_rc,
         "timed_out": timed_out,
         "stalled": stalled,
@@ -2778,6 +2785,7 @@ def _run_qemu(
         "heartbeat_stall_status": heartbeat_stall["status"],
         "heartbeat_tlb_fill": heartbeat_tlb_fill,
         "heartbeat_frame_stats": heartbeat_frame_stats,
+        "heartbeat_tb_stats": heartbeat_tb_stats,
         "heartbeat_tlb_fill_hot": heartbeat_tlb_fill_hot,
         "bstart_cache_stats": bstart_cache_stats,
         "heartbeat_kernel_symbols": heartbeat_kernel_symbols.get("sites", []),
@@ -3385,6 +3393,22 @@ def _heartbeat_frame_stats_summary(line: str) -> dict[str, Any]:
     }
 
 
+def _heartbeat_tb_stats_summary(line: str) -> dict[str, Any]:
+    fields = _heartbeat_fields(line)
+    return {
+        "exec": _decimal_or_none(fields.get("tbs_exec")),
+        "lookup": _decimal_or_none(fields.get("tbs_lookup")),
+        "jmp_hit": _decimal_or_none(fields.get("tbs_jmp_hit")),
+        "hash_hit": _decimal_or_none(fields.get("tbs_hash_hit")),
+        "miss": _decimal_or_none(fields.get("tbs_miss")),
+        "gen": _decimal_or_none(fields.get("tbs_gen")),
+        "flush": _decimal_or_none(fields.get("tbs_flush")),
+        "phys_inv": _decimal_or_none(fields.get("tbs_phys_inv")),
+        "code_used": _decimal_or_none(fields.get("tbs_code_used")),
+        "code_size": _decimal_or_none(fields.get("tbs_code_size")),
+    }
+
+
 def _tlb_fill_hot_summary(text: str) -> dict[str, Any]:
     lines = re.findall(r"^LINX_TLB_FILL_HOT .*$", text, flags=re.MULTILINE)
     if not lines:
@@ -3832,6 +3856,12 @@ def main(argv: list[str]) -> int:
         help="Set LINX_QEMU_FRAME_STATS=1 to append frame-template counters to QEMU heartbeats.",
     )
     parser.add_argument(
+        "--qemu-tb-stats",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_TB_STATS", False),
+        help="Set LINX_QEMU_TB_STATS=1 to append TCG TB counters to QEMU heartbeats.",
+    )
+    parser.add_argument(
         "--qemu-fault-trace",
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_FAULT_TRACE", False),
@@ -4008,6 +4038,7 @@ def main(argv: list[str]) -> int:
         "qemu_heartbeat_code_bytes": args.qemu_heartbeat_code_bytes,
         "qemu_heartbeat_same_site_warn": args.qemu_heartbeat_same_site_warn,
         "qemu_frame_stats": bool(args.qemu_frame_stats),
+        "qemu_tb_stats": bool(args.qemu_tb_stats),
         "qemu_fault_trace": bool(args.qemu_fault_trace or qemu_fault_trace_filters),
         "qemu_fault_trace_regs": bool(args.qemu_fault_trace_regs),
         "qemu_fault_trace_limit": args.qemu_fault_trace_limit,
@@ -4111,6 +4142,7 @@ def main(argv: list[str]) -> int:
                     args.qemu_heartbeat_code_bytes,
                     args.qemu_heartbeat_same_site_warn,
                     args.qemu_frame_stats,
+                    args.qemu_tb_stats,
                     args.no_progress_timeout,
                     args.append_extra,
                     args.symbolize_heartbeat,

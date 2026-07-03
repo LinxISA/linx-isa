@@ -2517,6 +2517,69 @@ evidence. Keep the next QEMU speed loop on generic soft-TLB/probe lookup shape,
 translated frame load cost, and benchmark data-memory traffic; keep `999` as
 the strict correctness sentinel.
 
+## 2026-07-03 TB Stats Heartbeat Counters And 505 Evidence
+
+QEMU now has an opt-in TCG translation-block counter surface for SPEC
+live-timeout runs. Set `LINX_QEMU_TB_STATS=1` directly, or pass
+`--qemu-tb-stats` through `tools/spec2017/run_int_rate_qemu.py` /
+`run_stage_qemu_matrix.py`. When QEMU BPC heartbeat is enabled,
+`LINX_HEARTBEAT` appends:
+
+- `tbs_exec`, `tbs_lookup`, `tbs_jmp_hit`, `tbs_hash_hit`
+- `tbs_miss`, `tbs_gen`, `tbs_flush`, `tbs_phys_inv`
+- `tbs_code_used`, `tbs_code_size`
+
+The SPEC runner records these fields under `heartbeat_tb_stats`; matrix
+failure details print a compact `tb=` tag. The counters are off by default.
+
+The motivating post-`LINX_SPEC_START` 505 profile is
+`workloads/generated/specint-profile-505-frame-stats-clean-20260703-r2/`.
+The wrapper sampled only the `qemu-system-linx64` child, and the sample still
+shows `pthread_jit_write_protect_np` under `cpu_tb_exec`, plus soft-MMU and
+Linx frame-template helpers. This made TB dispatch/cache pressure worth
+measuring directly instead of guessing from host samples.
+
+Validation on `/Users/zhoubot/linx-isa/emulator/qemu/build-linx/qemu-system-linx64`:
+
+| Check | Result |
+| --- | --- |
+| `python3 -m py_compile tools/spec2017/run_int_rate_qemu.py tools/spec2017/run_stage_qemu_matrix.py tools/spec2017/test_run_int_rate_qemu.py` | pass |
+| `python3 -m unittest test_run_int_rate_qemu.py` from `tools/spec2017` | pass, 39 tests |
+| `ninja qemu-system-linx64` in `emulator/qemu/build-linx` | pass; only pre-existing helper warnings |
+| `python3 avs/qemu/run_callret_contract.py --qemu emulator/qemu/build-linx/qemu-system-linx64` | pass |
+| `LINX_VIRT_TEST_FINISHER=1 python3 avs/qemu/run_tests.py --suite system --require-test-id 0x110F --timeout 20 --qemu emulator/qemu/build-linx/qemu-system-linx64` | pass |
+| strict `999.specrand_ir` train with `--qemu-tb-stats` | `workloads/generated/specint-tbstats-999-clean-20260703-r1/` passes strict hash |
+| focused `505.mcf_r` train 120s with `LINX_QEMU_TLB_FILL_STATS=1 --qemu-tb-stats` | `workloads/generated/specint-tbstats-505-clean-20260703-r1/` remains heartbeat-live `live-timeout` |
+
+The strict `999.specrand_ir` train reached final heartbeat count `500000002`
+with `tbs_exec=16985603`, `tbs_lookup=20264692`,
+`tbs_jmp_hit=17227425`, `tbs_hash_hit=3009457`, `tbs_miss=27809`,
+`tbs_gen=25810`, `tbs_flush=0`, `tbs_phys_inv=3480`,
+`tbs_code_used=30535720`, and `tbs_code_size=1073725352`.
+
+The focused `505.mcf_r` train reached count `28000000000`, BPC
+`0x155555cdb2`, `heartbeat_running=true`, and
+`heartbeat_site_progress=true`. Its final TB counters were
+`tbs_exec=748895025`, `tbs_lookup=1074296001`,
+`tbs_jmp_hit=1060230997`, `tbs_hash_hit=14032554`,
+`tbs_miss=32446`, `tbs_gen=30211`, `tbs_flush=0`,
+`tbs_phys_inv=3480`, `tbs_code_used=36007384`, and
+`tbs_code_size=1073725352`. The final TLB-fill counters were still
+data-load dominated: `tlbf_total=93189309`, `tlbf_load=85825683`,
+`tlbf_store=6978528`, `tlbf_probe=3287`, `tlbf_user=91315933`,
+and `tlbf_kernel=1873376`.
+
+Loop update: `505.mcf_r` is not blocked on TB code-cache capacity or TB churn.
+The miss/generation counts plateau early, there are no TB flushes, and only
+about 36 MiB of the roughly 1 GiB code buffer is used. Reject larger TCG
+`tb-size` as the next lever: the focused
+`workloads/generated/specint-505-tbsize512-qemu-20260703-r1/` probe reached
+only `30000000004` instructions in 120 seconds, worse than the clean
+`34000000002` baseline. The next QEMU speed loop should target per-TB dispatch
+and Darwin JIT write-protect transition cost, plus soft-MMU load/probe lookup
+specialization; keep `--qemu-tb-stats` on focused comparisons to prove the
+change does not introduce TB churn.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.

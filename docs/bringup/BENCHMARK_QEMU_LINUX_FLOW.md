@@ -322,6 +322,15 @@ Use this before reopening frame-store or return-target experiments: the
 return fast-hit rate, so the active frame-related speed question is restore
 load/probe lookup cost, not fallback stores or return-cache misses.
 
+Use `LINX_QEMU_TB_STATS=1` or SPEC runner `--qemu-tb-stats` when a live-timeout
+row needs aggregate TCG TB execution/cache pressure without full TCG tracing.
+Current QEMU appends `tbs_` counters to `LINX_HEARTBEAT`, and SPEC summaries
+record them as `heartbeat_tb_stats`. Use this before changing TCG cache size or
+dispatch behavior: the 2026-07-03 focused `505.mcf_r` probe has
+`tbs_flush=0`, stable miss/generation counts, and about 36 MiB of roughly 1 GiB
+code-buffer use, so the active speed question is per-TB dispatch/JIT transition
+and soft-MMU lookup cost, not TB code-cache churn.
+
 Use `LINX_FENTRY_TRACE=1` or `LINX_QEMU_FENTRY_TRACE=1` only for focused frame
 save windows. Narrow with `LINX_FENTRY_TRACE_PC`, `LINX_FENTRY_TRACE_RA`,
 `LINX_FENTRY_TRACE_SP`, `LINX_FENTRY_TRACE_NEW_SP`, or the `COUNT_LO/HI`

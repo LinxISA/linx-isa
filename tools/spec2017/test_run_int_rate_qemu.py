@@ -245,6 +245,7 @@ class RunIntRateQemuTests(unittest.TestCase):
             qemu_heartbeat_code_bytes=16,
             qemu_heartbeat_same_site_warn=4,
             qemu_frame_stats=True,
+            qemu_tb_stats=True,
             qemu_fault_trace_regs=True,
             qemu_fault_trace_limit=3,
         )
@@ -254,6 +255,7 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(env["LINX_QEMU_HEARTBEAT_CODE_BYTES"], "16")
         self.assertEqual(env["LINX_QEMU_HEARTBEAT_SAME_SITE_WARN"], "4")
         self.assertEqual(env["LINX_QEMU_FRAME_STATS"], "1")
+        self.assertEqual(env["LINX_QEMU_TB_STATS"], "1")
         self.assertEqual(env["LINX_QEMU_FAULT_TRACE"], "1")
         self.assertEqual(env["LINX_QEMU_FAULT_TRACE_REGS"], "1")
         self.assertEqual(env["LINX_QEMU_FAULT_TRACE_LIMIT"], "3")
@@ -320,6 +322,26 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(summary["restore_slot"], 13)
         self.assertEqual(summary["ret_fast"], 17)
         self.assertEqual(summary["ret_check"], 4)
+
+    def test_heartbeat_tb_stats_summary_parses_tcg_counts(self) -> None:
+        summary = runner._heartbeat_tb_stats_summary(
+            "LINX_HEARTBEAT count=100 pc=0x1 bpc=0x2 "
+            "tbs_exec=1000 tbs_lookup=900 tbs_jmp_hit=700 "
+            "tbs_hash_hit=150 tbs_miss=50 tbs_gen=45 "
+            "tbs_flush=2 tbs_phys_inv=3 "
+            "tbs_code_used=4096 tbs_code_size=65536"
+        )
+
+        self.assertEqual(summary["exec"], 1000)
+        self.assertEqual(summary["lookup"], 900)
+        self.assertEqual(summary["jmp_hit"], 700)
+        self.assertEqual(summary["hash_hit"], 150)
+        self.assertEqual(summary["miss"], 50)
+        self.assertEqual(summary["gen"], 45)
+        self.assertEqual(summary["flush"], 2)
+        self.assertEqual(summary["phys_inv"], 3)
+        self.assertEqual(summary["code_used"], 4096)
+        self.assertEqual(summary["code_size"], 65536)
 
     def test_tlb_fill_hot_summary_parses_top_slots(self) -> None:
         summary = runner._tlb_fill_hot_summary(
