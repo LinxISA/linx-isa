@@ -277,6 +277,27 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(env["LINX_QEMU_FAULT_TRACE_PC_HI"], "0x15559efe40")
         self.assertEqual(env["LINX_QEMU_FAULT_TRACE_TRAPNUM"], "5")
 
+    def test_heartbeat_tlb_fill_summary_includes_mmu_split(self) -> None:
+        summary = runner._heartbeat_tlb_fill_summary(
+            "LINX_HEARTBEAT count=100 pc=0x1 bpc=0x2 "
+            "tlbf_total=10 tlbf_fetch=1 tlbf_load=6 tlbf_store=3 tlbf_probe=0 "
+            "tlbf_ok=9 tlbf_fault=1 "
+            "tlbf_user=7 tlbf_user_fetch=1 tlbf_user_load=4 tlbf_user_store=2 "
+            "tlbf_kernel=2 tlbf_kernel_fetch=0 tlbf_kernel_load=1 tlbf_kernel_store=1 "
+            "tlbf_other=1 "
+            "tlbf_last_count=99 tlbf_last_pc=0x10 tlbf_last_bpc=0x20 "
+            "tlbf_last_va=0x30 tlbf_last_pa=0x40 tlbf_last_access=1 "
+            "tlbf_last_mmu=1 tlbf_last_prot=0x7 tlbf_last_cause=0x0 tlbf_last_acr=3"
+        )
+
+        self.assertEqual(summary["total"], 10)
+        self.assertEqual(summary["user"], 7)
+        self.assertEqual(summary["user_load"], 4)
+        self.assertEqual(summary["kernel"], 2)
+        self.assertEqual(summary["kernel_store"], 1)
+        self.assertEqual(summary["other"], 1)
+        self.assertEqual(summary["last_mmu"], 1)
+
     def test_chdir_failure_evidence_includes_9p_errno(self) -> None:
         result = runner._classify_qemu_result(
             text=(

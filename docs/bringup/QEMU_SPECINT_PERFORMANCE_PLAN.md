@@ -2048,11 +2048,12 @@ TCG load/store MMU path plus template/frame memory traffic.
 The next debug patch adds `LINX_TLB_FILL_STATS=1` /
 `LINX_QEMU_TLB_FILL_STATS=1`, an opt-in aggregate counter path for
 `linx_cpu_tlb_fill()`. Heartbeat records now include total, fetch, load, store,
-probe, ok, fault, and last-fill PC/BPC/VA/PA/access/MMU/prot/cause/ACR fields
-with the `tlbf_` prefix. `tools/spec2017/run_int_rate_qemu.py` parses the final
-heartbeat into `heartbeat_tlb_fill`, and `run_stage_qemu_matrix.py` includes a
-compact `tlbf=<total>/f<fetch>/l<load>/s<store>/p<probe>` tag in matrix
-liveness summaries.
+probe, ok, fault, user/kernel/other MMU-index splits, and last-fill
+PC/BPC/VA/PA/access/MMU/prot/cause/ACR fields with the `tlbf_` prefix.
+`tools/spec2017/run_int_rate_qemu.py` parses the final heartbeat into
+`heartbeat_tlb_fill`, and `run_stage_qemu_matrix.py` includes a compact
+`tlbf=<total>/f<fetch>/l<load>/s<store>/p<probe>/u<user>/k<kernel>/o<other>`
+tag in matrix liveness summaries when the split fields are present.
 
 Validation on `/tmp/linx-qemu-hb-build-20260703-r1/qemu-system-linx64`:
 
@@ -2064,6 +2065,9 @@ Validation on `/tmp/linx-qemu-hb-build-20260703-r1/qemu-system-linx64`:
 | strict `999.specrand_ir`, default-off | `workloads/generated/specint-999-tlbfill-stats-defaultoff-qemu-20260703-r1/` | pass |
 | `505.mcf_r` train, fill stats on, 120s cap | `workloads/generated/specint-505-tlbfill-stats-final-qemu-20260703-r1/` | live timeout with BPC site progress at `30000000007` instructions; final `tlbf_total=97899663`, `tlbf_fetch=452898`, `tlbf_load=89920690`, `tlbf_store=7526075`, `tlbf_probe=71383`, `tlbf_fault=4793` |
 | all SPECint train rows, fill stats on, 300s cap | `workloads/generated/specint-train-all-tlbfill-latest-qemu-20260703-r1/` | `999.specrand_ir` passes; the other nine rows are heartbeat-backed `live-timeout` with BPC site progress and compact `tlbf=` evidence |
+| strict `999.specrand_ir`, split fields on | `workloads/generated/specint-999-tlbfill-split-qemu-20260703-r1/` | pass; strict train hash `rand.11.out=0x973dcfc2`; runner captures `user`, `kernel`, and `other` split fields under `heartbeat_tlb_fill` |
+| `505.mcf_r` train, split fields on, 120s cap | `workloads/generated/specint-505-tlbfill-split-qemu-20260703-r1/` | live timeout with BPC site progress at `32000000009` instructions; final `tlbf_total=102633834`, `tlbf_user=100756933`, `tlbf_kernel=1876901`, `tlbf_other=0`, `tlbf_user_load=92222996` |
+| `505.mcf_r`, QEMU soft-TLB default 1024-entry experiment | `workloads/generated/specint-505-tlb-default-1024-qemu-20260703-r1/` | rejected; same 120s shape reached `33000000001` instructions, below the `34000000007` current best, so do not bump `CPU_TLB_DYN_DEFAULT_BITS` as the next speed fix |
 
 Latest all-train fill totals from the clean `a3061b963f3` QEMU build:
 
@@ -2082,16 +2086,18 @@ Latest all-train fill totals from the clean `a3061b963f3` QEMU build:
 Current conclusion: invalidation counters showed `TLB.IV` is mostly
 startup/fault-path work, but fill counters show demand TLB fills continue
 through the live benchmark window and are data-load dominated on `505.mcf_r`.
-The all-train ledger generalizes that result: every slow row is live, and the
-highest fill pressure is dominated by data loads rather than instruction fetch.
-The next QEMU speed lane should test safe soft-TLB capacity or mapping
-granularity experiments, reduce translated data-memory traffic, and profile
-host-side TCG load/store lookup cost after `LINX_SPEC_START`. Do not make the
-experimental page-walk cache default-on without a new timing proof, because the
-previous cache experiment slowed the comparable 505 slice. Keep 9p-specific
-work separate: `525.x264_r` has much lower TLB-fill volume in this 300s shard,
-so its next speed owner is likely 9p/syscall/transport overhead before generic
-TLB tuning.
+The split counters show that this pressure is overwhelmingly user-mode mapping
+work in the focused 505 slice, not kernel page-walk churn: `100756933` user
+fills versus `1876901` kernel fills. The all-train ledger generalizes the live
+status: every slow row is running, and the highest fill pressure is dominated
+by data loads rather than instruction fetch. A simple larger direct-mapped QEMU
+soft-TLB default did not help, so the next speed lane should profile and reduce
+TCG load/store lookup and translated data-memory traffic before changing global
+TLB sizing. Do not make the experimental page-walk cache default-on without a
+new timing proof, because the previous cache experiment slowed the comparable
+505 slice. Keep 9p-specific work separate: `525.x264_r` has much lower
+TLB-fill volume in this 300s shard, so its next speed owner is likely
+9p/syscall/transport overhead before generic TLB tuning.
 
 ## 2026-07-03 Tile State Helper Inline
 

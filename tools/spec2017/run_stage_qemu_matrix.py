@@ -255,6 +255,12 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
                 f"/s{heartbeat_tlb_fill.get('store')}"
                 f"/p{heartbeat_tlb_fill.get('probe')}"
             )
+            if heartbeat_tlb_fill.get("user") is not None:
+                tlbfill_stats += (
+                    f"/u{heartbeat_tlb_fill.get('user')}"
+                    f"/k{heartbeat_tlb_fill.get('kernel')}"
+                    f"/o{heartbeat_tlb_fill.get('other')}"
+                )
         mprotect = ""
         if row.get("mprotect_trace_seen"):
             mprotect = f" mprotect-trace={row.get('mprotect_trace_count')}"

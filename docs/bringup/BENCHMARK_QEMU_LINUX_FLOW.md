@@ -42,6 +42,14 @@ Evidence:
   There are no fresh user traps, kernel panics, wrapper child exits,
   no-progress timeouts, benchmark internal errors, or oversized-initramfs VFS
   panics in this suite shape.
+- `workloads/generated/specint-505-tlbfill-split-qemu-20260703-r1/` is the
+  current focused user/kernel split for the slowest train row. `505.mcf_r`
+  remains a live-timeout at `32000000009` instructions, with
+  `tlbf_total=102633834`, `tlbf_user=100756933`, `tlbf_kernel=1876901`, and
+  `tlbf_user_load=92222996`; the simple 1024-entry QEMU soft-TLB default
+  experiment under
+  `workloads/generated/specint-505-tlb-default-1024-qemu-20260703-r1/` was
+  slower and should not be promoted as the next speed fix.
 - `workloads/generated/specint-profile-505-latest-qemu-20260703-r1/` is the
   current post-`LINX_SPEC_START` host profile for the slowest train row. The
   corrected sample targets the real QEMU child and shows hot stacks in
@@ -286,6 +294,11 @@ running a SPEC row. Each record prints the requested VA, access kind, QEMU prot,
 fault cause, PC/BPC/TPC, and the legacy leaf descriptor decision. This is the
 preferred discriminator when a syscall such as `mprotect()` appears to succeed
 but the next access still faults.
+
+Use `LINX_QEMU_TLB_FILL_STATS=1` for routine long-row ledgers before enabling
+per-fill traces. Heartbeats expose aggregate `tlbf_` counters, including
+user/kernel/other split fields on current QEMU, and the SPEC summaries print
+compact `/u<user>/k<kernel>/o<other>` suffixes when those fields are present.
 
 Use `LINX_FENTRY_TRACE=1` or `LINX_QEMU_FENTRY_TRACE=1` only for focused frame
 save windows. Narrow with `LINX_FENTRY_TRACE_PC`, `LINX_FENTRY_TRACE_RA`,
