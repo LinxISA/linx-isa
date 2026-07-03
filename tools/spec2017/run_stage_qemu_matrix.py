@@ -215,6 +215,7 @@ def _transport_failure_details(summary_obj: dict[str, Any]) -> dict[str, dict[st
             "heartbeat_stall_bpc": str(failed_run.get("heartbeat_stall_bpc") or ""),
             "heartbeat_stall_status": str(failed_run.get("heartbeat_stall_status") or ""),
             "heartbeat_tlb_fill": failed_run.get("heartbeat_tlb_fill") or {},
+            "heartbeat_tlb_fill_hot": failed_run.get("heartbeat_tlb_fill_hot") or {},
             "heartbeat_kernel_symbolized": bool(failed_run.get("heartbeat_kernel_symbolized", False)),
             "heartbeat_kernel_panic_loop": bool(failed_run.get("heartbeat_kernel_panic_loop", False)),
             "heartbeat_kernel_symbol_evidence": str(failed_run.get("heartbeat_kernel_symbol_evidence") or "")[:512],
@@ -235,6 +236,20 @@ def _transport_failure_details(summary_obj: dict[str, Any]) -> dict[str, dict[st
             "log": str(failed_run.get("log") or ""),
         }
     return details
+
+
+def _format_tlb_fill_hot(row: dict[str, Any]) -> str:
+    hot = row.get("heartbeat_tlb_fill_hot")
+    if not isinstance(hot, dict) or not hot.get("seen"):
+        return ""
+    top0_count = hot.get("top0_count")
+    if top0_count is None:
+        return ""
+    page = hot.get("top0_page") or "no-page"
+    access = hot.get("top0_access")
+    mmu = hot.get("top0_mmu")
+    evictions = hot.get("evictions")
+    return f" tlbf-hot={top0_count}@{page}/a{access}/m{mmu} evict={evictions}"
 
 
 def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
@@ -268,6 +283,7 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
                     f"/k{heartbeat_tlb_fill.get('kernel')}"
                     f"/o{heartbeat_tlb_fill.get('other')}"
                 )
+        tlbfill_hot = _format_tlb_fill_hot(row)
         mprotect = ""
         if row.get("mprotect_trace_seen"):
             mprotect = f" mprotect-trace={row.get('mprotect_trace_count')}"
@@ -286,7 +302,7 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
             hb_stall = f" heartbeat-stall={status}:{repeats}/{threshold}"
         parts.append(
             f"{bench}: {running}/{site} {progress}{timeout}{stalled} "
-            f"bpc={bpc}{kernel}{hb_stall}{fcmp}{tlbfill}{tlbfill_stats}{mprotect}"
+            f"bpc={bpc}{kernel}{hb_stall}{fcmp}{tlbfill}{tlbfill_stats}{tlbfill_hot}{mprotect}"
         )
     return ", ".join(parts)
 

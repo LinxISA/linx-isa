@@ -37,6 +37,14 @@ class StageQemuMatrixTests(unittest.TestCase):
                             "heartbeat_site_progress": True,
                             "heartbeat_kernel_panic_loop": True,
                             "heartbeat_kernel_symbol_evidence": "heartbeat kernel symbols: 0xffffffff800019bc=.LBB14_51 panic.c:0",
+                            "heartbeat_tlb_fill_hot": {
+                                "seen": True,
+                                "top0_count": 12345,
+                                "top0_page": "0x3f7fa8d000",
+                                "top0_access": 1,
+                                "top0_mmu": 1,
+                                "evictions": 17,
+                            },
                             "log": "run_002/qemu.log",
                         },
                     ],
@@ -73,8 +81,20 @@ class StageQemuMatrixTests(unittest.TestCase):
                 "heartbeat_kernel_panic_loop"
             ]
         )
+        self.assertEqual(
+            matrix._transport_failure_details(summary)["500.perlbench_r"][
+                "heartbeat_tlb_fill_hot"
+            ]["top0_page"],
+            "0x3f7fa8d000",
+        )
         self.assertIn(
             "kernel-panic-loop",
+            matrix._format_failure_details(
+                matrix._transport_failure_details(summary)
+            ),
+        )
+        self.assertIn(
+            "tlbf-hot=12345@0x3f7fa8d000/a1/m1 evict=17",
             matrix._format_failure_details(
                 matrix._transport_failure_details(summary)
             ),

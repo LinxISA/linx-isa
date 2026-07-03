@@ -63,12 +63,21 @@ class SpecintFastGateTests(unittest.TestCase):
                         "kernel": 1069739,
                         "other": 0,
                     },
+                    "heartbeat_tlb_fill_hot": {
+                        "seen": True,
+                        "top0_count": 991,
+                        "top0_page": "0x3f7fa8d000",
+                        "top0_access": 1,
+                        "top0_mmu": 1,
+                        "evictions": 4,
+                    },
                 }
             }
         )
 
         self.assertIn("tlbf=225069739/f1436090/l201417280/s22216369/p138258", text)
         self.assertIn("/u224000000/k1069739/o0", text)
+        self.assertIn("tlbf-hot=991@0x3f7fa8d000/a1/m1 evict=4", text)
 
     def test_markdown_records_qemu_provenance(self) -> None:
         with tempfile.TemporaryDirectory() as td:

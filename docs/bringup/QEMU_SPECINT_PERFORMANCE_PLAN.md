@@ -2398,6 +2398,45 @@ recorded QEMU binary provenance but not the actual forwarded QEMU extra args.
 accelerator, device, and debug-option experiments auditable from the generated
 ledger alone.
 
+## 2026-07-03 TLB-Fill Hot-Page Sketch
+
+QEMU now has an opt-in hot-page sketch for long SPEC rows where aggregate
+TLB-fill volume is high but full `LINX_TLB_FILL_TRACE` output would be too
+large. Set `LINX_QEMU_TLB_FILL_HOT=1` (or `LINX_TLB_FILL_HOT=1`) alongside
+`LINX_QEMU_TLB_FILL_STATS=1`. QEMU emits `LINX_TLB_FILL_HOT` companion lines at
+heartbeat boundaries, and the SPEC runner records the parsed data under
+`heartbeat_tlb_fill_hot`. Matrix and fast-gate markdown print a compact
+`tlbf-hot=<count>@<page>/a<access>/m<mmu> evict=<evictions>` liveness tag.
+
+Validation used rebuilt QEMU
+`/tmp/linx-qemu-tlbf-hot-build-20260703-r1/qemu-system-linx64`. The runtime
+checks used the identical pre-commit binary that reported
+`v10.2.0-1006-gf690aa1f7da-dirty`; after committing and relinking version
+metadata, the binary reports `v10.2.0-1007-gbbcad71a5c9`:
+
+- `python3 avs/qemu/run_callret_contract.py --qemu /tmp/linx-qemu-tlbf-hot-build-20260703-r1/qemu-system-linx64`
+  passed.
+- `LINX_VIRT_TEST_FINISHER=1 python3 avs/qemu/run_tests.py --suite system --require-test-id 0x110F --timeout 20 --qemu /tmp/linx-qemu-tlbf-hot-build-20260703-r1/qemu-system-linx64`
+  passed.
+- `LINX_QEMU_TLB_FILL_STATS=1 LINX_QEMU_TLB_FILL_HOT=1 python3 tools/bringup/run_specint_fast_gate.py --profile pr ...`
+  passed `999.specrand_ir` test and train strict hashes under
+  `workloads/generated/specint-pr-tlbf-hot-qemu-20260703-r1/`.
+- Focused `505.mcf_r` train under
+  `workloads/generated/specint-505-tlbf-hot-qemu-20260703-r1/` stayed
+  heartbeat-live and timed out at count `34000000009`, BPC `0x155555cfa0`.
+  The final aggregate TLB-fill count was `107430385`, with
+  `98282014` loads and `8631328` stores. The hot sketch identified
+  `tlbf-hot=2601@0x1555568000/a2/m1 evict=107427582`; the hottest tuple was a
+  user MMU probe/fetch-pressure page around `0x1555568000`, not a single
+  long-lived data-page store fault. High eviction pressure means this
+  16-slot sketch is only a coarse guide; use it to select VA/PC windows for
+  full `LINX_QEMU_TLB_FILL_TRACE`, not as exact attribution.
+
+Next speed work should keep using `LINX_QEMU_TLB_FILL_HOT=1` on focused 505
+and strict 999 comparisons while prototyping soft-TLB lookup specialization.
+If the hottest page stays in stable text/probe traffic, investigate BSTART or
+probe-access memoization before changing generic data TLB behavior.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.

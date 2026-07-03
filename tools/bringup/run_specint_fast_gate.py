@@ -361,6 +361,19 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
                     f"/k{heartbeat_tlb_fill.get('kernel')}"
                     f"/o{heartbeat_tlb_fill.get('other')}"
                 )
+        heartbeat_tlb_fill_hot = row.get("heartbeat_tlb_fill_hot")
+        if (
+            isinstance(heartbeat_tlb_fill_hot, dict)
+            and heartbeat_tlb_fill_hot.get("seen")
+            and heartbeat_tlb_fill_hot.get("top0_count") is not None
+        ):
+            tlbfill += (
+                f" tlbf-hot={heartbeat_tlb_fill_hot.get('top0_count')}"
+                f"@{heartbeat_tlb_fill_hot.get('top0_page') or 'no-page'}"
+                f"/a{heartbeat_tlb_fill_hot.get('top0_access')}"
+                f"/m{heartbeat_tlb_fill_hot.get('top0_mmu')}"
+                f" evict={heartbeat_tlb_fill_hot.get('evictions')}"
+            )
         mprotect = ""
         if row.get("mprotect_trace_seen"):
             mprotect = f" mprotect-trace={row.get('mprotect_trace_count')}"

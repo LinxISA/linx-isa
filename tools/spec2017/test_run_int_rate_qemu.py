@@ -298,6 +298,33 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(summary["other"], 1)
         self.assertEqual(summary["last_mmu"], 1)
 
+    def test_tlb_fill_hot_summary_parses_top_slots(self) -> None:
+        summary = runner._tlb_fill_hot_summary(
+            "LINX_HEARTBEAT count=100 pc=0x1 bpc=0x2\n"
+            "LINX_TLB_FILL_HOT count=100 evictions=7 slots=16 "
+            "top0_count=123 top0_page=0x3f7fa8d000 "
+            "top0_last_va=0x3f7fa8d010 top0_last_pa=0x8d010 "
+            "top0_access=1 top0_mmu=1 top0_probe=0 "
+            "top0_prot=0x7 top0_cause=0x0 top0_acr=3 "
+            "top0_pc=0x155555aa00 top0_bpc=0x155555aa02 "
+            "top1_count=9 top1_page=0x1555550000 "
+            "top1_last_va=0x1555550010 top1_last_pa=0x10010 "
+            "top1_access=0 top1_mmu=1 top1_probe=0 "
+            "top1_prot=0x5 top1_cause=0x0 top1_acr=3 "
+            "top1_pc=0x155555bb00 top1_bpc=0x155555bb02\n"
+        )
+
+        self.assertTrue(summary["seen"])
+        self.assertEqual(summary["line_count"], 1)
+        self.assertEqual(summary["heartbeat_count"], 100)
+        self.assertEqual(summary["evictions"], 7)
+        self.assertEqual(summary["top0_count"], 123)
+        self.assertEqual(summary["top0_page"], "0x3f7fa8d000")
+        self.assertEqual(summary["top0_access"], 1)
+        self.assertEqual(summary["top0_mmu"], 1)
+        self.assertEqual(summary["top1_count"], 9)
+        self.assertEqual(summary["top1_prot"], 5)
+
     def test_chdir_failure_evidence_includes_9p_errno(self) -> None:
         result = runner._classify_qemu_result(
             text=(

@@ -2735,6 +2735,7 @@ def _run_qemu(
     mprotect_trace = _mprotect_trace_summary(text)
     heartbeat_stall = classification["heartbeat_stall"]
     heartbeat_tlb_fill = _heartbeat_tlb_fill_summary(classification["last_heartbeat"])
+    heartbeat_tlb_fill_hot = _tlb_fill_hot_summary(text)
 
     qemu_info = {
         "command": cmd,
@@ -2769,6 +2770,7 @@ def _run_qemu(
         "heartbeat_stall_bpc": heartbeat_stall["bpc"],
         "heartbeat_stall_status": heartbeat_stall["status"],
         "heartbeat_tlb_fill": heartbeat_tlb_fill,
+        "heartbeat_tlb_fill_hot": heartbeat_tlb_fill_hot,
         "heartbeat_kernel_symbols": heartbeat_kernel_symbols.get("sites", []),
         "heartbeat_kernel_symbolized": bool(heartbeat_kernel_symbols.get("ok", False)),
         "heartbeat_kernel_panic_loop": bool(heartbeat_kernel_symbols.get("panic_loop", False)),
@@ -3354,6 +3356,50 @@ def _heartbeat_tlb_fill_summary(line: str) -> dict[str, Any]:
         "last_prot": _int_or_none(fields.get("tlbf_last_prot")),
         "last_cause": _int_or_none(fields.get("tlbf_last_cause")),
         "last_acr": _int_or_none(fields.get("tlbf_last_acr")),
+    }
+
+
+def _tlb_fill_hot_summary(text: str) -> dict[str, Any]:
+    lines = re.findall(r"^LINX_TLB_FILL_HOT .*$", text, flags=re.MULTILINE)
+    if not lines:
+        return {
+            "seen": False,
+            "line_count": 0,
+            "last": "",
+        }
+
+    fields = _heartbeat_fields(lines[-1])
+    return {
+        "seen": True,
+        "line_count": len(lines),
+        "last": lines[-1][:512],
+        "heartbeat_count": _decimal_or_none(fields.get("count")),
+        "evictions": _decimal_or_none(fields.get("evictions")),
+        "slots": _decimal_or_none(fields.get("slots")),
+        "top0_count": _decimal_or_none(fields.get("top0_count")),
+        "top0_page": fields.get("top0_page", "").lower(),
+        "top0_last_va": fields.get("top0_last_va", "").lower(),
+        "top0_last_pa": fields.get("top0_last_pa", "").lower(),
+        "top0_access": _int_or_none(fields.get("top0_access")),
+        "top0_mmu": _int_or_none(fields.get("top0_mmu")),
+        "top0_probe": _int_or_none(fields.get("top0_probe")),
+        "top0_prot": _int_or_none(fields.get("top0_prot")),
+        "top0_cause": _int_or_none(fields.get("top0_cause")),
+        "top0_acr": _int_or_none(fields.get("top0_acr")),
+        "top0_pc": fields.get("top0_pc", "").lower(),
+        "top0_bpc": fields.get("top0_bpc", "").lower(),
+        "top1_count": _decimal_or_none(fields.get("top1_count")),
+        "top1_page": fields.get("top1_page", "").lower(),
+        "top1_last_va": fields.get("top1_last_va", "").lower(),
+        "top1_last_pa": fields.get("top1_last_pa", "").lower(),
+        "top1_access": _int_or_none(fields.get("top1_access")),
+        "top1_mmu": _int_or_none(fields.get("top1_mmu")),
+        "top1_probe": _int_or_none(fields.get("top1_probe")),
+        "top1_prot": _int_or_none(fields.get("top1_prot")),
+        "top1_cause": _int_or_none(fields.get("top1_cause")),
+        "top1_acr": _int_or_none(fields.get("top1_acr")),
+        "top1_pc": fields.get("top1_pc", "").lower(),
+        "top1_bpc": fields.get("top1_bpc", "").lower(),
     }
 
 
