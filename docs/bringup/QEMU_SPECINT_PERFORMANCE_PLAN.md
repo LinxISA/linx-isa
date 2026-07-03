@@ -3006,6 +3006,41 @@ write-protect transitions. Keep the block-aware MMU cache as an opt-in
 component for comparison, then prototype a frame-template fast path or TB
 lookup/helper-exit reduction with the same post-start profile wrapper.
 
+## 2026-07-04 Opt-In Frame Template Chain Probe
+
+QEMU commit `51f42d1726c` adds `LINX_QEMU_TEMPLATE_CHAIN=1`. The default path
+still uses the original no-return frame-template helpers. With the switch
+enabled, successful `FENTRY`, `FEXIT`, `FRET.RA`, and `FRET.STK` helpers return
+to translated code after completing their existing probes, memory operations,
+CFI checks, trace commit, and `env->pc` update; the translated block then uses
+`tcg_gen_lookup_and_goto_ptr()` to continue. Fault paths remain inside the same
+helper logic, and the feature stays opt-in until a broad all-row run proves it.
+
+Validation:
+
+| Check | Result |
+| --- | --- |
+| `ninja -C emulator/qemu/build-linx qemu-system-linx64` | pass |
+| default `python3 avs/qemu/run_callret_contract.py --qemu emulator/qemu/build-linx/qemu-system-linx64` | pass |
+| `LINX_QEMU_TEMPLATE_CHAIN=1 python3 avs/qemu/run_callret_contract.py --qemu emulator/qemu/build-linx/qemu-system-linx64` | pass |
+| `LINX_QEMU_TEMPLATE_CHAIN=1 python3 tools/bringup/run_specint_fast_gate.py --profile pr ...` | pass, `workloads/generated/specint-template-chain-pr-qemu-20260704-r1/` |
+| `LINX_QEMU_TEMPLATE_CHAIN=1` Stage-B train `999.specrand_ir` | pass, `workloads/generated/specint-template-chain-999-stageb-qemu-20260704-r1/` |
+
+Focused `523.xalancbmk_r` train comparison with the block-aware MMU cache also
+enabled:
+
+| Run | Result | Final proof |
+| --- | --- | --- |
+| `LINX_QEMU_MMU_CACHE=1`, no template chain | `live-timeout` | `workloads/generated/specint-523-mmucache-focused-baseline-qemu-20260704-r1/`, `count=16000000000`, `bpc=0xffffffff803e91e4`, no panic/trap |
+| `LINX_QEMU_TEMPLATE_CHAIN=1 LINX_QEMU_MMU_CACHE=1` | `live-timeout` | `workloads/generated/specint-template-chain-523-mmucache-qemu-20260704-r1/`, `count=22000000002`, `bpc=0x15559aa4a6`, no panic/trap |
+
+Loop update: the template-chain path is the first strong 523-focused dispatch
+speed result in this lane (`+37.5%` in the focused 120-second shape), but it is
+not default-ready. Next required gate is an all-row train comparison with
+`LINX_QEMU_TEMPLATE_CHAIN=1` alone and then combined with
+`LINX_QEMU_MMU_CACHE=1`, because 505/531/525 may respond differently from the
+523-focused result.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.

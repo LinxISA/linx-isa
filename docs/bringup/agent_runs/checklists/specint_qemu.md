@@ -588,6 +588,12 @@
   Evidence: `qemu-523-mmucache.sample.json` records `sample.ok=true` against the real QEMU child after `LINX_SPEC_START`; the row summary is `live-timeout`, `count=15000000000`, `bpc=0xffffffff803e91e4`, `heartbeat_running=true`, `heartbeat_site_progress=true`, no panic, and no trap. Top active sample frames include `pthread_jit_write_protect_np=3815`, `tb_lookup=957`, `qht_lookup_custom=671`, `helper_linx_template_fret_stk=597`, `helper_linx_template_fentry=566`, `probe_access_internal=499`, and `mmu_lookup1=381`.
   Loop update: route `523`/`541` speed work to TCG dispatch/helper-exit reduction: template-frame helper exits, TB lookup/hash pressure, and macOS JIT write-protect transitions. Keep the MMU cache opt-in as a component, not the whole solution for these rows.
 
+- [x] ID: SPEC-PERF-TEMPLATE-CHAIN-523-20260704 Opt-in frame-template chaining improves focused 523 while preserving sentinels.
+  QEMU change: `emulator/qemu` commit `51f42d1726c` adds `LINX_QEMU_TEMPLATE_CHAIN=1`, which lets successful `FENTRY`/`FEXIT`/`FRET` helpers return into `tcg_gen_lookup_and_goto_ptr()` instead of forcing `cpu_loop_exit_noexc`; default behavior is unchanged when the switch is unset.
+  Validation: `ninja -C emulator/qemu/build-linx qemu-system-linx64` passes; default and `LINX_QEMU_TEMPLATE_CHAIN=1` `python3 avs/qemu/run_callret_contract.py --qemu emulator/qemu/build-linx/qemu-system-linx64` both pass; `LINX_QEMU_TEMPLATE_CHAIN=1` SPEC PR smoke passes in `workloads/generated/specint-template-chain-pr-qemu-20260704-r1/`; `LINX_QEMU_TEMPLATE_CHAIN=1` Stage-B train `999.specrand_ir` passes in `workloads/generated/specint-template-chain-999-stageb-qemu-20260704-r1/`.
+  Focused 523 evidence: with `LINX_QEMU_MMU_CACHE=1` and no template chain, `workloads/generated/specint-523-mmucache-focused-baseline-qemu-20260704-r1/` reaches `count=16000000000`, `bpc=0xffffffff803e91e4`; with `LINX_QEMU_TEMPLATE_CHAIN=1 LINX_QEMU_MMU_CACHE=1`, `workloads/generated/specint-template-chain-523-mmucache-qemu-20260704-r1/` reaches `count=22000000002`, `bpc=0x15559aa4a6`. Both are heartbeat-backed `live-timeout`, no panic, no trap.
+  Loop update: keep template chaining opt-in. It is a strong focused 523 speed result, but it needs all-row train comparison alone and combined with the MMU cache before any default promotion.
+
 ## Live Blockers (2026-05-21)
 
 - [ ] BLOCK-SPEC-FG-001 Fast SPECint gate must run `test`/`train` before promotion.
