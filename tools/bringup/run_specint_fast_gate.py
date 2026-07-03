@@ -341,6 +341,15 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
         tlbfill = ""
         if row.get("tlb_fill_trace_seen"):
             tlbfill = f" tlbfill-trace={row.get('tlb_fill_trace_count')}"
+        heartbeat_tlb_fill = row.get("heartbeat_tlb_fill")
+        if isinstance(heartbeat_tlb_fill, dict) and heartbeat_tlb_fill.get("total") is not None:
+            tlbfill += (
+                f" tlbf={heartbeat_tlb_fill.get('total')}"
+                f"/f{heartbeat_tlb_fill.get('fetch')}"
+                f"/l{heartbeat_tlb_fill.get('load')}"
+                f"/s{heartbeat_tlb_fill.get('store')}"
+                f"/p{heartbeat_tlb_fill.get('probe')}"
+            )
         mprotect = ""
         if row.get("mprotect_trace_seen"):
             mprotect = f" mprotect-trace={row.get('mprotect_trace_count')}"

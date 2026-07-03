@@ -2063,14 +2063,35 @@ Validation on `/tmp/linx-qemu-hb-build-20260703-r1/qemu-system-linx64`:
 | strict `999.specrand_ir`, fill stats on | `workloads/generated/specint-999-tlbfill-stats-final-qemu-20260703-r1/` | pass; final `tlbf_total=1861324`, `tlbf_load=1840179`, `tlbf_fault=14` at `508000003` instructions |
 | strict `999.specrand_ir`, default-off | `workloads/generated/specint-999-tlbfill-stats-defaultoff-qemu-20260703-r1/` | pass |
 | `505.mcf_r` train, fill stats on, 120s cap | `workloads/generated/specint-505-tlbfill-stats-final-qemu-20260703-r1/` | live timeout with BPC site progress at `30000000007` instructions; final `tlbf_total=97899663`, `tlbf_fetch=452898`, `tlbf_load=89920690`, `tlbf_store=7526075`, `tlbf_probe=71383`, `tlbf_fault=4793` |
+| all SPECint train rows, fill stats on, 300s cap | `workloads/generated/specint-train-all-tlbfill-latest-qemu-20260703-r1/` | `999.specrand_ir` passes; the other nine rows are heartbeat-backed `live-timeout` with BPC site progress and compact `tlbf=` evidence |
+
+Latest all-train fill totals from the clean `a3061b963f3` QEMU build:
+
+| Benchmark | Transport | Result | `tlbf_total` | Dominant class |
+| --- | --- | --- | ---: | --- |
+| `500.perlbench_r` | initramfs | `live-timeout` | 7,521,268 | load `4,812,625`, fetch `2,295,590` |
+| `502.gcc_r` | initramfs | `live-timeout` | 11,426,738 | load `6,977,134`, fetch `3,658,887` |
+| `505.mcf_r` | initramfs | `live-timeout` | 225,069,739 | load `201,417,280`, store `22,216,369` |
+| `520.omnetpp_r` | initramfs | `live-timeout` | 15,716,656 | load `10,884,233`, fetch `3,876,036` |
+| `523.xalancbmk_r` | initramfs | `live-timeout` | 9,543,929 | load `6,463,110`, fetch `2,550,076` |
+| `525.x264_r` | 9p | `live-timeout` | 1,873,592 | load `1,847,989` |
+| `531.deepsjeng_r` | initramfs | `live-timeout` | 18,300,938 | load `14,674,970`, fetch `1,996,971` |
+| `541.leela_r` | initramfs | `live-timeout` | 2,103,880 | load `2,011,387` |
+| `557.xz_r` | initramfs | `live-timeout` | 25,446,277 | load `23,216,363` |
 
 Current conclusion: invalidation counters showed `TLB.IV` is mostly
 startup/fault-path work, but fill counters show demand TLB fills continue
 through the live benchmark window and are data-load dominated on `505.mcf_r`.
+The all-train ledger generalizes that result: every slow row is live, and the
+highest fill pressure is dominated by data loads rather than instruction fetch.
 The next QEMU speed lane should test safe soft-TLB capacity or mapping
-granularity experiments and reduce translated data-memory traffic. Do not make
-the experimental page-walk cache default-on without a new timing proof, because
-the previous cache experiment slowed the comparable 505 slice.
+granularity experiments, reduce translated data-memory traffic, and profile
+host-side TCG load/store lookup cost after `LINX_SPEC_START`. Do not make the
+experimental page-walk cache default-on without a new timing proof, because the
+previous cache experiment slowed the comparable 505 slice. Keep 9p-specific
+work separate: `525.x264_r` has much lower TLB-fill volume in this 300s shard,
+so its next speed owner is likely 9p/syscall/transport overhead before generic
+TLB tuning.
 
 ## 2026-07-03 Tile State Helper Inline
 

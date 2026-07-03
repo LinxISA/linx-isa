@@ -2,6 +2,27 @@
 
 ## Live Blockers (2026-07-03)
 
+- [x] ID: SPEC-M05-TRAIN-ALL-TLBFILL-LATEST-QEMU-20260703 Clean latest-QEMU train-all run covers every SPECint row with BPC and TLB-fill liveness.
+  Command: `LINX_QEMU_TLB_FILL_STATS=1 SPECINT_TRAIN_ALL_TIMEOUT=300 SPEC_GUEST_HEARTBEAT_SEC=0 SPEC_QEMU_HEARTBEAT_INTERVAL=1000000000 SPEC_NO_PROGRESS_TIMEOUT=180 python3 tools/bringup/run_specint_fast_gate.py --profile train --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 --qemu /tmp/linx-qemu-current-build-20260703-r1/qemu-system-linx64 --sysroot out/libc/musl/install/phase-b --out-dir workloads/generated/specint-train-all-tlbfill-latest-qemu-20260703-r1 --append-extra norandmaps --heartbeat-sec 30 --qemu-heartbeat-interval 1000000000 --guest-heartbeat-sec 0 --no-progress-timeout 180 --stack-limit 2G --continue-on-fail`.
+  QEMU provenance: `tools/bringup/run_qemu_build_clean.sh` built `/tmp/linx-qemu-current-build-20260703-r1/qemu-system-linx64` from clean worktree marker `a3061b963f3a80efd66e7edd5fb746bec140d29e:worktree`; `qemu-system-linx64 --version` reports `v10.2.0-1004-ga3061b963f3`. Focused AVS system sentinel `0x110F` passes on that binary.
+  SPEC evidence: `workloads/generated/specint-train-all-tlbfill-latest-qemu-20260703-r1/specint_fast_gate_summary.json` covers `train-all` plus generated `train-all-large-9p`. `999.specrand_ir` passes strict train hash. The remaining nine rows are all `live-timeout` with `heartbeat_running=true`, `heartbeat_site_progress=true`, and no trap, panic, wrapper child-exit, benchmark internal-error, or no-progress class. `525.x264_r` runs on the generated 9p shard and reaches benchmark heartbeat, so the old oversized-initramfs VFS-root panic is not the active failure for this suite shape.
+  Current ledger:
+
+  | Benchmark | Transport | Result | Final BPC / TLB-fill proof |
+  | --- | --- | --- | --- |
+  | `500.perlbench_r` | initramfs | `live-timeout` | `bpc=0x15556d96b0`, `tlbf=7521268/f2295590/l4812625/s413053/p1285912` |
+  | `502.gcc_r` | initramfs | `live-timeout` | `bpc=0x1555813158`, `tlbf=11426738/f3658887/l6977134/s790717/p3188804` |
+  | `505.mcf_r` | initramfs | `live-timeout` | `bpc=0x155555c4be`, `tlbf=225069739/f1436090/l201417280/s22216369/p138258` |
+  | `520.omnetpp_r` | initramfs | `live-timeout` | `bpc=0x15556728f2`, `tlbf=15716656/f3876036/l10884233/s956387/p3472997` |
+  | `523.xalancbmk_r` | initramfs | `live-timeout` | `bpc=0x1555887996`, `tlbf=9543929/f2550076/l6463110/s530743/p2275192` |
+  | `525.x264_r` | 9p | `live-timeout` | `bpc=0xffffffff801141ec`, `tlbf=1873592/f6824/l1847989/s18779/p6568` |
+  | `531.deepsjeng_r` | initramfs | `live-timeout` | `bpc=0x155555bdd4`, `tlbf=18300938/f1996971/l14674970/s1628997/p1396079` |
+  | `541.leela_r` | initramfs | `live-timeout` | `bpc=0x1555585bd0`, `tlbf=2103880/f59325/l2011387/s33168/p56209` |
+  | `557.xz_r` | initramfs | `live-timeout` | `bpc=0x1555571222`, `tlbf=25446277/f723446/l23216363/s1506468/p571150` |
+  | `999.specrand_ir` | initramfs | pass | strict train hash passes; omitted from failure table |
+
+  Loop update: keep the bounded all-train gate as a throughput ledger, not a deadlock/correctness gate. Use `999.specrand_ir` for cheap strict correctness. Keep `LINX_QEMU_TLB_FILL_STATS=1` on profiling ledgers until the next speed loop identifies whether QEMU soft-TLB capacity/granularity, Linux page-fault/TLB batching, translated data-memory traffic, or 9p syscall overhead dominates after `LINX_SPEC_START`. Start the next QEMU profile with guest heartbeat disabled and coarse or disabled QEMU heartbeat to avoid sampling logging overhead.
+
 - [x] ID: SPEC-QEMU-TLB-FILL-STATS-20260703 QEMU heartbeat can now count TLB fill pressure without full per-fill traces.
   QEMU evidence: `LINX_TLB_FILL_STATS=1` / `LINX_QEMU_TLB_FILL_STATS=1` records total, fetch, load, store, probe, ok, fault, and last-fill PC/BPC/VA/PA/access/MMU/prot/cause/ACR fields in `CPULinxState`. `LINX_HEARTBEAT` now exposes them as `tlbf_total`, `tlbf_fetch`, `tlbf_load`, `tlbf_store`, `tlbf_probe`, `tlbf_ok`, `tlbf_fault`, and `tlbf_last_*`. The SPEC runner lifts the final heartbeat fields into `heartbeat_tlb_fill`, and matrix markdown prints compact `tlbf=<total>/f<fetch>/l<load>/s<store>/p<probe>` liveness evidence.
   Validation evidence: rebuilt `/tmp/linx-qemu-hb-build-20260703-r1/qemu-system-linx64` passes `avs/qemu/run_tests.py --all --timeout 20`. Strict `999.specrand_ir` train with fill stats enabled passes in `workloads/generated/specint-999-tlbfill-stats-final-qemu-20260703-r1/qemu_matrix_summary.json`; the matching default-off strict sentinel passes in `workloads/generated/specint-999-tlbfill-stats-defaultoff-qemu-20260703-r1/qemu_matrix_summary.json`.

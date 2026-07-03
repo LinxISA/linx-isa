@@ -27,6 +27,17 @@ Evidence:
   than mixed into every cheap regression check.
 - `docs/bringup/QEMU_SPECINT_PERFORMANCE_PLAN.md` records the current QEMU
   SPECint profile and the prioritized speedups for the Linx target.
+- `workloads/generated/specint-train-all-tlbfill-latest-qemu-20260703-r1/` is
+  the current all-SPECint train ledger on a clean latest-QEMU build
+  (`v10.2.0-1004-ga3061b963f3`, clean marker
+  `a3061b963f3a80efd66e7edd5fb746bec140d29e:worktree`). It runs the split
+  train suite with `LINX_QEMU_TLB_FILL_STATS=1`, a 300s row cap, 1B-instruction
+  QEMU heartbeat, and `2G` stack limit. `999.specrand_ir` passes strict train
+  hash; every other row, including generated 9p `525.x264_r`, is
+  heartbeat-backed `live-timeout` with BPC site progress and `tlbf=` evidence.
+  There are no fresh user traps, kernel panics, wrapper child exits,
+  no-progress timeouts, benchmark internal errors, or oversized-initramfs VFS
+  panics in this suite shape.
 - `workloads/generated/specint-test-train-all-after-blockify-20260702-r2/` is
   the last initramfs-only all-SPECint bounded diagnostic ledger after the QEMU
   Linx `virt` memory-node MMIO-hole fix and blockify rebuild. The run requested
@@ -51,11 +62,10 @@ Evidence:
   `heartbeat_site_progress=true`, and BPC `0x1555764ecc` instead of the earlier
   guest-diagnostic-induced user trap.
 - `workloads/generated/specint-train-all-current-qemu-20260702-r1/` is the
-  current all-SPECint train ledger on QEMU `v10.2.0-991-g5754b39fb76` with the
-  split initramfs/9p suite. It is red but no longer shows user traps or kernel
-  panics: `999.specrand_ir` passes, `502.gcc_r` exits with the SPEC GCC
-  `tree-into-ssa.c:942` benchmark internal error, and every other row is a
-  heartbeat-backed live-timeout.
+  prior split initramfs/9p train ledger on QEMU `v10.2.0-991-g5754b39fb76`.
+  It is superseded for current latest-QEMU classification by the 2026-07-03
+  TLB-fill run above, but remains useful historical evidence for the
+  `502.gcc_r` benchmark internal-error closure.
 - The canonical SPEC build stages now default `LINX_SPEC_BENCH_OPTIMIZE` to
   `502.gcc_r=-O0 -fno-vectorize -fno-slp-vectorize -fwrapv`. Focused evidence
   under `workloads/generated/specint-build-502-benchopt-wrapv-20260702-r1/`

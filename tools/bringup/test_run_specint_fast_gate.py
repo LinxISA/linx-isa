@@ -44,6 +44,27 @@ class SpecintFastGateTests(unittest.TestCase):
         self.assertFalse(gate._auto_fail_9p_timeout(large, "9p"))
         self.assertFalse(gate._auto_fail_9p_timeout(units[0], ""))
 
+    def test_format_failure_details_includes_tlb_fill_stats(self) -> None:
+        text = gate._format_failure_details(
+            {
+                "505.mcf_r": {
+                    "heartbeat_running": True,
+                    "heartbeat_site_progress": True,
+                    "heartbeat_last_progress": "site-change",
+                    "heartbeat_last_bpc": "0x155555c4be",
+                    "heartbeat_tlb_fill": {
+                        "total": 225069739,
+                        "fetch": 1436090,
+                        "load": 201417280,
+                        "store": 22216369,
+                        "probe": 138258,
+                    },
+                }
+            }
+        )
+
+        self.assertIn("tlbf=225069739/f1436090/l201417280/s22216369/p138258", text)
+
     def test_suite_command_forwards_qemu_heartbeat_debug_switches(self) -> None:
         cmd = gate._suite_command(
             suite=gate.SUITES["train-smoke"],
