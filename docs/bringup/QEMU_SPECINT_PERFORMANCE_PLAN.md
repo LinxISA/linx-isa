@@ -2064,33 +2064,35 @@ Validation on `/tmp/linx-qemu-hb-build-20260703-r1/qemu-system-linx64`:
 | strict `999.specrand_ir`, fill stats on | `workloads/generated/specint-999-tlbfill-stats-final-qemu-20260703-r1/` | pass; final `tlbf_total=1861324`, `tlbf_load=1840179`, `tlbf_fault=14` at `508000003` instructions |
 | strict `999.specrand_ir`, default-off | `workloads/generated/specint-999-tlbfill-stats-defaultoff-qemu-20260703-r1/` | pass |
 | `505.mcf_r` train, fill stats on, 120s cap | `workloads/generated/specint-505-tlbfill-stats-final-qemu-20260703-r1/` | live timeout with BPC site progress at `30000000007` instructions; final `tlbf_total=97899663`, `tlbf_fetch=452898`, `tlbf_load=89920690`, `tlbf_store=7526075`, `tlbf_probe=71383`, `tlbf_fault=4793` |
-| all SPECint train rows, fill stats on, 300s cap | `workloads/generated/specint-train-all-tlbfill-latest-qemu-20260703-r1/` | `999.specrand_ir` passes; the other nine rows are heartbeat-backed `live-timeout` with BPC site progress and compact `tlbf=` evidence |
+| all tracked SPECint C/C++ train rows, fill stats on, 300s cap | `workloads/generated/specint-train-all-provenance-clean-qemu-20260703-r1/` | clean QEMU `f690aa1f7daf4fdc3f70802c074b65b633418aa3`; `999.specrand_ir` passes strict hash; the other nine rows are heartbeat-backed `live-timeout` with BPC site progress and compact `tlbf=` evidence |
 | strict `999.specrand_ir`, split fields on | `workloads/generated/specint-999-tlbfill-split-qemu-20260703-r1/` | pass; strict train hash `rand.11.out=0x973dcfc2`; runner captures `user`, `kernel`, and `other` split fields under `heartbeat_tlb_fill` |
 | `505.mcf_r` train, split fields on, 120s cap | `workloads/generated/specint-505-tlbfill-split-qemu-20260703-r1/` | live timeout with BPC site progress at `32000000009` instructions; final `tlbf_total=102633834`, `tlbf_user=100756933`, `tlbf_kernel=1876901`, `tlbf_other=0`, `tlbf_user_load=92222996` |
 | `505.mcf_r`, QEMU soft-TLB default 1024-entry experiment | `workloads/generated/specint-505-tlb-default-1024-qemu-20260703-r1/` | rejected; same 120s shape reached `33000000001` instructions, below the `34000000007` current best, so do not bump `CPU_TLB_DYN_DEFAULT_BITS` as the next speed fix |
 
-Latest all-train fill totals from the clean `a3061b963f3` QEMU build:
+Latest all-train fill totals from the clean `f690aa1f7da` QEMU build:
 
 | Benchmark | Transport | Result | `tlbf_total` | Dominant class |
 | --- | --- | --- | ---: | --- |
-| `500.perlbench_r` | initramfs | `live-timeout` | 7,521,268 | load `4,812,625`, fetch `2,295,590` |
-| `502.gcc_r` | initramfs | `live-timeout` | 11,426,738 | load `6,977,134`, fetch `3,658,887` |
-| `505.mcf_r` | initramfs | `live-timeout` | 225,069,739 | load `201,417,280`, store `22,216,369` |
-| `520.omnetpp_r` | initramfs | `live-timeout` | 15,716,656 | load `10,884,233`, fetch `3,876,036` |
-| `523.xalancbmk_r` | initramfs | `live-timeout` | 9,543,929 | load `6,463,110`, fetch `2,550,076` |
-| `525.x264_r` | 9p | `live-timeout` | 1,873,592 | load `1,847,989` |
-| `531.deepsjeng_r` | initramfs | `live-timeout` | 18,300,938 | load `14,674,970`, fetch `1,996,971` |
-| `541.leela_r` | initramfs | `live-timeout` | 2,103,880 | load `2,011,387` |
-| `557.xz_r` | initramfs | `live-timeout` | 25,446,277 | load `23,216,363` |
+| `500.perlbench_r` | initramfs | `live-timeout` | 7,299,917 | load `4,697,601`, fetch `2,208,685`, user `4,921,019` |
+| `502.gcc_r` | initramfs | `live-timeout` | 10,498,172 | load `6,475,564`, fetch `3,291,644`, user `5,550,016` |
+| `505.mcf_r` | initramfs | `live-timeout` | 211,542,971 | load `189,545,388`, store `20,653,436`, user `209,665,989` |
+| `520.omnetpp_r` | initramfs | `live-timeout` | 15,916,858 | load `10,906,046`, fetch `4,064,551`, user `11,356,510` |
+| `523.xalancbmk_r` | initramfs | `live-timeout` | 9,533,917 | load `6,456,597`, fetch `2,548,521`, user `7,090,955` |
+| `525.x264_r` | 9p | `live-timeout` | 1,873,788 | load `1,848,143`, kernel `1,873,693` |
+| `531.deepsjeng_r` | initramfs | `live-timeout` | 16,834,934 | load `13,429,186`, store `1,557,950`, user `14,747,384` |
+| `541.leela_r` | initramfs | `live-timeout` | 2,151,098 | load `2,025,278`, kernel `1,962,581` |
+| `557.xz_r` | initramfs | `live-timeout` | 32,601,575 | load `29,914,792`, user `30,105,688` |
 
 Current conclusion: invalidation counters showed `TLB.IV` is mostly
 startup/fault-path work, but fill counters show demand TLB fills continue
 through the live benchmark window and are data-load dominated on `505.mcf_r`.
 The split counters show that this pressure is overwhelmingly user-mode mapping
 work in the focused 505 slice, not kernel page-walk churn: `100756933` user
-fills versus `1876901` kernel fills. The all-train ledger generalizes the live
-status: every slow row is running, and the highest fill pressure is dominated
-by data loads rather than instruction fetch. A simple larger direct-mapped QEMU
+fills versus `1876901` kernel fills. The current clean all-train ledger shows
+the same pattern at suite breadth: `505.mcf_r` reaches `211542971` total fills,
+`209665989` user fills, and `187698111` user-load fills by the 300s cap. Every
+slow row is running, and the highest fill pressure is dominated by data loads
+rather than instruction fetch. A simple larger direct-mapped QEMU
 soft-TLB default did not help, so the next speed lane should profile and reduce
 TCG load/store lookup and translated data-memory traffic before changing global
 TLB sizing. Do not make the experimental page-walk cache default-on without a

@@ -38,17 +38,19 @@ Evidence:
   `f690aa1f7daf4fdc3f70802c074b65b633418aa3`, and has
   `clean_build_for_head=true` in both fast-gate and matrix summaries. Both
   `999.specrand_ir` test and train strict hashes pass.
-- `workloads/generated/specint-train-all-tlbfill-latest-qemu-20260703-r1/` is
-  the current all-SPECint train ledger on a clean latest-QEMU build
-  (`v10.2.0-1004-ga3061b963f3`, clean marker
-  `a3061b963f3a80efd66e7edd5fb746bec140d29e:worktree`). It runs the split
+- `workloads/generated/specint-train-all-provenance-clean-qemu-20260703-r1/`
+  is the current all-SPECint train ledger on a clean latest-QEMU build selected
+  by the default QEMU resolver (`v10.2.0-1006-gf690aa1f7da`, clean marker
+  `f690aa1f7daf4fdc3f70802c074b65b633418aa3:worktree`). It runs the split
   train suite with `LINX_QEMU_TLB_FILL_STATS=1`, a 300s row cap, 1B-instruction
   QEMU heartbeat, and `2G` stack limit. `999.specrand_ir` passes strict train
-  hash; every other row, including generated 9p `525.x264_r`, is
-  heartbeat-backed `live-timeout` with BPC site progress and `tlbf=` evidence.
-  There are no fresh user traps, kernel panics, wrapper child exits,
-  no-progress timeouts, benchmark internal errors, or oversized-initramfs VFS
-  panics in this suite shape.
+  hash (`rand.11.out`, 871 bytes, `0x973dcfc2`); every other tracked C/C++
+  row, including generated 9p `525.x264_r`, is heartbeat-backed
+  `live-timeout` with BPC site progress and `tlbf=` evidence. There are no
+  fresh user traps, kernel panics, wrapper child exits, no-progress timeouts,
+  benchmark internal errors, or oversized-initramfs VFS panics in this suite
+  shape. `548.exchange2_r` remains outside the tracked Linx suite because the
+  current SPEC build flow intentionally skips Fortran.
 - `workloads/generated/specint-505-tlbfill-split-qemu-20260703-r1/` is the
   current focused user/kernel split for the slowest train row. `505.mcf_r`
   remains a live-timeout at `32000000009` instructions, with
