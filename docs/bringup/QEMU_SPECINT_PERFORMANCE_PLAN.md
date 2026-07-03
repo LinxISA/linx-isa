@@ -2367,7 +2367,7 @@ python3 tools/spec2017/run_stage_qemu_matrix.py \
   --qemu /tmp/linx-qemu-clean-build/qemu-system-linx64 \
   --stage b --input-set train --transports initramfs --bench 505.mcf_r \
   --strict --sysroot out/libc/musl/install/phase-b \
-  --out-dir workloads/generated/specint-505-splitwx-off-qemu-20260703-r1 \
+  --out-dir workloads/generated/specint-505-splitwx-off-qemu-20260703-r2 \
   --timeout 120 --memory-mb 2048 --heartbeat-sec 10 \
   --qemu-heartbeat-interval 1000000000 --no-progress-timeout 120 \
   --guest-heartbeat-sec 0 --append-extra norandmaps --stack-limit 2G
@@ -2378,12 +2378,16 @@ Result:
 | QEMU state | Artifact | Final heartbeat count | TLB-fill total | Result |
 | --- | --- | ---: | ---: | --- |
 | clean latest baseline | `workloads/generated/specint-505-clean-qemu-baseline-20260703-r2/` | `34000000002` | `107432023` | `live-timeout`; site-progress |
-| `-accel tcg,split-wx=off` | `workloads/generated/specint-505-splitwx-off-qemu-20260703-r1/` | `34000000002` | `107430853` | `live-timeout`; site-progress |
+| `-accel tcg,split-wx=off` | `workloads/generated/specint-505-splitwx-off-qemu-20260703-r2/` | `33000000002` | `105026008` | `live-timeout`; site-progress; summary records `qemu_extra_args` |
 
 Conclusion: `split-wx=off` is not a SPEC throughput lever on this host/QEMU
-build. Treat the `pthread_jit_write_protect_np` samples as host TCG/JIT
-runtime noise unless a future profile proves a direct Linx hot-path connection.
-Do not spend the next speed iteration on split-WX toggles.
+build. A pre-provenance run under
+`workloads/generated/specint-505-splitwx-off-qemu-20260703-r1/` matched the
+baseline at `34000000002` instructions, while the provenance-aware rerun
+reached `33000000002`; neither result beats the clean baseline. Treat the
+`pthread_jit_write_protect_np` samples as host TCG/JIT runtime noise unless a
+future profile proves a direct Linx hot-path connection. Do not spend the next
+speed iteration on split-WX toggles.
 
 The same investigation exposed a reproducibility gap: earlier SPEC summaries
 recorded QEMU binary provenance but not the actual forwarded QEMU extra args.
