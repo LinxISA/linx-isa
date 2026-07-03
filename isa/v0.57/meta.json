@@ -10,7 +10,10 @@
     "LinxISA v0.57 defines the current Linx block descriptor contract.",
     "B.ITP and B.OTA encode 8-bit TileReg ids spelled directly as T0 through T255, with T0/TZERO reserved as source-only id 0x00.",
     "B.OTA encodes destination allocation size as an 8-bit CellCountM1 field in 128-byte CELL units.",
-    "B.META names an ordinary GPR metadata operand for TEPL/TMA element-domain shape, valid-region, and mask state."
+    "B.META names an ordinary GPR metadata operand for TEPL/TMA element-domain shape, valid-region, and mask state.",
+    "v0.57 adds 32-bit CAS (Compare-And-Swap) instructions: CASB, CASH, CASW, CASD with register reuse pattern.",
+    "CAS encoding: 6..4=3'b000, 3..1=3'b101, 14..12=3'b111 (atomic instruction group).",
+    "DMA placeholder uses independent group: 6..4=3'b001, 3..1=3'b101."
   ],
   "status": "current",
   "version": "0.57.0"
