@@ -2,6 +2,26 @@
 
 ## Live Blockers (2026-07-03)
 
+- [x] ID: SPEC-M05-TRAIN-ALL-TLBF-HOT-LATEST-QEMU-20260703 Latest-QEMU train-all run records hot TLB-fill pages for every supported SPECint row.
+  Command: `LINX_QEMU_TLB_FILL_STATS=1 LINX_QEMU_TLB_FILL_HOT=1 python3 tools/bringup/run_specint_fast_gate.py --profile train --qemu /tmp/linx-qemu-tlbf-hot-build-20260703-r1/qemu-system-linx64 --out-dir workloads/generated/specint-train-all-tlbf-hot-qemu-20260703-r1 --append-extra norandmaps --guest-heartbeat-sec 0 --heartbeat-sec 10 --qemu-heartbeat-interval 1000000000 --no-progress-timeout 120 --stack-limit 2G`.
+  QEMU provenance: `workloads/generated/specint-train-all-tlbf-hot-qemu-20260703-r1/specint_fast_gate_summary.json` records `qemu_repo_head=bbcad71a5c9046547a72e266c20931505c6769c2`, `qemu_repo_dirty_tracked=false`, and version `v10.2.0-1007-gbbcad71a5c9`. The run is markerless because it uses the intentionally selected `/tmp/linx-qemu-tlbf-hot-build-20260703-r1` build rather than `/tmp/linx-qemu-clean-build`.
+  SPEC evidence: the split train profile covers `train-all` plus generated `train-all-large-9p`. `999.specrand_ir` passes strict train hash. The other nine rows are all `live-timeout` with `heartbeat_running=true`, `heartbeat_site_progress=true`, no trap, no panic, no wrapper child-exit, and a parsed `heartbeat_tlb_fill_hot` record.
+  Hot-page ledger:
+
+  | Benchmark | Transport | Result | TLB-fill / hot-page proof | Symbolized hot site |
+  | --- | --- | --- | --- | --- |
+  | `500.perlbench_r` | initramfs | `live-timeout` | `bpc=0x15556e2770`, `tlbf=5230387`, `tlbf-hot=1464@0x15556eb000/a2/m1` | `old_retrieve_hash` / `retrieve_lscalar` in `Storable.c` |
+  | `502.gcc_r` | initramfs | `live-timeout` | `bpc=0x155599040e`, `tlbf=6193472`, `tlbf-hot=9324@0x1556092000/a2/m1` | `gen_vec_pack_sfix_v2df` in `insn-emit.c`; last BPC in `recog_23.isra.0` |
+  | `505.mcf_r` | initramfs | `live-timeout` | `bpc=0x155555cc06`, `tlbf=147528309`, `tlbf-hot=2591@0x1555568000/a2/m1` | hot PC in `____strtoll_l_internal`; final BPC in `spec_qsort` |
+  | `520.omnetpp_r` | initramfs | `live-timeout` | `bpc=0x155560cda4`, `tlbf=11430703`, `tlbf-hot=238540@0x15555fe000/a2/m1` | `SectionBasedConfiguration::setupVariables` / `cNamedObject::getName` |
+  | `523.xalancbmk_r` | initramfs | `live-timeout` | `bpc=0x15556eb6c2`, `tlbf=6164604`, `tlbf-hot=4027@0x1555a60000/a2/m1` | `xercesc_2_7::SAXParser::parseReset`; final BPC in `FieldMatcher::matched` |
+  | `525.x264_r` | 9p | `live-timeout` | `bpc=0xffffffff801087f8`, `tlbf=1873401`, `tlbf-hot=5@0xffffffff80406000/a2/m0` | kernel `context.c` hot page; final BPC in `slub.c` |
+  | `531.deepsjeng_r` | initramfs | `live-timeout` | `bpc=0x1555561078`, `tlbf=11811921`, `tlbf-hot=655640@0x1556096000/a0/m1` | `mobility_eval` / `kingsafety_eval` in `neval.cpp` |
+  | `541.leela_r` | initramfs | `live-timeout` | `bpc=0x1555585c64`, `tlbf=1999924`, `tlbf-hot=1147@0x1555623000/a2/m1` | `std::locale::facet::_M_cow_shim`; final BPC in `stl_bvector.h` |
+  | `557.xz_r` | initramfs | `live-timeout` | `bpc=0xffffffff800fa93e`, `tlbf=3644604`, `tlbf-hot=25204@0x3f7feff000/a0/m1` | user hot PC in `_int_free_merge_chunk`; final kernel BPC in `zone_page_state` |
+
+  Loop update: classify this run as throughput evidence, not deadlock. Use the static user load base `0x1555155000` for symbolizing this specific train ledger; focused future runs should enable guest heartbeat or `/proc/<child>/maps` evidence before assuming that base. The next QEMU speed loop should split three lanes: `505/531` user data-load soft-TLB lookup cost, `520` executable-probe/BSTART or probe-access memoization, and `525` kernel/9p allocator/transport overhead. Keep `999.specrand_ir` as the strict correctness sentinel before and after each hot-path experiment.
+
 - [x] ID: SPEC-QEMU-CLEAN-PROVENANCE-20260703 SPECint summaries now prove whether the selected QEMU binary is a clean build of the current submodule head.
   Tool evidence: `tools/bringup/qemu_build_paths.py` exports `qemu_binary_provenance()`. `tools/spec2017/run_stage_qemu_matrix.py` now uses the same `default_qemu_binary()` selector as `run_specint_fast_gate.py`, so focused matrix runs and fast gates both prefer a matching `/tmp/linx-qemu-clean-build` marker before stale in-tree builds. `run_int_rate_qemu.py`, `run_stage_qemu_matrix.py`, and `run_specint_fast_gate.py` write `qemu_provenance` JSON; matrix and fast-gate Markdown include `qemu_version`, `qemu_repo_head`, and `qemu_clean_build_for_head`.
   Validation evidence: `tools/bringup/run_qemu_build_clean.sh` rebuilt `/tmp/linx-qemu-clean-build/qemu-system-linx64` from marker `f690aa1f7daf4fdc3f70802c074b65b633418aa3:worktree`; `qemu-system-linx64 --version` reports `v10.2.0-1006-gf690aa1f7da`. `workloads/generated/specint-999-provenance-clean-qemu-20260703-r1/` passes strict train hash and records `clean_build_for_head=true` in both matrix and stage summaries. `workloads/generated/specint-pr-provenance-clean-qemu-20260703-r1/specint_fast_gate_summary.json` passes `999.specrand_ir` test and train strict hashes with the same provenance fields.

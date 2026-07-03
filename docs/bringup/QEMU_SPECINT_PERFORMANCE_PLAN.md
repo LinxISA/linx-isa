@@ -2437,6 +2437,35 @@ and strict 999 comparisons while prototyping soft-TLB lookup specialization.
 If the hottest page stays in stable text/probe traffic, investigate BSTART or
 probe-access memoization before changing generic data TLB behavior.
 
+## 2026-07-03 All-Train Hot-Page Ledger
+
+`workloads/generated/specint-train-all-tlbf-hot-qemu-20260703-r1/` reruns the
+split train profile on QEMU `v10.2.0-1007-gbbcad71a5c9` with
+`LINX_QEMU_TLB_FILL_STATS=1` and `LINX_QEMU_TLB_FILL_HOT=1`. `999.specrand_ir`
+still passes strict train hash. Every other supported SPECint row is a
+heartbeat-backed `live-timeout` with BPC site progress and no trap, panic,
+wrapper child-exit, or no-progress class.
+
+The new hot-page sketch separates the next speed lanes:
+
+| Benchmark | Result | TLB-fill / hot page | Symbolized hot site |
+| --- | --- | --- | --- |
+| `500.perlbench_r` | live-timeout | `tlbf=5230387`, `tlbf-hot=1464@0x15556eb000/a2/m1` | `Storable.c` retrieve paths |
+| `502.gcc_r` | live-timeout | `tlbf=6193472`, `tlbf-hot=9324@0x1556092000/a2/m1` | GCC `insn-emit.c` / `insn-recog.c` |
+| `505.mcf_r` | live-timeout | `tlbf=147528309`, `tlbf-hot=2591@0x1555568000/a2/m1` | startup parse plus `spec_qsort` progress |
+| `520.omnetpp_r` | live-timeout | `tlbf=11430703`, `tlbf-hot=238540@0x15555fe000/a2/m1` | config/name lookup executable-probe traffic |
+| `523.xalancbmk_r` | live-timeout | `tlbf=6164604`, `tlbf-hot=4027@0x1555a60000/a2/m1` | Xerces parser paths |
+| `525.x264_r` | live-timeout | `tlbf=1873401`, `tlbf-hot=5@0xffffffff80406000/a2/m0` | kernel context/SLUB on the 9p shard |
+| `531.deepsjeng_r` | live-timeout | `tlbf=11811921`, `tlbf-hot=655640@0x1556096000/a0/m1` | `neval.cpp` load traffic |
+| `541.leela_r` | live-timeout | `tlbf=1999924`, `tlbf-hot=1147@0x1555623000/a2/m1` | C++ locale / bit-vector paths |
+| `557.xz_r` | live-timeout | `tlbf=3644604`, `tlbf-hot=25204@0x3f7feff000/a0/m1` | malloc free-list plus kernel allocator progress |
+
+For this run, user hot PCs symbolize with load base `0x1555155000`; future
+focused runs should preserve `/proc/<child>/maps` evidence before assuming the
+same base. The next QEMU speed loop should test user data soft-TLB lookup
+specialization on `505`/`531`, executable probe/BSTART memoization on `520`,
+and a separate kernel/9p transport profile for `525`.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.
