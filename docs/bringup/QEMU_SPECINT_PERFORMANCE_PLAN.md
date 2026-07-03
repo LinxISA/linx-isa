@@ -2172,6 +2172,59 @@ not make `505.mcf_r` train complete within the current gate budget. The next
 speed lanes remain TCG soft-TLB/page-walk cost, remaining frame save/restore
 memory traffic, and BSTART cold-target classification/cache churn.
 
+## 2026-07-03 FENTRY Save Probe Reuse and Real-QEMU Profiler Wrapper
+
+The next frame-memory experiment narrowed the safe part of the template
+optimization. `FENTRY` already probes every save slot before committing `sp` so
+that stack-growth faults retry from the original architectural state. QEMU now
+reuses that probed host RAM pointer for the actual save when the target is
+direct RAM, and falls back to the existing `cpu_stq_le_mmuidx_ra` path for
+MMIO/plugin cases. Restore loads stay on `cpu_ldq_le_mmuidx_ra`: a broader
+probe-read/direct-load experiment was rejected because the comparable
+`505.mcf_r` train run dropped to `32000000006` instructions in 120 seconds.
+
+Validation on `/tmp/linx-qemu-hb-build-20260703-r1/qemu-system-linx64`:
+
+| Run | Artifact / command | Result |
+| --- | --- | --- |
+| QEMU rebuild | `ninja -C /tmp/linx-qemu-hb-build-20260703-r1 qemu-system-linx64` | pass; only pre-existing warnings |
+| AVS system smoke | `python3 avs/qemu/run_tests.py --suite system --require-test-id 0x110F --timeout 20 --qemu /tmp/linx-qemu-hb-build-20260703-r1/qemu-system-linx64` | pass |
+| AVS call/ret contract | `python3 avs/qemu/run_callret_contract.py --qemu /tmp/linx-qemu-hb-build-20260703-r1/qemu-system-linx64` | pass |
+| AVS all | `python3 avs/qemu/run_tests.py --all --timeout 20 --qemu /tmp/linx-qemu-hb-build-20260703-r1/qemu-system-linx64` | pass |
+| strict `999.specrand_ir` train | `workloads/generated/specint-999-fentry-store-probe-qemu-20260703-r1/` | pass; `rand.11.out` size `871`, hash `0x973dcfc2` |
+| `505.mcf_r` train 120s | `workloads/generated/specint-505-fentry-store-probe-qemu-20260703-r1/` | live timeout with site-progress heartbeat at `34000000007` instructions |
+
+The 505 heartbeat metric matches the previous template-return-fast best point
+rather than improving it, so this is a local helper-path cleanup, not a SPEC
+closure. The current comparable sequence is:
+
+| QEMU state | Artifact | Final heartbeat count |
+| --- | --- | ---: |
+| page-walk cache default-off baseline | `workloads/generated/specint-505-mmu-cache-defaultoff-qemu-20260703-r1/` | `30000000005` |
+| tile helper inline | `workloads/generated/specint-505-inline-tile-qemu-20260703-r1/` | `31000000001` |
+| template return fast hit | `workloads/generated/specint-505-template-return-fast-qemu-20260703-r1/` | `34000000007` |
+| FENTRY save probe reuse | `workloads/generated/specint-505-fentry-store-probe-qemu-20260703-r1/` | `34000000007` |
+
+`tools/spec2017/profile_qemu_after_spec_start.py` now wraps SPEC/QEMU profiling
+runs so host sampling starts only after the generated QEMU log contains
+`LINX_SPEC_START`, and only after the wrapper finds the executable basename
+`qemu-system-linx64` in the launched process tree. This avoids matching the
+Python parent just because its command line contains a `--qemu` argument.
+
+Validation:
+
+| Run | Artifact / command | Result |
+| --- | --- | --- |
+| profiler unit tests | `python3 -m unittest tools/spec2017/test_profile_qemu_after_spec_start.py` | pass |
+| profiler compile check | `python3 -m py_compile tools/spec2017/profile_qemu_after_spec_start.py tools/spec2017/test_profile_qemu_after_spec_start.py` | pass |
+| live 505 profile wrapper | `workloads/generated/specint-profile-505-fentry-store-helper-20260703-r2/profile/report.json` | pass; sampled PID `12966`, marker log under the 505 run directory |
+| live 505 sample | `workloads/generated/specint-profile-505-fentry-store-helper-20260703-r2/profile/qemu-505-fentry-store.sample.txt` | header is `Analysis of sampling qemu-system-linx64`; not Python |
+
+Current conclusion: keep using the wrapper for post-start samples. The next
+speed lane should not spend more time on direct frame load probes; focus on
+soft-TLB lookup shape, page-fault/TLB invalidation pressure, and remaining
+BSTART cold-target/cache churn.
+
 ## 2026-07-03 Latest-QEMU Post-Start 505 Profile
 
 The current latest-QEMU verification binary is

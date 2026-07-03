@@ -51,6 +51,11 @@ Evidence:
   Treat the profiler row's `timeout-no-heartbeat` as expected because heartbeat
   output was disabled for sampling; the guest log proves the run reached
   benchmark execution.
+- Use `tools/spec2017/profile_qemu_after_spec_start.py` for future SPEC/QEMU
+  host samples. The wrapper waits for `LINX_SPEC_START` in the generated
+  `qemu.log` and matches the descendant executable basename
+  `qemu-system-linx64`, avoiding false samples of Python parent commands that
+  merely contain a `--qemu` argument.
 - `workloads/generated/specint-test-train-all-after-blockify-20260702-r2/` is
   the last initramfs-only all-SPECint bounded diagnostic ledger after the QEMU
   Linx `virt` memory-node MMIO-hole fix and blockify rebuild. The run requested
