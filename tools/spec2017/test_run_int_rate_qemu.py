@@ -384,6 +384,61 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertIs(result["checks"], checks)
         self.assertIs(result["hash_checks"], checks)
 
+    def test_hash_marker_allows_heartbeat_interleaving(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            ref = root / "ref.out"
+            log = root / "qemu.log"
+            ref.write_bytes(b"hash payload\n")
+            ref_size, ref_hash = runner._fnv1a32(ref)
+            ref_size_text = str(ref_size)
+            log.write_text(
+                f"LINX_SPEC_HASH rand.11.out {ref_size_text[:-1]}"
+                "LINX_HEARTBEAT count=509000003 pc=0xffffffff8006c06a "
+                f"bpc=0xffffffff8006c040 a0=0x{ref_hash:08x}\n"
+                f"{ref_size_text[-1]} 0x{ref_hash:08x}\n"
+                "LINX_SPEC_PASS 999.specrand_ir\n",
+                encoding="utf-8",
+            )
+
+            result = runner._verify_hash_markers(
+                root,
+                log,
+                "999.specrand_ir",
+                {"compares": [{"out": "rand.11.out", "ref": "ref.out"}]},
+                root,
+            )
+
+        self.assertTrue(result["ok"])
+        self.assertEqual(result["checks"][0]["actual_hash"], f"0x{ref_hash:08x}")
+
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            ref = root / "ref.out"
+            log = root / "qemu.log"
+            ref.write_bytes(b"hash payload\n")
+            ref_size, ref_hash = runner._fnv1a32(ref)
+            ref_size_text = str(ref_size)
+            log.write_text(
+                f"LINX_SPEC_HASH rand.11.out {ref_size_text[:-1]}"
+                "LINX_HEARTBEAT count=509000003 pc=0xffffffff8006c06a "
+                f"bpc=0xffffffff8006c040 a0=0x{ref_hash:08x}\n"
+                f"{ref_size_text[-1]} 0x00000000\n"
+                "LINX_SPEC_PASS 999.specrand_ir\n",
+                encoding="utf-8",
+            )
+
+            result = runner._verify_hash_markers(
+                root,
+                log,
+                "999.specrand_ir",
+                {"compares": [{"out": "rand.11.out", "ref": "ref.out"}]},
+                root,
+            )
+
+        self.assertFalse(result["ok"])
+        self.assertEqual(result["checks"][0]["actual_hash"], "0x00000000")
+
     def test_indexed_argv_override_targets_requested_argument(self) -> None:
         with mock.patch.dict(os.environ, {"LINX_SPEC_ARGV1_OVERRIDE": "/spec-run/test.txt"}, clear=True):
             argv = runner._apply_argv_overrides(["./bench", "test.txt"])

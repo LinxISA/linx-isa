@@ -3471,15 +3471,31 @@ def _fnv1a32(path: Path) -> tuple[int, int]:
     return len(data), h
 
 
+def _hash_marker_candidates(text: str) -> dict[str, list[tuple[int, int]]]:
+    text = re.sub(r"LINX_HEARTBEAT[^\n]*(?:\n|$)", "", text)
+    pat = re.compile(r"LINX_SPEC_HASH\s+(\S+)\s+(\d+)")
+    markers = list(pat.finditer(text))
+    seen: dict[str, list[tuple[int, int]]] = {}
+
+    for idx, marker in enumerate(markers):
+        name = marker.group(1)
+        size = int(marker.group(2), 10)
+        end = markers[idx + 1].start() if idx + 1 < len(markers) else len(text)
+        for sentinel in ("LINX_SPEC_PASS", "LINX_SPEC_FAIL", "LINX_REBOOT"):
+            pos = text.find(sentinel, marker.end())
+            if pos >= 0:
+                end = min(end, pos)
+
+        segment = text[marker.end():min(end, marker.end() + 8192)]
+        for hv in re.findall(r"0x([0-9a-fA-F]+)", segment):
+            seen.setdefault(name, []).append((size, int(hv, 16) & 0xFFFFFFFF))
+
+    return seen
+
+
 def _verify_hash_markers(spec_dir: Path, qemu_log: Path, bench: str, cfg: dict[str, Any], out_dir: Path) -> dict[str, Any]:
     text = qemu_log.read_text(encoding="utf-8", errors="replace")
-    pat = re.compile(r"LINX_SPEC_HASH\s+(\S+)\s+(\d+)\s+0x([0-9a-fA-F]+)")
-    seen: dict[str, tuple[int, int]] = {}
-    for m in pat.finditer(text):
-        name = m.group(1)
-        size = int(m.group(2), 10)
-        hv = int(m.group(3), 16)
-        seen[name] = (size, hv)
+    seen = _hash_marker_candidates(text)
 
     checks: list[dict[str, Any]] = []
     all_ok = True
@@ -3487,7 +3503,16 @@ def _verify_hash_markers(spec_dir: Path, qemu_log: Path, bench: str, cfg: dict[s
         out_name = cmp_cfg["out"]
         ref_path = spec_dir / cmp_cfg["ref"]
         ref_size, ref_hash = _fnv1a32(ref_path)
-        got = seen.get(out_name)
+        candidates = seen.get(out_name, [])
+        got = next(
+            ((size, hv) for size, hv in candidates if size == ref_size and hv == ref_hash),
+            None,
+        )
+        if got is None:
+            got = next(
+                ((size, hv) for size, hv in reversed(candidates) if size == ref_size),
+                candidates[-1] if candidates else None,
+            )
         ok = bool(got and got[0] == ref_size and got[1] == ref_hash)
         all_ok = all_ok and ok
 

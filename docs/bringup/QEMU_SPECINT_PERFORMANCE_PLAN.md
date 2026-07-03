@@ -1959,6 +1959,49 @@ Current optimization owners:
    The previous 525 oversized-initramfs panic is no longer the default suite
    result when the wrapper split policy is allowed to run.
 
+## 2026-07-03 MMU Cache Experiment
+
+The first page-walk speed experiment adds an opt-in direct-mapped Linx
+page-walk result cache behind `LINX_MMU_CACHE=1` or
+`LINX_QEMU_MMU_CACHE=1`. Cache counters are also opt-in with
+`LINX_MMU_CACHE_STATS=1` or `LINX_QEMU_MMU_CACHE_STATS=1`; heartbeat records
+always carry `mmuc_hit`, `mmuc_miss`, `mmuc_fill`, `mmuc_flush`, and
+`mmuc_flush_page`, which remain zero when stats are disabled.
+
+The experiment is intentionally default-off. Focused `505.mcf_r` train-input
+120 second runs on `/tmp/linx-qemu-hb-build-20260703-r1/qemu-system-linx64`
+showed the cache does not improve the current hot path:
+
+| Run | Artifact | Result |
+| --- | --- | --- |
+| disabled baseline | `workloads/generated/specint-505-mmu-cache-off-qemu-20260703-r1/` | live timeout at `30000000002` instructions |
+| cache on, full-scan page flush | `workloads/generated/specint-505-mmu-cache-on-qemu-20260703-r1/` | live timeout at `26000000003` instructions |
+| cache on, O(1) page flush, stats on | `workloads/generated/specint-505-mmu-cache-on-o1flush-qemu-20260703-r1/` | live timeout at `28000000005` instructions |
+| cache on, O(1) page flush, stats off | `workloads/generated/specint-505-mmu-cache-on-nostats-qemu-20260703-r1/` | live timeout at `28000000000` instructions |
+| default-off rebuild | `workloads/generated/specint-505-mmu-cache-defaultoff-qemu-20260703-r1/` | live timeout at `30000000005` instructions |
+
+The default-off rebuild preserves strict correctness on the cheap train sentinel:
+`workloads/generated/specint-999-mmu-cache-defaultoff-qemu-20260703-r1/`
+passes `999.specrand_ir` with strict hash validation. The parser false-red seen
+when QEMU heartbeat text interleaved a `LINX_SPEC_HASH` line is fixed by
+removing heartbeat records before matching hash markers, then scanning bounded
+hash-marker segments and preferring the candidate that matches the expected
+size and hash. The end-to-end proof with the opt-in cache, cache stats, and
+1M-instruction QEMU heartbeat enabled is
+`workloads/generated/specint-999-mmu-cache-parserfix-qemu-20260703-r2/`,
+which passes strict `999.specrand_ir` train hash validation.
+
+Rejected speed lane: widening `tlb_set_page()` with the large block size
+returned by `linx_mmu_translate()`. QEMU's soft-TLB fill still materializes a
+single `TARGET_PAGE_SIZE` entry for lookup; the larger size is useful for
+invalidation scope, not for coalescing the observed hot per-page miss path.
+
+Current conclusion: keep the MMU cache as a diagnostic/profiling switch only.
+Do not enable it in normal SPEC gates. The next useful speed work is to count
+why `tlb_flush_page()` is so frequent during SPEC rows, split user text/data
+misses from kernel and 9p misses, and reduce template/frame memory traffic that
+drives TCG load/store MMU lookups.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.
