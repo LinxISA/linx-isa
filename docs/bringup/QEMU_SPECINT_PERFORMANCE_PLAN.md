@@ -2172,6 +2172,67 @@ not make `505.mcf_r` train complete within the current gate budget. The next
 speed lanes remain TCG soft-TLB/page-walk cost, remaining frame save/restore
 memory traffic, and BSTART cold-target classification/cache churn.
 
+## 2026-07-03 Latest-QEMU Post-Start 505 Profile
+
+The current latest-QEMU verification binary is
+`/tmp/linx-qemu-current-build-20260703-r1/qemu-system-linx64`, built from clean
+worktree marker `a3061b963f3a80efd66e7edd5fb746bec140d29e:worktree` and
+reporting `v10.2.0-1004-ga3061b963f3`. A focused `505.mcf_r` train profiler
+run disabled guest heartbeat, host heartbeat, and QEMU heartbeat output, waited
+for `LINX_SPEC_START`, then sampled the real QEMU child for 30 seconds.
+
+Artifacts:
+
+| Artifact | Purpose |
+| --- | --- |
+| `workloads/generated/specint-profile-505-latest-qemu-20260703-r1/run/qemu_matrix_summary.json` | focused run summary |
+| `workloads/generated/specint-profile-505-latest-qemu-20260703-r1/run/initramfs/505_mcf_r/run_001/qemu.log` | guest log proving `LINX_SPEC_START` and child `exec` setup |
+| `workloads/generated/specint-profile-505-latest-qemu-20260703-r1/profile/qemu-505-latest-qemu-real.sample.txt` | corrected host sample of the real QEMU process |
+| `workloads/generated/specint-profile-505-latest-qemu-20260703-r1/profile/qemu-505-latest-qemu.sample.txt` | discarded control sample of the parent wrapper; do not use for conclusions |
+
+The run is expected red because heartbeat was disabled for profiling:
+`qemu_matrix_summary.json` classifies the row as `timeout-no-heartbeat` after
+180 seconds. The guest log still proves this is past setup: it emits
+`LINX_SPEC_START 505.mcf_r`, validates both relative and `/spec-run/`
+executable paths, reads ELF magic `0x7f454c46`, and then runs until the cap
+without a trap, panic, wrapper child-exit, benchmark internal error, or missing
+executable failure.
+
+Top collapsed stacks from the corrected post-start sample:
+
+| Stack top | Samples |
+| --- | ---: |
+| `helper_linx_template_fentry` | 1093 |
+| `mmu_lookup1` | 897 |
+| `helper_linx_template_fret_stk` | 715 |
+| `mmu_lookup` | 424 |
+| `probe_access_internal` | 370 |
+| `probe_access` | 232 |
+| `linx_frame_restore_commit` | 210 |
+| `linx_template_commit_and_exit` | 100 |
+| `cpu_stq_mmu` | 85 |
+| `cpu_ldq_mmu` | 59 |
+| `linx_cpu_tlb_fill` | 58 |
+
+Current conclusion: the previous tile set/reset helper noise remains closed,
+and the hot path is now the interaction between Linx template entry/return
+frame traffic and QEMU's generic soft-MMU load/store/probe lookup. The next
+speed work should test:
+
+1. Template frame traffic reduction: remove or specialize restartable
+   save/restore memory traffic only where the call/return ABI and debug trace
+   contracts still hold.
+2. Soft-MMU lookup specialization: prototype a safe hot path for known-aligned
+   FENTRY/FRET stack loads/stores and probe accesses before changing generic
+   QEMU TLB behavior.
+3. TLB capacity/lookup-shape experiments: compare focused `505.mcf_r` and
+   strict `999.specrand_ir` before promoting anything, because the prior
+   page-walk cache experiment slowed the comparable 505 slice.
+4. Separate `525.x264_r` transport profiling: the all-train TLB-fill ledger
+   shows lower fill volume on the 9p shard, so x264 should be profiled as
+   9p/syscall/transport overhead instead of being folded into generic 505 TLB
+   work.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.

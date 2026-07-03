@@ -1,6 +1,6 @@
 # LinxISA Maturity Plan (Tier-1 Track vs ARM/x86)
 
-Last updated: 2026-06-30
+Last updated: 2026-07-03
 
 ## Baseline
 
@@ -15,12 +15,14 @@ Last updated: 2026-06-30
   `docs/bringup/BENCHMARK_QEMU_LINUX_FLOW.md` and
   `tools/bringup/run_benchmark_linux_flow.py` as the hard-break execution
   order. The PR benchmark lane stops at TSVC/QEMU before Linux rootfs or SPEC.
-- June 30, 2026 BusyBox rootfs rerun: the stale-rootfs
-  `addr=0x10000004` PID1 trap is closed. A fresh clean rootfs rebuild under
-  `workloads/generated/busybox-rootfs-clean-rebuild-20260630/` removes the old
-  direct UART MMIO sequence from the no-libc BusyBox binary; `boot-r2/report.json`
+- July 3, 2026 latest-QEMU Linux rerun: QEMU
+  `v10.2.0-1004-ga3061b963f3` from
+  `/tmp/linx-qemu-current-build-20260703-r1/qemu-system-linx64` passes both
+  initramfs full boot and BusyBox virtio-blk rootfs boot. The BusyBox report
+  `workloads/generated/linux-busybox-latest-qemu-20260703-r1/report.json`
   records `ok=true`, shell command execution, `linx-timer` IRQ progress
-  `30 -> 35`, and poweroff through `LINX_REBOOT lisc_shutdown`.
+  `40 -> 45`, and poweroff through `LINX_REBOOT lisc_shutdown`. The stale
+  rootfs `addr=0x10000004` PID1 trap remains closed.
 
 ## Gap Snapshot
 
@@ -30,11 +32,13 @@ Last updated: 2026-06-30
     TSVC compile/QEMU runtime.
   - Linux/full-OS lane: `vmlinux`, trivial userspace entry, BusyBox rootfs,
     libc hosted runtime, then SPEC/full benchmarks.
-- The Linux/userspace runtime closure has fresh local BusyBox-rootfs evidence:
+- The Linux/userspace runtime closure has fresh local latest-QEMU evidence:
+  - initramfs full boot reaches the shell, probes `/proc` and `/sys`, passes
+    `getdents64`, `sigill`, and `sigsegv`, then powers off,
   - BusyBox rootfs now reaches `/sbin/init`, executes shell commands, observes
     timer IRQ progress, and powers off under `qemu-system-linx64`,
   - `strict_cross_repo.sh` is still red in the latest checked-in canonical run
-    because that report predates the June 30 BusyBox/rootfs rebuild proof,
+    because that report predates the July 3 latest-QEMU Linux/rootfs proof,
   - canonical runtime evidence is otherwise refreshed through
     `2026-04-18-r9-pin-linuxlibc-refresh`,
   - the next required closure step is a refreshed convergence/strict report and
@@ -47,18 +51,16 @@ Last updated: 2026-06-30
 - Hosted workload hardening is now split cleanly by tier:
   - PR lane: benchmark/polybench/portfolio/ctuning artifact publication and PTO parity are green.
   - runtime-heavy follow-up: the active in-repo SPEC lane is CPU2017 SPECint
-    train input, not a checked-in SPEC CPU2006 corpus. The latest all-ten
-    train loop under
-    `workloads/generated/specint-train-all-nomerge-qemu-20260630-r1/`
-    builds and runs all supported SPECint C/C++ rows, passes
-    `999.specrand_ir`, and proves timeout rows are live-progress rather than
-    global QEMU deadlock by QEMU heartbeat/BPC evidence. The former
-    `502.gcc_r` Linux VM/VMA correctness stop is closed by keeping Linx
-    `mprotect()` VMA modifications out of the unstable merge path; 502 now
-    joins the live-slow lane. Current SPEC follow-up splits into
-    initramfs/rootfs transport for `525.x264_r` and QEMU/kernel throughput
-    profiling for `500`/`502`/`505`/`520`/`523`/`531`/`541`/`557`;
-    shared-runtime packaging remains separate from the static correctness gate.
+    train input, not a checked-in SPEC CPU2006 corpus. The latest all-ten train
+    loop under
+    `workloads/generated/specint-train-all-tlbfill-latest-qemu-20260703-r1/`
+    builds and runs all supported SPECint C/C++ rows on latest QEMU, passes
+    `999.specrand_ir`, routes `525.x264_r` through the generated 9p shard, and
+    proves timeout rows are live-progress rather than global QEMU deadlock by
+    QEMU heartbeat/BPC plus TLB-fill evidence. The current 505 post-start
+    sample under `workloads/generated/specint-profile-505-latest-qemu-20260703-r1/`
+    points the next speed lane at template frame traffic and QEMU soft-MMU
+    lookup/probe cost.
 - Remaining superproject work: refreshed strict/convergence publication, libc
   hosted runtime, SPEC correctness/performance, TSVC runtime, AVS nightly
   breadth, QEMU decode coverage, ABI/unwind/TLS hardening,
@@ -117,13 +119,15 @@ Status: Active
 3. Re-run the runtime-heavy workload lanes that still block nightly closure:
    - keep the CPU2017 SPECint `train-all` QEMU matrix as the active static
      workload loop; the current all-ten ledger is
-     `workloads/generated/specint-train-all-nomerge-qemu-20260630-r1/`,
+     `workloads/generated/specint-train-all-tlbfill-latest-qemu-20260703-r1/`,
    - keep the new Linx Linux `mprotect()` no-merge smoke in the regression
      loop so the former `502.gcc_r` no-VMA trap stays closed,
    - move `525.x264_r` train execution to 9p or a future block-backed transport
      instead of relying on a giant initramfs CPIO,
-   - profile the live-slow rows with heartbeat disabled or coarse and host
-     sampling started after `LINX_SPEC_START`.
+   - use the current post-start `505.mcf_r` profile to guide QEMU speed work:
+     template frame traffic first, then soft-MMU load/store/probe lookup
+     specialization, with strict `999.specrand_ir` as the cheap correctness
+     sentinel.
 4. Resume nightly AVS breadth work on decode/block edge cases, atomics, FP, vector runtime, and Linux workload launch semantics.
 
 ## Canonical Milestones

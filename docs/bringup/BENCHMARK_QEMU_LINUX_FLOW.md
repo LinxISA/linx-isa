@@ -15,10 +15,14 @@ Evidence:
 - Recent TSVC evidence splits cleanly into compile coverage and QEMU runtime:
   compile coverage may be green while the PR benchmark lane still hard-breaks
   on TSVC/QEMU timeout or runtime completion.
-- `workloads/generated/busybox-rootfs-clean-rebuild-20260630/boot-r2/report.json`
-  records a fresh local Linux rootfs proof: the clean rebuilt BusyBox rootfs
-  boots from virtio-blk, reaches `/sbin/init`, runs shell commands, observes
-  `linx-timer` IRQ progress `30 -> 35`, and powers off. The older
+- `workloads/generated/linux-busybox-latest-qemu-20260703-r1/report.json`
+  records the current latest-QEMU Linux rootfs proof: QEMU
+  `v10.2.0-1004-ga3061b963f3` boots the current `vmlinux` and virtio-blk
+  BusyBox rootfs firmwareless, reaches `/sbin/init`, runs shell commands,
+  observes `linx-timer` IRQ progress `40 -> 45`, and powers off through
+  `LINX_REBOOT lisc_shutdown`. The initramfs full-boot command also passes on
+  the same QEMU binary, including `/proc`/`/sys` probes, `getdents64`, and
+  `sigill`/`sigsegv` tests. The older
   `workloads/generated/busybox-rootfs-boot-20260630-r1/` `addr=0x10000004`
   PID1 trap used a stale rootfs image whose BusyBox binary still performed
   direct UART MMIO from user mode.
@@ -38,6 +42,15 @@ Evidence:
   There are no fresh user traps, kernel panics, wrapper child exits,
   no-progress timeouts, benchmark internal errors, or oversized-initramfs VFS
   panics in this suite shape.
+- `workloads/generated/specint-profile-505-latest-qemu-20260703-r1/` is the
+  current post-`LINX_SPEC_START` host profile for the slowest train row. The
+  corrected sample targets the real QEMU child and shows hot stacks in
+  `helper_linx_template_fentry`, `helper_linx_template_fret_stk`,
+  `mmu_lookup1`, `mmu_lookup`, `probe_access_internal`, `probe_access`,
+  `linx_frame_restore_commit`, and generic `cpu_ldq_mmu`/`cpu_stq_mmu`.
+  Treat the profiler row's `timeout-no-heartbeat` as expected because heartbeat
+  output was disabled for sampling; the guest log proves the run reached
+  benchmark execution.
 - `workloads/generated/specint-test-train-all-after-blockify-20260702-r2/` is
   the last initramfs-only all-SPECint bounded diagnostic ledger after the QEMU
   Linx `virt` memory-node MMIO-hole fix and blockify rebuild. The run requested
@@ -101,10 +114,10 @@ Inference:
   prerequisite: ISA/catalog, compiler, QEMU, TSVC direct runtime, Linux
   userspace entry, libc hosted runtime, then full benchmark expansion.
 - The current strict PR benchmark lane reaches the TSVC/QEMU stage, and the
-  Linux BusyBox rootfs lane now has a fresh local pass. The next broad closure
-  step is to refresh the canonical convergence/strict report and continue into
-  libc hosted runtime plus SPEC correctness rather than reopening the stale
-  BusyBox-rootfs image failure.
+  Linux BusyBox rootfs lane now has a fresh latest-QEMU local pass. The next
+  broad closure step is to refresh the canonical convergence/strict report and
+  continue into libc hosted runtime plus SPEC correctness/performance rather
+  than reopening the stale BusyBox-rootfs image failure.
 - Markdown status pages are useful summaries, but several are stale relative to
   the current June 14 coverage snapshot and aggregate `latest.json` is older
   than some sidecar reports. Agents should use the JSON flow, command output,
