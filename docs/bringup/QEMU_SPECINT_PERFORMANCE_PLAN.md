@@ -2761,6 +2761,46 @@ pressure, while using the new `fr_restore_host`/`fr_restore_fallback` fields
 to check whether a future restore-load experiment actually changes the frame
 traffic mix.
 
+## 2026-07-04 BSTART Inline Cache Probe
+
+QEMU commit `7b6b33df2ca` adds a translated positive-only fast path for cached
+BSTART target checks. The generated code skips `helper_linx_check_bstart_target`
+only when the cached slot is valid, the tag matches the dynamic target, and the
+translated MMU index matches. Misses and debug modes still call the helper;
+`LINX_BSTART_INLINE_CACHE=0` disables the translated fast path, and
+`LINX_CFI_TRACE`, `LINX_BSTART_CACHE_REVALIDATE`, and
+`LINX_BSTART_CACHE_STATS` force the original helper behavior.
+
+Validation on the clean committed binary:
+
+- `qemu-system-linx64 --version` reports
+  `v10.2.0-1013-g7b6b33df2ca`.
+- `ninja -C emulator/qemu/build-linx qemu-system-linx64` passes.
+- `LINX_VIRT_TEST_FINISHER=1 python3 avs/qemu/run_tests.py --suite system
+  --require-test-id 0x110F --timeout 20 --qemu
+  emulator/qemu/build-linx/qemu-system-linx64` passes.
+- `python3 avs/qemu/run_callret_contract.py --qemu
+  emulator/qemu/build-linx/qemu-system-linx64` passes.
+- `workloads/generated/specint-bstart-inline-999-qemu-clean-20260704-r1/`
+  passes the `999.specrand_ir` train hash (`rand.11.out`, 871 bytes,
+  `0x973dcfc2`) on QEMU head
+  `7b6b33df2ca8c89517b493d7d149c26ea332badc` with
+  `qemu_repo_dirty_tracked=false`.
+
+Focused `520.omnetpp_r` train comparison remains performance-neutral in the
+90-second no-extra-stats shape:
+
+| Run | Result | Final proof |
+| --- | --- | --- |
+| `workloads/generated/specint-bstart-inline-520-off-qemu-20260704-r1/` | `live-timeout` | `count=8000000006`, `bpc=0x15555f155a`, site progress true |
+| `workloads/generated/specint-bstart-inline-520-on-qemu-20260704-r1/` | `live-timeout` | `count=8000000000`, `bpc=0x15555f0690`, site progress true |
+
+Loop update: keep this as a conservative helper-exit reduction foundation, not
+as a claimed SPEC speedup. The short 520 probe is neutral, so the next speed
+loop should either measure branch-helper hit rate directly or move to the
+already identified soft-MMU/TB-dispatch lanes before further generated-code
+complexity.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.

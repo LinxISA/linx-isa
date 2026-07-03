@@ -1,5 +1,13 @@
 # SPECint / QEMU Checklist
 
+## Live Blockers (2026-07-04)
+
+- [x] ID: SPEC-QEMU-BSTART-INLINE-CACHE-20260704 Translated BSTART checks can skip the helper only on proven cache hits.
+  QEMU evidence: `emulator/qemu` commit `7b6b33df2ca` adds a positive-only translated BSTART cache hit path. It bypasses `helper_linx_check_bstart_target` only when the cache entry is valid, the cached tag equals the target, and the cached MMU index equals the translation context. Misses still call the helper. `LINX_BSTART_INLINE_CACHE=0` disables the fast path, and CFI trace, BSTART cache revalidate, or BSTART cache stats modes keep the original helper behavior.
+  Validation evidence: rebuilt `emulator/qemu/build-linx/qemu-system-linx64` reports `v10.2.0-1013-g7b6b33df2ca`; `ninja -C emulator/qemu/build-linx qemu-system-linx64` passes; `LINX_VIRT_TEST_FINISHER=1 python3 avs/qemu/run_tests.py --suite system --require-test-id 0x110F --timeout 20 --qemu emulator/qemu/build-linx/qemu-system-linx64` passes; `python3 avs/qemu/run_callret_contract.py --qemu emulator/qemu/build-linx/qemu-system-linx64` passes.
+  SPEC evidence: `workloads/generated/specint-bstart-inline-999-qemu-clean-20260704-r1/` passes the `999.specrand_ir` train hash (`rand.11.out`, 871 bytes, `0x973dcfc2`) with `qemu_repo_head=7b6b33df2ca8c89517b493d7d149c26ea332badc` and `qemu_repo_dirty_tracked=false`. The focused no-extra-stats `520.omnetpp_r` train comparison is performance-neutral: inline disabled reaches `count=8000000006`, `bpc=0x15555f155a` in `workloads/generated/specint-bstart-inline-520-off-qemu-20260704-r1/`, while inline enabled reaches `count=8000000000`, `bpc=0x15555f0690` in `workloads/generated/specint-bstart-inline-520-on-qemu-20260704-r1/`; both remain heartbeat-backed `live-timeout` with site progress.
+  Loop update: keep this patch as correctness-preserving helper-exit reduction infrastructure, not a claimed all-row SPEC speedup. Use the strict `999.specrand_ir` train sentinel after future generated-code changes, and collect direct hit-rate or host-profile evidence before adding more translated BSTART logic.
+
 ## Live Blockers (2026-07-03)
 
 - [x] ID: SPEC-M05-TRAIN-ALL-CURRENT-HEAD-QEMU-20260703 Clean current-head QEMU train-all run covers every tracked SPECint train row with BPC, TLB-fill, and TB stats.
