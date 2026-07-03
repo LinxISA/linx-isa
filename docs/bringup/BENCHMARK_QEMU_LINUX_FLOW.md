@@ -31,6 +31,13 @@ Evidence:
   than mixed into every cheap regression check.
 - `docs/bringup/QEMU_SPECINT_PERFORMANCE_PLAN.md` records the current QEMU
   SPECint profile and the prioritized speedups for the Linx target.
+- `workloads/generated/specint-pr-provenance-clean-qemu-20260703-r1/` is the
+  current clean-build provenance smoke for the SPECint PR gate. The default
+  QEMU selector resolves `/tmp/linx-qemu-clean-build/qemu-system-linx64`,
+  reports `v10.2.0-1006-gf690aa1f7da`, records QEMU repo head
+  `f690aa1f7daf4fdc3f70802c074b65b633418aa3`, and has
+  `clean_build_for_head=true` in both fast-gate and matrix summaries. Both
+  `999.specrand_ir` test and train strict hashes pass.
 - `workloads/generated/specint-train-all-tlbfill-latest-qemu-20260703-r1/` is
   the current all-SPECint train ledger on a clean latest-QEMU build
   (`v10.2.0-1004-ga3061b963f3`, clean marker
@@ -157,6 +164,10 @@ when its marker matches the current QEMU submodule SHA; otherwise they fall
 back to the in-tree build path or any explicit `QEMU=...` override. When the
 user has not set `QEMU`, the runner refreshes the resolved QEMU path before
 each command so commands after `qemu-clean-build` use the newly built binary.
+SPECint runners now also include `qemu_provenance` in JSON summaries and
+`qemu_version`, `qemu_repo_head`, and `qemu_clean_build_for_head` in Markdown
+summaries; treat `qemu_clean_build_for_head=false` as stale-build evidence
+until the run intentionally names a non-clean experimental QEMU binary.
 
 ```bash
 bash tools/bringup/run_qemu_build_clean.sh \

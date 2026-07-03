@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import unittest
 import sys
+import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -58,12 +59,49 @@ class SpecintFastGateTests(unittest.TestCase):
                         "load": 201417280,
                         "store": 22216369,
                         "probe": 138258,
+                        "user": 224000000,
+                        "kernel": 1069739,
+                        "other": 0,
                     },
                 }
             }
         )
 
         self.assertIn("tlbf=225069739/f1436090/l201417280/s22216369/p138258", text)
+        self.assertIn("/u224000000/k1069739/o0", text)
+
+    def test_markdown_records_qemu_provenance(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            path = Path(td) / "summary.md"
+            gate._write_md(
+                path,
+                {
+                    "profile": "pr",
+                    "ok": True,
+                    "elapsed_sec": 1.0,
+                    "qemu": "/tmp/qemu-system-linx64",
+                    "qemu_provenance": {
+                        "version": "QEMU emulator version 10.2.50",
+                        "qemu_repo_head": "abc123",
+                        "clean_build_for_head": True,
+                    },
+                    "spec_dir": "/spec",
+                    "memory_mb": 2048,
+                    "stack_limit": "2G",
+                    "qemu_heartbeat_interval": 100,
+                    "qemu_heartbeat_regs": False,
+                    "qemu_heartbeat_code_bytes": 0,
+                    "qemu_heartbeat_same_site_warn": 0,
+                    "fail_9p_timeout": False,
+                    "suites": [],
+                },
+            )
+
+            text = path.read_text(encoding="utf-8")
+
+        self.assertIn("qemu_version: `QEMU emulator version 10.2.50`", text)
+        self.assertIn("qemu_repo_head: `abc123`", text)
+        self.assertIn("qemu_clean_build_for_head: `true`", text)
 
     def test_suite_command_forwards_qemu_heartbeat_debug_switches(self) -> None:
         cmd = gate._suite_command(

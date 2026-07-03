@@ -20,7 +20,7 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
-from qemu_build_paths import default_qemu_binary
+from qemu_build_paths import default_qemu_binary, qemu_binary_provenance
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -463,6 +463,10 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
         f"- ok: `{str(summary['ok']).lower()}`",
         f"- elapsed_sec: `{summary['elapsed_sec']}`",
         f"- qemu: `{summary['qemu']}`",
+        f"- qemu_version: `{(summary.get('qemu_provenance') or {}).get('version', '-')}`",
+        f"- qemu_repo_head: `{(summary.get('qemu_provenance') or {}).get('qemu_repo_head', '-')}`",
+        "- qemu_clean_build_for_head: "
+        f"`{str(bool((summary.get('qemu_provenance') or {}).get('clean_build_for_head', False))).lower()}`",
         f"- spec_dir: `{summary['spec_dir']}`",
         f"- memory_mb: `{summary['memory_mb']}`",
         f"- stack_limit: `{summary['stack_limit']}`",
@@ -739,6 +743,7 @@ def main(argv: list[str]) -> int:
         "ok": overall_ok,
         "spec_dir": str(spec_dir),
         "qemu": str(qemu),
+        "qemu_provenance": qemu_binary_provenance(REPO_ROOT, qemu),
         "sysroot": str(sysroot),
         "memory_mb": args.memory_mb,
         "append_extra": args.append_extra,

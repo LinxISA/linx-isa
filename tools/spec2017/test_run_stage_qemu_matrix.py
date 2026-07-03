@@ -77,6 +77,12 @@ class StageQemuMatrixTests(unittest.TestCase):
             "input_set": "test",
             "strict": True,
             "transports": ["initramfs"],
+            "qemu_provenance": {
+                "path": "/tmp/qemu-system-linx64",
+                "version": "QEMU emulator version 10.2.50",
+                "qemu_repo_head": "abc123",
+                "clean_build_for_head": True,
+            },
             "timeout_sec": 180,
             "memory_mb": 2048,
             "stack_limit": "2G",
@@ -108,6 +114,9 @@ class StageQemuMatrixTests(unittest.TestCase):
 
         self.assertIn("qemu_fault_trace: `true`", text)
         self.assertIn("qemu_heartbeat_regs: `true`", text)
+        self.assertIn("qemu_version: `QEMU emulator version 10.2.50`", text)
+        self.assertIn("qemu_repo_head: `abc123`", text)
+        self.assertIn("qemu_clean_build_for_head: `true`", text)
         self.assertIn("qemu_heartbeat_code_bytes: `16`", text)
         self.assertIn("qemu_heartbeat_same_site_warn: `4`", text)
         self.assertIn("guest_proc_diagnostics: `true`", text)

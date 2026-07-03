@@ -17,6 +17,11 @@ from typing import Any
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parents[1]
+BRINGUP_DIR = REPO_ROOT / "tools" / "bringup"
+if str(BRINGUP_DIR) not in sys.path:
+    sys.path.insert(0, str(BRINGUP_DIR))
+
+from qemu_build_paths import qemu_binary_provenance
 
 STAGE_A_BENCHES = [
     "999.specrand_ir",
@@ -3855,6 +3860,7 @@ def main(argv: list[str]) -> int:
         "input_set": args.input_set,
         "spec_dir": str(spec_dir),
         "qemu": str(qemu),
+        "qemu_provenance": qemu_binary_provenance(REPO_ROOT, qemu),
         "kernel": str(kernel),
         "sysroot": str(sysroot),
         "memory_mb": args.memory_mb,

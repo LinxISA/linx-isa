@@ -15,6 +15,11 @@ from typing import Any
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parents[1]
 RUNNER = SCRIPT_DIR / "run_int_rate_qemu.py"
+BRINGUP_DIR = REPO_ROOT / "tools" / "bringup"
+if str(BRINGUP_DIR) not in sys.path:
+    sys.path.insert(0, str(BRINGUP_DIR))
+
+from qemu_build_paths import default_qemu_binary, qemu_binary_provenance
 QEMU_FAULT_TRACE_FILTER_ARGS = {
     "qemu_fault_trace_pc": "LINX_QEMU_FAULT_TRACE_PC",
     "qemu_fault_trace_pc_lo": "LINX_QEMU_FAULT_TRACE_PC_LO",
@@ -32,12 +37,7 @@ def _default_qemu() -> str:
     env = os.environ.get("QEMU", "").strip()
     if env:
         return str(Path(os.path.expanduser(env)).resolve())
-    qemu_root = REPO_ROOT / "emulator" / "qemu"
-    for rel in ("build-linx", "build-tci", "build"):
-        candidate = qemu_root / rel / "qemu-system-linx64"
-        if candidate.is_file() and os.access(candidate, os.X_OK):
-            return str(candidate.resolve())
-    return str((qemu_root / "build-linx" / "qemu-system-linx64").resolve())
+    return str(default_qemu_binary(REPO_ROOT).resolve())
 
 
 def _default_musl_sysroot() -> str:
@@ -294,6 +294,15 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
     lines.append(f"- input_set: `{summary['input_set']}`")
     lines.append(f"- strict: `{str(summary['strict']).lower()}`")
     lines.append(f"- transports: `{', '.join(summary['transports'])}`")
+    qemu_provenance = summary.get("qemu_provenance") or {}
+    if qemu_provenance:
+        lines.append(f"- qemu: `{qemu_provenance.get('path', '-')}`")
+        lines.append(f"- qemu_version: `{qemu_provenance.get('version', '-')}`")
+        lines.append(f"- qemu_repo_head: `{qemu_provenance.get('qemu_repo_head', '-')}`")
+        lines.append(
+            "- qemu_clean_build_for_head: "
+            f"`{str(bool(qemu_provenance.get('clean_build_for_head', False))).lower()}`"
+        )
     lines.append(f"- timeout_sec: `{summary['timeout_sec']}`")
     lines.append(f"- fail_9p_timeout: `{str(bool(summary.get('fail_9p_timeout', False))).lower()}`")
     lines.append(f"- memory_mb: `{summary['memory_mb']}`")
@@ -668,6 +677,11 @@ def main(argv: list[str]) -> int:
         "input_set": args.input_set,
         "strict": bool(args.strict),
         "spec_dir": str(spec_dir),
+        "qemu": str(Path(os.path.expanduser(args.qemu)).resolve()),
+        "qemu_provenance": qemu_binary_provenance(
+            REPO_ROOT,
+            Path(os.path.expanduser(args.qemu)).resolve(),
+        ),
         "transports": transports,
         "timeout_sec": int(args.timeout),
         "memory_mb": int(args.memory_mb),

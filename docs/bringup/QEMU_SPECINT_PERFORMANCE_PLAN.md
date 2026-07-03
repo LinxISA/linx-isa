@@ -2231,6 +2231,30 @@ speed lane should not spend more time on direct frame load probes; focus on
 soft-TLB lookup shape, page-fault/TLB invalidation pressure, and remaining
 BSTART cold-target/cache churn.
 
+## 2026-07-03 Clean QEMU Provenance In SPEC Ledgers
+
+The SPEC runners now make latest-QEMU evidence auditable instead of relying on
+a path string. `tools/bringup/qemu_build_paths.py` records the selected QEMU
+binary path, `--version` line, QEMU submodule HEAD, tracked dirty state, and
+the `.linx_qemu_clean_head` marker emitted by `run_qemu_build_clean.sh`.
+`run_stage_qemu_matrix.py` now uses the same clean-build-aware default selector
+as `run_specint_fast_gate.py`, and all SPEC summary JSON files carry
+`qemu_provenance`. Matrix and fast-gate Markdown summaries also print
+`qemu_version`, `qemu_repo_head`, and `qemu_clean_build_for_head`.
+
+Validation:
+
+| Run | Artifact | Result |
+| --- | --- | --- |
+| Clean QEMU build | `/tmp/linx-qemu-clean-build/qemu-system-linx64` | marker `f690aa1f7daf4fdc3f70802c074b65b633418aa3:worktree`; version `v10.2.0-1006-gf690aa1f7da` |
+| Focused `999.specrand_ir` train | `workloads/generated/specint-999-provenance-clean-qemu-20260703-r1/` | pass; strict `rand.11.out` hash `0x973dcfc2`; matrix and stage summaries record `clean_build_for_head=true` |
+| SPECint PR smoke | `workloads/generated/specint-pr-provenance-clean-qemu-20260703-r1/` | pass; `999.specrand_ir` test and train strict hashes pass; fast-gate summary records the same clean build provenance |
+
+Current conclusion: require `qemu_provenance.clean_build_for_head=true` for
+canonical latest-QEMU SPEC ledgers unless the run is explicitly documented as a
+dirty or markerless experiment. This avoids promoting stale
+`emulator/qemu/build-linx` results after the QEMU submodule moves.
+
 ## 2026-07-03 Latest-QEMU Post-Start 505 Profile
 
 The current latest-QEMU verification binary is
