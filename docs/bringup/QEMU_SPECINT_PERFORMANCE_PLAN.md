@@ -2891,6 +2891,72 @@ continue soft-MMU/page-walk work for `505`, route `520`/`523`/`557` through
 combined cache plus TB/helper-exit profiling, and keep `541`/`525` out of the
 generic MMU-cache promotion decision.
 
+## 2026-07-04 No-Stats Train-All MMU Cache Comparison
+
+The follow-up no-stats train-all comparison used the same rebuilt QEMU
+`b37d0a5698092b1c9987582c5a925c446811e042`
+(`v10.2.0-1014-gb37d0a56980`) with `qemu_repo_dirty_tracked=false`. The
+generated summaries are markerless because this is the in-tree
+`emulator/qemu/build-linx/qemu-system-linx64` binary, not a `/tmp` clean-build
+marker directory.
+
+Cache-off command shape:
+
+```bash
+SPECINT_TRAIN_ALL_TIMEOUT=120 \
+SPEC_GUEST_HEARTBEAT_SEC=0 \
+SPEC_QEMU_HEARTBEAT_INTERVAL=1000000000 \
+SPEC_NO_PROGRESS_TIMEOUT=120 \
+python3 tools/bringup/run_specint_fast_gate.py \
+  --profile train \
+  --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 \
+  --qemu emulator/qemu/build-linx/qemu-system-linx64 \
+  --sysroot out/libc/musl/install/phase-b \
+  --out-dir workloads/generated/specint-train-all-block-mmu-cache-off-nostats-qemu-20260704-r1 \
+  --append-extra norandmaps \
+  --heartbeat-sec 30 \
+  --qemu-heartbeat-interval 1000000000 \
+  --guest-heartbeat-sec 0 \
+  --no-progress-timeout 120 \
+  --stack-limit 2G \
+  --continue-on-fail
+```
+
+Cache-on command shape is identical, with `LINX_QEMU_MMU_CACHE=1` added and
+`--out-dir workloads/generated/specint-train-all-block-mmu-cache-on-nostats-qemu-20260704-r1`.
+Neither run enabled `LINX_QEMU_MMU_CACHE_STATS`, so this measures the cache
+without per-fill hit/miss counter increments.
+
+Both runs cover the split train profile:
+`train-all/initramfs/stage_b_summary.json` plus
+`train-all-large-9p/9p/stage_b_summary.json`. `999.specrand_ir` passes the
+strict train hash in both runs (`rand.11.out`, 871 bytes, `0x973dcfc2`).
+Every other row is still a heartbeat-backed `live-timeout` with BPC site
+progress and no panic or user trap.
+
+| Benchmark | Transport | Cache off | Cache on | Delta |
+| --- | --- | ---: | ---: | ---: |
+| `500.perlbench_r` | initramfs | `32000000000` | `32000000005` | neutral |
+| `502.gcc_r` | initramfs | `19000000002` | `19000000001` | neutral |
+| `505.mcf_r` | initramfs | `28000000002` | `30000000009` | `+7.1%` |
+| `520.omnetpp_r` | initramfs | `11000000006` | `11000000006` | neutral |
+| `523.xalancbmk_r` | initramfs | `15000000000` | `16000000004` | `+6.7%` |
+| `525.x264_r` | 9p | `18000000003` | `18000000003` | neutral |
+| `531.deepsjeng_r` | initramfs | `31000000027` | `31000000005` | neutral |
+| `541.leela_r` | initramfs | `12000000001` | `13000000006` | `+8.3%` |
+| `557.xz_r` | initramfs | `28000000005` | `28000000001` | neutral |
+| `999.specrand_ir` | initramfs | pass | pass | strict hash preserved |
+
+Loop update: keep the block-aware MMU cache opt-in/default-off. The no-stats
+comparison removes the stats-overhead concern and shows useful row-level gains
+for `505`, `523`, and `541`, with no meaningful regression in the bounded
+counts. It is still not a broad enough aggregate win to promote by default:
+`500`, `502`, `520`, `525`, `531`, and `557` are neutral at this cap, and all
+non-999 rows remain throughput live-timeouts rather than correct completions.
+Next work should either combine this cache with the TB/helper-exit lane for
+`523`/`541`, or focus the cache design on the data-load-heavy `505` path before
+retesting promotion.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.
