@@ -220,6 +220,7 @@ def _transport_failure_details(summary_obj: dict[str, Any]) -> dict[str, dict[st
             "heartbeat_tlb_invalidation": failed_run.get("heartbeat_tlb_invalidation") or {},
             "heartbeat_tb_stats": failed_run.get("heartbeat_tb_stats") or {},
             "heartbeat_tlb_fill_hot": failed_run.get("heartbeat_tlb_fill_hot") or {},
+            "heartbeat_tlb_inv_hot": failed_run.get("heartbeat_tlb_inv_hot") or {},
             "bstart_cache_stats": failed_run.get("bstart_cache_stats") or {},
             "heartbeat_kernel_symbolized": bool(failed_run.get("heartbeat_kernel_symbolized", False)),
             "heartbeat_kernel_panic_loop": bool(failed_run.get("heartbeat_kernel_panic_loop", False)),
@@ -255,6 +256,26 @@ def _format_tlb_fill_hot(row: dict[str, Any]) -> str:
     mmu = hot.get("top0_mmu")
     evictions = hot.get("evictions")
     return f" tlbf-hot={top0_count}@{page}/a{access}/m{mmu} evict={evictions}"
+
+
+def _format_tlb_inv_hot(row: dict[str, Any]) -> str:
+    hot = row.get("heartbeat_tlb_inv_hot")
+    if not isinstance(hot, dict) or not hot.get("seen"):
+        return ""
+    top0_count = hot.get("max_delta_top0_count")
+    if top0_count is None:
+        top0_count = hot.get("top0_count")
+    if top0_count is None:
+        return ""
+    top0_delta = hot.get("max_delta_top0_delta")
+    if top0_delta is None:
+        top0_delta = hot.get("top0_delta")
+    count_tag = f"{top0_delta}/{top0_count}" if top0_delta is not None else str(top0_count)
+    op = hot.get("max_delta_top0_op") or hot.get("top0_op") or f"op{hot.get('top0_opid')}"
+    pc = hot.get("max_delta_top0_pc") or hot.get("top0_pc") or "no-pc"
+    page = hot.get("max_delta_top0_page") or hot.get("top0_page") or "no-page"
+    evictions = hot.get("evictions")
+    return f" tlbi-hot={count_tag}:{op}@{pc}/page{page} evict={evictions}"
 
 
 def _format_bstart_cache_stats(row: dict[str, Any]) -> str:
@@ -365,6 +386,7 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
                     f"/o{heartbeat_tlb_fill.get('other')}"
                 )
         tlbfill_hot = _format_tlb_fill_hot(row)
+        tlbinv_hot = _format_tlb_inv_hot(row)
         mmu_cache = _format_mmu_cache_stats(row)
         frame_stats = _format_frame_stats(row)
         tlb_invalidation = _format_tlb_invalidation_stats(row)
@@ -388,7 +410,7 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
             hb_stall = f" heartbeat-stall={status}:{repeats}/{threshold}"
         parts.append(
             f"{bench}: {running}/{site} {progress}{timeout}{stalled} "
-            f"bpc={bpc}{kernel}{hb_stall}{fcmp}{tlbfill}{tlbfill_stats}{tlbfill_hot}{mmu_cache}{frame_stats}{tlb_invalidation}{tb_stats}{bstart_cache}{mprotect}"
+            f"bpc={bpc}{kernel}{hb_stall}{fcmp}{tlbfill}{tlbfill_stats}{tlbfill_hot}{mmu_cache}{frame_stats}{tlb_invalidation}{tlbinv_hot}{tb_stats}{bstart_cache}{mprotect}"
         )
     return ", ".join(parts)
 
@@ -432,6 +454,7 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
         f"`{str(bool(summary.get('qemu_frame_restore_host_load', False))).lower()}`"
     )
     lines.append(f"- qemu_tlb_stats: `{str(bool(summary.get('qemu_tlb_stats', False))).lower()}`")
+    lines.append(f"- qemu_tlb_inv_hot: `{str(bool(summary.get('qemu_tlb_inv_hot', False))).lower()}`")
     lines.append(f"- qemu_tb_stats: `{str(bool(summary.get('qemu_tb_stats', False))).lower()}`")
     lines.append(f"- qemu_fault_trace: `{str(bool(summary.get('qemu_fault_trace', False))).lower()}`")
     lines.append(f"- qemu_fault_trace_regs: `{str(bool(summary.get('qemu_fault_trace_regs', False))).lower()}`")
@@ -580,6 +603,12 @@ def main(argv: list[str]) -> int:
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_TLB_STATS", False),
         help="Pass --qemu-tlb-stats to append TLB invalidation counters to QEMU heartbeats.",
+    )
+    ap.add_argument(
+        "--qemu-tlb-inv-hot",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_TLB_INV_HOT", False),
+        help="Pass --qemu-tlb-inv-hot to emit TLBI source-PC hot-site heartbeat lines.",
     )
     ap.add_argument(
         "--qemu-tb-stats",
@@ -765,6 +794,8 @@ def main(argv: list[str]) -> int:
             cmd.append("--qemu-frame-restore-host-load")
         if args.qemu_tlb_stats:
             cmd.append("--qemu-tlb-stats")
+        if args.qemu_tlb_inv_hot:
+            cmd.append("--qemu-tlb-inv-hot")
         if args.qemu_tb_stats:
             cmd.append("--qemu-tb-stats")
         if args.qemu_fault_trace:
@@ -849,6 +880,7 @@ def main(argv: list[str]) -> int:
         "qemu_frame_stats": bool(args.qemu_frame_stats),
         "qemu_frame_restore_host_load": bool(args.qemu_frame_restore_host_load),
         "qemu_tlb_stats": bool(args.qemu_tlb_stats),
+        "qemu_tlb_inv_hot": bool(args.qemu_tlb_inv_hot),
         "qemu_tb_stats": bool(args.qemu_tb_stats),
         "qemu_fault_trace": bool(args.qemu_fault_trace or qemu_fault_trace_filters),
         "qemu_fault_trace_regs": bool(args.qemu_fault_trace_regs),

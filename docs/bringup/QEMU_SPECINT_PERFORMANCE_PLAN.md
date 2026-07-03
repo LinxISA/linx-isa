@@ -3209,6 +3209,51 @@ Linux can reduce fault-time/page-aging flush volume without violating the ISA's
 ordering requirement. Keep QEMU work on `probe_access_internal`,
 template-helper dispatch, and `tb_lookup` after that Linux-side evidence.
 
+Follow-up TLBI hot-site instrumentation adds an opt-in
+`LINX_QEMU_TLB_INV_HOT=1` / `LINX_TLB_INV_HOT=1` QEMU heartbeat companion line
+and runner switch `--qemu-tlb-inv-hot`. The line is keyed by invalidation op
+and source PC, records last BPC/operand/page/ACR, and includes both cumulative
+counts and per-heartbeat deltas; SPEC summaries record it as
+`heartbeat_tlb_inv_hot` and print compact `tlbi-hot=` failure details.
+
+Validation:
+
+| Check | Result |
+| --- | --- |
+| `python3 -m py_compile tools/spec2017/run_int_rate_qemu.py tools/spec2017/run_stage_qemu_matrix.py tools/bringup/run_specint_fast_gate.py tools/spec2017/test_run_int_rate_qemu.py` | pass |
+| `cd tools/spec2017 && python3 -m unittest test_run_int_rate_qemu.py` | pass, 42 tests |
+| `ninja -C emulator/qemu/build-linx qemu-system-linx64` | pass; only pre-existing unrelated warnings |
+| default `python3 avs/qemu/run_callret_contract.py --qemu emulator/qemu/build-linx/qemu-system-linx64` | pass |
+| `LINX_QEMU_TLB_INV_HOT=1 python3 avs/qemu/run_callret_contract.py --qemu emulator/qemu/build-linx/qemu-system-linx64` | pass |
+| strict train `999.specrand_ir` with `--qemu-tlb-stats --qemu-tlb-inv-hot` | pass, `workloads/generated/specint-999-tlbi-hot-delta-initramfs-qemu-20260704-r1/` |
+
+Focused `531.deepsjeng_r` train probe:
+`workloads/generated/specint-531-tlbi-hot-delta-qemu-20260704-r1/` uses
+`LINX_QEMU_TEMPLATE_CHAIN=1`, `--qemu-frame-stats`,
+`--qemu-frame-restore-host-load`, `--qemu-tlb-stats`, and
+`--qemu-tlb-inv-hot` with a 120-second cap. It remains a heartbeat-backed
+`live-timeout`, not a deadlock: `heartbeat_running=true`,
+`heartbeat_site_progress=true`, `count=40000000004`, and recent count delta
+`7000000001`. Aggregate TLBI counters show `tlbi_iv=3849672`, `tlbi_iall=9`,
+and last steady invalidation at `0xffffffff800db2b6` /
+`0xffffffff800db2ac` on operand `0x3ffffe2000`.
+
+Attribution:
+
+| Site | Evidence | Interpretation |
+| --- | --- | --- |
+| `0xffffffff80405980`, `0xffffffff804059d2` | `tlbi-hot max_delta=458884` at first heartbeat; symbolized to `get_p4d_virt_fixmap` in `arch/linx/mm/init.c`; disassembly shows two `tlb.iv a3` sites | early fixmap/TLB setup burst |
+| `0xffffffff800db2b6` / BPC `0xffffffff800db2ac` | repeated `top0_delta` around `32739-32740` for several heartbeats, symbolized to `mm/memory.c` `.LBB50_265`; disassembly is a `tlb.iv a3` loop | Linux eager page-fault/update flush path |
+| `arch/linx/include/asm/pgtable.h` | `update_mmu_cache_range()` loops over `local_flush_tlb_page(address + nr * PAGE_SIZE)` and `ptep_set_wrprotect()` flushes one page after write-protect | source-level candidates for batching/reduction |
+| `arch/linx/include/asm/tlbflush.h` | `local_flush_tlb_page()` emits `BSTART.sys fall; tlb.iv %[a]`; `flush_tlb_range()` currently falls back to `local_flush_tlb_all()` in the non-SMP path | Linux policy, not QEMU MMU-index selection, is the next lever |
+
+Loop update: keep `--qemu-tlb-inv-hot` as the default low-volume attribution
+tool whenever `helper_linx_tlb_iv` appears in a post-start host profile. The
+next speed patch should investigate Linx Linux `update_mmu_cache_range()` /
+`ptep_set_wrprotect()` flush frequency, range batching, or architecture
+semantics before returning to QEMU cputlb changes. Do not classify current
+`531` as stuck; the row is BPC-progressing and throughput-limited.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.

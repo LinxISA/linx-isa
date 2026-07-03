@@ -716,6 +716,7 @@ def _apply_qemu_debug_env(
     qemu_frame_stats: bool = False,
     qemu_frame_restore_host_load: bool = False,
     qemu_tlb_stats: bool = False,
+    qemu_tlb_inv_hot: bool = False,
     qemu_tb_stats: bool = False,
     qemu_fault_trace: bool = False,
     qemu_fault_trace_regs: bool,
@@ -736,6 +737,8 @@ def _apply_qemu_debug_env(
         qemu_env["LINX_QEMU_FRAME_RESTORE_HOST_LOAD"] = "1"
     if qemu_tlb_stats:
         qemu_env["LINX_QEMU_TLB_STATS"] = "1"
+    if qemu_tlb_inv_hot:
+        qemu_env["LINX_QEMU_TLB_INV_HOT"] = "1"
     if qemu_tb_stats:
         qemu_env["LINX_QEMU_TB_STATS"] = "1"
     filters = {k: v for k, v in (qemu_fault_trace_filters or {}).items() if str(v).strip()}
@@ -2520,6 +2523,7 @@ def _run_qemu(
     qemu_frame_stats: bool,
     qemu_frame_restore_host_load: bool,
     qemu_tlb_stats: bool,
+    qemu_tlb_inv_hot: bool,
     qemu_tb_stats: bool,
     no_progress_timeout: float,
     append_extra: str,
@@ -2578,6 +2582,7 @@ def _run_qemu(
         qemu_frame_stats=qemu_frame_stats,
         qemu_frame_restore_host_load=qemu_frame_restore_host_load,
         qemu_tlb_stats=qemu_tlb_stats,
+        qemu_tlb_inv_hot=qemu_tlb_inv_hot,
         qemu_tb_stats=qemu_tb_stats,
         qemu_fault_trace=qemu_fault_trace,
         qemu_fault_trace_regs=qemu_fault_trace_regs,
@@ -2760,6 +2765,7 @@ def _run_qemu(
     heartbeat_tlb_invalidation = _heartbeat_tlb_invalidation_summary(classification["last_heartbeat"])
     heartbeat_tb_stats = _heartbeat_tb_stats_summary(classification["last_heartbeat"])
     heartbeat_tlb_fill_hot = _tlb_fill_hot_summary(text)
+    heartbeat_tlb_inv_hot = _tlb_inv_hot_summary(text)
     bstart_cache_stats = _bstart_cache_stats_summary(text)
 
     qemu_info = {
@@ -2770,6 +2776,7 @@ def _run_qemu(
         "qemu_frame_stats": bool(qemu_frame_stats),
         "qemu_frame_restore_host_load": bool(qemu_frame_restore_host_load),
         "qemu_tlb_stats": bool(qemu_tlb_stats),
+        "qemu_tlb_inv_hot": bool(qemu_tlb_inv_hot),
         "qemu_tb_stats": bool(qemu_tb_stats),
         "qemu_rc": qemu_rc,
         "timed_out": timed_out,
@@ -2804,6 +2811,7 @@ def _run_qemu(
         "heartbeat_tlb_invalidation": heartbeat_tlb_invalidation,
         "heartbeat_tb_stats": heartbeat_tb_stats,
         "heartbeat_tlb_fill_hot": heartbeat_tlb_fill_hot,
+        "heartbeat_tlb_inv_hot": heartbeat_tlb_inv_hot,
         "bstart_cache_stats": bstart_cache_stats,
         "heartbeat_kernel_symbols": heartbeat_kernel_symbols.get("sites", []),
         "heartbeat_kernel_symbolized": bool(heartbeat_kernel_symbols.get("ok", False)),
@@ -3498,6 +3506,67 @@ def _tlb_fill_hot_summary(text: str) -> dict[str, Any]:
     }
 
 
+def _tlb_inv_hot_summary(text: str) -> dict[str, Any]:
+    lines = re.findall(r"^LINX_TLB_INV_HOT .*$", text, flags=re.MULTILINE)
+    if not lines:
+        return {
+            "seen": False,
+            "line_count": 0,
+            "last": "",
+        }
+
+    fields = _heartbeat_fields(lines[-1])
+    max_delta_fields = fields
+    max_delta_line = lines[-1]
+    max_delta = _decimal_or_none(fields.get("top0_delta"))
+    for line in lines:
+        candidate_fields = _heartbeat_fields(line)
+        candidate_delta = _decimal_or_none(candidate_fields.get("top0_delta"))
+        if candidate_delta is not None and (max_delta is None or candidate_delta >= max_delta):
+            max_delta = candidate_delta
+            max_delta_fields = candidate_fields
+            max_delta_line = line
+
+    return {
+        "seen": True,
+        "line_count": len(lines),
+        "last": lines[-1][:512],
+        "heartbeat_count": _decimal_or_none(fields.get("count")),
+        "evictions": _decimal_or_none(fields.get("evictions")),
+        "slots": _decimal_or_none(fields.get("slots")),
+        "top0_count": _decimal_or_none(fields.get("top0_count")),
+        "top0_delta": _decimal_or_none(fields.get("top0_delta")),
+        "top0_op": fields.get("top0_op", "").lower(),
+        "top0_opid": _int_or_none(fields.get("top0_opid")),
+        "top0_pc": fields.get("top0_pc", "").lower(),
+        "top0_bpc": fields.get("top0_bpc", "").lower(),
+        "top0_operand": fields.get("top0_operand", "").lower(),
+        "top0_page": fields.get("top0_page", "").lower(),
+        "top0_acr": _int_or_none(fields.get("top0_acr")),
+        "top1_count": _decimal_or_none(fields.get("top1_count")),
+        "top1_delta": _decimal_or_none(fields.get("top1_delta")),
+        "top1_op": fields.get("top1_op", "").lower(),
+        "top1_opid": _int_or_none(fields.get("top1_opid")),
+        "top1_pc": fields.get("top1_pc", "").lower(),
+        "top1_bpc": fields.get("top1_bpc", "").lower(),
+        "top1_operand": fields.get("top1_operand", "").lower(),
+        "top1_page": fields.get("top1_page", "").lower(),
+        "top1_acr": _int_or_none(fields.get("top1_acr")),
+        "max_delta": max_delta,
+        "max_delta_line": max_delta_line[:512],
+        "max_delta_heartbeat_count": _decimal_or_none(max_delta_fields.get("count")),
+        "max_delta_top0_count": _decimal_or_none(max_delta_fields.get("top0_count")),
+        "max_delta_top0_delta": _decimal_or_none(max_delta_fields.get("top0_delta")),
+        "max_delta_top0_op": max_delta_fields.get("top0_op", "").lower(),
+        "max_delta_top0_opid": _int_or_none(max_delta_fields.get("top0_opid")),
+        "max_delta_top0_pc": max_delta_fields.get("top0_pc", "").lower(),
+        "max_delta_top0_bpc": max_delta_fields.get("top0_bpc", "").lower(),
+        "max_delta_top0_operand": max_delta_fields.get("top0_operand", "").lower(),
+        "max_delta_top0_page": max_delta_fields.get("top0_page", "").lower(),
+        "max_delta_top0_acr": _int_or_none(max_delta_fields.get("top0_acr")),
+    }
+
+
 def _bstart_cache_stats_summary(text: str) -> dict[str, Any]:
     lines = [
         line.strip()
@@ -3701,6 +3770,7 @@ def _strip_async_qemu_diagnostics(text: str) -> str:
         "LINX_HEARTBEAT",
         "LINX_BSTART_CACHE_STATS",
         "LINX_TLB_FILL_HOT",
+        "LINX_TLB_INV_HOT",
         "LINX_TLB_FILL_TRACE",
         "LINX_FCMP_TRACE",
         "LINX_MPROTECT",
@@ -3916,6 +3986,12 @@ def main(argv: list[str]) -> int:
         help="Set LINX_QEMU_TLB_STATS=1 to append TLB invalidation counters to QEMU heartbeats.",
     )
     parser.add_argument(
+        "--qemu-tlb-inv-hot",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_TLB_INV_HOT", False),
+        help="Set LINX_QEMU_TLB_INV_HOT=1 to emit TLBI source-PC hot-site heartbeat lines.",
+    )
+    parser.add_argument(
         "--qemu-tb-stats",
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_TB_STATS", False),
@@ -4100,6 +4176,7 @@ def main(argv: list[str]) -> int:
         "qemu_frame_stats": bool(args.qemu_frame_stats),
         "qemu_frame_restore_host_load": bool(args.qemu_frame_restore_host_load),
         "qemu_tlb_stats": bool(args.qemu_tlb_stats),
+        "qemu_tlb_inv_hot": bool(args.qemu_tlb_inv_hot),
         "qemu_tb_stats": bool(args.qemu_tb_stats),
         "qemu_fault_trace": bool(args.qemu_fault_trace or qemu_fault_trace_filters),
         "qemu_fault_trace_regs": bool(args.qemu_fault_trace_regs),
@@ -4206,6 +4283,7 @@ def main(argv: list[str]) -> int:
                     args.qemu_frame_stats,
                     args.qemu_frame_restore_host_load,
                     args.qemu_tlb_stats,
+                    args.qemu_tlb_inv_hot,
                     args.qemu_tb_stats,
                     args.no_progress_timeout,
                     args.append_extra,

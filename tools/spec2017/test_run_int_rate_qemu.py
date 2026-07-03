@@ -247,6 +247,7 @@ class RunIntRateQemuTests(unittest.TestCase):
             qemu_frame_stats=True,
             qemu_frame_restore_host_load=True,
             qemu_tlb_stats=True,
+            qemu_tlb_inv_hot=True,
             qemu_tb_stats=True,
             qemu_fault_trace_regs=True,
             qemu_fault_trace_limit=3,
@@ -259,6 +260,7 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(env["LINX_QEMU_FRAME_STATS"], "1")
         self.assertEqual(env["LINX_QEMU_FRAME_RESTORE_HOST_LOAD"], "1")
         self.assertEqual(env["LINX_QEMU_TLB_STATS"], "1")
+        self.assertEqual(env["LINX_QEMU_TLB_INV_HOT"], "1")
         self.assertEqual(env["LINX_QEMU_TB_STATS"], "1")
         self.assertEqual(env["LINX_QEMU_FAULT_TRACE"], "1")
         self.assertEqual(env["LINX_QEMU_FAULT_TRACE_REGS"], "1")
@@ -409,6 +411,47 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(summary["top0_mmu"], 1)
         self.assertEqual(summary["top1_count"], 9)
         self.assertEqual(summary["top1_prot"], 5)
+
+    def test_tlb_inv_hot_summary_parses_top_slots(self) -> None:
+        summary = runner._tlb_inv_hot_summary(
+            "LINX_HEARTBEAT count=100 pc=0x1 bpc=0x2\n"
+            "LINX_TLB_INV_HOT count=100 evictions=3 slots=16 "
+            "top0_count=456 top0_delta=23 top0_op=iv top0_opid=2 "
+            "top0_pc=0xffffffff800db2b6 top0_bpc=0xffffffff800db2ac "
+            "top0_operand=0x3ffffe2abc top0_page=0x3ffffe2000 top0_acr=1 "
+            "top1_count=12 top1_delta=4 top1_op=iav top1_opid=3 "
+            "top1_pc=0xffffffff800aa100 top1_bpc=0xffffffff800aa0f0 "
+            "top1_operand=0x100000001234 top1_page=0x1234 top1_acr=2\n"
+            "LINX_TLB_INV_HOT count=200 evictions=3 slots=16 "
+            "top0_count=500 top0_delta=0 top0_op=iall top0_opid=0 "
+            "top0_pc=0xffffffff80001000 top0_bpc=0xffffffff80000ff0 "
+            "top0_operand=0x0 top0_page=0x0 top0_acr=1 "
+            "top1_count=12 top1_delta=0 top1_op=iav top1_opid=3 "
+            "top1_pc=0xffffffff800aa100 top1_bpc=0xffffffff800aa0f0 "
+            "top1_operand=0x100000001234 top1_page=0x1234 top1_acr=2\n"
+        )
+
+        self.assertTrue(summary["seen"])
+        self.assertEqual(summary["line_count"], 2)
+        self.assertEqual(summary["heartbeat_count"], 200)
+        self.assertEqual(summary["evictions"], 3)
+        self.assertEqual(summary["top0_count"], 500)
+        self.assertEqual(summary["top0_delta"], 0)
+        self.assertEqual(summary["top0_op"], "iall")
+        self.assertEqual(summary["top0_opid"], 0)
+        self.assertEqual(summary["top0_pc"], "0xffffffff80001000")
+        self.assertEqual(summary["top0_acr"], 1)
+        self.assertEqual(summary["top1_count"], 12)
+        self.assertEqual(summary["top1_delta"], 0)
+        self.assertEqual(summary["top1_op"], "iav")
+        self.assertEqual(summary["top1_opid"], 3)
+        self.assertEqual(summary["max_delta"], 23)
+        self.assertEqual(summary["max_delta_heartbeat_count"], 100)
+        self.assertEqual(summary["max_delta_top0_count"], 456)
+        self.assertEqual(summary["max_delta_top0_delta"], 23)
+        self.assertEqual(summary["max_delta_top0_op"], "iv")
+        self.assertEqual(summary["max_delta_top0_pc"], "0xffffffff800db2b6")
+        self.assertEqual(summary["max_delta_top0_page"], "0x3ffffe2000")
 
     def test_chdir_failure_evidence_includes_9p_errno(self) -> None:
         result = runner._classify_qemu_result(

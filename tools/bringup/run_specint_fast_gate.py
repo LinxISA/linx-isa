@@ -374,6 +374,29 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
                 f"/m{heartbeat_tlb_fill_hot.get('top0_mmu')}"
                 f" evict={heartbeat_tlb_fill_hot.get('evictions')}"
             )
+        heartbeat_tlb_inv_hot = row.get("heartbeat_tlb_inv_hot")
+        if (
+            isinstance(heartbeat_tlb_inv_hot, dict)
+            and heartbeat_tlb_inv_hot.get("seen")
+            and heartbeat_tlb_inv_hot.get("top0_count") is not None
+        ):
+            top0_count = heartbeat_tlb_inv_hot.get("max_delta_top0_count")
+            if top0_count is None:
+                top0_count = heartbeat_tlb_inv_hot.get("top0_count")
+            top0_delta = heartbeat_tlb_inv_hot.get("max_delta_top0_delta")
+            if top0_delta is None:
+                top0_delta = heartbeat_tlb_inv_hot.get("top0_delta")
+            count_tag = f"{top0_delta}/{top0_count}" if top0_delta is not None else str(top0_count)
+            top0_op = heartbeat_tlb_inv_hot.get("max_delta_top0_op") or heartbeat_tlb_inv_hot.get("top0_op") or "op"
+            top0_pc = heartbeat_tlb_inv_hot.get("max_delta_top0_pc") or heartbeat_tlb_inv_hot.get("top0_pc") or "no-pc"
+            top0_page = heartbeat_tlb_inv_hot.get("max_delta_top0_page") or heartbeat_tlb_inv_hot.get("top0_page") or "no-page"
+            tlbfill += (
+                f" tlbi-hot={count_tag}"
+                f":{top0_op}"
+                f"@{top0_pc}"
+                f"/page{top0_page}"
+                f" evict={heartbeat_tlb_inv_hot.get('evictions')}"
+            )
         heartbeat_tlb_invalidation = row.get("heartbeat_tlb_invalidation")
         tlbinv = ""
         if isinstance(heartbeat_tlb_invalidation, dict) and heartbeat_tlb_invalidation.get("iv") is not None:
@@ -425,6 +448,7 @@ def _suite_command(
     qemu_frame_stats: bool,
     qemu_frame_restore_host_load: bool,
     qemu_tlb_stats: bool,
+    qemu_tlb_inv_hot: bool,
     no_progress_timeout: float,
     forward_memory_mb: bool,
     forward_qemu_heartbeat: bool,
@@ -434,6 +458,7 @@ def _suite_command(
     forward_qemu_frame_stats: bool,
     forward_qemu_frame_restore_host_load: bool,
     forward_qemu_tlb_stats: bool,
+    forward_qemu_tlb_inv_hot: bool,
     forward_no_progress: bool,
     forward_stack_limit: bool,
     forward_symbolize_heartbeat: bool,
@@ -489,6 +514,8 @@ def _suite_command(
         cmd.append("--qemu-frame-restore-host-load")
     if qemu_tlb_stats and forward_qemu_tlb_stats:
         cmd.append("--qemu-tlb-stats")
+    if qemu_tlb_inv_hot and forward_qemu_tlb_inv_hot:
+        cmd.append("--qemu-tlb-inv-hot")
     if forward_no_progress:
         cmd.extend(["--no-progress-timeout", str(no_progress_timeout)])
     if stack_limit.strip() and forward_stack_limit:
@@ -537,6 +564,7 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
         "- qemu_frame_restore_host_load: "
         f"`{str(bool(summary.get('qemu_frame_restore_host_load', False))).lower()}`",
         f"- qemu_tlb_stats: `{str(bool(summary.get('qemu_tlb_stats', False))).lower()}`",
+        f"- qemu_tlb_inv_hot: `{str(bool(summary.get('qemu_tlb_inv_hot', False))).lower()}`",
         f"- fail_9p_timeout: `{str(bool(summary.get('fail_9p_timeout', False))).lower()}`",
         "",
         "## Suites",
@@ -599,6 +627,15 @@ def main(argv: list[str]) -> int:
         help="Forward QEMU's opt-in cached host-load frame restore experiment.",
     )
     parser.add_argument("--qemu-tlb-stats", action="store_true", default=_env_bool("SPEC_QEMU_TLB_STATS", _env_bool("LINX_SPEC_QEMU_TLB_STATS", False)))
+    parser.add_argument(
+        "--qemu-tlb-inv-hot",
+        action="store_true",
+        default=_env_bool(
+            "SPEC_QEMU_TLB_INV_HOT",
+            _env_bool("LINX_SPEC_QEMU_TLB_INV_HOT", False),
+        ),
+        help="Forward QEMU's opt-in TLBI source-PC hot-site heartbeat sketch.",
+    )
     parser.add_argument("--no-progress-timeout", type=float, default=_env_float("SPEC_NO_PROGRESS_TIMEOUT", _env_float("LINX_SPEC_NO_PROGRESS_TIMEOUT", 0.0)))
     parser.add_argument(
         "--stack-limit",
@@ -662,6 +699,7 @@ def main(argv: list[str]) -> int:
     runner_has_qemu_frame_stats = _runner_supports_option(runner, "--qemu-frame-stats")
     runner_has_qemu_frame_restore_host_load = _runner_supports_option(runner, "--qemu-frame-restore-host-load")
     runner_has_qemu_tlb_stats = _runner_supports_option(runner, "--qemu-tlb-stats")
+    runner_has_qemu_tlb_inv_hot = _runner_supports_option(runner, "--qemu-tlb-inv-hot")
     runner_has_no_progress = _runner_supports_option(runner, "--no-progress-timeout")
     runner_has_memory_mb = _runner_supports_option(runner, "--memory-mb")
     runner_has_stack_limit = _runner_supports_option(runner, "--stack-limit")
@@ -708,6 +746,12 @@ def main(argv: list[str]) -> int:
             "error: local SPEC matrix runner does not support "
             "--qemu-tlb-stats; update tools/spec2017/run_stage_qemu_matrix.py "
             "or rerun without the TLB stats switch"
+        )
+    if args.qemu_tlb_inv_hot and not runner_has_qemu_tlb_inv_hot:
+        raise SystemExit(
+            "error: local SPEC matrix runner does not support "
+            "--qemu-tlb-inv-hot; update tools/spec2017/run_stage_qemu_matrix.py "
+            "or rerun without the TLB invalidation hot-site switch"
         )
     if args.no_progress_timeout and not runner_has_no_progress:
         raise SystemExit(
@@ -775,6 +819,7 @@ def main(argv: list[str]) -> int:
                 qemu_frame_stats=args.qemu_frame_stats,
                 qemu_frame_restore_host_load=args.qemu_frame_restore_host_load,
                 qemu_tlb_stats=args.qemu_tlb_stats,
+                qemu_tlb_inv_hot=args.qemu_tlb_inv_hot,
                 no_progress_timeout=args.no_progress_timeout,
                 forward_memory_mb=runner_has_memory_mb,
                 forward_qemu_heartbeat=runner_has_qemu_heartbeat,
@@ -784,6 +829,7 @@ def main(argv: list[str]) -> int:
                 forward_qemu_frame_stats=runner_has_qemu_frame_stats,
                 forward_qemu_frame_restore_host_load=runner_has_qemu_frame_restore_host_load,
                 forward_qemu_tlb_stats=runner_has_qemu_tlb_stats,
+                forward_qemu_tlb_inv_hot=runner_has_qemu_tlb_inv_hot,
                 forward_no_progress=runner_has_no_progress,
                 forward_stack_limit=runner_has_stack_limit,
                 forward_symbolize_heartbeat=runner_has_symbolize_heartbeat,
@@ -858,6 +904,7 @@ def main(argv: list[str]) -> int:
         "qemu_frame_stats": bool(args.qemu_frame_stats),
         "qemu_frame_restore_host_load": bool(args.qemu_frame_restore_host_load),
         "qemu_tlb_stats": bool(args.qemu_tlb_stats),
+        "qemu_tlb_inv_hot": bool(args.qemu_tlb_inv_hot),
         "no_progress_timeout": args.no_progress_timeout,
         "guest_heartbeat_sec": args.guest_heartbeat_sec,
         "symbolize_heartbeat": bool(args.symbolize_heartbeat),
