@@ -524,6 +524,15 @@
   Evidence: `workloads/generated/specint-train-all-20260628-after-kstat/specint_fast_gate_summary.json` and `workloads/generated/specint-train-all-20260628-after-kstat/train-all/qemu_matrix_summary.json`.
   Proposed solution: keep static phase-b as the current correctness gate, and use the shared run only as a libc/loader diagnostic until musl shared startup, `kstat`, and C++ runtime packaging are validated by dedicated static/shared smoke gates.
 
+## Live Blockers (2026-07-04)
+
+- [ ] ID: SPEC-PERF-RESTORE-001 Frame restore load attribution must stay visible while 505 remains live-timeout.
+  Current evidence: QEMU `LINX_QEMU_FRAME_STATS=1` heartbeats now include `fr_restore_host` and `fr_restore_fallback`, and the SPEC runner records them in `heartbeat_frame_stats`.
+  Diagnostic run: `workloads/generated/specint-restorefields-505-frame-qemu-20260704-r1/` reached `505.mcf_r` count `11000000000` in 60 seconds with `heartbeat_running=true`, `heartbeat_site_progress=true`, no panic, and no trap.
+  Finding: `fr_save_slot=170392325`, `fr_save_host=170392325`, `fr_save_fallback=0`, `fr_restore_slot=170391897`, `fr_restore_host=0`, and `fr_restore_fallback=170391897`; saves are direct-host, restores are still generic load-helper traffic.
+  Rejected: a local aligned/page-contained `tlb_vaddr_to_host()` restore-load fast path preserved the `999.specrand_ir` sentinel but reduced `505.mcf_r` no-stats throughput to `29000000005` instructions in 120 seconds (`workloads/generated/specint-restorefast-505-nostats-qemu-20260704-r1/`), below the clean baseline around `34000000002`.
+  Proposed solution: do not retry per-slot restore probes; next QEMU speed loops should batch by page/frame or reduce generated helper exits/TB dispatch pressure.
+
 ## Live Blockers (2026-05-21)
 
 - [ ] BLOCK-SPEC-FG-001 Fast SPECint gate must run `test`/`train` before promotion.

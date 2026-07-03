@@ -3388,6 +3388,8 @@ def _heartbeat_frame_stats_summary(line: str) -> dict[str, Any]:
         "fret_stk": _decimal_or_none(fields.get("fr_fret_stk")),
         "fret_ra": _decimal_or_none(fields.get("fr_fret_ra")),
         "restore_slot": _decimal_or_none(fields.get("fr_restore_slot")),
+        "restore_host": _decimal_or_none(fields.get("fr_restore_host")),
+        "restore_fallback": _decimal_or_none(fields.get("fr_restore_fallback")),
         "ret_fast": _decimal_or_none(fields.get("fr_ret_fast")),
         "ret_check": _decimal_or_none(fields.get("fr_ret_check")),
     }

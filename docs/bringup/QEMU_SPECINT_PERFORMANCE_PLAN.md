@@ -2680,6 +2680,53 @@ profile TB dispatch/hash lookup cost for the C++/game rows, and keep `525` on
 a transport or future block-device lane. Keep strict `999.specrand_ir` train
 as the correctness sentinel after each hot-path experiment.
 
+## 2026-07-04 Frame Restore Attribution
+
+QEMU now appends `fr_restore_host` and `fr_restore_fallback` to
+`LINX_QEMU_FRAME_STATS=1` heartbeats, and the SPEC runner records those fields
+under `heartbeat_frame_stats`. This makes frame restore load attribution
+visible next to the existing save-store and return-cache counters.
+
+Validation on `/Users/zhoubot/linx-isa/emulator/qemu/build-linx/qemu-system-linx64`:
+
+| Check | Result |
+| --- | --- |
+| `python3 -m py_compile tools/spec2017/run_int_rate_qemu.py tools/spec2017/run_stage_qemu_matrix.py tools/spec2017/test_run_int_rate_qemu.py` | pass |
+| `python3 -m unittest test_run_int_rate_qemu.py` from `tools/spec2017` | pass, 39 tests |
+| `ninja qemu-system-linx64` in `emulator/qemu/build-linx` | pass; only pre-existing helper warnings |
+| `python3 avs/qemu/run_callret_contract.py --qemu emulator/qemu/build-linx/qemu-system-linx64` | pass |
+| `LINX_VIRT_TEST_FINISHER=1 python3 avs/qemu/run_tests.py --suite system --require-test-id 0x110F --timeout 20 --qemu emulator/qemu/build-linx/qemu-system-linx64` | pass |
+| strict `999.specrand_ir` train with `--qemu-frame-stats` | `workloads/generated/specint-restorefast-999-frame-qemu-20260704-r1/` passes strict hash |
+| focused `505.mcf_r` train 60s with `--qemu-frame-stats` | `workloads/generated/specint-restorefields-505-frame-qemu-20260704-r1/` remains heartbeat-live `live-timeout` |
+
+The final 60-second `505.mcf_r` frame-stats probe reached count
+`11000000000`, BPC `0x155555c47e`, `heartbeat_running=true`,
+`heartbeat_site_progress=true`, `stalled=false`, no panic, and no trap. Frame
+stats show that the current save path is already direct-host dominated while
+restore remains fully generic: `fr_save_slot=170392325`,
+`fr_save_host=170392325`, `fr_save_fallback=0`,
+`fr_restore_slot=170391897`, `fr_restore_host=0`, and
+`fr_restore_fallback=170391897`.
+
+A local QEMU experiment then tried to convert frame restore loads to
+`tlb_vaddr_to_host()` plus direct `ldq_le_p()` for aligned, page-contained
+8-byte slots, falling back to `cpu_ldq_le_mmuidx_ra()` otherwise. It preserved
+the strict `999.specrand_ir` sentinel, but the comparable no-stats
+`505.mcf_r` run in
+`workloads/generated/specint-restorefast-505-nostats-qemu-20260704-r1/`
+reached only `29000000005` instructions in 120 seconds, below the clean
+no-stats baseline around `34000000002`. The direct-host restore-load fast path
+was backed out before commit.
+
+Loop update: do not retry a per-slot helper-side `tlb_vaddr_to_host()` restore
+load as the next SPEC speed patch. If frame restore is revisited, batch the
+translation by page/frame or move restore loads out of the C helper path
+instead of adding another TLB probe per saved register. The next QEMU speed
+loop should focus on generated helper-exit reduction and TB dispatch/hash
+pressure, while using the new `fr_restore_host`/`fr_restore_fallback` fields
+to check whether a future restore-load experiment actually changes the frame
+traffic mix.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.

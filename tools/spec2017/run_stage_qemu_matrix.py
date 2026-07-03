@@ -277,6 +277,8 @@ def _format_frame_stats(row: dict[str, Any]) -> str:
         f"/host{stats.get('save_host')}"
         f"/fb{stats.get('save_fallback')}"
         f" restore{stats.get('restore_slot')}"
+        f"/host{stats.get('restore_host')}"
+        f"/fb{stats.get('restore_fallback')}"
         f" ret{stats.get('ret_fast')}/{stats.get('ret_check')}"
     )
 

@@ -308,6 +308,7 @@ class RunIntRateQemuTests(unittest.TestCase):
             "fr_fentry=11 fr_save_probe=22 fr_save_slot=21 "
             "fr_save_host=19 fr_save_fallback=2 fr_fexit=3 "
             "fr_fret_stk=5 fr_fret_ra=7 fr_restore_slot=13 "
+            "fr_restore_host=12 fr_restore_fallback=1 "
             "fr_ret_fast=17 fr_ret_check=4"
         )
 
@@ -320,6 +321,8 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(summary["fret_stk"], 5)
         self.assertEqual(summary["fret_ra"], 7)
         self.assertEqual(summary["restore_slot"], 13)
+        self.assertEqual(summary["restore_host"], 12)
+        self.assertEqual(summary["restore_fallback"], 1)
         self.assertEqual(summary["ret_fast"], 17)
         self.assertEqual(summary["ret_check"], 4)
 
