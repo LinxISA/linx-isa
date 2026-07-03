@@ -35,7 +35,6 @@ USER_PASS_MARKERS = [
 ]
 
 SYSTEM_PASS_MARKERS = [
-    "WRAP_INIT_START",
     *USER_PASS_MARKERS,
 ]
 
@@ -43,7 +42,20 @@ FAIL_MARKERS = [
     "WRAP_INIT_EXECVE_FAIL",
     "error while loading shared libraries:",
     "Kernel panic - not syncing:",
+    "LINX_USER_TRAP",
+    "LINX_PANIC",
+    "LINX_EXIT_INIT",
 ]
+
+
+def _complete_failure_marker(text: str) -> str | None:
+    for marker in FAIL_MARKERS:
+        idx = text.find(marker)
+        if idx < 0:
+            continue
+        if "\n" in text[idx:]:
+            return marker
+    return None
 
 
 def _default_qemu() -> Path:
@@ -160,7 +172,7 @@ def _run_qemu(cmd: list[str], timeout_s: int) -> tuple[str, bool, bool]:
                 saw_pass = True
                 proc.kill()
                 break
-            if any(marker in text for marker in FAIL_MARKERS):
+            if _complete_failure_marker(text):
                 proc.kill()
                 break
 

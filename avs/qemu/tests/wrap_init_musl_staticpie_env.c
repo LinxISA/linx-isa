@@ -28,10 +28,6 @@ enum {
 	LINUX_REBOOT_CMD_POWER_OFF = 0x4321fedc,
 };
 
-enum {
-	LINX_VIRT_UART_BASE = 0x10000000UL,
-};
-
 __attribute__((noinline)) static slong sys_call6(int nr, ulong a0, ulong a1,
 						 ulong a2, ulong a3, ulong a4,
 						 ulong a5)
@@ -135,27 +131,13 @@ static void emit_line(const char *s)
 	(void)sys_write(1, nl, 1);
 }
 
-static void uart_putc(char c)
-{
-	*(volatile unsigned char *)(LINX_VIRT_UART_BASE + 0x0) =
-		(unsigned char)c;
-}
-
-static void emit_uart_line(const char *s)
-{
-	while (*s)
-		uart_putc(*s++);
-	uart_putc('\n');
-}
-
 __attribute__((noreturn)) void _start(void)
 {
 	char marker_start[16];
 	char marker_fail[22];
-	char ldso[13];
 	char hello[7];
 	char env_ld_path[21];
-	char *argv[3];
+	char *argv[2];
 	char *envp[2];
 
 	marker_start[0] = 'W';
@@ -198,20 +180,6 @@ __attribute__((noreturn)) void _start(void)
 	marker_fail[20] = 'L';
 	marker_fail[21] = 0;
 
-	ldso[0] = '/';
-	ldso[1] = 'l';
-	ldso[2] = 'i';
-	ldso[3] = 'b';
-	ldso[4] = '/';
-	ldso[5] = 'l';
-	ldso[6] = 'd';
-	ldso[7] = '.';
-	ldso[8] = 's';
-	ldso[9] = 'o';
-	ldso[10] = '.';
-	ldso[11] = '1';
-	ldso[12] = 0;
-
 	hello[0] = '/';
 	hello[1] = 'h';
 	hello[2] = 'e';
@@ -242,24 +210,22 @@ __attribute__((noreturn)) void _start(void)
 	env_ld_path[19] = 'b';
 	env_ld_path[20] = 0;
 
-	argv[0] = ldso;
-	argv[1] = hello;
-	argv[2] = 0;
+	argv[0] = hello;
+	argv[1] = 0;
 	envp[0] = env_ld_path;
 	envp[1] = 0;
 
 	/*
 	 * Keep PID1 on the inherited stdio fds instead of reopening
 	 * /dev/console. The current Linx runtime can trip kernel return-path
-	 * faults in that console-open path for some glibc hello variants.
-	 * Mirror markers to the virt UART so the smoke harness still sees them
-	 * even before userspace stdio is fully reliable.
+	 * faults in that console-open path for some glibc hello variants. Do
+	 * not write the virt UART MMIO page directly from Linux userspace; QEMU
+	 * should only see console output through kernel-mediated file
+	 * descriptors.
 	 */
 	emit_line(marker_start);
-	emit_uart_line(marker_start);
-	(void)sys_execve(ldso, argv, envp);
+	(void)sys_execve(hello, argv, envp);
 	emit_line(marker_fail);
-	emit_uart_line(marker_fail);
 	(void)sys_reboot(LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2,
 			 LINUX_REBOOT_CMD_POWER_OFF, 0);
 	sys_exit_group(127);
