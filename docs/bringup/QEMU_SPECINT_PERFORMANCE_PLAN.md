@@ -41,6 +41,40 @@ line contains the automatic bootarg, reaches `LINX_SPEC_START`, emits no 9p
 mount warning, and times out with BPC site progress in kernel allocator code
 instead of failing `chdir-rundir`.
 
+## Current Train Ledger
+
+The current latest in-tree QEMU ledger is
+`workloads/generated/specint-train-all-latest-qemu-20260704-r1/`. It uses QEMU
+head `66db53a30fec4b9e903fae461006d2b2ea8dd6ef`, version
+`v10.2.0-1012-g66db53a30fe`, with TLB-fill, TB, frame, and BPC heartbeat stats
+enabled. The binary is an in-tree rebuild, so it is markerless in the clean-build
+provenance fields, but the QEMU source tree was clean.
+
+Result shape:
+
+- `999.specrand_ir` passes the strict train hash (`rand.11.out`, 871 bytes,
+  `0x973dcfc2`).
+- `500.perlbench_r`, `502.gcc_r`, `505.mcf_r`, `520.omnetpp_r`,
+  `523.xalancbmk_r`, `525.x264_r`, `531.deepsjeng_r`, `541.leela_r`, and
+  `557.xz_r` are heartbeat-backed `live-timeout` rows with BPC site progress,
+  no panic, and no trap.
+- `525.x264_r` is routed through the generated `train-all-large-9p` shard; the
+  current failure is 9p/kernel-path throughput, not the old oversized-initramfs
+  VFS panic.
+
+Speed lanes from the current counters:
+
+- `505.mcf_r` and `531.deepsjeng_r`: data-load soft-MMU lookup pressure
+  dominates (`505` reaches `tlbf_load=118980879` in the bounded run).
+- `520.omnetpp_r`, `523.xalancbmk_r`, `541.leela_r`, and `557.xz_r`: TB
+  dispatch/hash lookup and helper-exit volume remain visible; use focused
+  post-start sampling with heartbeat logging disabled before changing cache
+  sizes.
+- All long rows: frame restores still use the generic fallback load path
+  (`fr_restore_host=0`, high `fr_restore_fallback`). The per-slot restore
+  fast-path experiment is rejected; any future restore optimization should work
+  at page/frame granularity or reduce helper exits.
+
 ## Initial Profile
 
 Command shape:

@@ -1,6 +1,6 @@
 # LinxISA Maturity Plan (Tier-1 Track vs ARM/x86)
 
-Last updated: 2026-07-03
+Last updated: 2026-07-04
 
 ## Baseline
 
@@ -53,14 +53,14 @@ Last updated: 2026-07-03
   - runtime-heavy follow-up: the active in-repo SPEC lane is CPU2017 SPECint
     train input, not a checked-in SPEC CPU2006 corpus. The latest all-ten train
     loop under
-    `workloads/generated/specint-train-all-tlbfill-latest-qemu-20260703-r1/`
-    builds and runs all supported SPECint C/C++ rows on latest QEMU, passes
-    `999.specrand_ir`, routes `525.x264_r` through the generated 9p shard, and
-    proves timeout rows are live-progress rather than global QEMU deadlock by
-    QEMU heartbeat/BPC plus TLB-fill evidence. The current 505 post-start
-    sample under `workloads/generated/specint-profile-505-latest-qemu-20260703-r1/`
-    points the next speed lane at template frame traffic and QEMU soft-MMU
-    lookup/probe cost.
+    `workloads/generated/specint-train-all-latest-qemu-20260704-r1/` builds
+    and runs all supported SPECint C/C++ rows on rebuilt in-tree QEMU head
+    `66db53a30fec4b9e903fae461006d2b2ea8dd6ef`, passes `999.specrand_ir`,
+    routes `525.x264_r` through the generated 9p shard, and proves timeout rows
+    are live-progress rather than global QEMU deadlock by QEMU heartbeat/BPC,
+    TLB-fill, TB, and frame-counter evidence. The current counters point the
+    next speed lanes at user data-load soft-MMU lookup cost, TB dispatch/helper
+    exits, and 9p/kernel transport overhead.
 - Remaining superproject work: refreshed strict/convergence publication, libc
   hosted runtime, SPEC correctness/performance, TSVC runtime, AVS nightly
   breadth, QEMU decode coverage, ABI/unwind/TLS hardening,

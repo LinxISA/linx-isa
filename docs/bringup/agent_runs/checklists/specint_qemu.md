@@ -526,6 +526,27 @@
 
 ## Live Blockers (2026-07-04)
 
+- [x] ID: SPEC-M05-TRAIN-ALL-LATEST-QEMU-20260704 Rebuilt in-tree QEMU train-all run covers every supported SPECint train row with BPC, TLB-fill, TB, and frame counters.
+  Command: `LINX_QEMU_TLB_FILL_STATS=1 LINX_SPEC_QEMU_TB_STATS=1 LINX_SPEC_QEMU_FRAME_STATS=1 SPECINT_TRAIN_ALL_TIMEOUT=180 SPEC_GUEST_HEARTBEAT_SEC=0 SPEC_QEMU_HEARTBEAT_INTERVAL=1000000000 SPEC_NO_PROGRESS_TIMEOUT=180 python3 tools/bringup/run_specint_fast_gate.py --profile train --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 --qemu emulator/qemu/build-linx/qemu-system-linx64 --sysroot out/libc/musl/install/phase-b --out-dir workloads/generated/specint-train-all-latest-qemu-20260704-r1 --append-extra norandmaps --heartbeat-sec 30 --qemu-heartbeat-interval 1000000000 --guest-heartbeat-sec 0 --no-progress-timeout 180 --stack-limit 2G --continue-on-fail`.
+  QEMU provenance: `workloads/generated/specint-train-all-latest-qemu-20260704-r1/specint_fast_gate_summary.json` records QEMU head `66db53a30fec4b9e903fae461006d2b2ea8dd6ef`, version `v10.2.0-1012-g66db53a30fe`, and `qemu_repo_dirty_tracked=false`. This is a rebuilt in-tree binary, so the clean-build marker fields are false even though the source tree was clean.
+  SPEC evidence: the gate emits `train-all/initramfs/stage_b_summary.json` plus the generated `train-all-large-9p/9p/stage_b_summary.json` shard for `525.x264_r`. `999.specrand_ir` passes strict train hash (`rand.11.out`, 871 bytes, `0x973dcfc2`). `500.perlbench_r`, `502.gcc_r`, `505.mcf_r`, `520.omnetpp_r`, `523.xalancbmk_r`, `525.x264_r`, `531.deepsjeng_r`, `541.leela_r`, and `557.xz_r` all classify as `live-timeout` with `heartbeat_running=true`, `heartbeat_site_progress=true`, `stalled=false`, no panic, and no trap.
+  Latest ledger:
+
+  | Benchmark | Transport | Result | Final proof |
+  | --- | --- | --- | --- |
+  | `500.perlbench_r` | initramfs | `live-timeout` | `count=49000000001`, `bpc=0x15556d0f3a`, `tlbf=4076456`, `tbs_exec=586220535`, `fr_restore_fallback=350504581` |
+  | `502.gcc_r` | initramfs | `live-timeout` | `count=27000000003`, `bpc=0x1555ebb852`, `tlbf=5107505`, `tbs_exec=1434169621`, `fr_restore_fallback=791729972` |
+  | `505.mcf_r` | initramfs | `live-timeout` | `count=44000000000`, `bpc=0x155555cc20`, `tlbf=130996252`, `tlbf_load=118980879`, `fr_restore_fallback=611783874` |
+  | `520.omnetpp_r` | initramfs | `live-timeout` | `count=19000000006`, `bpc=0x155560cd5c`, `tlbf=9643058`, `tlbf_probe=1988467`, `tbs_lookup=1984039659` |
+  | `523.xalancbmk_r` | initramfs | `live-timeout` | `count=23000000004`, `bpc=0x15556ae0c2`, `tlbf=4924194`, `tbs_lookup=1818976745`, `fr_restore_fallback=731502251` |
+  | `525.x264_r` | 9p | `live-timeout` | `count=27000000000`, `bpc=0xffffffff801088f0`, kernel/9p progress, `tlbf=1869588`, `tbs_lookup=2198112405` |
+  | `531.deepsjeng_r` | initramfs | `live-timeout` | `count=47000000006`, `bpc=0x15555654f4`, `tlbf=9506077`, `tlbf_load=7966311`, `fr_restore_fallback=559392935` |
+  | `541.leela_r` | initramfs | `live-timeout` | `count=20000000008`, `bpc=0x155559b526`, `tlbf=1952397`, `tbs_lookup=2713011571`, `fr_restore_fallback=974720561` |
+  | `557.xz_r` | initramfs | `live-timeout` | `count=38000000012`, `bpc=0x155558ce02`, `tlbf=3401288`, `tbs_lookup=2152488683`, `fr_restore_fallback=966869914` |
+  | `999.specrand_ir` | initramfs | pass | strict train hash passes; normal QEMU exit |
+
+  Loop update: keep this run as the current rebuilt in-tree latest-QEMU SPECint train ledger. The failing rows are throughput blockers, not global deadlocks or current correctness traps. Route the next QEMU speed loops to three lanes: `505`/`531` user data-load soft-MMU lookup cost, `520`/`523`/`541`/`557` TB dispatch and helper-exit pressure, and `525` 9p/kernel transport overhead. The frame counters also prove restore loads still use the generic fallback path (`fr_restore_host=0`) across long rows; do not retry the rejected per-slot restore fast path without a page/frame-level design.
+
 - [ ] ID: SPEC-PERF-RESTORE-001 Frame restore load attribution must stay visible while 505 remains live-timeout.
   Current evidence: QEMU `LINX_QEMU_FRAME_STATS=1` heartbeats now include `fr_restore_host` and `fr_restore_fallback`, and the SPEC runner records them in `heartbeat_frame_stats`.
   Diagnostic run: `workloads/generated/specint-restorefields-505-frame-qemu-20260704-r1/` reached `505.mcf_r` count `11000000000` in 60 seconds with `heartbeat_running=true`, `heartbeat_site_progress=true`, no panic, and no trap.
