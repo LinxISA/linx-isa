@@ -215,6 +215,7 @@ def _transport_failure_details(summary_obj: dict[str, Any]) -> dict[str, dict[st
             "heartbeat_stall_bpc": str(failed_run.get("heartbeat_stall_bpc") or ""),
             "heartbeat_stall_status": str(failed_run.get("heartbeat_stall_status") or ""),
             "heartbeat_tlb_fill": failed_run.get("heartbeat_tlb_fill") or {},
+            "heartbeat_mmu_cache": failed_run.get("heartbeat_mmu_cache") or {},
             "heartbeat_frame_stats": failed_run.get("heartbeat_frame_stats") or {},
             "heartbeat_tb_stats": failed_run.get("heartbeat_tb_stats") or {},
             "heartbeat_tlb_fill_hot": failed_run.get("heartbeat_tlb_fill_hot") or {},
@@ -264,6 +265,19 @@ def _format_bstart_cache_stats(row: dict[str, Any]) -> str:
         f" hit={stats.get('hit_pct')}%"
         f" miss={stats.get('bstarts')}"
         f" reset={stats.get('resets')}/{stats.get('page_resets')}"
+    )
+
+
+def _format_mmu_cache_stats(row: dict[str, Any]) -> str:
+    stats = row.get("heartbeat_mmu_cache")
+    if not isinstance(stats, dict) or stats.get("hit") is None:
+        return ""
+    return (
+        f" mmuc=h{stats.get('hit')}"
+        f"/m{stats.get('miss')}"
+        f"/f{stats.get('fill')}"
+        f"/flush{stats.get('flush')}"
+        f"/pflush{stats.get('flush_page')}"
     )
 
 
@@ -332,6 +346,7 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
                     f"/o{heartbeat_tlb_fill.get('other')}"
                 )
         tlbfill_hot = _format_tlb_fill_hot(row)
+        mmu_cache = _format_mmu_cache_stats(row)
         frame_stats = _format_frame_stats(row)
         tb_stats = _format_tb_stats(row)
         bstart_cache = _format_bstart_cache_stats(row)
@@ -353,7 +368,7 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
             hb_stall = f" heartbeat-stall={status}:{repeats}/{threshold}"
         parts.append(
             f"{bench}: {running}/{site} {progress}{timeout}{stalled} "
-            f"bpc={bpc}{kernel}{hb_stall}{fcmp}{tlbfill}{tlbfill_stats}{tlbfill_hot}{frame_stats}{tb_stats}{bstart_cache}{mprotect}"
+            f"bpc={bpc}{kernel}{hb_stall}{fcmp}{tlbfill}{tlbfill_stats}{tlbfill_hot}{mmu_cache}{frame_stats}{tb_stats}{bstart_cache}{mprotect}"
         )
     return ", ".join(parts)
 

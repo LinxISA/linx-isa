@@ -2745,6 +2745,7 @@ def _run_qemu(
     mprotect_trace = _mprotect_trace_summary(text)
     heartbeat_stall = classification["heartbeat_stall"]
     heartbeat_tlb_fill = _heartbeat_tlb_fill_summary(classification["last_heartbeat"])
+    heartbeat_mmu_cache = _heartbeat_mmu_cache_summary(classification["last_heartbeat"])
     heartbeat_frame_stats = _heartbeat_frame_stats_summary(classification["last_heartbeat"])
     heartbeat_tb_stats = _heartbeat_tb_stats_summary(classification["last_heartbeat"])
     heartbeat_tlb_fill_hot = _tlb_fill_hot_summary(text)
@@ -2784,6 +2785,7 @@ def _run_qemu(
         "heartbeat_stall_bpc": heartbeat_stall["bpc"],
         "heartbeat_stall_status": heartbeat_stall["status"],
         "heartbeat_tlb_fill": heartbeat_tlb_fill,
+        "heartbeat_mmu_cache": heartbeat_mmu_cache,
         "heartbeat_frame_stats": heartbeat_frame_stats,
         "heartbeat_tb_stats": heartbeat_tb_stats,
         "heartbeat_tlb_fill_hot": heartbeat_tlb_fill_hot,
@@ -3373,6 +3375,17 @@ def _heartbeat_tlb_fill_summary(line: str) -> dict[str, Any]:
         "last_prot": _int_or_none(fields.get("tlbf_last_prot")),
         "last_cause": _int_or_none(fields.get("tlbf_last_cause")),
         "last_acr": _int_or_none(fields.get("tlbf_last_acr")),
+    }
+
+
+def _heartbeat_mmu_cache_summary(line: str) -> dict[str, Any]:
+    fields = _heartbeat_fields(line)
+    return {
+        "hit": _decimal_or_none(fields.get("mmuc_hit")),
+        "miss": _decimal_or_none(fields.get("mmuc_miss")),
+        "fill": _decimal_or_none(fields.get("mmuc_fill")),
+        "flush": _decimal_or_none(fields.get("mmuc_flush")),
+        "flush_page": _decimal_or_none(fields.get("mmuc_flush_page")),
     }
 
 

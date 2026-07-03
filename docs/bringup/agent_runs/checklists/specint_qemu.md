@@ -562,6 +562,14 @@
   Rejected: a local aligned/page-contained `tlb_vaddr_to_host()` restore-load fast path preserved the `999.specrand_ir` sentinel but reduced `505.mcf_r` no-stats throughput to `29000000005` instructions in 120 seconds (`workloads/generated/specint-restorefast-505-nostats-qemu-20260704-r1/`), below the clean baseline around `34000000002`.
   Proposed solution: do not retry per-slot restore probes; next QEMU speed loops should batch by page/frame or reduce generated helper exits/TB dispatch pressure.
 
+- [x] ID: SPEC-PERF-MMUC-BLOCK-20260704 Block-aware QEMU page-walk cache probe is implemented and bounded by 999/505 evidence.
+  QEMU change: the existing opt-in `LINX_QEMU_MMU_CACHE=1` page-walk result cache now keys entries by the translated block size, so 2 MiB/1 GiB Linx page-table leaves can be reused across 4 KiB soft-TLB fills. TLBI page invalidation clears the matching 4 KiB, 2 MiB, 1 GiB, and 512 GiB candidate slots for both MMU indices. The default path remains cache-off.
+  Runner change: SPEC summaries now expose `heartbeat_mmu_cache` and matrix markdown prints compact `mmuc=h<hit>/m<miss>/f<fill>/flush<n>/pflush<n>` tags from the existing `LINX_HEARTBEAT` fields.
+  Validation: `python3 -m py_compile tools/spec2017/run_int_rate_qemu.py tools/spec2017/run_stage_qemu_matrix.py tools/spec2017/test_run_int_rate_qemu.py` passes; `python3 -m unittest test_run_int_rate_qemu.py` from `tools/spec2017` passes 40 tests; `ninja -C emulator/qemu/build-linx qemu-system-linx64` passes; `python3 avs/qemu/run_callret_contract.py --qemu emulator/qemu/build-linx/qemu-system-linx64` passes; `LINX_VIRT_TEST_FINISHER=1 python3 avs/qemu/run_tests.py --suite system --require-test-id 0x110F --timeout 20 --qemu emulator/qemu/build-linx/qemu-system-linx64` passes.
+  SPEC evidence: strict `999.specrand_ir` train passes with the cache disabled in `workloads/generated/specint-block-mmu-cache-999-off-qemu-20260704-r1/` and with `LINX_QEMU_MMU_CACHE=1 LINX_QEMU_MMU_CACHE_STATS=1` in `workloads/generated/specint-block-mmu-cache-999-on-qemu-20260704-r1/`.
+  Focused `505.mcf_r` train evidence: disabled cache reaches `28000000002` instructions in `workloads/generated/specint-block-mmu-cache-505-off-qemu-20260704-r1/`; cache enabled with stats reaches `29000000001` with `mmuc=h87701206/m7953961/f7949164`, `mmuc_flush=21`, and `mmuc_flush_page=3675648` in `workloads/generated/specint-block-mmu-cache-505-on-qemu-20260704-r1/`; cache enabled without stats reaches `30000000003` in `workloads/generated/specint-block-mmu-cache-505-on-nostats-qemu-20260704-r1/`.
+  Loop update: this is a candidate speed feature, not SPEC closure. Keep default-off until `531.deepsjeng_r` and a train-all shard show no regression and the count improvement holds outside a single focused 505 run.
+
 ## Live Blockers (2026-05-21)
 
 - [ ] BLOCK-SPEC-FG-001 Fast SPECint gate must run `test`/`train` before promotion.

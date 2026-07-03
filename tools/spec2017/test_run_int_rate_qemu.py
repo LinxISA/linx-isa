@@ -302,6 +302,19 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(summary["other"], 1)
         self.assertEqual(summary["last_mmu"], 1)
 
+    def test_heartbeat_mmu_cache_summary_parses_cache_counts(self) -> None:
+        summary = runner._heartbeat_mmu_cache_summary(
+            "LINX_HEARTBEAT count=100 pc=0x1 bpc=0x2 "
+            "mmuc_hit=11 mmuc_miss=22 mmuc_fill=33 "
+            "mmuc_flush=4 mmuc_flush_page=5"
+        )
+
+        self.assertEqual(summary["hit"], 11)
+        self.assertEqual(summary["miss"], 22)
+        self.assertEqual(summary["fill"], 33)
+        self.assertEqual(summary["flush"], 4)
+        self.assertEqual(summary["flush_page"], 5)
+
     def test_heartbeat_frame_stats_summary_parses_template_counts(self) -> None:
         summary = runner._heartbeat_frame_stats_summary(
             "LINX_HEARTBEAT count=100 pc=0x1 bpc=0x2 "

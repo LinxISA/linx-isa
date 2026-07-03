@@ -2801,6 +2801,49 @@ loop should either measure branch-helper hit rate directly or move to the
 already identified soft-MMU/TB-dispatch lanes before further generated-code
 complexity.
 
+## 2026-07-04 Block-Aware MMU Cache Probe
+
+Source review rejected the tempting "large TLB mapping" route: QEMU
+`tlb_set_page_full()` still materializes one `TARGET_PAGE_SIZE` entry, and the
+`size` argument is only used to track large-page invalidation ranges. Passing a
+2 MiB or 1 GiB Linx block size to the generic soft-TLB would therefore not
+reduce demand TLB misses.
+
+The follow-up QEMU probe keeps the existing page-walk result cache opt-in
+behind `LINX_MMU_CACHE=1` / `LINX_QEMU_MMU_CACHE=1`, but makes it block-aware.
+Cache lookup now probes 4 KiB, 2 MiB, 1 GiB, and 512 GiB candidate bases, and
+TLBI page invalidation clears the matching candidate slots for both MMU
+indices. The default path remains cache-off.
+
+Validation on `/Users/zhoubot/linx-isa/emulator/qemu/build-linx/qemu-system-linx64`
+after the patch:
+
+| Check | Result |
+| --- | --- |
+| `python3 -m py_compile tools/spec2017/run_int_rate_qemu.py tools/spec2017/run_stage_qemu_matrix.py tools/spec2017/test_run_int_rate_qemu.py` | pass |
+| `python3 -m unittest test_run_int_rate_qemu.py` from `tools/spec2017` | pass, 40 tests |
+| `ninja -C emulator/qemu/build-linx qemu-system-linx64` | pass |
+| `python3 avs/qemu/run_callret_contract.py --qemu emulator/qemu/build-linx/qemu-system-linx64` | pass |
+| `LINX_VIRT_TEST_FINISHER=1 python3 avs/qemu/run_tests.py --suite system --require-test-id 0x110F --timeout 20 --qemu emulator/qemu/build-linx/qemu-system-linx64` | pass |
+| strict `999.specrand_ir`, default cache-off | `workloads/generated/specint-block-mmu-cache-999-off-qemu-20260704-r1/` passes strict train hash |
+| strict `999.specrand_ir`, `LINX_QEMU_MMU_CACHE=1 LINX_QEMU_MMU_CACHE_STATS=1` | `workloads/generated/specint-block-mmu-cache-999-on-qemu-20260704-r1/` passes strict train hash |
+
+Focused `505.mcf_r` train comparison in the same 120-second no-extra-TLB-stats
+shape:
+
+| Run | Result | Final proof |
+| --- | --- | --- |
+| cache disabled | `workloads/generated/specint-block-mmu-cache-505-off-qemu-20260704-r1/` live-timeout | `count=28000000002`, `bpc=0x155555c482`, `mmuc=h0/m0/f0` |
+| cache enabled with cache stats | `workloads/generated/specint-block-mmu-cache-505-on-qemu-20260704-r1/` live-timeout | `count=29000000001`, `bpc=0x155555cc20`, `mmuc=h87701206/m7953961/f7949164`, `mmuc_flush=21`, `mmuc_flush_page=3675648` |
+| cache enabled without cache stats | `workloads/generated/specint-block-mmu-cache-505-on-nostats-qemu-20260704-r1/` live-timeout | `count=30000000003`, `bpc=0x155555c482` |
+
+Loop update: the block-aware page-walk cache is a real candidate because it
+hits heavily and improves the same-binary focused `505.mcf_r` count by about
+7% without cache-stat increments. Keep it opt-in until it is checked on at
+least `531.deepsjeng_r` and a train-all shard, because the count remains below
+older no-stats best runs and the broader SPEC failures are still bounded
+throughput live-timeouts, not correct completions.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.
