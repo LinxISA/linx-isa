@@ -245,6 +245,7 @@ class RunIntRateQemuTests(unittest.TestCase):
             qemu_heartbeat_code_bytes=16,
             qemu_heartbeat_same_site_warn=4,
             qemu_frame_stats=True,
+            qemu_frame_restore_host_load=True,
             qemu_tlb_stats=True,
             qemu_tb_stats=True,
             qemu_fault_trace_regs=True,
@@ -256,6 +257,7 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(env["LINX_QEMU_HEARTBEAT_CODE_BYTES"], "16")
         self.assertEqual(env["LINX_QEMU_HEARTBEAT_SAME_SITE_WARN"], "4")
         self.assertEqual(env["LINX_QEMU_FRAME_STATS"], "1")
+        self.assertEqual(env["LINX_QEMU_FRAME_RESTORE_HOST_LOAD"], "1")
         self.assertEqual(env["LINX_QEMU_TLB_STATS"], "1")
         self.assertEqual(env["LINX_QEMU_TB_STATS"], "1")
         self.assertEqual(env["LINX_QEMU_FAULT_TRACE"], "1")

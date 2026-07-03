@@ -3091,6 +3091,49 @@ template-chain alone. The next speed lane should profile the template-chain
 `531`/`525` cases and reduce the remaining dispatch or kernel/9p overhead
 without relying on the MMU cache.
 
+## 2026-07-04 Opt-In Frame Restore Host Loads
+
+QEMU now has a default-off frame restore load fast path controlled by
+`LINX_QEMU_FRAME_RESTORE_HOST_LOAD=1` (or
+`LINX_FRAME_RESTORE_HOST_LOAD=1`). The SPEC runners expose the same control as
+`--qemu-frame-restore-host-load`, and `run_specint_fast_gate.py` also accepts
+`SPEC_QEMU_FRAME_RESTORE_HOST_LOAD=1` /
+`LINX_SPEC_QEMU_FRAME_RESTORE_HOST_LOAD=1`.
+
+The implementation uses `tlb_vaddr_to_host()` only as a non-faulting, same-page
+8-byte hit probe for restore slots. A null host pointer or unsupported access
+falls back to the existing faulting `cpu_ldq_le_mmuidx_ra()` path before any
+template state is committed, so correctness-sensitive faults stay on the old
+path. Frame stats now separate actual restore loads as
+`fr_restore_host` and `fr_restore_fallback`.
+
+Validation:
+
+| Check | Result |
+| --- | --- |
+| `ninja -C emulator/qemu/build-linx qemu-system-linx64` | pass |
+| default `python3 avs/qemu/run_callret_contract.py --qemu emulator/qemu/build-linx/qemu-system-linx64` | pass |
+| `LINX_QEMU_FRAME_RESTORE_HOST_LOAD=1 LINX_QEMU_FRAME_STATS=1 python3 avs/qemu/run_callret_contract.py --qemu emulator/qemu/build-linx/qemu-system-linx64` | pass |
+| `LINX_QEMU_TEMPLATE_CHAIN=1 LINX_QEMU_FRAME_RESTORE_HOST_LOAD=1` strict train `999.specrand_ir` | pass, `workloads/generated/specint-999-frame-hostload-qemu-20260704-r1/` |
+| `python3 tools/bringup/run_specint_fast_gate.py --profile smoke --qemu-frame-stats --qemu-frame-restore-host-load ...` | pass, `workloads/generated/specint-fastgate-frame-hostload-smoke-20260704-r1/` |
+
+Focused `531.deepsjeng_r` train comparison with `LINX_QEMU_TEMPLATE_CHAIN=1`,
+`--qemu-frame-stats`, a 60-second cap, and no guest heartbeat:
+
+| Run | Result | Frame proof |
+| --- | --- | --- |
+| baseline restore loads | `live-timeout`, `count=16000000026` | `fr_restore_slot=175381838`, `fr_restore_host=0`, `fr_restore_fallback=175381838` |
+| `LINX_QEMU_FRAME_RESTORE_HOST_LOAD=1` | `live-timeout`, `count=17000000016` | `fr_restore_slot=187411358`, `fr_restore_host=187411358`, `fr_restore_fallback=0` |
+
+The new path is a useful gated frame-template experiment and runner switch, not
+a broad SPEC closure. It improves the focused `531` sample by about 6.25% under
+the same budget, while previous `505` restore-host experiments remained
+negative and the all-row train suite is still live-timeout for every real row.
+Loop update: keep the switch opt-in. Use it with frame stats when
+`fr_restore_fallback` dominates, then compare focused rows and train-all before
+considering default promotion. Keep `505` on the user data-memory/TLB lane and
+`525` on the kernel/9p lane until new evidence changes that split.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.

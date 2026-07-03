@@ -427,6 +427,10 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
     lines.append(f"- qemu_heartbeat_code_bytes: `{summary.get('qemu_heartbeat_code_bytes', 0)}`")
     lines.append(f"- qemu_heartbeat_same_site_warn: `{summary.get('qemu_heartbeat_same_site_warn', 0)}`")
     lines.append(f"- qemu_frame_stats: `{str(bool(summary.get('qemu_frame_stats', False))).lower()}`")
+    lines.append(
+        "- qemu_frame_restore_host_load: "
+        f"`{str(bool(summary.get('qemu_frame_restore_host_load', False))).lower()}`"
+    )
     lines.append(f"- qemu_tlb_stats: `{str(bool(summary.get('qemu_tlb_stats', False))).lower()}`")
     lines.append(f"- qemu_tb_stats: `{str(bool(summary.get('qemu_tb_stats', False))).lower()}`")
     lines.append(f"- qemu_fault_trace: `{str(bool(summary.get('qemu_fault_trace', False))).lower()}`")
@@ -564,6 +568,12 @@ def main(argv: list[str]) -> int:
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_FRAME_STATS", False),
         help="Pass --qemu-frame-stats to append frame-template counters to QEMU heartbeats.",
+    )
+    ap.add_argument(
+        "--qemu-frame-restore-host-load",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_FRAME_RESTORE_HOST_LOAD", False),
+        help="Pass --qemu-frame-restore-host-load to enable cached host loads for frame restore slots.",
     )
     ap.add_argument(
         "--qemu-tlb-stats",
@@ -751,6 +761,8 @@ def main(argv: list[str]) -> int:
             cmd.append("--qemu-heartbeat-regs")
         if args.qemu_frame_stats:
             cmd.append("--qemu-frame-stats")
+        if args.qemu_frame_restore_host_load:
+            cmd.append("--qemu-frame-restore-host-load")
         if args.qemu_tlb_stats:
             cmd.append("--qemu-tlb-stats")
         if args.qemu_tb_stats:
@@ -835,6 +847,7 @@ def main(argv: list[str]) -> int:
         "qemu_heartbeat_code_bytes": int(args.qemu_heartbeat_code_bytes),
         "qemu_heartbeat_same_site_warn": int(args.qemu_heartbeat_same_site_warn),
         "qemu_frame_stats": bool(args.qemu_frame_stats),
+        "qemu_frame_restore_host_load": bool(args.qemu_frame_restore_host_load),
         "qemu_tlb_stats": bool(args.qemu_tlb_stats),
         "qemu_tb_stats": bool(args.qemu_tb_stats),
         "qemu_fault_trace": bool(args.qemu_fault_trace or qemu_fault_trace_filters),

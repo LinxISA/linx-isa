@@ -714,6 +714,7 @@ def _apply_qemu_debug_env(
     qemu_heartbeat_code_bytes: int = 0,
     qemu_heartbeat_same_site_warn: int = 0,
     qemu_frame_stats: bool = False,
+    qemu_frame_restore_host_load: bool = False,
     qemu_tlb_stats: bool = False,
     qemu_tb_stats: bool = False,
     qemu_fault_trace: bool = False,
@@ -731,6 +732,8 @@ def _apply_qemu_debug_env(
         qemu_env["LINX_QEMU_HEARTBEAT_SAME_SITE_WARN"] = str(qemu_heartbeat_same_site_warn)
     if qemu_frame_stats:
         qemu_env["LINX_QEMU_FRAME_STATS"] = "1"
+    if qemu_frame_restore_host_load:
+        qemu_env["LINX_QEMU_FRAME_RESTORE_HOST_LOAD"] = "1"
     if qemu_tlb_stats:
         qemu_env["LINX_QEMU_TLB_STATS"] = "1"
     if qemu_tb_stats:
@@ -2515,6 +2518,7 @@ def _run_qemu(
     qemu_heartbeat_code_bytes: int,
     qemu_heartbeat_same_site_warn: int,
     qemu_frame_stats: bool,
+    qemu_frame_restore_host_load: bool,
     qemu_tlb_stats: bool,
     qemu_tb_stats: bool,
     no_progress_timeout: float,
@@ -2572,6 +2576,7 @@ def _run_qemu(
         qemu_heartbeat_code_bytes=qemu_heartbeat_code_bytes,
         qemu_heartbeat_same_site_warn=qemu_heartbeat_same_site_warn,
         qemu_frame_stats=qemu_frame_stats,
+        qemu_frame_restore_host_load=qemu_frame_restore_host_load,
         qemu_tlb_stats=qemu_tlb_stats,
         qemu_tb_stats=qemu_tb_stats,
         qemu_fault_trace=qemu_fault_trace,
@@ -2762,6 +2767,8 @@ def _run_qemu(
         "qemu_machine": machine,
         "qemu_machine_extra": machine_extra,
         "qemu_extra_args": qemu_extra,
+        "qemu_frame_stats": bool(qemu_frame_stats),
+        "qemu_frame_restore_host_load": bool(qemu_frame_restore_host_load),
         "qemu_tlb_stats": bool(qemu_tlb_stats),
         "qemu_tb_stats": bool(qemu_tb_stats),
         "qemu_rc": qemu_rc,
@@ -3894,6 +3901,15 @@ def main(argv: list[str]) -> int:
         help="Set LINX_QEMU_FRAME_STATS=1 to append frame-template counters to QEMU heartbeats.",
     )
     parser.add_argument(
+        "--qemu-frame-restore-host-load",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_FRAME_RESTORE_HOST_LOAD", False),
+        help=(
+            "Set LINX_QEMU_FRAME_RESTORE_HOST_LOAD=1 to use cached host loads "
+            "for frame restore slots when QEMU already has a RAM TLB entry."
+        ),
+    )
+    parser.add_argument(
         "--qemu-tlb-stats",
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_TLB_STATS", False),
@@ -4082,6 +4098,7 @@ def main(argv: list[str]) -> int:
         "qemu_heartbeat_code_bytes": args.qemu_heartbeat_code_bytes,
         "qemu_heartbeat_same_site_warn": args.qemu_heartbeat_same_site_warn,
         "qemu_frame_stats": bool(args.qemu_frame_stats),
+        "qemu_frame_restore_host_load": bool(args.qemu_frame_restore_host_load),
         "qemu_tlb_stats": bool(args.qemu_tlb_stats),
         "qemu_tb_stats": bool(args.qemu_tb_stats),
         "qemu_fault_trace": bool(args.qemu_fault_trace or qemu_fault_trace_filters),
@@ -4187,6 +4204,7 @@ def main(argv: list[str]) -> int:
                     args.qemu_heartbeat_code_bytes,
                     args.qemu_heartbeat_same_site_warn,
                     args.qemu_frame_stats,
+                    args.qemu_frame_restore_host_load,
                     args.qemu_tlb_stats,
                     args.qemu_tb_stats,
                     args.no_progress_timeout,
