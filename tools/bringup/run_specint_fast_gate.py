@@ -374,6 +374,21 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
                 f"/m{heartbeat_tlb_fill_hot.get('top0_mmu')}"
                 f" evict={heartbeat_tlb_fill_hot.get('evictions')}"
             )
+        heartbeat_tlb_invalidation = row.get("heartbeat_tlb_invalidation")
+        tlbinv = ""
+        if isinstance(heartbeat_tlb_invalidation, dict) and heartbeat_tlb_invalidation.get("iv") is not None:
+            last_bpc = heartbeat_tlb_invalidation.get("last_bpc")
+            last_operand = heartbeat_tlb_invalidation.get("last_operand")
+            last = ""
+            if last_bpc or last_operand:
+                last = f" last={last_bpc or 'no-bpc'}@{last_operand or 'no-op'}"
+            tlbinv = (
+                f" tlbi=iv{heartbeat_tlb_invalidation.get('iv')}"
+                f"/iav{heartbeat_tlb_invalidation.get('iav')}"
+                f"/ia{heartbeat_tlb_invalidation.get('ia')}"
+                f"/iall{heartbeat_tlb_invalidation.get('iall')}"
+                f"{last}"
+            )
         bstart_cache = ""
         bstart_cache_stats = row.get("bstart_cache_stats")
         if isinstance(bstart_cache_stats, dict) and bstart_cache_stats.get("seen"):
@@ -388,7 +403,7 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
         mprotect = ""
         if row.get("mprotect_trace_seen"):
             mprotect = f" mprotect-trace={row.get('mprotect_trace_count')}"
-        parts.append(f"{bench}: {running}/{site} {progress} bpc={bpc}{hb_stall}{tlbfill}{bstart_cache}{mprotect}")
+        parts.append(f"{bench}: {running}/{site} {progress} bpc={bpc}{hb_stall}{tlbfill}{tlbinv}{bstart_cache}{mprotect}")
     return ", ".join(parts)
 
 
@@ -407,12 +422,14 @@ def _suite_command(
     qemu_heartbeat_regs: bool,
     qemu_heartbeat_code_bytes: int,
     qemu_heartbeat_same_site_warn: int,
+    qemu_tlb_stats: bool,
     no_progress_timeout: float,
     forward_memory_mb: bool,
     forward_qemu_heartbeat: bool,
     forward_qemu_heartbeat_regs: bool,
     forward_qemu_heartbeat_code_bytes: bool,
     forward_qemu_heartbeat_same_site_warn: bool,
+    forward_qemu_tlb_stats: bool,
     forward_no_progress: bool,
     forward_stack_limit: bool,
     forward_symbolize_heartbeat: bool,
@@ -462,6 +479,8 @@ def _suite_command(
         cmd.extend(["--qemu-heartbeat-code-bytes", str(qemu_heartbeat_code_bytes)])
     if qemu_heartbeat_same_site_warn and forward_qemu_heartbeat_same_site_warn:
         cmd.extend(["--qemu-heartbeat-same-site-warn", str(qemu_heartbeat_same_site_warn)])
+    if qemu_tlb_stats and forward_qemu_tlb_stats:
+        cmd.append("--qemu-tlb-stats")
     if forward_no_progress:
         cmd.extend(["--no-progress-timeout", str(no_progress_timeout)])
     if stack_limit.strip() and forward_stack_limit:
@@ -506,6 +525,7 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
         f"- qemu_heartbeat_regs: `{str(bool(summary.get('qemu_heartbeat_regs', False))).lower()}`",
         f"- qemu_heartbeat_code_bytes: `{summary.get('qemu_heartbeat_code_bytes', 0)}`",
         f"- qemu_heartbeat_same_site_warn: `{summary.get('qemu_heartbeat_same_site_warn', 0)}`",
+        f"- qemu_tlb_stats: `{str(bool(summary.get('qemu_tlb_stats', False))).lower()}`",
         f"- fail_9p_timeout: `{str(bool(summary.get('fail_9p_timeout', False))).lower()}`",
         "",
         "## Suites",
@@ -557,6 +577,7 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--qemu-heartbeat-regs", action="store_true", default=_env_bool("SPEC_QEMU_HEARTBEAT_REGS", _env_bool("LINX_SPEC_QEMU_HEARTBEAT_REGS", False)))
     parser.add_argument("--qemu-heartbeat-code-bytes", type=int, default=_env_int("SPEC_QEMU_HEARTBEAT_CODE_BYTES", _env_int("LINX_SPEC_QEMU_HEARTBEAT_CODE_BYTES", 0)))
     parser.add_argument("--qemu-heartbeat-same-site-warn", type=int, default=_env_int("SPEC_QEMU_HEARTBEAT_SAME_SITE_WARN", _env_int("LINX_SPEC_QEMU_HEARTBEAT_SAME_SITE_WARN", 0)))
+    parser.add_argument("--qemu-tlb-stats", action="store_true", default=_env_bool("SPEC_QEMU_TLB_STATS", _env_bool("LINX_SPEC_QEMU_TLB_STATS", False)))
     parser.add_argument("--no-progress-timeout", type=float, default=_env_float("SPEC_NO_PROGRESS_TIMEOUT", _env_float("LINX_SPEC_NO_PROGRESS_TIMEOUT", 0.0)))
     parser.add_argument(
         "--stack-limit",
@@ -617,6 +638,7 @@ def main(argv: list[str]) -> int:
     runner_has_qemu_heartbeat_regs = _runner_supports_option(runner, "--qemu-heartbeat-regs")
     runner_has_qemu_heartbeat_code_bytes = _runner_supports_option(runner, "--qemu-heartbeat-code-bytes")
     runner_has_qemu_heartbeat_same_site_warn = _runner_supports_option(runner, "--qemu-heartbeat-same-site-warn")
+    runner_has_qemu_tlb_stats = _runner_supports_option(runner, "--qemu-tlb-stats")
     runner_has_no_progress = _runner_supports_option(runner, "--no-progress-timeout")
     runner_has_memory_mb = _runner_supports_option(runner, "--memory-mb")
     runner_has_stack_limit = _runner_supports_option(runner, "--stack-limit")
@@ -645,6 +667,12 @@ def main(argv: list[str]) -> int:
             "error: local SPEC matrix runner does not support "
             "--qemu-heartbeat-same-site-warn; update tools/spec2017/run_stage_qemu_matrix.py "
             "or rerun without the heartbeat stall switch"
+        )
+    if args.qemu_tlb_stats and not runner_has_qemu_tlb_stats:
+        raise SystemExit(
+            "error: local SPEC matrix runner does not support "
+            "--qemu-tlb-stats; update tools/spec2017/run_stage_qemu_matrix.py "
+            "or rerun without the TLB stats switch"
         )
     if args.no_progress_timeout and not runner_has_no_progress:
         raise SystemExit(
@@ -709,12 +737,14 @@ def main(argv: list[str]) -> int:
                 qemu_heartbeat_regs=args.qemu_heartbeat_regs,
                 qemu_heartbeat_code_bytes=args.qemu_heartbeat_code_bytes,
                 qemu_heartbeat_same_site_warn=args.qemu_heartbeat_same_site_warn,
+                qemu_tlb_stats=args.qemu_tlb_stats,
                 no_progress_timeout=args.no_progress_timeout,
                 forward_memory_mb=runner_has_memory_mb,
                 forward_qemu_heartbeat=runner_has_qemu_heartbeat,
                 forward_qemu_heartbeat_regs=runner_has_qemu_heartbeat_regs,
                 forward_qemu_heartbeat_code_bytes=runner_has_qemu_heartbeat_code_bytes,
                 forward_qemu_heartbeat_same_site_warn=runner_has_qemu_heartbeat_same_site_warn,
+                forward_qemu_tlb_stats=runner_has_qemu_tlb_stats,
                 forward_no_progress=runner_has_no_progress,
                 forward_stack_limit=runner_has_stack_limit,
                 forward_symbolize_heartbeat=runner_has_symbolize_heartbeat,
@@ -786,6 +816,7 @@ def main(argv: list[str]) -> int:
         "qemu_heartbeat_regs": bool(args.qemu_heartbeat_regs),
         "qemu_heartbeat_code_bytes": args.qemu_heartbeat_code_bytes,
         "qemu_heartbeat_same_site_warn": args.qemu_heartbeat_same_site_warn,
+        "qemu_tlb_stats": bool(args.qemu_tlb_stats),
         "no_progress_timeout": args.no_progress_timeout,
         "guest_heartbeat_sec": args.guest_heartbeat_sec,
         "symbolize_heartbeat": bool(args.symbolize_heartbeat),

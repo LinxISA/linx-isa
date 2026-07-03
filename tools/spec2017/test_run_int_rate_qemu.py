@@ -245,6 +245,7 @@ class RunIntRateQemuTests(unittest.TestCase):
             qemu_heartbeat_code_bytes=16,
             qemu_heartbeat_same_site_warn=4,
             qemu_frame_stats=True,
+            qemu_tlb_stats=True,
             qemu_tb_stats=True,
             qemu_fault_trace_regs=True,
             qemu_fault_trace_limit=3,
@@ -255,6 +256,7 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(env["LINX_QEMU_HEARTBEAT_CODE_BYTES"], "16")
         self.assertEqual(env["LINX_QEMU_HEARTBEAT_SAME_SITE_WARN"], "4")
         self.assertEqual(env["LINX_QEMU_FRAME_STATS"], "1")
+        self.assertEqual(env["LINX_QEMU_TLB_STATS"], "1")
         self.assertEqual(env["LINX_QEMU_TB_STATS"], "1")
         self.assertEqual(env["LINX_QEMU_FAULT_TRACE"], "1")
         self.assertEqual(env["LINX_QEMU_FAULT_TRACE_REGS"], "1")
@@ -338,6 +340,26 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(summary["restore_fallback"], 1)
         self.assertEqual(summary["ret_fast"], 17)
         self.assertEqual(summary["ret_check"], 4)
+
+    def test_heartbeat_tlb_invalidation_summary_parses_counts(self) -> None:
+        summary = runner._heartbeat_tlb_invalidation_summary(
+            "LINX_HEARTBEAT count=100 pc=0x1 bpc=0x2 "
+            "tlbi_iall=9 tlbi_ia=1 tlbi_iv=3849672 tlbi_iav=2 "
+            "tlbi_last_count=19983095448 "
+            "tlbi_last_pc=0xffffffff800db2b6 "
+            "tlbi_last_bpc=0xffffffff800db2ac "
+            "tlbi_last_operand=0x3ffffe2000 tlbi_last_acr=1"
+        )
+
+        self.assertEqual(summary["iall"], 9)
+        self.assertEqual(summary["ia"], 1)
+        self.assertEqual(summary["iv"], 3849672)
+        self.assertEqual(summary["iav"], 2)
+        self.assertEqual(summary["last_count"], 19983095448)
+        self.assertEqual(summary["last_pc"], "0xffffffff800db2b6")
+        self.assertEqual(summary["last_bpc"], "0xffffffff800db2ac")
+        self.assertEqual(summary["last_operand"], "0x3ffffe2000")
+        self.assertEqual(summary["last_acr"], 1)
 
     def test_heartbeat_tb_stats_summary_parses_tcg_counts(self) -> None:
         summary = runner._heartbeat_tb_stats_summary(

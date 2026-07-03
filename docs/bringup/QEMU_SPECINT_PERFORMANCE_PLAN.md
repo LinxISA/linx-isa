@@ -2050,7 +2050,10 @@ The follow-up debug patch adds `LINX_TLB_STATS=1` /
 Heartbeat records now include `tlbi_iall`, `tlbi_ia`, `tlbi_iv`,
 `tlbi_iav`, and the last invalidation count/PC/BPC/operand/ACR. The counters
 do not require the experimental MMU cache, so they can quantify invalidation
-pressure without changing page-walk behavior.
+pressure without changing page-walk behavior. The SPEC runners expose this as
+`--qemu-tlb-stats` / `LINX_SPEC_QEMU_TLB_STATS=1`, record final heartbeat
+values under `heartbeat_tlb_invalidation`, and print compact `tlbi=` liveness
+tags for failing matrix rows.
 
 Focused evidence on `/tmp/linx-qemu-hb-build-20260703-r1/qemu-system-linx64`:
 
@@ -2059,6 +2062,7 @@ Focused evidence on `/tmp/linx-qemu-hb-build-20260703-r1/qemu-system-linx64`:
 | strict `999.specrand_ir`, stats on, 1M heartbeat | `workloads/generated/specint-999-tlb-stats-qemu-20260703-r1/` | pass in `9.304s`; final `tlbi_iv=3670859` |
 | strict `999.specrand_ir`, stats off/default | `workloads/generated/specint-999-tlb-stats-defaultoff-qemu-20260703-r1/` | pass |
 | `505.mcf_r` train, stats on, 120s cap | `workloads/generated/specint-505-tlb-stats-qemu-20260703-r1/` | live timeout at `26000000004` instructions; final `tlbi_iv=3675648` |
+| strict `999.specrand_ir`, runner switch on | `workloads/generated/specint-999-tlbi-runner-qemu-20260704-r1/` | pass; `qemu_tlb_stats=true`; `heartbeat_tlb_invalidation.iv=3670859`, `iall=9`, last invalidation `bpc=0xffffffff800d94ea`, operand `0x1555556000` |
 
 The new data changes the interpretation of the earlier MMU-cache page-flush
 counter. The million-scale `TLB.IV` traffic is largely boot/startup mapping

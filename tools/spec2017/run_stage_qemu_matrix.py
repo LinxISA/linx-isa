@@ -217,6 +217,7 @@ def _transport_failure_details(summary_obj: dict[str, Any]) -> dict[str, dict[st
             "heartbeat_tlb_fill": failed_run.get("heartbeat_tlb_fill") or {},
             "heartbeat_mmu_cache": failed_run.get("heartbeat_mmu_cache") or {},
             "heartbeat_frame_stats": failed_run.get("heartbeat_frame_stats") or {},
+            "heartbeat_tlb_invalidation": failed_run.get("heartbeat_tlb_invalidation") or {},
             "heartbeat_tb_stats": failed_run.get("heartbeat_tb_stats") or {},
             "heartbeat_tlb_fill_hot": failed_run.get("heartbeat_tlb_fill_hot") or {},
             "bstart_cache_stats": failed_run.get("bstart_cache_stats") or {},
@@ -297,6 +298,24 @@ def _format_frame_stats(row: dict[str, Any]) -> str:
     )
 
 
+def _format_tlb_invalidation_stats(row: dict[str, Any]) -> str:
+    stats = row.get("heartbeat_tlb_invalidation")
+    if not isinstance(stats, dict) or stats.get("iv") is None:
+        return ""
+    last = ""
+    last_bpc = stats.get("last_bpc")
+    last_operand = stats.get("last_operand")
+    if last_bpc or last_operand:
+        last = f" last={last_bpc or 'no-bpc'}@{last_operand or 'no-op'}"
+    return (
+        f" tlbi=iv{stats.get('iv')}"
+        f"/iav{stats.get('iav')}"
+        f"/ia{stats.get('ia')}"
+        f"/iall{stats.get('iall')}"
+        f"{last}"
+    )
+
+
 def _format_tb_stats(row: dict[str, Any]) -> str:
     stats = row.get("heartbeat_tb_stats")
     if not isinstance(stats, dict) or stats.get("lookup") is None:
@@ -348,6 +367,7 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
         tlbfill_hot = _format_tlb_fill_hot(row)
         mmu_cache = _format_mmu_cache_stats(row)
         frame_stats = _format_frame_stats(row)
+        tlb_invalidation = _format_tlb_invalidation_stats(row)
         tb_stats = _format_tb_stats(row)
         bstart_cache = _format_bstart_cache_stats(row)
         mprotect = ""
@@ -368,7 +388,7 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
             hb_stall = f" heartbeat-stall={status}:{repeats}/{threshold}"
         parts.append(
             f"{bench}: {running}/{site} {progress}{timeout}{stalled} "
-            f"bpc={bpc}{kernel}{hb_stall}{fcmp}{tlbfill}{tlbfill_stats}{tlbfill_hot}{mmu_cache}{frame_stats}{tb_stats}{bstart_cache}{mprotect}"
+            f"bpc={bpc}{kernel}{hb_stall}{fcmp}{tlbfill}{tlbfill_stats}{tlbfill_hot}{mmu_cache}{frame_stats}{tlb_invalidation}{tb_stats}{bstart_cache}{mprotect}"
         )
     return ", ".join(parts)
 
@@ -407,6 +427,7 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
     lines.append(f"- qemu_heartbeat_code_bytes: `{summary.get('qemu_heartbeat_code_bytes', 0)}`")
     lines.append(f"- qemu_heartbeat_same_site_warn: `{summary.get('qemu_heartbeat_same_site_warn', 0)}`")
     lines.append(f"- qemu_frame_stats: `{str(bool(summary.get('qemu_frame_stats', False))).lower()}`")
+    lines.append(f"- qemu_tlb_stats: `{str(bool(summary.get('qemu_tlb_stats', False))).lower()}`")
     lines.append(f"- qemu_tb_stats: `{str(bool(summary.get('qemu_tb_stats', False))).lower()}`")
     lines.append(f"- qemu_fault_trace: `{str(bool(summary.get('qemu_fault_trace', False))).lower()}`")
     lines.append(f"- qemu_fault_trace_regs: `{str(bool(summary.get('qemu_fault_trace_regs', False))).lower()}`")
@@ -543,6 +564,12 @@ def main(argv: list[str]) -> int:
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_FRAME_STATS", False),
         help="Pass --qemu-frame-stats to append frame-template counters to QEMU heartbeats.",
+    )
+    ap.add_argument(
+        "--qemu-tlb-stats",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_TLB_STATS", False),
+        help="Pass --qemu-tlb-stats to append TLB invalidation counters to QEMU heartbeats.",
     )
     ap.add_argument(
         "--qemu-tb-stats",
@@ -724,6 +751,8 @@ def main(argv: list[str]) -> int:
             cmd.append("--qemu-heartbeat-regs")
         if args.qemu_frame_stats:
             cmd.append("--qemu-frame-stats")
+        if args.qemu_tlb_stats:
+            cmd.append("--qemu-tlb-stats")
         if args.qemu_tb_stats:
             cmd.append("--qemu-tb-stats")
         if args.qemu_fault_trace:
@@ -806,6 +835,7 @@ def main(argv: list[str]) -> int:
         "qemu_heartbeat_code_bytes": int(args.qemu_heartbeat_code_bytes),
         "qemu_heartbeat_same_site_warn": int(args.qemu_heartbeat_same_site_warn),
         "qemu_frame_stats": bool(args.qemu_frame_stats),
+        "qemu_tlb_stats": bool(args.qemu_tlb_stats),
         "qemu_tb_stats": bool(args.qemu_tb_stats),
         "qemu_fault_trace": bool(args.qemu_fault_trace or qemu_fault_trace_filters),
         "qemu_fault_trace_regs": bool(args.qemu_fault_trace_regs),
