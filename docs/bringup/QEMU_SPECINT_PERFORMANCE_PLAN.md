@@ -3055,12 +3055,37 @@ The summary records QEMU head `51f42d1726c02584e1646bdcc2ee8ca133e290ff` and
 | `557.xz_r` | 28000000005 | 28000000001 | 34000000005 | `live-timeout`, no panic/trap |
 | `999.specrand_ir` | pass | pass | pass | strict train hash passes |
 
-Loop update: the template-chain path is the first broad dispatch speed result in
-this lane. It improves bounded instruction progress for all nine long train
-rows versus both no-cache and MMU-cache-only 120-second baselines, while the
-`999.specrand_ir` train sentinel still passes. Keep it opt-in until a combined
-`LINX_QEMU_TEMPLATE_CHAIN=1 LINX_QEMU_MMU_CACHE=1` all-row train comparison and
-a longer correctness-oriented test/train gate prove no row-level regression.
+The combined follow-up used the rebuilt in-tree QEMU
+`v10.2.0-1015-g51f42d1726c`, with `LINX_QEMU_TEMPLATE_CHAIN=1` and
+`LINX_QEMU_MMU_CACHE=1`:
+
+- `workloads/generated/specint-template-chain-mmuc-pr-qemu-20260704-r1/`
+  passes the PR `999.specrand_ir` test/train strict hash sentinels.
+- `workloads/generated/specint-train-all-template-chain-mmuc-qemu-20260704-r1/`
+  covers the same split train-all plus `train-all-large-9p` shape.
+
+| Benchmark | Template-chain count | Template+MMU-cache count | Decision |
+| --- | ---: | ---: | --- |
+| `500.perlbench_r` | 36000000003 | 37000000000 | combined improves |
+| `502.gcc_r` | 23000000003 | 25000000004 | combined improves |
+| `505.mcf_r` | 34000000008 | 35000000000 | combined improves |
+| `520.omnetpp_r` | 16000000012 | 16000000000 | neutral |
+| `523.xalancbmk_r` | 21000000001 | 22000000003 | combined improves |
+| `525.x264_r` | 31000000006 | 30000000003 | combined regresses |
+| `531.deepsjeng_r` | 40000000008 | 39000000024 | combined regresses |
+| `541.leela_r` | 19000000007 | 20000000005 | combined improves |
+| `557.xz_r` | 34000000005 | 35000000001 | combined improves |
+| `999.specrand_ir` | pass | pass | strict train hash passes |
+
+All non-999 combined rows remain heartbeat-backed `live-timeout` rows with BPC
+site progress, no panic, and no trap. Loop update: keep
+`LINX_QEMU_TEMPLATE_CHAIN=1` as the broad opt-in dispatch lever. Keep
+`LINX_QEMU_MMU_CACHE=1` as a secondary focused component for rows such as
+`505`, `523`, `541`, and `557`, not a default companion, because the combined
+train-all run regresses `525.x264_r` and `531.deepsjeng_r` relative to
+template-chain alone. The next speed lane should profile the template-chain
+`531`/`525` cases and reduce the remaining dispatch or kernel/9p overhead
+without relying on the MMU cache.
 
 ## Validation Targets
 
