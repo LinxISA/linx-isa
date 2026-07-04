@@ -3558,6 +3558,76 @@ Next loop:
   BPC/site progress. Do not reopen deadlock triage unless a row loses heartbeat
   progress or reports panic/trap evidence.
 
+## Clean Speed-Stack Run After Glibc
+
+The clean-marker rerun uses QEMU head `fe2e7ac19c26951ab4a9994b0e025bed582362c9`
+through `/tmp/linx-qemu-clean-build/qemu-system-linx64`; provenance records
+`clean_build_for_head=true` and `clean_build_marker_matches_head=true`. The
+call/ret contract passes on the same binary. The SPEC command enables template
+chaining, frame stats, restore-host loads, TLBI stats/hot-site attribution, TB
+stats, and BPC heartbeat:
+`workloads/generated/specint-train-all-clean-post-glibc-speedstack-qemu-20260704-r1/`.
+
+`999.specrand_ir` still passes strict train hash. The other rows remain
+heartbeat-live timeouts, but all improve bounded instruction progress versus the
+default post-glibc run:
+
+| Benchmark | Count | Delta | Final BPC | Notes |
+| --- | ---: | ---: | --- | --- |
+| `500.perlbench_r` | 56000000042 | +7000000042 | `0x1555670bf6` | `fr_restore_fallback=0`, `tbs_flush=0` |
+| `502.gcc_r` | 34000000004 | +8000000001 | `0xffffffff803e91e8` | final kernel BPC, site-progress live |
+| `505.mcf_r` | 52000000002 | +9000000000 | `0x155555c4e6` | user memory/TLB lane |
+| `520.omnetpp_r` | 24000000003 | +7000000000 | `0x155560cda8` | TLBI source `0xffffffff800daf1a` |
+| `523.xalancbmk_r` | 35000000000 | +12999999998 | `0x155594c066` | dispatch/TLBI lane |
+| `525.x264_r` | 48000000005 | +22999999993 | `0xffffffff80115f6a` | 9p/kernel transport lane |
+| `531.deepsjeng_r` | 65000000023 | +19000000013 | `0x155555b92e` | CPU/profile lane |
+| `541.leela_r` | 32000000002 | +12000000001 | `0x15555a6b90` | high TB lookup count |
+| `557.xz_r` | 61000000002 | +22999999994 | `0x1555577f3c` | no longer same-site final heartbeat |
+
+Every live row reports no panic, no trap, `stalled=false`, BPC site progress,
+and zero frame restore fallback. TB counters show `tbs_flush=0` across the live
+rows, which rejects TB-cache-size growth as the next broad lever. TLBI hot-site
+data still reports the shared early `get_p4d_virt_fixmap` burst and steady
+Linux invalidation sources at `0xffffffff800db20c` or `0xffffffff800daf1a`.
+
+The focused post-start `531.deepsjeng_r` profile
+`workloads/generated/specint-profile-531-clean-post-glibc-speedstack-qemu-20260704-r1/`
+sampled the real QEMU child after `LINX_SPEC_START` (`sample.ok=true`). The row
+is red only because heartbeat was intentionally disabled for profiling. Top
+QEMU frames are:
+
+| Frame | Samples |
+| --- | ---: |
+| `probe_access_internal` | 876 |
+| `linx_frame_restore_prepare` | 803 |
+| `linx_template_fentry_impl` | 726 |
+| `helper_linx_tlb_iv` | 723 |
+| `linx_template_fret_stk_impl` | 671 |
+| `tb_lookup` | 548 |
+| `helper_lookup_tb_ptr` | 459 |
+| `probe_access` | 368 |
+| `linx_get_tb_cpu_state` | 232 |
+| `linx_frame_restore_commit` | 197 |
+| `tlb_vaddr_to_host` | 147 |
+| `qht_lookup_custom` | 101 |
+
+Profiler tool update: `tools/spec2017/profile_qemu_after_spec_start.py` now
+parses the macOS `sample` top-stack section into `sample.top_stack`,
+`sample.top_stack_qemu`, and `sample.top_stack_unknown` JSON fields. This keeps
+future profile reports machine-readable instead of requiring manual sample-text
+inspection.
+
+Next speed lanes:
+
+- Linux: re-examine legal reductions in `local_flush_tlb_page()` volume from
+  `update_mmu_cache_range()`, `ptep_set_wrprotect()`, and fault/update paths.
+- QEMU: specialize or batch the remaining `probe_access_internal` /
+  `tlb_vaddr_to_host` restore/probe work without losing fault precision.
+- QEMU: reduce template entry/return dispatch and `helper_lookup_tb_ptr` costs;
+  the template-chain path helps but still leaves FENTRY/FRET helpers hot.
+- Transport: keep `525.x264_r` separate on the 9p/kernel lane because its final
+  BPC remains kernel-space even after the speed stack.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.

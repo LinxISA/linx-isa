@@ -120,13 +120,89 @@ def _run_sample(pid: int, seconds: int, out_file: Path) -> dict[str, Any]:
     cmd = [sample_bin, str(pid), str(seconds), "1", "-file", str(out_file)]
     started = time.monotonic()
     proc = subprocess.run(cmd, text=True, capture_output=True)
-    return {
+    result: dict[str, Any] = {
         "ok": proc.returncode == 0 and out_file.exists(),
         "returncode": proc.returncode,
         "elapsed_sec": round(time.monotonic() - started, 3),
         "command": cmd,
         "stdout": proc.stdout[-4000:],
         "stderr": proc.stderr[-4000:],
+    }
+    if result["ok"]:
+        sample_text = out_file.read_text(encoding="utf-8", errors="replace")
+        top_stack = _parse_top_stack_sample(sample_text)
+        result["top_stack"] = top_stack
+        result["top_stack_qemu"] = [
+            row
+            for row in top_stack
+            if row.get("image", "").startswith("qemu-system-linx")
+        ][:40]
+        result["top_stack_unknown"] = [
+            row for row in top_stack if row.get("image") == "<unknown binary>"
+        ][:40]
+    return result
+
+
+def _parse_top_stack_sample(text: str, limit: int = 120) -> list[dict[str, Any]]:
+    marker = "Sort by top of stack, same collapsed"
+    lines = text.splitlines()
+    start: int | None = None
+    for idx, line in enumerate(lines):
+        if line.startswith(marker):
+            start = idx + 1
+            break
+    if start is None:
+        return []
+
+    rows: list[dict[str, Any]] = []
+    for raw in lines[start:]:
+        if not raw.strip():
+            if rows:
+                break
+            continue
+        if raw.startswith("Sort by "):
+            break
+        parsed = _parse_top_stack_line(raw)
+        if parsed is None:
+            if rows:
+                break
+            continue
+        rows.append(parsed)
+        if len(rows) >= limit:
+            break
+    return rows
+
+
+def _parse_top_stack_line(raw: str) -> dict[str, Any] | None:
+    text = raw.strip()
+    count_text = text.rsplit(None, 1)
+    if len(count_text) != 2:
+        return None
+    body, count_s = count_text
+    try:
+        count = int(count_s)
+    except ValueError:
+        return None
+
+    marker = "  (in "
+    if marker not in body:
+        return None
+    symbol, rest = body.split(marker, 1)
+    image, sep, tail = rest.partition(")")
+    if not sep:
+        return None
+    address = None
+    tail = tail.strip()
+    if tail.startswith("["):
+        close = tail.find("]")
+        if close > 1:
+            address = tail[1:close]
+    return {
+        "symbol": symbol.strip(),
+        "image": image.strip(),
+        "address": address,
+        "count": count,
+        "raw": raw.strip(),
     }
 
 

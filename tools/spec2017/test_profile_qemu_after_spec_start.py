@@ -63,6 +63,33 @@ class ProfileQemuAfterSpecStartTests(unittest.TestCase):
 
             self.assertEqual(profiler._find_marker_log(root, "LINX_SPEC_START"), new)
 
+    def test_parse_top_stack_sample_extracts_qemu_and_unknown_frames(self) -> None:
+        rows = profiler._parse_top_stack_sample(
+            """
+Call graph:
+    omitted
+
+Sort by top of stack, same collapsed (when >= 5):
+        __select  (in libsystem_kernel.dylib)        22355
+        probe_access_internal  (in qemu-system-linx64)        876
+        ???  (in <unknown binary>)  [0x30008a7a4]        502
+        tb_lookup  (in qemu-system-linx64)        548
+
+Sort by top of stack, exclusive:
+        ignored  (in qemu-system-linx64)        1
+"""
+        )
+
+        self.assertEqual(rows[0]["symbol"], "__select")
+        self.assertEqual(rows[1]["symbol"], "probe_access_internal")
+        self.assertEqual(rows[1]["image"], "qemu-system-linx64")
+        self.assertEqual(rows[1]["count"], 876)
+        self.assertEqual(rows[2]["symbol"], "???")
+        self.assertEqual(rows[2]["image"], "<unknown binary>")
+        self.assertEqual(rows[2]["address"], "0x30008a7a4")
+        self.assertEqual(rows[3]["symbol"], "tb_lookup")
+        self.assertEqual(len(rows), 4)
+
 
 if __name__ == "__main__":
     unittest.main()
