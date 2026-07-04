@@ -84,12 +84,20 @@ Downstream hard-break status after this ledger:
   `workloads/generated/busybox-rootfs-directgoto-20260704-r1/boot-report.json`
   records `ok=true` / `status=pass`.
 - Hosted libc is the current hard-break:
-  `workloads/generated/flow-linux-libc-directgoto-20260704-r1/report.json`
+  `workloads/generated/flow-linux-libc-page-copy-exec-fix-20260704-r1/report.json`
   records `musl-build-phase-b` pass, `musl-runtime-both` pass, and
-  `glibc-runtime` fail. The focused static glibc probe in
-  `workloads/generated/glibc-smoke-static-probe-20260704-r1/summary.json`
-  fails with `LINX_USER_TRAP` in the glibc runtime path, with the trap
-  symbolized around `__tls_init_tp` / the early rseq tunable access.
+  `glibc-runtime` fail. The previous libc `_DYNAMIC` timeout was a Linux
+  PTE bug: `PAGE_COPY_EXEC` produced `legacy_desc=0x...0017` /
+  `legacy_prot=0x6`, so QEMU correctly rejected user loads from a write/exec
+  but unreadable private executable page. `kernel/linux` now maps
+  `PAGE_COPY_EXEC` to `PAGE_READ_EXEC`; focused TLB evidence in
+  `avs/qemu/out/glibc-smoke-entry-page-copy-exec-fix-tlbtrace-20260704-r1/`
+  shows the page as `legacy_desc=0x...001f` / `legacy_prot=0x7` and the
+  loader advances.
+  The remaining glibc blocker is a deterministic `LINX_USER_TRAP` in ld.so
+  around `is_trusted_path_normalize` / `dl_main`, with `addr=0x1486` in the
+  focused `entry_main` run. Treat that as pointer-provenance work, not the old
+  page-permission deadlock.
 
 The older clean-head TLBI-hot reference ledger is
 `workloads/generated/specint-train-all-latest-qemu-20260704-r2/`. It uses the
