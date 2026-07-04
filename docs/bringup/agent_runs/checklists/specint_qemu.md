@@ -2,6 +2,33 @@
 
 ## Live Blockers (2026-07-04)
 
+- [x] ID: SPEC-LIBC-VERSION-MAP-INIT-20260704 glibc ld.so now initializes version metadata before direct runtime lookups.
+  Root cause: the earlier Linx-only `_dl_check_map_versions()` early return in `lib/glibc/elf/dl-version.c` skipped the normal `link_map` version table setup, not just version diagnostics. After the page-permission fix moved ld.so past the `_DYNAMIC` load loop, `__rtld_static_init` reached `_dl_lookup_direct()` for `_rtld_global_ro`; `check_match()` then loaded `map->l_versyms[symidx]` through a null `l_versyms` pointer and trapped at `addr=0x1486` with `symidx=0xa43`.
+  Fix: remove the Linx early return so `_dl_check_map_versions()` fills `l_versions` and `l_versyms` through the normal glibc path.
+  Evidence: focused pre-fix PC-watch logs in `avs/qemu/out/glibc-smoke-entry-version-map-trace-20260704-r1/qemu_glibc_runtime_entry_main.log` show `_dl_setup_hash` and `_dl_lookup_direct` reached with `_dl_rtld_map`, followed by the `check_match` null-version load. After rebuilding the loader, `avs/qemu/out/glibc-smoke-entry-version-init-fix-20260704-r1/summary.json` passes the `entry_main` variant and `avs/qemu/out/glibc-smoke-version-init-fix-20260704-r1/summary.json` passes the full glibc runtime matrix. The canonical hard-break rerun `workloads/generated/flow-linux-libc-version-init-fix-20260704-r1/report.json` passes `libc-hosted-runtime` with musl build/runtime and glibc runtime all green.
+  Loop update: the old glibc runtime hard-break is closed. Do not reintroduce a blanket Linx skip in `_dl_check_map_versions()` unless it preserves `l_versions` and `l_versyms`; future loader diagnostic suppression must be narrower than the metadata initialization path.
+
+- [x] ID: SPEC-M05-TRAIN-ALL-POST-GLIBC-VERSION-INIT-20260704 Latest in-tree QEMU reruns every supported SPECint train row after the glibc unblock.
+  Command: `SPECINT_TRAIN_ALL_TIMEOUT=180 SPEC_GUEST_HEARTBEAT_SEC=0 SPEC_QEMU_HEARTBEAT_INTERVAL=1000000000 SPEC_NO_PROGRESS_TIMEOUT=120 python3 tools/bringup/run_specint_fast_gate.py --profile train --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 --qemu emulator/qemu/build-linx/qemu-system-linx64 --sysroot out/libc/musl/install/phase-b --out-dir workloads/generated/specint-train-all-post-glibc-version-init-20260704-r1 --append-extra norandmaps --heartbeat-sec 30 --qemu-heartbeat-interval 1000000000 --guest-heartbeat-sec 0 --no-progress-timeout 120 --stack-limit 2G --continue-on-fail`.
+  QEMU provenance: `workloads/generated/specint-train-all-post-glibc-version-init-20260704-r1/specint_fast_gate_summary.json` records QEMU head `fe2e7ac19c26951ab4a9994b0e025bed582362c9`, version `QEMU emulator version 10.2.50 (v10.2.0-1021-gfe2e7ac19c2)`, `qemu_repo_dirty_tracked=false`, and `clean_build_for_head=false` because this used the in-tree `build-linx` binary rather than a clean-build marker path.
+  SPEC evidence: the run emits `train-all/initramfs/stage_b_summary.json` and the generated `train-all-large-9p/9p/stage_b_summary.json` split for `525.x264_r`. Strict train `999.specrand_ir` passes (`rand.11.out`, 871 bytes, FNV-1a `0x973dcfc2`). `500.perlbench_r`, `502.gcc_r`, `505.mcf_r`, `520.omnetpp_r`, `523.xalancbmk_r`, `525.x264_r`, `531.deepsjeng_r`, `541.leela_r`, and `557.xz_r` are all heartbeat-backed `live-timeout` rows with `heartbeat_running=true`, `heartbeat_site_progress=true`, `stalled=false`, no panic, and no trap.
+  Latest ledger:
+
+  | Benchmark | Transport | Result | Final proof |
+  | --- | --- | --- | --- |
+  | `500.perlbench_r` | initramfs | `live-timeout` | `count=49000000000`, `bpc=0x1555670cd4`, `progress=site-change` |
+  | `502.gcc_r` | initramfs | `live-timeout` | `count=26000000003`, `bpc=0x1555f754a2`, `progress=site-change` |
+  | `505.mcf_r` | initramfs | `live-timeout` | `count=43000000002`, `bpc=0x155555c6fa`, `progress=site-change` |
+  | `520.omnetpp_r` | initramfs | `live-timeout` | `count=17000000003`, `bpc=0xffffffff803e91e8`, `progress=site-change` |
+  | `523.xalancbmk_r` | initramfs | `live-timeout` | `count=22000000002`, `bpc=0xffffffff800b4756`, `progress=site-change` |
+  | `525.x264_r` | 9p | `live-timeout` | `count=25000000012`, `bpc=0xffffffff801146f0`, `progress=site-change` |
+  | `531.deepsjeng_r` | initramfs | `live-timeout` | `count=46000000010`, `bpc=0x155555b872`, `progress=site-change` |
+  | `541.leela_r` | initramfs | `live-timeout` | `count=20000000001`, `bpc=0x1555584dbc`, `progress=site-change` |
+  | `557.xz_r` | initramfs | `live-timeout` | `count=38000000008`, `bpc=0x155558d6da`, `progress=same-site` with recent unique sites still present |
+  | `999.specrand_ir` | initramfs | pass | strict train hash passes; normal QEMU exit |
+
+  Loop update: SPEC train bring-up is no longer blocked by glibc hosted runtime. The current all-train failures are running throughput limits, not deadlocks or active correctness traps. Next speed/profiling work should use a clean-marker QEMU build for comparison, re-run the current best opt-in speed stack after the glibc unblock, and split lanes between user soft-MMU/template dispatch rows (`500`, `502`, `505`, `531`, `541`, `557`) and kernel/transport-heavy rows (`520`, `523`, `525`).
+
 - [x] ID: SPEC-LIBC-PAGE-COPY-EXEC-20260704 Linux now gives private executable COW mappings read permission, closing the glibc `_DYNAMIC` page-permission spin.
   Kernel fix: `kernel/linux/arch/linx/include/asm/pgtable.h` changes `PAGE_COPY_EXEC` from `PAGE_EXEC` to `PAGE_READ_EXEC`, matching the contract that QEMU enforces Linx PTE R/W/X permissions independently and should not infer read permission from write or execute bits.
   Focused TLB evidence: before the fix, `avs/qemu/out/glibc-smoke-entry-post-inito-rebuild-tlbtrace-20260704-r1/qemu_glibc_runtime_entry_main.log` showed the libc `_DYNAMIC` page installed as `legacy_desc=0x155f00600017` / `legacy_prot=0x6`, so repeated user loads from that page faulted. After rebuilding the kernel, `avs/qemu/out/glibc-smoke-entry-page-copy-exec-fix-tlbtrace-20260704-r1/qemu_glibc_runtime_entry_main.log` shows the same deterministic page as `legacy_desc=0x155f0060001f` / `legacy_prot=0x7`; the loader advances past the old load-fault loop.

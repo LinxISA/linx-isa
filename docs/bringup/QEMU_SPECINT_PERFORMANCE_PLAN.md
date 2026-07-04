@@ -3509,6 +3509,55 @@ next speed patch should investigate Linx Linux `update_mmu_cache_range()` /
 semantics before returning to QEMU cputlb changes. Do not classify current
 `531` as stuck; the row is BPC-progressing and throughput-limited.
 
+## Post-Glibc Version-Init Train Run
+
+The hosted libc hard-break is green after removing the Linx-only early return
+from glibc `_dl_check_map_versions()`. The old page-permission loop had already
+moved forward; the remaining ld.so trap was a null `l_versyms` load in
+`check_match()` during `_dl_lookup_direct()` for `_rtld_global_ro`.
+`avs/qemu/out/glibc-smoke-version-init-fix-20260704-r1/summary.json` passes the
+full glibc runtime matrix, and
+`workloads/generated/flow-linux-libc-version-init-fix-20260704-r1/report.json`
+passes the canonical `libc-hosted-runtime` hard-break stage.
+
+After that unblock, `workloads/generated/specint-train-all-post-glibc-version-init-20260704-r1/`
+reran every supported C/C++ SPECint train row on in-tree QEMU head
+`fe2e7ac19c26951ab4a9994b0e025bed582362c9` (`v10.2.0-1021-gfe2e7ac19c2`).
+The run used the default QEMU path without the opt-in speed stack, so it is a
+fresh liveness/correctness ledger rather than a speed comparison against the
+earlier template-chain/TLBI runs. `999.specrand_ir` passes strict train hash
+(`rand.11.out`, 871 bytes, `0x973dcfc2`). The other nine rows remain red only as
+heartbeat-backed `live-timeout` rows with BPC/site progress, no panic, no trap,
+and `stalled=false`.
+
+| Benchmark | Transport | Result | Final proof |
+| --- | --- | --- | --- |
+| `500.perlbench_r` | initramfs | `live-timeout` | `count=49000000000`, `bpc=0x1555670cd4` |
+| `502.gcc_r` | initramfs | `live-timeout` | `count=26000000003`, `bpc=0x1555f754a2` |
+| `505.mcf_r` | initramfs | `live-timeout` | `count=43000000002`, `bpc=0x155555c6fa` |
+| `520.omnetpp_r` | initramfs | `live-timeout` | `count=17000000003`, `bpc=0xffffffff803e91e8` |
+| `523.xalancbmk_r` | initramfs | `live-timeout` | `count=22000000002`, `bpc=0xffffffff800b4756` |
+| `525.x264_r` | 9p | `live-timeout` | `count=25000000012`, `bpc=0xffffffff801146f0` |
+| `531.deepsjeng_r` | initramfs | `live-timeout` | `count=46000000010`, `bpc=0x155555b872` |
+| `541.leela_r` | initramfs | `live-timeout` | `count=20000000001`, `bpc=0x1555584dbc` |
+| `557.xz_r` | initramfs | `live-timeout` | `count=38000000008`, `bpc=0x155558d6da`, same-site final heartbeat but recent unique sites present |
+| `999.specrand_ir` | initramfs | pass | strict hash `0x973dcfc2` |
+
+Next loop:
+
+- Build the next comparison through `/tmp/linx-qemu-clean-build` so
+  `clean_build_for_head=true` and the provenance marker matches the QEMU head.
+- Re-run the current best opt-in speed stack after the glibc unblock, especially
+  template-chain and row-specific frame/TLBI switches, before comparing counts
+  to earlier ledgers.
+- Profile post-`LINX_SPEC_START` rows with guest heartbeat disabled and BPC
+  heartbeat available: `525.x264_r` for kernel/9p transport, `520`/`523` for
+  kernel/TLBI-heavy paths, `557` for same-site user progress, and
+  `502`/`505`/`531` for user soft-MMU/template-dispatch pressure.
+- Keep the failure classification as throughput-limited while heartbeats show
+  BPC/site progress. Do not reopen deadlock triage unless a row loses heartbeat
+  progress or reports panic/trap evidence.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.

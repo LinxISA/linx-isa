@@ -15,6 +15,9 @@ from typing import Any
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parents[1]
+sys.path.insert(0, str(REPO_ROOT / "tools" / "bringup"))
+
+from qemu_build_paths import default_qemu_binary, qemu_binary_provenance  # noqa: E402
 
 HELLO_VARIANTS: dict[str, str] = {
     "entry_main": "hello_glibc_entry_main",
@@ -59,14 +62,7 @@ def _complete_failure_marker(text: str) -> str | None:
 
 
 def _default_qemu() -> Path:
-    cands = [
-        REPO_ROOT / "emulator" / "qemu" / "build" / "qemu-system-linx64",
-        Path("qemu-system-linx64"),
-    ]
-    for p in cands:
-        if p.exists():
-            return p
-    return cands[-1]
+    return default_qemu_binary(REPO_ROOT)
 
 
 def _default_qemu_user() -> Path:
@@ -138,6 +134,10 @@ def _find_gen_init_cpio(linux_root: Path, out_dir: Path) -> Path:
 
 def _write_summary(path: Path, payload: dict[str, Any]) -> None:
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _qemu_debug_env() -> dict[str, str]:
+    return {key: os.environ[key] for key in sorted(os.environ) if key.startswith("LINX_")}
 
 
 def _run_qemu(cmd: list[str], timeout_s: int) -> tuple[str, bool, bool]:
@@ -267,9 +267,15 @@ def main(argv: list[str]) -> int:
             "out_dir": str(out_dir),
         },
         "runner": args.runner,
+        "qemu_debug_env": _qemu_debug_env(),
         "stages": [],
         "result": {"ok": False, "classification": "not_run"},
     }
+    if args.runner == "system":
+        summary["qemu_provenance"] = qemu_binary_provenance(
+            REPO_ROOT,
+            Path(os.path.expanduser(args.qemu)),
+        )
 
     def add_stage(name: str, status: str, detail: str, log: str | None = None) -> None:
         item: dict[str, str] = {"name": name, "status": status, "detail": detail}
