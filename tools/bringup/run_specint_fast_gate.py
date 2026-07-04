@@ -465,6 +465,9 @@ def _suite_command(
     qemu_frame_restore_host_load: bool,
     qemu_tlb_stats: bool,
     qemu_tlb_inv_hot: bool,
+    qemu_tlb_fill_stats: bool,
+    qemu_tlb_fill_hot: bool,
+    qemu_tb_stats: bool,
     no_progress_timeout: float,
     forward_memory_mb: bool,
     forward_qemu_heartbeat: bool,
@@ -475,6 +478,9 @@ def _suite_command(
     forward_qemu_frame_restore_host_load: bool,
     forward_qemu_tlb_stats: bool,
     forward_qemu_tlb_inv_hot: bool,
+    forward_qemu_tlb_fill_stats: bool,
+    forward_qemu_tlb_fill_hot: bool,
+    forward_qemu_tb_stats: bool,
     forward_no_progress: bool,
     forward_stack_limit: bool,
     forward_symbolize_heartbeat: bool,
@@ -532,6 +538,12 @@ def _suite_command(
         cmd.append("--qemu-tlb-stats")
     if qemu_tlb_inv_hot and forward_qemu_tlb_inv_hot:
         cmd.append("--qemu-tlb-inv-hot")
+    if qemu_tlb_fill_stats and forward_qemu_tlb_fill_stats:
+        cmd.append("--qemu-tlb-fill-stats")
+    if qemu_tlb_fill_hot and forward_qemu_tlb_fill_hot:
+        cmd.append("--qemu-tlb-fill-hot")
+    if qemu_tb_stats and forward_qemu_tb_stats:
+        cmd.append("--qemu-tb-stats")
     if forward_no_progress:
         cmd.extend(["--no-progress-timeout", str(no_progress_timeout)])
     if stack_limit.strip() and forward_stack_limit:
@@ -581,6 +593,9 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
         f"`{str(bool(summary.get('qemu_frame_restore_host_load', False))).lower()}`",
         f"- qemu_tlb_stats: `{str(bool(summary.get('qemu_tlb_stats', False))).lower()}`",
         f"- qemu_tlb_inv_hot: `{str(bool(summary.get('qemu_tlb_inv_hot', False))).lower()}`",
+        f"- qemu_tlb_fill_stats: `{str(bool(summary.get('qemu_tlb_fill_stats', False))).lower()}`",
+        f"- qemu_tlb_fill_hot: `{str(bool(summary.get('qemu_tlb_fill_hot', False))).lower()}`",
+        f"- qemu_tb_stats: `{str(bool(summary.get('qemu_tb_stats', False))).lower()}`",
         f"- fail_9p_timeout: `{str(bool(summary.get('fail_9p_timeout', False))).lower()}`",
         "",
         "## Suites",
@@ -652,6 +667,33 @@ def main(argv: list[str]) -> int:
         ),
         help="Forward QEMU's opt-in TLBI source-PC hot-site heartbeat sketch.",
     )
+    parser.add_argument(
+        "--qemu-tlb-fill-stats",
+        action="store_true",
+        default=_env_bool(
+            "SPEC_QEMU_TLB_FILL_STATS",
+            _env_bool("LINX_SPEC_QEMU_TLB_FILL_STATS", False),
+        ),
+        help="Forward QEMU's opt-in demand page-walk heartbeat counters.",
+    )
+    parser.add_argument(
+        "--qemu-tlb-fill-hot",
+        action="store_true",
+        default=_env_bool(
+            "SPEC_QEMU_TLB_FILL_HOT",
+            _env_bool("LINX_SPEC_QEMU_TLB_FILL_HOT", False),
+        ),
+        help="Forward QEMU's opt-in demand page-walk hot-page heartbeat sketch.",
+    )
+    parser.add_argument(
+        "--qemu-tb-stats",
+        action="store_true",
+        default=_env_bool(
+            "SPEC_QEMU_TB_STATS",
+            _env_bool("LINX_SPEC_QEMU_TB_STATS", False),
+        ),
+        help="Forward QEMU's opt-in TCG TB heartbeat counters.",
+    )
     parser.add_argument("--no-progress-timeout", type=float, default=_env_float("SPEC_NO_PROGRESS_TIMEOUT", _env_float("LINX_SPEC_NO_PROGRESS_TIMEOUT", 0.0)))
     parser.add_argument(
         "--stack-limit",
@@ -716,6 +758,9 @@ def main(argv: list[str]) -> int:
     runner_has_qemu_frame_restore_host_load = _runner_supports_option(runner, "--qemu-frame-restore-host-load")
     runner_has_qemu_tlb_stats = _runner_supports_option(runner, "--qemu-tlb-stats")
     runner_has_qemu_tlb_inv_hot = _runner_supports_option(runner, "--qemu-tlb-inv-hot")
+    runner_has_qemu_tlb_fill_stats = _runner_supports_option(runner, "--qemu-tlb-fill-stats")
+    runner_has_qemu_tlb_fill_hot = _runner_supports_option(runner, "--qemu-tlb-fill-hot")
+    runner_has_qemu_tb_stats = _runner_supports_option(runner, "--qemu-tb-stats")
     runner_has_no_progress = _runner_supports_option(runner, "--no-progress-timeout")
     runner_has_memory_mb = _runner_supports_option(runner, "--memory-mb")
     runner_has_stack_limit = _runner_supports_option(runner, "--stack-limit")
@@ -768,6 +813,24 @@ def main(argv: list[str]) -> int:
             "error: local SPEC matrix runner does not support "
             "--qemu-tlb-inv-hot; update tools/spec2017/run_stage_qemu_matrix.py "
             "or rerun without the TLB invalidation hot-site switch"
+        )
+    if args.qemu_tlb_fill_stats and not runner_has_qemu_tlb_fill_stats:
+        raise SystemExit(
+            "error: local SPEC matrix runner does not support "
+            "--qemu-tlb-fill-stats; update tools/spec2017/run_stage_qemu_matrix.py "
+            "or rerun without the TLB fill stats switch"
+        )
+    if args.qemu_tlb_fill_hot and not runner_has_qemu_tlb_fill_hot:
+        raise SystemExit(
+            "error: local SPEC matrix runner does not support "
+            "--qemu-tlb-fill-hot; update tools/spec2017/run_stage_qemu_matrix.py "
+            "or rerun without the TLB fill hot-site switch"
+        )
+    if args.qemu_tb_stats and not runner_has_qemu_tb_stats:
+        raise SystemExit(
+            "error: local SPEC matrix runner does not support "
+            "--qemu-tb-stats; update tools/spec2017/run_stage_qemu_matrix.py "
+            "or rerun without the TB stats switch"
         )
     if args.no_progress_timeout and not runner_has_no_progress:
         raise SystemExit(
@@ -836,6 +899,9 @@ def main(argv: list[str]) -> int:
                 qemu_frame_restore_host_load=args.qemu_frame_restore_host_load,
                 qemu_tlb_stats=args.qemu_tlb_stats,
                 qemu_tlb_inv_hot=args.qemu_tlb_inv_hot,
+                qemu_tlb_fill_stats=args.qemu_tlb_fill_stats,
+                qemu_tlb_fill_hot=args.qemu_tlb_fill_hot,
+                qemu_tb_stats=args.qemu_tb_stats,
                 no_progress_timeout=args.no_progress_timeout,
                 forward_memory_mb=runner_has_memory_mb,
                 forward_qemu_heartbeat=runner_has_qemu_heartbeat,
@@ -846,6 +912,9 @@ def main(argv: list[str]) -> int:
                 forward_qemu_frame_restore_host_load=runner_has_qemu_frame_restore_host_load,
                 forward_qemu_tlb_stats=runner_has_qemu_tlb_stats,
                 forward_qemu_tlb_inv_hot=runner_has_qemu_tlb_inv_hot,
+                forward_qemu_tlb_fill_stats=runner_has_qemu_tlb_fill_stats,
+                forward_qemu_tlb_fill_hot=runner_has_qemu_tlb_fill_hot,
+                forward_qemu_tb_stats=runner_has_qemu_tb_stats,
                 forward_no_progress=runner_has_no_progress,
                 forward_stack_limit=runner_has_stack_limit,
                 forward_symbolize_heartbeat=runner_has_symbolize_heartbeat,
@@ -921,6 +990,9 @@ def main(argv: list[str]) -> int:
         "qemu_frame_restore_host_load": bool(args.qemu_frame_restore_host_load),
         "qemu_tlb_stats": bool(args.qemu_tlb_stats),
         "qemu_tlb_inv_hot": bool(args.qemu_tlb_inv_hot),
+        "qemu_tlb_fill_stats": bool(args.qemu_tlb_fill_stats),
+        "qemu_tlb_fill_hot": bool(args.qemu_tlb_fill_hot),
+        "qemu_tb_stats": bool(args.qemu_tb_stats),
         "no_progress_timeout": args.no_progress_timeout,
         "guest_heartbeat_sec": args.guest_heartbeat_sec,
         "symbolize_heartbeat": bool(args.symbolize_heartbeat),

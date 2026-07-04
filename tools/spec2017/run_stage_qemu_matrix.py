@@ -814,6 +814,18 @@ def main(argv: list[str]) -> int:
         help="Pass --qemu-tlb-inv-hot to emit TLBI source-PC hot-site heartbeat lines.",
     )
     ap.add_argument(
+        "--qemu-tlb-fill-stats",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_TLB_FILL_STATS", False),
+        help="Pass --qemu-tlb-fill-stats to append demand page-walk counters to QEMU heartbeats.",
+    )
+    ap.add_argument(
+        "--qemu-tlb-fill-hot",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_TLB_FILL_HOT", False),
+        help="Pass --qemu-tlb-fill-hot to emit hot demand page-walk heartbeat sketches.",
+    )
+    ap.add_argument(
         "--qemu-tb-stats",
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_TB_STATS", False),
@@ -1241,6 +1253,10 @@ def main(argv: list[str]) -> int:
             cmd.append("--qemu-tlb-stats")
         if args.qemu_tlb_inv_hot:
             cmd.append("--qemu-tlb-inv-hot")
+        if args.qemu_tlb_fill_stats:
+            cmd.append("--qemu-tlb-fill-stats")
+        if args.qemu_tlb_fill_hot:
+            cmd.append("--qemu-tlb-fill-hot")
         if args.qemu_tb_stats:
             cmd.append("--qemu-tb-stats")
         if args.qemu_fault_trace:
@@ -1355,6 +1371,8 @@ def main(argv: list[str]) -> int:
         "qemu_fentry_trace": qemu_fentry_trace,
         "qemu_tlb_stats": bool(args.qemu_tlb_stats),
         "qemu_tlb_inv_hot": bool(args.qemu_tlb_inv_hot),
+        "qemu_tlb_fill_stats": bool(args.qemu_tlb_fill_stats),
+        "qemu_tlb_fill_hot": bool(args.qemu_tlb_fill_hot),
         "qemu_tb_stats": bool(args.qemu_tb_stats),
         "qemu_fault_trace": bool(args.qemu_fault_trace or qemu_fault_trace_filters),
         "qemu_fault_trace_regs": bool(args.qemu_fault_trace_regs),

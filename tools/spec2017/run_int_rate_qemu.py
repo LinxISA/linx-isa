@@ -767,6 +767,8 @@ def _apply_qemu_debug_env(
     qemu_frame_restore_host_verify_limit: int = 0,
     qemu_tlb_stats: bool = False,
     qemu_tlb_inv_hot: bool = False,
+    qemu_tlb_fill_stats: bool = False,
+    qemu_tlb_fill_hot: bool = False,
     qemu_tb_stats: bool = False,
     qemu_fret_stk_trace: dict[str, str] | None = None,
     qemu_fentry_trace: dict[str, str] | None = None,
@@ -800,6 +802,10 @@ def _apply_qemu_debug_env(
         qemu_env["LINX_QEMU_TLB_STATS"] = "1"
     if qemu_tlb_inv_hot:
         qemu_env["LINX_QEMU_TLB_INV_HOT"] = "1"
+    if qemu_tlb_fill_stats:
+        qemu_env["LINX_QEMU_TLB_FILL_STATS"] = "1"
+    if qemu_tlb_fill_hot:
+        qemu_env["LINX_QEMU_TLB_FILL_HOT"] = "1"
     if qemu_tb_stats:
         qemu_env["LINX_QEMU_TB_STATS"] = "1"
     for name, value in (qemu_fret_stk_trace or {}).items():
@@ -2792,6 +2798,8 @@ def _run_qemu(
     qemu_frame_restore_host_verify_limit: int,
     qemu_tlb_stats: bool,
     qemu_tlb_inv_hot: bool,
+    qemu_tlb_fill_stats: bool,
+    qemu_tlb_fill_hot: bool,
     qemu_tb_stats: bool,
     qemu_fret_stk_trace: dict[str, str],
     qemu_fentry_trace: dict[str, str],
@@ -2858,6 +2866,8 @@ def _run_qemu(
         qemu_frame_restore_host_verify_limit=qemu_frame_restore_host_verify_limit,
         qemu_tlb_stats=qemu_tlb_stats,
         qemu_tlb_inv_hot=qemu_tlb_inv_hot,
+        qemu_tlb_fill_stats=qemu_tlb_fill_stats,
+        qemu_tlb_fill_hot=qemu_tlb_fill_hot,
         qemu_tb_stats=qemu_tb_stats,
         qemu_fret_stk_trace=qemu_fret_stk_trace,
         qemu_fentry_trace=qemu_fentry_trace,
@@ -3060,6 +3070,8 @@ def _run_qemu(
         "qemu_frame_restore_host_load": bool(qemu_frame_restore_host_load),
         "qemu_tlb_stats": bool(qemu_tlb_stats),
         "qemu_tlb_inv_hot": bool(qemu_tlb_inv_hot),
+        "qemu_tlb_fill_stats": bool(qemu_tlb_fill_stats),
+        "qemu_tlb_fill_hot": bool(qemu_tlb_fill_hot),
         "qemu_tb_stats": bool(qemu_tb_stats),
         "qemu_rc": qemu_rc,
         "timed_out": timed_out,
@@ -4435,6 +4447,18 @@ def main(argv: list[str]) -> int:
         help="Set LINX_QEMU_TLB_INV_HOT=1 to emit TLBI source-PC hot-site heartbeat lines.",
     )
     parser.add_argument(
+        "--qemu-tlb-fill-stats",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_TLB_FILL_STATS", False),
+        help="Set LINX_QEMU_TLB_FILL_STATS=1 to append demand page-walk counters to QEMU heartbeats.",
+    )
+    parser.add_argument(
+        "--qemu-tlb-fill-hot",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_TLB_FILL_HOT", False),
+        help="Set LINX_QEMU_TLB_FILL_HOT=1 to emit hot demand page-walk heartbeat sketches.",
+    )
+    parser.add_argument(
         "--qemu-tb-stats",
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_TB_STATS", False),
@@ -4831,6 +4855,8 @@ def main(argv: list[str]) -> int:
         "qemu_frame_restore_host_verify_limit": args.qemu_frame_restore_host_verify_limit,
         "qemu_tlb_stats": bool(args.qemu_tlb_stats),
         "qemu_tlb_inv_hot": bool(args.qemu_tlb_inv_hot),
+        "qemu_tlb_fill_stats": bool(args.qemu_tlb_fill_stats),
+        "qemu_tlb_fill_hot": bool(args.qemu_tlb_fill_hot),
         "qemu_tb_stats": bool(args.qemu_tb_stats),
         "qemu_fret_stk_trace": qemu_fret_stk_trace,
         "qemu_fentry_trace": qemu_fentry_trace,
@@ -4945,6 +4971,8 @@ def main(argv: list[str]) -> int:
                     args.qemu_frame_restore_host_verify_limit,
                     args.qemu_tlb_stats,
                     args.qemu_tlb_inv_hot,
+                    args.qemu_tlb_fill_stats,
+                    args.qemu_tlb_fill_hot,
                     args.qemu_tb_stats,
                     qemu_fret_stk_trace,
                     qemu_fentry_trace,
