@@ -142,6 +142,47 @@ def _usable_static_sysroot(path: Path) -> bool:
     )
 
 
+def _sysroot_provenance(sysroot: Path) -> dict[str, Any]:
+    info: dict[str, Any] = {"path": str(sysroot)}
+    summary_path: Path | None = None
+    if sysroot.parent.name == "install":
+        summary_path = sysroot.parent.parent / "logs" / f"{sysroot.name}-summary.txt"
+    if summary_path is None:
+        return info
+
+    info["summary_path"] = str(summary_path)
+    info["summary_exists"] = summary_path.is_file()
+    if not summary_path.is_file():
+        return info
+
+    parsed: dict[str, str] = {}
+    for raw in summary_path.read_text(encoding="utf-8", errors="replace").splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        parsed[key.strip()] = value.strip()
+
+    for key in (
+        "mode",
+        "target",
+        "malloc_impl",
+        "musl_root",
+        "llvm_bin",
+        "build_dir",
+        "install_dir",
+        "m1",
+        "m2",
+        "m3",
+        "shared_install",
+    ):
+        if key in parsed:
+            info[key] = parsed[key]
+    if parsed.get("install_dir"):
+        info["install_dir_matches_sysroot"] = parsed["install_dir"] == str(sysroot)
+    return info
+
+
 def _read_control_rows(path: Path) -> list[list[str]]:
     if not path.exists():
         raise SystemExit(f"error: missing control file: {path}")
@@ -4775,6 +4816,7 @@ def main(argv: list[str]) -> int:
         "qemu_provenance": qemu_binary_provenance(REPO_ROOT, qemu),
         "kernel": str(kernel),
         "sysroot": str(sysroot),
+        "sysroot_provenance": _sysroot_provenance(sysroot),
         "memory_mb": args.memory_mb,
         "stack_limit": _spec_stack_limit_raw() or "default",
         "stack_limit_defines": _spec_stack_limit_defines(),
