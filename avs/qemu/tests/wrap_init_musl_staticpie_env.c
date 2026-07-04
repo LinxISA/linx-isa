@@ -6,6 +6,7 @@ enum {
 	__NR_close = 57,
 	__NR_write = 64,
 	__NR_dup = 23,
+	__NR_dup3 = 24,
 	__NR_reboot = 142,
 	__NR_exit_group = 94,
 	__NR_execve = 221,
@@ -85,6 +86,11 @@ static inline slong sys_dup(int fd)
 	return sys_call1(__NR_dup, (ulong)fd);
 }
 
+static inline slong sys_dup3(int oldfd, int newfd, int flags)
+{
+	return sys_call3(__NR_dup3, (ulong)oldfd, (ulong)newfd, (ulong)flags);
+}
+
 static inline slong sys_write(int fd, const void *buf, ulong count)
 {
 	return sys_call3(__NR_write, (ulong)fd, (ulong)buf, count);
@@ -129,6 +135,37 @@ static void emit_line(const char *s)
 	nl[0] = '\n';
 	emit_raw(s);
 	(void)sys_write(1, nl, 1);
+}
+
+static void setup_stdio(void)
+{
+	char tty[11];
+	slong fd;
+
+	tty[0] = '/';
+	tty[1] = 'd';
+	tty[2] = 'e';
+	tty[3] = 'v';
+	tty[4] = '/';
+	tty[5] = 't';
+	tty[6] = 't';
+	tty[7] = 'y';
+	tty[8] = 'S';
+	tty[9] = '0';
+	tty[10] = 0;
+
+	fd = sys_openat(AT_FDCWD, tty, O_RDWR, 0);
+	if (fd < 0)
+		return;
+
+	if (fd != 0)
+		(void)sys_dup3((int)fd, 0, 0);
+	if (fd != 1)
+		(void)sys_dup3((int)fd, 1, 0);
+	if (fd != 2)
+		(void)sys_dup3((int)fd, 2, 0);
+	if (fd > 2)
+		(void)sys_close((int)fd);
 }
 
 __attribute__((noreturn)) void _start(void)
@@ -216,13 +253,10 @@ __attribute__((noreturn)) void _start(void)
 	envp[1] = 0;
 
 	/*
-	 * Keep PID1 on the inherited stdio fds instead of reopening
-	 * /dev/console. The current Linx runtime can trip kernel return-path
-	 * faults in that console-open path for some glibc hello variants. Do
-	 * not write the virt UART MMIO page directly from Linux userspace; QEMU
-	 * should only see console output through kernel-mediated file
-	 * descriptors.
+	 * Keep marker output kernel-mediated: current Linx kernels can return
+	 * ENODEV for /dev/console, while /dev/ttyS0 is the actual serial node.
 	 */
+	setup_stdio();
 	emit_line(marker_start);
 	(void)sys_execve(hello, argv, envp);
 	emit_line(marker_fail);
