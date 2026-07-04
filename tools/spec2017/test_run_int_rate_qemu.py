@@ -272,6 +272,7 @@ class RunIntRateQemuTests(unittest.TestCase):
             qemu_heartbeat_same_site_warn=4,
             qemu_frame_stats=True,
             qemu_frame_shape_hot=True,
+            qemu_frame_single_reg_fast=True,
             qemu_frame_restore_host_load=True,
             qemu_frame_restore_host_verify=True,
             qemu_frame_restore_host_verify_limit=9,
@@ -288,6 +289,7 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(env["LINX_QEMU_HEARTBEAT_SAME_SITE_WARN"], "4")
         self.assertEqual(env["LINX_QEMU_FRAME_STATS"], "1")
         self.assertEqual(env["LINX_QEMU_FRAME_SHAPE_HOT"], "1")
+        self.assertEqual(env["LINX_QEMU_FRAME_SINGLE_REG_FAST"], "1")
         self.assertEqual(env["LINX_QEMU_FRAME_RESTORE_HOST_LOAD"], "1")
         self.assertEqual(env["LINX_QEMU_FRAME_RESTORE_HOST_VERIFY"], "1")
         self.assertEqual(env["LINX_QEMU_FRAME_RESTORE_HOST_VERIFY_LIMIT"], "9")
@@ -533,7 +535,8 @@ class RunIntRateQemuTests(unittest.TestCase):
             "fr_fret_stk=5 fr_fret_ra=7 fr_restore_slot=13 "
             "fr_restore_host=12 fr_restore_fallback=1 "
             "fr_restore_verify=15 fr_restore_mismatch=6 "
-            "fr_ret_fast=17 fr_ret_check=4"
+            "fr_ret_fast=17 fr_ret_check=4 "
+            "fr_single_fast_fentry=8 fr_single_fast_fret_stk=9"
         )
 
         self.assertEqual(summary["fentry"], 11)
@@ -551,6 +554,8 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(summary["restore_mismatch"], 6)
         self.assertEqual(summary["ret_fast"], 17)
         self.assertEqual(summary["ret_check"], 4)
+        self.assertEqual(summary["single_fast_fentry"], 8)
+        self.assertEqual(summary["single_fast_fret_stk"], 9)
 
     def test_frame_shape_hot_summary_parses_top_shapes(self) -> None:
         summary = runner._frame_shape_hot_summary(

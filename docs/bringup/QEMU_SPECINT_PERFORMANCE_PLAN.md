@@ -239,6 +239,38 @@ as the top shapes, both using register range `10-10`, one register, and
 prototype should specialize or batch this one-register stack-32 entry/return
 shape first, using `999.specrand_ir` strict train as the before/after guard.
 
+Single-register frame fast-path update:
+QEMU now has a default-off speed experiment controlled by
+`LINX_QEMU_FRAME_SINGLE_REG_FAST=1` / `LINX_FRAME_SINGLE_REG_FAST=1`, surfaced
+to SPEC as `--qemu-frame-single-reg-fast`. It handles valid one-register
+`FENTRY` and `FRET.STK` shapes without the generic register-loop/array path,
+while preserving the pre-SP store probe, restore load faulting behavior,
+architectural SP/register traces, call trace, and BSTART return-target check.
+Trace-heavy `FENTRY` / `FRET.STK` modes stay on the generic path.
+
+Validation and focused result:
+
+| Check | Result |
+| --- | --- |
+| `ninja -C emulator/qemu/build-linx qemu-system-linx64` | pass, only pre-existing warnings |
+| `LINX_QEMU_FRAME_SINGLE_REG_FAST=1 LINX_QEMU_FRAME_STATS=1 python3 avs/qemu/run_callret_contract.py --qemu emulator/qemu/build-linx/qemu-system-linx64` | pass |
+| strict train `999.specrand_ir` with `--qemu-frame-stats --qemu-frame-single-reg-fast` | pass, `workloads/generated/specint-999-frame-single-fast-qemu-20260705-r1/`; counters show `single_fast_fentry=4763059`, `single_fast_fret_stk=4763046` |
+
+Focused `541.leela_r` train A/B with 100M-instruction QEMU heartbeats and frame
+stats:
+
+| Run | Result | Elapsed | Count | Single-fast counters |
+| --- | --- | ---: | ---: | ---: |
+| `workloads/generated/specint-541-single-fast-baseline-finehb-qemu-20260705-r1/` | `live-timeout`, site progress | 46.125s | 5500000007 | 0 / 0 |
+| `workloads/generated/specint-541-single-fast-on-finehb-qemu-20260705-r1/` | `live-timeout`, site progress | 45.396s | 5900000001 | 282866542 / 282866531 |
+
+This is a focused throughput win for the hot one-register RA shape: `+399999994`
+guest instructions at the bounded timeout (`+7.27%` raw final-count delta, and
+about `+8.9%` by count/elapsed). Loop update: keep the switch opt-in until an
+all-row train comparison proves no row regresses, but use it in the next
+template-helper speed stack for rows where `frame-hot=` reports one-register
+entry/return shapes.
+
 The older post-directgoto opt-in train ledger is
 `workloads/generated/specint-train-all-template-directgoto-qemu-20260704-r1/`.
 It used in-tree QEMU head `1b55b888b36f6d4f7ad600d4121ac8c7b8821462` and is

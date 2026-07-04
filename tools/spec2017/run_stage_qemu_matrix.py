@@ -610,6 +610,7 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
     lines.append(f"- qemu_heartbeat_same_site_warn: `{summary.get('qemu_heartbeat_same_site_warn', 0)}`")
     lines.append(f"- qemu_frame_stats: `{str(bool(summary.get('qemu_frame_stats', False))).lower()}`")
     lines.append(f"- qemu_frame_shape_hot: `{str(bool(summary.get('qemu_frame_shape_hot', False))).lower()}`")
+    lines.append(f"- qemu_frame_single_reg_fast: `{str(bool(summary.get('qemu_frame_single_reg_fast', False))).lower()}`")
     lines.append(
         "- qemu_frame_restore_host_load: "
         f"`{str(bool(summary.get('qemu_frame_restore_host_load', False))).lower()}`"
@@ -786,6 +787,12 @@ def main(argv: list[str]) -> int:
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_FRAME_SHAPE_HOT", False),
         help="Pass --qemu-frame-shape-hot to emit hot frame-template shape heartbeat sketches.",
+    )
+    ap.add_argument(
+        "--qemu-frame-single-reg-fast",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_FRAME_SINGLE_REG_FAST", False),
+        help="Pass --qemu-frame-single-reg-fast to enable QEMU's opt-in one-register frame fast path.",
     )
     ap.add_argument(
         "--qemu-frame-restore-host-load",
@@ -1270,6 +1277,8 @@ def main(argv: list[str]) -> int:
             cmd.append("--qemu-frame-stats")
         if args.qemu_frame_shape_hot:
             cmd.append("--qemu-frame-shape-hot")
+        if args.qemu_frame_single_reg_fast:
+            cmd.append("--qemu-frame-single-reg-fast")
         if args.qemu_frame_restore_host_load:
             cmd.append("--qemu-frame-restore-host-load")
         if args.qemu_frame_restore_host_verify:
@@ -1413,6 +1422,7 @@ def main(argv: list[str]) -> int:
         "qemu_heartbeat_same_site_warn": int(args.qemu_heartbeat_same_site_warn),
         "qemu_frame_stats": bool(args.qemu_frame_stats),
         "qemu_frame_shape_hot": bool(args.qemu_frame_shape_hot),
+        "qemu_frame_single_reg_fast": bool(args.qemu_frame_single_reg_fast),
         "qemu_frame_restore_host_load": bool(args.qemu_frame_restore_host_load),
         "qemu_frame_restore_host_verify": bool(args.qemu_frame_restore_host_verify),
         "qemu_frame_restore_host_verify_limit": int(args.qemu_frame_restore_host_verify_limit),

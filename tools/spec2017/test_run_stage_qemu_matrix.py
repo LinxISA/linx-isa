@@ -145,6 +145,7 @@ class StageQemuMatrixTests(unittest.TestCase):
             "qemu_heartbeat_regs": True,
             "qemu_heartbeat_code_bytes": 16,
             "qemu_heartbeat_same_site_warn": 4,
+            "qemu_frame_single_reg_fast": True,
             "qemu_frame_restore_host_verify": True,
             "qemu_frame_restore_host_verify_limit": 9,
             "qemu_fault_trace": True,
@@ -200,6 +201,7 @@ class StageQemuMatrixTests(unittest.TestCase):
         self.assertIn("qemu_extra_args: `-accel tcg,split-wx=off`", text)
         self.assertIn("qemu_heartbeat_code_bytes: `16`", text)
         self.assertIn("qemu_heartbeat_same_site_warn: `4`", text)
+        self.assertIn("qemu_frame_single_reg_fast: `true`", text)
         self.assertIn("qemu_frame_restore_host_verify: `true`", text)
         self.assertIn("qemu_frame_restore_host_verify_limit: `9`", text)
         self.assertIn("guest_proc_diagnostics: `true`", text)

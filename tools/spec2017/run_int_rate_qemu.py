@@ -763,6 +763,7 @@ def _apply_qemu_debug_env(
     qemu_heartbeat_same_site_warn: int = 0,
     qemu_frame_stats: bool = False,
     qemu_frame_shape_hot: bool = False,
+    qemu_frame_single_reg_fast: bool = False,
     qemu_frame_restore_host_load: bool = False,
     qemu_frame_restore_host_verify: bool = False,
     qemu_frame_restore_host_verify_limit: int = 0,
@@ -793,6 +794,8 @@ def _apply_qemu_debug_env(
         qemu_env["LINX_QEMU_FRAME_STATS"] = "1"
     if qemu_frame_shape_hot:
         qemu_env["LINX_QEMU_FRAME_SHAPE_HOT"] = "1"
+    if qemu_frame_single_reg_fast:
+        qemu_env["LINX_QEMU_FRAME_SINGLE_REG_FAST"] = "1"
     if qemu_frame_restore_host_load:
         qemu_env["LINX_QEMU_FRAME_RESTORE_HOST_LOAD"] = "1"
     if qemu_frame_restore_host_verify or qemu_frame_restore_host_verify_limit > 0:
@@ -2797,6 +2800,7 @@ def _run_qemu(
     qemu_heartbeat_same_site_warn: int,
     qemu_frame_stats: bool,
     qemu_frame_shape_hot: bool,
+    qemu_frame_single_reg_fast: bool,
     qemu_frame_restore_host_load: bool,
     qemu_frame_restore_host_verify: bool,
     qemu_frame_restore_host_verify_limit: int,
@@ -2866,6 +2870,7 @@ def _run_qemu(
         qemu_heartbeat_same_site_warn=qemu_heartbeat_same_site_warn,
         qemu_frame_stats=qemu_frame_stats,
         qemu_frame_shape_hot=qemu_frame_shape_hot,
+        qemu_frame_single_reg_fast=qemu_frame_single_reg_fast,
         qemu_frame_restore_host_load=qemu_frame_restore_host_load,
         qemu_frame_restore_host_verify=qemu_frame_restore_host_verify,
         qemu_frame_restore_host_verify_limit=qemu_frame_restore_host_verify_limit,
@@ -3074,6 +3079,7 @@ def _run_qemu(
         "qemu_debug_env": qemu_debug_env,
         "qemu_frame_stats": bool(qemu_frame_stats),
         "qemu_frame_shape_hot": bool(qemu_frame_shape_hot),
+        "qemu_frame_single_reg_fast": bool(qemu_frame_single_reg_fast),
         "qemu_frame_restore_host_load": bool(qemu_frame_restore_host_load),
         "qemu_tlb_stats": bool(qemu_tlb_stats),
         "qemu_tlb_inv_hot": bool(qemu_tlb_inv_hot),
@@ -3734,6 +3740,8 @@ def _heartbeat_frame_stats_summary(line: str) -> dict[str, Any]:
         "restore_mismatch": _decimal_or_none(fields.get("fr_restore_mismatch")),
         "ret_fast": _decimal_or_none(fields.get("fr_ret_fast")),
         "ret_check": _decimal_or_none(fields.get("fr_ret_check")),
+        "single_fast_fentry": _decimal_or_none(fields.get("fr_single_fast_fentry")),
+        "single_fast_fret_stk": _decimal_or_none(fields.get("fr_single_fast_fret_stk")),
     }
 
 
@@ -4445,6 +4453,12 @@ def main(argv: list[str]) -> int:
         help="Set LINX_QEMU_FRAME_SHAPE_HOT=1 to emit hot frame-template shape heartbeat sketches.",
     )
     parser.add_argument(
+        "--qemu-frame-single-reg-fast",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_FRAME_SINGLE_REG_FAST", False),
+        help="Set LINX_QEMU_FRAME_SINGLE_REG_FAST=1 to use the opt-in one-register frame fast path.",
+    )
+    parser.add_argument(
         "--qemu-frame-restore-host-load",
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_FRAME_RESTORE_HOST_LOAD", False),
@@ -4927,6 +4941,7 @@ def main(argv: list[str]) -> int:
         "qemu_heartbeat_same_site_warn": args.qemu_heartbeat_same_site_warn,
         "qemu_frame_stats": bool(args.qemu_frame_stats),
         "qemu_frame_shape_hot": bool(args.qemu_frame_shape_hot),
+        "qemu_frame_single_reg_fast": bool(args.qemu_frame_single_reg_fast),
         "qemu_frame_restore_host_load": bool(args.qemu_frame_restore_host_load),
         "qemu_frame_restore_host_verify": bool(args.qemu_frame_restore_host_verify),
         "qemu_frame_restore_host_verify_limit": args.qemu_frame_restore_host_verify_limit,
@@ -5044,6 +5059,7 @@ def main(argv: list[str]) -> int:
                     args.qemu_heartbeat_same_site_warn,
                     args.qemu_frame_stats,
                     args.qemu_frame_shape_hot,
+                    args.qemu_frame_single_reg_fast,
                     args.qemu_frame_restore_host_load,
                     args.qemu_frame_restore_host_verify,
                     args.qemu_frame_restore_host_verify_limit,
