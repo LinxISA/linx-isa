@@ -29,15 +29,31 @@ class ProfileQemuSpecSuiteTests(unittest.TestCase):
         with self.assertRaises(SystemExit):
             suite._parse_env_assignment("=no_key")
 
-    def test_parse_args_defaults_to_all_train_benches(self) -> None:
+    def test_parse_args_defaults_to_train_workload_benches(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             args = suite._parse_args(["--out-root", td, "--qemu", "/tmp/qemu"])
 
         self.assertEqual(args.input_set, "train")
         self.assertEqual(args.stage, "b")
-        self.assertEqual(args.bench, suite.SPECINT_STAGE_B_BENCHES)
+        self.assertEqual(args.bench, suite.DEFAULT_PROFILE_BENCHES)
+        self.assertNotIn("999.specrand_ir", args.bench)
         self.assertTrue(args.terminate_after_sample)
         self.assertTrue(args.terminate_on_wait_timeout)
+
+    def test_parse_args_can_profile_sentinel_when_named(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            args = suite._parse_args(
+                [
+                    "--out-root",
+                    td,
+                    "--qemu",
+                    "/tmp/qemu",
+                    "--bench",
+                    "999.specrand_ir",
+                ]
+            )
+
+        self.assertEqual(args.bench, ("999.specrand_ir",))
 
     def test_profile_command_uses_bench_root_and_transport_policy(self) -> None:
         args = argparse.Namespace(

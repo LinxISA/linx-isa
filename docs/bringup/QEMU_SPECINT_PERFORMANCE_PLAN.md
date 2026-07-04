@@ -162,11 +162,13 @@ visible outside `505`: `linx_template_fret_stk_impl=252`,
 
 Suite profiler update: `tools/spec2017/profile_qemu_spec_suite.py` runs the
 same marker-aware profiler over a benchmark list and writes
-`profile_suite_summary.json` plus Markdown. It defaults to train stage-b
-SPECint, applies the existing large-payload transport split for `525.x264_r`,
-and passes `--terminate-on-wait-timeout` to the lower-level profiler so a row
-that never reaches `LINX_SPEC_START` cannot trap the suite behind the full
-matrix retry behavior.
+`profile_suite_summary.json` plus Markdown. It defaults to the nine train
+stage-b SPECint workload rows, excludes the fast correctness sentinel
+`999.specrand_ir` unless it is named with `--bench`, applies the existing
+large-payload transport split for `525.x264_r`, and passes
+`--terminate-on-wait-timeout` to the lower-level profiler so a row that never
+reaches `LINX_SPEC_START` cannot trap the suite behind the full matrix retry
+behavior.
 
 The clean-head long-row train suite
 `workloads/generated/specint-profile-suite-train-long-clean-qemu-20260705-r2/`
@@ -193,12 +195,28 @@ TLBI remains row-selective in these delayed samples, concentrated in `531` and
 `557`, so keep TLBI work behind row-specific Linux invalidation attribution
 instead of treating it as the broad first fix.
 
+Current-head profile refresh:
+`workloads/generated/specint-profile-suite-train-frame-single-fast-clean-qemu-20260705-r2/`
+uses the clean QEMU binary at
+`7ae245b6a5e937fdfd1f377662efa00997f68025` /
+`v10.2.0-1024-g7ae245b6a5e`, with `LINX_QEMU_TEMPLATE_CHAIN=1`,
+`--qemu-frame-single-reg-fast`, frame/TB/TLB stats, and the 1B-instruction
+BPC heartbeat. The patched default suite covers the nine non-sentinel train
+workload rows, exits `ok=true`, and records valid delayed samples for all nine.
+Aggregate active QEMU frames remain concentrated in frame-template helpers, TB
+dispatch, and soft-MMU lookup: `linx_template_fret_stk_impl=1226`,
+`linx_template_fentry_impl=1164`, `tb_lookup=1124`,
+`helper_lookup_tb_ptr=889`, `probe_access_internal=833`, `mmu_lookup1=790`;
+`helper_linx_tlb_iv=524` is concentrated across three reports.
+
 Progress-analysis loop update:
 `tools/spec2017/analyze_specint_qemu_progress.py` now joins the clean all-row
 train gate with the all-row delayed profile suite and writes a generated
-machine-readable report plus Markdown. The current report is
-`workloads/generated/specint-qemu-progress-analysis-20260705-r1/report.json`.
-It records `spec_train_correctness_complete=false`: only
+machine-readable report plus Markdown. The current matching-head report is
+`workloads/generated/specint-qemu-progress-analysis-frame-single-fast-clean-current-profile-20260705-r1/report.json`;
+both gate and profile inputs record QEMU head
+`7ae245b6a5e937fdfd1f377662efa00997f68025`. It records
+`spec_train_correctness_complete=false`: only
 `999.specrand_ir` passes the strict train hash, while the nine real SPECint
 rows remain heartbeat-backed live-throughput failures. The analyzer classifies
 the next work lanes as:
@@ -305,6 +323,15 @@ the train-all clean ledger shows regressions on `500`, `505`, and `557`, so the
 next speed loop should split row classes instead of promoting this switch
 globally. Continue to use `--qemu-frame-stats` so frame-fast usage and generic
 restore fallback traffic remain visible.
+
+The matching-head delayed profile suite
+`workloads/generated/specint-profile-suite-train-frame-single-fast-clean-qemu-20260705-r2/`
+keeps the same lane split under this fast-path stack: six rows
+(`500`, `502`, `505`, `520`, `523`, `541`) remain
+`template-tb-mmu-throughput`, `531` and `557` remain
+`linux-tlbi-attribution`, and `525` remains `transport-9p-throughput`. The
+corresponding analyzer report is
+`workloads/generated/specint-qemu-progress-analysis-frame-single-fast-clean-current-profile-20260705-r1/report.md`.
 
 The older post-directgoto opt-in train ledger is
 `workloads/generated/specint-train-all-template-directgoto-qemu-20260704-r1/`.

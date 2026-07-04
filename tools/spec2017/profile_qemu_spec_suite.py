@@ -26,7 +26,7 @@ MATRIX_RUNNER = SCRIPT_DIR / "run_stage_qemu_matrix.py"
 DEFAULT_SPEC_DIR = REPO_ROOT / "workloads" / "spec2017" / "cpu2017v118_x64_gcc12_avx2"
 DEFAULT_SYSROOT = REPO_ROOT / "out" / "libc" / "musl" / "install" / "phase-b"
 
-SPECINT_STAGE_B_BENCHES = (
+SPECINT_STAGE_B_WORKLOAD_BENCHES = (
     "500.perlbench_r",
     "502.gcc_r",
     "505.mcf_r",
@@ -36,8 +36,14 @@ SPECINT_STAGE_B_BENCHES = (
     "531.deepsjeng_r",
     "541.leela_r",
     "557.xz_r",
+)
+
+SPECINT_STAGE_B_SENTINELS = (
     "999.specrand_ir",
 )
+
+SPECINT_STAGE_B_BENCHES = SPECINT_STAGE_B_WORKLOAD_BENCHES + SPECINT_STAGE_B_SENTINELS
+DEFAULT_PROFILE_BENCHES = SPECINT_STAGE_B_WORKLOAD_BENCHES
 
 LARGE_PAYLOAD_TRANSPORTS = {
     "525.x264_r": "9p",
@@ -287,7 +293,16 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--qemu", type=Path, default=Path(_default_qemu()))
     parser.add_argument("--sysroot", type=Path, default=DEFAULT_SYSROOT)
     parser.add_argument("--out-root", type=Path, default=REPO_ROOT / "workloads" / "generated" / "specint-qemu-profile-suite")
-    parser.add_argument("--bench", action="append", default=[], help="Benchmark to profile; repeatable. Defaults to all stage-b SPECint benches.")
+    parser.add_argument(
+        "--bench",
+        action="append",
+        default=[],
+        help=(
+            "Benchmark to profile; repeatable. Defaults to stage-b SPECint "
+            "workload rows, excluding the fast correctness sentinel "
+            "999.specrand_ir. Pass --bench 999.specrand_ir to profile it."
+        ),
+    )
     parser.add_argument("--input-set", choices=("test", "train"), default="train")
     parser.add_argument("--stage", choices=("a", "b"), default="b")
     parser.add_argument("--transports", default="auto", help="Transport override for all benches, or auto for per-bench policy.")
@@ -343,7 +358,7 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
     args.qemu = Path(os.path.expanduser(str(args.qemu))).resolve()
     args.sysroot = Path(os.path.expanduser(str(args.sysroot))).resolve()
     args.out_root = Path(os.path.expanduser(str(args.out_root))).resolve()
-    args.bench = tuple(args.bench or SPECINT_STAGE_B_BENCHES)
+    args.bench = tuple(args.bench or DEFAULT_PROFILE_BENCHES)
     return args
 
 

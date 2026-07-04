@@ -44,6 +44,14 @@ Evidence:
   with site-changing BPC progress, no panic, no trap, and no no-progress
   timeout. The one-register frame fast path remains opt-in because normalized
   train-all throughput is mixed.
+- `workloads/generated/specint-profile-suite-train-frame-single-fast-clean-qemu-20260705-r2/`
+  is the matching current-head train profile suite. It profiles the nine
+  non-sentinel SPECint workload rows with delayed post-marker host samples,
+  records `ok=true`, and keeps `525.x264_r` on 9p. The matching analyzer report
+  `workloads/generated/specint-qemu-progress-analysis-frame-single-fast-clean-current-profile-20260705-r1/report.md`
+  classifies the next work as six template/TB/soft-MMU rows, two TLBI
+  attribution rows (`531`, `557`), one 9p transport row (`525`), and the
+  passing `999.specrand_ir` correctness sentinel.
 - `workloads/generated/specint-train-all-clean-qemu-20260705-r1/` is the
   prior clean latest-QEMU all-SPECint train ledger. It uses
   `/tmp/linx-qemu-clean-build/qemu-system-linx64` at QEMU head
