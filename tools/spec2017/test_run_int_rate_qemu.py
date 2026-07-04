@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import argparse
 import inspect
 import os
 import tempfile
@@ -34,6 +35,31 @@ class RunIntRateQemuTests(unittest.TestCase):
 
         self.assertIn("virtio_mmio.device=0x100@0x30002000:2", append)
         self.assertNotIn("virtio_mmio.device=0x200@0x30001000:1", append)
+
+    def test_default_qemu_prefers_build_linx_over_legacy_build(self) -> None:
+        with tempfile.TemporaryDirectory() as td, mock.patch.dict(
+            os.environ, {}, clear=True
+        ):
+            root = Path(td)
+            build_linx = root / "emulator" / "qemu" / "build-linx" / "qemu-system-linx64"
+            legacy = root / "emulator" / "qemu" / "build" / "qemu-system-linx64"
+            build_linx.parent.mkdir(parents=True)
+            legacy.parent.mkdir(parents=True)
+            build_linx.write_text("#!/bin/sh\n", encoding="utf-8")
+            legacy.write_text("#!/bin/sh\n", encoding="utf-8")
+            build_linx.chmod(0o755)
+            legacy.chmod(0o755)
+
+            self.assertEqual(runner._default_qemu(root), str(build_linx.resolve()))
+
+    def test_default_qemu_honors_qemu_env_override(self) -> None:
+        with tempfile.TemporaryDirectory() as td, mock.patch.dict(
+            os.environ, {"QEMU": f"{td}/custom-qemu"}, clear=True
+        ):
+            self.assertEqual(
+                runner._default_qemu(Path(td)),
+                str((Path(td) / "custom-qemu").resolve()),
+            )
 
     def test_child_exit_failure_evidence_includes_wait_status(self) -> None:
         result = runner._classify_qemu_result(
@@ -288,7 +314,12 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(env["LINX_QEMU_FAULT_TRACE_TRAPNUM"], "5")
 
     def test_qemu_debug_env_summary_is_sanitized(self) -> None:
-        env: dict[str, str] = {"PATH": "/bin", "LINX_SYSROOT": "/tmp/sysroot"}
+        env: dict[str, str] = {
+            "PATH": "/bin",
+            "LINX_CALL_TRACE_RING": "1",
+            "LINX_CALL_TRACE_RING_SIZE": "128",
+            "LINX_SYSROOT": "/tmp/sysroot",
+        }
         runner._apply_qemu_debug_env(
             env,
             qemu_heartbeat_interval=1000,
@@ -306,11 +337,26 @@ class RunIntRateQemuTests(unittest.TestCase):
                 "LINX_DEBUG_PC_WATCH": "0x1555827c8c",
                 "LINX_DEBUG_PC_WATCH_RING": "1",
                 "LINX_HEARTBEAT_INTERVAL": "1000",
+                "LINX_CALL_TRACE_RING": "1",
+                "LINX_CALL_TRACE_RING_SIZE": "128",
                 "LINX_QEMU_FAULT_TRACE": "1",
                 "LINX_QEMU_FAULT_TRACE_LIMIT": "3",
                 "LINX_QEMU_FAULT_TRACE_REGS": "1",
             },
         )
+
+    def test_pc_watch_call_ring_dump_enables_call_trace_ring(self) -> None:
+        watch = runner._qemu_pc_watch_from_args(
+            argparse.Namespace(
+                qemu_pc_watch_dump_call_ring=True,
+                qemu_call_trace_ring=False,
+                qemu_call_trace_ring_size="128",
+            )
+        )
+
+        self.assertEqual(watch["LINX_DEBUG_PC_WATCH_DUMP_CALL_RING"], "1")
+        self.assertEqual(watch["LINX_CALL_TRACE_RING"], "1")
+        self.assertEqual(watch["LINX_CALL_TRACE_RING_SIZE"], "128")
 
     def test_heartbeat_tlb_fill_summary_includes_mmu_split(self) -> None:
         summary = runner._heartbeat_tlb_fill_summary(
@@ -436,6 +482,33 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(last_entry["mem_addr"], "0x3fffffe140")
         self.assertEqual(last_entry["mem_ok"], 1)
         self.assertEqual(last_entry["mem_value"], "0x0")
+
+    def test_pc_watch_summary_keeps_call_trace_ring_fields(self) -> None:
+        summary = runner._pc_watch_summary(
+            "LINX_CALL_TRACE_RING reason=pc_watch fault_pc=0x1555837f3c "
+            "fault_count=3340028859 entries=2\n"
+            "LINX_CALL_TRACE_RING_ENTRY idx=0 age=1 event=call_commit "
+            "pc=0x155583b6f6 target=0x1555837f4a extra1=0x1555837f4a "
+            "count=3340028844 a0=0x40 a1=0x1 a2=0x3fefec9220\n"
+            "LINX_CALL_TRACE_RING_ENTRY idx=1 age=0 event=fentry "
+            "pc=0x1555837f18 count=3340028849 a0=0x40\n"
+        )
+
+        self.assertTrue(summary["seen"])
+        self.assertTrue(summary["call_trace_ring_seen"])
+        self.assertEqual(summary["call_trace_ring_count"], 1)
+        self.assertEqual(summary["call_trace_ring_entry_count"], 2)
+        self.assertEqual(
+            summary["last_call_trace_ring_fields"]["fault_pc"], "0x1555837f3c"
+        )
+        self.assertEqual(
+            summary["last_call_trace_ring_fields"]["fault_count"], 3340028859
+        )
+        last_entry = summary["last_call_trace_ring_entry_fields"]
+        self.assertEqual(last_entry["idx"], 1)
+        self.assertEqual(last_entry["event"], "fentry")
+        self.assertEqual(last_entry["pc"], "0x1555837f18")
+        self.assertEqual(last_entry["count"], 3340028849)
 
     def test_tlb_fill_hot_summary_parses_top_slots(self) -> None:
         summary = runner._tlb_fill_hot_summary(

@@ -21,7 +21,7 @@ BRINGUP_DIR = REPO_ROOT / "tools" / "bringup"
 if str(BRINGUP_DIR) not in sys.path:
     sys.path.insert(0, str(BRINGUP_DIR))
 
-from qemu_build_paths import qemu_binary_provenance
+from qemu_build_paths import default_qemu_binary, qemu_binary_provenance
 
 STAGE_A_BENCHES = [
     "999.specrand_ir",
@@ -122,6 +122,13 @@ def _default_musl_sysroot() -> str:
     if _usable_static_sysroot(phase_c):
         return str(phase_c.resolve())
     return str((REPO_ROOT / "out" / "libc" / "musl" / "install" / "phase-b").resolve())
+
+
+def _default_qemu(root: Path = REPO_ROOT) -> str:
+    env = os.environ.get("QEMU", "").strip()
+    if env:
+        return str(Path(os.path.expanduser(env)).resolve())
+    return str(default_qemu_binary(root).resolve())
 
 
 def _usable_static_sysroot(path: Path) -> bool:
@@ -758,6 +765,7 @@ def _apply_qemu_debug_env(
 
 def _qemu_debug_env_summary(qemu_env: dict[str, str]) -> dict[str, str]:
     prefixes = (
+        "LINX_CALL_TRACE",
         "LINX_DEBUG_PC_WATCH",
         "LINX_HEARTBEAT_INTERVAL",
         "LINX_QEMU_",
@@ -829,6 +837,15 @@ def _qemu_pc_watch_from_args(args: argparse.Namespace) -> dict[str, str]:
     for attr, env_name in QEMU_PC_WATCH_BOOL_ARGS.items():
         if bool(getattr(args, attr, False)):
             watch[env_name] = "1"
+    if bool(getattr(args, "qemu_call_trace_ring", False)) or bool(
+        getattr(args, "qemu_pc_watch_dump_call_ring", False)
+    ):
+        watch.setdefault("LINX_CALL_TRACE_RING", "1")
+    call_trace_ring_size = str(
+        getattr(args, "qemu_call_trace_ring_size", "") or ""
+    ).strip()
+    if call_trace_ring_size:
+        watch["LINX_CALL_TRACE_RING_SIZE"] = call_trace_ring_size
     return watch
 
 
@@ -3674,7 +3691,10 @@ def _bstart_cache_stats_summary(text: str) -> dict[str, Any]:
 
 def _pc_watch_summary(text: str) -> dict[str, Any]:
     lines = re.findall(
-        r"^(?:linx_pc_watch:|LINX_PC_WATCH_[A-Z_]+).*$",
+        (
+            r"^(?:linx_pc_watch:|LINX_PC_WATCH_[A-Z_]+|"
+            r"LINX_CALL_TRACE_RING(?:_ENTRY)?).*$"
+        ),
         text,
         flags=re.MULTILINE,
     )
@@ -3684,9 +3704,23 @@ def _pc_watch_summary(text: str) -> dict[str, Any]:
     ring_entries = [
         line for line in lines if line.startswith("LINX_PC_WATCH_RING_ENTRY ")
     ]
+    call_trace_ring_headers = [
+        line for line in lines if line.startswith("LINX_CALL_TRACE_RING ")
+    ]
+    call_trace_ring_entries = [
+        line for line in lines if line.startswith("LINX_CALL_TRACE_RING_ENTRY ")
+    ]
     ring_header_fields = _heartbeat_fields(ring_headers[-1]) if ring_headers else {}
+    call_trace_ring_header_fields = (
+        _heartbeat_fields(call_trace_ring_headers[-1])
+        if call_trace_ring_headers
+        else {}
+    )
     ring_entry_samples = [
         _pc_watch_entry_summary(line) for line in ring_entries[-8:]
+    ]
+    call_trace_ring_entry_samples = [
+        _pc_watch_entry_summary(line) for line in call_trace_ring_entries[-8:]
     ]
     return {
         "seen": bool(lines),
@@ -3703,6 +3737,24 @@ def _pc_watch_summary(text: str) -> dict[str, Any]:
             ring_entry_samples[-1] if ring_entry_samples else {}
         ),
         "ring_entry_samples": ring_entry_samples,
+        "call_trace_ring_seen": bool(call_trace_ring_headers),
+        "call_trace_ring_count": len(call_trace_ring_headers),
+        "call_trace_ring_entry_count": len(call_trace_ring_entries),
+        "last_call_trace_ring": (
+            call_trace_ring_headers[-1][:512] if call_trace_ring_headers else ""
+        ),
+        "last_call_trace_ring_entry": (
+            call_trace_ring_entries[-1][:512] if call_trace_ring_entries else ""
+        ),
+        "last_call_trace_ring_fields": _pc_watch_fields_summary(
+            call_trace_ring_header_fields
+        ),
+        "last_call_trace_ring_entry_fields": (
+            call_trace_ring_entry_samples[-1]
+            if call_trace_ring_entry_samples
+            else {}
+        ),
+        "call_trace_ring_entry_samples": call_trace_ring_entry_samples,
     }
 
 
@@ -4047,7 +4099,7 @@ def main(argv: list[str]) -> int:
         "--spec-dir",
         default=str(REPO_ROOT / "workloads" / "spec2017" / "cpu2017v118_x64_gcc12_avx2"),
     )
-    parser.add_argument("--qemu", default=str(REPO_ROOT / "emulator" / "qemu" / "build" / "qemu-system-linx64"))
+    parser.add_argument("--qemu", default=_default_qemu())
     parser.add_argument("--kernel", default=str(REPO_ROOT / "kernel" / "linux" / "build-linx-fixed" / "vmlinux"))
     parser.add_argument("--linux-root", default=str(REPO_ROOT / "kernel" / "linux"))
     parser.add_argument("--clang", default=str(REPO_ROOT / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "clang"))
@@ -4173,6 +4225,11 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--qemu-pc-watch-ring-mem-reg", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_RING_MEM_REG", ""))
     parser.add_argument("--qemu-pc-watch-ring-mem-offset", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_RING_MEM_OFFSET", ""))
     parser.add_argument(
+        "--qemu-call-trace-ring-size",
+        default=os.environ.get("LINX_SPEC_QEMU_CALL_TRACE_RING_SIZE", ""),
+        help="Set LINX_CALL_TRACE_RING_SIZE for call-ring dumps.",
+    )
+    parser.add_argument(
         "--qemu-pc-watch-regs",
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_PC_WATCH_REGS", False),
@@ -4188,7 +4245,16 @@ def main(argv: list[str]) -> int:
         "--qemu-pc-watch-dump-call-ring",
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_PC_WATCH_DUMP_CALL_RING", False),
-        help="Set LINX_DEBUG_PC_WATCH_DUMP_CALL_RING=1 on matching PC-watch hits.",
+        help=(
+            "Set LINX_DEBUG_PC_WATCH_DUMP_CALL_RING=1 on matching PC-watch "
+            "hits and enable LINX_CALL_TRACE_RING=1 so a caller ring exists."
+        ),
+    )
+    parser.add_argument(
+        "--qemu-call-trace-ring",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_CALL_TRACE_RING", False),
+        help="Set LINX_CALL_TRACE_RING=1 without requiring a PC-watch call-ring dump.",
     )
     parser.add_argument(
         "--qemu-pc-watch-dump-phys",
