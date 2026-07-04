@@ -87,6 +87,51 @@ Speed lanes from the current counters:
   `local_flush_tlb_page()` volume, then rerun the same all-train gate before
   returning to QEMU cputlb changes.
 
+### Post-Linux TLBI Range-Batching Follow-Up
+
+`workloads/generated/specint-train-all-linux-tlbirange-qemu-20260704-r1/`
+reruns the same all-train shape after Linux head
+`a1bdaf6bce6949e5c0081bf96e76f6c845fafc11` adds range-aware local TLB
+flush batching for the SPEC fault/update path. It uses the same clean QEMU
+head `1db7e12b6809c8ca2e2bee397f6019a14966e2ad` and clean build marker as the
+current train ledger, with `LINX_QEMU_TEMPLATE_CHAIN=1`, frame stats,
+restore-host loads, TLBI aggregate counters, and TLBI hot-source attribution.
+
+Result shape:
+
+- `999.specrand_ir` still passes the strict train hash.
+- The nine real train workloads remain heartbeat-backed `live-timeout` rows
+  with BPC site progress, no panic, and no trap.
+- The old large steady `mm/memory.c` hot loop at `0xffffffff800db2b6` moves to
+  the new batched path site `0xffffffff800db20c`, but the all-row count change
+  is mixed rather than a closure result.
+- The early common `tlbi-hot max_delta=458884` burst at
+  `0xffffffff80405980` (`get_p4d_virt_fixmap`) remains visible.
+
+Comparison against `specint-train-all-latest-qemu-20260704-r2`:
+
+| Benchmark | Result | Count after Linux batching | Prior count | Delta | BPC | TLBI iv | TLBI iall | Last TLBI PC | Hot source delta |
+| --- | --- | ---: | ---: | ---: | --- | ---: | ---: | --- | --- |
+| `500.perlbench_r` | live-timeout | 59000000003 | 58000000010 | +999999993 | `0x15556d9536` | 3687828 | 565 | `0xffffffff800db20c` | `0xffffffff800db20c` / 77 |
+| `502.gcc_r` | live-timeout | 41000000003 | 38000000005 | +2999999998 | `0x155599b182` | 3789138 | 10953 | `0xffffffff800daf1a` | `0xffffffff800db20c` / 2224 |
+| `505.mcf_r` | live-timeout | 55000000003 | 55000000002 | +1 | `0x155555c4a4` | 3675648 | 10 | `0xffffffff800db20c` | `0xffffffff8000d8ea` / 0 |
+| `520.omnetpp_r` | live-timeout | 28000000000 | 28000000004 | -4 | `0x15555fe9ca` | 3797422 | 7305 | `0xffffffff800db20c` | `0xffffffff800db20c` / 1406 |
+| `523.xalancbmk_r` | live-timeout | 33000000002 | 34000000000 | -999999998 | `0x1555699c0e` | 3742538 | 193 | `0xffffffff800db20c` | `0xffffffff800db20c` / 2306 |
+| `525.x264_r` | live-timeout | 45000000004 | 49000000001 | -3999999997 | `0xffffffff80108930` | 3670920 | 9 | `0xffffffff800daf1a` | `0xffffffff8000d8ea` / 0 |
+| `531.deepsjeng_r` | live-timeout | 60000000005 | 60000000003 | +2 | `0x15555683b2` | 3849676 | 9 | `0xffffffff800db20c` | `0xffffffff8000d8ea` / 0 |
+| `541.leela_r` | live-timeout | 31000000001 | 32000000001 | -1000000000 | `0x1555574e08` | 3675299 | 309 | `0xffffffff800daf1a` | `0xffffffff800db20c` / 335 |
+| `557.xz_r` | live-timeout | 58000000003 | 56000000009 | +1999999994 | `0x1555576750` | 3861941 | 21 | `0xffffffff800db20c` | `0xffffffff800db20c` / 296 |
+
+Loop update: Linux range batching is correct enough to keep, but it did not
+close the SPEC train throughput blocker. The next speed loop should no longer
+assume that `update_mmu_cache_range()` alone is the dominant fix. Profile and
+attribute the remaining early `get_p4d_virt_fixmap` burst, the
+`0xffffffff800daf1a`/`0xffffffff800db20c` `mm/memory.c` fault/update sites,
+and the rows with zero current TLBI hot delta (`505`, `525`, `531`) against
+QEMU `probe_access_internal`, soft-MMU lookup, template dispatch, and 9p
+transport cost. Keep `999.specrand_ir` as the cheap correctness sentinel before
+any wider run.
+
 ## Initial Profile
 
 Command shape:
