@@ -722,6 +722,8 @@ def _apply_qemu_debug_env(
     qemu_heartbeat_same_site_warn: int = 0,
     qemu_frame_stats: bool = False,
     qemu_frame_restore_host_load: bool = False,
+    qemu_frame_restore_host_verify: bool = False,
+    qemu_frame_restore_host_verify_limit: int = 0,
     qemu_tlb_stats: bool = False,
     qemu_tlb_inv_hot: bool = False,
     qemu_tb_stats: bool = False,
@@ -747,6 +749,12 @@ def _apply_qemu_debug_env(
         qemu_env["LINX_QEMU_FRAME_STATS"] = "1"
     if qemu_frame_restore_host_load:
         qemu_env["LINX_QEMU_FRAME_RESTORE_HOST_LOAD"] = "1"
+    if qemu_frame_restore_host_verify or qemu_frame_restore_host_verify_limit > 0:
+        qemu_env["LINX_QEMU_FRAME_RESTORE_HOST_VERIFY"] = "1"
+    if qemu_frame_restore_host_verify_limit > 0:
+        qemu_env["LINX_QEMU_FRAME_RESTORE_HOST_VERIFY_LIMIT"] = str(
+            qemu_frame_restore_host_verify_limit
+        )
     if qemu_tlb_stats:
         qemu_env["LINX_QEMU_TLB_STATS"] = "1"
     if qemu_tlb_inv_hot:
@@ -2739,6 +2747,8 @@ def _run_qemu(
     qemu_heartbeat_same_site_warn: int,
     qemu_frame_stats: bool,
     qemu_frame_restore_host_load: bool,
+    qemu_frame_restore_host_verify: bool,
+    qemu_frame_restore_host_verify_limit: int,
     qemu_tlb_stats: bool,
     qemu_tlb_inv_hot: bool,
     qemu_tb_stats: bool,
@@ -2803,6 +2813,8 @@ def _run_qemu(
         qemu_heartbeat_same_site_warn=qemu_heartbeat_same_site_warn,
         qemu_frame_stats=qemu_frame_stats,
         qemu_frame_restore_host_load=qemu_frame_restore_host_load,
+        qemu_frame_restore_host_verify=qemu_frame_restore_host_verify,
+        qemu_frame_restore_host_verify_limit=qemu_frame_restore_host_verify_limit,
         qemu_tlb_stats=qemu_tlb_stats,
         qemu_tlb_inv_hot=qemu_tlb_inv_hot,
         qemu_tb_stats=qemu_tb_stats,
@@ -3657,6 +3669,8 @@ def _heartbeat_frame_stats_summary(line: str) -> dict[str, Any]:
         "restore_slot": _decimal_or_none(fields.get("fr_restore_slot")),
         "restore_host": _decimal_or_none(fields.get("fr_restore_host")),
         "restore_fallback": _decimal_or_none(fields.get("fr_restore_fallback")),
+        "restore_verify": _decimal_or_none(fields.get("fr_restore_verify")),
+        "restore_mismatch": _decimal_or_none(fields.get("fr_restore_mismatch")),
         "ret_fast": _decimal_or_none(fields.get("fr_ret_fast")),
         "ret_check": _decimal_or_none(fields.get("fr_ret_check")),
     }
@@ -4311,6 +4325,21 @@ def main(argv: list[str]) -> int:
         ),
     )
     parser.add_argument(
+        "--qemu-frame-restore-host-verify",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_FRAME_RESTORE_HOST_VERIFY", False),
+        help=(
+            "Set LINX_QEMU_FRAME_RESTORE_HOST_VERIFY=1 to compare cached "
+            "frame restore host loads against the normal soft-MMU load."
+        ),
+    )
+    parser.add_argument(
+        "--qemu-frame-restore-host-verify-limit",
+        type=int,
+        default=int(os.environ.get("LINX_SPEC_QEMU_FRAME_RESTORE_HOST_VERIFY_LIMIT", "0")),
+        help="Set LINX_QEMU_FRAME_RESTORE_HOST_VERIFY_LIMIT for mismatch trace lines (0 uses QEMU default).",
+    )
+    parser.add_argument(
         "--qemu-fret-stk-trace",
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_FRET_STK_TRACE", False),
@@ -4615,6 +4644,8 @@ def main(argv: list[str]) -> int:
         raise SystemExit("error: --qemu-heartbeat-same-site-warn must be >= 0")
     if args.qemu_fault_trace_limit < 0:
         raise SystemExit("error: --qemu-fault-trace-limit must be >= 0")
+    if args.qemu_frame_restore_host_verify_limit < 0:
+        raise SystemExit("error: --qemu-frame-restore-host-verify-limit must be >= 0")
     for attr in (
         "qemu_syscall_trace_limit",
         "qemu_syscall_trace_pc_lo",
@@ -4754,6 +4785,8 @@ def main(argv: list[str]) -> int:
         "qemu_heartbeat_same_site_warn": args.qemu_heartbeat_same_site_warn,
         "qemu_frame_stats": bool(args.qemu_frame_stats),
         "qemu_frame_restore_host_load": bool(args.qemu_frame_restore_host_load),
+        "qemu_frame_restore_host_verify": bool(args.qemu_frame_restore_host_verify),
+        "qemu_frame_restore_host_verify_limit": args.qemu_frame_restore_host_verify_limit,
         "qemu_tlb_stats": bool(args.qemu_tlb_stats),
         "qemu_tlb_inv_hot": bool(args.qemu_tlb_inv_hot),
         "qemu_tb_stats": bool(args.qemu_tb_stats),
@@ -4866,6 +4899,8 @@ def main(argv: list[str]) -> int:
                     args.qemu_heartbeat_same_site_warn,
                     args.qemu_frame_stats,
                     args.qemu_frame_restore_host_load,
+                    args.qemu_frame_restore_host_verify,
+                    args.qemu_frame_restore_host_verify_limit,
                     args.qemu_tlb_stats,
                     args.qemu_tlb_inv_hot,
                     args.qemu_tb_stats,

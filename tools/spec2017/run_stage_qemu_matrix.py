@@ -574,6 +574,14 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
         "- qemu_frame_restore_host_load: "
         f"`{str(bool(summary.get('qemu_frame_restore_host_load', False))).lower()}`"
     )
+    lines.append(
+        "- qemu_frame_restore_host_verify: "
+        f"`{str(bool(summary.get('qemu_frame_restore_host_verify', False))).lower()}`"
+    )
+    lines.append(
+        "- qemu_frame_restore_host_verify_limit: "
+        f"`{summary.get('qemu_frame_restore_host_verify_limit', 0)}`"
+    )
     fret_stk_trace = summary.get("qemu_fret_stk_trace") or {}
     if fret_stk_trace:
         trace_text = ", ".join(f"{k}={v}" for k, v in sorted(fret_stk_trace.items()))
@@ -738,6 +746,18 @@ def main(argv: list[str]) -> int:
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_FRAME_RESTORE_HOST_LOAD", False),
         help="Pass --qemu-frame-restore-host-load to enable cached host loads for frame restore slots.",
+    )
+    ap.add_argument(
+        "--qemu-frame-restore-host-verify",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_FRAME_RESTORE_HOST_VERIFY", False),
+        help="Pass --qemu-frame-restore-host-verify to compare host restore loads against soft-MMU loads.",
+    )
+    ap.add_argument(
+        "--qemu-frame-restore-host-verify-limit",
+        type=int,
+        default=_env_int("LINX_SPEC_QEMU_FRAME_RESTORE_HOST_VERIFY_LIMIT", 0),
+        help="Pass --qemu-frame-restore-host-verify-limit to cap mismatch trace lines (0 uses QEMU default).",
     )
     ap.add_argument(
         "--qemu-fret-stk-trace",
@@ -977,6 +997,8 @@ def main(argv: list[str]) -> int:
         raise SystemExit("error: --qemu-heartbeat-same-site-warn must be >= 0")
     if args.qemu_fault_trace_limit < 0:
         raise SystemExit("error: --qemu-fault-trace-limit must be >= 0")
+    if args.qemu_frame_restore_host_verify_limit < 0:
+        raise SystemExit("error: --qemu-frame-restore-host-verify-limit must be >= 0")
     for attr in (
         "qemu_syscall_trace_limit",
         "qemu_syscall_trace_pc_lo",
@@ -1190,6 +1212,13 @@ def main(argv: list[str]) -> int:
             cmd.append("--qemu-frame-stats")
         if args.qemu_frame_restore_host_load:
             cmd.append("--qemu-frame-restore-host-load")
+        if args.qemu_frame_restore_host_verify:
+            cmd.append("--qemu-frame-restore-host-verify")
+        if args.qemu_frame_restore_host_verify_limit > 0:
+            cmd.extend([
+                "--qemu-frame-restore-host-verify-limit",
+                str(args.qemu_frame_restore_host_verify_limit),
+            ])
         if args.qemu_fret_stk_trace:
             cmd.append("--qemu-fret-stk-trace")
         for attr in QEMU_FRET_STK_TRACE_BOOL_ARGS:
@@ -1320,6 +1349,8 @@ def main(argv: list[str]) -> int:
         "qemu_heartbeat_same_site_warn": int(args.qemu_heartbeat_same_site_warn),
         "qemu_frame_stats": bool(args.qemu_frame_stats),
         "qemu_frame_restore_host_load": bool(args.qemu_frame_restore_host_load),
+        "qemu_frame_restore_host_verify": bool(args.qemu_frame_restore_host_verify),
+        "qemu_frame_restore_host_verify_limit": int(args.qemu_frame_restore_host_verify_limit),
         "qemu_fret_stk_trace": qemu_fret_stk_trace,
         "qemu_fentry_trace": qemu_fentry_trace,
         "qemu_tlb_stats": bool(args.qemu_tlb_stats),

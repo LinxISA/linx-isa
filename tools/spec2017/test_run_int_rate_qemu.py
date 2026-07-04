@@ -272,6 +272,8 @@ class RunIntRateQemuTests(unittest.TestCase):
             qemu_heartbeat_same_site_warn=4,
             qemu_frame_stats=True,
             qemu_frame_restore_host_load=True,
+            qemu_frame_restore_host_verify=True,
+            qemu_frame_restore_host_verify_limit=9,
             qemu_tlb_stats=True,
             qemu_tlb_inv_hot=True,
             qemu_tb_stats=True,
@@ -285,6 +287,8 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(env["LINX_QEMU_HEARTBEAT_SAME_SITE_WARN"], "4")
         self.assertEqual(env["LINX_QEMU_FRAME_STATS"], "1")
         self.assertEqual(env["LINX_QEMU_FRAME_RESTORE_HOST_LOAD"], "1")
+        self.assertEqual(env["LINX_QEMU_FRAME_RESTORE_HOST_VERIFY"], "1")
+        self.assertEqual(env["LINX_QEMU_FRAME_RESTORE_HOST_VERIFY_LIMIT"], "9")
         self.assertEqual(env["LINX_QEMU_TLB_STATS"], "1")
         self.assertEqual(env["LINX_QEMU_TLB_INV_HOT"], "1")
         self.assertEqual(env["LINX_QEMU_TB_STATS"], "1")
@@ -526,6 +530,7 @@ class RunIntRateQemuTests(unittest.TestCase):
             "fr_save_host=19 fr_save_fallback=2 fr_fexit=3 "
             "fr_fret_stk=5 fr_fret_ra=7 fr_restore_slot=13 "
             "fr_restore_host=12 fr_restore_fallback=1 "
+            "fr_restore_verify=15 fr_restore_mismatch=6 "
             "fr_ret_fast=17 fr_ret_check=4"
         )
 
@@ -540,6 +545,8 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(summary["restore_slot"], 13)
         self.assertEqual(summary["restore_host"], 12)
         self.assertEqual(summary["restore_fallback"], 1)
+        self.assertEqual(summary["restore_verify"], 15)
+        self.assertEqual(summary["restore_mismatch"], 6)
         self.assertEqual(summary["ret_fast"], 17)
         self.assertEqual(summary["ret_check"], 4)
 
