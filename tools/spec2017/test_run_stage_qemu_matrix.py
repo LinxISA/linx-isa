@@ -134,6 +134,14 @@ class StageQemuMatrixTests(unittest.TestCase):
                 "LINX_SYSCALL_TRACE_PC_LO": "0x1555837f00",
                 "LINX_SYSCALL_TRACE_PC_HI": "0x1555838000",
             },
+            "qemu_mem_trace": {
+                "LINX_MEM_TRACE": "1",
+                "LINX_MEM_TRACE_PC_LO": "0x15555c09d0",
+                "LINX_MEM_TRACE_PC_HI": "0x15555c09e8",
+                "LINX_MEM_TRACE_ACCESS": "loads",
+                "LINX_MEM_TRACE_PRE": "1",
+                "LINX_MEM_TRACE_REGS": "1",
+            },
             "guest_heartbeat_sec": 10,
             "guest_proc_diagnostics": True,
             "bench_override": ["523.xalancbmk_r"],
@@ -162,6 +170,10 @@ class StageQemuMatrixTests(unittest.TestCase):
         self.assertIn("LINX_QEMU_FAULT_TRACE_PC_HI=0x15559efe40", text)
         self.assertIn("qemu_syscall_trace:", text)
         self.assertIn("LINX_SYSCALL_TRACE_PC_LO=0x1555837f00", text)
+        self.assertIn("qemu_mem_trace:", text)
+        self.assertIn("LINX_MEM_TRACE_PC_LO=0x15555c09d0", text)
+        self.assertIn("LINX_MEM_TRACE_PRE=1", text)
+        self.assertIn("LINX_MEM_TRACE_REGS=1", text)
 
 
 if __name__ == "__main__":

@@ -343,6 +343,46 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertNotIn("LINX_SYSCALL_TRACE_STRINGS", env)
         self.assertIn("LINX_SYSCALL_TRACE_NR", runner._qemu_debug_env_summary(env))
 
+    def test_qemu_mem_trace_args_auto_enable_trace(self) -> None:
+        trace = runner._qemu_mem_trace_from_args(
+            argparse.Namespace(
+                qemu_mem_trace=False,
+                qemu_mem_trace_addr="",
+                qemu_mem_trace_size="",
+                qemu_mem_trace_limit="32",
+                qemu_mem_trace_access="loads",
+                qemu_mem_trace_acr="2",
+                qemu_mem_trace_pc="",
+                qemu_mem_trace_pc_lo="0x15555c09d0",
+                qemu_mem_trace_pc_hi="0x15555c09e8",
+                qemu_mem_trace_count_lo="",
+                qemu_mem_trace_count_hi="",
+                qemu_mem_trace_fast="",
+                qemu_mem_trace_context=True,
+                qemu_mem_trace_pre=True,
+                qemu_mem_trace_regs=True,
+            )
+        )
+        env: dict[str, str] = {}
+        runner._apply_qemu_debug_env(
+            env,
+            qemu_heartbeat_interval=0,
+            qemu_fault_trace_regs=False,
+            qemu_fault_trace_limit=0,
+            qemu_mem_trace=trace,
+        )
+
+        self.assertEqual(env["LINX_MEM_TRACE"], "1")
+        self.assertEqual(env["LINX_MEM_TRACE_LIMIT"], "32")
+        self.assertEqual(env["LINX_MEM_TRACE_ACCESS"], "loads")
+        self.assertEqual(env["LINX_MEM_TRACE_ACR"], "2")
+        self.assertEqual(env["LINX_MEM_TRACE_PC_LO"], "0x15555c09d0")
+        self.assertEqual(env["LINX_MEM_TRACE_PC_HI"], "0x15555c09e8")
+        self.assertEqual(env["LINX_MEM_TRACE_CONTEXT"], "1")
+        self.assertEqual(env["LINX_MEM_TRACE_PRE"], "1")
+        self.assertEqual(env["LINX_MEM_TRACE_REGS"], "1")
+        self.assertIn("LINX_MEM_TRACE_PC_LO", runner._qemu_debug_env_summary(env))
+
     def test_qemu_debug_env_summary_is_sanitized(self) -> None:
         env: dict[str, str] = {
             "PATH": "/bin",

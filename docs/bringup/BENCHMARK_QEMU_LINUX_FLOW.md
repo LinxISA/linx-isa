@@ -140,6 +140,18 @@ Evidence:
   `addr=0x8` after returning from the `sccp` syscall wrapper. Keep this in the
   correctness lane and trace allocator metadata writes plus caller/control-flow
   provenance before changing broad SPEC timeouts.
+- QEMU memory tracing is now usable without an address filter. Use
+  `--qemu-mem-trace --qemu-mem-trace-pc-lo <pc> --qemu-mem-trace-pc-hi <pc>`
+  for narrow producer windows, add `--qemu-mem-trace-pre` for faulting loads,
+  and add `--qemu-mem-trace-regs` when T/U queue heads matter. Focused row-2
+  packets in
+  `workloads/generated/specint-500-test-row2-enframe-pcwatch-qemu-20260704-r1/`
+  and
+  `workloads/generated/specint-500-test-row2-rcrt1-memtrace-qemu-20260704-r1/`
+  show normal PC-relative producers and startup relocation stores with nonzero
+  operands, while the latter remains heartbeat-live through the timeout. Treat
+  those packets as producer evidence; the uninstrumented/null-trap packets
+  remain the terminal correctness evidence.
 
 Inference:
 
@@ -365,6 +377,11 @@ stores come from the same guest address space. Pair it with
 `LINX_MEM_TRACE_ACR=2` for focused userspace heap/list traces; leave both unset
 for normal train-all runs because context printing belongs in narrow triage
 windows.
+Use `LINX_MEM_TRACE_PRE=1` only when faulting loads need their computed address
+before `tcg_gen_qemu_ld_i64` can raise the MMU exception. Store trace lines are
+already emitted before the QEMU store. Use `LINX_MEM_TRACE_REGS=1` only when
+the T/U queue heads decide the root cause; it appends `tq0..tq3` and `uq0..uq3`
+to every memory trace line in the filtered window.
 For late SPEC faults, also set `LINX_MEM_TRACE_COUNT_LO=<insns>` and
 `LINX_MEM_TRACE_COUNT_HI=<insns>` with the address/PC/ACR filters. Without a
 count window, repeated stack-slot reuse can spend `LINX_MEM_TRACE_LIMIT` long

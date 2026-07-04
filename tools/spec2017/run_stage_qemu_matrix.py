@@ -77,6 +77,26 @@ QEMU_SYSCALL_TRACE_BOOL_ARGS = {
     "qemu_syscall_trace_strings": "LINX_SYSCALL_TRACE_STRINGS",
 }
 
+QEMU_MEM_TRACE_ARGS = {
+    "qemu_mem_trace_addr": "LINX_MEM_TRACE_ADDR",
+    "qemu_mem_trace_size": "LINX_MEM_TRACE_SIZE",
+    "qemu_mem_trace_limit": "LINX_MEM_TRACE_LIMIT",
+    "qemu_mem_trace_access": "LINX_MEM_TRACE_ACCESS",
+    "qemu_mem_trace_acr": "LINX_MEM_TRACE_ACR",
+    "qemu_mem_trace_pc": "LINX_MEM_TRACE_PC",
+    "qemu_mem_trace_pc_lo": "LINX_MEM_TRACE_PC_LO",
+    "qemu_mem_trace_pc_hi": "LINX_MEM_TRACE_PC_HI",
+    "qemu_mem_trace_count_lo": "LINX_MEM_TRACE_COUNT_LO",
+    "qemu_mem_trace_count_hi": "LINX_MEM_TRACE_COUNT_HI",
+    "qemu_mem_trace_fast": "LINX_MEM_TRACE_FAST",
+}
+
+QEMU_MEM_TRACE_BOOL_ARGS = {
+    "qemu_mem_trace_context": "LINX_MEM_TRACE_CONTEXT",
+    "qemu_mem_trace_pre": "LINX_MEM_TRACE_PRE",
+    "qemu_mem_trace_regs": "LINX_MEM_TRACE_REGS",
+}
+
 
 def _default_qemu() -> str:
     env = os.environ.get("QEMU", "").strip()
@@ -540,6 +560,10 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
     if syscall_trace:
         trace_text = ", ".join(f"{k}={v}" for k, v in sorted(syscall_trace.items()))
         lines.append(f"- qemu_syscall_trace: `{trace_text}`")
+    mem_trace = summary.get("qemu_mem_trace") or {}
+    if mem_trace:
+        trace_text = ", ".join(f"{k}={v}" for k, v in sorted(mem_trace.items()))
+        lines.append(f"- qemu_mem_trace: `{trace_text}`")
     lines.append(f"- guest_heartbeat_sec: `{summary['guest_heartbeat_sec']}`")
     guest_proc_diag = str(bool(summary.get("guest_proc_diagnostics", False))).lower()
     lines.append(f"- guest_proc_diagnostics: `{guest_proc_diag}`")
@@ -746,6 +770,41 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--qemu-syscall-trace-dump-args", default=os.environ.get("LINX_SPEC_QEMU_SYSCALL_TRACE_DUMP_ARGS", ""))
     ap.add_argument("--qemu-syscall-trace-dump-arg", default=os.environ.get("LINX_SPEC_QEMU_SYSCALL_TRACE_DUMP_ARG", ""))
     ap.add_argument("--qemu-syscall-trace-dump-bytes", default=os.environ.get("LINX_SPEC_QEMU_SYSCALL_TRACE_DUMP_BYTES", ""))
+    ap.add_argument(
+        "--qemu-mem-trace",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_MEM_TRACE", False),
+        help="Pass --qemu-mem-trace to the per-transport runner.",
+    )
+    ap.add_argument(
+        "--qemu-mem-trace-context",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_MEM_TRACE_CONTEXT", False),
+        help="Pass --qemu-mem-trace-context to the per-transport runner.",
+    )
+    ap.add_argument(
+        "--qemu-mem-trace-pre",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_MEM_TRACE_PRE", False),
+        help="Pass --qemu-mem-trace-pre to the per-transport runner.",
+    )
+    ap.add_argument(
+        "--qemu-mem-trace-regs",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_MEM_TRACE_REGS", False),
+        help="Pass --qemu-mem-trace-regs to the per-transport runner.",
+    )
+    ap.add_argument("--qemu-mem-trace-addr", default=os.environ.get("LINX_SPEC_QEMU_MEM_TRACE_ADDR", ""))
+    ap.add_argument("--qemu-mem-trace-size", default=os.environ.get("LINX_SPEC_QEMU_MEM_TRACE_SIZE", ""))
+    ap.add_argument("--qemu-mem-trace-limit", default=os.environ.get("LINX_SPEC_QEMU_MEM_TRACE_LIMIT", ""))
+    ap.add_argument("--qemu-mem-trace-access", default=os.environ.get("LINX_SPEC_QEMU_MEM_TRACE_ACCESS", ""))
+    ap.add_argument("--qemu-mem-trace-acr", default=os.environ.get("LINX_SPEC_QEMU_MEM_TRACE_ACR", ""))
+    ap.add_argument("--qemu-mem-trace-pc", default=os.environ.get("LINX_SPEC_QEMU_MEM_TRACE_PC", ""))
+    ap.add_argument("--qemu-mem-trace-pc-lo", default=os.environ.get("LINX_SPEC_QEMU_MEM_TRACE_PC_LO", ""))
+    ap.add_argument("--qemu-mem-trace-pc-hi", default=os.environ.get("LINX_SPEC_QEMU_MEM_TRACE_PC_HI", ""))
+    ap.add_argument("--qemu-mem-trace-count-lo", default=os.environ.get("LINX_SPEC_QEMU_MEM_TRACE_COUNT_LO", ""))
+    ap.add_argument("--qemu-mem-trace-count-hi", default=os.environ.get("LINX_SPEC_QEMU_MEM_TRACE_COUNT_HI", ""))
+    ap.add_argument("--qemu-mem-trace-fast", default=os.environ.get("LINX_SPEC_QEMU_MEM_TRACE_FAST", ""))
     ap.add_argument("--qemu-pc-watch", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH", ""))
     ap.add_argument("--qemu-pc-watch-count-lo", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_COUNT_LO", ""))
     ap.add_argument("--qemu-pc-watch-count-hi", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_COUNT_HI", ""))
@@ -843,6 +902,14 @@ def main(argv: list[str]) -> int:
         "qemu_syscall_trace_string_max",
         "qemu_syscall_trace_dump_arg",
         "qemu_syscall_trace_dump_bytes",
+        "qemu_mem_trace_addr",
+        "qemu_mem_trace_size",
+        "qemu_mem_trace_limit",
+        "qemu_mem_trace_pc",
+        "qemu_mem_trace_pc_lo",
+        "qemu_mem_trace_pc_hi",
+        "qemu_mem_trace_count_lo",
+        "qemu_mem_trace_count_hi",
     ):
         value = str(getattr(args, attr, "") or "").strip()
         if value:
@@ -856,6 +923,24 @@ def main(argv: list[str]) -> int:
                 raise SystemExit(f"error: --{attr.replace('_', '-')} must be >= 0")
             if attr == "qemu_syscall_trace_dump_arg" and parsed > 5:
                 raise SystemExit("error: --qemu-syscall-trace-dump-arg must be <= 5")
+    qemu_mem_trace_access = str(getattr(args, "qemu_mem_trace_access", "") or "").strip()
+    if qemu_mem_trace_access and qemu_mem_trace_access not in {
+        "load",
+        "loads",
+        "store",
+        "stores",
+        "all",
+        "both",
+    }:
+        raise SystemExit("error: --qemu-mem-trace-access must be load, store, or all")
+    qemu_mem_trace_acr = str(getattr(args, "qemu_mem_trace_acr", "") or "").strip()
+    if qemu_mem_trace_acr and qemu_mem_trace_acr not in {"any", "all"}:
+        try:
+            parsed_acr = int(qemu_mem_trace_acr, 0)
+        except ValueError as exc:
+            raise SystemExit("error: --qemu-mem-trace-acr must be an integer, any, or all") from exc
+        if parsed_acr < 0 or parsed_acr > 15:
+            raise SystemExit("error: --qemu-mem-trace-acr must be between 0 and 15")
     for attr in (
         "qemu_pc_watch_hit_limit",
         "qemu_pc_watch_hit_lo",
@@ -904,6 +989,16 @@ def main(argv: list[str]) -> int:
             qemu_syscall_trace[env_name] = "1"
     if bool(getattr(args, "qemu_syscall_trace", False)) or qemu_syscall_trace:
         qemu_syscall_trace["LINX_SYSCALL_TRACE"] = "1"
+    qemu_mem_trace = {
+        env_name: str(getattr(args, attr, "") or "").strip()
+        for attr, env_name in QEMU_MEM_TRACE_ARGS.items()
+        if str(getattr(args, attr, "") or "").strip()
+    }
+    for attr, env_name in QEMU_MEM_TRACE_BOOL_ARGS.items():
+        if bool(getattr(args, attr, False)):
+            qemu_mem_trace[env_name] = "1"
+    if bool(getattr(args, "qemu_mem_trace", False)) or qemu_mem_trace:
+        qemu_mem_trace["LINX_MEM_TRACE"] = "1"
 
     transports = _parse_transports(args.transports) if args.transports else _default_transports(args.stage)
     benches = list(args.bench or [])
@@ -998,6 +1093,15 @@ def main(argv: list[str]) -> int:
             value = str(getattr(args, attr, "") or "").strip()
             if value:
                 cmd.extend(["--" + attr.replace("_", "-"), value])
+        if args.qemu_mem_trace:
+            cmd.append("--qemu-mem-trace")
+        for attr in QEMU_MEM_TRACE_BOOL_ARGS:
+            if bool(getattr(args, attr, False)):
+                cmd.append("--" + attr.replace("_", "-"))
+        for attr in QEMU_MEM_TRACE_ARGS:
+            value = str(getattr(args, attr, "") or "").strip()
+            if value:
+                cmd.extend(["--" + attr.replace("_", "-"), value])
         for attr in QEMU_PC_WATCH_ARGS:
             value = str(getattr(args, attr, "") or "").strip()
             if value:
@@ -1087,6 +1191,7 @@ def main(argv: list[str]) -> int:
         "qemu_fault_trace_filters": qemu_fault_trace_filters,
         "qemu_pc_watch": qemu_pc_watch,
         "qemu_syscall_trace": qemu_syscall_trace,
+        "qemu_mem_trace": qemu_mem_trace,
         "no_progress_timeout": float(args.no_progress_timeout),
         "fail_9p_timeout": bool(args.fail_9p_timeout),
         "guest_heartbeat_sec": int(args.guest_heartbeat_sec),
