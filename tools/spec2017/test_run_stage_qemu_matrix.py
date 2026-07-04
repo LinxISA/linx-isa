@@ -142,6 +142,16 @@ class StageQemuMatrixTests(unittest.TestCase):
                 "LINX_MEM_TRACE_PRE": "1",
                 "LINX_MEM_TRACE_REGS": "1",
             },
+            "qemu_fret_stk_trace": {
+                "LINX_QEMU_FRET_STK_TRACE": "1",
+                "LINX_QEMU_FRET_STK_TRACE_RA": "0",
+                "LINX_QEMU_FRET_STK_TRACE_LIMIT": "64",
+            },
+            "qemu_fentry_trace": {
+                "LINX_QEMU_FENTRY_TRACE": "1",
+                "LINX_QEMU_FENTRY_TRACE_PC": "0x1555828c10",
+                "LINX_QEMU_FENTRY_TRACE_REGS": "1",
+            },
             "guest_heartbeat_sec": 10,
             "guest_proc_diagnostics": True,
             "bench_override": ["523.xalancbmk_r"],
@@ -174,6 +184,10 @@ class StageQemuMatrixTests(unittest.TestCase):
         self.assertIn("LINX_MEM_TRACE_PC_LO=0x15555c09d0", text)
         self.assertIn("LINX_MEM_TRACE_PRE=1", text)
         self.assertIn("LINX_MEM_TRACE_REGS=1", text)
+        self.assertIn("qemu_fret_stk_trace:", text)
+        self.assertIn("LINX_QEMU_FRET_STK_TRACE_RA=0", text)
+        self.assertIn("qemu_fentry_trace:", text)
+        self.assertIn("LINX_QEMU_FENTRY_TRACE_PC=0x1555828c10", text)
 
 
 if __name__ == "__main__":

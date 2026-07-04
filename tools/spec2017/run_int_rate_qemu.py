@@ -725,6 +725,8 @@ def _apply_qemu_debug_env(
     qemu_tlb_stats: bool = False,
     qemu_tlb_inv_hot: bool = False,
     qemu_tb_stats: bool = False,
+    qemu_fret_stk_trace: dict[str, str] | None = None,
+    qemu_fentry_trace: dict[str, str] | None = None,
     qemu_fault_trace: bool = False,
     qemu_fault_trace_regs: bool,
     qemu_fault_trace_limit: int,
@@ -751,6 +753,12 @@ def _apply_qemu_debug_env(
         qemu_env["LINX_QEMU_TLB_INV_HOT"] = "1"
     if qemu_tb_stats:
         qemu_env["LINX_QEMU_TB_STATS"] = "1"
+    for name, value in (qemu_fret_stk_trace or {}).items():
+        if str(value).strip():
+            qemu_env[name] = str(value).strip()
+    for name, value in (qemu_fentry_trace or {}).items():
+        if str(value).strip():
+            qemu_env[name] = str(value).strip()
     filters = {k: v for k, v in (qemu_fault_trace_filters or {}).items() if str(v).strip()}
     if qemu_fault_trace or qemu_fault_trace_regs or filters:
         qemu_env["LINX_QEMU_FAULT_TRACE"] = "1"
@@ -864,6 +872,38 @@ QEMU_MEM_TRACE_BOOL_ARGS = {
     "qemu_mem_trace_regs": "LINX_MEM_TRACE_REGS",
 }
 
+QEMU_FRET_STK_TRACE_ARGS = {
+    "qemu_fret_stk_trace_pc": "LINX_QEMU_FRET_STK_TRACE_PC",
+    "qemu_fret_stk_trace_pc_lo": "LINX_QEMU_FRET_STK_TRACE_PC_LO",
+    "qemu_fret_stk_trace_pc_hi": "LINX_QEMU_FRET_STK_TRACE_PC_HI",
+    "qemu_fret_stk_trace_count_lo": "LINX_QEMU_FRET_STK_TRACE_COUNT_LO",
+    "qemu_fret_stk_trace_count_hi": "LINX_QEMU_FRET_STK_TRACE_COUNT_HI",
+    "qemu_fret_stk_trace_ra": "LINX_QEMU_FRET_STK_TRACE_RA",
+    "qemu_fret_stk_trace_limit": "LINX_QEMU_FRET_STK_TRACE_LIMIT",
+    "qemu_fret_stk_trace_dump_words": "LINX_QEMU_FRET_STK_TRACE_DUMP_WORDS",
+}
+
+QEMU_FRET_STK_TRACE_BOOL_ARGS = {
+    "qemu_fret_stk_trace_regs": "LINX_QEMU_FRET_STK_TRACE_REGS",
+}
+
+QEMU_FENTRY_TRACE_ARGS = {
+    "qemu_fentry_trace_pc": "LINX_QEMU_FENTRY_TRACE_PC",
+    "qemu_fentry_trace_pc_lo": "LINX_QEMU_FENTRY_TRACE_PC_LO",
+    "qemu_fentry_trace_pc_hi": "LINX_QEMU_FENTRY_TRACE_PC_HI",
+    "qemu_fentry_trace_count_lo": "LINX_QEMU_FENTRY_TRACE_COUNT_LO",
+    "qemu_fentry_trace_count_hi": "LINX_QEMU_FENTRY_TRACE_COUNT_HI",
+    "qemu_fentry_trace_ra": "LINX_QEMU_FENTRY_TRACE_RA",
+    "qemu_fentry_trace_sp": "LINX_QEMU_FENTRY_TRACE_SP",
+    "qemu_fentry_trace_new_sp": "LINX_QEMU_FENTRY_TRACE_NEW_SP",
+    "qemu_fentry_trace_limit": "LINX_QEMU_FENTRY_TRACE_LIMIT",
+    "qemu_fentry_trace_dump_words": "LINX_QEMU_FENTRY_TRACE_DUMP_WORDS",
+}
+
+QEMU_FENTRY_TRACE_BOOL_ARGS = {
+    "qemu_fentry_trace_regs": "LINX_QEMU_FENTRY_TRACE_REGS",
+}
+
 
 def _qemu_fault_trace_filters_from_args(args: argparse.Namespace) -> dict[str, str]:
     filters: dict[str, str] = {}
@@ -920,6 +960,34 @@ def _qemu_mem_trace_from_args(args: argparse.Namespace) -> dict[str, str]:
             trace[env_name] = "1"
     if bool(getattr(args, "qemu_mem_trace", False)) or trace:
         trace["LINX_MEM_TRACE"] = "1"
+    return trace
+
+
+def _qemu_fret_stk_trace_from_args(args: argparse.Namespace) -> dict[str, str]:
+    trace: dict[str, str] = {}
+    for attr, env_name in QEMU_FRET_STK_TRACE_ARGS.items():
+        value = str(getattr(args, attr, "") or "").strip()
+        if value:
+            trace[env_name] = value
+    for attr, env_name in QEMU_FRET_STK_TRACE_BOOL_ARGS.items():
+        if bool(getattr(args, attr, False)):
+            trace[env_name] = "1"
+    if bool(getattr(args, "qemu_fret_stk_trace", False)) or trace:
+        trace["LINX_QEMU_FRET_STK_TRACE"] = "1"
+    return trace
+
+
+def _qemu_fentry_trace_from_args(args: argparse.Namespace) -> dict[str, str]:
+    trace: dict[str, str] = {}
+    for attr, env_name in QEMU_FENTRY_TRACE_ARGS.items():
+        value = str(getattr(args, attr, "") or "").strip()
+        if value:
+            trace[env_name] = value
+    for attr, env_name in QEMU_FENTRY_TRACE_BOOL_ARGS.items():
+        if bool(getattr(args, attr, False)):
+            trace[env_name] = "1"
+    if bool(getattr(args, "qemu_fentry_trace", False)) or trace:
+        trace["LINX_QEMU_FENTRY_TRACE"] = "1"
     return trace
 
 
@@ -2674,6 +2742,8 @@ def _run_qemu(
     qemu_tlb_stats: bool,
     qemu_tlb_inv_hot: bool,
     qemu_tb_stats: bool,
+    qemu_fret_stk_trace: dict[str, str],
+    qemu_fentry_trace: dict[str, str],
     no_progress_timeout: float,
     append_extra: str,
     symbolize_heartbeat: bool,
@@ -2736,6 +2806,8 @@ def _run_qemu(
         qemu_tlb_stats=qemu_tlb_stats,
         qemu_tlb_inv_hot=qemu_tlb_inv_hot,
         qemu_tb_stats=qemu_tb_stats,
+        qemu_fret_stk_trace=qemu_fret_stk_trace,
+        qemu_fentry_trace=qemu_fentry_trace,
         qemu_fault_trace=qemu_fault_trace,
         qemu_fault_trace_regs=qemu_fault_trace_regs,
         qemu_fault_trace_limit=qemu_fault_trace_limit,
@@ -4239,6 +4311,48 @@ def main(argv: list[str]) -> int:
         ),
     )
     parser.add_argument(
+        "--qemu-fret-stk-trace",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_FRET_STK_TRACE", False),
+        help="Set LINX_QEMU_FRET_STK_TRACE=1 for FRET.STK frame-restore tracing.",
+    )
+    parser.add_argument(
+        "--qemu-fret-stk-trace-regs",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_FRET_STK_TRACE_REGS", False),
+        help="Set LINX_QEMU_FRET_STK_TRACE_REGS=1 for GPR dumps on FRET.STK trace hits.",
+    )
+    parser.add_argument("--qemu-fret-stk-trace-pc", default=os.environ.get("LINX_SPEC_QEMU_FRET_STK_TRACE_PC", ""))
+    parser.add_argument("--qemu-fret-stk-trace-pc-lo", default=os.environ.get("LINX_SPEC_QEMU_FRET_STK_TRACE_PC_LO", ""))
+    parser.add_argument("--qemu-fret-stk-trace-pc-hi", default=os.environ.get("LINX_SPEC_QEMU_FRET_STK_TRACE_PC_HI", ""))
+    parser.add_argument("--qemu-fret-stk-trace-count-lo", default=os.environ.get("LINX_SPEC_QEMU_FRET_STK_TRACE_COUNT_LO", ""))
+    parser.add_argument("--qemu-fret-stk-trace-count-hi", default=os.environ.get("LINX_SPEC_QEMU_FRET_STK_TRACE_COUNT_HI", ""))
+    parser.add_argument("--qemu-fret-stk-trace-ra", default=os.environ.get("LINX_SPEC_QEMU_FRET_STK_TRACE_RA", ""))
+    parser.add_argument("--qemu-fret-stk-trace-limit", default=os.environ.get("LINX_SPEC_QEMU_FRET_STK_TRACE_LIMIT", ""))
+    parser.add_argument("--qemu-fret-stk-trace-dump-words", default=os.environ.get("LINX_SPEC_QEMU_FRET_STK_TRACE_DUMP_WORDS", ""))
+    parser.add_argument(
+        "--qemu-fentry-trace",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_FENTRY_TRACE", False),
+        help="Set LINX_QEMU_FENTRY_TRACE=1 for FENTRY frame-save tracing.",
+    )
+    parser.add_argument(
+        "--qemu-fentry-trace-regs",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_FENTRY_TRACE_REGS", False),
+        help="Set LINX_QEMU_FENTRY_TRACE_REGS=1 for GPR dumps on FENTRY trace hits.",
+    )
+    parser.add_argument("--qemu-fentry-trace-pc", default=os.environ.get("LINX_SPEC_QEMU_FENTRY_TRACE_PC", ""))
+    parser.add_argument("--qemu-fentry-trace-pc-lo", default=os.environ.get("LINX_SPEC_QEMU_FENTRY_TRACE_PC_LO", ""))
+    parser.add_argument("--qemu-fentry-trace-pc-hi", default=os.environ.get("LINX_SPEC_QEMU_FENTRY_TRACE_PC_HI", ""))
+    parser.add_argument("--qemu-fentry-trace-count-lo", default=os.environ.get("LINX_SPEC_QEMU_FENTRY_TRACE_COUNT_LO", ""))
+    parser.add_argument("--qemu-fentry-trace-count-hi", default=os.environ.get("LINX_SPEC_QEMU_FENTRY_TRACE_COUNT_HI", ""))
+    parser.add_argument("--qemu-fentry-trace-ra", default=os.environ.get("LINX_SPEC_QEMU_FENTRY_TRACE_RA", ""))
+    parser.add_argument("--qemu-fentry-trace-sp", default=os.environ.get("LINX_SPEC_QEMU_FENTRY_TRACE_SP", ""))
+    parser.add_argument("--qemu-fentry-trace-new-sp", default=os.environ.get("LINX_SPEC_QEMU_FENTRY_TRACE_NEW_SP", ""))
+    parser.add_argument("--qemu-fentry-trace-limit", default=os.environ.get("LINX_SPEC_QEMU_FENTRY_TRACE_LIMIT", ""))
+    parser.add_argument("--qemu-fentry-trace-dump-words", default=os.environ.get("LINX_SPEC_QEMU_FENTRY_TRACE_DUMP_WORDS", ""))
+    parser.add_argument(
         "--qemu-tlb-stats",
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_TLB_STATS", False),
@@ -4516,6 +4630,24 @@ def main(argv: list[str]) -> int:
         "qemu_mem_trace_pc_hi",
         "qemu_mem_trace_count_lo",
         "qemu_mem_trace_count_hi",
+        "qemu_fret_stk_trace_pc",
+        "qemu_fret_stk_trace_pc_lo",
+        "qemu_fret_stk_trace_pc_hi",
+        "qemu_fret_stk_trace_count_lo",
+        "qemu_fret_stk_trace_count_hi",
+        "qemu_fret_stk_trace_ra",
+        "qemu_fret_stk_trace_limit",
+        "qemu_fret_stk_trace_dump_words",
+        "qemu_fentry_trace_pc",
+        "qemu_fentry_trace_pc_lo",
+        "qemu_fentry_trace_pc_hi",
+        "qemu_fentry_trace_count_lo",
+        "qemu_fentry_trace_count_hi",
+        "qemu_fentry_trace_ra",
+        "qemu_fentry_trace_sp",
+        "qemu_fentry_trace_new_sp",
+        "qemu_fentry_trace_limit",
+        "qemu_fentry_trace_dump_words",
     ):
         value = str(getattr(args, attr, "") or "").strip()
         if value:
@@ -4576,6 +4708,8 @@ def main(argv: list[str]) -> int:
     qemu_pc_watch = _qemu_pc_watch_from_args(args)
     qemu_syscall_trace = _qemu_syscall_trace_from_args(args)
     qemu_mem_trace = _qemu_mem_trace_from_args(args)
+    qemu_fret_stk_trace = _qemu_fret_stk_trace_from_args(args)
+    qemu_fentry_trace = _qemu_fentry_trace_from_args(args)
 
     spec_dir = Path(os.path.expanduser(args.spec_dir)).resolve()
     qemu = _check_exe(Path(os.path.expanduser(args.qemu)).resolve(), "qemu-system-linx64")
@@ -4623,6 +4757,8 @@ def main(argv: list[str]) -> int:
         "qemu_tlb_stats": bool(args.qemu_tlb_stats),
         "qemu_tlb_inv_hot": bool(args.qemu_tlb_inv_hot),
         "qemu_tb_stats": bool(args.qemu_tb_stats),
+        "qemu_fret_stk_trace": qemu_fret_stk_trace,
+        "qemu_fentry_trace": qemu_fentry_trace,
         "qemu_fault_trace": bool(args.qemu_fault_trace or qemu_fault_trace_filters),
         "qemu_fault_trace_regs": bool(args.qemu_fault_trace_regs),
         "qemu_fault_trace_limit": args.qemu_fault_trace_limit,
@@ -4733,6 +4869,8 @@ def main(argv: list[str]) -> int:
                     args.qemu_tlb_stats,
                     args.qemu_tlb_inv_hot,
                     args.qemu_tb_stats,
+                    qemu_fret_stk_trace,
+                    qemu_fentry_trace,
                     args.no_progress_timeout,
                     args.append_extra,
                     args.symbolize_heartbeat,

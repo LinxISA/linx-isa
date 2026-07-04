@@ -383,6 +383,63 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(env["LINX_MEM_TRACE_REGS"], "1")
         self.assertIn("LINX_MEM_TRACE_PC_LO", runner._qemu_debug_env_summary(env))
 
+    def test_qemu_frame_trace_args_auto_enable_trace(self) -> None:
+        fret_trace = runner._qemu_fret_stk_trace_from_args(
+            argparse.Namespace(
+                qemu_fret_stk_trace=False,
+                qemu_fret_stk_trace_pc="",
+                qemu_fret_stk_trace_pc_lo="0x1555828d20",
+                qemu_fret_stk_trace_pc_hi="0x1555828d40",
+                qemu_fret_stk_trace_count_lo="",
+                qemu_fret_stk_trace_count_hi="",
+                qemu_fret_stk_trace_ra="0",
+                qemu_fret_stk_trace_limit="64",
+                qemu_fret_stk_trace_dump_words="16",
+                qemu_fret_stk_trace_regs=True,
+            )
+        )
+        fentry_trace = runner._qemu_fentry_trace_from_args(
+            argparse.Namespace(
+                qemu_fentry_trace=False,
+                qemu_fentry_trace_pc="0x1555828c10",
+                qemu_fentry_trace_pc_lo="",
+                qemu_fentry_trace_pc_hi="",
+                qemu_fentry_trace_count_lo="",
+                qemu_fentry_trace_count_hi="",
+                qemu_fentry_trace_ra="0x1555828d20",
+                qemu_fentry_trace_sp="",
+                qemu_fentry_trace_new_sp="",
+                qemu_fentry_trace_limit="8",
+                qemu_fentry_trace_dump_words="4",
+                qemu_fentry_trace_regs=True,
+            )
+        )
+        env: dict[str, str] = {}
+        runner._apply_qemu_debug_env(
+            env,
+            qemu_heartbeat_interval=0,
+            qemu_fault_trace_regs=False,
+            qemu_fault_trace_limit=0,
+            qemu_fret_stk_trace=fret_trace,
+            qemu_fentry_trace=fentry_trace,
+        )
+
+        self.assertEqual(env["LINX_QEMU_FRET_STK_TRACE"], "1")
+        self.assertEqual(env["LINX_QEMU_FRET_STK_TRACE_PC_LO"], "0x1555828d20")
+        self.assertEqual(env["LINX_QEMU_FRET_STK_TRACE_PC_HI"], "0x1555828d40")
+        self.assertEqual(env["LINX_QEMU_FRET_STK_TRACE_RA"], "0")
+        self.assertEqual(env["LINX_QEMU_FRET_STK_TRACE_LIMIT"], "64")
+        self.assertEqual(env["LINX_QEMU_FRET_STK_TRACE_DUMP_WORDS"], "16")
+        self.assertEqual(env["LINX_QEMU_FRET_STK_TRACE_REGS"], "1")
+        self.assertEqual(env["LINX_QEMU_FENTRY_TRACE"], "1")
+        self.assertEqual(env["LINX_QEMU_FENTRY_TRACE_PC"], "0x1555828c10")
+        self.assertEqual(env["LINX_QEMU_FENTRY_TRACE_RA"], "0x1555828d20")
+        self.assertEqual(env["LINX_QEMU_FENTRY_TRACE_LIMIT"], "8")
+        self.assertEqual(env["LINX_QEMU_FENTRY_TRACE_DUMP_WORDS"], "4")
+        self.assertEqual(env["LINX_QEMU_FENTRY_TRACE_REGS"], "1")
+        self.assertIn("LINX_QEMU_FRET_STK_TRACE_RA", runner._qemu_debug_env_summary(env))
+        self.assertIn("LINX_QEMU_FENTRY_TRACE_PC", runner._qemu_debug_env_summary(env))
+
     def test_qemu_debug_env_summary_is_sanitized(self) -> None:
         env: dict[str, str] = {
             "PATH": "/bin",
