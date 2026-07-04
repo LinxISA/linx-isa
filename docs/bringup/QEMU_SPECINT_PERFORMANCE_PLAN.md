@@ -43,7 +43,55 @@ instead of failing `chdir-rundir`.
 
 ## Current Train Ledger
 
-The current clean-head QEMU ledger is
+The latest post-directgoto opt-in train ledger is
+`workloads/generated/specint-train-all-template-directgoto-qemu-20260704-r1/`.
+It uses in-tree QEMU head `1b55b888b36f6d4f7ad600d4121ac8c7b8821462`,
+version `QEMU emulator version 10.2.50 (v10.2.0-1019-g1b55b888b36)`, with
+`qemu_repo_dirty_tracked=false`, `LINX_QEMU_TEMPLATE_CHAIN=1`, frame stats, and
+restore-host frame loads. It is not a clean-build-marker run
+(`clean_build_for_head=false`) because it intentionally used the canonical
+in-tree build after rebuilding `emulator/qemu/build-linx/qemu-system-linx64`.
+
+Result shape:
+
+- `999.specrand_ir` passes the strict train hash (`rand.11.out`, 871 bytes,
+  `0x973dcfc2`).
+- `500.perlbench_r`, `502.gcc_r`, `505.mcf_r`, `520.omnetpp_r`,
+  `523.xalancbmk_r`, `525.x264_r`, `531.deepsjeng_r`, `541.leela_r`, and
+  `557.xz_r` are heartbeat-backed `live-timeout` rows with BPC site progress,
+  no panic, and no trap.
+- `525.x264_r` is still routed through the generated `train-all-large-9p`
+  shard; the observed failure is a heartbeat-backed 9p live-timeout, not an
+  oversized-initramfs VFS panic.
+- Final 120-second heartbeat counts are `500=36B`, `502=26B`, `505=33B`,
+  `520=19B`, `523=24B`, `525=32B`, `531=41B`, `541=21B`, and `557=35B`,
+  with recent progress deltas of about `7B` instructions for each red row.
+
+Compared with the previous 120-second template-chain/frame-hostload ledger
+`workloads/generated/specint-train-all-template-chain-frame-hostload-qemu-20260704-r2/`,
+direct fall-through chaining is mixed but broadly positive: `520`, `523`,
+`525`, `531`, `541`, and `557` improve, `502` is neutral, and `500`/`505`
+regress in this stats-enabled all-row shape. Keep it as a measured dispatch
+speedup candidate, not SPEC train closure.
+
+Downstream hard-break status after this ledger:
+
+- TSVC QEMU is green on the current in-tree QEMU:
+  `workloads/generated/flow-pr-tsvc-directgoto-20260704-r1/report.json`
+  records `ok=true`; both `tsvc-compile-only-floor` and
+  `tsvc-qemu-batched` pass.
+- The clean BusyBox rootfs boot is green:
+  `workloads/generated/busybox-rootfs-directgoto-20260704-r1/boot-report.json`
+  records `ok=true` / `status=pass`.
+- Hosted libc is the current hard-break:
+  `workloads/generated/flow-linux-libc-directgoto-20260704-r1/report.json`
+  records `musl-build-phase-b` pass, `musl-runtime-both` pass, and
+  `glibc-runtime` fail. The focused static glibc probe in
+  `workloads/generated/glibc-smoke-static-probe-20260704-r1/summary.json`
+  fails with `LINX_USER_TRAP` in the glibc runtime path, with the trap
+  symbolized around `__tls_init_tp` / the early rseq tunable access.
+
+The older clean-head TLBI-hot reference ledger is
 `workloads/generated/specint-train-all-latest-qemu-20260704-r2/`. It uses the
 clean build `/tmp/linx-qemu-clean-build/qemu-system-linx64` from QEMU head
 `1db7e12b6809c8ca2e2bee397f6019a14966e2ad`, version
@@ -70,7 +118,7 @@ Result shape:
   `523=34B`, `525=49B`, `531=60B`, `541=32B`, and `557=56B`, with recent
   progress deltas of about `7B` instructions for each red row.
 
-Speed lanes from the current counters:
+Speed lanes from the TLBI-hot reference counters:
 
 - Every long row records millions of `tlb.iv` operations. The shared maximum
   per-heartbeat hot burst is `max_delta=458884` at `0xffffffff80405980`
@@ -84,8 +132,8 @@ Speed lanes from the current counters:
 - Earlier TLB-fill and TB-stat ledgers still identify `probe_access_internal`,
   template dispatch, and TB lookup as QEMU-side costs. This current ledger says
   the next speed loop should first reduce or batch Linx Linux
-  `local_flush_tlb_page()` volume, then rerun the same all-train gate before
-  returning to QEMU cputlb changes.
+  `local_flush_tlb_page()` volume, then rerun the same all-train gate with
+  TLBI/TB counters before returning to QEMU cputlb changes.
 
 ### Post-Linux TLBI Range-Batching Follow-Up
 
@@ -209,11 +257,27 @@ Focused `505.mcf_r` train A/B with template chaining and restore-host loads:
 | `workloads/generated/specint-505-template-directgoto-baseline-qemu-20260704-r1/` | 28000000002 | `live-timeout` | 6999999996 | `0x155555cce6` |
 | `workloads/generated/specint-505-template-directgoto-patched-qemu-20260704-r1/` | 31000000003 | `live-timeout` | 7000000003 | `0x155555c4a4` |
 
+All-row train evidence:
+
+| Benchmark | Result | Count | BPC |
+| --- | --- | ---: | --- |
+| `500.perlbench_r` | `live-timeout` | 36000000008 | `0x15555de436` |
+| `502.gcc_r` | `live-timeout` | 26000000006 | `0x1555ec5d1c` |
+| `505.mcf_r` | `live-timeout` | 33000000002 | `0x155555cce6` |
+| `520.omnetpp_r` | `live-timeout` | 19000000004 | `0x15557668f6` |
+| `523.xalancbmk_r` | `live-timeout` | 24000000002 | `0x1555677998` |
+| `525.x264_r` | `live-timeout` | 32000000002 | `0xffffffff801149e8` |
+| `531.deepsjeng_r` | `live-timeout` | 41000000004 | `0x1555565238` |
+| `541.leela_r` | `live-timeout` | 21000000003 | `0x1555580d0a` |
+| `557.xz_r` | `live-timeout` | 35000000000 | `0x155558d6da` |
+| `999.specrand_ir` | pass | strict hash `0x973dcfc2` | - |
+
 Loop update: keep the direct fall-through chaining patch as a measured
 template-dispatch speedup and correctness-preserving helper-exit reduction.
-The row is still live-slow rather than correct-complete, so this does not close
-the all-train gate. Re-run an all-row train ledger before promoting template
-chaining beyond the current opt-in shape.
+The row set is still live-slow rather than correct-complete, and `505` regresses
+in the stats-enabled all-row shape, so this does not close the all-train gate.
+TSVC QEMU and BusyBox rootfs have since passed on this QEMU; the next
+hard-break lane is hosted glibc runtime bring-up, then return to SPEC speed work.
 
 ### Rejected FENTRY Save-Window Probe Grouping
 
