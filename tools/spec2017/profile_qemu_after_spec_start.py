@@ -181,6 +181,40 @@ def _terminate_wrapped_command(proc: subprocess.Popen[Any], grace_sec: float) ->
         return result
 
 
+def _wait_for_sample_delay(
+    proc: subprocess.Popen[Any],
+    delay_sec: float,
+    poll_sec: float,
+) -> dict[str, Any]:
+    started = time.monotonic()
+    result: dict[str, Any] = {
+        "requested_sec": delay_sec,
+        "elapsed_sec": 0.0,
+        "completed": True,
+        "command_exited": False,
+        "returncode": None,
+    }
+    if delay_sec <= 0:
+        result["command_exited"] = proc.poll() is not None
+        result["returncode"] = proc.returncode
+        return result
+
+    deadline = started + delay_sec
+    while True:
+        proc_returncode = proc.poll()
+        now = time.monotonic()
+        result["elapsed_sec"] = round(now - started, 3)
+        if proc_returncode is not None:
+            result["completed"] = False
+            result["command_exited"] = True
+            result["returncode"] = proc_returncode
+            return result
+        remaining = deadline - now
+        if remaining <= 0:
+            return result
+        time.sleep(min(poll_sec, remaining))
+
+
 def _parse_top_stack_sample(text: str, limit: int = 120) -> list[dict[str, Any]]:
     marker = "Sort by top of stack, same collapsed"
     lines = text.splitlines()
@@ -275,6 +309,8 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
                     help="Polling interval while waiting for marker/qemu.")
     ap.add_argument("--sample-sec", type=int, default=30,
                     help="Seconds to pass to macOS sample.")
+    ap.add_argument("--sample-delay-sec", type=float, default=0.0,
+                    help="Seconds to wait after the marker is observed before sampling.")
     ap.add_argument("--terminate-after-sample", action="store_true",
                     help="Terminate the wrapped command after sample collection instead of waiting for normal completion.")
     ap.add_argument("--terminate-grace-sec", type=float, default=5.0,
@@ -293,6 +329,8 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
         raise SystemExit("error: --sample-sec must be positive")
     if args.wait_timeout <= 0:
         raise SystemExit("error: --wait-timeout must be positive")
+    if args.sample_delay_sec < 0:
+        raise SystemExit("error: --sample-delay-sec must be non-negative")
     if args.terminate_grace_sec < 0:
         raise SystemExit("error: --terminate-grace-sec must be non-negative")
     return args
@@ -314,6 +352,8 @@ def main(argv: list[str] | None = None) -> int:
         "report_out": str(report_out),
         "qemu_pid": None,
         "marker_log": None,
+        "sample_delay_sec": args.sample_delay_sec,
+        "sample_delay": None,
         "sample": None,
         "terminate_after_sample": bool(args.terminate_after_sample),
         "termination": None,
@@ -332,6 +372,16 @@ def main(argv: list[str] | None = None) -> int:
             if qemu_pid is not None:
                 report["qemu_pid"] = qemu_pid
             if marker_log is not None and qemu_pid is not None:
+                if args.sample_delay_sec > 0:
+                    report["sample_delay"] = _wait_for_sample_delay(
+                        proc, args.sample_delay_sec, args.poll_sec
+                    )
+                    if not report["sample_delay"]["completed"]:
+                        break
+                    refreshed_qemu_pid = _find_qemu_descendant(proc.pid, args.qemu_name)
+                    if refreshed_qemu_pid is not None:
+                        qemu_pid = refreshed_qemu_pid
+                        report["qemu_pid"] = qemu_pid
                 report["sample"] = _run_sample(qemu_pid, args.sample_sec, args.sample_out)
                 sample_done = True
                 if args.terminate_after_sample:

@@ -139,21 +139,31 @@ does not close the 505 throughput blocker and earlier focused `500.perlbench_r`
 row-2 evidence showed it can perturb the terminal user-trap timing.
 
 Profiler loop update: `tools/spec2017/profile_qemu_after_spec_start.py` now has
-`--terminate-after-sample` and `--terminate-grace-sec`. This mode sends SIGTERM
-to the wrapped process group after a sample is collected and returns success
-when the sample is valid, so post-start profiles no longer need to wait for the
-full SPEC timeout. Validation:
+`--terminate-after-sample`, `--terminate-grace-sec`, and
+`--sample-delay-sec`. The terminate mode sends SIGTERM to the wrapped process
+group after a sample is collected and returns success when the sample is valid,
+so post-start profiles no longer need to wait for the full SPEC timeout. The
+delay mode waits for a configurable interval after `LINX_SPEC_START` before
+sampling, making it possible to distinguish early benchmark startup from a more
+settled live row. Validation:
 
 | Check | Result |
 | --- | --- |
 | `python3 -m py_compile tools/spec2017/profile_qemu_after_spec_start.py tools/spec2017/test_profile_qemu_after_spec_start.py` | pass |
-| `python3 -m unittest tools/spec2017/test_profile_qemu_after_spec_start.py` | pass, 9 tests |
+| `python3 -m unittest tools/spec2017/test_profile_qemu_after_spec_start.py` | pass, 12 tests |
 | `workloads/generated/specint-profile-505-terminate-after-sample-20260705-r2/` | exits 0 after 24.959s, `sample.ok=true`, `sample.elapsed_sec=5.199`, termination metadata records process-group SIGTERM and `command_returncode=-15` |
+| `workloads/generated/specint-profile-541-delay-terminate-clean-qemu-20260705-r1/` | exits 0 after 29.496s, `sample_delay.completed=true`, delay elapsed 5.010s, `sample.ok=true`, `sample.elapsed_sec=5.293`, process-group SIGTERM without SIGKILL |
+
+The delayed clean-head `541.leela_r` sample keeps the same broad QEMU owners
+visible outside `505`: `linx_template_fret_stk_impl=252`,
+`linx_template_fentry_impl=242`, `linx_frame_restore_prepare=199`,
+`helper_lookup_tb_ptr=188`, `tb_lookup=179`, `probe_access_internal=162`,
+`mmu_lookup1=152`, and `qht_lookup_custom=132`.
 
 Loop update: the next 505 speed loop should target soft-MMU/probe lookup,
 template helper exits, and TB lookup/dispatch. Do not promote restore-host load
-as the broad solution; use `--terminate-after-sample` for faster focused host
-profiles of those remaining lanes.
+as the broad solution; use `--terminate-after-sample` and
+`--sample-delay-sec` for faster focused host profiles of those remaining lanes.
 
 The older post-directgoto opt-in train ledger is
 `workloads/generated/specint-train-all-template-directgoto-qemu-20260704-r1/`.

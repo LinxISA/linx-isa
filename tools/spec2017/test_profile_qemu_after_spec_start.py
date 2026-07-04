@@ -119,6 +119,51 @@ Sort by top of stack, exclusive:
         self.assertIsNotNone(result["returncode"])
         self.assertNotEqual(result["returncode"], 0)
 
+    def test_wait_for_sample_delay_completes_while_process_runs(self) -> None:
+        proc = subprocess.Popen(
+            [sys.executable, "-c", "import time; time.sleep(1)"],
+            start_new_session=True,
+        )
+        try:
+            result = profiler._wait_for_sample_delay(proc, 0.05, 0.01)
+        finally:
+            if proc.poll() is None:
+                proc.kill()
+                proc.wait(timeout=5)
+
+        self.assertTrue(result["completed"])
+        self.assertFalse(result["command_exited"])
+        self.assertIsNone(result["returncode"])
+
+    def test_wait_for_sample_delay_reports_process_exit(self) -> None:
+        proc = subprocess.Popen(
+            [sys.executable, "-c", ""],
+            start_new_session=True,
+        )
+        result = profiler._wait_for_sample_delay(proc, 1.0, 0.01)
+        proc.wait(timeout=5)
+
+        self.assertFalse(result["completed"])
+        self.assertTrue(result["command_exited"])
+        self.assertEqual(result["returncode"], 0)
+
+    def test_parse_args_rejects_negative_sample_delay(self) -> None:
+        with self.assertRaises(SystemExit):
+            profiler._parse_args(
+                [
+                    "--out-root",
+                    "out",
+                    "--sample-out",
+                    "sample.txt",
+                    "--sample-delay-sec",
+                    "-1",
+                    "--",
+                    sys.executable,
+                    "-c",
+                    "",
+                ]
+            )
+
     def test_profile_exit_code_accepts_intentional_termination_after_sample(self) -> None:
         report = {
             "terminate_after_sample": True,
