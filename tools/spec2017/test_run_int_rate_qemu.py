@@ -287,6 +287,31 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(env["LINX_QEMU_FAULT_TRACE_PC_HI"], "0x15559efe40")
         self.assertEqual(env["LINX_QEMU_FAULT_TRACE_TRAPNUM"], "5")
 
+    def test_qemu_debug_env_summary_is_sanitized(self) -> None:
+        env: dict[str, str] = {"PATH": "/bin", "LINX_SYSROOT": "/tmp/sysroot"}
+        runner._apply_qemu_debug_env(
+            env,
+            qemu_heartbeat_interval=1000,
+            qemu_fault_trace_regs=True,
+            qemu_fault_trace_limit=3,
+            qemu_pc_watch={
+                "LINX_DEBUG_PC_WATCH": "0x1555827c8c",
+                "LINX_DEBUG_PC_WATCH_RING": "1",
+            },
+        )
+
+        self.assertEqual(
+            runner._qemu_debug_env_summary(env),
+            {
+                "LINX_DEBUG_PC_WATCH": "0x1555827c8c",
+                "LINX_DEBUG_PC_WATCH_RING": "1",
+                "LINX_HEARTBEAT_INTERVAL": "1000",
+                "LINX_QEMU_FAULT_TRACE": "1",
+                "LINX_QEMU_FAULT_TRACE_LIMIT": "3",
+                "LINX_QEMU_FAULT_TRACE_REGS": "1",
+            },
+        )
+
     def test_heartbeat_tlb_fill_summary_includes_mmu_split(self) -> None:
         summary = runner._heartbeat_tlb_fill_summary(
             "LINX_HEARTBEAT count=100 pc=0x1 bpc=0x2 "

@@ -756,6 +756,19 @@ def _apply_qemu_debug_env(
             qemu_env[name] = str(value).strip()
 
 
+def _qemu_debug_env_summary(qemu_env: dict[str, str]) -> dict[str, str]:
+    prefixes = (
+        "LINX_DEBUG_PC_WATCH",
+        "LINX_HEARTBEAT_INTERVAL",
+        "LINX_QEMU_",
+    )
+    return {
+        name: qemu_env[name]
+        for name in sorted(qemu_env)
+        if any(name.startswith(prefix) for prefix in prefixes)
+    }
+
+
 QEMU_FAULT_TRACE_FILTER_ARGS = {
     "qemu_fault_trace_pc": "LINX_QEMU_FAULT_TRACE_PC",
     "qemu_fault_trace_pc_lo": "LINX_QEMU_FAULT_TRACE_PC_LO",
@@ -2636,6 +2649,7 @@ def _run_qemu(
         qemu_fault_trace_filters=qemu_fault_trace_filters,
         qemu_pc_watch=qemu_pc_watch,
     )
+    qemu_debug_env = _qemu_debug_env_summary(qemu_env)
 
     proc = subprocess.Popen(
         cmd,
@@ -2821,6 +2835,7 @@ def _run_qemu(
         "qemu_machine": machine,
         "qemu_machine_extra": machine_extra,
         "qemu_extra_args": qemu_extra,
+        "qemu_debug_env": qemu_debug_env,
         "qemu_frame_stats": bool(qemu_frame_stats),
         "qemu_frame_restore_host_load": bool(qemu_frame_restore_host_load),
         "qemu_tlb_stats": bool(qemu_tlb_stats),
