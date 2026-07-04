@@ -31,23 +31,28 @@ Evidence:
   than mixed into every cheap regression check.
 - `docs/bringup/QEMU_SPECINT_PERFORMANCE_PLAN.md` records the current QEMU
   SPECint profile and the prioritized speedups for the Linx target.
-- `workloads/generated/specint-train-all-frame-single-fast-clean-qemu-20260705-r1/`
+- `workloads/generated/specint-train-all-shape-record-inline-clean-qemu-20260705-r1/`
   is the current clean latest-QEMU all-SPECint train ledger. It uses
   `/tmp/linx-qemu-clean-build/qemu-system-linx64` at QEMU head
-  `7ae245b6a5e937fdfd1f377662efa00997f68025`, version
-  `v10.2.0-1024-g7ae245b6a5e`, and records `clean_build_for_head=true`.
+  `418f56ba1f58c908dc75c095e07606b725dafba4`, version
+  `v10.2.0-1025-g418f56ba1f5`, and records `clean_build_for_head=true`.
   The split train suite enables BPC heartbeat, `LINX_QEMU_TEMPLATE_CHAIN=1`,
   `--qemu-frame-single-reg-fast`, frame stats, TB stats, TLB aggregate stats,
   TLB-fill hot pages, and TLB-invalidation hot-source attribution.
   `999.specrand_ir` passes strict train hash; every other tracked C/C++ row,
   including generated 9p `525.x264_r`, is a heartbeat-backed `live-timeout`
   with site-changing BPC progress, no panic, no trap, and no no-progress
-  timeout. The one-register frame fast path remains opt-in because normalized
-  train-all throughput is mixed.
+  timeout. Compared with the previous clean `7ae245b6...` all-row ledger, the
+  bounded 120-second counts are neutral to mixed: `502`, `505`, `523`, and
+  `525` improve by about 1B instructions, `500` and `557` regress by about 1B,
+  and `520`, `531`, and `541` are effectively flat. The one-register frame
+  fast path remains opt-in because normalized train-all throughput is mixed.
 - `workloads/generated/specint-profile-suite-train-frame-single-fast-clean-qemu-20260705-r2/`
-  is the matching current-head train profile suite. It profiles the nine
+  is the most recent all-row train profile suite. It profiles the nine
   non-sentinel SPECint workload rows with delayed post-marker host samples,
-  records `ok=true`, and keeps `525.x264_r` on 9p. The matching analyzer report
+  records `ok=true`, and keeps `525.x264_r` on 9p. It was collected on the
+  previous `7ae245b6...` clean QEMU head, so refresh it before claiming a
+  matching-head profile for `418f56ba...`. The analyzer report
   `workloads/generated/specint-qemu-progress-analysis-frame-single-fast-clean-current-profile-20260705-r1/report.md`
   classifies the next work as six template/TB/soft-MMU rows, two TLBI
   attribution rows (`531`, `557`), one 9p transport row (`525`), and the
@@ -56,9 +61,13 @@ Evidence:
   QEMU hygiene repin. It removes disabled frame-shape recorder calls from
   ordinary SPEC profiles and passes clean SPECint PR smoke in
   `workloads/generated/specint-pr-shape-record-inline-clean-qemu-20260705-r1/`.
-  It does not replace the all-row train ledger above: focused `541.leela_r`
-  remains neutral at a 45-second cap, so the next throughput work is still
+  The latest all-row train ledger above shows the patch is profile-fidelity and
+  hot-path hygiene, not a broad speedup, so the next throughput work is still
   TB dispatch, soft-MMU lookup, and row-specific TLBI attribution.
+- `workloads/generated/specint-train-all-frame-single-fast-clean-qemu-20260705-r1/`
+  is the previous clean all-SPECint train comparison baseline at QEMU head
+  `7ae245b6a5e937fdfd1f377662efa00997f68025`, version
+  `v10.2.0-1024-g7ae245b6a5e`.
 - `workloads/generated/specint-train-all-clean-qemu-20260705-r1/` is the
   prior clean latest-QEMU all-SPECint train ledger. It uses
   `/tmp/linx-qemu-clean-build/qemu-system-linx64` at QEMU head

@@ -246,6 +246,41 @@ also reaches `5000000004`, so restore-host loads are neutral on this row and
 should remain opt-in. The next real speed loop should target TB dispatch and
 soft-MMU lookup directly, or Linux TLBI frequency for the `531`/`557` lane.
 
+Latest all-row clean-build train refresh:
+`workloads/generated/specint-train-all-shape-record-inline-clean-qemu-20260705-r1/`
+runs every supported SPECint train row on the clean-build QEMU binary
+`/private/tmp/linx-qemu-clean-build/qemu-system-linx64`, with marker
+`418f56ba1f58c908dc75c095e07606b725dafba4:worktree` and version
+`v10.2.0-1025-g418f56ba1f5`. The command keeps `LINX_QEMU_TEMPLATE_CHAIN=1`,
+`--qemu-frame-stats`, `--qemu-frame-single-reg-fast`, TLB aggregate/hot-site
+stats, TB stats, a 1B-instruction QEMU heartbeat, and 120-second row caps.
+`999.specrand_ir` still passes strict train hash. The other nine rows are
+heartbeat-backed `live-timeout` rows with `heartbeat_running=true`, BPC site
+progress, no panic, and no trap.
+
+Compared with the previous clean all-row frame-single-fast ledger
+`workloads/generated/specint-train-all-frame-single-fast-clean-qemu-20260705-r1/`,
+the latest-head result is neutral to mixed rather than a speedup:
+
+| Bench | Count / cap | Delta vs `7ae245b6...` | Last BPC |
+| --- | ---: | ---: | --- |
+| `500.perlbench_r` | 37000000002 / 120s | -999999998 | `0x15556e0ce6` |
+| `502.gcc_r` | 28000000002 / 120s | +1000000002 | `0x1555c80708` |
+| `505.mcf_r` | 35000000001 / 120s | +999999999 | `0x155555c4e6` |
+| `520.omnetpp_r` | 20000000000 / 120s | -2 | `0x15557763da` |
+| `523.xalancbmk_r` | 25000000001 / 120s | +1000000000 | `0x15557e653e` |
+| `525.x264_r` | 34000000007 / 120s | +1000000004 | `0xffffffff8011612e` |
+| `531.deepsjeng_r` | 42000000015 / 120s | 0 | `0x15555637e2` |
+| `541.leela_r` | 23000000008 / 120s | +3 | `0x1555580d28` |
+| `557.xz_r` | 37000000006 / 120s | -999999996 | `0x155558d6da` |
+
+Loop update: keep `418f56ba...` as the submitted profile-hygiene QEMU head,
+but do not promote `LINX_QEMU_FRAME_SINGLE_REG_FAST=1` into the default stack.
+The next broad speed loop should refresh the all-row profile suite on
+`418f56ba...`, then target the persistent template/TB/soft-MMU lane and the
+row-specific Linux TLBI lane rather than spending more time on disabled
+frame-shape recorder overhead.
+
 Progress-analysis loop update:
 `tools/spec2017/analyze_specint_qemu_progress.py` now joins the clean all-row
 train gate with the all-row delayed profile suite and writes a generated
