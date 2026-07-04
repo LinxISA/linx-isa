@@ -271,6 +271,41 @@ all-row train comparison proves no row regresses, but use it in the next
 template-helper speed stack for rows where `frame-hot=` reports one-register
 entry/return shapes.
 
+All-row clean-build train comparison:
+`workloads/generated/specint-train-all-frame-single-fast-clean-qemu-20260705-r1/`
+reruns every supported SPECint train row on the clean-build QEMU binary
+`/private/tmp/linx-qemu-clean-build/qemu-system-linx64`, with marker
+`7ae245b6a5e937fdfd1f377662efa00997f68025:worktree` and version
+`v10.2.0-1024-g7ae245b6a5e`. The command uses `LINX_QEMU_TEMPLATE_CHAIN=1`,
+`--qemu-frame-stats`, `--qemu-frame-single-reg-fast`, TLB aggregate/hot-site
+stats, TB stats, a 1B-instruction QEMU heartbeat, and 120-second row caps.
+`999.specrand_ir` still passes strict train hash. The other nine rows are
+heartbeat-backed `live-timeout` rows with `heartbeat_running=true`, BPC site
+progress, no panic, and no trap.
+
+Normalized against the prior 180-second clean train ledger
+`workloads/generated/specint-train-all-clean-qemu-20260705-r1/`, the fast path
+is mixed rather than a broad default win:
+
+| Bench | Count / cap | Rate delta vs prior clean ledger | Single-fast counters |
+| --- | ---: | ---: | ---: |
+| `500.perlbench_r` | 38000000000 / 120s | -5.0% | 212642523 / 212642511 |
+| `502.gcc_r` | 27000000000 / 120s | -1.2% | 692800888 / 692800868 |
+| `505.mcf_r` | 34000000002 / 120s | -3.8% | 445331129 / 445331115 |
+| `520.omnetpp_r` | 20000000002 / 120s | +3.4% | 795349708 / 795349455 |
+| `523.xalancbmk_r` | 24000000001 / 120s | +2.9% | 688167558 / 688167525 |
+| `525.x264_r` | 33000000003 / 120s | +3.1% | 1006472830 / 1006472822 |
+| `531.deepsjeng_r` | 42000000015 / 120s | roughly flat | 464231978 / 464231947 |
+| `541.leela_r` | 23000000005 / 120s | +7.8% | 1083244037 / 1083244020 |
+| `557.xz_r` | 38000000002 / 120s | -6.6% | 900468972 / 900468958 |
+
+Loop update: keep `LINX_QEMU_FRAME_SINGLE_REG_FAST=1` default-off. It is useful
+for focused one-register frame-shape experiments and helps several rows, but
+the train-all clean ledger shows regressions on `500`, `505`, and `557`, so the
+next speed loop should split row classes instead of promoting this switch
+globally. Continue to use `--qemu-frame-stats` so frame-fast usage and generic
+restore fallback traffic remain visible.
+
 The older post-directgoto opt-in train ledger is
 `workloads/generated/specint-train-all-template-directgoto-qemu-20260704-r1/`.
 It used in-tree QEMU head `1b55b888b36f6d4f7ad600d4121ac8c7b8821462` and is

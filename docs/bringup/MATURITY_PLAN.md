@@ -53,13 +53,15 @@ Last updated: 2026-07-05
   - runtime-heavy follow-up: the active in-repo SPEC lane is CPU2017 SPECint
     train input, not a checked-in SPEC CPU2006 corpus. The latest clean all-ten
     train loop under
-    `workloads/generated/specint-train-all-clean-qemu-20260705-r1/` runs all
+    `workloads/generated/specint-train-all-frame-single-fast-clean-qemu-20260705-r1/` runs all
     supported SPECint C/C++ rows on clean QEMU head
-    `40f869298c75aa9378746d5bf93ad3ec64475f85`, passes `999.specrand_ir`,
+    `7ae245b6a5e937fdfd1f377662efa00997f68025`, passes `999.specrand_ir`,
     routes `525.x264_r` through the generated 9p shard, and proves timeout rows
     are live-progress rather than global QEMU deadlock by QEMU heartbeat/BPC,
-    frame counters, TB counters, TLB aggregate counters, TLB-fill hot pages, and
-    TLBI hot-source evidence. The next speed lanes are remaining
+    frame counters including one-register frame-fast usage, TB counters, TLB
+    aggregate counters, TLB-fill hot pages, and TLBI hot-source evidence. The
+    frame-fast switch remains opt-in because normalized train-all throughput is
+    mixed; the next speed lanes are remaining
     fixmap/fault-path TLBI bursts, QEMU `probe_access_internal` / soft-MMU
     lookup, template/TB lookup dispatch, frame restore fallback traffic, and
     9p/kernel transport overhead.

@@ -31,8 +31,21 @@ Evidence:
   than mixed into every cheap regression check.
 - `docs/bringup/QEMU_SPECINT_PERFORMANCE_PLAN.md` records the current QEMU
   SPECint profile and the prioritized speedups for the Linx target.
+- `workloads/generated/specint-train-all-frame-single-fast-clean-qemu-20260705-r1/`
+  is the current clean latest-QEMU all-SPECint train ledger. It uses
+  `/tmp/linx-qemu-clean-build/qemu-system-linx64` at QEMU head
+  `7ae245b6a5e937fdfd1f377662efa00997f68025`, version
+  `v10.2.0-1024-g7ae245b6a5e`, and records `clean_build_for_head=true`.
+  The split train suite enables BPC heartbeat, `LINX_QEMU_TEMPLATE_CHAIN=1`,
+  `--qemu-frame-single-reg-fast`, frame stats, TB stats, TLB aggregate stats,
+  TLB-fill hot pages, and TLB-invalidation hot-source attribution.
+  `999.specrand_ir` passes strict train hash; every other tracked C/C++ row,
+  including generated 9p `525.x264_r`, is a heartbeat-backed `live-timeout`
+  with site-changing BPC progress, no panic, no trap, and no no-progress
+  timeout. The one-register frame fast path remains opt-in because normalized
+  train-all throughput is mixed.
 - `workloads/generated/specint-train-all-clean-qemu-20260705-r1/` is the
-  current clean latest-QEMU all-SPECint train ledger. It uses
+  prior clean latest-QEMU all-SPECint train ledger. It uses
   `/tmp/linx-qemu-clean-build/qemu-system-linx64` at QEMU head
   `40f869298c75aa9378746d5bf93ad3ec64475f85`, version
   `v10.2.0-1022-g40f869298c7`, and records `clean_build_for_head=true`.
