@@ -116,6 +116,7 @@ def _suite_transport(suite: dict[str, Any]) -> str | None:
 
 def _merge_failure_detail(row: dict[str, Any], detail: dict[str, Any]) -> None:
     frame_stats = detail.get("heartbeat_frame_stats") or {}
+    frame_shape_hot = detail.get("heartbeat_frame_shape_hot") or {}
     tb_stats = detail.get("heartbeat_tb_stats") or {}
     tlb_fill = detail.get("heartbeat_tlb_fill") or {}
     tlb_inv = detail.get("heartbeat_tlb_invalidation") or {}
@@ -139,6 +140,7 @@ def _merge_failure_detail(row: dict[str, Any], detail: dict[str, Any]) -> None:
             "frame_restore_host": frame_stats.get("restore_host"),
             "frame_fentry": frame_stats.get("fentry"),
             "frame_fret_stk": frame_stats.get("fret_stk"),
+            "frame_shape_hot": frame_shape_hot if frame_shape_hot.get("seen") else {},
             "tb_lookup": tb_stats.get("lookup"),
             "tb_miss": tb_stats.get("miss"),
             "tlb_fill_total": tlb_fill.get("total"),
@@ -353,6 +355,7 @@ def _bench_report_row(
         "tlb_fill_user": gate_row.get("tlb_fill_user"),
         "tlb_inv_iv": gate_row.get("tlb_inv_iv"),
         "frame_restore_fallback": gate_row.get("frame_restore_fallback"),
+        "frame_shape_hot": gate_row.get("frame_shape_hot") or {},
         "strict_hash_ok": gate_row.get("strict_hash_ok"),
         "hash_checks": gate_row.get("hash_checks", []),
         "profile_sample_ok": bool(profile_row and profile_row.get("sample_ok")),

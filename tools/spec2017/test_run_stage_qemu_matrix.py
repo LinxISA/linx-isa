@@ -45,6 +45,17 @@ class StageQemuMatrixTests(unittest.TestCase):
                                 "top0_mmu": 1,
                                 "evictions": 17,
                             },
+                            "heartbeat_frame_shape_hot": {
+                                "seen": True,
+                                "top0_count": 80,
+                                "top0_delta": 20,
+                                "top0_kind": "fentry",
+                                "top0_begin": 10,
+                                "top0_end": 13,
+                                "top0_stack": 64,
+                                "top0_regs": 4,
+                                "evictions": 2,
+                            },
                             "log": "run_002/qemu.log",
                         },
                     ],
@@ -87,8 +98,20 @@ class StageQemuMatrixTests(unittest.TestCase):
             ]["top0_page"],
             "0x3f7fa8d000",
         )
+        self.assertEqual(
+            matrix._transport_failure_details(summary)["500.perlbench_r"][
+                "heartbeat_frame_shape_hot"
+            ]["top0_kind"],
+            "fentry",
+        )
         self.assertIn(
             "kernel-panic-loop",
+            matrix._format_failure_details(
+                matrix._transport_failure_details(summary)
+            ),
+        )
+        self.assertIn(
+            "frame-hot=fentry:80/d20/r10-13/n4/s64 evict=2",
             matrix._format_failure_details(
                 matrix._transport_failure_details(summary)
             ),

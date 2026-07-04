@@ -215,6 +215,30 @@ template helper exits, and TB lookup/dispatch. Do not promote restore-host load
 as the broad solution; use `--terminate-after-sample` and
 `--sample-delay-sec` for faster focused host profiles of those remaining lanes.
 
+Frame-shape attribution update:
+QEMU now has an opt-in frame-template shape sketch for SPEC heartbeat runs. Set
+`LINX_QEMU_FRAME_SHAPE_HOT=1` directly, or pass `--qemu-frame-shape-hot`
+through `run_int_rate_qemu.py`, `run_stage_qemu_matrix.py`, or
+`run_specint_fast_gate.py`. QEMU emits `LINX_FRAME_SHAPE_HOT` companion lines
+with the hottest frame kind, register range, register count, stack size,
+per-heartbeat delta, and eviction pressure. The SPEC runners record the parsed
+summary under `heartbeat_frame_shape_hot`, matrix markdown prints a compact
+`frame-hot=` liveness tag, and the progress analyzer carries the field forward
+as `frame_shape_hot`.
+
+Focused proof:
+`workloads/generated/specint-541-frame-shape-hot-qemu-20260705-r2/` reruns
+`541.leela_r` train for 45 seconds on the rebuilt in-tree QEMU with
+`LINX_QEMU_TEMPLATE_CHAIN=1`, frame stats, TB stats, and
+`--qemu-frame-shape-hot`. The row remains a heartbeat-backed `live-timeout`
+(`count=3000000002`, `bpc=0x15555882aa`, site progress, no panic, no trap), but
+the companion sketch works: the last heartbeat reports `fret_stk` and `fentry`
+as the top shapes, both using register range `10-10`, one register, and
+`stack=32`; the max-delta window reports `fentry` with `delta=32181973` and
+`fret_stk` with the same delta. Loop update: the next template-helper speed
+prototype should specialize or batch this one-register stack-32 entry/return
+shape first, using `999.specrand_ir` strict train as the before/after guard.
+
 The older post-directgoto opt-in train ledger is
 `workloads/generated/specint-train-all-template-directgoto-qemu-20260704-r1/`.
 It used in-tree QEMU head `1b55b888b36f6d4f7ad600d4121ac8c7b8821462` and is

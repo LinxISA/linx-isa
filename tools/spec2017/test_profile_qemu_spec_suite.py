@@ -63,6 +63,7 @@ class ProfileQemuSpecSuiteTests(unittest.TestCase):
             append_extra="norandmaps",
             dump_prefix_bytes=0,
             qemu_frame_stats=True,
+            qemu_frame_shape_hot=True,
             qemu_tb_stats=True,
             qemu_tlb_stats=False,
             qemu_tlb_inv_hot=False,
@@ -79,6 +80,7 @@ class ProfileQemuSpecSuiteTests(unittest.TestCase):
         self.assertIn("--transports", cmd)
         self.assertEqual(cmd[cmd.index("--transports") + 1], "9p")
         self.assertIn("--qemu-frame-stats", cmd)
+        self.assertIn("--qemu-frame-shape-hot", cmd)
         self.assertIn("--qemu-tb-stats", cmd)
         self.assertEqual(cmd[cmd.index("--bench") + 1], "525.x264_r")
 

@@ -42,6 +42,11 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                                 "heartbeat_last_count": 12,
                                 "heartbeat_last_bpc": "0x531",
                                 "heartbeat_frame_stats": {"restore_fallback": 7},
+                                "heartbeat_frame_shape_hot": {
+                                    "seen": True,
+                                    "top0_kind": "fentry",
+                                    "top0_count": 80,
+                                },
                                 "heartbeat_tb_stats": {"lookup": 100, "miss": 3},
                             }
                         },
@@ -93,6 +98,7 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
 
         self.assertEqual(rows["531.deepsjeng_r"]["failure_class"], "live-timeout")
         self.assertEqual(rows["531.deepsjeng_r"]["heartbeat_last_bpc"], "0x531")
+        self.assertEqual(rows["531.deepsjeng_r"]["frame_shape_hot"]["top0_kind"], "fentry")
         self.assertEqual(rows["531.deepsjeng_r"]["tb_lookup"], 100)
         self.assertFalse(rows["531.deepsjeng_r"]["ok"])
         self.assertTrue(rows["999.specrand_ir"]["ok"])

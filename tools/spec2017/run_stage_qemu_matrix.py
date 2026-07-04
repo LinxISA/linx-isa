@@ -314,6 +314,7 @@ def _transport_failure_details(summary_obj: dict[str, Any]) -> dict[str, dict[st
             "heartbeat_tlb_fill": failed_run.get("heartbeat_tlb_fill") or {},
             "heartbeat_mmu_cache": failed_run.get("heartbeat_mmu_cache") or {},
             "heartbeat_frame_stats": failed_run.get("heartbeat_frame_stats") or {},
+            "heartbeat_frame_shape_hot": failed_run.get("heartbeat_frame_shape_hot") or {},
             "heartbeat_tlb_invalidation": failed_run.get("heartbeat_tlb_invalidation") or {},
             "heartbeat_tb_stats": failed_run.get("heartbeat_tb_stats") or {},
             "heartbeat_tlb_fill_hot": failed_run.get("heartbeat_tlb_fill_hot") or {},
@@ -438,6 +439,43 @@ def _format_frame_stats(row: dict[str, Any]) -> str:
     )
 
 
+def _format_frame_shape_hot(row: dict[str, Any]) -> str:
+    hot = row.get("heartbeat_frame_shape_hot")
+    if (
+        not isinstance(hot, dict)
+        or not hot.get("seen")
+        or hot.get("top0_count") is None
+    ):
+        return ""
+    top0_count = hot.get("max_delta_top0_count")
+    if top0_count is None:
+        top0_count = hot.get("top0_count")
+    top0_delta = hot.get("max_delta_top0_delta")
+    if top0_delta is None:
+        top0_delta = hot.get("top0_delta")
+    kind = hot.get("max_delta_top0_kind") or hot.get("top0_kind") or "shape"
+    begin = hot.get("max_delta_top0_begin")
+    if begin is None:
+        begin = hot.get("top0_begin")
+    end = hot.get("max_delta_top0_end")
+    if end is None:
+        end = hot.get("top0_end")
+    stack = hot.get("max_delta_top0_stack")
+    if stack is None:
+        stack = hot.get("top0_stack")
+    regs = hot.get("max_delta_top0_regs")
+    if regs is None:
+        regs = hot.get("top0_regs")
+    return (
+        f" frame-hot={kind}:{top0_count}"
+        f"/d{top0_delta}"
+        f"/r{begin}-{end}"
+        f"/n{regs}"
+        f"/s{stack}"
+        f" evict={hot.get('evictions')}"
+    )
+
+
 def _format_tlb_invalidation_stats(row: dict[str, Any]) -> str:
     stats = row.get("heartbeat_tlb_invalidation")
     if not isinstance(stats, dict) or stats.get("iv") is None:
@@ -508,6 +546,7 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
         tlbinv_hot = _format_tlb_inv_hot(row)
         mmu_cache = _format_mmu_cache_stats(row)
         frame_stats = _format_frame_stats(row)
+        frame_shape_hot = _format_frame_shape_hot(row)
         tlb_invalidation = _format_tlb_invalidation_stats(row)
         tb_stats = _format_tb_stats(row)
         bstart_cache = _format_bstart_cache_stats(row)
@@ -530,7 +569,7 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
             hb_stall = f" heartbeat-stall={status}:{repeats}/{threshold}"
         parts.append(
             f"{bench}: {running}/{site} {progress}{timeout}{stalled} "
-            f"bpc={bpc}{kernel}{hb_stall}{fcmp}{tlbfill}{tlbfill_stats}{tlbfill_hot}{mmu_cache}{frame_stats}{tlb_invalidation}{tlbinv_hot}{tb_stats}{bstart_cache}{mprotect}"
+            f"bpc={bpc}{kernel}{hb_stall}{fcmp}{tlbfill}{tlbfill_stats}{tlbfill_hot}{mmu_cache}{frame_stats}{frame_shape_hot}{tlb_invalidation}{tlbinv_hot}{tb_stats}{bstart_cache}{mprotect}"
             f"{pc_watch}"
         )
     return ", ".join(parts)
@@ -570,6 +609,7 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
     lines.append(f"- qemu_heartbeat_code_bytes: `{summary.get('qemu_heartbeat_code_bytes', 0)}`")
     lines.append(f"- qemu_heartbeat_same_site_warn: `{summary.get('qemu_heartbeat_same_site_warn', 0)}`")
     lines.append(f"- qemu_frame_stats: `{str(bool(summary.get('qemu_frame_stats', False))).lower()}`")
+    lines.append(f"- qemu_frame_shape_hot: `{str(bool(summary.get('qemu_frame_shape_hot', False))).lower()}`")
     lines.append(
         "- qemu_frame_restore_host_load: "
         f"`{str(bool(summary.get('qemu_frame_restore_host_load', False))).lower()}`"
@@ -740,6 +780,12 @@ def main(argv: list[str]) -> int:
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_FRAME_STATS", False),
         help="Pass --qemu-frame-stats to append frame-template counters to QEMU heartbeats.",
+    )
+    ap.add_argument(
+        "--qemu-frame-shape-hot",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_FRAME_SHAPE_HOT", False),
+        help="Pass --qemu-frame-shape-hot to emit hot frame-template shape heartbeat sketches.",
     )
     ap.add_argument(
         "--qemu-frame-restore-host-load",
@@ -1222,6 +1268,8 @@ def main(argv: list[str]) -> int:
             cmd.append("--qemu-heartbeat-regs")
         if args.qemu_frame_stats:
             cmd.append("--qemu-frame-stats")
+        if args.qemu_frame_shape_hot:
+            cmd.append("--qemu-frame-shape-hot")
         if args.qemu_frame_restore_host_load:
             cmd.append("--qemu-frame-restore-host-load")
         if args.qemu_frame_restore_host_verify:
@@ -1364,6 +1412,7 @@ def main(argv: list[str]) -> int:
         "qemu_heartbeat_code_bytes": int(args.qemu_heartbeat_code_bytes),
         "qemu_heartbeat_same_site_warn": int(args.qemu_heartbeat_same_site_warn),
         "qemu_frame_stats": bool(args.qemu_frame_stats),
+        "qemu_frame_shape_hot": bool(args.qemu_frame_shape_hot),
         "qemu_frame_restore_host_load": bool(args.qemu_frame_restore_host_load),
         "qemu_frame_restore_host_verify": bool(args.qemu_frame_restore_host_verify),
         "qemu_frame_restore_host_verify_limit": int(args.qemu_frame_restore_host_verify_limit),

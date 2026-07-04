@@ -131,12 +131,28 @@ class SpecintFastGateTests(unittest.TestCase):
             qemu_heartbeat_regs=True,
             qemu_heartbeat_code_bytes=16,
             qemu_heartbeat_same_site_warn=4,
+            qemu_frame_stats=True,
+            qemu_frame_shape_hot=True,
+            qemu_frame_restore_host_load=False,
+            qemu_tlb_stats=False,
+            qemu_tlb_inv_hot=False,
+            qemu_tlb_fill_stats=False,
+            qemu_tlb_fill_hot=False,
+            qemu_tb_stats=False,
             no_progress_timeout=120,
             forward_memory_mb=True,
             forward_qemu_heartbeat=True,
             forward_qemu_heartbeat_regs=True,
             forward_qemu_heartbeat_code_bytes=True,
             forward_qemu_heartbeat_same_site_warn=True,
+            forward_qemu_frame_stats=True,
+            forward_qemu_frame_shape_hot=True,
+            forward_qemu_frame_restore_host_load=True,
+            forward_qemu_tlb_stats=True,
+            forward_qemu_tlb_inv_hot=True,
+            forward_qemu_tlb_fill_stats=True,
+            forward_qemu_tlb_fill_hot=True,
+            forward_qemu_tb_stats=True,
             forward_no_progress=True,
             forward_stack_limit=True,
             forward_symbolize_heartbeat=True,
@@ -152,6 +168,8 @@ class SpecintFastGateTests(unittest.TestCase):
         self.assertEqual(cmd[cmd.index("--qemu-heartbeat-code-bytes") + 1], "16")
         self.assertIn("--qemu-heartbeat-same-site-warn", cmd)
         self.assertEqual(cmd[cmd.index("--qemu-heartbeat-same-site-warn") + 1], "4")
+        self.assertIn("--qemu-frame-stats", cmd)
+        self.assertIn("--qemu-frame-shape-hot", cmd)
         self.assertIn("--fail-9p-timeout", cmd)
 
 

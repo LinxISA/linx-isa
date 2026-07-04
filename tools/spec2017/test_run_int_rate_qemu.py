@@ -271,6 +271,7 @@ class RunIntRateQemuTests(unittest.TestCase):
             qemu_heartbeat_code_bytes=16,
             qemu_heartbeat_same_site_warn=4,
             qemu_frame_stats=True,
+            qemu_frame_shape_hot=True,
             qemu_frame_restore_host_load=True,
             qemu_frame_restore_host_verify=True,
             qemu_frame_restore_host_verify_limit=9,
@@ -286,6 +287,7 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(env["LINX_QEMU_HEARTBEAT_CODE_BYTES"], "16")
         self.assertEqual(env["LINX_QEMU_HEARTBEAT_SAME_SITE_WARN"], "4")
         self.assertEqual(env["LINX_QEMU_FRAME_STATS"], "1")
+        self.assertEqual(env["LINX_QEMU_FRAME_SHAPE_HOT"], "1")
         self.assertEqual(env["LINX_QEMU_FRAME_RESTORE_HOST_LOAD"], "1")
         self.assertEqual(env["LINX_QEMU_FRAME_RESTORE_HOST_VERIFY"], "1")
         self.assertEqual(env["LINX_QEMU_FRAME_RESTORE_HOST_VERIFY_LIMIT"], "9")
@@ -549,6 +551,42 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(summary["restore_mismatch"], 6)
         self.assertEqual(summary["ret_fast"], 17)
         self.assertEqual(summary["ret_check"], 4)
+
+    def test_frame_shape_hot_summary_parses_top_shapes(self) -> None:
+        summary = runner._frame_shape_hot_summary(
+            "LINX_HEARTBEAT count=100 pc=0x1 bpc=0x2\n"
+            "LINX_FRAME_SHAPE_HOT count=100 evictions=2 slots=16 "
+            "top0_count=80 top0_delta=20 top0_kind=fentry top0_kindid=0 "
+            "top0_begin=10 top0_end=13 top0_stack=64 top0_regs=4 "
+            "top0_frame_slots=320 "
+            "top1_count=40 top1_delta=9 top1_kind=fret_stk top1_kindid=3 "
+            "top1_begin=10 top1_end=13 top1_stack=64 top1_regs=4 "
+            "top1_frame_slots=160\n"
+            "LINX_FRAME_SHAPE_HOT count=200 evictions=2 slots=16 "
+            "top0_count=95 top0_delta=15 top0_kind=fentry top0_kindid=0 "
+            "top0_begin=10 top0_end=13 top0_stack=64 top0_regs=4 "
+            "top0_frame_slots=380 "
+            "top1_count=60 top1_delta=20 top1_kind=fret_stk top1_kindid=3 "
+            "top1_begin=10 top1_end=13 top1_stack=64 top1_regs=4 "
+            "top1_frame_slots=240\n"
+        )
+
+        self.assertTrue(summary["seen"])
+        self.assertEqual(summary["line_count"], 2)
+        self.assertEqual(summary["heartbeat_count"], 200)
+        self.assertEqual(summary["evictions"], 2)
+        self.assertEqual(summary["top0_count"], 95)
+        self.assertEqual(summary["top0_delta"], 15)
+        self.assertEqual(summary["top0_kind"], "fentry")
+        self.assertEqual(summary["top0_begin"], 10)
+        self.assertEqual(summary["top0_end"], 13)
+        self.assertEqual(summary["top0_stack"], 64)
+        self.assertEqual(summary["top0_regs"], 4)
+        self.assertEqual(summary["top1_kind"], "fret_stk")
+        self.assertEqual(summary["max_delta"], 20)
+        self.assertEqual(summary["max_delta_heartbeat_count"], 100)
+        self.assertEqual(summary["max_delta_top0_kind"], "fentry")
+        self.assertEqual(summary["max_delta_top0_frame_slots"], 320)
 
     def test_heartbeat_tlb_invalidation_summary_parses_counts(self) -> None:
         summary = runner._heartbeat_tlb_invalidation_summary(

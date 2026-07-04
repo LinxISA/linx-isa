@@ -762,6 +762,7 @@ def _apply_qemu_debug_env(
     qemu_heartbeat_code_bytes: int = 0,
     qemu_heartbeat_same_site_warn: int = 0,
     qemu_frame_stats: bool = False,
+    qemu_frame_shape_hot: bool = False,
     qemu_frame_restore_host_load: bool = False,
     qemu_frame_restore_host_verify: bool = False,
     qemu_frame_restore_host_verify_limit: int = 0,
@@ -790,6 +791,8 @@ def _apply_qemu_debug_env(
         qemu_env["LINX_QEMU_HEARTBEAT_SAME_SITE_WARN"] = str(qemu_heartbeat_same_site_warn)
     if qemu_frame_stats:
         qemu_env["LINX_QEMU_FRAME_STATS"] = "1"
+    if qemu_frame_shape_hot:
+        qemu_env["LINX_QEMU_FRAME_SHAPE_HOT"] = "1"
     if qemu_frame_restore_host_load:
         qemu_env["LINX_QEMU_FRAME_RESTORE_HOST_LOAD"] = "1"
     if qemu_frame_restore_host_verify or qemu_frame_restore_host_verify_limit > 0:
@@ -2793,6 +2796,7 @@ def _run_qemu(
     qemu_heartbeat_code_bytes: int,
     qemu_heartbeat_same_site_warn: int,
     qemu_frame_stats: bool,
+    qemu_frame_shape_hot: bool,
     qemu_frame_restore_host_load: bool,
     qemu_frame_restore_host_verify: bool,
     qemu_frame_restore_host_verify_limit: int,
@@ -2861,6 +2865,7 @@ def _run_qemu(
         qemu_heartbeat_code_bytes=qemu_heartbeat_code_bytes,
         qemu_heartbeat_same_site_warn=qemu_heartbeat_same_site_warn,
         qemu_frame_stats=qemu_frame_stats,
+        qemu_frame_shape_hot=qemu_frame_shape_hot,
         qemu_frame_restore_host_load=qemu_frame_restore_host_load,
         qemu_frame_restore_host_verify=qemu_frame_restore_host_verify,
         qemu_frame_restore_host_verify_limit=qemu_frame_restore_host_verify_limit,
@@ -3053,6 +3058,7 @@ def _run_qemu(
     heartbeat_tlb_fill = _heartbeat_tlb_fill_summary(classification["last_heartbeat"])
     heartbeat_mmu_cache = _heartbeat_mmu_cache_summary(classification["last_heartbeat"])
     heartbeat_frame_stats = _heartbeat_frame_stats_summary(classification["last_heartbeat"])
+    heartbeat_frame_shape_hot = _frame_shape_hot_summary(text)
     heartbeat_tlb_invalidation = _heartbeat_tlb_invalidation_summary(classification["last_heartbeat"])
     heartbeat_tb_stats = _heartbeat_tb_stats_summary(classification["last_heartbeat"])
     heartbeat_tlb_fill_hot = _tlb_fill_hot_summary(text)
@@ -3067,6 +3073,7 @@ def _run_qemu(
         "qemu_extra_args": qemu_extra,
         "qemu_debug_env": qemu_debug_env,
         "qemu_frame_stats": bool(qemu_frame_stats),
+        "qemu_frame_shape_hot": bool(qemu_frame_shape_hot),
         "qemu_frame_restore_host_load": bool(qemu_frame_restore_host_load),
         "qemu_tlb_stats": bool(qemu_tlb_stats),
         "qemu_tlb_inv_hot": bool(qemu_tlb_inv_hot),
@@ -3103,6 +3110,7 @@ def _run_qemu(
         "heartbeat_tlb_fill": heartbeat_tlb_fill,
         "heartbeat_mmu_cache": heartbeat_mmu_cache,
         "heartbeat_frame_stats": heartbeat_frame_stats,
+        "heartbeat_frame_shape_hot": heartbeat_frame_shape_hot,
         "heartbeat_tlb_invalidation": heartbeat_tlb_invalidation,
         "heartbeat_tb_stats": heartbeat_tb_stats,
         "heartbeat_tlb_fill_hot": heartbeat_tlb_fill_hot,
@@ -3729,6 +3737,67 @@ def _heartbeat_frame_stats_summary(line: str) -> dict[str, Any]:
     }
 
 
+def _frame_shape_hot_summary(text: str) -> dict[str, Any]:
+    lines = re.findall(r"^LINX_FRAME_SHAPE_HOT .*$", text, flags=re.MULTILINE)
+    if not lines:
+        return {
+            "seen": False,
+            "line_count": 0,
+            "last": "",
+        }
+
+    fields = _heartbeat_fields(lines[-1])
+    max_delta_fields = fields
+    max_delta_line = lines[-1]
+    max_delta = _decimal_or_none(fields.get("top0_delta"))
+    for line in lines:
+        candidate_fields = _heartbeat_fields(line)
+        candidate_delta = _decimal_or_none(candidate_fields.get("top0_delta"))
+        if candidate_delta is not None and (max_delta is None or candidate_delta >= max_delta):
+            max_delta = candidate_delta
+            max_delta_fields = candidate_fields
+            max_delta_line = line
+
+    return {
+        "seen": True,
+        "line_count": len(lines),
+        "last": lines[-1][:512],
+        "heartbeat_count": _decimal_or_none(fields.get("count")),
+        "evictions": _decimal_or_none(fields.get("evictions")),
+        "slots": _decimal_or_none(fields.get("slots")),
+        "top0_count": _decimal_or_none(fields.get("top0_count")),
+        "top0_delta": _decimal_or_none(fields.get("top0_delta")),
+        "top0_kind": fields.get("top0_kind", ""),
+        "top0_kindid": _int_or_none(fields.get("top0_kindid")),
+        "top0_begin": _int_or_none(fields.get("top0_begin")),
+        "top0_end": _int_or_none(fields.get("top0_end")),
+        "top0_stack": _decimal_or_none(fields.get("top0_stack")),
+        "top0_regs": _int_or_none(fields.get("top0_regs")),
+        "top0_frame_slots": _decimal_or_none(fields.get("top0_frame_slots")),
+        "top1_count": _decimal_or_none(fields.get("top1_count")),
+        "top1_delta": _decimal_or_none(fields.get("top1_delta")),
+        "top1_kind": fields.get("top1_kind", ""),
+        "top1_kindid": _int_or_none(fields.get("top1_kindid")),
+        "top1_begin": _int_or_none(fields.get("top1_begin")),
+        "top1_end": _int_or_none(fields.get("top1_end")),
+        "top1_stack": _decimal_or_none(fields.get("top1_stack")),
+        "top1_regs": _int_or_none(fields.get("top1_regs")),
+        "top1_frame_slots": _decimal_or_none(fields.get("top1_frame_slots")),
+        "max_delta": max_delta,
+        "max_delta_line": max_delta_line[:512],
+        "max_delta_heartbeat_count": _decimal_or_none(max_delta_fields.get("count")),
+        "max_delta_top0_count": _decimal_or_none(max_delta_fields.get("top0_count")),
+        "max_delta_top0_delta": _decimal_or_none(max_delta_fields.get("top0_delta")),
+        "max_delta_top0_kind": max_delta_fields.get("top0_kind", ""),
+        "max_delta_top0_kindid": _int_or_none(max_delta_fields.get("top0_kindid")),
+        "max_delta_top0_begin": _int_or_none(max_delta_fields.get("top0_begin")),
+        "max_delta_top0_end": _int_or_none(max_delta_fields.get("top0_end")),
+        "max_delta_top0_stack": _decimal_or_none(max_delta_fields.get("top0_stack")),
+        "max_delta_top0_regs": _int_or_none(max_delta_fields.get("top0_regs")),
+        "max_delta_top0_frame_slots": _decimal_or_none(max_delta_fields.get("top0_frame_slots")),
+    }
+
+
 def _heartbeat_tlb_invalidation_summary(line: str) -> dict[str, Any]:
     fields = _heartbeat_fields(line)
     return {
@@ -4169,6 +4238,7 @@ def _strip_async_qemu_diagnostics(text: str) -> str:
         "LINX_BSTART_CACHE_STATS",
         "LINX_TLB_FILL_HOT",
         "LINX_TLB_INV_HOT",
+        "LINX_FRAME_SHAPE_HOT",
         "LINX_TLB_FILL_TRACE",
         "LINX_FCMP_TRACE",
         "LINX_MPROTECT",
@@ -4367,6 +4437,12 @@ def main(argv: list[str]) -> int:
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_FRAME_STATS", False),
         help="Set LINX_QEMU_FRAME_STATS=1 to append frame-template counters to QEMU heartbeats.",
+    )
+    parser.add_argument(
+        "--qemu-frame-shape-hot",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_FRAME_SHAPE_HOT", False),
+        help="Set LINX_QEMU_FRAME_SHAPE_HOT=1 to emit hot frame-template shape heartbeat sketches.",
     )
     parser.add_argument(
         "--qemu-frame-restore-host-load",
@@ -4850,6 +4926,7 @@ def main(argv: list[str]) -> int:
         "qemu_heartbeat_code_bytes": args.qemu_heartbeat_code_bytes,
         "qemu_heartbeat_same_site_warn": args.qemu_heartbeat_same_site_warn,
         "qemu_frame_stats": bool(args.qemu_frame_stats),
+        "qemu_frame_shape_hot": bool(args.qemu_frame_shape_hot),
         "qemu_frame_restore_host_load": bool(args.qemu_frame_restore_host_load),
         "qemu_frame_restore_host_verify": bool(args.qemu_frame_restore_host_verify),
         "qemu_frame_restore_host_verify_limit": args.qemu_frame_restore_host_verify_limit,
@@ -4966,6 +5043,7 @@ def main(argv: list[str]) -> int:
                     args.qemu_heartbeat_code_bytes,
                     args.qemu_heartbeat_same_site_warn,
                     args.qemu_frame_stats,
+                    args.qemu_frame_shape_hot,
                     args.qemu_frame_restore_host_load,
                     args.qemu_frame_restore_host_verify,
                     args.qemu_frame_restore_host_verify_limit,

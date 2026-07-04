@@ -162,6 +162,7 @@ def _profile_command(args: argparse.Namespace, bench: str, bench_root: Path) -> 
         ]
     )
     _add_bool(cmd, args.qemu_frame_stats, "--qemu-frame-stats")
+    _add_bool(cmd, args.qemu_frame_shape_hot, "--qemu-frame-shape-hot")
     _add_bool(cmd, args.qemu_tb_stats, "--qemu-tb-stats")
     _add_bool(cmd, args.qemu_tlb_stats, "--qemu-tlb-stats")
     _add_bool(cmd, args.qemu_tlb_inv_hot, "--qemu-tlb-inv-hot")
@@ -309,6 +310,7 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--template-chain", action="store_true", default=_env_bool("LINX_SPEC_QEMU_TEMPLATE_CHAIN", False))
     parser.add_argument("--qemu-env", action="append", default=[], help="Extra QEMU environment assignment, KEY=VALUE; repeatable.")
     parser.add_argument("--qemu-frame-stats", action="store_true")
+    parser.add_argument("--qemu-frame-shape-hot", action="store_true")
     parser.add_argument("--qemu-tb-stats", action="store_true")
     parser.add_argument("--qemu-tlb-stats", action="store_true")
     parser.add_argument("--qemu-tlb-inv-hot", action="store_true")
