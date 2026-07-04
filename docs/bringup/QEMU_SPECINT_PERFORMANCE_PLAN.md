@@ -184,6 +184,37 @@ throughput closure. The next substantive speed lane remains template
 entry/return, TB lookup, `probe_access_internal`, address-space translation,
 and frame save/restore traffic.
 
+### Template Helper Direct Fall-Through TB Chaining
+
+Post-start `505.mcf_r` profiling after the TLB-fill guard kept
+`linx_template_fentry_impl`, `tb_lookup`, and `helper_lookup_tb_ptr` in the hot
+set. Successful template `FENTRY` and `FEXIT` helpers have already committed
+their architectural side effects and then fall through to a static next PC, so
+QEMU can use `goto_tb`/`exit_tb` for that translated fall-through instead of
+always returning through `tcg_gen_lookup_and_goto_ptr()`.
+
+Validation:
+
+| Check | Result |
+| --- | --- |
+| `git -C emulator/qemu diff --check` | pass |
+| `ninja -C emulator/qemu/build-linx qemu-system-linx64` | pass |
+| `python3 avs/qemu/run_callret_contract.py --qemu emulator/qemu/build-linx/qemu-system-linx64` | pass |
+| `LINX_QEMU_TEMPLATE_CHAIN=1 ... 999.specrand_ir ... --strict` | pass, `workloads/generated/specint-999-template-directgoto-qemu-20260704-r1/` |
+
+Focused `505.mcf_r` train A/B with template chaining and restore-host loads:
+
+| Run | Count | Result | Recent delta | BPC |
+| --- | ---: | --- | ---: | --- |
+| `workloads/generated/specint-505-template-directgoto-baseline-qemu-20260704-r1/` | 28000000002 | `live-timeout` | 6999999996 | `0x155555cce6` |
+| `workloads/generated/specint-505-template-directgoto-patched-qemu-20260704-r1/` | 31000000003 | `live-timeout` | 7000000003 | `0x155555c4a4` |
+
+Loop update: keep the direct fall-through chaining patch as a measured
+template-dispatch speedup and correctness-preserving helper-exit reduction.
+The row is still live-slow rather than correct-complete, so this does not close
+the all-train gate. Re-run an all-row train ledger before promoting template
+chaining beyond the current opt-in shape.
+
 ### Rejected FENTRY Save-Window Probe Grouping
 
 An uncommitted opt-in QEMU experiment grouped contiguous same-page FENTRY save
