@@ -184,6 +184,38 @@ throughput closure. The next substantive speed lane remains template
 entry/return, TB lookup, `probe_access_internal`, address-space translation,
 and frame save/restore traffic.
 
+### Rejected FENTRY Save-Window Probe Grouping
+
+An uncommitted opt-in QEMU experiment grouped contiguous same-page FENTRY save
+slots into one pre-SP-commit `probe_write()` window before storing through the
+returned host pointers. The intent was to reduce the profiled
+`linx_template_fentry_impl` / `probe_access_internal` cost while preserving the
+existing fault-before-SP-update retry contract on misses.
+
+Validation:
+
+| Check | Result |
+| --- | --- |
+| `ninja -C emulator/qemu/build-linx qemu-system-linx64` | pass |
+| `python3 avs/qemu/run_callret_contract.py --qemu emulator/qemu/build-linx/qemu-system-linx64` | pass |
+| `LINX_QEMU_FRAME_SAVE_HOST_STORE=1 LINX_QEMU_FRAME_STATS=1 python3 avs/qemu/run_callret_contract.py --qemu emulator/qemu/build-linx/qemu-system-linx64` | pass |
+| `LINX_QEMU_TEMPLATE_CHAIN=1 LINX_QEMU_FRAME_SAVE_HOST_STORE=1 ... 999.specrand_ir ... --strict --qemu-frame-stats --qemu-frame-restore-host-load` | pass, `workloads/generated/specint-999-frame-save-hoststore-qemu-20260704-r1/` |
+
+Focused `505.mcf_r` train A/B with template chaining, frame stats, and
+restore-host loads was neutral:
+
+| Run | Count | FENTRY save probes | Save slots | Host stores | Restore host loads |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `workloads/generated/specint-505-frame-save-hoststore-baseline-qemu-20260704-r1/` | 34000000001 | 477958898 | 477958898 | 477958898 | 477958470 |
+| `workloads/generated/specint-505-frame-save-hoststore-optin-qemu-20260704-r1/` | 34000000001 | 449646209 | 477924628 | 477924628 | 477924203 |
+
+Loop update: the grouped save-window probe reduced the frame save probe counter
+by about 28M calls in this focused sample, but it did not improve the
+instruction-count throughput. The experiment was backed out. Do not reopen
+FENTRY save-probe grouping as a primary `505.mcf_r` speed lane without a new
+post-start host profile showing that the grouped probe itself, rather than
+template helper dispatch/TB lookup/address translation, is the limiting cost.
+
 ## Initial Profile
 
 Command shape:
