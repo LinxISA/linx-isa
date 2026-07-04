@@ -43,12 +43,17 @@ instead of failing `chdir-rundir`.
 
 ## Current Train Ledger
 
-The current latest in-tree QEMU ledger is
-`workloads/generated/specint-train-all-latest-qemu-20260704-r1/`. It uses QEMU
-head `66db53a30fec4b9e903fae461006d2b2ea8dd6ef`, version
-`v10.2.0-1012-g66db53a30fe`, with TLB-fill, TB, frame, and BPC heartbeat stats
-enabled. The binary is an in-tree rebuild, so it is markerless in the clean-build
-provenance fields, but the QEMU source tree was clean.
+The current clean-head QEMU ledger is
+`workloads/generated/specint-train-all-latest-qemu-20260704-r2/`. It uses the
+clean build `/tmp/linx-qemu-clean-build/qemu-system-linx64` from QEMU head
+`1db7e12b6809c8ca2e2bee397f6019a14966e2ad`, version
+`QEMU emulator version 10.2.50 (v10.2.0-1017-g1db7e12b680)`. The fast-gate
+summary records `qemu_repo_dirty_tracked=false`,
+`clean_build_for_head=true`, and `clean_build_marker_matches_head=true`. The
+SPEC build manifest for the same ledger is
+`workloads/generated/specint-train-all-latest-qemu-20260704-r2/build-manifest.json`;
+it rebuilds all selected INT C/C++ phase-B binaries and passes the source
+immutability check.
 
 Result shape:
 
@@ -61,19 +66,26 @@ Result shape:
 - `525.x264_r` is routed through the generated `train-all-large-9p` shard; the
   current failure is 9p/kernel-path throughput, not the old oversized-initramfs
   VFS panic.
+- Final heartbeat counts are `500=58B`, `502=38B`, `505=55B`, `520=28B`,
+  `523=34B`, `525=49B`, `531=60B`, `541=32B`, and `557=56B`, with recent
+  progress deltas of about `7B` instructions for each red row.
 
 Speed lanes from the current counters:
 
-- `505.mcf_r` and `531.deepsjeng_r`: data-load soft-MMU lookup pressure
-  dominates (`505` reaches `tlbf_load=118980879` in the bounded run).
-- `520.omnetpp_r`, `523.xalancbmk_r`, `541.leela_r`, and `557.xz_r`: TB
-  dispatch/hash lookup and helper-exit volume remain visible; use focused
-  post-start sampling with heartbeat logging disabled before changing cache
-  sizes.
-- All long rows: frame restores still use the generic fallback load path
-  (`fr_restore_host=0`, high `fr_restore_fallback`). The per-slot restore
-  fast-path experiment is rejected; any future restore optimization should work
-  at page/frame granularity or reduce helper exits.
+- Every long row records millions of `tlb.iv` operations. The shared maximum
+  per-heartbeat hot burst is `max_delta=458884` at `0xffffffff80405980`
+  (`get_p4d_virt_fixmap`), followed by steady invalidations from Linux MM paths
+  such as `0xffffffff800db2b6` / BPC `0xffffffff800db2ac` and
+  `0xffffffff800daf70` / BPC `0xffffffff800daf62`.
+- Frame restore host loads are active and effective in this clean-head ledger:
+  every long row has `fr_restore_fallback=0`. The remaining red rows are
+  throughput-limited after the restore-load fast path, not blocked on fallback
+  restore loads.
+- Earlier TLB-fill and TB-stat ledgers still identify `probe_access_internal`,
+  template dispatch, and TB lookup as QEMU-side costs. This current ledger says
+  the next speed loop should first reduce or batch Linx Linux
+  `local_flush_tlb_page()` volume, then rerun the same all-train gate before
+  returning to QEMU cputlb changes.
 
 ## Initial Profile
 
@@ -3246,6 +3258,17 @@ Attribution:
 | `0xffffffff800db2b6` / BPC `0xffffffff800db2ac` | repeated `top0_delta` around `32739-32740` for several heartbeats, symbolized to `mm/memory.c` `.LBB50_265`; disassembly is a `tlb.iv a3` loop | Linux eager page-fault/update flush path |
 | `arch/linx/include/asm/pgtable.h` | `update_mmu_cache_range()` loops over `local_flush_tlb_page(address + nr * PAGE_SIZE)` and `ptep_set_wrprotect()` flushes one page after write-protect | source-level candidates for batching/reduction |
 | `arch/linx/include/asm/tlbflush.h` | `local_flush_tlb_page()` emits `BSTART.sys fall; tlb.iv %[a]`; `flush_tlb_range()` currently falls back to `local_flush_tlb_all()` in the non-SMP path | Linux policy, not QEMU MMU-index selection, is the next lever |
+
+All-train follow-up:
+`workloads/generated/specint-train-all-latest-qemu-20260704-r2/` reruns every
+supported SPECint train row on clean QEMU head `1db7e12b680` with
+`--qemu-tlb-stats`, `--qemu-tlb-inv-hot`, frame stats, and restore-host loads.
+`999.specrand_ir` passes strict hash; the other nine rows remain live timeouts
+with BPC site progress, no trap, no panic, shared early
+`tlbi-hot max_delta=458884` at `get_p4d_virt_fixmap`, and
+`fr_restore_fallback=0`. This generalizes the focused `531` result: current
+all-train failures are running throughput limits with heavy Linux TLBI volume,
+not deadlocks or frame restore fallback regressions.
 
 Loop update: keep `--qemu-tlb-inv-hot` as the default low-volume attribution
 tool whenever `helper_linx_tlb_iv` appears in a post-start host profile. The
