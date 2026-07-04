@@ -209,6 +209,43 @@ dispatch, and soft-MMU lookup: `linx_template_fret_stk_impl=1226`,
 `helper_lookup_tb_ptr=889`, `probe_access_internal=833`, `mmu_lookup1=790`;
 `helper_linx_tlb_iv=524` is concentrated across three reports.
 
+Frame-shape recorder hygiene update:
+QEMU commit `418f56ba1f58c908dc75c095e07606b725dafba4` keeps the
+`LINX_QEMU_FRAME_SHAPE_HOT=1` sketch opt-in but avoids an unconditional call
+into the shape recorder when the sketch is disabled. The clean rebuild marker is
+`418f56ba1f58c908dc75c095e07606b725dafba4:worktree`, and the binary reports
+`v10.2.0-1025-g418f56ba1f5`.
+
+Validation:
+
+| Check | Result |
+| --- | --- |
+| `ninja -C emulator/qemu/build-linx qemu-system-linx64` | pass, only pre-existing warnings |
+| `python3 avs/qemu/run_callret_contract.py --qemu emulator/qemu/build-linx/qemu-system-linx64` | pass |
+| clean-build `python3 avs/qemu/run_callret_contract.py --qemu /tmp/linx-qemu-clean-build/qemu-system-linx64` | pass |
+| strict `999.specrand_ir` with `--qemu-frame-shape-hot` | pass, `workloads/generated/specint-999-shape-hot-inline-patched-qemu-20260705-r1/` |
+| short `541.leela_r` with `--qemu-frame-shape-hot` | emits 51 `LINX_FRAME_SHAPE_HOT` lines, live-timeout with site progress and no panic/trap in `workloads/generated/specint-541-shape-hot-inline-patched-qemu-20260705-r2/` |
+| SPECint PR smoke on clean QEMU | pass, `workloads/generated/specint-pr-shape-record-inline-clean-qemu-20260705-r1/`, test/train `999.specrand_ir` strict hashes green |
+
+The focused clean `541.leela_r` count is neutral, not a throughput closure:
+`workloads/generated/specint-541-shape-record-baseline-clean-qemu-20260705-r1/`
+at `7ae245b6...` reaches `5000000007` instructions in a 45-second cap, while
+`workloads/generated/specint-541-shape-record-inline-clean-qemu-20260705-r1/`
+at `418f56ba...` reaches `5000000003`. The improvement is profile fidelity:
+`workloads/generated/specint-profile-541-shape-record-inline-clean-qemu-20260705-r1/`
+exits `ok=true` and no longer contains `linx_frame_shape_hot_record` when
+shape-hot is disabled; the top frames are now
+`linx_template_fret_stk_impl`, `tb_lookup`, `linx_template_fentry_impl`,
+`helper_lookup_tb_ptr`, `mmu_lookup1`, and `probe_access_internal`.
+
+Loop update: keep this QEMU change as hot-path hygiene and profiler-noise
+removal, not as a claimed SPEC speedup. A focused `541` probe with
+`--qemu-frame-restore-host-load` plus `--qemu-frame-single-reg-fast`
+(`workloads/generated/specint-541-frame-restore-hostload-singlefast-clean-qemu-20260705-r1/`)
+also reaches `5000000004`, so restore-host loads are neutral on this row and
+should remain opt-in. The next real speed loop should target TB dispatch and
+soft-MMU lookup directly, or Linux TLBI frequency for the `531`/`557` lane.
+
 Progress-analysis loop update:
 `tools/spec2017/analyze_specint_qemu_progress.py` now joins the clean all-row
 train gate with the all-row delayed profile suite and writes a generated

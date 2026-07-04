@@ -52,6 +52,13 @@ Evidence:
   classifies the next work as six template/TB/soft-MMU rows, two TLBI
   attribution rows (`531`, `557`), one 9p transport row (`525`), and the
   passing `999.specrand_ir` correctness sentinel.
+- QEMU head `418f56ba1f58c908dc75c095e07606b725dafba4` is the latest focused
+  QEMU hygiene repin. It removes disabled frame-shape recorder calls from
+  ordinary SPEC profiles and passes clean SPECint PR smoke in
+  `workloads/generated/specint-pr-shape-record-inline-clean-qemu-20260705-r1/`.
+  It does not replace the all-row train ledger above: focused `541.leela_r`
+  remains neutral at a 45-second cap, so the next throughput work is still
+  TB dispatch, soft-MMU lookup, and row-specific TLBI attribution.
 - `workloads/generated/specint-train-all-clean-qemu-20260705-r1/` is the
   prior clean latest-QEMU all-SPECint train ledger. It uses
   `/tmp/linx-qemu-clean-build/qemu-system-linx64` at QEMU head
