@@ -132,6 +132,58 @@ QEMU `probe_access_internal`, soft-MMU lookup, template dispatch, and 9p
 transport cost. Keep `999.specrand_ir` as the cheap correctness sentinel before
 any wider run.
 
+### Post-Batching `505.mcf_r` QEMU Profile
+
+`workloads/generated/specint-profile-505-post-tlbirange-qemu-20260704-r1/`
+samples the real QEMU child after `LINX_SPEC_START` with QEMU heartbeat output
+disabled. The wrapper report records `ok=true`, real QEMU PID `40158`, sample
+duration `30.435s`, and a bounded `timeout-no-heartbeat` matrix result because
+the profiler run intentionally disables progress heartbeats.
+
+The active QEMU frames are no longer dominated by `helper_linx_tlb_iv`:
+
+| Frame | Samples |
+| --- | ---: |
+| `linx_template_fentry_impl` | 1087 |
+| `linx_template_fret_stk_impl` | 755 |
+| `tb_lookup` | 746 |
+| `probe_access_internal` | 744 |
+| `helper_lookup_tb_ptr` | 689 |
+| `flatview_translate` | 535 |
+| `linx_frame_restore_prepare` | 492 |
+| `address_space_ldm_internal` | 472 |
+| `address_space_translate_internal` | 462 |
+| `linx_mmu_translate` | 367 |
+| `linx_tlb_fill_stats_record` | 71 |
+| `linx_tlb_fill_trace_emit` | 68 |
+| `helper_linx_tlb_iv` | 17 |
+
+QEMU cleanup: `emulator/qemu/target/linx/cpu.c` now checks whether
+TLB-fill stats/hot-site recording or TLB-fill tracing are enabled before
+calling their full helper bodies from `linx_cpu_tlb_fill()`. This removes the
+disabled instrumentation helper calls that appeared in the profile while
+leaving the enabled debug paths intact.
+
+Validation:
+
+| Check | Result |
+| --- | --- |
+| `ninja -C emulator/qemu/build-linx qemu-system-linx64` | pass |
+| `python3 avs/qemu/run_callret_contract.py --qemu emulator/qemu/build-linx/qemu-system-linx64` | pass |
+| `LINX_QEMU_TLB_FILL_STATS=1 ... 999.specrand_ir ...` | pass, `workloads/generated/specint-999-tlbfill-guard-qemu-20260704-r1/` |
+| `LINX_QEMU_TLB_FILL_HOT=1 ... 999.specrand_ir ...` | pass, `workloads/generated/specint-999-tlbfill-hot-guard-qemu-20260704-r1/` |
+| `LINX_QEMU_TLB_FILL_TRACE=1 ... 999.specrand_ir ... --timeout 120` | emits the bounded 64 `LINX_TLB_FILL_TRACE` lines and remains heartbeat-live, but times out before strict hash under trace overhead |
+
+Focused `505.mcf_r` A/B: the guard is neutral at the 120-second count level.
+Clean QEMU reaches `35000000005` instructions in
+`workloads/generated/specint-505-tlbfill-guard-baseline-qemu-20260704-r1/`;
+patched QEMU reaches `35000000002` in
+`workloads/generated/specint-505-tlbfill-guard-patched-qemu-20260704-r1/`.
+Keep the patch as a low-risk disabled-instrumentation cleanup, not as the SPEC
+throughput closure. The next substantive speed lane remains template
+entry/return, TB lookup, `probe_access_internal`, address-space translation,
+and frame save/restore traffic.
+
 ## Initial Profile
 
 Command shape:
