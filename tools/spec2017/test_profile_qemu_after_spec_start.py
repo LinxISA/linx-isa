@@ -4,6 +4,7 @@ from __future__ import annotations
 import tempfile
 import os
 from pathlib import Path
+import subprocess
 import sys
 import unittest
 
@@ -89,6 +90,54 @@ Sort by top of stack, exclusive:
         self.assertEqual(rows[2]["address"], "0x30008a7a4")
         self.assertEqual(rows[3]["symbol"], "tb_lookup")
         self.assertEqual(len(rows), 4)
+
+    def test_terminate_wrapped_command_reports_already_exited(self) -> None:
+        proc = subprocess.Popen(
+            [sys.executable, "-c", ""],
+            start_new_session=True,
+        )
+        proc.wait(timeout=5)
+
+        result = profiler._terminate_wrapped_command(proc, 0.1)
+
+        self.assertFalse(result["attempted"])
+        self.assertEqual(result["reason"], "already-exited")
+        self.assertEqual(result["returncode"], 0)
+
+    def test_terminate_wrapped_command_stops_running_process(self) -> None:
+        proc = subprocess.Popen(
+            [sys.executable, "-c", "import time; time.sleep(60)"],
+            start_new_session=True,
+        )
+        try:
+            result = profiler._terminate_wrapped_command(proc, 1.0)
+        finally:
+            if proc.poll() is None:
+                proc.kill()
+
+        self.assertTrue(result["attempted"])
+        self.assertIsNotNone(result["returncode"])
+        self.assertNotEqual(result["returncode"], 0)
+
+    def test_profile_exit_code_accepts_intentional_termination_after_sample(self) -> None:
+        report = {
+            "terminate_after_sample": True,
+            "termination": {"attempted": True, "returncode": -15},
+            "sample": {"ok": True},
+            "ok": True,
+        }
+
+        self.assertEqual(profiler._profile_exit_code(-15, report), 0)
+
+    def test_profile_exit_code_preserves_real_command_failure(self) -> None:
+        report = {
+            "terminate_after_sample": False,
+            "termination": None,
+            "sample": {"ok": True},
+            "ok": True,
+        }
+
+        self.assertEqual(profiler._profile_exit_code(1, report), 1)
 
 
 if __name__ == "__main__":

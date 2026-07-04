@@ -98,6 +98,63 @@ lookup counts and low miss counts; and profile `525.x264_r` separately as a
 9p/kernel transport row. Keep `999.specrand_ir` as the strict correctness
 sentinel before and after each speed experiment.
 
+### Clean `505.mcf_r` Post-Start Profile and Frame-Restore A/B
+
+`workloads/generated/specint-profile-505-clean-qemu-20260706-r1/` samples the
+real clean-QEMU child after `LINX_SPEC_START` for `505.mcf_r` train input. The
+profile wrapper report records `ok=true`, `sample.ok=true`, QEMU PID `82444`,
+and a 30.546 second host sample. The wrapped matrix row is expected to classify
+as `timeout-no-heartbeat` because the profiling run intentionally disables QEMU
+heartbeats.
+
+Top active QEMU frames:
+
+| Frame | Samples |
+| --- | ---: |
+| `linx_template_fentry_impl` | 1101 |
+| `mmu_lookup1` | 775 |
+| `linx_template_fret_stk_impl` | 735 |
+| `linx_frame_restore_prepare` | 601 |
+| `address_space_ldm_internal` | 590 |
+| `get_ptr_rcu_reader` | 545 |
+| `helper_lookup_tb_ptr` | 545 |
+| `tb_lookup` | 526 |
+| `flatview_translate` | 501 |
+| `probe_access_internal` | 425 |
+| `linx_mmu_translate` | 384 |
+| `address_space_translate_internal` | 383 |
+
+Clean 505 frame-restore A/B:
+
+| Run | Result | Count | Restore fallback | Restore host | Restore verify | Mismatch |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| `workloads/generated/specint-505-frame-baseline-clean-qemu-20260706-r1/` | `live-timeout` | 32000000008 | 451404440 | 0 | 0 | 0 |
+| `workloads/generated/specint-505-frame-hostload-verify-clean-qemu-20260706-r1/` | `live-timeout` | 33000000000 | 0 | 464635853 | 464635853 | 0 |
+
+The host-load verifier proves the restore host path matched the soft-MMU load
+for 464635853 restore slots on this 505 run, but the bounded progress gain is
+only about 3.1% and the row remains a live timeout. Keep frame restore
+host-load opt-in: it is valid as attribution and can help selected rows, but it
+does not close the 505 throughput blocker and earlier focused `500.perlbench_r`
+row-2 evidence showed it can perturb the terminal user-trap timing.
+
+Profiler loop update: `tools/spec2017/profile_qemu_after_spec_start.py` now has
+`--terminate-after-sample` and `--terminate-grace-sec`. This mode sends SIGTERM
+to the wrapped process group after a sample is collected and returns success
+when the sample is valid, so post-start profiles no longer need to wait for the
+full SPEC timeout. Validation:
+
+| Check | Result |
+| --- | --- |
+| `python3 -m py_compile tools/spec2017/profile_qemu_after_spec_start.py tools/spec2017/test_profile_qemu_after_spec_start.py` | pass |
+| `python3 -m unittest tools/spec2017/test_profile_qemu_after_spec_start.py` | pass, 9 tests |
+| `workloads/generated/specint-profile-505-terminate-after-sample-20260705-r2/` | exits 0 after 24.959s, `sample.ok=true`, `sample.elapsed_sec=5.199`, termination metadata records process-group SIGTERM and `command_returncode=-15` |
+
+Loop update: the next 505 speed loop should target soft-MMU/probe lookup,
+template helper exits, and TB lookup/dispatch. Do not promote restore-host load
+as the broad solution; use `--terminate-after-sample` for faster focused host
+profiles of those remaining lanes.
+
 The older post-directgoto opt-in train ledger is
 `workloads/generated/specint-train-all-template-directgoto-qemu-20260704-r1/`.
 It used in-tree QEMU head `1b55b888b36f6d4f7ad600d4121ac8c7b8821462` and is

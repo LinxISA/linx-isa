@@ -4,8 +4,10 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import os
 import shlex
 import shutil
+import signal
 import subprocess
 import sys
 import time
@@ -143,6 +145,42 @@ def _run_sample(pid: int, seconds: int, out_file: Path) -> dict[str, Any]:
     return result
 
 
+def _terminate_wrapped_command(proc: subprocess.Popen[Any], grace_sec: float) -> dict[str, Any]:
+    if proc.poll() is not None:
+        return {
+            "attempted": False,
+            "returncode": proc.returncode,
+            "reason": "already-exited",
+        }
+
+    result: dict[str, Any] = {
+        "attempted": True,
+        "grace_sec": grace_sec,
+        "returncode": None,
+        "signal": "SIGTERM",
+        "killed": False,
+        "target": "process-group",
+    }
+    try:
+        os.killpg(proc.pid, signal.SIGTERM)
+    except (OSError, ProcessLookupError):
+        result["target"] = "process"
+        proc.terminate()
+
+    try:
+        result["returncode"] = proc.wait(timeout=grace_sec)
+        return result
+    except subprocess.TimeoutExpired:
+        result["killed"] = True
+        result["signal"] = "SIGKILL"
+        try:
+            os.killpg(proc.pid, signal.SIGKILL)
+        except (OSError, ProcessLookupError):
+            proc.kill()
+        result["returncode"] = proc.wait()
+        return result
+
+
 def _parse_top_stack_sample(text: str, limit: int = 120) -> list[dict[str, Any]]:
     marker = "Sort by top of stack, same collapsed"
     lines = text.splitlines()
@@ -206,6 +244,19 @@ def _parse_top_stack_line(raw: str) -> dict[str, Any] | None:
     }
 
 
+def _profile_exit_code(proc_returncode: int, report: dict[str, Any]) -> int:
+    termination = report.get("termination") or {}
+    if (
+        report.get("terminate_after_sample")
+        and termination.get("attempted")
+        and report.get("sample", {}).get("ok")
+    ):
+        return 0
+    if proc_returncode != 0:
+        return proc_returncode
+    return 0 if report.get("ok") else 2
+
+
 def _parse_args(argv: list[str]) -> argparse.Namespace:
     ap = argparse.ArgumentParser(
         description="Profile the real qemu-system-linx64 child after LINX_SPEC_START."
@@ -224,6 +275,10 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
                     help="Polling interval while waiting for marker/qemu.")
     ap.add_argument("--sample-sec", type=int, default=30,
                     help="Seconds to pass to macOS sample.")
+    ap.add_argument("--terminate-after-sample", action="store_true",
+                    help="Terminate the wrapped command after sample collection instead of waiting for normal completion.")
+    ap.add_argument("--terminate-grace-sec", type=float, default=5.0,
+                    help="Grace period after SIGTERM before SIGKILL when --terminate-after-sample is used.")
     ap.add_argument("--qemu-name", action="append",
                     default=["qemu-system-linx64", "qemu-system-linx"],
                     help="Substring used to identify the QEMU child; repeatable.")
@@ -238,6 +293,8 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
         raise SystemExit("error: --sample-sec must be positive")
     if args.wait_timeout <= 0:
         raise SystemExit("error: --wait-timeout must be positive")
+    if args.terminate_grace_sec < 0:
+        raise SystemExit("error: --terminate-grace-sec must be non-negative")
     return args
 
 
@@ -258,10 +315,13 @@ def main(argv: list[str] | None = None) -> int:
         "qemu_pid": None,
         "marker_log": None,
         "sample": None,
+        "terminate_after_sample": bool(args.terminate_after_sample),
+        "termination": None,
     }
 
-    proc = subprocess.Popen(args.command)
+    proc = subprocess.Popen(args.command, start_new_session=True)
     sample_done = False
+    proc_returncode: int | None = None
     try:
         deadline = started + args.wait_timeout
         while time.monotonic() < deadline:
@@ -274,14 +334,20 @@ def main(argv: list[str] | None = None) -> int:
             if marker_log is not None and qemu_pid is not None:
                 report["sample"] = _run_sample(qemu_pid, args.sample_sec, args.sample_out)
                 sample_done = True
+                if args.terminate_after_sample:
+                    report["termination"] = _terminate_wrapped_command(
+                        proc, args.terminate_grace_sec
+                    )
+                    proc_returncode = int(report["termination"]["returncode"])
                 break
             if proc.poll() is not None:
                 break
             time.sleep(args.poll_sec)
 
-        proc_returncode = proc.wait()
+        if proc_returncode is None:
+            proc_returncode = proc.wait()
     except KeyboardInterrupt:
-        proc.terminate()
+        report["termination"] = _terminate_wrapped_command(proc, args.terminate_grace_sec)
         raise
     finally:
         report["finished_at_utc"] = _utc_now()
@@ -296,7 +362,7 @@ def main(argv: list[str] | None = None) -> int:
         }
     report["ok"] = bool(report.get("sample", {}).get("ok"))
     report_out.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
-    return proc_returncode if proc_returncode != 0 else (0 if report["ok"] else 2)
+    return _profile_exit_code(proc_returncode, report)
 
 
 if __name__ == "__main__":
