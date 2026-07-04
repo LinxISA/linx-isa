@@ -330,7 +330,15 @@ def _format_pc_watch(row: dict[str, Any]) -> str:
             f"/ring{stats.get('ring_count')}"
             f"/entries{stats.get('ring_entry_count')}"
         )
-    return f" pc-watch={stats.get('line_count')}{ring}"
+    mem = ""
+    last_entry = stats.get("last_ring_entry_fields")
+    if isinstance(last_entry, dict) and last_entry.get("mem_ok") is not None:
+        mem = (
+            f"/mem{last_entry.get('mem_ok')}"
+            f"@{last_entry.get('mem_addr') or 'no-addr'}"
+            f"={last_entry.get('mem_value') or 'no-value'}"
+        )
+    return f" pc-watch={stats.get('line_count')}{ring}{mem}"
 
 
 def _format_mmu_cache_stats(row: dict[str, Any]) -> str:

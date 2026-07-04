@@ -423,10 +423,26 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
                 f" reset={bstart_cache_stats.get('resets')}/"
                 f"{bstart_cache_stats.get('page_resets')}"
             )
+        pc_watch = ""
+        pc_watch_stats = row.get("pc_watch")
+        if isinstance(pc_watch_stats, dict) and pc_watch_stats.get("seen"):
+            pc_watch = f" pc-watch={pc_watch_stats.get('line_count')}"
+            if pc_watch_stats.get("ring_seen"):
+                pc_watch += (
+                    f"/ring{pc_watch_stats.get('ring_count')}"
+                    f"/entries{pc_watch_stats.get('ring_entry_count')}"
+                )
+            last_entry = pc_watch_stats.get("last_ring_entry_fields")
+            if isinstance(last_entry, dict) and last_entry.get("mem_ok") is not None:
+                pc_watch += (
+                    f"/mem{last_entry.get('mem_ok')}"
+                    f"@{last_entry.get('mem_addr') or 'no-addr'}"
+                    f"={last_entry.get('mem_value') or 'no-value'}"
+                )
         mprotect = ""
         if row.get("mprotect_trace_seen"):
             mprotect = f" mprotect-trace={row.get('mprotect_trace_count')}"
-        parts.append(f"{bench}: {running}/{site} {progress} bpc={bpc}{hb_stall}{tlbfill}{tlbinv}{bstart_cache}{mprotect}")
+        parts.append(f"{bench}: {running}/{site} {progress} bpc={bpc}{hb_stall}{tlbfill}{tlbinv}{bstart_cache}{pc_watch}{mprotect}")
     return ", ".join(parts)
 
 

@@ -385,6 +385,33 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(summary["code_used"], 4096)
         self.assertEqual(summary["code_size"], 65536)
 
+    def test_pc_watch_summary_keeps_structured_ring_memory_fields(self) -> None:
+        summary = runner._pc_watch_summary(
+            "linx_pc_watch: pc=0x1555837f2e hit=8 printed=8 count=3185030925 "
+            "sp=0x3fffffb690 bpc=0x1555837f1c\n"
+            "LINX_PC_WATCH_RING reason=fault fault_pc=0x1555825572 "
+            "fault_count=4181468642 entries=64\n"
+            "LINX_PC_WATCH_RING_ENTRY idx=63 age=0 watch=2 "
+            "pc=0x1555837f36 hit=876 printed=8 count=4181458218 "
+            "bpc=0x1555837f1c sp=0x3fffffd3e0 a0=0x3 "
+            "mem_src=sp mem_kind=0 mem_index=1 mem_offset=0xd60 "
+            "mem_base=0x3fffffd3e0 mem_addr=0x3fffffe140 "
+            "mem_ok=1 mem_value=0x0\n"
+        )
+
+        self.assertTrue(summary["seen"])
+        self.assertTrue(summary["ring_seen"])
+        self.assertEqual(summary["ring_entry_count"], 1)
+        self.assertEqual(summary["last_ring_fields"]["fault_pc"], "0x1555825572")
+        self.assertEqual(summary["last_ring_fields"]["fault_count"], 4181468642)
+        last_entry = summary["last_ring_entry_fields"]
+        self.assertEqual(last_entry["pc"], "0x1555837f36")
+        self.assertEqual(last_entry["hit"], 876)
+        self.assertEqual(last_entry["mem_src"], "sp")
+        self.assertEqual(last_entry["mem_addr"], "0x3fffffe140")
+        self.assertEqual(last_entry["mem_ok"], 1)
+        self.assertEqual(last_entry["mem_value"], "0x0")
+
     def test_tlb_fill_hot_summary_parses_top_slots(self) -> None:
         summary = runner._tlb_fill_hot_summary(
             "LINX_HEARTBEAT count=100 pc=0x1 bpc=0x2\n"

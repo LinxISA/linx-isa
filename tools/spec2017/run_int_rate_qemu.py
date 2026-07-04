@@ -3669,6 +3669,10 @@ def _pc_watch_summary(text: str) -> dict[str, Any]:
     ring_entries = [
         line for line in lines if line.startswith("LINX_PC_WATCH_RING_ENTRY ")
     ]
+    ring_header_fields = _heartbeat_fields(ring_headers[-1]) if ring_headers else {}
+    ring_entry_samples = [
+        _pc_watch_entry_summary(line) for line in ring_entries[-8:]
+    ]
     return {
         "seen": bool(lines),
         "line_count": len(lines),
@@ -3679,7 +3683,43 @@ def _pc_watch_summary(text: str) -> dict[str, Any]:
         "ring_entry_count": len(ring_entries),
         "last_ring": ring_headers[-1][:512] if ring_headers else "",
         "last_ring_entry": ring_entries[-1][:512] if ring_entries else "",
+        "last_ring_fields": _pc_watch_fields_summary(ring_header_fields),
+        "last_ring_entry_fields": (
+            ring_entry_samples[-1] if ring_entry_samples else {}
+        ),
+        "ring_entry_samples": ring_entry_samples,
     }
+
+
+def _pc_watch_fields_summary(fields: dict[str, str]) -> dict[str, Any]:
+    result: dict[str, Any] = {}
+    for key, value in fields.items():
+        if key in {
+            "idx",
+            "age",
+            "watch",
+            "hit",
+            "printed",
+            "count",
+            "fault_count",
+            "entries",
+            "mem_kind",
+            "mem_index",
+            "mem_ok",
+        }:
+            result[key] = _int_or_none(value)
+        elif value.lower().startswith("0x"):
+            result[key] = value.lower()
+        else:
+            result[key] = value
+    return result
+
+
+def _pc_watch_entry_summary(line: str) -> dict[str, Any]:
+    fields = _heartbeat_fields(line)
+    summary = _pc_watch_fields_summary(fields)
+    summary["line"] = line[:1024]
+    return summary
 
 
 def _fcmp_trace_summary(text: str) -> dict[str, Any]:
