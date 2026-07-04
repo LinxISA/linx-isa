@@ -61,6 +61,22 @@ QEMU_PC_WATCH_BOOL_ARGS = {
     "qemu_pc_watch_dump_phys": "LINX_DEBUG_PC_WATCH_DUMP_PHYS",
 }
 
+QEMU_SYSCALL_TRACE_ARGS = {
+    "qemu_syscall_trace_nr": "LINX_SYSCALL_TRACE_NR",
+    "qemu_syscall_trace_limit": "LINX_SYSCALL_TRACE_LIMIT",
+    "qemu_syscall_trace_pc_lo": "LINX_SYSCALL_TRACE_PC_LO",
+    "qemu_syscall_trace_pc_hi": "LINX_SYSCALL_TRACE_PC_HI",
+    "qemu_syscall_trace_string_max": "LINX_SYSCALL_TRACE_STRING_MAX",
+    "qemu_syscall_trace_dump_args": "LINX_SYSCALL_TRACE_DUMP_ARGS",
+    "qemu_syscall_trace_dump_arg": "LINX_SYSCALL_TRACE_DUMP_ARG",
+    "qemu_syscall_trace_dump_bytes": "LINX_SYSCALL_TRACE_DUMP_BYTES",
+}
+
+QEMU_SYSCALL_TRACE_BOOL_ARGS = {
+    "qemu_syscall_trace_regs": "LINX_SYSCALL_TRACE_REGS",
+    "qemu_syscall_trace_strings": "LINX_SYSCALL_TRACE_STRINGS",
+}
+
 
 def _default_qemu() -> str:
     env = os.environ.get("QEMU", "").strip()
@@ -520,6 +536,10 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
     if pc_watch:
         watch_text = ", ".join(f"{k}={v}" for k, v in sorted(pc_watch.items()))
         lines.append(f"- qemu_pc_watch: `{watch_text}`")
+    syscall_trace = summary.get("qemu_syscall_trace") or {}
+    if syscall_trace:
+        trace_text = ", ".join(f"{k}={v}" for k, v in sorted(syscall_trace.items()))
+        lines.append(f"- qemu_syscall_trace: `{trace_text}`")
     lines.append(f"- guest_heartbeat_sec: `{summary['guest_heartbeat_sec']}`")
     guest_proc_diag = str(bool(summary.get("guest_proc_diagnostics", False))).lower()
     lines.append(f"- guest_proc_diagnostics: `{guest_proc_diag}`")
@@ -700,6 +720,32 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--qemu-fault-trace-count-lo", default=os.environ.get("LINX_SPEC_QEMU_FAULT_TRACE_COUNT_LO", ""))
     ap.add_argument("--qemu-fault-trace-count-hi", default=os.environ.get("LINX_SPEC_QEMU_FAULT_TRACE_COUNT_HI", ""))
     ap.add_argument("--qemu-fault-trace-trapnum", default=os.environ.get("LINX_SPEC_QEMU_FAULT_TRACE_TRAPNUM", ""))
+    ap.add_argument(
+        "--qemu-syscall-trace",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_SYSCALL_TRACE", False),
+        help="Pass --qemu-syscall-trace to the per-transport runner.",
+    )
+    ap.add_argument(
+        "--qemu-syscall-trace-regs",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_SYSCALL_TRACE_REGS", False),
+        help="Pass --qemu-syscall-trace-regs to the per-transport runner.",
+    )
+    ap.add_argument(
+        "--qemu-syscall-trace-strings",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_SYSCALL_TRACE_STRINGS", False),
+        help="Pass --qemu-syscall-trace-strings to the per-transport runner.",
+    )
+    ap.add_argument("--qemu-syscall-trace-nr", default=os.environ.get("LINX_SPEC_QEMU_SYSCALL_TRACE_NR", ""))
+    ap.add_argument("--qemu-syscall-trace-limit", default=os.environ.get("LINX_SPEC_QEMU_SYSCALL_TRACE_LIMIT", ""))
+    ap.add_argument("--qemu-syscall-trace-pc-lo", default=os.environ.get("LINX_SPEC_QEMU_SYSCALL_TRACE_PC_LO", ""))
+    ap.add_argument("--qemu-syscall-trace-pc-hi", default=os.environ.get("LINX_SPEC_QEMU_SYSCALL_TRACE_PC_HI", ""))
+    ap.add_argument("--qemu-syscall-trace-string-max", default=os.environ.get("LINX_SPEC_QEMU_SYSCALL_TRACE_STRING_MAX", ""))
+    ap.add_argument("--qemu-syscall-trace-dump-args", default=os.environ.get("LINX_SPEC_QEMU_SYSCALL_TRACE_DUMP_ARGS", ""))
+    ap.add_argument("--qemu-syscall-trace-dump-arg", default=os.environ.get("LINX_SPEC_QEMU_SYSCALL_TRACE_DUMP_ARG", ""))
+    ap.add_argument("--qemu-syscall-trace-dump-bytes", default=os.environ.get("LINX_SPEC_QEMU_SYSCALL_TRACE_DUMP_BYTES", ""))
     ap.add_argument("--qemu-pc-watch", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH", ""))
     ap.add_argument("--qemu-pc-watch-count-lo", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_COUNT_LO", ""))
     ap.add_argument("--qemu-pc-watch-count-hi", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_COUNT_HI", ""))
@@ -791,6 +837,26 @@ def main(argv: list[str]) -> int:
     if args.qemu_fault_trace_limit < 0:
         raise SystemExit("error: --qemu-fault-trace-limit must be >= 0")
     for attr in (
+        "qemu_syscall_trace_limit",
+        "qemu_syscall_trace_pc_lo",
+        "qemu_syscall_trace_pc_hi",
+        "qemu_syscall_trace_string_max",
+        "qemu_syscall_trace_dump_arg",
+        "qemu_syscall_trace_dump_bytes",
+    ):
+        value = str(getattr(args, attr, "") or "").strip()
+        if value:
+            try:
+                parsed = int(value, 0)
+            except ValueError as exc:
+                raise SystemExit(
+                    f"error: --{attr.replace('_', '-')} must be an integer"
+                ) from exc
+            if parsed < 0:
+                raise SystemExit(f"error: --{attr.replace('_', '-')} must be >= 0")
+            if attr == "qemu_syscall_trace_dump_arg" and parsed > 5:
+                raise SystemExit("error: --qemu-syscall-trace-dump-arg must be <= 5")
+    for attr in (
         "qemu_pc_watch_hit_limit",
         "qemu_pc_watch_hit_lo",
         "qemu_pc_watch_hit_hi",
@@ -828,6 +894,16 @@ def main(argv: list[str]) -> int:
     for attr, env_name in QEMU_PC_WATCH_BOOL_ARGS.items():
         if bool(getattr(args, attr, False)):
             qemu_pc_watch[env_name] = "1"
+    qemu_syscall_trace = {
+        env_name: str(getattr(args, attr, "") or "").strip()
+        for attr, env_name in QEMU_SYSCALL_TRACE_ARGS.items()
+        if str(getattr(args, attr, "") or "").strip()
+    }
+    for attr, env_name in QEMU_SYSCALL_TRACE_BOOL_ARGS.items():
+        if bool(getattr(args, attr, False)):
+            qemu_syscall_trace[env_name] = "1"
+    if bool(getattr(args, "qemu_syscall_trace", False)) or qemu_syscall_trace:
+        qemu_syscall_trace["LINX_SYSCALL_TRACE"] = "1"
 
     transports = _parse_transports(args.transports) if args.transports else _default_transports(args.stage)
     benches = list(args.bench or [])
@@ -910,6 +986,15 @@ def main(argv: list[str]) -> int:
         if args.qemu_fault_trace_regs:
             cmd.append("--qemu-fault-trace-regs")
         for attr in QEMU_FAULT_TRACE_FILTER_ARGS:
+            value = str(getattr(args, attr, "") or "").strip()
+            if value:
+                cmd.extend(["--" + attr.replace("_", "-"), value])
+        if args.qemu_syscall_trace:
+            cmd.append("--qemu-syscall-trace")
+        for attr in QEMU_SYSCALL_TRACE_BOOL_ARGS:
+            if bool(getattr(args, attr, False)):
+                cmd.append("--" + attr.replace("_", "-"))
+        for attr in QEMU_SYSCALL_TRACE_ARGS:
             value = str(getattr(args, attr, "") or "").strip()
             if value:
                 cmd.extend(["--" + attr.replace("_", "-"), value])
@@ -1001,6 +1086,7 @@ def main(argv: list[str]) -> int:
         "qemu_fault_trace_limit": int(args.qemu_fault_trace_limit),
         "qemu_fault_trace_filters": qemu_fault_trace_filters,
         "qemu_pc_watch": qemu_pc_watch,
+        "qemu_syscall_trace": qemu_syscall_trace,
         "no_progress_timeout": float(args.no_progress_timeout),
         "fail_9p_timeout": bool(args.fail_9p_timeout),
         "guest_heartbeat_sec": int(args.guest_heartbeat_sec),

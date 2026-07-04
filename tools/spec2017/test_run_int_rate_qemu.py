@@ -313,6 +313,36 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(env["LINX_QEMU_FAULT_TRACE_PC_HI"], "0x15559efe40")
         self.assertEqual(env["LINX_QEMU_FAULT_TRACE_TRAPNUM"], "5")
 
+    def test_qemu_syscall_trace_args_auto_enable_trace(self) -> None:
+        trace = runner._qemu_syscall_trace_from_args(
+            argparse.Namespace(
+                qemu_syscall_trace=False,
+                qemu_syscall_trace_nr="56,63",
+                qemu_syscall_trace_limit="64",
+                qemu_syscall_trace_pc_lo="0x1555837f00",
+                qemu_syscall_trace_pc_hi="0x1555838000",
+                qemu_syscall_trace_regs=True,
+                qemu_syscall_trace_strings=False,
+            )
+        )
+        env: dict[str, str] = {}
+        runner._apply_qemu_debug_env(
+            env,
+            qemu_heartbeat_interval=0,
+            qemu_fault_trace_regs=False,
+            qemu_fault_trace_limit=0,
+            qemu_syscall_trace=trace,
+        )
+
+        self.assertEqual(env["LINX_SYSCALL_TRACE"], "1")
+        self.assertEqual(env["LINX_SYSCALL_TRACE_NR"], "56,63")
+        self.assertEqual(env["LINX_SYSCALL_TRACE_LIMIT"], "64")
+        self.assertEqual(env["LINX_SYSCALL_TRACE_PC_LO"], "0x1555837f00")
+        self.assertEqual(env["LINX_SYSCALL_TRACE_PC_HI"], "0x1555838000")
+        self.assertEqual(env["LINX_SYSCALL_TRACE_REGS"], "1")
+        self.assertNotIn("LINX_SYSCALL_TRACE_STRINGS", env)
+        self.assertIn("LINX_SYSCALL_TRACE_NR", runner._qemu_debug_env_summary(env))
+
     def test_qemu_debug_env_summary_is_sanitized(self) -> None:
         env: dict[str, str] = {
             "PATH": "/bin",

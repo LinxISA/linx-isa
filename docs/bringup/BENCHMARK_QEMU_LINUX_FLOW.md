@@ -128,6 +128,18 @@ Evidence:
   with timer IRQ progress `32 -> 37`. A `SKIP_BUILD=1` BusyBox rootfs run still
   reproduces the stale PID1 `addr=0x10000004` trap, so stale rootfs results are
   non-authoritative for current closure.
+- Focused `500.perlbench_r` test row 2 triage now has a lower-perturbation
+  syscall/fault trace packet in
+  `workloads/generated/specint-500-test-row2-syscalltrace-qemu-20260704-r1/`.
+  The SPEC runners expose QEMU syscall tracing with
+  `--qemu-syscall-trace*` switches and record the selected
+  `LINX_SYSCALL_TRACE*` knobs in JSON/Markdown summaries. The current terminal
+  trap is not a deadlock: with `norandmaps` bias `0x1515555000`, terminal
+  `tpc=0x1555828b40` maps to musl `__malloc_alloc_meta` linked
+  `0x402d3b40`, where a zero allocator-list link causes a store through
+  `addr=0x8` after returning from the `sccp` syscall wrapper. Keep this in the
+  correctness lane and trace allocator metadata writes plus caller/control-flow
+  provenance before changing broad SPEC timeouts.
 
 Inference:
 
