@@ -47,16 +47,20 @@ Evidence:
   `525` improve by about 1B instructions, `500` and `557` regress by about 1B,
   and `520`, `531`, and `541` are effectively flat. The one-register frame
   fast path remains opt-in because normalized train-all throughput is mixed.
-- `workloads/generated/specint-profile-suite-train-frame-single-fast-clean-qemu-20260705-r2/`
-  is the most recent all-row train profile suite. It profiles the nine
+- `workloads/generated/specint-profile-suite-train-shape-record-inline-clean-qemu-20260705-r1/`
+  is the matching latest-head all-row train profile suite. It profiles the nine
   non-sentinel SPECint workload rows with delayed post-marker host samples,
-  records `ok=true`, and keeps `525.x264_r` on 9p. It was collected on the
-  previous `7ae245b6...` clean QEMU head, so refresh it before claiming a
-  matching-head profile for `418f56ba...`. The analyzer report
-  `workloads/generated/specint-qemu-progress-analysis-frame-single-fast-clean-current-profile-20260705-r1/report.md`
+  records `ok=true`, keeps `525.x264_r` on 9p, and records QEMU head
+  `418f56ba1f58c908dc75c095e07606b725dafba4` with
+  `clean_build_for_head=true`. The analyzer report
+  `workloads/generated/specint-qemu-progress-analysis-shape-record-inline-clean-20260705-r1/report.md`
   classifies the next work as six template/TB/soft-MMU rows, two TLBI
   attribution rows (`531`, `557`), one 9p transport row (`525`), and the
-  passing `999.specrand_ir` correctness sentinel.
+  passing `999.specrand_ir` correctness sentinel. The latest aggregate active
+  QEMU frames remain `linx_template_fret_stk_impl`, `tb_lookup`,
+  `linx_template_fentry_impl`, `helper_lookup_tb_ptr`, `mmu_lookup1`, and
+  `probe_access_internal`; `helper_linx_tlb_iv` is concentrated in the
+  `531`/`557` TLBI lane.
 - QEMU head `418f56ba1f58c908dc75c095e07606b725dafba4` is the latest focused
   QEMU hygiene repin. It removes disabled frame-shape recorder calls from
   ordinary SPEC profiles and passes clean SPECint PR smoke in

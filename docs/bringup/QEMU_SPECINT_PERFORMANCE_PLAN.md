@@ -195,7 +195,7 @@ TLBI remains row-selective in these delayed samples, concentrated in `531` and
 `557`, so keep TLBI work behind row-specific Linux invalidation attribution
 instead of treating it as the broad first fix.
 
-Current-head profile refresh:
+Frame-single-fast profile refresh:
 `workloads/generated/specint-profile-suite-train-frame-single-fast-clean-qemu-20260705-r2/`
 uses the clean QEMU binary at
 `7ae245b6a5e937fdfd1f377662efa00997f68025` /
@@ -274,20 +274,33 @@ the latest-head result is neutral to mixed rather than a speedup:
 | `541.leela_r` | 23000000008 / 120s | +3 | `0x1555580d28` |
 | `557.xz_r` | 37000000006 / 120s | -999999996 | `0x155558d6da` |
 
+Matching-head profile refresh:
+`workloads/generated/specint-profile-suite-train-shape-record-inline-clean-qemu-20260705-r1/`
+profiles the same nine non-sentinel train workload rows on the clean QEMU
+binary at `418f56ba1f58c908dc75c095e07606b725dafba4` /
+`v10.2.0-1025-g418f56ba1f5`. It exits `ok=true`, records
+`clean_build_for_head=true`, keeps `525.x264_r` on 9p, and captures valid
+5-second delayed samples for all nine rows. Aggregate active QEMU frames are
+still concentrated in template helpers, TB lookup, and soft-MMU lookup:
+`linx_template_fret_stk_impl=1263`, `tb_lookup=1169`,
+`linx_template_fentry_impl=1138`, `helper_lookup_tb_ptr=885`,
+`mmu_lookup1=855`, and `probe_access_internal=690`. `helper_linx_tlb_iv=572`
+appears across four reports and remains concentrated in the `531`/`557` lane.
+
 Loop update: keep `418f56ba...` as the submitted profile-hygiene QEMU head,
 but do not promote `LINX_QEMU_FRAME_SINGLE_REG_FAST=1` into the default stack.
-The next broad speed loop should refresh the all-row profile suite on
-`418f56ba...`, then target the persistent template/TB/soft-MMU lane and the
-row-specific Linux TLBI lane rather than spending more time on disabled
-frame-shape recorder overhead.
+The matching-head profile confirms disabled frame-shape recorder overhead is no
+longer the primary profiler signal. The next broad speed loop should target the
+persistent template/TB/soft-MMU lane, while the `531`/`557` work should stay on
+Linux TLBI attribution before any broad QEMU cputlb semantic change.
 
 Progress-analysis loop update:
 `tools/spec2017/analyze_specint_qemu_progress.py` now joins the clean all-row
 train gate with the all-row delayed profile suite and writes a generated
 machine-readable report plus Markdown. The current matching-head report is
-`workloads/generated/specint-qemu-progress-analysis-frame-single-fast-clean-current-profile-20260705-r1/report.json`;
+`workloads/generated/specint-qemu-progress-analysis-shape-record-inline-clean-20260705-r1/report.json`;
 both gate and profile inputs record QEMU head
-`7ae245b6a5e937fdfd1f377662efa00997f68025`. It records
+`418f56ba1f58c908dc75c095e07606b725dafba4`. It records
 `spec_train_correctness_complete=false`: only
 `999.specrand_ir` passes the strict train hash, while the nine real SPECint
 rows remain heartbeat-backed live-throughput failures. The analyzer classifies
