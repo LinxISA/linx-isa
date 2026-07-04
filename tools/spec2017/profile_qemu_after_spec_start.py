@@ -286,6 +286,8 @@ def _profile_exit_code(proc_returncode: int, report: dict[str, Any]) -> int:
         and report.get("sample", {}).get("ok")
     ):
         return 0
+    if report.get("wait_timed_out") and report.get("terminate_on_wait_timeout"):
+        return 2
     if proc_returncode != 0:
         return proc_returncode
     return 0 if report.get("ok") else 2
@@ -313,6 +315,8 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
                     help="Seconds to wait after the marker is observed before sampling.")
     ap.add_argument("--terminate-after-sample", action="store_true",
                     help="Terminate the wrapped command after sample collection instead of waiting for normal completion.")
+    ap.add_argument("--terminate-on-wait-timeout", action="store_true",
+                    help="Terminate the wrapped command if marker/qemu are not both observed before --wait-timeout.")
     ap.add_argument("--terminate-grace-sec", type=float, default=5.0,
                     help="Grace period after SIGTERM before SIGKILL when --terminate-after-sample is used.")
     ap.add_argument("--qemu-name", action="append",
@@ -352,10 +356,13 @@ def main(argv: list[str] | None = None) -> int:
         "report_out": str(report_out),
         "qemu_pid": None,
         "marker_log": None,
+        "wait_timeout_sec": args.wait_timeout,
+        "wait_timed_out": False,
         "sample_delay_sec": args.sample_delay_sec,
         "sample_delay": None,
         "sample": None,
         "terminate_after_sample": bool(args.terminate_after_sample),
+        "terminate_on_wait_timeout": bool(args.terminate_on_wait_timeout),
         "termination": None,
     }
 
@@ -364,6 +371,7 @@ def main(argv: list[str] | None = None) -> int:
     proc_returncode: int | None = None
     try:
         deadline = started + args.wait_timeout
+        deadline_expired = False
         while time.monotonic() < deadline:
             marker_log = _find_marker_log(args.out_root, args.marker)
             qemu_pid = _find_qemu_descendant(proc.pid, args.qemu_name)
@@ -393,6 +401,16 @@ def main(argv: list[str] | None = None) -> int:
             if proc.poll() is not None:
                 break
             time.sleep(args.poll_sec)
+        else:
+            deadline_expired = True
+
+        if not sample_done and deadline_expired and proc.poll() is None:
+            report["wait_timed_out"] = True
+            if args.terminate_on_wait_timeout:
+                report["termination"] = _terminate_wrapped_command(
+                    proc, args.terminate_grace_sec
+                )
+                proc_returncode = int(report["termination"]["returncode"])
 
         if proc_returncode is None:
             proc_returncode = proc.wait()
@@ -408,7 +426,10 @@ def main(argv: list[str] | None = None) -> int:
         report["sample"] = {
             "ok": False,
             "returncode": None,
-            "error": "marker and qemu descendant were not both observed before command exit/timeout",
+            "error": (
+                "marker and qemu descendant were not both observed before "
+                "command exit or wait timeout"
+            ),
         }
     report["ok"] = bool(report.get("sample", {}).get("ok"))
     report_out.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")

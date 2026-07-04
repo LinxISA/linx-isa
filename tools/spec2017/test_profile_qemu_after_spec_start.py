@@ -164,6 +164,18 @@ Sort by top of stack, exclusive:
                 ]
             )
 
+    def test_profile_exit_code_maps_wait_timeout_termination_to_failure(self) -> None:
+        report = {
+            "terminate_after_sample": True,
+            "terminate_on_wait_timeout": True,
+            "wait_timed_out": True,
+            "termination": {"attempted": True, "returncode": -15},
+            "sample": {"ok": False},
+            "ok": False,
+        }
+
+        self.assertEqual(profiler._profile_exit_code(-15, report), 2)
+
     def test_profile_exit_code_accepts_intentional_termination_after_sample(self) -> None:
         report = {
             "terminate_after_sample": True,

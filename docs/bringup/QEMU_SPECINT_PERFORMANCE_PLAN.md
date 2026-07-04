@@ -160,6 +160,39 @@ visible outside `505`: `linx_template_fret_stk_impl=252`,
 `helper_lookup_tb_ptr=188`, `tb_lookup=179`, `probe_access_internal=162`,
 `mmu_lookup1=152`, and `qht_lookup_custom=132`.
 
+Suite profiler update: `tools/spec2017/profile_qemu_spec_suite.py` runs the
+same marker-aware profiler over a benchmark list and writes
+`profile_suite_summary.json` plus Markdown. It defaults to train stage-b
+SPECint, applies the existing large-payload transport split for `525.x264_r`,
+and passes `--terminate-on-wait-timeout` to the lower-level profiler so a row
+that never reaches `LINX_SPEC_START` cannot trap the suite behind the full
+matrix retry behavior.
+
+The clean-head long-row train suite
+`workloads/generated/specint-profile-suite-train-long-clean-qemu-20260705-r2/`
+profiled all non-sentinel SPECint train rows on QEMU
+`40f869298c75aa9378746d5bf93ad3ec64475f85` /
+`v10.2.0-1022-g40f869298c7`; the clean-build marker matched the QEMU head. All
+nine rows produced valid delayed post-marker samples:
+
+| Aggregate QEMU frame | Samples | Reports |
+| --- | ---: | ---: |
+| `linx_template_fentry_impl` | 1645 | 9 |
+| `linx_template_fret_stk_impl` | 1360 | 9 |
+| `tb_lookup` | 1073 | 9 |
+| `linx_frame_restore_prepare` | 1045 | 9 |
+| `mmu_lookup1` | 971 | 9 |
+| `probe_access_internal` | 964 | 9 |
+| `helper_lookup_tb_ptr` | 801 | 9 |
+| `helper_linx_tlb_iv` | 491 | 3 |
+
+Loop update: the broad train profile suite moves the next QEMU speed work out
+of single-row speculation. Template helper entry/return, TB lookup/dispatch,
+frame restore preparation, and soft-MMU probe/load lookup are cross-row costs.
+TLBI remains row-selective in these delayed samples, concentrated in `531` and
+`557`, so keep TLBI work behind row-specific Linux invalidation attribution
+instead of treating it as the broad first fix.
+
 Loop update: the next 505 speed loop should target soft-MMU/probe lookup,
 template helper exits, and TB lookup/dispatch. Do not promote restore-host load
 as the broad solution; use `--terminate-after-sample` and
