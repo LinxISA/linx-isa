@@ -43,14 +43,15 @@ instead of failing `chdir-rundir`.
 
 ## Current Train Ledger
 
-The latest post-directgoto opt-in train ledger is
-`workloads/generated/specint-train-all-template-directgoto-qemu-20260704-r1/`.
-It uses in-tree QEMU head `1b55b888b36f6d4f7ad600d4121ac8c7b8821462`,
-version `QEMU emulator version 10.2.50 (v10.2.0-1019-g1b55b888b36)`, with
-`qemu_repo_dirty_tracked=false`, `LINX_QEMU_TEMPLATE_CHAIN=1`, frame stats, and
-restore-host frame loads. It is not a clean-build-marker run
-(`clean_build_for_head=false`) because it intentionally used the canonical
-in-tree build after rebuilding `emulator/qemu/build-linx/qemu-system-linx64`.
+The current clean latest-QEMU train ledger is
+`workloads/generated/specint-train-all-clean-qemu-20260705-r1/`. It uses the
+clean build `/tmp/linx-qemu-clean-build/qemu-system-linx64` from QEMU head
+`40f869298c75aa9378746d5bf93ad3ec64475f85`, version
+`QEMU emulator version 10.2.50 (v10.2.0-1022-g40f869298c7)`, with
+`qemu_repo_dirty_tracked=false`, `clean_build_for_head=true`, and
+`clean_build_marker_matches_head=true`. The run enables the current diagnostic
+stack: `LINX_QEMU_TEMPLATE_CHAIN=1`, frame stats, TLB aggregate stats, TLB
+invalidation hot-source stats, TLB-fill stats/hot pages, and TB stats.
 
 Result shape:
 
@@ -60,19 +61,48 @@ Result shape:
   `523.xalancbmk_r`, `525.x264_r`, `531.deepsjeng_r`, `541.leela_r`, and
   `557.xz_r` are heartbeat-backed `live-timeout` rows with BPC site progress,
   no panic, and no trap.
-- `525.x264_r` is still routed through the generated `train-all-large-9p`
-  shard; the observed failure is a heartbeat-backed 9p live-timeout, not an
-  oversized-initramfs VFS panic.
-- Final 120-second heartbeat counts are `500=36B`, `502=26B`, `505=33B`,
-  `520=19B`, `523=24B`, `525=32B`, `531=41B`, `541=21B`, and `557=35B`,
-  with recent progress deltas of about `7B` instructions for each red row.
+- `525.x264_r` is routed through the generated `train-all-large-9p` shard; the
+  failure is a heartbeat-backed 9p live-timeout, not an oversized-initramfs VFS
+  panic.
+- The shared maximum per-heartbeat TLBI burst remains `458884` invalidations at
+  `0xffffffff804059bc` / `0xffffffff80405a0e`, symbolized to
+  `get_p4d_virt_fixmap`. Steady invalidations are mainly Linux memory-management
+  sites around `0xffffffff800db20c`, `0xffffffff800daf1a`, and
+  `0xffffffff800d94e0`.
+- Frame restore host loads are not enabled in this clean diagnostic ledger, so
+  every live row still has `fr_restore_host=0` and large
+  `fr_restore_fallback` counts. Keep restore-host loads opt-in because earlier
+  focused row-2 evidence showed it can perturb user traps.
 
-Compared with the previous 120-second template-chain/frame-hostload ledger
-`workloads/generated/specint-train-all-template-chain-frame-hostload-qemu-20260704-r2/`,
-direct fall-through chaining is mixed but broadly positive: `520`, `523`,
-`525`, `531`, `541`, and `557` improve, `502` is neutral, and `500`/`505`
-regress in this stats-enabled all-row shape. Keep it as a measured dispatch
-speedup candidate, not SPEC train closure.
+Current clean ledger:
+
+| Benchmark | Transport | Result | Count | BPC | TLB fill/user | TB lookup/miss | Frame fallback |
+| --- | --- | --- | ---: | --- | ---: | ---: | ---: |
+| `500.perlbench_r` | initramfs | `live-timeout` | 60000000003 | `0x1555676da6` | 3945027 / 1689541 | 976360222 / 78332 | 413484887 |
+| `502.gcc_r` | initramfs | `live-timeout` | 41000000004 | `0x155576b876` | 8059622 / 3958061 | 1818390791 / 276813 | 1137325203 |
+| `505.mcf_r` | initramfs | `live-timeout` | 53000000001 | `0x155555ccf8` | 150038789 / 148166165 | 1356660574 / 38164 | 731624969 |
+| `520.omnetpp_r` | initramfs | `live-timeout` | 29000000005 | `0x15555fe9ca` | 12912236 / 8787216 | 2096995726 / 95572 | 1531078447 |
+| `523.xalancbmk_r` | initramfs | `live-timeout` | 35000000005 | `0x1555678654` | 6209489 / 3880563 | 1847012247 / 77025 | 1148814789 |
+| `525.x264_r` | 9p | `live-timeout` | 48000000002 | `0xffffffff80114764` | 1868715 / 95 | 2457518763 / 38198 | 1488631715 |
+| `531.deepsjeng_r` | initramfs | `live-timeout` | 63000000024 | `0x155555edd8` | 11955960 / 9871048 | 1342672093 / 40733 | 753070088 |
+| `541.leela_r` | initramfs | `live-timeout` | 32000000026 | `0x15555a6be6` | 2045621 / 127100 | 2772343254 / 51031 | 1507342491 |
+| `557.xz_r` | initramfs | `live-timeout` | 61000000002 | `0x1555577fa4` | 12756075 / 10441446 | 1764945769 / 42758 | 1288102745 |
+| `999.specrand_ir` | initramfs | pass | 0 | `0x0` | 1 / 0 | 1 / 1 | 0 |
+
+Loop update: this ledger confirms the current broad SPEC train state is
+running slowly, not deadlocked. The next speed loop should be split into four
+lanes: reduce or batch remaining Linux fault/fixmap TLB invalidations; profile
+and specialize QEMU soft-MMU/probe/data-load paths, especially for
+`505.mcf_r`; keep template/TB lookup work focused on rows with very high
+lookup counts and low miss counts; and profile `525.x264_r` separately as a
+9p/kernel transport row. Keep `999.specrand_ir` as the strict correctness
+sentinel before and after each speed experiment.
+
+The older post-directgoto opt-in train ledger is
+`workloads/generated/specint-train-all-template-directgoto-qemu-20260704-r1/`.
+It used in-tree QEMU head `1b55b888b36f6d4f7ad600d4121ac8c7b8821462` and is
+superseded for clean-head classification, but remains useful as direct
+fall-through chaining evidence.
 
 Downstream hard-break status after this ledger:
 

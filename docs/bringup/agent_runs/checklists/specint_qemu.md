@@ -1,5 +1,28 @@
 # SPECint / QEMU Checklist
 
+## Live Blockers (2026-07-05)
+
+- [x] ID: SPEC-M05-CLEAN-HEARTBEAT-TB-TLBFILL-20260705 Clean latest-QEMU run covers every supported SPECint train row with BPC, TB, TLB-fill, and TLBI hot-source diagnostics.
+  Command: `OUT=workloads/generated/specint-train-all-clean-qemu-20260705-r1 LINX_QEMU_TEMPLATE_CHAIN=1 SPECINT_TRAIN_ALL_TIMEOUT=180 python3 tools/bringup/run_specint_fast_gate.py --profile train --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 --qemu /tmp/linx-qemu-clean-build/qemu-system-linx64 --sysroot out/libc/musl/install/phase-b --out-dir "$OUT" --append-extra norandmaps --guest-heartbeat-sec 0 --heartbeat-sec 30 --qemu-heartbeat-interval 1000000000 --qemu-heartbeat-code-bytes 0 --qemu-heartbeat-same-site-warn 0 --no-progress-timeout 120 --stack-limit 2G --qemu-frame-stats --qemu-tlb-stats --qemu-tlb-inv-hot --qemu-tlb-fill-stats --qemu-tlb-fill-hot --qemu-tb-stats --dump-prefix-bytes 0 --continue-on-fail`.
+  QEMU provenance: `workloads/generated/specint-train-all-clean-qemu-20260705-r1/specint_fast_gate_summary.json` records `/tmp/linx-qemu-clean-build/qemu-system-linx64`, QEMU head `40f869298c75aa9378746d5bf93ad3ec64475f85`, version `QEMU emulator version 10.2.50 (v10.2.0-1022-g40f869298c7)`, `qemu_repo_dirty_tracked=false`, `clean_build_for_head=true`, and `clean_build_marker_matches_head=true`.
+  SPEC evidence: the split train suite emits `train-all/initramfs/stage_b_summary.json` and `train-all-large-9p/9p/stage_b_summary.json`. `999.specrand_ir` passes strict train hash (`rand.11.out`, 871 bytes, `0x973dcfc2`). `500.perlbench_r`, `502.gcc_r`, `505.mcf_r`, `520.omnetpp_r`, `523.xalancbmk_r`, `525.x264_r`, `531.deepsjeng_r`, `541.leela_r`, and `557.xz_r` are all heartbeat-backed `live-timeout` rows with `heartbeat_running=true`, `heartbeat_site_progress=true`, `stalled=false`, no panic, and no trap.
+  Current ledger:
+
+  | Benchmark | Transport | Result | Count | BPC | TLB fill/user | TB lookup/miss | Frame fallback |
+  | --- | --- | --- | ---: | --- | ---: | ---: | ---: |
+  | `500.perlbench_r` | initramfs | `live-timeout` | 60000000003 | `0x1555676da6` | 3945027 / 1689541 | 976360222 / 78332 | 413484887 |
+  | `502.gcc_r` | initramfs | `live-timeout` | 41000000004 | `0x155576b876` | 8059622 / 3958061 | 1818390791 / 276813 | 1137325203 |
+  | `505.mcf_r` | initramfs | `live-timeout` | 53000000001 | `0x155555ccf8` | 150038789 / 148166165 | 1356660574 / 38164 | 731624969 |
+  | `520.omnetpp_r` | initramfs | `live-timeout` | 29000000005 | `0x15555fe9ca` | 12912236 / 8787216 | 2096995726 / 95572 | 1531078447 |
+  | `523.xalancbmk_r` | initramfs | `live-timeout` | 35000000005 | `0x1555678654` | 6209489 / 3880563 | 1847012247 / 77025 | 1148814789 |
+  | `525.x264_r` | 9p | `live-timeout` | 48000000002 | `0xffffffff80114764` | 1868715 / 95 | 2457518763 / 38198 | 1488631715 |
+  | `531.deepsjeng_r` | initramfs | `live-timeout` | 63000000024 | `0x155555edd8` | 11955960 / 9871048 | 1342672093 / 40733 | 753070088 |
+  | `541.leela_r` | initramfs | `live-timeout` | 32000000026 | `0x15555a6be6` | 2045621 / 127100 | 2772343254 / 51031 | 1507342491 |
+  | `557.xz_r` | initramfs | `live-timeout` | 61000000002 | `0x1555577fa4` | 12756075 / 10441446 | 1764945769 / 42758 | 1288102745 |
+  | `999.specrand_ir` | initramfs | pass | 0 | `0x0` | 1 / 0 | 1 / 1 | 0 |
+
+  Loop update: this run confirms all red train rows are running slowly rather than deadlocked. The shared maximum TLBI burst is `458884` at `get_p4d_virt_fixmap`; steady invalidations point at Linux `memory.c` fault/update paths. `505.mcf_r` is still the strongest user soft-MMU/data-load target, rows with multi-billion TB lookups need template/TB dispatch profiling, frame restore fallback traffic remains large when host restore loads are disabled, and `525.x264_r` remains a separate 9p/kernel transport lane. Keep `999.specrand_ir` as the strict before/after sentinel and keep frame restore host loads opt-in because prior focused row-2 evidence showed it can perturb correctness failures.
+
 ## Live Blockers (2026-07-04)
 
 - [x] ID: SPEC-LIBC-VERSION-MAP-INIT-20260704 glibc ld.so now initializes version metadata before direct runtime lookups.

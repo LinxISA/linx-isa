@@ -1,6 +1,6 @@
 # LinxISA Maturity Plan (Tier-1 Track vs ARM/x86)
 
-Last updated: 2026-07-04
+Last updated: 2026-07-05
 
 ## Baseline
 
@@ -51,20 +51,18 @@ Last updated: 2026-07-04
 - Hosted workload hardening is now split cleanly by tier:
   - PR lane: benchmark/polybench/portfolio/ctuning artifact publication and PTO parity are green.
   - runtime-heavy follow-up: the active in-repo SPEC lane is CPU2017 SPECint
-    train input, not a checked-in SPEC CPU2006 corpus. The latest all-ten train
-    loop under
-    `workloads/generated/specint-train-all-linux-tlbirange-qemu-20260704-r1/`
-    runs all supported SPECint C/C++ rows on clean QEMU head
-    `1db7e12b6809c8ca2e2bee397f6019a14966e2ad` after Linux head
-    `a1bdaf6bce6949e5c0081bf96e76f6c845fafc11` adds local TLBI range
-    batching, passes `999.specrand_ir`, routes `525.x264_r` through the
-    generated 9p shard, and proves timeout rows are live-progress rather than
-    global QEMU deadlock by QEMU heartbeat/BPC, frame counters, TLBI aggregate
-    counters, and TLBI hot-source evidence. Linux batching shifts the steady
-    `mm/memory.c` hot site but is mixed/neutral on all-row throughput, so the
-    next speed lanes are remaining fixmap/fault-path TLBI bursts, QEMU
-    `probe_access_internal` / soft-MMU lookup, template dispatch/helper exits,
-    and 9p/kernel transport overhead.
+    train input, not a checked-in SPEC CPU2006 corpus. The latest clean all-ten
+    train loop under
+    `workloads/generated/specint-train-all-clean-qemu-20260705-r1/` runs all
+    supported SPECint C/C++ rows on clean QEMU head
+    `40f869298c75aa9378746d5bf93ad3ec64475f85`, passes `999.specrand_ir`,
+    routes `525.x264_r` through the generated 9p shard, and proves timeout rows
+    are live-progress rather than global QEMU deadlock by QEMU heartbeat/BPC,
+    frame counters, TB counters, TLB aggregate counters, TLB-fill hot pages, and
+    TLBI hot-source evidence. The next speed lanes are remaining
+    fixmap/fault-path TLBI bursts, QEMU `probe_access_internal` / soft-MMU
+    lookup, template/TB lookup dispatch, frame restore fallback traffic, and
+    9p/kernel transport overhead.
 - Remaining superproject work: refreshed strict/convergence publication, libc
   hosted runtime, SPEC correctness/performance, TSVC runtime, AVS nightly
   breadth, QEMU decode coverage, ABI/unwind/TLS hardening,
@@ -123,15 +121,16 @@ Status: Active
 3. Re-run the runtime-heavy workload lanes that still block nightly closure:
    - keep the CPU2017 SPECint `train-all` QEMU matrix as the active static
      workload loop; the current all-ten ledger is
-     `workloads/generated/specint-train-all-linux-tlbirange-qemu-20260704-r1/`,
+     `workloads/generated/specint-train-all-clean-qemu-20260705-r1/`,
    - keep the new Linx Linux `mprotect()` no-merge smoke in the regression
      loop so the former `502.gcc_r` no-VMA trap stays closed,
    - move `525.x264_r` train execution to 9p or a future block-backed transport
      instead of relying on a giant initramfs CPIO,
-   - use the current post-Linux TLBI-batching evidence to guide speed work:
-     remaining fixmap/fault-path TLBI sources, QEMU probe/soft-MMU lookup,
-     template dispatch/helper exits, and 9p transport, with strict
-     `999.specrand_ir` as the cheap correctness sentinel.
+   - use the current clean-QEMU heartbeat/TB/TLB-fill ledger to guide speed
+     work: remaining fixmap/fault-path TLBI sources, QEMU probe/soft-MMU
+     lookup, template/TB lookup dispatch, frame restore fallback traffic, and
+     9p transport, with strict `999.specrand_ir` as the cheap correctness
+     sentinel.
 4. Resume nightly AVS breadth work on decode/block edge cases, atomics, FP, vector runtime, and Linux workload launch semantics.
 
 ## Canonical Milestones
