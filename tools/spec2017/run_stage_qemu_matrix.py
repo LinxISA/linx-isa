@@ -32,6 +32,35 @@ QEMU_FAULT_TRACE_FILTER_ARGS = {
     "qemu_fault_trace_trapnum": "LINX_QEMU_FAULT_TRACE_TRAPNUM",
 }
 
+QEMU_PC_WATCH_ARGS = {
+    "qemu_pc_watch": "LINX_DEBUG_PC_WATCH",
+    "qemu_pc_watch_count_lo": "LINX_DEBUG_PC_WATCH_COUNT_LO",
+    "qemu_pc_watch_count_hi": "LINX_DEBUG_PC_WATCH_COUNT_HI",
+    "qemu_pc_watch_hit_limit": "LINX_DEBUG_PC_WATCH_HIT_LIMIT",
+    "qemu_pc_watch_hit_lo": "LINX_DEBUG_PC_WATCH_HIT_LO",
+    "qemu_pc_watch_hit_hi": "LINX_DEBUG_PC_WATCH_HIT_HI",
+    "qemu_pc_watch_match_gpr": "LINX_DEBUG_PC_WATCH_MATCH_GPR",
+    "qemu_pc_watch_match_value": "LINX_DEBUG_PC_WATCH_MATCH_VALUE",
+    "qemu_pc_watch_match_mask": "LINX_DEBUG_PC_WATCH_MATCH_MASK",
+    "qemu_pc_watch_dump_reg": "LINX_DEBUG_PC_WATCH_DUMP_REG",
+    "qemu_pc_watch_dump_regs": "LINX_DEBUG_PC_WATCH_DUMP_REGS",
+    "qemu_pc_watch_dump_offsets": "LINX_DEBUG_PC_WATCH_DUMP_OFFSETS",
+    "qemu_pc_watch_dump_ptr_offsets": "LINX_DEBUG_PC_WATCH_DUMP_PTR_OFFSETS",
+    "qemu_pc_watch_dump_words": "LINX_DEBUG_PC_WATCH_DUMP_WORDS",
+    "qemu_pc_watch_dump_width": "LINX_DEBUG_PC_WATCH_DUMP_WIDTH",
+    "qemu_pc_watch_dump_code_bytes": "LINX_DEBUG_PC_WATCH_DUMP_CODE_BYTES",
+    "qemu_pc_watch_ring_size": "LINX_DEBUG_PC_WATCH_RING_SIZE",
+    "qemu_pc_watch_ring_mem_reg": "LINX_DEBUG_PC_WATCH_RING_MEM_REG",
+    "qemu_pc_watch_ring_mem_offset": "LINX_DEBUG_PC_WATCH_RING_MEM_OFFSET",
+}
+
+QEMU_PC_WATCH_BOOL_ARGS = {
+    "qemu_pc_watch_regs": "LINX_DEBUG_PC_WATCH_REGS",
+    "qemu_pc_watch_ring": "LINX_DEBUG_PC_WATCH_RING",
+    "qemu_pc_watch_dump_call_ring": "LINX_DEBUG_PC_WATCH_DUMP_CALL_RING",
+    "qemu_pc_watch_dump_phys": "LINX_DEBUG_PC_WATCH_DUMP_PHYS",
+}
+
 
 def _default_qemu() -> str:
     env = os.environ.get("QEMU", "").strip()
@@ -222,6 +251,7 @@ def _transport_failure_details(summary_obj: dict[str, Any]) -> dict[str, dict[st
             "heartbeat_tlb_fill_hot": failed_run.get("heartbeat_tlb_fill_hot") or {},
             "heartbeat_tlb_inv_hot": failed_run.get("heartbeat_tlb_inv_hot") or {},
             "bstart_cache_stats": failed_run.get("bstart_cache_stats") or {},
+            "pc_watch": failed_run.get("pc_watch") or {},
             "heartbeat_kernel_symbolized": bool(failed_run.get("heartbeat_kernel_symbolized", False)),
             "heartbeat_kernel_panic_loop": bool(failed_run.get("heartbeat_kernel_panic_loop", False)),
             "heartbeat_kernel_symbol_evidence": str(failed_run.get("heartbeat_kernel_symbol_evidence") or "")[:512],
@@ -288,6 +318,19 @@ def _format_bstart_cache_stats(row: dict[str, Any]) -> str:
         f" miss={stats.get('bstarts')}"
         f" reset={stats.get('resets')}/{stats.get('page_resets')}"
     )
+
+
+def _format_pc_watch(row: dict[str, Any]) -> str:
+    stats = row.get("pc_watch")
+    if not isinstance(stats, dict) or not stats.get("seen"):
+        return ""
+    ring = ""
+    if stats.get("ring_seen"):
+        ring = (
+            f"/ring{stats.get('ring_count')}"
+            f"/entries{stats.get('ring_entry_count')}"
+        )
+    return f" pc-watch={stats.get('line_count')}{ring}"
 
 
 def _format_mmu_cache_stats(row: dict[str, Any]) -> str:
@@ -392,6 +435,7 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
         tlb_invalidation = _format_tlb_invalidation_stats(row)
         tb_stats = _format_tb_stats(row)
         bstart_cache = _format_bstart_cache_stats(row)
+        pc_watch = _format_pc_watch(row)
         mprotect = ""
         if row.get("mprotect_trace_seen"):
             mprotect = f" mprotect-trace={row.get('mprotect_trace_count')}"
@@ -411,6 +455,7 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
         parts.append(
             f"{bench}: {running}/{site} {progress}{timeout}{stalled} "
             f"bpc={bpc}{kernel}{hb_stall}{fcmp}{tlbfill}{tlbfill_stats}{tlbfill_hot}{mmu_cache}{frame_stats}{tlb_invalidation}{tlbinv_hot}{tb_stats}{bstart_cache}{mprotect}"
+            f"{pc_watch}"
         )
     return ", ".join(parts)
 
@@ -463,6 +508,10 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
     if filters:
         filter_text = ", ".join(f"{k}={v}" for k, v in sorted(filters.items()))
         lines.append(f"- qemu_fault_trace_filters: `{filter_text}`")
+    pc_watch = summary.get("qemu_pc_watch") or {}
+    if pc_watch:
+        watch_text = ", ".join(f"{k}={v}" for k, v in sorted(pc_watch.items()))
+        lines.append(f"- qemu_pc_watch: `{watch_text}`")
     lines.append(f"- guest_heartbeat_sec: `{summary['guest_heartbeat_sec']}`")
     guest_proc_diag = str(bool(summary.get("guest_proc_diagnostics", False))).lower()
     lines.append(f"- guest_proc_diagnostics: `{guest_proc_diag}`")
@@ -643,6 +692,29 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--qemu-fault-trace-count-lo", default=os.environ.get("LINX_SPEC_QEMU_FAULT_TRACE_COUNT_LO", ""))
     ap.add_argument("--qemu-fault-trace-count-hi", default=os.environ.get("LINX_SPEC_QEMU_FAULT_TRACE_COUNT_HI", ""))
     ap.add_argument("--qemu-fault-trace-trapnum", default=os.environ.get("LINX_SPEC_QEMU_FAULT_TRACE_TRAPNUM", ""))
+    ap.add_argument("--qemu-pc-watch", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH", ""))
+    ap.add_argument("--qemu-pc-watch-count-lo", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_COUNT_LO", ""))
+    ap.add_argument("--qemu-pc-watch-count-hi", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_COUNT_HI", ""))
+    ap.add_argument("--qemu-pc-watch-hit-limit", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_HIT_LIMIT", ""))
+    ap.add_argument("--qemu-pc-watch-hit-lo", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_HIT_LO", ""))
+    ap.add_argument("--qemu-pc-watch-hit-hi", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_HIT_HI", ""))
+    ap.add_argument("--qemu-pc-watch-match-gpr", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_MATCH_GPR", ""))
+    ap.add_argument("--qemu-pc-watch-match-value", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_MATCH_VALUE", ""))
+    ap.add_argument("--qemu-pc-watch-match-mask", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_MATCH_MASK", ""))
+    ap.add_argument("--qemu-pc-watch-dump-reg", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_DUMP_REG", ""))
+    ap.add_argument("--qemu-pc-watch-dump-regs", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_DUMP_REGS", ""))
+    ap.add_argument("--qemu-pc-watch-dump-offsets", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_DUMP_OFFSETS", ""))
+    ap.add_argument("--qemu-pc-watch-dump-ptr-offsets", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_DUMP_PTR_OFFSETS", ""))
+    ap.add_argument("--qemu-pc-watch-dump-words", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_DUMP_WORDS", ""))
+    ap.add_argument("--qemu-pc-watch-dump-width", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_DUMP_WIDTH", ""))
+    ap.add_argument("--qemu-pc-watch-dump-code-bytes", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_DUMP_CODE_BYTES", ""))
+    ap.add_argument("--qemu-pc-watch-ring-size", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_RING_SIZE", ""))
+    ap.add_argument("--qemu-pc-watch-ring-mem-reg", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_RING_MEM_REG", ""))
+    ap.add_argument("--qemu-pc-watch-ring-mem-offset", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_RING_MEM_OFFSET", ""))
+    ap.add_argument("--qemu-pc-watch-regs", action="store_true", default=_env_bool("LINX_SPEC_QEMU_PC_WATCH_REGS", False))
+    ap.add_argument("--qemu-pc-watch-ring", action="store_true", default=_env_bool("LINX_SPEC_QEMU_PC_WATCH_RING", False))
+    ap.add_argument("--qemu-pc-watch-dump-call-ring", action="store_true", default=_env_bool("LINX_SPEC_QEMU_PC_WATCH_DUMP_CALL_RING", False))
+    ap.add_argument("--qemu-pc-watch-dump-phys", action="store_true", default=_env_bool("LINX_SPEC_QEMU_PC_WATCH_DUMP_PHYS", False))
     ap.add_argument(
         "--no-progress-timeout",
         type=float,
@@ -710,6 +782,25 @@ def main(argv: list[str]) -> int:
         raise SystemExit("error: --qemu-heartbeat-same-site-warn must be >= 0")
     if args.qemu_fault_trace_limit < 0:
         raise SystemExit("error: --qemu-fault-trace-limit must be >= 0")
+    for attr in (
+        "qemu_pc_watch_hit_limit",
+        "qemu_pc_watch_hit_lo",
+        "qemu_pc_watch_hit_hi",
+        "qemu_pc_watch_dump_words",
+        "qemu_pc_watch_dump_width",
+        "qemu_pc_watch_dump_code_bytes",
+        "qemu_pc_watch_ring_size",
+    ):
+        value = str(getattr(args, attr, "") or "").strip()
+        if value:
+            try:
+                parsed = int(value, 0)
+            except ValueError as exc:
+                raise SystemExit(
+                    f"error: --{attr.replace('_', '-')} must be an integer"
+                ) from exc
+            if parsed < 0:
+                raise SystemExit(f"error: --{attr.replace('_', '-')} must be >= 0")
     if args.no_progress_timeout < 0:
         raise SystemExit("error: --no-progress-timeout must be >= 0")
     if args.guest_heartbeat_sec < 0:
@@ -721,6 +812,14 @@ def main(argv: list[str]) -> int:
         for attr, env_name in QEMU_FAULT_TRACE_FILTER_ARGS.items()
         if str(getattr(args, attr, "") or "").strip()
     }
+    qemu_pc_watch = {
+        env_name: str(getattr(args, attr, "") or "").strip()
+        for attr, env_name in QEMU_PC_WATCH_ARGS.items()
+        if str(getattr(args, attr, "") or "").strip()
+    }
+    for attr, env_name in QEMU_PC_WATCH_BOOL_ARGS.items():
+        if bool(getattr(args, attr, False)):
+            qemu_pc_watch[env_name] = "1"
 
     transports = _parse_transports(args.transports) if args.transports else _default_transports(args.stage)
     benches = list(args.bench or [])
@@ -806,6 +905,13 @@ def main(argv: list[str]) -> int:
             value = str(getattr(args, attr, "") or "").strip()
             if value:
                 cmd.extend(["--" + attr.replace("_", "-"), value])
+        for attr in QEMU_PC_WATCH_ARGS:
+            value = str(getattr(args, attr, "") or "").strip()
+            if value:
+                cmd.extend(["--" + attr.replace("_", "-"), value])
+        for attr in QEMU_PC_WATCH_BOOL_ARGS:
+            if bool(getattr(args, attr, False)):
+                cmd.append("--" + attr.replace("_", "-"))
         if args.fail_9p_timeout:
             cmd.append("--fail-9p-timeout")
         if args.stack_limit.strip():
@@ -886,6 +992,7 @@ def main(argv: list[str]) -> int:
         "qemu_fault_trace_regs": bool(args.qemu_fault_trace_regs),
         "qemu_fault_trace_limit": int(args.qemu_fault_trace_limit),
         "qemu_fault_trace_filters": qemu_fault_trace_filters,
+        "qemu_pc_watch": qemu_pc_watch,
         "no_progress_timeout": float(args.no_progress_timeout),
         "fail_9p_timeout": bool(args.fail_9p_timeout),
         "guest_heartbeat_sec": int(args.guest_heartbeat_sec),

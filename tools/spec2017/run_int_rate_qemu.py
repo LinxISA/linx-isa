@@ -722,6 +722,7 @@ def _apply_qemu_debug_env(
     qemu_fault_trace_regs: bool,
     qemu_fault_trace_limit: int,
     qemu_fault_trace_filters: dict[str, str] | None = None,
+    qemu_pc_watch: dict[str, str] | None = None,
 ) -> None:
     if qemu_heartbeat_interval > 0:
         qemu_env["LINX_HEARTBEAT_INTERVAL"] = str(qemu_heartbeat_interval)
@@ -750,6 +751,9 @@ def _apply_qemu_debug_env(
             qemu_env["LINX_QEMU_FAULT_TRACE_LIMIT"] = str(qemu_fault_trace_limit)
     if qemu_fault_trace_regs:
         qemu_env["LINX_QEMU_FAULT_TRACE_REGS"] = "1"
+    for name, value in (qemu_pc_watch or {}).items():
+        if str(value).strip():
+            qemu_env[name] = str(value).strip()
 
 
 QEMU_FAULT_TRACE_FILTER_ARGS = {
@@ -764,6 +768,35 @@ QEMU_FAULT_TRACE_FILTER_ARGS = {
     "qemu_fault_trace_trapnum": "LINX_QEMU_FAULT_TRACE_TRAPNUM",
 }
 
+QEMU_PC_WATCH_ARGS = {
+    "qemu_pc_watch": "LINX_DEBUG_PC_WATCH",
+    "qemu_pc_watch_count_lo": "LINX_DEBUG_PC_WATCH_COUNT_LO",
+    "qemu_pc_watch_count_hi": "LINX_DEBUG_PC_WATCH_COUNT_HI",
+    "qemu_pc_watch_hit_limit": "LINX_DEBUG_PC_WATCH_HIT_LIMIT",
+    "qemu_pc_watch_hit_lo": "LINX_DEBUG_PC_WATCH_HIT_LO",
+    "qemu_pc_watch_hit_hi": "LINX_DEBUG_PC_WATCH_HIT_HI",
+    "qemu_pc_watch_match_gpr": "LINX_DEBUG_PC_WATCH_MATCH_GPR",
+    "qemu_pc_watch_match_value": "LINX_DEBUG_PC_WATCH_MATCH_VALUE",
+    "qemu_pc_watch_match_mask": "LINX_DEBUG_PC_WATCH_MATCH_MASK",
+    "qemu_pc_watch_dump_reg": "LINX_DEBUG_PC_WATCH_DUMP_REG",
+    "qemu_pc_watch_dump_regs": "LINX_DEBUG_PC_WATCH_DUMP_REGS",
+    "qemu_pc_watch_dump_offsets": "LINX_DEBUG_PC_WATCH_DUMP_OFFSETS",
+    "qemu_pc_watch_dump_ptr_offsets": "LINX_DEBUG_PC_WATCH_DUMP_PTR_OFFSETS",
+    "qemu_pc_watch_dump_words": "LINX_DEBUG_PC_WATCH_DUMP_WORDS",
+    "qemu_pc_watch_dump_width": "LINX_DEBUG_PC_WATCH_DUMP_WIDTH",
+    "qemu_pc_watch_dump_code_bytes": "LINX_DEBUG_PC_WATCH_DUMP_CODE_BYTES",
+    "qemu_pc_watch_ring_size": "LINX_DEBUG_PC_WATCH_RING_SIZE",
+    "qemu_pc_watch_ring_mem_reg": "LINX_DEBUG_PC_WATCH_RING_MEM_REG",
+    "qemu_pc_watch_ring_mem_offset": "LINX_DEBUG_PC_WATCH_RING_MEM_OFFSET",
+}
+
+QEMU_PC_WATCH_BOOL_ARGS = {
+    "qemu_pc_watch_regs": "LINX_DEBUG_PC_WATCH_REGS",
+    "qemu_pc_watch_ring": "LINX_DEBUG_PC_WATCH_RING",
+    "qemu_pc_watch_dump_call_ring": "LINX_DEBUG_PC_WATCH_DUMP_CALL_RING",
+    "qemu_pc_watch_dump_phys": "LINX_DEBUG_PC_WATCH_DUMP_PHYS",
+}
+
 
 def _qemu_fault_trace_filters_from_args(args: argparse.Namespace) -> dict[str, str]:
     filters: dict[str, str] = {}
@@ -772,6 +805,18 @@ def _qemu_fault_trace_filters_from_args(args: argparse.Namespace) -> dict[str, s
         if value:
             filters[env_name] = value
     return filters
+
+
+def _qemu_pc_watch_from_args(args: argparse.Namespace) -> dict[str, str]:
+    watch: dict[str, str] = {}
+    for attr, env_name in QEMU_PC_WATCH_ARGS.items():
+        value = str(getattr(args, attr, "") or "").strip()
+        if value:
+            watch[env_name] = value
+    for attr, env_name in QEMU_PC_WATCH_BOOL_ARGS.items():
+        if bool(getattr(args, attr, False)):
+            watch[env_name] = "1"
+    return watch
 
 
 def _find_gen_init_cpio(linux_root: Path, out_dir: Path) -> Path:
@@ -2532,6 +2577,7 @@ def _run_qemu(
     qemu_fault_trace_regs: bool,
     qemu_fault_trace_limit: int,
     qemu_fault_trace_filters: dict[str, str],
+    qemu_pc_watch: dict[str, str],
 ) -> dict[str, Any]:
     append = _build_kernel_append(transport, append_extra)
 
@@ -2588,6 +2634,7 @@ def _run_qemu(
         qemu_fault_trace_regs=qemu_fault_trace_regs,
         qemu_fault_trace_limit=qemu_fault_trace_limit,
         qemu_fault_trace_filters=qemu_fault_trace_filters,
+        qemu_pc_watch=qemu_pc_watch,
     )
 
     proc = subprocess.Popen(
@@ -2767,6 +2814,7 @@ def _run_qemu(
     heartbeat_tlb_fill_hot = _tlb_fill_hot_summary(text)
     heartbeat_tlb_inv_hot = _tlb_inv_hot_summary(text)
     bstart_cache_stats = _bstart_cache_stats_summary(text)
+    pc_watch = _pc_watch_summary(text)
 
     qemu_info = {
         "command": cmd,
@@ -2813,6 +2861,7 @@ def _run_qemu(
         "heartbeat_tlb_fill_hot": heartbeat_tlb_fill_hot,
         "heartbeat_tlb_inv_hot": heartbeat_tlb_inv_hot,
         "bstart_cache_stats": bstart_cache_stats,
+        "pc_watch": pc_watch,
         "heartbeat_kernel_symbols": heartbeat_kernel_symbols.get("sites", []),
         "heartbeat_kernel_symbolized": bool(heartbeat_kernel_symbols.get("ok", False)),
         "heartbeat_kernel_panic_loop": bool(heartbeat_kernel_symbols.get("panic_loop", False)),
@@ -3608,6 +3657,31 @@ def _bstart_cache_stats_summary(text: str) -> dict[str, Any]:
     }
 
 
+def _pc_watch_summary(text: str) -> dict[str, Any]:
+    lines = re.findall(
+        r"^(?:linx_pc_watch:|LINX_PC_WATCH_[A-Z_]+).*$",
+        text,
+        flags=re.MULTILINE,
+    )
+    ring_headers = [
+        line for line in lines if line.startswith("LINX_PC_WATCH_RING ")
+    ]
+    ring_entries = [
+        line for line in lines if line.startswith("LINX_PC_WATCH_RING_ENTRY ")
+    ]
+    return {
+        "seen": bool(lines),
+        "line_count": len(lines),
+        "last": lines[-1][:512] if lines else "",
+        "samples": [line[:512] for line in lines[-8:]],
+        "ring_seen": bool(ring_headers),
+        "ring_count": len(ring_headers),
+        "ring_entry_count": len(ring_entries),
+        "last_ring": ring_headers[-1][:512] if ring_headers else "",
+        "last_ring_entry": ring_entries[-1][:512] if ring_entries else "",
+    }
+
+
 def _fcmp_trace_summary(text: str) -> dict[str, Any]:
     lines = re.findall(r"^LINX_FCMP_TRACE .*$", text, flags=re.MULTILINE)
     samples: list[dict[str, Any]] = []
@@ -4024,6 +4098,49 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--qemu-fault-trace-count-lo", default=os.environ.get("LINX_SPEC_QEMU_FAULT_TRACE_COUNT_LO", ""))
     parser.add_argument("--qemu-fault-trace-count-hi", default=os.environ.get("LINX_SPEC_QEMU_FAULT_TRACE_COUNT_HI", ""))
     parser.add_argument("--qemu-fault-trace-trapnum", default=os.environ.get("LINX_SPEC_QEMU_FAULT_TRACE_TRAPNUM", ""))
+    parser.add_argument("--qemu-pc-watch", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH", ""))
+    parser.add_argument("--qemu-pc-watch-count-lo", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_COUNT_LO", ""))
+    parser.add_argument("--qemu-pc-watch-count-hi", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_COUNT_HI", ""))
+    parser.add_argument("--qemu-pc-watch-hit-limit", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_HIT_LIMIT", ""))
+    parser.add_argument("--qemu-pc-watch-hit-lo", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_HIT_LO", ""))
+    parser.add_argument("--qemu-pc-watch-hit-hi", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_HIT_HI", ""))
+    parser.add_argument("--qemu-pc-watch-match-gpr", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_MATCH_GPR", ""))
+    parser.add_argument("--qemu-pc-watch-match-value", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_MATCH_VALUE", ""))
+    parser.add_argument("--qemu-pc-watch-match-mask", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_MATCH_MASK", ""))
+    parser.add_argument("--qemu-pc-watch-dump-reg", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_DUMP_REG", ""))
+    parser.add_argument("--qemu-pc-watch-dump-regs", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_DUMP_REGS", ""))
+    parser.add_argument("--qemu-pc-watch-dump-offsets", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_DUMP_OFFSETS", ""))
+    parser.add_argument("--qemu-pc-watch-dump-ptr-offsets", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_DUMP_PTR_OFFSETS", ""))
+    parser.add_argument("--qemu-pc-watch-dump-words", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_DUMP_WORDS", ""))
+    parser.add_argument("--qemu-pc-watch-dump-width", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_DUMP_WIDTH", ""))
+    parser.add_argument("--qemu-pc-watch-dump-code-bytes", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_DUMP_CODE_BYTES", ""))
+    parser.add_argument("--qemu-pc-watch-ring-size", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_RING_SIZE", ""))
+    parser.add_argument("--qemu-pc-watch-ring-mem-reg", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_RING_MEM_REG", ""))
+    parser.add_argument("--qemu-pc-watch-ring-mem-offset", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_RING_MEM_OFFSET", ""))
+    parser.add_argument(
+        "--qemu-pc-watch-regs",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_PC_WATCH_REGS", False),
+        help="Set LINX_DEBUG_PC_WATCH_REGS=1 for matching PC-watch hits.",
+    )
+    parser.add_argument(
+        "--qemu-pc-watch-ring",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_PC_WATCH_RING", False),
+        help="Set LINX_DEBUG_PC_WATCH_RING=1 to retain recent PC-watch hits for fault dumps.",
+    )
+    parser.add_argument(
+        "--qemu-pc-watch-dump-call-ring",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_PC_WATCH_DUMP_CALL_RING", False),
+        help="Set LINX_DEBUG_PC_WATCH_DUMP_CALL_RING=1 on matching PC-watch hits.",
+    )
+    parser.add_argument(
+        "--qemu-pc-watch-dump-phys",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_PC_WATCH_DUMP_PHYS", False),
+        help="Set LINX_DEBUG_PC_WATCH_DUMP_PHYS=1 on matching PC-watch hits.",
+    )
     parser.add_argument(
         "--guest-heartbeat-sec",
         type=int,
@@ -4124,6 +4241,25 @@ def main(argv: list[str]) -> int:
         raise SystemExit("error: --qemu-heartbeat-same-site-warn must be >= 0")
     if args.qemu_fault_trace_limit < 0:
         raise SystemExit("error: --qemu-fault-trace-limit must be >= 0")
+    for attr in (
+        "qemu_pc_watch_hit_limit",
+        "qemu_pc_watch_hit_lo",
+        "qemu_pc_watch_hit_hi",
+        "qemu_pc_watch_dump_words",
+        "qemu_pc_watch_dump_width",
+        "qemu_pc_watch_dump_code_bytes",
+        "qemu_pc_watch_ring_size",
+    ):
+        value = str(getattr(args, attr, "") or "").strip()
+        if value:
+            try:
+                parsed = int(value, 0)
+            except ValueError as exc:
+                raise SystemExit(
+                    f"error: --{attr.replace('_', '-')} must be an integer"
+                ) from exc
+            if parsed < 0:
+                raise SystemExit(f"error: --{attr.replace('_', '-')} must be >= 0")
     if args.guest_heartbeat_sec < 0:
         raise SystemExit("error: --guest-heartbeat-sec must be >= 0")
     if args.no_progress_timeout < 0:
@@ -4131,6 +4267,7 @@ def main(argv: list[str]) -> int:
     if args.dump_prefix_bytes < 0:
         raise SystemExit("error: --dump-prefix-bytes must be >= 0")
     qemu_fault_trace_filters = _qemu_fault_trace_filters_from_args(args)
+    qemu_pc_watch = _qemu_pc_watch_from_args(args)
 
     spec_dir = Path(os.path.expanduser(args.spec_dir)).resolve()
     qemu = _check_exe(Path(os.path.expanduser(args.qemu)).resolve(), "qemu-system-linx64")
@@ -4182,6 +4319,7 @@ def main(argv: list[str]) -> int:
         "qemu_fault_trace_regs": bool(args.qemu_fault_trace_regs),
         "qemu_fault_trace_limit": args.qemu_fault_trace_limit,
         "qemu_fault_trace_filters": qemu_fault_trace_filters,
+        "qemu_pc_watch": qemu_pc_watch,
         "guest_heartbeat_sec": args.guest_heartbeat_sec,
         "guest_proc_diagnostics": bool(args.guest_proc_diagnostics),
         "symbolize_heartbeat": bool(args.symbolize_heartbeat),
@@ -4292,6 +4430,7 @@ def main(argv: list[str]) -> int:
                     args.qemu_fault_trace_regs,
                     args.qemu_fault_trace_limit,
                     qemu_fault_trace_filters,
+                    qemu_pc_watch,
                 )
                 qemu_info["run_index"] = run_idx
                 qemu_info["source_run_index"] = run_cfg.get("source_run_index", run_idx)
