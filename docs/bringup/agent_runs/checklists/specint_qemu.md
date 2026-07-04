@@ -803,6 +803,12 @@
   Aggregate profile evidence: the recurring top QEMU frames are `linx_template_fentry_impl=1645/9 reports`, `linx_template_fret_stk_impl=1360/9`, `tb_lookup=1073/9`, `linx_frame_restore_prepare=1045/9`, `mmu_lookup1=971/9`, `probe_access_internal=964/9`, and `helper_lookup_tb_ptr=801/9`. `helper_linx_tlb_iv=491` appears in only 3 reports, with the largest delayed samples in `531.deepsjeng_r` and `557.xz_r`.
   Loop update: the next broad QEMU speed work should target cross-row template helper entry/return, TB lookup/dispatch, frame restore preparation, and soft-MMU probe/load lookup. Keep TLBI optimization row-specific until Linux invalidation attribution proves it is the first bottleneck for more rows.
 
+- [x] ID: SPEC-QEMU-PROGRESS-ANALYZER-20260705 Gate/profile analysis records all current SPECint train failures and solution lanes.
+  Tool evidence: `tools/spec2017/analyze_specint_qemu_progress.py` follows the fast-gate suite, matrix, and stage summaries, joins them with `profile_suite_summary.json`, and emits `completion_status`, per-row heartbeat/BPC/counter fields, per-row profile samples, and solution-lane classification.
+  Validation: `python3 -m py_compile tools/spec2017/analyze_specint_qemu_progress.py tools/spec2017/test_analyze_specint_qemu_progress.py` passes, and `python3 -m unittest tools/spec2017/test_analyze_specint_qemu_progress.py` passes 3 tests.
+  Live proof: `python3 tools/spec2017/analyze_specint_qemu_progress.py --gate-summary workloads/generated/specint-train-all-clean-qemu-20260705-r1/specint_fast_gate_summary.json --profile-summary workloads/generated/specint-profile-suite-train-long-clean-qemu-20260705-r2/profile_suite_summary.json --report-out workloads/generated/specint-qemu-progress-analysis-20260705-r1/report.json --out-md workloads/generated/specint-qemu-progress-analysis-20260705-r1/report.md` exits 0. The report records QEMU head `40f869298c75aa9378746d5bf93ad3ec64475f85` for both inputs, `999.specrand_ir` as the only strict passing row, and the other nine rows as live failures with heartbeat progress.
+  Loop update: the generated lanes are `template-tb-mmu-throughput` for `500`, `502`, `505`, `520`, `523`, and `541`; `linux-tlbi-attribution` for `531` and `557`; `transport-9p-throughput` for `525`; and `correctness-sentinel-pass` for `999`. Use this report as the machine-readable handoff for the next speed/debug iteration instead of re-summarizing the gate by hand.
+
 ## Live Blockers (2026-05-21)
 
 - [ ] BLOCK-SPEC-FG-001 Fast SPECint gate must run `test`/`train` before promotion.

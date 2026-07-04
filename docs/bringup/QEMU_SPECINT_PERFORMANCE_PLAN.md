@@ -193,6 +193,23 @@ TLBI remains row-selective in these delayed samples, concentrated in `531` and
 `557`, so keep TLBI work behind row-specific Linux invalidation attribution
 instead of treating it as the broad first fix.
 
+Progress-analysis loop update:
+`tools/spec2017/analyze_specint_qemu_progress.py` now joins the clean all-row
+train gate with the all-row delayed profile suite and writes a generated
+machine-readable report plus Markdown. The current report is
+`workloads/generated/specint-qemu-progress-analysis-20260705-r1/report.json`.
+It records `spec_train_correctness_complete=false`: only
+`999.specrand_ir` passes the strict train hash, while the nine real SPECint
+rows remain heartbeat-backed live-throughput failures. The analyzer classifies
+the next work lanes as:
+
+| Lane | Rows | Action |
+| --- | --- | --- |
+| `template-tb-mmu-throughput` | `500`, `502`, `505`, `520`, `523`, `541` | Optimize template entry/return, TB lookup/dispatch, and soft-MMU probe/load lookup first. |
+| `linux-tlbi-attribution` | `531`, `557` | Attribute Linux TLBI/fixmap churn before changing broad QEMU cputlb behavior. |
+| `transport-9p-throughput` | `525` | Profile 9p/kernel transport separately from initramfs throughput. |
+| `correctness-sentinel-pass` | `999` | Keep as the strict before/after speed-experiment guard. |
+
 Loop update: the next 505 speed loop should target soft-MMU/probe lookup,
 template helper exits, and TB lookup/dispatch. Do not promote restore-host load
 as the broad solution; use `--terminate-after-sample` and
