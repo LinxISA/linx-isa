@@ -806,6 +806,21 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(watch["LINX_CALL_TRACE_RING"], "1")
         self.assertEqual(watch["LINX_CALL_TRACE_RING_SIZE"], "128")
 
+    def test_pc_watch_match_reg_maps_to_qemu_env(self) -> None:
+        watch = runner._qemu_pc_watch_from_args(
+            argparse.Namespace(
+                qemu_pc_watch="0x155567e690",
+                qemu_pc_watch_match_reg="tq0",
+                qemu_pc_watch_match_value="0",
+                qemu_pc_watch_hit_limit="1",
+            )
+        )
+
+        self.assertEqual(watch["LINX_DEBUG_PC_WATCH"], "0x155567e690")
+        self.assertEqual(watch["LINX_DEBUG_PC_WATCH_MATCH_REG"], "tq0")
+        self.assertEqual(watch["LINX_DEBUG_PC_WATCH_MATCH_VALUE"], "0")
+        self.assertEqual(watch["LINX_DEBUG_PC_WATCH_HIT_LIMIT"], "1")
+
     def test_heartbeat_tlb_fill_summary_includes_mmu_split(self) -> None:
         summary = runner._heartbeat_tlb_fill_summary(
             "LINX_HEARTBEAT count=100 pc=0x1 bpc=0x2 "

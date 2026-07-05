@@ -993,6 +993,7 @@ QEMU_PC_WATCH_ARGS = {
     "qemu_pc_watch_hit_limit": "LINX_DEBUG_PC_WATCH_HIT_LIMIT",
     "qemu_pc_watch_hit_lo": "LINX_DEBUG_PC_WATCH_HIT_LO",
     "qemu_pc_watch_hit_hi": "LINX_DEBUG_PC_WATCH_HIT_HI",
+    "qemu_pc_watch_match_reg": "LINX_DEBUG_PC_WATCH_MATCH_REG",
     "qemu_pc_watch_match_gpr": "LINX_DEBUG_PC_WATCH_MATCH_GPR",
     "qemu_pc_watch_match_value": "LINX_DEBUG_PC_WATCH_MATCH_VALUE",
     "qemu_pc_watch_match_mask": "LINX_DEBUG_PC_WATCH_MATCH_MASK",
@@ -5529,6 +5530,7 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--qemu-pc-watch-hit-limit", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_HIT_LIMIT", ""))
     parser.add_argument("--qemu-pc-watch-hit-lo", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_HIT_LO", ""))
     parser.add_argument("--qemu-pc-watch-hit-hi", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_HIT_HI", ""))
+    parser.add_argument("--qemu-pc-watch-match-reg", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_MATCH_REG", ""))
     parser.add_argument("--qemu-pc-watch-match-gpr", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_MATCH_GPR", ""))
     parser.add_argument("--qemu-pc-watch-match-value", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_MATCH_VALUE", ""))
     parser.add_argument("--qemu-pc-watch-match-mask", default=os.environ.get("LINX_SPEC_QEMU_PC_WATCH_MATCH_MASK", ""))
