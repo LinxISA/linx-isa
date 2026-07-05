@@ -1,5 +1,78 @@
 # SPECint QEMU test/train bring-up, 2026-07-02
 
+## 2026-07-05 continuation: `500.perlbench_r` fault-time call ring
+
+Artifact root:
+
+- `workloads/generated/specint-500-testpl-fault0-10-callring-qemu-20260705-r1`
+
+Command shape:
+
+```bash
+python3 tools/spec2017/run_int_rate_qemu.py \
+  --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 \
+  --qemu /private/tmp/linx-qemu-clean-build/qemu-system-linx64 \
+  --kernel kernel/linux/build-linx-fixed/vmlinux \
+  --stage b --transport initramfs --input-set test \
+  --bench 500.perlbench_r --run-index 2 --timeout 150 \
+  --heartbeat-sec 15 --qemu-heartbeat-interval 1000000000 \
+  --qemu-heartbeat-same-site-warn 4 --guest-heartbeat-sec 1 \
+  --guest-child-maps-bytes 4096 --terminal-failure-grace-sec 3 \
+  --append-extra norandmaps --linux-vm-trace \
+  --qemu-fault-trace --qemu-fault-trace-regs \
+  --qemu-fault-trace-addr-lo 0x0 --qemu-fault-trace-addr-hi 0x10 \
+  --qemu-fault-trace-limit 16 \
+  --qemu-call-trace-ring --qemu-call-trace-ring-size 128
+```
+
+Result:
+
+- QEMU: `/private/tmp/linx-qemu-clean-build/qemu-system-linx64`,
+  `QEMU emulator version 10.2.50 (v10.2.0-1029-g68bebbd9e7b)`.
+- Runner summary:
+  `workloads/generated/specint-500-testpl-fault0-10-callring-qemu-20260705-r1/stage_b_summary.json`.
+- Classification: `user-trap`, not timeout or deadlock.
+- Heartbeat: `heartbeat_running=true`, `heartbeat_site_progress=true`,
+  last count `3000000003`, last BPC `0xffffffff803e91e8`.
+- Terminal QEMU fault trace:
+  `count=3347319869`, `tpc=0x1555672a00`, `report_bpc=0x15556729ea`,
+  `traparg0=0xc`, `mem_va=0xc`, `cause=0x5`, `bi=1`, `precise=0`,
+  `store_ok=0`, `store_cause=0x5`, `tq0..tq3=0`, `uq0..uq3=0`.
+- Fault-time call ring:
+  `LINX_CALL_TRACE_RING reason=fault fault_pc=0x1555672a00`
+  with final entries `acre_enter` and `acre_staged` for the same user PC.
+  The staged entry records `acr=2`, `cstate=0x12`, `a0=0x7`,
+  `a1=0x3fefe55c50`, `a2=0x602`, `ra=0x15556727ce`.
+- Linux VM trace:
+  final `LINX_VM_FAULT stage=vma-gap addr=0xc tpc=0x1555672a00`
+  and final `LINX_USER_TRAP ... addr=0xc ... traparg0=0xc`.
+- Symbolization with the observed load bias maps `tpc=0x1555672a00` to
+  linked `0x4011da00` in `S_SvPADSTALE_off`:
+  `swi a0, [t#2, 12]`. The store address `0xc` means the base carried in the
+  T queue for `t#2` was zero at the terminal execution. `orig_tpc=0x1555837f3c`
+  maps to linked `0x402e2f3c`, the `sccp` ACRC/BSTOP return path.
+
+Tool update:
+
+- `tools/spec2017/run_int_rate_qemu.py` now extracts `LINX_FAULT_TRACE`
+  records even when serial output glues a guest maps line and a QEMU trace
+  record together. The captured log had this exact shape, so older parser code
+  missed `fault_trace_seen` even though the raw QEMU log contained the fault.
+- Validation: `python3 -m py_compile tools/spec2017/run_int_rate_qemu.py
+  tools/spec2017/test_run_int_rate_qemu.py` passed; `cd tools/spec2017 &&
+  python3 -m unittest test_run_int_rate_qemu.py` passed 62 tests.
+
+Interpretation:
+
+The current row-2 failure remains in the QEMU/compiler/control-state
+correctness lane. It is live until the terminal fault, then QEMU reports a
+block-interior store fault where all captured T/U queue slots are zero at
+fault time. The next loop should trace the producer of `t#2` across
+`S_SvPADSTALE_off` and the `sccp` ACRC/BSTOP return path with a narrow PC/count
+window, then compare against compiler lowering for the T-queue lifetime in
+this function. Do not route this row to deadlock triage; BPC heartbeats and the
+fault-time ring prove forward progress until the fatal user trap.
+
 ## 2026-07-05 continuation: `500.perlbench_r` Linux VM-fault trace
 
 Artifact root:

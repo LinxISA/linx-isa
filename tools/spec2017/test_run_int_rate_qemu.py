@@ -890,6 +890,26 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(sample["store_cause"], "0x5")
         self.assertIn("type0", sample["legacy_store"])
 
+    def test_fault_trace_summary_handles_serial_line_interleaving(self) -> None:
+        text = (
+            "3fefe7c000-3fefe7e000 rwLINX_FAULT_TRACE count=3347319869 "
+            "trapnum=1 src_acr=2 dst_acr=1 bi=1 precise=0 "
+            "tpc=0x1555672a00 report_bpc=0x15556729ea "
+            "traparg0=0xc mem_va=0xc cause=0x5 store_ok=0 "
+            "store_cause=0x5\n"
+        )
+
+        summary = runner._fault_trace_summary(text)
+
+        self.assertTrue(summary["seen"])
+        self.assertEqual(summary["count"], 1)
+        self.assertTrue(summary["last"].startswith("LINX_FAULT_TRACE "))
+        sample = summary["samples"][0]
+        self.assertEqual(sample["count"], 3347319869)
+        self.assertEqual(sample["traparg0"], "0xc")
+        self.assertEqual(sample["mem_va"], "0xc")
+        self.assertEqual(sample["tpc"], "0x1555672a00")
+
     def test_tlb_fill_hot_summary_parses_top_slots(self) -> None:
         summary = runner._tlb_fill_hot_summary(
             "LINX_HEARTBEAT count=100 pc=0x1 bpc=0x2\n"

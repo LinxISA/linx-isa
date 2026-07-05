@@ -4367,7 +4367,7 @@ def _tlb_fault_trace_summary(text: str) -> dict[str, Any]:
 
 
 def _fault_trace_summary(text: str) -> dict[str, Any]:
-    lines = re.findall(r"^LINX_FAULT_TRACE .*$", text, flags=re.MULTILINE)
+    lines = _marked_log_records(text, "LINX_FAULT_TRACE")
     samples: list[dict[str, Any]] = []
     for line in lines[-8:]:
         fields = _heartbeat_fields(line)
@@ -4451,6 +4451,10 @@ def _trap_delivery_trace_summary(text: str) -> dict[str, Any]:
     }
 
 
+def _marked_log_records(text: str, marker: str) -> list[str]:
+    return re.findall(rf"{re.escape(marker)} [^\r\n]*", text)
+
+
 def _parse_hex_int(value: str | None) -> int | None:
     if not value:
         return None
@@ -4478,7 +4482,7 @@ def _child_maps_summary(text: str) -> dict[str, Any]:
     trap_fields = _heartbeat_fields(trap_line)
     trap_addr = _parse_hex_int(trap_fields.get("addr") or trap_fields.get("traparg0"))
     fault_addr: int | None = None
-    for fault_line in re.findall(r"^LINX_FAULT_TRACE .*$", text, flags=re.MULTILINE):
+    for fault_line in _marked_log_records(text, "LINX_FAULT_TRACE"):
         fault_fields = _heartbeat_fields(fault_line)
         fault_addr = (
             _parse_hex_int(fault_fields.get("mem_va"))
