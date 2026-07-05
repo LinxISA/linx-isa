@@ -4054,6 +4054,19 @@ def _heartbeat_mmu_cache_summary(line: str) -> dict[str, Any]:
         "fill": _decimal_or_none(fields.get("mmuc_fill")),
         "flush": _decimal_or_none(fields.get("mmuc_flush")),
         "flush_page": _decimal_or_none(fields.get("mmuc_flush_page")),
+        "collision": _decimal_or_none(fields.get("mmuc_col")),
+        "hit_4k": _decimal_or_none(fields.get("mmuc_hit4k")),
+        "hit_2m": _decimal_or_none(fields.get("mmuc_hit2m")),
+        "hit_1g": _decimal_or_none(fields.get("mmuc_hit1g")),
+        "hit_512g": _decimal_or_none(fields.get("mmuc_hit512g")),
+        "fill_4k": _decimal_or_none(fields.get("mmuc_fill4k")),
+        "fill_2m": _decimal_or_none(fields.get("mmuc_fill2m")),
+        "fill_1g": _decimal_or_none(fields.get("mmuc_fill1g")),
+        "fill_512g": _decimal_or_none(fields.get("mmuc_fill512g")),
+        "collision_4k": _decimal_or_none(fields.get("mmuc_col4k")),
+        "collision_2m": _decimal_or_none(fields.get("mmuc_col2m")),
+        "collision_1g": _decimal_or_none(fields.get("mmuc_col1g")),
+        "collision_512g": _decimal_or_none(fields.get("mmuc_col512g")),
     }
 
 

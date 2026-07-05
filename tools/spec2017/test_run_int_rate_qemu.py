@@ -874,7 +874,10 @@ class RunIntRateQemuTests(unittest.TestCase):
         summary = runner._heartbeat_mmu_cache_summary(
             "LINX_HEARTBEAT count=100 pc=0x1 bpc=0x2 "
             "mmuc_hit=11 mmuc_miss=22 mmuc_fill=33 "
-            "mmuc_flush=4 mmuc_flush_page=5"
+            "mmuc_flush=4 mmuc_flush_page=5 mmuc_col=6 "
+            "mmuc_hit4k=7 mmuc_hit2m=8 mmuc_hit1g=9 mmuc_hit512g=10 "
+            "mmuc_fill4k=12 mmuc_fill2m=13 mmuc_fill1g=14 mmuc_fill512g=15 "
+            "mmuc_col4k=16 mmuc_col2m=17 mmuc_col1g=18 mmuc_col512g=19"
         )
 
         self.assertEqual(summary["hit"], 11)
@@ -882,6 +885,19 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(summary["fill"], 33)
         self.assertEqual(summary["flush"], 4)
         self.assertEqual(summary["flush_page"], 5)
+        self.assertEqual(summary["collision"], 6)
+        self.assertEqual(summary["hit_4k"], 7)
+        self.assertEqual(summary["hit_2m"], 8)
+        self.assertEqual(summary["hit_1g"], 9)
+        self.assertEqual(summary["hit_512g"], 10)
+        self.assertEqual(summary["fill_4k"], 12)
+        self.assertEqual(summary["fill_2m"], 13)
+        self.assertEqual(summary["fill_1g"], 14)
+        self.assertEqual(summary["fill_512g"], 15)
+        self.assertEqual(summary["collision_4k"], 16)
+        self.assertEqual(summary["collision_2m"], 17)
+        self.assertEqual(summary["collision_1g"], 18)
+        self.assertEqual(summary["collision_512g"], 19)
 
     def test_heartbeat_frame_stats_summary_parses_template_counts(self) -> None:
         summary = runner._heartbeat_frame_stats_summary(

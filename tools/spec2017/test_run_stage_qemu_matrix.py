@@ -12,6 +12,37 @@ import run_stage_qemu_matrix as matrix
 
 
 class StageQemuMatrixTests(unittest.TestCase):
+    def test_format_mmu_cache_stats_includes_split_counters(self) -> None:
+        text = matrix._format_mmu_cache_stats(
+            {
+                "heartbeat_mmu_cache": {
+                    "hit": 11,
+                    "miss": 22,
+                    "fill": 33,
+                    "flush": 4,
+                    "flush_page": 5,
+                    "collision": 6,
+                    "hit_4k": 7,
+                    "hit_2m": 8,
+                    "hit_1g": 9,
+                    "hit_512g": 10,
+                    "fill_4k": 12,
+                    "fill_2m": 13,
+                    "fill_1g": 14,
+                    "fill_512g": 15,
+                    "collision_4k": 16,
+                    "collision_2m": 17,
+                    "collision_1g": 18,
+                    "collision_512g": 19,
+                }
+            }
+        )
+
+        self.assertIn("mmuc=h11/m22/f33/flush4/pflush5/col6", text)
+        self.assertIn("size=h4k7/h2m8/h1g9/h512g10", text)
+        self.assertIn("f4k12/f2m13/f1g14/f512g15", text)
+        self.assertIn("c4k16/c2m17/c1g18/c512g19", text)
+
     def test_template_chain_is_forwarded_to_child_env(self) -> None:
         captured_envs: list[dict[str, str]] = []
         captured_cmds: list[list[str]] = []

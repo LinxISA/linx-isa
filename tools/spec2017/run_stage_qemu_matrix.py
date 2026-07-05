@@ -451,13 +451,31 @@ def _format_mmu_cache_stats(row: dict[str, Any]) -> str:
     stats = row.get("heartbeat_mmu_cache")
     if not isinstance(stats, dict) or stats.get("hit") is None:
         return ""
-    return (
+    text = (
         f" mmuc=h{stats.get('hit')}"
         f"/m{stats.get('miss')}"
         f"/f{stats.get('fill')}"
         f"/flush{stats.get('flush')}"
         f"/pflush{stats.get('flush_page')}"
     )
+    if stats.get("collision") is not None:
+        text += f"/col{stats.get('collision')}"
+    if stats.get("hit_4k") is not None:
+        text += (
+            f" size=h4k{stats.get('hit_4k')}"
+            f"/h2m{stats.get('hit_2m')}"
+            f"/h1g{stats.get('hit_1g')}"
+            f"/h512g{stats.get('hit_512g')}"
+            f" f4k{stats.get('fill_4k')}"
+            f"/f2m{stats.get('fill_2m')}"
+            f"/f1g{stats.get('fill_1g')}"
+            f"/f512g{stats.get('fill_512g')}"
+            f" c4k{stats.get('collision_4k')}"
+            f"/c2m{stats.get('collision_2m')}"
+            f"/c1g{stats.get('collision_1g')}"
+            f"/c512g{stats.get('collision_512g')}"
+        )
+    return text
 
 
 def _format_frame_stats(row: dict[str, Any]) -> str:
