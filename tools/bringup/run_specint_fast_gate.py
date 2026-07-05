@@ -211,6 +211,53 @@ def _env_bool(name: str, default: bool = False) -> bool:
     raise SystemExit(f"error: {name} must be a boolean, got {value!r}")
 
 
+def _format_bytes(value: int) -> str:
+    units = ("B", "KiB", "MiB", "GiB", "TiB")
+    amount = float(value)
+    for unit in units:
+        if amount < 1024 or unit == units[-1]:
+            if unit == "B":
+                return f"{int(amount)} {unit}"
+            return f"{amount:.1f} {unit}"
+        amount /= 1024
+    return f"{value} B"
+
+
+def _nearest_existing_parent(path: Path) -> Path:
+    probe = path if path.exists() else path.parent
+    while not probe.exists() and probe != probe.parent:
+        probe = probe.parent
+    return probe
+
+
+def _free_bytes_for_path(path: Path) -> int:
+    stat = os.statvfs(_nearest_existing_parent(path))
+    return stat.f_bavail * stat.f_frsize
+
+
+def _check_out_dir_free_space(out_dir: Path, min_free_gb: float) -> dict[str, Any]:
+    if min_free_gb < 0:
+        raise SystemExit("error: --min-free-gb must be >= 0")
+    free_bytes = _free_bytes_for_path(out_dir)
+    required_bytes = int(min_free_gb * (1024**3))
+    info = {
+        "out_dir": str(out_dir),
+        "free_bytes": free_bytes,
+        "free_human": _format_bytes(free_bytes),
+        "min_free_gb": min_free_gb,
+        "required_bytes": required_bytes,
+        "required_human": _format_bytes(required_bytes),
+    }
+    if required_bytes and free_bytes < required_bytes:
+        raise SystemExit(
+            "error: insufficient free space for SPECint gate output at "
+            f"{out_dir}: have {_format_bytes(free_bytes)}, require at least "
+            f"{_format_bytes(required_bytes)}; remove old workloads/generated "
+            "artifacts or rerun with --min-free-gb 0 for a deliberate small run"
+        )
+    return info
+
+
 def _default_qemu() -> str:
     env = os.environ.get("QEMU", "").strip()
     if env:
@@ -867,6 +914,15 @@ def main(argv: list[str]) -> int:
         ),
     )
     parser.add_argument("--continue-on-fail", action="store_true")
+    parser.add_argument(
+        "--min-free-gb",
+        type=float,
+        default=_env_float("SPEC_MIN_FREE_GB", _env_float("LINX_SPEC_MIN_FREE_GB", 4.0)),
+        help=(
+            "Fail before launching QEMU when the output filesystem has less "
+            "than this much free space. Use 0 to disable for deliberate small runs."
+        ),
+    )
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args(argv)
 
@@ -886,6 +942,8 @@ def main(argv: list[str]) -> int:
         raise SystemExit("error: --guest-heartbeat-sec must be >= 0")
     if args.dump_prefix_bytes < 0:
         raise SystemExit("error: --dump-prefix-bytes must be >= 0")
+    if args.min_free_gb < 0:
+        raise SystemExit("error: --min-free-gb must be >= 0")
 
     spec_dir = Path(os.path.expanduser(args.spec_dir)).resolve()
     runner = Path(os.path.expanduser(args.runner)).resolve()
@@ -1077,6 +1135,7 @@ def main(argv: list[str]) -> int:
         )
 
     suites = _select_suites(args.profile, args.suite)
+    space_info = _check_out_dir_free_space(out_dir, args.min_free_gb) if not args.dry_run else {}
     out_dir.mkdir(parents=True, exist_ok=True)
 
     started = _utc_now()
@@ -1233,6 +1292,8 @@ def main(argv: list[str]) -> int:
         "guest_heartbeat_sec": args.guest_heartbeat_sec,
         "symbolize_heartbeat": bool(args.symbolize_heartbeat),
         "fail_9p_timeout": bool(args.fail_9p_timeout),
+        "min_free_gb": args.min_free_gb,
+        "preflight_free_space": space_info,
         "suites": rows,
     }
     summary_json = out_dir / "specint_fast_gate_summary.json"

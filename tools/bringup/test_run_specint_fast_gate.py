@@ -45,6 +45,20 @@ class SpecintFastGateTests(unittest.TestCase):
         self.assertFalse(gate._auto_fail_9p_timeout(large, "9p"))
         self.assertFalse(gate._auto_fail_9p_timeout(units[0], ""))
 
+    def test_out_dir_space_check_records_free_space(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            info = gate._check_out_dir_free_space(Path(td) / "nested" / "out", 0)
+
+        self.assertGreaterEqual(info["free_bytes"], 0)
+        self.assertEqual(info["min_free_gb"], 0)
+        self.assertEqual(info["required_bytes"], 0)
+        self.assertIn("free_human", info)
+
+    def test_out_dir_space_check_fails_before_qemu_when_too_small(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            with self.assertRaisesRegex(SystemExit, "insufficient free space"):
+                gate._check_out_dir_free_space(Path(td), 1024 * 1024)
+
     def test_format_failure_details_includes_tlb_fill_stats(self) -> None:
         text = gate._format_failure_details(
             {

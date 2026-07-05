@@ -98,6 +98,47 @@ lookup counts and low miss counts; and profile `525.x264_r` separately as a
 9p/kernel transport row. Keep `999.specrand_ir` as the strict correctness
 sentinel before and after each speed experiment.
 
+### Latest MMU-Cache Train-All Rerun
+
+`workloads/generated/specint-train-all-mmuc-current-qemu-20260705-r3/`
+reruns the full train profile on the current submitted QEMU binary
+`emulator/qemu/build-linx/qemu-system-linx64`, version
+`QEMU emulator version 10.2.50 (v10.2.0-1027-gda8d7cae165)`, with
+`--qemu-mmu-cache`, MMU-cache stats, TLB stats, TLB-fill stats, TB stats, and
+coarse QEMU heartbeats enabled. The first attempt
+`specint-train-all-mmuc-current-qemu-20260705-r2` filled the filesystem before
+the aggregate summary could be written, so `run_specint_fast_gate.py` now has a
+configurable output-space preflight (`--min-free-gb`, default 4 GiB; disable
+with `--min-free-gb 0`). The successful r3 summary records 16.1 GiB free before
+launch and writes the preflight evidence into `specint_fast_gate_summary.json`.
+
+The all-row result remains correctness-red: only `999.specrand_ir` passes the
+strict train hash, while all nine real SPECint rows are heartbeat-backed
+`live-timeout` rows with BPC site progress, no panic, and no user trap. Compared
+with the current no-MMU-cache train ledger
+`workloads/generated/specint-train-all-current-qemu-20260705-r2/`, the cache
+helps the first five long rows and is effectively neutral for the remaining
+four:
+
+| Benchmark | Transport | Count delta | MMUC hit/miss | TLB fill/user | Last BPC |
+| --- | --- | ---: | ---: | ---: | --- |
+| `500.perlbench_r` | initramfs | +3999999997 (+8.7%) | 2198896 / 2082856 | 4092396 / 1822676 | `0x15556da27e` |
+| `502.gcc_r` | initramfs | +2000000002 (+8.0%) | 2503842 / 3262410 | 5105494 / 2057805 | `0x1555c74f7a` |
+| `505.mcf_r` | initramfs | +4999999998 (+12.2%) | 124361308 / 11454644 | 135662569 / 133789530 | `0x155555cd12` |
+| `520.omnetpp_r` | initramfs | +1000000000 (+6.2%) | 6725905 / 3509227 | 8845208 / 5068914 | `0x1555667930` |
+| `523.xalancbmk_r` | initramfs | +999999999 (+4.8%) | 3262604 / 1981850 | 4773485 / 2506841 | `0x1555679388` |
+| `525.x264_r` | 9p | -6 | 16309 / 1853208 | 1869500 / 95 | `0xffffffff80114248` |
+| `531.deepsjeng_r` | initramfs | -4 | 4527574 / 5516851 | 9318193 / 7232302 | `0x1555560f70` |
+| `541.leela_r` | initramfs | -5 | 126177 / 1881179 | 1948184 / 47630 | `0x155558537c` |
+| `557.xz_r` | initramfs | 0 | 2732022 / 2535270 | 3413919 / 1130378 | `0x155558cc0a` |
+
+Loop update: keep the MMU cache opt-in/default-off until it closes more than
+bounded progress. The next speed loop should target Linux TLBI
+reduction/batching around the recurring hot PCs (`0xffffffff800db20c`,
+`0xffffffff800daf1a`, `0xffffffff800d94e0`), QEMU soft-MMU/probe/data-load
+fast paths for rows such as `505.mcf_r`, and a separate 9p/kernel transport
+path for `525.x264_r`, where the latest run records only 95 user TLB fills.
+
 ### Clean `505.mcf_r` Post-Start Profile and Frame-Restore A/B
 
 `workloads/generated/specint-profile-505-clean-qemu-20260706-r1/` samples the
