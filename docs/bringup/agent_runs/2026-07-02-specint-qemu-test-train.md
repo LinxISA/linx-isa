@@ -148,6 +148,7 @@ Artifact roots:
 - `workloads/generated/specint-500-testpl-enframe-postacre-queue-qemu-20260705-r1`
 - `workloads/generated/specint-500-testpl-terminal8534-queue-acre-qemu-20260705-r1`
 - `workloads/generated/specint-500-testpl-getmeta-slot-memtrace-qemu-20260706-r1`
+- `workloads/generated/specint-500-testpl-malloc-writer-callring-qemu-20260706-r1`
 
 Command shape for the exact-BPC ACRE run:
 
@@ -243,6 +244,22 @@ Result:
   `sdi t#2, [u#1, 8]`, with `mem_va=0x8`, `a0=0`, and all captured T/U queues
   zero; its origin remains the recurrent `fcntl.c` ACRC/BSTOP path
   (`orig_tpc=0x1555827cb8`).
+- The malloc-writer call-ring probe
+  `specint-500-testpl-malloc-writer-callring-qemu-20260706-r1` keeps the exact
+  metadata-slot memory trace enabled but count-bounds a PC watch on the two
+  musl `malloc.c` `.LBB4_13` zero-byte store sites. In this timing shape the
+  exact slot does not recur inside the count window, but the PC watch emits
+  call rings for the writer shape. The first watched store at
+  `pc=0x1555829a94`, linked `0x402d4a94`, occurs at `count=3180001657` with
+  `a0=0x3`, `a1=0x3fefed0470`, `a2=0x3fefed046c`, and
+  `ra=0x155582908c`; the second occurs at `count=3180002661` with `a0=0xc`,
+  `a1=0x3fefedab70`, `a2=0x3fefedab6c`. The caller ring for the first hit
+  resolves the producer path as `hv.c` hash allocation through
+  `S_share_hek_flags`, `Perl_safesysmalloc(0x29)`, `malloc`,
+  `__libc_malloc_impl`, and `enframe`. The run's terminal shifts again to
+  `sv.c` `.LBB49_18`, linked `0x4019c49c`, instruction
+  `sd a0, [u#1, t#1<<3]`, with `addr=0x0` and the same recurrent
+  `fcntl.c` origin.
 
 Tool update:
 
@@ -268,7 +285,10 @@ queues zero, while the post-ACRE and terminal-`get_meta` queue probes show
 narrow instrumentation can shift terminal traps into live-timeout and that the
 shifted terminal blocks normally build valid operands. The exact metadata-slot
 trace ties the watched bad slot to allocator byte stores/loads before a later
-terminal shift, so the next loop should trace the allocator metadata lifecycle
+terminal shift. The writer call-ring packet shows that at least one recurring
+zero-store shape is reached through normal Perl hash allocation into
+`safesysmalloc(0x29)` and musl `enframe`, not a spontaneous isolated write.
+The next loop should trace allocator metadata lifecycle with caller context
 around `malloc.c` `.LBB4_13`, `realloc.c` `.LBB0_37/.LBB0_42`, and `free.c`
 `.LBB0_11/.LBB0_15`, or the first resumed instruction after ACRE staging, with
 the narrowest possible PC/BPC/count filters. Keep ACRE traces BPC/count-
