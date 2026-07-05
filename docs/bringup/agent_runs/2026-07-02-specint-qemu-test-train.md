@@ -147,6 +147,7 @@ Artifact roots:
 - `workloads/generated/specint-500-testpl-acre-restore-window-qemu-20260705-r1`
 - `workloads/generated/specint-500-testpl-enframe-postacre-queue-qemu-20260705-r1`
 - `workloads/generated/specint-500-testpl-terminal8534-queue-acre-qemu-20260705-r1`
+- `workloads/generated/specint-500-testpl-getmeta-slot-memtrace-qemu-20260706-r1`
 
 Command shape for the exact-BPC ACRE run:
 
@@ -229,6 +230,19 @@ Result:
   for example `count=3170257044`, `pc=0x1555828534`, `bpc=0x155582851a`
   has `a0=0x155584a360`, `tq0=0xfffffffffffffff0`, `tq1=0xd0`,
   `tq2=0xd0`, `uq0=0x3fefeffa10`, and `uq1=0x3fefeffa20`.
+- The exact metadata-slot memory trace
+  `specint-500-testpl-getmeta-slot-memtrace-qemu-20260706-r1` watches
+  `0x3fefedabc0`, the prior bad `get_meta` `[u#2, -16]` slot. It reproduces a
+  `user-trap` quickly with heartbeat site progress and records 44 memory
+  events against the watched byte range. The trace repeatedly sees zero byte
+  stores from musl `malloc.c` `.LBB4_13`: linked `0x402d4a94`
+  (`sb a4, [a2, t#1]`) and linked `0x402d4aa4` (`sbi a4, [a1, -9]`), followed
+  by zero byte loads from `realloc.c` (`0x402d4ecc`, `0x402d4f00`) and
+  `free.c` (`0x402d337c`, `0x402d33aa`). The final terminal shifts again to
+  `pp_sys.c` `.LBB8_39`, linked `0x4013d76c`, instruction
+  `sdi t#2, [u#1, 8]`, with `mem_va=0x8`, `a0=0`, and all captured T/U queues
+  zero; its origin remains the recurrent `fcntl.c` ACRC/BSTOP path
+  (`orig_tpc=0x1555827cb8`).
 
 Tool update:
 
@@ -252,9 +266,11 @@ same values into live user T/U queues before execution resumes. The
 lower-perturbation run faults later at the same `enframe` PC/BPC with all
 queues zero, while the post-ACRE and terminal-`get_meta` queue probes show
 narrow instrumentation can shift terminal traps into live-timeout and that the
-shifted terminal blocks normally build valid operands. The next loop should
-trace the producer/caller path that hands bad allocator metadata into
-`get_meta`/`enframe`, or the first resumed instruction after ACRE staging, with
+shifted terminal blocks normally build valid operands. The exact metadata-slot
+trace ties the watched bad slot to allocator byte stores/loads before a later
+terminal shift, so the next loop should trace the allocator metadata lifecycle
+around `malloc.c` `.LBB4_13`, `realloc.c` `.LBB0_37/.LBB0_42`, and `free.c`
+`.LBB0_11/.LBB0_15`, or the first resumed instruction after ACRE staging, with
 the narrowest possible PC/BPC/count filters. Keep ACRE traces BPC/count-
 filtered; broad ACRE tracing is observable perturbation on this row.
 
