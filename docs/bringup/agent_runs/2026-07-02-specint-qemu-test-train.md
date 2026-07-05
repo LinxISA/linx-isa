@@ -157,6 +157,8 @@ Artifact roots:
 - `workloads/generated/specint-500-testpl-entersub-faultpc-qemu-20260706-r1`
 - `workloads/generated/specint-500-testpl-entersub-match-tq0-zero-qemu-20260706-r1`
 - `workloads/generated/specint-500-testpl-minfault-match-a0-qemu-20260706-r1`
+- `workloads/generated/specint-500-testpl-entersub-producer-watch-qemu-20260706-r1`
+- `workloads/generated/specint-500-testpl-entersub-producer-match-tq0-zero-qemu-20260706-r1`
 
 Command shape for the exact-BPC ACRE run:
 
@@ -375,6 +377,36 @@ Result:
   heartbeat-backed `live-timeout` with site progress. Treat this as tool
   validation plus perturbation evidence, not as a clean row-2 correctness
   boundary.
+- The producer-side PC-watch run
+  `specint-500-testpl-entersub-producer-watch-qemu-20260706-r1` moves the
+  watch point earlier in `Perl_pp_entersub` to runtime `0x155567e512`, linked
+  `0x40129512`, the `sdi t#1, [sp, 296]` saved-pointer producer before the
+  terminal block. It records QEMU source head
+  `1273ef5381b562ddc2e62dca1b2731dd554055d3`,
+  tracked-clean status, and a built binary version string with `-dirty`.
+  The run ends as heartbeat-backed `live-timeout`, with
+  `heartbeat_running=true`, `heartbeat_site_progress=true`,
+  `heartbeat_recent_unique_sites=6`, and count delta `6999999997`.
+  It emits eight `linx_pc_watch` rows at the producer. All eight have nonzero
+  saved-pointer source operands in `tq0`, for example
+  `tq0=0x3fefea32c0` at `count=3278137939`,
+  `tq0=0x3fefea3518` at `count=3278556998`, and
+  `tq0=0x3fefe156d0` at `count=3311611336`; `uq0` and `uq1` remain zero in
+  those producer samples. The final traced `mmap` syscall sample is again the
+  musl return window at `tpc=0x155582e9e6`, `pc_next=0x155582e9ea`.
+- The stricter producer matcher
+  `specint-500-testpl-entersub-producer-match-tq0-zero-qemu-20260706-r1`
+  watches the same producer PC but prints only if
+  `LINX_DEBUG_PC_WATCH_MATCH_REG=tq0` equals zero. It reproduces a terminal
+  `user-trap` quickly with heartbeat site progress and no PC-watch lines, so
+  no zero `tq0` producer event was observed before the failure. The terminal
+  shifts to the recurrent `Perl_do_exec3` indexed load:
+  `addr=0x0`, `tpc=0x15555c09e6`, `bpc=0x15555c09d4`,
+  `orig_tpc=0x1555837f3c`, and `orig_bpc=0x1555837f1c`; with load bias
+  `0x1515555000`, this maps to linked `0x4006b9e6` in `doio.c`, while the
+  origin maps to the `sccp` `ACRC`/`BSTOP` path. The last syscall trace is
+  again `nr=222` at `tpc=0x155582e9e6`, `bpc=0x155582e9c6`,
+  `pc_next=0x155582e9ea`, `a1=0x2000`, and `ra=0x1555829780`.
 
 Tool update:
 
@@ -419,11 +451,17 @@ pointer operands, but tracing inside that hot block perturbs the endpoint into
 heartbeat-backed live-timeout. The `MATCH_REG` probes prove the new source
 matcher can capture a single matched PC-watch packet, but also show that even a
 one-hit filtered hook at or near the hot terminal path can shift row 2. The
-next loop should avoid helper hooks at `0x4012968a..0x40129690`: trace the
-producer of the `[sp+296]` saved-pointer slot before entering the terminal
-block, or add a lower-overhead non-printing counter/checkpoint outside the hot
-block and print only on the later terminal fault. Preserve the call ring and
-the musl `fcntl.c`/`mmap.c` `ACRC`/`BSTOP` origin correlation. Keep ACRE traces
+producer-side PC-watch rows show the `[sp+296]` saved-pointer producer normally
+stores nonzero `tq0` operands, and the one-hit `tq0==0` producer matcher
+reproduces the `Perl_do_exec3` zero-table trap without any producer match.
+That moves the current hypothesis away from the `0x40129512` producer store
+itself and toward later saved-slot preservation, stack-slot overwrite, or
+queue/control-state replay between the syscall-return path and repeated Perl
+body execution. The next loop should avoid helper hooks at
+`0x4012968a..0x40129690`; if more `Perl_pp_entersub` evidence is needed, add a
+lower-overhead non-printing checkpoint outside the hot block and print only on
+the later terminal fault. Preserve the call ring and the musl
+`fcntl.c`/`mmap.c` `ACRC`/`BSTOP` origin correlation. Keep ACRE traces
 BPC/count-filtered and avoid terminal-address-only filters as primary evidence,
 because broad ACRE, over-narrow fault filters, terminal-block mem/fault
 tracing, and even matched terminal-block PC hooks all perturb this row.
