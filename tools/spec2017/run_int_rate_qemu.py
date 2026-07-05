@@ -798,6 +798,7 @@ def _apply_qemu_debug_env(
     qemu_trap_delivery_trace_limit: int = 0,
     qemu_trap_delivery_trace_filters: dict[str, str] | None = None,
     qemu_acre_trace: dict[str, str] | None = None,
+    qemu_queue_trace: dict[str, str] | None = None,
     qemu_tb_stats: bool = False,
     qemu_fret_stk_trace: dict[str, str] | None = None,
     qemu_fentry_trace: dict[str, str] | None = None,
@@ -872,6 +873,9 @@ def _apply_qemu_debug_env(
     for name, value in (qemu_acre_trace or {}).items():
         if str(value).strip():
             qemu_env[name] = str(value).strip()
+    for name, value in (qemu_queue_trace or {}).items():
+        if str(value).strip():
+            qemu_env[name] = str(value).strip()
     if qemu_tb_stats:
         qemu_env["LINX_QEMU_TB_STATS"] = "1"
     for name, value in (qemu_fret_stk_trace or {}).items():
@@ -907,6 +911,7 @@ def _qemu_debug_env_summary(qemu_env: dict[str, str]) -> dict[str, str]:
         "LINX_HEARTBEAT_INTERVAL",
         "LINX_MEM_TRACE",
         "LINX_ACRE_TRACE",
+        "LINX_QUEUE_TRACE",
         "LINX_QEMU_",
         "LINX_SYSCALL_TRACE",
     )
@@ -963,6 +968,22 @@ QEMU_ACRE_TRACE_ARGS = {
 
 QEMU_ACRE_TRACE_BOOL_ARGS = {
     "qemu_acre_trace_regs": "LINX_QEMU_ACRE_TRACE_REGS",
+}
+
+QEMU_QUEUE_TRACE_ARGS = {
+    "qemu_queue_trace_pc": "LINX_QEMU_QUEUE_TRACE_PC",
+    "qemu_queue_trace_pc_lo": "LINX_QEMU_QUEUE_TRACE_PC_LO",
+    "qemu_queue_trace_pc_hi": "LINX_QEMU_QUEUE_TRACE_PC_HI",
+    "qemu_queue_trace_bpc": "LINX_QEMU_QUEUE_TRACE_BPC",
+    "qemu_queue_trace_bpc_lo": "LINX_QEMU_QUEUE_TRACE_BPC_LO",
+    "qemu_queue_trace_bpc_hi": "LINX_QEMU_QUEUE_TRACE_BPC_HI",
+    "qemu_queue_trace_count_lo": "LINX_QEMU_QUEUE_TRACE_COUNT_LO",
+    "qemu_queue_trace_count_hi": "LINX_QEMU_QUEUE_TRACE_COUNT_HI",
+    "qemu_queue_trace_limit": "LINX_QEMU_QUEUE_TRACE_LIMIT",
+}
+
+QEMU_QUEUE_TRACE_BOOL_ARGS = {
+    "qemu_queue_trace_all": "LINX_QEMU_QUEUE_TRACE_ALL",
 }
 
 QEMU_PC_WATCH_ARGS = {
@@ -1101,6 +1122,20 @@ def _qemu_acre_trace_from_args(args: argparse.Namespace) -> dict[str, str]:
             trace[env_name] = "1"
     if bool(getattr(args, "qemu_acre_trace", False)) or trace:
         trace["LINX_QEMU_ACRE_TRACE"] = "1"
+    return trace
+
+
+def _qemu_queue_trace_from_args(args: argparse.Namespace) -> dict[str, str]:
+    trace: dict[str, str] = {}
+    for attr, env_name in QEMU_QUEUE_TRACE_ARGS.items():
+        value = str(getattr(args, attr, "") or "").strip()
+        if value:
+            trace[env_name] = value
+    for attr, env_name in QEMU_QUEUE_TRACE_BOOL_ARGS.items():
+        if bool(getattr(args, attr, False)):
+            trace[env_name] = "1"
+    if bool(getattr(args, "qemu_queue_trace", False)) or trace:
+        trace["LINX_QEMU_QUEUE_TRACE"] = "1"
     return trace
 
 
@@ -2928,6 +2963,7 @@ def _run_qemu(
     qemu_trap_delivery_trace_limit: int,
     qemu_trap_delivery_trace_filters: dict[str, str],
     qemu_acre_trace: dict[str, str],
+    qemu_queue_trace: dict[str, str],
     qemu_tb_stats: bool,
     qemu_fret_stk_trace: dict[str, str],
     qemu_fentry_trace: dict[str, str],
@@ -3009,6 +3045,7 @@ def _run_qemu(
         qemu_trap_delivery_trace_limit=qemu_trap_delivery_trace_limit,
         qemu_trap_delivery_trace_filters=qemu_trap_delivery_trace_filters,
         qemu_acre_trace=qemu_acre_trace,
+        qemu_queue_trace=qemu_queue_trace,
         qemu_tb_stats=qemu_tb_stats,
         qemu_fret_stk_trace=qemu_fret_stk_trace,
         qemu_fentry_trace=qemu_fentry_trace,
@@ -3193,6 +3230,7 @@ def _run_qemu(
     tlb_fault_trace = _tlb_fault_trace_summary(text)
     trap_delivery_trace = _trap_delivery_trace_summary(text)
     acre_trace = _acre_trace_summary(text)
+    queue_trace = _queue_trace_summary(text)
     mprotect_trace = _mprotect_trace_summary(text)
     linux_vm_fault_trace = _linux_vm_fault_trace_summary(text)
     heartbeat_stall = classification["heartbeat_stall"]
@@ -3232,6 +3270,8 @@ def _run_qemu(
         "qemu_trap_delivery_trace_filters": dict(qemu_trap_delivery_trace_filters),
         "qemu_acre_trace": bool(qemu_acre_trace),
         "qemu_acre_trace_filters": dict(qemu_acre_trace),
+        "qemu_queue_trace": bool(qemu_queue_trace),
+        "qemu_queue_trace_filters": dict(qemu_queue_trace),
         "qemu_tb_stats": bool(qemu_tb_stats),
         "terminal_failure_grace_sec": terminal_failure_grace_sec,
         "qemu_rc": qemu_rc,
@@ -3344,6 +3384,10 @@ def _run_qemu(
         "acre_trace_count": acre_trace["count"],
         "acre_trace_last": acre_trace["last"],
         "acre_trace_samples": acre_trace["samples"],
+        "queue_trace_seen": queue_trace["seen"],
+        "queue_trace_count": queue_trace["count"],
+        "queue_trace_last": queue_trace["last"],
+        "queue_trace_samples": queue_trace["samples"],
         "mprotect_trace_seen": mprotect_trace["seen"],
         "mprotect_trace_count": mprotect_trace["count"],
         "mprotect_trace_last": mprotect_trace["last"],
@@ -4732,6 +4776,38 @@ def _acre_trace_summary(text: str) -> dict[str, Any]:
     }
 
 
+def _queue_trace_summary(text: str) -> dict[str, Any]:
+    lines = re.findall(r"^LINX_QUEUE_TRACE .*$", text, flags=re.MULTILINE)
+    samples: list[dict[str, Any]] = []
+    int_keys = {
+        "seq",
+        "count",
+        "acr",
+        "in_body",
+        "blocktype",
+        "brtype",
+        "call_ra_set",
+        "call_setret_pending",
+    }
+    for line in lines[-8:]:
+        fields = _heartbeat_fields(line)
+        sample: dict[str, Any] = {"line": line[:1024]}
+        for key, value in fields.items():
+            if key in int_keys:
+                sample[key] = _decimal_or_none(value)
+            elif value.lower().startswith("0x"):
+                sample[key] = value.lower()
+            else:
+                sample[key] = value
+        samples.append(sample)
+    return {
+        "seen": bool(lines),
+        "count": len(lines),
+        "last": lines[-1][:1024] if lines else "",
+        "samples": samples,
+    }
+
+
 def _marked_log_records(text: str, marker: str) -> list[str]:
     return re.findall(rf"{re.escape(marker)} [^\r\n]*", text)
 
@@ -5329,6 +5405,27 @@ def main(argv: list[str]) -> int:
         help="Set LINX_QEMU_ACRE_TRACE_REGS=1 for full GPR dumps on matching ACRE trace rows.",
     )
     parser.add_argument(
+        "--qemu-queue-trace",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_QUEUE_TRACE", False),
+        help="Set LINX_QEMU_QUEUE_TRACE=1 for bounded queue/control-state transition diagnostics.",
+    )
+    parser.add_argument("--qemu-queue-trace-pc", default=os.environ.get("LINX_SPEC_QEMU_QUEUE_TRACE_PC", ""))
+    parser.add_argument("--qemu-queue-trace-pc-lo", default=os.environ.get("LINX_SPEC_QEMU_QUEUE_TRACE_PC_LO", ""))
+    parser.add_argument("--qemu-queue-trace-pc-hi", default=os.environ.get("LINX_SPEC_QEMU_QUEUE_TRACE_PC_HI", ""))
+    parser.add_argument("--qemu-queue-trace-bpc", default=os.environ.get("LINX_SPEC_QEMU_QUEUE_TRACE_BPC", ""))
+    parser.add_argument("--qemu-queue-trace-bpc-lo", default=os.environ.get("LINX_SPEC_QEMU_QUEUE_TRACE_BPC_LO", ""))
+    parser.add_argument("--qemu-queue-trace-bpc-hi", default=os.environ.get("LINX_SPEC_QEMU_QUEUE_TRACE_BPC_HI", ""))
+    parser.add_argument("--qemu-queue-trace-count-lo", default=os.environ.get("LINX_SPEC_QEMU_QUEUE_TRACE_COUNT_LO", ""))
+    parser.add_argument("--qemu-queue-trace-count-hi", default=os.environ.get("LINX_SPEC_QEMU_QUEUE_TRACE_COUNT_HI", ""))
+    parser.add_argument("--qemu-queue-trace-limit", default=os.environ.get("LINX_SPEC_QEMU_QUEUE_TRACE_LIMIT", ""))
+    parser.add_argument(
+        "--qemu-queue-trace-all",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_QUEUE_TRACE_ALL", False),
+        help="Set LINX_QEMU_QUEUE_TRACE_ALL=1 to print every matching queue trace row instead of changed state only.",
+    )
+    parser.add_argument(
         "--qemu-tb-stats",
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_TB_STATS", False),
@@ -5743,6 +5840,7 @@ def main(argv: list[str]) -> int:
         or qemu_trap_delivery_trace_filters
     )
     qemu_acre_trace = _qemu_acre_trace_from_args(args)
+    qemu_queue_trace = _qemu_queue_trace_from_args(args)
     qemu_pc_watch = _qemu_pc_watch_from_args(args)
     qemu_syscall_trace = _qemu_syscall_trace_from_args(args)
     qemu_mem_trace = _qemu_mem_trace_from_args(args)
@@ -5944,6 +6042,7 @@ def main(argv: list[str]) -> int:
                     args.qemu_trap_delivery_trace_limit,
                     qemu_trap_delivery_trace_filters,
                     qemu_acre_trace,
+                    qemu_queue_trace,
                     args.qemu_tb_stats,
                     qemu_fret_stk_trace,
                     qemu_fentry_trace,

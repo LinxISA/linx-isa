@@ -1,5 +1,121 @@
 # SPECint QEMU test/train bring-up, 2026-07-02
 
+## 2026-07-05 continuation: QEMU queue-transition trace for `500.perlbench_r`
+
+Artifact roots:
+
+- `workloads/generated/specint-500-testpl-enframe-queuetrace-qemu-20260705-r1`
+- `workloads/generated/specint-500-testpl-terminal80-queuetrace-qemu-20260705-r1`
+- `workloads/generated/specint-500-testpl-entersub-queuetrace-qemu-20260705-r1`
+- `workloads/generated/specint-500-testpl-entersub-acre-qemu-20260705-r1`
+- `workloads/generated/specint-qemu-progress-analysis-500-terminal80-queuetrace-20260705-r1`
+
+Tool update:
+
+- `emulator/qemu/target/linx/helper.c` now has default-off
+  `LINX_QEMU_QUEUE_TRACE=1` / `LINX_QUEUE_TRACE=1`. It emits bounded
+  `LINX_QUEUE_TRACE` rows with PC, BPC, ACR/CSTATE, block-control state, GPRs,
+  and all scalar `tq*`/`uq*` queues. By default it prints only changed
+  queue/control states; `LINX_QEMU_QUEUE_TRACE_ALL=1` prints every matching
+  row.
+- `emulator/qemu/target/linx/translate.c` only inserts the before-instruction
+  helper for queue-trace PC matches when a PC filter is provided, so focused
+  SPEC runs do not pay a full-run helper cost.
+- `tools/spec2017/run_int_rate_qemu.py` exposes
+  `--qemu-queue-trace`, PC/BPC/count filters, `--qemu-queue-trace-limit`, and
+  `--qemu-queue-trace-all`, then records `queue_trace_seen`,
+  `queue_trace_count`, `queue_trace_last`, and `queue_trace_samples`.
+- `tools/spec2017/analyze_specint_qemu_progress.py` carries those fields into
+  JSON/Markdown reports and includes queue-trace rows in the fault-evidence
+  section.
+
+Command shape for the terminal-block queue trace:
+
+```bash
+python3 tools/spec2017/run_int_rate_qemu.py \
+  --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 \
+  --qemu emulator/qemu/build-linx/qemu-system-linx64 \
+  --kernel kernel/linux/build-linx-fixed/vmlinux \
+  --stage b --transport initramfs --input-set test \
+  --bench 500.perlbench_r --run-index 2 --timeout 120 \
+  --heartbeat-sec 15 --qemu-heartbeat-interval 1000000000 \
+  --qemu-heartbeat-same-site-warn 4 --guest-heartbeat-sec 1 \
+  --guest-child-maps-bytes 4096 --terminal-failure-grace-sec 3 \
+  --append-extra norandmaps --linux-vm-trace \
+  --qemu-fault-trace --qemu-fault-trace-regs \
+  --qemu-fault-trace-addr-lo 0x0 --qemu-fault-trace-addr-hi 0x90 \
+  --qemu-fault-trace-limit 16 \
+  --qemu-call-trace-ring --qemu-call-trace-ring-size 128 \
+  --qemu-queue-trace \
+  --qemu-queue-trace-pc-lo 0x15555bd3c6 \
+  --qemu-queue-trace-pc-hi 0x15555bd3d8 \
+  --qemu-queue-trace-bpc 0x15555bd3c6 \
+  --qemu-queue-trace-limit 64 \
+  --qemu-queue-trace-all
+```
+
+Result:
+
+- QEMU: `emulator/qemu/build-linx/qemu-system-linx64`,
+  `QEMU emulator version 10.2.50 (v10.2.0-1029-g68bebbd9e7b-dirty)`,
+  source head `68bebbd9e7b61df45f433830199ff59a49622ad1` with local queue-trace
+  instrumentation.
+- Validation: `ninja -C emulator/qemu/build-linx qemu-system-linx64` passes;
+  `python3 avs/qemu/run_callret_contract.py --qemu
+  emulator/qemu/build-linx/qemu-system-linx64` passes.
+- The exact `enframe` ACRE/queue run
+  `specint-500-testpl-enframe-queuetrace-qemu-20260705-r1` did not reach the
+  prior `0x155582998e` count/BPC window. It still failed as `user-trap`, with
+  a new terminal `addr=0x80`, `tpc=0x15555bd3d4`, `bpc=0x15555bd3c6`.
+- The terminal-block queue run
+  `specint-500-testpl-terminal80-queuetrace-qemu-20260705-r1` reproduced a
+  `user-trap` and recorded 12 queue-trace rows for linked `0x400683c6`
+  (`Perl_do_open6` / `doio.c`, `.LBB2_260`). The watched block executes
+  `sbi t#1, [u#1, 128]` at linked `0x400683d4`. Queue trace shows the block
+  can execute with nonzero queue operands, for example
+  `tq0=0x7c`, `tq1=0x3fefe040e8`, `uq0=0x3fefed2740`.
+- The same run later fails at a different block:
+  `LINX_FAULT_TRACE count=3338296786 ... tpc=0x155567e690
+  report_bpc=0x155567e67e traparg0=0x10 mem_va=0x10 cause=0x5 ...`
+  with all captured `tq0..tq3` and `uq0..uq3` zero. With load bias
+  `0x1515555000`, the terminal PC maps to linked `0x40129690` in
+  `Perl_pp_entersub` / `pp_hot.c`, `.LBB51_237`, instruction
+  `sdi u#1, [t#1, 16]`. The terminal origin again comes from a syscall-return
+  path: `orig_tpc=0x1555827cb8` maps to linked `0x402d2cb8` in
+  `fcntl.c`, while an earlier shifted terminal maps `orig_tpc=0x155583a988`
+  to linked `0x402e5988`, musl `lseek` `C.BSTOP`.
+- The follow-up run
+  `specint-500-testpl-entersub-queuetrace-qemu-20260705-r1` queue-traced the
+  actual `Perl_pp_entersub` terminal block window
+  `0x155567e67e..0x155567e694`. It ended as heartbeat-backed `live-timeout`,
+  showing trace perturbation, but recorded 63 queue rows. Normal block-entry
+  execution starts with zero queues immediately after `C.BSTART`, then builds
+  valid operands before the store: a late sample reaches `pc=0x155567e690`
+  with `tq0=0x3fefefac58`, `tq1=0x3fefea32c0`,
+  `tq2=0xffffffffffffffff`, `uq0=0x1`, and `uq1=0x2`.
+- The ACRE-filtered follow-up
+  `specint-500-testpl-entersub-acre-qemu-20260705-r1` reproduced
+  `user-trap` with heartbeat site progress but missed the intended ACRE
+  filter because the terminal moved again under instrumentation. The captured
+  low-address fault still has the same zero-queue signature:
+  `LINX_FAULT_TRACE count=3543630953 ... tpc=0x1555829bb4
+  report_bpc=0x1555829bb0 mem_va=0x0 cause=0x5 ... tq0=0x0 ...
+  uq3=0x0`.
+
+Interpretation:
+
+The queue traces confirm that the observed terminal blocks are not statically
+zero-queue. `Perl_do_open6` and the actual `Perl_pp_entersub` terminal block
+both build valid nonzero T/U operands during normal block-entry execution. The
+terminal failures still present as resumed user blocks with all queues zero,
+and broad ACRE/queue instrumentation can move the exact terminal site. This
+keeps the leading hypothesis in the trap-return/resumed-block queue
+preservation lane rather than a missing VMA or static codegen problem in the
+watched blocks. The next loop should correlate the last ACRE/trap-delivery
+restore record before the low-address fault with the first zero-queue
+body-instruction resume, using the narrowest possible PC/BPC/count filters to
+avoid perturbing row 2.
+
 ## 2026-07-05 continuation: `500.perlbench_r` ACRE/enframe queue provenance
 
 Artifact roots:

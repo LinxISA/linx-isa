@@ -683,6 +683,53 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(summary["samples"][0]["saved_tq0"], "0x155557eb10")
         self.assertEqual(summary["samples"][0]["uq0"], "0x2e")
 
+    def test_qemu_queue_trace_env_and_summary(self) -> None:
+        trace = runner._qemu_queue_trace_from_args(
+            argparse.Namespace(
+                qemu_queue_trace=False,
+                qemu_queue_trace_pc="",
+                qemu_queue_trace_pc_lo="0x155582997c",
+                qemu_queue_trace_pc_hi="0x155582998e",
+                qemu_queue_trace_bpc="0x155582997c",
+                qemu_queue_trace_bpc_lo="",
+                qemu_queue_trace_bpc_hi="",
+                qemu_queue_trace_count_lo="3282094328",
+                qemu_queue_trace_count_hi="3282128183",
+                qemu_queue_trace_limit="16",
+                qemu_queue_trace_all=True,
+            )
+        )
+        env: dict[str, str] = {}
+        runner._apply_qemu_debug_env(
+            env,
+            qemu_heartbeat_interval=0,
+            qemu_fault_trace_regs=False,
+            qemu_fault_trace_limit=0,
+            qemu_queue_trace=trace,
+        )
+
+        self.assertEqual(env["LINX_QEMU_QUEUE_TRACE"], "1")
+        self.assertEqual(env["LINX_QEMU_QUEUE_TRACE_PC_LO"], "0x155582997c")
+        self.assertEqual(env["LINX_QEMU_QUEUE_TRACE_BPC"], "0x155582997c")
+        self.assertEqual(env["LINX_QEMU_QUEUE_TRACE_COUNT_LO"], "3282094328")
+        self.assertEqual(env["LINX_QEMU_QUEUE_TRACE_ALL"], "1")
+        self.assertIn("LINX_QEMU_QUEUE_TRACE_PC_LO", runner._qemu_debug_env_summary(env))
+
+        summary = runner._queue_trace_summary(
+            "LINX_QUEUE_TRACE seq=1 count=3282094328 pc=0x155582998e "
+            "bpc=0x155582997c tpc=0x155582998e acr=2 in_body=0 "
+            "blocktype=0 brtype=1 call_ra_set=0 call_setret_pending=0 "
+            "tq0=0x6 tq1=0x7 tq2=0x15555b5000 tq3=0x0 "
+            "uq0=0x15555b5594 uq1=0x0 uq2=0x0 uq3=0x0\n"
+        )
+
+        self.assertTrue(summary["seen"])
+        self.assertEqual(summary["count"], 1)
+        self.assertEqual(summary["samples"][0]["seq"], 1)
+        self.assertEqual(summary["samples"][0]["pc"], "0x155582998e")
+        self.assertEqual(summary["samples"][0]["tq2"], "0x15555b5000")
+        self.assertEqual(summary["samples"][0]["uq0"], "0x15555b5594")
+
     def test_pc_watch_summary_captures_ring_fields(self) -> None:
         text = (
             "linx_pc_watch: pc=0x15555c09e6 hit=4 printed=4 "

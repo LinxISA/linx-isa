@@ -456,6 +456,10 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                                 "acre_trace_count": 7,
                                 "acre_trace_last": "LINX_ACRE_TRACE phase=staged saved_tq0=0x155557eb10",
                                 "acre_trace_samples": [{"phase": "staged"}],
+                                "queue_trace_seen": True,
+                                "queue_trace_count": 9,
+                                "queue_trace_last": "LINX_QUEUE_TRACE pc=0x155582998e tq0=0x6",
+                                "queue_trace_samples": [{"pc": "0x155582998e"}],
                                 "pc_watch_seen": True,
                                 "pc_watch_line_count": 8,
                                 "pc_watch_last": "LINX_PC_WATCH_REGS pc=0x15555c09e6",
@@ -508,6 +512,8 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
         self.assertEqual(row["fret_stk_trace_count"], 6)
         self.assertTrue(row["acre_trace_seen"])
         self.assertEqual(row["acre_trace_count"], 7)
+        self.assertTrue(row["queue_trace_seen"])
+        self.assertEqual(row["queue_trace_count"], 9)
         self.assertTrue(row["pc_watch_seen"])
         self.assertEqual(row["pc_watch_line_count"], 8)
         self.assertTrue(row["pc_watch_ring_seen"])
@@ -615,6 +621,9 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                     "acre_trace_seen": True,
                     "acre_trace_count": 3,
                     "acre_trace_last": "LINX_ACRE_TRACE phase=entry saved_tq0=0x155557eb10",
+                    "queue_trace_seen": True,
+                    "queue_trace_count": 4,
+                    "queue_trace_last": "LINX_QUEUE_TRACE pc=0x155582998e tq0=0x6",
                     "pc_watch_seen": True,
                     "pc_watch_line_count": 3,
                     "pc_watch_last": "LINX_PC_WATCH_REGS pc=0x15555c09e6",
@@ -658,6 +667,7 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
         self.assertIn("syscall-trace count=`2`", text)
         self.assertIn("fentry-trace count=`2`", text)
         self.assertIn("fret-stk-trace count=`2`", text)
+        self.assertIn("queue-trace count=`4`", text)
         self.assertIn("pc-watch lines=`3`", text)
         self.assertIn("pc-watch-ring entries=`1`", text)
         self.assertIn("child-maps trap_addr=`0x3f7ff0008c` mapped=`false`", text)
