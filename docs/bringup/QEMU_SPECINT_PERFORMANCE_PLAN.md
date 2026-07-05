@@ -2810,8 +2810,8 @@ from translated block setup. `linx_tile_set_attr_const()` now emits direct TCG
 stores for `tile_attr_raw`, `tile_attr_dtype`, and `tile_attr_pad`, while
 `linx_tile_reset_block_inline()` clears the tile descriptor counters and
 argument format directly in `CPULinxState`. The semantic helper implementations
-remain available, but hot block headers and constant `B.ATTR` descriptors no
-longer call `helper_linx_tile_set_attr` or `helper_linx_tile_reset_block`.
+remain available, but hot block headers and constant tile-attribute descriptors
+no longer call `helper_linx_tile_set_attr` or `helper_linx_tile_reset_block`.
 
 Validation on `/tmp/linx-qemu-hb-build-20260703-r1/qemu-system-linx64`:
 
