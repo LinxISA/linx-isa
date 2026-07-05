@@ -513,6 +513,7 @@ def _suite_command(
     qemu_frame_stats: bool,
     qemu_frame_shape_hot: bool,
     qemu_frame_single_reg_fast: bool,
+    qemu_frame_page_fast: bool,
     qemu_frame_restore_host_load: bool,
     qemu_tlb_stats: bool,
     qemu_tlb_inv_hot: bool,
@@ -537,6 +538,7 @@ def _suite_command(
     forward_qemu_frame_stats: bool,
     forward_qemu_frame_shape_hot: bool,
     forward_qemu_frame_single_reg_fast: bool,
+    forward_qemu_frame_page_fast: bool,
     forward_qemu_frame_restore_host_load: bool,
     forward_qemu_tlb_stats: bool,
     forward_qemu_tlb_inv_hot: bool,
@@ -601,6 +603,8 @@ def _suite_command(
         cmd.append("--qemu-frame-shape-hot")
     if qemu_frame_single_reg_fast and forward_qemu_frame_single_reg_fast:
         cmd.append("--qemu-frame-single-reg-fast")
+    if qemu_frame_page_fast and forward_qemu_frame_page_fast:
+        cmd.append("--qemu-frame-page-fast")
     if qemu_frame_restore_host_load and forward_qemu_frame_restore_host_load:
         cmd.append("--qemu-frame-restore-host-load")
     if qemu_tlb_stats and forward_qemu_tlb_stats:
@@ -687,6 +691,7 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
         f"- qemu_frame_stats: `{str(bool(summary.get('qemu_frame_stats', False))).lower()}`",
         f"- qemu_frame_shape_hot: `{str(bool(summary.get('qemu_frame_shape_hot', False))).lower()}`",
         f"- qemu_frame_single_reg_fast: `{str(bool(summary.get('qemu_frame_single_reg_fast', False))).lower()}`",
+        f"- qemu_frame_page_fast: `{str(bool(summary.get('qemu_frame_page_fast', False))).lower()}`",
         "- qemu_frame_restore_host_load: "
         f"`{str(bool(summary.get('qemu_frame_restore_host_load', False))).lower()}`",
         f"- qemu_tlb_stats: `{str(bool(summary.get('qemu_tlb_stats', False))).lower()}`",
@@ -768,6 +773,15 @@ def main(argv: list[str]) -> int:
             _env_bool("LINX_SPEC_QEMU_FRAME_SINGLE_REG_FAST", False),
         ),
         help="Forward QEMU's opt-in one-register frame fast path switch.",
+    )
+    parser.add_argument(
+        "--qemu-frame-page-fast",
+        action="store_true",
+        default=_env_bool(
+            "SPEC_QEMU_FRAME_PAGE_FAST",
+            _env_bool("LINX_SPEC_QEMU_FRAME_PAGE_FAST", False),
+        ),
+        help="Forward QEMU's opt-in same-page multi-register frame fast path switch.",
     )
     parser.add_argument(
         "--qemu-frame-restore-host-load",
@@ -965,6 +979,7 @@ def main(argv: list[str]) -> int:
     runner_has_qemu_frame_stats = _runner_supports_option(runner, "--qemu-frame-stats")
     runner_has_qemu_frame_shape_hot = _runner_supports_option(runner, "--qemu-frame-shape-hot")
     runner_has_qemu_frame_single_reg_fast = _runner_supports_option(runner, "--qemu-frame-single-reg-fast")
+    runner_has_qemu_frame_page_fast = _runner_supports_option(runner, "--qemu-frame-page-fast")
     runner_has_qemu_frame_restore_host_load = _runner_supports_option(runner, "--qemu-frame-restore-host-load")
     runner_has_qemu_tlb_stats = _runner_supports_option(runner, "--qemu-tlb-stats")
     runner_has_qemu_tlb_inv_hot = _runner_supports_option(runner, "--qemu-tlb-inv-hot")
@@ -1025,6 +1040,12 @@ def main(argv: list[str]) -> int:
             "error: local SPEC matrix runner does not support "
             "--qemu-frame-single-reg-fast; update tools/spec2017/run_stage_qemu_matrix.py "
             "or rerun without the one-register frame fast-path switch"
+        )
+    if args.qemu_frame_page_fast and not runner_has_qemu_frame_page_fast:
+        raise SystemExit(
+            "error: local SPEC matrix runner does not support "
+            "--qemu-frame-page-fast; update tools/spec2017/run_stage_qemu_matrix.py "
+            "or rerun without the same-page frame fast-path switch"
         )
     if args.qemu_frame_restore_host_load and not runner_has_qemu_frame_restore_host_load:
         raise SystemExit(
@@ -1170,6 +1191,7 @@ def main(argv: list[str]) -> int:
                 qemu_frame_stats=args.qemu_frame_stats,
                 qemu_frame_shape_hot=args.qemu_frame_shape_hot,
                 qemu_frame_single_reg_fast=args.qemu_frame_single_reg_fast,
+                qemu_frame_page_fast=args.qemu_frame_page_fast,
                 qemu_frame_restore_host_load=args.qemu_frame_restore_host_load,
                 qemu_tlb_stats=args.qemu_tlb_stats,
                 qemu_tlb_inv_hot=args.qemu_tlb_inv_hot,
@@ -1194,6 +1216,7 @@ def main(argv: list[str]) -> int:
                 forward_qemu_frame_stats=runner_has_qemu_frame_stats,
                 forward_qemu_frame_shape_hot=runner_has_qemu_frame_shape_hot,
                 forward_qemu_frame_single_reg_fast=runner_has_qemu_frame_single_reg_fast,
+                forward_qemu_frame_page_fast=runner_has_qemu_frame_page_fast,
                 forward_qemu_frame_restore_host_load=runner_has_qemu_frame_restore_host_load,
                 forward_qemu_tlb_stats=runner_has_qemu_tlb_stats,
                 forward_qemu_tlb_inv_hot=runner_has_qemu_tlb_inv_hot,
@@ -1277,6 +1300,7 @@ def main(argv: list[str]) -> int:
         "qemu_frame_stats": bool(args.qemu_frame_stats),
         "qemu_frame_shape_hot": bool(args.qemu_frame_shape_hot),
         "qemu_frame_single_reg_fast": bool(args.qemu_frame_single_reg_fast),
+        "qemu_frame_page_fast": bool(args.qemu_frame_page_fast),
         "qemu_frame_restore_host_load": bool(args.qemu_frame_restore_host_load),
         "qemu_tlb_stats": bool(args.qemu_tlb_stats),
         "qemu_tlb_inv_hot": bool(args.qemu_tlb_inv_hot),

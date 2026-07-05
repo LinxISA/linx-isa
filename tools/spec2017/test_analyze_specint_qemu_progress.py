@@ -45,6 +45,8 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                                     "restore_fallback": 7,
                                     "single_fast_fentry": 5,
                                     "single_fast_fret_stk": 4,
+                                    "page_fast_fentry": 3,
+                                    "page_fast_restore": 2,
                                 },
                                 "heartbeat_frame_shape_hot": {
                                     "seen": True,
@@ -105,6 +107,8 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
         self.assertEqual(rows["531.deepsjeng_r"]["frame_shape_hot"]["top0_kind"], "fentry")
         self.assertEqual(rows["531.deepsjeng_r"]["frame_single_fast_fentry"], 5)
         self.assertEqual(rows["531.deepsjeng_r"]["frame_single_fast_fret_stk"], 4)
+        self.assertEqual(rows["531.deepsjeng_r"]["frame_page_fast_fentry"], 3)
+        self.assertEqual(rows["531.deepsjeng_r"]["frame_page_fast_restore"], 2)
         self.assertEqual(rows["531.deepsjeng_r"]["tb_lookup"], 100)
         self.assertFalse(rows["531.deepsjeng_r"]["ok"])
         self.assertTrue(rows["999.specrand_ir"]["ok"])
@@ -298,6 +302,7 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                 "profile": "train",
                 "qemu_frame_stats": True,
                 "qemu_frame_single_reg_fast": False,
+                "qemu_frame_page_fast": True,
                 "qemu_mmu_cache": True,
                 "qemu_mmu_cache_stats": True,
                 "suites": [],
@@ -308,6 +313,7 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                 "qemu_features": {
                     "qemu_frame_stats": False,
                     "qemu_frame_single_reg_fast": True,
+                    "qemu_frame_page_fast": False,
                     "qemu_mmu_cache": False,
                     "qemu_mmu_cache_stats": False,
                 },
@@ -328,6 +334,7 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
         }
         self.assertEqual(mismatches["qemu_frame_stats"], (True, False))
         self.assertEqual(mismatches["qemu_frame_single_reg_fast"], (False, True))
+        self.assertEqual(mismatches["qemu_frame_page_fast"], (True, False))
         self.assertEqual(mismatches["qemu_mmu_cache"], (True, False))
         self.assertEqual(mismatches["qemu_mmu_cache_stats"], (True, False))
         self.assertFalse(report["qemu"]["profile_used_for_classification"])
