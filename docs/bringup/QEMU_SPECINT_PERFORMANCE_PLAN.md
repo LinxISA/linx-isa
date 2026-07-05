@@ -4003,6 +4003,53 @@ permissions, TLB invalidation/retry state, and precise block-interior restart
 for mapped writable user pages. Keep the strict hash sentinels (`502.gcc_r`,
 `523.xalancbmk_r`, and `999.specrand_ir`) after any MMU/fault-path change.
 
+## Current QEMU Train-All Ledger And MMU-Cache Probe
+
+The latest in-repo QEMU run uses
+`emulator/qemu/build-linx/qemu-system-linx64` reporting
+`v10.2.0-1027-gda8d7cae165` and writes the all-train ledger under
+`workloads/generated/specint-train-all-current-qemu-20260705-r2/`.
+It covers all ten supported SPECint train rows. `999.specrand_ir` passes;
+the other rows are heartbeat-live timeouts with BPC site progress, no panic,
+and no user-trap evidence.
+
+| Benchmark | Status | Count | Dominant evidence |
+| --- | --- | ---: | --- |
+| `500.perlbench_r` | live-timeout | 46000000010 | site progress, mixed user/kernel TLB fills |
+| `502.gcc_r` | live-timeout | 25000000001 | site progress, high TB lookup volume |
+| `505.mcf_r` | live-timeout | 41000000005 | `122130432` user TLB fills, `tbs_flush=0` |
+| `520.omnetpp_r` | live-timeout | 16000000000 | mixed user/kernel TLB fills |
+| `523.xalancbmk_r` | live-timeout | 21000000002 | high TB lookup volume |
+| `525.x264_r` | live-timeout | 26000000006 | 9p/kernel lane, only `95` user TLB fills |
+| `531.deepsjeng_r` | live-timeout | 46000000007 | site progress, CPU/TB lookup lane |
+| `541.leela_r` | live-timeout | 19000000005 | kernel-heavy TLB fills, high TB lookup volume |
+| `557.xz_r` | live-timeout | 37000000001 | site progress, mixed TLB/TB pressure |
+| `999.specrand_ir` | pass | 0 | strict train sentinel green |
+
+Focused `505.mcf_r` train probing with QEMU's opt-in page-walk result cache is
+under `workloads/generated/specint-505-train-mmuc-current-qemu-20260705-r1/`.
+The row still live-times out, but the 180-second bounded count improves from
+`41000000005` to `45000000003`. The final heartbeat records
+`mmuc_hit=122234545`, `mmuc_miss=11249614`, `mmuc_fill=11244817`, and the same
+TLBI page-flush count as the baseline. The strict `999.specrand_ir` guard with
+new first-class runner switches passes in
+`workloads/generated/specint-999-train-mmuc-switch-qemu-20260705-r1/`, and its
+`qemu_debug_env` records `LINX_QEMU_MMU_CACHE=1` plus
+`LINX_QEMU_MMU_CACHE_STATS=1`.
+
+Actionable next loops:
+
+- Promote MMU-cache experiments through runner switches, not ad hoc env vars:
+  use `--qemu-mmu-cache --qemu-mmu-cache-stats` so JSON summaries record the
+  active knobs and `mmuc=` liveness tags.
+- For `505`, improve QEMU's cache hit path and investigate why millions of
+  Linux `TLB.IV` page flushes still force `mmuc_flush_page` churn.
+- For `525`, keep the lane separate from user-code TLB work; the current
+  evidence is kernel/9p transport bound, so profile filesystem/virtio paths
+  before changing generic user soft-MMU behavior.
+- Keep TB cache-size growth rejected for this ledger: all rows report
+  `tbs_flush=0` and code-buffer use remains far below the configured size.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.

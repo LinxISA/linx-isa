@@ -648,6 +648,10 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
         lines.append(f"- qemu_fentry_trace: `{trace_text}`")
     lines.append(f"- qemu_tlb_stats: `{str(bool(summary.get('qemu_tlb_stats', False))).lower()}`")
     lines.append(f"- qemu_tlb_inv_hot: `{str(bool(summary.get('qemu_tlb_inv_hot', False))).lower()}`")
+    lines.append(f"- qemu_tlb_fill_stats: `{str(bool(summary.get('qemu_tlb_fill_stats', False))).lower()}`")
+    lines.append(f"- qemu_tlb_fill_hot: `{str(bool(summary.get('qemu_tlb_fill_hot', False))).lower()}`")
+    lines.append(f"- qemu_mmu_cache: `{str(bool(summary.get('qemu_mmu_cache', False))).lower()}`")
+    lines.append(f"- qemu_mmu_cache_stats: `{str(bool(summary.get('qemu_mmu_cache_stats', False))).lower()}`")
     lines.append(f"- qemu_tb_stats: `{str(bool(summary.get('qemu_tb_stats', False))).lower()}`")
     lines.append(f"- qemu_fault_trace: `{str(bool(summary.get('qemu_fault_trace', False))).lower()}`")
     lines.append(f"- qemu_fault_trace_regs: `{str(bool(summary.get('qemu_fault_trace_regs', False))).lower()}`")
@@ -892,6 +896,18 @@ def main(argv: list[str]) -> int:
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_TLB_FILL_HOT", False),
         help="Pass --qemu-tlb-fill-hot to emit hot demand page-walk heartbeat sketches.",
+    )
+    ap.add_argument(
+        "--qemu-mmu-cache",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_MMU_CACHE", False),
+        help="Pass --qemu-mmu-cache to enable QEMU's opt-in page-walk result cache.",
+    )
+    ap.add_argument(
+        "--qemu-mmu-cache-stats",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_MMU_CACHE_STATS", False),
+        help="Pass --qemu-mmu-cache-stats to append MMU-cache counters to QEMU heartbeats.",
     )
     ap.add_argument(
         "--qemu-tlb-fault-trace",
@@ -1358,6 +1374,10 @@ def main(argv: list[str]) -> int:
             cmd.append("--qemu-tlb-fill-stats")
         if args.qemu_tlb_fill_hot:
             cmd.append("--qemu-tlb-fill-hot")
+        if args.qemu_mmu_cache:
+            cmd.append("--qemu-mmu-cache")
+        if args.qemu_mmu_cache_stats:
+            cmd.append("--qemu-mmu-cache-stats")
         if args.qemu_tlb_fault_trace:
             cmd.append("--qemu-tlb-fault-trace")
         if args.qemu_tlb_fault_trace_limit > 0:
@@ -1487,6 +1507,8 @@ def main(argv: list[str]) -> int:
         "qemu_tlb_inv_hot": bool(args.qemu_tlb_inv_hot),
         "qemu_tlb_fill_stats": bool(args.qemu_tlb_fill_stats),
         "qemu_tlb_fill_hot": bool(args.qemu_tlb_fill_hot),
+        "qemu_mmu_cache": bool(args.qemu_mmu_cache),
+        "qemu_mmu_cache_stats": bool(args.qemu_mmu_cache_stats),
         "qemu_tlb_fault_trace": bool(qemu_tlb_fault_trace_requested),
         "qemu_tlb_fault_trace_limit": int(args.qemu_tlb_fault_trace_limit),
         "qemu_tlb_fault_trace_filters": qemu_tlb_fault_trace_filters,
