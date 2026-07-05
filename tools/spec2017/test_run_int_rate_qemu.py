@@ -1194,6 +1194,32 @@ class RunIntRateQemuTests(unittest.TestCase):
             ],
         )
 
+    def test_tlb_inv_hot_kernel_addresses_keep_recent_sources(self) -> None:
+        text = "\n".join(
+            [
+                (
+                    "LINX_TLB_INV_HOT count=1 evictions=0 slots=16 "
+                    "top0_pc=0x1555555000 top0_bpc=0x1555554000 "
+                    "top1_pc=0xffffffff800d6c88 top1_bpc=0xffffffff800d6c54"
+                ),
+                (
+                    "LINX_TLB_INV_HOT count=2 evictions=0 slots=16 "
+                    "top0_pc=0xffffffff800db20c top0_bpc=0xffffffff800db202 "
+                    "top1_pc=0xffffffff800d6c88 top1_bpc=0xffffffff800d6c54"
+                ),
+            ]
+        )
+
+        self.assertEqual(
+            runner._tlb_inv_hot_kernel_addresses(text),
+            [
+                "0xffffffff800d6c88",
+                "0xffffffff800d6c54",
+                "0xffffffff800db20c",
+                "0xffffffff800db202",
+            ],
+        )
+
     def test_kernel_symbols_suggest_panic_loop_from_panic_source(self) -> None:
         self.assertTrue(
             runner._kernel_symbols_suggest_panic_loop(

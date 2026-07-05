@@ -217,6 +217,9 @@ def _merge_failure_detail(row: dict[str, Any], detail: dict[str, Any]) -> None:
             "tlb_inv_hot_max_delta": tlb_inv_hot.get("max_delta"),
             "tlb_inv_hot_max_pc": tlb_inv_hot.get("max_delta_top0_pc"),
             "tlb_inv_hot_max_bpc": tlb_inv_hot.get("max_delta_top0_bpc"),
+            "tlb_inv_hot_kernel_symbolized": detail.get("tlb_inv_hot_kernel_symbolized"),
+            "tlb_inv_hot_kernel_symbol_evidence": detail.get("tlb_inv_hot_kernel_symbol_evidence"),
+            "tlb_inv_hot_kernel_symbols": detail.get("tlb_inv_hot_kernel_symbols", []),
         }
     )
 
@@ -502,6 +505,12 @@ def _bench_report_row(
         "tlb_fill_total": gate_row.get("tlb_fill_total"),
         "tlb_fill_user": gate_row.get("tlb_fill_user"),
         "tlb_inv_iv": gate_row.get("tlb_inv_iv"),
+        "tlb_inv_hot_max_delta": gate_row.get("tlb_inv_hot_max_delta"),
+        "tlb_inv_hot_max_pc": gate_row.get("tlb_inv_hot_max_pc"),
+        "tlb_inv_hot_max_bpc": gate_row.get("tlb_inv_hot_max_bpc"),
+        "tlb_inv_hot_kernel_symbolized": gate_row.get("tlb_inv_hot_kernel_symbolized"),
+        "tlb_inv_hot_kernel_symbol_evidence": gate_row.get("tlb_inv_hot_kernel_symbol_evidence"),
+        "tlb_inv_hot_kernel_symbols": gate_row.get("tlb_inv_hot_kernel_symbols", []),
         "frame_restore_fallback": gate_row.get("frame_restore_fallback"),
         "frame_single_fast_fentry": gate_row.get("frame_single_fast_fentry"),
         "frame_single_fast_fret_stk": gate_row.get("frame_single_fast_fret_stk"),
@@ -718,6 +727,21 @@ def _write_markdown(path: Path, report: dict[str, Any]) -> None:
             f"`{top}` | "
             f"{row['proposed_action']} |"
         )
+
+    tlbi_rows = [
+        row
+        for row in report["benchmarks"]
+        if row.get("tlb_inv_hot_kernel_symbol_evidence")
+    ]
+    if tlbi_rows:
+        lines.extend(["", "## TLBI Hot Kernel Evidence", ""])
+        for row in tlbi_rows:
+            lines.append(
+                f"- `{row['bench']}` max-delta=`{row.get('tlb_inv_hot_max_delta')}` "
+                f"pc=`{row.get('tlb_inv_hot_max_pc', '')}` "
+                f"bpc=`{row.get('tlb_inv_hot_max_bpc', '')}` "
+                f"symbols=`{row.get('tlb_inv_hot_kernel_symbol_evidence', '')[:240]}`"
+            )
 
     fault_rows = [
         row

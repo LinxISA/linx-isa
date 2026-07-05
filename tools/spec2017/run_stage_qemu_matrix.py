@@ -333,6 +333,9 @@ def _transport_failure_details(summary_obj: dict[str, Any]) -> dict[str, dict[st
             "heartbeat_kernel_panic_loop": bool(failed_run.get("heartbeat_kernel_panic_loop", False)),
             "heartbeat_kernel_symbol_evidence": str(failed_run.get("heartbeat_kernel_symbol_evidence") or "")[:512],
             "heartbeat_kernel_symbols": failed_run.get("heartbeat_kernel_symbols") or [],
+            "tlb_inv_hot_kernel_symbolized": bool(failed_run.get("tlb_inv_hot_kernel_symbolized", False)),
+            "tlb_inv_hot_kernel_symbol_evidence": str(failed_run.get("tlb_inv_hot_kernel_symbol_evidence") or "")[:512],
+            "tlb_inv_hot_kernel_symbols": failed_run.get("tlb_inv_hot_kernel_symbols") or [],
             "last_heartbeat": str(failed_run.get("last_heartbeat") or "")[:512],
             "fcmp_trace_seen": bool(failed_run.get("fcmp_trace_seen", False)),
             "fcmp_trace_count": failed_run.get("fcmp_trace_count"),
@@ -579,6 +582,9 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
             kernel = " kernel-panic-loop"
         elif row.get("heartbeat_kernel_symbol_evidence"):
             kernel = " kernel-symbolized"
+        tlb_inv_symbols = ""
+        if row.get("tlb_inv_hot_kernel_symbol_evidence"):
+            tlb_inv_symbols = " tlbi-hot-symbolized"
         timeout = " timeout" if row.get("timed_out") else ""
         stalled = " stalled" if row.get("stalled") else ""
         hb_stall = ""
@@ -589,7 +595,7 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
             hb_stall = f" heartbeat-stall={status}:{repeats}/{threshold}"
         parts.append(
             f"{bench}: {running}/{site} {progress}{timeout}{stalled} "
-            f"bpc={bpc}{recent}{kernel}{hb_stall}{fcmp}{tlbfill}{tlbfault}{tlbfill_stats}{tlbfill_hot}{mmu_cache}{frame_stats}{frame_shape_hot}{tlb_invalidation}{tlbinv_hot}{tb_stats}{bstart_cache}{mprotect}"
+            f"bpc={bpc}{recent}{kernel}{tlb_inv_symbols}{hb_stall}{fcmp}{tlbfill}{tlbfault}{tlbfill_stats}{tlbfill_hot}{mmu_cache}{frame_stats}{frame_shape_hot}{tlb_invalidation}{tlbinv_hot}{tb_stats}{bstart_cache}{mprotect}"
             f"{pc_watch}"
         )
     return ", ".join(parts)

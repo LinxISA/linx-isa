@@ -39,6 +39,15 @@ class StageQemuMatrixTests(unittest.TestCase):
                             "heartbeat_recent_count_delta": 2000000024,
                             "heartbeat_kernel_panic_loop": True,
                             "heartbeat_kernel_symbol_evidence": "heartbeat kernel symbols: 0xffffffff800019bc=.LBB14_51 panic.c:0",
+                            "tlb_inv_hot_kernel_symbolized": True,
+                            "tlb_inv_hot_kernel_symbol_evidence": "tlb-inv-hot kernel symbols: 0xffffffff800db20c=local_flush_tlb_page arch/linx/include/asm/tlbflush.h:23",
+                            "tlb_inv_hot_kernel_symbols": [
+                                {
+                                    "address": "0xffffffff800db20c",
+                                    "function": "local_flush_tlb_page",
+                                    "source": "arch/linx/include/asm/tlbflush.h:23",
+                                }
+                            ],
                             "heartbeat_tlb_fill_hot": {
                                 "seen": True,
                                 "top0_count": 12345,
@@ -114,6 +123,12 @@ class StageQemuMatrixTests(unittest.TestCase):
         )
         self.assertIn(
             "recent-sites=3 count-delta=2000000024",
+            matrix._format_failure_details(
+                matrix._transport_failure_details(summary)
+            ),
+        )
+        self.assertIn(
+            "tlbi-hot-symbolized",
             matrix._format_failure_details(
                 matrix._transport_failure_details(summary)
             ),

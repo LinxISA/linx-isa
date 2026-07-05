@@ -3068,16 +3068,10 @@ def _run_qemu(
     )
     if symbolize_heartbeat:
         heartbeat_kernel_symbols = _symbolize_heartbeat_kernel_sites(text, kernel)
+        tlb_inv_hot_kernel_symbols = _symbolize_tlb_inv_hot_kernel_sites(text, kernel)
     else:
-        heartbeat_kernel_symbols = {
-            "enabled": False,
-            "ok": False,
-            "tool": "",
-            "kernel": str(kernel),
-            "sites": [],
-            "panic_loop": False,
-            "evidence": "",
-        }
+        heartbeat_kernel_symbols = _empty_kernel_symbol_result(False, kernel)
+        tlb_inv_hot_kernel_symbols = _empty_kernel_symbol_result(False, kernel)
     if (
         classification["class"]
         in {"live-timeout", "same-site-live-timeout", "timeout-no-bpc-progress"}
@@ -3168,6 +3162,9 @@ def _run_qemu(
         "heartbeat_kernel_symbolized": bool(heartbeat_kernel_symbols.get("ok", False)),
         "heartbeat_kernel_panic_loop": bool(heartbeat_kernel_symbols.get("panic_loop", False)),
         "heartbeat_kernel_symbol_evidence": str(heartbeat_kernel_symbols.get("evidence") or "")[:512],
+        "tlb_inv_hot_kernel_symbols": tlb_inv_hot_kernel_symbols.get("sites", []),
+        "tlb_inv_hot_kernel_symbolized": bool(tlb_inv_hot_kernel_symbols.get("ok", False)),
+        "tlb_inv_hot_kernel_symbol_evidence": str(tlb_inv_hot_kernel_symbols.get("evidence") or "")[:512],
         "fcmp_trace_seen": fcmp_trace["seen"],
         "fcmp_trace_count": fcmp_trace["count"],
         "fcmp_trace_last": fcmp_trace["last"],
@@ -3648,6 +3645,23 @@ def _heartbeat_kernel_addresses(text: str, *, limit: int = 16) -> list[str]:
     return addresses
 
 
+def _tlb_inv_hot_kernel_addresses(text: str, *, limit: int = 16) -> list[str]:
+    lines = re.findall(r"^LINX_TLB_INV_HOT .*$", text, flags=re.MULTILINE)
+    addresses: list[str] = []
+    seen: set[str] = set()
+    for line in lines[-limit:]:
+        fields = _heartbeat_fields(line)
+        for name in ("top0_pc", "top0_bpc", "top1_pc", "top1_bpc"):
+            value = fields.get(name, "").lower()
+            if not value.startswith("0xffffffff"):
+                continue
+            if value in seen:
+                continue
+            seen.add(value)
+            addresses.append(value)
+    return addresses
+
+
 def _find_llvm_addr2line() -> Path | None:
     env = os.environ.get("LINX_LLVM_ADDR2LINE", "").strip()
     if env:
@@ -3682,9 +3696,9 @@ def _kernel_symbols_suggest_panic_loop(sites: list[dict[str, str]]) -> bool:
     return False
 
 
-def _symbolize_heartbeat_kernel_sites(text: str, kernel: Path) -> dict[str, Any]:
-    result: dict[str, Any] = {
-        "enabled": True,
+def _empty_kernel_symbol_result(enabled: bool, kernel: Path) -> dict[str, Any]:
+    return {
+        "enabled": enabled,
         "ok": False,
         "tool": "",
         "kernel": str(kernel),
@@ -3692,13 +3706,21 @@ def _symbolize_heartbeat_kernel_sites(text: str, kernel: Path) -> dict[str, Any]
         "panic_loop": False,
         "evidence": "",
     }
-    addresses = _heartbeat_kernel_addresses(text)
+
+
+def _symbolize_kernel_addresses(
+    addresses: list[str],
+    kernel: Path,
+    *,
+    label: str,
+) -> dict[str, Any]:
+    result = _empty_kernel_symbol_result(True, kernel)
     if not addresses:
         return result
 
     tool = _find_llvm_addr2line()
     if tool is None:
-        result["evidence"] = "heartbeat kernel symbolization unavailable: llvm-addr2line not found"
+        result["evidence"] = f"{label} kernel symbolization unavailable: llvm-addr2line not found"
         return result
 
     proc = subprocess.run(
@@ -3729,8 +3751,24 @@ def _symbolize_heartbeat_kernel_sites(text: str, kernel: Path) -> dict[str, Any]
     ]
     if not interesting:
         interesting = [site["address"] for site in sites]
-    result["evidence"] = "heartbeat kernel symbols: " + "; ".join(interesting[:8])
+    result["evidence"] = f"{label} kernel symbols: " + "; ".join(interesting[:8])
     return result
+
+
+def _symbolize_heartbeat_kernel_sites(text: str, kernel: Path) -> dict[str, Any]:
+    return _symbolize_kernel_addresses(
+        _heartbeat_kernel_addresses(text),
+        kernel,
+        label="heartbeat",
+    )
+
+
+def _symbolize_tlb_inv_hot_kernel_sites(text: str, kernel: Path) -> dict[str, Any]:
+    return _symbolize_kernel_addresses(
+        _tlb_inv_hot_kernel_addresses(text),
+        kernel,
+        label="tlb-inv-hot",
+    )
 
 
 def _decimal_or_none(value: str | None) -> int | None:

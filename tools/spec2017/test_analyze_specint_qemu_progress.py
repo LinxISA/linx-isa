@@ -161,6 +161,15 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                                         "same_site": 0,
                                     },
                                 ],
+                                "tlb_inv_hot_kernel_symbolized": True,
+                                "tlb_inv_hot_kernel_symbol_evidence": "tlb-inv-hot kernel symbols: 0xffffffff800db20c=local_flush_tlb_page arch/linx/include/asm/tlbflush.h:23",
+                                "tlb_inv_hot_kernel_symbols": [
+                                    {
+                                        "address": "0xffffffff800db20c",
+                                        "function": "local_flush_tlb_page",
+                                        "source": "arch/linx/include/asm/tlbflush.h:23",
+                                    }
+                                ],
                             },
                             "531.deepsjeng_r": {
                                 "failure_class": "live-timeout",
@@ -255,6 +264,15 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
         self.assertEqual(rows["505.mcf_r"]["heartbeat_recent_unique_sites"], 4)
         self.assertEqual(rows["505.mcf_r"]["heartbeat_recent_count_delta"], 3000000000)
         self.assertEqual(rows["505.mcf_r"]["heartbeat_recent_sites"][-1]["bpc"], "0x505")
+        self.assertTrue(rows["505.mcf_r"]["tlb_inv_hot_kernel_symbolized"])
+        self.assertIn(
+            "local_flush_tlb_page",
+            rows["505.mcf_r"]["tlb_inv_hot_kernel_symbol_evidence"],
+        )
+        self.assertEqual(
+            rows["505.mcf_r"]["tlb_inv_hot_kernel_symbols"][0]["function"],
+            "local_flush_tlb_page",
+        )
         self.assertEqual(
             rows["505.mcf_r"]["profile_wrapper_qemu"],
             [{"symbol": "cpu_exec_setjmp", "count": 99}],
