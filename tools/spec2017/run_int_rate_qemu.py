@@ -4697,7 +4697,7 @@ def _trap_delivery_trace_summary(text: str) -> dict[str, Any]:
         fields = _heartbeat_fields(line)
         samples.append(
             {
-                "line": line[:768],
+                "line": line[:1024],
                 "seq": _decimal_or_none(fields.get("seq")),
                 "count": _decimal_or_none(fields.get("count")),
                 "trapnum": _decimal_or_none(fields.get("trapnum")),
@@ -4721,8 +4721,12 @@ def _trap_delivery_trace_summary(text: str) -> dict[str, Any]:
                 "src_blocktype": fields.get("src_blocktype", ""),
                 "src_tq0": fields.get("src_tq0", "").lower(),
                 "src_tq1": fields.get("src_tq1", "").lower(),
+                "src_tq2": fields.get("src_tq2", "").lower(),
+                "src_tq3": fields.get("src_tq3", "").lower(),
                 "src_uq0": fields.get("src_uq0", "").lower(),
                 "src_uq1": fields.get("src_uq1", "").lower(),
+                "src_uq2": fields.get("src_uq2", "").lower(),
+                "src_uq3": fields.get("src_uq3", "").lower(),
                 "sp": fields.get("sp", "").lower(),
                 "ra": fields.get("ra", "").lower(),
                 "a0": fields.get("a0", "").lower(),
@@ -4735,7 +4739,7 @@ def _trap_delivery_trace_summary(text: str) -> dict[str, Any]:
     return {
         "seen": bool(lines),
         "count": len(lines),
-        "last": lines[-1][:768] if lines else "",
+        "last": lines[-1][:1024] if lines else "",
         "samples": samples,
     }
 

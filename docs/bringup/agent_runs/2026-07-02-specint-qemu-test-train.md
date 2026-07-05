@@ -4,6 +4,7 @@
 
 Artifact roots:
 
+- `workloads/generated/specint-500-testpl-trapdelivery-queues-qemu-20260705-r1`
 - `workloads/generated/specint-500-testpl-enframe-queuetrace-qemu-20260705-r1`
 - `workloads/generated/specint-500-testpl-terminal80-queuetrace-qemu-20260705-r1`
 - `workloads/generated/specint-500-testpl-entersub-queuetrace-qemu-20260705-r1`
@@ -21,10 +22,15 @@ Tool update:
 - `emulator/qemu/target/linx/translate.c` only inserts the before-instruction
   helper for queue-trace PC matches when a PC filter is provided, so focused
   SPEC runs do not pay a full-run helper cost.
+- `emulator/qemu/target/linx/cpu.c` now emits all four saved source T/U queue
+  entries in `LINX_TRAP_DELIVERY_TRACE` rows (`src_tq0..src_tq3` and
+  `src_uq0..src_uq3`) so trap-delivery EBARG capture can be compared with
+  later ACRE/queue traces without enabling per-instruction hooks.
 - `tools/spec2017/run_int_rate_qemu.py` exposes
   `--qemu-queue-trace`, PC/BPC/count filters, `--qemu-queue-trace-limit`, and
   `--qemu-queue-trace-all`, then records `queue_trace_seen`,
-  `queue_trace_count`, `queue_trace_last`, and `queue_trace_samples`.
+  `queue_trace_count`, `queue_trace_last`, and `queue_trace_samples`. Its
+  trap-delivery parser also preserves the full saved T/U queue vector.
 - `tools/spec2017/analyze_specint_qemu_progress.py` carries those fields into
   JSON/Markdown reports and includes queue-trace rows in the fault-evidence
   section.
@@ -57,12 +63,25 @@ python3 tools/spec2017/run_int_rate_qemu.py \
 Result:
 
 - QEMU: `emulator/qemu/build-linx/qemu-system-linx64`,
-  `QEMU emulator version 10.2.50 (v10.2.0-1029-g68bebbd9e7b-dirty)`,
-  source head `68bebbd9e7b61df45f433830199ff59a49622ad1` with local queue-trace
+  `QEMU emulator version 10.2.50 (v10.2.0-1030-g6154f7f701c-dirty)`,
+  source head `6154f7f701c8e94020bd138d9c21d3357cda80f8` with local queue-trace
   instrumentation.
 - Validation: `ninja -C emulator/qemu/build-linx qemu-system-linx64` passes;
   `python3 avs/qemu/run_callret_contract.py --qemu
   emulator/qemu/build-linx/qemu-system-linx64` passes.
+- The low-perturbation trap-delivery run
+  `specint-500-testpl-trapdelivery-queues-qemu-20260705-r1` used fault trace
+  plus `LINX_QEMU_TRAP_DELIVERY_TRACE` only. It ended as heartbeat-backed
+  `live-timeout`, not a terminal low-address trap, but captured 686
+  trap-delivery rows with full source queue vectors. The known `enframe`
+  delivery at `tpc=0x155582998e`, `report_bpc=0x155582997c`,
+  `count=3281114386` saved nonzero source queues:
+  `src_tq0=0x6`, `src_tq1=0x7`, `src_tq2=0x15555b5000`,
+  `src_uq0=0x15555b5594`. The known `Perl_do_exec3` delivery at
+  `tpc=0x15555c09e6`, `report_bpc=0x15555c09d4`, `count=3281361386`
+  also saved nonzero queues:
+  `src_tq0=0x155557eb10`, `src_tq1=0x1555841468`,
+  `src_tq2=0x1555841000`, `src_tq3=0x3fefe32a70`, `src_uq0=0x2e`.
 - The exact `enframe` ACRE/queue run
   `specint-500-testpl-enframe-queuetrace-qemu-20260705-r1` did not reach the
   prior `0x155582998e` count/BPC window. It still failed as `user-trap`, with
@@ -106,15 +125,17 @@ Interpretation:
 
 The queue traces confirm that the observed terminal blocks are not statically
 zero-queue. `Perl_do_open6` and the actual `Perl_pp_entersub` terminal block
-both build valid nonzero T/U operands during normal block-entry execution. The
-terminal failures still present as resumed user blocks with all queues zero,
-and broad ACRE/queue instrumentation can move the exact terminal site. This
-keeps the leading hypothesis in the trap-return/resumed-block queue
-preservation lane rather than a missing VMA or static codegen problem in the
-watched blocks. The next loop should correlate the last ACRE/trap-delivery
-restore record before the low-address fault with the first zero-queue
-body-instruction resume, using the narrowest possible PC/BPC/count filters to
-avoid perturbing row 2.
+both build valid nonzero T/U operands during normal block-entry execution.
+Trap-delivery evidence also shows nonzero source queues being captured for
+recurrent `enframe` and `Perl_do_exec3` deliveries before the manager handoff.
+The terminal failures still present as resumed user blocks with all queues
+zero, and broad ACRE/queue instrumentation can move the exact terminal site.
+This keeps the leading hypothesis in the trap-return/resumed-block queue
+preservation lane after source EBARG capture, rather than a missing VMA or
+static codegen problem in the watched blocks. The next loop should correlate
+the last ACRE/trap-return restore record before the low-address fault with the
+first zero-queue body-instruction resume, using the narrowest possible
+PC/BPC/count filters to avoid perturbing row 2.
 
 ## 2026-07-05 continuation: `500.perlbench_r` ACRE/enframe queue provenance
 

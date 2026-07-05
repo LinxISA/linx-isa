@@ -125,7 +125,8 @@ class RunIntRateQemuTests(unittest.TestCase):
             "pending_arg0=0x155583c708 pending_cause=0x5 "
             "envpc=0x1555825572 body_tpc=0x1555825572 in_body=1 brtype=1 "
             "tgt=0x0 src_blocktype=1 src_tq0=0x0 src_tq1=0x1 "
-            "src_uq0=0x2 src_uq1=0x3 src_lb=0x0:0x1:0x2 "
+            "src_tq2=0x2 src_tq3=0x3 src_uq0=0x4 src_uq1=0x5 "
+            "src_uq2=0x6 src_uq3=0x7 src_lb=0x0:0x1:0x2 "
             "src_lc=0x3:0x4:0x5 dst_evbase=0xffffffff80000000 "
             "cstate=0x1 sp=0x3f7fff0000 ra=0x1555000000 "
             "a0=0x1 a1=0x2 a2=0x3 a3=0x4 a7=0xdd\n"
@@ -135,6 +136,8 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(summary["count"], 1)
         self.assertEqual(summary["samples"][0]["pending_arg0"], "0x155583c708")
         self.assertEqual(summary["samples"][0]["tpc"], "0x1555825572")
+        self.assertEqual(summary["samples"][0]["src_tq3"], "0x3")
+        self.assertEqual(summary["samples"][0]["src_uq3"], "0x7")
 
     def test_linux_vm_trace_append_extra_and_summary(self) -> None:
         append = runner._linux_vm_trace_append_extra(
