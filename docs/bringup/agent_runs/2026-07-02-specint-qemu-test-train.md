@@ -509,6 +509,55 @@ TLBI batching/source reduction on the cross-row QEMU/Linux speed path. Keep
 `999.specrand_ir` as the strict hash sentinel when trying opt-in QEMU speed
 features.
 
+## 2026-07-06 continuation: TLB fill hot-sketch recorder overhead
+
+Change:
+
+- `emulator/qemu/target/linx/cpu.c` now initializes both
+  `LINX_QEMU_TLB_FILL_STATS` and `LINX_QEMU_TLB_FILL_HOT` before the combined
+  TLB-fill recorder gate, so enabling stats no longer short-circuits hot-sketch
+  setup.
+- The `LINX_TLB_FILL_HOT` recorder now keeps a one-slot last-key cache in
+  `CPULinxState`. Consecutive fills for the same page/access/MMU/probe tuple
+  update the same sketch slot directly instead of scanning all 16 hot-sketch
+  slots. This preserves the existing counter and eviction semantics while
+  lowering debug-recorder overhead in SPEC profiles.
+
+Validation:
+
+- `ninja -C emulator/qemu/build-linx qemu-system-linx64`
+- `python3 avs/qemu/run_callret_contract.py --qemu emulator/qemu/build-linx/qemu-system-linx64`
+- `bash avs/qemu/check_system_strict.sh`
+- `bash avs/qemu/run_tests.sh --all --timeout 10`
+- Strict train sentinel:
+  `workloads/generated/specint-999-tlbf-hot-lastslot-qemu-20260706-r2/qemu_matrix_summary.json`
+  reports `ok=true` and the `999.specrand_ir` pass marker with
+  `LINX_QEMU_TLB_FILL_STATS=1` and `LINX_QEMU_TLB_FILL_HOT=1`.
+- Focused `505.mcf_r` train:
+  `workloads/generated/specint-505-tlbf-hot-lastslot-qemu-20260706-r2/initramfs/stage_b_summary.json`
+  remains a heartbeat-backed `live-timeout`, not a trap or panic, with
+  `heartbeat_running=true`, `heartbeat_site_progress=true`,
+  `heartbeat_last_count=27000000012`, and restored `heartbeat_tlb_fill_hot`
+  output (`line_count=28`, `seen=true`).
+- Post-start host profile:
+  `workloads/generated/specint-profile-505-tlbf-hot-lastslot-qemu-20260706-r1/profile_suite_summary.json`
+  samples current-head `505.mcf_r` after `LINX_SPEC_START`. Compared with the
+  pre-change current-head sample
+  `workloads/generated/specint-profile-505-current-head-speedstack-20260706-r1/`,
+  `linx_tlb_fill_stats_record` drops from `231` to `179` top-stack samples in
+  the 20-second sample. The top lane is still template entry/return plus TB
+  lookup and soft-MMU lookup, so this is an observability-overhead reduction,
+  not SPEC closure.
+
+Loop update:
+
+Keep `--qemu-tlb-fill-hot` enabled for narrow throughput attribution, but do
+not treat it as free instrumentation. The next speed loops still need to attack
+the larger shared hot frames: template entry/return helper cost,
+`tb_lookup`/`helper_lookup_tb_ptr`, and `mmu_lookup1`/`probe_access_internal`.
+The latest focused `505` row proves the hot-sketch output is restored after the
+optimization, so future all-row gates can continue using `tlbf-hot` evidence.
+
 Tool update:
 
 - `tools/spec2017/run_int_rate_qemu.py` now exposes the existing QEMU
