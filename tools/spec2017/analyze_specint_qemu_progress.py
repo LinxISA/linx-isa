@@ -146,10 +146,12 @@ def _merge_failure_detail(row: dict[str, Any], detail: dict[str, Any]) -> None:
     tlb_fill = detail.get("heartbeat_tlb_fill") or {}
     tlb_inv = detail.get("heartbeat_tlb_invalidation") or {}
     tlb_inv_hot = detail.get("heartbeat_tlb_inv_hot") or {}
+    pc_watch = detail.get("pc_watch") or {}
 
     row.update(
         {
             "failure_class": detail.get("failure_class", row.get("failure_class")),
+            "failure_evidence": detail.get("failure_evidence", row.get("failure_evidence")),
             "heartbeat_running": detail.get("heartbeat_running"),
             "heartbeat_site_progress": detail.get("heartbeat_site_progress"),
             "heartbeat_last_count": detail.get("heartbeat_last_count"),
@@ -161,6 +163,18 @@ def _merge_failure_detail(row: dict[str, Any], detail: dict[str, Any]) -> None:
             "trap_seen": detail.get("trap_seen"),
             "timed_out": detail.get("timed_out"),
             "qemu_log": detail.get("log"),
+            "qemu_debug_env": detail.get("qemu_debug_env", row.get("qemu_debug_env", {})),
+            "fault_trace_seen": detail.get("fault_trace_seen"),
+            "fault_trace_count": detail.get("fault_trace_count"),
+            "fault_trace_last": detail.get("fault_trace_last"),
+            "fault_trace_samples": detail.get("fault_trace_samples", []),
+            "mprotect_trace_seen": detail.get("mprotect_trace_seen"),
+            "mprotect_trace_count": detail.get("mprotect_trace_count"),
+            "mprotect_trace_last": detail.get("mprotect_trace_last"),
+            "mprotect_trace_samples": detail.get("mprotect_trace_samples", []),
+            "pc_watch_seen": pc_watch.get("seen"),
+            "pc_watch_last": pc_watch.get("last"),
+            "pc_watch_samples": pc_watch.get("samples", []),
             "frame_restore_fallback": frame_stats.get("restore_fallback"),
             "frame_restore_host": frame_stats.get("restore_host"),
             "frame_fentry": frame_stats.get("fentry"),
@@ -180,6 +194,19 @@ def _merge_failure_detail(row: dict[str, Any], detail: dict[str, Any]) -> None:
             "tlb_inv_hot_max_bpc": tlb_inv_hot.get("max_delta_top0_bpc"),
         }
     )
+
+
+def _qemu_run_detail(bench_row: dict[str, Any]) -> dict[str, Any] | None:
+    qemu_rows = bench_row.get("qemu")
+    if not isinstance(qemu_rows, list):
+        return None
+    candidates = [item for item in qemu_rows if isinstance(item, dict)]
+    if not candidates:
+        return None
+    for item in candidates:
+        if item.get("failure_class") not in (None, "", "none") or item.get("trap_seen"):
+            return item
+    return candidates[0]
 
 
 def _merge_stage_result(row: dict[str, Any], stage_summary: dict[str, Any], bench_row: dict[str, Any]) -> None:
@@ -209,6 +236,9 @@ def _merge_stage_result(row: dict[str, Any], stage_summary: dict[str, Any], benc
             ],
         }
     )
+    qemu_detail = _qemu_run_detail(bench_row)
+    if qemu_detail:
+        _merge_failure_detail(row, qemu_detail)
 
 
 def extract_gate_rows(gate_summary: dict[str, Any], gate_summary_path: Path) -> dict[str, dict[str, Any]]:
@@ -233,7 +263,9 @@ def extract_gate_rows(gate_summary: dict[str, Any], gate_summary_path: Path) -> 
             if bench in failure_details:
                 _merge_failure_detail(row, failure_details[bench])
 
-    for summary in _related_summaries(gate_summary, gate_summary_path):
+    summaries = [gate_summary]
+    summaries.extend(_related_summaries(gate_summary, gate_summary_path))
+    for summary in summaries:
         results = summary.get("results")
         if isinstance(results, dict):
             for bench, bench_row in results.items():
@@ -319,6 +351,11 @@ def classify_row(gate_row: dict[str, Any], profile_row: dict[str, Any] | None) -
             "Keep this strict-hash row as the before/after guard for QEMU speed experiments.",
         )
     if gate_row.get("panic_seen") or gate_row.get("trap_seen"):
+        if gate_row.get("fault_trace_seen"):
+            return (
+                "correctness-fault-trace-debug",
+                "Correlate the fatal trap with the recent LINX_FAULT_TRACE records before changing throughput paths.",
+            )
         return (
             "correctness-debug",
             "Prioritize panic/trap root cause before spending more cycles on throughput.",
@@ -374,8 +411,18 @@ def _bench_report_row(
         "stalled": gate_row.get("stalled"),
         "panic_seen": gate_row.get("panic_seen"),
         "trap_seen": gate_row.get("trap_seen"),
+        "failure_evidence": gate_row.get("failure_evidence"),
         "heartbeat_last_count": gate_row.get("heartbeat_last_count"),
         "heartbeat_last_bpc": gate_row.get("heartbeat_last_bpc"),
+        "qemu_debug_env": gate_row.get("qemu_debug_env", {}),
+        "fault_trace_seen": gate_row.get("fault_trace_seen"),
+        "fault_trace_count": gate_row.get("fault_trace_count"),
+        "fault_trace_last": gate_row.get("fault_trace_last"),
+        "fault_trace_samples": gate_row.get("fault_trace_samples", []),
+        "mprotect_trace_seen": gate_row.get("mprotect_trace_seen"),
+        "mprotect_trace_count": gate_row.get("mprotect_trace_count"),
+        "pc_watch_seen": gate_row.get("pc_watch_seen"),
+        "pc_watch_last": gate_row.get("pc_watch_last"),
         "tb_lookup": gate_row.get("tb_lookup"),
         "tb_miss": gate_row.get("tb_miss"),
         "tlb_fill_total": gate_row.get("tlb_fill_total"),
@@ -489,7 +536,11 @@ def build_analysis(
         "generated_at_utc": _utc_now(),
         "gate_summary": str(gate_summary_path),
         "profile_summary": str(profile_summary_path),
-        "input_set": gate_summary.get("profile") or profile_summary.get("input_set"),
+        "input_set": (
+            gate_summary.get("profile")
+            or gate_summary.get("input_set")
+            or profile_summary.get("input_set")
+        ),
         "stage": profile_summary.get("stage"),
         "qemu": {
             "gate": gate_summary.get("qemu"),
@@ -568,6 +619,25 @@ def _write_markdown(path: Path, report: dict[str, Any]) -> None:
             f"`{top}` | "
             f"{row['proposed_action']} |"
         )
+
+    fault_rows = [
+        row
+        for row in report["benchmarks"]
+        if row.get("trap_seen") or row.get("fault_trace_seen") or row.get("pc_watch_seen")
+    ]
+    if fault_rows:
+        lines.extend(["", "## Fault And Trap Evidence", ""])
+        for row in fault_rows:
+            lines.append(f"- `{row['bench']}` lane=`{row['lane']}`")
+            if row.get("fault_trace_seen"):
+                lines.append(
+                    f"  fault-trace count=`{row.get('fault_trace_count')}` "
+                    f"last=`{row.get('fault_trace_last', '')[:240]}`"
+                )
+            if row.get("pc_watch_seen"):
+                lines.append(f"  pc-watch last=`{row.get('pc_watch_last', '')[:240]}`")
+            if row.get("failure_evidence"):
+                lines.append(f"  failure=`{row.get('failure_evidence', '')[:240]}`")
 
     lines.extend(["", "## Lanes", ""])
     for lane in report["lanes"]:

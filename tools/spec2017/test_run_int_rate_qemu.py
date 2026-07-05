@@ -687,6 +687,33 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(last_entry["pc"], "0x1555837f18")
         self.assertEqual(last_entry["count"], 3340028849)
 
+    def test_fault_trace_summary_keeps_recent_fault_fields(self) -> None:
+        summary = runner._fault_trace_summary(
+            "LINX_FAULT_TRACE count=3159403588 trapnum=1 src_acr=2 dst_acr=1 "
+            "bi=1 precise=0 tpc=0x1555825572 tpc_next=0x1555825574 "
+            "src_bpc=0x1555825566 report_bpc=0x1555825566 "
+            "traparg0=0x155583c708 mem_va=0x155583c708 cause=0x5 "
+            "store_ok=0 store_prot=0x0 store_cause=0x5 "
+            "legacy_store=1:0:type0:4:0x868c1e0:0x0:0x0:0x0:0x0:0x5\n"
+        )
+
+        self.assertTrue(summary["seen"])
+        self.assertEqual(summary["count"], 1)
+        sample = summary["samples"][0]
+        self.assertEqual(sample["count"], 3159403588)
+        self.assertEqual(sample["trapnum"], 1)
+        self.assertEqual(sample["src_acr"], 2)
+        self.assertEqual(sample["dst_acr"], 1)
+        self.assertEqual(sample["bi"], 1)
+        self.assertEqual(sample["precise"], 0)
+        self.assertEqual(sample["tpc"], "0x1555825572")
+        self.assertEqual(sample["report_bpc"], "0x1555825566")
+        self.assertEqual(sample["traparg0"], "0x155583c708")
+        self.assertEqual(sample["mem_va"], "0x155583c708")
+        self.assertEqual(sample["store_ok"], 0)
+        self.assertEqual(sample["store_cause"], "0x5")
+        self.assertIn("type0", sample["legacy_store"])
+
     def test_tlb_fill_hot_summary_parses_top_slots(self) -> None:
         summary = runner._tlb_fill_hot_summary(
             "LINX_HEARTBEAT count=100 pc=0x1 bpc=0x2\n"

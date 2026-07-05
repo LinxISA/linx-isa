@@ -3057,6 +3057,7 @@ def _run_qemu(
             heartbeat_kernel_symbols.get("evidence") or classification["evidence"]
         )[:512]
     fcmp_trace = _fcmp_trace_summary(text)
+    fault_trace = _fault_trace_summary(text)
     tlb_fill_trace = _tlb_fill_trace_summary(text)
     mprotect_trace = _mprotect_trace_summary(text)
     heartbeat_stall = classification["heartbeat_stall"]
@@ -3131,6 +3132,10 @@ def _run_qemu(
         "fcmp_trace_count": fcmp_trace["count"],
         "fcmp_trace_last": fcmp_trace["last"],
         "fcmp_trace_samples": fcmp_trace["samples"],
+        "fault_trace_seen": fault_trace["seen"],
+        "fault_trace_count": fault_trace["count"],
+        "fault_trace_last": fault_trace["last"],
+        "fault_trace_samples": fault_trace["samples"],
         "tlb_fill_trace_seen": tlb_fill_trace["seen"],
         "tlb_fill_trace_count": tlb_fill_trace["count"],
         "tlb_fill_trace_last": tlb_fill_trace["last"],
@@ -4137,6 +4142,41 @@ def _tlb_fill_trace_summary(text: str) -> dict[str, Any]:
                 "legacy_desc": fields.get("legacy_desc", "").lower(),
                 "legacy_prot": fields.get("legacy_prot", "").lower(),
                 "legacy_cause": fields.get("legacy_cause", "").lower(),
+            }
+        )
+    return {
+        "seen": bool(lines),
+        "count": len(lines),
+        "last": lines[-1][:512] if lines else "",
+        "samples": samples,
+    }
+
+
+def _fault_trace_summary(text: str) -> dict[str, Any]:
+    lines = re.findall(r"^LINX_FAULT_TRACE .*$", text, flags=re.MULTILINE)
+    samples: list[dict[str, Any]] = []
+    for line in lines[-8:]:
+        fields = _heartbeat_fields(line)
+        samples.append(
+            {
+                "line": line[:512],
+                "count": _decimal_or_none(fields.get("count")),
+                "trapnum": _decimal_or_none(fields.get("trapnum")),
+                "src_acr": _decimal_or_none(fields.get("src_acr")),
+                "dst_acr": _decimal_or_none(fields.get("dst_acr")),
+                "bi": _decimal_or_none(fields.get("bi")),
+                "precise": _decimal_or_none(fields.get("precise")),
+                "tpc": fields.get("tpc", "").lower(),
+                "tpc_next": fields.get("tpc_next", "").lower(),
+                "src_bpc": fields.get("src_bpc", "").lower(),
+                "report_bpc": fields.get("report_bpc", "").lower(),
+                "traparg0": fields.get("traparg0", "").lower(),
+                "mem_va": fields.get("mem_va", "").lower(),
+                "cause": fields.get("cause", "").lower(),
+                "store_ok": _decimal_or_none(fields.get("store_ok")),
+                "store_prot": fields.get("store_prot", "").lower(),
+                "store_cause": fields.get("store_cause", "").lower(),
+                "legacy_store": fields.get("legacy_store", ""),
             }
         )
     return {

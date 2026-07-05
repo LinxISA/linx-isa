@@ -259,6 +259,71 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
         self.assertEqual(mismatches["qemu_frame_stats"], (True, False))
         self.assertEqual(mismatches["qemu_frame_single_reg_fast"], (False, True))
 
+    def test_stage_qemu_detail_carries_fault_trace_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            gate_path = root / "specint_fast_gate_summary.json"
+            profile_path = root / "profile_suite_summary.json"
+            stage_path = root / "stage_b_summary.json"
+            gate = {
+                "profile": "test",
+                "suites": [
+                    {
+                        "name": "test-all",
+                        "input_set": "test",
+                        "stage": "b",
+                        "transports": ["initramfs"],
+                        "stage_summary": str(stage_path),
+                        "benches": ["500.perlbench_r"],
+                    }
+                ],
+            }
+            stage = {
+                "stage": "b",
+                "input_set": "test",
+                "transport": "initramfs",
+                "results": {
+                    "500.perlbench_r": {
+                        "ok": False,
+                        "specdiff": {"ok": False, "strict_hash": True, "hash_checks": []},
+                        "qemu": [
+                            {
+                                "failure_class": "user-trap",
+                                "failure_evidence": "LINX_USER_TRAP addr=0x0",
+                                "trap_seen": True,
+                                "qemu_debug_env": {"LINX_QEMU_FAULT_TRACE": "1"},
+                                "fault_trace_seen": True,
+                                "fault_trace_count": 2,
+                                "fault_trace_last": "LINX_FAULT_TRACE traparg0=0x1234",
+                                "fault_trace_samples": [{"traparg0": "0x1234"}],
+                                "pc_watch": {"seen": True, "last": "linx_pc_watch: pc=0x1"},
+                                "log": "/tmp/qemu.log",
+                            }
+                        ],
+                    }
+                },
+            }
+            profile = {"input_set": "test", "stage": "b", "rows": []}
+            self._write(gate_path, gate)
+            self._write(stage_path, stage)
+            self._write(profile_path, profile)
+
+            report = analyzer.build_analysis(gate, profile, gate_path, profile_path)
+            direct_report = analyzer.build_analysis(stage, profile, stage_path, profile_path)
+
+        row = report["benchmarks"][0]
+        self.assertEqual(row["lane"], "correctness-fault-trace-debug")
+        self.assertEqual(row["failure_class"], "user-trap")
+        self.assertTrue(row["fault_trace_seen"])
+        self.assertEqual(row["fault_trace_count"], 2)
+        self.assertEqual(row["qemu_debug_env"], {"LINX_QEMU_FAULT_TRACE": "1"})
+        self.assertTrue(row["pc_watch_seen"])
+        self.assertEqual(
+            direct_report["benchmarks"][0]["lane"],
+            "correctness-fault-trace-debug",
+        )
+        self.assertEqual(direct_report["input_set"], "test")
+
     def test_feature_compatibility_infers_legacy_profile_command_flags(self) -> None:
         gate = {
             "template_chain": True,
@@ -322,6 +387,11 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                     "lane": "template-tb-mmu-throughput",
                     "top_qemu": [{"symbol": "tb_lookup", "count": 3}],
                     "proposed_action": "Target TB lookup.",
+                    "trap_seen": True,
+                    "fault_trace_seen": True,
+                    "fault_trace_count": 1,
+                    "fault_trace_last": "LINX_FAULT_TRACE traparg0=0x1234",
+                    "failure_evidence": "LINX_USER_TRAP addr=0x0",
                 }
             ],
             "lanes": [
@@ -343,6 +413,8 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
         self.assertIn("qemu_frame_stats", text)
         self.assertIn("template-tb-mmu-throughput", text)
         self.assertIn("tb_lookup=3", text)
+        self.assertIn("Fault And Trap Evidence", text)
+        self.assertIn("LINX_FAULT_TRACE", text)
 
 
 if __name__ == "__main__":
