@@ -1,14 +1,70 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import os
 import tempfile
 from pathlib import Path
+from types import SimpleNamespace
 import unittest
+from unittest import mock
 
 import run_stage_qemu_matrix as matrix
 
 
 class StageQemuMatrixTests(unittest.TestCase):
+    def test_template_chain_is_forwarded_to_child_env(self) -> None:
+        captured_envs: list[dict[str, str]] = []
+
+        def fake_run(cmd, **kwargs):  # type: ignore[no-untyped-def]
+            env = kwargs.get("env")
+            if env is None:
+                return SimpleNamespace(returncode=0, stdout="")
+            captured_envs.append(dict(env))
+            out_dir = Path(cmd[cmd.index("--out-dir") + 1])
+            out_dir.mkdir(parents=True, exist_ok=True)
+            (out_dir / "stage_b_summary.json").write_text(
+                '{"ok": true, "results": {}}\n',
+                encoding="utf-8",
+            )
+            return SimpleNamespace(returncode=0)
+
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            spec_dir = root / "spec"
+            (spec_dir / "benchspec" / "CPU").mkdir(parents=True)
+            (spec_dir / "bin" / "harness").mkdir(parents=True)
+            (spec_dir / "bin" / "harness" / "specdiff").write_text("")
+            out_dir = root / "out"
+
+            with mock.patch.dict(os.environ, {"QEMU": "/bin/true"}), mock.patch.object(
+                matrix.subprocess, "run", side_effect=fake_run
+            ):
+                rc = matrix.main(
+                    [
+                        "--spec-dir",
+                        str(spec_dir),
+                        "--qemu",
+                        "/bin/true",
+                        "--stage",
+                        "b",
+                        "--input-set",
+                        "train",
+                        "--transports",
+                        "initramfs",
+                        "--sysroot",
+                        str(root / "sysroot"),
+                        "--out-dir",
+                        str(out_dir),
+                        "--template-chain",
+                    ]
+                )
+
+            summary = (out_dir / "qemu_matrix_summary.json").read_text()
+
+        self.assertEqual(rc, 0)
+        self.assertEqual(captured_envs[0]["LINX_QEMU_TEMPLATE_CHAIN"], "1")
+        self.assertIn('"template_chain": true', summary)
+
     def test_multi_run_benchmark_reports_failing_subrun(self) -> None:
         summary = {
             "results": {
@@ -170,6 +226,7 @@ class StageQemuMatrixTests(unittest.TestCase):
             "qemu_heartbeat_same_site_warn": 4,
             "qemu_frame_single_reg_fast": True,
             "qemu_frame_page_fast": True,
+            "template_chain": True,
             "qemu_frame_restore_host_verify": True,
             "qemu_frame_restore_host_verify_limit": 9,
             "qemu_fault_trace": True,
@@ -227,6 +284,7 @@ class StageQemuMatrixTests(unittest.TestCase):
         self.assertIn("qemu_heartbeat_same_site_warn: `4`", text)
         self.assertIn("qemu_frame_single_reg_fast: `true`", text)
         self.assertIn("qemu_frame_page_fast: `true`", text)
+        self.assertIn("template_chain: `true`", text)
         self.assertIn("qemu_frame_restore_host_verify: `true`", text)
         self.assertIn("qemu_frame_restore_host_verify_limit: `9`", text)
         self.assertIn("guest_proc_diagnostics: `true`", text)
