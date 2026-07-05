@@ -1,6 +1,6 @@
 # SPECint / QEMU Checklist
 
-## Live Blockers (2026-07-05)
+## Live Blockers (2026-07-06)
 
 - [x] ID: SPEC-QEMU-HEARTBEAT-EXTENDED-SPLIT-20260706 QEMU heartbeat keeps BPC liveness cheap while preserving opt-in counter payloads for SPEC triage.
   Tool evidence: `emulator/qemu/target/linx/helper.c` now keeps the base
@@ -36,6 +36,33 @@
   `--qemu-heartbeat-extended` or any MMU/TLB stat switch only for profiling and
   attribution gates. Do not compare compact and extended timeout counts as pure
   speed A/B because the extended formatter intentionally does more work.
+
+- [x] ID: SPEC-TRAIN-ALL-CURRENT-SUBMITTED-QEMU-20260706 Latest submitted QEMU all-row train gate covers every tracked SPECint train row after rebuilding `build-linx`.
+  Command: `SPECINT_TRAIN_ALL_TIMEOUT=90 python3 tools/bringup/run_specint_fast_gate.py --profile train --out-dir workloads/generated/specint-train-all-current-clean-qemu-20260706-r2 --qemu emulator/qemu/build-linx/qemu-system-linx64 --sysroot out/libc/musl/install/phase-b --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 --qemu-heartbeat-interval 1000000000 --heartbeat-sec 30 --no-progress-timeout 120 --stack-limit 2G --guest-heartbeat-sec 0 --qemu-mmu-cache --qemu-mmu-cache-stats --qemu-frame-single-reg-fast --qemu-frame-stats --template-chain --qemu-tlb-stats --qemu-tlb-fill-stats --qemu-tlb-fill-hot --qemu-tlb-inv-hot --qemu-tb-stats --continue-on-fail --min-free-gb 0`.
+  Provenance evidence: `ninja -C emulator/qemu/build-linx qemu-system-linx64`
+  rebuilt the in-tree binary before the run. The fast-gate summary records QEMU
+  head `4462415a388cad7c91909f628dd4f42290569428`, version
+  `QEMU emulator version 10.2.50 (v10.2.0-1034-g4462415a388)`,
+  `qemu_repo_dirty_tracked=false`, and `clean_build_for_head=false` because
+  `build-linx` has no clean-build marker.
+  SPEC evidence: `workloads/generated/specint-train-all-current-clean-qemu-20260706-r2/specint_fast_gate_summary.json`
+  covers `500.perlbench_r`, `502.gcc_r`, `505.mcf_r`, `520.omnetpp_r`,
+  `523.xalancbmk_r`, `531.deepsjeng_r`, `541.leela_r`, `557.xz_r`, and strict
+  `999.specrand_ir` on initramfs, plus `525.x264_r` on the large 9p shard.
+  `999.specrand_ir` is absent from the failed list. The nine real train rows
+  are all `live-timeout` rows with `running/site-progress`, changing BPC, no
+  no-progress timeout, no panic, and no fresh user-trap classification.
+  BPC/count evidence at the timeout boundary is `500=22B @ 0x15556d955a`,
+  `502=18B @ 0x1555f400da`, `505=25B @ 0x155555c4a4`,
+  `520=14B @ 0x15557ec132`, `523=18B @ 0x1555998fb0`,
+  `525=17B @ 0xffffffff801147e6`, `531=30B @ 0x1555566dd8`,
+  `541=16B @ 0x155559bac8`, and `557=29B @ 0x155558d584`.
+  Loop update: this run confirms the submitted heartbeat/debug stack still
+  separates deadlock from throughput: every red row is running. The next speed
+  loop should target template/TB/soft-MMU dispatch first, keep `505.mcf_r` as
+  the heaviest user demand-walk row (`tlbf_total=87810258`), preserve separate
+  Linux TLBI attribution for `531`/`557`, and keep `525.x264_r` as a 9p/kernel
+  transport lane whose latest 90-second BPC remains kernel-side.
 
 - [x] ID: SPEC-TRAIN-ALL-EXPLICIT-TEMPLATE-CHAIN-20260706 Latest pinned QEMU all-row train gate uses explicit template-chain runner switches and records every SPECint train row.
   Tool evidence: `tools/bringup/run_specint_fast_gate.py` now forwards

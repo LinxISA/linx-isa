@@ -31,6 +31,21 @@ Evidence:
   than mixed into every cheap regression check.
 - `docs/bringup/QEMU_SPECINT_PERFORMANCE_PLAN.md` records the current QEMU
   SPECint profile and the prioritized speedups for the Linx target.
+- `workloads/generated/specint-train-all-current-clean-qemu-20260706-r2/` is
+  the latest submitted-QEMU all-SPECint train ledger. It uses the rebuilt
+  in-tree `emulator/qemu/build-linx/qemu-system-linx64` at QEMU head
+  `4462415a388cad7c91909f628dd4f42290569428`, version
+  `v10.2.0-1034-g4462415a388`, with `qemu_repo_dirty_tracked=false`. The
+  runner records `clean_build_for_head=false` only because `build-linx` has no
+  clean-build marker. The split train suite enables BPC heartbeat, extended
+  MMU/TLB/frame/TB counters, `--qemu-mmu-cache`, `--qemu-frame-single-reg-fast`,
+  and explicit `--template-chain`. `999.specrand_ir` is not in the failed list;
+  every real tracked C/C++ row, including generated 9p `525.x264_r`, remains a
+  heartbeat-backed `live-timeout` with site-changing BPC progress, no
+  no-progress timeout, no panic, and no fresh user-trap classification. The
+  next speed loop remains template/TB/soft-MMU dispatch first, `505.mcf_r`
+  demand-walk pressure, Linux TLBI attribution for `531`/`557`, and a separate
+  9p/kernel transport lane for `525`.
 - `workloads/generated/specint-train-all-shape-record-inline-clean-qemu-20260705-r1/`
   is the current clean latest-QEMU all-SPECint train ledger. It uses
   `/tmp/linx-qemu-clean-build/qemu-system-linx64` at QEMU head
