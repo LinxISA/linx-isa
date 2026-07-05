@@ -144,6 +144,8 @@ Artifact roots:
 - `workloads/generated/specint-500-testpl-acre-unfiltered-smoke-qemu-20260705-r1`
 - `workloads/generated/specint-500-testpl-acre-late-unfiltered-qemu-20260705-r1`
 - `workloads/generated/specint-500-testpl-enframe-acre-qemu-20260705-r1`
+- `workloads/generated/specint-500-testpl-acre-restore-window-qemu-20260705-r1`
+- `workloads/generated/specint-500-testpl-enframe-postacre-queue-qemu-20260705-r1`
 
 Command shape for the exact-BPC ACRE run:
 
@@ -193,6 +195,27 @@ Result:
   `tq0=0x6`, `tq1=0x7`, `tq2=0x15555b5000`, `tq3=0x0`,
   `uq0=0x15555b5594`, `uq1=0x0`, `uq2=0x0`, `uq3=0x0`; the staged live
   `tq*`/`uq*` queues match those nonzero saved values.
+- The restore-window run
+  `specint-500-testpl-acre-restore-window-qemu-20260705-r1` combines
+  trap-delivery source-queue capture with target/RRA/trapnum-filtered ACRE
+  tracing over the recurrent row-2 window. It ends as heartbeat-backed
+  `live-timeout`, but records matching nonzero queue vectors through both
+  source EBARG capture and ACRE `phase=staged` live state. For `enframe`,
+  trap delivery saves `src_tq0=0x6`, `src_tq1=0x7`,
+  `src_tq2=0x15555b5000`, `src_uq0=0x15555b5594`, and ACRE stages the same
+  `tq0=0x6`, `tq1=0x7`, `tq2=0x15555b5000`, `uq0=0x15555b5594`. For
+  `Perl_do_exec3`, trap delivery saves `src_tq0=0x155557eb10`,
+  `src_tq1=0x1555841468`, `src_tq2=0x1555841000`,
+  `src_tq3=0x3fefe32a70`, `src_uq0=0x2e`, and ACRE stages the same live
+  queue vector.
+- The post-ACRE queue probe
+  `specint-500-testpl-enframe-postacre-queue-qemu-20260705-r1` did not hit its
+  narrow ACRE/queue window before the terminal site shifted. It fails as
+  `user-trap` at `tpc=0x1555828534`, `report_bpc=0x155582851a`,
+  `mem_va=0x10`, with `tq0=0xfffffffffffffff0`, `uq0=0x3fefedabc0`, and
+  `uq1=0x3fefedabd0`. Treat this packet as perturbation evidence: narrow
+  post-ACRE tracing can move the final terminal site before the intended
+  restore window is observed.
 
 Tool update:
 
@@ -209,15 +232,17 @@ Tool update:
 
 Interpretation:
 
-The exact-BPC trace rules out EBARG/ACRE restore as the direct source of the
-zero queues at this `enframe` resume site: ACRE restores nonzero saved queues
-into live user T/U queues before execution resumes. The lower-perturbation run
-faults 33,855 retired instructions later at the same PC/BPC with all queues
-zero. The next loop should add a very narrow queue-transition trace after ACRE
-staging, or a count/BPC-limited PC-watch over `0x155582997c..0x155582998e`, to
-find where resumed user-mode block execution or block-boundary logic clears
-the queues. Keep ACRE traces BPC/count-filtered; broad ACRE tracing is
-observable perturbation on this row.
+The exact-BPC and restore-window traces rule out source EBARG capture and ACRE
+restore as the direct source of the zero queues at the recurrent `enframe` and
+`Perl_do_exec3` resume sites: QEMU captures nonzero saved queues and stages the
+same values into live user T/U queues before execution resumes. The
+lower-perturbation run faults later at the same `enframe` PC/BPC with all
+queues zero, while the post-ACRE queue probe shows narrow instrumentation can
+shift the terminal site before the requested window is observed. The next loop
+should trace the first resumed instruction after ACRE staging, or the later
+shifted terminal path, with the narrowest possible PC/BPC/count filters. Keep
+ACRE traces BPC/count-filtered; broad ACRE tracing is observable perturbation
+on this row.
 
 ## 2026-07-05 continuation: `500.perlbench_r` `Perl_do_exec3` operand provenance
 
