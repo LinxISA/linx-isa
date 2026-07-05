@@ -136,6 +136,55 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(summary["samples"][0]["pending_arg0"], "0x155583c708")
         self.assertEqual(summary["samples"][0]["tpc"], "0x1555825572")
 
+    def test_linux_vm_trace_append_extra_and_summary(self) -> None:
+        append = runner._linux_vm_trace_append_extra(
+            "norandmaps",
+            linux_vm_trace=False,
+            linux_vm_trace_addr="0x155583c708",
+        )
+
+        self.assertEqual(
+            append,
+            "norandmaps linx_vm_trace=1 linx_vm_trace_addr=0x155583c708",
+        )
+        self.assertEqual(
+            runner._linux_vm_trace_append_extra(
+                append,
+                linux_vm_trace=True,
+                linux_vm_trace_addr="0x155583c708",
+            ),
+            append,
+        )
+
+        summary = runner._linux_vm_fault_trace_summary(
+            "LINX_VM_FAULT stage=good-vma pid=0x2a comm=perlbench_r "
+            "addr=0x155583c708 cause=0x5 flags=0x55 tpc=0x1555825572 "
+            "bpc=0x1555825566 sp=0x3f7fff0000 vma_start=0x155583c000 "
+            "vma_end=0x1555843000 vm_flags=0x75 page_prot=0x33 "
+            "vm_pgoff=0x0 fault_pgoff=0x7\n"
+            "LINX_VM_FAULT stage=handled pid=0x2a comm=perlbench_r "
+            "addr=0x155583c708 cause=0x5 flags=0x55 tpc=0x1555825572 "
+            "bpc=0x1555825566 sp=0x3f7fff0000 vma_start=0x155583c000 "
+            "vma_end=0x1555843000 vm_flags=0x75 page_prot=0x33 "
+            "vm_pgoff=0x0 fault_pgoff=0x7 fault=0x100\n"
+        )
+
+        self.assertTrue(summary["seen"])
+        self.assertEqual(summary["count"], 2)
+        self.assertEqual(summary["samples"][-1]["stage"], "handled")
+        self.assertEqual(summary["samples"][-1]["pid"], 42)
+        self.assertEqual(summary["samples"][-1]["addr"], "0x155583c708")
+        self.assertEqual(summary["samples"][-1]["fault"], "0x100")
+
+        interleaved = runner._linux_vm_fault_trace_summary(
+            "3fefe4cLINX_VM_FAULT stage=vma-gap pid=0xd comm=perlbench_r_bas "
+            "addr=0xc cause=0xc000000005000001 flags=0x255 "
+            "tpc=0x1555672a00 bpc=0x15556729ea sp=0x3ffffff8d8\n"
+        )
+        self.assertTrue(interleaved["seen"])
+        self.assertEqual(interleaved["samples"][0]["stage"], "vma-gap")
+        self.assertEqual(interleaved["samples"][0]["addr"], "0xc")
+
     def test_child_exit_with_benchmark_internal_error_is_classified(self) -> None:
         result = runner._classify_qemu_result(
             text=(

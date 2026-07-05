@@ -90,6 +90,23 @@ def _append_kernel_arg_if_absent(cmdline: str, name: str, value: str) -> str:
     return f"{cmdline} {extra}".strip()
 
 
+def _linux_vm_trace_append_extra(
+    append_extra: str,
+    *,
+    linux_vm_trace: bool,
+    linux_vm_trace_addr: str,
+) -> str:
+    result = append_extra.strip()
+    trace_addr = linux_vm_trace_addr.strip()
+    if linux_vm_trace or trace_addr:
+        result = _append_kernel_arg_if_absent(result, "linx_vm_trace", "1")
+    if trace_addr:
+        result = _append_kernel_arg_if_absent(
+            result, "linx_vm_trace_addr", trace_addr
+        )
+    return result
+
+
 def _build_kernel_append(transport: str, append_extra: str) -> str:
     append = "lpj=1000000 loglevel=8 console=ttyS0 kfence.sample_interval=0"
     disable_timer_irq = os.environ.get("LINX_DISABLE_TIMER_IRQ", "").lower() in {
@@ -3131,6 +3148,7 @@ def _run_qemu(
     tlb_fault_trace = _tlb_fault_trace_summary(text)
     trap_delivery_trace = _trap_delivery_trace_summary(text)
     mprotect_trace = _mprotect_trace_summary(text)
+    linux_vm_fault_trace = _linux_vm_fault_trace_summary(text)
     heartbeat_stall = classification["heartbeat_stall"]
     heartbeat_tlb_fill = _heartbeat_tlb_fill_summary(classification["last_heartbeat"])
     heartbeat_mmu_cache = _heartbeat_mmu_cache_summary(classification["last_heartbeat"])
@@ -3238,6 +3256,10 @@ def _run_qemu(
         "mprotect_trace_count": mprotect_trace["count"],
         "mprotect_trace_last": mprotect_trace["last"],
         "mprotect_trace_samples": mprotect_trace["samples"],
+        "linux_vm_fault_trace_seen": linux_vm_fault_trace["seen"],
+        "linux_vm_fault_trace_count": linux_vm_fault_trace["count"],
+        "linux_vm_fault_trace_last": linux_vm_fault_trace["last"],
+        "linux_vm_fault_trace_samples": linux_vm_fault_trace["samples"],
         "log": str(out_log),
     }
     _specialize_spec_wrapper_failure(qemu_info, text)
@@ -4543,6 +4565,41 @@ def _mprotect_trace_summary(text: str) -> dict[str, Any]:
     }
 
 
+def _linux_vm_fault_trace_summary(text: str) -> dict[str, Any]:
+    lines = [match.strip() for match in re.findall(r"LINX_VM_FAULT [^\n]*", text)]
+    samples: list[dict[str, Any]] = []
+    for line in lines[-8:]:
+        fields = _heartbeat_fields(line)
+        samples.append(
+            {
+                "line": line[:768],
+                "stage": fields.get("stage", ""),
+                "pid": _int_or_none(fields.get("pid")),
+                "comm": fields.get("comm", ""),
+                "addr": fields.get("addr", "").lower(),
+                "cause": fields.get("cause", "").lower(),
+                "flags": fields.get("flags", "").lower(),
+                "tpc": fields.get("tpc", "").lower(),
+                "bpc": fields.get("bpc", "").lower(),
+                "sp": fields.get("sp", "").lower(),
+                "vma": fields.get("vma", ""),
+                "vma_start": fields.get("vma_start", "").lower(),
+                "vma_end": fields.get("vma_end", "").lower(),
+                "vm_flags": fields.get("vm_flags", "").lower(),
+                "page_prot": fields.get("page_prot", "").lower(),
+                "vm_pgoff": fields.get("vm_pgoff", "").lower(),
+                "fault_pgoff": fields.get("fault_pgoff", "").lower(),
+                "fault": fields.get("fault", "").lower(),
+            }
+        )
+    return {
+        "seen": bool(lines),
+        "count": len(lines),
+        "last": lines[-1][:768] if lines else "",
+        "samples": samples,
+    }
+
+
 def _collect_outputs_from_log(qemu_log: Path, run_dir: Path, cfg: dict[str, Any]) -> dict[str, Any]:
     data = qemu_log.read_bytes()
     wanted = sorted({cmp_cfg["out"] for cmp_cfg in cfg.get("compares", [])})
@@ -4610,6 +4667,7 @@ def _strip_async_qemu_diagnostics(text: str) -> str:
         "LINX_TLB_FAULT_TRACE",
         "LINX_FCMP_TRACE",
         "LINX_MPROTECT",
+        "LINX_VM_FAULT",
     ):
         text = re.sub(rf"{marker}[^\n]*(?:\n|$)", "", text)
     return text
@@ -5173,6 +5231,20 @@ def main(argv: list[str]) -> int:
         help="Extra kernel cmdline appended to the built-in defaults (for example: 'norandmaps').",
     )
     parser.add_argument(
+        "--linux-vm-trace",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_LINUX_VM_TRACE", False),
+        help="Append linx_vm_trace=1 to the Linux cmdline and parse LINX_VM_FAULT lines.",
+    )
+    parser.add_argument(
+        "--linux-vm-trace-addr",
+        default=os.environ.get("LINX_SPEC_LINUX_VM_TRACE_ADDR", ""),
+        help=(
+            "Append linx_vm_trace_addr=<addr> to restrict Linux VM fault tracing "
+            "to one page; also enables linx_vm_trace=1."
+        ),
+    )
+    parser.add_argument(
         "--dump-prefix-bytes",
         type=int,
         default=int(os.environ.get("LINX_SPEC_DUMP_PREFIX_BYTES", "0")),
@@ -5334,6 +5406,19 @@ def main(argv: list[str]) -> int:
         raise SystemExit("error: --terminal-failure-grace-sec must be >= 0")
     if args.dump_prefix_bytes < 0:
         raise SystemExit("error: --dump-prefix-bytes must be >= 0")
+    linux_vm_trace_addr = str(args.linux_vm_trace_addr or "").strip()
+    if linux_vm_trace_addr:
+        try:
+            parsed = int(linux_vm_trace_addr, 0)
+        except ValueError as exc:
+            raise SystemExit("error: --linux-vm-trace-addr must be an integer") from exc
+        if parsed < 0:
+            raise SystemExit("error: --linux-vm-trace-addr must be >= 0")
+    effective_append_extra = _linux_vm_trace_append_extra(
+        args.append_extra,
+        linux_vm_trace=bool(args.linux_vm_trace),
+        linux_vm_trace_addr=linux_vm_trace_addr,
+    )
     qemu_fault_trace_filters = _qemu_fault_trace_filters_from_args(args)
     qemu_tlb_fault_trace_filters = _qemu_tlb_fault_trace_filters_from_args(args)
     qemu_tlb_fault_trace_requested = bool(
@@ -5431,7 +5516,10 @@ def main(argv: list[str]) -> int:
         "no_progress_timeout": args.no_progress_timeout,
         "terminal_failure_grace_sec": args.terminal_failure_grace_sec,
         "fail_9p_timeout": bool(args.fail_9p_timeout),
-        "append_extra": args.append_extra,
+        "append_extra": effective_append_extra,
+        "append_extra_requested": args.append_extra,
+        "linux_vm_trace": bool(args.linux_vm_trace or linux_vm_trace_addr),
+        "linux_vm_trace_addr": linux_vm_trace_addr,
         "dump_prefix_bytes": args.dump_prefix_bytes,
         "strict_hash": strict_hash,
         "run_indices": args.run_index,
@@ -5548,7 +5636,7 @@ def main(argv: list[str]) -> int:
                     qemu_fret_stk_trace,
                     qemu_fentry_trace,
                     args.no_progress_timeout,
-                    args.append_extra,
+                    effective_append_extra,
                     args.symbolize_heartbeat,
                     args.qemu_fault_trace,
                     args.qemu_fault_trace_regs,

@@ -123,6 +123,12 @@ class StageQemuMatrixTests(unittest.TestCase):
                                 "top0_regs": 4,
                                 "evictions": 2,
                             },
+                            "linux_vm_fault_trace_seen": True,
+                            "linux_vm_fault_trace_count": 12,
+                            "linux_vm_fault_trace_last": (
+                                "LINX_VM_FAULT stage=handled addr=0x155583c708 "
+                                "tpc=0x1555825572 fault=0x100"
+                            ),
                             "log": "run_002/qemu.log",
                         },
                     ],
@@ -201,6 +207,12 @@ class StageQemuMatrixTests(unittest.TestCase):
                 matrix._transport_failure_details(summary)
             ),
         )
+        self.assertIn(
+            "vmfault-trace=12",
+            matrix._format_failure_details(
+                matrix._transport_failure_details(summary)
+            ),
+        )
 
     def test_markdown_records_qemu_fault_filters(self) -> None:
         summary = {
@@ -220,6 +232,8 @@ class StageQemuMatrixTests(unittest.TestCase):
             "memory_mb": 2048,
             "stack_limit": "2G",
             "append_extra": "norandmaps",
+            "linux_vm_trace": True,
+            "linux_vm_trace_addr": "0x155583c708",
             "qemu_heartbeat_interval": 1000000000,
             "qemu_heartbeat_regs": True,
             "qemu_heartbeat_code_bytes": 16,
@@ -289,6 +303,8 @@ class StageQemuMatrixTests(unittest.TestCase):
         self.assertIn("qemu_clean_build_for_head: `true`", text)
         self.assertIn("qemu_machine_extra: `dumpdtb=/tmp/virt.dtb`", text)
         self.assertIn("qemu_extra_args: `-accel tcg,split-wx=off`", text)
+        self.assertIn("linux_vm_trace: `true`", text)
+        self.assertIn("linux_vm_trace_addr: `0x155583c708`", text)
         self.assertIn("qemu_heartbeat_code_bytes: `16`", text)
         self.assertIn("qemu_heartbeat_same_site_warn: `4`", text)
         self.assertIn("qemu_frame_single_reg_fast: `true`", text)

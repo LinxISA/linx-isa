@@ -195,6 +195,25 @@ Evidence:
   `addr=0x8` after returning from the `sccp` syscall wrapper. Keep this in the
   correctness lane and trace allocator metadata writes plus caller/control-flow
   provenance before changing broad SPEC timeouts.
+- `workloads/generated/specint-500-testpl-linuxvmtrace-qemu-20260705-r1/`
+  is the current Linux VM-fault plus QEMU trap-delivery packet for focused
+  `500.perlbench_r` test row 2 on clean QEMU
+  `v10.2.0-1029-g68bebbd9e7b`. The new SPEC runner switches
+  `--linux-vm-trace` and `--linux-vm-trace-addr` append Linux
+  `linx_vm_trace=1` / `linx_vm_trace_addr=<addr>` cmdline arguments and parse
+  `LINX_VM_FAULT` records into JSON summaries. This run records
+  `linux_vm_fault_trace_count=1911` and `trap_delivery_trace_count=512`.
+  The terminal signal is not a QEMU deadlock: QEMU BPC heartbeat progressed to
+  count `3000000003`, and Linux reports a real user page fault at
+  `addr=0x10`, `tpc=0x15555e4608`, `bpc=0x15555e45fa`,
+  `stage=vma-gap`, `trapno=0xc000000005000001`. Immediately before the
+  terminal null-ish dereference, the same `tpc`/`bpc` pair handled a mapped
+  store fault at `addr=0x3fefed04e0` in VMA
+  `0x3fefed0000..0x3fefed2000`. Keep the next loop in user-state corruption
+  triage: trace writes to the data structure read at `tpc=0x15555e4608` and
+  symbolicate that PC in `perlbench_r_base.mytest-m64`; do not treat the
+  earlier mapped page faults as emulator delivery failures without new
+  contrary evidence.
 - QEMU memory tracing is now usable without an address filter. Use
   `--qemu-mem-trace --qemu-mem-trace-pc-lo <pc> --qemu-mem-trace-pc-hi <pc>`
   for narrow producer windows, add `--qemu-mem-trace-pre` for faulting loads,

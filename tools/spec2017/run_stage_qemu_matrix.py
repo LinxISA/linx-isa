@@ -365,6 +365,10 @@ def _transport_failure_details(summary_obj: dict[str, Any]) -> dict[str, dict[st
             "mprotect_trace_count": failed_run.get("mprotect_trace_count"),
             "mprotect_trace_last": str(failed_run.get("mprotect_trace_last") or "")[:512],
             "mprotect_trace_samples": failed_run.get("mprotect_trace_samples") or [],
+            "linux_vm_fault_trace_seen": bool(failed_run.get("linux_vm_fault_trace_seen", False)),
+            "linux_vm_fault_trace_count": failed_run.get("linux_vm_fault_trace_count"),
+            "linux_vm_fault_trace_last": str(failed_run.get("linux_vm_fault_trace_last") or "")[:768],
+            "linux_vm_fault_trace_samples": failed_run.get("linux_vm_fault_trace_samples") or [],
             "log": str(failed_run.get("log") or ""),
         }
     return details
@@ -589,6 +593,9 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
         mprotect = ""
         if row.get("mprotect_trace_seen"):
             mprotect = f" mprotect-trace={row.get('mprotect_trace_count')}"
+        vmfault = ""
+        if row.get("linux_vm_fault_trace_seen"):
+            vmfault = f" vmfault-trace={row.get('linux_vm_fault_trace_count')}"
         kernel = ""
         if row.get("heartbeat_kernel_panic_loop"):
             kernel = " kernel-panic-loop"
@@ -607,7 +614,7 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
             hb_stall = f" heartbeat-stall={status}:{repeats}/{threshold}"
         parts.append(
             f"{bench}: {running}/{site} {progress}{timeout}{stalled} "
-            f"bpc={bpc}{recent}{kernel}{tlb_inv_symbols}{hb_stall}{fcmp}{tlbfill}{tlbfault}{tlbfill_stats}{tlbfill_hot}{mmu_cache}{frame_stats}{frame_shape_hot}{tlb_invalidation}{tlbinv_hot}{tb_stats}{bstart_cache}{mprotect}"
+            f"bpc={bpc}{recent}{kernel}{tlb_inv_symbols}{hb_stall}{fcmp}{tlbfill}{tlbfault}{tlbfill_stats}{tlbfill_hot}{mmu_cache}{frame_stats}{frame_shape_hot}{tlb_invalidation}{tlbinv_hot}{tb_stats}{bstart_cache}{mprotect}{vmfault}"
             f"{pc_watch}"
         )
     return ", ".join(parts)
@@ -642,6 +649,8 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
     lines.append(f"- memory_mb: `{summary['memory_mb']}`")
     lines.append(f"- stack_limit: `{summary['stack_limit']}`")
     lines.append(f"- append_extra: `{summary['append_extra'] or '-'}`")
+    lines.append(f"- linux_vm_trace: `{str(bool(summary.get('linux_vm_trace', False))).lower()}`")
+    lines.append(f"- linux_vm_trace_addr: `{summary.get('linux_vm_trace_addr') or '-'}`")
     lines.append(f"- qemu_heartbeat_interval: `{summary['qemu_heartbeat_interval']}`")
     lines.append(f"- qemu_heartbeat_regs: `{str(bool(summary.get('qemu_heartbeat_regs', False))).lower()}`")
     lines.append(f"- qemu_heartbeat_code_bytes: `{summary.get('qemu_heartbeat_code_bytes', 0)}`")
@@ -1142,6 +1151,20 @@ def main(argv: list[str]) -> int:
         help="Extra kernel command-line text passed through to the per-transport runner.",
     )
     ap.add_argument(
+        "--linux-vm-trace",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_LINUX_VM_TRACE", False),
+        help="Pass --linux-vm-trace to append linx_vm_trace=1 in per-transport runners.",
+    )
+    ap.add_argument(
+        "--linux-vm-trace-addr",
+        default=os.environ.get("LINX_SPEC_LINUX_VM_TRACE_ADDR", ""),
+        help=(
+            "Pass --linux-vm-trace-addr to restrict Linux VM fault tracing "
+            "to one page; also enables linx_vm_trace=1."
+        ),
+    )
+    ap.add_argument(
         "--dump-prefix-bytes",
         type=int,
         default=_env_int("LINX_SPEC_DUMP_PREFIX_BYTES", 0),
@@ -1273,6 +1296,14 @@ def main(argv: list[str]) -> int:
         raise SystemExit("error: --qemu-trap-delivery-trace-limit must be >= 0")
     if args.dump_prefix_bytes < 0:
         raise SystemExit("error: --dump-prefix-bytes must be >= 0")
+    linux_vm_trace_addr = str(args.linux_vm_trace_addr or "").strip()
+    if linux_vm_trace_addr:
+        try:
+            parsed = int(linux_vm_trace_addr, 0)
+        except ValueError as exc:
+            raise SystemExit("error: --linux-vm-trace-addr must be an integer") from exc
+        if parsed < 0:
+            raise SystemExit("error: --linux-vm-trace-addr must be >= 0")
     qemu_fault_trace_filters = {
         env_name: str(getattr(args, attr, "") or "").strip()
         for attr, env_name in QEMU_FAULT_TRACE_FILTER_ARGS.items()
@@ -1517,6 +1548,10 @@ def main(argv: list[str]) -> int:
         for attr in QEMU_PC_WATCH_BOOL_ARGS:
             if bool(getattr(args, attr, False)):
                 cmd.append("--" + attr.replace("_", "-"))
+        if args.linux_vm_trace:
+            cmd.append("--linux-vm-trace")
+        if linux_vm_trace_addr:
+            cmd.extend(["--linux-vm-trace-addr", linux_vm_trace_addr])
         if args.fail_9p_timeout:
             cmd.append("--fail-9p-timeout")
         if args.stack_limit.strip():
@@ -1628,6 +1663,8 @@ def main(argv: list[str]) -> int:
         "guest_proc_diagnostics": bool(args.guest_proc_diagnostics),
         "symbolize_heartbeat": bool(args.symbolize_heartbeat),
         "append_extra": str(args.append_extra),
+        "linux_vm_trace": bool(args.linux_vm_trace or linux_vm_trace_addr),
+        "linux_vm_trace_addr": linux_vm_trace_addr,
         "dump_prefix_bytes": int(args.dump_prefix_bytes),
         "bench_override": benches,
         "started_at_utc": started,

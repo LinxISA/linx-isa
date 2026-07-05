@@ -1,5 +1,60 @@
 # SPECint QEMU test/train bring-up, 2026-07-02
 
+## 2026-07-05 continuation: `500.perlbench_r` Linux VM-fault trace
+
+Artifact root:
+
+- `workloads/generated/specint-500-testpl-linuxvmtrace-qemu-20260705-r1`
+
+Command shape:
+
+```bash
+python3 tools/spec2017/run_int_rate_qemu.py \
+  --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 \
+  --qemu /private/tmp/linx-qemu-clean-build/qemu-system-linx64 \
+  --kernel kernel/linux/build-linx-fixed/vmlinux \
+  --stage b --transport initramfs --input-set test \
+  --bench 500.perlbench_r --run-index 2 --timeout 150 \
+  --heartbeat-sec 15 --qemu-heartbeat-interval 1000000000 \
+  --qemu-heartbeat-same-site-warn 4 --guest-heartbeat-sec 1 \
+  --guest-child-maps-bytes 4096 --terminal-failure-grace-sec 3 \
+  --append-extra norandmaps --linux-vm-trace \
+  --qemu-trap-delivery-trace \
+  --qemu-trap-delivery-trace-count-lo 3161900000 \
+  --qemu-trap-delivery-trace-count-hi 4100000000 \
+  --qemu-trap-delivery-trace-limit 512
+```
+
+Result:
+
+- QEMU: `/private/tmp/linx-qemu-clean-build/qemu-system-linx64`,
+  `QEMU emulator version 10.2.50 (v10.2.0-1029-g68bebbd9e7b)`.
+- Runner summary:
+  `workloads/generated/specint-500-testpl-linuxvmtrace-qemu-20260705-r1/stage_b_summary.json`.
+- Classification: `user-trap`, not timeout or deadlock.
+- Heartbeat: `heartbeat_running=true`, `heartbeat_site_progress=true`,
+  last count `3000000003`, last BPC `0xffffffff800fe9de`.
+- QEMU trap delivery: `trap_delivery_trace_count=512`; the count-window tail
+  still delivers nonzero `pending_arg0` values before the terminal signal.
+- Linux VM fault trace: `linux_vm_fault_trace_count=1911`.
+- Terminal Linux signal:
+  `addr=0x10`, `tpc=0x15555e4608`, `bpc=0x15555e45fa`,
+  `traparg0=0x10`, `trapno=0xc000000005000001`,
+  `LINX_VM_FAULT stage=vma-gap`.
+- Immediately preceding Linux VM fault at the same `tpc`/`bpc` was handled:
+  `addr=0x3fefed04e0`, VMA `0x3fefed0000..0x3fefed2000`,
+  `fault=0x0`.
+
+Interpretation:
+
+The current row-2 failure is a real null-ish user data dereference surfaced by
+Linux, not an absence of QEMU progress and not the earlier mapped page-fault
+delivery bug hypothesis. The next loop should symbolicate `0x15555e4608` in
+`perlbench_r_base.mytest-m64`, trace the producer of the base pointer that
+leads to `addr=0x10`, and use QEMU memory/PC-watch around that producer. Keep
+the terminal classification in the correctness lane rather than raising broad
+SPEC timeouts.
+
 ## Scope
 
 This run used the all-SPECint fast gate with `test` and `train` input sets on the Linx QEMU Linux path.
