@@ -4120,6 +4120,50 @@ Actionable next loops:
 - Keep TB cache-size growth rejected for this ledger: all rows report
   `tbs_flush=0` and code-buffer use remains far below the configured size.
 
+## Current Speed-Stack Train-All Ledger
+
+`workloads/generated/specint-train-all-current-speedstack-20260705-r2/` reruns
+the all-train gate on QEMU head `dfb80956f9031392c7d9a7d8d7819cbe22811f6f`
+with the current opt-in speed stack: template chaining, frame stats,
+one-register frame fast path, MMU cache and stats, TLB/TB stats, TLBI hot-site
+attribution, BPC heartbeat, and symbolized heartbeat output. The broad run uses
+`emulator/qemu/build-linx/qemu-system-linx64`, which reports the same source
+head but a `-dirty` version string. The same-head clean-build sentinel
+`workloads/generated/specint-train-smoke-clean-qemu-speedstack-20260705-r1/`
+passes strict `999.specrand_ir` on
+`/tmp/linx-qemu-clean-build/qemu-system-linx64`.
+
+The gate covers every supported SPECint train row: initramfs for `500`, `502`,
+`505`, `520`, `523`, `531`, `541`, `557`, and `999`, plus the large 9p shard
+for `525.x264_r`. `999.specrand_ir` passes the strict train sentinel. The nine
+real benchmark rows remain live timeouts with heartbeat running, BPC site
+progress, no panic, and no trap:
+
+| Benchmark | Status | Count | Final BPC | TLB-fill shape |
+| --- | --- | ---: | --- | --- |
+| `500.perlbench_r` | live-timeout | 61000000001 | `0x15556e5976` | user 1720544 / kernel 2259012 |
+| `502.gcc_r` | live-timeout | 42000000006 | `0x1555f7ce4a` | user 4095417 / kernel 4191451 |
+| `505.mcf_r` | live-timeout | 61000000005 | `0x155555cbf4` | user 166784131 / kernel 1872526 |
+| `520.omnetpp_r` | live-timeout | 31000000018 | `0x15557d829c` | user 9348788 / kernel 4234967 |
+| `523.xalancbmk_r` | live-timeout | 37000000004 | `0x1555986002` | user 4279172 / kernel 2339924 |
+| `525.x264_r` | live-timeout | 54000000010 | `0xffffffff801088f4` | user 95 / kernel 1868674 |
+| `531.deepsjeng_r` | live-timeout | 66000000034 | `0x155555b5de` | user 10330118 / kernel 2085365 |
+| `541.leela_r` | live-timeout | 37000000003 | `0xffffffff803e91e8` | user 171451 / kernel 1953243 |
+| `557.xz_r` | live-timeout | 68000000002 | `0x15555709b6` | user 14346358 / kernel 2322863 |
+| `999.specrand_ir` | pass | 0 | `0x0` | sentinel hash pass |
+
+Actionable next loops:
+
+- Treat current failures as throughput-limited while BPC/site progress remains
+  present. Reopen deadlock triage only if a row loses heartbeat progress,
+  reports panic/trap evidence, or repeats the same BPC without site changes.
+- Keep `525.x264_r` on the transport/kernel lane: the latest row records only
+  `95` user TLB fills and final BPC in `slub.c`.
+- Keep `531.deepsjeng_r` and `557.xz_r` in the Linux TLBI lane, but avoid
+  conflating the shared early fixmap burst with steady-state user work.
+- For `500`, `502`, `505`, `520`, and `523`, continue reducing template/TB and
+  soft-MMU dispatch cost before adding more broad frame-helper experiments.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.
