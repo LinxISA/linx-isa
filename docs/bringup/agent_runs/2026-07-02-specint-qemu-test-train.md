@@ -146,6 +146,7 @@ Artifact roots:
 - `workloads/generated/specint-500-testpl-enframe-acre-qemu-20260705-r1`
 - `workloads/generated/specint-500-testpl-acre-restore-window-qemu-20260705-r1`
 - `workloads/generated/specint-500-testpl-enframe-postacre-queue-qemu-20260705-r1`
+- `workloads/generated/specint-500-testpl-terminal8534-queue-acre-qemu-20260705-r1`
 
 Command shape for the exact-BPC ACRE run:
 
@@ -216,6 +217,18 @@ Result:
   `uq1=0x3fefedabd0`. Treat this packet as perturbation evidence: narrow
   post-ACRE tracing can move the final terminal site before the intended
   restore window is observed.
+- The terminal-`0x1555828534` queue/ACRE probe
+  `specint-500-testpl-terminal8534-queue-acre-qemu-20260705-r1` watches the
+  shifted terminal block directly. It ends as heartbeat-backed `live-timeout`
+  with `heartbeat_site_progress=true`, no low-address fault, 64 queue-trace
+  rows, and one unrelated kernel ACRE row in the count window. With load bias
+  `0x1515555000`, the watched block maps to linked
+  `0x402d351a..0x402d3538` in musl `get_meta` / `free.c`, `.LBB1_7`:
+  `ldi [u#2, -16], ->a0` followed by `c.ldi [a0, 16], ->t` at
+  `0x402d3534`. Normal traced executions build valid operands for that load;
+  for example `count=3170257044`, `pc=0x1555828534`, `bpc=0x155582851a`
+  has `a0=0x155584a360`, `tq0=0xfffffffffffffff0`, `tq1=0xd0`,
+  `tq2=0xd0`, `uq0=0x3fefeffa10`, and `uq1=0x3fefeffa20`.
 
 Tool update:
 
@@ -237,12 +250,13 @@ restore as the direct source of the zero queues at the recurrent `enframe` and
 `Perl_do_exec3` resume sites: QEMU captures nonzero saved queues and stages the
 same values into live user T/U queues before execution resumes. The
 lower-perturbation run faults later at the same `enframe` PC/BPC with all
-queues zero, while the post-ACRE queue probe shows narrow instrumentation can
-shift the terminal site before the requested window is observed. The next loop
-should trace the first resumed instruction after ACRE staging, or the later
-shifted terminal path, with the narrowest possible PC/BPC/count filters. Keep
-ACRE traces BPC/count-filtered; broad ACRE tracing is observable perturbation
-on this row.
+queues zero, while the post-ACRE and terminal-`get_meta` queue probes show
+narrow instrumentation can shift terminal traps into live-timeout and that the
+shifted terminal blocks normally build valid operands. The next loop should
+trace the producer/caller path that hands bad allocator metadata into
+`get_meta`/`enframe`, or the first resumed instruction after ACRE staging, with
+the narrowest possible PC/BPC/count filters. Keep ACRE traces BPC/count-
+filtered; broad ACRE tracing is observable perturbation on this row.
 
 ## 2026-07-05 continuation: `500.perlbench_r` `Perl_do_exec3` operand provenance
 
