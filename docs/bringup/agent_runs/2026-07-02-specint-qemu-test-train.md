@@ -407,6 +407,23 @@ Result:
   origin maps to the `sccp` `ACRC`/`BSTOP` path. The last syscall trace is
   again `nr=222` at `tpc=0x155582e9e6`, `bpc=0x155582e9c6`,
   `pc_next=0x155582e9ea`, `a1=0x2000`, and `ra=0x1555829780`.
+- The lower-perturbation post-store checkpoint
+  `specint-500-testpl-entersub-poststore-ring-fault-qemu-20260706-r1`
+  moves the watch point to linked `0x40129516` / runtime `0x155567e516`,
+  immediately after the `sdi t#1, [sp, 296]` producer and before the reload.
+  It sets `LINX_DEBUG_PC_WATCH_PRINT=0` so QEMU records only the PC-watch ring,
+  plus `LINX_DEBUG_PC_WATCH_RING_MEM_REG=sp` and
+  `LINX_DEBUG_PC_WATCH_RING_MEM_OFFSET=296` so fault-time ring entries snapshot
+  the saved slot. The run reproduces a quick heartbeat-backed `user-trap`
+  (`heartbeat_running=true`, `heartbeat_site_progress=true`) and dumps one
+  16-entry `LINX_PC_WATCH_RING reason=fault`. All 16 entries have
+  `mem_ok=1` and nonzero `mem_value`, including `0x3fefea3518`,
+  `0x3fefebb590`, `0x3fefe92f60`, and `0x3fefe92900`; every sampled
+  `mem_value` matches the entry's live `tq0`. The terminal shifted to musl
+  `free.c` linked `0x402d3566` / runtime `0x1555828566`, instruction
+  `sbi t#1, [a1, 0]`, with `addr=0x0`, `a1=0`, and all captured T/U queues
+  zero at the low-address fault. The last syscall trace is again `nr=222` at
+  `tpc=0x155582e9e6`, `bpc=0x155582e9c6`, `pc_next=0x155582e9ea`.
 
 Tool update:
 
@@ -454,10 +471,13 @@ one-hit filtered hook at or near the hot terminal path can shift row 2. The
 producer-side PC-watch rows show the `[sp+296]` saved-pointer producer normally
 stores nonzero `tq0` operands, and the one-hit `tq0==0` producer matcher
 reproduces the `Perl_do_exec3` zero-table trap without any producer match.
-That moves the current hypothesis away from the `0x40129512` producer store
-itself and toward later saved-slot preservation, stack-slot overwrite, or
-queue/control-state replay between the syscall-return path and repeated Perl
-body execution. The next loop should avoid helper hooks at
+The unprinted post-store ring extends that boundary: shortly before a later
+musl `free.c` low-address fault, `[sp+296]` is still readable and nonzero at
+each sampled `Perl_pp_entersub` checkpoint. That moves the current hypothesis
+away from the `0x40129512` producer store and immediate saved slot itself, and
+toward later queue/control-state replay or a separate corrupt pointer flowing
+through the repeated syscall-return / Perl body / allocator path. The next loop
+should avoid helper hooks at
 `0x4012968a..0x40129690`; if more `Perl_pp_entersub` evidence is needed, add a
 lower-overhead non-printing checkpoint outside the hot block and print only on
 the later terminal fault. Preserve the call ring and the musl
