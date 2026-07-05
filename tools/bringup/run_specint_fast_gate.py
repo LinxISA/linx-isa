@@ -510,6 +510,7 @@ def _suite_command(
     qemu_heartbeat_regs: bool,
     qemu_heartbeat_code_bytes: int,
     qemu_heartbeat_same_site_warn: int,
+    qemu_heartbeat_extended: bool,
     qemu_frame_stats: bool,
     qemu_frame_shape_hot: bool,
     qemu_frame_single_reg_fast: bool,
@@ -536,6 +537,7 @@ def _suite_command(
     forward_qemu_heartbeat_regs: bool,
     forward_qemu_heartbeat_code_bytes: bool,
     forward_qemu_heartbeat_same_site_warn: bool,
+    forward_qemu_heartbeat_extended: bool,
     forward_qemu_frame_stats: bool,
     forward_qemu_frame_shape_hot: bool,
     forward_qemu_frame_single_reg_fast: bool,
@@ -599,6 +601,8 @@ def _suite_command(
         cmd.extend(["--qemu-heartbeat-code-bytes", str(qemu_heartbeat_code_bytes)])
     if qemu_heartbeat_same_site_warn and forward_qemu_heartbeat_same_site_warn:
         cmd.extend(["--qemu-heartbeat-same-site-warn", str(qemu_heartbeat_same_site_warn)])
+    if qemu_heartbeat_extended and forward_qemu_heartbeat_extended:
+        cmd.append("--qemu-heartbeat-extended")
     if qemu_frame_stats and forward_qemu_frame_stats:
         cmd.append("--qemu-frame-stats")
     if qemu_frame_shape_hot and forward_qemu_frame_shape_hot:
@@ -692,6 +696,7 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
         f"- qemu_heartbeat_regs: `{str(bool(summary.get('qemu_heartbeat_regs', False))).lower()}`",
         f"- qemu_heartbeat_code_bytes: `{summary.get('qemu_heartbeat_code_bytes', 0)}`",
         f"- qemu_heartbeat_same_site_warn: `{summary.get('qemu_heartbeat_same_site_warn', 0)}`",
+        f"- qemu_heartbeat_extended: `{str(bool(summary.get('qemu_heartbeat_extended', False))).lower()}`",
         f"- qemu_frame_stats: `{str(bool(summary.get('qemu_frame_stats', False))).lower()}`",
         f"- qemu_frame_shape_hot: `{str(bool(summary.get('qemu_frame_shape_hot', False))).lower()}`",
         f"- qemu_frame_single_reg_fast: `{str(bool(summary.get('qemu_frame_single_reg_fast', False))).lower()}`",
@@ -760,6 +765,7 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--qemu-heartbeat-regs", action="store_true", default=_env_bool("SPEC_QEMU_HEARTBEAT_REGS", _env_bool("LINX_SPEC_QEMU_HEARTBEAT_REGS", False)))
     parser.add_argument("--qemu-heartbeat-code-bytes", type=int, default=_env_int("SPEC_QEMU_HEARTBEAT_CODE_BYTES", _env_int("LINX_SPEC_QEMU_HEARTBEAT_CODE_BYTES", 0)))
     parser.add_argument("--qemu-heartbeat-same-site-warn", type=int, default=_env_int("SPEC_QEMU_HEARTBEAT_SAME_SITE_WARN", _env_int("LINX_SPEC_QEMU_HEARTBEAT_SAME_SITE_WARN", 0)))
+    parser.add_argument("--qemu-heartbeat-extended", action="store_true", default=_env_bool("SPEC_QEMU_HEARTBEAT_EXTENDED", _env_bool("LINX_SPEC_QEMU_HEARTBEAT_EXTENDED", False)))
     parser.add_argument("--qemu-frame-stats", action="store_true", default=_env_bool("SPEC_QEMU_FRAME_STATS", _env_bool("LINX_SPEC_QEMU_FRAME_STATS", False)))
     parser.add_argument(
         "--qemu-frame-shape-hot",
@@ -967,6 +973,12 @@ def main(argv: list[str]) -> int:
         raise SystemExit("error: --qemu-heartbeat-code-bytes must be >= 0")
     if args.qemu_heartbeat_same_site_warn < 0:
         raise SystemExit("error: --qemu-heartbeat-same-site-warn must be >= 0")
+    args.qemu_heartbeat_extended = bool(
+        args.qemu_heartbeat_extended
+        or args.qemu_tlb_stats
+        or args.qemu_tlb_fill_stats
+        or args.qemu_mmu_cache_stats
+    )
     if args.no_progress_timeout < 0:
         raise SystemExit("error: --no-progress-timeout must be >= 0")
     if args.guest_heartbeat_sec < 0:
@@ -993,6 +1005,7 @@ def main(argv: list[str]) -> int:
     runner_has_qemu_heartbeat_regs = _runner_supports_option(runner, "--qemu-heartbeat-regs")
     runner_has_qemu_heartbeat_code_bytes = _runner_supports_option(runner, "--qemu-heartbeat-code-bytes")
     runner_has_qemu_heartbeat_same_site_warn = _runner_supports_option(runner, "--qemu-heartbeat-same-site-warn")
+    runner_has_qemu_heartbeat_extended = _runner_supports_option(runner, "--qemu-heartbeat-extended")
     runner_has_qemu_frame_stats = _runner_supports_option(runner, "--qemu-frame-stats")
     runner_has_qemu_frame_shape_hot = _runner_supports_option(runner, "--qemu-frame-shape-hot")
     runner_has_qemu_frame_single_reg_fast = _runner_supports_option(runner, "--qemu-frame-single-reg-fast")
@@ -1040,6 +1053,12 @@ def main(argv: list[str]) -> int:
             "error: local SPEC matrix runner does not support "
             "--qemu-heartbeat-same-site-warn; update tools/spec2017/run_stage_qemu_matrix.py "
             "or rerun without the heartbeat stall switch"
+        )
+    if args.qemu_heartbeat_extended and not runner_has_qemu_heartbeat_extended:
+        raise SystemExit(
+            "error: local SPEC matrix runner does not support "
+            "--qemu-heartbeat-extended; update tools/spec2017/run_stage_qemu_matrix.py "
+            "or rerun without the extended heartbeat switch"
         )
     if args.qemu_frame_stats and not runner_has_qemu_frame_stats:
         raise SystemExit(
@@ -1212,6 +1231,7 @@ def main(argv: list[str]) -> int:
                 qemu_heartbeat_regs=args.qemu_heartbeat_regs,
                 qemu_heartbeat_code_bytes=args.qemu_heartbeat_code_bytes,
                 qemu_heartbeat_same_site_warn=args.qemu_heartbeat_same_site_warn,
+                qemu_heartbeat_extended=args.qemu_heartbeat_extended,
                 qemu_frame_stats=args.qemu_frame_stats,
                 qemu_frame_shape_hot=args.qemu_frame_shape_hot,
                 qemu_frame_single_reg_fast=args.qemu_frame_single_reg_fast,
@@ -1238,6 +1258,7 @@ def main(argv: list[str]) -> int:
                 forward_qemu_heartbeat_regs=runner_has_qemu_heartbeat_regs,
                 forward_qemu_heartbeat_code_bytes=runner_has_qemu_heartbeat_code_bytes,
                 forward_qemu_heartbeat_same_site_warn=runner_has_qemu_heartbeat_same_site_warn,
+                forward_qemu_heartbeat_extended=runner_has_qemu_heartbeat_extended,
                 forward_qemu_frame_stats=runner_has_qemu_frame_stats,
                 forward_qemu_frame_shape_hot=runner_has_qemu_frame_shape_hot,
                 forward_qemu_frame_single_reg_fast=runner_has_qemu_frame_single_reg_fast,
@@ -1326,6 +1347,7 @@ def main(argv: list[str]) -> int:
         "qemu_heartbeat_regs": bool(args.qemu_heartbeat_regs),
         "qemu_heartbeat_code_bytes": args.qemu_heartbeat_code_bytes,
         "qemu_heartbeat_same_site_warn": args.qemu_heartbeat_same_site_warn,
+        "qemu_heartbeat_extended": bool(args.qemu_heartbeat_extended),
         "qemu_frame_stats": bool(args.qemu_frame_stats),
         "qemu_frame_shape_hot": bool(args.qemu_frame_shape_hot),
         "qemu_frame_single_reg_fast": bool(args.qemu_frame_single_reg_fast),

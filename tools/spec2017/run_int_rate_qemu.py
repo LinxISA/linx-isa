@@ -778,6 +778,7 @@ def _apply_qemu_debug_env(
     qemu_heartbeat_regs: bool = False,
     qemu_heartbeat_code_bytes: int = 0,
     qemu_heartbeat_same_site_warn: int = 0,
+    qemu_heartbeat_extended: bool = False,
     qemu_frame_stats: bool = False,
     qemu_frame_shape_hot: bool = False,
     qemu_frame_single_reg_fast: bool = False,
@@ -819,6 +820,13 @@ def _apply_qemu_debug_env(
         qemu_env["LINX_QEMU_HEARTBEAT_CODE_BYTES"] = str(qemu_heartbeat_code_bytes)
     if qemu_heartbeat_same_site_warn > 0:
         qemu_env["LINX_QEMU_HEARTBEAT_SAME_SITE_WARN"] = str(qemu_heartbeat_same_site_warn)
+    if (
+        qemu_heartbeat_extended
+        or qemu_tlb_stats
+        or qemu_tlb_fill_stats
+        or qemu_mmu_cache_stats
+    ):
+        qemu_env["LINX_QEMU_HEARTBEAT_EXTENDED"] = "1"
     if qemu_frame_stats:
         qemu_env["LINX_QEMU_FRAME_STATS"] = "1"
     if qemu_frame_shape_hot:
@@ -2947,6 +2955,7 @@ def _run_qemu(
     qemu_heartbeat_regs: bool,
     qemu_heartbeat_code_bytes: int,
     qemu_heartbeat_same_site_warn: int,
+    qemu_heartbeat_extended: bool,
     qemu_frame_stats: bool,
     qemu_frame_shape_hot: bool,
     qemu_frame_single_reg_fast: bool,
@@ -3030,6 +3039,7 @@ def _run_qemu(
         qemu_heartbeat_regs=qemu_heartbeat_regs,
         qemu_heartbeat_code_bytes=qemu_heartbeat_code_bytes,
         qemu_heartbeat_same_site_warn=qemu_heartbeat_same_site_warn,
+        qemu_heartbeat_extended=qemu_heartbeat_extended,
         qemu_frame_stats=qemu_frame_stats,
         qemu_frame_shape_hot=qemu_frame_shape_hot,
         qemu_frame_single_reg_fast=qemu_frame_single_reg_fast,
@@ -3257,6 +3267,7 @@ def _run_qemu(
         "qemu_machine_extra": machine_extra,
         "qemu_extra_args": qemu_extra,
         "qemu_debug_env": qemu_debug_env,
+        "qemu_heartbeat_extended": bool(qemu_heartbeat_extended),
         "qemu_frame_stats": bool(qemu_frame_stats),
         "qemu_frame_shape_hot": bool(qemu_frame_shape_hot),
         "qemu_frame_single_reg_fast": bool(qemu_frame_single_reg_fast),
@@ -5231,6 +5242,12 @@ def main(argv: list[str]) -> int:
         help="Set LINX_QEMU_HEARTBEAT_SAME_SITE_WARN to emit LINX_HEARTBEAT_STALL markers.",
     )
     parser.add_argument(
+        "--qemu-heartbeat-extended",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_HEARTBEAT_EXTENDED", False),
+        help="Set LINX_QEMU_HEARTBEAT_EXTENDED=1 for the full MMU/TLB/register heartbeat payload.",
+    )
+    parser.add_argument(
         "--qemu-frame-stats",
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_FRAME_STATS", False),
@@ -5728,6 +5745,12 @@ def main(argv: list[str]) -> int:
         raise SystemExit("error: --qemu-heartbeat-code-bytes must be >= 0")
     if args.qemu_heartbeat_same_site_warn < 0:
         raise SystemExit("error: --qemu-heartbeat-same-site-warn must be >= 0")
+    args.qemu_heartbeat_extended = bool(
+        args.qemu_heartbeat_extended
+        or args.qemu_tlb_stats
+        or args.qemu_tlb_fill_stats
+        or args.qemu_mmu_cache_stats
+    )
     if args.qemu_fault_trace_limit < 0:
         raise SystemExit("error: --qemu-fault-trace-limit must be >= 0")
     if args.qemu_frame_restore_host_verify_limit < 0:
@@ -5910,6 +5933,7 @@ def main(argv: list[str]) -> int:
         "qemu_heartbeat_regs": bool(args.qemu_heartbeat_regs),
         "qemu_heartbeat_code_bytes": args.qemu_heartbeat_code_bytes,
         "qemu_heartbeat_same_site_warn": args.qemu_heartbeat_same_site_warn,
+        "qemu_heartbeat_extended": bool(args.qemu_heartbeat_extended),
         "qemu_frame_stats": bool(args.qemu_frame_stats),
         "qemu_frame_shape_hot": bool(args.qemu_frame_shape_hot),
         "qemu_frame_single_reg_fast": bool(args.qemu_frame_single_reg_fast),
@@ -6044,6 +6068,7 @@ def main(argv: list[str]) -> int:
                     args.qemu_heartbeat_regs,
                     args.qemu_heartbeat_code_bytes,
                     args.qemu_heartbeat_same_site_warn,
+                    args.qemu_heartbeat_extended,
                     args.qemu_frame_stats,
                     args.qemu_frame_shape_hot,
                     args.qemu_frame_single_reg_fast,

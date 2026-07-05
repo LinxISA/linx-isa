@@ -2,6 +2,41 @@
 
 ## Live Blockers (2026-07-05)
 
+- [x] ID: SPEC-QEMU-HEARTBEAT-EXTENDED-SPLIT-20260706 QEMU heartbeat keeps BPC liveness cheap while preserving opt-in counter payloads for SPEC triage.
+  Tool evidence: `emulator/qemu/target/linx/helper.c` now keeps the base
+  `LINX_HEARTBEAT` line to `count`/`delta`/`pc`/`bpc`/`tpc`/`envpc`,
+  ACR/control-flow state, and `progress`/`same_site`. The large MMU cache,
+  TLB invalidation, TLB-fill, and register tail is gated by
+  `LINX_QEMU_HEARTBEAT_EXTENDED=1` / `LINX_HEARTBEAT_EXTENDED=1`, and is also
+  auto-enabled when MMU/TLB stat switches request those counters.
+  `tools/spec2017/run_int_rate_qemu.py`,
+  `tools/spec2017/run_stage_qemu_matrix.py`, and
+  `tools/bringup/run_specint_fast_gate.py` expose and record
+  `--qemu-heartbeat-extended`; the fast-gate wrapper forwards the switch only
+  when the matrix runner supports it.
+  Validation evidence: `python3 -m py_compile tools/spec2017/run_int_rate_qemu.py
+  tools/spec2017/run_stage_qemu_matrix.py tools/bringup/run_specint_fast_gate.py
+  tools/bringup/test_run_specint_fast_gate.py` passes; `python3 -m unittest
+  tools.bringup.test_run_specint_fast_gate
+  tools.spec2017.test_analyze_specint_qemu_progress
+  tools.spec2017.test_compare_specint_qemu_runs` passes 19 tests; `ninja -C
+  emulator/qemu/build-linx qemu-system-linx64` passes with only pre-existing
+  unrelated helper warnings; `git -C emulator/qemu diff --check` and `git diff
+  --check` pass.
+  SPEC evidence: compact strict train `999.specrand_ir` passes in
+  `workloads/generated/specint-999-heartbeat-compact-qemu-20260706-r1/stage_b_summary.json`
+  with hash `0x973dcfc2`, `qemu_heartbeat_extended=false`,
+  `heartbeat_running=true`, `heartbeat_site_progress=true`, and the last
+  heartbeat still carrying BPC (`0xffffffff803eee70`) while omitting
+  `mmuc_hit`/`tlbf_total`. Extended strict train `999.specrand_ir` passes in
+  `workloads/generated/specint-999-heartbeat-extended-qemu-20260706-r2/stage_b_summary.json`
+  with the same hash, `qemu_heartbeat_extended=true`, BPC progress, and the
+  full MMU/TLB tail present.
+  Loop update: use compact heartbeat for cheap deadlock-vs-running gates; add
+  `--qemu-heartbeat-extended` or any MMU/TLB stat switch only for profiling and
+  attribution gates. Do not compare compact and extended timeout counts as pure
+  speed A/B because the extended formatter intentionally does more work.
+
 - [x] ID: SPEC-TRAIN-ALL-EXPLICIT-TEMPLATE-CHAIN-20260706 Latest pinned QEMU all-row train gate uses explicit template-chain runner switches and records every SPECint train row.
   Tool evidence: `tools/bringup/run_specint_fast_gate.py` now forwards
   `--template-chain` to `tools/spec2017/run_stage_qemu_matrix.py`;

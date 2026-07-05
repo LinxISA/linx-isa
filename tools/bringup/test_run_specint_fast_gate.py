@@ -147,6 +147,7 @@ class SpecintFastGateTests(unittest.TestCase):
             qemu_heartbeat_regs=True,
             qemu_heartbeat_code_bytes=16,
             qemu_heartbeat_same_site_warn=4,
+            qemu_heartbeat_extended=True,
             qemu_frame_stats=True,
             qemu_frame_shape_hot=True,
             qemu_frame_single_reg_fast=True,
@@ -173,6 +174,7 @@ class SpecintFastGateTests(unittest.TestCase):
             forward_qemu_heartbeat_regs=True,
             forward_qemu_heartbeat_code_bytes=True,
             forward_qemu_heartbeat_same_site_warn=True,
+            forward_qemu_heartbeat_extended=True,
             forward_qemu_frame_stats=True,
             forward_qemu_frame_shape_hot=True,
             forward_qemu_frame_single_reg_fast=True,
@@ -202,6 +204,7 @@ class SpecintFastGateTests(unittest.TestCase):
         self.assertEqual(cmd[cmd.index("--qemu-heartbeat-code-bytes") + 1], "16")
         self.assertIn("--qemu-heartbeat-same-site-warn", cmd)
         self.assertEqual(cmd[cmd.index("--qemu-heartbeat-same-site-warn") + 1], "4")
+        self.assertIn("--qemu-heartbeat-extended", cmd)
         self.assertIn("--qemu-frame-stats", cmd)
         self.assertIn("--qemu-frame-shape-hot", cmd)
         self.assertIn("--qemu-frame-single-reg-fast", cmd)

@@ -655,6 +655,7 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
     lines.append(f"- qemu_heartbeat_regs: `{str(bool(summary.get('qemu_heartbeat_regs', False))).lower()}`")
     lines.append(f"- qemu_heartbeat_code_bytes: `{summary.get('qemu_heartbeat_code_bytes', 0)}`")
     lines.append(f"- qemu_heartbeat_same_site_warn: `{summary.get('qemu_heartbeat_same_site_warn', 0)}`")
+    lines.append(f"- qemu_heartbeat_extended: `{str(bool(summary.get('qemu_heartbeat_extended', False))).lower()}`")
     lines.append(f"- qemu_frame_stats: `{str(bool(summary.get('qemu_frame_stats', False))).lower()}`")
     lines.append(f"- qemu_frame_shape_hot: `{str(bool(summary.get('qemu_frame_shape_hot', False))).lower()}`")
     lines.append(f"- qemu_frame_single_reg_fast: `{str(bool(summary.get('qemu_frame_single_reg_fast', False))).lower()}`")
@@ -834,6 +835,12 @@ def main(argv: list[str]) -> int:
         type=int,
         default=_env_int("LINX_SPEC_QEMU_HEARTBEAT_SAME_SITE_WARN", 0),
         help="QEMU same-site heartbeat warning threshold passed through to the per-transport runner (0 disables).",
+    )
+    ap.add_argument(
+        "--qemu-heartbeat-extended",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_HEARTBEAT_EXTENDED", False),
+        help="Pass --qemu-heartbeat-extended to keep the full MMU/TLB/register heartbeat payload.",
     )
     ap.add_argument(
         "--qemu-frame-stats",
@@ -1194,6 +1201,12 @@ def main(argv: list[str]) -> int:
         raise SystemExit("error: --qemu-heartbeat-code-bytes must be >= 0")
     if args.qemu_heartbeat_same_site_warn < 0:
         raise SystemExit("error: --qemu-heartbeat-same-site-warn must be >= 0")
+    args.qemu_heartbeat_extended = bool(
+        args.qemu_heartbeat_extended
+        or args.qemu_tlb_stats
+        or args.qemu_tlb_fill_stats
+        or args.qemu_mmu_cache_stats
+    )
     if args.qemu_fault_trace_limit < 0:
         raise SystemExit("error: --qemu-fault-trace-limit must be >= 0")
     if args.qemu_frame_restore_host_verify_limit < 0:
@@ -1444,6 +1457,8 @@ def main(argv: list[str]) -> int:
             cmd.append("--guest-proc-diagnostics")
         if args.qemu_heartbeat_regs:
             cmd.append("--qemu-heartbeat-regs")
+        if args.qemu_heartbeat_extended:
+            cmd.append("--qemu-heartbeat-extended")
         if args.qemu_frame_stats:
             cmd.append("--qemu-frame-stats")
         if args.qemu_frame_shape_hot:
@@ -1629,6 +1644,7 @@ def main(argv: list[str]) -> int:
         "qemu_heartbeat_regs": bool(args.qemu_heartbeat_regs),
         "qemu_heartbeat_code_bytes": int(args.qemu_heartbeat_code_bytes),
         "qemu_heartbeat_same_site_warn": int(args.qemu_heartbeat_same_site_warn),
+        "qemu_heartbeat_extended": bool(args.qemu_heartbeat_extended),
         "qemu_frame_stats": bool(args.qemu_frame_stats),
         "qemu_frame_shape_hot": bool(args.qemu_frame_shape_hot),
         "qemu_frame_single_reg_fast": bool(args.qemu_frame_single_reg_fast),
