@@ -195,7 +195,10 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                         "bench": "505.mcf_r",
                         "transport": "initramfs",
                         "sample_ok": True,
-                        "top_qemu": [{"symbol": "linx_template_fentry_impl", "count": 10}],
+                        "top_qemu": [
+                            {"symbol": "cpu_exec_setjmp", "count": 99},
+                            {"symbol": "linx_template_fentry_impl", "count": 10},
+                        ],
                     },
                     {
                         "bench": "531.deepsjeng_r",
@@ -222,6 +225,26 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
         self.assertEqual(lanes["531.deepsjeng_r"], "linux-tlbi-attribution")
         self.assertEqual(lanes["525.x264_r"], "transport-9p-throughput")
         self.assertEqual(lanes["505.mcf_r"], "template-tb-mmu-throughput")
+        rows = {row["bench"]: row for row in report["benchmarks"]}
+        self.assertEqual(
+            rows["505.mcf_r"]["top_qemu"],
+            [{"symbol": "linx_template_fentry_impl", "count": 10}],
+        )
+        self.assertEqual(
+            rows["505.mcf_r"]["profile_wrapper_qemu"],
+            [{"symbol": "cpu_exec_setjmp", "count": 99}],
+        )
+        self.assertEqual(
+            rows["505.mcf_r"]["raw_top_qemu"][0],
+            {"symbol": "cpu_exec_setjmp", "count": 99},
+        )
+        lane_summary = {
+            row["lane"]: row["top_qemu_symbols"] for row in report["lanes"]
+        }
+        self.assertNotIn(
+            "cpu_exec_setjmp",
+            {item["symbol"] for item in lane_summary["template-tb-mmu-throughput"]},
+        )
         self.assertFalse(report["completion_status"]["spec_train_correctness_complete"])
         self.assertTrue(report["qemu"]["feature_compatibility"]["ok"])
 

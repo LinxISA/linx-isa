@@ -146,19 +146,20 @@ samples all nine non-sentinel train rows on the same current QEMU head
 TLB, TLB-fill, TLB-invalidation-hot, and TB stats switches used by the r3 gate.
 `tools/spec2017/analyze_specint_qemu_progress.py` now treats feature mismatch
 as profile-suppression by default, includes MMU-cache switches in the
-compatibility check, and requires `--allow-feature-mismatch` for exploratory
+compatibility check, filters generic executor wrapper frames out of actionable
+lane summaries, and requires `--allow-feature-mismatch` for exploratory
 stale-profile lane joins. The feature-clean joined report is
-`workloads/generated/specint-qemu-progress-analysis-mmuc-current-20260705-r3/`
-and records `qemu_feature_compatible=true` plus
-`profile_used_for_classification=true`.
+`workloads/generated/specint-qemu-progress-analysis-mmuc-current-20260705-r4/`
+and records schema `linx-specint-qemu-progress-analysis-v3`,
+`qemu_feature_compatible=true`, and `profile_used_for_classification=true`.
 
 Feature-clean lane split:
 
 | Lane | Benchmarks | Top profile signal |
 | --- | --- | --- |
-| `template-tb-mmu-throughput` | `500`, `502`, `505`, `520`, `523`, `541` | aggregate `tb_lookup=934`, `cpu_exec_setjmp=907`, `linx_template_fentry_impl=571`, `linx_template_fret_stk_impl=557`, `probe_access_internal=454`, `mmu_lookup1=444` |
+| `template-tb-mmu-throughput` | `500`, `502`, `505`, `520`, `523`, `541` | aggregate actionable frames `tb_lookup=934`, `linx_template_fentry_impl=571`, `linx_template_fret_stk_impl=557`, `probe_access_internal=454`, `qht_lookup_custom=449`, `mmu_lookup1=444` |
 | `linux-tlbi-attribution` | `531`, `557` | aggregate `helper_linx_tlb_iv=559`; focused rows top out at `531 helper_linx_tlb_iv=301` and `557 helper_linx_tlb_iv=258` |
-| `transport-9p-throughput` | `525` | `cpu_exec_setjmp=200`, `cpu_exec_loop=183`, `linx_template_fentry_impl=143`, `tb_lookup=142`, `get_bql_locked=132` |
+| `transport-9p-throughput` | `525` | actionable frames `linx_template_fentry_impl=143`, `tb_lookup=142`, `get_bql_locked=132`, `linx_template_fret_stk_impl=123`, `probe_access_internal=95` |
 
 Updated loop rule: do not use a profile summary to assign solution lanes unless
 `qemu_feature_compatible=true` or the report was intentionally generated with

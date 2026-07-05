@@ -49,6 +49,13 @@ CROSS_ROW_HOT_SYMBOLS = {
 
 TLBI_SYMBOLS = {"helper_linx_tlb_iv"}
 
+PROFILE_WRAPPER_SYMBOLS = {
+    "cpu_exec",
+    "cpu_exec_setjmp",
+    "cpu_exec_loop",
+    "cpu_loop_exec_tb",
+}
+
 FEATURE_KEYS = (
     "template_chain",
     "qemu_frame_stats",
@@ -322,6 +329,39 @@ def _top_symbols(profile_row: dict[str, Any] | None) -> set[str]:
     }
 
 
+def _is_profile_wrapper_symbol(symbol: str | None) -> bool:
+    return bool(symbol and symbol in PROFILE_WRAPPER_SYMBOLS)
+
+
+def _profile_top_frames(
+    profile_row: dict[str, Any] | None,
+    *,
+    wrappers: bool = False,
+) -> list[dict[str, Any]]:
+    if not profile_row:
+        return []
+    out = []
+    for item in profile_row.get("top_qemu") or []:
+        if not isinstance(item, dict):
+            continue
+        symbol = item.get("symbol")
+        count = item.get("count")
+        if not symbol or not isinstance(count, int):
+            continue
+        if _is_profile_wrapper_symbol(symbol) != wrappers:
+            continue
+        out.append({"symbol": symbol, "count": count})
+    return out
+
+
+def _actionable_profile_row(profile_row: dict[str, Any] | None) -> dict[str, Any] | None:
+    if not profile_row:
+        return None
+    out = dict(profile_row)
+    out["top_qemu"] = _profile_top_frames(profile_row)
+    return out
+
+
 def _dominant_tlbi(profile_row: dict[str, Any] | None) -> bool:
     if not profile_row:
         return False
@@ -355,7 +395,8 @@ def _top_text(profile_row: dict[str, Any] | None, limit: int = 5) -> str:
 
 def classify_row(gate_row: dict[str, Any], profile_row: dict[str, Any] | None) -> tuple[str, str]:
     bench = gate_row["bench"]
-    symbols = _top_symbols(profile_row)
+    actionable_profile = _actionable_profile_row(profile_row)
+    symbols = _top_symbols(actionable_profile)
     transport = gate_row.get("transport")
     failure_class = gate_row.get("failure_class")
 
@@ -385,7 +426,7 @@ def classify_row(gate_row: dict[str, Any], profile_row: dict[str, Any] | None) -
                 "transport-9p-throughput",
                 "Profile 9p/kernel transport separately; do not mix this row with initramfs throughput decisions.",
             )
-        if _dominant_tlbi(profile_row):
+        if _dominant_tlbi(actionable_profile):
             return (
                 "linux-tlbi-attribution",
                 "Attribute and reduce Linux TLBI/fixmap churn before changing broad QEMU cputlb behavior.",
@@ -415,6 +456,9 @@ def _bench_report_row(
     profile_row: dict[str, Any] | None,
 ) -> dict[str, Any]:
     lane, action = classify_row(gate_row, profile_row)
+    raw_top_qemu = profile_row.get("top_qemu", []) if profile_row else []
+    actionable_top_qemu = _profile_top_frames(profile_row)
+    wrapper_top_qemu = _profile_top_frames(profile_row, wrappers=True)
     out = {
         "bench": gate_row["bench"],
         "transport": gate_row.get("transport"),
@@ -458,7 +502,9 @@ def _bench_report_row(
         "hash_checks": gate_row.get("hash_checks", []),
         "profile_sample_ok": bool(profile_row and profile_row.get("sample_ok")),
         "profile_transport": profile_row.get("transport") if profile_row else None,
-        "top_qemu": profile_row.get("top_qemu", []) if profile_row else [],
+        "top_qemu": actionable_top_qemu,
+        "raw_top_qemu": raw_top_qemu,
+        "profile_wrapper_qemu": wrapper_top_qemu,
         "lane": lane,
         "proposed_action": action,
     }
@@ -564,7 +610,7 @@ def build_analysis(
     )
 
     return {
-        "schema_version": "linx-specint-qemu-progress-analysis-v2",
+        "schema_version": "linx-specint-qemu-progress-analysis-v3",
         "generated_at_utc": _utc_now(),
         "gate_summary": str(gate_summary_path),
         "profile_summary": str(profile_summary_path),
