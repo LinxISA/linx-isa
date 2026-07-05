@@ -160,6 +160,11 @@
           "command": "MODE=phase-b lib/musl/tools/linx/build_linx64_musl.sh"
         },
         {
+          "id": "cpp-runtime-noeh-phase-b",
+          "timeout_seconds": 3600,
+          "command": "bash tools/build_linx_llvm_cpp_runtimes.sh --mode phase-b --profile noeh --jobs \"${CPP_RUNTIME_JOBS:-${SPEC_BUILD_JOBS:-10}}\""
+        },
+        {
           "id": "musl-runtime-both",
           "timeout_seconds": 600,
           "command": "python3 avs/qemu/run_musl_smoke.py --mode phase-b --link both --sample all --qemu \"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\" --timeout \"${MUSL_TIMEOUT:-90}\""
