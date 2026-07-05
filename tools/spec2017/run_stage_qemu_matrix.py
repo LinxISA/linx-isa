@@ -1491,6 +1491,8 @@ def main(argv: list[str]) -> int:
             cmd.append("--qemu-mmu-cache")
         if args.qemu_mmu_cache_stats:
             cmd.append("--qemu-mmu-cache-stats")
+        if args.template_chain:
+            cmd.append("--template-chain")
         if args.qemu_tlb_fault_trace:
             cmd.append("--qemu-tlb-fault-trace")
         if args.qemu_tlb_fault_trace_limit > 0:

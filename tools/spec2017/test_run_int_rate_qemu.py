@@ -381,6 +381,7 @@ class RunIntRateQemuTests(unittest.TestCase):
             qemu_tlb_stats=True,
             qemu_tlb_inv_hot=True,
             qemu_tb_stats=True,
+            template_chain=True,
             qemu_fault_trace_regs=True,
             qemu_fault_trace_limit=3,
         )
@@ -399,6 +400,7 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(env["LINX_QEMU_TLB_STATS"], "1")
         self.assertEqual(env["LINX_QEMU_TLB_INV_HOT"], "1")
         self.assertEqual(env["LINX_QEMU_TB_STATS"], "1")
+        self.assertEqual(env["LINX_QEMU_TEMPLATE_CHAIN"], "1")
         self.assertEqual(env["LINX_QEMU_FAULT_TRACE"], "1")
         self.assertEqual(env["LINX_QEMU_FAULT_TRACE_REGS"], "1")
         self.assertEqual(env["LINX_QEMU_FAULT_TRACE_LIMIT"], "3")

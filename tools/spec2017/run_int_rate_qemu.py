@@ -791,6 +791,7 @@ def _apply_qemu_debug_env(
     qemu_tlb_fill_hot: bool = False,
     qemu_mmu_cache: bool = False,
     qemu_mmu_cache_stats: bool = False,
+    template_chain: bool = False,
     qemu_tlb_fault_trace: bool = False,
     qemu_tlb_fault_trace_limit: int = 0,
     qemu_tlb_fault_trace_filters: dict[str, str] | None = None,
@@ -846,6 +847,8 @@ def _apply_qemu_debug_env(
         qemu_env["LINX_QEMU_MMU_CACHE"] = "1"
     if qemu_mmu_cache_stats:
         qemu_env["LINX_QEMU_MMU_CACHE_STATS"] = "1"
+    if template_chain:
+        qemu_env["LINX_QEMU_TEMPLATE_CHAIN"] = "1"
     tlb_fault_filters = {
         k: v for k, v in (qemu_tlb_fault_trace_filters or {}).items()
         if str(v).strip()
@@ -2957,6 +2960,7 @@ def _run_qemu(
     qemu_tlb_fill_hot: bool,
     qemu_mmu_cache: bool,
     qemu_mmu_cache_stats: bool,
+    template_chain: bool,
     qemu_tlb_fault_trace: bool,
     qemu_tlb_fault_trace_limit: int,
     qemu_tlb_fault_trace_filters: dict[str, str],
@@ -3039,6 +3043,7 @@ def _run_qemu(
         qemu_tlb_fill_hot=qemu_tlb_fill_hot,
         qemu_mmu_cache=qemu_mmu_cache,
         qemu_mmu_cache_stats=qemu_mmu_cache_stats,
+        template_chain=template_chain,
         qemu_tlb_fault_trace=qemu_tlb_fault_trace,
         qemu_tlb_fault_trace_limit=qemu_tlb_fault_trace_limit,
         qemu_tlb_fault_trace_filters=qemu_tlb_fault_trace_filters,
@@ -3263,6 +3268,7 @@ def _run_qemu(
         "qemu_tlb_fill_hot": bool(qemu_tlb_fill_hot),
         "qemu_mmu_cache": bool(qemu_mmu_cache),
         "qemu_mmu_cache_stats": bool(qemu_mmu_cache_stats),
+        "template_chain": bool(template_chain),
         "qemu_tlb_fault_trace": bool(qemu_tlb_fault_trace),
         "qemu_tlb_fault_trace_limit": int(qemu_tlb_fault_trace_limit),
         "qemu_tlb_fault_trace_filters": dict(qemu_tlb_fault_trace_filters),
@@ -5351,6 +5357,15 @@ def main(argv: list[str]) -> int:
         help="Set LINX_QEMU_MMU_CACHE_STATS=1 to append MMU-cache counters to QEMU heartbeats.",
     )
     parser.add_argument(
+        "--template-chain",
+        action="store_true",
+        default=(
+            _env_bool("LINX_SPEC_QEMU_TEMPLATE_CHAIN", False)
+            or _env_bool("LINX_QEMU_TEMPLATE_CHAIN", False)
+        ),
+        help="Set LINX_QEMU_TEMPLATE_CHAIN=1 for QEMU frame-template chaining.",
+    )
+    parser.add_argument(
         "--qemu-tlb-fault-trace",
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_TLB_FAULT_TRACE", False),
@@ -5908,6 +5923,7 @@ def main(argv: list[str]) -> int:
         "qemu_tlb_fill_hot": bool(args.qemu_tlb_fill_hot),
         "qemu_mmu_cache": bool(args.qemu_mmu_cache),
         "qemu_mmu_cache_stats": bool(args.qemu_mmu_cache_stats),
+        "template_chain": bool(args.template_chain),
         "qemu_tlb_fault_trace": bool(qemu_tlb_fault_trace_requested),
         "qemu_tlb_fault_trace_limit": args.qemu_tlb_fault_trace_limit,
         "qemu_tlb_fault_trace_filters": qemu_tlb_fault_trace_filters,
@@ -6041,6 +6057,7 @@ def main(argv: list[str]) -> int:
                     args.qemu_tlb_fill_hot,
                     args.qemu_mmu_cache,
                     args.qemu_mmu_cache_stats,
+                    args.template_chain,
                     qemu_tlb_fault_trace_requested,
                     args.qemu_tlb_fault_trace_limit,
                     qemu_tlb_fault_trace_filters,

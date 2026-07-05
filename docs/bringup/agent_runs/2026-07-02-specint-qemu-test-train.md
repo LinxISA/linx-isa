@@ -1,5 +1,102 @@
 # SPECint QEMU test/train bring-up, 2026-07-02
 
+## 2026-07-06 continuation: latest pinned QEMU all-row train gate
+
+Artifact root:
+
+- `workloads/generated/specint-train-all-tlbf-hot-lastslot-qemu-20260706-r4-90s`
+
+Tool update:
+
+- `tools/bringup/run_specint_fast_gate.py` now forwards `--template-chain`
+  explicitly to `tools/spec2017/run_stage_qemu_matrix.py` instead of relying
+  only on ambient `LINX_QEMU_TEMPLATE_CHAIN`.
+- `tools/spec2017/run_stage_qemu_matrix.py` now forwards `--template-chain`
+  explicitly to `tools/spec2017/run_int_rate_qemu.py`.
+- `tools/spec2017/run_int_rate_qemu.py` now exposes `--template-chain`, records
+  `template_chain` in per-stage/per-row summaries, and sets
+  `LINX_QEMU_TEMPLATE_CHAIN=1` through the same debug-env path as the other
+  opt-in QEMU speed/debug switches.
+
+Command:
+
+```bash
+SPECINT_TRAIN_ALL_TIMEOUT=90 python3 tools/bringup/run_specint_fast_gate.py \
+  --profile train --suite train-all \
+  --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 \
+  --qemu emulator/qemu/build-linx/qemu-system-linx64 \
+  --sysroot out/libc/musl/install/phase-b \
+  --out-dir workloads/generated/specint-train-all-tlbf-hot-lastslot-qemu-20260706-r4-90s \
+  --append-extra "norandmaps ignore_loglevel loglevel=8" \
+  --guest-heartbeat-sec 0 --heartbeat-sec 30 \
+  --qemu-heartbeat-interval 1000000000 \
+  --qemu-heartbeat-same-site-warn 4 \
+  --qemu-frame-stats --qemu-frame-single-reg-fast \
+  --qemu-mmu-cache --qemu-mmu-cache-stats \
+  --qemu-tlb-stats --qemu-tlb-fill-stats --qemu-tlb-fill-hot \
+  --qemu-tlb-inv-hot --qemu-tb-stats --template-chain \
+  --no-progress-timeout 120 --stack-limit 2G \
+  --symbolize-heartbeat --continue-on-fail --min-free-gb 0
+```
+
+Result:
+
+- QEMU: `emulator/qemu/build-linx/qemu-system-linx64`,
+  `QEMU emulator version 10.2.50 (v10.2.0-1033-g38d6c1f3c49)`, source head
+  `38d6c1f3c492868888451d5bb8d17477e6cc6694`.
+- Provenance note: `qemu_repo_dirty_tracked=false`; `qemu_clean_build_for_head`
+  is `false` because this was the in-tree incremental `build-linx` binary and
+  no `.linx_qemu_clean_head` marker was present.
+- Validation before run: `ninja -C emulator/qemu/build-linx
+  qemu-system-linx64` rebuilt the binary, `python3 -m py_compile` passed for
+  the three runner files, `cd tools/spec2017 && python3 -m unittest
+  test_run_int_rate_qemu.py test_run_stage_qemu_matrix.py` passed 71 tests,
+  `python3 -m unittest tools.bringup.test_run_specint_fast_gate` passed 9
+  tests, and `git diff --check` passed.
+- The fast-gate dry run printed explicit `--template-chain` on both generated
+  matrix commands. The completed stage summaries record `template_chain=true`,
+  and per-row `qemu_debug_env` records `LINX_QEMU_TEMPLATE_CHAIN=1`.
+- Strict train `999.specrand_ir` passes (`rand.11.out`, 871 bytes,
+  FNV-1a `0x973dcfc2`).
+- All nine real train rows are still heartbeat-backed `live-timeout` rows with
+  running/site-progress evidence. No row reports panic, terminal trap, or
+  `SPEC_FAIL`; this remains a throughput/host-simulation-speed blocker, not a
+  deadlock.
+
+Latest 90-second ledger:
+
+| Benchmark | Transport | Result | Count | BPC | Progress | Primary evidence |
+| --- | --- | --- | ---: | --- | --- | --- |
+| `500.perlbench_r` | initramfs | `live-timeout` | `27000000025` | `0x15556df774` | site-change, 8 sites | TB lookup `456610935`, TLB fill `2982702`, frame fentry `168585044` |
+| `502.gcc_r` | initramfs | `live-timeout` | `20000000001` | `0x1555f29712` | site-change, 8 sites | TB lookup `824353712`, TLB fill `4281817`, frame fentry `448738517` |
+| `505.mcf_r` | initramfs | `live-timeout` | `26000000008` | `0x155555c4a4` | same-site with 7 recent sites | user-heavy TLB fill `87810010` (`user=85937490`), MMU-cache hit/miss `80596421/7354284` |
+| `520.omnetpp_r` | initramfs | `live-timeout` | `14000000001` | `0xffffffff803e91e8` | site-change, 8 sites | kernel BPC, TB lookup `858188740`, TLB fill `7460605` |
+| `523.xalancbmk_r` | initramfs | `live-timeout` | `17000000000` | `0x155572f6ce` | site-change, 8 sites | TB lookup `810110825`, frame fentry `464313587` |
+| `525.x264_r` | 9p | `live-timeout` | `24000000007` | `0xffffffff801088f4` | site-change, 8 sites | kernel/9p lane, TB lookup `1220403557`, kernel TLB fill `1868688` |
+| `531.deepsjeng_r` | initramfs | `live-timeout` | `30000000013` | `0x155555b92e` | site-change, 8 sites | TLB fill `6566126`, TLBI `3849672`, TB lookup `594857631` |
+| `541.leela_r` | initramfs | `live-timeout` | `16000000006` | `0x1555580d96` | site-change, 7 sites | frame fentry `778539455`, TB lookup `1421360239`, kernel TLB fill `1890817` |
+| `557.xz_r` | initramfs | `live-timeout` | `29000000001` | `0x155558d5b6` | site-change, heartbeat same-site warning | TB lookup `811155426`, TLBI `3827251`, TLB fill `3344036` |
+| `999.specrand_ir` | initramfs | pass | `0` | `0x0` | normal exit | strict hash `0x973dcfc2`, `LINX_QEMU_TEMPLATE_CHAIN=1` |
+
+Loop update:
+
+- Keep the current all-row fast gate on explicit runner switches:
+  `--template-chain --qemu-frame-single-reg-fast --qemu-mmu-cache
+  --qemu-mmu-cache-stats --qemu-frame-stats --qemu-tlb-stats
+  --qemu-tlb-fill-stats --qemu-tlb-fill-hot --qemu-tlb-inv-hot
+  --qemu-tb-stats`.
+- Next QEMU speed work should target template entry/return helper exits,
+  TB lookup/dispatch, and soft-MMU lookup/probe first. This is the shared lane
+  for `500`, `502`, `520`, `523`, and `541`.
+- Keep `505.mcf_r` as the user page-walk/MMU-cache stress row; it is still the
+  strongest user-side TLB-fill row.
+- Keep `531` and `557` in the Linux TLBI attribution lane until Linux
+  `local_flush_tlb_page()`/fault-update sources are quantified.
+- Keep `525.x264_r` in the separate 9p/kernel transport lane.
+- Use a clean-marker QEMU build for the next comparable promotion run if the
+  question is cross-run speed deltas; the current in-tree run is valid latest
+  pinned-QEMU functionality evidence but not clean-marker provenance.
+
 ## 2026-07-05 continuation: QEMU queue-transition trace for `500.perlbench_r`
 
 Artifact roots:

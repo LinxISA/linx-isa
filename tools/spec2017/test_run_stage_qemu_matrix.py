@@ -14,11 +14,13 @@ import run_stage_qemu_matrix as matrix
 class StageQemuMatrixTests(unittest.TestCase):
     def test_template_chain_is_forwarded_to_child_env(self) -> None:
         captured_envs: list[dict[str, str]] = []
+        captured_cmds: list[list[str]] = []
 
         def fake_run(cmd, **kwargs):  # type: ignore[no-untyped-def]
             env = kwargs.get("env")
             if env is None:
                 return SimpleNamespace(returncode=0, stdout="")
+            captured_cmds.append(list(cmd))
             captured_envs.append(dict(env))
             out_dir = Path(cmd[cmd.index("--out-dir") + 1])
             out_dir.mkdir(parents=True, exist_ok=True)
@@ -62,6 +64,7 @@ class StageQemuMatrixTests(unittest.TestCase):
             summary = (out_dir / "qemu_matrix_summary.json").read_text()
 
         self.assertEqual(rc, 0)
+        self.assertIn("--template-chain", captured_cmds[0])
         self.assertEqual(captured_envs[0]["LINX_QEMU_TEMPLATE_CHAIN"], "1")
         self.assertIn('"template_chain": true', summary)
 

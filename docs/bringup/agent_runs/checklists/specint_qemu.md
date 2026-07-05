@@ -2,6 +2,35 @@
 
 ## Live Blockers (2026-07-05)
 
+- [x] ID: SPEC-TRAIN-ALL-EXPLICIT-TEMPLATE-CHAIN-20260706 Latest pinned QEMU all-row train gate uses explicit template-chain runner switches and records every SPECint train row.
+  Tool evidence: `tools/bringup/run_specint_fast_gate.py` now forwards
+  `--template-chain` to `tools/spec2017/run_stage_qemu_matrix.py`;
+  `tools/spec2017/run_stage_qemu_matrix.py` now forwards `--template-chain` to
+  `tools/spec2017/run_int_rate_qemu.py`; and `run_int_rate_qemu.py` now exposes
+  `--template-chain`, records `template_chain`, and sets
+  `LINX_QEMU_TEMPLATE_CHAIN=1` in `qemu_debug_env`.
+  Validation evidence: `ninja -C emulator/qemu/build-linx qemu-system-linx64`
+  passes; `python3 -m py_compile tools/spec2017/run_int_rate_qemu.py
+  tools/spec2017/run_stage_qemu_matrix.py tools/bringup/run_specint_fast_gate.py`
+  passes; `cd tools/spec2017 && python3 -m unittest
+  test_run_int_rate_qemu.py test_run_stage_qemu_matrix.py` passes 71 tests;
+  `python3 -m unittest tools.bringup.test_run_specint_fast_gate` passes 9
+  tests; `git diff --check` passes.
+  SPEC evidence: `workloads/generated/specint-train-all-tlbf-hot-lastslot-qemu-20260706-r4-90s/specint_fast_gate_summary.json`
+  records QEMU head `38d6c1f3c492868888451d5bb8d17477e6cc6694`, version
+  `QEMU emulator version 10.2.50 (v10.2.0-1033-g38d6c1f3c49)`,
+  `template_chain=true`, and `qemu_repo_dirty_tracked=false`; the in-tree
+  binary lacks a clean-build marker, so `qemu_clean_build_for_head=false`.
+  Strict train `999.specrand_ir` passes with `rand.11.out` size 871 and hash
+  `0x973dcfc2`. `500.perlbench_r`, `502.gcc_r`, `505.mcf_r`,
+  `520.omnetpp_r`, `523.xalancbmk_r`, `525.x264_r`, `531.deepsjeng_r`,
+  `541.leela_r`, and `557.xz_r` all remain heartbeat-backed `live-timeout`
+  rows with BPC/site progress and no panic/trap/SPEC_FAIL.
+  Loop update: keep the explicit switch path as the current fast-gate flow.
+  The failures are still throughput limits, not deadlocks. Next speed work
+  stays split into template/TB/soft-MMU dispatch, `505` page-walk pressure,
+  Linux TLBI attribution for `531`/`557`, and 9p/kernel transport for `525`.
+
 - [x] ID: SPEC-QEMU-TLBF-HOT-LASTSLOT-20260706 QEMU TLB-fill hot-sketch profiling now avoids a repeated 16-slot scan for consecutive fill keys.
   QEMU evidence: `emulator/qemu/target/linx/cpu.c` initializes both TLB-fill stats and TLB-fill hot switches before the combined recorder gate, then uses `CPULinxState::tlb_fill_hot_last_slot` to update repeated page/access/MMU/probe hot-sketch keys without rescanning all 16 slots. This preserves the existing `LINX_TLB_FILL_HOT` sketch semantics and reduces debug-recorder self-overhead.
   Validation evidence: `ninja -C emulator/qemu/build-linx qemu-system-linx64` passes; `python3 avs/qemu/run_callret_contract.py --qemu emulator/qemu/build-linx/qemu-system-linx64` passes; `bash avs/qemu/check_system_strict.sh` passes after its retry; `bash avs/qemu/run_tests.sh --all --timeout 10` passes.
