@@ -98,6 +98,36 @@ lookup counts and low miss counts; and profile `525.x264_r` separately as a
 9p/kernel transport row. Keep `999.specrand_ir` as the strict correctness
 sentinel before and after each speed experiment.
 
+### Rejected BSTART Fast-Hit Availability Cache
+
+On 2026-07-06, a local helper-only QEMU prototype cached the result of the
+existing debug/stat env-switch checks inside
+`linx_bstart_cache_fast_hit_available()`. It preserved the existing disabling
+conditions for `LINX_CFI_TRACE`, `LINX_BSTART_CACHE_REVALIDATE`, and
+`LINX_BSTART_CACHE_STATS`, and did not change BSTART cache contents or target
+validation semantics.
+
+Correctness sentinels passed: `run_callret_contract.py` passed against
+`emulator/qemu/build-linx/qemu-system-linx64`, and strict train
+`999.specrand_ir` passed under the current best SPEC stack in
+`workloads/generated/specint-999-bstart-fast-qemu-20260706-r1/`.
+
+Same-command focused A/B rejected the prototype as a speed lane. The no-patch
+controls were `workloads/generated/specint-505-bstart-fast-control-norandmaps-qemu-20260706-r1/`
+and `workloads/generated/specint-541-bstart-fast-control-norandmaps-qemu-20260706-r1/`;
+the candidate rows were `workloads/generated/specint-505-bstart-fast-norandmaps-qemu-20260706-r1/`
+and `workloads/generated/specint-541-bstart-fast-norandmaps-qemu-20260706-r1/`.
+All four rows used `--append-extra norandmaps`, the current MMU-cache plus
+single-register frame fast path plus template-chain stack, and 90 second train
+timeouts. `505.mcf_r` was effectively unchanged at `27000000002` versus
+`27000000008`; `541.leela_r` was effectively unchanged at `16000000005`
+versus `16000000003`.
+
+Decision: the patch was dropped. Do not repeat an availability-cache-only
+BSTART fast-hit experiment. The next QEMU speed loop should target the actual
+hot work still visible in profiles: TB lookup/dispatch, template helper body
+cost, and soft-MMU/probe/data-load lookup cost.
+
 ### Latest MMU-Cache Train-All Rerun
 
 `workloads/generated/specint-train-all-mmuc-current-qemu-20260705-r3/`
