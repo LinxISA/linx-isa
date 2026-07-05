@@ -155,6 +155,8 @@ Artifact roots:
 - `workloads/generated/specint-500-testpl-syscall-resume-fault10-qemu-20260706-r1`
 - `workloads/generated/specint-500-testpl-entersub-source-memtrace-qemu-20260706-r1`
 - `workloads/generated/specint-500-testpl-entersub-faultpc-qemu-20260706-r1`
+- `workloads/generated/specint-500-testpl-entersub-match-tq0-zero-qemu-20260706-r1`
+- `workloads/generated/specint-500-testpl-minfault-match-a0-qemu-20260706-r1`
 
 Command shape for the exact-BPC ACRE run:
 
@@ -346,6 +348,33 @@ Result:
   delta `7000000002`, `fault_trace_seen=false`, and `fault_trace_count=0`.
   This proves that even PC-window fault tracing around the terminal block can
   move row 2 away from the uninstrumented `Perl_pp_entersub` terminal trap.
+- The generic PC-watch source matcher is now available through QEMU
+  `LINX_DEBUG_PC_WATCH_MATCH_REG` and the SPEC runner flag
+  `--qemu-pc-watch-match-reg`; `LINX_DEBUG_PC_WATCH_MATCH_GPR` remains a
+  compatibility alias. The no-hit first-zero attempt
+  `specint-500-testpl-entersub-match-tq0-zero-qemu-20260706-r1` used dirty
+  QEMU `1273ef5381b562ddc2e62dca1b2731dd554055d3` with
+  `LINX_DEBUG_PC_WATCH=0x155567e690`,
+  `LINX_DEBUG_PC_WATCH_MATCH_REG=tq0`,
+  `LINX_DEBUG_PC_WATCH_MATCH_VALUE=0`, and one-hit printing. It fails quickly
+  as `user-trap`, not timeout, with heartbeat site progress and no PC-watch
+  lines. The terminal shifts earlier to `addr=0x0`, `tpc=0x1555825572`,
+  `bpc=0x1555825566`, so even a filtered hook at the hot terminal store can
+  change row timing before the requested first-zero event appears.
+- The matcher validation run
+  `specint-500-testpl-minfault-match-a0-qemu-20260706-r1` uses the same dirty
+  QEMU and watches that shifted terminal PC with
+  `LINX_DEBUG_PC_WATCH_MATCH_REG=a0`,
+  `LINX_DEBUG_PC_WATCH_MATCH_VALUE=0x1515555000`, and one-hit printing. It
+  proves the source matcher works in a real SPEC run: QEMU emits one
+  `linx_pc_watch` line at `pc=0x1555825572`, `count=3161939069`,
+  `bpc=0x1555825566`, `a0=0x1515555000`, `tq0=0x155557a607`,
+  `tq1=0x40025607`, `uq0=0x155583c708`, and
+  `match_src=a0 match_kind=0 match_index=2`. It also emits a 128-entry
+  `LINX_CALL_TRACE_RING reason=pc_watch` packet, then continues into
+  heartbeat-backed `live-timeout` with site progress. Treat this as tool
+  validation plus perturbation evidence, not as a clean row-2 correctness
+  boundary.
 
 Tool update:
 
@@ -359,6 +388,11 @@ Tool update:
 - `tools/spec2017/analyze_specint_qemu_progress.py` carries ACRE summaries
   into merged JSON/Markdown reports and includes ACRE-only rows in the
   fault-evidence section.
+- `emulator/qemu` commit `1273ef5381b` generalizes PC-watch match filters
+  from GPR-only matching to the same named source parser used by dumps and
+  rings. `tools/spec2017/run_int_rate_qemu.py` exposes this as
+  `--qemu-pc-watch-match-reg`, and the runner preserves the corresponding
+  `LINX_DEBUG_PC_WATCH_MATCH_REG` knob in `qemu_debug_env`.
 
 Interpretation:
 
@@ -382,15 +416,17 @@ between repeated musl `mmap`/`fcntl` syscall-return paths and a subsequent
 `Perl_pp_entersub` null saved-pointer store. The two `Perl_pp_entersub`
 follow-ups show that the terminal block normally builds valid nonzero saved
 pointer operands, but tracing inside that hot block perturbs the endpoint into
-heartbeat-backed live-timeout. The next loop should avoid logging every
-terminal-block execution: add or use a purpose-built default-off diagnostic
-that records only the first zero saved pointer at `pc=0x155567e690`, or trace
-the producer of the `[sp+296]` saved-pointer slot before entering the terminal
-block. Preserve the call ring and the musl `fcntl.c`/`mmap.c`
-`ACRC`/`BSTOP` origin correlation. Keep ACRE traces BPC/count-filtered and
-avoid terminal-address-only filters as primary evidence, because broad ACRE,
-over-narrow fault filters, and terminal-block mem/fault tracing all perturb
-this row.
+heartbeat-backed live-timeout. The `MATCH_REG` probes prove the new source
+matcher can capture a single matched PC-watch packet, but also show that even a
+one-hit filtered hook at or near the hot terminal path can shift row 2. The
+next loop should avoid helper hooks at `0x4012968a..0x40129690`: trace the
+producer of the `[sp+296]` saved-pointer slot before entering the terminal
+block, or add a lower-overhead non-printing counter/checkpoint outside the hot
+block and print only on the later terminal fault. Preserve the call ring and
+the musl `fcntl.c`/`mmap.c` `ACRC`/`BSTOP` origin correlation. Keep ACRE traces
+BPC/count-filtered and avoid terminal-address-only filters as primary evidence,
+because broad ACRE, over-narrow fault filters, terminal-block mem/fault
+tracing, and even matched terminal-block PC hooks all perturb this row.
 
 ## 2026-07-05 continuation: `500.perlbench_r` `Perl_do_exec3` operand provenance
 
