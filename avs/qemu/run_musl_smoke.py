@@ -105,6 +105,35 @@ SAMPLES: dict[str, dict[str, str]] = {
 
 }
 
+LIBC_RUNTIME_SAMPLES = [
+    "malloc_printf",
+    "hello",
+    "callret",
+    "fork_wait",
+    "fork_wait_raw_exit",
+    "fork_noinline_raw",
+    "fork_exec_self",
+    "fork_exec_path",
+    "fork_child_poweroff",
+    "printf_string_arg",
+    "file_stdio",
+    "time_syscalls",
+    "mremap_end",
+    "mprotect_adjacent",
+    "tp_preserve",
+    "cpp17_smoke",
+]
+
+SAMPLE_GROUPS = {
+    # Keep the gate-facing "all" group scoped to hosted libc behavior.
+    # EBARG is a kernel/interrupt selftest carrier that intentionally spins as
+    # PID1 while waiting for a kernel printk, so it must not make libc closure
+    # depend on the system timer/EBARG lane.
+    "all": LIBC_RUNTIME_SAMPLES,
+    "libc-all": LIBC_RUNTIME_SAMPLES,
+    "system-all": list(SAMPLES.keys()),
+}
+
 
 def _default_clang() -> Path:
     cands = [
@@ -259,9 +288,10 @@ def _write_summary(path: Path, payload: dict[str, Any]) -> None:
 def _select_samples(raw_samples: list[str] | None) -> list[str]:
     if not raw_samples:
         return ["malloc_printf"]
-    if "all" in raw_samples:
-        return list(SAMPLES.keys())
-    return list(dict.fromkeys(raw_samples))
+    selected: list[str] = []
+    for sample in raw_samples:
+        selected.extend(SAMPLE_GROUPS.get(sample, [sample]))
+    return list(dict.fromkeys(selected))
 
 
 def _run_split_link_modes(args: argparse.Namespace, out_dir: Path, selected_samples: list[str]) -> int:
@@ -408,8 +438,12 @@ def main(argv: list[str]) -> int:
     parser.add_argument(
         "--sample",
         action="append",
-        choices=[*SAMPLES.keys(), "all"],
-        help="Runtime sample(s) to run (default: malloc_printf). Repeatable.",
+        choices=[*SAMPLES.keys(), *SAMPLE_GROUPS.keys()],
+        help=(
+            "Runtime sample(s) to run (default: malloc_printf). Repeatable. "
+            "`all`/`libc-all` select the hosted libc gate group; `system-all` "
+            "also includes system probes such as ebarg_timer."
+        ),
     )
     parser.add_argument("--timeout", type=int, default=90)
     parser.add_argument(

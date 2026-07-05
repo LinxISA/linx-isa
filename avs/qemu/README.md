@@ -153,6 +153,11 @@ set covers malloc/printf, fork/wait, fork/exec, stdio flushing, and C++
 startup. For a narrow local repro, pass one or more explicit `--sample` values;
 omitting `--sample` keeps the lightweight `malloc_printf` smoke.
 
+`--sample all` is the hosted libc gate group. System probes that intentionally
+wait for kernel-side behavior, such as `ebarg_timer`, remain explicit samples;
+use `--sample ebarg_timer` for that probe or `--sample system-all` when
+intentionally running every runner entry.
+
 When an external Linx linux-user QEMU build is available, run the same
 compile/link smoke directly as a process ABI gate before entering the
 full-system lane:
