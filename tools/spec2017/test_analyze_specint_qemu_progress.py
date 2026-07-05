@@ -120,6 +120,7 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                 "profile": "train",
                 "qemu": "/tmp/qemu",
                 "qemu_provenance": {"qemu_repo_head": "gate-head"},
+                "qemu_frame_stats": True,
                 "suites": [
                     {
                         "name": "train-all",
@@ -188,6 +189,7 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                 "stage": "b",
                 "qemu": "/tmp/qemu",
                 "qemu_provenance": {"qemu_repo_head": "profile-head"},
+                "qemu_features": {"qemu_frame_stats": True},
                 "rows": [
                     {
                         "bench": "505.mcf_r",
@@ -221,6 +223,67 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
         self.assertEqual(lanes["525.x264_r"], "transport-9p-throughput")
         self.assertEqual(lanes["505.mcf_r"], "template-tb-mmu-throughput")
         self.assertFalse(report["completion_status"]["spec_train_correctness_complete"])
+        self.assertTrue(report["qemu"]["feature_compatibility"]["ok"])
+
+    def test_build_analysis_reports_qemu_feature_mismatches(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            gate = {
+                "profile": "train",
+                "qemu_frame_stats": True,
+                "qemu_frame_single_reg_fast": False,
+                "suites": [],
+            }
+            profile = {
+                "input_set": "train",
+                "stage": "b",
+                "qemu_features": {
+                    "qemu_frame_stats": False,
+                    "qemu_frame_single_reg_fast": True,
+                },
+                "rows": [],
+            }
+
+            report = analyzer.build_analysis(
+                gate,
+                profile,
+                root / "gate.json",
+                root / "profile.json",
+            )
+
+        self.assertFalse(report["qemu"]["feature_compatibility"]["ok"])
+        mismatches = {
+            item["feature"]: (item["gate"], item["profile"])
+            for item in report["qemu"]["feature_compatibility"]["mismatches"]
+        }
+        self.assertEqual(mismatches["qemu_frame_stats"], (True, False))
+        self.assertEqual(mismatches["qemu_frame_single_reg_fast"], (False, True))
+
+    def test_feature_compatibility_infers_legacy_profile_command_flags(self) -> None:
+        gate = {
+            "template_chain": True,
+            "qemu_frame_stats": True,
+            "qemu_tlb_fill_hot": True,
+        }
+        profile = {
+            "template_chain": True,
+            "commands": [
+                {
+                    "command": [
+                        "python3",
+                        "run_stage_qemu_matrix.py",
+                        "--qemu-frame-stats",
+                        "--qemu-tlb-fill-hot",
+                    ]
+                }
+            ],
+        }
+
+        compatibility = analyzer._feature_compatibility(gate, profile)
+
+        self.assertTrue(compatibility["ok"])
+        self.assertTrue(compatibility["profile"]["qemu_frame_stats"])
+        self.assertTrue(compatibility["profile"]["qemu_tlb_fill_hot"])
 
     def test_write_markdown_includes_lane_summary(self) -> None:
         report = {
@@ -231,6 +294,16 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
             "qemu": {
                 "gate_provenance": {"qemu_repo_head": "abc"},
                 "profile_provenance": {"qemu_repo_head": "def"},
+                "feature_compatibility": {
+                    "ok": False,
+                    "mismatches": [
+                        {
+                            "feature": "qemu_frame_stats",
+                            "gate": True,
+                            "profile": False,
+                        }
+                    ],
+                },
             },
             "completion_status": {
                 "spec_train_correctness_complete": False,
@@ -266,6 +339,8 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
             text = path.read_text(encoding="utf-8")
 
         self.assertIn("SPECint QEMU Progress Analysis", text)
+        self.assertIn("qemu_feature_compatible: `false`", text)
+        self.assertIn("qemu_frame_stats", text)
         self.assertIn("template-tb-mmu-throughput", text)
         self.assertIn("tb_lookup=3", text)
 

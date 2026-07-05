@@ -49,6 +49,31 @@ CROSS_ROW_HOT_SYMBOLS = {
 
 TLBI_SYMBOLS = {"helper_linx_tlb_iv"}
 
+FEATURE_KEYS = (
+    "template_chain",
+    "qemu_frame_stats",
+    "qemu_frame_shape_hot",
+    "qemu_frame_single_reg_fast",
+    "qemu_frame_restore_host_load",
+    "qemu_tb_stats",
+    "qemu_tlb_stats",
+    "qemu_tlb_inv_hot",
+    "qemu_tlb_fill_stats",
+    "qemu_tlb_fill_hot",
+)
+
+FEATURE_FLAGS = {
+    "qemu_frame_stats": "--qemu-frame-stats",
+    "qemu_frame_shape_hot": "--qemu-frame-shape-hot",
+    "qemu_frame_single_reg_fast": "--qemu-frame-single-reg-fast",
+    "qemu_frame_restore_host_load": "--qemu-frame-restore-host-load",
+    "qemu_tb_stats": "--qemu-tb-stats",
+    "qemu_tlb_stats": "--qemu-tlb-stats",
+    "qemu_tlb_inv_hot": "--qemu-tlb-inv-hot",
+    "qemu_tlb_fill_stats": "--qemu-tlb-fill-stats",
+    "qemu_tlb_fill_hot": "--qemu-tlb-fill-hot",
+}
+
 
 def _utc_now() -> str:
     return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M:%SZ")
@@ -404,6 +429,44 @@ def _lane_summary(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return out
 
 
+def _features_from_summary(summary: dict[str, Any]) -> dict[str, bool]:
+    features = summary.get("qemu_features")
+    if isinstance(features, dict):
+        return {key: bool(features.get(key, False)) for key in FEATURE_KEYS}
+    out = {key: bool(summary.get(key, False)) for key in FEATURE_KEYS}
+    for command_row in summary.get("commands") or []:
+        command = command_row.get("command") if isinstance(command_row, dict) else None
+        if not isinstance(command, list):
+            continue
+        tokens = {str(item) for item in command}
+        for key, flag in FEATURE_FLAGS.items():
+            out[key] = out[key] or flag in tokens
+    return out
+
+
+def _feature_compatibility(
+    gate_summary: dict[str, Any],
+    profile_summary: dict[str, Any],
+) -> dict[str, Any]:
+    gate = _features_from_summary(gate_summary)
+    profile = _features_from_summary(profile_summary)
+    mismatches = [
+        {
+            "feature": key,
+            "gate": gate[key],
+            "profile": profile[key],
+        }
+        for key in FEATURE_KEYS
+        if gate[key] != profile[key]
+    ]
+    return {
+        "ok": not mismatches,
+        "gate": gate,
+        "profile": profile,
+        "mismatches": mismatches,
+    }
+
+
 def build_analysis(
     gate_summary: dict[str, Any],
     profile_summary: dict[str, Any],
@@ -419,6 +482,7 @@ def build_analysis(
     ]
     passing = [row["bench"] for row in rows if row.get("gate_ok")]
     failing = [row["bench"] for row in rows if not row.get("gate_ok")]
+    feature_compatibility = _feature_compatibility(gate_summary, profile_summary)
 
     return {
         "schema_version": "linx-specint-qemu-progress-analysis-v1",
@@ -432,6 +496,7 @@ def build_analysis(
             "profile": profile_summary.get("qemu"),
             "gate_provenance": gate_summary.get("qemu_provenance") or {},
             "profile_provenance": profile_summary.get("qemu_provenance") or {},
+            "feature_compatibility": feature_compatibility,
         },
         "completion_status": {
             "spec_train_correctness_complete": not failing,
@@ -453,6 +518,8 @@ def _write_markdown(path: Path, report: dict[str, Any]) -> None:
     qemu = report["qemu"]
     gate_head = qemu.get("gate_provenance", {}).get("qemu_repo_head")
     profile_head = qemu.get("profile_provenance", {}).get("qemu_repo_head")
+    feature_compatibility = qemu.get("feature_compatibility") or {}
+    feature_mismatches = feature_compatibility.get("mismatches") or []
     lines = [
         "# SPECint QEMU Progress Analysis",
         "",
@@ -462,7 +529,19 @@ def _write_markdown(path: Path, report: dict[str, Any]) -> None:
         f"- profile_summary: `{report['profile_summary']}`",
         f"- gate_qemu_head: `{gate_head}`",
         f"- profile_qemu_head: `{profile_head}`",
+        f"- qemu_feature_compatible: `{str(feature_compatibility.get('ok', True)).lower()}`",
         "",
+    ]
+    if feature_mismatches:
+        lines.extend(["## QEMU Feature Mismatches", ""])
+        for item in feature_mismatches:
+            lines.append(
+                f"- `{item['feature']}`: gate=`{str(item['gate']).lower()}`, "
+                f"profile=`{str(item['profile']).lower()}`"
+            )
+        lines.append("")
+
+    lines.extend([
         "## Completion",
         "",
         f"- spec_train_correctness_complete: `{str(report['completion_status']['spec_train_correctness_complete']).lower()}`",
@@ -473,7 +552,7 @@ def _write_markdown(path: Path, report: dict[str, Any]) -> None:
         "",
         "| Bench | Transport | Gate | Count | BPC | Profile | Lane | Top QEMU frames | Next action |",
         "| --- | --- | --- | ---: | --- | --- | --- | --- | --- |",
-    ]
+    ])
     for row in report["benchmarks"]:
         gate = "pass" if row.get("gate_ok") else row.get("failure_class", "fail")
         top = _top_text(row, 5)

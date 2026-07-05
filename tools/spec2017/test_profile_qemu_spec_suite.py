@@ -119,6 +119,31 @@ class ProfileQemuSpecSuiteTests(unittest.TestCase):
         self.assertEqual(out[0], {"symbol": "tb_lookup", "count": 14, "reports": 2})
         self.assertEqual(out[1], {"symbol": "mmu_lookup1", "count": 3, "reports": 1})
 
+    def test_qemu_features_records_all_profile_knobs(self) -> None:
+        args = argparse.Namespace(
+            template_chain=True,
+            qemu_frame_stats=True,
+            qemu_frame_shape_hot=False,
+            qemu_frame_single_reg_fast=True,
+            qemu_tb_stats=True,
+            qemu_tlb_stats=True,
+            qemu_tlb_inv_hot=False,
+            qemu_tlb_fill_stats=True,
+            qemu_tlb_fill_hot=False,
+        )
+
+        features = suite._qemu_features(args)
+
+        self.assertTrue(features["template_chain"])
+        self.assertTrue(features["qemu_frame_stats"])
+        self.assertFalse(features["qemu_frame_shape_hot"])
+        self.assertTrue(features["qemu_frame_single_reg_fast"])
+        self.assertTrue(features["qemu_tb_stats"])
+        self.assertTrue(features["qemu_tlb_stats"])
+        self.assertFalse(features["qemu_tlb_inv_hot"])
+        self.assertTrue(features["qemu_tlb_fill_stats"])
+        self.assertFalse(features["qemu_tlb_fill_hot"])
+
     def test_write_markdown_uses_qemu_repo_head(self) -> None:
         summary = {
             "started_at_utc": "2026-07-05 00:00:00Z",

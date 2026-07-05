@@ -243,6 +243,20 @@ def _aggregate_top(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     ]
 
 
+def _qemu_features(args: argparse.Namespace) -> dict[str, bool]:
+    return {
+        "template_chain": bool(args.template_chain),
+        "qemu_frame_stats": bool(args.qemu_frame_stats),
+        "qemu_frame_shape_hot": bool(args.qemu_frame_shape_hot),
+        "qemu_frame_single_reg_fast": bool(args.qemu_frame_single_reg_fast),
+        "qemu_tb_stats": bool(args.qemu_tb_stats),
+        "qemu_tlb_stats": bool(args.qemu_tlb_stats),
+        "qemu_tlb_inv_hot": bool(args.qemu_tlb_inv_hot),
+        "qemu_tlb_fill_stats": bool(args.qemu_tlb_fill_stats),
+        "qemu_tlb_fill_hot": bool(args.qemu_tlb_fill_hot),
+    }
+
+
 def _write_markdown(path: Path, summary: dict[str, Any]) -> None:
     lines = [
         "# SPECint QEMU Profile Suite",
@@ -422,6 +436,7 @@ def main(argv: list[str] | None = None) -> int:
         "terminate_after_sample": bool(args.terminate_after_sample),
         "terminate_on_wait_timeout": bool(args.terminate_on_wait_timeout),
         "template_chain": bool(args.template_chain),
+        "qemu_features": _qemu_features(args),
         "dry_run": bool(args.dry_run),
         "ok": bool(overall_ok),
         "commands": commands,
