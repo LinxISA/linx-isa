@@ -149,6 +149,8 @@ Artifact roots:
 - `workloads/generated/specint-500-testpl-terminal8534-queue-acre-qemu-20260705-r1`
 - `workloads/generated/specint-500-testpl-getmeta-slot-memtrace-qemu-20260706-r1`
 - `workloads/generated/specint-500-testpl-malloc-writer-callring-qemu-20260706-r1`
+- `workloads/generated/specint-500-testpl-allocator-lifecycle-callring-qemu-20260706-r1`
+- `workloads/generated/specint-500-testpl-allocator-lifecycle-callring-qemu-20260706-r2`
 
 Command shape for the exact-BPC ACRE run:
 
@@ -260,6 +262,32 @@ Result:
   `sv.c` `.LBB49_18`, linked `0x4019c49c`, instruction
   `sd a0, [u#1, t#1<<3]`, with `addr=0x0` and the same recurrent
   `fcntl.c` origin.
+- The allocator-lifecycle probe
+  `specint-500-testpl-allocator-lifecycle-callring-qemu-20260706-r1` watches
+  all six allocator metadata PCs in one count window: musl `malloc.c`
+  `.LBB4_13` stores (`0x402d4a94`, `0x402d4aa4`), `realloc.c` `.LBB0_37` /
+  `.LBB0_42` reads (`0x402d4ecc`, `0x402d4f00`), and `free.c` `.LBB0_11` /
+  `.LBB0_15` reads (`0x402d337c`, `0x402d33aa`). The run was collected before
+  rebuilding the in-tree QEMU binary, so use it as lifecycle evidence rather
+  than current-head closure. It records 38 exact-slot events on
+  `0x3fefedabc0..0x3fefedabc7`: repeated zero-byte malloc metadata stores,
+  followed by realloc/free zero-byte reads of the same bytes. The terminal
+  shifts back to `Perl_do_exec3`, linked `0x4006b9e6` in `doio.c`
+  `.LBB23_1`, instruction `lw [t#1, u#1<<2], ->u`, with `addr=0x0`; the
+  resume origin is musl `mmap` (`orig_tpc=0x155582e9ea`, linked
+  `0x402d99ea`) through the `ACRC`/`BSTOP` syscall-return path.
+- After rebuilding `emulator/qemu/build-linx/qemu-system-linx64`, the same
+  probe rerun
+  `specint-500-testpl-allocator-lifecycle-callring-qemu-20260706-r2` records
+  QEMU head `ba3a85c66c037465405fefde106e5d3ed4315cb7` and version
+  `v10.2.0-1031-gba3a85c66c0`. It still fails as `user-trap` with heartbeat
+  site progress (`heartbeat_recent_unique_sites=4`, count delta
+  `3000000001`), but the terminal shifts earlier, before the exact
+  `0x3fefedabc0` slot recurs. The faulting instruction maps to
+  `Perl_sv_add_backref+0xbe`, linked `0x401a3cce` in `sv.c` `.LBB88_9`,
+  instruction `lbui [t#1, 12], ->t`, with unmapped `addr=0xefef992c`.
+  The origin is again a syscall-return packet from musl `mmap`
+  (`orig_tpc=0x155582e9ea`, linked `0x402d99ea`).
 
 Tool update:
 
@@ -288,11 +316,14 @@ trace ties the watched bad slot to allocator byte stores/loads before a later
 terminal shift. The writer call-ring packet shows that at least one recurring
 zero-store shape is reached through normal Perl hash allocation into
 `safesysmalloc(0x29)` and musl `enframe`, not a spontaneous isolated write.
-The next loop should trace allocator metadata lifecycle with caller context
-around `malloc.c` `.LBB4_13`, `realloc.c` `.LBB0_37/.LBB0_42`, and `free.c`
-`.LBB0_11/.LBB0_15`, or the first resumed instruction after ACRE staging, with
-the narrowest possible PC/BPC/count filters. Keep ACRE traces BPC/count-
-filtered; broad ACRE tracing is observable perturbation on this row.
+The lifecycle probe shows the watched allocator bytes can be written and read
+normally before a later terminal shift, while the rebuilt-QEMU rerun confirms
+the current head still fails in this row as user-space pointer/queue
+corruption. The next loop should move downstream from static allocator block
+lowering and compare syscall-return resume state against the first subsequent
+`Perl_do_exec3` / `Perl_sv_add_backref` low-address fault, using narrow
+fault-trace and call-ring filters. Keep ACRE traces BPC/count-filtered; broad
+ACRE tracing is observable perturbation on this row.
 
 ## 2026-07-05 continuation: `500.perlbench_r` `Perl_do_exec3` operand provenance
 
