@@ -219,6 +219,10 @@ def _merge_failure_detail(row: dict[str, Any], detail: dict[str, Any]) -> None:
             "fret_stk_trace_count": detail.get("fret_stk_trace_count"),
             "fret_stk_trace_last": detail.get("fret_stk_trace_last"),
             "fret_stk_trace_samples": detail.get("fret_stk_trace_samples", []),
+            "acre_trace_seen": detail.get("acre_trace_seen"),
+            "acre_trace_count": detail.get("acre_trace_count"),
+            "acre_trace_last": detail.get("acre_trace_last"),
+            "acre_trace_samples": detail.get("acre_trace_samples", []),
             "pc_watch_seen": detail.get("pc_watch_seen", pc_watch.get("seen")),
             "pc_watch_line_count": detail.get(
                 "pc_watch_line_count", pc_watch.get("line_count")
@@ -606,6 +610,10 @@ def _bench_report_row(
         "fret_stk_trace_count": gate_row.get("fret_stk_trace_count"),
         "fret_stk_trace_last": gate_row.get("fret_stk_trace_last"),
         "fret_stk_trace_samples": gate_row.get("fret_stk_trace_samples", []),
+        "acre_trace_seen": gate_row.get("acre_trace_seen"),
+        "acre_trace_count": gate_row.get("acre_trace_count"),
+        "acre_trace_last": gate_row.get("acre_trace_last"),
+        "acre_trace_samples": gate_row.get("acre_trace_samples", []),
         "child_maps_seen": gate_row.get("child_maps_seen"),
         "child_maps_block_count": gate_row.get("child_maps_block_count"),
         "child_maps_trap_addr": gate_row.get("child_maps_trap_addr"),
@@ -941,6 +949,7 @@ def _write_markdown(path: Path, report: dict[str, Any]) -> None:
         or row.get("syscall_trace_seen")
         or row.get("fentry_trace_seen")
         or row.get("fret_stk_trace_seen")
+        or row.get("acre_trace_seen")
         or row.get("pc_watch_seen")
     ]
     if fault_rows:
@@ -971,6 +980,11 @@ def _write_markdown(path: Path, report: dict[str, Any]) -> None:
                 lines.append(
                     f"  fret-stk-trace count=`{row.get('fret_stk_trace_count')}` "
                     f"last=`{row.get('fret_stk_trace_last', '')[:240]}`"
+                )
+            if row.get("acre_trace_seen"):
+                lines.append(
+                    f"  acre-trace count=`{row.get('acre_trace_count')}` "
+                    f"last=`{row.get('acre_trace_last', '')[:240]}`"
                 )
             if row.get("pc_watch_seen"):
                 lines.append(

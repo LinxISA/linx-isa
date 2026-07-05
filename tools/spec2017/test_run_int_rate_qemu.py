@@ -629,6 +629,60 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(fret["samples"][0]["restored_ra"], "0x1555837f56")
         self.assertEqual(fret["samples"][0]["new_sp"], "0x3ffffff430")
 
+    def test_qemu_acre_trace_env_and_summary(self) -> None:
+        trace = runner._qemu_acre_trace_from_args(
+            argparse.Namespace(
+                qemu_acre_trace=False,
+                qemu_acre_trace_pc="",
+                qemu_acre_trace_pc_lo="0x1555837f18",
+                qemu_acre_trace_pc_hi="0x1555837f48",
+                qemu_acre_trace_bpc="",
+                qemu_acre_trace_bpc_lo="",
+                qemu_acre_trace_bpc_hi="",
+                qemu_acre_trace_count_lo="3317000000",
+                qemu_acre_trace_count_hi="3318000000",
+                qemu_acre_trace_target="2",
+                qemu_acre_trace_rra="1",
+                qemu_acre_trace_trapnum="16",
+                qemu_acre_trace_limit="8",
+                qemu_acre_trace_code_bytes="16",
+                qemu_acre_trace_regs=True,
+            )
+        )
+        env: dict[str, str] = {}
+        runner._apply_qemu_debug_env(
+            env,
+            qemu_heartbeat_interval=0,
+            qemu_fault_trace_regs=False,
+            qemu_fault_trace_limit=0,
+            qemu_acre_trace=trace,
+        )
+
+        self.assertEqual(env["LINX_QEMU_ACRE_TRACE"], "1")
+        self.assertEqual(env["LINX_QEMU_ACRE_TRACE_PC_LO"], "0x1555837f18")
+        self.assertEqual(env["LINX_QEMU_ACRE_TRACE_COUNT_LO"], "3317000000")
+        self.assertEqual(env["LINX_QEMU_ACRE_TRACE_TARGET"], "2")
+        self.assertEqual(env["LINX_QEMU_ACRE_TRACE_RRA"], "1")
+        self.assertEqual(env["LINX_QEMU_ACRE_TRACE_TRAPNUM"], "16")
+        self.assertEqual(env["LINX_QEMU_ACRE_TRACE_REGS"], "1")
+        self.assertIn("LINX_QEMU_ACRE_TRACE_PC_LO", runner._qemu_debug_env_summary(env))
+
+        summary = runner._acre_trace_summary(
+            "LINX_ACRE_TRACE phase=staged count=3317420000 mgr=1 target=2 "
+            "rra=1 bi=1 trapno=0x110 trapnum=16 resume=0x1555837f3c "
+            "resume_bpc=0x1555837f1c saved_tq0=0x155557eb10 "
+            "saved_tq1=0x1555841468 saved_uq0=0x2e saved_uq1=0x0 "
+            "ebarg_tq0=0x155557eb10 ebarg_uq0=0x2e "
+            "tq0=0x155557eb10 uq0=0x2e\n"
+        )
+
+        self.assertTrue(summary["seen"])
+        self.assertEqual(summary["count"], 1)
+        self.assertEqual(summary["samples"][0]["phase"], "staged")
+        self.assertEqual(summary["samples"][0]["target"], 2)
+        self.assertEqual(summary["samples"][0]["saved_tq0"], "0x155557eb10")
+        self.assertEqual(summary["samples"][0]["uq0"], "0x2e")
+
     def test_pc_watch_summary_captures_ring_fields(self) -> None:
         text = (
             "linx_pc_watch: pc=0x15555c09e6 hit=4 printed=4 "

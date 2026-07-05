@@ -1,5 +1,87 @@
 # SPECint QEMU test/train bring-up, 2026-07-02
 
+## 2026-07-05 continuation: `500.perlbench_r` ACRE/enframe queue provenance
+
+Artifact roots:
+
+- `workloads/generated/specint-500-testpl-acre-unfiltered-smoke-qemu-20260705-r1`
+- `workloads/generated/specint-500-testpl-acre-late-unfiltered-qemu-20260705-r1`
+- `workloads/generated/specint-500-testpl-enframe-acre-qemu-20260705-r1`
+
+Command shape for the exact-BPC ACRE run:
+
+```bash
+python3 tools/spec2017/run_int_rate_qemu.py \
+  --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 \
+  --qemu /private/tmp/linx-qemu-clean-build/qemu-system-linx64 \
+  --kernel kernel/linux/build-linx-fixed/vmlinux \
+  --stage b --transport initramfs --input-set test \
+  --bench 500.perlbench_r --run-index 2 --timeout 120 \
+  --heartbeat-sec 15 --qemu-heartbeat-interval 1000000000 \
+  --qemu-heartbeat-same-site-warn 4 --guest-heartbeat-sec 1 \
+  --guest-child-maps-bytes 4096 --terminal-failure-grace-sec 3 \
+  --append-extra norandmaps --linux-vm-trace \
+  --qemu-fault-trace --qemu-fault-trace-regs \
+  --qemu-fault-trace-addr-lo 0x0 --qemu-fault-trace-addr-hi 0x10 \
+  --qemu-fault-trace-limit 16 \
+  --qemu-call-trace-ring --qemu-call-trace-ring-size 128 \
+  --qemu-acre-trace --qemu-acre-trace-bpc 0x155582997c \
+  --qemu-acre-trace-count-lo 3275000000 \
+  --qemu-acre-trace-count-hi 3283000000 \
+  --qemu-acre-trace-limit 32
+```
+
+Result:
+
+- QEMU: `/private/tmp/linx-qemu-clean-build/qemu-system-linx64`,
+  `QEMU emulator version 10.2.50 (v10.2.0-1029-g68bebbd9e7b)`,
+  clean marker matching QEMU head
+  `68bebbd9e7b61df45f433830199ff59a49622ad1`.
+- The ACRE smoke run proves the clean QEMU binary emits `LINX_ACRE_TRACE`
+  records. The first target assumption was too narrow: early ACRE rows include
+  target `1` and trapnum `44`, so later traces use count/BPC filters instead
+  of assuming only target `2` / syscall trapnum `16`.
+- The low-perturbation late-unfiltered ACRE run reproduces the terminal
+  `500.perlbench_r` row-2 fault. It records one low-address fault at
+  `count=3282128183`, `tpc=0x155582998e`, `report_bpc=0x155582997c`,
+  `mem_va=0x0`, `cause=0x2`, with all captured `tq0..tq3` and `uq0..uq3`
+  zero. With the current `0x1515555000` load bias, the PC maps to linked
+  `0x402d498e` in musl mallocng `enframe`, instruction
+  `lhu [u#1, t#1], ->t`.
+- The exact-BPC ACRE run is perturbing enough to end as heartbeat-backed
+  `live-timeout`, not terminal trap, but it captures the return into the same
+  `enframe` site. At `count=3282094328`, ACRE enters from manager code and
+  stages user resume to `resume=0x155582998e`, `resume_bpc=0x155582997c`,
+  `target=2`, `rra=1`, `trapnum=44`. The entry EBARG/saved queues are
+  `tq0=0x6`, `tq1=0x7`, `tq2=0x15555b5000`, `tq3=0x0`,
+  `uq0=0x15555b5594`, `uq1=0x0`, `uq2=0x0`, `uq3=0x0`; the staged live
+  `tq*`/`uq*` queues match those nonzero saved values.
+
+Tool update:
+
+- `tools/spec2017/run_int_rate_qemu.py` now exposes the existing QEMU
+  `LINX_QEMU_ACRE_TRACE*` controls through runner flags and environment
+  plumbing, including PC/BPC/count/target/RRA/trapnum filters and optional
+  register dumps.
+- The runner now summarizes `LINX_ACRE_TRACE`, `LINX_ACRE_REGS`, and
+  `LINX_ACRE_CODE` rows into `acre_trace_seen`, `acre_trace_count`,
+  `acre_trace_last`, and bounded `acre_trace_samples`.
+- `tools/spec2017/analyze_specint_qemu_progress.py` carries ACRE summaries
+  into merged JSON/Markdown reports and includes ACRE-only rows in the
+  fault-evidence section.
+
+Interpretation:
+
+The exact-BPC trace rules out EBARG/ACRE restore as the direct source of the
+zero queues at this `enframe` resume site: ACRE restores nonzero saved queues
+into live user T/U queues before execution resumes. The lower-perturbation run
+faults 33,855 retired instructions later at the same PC/BPC with all queues
+zero. The next loop should add a very narrow queue-transition trace after ACRE
+staging, or a count/BPC-limited PC-watch over `0x155582997c..0x155582998e`, to
+find where resumed user-mode block execution or block-boundary logic clears
+the queues. Keep ACRE traces BPC/count-filtered; broad ACRE tracing is
+observable perturbation on this row.
+
 ## 2026-07-05 continuation: `500.perlbench_r` `Perl_do_exec3` operand provenance
 
 Artifact roots:

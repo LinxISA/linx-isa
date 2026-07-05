@@ -452,8 +452,12 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                                 "fret_stk_trace_count": 6,
                                 "fret_stk_trace_last": "LINX_FRET_STK_TRACE pc=0x1555837f46",
                                 "fret_stk_trace_samples": [{"pc": "0x1555837f46"}],
+                                "acre_trace_seen": True,
+                                "acre_trace_count": 7,
+                                "acre_trace_last": "LINX_ACRE_TRACE phase=staged saved_tq0=0x155557eb10",
+                                "acre_trace_samples": [{"phase": "staged"}],
                                 "pc_watch_seen": True,
-                                "pc_watch_line_count": 7,
+                                "pc_watch_line_count": 8,
                                 "pc_watch_last": "LINX_PC_WATCH_REGS pc=0x15555c09e6",
                                 "pc_watch_samples": [{"pc": "0x15555c09e6"}],
                                 "pc_watch_ring_seen": True,
@@ -502,8 +506,10 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
         self.assertEqual(row["fentry_trace_count"], 5)
         self.assertTrue(row["fret_stk_trace_seen"])
         self.assertEqual(row["fret_stk_trace_count"], 6)
+        self.assertTrue(row["acre_trace_seen"])
+        self.assertEqual(row["acre_trace_count"], 7)
         self.assertTrue(row["pc_watch_seen"])
-        self.assertEqual(row["pc_watch_line_count"], 7)
+        self.assertEqual(row["pc_watch_line_count"], 8)
         self.assertTrue(row["pc_watch_ring_seen"])
         self.assertEqual(row["pc_watch_ring_entry_count"], 4)
         self.assertTrue(row["child_maps_seen"])
@@ -606,6 +612,9 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                     "fret_stk_trace_seen": True,
                     "fret_stk_trace_count": 2,
                     "fret_stk_trace_last": "LINX_FRET_STK_TRACE pc=0x1555837f46",
+                    "acre_trace_seen": True,
+                    "acre_trace_count": 3,
+                    "acre_trace_last": "LINX_ACRE_TRACE phase=entry saved_tq0=0x155557eb10",
                     "pc_watch_seen": True,
                     "pc_watch_line_count": 3,
                     "pc_watch_last": "LINX_PC_WATCH_REGS pc=0x15555c09e6",
