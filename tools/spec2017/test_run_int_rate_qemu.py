@@ -1120,7 +1120,8 @@ class RunIntRateQemuTests(unittest.TestCase):
     def test_tlb_fill_hot_summary_parses_top_slots(self) -> None:
         summary = runner._tlb_fill_hot_summary(
             "LINX_HEARTBEAT count=100 pc=0x1 bpc=0x2\n"
-            "LINX_TLB_FILL_HOT count=100 evictions=7 slots=16 "
+            "LINX_TLB_FILL_HOT count=100 evictions=7 inserts=19 "
+            "last_hits=11 slot_hits=5 slots=16 "
             "top0_count=123 top0_page=0x3f7fa8d000 "
             "top0_last_va=0x3f7fa8d010 top0_last_pa=0x8d010 "
             "top0_access=1 top0_mmu=1 top0_probe=0 "
@@ -1137,6 +1138,9 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(summary["line_count"], 1)
         self.assertEqual(summary["heartbeat_count"], 100)
         self.assertEqual(summary["evictions"], 7)
+        self.assertEqual(summary["inserts"], 19)
+        self.assertEqual(summary["last_hits"], 11)
+        self.assertEqual(summary["slot_hits"], 5)
         self.assertEqual(summary["top0_count"], 123)
         self.assertEqual(summary["top0_page"], "0x3f7fa8d000")
         self.assertEqual(summary["top0_access"], 1)

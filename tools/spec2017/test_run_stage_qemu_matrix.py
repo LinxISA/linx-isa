@@ -114,6 +114,9 @@ class StageQemuMatrixTests(unittest.TestCase):
                                 "top0_access": 1,
                                 "top0_mmu": 1,
                                 "evictions": 17,
+                                "inserts": 31,
+                                "last_hits": 29,
+                                "slot_hits": 7,
                             },
                             "heartbeat_frame_shape_hot": {
                                 "seen": True,
@@ -205,7 +208,7 @@ class StageQemuMatrixTests(unittest.TestCase):
             ),
         )
         self.assertIn(
-            "tlbf-hot=12345@0x3f7fa8d000/a1/m1 evict=17",
+            "tlbf-hot=12345@0x3f7fa8d000/a1/m1 evict=17/ins31/last29/slot7",
             matrix._format_failure_details(
                 matrix._transport_failure_details(summary)
             ),

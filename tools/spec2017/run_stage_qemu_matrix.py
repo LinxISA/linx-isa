@@ -385,7 +385,13 @@ def _format_tlb_fill_hot(row: dict[str, Any]) -> str:
     access = hot.get("top0_access")
     mmu = hot.get("top0_mmu")
     evictions = hot.get("evictions")
-    return f" tlbf-hot={top0_count}@{page}/a{access}/m{mmu} evict={evictions}"
+    inserts = hot.get("inserts")
+    last_hits = hot.get("last_hits")
+    slot_hits = hot.get("slot_hits")
+    reuse = ""
+    if inserts is not None or last_hits is not None or slot_hits is not None:
+        reuse = f"/ins{inserts}/last{last_hits}/slot{slot_hits}"
+    return f" tlbf-hot={top0_count}@{page}/a{access}/m{mmu} evict={evictions}{reuse}"
 
 
 def _format_tlb_inv_hot(row: dict[str, Any]) -> str:

@@ -46,6 +46,17 @@ Evidence:
   next speed loop remains template/TB/soft-MMU dispatch first, `505.mcf_r`
   demand-walk pressure, Linux TLBI attribution for `531`/`557`, and a separate
   9p/kernel transport lane for `525`.
+- `workloads/generated/specint-505-tlbf-hot-reuse-qemu-20260706-r1/` is the
+  current focused `505.mcf_r` TLB-fill reuse packet on rebuilt dirty QEMU
+  `v10.2.0-1034-g4462415a388-dirty`. It extends `LINX_TLB_FILL_HOT` evidence
+  with `inserts`, `last_hits`, and `slot_hits`. The row remains
+  heartbeat-live at `count=27000000003`, `bpc=0x157b815526`, with
+  `tlbf_total=89914727` and `tlbf_user_load=81317911`. The hot sketch reports
+  `inserts=89914720`, `evictions=89914704`, `last_hits=5`, `slot_hits=2`, and
+  `top0_count=2`, proving the 16-slot sketch sees streaming page-walk churn
+  rather than short-window hot-page reuse. Keep the next `505` loop on
+  streaming page-walk/soft-MMU lookup cost instead of larger small-hot-page
+  sketches.
 - `workloads/generated/specint-train-all-shape-record-inline-clean-qemu-20260705-r1/`
   is the current clean latest-QEMU all-SPECint train ledger. It uses
   `/tmp/linx-qemu-clean-build/qemu-system-linx64` at QEMU head
