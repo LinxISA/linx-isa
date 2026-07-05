@@ -84,6 +84,7 @@ class ProfileQemuSpecSuiteTests(unittest.TestCase):
             qemu_frame_page_fast=True,
             qemu_mmu_cache=True,
             qemu_mmu_cache_stats=True,
+            qemu_mmu_cache_assoc2=True,
             qemu_tb_stats=True,
             qemu_tlb_stats=False,
             qemu_tlb_inv_hot=False,
@@ -134,6 +135,7 @@ class ProfileQemuSpecSuiteTests(unittest.TestCase):
             qemu_frame_page_fast=True,
             qemu_mmu_cache=True,
             qemu_mmu_cache_stats=True,
+            qemu_mmu_cache_assoc2=True,
             qemu_tb_stats=True,
             qemu_tlb_stats=True,
             qemu_tlb_inv_hot=False,
@@ -150,6 +152,7 @@ class ProfileQemuSpecSuiteTests(unittest.TestCase):
         self.assertTrue(features["qemu_frame_page_fast"])
         self.assertTrue(features["qemu_mmu_cache"])
         self.assertTrue(features["qemu_mmu_cache_stats"])
+        self.assertTrue(features["qemu_mmu_cache_assoc2"])
         self.assertTrue(features["qemu_tb_stats"])
         self.assertTrue(features["qemu_tlb_stats"])
         self.assertFalse(features["qemu_tlb_inv_hot"])

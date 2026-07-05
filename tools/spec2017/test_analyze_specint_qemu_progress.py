@@ -305,6 +305,7 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                 "qemu_frame_page_fast": True,
                 "qemu_mmu_cache": True,
                 "qemu_mmu_cache_stats": True,
+                "qemu_mmu_cache_assoc2": True,
                 "suites": [],
             }
             profile = {
@@ -316,6 +317,7 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                     "qemu_frame_page_fast": False,
                     "qemu_mmu_cache": False,
                     "qemu_mmu_cache_stats": False,
+                    "qemu_mmu_cache_assoc2": False,
                 },
                 "rows": [],
             }
@@ -337,6 +339,7 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
         self.assertEqual(mismatches["qemu_frame_page_fast"], (True, False))
         self.assertEqual(mismatches["qemu_mmu_cache"], (True, False))
         self.assertEqual(mismatches["qemu_mmu_cache_stats"], (True, False))
+        self.assertEqual(mismatches["qemu_mmu_cache_assoc2"], (True, False))
         self.assertFalse(report["qemu"]["profile_used_for_classification"])
         self.assertEqual(report["qemu"]["profile_use_reason"], "suppressed-feature-mismatch")
 
@@ -538,6 +541,7 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
             "qemu_frame_stats": True,
             "qemu_mmu_cache": True,
             "qemu_mmu_cache_stats": True,
+            "qemu_mmu_cache_assoc2": True,
             "qemu_tlb_fill_hot": True,
         }
         profile = {
@@ -551,6 +555,7 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                         "--qemu-frame-stats",
                         "--qemu-mmu-cache",
                         "--qemu-mmu-cache-stats",
+                        "--qemu-mmu-cache-assoc2",
                         "--qemu-tlb-fill-hot",
                     ]
                 }
@@ -564,6 +569,7 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
         self.assertTrue(compatibility["profile"]["qemu_frame_stats"])
         self.assertTrue(compatibility["profile"]["qemu_mmu_cache"])
         self.assertTrue(compatibility["profile"]["qemu_mmu_cache_stats"])
+        self.assertTrue(compatibility["profile"]["qemu_mmu_cache_assoc2"])
         self.assertTrue(compatibility["profile"]["qemu_tlb_fill_hot"])
 
     def test_write_markdown_includes_lane_summary(self) -> None:

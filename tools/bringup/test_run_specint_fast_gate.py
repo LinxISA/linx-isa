@@ -118,6 +118,7 @@ class SpecintFastGateTests(unittest.TestCase):
                     "qemu_heartbeat_code_bytes": 0,
                     "qemu_heartbeat_same_site_warn": 0,
                     "fail_9p_timeout": False,
+                    "qemu_mmu_cache_assoc2": True,
                     "template_chain": True,
                     "suites": [],
                 },
@@ -130,6 +131,7 @@ class SpecintFastGateTests(unittest.TestCase):
         self.assertIn("qemu_clean_build_for_head: `true`", text)
         self.assertIn("qemu_machine_extra: `dumpdtb=/tmp/virt.dtb`", text)
         self.assertIn("qemu_extra_args: `-accel tcg,split-wx=off`", text)
+        self.assertIn("qemu_mmu_cache_assoc2: `true`", text)
         self.assertIn("template_chain: `true`", text)
 
     def test_suite_command_forwards_qemu_heartbeat_debug_switches(self) -> None:
@@ -159,6 +161,7 @@ class SpecintFastGateTests(unittest.TestCase):
             qemu_tlb_fill_hot=False,
             qemu_mmu_cache=True,
             qemu_mmu_cache_stats=True,
+            qemu_mmu_cache_assoc2=True,
             template_chain=True,
             qemu_tlb_fault_trace=True,
             qemu_tlb_fault_trace_limit=64,
@@ -186,6 +189,7 @@ class SpecintFastGateTests(unittest.TestCase):
             forward_qemu_tlb_fill_hot=True,
             forward_qemu_mmu_cache=True,
             forward_qemu_mmu_cache_stats=True,
+            forward_qemu_mmu_cache_assoc2=True,
             forward_template_chain=True,
             forward_qemu_tlb_fault_trace=True,
             forward_qemu_tb_stats=True,
@@ -214,6 +218,7 @@ class SpecintFastGateTests(unittest.TestCase):
         self.assertEqual(cmd[cmd.index("--qemu-tlb-fault-trace-limit") + 1], "64")
         self.assertIn("--qemu-mmu-cache", cmd)
         self.assertIn("--qemu-mmu-cache-stats", cmd)
+        self.assertIn("--qemu-mmu-cache-assoc2", cmd)
         self.assertIn("--template-chain", cmd)
         self.assertIn("--qemu-tlb-fault-trace-addr-lo", cmd)
         self.assertEqual(cmd[cmd.index("--qemu-tlb-fault-trace-addr-lo") + 1], "0x3f7feec000")
