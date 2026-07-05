@@ -189,7 +189,7 @@
         {
           "id": "specint-build-static-phase-b",
           "timeout_seconds": 3600,
-          "command": "LINX_SPEC_BENCH_OPTIMIZE=\"${LINX_SPEC_BENCH_OPTIMIZE:-${SPEC_BENCH_OPTIMIZE:-502.gcc_r=-O0 -fno-vectorize -fno-slp-vectorize -fwrapv}}\" MODE=phase-b bash tools/spec2017/build_int_rate_linx.sh --force-static --jobs \"${SPEC_BUILD_JOBS:-10}\" --emit-manifest \"${SPECINT_BUILD_MANIFEST:-$PWD/workloads/generated/specint-fast-gate/build-manifest.json}\""
+          "command": "LINX_SPEC_BENCH_OPTIMIZE=\"${LINX_SPEC_BENCH_OPTIMIZE:-${SPEC_BENCH_OPTIMIZE:-502.gcc_r=-O0 -fno-vectorize -fno-slp-vectorize -fwrapv}}\" MODE=phase-b bash tools/spec2017/build_int_rate_linx.sh --force-static --build-runtimes --jobs \"${SPEC_BUILD_JOBS:-10}\" --emit-manifest \"${SPECINT_BUILD_MANIFEST:-$PWD/workloads/generated/specint-fast-gate/build-manifest.json}\""
         },
         {
           "id": "specint-fast-test-train",
@@ -226,7 +226,7 @@
         {
           "id": "specint-build-static-nightly",
           "timeout_seconds": 3600,
-          "command": "LINX_SPEC_BENCH_OPTIMIZE=\"${LINX_SPEC_BENCH_OPTIMIZE:-${SPEC_BENCH_OPTIMIZE:-502.gcc_r=-O0 -fno-vectorize -fno-slp-vectorize -fwrapv}}\" MODE=phase-b bash tools/spec2017/build_int_rate_linx.sh --force-static --jobs \"${SPEC_BUILD_JOBS:-10}\" --emit-manifest \"${SPECINT_NIGHTLY_BUILD_MANIFEST:-$PWD/workloads/generated/specint-nightly-test-train/build-manifest.json}\""
+          "command": "LINX_SPEC_BENCH_OPTIMIZE=\"${LINX_SPEC_BENCH_OPTIMIZE:-${SPEC_BENCH_OPTIMIZE:-502.gcc_r=-O0 -fno-vectorize -fno-slp-vectorize -fwrapv}}\" MODE=phase-b bash tools/spec2017/build_int_rate_linx.sh --force-static --build-runtimes --jobs \"${SPEC_BUILD_JOBS:-10}\" --emit-manifest \"${SPECINT_NIGHTLY_BUILD_MANIFEST:-$PWD/workloads/generated/specint-nightly-test-train/build-manifest.json}\""
         },
         {
           "id": "specint-nightly-test-train",
