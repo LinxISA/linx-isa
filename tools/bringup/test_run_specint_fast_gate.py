@@ -139,6 +139,8 @@ class SpecintFastGateTests(unittest.TestCase):
             qemu_tlb_inv_hot=False,
             qemu_tlb_fill_stats=False,
             qemu_tlb_fill_hot=False,
+            qemu_tlb_fault_trace=True,
+            qemu_tlb_fault_trace_limit=64,
             qemu_tb_stats=False,
             no_progress_timeout=120,
             forward_memory_mb=True,
@@ -154,6 +156,7 @@ class SpecintFastGateTests(unittest.TestCase):
             forward_qemu_tlb_inv_hot=True,
             forward_qemu_tlb_fill_stats=True,
             forward_qemu_tlb_fill_hot=True,
+            forward_qemu_tlb_fault_trace=True,
             forward_qemu_tb_stats=True,
             forward_no_progress=True,
             forward_stack_limit=True,
@@ -173,6 +176,9 @@ class SpecintFastGateTests(unittest.TestCase):
         self.assertIn("--qemu-frame-stats", cmd)
         self.assertIn("--qemu-frame-shape-hot", cmd)
         self.assertIn("--qemu-frame-single-reg-fast", cmd)
+        self.assertIn("--qemu-tlb-fault-trace", cmd)
+        self.assertIn("--qemu-tlb-fault-trace-limit", cmd)
+        self.assertEqual(cmd[cmd.index("--qemu-tlb-fault-trace-limit") + 1], "64")
         self.assertIn("--fail-9p-timeout", cmd)
 
 

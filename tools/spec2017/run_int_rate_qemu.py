@@ -771,6 +771,8 @@ def _apply_qemu_debug_env(
     qemu_tlb_inv_hot: bool = False,
     qemu_tlb_fill_stats: bool = False,
     qemu_tlb_fill_hot: bool = False,
+    qemu_tlb_fault_trace: bool = False,
+    qemu_tlb_fault_trace_limit: int = 0,
     qemu_tb_stats: bool = False,
     qemu_fret_stk_trace: dict[str, str] | None = None,
     qemu_fentry_trace: dict[str, str] | None = None,
@@ -812,6 +814,12 @@ def _apply_qemu_debug_env(
         qemu_env["LINX_QEMU_TLB_FILL_STATS"] = "1"
     if qemu_tlb_fill_hot:
         qemu_env["LINX_QEMU_TLB_FILL_HOT"] = "1"
+    if qemu_tlb_fault_trace:
+        qemu_env["LINX_QEMU_TLB_FAULT_TRACE"] = "1"
+    if qemu_tlb_fault_trace_limit > 0:
+        qemu_env["LINX_QEMU_TLB_FAULT_TRACE_LIMIT"] = str(
+            qemu_tlb_fault_trace_limit
+        )
     if qemu_tb_stats:
         qemu_env["LINX_QEMU_TB_STATS"] = "1"
     for name, value in (qemu_fret_stk_trace or {}).items():
@@ -2789,6 +2797,8 @@ def _run_qemu(
     qemu_tlb_inv_hot: bool,
     qemu_tlb_fill_stats: bool,
     qemu_tlb_fill_hot: bool,
+    qemu_tlb_fault_trace: bool,
+    qemu_tlb_fault_trace_limit: int,
     qemu_tb_stats: bool,
     qemu_fret_stk_trace: dict[str, str],
     qemu_fentry_trace: dict[str, str],
@@ -2860,6 +2870,8 @@ def _run_qemu(
         qemu_tlb_inv_hot=qemu_tlb_inv_hot,
         qemu_tlb_fill_stats=qemu_tlb_fill_stats,
         qemu_tlb_fill_hot=qemu_tlb_fill_hot,
+        qemu_tlb_fault_trace=qemu_tlb_fault_trace,
+        qemu_tlb_fault_trace_limit=qemu_tlb_fault_trace_limit,
         qemu_tb_stats=qemu_tb_stats,
         qemu_fret_stk_trace=qemu_fret_stk_trace,
         qemu_fentry_trace=qemu_fentry_trace,
@@ -3043,6 +3055,7 @@ def _run_qemu(
     fault_trace = _fault_trace_summary(text)
     child_maps = _child_maps_summary(text)
     tlb_fill_trace = _tlb_fill_trace_summary(text)
+    tlb_fault_trace = _tlb_fault_trace_summary(text)
     mprotect_trace = _mprotect_trace_summary(text)
     heartbeat_stall = classification["heartbeat_stall"]
     heartbeat_tlb_fill = _heartbeat_tlb_fill_summary(classification["last_heartbeat"])
@@ -3070,6 +3083,8 @@ def _run_qemu(
         "qemu_tlb_inv_hot": bool(qemu_tlb_inv_hot),
         "qemu_tlb_fill_stats": bool(qemu_tlb_fill_stats),
         "qemu_tlb_fill_hot": bool(qemu_tlb_fill_hot),
+        "qemu_tlb_fault_trace": bool(qemu_tlb_fault_trace),
+        "qemu_tlb_fault_trace_limit": int(qemu_tlb_fault_trace_limit),
         "qemu_tb_stats": bool(qemu_tb_stats),
         "terminal_failure_grace_sec": terminal_failure_grace_sec,
         "qemu_rc": qemu_rc,
@@ -3126,6 +3141,10 @@ def _run_qemu(
         "tlb_fill_trace_count": tlb_fill_trace["count"],
         "tlb_fill_trace_last": tlb_fill_trace["last"],
         "tlb_fill_trace_samples": tlb_fill_trace["samples"],
+        "tlb_fault_trace_seen": tlb_fault_trace["seen"],
+        "tlb_fault_trace_count": tlb_fault_trace["count"],
+        "tlb_fault_trace_last": tlb_fault_trace["last"],
+        "tlb_fault_trace_samples": tlb_fault_trace["samples"],
         "mprotect_trace_seen": mprotect_trace["seen"],
         "mprotect_trace_count": mprotect_trace["count"],
         "mprotect_trace_last": mprotect_trace["last"],
@@ -4138,6 +4157,42 @@ def _tlb_fill_trace_summary(text: str) -> dict[str, Any]:
     }
 
 
+def _tlb_fault_trace_summary(text: str) -> dict[str, Any]:
+    lines = re.findall(r"^LINX_TLB_FAULT_TRACE .*$", text, flags=re.MULTILINE)
+    samples: list[dict[str, Any]] = []
+    for line in lines[-8:]:
+        fields = _heartbeat_fields(line)
+        samples.append(
+            {
+                "line": line[:512],
+                "count": _decimal_or_none(fields.get("count")),
+                "access": _decimal_or_none(fields.get("access")),
+                "va": fields.get("va", "").lower(),
+                "cause": fields.get("cause", "").lower(),
+                "pc": fields.get("pc", "").lower(),
+                "bpc": fields.get("bpc", "").lower(),
+                "body_tpc": fields.get("body_tpc", "").lower(),
+                "insn_next": fields.get("insn_next", "").lower(),
+                "mmu": _decimal_or_none(fields.get("mmu")),
+                "legacy": _decimal_or_none(fields.get("legacy")),
+                "legacy_ok": _decimal_or_none(fields.get("legacy_ok")),
+                "legacy_why": fields.get("legacy_why", ""),
+                "legacy_desc_addr": fields.get("legacy_desc_addr", "").lower(),
+                "legacy_desc": fields.get("legacy_desc", "").lower(),
+                "legacy_prot": fields.get("legacy_prot", "").lower(),
+                "legacy_pa": fields.get("legacy_pa", "").lower(),
+                "legacy_block": fields.get("legacy_block", "").lower(),
+                "legacy_cause": fields.get("legacy_cause", "").lower(),
+            }
+        )
+    return {
+        "seen": bool(lines),
+        "count": len(lines),
+        "last": lines[-1][:512] if lines else "",
+        "samples": samples,
+    }
+
+
 def _fault_trace_summary(text: str) -> dict[str, Any]:
     lines = re.findall(r"^LINX_FAULT_TRACE .*$", text, flags=re.MULTILINE)
     samples: list[dict[str, Any]] = []
@@ -4351,6 +4406,7 @@ def _strip_async_qemu_diagnostics(text: str) -> str:
         "LINX_TLB_INV_HOT",
         "LINX_FRAME_SHAPE_HOT",
         "LINX_TLB_FILL_TRACE",
+        "LINX_TLB_FAULT_TRACE",
         "LINX_FCMP_TRACE",
         "LINX_MPROTECT",
     ):
@@ -4650,6 +4706,18 @@ def main(argv: list[str]) -> int:
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_TLB_FILL_HOT", False),
         help="Set LINX_QEMU_TLB_FILL_HOT=1 to emit hot demand page-walk heartbeat sketches.",
+    )
+    parser.add_argument(
+        "--qemu-tlb-fault-trace",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_TLB_FAULT_TRACE", False),
+        help="Set LINX_QEMU_TLB_FAULT_TRACE=1 for page-walk fault diagnostics.",
+    )
+    parser.add_argument(
+        "--qemu-tlb-fault-trace-limit",
+        type=int,
+        default=int(os.environ.get("LINX_SPEC_QEMU_TLB_FAULT_TRACE_LIMIT", "0")),
+        help="Set LINX_QEMU_TLB_FAULT_TRACE_LIMIT when TLB fault tracing is enabled (0 uses QEMU default).",
     )
     parser.add_argument(
         "--qemu-tb-stats",
@@ -5010,6 +5078,8 @@ def main(argv: list[str]) -> int:
         raise SystemExit("error: --guest-heartbeat-sec must be >= 0")
     if args.guest_child_maps_bytes < 0:
         raise SystemExit("error: --guest-child-maps-bytes must be >= 0")
+    if args.qemu_tlb_fault_trace_limit < 0:
+        raise SystemExit("error: --qemu-tlb-fault-trace-limit must be >= 0")
     if args.no_progress_timeout < 0:
         raise SystemExit("error: --no-progress-timeout must be >= 0")
     if args.terminal_failure_grace_sec < 0:
@@ -5075,6 +5145,8 @@ def main(argv: list[str]) -> int:
         "qemu_tlb_inv_hot": bool(args.qemu_tlb_inv_hot),
         "qemu_tlb_fill_stats": bool(args.qemu_tlb_fill_stats),
         "qemu_tlb_fill_hot": bool(args.qemu_tlb_fill_hot),
+        "qemu_tlb_fault_trace": bool(args.qemu_tlb_fault_trace),
+        "qemu_tlb_fault_trace_limit": args.qemu_tlb_fault_trace_limit,
         "qemu_tb_stats": bool(args.qemu_tb_stats),
         "qemu_fret_stk_trace": qemu_fret_stk_trace,
         "qemu_fentry_trace": qemu_fentry_trace,
@@ -5196,6 +5268,8 @@ def main(argv: list[str]) -> int:
                     args.qemu_tlb_inv_hot,
                     args.qemu_tlb_fill_stats,
                     args.qemu_tlb_fill_hot,
+                    args.qemu_tlb_fault_trace,
+                    args.qemu_tlb_fault_trace_limit,
                     args.qemu_tb_stats,
                     qemu_fret_stk_trace,
                     qemu_fentry_trace,

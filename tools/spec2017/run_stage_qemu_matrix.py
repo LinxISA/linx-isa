@@ -879,6 +879,18 @@ def main(argv: list[str]) -> int:
         help="Pass --qemu-tlb-fill-hot to emit hot demand page-walk heartbeat sketches.",
     )
     ap.add_argument(
+        "--qemu-tlb-fault-trace",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_TLB_FAULT_TRACE", False),
+        help="Pass --qemu-tlb-fault-trace to emit page-walk fault diagnostics.",
+    )
+    ap.add_argument(
+        "--qemu-tlb-fault-trace-limit",
+        type=int,
+        default=_env_int("LINX_SPEC_QEMU_TLB_FAULT_TRACE_LIMIT", 0),
+        help="Pass --qemu-tlb-fault-trace-limit to cap TLB fault trace lines.",
+    )
+    ap.add_argument(
         "--qemu-tb-stats",
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_TB_STATS", False),
@@ -1151,6 +1163,8 @@ def main(argv: list[str]) -> int:
         raise SystemExit("error: --no-progress-timeout must be >= 0")
     if args.guest_heartbeat_sec < 0:
         raise SystemExit("error: --guest-heartbeat-sec must be >= 0")
+    if args.qemu_tlb_fault_trace_limit < 0:
+        raise SystemExit("error: --qemu-tlb-fault-trace-limit must be >= 0")
     if args.dump_prefix_bytes < 0:
         raise SystemExit("error: --dump-prefix-bytes must be >= 0")
     qemu_fault_trace_filters = {
@@ -1314,6 +1328,13 @@ def main(argv: list[str]) -> int:
             cmd.append("--qemu-tlb-fill-stats")
         if args.qemu_tlb_fill_hot:
             cmd.append("--qemu-tlb-fill-hot")
+        if args.qemu_tlb_fault_trace:
+            cmd.append("--qemu-tlb-fault-trace")
+        if args.qemu_tlb_fault_trace_limit > 0:
+            cmd.extend([
+                "--qemu-tlb-fault-trace-limit",
+                str(args.qemu_tlb_fault_trace_limit),
+            ])
         if args.qemu_tb_stats:
             cmd.append("--qemu-tb-stats")
         if args.qemu_fault_trace:
@@ -1432,6 +1453,8 @@ def main(argv: list[str]) -> int:
         "qemu_tlb_inv_hot": bool(args.qemu_tlb_inv_hot),
         "qemu_tlb_fill_stats": bool(args.qemu_tlb_fill_stats),
         "qemu_tlb_fill_hot": bool(args.qemu_tlb_fill_hot),
+        "qemu_tlb_fault_trace": bool(args.qemu_tlb_fault_trace),
+        "qemu_tlb_fault_trace_limit": int(args.qemu_tlb_fault_trace_limit),
         "qemu_tb_stats": bool(args.qemu_tb_stats),
         "qemu_fault_trace": bool(args.qemu_fault_trace or qemu_fault_trace_filters),
         "qemu_fault_trace_regs": bool(args.qemu_fault_trace_regs),
