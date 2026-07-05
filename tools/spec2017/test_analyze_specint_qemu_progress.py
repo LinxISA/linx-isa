@@ -452,6 +452,18 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                                 "fret_stk_trace_count": 6,
                                 "fret_stk_trace_last": "LINX_FRET_STK_TRACE pc=0x1555837f46",
                                 "fret_stk_trace_samples": [{"pc": "0x1555837f46"}],
+                                "pc_watch_seen": True,
+                                "pc_watch_line_count": 7,
+                                "pc_watch_last": "LINX_PC_WATCH_REGS pc=0x15555c09e6",
+                                "pc_watch_samples": [{"pc": "0x15555c09e6"}],
+                                "pc_watch_ring_seen": True,
+                                "pc_watch_ring_entry_count": 4,
+                                "pc_watch_last_ring_entry": (
+                                    "LINX_PC_WATCH_RING_ENTRY pc=0x15555c09e6"
+                                ),
+                                "pc_watch_ring_entry_samples": [
+                                    {"pc": "0x15555c09e6"}
+                                ],
                                 "child_maps": {
                                     "seen": True,
                                     "block_count": 3,
@@ -490,6 +502,10 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
         self.assertEqual(row["fentry_trace_count"], 5)
         self.assertTrue(row["fret_stk_trace_seen"])
         self.assertEqual(row["fret_stk_trace_count"], 6)
+        self.assertTrue(row["pc_watch_seen"])
+        self.assertEqual(row["pc_watch_line_count"], 7)
+        self.assertTrue(row["pc_watch_ring_seen"])
+        self.assertEqual(row["pc_watch_ring_entry_count"], 4)
         self.assertTrue(row["child_maps_seen"])
         self.assertEqual(row["child_maps_block_count"], 3)
         self.assertEqual(row["child_maps_trap_addr"], "0x3f7ff0008c")
@@ -590,6 +606,14 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                     "fret_stk_trace_seen": True,
                     "fret_stk_trace_count": 2,
                     "fret_stk_trace_last": "LINX_FRET_STK_TRACE pc=0x1555837f46",
+                    "pc_watch_seen": True,
+                    "pc_watch_line_count": 3,
+                    "pc_watch_last": "LINX_PC_WATCH_REGS pc=0x15555c09e6",
+                    "pc_watch_ring_seen": True,
+                    "pc_watch_ring_entry_count": 1,
+                    "pc_watch_last_ring_entry": (
+                        "LINX_PC_WATCH_RING_ENTRY pc=0x15555c09e6"
+                    ),
                     "child_maps_seen": True,
                     "child_maps_trap_addr": "0x3f7ff0008c",
                     "child_maps_trap_addr_mapped": False,
@@ -625,6 +649,8 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
         self.assertIn("syscall-trace count=`2`", text)
         self.assertIn("fentry-trace count=`2`", text)
         self.assertIn("fret-stk-trace count=`2`", text)
+        self.assertIn("pc-watch lines=`3`", text)
+        self.assertIn("pc-watch-ring entries=`1`", text)
         self.assertIn("child-maps trap_addr=`0x3f7ff0008c` mapped=`false`", text)
         self.assertIn("child-maps fault_addr=`0x3f7feec008` mapped=`true`", text)
 

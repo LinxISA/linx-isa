@@ -629,6 +629,34 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(fret["samples"][0]["restored_ra"], "0x1555837f56")
         self.assertEqual(fret["samples"][0]["new_sp"], "0x3ffffff430")
 
+    def test_pc_watch_summary_captures_ring_fields(self) -> None:
+        text = (
+            "linx_pc_watch: pc=0x15555c09e6 hit=4 printed=4 "
+            "count=3317352495 sp=0x3ffffff5f0 a0=0x3fefdfd3c0 "
+            "a1=0x3fefe32a9a a2=0xb ra=0x15555c09c0 "
+            "tq0=0x155557eb10 tq1=0x1555841468 uq0=0x2e uq1=0x0\n"
+            "LINX_PC_WATCH_RING reason=fault fault_pc=0x15555c09e6 "
+            "fault_count=3317352495 entries=1\n"
+            "LINX_PC_WATCH_RING_ENTRY idx=0 age=0 watch=6 "
+            "pc=0x15555c09e6 hit=4 printed=4 count=3317352495 "
+            "envpc=0x15555c09e6 bpc=0x15555c09d4 tpc=0x0 acr=2 "
+            "cstate=0x12 tq0=0x155557eb10 tq1=0x1555841468 "
+            "uq0=0x2e uq1=0x0\n"
+        )
+
+        summary = runner._pc_watch_summary(text)
+
+        self.assertTrue(summary["seen"])
+        self.assertEqual(summary["line_count"], 3)
+        self.assertIn("pc=0x15555c09e6", summary["last"])
+        self.assertTrue(summary["ring_seen"])
+        self.assertEqual(summary["ring_entry_count"], 1)
+        self.assertEqual(summary["last_ring_fields"]["fault_count"], 3317352495)
+        self.assertEqual(
+            summary["last_ring_entry_fields"]["tq0"],
+            "0x155557eb10",
+        )
+
     def test_qemu_debug_env_summary_is_sanitized(self) -> None:
         env: dict[str, str] = {
             "PATH": "/bin",

@@ -176,8 +176,8 @@ def _merge_failure_detail(row: dict[str, Any], detail: dict[str, Any]) -> None:
     tlb_fill = detail.get("heartbeat_tlb_fill") or {}
     tlb_inv = detail.get("heartbeat_tlb_invalidation") or {}
     tlb_inv_hot = detail.get("heartbeat_tlb_inv_hot") or {}
-    pc_watch = detail.get("pc_watch") or {}
     child_maps = detail.get("child_maps") or {}
+    pc_watch = detail.get("pc_watch") or {}
 
     row.update(
         {
@@ -219,6 +219,72 @@ def _merge_failure_detail(row: dict[str, Any], detail: dict[str, Any]) -> None:
             "fret_stk_trace_count": detail.get("fret_stk_trace_count"),
             "fret_stk_trace_last": detail.get("fret_stk_trace_last"),
             "fret_stk_trace_samples": detail.get("fret_stk_trace_samples", []),
+            "pc_watch_seen": detail.get("pc_watch_seen", pc_watch.get("seen")),
+            "pc_watch_line_count": detail.get(
+                "pc_watch_line_count", pc_watch.get("line_count")
+            ),
+            "pc_watch_last": detail.get("pc_watch_last", pc_watch.get("last")),
+            "pc_watch_samples": detail.get(
+                "pc_watch_samples", pc_watch.get("samples", [])
+            ),
+            "pc_watch_ring_seen": detail.get(
+                "pc_watch_ring_seen", pc_watch.get("ring_seen")
+            ),
+            "pc_watch_ring_count": detail.get(
+                "pc_watch_ring_count", pc_watch.get("ring_count")
+            ),
+            "pc_watch_ring_entry_count": detail.get(
+                "pc_watch_ring_entry_count", pc_watch.get("ring_entry_count")
+            ),
+            "pc_watch_last_ring": detail.get(
+                "pc_watch_last_ring", pc_watch.get("last_ring")
+            ),
+            "pc_watch_last_ring_entry": detail.get(
+                "pc_watch_last_ring_entry", pc_watch.get("last_ring_entry")
+            ),
+            "pc_watch_last_ring_fields": detail.get(
+                "pc_watch_last_ring_fields", pc_watch.get("last_ring_fields", {})
+            ),
+            "pc_watch_last_ring_entry_fields": detail.get(
+                "pc_watch_last_ring_entry_fields",
+                pc_watch.get("last_ring_entry_fields", {}),
+            ),
+            "pc_watch_ring_entry_samples": detail.get(
+                "pc_watch_ring_entry_samples",
+                pc_watch.get("ring_entry_samples", []),
+            ),
+            "pc_watch_call_trace_ring_seen": detail.get(
+                "pc_watch_call_trace_ring_seen",
+                pc_watch.get("call_trace_ring_seen"),
+            ),
+            "pc_watch_call_trace_ring_count": detail.get(
+                "pc_watch_call_trace_ring_count",
+                pc_watch.get("call_trace_ring_count"),
+            ),
+            "pc_watch_call_trace_ring_entry_count": detail.get(
+                "pc_watch_call_trace_ring_entry_count",
+                pc_watch.get("call_trace_ring_entry_count"),
+            ),
+            "pc_watch_last_call_trace_ring": detail.get(
+                "pc_watch_last_call_trace_ring",
+                pc_watch.get("last_call_trace_ring"),
+            ),
+            "pc_watch_last_call_trace_ring_entry": detail.get(
+                "pc_watch_last_call_trace_ring_entry",
+                pc_watch.get("last_call_trace_ring_entry"),
+            ),
+            "pc_watch_last_call_trace_ring_fields": detail.get(
+                "pc_watch_last_call_trace_ring_fields",
+                pc_watch.get("last_call_trace_ring_fields", {}),
+            ),
+            "pc_watch_last_call_trace_ring_entry_fields": detail.get(
+                "pc_watch_last_call_trace_ring_entry_fields",
+                pc_watch.get("last_call_trace_ring_entry_fields", {}),
+            ),
+            "pc_watch_call_trace_ring_entry_samples": detail.get(
+                "pc_watch_call_trace_ring_entry_samples",
+                pc_watch.get("call_trace_ring_entry_samples", []),
+            ),
             "child_maps_seen": child_maps.get("seen"),
             "child_maps_block_count": child_maps.get("block_count"),
             "child_maps_trap_addr": child_maps.get("trap_addr"),
@@ -551,7 +617,37 @@ def _bench_report_row(
         "mprotect_trace_seen": gate_row.get("mprotect_trace_seen"),
         "mprotect_trace_count": gate_row.get("mprotect_trace_count"),
         "pc_watch_seen": gate_row.get("pc_watch_seen"),
+        "pc_watch_line_count": gate_row.get("pc_watch_line_count"),
         "pc_watch_last": gate_row.get("pc_watch_last"),
+        "pc_watch_samples": gate_row.get("pc_watch_samples", []),
+        "pc_watch_ring_seen": gate_row.get("pc_watch_ring_seen"),
+        "pc_watch_ring_count": gate_row.get("pc_watch_ring_count"),
+        "pc_watch_ring_entry_count": gate_row.get("pc_watch_ring_entry_count"),
+        "pc_watch_last_ring": gate_row.get("pc_watch_last_ring"),
+        "pc_watch_last_ring_entry": gate_row.get("pc_watch_last_ring_entry"),
+        "pc_watch_last_ring_fields": gate_row.get("pc_watch_last_ring_fields", {}),
+        "pc_watch_last_ring_entry_fields": gate_row.get(
+            "pc_watch_last_ring_entry_fields", {}
+        ),
+        "pc_watch_ring_entry_samples": gate_row.get("pc_watch_ring_entry_samples", []),
+        "pc_watch_call_trace_ring_seen": gate_row.get("pc_watch_call_trace_ring_seen"),
+        "pc_watch_call_trace_ring_count": gate_row.get("pc_watch_call_trace_ring_count"),
+        "pc_watch_call_trace_ring_entry_count": gate_row.get(
+            "pc_watch_call_trace_ring_entry_count"
+        ),
+        "pc_watch_last_call_trace_ring": gate_row.get("pc_watch_last_call_trace_ring"),
+        "pc_watch_last_call_trace_ring_entry": gate_row.get(
+            "pc_watch_last_call_trace_ring_entry"
+        ),
+        "pc_watch_last_call_trace_ring_fields": gate_row.get(
+            "pc_watch_last_call_trace_ring_fields", {}
+        ),
+        "pc_watch_last_call_trace_ring_entry_fields": gate_row.get(
+            "pc_watch_last_call_trace_ring_entry_fields", {}
+        ),
+        "pc_watch_call_trace_ring_entry_samples": gate_row.get(
+            "pc_watch_call_trace_ring_entry_samples", []
+        ),
         "tb_lookup": gate_row.get("tb_lookup"),
         "tb_miss": gate_row.get("tb_miss"),
         "tlb_fill_total": gate_row.get("tlb_fill_total"),
@@ -876,6 +972,16 @@ def _write_markdown(path: Path, report: dict[str, Any]) -> None:
                     f"  fret-stk-trace count=`{row.get('fret_stk_trace_count')}` "
                     f"last=`{row.get('fret_stk_trace_last', '')[:240]}`"
                 )
+            if row.get("pc_watch_seen"):
+                lines.append(
+                    f"  pc-watch lines=`{row.get('pc_watch_line_count')}` "
+                    f"last=`{row.get('pc_watch_last', '')[:240]}`"
+                )
+                if row.get("pc_watch_ring_seen"):
+                    lines.append(
+                        f"  pc-watch-ring entries=`{row.get('pc_watch_ring_entry_count')}` "
+                        f"last=`{row.get('pc_watch_last_ring_entry', '')[:240]}`"
+                    )
             if row.get("child_maps_seen"):
                 mapped = row.get("child_maps_trap_addr_mapped")
                 mapped_text = "unknown" if mapped is None else str(bool(mapped)).lower()

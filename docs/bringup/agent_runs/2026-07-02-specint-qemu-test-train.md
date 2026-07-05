@@ -1,5 +1,95 @@
 # SPECint QEMU test/train bring-up, 2026-07-02
 
+## 2026-07-05 continuation: `500.perlbench_r` `Perl_do_exec3` operand provenance
+
+Artifact roots:
+
+- `workloads/generated/specint-500-testpl-exec3-memtrace-qemu-20260705-r1`
+- `workloads/generated/specint-500-testpl-exec3-pcwatch-qemu-20260705-r1`
+- `workloads/generated/specint-qemu-progress-analysis-500-testpl-exec3-pcwatch-20260705-r1`
+
+Command shape:
+
+```bash
+python3 tools/spec2017/run_int_rate_qemu.py \
+  --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 \
+  --qemu /private/tmp/linx-qemu-clean-build/qemu-system-linx64 \
+  --kernel kernel/linux/build-linx-fixed/vmlinux \
+  --stage b --transport initramfs --input-set test \
+  --bench 500.perlbench_r --run-index 2 --timeout 120 \
+  --heartbeat-sec 15 --qemu-heartbeat-interval 1000000000 \
+  --qemu-heartbeat-same-site-warn 4 --guest-heartbeat-sec 1 \
+  --guest-child-maps-bytes 4096 --terminal-failure-grace-sec 3 \
+  --append-extra norandmaps --linux-vm-trace \
+  --qemu-fault-trace --qemu-fault-trace-regs \
+  --qemu-fault-trace-addr-lo 0x0 --qemu-fault-trace-addr-hi 0x10 \
+  --qemu-fault-trace-limit 16 \
+  --qemu-call-trace-ring --qemu-call-trace-ring-size 128 \
+  --qemu-mem-trace --qemu-mem-trace-pre --qemu-mem-trace-regs \
+  --qemu-mem-trace-pc-lo 0x15555c09c0 \
+  --qemu-mem-trace-pc-hi 0x15555c09ea \
+  --qemu-mem-trace-count-lo 3317000000 \
+  --qemu-mem-trace-count-hi 3317800000 \
+  --qemu-mem-trace-limit 128
+```
+
+The paired PC-watch run replaces the memory trace with:
+
+```bash
+--qemu-pc-watch \
+  0x15555c09c2,0x15555c09c4,0x15555c09c8,0x15555c09d6,0x15555c09d8,0x15555c09e4,0x15555c09e6 \
+--qemu-pc-watch-hit-limit 4 --qemu-pc-watch-regs \
+--qemu-pc-watch-ring --qemu-pc-watch-ring-size 128 \
+--qemu-pc-watch-dump-reg sp --qemu-pc-watch-dump-offsets 112 \
+--qemu-pc-watch-dump-words 2
+```
+
+Result:
+
+- Both runs use clean QEMU head
+  `68bebbd9e7b61df45f433830199ff59a49622ad1`,
+  `QEMU emulator version 10.2.50 (v10.2.0-1029-g68bebbd9e7b)`.
+- Symbolization with load bias `0x1515555000` maps terminal
+  `tpc=0x15555c09e6` to linked `0x4006b9e6` in `Perl_do_exec3`,
+  instruction `lw [t#1, u#1<<2], ->u`. The surrounding block loads a command
+  string byte into `u#1`, then loads a table pointer into `t#1`, then performs
+  the indexed load.
+- The low-perturbation memory trace run reproduces the terminal `user-trap`.
+  The final `LINX_MEM_TRACE` is
+  `pc=0x15555c09e6`, `addr=0x0`, `size=4`, `count=3317280971`,
+  `bpc=0x15555c09d4`, with all captured `tq0..tq3` and `uq0..uq3` zero.
+  The paired `LINX_FAULT_TRACE` records the same count and PC with
+  `traparg0=0x0`, `mem_va=0x0`, `cause=0x2`, `store_cause=0x5`, and
+  `orig_tpc=0x1555837f3c` in the terminal `LINX_USER_TRAP`.
+- The PC-watch run is perturbing: it ends as heartbeat-backed `live-timeout`,
+  not terminal trap, with last count `17000000000`, last BPC
+  `0xffffffff8011612e`, and site progress. It still records 36 PC-watch lines
+  in the same `Perl_do_exec3` block. For the matching command-string state
+  (`a0=0x3fefdfd3c0`, `a1=0x3fefe32a9a`, `a2=0xb`), a normal hit at
+  `pc=0x15555c09e6` records `tq0=0x155557eb10`,
+  `tq1=0x1555841468`, `uq0=0x2e`, `uq1=0x0` at count `3317246774`.
+  A later printed hit at the same PC still has the same nonzero queue operands.
+
+Tool update:
+
+- `tools/spec2017/run_int_rate_qemu.py` now exposes `pc_watch_*` summary
+  fields at the same level as fault, memory, syscall, FENTRY, and FRET.STK
+  trace summaries while preserving the existing nested `pc_watch` object.
+- `tools/spec2017/analyze_specint_qemu_progress.py` now carries both new
+  top-level PC-watch fields and older nested-only stage summaries into
+  JSON/Markdown reports.
+
+Interpretation:
+
+`Perl_do_exec3` is not a static always-bad block: the same command-string state
+can reach the indexed table load with a valid table pointer and byte index in
+the queue operands. The terminal low-perturbation run later reaches the same
+PC with the same visible GPR arguments but zeroed T/U queue state and faults at
+address zero. Keep the low-perturbation mem/fault trace as terminal proof, but
+route the next loop to queue/control-state preservation between the recurrent
+`sccp` syscall return path and repeated `Perl_do_exec3` block execution. Do
+not classify this as deadlock or as a missing Linux VMA.
+
 ## 2026-07-05 continuation: `500.perlbench_r` `sccp` frame/syscall trace
 
 Artifact root:
