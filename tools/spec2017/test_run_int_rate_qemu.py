@@ -94,6 +94,48 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertIn("marker_now + terminal_failure_grace_sec", source)
         self.assertIn("max(1.0, terminal_failure_grace_sec)", source)
 
+    def test_trap_delivery_trace_env_and_summary(self) -> None:
+        qemu_env: dict[str, str] = {}
+
+        runner._apply_qemu_debug_env(
+            qemu_env,
+            qemu_heartbeat_interval=0,
+            qemu_fault_trace_regs=False,
+            qemu_fault_trace_limit=1,
+            qemu_trap_delivery_trace=True,
+            qemu_trap_delivery_trace_limit=7,
+            qemu_trap_delivery_trace_filters={
+                "LINX_QEMU_TRAP_DELIVERY_TRACE_PC_LO": "0x1555825400",
+                "LINX_QEMU_TRAP_DELIVERY_TRACE_PC_HI": "0x1555829900",
+            },
+        )
+
+        self.assertEqual(qemu_env["LINX_QEMU_TRAP_DELIVERY_TRACE"], "1")
+        self.assertEqual(qemu_env["LINX_QEMU_TRAP_DELIVERY_TRACE_LIMIT"], "7")
+        self.assertEqual(
+            qemu_env["LINX_QEMU_TRAP_DELIVERY_TRACE_PC_LO"],
+            "0x1555825400",
+        )
+
+        summary = runner._trap_delivery_trace_summary(
+            "LINX_TRAP_DELIVERY_TRACE seq=1 count=3159358776 trapnum=1 "
+            "cause=0x5 argv=1 is_trap=1 bi=1 precise=0 src_acr=2 dst_acr=1 "
+            "tpc=0x1555825572 tpc_next=0x1555825574 "
+            "src_bpc=0x1555825566 report_bpc=0x1555825566 "
+            "pending_arg0=0x155583c708 pending_cause=0x5 "
+            "envpc=0x1555825572 body_tpc=0x1555825572 in_body=1 brtype=1 "
+            "tgt=0x0 src_blocktype=1 src_tq0=0x0 src_tq1=0x1 "
+            "src_uq0=0x2 src_uq1=0x3 src_lb=0x0:0x1:0x2 "
+            "src_lc=0x3:0x4:0x5 dst_evbase=0xffffffff80000000 "
+            "cstate=0x1 sp=0x3f7fff0000 ra=0x1555000000 "
+            "a0=0x1 a1=0x2 a2=0x3 a3=0x4 a7=0xdd\n"
+        )
+
+        self.assertTrue(summary["seen"])
+        self.assertEqual(summary["count"], 1)
+        self.assertEqual(summary["samples"][0]["pending_arg0"], "0x155583c708")
+        self.assertEqual(summary["samples"][0]["tpc"], "0x1555825572")
+
     def test_child_exit_with_benchmark_internal_error_is_classified(self) -> None:
         result = runner._classify_qemu_result(
             text=(

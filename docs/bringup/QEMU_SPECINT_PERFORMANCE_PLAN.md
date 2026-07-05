@@ -4164,6 +4164,31 @@ Actionable next loops:
 - For `500`, `502`, `505`, `520`, and `523`, continue reducing template/TB and
   soft-MMU dispatch cost before adding more broad frame-helper experiments.
 
+## SPEC 500 Trap-Delivery Evidence
+
+`emulator/qemu/target/linx/cpu.c` now has default-off synchronous trap delivery
+tracing controlled by `LINX_TRAP_DELIVERY_TRACE` /
+`LINX_QEMU_TRAP_DELIVERY_TRACE`. The SPEC per-row and matrix runners expose the
+same feature through `--qemu-trap-delivery-trace`, PC/count filters, and
+`trap_delivery_trace_*` JSON fields. This is meant to distinguish "QEMU
+delivered the wrong trap argument" from "Linux later turned a handled fault path
+into a signal".
+
+Focused `500.perlbench_r` test input row 2 evidence:
+
+| Run | Evidence |
+| --- | --- |
+| `workloads/generated/specint-500-testpl-trapdelivery-qemu-20260705-r1/` | The earlier mapped store fault is delivered correctly: `tpc=0x1555825572`, `report_bpc=0x1555825566`, `pending_arg0=0x155583c708`, `pending_cause=0x5`; the guest maps summary proves `0x155583c708` lies in `155583c000-1555843000 rw-p ... /spec-run/perlbench_r_base.mytest-m64`. The row still ends later as `user-trap` with `traparg0=0`. |
+| `workloads/generated/specint-500-testpl-trapdelivery-window-qemu-20260705-r1/` | A count-window trace captures 24 later sync deliveries through `count=3161914921`, all with nonzero `pending_arg0`; the final captured delivery is `tpc=0x1555829a94`, `pending_arg0=0x3f7fefa040`, `pending_cause=0x5`. The later terminal signal is `LINX_USER_TRAP ... tpc=0x15555c09e6 ... traparg0=0 trapno=0xc000000002000001`. |
+
+Conclusion: do not spend the next loop on the previously highlighted
+`0x155583c708` mapped first-write fault. QEMU delivered that fault with the
+expected nonzero trap argument. The remaining `500.perlbench_r` correctness
+question is why Linux later reports a zero-argument user SIGSEGV after prior
+handled page/access faults. The next diagnostic should widen the delivery trace
+past `count=3161914921` and add Linux-side `do_page_fault` / `do_trap` signal
+classification around the terminal `trapno=0xc000000002000001` path.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.

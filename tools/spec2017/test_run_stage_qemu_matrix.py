@@ -236,6 +236,12 @@ class StageQemuMatrixTests(unittest.TestCase):
                 "LINX_QEMU_FAULT_TRACE_PC_LO": "0x15559efe00",
                 "LINX_QEMU_FAULT_TRACE_PC_HI": "0x15559efe40",
             },
+            "qemu_trap_delivery_trace": True,
+            "qemu_trap_delivery_trace_limit": 64,
+            "qemu_trap_delivery_trace_filters": {
+                "LINX_QEMU_TRAP_DELIVERY_TRACE_PC_LO": "0x1555825400",
+                "LINX_QEMU_TRAP_DELIVERY_TRACE_PC_HI": "0x1555829900",
+            },
             "qemu_syscall_trace": {
                 "LINX_SYSCALL_TRACE": "1",
                 "LINX_SYSCALL_TRACE_PC_LO": "0x1555837f00",
@@ -274,6 +280,9 @@ class StageQemuMatrixTests(unittest.TestCase):
             text = path.read_text()
 
         self.assertIn("qemu_fault_trace: `true`", text)
+        self.assertIn("qemu_trap_delivery_trace: `true`", text)
+        self.assertIn("qemu_trap_delivery_trace_limit: `64`", text)
+        self.assertIn("LINX_QEMU_TRAP_DELIVERY_TRACE_PC_LO=0x1555825400", text)
         self.assertIn("qemu_heartbeat_regs: `true`", text)
         self.assertIn("qemu_version: `QEMU emulator version 10.2.50`", text)
         self.assertIn("qemu_repo_head: `abc123`", text)

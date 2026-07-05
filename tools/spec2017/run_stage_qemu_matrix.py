@@ -40,6 +40,14 @@ QEMU_TLB_FAULT_TRACE_FILTER_ARGS = {
     "qemu_tlb_fault_trace_count_hi": "LINX_QEMU_TLB_FAULT_TRACE_COUNT_HI",
 }
 
+QEMU_TRAP_DELIVERY_TRACE_FILTER_ARGS = {
+    "qemu_trap_delivery_trace_pc": "LINX_QEMU_TRAP_DELIVERY_TRACE_PC",
+    "qemu_trap_delivery_trace_pc_lo": "LINX_QEMU_TRAP_DELIVERY_TRACE_PC_LO",
+    "qemu_trap_delivery_trace_pc_hi": "LINX_QEMU_TRAP_DELIVERY_TRACE_PC_HI",
+    "qemu_trap_delivery_trace_count_lo": "LINX_QEMU_TRAP_DELIVERY_TRACE_COUNT_LO",
+    "qemu_trap_delivery_trace_count_hi": "LINX_QEMU_TRAP_DELIVERY_TRACE_COUNT_HI",
+}
+
 QEMU_PC_WATCH_ARGS = {
     "qemu_pc_watch": "LINX_DEBUG_PC_WATCH",
     "qemu_pc_watch_count_lo": "LINX_DEBUG_PC_WATCH_COUNT_LO",
@@ -349,6 +357,10 @@ def _transport_failure_details(summary_obj: dict[str, Any]) -> dict[str, dict[st
             "tlb_fault_trace_count": failed_run.get("tlb_fault_trace_count"),
             "tlb_fault_trace_last": str(failed_run.get("tlb_fault_trace_last") or "")[:512],
             "tlb_fault_trace_samples": failed_run.get("tlb_fault_trace_samples") or [],
+            "trap_delivery_trace_seen": bool(failed_run.get("trap_delivery_trace_seen", False)),
+            "trap_delivery_trace_count": failed_run.get("trap_delivery_trace_count"),
+            "trap_delivery_trace_last": str(failed_run.get("trap_delivery_trace_last") or "")[:768],
+            "trap_delivery_trace_samples": failed_run.get("trap_delivery_trace_samples") or [],
             "mprotect_trace_seen": bool(failed_run.get("mprotect_trace_seen", False)),
             "mprotect_trace_count": failed_run.get("mprotect_trace_count"),
             "mprotect_trace_last": str(failed_run.get("mprotect_trace_last") or "")[:512],
@@ -673,6 +685,12 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
     if filters:
         filter_text = ", ".join(f"{k}={v}" for k, v in sorted(filters.items()))
         lines.append(f"- qemu_fault_trace_filters: `{filter_text}`")
+    lines.append(f"- qemu_trap_delivery_trace: `{str(bool(summary.get('qemu_trap_delivery_trace', False))).lower()}`")
+    lines.append(f"- qemu_trap_delivery_trace_limit: `{summary.get('qemu_trap_delivery_trace_limit', 0)}`")
+    trap_delivery_filters = summary.get("qemu_trap_delivery_trace_filters") or {}
+    if trap_delivery_filters:
+        filter_text = ", ".join(f"{k}={v}" for k, v in sorted(trap_delivery_filters.items()))
+        lines.append(f"- qemu_trap_delivery_trace_filters: `{filter_text}`")
     pc_watch = summary.get("qemu_pc_watch") or {}
     if pc_watch:
         watch_text = ", ".join(f"{k}={v}" for k, v in sorted(pc_watch.items()))
@@ -955,6 +973,23 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--qemu-tlb-fault-trace-count-lo", default=os.environ.get("LINX_SPEC_QEMU_TLB_FAULT_TRACE_COUNT_LO", ""))
     ap.add_argument("--qemu-tlb-fault-trace-count-hi", default=os.environ.get("LINX_SPEC_QEMU_TLB_FAULT_TRACE_COUNT_HI", ""))
     ap.add_argument(
+        "--qemu-trap-delivery-trace",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_TRAP_DELIVERY_TRACE", False),
+        help="Pass --qemu-trap-delivery-trace to emit synchronous trap-delivery diagnostics.",
+    )
+    ap.add_argument(
+        "--qemu-trap-delivery-trace-limit",
+        type=int,
+        default=_env_int("LINX_SPEC_QEMU_TRAP_DELIVERY_TRACE_LIMIT", 0),
+        help="Pass --qemu-trap-delivery-trace-limit to cap trap-delivery trace lines.",
+    )
+    ap.add_argument("--qemu-trap-delivery-trace-pc", default=os.environ.get("LINX_SPEC_QEMU_TRAP_DELIVERY_TRACE_PC", ""))
+    ap.add_argument("--qemu-trap-delivery-trace-pc-lo", default=os.environ.get("LINX_SPEC_QEMU_TRAP_DELIVERY_TRACE_PC_LO", ""))
+    ap.add_argument("--qemu-trap-delivery-trace-pc-hi", default=os.environ.get("LINX_SPEC_QEMU_TRAP_DELIVERY_TRACE_PC_HI", ""))
+    ap.add_argument("--qemu-trap-delivery-trace-count-lo", default=os.environ.get("LINX_SPEC_QEMU_TRAP_DELIVERY_TRACE_COUNT_LO", ""))
+    ap.add_argument("--qemu-trap-delivery-trace-count-hi", default=os.environ.get("LINX_SPEC_QEMU_TRAP_DELIVERY_TRACE_COUNT_HI", ""))
+    ap.add_argument(
         "--qemu-tb-stats",
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_TB_STATS", False),
@@ -1173,6 +1208,11 @@ def main(argv: list[str]) -> int:
         "qemu_fentry_trace_new_sp",
         "qemu_fentry_trace_limit",
         "qemu_fentry_trace_dump_words",
+        "qemu_trap_delivery_trace_pc",
+        "qemu_trap_delivery_trace_pc_lo",
+        "qemu_trap_delivery_trace_pc_hi",
+        "qemu_trap_delivery_trace_count_lo",
+        "qemu_trap_delivery_trace_count_hi",
     ):
         value = str(getattr(args, attr, "") or "").strip()
         if value:
@@ -1229,6 +1269,8 @@ def main(argv: list[str]) -> int:
         raise SystemExit("error: --guest-heartbeat-sec must be >= 0")
     if args.qemu_tlb_fault_trace_limit < 0:
         raise SystemExit("error: --qemu-tlb-fault-trace-limit must be >= 0")
+    if args.qemu_trap_delivery_trace_limit < 0:
+        raise SystemExit("error: --qemu-trap-delivery-trace-limit must be >= 0")
     if args.dump_prefix_bytes < 0:
         raise SystemExit("error: --dump-prefix-bytes must be >= 0")
     qemu_fault_trace_filters = {
@@ -1245,6 +1287,16 @@ def main(argv: list[str]) -> int:
         args.qemu_tlb_fault_trace
         or args.qemu_tlb_fault_trace_limit > 0
         or qemu_tlb_fault_trace_filters
+    )
+    qemu_trap_delivery_trace_filters = {
+        env_name: str(getattr(args, attr, "") or "").strip()
+        for attr, env_name in QEMU_TRAP_DELIVERY_TRACE_FILTER_ARGS.items()
+        if str(getattr(args, attr, "") or "").strip()
+    }
+    qemu_trap_delivery_trace_requested = bool(
+        args.qemu_trap_delivery_trace
+        or args.qemu_trap_delivery_trace_limit > 0
+        or qemu_trap_delivery_trace_filters
     )
     qemu_pc_watch = {
         env_name: str(getattr(args, attr, "") or "").strip()
@@ -1419,6 +1471,17 @@ def main(argv: list[str]) -> int:
             value = str(getattr(args, attr, "") or "").strip()
             if value:
                 cmd.extend(["--" + attr.replace("_", "-"), value])
+        if args.qemu_trap_delivery_trace:
+            cmd.append("--qemu-trap-delivery-trace")
+        if args.qemu_trap_delivery_trace_limit > 0:
+            cmd.extend([
+                "--qemu-trap-delivery-trace-limit",
+                str(args.qemu_trap_delivery_trace_limit),
+            ])
+        for attr in QEMU_TRAP_DELIVERY_TRACE_FILTER_ARGS:
+            value = str(getattr(args, attr, "") or "").strip()
+            if value:
+                cmd.extend(["--" + attr.replace("_", "-"), value])
         if args.qemu_tb_stats:
             cmd.append("--qemu-tb-stats")
         if args.qemu_fault_trace:
@@ -1548,6 +1611,9 @@ def main(argv: list[str]) -> int:
         "qemu_tlb_fault_trace": bool(qemu_tlb_fault_trace_requested),
         "qemu_tlb_fault_trace_limit": int(args.qemu_tlb_fault_trace_limit),
         "qemu_tlb_fault_trace_filters": qemu_tlb_fault_trace_filters,
+        "qemu_trap_delivery_trace": bool(qemu_trap_delivery_trace_requested),
+        "qemu_trap_delivery_trace_limit": int(args.qemu_trap_delivery_trace_limit),
+        "qemu_trap_delivery_trace_filters": qemu_trap_delivery_trace_filters,
         "qemu_tb_stats": bool(args.qemu_tb_stats),
         "qemu_fault_trace": bool(args.qemu_fault_trace or qemu_fault_trace_filters),
         "qemu_fault_trace_regs": bool(args.qemu_fault_trace_regs),
