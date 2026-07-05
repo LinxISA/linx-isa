@@ -424,6 +424,31 @@ Result:
   `sbi t#1, [a1, 0]`, with `addr=0x0`, `a1=0`, and all captured T/U queues
   zero at the low-address fault. The last syscall trace is again `nr=222` at
   `tpc=0x155582e9e6`, `bpc=0x155582e9c6`, `pc_next=0x155582e9ea`.
+- The late-count shifted free-path run
+  `specint-500-testpl-free-prestore-count-ring-qemu-20260706-r1`
+  keeps `LINX_DEBUG_PC_WATCH_PRINT=0`, watches the earlier musl `free.c`
+  pre-store PC (`0x1555828562`, linked `0x402d3562`), enables an `a1+0`
+  PC-watch ring, preserves the call ring, and narrows fault tracing to
+  `addr=0..0x10`. It fails quickly as heartbeat-backed `user-trap`
+  (`heartbeat_running=true`, `heartbeat_site_progress=true`,
+  `heartbeat_recent_count_delta=3000000003`) and has `pc_watch_seen=true`
+  but no `LINX_PC_WATCH_RING` output. The runner's first terminal evidence is
+  the familiar musl `free.c` `enframe` block at linked `0x402d498e`,
+  runtime `0x155582998e`, `addr=0`, with zero T/U queues. A later fault-ring
+  packet in the same log reaches `__malloc_allzerop` / `malloc.c` `.LBB5_7`
+  at linked `0x402d4b38`, runtime `0x1555829b38`, instruction
+  `c.ldi [x0, 16], ->t`, `addr=0x10`.
+- The `0x402d4b38` call ring keeps a useful pre-fault boundary without a
+  hot-block PC-watch ring: `acre_enter`/`acre_staged` at linked `0x402d4a68`
+  carry `a0=0x155584bf90`, `a1=0x7`, `a2=0x50`; later `fret_stk` rows and
+  the `call_commit` into linked `0x402d4ace` carry heap-adjacent
+  `a0=0x3fefe782c0`, `a1=0x3fefe78320`, `a2=0x3fefe7831c`; and the
+  `__malloc_allzerop` `fentry` still has those nonzero `a1/a2` values. The
+  final `LINX_FAULT_TRACE` at linked `0x402d4b38` has `a1=0`, `a2=0`,
+  `tq0=0x3fefe782c0`, and `uq0=0x3fefe782b0`. This shifts the current row-2
+  hypothesis toward queue/control operand preservation through the allocator
+  body or call/return replay path, not the earlier Perl `[sp+296]` producer or
+  the unsampled `free.c` pre-store watch PC.
 
 Tool update:
 
