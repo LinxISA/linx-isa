@@ -773,6 +773,7 @@ def _apply_qemu_debug_env(
     qemu_tlb_fill_hot: bool = False,
     qemu_tlb_fault_trace: bool = False,
     qemu_tlb_fault_trace_limit: int = 0,
+    qemu_tlb_fault_trace_filters: dict[str, str] | None = None,
     qemu_tb_stats: bool = False,
     qemu_fret_stk_trace: dict[str, str] | None = None,
     qemu_fentry_trace: dict[str, str] | None = None,
@@ -814,12 +815,18 @@ def _apply_qemu_debug_env(
         qemu_env["LINX_QEMU_TLB_FILL_STATS"] = "1"
     if qemu_tlb_fill_hot:
         qemu_env["LINX_QEMU_TLB_FILL_HOT"] = "1"
-    if qemu_tlb_fault_trace:
+    tlb_fault_filters = {
+        k: v for k, v in (qemu_tlb_fault_trace_filters or {}).items()
+        if str(v).strip()
+    }
+    if qemu_tlb_fault_trace or tlb_fault_filters:
         qemu_env["LINX_QEMU_TLB_FAULT_TRACE"] = "1"
     if qemu_tlb_fault_trace_limit > 0:
         qemu_env["LINX_QEMU_TLB_FAULT_TRACE_LIMIT"] = str(
             qemu_tlb_fault_trace_limit
         )
+    for name, value in tlb_fault_filters.items():
+        qemu_env[name] = str(value).strip()
     if qemu_tb_stats:
         qemu_env["LINX_QEMU_TB_STATS"] = "1"
     for name, value in (qemu_fret_stk_trace or {}).items():
@@ -874,6 +881,14 @@ QEMU_FAULT_TRACE_FILTER_ARGS = {
     "qemu_fault_trace_count_lo": "LINX_QEMU_FAULT_TRACE_COUNT_LO",
     "qemu_fault_trace_count_hi": "LINX_QEMU_FAULT_TRACE_COUNT_HI",
     "qemu_fault_trace_trapnum": "LINX_QEMU_FAULT_TRACE_TRAPNUM",
+}
+
+QEMU_TLB_FAULT_TRACE_FILTER_ARGS = {
+    "qemu_tlb_fault_trace_addr": "LINX_QEMU_TLB_FAULT_TRACE_ADDR",
+    "qemu_tlb_fault_trace_addr_lo": "LINX_QEMU_TLB_FAULT_TRACE_ADDR_LO",
+    "qemu_tlb_fault_trace_addr_hi": "LINX_QEMU_TLB_FAULT_TRACE_ADDR_HI",
+    "qemu_tlb_fault_trace_count_lo": "LINX_QEMU_TLB_FAULT_TRACE_COUNT_LO",
+    "qemu_tlb_fault_trace_count_hi": "LINX_QEMU_TLB_FAULT_TRACE_COUNT_HI",
 }
 
 QEMU_PC_WATCH_ARGS = {
@@ -977,6 +992,15 @@ QEMU_FENTRY_TRACE_BOOL_ARGS = {
 def _qemu_fault_trace_filters_from_args(args: argparse.Namespace) -> dict[str, str]:
     filters: dict[str, str] = {}
     for attr, env_name in QEMU_FAULT_TRACE_FILTER_ARGS.items():
+        value = str(getattr(args, attr, "") or "").strip()
+        if value:
+            filters[env_name] = value
+    return filters
+
+
+def _qemu_tlb_fault_trace_filters_from_args(args: argparse.Namespace) -> dict[str, str]:
+    filters: dict[str, str] = {}
+    for attr, env_name in QEMU_TLB_FAULT_TRACE_FILTER_ARGS.items():
         value = str(getattr(args, attr, "") or "").strip()
         if value:
             filters[env_name] = value
@@ -2799,6 +2823,7 @@ def _run_qemu(
     qemu_tlb_fill_hot: bool,
     qemu_tlb_fault_trace: bool,
     qemu_tlb_fault_trace_limit: int,
+    qemu_tlb_fault_trace_filters: dict[str, str],
     qemu_tb_stats: bool,
     qemu_fret_stk_trace: dict[str, str],
     qemu_fentry_trace: dict[str, str],
@@ -2872,6 +2897,7 @@ def _run_qemu(
         qemu_tlb_fill_hot=qemu_tlb_fill_hot,
         qemu_tlb_fault_trace=qemu_tlb_fault_trace,
         qemu_tlb_fault_trace_limit=qemu_tlb_fault_trace_limit,
+        qemu_tlb_fault_trace_filters=qemu_tlb_fault_trace_filters,
         qemu_tb_stats=qemu_tb_stats,
         qemu_fret_stk_trace=qemu_fret_stk_trace,
         qemu_fentry_trace=qemu_fentry_trace,
@@ -3085,6 +3111,7 @@ def _run_qemu(
         "qemu_tlb_fill_hot": bool(qemu_tlb_fill_hot),
         "qemu_tlb_fault_trace": bool(qemu_tlb_fault_trace),
         "qemu_tlb_fault_trace_limit": int(qemu_tlb_fault_trace_limit),
+        "qemu_tlb_fault_trace_filters": dict(qemu_tlb_fault_trace_filters),
         "qemu_tb_stats": bool(qemu_tb_stats),
         "terminal_failure_grace_sec": terminal_failure_grace_sec,
         "qemu_rc": qemu_rc,
@@ -4719,6 +4746,11 @@ def main(argv: list[str]) -> int:
         default=int(os.environ.get("LINX_SPEC_QEMU_TLB_FAULT_TRACE_LIMIT", "0")),
         help="Set LINX_QEMU_TLB_FAULT_TRACE_LIMIT when TLB fault tracing is enabled (0 uses QEMU default).",
     )
+    parser.add_argument("--qemu-tlb-fault-trace-addr", default=os.environ.get("LINX_SPEC_QEMU_TLB_FAULT_TRACE_ADDR", ""))
+    parser.add_argument("--qemu-tlb-fault-trace-addr-lo", default=os.environ.get("LINX_SPEC_QEMU_TLB_FAULT_TRACE_ADDR_LO", ""))
+    parser.add_argument("--qemu-tlb-fault-trace-addr-hi", default=os.environ.get("LINX_SPEC_QEMU_TLB_FAULT_TRACE_ADDR_HI", ""))
+    parser.add_argument("--qemu-tlb-fault-trace-count-lo", default=os.environ.get("LINX_SPEC_QEMU_TLB_FAULT_TRACE_COUNT_LO", ""))
+    parser.add_argument("--qemu-tlb-fault-trace-count-hi", default=os.environ.get("LINX_SPEC_QEMU_TLB_FAULT_TRACE_COUNT_HI", ""))
     parser.add_argument(
         "--qemu-tb-stats",
         action="store_true",
@@ -5087,6 +5119,12 @@ def main(argv: list[str]) -> int:
     if args.dump_prefix_bytes < 0:
         raise SystemExit("error: --dump-prefix-bytes must be >= 0")
     qemu_fault_trace_filters = _qemu_fault_trace_filters_from_args(args)
+    qemu_tlb_fault_trace_filters = _qemu_tlb_fault_trace_filters_from_args(args)
+    qemu_tlb_fault_trace_requested = bool(
+        args.qemu_tlb_fault_trace
+        or args.qemu_tlb_fault_trace_limit > 0
+        or qemu_tlb_fault_trace_filters
+    )
     qemu_pc_watch = _qemu_pc_watch_from_args(args)
     qemu_syscall_trace = _qemu_syscall_trace_from_args(args)
     qemu_mem_trace = _qemu_mem_trace_from_args(args)
@@ -5145,8 +5183,9 @@ def main(argv: list[str]) -> int:
         "qemu_tlb_inv_hot": bool(args.qemu_tlb_inv_hot),
         "qemu_tlb_fill_stats": bool(args.qemu_tlb_fill_stats),
         "qemu_tlb_fill_hot": bool(args.qemu_tlb_fill_hot),
-        "qemu_tlb_fault_trace": bool(args.qemu_tlb_fault_trace),
+        "qemu_tlb_fault_trace": bool(qemu_tlb_fault_trace_requested),
         "qemu_tlb_fault_trace_limit": args.qemu_tlb_fault_trace_limit,
+        "qemu_tlb_fault_trace_filters": qemu_tlb_fault_trace_filters,
         "qemu_tb_stats": bool(args.qemu_tb_stats),
         "qemu_fret_stk_trace": qemu_fret_stk_trace,
         "qemu_fentry_trace": qemu_fentry_trace,
@@ -5268,8 +5307,9 @@ def main(argv: list[str]) -> int:
                     args.qemu_tlb_inv_hot,
                     args.qemu_tlb_fill_stats,
                     args.qemu_tlb_fill_hot,
-                    args.qemu_tlb_fault_trace,
+                    qemu_tlb_fault_trace_requested,
                     args.qemu_tlb_fault_trace_limit,
+                    qemu_tlb_fault_trace_filters,
                     args.qemu_tb_stats,
                     qemu_fret_stk_trace,
                     qemu_fentry_trace,

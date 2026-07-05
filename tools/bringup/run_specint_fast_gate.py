@@ -346,6 +346,8 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
         tlbfill = ""
         if row.get("tlb_fill_trace_seen"):
             tlbfill = f" tlbfill-trace={row.get('tlb_fill_trace_count')}"
+        if row.get("tlb_fault_trace_seen"):
+            tlbfill += f" tlbfault-trace={row.get('tlb_fault_trace_count')}"
         heartbeat_tlb_fill = row.get("heartbeat_tlb_fill")
         if isinstance(heartbeat_tlb_fill, dict) and heartbeat_tlb_fill.get("total") is not None:
             tlbfill += (
@@ -471,6 +473,11 @@ def _suite_command(
     qemu_tlb_fill_hot: bool,
     qemu_tlb_fault_trace: bool,
     qemu_tlb_fault_trace_limit: int,
+    qemu_tlb_fault_trace_addr: str,
+    qemu_tlb_fault_trace_addr_lo: str,
+    qemu_tlb_fault_trace_addr_hi: str,
+    qemu_tlb_fault_trace_count_lo: str,
+    qemu_tlb_fault_trace_count_hi: str,
     qemu_tb_stats: bool,
     no_progress_timeout: float,
     forward_memory_mb: bool,
@@ -560,6 +567,16 @@ def _suite_command(
         and forward_qemu_tlb_fault_trace
     ):
         cmd.extend(["--qemu-tlb-fault-trace-limit", str(qemu_tlb_fault_trace_limit)])
+    if forward_qemu_tlb_fault_trace:
+        for opt, value in (
+            ("--qemu-tlb-fault-trace-addr", qemu_tlb_fault_trace_addr),
+            ("--qemu-tlb-fault-trace-addr-lo", qemu_tlb_fault_trace_addr_lo),
+            ("--qemu-tlb-fault-trace-addr-hi", qemu_tlb_fault_trace_addr_hi),
+            ("--qemu-tlb-fault-trace-count-lo", qemu_tlb_fault_trace_count_lo),
+            ("--qemu-tlb-fault-trace-count-hi", qemu_tlb_fault_trace_count_hi),
+        ):
+            if value.strip():
+                cmd.extend([opt, value.strip()])
     if qemu_tb_stats and forward_qemu_tb_stats:
         cmd.append("--qemu-tb-stats")
     if forward_no_progress:
@@ -580,6 +597,12 @@ def _auto_fail_9p_timeout(unit: Suite, transports_override: str) -> bool:
         return False
     transports = {item.strip() for item in unit.transports.split(",") if item.strip()}
     return unit.name.endswith("-large-9p") and "9p" in transports
+
+
+def _format_filter_dict(filters: dict[str, Any]) -> str:
+    if not filters:
+        return "-"
+    return " ".join(f"{key}={shlex.quote(str(value))}" for key, value in sorted(filters.items()))
 
 
 def _write_md(path: Path, summary: dict[str, Any]) -> None:
@@ -617,6 +640,7 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
         f"- qemu_tlb_fill_hot: `{str(bool(summary.get('qemu_tlb_fill_hot', False))).lower()}`",
         f"- qemu_tlb_fault_trace: `{str(bool(summary.get('qemu_tlb_fault_trace', False))).lower()}`",
         f"- qemu_tlb_fault_trace_limit: `{summary.get('qemu_tlb_fault_trace_limit', 0)}`",
+        f"- qemu_tlb_fault_trace_filters: `{_format_filter_dict(summary.get('qemu_tlb_fault_trace_filters') or {})}`",
         f"- qemu_tb_stats: `{str(bool(summary.get('qemu_tb_stats', False))).lower()}`",
         f"- fail_9p_timeout: `{str(bool(summary.get('fail_9p_timeout', False))).lower()}`",
         "",
@@ -744,6 +768,46 @@ def main(argv: list[str]) -> int:
         help="Forward QEMU's page-walk fault trace line limit.",
     )
     parser.add_argument(
+        "--qemu-tlb-fault-trace-addr",
+        default=os.environ.get(
+            "SPEC_QEMU_TLB_FAULT_TRACE_ADDR",
+            os.environ.get("LINX_SPEC_QEMU_TLB_FAULT_TRACE_ADDR", ""),
+        ),
+        help="Forward exact virtual address filter for QEMU TLB fault trace.",
+    )
+    parser.add_argument(
+        "--qemu-tlb-fault-trace-addr-lo",
+        default=os.environ.get(
+            "SPEC_QEMU_TLB_FAULT_TRACE_ADDR_LO",
+            os.environ.get("LINX_SPEC_QEMU_TLB_FAULT_TRACE_ADDR_LO", ""),
+        ),
+        help="Forward low virtual address filter for QEMU TLB fault trace.",
+    )
+    parser.add_argument(
+        "--qemu-tlb-fault-trace-addr-hi",
+        default=os.environ.get(
+            "SPEC_QEMU_TLB_FAULT_TRACE_ADDR_HI",
+            os.environ.get("LINX_SPEC_QEMU_TLB_FAULT_TRACE_ADDR_HI", ""),
+        ),
+        help="Forward high virtual address filter for QEMU TLB fault trace.",
+    )
+    parser.add_argument(
+        "--qemu-tlb-fault-trace-count-lo",
+        default=os.environ.get(
+            "SPEC_QEMU_TLB_FAULT_TRACE_COUNT_LO",
+            os.environ.get("LINX_SPEC_QEMU_TLB_FAULT_TRACE_COUNT_LO", ""),
+        ),
+        help="Forward low instruction-count filter for QEMU TLB fault trace.",
+    )
+    parser.add_argument(
+        "--qemu-tlb-fault-trace-count-hi",
+        default=os.environ.get(
+            "SPEC_QEMU_TLB_FAULT_TRACE_COUNT_HI",
+            os.environ.get("LINX_SPEC_QEMU_TLB_FAULT_TRACE_COUNT_HI", ""),
+        ),
+        help="Forward high instruction-count filter for QEMU TLB fault trace.",
+    )
+    parser.add_argument(
         "--qemu-tb-stats",
         action="store_true",
         default=_env_bool(
@@ -821,6 +885,9 @@ def main(argv: list[str]) -> int:
     runner_has_qemu_tlb_fill_stats = _runner_supports_option(runner, "--qemu-tlb-fill-stats")
     runner_has_qemu_tlb_fill_hot = _runner_supports_option(runner, "--qemu-tlb-fill-hot")
     runner_has_qemu_tlb_fault_trace = _runner_supports_option(runner, "--qemu-tlb-fault-trace")
+    runner_has_qemu_tlb_fault_trace_filters = _runner_supports_option(
+        runner, "--qemu-tlb-fault-trace-addr-lo"
+    )
     runner_has_qemu_tb_stats = _runner_supports_option(runner, "--qemu-tb-stats")
     runner_has_no_progress = _runner_supports_option(runner, "--no-progress-timeout")
     runner_has_memory_mb = _runner_supports_option(runner, "--memory-mb")
@@ -899,11 +966,32 @@ def main(argv: list[str]) -> int:
             "--qemu-tlb-fill-hot; update tools/spec2017/run_stage_qemu_matrix.py "
             "or rerun without the TLB fill hot-site switch"
         )
-    if (args.qemu_tlb_fault_trace or args.qemu_tlb_fault_trace_limit > 0) and not runner_has_qemu_tlb_fault_trace:
+    qemu_tlb_fault_trace_filters = {
+        "addr": args.qemu_tlb_fault_trace_addr.strip(),
+        "addr_lo": args.qemu_tlb_fault_trace_addr_lo.strip(),
+        "addr_hi": args.qemu_tlb_fault_trace_addr_hi.strip(),
+        "count_lo": args.qemu_tlb_fault_trace_count_lo.strip(),
+        "count_hi": args.qemu_tlb_fault_trace_count_hi.strip(),
+    }
+    qemu_tlb_fault_trace_filters = {
+        key: value for key, value in qemu_tlb_fault_trace_filters.items() if value
+    }
+    qemu_tlb_fault_trace_requested = bool(
+        args.qemu_tlb_fault_trace
+        or args.qemu_tlb_fault_trace_limit > 0
+        or qemu_tlb_fault_trace_filters
+    )
+    if qemu_tlb_fault_trace_requested and not runner_has_qemu_tlb_fault_trace:
         raise SystemExit(
             "error: local SPEC matrix runner does not support "
             "--qemu-tlb-fault-trace; update tools/spec2017/run_stage_qemu_matrix.py "
             "or rerun without the TLB fault trace switch"
+        )
+    if qemu_tlb_fault_trace_filters and not runner_has_qemu_tlb_fault_trace_filters:
+        raise SystemExit(
+            "error: local SPEC matrix runner does not support "
+            "--qemu-tlb-fault-trace-* filters; update tools/spec2017/run_stage_qemu_matrix.py "
+            "or rerun without the TLB fault trace filters"
         )
     if args.qemu_tlb_fault_trace_limit < 0:
         raise SystemExit("error: --qemu-tlb-fault-trace-limit must be >= 0")
@@ -986,6 +1074,11 @@ def main(argv: list[str]) -> int:
                 qemu_tlb_fill_hot=args.qemu_tlb_fill_hot,
                 qemu_tlb_fault_trace=args.qemu_tlb_fault_trace,
                 qemu_tlb_fault_trace_limit=args.qemu_tlb_fault_trace_limit,
+                qemu_tlb_fault_trace_addr=args.qemu_tlb_fault_trace_addr,
+                qemu_tlb_fault_trace_addr_lo=args.qemu_tlb_fault_trace_addr_lo,
+                qemu_tlb_fault_trace_addr_hi=args.qemu_tlb_fault_trace_addr_hi,
+                qemu_tlb_fault_trace_count_lo=args.qemu_tlb_fault_trace_count_lo,
+                qemu_tlb_fault_trace_count_hi=args.qemu_tlb_fault_trace_count_hi,
                 qemu_tb_stats=args.qemu_tb_stats,
                 no_progress_timeout=args.no_progress_timeout,
                 forward_memory_mb=runner_has_memory_mb,
@@ -1082,8 +1175,9 @@ def main(argv: list[str]) -> int:
         "qemu_tlb_inv_hot": bool(args.qemu_tlb_inv_hot),
         "qemu_tlb_fill_stats": bool(args.qemu_tlb_fill_stats),
         "qemu_tlb_fill_hot": bool(args.qemu_tlb_fill_hot),
-        "qemu_tlb_fault_trace": bool(args.qemu_tlb_fault_trace),
+        "qemu_tlb_fault_trace": bool(qemu_tlb_fault_trace_requested),
         "qemu_tlb_fault_trace_limit": args.qemu_tlb_fault_trace_limit,
+        "qemu_tlb_fault_trace_filters": qemu_tlb_fault_trace_filters,
         "qemu_tb_stats": bool(args.qemu_tb_stats),
         "no_progress_timeout": args.no_progress_timeout,
         "guest_heartbeat_sec": args.guest_heartbeat_sec,

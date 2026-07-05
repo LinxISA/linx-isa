@@ -32,6 +32,14 @@ QEMU_FAULT_TRACE_FILTER_ARGS = {
     "qemu_fault_trace_trapnum": "LINX_QEMU_FAULT_TRACE_TRAPNUM",
 }
 
+QEMU_TLB_FAULT_TRACE_FILTER_ARGS = {
+    "qemu_tlb_fault_trace_addr": "LINX_QEMU_TLB_FAULT_TRACE_ADDR",
+    "qemu_tlb_fault_trace_addr_lo": "LINX_QEMU_TLB_FAULT_TRACE_ADDR_LO",
+    "qemu_tlb_fault_trace_addr_hi": "LINX_QEMU_TLB_FAULT_TRACE_ADDR_HI",
+    "qemu_tlb_fault_trace_count_lo": "LINX_QEMU_TLB_FAULT_TRACE_COUNT_LO",
+    "qemu_tlb_fault_trace_count_hi": "LINX_QEMU_TLB_FAULT_TRACE_COUNT_HI",
+}
+
 QEMU_PC_WATCH_ARGS = {
     "qemu_pc_watch": "LINX_DEBUG_PC_WATCH",
     "qemu_pc_watch_count_lo": "LINX_DEBUG_PC_WATCH_COUNT_LO",
@@ -334,6 +342,10 @@ def _transport_failure_details(summary_obj: dict[str, Any]) -> dict[str, dict[st
             "tlb_fill_trace_count": failed_run.get("tlb_fill_trace_count"),
             "tlb_fill_trace_last": str(failed_run.get("tlb_fill_trace_last") or "")[:512],
             "tlb_fill_trace_samples": failed_run.get("tlb_fill_trace_samples") or [],
+            "tlb_fault_trace_seen": bool(failed_run.get("tlb_fault_trace_seen", False)),
+            "tlb_fault_trace_count": failed_run.get("tlb_fault_trace_count"),
+            "tlb_fault_trace_last": str(failed_run.get("tlb_fault_trace_last") or "")[:512],
+            "tlb_fault_trace_samples": failed_run.get("tlb_fault_trace_samples") or [],
             "mprotect_trace_seen": bool(failed_run.get("mprotect_trace_seen", False)),
             "mprotect_trace_count": failed_run.get("mprotect_trace_count"),
             "mprotect_trace_last": str(failed_run.get("mprotect_trace_last") or "")[:512],
@@ -526,6 +538,9 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
         tlbfill = ""
         if row.get("tlb_fill_trace_seen"):
             tlbfill = f" tlbfill-trace={row.get('tlb_fill_trace_count')}"
+        tlbfault = ""
+        if row.get("tlb_fault_trace_seen"):
+            tlbfault = f" tlbfault-trace={row.get('tlb_fault_trace_count')}"
         tlbfill_stats = ""
         heartbeat_tlb_fill = row.get("heartbeat_tlb_fill")
         if isinstance(heartbeat_tlb_fill, dict) and heartbeat_tlb_fill.get("total") is not None:
@@ -569,7 +584,7 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
             hb_stall = f" heartbeat-stall={status}:{repeats}/{threshold}"
         parts.append(
             f"{bench}: {running}/{site} {progress}{timeout}{stalled} "
-            f"bpc={bpc}{kernel}{hb_stall}{fcmp}{tlbfill}{tlbfill_stats}{tlbfill_hot}{mmu_cache}{frame_stats}{frame_shape_hot}{tlb_invalidation}{tlbinv_hot}{tb_stats}{bstart_cache}{mprotect}"
+            f"bpc={bpc}{kernel}{hb_stall}{fcmp}{tlbfill}{tlbfault}{tlbfill_stats}{tlbfill_hot}{mmu_cache}{frame_stats}{frame_shape_hot}{tlb_invalidation}{tlbinv_hot}{tb_stats}{bstart_cache}{mprotect}"
             f"{pc_watch}"
         )
     return ", ".join(parts)
@@ -890,6 +905,11 @@ def main(argv: list[str]) -> int:
         default=_env_int("LINX_SPEC_QEMU_TLB_FAULT_TRACE_LIMIT", 0),
         help="Pass --qemu-tlb-fault-trace-limit to cap TLB fault trace lines.",
     )
+    ap.add_argument("--qemu-tlb-fault-trace-addr", default=os.environ.get("LINX_SPEC_QEMU_TLB_FAULT_TRACE_ADDR", ""))
+    ap.add_argument("--qemu-tlb-fault-trace-addr-lo", default=os.environ.get("LINX_SPEC_QEMU_TLB_FAULT_TRACE_ADDR_LO", ""))
+    ap.add_argument("--qemu-tlb-fault-trace-addr-hi", default=os.environ.get("LINX_SPEC_QEMU_TLB_FAULT_TRACE_ADDR_HI", ""))
+    ap.add_argument("--qemu-tlb-fault-trace-count-lo", default=os.environ.get("LINX_SPEC_QEMU_TLB_FAULT_TRACE_COUNT_LO", ""))
+    ap.add_argument("--qemu-tlb-fault-trace-count-hi", default=os.environ.get("LINX_SPEC_QEMU_TLB_FAULT_TRACE_COUNT_HI", ""))
     ap.add_argument(
         "--qemu-tb-stats",
         action="store_true",
@@ -1172,6 +1192,16 @@ def main(argv: list[str]) -> int:
         for attr, env_name in QEMU_FAULT_TRACE_FILTER_ARGS.items()
         if str(getattr(args, attr, "") or "").strip()
     }
+    qemu_tlb_fault_trace_filters = {
+        env_name: str(getattr(args, attr, "") or "").strip()
+        for attr, env_name in QEMU_TLB_FAULT_TRACE_FILTER_ARGS.items()
+        if str(getattr(args, attr, "") or "").strip()
+    }
+    qemu_tlb_fault_trace_requested = bool(
+        args.qemu_tlb_fault_trace
+        or args.qemu_tlb_fault_trace_limit > 0
+        or qemu_tlb_fault_trace_filters
+    )
     qemu_pc_watch = {
         env_name: str(getattr(args, attr, "") or "").strip()
         for attr, env_name in QEMU_PC_WATCH_ARGS.items()
@@ -1335,6 +1365,10 @@ def main(argv: list[str]) -> int:
                 "--qemu-tlb-fault-trace-limit",
                 str(args.qemu_tlb_fault_trace_limit),
             ])
+        for attr in QEMU_TLB_FAULT_TRACE_FILTER_ARGS:
+            value = str(getattr(args, attr, "") or "").strip()
+            if value:
+                cmd.extend(["--" + attr.replace("_", "-"), value])
         if args.qemu_tb_stats:
             cmd.append("--qemu-tb-stats")
         if args.qemu_fault_trace:
@@ -1453,8 +1487,9 @@ def main(argv: list[str]) -> int:
         "qemu_tlb_inv_hot": bool(args.qemu_tlb_inv_hot),
         "qemu_tlb_fill_stats": bool(args.qemu_tlb_fill_stats),
         "qemu_tlb_fill_hot": bool(args.qemu_tlb_fill_hot),
-        "qemu_tlb_fault_trace": bool(args.qemu_tlb_fault_trace),
+        "qemu_tlb_fault_trace": bool(qemu_tlb_fault_trace_requested),
         "qemu_tlb_fault_trace_limit": int(args.qemu_tlb_fault_trace_limit),
+        "qemu_tlb_fault_trace_filters": qemu_tlb_fault_trace_filters,
         "qemu_tb_stats": bool(args.qemu_tb_stats),
         "qemu_fault_trace": bool(args.qemu_fault_trace or qemu_fault_trace_filters),
         "qemu_fault_trace_regs": bool(args.qemu_fault_trace_regs),
