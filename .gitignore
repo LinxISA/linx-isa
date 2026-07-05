@@ -77,6 +77,7 @@ tools/spec2017/*
 !tools/spec2017/linx_cc.sh
 !tools/spec2017/linx_cxx.sh
 !tools/spec2017/analyze_specint_qemu_progress.py
+!tools/spec2017/compare_specint_qemu_runs.py
 !tools/spec2017/prepare_phaseb_static_images.py
 !tools/spec2017/profile_qemu_after_spec_start.py
 !tools/spec2017/profile_qemu_spec_suite.py
@@ -84,6 +85,7 @@ tools/spec2017/*
 !tools/spec2017/run_int_rate_qemu.py
 !tools/spec2017/run_stage_qemu_matrix.py
 !tools/spec2017/test_analyze_specint_qemu_progress.py
+!tools/spec2017/test_compare_specint_qemu_runs.py
 !tools/spec2017/test_profile_qemu_after_spec_start.py
 !tools/spec2017/test_profile_qemu_spec_suite.py
 
