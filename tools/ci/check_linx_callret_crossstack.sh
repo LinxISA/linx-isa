@@ -29,7 +29,10 @@ pick_first_exists() {
 SWITCH_O="$(pick_first_exists \
   "$LINUX_ROOT/build-linx-fixed/arch/linx/kernel/switch_to.o" \
   "$LINUX_ROOT/build-linx/arch/linx/kernel/switch_to.o" \
-  "$LINUX_ROOT/arch/linx/kernel/switch_to.o" || true)"
+  "$LINUX_ROOT/arch/linx/kernel/switch_to.o" \
+  "$LINUX_ROOT/build-linx-fixed/arch/linx/kernel/entry.o" \
+  "$LINUX_ROOT/build-linx/arch/linx/kernel/entry.o" \
+  "$LINUX_ROOT/arch/linx/kernel/entry.o" || true)"
 ENTRY_O="$(pick_first_exists \
   "$LINUX_ROOT/build-linx-fixed/arch/linx/kernel/entry.o" \
   "$LINUX_ROOT/build-linx/arch/linx/kernel/entry.o" \

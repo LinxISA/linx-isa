@@ -162,7 +162,7 @@
         {
           "id": "musl-runtime-both",
           "timeout_seconds": 600,
-          "command": "python3 avs/qemu/run_musl_smoke.py --mode phase-b --link both --qemu \"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\" --timeout \"${MUSL_TIMEOUT:-90}\""
+          "command": "python3 avs/qemu/run_musl_smoke.py --mode phase-b --link both --sample all --qemu \"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\" --timeout \"${MUSL_TIMEOUT:-90}\""
         },
         {
           "id": "glibc-runtime",
