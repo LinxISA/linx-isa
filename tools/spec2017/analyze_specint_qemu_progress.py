@@ -147,6 +147,7 @@ def _merge_failure_detail(row: dict[str, Any], detail: dict[str, Any]) -> None:
     tlb_inv = detail.get("heartbeat_tlb_invalidation") or {}
     tlb_inv_hot = detail.get("heartbeat_tlb_inv_hot") or {}
     pc_watch = detail.get("pc_watch") or {}
+    child_maps = detail.get("child_maps") or {}
 
     row.update(
         {
@@ -168,6 +169,14 @@ def _merge_failure_detail(row: dict[str, Any], detail: dict[str, Any]) -> None:
             "fault_trace_count": detail.get("fault_trace_count"),
             "fault_trace_last": detail.get("fault_trace_last"),
             "fault_trace_samples": detail.get("fault_trace_samples", []),
+            "child_maps_seen": child_maps.get("seen"),
+            "child_maps_block_count": child_maps.get("block_count"),
+            "child_maps_trap_addr": child_maps.get("trap_addr"),
+            "child_maps_trap_addr_mapped": child_maps.get("trap_addr_mapped"),
+            "child_maps_trap_addr_line": child_maps.get("trap_addr_line"),
+            "child_maps_fault_addr": child_maps.get("fault_addr"),
+            "child_maps_fault_addr_mapped": child_maps.get("fault_addr_mapped"),
+            "child_maps_fault_addr_line": child_maps.get("fault_addr_line"),
             "mprotect_trace_seen": detail.get("mprotect_trace_seen"),
             "mprotect_trace_count": detail.get("mprotect_trace_count"),
             "mprotect_trace_last": detail.get("mprotect_trace_last"),
@@ -419,6 +428,14 @@ def _bench_report_row(
         "fault_trace_count": gate_row.get("fault_trace_count"),
         "fault_trace_last": gate_row.get("fault_trace_last"),
         "fault_trace_samples": gate_row.get("fault_trace_samples", []),
+        "child_maps_seen": gate_row.get("child_maps_seen"),
+        "child_maps_block_count": gate_row.get("child_maps_block_count"),
+        "child_maps_trap_addr": gate_row.get("child_maps_trap_addr"),
+        "child_maps_trap_addr_mapped": gate_row.get("child_maps_trap_addr_mapped"),
+        "child_maps_trap_addr_line": gate_row.get("child_maps_trap_addr_line"),
+        "child_maps_fault_addr": gate_row.get("child_maps_fault_addr"),
+        "child_maps_fault_addr_mapped": gate_row.get("child_maps_fault_addr_mapped"),
+        "child_maps_fault_addr_line": gate_row.get("child_maps_fault_addr_line"),
         "mprotect_trace_seen": gate_row.get("mprotect_trace_seen"),
         "mprotect_trace_count": gate_row.get("mprotect_trace_count"),
         "pc_watch_seen": gate_row.get("pc_watch_seen"),
@@ -633,6 +650,21 @@ def _write_markdown(path: Path, report: dict[str, Any]) -> None:
                 lines.append(
                     f"  fault-trace count=`{row.get('fault_trace_count')}` "
                     f"last=`{row.get('fault_trace_last', '')[:240]}`"
+                )
+            if row.get("child_maps_seen"):
+                mapped = row.get("child_maps_trap_addr_mapped")
+                mapped_text = "unknown" if mapped is None else str(bool(mapped)).lower()
+                lines.append(
+                    f"  child-maps trap_addr=`{row.get('child_maps_trap_addr', '')}` "
+                    f"mapped=`{mapped_text}` line=`{row.get('child_maps_trap_addr_line', '')[:180]}`"
+                )
+                fault_mapped = row.get("child_maps_fault_addr_mapped")
+                fault_mapped_text = (
+                    "unknown" if fault_mapped is None else str(bool(fault_mapped)).lower()
+                )
+                lines.append(
+                    f"  child-maps fault_addr=`{row.get('child_maps_fault_addr', '')}` "
+                    f"mapped=`{fault_mapped_text}` line=`{row.get('child_maps_fault_addr_line', '')[:180]}`"
                 )
             if row.get("pc_watch_seen"):
                 lines.append(f"  pc-watch last=`{row.get('pc_watch_last', '')[:240]}`")

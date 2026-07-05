@@ -3978,6 +3978,31 @@ Next speed lanes:
 - Transport: keep `525.x264_r` separate on the 9p/kernel lane because its final
   BPC remains kernel-space even after the speed stack.
 
+## SPEC 500 Mapped-Fault Diagnostic
+
+Focused `500.perlbench_r` `test.pl` row-2 triage now has a maps-correlated
+fault packet in
+`workloads/generated/specint-500-testpl-maps-qemu-20260705-r4/` with clean QEMU
+head `418f56ba1f58c908dc75c095e07606b725dafba4`. The run uses
+`--guest-heartbeat-sec 1`, `--guest-child-maps-bytes 98304`,
+`--terminal-failure-grace-sec 3`, and a narrow malloc fault-trace PC window.
+
+The row still ends as `user-trap`, but the important allocator store fault is
+not a missing VMA:
+
+| Field | Evidence |
+| --- | --- |
+| Recent fault VA | `0x3f7feec008` |
+| Guest maps line | `3f7feec000-3f7feee000 rw-p 00000000 00:00 0` |
+| Fault trace | `store_ok=0`, `store_cause=0x5`, alternating `legacy_store` `type0` / `perm` failures |
+| Report | `workloads/generated/specint-qemu-progress-analysis-500-testpl-maps-20260705-r4/report.md` |
+
+Conclusion: stop treating this as anonymous `mmap` placement failure. The next
+correctness loop should audit QEMU/Linux store-fault classification,
+permissions, TLB invalidation/retry state, and precise block-interior restart
+for mapped writable user pages. Keep the strict hash sentinels (`502.gcc_r`,
+`523.xalancbmk_r`, and `999.specrand_ir`) after any MMU/fault-path change.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.

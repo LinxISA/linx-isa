@@ -296,6 +296,16 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                                 "fault_trace_count": 2,
                                 "fault_trace_last": "LINX_FAULT_TRACE traparg0=0x1234",
                                 "fault_trace_samples": [{"traparg0": "0x1234"}],
+                                "child_maps": {
+                                    "seen": True,
+                                    "block_count": 3,
+                                    "trap_addr": "0x3f7ff0008c",
+                                    "trap_addr_mapped": False,
+                                    "trap_addr_line": "",
+                                    "fault_addr": "0x3f7feec008",
+                                    "fault_addr_mapped": True,
+                                    "fault_addr_line": "3f7feec000-3f7feed000 rw-p 00000000 00:00 0",
+                                },
                                 "pc_watch": {"seen": True, "last": "linx_pc_watch: pc=0x1"},
                                 "log": "/tmp/qemu.log",
                             }
@@ -316,6 +326,12 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
         self.assertEqual(row["failure_class"], "user-trap")
         self.assertTrue(row["fault_trace_seen"])
         self.assertEqual(row["fault_trace_count"], 2)
+        self.assertTrue(row["child_maps_seen"])
+        self.assertEqual(row["child_maps_block_count"], 3)
+        self.assertEqual(row["child_maps_trap_addr"], "0x3f7ff0008c")
+        self.assertFalse(row["child_maps_trap_addr_mapped"])
+        self.assertEqual(row["child_maps_fault_addr"], "0x3f7feec008")
+        self.assertTrue(row["child_maps_fault_addr_mapped"])
         self.assertEqual(row["qemu_debug_env"], {"LINX_QEMU_FAULT_TRACE": "1"})
         self.assertTrue(row["pc_watch_seen"])
         self.assertEqual(
@@ -391,6 +407,12 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                     "fault_trace_seen": True,
                     "fault_trace_count": 1,
                     "fault_trace_last": "LINX_FAULT_TRACE traparg0=0x1234",
+                    "child_maps_seen": True,
+                    "child_maps_trap_addr": "0x3f7ff0008c",
+                    "child_maps_trap_addr_mapped": False,
+                    "child_maps_fault_addr": "0x3f7feec008",
+                    "child_maps_fault_addr_mapped": True,
+                    "child_maps_fault_addr_line": "3f7feec000-3f7feed000 rw-p 00000000 00:00 0",
                     "failure_evidence": "LINX_USER_TRAP addr=0x0",
                 }
             ],
@@ -415,6 +437,8 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
         self.assertIn("tb_lookup=3", text)
         self.assertIn("Fault And Trap Evidence", text)
         self.assertIn("LINX_FAULT_TRACE", text)
+        self.assertIn("child-maps trap_addr=`0x3f7ff0008c` mapped=`false`", text)
+        self.assertIn("child-maps fault_addr=`0x3f7feec008` mapped=`true`", text)
 
 
 if __name__ == "__main__":

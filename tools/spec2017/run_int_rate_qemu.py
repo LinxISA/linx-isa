@@ -1160,6 +1160,7 @@ def _build_init_for_run(
     transport: str,
     dump_prefix_bytes: int,
     guest_heartbeat_sec: int,
+    guest_child_maps_bytes: int,
     guest_proc_diagnostics: bool,
     *,
     emit_hashes: bool = False,
@@ -1170,6 +1171,8 @@ def _build_init_for_run(
         raise SystemExit("error: dump_prefix_bytes must be >= 0")
     if guest_heartbeat_sec < 0:
         raise SystemExit("error: guest_heartbeat_sec must be >= 0")
+    if guest_child_maps_bytes < 0:
+        raise SystemExit("error: guest_child_maps_bytes must be >= 0")
 
     argv = _effective_run_argv(run_cfg)
     argv_items = "\n".join(f'    "{_c_escape(arg)}",' for arg in argv)
@@ -1457,35 +1460,13 @@ def _build_init_for_run(
         char proc_maps_path[64];
         int proc_maps_len = snprintf(proc_maps_path, sizeof(proc_maps_path),
                                      "/proc/%lld/maps", (long long)child);
-        if (proc_maps_len > 0 && proc_maps_len < (int)sizeof(proc_maps_path)) {{
-          errno = 0;
-          int maps_fd = raw_openat(proc_maps_path, O_RDONLY, 0);
-          if (maps_fd >= 0) {{
-            char maps_buf[2048];
-            errno = 0;
-            ssize_t maps_rd = read(maps_fd, maps_buf, sizeof(maps_buf) - 1);
-            int maps_read_errno = errno;
-            close(maps_fd);
-            if (maps_rd > 0) {{
-              maps_buf[maps_rd] = '\\0';
-              LOG_LIT("LINX_SPEC_CHILD_MAPS_BEGIN\\n");
-              write_log_all(maps_buf, (unsigned long)maps_rd);
-              if (maps_buf[maps_rd - 1] != '\\n')
-                LOG_LIT("\\n");
-              LOG_LIT("LINX_SPEC_CHILD_MAPS_END\\n");
-            }} else {{
-              LOG_LIT("LINX_SPEC_CHILD_MAPS_READ_FAIL rd=");
-              write_log_s64_dec((long long)maps_rd);
-              LOG_LIT(" errno=");
-              write_log_s64_dec((long long)maps_read_errno);
-              LOG_LIT("\\n");
-            }}
-          }} else {{
-            int maps_open_errno = errno;
-            LOG_LIT("LINX_SPEC_CHILD_MAPS_OPEN_FAIL errno=");
-            write_log_s64_dec((long long)maps_open_errno);
-            LOG_LIT("\\n");
-          }}
+        if ({guest_child_maps_bytes} > 0 && proc_maps_len > 0 && proc_maps_len < (int)sizeof(proc_maps_path)) {{
+          dump_log_file_with_markers("LINX_SPEC_CHILD_MAPS_BEGIN",
+                                     "LINX_SPEC_CHILD_MAPS_END",
+                                     "LINX_SPEC_CHILD_MAPS_OPEN_FAIL",
+                                     "LINX_SPEC_CHILD_MAPS_READ_FAIL",
+                                     proc_maps_path,
+                                     {guest_child_maps_bytes}UL);
         }}
 
 {guest_proc_diagnostics_block}
@@ -2821,6 +2802,7 @@ def _run_qemu(
     qemu_pc_watch: dict[str, str],
     qemu_syscall_trace: dict[str, str],
     qemu_mem_trace: dict[str, str],
+    terminal_failure_grace_sec: float,
 ) -> dict[str, Any]:
     append = _build_kernel_append(transport, append_extra)
 
@@ -2974,10 +2956,11 @@ def _run_qemu(
                     if marker_pos < 0:
                         continue
                     terminal_failure_seen = True
+                    marker_now = time.monotonic()
                     if b"\n" in recent_output[marker_pos:]:
-                        terminal_failure_deadline = time.monotonic()
+                        terminal_failure_deadline = marker_now + terminal_failure_grace_sec
                     elif terminal_failure_deadline is None:
-                        terminal_failure_deadline = time.monotonic() + 1.0
+                        terminal_failure_deadline = marker_now + max(1.0, terminal_failure_grace_sec)
                     break
                 if terminal_failure_deadline is not None and terminal_failure_deadline <= time.monotonic():
                     break
@@ -3058,6 +3041,7 @@ def _run_qemu(
         )[:512]
     fcmp_trace = _fcmp_trace_summary(text)
     fault_trace = _fault_trace_summary(text)
+    child_maps = _child_maps_summary(text)
     tlb_fill_trace = _tlb_fill_trace_summary(text)
     mprotect_trace = _mprotect_trace_summary(text)
     heartbeat_stall = classification["heartbeat_stall"]
@@ -3087,6 +3071,7 @@ def _run_qemu(
         "qemu_tlb_fill_stats": bool(qemu_tlb_fill_stats),
         "qemu_tlb_fill_hot": bool(qemu_tlb_fill_hot),
         "qemu_tb_stats": bool(qemu_tb_stats),
+        "terminal_failure_grace_sec": terminal_failure_grace_sec,
         "qemu_rc": qemu_rc,
         "timed_out": timed_out,
         "stalled": stalled,
@@ -3136,6 +3121,7 @@ def _run_qemu(
         "fault_trace_count": fault_trace["count"],
         "fault_trace_last": fault_trace["last"],
         "fault_trace_samples": fault_trace["samples"],
+        "child_maps": child_maps,
         "tlb_fill_trace_seen": tlb_fill_trace["seen"],
         "tlb_fill_trace_count": tlb_fill_trace["count"],
         "tlb_fill_trace_last": tlb_fill_trace["last"],
@@ -4187,6 +4173,83 @@ def _fault_trace_summary(text: str) -> dict[str, Any]:
     }
 
 
+def _parse_hex_int(value: str | None) -> int | None:
+    if not value:
+        return None
+    try:
+        return int(value, 0)
+    except ValueError:
+        return None
+
+
+def _child_maps_summary(text: str) -> dict[str, Any]:
+    blocks: list[str] = []
+    current: list[str] | None = None
+    for line in text.replace("\r\n", "\n").replace("\r", "\n").splitlines():
+        if line.startswith("LINX_SPEC_CHILD_MAPS_BEGIN"):
+            current = []
+            continue
+        if line == "LINX_SPEC_CHILD_MAPS_END":
+            if current is not None:
+                blocks.append("\n".join(current))
+            current = None
+            continue
+        if current is not None:
+            current.append(line)
+    trap_line = _first_matching_line(text, ("LINX_USER_TRAP", "[linx trap]"))
+    trap_fields = _heartbeat_fields(trap_line)
+    trap_addr = _parse_hex_int(trap_fields.get("addr") or trap_fields.get("traparg0"))
+    fault_addr: int | None = None
+    for fault_line in re.findall(r"^LINX_FAULT_TRACE .*$", text, flags=re.MULTILINE):
+        fault_fields = _heartbeat_fields(fault_line)
+        fault_addr = (
+            _parse_hex_int(fault_fields.get("mem_va"))
+            or _parse_hex_int(fault_fields.get("traparg0"))
+            or fault_addr
+        )
+    result: dict[str, Any] = {
+        "seen": bool(blocks),
+        "block_count": len(blocks),
+        "trap_addr": f"0x{trap_addr:x}" if trap_addr not in (None, 0) else "",
+        "trap_addr_mapped": None,
+        "trap_addr_line": "",
+        "fault_addr": f"0x{fault_addr:x}" if fault_addr not in (None, 0) else "",
+        "fault_addr_mapped": None,
+        "fault_addr_line": "",
+        "last_excerpt": "",
+    }
+    if not blocks:
+        return result
+
+    lines = [line.strip() for line in blocks[-1].splitlines() if line.strip()]
+    result["last_excerpt"] = "\n".join(lines[-16:])[:4096]
+
+    trap_match = _maps_line_for_addr(lines, trap_addr)
+    if trap_addr not in (None, 0):
+        result["trap_addr_mapped"] = trap_match is not None
+        result["trap_addr_line"] = (trap_match or "")[:512]
+
+    fault_match = _maps_line_for_addr(lines, fault_addr)
+    if fault_addr not in (None, 0):
+        result["fault_addr_mapped"] = fault_match is not None
+        result["fault_addr_line"] = (fault_match or "")[:512]
+    return result
+
+
+def _maps_line_for_addr(lines: list[str], addr: int | None) -> str | None:
+    if addr in (None, 0):
+        return None
+    for line in lines:
+        match = re.match(r"^([0-9a-fA-F]+)-([0-9a-fA-F]+)\s+(\S+)\s+", line)
+        if not match:
+            continue
+        start = int(match.group(1), 16)
+        end = int(match.group(2), 16)
+        if start <= addr < end:
+            return line
+    return None
+
+
 def _mprotect_trace_summary(text: str) -> dict[str, Any]:
     lines = re.findall(r"^LINX_MPROTECT .*$", text, flags=re.MULTILINE)
     samples: list[dict[str, Any]] = []
@@ -4746,6 +4809,15 @@ def main(argv: list[str]) -> int:
         help="Emit guest-side child/output heartbeats from the init wrapper while waiting (0 to disable).",
     )
     parser.add_argument(
+        "--guest-child-maps-bytes",
+        type=int,
+        default=int(os.environ.get("LINX_SPEC_GUEST_CHILD_MAPS_BYTES", "2048")),
+        help=(
+            "Maximum bytes to dump from /proc/<child>/maps on each guest heartbeat "
+            "(0 disables maps dumps; default preserves the legacy 2048-byte cap)."
+        ),
+    )
+    parser.add_argument(
         "--guest-proc-diagnostics",
         action="store_true",
         default=_env_bool("LINX_SPEC_GUEST_PROC_DIAGNOSTICS", False),
@@ -4766,6 +4838,16 @@ def main(argv: list[str]) -> int:
         type=float,
         default=float(os.environ.get("LINX_SPEC_NO_PROGRESS_TIMEOUT", "0")),
         help="Fail if QEMU emits no output for this many seconds (0 to disable).",
+    )
+    parser.add_argument(
+        "--terminal-failure-grace-sec",
+        type=float,
+        default=float(os.environ.get("LINX_SPEC_TERMINAL_FAILURE_GRACE_SEC", "0")),
+        help=(
+            "After a terminal failure marker such as LINX_USER_TRAP, keep QEMU alive "
+            "for this many seconds so guest diagnostics can flush (0 preserves the "
+            "default immediate stop)."
+        ),
     )
     parser.add_argument(
         "--fail-9p-timeout",
@@ -4926,8 +5008,12 @@ def main(argv: list[str]) -> int:
                 raise SystemExit(f"error: --{attr.replace('_', '-')} must be >= 0")
     if args.guest_heartbeat_sec < 0:
         raise SystemExit("error: --guest-heartbeat-sec must be >= 0")
+    if args.guest_child_maps_bytes < 0:
+        raise SystemExit("error: --guest-child-maps-bytes must be >= 0")
     if args.no_progress_timeout < 0:
         raise SystemExit("error: --no-progress-timeout must be >= 0")
+    if args.terminal_failure_grace_sec < 0:
+        raise SystemExit("error: --terminal-failure-grace-sec must be >= 0")
     if args.dump_prefix_bytes < 0:
         raise SystemExit("error: --dump-prefix-bytes must be >= 0")
     qemu_fault_trace_filters = _qemu_fault_trace_filters_from_args(args)
@@ -5000,9 +5086,11 @@ def main(argv: list[str]) -> int:
         "qemu_syscall_trace": qemu_syscall_trace,
         "qemu_mem_trace": qemu_mem_trace,
         "guest_heartbeat_sec": args.guest_heartbeat_sec,
+        "guest_child_maps_bytes": args.guest_child_maps_bytes,
         "guest_proc_diagnostics": bool(args.guest_proc_diagnostics),
         "symbolize_heartbeat": bool(args.symbolize_heartbeat),
         "no_progress_timeout": args.no_progress_timeout,
+        "terminal_failure_grace_sec": args.terminal_failure_grace_sec,
         "fail_9p_timeout": bool(args.fail_9p_timeout),
         "append_extra": args.append_extra,
         "dump_prefix_bytes": args.dump_prefix_bytes,
@@ -5067,6 +5155,7 @@ def main(argv: list[str]) -> int:
                     args.transport,
                     args.dump_prefix_bytes,
                     args.guest_heartbeat_sec,
+                    args.guest_child_maps_bytes,
                     args.guest_proc_diagnostics,
                     emit_hashes=(args.transport == "initramfs"),
                 )
@@ -5120,6 +5209,7 @@ def main(argv: list[str]) -> int:
                     qemu_pc_watch,
                     qemu_syscall_trace,
                     qemu_mem_trace,
+                    args.terminal_failure_grace_sec,
                 )
                 qemu_info["run_index"] = run_idx
                 qemu_info["source_run_index"] = run_cfg.get("source_run_index", run_idx)

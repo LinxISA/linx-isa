@@ -87,6 +87,13 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertIn("static void write_wait_status_log", source)
         self.assertNotIn('LOG_LIT("LINX_SPEC_DBG wait wr=");', source)
 
+    def test_terminal_failure_grace_is_opt_in(self) -> None:
+        source = inspect.getsource(runner._run_qemu)
+
+        self.assertIn("terminal_failure_grace_sec", source)
+        self.assertIn("marker_now + terminal_failure_grace_sec", source)
+        self.assertIn("max(1.0, terminal_failure_grace_sec)", source)
+
     def test_child_exit_with_benchmark_internal_error_is_classified(self) -> None:
         result = runner._classify_qemu_result(
             text=(
@@ -320,6 +327,53 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(env["LINX_QEMU_FAULT_TRACE_PC_LO"], "0x15559efe00")
         self.assertEqual(env["LINX_QEMU_FAULT_TRACE_PC_HI"], "0x15559efe40")
         self.assertEqual(env["LINX_QEMU_FAULT_TRACE_TRAPNUM"], "5")
+
+    def test_child_maps_summary_matches_trap_addr(self) -> None:
+        summary = runner._child_maps_summary(
+            "LINX_SPEC_CHILD_MAPS_BEGIN path=/proc/13/maps\n"
+            "0000001555824000-0000001555830000 r-xp 00000000 00:00 0 /spec-run/perlbench_r\n"
+            "0000003f7ff00000-0000003f7ff02000 rw-p 00000000 00:00 0\n"
+            "LINX_SPEC_CHILD_MAPS_END\n"
+            "LINX_FAULT_TRACE mem_va=0x0000003f7ff00090 traparg0=0x0000003f7ff00090\n"
+            "LINX_USER_TRAP addr=0x0000003f7ff0008c tpc=0x1555829a56\n"
+        )
+
+        self.assertTrue(summary["seen"])
+        self.assertEqual(summary["block_count"], 1)
+        self.assertEqual(summary["trap_addr"], "0x3f7ff0008c")
+        self.assertTrue(summary["trap_addr_mapped"])
+        self.assertIn("3f7ff00000-0000003f7ff02000", summary["trap_addr_line"])
+        self.assertEqual(summary["fault_addr"], "0x3f7ff00090")
+        self.assertTrue(summary["fault_addr_mapped"])
+        self.assertIn("3f7ff00000-0000003f7ff02000", summary["fault_addr_line"])
+
+    def test_child_maps_summary_reports_unmapped_trap_addr(self) -> None:
+        summary = runner._child_maps_summary(
+            "LINX_SPEC_CHILD_MAPS_BEGIN\n"
+            "0000001555824000-0000001555830000 r-xp 00000000 00:00 0 /spec-run/perlbench_r\n"
+            "0000003f7fef0000-0000003f7fef1000 rw-p 00000000 00:00 0\n"
+            "LINX_SPEC_CHILD_MAPS_END\n"
+            "LINX_USER_TRAP addr=0x0000003f7ff0008c tpc=0x1555829a56\n"
+        )
+
+        self.assertTrue(summary["seen"])
+        self.assertEqual(summary["trap_addr"], "0x3f7ff0008c")
+        self.assertFalse(summary["trap_addr_mapped"])
+        self.assertEqual(summary["trap_addr_line"], "")
+
+    def test_child_maps_summary_matches_fault_addr_when_terminal_trap_addr_is_zero(self) -> None:
+        summary = runner._child_maps_summary(
+            "LINX_SPEC_CHILD_MAPS_BEGIN\n"
+            "0000003f7feec000-0000003f7feed000 rw-p 00000000 00:00 0\n"
+            "LINX_SPEC_CHILD_MAPS_END\n"
+            "LINX_FAULT_TRACE mem_va=0x0000003f7feec008 traparg0=0x0000003f7feec008\n"
+            "LINX_USER_TRAP addr=0x0000000000000000 tpc=0x1555825572\n"
+        )
+
+        self.assertEqual(summary["trap_addr"], "")
+        self.assertIsNone(summary["trap_addr_mapped"])
+        self.assertEqual(summary["fault_addr"], "0x3f7feec008")
+        self.assertTrue(summary["fault_addr_mapped"])
 
     def test_qemu_syscall_trace_args_auto_enable_trace(self) -> None:
         trace = runner._qemu_syscall_trace_from_args(
