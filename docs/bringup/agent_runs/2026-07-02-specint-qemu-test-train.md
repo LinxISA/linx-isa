@@ -802,7 +802,7 @@ raising SPEC train timeouts.
    classifier because the failure is actionable when it appears, but do not
    treat the all-train row as a deterministic memory-size threshold until a
    focused repro exists.
-9. `500.perlbench_r` test run 2: investigate kernel Oops/SIGSEGV separately from train. The test row traps before hash verification; train hashes all match.
+9. `500.perlbench_r` test run 2: investigate as a user-space corruption/debug lane separately from train. Linux VM trace shows the terminal row-2 failure is a real user trap, not deadlock: `S_unshare_hek_or_pvn` faults at `addr=0x10` after the same PC/BPC handles mapped HEK refcount stores, and a narrower rerun failed earlier in `Perl_do_exec3` through a zero jump-table pointer. Keep the next loop on low-overhead call/queue-state tracing around those two sites before changing Linux or Perl source.
 10. All other train failures in the current split run are heartbeat-backed
    live-timeouts, not deadlocks. Keep correctness work on the explicit
    internal-error/trap rows and run live-timeout rows through the QEMU
