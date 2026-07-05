@@ -288,6 +288,35 @@ Result:
   instruction `lbui [t#1, 12], ->t`, with unmapped `addr=0xefef992c`.
   The origin is again a syscall-return packet from musl `mmap`
   (`orig_tpc=0x155582e9ea`, linked `0x402d99ea`).
+- The current-head syscall-resume probe
+  `specint-500-testpl-syscall-resume-fault-qemu-20260706-r1` keeps broad ACRE
+  tracing off and enables only heartbeat, Linux VM trace, QEMU fault trace,
+  a call-trace ring, and syscall trace narrowed to the musl `mmap` return
+  window `0x155582e9c0..0x155582e9f0`. It records the same QEMU head
+  `ba3a85c66c037465405fefde106e5d3ed4315cb7`, tracked-clean QEMU status, and
+  `v10.2.0-1031-gba3a85c66c0`. The row fails as `user-trap`, not timeout:
+  `heartbeat_running=true`, `heartbeat_site_progress=true`,
+  `heartbeat_recent_unique_sites=3`, and count delta `3000000013`.
+  The final syscall sample is `nr=222` at `tpc=0x155582e9e6`,
+  `bpc=0x155582e9c6`, `pc_next=0x155582e9ea`, `a1=0x2000`,
+  `a2=0x3`, `a3=0x22`, and `ra=0x1555829780`. The terminal user trap is
+  `addr=0x10`, `tpc=0x155567e690`, `bpc=0x155567e67e`,
+  `orig_tpc=0x1555827cb8`, and `orig_bpc=0x1555827c8c`. With the
+  deterministic `norandmaps` load bias `0x1515555000`, the terminal maps to
+  linked `0x40129690` in `Perl_pp_entersub` / `pp_hot.c` `.LBB51_237`,
+  instruction `sdi u#1, [t#1, 16]`; the origin maps to linked `0x402d2cb8`
+  in musl `fcntl.c` `.LBB0_2`, the `ACRC`/`BSTOP` return path for syscall
+  `a7=25`.
+- The narrower address-filtered rerun
+  `specint-500-testpl-syscall-resume-fault10-qemu-20260706-r1` uses the same
+  QEMU head and syscall-return trace but adds `LINX_QEMU_FAULT_TRACE_ADDR=0x10`.
+  It still fails as `user-trap` with heartbeat site progress, but the terminal
+  shifts to `addr=0x0`, `tpc=0x15555e2a7e`, `orig_tpc=0x1555827cb8` and emits
+  no `LINX_FAULT_TRACE` rows. The shifted terminal maps to linked
+  `0x400d7a7e` in `perl.c` `.LBB56_11`; the origin remains the same
+  `fcntl.c` `ACRC`/`BSTOP` path. Use this rerun as perturbation evidence:
+  over-narrow terminal-address filtering can move the endpoint, while the
+  broader syscall-resume packet is the better current-head boundary.
 
 Tool update:
 
@@ -319,11 +348,16 @@ zero-store shape is reached through normal Perl hash allocation into
 The lifecycle probe shows the watched allocator bytes can be written and read
 normally before a later terminal shift, while the rebuilt-QEMU rerun confirms
 the current head still fails in this row as user-space pointer/queue
-corruption. The next loop should move downstream from static allocator block
-lowering and compare syscall-return resume state against the first subsequent
-`Perl_do_exec3` / `Perl_sv_add_backref` low-address fault, using narrow
-fault-trace and call-ring filters. Keep ACRE traces BPC/count-filtered; broad
-ACRE tracing is observable perturbation on this row.
+corruption. The syscall-resume probe now places a fresh current-head boundary
+between repeated musl `mmap`/`fcntl` syscall-return paths and a subsequent
+`Perl_pp_entersub` null saved-pointer store. The next loop should move
+downstream from static allocator block lowering and broad ACRE/fault tracing:
+use a low-perturbation watch on the saved pointer source for
+`Perl_pp_entersub` linked `0x4012968a..0x40129690`, correlate it with the last
+`fcntl.c`/`mmap.c` `ACRC`/`BSTOP` origin, and preserve the call ring. Keep ACRE
+traces BPC/count-filtered and avoid terminal-address-only filters as primary
+evidence, because both broad ACRE and over-narrow fault filters perturb this
+row.
 
 ## 2026-07-05 continuation: `500.perlbench_r` `Perl_do_exec3` operand provenance
 
