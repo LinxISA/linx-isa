@@ -3144,6 +3144,9 @@ def _run_qemu(
     fcmp_trace = _fcmp_trace_summary(text)
     fault_trace = _fault_trace_summary(text)
     mem_trace = _mem_trace_summary(text)
+    syscall_trace = _syscall_trace_summary(text)
+    fentry_trace = _fentry_trace_summary(text)
+    fret_stk_trace = _fret_stk_trace_summary(text)
     child_maps = _child_maps_summary(text)
     tlb_fill_trace = _tlb_fill_trace_summary(text)
     tlb_fault_trace = _tlb_fault_trace_summary(text)
@@ -3244,6 +3247,18 @@ def _run_qemu(
         "mem_trace_count": mem_trace["count"],
         "mem_trace_last": mem_trace["last"],
         "mem_trace_samples": mem_trace["samples"],
+        "syscall_trace_seen": syscall_trace["seen"],
+        "syscall_trace_count": syscall_trace["count"],
+        "syscall_trace_last": syscall_trace["last"],
+        "syscall_trace_samples": syscall_trace["samples"],
+        "fentry_trace_seen": fentry_trace["seen"],
+        "fentry_trace_count": fentry_trace["count"],
+        "fentry_trace_last": fentry_trace["last"],
+        "fentry_trace_samples": fentry_trace["samples"],
+        "fret_stk_trace_seen": fret_stk_trace["seen"],
+        "fret_stk_trace_count": fret_stk_trace["count"],
+        "fret_stk_trace_last": fret_stk_trace["last"],
+        "fret_stk_trace_samples": fret_stk_trace["samples"],
         "child_maps": child_maps,
         "tlb_fill_trace_seen": tlb_fill_trace["seen"],
         "tlb_fill_trace_count": tlb_fill_trace["count"],
@@ -4447,6 +4462,116 @@ def _mem_trace_summary(text: str) -> dict[str, Any]:
         "last": lines[-1][:768] if lines else "",
         "samples": samples,
     }
+
+
+def _qemu_marker_trace_summary(
+    text: str,
+    marker: str,
+    fields_to_keep: tuple[str, ...],
+    *,
+    line_limit: int = 768,
+) -> dict[str, Any]:
+    lines = _marked_log_records(text, marker)
+    samples: list[dict[str, Any]] = []
+    for line in lines[-8:]:
+        fields = _heartbeat_fields(line)
+        sample: dict[str, Any] = {"line": line[:line_limit]}
+        for key in fields_to_keep:
+            value = fields.get(key)
+            if value is None:
+                continue
+            if key in {"count", "nr", "src_acr", "dst_acr", "stacksize", "save_count", "restore_count", "restore_base", "callframe", "mmu", "brtype"}:
+                sample[key] = _decimal_or_none(value)
+            else:
+                sample[key] = value.lower() if value.startswith("0x") else value
+        samples.append(sample)
+    return {
+        "seen": bool(lines),
+        "count": len(lines),
+        "last": lines[-1][:line_limit] if lines else "",
+        "samples": samples,
+    }
+
+
+def _syscall_trace_summary(text: str) -> dict[str, Any]:
+    return _qemu_marker_trace_summary(
+        text,
+        "LINX_SYSCALL_TRACE",
+        (
+            "nr",
+            "src_acr",
+            "dst_acr",
+            "count",
+            "bpc",
+            "tpc",
+            "pc_next",
+            "a0",
+            "a1",
+            "a2",
+            "a3",
+            "a4",
+            "a5",
+            "sp",
+            "ra",
+            "cstate",
+        ),
+    )
+
+
+def _fentry_trace_summary(text: str) -> dict[str, Any]:
+    return _qemu_marker_trace_summary(
+        text,
+        "LINX_FENTRY_TRACE",
+        (
+            "count",
+            "pc",
+            "next_pc",
+            "old_sp",
+            "new_sp",
+            "stacksize",
+            "callframe",
+            "begin",
+            "end",
+            "save_count",
+            "incoming_ra",
+            "envpc",
+            "bpc",
+            "tpc",
+            "cstate",
+            "acr",
+            "mmu",
+            "brtype",
+            "tgt",
+        ),
+    )
+
+
+def _fret_stk_trace_summary(text: str) -> dict[str, Any]:
+    return _qemu_marker_trace_summary(
+        text,
+        "LINX_FRET_STK_TRACE",
+        (
+            "count",
+            "pc",
+            "next_pc",
+            "old_sp",
+            "new_sp",
+            "stacksize",
+            "callframe",
+            "restore_base",
+            "begin",
+            "end",
+            "restore_count",
+            "incoming_ra",
+            "restored_ra",
+            "envpc",
+            "bpc",
+            "tpc",
+            "cstate",
+            "brtype",
+            "tgt",
+        ),
+    )
 
 
 def _trap_delivery_trace_summary(text: str) -> dict[str, Any]:

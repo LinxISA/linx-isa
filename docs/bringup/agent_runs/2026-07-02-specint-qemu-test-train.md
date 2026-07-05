@@ -1,5 +1,93 @@
 # SPECint QEMU test/train bring-up, 2026-07-02
 
+## 2026-07-05 continuation: `500.perlbench_r` `sccp` frame/syscall trace
+
+Artifact root:
+
+- `workloads/generated/specint-500-testpl-sccp-frame-syscall-summary-qemu-20260705-r1`
+
+Command shape:
+
+```bash
+python3 tools/spec2017/run_int_rate_qemu.py \
+  --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 \
+  --qemu /private/tmp/linx-qemu-clean-build/qemu-system-linx64 \
+  --kernel kernel/linux/build-linx-fixed/vmlinux \
+  --stage b --transport initramfs --input-set test \
+  --bench 500.perlbench_r --run-index 2 --timeout 90 \
+  --heartbeat-sec 15 --qemu-heartbeat-interval 1000000000 \
+  --qemu-heartbeat-same-site-warn 4 --guest-heartbeat-sec 1 \
+  --guest-child-maps-bytes 4096 --terminal-failure-grace-sec 3 \
+  --append-extra norandmaps --linux-vm-trace \
+  --qemu-fault-trace --qemu-fault-trace-regs \
+  --qemu-fault-trace-addr-lo 0x0 --qemu-fault-trace-addr-hi 0x10 \
+  --qemu-fault-trace-limit 16 \
+  --qemu-call-trace-ring --qemu-call-trace-ring-size 128 \
+  --qemu-syscall-trace --qemu-syscall-trace-regs \
+  --qemu-syscall-trace-pc-lo 0x1555837f18 \
+  --qemu-syscall-trace-pc-hi 0x1555837f48 \
+  --qemu-syscall-trace-limit 128 \
+  --qemu-fentry-trace --qemu-fentry-trace-regs \
+  --qemu-fentry-trace-pc 0x1555837f18 \
+  --qemu-fentry-trace-limit 64 \
+  --qemu-fret-stk-trace --qemu-fret-stk-trace-regs \
+  --qemu-fret-stk-trace-pc 0x1555837f46 \
+  --qemu-fret-stk-trace-limit 64
+```
+
+Result:
+
+- QEMU: `/private/tmp/linx-qemu-clean-build/qemu-system-linx64`,
+  `QEMU emulator version 10.2.50 (v10.2.0-1029-g68bebbd9e7b)`,
+  clean marker matching QEMU head
+  `68bebbd9e7b61df45f433830199ff59a49622ad1`.
+- Runner summary:
+  `workloads/generated/specint-500-testpl-sccp-frame-syscall-summary-qemu-20260705-r1/stage_b_summary.json`.
+- Classification: `user-trap`, not timeout or deadlock. The QEMU heartbeat
+  still reports site progress before the trap, with last count `3000000005`
+  and last BPC `0xffffffff803e91e8`.
+- Terminal trap evidence:
+  `LINX_USER_TRAP ... addr=0x0 tpc=0x15555c09e6 bpc=0x15555c09d4
+  orig_tpc=0x1555837f3c orig_bpc=0x1555837f1c ... traparg0=0x0`.
+  The first low-address `LINX_FAULT_TRACE` for that terminal site records
+  `count=3317420356`, `tpc=0x15555c09e6`, `report_bpc=0x15555c09d4`,
+  `mem_va=0x0`, `cause=0x2`, `store_cause=0x5`, and all captured
+  `tq0..tq3`/`uq0..uq3` zero.
+- `sccp` trace evidence: the run captures 64 `LINX_SYSCALL_TRACE` records
+  in the `sccp` wrapper window. The final sampled syscall entry is
+  `nr=56`, `count=3343909258`, `bpc=0x1555837f1c`,
+  `tpc=0x1555837f38`, `pc_next=0x1555837f3c`, `sp=0x3ffffff400`,
+  and `ra=0x1555837f56`.
+- Frame trace evidence: the run captures 64 `LINX_FENTRY_TRACE` records at
+  `pc=0x1555837f18` and 64 `LINX_FRET_STK_TRACE` records at
+  `pc=0x1555837f46`. The final FENTRY sample moves
+  `old_sp=0x3ffffff440` to `new_sp=0x3ffffff400`, with
+  `stacksize=64`, `save_count=7`, and `incoming_ra=0x1555837f56`.
+  The final FRET.STK sample moves `old_sp=0x3fffffbab0` to
+  `new_sp=0x3fffffbaf0`, with `restore_count=7`,
+  `incoming_ra=0x1555837f56`, and `restored_ra=0x1555837f56`.
+
+Tool update:
+
+- `tools/spec2017/run_int_rate_qemu.py` now summarizes
+  `LINX_SYSCALL_TRACE`, `LINX_FENTRY_TRACE`, and `LINX_FRET_STK_TRACE`
+  markers into `*_trace_seen`, `*_trace_count`, `*_trace_last`, and bounded
+  `*_trace_samples` fields.
+- `tools/spec2017/analyze_specint_qemu_progress.py` carries those fields into
+  progress JSON/Markdown and includes trace-only rows in the fault-evidence
+  section.
+
+Interpretation:
+
+The recurrent `orig_tpc=0x1555837f3c` still maps to linked `0x402e2f3c`,
+the `sccp` ACRC/BSTOP return path, but the sampled `sccp` wrapper entries and
+returns preserve balanced stack movement and restore the expected
+`ra=0x1555837f56`. This is evidence against a simple `sccp` frame restore
+corruption as the whole row-2 failure. The next loop should trace the caller
+chain, data operands, and T/U queue provenance after syscall return while
+keeping the low-address terminal fault trace as the low-perturbation failure
+proof.
+
 ## 2026-07-05 continuation: `500.perlbench_r` add-backref PC-wide trace
 
 Artifact roots:

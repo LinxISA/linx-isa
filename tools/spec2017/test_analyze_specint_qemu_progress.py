@@ -440,6 +440,18 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                                 "mem_trace_count": 3,
                                 "mem_trace_last": "LINX_MEM_TRACE pc=0x1555672a00 addr=0x3fefe66724",
                                 "mem_trace_samples": [{"pc": "0x1555672a00"}],
+                                "syscall_trace_seen": True,
+                                "syscall_trace_count": 4,
+                                "syscall_trace_last": "LINX_SYSCALL_TRACE nr=56 bpc=0x1555837f1c",
+                                "syscall_trace_samples": [{"nr": 56}],
+                                "fentry_trace_seen": True,
+                                "fentry_trace_count": 5,
+                                "fentry_trace_last": "LINX_FENTRY_TRACE pc=0x1555837f18",
+                                "fentry_trace_samples": [{"pc": "0x1555837f18"}],
+                                "fret_stk_trace_seen": True,
+                                "fret_stk_trace_count": 6,
+                                "fret_stk_trace_last": "LINX_FRET_STK_TRACE pc=0x1555837f46",
+                                "fret_stk_trace_samples": [{"pc": "0x1555837f46"}],
                                 "child_maps": {
                                     "seen": True,
                                     "block_count": 3,
@@ -472,6 +484,12 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
         self.assertEqual(row["fault_trace_count"], 2)
         self.assertTrue(row["mem_trace_seen"])
         self.assertEqual(row["mem_trace_count"], 3)
+        self.assertTrue(row["syscall_trace_seen"])
+        self.assertEqual(row["syscall_trace_count"], 4)
+        self.assertTrue(row["fentry_trace_seen"])
+        self.assertEqual(row["fentry_trace_count"], 5)
+        self.assertTrue(row["fret_stk_trace_seen"])
+        self.assertEqual(row["fret_stk_trace_count"], 6)
         self.assertTrue(row["child_maps_seen"])
         self.assertEqual(row["child_maps_block_count"], 3)
         self.assertEqual(row["child_maps_trap_addr"], "0x3f7ff0008c")
@@ -563,6 +581,15 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                     "fault_trace_seen": True,
                     "fault_trace_count": 1,
                     "fault_trace_last": "LINX_FAULT_TRACE traparg0=0x1234",
+                    "syscall_trace_seen": True,
+                    "syscall_trace_count": 2,
+                    "syscall_trace_last": "LINX_SYSCALL_TRACE nr=63 bpc=0x1555837f1c",
+                    "fentry_trace_seen": True,
+                    "fentry_trace_count": 2,
+                    "fentry_trace_last": "LINX_FENTRY_TRACE pc=0x1555837f18",
+                    "fret_stk_trace_seen": True,
+                    "fret_stk_trace_count": 2,
+                    "fret_stk_trace_last": "LINX_FRET_STK_TRACE pc=0x1555837f46",
                     "child_maps_seen": True,
                     "child_maps_trap_addr": "0x3f7ff0008c",
                     "child_maps_trap_addr_mapped": False,
@@ -595,6 +622,9 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
         self.assertIn("tb_lookup=3", text)
         self.assertIn("Fault And Trap Evidence", text)
         self.assertIn("LINX_FAULT_TRACE", text)
+        self.assertIn("syscall-trace count=`2`", text)
+        self.assertIn("fentry-trace count=`2`", text)
+        self.assertIn("fret-stk-trace count=`2`", text)
         self.assertIn("child-maps trap_addr=`0x3f7ff0008c` mapped=`false`", text)
         self.assertIn("child-maps fault_addr=`0x3f7feec008` mapped=`true`", text)
 

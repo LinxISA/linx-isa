@@ -595,6 +595,40 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertIn("LINX_QEMU_FRET_STK_TRACE_RA", runner._qemu_debug_env_summary(env))
         self.assertIn("LINX_QEMU_FENTRY_TRACE_PC", runner._qemu_debug_env_summary(env))
 
+    def test_qemu_frame_and_syscall_trace_summaries(self) -> None:
+        text = (
+            "LINX_FENTRY_TRACE count=3170704551 pc=0x1555837f18 "
+            "next_pc=0x1555837f1c old_sp=0x3ffffff430 new_sp=0x3ffffff3f0 "
+            "stacksize=64 callframe=0 begin=ra end=s5 save_count=7 "
+            "incoming_ra=0x1555837f56 envpc=0x1555837f18 bpc=0x1555837f18 "
+            "tpc=0x0 cstate=0x12 acr=2 mmu=1 brtype=1 tgt=0x0\n"
+            "LINX_SYSCALL_TRACE nr=56 src_acr=2 dst_acr=1 count=3170704566 "
+            "bpc=0x1555837f1c tpc=0x1555837f38 pc_next=0x1555837f3c "
+            "a0=0xffffffffffffff9c a1=0x3fefeff180 a2=0x8000 a3=0x0 "
+            "a4=0x0 a5=0x0 sp=0x3ffffff3f0 ra=0x1555837f56 cstate=0x12\n"
+            "LINX_FRET_STK_TRACE count=3170709898 pc=0x1555837f46 "
+            "next_pc=0x1555837f4a old_sp=0x3ffffff3f0 new_sp=0x3ffffff430 "
+            "stacksize=64 callframe=0 restore_base=0 begin=ra end=s5 "
+            "restore_count=7 incoming_ra=0x1555837f56 restored_ra=0x1555837f56 "
+            "envpc=0x1555837f46 bpc=0x1555837f46 tpc=0x0 cstate=0x12 "
+            "brtype=1 tgt=0x0\n"
+        )
+
+        fentry = runner._fentry_trace_summary(text)
+        syscall = runner._syscall_trace_summary(text)
+        fret = runner._fret_stk_trace_summary(text)
+
+        self.assertTrue(fentry["seen"])
+        self.assertEqual(fentry["count"], 1)
+        self.assertEqual(fentry["samples"][0]["pc"], "0x1555837f18")
+        self.assertEqual(fentry["samples"][0]["stacksize"], 64)
+        self.assertTrue(syscall["seen"])
+        self.assertEqual(syscall["samples"][0]["nr"], 56)
+        self.assertEqual(syscall["samples"][0]["bpc"], "0x1555837f1c")
+        self.assertTrue(fret["seen"])
+        self.assertEqual(fret["samples"][0]["restored_ra"], "0x1555837f56")
+        self.assertEqual(fret["samples"][0]["new_sp"], "0x3ffffff430")
+
     def test_qemu_debug_env_summary_is_sanitized(self) -> None:
         env: dict[str, str] = {
             "PATH": "/bin",

@@ -207,6 +207,18 @@ def _merge_failure_detail(row: dict[str, Any], detail: dict[str, Any]) -> None:
             "mem_trace_count": detail.get("mem_trace_count"),
             "mem_trace_last": detail.get("mem_trace_last"),
             "mem_trace_samples": detail.get("mem_trace_samples", []),
+            "syscall_trace_seen": detail.get("syscall_trace_seen"),
+            "syscall_trace_count": detail.get("syscall_trace_count"),
+            "syscall_trace_last": detail.get("syscall_trace_last"),
+            "syscall_trace_samples": detail.get("syscall_trace_samples", []),
+            "fentry_trace_seen": detail.get("fentry_trace_seen"),
+            "fentry_trace_count": detail.get("fentry_trace_count"),
+            "fentry_trace_last": detail.get("fentry_trace_last"),
+            "fentry_trace_samples": detail.get("fentry_trace_samples", []),
+            "fret_stk_trace_seen": detail.get("fret_stk_trace_seen"),
+            "fret_stk_trace_count": detail.get("fret_stk_trace_count"),
+            "fret_stk_trace_last": detail.get("fret_stk_trace_last"),
+            "fret_stk_trace_samples": detail.get("fret_stk_trace_samples", []),
             "child_maps_seen": child_maps.get("seen"),
             "child_maps_block_count": child_maps.get("block_count"),
             "child_maps_trap_addr": child_maps.get("trap_addr"),
@@ -516,6 +528,18 @@ def _bench_report_row(
         "mem_trace_count": gate_row.get("mem_trace_count"),
         "mem_trace_last": gate_row.get("mem_trace_last"),
         "mem_trace_samples": gate_row.get("mem_trace_samples", []),
+        "syscall_trace_seen": gate_row.get("syscall_trace_seen"),
+        "syscall_trace_count": gate_row.get("syscall_trace_count"),
+        "syscall_trace_last": gate_row.get("syscall_trace_last"),
+        "syscall_trace_samples": gate_row.get("syscall_trace_samples", []),
+        "fentry_trace_seen": gate_row.get("fentry_trace_seen"),
+        "fentry_trace_count": gate_row.get("fentry_trace_count"),
+        "fentry_trace_last": gate_row.get("fentry_trace_last"),
+        "fentry_trace_samples": gate_row.get("fentry_trace_samples", []),
+        "fret_stk_trace_seen": gate_row.get("fret_stk_trace_seen"),
+        "fret_stk_trace_count": gate_row.get("fret_stk_trace_count"),
+        "fret_stk_trace_last": gate_row.get("fret_stk_trace_last"),
+        "fret_stk_trace_samples": gate_row.get("fret_stk_trace_samples", []),
         "child_maps_seen": gate_row.get("child_maps_seen"),
         "child_maps_block_count": gate_row.get("child_maps_block_count"),
         "child_maps_trap_addr": gate_row.get("child_maps_trap_addr"),
@@ -818,6 +842,9 @@ def _write_markdown(path: Path, report: dict[str, Any]) -> None:
         if row.get("trap_seen")
         or row.get("fault_trace_seen")
         or row.get("mem_trace_seen")
+        or row.get("syscall_trace_seen")
+        or row.get("fentry_trace_seen")
+        or row.get("fret_stk_trace_seen")
         or row.get("pc_watch_seen")
     ]
     if fault_rows:
@@ -833,6 +860,21 @@ def _write_markdown(path: Path, report: dict[str, Any]) -> None:
                 lines.append(
                     f"  mem-trace count=`{row.get('mem_trace_count')}` "
                     f"last=`{row.get('mem_trace_last', '')[:240]}`"
+                )
+            if row.get("syscall_trace_seen"):
+                lines.append(
+                    f"  syscall-trace count=`{row.get('syscall_trace_count')}` "
+                    f"last=`{row.get('syscall_trace_last', '')[:240]}`"
+                )
+            if row.get("fentry_trace_seen"):
+                lines.append(
+                    f"  fentry-trace count=`{row.get('fentry_trace_count')}` "
+                    f"last=`{row.get('fentry_trace_last', '')[:240]}`"
+                )
+            if row.get("fret_stk_trace_seen"):
+                lines.append(
+                    f"  fret-stk-trace count=`{row.get('fret_stk_trace_count')}` "
+                    f"last=`{row.get('fret_stk_trace_last', '')[:240]}`"
                 )
             if row.get("child_maps_seen"):
                 mapped = row.get("child_maps_trap_addr_mapped")
