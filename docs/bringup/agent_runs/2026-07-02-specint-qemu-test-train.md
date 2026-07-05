@@ -450,6 +450,65 @@ Result:
   body or call/return replay path, not the earlier Perl `[sp+296]` producer or
   the unsampled `free.c` pre-store watch PC.
 
+## 2026-07-06 continuation: current QEMU all-row train gate
+
+Command:
+
+```bash
+SPECINT_TRAIN_ALL_TIMEOUT=90 python3 tools/bringup/run_specint_fast_gate.py \
+  --profile train --suite train-all \
+  --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 \
+  --qemu emulator/qemu/build-linx/qemu-system-linx64 \
+  --sysroot out/libc/musl/install/phase-b \
+  --out-dir workloads/generated/specint-train-all-current-rtl-qemu-20260706-r1 \
+  --append-extra "norandmaps ignore_loglevel loglevel=8" \
+  --guest-heartbeat-sec 0 --heartbeat-sec 30 \
+  --qemu-heartbeat-interval 1000000000 \
+  --qemu-heartbeat-same-site-warn 4 \
+  --qemu-frame-stats --qemu-frame-single-reg-fast \
+  --qemu-mmu-cache --qemu-mmu-cache-stats \
+  --qemu-tlb-stats --qemu-tlb-fill-stats --qemu-tlb-inv-hot \
+  --qemu-tb-stats --template-chain \
+  --no-progress-timeout 120 --stack-limit 2G \
+  --symbolize-heartbeat --continue-on-fail --min-free-gb 0
+```
+
+Result:
+
+- `workloads/generated/specint-train-all-current-rtl-qemu-20260706-r1/specint_fast_gate_summary.json`
+  records `ok=false`, elapsed `836.145s`, in-tree QEMU
+  `emulator/qemu/build-linx/qemu-system-linx64`, QEMU source head
+  `1273ef5381b562ddc2e62dca1b2731dd554055d3`, tracked-clean QEMU source
+  status, and binary version
+  `QEMU emulator version 10.2.50 (v10.2.0-1031-gba3a85c66c0-dirty)`.
+- The wrapper covered every supported SPECint train row: initramfs rows
+  `500.perlbench_r`, `502.gcc_r`, `505.mcf_r`, `520.omnetpp_r`,
+  `523.xalancbmk_r`, `531.deepsjeng_r`, `541.leela_r`, `557.xz_r`, and
+  strict `999.specrand_ir`; plus the large-payload `525.x264_r` 9p shard.
+- `999.specrand_ir` is the correctness sentinel and passes:
+  `rand.11.out` has expected and actual size `871`, expected and actual hash
+  `0x973dcfc2`, and the guest log emits `LINX_SPEC_PASS 999.specrand_ir`.
+- The nine real train rows are all bounded `live-timeout` rows, not deadlocks:
+  each has `heartbeat_running=true`, `heartbeat_site_progress=true`, no
+  `LINX_USER_TRAP`, no `LINX_SPEC_FAIL`, and no panic/Oops marker in the run
+  logs. Last BPC/count pairs are `500=22B @ 0x15556ea44a`,
+  `502=18B @ 0x1555f17148`, `505=25B @ 0x155555c42c`,
+  `520=14B @ 0x1555600eee`, `523=18B @ 0x15556ea446`,
+  `525=13B @ 0xffffffff8004a8ca`, `531=30B @ 0x155556e178`,
+  `541=16B @ 0x15555810d0`, and `557=29B @ 0x155558d66e`.
+
+Interpretation:
+
+This run keeps the all-row train gate in the throughput lane. The immediate
+next speed loops should be counter-driven rather than correctness-trap driven:
+`505.mcf_r` remains the high-volume user page-walk row
+(`tlbf_total=85607009`, mostly user loads); `502.gcc_r` and
+`520.omnetpp_r` remain template/TB-heavy rows; `525.x264_r` is still a
+kernel/9p transport row; and the shared `tlbi-hot` source family keeps Linux
+TLBI batching/source reduction on the cross-row QEMU/Linux speed path. Keep
+`999.specrand_ir` as the strict hash sentinel when trying opt-in QEMU speed
+features.
+
 Tool update:
 
 - `tools/spec2017/run_int_rate_qemu.py` now exposes the existing QEMU
