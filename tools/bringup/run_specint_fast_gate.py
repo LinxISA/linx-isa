@@ -521,6 +521,7 @@ def _suite_command(
     qemu_tlb_fill_hot: bool,
     qemu_mmu_cache: bool,
     qemu_mmu_cache_stats: bool,
+    template_chain: bool,
     qemu_tlb_fault_trace: bool,
     qemu_tlb_fault_trace_limit: int,
     qemu_tlb_fault_trace_addr: str,
@@ -546,6 +547,7 @@ def _suite_command(
     forward_qemu_tlb_fill_hot: bool,
     forward_qemu_mmu_cache: bool,
     forward_qemu_mmu_cache_stats: bool,
+    forward_template_chain: bool,
     forward_qemu_tlb_fault_trace: bool,
     forward_qemu_tb_stats: bool,
     forward_no_progress: bool,
@@ -619,6 +621,8 @@ def _suite_command(
         cmd.append("--qemu-mmu-cache")
     if qemu_mmu_cache_stats and forward_qemu_mmu_cache_stats:
         cmd.append("--qemu-mmu-cache-stats")
+    if template_chain and forward_template_chain:
+        cmd.append("--template-chain")
     if qemu_tlb_fault_trace and forward_qemu_tlb_fault_trace:
         cmd.append("--qemu-tlb-fault-trace")
     if (
@@ -1002,6 +1006,7 @@ def main(argv: list[str]) -> int:
     runner_has_qemu_mmu_cache_stats = _runner_supports_option(
         runner, "--qemu-mmu-cache-stats"
     )
+    runner_has_template_chain = _runner_supports_option(runner, "--template-chain")
     runner_has_qemu_tlb_fault_trace = _runner_supports_option(runner, "--qemu-tlb-fault-trace")
     runner_has_qemu_tlb_fault_trace_filters = _runner_supports_option(
         runner, "--qemu-tlb-fault-trace-addr-lo"
@@ -1101,6 +1106,12 @@ def main(argv: list[str]) -> int:
             "error: local SPEC matrix runner does not support "
             "--qemu-mmu-cache-stats; update tools/spec2017/run_stage_qemu_matrix.py "
             "or rerun without the MMU cache stats switch"
+        )
+    if args.template_chain and not runner_has_template_chain:
+        raise SystemExit(
+            "error: local SPEC matrix runner does not support "
+            "--template-chain; update tools/spec2017/run_stage_qemu_matrix.py "
+            "or rerun without the template-chain switch"
         )
     qemu_tlb_fault_trace_filters = {
         "addr": args.qemu_tlb_fault_trace_addr.strip(),
@@ -1212,6 +1223,7 @@ def main(argv: list[str]) -> int:
                 qemu_tlb_fill_hot=args.qemu_tlb_fill_hot,
                 qemu_mmu_cache=args.qemu_mmu_cache,
                 qemu_mmu_cache_stats=args.qemu_mmu_cache_stats,
+                template_chain=args.template_chain,
                 qemu_tlb_fault_trace=args.qemu_tlb_fault_trace,
                 qemu_tlb_fault_trace_limit=args.qemu_tlb_fault_trace_limit,
                 qemu_tlb_fault_trace_addr=args.qemu_tlb_fault_trace_addr,
@@ -1237,6 +1249,7 @@ def main(argv: list[str]) -> int:
                 forward_qemu_tlb_fill_hot=runner_has_qemu_tlb_fill_hot,
                 forward_qemu_mmu_cache=runner_has_qemu_mmu_cache,
                 forward_qemu_mmu_cache_stats=runner_has_qemu_mmu_cache_stats,
+                forward_template_chain=runner_has_template_chain,
                 forward_qemu_tlb_fault_trace=runner_has_qemu_tlb_fault_trace,
                 forward_qemu_tb_stats=runner_has_qemu_tb_stats,
                 forward_no_progress=runner_has_no_progress,
