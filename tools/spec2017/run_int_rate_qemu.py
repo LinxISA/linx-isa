@@ -3146,6 +3146,7 @@ def _run_qemu(
         "heartbeat_last_same_site": classification["heartbeat_last_same_site"],
         "heartbeat_recent_unique_sites": classification["heartbeat_recent_unique_sites"],
         "heartbeat_recent_count_delta": classification["heartbeat_recent_count_delta"],
+        "heartbeat_recent_sites": classification["heartbeat_recent_sites"],
         "heartbeat_stall_seen": heartbeat_stall["seen"],
         "heartbeat_stall_count": heartbeat_stall["count"],
         "heartbeat_stall_last": heartbeat_stall["last"],
@@ -3529,6 +3530,7 @@ def _heartbeat_classification_fields(heartbeat: dict[str, Any]) -> dict[str, Any
         "heartbeat_last_same_site": heartbeat["last_same_site"],
         "heartbeat_recent_unique_sites": heartbeat["recent_unique_sites"],
         "heartbeat_recent_count_delta": heartbeat["recent_count_delta"],
+        "heartbeat_recent_sites": heartbeat["recent_sites"],
     }
 
 
@@ -3545,6 +3547,7 @@ def _heartbeat_summary(heartbeats: list[str]) -> dict[str, Any]:
             "last_same_site": None,
             "recent_unique_sites": 0,
             "recent_count_delta": 0,
+            "recent_sites": [],
         }
 
     counts: list[int] = []
@@ -3565,6 +3568,22 @@ def _heartbeat_summary(heartbeats: list[str]) -> dict[str, Any]:
             sites.append(site)
 
     last = entries[-1] if entries else {}
+    recent_sites: list[dict[str, Any]] = []
+    for fields in entries:
+        recent_sites.append(
+            {
+                "count": int(fields["count"]) if fields.get("count", "").isdecimal() else None,
+                "pc": fields.get("pc", "").lower(),
+                "bpc": fields.get("bpc", "").lower(),
+                "tpc": fields.get("tpc", "").lower(),
+                "progress": fields.get("progress", ""),
+                "same_site": (
+                    int(fields["same_site"])
+                    if fields.get("same_site", "").isdecimal()
+                    else None
+                ),
+            }
+        )
     recent_count_delta = counts[-1] - counts[0] if len(counts) >= 2 else 0
     return {
         "seen": True,
@@ -3577,6 +3596,7 @@ def _heartbeat_summary(heartbeats: list[str]) -> dict[str, Any]:
         "last_same_site": int(last["same_site"]) if last.get("same_site", "").isdecimal() else None,
         "recent_unique_sites": len(set(sites)),
         "recent_count_delta": recent_count_delta,
+        "recent_sites": recent_sites,
     }
 
 

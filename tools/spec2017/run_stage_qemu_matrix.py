@@ -532,6 +532,11 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
         site = "site-progress" if row.get("heartbeat_site_progress") else "same-site"
         bpc = row.get("heartbeat_last_bpc") or "no-bpc"
         progress = row.get("heartbeat_last_progress") or "no-progress-tag"
+        unique_sites = row.get("heartbeat_recent_unique_sites")
+        count_delta = row.get("heartbeat_recent_count_delta")
+        recent = ""
+        if unique_sites is not None or count_delta is not None:
+            recent = f" recent-sites={unique_sites} count-delta={count_delta}"
         fcmp = ""
         if row.get("fcmp_trace_seen"):
             fcmp = f" fcmp-trace={row.get('fcmp_trace_count')}"
@@ -584,7 +589,7 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
             hb_stall = f" heartbeat-stall={status}:{repeats}/{threshold}"
         parts.append(
             f"{bench}: {running}/{site} {progress}{timeout}{stalled} "
-            f"bpc={bpc}{kernel}{hb_stall}{fcmp}{tlbfill}{tlbfault}{tlbfill_stats}{tlbfill_hot}{mmu_cache}{frame_stats}{frame_shape_hot}{tlb_invalidation}{tlbinv_hot}{tb_stats}{bstart_cache}{mprotect}"
+            f"bpc={bpc}{recent}{kernel}{hb_stall}{fcmp}{tlbfill}{tlbfault}{tlbfill_stats}{tlbfill_hot}{mmu_cache}{frame_stats}{frame_shape_hot}{tlb_invalidation}{tlbinv_hot}{tb_stats}{bstart_cache}{mprotect}"
             f"{pc_watch}"
         )
     return ", ".join(parts)

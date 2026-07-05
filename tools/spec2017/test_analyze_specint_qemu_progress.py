@@ -140,6 +140,27 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                                 "heartbeat_site_progress": True,
                                 "heartbeat_last_count": 50,
                                 "heartbeat_last_bpc": "0x505",
+                                "heartbeat_last_progress": "site-change",
+                                "heartbeat_recent_unique_sites": 4,
+                                "heartbeat_recent_count_delta": 3000000000,
+                                "heartbeat_recent_sites": [
+                                    {
+                                        "count": 20,
+                                        "pc": "0x5010",
+                                        "bpc": "0x5000",
+                                        "tpc": "0x5014",
+                                        "progress": "first",
+                                        "same_site": 0,
+                                    },
+                                    {
+                                        "count": 50,
+                                        "pc": "0x5050",
+                                        "bpc": "0x505",
+                                        "tpc": "0x5054",
+                                        "progress": "site-change",
+                                        "same_site": 0,
+                                    },
+                                ],
                             },
                             "531.deepsjeng_r": {
                                 "failure_class": "live-timeout",
@@ -230,6 +251,10 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
             rows["505.mcf_r"]["top_qemu"],
             [{"symbol": "linx_template_fentry_impl", "count": 10}],
         )
+        self.assertEqual(rows["505.mcf_r"]["heartbeat_last_progress"], "site-change")
+        self.assertEqual(rows["505.mcf_r"]["heartbeat_recent_unique_sites"], 4)
+        self.assertEqual(rows["505.mcf_r"]["heartbeat_recent_count_delta"], 3000000000)
+        self.assertEqual(rows["505.mcf_r"]["heartbeat_recent_sites"][-1]["bpc"], "0x505")
         self.assertEqual(
             rows["505.mcf_r"]["profile_wrapper_qemu"],
             [{"symbol": "cpu_exec_setjmp", "count": 99}],

@@ -568,6 +568,32 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(summary["other"], 1)
         self.assertEqual(summary["last_mmu"], 1)
 
+    def test_heartbeat_summary_preserves_recent_site_window(self) -> None:
+        result = runner._classify_qemu_result(
+            text=(
+                "LINX_HEARTBEAT count=100 pc=0x10 bpc=0x10 tpc=0x14 "
+                "progress=first same_site=0\n"
+                "LINX_HEARTBEAT count=200 pc=0x20 bpc=0x20 tpc=0x24 "
+                "progress=site-change same_site=0\n"
+                "LINX_HEARTBEAT count=300 pc=0x20 bpc=0x20 tpc=0x24 "
+                "progress=same-site same_site=1\n"
+            ),
+            timed_out=True,
+            stalled=False,
+            panic_seen=False,
+            fail_marker=False,
+        )
+
+        self.assertEqual(result["class"], "live-timeout")
+        self.assertTrue(result["heartbeat_running"])
+        self.assertTrue(result["heartbeat_site_progress"])
+        self.assertEqual(result["heartbeat_recent_unique_sites"], 2)
+        self.assertEqual(result["heartbeat_recent_count_delta"], 200)
+        self.assertEqual(result["heartbeat_recent_sites"][-1]["count"], 300)
+        self.assertEqual(result["heartbeat_recent_sites"][-1]["bpc"], "0x20")
+        self.assertEqual(result["heartbeat_recent_sites"][-1]["progress"], "same-site")
+        self.assertEqual(result["heartbeat_recent_sites"][-1]["same_site"], 1)
+
     def test_heartbeat_mmu_cache_summary_parses_cache_counts(self) -> None:
         summary = runner._heartbeat_mmu_cache_summary(
             "LINX_HEARTBEAT count=100 pc=0x1 bpc=0x2 "

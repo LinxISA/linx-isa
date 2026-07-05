@@ -170,6 +170,10 @@ def _merge_failure_detail(row: dict[str, Any], detail: dict[str, Any]) -> None:
             "heartbeat_last_count": detail.get("heartbeat_last_count"),
             "heartbeat_last_bpc": detail.get("heartbeat_last_bpc"),
             "heartbeat_last_progress": detail.get("heartbeat_last_progress"),
+            "heartbeat_last_same_site": detail.get("heartbeat_last_same_site"),
+            "heartbeat_recent_unique_sites": detail.get("heartbeat_recent_unique_sites"),
+            "heartbeat_recent_count_delta": detail.get("heartbeat_recent_count_delta"),
+            "heartbeat_recent_sites": detail.get("heartbeat_recent_sites", []),
             "stalled": detail.get("stalled"),
             "panic_seen": detail.get("panic_seen")
             or detail.get("heartbeat_kernel_panic_loop"),
@@ -472,6 +476,10 @@ def _bench_report_row(
         "failure_evidence": gate_row.get("failure_evidence"),
         "heartbeat_last_count": gate_row.get("heartbeat_last_count"),
         "heartbeat_last_bpc": gate_row.get("heartbeat_last_bpc"),
+        "heartbeat_last_progress": gate_row.get("heartbeat_last_progress"),
+        "heartbeat_recent_unique_sites": gate_row.get("heartbeat_recent_unique_sites"),
+        "heartbeat_recent_count_delta": gate_row.get("heartbeat_recent_count_delta"),
+        "heartbeat_recent_sites": gate_row.get("heartbeat_recent_sites", []),
         "qemu_debug_env": gate_row.get("qemu_debug_env", {}),
         "fault_trace_seen": gate_row.get("fault_trace_seen"),
         "fault_trace_count": gate_row.get("fault_trace_count"),
@@ -683,12 +691,20 @@ def _write_markdown(path: Path, report: dict[str, Any]) -> None:
         "",
         "## Rows",
         "",
-        "| Bench | Transport | Gate | Count | BPC | Profile | Lane | Top QEMU frames | Next action |",
-        "| --- | --- | --- | ---: | --- | --- | --- | --- | --- |",
+        "| Bench | Transport | Gate | Count | BPC | Progress | Profile | Lane | Top QEMU frames | Next action |",
+        "| --- | --- | --- | ---: | --- | --- | --- | --- | --- | --- |",
     ])
     for row in report["benchmarks"]:
         gate = "pass" if row.get("gate_ok") else row.get("failure_class", "fail")
         top = _top_text(row, 5)
+        progress = row.get("heartbeat_last_progress", "")
+        unique_sites = row.get("heartbeat_recent_unique_sites")
+        count_delta = row.get("heartbeat_recent_count_delta")
+        progress_text = progress
+        if unique_sites is not None or count_delta is not None:
+            progress_text = (
+                f"{progress or '-'}; sites={unique_sites}; delta={count_delta}"
+            )
         lines.append(
             "| "
             f"`{row['bench']}` | "
@@ -696,6 +712,7 @@ def _write_markdown(path: Path, report: dict[str, Any]) -> None:
             f"`{gate}` | "
             f"{row.get('heartbeat_last_count', '')} | "
             f"`{row.get('heartbeat_last_bpc', '')}` | "
+            f"`{progress_text}` | "
             f"`{str(row.get('profile_sample_ok', False)).lower()}` | "
             f"`{row['lane']}` | "
             f"`{top}` | "

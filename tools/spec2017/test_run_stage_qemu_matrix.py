@@ -35,6 +35,8 @@ class StageQemuMatrixTests(unittest.TestCase):
                             "heartbeat_last_progress": "site-change",
                             "heartbeat_running": True,
                             "heartbeat_site_progress": True,
+                            "heartbeat_recent_unique_sites": 3,
+                            "heartbeat_recent_count_delta": 2000000024,
                             "heartbeat_kernel_panic_loop": True,
                             "heartbeat_kernel_symbol_evidence": "heartbeat kernel symbols: 0xffffffff800019bc=.LBB14_51 panic.c:0",
                             "heartbeat_tlb_fill_hot": {
@@ -106,6 +108,12 @@ class StageQemuMatrixTests(unittest.TestCase):
         )
         self.assertIn(
             "kernel-panic-loop",
+            matrix._format_failure_details(
+                matrix._transport_failure_details(summary)
+            ),
+        )
+        self.assertIn(
+            "recent-sites=3 count-delta=2000000024",
             matrix._format_failure_details(
                 matrix._transport_failure_details(summary)
             ),
