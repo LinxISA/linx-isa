@@ -910,6 +910,30 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(sample["mem_va"], "0xc")
         self.assertEqual(sample["tpc"], "0x1555672a00")
 
+    def test_mem_trace_summary_keeps_recent_queue_fields(self) -> None:
+        summary = runner._mem_trace_summary(
+            "LINX_MEM_TRACE access=store pc=0x1555672a00 addr=0x3fefe66724 "
+            "size=4 value=0x4000000b count=3347503003 bpc=0x15556729ea "
+            "tpc=0x0 envpc=0x15556729ea acr=2 cstate=0x12 "
+            "tq0=0xfffffffffffbffff tq1=0x3fefe66718 tq2=0x0 tq3=0x0 "
+            "uq0=0x4004000b uq1=0x0 uq2=0x0 uq3=0x0 "
+            "ra=0x15556727ce sp=0x3ffffff8d8 a0=0x4000000b "
+            "a1=0x3fefe55a88 a2=0x602\n"
+        )
+
+        self.assertTrue(summary["seen"])
+        self.assertEqual(summary["count"], 1)
+        sample = summary["samples"][0]
+        self.assertEqual(sample["access"], "store")
+        self.assertEqual(sample["pc"], "0x1555672a00")
+        self.assertEqual(sample["addr"], "0x3fefe66724")
+        self.assertEqual(sample["size"], 4)
+        self.assertEqual(sample["value"], "0x4000000b")
+        self.assertEqual(sample["count"], 3347503003)
+        self.assertEqual(sample["tq1"], "0x3fefe66718")
+        self.assertEqual(sample["uq0"], "0x4004000b")
+        self.assertEqual(sample["a0"], "0x4000000b")
+
     def test_tlb_fill_hot_summary_parses_top_slots(self) -> None:
         summary = runner._tlb_fill_hot_summary(
             "LINX_HEARTBEAT count=100 pc=0x1 bpc=0x2\n"

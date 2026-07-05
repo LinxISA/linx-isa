@@ -436,6 +436,10 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                                 "fault_trace_count": 2,
                                 "fault_trace_last": "LINX_FAULT_TRACE traparg0=0x1234",
                                 "fault_trace_samples": [{"traparg0": "0x1234"}],
+                                "mem_trace_seen": True,
+                                "mem_trace_count": 3,
+                                "mem_trace_last": "LINX_MEM_TRACE pc=0x1555672a00 addr=0x3fefe66724",
+                                "mem_trace_samples": [{"pc": "0x1555672a00"}],
                                 "child_maps": {
                                     "seen": True,
                                     "block_count": 3,
@@ -466,6 +470,8 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
         self.assertEqual(row["failure_class"], "user-trap")
         self.assertTrue(row["fault_trace_seen"])
         self.assertEqual(row["fault_trace_count"], 2)
+        self.assertTrue(row["mem_trace_seen"])
+        self.assertEqual(row["mem_trace_count"], 3)
         self.assertTrue(row["child_maps_seen"])
         self.assertEqual(row["child_maps_block_count"], 3)
         self.assertEqual(row["child_maps_trap_addr"], "0x3f7ff0008c")

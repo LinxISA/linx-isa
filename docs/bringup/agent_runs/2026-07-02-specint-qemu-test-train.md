@@ -1,5 +1,95 @@
 # SPECint QEMU test/train bring-up, 2026-07-02
 
+## 2026-07-05 continuation: `500.perlbench_r` count-window memory trace
+
+Artifact root:
+
+- `workloads/generated/specint-500-testpl-svpadstale-countwindow-qemu-20260705-r1`
+
+Command shape:
+
+```bash
+python3 tools/spec2017/run_int_rate_qemu.py \
+  --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 \
+  --qemu /private/tmp/linx-qemu-clean-build/qemu-system-linx64 \
+  --kernel kernel/linux/build-linx-fixed/vmlinux \
+  --stage b --transport initramfs --input-set test \
+  --bench 500.perlbench_r --run-index 2 --timeout 150 \
+  --heartbeat-sec 15 --qemu-heartbeat-interval 1000000000 \
+  --qemu-heartbeat-same-site-warn 4 --guest-heartbeat-sec 1 \
+  --guest-child-maps-bytes 4096 --terminal-failure-grace-sec 3 \
+  --append-extra norandmaps --linux-vm-trace \
+  --qemu-fault-trace --qemu-fault-trace-regs \
+  --qemu-fault-trace-addr-lo 0x0 --qemu-fault-trace-addr-hi 0x10 \
+  --qemu-fault-trace-limit 16 \
+  --qemu-call-trace-ring --qemu-call-trace-ring-size 128 \
+  --qemu-mem-trace --qemu-mem-trace-pre --qemu-mem-trace-regs \
+  --qemu-mem-trace-pc-lo 0x15556729ea \
+  --qemu-mem-trace-pc-hi 0x1555672a04 \
+  --qemu-mem-trace-count-lo 3346000000 \
+  --qemu-mem-trace-count-hi 3347600000 \
+  --qemu-mem-trace-limit 96
+```
+
+Result:
+
+- QEMU: `/private/tmp/linx-qemu-clean-build/qemu-system-linx64`,
+  `QEMU emulator version 10.2.50 (v10.2.0-1029-g68bebbd9e7b)`.
+- Runner summary:
+  `workloads/generated/specint-500-testpl-svpadstale-countwindow-qemu-20260705-r1/stage_b_summary.json`.
+- Classification: `user-trap`, not timeout or deadlock.
+- Heartbeat: `heartbeat_running=true`, `heartbeat_site_progress=true`,
+  last count `3000000004`, last BPC `0xffffffff803e91e8`.
+- Terminal QEMU fault trace:
+  `count=3349229738`, `tpc=0x15556f8dd6`, `report_bpc=0x15556f8dc0`,
+  `traparg0=0x0`, `mem_va=0x0`, `cause=0x5`, `bi=1`, `precise=0`,
+  `store_ok=0`, `store_cause=0x5`, `tq0..tq3=0`, `uq0..uq3=0`.
+- Fault-time call ring:
+  final entries `acre_enter` and `acre_staged` at `pc=0x15556f8dd6`,
+  with `a0=0x3fefe1b6e0`, `a1=0x3fefe1b6e0`, `a2=0x0`,
+  `ra=0x15556f8c3e`, and user `acr=2` at staging.
+- Linux VM trace:
+  final `LINX_VM_FAULT stage=vma-gap addr=0x0 tpc=0x15556f8dd6`
+  and final `LINX_USER_TRAP ... addr=0x0 ... traparg0=0x0`.
+- Symbolization with the observed load bias maps `tpc=0x15556f8dd6` to
+  linked `0x401a3dd6` in `Perl_sv_add_backref`, instruction
+  `sd a0, [u#2, t#1<<3]`. `orig_tpc=0x1555837f3c` again maps to linked
+  `0x402e2f3c`, the `sccp` ACRC/BSTOP return path.
+- Count-window memory trace around the previous `S_SvPADSTALE_off` terminal
+  block captured 67 `LINX_MEM_TRACE` records before the later terminal trap.
+  The final captured non-failing producer/store pass is
+  `count=3347503003`, `pc=0x1555672a00`, `addr=0x3fefe66724`,
+  `value=0x4000000b`, `tq1=0x3fefe66718`, `uq0=0x4004000b`,
+  proving that the same block can carry a valid object base and mapped store
+  target under the low-perturbation count window.
+
+Tool update:
+
+- `tools/spec2017/run_int_rate_qemu.py` now summarizes `LINX_MEM_TRACE`
+  records into `mem_trace_seen`, `mem_trace_count`, `mem_trace_last`, and
+  bounded `mem_trace_samples` with PC/address/count and T/U queue fields.
+- `tools/spec2017/analyze_specint_qemu_progress.py` carries those fields into
+  progress JSON/Markdown reports and includes memory-trace-only rows in the
+  fault-evidence section.
+- Validation: `python3 -m py_compile tools/spec2017/run_int_rate_qemu.py
+  tools/spec2017/test_run_int_rate_qemu.py
+  tools/spec2017/analyze_specint_qemu_progress.py
+  tools/spec2017/test_analyze_specint_qemu_progress.py` passed;
+  `cd tools/spec2017 && python3 -m unittest test_run_int_rate_qemu.py
+  test_analyze_specint_qemu_progress.py` passed 70 tests.
+
+Interpretation:
+
+The low-address `500.perlbench_r` row-2 failures are still live-progress
+correctness failures, not deadlocks. The latest count-window run shows a later
+terminal indexed store in `Perl_sv_add_backref` with all captured T/U queue
+slots zero at fault time, while the same run also proves nearby
+`S_SvPADSTALE_off` executions preserve a valid T-queue base and store to mapped
+addresses. The recurrent origin remains the `sccp` ACRC/BSTOP path, so the next
+loop should trace return-state/queue preservation around `sccp` and the
+`Perl_sv_add_backref` caller chain before changing Linux VM handling or SPEC
+inputs.
+
 ## 2026-07-05 continuation: `500.perlbench_r` fault-time call ring
 
 Artifact root:

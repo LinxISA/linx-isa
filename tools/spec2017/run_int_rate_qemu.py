@@ -3143,6 +3143,7 @@ def _run_qemu(
         )[:512]
     fcmp_trace = _fcmp_trace_summary(text)
     fault_trace = _fault_trace_summary(text)
+    mem_trace = _mem_trace_summary(text)
     child_maps = _child_maps_summary(text)
     tlb_fill_trace = _tlb_fill_trace_summary(text)
     tlb_fault_trace = _tlb_fault_trace_summary(text)
@@ -3239,6 +3240,10 @@ def _run_qemu(
         "fault_trace_count": fault_trace["count"],
         "fault_trace_last": fault_trace["last"],
         "fault_trace_samples": fault_trace["samples"],
+        "mem_trace_seen": mem_trace["seen"],
+        "mem_trace_count": mem_trace["count"],
+        "mem_trace_last": mem_trace["last"],
+        "mem_trace_samples": mem_trace["samples"],
         "child_maps": child_maps,
         "tlb_fill_trace_seen": tlb_fill_trace["seen"],
         "tlb_fill_trace_count": tlb_fill_trace["count"],
@@ -4397,6 +4402,49 @@ def _fault_trace_summary(text: str) -> dict[str, Any]:
         "seen": bool(lines),
         "count": len(lines),
         "last": lines[-1][:512] if lines else "",
+        "samples": samples,
+    }
+
+
+def _mem_trace_summary(text: str) -> dict[str, Any]:
+    lines = _marked_log_records(text, "LINX_MEM_TRACE")
+    samples: list[dict[str, Any]] = []
+    for line in lines[-8:]:
+        fields = _heartbeat_fields(line)
+        samples.append(
+            {
+                "line": line[:768],
+                "access": fields.get("access", ""),
+                "phase": fields.get("phase", ""),
+                "pc": fields.get("pc", "").lower(),
+                "addr": fields.get("addr", "").lower(),
+                "size": _decimal_or_none(fields.get("size")),
+                "value": fields.get("value", "").lower(),
+                "count": _decimal_or_none(fields.get("count")),
+                "bpc": fields.get("bpc", "").lower(),
+                "tpc": fields.get("tpc", "").lower(),
+                "envpc": fields.get("envpc", "").lower(),
+                "acr": _decimal_or_none(fields.get("acr")),
+                "cstate": fields.get("cstate", "").lower(),
+                "tq0": fields.get("tq0", "").lower(),
+                "tq1": fields.get("tq1", "").lower(),
+                "tq2": fields.get("tq2", "").lower(),
+                "tq3": fields.get("tq3", "").lower(),
+                "uq0": fields.get("uq0", "").lower(),
+                "uq1": fields.get("uq1", "").lower(),
+                "uq2": fields.get("uq2", "").lower(),
+                "uq3": fields.get("uq3", "").lower(),
+                "ra": fields.get("ra", "").lower(),
+                "sp": fields.get("sp", "").lower(),
+                "a0": fields.get("a0", "").lower(),
+                "a1": fields.get("a1", "").lower(),
+                "a2": fields.get("a2", "").lower(),
+            }
+        )
+    return {
+        "seen": bool(lines),
+        "count": len(lines),
+        "last": lines[-1][:768] if lines else "",
         "samples": samples,
     }
 

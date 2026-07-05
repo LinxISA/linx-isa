@@ -203,6 +203,10 @@ def _merge_failure_detail(row: dict[str, Any], detail: dict[str, Any]) -> None:
             "fault_trace_count": detail.get("fault_trace_count"),
             "fault_trace_last": detail.get("fault_trace_last"),
             "fault_trace_samples": detail.get("fault_trace_samples", []),
+            "mem_trace_seen": detail.get("mem_trace_seen"),
+            "mem_trace_count": detail.get("mem_trace_count"),
+            "mem_trace_last": detail.get("mem_trace_last"),
+            "mem_trace_samples": detail.get("mem_trace_samples", []),
             "child_maps_seen": child_maps.get("seen"),
             "child_maps_block_count": child_maps.get("block_count"),
             "child_maps_trap_addr": child_maps.get("trap_addr"),
@@ -508,6 +512,10 @@ def _bench_report_row(
         "fault_trace_count": gate_row.get("fault_trace_count"),
         "fault_trace_last": gate_row.get("fault_trace_last"),
         "fault_trace_samples": gate_row.get("fault_trace_samples", []),
+        "mem_trace_seen": gate_row.get("mem_trace_seen"),
+        "mem_trace_count": gate_row.get("mem_trace_count"),
+        "mem_trace_last": gate_row.get("mem_trace_last"),
+        "mem_trace_samples": gate_row.get("mem_trace_samples", []),
         "child_maps_seen": gate_row.get("child_maps_seen"),
         "child_maps_block_count": gate_row.get("child_maps_block_count"),
         "child_maps_trap_addr": gate_row.get("child_maps_trap_addr"),
@@ -807,7 +815,10 @@ def _write_markdown(path: Path, report: dict[str, Any]) -> None:
     fault_rows = [
         row
         for row in report["benchmarks"]
-        if row.get("trap_seen") or row.get("fault_trace_seen") or row.get("pc_watch_seen")
+        if row.get("trap_seen")
+        or row.get("fault_trace_seen")
+        or row.get("mem_trace_seen")
+        or row.get("pc_watch_seen")
     ]
     if fault_rows:
         lines.extend(["", "## Fault And Trap Evidence", ""])
@@ -817,6 +828,11 @@ def _write_markdown(path: Path, report: dict[str, Any]) -> None:
                 lines.append(
                     f"  fault-trace count=`{row.get('fault_trace_count')}` "
                     f"last=`{row.get('fault_trace_last', '')[:240]}`"
+                )
+            if row.get("mem_trace_seen"):
+                lines.append(
+                    f"  mem-trace count=`{row.get('mem_trace_count')}` "
+                    f"last=`{row.get('mem_trace_last', '')[:240]}`"
                 )
             if row.get("child_maps_seen"):
                 mapped = row.get("child_maps_trap_addr_mapped")
