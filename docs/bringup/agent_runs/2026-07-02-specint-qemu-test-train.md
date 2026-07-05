@@ -1,5 +1,70 @@
 # SPECint QEMU test/train bring-up, 2026-07-02
 
+## 2026-07-05 continuation: `500.perlbench_r` add-backref PC-wide trace
+
+Artifact roots:
+
+- `workloads/generated/specint-500-testpl-addbackref-countwindow-qemu-20260705-r1`
+- `workloads/generated/specint-500-testpl-addbackref-pcwide-qemu-20260705-r1`
+
+Command shape:
+
+```bash
+python3 tools/spec2017/run_int_rate_qemu.py \
+  --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 \
+  --qemu /private/tmp/linx-qemu-clean-build/qemu-system-linx64 \
+  --kernel kernel/linux/build-linx-fixed/vmlinux \
+  --stage b --transport initramfs --input-set test \
+  --bench 500.perlbench_r --run-index 2 --timeout 120 \
+  --heartbeat-sec 15 --qemu-heartbeat-interval 1000000000 \
+  --qemu-heartbeat-same-site-warn 4 --guest-heartbeat-sec 1 \
+  --guest-child-maps-bytes 4096 --terminal-failure-grace-sec 3 \
+  --append-extra norandmaps --linux-vm-trace \
+  --qemu-fault-trace --qemu-fault-trace-regs \
+  --qemu-fault-trace-addr-lo 0x0 --qemu-fault-trace-addr-hi 0x10 \
+  --qemu-fault-trace-limit 16 \
+  --qemu-call-trace-ring --qemu-call-trace-ring-size 128 \
+  --qemu-mem-trace --qemu-mem-trace-pre --qemu-mem-trace-regs \
+  --qemu-mem-trace-pc-lo 0x15556f8dc0 \
+  --qemu-mem-trace-pc-hi 0x15556f8dda \
+  --qemu-mem-trace-limit 96
+```
+
+Result:
+
+- QEMU: `/private/tmp/linx-qemu-clean-build/qemu-system-linx64`,
+  `QEMU emulator version 10.2.50 (v10.2.0-1029-g68bebbd9e7b)`,
+  clean marker matching QEMU head
+  `68bebbd9e7b61df45f433830199ff59a49622ad1`.
+- The count-window run over the same PC range and counts
+  `3349000000..3349300000` ended as `live-timeout`, with
+  `heartbeat_running=true`, `heartbeat_site_progress=true`,
+  last count `23000000001`, and last BPC `0xffffffff8010ef74`.
+  It recorded no `LINX_MEM_TRACE` or `LINX_FAULT_TRACE` hits, proving that
+  the prior terminal `Perl_sv_add_backref` site was outside that guessed
+  count window under the instrumented path.
+- The PC-wide run removed only the memory-trace count filter and also ended
+  as `live-timeout`, not trap or deadlock. Heartbeat reached
+  `count=17000000004`, last BPC `0xffffffff80114202`, with site progress.
+- The PC-wide run captured 96 `LINX_MEM_TRACE` records in the
+  `Perl_sv_add_backref` block. The first captured pre-load was
+  `pc=0x15556f8dc2`, `addr=0x3ffffff5e8`, `count=3169430636`.
+  The final captured store at the previously terminal instruction was
+  `pc=0x15556f8dd6`, `addr=0x3fefeee8d0`, `value=0x3fefef9548`,
+  `count=3170035023`, `tq0=0x8`, `tq1=0x7`, `tq2=0x3fefef9380`,
+  `uq0=0x3fefefa5f0`, and `uq1=0x3fefeee890`.
+
+Interpretation:
+
+The `Perl_sv_add_backref` terminal null-store evidence remains valid from the
+low-perturbation fault run, but the PC-wide memory trace proves that normal
+executions of the same block carry nonzero T/U queue operands and mapped store
+addresses. The row is still a live-progress correctness failure, not a
+deadlock. The next loop should stop guessing terminal count windows and instead
+trace queue/control-state preservation across the recurrent `sccp` ACRC/BSTOP
+origin plus the `Perl_sv_add_backref` caller chain, keeping terminal
+fault-trace/call-ring enabled as the low-perturbation proof.
+
 ## 2026-07-05 continuation: `500.perlbench_r` count-window memory trace
 
 Artifact root:
