@@ -88,6 +88,22 @@ FEATURE_FLAGS = {
     "qemu_tlb_fill_hot": "--qemu-tlb-fill-hot",
 }
 
+FEATURE_ENVS = {
+    "template_chain": "LINX_QEMU_TEMPLATE_CHAIN",
+    "qemu_frame_stats": "LINX_QEMU_FRAME_STATS",
+    "qemu_frame_shape_hot": "LINX_QEMU_FRAME_SHAPE_HOT",
+    "qemu_frame_single_reg_fast": "LINX_QEMU_FRAME_SINGLE_REG_FAST",
+    "qemu_frame_page_fast": "LINX_QEMU_FRAME_PAGE_FAST",
+    "qemu_frame_restore_host_load": "LINX_QEMU_FRAME_RESTORE_HOST_LOAD",
+    "qemu_mmu_cache": "LINX_QEMU_MMU_CACHE",
+    "qemu_mmu_cache_stats": "LINX_QEMU_MMU_CACHE_STATS",
+    "qemu_tb_stats": "LINX_QEMU_TB_STATS",
+    "qemu_tlb_stats": "LINX_QEMU_TLB_STATS",
+    "qemu_tlb_inv_hot": "LINX_QEMU_TLB_INV_HOT",
+    "qemu_tlb_fill_stats": "LINX_QEMU_TLB_FILL_STATS",
+    "qemu_tlb_fill_hot": "LINX_QEMU_TLB_FILL_HOT",
+}
+
 
 def _utc_now() -> str:
     return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M:%SZ")
@@ -570,8 +586,9 @@ def _lane_summary(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
 def _features_from_summary(summary: dict[str, Any]) -> dict[str, bool]:
     features = summary.get("qemu_features")
     if isinstance(features, dict):
-        return {key: bool(features.get(key, False)) for key in FEATURE_KEYS}
-    out = {key: bool(summary.get(key, False)) for key in FEATURE_KEYS}
+        out = {key: bool(features.get(key, False)) for key in FEATURE_KEYS}
+    else:
+        out = {key: bool(summary.get(key, False)) for key in FEATURE_KEYS}
     for command_row in summary.get("commands") or []:
         command = command_row.get("command") if isinstance(command_row, dict) else None
         if not isinstance(command, list):
@@ -579,14 +596,48 @@ def _features_from_summary(summary: dict[str, Any]) -> dict[str, bool]:
         tokens = {str(item) for item in command}
         for key, flag in FEATURE_FLAGS.items():
             out[key] = out[key] or flag in tokens
+    for qemu_env in _iter_qemu_debug_envs(summary):
+        _merge_feature_env(out, qemu_env)
     return out
+
+
+def _features_from_summary_and_rows(
+    summary: dict[str, Any],
+    rows: dict[str, dict[str, Any]] | None = None,
+) -> dict[str, bool]:
+    out = _features_from_summary(summary)
+    if rows:
+        for qemu_env in _iter_qemu_debug_envs(rows):
+            _merge_feature_env(out, qemu_env)
+    return out
+
+
+def _merge_feature_env(out: dict[str, bool], qemu_env: dict[str, Any]) -> None:
+    for key, env_name in FEATURE_ENVS.items():
+        value = str(qemu_env.get(env_name, "")).strip().lower()
+        out[key] = out[key] or bool(value and value not in {"0", "false", "no", "off"})
+
+
+def _iter_qemu_debug_envs(value: Any) -> list[dict[str, Any]]:
+    envs: list[dict[str, Any]] = []
+    if isinstance(value, dict):
+        env = value.get("qemu_debug_env")
+        if isinstance(env, dict):
+            envs.append(env)
+        for item in value.values():
+            envs.extend(_iter_qemu_debug_envs(item))
+    elif isinstance(value, list):
+        for item in value:
+            envs.extend(_iter_qemu_debug_envs(item))
+    return envs
 
 
 def _feature_compatibility(
     gate_summary: dict[str, Any],
     profile_summary: dict[str, Any],
+    gate_rows: dict[str, dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
-    gate = _features_from_summary(gate_summary)
+    gate = _features_from_summary_and_rows(gate_summary, gate_rows)
     profile = _features_from_summary(profile_summary)
     mismatches = [
         {
@@ -614,7 +665,11 @@ def build_analysis(
     allow_feature_mismatch: bool = False,
 ) -> dict[str, Any]:
     gate_rows = extract_gate_rows(gate_summary, gate_summary_path)
-    feature_compatibility = _feature_compatibility(gate_summary, profile_summary)
+    feature_compatibility = _feature_compatibility(
+        gate_summary,
+        profile_summary,
+        gate_rows,
+    )
     profile_used = bool(feature_compatibility["ok"] or allow_feature_mismatch)
     profile_rows = _profile_by_bench(profile_summary) if profile_used else {}
 

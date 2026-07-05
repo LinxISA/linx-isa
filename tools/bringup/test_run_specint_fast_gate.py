@@ -118,6 +118,7 @@ class SpecintFastGateTests(unittest.TestCase):
                     "qemu_heartbeat_code_bytes": 0,
                     "qemu_heartbeat_same_site_warn": 0,
                     "fail_9p_timeout": False,
+                    "template_chain": True,
                     "suites": [],
                 },
             )
@@ -129,6 +130,7 @@ class SpecintFastGateTests(unittest.TestCase):
         self.assertIn("qemu_clean_build_for_head: `true`", text)
         self.assertIn("qemu_machine_extra: `dumpdtb=/tmp/virt.dtb`", text)
         self.assertIn("qemu_extra_args: `-accel tcg,split-wx=off`", text)
+        self.assertIn("template_chain: `true`", text)
 
     def test_suite_command_forwards_qemu_heartbeat_debug_switches(self) -> None:
         cmd = gate._suite_command(

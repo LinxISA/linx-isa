@@ -26,6 +26,7 @@ class CompareSpecintQemuRunsTests(unittest.TestCase):
         ok_benches: set[str] | None = None,
         trap_benches: set[str] | None = None,
         features: dict[str, bool] | None = None,
+        debug_env: dict[str, str] | None = None,
     ) -> Path:
         ok_benches = ok_benches or set()
         trap_benches = trap_benches or set()
@@ -66,6 +67,7 @@ class CompareSpecintQemuRunsTests(unittest.TestCase):
                                 "restore_fallback": counts.get(bench, 0) * 4,
                                 "single_fast_fentry": counts.get(bench, 0) * 5,
                             },
+                            "qemu_debug_env": debug_env or {},
                         }
                         for bench in benches
                         if bench not in ok_benches
@@ -139,6 +141,33 @@ class CompareSpecintQemuRunsTests(unittest.TestCase):
             for item in report["qemu_features"]["changed"]
         }
         self.assertEqual(feature_changes["qemu_frame_single_reg_fast"], (False, True))
+
+    def test_feature_delta_infers_template_chain_from_row_debug_env(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            baseline_path = self._summary(
+                root,
+                "base",
+                counts={"505.mcf_r": 100},
+            )
+            candidate_path = self._summary(
+                root,
+                "cand",
+                counts={"505.mcf_r": 110},
+                debug_env={"LINX_QEMU_TEMPLATE_CHAIN": "1"},
+            )
+            report = compare.build_comparison(
+                json.loads(baseline_path.read_text(encoding="utf-8")),
+                json.loads(candidate_path.read_text(encoding="utf-8")),
+                baseline_path,
+                candidate_path,
+            )
+
+        feature_changes = {
+            item["feature"]: (item["baseline"], item["candidate"])
+            for item in report["qemu_features"]["changed"]
+        }
+        self.assertEqual(feature_changes["template_chain"], (False, True))
 
     def test_write_markdown_contains_feature_and_row_table(self) -> None:
         report = {

@@ -700,6 +700,7 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
         f"- qemu_tlb_fill_hot: `{str(bool(summary.get('qemu_tlb_fill_hot', False))).lower()}`",
         f"- qemu_mmu_cache: `{str(bool(summary.get('qemu_mmu_cache', False))).lower()}`",
         f"- qemu_mmu_cache_stats: `{str(bool(summary.get('qemu_mmu_cache_stats', False))).lower()}`",
+        f"- template_chain: `{str(bool(summary.get('template_chain', False))).lower()}`",
         f"- qemu_tlb_fault_trace: `{str(bool(summary.get('qemu_tlb_fault_trace', False))).lower()}`",
         f"- qemu_tlb_fault_trace_limit: `{summary.get('qemu_tlb_fault_trace_limit', 0)}`",
         f"- qemu_tlb_fault_trace_filters: `{_format_filter_dict(summary.get('qemu_tlb_fault_trace_filters') or {})}`",
@@ -837,6 +838,18 @@ def main(argv: list[str]) -> int:
             _env_bool("LINX_SPEC_QEMU_MMU_CACHE_STATS", False),
         ),
         help="Forward QEMU's opt-in MMU-cache heartbeat counters.",
+    )
+    parser.add_argument(
+        "--template-chain",
+        action="store_true",
+        default=_env_bool(
+            "SPEC_QEMU_TEMPLATE_CHAIN",
+            _env_bool(
+                "LINX_SPEC_QEMU_TEMPLATE_CHAIN",
+                _env_bool("LINX_QEMU_TEMPLATE_CHAIN", False),
+            ),
+        ),
+        help="Forward QEMU's opt-in frame-template chaining switch.",
     )
     parser.add_argument(
         "--qemu-tlb-fault-trace",
@@ -1242,7 +1255,10 @@ def main(argv: list[str]) -> int:
                 rc = 0
                 matrix = {"ok": True, "loaded": False, "dry_run": True}
             else:
-                proc = subprocess.run(cmd, check=False)
+                suite_env = os.environ.copy()
+                if args.template_chain:
+                    suite_env["LINX_QEMU_TEMPLATE_CHAIN"] = "1"
+                proc = subprocess.run(cmd, check=False, env=suite_env)
                 rc = proc.returncode
                 matrix = _read_matrix_summary(suite_out / "qemu_matrix_summary.json")
             row_ok = rc == 0 and bool(matrix.get("ok", False))
@@ -1308,6 +1324,7 @@ def main(argv: list[str]) -> int:
         "qemu_tlb_fill_hot": bool(args.qemu_tlb_fill_hot),
         "qemu_mmu_cache": bool(args.qemu_mmu_cache),
         "qemu_mmu_cache_stats": bool(args.qemu_mmu_cache_stats),
+        "template_chain": bool(args.template_chain),
         "qemu_tlb_fault_trace": bool(qemu_tlb_fault_trace_requested),
         "qemu_tlb_fault_trace_limit": args.qemu_tlb_fault_trace_limit,
         "qemu_tlb_fault_trace_filters": qemu_tlb_fault_trace_filters,

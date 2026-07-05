@@ -107,9 +107,14 @@ def _pct_delta(base: int | float | None, candidate: int | float | None) -> float
     return ((candidate - base) / base) * 100.0
 
 
-def _feature_delta(base: dict[str, Any], candidate: dict[str, Any]) -> dict[str, Any]:
-    base_features = analyzer._features_from_summary(base)
-    candidate_features = analyzer._features_from_summary(candidate)
+def _feature_delta(
+    base: dict[str, Any],
+    candidate: dict[str, Any],
+    base_rows: dict[str, dict[str, Any]],
+    candidate_rows: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
+    base_features = analyzer._features_from_summary_and_rows(base, base_rows)
+    candidate_features = analyzer._features_from_summary_and_rows(candidate, candidate_rows)
     changes = [
         {
             "feature": key,
@@ -288,7 +293,12 @@ def build_comparison(
             "qemu_head": _qemu_head(candidate_summary),
             "qemu_provenance": candidate_summary.get("qemu_provenance") or {},
         },
-        "qemu_features": _feature_delta(baseline_summary, candidate_summary),
+        "qemu_features": _feature_delta(
+            baseline_summary,
+            candidate_summary,
+            baseline_rows,
+            candidate_rows,
+        ),
         "summary": {
             "row_count": len(rows),
             "verdict_counts": verdict_counts,
