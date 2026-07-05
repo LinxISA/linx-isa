@@ -151,6 +151,10 @@ Artifact roots:
 - `workloads/generated/specint-500-testpl-malloc-writer-callring-qemu-20260706-r1`
 - `workloads/generated/specint-500-testpl-allocator-lifecycle-callring-qemu-20260706-r1`
 - `workloads/generated/specint-500-testpl-allocator-lifecycle-callring-qemu-20260706-r2`
+- `workloads/generated/specint-500-testpl-syscall-resume-fault-qemu-20260706-r1`
+- `workloads/generated/specint-500-testpl-syscall-resume-fault10-qemu-20260706-r1`
+- `workloads/generated/specint-500-testpl-entersub-source-memtrace-qemu-20260706-r1`
+- `workloads/generated/specint-500-testpl-entersub-faultpc-qemu-20260706-r1`
 
 Command shape for the exact-BPC ACRE run:
 
@@ -317,6 +321,31 @@ Result:
   `fcntl.c` `ACRC`/`BSTOP` path. Use this rerun as perturbation evidence:
   over-narrow terminal-address filtering can move the endpoint, while the
   broader syscall-resume packet is the better current-head boundary.
+- The saved-pointer source probe
+  `specint-500-testpl-entersub-source-memtrace-qemu-20260706-r1` keeps the
+  same current-head QEMU and narrows memory tracing to the terminal
+  `Perl_pp_entersub` producer window `0x155567e68a..0x155567e690`. It ends as
+  heartbeat-backed `live-timeout`, not a terminal trap:
+  `heartbeat_running=true`, `heartbeat_site_progress=true`,
+  `heartbeat_recent_unique_sites=8`, and count delta `7000000006`. It captures
+  `mem_trace_count=65` rows and `syscall_trace_count=32`; the last syscall is
+  again `nr=222` at `tpc=0x155582e9e6`, `bpc=0x155582e9c6`,
+  `pc_next=0x155582e9ea`. The 65 memory rows split across `pc=0x155567e68a`
+  (26 rows), `pc=0x155567e68e` (26 rows), and the terminal store
+  `pc=0x155567e690` (13 rows). All 13 captured store addresses are nonzero
+  mapped-looking saved-pointer targets (`0x3fefefab28..0x3fefefb078`); zero
+  values appear as legitimate stored values, not zero store addresses. The last
+  captured store writes value `0x0` to `addr=0x3fefefacb8` with
+  `tq0=0x3fefefaca8`, `tq1=0x3fefea3518`, `uq0=0x0`, and `uq1=0x1`.
+- The fault-PC-only probe
+  `specint-500-testpl-entersub-faultpc-qemu-20260706-r1` removes memory tracing
+  but keeps the same fault PC window `0x155567e680..0x155567e6a0`, syscall
+  trace, call ring, heartbeat, and Linux VM trace. It also ends as
+  heartbeat-backed `live-timeout`, with `heartbeat_running=true`,
+  `heartbeat_site_progress=true`, `heartbeat_recent_unique_sites=6`, count
+  delta `7000000002`, `fault_trace_seen=false`, and `fault_trace_count=0`.
+  This proves that even PC-window fault tracing around the terminal block can
+  move row 2 away from the uninstrumented `Perl_pp_entersub` terminal trap.
 
 Tool update:
 
@@ -350,14 +379,18 @@ normally before a later terminal shift, while the rebuilt-QEMU rerun confirms
 the current head still fails in this row as user-space pointer/queue
 corruption. The syscall-resume probe now places a fresh current-head boundary
 between repeated musl `mmap`/`fcntl` syscall-return paths and a subsequent
-`Perl_pp_entersub` null saved-pointer store. The next loop should move
-downstream from static allocator block lowering and broad ACRE/fault tracing:
-use a low-perturbation watch on the saved pointer source for
-`Perl_pp_entersub` linked `0x4012968a..0x40129690`, correlate it with the last
-`fcntl.c`/`mmap.c` `ACRC`/`BSTOP` origin, and preserve the call ring. Keep ACRE
-traces BPC/count-filtered and avoid terminal-address-only filters as primary
-evidence, because both broad ACRE and over-narrow fault filters perturb this
-row.
+`Perl_pp_entersub` null saved-pointer store. The two `Perl_pp_entersub`
+follow-ups show that the terminal block normally builds valid nonzero saved
+pointer operands, but tracing inside that hot block perturbs the endpoint into
+heartbeat-backed live-timeout. The next loop should avoid logging every
+terminal-block execution: add or use a purpose-built default-off diagnostic
+that records only the first zero saved pointer at `pc=0x155567e690`, or trace
+the producer of the `[sp+296]` saved-pointer slot before entering the terminal
+block. Preserve the call ring and the musl `fcntl.c`/`mmap.c`
+`ACRC`/`BSTOP` origin correlation. Keep ACRE traces BPC/count-filtered and
+avoid terminal-address-only filters as primary evidence, because broad ACRE,
+over-narrow fault filters, and terminal-block mem/fault tracing all perturb
+this row.
 
 ## 2026-07-05 continuation: `500.perlbench_r` `Perl_do_exec3` operand provenance
 
