@@ -55,6 +55,8 @@ FEATURE_KEYS = (
     "qemu_frame_shape_hot",
     "qemu_frame_single_reg_fast",
     "qemu_frame_restore_host_load",
+    "qemu_mmu_cache",
+    "qemu_mmu_cache_stats",
     "qemu_tb_stats",
     "qemu_tlb_stats",
     "qemu_tlb_inv_hot",
@@ -63,10 +65,13 @@ FEATURE_KEYS = (
 )
 
 FEATURE_FLAGS = {
+    "template_chain": "--template-chain",
     "qemu_frame_stats": "--qemu-frame-stats",
     "qemu_frame_shape_hot": "--qemu-frame-shape-hot",
     "qemu_frame_single_reg_fast": "--qemu-frame-single-reg-fast",
     "qemu_frame_restore_host_load": "--qemu-frame-restore-host-load",
+    "qemu_mmu_cache": "--qemu-mmu-cache",
+    "qemu_mmu_cache_stats": "--qemu-mmu-cache-stats",
     "qemu_tb_stats": "--qemu-tb-stats",
     "qemu_tlb_stats": "--qemu-tlb-stats",
     "qemu_tlb_inv_hot": "--qemu-tlb-inv-hot",
@@ -536,9 +541,13 @@ def build_analysis(
     profile_summary: dict[str, Any],
     gate_summary_path: Path,
     profile_summary_path: Path,
+    *,
+    allow_feature_mismatch: bool = False,
 ) -> dict[str, Any]:
     gate_rows = extract_gate_rows(gate_summary, gate_summary_path)
-    profile_rows = _profile_by_bench(profile_summary)
+    feature_compatibility = _feature_compatibility(gate_summary, profile_summary)
+    profile_used = bool(feature_compatibility["ok"] or allow_feature_mismatch)
+    profile_rows = _profile_by_bench(profile_summary) if profile_used else {}
 
     rows = [
         _bench_report_row(gate_row, profile_rows.get(bench))
@@ -546,10 +555,16 @@ def build_analysis(
     ]
     passing = [row["bench"] for row in rows if row.get("gate_ok")]
     failing = [row["bench"] for row in rows if not row.get("gate_ok")]
-    feature_compatibility = _feature_compatibility(gate_summary, profile_summary)
+    profile_use_reason = (
+        "feature-compatible"
+        if feature_compatibility["ok"]
+        else "allowed-feature-mismatch"
+        if allow_feature_mismatch
+        else "suppressed-feature-mismatch"
+    )
 
     return {
-        "schema_version": "linx-specint-qemu-progress-analysis-v1",
+        "schema_version": "linx-specint-qemu-progress-analysis-v2",
         "generated_at_utc": _utc_now(),
         "gate_summary": str(gate_summary_path),
         "profile_summary": str(profile_summary_path),
@@ -565,6 +580,8 @@ def build_analysis(
             "gate_provenance": gate_summary.get("qemu_provenance") or {},
             "profile_provenance": profile_summary.get("qemu_provenance") or {},
             "feature_compatibility": feature_compatibility,
+            "profile_used_for_classification": profile_used,
+            "profile_use_reason": profile_use_reason,
         },
         "completion_status": {
             "spec_train_correctness_complete": not failing,
@@ -598,6 +615,8 @@ def _write_markdown(path: Path, report: dict[str, Any]) -> None:
         f"- gate_qemu_head: `{gate_head}`",
         f"- profile_qemu_head: `{profile_head}`",
         f"- qemu_feature_compatible: `{str(feature_compatibility.get('ok', True)).lower()}`",
+        f"- profile_used_for_classification: `{str(qemu.get('profile_used_for_classification', True)).lower()}`",
+        f"- profile_use_reason: `{qemu.get('profile_use_reason', 'unknown')}`",
         "",
     ]
     if feature_mismatches:
@@ -692,6 +711,15 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--profile-summary", type=Path, default=DEFAULT_PROFILE_SUMMARY)
     parser.add_argument("--report-out", type=Path, default=DEFAULT_REPORT_OUT)
     parser.add_argument("--out-md", type=Path, default=None)
+    parser.add_argument(
+        "--allow-feature-mismatch",
+        action="store_true",
+        help=(
+            "Use profile samples for lane classification even when gate/profile "
+            "QEMU feature switches differ. By default mismatched profiles are "
+            "reported but suppressed from row classification."
+        ),
+    )
     return parser.parse_args(argv)
 
 
@@ -712,6 +740,7 @@ def main(argv: list[str] | None = None) -> int:
         _load_json(profile_summary_path),
         gate_summary_path,
         profile_summary_path,
+        allow_feature_mismatch=args.allow_feature_mismatch,
     )
     report_out.parent.mkdir(parents=True, exist_ok=True)
     report_out.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")

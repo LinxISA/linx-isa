@@ -139,6 +139,34 @@ reduction/batching around the recurring hot PCs (`0xffffffff800db20c`,
 fast paths for rows such as `505.mcf_r`, and a separate 9p/kernel transport
 path for `525.x264_r`, where the latest run records only 95 user TLB fills.
 
+Feature-matched MMU-cache profile:
+`workloads/generated/specint-profile-suite-train-mmuc-current-qemu-20260705-r1/`
+samples all nine non-sentinel train rows on the same current QEMU head
+`da8d7cae1654201741bf4aa8c26f4abc0ec830ea` with the same MMU-cache, frame,
+TLB, TLB-fill, TLB-invalidation-hot, and TB stats switches used by the r3 gate.
+`tools/spec2017/analyze_specint_qemu_progress.py` now treats feature mismatch
+as profile-suppression by default, includes MMU-cache switches in the
+compatibility check, and requires `--allow-feature-mismatch` for exploratory
+stale-profile lane joins. The feature-clean joined report is
+`workloads/generated/specint-qemu-progress-analysis-mmuc-current-20260705-r3/`
+and records `qemu_feature_compatible=true` plus
+`profile_used_for_classification=true`.
+
+Feature-clean lane split:
+
+| Lane | Benchmarks | Top profile signal |
+| --- | --- | --- |
+| `template-tb-mmu-throughput` | `500`, `502`, `505`, `520`, `523`, `541` | aggregate `tb_lookup=934`, `cpu_exec_setjmp=907`, `linx_template_fentry_impl=571`, `linx_template_fret_stk_impl=557`, `probe_access_internal=454`, `mmu_lookup1=444` |
+| `linux-tlbi-attribution` | `531`, `557` | aggregate `helper_linx_tlb_iv=559`; focused rows top out at `531 helper_linx_tlb_iv=301` and `557 helper_linx_tlb_iv=258` |
+| `transport-9p-throughput` | `525` | `cpu_exec_setjmp=200`, `cpu_exec_loop=183`, `linx_template_fentry_impl=143`, `tb_lookup=142`, `get_bql_locked=132` |
+
+Updated loop rule: do not use a profile summary to assign solution lanes unless
+`qemu_feature_compatible=true` or the report was intentionally generated with
+`--allow-feature-mismatch`. The MMU-cache gate's next implementation work is
+therefore: first, a QEMU dispatch/template/soft-MMU prototype guarded by
+`999.specrand_ir` for the six broad rows; second, Linux TLBI source reduction
+for `531`/`557`; third, a 9p/kernel transport profile for `525`.
+
 ### Clean `505.mcf_r` Post-Start Profile and Frame-Restore A/B
 
 `workloads/generated/specint-profile-505-clean-qemu-20260706-r1/` samples the

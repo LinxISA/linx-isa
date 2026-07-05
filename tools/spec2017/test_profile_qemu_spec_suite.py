@@ -81,6 +81,8 @@ class ProfileQemuSpecSuiteTests(unittest.TestCase):
             qemu_frame_stats=True,
             qemu_frame_shape_hot=True,
             qemu_frame_single_reg_fast=True,
+            qemu_mmu_cache=True,
+            qemu_mmu_cache_stats=True,
             qemu_tb_stats=True,
             qemu_tlb_stats=False,
             qemu_tlb_inv_hot=False,
@@ -99,6 +101,8 @@ class ProfileQemuSpecSuiteTests(unittest.TestCase):
         self.assertIn("--qemu-frame-stats", cmd)
         self.assertIn("--qemu-frame-shape-hot", cmd)
         self.assertIn("--qemu-frame-single-reg-fast", cmd)
+        self.assertIn("--qemu-mmu-cache", cmd)
+        self.assertIn("--qemu-mmu-cache-stats", cmd)
         self.assertIn("--qemu-tb-stats", cmd)
         self.assertEqual(cmd[cmd.index("--bench") + 1], "525.x264_r")
 
@@ -125,6 +129,8 @@ class ProfileQemuSpecSuiteTests(unittest.TestCase):
             qemu_frame_stats=True,
             qemu_frame_shape_hot=False,
             qemu_frame_single_reg_fast=True,
+            qemu_mmu_cache=True,
+            qemu_mmu_cache_stats=True,
             qemu_tb_stats=True,
             qemu_tlb_stats=True,
             qemu_tlb_inv_hot=False,
@@ -138,6 +144,8 @@ class ProfileQemuSpecSuiteTests(unittest.TestCase):
         self.assertTrue(features["qemu_frame_stats"])
         self.assertFalse(features["qemu_frame_shape_hot"])
         self.assertTrue(features["qemu_frame_single_reg_fast"])
+        self.assertTrue(features["qemu_mmu_cache"])
+        self.assertTrue(features["qemu_mmu_cache_stats"])
         self.assertTrue(features["qemu_tb_stats"])
         self.assertTrue(features["qemu_tlb_stats"])
         self.assertFalse(features["qemu_tlb_inv_hot"])

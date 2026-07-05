@@ -232,6 +232,8 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                 "profile": "train",
                 "qemu_frame_stats": True,
                 "qemu_frame_single_reg_fast": False,
+                "qemu_mmu_cache": True,
+                "qemu_mmu_cache_stats": True,
                 "suites": [],
             }
             profile = {
@@ -240,6 +242,8 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                 "qemu_features": {
                     "qemu_frame_stats": False,
                     "qemu_frame_single_reg_fast": True,
+                    "qemu_mmu_cache": False,
+                    "qemu_mmu_cache_stats": False,
                 },
                 "rows": [],
             }
@@ -258,6 +262,69 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
         }
         self.assertEqual(mismatches["qemu_frame_stats"], (True, False))
         self.assertEqual(mismatches["qemu_frame_single_reg_fast"], (False, True))
+        self.assertEqual(mismatches["qemu_mmu_cache"], (True, False))
+        self.assertEqual(mismatches["qemu_mmu_cache_stats"], (True, False))
+        self.assertFalse(report["qemu"]["profile_used_for_classification"])
+        self.assertEqual(report["qemu"]["profile_use_reason"], "suppressed-feature-mismatch")
+
+    def test_mismatched_profile_is_suppressed_unless_allowed(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            gate_path = root / "specint_fast_gate_summary.json"
+            profile_path = root / "profile_suite_summary.json"
+            gate = {
+                "profile": "train",
+                "qemu_mmu_cache": True,
+                "suites": [
+                    {
+                        "name": "train-all",
+                        "input_set": "train",
+                        "stage": "b",
+                        "transports": ["initramfs"],
+                        "benches": ["531.deepsjeng_r"],
+                        "failure_classes": {"531.deepsjeng_r": "live-timeout"},
+                        "failure_details": {
+                            "531.deepsjeng_r": {
+                                "failure_class": "live-timeout",
+                                "heartbeat_running": True,
+                                "heartbeat_site_progress": True,
+                                "heartbeat_last_count": 53,
+                                "heartbeat_last_bpc": "0x531",
+                            },
+                        },
+                    }
+                ],
+            }
+            profile = {
+                "input_set": "train",
+                "stage": "b",
+                "qemu_features": {"qemu_mmu_cache": False},
+                "rows": [
+                    {
+                        "bench": "531.deepsjeng_r",
+                        "transport": "initramfs",
+                        "sample_ok": True,
+                        "top_qemu": [{"symbol": "helper_linx_tlb_iv", "count": 120}],
+                    }
+                ],
+            }
+
+            suppressed = analyzer.build_analysis(gate, profile, gate_path, profile_path)
+            allowed = analyzer.build_analysis(
+                gate,
+                profile,
+                gate_path,
+                profile_path,
+                allow_feature_mismatch=True,
+            )
+
+        self.assertFalse(suppressed["qemu"]["feature_compatibility"]["ok"])
+        self.assertFalse(suppressed["qemu"]["profile_used_for_classification"])
+        self.assertEqual(suppressed["benchmarks"][0]["lane"], "live-throughput-unattributed")
+        self.assertEqual(suppressed["benchmarks"][0]["top_qemu"], [])
+        self.assertTrue(allowed["qemu"]["profile_used_for_classification"])
+        self.assertEqual(allowed["qemu"]["profile_use_reason"], "allowed-feature-mismatch")
+        self.assertEqual(allowed["benchmarks"][0]["lane"], "linux-tlbi-attribution")
 
     def test_stage_qemu_detail_carries_fault_trace_evidence(self) -> None:
         with tempfile.TemporaryDirectory() as td:
@@ -344,6 +411,8 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
         gate = {
             "template_chain": True,
             "qemu_frame_stats": True,
+            "qemu_mmu_cache": True,
+            "qemu_mmu_cache_stats": True,
             "qemu_tlb_fill_hot": True,
         }
         profile = {
@@ -353,7 +422,10 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                     "command": [
                         "python3",
                         "run_stage_qemu_matrix.py",
+                        "--template-chain",
                         "--qemu-frame-stats",
+                        "--qemu-mmu-cache",
+                        "--qemu-mmu-cache-stats",
                         "--qemu-tlb-fill-hot",
                     ]
                 }
@@ -363,7 +435,10 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
         compatibility = analyzer._feature_compatibility(gate, profile)
 
         self.assertTrue(compatibility["ok"])
+        self.assertTrue(compatibility["profile"]["template_chain"])
         self.assertTrue(compatibility["profile"]["qemu_frame_stats"])
+        self.assertTrue(compatibility["profile"]["qemu_mmu_cache"])
+        self.assertTrue(compatibility["profile"]["qemu_mmu_cache_stats"])
         self.assertTrue(compatibility["profile"]["qemu_tlb_fill_hot"])
 
     def test_write_markdown_includes_lane_summary(self) -> None:
@@ -385,6 +460,8 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                         }
                     ],
                 },
+                "profile_used_for_classification": False,
+                "profile_use_reason": "suppressed-feature-mismatch",
             },
             "completion_status": {
                 "spec_train_correctness_complete": False,
@@ -432,6 +509,8 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
 
         self.assertIn("SPECint QEMU Progress Analysis", text)
         self.assertIn("qemu_feature_compatible: `false`", text)
+        self.assertIn("profile_used_for_classification: `false`", text)
+        self.assertIn("profile_use_reason: `suppressed-feature-mismatch`", text)
         self.assertIn("qemu_frame_stats", text)
         self.assertIn("template-tb-mmu-throughput", text)
         self.assertIn("tb_lookup=3", text)
