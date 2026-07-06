@@ -217,6 +217,48 @@ transport despite its similar template/TB/MMU-heavy profile, because the row
 still runs through the 9p large-input shard. Keep `999.specrand_ir` as the
 strict before/after guard for every speed experiment.
 
+### Latest Submitted-QEMU Speedpreset Refresh
+
+`workloads/generated/specint-train-all-speedpreset-latest-b8faff-qemu-20260706-r1/`
+reruns the bounded all-row train speedpreset on submitted QEMU head
+`b8faff79be9a157fa5100f86957532652f79d679`, version
+`QEMU emulator version 10.2.50 (v10.2.0-1040-gb8faff79be9)`. The QEMU source
+is tracked-clean, and the feature stack matches the previous clean speedpreset
+gate: `--template-chain`, `--qemu-frame-single-reg-fast`, `--qemu-mmu-cache`,
+extended heartbeat BPC liveness, and no debug-counter stack.
+
+The latest submitted head still boots Linux and covers every train row:
+`999.specrand_ir` passes the strict train hash (`rand.11.out` `0x973dcfc2`),
+while all nine real rows are heartbeat-backed `live-timeout` rows with site
+progress, no panic, and no trap classification.
+
+| Benchmark | Transport | Count | BPC | Result |
+| --- | --- | ---: | --- | --- |
+| `500.perlbench_r` | initramfs | 10000000000 | `0x15556d95a2` | `live-timeout` |
+| `502.gcc_r` | initramfs | 9000000004 | `0x15559405ae` | `live-timeout` |
+| `505.mcf_r` | initramfs | 9000000005 | `0x155555cbe2` | `live-timeout` |
+| `520.omnetpp_r` | initramfs | 5000000000 | `0x15557f1444` | `live-timeout` |
+| `523.xalancbmk_r` | initramfs | 8000000003 | `0x1555762ba6` | `live-timeout` |
+| `525.x264_r` | 9p | 9000000003 | `0xffffffff8011485a` | `live-timeout` |
+| `531.deepsjeng_r` | initramfs | 13000000017 | `0x155555b92e` | `live-timeout` |
+| `541.leela_r` | initramfs | 6000000007 | `0x155558e77c` | `live-timeout` |
+| `557.xz_r` | initramfs | 12000000004 | `0xffffffff803e91e8` | `live-timeout` |
+| `999.specrand_ir` | initramfs | 0 | `0x0` | strict hash passes |
+
+`workloads/generated/specint-qemu-run-compare-speedpreset-b8faff-vs-4b7a-20260706-r1/report.md`
+compares this latest-head gate with the previous clean speedpreset gate
+`workloads/generated/specint-train-all-speedpreset-current-clean-qemu-20260706-r2/`.
+Feature switches are unchanged. The comparison is mixed: `500.perlbench_r`
+improves by 11.11%, `531.deepsjeng_r` improves by 8.33%, `557.xz_r` regresses
+by 7.69%, and the remaining six real rows are flat.
+
+Loop update: latest QEMU is still correctness-sentinel clean and
+throughput-limited, not deadlocked. Do not route the next speed patch from the
+`500`/`531` gains alone because the same submitted stack regresses `557`.
+Keep the next prototype focused on the component-led soft-MMU/probe/load lane,
+with `999.specrand_ir` plus focused `505`/`541`/`557` controls before another
+all-row promotion.
+
 ### Latest MMU-Cache Train-All Rerun
 
 `workloads/generated/specint-train-all-mmuc-current-qemu-20260705-r3/`
