@@ -340,6 +340,31 @@ soft-MMU load/probe lookup. Keep broad cputlb invalidation changes behind new
 evidence because this delayed sample shows the row continues through a
 template/TB/soft-MMU-heavy steady phase.
 
+Focused restore-host-load A/B on the same submitted QEMU head confirms the
+frame-restore part of that lane is actionable for `557.xz_r`.
+`workloads/generated/specint-557-frame-restore-control-b8faff-qemu-20260706-r1/`
+and
+`workloads/generated/specint-557-frame-restore-hostload-b8faff-qemu-20260706-r1/`
+both use QEMU head `b8faff79be9a157fa5100f86957532652f79d679` with
+`--template-chain`, `--qemu-frame-single-reg-fast`, `--qemu-mmu-cache`, frame
+stats, TB stats, TLBI stats, and TLBI hot attribution. The only feature
+difference is `--qemu-frame-restore-host-load`. In the same 75-second train
+shape, the control reaches `21000000003` instructions at BPC `0x155558d4f8`
+with `fr_restore_fallback=311347400` and `fr_restore_host=0`; the candidate
+reaches `25000000014` instructions at the same BPC with
+`fr_restore_host=468006587`, `fr_restore_fallback=0`, and no restore mismatch.
+TLBI counters are unchanged (`tlbi_iv=3827251`, `tlbi_iall=15`) and TB flush
+stays zero, so the gain is from restore/load handling rather than a different
+Linux invalidation phase. Strict train `999.specrand_ir` also passes with this
+stack in
+`workloads/generated/specint-999-frame-restore-hostload-b8faff-qemu-20260706-r1/`
+(`rand.11.out`, 871 bytes, `0x973dcfc2`).
+
+Loop update: keep restore-host loads default-off for all-row gates because the
+same-head train-all comparison still regresses several rows, but use
+`--qemu-frame-restore-host-load` as the current focused `557.xz_r` speed switch
+when profiling or prototyping the remaining template/TB/soft-MMU costs.
+
 ### Latest MMU-Cache Train-All Rerun
 
 `workloads/generated/specint-train-all-mmuc-current-qemu-20260705-r3/`
