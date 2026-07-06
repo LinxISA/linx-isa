@@ -4339,6 +4339,31 @@ handled page/access faults. The next diagnostic should widen the delivery trace
 past `count=3161914921` and add Linux-side `do_page_fault` / `do_trap` signal
 classification around the terminal `trapno=0xc000000002000001` path.
 
+## Rejected MMU-Cache 4K-Only Probe
+
+On 2026-07-06, a local QEMU/tooling prototype added a default-off
+`LINX_QEMU_MMU_CACHE_4K_ONLY` experiment that limited the page-walk result
+cache to confirmed 4 KiB translations and skipped larger block translations.
+The intent was to reduce lookup candidate probes after the counter-light
+`505.mcf_r` post-start profile
+`workloads/generated/specint-505-poststart-profile-speedpreset-qemu-20260706-r1/`
+showed `mmu_lookup1`, `probe_access_internal`, `tlb_set_page_full`, and
+`linx_mmu_translate` in the hot QEMU frames.
+
+The strict train sentinel rejected the lane before focused real-row A/B:
+`workloads/generated/specint-999-speedstack-4konly-qemu-20260706-r1/` ran
+`999.specrand_ir` with `--qemu-speed-stack --qemu-mmu-cache-4k-only` and
+timed out after 300 seconds. The row remained heartbeat-live with BPC site
+progress (`bpc=0xffffffff8004a87c`, recent site count `6`, count delta about
+`7B`), so this was not a deadlock or wrong-output trap, but it failed the
+required strict sentinel budget. The prototype was dropped and the switch was
+not submitted.
+
+Decision: do not repeat a 4K-only MMU-cache shape that disables cached block
+translations. Future page-walk cache experiments must preserve large-mapping
+reuse or prove, with the `999.specrand_ir` sentinel first, that any safer
+subpage strategy does not regress the small strict train row.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.
