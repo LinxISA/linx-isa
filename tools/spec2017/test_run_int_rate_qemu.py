@@ -1647,6 +1647,26 @@ class RunIntRateQemuTests(unittest.TestCase):
             ],
         )
 
+    def test_tlb_inv_hot_symbolization_follows_hot_switch(self) -> None:
+        self.assertTrue(
+            runner._should_symbolize_tlb_inv_hot(
+                symbolize_heartbeat=False,
+                qemu_tlb_inv_hot=True,
+            )
+        )
+        self.assertTrue(
+            runner._should_symbolize_tlb_inv_hot(
+                symbolize_heartbeat=True,
+                qemu_tlb_inv_hot=False,
+            )
+        )
+        self.assertFalse(
+            runner._should_symbolize_tlb_inv_hot(
+                symbolize_heartbeat=False,
+                qemu_tlb_inv_hot=False,
+            )
+        )
+
     def test_kernel_symbols_suggest_panic_loop_from_panic_source(self) -> None:
         self.assertTrue(
             runner._kernel_symbols_suggest_panic_loop(

@@ -279,6 +279,35 @@ row. Keep `541.leela_r` as a mixed template/TB/MMU control and route the
 latest `557.xz_r` regression through TLBI-source attribution before treating it
 as a generic soft-MMU regression.
 
+Focused latest-head `557.xz_r` TLBI attribution:
+`workloads/generated/specint-557-tlbi-hot-speedpreset-b8faff-qemu-20260706-r1/`
+runs train `557.xz_r` for 90s on QEMU head
+`b8faff79be9a157fa5100f86957532652f79d679` with `--template-chain`,
+`--qemu-frame-single-reg-fast`, `--qemu-mmu-cache`, `--qemu-tlb-stats`, and
+`--qemu-tlb-inv-hot`. The row remains a heartbeat-backed `live-timeout`, not a
+trap or deadlock: the last heartbeat reaches `25000000010`, has
+`recent-sites=5`, and advances by `7000000004` counts in the recent window.
+The TLBI counter reaches `tlbi_iv=3827251`, but its last invalidation is at
+count `16730425378`; the benchmark then continues through user BPCs such as
+`0x155558d6da` without further TLBI growth. The maximum hot burst is still the
+shared early fixmap pair `0xffffffff804059bc` / `0xffffffff80405a0e`
+(`get_p4d_virt_fixmap`, `max_delta=458884`), followed by steady
+`mm/memory.c` sites around `0xffffffff800db20c` and `0xffffffff800d94e0`.
+
+The post-fix proof
+`workloads/generated/specint-557-tlbi-hot-symbolized-b8faff-qemu-20260706-r1/`
+verifies the SPEC runner now automatically symbolizes TLBI hot-source PCs when
+`--qemu-tlb-inv-hot` is enabled, even without broad `--symbolize-heartbeat`.
+Its markdown prints `tlbi-hot-symbolized`; JSON records
+`tlb_inv_hot_kernel_symbolized=true` with symbols for `get_p4d_virt_fixmap`,
+`__set_fixmap`, `memory.c`, and `pageattr.c`.
+
+Loop update: `557.xz_r` no longer needs to stay in the TLBI lane for the next
+QEMU speed loop. Keep the Linux fixmap/fault-update TLBI evidence as background
+cost, but the row's post-TLBI progress means the next focused work should join
+`557` with the template/TB/soft-MMU lane instead of changing broad QEMU cputlb
+invalidation semantics.
+
 ### Latest MMU-Cache Train-All Rerun
 
 `workloads/generated/specint-train-all-mmuc-current-qemu-20260705-r3/`

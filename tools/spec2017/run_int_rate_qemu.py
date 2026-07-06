@@ -3245,9 +3245,14 @@ def _run_qemu(
     )
     if symbolize_heartbeat:
         heartbeat_kernel_symbols = _symbolize_heartbeat_kernel_sites(text, kernel)
-        tlb_inv_hot_kernel_symbols = _symbolize_tlb_inv_hot_kernel_sites(text, kernel)
     else:
         heartbeat_kernel_symbols = _empty_kernel_symbol_result(False, kernel)
+    if _should_symbolize_tlb_inv_hot(
+        symbolize_heartbeat=symbolize_heartbeat,
+        qemu_tlb_inv_hot=qemu_tlb_inv_hot,
+    ):
+        tlb_inv_hot_kernel_symbols = _symbolize_tlb_inv_hot_kernel_sites(text, kernel)
+    else:
         tlb_inv_hot_kernel_symbols = _empty_kernel_symbol_result(False, kernel)
     if (
         classification["class"]
@@ -4026,6 +4031,10 @@ def _symbolize_tlb_inv_hot_kernel_sites(text: str, kernel: Path) -> dict[str, An
         kernel,
         label="tlb-inv-hot",
     )
+
+
+def _should_symbolize_tlb_inv_hot(*, symbolize_heartbeat: bool, qemu_tlb_inv_hot: bool) -> bool:
+    return bool(symbolize_heartbeat or qemu_tlb_inv_hot)
 
 
 def _empty_user_symbol_result(enabled: bool, elf: Path | None = None) -> dict[str, Any]:
