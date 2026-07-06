@@ -259,6 +259,26 @@ Keep the next prototype focused on the component-led soft-MMU/probe/load lane,
 with `999.specrand_ir` plus focused `505`/`541`/`557` controls before another
 all-row promotion.
 
+Focused latest-head post-start profiles:
+`workloads/generated/specint-profile-suite-softmmu-focus-b8faff-qemu-20260706-r1/`
+samples `505.mcf_r`, `541.leela_r`, and `557.xz_r` on the same QEMU head and
+speed stack. The profiler summary records `template_chain=true`,
+`qemu_frame_single_reg_fast=true`, and `qemu_mmu_cache=true`; the suite driver
+now also forwards `--template-chain` explicitly into the nested matrix command,
+so future profile command lines are self-describing instead of relying only on
+the QEMU environment.
+
+| Benchmark | Dominant profile signal | Top QEMU frames |
+| --- | --- | --- |
+| `505.mcf_r` | soft-MMU/page-walk | `mmu_lookup1=130`, `fentry=113`, `fret_stk=109`, `tb_lookup=106`, `probe_access_internal=66`, `tlb_set_page_full=62`, `linx_mmu_translate=55`, `do_ld8_mmu=51` |
+| `541.leela_r` | mixed template/TB/soft-MMU | `fret_stk=302`, `fentry=247`, `tb_lookup=209`, `probe_access_internal=174`, `qht_lookup_custom=174`, `helper_lookup_tb_ptr=166`, `mmu_lookup1=140`, `do_ld8_mmu=105` |
+| `557.xz_r` | TLBI-skewed | `helper_linx_tlb_iv=120`, `tb_lookup=49`, `fentry=48`, `helper_lookup_tb_ptr=45`, `helper_linx_ssr_read=44`, `probe_access_internal=29`, `mmu_lookup1=28` |
+
+Loop update: use `505.mcf_r` as the next focused soft-MMU/probe/load prototype
+row. Keep `541.leela_r` as a mixed template/TB/MMU control and route the
+latest `557.xz_r` regression through TLBI-source attribution before treating it
+as a generic soft-MMU regression.
+
 ### Latest MMU-Cache Train-All Rerun
 
 `workloads/generated/specint-train-all-mmuc-current-qemu-20260705-r3/`

@@ -167,6 +167,7 @@ def _profile_command(args: argparse.Namespace, bench: str, bench_root: Path) -> 
             str(matrix_out),
         ]
     )
+    _add_bool(cmd, args.template_chain, "--template-chain")
     _add_bool(cmd, args.qemu_frame_stats, "--qemu-frame-stats")
     _add_bool(cmd, args.qemu_frame_shape_hot, "--qemu-frame-shape-hot")
     _add_bool(cmd, args.qemu_frame_single_reg_fast, "--qemu-frame-single-reg-fast")
