@@ -22,6 +22,15 @@ The gate uses initramfs by default to avoid 9p overhead while debugging QEMU
 and Linux correctness. Use `--transports 9p,initramfs` only when transport
 coverage is the point of the run.
 
+Use `--qemu-speed-stack` for bounded throughput gates and focused A/B speed
+probes. It expands to the current default-off speed features without heavy
+attribution counters: `--qemu-frame-single-reg-fast`, `--qemu-mmu-cache`,
+`--template-chain`, and `--qemu-heartbeat-extended`. Use `--qemu-debug-stack`
+when row attribution is the goal; it layers frame/TLB/TLB-fill/MMU-cache/TB
+counters and hot-site sketches on top of the speed stack. Do not compare speed
+results across mixed speed-only and debug-counter stacks without recording the
+feature split in the summary.
+
 For bounded 9p transport coverage, use `run_stage_qemu_matrix.py
 --fail-9p-timeout` with train input. That mode treats a per-run 9p timeout as a
 fast-gate failure and stops the current benchmark instead of continuing every
@@ -449,6 +458,15 @@ both reached 21B bounded instructions with effectively identical TB lookup,
 MMU-cache, TLBI, and frame counters. Do not optimize TLB-fill stats overhead
 as the next 505 speed lane; target real execution costs in frame helper exits,
 generic soft-MMU lookup/probe, TB dispatch, and page-walk cache shape.
+
+The speed-only control
+`workloads/generated/specint-505-speedfeatures-only-qemu-20260706-r1/` keeps
+the same speed features and BPC heartbeat while dropping the heavy
+debug-counter stack. It reaches 23B bounded instructions in the same 75-second
+shape versus 21B for the debug-counter controls, about +9.5%. Treat this as
+gate-shape evidence, not SPEC closure: the row remains a live-timeout, but
+future throughput probes should use `--qemu-speed-stack` and reserve
+`--qemu-debug-stack` for attribution runs.
 
 Frame-shape attribution update:
 QEMU now has an opt-in frame-template shape sketch for SPEC heartbeat runs. Set

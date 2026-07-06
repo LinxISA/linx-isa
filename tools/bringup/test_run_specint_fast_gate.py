@@ -4,10 +4,36 @@ from __future__ import annotations
 import unittest
 import sys
 import tempfile
+from types import SimpleNamespace
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import run_specint_fast_gate as gate
+
+
+def _stack_args(**overrides: bool) -> SimpleNamespace:
+    values = {
+        "qemu_debug_stack": False,
+        "qemu_speed_stack": False,
+        "qemu_frame_stats": False,
+        "qemu_frame_shape_hot": False,
+        "qemu_frame_single_reg_fast": False,
+        "qemu_frame_page_fast": False,
+        "qemu_frame_restore_host_load": False,
+        "qemu_tlb_stats": False,
+        "qemu_tlb_inv_hot": False,
+        "qemu_tlb_fill_stats": False,
+        "qemu_tlb_fill_hot": False,
+        "qemu_mmu_cache": False,
+        "qemu_mmu_cache_stats": False,
+        "qemu_mmu_cache_assoc2": False,
+        "template_chain": False,
+        "qemu_heartbeat_extended": False,
+        "qemu_tb_stats": False,
+        "qemu_tb_hot": False,
+    }
+    values.update(overrides)
+    return SimpleNamespace(**values)
 
 
 class SpecintFastGateTests(unittest.TestCase):
@@ -58,6 +84,47 @@ class SpecintFastGateTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             with self.assertRaisesRegex(SystemExit, "insufficient free space"):
                 gate._check_out_dir_free_space(Path(td), 1024 * 1024)
+
+    def test_qemu_speed_stack_preset_enables_speed_features_only(self) -> None:
+        args = _stack_args(qemu_speed_stack=True)
+
+        gate._apply_qemu_stack_presets(args)
+
+        self.assertTrue(args.qemu_frame_single_reg_fast)
+        self.assertTrue(args.qemu_mmu_cache)
+        self.assertTrue(args.template_chain)
+        self.assertTrue(args.qemu_heartbeat_extended)
+        self.assertFalse(args.qemu_frame_stats)
+        self.assertFalse(args.qemu_tlb_stats)
+        self.assertFalse(args.qemu_tlb_fill_stats)
+        self.assertFalse(args.qemu_mmu_cache_stats)
+        self.assertFalse(args.qemu_tb_stats)
+        self.assertFalse(args.qemu_frame_page_fast)
+        self.assertFalse(args.qemu_frame_restore_host_load)
+        self.assertFalse(args.qemu_mmu_cache_assoc2)
+
+    def test_qemu_debug_stack_preset_extends_speed_stack_with_attribution(self) -> None:
+        args = _stack_args(qemu_debug_stack=True)
+
+        gate._apply_qemu_stack_presets(args)
+
+        self.assertTrue(args.qemu_speed_stack)
+        self.assertTrue(args.qemu_frame_single_reg_fast)
+        self.assertTrue(args.qemu_mmu_cache)
+        self.assertTrue(args.template_chain)
+        self.assertTrue(args.qemu_heartbeat_extended)
+        self.assertTrue(args.qemu_frame_stats)
+        self.assertTrue(args.qemu_frame_shape_hot)
+        self.assertTrue(args.qemu_tlb_stats)
+        self.assertTrue(args.qemu_tlb_inv_hot)
+        self.assertTrue(args.qemu_tlb_fill_stats)
+        self.assertTrue(args.qemu_tlb_fill_hot)
+        self.assertTrue(args.qemu_mmu_cache_stats)
+        self.assertTrue(args.qemu_tb_stats)
+        self.assertTrue(args.qemu_tb_hot)
+        self.assertFalse(args.qemu_frame_page_fast)
+        self.assertFalse(args.qemu_frame_restore_host_load)
+        self.assertFalse(args.qemu_mmu_cache_assoc2)
 
     def test_format_failure_details_includes_tlb_fill_stats(self) -> None:
         text = gate._format_failure_details(
@@ -117,6 +184,8 @@ class SpecintFastGateTests(unittest.TestCase):
                     "qemu_heartbeat_regs": False,
                     "qemu_heartbeat_code_bytes": 0,
                     "qemu_heartbeat_same_site_warn": 0,
+                    "qemu_speed_stack": True,
+                    "qemu_debug_stack": False,
                     "fail_9p_timeout": False,
                     "qemu_mmu_cache_assoc2": True,
                     "template_chain": True,
@@ -131,6 +200,8 @@ class SpecintFastGateTests(unittest.TestCase):
         self.assertIn("qemu_clean_build_for_head: `true`", text)
         self.assertIn("qemu_machine_extra: `dumpdtb=/tmp/virt.dtb`", text)
         self.assertIn("qemu_extra_args: `-accel tcg,split-wx=off`", text)
+        self.assertIn("qemu_speed_stack: `true`", text)
+        self.assertIn("qemu_debug_stack: `false`", text)
         self.assertIn("qemu_mmu_cache_assoc2: `true`", text)
         self.assertIn("template_chain: `true`", text)
 
@@ -171,6 +242,7 @@ class SpecintFastGateTests(unittest.TestCase):
             qemu_tlb_fault_trace_count_lo="",
             qemu_tlb_fault_trace_count_hi="",
             qemu_tb_stats=False,
+            qemu_tb_hot=False,
             no_progress_timeout=120,
             forward_memory_mb=True,
             forward_qemu_heartbeat=True,
@@ -193,6 +265,7 @@ class SpecintFastGateTests(unittest.TestCase):
             forward_template_chain=True,
             forward_qemu_tlb_fault_trace=True,
             forward_qemu_tb_stats=True,
+            forward_qemu_tb_hot=True,
             forward_no_progress=True,
             forward_stack_limit=True,
             forward_symbolize_heartbeat=True,

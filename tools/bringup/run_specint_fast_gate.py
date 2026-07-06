@@ -211,6 +211,25 @@ def _env_bool(name: str, default: bool = False) -> bool:
     raise SystemExit(f"error: {name} must be a boolean, got {value!r}")
 
 
+def _apply_qemu_stack_presets(args: argparse.Namespace) -> None:
+    if args.qemu_debug_stack:
+        args.qemu_speed_stack = True
+        args.qemu_frame_stats = True
+        args.qemu_frame_shape_hot = True
+        args.qemu_tlb_stats = True
+        args.qemu_tlb_inv_hot = True
+        args.qemu_tlb_fill_stats = True
+        args.qemu_tlb_fill_hot = True
+        args.qemu_mmu_cache_stats = True
+        args.qemu_tb_stats = True
+        args.qemu_tb_hot = True
+    if args.qemu_speed_stack:
+        args.qemu_frame_single_reg_fast = True
+        args.qemu_mmu_cache = True
+        args.template_chain = True
+        args.qemu_heartbeat_extended = True
+
+
 def _format_bytes(value: int) -> str:
     units = ("B", "KiB", "MiB", "GiB", "TiB")
     amount = float(value)
@@ -705,6 +724,8 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
         f"- qemu_heartbeat_code_bytes: `{summary.get('qemu_heartbeat_code_bytes', 0)}`",
         f"- qemu_heartbeat_same_site_warn: `{summary.get('qemu_heartbeat_same_site_warn', 0)}`",
         f"- qemu_heartbeat_extended: `{str(bool(summary.get('qemu_heartbeat_extended', False))).lower()}`",
+        f"- qemu_speed_stack: `{str(bool(summary.get('qemu_speed_stack', False))).lower()}`",
+        f"- qemu_debug_stack: `{str(bool(summary.get('qemu_debug_stack', False))).lower()}`",
         f"- qemu_frame_stats: `{str(bool(summary.get('qemu_frame_stats', False))).lower()}`",
         f"- qemu_frame_shape_hot: `{str(bool(summary.get('qemu_frame_shape_hot', False))).lower()}`",
         f"- qemu_frame_single_reg_fast: `{str(bool(summary.get('qemu_frame_single_reg_fast', False))).lower()}`",
@@ -776,6 +797,31 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--qemu-heartbeat-code-bytes", type=int, default=_env_int("SPEC_QEMU_HEARTBEAT_CODE_BYTES", _env_int("LINX_SPEC_QEMU_HEARTBEAT_CODE_BYTES", 0)))
     parser.add_argument("--qemu-heartbeat-same-site-warn", type=int, default=_env_int("SPEC_QEMU_HEARTBEAT_SAME_SITE_WARN", _env_int("LINX_SPEC_QEMU_HEARTBEAT_SAME_SITE_WARN", 0)))
     parser.add_argument("--qemu-heartbeat-extended", action="store_true", default=_env_bool("SPEC_QEMU_HEARTBEAT_EXTENDED", _env_bool("LINX_SPEC_QEMU_HEARTBEAT_EXTENDED", False)))
+    parser.add_argument(
+        "--qemu-speed-stack",
+        action="store_true",
+        default=_env_bool(
+            "SPEC_QEMU_SPEED_STACK",
+            _env_bool("LINX_SPEC_QEMU_SPEED_STACK", False),
+        ),
+        help=(
+            "Enable the current opt-in QEMU speed stack without heavy "
+            "attribution counters: one-register frame fast path, MMU-cache, "
+            "template chaining, and extended BPC heartbeat fields."
+        ),
+    )
+    parser.add_argument(
+        "--qemu-debug-stack",
+        action="store_true",
+        default=_env_bool(
+            "SPEC_QEMU_DEBUG_STACK",
+            _env_bool("LINX_SPEC_QEMU_DEBUG_STACK", False),
+        ),
+        help=(
+            "Enable the QEMU speed stack plus heartbeat attribution counters "
+            "and hot-site sketches for debugging live SPEC rows."
+        ),
+    )
     parser.add_argument("--qemu-frame-stats", action="store_true", default=_env_bool("SPEC_QEMU_FRAME_STATS", _env_bool("LINX_SPEC_QEMU_FRAME_STATS", False)))
     parser.add_argument(
         "--qemu-frame-shape-hot",
@@ -1001,6 +1047,7 @@ def main(argv: list[str]) -> int:
         raise SystemExit("error: --qemu-heartbeat-code-bytes must be >= 0")
     if args.qemu_heartbeat_same_site_warn < 0:
         raise SystemExit("error: --qemu-heartbeat-same-site-warn must be >= 0")
+    _apply_qemu_stack_presets(args)
     args.qemu_heartbeat_extended = bool(
         args.qemu_heartbeat_extended
         or args.qemu_tlb_stats
@@ -1396,6 +1443,8 @@ def main(argv: list[str]) -> int:
         "qemu_heartbeat_code_bytes": args.qemu_heartbeat_code_bytes,
         "qemu_heartbeat_same_site_warn": args.qemu_heartbeat_same_site_warn,
         "qemu_heartbeat_extended": bool(args.qemu_heartbeat_extended),
+        "qemu_speed_stack": bool(args.qemu_speed_stack),
+        "qemu_debug_stack": bool(args.qemu_debug_stack),
         "qemu_frame_stats": bool(args.qemu_frame_stats),
         "qemu_frame_shape_hot": bool(args.qemu_frame_shape_hot),
         "qemu_frame_single_reg_fast": bool(args.qemu_frame_single_reg_fast),
