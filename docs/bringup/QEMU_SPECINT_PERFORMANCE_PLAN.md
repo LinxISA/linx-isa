@@ -432,6 +432,24 @@ and regress `500.perlbench_r` (-3.7%), `505.mcf_r` (-3.8%),
 `531.deepsjeng_r` (-6.7%). Keep restore-host loads as an opt-in focused A/B
 switch, not a default all-row gate feature.
 
+Focused `505.mcf_r` post-start profile update (2026-07-06):
+`workloads/generated/specint-505-poststart-profile-speedstack-qemu-20260706-r1/profile_report.json`
+sampled the real `qemu-system-linx64` child after `LINX_SPEC_START` on QEMU
+head `4e9c0fcf35e80216ae46e407d97118ecd721618a`. The top QEMU frames are
+split across frame templates, soft-MMU, TB dispatch, and instrumentation:
+`linx_template_fentry_impl` 9.5%, `linx_template_fret_stk_impl` 9.2%,
+`mmu_lookup1` 8.7%, `tb_lookup` 8.5%, `helper_lookup_tb_ptr` 7.0%,
+`probe_access_internal` 5.6%, and `linx_tlb_fill_stats_record` 5.0% of parsed
+QEMU top-stack samples. A matched 75-second A/B rejected TLB-fill stats/hot
+instrumentation as the row limiter:
+`workloads/generated/specint-505-speedstack-tlbfillstats-control-qemu-20260706-r1/`
+and
+`workloads/generated/specint-505-speedstack-no-tlbfillstats-qemu-20260706-r1/`
+both reached 21B bounded instructions with effectively identical TB lookup,
+MMU-cache, TLBI, and frame counters. Do not optimize TLB-fill stats overhead
+as the next 505 speed lane; target real execution costs in frame helper exits,
+generic soft-MMU lookup/probe, TB dispatch, and page-walk cache shape.
+
 Frame-shape attribution update:
 QEMU now has an opt-in frame-template shape sketch for SPEC heartbeat runs. Set
 `LINX_QEMU_FRAME_SHAPE_HOT=1` directly, or pass `--qemu-frame-shape-hot`
