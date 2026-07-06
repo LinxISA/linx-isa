@@ -365,6 +365,23 @@ same-head train-all comparison still regresses several rows, but use
 `--qemu-frame-restore-host-load` as the current focused `557.xz_r` speed switch
 when profiling or prototyping the remaining template/TB/soft-MMU costs.
 
+Adding the existing same-page multi-register frame fast path is modestly
+positive for this focused `557.xz_r` shape, but still not a broad promotion.
+`workloads/generated/specint-557-frame-pagefast-hostload-b8faff-qemu-20260706-r1/`
+adds only `--qemu-frame-page-fast` on top of the restore-host stack above. It
+reaches `26000000000` instructions in the same 75-second train window, records
+`fr_page_fast_fentry=10652790`, `fr_page_fast_restore=10652731`,
+`fr_restore_host=507190209`, and keeps `fr_restore_fallback=0`. TB miss,
+TB flush, and TLBI totals do not move versus the restore-host control. Strict
+train `999.specrand_ir` also passes with this stack in
+`workloads/generated/specint-999-frame-pagefast-hostload-b8faff-qemu-20260706-r1/`
+(`rand.11.out`, 871 bytes, `0x973dcfc2`).
+
+Loop update: include `--qemu-frame-page-fast` in focused `557.xz_r`
+restore-host probes when the question is remaining frame/template cost, but
+keep it default-off for all-row gates until a fresh train-all comparison shows
+that the small focused win outweighs earlier neutral 505/541 page-fast probes.
+
 ### Latest MMU-Cache Train-All Rerun
 
 `workloads/generated/specint-train-all-mmuc-current-qemu-20260705-r3/`
