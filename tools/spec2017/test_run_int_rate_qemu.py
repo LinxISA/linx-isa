@@ -94,6 +94,39 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertIn("marker_now + terminal_failure_grace_sec", source)
         self.assertIn("max(1.0, terminal_failure_grace_sec)", source)
 
+    def test_tb_hot_env_and_summary(self) -> None:
+        qemu_env: dict[str, str] = {}
+
+        runner._apply_qemu_debug_env(
+            qemu_env,
+            qemu_heartbeat_interval=0,
+            qemu_fault_trace_regs=False,
+            qemu_fault_trace_limit=1,
+            qemu_tb_hot=True,
+        )
+
+        self.assertEqual(qemu_env["LINX_QEMU_TB_HOT"], "1")
+
+        summary = runner._tb_hot_summary(
+            "LINX_TB_HOT count=10 evictions=1 slots=16 "
+            "top0_pc=0x100 top0_lookup=7 top0_delta=3 "
+            "top0_jmp=5 top0_hash=1 top0_miss=1 "
+            "top1_pc=0x200 top1_lookup=2 top1_delta=1 "
+            "top1_jmp=2 top1_hash=0 top1_miss=0\n"
+            "LINX_TB_HOT count=20 evictions=2 slots=16 "
+            "top0_pc=0x300 top0_lookup=11 top0_delta=9 "
+            "top0_jmp=8 top0_hash=2 top0_miss=1 "
+            "top1_pc=0x400 top1_lookup=4 top1_delta=2 "
+            "top1_jmp=3 top1_hash=1 top1_miss=0\n"
+        )
+
+        self.assertTrue(summary["seen"])
+        self.assertEqual(summary["line_count"], 2)
+        self.assertEqual(summary["top0_pc"], "0x300")
+        self.assertEqual(summary["max_delta_top0_pc"], "0x300")
+        self.assertEqual(summary["max_delta_top0_delta"], 9)
+        self.assertEqual(summary["max_delta_top0_hash"], 2)
+
     def test_trap_delivery_trace_env_and_summary(self) -> None:
         qemu_env: dict[str, str] = {}
 

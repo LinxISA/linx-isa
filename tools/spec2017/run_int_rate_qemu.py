@@ -803,6 +803,7 @@ def _apply_qemu_debug_env(
     qemu_acre_trace: dict[str, str] | None = None,
     qemu_queue_trace: dict[str, str] | None = None,
     qemu_tb_stats: bool = False,
+    qemu_tb_hot: bool = False,
     qemu_fret_stk_trace: dict[str, str] | None = None,
     qemu_fentry_trace: dict[str, str] | None = None,
     qemu_fault_trace: bool = False,
@@ -892,6 +893,8 @@ def _apply_qemu_debug_env(
             qemu_env[name] = str(value).strip()
     if qemu_tb_stats:
         qemu_env["LINX_QEMU_TB_STATS"] = "1"
+    if qemu_tb_hot:
+        qemu_env["LINX_QEMU_TB_HOT"] = "1"
     for name, value in (qemu_fret_stk_trace or {}).items():
         if str(value).strip():
             qemu_env[name] = str(value).strip()
@@ -2983,6 +2986,7 @@ def _run_qemu(
     qemu_acre_trace: dict[str, str],
     qemu_queue_trace: dict[str, str],
     qemu_tb_stats: bool,
+    qemu_tb_hot: bool,
     qemu_fret_stk_trace: dict[str, str],
     qemu_fentry_trace: dict[str, str],
     no_progress_timeout: float,
@@ -3068,6 +3072,7 @@ def _run_qemu(
         qemu_acre_trace=qemu_acre_trace,
         qemu_queue_trace=qemu_queue_trace,
         qemu_tb_stats=qemu_tb_stats,
+        qemu_tb_hot=qemu_tb_hot,
         qemu_fret_stk_trace=qemu_fret_stk_trace,
         qemu_fentry_trace=qemu_fentry_trace,
         qemu_fault_trace=qemu_fault_trace,
@@ -3261,6 +3266,7 @@ def _run_qemu(
     heartbeat_frame_shape_hot = _frame_shape_hot_summary(text)
     heartbeat_tlb_invalidation = _heartbeat_tlb_invalidation_summary(classification["last_heartbeat"])
     heartbeat_tb_stats = _heartbeat_tb_stats_summary(classification["last_heartbeat"])
+    heartbeat_tb_hot = _tb_hot_summary(text)
     heartbeat_tlb_fill_hot = _tlb_fill_hot_summary(text)
     heartbeat_tlb_inv_hot = _tlb_inv_hot_summary(text)
     bstart_cache_stats = _bstart_cache_stats_summary(text)
@@ -3297,6 +3303,7 @@ def _run_qemu(
         "qemu_queue_trace": bool(qemu_queue_trace),
         "qemu_queue_trace_filters": dict(qemu_queue_trace),
         "qemu_tb_stats": bool(qemu_tb_stats),
+        "qemu_tb_hot": bool(qemu_tb_hot),
         "terminal_failure_grace_sec": terminal_failure_grace_sec,
         "qemu_rc": qemu_rc,
         "timed_out": timed_out,
@@ -3332,6 +3339,7 @@ def _run_qemu(
         "heartbeat_frame_shape_hot": heartbeat_frame_shape_hot,
         "heartbeat_tlb_invalidation": heartbeat_tlb_invalidation,
         "heartbeat_tb_stats": heartbeat_tb_stats,
+        "heartbeat_tb_hot": heartbeat_tb_hot,
         "heartbeat_tlb_fill_hot": heartbeat_tlb_fill_hot,
         "heartbeat_tlb_inv_hot": heartbeat_tlb_inv_hot,
         "bstart_cache_stats": bstart_cache_stats,
@@ -4190,6 +4198,58 @@ def _heartbeat_tb_stats_summary(line: str) -> dict[str, Any]:
         "phys_inv": _decimal_or_none(fields.get("tbs_phys_inv")),
         "code_used": _decimal_or_none(fields.get("tbs_code_used")),
         "code_size": _decimal_or_none(fields.get("tbs_code_size")),
+    }
+
+
+def _tb_hot_summary(text: str) -> dict[str, Any]:
+    lines = re.findall(r"^LINX_TB_HOT .*$", text, flags=re.MULTILINE)
+    if not lines:
+        return {
+            "seen": False,
+            "line_count": 0,
+            "last": "",
+        }
+
+    fields = _heartbeat_fields(lines[-1])
+    max_delta_fields = fields
+    max_delta_line = lines[-1]
+    max_delta = _decimal_or_none(fields.get("top0_delta"))
+    for line in lines:
+        candidate_fields = _heartbeat_fields(line)
+        candidate_delta = _decimal_or_none(candidate_fields.get("top0_delta"))
+        if candidate_delta is not None and (max_delta is None or candidate_delta >= max_delta):
+            max_delta = candidate_delta
+            max_delta_fields = candidate_fields
+            max_delta_line = line
+
+    return {
+        "seen": True,
+        "line_count": len(lines),
+        "last": lines[-1][:512],
+        "heartbeat_count": _decimal_or_none(fields.get("count")),
+        "evictions": _decimal_or_none(fields.get("evictions")),
+        "slots": _decimal_or_none(fields.get("slots")),
+        "top0_pc": fields.get("top0_pc", "").lower(),
+        "top0_lookup": _decimal_or_none(fields.get("top0_lookup")),
+        "top0_delta": _decimal_or_none(fields.get("top0_delta")),
+        "top0_jmp": _decimal_or_none(fields.get("top0_jmp")),
+        "top0_hash": _decimal_or_none(fields.get("top0_hash")),
+        "top0_miss": _decimal_or_none(fields.get("top0_miss")),
+        "top1_pc": fields.get("top1_pc", "").lower(),
+        "top1_lookup": _decimal_or_none(fields.get("top1_lookup")),
+        "top1_delta": _decimal_or_none(fields.get("top1_delta")),
+        "top1_jmp": _decimal_or_none(fields.get("top1_jmp")),
+        "top1_hash": _decimal_or_none(fields.get("top1_hash")),
+        "top1_miss": _decimal_or_none(fields.get("top1_miss")),
+        "max_delta": max_delta,
+        "max_delta_line": max_delta_line[:512],
+        "max_delta_heartbeat_count": _decimal_or_none(max_delta_fields.get("count")),
+        "max_delta_top0_pc": max_delta_fields.get("top0_pc", "").lower(),
+        "max_delta_top0_lookup": _decimal_or_none(max_delta_fields.get("top0_lookup")),
+        "max_delta_top0_delta": _decimal_or_none(max_delta_fields.get("top0_delta")),
+        "max_delta_top0_jmp": _decimal_or_none(max_delta_fields.get("top0_jmp")),
+        "max_delta_top0_hash": _decimal_or_none(max_delta_fields.get("top0_hash")),
+        "max_delta_top0_miss": _decimal_or_none(max_delta_fields.get("top0_miss")),
     }
 
 
@@ -5497,6 +5557,12 @@ def main(argv: list[str]) -> int:
         help="Set LINX_QEMU_TB_STATS=1 to append TCG TB counters to QEMU heartbeats.",
     )
     parser.add_argument(
+        "--qemu-tb-hot",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_TB_HOT", False),
+        help="Set LINX_QEMU_TB_HOT=1 to emit hot TB lookup PC heartbeat sketches.",
+    )
+    parser.add_argument(
         "--qemu-fault-trace",
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_FAULT_TRACE", False),
@@ -5984,6 +6050,7 @@ def main(argv: list[str]) -> int:
         "qemu_trap_delivery_trace_limit": args.qemu_trap_delivery_trace_limit,
         "qemu_trap_delivery_trace_filters": qemu_trap_delivery_trace_filters,
         "qemu_tb_stats": bool(args.qemu_tb_stats),
+        "qemu_tb_hot": bool(args.qemu_tb_hot),
         "qemu_fret_stk_trace": qemu_fret_stk_trace,
         "qemu_fentry_trace": qemu_fentry_trace,
         "qemu_fault_trace": bool(args.qemu_fault_trace or qemu_fault_trace_filters),
@@ -6122,6 +6189,7 @@ def main(argv: list[str]) -> int:
                     qemu_acre_trace,
                     qemu_queue_trace,
                     args.qemu_tb_stats,
+                    args.qemu_tb_hot,
                     qemu_fret_stk_trace,
                     qemu_fentry_trace,
                     args.no_progress_timeout,

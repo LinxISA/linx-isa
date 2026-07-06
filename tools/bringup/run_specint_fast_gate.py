@@ -532,6 +532,7 @@ def _suite_command(
     qemu_tlb_fault_trace_count_lo: str,
     qemu_tlb_fault_trace_count_hi: str,
     qemu_tb_stats: bool,
+    qemu_tb_hot: bool,
     no_progress_timeout: float,
     forward_memory_mb: bool,
     forward_qemu_heartbeat: bool,
@@ -554,6 +555,7 @@ def _suite_command(
     forward_template_chain: bool,
     forward_qemu_tlb_fault_trace: bool,
     forward_qemu_tb_stats: bool,
+    forward_qemu_tb_hot: bool,
     forward_no_progress: bool,
     forward_stack_limit: bool,
     forward_symbolize_heartbeat: bool,
@@ -650,6 +652,8 @@ def _suite_command(
                 cmd.extend([opt, value.strip()])
     if qemu_tb_stats and forward_qemu_tb_stats:
         cmd.append("--qemu-tb-stats")
+    if qemu_tb_hot and forward_qemu_tb_hot:
+        cmd.append("--qemu-tb-hot")
     if forward_no_progress:
         cmd.extend(["--no-progress-timeout", str(no_progress_timeout)])
     if stack_limit.strip() and forward_stack_limit:
@@ -719,6 +723,7 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
         f"- qemu_tlb_fault_trace_limit: `{summary.get('qemu_tlb_fault_trace_limit', 0)}`",
         f"- qemu_tlb_fault_trace_filters: `{_format_filter_dict(summary.get('qemu_tlb_fault_trace_filters') or {})}`",
         f"- qemu_tb_stats: `{str(bool(summary.get('qemu_tb_stats', False))).lower()}`",
+        f"- qemu_tb_hot: `{str(bool(summary.get('qemu_tb_hot', False))).lower()}`",
         f"- fail_9p_timeout: `{str(bool(summary.get('fail_9p_timeout', False))).lower()}`",
         "",
         "## Suites",
@@ -942,6 +947,15 @@ def main(argv: list[str]) -> int:
         ),
         help="Forward QEMU's opt-in TCG TB heartbeat counters.",
     )
+    parser.add_argument(
+        "--qemu-tb-hot",
+        action="store_true",
+        default=_env_bool(
+            "SPEC_QEMU_TB_HOT",
+            _env_bool("LINX_SPEC_QEMU_TB_HOT", False),
+        ),
+        help="Forward QEMU's opt-in hot TB lookup PC heartbeat sketch.",
+    )
     parser.add_argument("--no-progress-timeout", type=float, default=_env_float("SPEC_NO_PROGRESS_TIMEOUT", _env_float("LINX_SPEC_NO_PROGRESS_TIMEOUT", 0.0)))
     parser.add_argument(
         "--stack-limit",
@@ -1042,6 +1056,7 @@ def main(argv: list[str]) -> int:
         runner, "--qemu-tlb-fault-trace-addr-lo"
     )
     runner_has_qemu_tb_stats = _runner_supports_option(runner, "--qemu-tb-stats")
+    runner_has_qemu_tb_hot = _runner_supports_option(runner, "--qemu-tb-hot")
     runner_has_no_progress = _runner_supports_option(runner, "--no-progress-timeout")
     runner_has_memory_mb = _runner_supports_option(runner, "--memory-mb")
     runner_has_stack_limit = _runner_supports_option(runner, "--stack-limit")
@@ -1190,6 +1205,12 @@ def main(argv: list[str]) -> int:
             "--qemu-tb-stats; update tools/spec2017/run_stage_qemu_matrix.py "
             "or rerun without the TB stats switch"
         )
+    if args.qemu_tb_hot and not runner_has_qemu_tb_hot:
+        raise SystemExit(
+            "error: local SPEC matrix runner does not support "
+            "--qemu-tb-hot; update tools/spec2017/run_stage_qemu_matrix.py "
+            "or rerun without the TB hot switch"
+        )
     if args.no_progress_timeout and not runner_has_no_progress:
         raise SystemExit(
             "error: local SPEC matrix runner does not support "
@@ -1276,6 +1297,7 @@ def main(argv: list[str]) -> int:
                 qemu_tlb_fault_trace_count_lo=args.qemu_tlb_fault_trace_count_lo,
                 qemu_tlb_fault_trace_count_hi=args.qemu_tlb_fault_trace_count_hi,
                 qemu_tb_stats=args.qemu_tb_stats,
+                qemu_tb_hot=args.qemu_tb_hot,
                 no_progress_timeout=args.no_progress_timeout,
                 forward_memory_mb=runner_has_memory_mb,
                 forward_qemu_heartbeat=runner_has_qemu_heartbeat,
@@ -1298,6 +1320,7 @@ def main(argv: list[str]) -> int:
                 forward_template_chain=runner_has_template_chain,
                 forward_qemu_tlb_fault_trace=runner_has_qemu_tlb_fault_trace,
                 forward_qemu_tb_stats=runner_has_qemu_tb_stats,
+                forward_qemu_tb_hot=runner_has_qemu_tb_hot,
                 forward_no_progress=runner_has_no_progress,
                 forward_stack_limit=runner_has_stack_limit,
                 forward_symbolize_heartbeat=runner_has_symbolize_heartbeat,
@@ -1390,6 +1413,7 @@ def main(argv: list[str]) -> int:
         "qemu_tlb_fault_trace_limit": args.qemu_tlb_fault_trace_limit,
         "qemu_tlb_fault_trace_filters": qemu_tlb_fault_trace_filters,
         "qemu_tb_stats": bool(args.qemu_tb_stats),
+        "qemu_tb_hot": bool(args.qemu_tb_hot),
         "no_progress_timeout": args.no_progress_timeout,
         "guest_heartbeat_sec": args.guest_heartbeat_sec,
         "symbolize_heartbeat": bool(args.symbolize_heartbeat),

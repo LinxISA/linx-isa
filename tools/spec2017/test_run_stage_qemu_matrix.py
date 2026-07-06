@@ -12,6 +12,29 @@ import run_stage_qemu_matrix as matrix
 
 
 class StageQemuMatrixTests(unittest.TestCase):
+    def test_format_tb_hot_uses_max_delta_pc(self) -> None:
+        text = matrix._format_tb_hot(
+            {
+                "heartbeat_tb_hot": {
+                    "seen": True,
+                    "top0_pc": "0x100",
+                    "top0_lookup": 10,
+                    "top0_delta": 1,
+                    "max_delta_top0_pc": "0x200",
+                    "max_delta_top0_lookup": 20,
+                    "max_delta_top0_delta": 8,
+                    "max_delta_top0_jmp": 6,
+                    "max_delta_top0_hash": 1,
+                    "max_delta_top0_miss": 1,
+                    "evictions": 3,
+                }
+            }
+        )
+
+        self.assertIn("tb-hot=8/20@0x200", text)
+        self.assertIn("/jmp6/hash1/miss1", text)
+        self.assertIn("evict3", text)
+
     def test_format_mmu_cache_stats_includes_split_counters(self) -> None:
         text = matrix._format_mmu_cache_stats(
             {
