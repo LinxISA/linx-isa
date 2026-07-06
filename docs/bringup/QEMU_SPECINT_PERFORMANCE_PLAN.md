@@ -137,6 +137,39 @@ BSTART fast-hit experiment. The next QEMU speed loop should target the actual
 hot work still visible in profiles: TB lookup/dispatch, template helper body
 cost, and soft-MMU/probe/data-load lookup cost.
 
+### MMU-Cache Victim Entry Experiment
+
+On 2026-07-06, QEMU and the SPEC runners gained a default-off
+`LINX_QEMU_MMU_CACHE_VICTIM=1` / `--qemu-mmu-cache-victim` experiment. The
+shape preserves the existing direct-mapped page-walk result cache and keeps one
+evicted direct-map entry as a victim slot. Heartbeat MMU-cache summaries now
+include `mmuc_vhit` and `mmuc_vfill`, parsed by the SPEC runner as
+`heartbeat_mmu_cache.victim_hit` and `victim_fill`.
+
+Correctness sentinels passed: `ninja -C emulator/qemu/build-linx
+qemu-system-linx64` rebuilt the candidate, `QEMU=.../qemu-system-linx64
+python3 avs/qemu/run_callret_contract.py` passed, and strict train
+`999.specrand_ir` passed with the speed stack plus
+`--qemu-mmu-cache-stats --qemu-mmu-cache-victim` in
+`workloads/generated/specint-999-mmuc-victim-qemu-20260706-r1/`.
+
+Focused same-head 90-second train A/B shows the switch is active but not a
+speed win:
+
+| Benchmark | Run | Count | MMUC hit/miss | Fill/collision | Victim hit/fill |
+| --- | --- | ---: | ---: | ---: | ---: |
+| `505.mcf_r` | control | 27000000006 | 82590502 / 7548986 | 7544189 / 5701131 | 0 / 0 |
+| `505.mcf_r` | victim | 27000000003 | 82771127 / 7368363 | 7363566 / 5520491 | 180639 / 5520491 |
+| `531.deepsjeng_r` | control | 31000000000 | 3040001 / 4383626 | 4207785 / 2367258 | 0 / 0 |
+| `531.deepsjeng_r` | victim | 31000000007 | 3041458 / 4382012 | 4206171 / 2365644 | 1561 / 2365644 |
+
+Decision: keep the switch default-off as a cache-shape diagnostic only. Do not
+promote it into `--qemu-speed-stack` or all-row train gates until a fresh
+same-head control shows a real bounded-count win. The result also reinforces
+the current lane split: MMU-cache shape can shave page-walk pressure, but the
+next real speed loop still needs to attack template/TB/helper-exit and
+soft-MMU/probe/load costs directly.
+
 ### Latest MMU-Cache Train-All Rerun
 
 `workloads/generated/specint-train-all-mmuc-current-qemu-20260705-r3/`

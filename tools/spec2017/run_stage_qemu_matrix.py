@@ -1044,6 +1044,12 @@ def main(argv: list[str]) -> int:
         help="Pass --qemu-mmu-cache-assoc2 to test QEMU's 2-way page-walk result cache shape.",
     )
     ap.add_argument(
+        "--qemu-mmu-cache-victim",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_MMU_CACHE_VICTIM", False),
+        help="Pass --qemu-mmu-cache-victim to test QEMU's direct-map victim page-walk cache entry.",
+    )
+    ap.add_argument(
         "--qemu-tlb-fault-trace",
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_TLB_FAULT_TRACE", False),
@@ -1586,6 +1592,8 @@ def main(argv: list[str]) -> int:
             cmd.append("--qemu-mmu-cache-stats")
         if args.qemu_mmu_cache_assoc2:
             cmd.append("--qemu-mmu-cache-assoc2")
+        if args.qemu_mmu_cache_victim:
+            cmd.append("--qemu-mmu-cache-victim")
         if args.template_chain:
             cmd.append("--template-chain")
         if args.qemu_tlb_fault_trace:
@@ -1744,6 +1752,7 @@ def main(argv: list[str]) -> int:
         "qemu_mmu_cache": bool(args.qemu_mmu_cache),
         "qemu_mmu_cache_stats": bool(args.qemu_mmu_cache_stats),
         "qemu_mmu_cache_assoc2": bool(args.qemu_mmu_cache_assoc2),
+        "qemu_mmu_cache_victim": bool(args.qemu_mmu_cache_victim),
         "qemu_tlb_fault_trace": bool(qemu_tlb_fault_trace_requested),
         "qemu_tlb_fault_trace_limit": int(args.qemu_tlb_fault_trace_limit),
         "qemu_tlb_fault_trace_filters": qemu_tlb_fault_trace_filters,

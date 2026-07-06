@@ -542,6 +542,7 @@ def _suite_command(
     qemu_mmu_cache: bool,
     qemu_mmu_cache_stats: bool,
     qemu_mmu_cache_assoc2: bool,
+    qemu_mmu_cache_victim: bool,
     template_chain: bool,
     qemu_tlb_fault_trace: bool,
     qemu_tlb_fault_trace_limit: int,
@@ -571,6 +572,7 @@ def _suite_command(
     forward_qemu_mmu_cache: bool,
     forward_qemu_mmu_cache_stats: bool,
     forward_qemu_mmu_cache_assoc2: bool,
+    forward_qemu_mmu_cache_victim: bool,
     forward_template_chain: bool,
     forward_qemu_tlb_fault_trace: bool,
     forward_qemu_tb_stats: bool,
@@ -650,6 +652,8 @@ def _suite_command(
         cmd.append("--qemu-mmu-cache-stats")
     if qemu_mmu_cache_assoc2 and forward_qemu_mmu_cache_assoc2:
         cmd.append("--qemu-mmu-cache-assoc2")
+    if qemu_mmu_cache_victim and forward_qemu_mmu_cache_victim:
+        cmd.append("--qemu-mmu-cache-victim")
     if template_chain and forward_template_chain:
         cmd.append("--template-chain")
     if qemu_tlb_fault_trace and forward_qemu_tlb_fault_trace:
@@ -739,6 +743,7 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
         f"- qemu_mmu_cache: `{str(bool(summary.get('qemu_mmu_cache', False))).lower()}`",
         f"- qemu_mmu_cache_stats: `{str(bool(summary.get('qemu_mmu_cache_stats', False))).lower()}`",
         f"- qemu_mmu_cache_assoc2: `{str(bool(summary.get('qemu_mmu_cache_assoc2', False))).lower()}`",
+        f"- qemu_mmu_cache_victim: `{str(bool(summary.get('qemu_mmu_cache_victim', False))).lower()}`",
         f"- template_chain: `{str(bool(summary.get('template_chain', False))).lower()}`",
         f"- qemu_tlb_fault_trace: `{str(bool(summary.get('qemu_tlb_fault_trace', False))).lower()}`",
         f"- qemu_tlb_fault_trace_limit: `{summary.get('qemu_tlb_fault_trace_limit', 0)}`",
@@ -913,6 +918,15 @@ def main(argv: list[str]) -> int:
             _env_bool("LINX_SPEC_QEMU_MMU_CACHE_ASSOC2", False),
         ),
         help="Forward QEMU's opt-in 2-way page-walk result cache shape.",
+    )
+    parser.add_argument(
+        "--qemu-mmu-cache-victim",
+        action="store_true",
+        default=_env_bool(
+            "SPEC_QEMU_MMU_CACHE_VICTIM",
+            _env_bool("LINX_SPEC_QEMU_MMU_CACHE_VICTIM", False),
+        ),
+        help="Forward QEMU's opt-in direct-map victim page-walk cache entry.",
     )
     parser.add_argument(
         "--template-chain",
@@ -1097,6 +1111,9 @@ def main(argv: list[str]) -> int:
     runner_has_qemu_mmu_cache_assoc2 = _runner_supports_option(
         runner, "--qemu-mmu-cache-assoc2"
     )
+    runner_has_qemu_mmu_cache_victim = _runner_supports_option(
+        runner, "--qemu-mmu-cache-victim"
+    )
     runner_has_template_chain = _runner_supports_option(runner, "--template-chain")
     runner_has_qemu_tlb_fault_trace = _runner_supports_option(runner, "--qemu-tlb-fault-trace")
     runner_has_qemu_tlb_fault_trace_filters = _runner_supports_option(
@@ -1210,6 +1227,12 @@ def main(argv: list[str]) -> int:
             "error: local SPEC matrix runner does not support "
             "--qemu-mmu-cache-assoc2; update tools/spec2017/run_stage_qemu_matrix.py "
             "or rerun without the MMU cache assoc2 switch"
+        )
+    if args.qemu_mmu_cache_victim and not runner_has_qemu_mmu_cache_victim:
+        raise SystemExit(
+            "error: local SPEC matrix runner does not support "
+            "--qemu-mmu-cache-victim; update tools/spec2017/run_stage_qemu_matrix.py "
+            "or rerun without the MMU cache victim switch"
         )
     if args.template_chain and not runner_has_template_chain:
         raise SystemExit(
@@ -1335,6 +1358,7 @@ def main(argv: list[str]) -> int:
                 qemu_mmu_cache=args.qemu_mmu_cache,
                 qemu_mmu_cache_stats=args.qemu_mmu_cache_stats,
                 qemu_mmu_cache_assoc2=args.qemu_mmu_cache_assoc2,
+                qemu_mmu_cache_victim=args.qemu_mmu_cache_victim,
                 template_chain=args.template_chain,
                 qemu_tlb_fault_trace=args.qemu_tlb_fault_trace,
                 qemu_tlb_fault_trace_limit=args.qemu_tlb_fault_trace_limit,
@@ -1364,6 +1388,7 @@ def main(argv: list[str]) -> int:
                 forward_qemu_mmu_cache=runner_has_qemu_mmu_cache,
                 forward_qemu_mmu_cache_stats=runner_has_qemu_mmu_cache_stats,
                 forward_qemu_mmu_cache_assoc2=runner_has_qemu_mmu_cache_assoc2,
+                forward_qemu_mmu_cache_victim=runner_has_qemu_mmu_cache_victim,
                 forward_template_chain=runner_has_template_chain,
                 forward_qemu_tlb_fault_trace=runner_has_qemu_tlb_fault_trace,
                 forward_qemu_tb_stats=runner_has_qemu_tb_stats,
@@ -1457,6 +1482,7 @@ def main(argv: list[str]) -> int:
         "qemu_mmu_cache": bool(args.qemu_mmu_cache),
         "qemu_mmu_cache_stats": bool(args.qemu_mmu_cache_stats),
         "qemu_mmu_cache_assoc2": bool(args.qemu_mmu_cache_assoc2),
+        "qemu_mmu_cache_victim": bool(args.qemu_mmu_cache_victim),
         "template_chain": bool(args.template_chain),
         "qemu_tlb_fault_trace": bool(qemu_tlb_fault_trace_requested),
         "qemu_tlb_fault_trace_limit": args.qemu_tlb_fault_trace_limit,

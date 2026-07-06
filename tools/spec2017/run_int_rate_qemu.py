@@ -796,6 +796,7 @@ def _apply_qemu_debug_env(
     qemu_mmu_cache: bool = False,
     qemu_mmu_cache_stats: bool = False,
     qemu_mmu_cache_assoc2: bool = False,
+    qemu_mmu_cache_victim: bool = False,
     template_chain: bool = False,
     qemu_tlb_fault_trace: bool = False,
     qemu_tlb_fault_trace_limit: int = 0,
@@ -862,6 +863,8 @@ def _apply_qemu_debug_env(
         qemu_env["LINX_QEMU_MMU_CACHE_STATS"] = "1"
     if qemu_mmu_cache_assoc2:
         qemu_env["LINX_QEMU_MMU_CACHE_ASSOC2"] = "1"
+    if qemu_mmu_cache_victim:
+        qemu_env["LINX_QEMU_MMU_CACHE_VICTIM"] = "1"
     if template_chain:
         qemu_env["LINX_QEMU_TEMPLATE_CHAIN"] = "1"
     tlb_fault_filters = {
@@ -2979,6 +2982,7 @@ def _run_qemu(
     qemu_mmu_cache: bool,
     qemu_mmu_cache_stats: bool,
     qemu_mmu_cache_assoc2: bool,
+    qemu_mmu_cache_victim: bool,
     template_chain: bool,
     qemu_tlb_fault_trace: bool,
     qemu_tlb_fault_trace_limit: int,
@@ -3065,6 +3069,7 @@ def _run_qemu(
         qemu_mmu_cache=qemu_mmu_cache,
         qemu_mmu_cache_stats=qemu_mmu_cache_stats,
         qemu_mmu_cache_assoc2=qemu_mmu_cache_assoc2,
+        qemu_mmu_cache_victim=qemu_mmu_cache_victim,
         template_chain=template_chain,
         qemu_tlb_fault_trace=qemu_tlb_fault_trace,
         qemu_tlb_fault_trace_limit=qemu_tlb_fault_trace_limit,
@@ -3294,6 +3299,7 @@ def _run_qemu(
         "qemu_mmu_cache": bool(qemu_mmu_cache),
         "qemu_mmu_cache_stats": bool(qemu_mmu_cache_stats),
         "qemu_mmu_cache_assoc2": bool(qemu_mmu_cache_assoc2),
+        "qemu_mmu_cache_victim": bool(qemu_mmu_cache_victim),
         "template_chain": bool(template_chain),
         "qemu_tlb_fault_trace": bool(qemu_tlb_fault_trace),
         "qemu_tlb_fault_trace_limit": int(qemu_tlb_fault_trace_limit),
@@ -4230,6 +4236,8 @@ def _heartbeat_mmu_cache_summary(line: str) -> dict[str, Any]:
         "flush": _decimal_or_none(fields.get("mmuc_flush")),
         "flush_page": _decimal_or_none(fields.get("mmuc_flush_page")),
         "collision": _decimal_or_none(fields.get("mmuc_col")),
+        "victim_hit": _decimal_or_none(fields.get("mmuc_vhit")),
+        "victim_fill": _decimal_or_none(fields.get("mmuc_vfill")),
         "hit_4k": _decimal_or_none(fields.get("mmuc_hit4k")),
         "hit_2m": _decimal_or_none(fields.get("mmuc_hit2m")),
         "hit_1g": _decimal_or_none(fields.get("mmuc_hit1g")),
@@ -5648,6 +5656,12 @@ def main(argv: list[str]) -> int:
         help="Set LINX_QEMU_MMU_CACHE_ASSOC2=1 to test QEMU's 2-way page-walk result cache shape.",
     )
     parser.add_argument(
+        "--qemu-mmu-cache-victim",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_MMU_CACHE_VICTIM", False),
+        help="Set LINX_QEMU_MMU_CACHE_VICTIM=1 to test QEMU's direct-map victim page-walk cache entry.",
+    )
+    parser.add_argument(
         "--template-chain",
         action="store_true",
         default=(
@@ -6228,6 +6242,7 @@ def main(argv: list[str]) -> int:
         "qemu_mmu_cache": bool(args.qemu_mmu_cache),
         "qemu_mmu_cache_stats": bool(args.qemu_mmu_cache_stats),
         "qemu_mmu_cache_assoc2": bool(args.qemu_mmu_cache_assoc2),
+        "qemu_mmu_cache_victim": bool(args.qemu_mmu_cache_victim),
         "template_chain": bool(args.template_chain),
         "qemu_tlb_fault_trace": bool(qemu_tlb_fault_trace_requested),
         "qemu_tlb_fault_trace_limit": args.qemu_tlb_fault_trace_limit,
@@ -6365,6 +6380,7 @@ def main(argv: list[str]) -> int:
                     args.qemu_mmu_cache,
                     args.qemu_mmu_cache_stats,
                     args.qemu_mmu_cache_assoc2,
+                    args.qemu_mmu_cache_victim,
                     args.template_chain,
                     qemu_tlb_fault_trace_requested,
                     args.qemu_tlb_fault_trace_limit,

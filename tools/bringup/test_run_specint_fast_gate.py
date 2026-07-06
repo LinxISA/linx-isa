@@ -188,6 +188,7 @@ class SpecintFastGateTests(unittest.TestCase):
                     "qemu_debug_stack": False,
                     "fail_9p_timeout": False,
                     "qemu_mmu_cache_assoc2": True,
+                    "qemu_mmu_cache_victim": True,
                     "template_chain": True,
                     "suites": [],
                 },
@@ -203,6 +204,7 @@ class SpecintFastGateTests(unittest.TestCase):
         self.assertIn("qemu_speed_stack: `true`", text)
         self.assertIn("qemu_debug_stack: `false`", text)
         self.assertIn("qemu_mmu_cache_assoc2: `true`", text)
+        self.assertIn("qemu_mmu_cache_victim: `true`", text)
         self.assertIn("template_chain: `true`", text)
 
     def test_suite_command_forwards_qemu_heartbeat_debug_switches(self) -> None:
@@ -233,6 +235,7 @@ class SpecintFastGateTests(unittest.TestCase):
             qemu_mmu_cache=True,
             qemu_mmu_cache_stats=True,
             qemu_mmu_cache_assoc2=True,
+            qemu_mmu_cache_victim=True,
             template_chain=True,
             qemu_tlb_fault_trace=True,
             qemu_tlb_fault_trace_limit=64,
@@ -262,6 +265,7 @@ class SpecintFastGateTests(unittest.TestCase):
             forward_qemu_mmu_cache=True,
             forward_qemu_mmu_cache_stats=True,
             forward_qemu_mmu_cache_assoc2=True,
+            forward_qemu_mmu_cache_victim=True,
             forward_template_chain=True,
             forward_qemu_tlb_fault_trace=True,
             forward_qemu_tb_stats=True,
@@ -292,6 +296,7 @@ class SpecintFastGateTests(unittest.TestCase):
         self.assertIn("--qemu-mmu-cache", cmd)
         self.assertIn("--qemu-mmu-cache-stats", cmd)
         self.assertIn("--qemu-mmu-cache-assoc2", cmd)
+        self.assertIn("--qemu-mmu-cache-victim", cmd)
         self.assertIn("--template-chain", cmd)
         self.assertIn("--qemu-tlb-fault-trace-addr-lo", cmd)
         self.assertEqual(cmd[cmd.index("--qemu-tlb-fault-trace-addr-lo") + 1], "0x3f7feec000")

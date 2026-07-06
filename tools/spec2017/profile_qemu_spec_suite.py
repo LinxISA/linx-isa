@@ -174,6 +174,7 @@ def _profile_command(args: argparse.Namespace, bench: str, bench_root: Path) -> 
     _add_bool(cmd, args.qemu_mmu_cache, "--qemu-mmu-cache")
     _add_bool(cmd, args.qemu_mmu_cache_stats, "--qemu-mmu-cache-stats")
     _add_bool(cmd, args.qemu_mmu_cache_assoc2, "--qemu-mmu-cache-assoc2")
+    _add_bool(cmd, args.qemu_mmu_cache_victim, "--qemu-mmu-cache-victim")
     _add_bool(cmd, args.qemu_tb_stats, "--qemu-tb-stats")
     _add_bool(cmd, args.qemu_tlb_stats, "--qemu-tlb-stats")
     _add_bool(cmd, args.qemu_tlb_inv_hot, "--qemu-tlb-inv-hot")
@@ -257,6 +258,7 @@ def _qemu_features(args: argparse.Namespace) -> dict[str, bool]:
         "qemu_mmu_cache": bool(args.qemu_mmu_cache),
         "qemu_mmu_cache_stats": bool(args.qemu_mmu_cache_stats),
         "qemu_mmu_cache_assoc2": bool(args.qemu_mmu_cache_assoc2),
+        "qemu_mmu_cache_victim": bool(args.qemu_mmu_cache_victim),
         "qemu_tb_stats": bool(args.qemu_tb_stats),
         "qemu_tlb_stats": bool(args.qemu_tlb_stats),
         "qemu_tlb_inv_hot": bool(args.qemu_tlb_inv_hot),
@@ -354,6 +356,7 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--qemu-mmu-cache", action="store_true", default=_env_bool("LINX_SPEC_QEMU_MMU_CACHE", False))
     parser.add_argument("--qemu-mmu-cache-stats", action="store_true", default=_env_bool("LINX_SPEC_QEMU_MMU_CACHE_STATS", False))
     parser.add_argument("--qemu-mmu-cache-assoc2", action="store_true", default=_env_bool("LINX_SPEC_QEMU_MMU_CACHE_ASSOC2", False))
+    parser.add_argument("--qemu-mmu-cache-victim", action="store_true", default=_env_bool("LINX_SPEC_QEMU_MMU_CACHE_VICTIM", False))
     parser.add_argument("--qemu-tb-stats", action="store_true")
     parser.add_argument("--qemu-tlb-stats", action="store_true")
     parser.add_argument("--qemu-tlb-inv-hot", action="store_true")
