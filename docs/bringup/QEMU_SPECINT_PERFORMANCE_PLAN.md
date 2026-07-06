@@ -170,6 +170,50 @@ the current lane split: MMU-cache shape can shave page-walk pressure, but the
 next real speed loop still needs to attack template/TB/helper-exit and
 soft-MMU/probe/load costs directly.
 
+### Current-Head Speedpreset Profile Sweep
+
+`workloads/generated/specint-train-all-speedpreset-current-clean-qemu-20260706-r2/`
+reruns the bounded train gate on clean submitted QEMU head
+`4b7a66b166a1d5c987f4b906418f1610f5691ff6`, version
+`QEMU emulator version 10.2.50 (v10.2.0-1039-g4b7a66b166a)`, with
+`--qemu-speed-stack`, `--append-extra norandmaps`, 45-second row caps, compact
+extended heartbeats, and no debug counters. `qemu_repo_dirty_tracked=false`.
+
+The current clean speedpreset result remains correctness-red but live:
+`999.specrand_ir` is the strict passing train sentinel, and all nine real
+SPECint train rows are heartbeat-backed `live-timeout` rows with BPC
+site-progress and no panic/trap classification. Last bounded counts/BPCs are
+`500=9B @ 0x15556db782`, `502=9B @ 0x15559405e4`,
+`505=9B @ 0x155555c4a4`, `520=5B @ 0x15555f1192`,
+`523=8B @ 0x15556acb76`, `525=9B @ 0xffffffff8011480c`,
+`531=12B @ 0x1555567c58`, `541=6B @ 0x155557bfdc`, and
+`557=13B @ 0x155557c9a0`.
+
+`workloads/generated/specint-profile-suite-train-speedpreset-current-clean-qemu-20260706-r1/`
+then profiles all nine real train rows with the same speed-stack feature set:
+`--template-chain`, `--qemu-frame-single-reg-fast`, `--qemu-mmu-cache`, no
+MMU-cache stats, no victim cache, and clean QEMU head
+`4b7a66b166a1d5c987f4b906418f1610f5691ff6`. The joined report
+`workloads/generated/specint-progress-analysis-speedpreset-current-clean-20260706-r1/report.md`
+records `qemu_feature_compatible=true` and
+`profile_used_for_classification=true`.
+
+Current clean lane split:
+
+| Lane | Benchmarks | Top QEMU symbols |
+| --- | --- | --- |
+| `template-tb-mmu-throughput` | `500`, `502`, `505`, `520`, `523`, `531`, `541`, `557` | `linx_template_fret_stk_impl=2022`, `linx_template_fentry_impl=1847`, `tb_lookup=1732`, `helper_lookup_tb_ptr=1403`, `mmu_lookup1=1370`, `probe_access_internal=1289`, `mmu_lookup=756`, `linx_get_tb_cpu_state=745` |
+| `transport-9p-throughput` | `525` | `linx_template_fentry_impl=459`, `linx_template_fret_stk_impl=412`, `tb_lookup=307`, `helper_lookup_tb_ptr=264`, `mmu_lookup1=241`, `probe_access=241`, `probe_access_internal=198`, `linx_get_tb_cpu_state=158` |
+
+Loop update: the previous `live-throughput-unattributed` bucket is closed for
+the current clean speedpreset stack. The next QEMU implementation loop should
+target the shared initramfs lane first: reduce template `FENTRY`/`FRET.STK`
+helper exits, TB lookup/dispatch overhead, and soft-MMU/probe/load lookup cost
+for the eight initramfs rows. Keep `525.x264_r` separate as 9p/kernel
+transport despite its similar template/TB/MMU-heavy profile, because the row
+still runs through the 9p large-input shard. Keep `999.specrand_ir` as the
+strict before/after guard for every speed experiment.
+
 ### Latest MMU-Cache Train-All Rerun
 
 `workloads/generated/specint-train-all-mmuc-current-qemu-20260705-r3/`
