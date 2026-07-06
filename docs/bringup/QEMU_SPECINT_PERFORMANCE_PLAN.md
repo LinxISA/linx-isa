@@ -308,6 +308,38 @@ cost, but the row's post-TLBI progress means the next focused work should join
 `557` with the template/TB/soft-MMU lane instead of changing broad QEMU cputlb
 invalidation semantics.
 
+Delayed steady-state `557.xz_r` profile:
+`workloads/generated/specint-profile-557-steady-speedpreset-b8faff-qemu-20260706-r1/`
+waits for `LINX_SPEC_START`, delays sampling by `65.003s`, samples the real
+`qemu-system-linx64` child for `6.3s`, then terminates the process group by
+design. The child command is feature-compatible with the speedpreset stack and
+adds attribution counters: `--template-chain`, `--qemu-frame-single-reg-fast`,
+`--qemu-mmu-cache`, `--qemu-frame-stats`, `--qemu-tb-stats`,
+`--qemu-tlb-stats`, and `--qemu-tlb-inv-hot`.
+
+Top QEMU frames in that delayed sample are now dominated by the shared
+throughput lane rather than TLBI: `linx_template_fret_stk_impl=350`,
+`linx_template_fentry_impl=290`, `tb_lookup=244`, `mmu_lookup1=187`,
+`probe_access_internal=163`, `helper_lookup_tb_ptr=146`, `do_ld8_mmu=114`,
+`probe_access=109`, and `mmu_lookup=82`. `helper_linx_tlb_iv` is down to `46`
+samples in the full sample report, below the template/TB/soft-MMU cluster.
+
+The QEMU heartbeat counters agree with the profile. From the first heartbeat at
+or after `17B` instructions through the last captured heartbeat at
+`32B`, the row stays live with site changes while `tbs_flush=0`, TB misses rise
+by only `90`, generated TBs by `72`, and code usage by only `92528` bytes.
+During the same window, `tbs_lookup` rises by `726201608`, `tbs_jmp_hit` by
+`665532634`, frame entry/return counters rise by about `575M`, and
+`fr_restore_fallback` rises by `576707039`. TLBI still has a small later burst
+(`tlbi_iv` +`10241`, `tlbi_iall` +`3`) at `mm/memory.c`, but it is no longer
+the dominant steady-state host sample.
+
+Loop update: for `557.xz_r`, prioritize frame restore/load and template
+entry/return helper exits first, then TB lookup/dispatch, then generic
+soft-MMU load/probe lookup. Keep broad cputlb invalidation changes behind new
+evidence because this delayed sample shows the row continues through a
+template/TB/soft-MMU-heavy steady phase.
+
 ### Latest MMU-Cache Train-All Rerun
 
 `workloads/generated/specint-train-all-mmuc-current-qemu-20260705-r3/`
