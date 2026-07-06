@@ -175,7 +175,7 @@ Done means:
 
 ## Current Live Interpretation
 
-As of 2026-07-01:
+As of 2026-07-06:
 
 - `SPEC-M01` is resolved.
 - `SPEC-M01F` is the canonical fast gate shape for current QEMU/Linux SPECint
@@ -183,27 +183,49 @@ As of 2026-07-01:
   signal, then use `--profile test --suite test-all`,
   `--profile train --suite train-all`, or `--profile test-train` for bounded
   all-row ledgers before any refrate-scale or broad promotion run.
-- Latest all-row evidence is
-  `workloads/generated/specint-test-train-all-after-blockify-20260702-r2/`:
-  both `test-all` and `train-all` attempted all ten supported rows with BPC
-  heartbeat on rebuilt QEMU `v10.2.0-989-g5cfb672a711` after the Linx `virt`
-  memory-node MMIO-hole fix and blockify rebuild. The run is red, but it
-  supersedes the older hashclass ledger: `502.gcc_r`, `557.xz_r`, and
-  `999.specrand_ir` pass on `test`; `999.specrand_ir` passes on `train`;
-  remaining red rows are live-progress timeouts, focused user traps, guest OOM
-  at 2 GiB, wrapper/benchmark exits, and the now-isolated `525.x264_r`
-  large-payload transport row. Focused x264 9p reruns classify both `test` and
-  `train` as heartbeat-backed `live-timeout`, so future all-row ledgers should
-  use the wrapper's default `*-large-9p` split rather than recording the
-  oversized-initramfs panic as a benchmark result.
-- Latest train-only performance ledger is
-  `workloads/generated/specint-train-all-current-20260702-r1/`: the generated
-  profile again covers every supported train row, routes `525.x264_r` through
-  the large-payload 9p shard, passes `999.specrand_ir`, classifies `520` and
-  `523` as current null-address user traps, and keeps all remaining failed rows
-  in heartbeat-backed live-timeout rather than deadlock. The same pass produced
-  the QEMU helper-elision profile used by
-  `docs/bringup/QEMU_SPECINT_PERFORMANCE_PLAN.md`.
+- Latest same-head all-row speed baseline is
+  `workloads/generated/specint-train-all-speedpreset-latest-b8faff-qemu-20260706-r1/`
+  on QEMU `b8faff79be9a157fa5100f86957532652f79d679`, using the current
+  explicit speed stack (`--template-chain`, `--qemu-frame-single-reg-fast`,
+  `--qemu-mmu-cache`) plus QEMU BPC heartbeat. It passes the strict
+  `999.specrand_ir` train sentinel and keeps every real SPECint train row
+  heartbeat-live with site progress rather than deadlock. Counts in the
+  bounded 45-second ledger remain far from completion: `500=10B`, `502=9B`,
+  `505=9B`, `520=5B`, `523=8B`, `525=9B` on the generated 9p shard,
+  `531=13B`, `541=6B`, and `557=12B`.
+- The latest rejected broad QEMU speed candidate is
+  `workloads/generated/specint-train-all-restorehost-pagefast-b8faff-qemu-20260706-r1/`,
+  compared by
+  `workloads/generated/specint-qemu-run-compare-pagefast-restorehost-vs-speedpreset-b8faff-20260706-r1/report.md`.
+  It preserves the `999.specrand_ir` sentinel but regresses six real rows
+  (`500`, `502`, `505`, `520`, `531`, `557`), leaves `523`, `525`, and `541`
+  flat, and improves none. Do not put `--qemu-frame-restore-host-load` plus
+  `--qemu-frame-page-fast` into broad train-all gates unless a new same-head
+  control reverses this result.
+- Latest feature-compatible all-row profile evidence is
+  `workloads/generated/specint-profile-suite-train-speedpreset-current-clean-qemu-20260706-r1/`
+  with joined analysis
+  `workloads/generated/specint-progress-analysis-speedpreset-current-clean-20260706-r2/report.md`.
+  It classifies eight initramfs rows as the same
+  `template-tb-mmu-throughput` lane with aggregate component counts
+  `soft-mmu=4871`, `tb-dispatch=4531`, and `frame-template=3890`; `525.x264_r`
+  remains a separate `transport-9p-throughput` lane. The leading shared QEMU
+  frames are `linx_template_fret_stk_impl`,
+  `linx_template_fentry_impl`, `tb_lookup`, `helper_lookup_tb_ptr`,
+  `mmu_lookup1`, and `probe_access_internal`.
+- Focused `541.leela_r` TB-hot follow-up is
+  `workloads/generated/specint-541-tb-hot-speedpreset-b8faff-qemu-20260706-r1/`.
+  With the same explicit speed stack plus `--qemu-tb-stats`,
+  `--qemu-tb-hot`, and `--symbolize-heartbeat`, the row remains a
+  heartbeat-backed live-timeout at 10B bounded instructions in 75 seconds. TB
+  counters show code-cache pressure is not the first target (`tbs_flush=0`,
+  `tbs_code_used=37818696` of
+  `1073725352`, `tbs_miss=39207` against `895315888` lookups). Post-start
+  hot PCs are benchmark loops, not kernel boot loops:
+  `0x1555595d54 -> 0x40040d54 = .LBB154_22 Matcher.cpp:0` and
+  `0x1555596180 -> 0x40041180 = .LBB173_3 Matcher.cpp:0`. Route 541-style TB
+  evidence to dispatch/lookup overhead, template helper exits, and soft-MMU
+  probe/load cost; do not spend the next loop enlarging the TB cache.
 - Focused `531.deepsjeng_r` follow-up is
   `workloads/generated/specint-531-test-filesys-trace-20260701-r1/`: cwd,
   executable preflight, and `execve()` are correct, but the child writes the
@@ -224,30 +246,19 @@ As of 2026-07-01:
   QEMU store helper. The same focused run remains red with a later addr-zero
   user trap at `tpc=0x1555622dba`, so the next owner is that later user fault,
   not stack-growth faulting, syscall return, or SPEC input packaging.
-- Focused `541.leela_r` follow-up is
+- Focused historical `541.leela_r` correctness follow-up is
   `workloads/generated/specint-541-atomicfix-20260702-r1/`: the earlier 4 GiB
   / `--stack-limit 2G` trap mapped to recursive compiler-rt
   `__atomic_load_1` lowering. After rebuilding musl phase-b builtins, the
   spec-profile C++ runtime overlay, and the `541` executable, the row no longer
-  traps or OOMs; it becomes a heartbeat-backed `live-timeout` through 420
-  seconds with `oom_kill 0`. A longer same-binary run under
-  `workloads/generated/specint-541-atomicfix-long-20260702-r1/` exposes the next
-  blocker: a null-address mallocng `a_crash` at runtime PC `0x155561559c`,
-  mapping to ELF `0x400c059c` in `get_meta` and
-  `assert(area->check == ctx.secret)`. A second mallocng run reached the
-  `queue()` `assert(!m->next)` path at runtime PC `0x1555616858`. The oldmalloc
-  bisection under `workloads/generated/specint-541-oldmalloc-long-20260702-r1/`
-  stayed live through 1200 seconds, count `133000000000`, with no trap, panic,
-  or OOM. The old atomic recursion is closed; the next owner is mallocng
-  metadata corruption, codegen, or the mmap/free path. Keep mallocng as the
-  default phase-b allocator and use oldmalloc only as the focused bisection
-  lane for allocator-metadata traps.
+  traps or OOMs; on the current QEMU speed stack it is a throughput row rather
+  than a first-fault correctness row. Keep mallocng as the default phase-b
+  allocator and use oldmalloc only as the focused bisection lane if fresh
+  allocator-metadata traps recur.
 - `SPEC-M02` is resolved for the SPEC initramfs userspace path: the wrapper
-  reaches SPEC startup, and prior focused `999.specrand_ir` train-smoke
-  evidence passes strict hash on this QEMU/kernel stack. In the current all-row
-  diagnostic, both `999` inputs reach guest `LINX_SPEC_PASS` but fail host
-  strict-hash validation, so use a focused smoke rerun when `999` is needed as
-  a cheap correctness sentinel.
+  reaches SPEC startup, and current `999.specrand_ir` train-smoke/all-row
+  evidence passes strict hash on this QEMU/kernel stack. Keep `999` as the
+  cheap correctness sentinel before and after QEMU speed experiments.
 - `SPEC-M03` and `SPEC-M05` are active, not blocked by entry: current
   initramfs evidence reaches SPEC startup for every non-panic row. The current
   blockers are focused user traps, wrapper/benchmark child exits, confirmed
