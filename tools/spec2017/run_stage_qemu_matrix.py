@@ -334,6 +334,11 @@ def _transport_failure_details(summary_obj: dict[str, Any]) -> dict[str, dict[st
             "heartbeat_tlb_invalidation": failed_run.get("heartbeat_tlb_invalidation") or {},
             "heartbeat_tb_stats": failed_run.get("heartbeat_tb_stats") or {},
             "heartbeat_tb_hot": failed_run.get("heartbeat_tb_hot") or {},
+            "heartbeat_tb_hot_user_symbolized": bool(failed_run.get("heartbeat_tb_hot_user_symbolized", False)),
+            "heartbeat_tb_hot_user_symbol_evidence": str(
+                failed_run.get("heartbeat_tb_hot_user_symbol_evidence") or ""
+            )[:512],
+            "heartbeat_tb_hot_user_symbols": failed_run.get("heartbeat_tb_hot_user_symbols") or {},
             "heartbeat_tlb_fill_hot": failed_run.get("heartbeat_tlb_fill_hot") or {},
             "heartbeat_tlb_inv_hot": failed_run.get("heartbeat_tlb_inv_hot") or {},
             "bstart_cache_stats": failed_run.get("bstart_cache_stats") or {},
@@ -660,6 +665,9 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
         tlb_inv_symbols = ""
         if row.get("tlb_inv_hot_kernel_symbol_evidence"):
             tlb_inv_symbols = " tlbi-hot-symbolized"
+        tb_hot_symbols = ""
+        if row.get("heartbeat_tb_hot_user_symbol_evidence"):
+            tb_hot_symbols = " tb-hot-symbolized"
         timeout = " timeout" if row.get("timed_out") else ""
         stalled = " stalled" if row.get("stalled") else ""
         hb_stall = ""
@@ -670,7 +678,7 @@ def _format_failure_details(details: dict[str, dict[str, Any]]) -> str:
             hb_stall = f" heartbeat-stall={status}:{repeats}/{threshold}"
         parts.append(
             f"{bench}: {running}/{site} {progress}{timeout}{stalled} "
-            f"bpc={bpc}{recent}{kernel}{tlb_inv_symbols}{hb_stall}{fcmp}{tlbfill}{tlbfault}{tlbfill_stats}{tlbfill_hot}{mmu_cache}{frame_stats}{frame_shape_hot}{tlb_invalidation}{tlbinv_hot}{tb_stats}{tb_hot}{bstart_cache}{mprotect}{vmfault}"
+            f"bpc={bpc}{recent}{kernel}{tlb_inv_symbols}{tb_hot_symbols}{hb_stall}{fcmp}{tlbfill}{tlbfault}{tlbfill_stats}{tlbfill_hot}{mmu_cache}{frame_stats}{frame_shape_hot}{tlb_invalidation}{tlbinv_hot}{tb_stats}{tb_hot}{bstart_cache}{mprotect}{vmfault}"
             f"{pc_watch}"
         )
     return ", ".join(parts)

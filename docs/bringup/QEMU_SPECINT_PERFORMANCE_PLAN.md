@@ -3324,6 +3324,8 @@ dispatch pressure. QEMU now has a default-off hot-PC sketch:
 - Markdown tag: `tb-hot=<delta>/<lookup>@<pc>/jmp<...>/hash<...>/miss<...>`
 - Post-start markdown tag when `LINX_SPEC_START` is present:
   `tb-hot=post:<delta>/<lookup>@<pc>/jmp<...>/hash<...>/miss<...>`
+- User symbol JSON field when the runner can infer the static-PIE slide:
+  `heartbeat_tb_hot_user_symbols`
 
 Validation used the in-tree
 `emulator/qemu/build-linx/qemu-system-linx64` after rebuilding:
@@ -3332,7 +3334,7 @@ Validation used the in-tree
 | --- | --- |
 | `ninja -C emulator/qemu/build-linx qemu-system-linx64` | pass; only pre-existing Linx helper warnings |
 | `QEMU=emulator/qemu/build-linx/qemu-system-linx64 python3 avs/qemu/run_callret_contract.py` | pass |
-| `cd tools/spec2017 && python3 -m unittest test_run_int_rate_qemu test_run_stage_qemu_matrix` | pass, 76 tests |
+| `cd tools/spec2017 && python3 -m unittest test_run_int_rate_qemu test_run_stage_qemu_matrix` | pass, 79 tests |
 | `python3 -m py_compile tools/spec2017/run_int_rate_qemu.py tools/spec2017/run_stage_qemu_matrix.py tools/bringup/run_specint_fast_gate.py` | pass |
 | strict `999.specrand_ir` train with `--qemu-tb-hot` | `workloads/generated/specint-999-tb-hot-256-qemu-20260706-r1/` passes |
 | focused `502.gcc_r` train with `--qemu-tb-hot` | `workloads/generated/specint-502-tb-hot-256-qemu-20260706-r1/` remains heartbeat-live `live-timeout` |
@@ -3362,12 +3364,23 @@ it reached the same `13000000003` count, kept the same boot-phase
 `0xffffffff8006dbca` max-delta site, and showed essentially unchanged TB
 aggregate counters.
 
+The runner now adds user-side TB-hot symbolization for no-ASLR Linx static-PIE
+runs when it can infer the kernel's static-PIE slide. Re-parsing the 502 log
+against the staged train ELF reports load bias `0x1515555000` and:
+`post_start_max_delta_top0_pc:0x15559413aa->0x403ec3aa=gimple_code gimple.c:0`;
+`post_start_top0_pc:0x1555958656->0x40403656=.LBB56_543 gimplify.c:0`; and
+`post_start_top1_pc:0x1555ebb914->0x40966914=.LBB175_3 tree-inline.c:0`.
+
 Loop update: use `--qemu-tb-hot` only on focused probes after aggregate
 `--qemu-tb-stats` implicates dispatch pressure. For `502.gcc_r`, symbolize
 post-start hot PCs against the matching benchmark ELF before changing QEMU
-cache policy. Keep all-run boot-phase kernel PCs for boot/TLBI/transport
-triage only. This diagnostic does not close SPECint: the real train rows are
-still throughput-limited live-timeouts.
+cache policy. The first actionable 502 post-start TB-hot target is now the
+tiny user helper `gimple_code` plus nearby `gimplify.c` / `tree-inline.c`
+blocks, so the next speed probe should focus on user tiny-helper dispatch,
+template entry/return, and TB chaining behavior around those PCs. Keep all-run
+boot-phase kernel PCs for boot/TLBI/transport triage only. This diagnostic
+does not close SPECint: the real train rows are still throughput-limited
+live-timeouts.
 
 ## 2026-07-03 Rejected Darwin JIT State Guard
 

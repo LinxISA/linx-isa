@@ -9,6 +9,7 @@ import re
 import select
 import shlex
 import shutil
+import struct
 import subprocess
 import sys
 import time
@@ -72,6 +73,8 @@ COMPARE_ARGS: dict[str, list[str]] = {
 
 SRC_RUN_DIR = "run_base_refrate_mytest-m64.0000"
 EMPTY_STDIN_NAME = ".linx_empty_stdin"
+LINX_64_TASK_SIZE = 0x4000000000
+LINX_PAGE_SIZE = 0x1000
 
 
 def _kernel_cmdline_has_arg(cmdline: str, name: str) -> bool:
@@ -4013,6 +4016,164 @@ def _symbolize_tlb_inv_hot_kernel_sites(text: str, kernel: Path) -> dict[str, An
     )
 
 
+def _empty_user_symbol_result(enabled: bool, elf: Path | None = None) -> dict[str, Any]:
+    return {
+        "enabled": enabled,
+        "ok": False,
+        "tool": "",
+        "elf": str(elf) if elf is not None else "",
+        "load_bias": "",
+        "sites": [],
+        "evidence": "",
+    }
+
+
+def _read_elf_load_info(elf: Path) -> dict[str, Any] | None:
+    try:
+        data = elf.read_bytes()
+    except OSError:
+        return None
+    if len(data) < 64 or data[:4] != b"\x7fELF" or data[4] != 2 or data[5] != 1:
+        return None
+    e_type = struct.unpack_from("<H", data, 16)[0]
+    e_phoff = struct.unpack_from("<Q", data, 32)[0]
+    e_phentsize = struct.unpack_from("<H", data, 54)[0]
+    e_phnum = struct.unpack_from("<H", data, 56)[0]
+    loads: list[tuple[int, int]] = []
+    has_interp = False
+    for idx in range(e_phnum):
+        off = e_phoff + idx * e_phentsize
+        if off + 56 > len(data):
+            return None
+        p_type = struct.unpack_from("<I", data, off)[0]
+        if p_type == 3:  # PT_INTERP
+            has_interp = True
+        if p_type != 1:  # PT_LOAD
+            continue
+        p_vaddr = struct.unpack_from("<Q", data, off + 16)[0]
+        p_memsz = struct.unpack_from("<Q", data, off + 40)[0]
+        if p_memsz:
+            loads.append((p_vaddr, p_vaddr + p_memsz))
+    if not loads:
+        return None
+    return {
+        "type": e_type,
+        "has_interp": has_interp,
+        "loads": loads,
+        "min_load": min(start for start, _ in loads),
+    }
+
+
+def _page_start(value: int) -> int:
+    return value & ~(LINX_PAGE_SIZE - 1)
+
+
+def _linx_static_pie_noaslr_load_bias(first_load_vaddr: int) -> int:
+    # Mirrors kernel/linux/fs/binfmt_elf.c for CONFIG_ARCH_LINX static PIE:
+    # load_bias = ELF_PAGESTART((ELF_ET_DYN_BASE / 2) - first_vaddr).
+    elf_et_dyn_base = (LINX_64_TASK_SIZE // 3) * 2
+    return _page_start((elf_et_dyn_base // 2) - first_load_vaddr)
+
+
+def _tb_hot_user_symbol_addresses(hot: dict[str, Any]) -> list[tuple[str, str]]:
+    if not isinstance(hot, dict) or not hot.get("seen"):
+        return []
+    keys: list[tuple[str, str]] = []
+    prefixes = ["post_start_"] if hot.get("post_start_seen") else []
+    prefixes.append("")
+    seen: set[str] = set()
+    for prefix in prefixes:
+        for key in ("max_delta_top0_pc", "top0_pc", "top1_pc"):
+            field = f"{prefix}{key}"
+            value = str(hot.get(field) or "").lower()
+            if not value.startswith("0x"):
+                continue
+            if value.startswith("0xffffffff") or value in seen:
+                continue
+            seen.add(value)
+            keys.append((field, value))
+    return keys
+
+
+def _symbolize_tb_hot_user_sites(
+    hot: dict[str, Any],
+    run_dir: Path,
+    argv: list[str],
+    append_extra: str,
+) -> dict[str, Any]:
+    exe_name = Path(argv[0]).name if argv else ""
+    elf = (run_dir / exe_name) if exe_name else None
+    result = _empty_user_symbol_result(True, elf)
+    if not exe_name or elf is None or not elf.exists():
+        result["evidence"] = "tb-hot user symbolization unavailable: benchmark ELF not found"
+        return result
+    addresses = _tb_hot_user_symbol_addresses(hot)
+    if not addresses:
+        return result
+    elf_info = _read_elf_load_info(elf)
+    if elf_info is None:
+        result["evidence"] = "tb-hot user symbolization unavailable: unsupported ELF"
+        return result
+    load_bias: int | None = None
+    if elf_info["type"] == 2:  # ET_EXEC
+        load_bias = 0
+    elif elf_info["type"] == 3 and not elf_info["has_interp"] and _kernel_cmdline_has_arg(append_extra, "norandmaps"):
+        load_bias = _linx_static_pie_noaslr_load_bias(int(elf_info["min_load"]))
+    if load_bias is None:
+        result["evidence"] = "tb-hot user symbolization unavailable: need child maps or norandmaps static PIE"
+        return result
+    linked: list[tuple[str, str, int]] = []
+    for field, pc_text in addresses:
+        pc = int(pc_text, 16)
+        linked_addr = pc - load_bias
+        if any(start <= linked_addr < end for start, end in elf_info["loads"]):
+            linked.append((field, pc_text, linked_addr))
+    if not linked:
+        result["evidence"] = f"tb-hot user symbols: no hot PCs mapped with load_bias=0x{load_bias:x}"
+        return result
+    tool = _find_llvm_addr2line()
+    if tool is None:
+        result["load_bias"] = f"0x{load_bias:x}"
+        result["evidence"] = "tb-hot user symbolization unavailable: llvm-addr2line not found"
+        return result
+    proc = subprocess.run(
+        [str(tool), "-e", str(elf), "-f", "-C", *[f"0x{addr:x}" for _, _, addr in linked]],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        check=False,
+    )
+    result["tool"] = str(tool)
+    result["load_bias"] = f"0x{load_bias:x}"
+    if proc.returncode != 0:
+        result["evidence"] = proc.stdout.decode("utf-8", errors="replace").strip()[:512]
+        return result
+    lines = proc.stdout.decode("utf-8", errors="replace").splitlines()
+    sites: list[dict[str, str]] = []
+    for idx, (field, pc_text, linked_addr) in enumerate(linked):
+        function = lines[2 * idx].strip() if 2 * idx < len(lines) else ""
+        source = lines[2 * idx + 1].strip() if 2 * idx + 1 < len(lines) else ""
+        sites.append(
+            {
+                "field": field,
+                "pc": pc_text,
+                "linked": f"0x{linked_addr:x}",
+                "function": function,
+                "source": source,
+            }
+        )
+    result["ok"] = True
+    result["sites"] = sites
+    interesting = [
+        f"{site['field']}:{site['pc']}->{site['linked']}={site['function']} {site['source']}".strip()
+        for site in sites
+        if site.get("function") and site.get("function") != "??"
+    ]
+    if not interesting:
+        interesting = [f"{site['field']}:{site['pc']}->{site['linked']}" for site in sites]
+    result["evidence"] = "tb-hot user symbols: " + "; ".join(interesting[:6])
+    return result
+
+
 def _decimal_or_none(value: str | None) -> int | None:
     if value and value.isdecimal():
         return int(value)
@@ -6233,6 +6394,18 @@ def main(argv: list[str]) -> int:
                 qemu_info["source_run_index"] = run_cfg.get("source_run_index", run_idx)
                 qemu_info["configured_argv"] = list(run_cfg.get("argv", []))
                 qemu_info["effective_argv"] = _effective_run_argv(run_cfg)
+                qemu_info["heartbeat_tb_hot_user_symbols"] = _symbolize_tb_hot_user_sites(
+                    qemu_info.get("heartbeat_tb_hot") or {},
+                    run_dir,
+                    qemu_info["effective_argv"],
+                    effective_append_extra,
+                )
+                qemu_info["heartbeat_tb_hot_user_symbolized"] = bool(
+                    qemu_info["heartbeat_tb_hot_user_symbols"].get("ok", False)
+                )
+                qemu_info["heartbeat_tb_hot_user_symbol_evidence"] = str(
+                    qemu_info["heartbeat_tb_hot_user_symbols"].get("evidence") or ""
+                )[:512]
                 qemu_info["stdout"] = run_cfg.get("stdout")
                 qemu_info["stderr"] = run_cfg.get("stderr")
                 qemu_info["initramfs"] = str(initramfs)

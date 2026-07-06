@@ -148,6 +148,34 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(summary["post_start_max_delta_top0_pc"], "0x15559413aa")
         self.assertEqual(summary["post_start_max_delta_top0_delta"], 28272)
 
+    def test_linx_static_pie_noaslr_load_bias_matches_kernel_rule(self) -> None:
+        self.assertEqual(
+            runner._linx_static_pie_noaslr_load_bias(0x40000000),
+            0x1515555000,
+        )
+
+    def test_tb_hot_user_symbol_addresses_prefer_post_start_user_pcs(self) -> None:
+        addresses = runner._tb_hot_user_symbol_addresses(
+            {
+                "seen": True,
+                "max_delta_top0_pc": "0xffffffff8006dbca",
+                "top0_pc": "0x1555958656",
+                "post_start_seen": True,
+                "post_start_max_delta_top0_pc": "0x15559413aa",
+                "post_start_top0_pc": "0x1555958656",
+                "post_start_top1_pc": "0x1555ebb914",
+            }
+        )
+
+        self.assertEqual(
+            addresses,
+            [
+                ("post_start_max_delta_top0_pc", "0x15559413aa"),
+                ("post_start_top0_pc", "0x1555958656"),
+                ("post_start_top1_pc", "0x1555ebb914"),
+            ],
+        )
+
     def test_trap_delivery_trace_env_and_summary(self) -> None:
         qemu_env: dict[str, str] = {}
 

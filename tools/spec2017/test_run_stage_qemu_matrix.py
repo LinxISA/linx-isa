@@ -62,6 +62,37 @@ class StageQemuMatrixTests(unittest.TestCase):
         self.assertIn("/jmp23313/hash4959/miss0", text)
         self.assertNotIn("0xffffffff8006dbca", text)
 
+    def test_failure_details_marks_tb_hot_symbolized(self) -> None:
+        text = matrix._format_failure_details(
+            {
+                "502.gcc_r": {
+                    "failure_class": "live-timeout",
+                    "timed_out": True,
+                    "heartbeat_running": True,
+                    "heartbeat_site_progress": True,
+                    "heartbeat_last_progress": "site-change",
+                    "heartbeat_last_bpc": "0x1555959e5a",
+                    "heartbeat_tb_hot_user_symbol_evidence": (
+                        "tb-hot user symbols: post_start_max_delta_top0_pc:"
+                        "0x15559413aa->0x403ec3aa=gimple_code gimple.c:0"
+                    ),
+                    "heartbeat_tb_hot": {
+                        "seen": True,
+                        "post_start_seen": True,
+                        "post_start_max_delta_top0_pc": "0x15559413aa",
+                        "post_start_max_delta_top0_lookup": 28272,
+                        "post_start_max_delta_top0_delta": 28272,
+                        "post_start_max_delta_top0_jmp": 23313,
+                        "post_start_max_delta_top0_hash": 4959,
+                        "post_start_max_delta_top0_miss": 0,
+                    },
+                }
+            }
+        )
+
+        self.assertIn("tb-hot-symbolized", text)
+        self.assertIn("tb-hot=post:28272/28272@0x15559413aa", text)
+
     def test_format_mmu_cache_stats_includes_split_counters(self) -> None:
         text = matrix._format_mmu_cache_stats(
             {
