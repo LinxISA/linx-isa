@@ -468,6 +468,45 @@ gate-shape evidence, not SPEC closure: the row remains a live-timeout, but
 future throughput probes should use `--qemu-speed-stack` and reserve
 `--qemu-debug-stack` for attribution runs.
 
+Feature-matched speedpreset 505 refresh (2026-07-06):
+`workloads/generated/specint-profile-505-speedpreset-qemu-20260706-r1/`
+profiles `505.mcf_r` train under the same lightweight speed stack used by
+`workloads/generated/specint-train-all-speedpreset-qemu-20260706-r1/`:
+`--template-chain`, `--qemu-frame-single-reg-fast`, and `--qemu-mmu-cache`
+with no heavy TLB-fill or TB-hot counters. The marker-aware profile samples the
+real `qemu-system-linx64` child 20 seconds after `LINX_SPEC_START` for 8
+seconds and records `sample.ok=true` on QEMU head
+`4e9c0fcf35e80216ae46e407d97118ecd721618a`.
+
+The joined analysis
+`workloads/generated/specint-progress-analysis-speedpreset-505-profile-20260706-r1/report.md`
+is feature-compatible with the speedpreset gate and classifies `505.mcf_r` as
+`template-tb-mmu-throughput`. Its top actionable frames are
+`linx_template_fentry_impl=220`, `linx_template_fret_stk_impl=204`,
+`helper_lookup_tb_ptr=175`, `mmu_lookup1=170`, `tb_lookup=145`,
+`probe_access_internal=118`, `mmu_lookup=83`, and `do_ld8_mmu=76`. This
+refresh confirms the lighter speed stack has the same dominant cost shape as
+the earlier debug-stack profile after instrumentation overhead is removed.
+
+Single-restore-host-load experiment (2026-07-06): a local default-off QEMU
+prototype enabled host-pointer restore loads only in
+`linx_template_fret_stk_single_reg_fast()` through
+`LINX_QEMU_FRAME_SINGLE_RESTORE_HOST_LOAD=1`. `run_callret_contract.py` passed,
+but strict train `999.specrand_ir` under the speed stack failed as a
+heartbeat-backed `live-timeout` in
+`workloads/generated/specint-999-single-restore-host-qemu-20260706-r1/`.
+The patch was dropped. Do not promote or rerun the single-register-only
+restore-host switch unless a new sentinel-passing design changes the restore
+contract; keep restore-host-load work on the existing opt-in broad switch and
+focused A/B rows.
+
+Loop update: treat current speedpreset train as still throughput-limited, not
+deadlocked. The immediate 505 implementation lanes are template entry/return
+helper body cost, TB lookup/dispatch, and generic soft-MMU/probe/load lookup.
+Use strict `999.specrand_ir` as the first guard before any new QEMU speed
+prototype, then run a focused 505 A/B with the same speedpreset switches before
+considering an all-row train gate.
+
 Frame-shape attribution update:
 QEMU now has an opt-in frame-template shape sketch for SPEC heartbeat runs. Set
 `LINX_QEMU_FRAME_SHAPE_HOT=1` directly, or pass `--qemu-frame-shape-hot`
