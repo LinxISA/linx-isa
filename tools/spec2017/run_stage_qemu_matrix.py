@@ -724,6 +724,10 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
     lines.append(f"- qemu_frame_shape_hot: `{str(bool(summary.get('qemu_frame_shape_hot', False))).lower()}`")
     lines.append(f"- qemu_frame_single_reg_fast: `{str(bool(summary.get('qemu_frame_single_reg_fast', False))).lower()}`")
     lines.append(f"- qemu_frame_page_fast: `{str(bool(summary.get('qemu_frame_page_fast', False))).lower()}`")
+    lines.append(
+        "- qemu_frame_single_restore_host_load: "
+        f"`{str(bool(summary.get('qemu_frame_single_restore_host_load', False))).lower()}`"
+    )
     lines.append(f"- template_chain: `{str(bool(summary.get('template_chain', False))).lower()}`")
     lines.append(
         "- qemu_frame_restore_host_load: "
@@ -931,6 +935,15 @@ def main(argv: list[str]) -> int:
         action="store_true",
         default=_env_bool("LINX_SPEC_QEMU_FRAME_PAGE_FAST", False),
         help="Pass --qemu-frame-page-fast to enable QEMU's opt-in same-page multi-register frame fast path.",
+    )
+    ap.add_argument(
+        "--qemu-frame-single-restore-host-load",
+        action="store_true",
+        default=_env_bool("LINX_SPEC_QEMU_FRAME_SINGLE_RESTORE_HOST_LOAD", False),
+        help=(
+            "Pass --qemu-frame-single-restore-host-load to enable cached "
+            "host loads only for QEMU's one-register FRET.STK fast path."
+        ),
     )
     ap.add_argument(
         "--template-chain",
@@ -1551,6 +1564,8 @@ def main(argv: list[str]) -> int:
             cmd.append("--qemu-frame-single-reg-fast")
         if args.qemu_frame_page_fast:
             cmd.append("--qemu-frame-page-fast")
+        if args.qemu_frame_single_restore_host_load:
+            cmd.append("--qemu-frame-single-restore-host-load")
         if args.qemu_frame_restore_host_load:
             cmd.append("--qemu-frame-restore-host-load")
         if args.qemu_frame_restore_host_verify:
@@ -1739,6 +1754,7 @@ def main(argv: list[str]) -> int:
         "qemu_frame_shape_hot": bool(args.qemu_frame_shape_hot),
         "qemu_frame_single_reg_fast": bool(args.qemu_frame_single_reg_fast),
         "qemu_frame_page_fast": bool(args.qemu_frame_page_fast),
+        "qemu_frame_single_restore_host_load": bool(args.qemu_frame_single_restore_host_load),
         "template_chain": bool(args.template_chain),
         "qemu_frame_restore_host_load": bool(args.qemu_frame_restore_host_load),
         "qemu_frame_restore_host_verify": bool(args.qemu_frame_restore_host_verify),

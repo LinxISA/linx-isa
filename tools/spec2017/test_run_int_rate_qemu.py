@@ -457,6 +457,7 @@ class RunIntRateQemuTests(unittest.TestCase):
             qemu_frame_shape_hot=True,
             qemu_frame_single_reg_fast=True,
             qemu_frame_page_fast=True,
+            qemu_frame_single_restore_host_load=True,
             qemu_frame_restore_host_load=True,
             qemu_frame_restore_host_verify=True,
             qemu_frame_restore_host_verify_limit=9,
@@ -476,6 +477,7 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(env["LINX_QEMU_FRAME_SHAPE_HOT"], "1")
         self.assertEqual(env["LINX_QEMU_FRAME_SINGLE_REG_FAST"], "1")
         self.assertEqual(env["LINX_QEMU_FRAME_PAGE_FAST"], "1")
+        self.assertEqual(env["LINX_QEMU_FRAME_SINGLE_RESTORE_HOST_LOAD"], "1")
         self.assertEqual(env["LINX_QEMU_FRAME_RESTORE_HOST_LOAD"], "1")
         self.assertEqual(env["LINX_QEMU_FRAME_RESTORE_HOST_VERIFY"], "1")
         self.assertEqual(env["LINX_QEMU_FRAME_RESTORE_HOST_VERIFY_LIMIT"], "9")

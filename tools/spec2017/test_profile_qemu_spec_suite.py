@@ -82,6 +82,7 @@ class ProfileQemuSpecSuiteTests(unittest.TestCase):
             qemu_frame_shape_hot=True,
             qemu_frame_single_reg_fast=True,
             qemu_frame_page_fast=True,
+            qemu_frame_single_restore_host_load=True,
             qemu_mmu_cache=True,
             qemu_mmu_cache_stats=True,
             qemu_mmu_cache_assoc2=True,
@@ -105,6 +106,7 @@ class ProfileQemuSpecSuiteTests(unittest.TestCase):
         self.assertIn("--qemu-frame-shape-hot", cmd)
         self.assertIn("--qemu-frame-single-reg-fast", cmd)
         self.assertIn("--qemu-frame-page-fast", cmd)
+        self.assertIn("--qemu-frame-single-restore-host-load", cmd)
         self.assertIn("--qemu-mmu-cache", cmd)
         self.assertIn("--qemu-mmu-cache-stats", cmd)
         self.assertIn("--qemu-mmu-cache-assoc2", cmd)
@@ -136,6 +138,7 @@ class ProfileQemuSpecSuiteTests(unittest.TestCase):
             qemu_frame_shape_hot=False,
             qemu_frame_single_reg_fast=True,
             qemu_frame_page_fast=True,
+            qemu_frame_single_restore_host_load=True,
             qemu_mmu_cache=True,
             qemu_mmu_cache_stats=True,
             qemu_mmu_cache_assoc2=True,
@@ -154,6 +157,7 @@ class ProfileQemuSpecSuiteTests(unittest.TestCase):
         self.assertFalse(features["qemu_frame_shape_hot"])
         self.assertTrue(features["qemu_frame_single_reg_fast"])
         self.assertTrue(features["qemu_frame_page_fast"])
+        self.assertTrue(features["qemu_frame_single_restore_host_load"])
         self.assertTrue(features["qemu_mmu_cache"])
         self.assertTrue(features["qemu_mmu_cache_stats"])
         self.assertTrue(features["qemu_mmu_cache_assoc2"])

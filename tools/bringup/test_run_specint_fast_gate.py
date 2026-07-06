@@ -19,6 +19,7 @@ def _stack_args(**overrides: bool) -> SimpleNamespace:
         "qemu_frame_shape_hot": False,
         "qemu_frame_single_reg_fast": False,
         "qemu_frame_page_fast": False,
+        "qemu_frame_single_restore_host_load": False,
         "qemu_frame_restore_host_load": False,
         "qemu_tlb_stats": False,
         "qemu_tlb_inv_hot": False,
@@ -100,6 +101,7 @@ class SpecintFastGateTests(unittest.TestCase):
         self.assertFalse(args.qemu_mmu_cache_stats)
         self.assertFalse(args.qemu_tb_stats)
         self.assertFalse(args.qemu_frame_page_fast)
+        self.assertFalse(args.qemu_frame_single_restore_host_load)
         self.assertFalse(args.qemu_frame_restore_host_load)
         self.assertFalse(args.qemu_mmu_cache_assoc2)
 
@@ -123,6 +125,7 @@ class SpecintFastGateTests(unittest.TestCase):
         self.assertTrue(args.qemu_tb_stats)
         self.assertTrue(args.qemu_tb_hot)
         self.assertFalse(args.qemu_frame_page_fast)
+        self.assertFalse(args.qemu_frame_single_restore_host_load)
         self.assertFalse(args.qemu_frame_restore_host_load)
         self.assertFalse(args.qemu_mmu_cache_assoc2)
 
@@ -227,6 +230,7 @@ class SpecintFastGateTests(unittest.TestCase):
             qemu_frame_shape_hot=True,
             qemu_frame_single_reg_fast=True,
             qemu_frame_page_fast=True,
+            qemu_frame_single_restore_host_load=True,
             qemu_frame_restore_host_load=False,
             qemu_tlb_stats=False,
             qemu_tlb_inv_hot=False,
@@ -257,6 +261,7 @@ class SpecintFastGateTests(unittest.TestCase):
             forward_qemu_frame_shape_hot=True,
             forward_qemu_frame_single_reg_fast=True,
             forward_qemu_frame_page_fast=True,
+            forward_qemu_frame_single_restore_host_load=True,
             forward_qemu_frame_restore_host_load=True,
             forward_qemu_tlb_stats=True,
             forward_qemu_tlb_inv_hot=True,
@@ -290,6 +295,7 @@ class SpecintFastGateTests(unittest.TestCase):
         self.assertIn("--qemu-frame-shape-hot", cmd)
         self.assertIn("--qemu-frame-single-reg-fast", cmd)
         self.assertIn("--qemu-frame-page-fast", cmd)
+        self.assertIn("--qemu-frame-single-restore-host-load", cmd)
         self.assertIn("--qemu-tlb-fault-trace", cmd)
         self.assertIn("--qemu-tlb-fault-trace-limit", cmd)
         self.assertEqual(cmd[cmd.index("--qemu-tlb-fault-trace-limit") + 1], "64")

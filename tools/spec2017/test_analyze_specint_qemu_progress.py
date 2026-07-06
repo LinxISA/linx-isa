@@ -303,6 +303,7 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                 "qemu_frame_stats": True,
                 "qemu_frame_single_reg_fast": False,
                 "qemu_frame_page_fast": True,
+                "qemu_frame_single_restore_host_load": True,
                 "qemu_mmu_cache": True,
                 "qemu_mmu_cache_stats": True,
                 "qemu_mmu_cache_assoc2": True,
@@ -315,6 +316,7 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                     "qemu_frame_stats": False,
                     "qemu_frame_single_reg_fast": True,
                     "qemu_frame_page_fast": False,
+                    "qemu_frame_single_restore_host_load": False,
                     "qemu_mmu_cache": False,
                     "qemu_mmu_cache_stats": False,
                     "qemu_mmu_cache_assoc2": False,
@@ -337,6 +339,7 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
         self.assertEqual(mismatches["qemu_frame_stats"], (True, False))
         self.assertEqual(mismatches["qemu_frame_single_reg_fast"], (False, True))
         self.assertEqual(mismatches["qemu_frame_page_fast"], (True, False))
+        self.assertEqual(mismatches["qemu_frame_single_restore_host_load"], (True, False))
         self.assertEqual(mismatches["qemu_mmu_cache"], (True, False))
         self.assertEqual(mismatches["qemu_mmu_cache_stats"], (True, False))
         self.assertEqual(mismatches["qemu_mmu_cache_assoc2"], (True, False))

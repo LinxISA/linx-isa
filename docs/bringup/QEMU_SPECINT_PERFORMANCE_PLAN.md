@@ -4480,6 +4480,40 @@ translations. Future page-walk cache experiments must preserve large-mapping
 reuse or prove, with the `999.specrand_ir` sentinel first, that any safer
 subpage strategy does not regress the small strict train row.
 
+## Single-Register Restore Host-Load Probe
+
+On 2026-07-06, the focused `541.leela_r` train debug run
+`workloads/generated/specint-541-speedstack-frame-tb-stats-qemu-20260706-r1/`
+showed the current speed stack is already hitting the one-register frame fast
+path for the dominant shape: `single_fast_fentry=340072232`,
+`single_fast_fret_stk=340072217`, and hot shape `r10` / stack 32 for both
+`FENTRY` and `FRET.STK`. The same row still restored every slot through the
+fallback soft-MMU path (`restore_host=0`, `restore_fallback=358338546`) while
+FENTRY stores used host pointers (`save_host=358338970`).
+
+QEMU now has a narrower default-off probe,
+`LINX_QEMU_FRAME_SINGLE_RESTORE_HOST_LOAD=1` /
+`LINX_FRAME_SINGLE_RESTORE_HOST_LOAD=1`, exposed in SPEC tooling as
+`--qemu-frame-single-restore-host-load`. Unlike the broader
+`--qemu-frame-restore-host-load` experiment, this switch only lets the
+one-register `FRET.STK` fast path use cached host loads.
+
+Validation and A/B evidence:
+
+| Run | Result |
+| --- | --- |
+| `python3 avs/qemu/run_callret_contract.py` | PASS in `avs/qemu/out/callret-contract` |
+| `workloads/generated/specint-999-single-restore-host-qemu-20260706-r1/` | strict train `999.specrand_ir` passes with `--qemu-speed-stack --qemu-frame-single-restore-host-load` |
+| `workloads/generated/specint-541-speedstack-frame-tb-stats-qemu-20260706-r1/` | 60-second `541.leela_r` control reaches `count=7000000000`, `restore_host=0`, `restore_fallback=358338546` |
+| `workloads/generated/specint-541-single-restore-host-frame-tb-stats-qemu-20260706-r1/` | same-command candidate reaches `count=7000000008`, `restore_host=340102305`, `restore_fallback=18205420` |
+
+Decision: keep `--qemu-frame-single-restore-host-load` default-off and out of
+`--qemu-speed-stack`. The probe proves the restore path can be narrowed to
+one-register frames, but the focused 541 count is flat after almost all
+one-register restores become host loads. The next speed loop should stay on TB
+lookup/dispatch, template helper body cost, and soft-MMU/probe/data-load lookup
+rather than promoting restore-host loads.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.
