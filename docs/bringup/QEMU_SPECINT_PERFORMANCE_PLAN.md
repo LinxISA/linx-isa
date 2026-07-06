@@ -382,6 +382,24 @@ restore-host probes when the question is remaining frame/template cost, but
 keep it default-off for all-row gates until a fresh train-all comparison shows
 that the small focused win outweighs earlier neutral 505/541 page-fast probes.
 
+The fresh all-row comparison rejects that broad promotion. The candidate
+`workloads/generated/specint-train-all-restorehost-pagefast-b8faff-qemu-20260706-r1/`
+runs the latest submitted QEMU head with `--qemu-speed-stack` plus both
+`--qemu-frame-restore-host-load` and `--qemu-frame-page-fast`, using the same
+45-second train-all shape as
+`workloads/generated/specint-train-all-speedpreset-latest-b8faff-qemu-20260706-r1/`.
+It keeps strict `999.specrand_ir` passing (`rand.11.out`, 871 bytes,
+`0x973dcfc2`) and all real rows heartbeat-live, but the generated comparison
+`workloads/generated/specint-qemu-run-compare-pagefast-restorehost-vs-speedpreset-b8faff-20260706-r1/report.md`
+recommends `reject-candidate-throughput-regression`: no row improves, `523`,
+`525`, and `541` are flat, and `500`, `502`, `505`, `520`, `531`, and `557`
+regress versus the speedpreset baseline.
+
+Loop update: do not stack restore-host loads and page-fast in broad train-all
+gates. Keep them as row-specific 557 probes only; the next candidate should
+attack template helper body cost, TB lookup/dispatch, or soft-MMU/probe/load
+lookup directly.
+
 ### Latest MMU-Cache Train-All Rerun
 
 `workloads/generated/specint-train-all-mmuc-current-qemu-20260705-r3/`
