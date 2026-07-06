@@ -2,6 +2,13 @@
 
 ## Live Blockers (2026-07-06)
 
+- [x] ID: SPEC-QEMU-TB-JMP-CACHE14-NO-PROMOTE-20260706 A larger TCG jump cache improves 541 hash-hit attribution but not bounded progress; keep upstream QEMU's 4K-entry cache shape.
+  Candidate: a local QEMU probe raised `TB_JMP_CACHE_BITS` from 12 to 14, expanding the per-CPU jump cache from 4K to 16K entries. It changed the generic TCG dispatch cache shape, not Linx ISA semantics.
+  Validation evidence: `ninja -C emulator/qemu/build-linx qemu-system-linx64` rebuilt the candidate; `python3 avs/qemu/run_callret_contract.py` passed; strict train `999.specrand_ir` passed with the current speed stack in `workloads/generated/specint-999-tb-jmp-cache14-qemu-20260706-r1/`.
+  Focused A/B evidence: the 60-second `541.leela_r` candidate `workloads/generated/specint-541-tb-jmp-cache14-frame-tb-stats-qemu-20260706-r1/` increased jump-cache hit ratio from about 79.4% to 85.4% and reduced hash hits from about 126M to 89M versus the submitted-head control `workloads/generated/specint-541-speedstack-frame-tb-stats-qemu-20260706-r1/`, but bounded progress stayed flat (`7000000004` versus `7000000000`).
+  Loop update: the patch was dropped and not submitted. Do not promote TB jump-cache-size growth as the next SPECint speed lever without a same-head speed-only count win; keep the next loop on template helper entry/return, TB dispatch cost beyond cache hit rate, and soft-MMU/probe/load lookup.
+  skill-evolve: no-update (the rejected cache-size result is captured here; no new reusable QEMU contract was accepted).
+
 - [x] ID: SPEC-QEMU-SINGLE-RESTORE-HOST-NO-PROMOTE-20260706 A narrow one-register FRET.STK restore-host probe is sentinel-clean but flat on the focused 541 train row; keep it default-off.
   Tool change: QEMU now exposes `LINX_QEMU_FRAME_SINGLE_RESTORE_HOST_LOAD=1` / `LINX_FRAME_SINGLE_RESTORE_HOST_LOAD=1`, and SPEC tooling exposes `--qemu-frame-single-restore-host-load`. The switch only affects the one-register `FRET.STK` fast path, unlike the broader `--qemu-frame-restore-host-load` experiment.
   Attribution evidence: `workloads/generated/specint-541-speedstack-frame-tb-stats-qemu-20260706-r1/` shows the current speed stack already uses the one-register fast path for the dominant `541.leela_r` frame shape (`r10`, stack 32): `single_fast_fentry=340072232`, `single_fast_fret_stk=340072217`, `save_host=358338970`, but `restore_host=0` and `restore_fallback=358338546`.

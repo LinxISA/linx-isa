@@ -4514,6 +4514,34 @@ one-register restores become host loads. The next speed loop should stay on TB
 lookup/dispatch, template helper body cost, and soft-MMU/probe/data-load lookup
 rather than promoting restore-host loads.
 
+## Rejected TB Jump-Cache 16K Probe
+
+On 2026-07-06, the focused `541.leela_r` frame/TB-stats control still showed
+heavy TB lookup traffic on clean submitted QEMU head `b8faff79be9`, with about
+612.9M lookups in 60 seconds. Roughly 79.4% hit the per-CPU jump cache, while
+about 20.6% missed that cache and hit the global TB hash.
+
+A local QEMU probe raised generic TCG `TB_JMP_CACHE_BITS` from 12 to 14,
+expanding the jump cache from 4K entries to 16K entries. This did not change
+Linx decode, frame semantics, or the SPEC runner switches. The candidate
+rebuilt cleanly, passed `python3 avs/qemu/run_callret_contract.py`, and passed
+strict train `999.specrand_ir` in
+`workloads/generated/specint-999-tb-jmp-cache14-qemu-20260706-r1/`.
+
+Focused A/B evidence:
+
+| Run | 541 count | Jump-cache hit ratio | Hash hits | Result |
+| --- | ---: | ---: | ---: | --- |
+| `workloads/generated/specint-541-speedstack-frame-tb-stats-qemu-20260706-r1/` | 7000000000 | 79.4% | 126077902 | `live-timeout` |
+| `workloads/generated/specint-541-tb-jmp-cache14-frame-tb-stats-qemu-20260706-r1/` | 7000000004 | 85.4% | 89333135 | `live-timeout` |
+
+Decision: the patch was dropped and not submitted. A larger jump cache reduces
+global TB hash lookups, but the focused row's bounded-instruction progress is
+flat under the same debug-counter shape. Do not promote TB jump-cache-size
+growth as the next SPECint speed lever without a same-head speed-only count
+win. Keep the next QEMU loop on template helper entry/return, residual TB
+dispatch cost beyond cache hit rate, and soft-MMU/probe/load lookup.
+
 ## Validation Targets
 
 - Rebuild `emulator/qemu/build-linx/qemu-system-linx64`.
