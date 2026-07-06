@@ -126,6 +126,27 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertEqual(summary["max_delta_top0_pc"], "0x300")
         self.assertEqual(summary["max_delta_top0_delta"], 9)
         self.assertEqual(summary["max_delta_top0_hash"], 2)
+        self.assertFalse(summary["post_start_seen"])
+
+    def test_tb_hot_summary_tracks_post_spec_start_peak(self) -> None:
+        summary = runner._tb_hot_summary(
+            "LINX_TB_HOT count=10 evictions=1 slots=256 "
+            "top0_pc=0xffffffff8006dbca top0_lookup=125865 top0_delta=125865 "
+            "top0_jmp=125865 top0_hash=0 top0_miss=0 "
+            "top1_pc=0x0 top1_lookup=0 top1_delta=0 top1_jmp=0 top1_hash=0 top1_miss=0\n"
+            "LINX_SPEC_START 502.gcc_r\n"
+            "LINX_TB_HOT count=20 evictions=2 slots=256 "
+            "top0_pc=0x15559413aa top0_lookup=28272 top0_delta=28272 "
+            "top0_jmp=23313 top0_hash=4959 top0_miss=0 "
+            "top1_pc=0x1555942ea8 top1_lookup=10210 top1_delta=10210 "
+            "top1_jmp=8195 top1_hash=2015 top1_miss=0\n"
+        )
+
+        self.assertTrue(summary["seen"])
+        self.assertEqual(summary["max_delta_top0_pc"], "0xffffffff8006dbca")
+        self.assertTrue(summary["post_start_seen"])
+        self.assertEqual(summary["post_start_max_delta_top0_pc"], "0x15559413aa")
+        self.assertEqual(summary["post_start_max_delta_top0_delta"], 28272)
 
     def test_trap_delivery_trace_env_and_summary(self) -> None:
         qemu_env: dict[str, str] = {}

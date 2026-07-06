@@ -35,6 +35,33 @@ class StageQemuMatrixTests(unittest.TestCase):
         self.assertIn("/jmp6/hash1/miss1", text)
         self.assertIn("evict3", text)
 
+    def test_format_tb_hot_prefers_post_start_pc(self) -> None:
+        text = matrix._format_tb_hot(
+            {
+                "heartbeat_tb_hot": {
+                    "seen": True,
+                    "max_delta_top0_pc": "0xffffffff8006dbca",
+                    "max_delta_top0_lookup": 125865,
+                    "max_delta_top0_delta": 125865,
+                    "max_delta_top0_jmp": 125865,
+                    "max_delta_top0_hash": 0,
+                    "max_delta_top0_miss": 0,
+                    "post_start_seen": True,
+                    "post_start_max_delta_top0_pc": "0x15559413aa",
+                    "post_start_max_delta_top0_lookup": 28272,
+                    "post_start_max_delta_top0_delta": 28272,
+                    "post_start_max_delta_top0_jmp": 23313,
+                    "post_start_max_delta_top0_hash": 4959,
+                    "post_start_max_delta_top0_miss": 0,
+                    "evictions": 3,
+                }
+            }
+        )
+
+        self.assertIn("tb-hot=post:28272/28272@0x15559413aa", text)
+        self.assertIn("/jmp23313/hash4959/miss0", text)
+        self.assertNotIn("0xffffffff8006dbca", text)
+
     def test_format_mmu_cache_stats_includes_split_counters(self) -> None:
         text = matrix._format_mmu_cache_stats(
             {

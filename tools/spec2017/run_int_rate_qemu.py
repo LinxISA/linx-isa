@@ -4201,8 +4201,7 @@ def _heartbeat_tb_stats_summary(line: str) -> dict[str, Any]:
     }
 
 
-def _tb_hot_summary(text: str) -> dict[str, Any]:
-    lines = re.findall(r"^LINX_TB_HOT .*$", text, flags=re.MULTILINE)
+def _tb_hot_summary_from_lines(lines: list[str]) -> dict[str, Any]:
     if not lines:
         return {
             "seen": False,
@@ -4251,6 +4250,32 @@ def _tb_hot_summary(text: str) -> dict[str, Any]:
         "max_delta_top0_hash": _decimal_or_none(max_delta_fields.get("top0_hash")),
         "max_delta_top0_miss": _decimal_or_none(max_delta_fields.get("top0_miss")),
     }
+
+
+def _tb_hot_post_start_lines(text: str) -> list[str]:
+    lines: list[str] = []
+    after_start = False
+    for line in text.splitlines():
+        if line.startswith("LINX_SPEC_START "):
+            after_start = True
+            continue
+        if after_start and line.startswith("LINX_TB_HOT "):
+            lines.append(line)
+    return lines
+
+
+def _tb_hot_summary(text: str) -> dict[str, Any]:
+    lines = re.findall(r"^LINX_TB_HOT .*$", text, flags=re.MULTILINE)
+    summary = _tb_hot_summary_from_lines(lines)
+    post_start = _tb_hot_summary_from_lines(_tb_hot_post_start_lines(text))
+    if post_start.get("seen"):
+        for key, value in post_start.items():
+            summary[f"post_start_{key}"] = value
+    else:
+        summary["post_start_seen"] = False
+        summary["post_start_line_count"] = 0
+        summary["post_start_last"] = ""
+    return summary
 
 
 def _tlb_fill_hot_summary(text: str) -> dict[str, Any]:

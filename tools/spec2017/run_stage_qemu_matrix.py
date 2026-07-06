@@ -571,23 +571,25 @@ def _format_tb_hot(row: dict[str, Any]) -> str:
     hot = row.get("heartbeat_tb_hot")
     if not isinstance(hot, dict) or not hot.get("seen"):
         return ""
-    pc = hot.get("max_delta_top0_pc") or hot.get("top0_pc") or "no-pc"
-    delta = hot.get("max_delta_top0_delta")
-    lookup = hot.get("max_delta_top0_lookup")
+    prefix = "post_start_" if hot.get("post_start_seen") else ""
+    pc = hot.get(f"{prefix}max_delta_top0_pc") or hot.get(f"{prefix}top0_pc") or "no-pc"
+    delta = hot.get(f"{prefix}max_delta_top0_delta")
+    lookup = hot.get(f"{prefix}max_delta_top0_lookup")
     if lookup is None:
-        lookup = hot.get("top0_lookup")
+        lookup = hot.get(f"{prefix}top0_lookup")
     if delta is None and lookup is None:
         return ""
-    count_tag = f"{delta}/{lookup}" if delta is not None else str(lookup)
-    jmp = hot.get("max_delta_top0_jmp")
+    phase = "post:" if prefix else ""
+    count_tag = f"{phase}{delta}/{lookup}" if delta is not None else f"{phase}{lookup}"
+    jmp = hot.get(f"{prefix}max_delta_top0_jmp")
     if jmp is None:
-        jmp = hot.get("top0_jmp")
-    hash_hit = hot.get("max_delta_top0_hash")
+        jmp = hot.get(f"{prefix}top0_jmp")
+    hash_hit = hot.get(f"{prefix}max_delta_top0_hash")
     if hash_hit is None:
-        hash_hit = hot.get("top0_hash")
-    miss = hot.get("max_delta_top0_miss")
+        hash_hit = hot.get(f"{prefix}top0_hash")
+    miss = hot.get(f"{prefix}max_delta_top0_miss")
     if miss is None:
-        miss = hot.get("top0_miss")
+        miss = hot.get(f"{prefix}top0_miss")
     return (
         f" tb-hot={count_tag}@{pc}"
         f"/jmp{jmp}/hash{hash_hit}/miss{miss}"

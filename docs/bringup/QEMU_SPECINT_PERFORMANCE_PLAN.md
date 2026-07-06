@@ -3322,6 +3322,8 @@ dispatch pressure. QEMU now has a default-off hot-PC sketch:
 - Log line: `LINX_TB_HOT count=... evictions=... slots=256 top0_pc=...`
 - JSON field: `heartbeat_tb_hot`
 - Markdown tag: `tb-hot=<delta>/<lookup>@<pc>/jmp<...>/hash<...>/miss<...>`
+- Post-start markdown tag when `LINX_SPEC_START` is present:
+  `tb-hot=post:<delta>/<lookup>@<pc>/jmp<...>/hash<...>/miss<...>`
 
 Validation used the in-tree
 `emulator/qemu/build-linx/qemu-system-linx64` after rebuilding:
@@ -3330,7 +3332,7 @@ Validation used the in-tree
 | --- | --- |
 | `ninja -C emulator/qemu/build-linx qemu-system-linx64` | pass; only pre-existing Linx helper warnings |
 | `QEMU=emulator/qemu/build-linx/qemu-system-linx64 python3 avs/qemu/run_callret_contract.py` | pass |
-| `cd tools/spec2017 && python3 -m unittest test_run_int_rate_qemu test_run_stage_qemu_matrix` | pass, 74 tests |
+| `cd tools/spec2017 && python3 -m unittest test_run_int_rate_qemu test_run_stage_qemu_matrix` | pass, 76 tests |
 | `python3 -m py_compile tools/spec2017/run_int_rate_qemu.py tools/spec2017/run_stage_qemu_matrix.py tools/bringup/run_specint_fast_gate.py` | pass |
 | strict `999.specrand_ir` train with `--qemu-tb-hot` | `workloads/generated/specint-999-tb-hot-256-qemu-20260706-r1/` passes |
 | focused `502.gcc_r` train with `--qemu-tb-hot` | `workloads/generated/specint-502-tb-hot-256-qemu-20260706-r1/` remains heartbeat-live `live-timeout` |
@@ -3342,21 +3344,30 @@ no panic and no trap. Aggregate TB counters were
 `tbs_jmp_hit=383996953`, `tbs_hash_hit=43707695`,
 `tbs_miss=90063`, `tbs_gen=71561`, `tbs_flush=0`,
 `tbs_phys_inv=3494`, and `tbs_code_used=91901096` of
-`1073725352`. The hot sketch's max-delta heartbeat identified
-`0xffffffff8006dbca` as the dominant TB lookup PC in that window:
+`1073725352`. The all-run hot sketch's max-delta heartbeat identified
+`0xffffffff8006dbca` as the dominant TB lookup PC before benchmark start:
 `tb-hot=125865/125865@0xffffffff8006dbca/jmp125865/hash0/miss0`
 with `evict119680762`. Symbolization with
 `compiler/llvm/build-linxisa-clang/bin/llvm-addr2line -e
 kernel/linux/build-linx-fixed/vmlinux -f -C 0xffffffff8006dbca` resolves the
-site to `.LBB19_16` in `printk_ringbuffer.c`.
+site to `.LBB19_16` in `printk_ringbuffer.c`. That is boot-phase evidence,
+not the current benchmark bottleneck: `LINX_SPEC_START 502.gcc_r` appears
+after the first five `LINX_TB_HOT` lines in the QEMU log. Re-parsing the same
+log with post-start filtering reports `post_start_max_delta_top0_pc=0x15559413aa`
+and `post_start_max_delta_top0_delta=28272`, so focused speed work should
+symbolize the post-start user PC before changing kernel logging or TB cache
+policy. A quiet/loglevel probe in
+`workloads/generated/specint-502-tb-hot-quiet-qemu-20260706-r1/` was neutral:
+it reached the same `13000000003` count, kept the same boot-phase
+`0xffffffff8006dbca` max-delta site, and showed essentially unchanged TB
+aggregate counters.
 
 Loop update: use `--qemu-tb-hot` only on focused probes after aggregate
 `--qemu-tb-stats` implicates dispatch pressure. For `502.gcc_r`, symbolize
-hot PCs against the matching `vmlinux` or benchmark ELF before changing QEMU
-cache policy. The first `502.gcc_r` hot PC points at kernel logging/ring-buffer
-activity, so the next probe should separate printk/loglevel overhead from
-generic TB dispatch churn. This diagnostic does not close SPECint: the real
-train rows are still throughput-limited live-timeouts.
+post-start hot PCs against the matching benchmark ELF before changing QEMU
+cache policy. Keep all-run boot-phase kernel PCs for boot/TLBI/transport
+triage only. This diagnostic does not close SPECint: the real train rows are
+still throughput-limited live-timeouts.
 
 ## 2026-07-03 Rejected Darwin JIT State Guard
 
