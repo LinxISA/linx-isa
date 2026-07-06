@@ -232,6 +232,8 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                         "top_qemu": [
                             {"symbol": "cpu_exec_setjmp", "count": 99},
                             {"symbol": "linx_template_fentry_impl", "count": 10},
+                            {"symbol": "tb_lookup", "count": 7},
+                            {"symbol": "mmu_lookup1", "count": 5},
                         ],
                     },
                     {
@@ -262,7 +264,19 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
         rows = {row["bench"]: row for row in report["benchmarks"]}
         self.assertEqual(
             rows["505.mcf_r"]["top_qemu"],
-            [{"symbol": "linx_template_fentry_impl", "count": 10}],
+            [
+                {"symbol": "linx_template_fentry_impl", "count": 10},
+                {"symbol": "tb_lookup", "count": 7},
+                {"symbol": "mmu_lookup1", "count": 5},
+            ],
+        )
+        self.assertEqual(
+            rows["505.mcf_r"]["profile_components"],
+            [
+                {"component": "frame-template", "count": 10},
+                {"component": "tb-dispatch", "count": 7},
+                {"component": "soft-mmu", "count": 5},
+            ],
         )
         self.assertEqual(rows["505.mcf_r"]["heartbeat_last_progress"], "site-change")
         self.assertEqual(rows["505.mcf_r"]["heartbeat_recent_unique_sites"], 4)
@@ -288,9 +302,20 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
         lane_summary = {
             row["lane"]: row["top_qemu_symbols"] for row in report["lanes"]
         }
+        lane_components = {
+            row["lane"]: row["component_counts"] for row in report["lanes"]
+        }
         self.assertNotIn(
             "cpu_exec_setjmp",
             {item["symbol"] for item in lane_summary["template-tb-mmu-throughput"]},
+        )
+        self.assertEqual(
+            lane_components["template-tb-mmu-throughput"][:3],
+            [
+                {"component": "frame-template", "count": 10},
+                {"component": "tb-dispatch", "count": 7},
+                {"component": "soft-mmu", "count": 5},
+            ],
         )
         self.assertFalse(report["completion_status"]["spec_train_correctness_complete"])
         self.assertTrue(report["qemu"]["feature_compatibility"]["ok"])
@@ -613,6 +638,7 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                     "profile_sample_ok": True,
                     "lane": "template-tb-mmu-throughput",
                     "top_qemu": [{"symbol": "tb_lookup", "count": 3}],
+                    "profile_components": [{"component": "tb-dispatch", "count": 3}],
                     "proposed_action": "Target TB lookup.",
                     "trap_seen": True,
                     "fault_trace_seen": True,
@@ -656,6 +682,7 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
                     "bench_count": 1,
                     "benches": ["505.mcf_r"],
                     "top_qemu_symbols": [{"symbol": "tb_lookup", "count": 3}],
+                    "component_counts": [{"component": "tb-dispatch", "count": 3}],
                 }
             ],
         }
@@ -670,6 +697,7 @@ class AnalyzeSpecintQemuProgressTests(unittest.TestCase):
         self.assertIn("profile_use_reason: `suppressed-feature-mismatch`", text)
         self.assertIn("qemu_frame_stats", text)
         self.assertIn("template-tb-mmu-throughput", text)
+        self.assertIn("tb-dispatch=3", text)
         self.assertIn("tb_lookup=3", text)
         self.assertIn("Fault And Trap Evidence", text)
         self.assertIn("LINX_FAULT_TRACE", text)

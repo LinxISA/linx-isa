@@ -197,19 +197,22 @@ MMU-cache stats, no victim cache, and clean QEMU head
 `workloads/generated/specint-progress-analysis-speedpreset-current-clean-20260706-r1/report.md`
 records `qemu_feature_compatible=true` and
 `profile_used_for_classification=true`.
+The refreshed analyzer report
+`workloads/generated/specint-progress-analysis-speedpreset-current-clean-20260706-r2/report.md`
+adds component rollups over the same profile rows.
 
 Current clean lane split:
 
-| Lane | Benchmarks | Top QEMU symbols |
-| --- | --- | --- |
-| `template-tb-mmu-throughput` | `500`, `502`, `505`, `520`, `523`, `531`, `541`, `557` | `linx_template_fret_stk_impl=2022`, `linx_template_fentry_impl=1847`, `tb_lookup=1732`, `helper_lookup_tb_ptr=1403`, `mmu_lookup1=1370`, `probe_access_internal=1289`, `mmu_lookup=756`, `linx_get_tb_cpu_state=745` |
-| `transport-9p-throughput` | `525` | `linx_template_fentry_impl=459`, `linx_template_fret_stk_impl=412`, `tb_lookup=307`, `helper_lookup_tb_ptr=264`, `mmu_lookup1=241`, `probe_access=241`, `probe_access_internal=198`, `linx_get_tb_cpu_state=158` |
+| Lane | Benchmarks | Component counts | Top QEMU symbols |
+| --- | --- | --- | --- |
+| `template-tb-mmu-throughput` | `500`, `502`, `505`, `520`, `523`, `531`, `541`, `557` | `soft-mmu=4871`, `tb-dispatch=4531`, `frame-template=3890`, `other=335`, `tlbi=209` | `linx_template_fret_stk_impl=2022`, `linx_template_fentry_impl=1847`, `tb_lookup=1732`, `helper_lookup_tb_ptr=1403`, `mmu_lookup1=1370`, `probe_access_internal=1289`, `mmu_lookup=756`, `linx_get_tb_cpu_state=745` |
+| `transport-9p-throughput` | `525` | `soft-mmu=1024`, `frame-template=930`, `tb-dispatch=729` | `linx_template_fentry_impl=459`, `linx_template_fret_stk_impl=412`, `tb_lookup=307`, `helper_lookup_tb_ptr=264`, `mmu_lookup1=241`, `probe_access=241`, `probe_access_internal=198`, `linx_get_tb_cpu_state=158` |
 
 Loop update: the previous `live-throughput-unattributed` bucket is closed for
 the current clean speedpreset stack. The next QEMU implementation loop should
-target the shared initramfs lane first: reduce template `FENTRY`/`FRET.STK`
-helper exits, TB lookup/dispatch overhead, and soft-MMU/probe/load lookup cost
-for the eight initramfs rows. Keep `525.x264_r` separate as 9p/kernel
+target the shared initramfs lane first: reduce soft-MMU/probe/load lookup,
+TB lookup/dispatch overhead, and template `FENTRY`/`FRET.STK` helper exits for
+the eight initramfs rows. Keep `525.x264_r` separate as 9p/kernel
 transport despite its similar template/TB/MMU-heavy profile, because the row
 still runs through the 9p large-input shard. Keep `999.specrand_ir` as the
 strict before/after guard for every speed experiment.

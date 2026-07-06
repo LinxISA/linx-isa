@@ -2,6 +2,13 @@
 
 ## Live Blockers (2026-07-06)
 
+- [x] ID: SPEC-QEMU-PROGRESS-COMPONENT-ROLLUP-20260706 SPEC/QEMU progress analysis now reports component totals before selecting the next speed lane.
+  Tool change: `tools/spec2017/analyze_specint_qemu_progress.py` now groups actionable post-start QEMU profile samples into stable components such as `soft-mmu`, `tb-dispatch`, `frame-template`, `tlbi`, and `transport`. Reports preserve per-symbol frames, but row and lane summaries now also include `profile_components` / `component_counts`.
+  Validation evidence: `python3 -m py_compile tools/spec2017/analyze_specint_qemu_progress.py tools/spec2017/test_analyze_specint_qemu_progress.py` passes; `PYTHONPATH=tools/spec2017 python3 -m unittest tools.spec2017.test_analyze_specint_qemu_progress` passes seven tests.
+  Analysis evidence: regenerated report `workloads/generated/specint-progress-analysis-speedpreset-current-clean-20260706-r2/report.md` keeps the same clean-head lane split and shows the eight initramfs throughput rows are led by `soft-mmu=4871`, then `tb-dispatch=4531`, `frame-template=3890`, `other=335`, and `tlbi=209`. The 9p row is also soft-MMU/template/TB heavy (`soft-mmu=1024`, `frame-template=930`, `tb-dispatch=729`) but remains transport-separated.
+  Loop update: prioritize the next accepted QEMU speed prototype on soft-MMU/probe/load lookup first, with TB dispatch and frame-template helper exits immediately behind it. Keep `999.specrand_ir` as the strict sentinel and keep `525.x264_r` out of initramfs all-row speed conclusions.
+  skill-evolve: no-update (this is root tooling/reporting refinement; existing `linx-qemu` guidance already routes these rows to soft-MMU/TB/template work).
+
 - [x] ID: SPEC-QEMU-TB-JMP-CACHE14-NO-PROMOTE-20260706 A larger TCG jump cache improves 541 hash-hit attribution but not bounded progress; keep upstream QEMU's 4K-entry cache shape.
   Candidate: a local QEMU probe raised `TB_JMP_CACHE_BITS` from 12 to 14, expanding the per-CPU jump cache from 4K to 16K entries. It changed the generic TCG dispatch cache shape, not Linx ISA semantics.
   Validation evidence: `ninja -C emulator/qemu/build-linx qemu-system-linx64` rebuilt the candidate; `python3 avs/qemu/run_callret_contract.py` passed; strict train `999.specrand_ir` passed with the current speed stack in `workloads/generated/specint-999-tb-jmp-cache14-qemu-20260706-r1/`.

@@ -56,6 +56,59 @@ PROFILE_WRAPPER_SYMBOLS = {
     "cpu_loop_exec_tb",
 }
 
+PROFILE_COMPONENT_PATTERNS = (
+    (
+        "frame-template",
+        (
+            "linx_template_",
+            "helper_linx_template_",
+            "linx_frame_",
+            "helper_linx_frame_",
+        ),
+    ),
+    (
+        "tb-dispatch",
+        (
+            "tb_lookup",
+            "helper_lookup_tb_ptr",
+            "linx_get_tb_cpu_state",
+            "qht_lookup_custom",
+            "cpu_tb_exec",
+            "cpu_loop_exec_tb",
+        ),
+    ),
+    (
+        "soft-mmu",
+        (
+            "mmu_lookup",
+            "mmu_lookup1",
+            "probe_access",
+            "probe_access_internal",
+            "do_ld",
+            "do_st",
+            "tlb_vaddr_to_host",
+            "linx_mmu_translate",
+        ),
+    ),
+    (
+        "tlbi",
+        (
+            "helper_linx_tlb_",
+            "tlb_flush",
+        ),
+    ),
+    (
+        "transport",
+        (
+            "get_bql_locked",
+            "virtio",
+            "v9fs",
+            "pdu_",
+            "p9_",
+        ),
+    ),
+)
+
 FEATURE_KEYS = (
     "template_chain",
     "qemu_frame_stats",
@@ -480,6 +533,28 @@ def _profile_top_frames(
     return out
 
 
+def _component_for_symbol(symbol: str) -> str:
+    for component, prefixes in PROFILE_COMPONENT_PATTERNS:
+        if any(symbol.startswith(prefix) for prefix in prefixes):
+            return component
+    return "other"
+
+
+def _component_counts(top_qemu: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    totals: dict[str, int] = {}
+    for item in top_qemu:
+        symbol = item.get("symbol")
+        count = item.get("count")
+        if not symbol or not isinstance(count, int):
+            continue
+        component = _component_for_symbol(symbol)
+        totals[component] = totals.get(component, 0) + count
+    return [
+        {"component": component, "count": count}
+        for component, count in sorted(totals.items(), key=lambda item: (-item[1], item[0]))
+    ]
+
+
 def _actionable_profile_row(profile_row: dict[str, Any] | None) -> dict[str, Any] | None:
     if not profile_row:
         return None
@@ -585,6 +660,7 @@ def _bench_report_row(
     raw_top_qemu = profile_row.get("top_qemu", []) if profile_row else []
     actionable_top_qemu = _profile_top_frames(profile_row)
     wrapper_top_qemu = _profile_top_frames(profile_row, wrappers=True)
+    profile_components = _component_counts(actionable_top_qemu)
     out = {
         "bench": gate_row["bench"],
         "transport": gate_row.get("transport"),
@@ -695,6 +771,7 @@ def _bench_report_row(
         "profile_sample_ok": bool(profile_row and profile_row.get("sample_ok")),
         "profile_transport": profile_row.get("transport") if profile_row else None,
         "top_qemu": actionable_top_qemu,
+        "profile_components": profile_components,
         "raw_top_qemu": raw_top_qemu,
         "profile_wrapper_qemu": wrapper_top_qemu,
         "lane": lane,
@@ -707,7 +784,15 @@ def _lane_summary(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     lanes: dict[str, dict[str, Any]] = {}
     for row in rows:
         lane = row["lane"]
-        slot = lanes.setdefault(lane, {"lane": lane, "benches": [], "top_qemu_symbols": {}})
+        slot = lanes.setdefault(
+            lane,
+            {
+                "lane": lane,
+                "benches": [],
+                "top_qemu_symbols": {},
+                "component_counts": {},
+            },
+        )
         slot["benches"].append(row["bench"])
         for item in row.get("top_qemu") or []:
             symbol = item.get("symbol")
@@ -715,6 +800,12 @@ def _lane_summary(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
             if not symbol or not isinstance(count, int):
                 continue
             slot["top_qemu_symbols"][symbol] = slot["top_qemu_symbols"].get(symbol, 0) + count
+        for item in row.get("profile_components") or []:
+            component = item.get("component")
+            count = item.get("count")
+            if not component or not isinstance(count, int):
+                continue
+            slot["component_counts"][component] = slot["component_counts"].get(component, 0) + count
 
     out: list[dict[str, Any]] = []
     for lane, slot in sorted(lanes.items()):
@@ -725,12 +816,20 @@ def _lane_summary(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 key=lambda item: (-item[1], item[0]),
             )[:8]
         ]
+        components = [
+            {"component": component, "count": count}
+            for component, count in sorted(
+                slot["component_counts"].items(),
+                key=lambda item: (-item[1], item[0]),
+            )
+        ]
         out.append(
             {
                 "lane": lane,
                 "bench_count": len(slot["benches"]),
                 "benches": slot["benches"],
                 "top_qemu_symbols": symbols,
+                "component_counts": components,
             }
         )
     return out
@@ -920,6 +1019,13 @@ def _write_markdown(path: Path, report: dict[str, Any]) -> None:
     for row in report["benchmarks"]:
         gate = "pass" if row.get("gate_ok") else row.get("failure_class", "fail")
         top = _top_text(row, 5)
+        components = ", ".join(
+            f"{item['component']}={item['count']}"
+            for item in row.get("profile_components") or []
+        )
+        top_text = top
+        if components:
+            top_text = f"{components}; {top}" if top else components
         progress = row.get("heartbeat_last_progress", "")
         unique_sites = row.get("heartbeat_recent_unique_sites")
         count_delta = row.get("heartbeat_recent_count_delta")
@@ -938,7 +1044,7 @@ def _write_markdown(path: Path, report: dict[str, Any]) -> None:
             f"`{progress_text}` | "
             f"`{str(row.get('profile_sample_ok', False)).lower()}` | "
             f"`{row['lane']}` | "
-            f"`{top}` | "
+            f"`{top_text}` | "
             f"{row['proposed_action']} |"
         )
 
@@ -1045,10 +1151,16 @@ def _write_markdown(path: Path, report: dict[str, Any]) -> None:
             f"{item['symbol']}={item['count']}"
             for item in lane.get("top_qemu_symbols") or []
         )
+        components = ", ".join(
+            f"{item['component']}={item['count']}"
+            for item in lane.get("component_counts") or []
+        )
         lines.append(
             f"- `{lane['lane']}`: {lane['bench_count']} row(s): "
             f"`{', '.join(lane['benches'])}`"
         )
+        if components:
+            lines.append(f"  Component counts: `{components}`")
         if top:
             lines.append(f"  Top QEMU symbols: `{top}`")
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
