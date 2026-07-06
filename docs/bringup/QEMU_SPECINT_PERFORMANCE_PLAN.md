@@ -418,6 +418,20 @@ template helper exits, and TB lookup/dispatch. Do not promote restore-host load
 as the broad solution; use `--terminate-after-sample` and
 `--sample-delay-sec` for faster focused host profiles of those remaining lanes.
 
+Same-head restore-host-load update (2026-07-06): QEMU head
+`4e9c0fcf35e80216ae46e407d97118ecd721618a` now has paired 90-second train-all
+runs with and without `--qemu-frame-restore-host-load`:
+`workloads/generated/specint-train-all-speedstack-qemu-20260706-r2/` and
+`workloads/generated/specint-train-all-restorehost-stack-qemu-20260706-r1/`.
+The restore-host run eliminates `fr_restore_fallback` for every live row and
+keeps the strict `999.specrand_ir` sentinel passing, but it is not a broad
+speed-stack promotion: bounded counts improve for `502.gcc_r` (+5.0%),
+`525.x264_r` (+4.3%), and `557.xz_r` (+7.1%), are neutral for `541.leela_r`,
+and regress `500.perlbench_r` (-3.7%), `505.mcf_r` (-3.8%),
+`520.omnetpp_r` (-7.1%), `523.xalancbmk_r` (-5.9%), and
+`531.deepsjeng_r` (-6.7%). Keep restore-host loads as an opt-in focused A/B
+switch, not a default all-row gate feature.
+
 Frame-shape attribution update:
 QEMU now has an opt-in frame-template shape sketch for SPEC heartbeat runs. Set
 `LINX_QEMU_FRAME_SHAPE_HOT=1` directly, or pass `--qemu-frame-shape-hot`
