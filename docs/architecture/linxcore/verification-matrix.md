@@ -21,16 +21,18 @@ It is the normative mapping between:
 | Contract ID | Area | Normative statement |
 |---|---|---|
 | `LC-ARCH-DOC-001` | Architecture docs | Canonical LinxCore docs live in `rtl/LinxCore/docs/architecture`, are mirrored into `docs/architecture/linxcore`, and stay nav-wired in LinxArch docs |
-| `LC-MA-PIPE-001` | Pipeline | Stage ownership and precise superscalar retirement are preserved |
+| `LC-MA-PIPE-001` | Pipeline | F0 controls thread/PC selection; fetch is `F1..F4/IB`; decode/dispatch is `D1..D3/S1..S3`; E stages are absolute execute cycles; W alignment is declared per producer; precise completion/commit/recovery uses R0..R4 with CMT/FLS at R2 and restart at R4 |
+| `LC-MA-RES-001` | Resource admission | Decode groups reserve ROB/BROB, rename, IQ, and memory-order resources atomically or make no state change |
+| `LC-MA-ROB-001` | ROB/retirement | Instruction rows allocate in order, commit contiguously, retain cleanup sidecars through deallocation, and recover precisely |
 | `LC-MA-HAZ-001` | Hazards/replay | Replay, redirect, wakeup, and issue behavior do not violate correctness |
-| `LC-MA-BLK-001` | Block control flow | `BSTART`/`BSTOP`, BID, and recovery-to-boundary legality are preserved |
-| `LC-MA-PRV-001` | Privilege/traps | U/S trap entry/return and CSR-visible side effects are precise |
+| `LC-MA-BLK-001` | Block control flow | `BSTART`/`BSTOP`, separate STID plus `BID_W=ceil(log2(BROB_ENTRIES))`, per-STID BROB ring-qualified age/flush, and recovery-to-boundary legality are preserved |
+| `LC-MA-PRV-001` | Privilege/traps | ACR service-request entry/return, `BI=1` block-state restore, and SSR-visible side effects are precise |
 | `LC-MA-MMU-001` | MMU | Translation and fault behavior are precise and gate-validated |
 | `LC-MA-IRQ-001` | Interrupts | Timer IRQ delivery and entry/return behavior are deterministic under strict gates |
 | `LC-MA-MEM-001` | Memory ordering | Load/store forwarding, replay, and commit-visible ordering stay legal |
 | `LC-MA-ENG-001` | Engine integration | Engine-backed execution remains visible through the lowered block stream and canonical block/BID completion model |
 | `LC-MA-FWD-001` | Forward progress | Branch, flush, load-miss, and replay paths preserve progress |
-| `LC-MA-STAGE-001` | Stage ownership | Every documented pipeline stage maps to a dedicated owner file and `@module` boundary |
+| `LC-MA-STAGE-001` | Stage ownership | Every documented stateful boundary maps to a named `@module` state owner; service contributors and shared per-pipe E/W or R coordinate owners are explicit |
 | `LC-IF-PYC-001` | pyCircuit interface versioning | pyCircuit-LinxCore contract follows SemVer with gate-enforced compatibility |
 | `LC-IF-PYC-002` | pyCircuit commit payload | Required commit fields and env controls stay compatible with trace tooling |
 | `LC-IF-TRACE-001` | Trace schema | LinxTrace schema stays synchronized across producer and consumer tools |
@@ -42,14 +44,14 @@ It is the normative mapping between:
 
 | Gate key | Contract IDs covered |
 |---|---|
-| `Architecture::LinxCore architecture contract lint` | `LC-ARCH-DOC-001`, `LC-MA-PIPE-001`, `LC-MA-HAZ-001`, `LC-MA-BLK-001`, `LC-MA-PRV-001`, `LC-MA-MMU-001`, `LC-MA-IRQ-001`, `LC-MA-MEM-001`, `LC-MA-ENG-001`, `LC-MA-FWD-001`, `LC-MA-STAGE-001`, `LC-IF-PYC-001`, `LC-IF-PYC-002`, `LC-IF-TRACE-001`, `LC-IF-TRACE-002`, `LC-IF-SYNC-001`, `LC-IF-MODEL-001` |
+| `Architecture::LinxCore architecture contract lint` | `LC-ARCH-DOC-001`, `LC-MA-PIPE-001`, `LC-MA-RES-001`, `LC-MA-ROB-001`, `LC-MA-HAZ-001`, `LC-MA-BLK-001`, `LC-MA-PRV-001`, `LC-MA-MMU-001`, `LC-MA-IRQ-001`, `LC-MA-MEM-001`, `LC-MA-ENG-001`, `LC-MA-FWD-001`, `LC-MA-STAGE-001`, `LC-IF-PYC-001`, `LC-IF-PYC-002`, `LC-IF-TRACE-001`, `LC-IF-TRACE-002`, `LC-IF-SYNC-001`, `LC-IF-MODEL-001` |
 | `Architecture::mkdocs architecture nav/docs` | `LC-ARCH-DOC-001` |
 | `LinxCore::stage/connectivity lint` | `LC-MA-PIPE-001`, `LC-MA-STAGE-001` |
 | `LinxCore::opcode parity` | `LC-MA-PIPE-001`, `LC-MA-BLK-001` |
 | `LinxCore::runner protocol` | `LC-MA-BLK-001`, `LC-MA-FWD-001`, `LC-MA-IRQ-001` |
 | `LinxCore::trace schema and memory smoke` | `LC-MA-HAZ-001`, `LC-MA-MEM-001`, `LC-IF-TRACE-001` |
 | `LinxCore::cosim smoke` | `LC-MA-PRV-001`, `LC-MA-MMU-001`, `LC-MA-IRQ-001`, `LC-MA-MEM-001` |
-| `Testbench::ROB bookkeeping` | `LC-MA-PIPE-001`, `LC-MA-HAZ-001`, `LC-MA-FWD-001` |
+| `Testbench::ROB bookkeeping` | `LC-MA-PIPE-001`, `LC-MA-RES-001`, `LC-MA-ROB-001`, `LC-MA-HAZ-001`, `LC-MA-FWD-001` |
 | `Testbench::block struct pyc flow smoke` | `LC-MA-BLK-001`, `LC-MA-HAZ-001`, `LC-MA-ENG-001` |
 | `pyCircuit::CPU C++ smoke` | `LC-IF-PYC-001`, `LC-IF-PYC-002` |
 | `pyCircuit::QEMU vs pyCircuit trace diff` | `LC-MA-PRV-001`, `LC-MA-MMU-001`, `LC-MA-MEM-001`, `LC-IF-PYC-002`, `LC-IF-TRACE-001` |
@@ -106,13 +108,57 @@ It is the normative mapping between:
 
 Mandatory scenario families:
 
-- privilege transitions and `SRET` behavior
+- `ACRE`/`ACRC` service requests, ACR transitions, and `BI=0/1` return-state
+  restoration
 - MMU translation and page or permission fault paths
 - timer interrupt delivery and boundary interactions
 - branch, block, and recovery legality
-- load/store forwarding and replay ordering
+- stage taxonomy: F0 owns frontend PC/thread control but is not one of the four
+  fetch-data stages, F4 aliases IB and owns final predecode/prediction, decode
+  width does not name F4, S3 is IQ visibility, W alignment is declared per
+  producer, CMT/FLS publish at R2, and restart state publishes at R4
+- atomic decode-group admission failure with no partial RID/BID/rename/store
+  allocation
+- contiguous ROB commit, delayed deallocation, precise head fault/nuke, and
+  ring-qualified BID flush across wrap without unsigned BID comparisons
+- default 256-entry BROB per STID with 8-bit BID, separate STID and pointer
+  wrap, stale response rejection, and safe `(STID,BID)`-slot reuse
+- two STIDs simultaneously using the same BID without response/cleanup alias,
+  one-ring flush isolation, independent faulting heads, and fair shared
+  issue/completion/retire arbitration
+- lossless simultaneous engine responses with hold-until-fire backpressure,
+  full trap envelope preservation, and no priority-mux drops
+- one-command-per-`(STID,BID)` enforcement, or transaction-ID/count handling
+  for multiple same-block commands including duplicate-response rejection
+- CTU D3 parent/child reservation, child-before-final-row retirement and trace
+  ordering, partial-expansion flush, and adjacent-boundary/BID allocation
+- target TEPL-to-TAU and FIXP unsupported paths fail explicitly until their
+  execution/completion owners are promoted
+- split-store identity, strong non-flush SCB admission, byte-granular
+  nearest-older forwarding, response retry, and replay ordering
+- MDB same-BID inner recovery versus cross-BID head-taken nuke
 - superscalar multi-issue, multi-commit, and flush ordering
 - trace schema, contract ID sync, and SemVer policy
+
+## Focused implementation evidence
+
+Focused module gates support review of individual mechanisms but do not replace
+the mandatory PR matrix or prove full-core promotion.
+
+| Mechanism | Focused evidence |
+|---|---|
+| Decode/resource reservation | `FrontendDecodeStage`, `DecodeRenameROBPath`, `DispatchROBAllocator`, `DecodeLoadStoreIdAssign`; current allocation timing must be checked against canonical D1/D2/D3 ownership |
+| Scalar and local rename | `GPRRenameCheckpoint`, `ScalarDecodeRenameBridge`, `TULinkRename`, `TULinkRetireCommandPath` |
+| ROB/BROB/recovery | `ROBEntryBank`, `ROBFlushPrune`, `ReducedCommitROB`, `BROB`, `FullBidRecoveryBridge`; 64-bit/upper-uniqueness BID helpers are legacy until migrated |
+| IQ/speculative load readiness | `ReducedScalarIssueQueue`, `ReducedScalarIssuePick`, `LoadReplayWakeup` |
+| Store/STQ/SCB | `StoreDispatchSTQPath`, `STQEntryBank`, `STQCommitQueue`, `STQCommitDrain`, `SCBRowBank`, `STQSCBCommitPath` |
+| Load forwarding/replay | `LoadStoreForwarding`, `LoadForwardPipeline`, `LoadInflightQueue`, `LoadResolveQueue`, `LoadRefillWakeup` |
+| Memory disambiguation | `MDBConflictDetect`, `MDBSSIT`, `MDBQueueFanout` |
+
+For Chisel modules, run the repository wrapper serially, for example
+`bash tools/chisel/run_chisel_tests.sh --only <Module>`. A unit pass proves the
+named owner in its harness. Full replacement evidence additionally requires
+integrated owner visibility and a neutral generated-RTL/QEMU cross-check.
 
 ## Matrix maintenance rules
 

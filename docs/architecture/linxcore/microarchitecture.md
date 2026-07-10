@@ -21,8 +21,9 @@ Current baseline limits:
 - commit width: up to 4
 - LSU width: 1
 
-These limits are the live `v0.56` closure baseline. Wider issue or multi-LSU
-scaling is a follow-on track, not part of the normative contract here.
+These limits are the selected LinxCore closure baseline, not LinxISA-visible
+widths. Wider issue or multi-LSU scaling is a follow-on track and must preserve
+the same ordering, recovery, and observability contracts.
 
 ## Architectural state model
 
@@ -32,7 +33,8 @@ LinxCore must preserve the following architectural state classes:
 - CSR, trap, MMU, and interrupt-visible state,
 - block-visible architectural state for `BSTART`, `BSTOP`, and
   boundary-authoritative redirect,
-- dynamic block identity through `block_uid` and `block_bid`,
+- dynamic block identity through the `BID_W`-bit `block_bid`, with a separate
+  optional `block_uid` for trace correlation,
 - precise retirement order through the ROB,
 - trace-visible dynamic identity through uop- and block-level metadata.
 
@@ -54,6 +56,30 @@ LinxCore is partitioned into these major architectural domains:
 
 The remainder of this document freezes the contract across those domains.
 
+## STID and SMT ownership
+
+`STID` is the scalar frontend/BROB-ring hardware-thread namespace. A scalar
+frontend field named `thread_id` maps one-to-one to STID. Engine or PE-local
+`tid` and PE ID may remain separate subordinate qualifiers; they never replace
+STID on shared block, memory, or recovery interfaces.
+
+- F0 PC/redirect state, F4/IB residency, checkpoints, speculative/committed
+  rename maps, local T/U managers, instruction-ROB/RID head state, BROB,
+  CARG/BARG, and LSID allocation are either physically partitioned per STID or
+  stored in shared structures with an explicit STID tag on every row.
+- A physical-tag namespace may be globally unique, or it must carry STID at
+  every ready-table, wakeup, and bypass comparison. Untagged cross-STID aliasing
+  is forbidden.
+- Shared IQs select oldest-ready work within each STID and then arbitrate fairly
+  across eligible STIDs; they never compare per-STID ROB ages globally.
+- Shared RF ports, completion collectors, command fabrics, and retire ports use
+  explicit fair arbitration. A blocked or faulting head in one STID does not
+  block independent progress in another except for the cycle in which a
+  documented shared port is granted elsewhere.
+- Flush, recovery, local cleanup, and block completion always select an STID
+  first, then apply RID/BID/LSID age in that STID's ring/domain. A flush of one
+  STID must not mutate another STID's state.
+
 ## Module decomposition contract
 
 LinxCore is specified as a hierarchy of named modules. The module decomposition
@@ -63,8 +89,9 @@ generation, trace production, and bring-up tooling.
 
 ### Stage-to-module rule
 
-- Every architecturally visible stage token must map to a dedicated module
-  owner.
+- Every architecturally visible stateful boundary must map to a named module
+  owner. One pipe module may own multiple separately visible E/W or R
+  coordinates; a pure timing coordinate does not require one file per cycle.
 - Integration wrappers may compose stage modules, but they must not absorb
   stage state into anonymous glue.
 - Shared helper files may provide types, combinational helpers, or packed
@@ -82,118 +109,159 @@ The detailed structural catalog is normative in:
 
 - Stage ownership must remain explicit across frontend, decode, rename, issue,
   execute, and commit; no hidden pass-through collapse is allowed.
-- Each architecturally visible stage must remain a module in the pyCircuit
-  hierarchy, either as a direct stage module or as a dedicated owner module
-  inside the backend family.
+- Each architecturally visible stateful boundary must remain inspectable in the
+  pyCircuit hierarchy, either as a direct stage module or as named state inside
+  a declared owner family.
 - Commit behavior must remain precise and ordered by architectural retirement.
 - ROB bookkeeping must remain coherent across multi-commit cycles.
 - `BSTART` and `BSTOP` are ROB-visible boundary uops resolved by `D2`; they do
   not require IQ or FU issue to become architecturally visible.
 
-### Current promoted closure slice
+### Canonical stage taxonomy
 
-The current promoted stage contract covers the frontend/decode path, the
-post-rename dispatch path, and the baseline issue/wakeup slice from `F0`
-through `W1`:
+The canonical pipeline is:
 
-- `F0`, `F1`, `F2`, `F3`, `IB`, `F4`
-- `D1`, `D2`, `D3`
-- `S1`, `S2`, `IQ`
-- `P1`, `I1`, `I2`, `E1`, `W1`
+```text
+F0 -> F1 -> F2 -> F3 -> F4/IB -> D1 -> D2 -> D3
+                                        |
+                                        v
+                               S1 -> S2 -> S3/IQ
+                                        |
+                                        v
+                               [P0] -> P1 -> I1 -> I2 -> E1 -> E2 -> E3 -> ...
+                                                          \---- W1/W2/W3 overlay
+                     resolve/ROB -> R0 -> R1 -> R2 -> R3 -> R4
+                                                  |               |
+                                               CMT/FLS       restart -> F0
+```
 
-Later execute/writeback detail beyond that promoted slice may be refined by
-future canonical updates, but it must not contradict the rules below.
+`F0` is canonical frontend selection/control. `F1..F4` are the four fetch
+stages, and `F4` and `IB` are the same stage. `W` stages describe
+producer-relative actual data-bypass/result/writeback age and overlay `E` stages; they
+are not a serial tail after execute. Full ownership and implementation-alias
+rules are normative in `pipeline-stage-catalog.md`.
 
-### Frontend contract details (`F0` to `F4`)
+### Frontend contract details (`F0` to `F4/IB`)
 
 #### F0
 
-- `F0` is a dedicated PC-select stage.
-- `F0` receives multiple candidate PCs and selects one under control logic.
-- `F0 -> F1` is a registered pipeline boundary.
-- The architecture-facing `F0 -> F1` interface is per-thread rather than a
-  single shared port with explicit thread multiplexing.
+- `F0` arbitrates runnable threads, selects reset/sequential/predicted/redirect
+  PC state, and launches one registered frontend request context toward F1.
+- Redirect state delivered by R4 is consumed by F0 before new sequential or
+  predicted work for that thread.
+- F0 is not counted among the four fetch-data stages.
 
 #### F1
 
-- `F1` owns I-cache lookup and tag-check semantics.
-- `F1` determines hit or miss and applies frontend backpressure on miss.
-- The architectural model reserves per-thread miss independence.
-- The current physical I-cache read path is single-ported, so `F1` arbitrates
-  among threads and services at most one thread lookup per cycle.
-- `F1 -> F2` is a registered boundary.
+- `F1` owns iTLB/I-cache request and lookup launch for the F0-selected thread
+  and PC.
+- Fetch packet and checkpoint identity are assigned before leaving F1.
 
 #### F2
 
-- `F2` receives cache-read data plus thread and PC context from `F1`.
-- `F2` performs ECC checking and stages the raw cache-read result.
-- On ECC error, `F2` blocks normal delivery to `F3` and reports a fetch-side
-  fault instead of forwarding a normal bundle-with-flag form.
-- `F2` does not own variable-length stitching or cross-line assembly.
+- `F2` captures the I-cache response, integrity/ECC status, hit/miss state, and
+  the matching thread/PC context.
+- Physical port sharing is an implementation parameter and must preserve
+  independent per-thread architectural state.
 
 #### F3
 
-- `F3` owns variable-length instruction assembly and per-thread carry/stitch
-  buffering.
-- `F3` performs static prediction.
-- `F3` must recognize at least `BSTART` and `BSTOP` and annotate explicit
-  block-boundary metadata.
-- The primary boundary metadata is semantic `start_of_block` and
-  `end_of_block`, not raw opcode-tag residue.
-- Template instructions (`FENTRY`, `FEXIT`, `FRET.*`) may be consumed by the
-  CTU without forcing later instructions in the same fetch bundle to disappear.
-  Those later instructions may remain in frontend queues, but they must not
-  enter `IB` before the CTU-expanded child stream for that template.
-- While a CTU child stream is actively injecting instructions, `IB` write-port
-  source selection is CTU-priority and ordinary IFU writes wait until the
-  active child stream completes.
+- `F3` owns variable-length 16/32/48/64-bit assembly, cross-line carry state,
+  and byte-stream ordering. A failed F2 integrity check produces a fetch fault
+  instead of a normal instruction entry.
+- F3 retains incomplete cross-line carry locally and hands only complete
+  instruction records to F4/IB. It does not own final prediction or
+  block-boundary predecode.
 
-#### IB
+#### F4/IB
 
-- `IB` is partitioned by thread; each thread owns an independent bank or FIFO.
-- An `IB` entry may legally straddle a block boundary.
-- Block metadata is carried per instruction, not as one summary bit per entry.
-- Each stored instruction carries its own length metadata.
-- PC encoding uses `entry_base_pc` plus per-instruction offset and length
-  rather than a full explicit PC for every instruction.
-- Each per-thread `IB` bank provides up to `decodeWidth` lane reads per cycle
-  so `D1` can assemble a decode-width-aligned contiguous decode group.
-
-#### F4
-
-- `F4` provides a 4-slot window per cycle.
-- Each slot is a continuous 64-bit view from its own PC.
-- Decode consumes slots strictly in order.
-- Decode must not concatenate across slots to form 48-bit or 64-bit
-  instructions.
-- Slot consumption stops at the first invalid or killed slot; no slot
-  compaction or skipping is allowed.
+- `F4` is the fourth fetch stage and the instruction buffer. There is no
+  architectural `IB -> F4` or `F4 -> IB` serial boundary.
+- F4 performs final lightweight predecode, prediction, and block-boundary/
+  template metadata formation before the D1 handoff. Full opcode and operand
+  decode remains D1/D2 work.
+- The primary boundary metadata is `start_of_block`/`end_of_block` plus branch
+  kind and target context, not raw opcode residue.
+- At F4 ingress, a recognized template (`FENTRY`, `FEXIT`, `FRET.*`) is marked
+  as a template parent and sent through D1/D2 to D3; F4/IB holds later ordinary
+  records for only that STID. F4 does not allocate BID or start child execution.
+- D3 atomically allocates the template's `(STID,BID)`, checkpoint, resource
+  reservation, and ordered ROB group: child rows first and one final template
+  completion/trace row last. Only then does CTU emit children into their
+  reserved rows through the normal rename/execute/LSU path.
+- Children reuse the parent's `(STID,BID)` and do not allocate another BROB
+  slot unless a child is itself an architecturally legal boundary. The final
+  template row completes only after expansion and every child completes, so
+  children retire before template completion/redirect becomes visible.
+- Flush kills filled and unfilled reserved rows plus CTU state by STID and
+  checkpoint. This is an internal F4/D3/CTU producer loop, not an architectural
+  `F4 -> CTU/F5 -> IB` stage chain.
+- F4/IB is partitioned by thread; each thread owns an independent bank or FIFO.
+- Every stored instruction carries PC/offset, length, raw bits, boundary,
+  prediction, template, and checkpoint metadata.
+- F4/IB presents up to `decodeWidth` contiguous program-order instructions to
+  D1. The baseline width is four, but that width does not define the F4 name.
+- The D1 ingress reader may construct a continuous 64-bit view for each
+  selected instruction so 48/64-bit forms decode without concatenating
+  unrelated entries.
+- Consumption stops at the first invalid, killed, or structurally blocked
+  entry. No compaction or younger-entry skipping is allowed.
 
 ### Decode and renamed-uop contract (`D1` to `D3`)
 
 #### D1
 
-- `D1` reads a program-order contiguous decode group from `IB`.
-- `D1` performs instruction decode and allocates `RID`, `BID`, and `LSID`.
-- Allocation for a decode group is all-or-nothing; if the full group cannot
-  allocate successfully, the pipeline stalls and retries the whole group.
+- `D1` reads a program-order contiguous group from F4/IB.
+- `D1` performs early opcode decode, illegal-instruction and early-exception
+  detection, uop split/fuse recognition, and decode-group formation.
+- D1 calculates per-row shape and group demand but does not mutate ROB, BROB,
+  rename, LSID, or IQ state.
 - `D1` may split or fuse decoded work, but older split work must be emitted
   before younger instructions are consumed.
-- `D1` output uops already carry decoded opcode or uop semantics, fixed operand
-  slots, architectural operand tags, extended immediate values, and block/order
-  metadata.
+- With baseline `BROB_ALLOC_PER_CYCLE=1`, D1 never forms a group containing
+  two new-block allocation boundaries. If a `BSTART`/template boundary is not
+  the first candidate, D1 ends the current group before it. A group beginning
+  with `BSTART` may include following body rows only up to the next boundary;
+  a template-parent group contains only that parent.
+- D1 output carries decoded opcode/uop semantics, raw instruction identity,
+  length, early fault state, and the information D2 needs for operand
+  extraction and resource calculation.
 
 #### D2
 
-- `D2` is the rename request and translation stage.
+- `D2` extracts architectural source/destination operands and immediates,
+  resolves block-boundary metadata, and calculates the complete resource
+  demand of the group.
 - `D2` preserves decode-slot program order across one decode group.
-- `D2` resolves boundary metadata and prepares ROB-visible boundary uops.
-- `D2` carries the canonical architectural uop shape:
+- D2 marks the single boundary allocation, if present, and partitions row
+  ownership so the `BSTART` row plus every following row in that group receives
+  the newly allocated BID.
+- `D2` prepares one coherent D3 admission request; it does not allocate
+  physical tags, BID, RID, LSID, or IQ rows.
+- `BSTART`, `BSTOP`, and macro boundaries are fully classified by D2 so D3 can
+  reserve the correct BROB/ROB and checkpoint resources.
+
+#### D3
+
+- `D3` is the atomic-admission and physical-rename stage.
+- D3 accepts the entire prepared group only when ROB, BROB, scalar/local
+  rename, IQ write, checkpoint, and memory-order capacity are all available.
+- On acceptance, the instruction ROB supplies native RID, BROB supplies the
+  `BID_W`-bit BID, the memory-order owner stamps the pre-increment LSID
+  snapshot and advances only for memory operations, and rename supplies
+  physical tags.
+- When the group begins with a new-block boundary, D3 allocates exactly one new
+  `(STID,BID)` before stamping rows in decode-slot order. Adjacent BSTARTs are
+  admitted in separate groups/cycles. A wider design may allocate multiple
+  BIDs only by raising `BROB_ALLOC_PER_CYCLE` and preserving the same slot-order
+  ownership atomically.
+- D3 writes the corresponding speculative state and emits the canonical
+  renamed-uop shape:
 
 ```text
 {
   valid,
-  thread_id,
+  stid,                // canonical hardware-thread/BROB-ring selector
   pc,
   opcode,
   uop_type,
@@ -202,9 +270,13 @@ future canonical updates, but it must not contradict the rules below.
   imm,
   imm_type,
   imm_valid,
-  rid,
-  bid,
+  rid,                 // native instruction-order identity
+  block_bid,           // BID_W-bit BROB slot identity
+  block_order,         // internal wrap/age sidecar where required
+  model_identity,      // separate bid/gid/rid cross-check sideband
   lsid,
+  mem_order_snapshot,
+  checkpoint_id,
   sob,
   eob,
   boundary_type,
@@ -215,24 +287,30 @@ future canonical updates, but it must not contradict the rules below.
 }
 ```
 
+An existing scalar-frontend transport field named `thread_id` is an encoding
+alias for `stid` and must map one-to-one. PE/engine-local TID, when present, is
+a separate subordinate qualifier.
+
+Native ring IDs, BROB slot BID, internal wrap/age state, optional DFX
+`block_uid`, and model/cross-check identity are distinct namespaces. An
+implementation must not widen BID with hidden uniqueness bits or reconstruct
+order, checkpoint, or memory ownership from a currently selected queue head.
+
 - Source slots use operand classes `{P, T, U, CARG}`.
 - Destination slots use `{P, T, U}`; `CARG` is source-only.
 - `P` carries architectural `atag`.
 - `T` carries `t_rel`.
 - `U` carries `u_rel`.
 - `CARG` carries only `type=CARG`; the actual block argument is resolved via
-  `bid` rather than an independent operand id.
+  `(stid,bid)` rather than an independent operand id.
 
-#### D3
-
-- `D3` is the renamed-uop latch boundary.
-- `D3` retains semantic operand identity while also carrying the resolved
-  backend tag form needed by later stages.
+- D3 retains semantic operand identity while adding the resolved backend tag
+  form needed by later stages.
 - `P` retains `atag` and adds `ptag`.
 - `T` retains `t_rel` and adds resolved `ttag`.
 - `U` retains `u_rel` and adds resolved `utag`.
 - `CARG` is resolved at `D3` into the block-scoped `CARG` file indexed by
-  `bid`; it does not continue as an IQ-visible operand payload.
+  `(stid,bid)`; it does not continue as an IQ-visible operand payload.
 
 #### Rename rules
 
@@ -247,38 +325,81 @@ future canonical updates, but it must not contradict the rules below.
   flushing instruction (`<= flush_rid`) for the younger-squash redirect path.
 - Same-cycle `P` rename bookkeeping uses stable FIFO insertion order derived
   from `rid + decode_slot`.
-- `T` and `U` do not use `CMAP`, `SMAP`, or `MapQ`.
-- `T` allocates from `T_FIFO`; `U` allocates from `U_FIFO`.
+- `T` and `U` do not use the scalar-`P` `CMAP`, `SMAP`, free list, or global
+  remap log.
+- `T` and `U` each use an independent `LocalRegMgr`/ClockHands mapping queue,
+  allocation sequence, circular local physical pool, and `(STID,BID)`-qualified
+  retire/commit/flush lifecycle. These local mapping queues must not be
+  confused with the scalar-`P` `MapQ`.
 - Same-cycle `T` and `U` allocations are performed in decode-slot order.
 - There is exactly one `CARG` per block.
-- `CARG` is identified implicitly by `bid` and is not independently renamed.
+- `CARG` is identified implicitly by `(stid,bid)` and is not independently
+  renamed.
 
-### Post-rename dispatch contract (`S1`, `S2`, and `IQ`)
+The split exists because scalar `P` names persistent architectural state while
+`T/U` name relative block-local values. Reusing one committed/speculative map
+for both domains would give local values the wrong lifetime and would make
+block recovery depend on unrelated scalar-map checkpoints.
+
+### Resource admission and backpressure (LC-MA-RES-001)
+
+An admitted decode group must have a coherent reservation for every resource
+that its rows will consume. The admission check includes, as applicable:
+
+- instruction ROB rows and native RIDs;
+- a BROB slot/BID and internal ring-pointer state for a new block;
+- scalar-`P` physical tags and `MapQ` rows;
+- local `T/U` mapping-queue and physical-pool capacity;
+- destination IQ write capacity;
+- LSID/SID/LID state and split-store dispatch capacity;
+- marker lifecycle and checkpoint storage;
+- BISQ/BCTRL command capacity for block-fabric work.
+
+At D3 the group either reserves all required resources in program order or
+makes no state change. A reduced harness may serialize or bypass one of these resources,
+but it must label that behavior as reduced and must not redefine the full-core
+admission contract. Atomic admission prevents duplicate RIDs/BIDs, holes in
+same-cycle rename order, and one-half allocation of a split store.
+
+Capacity numbers from LinxCoreModel or an ARM reference implementation are
+reference evidence only unless this document explicitly promotes them as a
+LinxCore baseline parameter.
+
+Detailed local-register lifetime and recovery rules are documented in
+`rtl/LinxCore/docs/architecture/block_private_rf.md`.
+
+### Post-rename dispatch contract (`S1`, `S2`, and `S3/IQ`)
 
 #### S1
 
-- `S1` is the first post-rename dispatch-preparation stage.
-- `S1` receives renamed uops from `D3`, classifies each uop by its execution
-  or issue class, selects the target physical IQ, and queries the operand ready
-  state used to initialize the eventual IQ entry.
+- `S1` captures admitted D3 packets into the speculative issue-buffer/write-
+  port boundary. The packet already carries its execution class and selected
+  physical route; S1 retains the readiness seed and cancellation state.
 
 #### S2
 
-- `S2` is the actual IQ write stage.
-- `S2` receives the routed and annotated uops from `S1` and performs the real
-  enqueue into the selected downstream IQ.
+- `S2` selects a free physical IQ row and writes the S1 packet plus initial
+  source readiness.
+
+#### S3/IQ
+
+- The S2-written row becomes valid, resident, wakeable, and pick-visible at
+  S3.
+- S3 is the IQ residency boundary; `IQ` names the structure, not a distinct
+  serial pipeline stage.
 
 #### IQ routing and enqueue rules
 
 - The architectural routing rule is type-directed: the destination physical IQ
   is a function of the decoded or renamed execution class plus a fixed-priority
   physical-queue selection policy for classes with multiple legal queues.
-- `S1` performs routing selection and ready-state query.
-- `S2` performs the actual IQ entry write.
-- `CARG` does not participate in `S1` or `S2` IQ routing; it has already been
+- D3 performs routing selection and prepares the ready-state seed.
+- S1 captures the selected write-port packet; S2 allocates/writes; S3 exposes
+  the resident entry.
+- `CARG` does not participate in `S1`/`S2`/`S3` IQ routing; it has already been
   materialized into the `CARG` file at `D3`.
-- `S1` and `S2` preserve program order within one decode or rename group when
-  presenting multiple same-cycle enqueue attempts.
+- `S1` and `S2` preserve program order within one D3 group when presenting
+  multiple same-cycle enqueue attempts.
 - `BBD` does not enter an IQ; boundary handling must be resolved before `S2`
   writes uops into the IQ fabric.
 
@@ -319,7 +440,7 @@ future canonical updates, but it must not contradict the rules below.
 - A ready-table bit may be set only when the corresponding produced value is
   architecturally stable and will not later be withdrawn by ordinary
   cancellation or flush of a still-speculative producer.
-- `S1` initializes operand readiness by querying the corresponding ready table:
+- D3/S1 initializes operand readiness by querying the corresponding ready table:
   - `P` via `ready_table_p[ptag]`
   - `T` via `ready_table_t[ttag]`
   - `U` via `ready_table_u[utag]`
@@ -338,7 +459,9 @@ future canonical updates, but it must not contradict the rules below.
   for wakeup.
 - An IQ entry becomes pick-eligible only when all of its valid source operands
   are ready and the entry is not already `inflight`.
-- Pick policy is oldest-ready-first.
+- Pick policy is oldest-ready-first within each STID. A shared IQ forms one or
+  more per-STID candidates and uses a fair/RR cross-STID grant; per-STID ROB
+  ages are never compared globally.
 - Pick does not immediately remove an entry from the IQ.
 - When an entry is picked, the entry remains valid and transitions to an
   `inflight` state.
@@ -347,9 +470,12 @@ future canonical updates, but it must not contradict the rules below.
   retry.
 - The architecture forbids a pick-then-reinsert model for ordinary issue
   cancellation or retry.
-- The real IQ entry deallocation point is `I2`: only after the uop reaches
-  `I2` and is confirmed non-cancellable does the IQ clear the entry's `valid`
-  state.
+- A non-speculative uop deallocates its IQ entry at `I2` only after the transfer
+  is confirmed non-cancellable.
+- A uop carrying a live `ld_gen_vec` remains valid and `inflight` in its IQ
+  after I2. It deallocates only when every producer load resolves hit at E5.
+  On miss/replay, recovery cancels the speculative pipe copy, clears
+  `inflight`, and leaves the resident entry eligible for repick.
 
 ### Ready table vs speculative ready
 
@@ -360,18 +486,33 @@ future canonical updates, but it must not contradict the rules below.
 
 ### Pipeline and wakeup timing
 
-- Pipeline stages used in the promoted issue slice are `P1 -> I1 -> I2 -> E1 ->
-  W1`.
+- The issue path is `[P0] -> P1 -> I1 -> I2`; P0 exists only when candidate
+  preselection is registered.
+- `E1`, `E2`, `E3`, and later E labels count absolute cycles after I2 for each
+  execution pipe.
+- `W1`, `W2`, and `W3` are producer-relative actual
+  data-bypass/result/writeback ages. They overlay E stages and are not a serial
+  continuation after E. Each pipe declares
+  `{spec_wakeup, data_bypass, rf_write, resolve}` alignment; speculative
+  dependency wakeup is a separate earlier E-qualified event that
+  predicts a future W1 and remains cancellable.
 - Wakeup must not affect pick in the same cycle:
   wakeup at cycle `N` becomes visible to pick at cycle `N+1`.
-- Baseline latency-to-wakeup mapping is:
-  - `lat=1 -> wakeup at P1`
-  - `lat=2 -> wakeup at I2`
-  - `lat=3 -> wakeup at E1`
-  - `lat=4 -> wakeup at W1`
+- Baseline scalar data-result alignment is:
+  - 1-cycle scalar ALU: `E1/W1`, `E2/W2`, `E3/W3`;
+  - 2-cycle scalar ALU: `E2/W1`, `E3/W2`, `E4/W3`;
+  - 3-cycle scalar/MAC: `E3/W1`, `E4/W2`, `E5/W3`;
+  - load hit: `E4/W1`, `E5/W2`, `E6/W3`.
+- For all result-producing pipes, W1 is the first actual data-bypass/result
+  age. In the baseline scalar pipes, W2 is the normal RF-write age and W3 is
+  the RF-visible/last baseline bypass age. A special pipe may write RF at W4;
+  its earlier speculative wakeup stays separately E-qualified and must be
+  repaired if the predicted W1 data does not arrive.
 
-### `P1`, `I1`, `I2`, `E1`, and `W1`
+### `P0`, `P1`, `I1`, `I2`, `E`, and `W`
 
+- `P0`, when present, performs registered queue-local candidate reduction. A
+  combinational preselect remains part of P1 and must not be traced as P0.
 - `P1` selects ready, non-`inflight` IQ entries and marks the chosen entry
   `inflight`.
 - `I1` is responsible for deciding which source operands require physical
@@ -381,16 +522,24 @@ future canonical updates, but it must not contradict the rules below.
 - If a picked uop loses required `I1` read-port arbitration, the attempt is
   cancelled for this cycle: the IQ entry remains valid, `inflight` is cleared,
   and the uop returns to normal future-pick eligibility.
-- `I2` is the issue-confirmation boundary and the IQ deallocation point.
+- `I2` is the issue-confirmation boundary. It deallocates only
+  non-speculative/non-cancellable entries; load-dependent speculative entries
+  retain their resident IQ owner until the producer loads resolve at E5.
 - `E1` is the first execute stage after issue confirmation.
-- `W1` is the architecturally visible late resolve and wakeup stage for the
-  promoted baseline slice.
+- Result-producing pipes publish W1/W2/W3 from their real result/writeback
+  state. ROB head wait, commit preparation, and trace formatting are not W
+  owners.
+- Control-only work remains E-qualified: for example, baseline BRU decides at
+  E1, resolves at E2, and may send later LSU cleanup at E3 without inventing a
+  W stage.
 
 ### Register-file arbitration
 
 - Read ports may contend; the default `int_rf_rports` is 3.
 - `I1` performs global read-port arbitration.
-- Arbitration policy is oldest-first by ROB age relative to ROB head.
+- Arbitration is oldest-first by ROB age within each STID, followed by a
+  fair/RR grant across STIDs for shared ports. It never compares unrelated
+  per-STID ROB ages.
 - Failure to win arbitration cancels the in-flight attempt without deallocating
   the IQ entry.
 - Write ports must not contend.
@@ -402,6 +551,10 @@ future canonical updates, but it must not contradict the rules below.
 
 - Loads produce speculative wakeup at `LD_E1`.
 - Loads return data only at `LD_E4`.
+- Loads publish their final ROB/LSU resolve at `LD_E5` after hit/miss/fault and
+  replay classification is stable.
+- Baseline hit data reaches its W3/RF-visible retention age at `LD_E6`; this
+  does not delay the E4/W1 bypass.
 - Consumers that become ready only via load spec-wakeup:
   - must not request RF read ports in `I1` for that source,
   - must obtain data via `E4 -> consumer-I2` forward using the bypass network.
@@ -412,8 +565,8 @@ future canonical updates, but it must not contradict the rules below.
 - LSU provides `miss_pending` derived from `E4` miss detection.
 - While `miss_pending == 1`, issue queues must suppress picking entries whose
   source dependency still carries `LD_E4`.
-- A top-level configuration hook may later extend miss visibility to `E5`, but
-  the default contract is the `E4` scheme above.
+- `E5` resolve does not extend speculative-data availability; consumers still
+  use the E4 data/forwarding rule and are repaired if E5 resolves miss/replay.
 
 ### T/U point-to-point wakeup
 
@@ -423,6 +576,69 @@ future canonical updates, but it must not contradict the rules below.
 - `phys_issq_id` is a physical IQ enum derived via spec templates at JIT.
 - `entry_id` width is derived per IQ and packed to a uniform maximum width on
   the qtag wire.
+
+## ROB and precise retirement contract (LC-MA-ROB-001)
+
+The instruction ROB is the precise instruction-side authority. BROB is a
+separate block-lifetime and engine-completion authority; it does not replace
+instruction-row retirement.
+
+The physical retirement/recovery pipeline uses `R0..R4`:
+
+- `R0` captures execution, LSU, block, and exception resolve/completion inputs
+  into ROB-visible state.
+- `R1` reads the contiguous ROB head window, selects the maximal legal commit
+  prefix, and generates the precise trap, nuke, interrupt, or boundary-flush
+  decision from one coherent snapshot.
+- `R2` publishes ordered `CMT` rows and the coherent `FLS` flush broadcast,
+  advances commit/flush state, and launches rename, local-register, LSU,
+  trace, and block-last cleanup.
+- `R3` consumes the registered recovery/exception classification and performs
+  owner-side recovery processing and cleanup.
+- `R4` publishes the legal restart PC and restored architectural/frontend
+  state to F0. Deallocation may trail R4 and remains a ROB operation, not
+  W-stage writeback.
+
+ROB rows progress through distinct ownership states:
+
+```text
+Free -> Allocated -> Renamed -> Issued -> Completed -> Retired -> Free
+                       \---------------------> Fault/NeedFlush
+```
+
+Required behavior:
+
+- Allocation is in program order. Completion may be out of order.
+- Commit walks a contiguous prefix of completed head rows and stops at the
+  first invalid, incomplete, faulting, or blocked row.
+- Commit and deallocation are separate operations. A retired row remains
+  resident until scalar-map release, local `T/U` relation cleanup, memory
+  side effects, block-last processing, and trace publication no longer need
+  its sidecars.
+- A fault or nuke request may be discovered early, but the commit/recovery
+  owner takes it only at the precise head point defined by the corresponding
+  contract.
+- Flush owns the bank mutation cycle, prunes younger rows with the request's
+  declared comparison domain, and rebases allocation/commit state without
+  exposing a partially updated ROB.
+- Live duplicate instruction identities are illegal, including while a row is
+  retired but not yet deallocated.
+
+Each row retains the metadata needed by downstream owners rather than
+reconstructing it from current queue heads:
+
+- native ring `RID`, `BID_W`-bit `blockBid`, and any internal BROB wrap/age
+  sidecar needed by the owning comparison domain;
+- model/cross-check `bid/gid/rid` identity as a separate sideband;
+- PC, raw instruction, length, STID/PE ownership, and checkpoint context;
+- scalar and local-register destination/sequence sidecars;
+- the all-row memory-order snapshot and memory/store identity where present;
+- boundary, block-last, trap, and recovery metadata.
+
+The separation between commit and deallocation is adopted from mature OOO
+designs because Linx local-register and block cleanup are ordered side effects,
+not bookkeeping that can be discarded when the instruction first becomes
+architecturally retired.
 
 ## Block and recovery contract (LC-MA-BLK-001)
 
@@ -436,12 +652,18 @@ future canonical updates, but it must not contradict the rules below.
 - `BSTART` encountered in-body terminates the previous block and may restart at
   the same PC as the next block head.
 - `RET`, `IND`, and `ICALL` require explicit `SETC.TGT` in the same block.
-- `BSTART.CALL` does not implicitly write `ra`. Return-address updates come
-  only from explicit `SETRET` or `C.SETRET`.
+- `BSTART.CALL` by itself does not implicitly write `ra`. A return label is
+  materialized only by an architecturally explicit returning-call form or by
+  an adjacent `SETRET`, `C.SETRET`, or `HL.SETRET` owner. A fused returning
+  header is explicit materialization, not an implicit side effect of every
+  call-type start marker.
 - `FENTRY`, `FEXIT`, `FRET.RA`, and `FRET.STK` are valid standalone macro block
   boundaries and remain visible in committed block metadata.
-- Recovery targets must resolve to legal block starts. Non-block targets raise
-  `TRAP_BRU_RECOVERY_NOT_BSTART (0x0000B001)` precisely.
+- Recovery targets must resolve to legal block starts. A bad target raises the
+  precise architectural `E_BLOCK(EC_CFI)` envelope with
+  `EC_CFI_KIND=CFI_BAD_TARGET`, `TRAPARG0=source PC/TPC`, and `ECSTATE.BI=0`.
+  The legacy internal diagnostic `TRAP_BRU_RECOVERY_NOT_BSTART (0x0000B001)`
+  must be translated before architectural trap export.
 
 ### Boundary-authoritative redirect
 
@@ -464,21 +686,46 @@ Detailed recovery behavior remains documented in:
 
 ## BID and BROB contract
 
-- BID is generated by BROB and remains 64-bit.
-- Default BID encoding is `BID = (uniq << 7) | slot_id`, with
-  `slot_id = BID[6:0]` for the 128-entry default.
-- `cmd_tag` must equal `bid[7:0]` for PE response routing.
+- BID is generated by BROB and is exactly the BROB slot index:
+  `BID_W = ceil(log2(BROB_ENTRIES))`.
+- `BROB_ENTRIES` is the power-of-two depth of each STID's BROB ring. The
+  target default is 256 per STID, so the default BID is 8 bits.
+- The cross-thread block identity is `(stid, bid)`. STID remains a separate
+  field and must be carried on any shared command, response, completion,
+  cleanup, or flush interface; it is not packed above BID.
+- Wrap, generation, age, and DFX uniqueness are separate state. A conventional
+  internal ring pointer may be `{wrap, bid}` with width `BID_W + 1`, but the
+  wrap bit is not carried as part of BID.
+- `block_uid`, when present, is trace/correlation metadata and must not be used
+  as a wider architectural BID.
+- `cmd_tag` equals BID and `cmd_stid` carries the separate ring selector. A
+  fixed 8-bit command interface carries the default 8-bit BID directly;
+  configurations with fewer entries zero-extend BID.
 - Block completion is `scalar_done && (needs_engine ? engine_done : 1)`.
-- `scalar_done` is triggered at both `BSTART` retire and `BSTOP` retire.
-- Flush and redirect behavior is BID-based across every BID-carrying queue:
-  keep `bid <= flush_bid`, kill `bid > flush_bid`.
-- BROB, BISQ, and every block-carrying path must preserve full-width BID
-  ordering across slot wrap.
+- `scalar_done` is triggered by both boundary forms, but for different dynamic
+  blocks: retiring `BSTART` completes the old active `(STID,BID)` that it
+  implicitly terminates, while retiring `BSTOP` completes the current active
+  `(STID,BID)`. The BSTART row itself carries the new block's BID and must not
+  mark that new block scalar-done.
+- BID values must not be compared with unsigned `<`, `<=`, `>`, or `>=` to
+  determine age across wrap.
+- Each STID's BROB owns live block order through its head, tail, occupancy, and
+  internal wrap state. On a redirect for `flush_stid` that preserves
+  `flush_bid`, that ring produces the kill set for live slots from
+  `successor(flush_bid)` through the pre-flush tail.
+- BID-carrying queues consume that BROB-qualified kill set, or an equivalent
+  ring-age context, rather than reimplementing numeric BID ordering.
+- A `(STID,BID)` slot may be reused only after its BROB row is free and no ROB
+  row, engine command/response, memory side effect, or cleanup record can still
+  name the prior occupant. If transport permits late/duplicate responses, it
+  must carry a separate echoed transaction epoch; that epoch does not widen
+  BID.
 
 ### Architectural block-completion abstraction
 
 - For block completion semantics, LinxCore follows the ISA-visible canonical
-  block-type domain `{STD, FP, SYS, MPAR, MSEQ, VPAR, VSEQ, TMA, CUBE, TEPL}`.
+  block-type domain
+  `{STD, FP, SYS, MPAR, MSEQ, VPAR, VSEQ, TMA, CUBE, TEPL, FIXP}`.
 - `STD`, `FP`, and `SYS` are equivalent in the two-layer completion model.
 - Dynamic block instances collapse to exactly one of three architectural
   participant sets:
@@ -487,20 +734,55 @@ Detailed recovery behavior remains documented in:
   - `{non-scalar}` for canonical non-scalar block types.
 - Dynamic degeneration to `{}` is allowed only for scalar/control-family block
   types.
-- Canonical non-scalar block types always carry a `{non-scalar}` completion
-  obligation.
+- Canonical non-scalar block types, including FIXP, always carry a
+  `{non-scalar}` completion obligation.
 - The architectural `{non-scalar}` participant has single-point resolve
   semantics: `BROB` and retirement observe one `non-scalar-done` event per
   block instance.
 
+Normative block-type routing is:
+
+| Block type | Completion participant / owner | Status |
+|---|---|---|
+| `STD`, `FP`, `SYS` | scalar path | promoted |
+| `MPAR`, `MSEQ`, `VPAR`, `VSEQ` | target `VEC` | canonical route; current pyCircuit facade is reduced |
+| `TMA` | TMA command/completion frontend; shared CSU/L2 transport | target split; reduced facade current |
+| `CUBE` | target `CUBE` | canonical boundary; current pyCircuit facade is reduced |
+| `TEPL` | target `TAU` typed tile-to-tile operation selected by `TileOpcode` | unsupported until TileOpcode/descriptor/completion behavior is promoted |
+| `FIXP` | no owner | unsupported until a completion owner is promoted |
+| `FENTRY`, `FEXIT`, `FRET.*` | CTU-expanded scalar child group | `{scalar}`, `needs_engine=0`; scalar done when the final template row is eligible after all children |
+
+An unsupported type fails explicitly before issue; it must not alias scalar or
+another engine and must not leave a BROB entry waiting forever.
+
 ### Block lifecycle rules
 
-- `BSTART` carries the new BID of the new block.
+- `BSTART` carries the new `(STID,BID)` of the new block.
+- An in-body BSTART same-PC head reentry reuses that allocated identity through
+  an R4/F0 marker-reentry token. It does not allocate a duplicate BROB/ROB row,
+  duplicate trace, or fire scalar completion again.
 - `BSTOP` retires only when the active block is no longer blocked by engine
   completion.
-- Only the oldest architecturally eligible block may retire.
+- Block-private state is released by an `(STID,BID)`-qualified local
+  block-commit event, not by opcode name alone. That event may follow an
+  explicit `BSTOP`, an implicit termination by the next `BSTART`, or a
+  template completion boundary.
+- Local `T/U` cleanup order is: retire/relation commands, relation-map clean,
+  then selected-BID/STID local block commit. Only consecutive retired local
+  mapping rows at the deallocation head may be freed.
+- Only the oldest architecturally eligible block within each STID may retire;
+  shared retire bandwidth arbitrates fairly across eligible STID heads.
 - Younger engine-backed work must remain cancellable under normal redirect and
   flush rules.
+
+The C++ model carries `ROBID { val, wrap }` as a composite identity on some
+interfaces. The narrower LinxCore hardware BID is an intentional target
+contract, not a claim that the model already exposes the same wire shape. A
+model adapter must map `val` to BID and retain `wrap` only as ring-order
+sidecar/context. Current Chisel/pyCircuit paths that encode uniqueness above a
+slot or expose a 64-bit `blockBid` are legacy, non-conforming implementations.
+They remain partial evidence until migrated to `BID_W`, ring-qualified flush,
+per-STID active state, and stale-response-safe reuse.
 
 Detailed BROB and block-fabric behavior remains documented in:
 
@@ -509,11 +791,26 @@ Detailed BROB and block-fabric behavior remains documented in:
 
 ## Privilege/trap contract (LC-MA-PRV-001)
 
-- U->S trap entry and `SRET` return must preserve architected control and state
-  transitions.
-- Trap envelope and CSR-visible side effects must remain coherent with
+- LinxCore uses the LinxISA Access Control Ring (ACR) service-request model; it
+  does not implement an ARM/RISC-V-style U/S plus `SRET` contract.
+- `ACRE` requests an ACR transition at block commit. `ACRC` creates a
+  synchronous `SERVICE_REQUEST` immediately after execution and follows the
+  ISA-defined explicit-terminator restriction.
+- Trap entry saves `CSTATE` into the managing ring's `ECSTATE`, records block
+  and resume PCs in `EBARG`, records `TRAPNO/TRAPARG0`, disables interrupts,
+  resets `BARG`, and vectors `BPC` to the managing ring's event base.
+- When `ECSTATE.BI=1`, return restores the body resume `TPC` and the
+  profile-defined second-layer block snapshot, including `BSTATE`, `BARG`,
+  `TQ/UQ`, and continuation state. Header-context return resumes at the saved
+  block start.
+- `EBREAK` is a precise architectural breakpoint trap by default. Semihosting
+  is an explicit runtime opt-in and must not silently replace the trap.
+- Trap-envelope and SSR-visible side effects must remain coherent with
   commit-visible behavior.
 - Precise exception reporting is required under superscalar retirement.
+
+These are ISA obligations. Full ACR/ECSTATE/EBARG/BSTATE, MMU, and interrupt
+owners are not yet proven complete by the reduced RTL paths.
 
 ## MMU contract (LC-MA-MMU-001)
 
@@ -534,27 +831,123 @@ trap-visible architectural behavior.
 
 ## Memory-ordering contract (LC-MA-MEM-001)
 
-- Load/store ordering, forwarding, and replay behavior must remain
-  architecturally legal.
-- Memory visibility at commit must remain consistent with recorded trace and
-  memory metadata.
-- Dispatch allocates a monotonic `load_store_id` per memory uop and LSU issue
-  remains ordered by `lsid_issue_ptr`.
-- Committed stores remain decoupled through the committed-store drain path;
-  younger speculative memory state must still be flushable before commit.
-- Ordering checks must include block and redirect interactions.
+LinxISA defines TSO and exposes BCC and MTC issue channels inside one
+architectural ordering domain. The single-width, strictly LSID-ordered scalar
+LSU is a conservative LinxCore design policy for the closure baseline; it is
+not an additional ISA guarantee. A future speculative issue policy may replace
+it only with equivalent TSO, precise recovery, and forward-progress evidence.
 
-### LSU rules
+### Memory-order identity
 
-- The live contract is a single-LSU-width machine.
-- LSU issue remains ordered by `load_store_id`.
-- Load forwarding, replay, and store-drain behavior must remain precise with
-  respect to committed state.
-- MMIO commit-visible behavior must remain architecturally explicit.
+- Every scalar decoded row captures the current pre-increment memory-order
+  snapshot. Only load, store, atomic, and other cataloged memory operations
+  consume and advance the LSID counter.
+- A memory row carries its allocated LSID through ROB, LSU, replay, and flush
+  ownership. A non-memory row retains the snapshot as a retire/recovery
+  watermark but does not allocate a memory operation.
+- The all-row watermark is an internal ROB/LSU sidecar. It must not be added to
+  the architectural commit payload merely for implementation convenience.
+- The strict baseline issues a scalar memory operation only when its LSID
+  reaches `lsid_issue_ptr`. Flush rebases allocation, issue, and completion
+  state so a squashed ID cannot deadlock the pointer.
+- Flush requests declare their comparison scope. STQ/load pruning may include
+  STID, PE/thread scope, block-only, group, or default STID+BID+LSID matching;
+  a generic `(BID, LSID)` predicate must not replace the typed flush contract.
+- LSID comparisons are wrap-qualified. An implementation either carries an
+  internal LSID wrap/generation sidecar or permits counter reset/reuse only
+  after that STID's memory queues and recovery records are quiescent; plain
+  unsigned LSID `<` across wrap is forbidden.
+
+### Store path: dispatch, STQ, and SCB
+
+- A scalar store splits into address (`STA`) and data (`STD`) work with one
+  shared instruction, BID, RID, SID, and LSID identity.
+- Dispatch reserves the two halves atomically. After dispatch, address and data
+  may execute and merge into STQ independently; a blocked address allocation
+  must not prevent a complementary data half from merging into an existing
+  row when the typed readiness rules allow it.
+- STQ owns speculative, flushable store state. Address readiness, data
+  readiness, byte mask, memory type, and row identity remain explicit.
+- SCB accepts a store only after a strong non-flush decision proves that no
+  branch recovery, trap, exception, or interrupt can still cancel it.
+- SCB owns committed, non-flushable, physical-cacheline coalescing. It must not
+  merge new bytes into a row that has issued ownership traffic and is awaiting
+  its response.
+- An accepted final SCB fragment, not a standalone drain attempt, authorizes
+  the matching committed STQ row to free. Request acceptance is not fence- or
+  store-completion evidence; the required WriteResp or platform-equivalent
+  completion must be observed where architectural completion depends on it.
+- Committed stores drain in program order. Store coalescing may reduce physical
+  writes but may not reorder architectural store visibility.
+
+### Load path and forwarding
+
+- The active-load window (`LDQInfo`/`LoadInflightQueue`, historically called
+  `LIQ`) owns misses, wait-store state, replay, refill, and relaunch.
+- The resolved-load queue (`ResolveQ`/`LoadResolveQueue`, historically called
+  `LHQ`) retains the address/byte metadata required to detect a later older
+  store conflict. After applying an R2 commit batch, the ROB publishes one
+  cumulative commit frontier per affected STID: the first uncommitted position
+  as `(STID,BID,LSID)` using the all-row pre-increment LSID snapshot (or the
+  equivalent tail frontier when no row remains). ResolveQ removes rows strictly
+  older than that frontier by
+  `(BROB_age(row_bid), row_lsid) <
+  (BROB_age(frontier_bid), frontier_lsid)`. A later frontier subsumes an older
+  one, so multiple commits coalesce to the most advanced frontier per STID
+  without losing cleanup; no comparison crosses STIDs.
+- A load snapshots the youngest eligible store identity when allocated.
+- Store-to-load forwarding is byte granular. For every requested byte, choose
+  the nearest older eligible store within the same STID/PE-thread domain by
+  `(BROB_age(bid), LSID)` order. BROB age is defined only in that STID's ring.
+  If a
+  selected byte is not data-ready, the load waits or replays; it must not fall
+  through to an older value for that byte.
+- Cache, SCB, refill, and store-forward data may merge only with explicit byte
+  validity and matching live-row identity.
+- Load speculation follows the `LD_E1` wakeup / `LD_E4` data contract above.
+  `miss_pending` remains asserted until the affected load has been relaunched
+  after refill and returns through a non-miss path.
+
+### Memory disambiguation and precise recovery
+
+- MDB is the Memory Disambiguation Buffer/store-set predictor. It is not a
+  generic miss-data buffer.
+- A scalar store-arrival conflict requires the same STID/PE-thread ordering
+  domain, byte/address overlap, and an older-or-equal store according to that
+  STID's BROB ring age plus LSID within the block.
+- An unresolved active load may be marked wait-store. A resolved load or
+  ResolveQ row may be selected as a recovery candidate.
+- A same-BID violation within one STID requests an inner replay/flush. A
+  cross-BID violation within that same STID marks the offending load for a
+  load-attributed nuke. Blocks from different STIDs have no BROB age relation
+  and are not classified by this predicate.
+- MDB may predict waits and learn conflicts, but it does not own architectural
+  recovery. A nuke is taken only when the marked load reaches the precise ROB
+  head. That row's `(STID,BID)` identifies the surviving block; the selected
+  BROB ring uses its current context to flush younger live blocks.
+- MDB and final nuke/flush integration are partial RTL evidence today. Focused
+  fixtures do not prove natural-workload activation or full recovery closure.
+
+### Atomics, fences, Device/MMIO, and engine memory
+
+- Linx atomics and `lr/sc` follow the ISA `.aq`, `.rl`, and `.aqrl` contract;
+  they do not inherit ARM exclusive-monitor semantics.
+- `FENCE.D` orders the selected Normal, Device/MMIO, and instruction-visibility
+  classes. `FENCE.I` is the instruction-fetch visibility boundary.
+- Device/MMIO accesses are side-effecting and non-speculative. A replay or
+  retry must not duplicate an externally visible access.
+- TLOAD/TSTORE and other engine memory operations remain block-fabric work
+  attributable to BID and command identity. They are not hidden scalar-LSU
+  traffic, but BCC and MTC still share the architectural TSO domain.
+
+Full cache/TLB arrays, ACR/MMU fault ownership, atomics/fences, and tile-memory
+integration remain implementation promotion points even though the ISA
+obligations above are already normative.
 
 Detailed ordering behavior remains documented in:
 
 - `rtl/LinxCore/docs/architecture/lsid_memory_ordering.md`
+- `rtl/LinxCore/docs/chisel/model-notes/LSU_STQ.md`
 
 ## Engine integration contract (LC-MA-ENG-001)
 
@@ -564,15 +957,18 @@ Detailed ordering behavior remains documented in:
   block-engine completion model.
 - Engine-local work must not create hidden global-memory side effects outside
   architecturally visible memory operations and committed block boundaries.
-- Tile-oriented engines such as `TAU` must preserve the current tile-to-tile
-  contract unless a future canonical architecture update changes that rule.
+- `TAU` is the typed tile-to-tile template/tile-operation engine. It must keep
+  memory access tile-to-tile and must not be described as a generic tensor or
+  auxiliary memory engine.
 
 ### Workload-engine composition
 
 - `VEC` remains the general programmable SIMT compute engine.
 - `TMA` integrates into LinxCore through the same block/BID contract as the
-  rest of the machine, but its southbound memory traffic is owned by the CSU
-  subsystem and targets CSU L2 alongside frontend refill traffic.
+  rest of the machine. TMA owns the Tile Memory Access command/completion
+  frontend; its architectural southbound memory transport terminates at the
+  shared CSU/L2 boundary. That target owner is not yet promoted here, and
+  `src/tma/tma.py` remains a reduced compatibility facade.
 - `CUBE` and `TAU` continue to integrate through the same block/BID contract
   as peer engines.
 - Engine issue, completion, exception, and flush behavior must remain visible

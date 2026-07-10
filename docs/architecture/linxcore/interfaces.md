@@ -32,6 +32,12 @@ Required commit fields from `pyc_linxcore_interface_contract.json`:
 - `mem_valid`, `mem_addr`, `mem_wdata`, `mem_rdata`, `mem_size`
 - `trap_valid`, `trap_cause`, `next_pc`
 
+The current payload is a reduced `N_STID=1` contract. A multi-STID producer
+must add canonical `stid` to every commit event and synchronize the JSON
+contract, emitter, viewer, comparator, fixtures, and SemVer major. Identical
+PC/RID/BID values from different STIDs must never be merged or inferred from
+event order.
+
 Required environment controls:
 
 - `PYC_COMMIT_TRACE`
@@ -58,18 +64,32 @@ Rules:
 - `linxtrace.v1` remains stable for additive changes.
 - Major-version bump is mandatory for incompatible field/semantics changes.
 - Compatibility checks must fail fast on major mismatch.
+- LinxTrace v1's missing STID and legacy 64-bit `block_bid` container are valid
+  only for the current single-STID compatibility lane. Multi-STID and the
+  canonical `{stid, BID_W-bit block_bid, block_uid}` identity require a v2
+  schema; v1 must not be silently reinterpreted.
 
 ## Cross-tool synchronization contract (LC-IF-SYNC-001)
 
 The following must stay synchronized when trace/pipeline contracts change:
 
 - `rtl/LinxCore/src/common/stage_tokens.py`
+- `rtl/LinxCore/src/common/interfaces.py`
 - `rtl/LinxCore/tb/tb_linxcore_top.cpp`
 - `rtl/LinxCore/tools/trace/build_linxtrace_view.py`
 - `rtl/LinxCore/tools/linxcoresight/lint_linxtrace.py`
 - `rtl/LinxCore/tools/linxcoresight/lint_trace_contract_sync.py`
 
 Viewer-side contract sync is validated through LinxTrace gates.
+
+The canonical stage taxonomy is `F0` control followed by `F1..F4/IB`,
+`D1..D3`, `S1..S3`, optional
+`P0`, `P1/I1/I2`, per-pipe `E1..En` with `W1..Wn` result overlays, and
+`R0..R4`. The current LinxTrace v1 `F0` token is canonical, but its separate
+serial `IB/F4` tokens and incomplete `W`/`R` coverage are legacy. Removing or
+reordering fields is a breaking trace change and requires a new schema major
+plus synchronized producer, linter, viewer, sample, and compatibility
+evidence.
 
 ## LinxCoreModel simulator contract (LC-IF-MODEL-001)
 
@@ -83,12 +103,13 @@ Required model checkout:
 
 - Repository: `https://github.com/LinxISA/LinxCoreModel.git`
 - Branch: `main`
-- Current aligned commit: `793722e`
+- Reviewed commit: `793722e85c62eade9ab4e8481c9577dc5b9c98f7`
+- Review date: 2026-07-10
 
 Current build contract from the aligned model:
 
 ```bash
-cd /Users/zhoubot/linx-isa/model/LinxCoreModel
+cd model/LinxCoreModel  # from the superproject root
 python3 build.py all --target gfsim -j"$(sysctl -n hw.ncpu 2>/dev/null || nproc)"
 ```
 
@@ -124,11 +145,19 @@ raw engine fabric, engine/block-type mapping) belong under:
 - `rtl/LinxCore/docs/architecture/`
 - `docs/architecture/linxcore/microarchitecture.md`
 
-For the current architecture-writing pass, the promoted stage contracts from
-`F0` through the baseline issue/wakeup slice (`S1/S2/P1/I1/I2/E1/W1`) are
-captured normatively in `docs/architecture/linxcore/microarchitecture.md`,
-while this document remains limited to external/tool-facing interface
-governance.
+The exact command/response envelope and BID/tag routing live in
+`rtl/LinxCore/docs/architecture/block_fabric_contract.md`. Internal ROB/LSU
+sidecars such as all-row LSID watermarks, local-register sequences, native
+ring RIDs, BROB wrap/age state, and transaction epochs are not automatically
+architectural commit fields. BID itself is `BID_W` bits and shared block
+interfaces carry STID separately. Promoting any sidecar
+into the external trace schema requires the
+SemVer and compatibility process above.
+
+The complete canonical stage meanings are captured normatively in
+`docs/architecture/linxcore/microarchitecture.md` and
+`docs/architecture/linxcore/pipeline-stage-catalog.md`; this document remains
+limited to external/tool-facing interface governance.
 
 ## Interface change control
 

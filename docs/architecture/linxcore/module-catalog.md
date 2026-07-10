@@ -52,8 +52,9 @@ stage owners.
 
 - Defines `LinxCoreTop`, the full top-level composition with the explicit IFU
   stage chain.
-- Instantiates the IFU modules `F0` through `F4`, the backend, block-control
-  path, LSU, memory, and engine adapters.
+- Instantiates the current IFU implementation modules and must converge them to
+  the canonical `F0 -> F1 -> F2 -> F3 -> F4/IB` chain before claiming
+  frontend stage ownership.
 - Serves as the reference composition for stage-to-stage wiring names.
 - Must converge toward a connection-only composition shell as stage-local trace
   and bring-up logic is pushed into dedicated children.
@@ -84,7 +85,8 @@ canonical build-time configuration rules.
 - `src/common/decode32.py`
 - `src/common/decode48.py`
 - `src/common/decode64.py`
-- `src/common/decode_f4.py`
+- `src/common/decode_f4.py` (legacy filename for a D1-ingress compatibility
+  helper; not an F4 stage owner)
 
 These files define opcode identity and decode behavior consumed by the
 frontend/decode stages.
@@ -104,15 +106,14 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 
 ### `src/bcc/ifu/f0.py`
 
-- Owns the `F0` boundary.
-- Selects the next fetch PC from boot, redirect, or sequential candidates.
-- Presents a registered `F0 -> F1` boundary.
+- Owns canonical F0 thread arbitration, redirect/next-PC selection, and the
+  registered request context handed to F1.
+- F0 is frontend control and is not counted as a fifth fetch-data stage.
 
 ### `src/bcc/ifu/f1.py`
 
-- Owns the `F1` boundary.
-- Holds I-cache lookup/tag-check control and frontend miss/backpressure
-  generation.
+- Must converge on canonical F1 iTLB/I-cache request/lookup launch for the
+  F0-selected thread and PC.
 - Preserves the architecture-facing per-thread fetch-control model even though
   the current physical I-cache read path is single-ported.
 
@@ -123,8 +124,10 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 
 ### `src/bcc/ifu/f2.py`
 
-- Owns the `F2` boundary.
-- Stages raw cache-read data and ECC status before variable-length assembly.
+- Current mixed fetch-return/decode-window helper. Its cache-return,
+  integrity/ECC-facing work contributes to F2; assembly work belongs to F3.
+- Any four-lane window extraction in this module is D1-ingress behavior, not a
+  reason to name the module F4.
 
 ### `src/bcc/ifu/ctrl.py`
 
@@ -134,16 +137,17 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 
 ### `src/bcc/ifu/f3.py`
 
-- Owns the `F3` boundary and the full IFU instruction-buffer ingress behavior.
-- Performs variable-length stitch/assembly, static prediction, block-boundary
-  annotation, and template-stream control before instruction-buffer delivery.
+- Contributes variable-length assembly, cross-line carry, and byte-stream
+  ordering to F3. Its prediction, boundary-predecode, and template-ordering
+  logic must converge under F4/IB ownership.
+- Its internal instruction-buffer instance is target F4/IB state and must be
+  separated from F3 combinational ownership in the final stage mapping.
 
 ### `src/top/modules/ib.py`
 
-- Owns `LinxCoreTopIb`, the host-fed instruction-buffer module used by the
-  export shell.
-- Preserves the same downstream instruction-buffer ownership model when
-  QEMU/host injection replaces the native IFU source in bring-up lanes.
+- Owns `LinxCoreTopIb`, the host-fed form of canonical F4/IB used by the export
+  shell.
+- `IB` aliases F4; host injection must not create a serial `IB -> F4` stage.
 
 ### `src/top/modules/xchk.py`
 
@@ -159,8 +163,10 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 
 ### `src/bcc/ifu/f4.py`
 
-- Owns the `F4` boundary.
-- Presents the 4-slot decode window used by the architectural decode contract.
+- Legacy-misnamed register/window slicer. Its continuous-view extraction is a
+  D1 ingress helper; it is not the canonical F4 stage.
+- New code must not extend the `F4DecodeWindow` naming. The target F4 owner is
+  the instruction-buffer state described above.
 
 ### `src/bcc/frontend/`
 
@@ -174,31 +180,32 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 ### `src/bcc/ooo/dec1.py`
 
 - Owns `D1`.
-- Decodes the `F4` slot window into uop candidates and allocates `RID`, `BID`,
-  and `LSID`.
+- Reads contiguous F4/IB entries, performs early decode/fault detection,
+  recognizes split/fuse shapes, and forms the decode group.
+- Computes demand but does not mutate ROB/BROB/rename/IQ state.
 
 ### `src/bcc/ooo/dec2.py`
 
 - Owns `D2`.
-- Performs rename request/translation preparation and resolves ROB-visible
-  boundary metadata for `BSTART` and `BSTOP`.
+- Extracts operands/immediates, resolves boundary metadata, and prepares one
+  coherent resource-admission request for D3.
 
 ### `src/bcc/ooo/ren.py`
 
 - Owns `D3`.
-- Maps architectural operands into renamed/tagged operand form and serves as
-  the renamed-uop latch boundary.
+- Owns atomic resource admission and physical rename.
+- Receives the ROB RID, BROB `BID_W`-bit BID, and memory-order identities only
+  when the complete group can be accepted, then forms dispatch packets.
 
 ### `src/bcc/ooo/s1.py`
 
 - Owns `S1`.
-- Performs post-rename dispatch preparation, execution-class routing, and ready
-  query against the non-spec ready tables.
+- Captures admitted D3 packets into the speculative IQ write-port buffer.
 
 ### `src/bcc/ooo/s2.py`
 
 - Owns `S2`.
-- Performs the actual IQ entry write into the selected physical IQ.
+- Allocates and writes the selected physical IQ row.
 
 ### `src/bcc/ooo/renu.py`
 
@@ -250,8 +257,11 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 
 - Defines `LinxCoreIssuePicker`, `LinxCoreIssueStage`, and
   `LinxCoreIqUpdateStage`.
-- Owns IQ readiness, oldest-first pick, `inflight` retention, and issue
-  legality.
+- Owns the S3/IQ resident boundary, optional P0 preselect, P1 final pick, I1 RF
+  arbitration, I2 issue-confirm coordination, IQ readiness, and `inflight`
+  retention.
+- Must keep S3 residency distinct from the S2 write event so a newly written
+  row becomes pick-visible only at the defined next boundary.
 
 ### `src/bcc/backend/prf.py`
 
@@ -273,12 +283,17 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 ### `src/bcc/backend/commit.py`
 
 - Defines `LinxCoreCommitHeadStage` and `LinxCoreCommitCtrlStage`.
-- Owns architectural commit selection and ordered retire-side control.
+- Owns R1 retire-window decision, R2 CMT/FLS publication, and ordered
+  retire-side control. `backend/rob.py` owns R0 intake; `ooo/flush_ctrl.py`
+  owns registered R3 recovery processing and R4 restart publication.
+- Commit-head logic is not a W1/W2 result-stage owner.
 
 ### `src/bcc/backend/wakeup.py`
 
 - Defines `LinxCoreHeadWaitStage`.
-- Owns wakeup, head-wait, and replay-side visibility constraints.
+- Owns head-wait and replay-side visibility constraints.
+- Producer execution pipes own W1/W2/W3 result state; this module may consume
+  wakeup but must not synthesize W stages from ROB/commit state.
 
 ### `src/bcc/backend/engine.py`
 
@@ -299,6 +314,9 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   memory-read arbitration, execution-pipe clustering, and store-buffer stages.
 - These are canonical submodule owners of backend behavior, not optional debug
   wrappers.
+- `exec_pipe_cluster.py` owns the E-stage progression and producer-relative
+  W1/W2/W3 result/writeback overlay. The current shorter
+  `P1/I1/I2/E1/W1/W2` sequence is a migration gap, not the stage contract.
 
 ## Integer and scalar execution modules
 
@@ -336,11 +354,15 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 
 ### `src/bcc/lsu/liq.py`
 
-- Owns `LIQ`, the load-issue queue.
+- Owns the pyCircuit bring-up `LIQ` shell. The canonical concept is the active
+  load-inflight window that tracks miss, wait-store, replay, refill, and
+  relaunch state; the C++/Chisel owners are `LDQInfo`/`LoadInflightQueue`.
 
 ### `src/bcc/lsu/lhq.py`
 
-- Owns `LHQ`, the load-hit/load-return queue state.
+- Owns the pyCircuit bring-up `LHQ` shell. The canonical resolved-load owner is
+  `ResolveQ`/`LoadResolveQueue`, which retains address and byte metadata for
+  late older-store conflict detection.
 
 ### `src/bcc/lsu/stq.py`
 
@@ -352,7 +374,10 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 
 ### `src/bcc/lsu/mdb.py`
 
-- Owns `MDB`, the miss/data-buffer tracking boundary.
+- Owns the pyCircuit bring-up Memory Disambiguation Buffer boundary.
+- The canonical MDB is a PC-keyed store-set/conflict predictor with lookup,
+  record, decay/delete, wait-store wakeup, and same-BID versus cross-BID
+  recovery classification. It is not a generic miss/data buffer.
 
 ### `src/bcc/lsu/l1d.py`
 
@@ -397,25 +422,19 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 
 ## Engine and accelerator modules
 
-### `src/csu/subsystem.py`
-
-- Owns the unified CSU parent subsystem that absorbs IFU refill traffic and
-  CSU-internal TMA transport ownership.
-
-### `src/csu/{tma_cmd_frontend,tma_ctx_tracker,tma_l2_client,client_arb}.py`
-
-- Own the CSU-internal TMA command ingress, context tracking, L2-client
-  translation, and refill-versus-TMA arbitration boundaries.
-
 ### `src/vec/vec.py`
 
 - Owns the `VEC` engine boundary.
 
 ### `src/tma/tma.py`
 
-- Remains the standalone compatibility facade for isolated TMA unit tests.
-- Janus top-level integration no longer treats it as the normative southbound
-  transport owner.
+- Owns the current reduced `TMA` Tile Memory Access command, completion, and
+  block-identity facade.
+- The target architecture splits southbound memory transport into the shared
+  CSU/L2 boundary; that owner is not yet promoted in this repository.
+- Its present 64-bit BID ports and unsigned numeric flush comparison are
+  legacy implementation behavior; convergence must replace them with
+  `BID_W` ports and BROB-provided kill context.
 
 ### `src/cube/cube.py`
 
@@ -423,7 +442,24 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 
 ### `src/tau/tau.py`
 
-- Owns the `TAU` engine boundary.
+- Owns the current `TAU` typed tile-to-tile template/tile-operation boundary.
+
+### TEPL owner status
+
+- LinxISA `v0.56` `TEPL` targets the `TAU` typed tile-to-tile
+  template/tile-operation boundary through `TileOpcode`.
+- Current `src/tau/tau.py` is a reduced fixed-latency shell without promoted
+  TileOpcode, descriptor, STID, rejection, or tile-state behavior. BCTRL must
+  fail TEPL explicitly until that behavior and its single non-scalar completion
+  are integrated; it must not silently route TEPL to the reduced shell.
+
+### FIXP owner status
+
+- LinxISA `v0.56` defines `FIXP` as a non-scalar block type, but this
+  repository does not yet have a promoted FIXP execution-owner module.
+- BCTRL/BROB must preserve its `{non-scalar}` completion obligation and reject
+  unsupported execution explicitly; FIXP must not alias a scalar or unrelated
+  engine path.
 
 ### `src/tmu/noc/node.py` and `src/tmu/noc/pipe.py`
 
