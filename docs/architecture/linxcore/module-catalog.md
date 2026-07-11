@@ -380,6 +380,11 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 ### `src/bcc/lsu/scb.py`
 
 - Owns `SCB`, the committed-store coalescing buffer.
+- Parameterizes row and transaction-ID capacity, coalesces only consecutive
+  SIDs on the same cache line, and freezes any row already presented to the
+  downstream ready/valid interface.
+- Uses one priority-ordered next-state assignment per row field so allocation,
+  merge, issue, response, and dequeue updates cannot overwrite one another.
 
 ### `src/bcc/lsu/mdb.py`
 
