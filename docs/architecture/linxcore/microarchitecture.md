@@ -1116,6 +1116,13 @@ implementation choices and must not change architectural identity widths:
   the authoritative full BID corresponding to its next-ring cleanup BID; the
   implementation must not pair an incremented ring BID with the retiring
   marker's prior full BID.
+  R647 defines provenance as implementation-only metadata: a parameterized
+  cause mask follows all reports contributing to one resident action, while one
+  payload-owner index follows the exact request copied by model merge rules.
+  Drops and cancellations resolve their cause masks without cleanup; accepted
+  cleanup resolves the final cause mask and authorizes private sidecars only for
+  the consumed payload owner. Provenance does not affect age, class, scope, BID,
+  STID, or architectural behavior.
 
 ### Atomics, fences, Device/MMIO, and engine memory
 

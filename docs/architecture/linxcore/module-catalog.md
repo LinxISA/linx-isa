@@ -235,11 +235,15 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 - Applies same-STID model `CheckOlder` ordering, exact inner/nuke merge
   transformation, completed-oldest replay rejection, fair STID serialization,
   and an irrevocable cleanup-facing output slot.
+- R647 adds a parameterized source cause mask, exact payload-owner index,
+  retained provenance per class lane, merged-cause union, and resolution pulses
+  for dropped, canceled, or replaced reports. The irrevocable output registers
+  request and provenance together.
 - Treats the full block BID as owner-supplied identity. It never creates a BID,
   compares BIDs across STIDs, or imports foreign-ISA exception, power, or
   exclusive-monitor behavior.
-- R645 proves the same named two-STID/two-PE scenario set in generated Chisel
-  and pyCircuit RTL. pyCircuit multi-source producer arbitration and registered
+- R647 proves the same named two-STID/two-PE request and provenance scenario set
+  in generated Chisel and pyCircuit RTL. pyCircuit multi-source producer arbitration and registered
   cleanup/ROB integration remain open and are not implied by this class owner.
 
 ### `src/bcc/ooo/rob.py`
@@ -431,11 +435,15 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   consumes external replay-queue cleanup on the accepted intent.
 - `ScalarRedirectRecoverySource` retains one execute/marker redirect, requires
   exact full-BID identity whose ring projection matches the supplied BID,
-  publishes once, and holds order/LSID sidecars until cleanup consumption.
-  Cancellation dominates capture; accepted cleanup may consume and replace.
-  The current full top has no other live recovery source. Adding one requires
-  accepted-intent provenance before generic cleanup consumption may clear or
-  apply these scalar-only sidecars.
+  publishes once, and holds order/LSID sidecars until matched source resolution.
+  Cancellation dominates capture; matched resolution may consume and replace.
+  Private sidecars are valid only when the consumed intent names this source as
+  its exact payload owner.
+- `RecoveryProvenance` carries a parameterized cause mask and exact-payload
+  source index beside recovery requests. `RecoveryClassMerge` unions causes on
+  merge, preserves the owner of copied payload fields, and resolves dropped or
+  canceled causes. `RecoveryCleanupControl` registers the metadata and publishes
+  separate final cause-resolution and payload-consumption masks.
 - The full fetch/RF/ALU composition currently admits execute redirects only.
   Marker-only redirects restart the frontend but do not request backend
   cleanup because the incremented cleanup ring BID lacks an authoritative
