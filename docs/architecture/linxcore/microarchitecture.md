@@ -1018,20 +1018,29 @@ implementation choices and must not change architectural identity widths:
   insertion rather than dropping recovery.
 - MDB recovery reports set `immediateFlush=false`. The oldest-signal/precise
   ROB-head owner in `ScalarLSU` retains the report until wrap-qualified BID/RID
-  age is eligible, then accepts it through the ring-identity input of
-  `RecoveryCleanupControl`. ROB pruning occurs only on
-  the registered cleanup-intent handshake. MDB never directly deletes ROB
-  rows.
+  age is eligible. Before cleanup acceptance, the allocator/ROB owner must
+  recover the row's full implementation generation sideband through an exact
+  `(BID,GID,RID,PE,STID,TID)` lookup. MDB never reconstructs that sideband from
+  slot bits and never directly deletes ROB rows.
+- The full-BID lookup is RID-indexed and side-effect free. The row must be
+  resident, every identity and scope field must match, `blockBidValid` must be
+  set, and projecting the stored full sideband back to ring ROBID must reproduce
+  the request BID. Missing, stale, cross-scope, or inconsistent lookup results
+  retain the report and authorize no cleanup.
+- `RingFullBidRecoveryBridge` requires the lookup result to echo the current
+  request before promoting the report to `FullBidFlushReq`. An independently
+  selected full-BID source has fixed priority. ROB and BROB/BCTRL consumers see
+  state-changing intent only after the registered cleanup handshake.
 - ROB pruning applies the same Linx scope contract as conflict detection:
   request STID must match every removed row, while `baseOnPE` and
   `baseOnThread` additionally require PE and TID equality. A prune region may
   pass over an out-of-scope row without deleting it and continue to later
   in-scope younger rows.
-- A ring-identity report authorizes ROB, rename, backend, frontend, and LSU
-  cleanup through its typed `FlushBus`, but it does not fabricate a full block
-  BID. `blockFlushValid` and `bctrlFlushValid` remain false until a future
-  allocator-owned lookup supplies the corresponding full BID for BROB/BCTRL
-  cleanup.
+- A raw ring-identity report cannot authorize BROB/BCTRL block cleanup.
+  Successful exact lookup promotes it with the allocator-stamped full sideband,
+  after which `blockFlushValid` and `bctrlFlushValid` may assert. The full
+  sideband is an implementation generation token during migration to the
+  canonical per-STID `BID_W` contract; it is not new Linx architectural state.
 - Ordinary hard or precise recovery clears queued MDB commands, LU/SU fanout
   results, retained wait plans, and registered store wakeups. It does not erase
   SSIT prediction state; SSIT is cleared only by reset or its explicit

@@ -375,14 +375,21 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   wakeup, and retained typed Linx conflict-recovery publication.
 - `ScalarLSU` connects that retained source through
   `RecoveryEligibilityControl` and `RecoveryCleanupControl`. Non-immediate
-  reports wait for the supplied oldest BID/RID watermark; full-BID requests
-  take fixed priority over an eligible ring request.
+  reports wait for the supplied oldest BID/RID watermark, then require an exact
+  allocator/ROB full-BID lookup before cleanup; independently selected full-BID
+  requests take fixed priority.
+- `ROBFullBidLookup` uses native RID indexing and exact
+  `(BID,GID,RID,PE,STID,TID)` equality to return the allocator-stamped row
+  generation sideband. `RingFullBidRecoveryBridge` validates the echoed key and
+  ring projection before constructing `FullBidFlushReq`; any blocker retains
+  the MDB report.
 - `RecoveryCleanupControl` accepts ring-qualified MDB reports, retains one
   selected cleanup intent, and gates ROB pruning on consumer acceptance. It
   suppresses BCTRL/BROB block cleanup when no full block BID is available.
   The real ROB consumer always matches STID and conditionally matches PE/TID
   before pruning, so a recovery cannot remove rows from another Linx scope.
-- Cache/miss queues, all-source top arbitration, full-BID BROB recovery, and IEX load-return
+- Cache/miss queues, all-source top arbitration, canonical-top lookup wiring,
+  and IEX load-return
   publication are not yet children of this boundary; this must not be reported
   as a complete integrated LSU.
 
