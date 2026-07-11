@@ -633,8 +633,18 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   comparisons.
 - Feeds `ReducedStoreCommitFreeOwner`, which retains committed store identity
   until the full block BID enters the prefix. Early branch/tile predicates,
-  store-barrier allocation, multi-block retirement, and replay-state mutation
-  remain open.
+  multi-block retirement, and replay-state mutation remain open.
+
+### `chisel/.../bctrl/BrobStoreRangeState.scala`
+
+- Owns one contiguous block store-range cursor and next store ID per STID,
+  separate from scalar decode-time `sid` assignment and non-flush authority.
+- Records scalar store counts by exact full BID, accepts explicit counts only
+  from authoritative template/tile producers, and advances through consecutive
+  count-certain resident rows without unsigned BID comparisons.
+- Restores the first killed row's saved start ID on accepted suffix recovery,
+  shares allocation/retirement admission with BROB order state, and has
+  generated Chisel proof across independent STIDs and rollover.
 
 ### `src/bcc/block_struct/`
 

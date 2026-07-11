@@ -959,6 +959,16 @@ implementation choices and must not change architectural identity widths:
   completion must be observed where architectural completion depends on it.
 - Committed stores drain in program order. Store coalescing may reduce physical
   writes but may not reorder architectural store visibility.
+- Scalar LSID, load-ID, and store-ID counters are independent per STID.
+  Accepted scoped recovery mutates only the selected lane; reset/restart may
+  clear every lane.
+- BROB separately assigns contiguous block store ranges. Its per-STID range
+  cursor publishes a stable start ID for the exact resident cursor block,
+  stops while that block's store count is uncertain, and advances through
+  consecutive count-certain blocks without unsigned BID comparisons.
+- Recovery reuses the first killed block's saved start ID when an already
+  assigned suffix is removed. Store ranges do not authorize SCB admission;
+  R652 strong non-flush proof remains mandatory.
 
 ### Load path and forwarding
 
