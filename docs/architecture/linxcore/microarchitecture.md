@@ -1117,8 +1117,13 @@ implementation choices and must not change architectural identity widths:
   publication rather than incrementing a ring BID or reinterpreting model
   `fbid`. PE inner recovery also carries the exact 64-bit restart TPC from the
   compare owner through class merge and registered cleanup. A target-valid bit
-  without its target is not sufficient. Canonical trigger-owner and production
-  top wiring remain open.
+  without its target is not sufficient. R657 groups these adapters under one
+  parameterized production bank and appends its four stable lanes to
+  `DecodeRenameROBPath` after existing external lanes. The IQ watchdog uses a
+  dedicated identity owner to select one STID's valid BROB commit cursor and
+  increment the full pointer, not the canonical BID slot. Upstream live BCC,
+  IEX, and PE event generation remains open; retained producer ownership and
+  backend-fabric connection do not.
   R645 adds the pyCircuit class owner with the same parameterized per-STID
   global-flush/global-replay slots, per-PE slots, `CheckOlder` cancellation,
   `mergeSignal` transformation, completed-oldest replay drop, invalid-scope

@@ -469,11 +469,17 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   `PeMismatchRecoverySource` retain and type the model-derived non-LSU event
   families. Queue depth and IQ-stall threshold are parameters. Exact full block
   BID is an owner input and is never reconstructed from ring identity.
+- `RecoveryNonLsuProducerBank` owns four stable retained source lanes and
+  `IexIqStallRecoveryIdentity` derives the watchdog replay pointer as the full
+  successor of the selected STID's authoritative BROB commit cursor. It blocks
+  absent, completed, and out-of-range STID state before watchdog publication.
 - The R642 producer probe composes BCC/IEX/PE adapters through
   `RecoveryFabric`. R646 makes backend control live at the real
   decode/rename/allocator seam and connects the first scalar redirect source
-  in the full fetch/RF/ALU composition. Direct trigger-owner ports and
-  production wiring for the complete BCC/IEX/PE/LSU source set remain open.
+  in the full fetch/RF/ALU composition. R657 appends the producer bank to that
+  production backend path without renumbering external lanes. Upstream live
+  BCC/IEX/PE event generation and the complete scalar-LSU source connection
+  remain open.
   R648 supplies the real per-STID oldest BID/RID/completion inputs required by
   the canonical scalar-LSU adapter. R649 connects the reduced MDB report through
   `MDBRecoveryDeliveryPath`: record publication and recovery enqueue share one
