@@ -1049,6 +1049,14 @@ implementation choices and must not change architectural identity widths:
   compare owner through class merge and registered cleanup. A target-valid bit
   without its target is not sufficient. Canonical trigger-owner and production
   top wiring remain open.
+  R645 adds the pyCircuit class owner with the same parameterized per-STID
+  global-flush/global-replay slots, per-PE slots, `CheckOlder` cancellation,
+  `mergeSignal` transformation, completed-oldest replay drop, invalid-scope
+  rejection, fair STID selection, and irrevocable output behavior as the
+  Chisel owner. The shared gate requires both generated RTL probes to declare
+  and pass one named scenario set. This is class-level convergence only:
+  pyCircuit source arbitration, exact producer composition, registered cleanup,
+  and resident ROB/BROB consumers remain future integration boundaries.
   Within one STID, arbitration applies the model `CheckOlder` type and ring-age
   rules. Different STIDs have no BID order and are serialized by fair STID
   round robin. ROB and BROB/BCTRL consumers see state-changing intent only
@@ -1085,7 +1093,7 @@ implementation choices and must not change architectural identity widths:
   proves registered class-merged cleanup consumption against resident ROB rows.
   Full-BID BROB recovery, final top-level oldest-head eligibility, IEX-local MDB
   training, BCC/IEX/PE trigger-owner connections, canonical production top
-  wiring, pyCircuit recovery-fabric convergence, and natural-workload
+  wiring, pyCircuit source-arbiter/cleanup integration, and natural-workload
   activation remain promotion points.
 
 ### Atomics, fences, Device/MMIO, and engine memory

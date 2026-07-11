@@ -223,11 +223,24 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 - Owns the explicit flush and redirect control boundary.
 - Provides the architectural flush owner instead of hiding redirect policy
   inside unrelated modules.
-- The current pyCircuit owner retains only one ROB redirect PC/checkpoint
-  event. It does not yet implement the R641 full-BID multi-source arbitration,
-  per-STID global-flush/global-replay state, per-PE lanes, or registered cleanup
-  intent fanout. Chisel is ahead at this boundary; pyCircuit recovery-fabric
-  convergence remains required before cross-RTL promotion.
+- This redirect shell retains one ROB redirect PC/checkpoint event. It is not
+  the recovery-class owner and must not be promoted as a recovery fabric.
+
+### `src/bcc/ooo/recovery_class_merge.py`
+
+- Defines `LinxBccOooRecoveryClassMerge`, the pyCircuit recovery-class owner.
+- Retains independent global-flush and global-replay slots per STID plus one
+  slot per `(STID, PE)`, with parameterized STID, PE, ROB, BID, RID, and TPC
+  dimensions.
+- Applies same-STID model `CheckOlder` ordering, exact inner/nuke merge
+  transformation, completed-oldest replay rejection, fair STID serialization,
+  and an irrevocable cleanup-facing output slot.
+- Treats the full block BID as owner-supplied identity. It never creates a BID,
+  compares BIDs across STIDs, or imports foreign-ISA exception, power, or
+  exclusive-monitor behavior.
+- R645 proves the same named two-STID/two-PE scenario set in generated Chisel
+  and pyCircuit RTL. pyCircuit multi-source producer arbitration and registered
+  cleanup/ROB integration remain open and are not implied by this class owner.
 
 ### `src/bcc/ooo/rob.py`
 
