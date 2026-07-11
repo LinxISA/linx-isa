@@ -742,6 +742,11 @@ Detailed recovery behavior remains documented in:
   mark that new block scalar-done.
 - BID values must not be compared with unsigned `<`, `<=`, `>`, or `>=` to
   determine age across wrap.
+- A canonical cleanup BID is resolved by the selected STID's BROB owner against
+  its exact head/live-count window. The unique matching internal `{wrap,bid}`
+  pointer defines the pivot and first-killed suffix. A migration-era wider
+  transport may be compared with that result for diagnostics, but its upper
+  bits are not recovery authority.
 - Each STID's BROB owns live block order through its head, tail, occupancy, and
   internal wrap state. On a redirect for `flush_stid` that preserves
   `flush_bid`, that ring produces the kill set for live slots from

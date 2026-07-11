@@ -612,9 +612,10 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 
 - Owns independent parameterized allocation-tail, commit-head, and bounded
   live-count state per STID.
-- Validates one model-derived first-killed BID against the live window, keeps
-  the commit head fixed, and applies the same suffix to metadata: inclusive for
-  miss-predict, successor-of-pivot for retained-target nuke/inner/fast flush.
+- Uses `BrobLiveBidResolver` to resolve the external canonical BID slot against
+  the selected STID live window. The unique internal pointer defines the same
+  metadata suffix: inclusive for miss-predict, successor-of-pivot for
+  retained-target nuke/inner/fast flush.
 - Supplies commit-head/live-count context so metadata classifies that suffix by
   bounded modular distance, including windows spanning implementation BID
   rollover.
@@ -623,6 +624,15 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 - Shares allocation and retirement admission with ROB/BROB metadata mutation,
   rejects invalid identities and recovery pivots, and has generated Chisel
   proof.
+
+### `chisel/.../bctrl/BrobLiveBidResolver.scala`
+
+- Resolves one canonical `BID_W` slot against a selected STID's bounded
+  head/live-count window and returns the unique internal wrap-qualified pointer
+  plus its distance from head.
+- Rejects zero-match requests, asserts impossible multiple matches, and treats
+  migration-era upper BID transport bits as diagnostics rather than age or
+  recovery authority.
 
 ### `chisel/.../bctrl/BrobNonFlushFrontier.scala`
 
