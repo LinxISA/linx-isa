@@ -163,7 +163,7 @@ the mandatory PR matrix or prove full-core promotion.
 | Scalar and local rename | `GPRRenameCheckpoint`, `ScalarDecodeRenameBridge`, `TULinkRename`, `TULinkRetireCommandPath` |
 | ROB/BROB/recovery | `ROBEntryBank`, `ROBFlushPrune`, `ReducedCommitROB`, `BROB`, `FullBidRecoveryBridge`; 64-bit/upper-uniqueness BID helpers are legacy until migrated |
 | IQ/speculative load readiness | `ReducedScalarIssueQueue`, `ReducedScalarIssuePick`, `LoadReplayWakeup` |
-| Store/STQ/SCB | `StoreDispatchSTQPath`, `STQEntryBank`, `STQCommitQueue`, `STQCommitDrain`, `SCBRowBank`, `STQSCBCommitPath` |
+| Store/STQ/SCB | `StoreDispatchSTQPath`, `STQEntryBank`, `STQCommitQueue`, `STQCommitDrain`, `SCBRowBank`, `STQSCBCommitPath`, `ScalarLSU` |
 | Load forwarding/replay | `LoadStoreForwarding`, `LoadForwardPipeline`, `LoadInflightQueue`, `LoadResolveQueue`, `LoadRefillWakeup` |
 | Memory disambiguation | `MDBConflictDetect`, `MDBSSIT`, `MDBQueueFanout` |
 

@@ -892,6 +892,29 @@ it only with equivalent TSO, precise recovery, and forward-progress evidence.
 
 ### Store path: dispatch, STQ, and SCB
 
+The canonical scalar LSU is one parameterized owner. Its queue capacities are
+implementation choices and must not change architectural identity widths:
+
+- ROB identity capacity defines the internal BID/GID/RID/LSID slot-plus-wrap
+  width carried by store requests, flush requests, STQ rows, commit-queue rows,
+  and SCB drain requests.
+- STQ entries, store-commit queue entries, store-commit issue width, SCB
+  entries, SCB response-buffer depth, cache-line bytes, and MapQ depth are
+  independent sizing parameters. No implementation may infer ROB identity
+  width from STQ capacity.
+- The scalar LSU owns speculative STQ state and committed SCB state beneath one
+  top-level boundary. A core is idle only when both retirement state and the
+  LSU's speculative/response state are quiescent.
+- Flush behavior is the typed Linx `FlushBus` contract, including STID,
+  PE/thread scope, BID/group selection, and wrap-qualified identity. Generic
+  ARM exception levels, condition flags, load/store-exclusive monitors,
+  acquire/release opcode semantics, and ARM barrier encodings are not part of
+  this owner and must not be imported with ISA-neutral queue mechanisms.
+- The first integrated Chisel owner contains the STQ-to-SCB store path. LIQ,
+  ResolveQ, MDB, load return, refill, and replay modules remain separate proven
+  mechanisms until they are connected under the same owner with shared flush,
+  LSID, and block-lifecycle evidence.
+
 - A scalar store splits into address (`STA`) and data (`STD`) work with one
   shared instruction, BID, RID, SID, and LSID identity.
 - Dispatch reserves the two halves atomically. After dispatch, address and data

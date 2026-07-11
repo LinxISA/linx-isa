@@ -356,6 +356,19 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 
 ## LSU and memory-ordering modules
 
+### `chisel/.../lsu/ScalarLSU.scala`
+
+- Owns the canonical Chisel scalar LSU boundary and the integrated STQ-to-SCB
+  store path.
+- Uses `CoreParams.robEntries` for ROB identity and `ScalarLsuParams` for
+  independent STQ, commit-queue, issue, SCB, response-buffer, line, and MapQ
+  sizing.
+- Consumes Linx typed flush and block/memory-order sidecars. It deliberately
+  defines no ARM architectural state or ordering operations.
+- The load-inflight, ResolveQ, MDB, replay, and refill owners are not yet
+  children of this boundary; their focused evidence must not be reported as a
+  complete integrated LSU.
+
 ### `src/bcc/lsu/lsu.py`
 
 - Owns the LSU composition boundary.
