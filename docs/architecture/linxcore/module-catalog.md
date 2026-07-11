@@ -622,8 +622,19 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   full-BID retire identity irrevocably until downstream acceptance.
 - Shares allocation and retirement admission with ROB/BROB metadata mutation,
   rejects invalid identities and recovery pivots, and has generated Chisel
-  proof. Non-flush/store-barrier frontiers, multi-block retirement, and
-  replay-state mutation remain open.
+  proof.
+
+### `chisel/.../bctrl/BrobNonFlushFrontier.scala`
+
+- Derives one exact consecutive strong-safe prefix per STID from BROB commit
+  head, live count, resident full BID, completion, and exception metadata.
+- Publishes head plus bounded count as the ordering proof, blocks on holes or
+  unsafe rows, and supports implementation-BID rollover without unsigned age
+  comparisons.
+- Feeds `ReducedStoreCommitFreeOwner`, which retains committed store identity
+  until the full block BID enters the prefix. Early branch/tile predicates,
+  store-barrier allocation, multi-block retirement, and replay-state mutation
+  remain open.
 
 ### `src/bcc/block_struct/`
 

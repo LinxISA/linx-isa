@@ -755,6 +755,16 @@ Detailed recovery behavior remains documented in:
 - A shared retire port selects eligible STID heads fairly and must hold its
   selected `(STID,BID)` stable under backpressure. Metadata free, head advance,
   occupancy decrement, and downstream block-commit publication are one fire.
+- BROB derives a strong non-flush prefix independently for each STID from the
+  exact commit head and bounded live count. The prefix stops at the first
+  missing, stale, unsafe, or exception-bearing row. Its `head_bid` plus
+  `prefix_count` is the ordering proof; the youngest safe BID is observability,
+  not an unsigned age threshold.
+- The initial promoted Chisel predicate is conservative: a row is safe only
+  after full block completion and only when it has no exception. Earlier safe
+  release for branch-resolved scalar non-memory blocks and authoritatively
+  issued tile memory blocks requires explicit live metadata and may not be
+  inferred from decode class alone.
 - BID-carrying queues consume that BROB-qualified kill set, or an equivalent
   ring-age context, rather than reimplementing numeric BID ordering.
 - A `(STID,BID)` slot may be reused only after its BROB row is free and no ROB
@@ -935,6 +945,11 @@ implementation choices and must not change architectural identity widths:
   readiness, byte mask, memory type, and row identity remain explicit.
 - SCB accepts a store only after a strong non-flush decision proves that no
   branch recovery, trap, exception, or interrupt can still cancel it.
+- A committed ROB store event may arrive before its block enters the strong
+  non-flush prefix. The store owner retains the event with its full block BID
+  and rechecks membership against the selected STID's `(head_bid,
+  prefix_count)` window. It may request the STQ `Wait -> Commit` transition
+  only after that proof succeeds; BID magnitude alone is never sufficient.
 - SCB owns committed, non-flushable, physical-cacheline coalescing. It must not
   merge new bytes into a row that has issued ownership traffic and is awaiting
   its response.
@@ -1156,8 +1171,11 @@ implementation choices and must not change architectural identity widths:
   fanout, BMDB report intent, active-row wait mutation, store-ready wakeup, and
   live failed-wait delete/decay. It also retains typed recovery reports and
   proves registered class-merged cleanup consumption against resident ROB rows.
-  Remaining BROB non-flush/store-barrier frontiers and wider retirement,
-  IEX-local MDB training, BCC/IEX/PE trigger-owner connections, complete
+  R652 adds the conservative per-STID strong non-flush prefix and makes the
+  reduced store owner retain a committed store until its full block BID lies
+  inside that exact head/count window. Early branch-resolved and tile-issued
+  predicates, store-barrier allocation, and wider retirement remain open.
+  Remaining IEX-local MDB training, BCC/IEX/PE trigger-owner connections, complete
   all-consumer cleanup fanout,
   pyCircuit source-arbiter/cleanup integration, and natural-workload recovery
   activation remain promotion points. The reduced `LinxCoreTop` continues to
