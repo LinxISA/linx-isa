@@ -910,10 +910,10 @@ implementation choices and must not change architectural identity widths:
   ARM exception levels, condition flags, load/store-exclusive monitors,
   acquire/release opcode semantics, and ARM barrier encodings are not part of
   this owner and must not be imported with ISA-neutral queue mechanisms.
-- The first integrated Chisel owner contains the STQ-to-SCB store path. LIQ,
-  ResolveQ, MDB, load return, refill, and replay modules remain separate proven
-  mechanisms until they are connected under the same owner with shared flush,
-  LSID, and block-lifecycle evidence.
+- The integrated Chisel owner contains the STQ-to-SCB store path and the
+  LIQ-to-ResolveQ active/resolved load lifecycle. MDB learning, load-return
+  publication, miss-queue/cache ownership, and live replay row mutation remain
+  staged mechanisms until they share this owner and its recovery contract.
 
 - A scalar store splits into address (`STA`) and data (`STD`) work with one
   shared instruction, BID, RID, SID, and LSID identity.
@@ -939,6 +939,15 @@ implementation choices and must not change architectural identity widths:
 
 - The active-load window (`LDQInfo`/`LoadInflightQueue`, historically called
   `LIQ`) owns misses, wait-store state, replay, refill, and relaunch.
+- Every active-load row carries PE, STID, TID, BID, GID, RID, and load LSID.
+  Typed precise flush applies the same scope and ring-qualified comparison to
+  LIQ and ResolveQ. A Boolean hard flush is reserved for reset/restart or a
+  recovery event whose precise identity is unavailable.
+- A precise flush prunes only matching active rows. It cancels resident E3/E4
+  work and returns a surviving pipeline row to `Wait`; no survivor may remain
+  stranded in `Repick` after its pipeline payload is discarded. The allocation
+  cursor rebases to the first pruned slot with a changed load-ID generation so
+  stale pre-flush observations cannot impersonate the replacement row.
 - The resolved-load queue (`ResolveQ`/`LoadResolveQueue`, historically called
   `LHQ`) retains the address/byte metadata required to detect a later older
   store conflict. After applying an R2 commit batch, the ROB publishes one
@@ -950,6 +959,11 @@ implementation choices and must not change architectural identity widths:
   (BROB_age(frontier_bid), frontier_lsid)`. A later frontier subsumes an older
   one, so multiple commits coalesce to the most advanced frontier per STID
   without losing cleanup; no comparison crosses STIDs.
+- LIQ-to-ResolveQ transfer is owned inside the scalar LSU. An E4 hit may enter
+  ResolveQ only when reserved queue credit covers the registered E3/E4 arrival
+  latency. After ResolveQ accepts the record, the owner clears that exact LIQ
+  slot; a parent top must not recreate this handoff with an independent pending
+  bit or sideband identity.
 - A load snapshots the youngest eligible store identity when allocated.
 - Store-to-load forwarding is byte granular. For every requested byte, choose
   the nearest older eligible store within the same STID/PE-thread domain by

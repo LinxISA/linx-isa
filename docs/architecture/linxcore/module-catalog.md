@@ -358,16 +358,28 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 
 ### `chisel/.../lsu/ScalarLSU.scala`
 
-- Owns the canonical Chisel scalar LSU boundary and the integrated STQ-to-SCB
-  store path.
+- Owns the canonical Chisel scalar LSU boundary, the integrated STQ-to-SCB
+  store path, and the active-to-resolved scalar load lifecycle.
 - Uses `CoreParams.robEntries` for ROB identity and `ScalarLsuParams` for
-  independent STQ, commit-queue, issue, SCB, response-buffer, line, and MapQ
-  sizing.
+  independent STQ, commit-queue, issue, SCB, response-buffer, LIQ, ResolveQ,
+  line, register-tag, and MapQ sizing.
 - Consumes Linx typed flush and block/memory-order sidecars. It deliberately
   defines no ARM architectural state or ordering operations.
-- The load-inflight, ResolveQ, MDB, replay, and refill owners are not yet
-  children of this boundary; their focused evidence must not be reported as a
-  complete integrated LSU.
+- `ScalarLSULoadPath` owns `LoadInflightQueue`, `LoadResolveQueue`, typed
+  pruning, reserved transfer credit, and source-row clear after accepted
+  resolved-record transfer.
+- MDB learning/fanout, live replay row mutation, cache/miss queues, and final
+  IEX load-return publication are not yet children of this boundary; this must
+  not be reported as a complete integrated LSU.
+
+### `chisel/.../lsu/ScalarLSULoadPath.scala`
+
+- Owns one canonical LIQ-to-ResolveQ lifecycle beneath `ScalarLSU`.
+- Shares hard and typed precise flush across active and resolved rows, carries
+  PE/STID/TID identity, and reserves two ResolveQ credits for registered E3/E4
+  arrivals before accepting another launch.
+- Transfers the E4 hit record with row-owned thread sidecars and clears the
+  exact source LIQ row after queue acceptance.
 
 ### `src/bcc/lsu/lsu.py`
 
