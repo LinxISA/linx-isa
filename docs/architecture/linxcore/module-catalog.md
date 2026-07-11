@@ -15,7 +15,7 @@ the canonical owners of those behaviors, and how those modules compose into the
 full core. Module ownership here is normative; helper utilities do not replace
 stage owners.
 
-## Structural rules
+## Structural rules (LC-MA-STAGE-001)
 
 - Every architecturally visible stage, queue, block-control owner, and engine
   boundary must have a named module owner.

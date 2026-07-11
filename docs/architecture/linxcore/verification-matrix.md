@@ -44,6 +44,7 @@ It is the normative mapping between:
 
 | Gate key | Contract IDs covered |
 |---|---|
+| `LinxCore::microarchitecture contract harness` | `LC-ARCH-DOC-001`, `LC-MA-PIPE-001`, `LC-MA-RES-001`, `LC-MA-ROB-001`, `LC-MA-HAZ-001`, `LC-MA-BLK-001`, `LC-MA-PRV-001`, `LC-MA-MMU-001`, `LC-MA-IRQ-001`, `LC-MA-MEM-001`, `LC-MA-ENG-001`, `LC-MA-FWD-001`, `LC-MA-STAGE-001`, `LC-IF-PYC-001`, `LC-IF-PYC-002`, `LC-IF-TRACE-001`, `LC-IF-TRACE-002`, `LC-IF-SYNC-001`, `LC-IF-MODEL-001` |
 | `Architecture::LinxCore architecture contract lint` | `LC-ARCH-DOC-001`, `LC-MA-PIPE-001`, `LC-MA-RES-001`, `LC-MA-ROB-001`, `LC-MA-HAZ-001`, `LC-MA-BLK-001`, `LC-MA-PRV-001`, `LC-MA-MMU-001`, `LC-MA-IRQ-001`, `LC-MA-MEM-001`, `LC-MA-ENG-001`, `LC-MA-FWD-001`, `LC-MA-STAGE-001`, `LC-IF-PYC-001`, `LC-IF-PYC-002`, `LC-IF-TRACE-001`, `LC-IF-TRACE-002`, `LC-IF-SYNC-001`, `LC-IF-MODEL-001` |
 | `Architecture::mkdocs architecture nav/docs` | `LC-ARCH-DOC-001` |
 | `LinxCore::stage/connectivity lint` | `LC-MA-PIPE-001`, `LC-MA-STAGE-001` |
@@ -66,6 +67,7 @@ It is the normative mapping between:
 
 | Domain | Gate Key | Command | Contract intent |
 |---|---|---|---|
+| LinxCore | `LinxCore::microarchitecture contract harness` | `bash rtl/LinxCore/tests/test_microarchitecture_contract.sh` | one golden definition per contract, explicit dual-RTL ownership, top-shell roles, scenario coverage, and migration-input safety |
 | Architecture | `Architecture::LinxCore architecture contract lint` | `python3 tools/bringup/check_linxcore_arch_contract.py --root . --strict` | canonical submodule docs, mirrors, and cross-links are present and synchronized |
 | Architecture | `Architecture::mkdocs architecture nav/docs` | `python3 tools/bringup/check_linxcore_arch_contract.py --root . --strict --require-mkdocs` | published docs include the mirrored LinxCore contract pages |
 | LinxCore | `LinxCore::stage/connectivity lint` | `bash rtl/LinxCore/tests/test_stage_connectivity.sh` | pipeline naming, stage-spec ownership, and connectivity invariants |

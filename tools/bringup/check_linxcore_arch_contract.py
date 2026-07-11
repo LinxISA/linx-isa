@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -34,7 +35,12 @@ PUBLISHED_ARCH_DOCS = [
     "docs/architecture/linxcore/pipeline-stage-catalog.md",
 ]
 
+MICROARCH_CONTRACT = (
+    "rtl/LinxCore/docs/architecture/microarchitecture-contract.json"
+)
+
 REQUIRED_MATRIX_GATE_NAMES = [
+    "LinxCore::microarchitecture contract harness",
     "Architecture::LinxCore architecture contract lint",
     "Architecture::mkdocs architecture nav/docs",
     "LinxCore::stage/connectivity lint",
@@ -108,7 +114,12 @@ def main(argv: list[str]) -> int:
     errors: list[str] = []
     warnings: list[str] = []
 
-    for rel in REQUIRED_TOPLEVEL_DOCS + CANONICAL_ARCH_DOCS + PUBLISHED_ARCH_DOCS:
+    for rel in (
+        REQUIRED_TOPLEVEL_DOCS
+        + CANONICAL_ARCH_DOCS
+        + PUBLISHED_ARCH_DOCS
+        + [MICROARCH_CONTRACT]
+    ):
         path = root / rel
         if not path.is_file():
             errors.append(f"missing required architecture doc: {rel}")
@@ -200,11 +211,42 @@ def main(argv: list[str]) -> int:
             if contract_id not in matrix_text:
                 errors.append(f"verification matrix missing contract id: {contract_id}")
 
+        microarch_checker = (
+            root
+            / "rtl/LinxCore/tools/architecture/check_microarchitecture_contract.py"
+        )
+        if not microarch_checker.is_file():
+            errors.append("missing LinxCore microarchitecture contract checker")
+        else:
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(microarch_checker),
+                    "--root",
+                    str(root / "rtl/LinxCore"),
+                    "--strict",
+                ],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            if result.returncode != 0:
+                details = (result.stderr or result.stdout).strip()
+                errors.append(
+                    "LinxCore microarchitecture contract checker failed"
+                    + (f": {details}" if details else "")
+                )
+
     report = {
         "ok": len(errors) == 0,
         "errors": errors,
         "warnings": warnings,
-        "checked_docs": REQUIRED_TOPLEVEL_DOCS + CANONICAL_ARCH_DOCS + PUBLISHED_ARCH_DOCS,
+        "checked_docs": (
+            REQUIRED_TOPLEVEL_DOCS
+            + CANONICAL_ARCH_DOCS
+            + PUBLISHED_ARCH_DOCS
+            + [MICROARCH_CONTRACT]
+        ),
     }
 
     if args.out:
