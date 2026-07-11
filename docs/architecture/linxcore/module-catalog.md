@@ -471,9 +471,12 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   in the full fetch/RF/ALU composition. Direct trigger-owner ports and
   production wiring for the complete BCC/IEX/PE/LSU source set remain open.
   R648 supplies the real per-STID oldest BID/RID/completion inputs required by
-  the canonical scalar-LSU adapter, but does not connect the reduced MDB report
-  until its record and recovery delivery are atomic and retained.
-- Cache/miss queues, canonical-top source/lookup wiring, and IEX load-return
+  the canonical scalar-LSU adapter. R649 connects the reduced MDB report through
+  `MDBRecoveryDeliveryPath`: record publication and recovery enqueue share one
+  acceptance, the report STID selects its owner-backed watermark, exact ROB
+  full-BID lookup promotes the request, and central source acceptance alone
+  releases the queue head.
+- Cache/miss queues and IEX load-return
   publication are not yet children of this boundary; this must not be reported
   as a complete integrated LSU.
 
@@ -502,6 +505,19 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   enqueues row-owned Linx `InnerFlush`/`NukeFlush` reports without importing
   ARM architectural ordering behavior. The report remains stable until the
   outer recovery owner accepts it.
+
+### `chisel/.../lsu/MDBRecoveryDeliveryPath.scala`
+
+- Shares `MDBConflictTransactionControl` with `ScalarLSUMDBPath`, so required
+  record, wait-plan, and recovery sinks either accept together or emit no
+  derived valid. Unrequired sinks do not backpressure the candidate.
+- Owns a parameterized retained recovery queue and selects oldest BID/RID only
+  from the queued report's STID lane. Out-of-range STID has no age owner and
+  cannot authorize recovery.
+- Uses `ScalarLSURecoverySource` for exact allocator-stamped full-BID promotion
+  and dequeues only on accepted central recovery. pyCircuit implements the same
+  atomic admission equation; retained queue, STID watermark selection, and
+  exact backend consumption remain declared pyCircuit promotion gaps.
 
 ### `chisel/.../lsu/LoadWaitStoreTimeout.scala`
 

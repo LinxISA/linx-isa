@@ -1016,6 +1016,18 @@ implementation choices and must not change architectural identity widths:
   are one accepted store transaction. `mdbRecoveryQueueEntries` sizes the
   retained report queue; a full queue backpressures address-bearing store
   insertion rather than dropping recovery.
+- `MDBConflictTransactionControl` is the shared admission rule for the
+  canonical scalar LSU and reduced integration top. Required record,
+  multi-row wait-plan, and recovery sinks must all be ready before any derived
+  valid asserts; sinks not required by the current conflict decision do not
+  reduce readiness. R649 applies this rule to the live reduced top through
+  `MDBRecoveryDeliveryPath`, replacing independent record publication and a
+  disconnected recovery report.
+- pyCircuit implements the same parameter-neutral admission equation and is
+  checked against the Chisel generated scenario set. This parity covers atomic
+  sink valids and conditional readiness only; retained report storage,
+  owner-backed STID watermark selection, and exact full-BID promotion remain
+  Chisel-ahead and are declared as pyCircuit gaps rather than inferred parity.
 - MDB recovery reports set `immediateFlush=false`. The oldest-signal/precise
   ROB-head owner in `ScalarLSU` retains the report until wrap-qualified BID/RID
   age is eligible. The report carries the conflicting load PC as its exact
@@ -1034,7 +1046,11 @@ implementation choices and must not change architectural identity widths:
   boundary requires every BCC, IEX, PE, and LSU producer to enter an
   independently retained source slot. R639 implements the arbiter; R640
   connects the production `ScalarLSURecoverySource` owner to it in the real-ROB
-  harness and removes local LSU cleanup selection. R641 adds the class merge
+  harness and removes local LSU cleanup selection. R649 connects that same
+  production owner in the live reduced top: a parameterized report queue
+  selects owner-backed oldest BID/RID by report STID, requests exact resident
+  full-BID lookup, and releases its head only when central recovery accepts the
+  promoted source. R641 adds the class merge
   between that arbiter and cleanup: global flush, global replay, and PE-scoped
   lanes are retained per STID, same-STID `CheckOlder` cancellation and
   `mergeSignal` transformation are modeled, completed-oldest global replay is
@@ -1114,9 +1130,9 @@ implementation choices and must not change architectural identity widths:
   fanout, BMDB report intent, active-row wait mutation, store-ready wakeup, and
   live failed-wait delete/decay. It also retains typed recovery reports and
   proves registered class-merged cleanup consumption against resident ROB rows.
-  Full-BID BROB pointer recovery, multi-STID top-level oldest-block watermarks,
-  IEX-local MDB training, BCC/IEX/PE trigger-owner connections, canonical
-  scalar-LSU source connection, complete all-consumer cleanup fanout,
+  Full-BID BROB pointer recovery,
+  IEX-local MDB training, BCC/IEX/PE trigger-owner connections, complete
+  all-consumer cleanup fanout,
   pyCircuit source-arbiter/cleanup integration, and natural-workload recovery
   activation remain promotion points. The reduced `LinxCoreTop` continues to
   own `ReducedCommitROB` and is not the canonical recovery integration point.
