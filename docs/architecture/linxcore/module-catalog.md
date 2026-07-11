@@ -418,14 +418,42 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 - `RecoveryFabric` composes
   `RecoverySourceArbiter -> RecoveryClassMerge -> RecoveryCleanupControl` for
   the real-ROB proof path.
+- `RecoveryBackendControl` owns the production backend composition around that
+  fabric. It routes the scalar-LSU full-BID request/result through the resident
+  ROB, appends the LSU source after the parameterized non-LSU source set, and
+  emits a ROB flush only when the registered cleanup intent is accepted by all
+  participating consumers. It does not fabricate readiness for unwired BCTRL,
+  rename, frontend, LSU, or PE cleanup sinks.
+- `DecodeRenameROBPath` instantiates `RecoveryBackendControl` around its
+  resident `DispatchROBAllocator`/`ROBEntryBank`. It exports the registered
+  intent and accepts one explicit all-consumer-ready decision. The full
+  fetch/RF/ALU composition connects a retained scalar redirect source and
+  consumes external replay-queue cleanup on the accepted intent.
+- `ScalarRedirectRecoverySource` retains one execute/marker redirect, requires
+  exact full-BID identity whose ring projection matches the supplied BID,
+  publishes once, and holds order/LSID sidecars until cleanup consumption.
+  Cancellation dominates capture; accepted cleanup may consume and replace.
+  The current full top has no other live recovery source. Adding one requires
+  accepted-intent provenance before generic cleanup consumption may clear or
+  apply these scalar-only sidecars.
+- The full fetch/RF/ALU composition currently admits execute redirects only.
+  Marker-only redirects restart the frontend but do not request backend
+  cleanup because the incremented cleanup ring BID lacks an authoritative
+  matching full BID. All backend and replay-queue mutation is qualified by
+  `recoveryIntentConsumed`, not producer residency.
+- Reduced trace shells use `DecodeRenameROBPath.tieOffRecovery` because they
+  expose no authoritative producer. `LinxCoreTop` still uses
+  `ReducedCommitROB`; it is not a full recovery integration boundary.
 - `RecoveryProducerQueue`, `BccRecoverySource`,
   `IexSlowInsertRecoverySource`, `IexIqStallRecoverySource`, and
   `PeMismatchRecoverySource` retain and type the model-derived non-LSU event
   families. Queue depth and IQ-stall threshold are parameters. Exact full block
   BID is an owner input and is never reconstructed from ring identity.
 - The R642 producer probe composes BCC/IEX/PE adapters through
-  `RecoveryFabric`. Canonical trigger-owner ports and production top wiring for
-  the complete BCC/IEX/PE/LSU set remain open.
+  `RecoveryFabric`. R646 makes backend control live at the real
+  decode/rename/allocator seam and connects the first scalar redirect source
+  in the full fetch/RF/ALU composition. Direct trigger-owner ports and
+  production wiring for the complete BCC/IEX/PE/LSU source set remain open.
 - Cache/miss queues, canonical-top source/lookup wiring, and IEX load-return
   publication are not yet children of this boundary; this must not be reported
   as a complete integrated LSU.

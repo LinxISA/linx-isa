@@ -1057,6 +1057,18 @@ implementation choices and must not change architectural identity widths:
   and pass one named scenario set. This is class-level convergence only:
   pyCircuit source arbitration, exact producer composition, registered cleanup,
   and resident ROB/BROB consumers remain future integration boundaries.
+  R646 promotes the Chisel backend boundary from probe-local wiring to a
+  reusable `RecoveryBackendControl` owner. The owner routes the LSU's exact
+  full-BID lookup through the resident ROB, appends the LSU report to the
+  parameterized non-LSU source set, and applies `robPruneValid` only on the
+  shared cleanup-intent handshake. `DecodeRenameROBPath` instantiates this
+  owner around `DispatchROBAllocator` and `ROBEntryBank`, so accepted recovery
+  can resolve allocator-stamped identity and prune resident rows. The full
+  fetch/RF/ALU composition publishes its retained execute redirect through this
+  boundary and applies backend, issue, store, LIQ, and ResolveQ mutation only
+  on the same accepted intent. Immediate frontend redirection is a separate
+  execute/marker control action. Reduced trace shells tie recovery off
+  explicitly.
   Within one STID, arbitration applies the model `CheckOlder` type and ring-age
   rules. Different STIDs have no BID order and are serialized by fair STID
   round robin. ROB and BROB/BCTRL consumers see state-changing intent only
@@ -1091,10 +1103,19 @@ implementation choices and must not change architectural identity widths:
   fanout, BMDB report intent, active-row wait mutation, store-ready wakeup, and
   live failed-wait delete/decay. It also retains typed recovery reports and
   proves registered class-merged cleanup consumption against resident ROB rows.
-  Full-BID BROB recovery, final top-level oldest-head eligibility, IEX-local MDB
-  training, BCC/IEX/PE trigger-owner connections, canonical production top
-  wiring, pyCircuit source-arbiter/cleanup integration, and natural-workload
-  activation remain promotion points.
+  Full-BID BROB pointer recovery, multi-STID top-level oldest-block watermarks,
+  IEX-local MDB training, BCC/IEX/PE trigger-owner connections, canonical
+  scalar-LSU source connection, complete all-consumer cleanup fanout,
+  pyCircuit source-arbiter/cleanup integration, and natural-workload recovery
+  activation remain promotion points. The reduced `LinxCoreTop` continues to
+  own `ReducedCommitROB` and is not the canonical recovery integration point.
+  Before a second live source is connected beside the scalar redirect source,
+  source provenance must reach accepted cleanup so scalar order/LSID sidecars
+  cannot be consumed by an unrelated LSU, BCC, IEX, or PE intent.
+  Marker-only backend cleanup also remains blocked until the owner can supply
+  the authoritative full BID corresponding to its next-ring cleanup BID; the
+  implementation must not pair an incremented ring BID with the retiring
+  marker's prior full BID.
 
 ### Atomics, fences, Device/MMIO, and engine memory
 
