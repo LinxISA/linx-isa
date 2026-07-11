@@ -1012,10 +1012,23 @@ implementation choices and must not change architectural identity widths:
   results, retained wait plans, and registered store wakeups. It does not erase
   SSIT prediction state; SSIT is cleared only by reset or its explicit
   confidence/weight delete policy.
+- Every scalar LIQ row that waits on an MDB-predicted store owns an independent,
+  saturating failed-wait age. Age is keyed by the load-slot generation and the
+  predicted store `(BID, LSID, PC)`; row reuse, store-identity replacement,
+  wakeup, or recovery restarts the age. Expiry is retained under backpressure.
+  The owner clears wait-store state and enqueues one `delete_lu_mdb_q`
+  equivalent in the same accepted cycle, so prediction confidence cannot decay
+  while the load remains stranded on the failed prediction.
+- `mdbFailedWaitTimeoutCycles` parameterizes the finite fallback interval. The
+  Chisel owner deliberately rejects the C++ model's shared `loadPendingCyc`
+  implementation because its `oldestPending` decrement enable is never set.
+  Per-row deterministic ageing preserves the useful failed-prediction feedback
+  mechanism without copying that dead heuristic or any ARM-specific state.
 - Canonical Chisel now integrates conflict learning, SSIT lookup, atomic LU/SU
-  fanout, BMDB report intent, active-row wait mutation, and store-ready wakeup.
-  Final ROB-head nuke consumption, IEX-local MDB training, failed-wait timeout
-  delete generation, and natural-workload activation remain promotion points.
+  fanout, BMDB report intent, active-row wait mutation, store-ready wakeup, and
+  live failed-wait delete/decay. Final ROB-head recovery consumption,
+  IEX-local MDB training, and natural-workload activation remain promotion
+  points.
 
 ### Atomics, fences, Device/MMIO, and engine memory
 

@@ -362,7 +362,8 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   store path, and the active-to-resolved scalar load lifecycle.
 - Uses `CoreParams.robEntries` for ROB identity and `ScalarLsuParams` for
   independent STQ, commit-queue, issue, SCB, response-buffer, LIQ, ResolveQ,
-  MDB SSIT/command/output/wait-plan, line, register-tag, and MapQ sizing.
+  MDB SSIT/command/output/wait-plan/failed-wait timeout, line, register-tag,
+  and MapQ sizing.
 - Consumes Linx typed flush and block/memory-order sidecars. It deliberately
   defines no ARM architectural state or ordering operations.
 - `ScalarLSULoadPath` owns `LoadInflightQueue`, `LoadResolveQueue`, typed
@@ -370,10 +371,11 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   resolved-record transfer, and `ScalarLSUMDBPath`.
 - `ScalarLSUMDBPath` owns conflict detection, finite SSIT and command/fanout
   queues, BMDB report intent, retained multi-row wait plans, live LIQ wait
-  mutation, registered store wakeup, and typed Linx conflict-flush publication.
-- Cache/miss queues, failed-wait delete timing, final recovery arbitration, and
-  IEX load-return publication are not yet children of this boundary; this must
-  not be reported as a complete integrated LSU.
+  mutation, per-row failed-wait timeout/delete feedback, registered store
+  wakeup, and typed Linx conflict-flush publication.
+- Cache/miss queues, final recovery arbitration, and IEX load-return
+  publication are not yet children of this boundary; this must not be reported
+  as a complete integrated LSU.
 
 ### `chisel/.../lsu/ScalarLSULoadPath.scala`
 
@@ -384,8 +386,8 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 - Transfers the E4 hit record with row-owned thread sidecars and clears the
   exact source LIQ row after queue acceptance.
 - Generates MDB lookup on accepted scalar allocation, applies accepted MDB wait
-  plans through the LIQ-native mutation port, and includes MDB transient state
-  in quiescence.
+  plans and atomic failed-wait releases through the LIQ-native mutation port,
+  and includes MDB transient state in quiescence.
 
 ### `chisel/.../lsu/ScalarLSUMDBPath.scala`
 
@@ -395,8 +397,19 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   unresolved wait target, records the oldest resolved violation, and trains a
   parameterized PC-keyed SSIT through finite command queues.
 - Holds atomic LU/SU lookup fanout until live LIQ mutation accepts, registers
-  store-ready wakeup, and emits row-owned Linx `InnerFlush`/`NukeFlush`
-  requests without importing ARM architectural ordering behavior.
+  store-ready wakeup, ages each stable predicted-store wait independently,
+  atomically clears expired waits while enqueueing SSIT delete feedback, and
+  emits row-owned Linx `InnerFlush`/`NukeFlush` requests without importing ARM
+  architectural ordering behavior.
+
+### `chisel/.../lsu/LoadWaitStoreTimeout.scala`
+
+- Owns parameterized, saturating per-LIQ-row age for failed MDB-predicted waits.
+- Keys age by load generation plus predicted store BID/LSID/PC, serializes
+  simultaneous expiries deterministically, and retains expiry until the
+  canonical MDB owner accepts both row release and delete enqueue.
+- Replaces the model's ineffective shared `oldestPending` ageing enable with a
+  deterministic hardware contract; it does not add an ISA-visible timer.
 
 ### `src/bcc/lsu/lsu.py`
 

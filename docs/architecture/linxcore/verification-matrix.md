@@ -166,7 +166,7 @@ the mandatory PR matrix or prove full-core promotion.
 | IQ/speculative load readiness | `ReducedScalarIssueQueue`, `ReducedScalarIssuePick`, `LoadReplayWakeup` |
 | Store/STQ/SCB | `StoreDispatchSTQPath`, `STQEntryBank`, `STQCommitQueue`, `STQCommitDrain`, `SCBRowBank`, `STQSCBCommitPath`, `ScalarLSU` |
 | Load forwarding/replay | `LoadStoreForwarding`, `LoadForwardPipeline`, `LoadInflightQueue`, `LoadResolveQueue`, `ScalarLSULoadPath`, `LoadRefillWakeup` |
-| Memory disambiguation | `MDBConflictDetect`, `MDBSSIT`, `MDBQueueFanout`, `LoadReplayMdbLookupWaitPlan`, `ScalarLSUMDBPath`; verify Wait/Repick mutation policy, retained multi-row wait masks, typed inner/nuke output, and flush-cleared transient queues |
+| Memory disambiguation | `MDBConflictDetect`, `MDBSSIT`, `MDBQueueFanout`, `LoadReplayMdbLookupWaitPlan`, `LoadWaitStoreTimeout`, `ScalarLSUMDBPath`; verify Wait/Repick mutation policy, retained multi-row wait masks, generation-keyed timeout restart, atomic wait-clear/delete enqueue, SSIT decay/release, typed inner/nuke output, and flush-cleared transient queues |
 
 For Chisel modules, run the repository wrapper serially, for example
 `bash tools/chisel/run_chisel_tests.sh --only <Module>`. A unit pass proves the
