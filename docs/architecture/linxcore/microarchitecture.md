@@ -747,6 +747,12 @@ Detailed recovery behavior remains documented in:
   pointer defines the pivot and first-killed suffix. A migration-era wider
   transport may be compared with that result for diagnostics, but its upper
   bits are not recovery authority.
+- Cleanup interfaces keep those identities structurally separate:
+  `block_flush_bid` is exactly `BID_W`, while
+  `block_flush_pointer_valid/block_flush_pointer` carry implementation-only
+  wrap/generation context. BROB consumes the canonical BID. Rename and other
+  pointer-age consumers use only the owner-resolved pointer. A global block
+  cleanup without valid resolved pointer context must mutate neither owner.
 - Each STID's BROB owns live block order through its head, tail, occupancy, and
   internal wrap state. On a redirect for `flush_stid` that preserves
   `flush_bid`, that ring produces the kill set for live slots from

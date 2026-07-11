@@ -404,9 +404,10 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   generation sideband. `RingFullBidRecoveryBridge` validates the echoed key and
   ring projection before constructing `FullBidFlushReq`; any blocker retains
   the MDB report.
-- `RecoveryCleanupControl` accepts the arbiter-selected full-BID report, retains
-  one cleanup intent, and gates ROB pruning on consumer acceptance. Its raw
-  ring compatibility input suppresses BCTRL/BROB block cleanup and is not used
+- `RecoveryCleanupControl` accepts the arbiter-selected exact-pointer report,
+  splits canonical `BID_W` from implementation pointer context, retains one
+  cleanup intent, and gates ROB pruning on consumer acceptance. Its raw
+  ring compatibility input suppresses BCTRL/BROB and scalar rename cleanup and is not used
   by the canonical MDB source path.
   The real ROB consumer always matches STID and conditionally matches PE/TID
   before pruning, so a recovery cannot remove rows from another Linx scope.
@@ -433,6 +434,9 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   intent and accepts one explicit all-consumer-ready decision. The full
   fetch/RF/ALU composition connects a retained scalar redirect source and
   consumes external replay-queue cleanup on the accepted intent.
+  For global block cleanup it resolves the canonical BID against BROB and
+  rebuilds one downstream intent with the resolved pointer before rename or
+  queue mutation.
 - `ROBRecoveryWatermark` and `BrobMetaTracker` are the per-STID oldest-state
   owners. ROB selects the first non-retired resident row in circular commit
   order and preserves its wrap-qualified RID and full block sideband; BROB
