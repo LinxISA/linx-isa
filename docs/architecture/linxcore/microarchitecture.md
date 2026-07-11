@@ -1096,6 +1096,18 @@ implementation choices and must not change architectural identity widths:
   and completed-oldest replay rejection. This preserves Linx block/STID
   semantics, supports parameterized lane and queue sizing, and introduces no
   foreign architectural state.
+  R650 restores the accepted-recovery BROB allocation tail instead of leaving
+  it beyond discarded speculative blocks. A parameterized full-BID cursor is
+  owned independently per STID and captures the pre-recovery `old_alloc`
+  value. Model `MISS_PRED_FLUSH` names the first killed block and restores
+  inclusively to its BID; accepted scalar nuke/inner/fast flush preserves its
+  authoritative target and restores to the target successor. Metadata pruning
+  and cursor restoration consume the same inclusive/exclusive decision, and
+  recovery dominates same-lane allocation. Chisel integrates this owner under
+  `DispatchROBAllocator`; a generated Chisel probe proves the cursor,
+  admission, and invalid-scope scenarios. BROB commit, dispatch, rename,
+  non-flush, and store-barrier
+  pointers remain separate promotion work.
   Within one STID, arbitration applies the model `CheckOlder` type and ring-age
   rules. Different STIDs have no BID order and are serialized by fair STID
   round robin. ROB and BROB/BCTRL consumers see state-changing intent only
@@ -1130,7 +1142,7 @@ implementation choices and must not change architectural identity widths:
   fanout, BMDB report intent, active-row wait mutation, store-ready wakeup, and
   live failed-wait delete/decay. It also retains typed recovery reports and
   proves registered class-merged cleanup consumption against resident ROB rows.
-  Full-BID BROB pointer recovery,
+  Remaining BROB pointer recovery beyond the allocation tail,
   IEX-local MDB training, BCC/IEX/PE trigger-owner connections, complete
   all-consumer cleanup fanout,
   pyCircuit source-arbiter/cleanup integration, and natural-workload recovery

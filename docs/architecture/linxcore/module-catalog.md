@@ -608,6 +608,20 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   64-bit linear BID helper remains a declared promotion blocker, not an
   alternative architecture contract.
 
+### `chisel/.../bctrl/BrobAllocationRecovery.scala`
+
+- Owns the parameterized next-allocation full BID independently per STID and
+  replaces split slot/uniqueness registers in `DispatchROBAllocator`.
+- Captures the old allocation cursor and restores to one model-derived
+  first-killed BID on accepted global cleanup: inclusive for miss-predict,
+  successor-of-pivot for retained-target nuke/inner/fast flush.
+- Gives recovery priority over same-lane allocation, rejects invalid STIDs,
+  and drives the same inclusive/exclusive suffix rule into `BrobMetaTracker`.
+- Has a generated Chisel probe for cursor restore, invalid-scope rejection, and
+  coherent child admission suppression. Complete BROB recovery still requires
+  commit, dispatch, rename, non-flush, and store-barrier pointers plus
+  replay-state mutation.
+
 ### `src/bcc/block_struct/`
 
 - Contains focused block-structure models and tests for ROB/BROB behavior.
