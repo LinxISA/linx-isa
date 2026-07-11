@@ -388,8 +388,12 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   suppresses BCTRL/BROB block cleanup when no full block BID is available.
   The real ROB consumer always matches STID and conditionally matches PE/TID
   before pruning, so a recovery cannot remove rows from another Linx scope.
-- Cache/miss queues, all-source top arbitration, canonical-top lookup wiring,
-  and IEX load-return
+- `RecoverySourceArbiter` implements parameterized retained source slots,
+  model-oldest same-STID selection, invalid-STID rejection, and fair
+  serialization across incomparable STIDs. R639 proves it in the exact-lookup
+  real-ROB harness; production `ScalarLSU` and canonical backend composition
+  have not yet moved to this central boundary.
+- Cache/miss queues, canonical-top source/lookup wiring, and IEX load-return
   publication are not yet children of this boundary; this must not be reported
   as a complete integrated LSU.
 

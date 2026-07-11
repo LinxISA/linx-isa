@@ -1028,9 +1028,14 @@ implementation choices and must not change architectural identity widths:
   the request BID. Missing, stale, cross-scope, or inconsistent lookup results
   retain the report and authorize no cleanup.
 - `RingFullBidRecoveryBridge` requires the lookup result to echo the current
-  request before promoting the report to `FullBidFlushReq`. An independently
-  selected full-BID source has fixed priority. ROB and BROB/BCTRL consumers see
-  state-changing intent only after the registered cleanup handshake.
+  request before promoting the report to `FullBidFlushReq`. The central
+  boundary requires every BCC, IEX, PE, and LSU producer to enter an
+  independently retained source slot. R639 implements and proves that boundary
+  in the real-ROB harness; canonical production source wiring remains open.
+  Within one STID, arbitration applies the model `CheckOlder` type and ring-age
+  rules. Different STIDs have no BID order and are serialized by fair STID
+  round robin. ROB and BROB/BCTRL consumers see state-changing intent only
+  after the registered cleanup handshake.
 - ROB pruning applies the same Linx scope contract as conflict detection:
   request STID must match every removed row, while `baseOnPE` and
   `baseOnThread` additionally require PE and TID equality. A prune region may
