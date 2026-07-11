@@ -223,6 +223,11 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 - Owns the explicit flush and redirect control boundary.
 - Provides the architectural flush owner instead of hiding redirect policy
   inside unrelated modules.
+- The current pyCircuit owner retains only one ROB redirect PC/checkpoint
+  event. It does not yet implement the R641 full-BID multi-source arbitration,
+  per-STID global-flush/global-replay state, per-PE lanes, or registered cleanup
+  intent fanout. Chisel is ahead at this boundary; pyCircuit recovery-fabric
+  convergence remains required before cross-RTL promotion.
 
 ### `src/bcc/ooo/rob.py`
 
@@ -392,8 +397,15 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   model-oldest same-STID selection, invalid-STID rejection, and fair
   serialization across incomparable STIDs. R639 proves it in the exact-lookup
   real-ROB harness. R640 connects the production ScalarLSU source owner to that
-  arbiter in the same harness and removes LSU-local cleanup selection. Canonical
-  backend composition has not yet connected the complete producer set.
+  arbiter in the same harness and removes LSU-local cleanup selection.
+- `RecoveryClassMerge` retains global flush, global replay, and per-PE recovery
+  classes per STID, performs same-STID `CheckOlder` cancellation and
+  `mergeSignal` transformation, rejects completed-oldest global replay, and
+  stages cleanup through an irrevocable output slot.
+- `RecoveryFabric` composes
+  `RecoverySourceArbiter -> RecoveryClassMerge -> RecoveryCleanupControl` for
+  the real-ROB proof path. Canonical backend composition has not yet connected
+  the complete BCC/IEX/PE/LSU producer set or production top wiring.
 - Cache/miss queues, canonical-top source/lookup wiring, and IEX load-return
   publication are not yet children of this boundary; this must not be reported
   as a complete integrated LSU.

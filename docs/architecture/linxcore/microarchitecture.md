@@ -1032,8 +1032,13 @@ implementation choices and must not change architectural identity widths:
   boundary requires every BCC, IEX, PE, and LSU producer to enter an
   independently retained source slot. R639 implements the arbiter; R640
   connects the production `ScalarLSURecoverySource` owner to it in the real-ROB
-  harness and removes local LSU cleanup selection. Canonical BCC/IEX/PE source
-  wiring remains open.
+  harness and removes local LSU cleanup selection. R641 adds the class merge
+  between that arbiter and cleanup: global flush, global replay, and PE-scoped
+  lanes are retained per STID, same-STID `CheckOlder` cancellation and
+  `mergeSignal` transformation are modeled, completed-oldest global replay is
+  rejected, and the selected request is staged through an irrevocable
+  downstream slot. Canonical BCC/IEX/PE source wiring and production top wiring
+  remain open.
   Within one STID, arbitration applies the model `CheckOlder` type and ring-age
   rules. Different STIDs have no BID order and are serialized by fair STID
   round robin. ROB and BROB/BCTRL consumers see state-changing intent only
@@ -1067,9 +1072,10 @@ implementation choices and must not change architectural identity widths:
 - Canonical Chisel now integrates conflict learning, SSIT lookup, atomic LU/SU
   fanout, BMDB report intent, active-row wait mutation, store-ready wakeup, and
   live failed-wait delete/decay. It also retains typed recovery reports and
-  proves registered cleanup consumption against resident ROB rows. Full-BID
-  BROB recovery, final top-level oldest-head eligibility, IEX-local MDB
-  training, and natural-workload activation remain promotion points.
+  proves registered class-merged cleanup consumption against resident ROB rows.
+  Full-BID BROB recovery, final top-level oldest-head eligibility, IEX-local MDB
+  training, BCC/IEX/PE recovery producers, canonical production top wiring, and
+  natural-workload activation remain promotion points.
 
 ### Atomics, fences, Device/MMIO, and engine memory
 
