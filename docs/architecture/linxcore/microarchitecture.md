@@ -898,10 +898,9 @@ implementation choices and must not change architectural identity widths:
 - ROB identity capacity defines the internal BID/GID/RID/LSID slot-plus-wrap
   width carried by store requests, flush requests, STQ rows, commit-queue rows,
   and SCB drain requests.
-- STQ entries, store-commit queue entries, store-commit issue width, SCB
-  entries, SCB response-buffer depth, cache-line bytes, and MapQ depth are
-  independent sizing parameters. No implementation may infer ROB identity
-  width from STQ capacity.
+- STQ, store-commit, SCB, LIQ, ResolveQ, MDB SSIT, MDB command/output, MDB
+  wait-plan, cache-line, and MapQ resources are independent sizing parameters.
+  No implementation may infer ROB identity width from any queue capacity.
 - The scalar LSU owns speculative STQ state and committed SCB state beneath one
   top-level boundary. A core is idle only when both retirement state and the
   LSU's speculative/response state are quiescent.
@@ -910,10 +909,11 @@ implementation choices and must not change architectural identity widths:
   ARM exception levels, condition flags, load/store-exclusive monitors,
   acquire/release opcode semantics, and ARM barrier encodings are not part of
   this owner and must not be imported with ISA-neutral queue mechanisms.
-- The integrated Chisel owner contains the STQ-to-SCB store path and the
-  LIQ-to-ResolveQ active/resolved load lifecycle. MDB learning, load-return
-  publication, miss-queue/cache ownership, and live replay row mutation remain
-  staged mechanisms until they share this owner and its recovery contract.
+- The integrated Chisel owner contains the STQ-to-SCB store path, the
+  LIQ-to-ResolveQ active/resolved load lifecycle, and the scalar MDB
+  conflict/SSIT/fanout/wait-mutation path. Load-return publication and
+  miss-queue/cache ownership remain staged mechanisms until they share this
+  owner and its recovery contract.
 
 - A scalar store splits into address (`STA`) and data (`STD`) work with one
   shared instruction, BID, RID, SID, and LSID identity.
@@ -994,8 +994,28 @@ implementation choices and must not change architectural identity widths:
   recovery. A nuke is taken only when the marked load reaches the precise ROB
   head. That row's `(STID,BID)` identifies the surviving block; the selected
   BROB ring uses its current context to flush younger live blocks.
-- MDB and final nuke/flush integration are partial RTL evidence today. Focused
-  fixtures do not prove natural-workload activation or full recovery closure.
+- Scalar load allocation enqueues one PC-keyed MDB lookup before first launch.
+  A hit is retained at the LU/SU fanout boundary until the named live LIQ row
+  accepts its wait-store mutation; a queue-full predictor may therefore
+  backpressure scalar load allocation rather than drop lookup state.
+- An accepted address-bearing scalar store feeds active-LIQ and ResolveQ
+  conflict detection. Store insertion is backpressured when the MDB record or
+  multi-row wait-plan queues cannot retain the event. Every unresolved active
+  conflict bit is retained and drained deterministically; the implementation
+  must not collapse a multi-row wait mask to one pulse.
+- Same-BID conflict publication emits a typed Linx `InnerFlush`; cross-BID
+  conflict publication emits `NukeFlush`. The request carries the load's
+  PE/STID/TID, BID/GID/RID/LSID, scalar execution-engine class, and fetch-PC
+  validity. The outer recovery arbiter and precise ROB-head policy remain the
+  architectural consumers; MDB does not directly delete arbitrary ROB rows.
+- Ordinary hard or precise recovery clears queued MDB commands, LU/SU fanout
+  results, retained wait plans, and registered store wakeups. It does not erase
+  SSIT prediction state; SSIT is cleared only by reset or its explicit
+  confidence/weight delete policy.
+- Canonical Chisel now integrates conflict learning, SSIT lookup, atomic LU/SU
+  fanout, BMDB report intent, active-row wait mutation, and store-ready wakeup.
+  Final ROB-head nuke consumption, IEX-local MDB training, failed-wait timeout
+  delete generation, and natural-workload activation remain promotion points.
 
 ### Atomics, fences, Device/MMIO, and engine memory
 

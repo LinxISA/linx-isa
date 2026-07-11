@@ -362,13 +362,16 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   store path, and the active-to-resolved scalar load lifecycle.
 - Uses `CoreParams.robEntries` for ROB identity and `ScalarLsuParams` for
   independent STQ, commit-queue, issue, SCB, response-buffer, LIQ, ResolveQ,
-  line, register-tag, and MapQ sizing.
+  MDB SSIT/command/output/wait-plan, line, register-tag, and MapQ sizing.
 - Consumes Linx typed flush and block/memory-order sidecars. It deliberately
   defines no ARM architectural state or ordering operations.
 - `ScalarLSULoadPath` owns `LoadInflightQueue`, `LoadResolveQueue`, typed
-  pruning, reserved transfer credit, and source-row clear after accepted
-  resolved-record transfer.
-- MDB learning/fanout, live replay row mutation, cache/miss queues, and final
+  pruning, reserved transfer credit, source-row clear after accepted
+  resolved-record transfer, and `ScalarLSUMDBPath`.
+- `ScalarLSUMDBPath` owns conflict detection, finite SSIT and command/fanout
+  queues, BMDB report intent, retained multi-row wait plans, live LIQ wait
+  mutation, registered store wakeup, and typed Linx conflict-flush publication.
+- Cache/miss queues, failed-wait delete timing, final recovery arbitration, and
   IEX load-return publication are not yet children of this boundary; this must
   not be reported as a complete integrated LSU.
 
@@ -376,10 +379,24 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 
 - Owns one canonical LIQ-to-ResolveQ lifecycle beneath `ScalarLSU`.
 - Shares hard and typed precise flush across active and resolved rows, carries
-  PE/STID/TID identity, and reserves two ResolveQ credits for registered E3/E4
-  arrivals before accepting another launch.
+  PE/STID/TID identity, and requires three free ResolveQ slots for two prior
+  registered E3/E4 arrivals plus the newly accepted launch.
 - Transfers the E4 hit record with row-owned thread sidecars and clears the
   exact source LIQ row after queue acceptance.
+- Generates MDB lookup on accepted scalar allocation, applies accepted MDB wait
+  plans through the LIQ-native mutation port, and includes MDB transient state
+  in quiescence.
+
+### `chisel/.../lsu/ScalarLSUMDBPath.scala`
+
+- Owns the canonical scalar memory-dependence predictor beneath
+  `ScalarLSULoadPath`.
+- Converts active LIQ and ResolveQ rows into one conflict scan, retains every
+  unresolved wait target, records the oldest resolved violation, and trains a
+  parameterized PC-keyed SSIT through finite command queues.
+- Holds atomic LU/SU lookup fanout until live LIQ mutation accepts, registers
+  store-ready wakeup, and emits row-owned Linx `InnerFlush`/`NukeFlush`
+  requests without importing ARM architectural ordering behavior.
 
 ### `src/bcc/lsu/lsu.py`
 
