@@ -1018,7 +1018,9 @@ implementation choices and must not change architectural identity widths:
   insertion rather than dropping recovery.
 - MDB recovery reports set `immediateFlush=false`. The oldest-signal/precise
   ROB-head owner in `ScalarLSU` retains the report until wrap-qualified BID/RID
-  age is eligible. Before cleanup acceptance, the allocator/ROB owner must
+  age is eligible. The report carries the conflicting load PC as its exact
+  Linx64 restart TPC whenever `fetchTpcValid` is set. Before cleanup acceptance,
+  the allocator/ROB owner must
   recover the row's full implementation generation sideband through an exact
   `(BID,GID,RID,PE,STID,TID)` lookup. MDB never reconstructs that sideband from
   slot bits and never directly deletes ROB rows.
@@ -1037,8 +1039,16 @@ implementation choices and must not change architectural identity widths:
   lanes are retained per STID, same-STID `CheckOlder` cancellation and
   `mergeSignal` transformation are modeled, completed-oldest global replay is
   rejected, and the selected request is staged through an irrevocable
-  downstream slot. Canonical BCC/IEX/PE source wiring and production top wiring
-  remain open.
+  downstream slot. R642 adds parameterized retained adapters for BCC miss
+  prediction, IEX slow insert, IEX IQ-stall replay, and PE result mismatch.
+  They publish `MissPredFlush`, immediate `NukeFlush`, configurable-threshold
+  `FastReplay`, and PE-scoped `InnerFlush`, respectively. Every adapter requires
+  the trigger owner to supply the exact full block BID; missing identity blocks
+  publication rather than incrementing a ring BID or reinterpreting model
+  `fbid`. PE inner recovery also carries the exact 64-bit restart TPC from the
+  compare owner through class merge and registered cleanup. A target-valid bit
+  without its target is not sufficient. Canonical trigger-owner and production
+  top wiring remain open.
   Within one STID, arbitration applies the model `CheckOlder` type and ring-age
   rules. Different STIDs have no BID order and are serialized by fair STID
   round robin. ROB and BROB/BCTRL consumers see state-changing intent only
@@ -1074,8 +1084,9 @@ implementation choices and must not change architectural identity widths:
   live failed-wait delete/decay. It also retains typed recovery reports and
   proves registered class-merged cleanup consumption against resident ROB rows.
   Full-BID BROB recovery, final top-level oldest-head eligibility, IEX-local MDB
-  training, BCC/IEX/PE recovery producers, canonical production top wiring, and
-  natural-workload activation remain promotion points.
+  training, BCC/IEX/PE trigger-owner connections, canonical production top
+  wiring, pyCircuit recovery-fabric convergence, and natural-workload
+  activation remain promotion points.
 
 ### Atomics, fences, Device/MMIO, and engine memory
 

@@ -404,8 +404,15 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   stages cleanup through an irrevocable output slot.
 - `RecoveryFabric` composes
   `RecoverySourceArbiter -> RecoveryClassMerge -> RecoveryCleanupControl` for
-  the real-ROB proof path. Canonical backend composition has not yet connected
-  the complete BCC/IEX/PE/LSU producer set or production top wiring.
+  the real-ROB proof path.
+- `RecoveryProducerQueue`, `BccRecoverySource`,
+  `IexSlowInsertRecoverySource`, `IexIqStallRecoverySource`, and
+  `PeMismatchRecoverySource` retain and type the model-derived non-LSU event
+  families. Queue depth and IQ-stall threshold are parameters. Exact full block
+  BID is an owner input and is never reconstructed from ring identity.
+- The R642 producer probe composes BCC/IEX/PE adapters through
+  `RecoveryFabric`. Canonical trigger-owner ports and production top wiring for
+  the complete BCC/IEX/PE/LSU set remain open.
 - Cache/miss queues, canonical-top source/lookup wiring, and IEX load-return
   publication are not yet children of this boundary; this must not be reported
   as a complete integrated LSU.

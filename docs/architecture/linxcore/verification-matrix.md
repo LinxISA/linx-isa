@@ -164,7 +164,7 @@ the mandatory PR matrix or prove full-core promotion.
 |---|---|
 | Decode/resource reservation | `FrontendDecodeStage`, `DecodeRenameROBPath`, `DispatchROBAllocator`, `DecodeLoadStoreIdAssign`; current allocation timing must be checked against canonical D1/D2/D3 ownership |
 | Scalar and local rename | `GPRRenameCheckpoint`, `ScalarDecodeRenameBridge`, `TULinkRename`, `TULinkRetireCommandPath` |
-| ROB/BROB/recovery | `ROBEntryBank`, `ROBFlushPrune`, `ReducedCommitROB`, `BROB`, `FullBidRecoveryBridge`, `ScalarLSURecoverySource`, `RecoverySourceArbiter`, `RecoveryClassMerge`, `RecoveryFabric`; 64-bit/upper-uniqueness BID helpers are legacy until migrated |
+| ROB/BROB/recovery | `ROBEntryBank`, `ROBFlushPrune`, `ReducedCommitROB`, `BROB`, `FullBidRecoveryBridge`, `ScalarLSURecoverySource`, `RecoveryProducerQueue`, `BccRecoverySource`, `IexSlowInsertRecoverySource`, `IexIqStallRecoverySource`, `PeMismatchRecoverySource`, `RecoverySourceArbiter`, `RecoveryClassMerge`, `RecoveryFabric`; verify exact owner-supplied full BID, retained producer backpressure, typed event mapping, and missing-identity blocking; 64-bit/upper-uniqueness BID helpers are legacy until migrated |
 | IQ/speculative load readiness | `ReducedScalarIssueQueue`, `ReducedScalarIssuePick`, `LoadReplayWakeup` |
 | Store/STQ/SCB | `StoreDispatchSTQPath`, `STQEntryBank`, `STQCommitQueue`, `STQCommitDrain`, `SCBRowBank`, `STQSCBCommitPath`, `ScalarLSU` |
 | Load forwarding/replay | `LoadStoreForwarding`, `LoadForwardPipeline`, `LoadInflightQueue`, `LoadResolveQueue`, `ScalarLSULoadPath`, `LoadRefillWakeup` |
