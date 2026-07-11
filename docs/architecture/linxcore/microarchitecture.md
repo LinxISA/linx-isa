@@ -651,8 +651,9 @@ Required behavior:
   owner takes it only at the precise head point defined by the corresponding
   contract.
 - Flush owns the bank mutation cycle, prunes younger rows with the request's
-  declared comparison domain, and rebases allocation/commit state without
-  exposing a partially updated ROB.
+  declared comparison domain and scope, and rebases allocation/commit state
+  without exposing a partially updated ROB. STID always qualifies a row;
+  PE and thread identity qualify it when the request enables those scopes.
 - Live duplicate instruction identities are illegal, including while a row is
   retired but not yet deallocated.
 
@@ -1003,11 +1004,34 @@ implementation choices and must not change architectural identity widths:
   multi-row wait-plan queues cannot retain the event. Every unresolved active
   conflict bit is retained and drained deterministically; the implementation
   must not collapse a multi-row wait mask to one pulse.
+- Store-probe intent is visible before STQ acceptance so conflict-dependent
+  recovery credit can participate in readiness without a combinational loop.
+  Predictor, wait-plan, and recovery side effects use a separate commit pulse
+  from accepted STQ insertion. A full recovery queue therefore blocks only a
+  conflicting probe, not an unrelated address-bearing store.
 - Same-BID conflict publication emits a typed Linx `InnerFlush`; cross-BID
   conflict publication emits `NukeFlush`. The request carries the load's
   PE/STID/TID, BID/GID/RID/LSID, scalar execution-engine class, and fetch-PC
-  validity. The outer recovery arbiter and precise ROB-head policy remain the
-  architectural consumers; MDB does not directly delete arbitrary ROB rows.
+  validity. Conflict training, wait-plan capture, and recovery-report enqueue
+  are one accepted store transaction. `mdbRecoveryQueueEntries` sizes the
+  retained report queue; a full queue backpressures address-bearing store
+  insertion rather than dropping recovery.
+- MDB recovery reports set `immediateFlush=false`. The oldest-signal/precise
+  ROB-head owner in `ScalarLSU` retains the report until wrap-qualified BID/RID
+  age is eligible, then accepts it through the ring-identity input of
+  `RecoveryCleanupControl`. ROB pruning occurs only on
+  the registered cleanup-intent handshake. MDB never directly deletes ROB
+  rows.
+- ROB pruning applies the same Linx scope contract as conflict detection:
+  request STID must match every removed row, while `baseOnPE` and
+  `baseOnThread` additionally require PE and TID equality. A prune region may
+  pass over an out-of-scope row without deleting it and continue to later
+  in-scope younger rows.
+- A ring-identity report authorizes ROB, rename, backend, frontend, and LSU
+  cleanup through its typed `FlushBus`, but it does not fabricate a full block
+  BID. `blockFlushValid` and `bctrlFlushValid` remain false until a future
+  allocator-owned lookup supplies the corresponding full BID for BROB/BCTRL
+  cleanup.
 - Ordinary hard or precise recovery clears queued MDB commands, LU/SU fanout
   results, retained wait plans, and registered store wakeups. It does not erase
   SSIT prediction state; SSIT is cleared only by reset or its explicit
@@ -1026,9 +1050,10 @@ implementation choices and must not change architectural identity widths:
   mechanism without copying that dead heuristic or any ARM-specific state.
 - Canonical Chisel now integrates conflict learning, SSIT lookup, atomic LU/SU
   fanout, BMDB report intent, active-row wait mutation, store-ready wakeup, and
-  live failed-wait delete/decay. Final ROB-head recovery consumption,
-  IEX-local MDB training, and natural-workload activation remain promotion
-  points.
+  live failed-wait delete/decay. It also retains typed recovery reports and
+  proves registered cleanup consumption against resident ROB rows. Full-BID
+  BROB recovery, final top-level oldest-head eligibility, IEX-local MDB
+  training, and natural-workload activation remain promotion points.
 
 ### Atomics, fences, Device/MMIO, and engine memory
 

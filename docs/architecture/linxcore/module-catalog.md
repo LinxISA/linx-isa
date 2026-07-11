@@ -362,8 +362,8 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   store path, and the active-to-resolved scalar load lifecycle.
 - Uses `CoreParams.robEntries` for ROB identity and `ScalarLsuParams` for
   independent STQ, commit-queue, issue, SCB, response-buffer, LIQ, ResolveQ,
-  MDB SSIT/command/output/wait-plan/failed-wait timeout, line, register-tag,
-  and MapQ sizing.
+  MDB SSIT/command/output/wait-plan/recovery queues, failed-wait timeout, line,
+  register-tag, and MapQ sizing.
 - Consumes Linx typed flush and block/memory-order sidecars. It deliberately
   defines no ARM architectural state or ordering operations.
 - `ScalarLSULoadPath` owns `LoadInflightQueue`, `LoadResolveQueue`, typed
@@ -372,8 +372,17 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 - `ScalarLSUMDBPath` owns conflict detection, finite SSIT and command/fanout
   queues, BMDB report intent, retained multi-row wait plans, live LIQ wait
   mutation, per-row failed-wait timeout/delete feedback, registered store
-  wakeup, and typed Linx conflict-flush publication.
-- Cache/miss queues, final recovery arbitration, and IEX load-return
+  wakeup, and retained typed Linx conflict-recovery publication.
+- `ScalarLSU` connects that retained source through
+  `RecoveryEligibilityControl` and `RecoveryCleanupControl`. Non-immediate
+  reports wait for the supplied oldest BID/RID watermark; full-BID requests
+  take fixed priority over an eligible ring request.
+- `RecoveryCleanupControl` accepts ring-qualified MDB reports, retains one
+  selected cleanup intent, and gates ROB pruning on consumer acceptance. It
+  suppresses BCTRL/BROB block cleanup when no full block BID is available.
+  The real ROB consumer always matches STID and conditionally matches PE/TID
+  before pruning, so a recovery cannot remove rows from another Linx scope.
+- Cache/miss queues, all-source top arbitration, full-BID BROB recovery, and IEX load-return
   publication are not yet children of this boundary; this must not be reported
   as a complete integrated LSU.
 
@@ -399,8 +408,9 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 - Holds atomic LU/SU lookup fanout until live LIQ mutation accepts, registers
   store-ready wakeup, ages each stable predicted-store wait independently,
   atomically clears expired waits while enqueueing SSIT delete feedback, and
-  emits row-owned Linx `InnerFlush`/`NukeFlush` requests without importing ARM
-  architectural ordering behavior.
+  enqueues row-owned Linx `InnerFlush`/`NukeFlush` reports without importing
+  ARM architectural ordering behavior. The report remains stable until the
+  outer recovery owner accepts it.
 
 ### `chisel/.../lsu/LoadWaitStoreTimeout.scala`
 

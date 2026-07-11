@@ -79,6 +79,7 @@ It is the normative mapping between:
 | LinxCore | `LinxCore::focused OOO promotion` | `bash rtl/LinxCore/tests/test_ooo_promotion.sh` | parameterized pyCircuit MapQ allocation/commit/flush and Chisel per-STID BID ring-order wrap semantics |
 | LinxCore | `LinxCore::focused LSU promotion` | `bash rtl/LinxCore/tests/test_lsu_promotion.sh` | pyCircuit SCB coalescing, request stability, and completion in C++/Verilator plus focused Chisel forwarding, replay, STQ/SCB, and MDB suites |
 | LinxCore | `LinxCore::canonical scalar MDB probe` | `bash rtl/LinxCore/tools/chisel/run_chisel_scalar_lsu_mdb_path_probe.sh` | generated-RTL same/cross-BID typed recovery, SSIT learning/suppression, LU/SU fanout hold, and accepted LIQ wait mutation |
+| LinxCore | `LinxCore::MDB recovery to ROB probe` | `bash rtl/LinxCore/tools/chisel/run_chisel_recovery_cleanup_rob_probe.sh` | non-oldest retention, oldest BID eligibility, full-over-ring priority, consume-plus-replace, no fabricated full-BID block flush, and accepted real resident ROB prune that preserves a different-STID row |
 | Architecture | `Architecture::LinxCore architecture contract lint` | `python3 tools/bringup/check_linxcore_arch_contract.py --root . --strict` | canonical submodule docs, mirrors, and cross-links are present and synchronized |
 | Architecture | `Architecture::mkdocs architecture nav/docs` | `python3 tools/bringup/check_linxcore_arch_contract.py --root . --strict --require-mkdocs` | published docs include the mirrored LinxCore contract pages |
 | LinxCore | `LinxCore::stage/connectivity lint` | `bash rtl/LinxCore/tests/test_stage_connectivity.sh` | pipeline naming, stage-spec ownership, and connectivity invariants |
@@ -166,7 +167,7 @@ the mandatory PR matrix or prove full-core promotion.
 | IQ/speculative load readiness | `ReducedScalarIssueQueue`, `ReducedScalarIssuePick`, `LoadReplayWakeup` |
 | Store/STQ/SCB | `StoreDispatchSTQPath`, `STQEntryBank`, `STQCommitQueue`, `STQCommitDrain`, `SCBRowBank`, `STQSCBCommitPath`, `ScalarLSU` |
 | Load forwarding/replay | `LoadStoreForwarding`, `LoadForwardPipeline`, `LoadInflightQueue`, `LoadResolveQueue`, `ScalarLSULoadPath`, `LoadRefillWakeup` |
-| Memory disambiguation | `MDBConflictDetect`, `MDBSSIT`, `MDBQueueFanout`, `LoadReplayMdbLookupWaitPlan`, `LoadWaitStoreTimeout`, `ScalarLSUMDBPath`; verify Wait/Repick mutation policy, retained multi-row wait masks, generation-keyed timeout restart, atomic wait-clear/delete enqueue, SSIT decay/release, typed inner/nuke output, and flush-cleared transient queues |
+| Memory disambiguation | `MDBConflictDetect`, `MDBSSIT`, `MDBQueueFanout`, `LoadReplayMdbLookupWaitPlan`, `LoadWaitStoreTimeout`, `ScalarLSUMDBPath`, `RecoveryEligibilityControl`, `RecoveryCleanupControl`; verify intent/commit separation, Wait/Repick mutation policy, retained multi-row waits, generation-keyed timeout restart, atomic wait-clear/delete enqueue, SSIT decay/release, retained typed inner/nuke reports, oldest BID/RID eligibility, source priority/replacement, registered ROB-prune acceptance, and flush-cleared transient queues |
 
 For Chisel modules, run the repository wrapper serially, for example
 `bash tools/chisel/run_chisel_tests.sh --only <Module>`. A unit pass proves the
