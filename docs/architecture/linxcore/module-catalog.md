@@ -481,11 +481,11 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   BCC/IEX/PE event generation and replacement of the reduced MDB producer with
   the complete `ScalarLSU` hierarchy remain open.
   R648 supplies the real per-STID oldest BID/RID/completion inputs required by
-  the canonical scalar-LSU adapter. R649 connects the reduced MDB report through
-  `MDBRecoveryDeliveryPath`: record publication and recovery enqueue share one
-  acceptance, the report STID selects its owner-backed watermark, exact ROB
-  full-BID lookup promotes the request, and central source acceptance alone
-  releases the queue head.
+  the canonical scalar-LSU adapter. R659 instantiates `ScalarLSUMDBPath` in the
+  reduced live composition and deletes the former delivery-only owner. Record,
+  wait-plan, and recovery publication now share canonical acceptance;
+  report-STID watermark selection, exact ROB full-BID promotion, and central
+  source acceptance use `ScalarLSURecoveryBoundary` directly.
 - Cache/miss queues and IEX load-return
   publication are not yet children of this boundary; this must not be reported
   as a complete integrated LSU.
@@ -515,21 +515,11 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   enqueues row-owned Linx `InnerFlush`/`NukeFlush` reports without importing
   ARM architectural ordering behavior. The report remains stable until the
   outer recovery owner accepts it.
-
-### `chisel/.../lsu/MDBRecoveryDeliveryPath.scala`
-
-- Shares `MDBConflictTransactionControl` with `ScalarLSUMDBPath`, so required
-  record, wait-plan, and recovery sinks either accept together or emit no
-  derived valid. Unrequired sinks do not backpressure the candidate.
-- Owns a parameterized retained recovery queue and selects oldest BID/RID only
-  from the queued report's STID lane. Out-of-range STID has no age owner and
-  cannot authorize recovery.
-- Uses the shared `ScalarLSURecoveryBoundary` for report-STID watermark
-  selection and `ScalarLSURecoverySource` for exact allocator-stamped full-BID
-  promotion. Invalid STIDs issue no lookup, and the queue dequeues only on
-  accepted central recovery. pyCircuit implements the same
-  atomic admission equation; retained queue, STID watermark selection, and
-  exact backend consumption remain declared pyCircuit promotion gaps.
+- In the reduced live top, MDB lookup credit is part of LIQ allocation
+  readiness and the accepted allocation payload is forwarded without
+  reconstruction. The canonical owner also supplies conflict diagnostics,
+  lookup/delete/record observability, failed-wait feedback, registered store
+  wakeup, and the retained recovery report to `ScalarLSURecoveryBoundary`.
 
 ### `chisel/.../lsu/LoadWaitStoreTimeout.scala`
 

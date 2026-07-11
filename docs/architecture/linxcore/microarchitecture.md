@@ -1070,13 +1070,14 @@ implementation choices and must not change architectural identity widths:
   are one accepted store transaction. `mdbRecoveryQueueEntries` sizes the
   retained report queue; a full queue backpressures address-bearing store
   insertion rather than dropping recovery.
-- `MDBConflictTransactionControl` is the shared admission rule for the
-  canonical scalar LSU and reduced integration top. Required record,
+- `MDBConflictTransactionControl` is the admission rule inside the canonical
+  scalar MDB owner. Required record,
   multi-row wait-plan, and recovery sinks must all be ready before any derived
   valid asserts; sinks not required by the current conflict decision do not
-  reduce readiness. R649 applies this rule to the live reduced top through
-  `MDBRecoveryDeliveryPath`, replacing independent record publication and a
-  disconnected recovery report.
+  reduce readiness. R659 applies the complete `ScalarLSUMDBPath` owner to the
+  live reduced top; the former delivery-only composition has been deleted.
+  Conflict detection, SSIT/fanout, multi-row waits, failed-wait decay/delete,
+  and retained recovery now have one implementation.
 - pyCircuit implements the same parameter-neutral admission equation and is
   checked against the Chisel generated scenario set. This parity covers atomic
   sink valids and conditional readiness only; retained report storage,
@@ -1107,7 +1108,7 @@ implementation choices and must not change architectural identity widths:
   promoted source. R658 removes the duplicated STID-selection policy from that
   reduced composition. `ScalarLSURecoveryBoundary` is now the canonical,
   parameterized boundary used by both `ScalarLSU` and
-  `MDBRecoveryDeliveryPath`: it selects only the report STID's watermark,
+  the reduced canonical-MDB composition: it selects only the report STID's watermark,
   suppresses lookup for an invalid STID, and delegates age and exact full-BID
   promotion to `ScalarLSURecoverySource`. `ScalarLsuParams.stidCount` sizes the
   canonical LSU lanes independently of queue capacities. R641 adds the class merge
@@ -1130,6 +1131,15 @@ implementation choices and must not change architectural identity widths:
   increment the full pointer, not the canonical BID slot. Upstream live BCC,
   IEX, and PE event generation remains open; retained producer ownership and
   backend-fabric connection do not.
+- R659 makes load admission and MDB lookup one transaction in the live reduced
+  top. MDB command credit participates in LIQ allocation readiness, and the
+  exact accepted allocation payload supplies PC, Linx identities, address,
+  size, and thread scope. The implementation must not allocate a LIQ row and
+  reconstruct or drop its lookup on a later pulse. Source-return and MDB row
+  mutations share one arbiter. MDB-only requests use the canonical pre-launch
+  `Wait` policy without SCB-return proof; source-return requests retain their
+  stricter `Repick` and SCB ordering. Registered MDB store wakeup has priority
+  at the LIQ wake port, while a displaced resident-store wakeup remains held.
   R645 adds the pyCircuit class owner with the same parameterized per-STID
   global-flush/global-replay slots, per-PE slots, `CheckOlder` cancellation,
   `mergeSignal` transformation, completed-oldest replay drop, invalid-scope
