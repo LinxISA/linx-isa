@@ -105,6 +105,38 @@ The detailed structural catalog is normative in:
 - `rtl/LinxCore/docs/architecture/module-catalog.md`
 - `rtl/LinxCore/docs/architecture/pipeline-stage-catalog.md`
 
+## Mechanism adoption policy
+
+The live architecture contains no parallel legacy specification. Historical
+OOO and LSU inputs are recoverable from the Git snapshots recorded in
+`mechanism-intake.json`; that ledger maps every removed source file to one or
+more reviewed mechanisms, a disposition, this contract's owning sections,
+pyCircuit and Chisel owners, and required scenarios.
+
+The intake dispositions have the following binding meaning:
+
+- **Adopt** preserves an ISA-neutral correctness mechanism directly.
+- **Adapt** preserves the mechanism after rebinding identity, ordering,
+  recovery, or state to Linx block semantics.
+- **Parameterize** preserves required behavior while leaving capacity,
+  banking, ports, and non-visible latency configurable.
+- **Reject** excludes ARM architectural state and platform-specific policy.
+
+The promoted OOO set includes PC metadata, atomic decode admission, scalar
+`SMAP`/`CMAP`/`MapQ`, block-local `T/U` rename, precise ROB/BROB
+retirement, resident IQ retry ownership, speculative readiness isolation,
+execution/bypass ownership, and R0-R4 recovery. The promoted LSU set includes
+LSID ordering, split-store STQ/SCB ownership, LIQ and ResolveQ/LHQ replay,
+byte-granular forwarding, MDB prediction, cache/TLB/refill identity,
+coherence-triggered nuke requests, Linx atomics/fences/MMIO, engine memory, and
+non-starving prefetch/maintenance policy.
+
+ARM exception levels, PAC/BTI, SVE/NEON state, condition-code architecture,
+ARM exclusives and AT/barrier encodings, WFx/SMT mode switching, DIDT policy,
+and implementation-defined ARM registers are rejected. Similar future Linx
+features require their own LinxISA contract; they cannot be restored from the
+historical input as compatibility behavior.
+
 ## Pipeline contract (LC-MA-PIPE-001)
 
 - Stage ownership must remain explicit across frontend, decode, rename, issue,

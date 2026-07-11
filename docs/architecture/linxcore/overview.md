@@ -70,11 +70,18 @@ Janus-Core-visible way, the discrepancy must be resolved explicitly by either:
 
 ## Reference-design migration policy
 
-The ARM-oriented material under `docs/temp/upgrade/` is a non-normative design
-reference. It explains why several mature out-of-order structures exist, but
-it also contains missing references, contradictory widths, unresolved flows,
-and AArch64-specific behavior. LinxCore therefore migrates mechanisms only
-when their correctness rationale survives rebinding to LinxISA.
+The historical ARM-oriented input is preserved in Git commit
+`8f6b821f75aa5170766d6ab4d37a9443b9a4f0ec`; the Linx migration draft is
+preserved in commit `f72c0ee6fb21d08b2ac38d1f9918021bf6c28af3`. The live
+tree does not retain either duplicate specification. The source-to-contract,
+disposition, and dual-RTL ownership record is
+`docs/architecture/mechanism-intake.json`.
+
+The historical material explains why several mature out-of-order structures
+exist, but it also contains missing references, contradictory widths,
+unresolved flows, and AArch64-specific behavior. LinxCore therefore migrates
+mechanisms only when their correctness rationale survives rebinding to
+LinxISA.
 
 The review uses four dispositions:
 
