@@ -646,6 +646,20 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   shares allocation/retirement admission with BROB order state, and has
   generated Chisel proof across independent STIDs and rollover.
 
+### `chisel/.../bctrl/BrobStoreCountPublisher.scala`
+
+- Retains scalar closure and explicit CTU/tile count events independently,
+  admits exact identities only inside the authoritative per-STID live window,
+  and applies accepted suffix recovery to both pending sources.
+- Gives same-block explicit counts authority, serializes different-block
+  collisions scalar-first, and preserves explicit payload under sink
+  backpressure.
+- Treats agreeing duplicate counts as idempotent, reports conflicting frozen
+  counts as integration errors, and prevents exact-head retirement until count
+  certainty reaches the range row.
+- Defines a future producer handoff; current reduced top ties the explicit
+  source inactive because no canonical Chisel CTU/tile count calculator exists.
+
 ### `src/bcc/block_struct/`
 
 - Contains focused block-structure models and tests for ROB/BROB behavior.

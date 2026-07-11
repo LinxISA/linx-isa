@@ -969,6 +969,15 @@ implementation choices and must not change architectural identity widths:
 - Recovery reuses the first killed block's saved start ID when an already
   assigned suffix is removed. Store ranges do not authorize SCB admission;
   R652 strong non-flush proof remains mandatory.
+- Explicit template/tile store counts use a retained, exact `(STID, full BID)`
+  publication boundary. The event is admitted only inside the live BROB
+  window, survives range-sink backpressure, and is canceled by the same
+  accepted killed-suffix recovery as its row. Same-value duplicates are
+  idempotent and conflicting duplicates are errors.
+- Scalar block closure remains non-backpressurable. A different-block source
+  collision publishes scalar closure first; a same-block explicit event is the
+  authoritative range count. Count certainty does not imply engine completion
+  or strong non-flush safety.
 
 ### Load path and forwarding
 
