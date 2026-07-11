@@ -608,19 +608,22 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   64-bit linear BID helper remains a declared promotion blocker, not an
   alternative architecture contract.
 
-### `chisel/.../bctrl/BrobAllocationRecovery.scala`
+### `chisel/.../bctrl/BrobOrderState.scala`
 
-- Owns the parameterized next-allocation full BID independently per STID and
-  replaces split slot/uniqueness registers in `DispatchROBAllocator`.
-- Captures the old allocation cursor and restores to one model-derived
-  first-killed BID on accepted global cleanup: inclusive for miss-predict,
-  successor-of-pivot for retained-target nuke/inner/fast flush.
-- Gives recovery priority over same-lane allocation, rejects invalid STIDs,
-  and drives the same inclusive/exclusive suffix rule into `BrobMetaTracker`.
-- Has a generated Chisel probe for cursor restore, invalid-scope rejection, and
-  coherent child admission suppression. Complete BROB recovery still requires
-  commit, dispatch, rename, non-flush, and store-barrier pointers plus
-  replay-state mutation.
+- Owns independent parameterized allocation-tail, commit-head, and bounded
+  live-count state per STID.
+- Validates one model-derived first-killed BID against the live window, keeps
+  the commit head fixed, and applies the same suffix to metadata: inclusive for
+  miss-predict, successor-of-pivot for retained-target nuke/inner/fast flush.
+- Supplies commit-head/live-count context so metadata classifies that suffix by
+  bounded modular distance, including windows spanning implementation BID
+  rollover.
+- Resolves only exact resident metadata heads and holds one fair STID-selected
+  full-BID retire identity irrevocably until downstream acceptance.
+- Shares allocation and retirement admission with ROB/BROB metadata mutation,
+  rejects invalid identities and recovery pivots, and has generated Chisel
+  proof. Non-flush/store-barrier frontiers, multi-block retirement, and
+  replay-state mutation remain open.
 
 ### `src/bcc/block_struct/`
 

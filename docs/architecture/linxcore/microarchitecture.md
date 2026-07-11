@@ -746,6 +746,15 @@ Detailed recovery behavior remains documented in:
   internal wrap state. On a redirect for `flush_stid` that preserves
   `flush_bid`, that ring produces the kill set for live slots from
   `successor(flush_bid)` through the pre-flush tail.
+- Allocation applies only at the exact tail identity and advances only the
+  tail. Retirement applies only to an exact resident completed head and
+  advances only the head. Recovery truncates tail and occupancy to the first
+  killed identity while preserving the head.
+- Completion is persistent per-block metadata, not a retirement pulse. A
+  younger completed block waits behind every older live block in its STID.
+- A shared retire port selects eligible STID heads fairly and must hold its
+  selected `(STID,BID)` stable under backpressure. Metadata free, head advance,
+  occupancy decrement, and downstream block-commit publication are one fire.
 - BID-carrying queues consume that BROB-qualified kill set, or an equivalent
   ring-age context, rather than reimplementing numeric BID ordering.
 - A `(STID,BID)` slot may be reused only after its BROB row is free and no ROB
@@ -1096,18 +1105,23 @@ implementation choices and must not change architectural identity widths:
   and completed-oldest replay rejection. This preserves Linx block/STID
   semantics, supports parameterized lane and queue sizing, and introduces no
   foreign architectural state.
-  R650 restores the accepted-recovery BROB allocation tail instead of leaving
-  it beyond discarded speculative blocks. A parameterized full-BID cursor is
-  owned independently per STID and captures the pre-recovery `old_alloc`
-  value. Model `MISS_PRED_FLUSH` names the first killed block and restores
-  inclusively to its BID; accepted scalar nuke/inner/fast flush preserves its
-  authoritative target and restores to the target successor. Metadata pruning
-  and cursor restoration consume the same inclusive/exclusive decision, and
-  recovery dominates same-lane allocation. Chisel integrates this owner under
-  `DispatchROBAllocator`; a generated Chisel probe proves the cursor,
-  admission, and invalid-scope scenarios. BROB commit, dispatch, rename,
-  non-flush, and store-barrier
-  pointers remain separate promotion work.
+  R651 promotes accepted-recovery allocation state into a complete per-STID
+  live order window: independent allocation tail, commit head, and bounded
+  live count. Model `MISS_PRED_FLUSH` names the first killed block; accepted
+  scalar nuke/inner/fast flush preserves its authoritative target and names the
+  target successor. The owner validates that identity against the resident
+  window, truncates tail/count, and never moves the commit head. Metadata sees
+  only the same applied suffix and classifies it by bounded modular distance
+  from the commit head, including migration full-BID rollover. Exact completed
+  heads arbitrate fairly across
+  STIDs and cross an irrevocable retire slot, so downstream backpressure cannot
+  change the selected identity. Chisel integrates this owner under
+  `DispatchROBAllocator`; a generated Chisel probe proves allocation/commit
+  order, exact metadata retirement, simultaneous events, valid recovery, and
+  invalid identity rejection. The current Chisel owner still uses a migration
+  full-BID token and one shared retire lane; canonical `BID_W` plus explicit
+  wrap context, configurable multi-block retirement, non-flush/store-barrier
+  frontiers, and replay-state mutation remain promotion work.
   Within one STID, arbitration applies the model `CheckOlder` type and ring-age
   rules. Different STIDs have no BID order and are serialized by fair STID
   round robin. ROB and BROB/BCTRL consumers see state-changing intent only
@@ -1142,7 +1156,7 @@ implementation choices and must not change architectural identity widths:
   fanout, BMDB report intent, active-row wait mutation, store-ready wakeup, and
   live failed-wait delete/decay. It also retains typed recovery reports and
   proves registered class-merged cleanup consumption against resident ROB rows.
-  Remaining BROB pointer recovery beyond the allocation tail,
+  Remaining BROB non-flush/store-barrier frontiers and wider retirement,
   IEX-local MDB training, BCC/IEX/PE trigger-owner connections, complete
   all-consumer cleanup fanout,
   pyCircuit source-arbiter/cleanup integration, and natural-workload recovery
