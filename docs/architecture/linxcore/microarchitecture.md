@@ -1069,6 +1069,17 @@ implementation choices and must not change architectural identity widths:
   on the same accepted intent. Immediate frontend redirection is a separate
   execute/marker control action. Reduced trace shells tie recovery off
   explicitly.
+  R648 makes oldest recovery state a resident-owner contract instead of a
+  top-level placeholder. `BrobMetaTracker` selects the oldest live full BID and
+  completion state independently per STID. `ROBRecoveryWatermark` scans
+  circular commit order for the first non-retired row in each STID and returns
+  its wrap-qualified RID plus allocator-stamped full block BID. The allocator
+  publishes a watermark only when the two full BIDs match exactly, then derives
+  the ring BID used by recovery eligibility. Its explicit valid bit follows the
+  BID through source arbitration and class merge, gating oldest-BID priority
+  and completed-oldest replay rejection. This preserves Linx block/STID
+  semantics, supports parameterized lane and queue sizing, and introduces no
+  foreign architectural state.
   Within one STID, arbitration applies the model `CheckOlder` type and ring-age
   rules. Different STIDs have no BID order and are serialized by fair STID
   round robin. ROB and BROB/BCTRL consumers see state-changing intent only

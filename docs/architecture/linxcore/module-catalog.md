@@ -433,6 +433,14 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   intent and accepts one explicit all-consumer-ready decision. The full
   fetch/RF/ALU composition connects a retained scalar redirect source and
   consumes external replay-queue cleanup on the accepted intent.
+- `ROBRecoveryWatermark` and `BrobMetaTracker` are the per-STID oldest-state
+  owners. ROB selects the first non-retired resident row in circular commit
+  order and preserves its wrap-qualified RID and full block sideband; BROB
+  selects the oldest live full block BID and completion state. The allocator
+  exports a coherent recovery watermark only when both full block identities
+  match, preventing marker-only and younger scalar generations from being
+  paired. Recovery arbitration and class merge consume the explicit valid bit;
+  diagnostic BID bits alone never authorize oldest-state special handling.
 - `ScalarRedirectRecoverySource` retains one execute/marker redirect, requires
   exact full-BID identity whose ring projection matches the supplied BID,
   publishes once, and holds order/LSID sidecars until matched source resolution.
@@ -462,6 +470,9 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   decode/rename/allocator seam and connects the first scalar redirect source
   in the full fetch/RF/ALU composition. Direct trigger-owner ports and
   production wiring for the complete BCC/IEX/PE/LSU source set remain open.
+  R648 supplies the real per-STID oldest BID/RID/completion inputs required by
+  the canonical scalar-LSU adapter, but does not connect the reduced MDB report
+  until its record and recovery delivery are atomic and retained.
 - Cache/miss queues, canonical-top source/lookup wiring, and IEX load-return
   publication are not yet children of this boundary; this must not be reported
   as a complete integrated LSU.
