@@ -1104,7 +1104,13 @@ implementation choices and must not change architectural identity widths:
   production owner in the live reduced top: a parameterized report queue
   selects owner-backed oldest BID/RID by report STID, requests exact resident
   full-BID lookup, and releases its head only when central recovery accepts the
-  promoted source. R641 adds the class merge
+  promoted source. R658 removes the duplicated STID-selection policy from that
+  reduced composition. `ScalarLSURecoveryBoundary` is now the canonical,
+  parameterized boundary used by both `ScalarLSU` and
+  `MDBRecoveryDeliveryPath`: it selects only the report STID's watermark,
+  suppresses lookup for an invalid STID, and delegates age and exact full-BID
+  promotion to `ScalarLSURecoverySource`. `ScalarLsuParams.stidCount` sizes the
+  canonical LSU lanes independently of queue capacities. R641 adds the class merge
   between that arbiter and cleanup: global flush, global replay, and PE-scoped
   lanes are retained per STID, same-STID `CheckOlder` cancellation and
   `mergeSignal` transformation are modeled, completed-oldest global replay is

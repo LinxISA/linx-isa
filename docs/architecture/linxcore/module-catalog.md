@@ -478,8 +478,8 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   decode/rename/allocator seam and connects the first scalar redirect source
   in the full fetch/RF/ALU composition. R657 appends the producer bank to that
   production backend path without renumbering external lanes. Upstream live
-  BCC/IEX/PE event generation and the complete scalar-LSU source connection
-  remain open.
+  BCC/IEX/PE event generation and replacement of the reduced MDB producer with
+  the complete `ScalarLSU` hierarchy remain open.
   R648 supplies the real per-STID oldest BID/RID/completion inputs required by
   the canonical scalar-LSU adapter. R649 connects the reduced MDB report through
   `MDBRecoveryDeliveryPath`: record publication and recovery enqueue share one
@@ -524,8 +524,10 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 - Owns a parameterized retained recovery queue and selects oldest BID/RID only
   from the queued report's STID lane. Out-of-range STID has no age owner and
   cannot authorize recovery.
-- Uses `ScalarLSURecoverySource` for exact allocator-stamped full-BID promotion
-  and dequeues only on accepted central recovery. pyCircuit implements the same
+- Uses the shared `ScalarLSURecoveryBoundary` for report-STID watermark
+  selection and `ScalarLSURecoverySource` for exact allocator-stamped full-BID
+  promotion. Invalid STIDs issue no lookup, and the queue dequeues only on
+  accepted central recovery. pyCircuit implements the same
   atomic admission equation; retained queue, STID watermark selection, and
   exact backend consumption remain declared pyCircuit promotion gaps.
 
