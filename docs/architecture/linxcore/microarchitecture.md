@@ -1030,8 +1030,10 @@ implementation choices and must not change architectural identity widths:
 - `RingFullBidRecoveryBridge` requires the lookup result to echo the current
   request before promoting the report to `FullBidFlushReq`. The central
   boundary requires every BCC, IEX, PE, and LSU producer to enter an
-  independently retained source slot. R639 implements and proves that boundary
-  in the real-ROB harness; canonical production source wiring remains open.
+  independently retained source slot. R639 implements the arbiter; R640
+  connects the production `ScalarLSURecoverySource` owner to it in the real-ROB
+  harness and removes local LSU cleanup selection. Canonical BCC/IEX/PE source
+  wiring remains open.
   Within one STID, arbitration applies the model `CheckOlder` type and ring-age
   rules. Different STIDs have no BID order and are serialized by fair STID
   round robin. ROB and BROB/BCTRL consumers see state-changing intent only

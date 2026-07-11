@@ -163,11 +163,11 @@ the mandatory PR matrix or prove full-core promotion.
 |---|---|
 | Decode/resource reservation | `FrontendDecodeStage`, `DecodeRenameROBPath`, `DispatchROBAllocator`, `DecodeLoadStoreIdAssign`; current allocation timing must be checked against canonical D1/D2/D3 ownership |
 | Scalar and local rename | `GPRRenameCheckpoint`, `ScalarDecodeRenameBridge`, `TULinkRename`, `TULinkRetireCommandPath` |
-| ROB/BROB/recovery | `ROBEntryBank`, `ROBFlushPrune`, `ReducedCommitROB`, `BROB`, `FullBidRecoveryBridge`, `RecoverySourceArbiter`; 64-bit/upper-uniqueness BID helpers are legacy until migrated |
+| ROB/BROB/recovery | `ROBEntryBank`, `ROBFlushPrune`, `ReducedCommitROB`, `BROB`, `FullBidRecoveryBridge`, `ScalarLSURecoverySource`, `RecoverySourceArbiter`; 64-bit/upper-uniqueness BID helpers are legacy until migrated |
 | IQ/speculative load readiness | `ReducedScalarIssueQueue`, `ReducedScalarIssuePick`, `LoadReplayWakeup` |
 | Store/STQ/SCB | `StoreDispatchSTQPath`, `STQEntryBank`, `STQCommitQueue`, `STQCommitDrain`, `SCBRowBank`, `STQSCBCommitPath`, `ScalarLSU` |
 | Load forwarding/replay | `LoadStoreForwarding`, `LoadForwardPipeline`, `LoadInflightQueue`, `LoadResolveQueue`, `ScalarLSULoadPath`, `LoadRefillWakeup` |
-| Memory disambiguation | `MDBConflictDetect`, `MDBSSIT`, `MDBQueueFanout`, `LoadReplayMdbLookupWaitPlan`, `LoadWaitStoreTimeout`, `ScalarLSUMDBPath`, `RecoveryEligibilityControl`, `RecoverySourceArbiter`, `RecoveryCleanupControl`; verify intent/commit separation, Wait/Repick mutation policy, retained multi-row waits, generation-keyed timeout restart, atomic wait-clear/delete enqueue, SSIT decay/release, retained typed inner/nuke reports, oldest BID/RID eligibility, same-STID oldest selection, cross-STID fairness, registered ROB-prune acceptance, and flush-cleared transient queues |
+| Memory disambiguation | `MDBConflictDetect`, `MDBSSIT`, `MDBQueueFanout`, `LoadReplayMdbLookupWaitPlan`, `LoadWaitStoreTimeout`, `ScalarLSUMDBPath`, `ScalarLSURecoverySource`, `RecoverySourceArbiter`, `RecoveryCleanupControl`; verify intent/commit separation, Wait/Repick mutation policy, retained multi-row waits, generation-keyed timeout restart, atomic wait-clear/delete enqueue, SSIT decay/release, retained typed inner/nuke reports, oldest BID/RID eligibility, exact source promotion, absence of LSU-local cleanup priority, same-STID oldest selection, cross-STID fairness, registered ROB-prune acceptance, and flush-cleared transient queues |
 
 For Chisel modules, run the repository wrapper serially, for example
 `bash tools/chisel/run_chisel_tests.sh --only <Module>`. A unit pass proves the

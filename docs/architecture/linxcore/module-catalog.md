@@ -373,26 +373,27 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   queues, BMDB report intent, retained multi-row wait plans, live LIQ wait
   mutation, per-row failed-wait timeout/delete feedback, registered store
   wakeup, and retained typed Linx conflict-recovery publication.
-- `ScalarLSU` connects that retained source through
-  `RecoveryEligibilityControl` and `RecoveryCleanupControl`. Non-immediate
+- `ScalarLSURecoverySource` connects the retained MDB head through
+  `RecoveryEligibilityControl` and `RingFullBidRecoveryBridge`. Non-immediate
   reports wait for the supplied oldest BID/RID watermark, then require an exact
-  allocator/ROB full-BID lookup before cleanup; independently selected full-BID
-  requests take fixed priority.
+  allocator/ROB full-BID lookup before publishing `FullBidFlushReq`.
 - `ROBFullBidLookup` uses native RID indexing and exact
   `(BID,GID,RID,PE,STID,TID)` equality to return the allocator-stamped row
   generation sideband. `RingFullBidRecoveryBridge` validates the echoed key and
   ring projection before constructing `FullBidFlushReq`; any blocker retains
   the MDB report.
-- `RecoveryCleanupControl` accepts ring-qualified MDB reports, retains one
-  selected cleanup intent, and gates ROB pruning on consumer acceptance. It
-  suppresses BCTRL/BROB block cleanup when no full block BID is available.
+- `RecoveryCleanupControl` accepts the arbiter-selected full-BID report, retains
+  one cleanup intent, and gates ROB pruning on consumer acceptance. Its raw
+  ring compatibility input suppresses BCTRL/BROB block cleanup and is not used
+  by the canonical MDB source path.
   The real ROB consumer always matches STID and conditionally matches PE/TID
   before pruning, so a recovery cannot remove rows from another Linx scope.
 - `RecoverySourceArbiter` implements parameterized retained source slots,
   model-oldest same-STID selection, invalid-STID rejection, and fair
   serialization across incomparable STIDs. R639 proves it in the exact-lookup
-  real-ROB harness; production `ScalarLSU` and canonical backend composition
-  have not yet moved to this central boundary.
+  real-ROB harness. R640 connects the production ScalarLSU source owner to that
+  arbiter in the same harness and removes LSU-local cleanup selection. Canonical
+  backend composition has not yet connected the complete producer set.
 - Cache/miss queues, canonical-top source/lookup wiring, and IEX load-return
   publication are not yet children of this boundary; this must not be reported
   as a complete integrated LSU.
