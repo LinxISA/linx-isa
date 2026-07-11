@@ -247,6 +247,15 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 - Defines `LinxCoreRenameStage` and `LinxCoreCommitRenameStage`.
 - Owns rename allocation and commit-side rename release.
 
+### `src/bcc/backend/modules/mapq.py`
+
+- Defines the parameterized `LinxCoreScalarMapQ` state owner.
+- Records RID/order-qualified old and new scalar-P mappings, reports exact
+  commit matches, prunes younger rows on recovery, and publishes physical-tag
+  release masks through registered owner events.
+- Is unit-proven but not integrated; `LinxCoreRenameBank` remains responsible
+  for SMAP/CMAP until it consumes MapQ allocation, commit, and restore events.
+
 ### `src/bcc/backend/dispatch.py`
 
 - Defines `LinxCoreDispatchStage`.
@@ -413,6 +422,14 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 
 - Owns `BROB`, including `BID` allocation, block completion, block exception
   capture, and oldest-block retirement gating.
+
+### `chisel/.../bctrl/BIDRingOrder.scala`
+
+- Defines the parameterized per-STID ring-order primitive for canonical BID
+  wrap, with the default 256-entry ring producing an 8-bit BID.
+- Is unit-proven but not yet consumed by `BrobMetaTracker`; the existing
+  64-bit linear BID helper remains a declared promotion blocker, not an
+  alternative architecture contract.
 
 ### `src/bcc/block_struct/`
 
