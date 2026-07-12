@@ -537,6 +537,20 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   survivor movement during the recovery cycle. It does not import ARM paired
   load, exception-level, exclusive-monitor, barrier, or return-state behavior.
 
+### `chisel/.../top/ScalarLoadCompletionROBBridge.scala`
+
+- Owns the reduced top's single physical ROB-completion arbitration boundary.
+  Existing external execute completion has fixed priority; a colliding scalar
+  W2 candidate remains resident because its resolve-ready input is withheld.
+- Routes the queue-head RID lookup to `ReducedCommitROB` and returns exact
+  slot-plus-wrap row-valid evidence to canonical LRET admission.
+- Selects scalar completion only on canonical resolve fire, preserves the full
+  RID, and requires the ROB to revalidate the resident generation at the
+  completion side-effect point. Free/stale identities hold W2. Collision and
+  protocol diagnostics remain explicit; same-slot external/scalar candidates
+  are duplicate-owner violations, not retryable contention. RF and wakeup
+  remain atomic readiness inputs at the scalar-load boundary.
+
 ### `chisel/.../lsu/ScalarLSUMDBPath.scala`
 
 - Owns the canonical scalar memory-dependence predictor beneath

@@ -1079,10 +1079,25 @@ implementation choices and must not change architectural identity widths:
   each W1 lane advances only into its paired W2 lane when W2 is empty or
   completing. W2 completion, W1 advance, and a new W1 insertion may coincide
   without dropping or duplicating a return.
+- When physical resolve/writeback/wakeup bandwidth is shared, a second fair
+  arbiter selects one resident W2 lane. Only that lane observes sink readiness;
+  the arbiter advances after the atomic resolve fire, so a blocked lane cannot
+  be skipped or duplicated and all W2 lanes eventually receive service.
 - Before LRET dequeue, IEX queries the exact scoped ROB row. A missing row
   holds the queue head; a present `NeedFlush` row consumes and drops the stale
   return without entering W1. Normal admission retains the complete
   PE/STID/TID plus BID/GID/RID/load-LSID identity through W1 and W2.
+- `LinxCoreTop` routes that lookup to the resident reduced ROB using the full
+  slot-plus-wrap RID. External execute completion has fixed priority on the
+  reduced ROB's single completion port; a colliding scalar W2 return keeps its
+  slot and retries. Scalar W2 retains the full RID and the ROB revalidates slot
+  plus wrap in the same cycle as completion-bit mutation; admission-time lookup
+  alone is not completion authority. A free, stale, or invalid RID withholds
+  resolve-ready. Legal external contention must target a different slot; a
+  same-slot external/scalar candidate is rejected as duplicate producer
+  ownership because the legacy external port cannot prove generation or
+  idempotence. The ROB completion pulse is emitted only from the selected source,
+  and completion becomes visible to retirement on the next cycle.
 - Typed precise recovery suppresses stage movement and side effects for that
   cycle, prunes only matching W1/W2 entries, and preserves older or independent
   lanes. Hard reset/start/restart may clear the complete pipeline.
