@@ -1063,6 +1063,12 @@ implementation choices and must not change architectural identity widths:
   Predictor, wait-plan, and recovery side effects use a separate commit pulse
   from accepted STQ insertion. A full recovery queue therefore blocks only a
   conflicting probe, not an unrelated address-bearing store.
+- Reduced timing adaptation may retain accepted probes until a related
+  unresolved LIQ row reaches ResolveQ, but that adapter must be a finite FIFO,
+  not a replaceable latest-value register. Replay credit and canonical MDB
+  transaction readiness both participate in address-bearing STQ admission;
+  data-only fragments bypass the address-side gate. Every accepted probe is
+  either consumed live or retained and replayed exactly once in FIFO order.
 - Same-BID conflict publication emits a typed Linx `InnerFlush`; cross-BID
   conflict publication emits `NukeFlush`. The request carries the load's
   PE/STID/TID, BID/GID/RID/LSID, scalar execution-engine class, and fetch-PC
