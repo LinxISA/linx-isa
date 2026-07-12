@@ -486,11 +486,12 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   wait-plan, and recovery publication now share canonical acceptance;
   report-STID watermark selection, exact ROB full-BID promotion, and central
   source acceptance use `ScalarLSURecoveryBoundary` directly.
-- The reduced timing top now owns live scoped IEX load-return publication
-  through `ScalarLSULoadReturnQueueBank`, including parameterized lane depth,
-  fair drain, and typed precise pruning. That bank and cache/miss queues are not
-  yet children of `ScalarLSU`; this must not be reported as a complete
-  integrated LSU.
+- `ScalarLSULoadPath` now owns live scoped IEX load-return publication through
+  `ScalarLSULoadReturnQueueBank`, including per-lane launch reservation, scalar
+  data extraction, atomic ResolveQ+LRET acceptance, fair drain, and typed
+  precise pruning. The reduced timing top reuses the bank for detailed W1/W2
+  proof. Cache/miss and cross-line queues remain outside `ScalarLSU`; this must
+  not yet be reported as a complete integrated LSU.
 
 ### `chisel/.../lsu/ScalarLSULoadReturnQueue.scala`
 
@@ -501,8 +502,11 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 - Uses round-robin shared-port drain and compacts only entries selected by the
   typed Linx precise-flush contract. Reset/start/restart retain a separate hard
   clear.
-- The live reduced top currently exposes one shared scalar return pipe; the
-  queue bank itself is parameterized and tested with multiple lanes.
+- Canonical `ScalarLSULoadPath` reserves exact lane credit at launch and
+  replaces the reservation with a resident entry only when ResolveQ accepts the
+  same E4 hit. The reduced top currently exposes one shared scalar W1/W2 pipe;
+  the canonical owner and queue bank are parameterized and tested with multiple
+  lanes.
 
 ### `chisel/.../lsu/ScalarLSULoadPath.scala`
 
@@ -510,8 +514,9 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 - Shares hard and typed precise flush across active and resolved rows, carries
   PE/STID/TID identity, and requires three free ResolveQ slots for two prior
   registered E3/E4 arrivals plus the newly accepted launch.
-- Transfers the E4 hit record with row-owned thread sidecars and clears the
-  exact source LIQ row after queue acceptance.
+- Carries return-pipe identity in each LIQ row, reserves exact lane credit at
+  launch, extracts final scalar data at E4, and transfers the hit atomically to
+  ResolveQ plus LRET before clearing the exact source LIQ row.
 - Generates MDB lookup on accepted scalar allocation, applies accepted MDB wait
   plans and atomic failed-wait releases through the LIQ-native mutation port,
   and includes MDB transient state in quiescence.

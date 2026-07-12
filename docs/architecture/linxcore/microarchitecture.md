@@ -943,10 +943,11 @@ implementation choices and must not change architectural identity widths:
   this owner and must not be imported with ISA-neutral queue mechanisms.
 - The integrated Chisel owner contains the STQ-to-SCB store path, the
   LIQ-to-ResolveQ active/resolved load lifecycle, and the scalar MDB
-  conflict/SSIT/fanout/wait-mutation path. The live reduced timing path also
-  uses the canonical scoped load-return queue bank. Moving that bank and its
-  W1/W2 boundary beneath the complete `ScalarLSU` hierarchy, plus miss-queue
-  and cache ownership, remains staged integration work.
+  conflict/SSIT/fanout/wait-mutation path. `ScalarLSULoadPath` also owns final
+  scalar data extraction, per-lane launch reservations, and atomic
+  ResolveQ+LRET publication through the scoped load-return queue bank. The
+  reduced timing path reuses the same bank while retaining its detailed W1/W2
+  proof surface. Miss-queue, cache, and cross-line ownership remain staged.
 
 - A scalar store splits into address (`STA`) and data (`STD`) work with one
   shared instruction, BID, RID, SID, and LSID identity.
@@ -1016,11 +1017,11 @@ implementation choices and must not change architectural identity widths:
   (BROB_age(frontier_bid), frontier_lsid)`. A later frontier subsumes an older
   one, so multiple commits coalesce to the most advanced frontier per STID
   without losing cleanup; no comparison crosses STIDs.
-- LIQ-to-ResolveQ transfer is owned inside the scalar LSU. An E4 hit may enter
-  ResolveQ only when reserved queue credit covers the registered E3/E4 arrival
-  latency. After ResolveQ accepts the record, the owner clears that exact LIQ
-  slot; a parent top must not recreate this handoff with an independent pending
-  bit or sideband identity.
+- LIQ-to-ResolveQ and LIQ-to-LRET transfer are one scalar-LSU transaction. An
+  E4 hit may publish only when both ResolveQ and its selected LRET lane accept
+  the same identity in the same cycle. After both sinks accept, the owner
+  clears that exact LIQ slot; a parent top must not recreate either handoff
+  with an independent pending bit or sideband identity.
 - A load snapshots the youngest eligible store identity when allocated.
 - Store-to-load forwarding is byte granular. For every requested byte, choose
   the nearest older eligible store within the same STID/PE-thread domain by
@@ -1047,6 +1048,14 @@ implementation choices and must not change architectural identity widths:
 - `loadReturnQueueEntries` sizes each retained lane independently.
   `loadReturnPipeCount` and `stidCount` define a matrix of per-STID,
   per-return-pipe queues. Neither parameter changes ROB identity width.
+- Every accepted scalar launch reserves one slot in its exact STID/return-pipe
+  lane. Resident entries plus in-flight reservations may not exceed that
+  lane's depth. E4 releases the reservation whether it hits, misses, or
+  replays; a hit replaces the reservation with one resident LRET entry in the
+  same transaction. Flush cancels pipeline work and its reservations together.
+- Return-pipe identity is allocated with the LIQ row and carried through E4.
+  The queue canonicalizes the resident payload pipe field from the accepted
+  target lane; duplicate metadata may not redirect a return.
 - Publication uses two readiness phases. Pre-admission credit is computed from
   the selected STID before return-pipe choice, so queue capacity cannot form a
   cycle through pipe selection. Final acceptance validates the selected pipe
