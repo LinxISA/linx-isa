@@ -930,7 +930,8 @@ implementation choices and must not change architectural identity widths:
   width carried by store requests, flush requests, STQ rows, commit-queue rows,
   and SCB drain requests.
 - STQ, store-commit, SCB, LIQ, ResolveQ, MDB SSIT, MDB command/output, MDB
-  wait-plan, cache-line, and MapQ resources are independent sizing parameters.
+  wait-plan, load-return queue, return-pipe, cache-line, and MapQ resources are
+  independent sizing parameters.
   No implementation may infer ROB identity width from any queue capacity.
 - The scalar LSU owns speculative STQ state and committed SCB state beneath one
   top-level boundary. A core is idle only when both retirement state and the
@@ -942,9 +943,10 @@ implementation choices and must not change architectural identity widths:
   this owner and must not be imported with ISA-neutral queue mechanisms.
 - The integrated Chisel owner contains the STQ-to-SCB store path, the
   LIQ-to-ResolveQ active/resolved load lifecycle, and the scalar MDB
-  conflict/SSIT/fanout/wait-mutation path. Load-return publication and
-  miss-queue/cache ownership remain staged mechanisms until they share this
-  owner and its recovery contract.
+  conflict/SSIT/fanout/wait-mutation path. The live reduced timing path also
+  uses the canonical scoped load-return queue bank. Moving that bank and its
+  W1/W2 boundary beneath the complete `ScalarLSU` hierarchy, plus miss-queue
+  and cache ownership, remains staged integration work.
 
 - A scalar store splits into address (`STA`) and data (`STD`) work with one
   shared instruction, BID, RID, SID, and LSID identity.
@@ -1031,6 +1033,50 @@ implementation choices and must not change architectural identity widths:
 - Load speculation follows the `LD_E1` wakeup / `LD_E4` data contract above.
   `miss_pending` remains asserted until the affected load has been relaunched
   after refill and returns through a non-miss path.
+
+### Load-return publication and IEX handoff
+
+- Final scalar return publication is queue-latched. LSU data return never
+  drives ROB completion, RF writeback, or issue wakeup through an unretained
+  combinational pulse.
+- Each return carries PE, STID, TID, BID, GID, RID, load LSID, PC, address,
+  size, destination, data, speculative-wakeup state, stack state, and selected
+  return-pipe identity. RID selects the resident ROB row; STID selects the
+  scalar thread lane; BID/GID/LSID remain ordering and recovery identities.
+  These roles are not interchangeable.
+- `loadReturnQueueEntries` sizes each retained lane independently.
+  `loadReturnPipeCount` and `stidCount` define a matrix of per-STID,
+  per-return-pipe queues. Neither parameter changes ROB identity width.
+- Publication uses two readiness phases. Pre-admission credit is computed from
+  the selected STID before return-pipe choice, so queue capacity cannot form a
+  cycle through pipe selection. Final acceptance validates the selected pipe
+  and commits the payload to exactly one queue. A published return that is not
+  accepted by that queue is a protocol error.
+- A full queue backpressures only its selected STID/pipe lane. Independent
+  lanes retain their own credit. When several lanes target a shared IEX
+  receive port, drain arbitration is round-robin so one STID cannot
+  indefinitely monopolize return bandwidth.
+- An empty return queue does not bypass directly into IEX. Enqueue and dequeue
+  are distinct registered phases, matching the model `SimQueue` boundary and
+  preventing ready/payload combinational cycles.
+- IEX drains a return only when the target E4 residency slot can retain it.
+  The payload then advances through registered E4, W1, and W2 stages. W2 is
+  the atomic side-effect point: required ROB resolve, GPR writeback, and
+  destination wakeup must all be ready before the slot clears.
+- Non-speculative, non-stack scalar returns may publish the normal memory
+  wakeup when stable data is retained. Speculative wakeup is a separate early
+  prediction and must be canceled or repaired on miss/replay. T/U local-link
+  wakeup remains identity-scoped and may occur at W2.
+- Typed Linx recovery selectively compacts matching return entries according
+  to PE/STID/TID and BID/GID/LSID scope while preserving older and independent
+  entries in FIFO order. Reset, restart, or an unscoped fatal recovery may
+  hard-clear every lane. Precise recovery must not be implemented as a global
+  queue clear merely because it is simpler.
+- The reusable mechanisms are retained queues, explicit credit, registered
+  pipe residency, fair drain arbitration, precise pruning, and atomic W2
+  side effects. ARM exception levels, condition flags, exclusive monitors,
+  acquire/release encodings, barrier opcodes, and ARM-specific return state do
+  not participate in this Linx load-return contract.
 
 ### Memory disambiguation and precise recovery
 

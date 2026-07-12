@@ -486,9 +486,23 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   wait-plan, and recovery publication now share canonical acceptance;
   report-STID watermark selection, exact ROB full-BID promotion, and central
   source acceptance use `ScalarLSURecoveryBoundary` directly.
-- Cache/miss queues and IEX load-return
-  publication are not yet children of this boundary; this must not be reported
-  as a complete integrated LSU.
+- The reduced timing top now owns live scoped IEX load-return publication
+  through `ScalarLSULoadReturnQueueBank`, including parameterized lane depth,
+  fair drain, and typed precise pruning. That bank and cache/miss queues are not
+  yet children of `ScalarLSU`; this must not be reported as a complete
+  integrated LSU.
+
+### `chisel/.../lsu/ScalarLSULoadReturnQueue.scala`
+
+- Owns a retained queue per `(STID, return pipe)` and carries PE/STID/TID plus
+  BID/GID/RID/load-LSID identity into the registered IEX E4/W1/W2 path.
+- Separates STID-local pre-admission credit from exact selected-pipe acceptance
+  so pipe selection cannot create a combinational capacity loop.
+- Uses round-robin shared-port drain and compacts only entries selected by the
+  typed Linx precise-flush contract. Reset/start/restart retain a separate hard
+  clear.
+- The live reduced top currently exposes one shared scalar return pipe; the
+  queue bank itself is parameterized and tested with multiple lanes.
 
 ### `chisel/.../lsu/ScalarLSULoadPath.scala`
 
