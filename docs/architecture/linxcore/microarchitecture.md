@@ -592,8 +592,13 @@ Detailed local-register lifetime and recovery rules are documented in
   configurations may complete independent writes together, but must reject
   duplicate committed writes and clear/write collision on one tag.
 - Each committed GPR write stores data and publishes non-speculative P-tag
-  wakeup by setting `ready_table_p` in the same edge. IQ consumers observe the
-  resulting ready mask no earlier than the following pick cycle.
+  wakeup by setting `ready_table_p` in the same edge. The same committed event
+  is broadcast to resident issue queues by physical P tag, updating their
+  per-source next-state readiness without waiting for a second ready-mask
+  sampling edge. Request/grant without commit broadcasts nothing.
+- A P wakeup in cycle N may make matching valid, non-issued P sources eligible
+  for pick in cycle N+1, never in cycle N. T/U sources do not match this global
+  broadcast; their point-to-point qtag path remains PE/STID scoped.
 - `STD` has read ports but no write port.
 
 ### Load speculative wakeup, forward, and miss handling

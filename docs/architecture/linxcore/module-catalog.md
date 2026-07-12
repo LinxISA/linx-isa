@@ -560,8 +560,21 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   different configured ports, while same-tag requests use fixed port priority.
   Duplicate committed writes and clear/write collision are protocol errors.
 - Supplies combinational physical-tag reads and the ready mask consumed by
-  issue. `ReducedScalarRegisterFile` is now only a compatibility wrapper over
-  this canonical state owner.
+  issue. Both live RF/issue tops instantiate this owner directly; the former
+  compatibility wrapper has been removed and remains available only in git
+  history.
+
+### `chisel/.../execute/ReducedScalarIssueQueue.scala`
+
+- Retains renamed issue rows and per-source readiness. Global P readiness is
+  initialized from `ScalarGPRFile.readyMask`; local T/U readiness remains on
+  separate scoped inputs.
+- Consumes a committed P writeback event from `ScalarGPRFile.write.fire` and
+  matches it against every valid, non-issued P source by physical tag. The IQ
+  next state and global ready table therefore observe one accepted producer
+  event together, matching model `IssueQueue::WakeupIQTag` ordering.
+- A request-only or uncommitted write cannot wake an IQ row. A committed P
+  wakeup is pick-visible on the next cycle, never in the current selection.
 
 ### `chisel/.../top/ScalarLoadGPRCompletionSink.scala`
 
