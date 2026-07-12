@@ -488,10 +488,12 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   source acceptance use `ScalarLSURecoveryBoundary` directly.
 - `ScalarLSULoadPath` now owns live scoped IEX load-return publication through
   `ScalarLSULoadReturnQueueBank`, including per-lane launch reservation, scalar
-  data extraction, atomic ResolveQ+LRET acceptance, fair drain, and typed
-  precise pruning. The reduced timing top reuses the bank for detailed W1/W2
-  proof. Cache/miss and cross-line queues remain outside `ScalarLSU`; this must
-  not yet be reported as a complete integrated LSU.
+  data extraction, atomic ResolveQ+LRET acceptance, fair drain, typed precise
+  pruning, and the parameterized `ScalarLSULoadReturnPipeline` W1/W2 owner.
+  The reduced timing top retains its detailed single-pipe sink proof until its
+  live ROB/RF/wakeup arbiters consume the canonical outputs. Cache/miss and
+  cross-line queues remain outside `ScalarLSU`; this must not yet be reported
+  as a complete integrated LSU.
 
 ### `chisel/.../lsu/ScalarLSULoadReturnQueue.scala`
 
@@ -520,6 +522,20 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 - Generates MDB lookup on accepted scalar allocation, applies accepted MDB wait
   plans and atomic failed-wait releases through the LIQ-native mutation port,
   and includes MDB transient state in quiescence.
+
+### `chisel/.../lsu/ScalarLSULoadReturnPipeline.scala`
+
+- Owns one scoped W1 and W2 slot per configured scalar return pipe. Every slot
+  retains PE/STID/TID plus BID/GID/RID/load-LSID, destination, data, and source
+  trace metadata.
+- Queries exact ROB-row validity before dequeue, holds a missing row, and drops
+  a row already marked `NeedFlush` without publishing side effects.
+- Completes W2 only when resolve and every required GPR-writeback/wakeup sink
+  are simultaneously ready. All fire outputs are one atomic rendezvous and the
+  W2 slot clears in that same cycle.
+- Applies typed Linx precise recovery independently to W1 and W2 while freezing
+  survivor movement during the recovery cycle. It does not import ARM paired
+  load, exception-level, exclusive-monitor, barrier, or return-state behavior.
 
 ### `chisel/.../lsu/ScalarLSUMDBPath.scala`
 

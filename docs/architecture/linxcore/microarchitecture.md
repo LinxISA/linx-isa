@@ -945,9 +945,11 @@ implementation choices and must not change architectural identity widths:
   LIQ-to-ResolveQ active/resolved load lifecycle, and the scalar MDB
   conflict/SSIT/fanout/wait-mutation path. `ScalarLSULoadPath` also owns final
   scalar data extraction, per-lane launch reservations, and atomic
-  ResolveQ+LRET publication through the scoped load-return queue bank. The
-  reduced timing path reuses the same bank while retaining its detailed W1/W2
-  proof surface. Miss-queue, cache, and cross-line ownership remain staged.
+  ResolveQ+LRET publication through the scoped load-return queue bank. It also
+  owns the parameterized scoped W1/W2 return pipeline and its atomic
+  resolve/writeback/wakeup rendezvous. The reduced timing path retains its
+  detailed single-pipe proof surface until the live sinks consume the canonical
+  outputs. Miss-queue, cache, and cross-line ownership remain staged.
 
 - A scalar store splits into address (`STA`) and data (`STD`) work with one
   shared instruction, BID, RID, SID, and LSID identity.
@@ -1072,6 +1074,18 @@ implementation choices and must not change architectural identity widths:
   The payload then advances through registered E4, W1, and W2 stages. W2 is
   the atomic side-effect point: required ROB resolve, GPR writeback, and
   destination wakeup must all be ready before the slot clears.
+- The canonical W1/W2 owner is a vector sized by `loadReturnPipeCount`. Shared
+  LRET drain selects a W1 lane fairly from lanes that are empty or advancing;
+  each W1 lane advances only into its paired W2 lane when W2 is empty or
+  completing. W2 completion, W1 advance, and a new W1 insertion may coincide
+  without dropping or duplicating a return.
+- Before LRET dequeue, IEX queries the exact scoped ROB row. A missing row
+  holds the queue head; a present `NeedFlush` row consumes and drops the stale
+  return without entering W1. Normal admission retains the complete
+  PE/STID/TID plus BID/GID/RID/load-LSID identity through W1 and W2.
+- Typed precise recovery suppresses stage movement and side effects for that
+  cycle, prunes only matching W1/W2 entries, and preserves older or independent
+  lanes. Hard reset/start/restart may clear the complete pipeline.
 - Non-speculative, non-stack scalar returns may publish the normal memory
   wakeup when stable data is retained. Speculative wakeup is a separate early
   prediction and must be canceled or repaired on miss/replay. T/U local-link
