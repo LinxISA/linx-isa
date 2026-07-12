@@ -551,6 +551,30 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   are duplicate-owner violations, not retryable contention. RF and wakeup
   remain atomic readiness inputs at the scalar-load boundary.
 
+### `chisel/.../execute/ScalarGPRFile.scala`
+
+- Owns parameterized scalar physical GPR data and the non-speculative P-tag
+  ready table. The 24 architectural identity tags reset ready; additional
+  physical tags reset not-ready.
+- Separates write request from write commit. Independent tags may commit on
+  different configured ports, while same-tag requests use fixed port priority.
+  Duplicate committed writes and clear/write collision are protocol errors.
+- Supplies combinational physical-tag reads and the ready mask consumed by
+  issue. `ReducedScalarRegisterFile` is now only a compatibility wrapper over
+  this canonical state owner.
+
+### `chisel/.../top/ScalarLoadGPRCompletionSink.scala`
+
+- Connects canonical scalar W2 completion to `ScalarGPRFile`. Existing external
+  writeback uses the first port; scalar W2 uses an independent port when
+  configured and when tags differ, otherwise it holds behind external
+  priority.
+- Presents writeback and P-tag wakeup readiness before completion, but mutates
+  data/readiness only from W2 fire. It checks resolve, writeback, and wakeup
+  fire coherence and exposes committed-write and wakeup diagnostics.
+- Rejects T/U destinations at this GPR boundary. Their local-bank write and
+  qtag wakeup remain a separate Linx-specific integration packet.
+
 ### `chisel/.../lsu/ScalarLSUMDBPath.scala`
 
 - Owns the canonical scalar memory-dependence predictor beneath

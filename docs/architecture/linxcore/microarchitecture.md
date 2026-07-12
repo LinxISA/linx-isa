@@ -469,6 +469,13 @@ Detailed local-register lifetime and recovery rules are documented in
 
 - `ready_table_p`, `ready_table_t`, and `ready_table_u` represent non-spec
   readiness only.
+- Scalar `P` data and `ready_table_p` are one physical GPR owner. Reset marks
+  the 24 architectural identity tags ready and all additional physical tags
+  not-ready. Rename allocation clears the new destination tag; committed
+  writeback stores data and sets that same tag ready atomically.
+- `gprPhysRegs` and `gprWritePorts` are scalar-backend parameters independent
+  from ROB, LIQ, STQ, LRET, and cache capacities. The physical-tag width must
+  address exactly the configured GPR capacity at every connected boundary.
 - A ready-table bit may be set only when the corresponding produced value is
   architecturally stable and will not later be withdrawn by ordinary
   cancellation or flush of a still-speculative producer.
@@ -574,9 +581,19 @@ Detailed local-register lifetime and recovery rules are documented in
   per-STID ROB ages.
 - Failure to win arbitration cancels the in-flight attempt without deallocating
   the IQ entry.
-- Write ports must not contend.
-- Each IQ picker/issue port corresponds to a pipeline and a dedicated RF write
-  port.
+- A producer may request a write port before its complete side-effect bundle
+  is authorized, but data and readiness mutate only on the request's explicit
+  commit/fire event. Port reservation is not writeback.
+- Physical write bandwidth is parameterized. Independent tags may use
+  different ports in one cycle. Same-tag requests serialize with one explicit
+  priority winner; a blocked producer retains its result-stage owner and
+  retries without publishing ROB resolve or wakeup.
+- A one-port configuration serializes all simultaneous producers. Wider
+  configurations may complete independent writes together, but must reject
+  duplicate committed writes and clear/write collision on one tag.
+- Each committed GPR write stores data and publishes non-speculative P-tag
+  wakeup by setting `ready_table_p` in the same edge. IQ consumers observe the
+  resulting ready mask no earlier than the following pick cycle.
 - `STD` has read ports but no write port.
 
 ### Load speculative wakeup, forward, and miss handling
@@ -1098,6 +1115,16 @@ implementation choices and must not change architectural identity widths:
   ownership because the legacy external port cannot prove generation or
   idempotence. The ROB completion pulse is emitted only from the selected source,
   and completion becomes visible to retirement on the next cycle.
+- `LinxCoreTop` also routes the selected W2 GPR destination and data into the
+  canonical scalar GPR/ready-table sink. The sink may grant a port while W2 is
+  resident, but it asserts write commit only when exact ROB resolve and every
+  required wakeup side effect fire. Same-tag external writeback holds W2;
+  independent tags may use separate configured ports. RF data, P-tag readiness,
+  and ROB completion therefore become visible from one accepted W2 event.
+- This GPR sink handles only `DestinationKind.Gpr`. Until their point-to-point
+  local-link bank and qtag wakeup owner is connected, T/U destinations are not
+  accepted and raise an explicit backend contract error. They must neither
+  stall silently forever nor be treated as global P-tag writes.
 - Typed precise recovery suppresses stage movement and side effects for that
   cycle, prunes only matching W1/W2 entries, and preserves older or independent
   lanes. Hard reset/start/restart may clear the complete pipeline.
