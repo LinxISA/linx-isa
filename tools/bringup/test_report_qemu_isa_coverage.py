@@ -13,6 +13,129 @@ import report_qemu_isa_coverage as coverage
 
 
 class ReportQemuIsaCoverageTests(unittest.TestCase):
+    def test_checked_in_l2_l3_counts_match_executable_ledger(self) -> None:
+        root = Path(__file__).resolve().parents[2]
+        executable = json.loads(
+            (root / "docs/bringup/gates/qemu_executable_coverage_latest.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        aggregate = json.loads(
+            (root / "docs/bringup/gates/qemu_isa_coverage_latest.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        for level in ("L2", "L3"):
+            with self.subTest(level=level):
+                self.assertEqual(aggregate["evidence"][level]["availability"], "available")
+                self.assertEqual(
+                    aggregate["evidence"][level]["form_count"],
+                    executable["evidence"][level]["form_count"],
+                )
+                self.assertEqual(
+                    aggregate["evidence"][level]["mnemonic_count"],
+                    executable["evidence"][level]["mnemonic_count"],
+                )
+                self.assertEqual(
+                    aggregate["evidence"][level]["qemu_sha"],
+                    executable["inputs"]["qemu_sha"],
+                )
+
+    def _executable_report(self) -> dict[str, object]:
+        return {
+            "schema_version": 1,
+            "claim": "per_form_qemu_executable_coverage",
+            "inputs": {"qemu_sha": "abc123"},
+            "rejected": [],
+            "admitted": [
+                {
+                    "form_id": "foo_32_id",
+                    "mnemonic": "FOO",
+                    "max_level": "L3",
+                    "qemu_sha": "abc123",
+                },
+                {
+                    "form_id": "bar_32_id",
+                    "mnemonic": "BAR",
+                    "max_level": "L2",
+                    "qemu_sha": "abc123",
+                },
+            ],
+            "evidence": {
+                "L2": {
+                    "availability": "available",
+                    "claim": "runtime_execution",
+                    "form_count": 2,
+                    "mnemonic_count": 2,
+                },
+                "L3": {
+                    "availability": "available",
+                    "claim": "semantic_oracle",
+                    "form_count": 1,
+                    "mnemonic_count": 1,
+                },
+            },
+        }
+
+    def test_executable_evidence_is_recounted_before_ingestion(self) -> None:
+        evidence = coverage._validate_executable_evidence(
+            self._executable_report(),
+            {"foo_32_id": "FOO", "bar_32_id": "BAR"},
+            "abc123",
+        )
+        self.assertEqual(evidence["L2"]["form_count"], 2)
+        self.assertEqual(evidence["L2"]["mnemonic_count"], 2)
+        self.assertEqual(evidence["L3"]["form_count"], 1)
+        self.assertEqual(evidence["L3"]["mnemonic_count"], 1)
+
+    def test_executable_evidence_rejects_stale_or_inconsistent_claims(self) -> None:
+        cases: list[tuple[str, dict[str, object], str]] = []
+
+        stale = self._executable_report()
+        cases.append(("stale qemu", stale, "other-sha"))
+
+        wrong_count = self._executable_report()
+        wrong_count["evidence"]["L3"]["form_count"] = 2
+        cases.append(("wrong count", wrong_count, "abc123"))
+
+        unknown_form = self._executable_report()
+        unknown_form["admitted"][0]["form_id"] = "unknown"
+        cases.append(("unknown form", unknown_form, "abc123"))
+
+        rejected = self._executable_report()
+        rejected["rejected"] = [{"form_id": "bad"}]
+        cases.append(("nonempty rejected list", rejected, "abc123"))
+
+        duplicate = self._executable_report()
+        duplicate["admitted"][1]["form_id"] = "foo_32_id"
+        duplicate["admitted"][1]["mnemonic"] = "FOO"
+        cases.append(("duplicate form", duplicate, "abc123"))
+
+        wrong_mnemonic = self._executable_report()
+        wrong_mnemonic["admitted"][0]["mnemonic"] = "BAR"
+        cases.append(("wrong mnemonic", wrong_mnemonic, "abc123"))
+
+        wrong_mnemonic_count = self._executable_report()
+        wrong_mnemonic_count["evidence"]["L2"]["mnemonic_count"] = 1
+        cases.append(("wrong mnemonic count", wrong_mnemonic_count, "abc123"))
+
+        wrong_availability = self._executable_report()
+        wrong_availability["evidence"]["L3"]["availability"] = "unavailable"
+        cases.append(("wrong availability", wrong_availability, "abc123"))
+
+        stale_entry = self._executable_report()
+        stale_entry["admitted"][0]["qemu_sha"] = "other-sha"
+        cases.append(("stale admitted entry", stale_entry, "abc123"))
+
+        for name, report, qemu_sha in cases:
+            with self.subTest(name=name):
+                with self.assertRaises(ValueError):
+                    coverage._validate_executable_evidence(
+                        report,
+                        {"foo_32_id": "FOO", "bar_32_id": "BAR"},
+                        qemu_sha,
+                    )
+
     def test_b_dim_decode_tokens_map_to_architectural_mnemonic(self) -> None:
         spec_set = {"B.DIM"}
 

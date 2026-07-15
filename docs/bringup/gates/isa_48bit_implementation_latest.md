@@ -1,11 +1,11 @@
 # 48-bit LLVM/QEMU L1 Mapping Coherence
 
-- Generated (UTC): `2026-07-15 20:12:13Z`
+- Generated (UTC): `2026-07-15 20:34:39Z`
 - Spec 48-bit forms: `200`
 - Spec 48-bit mnemonics: `194`
 - QEMU evidence: `L1 decoder_source_mapping`
-- L2 runtime execution: `unavailable`
-- L3 semantic oracle: `unavailable`
+- L2 runtime execution: `available`
+- L3 semantic oracle: `available`
 - LLVM mnemonic evidence is observed disassembly mnemonic breadth; it does not measure C-CodeGen coverage.
 - This report does not claim runtime or semantic completeness.
 

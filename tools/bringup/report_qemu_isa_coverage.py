@@ -1,15 +1,12 @@
 #!/usr/bin/env python3
-"""Generate an ISA-vs-QEMU decoder/source-mapping snapshot.
-
-This reporter provides L1 source evidence only. It does not ingest runtime
-execution traces or semantic result oracles.
-"""
+"""Generate ISA-vs-QEMU L1 mapping plus independently audited L2/L3 counts."""
 
 from __future__ import annotations
 
 import argparse
 import json
 import re
+import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -25,6 +22,78 @@ QEMU_META_RE = re.compile(
 DECODE_TOKEN_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 DECODE_BITS_RE = re.compile(r"^[01.\-]+$")
 TRAILING_WIDTH_RE = re.compile(r"_(16|32|48)$")
+
+
+def _validate_executable_evidence(
+    report: dict[str, object],
+    spec_forms_by_id: dict[str, str],
+    qemu_sha: str,
+) -> dict[str, dict[str, object]]:
+    if report.get("schema_version") != 1:
+        raise ValueError("expected executable evidence schema_version=1")
+    if report.get("claim") != "per_form_qemu_executable_coverage":
+        raise ValueError("unexpected executable evidence claim")
+    inputs = report.get("inputs")
+    if not isinstance(inputs, dict) or inputs.get("qemu_sha") != qemu_sha:
+        raise ValueError("executable evidence QEMU SHA does not match current source")
+    rejected = report.get("rejected")
+    if not isinstance(rejected, list) or rejected:
+        raise ValueError("executable evidence must contain an empty rejected list")
+    admitted = report.get("admitted")
+    if not isinstance(admitted, list):
+        raise ValueError("executable evidence admitted list is missing")
+
+    by_level: dict[str, list[dict[str, object]]] = {"L2": [], "L3": []}
+    seen_form_ids: set[str] = set()
+    for index, item in enumerate(admitted):
+        if not isinstance(item, dict):
+            raise ValueError(f"admitted[{index}] must be an object")
+        form_id = item.get("form_id")
+        mnemonic = item.get("mnemonic")
+        max_level = item.get("max_level")
+        if not isinstance(form_id, str) or form_id not in spec_forms_by_id:
+            raise ValueError(f"admitted[{index}] has an unknown golden form_id")
+        if form_id in seen_form_ids:
+            raise ValueError(f"duplicate admitted form_id: {form_id}")
+        if mnemonic != spec_forms_by_id[form_id]:
+            raise ValueError(f"admitted[{index}] mnemonic disagrees with golden form")
+        if max_level not in {"L2", "L3"}:
+            raise ValueError(f"admitted[{index}] has invalid max_level")
+        if item.get("qemu_sha") != qemu_sha:
+            raise ValueError(f"admitted[{index}] QEMU SHA mismatch")
+        seen_form_ids.add(form_id)
+        by_level["L2"].append(item)
+        if max_level == "L3":
+            by_level["L3"].append(item)
+
+    declared = report.get("evidence")
+    if not isinstance(declared, dict):
+        raise ValueError("executable evidence level summary is missing")
+    result: dict[str, dict[str, object]] = {}
+    for level, claim in (("L2", "runtime_execution"), ("L3", "semantic_oracle")):
+        items = by_level[level]
+        form_count = len(items)
+        mnemonic_count = len({str(item["mnemonic"]) for item in items})
+        summary = declared.get(level)
+        if not isinstance(summary, dict):
+            raise ValueError(f"executable evidence {level} summary is missing")
+        if summary.get("claim") != claim:
+            raise ValueError(f"executable evidence {level} claim mismatch")
+        if summary.get("form_count") != form_count:
+            raise ValueError(f"executable evidence {level} form count mismatch")
+        if summary.get("mnemonic_count") != mnemonic_count:
+            raise ValueError(f"executable evidence {level} mnemonic count mismatch")
+        expected_availability = "available" if form_count else "unavailable"
+        if summary.get("availability") != expected_availability:
+            raise ValueError(f"executable evidence {level} availability mismatch")
+        result[level] = {
+            "availability": expected_availability,
+            "claim": claim,
+            "form_count": form_count,
+            "mnemonic_count": mnemonic_count,
+            "qemu_sha": qemu_sha,
+        }
+    return result
 
 DECODE_LAYOUT_SPECS: tuple[tuple[tuple[str, int], ...], ...] = (
     (
@@ -777,12 +846,25 @@ def _render_markdown(report: dict[str, object], out_path: Path) -> None:
     lines.append(f"- Generated (UTC): `{report['generated_at_utc']}`")
     lines.append(f"- Evidence level: `{report['evidence_level']}`")
     lines.append(f"- Claim: `{report['claim']}`")
-    lines.append(f"- L2 runtime execution: `{evidence['L2']['availability']}`")
-    lines.append(f"- L3 semantic oracle: `{evidence['L3']['availability']}`")
-    lines.append(
-        "- Limitation: this report does not prove that an instruction executed "
-        "in QEMU or produced an architecturally correct result."
-    )
+    for level, label in (("L2", "runtime execution"), ("L3", "semantic oracle")):
+        item = evidence[level]
+        suffix = ""
+        if item["availability"] == "available":
+            suffix = (
+                f"; `{item['form_count']}` forms / "
+                f"`{item['mnemonic_count']}` mnemonics"
+            )
+        lines.append(f"- {level} {label}: `{item['availability']}`{suffix}")
+    if evidence["L2"]["availability"] == "available":
+        lines.append(
+            "- Limitation: L1 mapping does not imply execution; L2/L3 counts are "
+            "independently audited per-form evidence and remain partial."
+        )
+    else:
+        lines.append(
+            "- Limitation: this report does not prove that an instruction executed "
+            "in QEMU or produced an architecturally correct result."
+        )
     lines.append(f"- Spec unique mnemonics: `{report['spec_unique_mnemonics']}`")
     lines.append(f"- QEMU unique decode mnemonics (non-internal): `{report['qemu_unique_mnemonics']}`")
     lines.append(f"- QEMU mapped spec mnemonics: `{report['qemu_mapped_spec_mnemonics']}`")
@@ -855,6 +937,11 @@ def main(argv: list[str]) -> int:
         default="",
         help="Optional path to QEMU Linx opcode metadata header. When omitted, decode-source coverage remains authoritative.",
     )
+    ap.add_argument(
+        "--executable-report",
+        default="",
+        help="Optional audited per-form executable coverage report to ingest as L2/L3 evidence.",
+    )
     ap.add_argument("--report-out", default="", help="Optional JSON report path")
     ap.add_argument("--out-md", default="", help="Optional Markdown summary path")
     ap.add_argument(
@@ -873,6 +960,9 @@ def main(argv: list[str]) -> int:
     spec_path = Path(args.spec).resolve()
     qemu_root = Path(args.qemu_root).resolve()
     qemu_meta_path = Path(args.qemu_meta).resolve() if args.qemu_meta else Path()
+    executable_report_path = (
+        Path(args.executable_report).resolve() if args.executable_report else None
+    )
     if not spec_path.is_file():
         print(f"error: ISA spec not found: {spec_path}", file=sys.stderr)
         return 1
@@ -885,6 +975,46 @@ def main(argv: list[str]) -> int:
     instructions = [inst for inst in spec_data.get("instructions", []) if str(inst.get("mnemonic", "")).strip()]
     spec_set = {str(inst.get("mnemonic", "")).strip() for inst in instructions}
     spec_forms = {_spec_form_key(inst) for inst in instructions}
+    spec_forms_by_id = {
+        str(inst["id"]): str(inst["mnemonic"]).strip()
+        for inst in instructions
+        if isinstance(inst.get("id"), str)
+    }
+
+    executable_evidence: dict[str, dict[str, object]] | None = None
+    if executable_report_path is not None:
+        if not executable_report_path.is_file():
+            print(
+                f"error: executable evidence report not found: {executable_report_path}",
+                file=sys.stderr,
+            )
+            return 1
+        qemu_head = subprocess.run(
+            ["git", "-C", str(qemu_root), "rev-parse", "HEAD"],
+            check=False,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        if qemu_head.returncode != 0:
+            print("error: cannot determine current QEMU source SHA", file=sys.stderr)
+            return 1
+        try:
+            executable_report = json.loads(
+                executable_report_path.read_text(encoding="utf-8")
+            )
+            if not isinstance(executable_report, dict):
+                raise ValueError("top-level report must be an object")
+            executable_evidence = _validate_executable_evidence(
+                executable_report,
+                spec_forms_by_id,
+                qemu_head.stdout.strip(),
+            )
+        except (json.JSONDecodeError, ValueError) as error:
+            print(f"error: invalid executable evidence report: {error}", file=sys.stderr)
+            return 1
+        for level in ("L2", "L3"):
+            executable_evidence[level]["source"] = str(executable_report_path)
 
     qemu_source_kind = "decode"
     qemu_meta_all: set[str] = set()
@@ -970,19 +1100,51 @@ def main(argv: list[str]) -> int:
         ok = False
         classification = "qemu_isa_coverage_incomplete"
 
+    if executable_evidence is None:
+        l2_evidence = {
+            "availability": "unavailable",
+            "claim": "runtime_execution",
+            "mnemonic_count": None,
+            "form_count": None,
+            "reason": "runtime_execution_evidence_not_ingested",
+        }
+        l3_evidence = {
+            "availability": "unavailable",
+            "claim": "semantic_oracle",
+            "mnemonic_count": None,
+            "form_count": None,
+            "reason": "semantic_oracle_evidence_not_ingested",
+        }
+        capabilities = [
+            "decoder_source_to_isa_mnemonic_mapping",
+            "decoder_mask_to_isa_form_matching",
+        ]
+        limitations = [
+            "no_runtime_execution_evidence",
+            "no_semantic_oracle_evidence",
+        ]
+    else:
+        l2_evidence = executable_evidence["L2"]
+        l3_evidence = executable_evidence["L3"]
+        capabilities = [
+            "decoder_source_to_isa_mnemonic_mapping",
+            "decoder_mask_to_isa_form_matching",
+            "audited_per_form_runtime_evidence_ingestion",
+            "audited_per_form_semantic_oracle_ingestion",
+        ]
+        limitations = [
+            "runtime_execution_evidence_is_partial",
+            "semantic_oracle_evidence_is_partial",
+            "l2_l3_counts_do_not_extend_the_l1_mapping_claim",
+        ]
+
     report: dict[str, object] = {
         "generated_at_utc": _utc_now(),
         "schema_version": "qemu-isa-coverage-v3",
         "evidence_level": "L1",
         "claim": "decoder_source_mapping",
-        "capabilities": [
-            "decoder_source_to_isa_mnemonic_mapping",
-            "decoder_mask_to_isa_form_matching",
-        ],
-        "limitations": [
-            "no_runtime_execution_evidence",
-            "no_semantic_oracle_evidence",
-        ],
+        "capabilities": capabilities,
+        "limitations": limitations,
         "evidence": {
             "L1": {
                 "availability": "available",
@@ -990,20 +1152,8 @@ def main(argv: list[str]) -> int:
                 "mnemonic_count": coverage_count,
                 "form_count": form_coverage_count,
             },
-            "L2": {
-                "availability": "unavailable",
-                "claim": "runtime_execution",
-                "mnemonic_count": None,
-                "form_count": None,
-                "reason": "runtime_execution_evidence_not_ingested",
-            },
-            "L3": {
-                "availability": "unavailable",
-                "claim": "semantic_oracle",
-                "mnemonic_count": None,
-                "form_count": None,
-                "reason": "semantic_oracle_evidence_not_ingested",
-            },
+            "L2": l2_evidence,
+            "L3": l3_evidence,
         },
         "spec_path": str(spec_path),
         "qemu_root": str(qemu_root),

@@ -164,6 +164,54 @@ class RunGatesTests(unittest.TestCase):
         self.assertEqual(proc.returncode, 0, proc.stderr)
         self.assertIn("Kernel::Linux initramfs smoke", proc.stdout)
 
+    def test_qemu_isa_gate_short_circuits_when_executable_producer_fails(self) -> None:
+        root = Path(__file__).resolve().parents[2]
+        registry = json.loads(
+            (root / "docs/bringup/gate_registry.json").read_text(encoding="utf-8")
+        )
+        command = next(
+            gate["command"]
+            for gate in registry["gates"]
+            if gate["gate_key"] == "Emulator::ISA vs QEMU coverage report"
+        )
+        with tempfile.TemporaryDirectory() as td:
+            temp = Path(td)
+            log = temp / "python-calls.log"
+            shim = temp / "python3"
+            shim.write_text(
+                "#!/bin/sh\n"
+                "printf '%s\\n' \"$1\" >> \"$PYTHON_CALL_LOG\"\n"
+                "case \"$1\" in\n"
+                "  *report_qemu_executable_coverage.py) exit 7 ;;\n"
+                "  *) exit 0 ;;\n"
+                "esac\n",
+                encoding="utf-8",
+            )
+            shim.chmod(0o755)
+            env = os.environ.copy()
+            env.update(
+                {
+                    "PATH": f"{temp}:{env['PATH']}",
+                    "PYTHON_CALL_LOG": str(log),
+                    "ROOT": str(root),
+                }
+            )
+            proc = subprocess.run(
+                ["bash", "-c", command],
+                cwd=root,
+                env=env,
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+            calls = log.read_text(encoding="utf-8").splitlines()
+
+        self.assertEqual(proc.returncode, 7, proc.stderr)
+        self.assertEqual(
+            calls,
+            [str(root / "tools/bringup/report_qemu_executable_coverage.py")],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,7 +1,9 @@
 {
   "capabilities": [
     "decoder_source_to_isa_mnemonic_mapping",
-    "decoder_mask_to_isa_form_matching"
+    "decoder_mask_to_isa_form_matching",
+    "audited_per_form_runtime_evidence_ingestion",
+    "audited_per_form_semantic_oracle_ingestion"
   ],
   "claim": "decoder_source_mapping",
   "coverage_count": 620,
@@ -14,30 +16,33 @@
       "mnemonic_count": 620
     },
     "L2": {
-      "availability": "unavailable",
+      "availability": "available",
       "claim": "runtime_execution",
-      "form_count": null,
-      "mnemonic_count": null,
-      "reason": "runtime_execution_evidence_not_ingested"
+      "form_count": 20,
+      "mnemonic_count": 20,
+      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "source": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_executable_coverage_latest.json"
     },
     "L3": {
-      "availability": "unavailable",
+      "availability": "available",
       "claim": "semantic_oracle",
-      "form_count": null,
-      "mnemonic_count": null,
-      "reason": "semantic_oracle_evidence_not_ingested"
+      "form_count": 20,
+      "mnemonic_count": 20,
+      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "source": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_executable_coverage_latest.json"
     }
   },
   "evidence_level": "L1",
   "form_coverage_count": 625,
   "form_coverage_ratio_percent": 83.67,
   "form_missing_count": 122,
-  "generated_at_utc": "2026-07-15 15:52:09Z",
+  "generated_at_utc": "2026-07-15 20:34:39Z",
   "legal_form_count": 747,
   "legal_mnemonic_count": 711,
   "limitations": [
-    "no_runtime_execution_evidence",
-    "no_semantic_oracle_evidence"
+    "runtime_execution_evidence_is_partial",
+    "semantic_oracle_evidence_is_partial",
+    "l2_l3_counts_do_not_extend_the_l1_mapping_claim"
   ],
   "mapped_by_prefix": {
     "ACRC": 1,

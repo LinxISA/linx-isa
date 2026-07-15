@@ -125,6 +125,17 @@
       "freshness_hours": 24
     },
     {
+      "gate_key": "Compiler::C-CodeGen mnemonic breadth report",
+      "domain": "Compiler",
+      "owner": "llvm",
+      "command": "python3 \"$ROOT/tools/bringup/report_llvm_c_codegen_coverage.py\" --repo-root \"$ROOT\" --compiler-out-dir \"$ROOT/avs/compiler/linx-llvm/tests/out\" --build-manifest \"$ROOT/avs/compiler/linx-llvm/tests/out/c-codegen-build-manifest.json\" --clang \"$ROOT/compiler/llvm/build-linxisa-clang/bin/clang\" --llvm-objdump \"$ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-objdump\" --report-out \"$ROOT/docs/bringup/gates/llvm_c_codegen_coverage_latest.json\" --out-md \"$ROOT/docs/bringup/gates/llvm_c_codegen_coverage_latest.md\"",
+      "profiles": ["release-strict"],
+      "tiers": ["pr", "nightly"],
+      "required": true,
+      "artifacts": ["avs/compiler/linx-llvm/tests/out/c-codegen-build-manifest.json", "docs/bringup/gates/llvm_c_codegen_coverage_latest.json"],
+      "freshness_hours": 24
+    },
+    {
       "gate_key": "Emulator::QEMU strict system",
       "domain": "Emulator",
       "owner": "qemu",
@@ -161,11 +172,11 @@
       "gate_key": "Emulator::ISA vs QEMU coverage report",
       "domain": "Emulator",
       "owner": "qemu",
-      "command": "if [[ \"${QEMU_ISA_COVERAGE_REQUIRE_FULL:-0}\" == \"1\" ]]; then extra=--require-full; else extra=; fi; python3 \"$ROOT/tools/bringup/report_qemu_isa_coverage.py\" --spec \"$ROOT/isa/v0.56/linxisa-v0.56.json\" --qemu-root \"$ROOT/emulator/qemu\" --qemu-meta \"$ROOT/emulator/qemu/target/linx/linx_opcode_meta_gen.h\" --report-out \"$ROOT/docs/bringup/gates/qemu_isa_coverage_latest.json\" --out-md \"$ROOT/docs/bringup/gates/qemu_isa_coverage_latest.md\" $extra",
+      "command": "python3 \"$ROOT/tools/bringup/report_qemu_executable_coverage.py\" --repo-root \"$ROOT\" --require-nonzero --require-clean && { if [[ \"${QEMU_ISA_COVERAGE_REQUIRE_FULL:-0}\" == \"1\" ]]; then extra=--require-full; else extra=; fi; python3 \"$ROOT/tools/bringup/report_qemu_isa_coverage.py\" --spec \"$ROOT/isa/v0.56/linxisa-v0.56.json\" --qemu-root \"$ROOT/emulator/qemu\" --qemu-meta \"$ROOT/emulator/qemu/target/linx/linx_opcode_meta_gen.h\" --executable-report \"$ROOT/docs/bringup/gates/qemu_executable_coverage_latest.json\" --report-out \"$ROOT/docs/bringup/gates/qemu_isa_coverage_latest.json\" --out-md \"$ROOT/docs/bringup/gates/qemu_isa_coverage_latest.md\" $extra; }",
       "profiles": ["release-strict"],
       "tiers": ["pr", "nightly"],
       "required": true,
-      "artifacts": ["docs/bringup/gates/qemu_isa_coverage_latest.json"],
+      "artifacts": ["docs/bringup/gates/qemu_isa_coverage_latest.json", "docs/bringup/gates/qemu_executable_coverage_latest.json"],
       "freshness_hours": 24
     },
     {
