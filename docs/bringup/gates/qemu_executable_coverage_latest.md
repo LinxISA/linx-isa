@@ -1,6 +1,6 @@
 # QEMU Executable Coverage Ledger
 
-Generated: `2026-07-15T19:12:09Z`
+Generated: `2026-07-15T20:45:14Z`
 
 This ledger counts only per-form evidence bound to golden identity, bytes, test ID,
 artifacts, QEMU SHA, a test-specific terminal PASS, and an oracle. Suite exit 0 and stdout alone do not count.
@@ -9,8 +9,8 @@ artifacts, QEMU SHA, a test-specific terminal PASS, and an oracle. Suite exit 0 
 
 | Level | Availability | Forms | Mnemonics |
 | --- | --- | ---: | ---: |
-| L2 | `available` | 7 | 7 |
-| L3 | `available` | 7 | 7 |
+| L2 | `available` | 20 | 20 |
+| L3 | `available` | 20 | 20 |
 
 ## Admitted Forms
 
@@ -21,6 +21,19 @@ artifacts, QEMU SHA, a test-specific terminal PASS, and an oracle. Suite exit 0 
 | `fentry_32_a47584ec13b6` | `callret / 0x0000140b` | `L3` | `exact_value` | `4100a504` |
 | `fret_ra_32_659c886221c1` | `callret / 0x0000140c` | `L3` | `exact_value` | `4120a504` |
 | `fret_stk_32_4fe246bd8241` | `callret / 0x0000140b` | `L3` | `exact_value` | `4130a504` |
+| `hl_ldip_48_60afa6423d39` | `executable_memory / 0x0000220c` | `L3` | `architectural_state` | `1e2819320200` |
+| `hl_lwui_po_48_09a75b628dc4` | `executable_memory / 0x00002201` | `L3` | `architectural_state` | `3e1819611100` |
+| `hl_lwui_pr_48_32de19a508f0` | `executable_memory / 0x00002202` | `L3` | `architectural_state` | `2e1819611100` |
+| `hl_lwui_upo_48_33260eb06a2c` | `executable_memory / 0x00002203` | `L3` | `architectural_state` | `3e1829614100` |
+| `hl_lwui_upr_48_998a98c46469` | `executable_memory / 0x00002204` | `L3` | `architectural_state` | `2e1829614100` |
+| `hl_lwuip_48_2a5d6d8f3b70` | `executable_memory / 0x00002209` | `L3` | `architectural_state` | `1e2099e10100` |
+| `hl_sdip_48_6d622cf167ca` | `executable_memory / 0x0000220d` | `L3` | `architectural_state` | `de0059305100` |
+| `hl_swi_po_48_66a80d0fa7f5` | `executable_memory / 0x00002205` | `L3` | `architectural_state` | `3e2859204102` |
+| `hl_swi_pr_48_68b9003e0421` | `executable_memory / 0x00002206` | `L3` | `architectural_state` | `2e2059a02102` |
+| `hl_swi_upo_48_243d3c38cd1a` | `executable_memory / 0x00002207` | `L3` | `architectural_state` | `3e2059e02108` |
+| `hl_swi_upr_48_15c2fb96aab0` | `executable_memory / 0x00002208` | `L3` | `architectural_state` | `2e2859604108` |
+| `hl_swip_48_e2fca8cde001` | `executable_memory / 0x0000220a` | `L3` | `architectural_state` | `9e0059a04200` |
+| `hl_swip_u_48_e2dc917c8505` | `executable_memory / 0x0000220b` | `L3` | `architectural_state` | `9e0059e04210` |
 | `j_32_a303cf05af42` | `callret / 0x00001410` | `L3` | `exact_value` | `37000300` |
 | `l_bstart_std_64_37e84068ce61` | `callret / 0x00001411` | `L3` | `exact_value` | `0f06000001200000` |
 
@@ -36,4 +49,17 @@ None.
 - `callret / 0x0000140f`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
 - `callret / 0x00001410`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
 - `callret / 0x00001411`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_memory / 0x00002201`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_memory / 0x00002202`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_memory / 0x00002203`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_memory / 0x00002204`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_memory / 0x00002205`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_memory / 0x00002206`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_memory / 0x00002207`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_memory / 0x00002208`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_memory / 0x00002209`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_memory / 0x0000220a`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_memory / 0x0000220b`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_memory / 0x0000220c`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_memory / 0x0000220d`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
 - `v03_vector_ops / 0x00001321`: status `FAIL`, oracle `FAIL`, timeout-after-fail `True`, failure `0x00001321` expected `0x0000000000000053` actual `0x0000000000000011`, test-contract `invalid`, attribution `test_contract`, note: Historical first-red evidence. The AVS source used invalid VT/VU lifetime and relative-index semantics; the corrected source and authored B.IOR binding now pass 0x1300, 0x1310, and 0x1320.

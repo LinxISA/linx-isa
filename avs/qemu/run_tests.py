@@ -71,6 +71,7 @@ COMPLETION_TEST_IDS_BY_SUITE = {
     "v03_vector_ops": 0x00001320,
     "callret": 0x00001412,
     "runtime": 0x00002110,
+    "executable_memory": 0x0000220D,
     "system": 0x0000110D,
 }
 
@@ -196,6 +197,9 @@ def _runtime_verdict(
         "stalled": stalled,
         "declared_terminal_test_ids": [
             f"0x{test_id:08x}" for test_id in sorted(declared_terminal_ids)
+        ],
+        "declared_suite_completion_test_ids": [
+            f"0x{test_id:08x}" for test_id in sorted(set(suite_completion_test_ids or []))
         ],
         "missing_required_test_ids": [f"0x{test_id:08x}" for test_id in missing_ids],
         "missing_suite_completion_test_ids": [
@@ -337,6 +341,9 @@ def _write_execution_evidence(
                 "missing_suite_completion_test_ids"
             ],
             "declared_terminal_test_ids": verdict["declared_terminal_test_ids"],
+            "declared_suite_completion_test_ids": verdict[
+                "declared_suite_completion_test_ids"
+            ],
             "stdout_sha256": hashlib.sha256(stdout).hexdigest(),
         },
         "failure": failure,
@@ -462,6 +469,13 @@ SUITES: dict[str, dict[str, str]] = {
     },
     "callret": {"src": "tests/14_callret.c", "macro": "LINX_TEST_ENABLE_CALLRET"},
     "runtime": {"src": "tests/21_freestanding_runtime.c", "macro": "LINX_TEST_ENABLE_RUNTIME"},
+    # A dedicated, single-suite executable-coverage carrier.  It deliberately
+    # reuses main.c's load/store entry point so the generic runner need not grow
+    # a coverage-only dispatch surface.
+    "executable_memory": {
+        "src": "tests/22_executable_memory.c",
+        "macro": "LINX_TEST_ENABLE_LOADSTORE",
+    },
 }
 
 COMPILE_ONLY_SUITE_SOURCE_OVERRIDE: dict[str, str] = {
@@ -543,6 +557,13 @@ EXPERIMENTAL_SUITES: set[str] = {
     "v03_vector_body_fault",
     # Compile-only per-instruction translation corpus used by coverage/reporting.
     "translation_corpus",
+    # Evidence carrier: run explicitly so it never collides with the ordinary
+    # loadstore suite that owns the same main.c entry point.
+    "executable_memory",
+}
+
+DEDICATED_EVIDENCE_SUITES: set[str] = {
+    "executable_memory",
 }
 
 CORE_SUITES: list[str] = [
@@ -980,7 +1001,7 @@ def main(argv: list[str]) -> int:
 
     selected = _suite_selection(args)
     if args.all_suites:
-        selected = list(SUITES.keys())
+        selected = [s for s in SUITES.keys() if s not in DEDICATED_EVIDENCE_SUITES]
     if any(s in LLC_PIPELINE_SUITES for s in selected) and not llc:
         raise SystemExit("error: llc not found; set --llc or LLC")
     if any(s in OBJDUMP_ASSERTS_BY_SUITE for s in selected) and not llvm_objdump:
@@ -1091,9 +1112,14 @@ def main(argv: list[str]) -> int:
         add_source(REPO_ROOT / "avs" / "runtime" / "freestanding" / "src" / "softfp" / "softfp.c")
         add_source(REPO_ROOT / "avs" / "runtime" / "freestanding" / "src" / "math" / "math.c")
 
-    suite_macros: list[str] = []
+    suite_macro_values: dict[str, bool] = {}
     for name, meta in SUITES.items():
-        suite_macros.append(f"-D{meta['macro']}={'1' if name in selected else '0'}")
+        macro = meta["macro"]
+        suite_macro_values[macro] = suite_macro_values.get(macro, False) or name in selected
+    suite_macros = [
+        f"-D{macro}={'1' if enabled else '0'}"
+        for macro, enabled in suite_macro_values.items()
+    ]
     terminal_test_ids = [
         TERMINAL_TEST_IDS_BY_SUITE[suite]
         for suite in selected

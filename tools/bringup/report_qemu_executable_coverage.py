@@ -14,6 +14,8 @@ import argparse
 import hashlib
 import json
 import re
+import shutil
+import struct
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -24,6 +26,11 @@ from typing import Any
 SCHEMA_VERSION = 1
 AVAILABILITY_VALUES = {"available", "unavailable"}
 L3_ORACLE_KINDS = {"exact_value", "architectural_state", "expected_trap", "differential"}
+UART_SUCCESS_MARKERS = {
+    "TEST SUITE COMPLETE",
+    "LINX TESTS PASS",
+    "REGRESSION PASSED",
+}
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 HEX_RE = re.compile(r"0x[0-9a-fA-F]+")
@@ -249,6 +256,118 @@ def _trace_pcs(text: str) -> set[int]:
     }
 
 
+def _normalize_disassembly(text: str) -> str:
+    return re.sub(r"\s+", " ", text.strip().lower())
+
+
+def _inspect_elf_instruction(
+    repo_root: Path,
+    elf_path: Path,
+    *,
+    pc: int,
+    size: int,
+    symbol: str,
+) -> dict[str, Any]:
+    """Bind a claimed instruction to its PT_LOAD offset, symbol, and objdump text."""
+    data = elf_path.read_bytes()
+    if len(data) < 64 or data[:6] != b"\x7fELF\x02\x01":
+        raise ValueError("ELF must be little-endian ELF64")
+    header = struct.unpack_from("<16sHHIQQQIHHHHHH", data, 0)
+    phoff, shoff = header[5], header[6]
+    phentsize, phnum = header[9], header[10]
+    shentsize, shnum = header[11], header[12]
+    if phentsize < 56 or shentsize < 64:
+        raise ValueError("ELF header table entry size is invalid")
+
+    mapped_offset: int | None = None
+    for index in range(phnum):
+        offset = phoff + index * phentsize
+        if offset + 56 > len(data):
+            raise ValueError("ELF program header table is truncated")
+        p_type, _, p_offset, p_vaddr, _, p_filesz, _, _ = struct.unpack_from(
+            "<IIQQQQQQ", data, offset
+        )
+        if p_type == 1 and p_vaddr <= pc and pc + size <= p_vaddr + p_filesz:
+            mapped_offset = p_offset + (pc - p_vaddr)
+            break
+    if mapped_offset is None or mapped_offset + size > len(data):
+        raise ValueError("instruction PC is not backed by an ELF PT_LOAD range")
+
+    sections: list[tuple[int, ...]] = []
+    for index in range(shnum):
+        offset = shoff + index * shentsize
+        if offset + 64 > len(data):
+            raise ValueError("ELF section header table is truncated")
+        sections.append(struct.unpack_from("<IIQQQQIIQQ", data, offset))
+
+    symbol_range: tuple[int, int] | None = None
+    for section in sections:
+        _, sh_type, _, _, sym_offset, sym_size, sh_link, _, _, sym_entsize = section
+        if sh_type != 2 or not sym_entsize or sh_link >= len(sections):
+            continue
+        string_section = sections[sh_link]
+        strings_offset, strings_size = string_section[4], string_section[5]
+        strings = data[strings_offset : strings_offset + strings_size]
+        for entry_offset in range(sym_offset, sym_offset + sym_size, sym_entsize):
+            if entry_offset + 24 > len(data):
+                raise ValueError("ELF symbol table is truncated")
+            name_offset, _, _, _, value, symbol_size = struct.unpack_from(
+                "<IBBHQQ", data, entry_offset
+            )
+            if name_offset >= len(strings):
+                continue
+            end = strings.find(b"\0", name_offset)
+            if end < 0:
+                continue
+            name = strings[name_offset:end].decode("utf-8", errors="replace")
+            if name == symbol:
+                symbol_range = (value, value + symbol_size)
+                break
+        if symbol_range is not None:
+            break
+    if symbol_range is None or symbol_range[0] >= symbol_range[1]:
+        raise ValueError("instruction symbol is absent or has an empty ELF range")
+    if not (symbol_range[0] <= pc and pc + size <= symbol_range[1]):
+        raise ValueError("instruction PC is outside the claimed ELF symbol range")
+
+    objdump = repo_root / "compiler/llvm/build-linxisa-clang/bin/llvm-objdump"
+    if not objdump.is_file():
+        discovered = shutil.which("llvm-objdump")
+        if discovered is None:
+            raise ValueError("llvm-objdump is unavailable for ELF instruction binding")
+        objdump = Path(discovered)
+    completed = subprocess.run(
+        [
+            str(objdump),
+            "-d",
+            f"--start-address=0x{pc:x}",
+            f"--stop-address=0x{pc + size:x}",
+            str(elf_path),
+        ],
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    if completed.returncode != 0:
+        raise ValueError(f"llvm-objdump failed for ELF instruction binding: {completed.stderr.strip()}")
+    line_match = re.search(rf"^\s*{pc:x}:\s+(.+)$", completed.stdout, re.MULTILINE | re.IGNORECASE)
+    if line_match is None:
+        raise ValueError("llvm-objdump did not emit the claimed instruction PC")
+    tokens = line_match.group(1).split()
+    if len(tokens) < size + 1 or any(re.fullmatch(r"[0-9a-fA-F]{2}", token) is None for token in tokens[:size]):
+        raise ValueError("llvm-objdump did not emit complete instruction bytes")
+    objdump_bytes = bytes(int(token, 16) for token in tokens[:size])
+    return {
+        "elf_offset": mapped_offset,
+        "raw_bytes": data[mapped_offset : mapped_offset + size],
+        "objdump_bytes": objdump_bytes,
+        "disassembly": " ".join(tokens[size:]),
+        "symbol_start": symbol_range[0],
+        "symbol_end": symbol_range[1],
+    }
+
+
 def _validate_entry(
     *,
     repo_root: Path,
@@ -363,6 +482,33 @@ def _validate_entry(
             data = elf_path.read_bytes()
             if data[elf_offset : elf_offset + len(raw_bytes)] != raw_bytes:
                 reasons.append("raw bytes do not match bound ELF offset")
+        if (
+            elf_path is not None
+            and elf_offset is not None
+            and instruction_pc is not None
+            and isinstance(instruction_symbol, str)
+            and instruction_symbol
+            and isinstance(disassembly, str)
+            and disassembly
+        ):
+            try:
+                elf_binding = _inspect_elf_instruction(
+                    repo_root,
+                    elf_path,
+                    pc=instruction_pc,
+                    size=len(raw_bytes),
+                    symbol=instruction_symbol,
+                )
+                if elf_binding["elf_offset"] != elf_offset:
+                    reasons.append("instruction PC maps to a different ELF offset")
+                if elf_binding["raw_bytes"] != raw_bytes or elf_binding["objdump_bytes"] != raw_bytes:
+                    reasons.append("ELF/objdump bytes disagree with claimed instruction bytes")
+                if _normalize_disassembly(elf_binding["disassembly"]) != _normalize_disassembly(
+                    disassembly
+                ):
+                    reasons.append("ELF disassembly disagrees with claimed instruction text")
+            except (OSError, ValueError, struct.error) as exc:
+                reasons.append(str(exc))
 
     reachability = entry.get("reachability")
     if not isinstance(reachability, dict):
@@ -619,8 +765,54 @@ def _validate_entry(
             and marker.get("value") == "START/PASS"
             and exit_code == 0
         )
-        if not (finisher_pass or test_event_pass):
-            reasons.append("verified finisher or test-specific PASS marker is missing")
+        uart_marker_candidate = (
+            marker.get("kind") == "uart_success_marker"
+            and marker.get("value") in UART_SUCCESS_MARKERS
+            and exit_code == 0
+        )
+        uart_completion_valid = False
+        if uart_marker_candidate:
+            try:
+                completion_id = _test_id(entry.get("suite_completion_test_id"))
+                declared_completion_ids = {
+                    _test_id(value)
+                    for value in run_data.get("declared_suite_completion_test_ids", [])
+                }
+            except (TypeError, ValueError):
+                completion_id = None
+                declared_completion_ids = set()
+            missing_required = run_data.get("missing_required_test_ids")
+            missing_completion = run_data.get("missing_suite_completion_test_ids")
+            final_completion = False
+            if isinstance(events, list) and len(events) >= 2 and completion_id is not None:
+                start_event, pass_event = events[-2:]
+                try:
+                    final_completion = (
+                        isinstance(start_event, dict)
+                        and isinstance(pass_event, dict)
+                        and start_event.get("kind") == "START"
+                        and pass_event.get("kind") == "PASS"
+                        and _test_id(start_event.get("test_id")) == completion_id
+                        and _test_id(pass_event.get("test_id")) == completion_id
+                        and _parse_int(start_event.get("seq"), "completion START sequence") == len(events) - 2
+                        and _parse_int(pass_event.get("seq"), "completion PASS sequence") == len(events) - 1
+                    )
+                except ValueError:
+                    final_completion = False
+            uart_completion_valid = (
+                completion_id is not None
+                and declared_completion_ids == {completion_id}
+                and missing_required == []
+                and missing_completion == []
+                and final_completion
+            )
+            if not uart_completion_valid:
+                reasons.append(
+                    "suite UART marker lacks a declared, fully observed final completion test ID"
+                )
+        uart_pass = uart_marker_candidate and uart_completion_valid
+        if not (finisher_pass or test_event_pass or uart_pass):
+            reasons.append("verified finisher, suite UART, or test-specific PASS marker is missing")
         if run_data.get("timed_out") or run_data.get("stalled"):
             reasons.append("run timed out or stalled")
 
@@ -658,6 +850,10 @@ def _validate_entry(
                 digest = artifact.get("sha256")
                 if not artifact_path.is_file() or not isinstance(digest, str) or digest != _sha256(artifact_path):
                     reasons.append(f"run {label} SHA-256 does not match artifact")
+                elif label == "uart" and uart_pass and marker["value"] not in artifact_path.read_text(
+                    encoding="utf-8", errors="replace"
+                ):
+                    reasons.append("suite UART marker is absent from the hashed UART artifact")
                 elif label == "pc_trace" and (
                     instruction_pc is None
                     or instruction_pc not in _trace_pcs(

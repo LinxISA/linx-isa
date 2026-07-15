@@ -8,6 +8,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -24,6 +25,33 @@ def _sha256(path: Path) -> str:
 
 
 class ReportQemuExecutableCoverageTests(unittest.TestCase):
+    def test_checked_in_memory_bundle_binds_pc_to_elf_symbol_and_disassembly(self) -> None:
+        root = Path(__file__).resolve().parents[2]
+        manifest = json.loads(
+            (root / "avs/qemu/qemu_executable_coverage_manifest.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        entry = next(
+            item
+            for item in manifest["evidence"]
+            if item["form_id"] == "hl_swip_u_48_e2dc917c8505"
+        )
+        instruction = entry["instruction"]
+        binding = coverage._inspect_elf_instruction(
+            root,
+            root / entry["elf"],
+            pc=int(instruction["pc"], 0),
+            size=len(bytes.fromhex(instruction["raw_bytes_le"])),
+            symbol=instruction["symbol"],
+        )
+        self.assertEqual(binding["elf_offset"], int(instruction["elf_offset"], 0))
+        self.assertEqual(binding["raw_bytes"].hex(), instruction["raw_bytes_le"])
+        self.assertEqual(
+            coverage._normalize_disassembly(binding["disassembly"]),
+            coverage._normalize_disassembly(instruction["disassembly"]),
+        )
+
     def test_clean_gate_rejects_partial_ledgers(self) -> None:
         report = {
             "evidence": {"L2": {"form_count": 2}, "L3": {"form_count": 2}},
@@ -187,13 +215,36 @@ class ReportQemuExecutableCoverageTests(unittest.TestCase):
     ) -> dict[str, object]:
         manifest_path = root / "manifest.json"
         manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
-        return coverage.build_report(
-            repo_root=root,
-            spec_path=spec,
-            manifest_path=manifest_path,
-            current_qemu_sha=QEMU_SHA,
-            qemu_root=root / "emulator" / "qemu",
-        )
+        def inspect_fixture(
+            repo_root: Path,
+            elf_path: Path,
+            *,
+            pc: int,
+            size: int,
+            symbol: str,
+        ) -> dict[str, object]:
+            if pc != 0x10016 or symbol != "callret_tpl_fret_stk_slot_redirect":
+                raise ValueError("instruction PC is outside the claimed ELF symbol range")
+            raw = elf_path.read_bytes()[3 : 3 + size]
+            return {
+                "elf_offset": 3,
+                "raw_bytes": raw,
+                "objdump_bytes": raw,
+                "disassembly": "FRET.STK [ra ~ ra], sp!, 16",
+                "symbol_start": 0x10010,
+                "symbol_end": 0x10030,
+            }
+
+        with mock.patch.object(
+            coverage, "_inspect_elf_instruction", side_effect=inspect_fixture
+        ):
+            return coverage.build_report(
+                repo_root=root,
+                spec_path=spec,
+                manifest_path=manifest_path,
+                current_qemu_sha=QEMU_SHA,
+                qemu_root=root / "emulator" / "qemu",
+            )
 
     def _set_two_part_form(
         self,
@@ -361,6 +412,78 @@ class ReportQemuExecutableCoverageTests(unittest.TestCase):
         self.assertEqual(report["evidence"]["L3"]["form_count"], 0)
         self.assertIn("finisher", " ".join(report["rejected"][0]["reasons"]))
 
+    def test_verified_uart_suite_marker_is_admitted(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            spec, run_path, manifest, run = self._fixture(root)
+            uart = root / run["artifacts"]["uart"]["path"]
+            uart.write_text(
+                "Test 0x0000140B: PASS\nTEST SUITE COMPLETE\n",
+                encoding="utf-8",
+            )
+            run["artifacts"]["uart"]["sha256"] = _sha256(uart)
+            run["run"]["exit_code"] = 0
+            run["run"]["pass_marker"] = {
+                "kind": "uart_success_marker",
+                "value": "TEST SUITE COMPLETE",
+            }
+            run["run"]["missing_required_test_ids"] = []
+            run["run"]["missing_suite_completion_test_ids"] = []
+            run["run"]["declared_suite_completion_test_ids"] = ["0x0000140b"]
+            manifest["evidence"][0]["suite_completion_test_id"] = "0x0000140b"
+            run_path.write_text(json.dumps(run), encoding="utf-8")
+            manifest["evidence"][0]["run_evidence_sha256"] = _sha256(run_path)
+            report = self._report(root, spec, manifest)
+
+        self.assertEqual(report["evidence"]["L2"]["form_count"], 1)
+        self.assertEqual(report["evidence"]["L3"]["form_count"], 1)
+
+    def test_isolated_pass_cannot_forge_a_suite_uart_marker(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            spec, run_path, manifest, run = self._fixture(root)
+            run["run"]["exit_code"] = 0
+            run["run"]["pass_marker"] = {
+                "kind": "uart_success_marker",
+                "value": "TEST SUITE COMPLETE",
+            }
+            run_path.write_text(json.dumps(run), encoding="utf-8")
+            manifest["evidence"][0]["run_evidence_sha256"] = _sha256(run_path)
+            report = self._report(root, spec, manifest)
+
+        self.assertEqual(report["evidence"]["L2"]["form_count"], 0)
+        self.assertIn("final completion", " ".join(report["rejected"][0]["reasons"]))
+
+    def test_uart_marker_rejects_missing_final_completion_event(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            spec, run_path, manifest, run = self._fixture(root)
+            uart = root / run["artifacts"]["uart"]["path"]
+            uart.write_text(
+                "Test 0x0000140B: PASS\nTEST SUITE COMPLETE\n",
+                encoding="utf-8",
+            )
+            run["artifacts"]["uart"]["sha256"] = _sha256(uart)
+            run["run"].update(
+                {
+                    "exit_code": 0,
+                    "pass_marker": {
+                        "kind": "uart_success_marker",
+                        "value": "TEST SUITE COMPLETE",
+                    },
+                    "missing_required_test_ids": [],
+                    "missing_suite_completion_test_ids": ["0x00001412"],
+                    "declared_suite_completion_test_ids": ["0x00001412"],
+                }
+            )
+            manifest["evidence"][0]["suite_completion_test_id"] = "0x00001412"
+            run_path.write_text(json.dumps(run), encoding="utf-8")
+            manifest["evidence"][0]["run_evidence_sha256"] = _sha256(run_path)
+            report = self._report(root, spec, manifest)
+
+        self.assertEqual(report["evidence"]["L2"]["form_count"], 0)
+        self.assertIn("final completion", " ".join(report["rejected"][0]["reasons"]))
+
     def test_missing_pc_trace_rejects_form_level_evidence(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
@@ -371,6 +494,23 @@ class ReportQemuExecutableCoverageTests(unittest.TestCase):
 
         self.assertEqual(report["evidence"]["L2"]["form_count"], 0)
         self.assertIn("PC hit", " ".join(report["rejected"][0]["reasons"]))
+
+    def test_trace_hit_disconnected_from_claimed_elf_symbol_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            spec, run_path, manifest, run = self._fixture(root)
+            entry = manifest["evidence"][0]
+            entry["instruction"]["pc"] = "0x00010030"
+            run["pc_hits"] = [{"pc": "0x00010030", "elf_offset": 3, "raw_bytes_le": RAW_BYTES}]
+            trace = root / run["artifacts"]["pc_trace"]["path"]
+            trace.write_text("0x0000000000010030: unrelated\n", encoding="utf-8")
+            run["artifacts"]["pc_trace"]["sha256"] = _sha256(trace)
+            run_path.write_text(json.dumps(run), encoding="utf-8")
+            entry["run_evidence_sha256"] = _sha256(run_path)
+            report = self._report(root, spec, manifest)
+
+        self.assertEqual(report["evidence"]["L2"]["form_count"], 0)
+        self.assertIn("symbol range", " ".join(report["rejected"][0]["reasons"]))
 
     def test_claimed_pc_absent_from_hashed_trace_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as td:
