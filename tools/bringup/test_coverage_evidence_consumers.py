@@ -33,6 +33,91 @@ def _valid_l1_report() -> dict[str, object]:
 
 
 class CoverageEvidenceConsumerTests(unittest.TestCase):
+    def test_equal_size_wrong_translation_inventory_is_not_full_coverage(self) -> None:
+        covered, missing, extras = coherence._partition_translation_inventory(
+            {"ADD", "FENCE.D", "FENCE.I"},
+            {"ADD", "NCE.D", "NCE.I"},
+        )
+        self.assertEqual(covered, {"ADD"})
+        self.assertEqual(missing, {"FENCE.D", "FENCE.I"})
+        self.assertEqual(extras, {"NCE.D", "NCE.I"})
+
+    def test_checked_in_translation_reports_are_set_coherent(self) -> None:
+        root = Path(__file__).resolve().parents[2]
+        upstream = json.loads(
+            (root / "docs/bringup/gates/qemu_translation_coverage_latest.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        inventory = upstream["covered_objects_by_mnemonic"]
+        self.assertIn("FENCE.D", inventory)
+        self.assertIn("FENCE.I", inventory)
+        self.assertNotIn("NCE.D", inventory)
+        self.assertNotIn("NCE.I", inventory)
+
+        aggregate = json.loads(
+            (root / "docs/bringup/gates/isa_llvm_qemu_coverage_latest.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        translation = aggregate["qemu_translation"]
+        self.assertEqual(
+            translation["coverage_count"] + translation["missing_count"],
+            aggregate["spec_unique_mnemonics"],
+        )
+        self.assertEqual(translation["non_spec_count"], 0)
+
+    def test_current_bringup_views_match_authoritative_qemu_l1_counts(self) -> None:
+        root = Path(__file__).resolve().parents[2]
+        for relative in (
+            "docs/bringup/ALIGNMENT_MATRIX.md",
+            "docs/bringup/BENCHMARK_QEMU_LINUX_FLOW.md",
+        ):
+            with self.subTest(document=relative):
+                text = (root / relative).read_text(encoding="utf-8")
+                self.assertIn("620/711", text)
+                self.assertIn("625/747", text)
+                self.assertNotIn("618/711", text)
+                self.assertNotIn("621/747", text)
+
+    def test_checked_in_reports_publish_the_llvm_metric_contract(self) -> None:
+        root = Path(__file__).resolve().parents[2]
+        for relative in (
+            "docs/bringup/gates/isa_llvm_qemu_coverage_latest.json",
+            "docs/bringup/gates/isa_48bit_implementation_latest.json",
+        ):
+            with self.subTest(report=relative):
+                report = json.loads((root / relative).read_text(encoding="utf-8"))
+                llvm = report["llvm"]
+                self.assertEqual(
+                    llvm["claim"],
+                    "observed_disassembly_mnemonic_breadth",
+                )
+                self.assertIn("*.objdump", llvm["metric_scope"])
+                self.assertIn("C-CodeGen coverage", llvm["not_measured"])
+                compiler_out_dir = llvm.get(
+                    "compiler_out_dir",
+                    report.get("compiler_out_dir", ""),
+                )
+                self.assertNotIn("out-linx64", compiler_out_dir)
+
+    def test_aggregators_default_to_canonical_compiler_run_lane(self) -> None:
+        coherence_args = coherence._parse_args([])
+        self.assertEqual(
+            coherence_args.compiler_out_dir,
+            "avs/compiler/linx-llvm/tests/out",
+        )
+
+        report48_args = report48._parse_args([])
+        self.assertEqual(
+            report48_args.compiler_out_dir,
+            "avs/compiler/linx-llvm/tests/out",
+        )
+        self.assertEqual(
+            report48_args.compiler_roundtrip_json,
+            "avs/compiler/linx-llvm/tests/out/99_spec_decode/99_spec_decode.roundtrip.json",
+        )
+
     def test_consumers_require_explicit_l1_claim(self) -> None:
         valid = _valid_l1_report()
         self.assertIsNone(coherence._validate_qemu_l1_report(valid))
@@ -60,7 +145,11 @@ class CoverageEvidenceConsumerTests(unittest.TestCase):
                     "qemu_evidence": _valid_l1_report()["evidence"],
                     "llvm": {"coverage_count": 1, "coverage_ratio_percent": 100.0},
                     "qemu_l1_mapping": {"coverage_count": 1, "coverage_ratio_percent": 100.0},
-                    "qemu_translation": {"coverage_count": 1, "coverage_ratio_percent": 100.0},
+                    "qemu_translation": {
+                        "coverage_count": 1,
+                        "coverage_ratio_percent": 100.0,
+                        "non_spec_count": 0,
+                    },
                     "inconsistencies": {
                         "compiler_only_vs_qemu_l1_mapping_count": 0,
                         "qemu_l1_mapping_only_vs_translation_count": 0,
@@ -77,7 +166,10 @@ class CoverageEvidenceConsumerTests(unittest.TestCase):
             )
             text = coherence_path.read_text(encoding="utf-8")
             self.assertIn("QEMU L1 decoder/source mapping", text)
+            self.assertIn("LLVM observed disassembly mnemonic breadth", text)
+            self.assertIn("does not measure C-CodeGen or form-level coverage", text)
             self.assertIn("does not claim runtime or semantic completeness", text)
+            self.assertNotIn("LLVM compiled coverage", text)
             self.assertNotIn("mapped implementation", text.lower())
 
             report48_path = root / "48bit.md"
@@ -107,6 +199,8 @@ class CoverageEvidenceConsumerTests(unittest.TestCase):
             )
             text48 = report48_path.read_text(encoding="utf-8")
             self.assertIn("QEMU L1 mapped forms", text48)
+            self.assertIn("LLVM observed disassembly mnemonic breadth", text48)
+            self.assertIn("does not measure C-CodeGen coverage", text48)
             self.assertIn("does not claim runtime or semantic completeness", text48)
 
     def test_canonical_gate_uses_l1_wording(self) -> None:

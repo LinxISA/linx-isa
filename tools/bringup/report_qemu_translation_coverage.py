@@ -46,11 +46,24 @@ def canonicalize_mnemonic(mnemonic: str) -> str:
     s = s.rstrip(",")
     s = re.sub(r"\{[^}]*\}$", "", s)
     s = s.rstrip(",")
+    # Keep the glued-byte workaround narrow.  A generic "two hex chars"
+    # rule corrupts real mnemonics such as FENCE.D into NCE.D.
     m = re.match(r"^[0-9a-fA-F]{2}([A-Za-z].*)$", s)
     if m:
         candidate = m.group(1)
-        if "." in candidate or candidate.startswith(
-            ("BSTART", "BSTOP", "FENTRY", "FEXIT", "FRET")
+        if candidate.startswith(
+            (
+                "BSTART",
+                "BSTOP",
+                "C.BSTART",
+                "C.BSTOP",
+                "FENTRY",
+                "FEXIT",
+                "FRET",
+                "HL.",
+                "L.BSTART",
+                "L.BSTOP",
+            )
         ):
             s = candidate
     s = s.upper()

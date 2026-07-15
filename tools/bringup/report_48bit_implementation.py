@@ -60,12 +60,16 @@ def _render_markdown(report: dict[str, object], out_path: Path) -> None:
     lines.append(
         f"- L3 semantic oracle: `{report['qemu_evidence']['L3']['availability']}`"
     )
+    lines.append(
+        "- LLVM mnemonic evidence is observed disassembly mnemonic breadth; "
+        "it does not measure C-CodeGen coverage."
+    )
     lines.append("- This report does not claim runtime or semantic completeness.")
     lines.append("")
     lines.append("| Surface | Covered | Ratio |")
     lines.append("| --- | --- | --- |")
     lines.append(
-        f"| LLVM mnemonic coverage | `{report['llvm']['mnemonic_coverage_count']}/{report['spec']['mnemonic_count']}` | `{report['llvm']['mnemonic_coverage_ratio_percent']}%` |"
+        f"| LLVM observed disassembly mnemonic breadth (48-bit subset) | `{report['llvm']['mnemonic_coverage_count']}/{report['spec']['mnemonic_count']}` | `{report['llvm']['mnemonic_coverage_ratio_percent']}%` |"
     )
     lines.append(
         f"| LLVM roundtrip-stable forms | `{report['llvm']['roundtrip_stable_form_count']}/{report['spec']['form_count']}` | `{report['llvm']['roundtrip_stable_ratio_percent']}%` |"
@@ -116,7 +120,7 @@ def _render_markdown(report: dict[str, object], out_path: Path) -> None:
 _MISSING_FORM_RE = re.compile(r"^(?P<mnemonic>.+?) \[len=(?P<len>\d+) ")
 
 
-def main(argv: list[str]) -> int:
+def _parse_args(argv: list[str]) -> argparse.Namespace:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--spec", default="isa/v0.56/linxisa-v0.56.json")
     ap.add_argument(
@@ -125,11 +129,11 @@ def main(argv: list[str]) -> int:
     )
     ap.add_argument(
         "--compiler-out-dir",
-        default="avs/compiler/linx-llvm/tests/out-linx64",
+        default="avs/compiler/linx-llvm/tests/out",
     )
     ap.add_argument(
         "--compiler-roundtrip-json",
-        default="avs/compiler/linx-llvm/tests/out-linx64/99_spec_decode/99_spec_decode.roundtrip.json",
+        default="avs/compiler/linx-llvm/tests/out/99_spec_decode/99_spec_decode.roundtrip.json",
     )
     ap.add_argument(
         "--qemu-isa-report",
@@ -142,7 +146,11 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--report-out", default="")
     ap.add_argument("--out-md", default="")
     ap.add_argument("--require-full", action="store_true")
-    args = ap.parse_args(argv)
+    return ap.parse_args(argv)
+
+
+def main(argv: list[str]) -> int:
+    args = _parse_args(argv)
 
     spec_path = Path(args.spec).resolve()
     analyzer_path = Path(args.compiler_analyzer).resolve()
@@ -249,6 +257,9 @@ def main(argv: list[str]) -> int:
             "mnemonic_count": mnemonic_count,
         },
         "llvm": {
+            "claim": llvm_results["metric"],
+            "metric_scope": llvm_results["metric_scope"],
+            "not_measured": llvm_results["not_measured"],
             "compiler_analyzer": str(analyzer_path),
             "compiler_out_dir": str(compiler_out_dir),
             "roundtrip_report": str(roundtrip_path),

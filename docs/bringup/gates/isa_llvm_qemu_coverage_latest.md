@@ -1,17 +1,20 @@
 # ISA-LLVM-QEMU L1 Mapping Coherence
 
-- Generated (UTC): `2026-07-15 16:03:16Z`
+- Generated (UTC): `2026-07-15 20:12:13Z`
 - Spec unique mnemonics: `711`
 - QEMU evidence: `L1 decoder_source_mapping`
 - L2 runtime execution: `unavailable`
 - L3 semantic oracle: `unavailable`
+- LLVM evidence is observed disassembly mnemonic breadth; it does not measure C-CodeGen or form-level coverage.
 - This report does not claim runtime or semantic completeness.
 
 | Surface | Covered | Ratio |
 | --- | --- | --- |
-| LLVM compiled coverage | `708/711` | `99.58%` |
+| LLVM observed disassembly mnemonic breadth | `711/711` | `100.0%` |
 | QEMU L1 decoder/source mapping | `620/711` | `87.2%` |
 | QEMU AVS translation inventory | `711/711` | `100.0%` |
+
+- Non-spec translation inventory tokens: `0`
 
 ## Inconsistency Summary
 

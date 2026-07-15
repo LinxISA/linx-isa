@@ -2,6 +2,342 @@
   "coverage_count": 711,
   "coverage_ratio_percent": 100.0,
   "covered_by_object": {
+    "01_arithmetic.o": [
+      "C.BSTART",
+      "C.BSTART.STD",
+      "C.MOVI",
+      "C.SWI",
+      "FENTRY",
+      "FRET.STK",
+      "LUI",
+      "LWI"
+    ],
+    "02_bitwise.o": [
+      "FENTRY",
+      "FRET.STK"
+    ],
+    "03_loadstore.o": [
+      "ADDI",
+      "ADDTPC",
+      "ADDW",
+      "ANDI",
+      "ANDIW",
+      "BSTART",
+      "BSTART.CALL",
+      "BSTART.STD",
+      "BSTOP",
+      "C.ADDI",
+      "C.AND",
+      "C.BSTART",
+      "C.BSTART.STD",
+      "C.BSTOP",
+      "C.MOVI",
+      "C.MOVR",
+      "C.OR",
+      "C.SDI",
+      "C.SETC.EQ",
+      "C.SETC.NE",
+      "C.SEXT.W",
+      "C.SWI",
+      "C.ZEXT.W",
+      "FENTRY",
+      "FRET.STK",
+      "HL.LD.PCR",
+      "HL.LDIP",
+      "HL.LUI",
+      "HL.LW.PCR",
+      "HL.LWUI.PO",
+      "HL.LWUI.PR",
+      "HL.LWUI.UPO",
+      "HL.LWUI.UPR",
+      "HL.LWUIP",
+      "HL.SDIP",
+      "HL.SW.PCR",
+      "HL.SWI.PO",
+      "HL.SWI.PR",
+      "HL.SWI.UPO",
+      "HL.SWI.UPR",
+      "HL.SWIP",
+      "HL.SWIP.U",
+      "LBU",
+      "LBUI",
+      "LDI",
+      "LUI",
+      "OR",
+      "PRF",
+      "PRFI.U",
+      "SDI",
+      "SLL",
+      "SRL",
+      "SRLI",
+      "SRLIW",
+      "SWI"
+    ],
+    "04_branch.o": [
+      "ADDI",
+      "ADDIW",
+      "ADDTPC",
+      "AND",
+      "ANDI",
+      "ANDIW",
+      "B.CATR",
+      "BSTART",
+      "BSTART.CALL",
+      "BSTART.STD",
+      "BSTART.SYS",
+      "BSTOP",
+      "C.ADDI",
+      "C.BSTART",
+      "C.BSTART.STD",
+      "C.BSTOP",
+      "C.LDI",
+      "C.LWI",
+      "C.MOVI",
+      "C.MOVR",
+      "C.SDI",
+      "C.SETC.EQ",
+      "C.SETC.NE",
+      "C.SEXT.W",
+      "C.SWI",
+      "C.ZEXT.W",
+      "FENTRY",
+      "FRET.STK",
+      "HL.LD.PCR",
+      "HL.LUI",
+      "HL.SD.PCR",
+      "LBU",
+      "LBUI",
+      "LDI",
+      "LUI",
+      "OR",
+      "ORI",
+      "SDI",
+      "SETC.EQI",
+      "SETC.NEI",
+      "SLL",
+      "SRL",
+      "SRLI",
+      "SRLIW",
+      "SWI"
+    ],
+    "05_move.o": [
+      "ADDI",
+      "ADDIW",
+      "ADDTPC",
+      "ANDI",
+      "ANDIW",
+      "BSTART",
+      "BSTART.CALL",
+      "BSTART.STD",
+      "BSTOP",
+      "C.ADDI",
+      "C.BSTART",
+      "C.BSTART.STD",
+      "C.BSTOP",
+      "C.MOVI",
+      "C.MOVR",
+      "C.SETC.EQ",
+      "C.SETC.NE",
+      "C.SEXT.W",
+      "C.SWI",
+      "C.ZEXT.W",
+      "CSEL",
+      "FENTRY",
+      "FRET.STK",
+      "HL.LUI",
+      "LBU",
+      "LBUI",
+      "LUI",
+      "OR",
+      "SDI",
+      "SLL",
+      "SRL",
+      "SRLI",
+      "SWI"
+    ],
+    "06_floating_point.o": [
+      "ADDI",
+      "ADDIW",
+      "ADDTPC",
+      "ADDW",
+      "AND",
+      "ANDI",
+      "ANDIW",
+      "BSTART",
+      "BSTART.CALL",
+      "BSTART.STD",
+      "BSTOP",
+      "C.ADDI",
+      "C.AND",
+      "C.BSTART",
+      "C.BSTART.STD",
+      "C.BSTOP",
+      "C.LDI",
+      "C.MOVI",
+      "C.MOVR",
+      "C.OR",
+      "C.SDI",
+      "C.SETC.EQ",
+      "C.SETC.NE",
+      "C.SEXT.W",
+      "C.SWI",
+      "C.ZEXT.W",
+      "CSEL",
+      "FENTRY",
+      "FEQ",
+      "FGE",
+      "FLT",
+      "FRET.STK",
+      "HL.BSTART.CALL",
+      "HL.BSTART.STD",
+      "HL.LD.PCR",
+      "HL.LUI",
+      "LBU",
+      "LBUI",
+      "LDI",
+      "LUI",
+      "OR",
+      "SDI",
+      "SLL",
+      "SRL",
+      "SRLI",
+      "SRLIW",
+      "SWI",
+      "XORI"
+    ],
+    "07_atomic.o": [
+      "ADDI",
+      "ADDIW",
+      "ADDTPC",
+      "ADDW",
+      "ANDI",
+      "ANDIW",
+      "BSTART",
+      "BSTART.CALL",
+      "BSTART.STD",
+      "BSTOP",
+      "BXU",
+      "C.ADD",
+      "C.ADDI",
+      "C.AND",
+      "C.BSTART",
+      "C.BSTART.STD",
+      "C.BSTOP",
+      "C.MOVI",
+      "C.MOVR",
+      "C.OR",
+      "C.SETC.EQ",
+      "C.SETC.NE",
+      "C.SEXT.W",
+      "C.SWI",
+      "C.ZEXT.W",
+      "FENTRY",
+      "FRET.STK",
+      "HL.LBU.PCR",
+      "HL.LD.PCR",
+      "HL.LUI",
+      "HL.LW.PCR",
+      "HL.LWU.PCR",
+      "HL.SB.PCR",
+      "HL.SD.PCR",
+      "HL.SW.PCR",
+      "LBU",
+      "LBUI",
+      "LUI",
+      "OR",
+      "ORIW",
+      "SDI",
+      "SETC.GEUI",
+      "SETC.LTU",
+      "SETC.NEI",
+      "SLL",
+      "SRL",
+      "SRLI",
+      "SRLIW",
+      "SUBIW",
+      "SWI",
+      "XORIW"
+    ],
+    "08_jumptable.o": [
+      "ADDI",
+      "ADDIW",
+      "ADDTPC",
+      "ADDW",
+      "ANDI",
+      "ANDIW",
+      "BSTART",
+      "BSTART.CALL",
+      "BSTART.STD",
+      "BSTOP",
+      "C.ADDI",
+      "C.BSTART",
+      "C.BSTART.STD",
+      "C.BSTOP",
+      "C.MOVI",
+      "C.MOVR",
+      "C.SETC.EQ",
+      "C.SETC.NE",
+      "C.SEXT.W",
+      "C.SWI",
+      "C.ZEXT.W",
+      "FENTRY",
+      "FRET.STK",
+      "HL.LUI",
+      "LBU",
+      "LBUI",
+      "LUI",
+      "LW",
+      "OR",
+      "SDI",
+      "SETC.GEUI",
+      "SLL",
+      "SLLI",
+      "SRL",
+      "SRLI",
+      "SWI"
+    ],
+    "09_varargs.o": [
+      "ADDI",
+      "ADDIW",
+      "ADDTPC",
+      "ADDW",
+      "ANDI",
+      "ANDIW",
+      "BSTART",
+      "BSTART.CALL",
+      "BSTART.STD",
+      "BSTOP",
+      "C.ADDI",
+      "C.BSTART",
+      "C.BSTART.STD",
+      "C.BSTOP",
+      "C.LDI",
+      "C.LWI",
+      "C.MOVI",
+      "C.MOVR",
+      "C.SDI",
+      "C.SETC.EQ",
+      "C.SETC.NE",
+      "C.SEXT.W",
+      "C.SWI",
+      "C.ZEXT.W",
+      "FENTRY",
+      "FRET.STK",
+      "HL.LDI.UPO",
+      "HL.LUI",
+      "HL.LWI.UPO",
+      "LBU",
+      "LBUI",
+      "LUI",
+      "OR",
+      "ORI",
+      "SDI",
+      "SLL",
+      "SRL",
+      "SRLI",
+      "SUBI",
+      "SWI"
+    ],
     "11_system.o": [
       "ACRC",
       "ACRE",
@@ -64,6 +400,245 @@
       "SSRGET",
       "SSRSET",
       "SSRSWAP",
+      "SWI"
+    ],
+    "12_v03_vector_tile.o": [
+      "ADDI",
+      "ADDIW",
+      "ADDTPC",
+      "ADDW",
+      "ANDI",
+      "ANDIW",
+      "B.IOR",
+      "B.NE",
+      "B.NZ",
+      "B.TEXT",
+      "B.Z",
+      "BSTART",
+      "BSTART.CALL",
+      "BSTART.MPAR",
+      "BSTART.MSEQ",
+      "BSTART.STD",
+      "BSTART.TEPL",
+      "BSTART.VPAR",
+      "BSTART.VSEQ",
+      "BSTOP",
+      "C.ADD",
+      "C.ADDI",
+      "C.AND",
+      "C.B.DIMI",
+      "C.BSTART",
+      "C.BSTART.MPAR",
+      "C.BSTART.MSEQ",
+      "C.BSTART.STD",
+      "C.BSTOP",
+      "C.MOVI",
+      "C.MOVR",
+      "C.SETC.EQ",
+      "C.SETC.NE",
+      "C.SETC.TGT",
+      "C.SEXT.W",
+      "C.SWI",
+      "C.ZEXT.W",
+      "FENTRY",
+      "FRET.STK",
+      "HL.BSTART.CALL",
+      "HL.BSTART.STD",
+      "HL.LUI",
+      "HL.LW.PCR",
+      "HL.SW.PCR",
+      "J",
+      "LB",
+      "LBU",
+      "LBUI",
+      "LUI",
+      "LW",
+      "LWUI",
+      "OR",
+      "SDI",
+      "SETC.NEI",
+      "SLL",
+      "SRL",
+      "SRLI",
+      "SRLIW",
+      "SWI",
+      "UCVTF",
+      "V.ADD",
+      "V.CMP.EQ",
+      "V.CMP.LTU",
+      "V.CMP.LTUI",
+      "V.FADD",
+      "V.FMUL",
+      "V.LW.BRG",
+      "V.RDOR",
+      "V.SW",
+      "V.SW.BRG"
+    ],
+    "13_v03_vector_ops_matrix.o": [
+      "ADDI",
+      "ADDIW",
+      "ADDTPC",
+      "ADDW",
+      "ANDI",
+      "ANDIW",
+      "B.IOR",
+      "B.TEXT",
+      "BSTART",
+      "BSTART.CALL",
+      "BSTART.MSEQ",
+      "BSTART.STD",
+      "BSTART.TEPL",
+      "BSTOP",
+      "C.ADD",
+      "C.ADDI",
+      "C.B.DIMI",
+      "C.BSTART",
+      "C.BSTART.MSEQ",
+      "C.BSTART.STD",
+      "C.BSTOP",
+      "C.MOVI",
+      "C.MOVR",
+      "C.SETC.EQ",
+      "C.SETC.NE",
+      "C.SETC.TGT",
+      "C.SEXT.W",
+      "C.SWI",
+      "C.ZEXT.W",
+      "CMP.LTUI",
+      "FENTRY",
+      "FRET.STK",
+      "HL.BSTART.CALL",
+      "HL.BSTART.STD",
+      "HL.LUI",
+      "LB",
+      "LBU",
+      "LBUI",
+      "LUI",
+      "LW",
+      "LWI",
+      "OR",
+      "SDI",
+      "SLL",
+      "SRL",
+      "SRLI",
+      "SUBIW",
+      "SUBW",
+      "SWI",
+      "UCVTF",
+      "V.ADD",
+      "V.CMP.LT",
+      "V.FADD",
+      "V.FMUL",
+      "V.LW.BRG",
+      "V.SUB",
+      "V.SW.BRG"
+    ],
+    "14_callret.o": [
+      "ADDI",
+      "ADDIW",
+      "ADDTPC",
+      "ANDI",
+      "ANDIW",
+      "BSTART",
+      "BSTART.CALL",
+      "BSTART.STD",
+      "BSTOP",
+      "C.ADD",
+      "C.ADDI",
+      "C.BSTART",
+      "C.BSTART.STD",
+      "C.BSTOP",
+      "C.MOVI",
+      "C.MOVR",
+      "C.OR",
+      "C.SETC.EQ",
+      "C.SETC.NE",
+      "C.SETC.TGT",
+      "C.SETRET",
+      "C.SEXT.W",
+      "C.SWI",
+      "C.ZEXT.W",
+      "CMP.LTU",
+      "FENTRY",
+      "FEXIT",
+      "FRET.STK",
+      "HL.BSTART.CALL",
+      "HL.BSTART.STD",
+      "HL.LD.PCR",
+      "HL.LUI",
+      "HL.SD.PCR",
+      "LBU",
+      "LBUI",
+      "LD",
+      "LDI",
+      "LUI",
+      "MADD",
+      "MUL",
+      "OR",
+      "SDI",
+      "SETC.EQI",
+      "SLL",
+      "SLLI",
+      "SRL",
+      "SRLI",
+      "SUB",
+      "SWI"
+    ],
+    "14_callret_templates.o": [
+      "ADDI",
+      "ADDTPC",
+      "C.BSTART",
+      "C.BSTART.STD",
+      "C.BSTOP",
+      "C.MOVR",
+      "C.SETC.TGT",
+      "FENTRY",
+      "FRET.RA",
+      "FRET.STK",
+      "J",
+      "SDI",
+      "SETC.EQ"
+    ],
+    "21_freestanding_runtime.o": [
+      "ADDI",
+      "ADDIW",
+      "ADDTPC",
+      "ADDW",
+      "ANDI",
+      "ANDIW",
+      "BSTART",
+      "BSTART.CALL",
+      "BSTART.STD",
+      "BSTOP",
+      "C.ADDI",
+      "C.BSTART",
+      "C.BSTART.STD",
+      "C.BSTOP",
+      "C.LDI",
+      "C.MOVI",
+      "C.MOVR",
+      "C.SETC.EQ",
+      "C.SETC.NE",
+      "C.SEXT.W",
+      "C.SWI",
+      "C.ZEXT.W",
+      "FENTRY",
+      "FRET.STK",
+      "HL.BSTART.CALL",
+      "HL.BSTART.STD",
+      "HL.LUI",
+      "LBU",
+      "LBUI",
+      "LDI",
+      "LUI",
+      "MUL",
+      "OR",
+      "SDI",
+      "SETC.GEU",
+      "SETC.LTU",
+      "SLL",
+      "SRL",
+      "SRLI",
       "SWI"
     ],
     "41_v056_isa_forms.o": [
@@ -239,6 +814,8 @@
       "FCVTP",
       "FCVTZ",
       "FDIV",
+      "FENCE.D",
+      "FENCE.I",
       "FENTRY",
       "FEQ",
       "FEQS",
@@ -523,8 +1100,6 @@
       "MULU",
       "MULUW",
       "MULW",
-      "NCE.D",
-      "NCE.I",
       "OR",
       "ORI",
       "ORIW",
@@ -825,6 +1400,59 @@
       "HL.BSTART.STD",
       "LUI"
     ],
+    "math.o": [
+      "ADDI",
+      "ADDIW",
+      "ADDTPC",
+      "ADDW",
+      "AND",
+      "ANDI",
+      "C.AND",
+      "C.BSTART",
+      "C.BSTART.STD",
+      "C.CMP.EQI",
+      "C.LDI",
+      "C.MOVI",
+      "C.MOVR",
+      "C.OR",
+      "C.SDI",
+      "C.SETC.EQ",
+      "C.SETC.NE",
+      "C.SEXT.W",
+      "C.ZEXT.W",
+      "CMP.GEI",
+      "CSEL",
+      "FCVT",
+      "FCVTZ",
+      "FENTRY",
+      "FEQ",
+      "FGE",
+      "FLT",
+      "FRET.STK",
+      "HL.BSTART.CALL",
+      "HL.BSTART.STD",
+      "HL.LD.PCR",
+      "HL.LUI",
+      "HL.LWU.PCR",
+      "HL.SDIP",
+      "LD",
+      "LDI",
+      "OR",
+      "SCVTF",
+      "SDI",
+      "SETC.EQI",
+      "SETC.GEI",
+      "SETC.LT",
+      "SETC.LTI",
+      "SETC.LTU",
+      "SLL",
+      "SRL",
+      "SUBIW",
+      "UCVTF",
+      "XOR",
+      "XORI",
+      "XORIW"
+    ],
     "mem.o": [
       "ADDI",
       "ADDW",
@@ -852,6 +1480,168 @@
       "SETC.LTU",
       "SETC.LTUI",
       "SUBW"
+    ],
+    "softfp.o": [
+      "ADDI",
+      "ADDIW",
+      "ADDW",
+      "AND",
+      "ANDI",
+      "ANDIW",
+      "ANDW",
+      "BSTART",
+      "BSTART.CALL",
+      "BSTART.STD",
+      "C.ADD",
+      "C.ADDI",
+      "C.AND",
+      "C.BSTART",
+      "C.BSTART.STD",
+      "C.CMP.EQI",
+      "C.CMP.NEI",
+      "C.LDI",
+      "C.LWI",
+      "C.MOVI",
+      "C.MOVR",
+      "C.OR",
+      "C.SDI",
+      "C.SETC.EQ",
+      "C.SETC.NE",
+      "C.SEXT.W",
+      "C.SUB",
+      "C.SWI",
+      "CMP.AND",
+      "CMP.EQI",
+      "CMP.LT",
+      "CMP.LTU",
+      "CMP.NEI",
+      "CSEL",
+      "DIVU",
+      "FENTRY",
+      "FRET.STK",
+      "HL.BSTART.CALL",
+      "HL.BSTART.STD",
+      "HL.CMP.ANDI",
+      "HL.LUI",
+      "LBUI",
+      "LDI",
+      "LHUI",
+      "LUI",
+      "LWI",
+      "LWUI",
+      "MUL",
+      "OR",
+      "ORI",
+      "ORIW",
+      "ORW",
+      "REMU",
+      "SDI",
+      "SETC.EQI",
+      "SETC.GE",
+      "SETC.LT",
+      "SETC.LTI",
+      "SETC.LTU",
+      "SETC.NEI",
+      "SLL",
+      "SLLI",
+      "SLLIW",
+      "SLLW",
+      "SRL",
+      "SRLI",
+      "SRLIW",
+      "SRLW",
+      "SUBIW",
+      "SUBW",
+      "SWI",
+      "XOR",
+      "XORW"
+    ],
+    "stdlib.o": [
+      "ADDI",
+      "ADDTPC",
+      "ADDW",
+      "AND",
+      "ANDI",
+      "BCNT",
+      "C.ADD",
+      "C.BSTART",
+      "C.BSTART.STD",
+      "C.BSTOP",
+      "C.MOVI",
+      "C.MOVR",
+      "C.SETC.EQ",
+      "C.SETC.NE",
+      "C.SETC.TGT",
+      "C.SETRET",
+      "C.SEXT.W",
+      "C.SUB",
+      "CMP.LTU",
+      "CSEL",
+      "FENTRY",
+      "FRET.STK",
+      "HL.BSTART.CALL",
+      "HL.BSTART.STD",
+      "HL.LD.PCR",
+      "HL.LUI",
+      "HL.LW.PCR",
+      "HL.SD.PCR",
+      "HL.SW.PCR",
+      "LD",
+      "LDI",
+      "LUI",
+      "SDI",
+      "SETC.GEU",
+      "SETC.GEUI",
+      "SETC.LT",
+      "SETC.LTI",
+      "SETC.LTU",
+      "SETC.LTUI",
+      "SLL",
+      "SLLI",
+      "SRL",
+      "SUB"
+    ],
+    "syscall.o": [
+      "ADDI",
+      "ADDIW",
+      "ADDW",
+      "BXU",
+      "C.ADD",
+      "C.ADDI",
+      "C.BSTART",
+      "C.BSTART.STD",
+      "C.BSTOP",
+      "C.MOVI",
+      "C.MOVR",
+      "C.SDI",
+      "C.SETC.EQ",
+      "C.SETC.NE",
+      "C.SEXT.W",
+      "C.SUB",
+      "CMP.EQI",
+      "CMP.LTU",
+      "CSEL",
+      "FENTRY",
+      "FRET.STK",
+      "HL.LUI",
+      "HL.SW.PCR",
+      "LB",
+      "LBUI",
+      "LUI",
+      "MUL",
+      "OR",
+      "ORW",
+      "SBI",
+      "SDI",
+      "SETC.EQI",
+      "SETC.GEU",
+      "SETC.LTU",
+      "SLL",
+      "SLLIW",
+      "SRL",
+      "SRLI",
+      "SSRGET",
+      "SWI"
     ]
   },
   "covered_by_prefix": {
@@ -903,6 +1693,7 @@
     "FCVTP": 1,
     "FCVTZ": 1,
     "FDIV": 1,
+    "FENCE": 2,
     "FENTRY": 1,
     "FEQ": 1,
     "FEQS": 1,
@@ -960,7 +1751,6 @@
     "MULU": 1,
     "MULUW": 1,
     "MULW": 1,
-    "NCE": 2,
     "OR": 1,
     "ORI": 1,
     "ORIW": 1,
@@ -1029,38 +1819,125 @@
       "99_spec_decode_qemu.o"
     ],
     "ADDI": [
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "14_callret_templates.o",
+      "21_freestanding_runtime.o",
       "99_spec_decode_qemu.o",
       "main.o",
-      "mem.o"
+      "math.o",
+      "mem.o",
+      "softfp.o",
+      "stdlib.o",
+      "syscall.o"
     ],
     "ADDIW": [
-      "99_spec_decode_qemu.o"
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "21_freestanding_runtime.o",
+      "99_spec_decode_qemu.o",
+      "math.o",
+      "softfp.o",
+      "syscall.o"
     ],
     "ADDTPC": [
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
-      "99_spec_decode_qemu.o"
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "14_callret_templates.o",
+      "21_freestanding_runtime.o",
+      "99_spec_decode_qemu.o",
+      "math.o",
+      "stdlib.o"
     ],
     "ADDW": [
+      "03_loadstore.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "21_freestanding_runtime.o",
       "99_spec_decode_qemu.o",
-      "mem.o"
+      "math.o",
+      "mem.o",
+      "softfp.o",
+      "stdlib.o",
+      "syscall.o"
     ],
     "AND": [
-      "11_system.o",
-      "99_spec_decode_qemu.o"
-    ],
-    "ANDI": [
+      "04_branch.o",
+      "06_floating_point.o",
       "11_system.o",
       "99_spec_decode_qemu.o",
-      "mem.o"
+      "math.o",
+      "softfp.o",
+      "stdlib.o"
+    ],
+    "ANDI": [
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
+      "11_system.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "21_freestanding_runtime.o",
+      "99_spec_decode_qemu.o",
+      "math.o",
+      "mem.o",
+      "softfp.o",
+      "stdlib.o"
     ],
     "ANDIW": [
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
-      "99_spec_decode_qemu.o"
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "21_freestanding_runtime.o",
+      "99_spec_decode_qemu.o",
+      "softfp.o"
     ],
     "ANDW": [
-      "99_spec_decode_qemu.o"
+      "99_spec_decode_qemu.o",
+      "softfp.o"
     ],
     "ASSERT": [
       "99_spec_decode_qemu.o"
@@ -1070,6 +1947,7 @@
       "99_spec_decode_qemu.o"
     ],
     "B.CATR": [
+      "04_branch.o",
       "99_spec_decode_qemu.o"
     ],
     "B.DATR": [
@@ -1093,6 +1971,8 @@
     ],
     "B.IOR": [
       "11_system.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
       "41_v056_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
@@ -1106,16 +1986,21 @@
       "99_spec_decode_qemu.o"
     ],
     "B.NE": [
+      "12_v03_vector_tile.o",
       "99_spec_decode_qemu.o"
     ],
     "B.NZ": [
+      "12_v03_vector_tile.o",
       "99_spec_decode_qemu.o"
     ],
     "B.TEXT": [
       "11_system.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
       "99_spec_decode_qemu.o"
     ],
     "B.Z": [
+      "12_v03_vector_tile.o",
       "99_spec_decode_qemu.o"
     ],
     "BC.IALL": [
@@ -1125,7 +2010,8 @@
       "99_spec_decode_qemu.o"
     ],
     "BCNT": [
-      "99_spec_decode_qemu.o"
+      "99_spec_decode_qemu.o",
+      "stdlib.o"
     ],
     "BIC": [
       "99_spec_decode_qemu.o"
@@ -1137,17 +2023,41 @@
       "99_spec_decode_qemu.o"
     ],
     "BSTART": [
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "21_freestanding_runtime.o",
       "99_spec_decode_qemu.o",
-      "main.o"
+      "main.o",
+      "softfp.o"
     ],
     "BSTART.ACCCVT": [
       "41_v056_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "BSTART.CALL": [
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
-      "99_spec_decode_qemu.o"
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "21_freestanding_runtime.o",
+      "99_spec_decode_qemu.o",
+      "softfp.o"
     ],
     "BSTART.CUBE": [
       "41_v056_isa_forms.o",
@@ -1161,24 +2071,42 @@
       "99_spec_decode_qemu.o"
     ],
     "BSTART.MPAR": [
+      "12_v03_vector_tile.o",
       "41_v056_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "BSTART.MSEQ": [
       "11_system.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
       "41_v056_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "BSTART.STD": [
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "21_freestanding_runtime.o",
       "99_spec_decode_qemu.o",
-      "main.o"
+      "main.o",
+      "softfp.o"
     ],
     "BSTART.SYS": [
+      "04_branch.o",
       "99_spec_decode_qemu.o"
     ],
     "BSTART.TEPL": [
       "11_system.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
       "41_v056_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
@@ -1206,15 +2134,28 @@
       "99_spec_decode_qemu.o"
     ],
     "BSTART.VPAR": [
+      "12_v03_vector_tile.o",
       "41_v056_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "BSTART.VSEQ": [
+      "12_v03_vector_tile.o",
       "41_v056_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "BSTOP": [
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "21_freestanding_runtime.o",
       "41_v056_isa_forms.o",
       "99_spec_decode_qemu.o",
       "main.o"
@@ -1232,50 +2173,117 @@
       "99_spec_decode_qemu.o"
     ],
     "BXU": [
-      "99_spec_decode_qemu.o"
+      "07_atomic.o",
+      "99_spec_decode_qemu.o",
+      "syscall.o"
     ],
     "C.ADD": [
+      "07_atomic.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
       "99_spec_decode_qemu.o",
-      "mem.o"
+      "mem.o",
+      "softfp.o",
+      "stdlib.o",
+      "syscall.o"
     ],
     "C.ADDI": [
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
-      "99_spec_decode_qemu.o"
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "21_freestanding_runtime.o",
+      "99_spec_decode_qemu.o",
+      "softfp.o",
+      "syscall.o"
     ],
     "C.AND": [
+      "03_loadstore.o",
+      "06_floating_point.o",
+      "07_atomic.o",
       "11_system.o",
-      "99_spec_decode_qemu.o"
+      "12_v03_vector_tile.o",
+      "99_spec_decode_qemu.o",
+      "math.o",
+      "softfp.o"
     ],
     "C.B.DIM": [
       "99_spec_decode_qemu.o"
     ],
     "C.B.DIMI": [
       "11_system.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
       "99_spec_decode_qemu.o"
     ],
     "C.BSTART": [
+      "01_arithmetic.o",
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "14_callret_templates.o",
+      "21_freestanding_runtime.o",
       "99_spec_decode_qemu.o",
       "main.o",
-      "mem.o"
+      "math.o",
+      "mem.o",
+      "softfp.o",
+      "stdlib.o",
+      "syscall.o"
     ],
     "C.BSTART.FP": [
       "99_spec_decode_qemu.o"
     ],
     "C.BSTART.MPAR": [
+      "12_v03_vector_tile.o",
       "41_v056_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "C.BSTART.MSEQ": [
       "11_system.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
       "41_v056_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "C.BSTART.STD": [
+      "01_arithmetic.o",
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "14_callret_templates.o",
+      "21_freestanding_runtime.o",
       "99_spec_decode_qemu.o",
       "main.o",
-      "mem.o"
+      "math.o",
+      "mem.o",
+      "softfp.o",
+      "stdlib.o",
+      "syscall.o"
     ],
     "C.BSTART.SYS": [
       "41_v056_isa_forms.o",
@@ -1290,61 +2298,169 @@
       "99_spec_decode_qemu.o"
     ],
     "C.BSTOP": [
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "14_callret_templates.o",
+      "21_freestanding_runtime.o",
       "41_v056_isa_forms.o",
       "99_spec_decode_qemu.o",
       "main.o",
-      "mem.o"
+      "mem.o",
+      "stdlib.o",
+      "syscall.o"
     ],
     "C.CMP.EQI": [
-      "99_spec_decode_qemu.o"
+      "99_spec_decode_qemu.o",
+      "math.o",
+      "softfp.o"
     ],
     "C.CMP.NEI": [
-      "99_spec_decode_qemu.o"
+      "99_spec_decode_qemu.o",
+      "softfp.o"
     ],
     "C.EBREAK": [
       "99_spec_decode_qemu.o"
     ],
     "C.LDI": [
-      "99_spec_decode_qemu.o"
+      "04_branch.o",
+      "06_floating_point.o",
+      "09_varargs.o",
+      "21_freestanding_runtime.o",
+      "99_spec_decode_qemu.o",
+      "math.o",
+      "softfp.o"
     ],
     "C.LWI": [
+      "04_branch.o",
+      "09_varargs.o",
       "11_system.o",
       "99_spec_decode_qemu.o",
-      "mem.o"
+      "mem.o",
+      "softfp.o"
     ],
     "C.MOVI": [
+      "01_arithmetic.o",
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "21_freestanding_runtime.o",
       "99_spec_decode_qemu.o",
-      "mem.o"
+      "math.o",
+      "mem.o",
+      "softfp.o",
+      "stdlib.o",
+      "syscall.o"
     ],
     "C.MOVR": [
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "14_callret_templates.o",
+      "21_freestanding_runtime.o",
       "99_spec_decode_qemu.o",
-      "mem.o"
+      "math.o",
+      "mem.o",
+      "softfp.o",
+      "stdlib.o",
+      "syscall.o"
     ],
     "C.OR": [
+      "03_loadstore.o",
+      "06_floating_point.o",
+      "07_atomic.o",
       "11_system.o",
-      "99_spec_decode_qemu.o"
+      "14_callret.o",
+      "99_spec_decode_qemu.o",
+      "math.o",
+      "softfp.o"
     ],
     "C.SDI": [
-      "99_spec_decode_qemu.o"
+      "03_loadstore.o",
+      "04_branch.o",
+      "06_floating_point.o",
+      "09_varargs.o",
+      "99_spec_decode_qemu.o",
+      "math.o",
+      "softfp.o",
+      "syscall.o"
     ],
     "C.SETC.EQ": [
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "21_freestanding_runtime.o",
       "99_spec_decode_qemu.o",
-      "mem.o"
+      "math.o",
+      "mem.o",
+      "softfp.o",
+      "stdlib.o",
+      "syscall.o"
     ],
     "C.SETC.NE": [
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "21_freestanding_runtime.o",
       "99_spec_decode_qemu.o",
-      "mem.o"
+      "math.o",
+      "mem.o",
+      "softfp.o",
+      "stdlib.o",
+      "syscall.o"
     ],
     "C.SETC.TGT": [
-      "99_spec_decode_qemu.o"
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "14_callret_templates.o",
+      "99_spec_decode_qemu.o",
+      "stdlib.o"
     ],
     "C.SETRET": [
-      "99_spec_decode_qemu.o"
+      "14_callret.o",
+      "99_spec_decode_qemu.o",
+      "stdlib.o"
     ],
     "C.SEXT.B": [
       "99_spec_decode_qemu.o"
@@ -1353,9 +2469,24 @@
       "99_spec_decode_qemu.o"
     ],
     "C.SEXT.W": [
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "21_freestanding_runtime.o",
       "99_spec_decode_qemu.o",
-      "mem.o"
+      "math.o",
+      "mem.o",
+      "softfp.o",
+      "stdlib.o",
+      "syscall.o"
     ],
     "C.SLLI": [
       "99_spec_decode_qemu.o"
@@ -1369,13 +2500,29 @@
     ],
     "C.SUB": [
       "99_spec_decode_qemu.o",
-      "mem.o"
+      "mem.o",
+      "softfp.o",
+      "stdlib.o",
+      "syscall.o"
     ],
     "C.SWI": [
+      "01_arithmetic.o",
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "21_freestanding_runtime.o",
       "99_spec_decode_qemu.o",
       "main.o",
-      "mem.o"
+      "mem.o",
+      "softfp.o"
     ],
     "C.ZEXT.B": [
       "99_spec_decode_qemu.o"
@@ -1384,14 +2531,27 @@
       "99_spec_decode_qemu.o"
     ],
     "C.ZEXT.W": [
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
-      "99_spec_decode_qemu.o"
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "21_freestanding_runtime.o",
+      "99_spec_decode_qemu.o",
+      "math.o"
     ],
     "CLZ": [
       "99_spec_decode_qemu.o"
     ],
     "CMP.AND": [
-      "99_spec_decode_qemu.o"
+      "99_spec_decode_qemu.o",
+      "softfp.o"
     ],
     "CMP.ANDI": [
       "99_spec_decode_qemu.o"
@@ -1400,13 +2560,16 @@
       "99_spec_decode_qemu.o"
     ],
     "CMP.EQI": [
-      "99_spec_decode_qemu.o"
+      "99_spec_decode_qemu.o",
+      "softfp.o",
+      "syscall.o"
     ],
     "CMP.GE": [
       "99_spec_decode_qemu.o"
     ],
     "CMP.GEI": [
-      "99_spec_decode_qemu.o"
+      "99_spec_decode_qemu.o",
+      "math.o"
     ],
     "CMP.GEU": [
       "99_spec_decode_qemu.o"
@@ -1415,22 +2578,29 @@
       "99_spec_decode_qemu.o"
     ],
     "CMP.LT": [
-      "99_spec_decode_qemu.o"
+      "99_spec_decode_qemu.o",
+      "softfp.o"
     ],
     "CMP.LTI": [
       "99_spec_decode_qemu.o"
     ],
     "CMP.LTU": [
-      "99_spec_decode_qemu.o"
+      "14_callret.o",
+      "99_spec_decode_qemu.o",
+      "softfp.o",
+      "stdlib.o",
+      "syscall.o"
     ],
     "CMP.LTUI": [
+      "13_v03_vector_ops_matrix.o",
       "99_spec_decode_qemu.o"
     ],
     "CMP.NE": [
       "99_spec_decode_qemu.o"
     ],
     "CMP.NEI": [
-      "99_spec_decode_qemu.o"
+      "99_spec_decode_qemu.o",
+      "softfp.o"
     ],
     "CMP.OR": [
       "99_spec_decode_qemu.o"
@@ -1439,7 +2609,13 @@
       "99_spec_decode_qemu.o"
     ],
     "CSEL": [
-      "99_spec_decode_qemu.o"
+      "05_move.o",
+      "06_floating_point.o",
+      "99_spec_decode_qemu.o",
+      "math.o",
+      "softfp.o",
+      "stdlib.o",
+      "syscall.o"
     ],
     "CTZ": [
       "99_spec_decode_qemu.o"
@@ -1472,7 +2648,8 @@
       "99_spec_decode_qemu.o"
     ],
     "DIVU": [
-      "99_spec_decode_qemu.o"
+      "99_spec_decode_qemu.o",
+      "softfp.o"
     ],
     "DIVUW": [
       "99_spec_decode_qemu.o"
@@ -1499,7 +2676,8 @@
       "99_spec_decode_qemu.o"
     ],
     "FCVT": [
-      "99_spec_decode_qemu.o"
+      "99_spec_decode_qemu.o",
+      "math.o"
     ],
     "FCVTA": [
       "99_spec_decode_qemu.o"
@@ -1514,38 +2692,70 @@
       "99_spec_decode_qemu.o"
     ],
     "FCVTZ": [
-      "99_spec_decode_qemu.o"
+      "99_spec_decode_qemu.o",
+      "math.o"
     ],
     "FDIV": [
       "99_spec_decode_qemu.o"
     ],
+    "FENCE.D": [
+      "99_spec_decode_qemu.o"
+    ],
+    "FENCE.I": [
+      "99_spec_decode_qemu.o"
+    ],
     "FENTRY": [
+      "01_arithmetic.o",
+      "02_bitwise.o",
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "14_callret_templates.o",
+      "21_freestanding_runtime.o",
       "41_v056_isa_forms.o",
       "99_spec_decode_qemu.o",
       "main.o",
-      "mem.o"
+      "math.o",
+      "mem.o",
+      "softfp.o",
+      "stdlib.o",
+      "syscall.o"
     ],
     "FEQ": [
-      "99_spec_decode_qemu.o"
+      "06_floating_point.o",
+      "99_spec_decode_qemu.o",
+      "math.o"
     ],
     "FEQS": [
       "99_spec_decode_qemu.o"
     ],
     "FEXIT": [
+      "14_callret.o",
       "99_spec_decode_qemu.o"
     ],
     "FEXP": [
       "99_spec_decode_qemu.o"
     ],
     "FGE": [
-      "99_spec_decode_qemu.o"
+      "06_floating_point.o",
+      "99_spec_decode_qemu.o",
+      "math.o"
     ],
     "FGES": [
       "99_spec_decode_qemu.o"
     ],
     "FLT": [
-      "99_spec_decode_qemu.o"
+      "06_floating_point.o",
+      "99_spec_decode_qemu.o",
+      "math.o"
     ],
     "FLTS": [
       "99_spec_decode_qemu.o"
@@ -1581,13 +2791,32 @@
       "99_spec_decode_qemu.o"
     ],
     "FRET.RA": [
+      "14_callret_templates.o",
       "99_spec_decode_qemu.o"
     ],
     "FRET.STK": [
+      "01_arithmetic.o",
+      "02_bitwise.o",
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "14_callret_templates.o",
+      "21_freestanding_runtime.o",
       "41_v056_isa_forms.o",
       "99_spec_decode_qemu.o",
-      "mem.o"
+      "math.o",
+      "mem.o",
+      "softfp.o",
+      "stdlib.o",
+      "syscall.o"
     ],
     "FSQRT": [
       "99_spec_decode_qemu.o"
@@ -1614,15 +2843,31 @@
       "99_spec_decode_qemu.o"
     ],
     "HL.BSTART.CALL": [
+      "06_floating_point.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "21_freestanding_runtime.o",
       "99_spec_decode_qemu.o",
-      "main.o"
+      "main.o",
+      "math.o",
+      "softfp.o",
+      "stdlib.o"
     ],
     "HL.BSTART.FP": [
       "99_spec_decode_qemu.o"
     ],
     "HL.BSTART.STD": [
+      "06_floating_point.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "21_freestanding_runtime.o",
       "99_spec_decode_qemu.o",
-      "main.o"
+      "main.o",
+      "math.o",
+      "softfp.o",
+      "stdlib.o"
     ],
     "HL.BSTART.SYS": [
       "99_spec_decode_qemu.o"
@@ -1648,7 +2893,8 @@
       "99_spec_decode_qemu.o"
     ],
     "HL.CMP.ANDI": [
-      "99_spec_decode_qemu.o"
+      "99_spec_decode_qemu.o",
+      "softfp.o"
     ],
     "HL.CMP.EQI": [
       "99_spec_decode_qemu.o"
@@ -1708,6 +2954,7 @@
       "99_spec_decode_qemu.o"
     ],
     "HL.LBU.PCR": [
+      "07_atomic.o",
       "99_spec_decode_qemu.o"
     ],
     "HL.LBU.PO": [
@@ -1732,7 +2979,14 @@
       "99_spec_decode_qemu.o"
     ],
     "HL.LD.PCR": [
-      "99_spec_decode_qemu.o"
+      "03_loadstore.o",
+      "04_branch.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "14_callret.o",
+      "99_spec_decode_qemu.o",
+      "math.o",
+      "stdlib.o"
     ],
     "HL.LD.PO": [
       "99_spec_decode_qemu.o"
@@ -1753,12 +3007,14 @@
       "99_spec_decode_qemu.o"
     ],
     "HL.LDI.UPO": [
+      "09_varargs.o",
       "99_spec_decode_qemu.o"
     ],
     "HL.LDI.UPR": [
       "99_spec_decode_qemu.o"
     ],
     "HL.LDIP": [
+      "03_loadstore.o",
       "99_spec_decode_qemu.o"
     ],
     "HL.LDIP.U": [
@@ -1846,11 +3102,30 @@
       "99_spec_decode_qemu.o"
     ],
     "HL.LUI": [
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
-      "99_spec_decode_qemu.o"
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "21_freestanding_runtime.o",
+      "99_spec_decode_qemu.o",
+      "math.o",
+      "softfp.o",
+      "stdlib.o",
+      "syscall.o"
     ],
     "HL.LW.PCR": [
-      "99_spec_decode_qemu.o"
+      "03_loadstore.o",
+      "07_atomic.o",
+      "12_v03_vector_tile.o",
+      "99_spec_decode_qemu.o",
+      "stdlib.o"
     ],
     "HL.LW.PO": [
       "99_spec_decode_qemu.o"
@@ -1871,6 +3146,7 @@
       "99_spec_decode_qemu.o"
     ],
     "HL.LWI.UPO": [
+      "09_varargs.o",
       "99_spec_decode_qemu.o"
     ],
     "HL.LWI.UPR": [
@@ -1886,7 +3162,9 @@
       "99_spec_decode_qemu.o"
     ],
     "HL.LWU.PCR": [
-      "99_spec_decode_qemu.o"
+      "07_atomic.o",
+      "99_spec_decode_qemu.o",
+      "math.o"
     ],
     "HL.LWU.PO": [
       "99_spec_decode_qemu.o"
@@ -1898,21 +3176,26 @@
       "99_spec_decode_qemu.o"
     ],
     "HL.LWUI.PO": [
+      "03_loadstore.o",
       "99_spec_decode_qemu.o"
     ],
     "HL.LWUI.PR": [
+      "03_loadstore.o",
       "99_spec_decode_qemu.o"
     ],
     "HL.LWUI.U": [
       "99_spec_decode_qemu.o"
     ],
     "HL.LWUI.UPO": [
+      "03_loadstore.o",
       "99_spec_decode_qemu.o"
     ],
     "HL.LWUI.UPR": [
+      "03_loadstore.o",
       "99_spec_decode_qemu.o"
     ],
     "HL.LWUIP": [
+      "03_loadstore.o",
       "99_spec_decode_qemu.o"
     ],
     "HL.LWUIP.U": [
@@ -1979,6 +3262,7 @@
       "99_spec_decode_qemu.o"
     ],
     "HL.SB.PCR": [
+      "07_atomic.o",
       "99_spec_decode_qemu.o"
     ],
     "HL.SB.PO": [
@@ -2003,8 +3287,12 @@
       "99_spec_decode_qemu.o"
     ],
     "HL.SD.PCR": [
+      "04_branch.o",
+      "07_atomic.o",
       "11_system.o",
-      "99_spec_decode_qemu.o"
+      "14_callret.o",
+      "99_spec_decode_qemu.o",
+      "stdlib.o"
     ],
     "HL.SD.PO": [
       "99_spec_decode_qemu.o"
@@ -2037,7 +3325,9 @@
       "99_spec_decode_qemu.o"
     ],
     "HL.SDIP": [
-      "99_spec_decode_qemu.o"
+      "03_loadstore.o",
+      "99_spec_decode_qemu.o",
+      "math.o"
     ],
     "HL.SDIP.U": [
       "99_spec_decode_qemu.o"
@@ -2135,7 +3425,12 @@
       "99_spec_decode_qemu.o"
     ],
     "HL.SW.PCR": [
-      "99_spec_decode_qemu.o"
+      "03_loadstore.o",
+      "07_atomic.o",
+      "12_v03_vector_tile.o",
+      "99_spec_decode_qemu.o",
+      "stdlib.o",
+      "syscall.o"
     ],
     "HL.SW.PO": [
       "99_spec_decode_qemu.o"
@@ -2153,25 +3448,31 @@
       "99_spec_decode_qemu.o"
     ],
     "HL.SWI.PO": [
+      "03_loadstore.o",
       "11_system.o",
       "99_spec_decode_qemu.o"
     ],
     "HL.SWI.PR": [
+      "03_loadstore.o",
       "99_spec_decode_qemu.o"
     ],
     "HL.SWI.U": [
       "99_spec_decode_qemu.o"
     ],
     "HL.SWI.UPO": [
+      "03_loadstore.o",
       "99_spec_decode_qemu.o"
     ],
     "HL.SWI.UPR": [
+      "03_loadstore.o",
       "99_spec_decode_qemu.o"
     ],
     "HL.SWIP": [
+      "03_loadstore.o",
       "99_spec_decode_qemu.o"
     ],
     "HL.SWIP.U": [
+      "03_loadstore.o",
       "99_spec_decode_qemu.o"
     ],
     "HL.SWP": [
@@ -2193,6 +3494,8 @@
       "99_spec_decode_qemu.o"
     ],
     "J": [
+      "12_v03_vector_tile.o",
+      "14_callret_templates.o",
       "99_spec_decode_qemu.o"
     ],
     "JR": [
@@ -2208,8 +3511,11 @@
       "99_spec_decode_qemu.o"
     ],
     "LB": [
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
       "99_spec_decode_qemu.o",
-      "mem.o"
+      "mem.o",
+      "syscall.o"
     ],
     "LB.PCR": [
       "99_spec_decode_qemu.o"
@@ -2219,19 +3525,46 @@
       "mem.o"
     ],
     "LBU": [
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "21_freestanding_runtime.o",
       "99_spec_decode_qemu.o"
     ],
     "LBU.PCR": [
       "99_spec_decode_qemu.o"
     ],
     "LBUI": [
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "21_freestanding_runtime.o",
       "99_spec_decode_qemu.o",
-      "mem.o"
+      "mem.o",
+      "softfp.o",
+      "syscall.o"
     ],
     "LD": [
-      "99_spec_decode_qemu.o"
+      "14_callret.o",
+      "99_spec_decode_qemu.o",
+      "math.o",
+      "stdlib.o"
     ],
     "LD.ADD": [
       "99_spec_decode_qemu.o"
@@ -2261,7 +3594,15 @@
       "99_spec_decode_qemu.o"
     ],
     "LDI": [
-      "99_spec_decode_qemu.o"
+      "03_loadstore.o",
+      "04_branch.o",
+      "06_floating_point.o",
+      "14_callret.o",
+      "21_freestanding_runtime.o",
+      "99_spec_decode_qemu.o",
+      "math.o",
+      "softfp.o",
+      "stdlib.o"
     ],
     "LDI.U": [
       "99_spec_decode_qemu.o"
@@ -2285,7 +3626,8 @@
       "99_spec_decode_qemu.o"
     ],
     "LHUI": [
-      "99_spec_decode_qemu.o"
+      "99_spec_decode_qemu.o",
+      "softfp.o"
     ],
     "LHUI.U": [
       "99_spec_decode_qemu.o"
@@ -2306,11 +3648,29 @@
       "99_spec_decode_qemu.o"
     ],
     "LUI": [
+      "01_arithmetic.o",
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "21_freestanding_runtime.o",
       "99_spec_decode_qemu.o",
-      "main.o"
+      "main.o",
+      "softfp.o",
+      "stdlib.o",
+      "syscall.o"
     ],
     "LW": [
+      "08_jumptable.o",
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
       "99_spec_decode_qemu.o"
     ],
     "LW.ADD": [
@@ -2341,7 +3701,10 @@
       "99_spec_decode_qemu.o"
     ],
     "LWI": [
-      "99_spec_decode_qemu.o"
+      "01_arithmetic.o",
+      "13_v03_vector_ops_matrix.o",
+      "99_spec_decode_qemu.o",
+      "softfp.o"
     ],
     "LWI.U": [
       "99_spec_decode_qemu.o"
@@ -2353,12 +3716,15 @@
       "99_spec_decode_qemu.o"
     ],
     "LWUI": [
-      "99_spec_decode_qemu.o"
+      "12_v03_vector_tile.o",
+      "99_spec_decode_qemu.o",
+      "softfp.o"
     ],
     "LWUI.U": [
       "99_spec_decode_qemu.o"
     ],
     "MADD": [
+      "14_callret.o",
       "99_spec_decode_qemu.o"
     ],
     "MADDW": [
@@ -2383,7 +3749,11 @@
       "99_spec_decode_qemu.o"
     ],
     "MUL": [
-      "99_spec_decode_qemu.o"
+      "14_callret.o",
+      "21_freestanding_runtime.o",
+      "99_spec_decode_qemu.o",
+      "softfp.o",
+      "syscall.o"
     ],
     "MULU": [
       "99_spec_decode_qemu.o"
@@ -2394,37 +3764,55 @@
     "MULW": [
       "99_spec_decode_qemu.o"
     ],
-    "NCE.D": [
-      "99_spec_decode_qemu.o"
-    ],
-    "NCE.I": [
-      "99_spec_decode_qemu.o"
-    ],
     "OR": [
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
-      "99_spec_decode_qemu.o"
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "21_freestanding_runtime.o",
+      "99_spec_decode_qemu.o",
+      "math.o",
+      "softfp.o",
+      "syscall.o"
     ],
     "ORI": [
+      "04_branch.o",
+      "09_varargs.o",
       "11_system.o",
-      "99_spec_decode_qemu.o"
+      "99_spec_decode_qemu.o",
+      "softfp.o"
     ],
     "ORIW": [
-      "99_spec_decode_qemu.o"
+      "07_atomic.o",
+      "99_spec_decode_qemu.o",
+      "softfp.o"
     ],
     "ORW": [
-      "99_spec_decode_qemu.o"
+      "99_spec_decode_qemu.o",
+      "softfp.o",
+      "syscall.o"
     ],
     "PRF": [
+      "03_loadstore.o",
       "99_spec_decode_qemu.o"
     ],
     "PRFI.U": [
+      "03_loadstore.o",
       "99_spec_decode_qemu.o"
     ],
     "REM": [
       "99_spec_decode_qemu.o"
     ],
     "REMU": [
-      "99_spec_decode_qemu.o"
+      "99_spec_decode_qemu.o",
+      "softfp.o"
     ],
     "REMUW": [
       "99_spec_decode_qemu.o"
@@ -2444,7 +3832,8 @@
     ],
     "SBI": [
       "99_spec_decode_qemu.o",
-      "mem.o"
+      "mem.o",
+      "syscall.o"
     ],
     "SC.B": [
       "99_spec_decode_qemu.o"
@@ -2459,7 +3848,8 @@
       "99_spec_decode_qemu.o"
     ],
     "SCVTF": [
-      "99_spec_decode_qemu.o"
+      "99_spec_decode_qemu.o",
+      "math.o"
     ],
     "SD": [
       "99_spec_decode_qemu.o"
@@ -2495,8 +3885,24 @@
       "99_spec_decode_qemu.o"
     ],
     "SDI": [
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
-      "99_spec_decode_qemu.o"
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "14_callret_templates.o",
+      "21_freestanding_runtime.o",
+      "99_spec_decode_qemu.o",
+      "math.o",
+      "softfp.o",
+      "stdlib.o",
+      "syscall.o"
     ],
     "SDI.U": [
       "99_spec_decode_qemu.o"
@@ -2508,51 +3914,82 @@
       "99_spec_decode_qemu.o"
     ],
     "SETC.EQ": [
+      "14_callret_templates.o",
       "99_spec_decode_qemu.o"
     ],
     "SETC.EQI": [
+      "04_branch.o",
       "11_system.o",
-      "99_spec_decode_qemu.o"
+      "14_callret.o",
+      "99_spec_decode_qemu.o",
+      "math.o",
+      "softfp.o",
+      "syscall.o"
     ],
     "SETC.GE": [
       "11_system.o",
-      "99_spec_decode_qemu.o"
+      "99_spec_decode_qemu.o",
+      "softfp.o"
     ],
     "SETC.GEI": [
       "11_system.o",
-      "99_spec_decode_qemu.o"
+      "99_spec_decode_qemu.o",
+      "math.o"
     ],
     "SETC.GEU": [
       "11_system.o",
+      "21_freestanding_runtime.o",
       "99_spec_decode_qemu.o",
-      "mem.o"
+      "mem.o",
+      "stdlib.o",
+      "syscall.o"
     ],
     "SETC.GEUI": [
-      "11_system.o",
-      "99_spec_decode_qemu.o"
-    ],
-    "SETC.LT": [
-      "99_spec_decode_qemu.o"
-    ],
-    "SETC.LTI": [
-      "99_spec_decode_qemu.o"
-    ],
-    "SETC.LTU": [
+      "07_atomic.o",
+      "08_jumptable.o",
       "11_system.o",
       "99_spec_decode_qemu.o",
-      "mem.o"
+      "stdlib.o"
+    ],
+    "SETC.LT": [
+      "99_spec_decode_qemu.o",
+      "math.o",
+      "softfp.o",
+      "stdlib.o"
+    ],
+    "SETC.LTI": [
+      "99_spec_decode_qemu.o",
+      "math.o",
+      "softfp.o",
+      "stdlib.o"
+    ],
+    "SETC.LTU": [
+      "07_atomic.o",
+      "11_system.o",
+      "21_freestanding_runtime.o",
+      "99_spec_decode_qemu.o",
+      "math.o",
+      "mem.o",
+      "softfp.o",
+      "stdlib.o",
+      "syscall.o"
     ],
     "SETC.LTUI": [
       "11_system.o",
       "99_spec_decode_qemu.o",
-      "mem.o"
+      "mem.o",
+      "stdlib.o"
     ],
     "SETC.NE": [
       "99_spec_decode_qemu.o"
     ],
     "SETC.NEI": [
+      "04_branch.o",
+      "07_atomic.o",
       "11_system.o",
-      "99_spec_decode_qemu.o"
+      "12_v03_vector_tile.o",
+      "99_spec_decode_qemu.o",
+      "softfp.o"
     ],
     "SETC.OR": [
       "99_spec_decode_qemu.o"
@@ -2582,17 +4019,39 @@
       "99_spec_decode_qemu.o"
     ],
     "SLL": [
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
-      "99_spec_decode_qemu.o"
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "21_freestanding_runtime.o",
+      "99_spec_decode_qemu.o",
+      "math.o",
+      "softfp.o",
+      "stdlib.o",
+      "syscall.o"
     ],
     "SLLI": [
-      "99_spec_decode_qemu.o"
+      "08_jumptable.o",
+      "14_callret.o",
+      "99_spec_decode_qemu.o",
+      "softfp.o",
+      "stdlib.o"
     ],
     "SLLIW": [
-      "99_spec_decode_qemu.o"
+      "99_spec_decode_qemu.o",
+      "softfp.o",
+      "syscall.o"
     ],
     "SLLW": [
-      "99_spec_decode_qemu.o"
+      "99_spec_decode_qemu.o",
+      "softfp.o"
     ],
     "SRA": [
       "99_spec_decode_qemu.o"
@@ -2607,23 +4066,59 @@
       "99_spec_decode_qemu.o"
     ],
     "SRL": [
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
-      "99_spec_decode_qemu.o"
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "21_freestanding_runtime.o",
+      "99_spec_decode_qemu.o",
+      "math.o",
+      "softfp.o",
+      "stdlib.o",
+      "syscall.o"
     ],
     "SRLI": [
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
-      "99_spec_decode_qemu.o"
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "21_freestanding_runtime.o",
+      "99_spec_decode_qemu.o",
+      "softfp.o",
+      "syscall.o"
     ],
     "SRLIW": [
+      "03_loadstore.o",
+      "04_branch.o",
+      "06_floating_point.o",
+      "07_atomic.o",
       "11_system.o",
-      "99_spec_decode_qemu.o"
+      "12_v03_vector_tile.o",
+      "99_spec_decode_qemu.o",
+      "softfp.o"
     ],
     "SRLW": [
-      "99_spec_decode_qemu.o"
+      "99_spec_decode_qemu.o",
+      "softfp.o"
     ],
     "SSRGET": [
       "11_system.o",
-      "99_spec_decode_qemu.o"
+      "99_spec_decode_qemu.o",
+      "syscall.o"
     ],
     "SSRSET": [
       "11_system.o",
@@ -2634,17 +4129,26 @@
       "99_spec_decode_qemu.o"
     ],
     "SUB": [
-      "99_spec_decode_qemu.o"
+      "14_callret.o",
+      "99_spec_decode_qemu.o",
+      "stdlib.o"
     ],
     "SUBI": [
+      "09_varargs.o",
       "99_spec_decode_qemu.o"
     ],
     "SUBIW": [
-      "99_spec_decode_qemu.o"
+      "07_atomic.o",
+      "13_v03_vector_ops_matrix.o",
+      "99_spec_decode_qemu.o",
+      "math.o",
+      "softfp.o"
     ],
     "SUBW": [
+      "13_v03_vector_ops_matrix.o",
       "99_spec_decode_qemu.o",
-      "mem.o"
+      "mem.o",
+      "softfp.o"
     ],
     "SW": [
       "99_spec_decode_qemu.o"
@@ -2692,8 +4196,21 @@
       "99_spec_decode_qemu.o"
     ],
     "SWI": [
+      "03_loadstore.o",
+      "04_branch.o",
+      "05_move.o",
+      "06_floating_point.o",
+      "07_atomic.o",
+      "08_jumptable.o",
+      "09_varargs.o",
       "11_system.o",
-      "99_spec_decode_qemu.o"
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "14_callret.o",
+      "21_freestanding_runtime.o",
+      "99_spec_decode_qemu.o",
+      "softfp.o",
+      "syscall.o"
     ],
     "SWI.U": [
       "99_spec_decode_qemu.o"
@@ -2711,9 +4228,14 @@
       "99_spec_decode_qemu.o"
     ],
     "UCVTF": [
-      "99_spec_decode_qemu.o"
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
+      "99_spec_decode_qemu.o",
+      "math.o"
     ],
     "V.ADD": [
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
       "99_spec_decode_qemu.o"
     ],
     "V.ADDI": [
@@ -2750,6 +4272,7 @@
       "99_spec_decode_qemu.o"
     ],
     "V.CMP.EQ": [
+      "12_v03_vector_tile.o",
       "99_spec_decode_qemu.o"
     ],
     "V.CMP.EQI": [
@@ -2768,15 +4291,18 @@
       "99_spec_decode_qemu.o"
     ],
     "V.CMP.LT": [
+      "13_v03_vector_ops_matrix.o",
       "99_spec_decode_qemu.o"
     ],
     "V.CMP.LTI": [
       "99_spec_decode_qemu.o"
     ],
     "V.CMP.LTU": [
+      "12_v03_vector_tile.o",
       "99_spec_decode_qemu.o"
     ],
     "V.CMP.LTUI": [
+      "12_v03_vector_tile.o",
       "99_spec_decode_qemu.o"
     ],
     "V.CMP.NE": [
@@ -2804,6 +4330,8 @@
       "99_spec_decode_qemu.o"
     ],
     "V.FADD": [
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
       "99_spec_decode_qemu.o"
     ],
     "V.FCLASS": [
@@ -2852,6 +4380,8 @@
       "99_spec_decode_qemu.o"
     ],
     "V.FMUL": [
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
       "99_spec_decode_qemu.o"
     ],
     "V.FNE": [
@@ -2987,6 +4517,8 @@
       "99_spec_decode_qemu.o"
     ],
     "V.LW.BRG": [
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
       "99_spec_decode_qemu.o"
     ],
     "V.LW.MAX": [
@@ -3080,6 +4612,7 @@
       "99_spec_decode_qemu.o"
     ],
     "V.RDOR": [
+      "12_v03_vector_tile.o",
       "99_spec_decode_qemu.o"
     ],
     "V.RDXOR": [
@@ -3212,12 +4745,14 @@
       "99_spec_decode_qemu.o"
     ],
     "V.SUB": [
+      "13_v03_vector_ops_matrix.o",
       "99_spec_decode_qemu.o"
     ],
     "V.SUBI": [
       "99_spec_decode_qemu.o"
     ],
     "V.SW": [
+      "12_v03_vector_tile.o",
       "99_spec_decode_qemu.o"
     ],
     "V.SW.ADD": [
@@ -3227,6 +4762,8 @@
       "99_spec_decode_qemu.o"
     ],
     "V.SW.BRG": [
+      "12_v03_vector_tile.o",
+      "13_v03_vector_ops_matrix.o",
       "99_spec_decode_qemu.o"
     ],
     "V.SW.MAX": [
@@ -3269,25 +4806,32 @@
       "99_spec_decode_qemu.o"
     ],
     "XOR": [
-      "99_spec_decode_qemu.o"
+      "99_spec_decode_qemu.o",
+      "math.o",
+      "softfp.o"
     ],
     "XORI": [
-      "99_spec_decode_qemu.o"
+      "06_floating_point.o",
+      "99_spec_decode_qemu.o",
+      "math.o"
     ],
     "XORIW": [
-      "99_spec_decode_qemu.o"
+      "07_atomic.o",
+      "99_spec_decode_qemu.o",
+      "math.o"
     ],
     "XORW": [
-      "99_spec_decode_qemu.o"
+      "99_spec_decode_qemu.o",
+      "softfp.o"
     ]
   },
-  "generated_at_utc": "2026-07-15 10:37:55Z",
+  "generated_at_utc": "2026-07-15 20:12:13Z",
   "llvm_objdump": "/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/llvm-objdump",
   "missing_by_prefix": {},
   "missing_count": 0,
   "missing_spec_mnemonics": [],
   "obj_dir": "/Users/zhoubot/linx-isa/avs/qemu/out/obj",
-  "object_files_scanned": 5,
+  "object_files_scanned": 23,
   "result": {
     "classification": "qemu_avs_translation_coverage_complete",
     "ok": true
@@ -3301,8 +4845,68 @@
       711
     ],
     [
+      "softfp.o",
+      73
+    ],
+    [
+      "12_v03_vector_tile.o",
+      70
+    ],
+    [
       "11_system.o",
       62
+    ],
+    [
+      "13_v03_vector_ops_matrix.o",
+      57
+    ],
+    [
+      "03_loadstore.o",
+      55
+    ],
+    [
+      "07_atomic.o",
+      51
+    ],
+    [
+      "math.o",
+      51
+    ],
+    [
+      "14_callret.o",
+      49
+    ],
+    [
+      "06_floating_point.o",
+      48
+    ],
+    [
+      "04_branch.o",
+      45
+    ],
+    [
+      "stdlib.o",
+      43
+    ],
+    [
+      "09_varargs.o",
+      40
+    ],
+    [
+      "21_freestanding_runtime.o",
+      40
+    ],
+    [
+      "syscall.o",
+      40
+    ],
+    [
+      "08_jumptable.o",
+      36
+    ],
+    [
+      "05_move.o",
+      33
     ],
     [
       "41_v056_isa_forms.o",
@@ -3313,35 +4917,78 @@
       26
     ],
     [
+      "14_callret_templates.o",
+      13
+    ],
+    [
       "main.o",
       12
+    ],
+    [
+      "01_arithmetic.o",
+      8
+    ],
+    [
+      "02_bitwise.o",
+      2
     ]
   ],
   "unmapped_by_object": {
+    "01_arithmetic.o": [],
+    "02_bitwise.o": [],
+    "03_loadstore.o": [],
+    "04_branch.o": [],
+    "05_move.o": [],
+    "06_floating_point.o": [],
+    "07_atomic.o": [],
+    "08_jumptable.o": [],
+    "09_varargs.o": [
+      "A0",
+      "T#1",
+      "U#1",
+      "U#4"
+    ],
     "11_system.o": [],
+    "12_v03_vector_tile.o": [
+      "A0",
+      "A1",
+      "A5",
+      "S5"
+    ],
+    "13_v03_vector_ops_matrix.o": [
+      "A7"
+    ],
+    "14_callret.o": [
+      "A0",
+      "A1",
+      "T#1",
+      "U#1",
+      "U#2"
+    ],
+    "14_callret_templates.o": [],
+    "21_freestanding_runtime.o": [
+      "T#1",
+      "U#1"
+    ],
     "41_v056_isa_forms.o": [],
     "99_spec_decode_qemu.o": [
-      "A1",
-      "BS.FS",
-      "DD.FS",
-      "IV.FS",
-      "Q.FS",
-      "QS.FS",
-      "VT.FS2FS",
-      "VTA.FS2FS",
-      "VTM.FS2FS",
-      "VTN.FS2FS",
-      "VTP.FS2FS",
-      "VTZ.FS2UW",
-      "XP.FS"
+      "A1"
     ],
     "main.o": [],
+    "math.o": [],
     "mem.o": [
       "A0",
       "A1",
       "A2",
       "T#1",
       "X1"
-    ]
+    ],
+    "softfp.o": [],
+    "stdlib.o": [
+      "A2",
+      "A3",
+      "T#1"
+    ],
+    "syscall.o": []
   }
 }

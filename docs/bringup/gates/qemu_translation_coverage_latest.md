@@ -1,8 +1,8 @@
 # AVS QEMU Translation Coverage
 
-- Generated (UTC): `2026-07-15 10:37:55Z`
+- Generated (UTC): `2026-07-15 20:12:13Z`
 - Spec unique mnemonics: `711`
-- AVS object files scanned: `5`
+- AVS object files scanned: `23`
 - Covered spec mnemonics: `711/711` (`100.0%`)
 - Missing spec mnemonics: `0`
 
@@ -56,6 +56,7 @@
 - `FCVTP`: `1`
 - `FCVTZ`: `1`
 - `FDIV`: `1`
+- `FENCE`: `2`
 - `FENTRY`: `1`
 - `FEQ`: `1`
 - `FEQS`: `1`
@@ -113,7 +114,6 @@
 - `MULU`: `1`
 - `MULUW`: `1`
 - `MULW`: `1`
-- `NCE`: `2`
 - `OR`: `1`
 - `ORI`: `1`
 - `ORIW`: `1`
@@ -175,9 +175,27 @@
 ## Top Covering Objects
 
 - `99_spec_decode_qemu.o`: `711`
+- `softfp.o`: `73`
+- `12_v03_vector_tile.o`: `70`
 - `11_system.o`: `62`
+- `13_v03_vector_ops_matrix.o`: `57`
+- `03_loadstore.o`: `55`
+- `07_atomic.o`: `51`
+- `math.o`: `51`
+- `14_callret.o`: `49`
+- `06_floating_point.o`: `48`
+- `04_branch.o`: `45`
+- `stdlib.o`: `43`
+- `09_varargs.o`: `40`
+- `21_freestanding_runtime.o`: `40`
+- `syscall.o`: `40`
+- `08_jumptable.o`: `36`
+- `05_move.o`: `33`
 - `41_v056_isa_forms.o`: `30`
 - `mem.o`: `26`
+- `14_callret_templates.o`: `13`
 - `main.o`: `12`
+- `01_arithmetic.o`: `8`
+- `02_bitwise.o`: `2`
 
 ## Missing Spec Mnemonics (First 200)
