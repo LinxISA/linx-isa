@@ -26,10 +26,6 @@ RETIRED_PAGE_SLUGS = (
     "b_" + "attr",
     "b_" + "ioti",
 )
-HISTORICAL_GATE_EVIDENCE = {
-    Path("docs/bringup/GATE_STATUS.md"),
-    Path("docs/bringup/gates/latest.json"),
-}
 CURRENT_RETIREMENT_NOTICES = {Path("docs/releases/v0.56.5.md")}
 
 
@@ -84,11 +80,6 @@ def _check_retired_surfaces(root: Path, errors: list[str]) -> None:
             and RETIRED_SOURCE_POLICY not in hits
             and "retired and rejected" in text
         ):
-            continue
-        if rel in HISTORICAL_GATE_EVIDENCE and hits == [RETIRED_SOURCE_POLICY]:
-            # Recorded commands are immutable evidence. A fresh atomic gate
-            # packet replaces these files; changing the old command in place
-            # would falsify the run that produced it.
             continue
         _error(errors, f"active surface contains retired token(s) {', '.join(hits)}: {rel}")
 

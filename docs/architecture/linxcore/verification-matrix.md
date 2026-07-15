@@ -104,7 +104,7 @@ It is the normative mapping between:
 | LinxTrace | `LinxTrace::contract sync lint` | `python3 rtl/LinxCore/tools/linxcoresight/lint_trace_contract_sync.py` | emitter, linter, and viewer pipeline contract sync |
 | LinxTrace | `LinxTrace::sample trace lint` | `bash rtl/LinxCore/tests/test_konata_sanity.sh` | trace validity and stage presence |
 | LinxTrace | `LinxTrace::semver compatibility gate` | `python3 tools/bringup/check_trace_semver_compat.py --root . --strict` | schema version compatibility policy enforcement |
-| LinxCoreModel | `LinxCoreModel::gfsim build` | `cd tools/LinxCoreModel && python3 build.py all --target gfsim -j"$(sysctl -n hw.ncpu 2>/dev/null || nproc)"` | current executable-reference build remains available for comparison |
+| LinxCoreModel | `LinxCoreModel::gfsim build` | `cd model/LinxCoreModel && python3 build.py all --target gfsim -j"$(sysctl -n hw.ncpu 2>/dev/null || nproc)"` | current executable-reference build remains available for comparison |
 
 ## PR opt-in extensions
 
@@ -125,7 +125,7 @@ It is the normative mapping between:
 | pyCircuit | `pyCircuit::simulation regression` | `bash tools/pyCircuit/flows/scripts/run_sims.sh` | regression simulation lane |
 | pyCircuit | `pyCircuit::nightly simulation regression` | `bash tools/pyCircuit/flows/scripts/run_sims_nightly.sh` | deep nightly flow closure |
 | Integration | `Integration::LinxCore performance floor` | `python3 tools/bringup/check_linxcore_perf_floor.py --root . --max-regression 10.0` | <=10% regression cap enforcement |
-| LinxCoreModel | `LinxCoreModel::gfsim workload comparison` | `tools/LinxCoreModel/bin/gfsim -f <qemu-passing-linx.elf>` | model-lane comparison for Janus-Core-visible workload behavior |
+| LinxCoreModel | `LinxCoreModel::gfsim workload comparison` | `model/LinxCoreModel/bin/gfsim -f <qemu-passing-linx.elf>` | model-lane comparison for Janus-Core-visible workload behavior |
 
 ## Acceptance scenarios
 

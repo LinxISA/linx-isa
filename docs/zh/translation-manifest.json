@@ -18,7 +18,7 @@
       "translation_sha256": "4e6f1f03f37dc9f718bbff8046c87b5220cbfdfc93a8ac3d2b9cd17a917c019a"
     },
     "architecture/linxcore/interfaces.md": {
-      "source_sha256": "2c66ca35b84e935a6d50908c7b72a65a1e80541924206951b7f4a22a6f07af3c",
+      "source_sha256": "99513e05bf21ccd217a425c7d1271d0241a9af40505dbc454168423ba5287630",
       "translation_sha256": "bc2ddf917279af8f8fc8056257abb46dc6200981b5cd8138f1ada5c35ea1222e"
     },
     "architecture/linxcore/microarchitecture.md": {
@@ -30,7 +30,7 @@
       "translation_sha256": "437eb3932a6bc5a3889cb4a4462ae657f04956e399b654b047040f99c29f5900"
     },
     "architecture/linxcore/overview.md": {
-      "source_sha256": "dcaf04606a46de326dff0b23619dbc2307f6315cb0b116c55a294b0138288d18",
+      "source_sha256": "5793397fb2f104cce744e8764d3b6b26b26b6a07807d894f03f54a8dfae1723f",
       "translation_sha256": "5b4e822917038baf07ed70bd4c6b4f0f9645c4b2b0036ecb23a691cdb0a04fb7"
     },
     "architecture/linxcore/pipeline-stage-catalog.md": {
@@ -38,7 +38,7 @@
       "translation_sha256": "045cb3206148779caae638601c76792a8b559ecb527f7ac014b6a171870e802e"
     },
     "architecture/linxcore/verification-matrix.md": {
-      "source_sha256": "bafef42a419d4a6701bc59abf7034b0ad5e74c2c47d912036bda6749ec8c72a4",
+      "source_sha256": "c4a0f72db63b799d5a248a58b8ce1515f5543a4bd515c69c88ceb8695e784fe8",
       "translation_sha256": "1244f18dc6c20a918975a800308256cee62acdc8e815230eac11276500d8968b"
     },
     "architecture/research/linx-simt-alt-compiler-gap-analysis.md": {

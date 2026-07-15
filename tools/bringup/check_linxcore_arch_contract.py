@@ -107,12 +107,30 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--root", default=".", help="Repository root")
     ap.add_argument("--strict", action="store_true", help="Enable strict content checks")
     ap.add_argument("--require-mkdocs", action="store_true", help="Require mkdocs nav wiring")
+    ap.add_argument(
+        "--write-mirrors",
+        action="store_true",
+        help="Regenerate published architecture mirrors from canonical LinxCore sources",
+    )
     ap.add_argument("--out", default="", help="Optional JSON report output path")
     args = ap.parse_args(argv)
 
     root = Path(args.root).resolve()
     errors: list[str] = []
     warnings: list[str] = []
+
+    if args.write_mirrors:
+        for canonical_rel, published_rel in zip(CANONICAL_ARCH_DOCS, PUBLISHED_ARCH_DOCS):
+            canonical_path = root / canonical_rel
+            published_path = root / published_rel
+            if not canonical_path.is_file():
+                errors.append(f"missing canonical architecture doc: {canonical_rel}")
+                continue
+            published_path.parent.mkdir(parents=True, exist_ok=True)
+            published_path.write_text(
+                _render_expected_mirror(published_rel, _load_text(canonical_path)),
+                encoding="utf-8",
+            )
 
     for rel in (
         REQUIRED_TOPLEVEL_DOCS

@@ -54,7 +54,7 @@ current LinxISA line before promotion.
 Current alignment point:
 
 - Repository: `https://github.com/LinxISA/LinxCoreModel.git`
-- Superproject checkout: `tools/LinxCoreModel`
+- Superproject checkout: `model/LinxCoreModel`
 - Reference branch: `main`
 - Reviewed commit: `793722e85c62eade9ab4e8481c9577dc5b9c98f7`
 - Review date: 2026-07-10

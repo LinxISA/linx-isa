@@ -109,7 +109,7 @@ Required model checkout:
 Current build contract from the aligned model:
 
 ```bash
-cd tools/LinxCoreModel  # from the superproject root
+cd model/LinxCoreModel  # from the superproject root
 python3 build.py all --target gfsim -j"$(sysctl -n hw.ncpu 2>/dev/null || nproc)"
 ```
 
