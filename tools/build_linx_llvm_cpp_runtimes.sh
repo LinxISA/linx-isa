@@ -142,45 +142,26 @@ if [[ ! -d "$MUSL_SYSROOT/include" && ! -d "$MUSL_SYSROOT/usr/include" ]]; then
   exit 2
 fi
 
-ensure_linux_compat_headers() {
+install_linux_uapi_headers() {
   mkdir -p "$MUSL_SYSROOT/include/linux" "$MUSL_SYSROOT/usr/include/linux"
-
-  if [[ ! -f "$MUSL_SYSROOT/include/linux/limits.h" ]]; then
-    cat >"$MUSL_SYSROOT/include/linux/limits.h" <<'EOF'
-#ifndef _LINX_SPEC2017_LINUX_LIMITS_H
-#define _LINX_SPEC2017_LINUX_LIMITS_H
-#include <limits.h>
-#endif
-EOF
-  fi
-  install -m 644 "$MUSL_SYSROOT/include/linux/limits.h" \
-    "$MUSL_SYSROOT/usr/include/linux/limits.h"
-
-  if [[ ! -f "$MUSL_SYSROOT/include/linux/futex.h" ]]; then
-    cat >"$MUSL_SYSROOT/include/linux/futex.h" <<'EOF'
-#ifndef _LINX_COMPAT_LINUX_FUTEX_H
-#define _LINX_COMPAT_LINUX_FUTEX_H
-
-#define FUTEX_WAIT 0
-#define FUTEX_WAKE 1
-#define FUTEX_PRIVATE_FLAG 128
-#define FUTEX_WAIT_PRIVATE (FUTEX_WAIT | FUTEX_PRIVATE_FLAG)
-#define FUTEX_WAKE_PRIVATE (FUTEX_WAKE | FUTEX_PRIVATE_FLAG)
-
-#endif
-EOF
-  fi
-  install -m 644 "$MUSL_SYSROOT/include/linux/futex.h" \
-    "$MUSL_SYSROOT/usr/include/linux/futex.h"
+  local header source
+  for header in limits.h futex.h; do
+    source="$ROOT/kernel/linux/include/uapi/linux/$header"
+    if [[ ! -f "$source" ]]; then
+      echo "error: required Linux UAPI header missing: $source" >&2
+      exit 2
+    fi
+    install -m 644 "$source" "$MUSL_SYSROOT/include/linux/$header"
+    install -m 644 "$source" "$MUSL_SYSROOT/usr/include/linux/$header"
+  done
 }
 
-ensure_linux_compat_headers
+install_linux_uapi_headers
 
 CLANG="${CLANG:-}"
 if [[ -z "$CLANG" ]]; then
   for cand in \
-    "$ROOT/compiler/llvm/build-linxisa-clang/bin/clang" \
-    "$HOME/llvm-project/build-linxisa-clang/bin/clang"
+    "$ROOT/compiler/llvm/build-linxisa-clang/bin/clang"
   do
     if [[ -x "$cand" ]]; then
       CLANG="$cand"

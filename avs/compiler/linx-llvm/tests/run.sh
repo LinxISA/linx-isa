@@ -10,18 +10,13 @@ STRICT_CALLRET_RELOCS="${LINX_STRICT_CALLRET_RELOCS:-0}"
 
 CLANG="${CLANG:-}"
 if [[ -z "$CLANG" ]]; then
-  # Default: prefer the in-workspace LLVM submodule build, then fallback to sibling checkout.
+  # The pin lane resolves only through the superproject LLVM submodule.
   DEFAULT_CLANG="$ROOT/../../../../compiler/llvm/build-linxisa-clang/bin/clang"
   if [[ -x "$DEFAULT_CLANG" ]]; then
     CLANG="$DEFAULT_CLANG"
   else
-    FALLBACK_CLANG="$ROOT/../../../../../llvm-project/build-linxisa-clang/bin/clang"
-    if [[ -x "$FALLBACK_CLANG" ]]; then
-      CLANG="$FALLBACK_CLANG"
-    else
-      echo "error: set CLANG=/path/to/clang (built with Linx target)" >&2
-      exit 1
-    fi
+    echo "error: pinned clang not found; build compiler/llvm or set CLANG to an explicit external tool" >&2
+    exit 1
   fi
 fi
 
@@ -342,7 +337,7 @@ if [[ -d "$NEG_DIR" ]]; then
     echo "error: legacy L.BSTOP spelling unexpectedly assembled" >&2
     exit 1
   fi
-  if ! grep -Eq "legacy alias 'L\\.BSTOP' is not allowed in canonical v0\\.4; use 'C\\.BSTOP'" "$NEG_OUT/legacy_alias_l_bstop.err"; then
+  if ! grep -Eq "legacy alias 'L\\.BSTOP' is not allowed in canonical v0\\.56; use 'C\\.BSTOP'" "$NEG_OUT/legacy_alias_l_bstop.err"; then
     echo "error: legacy L.BSTOP rejection did not report the canonical spelling guidance" >&2
     cat "$NEG_OUT/legacy_alias_l_bstop.err" >&2
     exit 1

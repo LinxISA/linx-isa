@@ -8,7 +8,6 @@
 	url = https://github.com/LinxISA/linux.git
 	branch = main
 	update = checkout
-	ignore = dirty
 [submodule "emulator/qemu"]
 	path = emulator/qemu
 	url = https://github.com/LinxISA/qemu.git
@@ -43,9 +42,12 @@
 	path = skills/linx-skills
 	url = https://github.com/LinxISA/linx-skills.git
 	branch = main
+	update = checkout
 [submodule "lib/mesa3d"]
 	path = lib/mesa3d
 	url = https://github.com/LinxISA/mesa3d.git
+	branch = main
+	update = checkout
 [submodule "tools/model"]
 	path = tools/model
 	url = https://github.com/LinxISA/linx-model.git
@@ -55,6 +57,7 @@
 	path = tools/LinxCoreModel
 	url = https://github.com/LinxISA/LinxCoreModel.git
 	branch = main
+	update = checkout
 [submodule "compiler/ptoas"]
 	path = compiler/ptoas
 	url = https://github.com/LinxISA/ptoas.git
@@ -63,10 +66,5 @@
 [submodule "workloads/SuperNPUBench"]
 	path = workloads/SuperNPUBench
 	url = https://github.com/PTO-ISA/SuperNPUBench.git
-	branch = main
-	update = checkout
-[submodule "model/LinxCoreModel"]
-	path = model/LinxCoreModel
-	url = https://github.com/LinxISA/LinxCoreModel.git
 	branch = main
 	update = checkout

@@ -142,16 +142,8 @@ CXX_WRAPPER="$ROOT/tools/spec2017/linx_cxx.sh"
 chmod +x "$CC_WRAPPER" "$CXX_WRAPPER" "$ROOT/tools/spec2017/reextract_cpu2017.sh"
 
 export LINX_SYSROOT="${LINX_SYSROOT:-$ROOT/out/libc/musl/install/$MODE}"
-export LINX_SPEC_COMPAT_INCLUDE="${LINX_SPEC_COMPAT_INCLUDE:-$ROOT/tools/spec2017/compat}"
-if [[ "$FORCE_STATIC" == "1" ]]; then
-  export LINX_SPEC_LINK_MODE="${LINX_SPEC_LINK_MODE:-default}"
-elif [[ "$MODE" == "phase-c" ]]; then
-  export LINX_SPEC_LINK_MODE="${LINX_SPEC_LINK_MODE:-default}"
-else
-  export LINX_SPEC_LINK_MODE="${LINX_SPEC_LINK_MODE:-legacy}"
-fi
-if [[ "$FORCE_STATIC" == "1" && "$LINX_SPEC_LINK_MODE" == "legacy" ]]; then
-  echo "error: --force-static requires LINX_SPEC_LINK_MODE=default so crt startup runs .init_array" >&2
+if [[ -n "${LINX_SPEC_LINK_MODE:-}" || -n "${LINX_SPEC_COMPAT_INCLUDE:-}" ]]; then
+  echo "error: legacy SPEC link/compat controls were removed; use the canonical sysroot/CRT" >&2
   exit 2
 fi
 export LINX_SPEC_FORCE_STATIC="$FORCE_STATIC"
@@ -168,8 +160,7 @@ fi
 LLVM_READELF="${LLVM_READELF:-}"
 if [[ -z "$LLVM_READELF" ]]; then
   for cand in \
-    "$ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-readelf" \
-    "$HOME/llvm-project/build-linxisa-clang/bin/llvm-readelf"
+    "$ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-readelf"
   do
     if [[ -x "$cand" ]]; then
       LLVM_READELF="$cand"
@@ -375,7 +366,7 @@ build_benchmark() {
     echo "[cc] $CC_WRAPPER"
     echo "[cxx] $CXX_WRAPPER"
     echo "[sysroot] $LINX_SYSROOT"
-    echo "[link_mode] $LINX_SPEC_LINK_MODE"
+    echo "[link_mode] canonical-crt"
     echo "[force_static] $LINX_SPEC_FORCE_STATIC"
     echo "[readelf] $LLVM_READELF"
     echo
@@ -542,7 +533,7 @@ if [[ -n "$EMIT_MANIFEST" ]]; then
 
   benchmarks_csv="$(IFS=,; echo "${benchmarks[*]-}")"
   failed_csv="$(IFS=,; echo "${failed[*]-}")"
-  python3 - "$manifest_out" "$SPEC_DIR" "$MODE" "$OPTIMIZE_FLAGS" "$BENCH_OPTIMIZE_MANIFEST" "$LINX_SPEC_LINK_MODE" "$LINX_SPEC_FORCE_STATIC" "$LLVM_READELF" "$LOG_DIR" "$BASELINE_MANIFEST" "$POST_MANIFEST" "$DRIFT_PATHS" "$benchmarks_csv" "$failed_csv" <<'PY'
+  python3 - "$manifest_out" "$SPEC_DIR" "$MODE" "$OPTIMIZE_FLAGS" "$BENCH_OPTIMIZE_MANIFEST" "canonical-crt" "$LINX_SPEC_FORCE_STATIC" "$LLVM_READELF" "$LOG_DIR" "$BASELINE_MANIFEST" "$POST_MANIFEST" "$DRIFT_PATHS" "$benchmarks_csv" "$failed_csv" <<'PY'
 import datetime as dt
 import json
 import subprocess

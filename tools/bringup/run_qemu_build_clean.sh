@@ -7,7 +7,6 @@ OUT_DIR="${OUT_DIR:-/tmp/linx-qemu-clean-build}"
 WORKTREE_DIR="${WORKTREE_DIR:-/tmp/linx-qemu-clean-src}"
 TARGET="${TARGET:-qemu-system-linx64}"
 NINJA_BIN="${NINJA_BIN:-}"
-ALLOW_DIRTY_SOURCE_FALLBACK="${LINX_QEMU_ALLOW_DIRTY_SOURCE_FALLBACK:-0}"
 
 usage() {
   cat <<'USAGE'
@@ -131,11 +130,6 @@ hydrate_worktree_submodules_from_source() {
   done < <(git -C "$QEMU_ROOT" submodule status | awk '{print $2}')
 }
 
-tree_is_clean() {
-  local tree="$1"
-  [[ -z "$(git -C "$tree" status --porcelain --untracked-files=no)" ]]
-}
-
 have_qemu_submodule_content() {
   local tree="$1"
   [[ -f "$tree/roms/seabios/README" ]] \
@@ -168,29 +162,13 @@ if ! have_qemu_submodule_content "$WORKTREE_DIR"; then
 fi
 
 if ! have_qemu_submodule_content "$WORKTREE_DIR"; then
-  if [[ "$ALLOW_DIRTY_SOURCE_FALLBACK" == "1" ]] && have_qemu_submodule_content "$QEMU_ROOT"; then
-    echo "info: clean qemu worktree lacks populated nested submodules; using dirty source tree fallback" >&2
-    CONFIGURE_ROOT="$QEMU_ROOT"
-    BUILD_FINGERPRINT="$HEAD_SHA:dirty-source"
-  else
-    echo "info: populating clean qemu worktree submodules" >&2
-    populate_worktree_submodules
-  fi
+  echo "info: populating clean qemu worktree submodules" >&2
+  populate_worktree_submodules
 fi
 
 if ! have_qemu_submodule_content "$WORKTREE_DIR"; then
-  if [[ "$ALLOW_DIRTY_SOURCE_FALLBACK" == "1" ]] && have_qemu_submodule_content "$QEMU_ROOT"; then
-    echo "info: clean qemu worktree lacks populated nested submodules; using dirty source tree fallback" >&2
-    CONFIGURE_ROOT="$QEMU_ROOT"
-    BUILD_FINGERPRINT="$HEAD_SHA:dirty-source"
-  elif tree_is_clean "$QEMU_ROOT" && have_qemu_submodule_content "$QEMU_ROOT"; then
-    echo "info: clean qemu worktree lacks populated nested submodules; using clean source tree fallback" >&2
-    CONFIGURE_ROOT="$QEMU_ROOT"
-    BUILD_FINGERPRINT="$HEAD_SHA:source"
-  else
-    echo "error: clean qemu worktree lacks populated nested submodules and source tree fallback is unavailable" >&2
-    exit 1
-  fi
+  echo "error: clean qemu worktree lacks required nested submodules" >&2
+  exit 1
 fi
 
 need_configure=0

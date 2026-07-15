@@ -2,6 +2,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 OUT_LOG="${OUT_LOG:-$SCRIPT_DIR/out/system_strict.log}"
 RETRIES="${RETRIES:-3}"
 STRICT_TIMER_IRQ_DISABLE="${STRICT_TIMER_IRQ_DISABLE:-0}"
@@ -9,8 +10,30 @@ HEARTBEAT_SEC="${HEARTBEAT_SEC:-2}"
 NO_PROGRESS_TIMEOUT="${NO_PROGRESS_TIMEOUT:-0}"
 mkdir -p "$(dirname "$OUT_LOG")"
 
+if [[ -z "${QEMU:-}" || ! -x "$QEMU" ]]; then
+  echo "error: strict system lane requires QEMU to name an explicit executable" >&2
+  exit 2
+fi
+python3 - "$ROOT" "$QEMU" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+root = Path(sys.argv[1]).resolve()
+sys.path.insert(0, str(root / "tools" / "bringup"))
+from qemu_build_paths import qemu_binary_provenance
+
+provenance = qemu_binary_provenance(root, Path(sys.argv[2]))
+if not provenance["clean_build_for_head"]:
+    raise SystemExit(
+        "error: strict system lane requires a clean HEAD-matched QEMU build: "
+        + json.dumps(provenance, sort_keys=True)
+    )
+PY
+
 CMD=(
   python3 "$SCRIPT_DIR/run_tests.py"
+  --qemu "$QEMU"
   --suite system
   --timeout "${TIMEOUT:-60}"
   --heartbeat-sec "$HEARTBEAT_SEC"

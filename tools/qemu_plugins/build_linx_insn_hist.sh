@@ -2,7 +2,7 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-QEMU_SRC="${QEMU_SRC:-$HOME/qemu}"
+QEMU_SRC="${QEMU_SRC:-$REPO_ROOT/emulator/qemu}"
 
 OUT_DIR="${OUT_DIR:-$REPO_ROOT/workloads/generated/plugins}"
 OUT_SO="$OUT_DIR/liblinx_insn_hist.so"

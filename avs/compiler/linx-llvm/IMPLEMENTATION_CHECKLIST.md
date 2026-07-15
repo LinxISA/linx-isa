@@ -17,7 +17,7 @@ is first rewritten to match the checked-in `LinxV5` branch topology.
 ## Phase 1: Core Instruction Support
 
 ### TableGen Definitions
-- [ ] Generate instruction patterns from ISA spec using `tools/isa/gen_llvm_tablegen.py`
+- [ ] Regenerate the canonical C codec from `isa/v0.56/linxisa-v0.56.json`
 - [ ] Integrate generated patterns into `LinxInstrInfo.td`
 - [ ] Define instruction formats in `LinxInstrFormats.td`:
   - [ ] 16-bit compressed format
@@ -211,16 +211,16 @@ is first rewritten to match the checked-in `LinxV5` branch topology.
 ## Tools and Scripts
 
 ### In This Repository
-- [x] `tools/isa/gen_llvm_tablegen.py` - TableGen generator
+- [x] `tools/isa/gen_c_codec.py` - canonical LLVM MC codec generator
 - [x] `avs/compiler/linx-llvm/tests/analyze_coverage.py` - Coverage analysis
 - [x] `avs/compiler/linx-llvm/templates/` - Implementation templates
 
 ### Usage
 ```bash
-# Generate TableGen patterns
-python3 tools/isa/gen_llvm_tablegen.py \
-  --spec removed-pre-v056-profile/removed-pre-v056-catalog.json \
-  --out avs/compiler/linx-llvm/LinxInstrInfo.td
+# Generate canonical LLVM MC codec tables
+python3 tools/isa/gen_c_codec.py \
+  --spec isa/v0.56/linxisa-v0.56.json \
+  --out-dir compiler/llvm/llvm/lib/Target/LinxISA/MCTargetDesc
 
 # Run tests
 cd avs/compiler/linx-llvm/tests

@@ -1,8 +1,5 @@
 # LLVM Backend Implementation Guide
 
-This document is now a historical bring-up note. The previous external
-`~/llvm-project`-centric compiler plan is obsolete.
-
 The canonical compiler implementation for this superproject lives in the
 checked-in submodule at:
 
@@ -10,8 +7,7 @@ checked-in submodule at:
 - `compiler/llvm/clang/lib/Basic/Targets/LinxV5.*`
 - `compiler/llvm/clang/lib/Driver/ToolChains/LinxV5*`
 
-Use the in-repo compiler branch and its gate surface as source of truth; do not
-route new implementation work to an external `~/llvm-project` checkout.
+Use the in-repo compiler branch and its gate surface as source of truth.
 
 ## Current implementation surface
 

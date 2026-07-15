@@ -64,7 +64,6 @@ def _find_tool(configured: str, tool: str) -> str:
 
     candidates = [
         ROOT / "compiler/llvm/build-linxisa-clang/bin" / tool,
-        Path.home() / "llvm-project/build-linxisa-clang/bin" / tool,
     ]
     for cand in candidates:
         if cand.is_file():
@@ -158,9 +157,7 @@ def _split_objects(values: list[str], object_to_source: dict[str, str]) -> list[
 def _common_env(args: argparse.Namespace) -> dict[str, str]:
     env = dict(os.environ)
     env.setdefault("LINX_SYSROOT", str((ROOT / f"out/libc/musl/install/{args.mode}").resolve()))
-    env.setdefault("LINX_SPEC_COMPAT_INCLUDE", str((ROOT / "tools/spec2017/compat").resolve()))
     env.setdefault("LINX_SPEC_FORCE_STATIC", "1")
-    env.setdefault("LINX_SPEC_LINK_MODE", "default")
     return env
 
 

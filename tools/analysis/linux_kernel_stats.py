@@ -37,7 +37,7 @@ def _default_clang() -> Path | None:
     env = os.environ.get("CLANG")
     if env:
         return Path(os.path.expanduser(env))
-    cand = Path.home() / "llvm-project" / "build-linxisa-clang" / "bin" / "clang"
+    cand = REPO_ROOT / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "clang"
     return cand if cand.exists() else None
 
 
@@ -50,8 +50,7 @@ def _default_llvm_objdump() -> Path | None:
         cand = clang.parent / "llvm-objdump"
         if cand.exists():
             return cand
-    # Fallback: common location next to clang build.
-    cand = Path.home() / "llvm-project" / "build-linxisa-clang" / "bin" / "llvm-objdump"
+    cand = REPO_ROOT / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "llvm-objdump"
     return cand if cand.exists() else None
 
 
@@ -59,11 +58,8 @@ def _default_qemu() -> Path | None:
     env = os.environ.get("QEMU")
     if env:
         return Path(os.path.expanduser(env))
-    cand = Path.home() / "qemu" / "build" / "qemu-system-linx64"
-    if cand.exists():
-        return cand
-    cand_tci = Path.home() / "qemu" / "build-tci" / "qemu-system-linx64"
-    return cand_tci if cand_tci.exists() else None
+    cand = REPO_ROOT / "emulator" / "qemu" / "build-linx" / "qemu-system-linx64"
+    return cand if cand.exists() else None
 
 
 def _default_plugin() -> Path:
@@ -274,8 +270,12 @@ def _qemu_boot_sample(
 
 
 def main(argv: list[str]) -> int:
-    ap = argparse.ArgumentParser(description="Collect static+dynamic instruction stats for Linx Linux vmlinux under ~/linux.")
-    ap.add_argument("--linux-root", default=str(Path.home() / "linux"))
+    ap = argparse.ArgumentParser(description="Collect static+dynamic instruction stats for a Linx Linux vmlinux.")
+    ap.add_argument(
+        "--linux-root",
+        required=True,
+        help="explicit Linux source tree (for the pinned lane use kernel/linux)",
+    )
     ap.add_argument("--build-dir", default="build-linx-fixed")
     ap.add_argument("--vmlinux", default="vmlinux")
     ap.add_argument("--initrd", default="linx-initramfs/initramfs.cpio")

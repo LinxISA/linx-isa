@@ -63,19 +63,21 @@ def _matching_clean_qemu(root: Path, target: str = "qemu-system-linx64") -> Path
 
 
 def default_qemu_binary(root: Path, target: str = "qemu-system-linx64") -> Path:
+    explicit = os.environ.get("QEMU")
+    if explicit:
+        binary = Path(explicit).expanduser()
+        if not binary.is_file() or not os.access(binary, os.X_OK):
+            raise FileNotFoundError(f"explicit QEMU binary is not executable: {binary}")
+        return binary
+
     clean = _matching_clean_qemu(root, target=target)
     if clean is not None:
         return clean
-    qemu_root = root / "emulator" / "qemu"
-    candidates = [
-        qemu_root / "build-linx" / target,
-        qemu_root / "build-tci" / target,
-        qemu_root / "build" / target,
-    ]
-    for candidate in candidates:
-        if candidate.is_file() and os.access(candidate, os.X_OK):
-            return candidate
-    return candidates[0]
+    out_dir = Path(os.environ.get("QEMU_CLEAN_OUT_DIR", "/tmp/linx-qemu-clean-build"))
+    raise FileNotFoundError(
+        "no QEMU binary was selected: set QEMU to an explicit executable or "
+        f"produce a HEAD-matched clean build at {out_dir / target}"
+    )
 
 
 def qemu_binary_provenance(

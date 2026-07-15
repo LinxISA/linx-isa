@@ -36,9 +36,9 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertIn("virtio_mmio.device=0x100@0x30002000:2", append)
         self.assertNotIn("virtio_mmio.device=0x200@0x30001000:1", append)
 
-    def test_default_qemu_prefers_build_linx_over_legacy_build(self) -> None:
+    def test_default_qemu_rejects_in_tree_build_fallbacks(self) -> None:
         with tempfile.TemporaryDirectory() as td, mock.patch.dict(
-            os.environ, {}, clear=True
+            os.environ, {"QEMU_CLEAN_OUT_DIR": f"{td}/clean"}, clear=True
         ):
             root = Path(td)
             build_linx = root / "emulator" / "qemu" / "build-linx" / "qemu-system-linx64"
@@ -50,7 +50,8 @@ class RunIntRateQemuTests(unittest.TestCase):
             build_linx.chmod(0o755)
             legacy.chmod(0o755)
 
-            self.assertEqual(runner._default_qemu(root), str(build_linx.resolve()))
+            with self.assertRaisesRegex(FileNotFoundError, "no QEMU binary was selected"):
+                runner._default_qemu(root)
 
     def test_default_qemu_honors_qemu_env_override(self) -> None:
         with tempfile.TemporaryDirectory() as td, mock.patch.dict(

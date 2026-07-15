@@ -38,9 +38,9 @@ bash tools/bringup/run_qemu_build_local.sh
 This prints the current rebuilt `qemu-system-linx64` path, which is the
 boot-proof-passing local line as of the current bring-up state.
 
-`run_tests.py` resolves QEMU in this order when `QEMU` is unset:
-`emulator/qemu/build-linx`, `emulator/qemu/build-tci`,
-`emulator/qemu/build`, then the historical `$HOME/qemu` fallbacks.
+`run_tests.py` requires QEMU to be supplied through `--qemu` or `QEMU`.
+Strict lanes additionally require a clean, HEAD-matched build provenance
+marker; no in-tree or home-directory build is selected implicitly.
 
 Override paths with environment variables:
 

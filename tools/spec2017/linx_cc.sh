@@ -5,16 +5,13 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 ROOT="$(cd "$SCRIPT_DIR/../.." && pwd -P)"
 TARGET="${LINX_TARGET:-linx64-unknown-linux-musl}"
 SYSROOT="${LINX_SYSROOT:-$ROOT/out/libc/musl/install/phase-b}"
-COMPAT_INCLUDE="${LINX_SPEC_COMPAT_INCLUDE:-$SCRIPT_DIR/compat}"
-LINK_MODE="${LINX_SPEC_LINK_MODE:-legacy}"
 FORCE_STATIC="${LINX_SPEC_FORCE_STATIC:-0}"
 STATIC_IMAGE_BASE="${LINX_SPEC_IMAGE_BASE:-0x40000000}"
 
 CLANG="${LINX_CLANG:-}"
 if [[ -z "$CLANG" ]]; then
   for cand in \
-    "$ROOT/compiler/llvm/build-linxisa-clang/bin/clang" \
-    "$HOME/llvm-project/build-linxisa-clang/bin/clang"
+    "$ROOT/compiler/llvm/build-linxisa-clang/bin/clang"
   do
     if [[ -x "$cand" ]]; then
       CLANG="$cand"
@@ -27,22 +24,9 @@ if [[ -z "$CLANG" || ! -x "$CLANG" ]]; then
   exit 2
 fi
 
-case "$LINK_MODE" in
-  legacy|default) ;;
-  *)
-    echo "error: LINX_SPEC_LINK_MODE must be legacy or default (got '$LINK_MODE')" >&2
-    exit 2
-    ;;
-esac
-
-mkdir -p "$COMPAT_INCLUDE/linux"
-if [[ ! -f "$COMPAT_INCLUDE/linux/limits.h" ]]; then
-  cat >"$COMPAT_INCLUDE/linux/limits.h" <<'EOF'
-#ifndef _LINX_SPEC2017_COMPAT_LINUX_LIMITS_H
-#define _LINX_SPEC2017_COMPAT_LINUX_LIMITS_H
-#include <limits.h>
-#endif
-EOF
+if [[ -n "${LINX_SPEC_LINK_MODE:-}" || -n "${LINX_SPEC_COMPAT_INCLUDE:-}" ]]; then
+  echo "error: legacy SPEC link/compat controls were removed; use the canonical sysroot/CRT" >&2
+  exit 2
 fi
 
 BENCH_FLAGS=()
@@ -156,21 +140,9 @@ if [[ "$is_link" == "1" ]]; then
       -Wl,--image-base="$STATIC_IMAGE_BASE"
     )
   else
-    if [[ "$LINK_MODE" == "legacy" ]]; then
-      LINK_FLAGS+=(
-        -nostartfiles
-        -nodefaultlibs
-        -Wl,-e,main
-        -L"$SYSROOT/lib"
-        -L"$SYSROOT/usr/lib"
-        "$SYSROOT/lib/libclang_rt.builtins-linx64.a"
-        -lc
-      )
-    else
-      LINK_FLAGS+=(
-        -rtlib=compiler-rt
-      )
-    fi
+    LINK_FLAGS+=(
+      -rtlib=compiler-rt
+    )
   fi
 fi
 
@@ -178,7 +150,6 @@ exec "$CLANG" \
   --target="$TARGET" \
   --sysroot="$SYSROOT" \
   -fuse-ld=lld \
-  -I"$COMPAT_INCLUDE" \
   ${COMMON_FLAGS[@]+"${COMMON_FLAGS[@]}"} \
   ${BENCH_FLAGS[@]+"${BENCH_FLAGS[@]}"} \
   "${FILTERED_ARGS[@]}" \

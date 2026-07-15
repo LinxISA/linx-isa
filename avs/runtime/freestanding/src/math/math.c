@@ -1,13 +1,4 @@
-/*
- * linx-libc: minimal libm stubs for bring-up
- *
- * The initial Linx bring-up environment is freestanding (no hosted libc/libm).
- * A small subset of libm is needed to compile and run real-world workloads.
- *
- * This file intentionally implements only lightweight functionality. Where a
- * full implementation is not yet available, functions return conservative
- * placeholders so that code can link and execute under QEMU.
- */
+/* Minimal freestanding libm services used by AVS and direct-boot workloads. */
 
 #include <linxisa_libc.h>
 #include <math.h>
@@ -81,38 +72,170 @@ float sqrtf(float x)
     return (float)sqrt((double)x);
 }
 
-double cos(double x)
+static double linx_trig_reduce(double x)
 {
-    (void)x;
-    return 0.0;
+    const double two_pi_hi = 6.28318530717958623200;
+    const double two_pi_lo = 2.44929359829470641435e-16;
+    const double inv_two_pi = 0.15915494309189533577;
+    const u64 bits = linx_f64_bits(x);
+    const u64 exponent = (bits >> 52) & 0x7ff;
+
+    if (exponent == 0x7ff) {
+        return linx_f64_from_bits(0x7ff8000000000000ULL);
+    }
+
+    /*
+     * Direct-boot workloads stay well inside this exact-integer reduction
+     * range. Keeping the bound explicit avoids an overflowing conversion for
+     * enormous finite inputs while still providing real periodic semantics.
+     */
+    if (fabs(x) > 0x1p52) {
+        return linx_f64_from_bits(0x7ff8000000000000ULL);
+    }
+
+    const double turns = x * inv_two_pi;
+    const long long nearest = (long long)(turns + (turns < 0.0 ? -0.5 : 0.5));
+    return (x - (double)nearest * two_pi_hi) - (double)nearest * two_pi_lo;
 }
 
 double sin(double x)
 {
-    (void)x;
-    return 0.0;
+    const double pi = 3.14159265358979323846;
+    const double half_pi = 1.57079632679489661923;
+    double y = linx_trig_reduce(x);
+    if (linx_f64_bits(y) == 0x7ff8000000000000ULL) {
+        return y;
+    }
+    if (y > half_pi) {
+        y = pi - y;
+    } else if (y < -half_pi) {
+        y = -pi - y;
+    }
+
+    const double y2 = y * y;
+    return y * (1.0 + y2 * (-1.0 / 6.0 + y2 * (1.0 / 120.0 +
+           y2 * (-1.0 / 5040.0 + y2 * (1.0 / 362880.0 +
+           y2 * (-1.0 / 39916800.0 + y2 * (1.0 / 6227020800.0)))))));
+}
+
+double cos(double x)
+{
+    const double pi = 3.14159265358979323846;
+    const double half_pi = 1.57079632679489661923;
+    double y = linx_trig_reduce(x);
+    double sign = 1.0;
+    if (linx_f64_bits(y) == 0x7ff8000000000000ULL) {
+        return y;
+    }
+    if (y > half_pi) {
+        y = pi - y;
+        sign = -1.0;
+    } else if (y < -half_pi) {
+        y = -pi - y;
+        sign = -1.0;
+    }
+
+    const double y2 = y * y;
+    return sign * (1.0 + y2 * (-1.0 / 2.0 + y2 * (1.0 / 24.0 +
+           y2 * (-1.0 / 720.0 + y2 * (1.0 / 40320.0 +
+           y2 * (-1.0 / 3628800.0 + y2 * (1.0 / 479001600.0)))))));
+}
+
+float cosf(float x)
+{
+    return (float)cos((double)x);
+}
+
+float sinf(float x)
+{
+    return (float)sin((double)x);
 }
 
 double acos(double x)
 {
-    (void)x;
-    return 0.0;
+    const double pi = 3.14159265358979323846;
+    const double half_pi = 1.57079632679489661923;
+
+    if (x < -1.0 || x > 1.0) {
+        return linx_f64_from_bits(0x7ff8000000000000ULL);
+    }
+    if (x == 1.0) {
+        return 0.0;
+    }
+    if (x == -1.0) {
+        return pi;
+    }
+    if (x == 0.0) {
+        return half_pi;
+    }
+
+    const double ratio = sqrt((1.0 - x) * (1.0 + x)) / fabs(x);
+    return x > 0.0 ? atan(ratio) : pi - atan(ratio);
 }
 
 double atan(double x)
 {
-    /* Minimal special-case used by some codelets: atan(1) == pi/4. */
-    if (x == 1.0) {
-        return 0.7853981633974483;
+    const double pi_over_2 = 1.57079632679489661923;
+    const double pi_over_4 = 0.78539816339744830962;
+    const double tan_pi_over_8 = 0.41421356237309504880;
+    const u64 bits = linx_f64_bits(x);
+    const u64 exponent = (bits >> 52) & 0x7ff;
+
+    if (exponent == 0x7ff) {
+        if (bits & 0x000fffffffffffffULL) {
+            return x;
+        }
+        return bits >> 63 ? -pi_over_2 : pi_over_2;
     }
-    (void)x;
-    return 0.0;
+
+    const int negative = x < 0.0;
+    double y = fabs(x);
+    double offset = 0.0;
+    int reciprocal = 0;
+    if (y > 1.0) {
+        y = 1.0 / y;
+        offset = pi_over_2;
+        reciprocal = 1;
+    }
+    if (y > tan_pi_over_8) {
+        y = (y - 1.0) / (y + 1.0);
+        offset = reciprocal ? pi_over_4 : pi_over_4;
+        reciprocal = 0;
+    }
+
+    const double y2 = y * y;
+    double term = y;
+    double sum = y;
+    for (int denominator = 3, subtract = 1; denominator <= 25;
+         denominator += 2, subtract = !subtract) {
+        term *= y2;
+        sum += (subtract ? -term : term) / (double)denominator;
+    }
+    double result = reciprocal ? offset - sum : offset + sum;
+    return negative ? -result : result;
 }
 
 double pow(double x, double y)
 {
-    (void)y;
-    return x;
+    if (y == 0.0) {
+        return 1.0;
+    }
+    if (x == 0.0) {
+        return y > 0.0 ? 0.0 : linx_f64_from_bits(0x7ff0000000000000ULL);
+    }
+    if (x > 0.0) {
+        return exp(y * log(x));
+    }
+
+    if (fabs(y) > 0x1p52) {
+        return linx_f64_from_bits(0x7ff8000000000000ULL);
+    }
+    const long long integral_y = (long long)y;
+    if ((double)integral_y != y) {
+        return linx_f64_from_bits(0x7ff8000000000000ULL);
+    }
+    const double magnitude = exp(y * log(-x));
+    return (integral_y & 1LL) ? -magnitude : magnitude;
 }
 
 static inline double linx_f64_pos_inf(void)

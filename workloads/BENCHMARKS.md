@@ -48,7 +48,7 @@ python3 workloads/run_polybench.py \
 
 ```bash
 python3 workloads/ctuning/run_milepost_codelets.py \
-  --ctuning-root ~/ctuning-programs \
+  --ctuning-root "$CTUNING_ROOT" \
   --clang /path/to/clang \
   --lld /path/to/ld.lld \
   --target <triple> \

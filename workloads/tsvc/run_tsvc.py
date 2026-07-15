@@ -43,20 +43,19 @@ SECTIONS {
 
 ANALYZE_SCRIPT = TSVC_DIR / "analyze_tsvc_vectorization.py"
 COMPARE_SCRIPT = TSVC_DIR / "compare_tsvc_checksums.py"
-COMPAT_INCLUDE = TSVC_DIR / "include"
 FREESTANDING_INCLUDE = REPO_ROOT / "avs" / "runtime" / "freestanding" / "include"
 FREESTANDING_SRC = REPO_ROOT / "avs" / "runtime" / "freestanding" / "src"
 STARTUP_SRC = WORKLOADS_DIR / "common" / "startup.c"
-COMPAT_RUNTIME_SRC = TSVC_DIR / "runtime" / "linx_compat.c"
 PINNED_TSVC_SRC = TSVC_DIR / "upstream" / "TSVC_2" / "src"
 FALLBACK_TSVC_SRC = WORKLOADS_DIR / "third_party" / "TSVC_2" / "src"
 
 _RE_TSVC_ROW = re.compile(r"^\s*([A-Za-z_][A-Za-z0-9_]*)\s+(\S+)\s+(\S+)\s*$")
 _VECTOR_MODES = ("off", "mseq", "mpar", "auto")
-_SOURCE_POLICIES = ("linx-v03-parity", "upstream")
+_SOURCE_POLICIES = ("linx-v056", "upstream")
 _CANONICAL_ITERATIONS = 32
 _CANONICAL_LEN_1D = 320
 _CANONICAL_LEN_2D = 16
+_FINISHER_PASS_LOW8 = 0x55
 
 
 @dataclass(frozen=True)
@@ -134,10 +133,7 @@ def _default_clang() -> Path | None:
     env = os.environ.get("CLANG")
     if env:
         return Path(os.path.expanduser(env))
-    candidates = [
-        REPO_ROOT / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "clang",
-        Path.home() / "llvm-project" / "build-linxisa-clang" / "bin" / "clang",
-    ]
+    candidates = [REPO_ROOT / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "clang"]
     for cand in candidates:
         if cand.exists():
             return cand
@@ -153,16 +149,6 @@ def _default_qemu() -> Path | None:
     env = os.environ.get("QEMU")
     if env:
         return Path(os.path.expanduser(env))
-    candidates = [
-        Path("/tmp/linx-qemu-clean-build/qemu-system-linx64"),
-        REPO_ROOT / "emulator" / "qemu" / "build" / "qemu-system-linx64",
-        REPO_ROOT / "emulator" / "qemu" / "build-tci" / "qemu-system-linx64",
-        Path.home() / "qemu" / "build" / "qemu-system-linx64",
-        Path.home() / "qemu" / "build-tci" / "qemu-system-linx64",
-    ]
-    for cand in candidates:
-        if cand.exists():
-            return cand
     return None
 
 
@@ -360,7 +346,7 @@ def _stage_tsvc_sources(
     if n != 1:
         raise SystemExit(f"error: expected to patch exactly 1 time_function, got {n}")
 
-    if source_policy == "linx-v03-parity":
+    if source_policy == "linx-v056":
         tsvc_text, source_canonicalizations = _canonicalize_s2111_divide_literals(
             tsvc_text
         )
@@ -469,7 +455,7 @@ def _build_runtime_objects(
     out_dir: Path,
     verbose: bool,
 ) -> list[Path]:
-    include_dirs = [COMPAT_INCLUDE, FREESTANDING_INCLUDE, TSVC_DIR]
+    include_dirs = [FREESTANDING_INCLUDE, TSVC_DIR]
     rt_dir = out_dir / "_runtime"
     rt_dir.mkdir(parents=True, exist_ok=True)
 
@@ -484,7 +470,6 @@ def _build_runtime_objects(
         (FREESTANDING_SRC / "math" / "math.c", "math.o", []),
         (FREESTANDING_SRC / "softfp" / "softfp.c", "softfp.o", ["-O0"]),
         (FREESTANDING_SRC / "atomic" / "atomic_builtins.c", "atomic_builtins.o", []),
-        (COMPAT_RUNTIME_SRC, "linx_compat.o", []),
     ]
     for src, obj_name, extra in runtime_sources:
         if not src.exists():
@@ -566,6 +551,8 @@ def _run_qemu(
         "-monitor",
         "none",
     ]
+    qemu_env = os.environ.copy()
+    qemu_env.setdefault("LINX_VIRT_TEST_FINISHER", "1")
     try:
         p = _run(
             cmd,
@@ -573,6 +560,7 @@ def _run_qemu(
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             timeout=timeout_s,
+            env=qemu_env,
         )
     except subprocess.TimeoutExpired as e:
         stdout_log.write_bytes(e.stdout or b"")
@@ -582,7 +570,8 @@ def _run_qemu(
     stdout_log.write_bytes(p.stdout or b"")
     stderr_log.write_bytes(p.stderr or b"")
     text = (p.stdout or b"").decode("utf-8", errors="replace")
-    if p.returncode != 0:
+    finisher_low8 = p.returncode & 0xFF
+    if p.returncode != 0 and finisher_low8 != _FINISHER_PASS_LOW8:
         raise SystemExit(
             f"error: QEMU failed (exit={p.returncode})\n"
             f"  stdout: {stdout_log}\n"
@@ -697,7 +686,7 @@ def main(argv: list[str]) -> int:
     ap.add_argument(
         "--source-policy",
         choices=_SOURCE_POLICIES,
-        default="linx-v03-parity",
+        default="linx-v056",
         help="Staged source policy for parity gates.",
     )
     ap.add_argument("--strict-fail-under", type=int, default=None, help="Fail if strict vectorized kernels are below this threshold.")
@@ -812,7 +801,7 @@ def main(argv: list[str]) -> int:
 
     python = sys.executable or "python3"
     results: dict[str, ModeArtifacts] = {}
-    include_dirs = [COMPAT_INCLUDE, FREESTANDING_INCLUDE, stage_dir]
+    include_dirs = [FREESTANDING_INCLUDE, stage_dir]
     for mode in modes:
         mode_obj_dir = build_dir / mode / "obj"
         mode_obj_dir.mkdir(parents=True, exist_ok=True)

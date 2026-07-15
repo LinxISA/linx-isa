@@ -14,8 +14,7 @@ LINK_MODE="${LINK_MODE:-both}" # static|shared|both
 CLANGXX="${CLANGXX:-}"
 if [[ -z "$CLANGXX" ]]; then
   for cand in \
-    "$REPO_ROOT/compiler/llvm/build-linxisa-clang/bin/clang++" \
-    "$HOME/llvm-project/build-linxisa-clang/bin/clang++"
+    "$REPO_ROOT/compiler/llvm/build-linxisa-clang/bin/clang++"
   do
     if [[ -x "$cand" ]]; then
       CLANGXX="$cand"

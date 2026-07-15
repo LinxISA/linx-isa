@@ -36,7 +36,7 @@ def _default_clang() -> Path | None:
     env = os.environ.get("CLANG")
     if env:
         return Path(os.path.expanduser(env))
-    cand = Path.home() / "llvm-project" / "build-linxisa-clang" / "bin" / "clang"
+    cand = REPO_ROOT / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "clang"
     return cand if cand.exists() else None
 
 
@@ -55,11 +55,7 @@ def _default_qemu() -> Path | None:
     env = os.environ.get("QEMU")
     if env:
         return Path(os.path.expanduser(env))
-    cand_tci = Path.home() / "qemu" / "build-tci" / "qemu-system-linx64"
-    if cand_tci.exists():
-        return cand_tci
-    cand = Path.home() / "qemu" / "build" / "qemu-system-linx64"
-    return cand if cand.exists() else None
+    return None
 
 
 def _default_llvm_tool(clang: Path, tool: str) -> Path | None:

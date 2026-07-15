@@ -54,33 +54,25 @@ def check_tail_musttail(label: str, asm: str) -> None:
 
     direct_body = funcs["callret_tail_direct"]
     direct_is_tail_transfer = (
-        "FRET.STK" not in direct_body
+        "FEXIT" in direct_body
+        and "FRET.STK" not in direct_body
         and re.search(r"\b(?:[CL]\.)?BSTART(?:\.STD)?\s+DIRECT,\s*tail_target\b", direct_body) is not None
     )
-    direct_is_legacy_tail = (
-        re.search(r"\b(?:C\.)?BSTART(?:\.STD)?\s+CALL,\s*tail_target\b", direct_body) is not None
-        and "FRET.STK" in direct_body
-    )
     require(
-        direct_is_tail_transfer or direct_is_legacy_tail,
-        f"{label}:callret_tail_direct: missing accepted musttail lowering pattern",
+        direct_is_tail_transfer,
+        f"{label}:callret_tail_direct: expected canonical FEXIT + DIRECT tail transfer",
     )
 
     indirect_body = funcs["callret_tail_indirect"]
     indirect_is_tail_transfer = (
-        "FRET.STK" not in indirect_body
+        "FEXIT" in indirect_body
+        and "FRET.STK" not in indirect_body
         and re.search(r"\b(?:C\.)?BSTART(?:\.STD)?\s+IND\b", indirect_body) is not None
         and re.search(r"\bc\.setc\.tgt\b", indirect_body, re.IGNORECASE) is not None
     )
-    indirect_is_legacy_tail = (
-        re.search(r"\b(?:C\.)?BSTART(?:\.STD)?\s+ICALL\b", indirect_body) is not None
-        and re.search(r"\bc\.setret\b", indirect_body, re.IGNORECASE) is not None
-        and re.search(r"\bc\.setc\.tgt\b", indirect_body, re.IGNORECASE) is not None
-        and "FRET.STK" in indirect_body
-    )
     require(
-        indirect_is_tail_transfer or indirect_is_legacy_tail,
-        f"{label}:callret_tail_indirect: missing accepted musttail lowering pattern",
+        indirect_is_tail_transfer,
+        f"{label}:callret_tail_indirect: expected canonical FEXIT + IND tail transfer",
     )
 
 

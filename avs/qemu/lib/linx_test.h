@@ -5,7 +5,7 @@
  *
  * Conventions:
  * - UART (0x10000000) is used for human-readable output.
- * - Test finisher MMIO (0x00100000) is used to request QEMU shutdown. The low
+ * - Test finisher MMIO (0x10009000) is used to request QEMU shutdown. The low
  *   16 bits carry the finisher status and the upper 16 bits carry an optional
  *   failure code. Do not write the finisher for each passing test; only use it
  *   for final termination (or on failure).

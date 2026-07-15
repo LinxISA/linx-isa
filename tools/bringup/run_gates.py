@@ -112,7 +112,14 @@ def prepare_env(root: Path, profile: str, tier: str) -> dict[str, str]:
     env.setdefault("LINX_EMU_DISABLE_TIMER_IRQ", "0")
     env.setdefault("CLANG", default_tool(root, "compiler/llvm/build-linxisa-clang/bin/clang"))
     env.setdefault("LLD", default_tool(root, "compiler/llvm/build-linxisa-clang/bin/ld.lld"))
-    env.setdefault("QEMU", str(default_qemu_binary(root)))
+    if not env.get("QEMU"):
+        try:
+            env["QEMU"] = str(default_qemu_binary(root))
+        except FileNotFoundError:
+            # Non-QEMU gates and dry runs do not need an emulator. QEMU gates
+            # retain the strict contract and fail when no explicit or
+            # HEAD-matched clean executable is available.
+            env["QEMU"] = ""
     if tier == "nightly":
         env.setdefault("QEMU_ISA_COVERAGE_REQUIRE_FULL", "1")
         env.setdefault("RUN_BUSYBOX_ROOTFS_GATE", "1")

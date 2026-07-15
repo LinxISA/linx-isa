@@ -2569,20 +2569,33 @@ def pto_kernel_tier(rel: str) -> int:
     return 4
 
 
+def supernpu_test_root(root: Path) -> Path:
+    """Return the sole supported SuperNPUBench test root."""
+    return (
+        root
+        / "workloads"
+        / "SuperNPUBench"
+        / "benchmark"
+        / "two-level-arch"
+        / "test"
+    )
+
+
 def supernpu_elf_path(root: Path, suite_dir: Path, make_vars: dict[str, str]) -> Path:
     bench_root = root / "workloads" / "SuperNPUBench"
-    test_root = bench_root / "test"
+    test_root = supernpu_test_root(root)
     suite_rel = suite_dir.relative_to(test_root).as_posix()
     category_name = suite_rel.replace("/", "_")
     testcase = make_vars["TESTCASE"]
-    return bench_root / "output" / suite_rel / "elf" / f"{category_name}_{testcase}_linx.elf"
+    output_root = bench_root / "benchmark" / "two-level-arch" / "output"
+    return output_root / suite_rel / "elf" / f"{category_name}_{testcase}_linx.elf"
 
 
 def supernpu_elf_dir(root: Path, suite_dir: Path) -> Path:
     bench_root = root / "workloads" / "SuperNPUBench"
-    test_root = bench_root / "test"
+    test_root = supernpu_test_root(root)
     suite_rel = suite_dir.relative_to(test_root).as_posix()
-    return bench_root / "output" / suite_rel / "elf"
+    return bench_root / "benchmark" / "two-level-arch" / "output" / suite_rel / "elf"
 
 
 def _norm_key(text: str) -> str:
@@ -3295,8 +3308,7 @@ def discover_cases(root: Path) -> list[Case]:
                 )
             )
 
-    bench_root = root / "workloads" / "SuperNPUBench"
-    test_root = bench_root / "test"
+    test_root = supernpu_test_root(root)
     if test_root.exists():
         for compile_all in sorted(test_root.rglob("compile.all")):
             suite_dir = compile_all.parent
@@ -3391,7 +3403,7 @@ def case_matches_pattern(case: Case, pattern: str) -> bool:
 def tool_paths(root: Path, args: argparse.Namespace) -> dict[str, str]:
     llvm_bin = root / "compiler" / "llvm" / "build-linxisa-clang" / "bin"
     qemu_default = default_qemu_binary(root)
-    model_root = Path(args.model_root).expanduser().resolve() if args.model_root else root / "model" / "LinxCoreModel"
+    model_root = Path(args.model_root).expanduser().resolve() if args.model_root else root / "tools" / "LinxCoreModel"
     gfsim = Path(args.gfsim).expanduser().resolve() if args.gfsim else model_root / "bin" / "gfsim"
     return {
         "clang": str(Path(args.clang).expanduser().resolve() if args.clang else llvm_bin / "clang"),
@@ -3820,7 +3832,15 @@ def supernpu_make_command(
     if target:
         return f"{prefix} {shlex.quote(target)}"
     bench_root = next((p for p in [case.workdir, *case.workdir.parents] if p.name == "SuperNPUBench"), None)
-    output_root = obj_root if obj_root is not None else (bench_root / "output" if bench_root else None)
+    output_root = (
+        obj_root
+        if obj_root is not None
+        else (
+            bench_root / "benchmark" / "two-level-arch" / "output"
+            if bench_root
+            else None
+        )
+    )
     mkdir_output = f"mkdir -p {shlex.quote(str(output_root))}" if output_root else "true"
     clean = f"make{obj_root_part} clean" if obj_root_part else "make clean"
     return f"{mkdir_output} && {clean} && {prefix}"
@@ -3865,7 +3885,7 @@ def classify_supernpu_compile_failure(log_path: Path) -> tuple[str, str]:
         "use of undeclared identifier '__tf32'",
         "use of undeclared identifier '__hf32'",
         "include/c++/v1/iostream",
-        "workloads/SuperNPUBench/include/jcore/type.hpp",
+        "workloads/SuperNPUBench/benchmark/two-level-arch/include/jcore/type.hpp",
     ]
     if any(marker in text for marker in source_markers):
         return "benchmark", "SuperNPUBench source/toolchain manifest mismatch"
@@ -5152,7 +5172,7 @@ def write_manifest(
     submodules = [
         "compiler/llvm",
         "emulator/qemu",
-        "model/LinxCoreModel",
+        "tools/LinxCoreModel",
         "tools/model",
         "workloads/pto_kernels",
         "workloads/SuperNPUBench",

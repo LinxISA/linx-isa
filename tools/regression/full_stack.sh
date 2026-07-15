@@ -15,14 +15,8 @@ LINX_EMU_DISABLE_TIMER_IRQ="$LINX_EMU_DISABLE_TIMER_IRQ" bash "$ROOT/tools/regre
 
 QEMU_BIN="${QEMU_BIN:-${QEMU:-}}"
 if [[ -z "${QEMU_BIN:-}" ]]; then
-  for cand in "$ROOT/emulator/qemu/build-linx/qemu-system-linx64" \
-              "$ROOT/emulator/qemu/build-tci/qemu-system-linx64" \
-              "$ROOT/emulator/qemu/build/qemu-system-linx64"; do
-    if [[ -x "$cand" ]]; then
-      QEMU_BIN="$cand"
-      break
-    fi
-  done
+  cand="$ROOT/emulator/qemu/build-linx/qemu-system-linx64"
+  [[ ! -x "$cand" ]] || QEMU_BIN="$cand"
 fi
 if [[ -n "${QEMU_BIN:-}" ]]; then
   export QEMU="$QEMU_BIN"
@@ -31,7 +25,7 @@ elif [[ "$LINX_BRINGUP_PROFILE" == "release-strict" ]]; then
   exit 1
 fi
 
-LLVM_ROOT="${LLVM_ROOT:-$HOME/llvm-project}"
+LLVM_ROOT="${LLVM_ROOT:-$ROOT/compiler/llvm}"
 if [[ -d "$LLVM_ROOT/llvm/test" ]]; then
   echo
   echo "-- LLVM lit (MC + CodeGen)"
@@ -144,8 +138,8 @@ try_build_pyc_compile() {
   fi
 
   if [[ -z "$llvm_config" ]]; then
-    for cand in "${LLVM_ROOT:-$HOME/llvm-project}/build-linxisa-clang/bin/llvm-config" \
-                "${LLVM_ROOT:-$HOME/llvm-project}/build/bin/llvm-config" \
+    for cand in "$LLVM_ROOT/build-linxisa-clang/bin/llvm-config" \
+                "$LLVM_ROOT/build/bin/llvm-config" \
                 "$ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-config"; do
       if [[ -x "$cand" ]]; then
         llvm_config="$cand"
@@ -169,9 +163,9 @@ try_build_pyc_compile() {
   fi
 
   if [[ -z "$mlir_dir" ]]; then
-    for cand in "${LLVM_ROOT:-$HOME/llvm-project}/build-linxisa-clang/lib/cmake/mlir" \
-                "${LLVM_ROOT:-$HOME/llvm-project}/build/lib/cmake/mlir" \
-                "${LLVM_ROOT:-$HOME/llvm-project}/build-make/lib/cmake/mlir" \
+    for cand in "$LLVM_ROOT/build-linxisa-clang/lib/cmake/mlir" \
+                "$LLVM_ROOT/build/lib/cmake/mlir" \
+                "$LLVM_ROOT/build-make/lib/cmake/mlir" \
                 "$ROOT/compiler/llvm/build-linxisa-clang/lib/cmake/mlir" \
                 "$ROOT/compiler/llvm/build/lib/cmake/mlir" \
                 "$ROOT/compiler/llvm/build-make/lib/cmake/mlir"; do

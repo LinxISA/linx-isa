@@ -33,6 +33,45 @@ static size_t linx_align_up(size_t v, size_t align)
     return (v + align - 1) & ~(align - 1);
 }
 
+static int linx_is_power_of_two(size_t value)
+{
+    return value != 0 && (value & (value - 1)) == 0;
+}
+
+static void *linx_malloc_aligned(size_t size, size_t align)
+{
+    uintptr_t base;
+    uintptr_t raw;
+    uintptr_t aligned;
+    size_t user;
+    size_t header;
+
+    if (size == 0 || !linx_is_power_of_two(align)) {
+        return NULL;
+    }
+    if (linx_heap_off > LINX_HEAP_SIZE - sizeof(size_t)) {
+        return NULL;
+    }
+    base = (uintptr_t)(void *)linx_heap;
+    raw = base + linx_heap_off + sizeof(size_t);
+    aligned = (uintptr_t)linx_align_up((size_t)raw, align);
+    if (aligned < raw || aligned < base) {
+        return NULL;
+    }
+    user = (size_t)(aligned - base);
+    if (user < linx_heap_off || user > LINX_HEAP_SIZE) {
+        return NULL;
+    }
+    header = user - sizeof(size_t);
+    if (size > LINX_HEAP_SIZE - user) {
+        return NULL;
+    }
+
+    *((size_t *)(void *)(linx_heap + header)) = size;
+    linx_heap_off = user + size;
+    return (void *)(linx_heap + user);
+}
+
 static size_t linx_min_size(size_t a, size_t b)
 {
     return (a < b) ? a : b;
@@ -71,21 +110,14 @@ void abort(void) {
 /* Default malloc (freestanding bump allocator) */
 void *malloc(size_t size) __attribute__((weak));
 void *malloc(size_t size) {
-    if (size == 0) {
+    return linx_malloc_aligned(size, (size_t)_Alignof(max_align_t));
+}
+
+void *memalign(size_t alignment, size_t size) {
+    if (alignment < sizeof(void *) || alignment % sizeof(void *) != 0) {
         return NULL;
     }
-
-    const size_t align = (size_t)_Alignof(max_align_t);
-    const size_t user = linx_align_up(linx_heap_off + sizeof(size_t), align);
-    const size_t header = user - sizeof(size_t);
-
-    if (user > LINX_HEAP_SIZE || size > LINX_HEAP_SIZE - user) {
-        return NULL;
-    }
-
-    *((size_t *)(void *)(linx_heap + header)) = size;
-    linx_heap_off = user + size;
-    return (void *)(linx_heap + user);
+    return linx_malloc_aligned(size, alignment);
 }
 
 void free(void *ptr) __attribute__((weak));

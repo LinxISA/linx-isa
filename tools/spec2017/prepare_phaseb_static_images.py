@@ -46,7 +46,6 @@ def _utc_now() -> str:
 def _find_llvm_readelf() -> Path:
     cands = [
         REPO_ROOT / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "llvm-readelf",
-        Path.home() / "llvm-project" / "build-linxisa-clang" / "bin" / "llvm-readelf",
     ]
     for cand in cands:
         if cand.is_file() and os.access(cand, os.X_OK):

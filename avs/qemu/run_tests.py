@@ -157,6 +157,7 @@ SUITES: dict[str, dict[str, str]] = {
         "macro": "LINX_TEST_ENABLE_SIMT_AUTOVEC",
     },
     "callret": {"src": "tests/14_callret.c", "macro": "LINX_TEST_ENABLE_CALLRET"},
+    "runtime": {"src": "tests/21_freestanding_runtime.c", "macro": "LINX_TEST_ENABLE_RUNTIME"},
 }
 
 COMPILE_ONLY_SUITE_SOURCE_OVERRIDE: dict[str, str] = {
@@ -172,6 +173,12 @@ def _extra_sources_for_suite(suite: str) -> list[str]:
     if suite == "callret":
         return [
             "avs/qemu/tests/14_callret_templates.S",
+        ]
+    if suite == "runtime":
+        return [
+            "avs/runtime/freestanding/src/syscall.c",
+            "avs/runtime/freestanding/src/stdlib/stdlib.c",
+            "avs/runtime/freestanding/src/math/math.c",
         ]
     if suite == "pto_parity":
         return [_pto_kernel_src(name) for name in PTO_PARITY_KERNEL_NAMES]
@@ -259,10 +266,7 @@ def _default_clang() -> Path | None:
     env = os.environ.get("CLANG")
     if env:
         return Path(os.path.expanduser(env))
-    cands = [
-        REPO_ROOT / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "clang",
-        Path.home() / "llvm-project" / "build-linxisa-clang" / "bin" / "clang",
-    ]
+    cands = [REPO_ROOT / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "clang"]
     for cand in cands:
         if cand.exists():
             return cand
@@ -299,10 +303,7 @@ def _default_llvm_objdump(clang: Path | None) -> Path | None:
         cand = clang.parent / "llvm-objdump"
         if cand.exists():
             return cand
-    cands = [
-        REPO_ROOT / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "llvm-objdump",
-        Path.home() / "llvm-project" / "build-linxisa-clang" / "bin" / "llvm-objdump",
-    ]
+    cands = [REPO_ROOT / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "llvm-objdump"]
     for cand in cands:
         if cand.exists():
             return cand
@@ -317,10 +318,7 @@ def _default_llc(clang: Path | None) -> Path | None:
         cand = clang.parent / "llc"
         if cand.exists():
             return cand
-    cands = [
-        REPO_ROOT / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "llc",
-        Path.home() / "llvm-project" / "build-linxisa-clang" / "bin" / "llc",
-    ]
+    cands = [REPO_ROOT / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "llc"]
     for cand in cands:
         if cand.exists():
             return cand
@@ -358,16 +356,6 @@ def _default_qemu() -> Path | None:
     env = os.environ.get("QEMU")
     if env:
         return Path(os.path.expanduser(env))
-    cands = [
-        REPO_ROOT / "emulator" / "qemu" / "build-linx" / "qemu-system-linx64",
-        REPO_ROOT / "emulator" / "qemu" / "build-tci" / "qemu-system-linx64",
-        REPO_ROOT / "emulator" / "qemu" / "build" / "qemu-system-linx64",
-        Path.home() / "qemu" / "build-tci" / "qemu-system-linx64",
-        Path.home() / "qemu" / "build" / "qemu-system-linx64",
-    ]
-    for cand in cands:
-        if cand.exists():
-            return cand
     return None
 
 
@@ -788,6 +776,7 @@ def main(argv: list[str]) -> int:
         "simt_autovec",
         "tile",
         "pto_parity",
+        "runtime",
     }
     if any(s in softfp_suites for s in selected):
         add_source(REPO_ROOT / "avs" / "runtime" / "freestanding" / "src" / "softfp" / "softfp.c")

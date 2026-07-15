@@ -1,6 +1,0 @@
-#ifndef _LINX_SPEC2017_COMPAT_LINUX_LIMITS_H
-#define _LINX_SPEC2017_COMPAT_LINUX_LIMITS_H
-
-#include <limits.h>
-
-#endif

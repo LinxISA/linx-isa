@@ -12,7 +12,9 @@ double sqrt(double x);
 float sqrtf(float x);
 
 double cos(double x);
+float cosf(float x);
 double sin(double x);
+float sinf(float x);
 double acos(double x);
 double atan(double x);
 double pow(double x, double y);

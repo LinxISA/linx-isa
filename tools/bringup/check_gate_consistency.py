@@ -14,6 +14,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import gate_report
+
 
 def _parse_utc(ts: str, *, field: str) -> datetime:
     try:
@@ -238,6 +240,12 @@ def main(argv: list[str]) -> int:
         )
 
     gate_status_text = gate_status_path.read_text(encoding="utf-8", errors="replace")
+    expected_gate_status = gate_report._render_markdown(gate_report._load_report(report_path))
+    if gate_status_text != expected_gate_status:
+        raise SystemExit(
+            f"error: {gate_status_path} is not the byte-identical projection of {report_path}; "
+            "regenerate it with gate_report.py render"
+        )
     m = re.search(r"Last generated \(UTC\): `([^`]+)`", gate_status_text)
     if not m:
         raise SystemExit(f"error: {gate_status_path} missing last-generated header")
@@ -317,7 +325,7 @@ def main(argv: list[str]) -> int:
                 f"error: LinxCore perf-floor artifact reports non-passing state "
                 f"({classification}): {linxcore_perf_floor_path}"
             )
-        artifact_ts_raw = str(artifact.get("generated_at_utc", "")).strip()
+        artifact_ts_raw = str(perf_artifact.get("generated_at_utc", "")).strip()
         if artifact_ts_raw:
             artifact_ts = _parse_utc(artifact_ts_raw, field=f"{label}.generated_at_utc")
             artifact_age_hours = (now - artifact_ts).total_seconds() / 3600.0

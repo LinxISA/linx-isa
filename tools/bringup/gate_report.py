@@ -10,9 +10,11 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import os
 import json
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -42,6 +44,20 @@ def _run_git_rev(path: Path) -> str | None:
     except subprocess.CalledProcessError:
         return None
     return out.strip() or None
+
+
+def _run_git_dirty(path: Path) -> bool | None:
+    if not path.exists():
+        return None
+    try:
+        out = subprocess.check_output(
+            ["git", "-C", str(path), "status", "--porcelain", "--untracked-files=no"],
+            stderr=subprocess.DEVNULL,
+            text=True,
+        )
+    except subprocess.CalledProcessError:
+        return None
+    return bool(out.strip())
 
 
 def _parse_bool_flag(value: str) -> bool:
@@ -170,22 +186,45 @@ def _load_report(path: Path) -> dict[str, Any]:
     return data
 
 
+def _atomic_write_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, temporary = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as stream:
+            stream.write(text)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+    except BaseException:
+        try:
+            os.unlink(temporary)
+        except FileNotFoundError:
+            pass
+        raise
+
+
 def _save_report(path: Path, report: dict[str, Any]) -> None:
     report["schema_version"] = SCHEMA_VERSION
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    _atomic_write_text(path, json.dumps(report, indent=2, sort_keys=True) + "\n")
 
 
 def _pin_paths(root: Path) -> dict[str, Path]:
     return {
         "linx-isa": root,
         "llvm": root / "compiler" / "llvm",
+        "ptoas": root / "compiler" / "ptoas",
         "qemu": root / "emulator" / "qemu",
         "linux": root / "kernel" / "linux",
         "linxcore": root / "rtl" / "LinxCore",
+        "linx-skills": root / "skills" / "linx-skills",
+        "linxcore-model": root / "tools" / "LinxCoreModel",
+        "model": root / "tools" / "model",
         "pycircuit": root / "tools" / "pyCircuit",
         "glibc": root / "lib" / "glibc",
+        "mesa3d": root / "lib" / "mesa3d",
         "musl": root / "lib" / "musl",
+        "pto-kernels": root / "workloads" / "pto_kernels",
+        "supernpu-bench": root / "workloads" / "SuperNPUBench",
     }
 
 
@@ -245,6 +284,7 @@ def _collect_sha_manifest(lane: str, root: Path, external_root: Path) -> dict[st
         out[repo] = {
             "path": _portable_manifest_path(lane=lane, repo=repo, path=path, root=root),
             "sha": sha if sha is not None else "missing",
+            "dirty": _run_git_dirty(path),
         }
     return out
 
@@ -298,7 +338,9 @@ def _split_csv_items(items: list[str] | None) -> list[str]:
 def cmd_capture_sha(args: argparse.Namespace) -> int:
     report_path = Path(args.report).resolve()
     root = Path(args.root).resolve()
-    external_root = Path(args.external_root).resolve()
+    if args.lane == "external" and not args.external_root:
+        raise SystemExit("error: external lane requires --external-root PATH")
+    external_root = Path(args.external_root or args.root).resolve()
 
     report = _load_report(report_path)
     run = _find_run(report, args.lane, args.run_id)
@@ -447,7 +489,7 @@ def cmd_render(args: argparse.Namespace) -> int:
     out_md = Path(args.out_md).resolve()
     report = _load_report(report_path)
     text = _render_markdown(report)
-    out_md.write_text(text, encoding="utf-8")
+    _atomic_write_text(out_md, text)
     print(f"ok: wrote {out_md}")
     return 0
 
@@ -459,7 +501,7 @@ def main(argv: list[str]) -> int:
     ap_capture = sub.add_parser("capture-sha", help="Update run timestamp + SHA manifest for one lane")
     ap_capture.add_argument("--report", default=str(DEFAULT_REPORT))
     ap_capture.add_argument("--root", default=".")
-    ap_capture.add_argument("--external-root", default=str(Path.home()))
+    ap_capture.add_argument("--external-root", default="")
     ap_capture.add_argument("--lane", choices=["pin", "external"], required=True)
     ap_capture.add_argument("--run-id", required=True)
     ap_capture.add_argument("--profile", choices=["dev", "release-strict"], default="dev")

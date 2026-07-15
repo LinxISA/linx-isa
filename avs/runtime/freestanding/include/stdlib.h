@@ -15,6 +15,10 @@ int atexit(void (*func)(void));
 void *malloc(size_t size);
 void free(void *ptr);
 void *realloc(void *ptr, size_t size);
+void *memalign(size_t alignment, size_t size);
+
+#define EXIT_SUCCESS 0
+#define EXIT_FAILURE 1
 
 #ifdef __cplusplus
 }

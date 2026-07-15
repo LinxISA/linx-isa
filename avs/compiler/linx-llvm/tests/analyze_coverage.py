@@ -29,9 +29,6 @@ _OBJDUMP_INSN_RE = re.compile(r"^\s*[0-9a-fA-F]+:\s+")
 _SPEC_DECODE_COMMENT_RE = re.compile(
     r"^\s*#\s+([A-Za-z][A-Za-z0-9_. ]*)\s+\([^)]+\)\s+\[\d+\]\s*$"
 )
-_LEGACY_B_ATTR = "B." "ATTR"
-
-
 def canonicalize_mnemonic(mnemonic: str) -> str:
     s = mnemonic.strip()
     if not s:
@@ -57,12 +54,6 @@ def canonicalize_mnemonic(mnemonic: str) -> str:
         ):
             s = candidate
     s = s.upper()
-    if s == _LEGACY_B_ATTR:
-        return "B.ARG"
-    if s == "BSTART.AUX":
-        return "BSTART.SYS"
-    if s == "C.BSTART.AUX":
-        return "C.BSTART.SYS"
     return s
 
 
@@ -243,19 +234,6 @@ def analyze_coverage(
         if a in spec_mnems and b in spec_mnems and (a in covered_spec or b in covered_spec):
             covered_spec.add(a)
             covered_spec.add(b)
-    if any(
-        m in covered_spec
-        for m in ("BSTART.TMA", "BSTART.CUBE", "BSTART.VPAR", "BSTART.VSEQ", "BSTART.MPAR", "BSTART.MSEQ")
-    ):
-        if "BSTART.PAR" in spec_mnems:
-            covered_spec.add("BSTART.PAR")
-        if "BSTART.TEPL" in spec_mnems:
-            covered_spec.add("BSTART.TEPL")
-    if "BSTART.PAR" in emitted_raw or "BSTART.PAR" in covered_spec:
-        for typed in ("BSTART.TMA", "BSTART.CUBE", "BSTART.TEPL"):
-            if typed in spec_mnems:
-                covered_spec.add(typed)
-
     missing = spec_mnems - covered_spec
 
     missing_by_group: Dict[str, List[str]] = {}

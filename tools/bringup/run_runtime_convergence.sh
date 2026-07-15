@@ -7,7 +7,7 @@ RUN_ID=""
 REPORT="$ROOT/docs/bringup/gates/latest.json"
 LINX_BRINGUP_PROFILE="${LINX_BRINGUP_PROFILE:-release-strict}" # dev|release-strict
 TRACE_SCHEMA_VERSION="${TRACE_SCHEMA_VERSION:-1.0}"
-EXTERNAL_ROOT="${EXTERNAL_ROOT:-$HOME}"
+EXTERNAL_ROOT="${EXTERNAL_ROOT:-}"
 LINUX_ROOT="${LINUX_ROOT:-$ROOT/kernel/linux}"
 OUT_BASE="$ROOT/docs/bringup/gates/logs"
 QEMU_TIMEOUT="${QEMU_TIMEOUT:-10}"
@@ -83,14 +83,6 @@ else
   [[ -n "$RUN_PERF_FLOOR_GATES" ]] || RUN_PERF_FLOOR_GATES=0
 fi
 
-if [[ "$LANE" == "pin" ]]; then
-  [[ -n "$QEMU_CLEAN_BUILD" ]] || QEMU_CLEAN_BUILD=1
-  [[ -n "$LINUX_BUSYBOX_ROOTFS_CLEAN_BUILD" ]] || LINUX_BUSYBOX_ROOTFS_CLEAN_BUILD=1
-else
-  [[ -n "$QEMU_CLEAN_BUILD" ]] || QEMU_CLEAN_BUILD=0
-  [[ -n "$LINUX_BUSYBOX_ROOTFS_CLEAN_BUILD" ]] || LINUX_BUSYBOX_ROOTFS_CLEAN_BUILD=0
-fi
-
 if [[ "$LINX_BRINGUP_PROFILE" == "release-strict" ]]; then
   if [[ "$GLIBC_G1B_ALLOW_BLOCKED" != "0" ]]; then
     echo "error: release-strict forbids GLIBC_G1B_ALLOW_BLOCKED=$GLIBC_G1B_ALLOW_BLOCKED" >&2
@@ -120,7 +112,7 @@ Options:
   --lane pin|external          Lane to evaluate (default: pin)
   --run-id ID                  Run identifier (default: YYYY-MM-DD-r1-<lane>)
   --report PATH                Gate report JSON path
-  --external-root PATH         External workspace root (default: $HOME)
+  --external-root PATH         Required external workspace root for --lane external
   --linux-root PATH            Linux root (default: $ROOT/kernel/linux)
   --qemu-timeout SEC           run_tests.sh timeout (default: 10)
   --musl-timeout SEC           musl smoke timeout (default: 90)
@@ -209,6 +201,27 @@ if [[ "$LANE" != "pin" && "$LANE" != "external" ]]; then
   exit 2
 fi
 
+if [[ "$LANE" == "external" && -z "$EXTERNAL_ROOT" ]]; then
+  echo "error: --lane external requires --external-root PATH (or EXTERNAL_ROOT)" >&2
+  exit 2
+fi
+if [[ "$LANE" == "pin" ]]; then
+  EXTERNAL_ROOT="$ROOT"
+fi
+
+if [[ "$LANE" == "pin" ]]; then
+  [[ -n "$QEMU_CLEAN_BUILD" ]] || QEMU_CLEAN_BUILD=1
+  [[ -n "$LINUX_BUSYBOX_ROOTFS_CLEAN_BUILD" ]] || LINUX_BUSYBOX_ROOTFS_CLEAN_BUILD=1
+else
+  [[ -n "$QEMU_CLEAN_BUILD" ]] || QEMU_CLEAN_BUILD=0
+  [[ -n "$LINUX_BUSYBOX_ROOTFS_CLEAN_BUILD" ]] || LINUX_BUSYBOX_ROOTFS_CLEAN_BUILD=0
+fi
+
+if [[ "$LINX_BRINGUP_PROFILE" == "release-strict" && "$LANE" == "pin" && "$QEMU_CLEAN_BUILD" != "1" ]]; then
+  echo "error: release-strict pin lane requires QEMU_CLEAN_BUILD=1" >&2
+  exit 2
+fi
+
 if [[ -z "$RUN_ID" ]]; then
   RUN_ID="$(date -u +%Y-%m-%d)-r1-${LANE}"
 fi
@@ -222,13 +235,10 @@ resolve_clang() {
   if [[ "$LANE" == "pin" ]]; then
     cands=(
       "$ROOT/compiler/llvm/build-linxisa-clang/bin/clang"
-      "$HOME/llvm-project/build-linxisa-clang/bin/clang"
     )
   else
-    cands=(
-      "$HOME/llvm-project/build-linxisa-clang/bin/clang"
-      "$ROOT/compiler/llvm/build-linxisa-clang/bin/clang"
-    )
+    echo ""
+    return
   fi
   local c
   for c in "${cands[@]}"; do
@@ -264,15 +274,10 @@ resolve_qemu() {
   if [[ "$LANE" == "pin" ]]; then
     cands=(
       "$ROOT/emulator/qemu/build-linx/qemu-system-linx64"
-      "$ROOT/emulator/qemu/build-tci/qemu-system-linx64"
-      "$ROOT/emulator/qemu/build/qemu-system-linx64"
     )
   else
-    cands=(
-      "$EXTERNAL_ROOT/qemu/build-linx/qemu-system-linx64"
-      "$EXTERNAL_ROOT/qemu/build-tci/qemu-system-linx64"
-      "$EXTERNAL_ROOT/qemu/build/qemu-system-linx64"
-    )
+    echo ""
+    return
   fi
   local c
   for c in "${cands[@]}"; do
@@ -932,7 +937,7 @@ fi
 run_gate \
   "Integration" \
   "Pinned workspace build closure" \
-  "test -x $ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-ar && test -x $ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-nm && test -x $ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-readelf && test -x $ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-strip && { test -x $ROOT/emulator/qemu/build-linx/qemu-system-linx64 || test -x $ROOT/emulator/qemu/build/qemu-system-linx64; } && test -f $LINUX_ROOT/build-linx-fixed/vmlinux && test -f $ROOT/out/libc/glibc/build/linkobj/libc.so && test -f $ROOT/out/libc/glibc/logs/g1b-summary.txt && test -f $ROOT/out/libc/musl/logs/phase-b-summary.txt" \
+  "test -x $ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-ar && test -x $ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-nm && test -x $ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-readelf && test -x $ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-strip && test -x $ROOT/emulator/qemu/build-linx/qemu-system-linx64 && test -f $LINUX_ROOT/build-linx-fixed/vmlinux && test -f $ROOT/out/libc/glibc/build/linkobj/libc.so && test -f $ROOT/out/libc/glibc/logs/g1b-summary.txt && test -f $ROOT/out/libc/musl/logs/phase-b-summary.txt" \
   "pinned_workspace_build_closure_pass" \
   "pinned_workspace_build_closure_fail" \
   "integration_pinned_build_closure" \

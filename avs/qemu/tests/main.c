@@ -59,6 +59,9 @@
 #ifndef LINX_TEST_ENABLE_SIMT_AUTOVEC
 #define LINX_TEST_ENABLE_SIMT_AUTOVEC 0
 #endif
+#ifndef LINX_TEST_ENABLE_RUNTIME
+#define LINX_TEST_ENABLE_RUNTIME 0
+#endif
 
 /* Forward declarations for test suite functions */
 #if LINX_TEST_ENABLE_ARITHMETIC
@@ -111,6 +114,9 @@ void run_pto_parity_tests(void);
 #endif
 #if LINX_TEST_ENABLE_SIMT_AUTOVEC
 void run_simt_autovec_tests(void);
+#endif
+#if LINX_TEST_ENABLE_RUNTIME
+void run_freestanding_runtime_tests(void);
 #endif
 
 /*
@@ -172,6 +178,9 @@ void _start(void) {
 #endif
 #if LINX_TEST_ENABLE_SIMT_AUTOVEC
     run_simt_autovec_tests();
+#endif
+#if LINX_TEST_ENABLE_RUNTIME
+    run_freestanding_runtime_tests();
 #endif
     
     /* Print final summary */
