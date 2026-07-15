@@ -42,10 +42,11 @@ callret_tpl_fret_ra_slot_redirect:
 	.type callret_tpl_ret_error_trailer_success,@function
 callret_tpl_ret_error_trailer_success:
 	C.BSTART.STD RET
-	j .Lcallret_tpl_ret_error_trailer_bad
 	C.BSTOP
 .Lcallret_tpl_ret_error_trailer_bad:
+	C.BSTART.STD RET
 	addi zero, 85, ->a0
+	c.setc.tgt ra
 	C.BSTOP
 	.size callret_tpl_ret_error_trailer_success, .-callret_tpl_ret_error_trailer_success
 
@@ -64,3 +65,51 @@ callret_tpl_cond_ret_error_trailer_taken:
 	c.setc.tgt ra
 	C.BSTOP
 	.size callret_tpl_cond_ret_error_trailer_taken, .-callret_tpl_cond_ret_error_trailer_taken
+
+	.globl callret_tpl_c_bstart_cond_taken
+	.type callret_tpl_c_bstart_cond_taken,@function
+callret_tpl_c_bstart_cond_taken:
+	C.BSTART COND, .Lcallret_tpl_c_bstart_cond_taken_target
+	setc.eq zero, zero
+	C.BSTART.STD RET
+	addi zero, 225, ->a0
+	c.setc.tgt ra
+	C.BSTOP
+.Lcallret_tpl_c_bstart_cond_taken_target:
+	C.BSTART.STD RET
+	addi zero, 102, ->a0
+	c.setc.tgt ra
+	C.BSTOP
+	.size callret_tpl_c_bstart_cond_taken, .-callret_tpl_c_bstart_cond_taken
+
+	.globl callret_tpl_c_bstart_cond_not_taken
+	.type callret_tpl_c_bstart_cond_not_taken,@function
+callret_tpl_c_bstart_cond_not_taken:
+	C.BSTART COND, .Lcallret_tpl_c_bstart_cond_not_taken_target
+	setc.ne zero, zero
+	C.BSTART.STD RET
+	addi zero, 85, ->a0
+	c.setc.tgt ra
+	C.BSTOP
+.Lcallret_tpl_c_bstart_cond_not_taken_target:
+	C.BSTART.STD RET
+	addi zero, 226, ->a0
+	c.setc.tgt ra
+	C.BSTOP
+	.size callret_tpl_c_bstart_cond_not_taken, .-callret_tpl_c_bstart_cond_not_taken
+
+	.globl callret_tpl_j_skip_poison
+	.type callret_tpl_j_skip_poison,@function
+callret_tpl_j_skip_poison:
+	# FENTRY makes J the first instruction of the next translation block.
+	# Each observable path reaches its own frame-balanced FRET.STK return.
+	.4byte 0x04a50041
+	j .Lcallret_tpl_j_handler
+	addi zero, 85, ->a0
+	.4byte 0x04a53041
+.Lcallret_tpl_j_handler:
+	C.BSTART DIRECT, .Lcallret_tpl_j_handler_return
+	addi zero, 119, ->a0
+.Lcallret_tpl_j_handler_return:
+	.4byte 0x04a53041
+	.size callret_tpl_j_skip_poison, .-callret_tpl_j_skip_poison
