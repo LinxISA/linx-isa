@@ -145,6 +145,17 @@ SPECIAL_MAP: dict[str, str | list[str]] = {
     "qpop": ["HL.QPOP", "V.QPOP"],
 }
 
+MANUAL_TRANSLATE_EVIDENCE: tuple[dict[str, object], ...] = (
+    {
+        "mnemonic": "C.SETRET",
+        "insn_len": 16,
+        "source_file": "translate.c",
+        "predicate": "linx_is_c_setret_hw",
+        "operand": "hw",
+        "translator": "linx_setret_common",
+    },
+)
+
 
 def _utc_now() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%SZ")
@@ -219,6 +230,84 @@ def _load_qemu_decode_entries(qemu_root: Path) -> list[dict[str, object]]:
     for name, width_bits in selected_layout:
         out.extend(_parse_decode_entries(linx_dir / name, width_bits))
     return out
+
+
+def _extract_c_block(text: str, opening_brace: int) -> str | None:
+    """Return a balanced C block, including its braces."""
+    if opening_brace >= len(text) or text[opening_brace] != "{":
+        return None
+    depth = 0
+    for index in range(opening_brace, len(text)):
+        char = text[index]
+        if char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                return text[opening_brace : index + 1]
+    return None
+
+
+def _load_manual_translate_entries(qemu_root: Path) -> list[dict[str, object]]:
+    """Load non-decodetree instructions only when their C evidence is intact."""
+    linx_dir = qemu_root / "target" / "linx"
+    source_cache: dict[str, str] = {}
+    entries: list[dict[str, object]] = []
+
+    for evidence in MANUAL_TRANSLATE_EVIDENCE:
+        source_file = str(evidence["source_file"])
+        source_path = linx_dir / source_file
+        if not source_path.is_file():
+            continue
+        text = source_cache.setdefault(
+            source_file,
+            source_path.read_text(encoding="utf-8", errors="replace"),
+        )
+
+        predicate = str(evidence["predicate"])
+        operand = str(evidence["operand"])
+        function_match = re.search(
+            rf"\b{re.escape(predicate)}\s*\([^)]*\)\s*\{{",
+            text,
+        )
+        if function_match is None:
+            continue
+        predicate_body = _extract_c_block(text, function_match.end() - 1)
+        if predicate_body is None:
+            continue
+        encoding_match = re.search(
+            rf"\breturn\s*\(\s*{re.escape(operand)}\s*&\s*"
+            r"(?P<mask>0x[0-9a-fA-F]+)\s*\)\s*==\s*"
+            r"(?P<match>0x[0-9a-fA-F]+)\s*;",
+            predicate_body,
+        )
+        if encoding_match is None:
+            continue
+
+        dispatch_match = re.search(
+            rf"\belse\s+if\s*\(\s*{re.escape(predicate)}\s*\(\s*"
+            rf"{re.escape(operand)}\s*\)\s*\)\s*\{{",
+            text,
+        )
+        if dispatch_match is None:
+            continue
+        dispatch_body = _extract_c_block(text, dispatch_match.end() - 1)
+        translator = str(evidence["translator"])
+        if dispatch_body is None or re.search(
+            rf"\b{re.escape(translator)}\s*\(", dispatch_body
+        ) is None:
+            continue
+
+        entries.append(
+            {
+                "mnemonic": str(evidence["mnemonic"]),
+                "insn_len": int(evidence["insn_len"]),
+                "mask": _parse_int(encoding_match.group("mask")),
+                "match": _parse_int(encoding_match.group("match")),
+                "source_file": source_file,
+            }
+        )
+    return entries
 
 
 def _parse_int(value: str) -> int:
@@ -538,7 +627,7 @@ def _canonicalize_scalar_mnemonic(stem: str) -> str | list[str] | None:
         return header_map[stem]
     if stem.startswith("b_arg_"):
         return "B.ARG"
-    if stem.startswith("bdim_"):
+    if stem.startswith(("bdim_", "b_dim_")):
         return "B.DIM"
 
     family = _canonicalize_load_store_family(stem)
@@ -778,8 +867,10 @@ def main(argv: list[str]) -> int:
     qemu_source_kind = "decode"
     qemu_meta_all: set[str] = set()
     decode_entries: list[dict[str, object]] = []
+    manual_translate_entries = _load_manual_translate_entries(qemu_root)
     try:
         decode_entries = _load_qemu_decode_entries(qemu_root)
+        decode_entries.extend(manual_translate_entries)
         qemu_all = {str(entry["mnemonic"]) for entry in decode_entries}
     except FileNotFoundError:
         if not qemu_meta_path or not qemu_meta_path.is_file():
@@ -791,7 +882,9 @@ def main(argv: list[str]) -> int:
             return 1
         qemu_source_kind = "meta"
         qemu_meta_all = set(QEMU_MNEMONIC_RE.findall(qemu_meta_path.read_text(encoding="utf-8", errors="replace")))
-        qemu_all = qemu_meta_all
+        qemu_all = qemu_meta_all | {
+            str(entry["mnemonic"]) for entry in manual_translate_entries
+        }
 
     meta_entries: list[dict[str, object]] = []
     if qemu_meta_path and qemu_meta_path.is_file():
@@ -812,7 +905,11 @@ def main(argv: list[str]) -> int:
     mapped_spec = sorted({spec_name for values in mapped_pairs.values() for spec_name in values})
     missing_spec = sorted(spec_set - set(mapped_spec))
 
-    form_entries = decode_entries if decode_entries else meta_entries
+    form_entries = (
+        decode_entries
+        if decode_entries
+        else [*meta_entries, *manual_translate_entries]
+    )
     qemu_form_keys: set[tuple[str, int, int, int]] = set()
     for entry in form_entries:
         mapped = _canonicalize_qemu_mnemonic(str(entry["mnemonic"]), spec_set)
@@ -862,6 +959,9 @@ def main(argv: list[str]) -> int:
         "spec_unique_mnemonics": spec_count,
         "qemu_unique_mnemonics": len(qemu_non_internal),
         "qemu_unique_forms": len(form_entries),
+        "qemu_manual_translate_mnemonics": sorted(
+            str(entry["mnemonic"]) for entry in manual_translate_entries
+        ),
         "qemu_mapped_spec_mnemonics": coverage_count,
         "qemu_mapped_spec_forms": form_coverage_count,
         "coverage_count": coverage_count,
