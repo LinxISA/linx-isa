@@ -74,6 +74,24 @@ SOFTFP_STUBS_SRC="$ROOT/support/softfp_stubs.c"
 ATOMIC_BUILTINS_SRC="$LIBC_DIR/src/atomic/atomic_builtins.c"
 SUPPORT_SYMBOLS_SRC="$ROOT/support/symbols.c"
 
+MANIFEST_HELPER="$ROOT/write_c_codegen_manifest.py"
+CODEGEN_MANIFEST="$OUT_DIR/c-codegen-build-manifest.json"
+mkdir -p "$OUT_DIR"
+rm -f "$CODEGEN_MANIFEST"
+CODEGEN_RECORDS="$(mktemp "$OUT_DIR/.c-codegen-records.XXXXXX")"
+CODEGEN_MANIFEST_COMPLETE=0
+cleanup_codegen_manifest() {
+  rm -f "$CODEGEN_RECORDS"
+  if [[ "$CODEGEN_MANIFEST_COMPLETE" != "1" ]]; then
+    rm -f "$CODEGEN_MANIFEST"
+  fi
+}
+trap cleanup_codegen_manifest EXIT
+if [[ ! -f "$MANIFEST_HELPER" ]]; then
+  echo "error: missing C-CodeGen manifest helper: $MANIFEST_HELPER" >&2
+  exit 1
+fi
+
 RUNTIME_OUT="$OUT_DIR/_runtime"
 mkdir -p "$RUNTIME_OUT"
 
@@ -131,8 +149,6 @@ if [[ -n "${EXTRA_CFLAGS:-}" ]]; then
   EXTRA_FLAGS=(${EXTRA_CFLAGS})
 fi
 
-mkdir -p "$OUT_DIR"
-
 FAILED=0
 for SRC in "$SRC_DIR"/*.c; do
   BASE="$(basename "$SRC" .c)"
@@ -168,7 +184,21 @@ for SRC in "$SRC_DIR"/*.c; do
   "$CLANG" "${FLAGS[@]}" -S -o "$OUT/$BASE.s" "$SRC"
   "$CLANG" "${FLAGS[@]}" -c -o "$OUT/$BASE.o" "$SRC"
 
-  "$OBJDUMP" -d --triple="$TARGET" "$OUT/$BASE.o" >"$OUT/$BASE.objdump"
+  (cd "$OUT" && "$OBJDUMP" -d --triple="$TARGET" "$BASE.o") >"$OUT/$BASE.objdump"
+
+  RECORD_CMD=(
+    python3 "$MANIFEST_HELPER" record
+    --repo-root "$REPO_ROOT"
+    --records-jsonl "$CODEGEN_RECORDS"
+    --source "$SRC"
+    --generated-assembly "$OUT/$BASE.s"
+    --object "$OUT/$BASE.o"
+    --objdump "$OUT/$BASE.objdump"
+  )
+  for F in "${FLAGS[@]}"; do
+    RECORD_CMD+=("--compile-flag=$F")
+  done
+  "${RECORD_CMD[@]}"
 
   # Link a standalone ELF to resolve relocations before extracting a raw .bin.
   #
@@ -404,5 +434,23 @@ C
 else
   echo "warning: PIC relocation test skipped (missing llvm-readobj)" >&2
 fi
+
+COMPLETE_MANIFEST_CMD=(
+  python3 "$MANIFEST_HELPER" complete
+  --repo-root "$REPO_ROOT"
+  --records-jsonl "$CODEGEN_RECORDS"
+  --source-dir "$SRC_DIR"
+  --target "$TARGET"
+  --clang "$CLANG"
+  --llvm-objdump "$OBJDUMP"
+  --output "$CODEGEN_MANIFEST"
+)
+if [[ ${#EXTRA_FLAGS[@]} -ne 0 ]]; then
+  for F in "${EXTRA_FLAGS[@]}"; do
+    COMPLETE_MANIFEST_CMD+=("--extra-flag=$F")
+  done
+fi
+"${COMPLETE_MANIFEST_CMD[@]}"
+CODEGEN_MANIFEST_COMPLETE=1
 
 echo "ok: outputs in $OUT_DIR"
