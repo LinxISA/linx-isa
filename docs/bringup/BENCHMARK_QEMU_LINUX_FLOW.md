@@ -36,6 +36,19 @@ Evidence:
 - `docs/bringup/agent_runs/checklists/specint_qemu.md` records SPECint as a
   fast `test`/`train` gate first, with `505.mcf_r` isolated as VM stress rather
   than mixed into every cheap regression check.
+- Both canonical SPEC lanes now hard-break between static build and runtime on
+  `tools/spec2017/check_build_manifest.py attest` followed immediately by
+  `verify`. The attestation binds the current superproject/LLVM/musl state,
+  tool binaries, sysroot, immutable source tree, and the exact 10-benchmark / 12
+  static-Linx-ELF set. It deliberately makes no claim about licensed SPEC input
+  content, authorization, or test/train execution; those remain runtime-gate
+  responsibilities.
+- The nightly `full-benchmarks` stage requires an explicit
+  `LINX_BENCHMARK_RUN_COMMAND` and passes it to the CoreMark/Dhrystone runner.
+  A build-only result cannot satisfy this stage; each workload must return
+  `RUN_PASS` with its workload-specific semantic markers. The launcher command
+  remains explicit because the authoritative Linux image is still governed by
+  the source-completeness gate rather than an unchecked local kernel.
 - `docs/bringup/QEMU_SPECINT_PERFORMANCE_PLAN.md` records the current QEMU
   SPECint profile and the prioritized speedups for the Linx target.
 - `workloads/generated/specint-train-all-current-clean-qemu-20260706-r2/` is

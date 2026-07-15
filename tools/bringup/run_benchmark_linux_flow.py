@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import signal
 import subprocess
 import sys
 import threading
@@ -204,6 +205,7 @@ def run_command(
         encoding="utf-8",
         errors="replace",
         bufsize=1,
+        start_new_session=True,
     )
     reader = threading.Thread(
         target=stream_output,
@@ -216,12 +218,18 @@ def run_command(
         returncode = proc.wait(timeout=timeout if timeout > 0 else None)
     except subprocess.TimeoutExpired:
         timed_out = True
-        proc.kill()
         returncode = 124
+        try:
+            os.killpg(proc.pid, signal.SIGTERM)
+        except ProcessLookupError:
+            pass
         try:
             proc.wait(timeout=5)
         except subprocess.TimeoutExpired:
-            proc.kill()
+            try:
+                os.killpg(proc.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
             proc.wait(timeout=5)
     reader.join(timeout=5)
     if log_fp is not None:
@@ -320,7 +328,7 @@ def main(argv: list[str]) -> int:
         command_rows: list[dict[str, Any]] = []
         for command in stage["commands"]:
             command_env = env.copy()
-            if not qemu_was_explicit:
+            if not qemu_was_explicit and not args.dry_run:
                 command_env["QEMU"] = str(default_qemu_binary(root))
             row = run_command(
                 root=root,

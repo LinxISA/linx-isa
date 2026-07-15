@@ -192,12 +192,18 @@
           "command": "LINX_SPEC_BENCH_OPTIMIZE=\"${LINX_SPEC_BENCH_OPTIMIZE:-${SPEC_BENCH_OPTIMIZE:-502.gcc_r=-O0 -fno-vectorize -fno-slp-vectorize -fwrapv}}\" MODE=phase-b bash tools/spec2017/build_int_rate_linx.sh --force-static --build-runtimes --jobs \"${SPEC_BUILD_JOBS:-10}\" --emit-manifest \"${SPECINT_BUILD_MANIFEST:-$PWD/workloads/generated/specint-fast-gate/build-manifest.json}\""
         },
         {
+          "id": "specint-attest-static-phase-b",
+          "timeout_seconds": 900,
+          "command": "BUILD_MANIFEST=\"${SPECINT_BUILD_MANIFEST:-$PWD/workloads/generated/specint-fast-gate/build-manifest.json}\"; BUILD_ATTESTATION=\"${SPECINT_BUILD_ATTESTATION:-$PWD/workloads/generated/specint-fast-gate/build-attestation.json}\"; BUILD_ATTESTATION_MD=\"${SPECINT_BUILD_ATTESTATION_MD:-$PWD/workloads/generated/specint-fast-gate/build-attestation.md}\"; python3 tools/spec2017/check_build_manifest.py attest --repo-root \"$PWD\" --manifest \"$BUILD_MANIFEST\" --out \"$BUILD_ATTESTATION\" --out-md \"$BUILD_ATTESTATION_MD\" && python3 tools/spec2017/check_build_manifest.py verify --repo-root \"$PWD\" --attestation \"$BUILD_ATTESTATION\""
+        },
+        {
           "id": "specint-fast-test-train",
           "timeout_seconds": 3600,
           "command": "QEMU_BIN=\"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\"; python3 tools/bringup/run_specint_fast_gate.py --profile \"${SPECINT_FAST_PROFILE:-pr}\" --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 --qemu \"$QEMU_BIN\" --sysroot \"${WORKLOAD_SYSROOT:-$PWD/out/libc/musl/install/phase-b}\" --out-dir \"${SPECINT_FAST_OUT_DIR:-$PWD/workloads/generated/specint-fast-gate}\" --append-extra \"${SPEC_APPEND_EXTRA:-norandmaps}\" --guest-heartbeat-sec \"${SPEC_GUEST_HEARTBEAT_SEC:-0}\" --heartbeat-sec \"${SPEC_HEARTBEAT_SEC:-30}\" --qemu-heartbeat-interval \"${SPEC_QEMU_HEARTBEAT_INTERVAL:-1000000000}\" --no-progress-timeout \"${SPEC_NO_PROGRESS_TIMEOUT:-180}\" --stack-limit \"${SPEC_STACK_LIMIT:-2G}\""
         }
       ],
       "outputs": [
+        "build-attestation.json binding the current workspace, toolchain, sysroot, sources, and 12 static Linx ELFs",
         "specint_fast_gate_summary.json",
         "qemu_matrix_summary.json",
         "stage_b_summary.json with heartbeat_running, heartbeat_site_progress, heartbeat_last_bpc, and heartbeat_last_progress"
@@ -220,8 +226,8 @@
       "commands": [
         {
           "id": "coremark-dhrystone",
-          "timeout_seconds": 1800,
-          "command": "LINX_CLANG=\"${CLANG:-$PWD/compiler/llvm/build-linxisa-clang/bin/clang}\" LINX_SYSROOT=\"${LINX_SYSROOT:-$PWD/out/libc/musl/install/phase-b}\" python3 workloads/run_benchmarks.py --cc tools/spec2017/linx_cc.sh --target linx64-unknown-linux-musl --sysroot \"${LINX_SYSROOT:-$PWD/out/libc/musl/install/phase-b}\" --json-out workloads/generated/benchmarks_result.json"
+          "timeout_seconds": 3600,
+          "command": "BENCHMARK_RUN_COMMAND=\"${LINX_BENCHMARK_RUN_COMMAND:-}\"; if [[ -z \"$BENCHMARK_RUN_COMMAND\" ]]; then echo 'error: LINX_BENCHMARK_RUN_COMMAND is required for the full-benchmarks runtime gate' >&2; exit 2; fi; LINX_CLANG=\"${CLANG:-$PWD/compiler/llvm/build-linxisa-clang/bin/clang}\" LINX_SYSROOT=\"${LINX_SYSROOT:-$PWD/out/libc/musl/install/phase-b}\" python3 workloads/run_benchmarks.py --cc tools/spec2017/linx_cc.sh --target linx64-unknown-linux-musl --sysroot \"${LINX_SYSROOT:-$PWD/out/libc/musl/install/phase-b}\" --run-command \"$BENCHMARK_RUN_COMMAND\" --timeout \"${LINX_BENCHMARK_TIMEOUT:-1200}\" --out-dir \"${LINX_BENCHMARK_OUT_DIR:-$PWD/workloads/generated/benchmarks}\" --json-out \"${LINX_BENCHMARK_RESULT:-$PWD/workloads/generated/benchmarks_result.json}\""
         },
         {
           "id": "specint-build-static-nightly",
@@ -229,10 +235,22 @@
           "command": "LINX_SPEC_BENCH_OPTIMIZE=\"${LINX_SPEC_BENCH_OPTIMIZE:-${SPEC_BENCH_OPTIMIZE:-502.gcc_r=-O0 -fno-vectorize -fno-slp-vectorize -fwrapv}}\" MODE=phase-b bash tools/spec2017/build_int_rate_linx.sh --force-static --build-runtimes --jobs \"${SPEC_BUILD_JOBS:-10}\" --emit-manifest \"${SPECINT_NIGHTLY_BUILD_MANIFEST:-$PWD/workloads/generated/specint-nightly-test-train/build-manifest.json}\""
         },
         {
+          "id": "specint-attest-static-nightly",
+          "timeout_seconds": 900,
+          "command": "BUILD_MANIFEST=\"${SPECINT_NIGHTLY_BUILD_MANIFEST:-$PWD/workloads/generated/specint-nightly-test-train/build-manifest.json}\"; BUILD_ATTESTATION=\"${SPECINT_NIGHTLY_BUILD_ATTESTATION:-$PWD/workloads/generated/specint-nightly-test-train/build-attestation.json}\"; BUILD_ATTESTATION_MD=\"${SPECINT_NIGHTLY_BUILD_ATTESTATION_MD:-$PWD/workloads/generated/specint-nightly-test-train/build-attestation.md}\"; python3 tools/spec2017/check_build_manifest.py attest --repo-root \"$PWD\" --manifest \"$BUILD_MANIFEST\" --out \"$BUILD_ATTESTATION\" --out-md \"$BUILD_ATTESTATION_MD\" && python3 tools/spec2017/check_build_manifest.py verify --repo-root \"$PWD\" --attestation \"$BUILD_ATTESTATION\""
+        },
+        {
           "id": "specint-nightly-test-train",
           "timeout_seconds": 14400,
           "command": "QEMU_BIN=\"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\"; python3 tools/bringup/run_specint_fast_gate.py --profile nightly --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 --qemu \"$QEMU_BIN\" --sysroot \"${WORKLOAD_SYSROOT:-$PWD/out/libc/musl/install/phase-b}\" --out-dir \"${SPECINT_NIGHTLY_OUT_DIR:-$PWD/workloads/generated/specint-nightly-test-train}\" --append-extra \"${SPEC_APPEND_EXTRA:-norandmaps}\" --guest-heartbeat-sec \"${SPEC_GUEST_HEARTBEAT_SEC:-0}\" --heartbeat-sec \"${SPEC_HEARTBEAT_SEC:-30}\" --qemu-heartbeat-interval \"${SPEC_QEMU_HEARTBEAT_INTERVAL:-1000000000}\" --no-progress-timeout \"${SPEC_NO_PROGRESS_TIMEOUT:-180}\" --stack-limit \"${SPEC_STACK_LIMIT:-2G}\" --continue-on-fail"
         }
+      ],
+      "outputs": [
+        "benchmarks_result.json with RUN_PASS for both CoreMark and Dhrystone; build-only is rejected",
+        "build-attestation.json binding the current workspace, toolchain, sysroot, sources, and 12 static Linx ELFs",
+        "specint_fast_gate_summary.json",
+        "qemu_matrix_summary.json",
+        "stage_b_summary.json with per-row test/train outcomes and heartbeat progress"
       ]
     }
   ]
