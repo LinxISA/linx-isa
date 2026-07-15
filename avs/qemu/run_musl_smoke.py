@@ -294,6 +294,91 @@ def _select_samples(raw_samples: list[str] | None) -> list[str]:
     return list(dict.fromkeys(selected))
 
 
+def _qemu_instruction_failure(text: str) -> tuple[str, str] | None:
+    """Return bounded QEMU evidence, preferring the decode-specific message."""
+    lines = text.splitlines()
+    for classification, marker in (
+        ("runtime_qemu_decode_failure", "linx: decode32 failed"),
+        ("runtime_qemu_decode_failure", "linx: decode64 failed"),
+        ("runtime_qemu_decode_failure", "linx: decode failed"),
+        ("runtime_qemu_illegal_instruction", "linx: illegal instruction"),
+    ):
+        for line in lines:
+            if marker in line.lower():
+                return classification, line.strip()[:240]
+    return None
+
+
+def _classify_system_runtime_failure(
+    text: str,
+    *,
+    timed_out: bool,
+    start_seen: bool,
+    pass_seen: bool,
+    qemu_rc: int,
+    timeout: int,
+) -> tuple[str, str] | None:
+    if start_seen and pass_seen:
+        return None
+
+    panic_seen = "Kernel panic - not syncing" in text
+    trap_seen = "[linx trap]" in text.lower() or "LINX_USER_TRAP" in text
+    timeout_detail = f" (timeout after {timeout}s)" if timed_out else f", qemu_rc={qemu_rc}"
+    ordered_guest_failures = (
+        (("runtime_block_trap", "linx trap"), ("runtime_kernel_panic", "kernel panic"))
+        if timed_out
+        else (("runtime_kernel_panic", "kernel panic"), ("runtime_block_trap", "linx trap"))
+    )
+    if not pass_seen:
+        for classification, label in ordered_guest_failures:
+            seen = trap_seen if classification == "runtime_block_trap" else panic_seen
+            if seen:
+                return classification, f"{label} before pass marker{timeout_detail}"
+
+        instruction_failure = _qemu_instruction_failure(text)
+        if instruction_failure:
+            classification, diagnostic = instruction_failure
+            return classification, f"QEMU instruction failure before pass marker: {diagnostic}"
+
+    if timed_out:
+        return "runtime_timeout", f"timeout after {timeout}s"
+
+    classification = "runtime_missing_marker"
+    if not start_seen:
+        classification = "runtime_syscall_failure"
+    return (
+        classification,
+        f"missing markers: start={start_seen} pass={pass_seen}, qemu_rc={qemu_rc}",
+    )
+
+
+def _system_qemu_command(
+    qemu: Path,
+    kernel: Path,
+    initramfs: Path,
+    kernel_append: str,
+) -> list[str]:
+    return [
+        str(qemu),
+        "-machine",
+        "virt",
+        "-nographic",
+        "-monitor",
+        "none",
+        "-no-reboot",
+        "-d",
+        "guest_errors",
+        "-kernel",
+        str(kernel),
+        "-initrd",
+        str(initramfs),
+        "-append",
+        kernel_append,
+        "-bios",
+        "none",
+    ]
+
+
 def _run_split_link_modes(args: argparse.Namespace, out_dir: Path, selected_samples: list[str]) -> int:
     mode_results: dict[str, Any] = {}
     runner = Path(__file__).resolve()
@@ -1055,23 +1140,7 @@ def main(argv: list[str]) -> int:
             )
 
             qemu_log = out_dir / f"qemu_{sample_name}_{link_mode}.log"
-            qemu_cmd = [
-                str(qemu),
-                "-machine",
-                "virt",
-                "-nographic",
-                "-monitor",
-                "none",
-                "-no-reboot",
-                "-kernel",
-                str(kernel),
-                "-initrd",
-                str(initramfs),
-                "-append",
-                args.append,
-                "-bios",
-                "none",
-            ]
+            qemu_cmd = _system_qemu_command(qemu, kernel, initramfs, args.append)
 
             text = ""
             qemu_rc = 124
@@ -1093,8 +1162,6 @@ def main(argv: list[str]) -> int:
 
             qemu_log.write_text(text, encoding="utf-8")
 
-            panic_seen = "Kernel panic - not syncing" in text
-            trap_seen = "[linx trap]" in text.lower() or "LINX_USER_TRAP" in text
             start_seen = sample_meta["start"] in text
             pass_seen = sample_meta["pass"] in text
             if timed_out and start_seen and pass_seen:
@@ -1105,82 +1172,26 @@ def main(argv: list[str]) -> int:
                     str(qemu_log),
                 )
                 continue
-            if timed_out:
-                if trap_seen and not pass_seen:
-                    add_stage(
-                        f"qemu-runtime[{sample_name}:{link_mode}]",
-                        "fail",
-                        f"linx trap before pass marker (timeout after {args.timeout}s)",
-                        str(qemu_log),
-                    )
-                    summary["result"] = {
-                        "ok": False,
-                        "classification": f"{sample_name}_{link_mode}_runtime_block_trap",
-                    }
-                    _write_summary(summary_path, summary)
-                    return 2
-                if panic_seen and not pass_seen:
-                    add_stage(
-                        f"qemu-runtime[{sample_name}:{link_mode}]",
-                        "fail",
-                        f"kernel panic before pass marker (timeout after {args.timeout}s)",
-                        str(qemu_log),
-                    )
-                    summary["result"] = {
-                        "ok": False,
-                        "classification": f"{sample_name}_{link_mode}_runtime_kernel_panic",
-                    }
-                    _write_summary(summary_path, summary)
-                    return 2
+            runtime_failure = _classify_system_runtime_failure(
+                text,
+                timed_out=timed_out,
+                start_seen=start_seen,
+                pass_seen=pass_seen,
+                qemu_rc=qemu_rc,
+                timeout=args.timeout,
+            )
+            if runtime_failure:
+                classification, detail = runtime_failure
                 add_stage(
                     f"qemu-runtime[{sample_name}:{link_mode}]",
                     "fail",
-                    f"timeout after {args.timeout}s",
+                    detail,
                     str(qemu_log),
                 )
                 summary["result"] = {
                     "ok": False,
-                    "classification": f"{sample_name}_{link_mode}_runtime_timeout",
+                    "classification": f"{sample_name}_{link_mode}_{classification}",
                 }
-                _write_summary(summary_path, summary)
-                return 2
-            if panic_seen and not pass_seen:
-                add_stage(
-                    f"qemu-runtime[{sample_name}:{link_mode}]",
-                    "fail",
-                    f"kernel panic before pass marker, qemu_rc={qemu_rc}",
-                    str(qemu_log),
-                )
-                summary["result"] = {
-                    "ok": False,
-                    "classification": f"{sample_name}_{link_mode}_runtime_kernel_panic",
-                }
-                _write_summary(summary_path, summary)
-                return 2
-            if trap_seen and not pass_seen:
-                add_stage(
-                    f"qemu-runtime[{sample_name}:{link_mode}]",
-                    "fail",
-                    f"linx trap before pass marker, qemu_rc={qemu_rc}",
-                    str(qemu_log),
-                )
-                summary["result"] = {
-                    "ok": False,
-                    "classification": f"{sample_name}_{link_mode}_runtime_block_trap",
-                }
-                _write_summary(summary_path, summary)
-                return 2
-            if not start_seen or not pass_seen:
-                classification = f"{sample_name}_{link_mode}_runtime_missing_marker"
-                if not start_seen:
-                    classification = f"{sample_name}_{link_mode}_runtime_syscall_failure"
-                add_stage(
-                    f"qemu-runtime[{sample_name}:{link_mode}]",
-                    "fail",
-                    f"missing markers: start={start_seen} pass={pass_seen}, qemu_rc={qemu_rc}",
-                    str(qemu_log),
-                )
-                summary["result"] = {"ok": False, "classification": classification}
                 _write_summary(summary_path, summary)
                 return 2
 
