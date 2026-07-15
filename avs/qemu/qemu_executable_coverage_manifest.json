@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "availability": {
+    "L2": "available",
+    "L3": "available"
+  },
+  "producer": {
+    "suite_command": "LINX_VIRT_TEST_FINISHER=1 python3 avs/qemu/run_tests.py --suite callret --require-test-id 0x140b --require-test-id 0x140c --out-dir avs/qemu/out/executable-coverage --evidence-out avs/qemu/out/executable-coverage/run-evidence.json --qemu emulator/qemu/build-linx/qemu-system-linx64 --timeout 20",
+    "bundle_policy": "Preserve the five audited artifacts under docs/bringup/gates/evidence/qemu-executable/<run-id>/ and update run_evidence_sha256.",
+    "report_command": "python3 tools/bringup/report_qemu_executable_coverage.py"
+  },
+  "evidence": [
+    {
+      "form_id": "fret_stk_32_4fe246bd8241",
+      "mnemonic": "FRET.STK",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x0000707f",
+        "match": "0x00003041"
+      },
+      "suite": "callret",
+      "test_id": "0x0000140b",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-5b6dbb3-20260716-r1/linx-qemu-tests.elf",
+      "object": "docs/bringup/gates/evidence/qemu-executable/callret-5b6dbb3-20260716-r1/14_callret_templates.o",
+      "instruction": {
+        "raw_bytes_le": "4130a504",
+        "disassembly": "FRET.STK [ra ~ ra], sp!, 16",
+        "object_offset": "0x56",
+        "elf_offset": "0x225e",
+        "pc": "0x000000000001125e",
+        "symbol": "callret_tpl_fret_stk_slot_redirect"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/14_callret.c",
+        "test_symbol": "test_fret_stk_uses_stack_ra",
+        "target_symbol": "callret_tpl_fret_stk_slot_redirect"
+      },
+      "qemu_sha": "5b6dbb3c1647f8b96ac178f0df6a3b5d703df046",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-5b6dbb3-20260716-r1/run-evidence.json",
+      "run_evidence_sha256": "4e45237ef1db16f97a764d1723b3d27f4bbc61960d1eb9cc129296c4f00e22d8",
+      "oracle": {
+        "kind": "exact_value",
+        "source": "avs/qemu/tests/14_callret.c",
+        "locator": "test_fret_stk_uses_stack_ra",
+        "expected": "0x22"
+      },
+      "max_level": "L3",
+      "test_contract": "valid",
+      "failure_attribution": "none"
+    },
+    {
+      "form_id": "fret_ra_32_659c886221c1",
+      "mnemonic": "FRET.RA",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x0000707f",
+        "match": "0x00002041"
+      },
+      "suite": "callret",
+      "test_id": "0x0000140c",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-5b6dbb3-20260716-r1/linx-qemu-tests.elf",
+      "object": "docs/bringup/gates/evidence/qemu-executable/callret-5b6dbb3-20260716-r1/14_callret_templates.o",
+      "instruction": {
+        "raw_bytes_le": "4120a504",
+        "disassembly": "FRET.RA [ra ~ ra], sp!, 16",
+        "object_offset": "0x7a",
+        "elf_offset": "0x2282",
+        "pc": "0x0000000000011282",
+        "symbol": "callret_tpl_fret_ra_slot_redirect"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/14_callret.c",
+        "test_symbol": "test_fret_ra_uses_snapshot_ra",
+        "target_symbol": "callret_tpl_fret_ra_slot_redirect"
+      },
+      "qemu_sha": "5b6dbb3c1647f8b96ac178f0df6a3b5d703df046",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-5b6dbb3-20260716-r1/run-evidence.json",
+      "run_evidence_sha256": "4e45237ef1db16f97a764d1723b3d27f4bbc61960d1eb9cc129296c4f00e22d8",
+      "oracle": {
+        "kind": "exact_value",
+        "source": "avs/qemu/tests/14_callret.c",
+        "locator": "test_fret_ra_uses_snapshot_ra",
+        "expected": "0x33"
+      },
+      "max_level": "L3",
+      "test_contract": "valid",
+      "failure_attribution": "none"
+    }
+  ],
+  "execution_observations": [
+    {
+      "suite": "v03_vector_ops",
+      "test_id": "0x00001321",
+      "status": "FAIL",
+      "oracle_verdict": "FAIL",
+      "failure": {
+        "test_id": "0x00001321",
+        "expected": "0x0000000000000053",
+        "actual": "0x0000000000000011"
+      },
+      "timed_out": true,
+      "timeout_after_fail": true,
+      "test_contract": "invalid",
+      "failure_attribution": "test_contract",
+      "qemu_attribution": false,
+      "review_note": "Historical first-red evidence. The AVS source used invalid VT/VU lifetime and relative-index semantics; the corrected source and authored B.IOR binding now pass 0x1300, 0x1310, and 0x1320."
+    }
+  ]
+}

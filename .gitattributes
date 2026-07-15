@@ -1,0 +1,4 @@
+# Preserve immutable execution evidence byte-for-byte and suppress text normalization/diffs.
+docs/bringup/gates/evidence/qemu-executable/**/*.log binary
+docs/bringup/gates/evidence/qemu-executable/**/*.o binary
+docs/bringup/gates/evidence/qemu-executable/**/*.elf binary

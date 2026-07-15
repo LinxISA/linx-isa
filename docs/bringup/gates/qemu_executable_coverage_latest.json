@@ -1,0 +1,147 @@
+{
+  "admitted": [
+    {
+      "disassembly": "FRET.RA [ra ~ ra], sp!, 16",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-5b6dbb3-20260716-r1/linx-qemu-tests.elf",
+      "elf_sha256": "d51dbaf1e828f72f1fb5fce02b0f7833edfcc33ccc8ed3407f11445bf7deaa15",
+      "form_id": "fret_ra_32_659c886221c1",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x707f",
+        "match": "0x2041"
+      },
+      "max_level": "L3",
+      "mnemonic": "FRET.RA",
+      "object": "docs/bringup/gates/evidence/qemu-executable/callret-5b6dbb3-20260716-r1/14_callret_templates.o",
+      "object_sha256": "005ca4effe76b6f6e5412fd358844888f264f7836234e677ea2f72d6c4cbfaee",
+      "oracle": {
+        "expected": "0x33",
+        "kind": "exact_value",
+        "locator": "test_fret_ra_uses_snapshot_ra",
+        "source": "avs/qemu/tests/14_callret.c"
+      },
+      "pc": "0x11282",
+      "qemu_binary_verification": "local_binary_sha256",
+      "qemu_sha": "5b6dbb3c1647f8b96ac178f0df6a3b5d703df046",
+      "raw_bytes_le": "4120a504",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-5b6dbb3-20260716-r1/run-evidence.json",
+      "suite": "callret",
+      "symbol": "callret_tpl_fret_ra_slot_redirect",
+      "test_id": "0x0000140c"
+    },
+    {
+      "disassembly": "FRET.STK [ra ~ ra], sp!, 16",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-5b6dbb3-20260716-r1/linx-qemu-tests.elf",
+      "elf_sha256": "d51dbaf1e828f72f1fb5fce02b0f7833edfcc33ccc8ed3407f11445bf7deaa15",
+      "form_id": "fret_stk_32_4fe246bd8241",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x707f",
+        "match": "0x3041"
+      },
+      "max_level": "L3",
+      "mnemonic": "FRET.STK",
+      "object": "docs/bringup/gates/evidence/qemu-executable/callret-5b6dbb3-20260716-r1/14_callret_templates.o",
+      "object_sha256": "005ca4effe76b6f6e5412fd358844888f264f7836234e677ea2f72d6c4cbfaee",
+      "oracle": {
+        "expected": "0x22",
+        "kind": "exact_value",
+        "locator": "test_fret_stk_uses_stack_ra",
+        "source": "avs/qemu/tests/14_callret.c"
+      },
+      "pc": "0x1125e",
+      "qemu_binary_verification": "local_binary_sha256",
+      "qemu_sha": "5b6dbb3c1647f8b96ac178f0df6a3b5d703df046",
+      "raw_bytes_le": "4130a504",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-5b6dbb3-20260716-r1/run-evidence.json",
+      "suite": "callret",
+      "symbol": "callret_tpl_fret_stk_slot_redirect",
+      "test_id": "0x0000140b"
+    }
+  ],
+  "claim": "per_form_qemu_executable_coverage",
+  "evidence": {
+    "L2": {
+      "availability": "available",
+      "claim": "runtime_execution",
+      "form_count": 2,
+      "mnemonic_count": 2
+    },
+    "L3": {
+      "availability": "available",
+      "claim": "semantic_oracle",
+      "form_count": 2,
+      "mnemonic_count": 2
+    }
+  },
+  "execution_observations": [
+    {
+      "exit_code": 0,
+      "failure": null,
+      "failure_attribution": "none",
+      "oracle_verdict": "PASS",
+      "pass_marker": {
+        "kind": "test_event_sequence",
+        "value": "START/PASS"
+      },
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-5b6dbb3-20260716-r1/run-evidence.json",
+      "stalled": false,
+      "status": "PASS",
+      "suite": "callret",
+      "test_contract": "valid",
+      "test_id": "0x0000140b",
+      "timed_out": false,
+      "timeout_after_fail": false
+    },
+    {
+      "exit_code": 0,
+      "failure": null,
+      "failure_attribution": "none",
+      "oracle_verdict": "PASS",
+      "pass_marker": {
+        "kind": "test_event_sequence",
+        "value": "START/PASS"
+      },
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-5b6dbb3-20260716-r1/run-evidence.json",
+      "stalled": false,
+      "status": "PASS",
+      "suite": "callret",
+      "test_contract": "valid",
+      "test_id": "0x0000140c",
+      "timed_out": false,
+      "timeout_after_fail": false
+    },
+    {
+      "failure": {
+        "actual": "0x0000000000000011",
+        "expected": "0x0000000000000053",
+        "test_id": "0x00001321"
+      },
+      "failure_attribution": "test_contract",
+      "oracle_verdict": "FAIL",
+      "qemu_attribution": false,
+      "review_note": "Historical first-red evidence. The AVS source used invalid VT/VU lifetime and relative-index semantics; the corrected source and authored B.IOR binding now pass 0x1300, 0x1310, and 0x1320.",
+      "status": "FAIL",
+      "suite": "v03_vector_ops",
+      "test_contract": "invalid",
+      "test_id": "0x00001321",
+      "timed_out": true,
+      "timeout_after_fail": true
+    }
+  ],
+  "generated_at_utc": "2026-07-15T16:48:00Z",
+  "inputs": {
+    "manifest": "avs/qemu/qemu_executable_coverage_manifest.json",
+    "qemu_sha": "5b6dbb3c1647f8b96ac178f0df6a3b5d703df046",
+    "spec": "isa/v0.56/linxisa-v0.56.json"
+  },
+  "policy": {
+    "L1_suite_exit_is_coverage": false,
+    "L3_requires_oracle_pass": true,
+    "exit_zero_or_stdout_alone_is_coverage": false,
+    "failed_execution_is_counted": false,
+    "failed_execution_is_persisted": true
+  },
+  "rejected": [],
+  "schema_version": 1
+}

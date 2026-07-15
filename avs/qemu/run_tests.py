@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import os
 import re
 import select
@@ -50,6 +52,203 @@ SUCCESS_UART_MARKERS = (
     b"TEST SUITE COMPLETE",
     b"PASS\r\n",
 )
+
+
+def _sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _parse_test_events(output: bytes) -> list[dict[str, object]]:
+    events: list[dict[str, object]] = []
+    pattern = re.compile(r"Test\s+0x([0-9a-fA-F]{1,8}):.*?\b(PASS|FAIL)\s*$")
+    for line in output.decode("utf-8", errors="replace").splitlines():
+        match = pattern.search(line)
+        if match is None:
+            continue
+        test_id = f"0x{int(match.group(1), 16):08x}"
+        events.append({"seq": len(events), "kind": "START", "test_id": test_id})
+        if match.group(2) == "PASS":
+            events.append({"seq": len(events), "kind": "PASS", "test_id": test_id})
+        else:
+            events.append({"seq": len(events), "kind": "FAIL", "test_id": test_id})
+    return events
+
+
+def _test_events_are_clean_pass(events: list[dict[str, object]]) -> bool:
+    if not events or len(events) % 2:
+        return False
+    for index in range(0, len(events), 2):
+        start, terminal = events[index : index + 2]
+        if (
+            start.get("seq") != index
+            or terminal.get("seq") != index + 1
+            or start.get("kind") != "START"
+            or terminal.get("kind") != "PASS"
+            or start.get("test_id") != terminal.get("test_id")
+        ):
+            return False
+    return True
+
+
+def _parse_failure(output: bytes) -> dict[str, str] | None:
+    text = output.decode("utf-8", errors="replace")
+    match = re.search(
+        r"Test ID:\s*(0x[0-9a-fA-F]+).*?"
+        r"Expected:\s*(0x[0-9a-fA-F]+).*?"
+        r"Actual:\s*(0x[0-9a-fA-F]+)",
+        text,
+        re.DOTALL,
+    )
+    if match is None:
+        return None
+    return {
+        "test_id": f"0x{int(match.group(1), 16):08x}",
+        "expected": f"0x{int(match.group(2), 16):016x}",
+        "actual": f"0x{int(match.group(3), 16):016x}",
+    }
+
+
+def _parse_executed_pcs(trace: str) -> list[str]:
+    pcs = {
+        f"0x{int(match.group(1), 16):016x}"
+        for match in re.finditer(r"^\s*0x([0-9a-fA-F]+):", trace, re.MULTILINE)
+    }
+    return sorted(pcs, key=lambda value: int(value, 16))
+
+
+def _repo_relative(path: Path) -> str:
+    return str(path.resolve().relative_to(REPO_ROOT.resolve()))
+
+
+def _qemu_source_sha() -> str:
+    proc = subprocess.run(
+        ["git", "-C", str(REPO_ROOT / "emulator" / "qemu"), "rev-parse", "HEAD"],
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    if proc.returncode != 0:
+        raise SystemExit(f"error: cannot determine QEMU source SHA: {proc.stderr.strip()}")
+    return proc.stdout.strip()
+
+
+def _qemu_provenance(qemu: Path) -> dict[str, object]:
+    source_root = REPO_ROOT / "emulator" / "qemu"
+    status = subprocess.run(
+        ["git", "-C", str(source_root), "status", "--short", "--untracked-files=no"],
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    diff = subprocess.run(
+        ["git", "-C", str(source_root), "diff", "--binary", "HEAD"],
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    version = subprocess.run(
+        [str(qemu), "--version"],
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+    )
+    if status.returncode != 0 or diff.returncode != 0 or version.returncode != 0:
+        raise SystemExit("error: cannot capture QEMU dirty/version provenance")
+    dirty = bool(status.stdout.strip())
+    return {
+        "version": version.stdout.splitlines()[0] if version.stdout else "unknown",
+        "source_dirty": dirty,
+        "patch_sha256": hashlib.sha256(diff.stdout).hexdigest() if dirty else None,
+    }
+
+
+def _write_execution_evidence(
+    path: Path,
+    *,
+    selected: list[str],
+    objects: list[Path],
+    aggregate_object: Path,
+    elf: Path,
+    qemu: Path,
+    completed: subprocess.CompletedProcess[bytes],
+    timed_out: bool,
+    stalled: bool,
+    trace_path: Path,
+) -> None:
+    stdout = completed.stdout or b""
+    events = _parse_test_events(stdout)
+    failure = _parse_failure(stdout)
+    finisher_low8 = completed.returncode & 0xFF
+    if finisher_low8 == FINISHER_PASS_LOW8:
+        pass_marker: dict[str, str] | None = {
+            "kind": "finisher_exit_low8",
+            "value": "0x55",
+        }
+    elif (
+        completed.returncode == 0
+        and _test_events_are_clean_pass(events)
+        and any(marker in stdout for marker in SUCCESS_UART_MARKERS)
+    ):
+        pass_marker = {"kind": "test_event_sequence", "value": "START/PASS"}
+    else:
+        pass_marker = None
+    status = "PASS" if pass_marker and not timed_out and not stalled and failure is None else "FAIL"
+    if timed_out and failure is None:
+        status = "TIMEOUT"
+    elif stalled and failure is None:
+        status = "STALLED"
+    trace = trace_path.read_text(encoding="utf-8", errors="replace") if trace_path.is_file() else ""
+    payload = {
+        "schema_version": 1,
+        "status": status,
+        "oracle_verdict": "PASS" if status == "PASS" else ("FAIL" if failure else "UNAVAILABLE"),
+        "suites": selected,
+        "required_test_ids_observed": sorted(
+            {event["test_id"] for event in events if event["kind"] == "START"}
+        ),
+        "test_events": events,
+        "pc_hits": [{"pc": pc} for pc in _parse_executed_pcs(trace)],
+        "artifacts": {
+            "elf": {"path": _repo_relative(elf), "sha256": _sha256(elf)},
+            "object": {
+                "path": _repo_relative(aggregate_object),
+                "sha256": _sha256(aggregate_object),
+            },
+            "objects": [
+                {"path": _repo_relative(obj), "sha256": _sha256(obj)} for obj in objects
+            ],
+        },
+        "qemu": {
+            "path": str(qemu),
+            "binary_sha256": _sha256(qemu),
+            "sha": _qemu_source_sha(),
+            **_qemu_provenance(qemu),
+        },
+        "run": {
+            "exit_code": completed.returncode,
+            "timed_out": timed_out,
+            "stalled": stalled,
+            "timeout_after_fail": bool(timed_out and failure),
+            "pass_marker": pass_marker,
+            "stdout_sha256": hashlib.sha256(stdout).hexdigest(),
+        },
+        "failure": failure,
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    uart_path = path.with_suffix(".uart.log")
+    uart_path.write_bytes(stdout)
+    payload["artifacts"]["uart"] = {
+        "path": _repo_relative(uart_path),
+        "sha256": _sha256(uart_path),
+    }
+    if trace_path.is_file():
+        payload["artifacts"]["pc_trace"] = {
+            "path": _repo_relative(trace_path),
+            "sha256": _sha256(trace_path),
+        }
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 def _load_pto_kernel_catalog() -> dict[str, str]:
@@ -622,6 +821,11 @@ def main(argv: list[str]) -> int:
         default=[],
         help="Require UART evidence of test_start for this uint32 test id (hex/dec)",
     )
+    parser.add_argument(
+        "--evidence-out",
+        default=None,
+        help="Write structured runtime evidence JSON and enable bounded PC tracing.",
+    )
     args = parser.parse_args(argv)
 
     if args.timeout <= 0:
@@ -785,7 +989,7 @@ def main(argv: list[str]) -> int:
     suite_macros: list[str] = []
     for name, meta in SUITES.items():
         suite_macros.append(f"-D{meta['macro']}={'1' if name in selected else '0'}")
-    emit_test_logs = args.verbose or bool(required_test_ids)
+    emit_test_logs = args.verbose or bool(required_test_ids) or bool(args.evidence_out)
 
     common_cflags = [
         "-target",
@@ -937,6 +1141,10 @@ def main(argv: list[str]) -> int:
     print(f"ok: built {directboot_elf}")
 
     assert qemu is not None
+    evidence_trace = out_dir / "qemu-executable-coverage-in_asm.log"
+    evidence_trace_args = (
+        ["-d", "in_asm", "-D", str(evidence_trace)] if args.evidence_out else []
+    )
     qemu_cmd = [
         str(qemu),
         "-machine",
@@ -948,6 +1156,7 @@ def main(argv: list[str]) -> int:
         "-nographic",
         "-monitor",
         "none",
+        *evidence_trace_args,
         *args.qemu_arg,
     ]
 
@@ -959,6 +1168,20 @@ def main(argv: list[str]) -> int:
         heartbeat_sec=args.heartbeat_sec,
         no_progress_timeout=args.no_progress_timeout,
     )
+
+    if args.evidence_out:
+        _write_execution_evidence(
+            Path(os.path.expanduser(args.evidence_out)),
+            selected=selected,
+            objects=objects,
+            aggregate_object=out_obj,
+            elf=directboot_elf,
+            qemu=qemu,
+            completed=p,
+            timed_out=timed_out,
+            stalled=stalled,
+            trace_path=evidence_trace,
+        )
 
     if timed_out:
         stdout = p.stdout or b""

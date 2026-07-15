@@ -32,9 +32,9 @@ __asm__(
     "__linx_v03_ops_add_sub_body:\n"
     "  v.lw.brg [ri0.sd, lc0<<2, zero.sd], ->vt.w\n"
     "  v.lw.brg [ri1.sd, lc0<<2, zero.sd], ->vu.w\n"
-    "  v.add vt#1.sw, vu#1.sw, ->vt.w\n"
+    "  v.add vt#1.reuse.sw, vu#1.reuse.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri2.sd, lc0<<2, zero.sd]\n"
-    "  v.sub vt#1.sw, vu#1.sw, ->vt.w\n"
+    "  v.sub vt#2.sw, vu#1.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri3.sd, lc0<<2, zero.sd]\n"
     "  C.BSTOP\n");
 
