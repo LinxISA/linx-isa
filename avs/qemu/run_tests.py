@@ -50,8 +50,29 @@ FINISHER_RESET_LOW8 = 0x77
 SUCCESS_UART_MARKERS = (
     b"REGRESSION PASSED",
     b"TEST SUITE COMPLETE",
-    b"PASS\r\n",
+    b"LINX TESTS PASS",
 )
+TERMINAL_TEST_IDS_BY_SUITE = {
+    # The final system trap continuation intentionally exits through the
+    # finisher instead of returning to tests/main.c.
+    "system": 0x0000110D,
+}
+COMPLETION_TEST_IDS_BY_SUITE = {
+    "arithmetic": 0x0000A091,
+    "bitwise": 0x0000B0F1,
+    "loadstore": 0x0000C140,
+    "branch": 0x0000D0E2,
+    "move": 0x0000E141,
+    "float": 0x0000F0F0,
+    "atomic": 0x00007160,
+    "jumptable": 0x00008002,
+    "varargs": 0x00009004,
+    "v03_vector": 0x000012F0,
+    "v03_vector_ops": 0x00001320,
+    "callret": 0x00001412,
+    "runtime": 0x00002110,
+    "system": 0x0000110D,
+}
 
 
 def _sha256(path: Path) -> str:
@@ -90,6 +111,99 @@ def _test_events_are_clean_pass(events: list[dict[str, object]]) -> bool:
     return True
 
 
+def _runtime_verdict(
+    stdout: bytes,
+    returncode: int,
+    *,
+    timed_out: bool = False,
+    stalled: bool = False,
+    required_test_ids: list[int] | None = None,
+    terminal_test_ids: list[int] | None = None,
+    suite_completion_test_ids: list[int] | None = None,
+) -> dict[str, object]:
+    events = _parse_test_events(stdout)
+    failure = _parse_failure(stdout)
+    observed_ids = {
+        int(str(event["test_id"]), 16)
+        for event in events
+        if event["kind"] == "START"
+    }
+    missing_ids = sorted(set(required_test_ids or []) - observed_ids)
+    missing_suite_ids = sorted(set(suite_completion_test_ids or []) - observed_ids)
+    declared_terminal_ids = set(terminal_test_ids or [])
+    has_fail_event = any(event["kind"] == "FAIL" for event in events)
+    clean_events = not events or _test_events_are_clean_pass(events)
+    terminal_event_id = (
+        int(str(events[-1]["test_id"]), 16)
+        if events and events[-1]["kind"] == "PASS"
+        else None
+    )
+    success_marker = next(
+        (marker for marker in SUCCESS_UART_MARKERS if marker in stdout),
+        None,
+    )
+
+    pass_marker: dict[str, str] | None = None
+    if (
+        not failure
+        and not has_fail_event
+        and clean_events
+        and not missing_ids
+        and not missing_suite_ids
+        and not timed_out
+        and not stalled
+    ):
+        if returncode & 0xFF == FINISHER_PASS_LOW8:
+            pass_marker = {"kind": "finisher_exit_low8", "value": "0x55"}
+        elif returncode == 0 and success_marker is not None:
+            pass_marker = {
+                "kind": "uart_success_marker",
+                "value": success_marker.decode("ascii", errors="replace").strip(),
+            }
+        elif returncode == 0 and terminal_event_id in declared_terminal_ids:
+            pass_marker = {
+                "kind": "terminal_test_id",
+                "value": f"0x{terminal_event_id:08x}",
+            }
+
+    if failure or has_fail_event:
+        status, reason = "FAIL", "guest_failure"
+    elif timed_out:
+        status, reason = "TIMEOUT", "timeout"
+    elif stalled:
+        status, reason = "STALLED", "no_progress"
+    elif missing_ids:
+        status, reason = "FAIL", "missing_required_test_ids"
+    elif missing_suite_ids:
+        status, reason = "FAIL", "missing_suite_completion_test_ids"
+    elif pass_marker is not None:
+        status, reason = "PASS", "clean_terminal_oracle"
+    elif returncode == 0:
+        status, reason = "FAIL", "missing_terminal_oracle"
+    else:
+        status, reason = "FAIL", "nonzero_exit"
+
+    return {
+        "status": status,
+        "oracle_verdict": "PASS" if status == "PASS" else (
+            "FAIL" if failure or has_fail_event or missing_ids or missing_suite_ids else "UNAVAILABLE"
+        ),
+        "reason": reason,
+        "pass_marker": pass_marker,
+        "failure": failure,
+        "events": events,
+        "timed_out": timed_out,
+        "stalled": stalled,
+        "declared_terminal_test_ids": [
+            f"0x{test_id:08x}" for test_id in sorted(declared_terminal_ids)
+        ],
+        "missing_required_test_ids": [f"0x{test_id:08x}" for test_id in missing_ids],
+        "missing_suite_completion_test_ids": [
+            f"0x{test_id:08x}" for test_id in missing_suite_ids
+        ],
+    }
+
+
 def _parse_failure(output: bytes) -> dict[str, str] | None:
     text = output.decode("utf-8", errors="replace")
     match = re.search(
@@ -117,7 +231,11 @@ def _parse_executed_pcs(trace: str) -> list[str]:
 
 
 def _repo_relative(path: Path) -> str:
-    return str(path.resolve().relative_to(REPO_ROOT.resolve()))
+    resolved = path.resolve()
+    try:
+        return str(resolved.relative_to(REPO_ROOT.resolve()))
+    except ValueError:
+        return str(resolved)
 
 
 def _qemu_source_sha() -> str:
@@ -173,37 +291,18 @@ def _write_execution_evidence(
     elf: Path,
     qemu: Path,
     completed: subprocess.CompletedProcess[bytes],
-    timed_out: bool,
-    stalled: bool,
+    verdict: dict[str, object],
     trace_path: Path,
 ) -> None:
     stdout = completed.stdout or b""
-    events = _parse_test_events(stdout)
-    failure = _parse_failure(stdout)
-    finisher_low8 = completed.returncode & 0xFF
-    if finisher_low8 == FINISHER_PASS_LOW8:
-        pass_marker: dict[str, str] | None = {
-            "kind": "finisher_exit_low8",
-            "value": "0x55",
-        }
-    elif (
-        completed.returncode == 0
-        and _test_events_are_clean_pass(events)
-        and any(marker in stdout for marker in SUCCESS_UART_MARKERS)
-    ):
-        pass_marker = {"kind": "test_event_sequence", "value": "START/PASS"}
-    else:
-        pass_marker = None
-    status = "PASS" if pass_marker and not timed_out and not stalled and failure is None else "FAIL"
-    if timed_out and failure is None:
-        status = "TIMEOUT"
-    elif stalled and failure is None:
-        status = "STALLED"
+    events = verdict["events"]
+    failure = verdict["failure"]
+    status = verdict["status"]
     trace = trace_path.read_text(encoding="utf-8", errors="replace") if trace_path.is_file() else ""
     payload = {
         "schema_version": 1,
         "status": status,
-        "oracle_verdict": "PASS" if status == "PASS" else ("FAIL" if failure else "UNAVAILABLE"),
+        "oracle_verdict": verdict["oracle_verdict"],
         "suites": selected,
         "required_test_ids_observed": sorted(
             {event["test_id"] for event in events if event["kind"] == "START"}
@@ -228,10 +327,16 @@ def _write_execution_evidence(
         },
         "run": {
             "exit_code": completed.returncode,
-            "timed_out": timed_out,
-            "stalled": stalled,
-            "timeout_after_fail": bool(timed_out and failure),
-            "pass_marker": pass_marker,
+            "timed_out": verdict["timed_out"],
+            "stalled": verdict["stalled"],
+            "timeout_after_fail": bool(verdict["timed_out"] and failure),
+            "pass_marker": verdict["pass_marker"],
+            "verdict_reason": verdict["reason"],
+            "missing_required_test_ids": verdict["missing_required_test_ids"],
+            "missing_suite_completion_test_ids": verdict[
+                "missing_suite_completion_test_ids"
+            ],
+            "declared_terminal_test_ids": verdict["declared_terminal_test_ids"],
             "stdout_sha256": hashlib.sha256(stdout).hexdigest(),
         },
         "failure": failure,
@@ -989,7 +1094,26 @@ def main(argv: list[str]) -> int:
     suite_macros: list[str] = []
     for name, meta in SUITES.items():
         suite_macros.append(f"-D{meta['macro']}={'1' if name in selected else '0'}")
-    emit_test_logs = args.verbose or bool(required_test_ids) or bool(args.evidence_out)
+    terminal_test_ids = [
+        TERMINAL_TEST_IDS_BY_SUITE[suite]
+        for suite in selected
+        if suite in TERMINAL_TEST_IDS_BY_SUITE
+    ]
+    emit_test_logs = (
+        args.verbose
+        or bool(required_test_ids)
+        or bool(args.evidence_out)
+        or bool(terminal_test_ids)
+    )
+    suite_completion_test_ids = (
+        [
+            COMPLETION_TEST_IDS_BY_SUITE[suite]
+            for suite in selected
+            if suite in COMPLETION_TEST_IDS_BY_SUITE
+        ]
+        if emit_test_logs
+        else []
+    )
 
     common_cflags = [
         "-target",
@@ -1169,6 +1293,16 @@ def main(argv: list[str]) -> int:
         no_progress_timeout=args.no_progress_timeout,
     )
 
+    verdict = _runtime_verdict(
+        p.stdout or b"",
+        p.returncode,
+        timed_out=timed_out,
+        stalled=stalled,
+        required_test_ids=required_test_ids,
+        terminal_test_ids=terminal_test_ids,
+        suite_completion_test_ids=suite_completion_test_ids,
+    )
+
     if args.evidence_out:
         _write_execution_evidence(
             Path(os.path.expanduser(args.evidence_out)),
@@ -1178,10 +1312,17 @@ def main(argv: list[str]) -> int:
             elf=directboot_elf,
             qemu=qemu,
             completed=p,
-            timed_out=timed_out,
-            stalled=stalled,
+            verdict=verdict,
             trace_path=evidence_trace,
         )
+
+    if verdict["reason"] == "guest_failure":
+        sys.stderr.write("FAIL (guest reported a test failure)\n")
+        if not args.verbose and p.stdout:
+            sys.stderr.write("---- guest stdout (tail) ----\n")
+            sys.stderr.buffer.write(_tail(p.stdout))
+            sys.stderr.write("\n")
+        return p.returncode if p.returncode > 0 else 1
 
     if timed_out:
         stdout = p.stdout or b""
@@ -1214,31 +1355,43 @@ def main(argv: list[str]) -> int:
 
     finisher_low8 = p.returncode & 0xFF if p.returncode is not None else -1
 
-    if p.returncode == 0 or finisher_low8 == FINISHER_PASS_LOW8:
-        if emit_test_logs and not any(marker in p.stdout for marker in SUCCESS_UART_MARKERS):
-            sys.stderr.write(
-                "warning: exit=0 but did not see a known success marker in UART output\n"
-            )
-            return 2
-        if required_test_ids:
-            missing: list[int] = []
-            for test_id in required_test_ids:
-                marker = f"Test 0x{test_id:08X}:".encode()
-                if marker not in p.stdout:
-                    missing.append(test_id)
-            if missing:
-                sys.stderr.write(
-                    "error: missing required test id marker(s) in UART output: "
-                    + ", ".join(f"0x{tid:08X}" for tid in missing)
-                    + "\n"
-                )
-                if not args.verbose and p.stdout:
-                    sys.stderr.write("---- guest stdout (tail) ----\n")
-                    sys.stderr.buffer.write(_tail(p.stdout))
-                    sys.stderr.write("\n")
-                return 3
+    if verdict["status"] == "PASS":
         print("PASS")
         return 0
+
+    if verdict["missing_required_test_ids"]:
+        sys.stderr.write(
+            "error: missing required test id marker(s) in UART output: "
+            + ", ".join(verdict["missing_required_test_ids"])
+            + "\n"
+        )
+        if not args.verbose and p.stdout:
+            sys.stderr.write("---- guest stdout (tail) ----\n")
+            sys.stderr.buffer.write(_tail(p.stdout))
+            sys.stderr.write("\n")
+        return 3
+
+    if verdict["missing_suite_completion_test_ids"]:
+        sys.stderr.write(
+            "error: selected suite completion marker(s) missing from UART output: "
+            + ", ".join(verdict["missing_suite_completion_test_ids"])
+            + "\n"
+        )
+        if not args.verbose and p.stdout:
+            sys.stderr.write("---- guest stdout (tail) ----\n")
+            sys.stderr.buffer.write(_tail(p.stdout))
+            sys.stderr.write("\n")
+        return 4
+
+    if p.returncode == 0:
+        sys.stderr.write(
+            "error: exit=0 without a clean finisher or UART success oracle\n"
+        )
+        if not args.verbose and p.stdout:
+            sys.stderr.write("---- guest stdout (tail) ----\n")
+            sys.stderr.buffer.write(_tail(p.stdout))
+            sys.stderr.write("\n")
+        return 2
 
     if finisher_low8 == FINISHER_FAIL_LOW8:
         sys.stderr.write(f"FAIL (guest finisher fail exit={p.returncode})\n")

@@ -158,9 +158,6 @@ void _start(void) {
 #if LINX_TEST_ENABLE_TILE
     run_tile_tests();
 #endif
-#if LINX_TEST_ENABLE_SYSTEM
-    run_system_tests();
-#endif
 #if LINX_TEST_ENABLE_V03_VECTOR
     run_v03_vector_tile_tests();
 #endif
@@ -182,6 +179,10 @@ void _start(void) {
 #if LINX_TEST_ENABLE_RUNTIME
     run_freestanding_runtime_tests();
 #endif
+#if LINX_TEST_ENABLE_SYSTEM
+    /* This suite exits through its final trap continuation; keep it last. */
+    run_system_tests();
+#endif
     
     /* Print final summary */
 #if !LINX_TEST_QUIET
@@ -195,6 +196,9 @@ void _start(void) {
     uart_puts("Note: Check UART output for individual test results.\r\n");
     uart_puts("      Each test suite prints PASS for each test.\r\n");
     uart_puts("\r\n");
+#else
+    /* Quiet runs still need one bounded completion oracle. */
+    uart_puts("LINX TESTS PASS\r\n");
 #endif
     
     linx_test_exit(0);
