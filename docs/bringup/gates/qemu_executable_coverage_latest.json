@@ -2,7 +2,7 @@
   "admitted": [
     {
       "disassembly": "add a1, a2, ->a0",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "741e2605ea1fe3e11be61ddc977bec4ec009325a3339960c095a187b89e5243d",
       "form_id": "add_32_d04202886d0a",
       "form_key": {
@@ -12,7 +12,7 @@
       },
       "max_level": "L3",
       "mnemonic": "ADD",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/obj/23_executable_scalar.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/obj/23_executable_scalar.o",
       "object_sha256": "89257b5e2cd2220f3d530b1931a07b37057eec2cf7e8534781e81912ca41e80e",
       "oracle": {
         "expected": "0x68ac",
@@ -22,16 +22,16 @@
       },
       "pc": "0x10262",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "05814106",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_scalar",
       "symbol": "executable_scalar_add",
       "test_id": "0x00002501"
     },
     {
       "disassembly": "and a1, a2, ->a0",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "741e2605ea1fe3e11be61ddc977bec4ec009325a3339960c095a187b89e5243d",
       "form_id": "and_32_b6a903a3ec94",
       "form_key": {
@@ -41,7 +41,7 @@
       },
       "max_level": "L3",
       "mnemonic": "AND",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/obj/23_executable_scalar.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/obj/23_executable_scalar.o",
       "object_sha256": "89257b5e2cd2220f3d530b1931a07b37057eec2cf7e8534781e81912ca41e80e",
       "oracle": {
         "expected": "0x00f0",
@@ -51,16 +51,16 @@
       },
       "pc": "0x10294",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "05a14106",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_scalar",
       "symbol": "executable_scalar_and",
       "test_id": "0x00002503"
     },
     {
       "disassembly": "C.BSTART COND, 0x115f2",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "86bac7705ad808124c14df5bb5ef95001575cce202cf7b4bc59e61c87b260411",
       "form_id": "c_bstart_16_c4e238a9227a",
       "form_key": {
@@ -70,7 +70,7 @@
       },
       "max_level": "L3",
       "mnemonic": "C.BSTART",
-      "object": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/14_callret_templates.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/obj/14_callret_templates.o",
       "object_sha256": "5ff2b7ff9e1cc8da5640d903dfeef862b7c6a460a132a0eb46bdef5d4f6ad2fe",
       "oracle": {
         "expected": "0x6655",
@@ -80,16 +80,16 @@
       },
       "pc": "0x115e2",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "8400",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/run-evidence.json",
       "suite": "callret",
       "symbol": "callret_tpl_c_bstart_cond_taken",
       "test_id": "0x0000140f"
     },
     {
       "disassembly": "C.BSTART.STD RET",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "86bac7705ad808124c14df5bb5ef95001575cce202cf7b4bc59e61c87b260411",
       "form_id": "c_bstart_std_16_8b40f078c14a",
       "form_key": {
@@ -99,7 +99,7 @@
       },
       "max_level": "L3",
       "mnemonic": "C.BSTART.STD",
-      "object": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/14_callret_templates.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/obj/14_callret_templates.o",
       "object_sha256": "5ff2b7ff9e1cc8da5640d903dfeef862b7c6a460a132a0eb46bdef5d4f6ad2fe",
       "oracle": {
         "expected": "0x1234",
@@ -109,16 +109,16 @@
       },
       "pc": "0x115bc",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "0038",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/run-evidence.json",
       "suite": "callret",
       "symbol": "callret_tpl_ret_error_trailer_success",
       "test_id": "0x0000140d"
     },
     {
       "disassembly": "cmp.eq a1, a1, ->a0",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "71daa029e13a90e703437b4fed48478a2962fcf7a3ca1c1baa848c235a19cfc5",
       "form_id": "cmp_eq_32_6af7c8f41300",
       "form_key": {
@@ -128,7 +128,7 @@
       },
       "max_level": "L3",
       "mnemonic": "CMP.EQ",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/obj/24_executable_integer.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/obj/24_executable_integer.o",
       "object_sha256": "9258cf2919236a774a1297e8563578a6bb24be520f0cd3f947dfe0924ac5d1e5",
       "oracle": {
         "expected": "0x1",
@@ -138,16 +138,16 @@
       },
       "pc": "0x1031a",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "45813106",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_integer",
       "symbol": "executable_integer_cmp_eq",
       "test_id": "0x00002609"
     },
     {
       "disassembly": "cmp.ge a1, a2, ->a0",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "71daa029e13a90e703437b4fed48478a2962fcf7a3ca1c1baa848c235a19cfc5",
       "form_id": "cmp_ge_32_d88e3a1cfff4",
       "form_key": {
@@ -157,7 +157,7 @@
       },
       "max_level": "L3",
       "mnemonic": "CMP.GE",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/obj/24_executable_integer.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/obj/24_executable_integer.o",
       "object_sha256": "9258cf2919236a774a1297e8563578a6bb24be520f0cd3f947dfe0924ac5d1e5",
       "oracle": {
         "expected": "0x0",
@@ -167,16 +167,16 @@
       },
       "pc": "0x10390",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "45d14106",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_integer",
       "symbol": "executable_integer_cmp_ge",
       "test_id": "0x0000260d"
     },
     {
       "disassembly": "cmp.geu a1, a2, ->a0",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "71daa029e13a90e703437b4fed48478a2962fcf7a3ca1c1baa848c235a19cfc5",
       "form_id": "cmp_geu_32_0c002dc415ef",
       "form_key": {
@@ -186,7 +186,7 @@
       },
       "max_level": "L3",
       "mnemonic": "CMP.GEU",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/obj/24_executable_integer.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/obj/24_executable_integer.o",
       "object_sha256": "9258cf2919236a774a1297e8563578a6bb24be520f0cd3f947dfe0924ac5d1e5",
       "oracle": {
         "expected": "0x1",
@@ -196,16 +196,16 @@
       },
       "pc": "0x103a2",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "45f14106",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_integer",
       "symbol": "executable_integer_cmp_geu",
       "test_id": "0x0000260e"
     },
     {
       "disassembly": "cmp.lt a1, a2, ->a0",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "71daa029e13a90e703437b4fed48478a2962fcf7a3ca1c1baa848c235a19cfc5",
       "form_id": "cmp_lt_32_c0b8cc320f12",
       "form_key": {
@@ -215,7 +215,7 @@
       },
       "max_level": "L3",
       "mnemonic": "CMP.LT",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/obj/24_executable_integer.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/obj/24_executable_integer.o",
       "object_sha256": "9258cf2919236a774a1297e8563578a6bb24be520f0cd3f947dfe0924ac5d1e5",
       "oracle": {
         "expected": "0x1",
@@ -225,16 +225,16 @@
       },
       "pc": "0x1036c",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "45c14106",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_integer",
       "symbol": "executable_integer_cmp_lt",
       "test_id": "0x0000260b"
     },
     {
       "disassembly": "cmp.ltu a1, a2, ->a0",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "71daa029e13a90e703437b4fed48478a2962fcf7a3ca1c1baa848c235a19cfc5",
       "form_id": "cmp_ltu_32_4377481baebc",
       "form_key": {
@@ -244,7 +244,7 @@
       },
       "max_level": "L3",
       "mnemonic": "CMP.LTU",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/obj/24_executable_integer.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/obj/24_executable_integer.o",
       "object_sha256": "9258cf2919236a774a1297e8563578a6bb24be520f0cd3f947dfe0924ac5d1e5",
       "oracle": {
         "expected": "0x0",
@@ -254,16 +254,16 @@
       },
       "pc": "0x1037e",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "45e14106",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_integer",
       "symbol": "executable_integer_cmp_ltu",
       "test_id": "0x0000260c"
     },
     {
       "disassembly": "cmp.ne a3, a1, ->a0",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "71daa029e13a90e703437b4fed48478a2962fcf7a3ca1c1baa848c235a19cfc5",
       "form_id": "cmp_ne_32_fc47fbb1a0de",
       "form_key": {
@@ -273,7 +273,7 @@
       },
       "max_level": "L3",
       "mnemonic": "CMP.NE",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/obj/24_executable_integer.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/obj/24_executable_integer.o",
       "object_sha256": "9258cf2919236a774a1297e8563578a6bb24be520f0cd3f947dfe0924ac5d1e5",
       "oracle": {
         "expected": "0x1",
@@ -283,16 +283,16 @@
       },
       "pc": "0x1035a",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "45913206",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_integer",
       "symbol": "executable_integer_cmp_ne",
       "test_id": "0x0000260a"
     },
     {
       "disassembly": "csel a0, a2, a3, ->a1",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "71daa029e13a90e703437b4fed48478a2962fcf7a3ca1c1baa848c235a19cfc5",
       "form_id": "csel_32_ba77cbad3c99",
       "form_key": {
@@ -302,7 +302,7 @@
       },
       "max_level": "L3",
       "mnemonic": "CSEL",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/obj/24_executable_integer.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/obj/24_executable_integer.o",
       "object_sha256": "9258cf2919236a774a1297e8563578a6bb24be520f0cd3f947dfe0924ac5d1e5",
       "oracle": {
         "expected": "0x3",
@@ -312,16 +312,16 @@
       },
       "pc": "0x103e6",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "f7015216",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_integer",
       "symbol": "executable_integer_csel",
       "test_id": "0x0000260f"
     },
     {
       "disassembly": "div a1, a2, ->a0",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "71daa029e13a90e703437b4fed48478a2962fcf7a3ca1c1baa848c235a19cfc5",
       "form_id": "div_32_a6efe85f8662",
       "form_key": {
@@ -331,7 +331,7 @@
       },
       "max_level": "L3",
       "mnemonic": "DIV",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/obj/24_executable_integer.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/obj/24_executable_integer.o",
       "object_sha256": "9258cf2919236a774a1297e8563578a6bb24be520f0cd3f947dfe0924ac5d1e5",
       "oracle": {
         "expected": "0xfffffffffffffff2",
@@ -341,16 +341,16 @@
       },
       "pc": "0x102b6",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "57814100",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_integer",
       "symbol": "executable_integer_div",
       "test_id": "0x00002605"
     },
     {
       "disassembly": "divu a1, a2, ->a0",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "71daa029e13a90e703437b4fed48478a2962fcf7a3ca1c1baa848c235a19cfc5",
       "form_id": "divu_32_cfbc0d1760e4",
       "form_key": {
@@ -360,7 +360,7 @@
       },
       "max_level": "L3",
       "mnemonic": "DIVU",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/obj/24_executable_integer.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/obj/24_executable_integer.o",
       "object_sha256": "9258cf2919236a774a1297e8563578a6bb24be520f0cd3f947dfe0924ac5d1e5",
       "oracle": {
         "expected": "0x0fffffffffffffff",
@@ -370,16 +370,16 @@
       },
       "pc": "0x102ca",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "57914100",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_integer",
       "symbol": "executable_integer_divu",
       "test_id": "0x00002606"
     },
     {
       "disassembly": "FENTRY [ra ~ ra], sp!, 16",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "86bac7705ad808124c14df5bb5ef95001575cce202cf7b4bc59e61c87b260411",
       "form_id": "fentry_32_a47584ec13b6",
       "form_key": {
@@ -389,7 +389,7 @@
       },
       "max_level": "L3",
       "mnemonic": "FENTRY",
-      "object": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/14_callret_templates.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/obj/14_callret_templates.o",
       "object_sha256": "5ff2b7ff9e1cc8da5640d903dfeef862b7c6a460a132a0eb46bdef5d4f6ad2fe",
       "oracle": {
         "expected": "0x22",
@@ -399,16 +399,16 @@
       },
       "pc": "0x11574",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "4100a504",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/run-evidence.json",
       "suite": "callret",
       "symbol": "callret_tpl_fret_stk_slot_redirect",
       "test_id": "0x0000140b"
     },
     {
       "disassembly": "FRET.RA [ra ~ ra], sp!, 16",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "86bac7705ad808124c14df5bb5ef95001575cce202cf7b4bc59e61c87b260411",
       "form_id": "fret_ra_32_659c886221c1",
       "form_key": {
@@ -418,7 +418,7 @@
       },
       "max_level": "L3",
       "mnemonic": "FRET.RA",
-      "object": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/14_callret_templates.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/obj/14_callret_templates.o",
       "object_sha256": "5ff2b7ff9e1cc8da5640d903dfeef862b7c6a460a132a0eb46bdef5d4f6ad2fe",
       "oracle": {
         "expected": "0x33",
@@ -428,16 +428,16 @@
       },
       "pc": "0x115ae",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "4120a504",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/run-evidence.json",
       "suite": "callret",
       "symbol": "callret_tpl_fret_ra_slot_redirect",
       "test_id": "0x0000140c"
     },
     {
       "disassembly": "FRET.STK [ra ~ ra], sp!, 16",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "86bac7705ad808124c14df5bb5ef95001575cce202cf7b4bc59e61c87b260411",
       "form_id": "fret_stk_32_4fe246bd8241",
       "form_key": {
@@ -447,7 +447,7 @@
       },
       "max_level": "L3",
       "mnemonic": "FRET.STK",
-      "object": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/14_callret_templates.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/obj/14_callret_templates.o",
       "object_sha256": "5ff2b7ff9e1cc8da5640d903dfeef862b7c6a460a132a0eb46bdef5d4f6ad2fe",
       "oracle": {
         "expected": "0x22",
@@ -457,16 +457,16 @@
       },
       "pc": "0x1158a",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "4130a504",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/run-evidence.json",
       "suite": "callret",
       "symbol": "callret_tpl_fret_stk_slot_redirect",
       "test_id": "0x0000140b"
     },
     {
       "disassembly": "hl.ldip [a2, 0], ->a2, a3",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "dc52dcf391a3a2693a0beeccaec820d1cc324151345f6c00363da14c601fb712",
       "form_id": "hl_ldip_48_60afa6423d39",
       "form_key": {
@@ -476,7 +476,7 @@
       },
       "max_level": "L3",
       "mnemonic": "HL.LDIP",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/obj/22_executable_memory.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/obj/22_executable_memory.o",
       "object_sha256": "ac17b241bab754d3d6ba3b966aef9aa8ca49fd98c1c81ef02b135fa0a8b10ae9",
       "oracle": {
         "expected": "0x3",
@@ -486,16 +486,16 @@
       },
       "pc": "0x105dc",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "1e2819320200",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_memory",
       "symbol": "executable_memory_hl_ldip",
       "test_id": "0x0000220c"
     },
     {
       "disassembly": "hl.lwui.po [a0, 4], ->a0, a1",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "dc52dcf391a3a2693a0beeccaec820d1cc324151345f6c00363da14c601fb712",
       "form_id": "hl_lwui_po_48_09a75b628dc4",
       "form_key": {
@@ -505,7 +505,7 @@
       },
       "max_level": "L3",
       "mnemonic": "HL.LWUI.PO",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/obj/22_executable_memory.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/obj/22_executable_memory.o",
       "object_sha256": "ac17b241bab754d3d6ba3b966aef9aa8ca49fd98c1c81ef02b135fa0a8b10ae9",
       "oracle": {
         "expected": "0x3",
@@ -515,16 +515,16 @@
       },
       "pc": "0x1025e",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "3e1819611100",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_memory",
       "symbol": "executable_memory_hl_lwui_po",
       "test_id": "0x00002201"
     },
     {
       "disassembly": "hl.lwui.pr [a0, 4], ->a0, a1",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "dc52dcf391a3a2693a0beeccaec820d1cc324151345f6c00363da14c601fb712",
       "form_id": "hl_lwui_pr_48_32de19a508f0",
       "form_key": {
@@ -534,7 +534,7 @@
       },
       "max_level": "L3",
       "mnemonic": "HL.LWUI.PR",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/obj/22_executable_memory.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/obj/22_executable_memory.o",
       "object_sha256": "ac17b241bab754d3d6ba3b966aef9aa8ca49fd98c1c81ef02b135fa0a8b10ae9",
       "oracle": {
         "expected": "0x3",
@@ -544,16 +544,16 @@
       },
       "pc": "0x10298",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "2e1819611100",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_memory",
       "symbol": "executable_memory_hl_lwui_pr",
       "test_id": "0x00002202"
     },
     {
       "disassembly": "hl.lwui.upo [a0, 4], ->a0, a1",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "dc52dcf391a3a2693a0beeccaec820d1cc324151345f6c00363da14c601fb712",
       "form_id": "hl_lwui_upo_48_33260eb06a2c",
       "form_key": {
@@ -563,7 +563,7 @@
       },
       "max_level": "L3",
       "mnemonic": "HL.LWUI.UPO",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/obj/22_executable_memory.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/obj/22_executable_memory.o",
       "object_sha256": "ac17b241bab754d3d6ba3b966aef9aa8ca49fd98c1c81ef02b135fa0a8b10ae9",
       "oracle": {
         "expected": "0x3",
@@ -573,16 +573,16 @@
       },
       "pc": "0x102de",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "3e1829614100",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_memory",
       "symbol": "executable_memory_hl_lwui_upo",
       "test_id": "0x00002203"
     },
     {
       "disassembly": "hl.lwui.upr [a0, 4], ->a0, a1",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "dc52dcf391a3a2693a0beeccaec820d1cc324151345f6c00363da14c601fb712",
       "form_id": "hl_lwui_upr_48_998a98c46469",
       "form_key": {
@@ -592,7 +592,7 @@
       },
       "max_level": "L3",
       "mnemonic": "HL.LWUI.UPR",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/obj/22_executable_memory.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/obj/22_executable_memory.o",
       "object_sha256": "ac17b241bab754d3d6ba3b966aef9aa8ca49fd98c1c81ef02b135fa0a8b10ae9",
       "oracle": {
         "expected": "0x3",
@@ -602,16 +602,16 @@
       },
       "pc": "0x10318",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "2e1829614100",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_memory",
       "symbol": "executable_memory_hl_lwui_upr",
       "test_id": "0x00002204"
     },
     {
       "disassembly": "hl.lwuip [a1, 0], ->a1, a2",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "dc52dcf391a3a2693a0beeccaec820d1cc324151345f6c00363da14c601fb712",
       "form_id": "hl_lwuip_48_2a5d6d8f3b70",
       "form_key": {
@@ -621,7 +621,7 @@
       },
       "max_level": "L3",
       "mnemonic": "HL.LWUIP",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/obj/22_executable_memory.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/obj/22_executable_memory.o",
       "object_sha256": "ac17b241bab754d3d6ba3b966aef9aa8ca49fd98c1c81ef02b135fa0a8b10ae9",
       "oracle": {
         "expected": "0x3",
@@ -631,16 +631,16 @@
       },
       "pc": "0x104c8",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "1e2099e10100",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_memory",
       "symbol": "executable_memory_hl_lwuip",
       "test_id": "0x00002209"
     },
     {
       "disassembly": "hl.sdip a0, a1, [a3, 0]",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "dc52dcf391a3a2693a0beeccaec820d1cc324151345f6c00363da14c601fb712",
       "form_id": "hl_sdip_48_6d622cf167ca",
       "form_key": {
@@ -650,7 +650,7 @@
       },
       "max_level": "L3",
       "mnemonic": "HL.SDIP",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/obj/22_executable_memory.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/obj/22_executable_memory.o",
       "object_sha256": "ac17b241bab754d3d6ba3b966aef9aa8ca49fd98c1c81ef02b135fa0a8b10ae9",
       "oracle": {
         "expected": "0x3",
@@ -660,16 +660,16 @@
       },
       "pc": "0x10666",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "de0059305100",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_memory",
       "symbol": "executable_memory_hl_sdip",
       "test_id": "0x0000220d"
     },
     {
       "disassembly": "hl.swi.po a0, [a2, 4], ->a3",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "dc52dcf391a3a2693a0beeccaec820d1cc324151345f6c00363da14c601fb712",
       "form_id": "hl_swi_po_48_66a80d0fa7f5",
       "form_key": {
@@ -679,7 +679,7 @@
       },
       "max_level": "L3",
       "mnemonic": "HL.SWI.PO",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/obj/22_executable_memory.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/obj/22_executable_memory.o",
       "object_sha256": "ac17b241bab754d3d6ba3b966aef9aa8ca49fd98c1c81ef02b135fa0a8b10ae9",
       "oracle": {
         "expected": "0x3",
@@ -689,16 +689,16 @@
       },
       "pc": "0x1037e",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "3e2859204102",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_memory",
       "symbol": "executable_memory_hl_swi_po",
       "test_id": "0x00002205"
     },
     {
       "disassembly": "hl.swi.pr a1, [a0, 4], ->a2",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "dc52dcf391a3a2693a0beeccaec820d1cc324151345f6c00363da14c601fb712",
       "form_id": "hl_swi_pr_48_68b9003e0421",
       "form_key": {
@@ -708,7 +708,7 @@
       },
       "max_level": "L3",
       "mnemonic": "HL.SWI.PR",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/obj/22_executable_memory.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/obj/22_executable_memory.o",
       "object_sha256": "ac17b241bab754d3d6ba3b966aef9aa8ca49fd98c1c81ef02b135fa0a8b10ae9",
       "oracle": {
         "expected": "0x3",
@@ -718,16 +718,16 @@
       },
       "pc": "0x103ce",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "2e2059a02102",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_memory",
       "symbol": "executable_memory_hl_swi_pr",
       "test_id": "0x00002206"
     },
     {
       "disassembly": "hl.swi.upo a1, [a0, 4], ->a2",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "dc52dcf391a3a2693a0beeccaec820d1cc324151345f6c00363da14c601fb712",
       "form_id": "hl_swi_upo_48_243d3c38cd1a",
       "form_key": {
@@ -737,7 +737,7 @@
       },
       "max_level": "L3",
       "mnemonic": "HL.SWI.UPO",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/obj/22_executable_memory.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/obj/22_executable_memory.o",
       "object_sha256": "ac17b241bab754d3d6ba3b966aef9aa8ca49fd98c1c81ef02b135fa0a8b10ae9",
       "oracle": {
         "expected": "0x3",
@@ -747,16 +747,16 @@
       },
       "pc": "0x1041e",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "3e2059e02108",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_memory",
       "symbol": "executable_memory_hl_swi_upo",
       "test_id": "0x00002207"
     },
     {
       "disassembly": "hl.swi.upr a0, [a2, 4], ->a3",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "dc52dcf391a3a2693a0beeccaec820d1cc324151345f6c00363da14c601fb712",
       "form_id": "hl_swi_upr_48_15c2fb96aab0",
       "form_key": {
@@ -766,7 +766,7 @@
       },
       "max_level": "L3",
       "mnemonic": "HL.SWI.UPR",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/obj/22_executable_memory.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/obj/22_executable_memory.o",
       "object_sha256": "ac17b241bab754d3d6ba3b966aef9aa8ca49fd98c1c81ef02b135fa0a8b10ae9",
       "oracle": {
         "expected": "0x3",
@@ -776,16 +776,16 @@
       },
       "pc": "0x1047a",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "2e2859604108",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_memory",
       "symbol": "executable_memory_hl_swi_upr",
       "test_id": "0x00002208"
     },
     {
       "disassembly": "hl.swip a3, a0, [a2, 0]",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "dc52dcf391a3a2693a0beeccaec820d1cc324151345f6c00363da14c601fb712",
       "form_id": "hl_swip_48_e2fca8cde001",
       "form_key": {
@@ -795,7 +795,7 @@
       },
       "max_level": "L3",
       "mnemonic": "HL.SWIP",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/obj/22_executable_memory.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/obj/22_executable_memory.o",
       "object_sha256": "ac17b241bab754d3d6ba3b966aef9aa8ca49fd98c1c81ef02b135fa0a8b10ae9",
       "oracle": {
         "expected": "0x3",
@@ -805,16 +805,16 @@
       },
       "pc": "0x10520",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "9e0059a04200",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_memory",
       "symbol": "executable_memory_hl_swip",
       "test_id": "0x0000220a"
     },
     {
       "disassembly": "hl.swip.u a3, a0, [a2, 8]",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "dc52dcf391a3a2693a0beeccaec820d1cc324151345f6c00363da14c601fb712",
       "form_id": "hl_swip_u_48_e2dc917c8505",
       "form_key": {
@@ -824,7 +824,7 @@
       },
       "max_level": "L3",
       "mnemonic": "HL.SWIP.U",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/obj/22_executable_memory.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/obj/22_executable_memory.o",
       "object_sha256": "ac17b241bab754d3d6ba3b966aef9aa8ca49fd98c1c81ef02b135fa0a8b10ae9",
       "oracle": {
         "expected": "0x3",
@@ -834,16 +834,16 @@
       },
       "pc": "0x10582",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "9e0059e04210",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_memory",
       "symbol": "executable_memory_hl_swip_u",
       "test_id": "0x0000220b"
     },
     {
       "disassembly": "J 6",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "86bac7705ad808124c14df5bb5ef95001575cce202cf7b4bc59e61c87b260411",
       "form_id": "j_32_a303cf05af42",
       "form_key": {
@@ -853,7 +853,7 @@
       },
       "max_level": "L3",
       "mnemonic": "J",
-      "object": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/14_callret_templates.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/obj/14_callret_templates.o",
       "object_sha256": "5ff2b7ff9e1cc8da5640d903dfeef862b7c6a460a132a0eb46bdef5d4f6ad2fe",
       "oracle": {
         "expected": "0x77",
@@ -863,16 +863,16 @@
       },
       "pc": "0x1161a",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "37000300",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/run-evidence.json",
       "suite": "callret",
       "symbol": "callret_tpl_j_skip_poison",
       "test_id": "0x00001410"
     },
     {
       "disassembly": "L.BSTART.STD DIRECT, 24",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "86bac7705ad808124c14df5bb5ef95001575cce202cf7b4bc59e61c87b260411",
       "form_id": "l_bstart_std_64_37e84068ce61",
       "form_key": {
@@ -882,7 +882,7 @@
       },
       "max_level": "L3",
       "mnemonic": "L.BSTART.STD",
-      "object": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/14_callret_templates.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/obj/14_callret_templates.o",
       "object_sha256": "5ff2b7ff9e1cc8da5640d903dfeef862b7c6a460a132a0eb46bdef5d4f6ad2fe",
       "oracle": {
         "expected": "0x77",
@@ -892,16 +892,16 @@
       },
       "pc": "0x11630",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "0f06000001200000",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/run-evidence.json",
       "suite": "callret",
       "symbol": "callret_tpl_l_bstart_direct_positive",
       "test_id": "0x00001411"
     },
     {
       "disassembly": "lb [a1, a2], ->a0",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "741e2605ea1fe3e11be61ddc977bec4ec009325a3339960c095a187b89e5243d",
       "form_id": "lb_32_b718aa88e28f",
       "form_key": {
@@ -911,7 +911,7 @@
       },
       "max_level": "L3",
       "mnemonic": "LB",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/obj/23_executable_scalar.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/obj/23_executable_scalar.o",
       "object_sha256": "89257b5e2cd2220f3d530b1931a07b37057eec2cf7e8534781e81912ca41e80e",
       "oracle": {
         "expected": "0xfffffffffffffffe",
@@ -921,16 +921,16 @@
       },
       "pc": "0x1033a",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "09814106",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_scalar",
       "symbol": "executable_scalar_lb",
       "test_id": "0x00002509"
     },
     {
       "disassembly": "lbu [a1, a2], ->a0",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "71daa029e13a90e703437b4fed48478a2962fcf7a3ca1c1baa848c235a19cfc5",
       "form_id": "lbu_32_a9a58ab4ea22",
       "form_key": {
@@ -940,7 +940,7 @@
       },
       "max_level": "L3",
       "mnemonic": "LBU",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/obj/24_executable_integer.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/obj/24_executable_integer.o",
       "object_sha256": "9258cf2919236a774a1297e8563578a6bb24be520f0cd3f947dfe0924ac5d1e5",
       "oracle": {
         "expected": "0xfe",
@@ -950,16 +950,16 @@
       },
       "pc": "0x10260",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "09c14106",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_integer",
       "symbol": "executable_integer_lbu",
       "test_id": "0x00002601"
     },
     {
       "disassembly": "ld [a1, a2], ->a0",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "741e2605ea1fe3e11be61ddc977bec4ec009325a3339960c095a187b89e5243d",
       "form_id": "ld_32_7c48838bc4e6",
       "form_key": {
@@ -969,7 +969,7 @@
       },
       "max_level": "L3",
       "mnemonic": "LD",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/obj/23_executable_scalar.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/obj/23_executable_scalar.o",
       "object_sha256": "89257b5e2cd2220f3d530b1931a07b37057eec2cf7e8534781e81912ca41e80e",
       "oracle": {
         "expected": "0x0123456789abcdef",
@@ -979,16 +979,16 @@
       },
       "pc": "0x10382",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "09b14106",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_scalar",
       "symbol": "executable_scalar_ld",
       "test_id": "0x0000250c"
     },
     {
       "disassembly": "lh [a1, a2], ->a0",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "741e2605ea1fe3e11be61ddc977bec4ec009325a3339960c095a187b89e5243d",
       "form_id": "lh_32_d0f04d7d7696",
       "form_key": {
@@ -998,7 +998,7 @@
       },
       "max_level": "L3",
       "mnemonic": "LH",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/obj/23_executable_scalar.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/obj/23_executable_scalar.o",
       "object_sha256": "89257b5e2cd2220f3d530b1931a07b37057eec2cf7e8534781e81912ca41e80e",
       "oracle": {
         "expected": "0xfffffffffffff234",
@@ -1008,16 +1008,16 @@
       },
       "pc": "0x10352",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "09914106",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_scalar",
       "symbol": "executable_scalar_lh",
       "test_id": "0x0000250a"
     },
     {
       "disassembly": "lhu [a1, a2], ->a0",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "71daa029e13a90e703437b4fed48478a2962fcf7a3ca1c1baa848c235a19cfc5",
       "form_id": "lhu_32_730caf67ecd1",
       "form_key": {
@@ -1027,7 +1027,7 @@
       },
       "max_level": "L3",
       "mnemonic": "LHU",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/obj/24_executable_integer.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/obj/24_executable_integer.o",
       "object_sha256": "9258cf2919236a774a1297e8563578a6bb24be520f0cd3f947dfe0924ac5d1e5",
       "oracle": {
         "expected": "0xabcd",
@@ -1037,16 +1037,16 @@
       },
       "pc": "0x10278",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "09d14106",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_integer",
       "symbol": "executable_integer_lhu",
       "test_id": "0x00002602"
     },
     {
       "disassembly": "lw [a1, a2], ->a0",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "741e2605ea1fe3e11be61ddc977bec4ec009325a3339960c095a187b89e5243d",
       "form_id": "lw_32_3a77ffafcb34",
       "form_key": {
@@ -1056,7 +1056,7 @@
       },
       "max_level": "L3",
       "mnemonic": "LW",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/obj/23_executable_scalar.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/obj/23_executable_scalar.o",
       "object_sha256": "89257b5e2cd2220f3d530b1931a07b37057eec2cf7e8534781e81912ca41e80e",
       "oracle": {
         "expected": "0xfffffffff23480fe",
@@ -1066,16 +1066,16 @@
       },
       "pc": "0x1036a",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "09a14106",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_scalar",
       "symbol": "executable_scalar_lw",
       "test_id": "0x0000250b"
     },
     {
       "disassembly": "lwu [a1, a2], ->a0",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "71daa029e13a90e703437b4fed48478a2962fcf7a3ca1c1baa848c235a19cfc5",
       "form_id": "lwu_32_678935925636",
       "form_key": {
@@ -1085,7 +1085,7 @@
       },
       "max_level": "L3",
       "mnemonic": "LWU",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/obj/24_executable_integer.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/obj/24_executable_integer.o",
       "object_sha256": "9258cf2919236a774a1297e8563578a6bb24be520f0cd3f947dfe0924ac5d1e5",
       "oracle": {
         "expected": "0x89abcdef",
@@ -1095,16 +1095,16 @@
       },
       "pc": "0x10290",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "09e14106",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_integer",
       "symbol": "executable_integer_lwu",
       "test_id": "0x00002603"
     },
     {
       "disassembly": "mul a1, a2, ->a0",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "71daa029e13a90e703437b4fed48478a2962fcf7a3ca1c1baa848c235a19cfc5",
       "form_id": "mul_32_9f2affd8efb8",
       "form_key": {
@@ -1114,7 +1114,7 @@
       },
       "max_level": "L3",
       "mnemonic": "MUL",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/obj/24_executable_integer.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/obj/24_executable_integer.o",
       "object_sha256": "9258cf2919236a774a1297e8563578a6bb24be520f0cd3f947dfe0924ac5d1e5",
       "oracle": {
         "expected": "0xffffffffffffffa5",
@@ -1124,16 +1124,16 @@
       },
       "pc": "0x102a2",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "47814100",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_integer",
       "symbol": "executable_integer_mul",
       "test_id": "0x00002604"
     },
     {
       "disassembly": "or a1, a2, ->a0",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "741e2605ea1fe3e11be61ddc977bec4ec009325a3339960c095a187b89e5243d",
       "form_id": "or_32_a7fb80e78831",
       "form_key": {
@@ -1143,7 +1143,7 @@
       },
       "max_level": "L3",
       "mnemonic": "OR",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/obj/23_executable_scalar.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/obj/23_executable_scalar.o",
       "object_sha256": "89257b5e2cd2220f3d530b1931a07b37057eec2cf7e8534781e81912ca41e80e",
       "oracle": {
         "expected": "0xfff0",
@@ -1153,16 +1153,16 @@
       },
       "pc": "0x102ac",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "05b14106",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_scalar",
       "symbol": "executable_scalar_or",
       "test_id": "0x00002504"
     },
     {
       "disassembly": "rem a1, a2, ->a0",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "71daa029e13a90e703437b4fed48478a2962fcf7a3ca1c1baa848c235a19cfc5",
       "form_id": "rem_32_0abbd6a3b865",
       "form_key": {
@@ -1172,7 +1172,7 @@
       },
       "max_level": "L3",
       "mnemonic": "REM",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/obj/24_executable_integer.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/obj/24_executable_integer.o",
       "object_sha256": "9258cf2919236a774a1297e8563578a6bb24be520f0cd3f947dfe0924ac5d1e5",
       "oracle": {
         "expected": "0xfffffffffffffffe",
@@ -1182,16 +1182,16 @@
       },
       "pc": "0x102de",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "57c14100",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_integer",
       "symbol": "executable_integer_rem",
       "test_id": "0x00002607"
     },
     {
       "disassembly": "remu a1, a2, ->a0",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "71daa029e13a90e703437b4fed48478a2962fcf7a3ca1c1baa848c235a19cfc5",
       "form_id": "remu_32_d7a5d1ebbbf5",
       "form_key": {
@@ -1201,7 +1201,7 @@
       },
       "max_level": "L3",
       "mnemonic": "REMU",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/obj/24_executable_integer.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/obj/24_executable_integer.o",
       "object_sha256": "9258cf2919236a774a1297e8563578a6bb24be520f0cd3f947dfe0924ac5d1e5",
       "oracle": {
         "expected": "0x2",
@@ -1211,16 +1211,16 @@
       },
       "pc": "0x102f2",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "57d14100",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_integer",
       "symbol": "executable_integer_remu",
       "test_id": "0x00002608"
     },
     {
       "disassembly": "sb a1, [a0, a2]",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "741e2605ea1fe3e11be61ddc977bec4ec009325a3339960c095a187b89e5243d",
       "form_id": "sb_32_43c106ae3749",
       "form_key": {
@@ -1230,7 +1230,7 @@
       },
       "max_level": "L3",
       "mnemonic": "SB",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/obj/23_executable_scalar.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/obj/23_executable_scalar.o",
       "object_sha256": "89257b5e2cd2220f3d530b1931a07b37057eec2cf7e8534781e81912ca41e80e",
       "oracle": {
         "expected": "0x7",
@@ -1240,16 +1240,16 @@
       },
       "pc": "0x103ba",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "4900411e",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_scalar",
       "symbol": "executable_scalar_sb",
       "test_id": "0x0000250d"
     },
     {
       "disassembly": "sd a1, [a2, a3<<3]",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "741e2605ea1fe3e11be61ddc977bec4ec009325a3339960c095a187b89e5243d",
       "form_id": "sd_32_9dbc40328653",
       "form_key": {
@@ -1259,7 +1259,7 @@
       },
       "max_level": "L3",
       "mnemonic": "SD",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/obj/23_executable_scalar.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/obj/23_executable_scalar.o",
       "object_sha256": "89257b5e2cd2220f3d530b1931a07b37057eec2cf7e8534781e81912ca41e80e",
       "oracle": {
         "expected": "0x7",
@@ -1269,16 +1269,16 @@
       },
       "pc": "0x10550",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "4930521e",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_scalar",
       "symbol": "executable_scalar_sd",
       "test_id": "0x00002510"
     },
     {
       "disassembly": "sh a1, [a0, a2<<1]",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "741e2605ea1fe3e11be61ddc977bec4ec009325a3339960c095a187b89e5243d",
       "form_id": "sh_32_bc7d4a7dea28",
       "form_key": {
@@ -1288,7 +1288,7 @@
       },
       "max_level": "L3",
       "mnemonic": "SH",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/obj/23_executable_scalar.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/obj/23_executable_scalar.o",
       "object_sha256": "89257b5e2cd2220f3d530b1931a07b37057eec2cf7e8534781e81912ca41e80e",
       "oracle": {
         "expected": "0xf",
@@ -1298,16 +1298,16 @@
       },
       "pc": "0x10432",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "4910411e",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_scalar",
       "symbol": "executable_scalar_sh",
       "test_id": "0x0000250e"
     },
     {
       "disassembly": "sll a1, a2, ->a0",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "741e2605ea1fe3e11be61ddc977bec4ec009325a3339960c095a187b89e5243d",
       "form_id": "sll_32_a100b8961e21",
       "form_key": {
@@ -1317,7 +1317,7 @@
       },
       "max_level": "L3",
       "mnemonic": "SLL",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/obj/23_executable_scalar.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/obj/23_executable_scalar.o",
       "object_sha256": "89257b5e2cd2220f3d530b1931a07b37057eec2cf7e8534781e81912ca41e80e",
       "oracle": {
         "expected": "0x1230",
@@ -1327,16 +1327,16 @@
       },
       "pc": "0x102da",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "05f14100",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_scalar",
       "symbol": "executable_scalar_sll",
       "test_id": "0x00002506"
     },
     {
       "disassembly": "sra a1, a2, ->a0",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "741e2605ea1fe3e11be61ddc977bec4ec009325a3339960c095a187b89e5243d",
       "form_id": "sra_32_ba03eea6386b",
       "form_key": {
@@ -1346,7 +1346,7 @@
       },
       "max_level": "L3",
       "mnemonic": "SRA",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/obj/23_executable_scalar.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/obj/23_executable_scalar.o",
       "object_sha256": "89257b5e2cd2220f3d530b1931a07b37057eec2cf7e8534781e81912ca41e80e",
       "oracle": {
         "expected": "0xfffffffffffffff0",
@@ -1356,16 +1356,16 @@
       },
       "pc": "0x10322",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "05e14100",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_scalar",
       "symbol": "executable_scalar_sra",
       "test_id": "0x00002508"
     },
     {
       "disassembly": "srl a1, a2, ->a0",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "741e2605ea1fe3e11be61ddc977bec4ec009325a3339960c095a187b89e5243d",
       "form_id": "srl_32_5cfca42c59f3",
       "form_key": {
@@ -1375,7 +1375,7 @@
       },
       "max_level": "L3",
       "mnemonic": "SRL",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/obj/23_executable_scalar.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/obj/23_executable_scalar.o",
       "object_sha256": "89257b5e2cd2220f3d530b1931a07b37057eec2cf7e8534781e81912ca41e80e",
       "oracle": {
         "expected": "0x0800000000000000",
@@ -1385,16 +1385,16 @@
       },
       "pc": "0x1030c",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "05d14100",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_scalar",
       "symbol": "executable_scalar_srl",
       "test_id": "0x00002507"
     },
     {
       "disassembly": "sub a1, a2, ->a0",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "741e2605ea1fe3e11be61ddc977bec4ec009325a3339960c095a187b89e5243d",
       "form_id": "sub_32_af383d4a2b42",
       "form_key": {
@@ -1404,7 +1404,7 @@
       },
       "max_level": "L3",
       "mnemonic": "SUB",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/obj/23_executable_scalar.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/obj/23_executable_scalar.o",
       "object_sha256": "89257b5e2cd2220f3d530b1931a07b37057eec2cf7e8534781e81912ca41e80e",
       "oracle": {
         "expected": "0x8642",
@@ -1414,16 +1414,16 @@
       },
       "pc": "0x1027c",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "05914106",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_scalar",
       "symbol": "executable_scalar_sub",
       "test_id": "0x00002502"
     },
     {
       "disassembly": "sw a0, [a2, a3<<2]",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "741e2605ea1fe3e11be61ddc977bec4ec009325a3339960c095a187b89e5243d",
       "form_id": "sw_32_28ad317b1b41",
       "form_key": {
@@ -1433,7 +1433,7 @@
       },
       "max_level": "L3",
       "mnemonic": "SW",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/obj/23_executable_scalar.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/obj/23_executable_scalar.o",
       "object_sha256": "89257b5e2cd2220f3d530b1931a07b37057eec2cf7e8534781e81912ca41e80e",
       "oracle": {
         "expected": "0x7",
@@ -1443,16 +1443,16 @@
       },
       "pc": "0x104c4",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "49205216",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_scalar",
       "symbol": "executable_scalar_sw",
       "test_id": "0x0000250f"
     },
     {
       "disassembly": "xor a1, a2, ->a0",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/linx-qemu-tests.elf",
       "elf_sha256": "741e2605ea1fe3e11be61ddc977bec4ec009325a3339960c095a187b89e5243d",
       "form_id": "xor_32_33510860c585",
       "form_key": {
@@ -1462,7 +1462,7 @@
       },
       "max_level": "L3",
       "mnemonic": "XOR",
-      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/obj/23_executable_scalar.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/obj/23_executable_scalar.o",
       "object_sha256": "89257b5e2cd2220f3d530b1931a07b37057eec2cf7e8534781e81912ca41e80e",
       "oracle": {
         "expected": "0xa5a5",
@@ -1472,9 +1472,9 @@
       },
       "pc": "0x102c4",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
       "raw_bytes_le": "05c14106",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "suite": "executable_scalar",
       "symbol": "executable_scalar_xor",
       "test_id": "0x00002505"
@@ -1502,10 +1502,10 @@
       "failure_attribution": "none",
       "oracle_verdict": "PASS",
       "pass_marker": {
-        "kind": "test_event_sequence",
-        "value": "START/PASS"
+        "kind": "uart_success_marker",
+        "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "callret",
@@ -1520,10 +1520,10 @@
       "failure_attribution": "none",
       "oracle_verdict": "PASS",
       "pass_marker": {
-        "kind": "test_event_sequence",
-        "value": "START/PASS"
+        "kind": "uart_success_marker",
+        "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "callret",
@@ -1538,10 +1538,10 @@
       "failure_attribution": "none",
       "oracle_verdict": "PASS",
       "pass_marker": {
-        "kind": "test_event_sequence",
-        "value": "START/PASS"
+        "kind": "uart_success_marker",
+        "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "callret",
@@ -1556,10 +1556,10 @@
       "failure_attribution": "none",
       "oracle_verdict": "PASS",
       "pass_marker": {
-        "kind": "test_event_sequence",
-        "value": "START/PASS"
+        "kind": "uart_success_marker",
+        "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "callret",
@@ -1574,10 +1574,10 @@
       "failure_attribution": "none",
       "oracle_verdict": "PASS",
       "pass_marker": {
-        "kind": "test_event_sequence",
-        "value": "START/PASS"
+        "kind": "uart_success_marker",
+        "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "callret",
@@ -1592,10 +1592,10 @@
       "failure_attribution": "none",
       "oracle_verdict": "PASS",
       "pass_marker": {
-        "kind": "test_event_sequence",
-        "value": "START/PASS"
+        "kind": "uart_success_marker",
+        "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r6/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "callret",
@@ -1613,7 +1613,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_memory",
@@ -1631,7 +1631,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_memory",
@@ -1649,7 +1649,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_scalar",
@@ -1667,7 +1667,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_scalar",
@@ -1685,7 +1685,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_scalar",
@@ -1703,7 +1703,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_scalar",
@@ -1721,7 +1721,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_scalar",
@@ -1739,7 +1739,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_scalar",
@@ -1757,7 +1757,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_scalar",
@@ -1775,7 +1775,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_scalar",
@@ -1793,7 +1793,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_scalar",
@@ -1811,7 +1811,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_scalar",
@@ -1829,7 +1829,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_scalar",
@@ -1847,7 +1847,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_scalar",
@@ -1865,7 +1865,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_scalar",
@@ -1883,7 +1883,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_scalar",
@@ -1901,7 +1901,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_scalar",
@@ -1919,7 +1919,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-scalar-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_scalar",
@@ -1937,7 +1937,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_memory",
@@ -1955,7 +1955,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_memory",
@@ -1973,7 +1973,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_memory",
@@ -1991,7 +1991,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_memory",
@@ -2009,7 +2009,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_memory",
@@ -2027,7 +2027,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_memory",
@@ -2045,7 +2045,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_memory",
@@ -2063,7 +2063,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_memory",
@@ -2081,7 +2081,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_memory",
@@ -2099,7 +2099,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_memory",
@@ -2117,7 +2117,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-memory-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_memory",
@@ -2135,7 +2135,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_integer",
@@ -2153,7 +2153,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_integer",
@@ -2171,7 +2171,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_integer",
@@ -2189,7 +2189,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_integer",
@@ -2207,7 +2207,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_integer",
@@ -2225,7 +2225,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_integer",
@@ -2243,7 +2243,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_integer",
@@ -2261,7 +2261,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_integer",
@@ -2279,7 +2279,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_integer",
@@ -2297,7 +2297,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_integer",
@@ -2315,7 +2315,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_integer",
@@ -2333,7 +2333,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_integer",
@@ -2351,7 +2351,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_integer",
@@ -2369,7 +2369,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_integer",
@@ -2387,7 +2387,7 @@
         "kind": "uart_success_marker",
         "value": "TEST SUITE COMPLETE"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-f40b22b-20260716-r1/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-integer-2856230-20260716-r1/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "executable_integer",
@@ -2414,10 +2414,10 @@
       "timeout_after_fail": true
     }
   ],
-  "generated_at_utc": "2026-07-15T21:52:42Z",
+  "generated_at_utc": "2026-07-15T22:48:37Z",
   "inputs": {
     "manifest": "avs/qemu/qemu_executable_coverage_manifest.json",
-    "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
+    "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
     "spec": "isa/v0.56/linxisa-v0.56.json"
   },
   "policy": {

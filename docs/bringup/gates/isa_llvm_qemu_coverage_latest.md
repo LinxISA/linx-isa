@@ -1,6 +1,6 @@
 # ISA-LLVM-QEMU L1 Mapping Coherence
 
-- Generated (UTC): `2026-07-15 22:18:06Z`
+- Generated (UTC): `2026-07-15 22:49:12Z`
 - Spec unique mnemonics: `711`
 - QEMU evidence: `L1 decoder_source_mapping`
 - L2 runtime execution: `available`
@@ -11,21 +11,21 @@
 | Surface | Covered | Ratio |
 | --- | --- | --- |
 | LLVM observed disassembly mnemonic breadth | `711/711` | `100.0%` |
-| QEMU L1 decoder/source mapping | `620/711` | `87.2%` |
+| QEMU L1 decoder/source mapping | `626/711` | `88.05%` |
 | QEMU AVS translation inventory | `711/711` | `100.0%` |
 
 - Non-spec translation inventory tokens: `0`
 
 ## Inconsistency Summary
 
-- Compiler-covered but missing from QEMU L1 mapping: `91`
+- Compiler-covered but missing from QEMU L1 mapping: `85`
 - QEMU L1-mapped but missing from AVS translation inventory: `0`
-- AVS translation-listed but absent from QEMU L1 mapping: `91`
+- AVS translation-listed but absent from QEMU L1 mapping: `85`
 - Compiler-covered but missing from AVS translation coverage: `0`
 
 ### Compiler vs QEMU L1 mapping
 
-- `V`: `90`
+- `V`: `84`
 - `XB`: `1`
 
 ### QEMU L1 mapping vs AVS translation
@@ -36,10 +36,8 @@
 
 ## Missing From QEMU L1 Mapping (First 200)
 
-- `V.LB`
 - `V.LBI`
 - `V.LBI.BRG`
-- `V.LBU`
 - `V.LBUI`
 - `V.LBUI.BRG`
 - `V.LD`
@@ -54,12 +52,10 @@
 - `V.LDI.BRG`
 - `V.LDI.U`
 - `V.LDI.U.BRG`
-- `V.LH`
 - `V.LHI`
 - `V.LHI.BRG`
 - `V.LHI.U`
 - `V.LHI.U.BRG`
-- `V.LHU`
 - `V.LHUI`
 - `V.LHUI.BRG`
 - `V.LHUI.U`
@@ -82,7 +78,6 @@
 - `V.LWUI.U.BRG`
 - `V.QPOP`
 - `V.QPUSH`
-- `V.SB`
 - `V.SBI`
 - `V.SBI.BRG`
 - `V.SD`
@@ -99,7 +94,6 @@
 - `V.SDI.BRG`
 - `V.SDI.U`
 - `V.SDI.U.BRG`
-- `V.SH`
 - `V.SH.U`
 - `V.SH.U.BRG`
 - `V.SHFL.BFLY`

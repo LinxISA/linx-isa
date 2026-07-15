@@ -1,6 +1,6 @@
 # QEMU Executable Coverage Ledger
 
-Generated: `2026-07-15T21:52:42Z`
+Generated: `2026-07-15T22:48:37Z`
 
 This ledger counts only per-form evidence bound to golden identity, bytes, test ID,
 artifacts, QEMU SHA, a test-specific terminal PASS, and an oracle. Suite exit 0 and stdout alone do not count.
