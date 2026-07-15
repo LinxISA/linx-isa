@@ -72,6 +72,7 @@ COMPLETION_TEST_IDS_BY_SUITE = {
     "callret": 0x00001412,
     "runtime": 0x00002110,
     "executable_memory": 0x0000220D,
+    "executable_scalar": 0x00002510,
     "system": 0x0000110D,
 }
 
@@ -476,6 +477,10 @@ SUITES: dict[str, dict[str, str]] = {
         "src": "tests/22_executable_memory.c",
         "macro": "LINX_TEST_ENABLE_LOADSTORE",
     },
+    "executable_scalar": {
+        "src": "tests/23_executable_scalar.c",
+        "macro": "LINX_TEST_ENABLE_ARITHMETIC",
+    },
 }
 
 COMPILE_ONLY_SUITE_SOURCE_OVERRIDE: dict[str, str] = {
@@ -560,10 +565,12 @@ EXPERIMENTAL_SUITES: set[str] = {
     # Evidence carrier: run explicitly so it never collides with the ordinary
     # loadstore suite that owns the same main.c entry point.
     "executable_memory",
+    "executable_scalar",
 }
 
 DEDICATED_EVIDENCE_SUITES: set[str] = {
     "executable_memory",
+    "executable_scalar",
 }
 
 CORE_SUITES: list[str] = [
