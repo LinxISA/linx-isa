@@ -69,6 +69,8 @@ extern uint64_t callret_tpl_cond_ret_error_trailer_taken(uint64_t x);
 extern uint64_t callret_tpl_c_bstart_cond_taken(uint64_t x);
 extern uint64_t callret_tpl_c_bstart_cond_not_taken(uint64_t x);
 extern uint64_t callret_tpl_j_skip_poison(uint64_t x);
+extern uint64_t callret_tpl_l_bstart_direct_positive(uint64_t x);
+extern uint64_t callret_tpl_l_bstart_direct_negative(uint64_t x);
 
 static __attribute__((noinline)) uint64_t frame_heavy(uint64_t x) {
     volatile uint64_t s0 = x + 1;
@@ -180,6 +182,16 @@ static void test_j_isolated(void) {
     TEST_EQ64(r, 0x77, 0x1410);
 }
 
+static void test_l_bstart_direct_positive(void) {
+    uint64_t r = callret_tpl_l_bstart_direct_positive(0x11);
+    TEST_EQ64(r, 0x77, 0x1411);
+}
+
+static void test_l_bstart_direct_negative(void) {
+    uint64_t r = callret_tpl_l_bstart_direct_negative(0x22);
+    TEST_EQ64(r, 0x88, 0x1412);
+}
+
 void run_callret_tests(void) {
     test_suite_begin(0x1400);
     RUN_TEST(test_direct_calls, 0x1401);
@@ -198,5 +210,7 @@ void run_callret_tests(void) {
     RUN_TEST(test_cond_ret_error_trailer_taken_path, 0x140e);
     RUN_TEST(test_c_bstart_cond_paths, 0x140f);
     RUN_TEST(test_j_isolated, 0x1410);
-    test_suite_end(16, 16);
+    RUN_TEST(test_l_bstart_direct_positive, 0x1411);
+    RUN_TEST(test_l_bstart_direct_negative, 0x1412);
+    test_suite_end(18, 18);
 }

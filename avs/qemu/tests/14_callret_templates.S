@@ -113,3 +113,41 @@ callret_tpl_j_skip_poison:
 .Lcallret_tpl_j_handler_return:
 	.4byte 0x04a53041
 	.size callret_tpl_j_skip_poison, .-callret_tpl_j_skip_poison
+
+	.globl callret_tpl_l_bstart_direct_positive
+	.type callret_tpl_l_bstart_direct_positive,@function
+callret_tpl_l_bstart_direct_positive:
+	# Keep the target close: the canonical decoder treats this displacement as
+	# low25 halfwords, while the reversed decoder interprets it as high bits.
+	L.BSTART.STD DIRECT, .Lcallret_tpl_l_bstart_direct_positive_target
+	addi zero, 68, ->a0
+	C.BSTOP
+.Lcallret_tpl_l_bstart_direct_positive_fallthrough:
+	C.BSTART.STD RET
+	addi zero, 85, ->a0
+	c.setc.tgt ra
+	C.BSTOP
+.Lcallret_tpl_l_bstart_direct_positive_target:
+	C.BSTART.STD RET
+	addi zero, 119, ->a0
+	c.setc.tgt ra
+	C.BSTOP
+	.size callret_tpl_l_bstart_direct_positive, .-callret_tpl_l_bstart_direct_positive
+
+.Lcallret_tpl_l_bstart_direct_negative_target:
+	C.BSTART.STD RET
+	addi zero, 136, ->a0
+	c.setc.tgt ra
+	C.BSTOP
+
+	.globl callret_tpl_l_bstart_direct_negative
+	.type callret_tpl_l_bstart_direct_negative,@function
+callret_tpl_l_bstart_direct_negative:
+	L.BSTART.STD DIRECT, .Lcallret_tpl_l_bstart_direct_negative_target
+	addi zero, 102, ->a0
+	C.BSTOP
+	C.BSTART.STD RET
+	addi zero, 153, ->a0
+	c.setc.tgt ra
+	C.BSTOP
+	.size callret_tpl_l_bstart_direct_negative, .-callret_tpl_l_bstart_direct_negative

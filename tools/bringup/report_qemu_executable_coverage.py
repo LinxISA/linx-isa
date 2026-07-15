@@ -94,6 +94,7 @@ def _spec_forms(spec: dict[str, Any]) -> dict[str, dict[str, Any]]:
     if not isinstance(instructions, list):
         raise ValueError("spec.instructions must be an array")
     forms: dict[str, dict[str, Any]] = {}
+    form_keys: dict[tuple[int, int, int], str] = {}
     for item in instructions:
         if not isinstance(item, dict):
             continue
@@ -102,15 +103,89 @@ def _spec_forms(spec: dict[str, Any]) -> dict[str, dict[str, Any]]:
         encoding = item.get("encoding")
         if not isinstance(form_id, str) or not isinstance(mnemonic, str) or not isinstance(encoding, dict):
             continue
+        if form_id in forms:
+            raise ValueError(f"duplicate golden form_id: {form_id}")
+        length_bits = _parse_int(encoding.get("length_bits"), f"{form_id}.length_bits")
+        if length_bits <= 0 or length_bits % 8:
+            raise ValueError(f"{form_id}.length_bits must be a positive whole number of bytes")
         parts = encoding.get("parts")
-        if not isinstance(parts, list) or len(parts) != 1 or not isinstance(parts[0], dict):
-            continue
+        if not isinstance(parts, list) or not parts:
+            raise ValueError(f"{form_id}.parts must be a non-empty array")
+
+        # Multi-part indexes name 32-bit little-endian lanes.  A singleton may
+        # span the instruction's full 16/32/48-bit width.
+        composite_mask = 0
+        composite_match = 0
+        occupied_ranges: list[tuple[int, int]] = []
+        seen_indexes: set[int] = set()
+        for part_number, part in enumerate(parts):
+            if not isinstance(part, dict):
+                raise ValueError(f"{form_id}.parts[{part_number}] must be an object")
+            default_index = 0 if len(parts) == 1 else None
+            default_width = length_bits if len(parts) == 1 else None
+            part_index = _parse_int(
+                part.get("index", default_index), f"{form_id}.parts[{part_number}].index"
+            )
+            width_bits = _parse_int(
+                part.get("width_bits", default_width),
+                f"{form_id}.parts[{part_number}].width_bits",
+            )
+            if part_index < 0:
+                raise ValueError(f"{form_id}.parts[{part_number}].index must be non-negative")
+            if part_index in seen_indexes:
+                raise ValueError(f"{form_id} has duplicate part index {part_index}")
+            if width_bits <= 0:
+                raise ValueError(f"{form_id}.parts[{part_number}].width_bits must be positive")
+            if len(parts) > 1 and width_bits > 32:
+                raise ValueError(
+                    f"{form_id}.parts[{part_number}].width_bits exceeds the 32-bit part stride"
+                )
+
+            bit_offset = part_index * 32
+            bit_end = bit_offset + width_bits
+            if bit_end > length_bits:
+                raise ValueError(f"{form_id}.parts[{part_number}] exceeds instruction length")
+            if any(bit_offset < end and start < bit_end for start, end in occupied_ranges):
+                raise ValueError(f"{form_id}.parts[{part_number}] overlaps another part")
+
+            part_mask = _parse_int(part.get("mask"), f"{form_id}.parts[{part_number}].mask")
+            part_match = _parse_int(part.get("match"), f"{form_id}.parts[{part_number}].match")
+            part_limit = 1 << width_bits
+            if part_mask < 0 or part_mask >= part_limit:
+                raise ValueError(f"{form_id}.parts[{part_number}].mask exceeds part width")
+            if part_match < 0 or part_match >= part_limit:
+                raise ValueError(f"{form_id}.parts[{part_number}].match exceeds part width")
+            if part_match & ~part_mask:
+                raise ValueError(f"{form_id}.parts[{part_number}].match sets bits outside mask")
+
+            composite_mask |= part_mask << bit_offset
+            composite_match |= part_match << bit_offset
+            occupied_ranges.append((bit_offset, bit_end))
+            seen_indexes.add(part_index)
+
+        cursor = 0
+        for start, end in sorted(occupied_ranges):
+            if start != cursor:
+                raise ValueError(f"{form_id}.parts do not cover the instruction contiguously")
+            cursor = end
+        if cursor != length_bits:
+            raise ValueError(f"{form_id}.parts do not cover the full instruction length")
+        instruction_limit = 1 << length_bits
+        if composite_mask >= instruction_limit or composite_match >= instruction_limit:
+            raise ValueError(f"{form_id} composite encoding exceeds instruction length")
+
+        form_key = (length_bits, composite_mask, composite_match)
+        if form_key in form_keys:
+            raise ValueError(
+                f"golden forms {form_keys[form_key]} and {form_id} have the same form_key"
+            )
+        form_keys[form_key] = form_id
         forms[form_id] = {
             "form_id": form_id,
             "mnemonic": mnemonic,
-            "length_bits": _parse_int(encoding.get("length_bits"), f"{form_id}.length_bits"),
-            "mask": _parse_int(parts[0].get("mask"), f"{form_id}.mask"),
-            "match": _parse_int(parts[0].get("match"), f"{form_id}.match"),
+            "length_bits": length_bits,
+            "mask": composite_mask,
+            "match": composite_match,
         }
     return forms
 

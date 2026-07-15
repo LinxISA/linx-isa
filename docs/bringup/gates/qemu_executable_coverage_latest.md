@@ -1,6 +1,6 @@
 # QEMU Executable Coverage Ledger
 
-Generated: `2026-07-15T18:46:30Z`
+Generated: `2026-07-15T19:12:09Z`
 
 This ledger counts only per-form evidence bound to golden identity, bytes, test ID,
 artifacts, QEMU SHA, a test-specific terminal PASS, and an oracle. Suite exit 0 and stdout alone do not count.
@@ -9,8 +9,8 @@ artifacts, QEMU SHA, a test-specific terminal PASS, and an oracle. Suite exit 0 
 
 | Level | Availability | Forms | Mnemonics |
 | --- | --- | ---: | ---: |
-| L2 | `available` | 6 | 6 |
-| L3 | `available` | 6 | 6 |
+| L2 | `available` | 7 | 7 |
+| L3 | `available` | 7 | 7 |
 
 ## Admitted Forms
 
@@ -22,6 +22,7 @@ artifacts, QEMU SHA, a test-specific terminal PASS, and an oracle. Suite exit 0 
 | `fret_ra_32_659c886221c1` | `callret / 0x0000140c` | `L3` | `exact_value` | `4120a504` |
 | `fret_stk_32_4fe246bd8241` | `callret / 0x0000140b` | `L3` | `exact_value` | `4130a504` |
 | `j_32_a303cf05af42` | `callret / 0x00001410` | `L3` | `exact_value` | `37000300` |
+| `l_bstart_std_64_37e84068ce61` | `callret / 0x00001411` | `L3` | `exact_value` | `0f06000001200000` |
 
 ## Failed / Rejected Evidence
 
@@ -34,4 +35,5 @@ None.
 - `callret / 0x0000140d`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
 - `callret / 0x0000140f`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
 - `callret / 0x00001410`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `callret / 0x00001411`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
 - `v03_vector_ops / 0x00001321`: status `FAIL`, oracle `FAIL`, timeout-after-fail `True`, failure `0x00001321` expected `0x0000000000000053` actual `0x0000000000000011`, test-contract `invalid`, attribution `test_contract`, note: Historical first-red evidence. The AVS source used invalid VT/VU lifetime and relative-index semantics; the corrected source and authored B.IOR binding now pass 0x1300, 0x1310, and 0x1320.

@@ -195,6 +195,57 @@ class ReportQemuExecutableCoverageTests(unittest.TestCase):
             qemu_root=root / "emulator" / "qemu",
         )
 
+    def _set_two_part_form(
+        self,
+        root: Path,
+        spec: Path,
+        run_path: Path,
+        manifest: dict[str, object],
+        run: dict[str, object],
+        *,
+        low_word: int = 0x0000000F,
+        high_word: int = 0x00002001,
+    ) -> None:
+        spec_data = json.loads(spec.read_text(encoding="utf-8"))
+        spec_data["instructions"][0]["encoding"] = {
+            "length_bits": 64,
+            "parts": [
+                {
+                    "index": 0,
+                    "width_bits": 32,
+                    "mask": "0x0000007f",
+                    "match": "0x0000000f",
+                },
+                {
+                    "index": 1,
+                    "width_bits": 32,
+                    "mask": "0x00007fff",
+                    "match": "0x00002001",
+                },
+            ],
+        }
+        spec.write_text(json.dumps(spec_data), encoding="utf-8")
+
+        entry = manifest["evidence"][0]
+        entry["form_key"] = {
+            "length_bits": 64,
+            "mask": "0x00007fff0000007f",
+            "match": "0x000020010000000f",
+        }
+        raw_bytes = low_word.to_bytes(4, "little") + high_word.to_bytes(4, "little")
+        raw_text = raw_bytes.hex()
+        entry["instruction"]["raw_bytes_le"] = raw_text
+        run["pc_hits"][0]["raw_bytes_le"] = raw_text
+
+        obj = root / entry["object"]
+        elf = root / entry["elf"]
+        obj.write_bytes(b"OBJ" + raw_bytes + b"object-tail")
+        elf.write_bytes(b"ELF" + raw_bytes + b"executable-tail")
+        run["artifacts"]["object"]["sha256"] = _sha256(obj)
+        run["artifacts"]["elf"]["sha256"] = _sha256(elf)
+        run_path.write_text(json.dumps(run), encoding="utf-8")
+        entry["run_evidence_sha256"] = _sha256(run_path)
+
     def test_complete_form_evidence_enters_l2_and_l3(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
@@ -206,6 +257,70 @@ class ReportQemuExecutableCoverageTests(unittest.TestCase):
         self.assertEqual(report["evidence"]["L3"]["form_count"], 1)
         self.assertEqual(report["admitted"][0]["form_id"], FORM_ID)
         self.assertEqual(report["rejected"], [])
+
+    def test_two_part_64_bit_form_evidence_is_admitted(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            spec, run_path, manifest, run = self._fixture(root)
+            self._set_two_part_form(root, spec, run_path, manifest, run)
+            report = self._report(root, spec, manifest)
+
+        self.assertEqual(report["evidence"]["L2"]["form_count"], 1)
+        self.assertEqual(report["evidence"]["L3"]["form_count"], 1)
+        self.assertEqual(
+            report["admitted"][0]["form_key"],
+            {
+                "length_bits": 64,
+                "mask": "0x7fff0000007f",
+                "match": "0x20010000000f",
+            },
+        )
+
+    def test_two_part_form_rejects_mismatch_in_either_half(self) -> None:
+        mismatches = {
+            "low": {"low_word": 0x0000000E},
+            "high": {"high_word": 0x00002000},
+        }
+        for label, words in mismatches.items():
+            with self.subTest(part=label), tempfile.TemporaryDirectory() as td:
+                root = Path(td)
+                spec, run_path, manifest, run = self._fixture(root)
+                self._set_two_part_form(root, spec, run_path, manifest, run, **words)
+                report = self._report(root, spec, manifest)
+
+                self.assertEqual(report["evidence"]["L2"]["form_count"], 0)
+                self.assertIn(
+                    "raw bytes do not match golden form encoding",
+                    report["rejected"][0]["reasons"],
+                )
+
+    def test_spec_forms_rejects_invalid_part_layouts(self) -> None:
+        base_part = {
+            "index": 0,
+            "width_bits": 32,
+            "mask": "0x0000007f",
+            "match": "0x0000000f",
+        }
+        invalid_parts = {
+            "duplicate index": [base_part, {**base_part}],
+            "invalid width": [{**base_part, "width_bits": 33}],
+            "part exceeds instruction": [{**base_part, "index": 1}],
+            "mask exceeds part width": [{**base_part, "mask": "0x100000000"}],
+            "match outside mask": [{**base_part, "match": "0x0000008f"}],
+        }
+        for label, parts in invalid_parts.items():
+            with self.subTest(layout=label):
+                spec = {
+                    "instructions": [
+                        {
+                            "id": "test_form",
+                            "mnemonic": "TEST",
+                            "encoding": {"length_bits": 32, "parts": parts},
+                        }
+                    ]
+                }
+                with self.assertRaises(ValueError):
+                    coverage._spec_forms(spec)
 
     def test_deleting_required_evidence_downgrades_form(self) -> None:
         mutations = {
