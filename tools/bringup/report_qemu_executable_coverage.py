@@ -827,6 +827,18 @@ def _git_head(path: Path) -> str:
     return _canonical_sha(proc.stdout.strip(), "QEMU HEAD")
 
 
+def _gate_failed(
+    report: dict[str, Any], *, require_nonzero: bool, require_clean: bool
+) -> bool:
+    l2 = report["evidence"]["L2"]["form_count"]
+    l3 = report["evidence"]["L3"]["form_count"]
+    if require_nonzero and (
+        not isinstance(l2, int) or l2 == 0 or not isinstance(l3, int) or l3 == 0
+    ):
+        return True
+    return bool(require_clean and report["rejected"])
+
+
 def main(argv: list[str] | None = None) -> int:
     script = Path(__file__).resolve()
     default_root = script.parents[2]
@@ -838,6 +850,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--report-out", type=Path)
     parser.add_argument("--out-md", type=Path)
     parser.add_argument("--require-nonzero", action="store_true")
+    parser.add_argument(
+        "--require-clean",
+        action="store_true",
+        help="Fail when any manifest evidence entry is rejected.",
+    )
     args = parser.parse_args(argv)
 
     root = args.repo_root.resolve()
@@ -867,7 +884,11 @@ def main(argv: list[str] | None = None) -> int:
     l2 = report["evidence"]["L2"]["form_count"]
     l3 = report["evidence"]["L3"]["form_count"]
     print(f"QEMU executable coverage: L2={l2} L3={l3} rejected={len(report['rejected'])}")
-    if args.require_nonzero and (not isinstance(l2, int) or l2 == 0 or not isinstance(l3, int) or l3 == 0):
+    if _gate_failed(
+        report,
+        require_nonzero=args.require_nonzero,
+        require_clean=args.require_clean,
+    ):
         return 1
     return 0
 

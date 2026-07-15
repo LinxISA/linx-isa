@@ -24,6 +24,27 @@ def _sha256(path: Path) -> str:
 
 
 class ReportQemuExecutableCoverageTests(unittest.TestCase):
+    def test_clean_gate_rejects_partial_ledgers(self) -> None:
+        report = {
+            "evidence": {"L2": {"form_count": 2}, "L3": {"form_count": 2}},
+            "rejected": [{"form_id": "unproven"}],
+        }
+        self.assertFalse(
+            coverage._gate_failed(report, require_nonzero=True, require_clean=False)
+        )
+        self.assertTrue(
+            coverage._gate_failed(report, require_nonzero=True, require_clean=True)
+        )
+
+    def test_nonzero_gate_rejects_empty_ledgers(self) -> None:
+        report = {
+            "evidence": {"L2": {"form_count": 0}, "L3": {"form_count": 0}},
+            "rejected": [],
+        }
+        self.assertTrue(
+            coverage._gate_failed(report, require_nonzero=True, require_clean=True)
+        )
+
     def _fixture(self, root: Path) -> tuple[Path, Path, dict[str, object], dict[str, object]]:
         spec = root / "isa.json"
         spec.write_text(
