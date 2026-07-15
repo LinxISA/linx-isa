@@ -23,10 +23,12 @@ def _sha256(path: Path) -> str:
 
 
 def _rel(path: Path, root: Path) -> str:
+    canonical_path = path.resolve()
+    canonical_root = root.resolve()
     try:
-        return str(path.absolute().relative_to(root.absolute()))
+        return str(canonical_path.relative_to(canonical_root))
     except ValueError:
-        return str(path.absolute())
+        return str(canonical_path)
 
 
 def _identity(tool: Path) -> str:
@@ -36,12 +38,12 @@ def _identity(tool: Path) -> str:
 
 
 def _record(args: argparse.Namespace) -> int:
-    root = Path(args.repo_root).absolute()
+    root = Path(args.repo_root).resolve()
     paths = {
-        "source": Path(args.source).absolute(),
-        "generated_assembly": Path(args.generated_assembly).absolute(),
-        "object": Path(args.object).absolute(),
-        "objdump": Path(args.objdump).absolute(),
+        "source": Path(args.source).resolve(),
+        "generated_assembly": Path(args.generated_assembly).resolve(),
+        "object": Path(args.object).resolve(),
+        "objdump": Path(args.objdump).resolve(),
     }
     for label, path in paths.items():
         if not path.is_file():
@@ -55,10 +57,10 @@ def _record(args: argparse.Namespace) -> int:
 
 
 def _complete(args: argparse.Namespace) -> int:
-    root = Path(args.repo_root).absolute()
-    source_dir = Path(args.source_dir).absolute()
+    root = Path(args.repo_root).resolve()
+    source_dir = Path(args.source_dir).resolve()
     records_path = Path(args.records_jsonl)
-    output = Path(args.output).absolute()
+    output = Path(args.output).resolve()
     records = [json.loads(line) for line in records_path.read_text().splitlines() if line]
     sources = sorted(_rel(path, root) for path in source_dir.glob("*.c"))
     recorded_sources = [record["source"] for record in records]
@@ -67,8 +69,8 @@ def _complete(args: argparse.Namespace) -> int:
     if sorted(recorded_sources) != sources:
         raise SystemExit("error: recorded source set is not the complete current C source set")
 
-    clang = Path(args.clang).absolute()
-    objdump = Path(args.llvm_objdump).absolute()
+    clang = Path(args.clang).resolve()
+    objdump = Path(args.llvm_objdump).resolve()
     manifest = {
         "schema_version": SCHEMA_VERSION,
         "status": "complete",

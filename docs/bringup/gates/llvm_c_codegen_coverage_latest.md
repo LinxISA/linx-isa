@@ -1,12 +1,13 @@
 # LLVM C/C++ CodeGen ISA Mnemonic Breadth
 
-- Generated (UTC): `2026-07-15 20:51:36Z`
+- Generated (UTC): `2026-07-15 21:23:13Z`
 - Status: `MEASURED` (no target threshold is asserted)
-- Pure CodeGen direct coverage: `118/711`
-- Pure CodeGen after alias closure: `119/711`
-- C/C++ source-oriented direct coverage: `120/711` (`16.878%`)
-- C/C++ source-oriented after explicit alias closure: `121/711` (`17.018%`)
-- Included C/C++ artifacts: `40`
+- Pure CodeGen direct coverage: `136/711`
+- Pure CodeGen after alias closure: `137/711`
+- C/C++ source-oriented direct coverage: `137/711` (`19.269%`)
+- C/C++ source-oriented after explicit alias closure: `138/711` (`19.409%`)
+- Frozen plain-C reachable contract: `137/137` (`PASS`)
+- Included C/C++ artifacts: `42`
 - Excluded disassembly artifacts: `5`
 - Compiler identity: `clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 4f980cf4166b09d0d4afa394622650aa291c56b9)`
 
@@ -74,6 +75,8 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 - `avs/compiler/linx-llvm/tests/out/38_callret_local_reloc/38_callret_local_reloc.objdump` <- `avs/compiler/linx-llvm/tests/c/38_callret_local_reloc.c`
 - `avs/compiler/linx-llvm/tests/out/39_callret_noreturn/39_callret_noreturn.objdump` <- `avs/compiler/linx-llvm/tests/c/39_callret_noreturn.c`
 - `avs/compiler/linx-llvm/tests/out/40_callret_hl_setret/40_callret_hl_setret.objdump` <- `avs/compiler/linx-llvm/tests/c/40_callret_hl_setret.c`
+- `avs/compiler/linx-llvm/tests/out/41_plain_c_compare/41_plain_c_compare.objdump` <- `avs/compiler/linx-llvm/tests/c/41_plain_c_compare.c`
+- `avs/compiler/linx-llvm/tests/out/42_plain_c_memory/42_plain_c_memory.objdump` <- `avs/compiler/linx-llvm/tests/c/42_plain_c_memory.c`
 
 ## Excluded Artifacts
 
@@ -150,12 +153,6 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 - `C.ZEXT.B`
 - `C.ZEXT.H`
 - `CLZ`
-- `CMP.AND`
-- `CMP.ANDI`
-- `CMP.EQI`
-- `CMP.GEUI`
-- `CMP.NEI`
-- `CMP.OR`
 - `CMP.ORI`
 - `CTZ`
 - `DC.CISW`
@@ -178,7 +175,6 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 - `FDIV`
 - `FENCE.D`
 - `FENCE.I`
-- `FEQ`
 - `FEQS`
 - `FEXP`
 - `FGES`
@@ -198,7 +194,6 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 - `FSUB`
 - `HL.ADDIW`
 - `HL.ADDTPC`
-- `HL.ANDI`
 - `HL.ANDIW`
 - `HL.BFI`
 - `HL.BSTART.CALL`
@@ -222,7 +217,6 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 - `HL.DIVU`
 - `HL.DIVUW`
 - `HL.DIVW`
-- `HL.LB.PCR`
 - `HL.LB.PO`
 - `HL.LB.PR`
 - `HL.LBI`
@@ -230,7 +224,6 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 - `HL.LBI.PR`
 - `HL.LBIP`
 - `HL.LBP`
-- `HL.LBU.PCR`
 - `HL.LBU.PO`
 - `HL.LBU.PR`
 - `HL.LBUI`
@@ -249,7 +242,6 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 - `HL.LDIP`
 - `HL.LDIP.U`
 - `HL.LDP`
-- `HL.LH.PCR`
 - `HL.LH.PO`
 - `HL.LH.PR`
 - `HL.LHI`
@@ -261,7 +253,6 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 - `HL.LHIP`
 - `HL.LHIP.U`
 - `HL.LHP`
-- `HL.LHU.PCR`
 - `HL.LHU.PO`
 - `HL.LHU.PR`
 - `HL.LHUI`
@@ -275,11 +266,9 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 - `HL.LHUP`
 - `HL.LIS`
 - `HL.LIU`
-- `HL.LW.PCR`
 - `HL.LW.PO`
 - `HL.LW.PR`
 - `HL.LWI`
-- `HL.LWI.PO`
 - `HL.LWI.PR`
 - `HL.LWI.U`
 - `HL.LWI.UPO`
@@ -317,7 +306,6 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 - `HL.REMU`
 - `HL.REMUW`
 - `HL.REMW`
-- `HL.SB.PCR`
 - `HL.SB.PO`
 - `HL.SB.PR`
 - `HL.SBI`
@@ -347,7 +335,6 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 - `HL.SETC.NEI`
 - `HL.SETC.ORI`
 - `HL.SETRET`
-- `HL.SH.PCR`
 - `HL.SH.PO`
 - `HL.SH.PR`
 - `HL.SH.UPO`
@@ -366,7 +353,6 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 - `HL.SSRSET`
 - `HL.SUBI`
 - `HL.SUBIW`
-- `HL.SW.PCR`
 - `HL.SW.PO`
 - `HL.SW.PR`
 - `HL.SW.UPO`

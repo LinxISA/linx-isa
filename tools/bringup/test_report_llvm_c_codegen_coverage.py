@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import contextlib
+import importlib.util
 import io
 import json
 import os
@@ -18,6 +19,15 @@ import report_llvm_c_codegen_coverage as coverage
 
 ROOT = Path(__file__).resolve().parents[2]
 ANALYZER = ROOT / "avs/compiler/linx-llvm/tests/analyze_coverage.py"
+MANIFEST_HELPER = ROOT / "avs/compiler/linx-llvm/tests/write_c_codegen_manifest.py"
+
+
+def _load_manifest_helper():
+    spec = importlib.util.spec_from_file_location("write_c_codegen_manifest", MANIFEST_HELPER)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def _write_objdump(path: Path, mnemonic: str) -> None:
@@ -104,6 +114,57 @@ def _manifest_fixture(root: Path) -> tuple[dict, dict[str, Path]]:
     }
 
 
+def _reachable_contract_fixture() -> tuple[dict, dict]:
+    baseline = [f"BASE.{index:03d}" for index in range(119)]
+    delta = [f"DELTA.{index:02d}" for index in range(18)]
+    tranche_sources = sorted(coverage.TRANCHE_SOURCES)
+    observed_by_source = {
+        "c/baseline.c": baseline,
+        tranche_sources[0]: delta[:9],
+        tranche_sources[1]: delta[9:],
+    }
+    entries = [
+        {
+            "mnemonic": mnemonic,
+            "witness_source": "c/baseline.c",
+            "evidence_kind": "direct",
+        }
+        for mnemonic in baseline
+    ]
+    entries.extend(
+        {
+            "mnemonic": mnemonic,
+            "witness_source": tranche_sources[0 if index < 9 else 1],
+            "evidence_kind": "direct",
+        }
+        for index, mnemonic in enumerate(delta)
+    )
+    contract = {
+        "schema_version": coverage.REACHABLE_CONTRACT_SCHEMA_VERSION,
+        "target": coverage.CANONICAL_TARGET,
+        "status": "frozen",
+        "tranche_sources": tranche_sources,
+        "baseline_alias_closure_count": 119,
+        "expected_coverage_count": 137,
+        "new_direct_mnemonics": delta,
+        "entries": entries,
+    }
+    context = {
+        "spec_mnemonics": set(baseline + delta),
+        "observed_by_source": observed_by_source,
+        "included": [
+            {"source": "c/baseline.c", "provenance_class": "pure_c_cpp"},
+            *[
+                {"source": source, "provenance_class": "pure_c_cpp"}
+                for source in tranche_sources
+            ],
+        ],
+        "pure_direct": set(baseline + delta),
+        "pure_closed": set(baseline + delta),
+    }
+    return contract, context
+
+
 class LLVMCodeGenCoverageTests(unittest.TestCase):
     def _verify_fixture_manifest(
         self, root: Path, manifest: dict, paths: dict[str, Path]
@@ -140,6 +201,21 @@ class LLVMCodeGenCoverageTests(unittest.TestCase):
             encoding="utf-8",
         )
         return c_dir, asm_dir, out_dir, spec
+
+    def _verify_contract_fixture(
+        self, root: Path, contract: dict, context: dict
+    ) -> dict:
+        contract_path = root / "contract.json"
+        contract_path.write_text(json.dumps(contract), encoding="utf-8")
+        return coverage._verify_reachable_contract(
+            root=root,
+            contract_path=contract_path,
+            spec_mnemonics=context["spec_mnemonics"],
+            observed_by_source=context["observed_by_source"],
+            included=context["included"],
+            pure_direct=context["pure_direct"],
+            pure_closed=context["pure_closed"],
+        )
 
     def test_generated_and_assembly_artifacts_cannot_inflate_c_codegen(self) -> None:
         with tempfile.TemporaryDirectory() as td:
@@ -289,6 +365,27 @@ class LLVMCodeGenCoverageTests(unittest.TestCase):
             with self.assertRaisesRegex(coverage.ProvenanceError, "not canonical"):
                 self._verify_fixture_manifest(root, manifest, paths)
 
+    def test_default_paths_and_temp_aliases_use_shared_canonical_resolution(self) -> None:
+        args = coverage._parse_args([])
+        self.assertEqual(
+            args.clang, "compiler/llvm/build-linxisa-clang/bin/clang"
+        )
+        self.assertEqual(
+            args.compiler_out_dir, "avs/compiler/linx-llvm/tests/out"
+        )
+        producer = _load_manifest_helper()
+        with tempfile.TemporaryDirectory(dir="/tmp") as td:
+            root = Path(td)
+            real_tool = root / "clang-real"
+            real_tool.write_bytes(b"tool")
+            tool_alias = root / "clang"
+            tool_alias.symlink_to(real_tool.name)
+            self.assertEqual(
+                producer._rel(tool_alias, root),
+                coverage._relative(tool_alias, root),
+            )
+            self.assertEqual(producer._rel(tool_alias, root), "clang-real")
+
     def test_asm_volatile_and_builtin_spellings_are_source_directed(self) -> None:
         hostile_sources = (
             'asm volatile("add a0, a1, ->a0");',
@@ -300,6 +397,55 @@ class LLVMCodeGenCoverageTests(unittest.TestCase):
         for source in hostile_sources:
             with self.subTest(source=source):
                 self.assertIsNotNone(coverage.SOURCE_DIRECTIVE_RE.search(source))
+
+    def test_reachable_contract_rejects_hostile_entries(self) -> None:
+        base, context = _reachable_contract_fixture()
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            self.assertEqual(
+                self._verify_contract_fixture(root, base, context)["status"], "PASS"
+            )
+            cases = []
+
+            unknown = deepcopy(base)
+            unknown["entries"][0]["mnemonic"] = "UNKNOWN"
+            cases.append((unknown, "mnemonic is unknown"))
+
+            duplicate = deepcopy(base)
+            duplicate["entries"][1] = deepcopy(duplicate["entries"][0])
+            cases.append((duplicate, "duplicated"))
+
+            missing = deepcopy(base)
+            missing["entries"][0]["witness_source"] = "c/missing.c"
+            cases.append((missing, "witness is missing"))
+
+            bad_kind = deepcopy(base)
+            bad_kind["entries"][0]["evidence_kind"] = "inferred"
+            cases.append((bad_kind, "evidence kind is unknown"))
+
+            old_as_new = deepcopy(base)
+            old_as_new["new_direct_mnemonics"][0] = base["entries"][0]["mnemonic"]
+            cases.append((old_as_new, "direct delta is inconsistent"))
+
+            synchronized_delete = deepcopy(base)
+            removed = synchronized_delete["new_direct_mnemonics"].pop()
+            synchronized_delete["entries"] = [
+                entry
+                for entry in synchronized_delete["entries"]
+                if entry["mnemonic"] != removed
+            ]
+            synchronized_delete["expected_coverage_count"] = 136
+            cases.append((synchronized_delete, "denominator is inconsistent"))
+
+            for contract, message in cases:
+                with self.subTest(message=message):
+                    with self.assertRaisesRegex(coverage.ProvenanceError, message):
+                        self._verify_contract_fixture(root, contract, context)
+
+            directed_context = deepcopy(context)
+            directed_context["included"][1]["provenance_class"] = "source_directed"
+            with self.assertRaisesRegex(coverage.ProvenanceError, "source-directed"):
+                self._verify_contract_fixture(root, base, directed_context)
 
     def test_wrong_output_lane_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as td:
@@ -327,21 +473,26 @@ class LLVMCodeGenCoverageTests(unittest.TestCase):
         markdown = markdown_path.read_text(encoding="utf-8")
 
         self.assertEqual(report["schema_version"], coverage.SCHEMA_VERSION)
-        self.assertEqual(report["direct"]["coverage_count"], 120)
-        self.assertEqual(report["alias_closure"]["coverage_count"], 121)
-        self.assertEqual(report["pure_codegen"]["direct_coverage_count"], 118)
-        self.assertEqual(report["pure_codegen"]["alias_closure_coverage_count"], 119)
+        self.assertEqual(report["direct"]["coverage_count"], 137)
+        self.assertEqual(report["alias_closure"]["coverage_count"], 138)
+        self.assertEqual(report["pure_codegen"]["direct_coverage_count"], 136)
+        self.assertEqual(report["pure_codegen"]["alias_closure_coverage_count"], 137)
         self.assertEqual(report["spec_unique_mnemonics"], 711)
-        self.assertIn("`120/711`", markdown)
-        self.assertIn("`121/711`", markdown)
-        self.assertIn("`118/711`", markdown)
-        self.assertIn("`119/711`", markdown)
+        self.assertIn("`137/711`", markdown)
+        self.assertIn("`138/711`", markdown)
+        self.assertIn("`136/711`", markdown)
+        self.assertIn("`137/137` (`PASS`)", markdown)
         self.assertIsNone(report["threshold"])
         self.assertIsNone(report["threshold_met"])
         self.assertEqual(report["inputs"]["manifest_status"], "complete")
         self.assertEqual(report["inputs"]["target"], coverage.CANONICAL_TARGET)
-        self.assertEqual(report["inputs"]["replay_verified_source_count"], 40)
+        self.assertEqual(report["inputs"]["replay_verified_source_count"], 42)
         self.assertEqual(len(report["inputs"]["clang_sha256"]), 64)
+        contract = report["plain_c_reachable_contract"]
+        self.assertEqual(contract["status"], "PASS")
+        self.assertEqual(contract["coverage_count"], 137)
+        self.assertEqual(contract["coverage_denominator"], 137)
+        self.assertEqual(len(contract["new_direct_mnemonics"]), 18)
         excluded = {item["artifact"] for item in report["excluded_artifacts"]}
         self.assertIn(
             "avs/compiler/linx-llvm/tests/out/99_spec_decode/99_spec_decode.objdump",

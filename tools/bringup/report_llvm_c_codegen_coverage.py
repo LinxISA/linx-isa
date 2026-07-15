@@ -18,7 +18,16 @@ from typing import Any
 
 SCHEMA_VERSION = "linx-llvm-c-codegen-coverage-v1"
 MANIFEST_SCHEMA_VERSION = "linx-c-codegen-build-v1"
+REACHABLE_CONTRACT_SCHEMA_VERSION = "linx-plain-c-reachable-contract-v1"
 CANONICAL_TARGET = "linx64-linx-none-elf"
+FROZEN_BASELINE_ALIAS_CLOSURE_COUNT = 119
+FROZEN_REACHABLE_CONTRACT_COUNT = 137
+TRANCHE_SOURCES = frozenset(
+    {
+        "avs/compiler/linx-llvm/tests/c/41_plain_c_compare.c",
+        "avs/compiler/linx-llvm/tests/c/42_plain_c_memory.c",
+    }
+)
 SOURCE_SUFFIXES = (".c", ".cc", ".cpp", ".cxx")
 CLANG_IDENT_RE = re.compile(r'^\s*\.ident\s+"(clang version [^"]+)"', re.MULTILINE)
 SOURCE_DIRECTIVE_RE = re.compile(
@@ -57,13 +66,6 @@ def _relative(path: Path, root: Path) -> str:
         return str(path.resolve().relative_to(root.resolve()))
     except ValueError:
         return str(path.resolve())
-
-
-def _lexical_relative(path: Path, root: Path) -> str:
-    try:
-        return str(path.absolute().relative_to(root.absolute()))
-    except ValueError:
-        return str(path.absolute())
 
 
 def _load_module(path: Path):
@@ -148,7 +150,7 @@ def _verify_build_manifest(
         entry = tools.get(name)
         if not isinstance(entry, dict):
             raise ProvenanceError(f"build manifest tool is missing: {name}")
-        if entry.get("path") != _lexical_relative(path, root):
+        if entry.get("path") != _relative(path, root):
             raise ProvenanceError(f"build manifest {name} path is not canonical")
         if entry.get("sha256") != _sha256(path):
             raise ProvenanceError(f"build manifest {name} SHA does not match current tool")
@@ -372,6 +374,150 @@ def _apply_alias_closure(
     return closed, additions
 
 
+def _verify_reachable_contract(
+    *,
+    root: Path,
+    contract_path: Path,
+    spec_mnemonics: set[str],
+    observed_by_source: dict[str, list[str]],
+    included: list[dict[str, Any]],
+    pure_direct: set[str],
+    pure_closed: set[str],
+) -> dict[str, Any]:
+    contract = json.loads(contract_path.read_text(encoding="utf-8"))
+    if contract.get("schema_version") != REACHABLE_CONTRACT_SCHEMA_VERSION:
+        raise ProvenanceError("plain-C reachable contract has the wrong schema")
+    if contract.get("status") != "frozen":
+        raise ProvenanceError("plain-C reachable contract is not frozen")
+    if contract.get("target") != CANONICAL_TARGET:
+        raise ProvenanceError("plain-C reachable contract target is not canonical")
+    declared_tranche_sources = contract.get("tranche_sources")
+    if (
+        not isinstance(declared_tranche_sources, list)
+        or set(declared_tranche_sources) != TRANCHE_SOURCES
+        or len(declared_tranche_sources) != len(TRANCHE_SOURCES)
+    ):
+        raise ProvenanceError("plain-C reachable contract tranche source set is not exact")
+    entries = contract.get("entries")
+    if not isinstance(entries, list) or not entries:
+        raise ProvenanceError("plain-C reachable contract entries are missing")
+    if (
+        contract.get("expected_coverage_count") != FROZEN_REACHABLE_CONTRACT_COUNT
+        or len(entries) != FROZEN_REACHABLE_CONTRACT_COUNT
+    ):
+        raise ProvenanceError("plain-C reachable contract denominator is inconsistent")
+
+    artifacts_by_source = {item["source"]: item for item in included}
+    pure_sources = {
+        source
+        for source, artifact in artifacts_by_source.items()
+        if artifact["provenance_class"] == "pure_c_cpp"
+    }
+    if not TRANCHE_SOURCES.issubset(pure_sources):
+        raise ProvenanceError("plain-C tranche source is missing or source-directed")
+    baseline_direct: set[str] = set()
+    for source in pure_sources - TRANCHE_SOURCES:
+        baseline_direct.update(observed_by_source[source])
+    baseline_closed, _ = _apply_alias_closure(baseline_direct, spec_mnemonics)
+    if len(baseline_closed) != FROZEN_BASELINE_ALIAS_CLOSURE_COUNT:
+        raise ProvenanceError("plain-C independently recomputed baseline is not 119")
+    actual_delta = pure_direct - baseline_direct
+
+    seen: set[str] = set()
+    evidence_by_mnemonic: dict[str, str] = {}
+    satisfied: list[str] = []
+    for entry in entries:
+        if not isinstance(entry, dict):
+            raise ProvenanceError("plain-C reachable contract entry is not an object")
+        mnemonic = entry.get("mnemonic")
+        source = entry.get("witness_source")
+        evidence_kind = entry.get("evidence_kind")
+        if not isinstance(mnemonic, str) or mnemonic not in spec_mnemonics:
+            raise ProvenanceError(f"plain-C reachable contract mnemonic is unknown: {mnemonic!r}")
+        if mnemonic in seen:
+            raise ProvenanceError(f"plain-C reachable contract mnemonic is duplicated: {mnemonic}")
+        seen.add(mnemonic)
+        evidence_by_mnemonic[mnemonic] = evidence_kind
+        artifact = artifacts_by_source.get(source)
+        if artifact is None or source not in observed_by_source:
+            raise ProvenanceError(f"plain-C reachable contract witness is missing: {source!r}")
+        if artifact["provenance_class"] != "pure_c_cpp":
+            raise ProvenanceError(
+                f"plain-C reachable contract witness is source-directed: {source}"
+            )
+        observed = set(observed_by_source[source])
+        if evidence_kind == "direct":
+            if "observed_mnemonic" in entry or mnemonic not in observed:
+                raise ProvenanceError(
+                    f"plain-C direct witness does not observe {mnemonic}: {source}"
+                )
+        elif evidence_kind == "alias":
+            observed_mnemonic = entry.get("observed_mnemonic")
+            valid_alias = any(
+                {mnemonic, observed_mnemonic} == {left, right}
+                for left, right in ALIAS_PAIRS
+            )
+            if (
+                not isinstance(observed_mnemonic, str)
+                or observed_mnemonic not in observed
+                or not valid_alias
+            ):
+                raise ProvenanceError(
+                    f"plain-C alias witness is invalid for {mnemonic}: {source}"
+                )
+        else:
+            raise ProvenanceError(
+                f"plain-C reachable contract evidence kind is unknown: {evidence_kind!r}"
+            )
+        if mnemonic not in pure_closed:
+            raise ProvenanceError(f"plain-C reachable mnemonic is not currently covered: {mnemonic}")
+        satisfied.append(mnemonic)
+
+    new_direct = contract.get("new_direct_mnemonics")
+    if (
+        not isinstance(new_direct, list)
+        or not all(isinstance(mnemonic, str) for mnemonic in new_direct)
+        or len(new_direct) != len(set(new_direct))
+        or any(evidence_by_mnemonic.get(mnemonic) != "direct" for mnemonic in new_direct)
+    ):
+        raise ProvenanceError("plain-C tranche mnemonic list is unknown or duplicated")
+    baseline_count = contract.get("baseline_alias_closure_count")
+    if (
+        baseline_count != FROZEN_BASELINE_ALIAS_CLOSURE_COUNT
+        or set(new_direct) != actual_delta
+    ):
+        raise ProvenanceError("plain-C tranche baseline or direct delta is inconsistent")
+    for mnemonic in new_direct:
+        entry = next(item for item in entries if item["mnemonic"] == mnemonic)
+        if entry["witness_source"] not in TRANCHE_SOURCES:
+            raise ProvenanceError(
+                f"plain-C tranche mnemonic witness is outside tranche sources: {mnemonic}"
+            )
+    independently_reachable = baseline_closed | actual_delta
+    if (
+        len(independently_reachable) != FROZEN_REACHABLE_CONTRACT_COUNT
+        or seen != independently_reachable
+        or pure_closed != independently_reachable
+    ):
+        raise ProvenanceError(
+            "plain-C contract mnemonic set differs from independent baseline plus delta"
+        )
+    return {
+        "schema_version": contract["schema_version"],
+        "path": _relative(contract_path, root),
+        "sha256": _sha256(contract_path),
+        "target": contract["target"],
+        "tranche": contract.get("tranche"),
+        "status": "PASS",
+        "coverage_count": FROZEN_REACHABLE_CONTRACT_COUNT,
+        "coverage_denominator": FROZEN_REACHABLE_CONTRACT_COUNT,
+        "missing_count": 0,
+        "missing_mnemonics": [],
+        "baseline_alias_closure_count": baseline_count,
+        "new_direct_mnemonics": new_direct,
+    }
+
+
 def build_report(
     *,
     root: Path,
@@ -384,6 +530,7 @@ def build_report(
     clang_path: Path | None = None,
     llvm_objdump_path: Path | None = None,
     manifest_path: Path | None = None,
+    reachable_contract_path: Path | None = None,
     replay_manifest: bool = False,
     generated_at_utc: str | None = None,
 ) -> dict[str, Any]:
@@ -434,6 +581,17 @@ def build_report(
 
     closed, alias_additions = _apply_alias_closure(direct, spec_mnemonics)
     pure_closed, pure_alias_additions = _apply_alias_closure(pure_direct, spec_mnemonics)
+    reachable_contract = None
+    if reachable_contract_path is not None:
+        reachable_contract = _verify_reachable_contract(
+            root=root,
+            contract_path=reachable_contract_path,
+            spec_mnemonics=spec_mnemonics,
+            observed_by_source=observed_by_source,
+            included=included,
+            pure_direct=pure_direct,
+            pure_closed=pure_closed,
+        )
     denominator = len(spec_mnemonics)
     return {
         "schema_version": SCHEMA_VERSION,
@@ -466,10 +624,10 @@ def build_report(
             "c_source_dir": _relative(c_source_dir, root),
             "compiler_out_dir": _relative(out_dir, root),
             "compiler_identity": compiler_identity,
-            "clang": _lexical_relative(clang_path, root) if clang_path is not None else None,
+            "clang": _relative(clang_path, root) if clang_path is not None else None,
             "clang_sha256": _sha256(clang_path) if clang_path is not None else None,
             "llvm_objdump": (
-                _lexical_relative(llvm_objdump_path, root)
+                _relative(llvm_objdump_path, root)
                 if llvm_objdump_path is not None
                 else None
             ),
@@ -488,6 +646,11 @@ def build_report(
                 manifest.get("source_count")
                 if manifest is not None and replay_manifest
                 else 0
+            ),
+            "plain_c_reachable_contract": (
+                _relative(reachable_contract_path, root)
+                if reachable_contract_path is not None
+                else None
             ),
         },
         "spec_unique_mnemonics": denominator,
@@ -533,6 +696,7 @@ def build_report(
             ),
             "alias_additions": pure_alias_additions,
         },
+        "plain_c_reachable_contract": reachable_contract,
         "emitted_unique_mnemonics": len(emitted),
         "unmapped_emitted_mnemonics": sorted(unmapped),
         "included_artifact_count": len(included),
@@ -547,6 +711,7 @@ def _render_markdown(report: dict[str, Any], out_path: Path) -> None:
     direct = report["direct"]
     closed = report["alias_closure"]
     pure = report["pure_codegen"]
+    contract = report["plain_c_reachable_contract"]
     lines = [
         "# LLVM C/C++ CodeGen ISA Mnemonic Breadth",
         "",
@@ -558,6 +723,12 @@ def _render_markdown(report: dict[str, Any], out_path: Path) -> None:
         f"(`{direct['coverage_ratio_percent']}%`)",
         f"- C/C++ source-oriented after explicit alias closure: `{closed['coverage_count']}/{closed['coverage_denominator']}` "
         f"(`{closed['coverage_ratio_percent']}%`)",
+        (
+            f"- Frozen plain-C reachable contract: `{contract['coverage_count']}/"
+            f"{contract['coverage_denominator']}` (`{contract['status']}`)"
+            if contract is not None
+            else "- Frozen plain-C reachable contract: `UNAVAILABLE`"
+        ),
         f"- Included C/C++ artifacts: `{report['included_artifact_count']}`",
         f"- Excluded disassembly artifacts: `{report['excluded_artifact_count']}`",
         f"- Compiler identity: `{report['inputs']['compiler_identity']}`",
@@ -629,6 +800,10 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
         default="avs/compiler/linx-llvm/tests/out/c-codegen-build-manifest.json",
     )
     parser.add_argument(
+        "--reachable-contract",
+        default="avs/compiler/linx-llvm/tests/plain_c_reachable_contract.json",
+    )
+    parser.add_argument(
         "--report-out",
         default="docs/bringup/gates/llvm_c_codegen_coverage_latest.json",
     )
@@ -644,11 +819,6 @@ def _under_root(root: Path, value: str) -> Path:
     return path.resolve() if path.is_absolute() else (root / path).resolve()
 
 
-def _under_root_lexical(root: Path, value: str) -> Path:
-    path = Path(value)
-    return path.absolute() if path.is_absolute() else (root / path).absolute()
-
-
 def main(argv: list[str]) -> int:
     args = _parse_args(argv)
     root = Path(args.repo_root).resolve()
@@ -657,9 +827,10 @@ def main(argv: list[str]) -> int:
     c_source_dir = _under_root(root, args.c_source_dir)
     asm_source_dir = _under_root(root, args.asm_source_dir)
     out_dir = _under_root(root, args.compiler_out_dir)
-    clang_path = _under_root_lexical(root, args.clang)
-    llvm_objdump_path = _under_root_lexical(root, args.llvm_objdump)
+    clang_path = _under_root(root, args.clang)
+    llvm_objdump_path = _under_root(root, args.llvm_objdump)
     manifest_path = _under_root(root, args.build_manifest)
+    reachable_contract_path = _under_root(root, args.reachable_contract)
     report_out = _under_root(root, args.report_out)
     out_md = _under_root(root, args.out_md)
 
@@ -675,6 +846,10 @@ def main(argv: list[str]) -> int:
             root
             / "avs/compiler/linx-llvm/tests/out/c-codegen-build-manifest.json"
         ),
+        "plain-C reachable contract": (
+            root
+            / "avs/compiler/linx-llvm/tests/plain_c_reachable_contract.json"
+        ),
     }
     actual = {
         "spec": spec_path,
@@ -685,6 +860,7 @@ def main(argv: list[str]) -> int:
         "Clang": clang_path,
         "llvm-objdump": llvm_objdump_path,
         "build manifest": manifest_path,
+        "plain-C reachable contract": reachable_contract_path,
     }
     for label, expected in canonical.items():
         if actual[label].resolve() != expected.resolve():
@@ -711,6 +887,7 @@ def main(argv: list[str]) -> int:
             clang_path=clang_path,
             llvm_objdump_path=llvm_objdump_path,
             manifest_path=manifest_path,
+            reachable_contract_path=reachable_contract_path,
             replay_manifest=True,
         )
     except (
