@@ -115,13 +115,16 @@ def _manifest_fixture(root: Path) -> tuple[dict, dict[str, Path]]:
 
 
 def _reachable_contract_fixture() -> tuple[dict, dict]:
-    baseline = [f"BASE.{index:03d}" for index in range(119)]
-    delta = [f"DELTA.{index:02d}" for index in range(18)]
-    tranche_sources = sorted(coverage.TRANCHE_SOURCES)
+    baseline = ["BASE.0", "BASE.1", "BASE.2"]
+    tranche_one = ["DELTA.1", "DELTA.2"]
+    tranche_two = ["DELTA.3"]
+    tranche_one_sources = ["c/41_plain.c", "c/42_plain.c"]
+    tranche_two_sources = ["c/43_plain.c"]
     observed_by_source = {
         "c/baseline.c": baseline,
-        tranche_sources[0]: delta[:9],
-        tranche_sources[1]: delta[9:],
+        tranche_one_sources[0]: tranche_one[:1],
+        tranche_one_sources[1]: tranche_one[1:],
+        tranche_two_sources[0]: tranche_two,
     }
     entries = [
         {
@@ -134,33 +137,56 @@ def _reachable_contract_fixture() -> tuple[dict, dict]:
     entries.extend(
         {
             "mnemonic": mnemonic,
-            "witness_source": tranche_sources[0 if index < 9 else 1],
+            "witness_source": tranche_one_sources[index],
             "evidence_kind": "direct",
         }
-        for index, mnemonic in enumerate(delta)
+        for index, mnemonic in enumerate(tranche_one)
+    )
+    entries.extend(
+        {
+            "mnemonic": mnemonic,
+            "witness_source": tranche_two_sources[0],
+            "evidence_kind": "direct",
+        }
+        for mnemonic in tranche_two
     )
     contract = {
         "schema_version": coverage.REACHABLE_CONTRACT_SCHEMA_VERSION,
         "target": coverage.CANONICAL_TARGET,
         "status": "frozen",
-        "tranche_sources": tranche_sources,
-        "baseline_alias_closure_count": 119,
-        "expected_coverage_count": 137,
-        "new_direct_mnemonics": delta,
+        "tranches": [
+            {
+                "id": "plain-c-1",
+                "sources": tranche_one_sources,
+                "baseline_alias_closure_count": len(baseline),
+                "new_direct_mnemonics": tranche_one,
+                "expected_coverage_count": len(baseline + tranche_one),
+            },
+            {
+                "id": "plain-c-2",
+                "sources": tranche_two_sources,
+                "baseline_alias_closure_count": len(baseline + tranche_one),
+                "new_direct_mnemonics": tranche_two,
+                "expected_coverage_count": len(
+                    baseline + tranche_one + tranche_two
+                ),
+            },
+        ],
+        "expected_coverage_count": len(baseline + tranche_one + tranche_two),
         "entries": entries,
     }
     context = {
-        "spec_mnemonics": set(baseline + delta),
+        "spec_mnemonics": set(baseline + tranche_one + tranche_two),
         "observed_by_source": observed_by_source,
         "included": [
             {"source": "c/baseline.c", "provenance_class": "pure_c_cpp"},
             *[
                 {"source": source, "provenance_class": "pure_c_cpp"}
-                for source in tranche_sources
+                for source in tranche_one_sources + tranche_two_sources
             ],
         ],
-        "pure_direct": set(baseline + delta),
-        "pure_closed": set(baseline + delta),
+        "pure_direct": set(baseline + tranche_one + tranche_two),
+        "pure_closed": set(baseline + tranche_one + tranche_two),
     }
     return contract, context
 
@@ -203,7 +229,12 @@ class LLVMCodeGenCoverageTests(unittest.TestCase):
         return c_dir, asm_dir, out_dir, spec
 
     def _verify_contract_fixture(
-        self, root: Path, contract: dict, context: dict
+        self,
+        root: Path,
+        contract: dict,
+        context: dict,
+        *,
+        enforce_canonical_anchor: bool = False,
     ) -> dict:
         contract_path = root / "contract.json"
         contract_path.write_text(json.dumps(contract), encoding="utf-8")
@@ -215,6 +246,7 @@ class LLVMCodeGenCoverageTests(unittest.TestCase):
             included=context["included"],
             pure_direct=context["pure_direct"],
             pure_closed=context["pure_closed"],
+            enforce_canonical_anchor=enforce_canonical_anchor,
         )
 
     def test_generated_and_assembly_artifacts_cannot_inflate_c_codegen(self) -> None:
@@ -424,18 +456,34 @@ class LLVMCodeGenCoverageTests(unittest.TestCase):
             cases.append((bad_kind, "evidence kind is unknown"))
 
             old_as_new = deepcopy(base)
-            old_as_new["new_direct_mnemonics"][0] = base["entries"][0]["mnemonic"]
+            old_as_new["tranches"][0]["new_direct_mnemonics"][0] = base[
+                "entries"
+            ][0]["mnemonic"]
             cases.append((old_as_new, "direct delta is inconsistent"))
 
             synchronized_delete = deepcopy(base)
-            removed = synchronized_delete["new_direct_mnemonics"].pop()
+            removed = synchronized_delete["tranches"][-1][
+                "new_direct_mnemonics"
+            ].pop()
             synchronized_delete["entries"] = [
                 entry
                 for entry in synchronized_delete["entries"]
                 if entry["mnemonic"] != removed
             ]
-            synchronized_delete["expected_coverage_count"] = 136
-            cases.append((synchronized_delete, "denominator is inconsistent"))
+            synchronized_delete["tranches"][-1]["expected_coverage_count"] -= 1
+            synchronized_delete["expected_coverage_count"] -= 1
+            cases.append((synchronized_delete, "mnemonic list is unknown"))
+
+            deleted_tranche = deepcopy(base)
+            removed_tranche = deleted_tranche["tranches"].pop()
+            removed_mnemonics = set(removed_tranche["new_direct_mnemonics"])
+            deleted_tranche["entries"] = [
+                entry
+                for entry in deleted_tranche["entries"]
+                if entry["mnemonic"] not in removed_mnemonics
+            ]
+            deleted_tranche["expected_coverage_count"] -= len(removed_mnemonics)
+            cases.append((deleted_tranche, "baseline is inconsistent"))
 
             for contract, message in cases:
                 with self.subTest(message=message):
@@ -446,6 +494,137 @@ class LLVMCodeGenCoverageTests(unittest.TestCase):
             directed_context["included"][1]["provenance_class"] = "source_directed"
             with self.assertRaisesRegex(coverage.ProvenanceError, "source-directed"):
                 self._verify_contract_fixture(root, base, directed_context)
+
+    def test_canonical_anchor_rejects_coordinated_corpus_and_contract_shrink(
+        self,
+    ) -> None:
+        contract = json.loads(
+            (ROOT / coverage.CANONICAL_REACHABLE_CONTRACT_PATH).read_text(
+                encoding="utf-8"
+            )
+        )
+        report = json.loads(
+            (
+                ROOT / "docs/bringup/gates/llvm_c_codegen_coverage_latest.json"
+            ).read_text(encoding="utf-8")
+        )
+        spec_mnemonics = {
+            instruction["mnemonic"].upper()
+            for instruction in json.loads(
+                (ROOT / "isa/v0.56/linxisa-v0.56.json").read_text(
+                    encoding="utf-8"
+                )
+            )["instructions"]
+        }
+        context = {
+            "spec_mnemonics": spec_mnemonics,
+            "observed_by_source": deepcopy(report["observed_by_source"]),
+            "included": deepcopy(report["included_artifacts"]),
+            "pure_direct": set(
+                report["pure_codegen"]["direct_covered_mnemonics"]
+            ),
+            "pure_closed": set(
+                report["pure_codegen"]["alias_closure_covered_mnemonics"]
+            ),
+        }
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            anchored = self._verify_contract_fixture(
+                root,
+                contract,
+                context,
+                enforce_canonical_anchor=True,
+            )
+            self.assertEqual(
+                anchored["canonical_non_regression_anchor"]["status"], "PASS"
+            )
+
+            renamed_contract = deepcopy(contract)
+            renamed_contract["tranches"][-1]["id"] = "renamed-tranche"
+            self.assertEqual(
+                self._verify_contract_fixture(
+                    root, renamed_contract, context
+                )["coverage_count"],
+                143,
+            )
+            with self.assertRaisesRegex(
+                coverage.ProvenanceError, "non-regression anchor"
+            ):
+                self._verify_contract_fixture(
+                    root,
+                    renamed_contract,
+                    context,
+                    enforce_canonical_anchor=True,
+                )
+
+            shrunk_contract = deepcopy(contract)
+            removed_tranche = shrunk_contract["tranches"].pop()
+            removed_source = removed_tranche["sources"][0]
+            removed_mnemonics = set(removed_tranche["new_direct_mnemonics"])
+            shrunk_contract["entries"] = [
+                entry
+                for entry in shrunk_contract["entries"]
+                if entry["mnemonic"] not in removed_mnemonics
+            ]
+            shrunk_contract["expected_coverage_count"] = 137
+
+            shrunk_context = deepcopy(context)
+            shrunk_context["observed_by_source"].pop(removed_source)
+            shrunk_context["included"] = [
+                artifact
+                for artifact in shrunk_context["included"]
+                if artifact["source"] != removed_source
+            ]
+            shrunk_context["pure_direct"] -= removed_mnemonics
+            shrunk_context["pure_closed"], _ = coverage._apply_alias_closure(
+                shrunk_context["pure_direct"], spec_mnemonics
+            )
+
+            unanchored = self._verify_contract_fixture(
+                root, shrunk_contract, shrunk_context
+            )
+            self.assertEqual(unanchored["coverage_count"], 137)
+            self.assertIsNone(unanchored["canonical_non_regression_anchor"])
+            with self.assertRaisesRegex(
+                coverage.ProvenanceError, "non-regression minimum"
+            ):
+                self._verify_contract_fixture(
+                    root,
+                    shrunk_contract,
+                    shrunk_context,
+                    enforce_canonical_anchor=True,
+                )
+
+    def test_canonical_anchor_digest_covers_every_tranche_descriptor_field(
+        self,
+    ) -> None:
+        contract = json.loads(
+            (ROOT / coverage.CANONICAL_REACHABLE_CONTRACT_PATH).read_text(
+                encoding="utf-8"
+            )
+        )
+        tranches = contract["tranches"]
+        expected = coverage.CANONICAL_REACHABLE_CONTRACT_ANCHOR[
+            "tranche_chain_sha256"
+        ]
+        self.assertEqual(coverage._tranche_chain_sha256(tranches), expected)
+
+        mutations = []
+        for field, value in (
+            ("id", "renamed-tranche"),
+            ("sources", ["c/replaced.c"]),
+            ("baseline_alias_closure_count", 118),
+            ("expected_coverage_count", 142),
+            ("new_direct_mnemonics", ["REPLACED"]),
+        ):
+            mutated = deepcopy(tranches)
+            mutated[-1][field] = value
+            mutations.append((field, mutated))
+        for field, mutated in mutations:
+            with self.subTest(field=field):
+                self.assertNotEqual(
+                    coverage._tranche_chain_sha256(mutated), expected
+                )
 
     def test_wrong_output_lane_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as td:
@@ -473,26 +652,48 @@ class LLVMCodeGenCoverageTests(unittest.TestCase):
         markdown = markdown_path.read_text(encoding="utf-8")
 
         self.assertEqual(report["schema_version"], coverage.SCHEMA_VERSION)
-        self.assertEqual(report["direct"]["coverage_count"], 137)
-        self.assertEqual(report["alias_closure"]["coverage_count"], 138)
-        self.assertEqual(report["pure_codegen"]["direct_coverage_count"], 136)
-        self.assertEqual(report["pure_codegen"]["alias_closure_coverage_count"], 137)
+        self.assertEqual(report["direct"]["coverage_count"], 143)
+        self.assertEqual(report["alias_closure"]["coverage_count"], 144)
+        self.assertEqual(report["pure_codegen"]["direct_coverage_count"], 142)
+        self.assertEqual(report["pure_codegen"]["alias_closure_coverage_count"], 143)
         self.assertEqual(report["spec_unique_mnemonics"], 711)
-        self.assertIn("`137/711`", markdown)
-        self.assertIn("`138/711`", markdown)
-        self.assertIn("`136/711`", markdown)
-        self.assertIn("`137/137` (`PASS`)", markdown)
+        self.assertIn("`143/711`", markdown)
+        self.assertIn("`144/711`", markdown)
+        self.assertIn("`142/711`", markdown)
+        self.assertIn("`143/143` (`PASS`)", markdown)
+        self.assertIn("`frances-allen-plain-c-2`", markdown)
+        self.assertIn("`HL.LWUI.PO`", markdown)
         self.assertIsNone(report["threshold"])
         self.assertIsNone(report["threshold_met"])
         self.assertEqual(report["inputs"]["manifest_status"], "complete")
         self.assertEqual(report["inputs"]["target"], coverage.CANONICAL_TARGET)
-        self.assertEqual(report["inputs"]["replay_verified_source_count"], 42)
+        self.assertEqual(report["inputs"]["replay_verified_source_count"], 43)
         self.assertEqual(len(report["inputs"]["clang_sha256"]), 64)
         contract = report["plain_c_reachable_contract"]
         self.assertEqual(contract["status"], "PASS")
-        self.assertEqual(contract["coverage_count"], 137)
-        self.assertEqual(contract["coverage_denominator"], 137)
-        self.assertEqual(len(contract["new_direct_mnemonics"]), 18)
+        self.assertEqual(contract["coverage_count"], 143)
+        self.assertEqual(contract["coverage_denominator"], 143)
+        self.assertEqual(len(contract["new_direct_mnemonics"]), 24)
+        self.assertEqual(contract["baseline_alias_closure_count"], 119)
+        self.assertEqual(len(contract["tranches"]), 2)
+        self.assertEqual(
+            contract["canonical_non_regression_anchor"],
+            {
+                "status": "PASS",
+                **coverage.CANONICAL_REACHABLE_CONTRACT_ANCHOR,
+            },
+        )
+        self.assertEqual(
+            contract["tranches"][-1]["new_direct_mnemonics"],
+            [
+                "C.ADDI",
+                "C.CMP.NEI",
+                "HL.LDI.PO",
+                "HL.LWU.PCR",
+                "HL.LWUI.PO",
+                "HL.SDI.PO",
+            ],
+        )
         excluded = {item["artifact"] for item in report["excluded_artifacts"]}
         self.assertIn(
             "avs/compiler/linx-llvm/tests/out/99_spec_decode/99_spec_decode.objdump",

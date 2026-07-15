@@ -1,34 +1,55 @@
 {
-  "schema_version": "linx-plain-c-reachable-contract-v1",
+  "schema_version": "linx-plain-c-reachable-contract-v2",
   "target": "linx64-linx-none-elf",
   "status": "frozen",
-  "tranche": "frances-allen-plain-c-1",
-  "tranche_sources": [
-    "avs/compiler/linx-llvm/tests/c/41_plain_c_compare.c",
-    "avs/compiler/linx-llvm/tests/c/42_plain_c_memory.c"
+  "tranches": [
+    {
+      "id": "frances-allen-plain-c-1",
+      "sources": [
+        "avs/compiler/linx-llvm/tests/c/41_plain_c_compare.c",
+        "avs/compiler/linx-llvm/tests/c/42_plain_c_memory.c"
+      ],
+      "baseline_alias_closure_count": 119,
+      "new_direct_mnemonics": [
+        "CMP.AND",
+        "CMP.ANDI",
+        "CMP.EQI",
+        "CMP.GEUI",
+        "CMP.NEI",
+        "CMP.OR",
+        "FEQ",
+        "HL.ANDI",
+        "HL.LB.PCR",
+        "HL.LBU.PCR",
+        "HL.LH.PCR",
+        "HL.LHU.PCR",
+        "HL.LW.PCR",
+        "HL.LWI.PO",
+        "HL.SB.PCR",
+        "HL.SH.PCR",
+        "HL.SW.PCR",
+        "HL.SWI.PO"
+      ],
+      "expected_coverage_count": 137
+    },
+    {
+      "id": "frances-allen-plain-c-2",
+      "sources": [
+        "avs/compiler/linx-llvm/tests/c/43_plain_c_cursor.c"
+      ],
+      "baseline_alias_closure_count": 137,
+      "new_direct_mnemonics": [
+        "C.ADDI",
+        "C.CMP.NEI",
+        "HL.LDI.PO",
+        "HL.LWU.PCR",
+        "HL.LWUI.PO",
+        "HL.SDI.PO"
+      ],
+      "expected_coverage_count": 143
+    }
   ],
-  "baseline_alias_closure_count": 119,
-  "new_direct_mnemonics": [
-    "CMP.AND",
-    "CMP.ANDI",
-    "CMP.EQI",
-    "CMP.GEUI",
-    "CMP.NEI",
-    "CMP.OR",
-    "FEQ",
-    "HL.ANDI",
-    "HL.LB.PCR",
-    "HL.LBU.PCR",
-    "HL.LH.PCR",
-    "HL.LHU.PCR",
-    "HL.LW.PCR",
-    "HL.LWI.PO",
-    "HL.SB.PCR",
-    "HL.SH.PCR",
-    "HL.SW.PCR",
-    "HL.SWI.PO"
-  ],
-  "expected_coverage_count": 137,
+  "expected_coverage_count": 143,
   "entries": [
     {
       "mnemonic": "ADD",
@@ -714,6 +735,36 @@
     {
       "mnemonic": "XORW",
       "witness_source": "avs/compiler/linx-llvm/tests/c/05_switch.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "C.ADDI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/43_plain_c_cursor.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "C.CMP.NEI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/43_plain_c_cursor.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.LDI.PO",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/43_plain_c_cursor.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.LWU.PCR",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/43_plain_c_cursor.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.LWUI.PO",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/43_plain_c_cursor.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.SDI.PO",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/43_plain_c_cursor.c",
       "evidence_kind": "direct"
     }
   ]

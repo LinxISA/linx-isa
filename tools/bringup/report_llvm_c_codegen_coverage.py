@@ -18,16 +18,17 @@ from typing import Any
 
 SCHEMA_VERSION = "linx-llvm-c-codegen-coverage-v1"
 MANIFEST_SCHEMA_VERSION = "linx-c-codegen-build-v1"
-REACHABLE_CONTRACT_SCHEMA_VERSION = "linx-plain-c-reachable-contract-v1"
+REACHABLE_CONTRACT_SCHEMA_VERSION = "linx-plain-c-reachable-contract-v2"
 CANONICAL_TARGET = "linx64-linx-none-elf"
-FROZEN_BASELINE_ALIAS_CLOSURE_COUNT = 119
-FROZEN_REACHABLE_CONTRACT_COUNT = 137
-TRANCHE_SOURCES = frozenset(
-    {
-        "avs/compiler/linx-llvm/tests/c/41_plain_c_compare.c",
-        "avs/compiler/linx-llvm/tests/c/42_plain_c_memory.c",
-    }
+CANONICAL_REACHABLE_CONTRACT_PATH = Path(
+    "avs/compiler/linx-llvm/tests/plain_c_reachable_contract.json"
 )
+# This compact pin is intentionally outside the mutable contract. Additive
+# tranches require one reviewed anchor update; the minimum must never decrease.
+CANONICAL_REACHABLE_CONTRACT_ANCHOR = {
+    "minimum_coverage_count": 143,
+    "tranche_chain_sha256": "5fec4133e1b6ff70bddd22344c4a4470140f5d068b71fee8f41f8d56fe7613b8",
+}
 SOURCE_SUFFIXES = (".c", ".cc", ".cpp", ".cxx")
 CLANG_IDENT_RE = re.compile(r'^\s*\.ident\s+"(clang version [^"]+)"', re.MULTILINE)
 SOURCE_DIRECTIVE_RE = re.compile(
@@ -59,6 +60,29 @@ def _sha256(path: Path) -> str:
 
 def _sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
+
+
+def _tranche_chain_descriptor(tranches: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [
+        {
+            "id": tranche["id"],
+            "sources": sorted(tranche["sources"]),
+            "baseline_alias_closure_count": tranche[
+                "baseline_alias_closure_count"
+            ],
+            "expected_coverage_count": tranche["expected_coverage_count"],
+            "new_direct_mnemonics": sorted(tranche["new_direct_mnemonics"]),
+        }
+        for tranche in tranches
+    ]
+
+
+def _tranche_chain_sha256(tranches: list[dict[str, Any]]) -> str:
+    descriptor = _tranche_chain_descriptor(tranches)
+    canonical = json.dumps(
+        descriptor, sort_keys=True, separators=(",", ":"), ensure_ascii=True
+    ).encode("utf-8")
+    return _sha256_bytes(canonical)
 
 
 def _relative(path: Path, root: Path) -> str:
@@ -383,6 +407,7 @@ def _verify_reachable_contract(
     included: list[dict[str, Any]],
     pure_direct: set[str],
     pure_closed: set[str],
+    enforce_canonical_anchor: bool = False,
 ) -> dict[str, Any]:
     contract = json.loads(contract_path.read_text(encoding="utf-8"))
     if contract.get("schema_version") != REACHABLE_CONTRACT_SCHEMA_VERSION:
@@ -391,19 +416,17 @@ def _verify_reachable_contract(
         raise ProvenanceError("plain-C reachable contract is not frozen")
     if contract.get("target") != CANONICAL_TARGET:
         raise ProvenanceError("plain-C reachable contract target is not canonical")
-    declared_tranche_sources = contract.get("tranche_sources")
-    if (
-        not isinstance(declared_tranche_sources, list)
-        or set(declared_tranche_sources) != TRANCHE_SOURCES
-        or len(declared_tranche_sources) != len(TRANCHE_SOURCES)
-    ):
-        raise ProvenanceError("plain-C reachable contract tranche source set is not exact")
+    tranches = contract.get("tranches")
+    if not isinstance(tranches, list) or not tranches:
+        raise ProvenanceError("plain-C reachable contract tranches are missing")
     entries = contract.get("entries")
     if not isinstance(entries, list) or not entries:
         raise ProvenanceError("plain-C reachable contract entries are missing")
+    expected_coverage_count = contract.get("expected_coverage_count")
     if (
-        contract.get("expected_coverage_count") != FROZEN_REACHABLE_CONTRACT_COUNT
-        or len(entries) != FROZEN_REACHABLE_CONTRACT_COUNT
+        not isinstance(expected_coverage_count, int)
+        or expected_coverage_count <= 0
+        or len(entries) != expected_coverage_count
     ):
         raise ProvenanceError("plain-C reachable contract denominator is inconsistent")
 
@@ -413,19 +436,10 @@ def _verify_reachable_contract(
         for source, artifact in artifacts_by_source.items()
         if artifact["provenance_class"] == "pure_c_cpp"
     }
-    if not TRANCHE_SOURCES.issubset(pure_sources):
-        raise ProvenanceError("plain-C tranche source is missing or source-directed")
-    baseline_direct: set[str] = set()
-    for source in pure_sources - TRANCHE_SOURCES:
-        baseline_direct.update(observed_by_source[source])
-    baseline_closed, _ = _apply_alias_closure(baseline_direct, spec_mnemonics)
-    if len(baseline_closed) != FROZEN_BASELINE_ALIAS_CLOSURE_COUNT:
-        raise ProvenanceError("plain-C independently recomputed baseline is not 119")
-    actual_delta = pure_direct - baseline_direct
 
     seen: set[str] = set()
     evidence_by_mnemonic: dict[str, str] = {}
-    satisfied: list[str] = []
+    entry_by_mnemonic: dict[str, dict[str, Any]] = {}
     for entry in entries:
         if not isinstance(entry, dict):
             raise ProvenanceError("plain-C reachable contract entry is not an object")
@@ -438,6 +452,7 @@ def _verify_reachable_contract(
             raise ProvenanceError(f"plain-C reachable contract mnemonic is duplicated: {mnemonic}")
         seen.add(mnemonic)
         evidence_by_mnemonic[mnemonic] = evidence_kind
+        entry_by_mnemonic[mnemonic] = entry
         artifact = artifacts_by_source.get(source)
         if artifact is None or source not in observed_by_source:
             raise ProvenanceError(f"plain-C reachable contract witness is missing: {source!r}")
@@ -471,33 +486,130 @@ def _verify_reachable_contract(
             )
         if mnemonic not in pure_closed:
             raise ProvenanceError(f"plain-C reachable mnemonic is not currently covered: {mnemonic}")
-        satisfied.append(mnemonic)
 
-    new_direct = contract.get("new_direct_mnemonics")
-    if (
-        not isinstance(new_direct, list)
-        or not all(isinstance(mnemonic, str) for mnemonic in new_direct)
-        or len(new_direct) != len(set(new_direct))
-        or any(evidence_by_mnemonic.get(mnemonic) != "direct" for mnemonic in new_direct)
-    ):
-        raise ProvenanceError("plain-C tranche mnemonic list is unknown or duplicated")
-    baseline_count = contract.get("baseline_alias_closure_count")
-    if (
-        baseline_count != FROZEN_BASELINE_ALIAS_CLOSURE_COUNT
-        or set(new_direct) != actual_delta
-    ):
-        raise ProvenanceError("plain-C tranche baseline or direct delta is inconsistent")
-    for mnemonic in new_direct:
-        entry = next(item for item in entries if item["mnemonic"] == mnemonic)
-        if entry["witness_source"] not in TRANCHE_SOURCES:
+    tranche_ids: set[str] = set()
+    all_tranche_sources: set[str] = set()
+    parsed_tranches: list[tuple[str, set[str], list[str], int, int]] = []
+    for tranche in tranches:
+        if not isinstance(tranche, dict):
+            raise ProvenanceError("plain-C reachable contract tranche is not an object")
+        tranche_id = tranche.get("id")
+        sources = tranche.get("sources")
+        new_direct = tranche.get("new_direct_mnemonics")
+        baseline_count = tranche.get("baseline_alias_closure_count")
+        tranche_expected = tranche.get("expected_coverage_count")
+        if (
+            not isinstance(tranche_id, str)
+            or not tranche_id
+            or tranche_id in tranche_ids
+        ):
+            raise ProvenanceError("plain-C tranche id is missing or duplicated")
+        tranche_ids.add(tranche_id)
+        if (
+            not isinstance(sources, list)
+            or not sources
+            or not all(isinstance(source, str) for source in sources)
+            or len(sources) != len(set(sources))
+        ):
+            raise ProvenanceError(f"plain-C tranche source set is invalid: {tranche_id}")
+        source_set = set(sources)
+        if source_set & all_tranche_sources:
+            raise ProvenanceError("plain-C tranche sources overlap")
+        all_tranche_sources.update(source_set)
+        if not source_set.issubset(pure_sources):
+            raise ProvenanceError("plain-C tranche source is missing or source-directed")
+        if (
+            not isinstance(new_direct, list)
+            or not new_direct
+            or not all(isinstance(mnemonic, str) for mnemonic in new_direct)
+            or len(new_direct) != len(set(new_direct))
+            or any(evidence_by_mnemonic.get(mnemonic) != "direct" for mnemonic in new_direct)
+        ):
+            raise ProvenanceError("plain-C tranche mnemonic list is unknown or duplicated")
+        if (
+            not isinstance(baseline_count, int)
+            or baseline_count < 0
+            or not isinstance(tranche_expected, int)
+            or tranche_expected <= baseline_count
+        ):
+            raise ProvenanceError("plain-C tranche coverage counts are invalid")
+        parsed_tranches.append(
+            (tranche_id, source_set, new_direct, baseline_count, tranche_expected)
+        )
+
+    canonical_anchor = None
+    if enforce_canonical_anchor:
+        minimum_count = CANONICAL_REACHABLE_CONTRACT_ANCHOR[
+            "minimum_coverage_count"
+        ]
+        expected_digest = CANONICAL_REACHABLE_CONTRACT_ANCHOR[
+            "tranche_chain_sha256"
+        ]
+        actual_digest = _tranche_chain_sha256(tranches)
+        if expected_coverage_count < minimum_count:
             raise ProvenanceError(
-                f"plain-C tranche mnemonic witness is outside tranche sources: {mnemonic}"
+                "plain-C canonical coverage is below the non-regression minimum"
             )
-    independently_reachable = baseline_closed | actual_delta
+        if actual_digest != expected_digest:
+            raise ProvenanceError(
+                "plain-C canonical tranche chain does not match the non-regression anchor"
+            )
+        canonical_anchor = {
+            "status": "PASS",
+            "minimum_coverage_count": minimum_count,
+            "tranche_chain_sha256": actual_digest,
+        }
+
+    cumulative_direct: set[str] = set()
+    for source in pure_sources - all_tranche_sources:
+        cumulative_direct.update(observed_by_source[source])
+    initial_closed, _ = _apply_alias_closure(cumulative_direct, spec_mnemonics)
+    verified_tranches: list[dict[str, Any]] = []
+    aggregate_new_direct: list[str] = []
+    for tranche_id, sources, new_direct, baseline_count, tranche_expected in parsed_tranches:
+        baseline_closed, _ = _apply_alias_closure(cumulative_direct, spec_mnemonics)
+        if baseline_count != len(baseline_closed):
+            raise ProvenanceError(
+                f"plain-C tranche baseline is inconsistent: {tranche_id}"
+            )
+        next_direct = set(cumulative_direct)
+        for source in sources:
+            next_direct.update(observed_by_source[source])
+        actual_delta = next_direct - cumulative_direct
+        if set(new_direct) != actual_delta:
+            raise ProvenanceError(
+                f"plain-C tranche direct delta is inconsistent: {tranche_id}"
+            )
+        for mnemonic in new_direct:
+            if entry_by_mnemonic[mnemonic]["witness_source"] not in sources:
+                raise ProvenanceError(
+                    f"plain-C tranche mnemonic witness is outside tranche sources: {mnemonic}"
+                )
+        next_closed, _ = _apply_alias_closure(next_direct, spec_mnemonics)
+        if tranche_expected != len(next_closed):
+            raise ProvenanceError(
+                f"plain-C tranche expected coverage is inconsistent: {tranche_id}"
+            )
+        verified_tranches.append(
+            {
+                "id": tranche_id,
+                "sources": sorted(sources),
+                "baseline_alias_closure_count": len(baseline_closed),
+                "new_direct_mnemonics": new_direct,
+                "expected_coverage_count": len(next_closed),
+            }
+        )
+        aggregate_new_direct.extend(new_direct)
+        cumulative_direct = next_direct
+
+    independently_reachable, _ = _apply_alias_closure(
+        cumulative_direct, spec_mnemonics
+    )
     if (
-        len(independently_reachable) != FROZEN_REACHABLE_CONTRACT_COUNT
+        cumulative_direct != pure_direct
+        or independently_reachable != pure_closed
+        or len(independently_reachable) != expected_coverage_count
         or seen != independently_reachable
-        or pure_closed != independently_reachable
     ):
         raise ProvenanceError(
             "plain-C contract mnemonic set differs from independent baseline plus delta"
@@ -507,14 +619,15 @@ def _verify_reachable_contract(
         "path": _relative(contract_path, root),
         "sha256": _sha256(contract_path),
         "target": contract["target"],
-        "tranche": contract.get("tranche"),
         "status": "PASS",
-        "coverage_count": FROZEN_REACHABLE_CONTRACT_COUNT,
-        "coverage_denominator": FROZEN_REACHABLE_CONTRACT_COUNT,
+        "coverage_count": expected_coverage_count,
+        "coverage_denominator": expected_coverage_count,
         "missing_count": 0,
         "missing_mnemonics": [],
-        "baseline_alias_closure_count": baseline_count,
-        "new_direct_mnemonics": new_direct,
+        "baseline_alias_closure_count": len(initial_closed),
+        "new_direct_mnemonics": aggregate_new_direct,
+        "tranches": verified_tranches,
+        "canonical_non_regression_anchor": canonical_anchor,
     }
 
 
@@ -591,6 +704,10 @@ def build_report(
             included=included,
             pure_direct=pure_direct,
             pure_closed=pure_closed,
+            enforce_canonical_anchor=(
+                reachable_contract_path.resolve()
+                == (root / CANONICAL_REACHABLE_CONTRACT_PATH).resolve()
+            ),
         )
     denominator = len(spec_mnemonics)
     return {
@@ -745,6 +862,27 @@ def _render_markdown(report: dict[str, Any], out_path: Path) -> None:
         "- Not measured:",
     ]
     lines.extend(f"  - {item}" for item in report["not_measured"])
+    lines.extend(["", "## Frozen Plain-C Reachability Tranches", ""])
+    if contract is not None:
+        anchor = contract["canonical_non_regression_anchor"]
+        if anchor is not None:
+            lines.append(
+                "- Canonical non-regression anchor: "
+                f"`{anchor['status']}`; minimum "
+                f"`{anchor['minimum_coverage_count']}`; tranche-chain SHA-256 "
+                f"`{anchor['tranche_chain_sha256']}`"
+            )
+        for tranche in contract["tranches"]:
+            new_direct = ", ".join(
+                f"`{mnemonic}`" for mnemonic in tranche["new_direct_mnemonics"]
+            )
+            lines.append(
+                f"- `{tranche['id']}`: baseline "
+                f"`{tranche['baseline_alias_closure_count']}` -> "
+                f"`{tranche['expected_coverage_count']}`; new direct: {new_direct}"
+            )
+    else:
+        lines.append("- Unavailable")
     lines.extend(["", "## Source-Directed C/C++ Tests Excluded from Pure CodeGen", ""])
     for item in pure["excluded_source_directed_sources"]:
         directives = ", ".join(f"`{value}`" for value in item["directives"])
