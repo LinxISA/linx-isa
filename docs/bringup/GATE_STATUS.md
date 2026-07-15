@@ -2,19 +2,19 @@
 
 This file is generated from `docs/bringup/gates/latest.json` via `python3 tools/bringup/gate_report.py render`.
 
-Last generated (UTC): `2026-07-15 11:19:01Z`
+Last generated (UTC): `2026-07-15 15:26:30Z`
 
 ## Lane `pin` (`2026-07-15-v0565-maintenance`)
 
-- Timestamp (UTC): `2026-07-15 11:18:57Z`
+- Timestamp (UTC): `2026-07-15 15:26:30Z`
 - Profile: `release-strict`
 - Lane policy: `pin-only`
 - Trace schema version: `1.0`
 - SHA manifest:
   - `glibc`: `785d1b51ecc2042a94873665ec4b745d85473504` (`${LINXISA_ROOT}/lib/glibc`)
   - `linux`: `1d79efccf6b41bc675342e1b283b5ffd55f474a4` (`${LINXISA_ROOT}/kernel/linux`)
-  - `linx-isa`: `d3f53423fdea953594639da20026ef0b3d75a274` (`${LINXISA_ROOT}`)
-  - `linx-skills`: `4568c252a9de1b89d5941b209a6a8e770f8623d1` (`${LINXISA_ROOT}/skills/linx-skills`)
+  - `linx-isa`: `4a47f4ab548f49b991dd7f48e2760591ff0a512f` (`${LINXISA_ROOT}`)
+  - `linx-skills`: `dda5018926e39b19d647d72edb30f2ce60215d46` (`${LINXISA_ROOT}/skills/linx-skills`)
   - `linxcore`: `191fec59addc89aea5ebb004cf0acc55def271ff` (`${LINXISA_ROOT}/rtl/LinxCore`)
   - `linxcore-model`: `3bc1e6e2ceb2d578204013220cb14f67043c8eb7` (`${LINXISA_ROOT}/tools/LinxCoreModel`)
   - `llvm`: `7eee9db590cf131fa0498b7808ae279d080e8433` (`${LINXISA_ROOT}/compiler/llvm`)
@@ -24,7 +24,7 @@ Last generated (UTC): `2026-07-15 11:19:01Z`
   - `pto-kernels`: `43e606b6c90d8ffbc939f4f23c70fcc8b37080f0` (`${LINXISA_ROOT}/workloads/pto_kernels`)
   - `ptoas`: `939e9e0fe1a3a2349207e36d848fc6232faa135c` (`${LINXISA_ROOT}/compiler/ptoas`)
   - `pycircuit`: `1d7b6fcf42c0b59bb2c5b5bced220df90fb0f54f` (`${LINXISA_ROOT}/tools/pyCircuit`)
-  - `qemu`: `cdc5d976242d6e81c6938f192fc6b1849aa2f0df` (`${LINXISA_ROOT}/emulator/qemu`)
+  - `qemu`: `97b08e4b67fb1291172bc703efcf880fbca867bf` (`${LINXISA_ROOT}/emulator/qemu`)
   - `supernpu-bench`: `497cf3f7ebf7c5c18c707b82481e2285d0b0e07f` (`${LINXISA_ROOT}/workloads/SuperNPUBench`)
 
 | Domain | Gate | Required | Waived | Owner | Command | Result | Evidence |
@@ -37,11 +37,11 @@ Last generated (UTC): `2026-07-15 11:19:01Z`
 | linux | BusyBox rootfs boot after TSVC closure | yes | no | `linux` | `python3 kernel/linux/busybox_rootfs/boot.py --qemu /tmp/linx-qemu-clean-build/qemu-system-linx64 --timeout 120` | ❌ fail (`linux-mmu-no-uart`) | `Two explicit clean-QEMU attempts produced no UART output within 120 seconds` |
 | model | Cycle model and LinxCoreModel full matrix | yes | no | `model` | `tools/bringup/run_benchmark_linux_flow.py --profile nightly` | ⏸ not_run (`deferred-after-runtime-hard-break`) | `Leaf compile/parity checks passed; full superproject matrix not run after BusyBox failure` |
 | nightly | Same-manifest PR/nightly closure | yes | no | `superproject` | `python3 tools/bringup/run_benchmark_linux_flow.py --profile nightly` | ⏸ not_run (`blocked-required-gates-red`) | `Not run because BusyBox`; `MMU TTBR`; `HL SDIP`; `semantic breadth`; `and downstream matrices remain open` |
-| qemu | Canonical ISA executable semantic breadth | yes | no | `qemu` | `python3 tools/isa/qemu_isa_coverage.py --check` | ⚠ partial (`coverage-gap`) | `618/711 mnemonics and 621/747 form IDs have executable QEMU semantics` |
+| qemu | Canonical ISA executable semantic breadth | yes | no | `qemu` | `python3 tools/bringup/report_qemu_isa_coverage.py --qemu-root emulator/qemu --require-full` | ⚠ partial (`coverage-gap`) | `620/711 mnemonics and 625/747 encoding-signature forms have source-backed QEMU implementation evidence; remaining 90 V.* plus XB` |
 | qemu | Canonical opcode metadata and reserved encodings | yes | no | `qemu` | `python3 tools/bringup/check_qemu_opcode_meta_sync.py --strict` | ✅ pass (`closed`) | `strict opcode meta/id audit passed; unexpected decode-only=0; unexpected metadata-only=0` |
-| qemu | Full architecture validation suite on clean explicit QEMU | yes | no | `qemu` | `python3 avs/qemu/run_tests.py --all --qemu /tmp/linx-qemu-clean-build/qemu-system-linx64` | ✅ pass (`closed`) | `All selected QEMU AVS suites passed at cdc5d976 with clean-build provenance` |
-| qemu | HL SDIP directed semantic execution | yes | no | `qemu` | `python3 avs/qemu/run_tests.py --suite hl_sdip --qemu /tmp/linx-qemu-clean-build/qemu-system-linx64` | ❌ fail (`semantic-regression`) | `Directed HL SDIP execution exits with status 1` |
-| qemu | MMU TTBR directed boot | yes | no | `qemu` | `python3 avs/qemu/run_tests.py --suite mmu_ttbr --qemu /tmp/linx-qemu-clean-build/qemu-system-linx64` | ❌ fail (`mmu-no-finisher`) | `TTBR path hangs without reaching the canonical finisher` |
+| qemu | Full architecture validation suite on clean explicit QEMU | yes | no | `qemu` | `QEMU=/tmp/linx-qemu-clean-build/qemu-system-linx64 bash avs/qemu/run_tests.sh --all --timeout 10` | ✅ pass (`closed`) | `clean QEMU 97b08e4b67f: all selected AVS suites PASS; strict system provenance and semantic suite PASS` |
+| qemu | HL SDIP directed semantic execution | yes | no | `qemu` | `python3 avs/qemu/run_tests.py --suite loadstore --require-test-id 0xC140 --qemu /tmp/linx-qemu-clean-build/qemu-system-linx64 --timeout 20` | ✅ pass (`hl-sdip-directed-pass`) | `clean QEMU 97b08e4b67f: Test 0x0000C140 PASS; ELF contains hl.sdip` |
+| qemu | MMU TTBR directed boot | yes | no | `qemu` | `QEMU_BIN=/tmp/linx-qemu-clean-build/qemu-system-linx64 LLVM_BUILD=compiler/llvm/build-linxisa-clang bash emulator/qemu/scripts/linxisa/run-mmu-ttbr-basic.sh` | ✅ pass (`et-rel-loader-abi-aligned`) | `clean QEMU 97b08e4b67f: current ET_REL HI20/LO12/R64 path PASS; RELATIVE and GOT HI/LO unsupported-type regressions PASS` |
 | rtl | LinxCore RTL full regression | yes | no | `rtl` | `tools/bringup/run_benchmark_linux_flow.py --profile nightly` | ⏸ not_run (`deferred-after-runtime-hard-break`) | `Leaf decode parity and microarchitecture tests passed; full nightly RTL gate not run` |
 | runtime | TSVC monolithic all-mode diagnostic | no | no | `runtime` | `python3 workloads/tsvc/run_tsvc.py --all-modes --timeout 240 ...` | ⚠ partial (`nonrequired-scaling-diagnostic`) | `off completed 151/151; monolithic mseq reached 94/151 before process timeout; isolated s316 mseq passed; required batched lane is green` |
 | runtime | TSVC required batched auto-vector hard break | yes | no | `runtime` | `python3 workloads/tsvc/run_tsvc_batched.py --batch-size 20 --strict-fail-under 151 --vector-mode auto --qemu /tmp/linx-qemu-clean-build/qemu-system-linx64` | ✅ pass (`closed`) | `8/8 batches; 151/151 vectorized and completed; 10.587 seconds; zero failed batches` |

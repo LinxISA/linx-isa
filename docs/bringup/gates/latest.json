@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-07-15 11:19:01Z",
+  "generated_at_utc": "2026-07-15 15:26:30Z",
   "runs": [
     {
       "gates": [
@@ -121,12 +121,12 @@
         },
         {
           "classification": "coverage-gap",
-          "command": "python3 tools/isa/qemu_isa_coverage.py --check",
+          "command": "python3 tools/bringup/report_qemu_isa_coverage.py --qemu-root emulator/qemu --require-full",
           "domain": "qemu",
           "evidence": [
-            "618/711 mnemonics and 621/747 form IDs have executable QEMU semantics"
+            "620/711 mnemonics and 625/747 encoding-signature forms have source-backed QEMU implementation evidence; remaining 90 V.* plus XB"
           ],
-          "evidence_type": "generated-json",
+          "evidence_type": "gate-output",
           "gate": "Canonical ISA executable semantic breadth",
           "owner": "qemu",
           "required": true,
@@ -149,10 +149,10 @@
         },
         {
           "classification": "closed",
-          "command": "python3 avs/qemu/run_tests.py --all --qemu /tmp/linx-qemu-clean-build/qemu-system-linx64",
+          "command": "QEMU=/tmp/linx-qemu-clean-build/qemu-system-linx64 bash avs/qemu/run_tests.sh --all --timeout 10",
           "domain": "qemu",
           "evidence": [
-            "All selected QEMU AVS suites passed at cdc5d976 with clean-build provenance"
+            "clean QEMU 97b08e4b67f: all selected AVS suites PASS; strict system provenance and semantic suite PASS"
           ],
           "evidence_type": "gate-output",
           "gate": "Full architecture validation suite on clean explicit QEMU",
@@ -162,31 +162,31 @@
           "waived": false
         },
         {
-          "classification": "semantic-regression",
-          "command": "python3 avs/qemu/run_tests.py --suite hl_sdip --qemu /tmp/linx-qemu-clean-build/qemu-system-linx64",
+          "classification": "hl-sdip-directed-pass",
+          "command": "python3 avs/qemu/run_tests.py --suite loadstore --require-test-id 0xC140 --qemu /tmp/linx-qemu-clean-build/qemu-system-linx64 --timeout 20",
           "domain": "qemu",
           "evidence": [
-            "Directed HL SDIP execution exits with status 1"
+            "clean QEMU 97b08e4b67f: Test 0x0000C140 PASS; ELF contains hl.sdip"
           ],
           "evidence_type": "gate-output",
           "gate": "HL SDIP directed semantic execution",
           "owner": "qemu",
           "required": true,
-          "status": "fail",
+          "status": "pass",
           "waived": false
         },
         {
-          "classification": "mmu-no-finisher",
-          "command": "python3 avs/qemu/run_tests.py --suite mmu_ttbr --qemu /tmp/linx-qemu-clean-build/qemu-system-linx64",
+          "classification": "et-rel-loader-abi-aligned",
+          "command": "QEMU_BIN=/tmp/linx-qemu-clean-build/qemu-system-linx64 LLVM_BUILD=compiler/llvm/build-linxisa-clang bash emulator/qemu/scripts/linxisa/run-mmu-ttbr-basic.sh",
           "domain": "qemu",
           "evidence": [
-            "TTBR path hangs without reaching the canonical finisher"
+            "clean QEMU 97b08e4b67f: current ET_REL HI20/LO12/R64 path PASS; RELATIVE and GOT HI/LO unsupported-type regressions PASS"
           ],
           "evidence_type": "gate-output",
           "gate": "MMU TTBR directed boot",
           "owner": "qemu",
           "required": true,
-          "status": "fail",
+          "status": "pass",
           "waived": false
         },
         {
@@ -274,7 +274,7 @@
           "waived": false
         }
       ],
-      "generated_at_utc": "2026-07-15 11:18:57Z",
+      "generated_at_utc": "2026-07-15 15:26:30Z",
       "lane": "pin",
       "lane_policy": "pin-only",
       "profile": "release-strict",
@@ -291,14 +291,14 @@
           "sha": "1d79efccf6b41bc675342e1b283b5ffd55f474a4"
         },
         "linx-isa": {
-          "dirty": false,
+          "dirty": true,
           "path": "${LINXISA_ROOT}",
-          "sha": "d3f53423fdea953594639da20026ef0b3d75a274"
+          "sha": "4a47f4ab548f49b991dd7f48e2760591ff0a512f"
         },
         "linx-skills": {
           "dirty": false,
           "path": "${LINXISA_ROOT}/skills/linx-skills",
-          "sha": "4568c252a9de1b89d5941b209a6a8e770f8623d1"
+          "sha": "dda5018926e39b19d647d72edb30f2ce60215d46"
         },
         "linxcore": {
           "dirty": false,
@@ -348,7 +348,7 @@
         "qemu": {
           "dirty": false,
           "path": "${LINXISA_ROOT}/emulator/qemu",
-          "sha": "cdc5d976242d6e81c6938f192fc6b1849aa2f0df"
+          "sha": "97b08e4b67fb1291172bc703efcf880fbca867bf"
         },
         "supernpu-bench": {
           "dirty": false,
