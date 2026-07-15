@@ -1,6 +1,6 @@
 # QEMU Executable Coverage Ledger
 
-Generated: `2026-07-15T21:20:20Z`
+Generated: `2026-07-15T21:52:42Z`
 
 This ledger counts only per-form evidence bound to golden identity, bytes, test ID,
 artifacts, QEMU SHA, a test-specific terminal PASS, and an oracle. Suite exit 0 and stdout alone do not count.
@@ -9,8 +9,8 @@ artifacts, QEMU SHA, a test-specific terminal PASS, and an oracle. Suite exit 0 
 
 | Level | Availability | Forms | Mnemonics |
 | --- | --- | ---: | ---: |
-| L2 | `available` | 36 | 36 |
-| L3 | `available` | 36 | 36 |
+| L2 | `available` | 51 | 51 |
+| L3 | `available` | 51 | 51 |
 
 ## Admitted Forms
 
@@ -20,6 +20,15 @@ artifacts, QEMU SHA, a test-specific terminal PASS, and an oracle. Suite exit 0 
 | `and_32_b6a903a3ec94` | `executable_scalar / 0x00002503` | `L3` | `exact_value` | `05a14106` |
 | `c_bstart_16_c4e238a9227a` | `callret / 0x0000140f` | `L3` | `exact_value` | `8400` |
 | `c_bstart_std_16_8b40f078c14a` | `callret / 0x0000140d` | `L3` | `exact_value` | `0038` |
+| `cmp_eq_32_6af7c8f41300` | `executable_integer / 0x00002609` | `L3` | `exact_value` | `45813106` |
+| `cmp_ge_32_d88e3a1cfff4` | `executable_integer / 0x0000260d` | `L3` | `exact_value` | `45d14106` |
+| `cmp_geu_32_0c002dc415ef` | `executable_integer / 0x0000260e` | `L3` | `exact_value` | `45f14106` |
+| `cmp_lt_32_c0b8cc320f12` | `executable_integer / 0x0000260b` | `L3` | `exact_value` | `45c14106` |
+| `cmp_ltu_32_4377481baebc` | `executable_integer / 0x0000260c` | `L3` | `exact_value` | `45e14106` |
+| `cmp_ne_32_fc47fbb1a0de` | `executable_integer / 0x0000260a` | `L3` | `exact_value` | `45913206` |
+| `csel_32_ba77cbad3c99` | `executable_integer / 0x0000260f` | `L3` | `exact_value` | `f7015216` |
+| `div_32_a6efe85f8662` | `executable_integer / 0x00002605` | `L3` | `exact_value` | `57814100` |
+| `divu_32_cfbc0d1760e4` | `executable_integer / 0x00002606` | `L3` | `exact_value` | `57914100` |
 | `fentry_32_a47584ec13b6` | `callret / 0x0000140b` | `L3` | `exact_value` | `4100a504` |
 | `fret_ra_32_659c886221c1` | `callret / 0x0000140c` | `L3` | `exact_value` | `4120a504` |
 | `fret_stk_32_4fe246bd8241` | `callret / 0x0000140b` | `L3` | `exact_value` | `4130a504` |
@@ -39,10 +48,16 @@ artifacts, QEMU SHA, a test-specific terminal PASS, and an oracle. Suite exit 0 
 | `j_32_a303cf05af42` | `callret / 0x00001410` | `L3` | `exact_value` | `37000300` |
 | `l_bstart_std_64_37e84068ce61` | `callret / 0x00001411` | `L3` | `exact_value` | `0f06000001200000` |
 | `lb_32_b718aa88e28f` | `executable_scalar / 0x00002509` | `L3` | `exact_value` | `09814106` |
+| `lbu_32_a9a58ab4ea22` | `executable_integer / 0x00002601` | `L3` | `exact_value` | `09c14106` |
 | `ld_32_7c48838bc4e6` | `executable_scalar / 0x0000250c` | `L3` | `exact_value` | `09b14106` |
 | `lh_32_d0f04d7d7696` | `executable_scalar / 0x0000250a` | `L3` | `exact_value` | `09914106` |
+| `lhu_32_730caf67ecd1` | `executable_integer / 0x00002602` | `L3` | `exact_value` | `09d14106` |
 | `lw_32_3a77ffafcb34` | `executable_scalar / 0x0000250b` | `L3` | `exact_value` | `09a14106` |
+| `lwu_32_678935925636` | `executable_integer / 0x00002603` | `L3` | `exact_value` | `09e14106` |
+| `mul_32_9f2affd8efb8` | `executable_integer / 0x00002604` | `L3` | `exact_value` | `47814100` |
 | `or_32_a7fb80e78831` | `executable_scalar / 0x00002504` | `L3` | `exact_value` | `05b14106` |
+| `rem_32_0abbd6a3b865` | `executable_integer / 0x00002607` | `L3` | `exact_value` | `57c14100` |
+| `remu_32_d7a5d1ebbbf5` | `executable_integer / 0x00002608` | `L3` | `exact_value` | `57d14100` |
 | `sb_32_43c106ae3749` | `executable_scalar / 0x0000250d` | `L3` | `architectural_state` | `4900411e` |
 | `sd_32_9dbc40328653` | `executable_scalar / 0x00002510` | `L3` | `architectural_state` | `4930521e` |
 | `sh_32_bc7d4a7dea28` | `executable_scalar / 0x0000250e` | `L3` | `architectural_state` | `4910411e` |
@@ -94,4 +109,19 @@ None.
 - `executable_memory / 0x0000220b`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
 - `executable_memory / 0x0000220c`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
 - `executable_memory / 0x0000220d`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_integer / 0x00002601`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_integer / 0x00002602`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_integer / 0x00002603`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_integer / 0x00002604`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_integer / 0x00002605`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_integer / 0x00002606`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_integer / 0x00002607`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_integer / 0x00002608`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_integer / 0x00002609`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_integer / 0x0000260a`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_integer / 0x0000260b`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_integer / 0x0000260c`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_integer / 0x0000260d`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_integer / 0x0000260e`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `executable_integer / 0x0000260f`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
 - `v03_vector_ops / 0x00001321`: status `FAIL`, oracle `FAIL`, timeout-after-fail `True`, failure `0x00001321` expected `0x0000000000000053` actual `0x0000000000000011`, test-contract `invalid`, attribution `test_contract`, note: Historical first-red evidence. The AVS source used invalid VT/VU lifetime and relative-index semantics; the corrected source and authored B.IOR binding now pass 0x1300, 0x1310, and 0x1320.

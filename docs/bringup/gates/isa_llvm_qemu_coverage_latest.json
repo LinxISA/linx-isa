@@ -2,7 +2,7 @@
   "claim": "l1_mapping_coherence",
   "compiler_analyzer": "/Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/analyze_coverage.py",
   "compiler_out_dir": "/Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/out",
-  "generated_at_utc": "2026-07-15 21:28:14Z",
+  "generated_at_utc": "2026-07-15 22:18:06Z",
   "inconsistencies": {
     "compiler_only_vs_qemu_impl": [
       "V.LB",
@@ -434,16 +434,16 @@
     "L2": {
       "availability": "available",
       "claim": "runtime_execution",
-      "form_count": 36,
-      "mnemonic_count": 36,
+      "form_count": 51,
+      "mnemonic_count": 51,
       "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
       "source": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_executable_coverage_latest.json"
     },
     "L3": {
       "availability": "available",
       "claim": "semantic_oracle",
-      "form_count": 36,
-      "mnemonic_count": 36,
+      "form_count": 51,
+      "mnemonic_count": 51,
       "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
       "source": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_executable_coverage_latest.json"
     }
