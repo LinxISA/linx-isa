@@ -1,716 +1,2994 @@
 {
-  "generated_at_utc": "2026-03-07T12:00:00Z",
-  "mnemonics": {
-    "ACRC": "implemented",
-    "ACRE": "implemented",
-    "ADD": "implemented",
-    "ADDI": "implemented",
-    "ADDIW": "implemented",
-    "ADDTPC": "implemented",
-    "ADDW": "implemented",
-    "AND": "implemented",
-    "ANDI": "implemented",
-    "ANDIW": "implemented",
-    "ANDW": "implemented",
-    "ASSERT": "implemented",
-    "B.ARG": "implemented",
-    "B.CATR": "implemented",
-    "B.DATR": "implemented",
-    "B.DIM": "implemented",
-    "B.EQ": "implemented",
-    "B.GE": "implemented",
-    "B.GEU": "implemented",
-    "B.HINT": "implemented",
-    "B.IOD": "implemented",
-    "B.IOR": "implemented",
-    "B.IOT": "implemented",
-    "B.LT": "implemented",
-    "B.LTU": "implemented",
-    "B.NE": "implemented",
-    "B.NZ": "implemented",
-    "B.TEXT": "implemented",
-    "B.Z": "implemented",
-    "BC.IALL": "implemented",
-    "BC.IVA": "implemented",
-    "BCNT": "implemented",
-    "BIC": "implemented",
-    "BIS": "implemented",
-    "BSE": "implemented",
-    "BSTART": "implemented",
-    "BSTART CALL": "implemented",
-    "BSTART.ACCCVT": "implemented",
-    "BSTART.CUBE": "implemented",
-    "BSTART.FIXP": "implemented",
-    "BSTART.FP": "implemented",
-    "BSTART.MPAR": "implemented",
-    "BSTART.MSEQ": "implemented",
-    "BSTART.PAR": "implemented",
-    "BSTART.STD": "implemented",
-    "BSTART.SYS": "implemented",
-    "BSTART.TEPL": "implemented",
-    "BSTART.TLOAD": "implemented",
-    "BSTART.TMA": "implemented",
-    "BSTART.TMATMUL": "implemented",
-    "BSTART.TMATMUL.ACC": "implemented",
-    "BSTART.TMOV": "implemented",
-    "BSTART.TSTORE": "implemented",
-    "BSTART.VPAR": "implemented",
-    "BSTART.VSEQ": "implemented",
-    "BSTOP": "implemented",
-    "BWE": "implemented",
-    "BWI": "implemented",
-    "BWT": "implemented",
-    "BXS": "implemented",
-    "BXU": "implemented",
-    "C.ADD": "implemented",
-    "C.ADDI": "implemented",
-    "C.AND": "implemented",
-    "C.B.DIM": "implemented",
-    "C.B.DIMI": "implemented",
-    "C.BSTART": "implemented",
-    "C.BSTART.FP": "implemented",
-    "C.BSTART.MPAR": "implemented",
-    "C.BSTART.MSEQ": "implemented",
-    "C.BSTART.STD": "implemented",
-    "C.BSTART.SYS": "implemented",
-    "C.BSTART.VPAR": "implemented",
-    "C.BSTART.VSEQ": "implemented",
-    "C.BSTOP": "implemented",
-    "C.CMP.EQI": "implemented",
-    "C.CMP.NEI": "implemented",
-    "C.EBREAK": "implemented",
-    "C.LDI": "implemented",
-    "C.LWI": "implemented",
-    "C.MOVI": "implemented",
-    "C.MOVR": "implemented",
-    "C.OR": "implemented",
-    "C.SDI": "implemented",
-    "C.SETC.EQ": "implemented",
-    "C.SETC.NE": "implemented",
-    "C.SETC.TGT": "implemented",
-    "C.SETRET": "implemented",
-    "C.SEXT.B": "implemented",
-    "C.SEXT.H": "implemented",
-    "C.SEXT.W": "implemented",
-    "C.SLLI": "implemented",
-    "C.SRLI": "implemented",
-    "C.SSRGET": "implemented",
-    "C.SUB": "implemented",
-    "C.SWI": "implemented",
-    "C.ZEXT.B": "implemented",
-    "C.ZEXT.H": "implemented",
-    "C.ZEXT.W": "implemented",
-    "CLZ": "implemented",
-    "CMP.AND": "implemented",
-    "CMP.ANDI": "implemented",
-    "CMP.EQ": "implemented",
-    "CMP.EQI": "implemented",
-    "CMP.GE": "implemented",
-    "CMP.GEI": "implemented",
-    "CMP.GEU": "implemented",
-    "CMP.GEUI": "implemented",
-    "CMP.LT": "implemented",
-    "CMP.LTI": "implemented",
-    "CMP.LTU": "implemented",
-    "CMP.LTUI": "implemented",
-    "CMP.NE": "implemented",
-    "CMP.NEI": "implemented",
-    "CMP.OR": "implemented",
-    "CMP.ORI": "implemented",
-    "CSEL": "implemented",
-    "CTZ": "implemented",
-    "DC.CISW": "implemented",
-    "DC.CIVA": "implemented",
-    "DC.CSW": "implemented",
-    "DC.CVA": "implemented",
-    "DC.IALL": "implemented",
-    "DC.ISW": "implemented",
-    "DC.IVA": "implemented",
-    "DC.ZVA": "implemented",
-    "DIV": "implemented",
-    "DIVU": "implemented",
-    "DIVUW": "implemented",
-    "DIVW": "implemented",
-    "EBREAK": "implemented",
-    "ERCOV": "implemented",
-    "ESAVE": "implemented",
-    "FABS": "implemented",
-    "FADD": "implemented",
-    "FCVT": "implemented",
-    "FCVTA": "implemented",
-    "FCVTM": "implemented",
-    "FCVTN": "implemented",
-    "FCVTP": "implemented",
-    "FCVTZ": "implemented",
-    "FDIV": "implemented",
-    "FENCE.D": "implemented",
-    "FENCE.I": "implemented",
-    "FENTRY": "implemented",
-    "FEQ": "implemented",
-    "FEQS": "implemented",
-    "FEXIT": "implemented",
-    "FEXP": "implemented",
-    "FGE": "implemented",
-    "FGES": "implemented",
-    "FLT": "implemented",
-    "FLTS": "implemented",
-    "FMADD": "implemented",
-    "FMAX": "implemented",
-    "FMIN": "implemented",
-    "FMSUB": "implemented",
-    "FMUL": "implemented",
-    "FNE": "implemented",
-    "FNES": "implemented",
-    "FNMADD": "implemented",
-    "FNMSUB": "implemented",
-    "FRECIP": "implemented",
-    "FRET.RA": "implemented",
-    "FRET.STK": "implemented",
-    "FSQRT": "implemented",
-    "FSUB": "implemented",
-    "HL.ADDI": "implemented",
-    "HL.ADDIW": "implemented",
-    "HL.ADDTPC": "implemented",
-    "HL.ANDI": "implemented",
-    "HL.ANDIW": "implemented",
-    "HL.BFI": "implemented",
-    "HL.BSTART CALL": "implemented",
-    "HL.BSTART.FP": "implemented",
-    "HL.BSTART.STD": "implemented",
-    "HL.BSTART.SYS": "implemented",
-    "HL.CASB": "implemented",
-    "HL.CASD": "implemented",
-    "HL.CASH": "implemented",
-    "HL.CASW": "implemented",
-    "HL.CCAT": "implemented",
-    "HL.CCATW": "implemented",
-    "HL.CMP.ANDI": "implemented",
-    "HL.CMP.EQI": "implemented",
-    "HL.CMP.GEI": "implemented",
-    "HL.CMP.GEUI": "implemented",
-    "HL.CMP.LTI": "implemented",
-    "HL.CMP.LTUI": "implemented",
-    "HL.CMP.NEI": "implemented",
-    "HL.CMP.ORI": "implemented",
-    "HL.DIV": "implemented",
-    "HL.DIVU": "implemented",
-    "HL.DIVUW": "implemented",
-    "HL.DIVW": "implemented",
-    "HL.LB.PCR": "implemented",
-    "HL.LB.PO": "implemented",
-    "HL.LB.PR": "implemented",
-    "HL.LBI": "implemented",
-    "HL.LBI.PO": "implemented",
-    "HL.LBI.PR": "implemented",
-    "HL.LBIP": "implemented",
-    "HL.LBP": "implemented",
-    "HL.LBU.PCR": "implemented",
-    "HL.LBU.PO": "implemented",
-    "HL.LBU.PR": "implemented",
-    "HL.LBUI": "implemented",
-    "HL.LBUI.PO": "implemented",
-    "HL.LBUI.PR": "implemented",
-    "HL.LBUIP": "implemented",
-    "HL.LBUP": "implemented",
-    "HL.LD.PCR": "implemented",
-    "HL.LD.PO": "implemented",
-    "HL.LD.PR": "implemented",
-    "HL.LDI": "implemented",
-    "HL.LDI.PO": "implemented",
-    "HL.LDI.PR": "implemented",
-    "HL.LDI.U": "implemented",
-    "HL.LDI.UPO": "implemented",
-    "HL.LDI.UPR": "implemented",
-    "HL.LDIP": "implemented",
-    "HL.LDIP.U": "implemented",
-    "HL.LDP": "implemented",
-    "HL.LH.PCR": "implemented",
-    "HL.LH.PO": "implemented",
-    "HL.LH.PR": "implemented",
-    "HL.LHI": "implemented",
-    "HL.LHI.PO": "implemented",
-    "HL.LHI.PR": "implemented",
-    "HL.LHI.U": "implemented",
-    "HL.LHI.UPO": "implemented",
-    "HL.LHI.UPR": "implemented",
-    "HL.LHIP": "implemented",
-    "HL.LHIP.U": "implemented",
-    "HL.LHP": "implemented",
-    "HL.LHU.PCR": "implemented",
-    "HL.LHU.PO": "implemented",
-    "HL.LHU.PR": "implemented",
-    "HL.LHUI": "implemented",
-    "HL.LHUI.PO": "implemented",
-    "HL.LHUI.PR": "implemented",
-    "HL.LHUI.U": "implemented",
-    "HL.LHUI.UPO": "implemented",
-    "HL.LHUI.UPR": "implemented",
-    "HL.LHUIP": "implemented",
-    "HL.LHUIP.U": "implemented",
-    "HL.LHUP": "implemented",
-    "HL.LIS": "implemented",
-    "HL.LIU": "implemented",
-    "HL.LUI": "implemented",
-    "HL.LW.PCR": "implemented",
-    "HL.LW.PO": "implemented",
-    "HL.LW.PR": "implemented",
-    "HL.LWI": "implemented",
-    "HL.LWI.PO": "implemented",
-    "HL.LWI.PR": "implemented",
-    "HL.LWI.U": "implemented",
-    "HL.LWI.UPO": "implemented",
-    "HL.LWI.UPR": "implemented",
-    "HL.LWIP": "implemented",
-    "HL.LWIP.U": "implemented",
-    "HL.LWP": "implemented",
-    "HL.LWU.PCR": "implemented",
-    "HL.LWU.PO": "implemented",
-    "HL.LWU.PR": "implemented",
-    "HL.LWUI": "implemented",
-    "HL.LWUI.PO": "implemented",
-    "HL.LWUI.PR": "implemented",
-    "HL.LWUI.U": "implemented",
-    "HL.LWUI.UPO": "implemented",
-    "HL.LWUI.UPR": "implemented",
-    "HL.LWUIP": "implemented",
-    "HL.LWUIP.U": "implemented",
-    "HL.LWUP": "implemented",
-    "HL.MADD": "implemented",
-    "HL.MADDW": "implemented",
-    "HL.MIADD": "implemented",
-    "HL.MISUB": "implemented",
-    "HL.MUL": "implemented",
-    "HL.MULU": "implemented",
-    "HL.ORI": "implemented",
-    "HL.ORIW": "implemented",
-    "HL.PRF": "implemented",
-    "HL.PRF.A": "implemented",
-    "HL.PRFI.U": "implemented",
-    "HL.PRFI.UA": "implemented",
-    "HL.QMT": "implemented",
-    "HL.QPOP": "implemented",
-    "HL.QPUSH": "implemented",
-    "HL.REM": "implemented",
-    "HL.REMU": "implemented",
-    "HL.REMUW": "implemented",
-    "HL.REMW": "implemented",
-    "HL.SB.PCR": "implemented",
-    "HL.SB.PO": "implemented",
-    "HL.SB.PR": "implemented",
-    "HL.SBI": "implemented",
-    "HL.SBI.PO": "implemented",
-    "HL.SBI.PR": "implemented",
-    "HL.SBIP": "implemented",
-    "HL.SBP": "implemented",
-    "HL.SD.PCR": "implemented",
-    "HL.SD.PO": "implemented",
-    "HL.SD.PR": "implemented",
-    "HL.SD.UPO": "implemented",
-    "HL.SD.UPR": "implemented",
-    "HL.SDI": "implemented",
-    "HL.SDI.PO": "implemented",
-    "HL.SDI.PR": "implemented",
-    "HL.SDI.U": "implemented",
-    "HL.SDI.UPO": "implemented",
-    "HL.SDI.UPR": "implemented",
-    "HL.SDIP": "implemented",
-    "HL.SDIP.U": "implemented",
-    "HL.SDP": "implemented",
-    "HL.SDP.U": "implemented",
-    "HL.SETC.ANDI": "implemented",
-    "HL.SETC.EQI": "implemented",
-    "HL.SETC.GEI": "implemented",
-    "HL.SETC.GEUI": "implemented",
-    "HL.SETC.LTI": "implemented",
-    "HL.SETC.LTUI": "implemented",
-    "HL.SETC.NEI": "implemented",
-    "HL.SETC.ORI": "implemented",
-    "HL.SETRET": "implemented",
-    "HL.SH.PCR": "implemented",
-    "HL.SH.PO": "implemented",
-    "HL.SH.PR": "implemented",
-    "HL.SH.UPO": "implemented",
-    "HL.SH.UPR": "implemented",
-    "HL.SHI": "implemented",
-    "HL.SHI.PO": "implemented",
-    "HL.SHI.PR": "implemented",
-    "HL.SHI.U": "implemented",
-    "HL.SHI.UPO": "implemented",
-    "HL.SHI.UPR": "implemented",
-    "HL.SHIP": "implemented",
-    "HL.SHIP.U": "implemented",
-    "HL.SHP": "implemented",
-    "HL.SHP.U": "implemented",
-    "HL.SSRGET": "implemented",
-    "HL.SSRSET": "implemented",
-    "HL.SUBI": "implemented",
-    "HL.SUBIW": "implemented",
-    "HL.SW.PCR": "implemented",
-    "HL.SW.PO": "implemented",
-    "HL.SW.PR": "implemented",
-    "HL.SW.UPO": "implemented",
-    "HL.SW.UPR": "implemented",
-    "HL.SWI": "implemented",
-    "HL.SWI.PO": "implemented",
-    "HL.SWI.PR": "implemented",
-    "HL.SWI.U": "implemented",
-    "HL.SWI.UPO": "implemented",
-    "HL.SWI.UPR": "implemented",
-    "HL.SWIP": "implemented",
-    "HL.SWIP.U": "implemented",
-    "HL.SWP": "implemented",
-    "HL.SWP.U": "implemented",
-    "HL.XORI": "implemented",
-    "HL.XORIW": "implemented",
-    "IC.IALL": "implemented",
-    "IC.IVA": "implemented",
-    "J": "implemented",
-    "JR": "implemented",
-    "LB": "implemented",
-    "LB.PCR": "implemented",
-    "LBI": "implemented",
-    "LBU": "implemented",
-    "LBU.PCR": "implemented",
-    "LBUI": "implemented",
-    "LD": "implemented",
-    "LD.ADD": "implemented",
-    "LD.AND": "implemented",
-    "LD.OR": "implemented",
-    "LD.PCR": "implemented",
-    "LD.SMAX": "implemented",
-    "LD.SMIN": "implemented",
-    "LD.UMAX": "implemented",
-    "LD.UMIN": "implemented",
-    "LD.XOR": "implemented",
-    "LDI": "implemented",
-    "LDI.U": "implemented",
-    "LH": "implemented",
-    "LH.PCR": "implemented",
-    "LHI": "implemented",
-    "LHI.U": "implemented",
-    "LHU": "implemented",
-    "LHU.PCR": "implemented",
-    "LHUI": "implemented",
-    "LHUI.U": "implemented",
-    "LR.B": "implemented",
-    "LR.D": "implemented",
-    "LR.H": "implemented",
-    "LR.W": "implemented",
-    "LSRGET": "implemented",
-    "LUI": "implemented",
-    "LW": "implemented",
-    "LW.ADD": "implemented",
-    "LW.AND": "implemented",
-    "LW.OR": "implemented",
-    "LW.PCR": "implemented",
-    "LW.SMAX": "implemented",
-    "LW.SMIN": "implemented",
-    "LW.UMAX": "implemented",
-    "LW.UMIN": "implemented",
-    "LW.XOR": "implemented",
-    "LWI": "implemented",
-    "LWI.U": "implemented",
-    "LWU": "implemented",
-    "LWU.PCR": "implemented",
-    "LWUI": "implemented",
-    "LWUI.U": "implemented",
-    "MADD": "implemented",
-    "MADDW": "implemented",
-    "MAX": "implemented",
-    "MAXU": "implemented",
-    "MCOPY": "implemented",
-    "MIN": "implemented",
-    "MINU": "implemented",
-    "MSET": "implemented",
-    "MUL": "implemented",
-    "MULU": "implemented",
-    "MULUW": "implemented",
-    "MULW": "implemented",
-    "OR": "implemented",
-    "ORI": "implemented",
-    "ORIW": "implemented",
-    "ORW": "implemented",
-    "PRF": "implemented",
-    "PRFI.U": "implemented",
-    "REM": "implemented",
-    "REMU": "implemented",
-    "REMUW": "implemented",
-    "REMW": "implemented",
-    "REV": "implemented",
-    "SB": "implemented",
-    "SB.PCR": "implemented",
-    "SBI": "implemented",
-    "SC.B": "implemented",
-    "SC.D": "implemented",
-    "SC.H": "implemented",
-    "SC.W": "implemented",
-    "SCVTF": "implemented",
-    "SD": "implemented",
-    "SD.ADD": "implemented",
-    "SD.AND": "implemented",
-    "SD.OR": "implemented",
-    "SD.PCR": "implemented",
-    "SD.SMAX": "implemented",
-    "SD.SMIN": "implemented",
-    "SD.U": "implemented",
-    "SD.UMAX": "implemented",
-    "SD.UMIN": "implemented",
-    "SD.XOR": "implemented",
-    "SDI": "implemented",
-    "SDI.U": "implemented",
-    "SETC.AND": "implemented",
-    "SETC.ANDI": "implemented",
-    "SETC.EQ": "implemented",
-    "SETC.EQI": "implemented",
-    "SETC.GE": "implemented",
-    "SETC.GEI": "implemented",
-    "SETC.GEU": "implemented",
-    "SETC.GEUI": "implemented",
-    "SETC.LT": "implemented",
-    "SETC.LTI": "implemented",
-    "SETC.LTU": "implemented",
-    "SETC.LTUI": "implemented",
-    "SETC.NE": "implemented",
-    "SETC.NEI": "implemented",
-    "SETC.OR": "implemented",
-    "SETC.ORI": "implemented",
-    "SETC.TGT": "implemented",
-    "SETRET": "implemented",
-    "SH": "implemented",
-    "SH.PCR": "implemented",
-    "SH.U": "implemented",
-    "SHI": "implemented",
-    "SHI.U": "implemented",
-    "SLL": "implemented",
-    "SLLI": "implemented",
-    "SLLIW": "implemented",
-    "SLLW": "implemented",
-    "SRA": "implemented",
-    "SRAI": "implemented",
-    "SRAIW": "implemented",
-    "SRAW": "implemented",
-    "SRL": "implemented",
-    "SRLI": "implemented",
-    "SRLIW": "implemented",
-    "SRLW": "implemented",
-    "SSRGET": "implemented",
-    "SSRSET": "implemented",
-    "SSRSWAP": "implemented",
-    "SUB": "implemented",
-    "SUBI": "implemented",
-    "SUBIW": "implemented",
-    "SUBW": "implemented",
-    "SW": "implemented",
-    "SW.ADD": "implemented",
-    "SW.AND": "implemented",
-    "SW.OR": "implemented",
-    "SW.PCR": "implemented",
-    "SW.SMAX": "implemented",
-    "SW.SMIN": "implemented",
-    "SW.U": "implemented",
-    "SW.UMAX": "implemented",
-    "SW.UMIN": "implemented",
-    "SW.XOR": "implemented",
-    "SWAPB": "implemented",
-    "SWAPD": "implemented",
-    "SWAPH": "implemented",
-    "SWAPW": "implemented",
-    "SWI": "implemented",
-    "SWI.U": "implemented",
-    "TLB.IA": "implemented",
-    "TLB.IALL": "implemented",
-    "TLB.IAV": "implemented",
-    "TLB.IV": "implemented",
-    "UCVTF": "implemented",
-    "V.ADD": "implemented",
-    "V.ADDI": "implemented",
-    "V.AND": "implemented",
-    "V.ANDI": "implemented",
-    "V.BCNT": "implemented",
-    "V.BIC": "implemented",
-    "V.BIS": "implemented",
-    "V.BXS": "implemented",
-    "V.BXU": "implemented",
-    "V.CLZ": "implemented",
-    "V.CMP.AND": "implemented",
-    "V.CMP.ANDI": "implemented",
-    "V.CMP.EQ": "implemented",
-    "V.CMP.EQI": "implemented",
-    "V.CMP.GE": "implemented",
-    "V.CMP.GEI": "implemented",
-    "V.CMP.GEU": "implemented",
-    "V.CMP.GEUI": "implemented",
-    "V.CMP.LT": "implemented",
-    "V.CMP.LTI": "implemented",
-    "V.CMP.LTU": "implemented",
-    "V.CMP.LTUI": "implemented",
-    "V.CMP.NE": "implemented",
-    "V.CMP.NEI": "implemented",
-    "V.CMP.OR": "implemented",
-    "V.CMP.ORI": "implemented",
-    "V.CSEL": "implemented",
-    "V.CTZ": "implemented",
-    "V.DIV": "implemented",
-    "V.FABS": "implemented",
-    "V.FADD": "implemented",
-    "V.FCLASS": "implemented",
-    "V.FCVT": "implemented",
-    "V.FCVTI": "implemented",
-    "V.FDIV": "implemented",
-    "V.FEQ": "implemented",
-    "V.FEQS": "implemented",
-    "V.FEXP": "implemented",
-    "V.FGE": "implemented",
-    "V.FGES": "implemented",
-    "V.FLT": "implemented",
-    "V.FLTS": "implemented",
-    "V.FMADD": "implemented",
-    "V.FMAX": "implemented",
-    "V.FMIN": "implemented",
-    "V.FMSUB": "implemented",
-    "V.FMUL": "implemented",
-    "V.FNE": "implemented",
-    "V.FNES": "implemented",
-    "V.FNMADD": "implemented",
-    "V.FNMSUB": "implemented",
-    "V.FRECIP": "implemented",
-    "V.FSQRT": "implemented",
-    "V.FSUB": "implemented",
-    "V.ICVT": "implemented",
-    "V.ICVTF": "implemented",
-    "V.LB": "implemented",
-    "V.LB.BRG": "implemented",
-    "V.LBI": "implemented",
-    "V.LBI.BRG": "implemented",
-    "V.LBU": "implemented",
-    "V.LBU.BRG": "implemented",
-    "V.LBUI": "implemented",
-    "V.LBUI.BRG": "implemented",
-    "V.LD": "implemented",
-    "V.LD.ADD": "implemented",
-    "V.LD.AND": "implemented",
-    "V.LD.BRG": "implemented",
-    "V.LD.MAX": "implemented",
-    "V.LD.MIN": "implemented",
-    "V.LD.OR": "implemented",
-    "V.LD.XOR": "implemented",
-    "V.LDI": "implemented",
-    "V.LDI.BRG": "implemented",
-    "V.LDI.U": "implemented",
-    "V.LDI.U.BRG": "implemented",
-    "V.LH": "implemented",
-    "V.LH.BRG": "implemented",
-    "V.LHI": "implemented",
-    "V.LHI.BRG": "implemented",
-    "V.LHI.U": "implemented",
-    "V.LHI.U.BRG": "implemented",
-    "V.LHU": "implemented",
-    "V.LHU.BRG": "implemented",
-    "V.LHUI": "implemented",
-    "V.LHUI.BRG": "implemented",
-    "V.LHUI.U": "implemented",
-    "V.LHUI.U.BRG": "implemented",
-    "V.LW": "implemented",
-    "V.LW.ADD": "implemented",
-    "V.LW.AND": "implemented",
-    "V.LW.BRG": "implemented",
-    "V.LW.MAX": "implemented",
-    "V.LW.MIN": "implemented",
-    "V.LW.OR": "implemented",
-    "V.LW.XOR": "implemented",
-    "V.LWI": "implemented",
-    "V.LWI.BRG": "implemented",
-    "V.LWI.U": "implemented",
-    "V.LWI.U.BRG": "implemented",
-    "V.LWU": "implemented",
-    "V.LWU.BRG": "implemented",
-    "V.LWUI": "implemented",
-    "V.LWUI.BRG": "implemented",
-    "V.LWUI.U": "implemented",
-    "V.LWUI.U.BRG": "implemented",
-    "V.MADD": "implemented",
-    "V.MAX": "implemented",
-    "V.MIN": "implemented",
-    "V.MUL": "implemented",
-    "V.OR": "implemented",
-    "V.ORI": "implemented",
-    "V.PSEL": "implemented",
-    "V.QPOP": "implemented",
-    "V.QPUSH": "implemented",
-    "V.RDADD": "implemented",
-    "V.RDAND": "implemented",
-    "V.RDFADD": "implemented",
-    "V.RDFMAX": "implemented",
-    "V.RDFMIN": "implemented",
-    "V.RDMAX": "implemented",
-    "V.RDMIN": "implemented",
-    "V.RDOR": "implemented",
-    "V.RDXOR": "implemented",
-    "V.REM": "implemented",
-    "V.REV": "implemented",
-    "V.SB": "implemented",
-    "V.SB.BRG": "implemented",
-    "V.SBI": "implemented",
-    "V.SBI.BRG": "implemented",
-    "V.SD": "implemented",
-    "V.SD.ADD": "implemented",
-    "V.SD.AND": "implemented",
-    "V.SD.BRG": "implemented",
-    "V.SD.MAX": "implemented",
-    "V.SD.MIN": "implemented",
-    "V.SD.OR": "implemented",
-    "V.SD.U": "implemented",
-    "V.SD.U.BRG": "implemented",
-    "V.SD.XOR": "implemented",
-    "V.SDI": "implemented",
-    "V.SDI.BRG": "implemented",
-    "V.SDI.U": "implemented",
-    "V.SDI.U.BRG": "implemented",
-    "V.SH": "implemented",
-    "V.SH.BRG": "implemented",
-    "V.SH.U": "implemented",
-    "V.SH.U.BRG": "implemented",
-    "V.SHFL.BFLY": "implemented",
-    "V.SHFL.DOWN": "implemented",
-    "V.SHFL.IDX": "implemented",
-    "V.SHFL.UP": "implemented",
-    "V.SHFLI.BFLY": "implemented",
-    "V.SHFLI.DOWN": "implemented",
-    "V.SHFLI.IDX": "implemented",
-    "V.SHFLI.UP": "implemented",
-    "V.SHI": "implemented",
-    "V.SHI.BRG": "implemented",
-    "V.SHI.U": "implemented",
-    "V.SHI.U.BRG": "implemented",
-    "V.SLL": "implemented",
-    "V.SLLI": "implemented",
-    "V.SRA": "implemented",
-    "V.SRAI": "implemented",
-    "V.SRL": "implemented",
-    "V.SRLI": "implemented",
-    "V.SUB": "implemented",
-    "V.SUBI": "implemented",
-    "V.SW": "implemented",
-    "V.SW.ADD": "implemented",
-    "V.SW.AND": "implemented",
-    "V.SW.BRG": "implemented",
-    "V.SW.MAX": "implemented",
-    "V.SW.MIN": "implemented",
-    "V.SW.OR": "implemented",
-    "V.SW.U": "implemented",
-    "V.SW.U.BRG": "implemented",
-    "V.SW.XOR": "implemented",
-    "V.SWI": "implemented",
-    "V.SWI.BRG": "implemented",
-    "V.SWI.U": "implemented",
-    "V.SWI.U.BRG": "implemented",
-    "V.XOR": "implemented",
-    "V.XORI": "implemented",
-    "XB": "implemented",
-    "XOR": "implemented",
-    "XORI": "implemented",
-    "XORIW": "implemented",
-    "XORW": "implemented"
+  "forms": {
+    "acrc_32_a9c0e33f9904": {
+      "mnemonic": "ACRC",
+      "status": "executable-subset"
+    },
+    "acre_32_54b80944d32d": {
+      "mnemonic": "ACRE",
+      "status": "executable-subset"
+    },
+    "add_32_d04202886d0a": {
+      "mnemonic": "ADD",
+      "status": "executable-subset"
+    },
+    "addi_32_2decd0a93a0a": {
+      "mnemonic": "ADDI",
+      "status": "executable-subset"
+    },
+    "addiw_32_08cc89cd2689": {
+      "mnemonic": "ADDIW",
+      "status": "executable-subset"
+    },
+    "addtpc_32_e5aa0f0abca3": {
+      "mnemonic": "ADDTPC",
+      "status": "executable-subset"
+    },
+    "addw_32_a27109fe30fc": {
+      "mnemonic": "ADDW",
+      "status": "executable-subset"
+    },
+    "and_32_b6a903a3ec94": {
+      "mnemonic": "AND",
+      "status": "executable-subset"
+    },
+    "andi_32_1d9302e57d30": {
+      "mnemonic": "ANDI",
+      "status": "executable-subset"
+    },
+    "andiw_32_9ec1f7343dbd": {
+      "mnemonic": "ANDIW",
+      "status": "executable-subset"
+    },
+    "andw_32_6907ed7cec90": {
+      "mnemonic": "ANDW",
+      "status": "executable-subset"
+    },
+    "assert_32_f05d67874ae5": {
+      "mnemonic": "ASSERT",
+      "status": "executable-subset"
+    },
+    "b_arg_32_374ec956affe": {
+      "mnemonic": "B.ARG",
+      "status": "executable-subset"
+    },
+    "b_arg_32_47e8ac50ac96": {
+      "mnemonic": "B.ARG",
+      "status": "executable-subset"
+    },
+    "b_arg_32_5c8bfa662370": {
+      "mnemonic": "B.ARG",
+      "status": "executable-subset"
+    },
+    "b_arg_32_95152c29a268": {
+      "mnemonic": "B.ARG",
+      "status": "executable-subset"
+    },
+    "b_arg_32_c6d5c49a4ad7": {
+      "mnemonic": "B.ARG",
+      "status": "executable-subset"
+    },
+    "b_arg_32_f19d18f2126b": {
+      "mnemonic": "B.ARG",
+      "status": "executable-subset"
+    },
+    "b_catr_32_e90bd52fa480": {
+      "mnemonic": "B.CATR",
+      "status": "executable-subset"
+    },
+    "b_datr_32_c161a042ff38": {
+      "mnemonic": "B.DATR",
+      "status": "executable-subset"
+    },
+    "b_dim_32_1caa1aa2944a": {
+      "mnemonic": "B.DIM",
+      "status": "executable-subset"
+    },
+    "b_dim_32_27602ab68929": {
+      "mnemonic": "B.DIM",
+      "status": "executable-subset"
+    },
+    "b_dim_32_4191099a5f4d": {
+      "mnemonic": "B.DIM",
+      "status": "executable-subset"
+    },
+    "b_eq_32_41f00e5abd89": {
+      "mnemonic": "B.EQ",
+      "status": "executable-subset"
+    },
+    "b_ge_32_7bd9050705dc": {
+      "mnemonic": "B.GE",
+      "status": "executable-subset"
+    },
+    "b_geu_32_43a6e57dce55": {
+      "mnemonic": "B.GEU",
+      "status": "executable-subset"
+    },
+    "b_hint_32_69d942ff1583": {
+      "mnemonic": "B.HINT",
+      "status": "executable-subset"
+    },
+    "b_hint_32_f7d01d734925": {
+      "mnemonic": "B.HINT",
+      "status": "executable-subset"
+    },
+    "b_ior_32_c3ea71404eb3": {
+      "mnemonic": "B.IOR",
+      "status": "executable-subset"
+    },
+    "b_iot_32_10db6db84f5d": {
+      "mnemonic": "B.IOT",
+      "status": "executable-subset"
+    },
+    "b_iot_32_8b8bce6bffe8": {
+      "mnemonic": "B.IOT",
+      "status": "executable-subset"
+    },
+    "b_iot_32_efa0fe3fe49a": {
+      "mnemonic": "B.IOT",
+      "status": "executable-subset"
+    },
+    "b_lt_32_2ca5ecd25cfb": {
+      "mnemonic": "B.LT",
+      "status": "executable-subset"
+    },
+    "b_ltu_32_f1ea7ad44e37": {
+      "mnemonic": "B.LTU",
+      "status": "executable-subset"
+    },
+    "b_ne_32_831af6a36ff4": {
+      "mnemonic": "B.NE",
+      "status": "executable-subset"
+    },
+    "b_nz_32_0f583cdd8d4d": {
+      "mnemonic": "B.NZ",
+      "status": "executable-subset"
+    },
+    "b_text_32_1ce09f50e5dd": {
+      "mnemonic": "B.TEXT",
+      "status": "executable-subset"
+    },
+    "b_z_32_753dd3b4fcb6": {
+      "mnemonic": "B.Z",
+      "status": "executable-subset"
+    },
+    "bc_iall_32_fdceb48516a8": {
+      "mnemonic": "BC.IALL",
+      "status": "executable-subset"
+    },
+    "bc_iva_32_c166de534c98": {
+      "mnemonic": "BC.IVA",
+      "status": "executable-subset"
+    },
+    "bcnt_32_e0b06e436a5b": {
+      "mnemonic": "BCNT",
+      "status": "executable-subset"
+    },
+    "bic_32_3a10830a3a93": {
+      "mnemonic": "BIC",
+      "status": "executable-subset"
+    },
+    "bis_32_bca5d1a80f32": {
+      "mnemonic": "BIS",
+      "status": "executable-subset"
+    },
+    "bse_32_883b5167edbc": {
+      "mnemonic": "BSE",
+      "status": "executable-subset"
+    },
+    "bstart_32_7eb93b649748": {
+      "mnemonic": "BSTART",
+      "status": "executable-subset"
+    },
+    "bstart_32_e11e678a32ac": {
+      "mnemonic": "BSTART",
+      "status": "executable-subset"
+    },
+    "bstart_acccvt_32_56c3ce3838c5": {
+      "mnemonic": "BSTART.ACCCVT",
+      "status": "executable-subset"
+    },
+    "bstart_call_32_9404418d1ae5": {
+      "mnemonic": "BSTART CALL",
+      "status": "executable-subset"
+    },
+    "bstart_cube_32_bd3f337acb9d": {
+      "mnemonic": "BSTART.CUBE",
+      "status": "executable-subset"
+    },
+    "bstart_fixp_32_3b0ae11126a6": {
+      "mnemonic": "BSTART.FIXP",
+      "status": "executable-subset"
+    },
+    "bstart_fp_32_0c671a644214": {
+      "mnemonic": "BSTART.FP",
+      "status": "executable-subset"
+    },
+    "bstart_fp_32_24db3966d6ba": {
+      "mnemonic": "BSTART.FP",
+      "status": "executable-subset"
+    },
+    "bstart_fp_32_58ad7954fb49": {
+      "mnemonic": "BSTART.FP",
+      "status": "executable-subset"
+    },
+    "bstart_fp_32_7978795a29a1": {
+      "mnemonic": "BSTART.FP",
+      "status": "executable-subset"
+    },
+    "bstart_fp_32_d00a708a81f0": {
+      "mnemonic": "BSTART.FP",
+      "status": "executable-subset"
+    },
+    "bstart_fp_32_dd7bc8dd694c": {
+      "mnemonic": "BSTART.FP",
+      "status": "executable-subset"
+    },
+    "bstart_fp_32_face4f238d84": {
+      "mnemonic": "BSTART.FP",
+      "status": "executable-subset"
+    },
+    "bstart_mpar_32_2d163417c615": {
+      "mnemonic": "BSTART.MPAR",
+      "status": "executable-subset"
+    },
+    "bstart_mseq_32_39343a456ec5": {
+      "mnemonic": "BSTART.MSEQ",
+      "status": "executable-subset"
+    },
+    "bstart_std_32_1ef99c4cedcb": {
+      "mnemonic": "BSTART.STD",
+      "status": "executable-subset"
+    },
+    "bstart_std_32_3f6980d013f7": {
+      "mnemonic": "BSTART.STD",
+      "status": "executable-subset"
+    },
+    "bstart_std_32_441ad677fffe": {
+      "mnemonic": "BSTART.STD",
+      "status": "executable-subset"
+    },
+    "bstart_std_32_816dfa76cc4a": {
+      "mnemonic": "BSTART.STD",
+      "status": "executable-subset"
+    },
+    "bstart_std_32_986b7ee2cf6a": {
+      "mnemonic": "BSTART.STD",
+      "status": "executable-subset"
+    },
+    "bstart_std_32_b05390d367cf": {
+      "mnemonic": "BSTART.STD",
+      "status": "executable-subset"
+    },
+    "bstart_std_32_c1de85e06878": {
+      "mnemonic": "BSTART.STD",
+      "status": "executable-subset"
+    },
+    "bstart_sys_32_762d9d84a6d8": {
+      "mnemonic": "BSTART.SYS",
+      "status": "executable-subset"
+    },
+    "bstart_tepl_32_d022db6dacb3": {
+      "mnemonic": "BSTART.TEPL",
+      "status": "executable-subset"
+    },
+    "bstart_tload_32_d0c18bb0ab15": {
+      "mnemonic": "BSTART.TLOAD",
+      "status": "executable-subset"
+    },
+    "bstart_tma_32_f949c94c39c7": {
+      "mnemonic": "BSTART.TMA",
+      "status": "executable-subset"
+    },
+    "bstart_tmatmul_32_f9da70e4e0ad": {
+      "mnemonic": "BSTART.TMATMUL",
+      "status": "executable-subset"
+    },
+    "bstart_tmatmul_acc_32_0c8c62e5f00a": {
+      "mnemonic": "BSTART.TMATMUL.ACC",
+      "status": "executable-subset"
+    },
+    "bstart_tmov_32_211446509efb": {
+      "mnemonic": "BSTART.TMOV",
+      "status": "executable-subset"
+    },
+    "bstart_tstore_32_4048b6e8b0f4": {
+      "mnemonic": "BSTART.TSTORE",
+      "status": "executable-subset"
+    },
+    "bstart_vpar_32_8998d3fa51f8": {
+      "mnemonic": "BSTART.VPAR",
+      "status": "executable-subset"
+    },
+    "bstart_vseq_32_9324064902ae": {
+      "mnemonic": "BSTART.VSEQ",
+      "status": "executable-subset"
+    },
+    "bstop_32_d25b09fdd59c": {
+      "mnemonic": "BSTOP",
+      "status": "executable-subset"
+    },
+    "bwe_32_e5a5240bdf9b": {
+      "mnemonic": "BWE",
+      "status": "executable-subset"
+    },
+    "bwi_32_d9a0905cb31b": {
+      "mnemonic": "BWI",
+      "status": "executable-subset"
+    },
+    "bwt_32_5a0fe4a8e61f": {
+      "mnemonic": "BWT",
+      "status": "executable-subset"
+    },
+    "bxs_32_b1bb003c1703": {
+      "mnemonic": "BXS",
+      "status": "executable-subset"
+    },
+    "bxu_32_e9ea9715ba62": {
+      "mnemonic": "BXU",
+      "status": "executable-subset"
+    },
+    "c_add_16_85136d1e4904": {
+      "mnemonic": "C.ADD",
+      "status": "executable-subset"
+    },
+    "c_addi_16_3050744f2322": {
+      "mnemonic": "C.ADDI",
+      "status": "executable-subset"
+    },
+    "c_and_16_379e5bed3352": {
+      "mnemonic": "C.AND",
+      "status": "executable-subset"
+    },
+    "c_b_dim_16_14f1b8fba5e6": {
+      "mnemonic": "C.B.DIM",
+      "status": "executable-subset"
+    },
+    "c_b_dimi_16_3f1b113c76ce": {
+      "mnemonic": "C.B.DIMI",
+      "status": "executable-subset"
+    },
+    "c_bstart_16_c4e238a9227a": {
+      "mnemonic": "C.BSTART",
+      "status": "executable-subset"
+    },
+    "c_bstart_16_f833d2a4753c": {
+      "mnemonic": "C.BSTART",
+      "status": "executable-subset"
+    },
+    "c_bstart_fp_16_9dcef7e3a85b": {
+      "mnemonic": "C.BSTART.FP",
+      "status": "executable-subset"
+    },
+    "c_bstart_mpar_16_66c3ef2226ec": {
+      "mnemonic": "C.BSTART.MPAR",
+      "status": "executable-subset"
+    },
+    "c_bstart_mseq_16_b5597e0e41c2": {
+      "mnemonic": "C.BSTART.MSEQ",
+      "status": "executable-subset"
+    },
+    "c_bstart_std_16_8b40f078c14a": {
+      "mnemonic": "C.BSTART.STD",
+      "status": "executable-subset"
+    },
+    "c_bstart_sys_16_ec213ce96eb7": {
+      "mnemonic": "C.BSTART.SYS",
+      "status": "executable-subset"
+    },
+    "c_bstart_vpar_16_c4d89efc71ea": {
+      "mnemonic": "C.BSTART.VPAR",
+      "status": "executable-subset"
+    },
+    "c_bstart_vseq_16_50d70de3f84f": {
+      "mnemonic": "C.BSTART.VSEQ",
+      "status": "executable-subset"
+    },
+    "c_bstop_16_ca4743d8a95e": {
+      "mnemonic": "C.BSTOP",
+      "status": "executable-subset"
+    },
+    "c_cmp_eqi_16_e34367883ba1": {
+      "mnemonic": "C.CMP.EQI",
+      "status": "executable-subset"
+    },
+    "c_cmp_nei_16_35d1f02063e2": {
+      "mnemonic": "C.CMP.NEI",
+      "status": "executable-subset"
+    },
+    "c_ebreak_16_7f9c245fa13c": {
+      "mnemonic": "C.EBREAK",
+      "status": "executable-subset"
+    },
+    "c_ldi_16_973f42d37f29": {
+      "mnemonic": "C.LDI",
+      "status": "executable-subset"
+    },
+    "c_lwi_16_b224525971da": {
+      "mnemonic": "C.LWI",
+      "status": "executable-subset"
+    },
+    "c_movi_16_2c84faf1bc72": {
+      "mnemonic": "C.MOVI",
+      "status": "executable-subset"
+    },
+    "c_movr_16_80d2b5f3580b": {
+      "mnemonic": "C.MOVR",
+      "status": "executable-subset"
+    },
+    "c_or_16_90864d13a661": {
+      "mnemonic": "C.OR",
+      "status": "executable-subset"
+    },
+    "c_sdi_16_bbec69bcfd5d": {
+      "mnemonic": "C.SDI",
+      "status": "executable-subset"
+    },
+    "c_setc_eq_16_03e6b07a3699": {
+      "mnemonic": "C.SETC.EQ",
+      "status": "executable-subset"
+    },
+    "c_setc_ne_16_e9092e487e98": {
+      "mnemonic": "C.SETC.NE",
+      "status": "executable-subset"
+    },
+    "c_setc_tgt_16_736be9cada01": {
+      "mnemonic": "C.SETC.TGT",
+      "status": "executable-subset"
+    },
+    "c_setret_16_335651ef6c27": {
+      "mnemonic": "C.SETRET",
+      "status": "executable-subset"
+    },
+    "c_sext_b_16_8ffd07d15409": {
+      "mnemonic": "C.SEXT.B",
+      "status": "executable-subset"
+    },
+    "c_sext_h_16_90cb7ea36bd3": {
+      "mnemonic": "C.SEXT.H",
+      "status": "executable-subset"
+    },
+    "c_sext_w_16_f2bb13f0797b": {
+      "mnemonic": "C.SEXT.W",
+      "status": "executable-subset"
+    },
+    "c_slli_16_958a14dc4058": {
+      "mnemonic": "C.SLLI",
+      "status": "executable-subset"
+    },
+    "c_srli_16_b411862f7820": {
+      "mnemonic": "C.SRLI",
+      "status": "executable-subset"
+    },
+    "c_ssrget_16_9d83a6f2749a": {
+      "mnemonic": "C.SSRGET",
+      "status": "executable-subset"
+    },
+    "c_sub_16_ff0056ac7053": {
+      "mnemonic": "C.SUB",
+      "status": "executable-subset"
+    },
+    "c_swi_16_ca6c111163e5": {
+      "mnemonic": "C.SWI",
+      "status": "executable-subset"
+    },
+    "c_zext_b_16_7ea1a59fa2da": {
+      "mnemonic": "C.ZEXT.B",
+      "status": "executable-subset"
+    },
+    "c_zext_h_16_4c0976791cbc": {
+      "mnemonic": "C.ZEXT.H",
+      "status": "executable-subset"
+    },
+    "c_zext_w_16_e8bc051c7e8c": {
+      "mnemonic": "C.ZEXT.W",
+      "status": "executable-subset"
+    },
+    "clz_32_f890415c15b6": {
+      "mnemonic": "CLZ",
+      "status": "executable-subset"
+    },
+    "cmp_and_32_036813a12ae8": {
+      "mnemonic": "CMP.AND",
+      "status": "executable-subset"
+    },
+    "cmp_andi_32_da7a5391738d": {
+      "mnemonic": "CMP.ANDI",
+      "status": "executable-subset"
+    },
+    "cmp_eq_32_6af7c8f41300": {
+      "mnemonic": "CMP.EQ",
+      "status": "executable-subset"
+    },
+    "cmp_eqi_32_252943516dca": {
+      "mnemonic": "CMP.EQI",
+      "status": "executable-subset"
+    },
+    "cmp_ge_32_d88e3a1cfff4": {
+      "mnemonic": "CMP.GE",
+      "status": "executable-subset"
+    },
+    "cmp_gei_32_48bf7ea50737": {
+      "mnemonic": "CMP.GEI",
+      "status": "executable-subset"
+    },
+    "cmp_geu_32_0c002dc415ef": {
+      "mnemonic": "CMP.GEU",
+      "status": "executable-subset"
+    },
+    "cmp_geui_32_69ec7b908f5d": {
+      "mnemonic": "CMP.GEUI",
+      "status": "executable-subset"
+    },
+    "cmp_lt_32_c0b8cc320f12": {
+      "mnemonic": "CMP.LT",
+      "status": "executable-subset"
+    },
+    "cmp_lti_32_02d3081d120b": {
+      "mnemonic": "CMP.LTI",
+      "status": "executable-subset"
+    },
+    "cmp_ltu_32_4377481baebc": {
+      "mnemonic": "CMP.LTU",
+      "status": "executable-subset"
+    },
+    "cmp_ltui_32_8676c7bfd797": {
+      "mnemonic": "CMP.LTUI",
+      "status": "executable-subset"
+    },
+    "cmp_ne_32_fc47fbb1a0de": {
+      "mnemonic": "CMP.NE",
+      "status": "executable-subset"
+    },
+    "cmp_nei_32_00abf831b572": {
+      "mnemonic": "CMP.NEI",
+      "status": "executable-subset"
+    },
+    "cmp_or_32_75e1fa54ba94": {
+      "mnemonic": "CMP.OR",
+      "status": "executable-subset"
+    },
+    "cmp_ori_32_6d3efbc3d093": {
+      "mnemonic": "CMP.ORI",
+      "status": "executable-subset"
+    },
+    "csel_32_ba77cbad3c99": {
+      "mnemonic": "CSEL",
+      "status": "executable-subset"
+    },
+    "ctz_32_1761cbcc2a89": {
+      "mnemonic": "CTZ",
+      "status": "executable-subset"
+    },
+    "dc_cisw_32_166b7135e3c1": {
+      "mnemonic": "DC.CISW",
+      "status": "executable-subset"
+    },
+    "dc_civa_32_265d686549c8": {
+      "mnemonic": "DC.CIVA",
+      "status": "executable-subset"
+    },
+    "dc_csw_32_2719115a9246": {
+      "mnemonic": "DC.CSW",
+      "status": "executable-subset"
+    },
+    "dc_cva_32_166d5a076f0e": {
+      "mnemonic": "DC.CVA",
+      "status": "executable-subset"
+    },
+    "dc_iall_32_3d61563dd077": {
+      "mnemonic": "DC.IALL",
+      "status": "executable-subset"
+    },
+    "dc_isw_32_7940273560b2": {
+      "mnemonic": "DC.ISW",
+      "status": "executable-subset"
+    },
+    "dc_iva_32_0131d0cf364f": {
+      "mnemonic": "DC.IVA",
+      "status": "executable-subset"
+    },
+    "dc_zva_32_0859a1d7aa5b": {
+      "mnemonic": "DC.ZVA",
+      "status": "executable-subset"
+    },
+    "div_32_a6efe85f8662": {
+      "mnemonic": "DIV",
+      "status": "executable-subset"
+    },
+    "divu_32_cfbc0d1760e4": {
+      "mnemonic": "DIVU",
+      "status": "executable-subset"
+    },
+    "divuw_32_9c9470ef8982": {
+      "mnemonic": "DIVUW",
+      "status": "executable-subset"
+    },
+    "divw_32_b6366c50ac8c": {
+      "mnemonic": "DIVW",
+      "status": "executable-subset"
+    },
+    "ebreak_32_4f122d1e6be3": {
+      "mnemonic": "EBREAK",
+      "status": "executable-subset"
+    },
+    "ercov_32_dc0be14a2d8b": {
+      "mnemonic": "ERCOV",
+      "status": "executable-subset"
+    },
+    "esave_32_4c4f79fe3171": {
+      "mnemonic": "ESAVE",
+      "status": "executable-subset"
+    },
+    "fabs_32_9515e008bf17": {
+      "mnemonic": "FABS",
+      "status": "executable-subset"
+    },
+    "fadd_32_b78b658e6740": {
+      "mnemonic": "FADD",
+      "status": "executable-subset"
+    },
+    "fcvt_32_1102f5aeeda9": {
+      "mnemonic": "FCVT",
+      "status": "executable-subset"
+    },
+    "fcvta_32_010837b9acbd": {
+      "mnemonic": "FCVTA",
+      "status": "executable-subset"
+    },
+    "fcvtm_32_8801f1562870": {
+      "mnemonic": "FCVTM",
+      "status": "executable-subset"
+    },
+    "fcvtn_32_8714ba358d80": {
+      "mnemonic": "FCVTN",
+      "status": "executable-subset"
+    },
+    "fcvtp_32_84354a7aa6b1": {
+      "mnemonic": "FCVTP",
+      "status": "executable-subset"
+    },
+    "fcvtz_32_bee01d31217c": {
+      "mnemonic": "FCVTZ",
+      "status": "executable-subset"
+    },
+    "fdiv_32_04a5bb6ab56f": {
+      "mnemonic": "FDIV",
+      "status": "executable-subset"
+    },
+    "fence_d_32_f4783f17d84d": {
+      "mnemonic": "FENCE.D",
+      "status": "executable-subset"
+    },
+    "fence_i_32_a321a2a186b1": {
+      "mnemonic": "FENCE.I",
+      "status": "executable-subset"
+    },
+    "fentry_32_a47584ec13b6": {
+      "mnemonic": "FENTRY",
+      "status": "executable-subset"
+    },
+    "feq_32_9435d6959c3c": {
+      "mnemonic": "FEQ",
+      "status": "executable-subset"
+    },
+    "feqs_32_1d3011890fa8": {
+      "mnemonic": "FEQS",
+      "status": "executable-subset"
+    },
+    "fexit_32_37b663f2a34d": {
+      "mnemonic": "FEXIT",
+      "status": "executable-subset"
+    },
+    "fexp_32_592ef5288c7d": {
+      "mnemonic": "FEXP",
+      "status": "executable-subset"
+    },
+    "fge_32_b3244b2ffa89": {
+      "mnemonic": "FGE",
+      "status": "executable-subset"
+    },
+    "fges_32_e0301fcee743": {
+      "mnemonic": "FGES",
+      "status": "executable-subset"
+    },
+    "flt_32_1c09549d8d3f": {
+      "mnemonic": "FLT",
+      "status": "executable-subset"
+    },
+    "flts_32_c744c874e6a2": {
+      "mnemonic": "FLTS",
+      "status": "executable-subset"
+    },
+    "fmadd_32_c616a17bcb12": {
+      "mnemonic": "FMADD",
+      "status": "executable-subset"
+    },
+    "fmax_32_eaf3880d7739": {
+      "mnemonic": "FMAX",
+      "status": "executable-subset"
+    },
+    "fmin_32_b5c106e5cd7e": {
+      "mnemonic": "FMIN",
+      "status": "executable-subset"
+    },
+    "fmsub_32_b83012b83148": {
+      "mnemonic": "FMSUB",
+      "status": "executable-subset"
+    },
+    "fmul_32_7d521d9d65e7": {
+      "mnemonic": "FMUL",
+      "status": "executable-subset"
+    },
+    "fne_32_822c18caca3b": {
+      "mnemonic": "FNE",
+      "status": "executable-subset"
+    },
+    "fnes_32_9b4b5a493783": {
+      "mnemonic": "FNES",
+      "status": "executable-subset"
+    },
+    "fnmadd_32_7f45e606d299": {
+      "mnemonic": "FNMADD",
+      "status": "executable-subset"
+    },
+    "fnmsub_32_6542d56665b3": {
+      "mnemonic": "FNMSUB",
+      "status": "executable-subset"
+    },
+    "frecip_32_3d51f4f727ea": {
+      "mnemonic": "FRECIP",
+      "status": "executable-subset"
+    },
+    "fret_ra_32_659c886221c1": {
+      "mnemonic": "FRET.RA",
+      "status": "executable-subset"
+    },
+    "fret_stk_32_4fe246bd8241": {
+      "mnemonic": "FRET.STK",
+      "status": "executable-subset"
+    },
+    "fsqrt_32_84b3495cc6c7": {
+      "mnemonic": "FSQRT",
+      "status": "executable-subset"
+    },
+    "fsub_32_a4479d0d4276": {
+      "mnemonic": "FSUB",
+      "status": "executable-subset"
+    },
+    "hl_addi_48_9d3818bfbe64": {
+      "mnemonic": "HL.ADDI",
+      "status": "executable-subset"
+    },
+    "hl_addiw_48_f6d7f5032964": {
+      "mnemonic": "HL.ADDIW",
+      "status": "executable-subset"
+    },
+    "hl_addtpc_48_2e8e692eea09": {
+      "mnemonic": "HL.ADDTPC",
+      "status": "executable-subset"
+    },
+    "hl_andi_48_fe11c7ebca41": {
+      "mnemonic": "HL.ANDI",
+      "status": "executable-subset"
+    },
+    "hl_andiw_48_878c6594c6ff": {
+      "mnemonic": "HL.ANDIW",
+      "status": "executable-subset"
+    },
+    "hl_bfi_48_8adfd476aacc": {
+      "mnemonic": "HL.BFI",
+      "status": "executable-subset"
+    },
+    "hl_bstart_call_48_3c784c583c90": {
+      "mnemonic": "HL.BSTART CALL",
+      "status": "executable-subset"
+    },
+    "hl_bstart_fp_48_038e2e96cf64": {
+      "mnemonic": "HL.BSTART.FP",
+      "status": "executable-subset"
+    },
+    "hl_bstart_fp_48_43530d2ebfae": {
+      "mnemonic": "HL.BSTART.FP",
+      "status": "executable-subset"
+    },
+    "hl_bstart_fp_48_81b457553844": {
+      "mnemonic": "HL.BSTART.FP",
+      "status": "executable-subset"
+    },
+    "hl_bstart_fp_48_eb938e9200eb": {
+      "mnemonic": "HL.BSTART.FP",
+      "status": "executable-subset"
+    },
+    "hl_bstart_std_48_51f78942222e": {
+      "mnemonic": "HL.BSTART.STD",
+      "status": "executable-subset"
+    },
+    "hl_bstart_std_48_9ba705710872": {
+      "mnemonic": "HL.BSTART.STD",
+      "status": "executable-subset"
+    },
+    "hl_bstart_std_48_b13f22c7c4a3": {
+      "mnemonic": "HL.BSTART.STD",
+      "status": "executable-subset"
+    },
+    "hl_bstart_std_48_d814d26508a4": {
+      "mnemonic": "HL.BSTART.STD",
+      "status": "executable-subset"
+    },
+    "hl_bstart_sys_48_5bf0381f7bf8": {
+      "mnemonic": "HL.BSTART.SYS",
+      "status": "executable-subset"
+    },
+    "hl_casb_48_21fb578617a8": {
+      "mnemonic": "HL.CASB",
+      "status": "executable-subset"
+    },
+    "hl_casd_48_fbb5c4256d30": {
+      "mnemonic": "HL.CASD",
+      "status": "executable-subset"
+    },
+    "hl_cash_48_eee12c324d97": {
+      "mnemonic": "HL.CASH",
+      "status": "executable-subset"
+    },
+    "hl_casw_48_a89b3d58d8f0": {
+      "mnemonic": "HL.CASW",
+      "status": "executable-subset"
+    },
+    "hl_ccat_48_a1200d8bf5ac": {
+      "mnemonic": "HL.CCAT",
+      "status": "executable-subset"
+    },
+    "hl_ccatw_48_24a85ea4659c": {
+      "mnemonic": "HL.CCATW",
+      "status": "executable-subset"
+    },
+    "hl_cmp_andi_48_de2aae3f4516": {
+      "mnemonic": "HL.CMP.ANDI",
+      "status": "executable-subset"
+    },
+    "hl_cmp_eqi_48_887accd218b1": {
+      "mnemonic": "HL.CMP.EQI",
+      "status": "executable-subset"
+    },
+    "hl_cmp_gei_48_b3703d4c4619": {
+      "mnemonic": "HL.CMP.GEI",
+      "status": "executable-subset"
+    },
+    "hl_cmp_geui_48_c71f4fb29e6b": {
+      "mnemonic": "HL.CMP.GEUI",
+      "status": "executable-subset"
+    },
+    "hl_cmp_lti_48_bec21b77021a": {
+      "mnemonic": "HL.CMP.LTI",
+      "status": "executable-subset"
+    },
+    "hl_cmp_ltui_48_d12167277d58": {
+      "mnemonic": "HL.CMP.LTUI",
+      "status": "executable-subset"
+    },
+    "hl_cmp_nei_48_e77da507704a": {
+      "mnemonic": "HL.CMP.NEI",
+      "status": "executable-subset"
+    },
+    "hl_cmp_ori_48_4167568cb50b": {
+      "mnemonic": "HL.CMP.ORI",
+      "status": "executable-subset"
+    },
+    "hl_div_48_e8ff1fc1cb98": {
+      "mnemonic": "HL.DIV",
+      "status": "executable-subset"
+    },
+    "hl_divu_48_597acda29e08": {
+      "mnemonic": "HL.DIVU",
+      "status": "executable-subset"
+    },
+    "hl_divuw_48_9ebe516091b8": {
+      "mnemonic": "HL.DIVUW",
+      "status": "executable-subset"
+    },
+    "hl_divw_48_9048cdb3b22f": {
+      "mnemonic": "HL.DIVW",
+      "status": "executable-subset"
+    },
+    "hl_lb_pcr_48_c0ba9a54c8e0": {
+      "mnemonic": "HL.LB.PCR",
+      "status": "executable-subset"
+    },
+    "hl_lb_po_48_5c7f5c82b186": {
+      "mnemonic": "HL.LB.PO",
+      "status": "executable-subset"
+    },
+    "hl_lb_pr_48_cf73675cad50": {
+      "mnemonic": "HL.LB.PR",
+      "status": "executable-subset"
+    },
+    "hl_lbi_48_250803040cc8": {
+      "mnemonic": "HL.LBI",
+      "status": "executable-subset"
+    },
+    "hl_lbi_po_48_afbc00c48aba": {
+      "mnemonic": "HL.LBI.PO",
+      "status": "executable-subset"
+    },
+    "hl_lbi_pr_48_b4bdbd29f859": {
+      "mnemonic": "HL.LBI.PR",
+      "status": "executable-subset"
+    },
+    "hl_lbip_48_70a5767aff16": {
+      "mnemonic": "HL.LBIP",
+      "status": "executable-subset"
+    },
+    "hl_lbp_48_9d1fd0b3105b": {
+      "mnemonic": "HL.LBP",
+      "status": "executable-subset"
+    },
+    "hl_lbu_pcr_48_504b34c0ec9d": {
+      "mnemonic": "HL.LBU.PCR",
+      "status": "executable-subset"
+    },
+    "hl_lbu_po_48_5c8a5b39e6c5": {
+      "mnemonic": "HL.LBU.PO",
+      "status": "executable-subset"
+    },
+    "hl_lbu_pr_48_bf9a0ea4b0db": {
+      "mnemonic": "HL.LBU.PR",
+      "status": "executable-subset"
+    },
+    "hl_lbui_48_50579e3558f4": {
+      "mnemonic": "HL.LBUI",
+      "status": "executable-subset"
+    },
+    "hl_lbui_po_48_c889b4445022": {
+      "mnemonic": "HL.LBUI.PO",
+      "status": "executable-subset"
+    },
+    "hl_lbui_pr_48_78a81538a7fa": {
+      "mnemonic": "HL.LBUI.PR",
+      "status": "executable-subset"
+    },
+    "hl_lbuip_48_ad419fc474c0": {
+      "mnemonic": "HL.LBUIP",
+      "status": "executable-subset"
+    },
+    "hl_lbup_48_c9598658dde4": {
+      "mnemonic": "HL.LBUP",
+      "status": "executable-subset"
+    },
+    "hl_ld_pcr_48_703673c266da": {
+      "mnemonic": "HL.LD.PCR",
+      "status": "executable-subset"
+    },
+    "hl_ld_po_48_870e30995d10": {
+      "mnemonic": "HL.LD.PO",
+      "status": "executable-subset"
+    },
+    "hl_ld_pr_48_7ec4111b123b": {
+      "mnemonic": "HL.LD.PR",
+      "status": "executable-subset"
+    },
+    "hl_ldi_48_088e69e45b37": {
+      "mnemonic": "HL.LDI",
+      "status": "executable-subset"
+    },
+    "hl_ldi_po_48_0cc539e6798d": {
+      "mnemonic": "HL.LDI.PO",
+      "status": "executable-subset"
+    },
+    "hl_ldi_pr_48_d07cced5a281": {
+      "mnemonic": "HL.LDI.PR",
+      "status": "executable-subset"
+    },
+    "hl_ldi_u_48_894d02c12dcc": {
+      "mnemonic": "HL.LDI.U",
+      "status": "executable-subset"
+    },
+    "hl_ldi_upo_48_5126b735cfe8": {
+      "mnemonic": "HL.LDI.UPO",
+      "status": "executable-subset"
+    },
+    "hl_ldi_upr_48_7a8e2794526f": {
+      "mnemonic": "HL.LDI.UPR",
+      "status": "executable-subset"
+    },
+    "hl_ldip_48_60afa6423d39": {
+      "mnemonic": "HL.LDIP",
+      "status": "executable-subset"
+    },
+    "hl_ldip_u_48_6813f4fdce5c": {
+      "mnemonic": "HL.LDIP.U",
+      "status": "executable-subset"
+    },
+    "hl_ldp_48_a7a45a43dff9": {
+      "mnemonic": "HL.LDP",
+      "status": "executable-subset"
+    },
+    "hl_lh_pcr_48_37df3cfe0d6e": {
+      "mnemonic": "HL.LH.PCR",
+      "status": "executable-subset"
+    },
+    "hl_lh_po_48_7ca3e8b77906": {
+      "mnemonic": "HL.LH.PO",
+      "status": "executable-subset"
+    },
+    "hl_lh_pr_48_d59f64cde1dc": {
+      "mnemonic": "HL.LH.PR",
+      "status": "executable-subset"
+    },
+    "hl_lhi_48_6d94cb04aeac": {
+      "mnemonic": "HL.LHI",
+      "status": "executable-subset"
+    },
+    "hl_lhi_po_48_aa393747abda": {
+      "mnemonic": "HL.LHI.PO",
+      "status": "executable-subset"
+    },
+    "hl_lhi_pr_48_9ec8198594ad": {
+      "mnemonic": "HL.LHI.PR",
+      "status": "executable-subset"
+    },
+    "hl_lhi_u_48_4d4b89e63c98": {
+      "mnemonic": "HL.LHI.U",
+      "status": "executable-subset"
+    },
+    "hl_lhi_upo_48_81c796b13b12": {
+      "mnemonic": "HL.LHI.UPO",
+      "status": "executable-subset"
+    },
+    "hl_lhi_upr_48_2a7c09d4b645": {
+      "mnemonic": "HL.LHI.UPR",
+      "status": "executable-subset"
+    },
+    "hl_lhip_48_2c664751c537": {
+      "mnemonic": "HL.LHIP",
+      "status": "executable-subset"
+    },
+    "hl_lhip_u_48_e37e98d63bfd": {
+      "mnemonic": "HL.LHIP.U",
+      "status": "executable-subset"
+    },
+    "hl_lhp_48_128eb429101f": {
+      "mnemonic": "HL.LHP",
+      "status": "executable-subset"
+    },
+    "hl_lhu_pcr_48_444cb4ddde1d": {
+      "mnemonic": "HL.LHU.PCR",
+      "status": "executable-subset"
+    },
+    "hl_lhu_po_48_c57c3b4a74e8": {
+      "mnemonic": "HL.LHU.PO",
+      "status": "executable-subset"
+    },
+    "hl_lhu_pr_48_f874b126e29c": {
+      "mnemonic": "HL.LHU.PR",
+      "status": "executable-subset"
+    },
+    "hl_lhui_48_6450dca3aad9": {
+      "mnemonic": "HL.LHUI",
+      "status": "executable-subset"
+    },
+    "hl_lhui_po_48_16db8d40eee8": {
+      "mnemonic": "HL.LHUI.PO",
+      "status": "executable-subset"
+    },
+    "hl_lhui_pr_48_6a99a2b99298": {
+      "mnemonic": "HL.LHUI.PR",
+      "status": "executable-subset"
+    },
+    "hl_lhui_u_48_d75649bac1c7": {
+      "mnemonic": "HL.LHUI.U",
+      "status": "executable-subset"
+    },
+    "hl_lhui_upo_48_7f2c3eae793e": {
+      "mnemonic": "HL.LHUI.UPO",
+      "status": "executable-subset"
+    },
+    "hl_lhui_upr_48_7e66aaf61701": {
+      "mnemonic": "HL.LHUI.UPR",
+      "status": "executable-subset"
+    },
+    "hl_lhuip_48_0b0ef5bd2405": {
+      "mnemonic": "HL.LHUIP",
+      "status": "executable-subset"
+    },
+    "hl_lhuip_u_48_11a0e580caf1": {
+      "mnemonic": "HL.LHUIP.U",
+      "status": "executable-subset"
+    },
+    "hl_lhup_48_ea24f978b27a": {
+      "mnemonic": "HL.LHUP",
+      "status": "executable-subset"
+    },
+    "hl_lis_48_908853d6ef87": {
+      "mnemonic": "HL.LIS",
+      "status": "executable-subset"
+    },
+    "hl_liu_48_9dd207ce3aea": {
+      "mnemonic": "HL.LIU",
+      "status": "executable-subset"
+    },
+    "hl_lui_48_255991889818": {
+      "mnemonic": "HL.LUI",
+      "status": "executable-subset"
+    },
+    "hl_lw_pcr_48_00cf25e2ac36": {
+      "mnemonic": "HL.LW.PCR",
+      "status": "executable-subset"
+    },
+    "hl_lw_po_48_ff2c6de58064": {
+      "mnemonic": "HL.LW.PO",
+      "status": "executable-subset"
+    },
+    "hl_lw_pr_48_2b0d62d28b57": {
+      "mnemonic": "HL.LW.PR",
+      "status": "executable-subset"
+    },
+    "hl_lwi_48_549c666c56fd": {
+      "mnemonic": "HL.LWI",
+      "status": "executable-subset"
+    },
+    "hl_lwi_po_48_2dc642d88d9d": {
+      "mnemonic": "HL.LWI.PO",
+      "status": "executable-subset"
+    },
+    "hl_lwi_pr_48_3b5e1524de1b": {
+      "mnemonic": "HL.LWI.PR",
+      "status": "executable-subset"
+    },
+    "hl_lwi_u_48_267e0f4a6222": {
+      "mnemonic": "HL.LWI.U",
+      "status": "executable-subset"
+    },
+    "hl_lwi_upo_48_1c25d6266934": {
+      "mnemonic": "HL.LWI.UPO",
+      "status": "executable-subset"
+    },
+    "hl_lwi_upr_48_03b5f7994b14": {
+      "mnemonic": "HL.LWI.UPR",
+      "status": "executable-subset"
+    },
+    "hl_lwip_48_e459297b8b7c": {
+      "mnemonic": "HL.LWIP",
+      "status": "executable-subset"
+    },
+    "hl_lwip_u_48_c9aca369eab2": {
+      "mnemonic": "HL.LWIP.U",
+      "status": "executable-subset"
+    },
+    "hl_lwp_48_10fe25c62553": {
+      "mnemonic": "HL.LWP",
+      "status": "executable-subset"
+    },
+    "hl_lwu_pcr_48_95ba33b7b68c": {
+      "mnemonic": "HL.LWU.PCR",
+      "status": "executable-subset"
+    },
+    "hl_lwu_po_48_98730d2ddead": {
+      "mnemonic": "HL.LWU.PO",
+      "status": "executable-subset"
+    },
+    "hl_lwu_pr_48_f105cacec36c": {
+      "mnemonic": "HL.LWU.PR",
+      "status": "executable-subset"
+    },
+    "hl_lwui_48_eeb551f8269d": {
+      "mnemonic": "HL.LWUI",
+      "status": "executable-subset"
+    },
+    "hl_lwui_po_48_09a75b628dc4": {
+      "mnemonic": "HL.LWUI.PO",
+      "status": "executable-subset"
+    },
+    "hl_lwui_pr_48_32de19a508f0": {
+      "mnemonic": "HL.LWUI.PR",
+      "status": "executable-subset"
+    },
+    "hl_lwui_u_48_4570cc517629": {
+      "mnemonic": "HL.LWUI.U",
+      "status": "executable-subset"
+    },
+    "hl_lwui_upo_48_33260eb06a2c": {
+      "mnemonic": "HL.LWUI.UPO",
+      "status": "executable-subset"
+    },
+    "hl_lwui_upr_48_998a98c46469": {
+      "mnemonic": "HL.LWUI.UPR",
+      "status": "executable-subset"
+    },
+    "hl_lwuip_48_2a5d6d8f3b70": {
+      "mnemonic": "HL.LWUIP",
+      "status": "executable-subset"
+    },
+    "hl_lwuip_u_48_0fed3b8c43b6": {
+      "mnemonic": "HL.LWUIP.U",
+      "status": "executable-subset"
+    },
+    "hl_lwup_48_30f20380c354": {
+      "mnemonic": "HL.LWUP",
+      "status": "executable-subset"
+    },
+    "hl_madd_48_b062d741fd99": {
+      "mnemonic": "HL.MADD",
+      "status": "executable-subset"
+    },
+    "hl_maddw_48_6fac897f0264": {
+      "mnemonic": "HL.MADDW",
+      "status": "executable-subset"
+    },
+    "hl_miadd_48_ec5127b6dfd6": {
+      "mnemonic": "HL.MIADD",
+      "status": "executable-subset"
+    },
+    "hl_misub_48_e9e4c7b23479": {
+      "mnemonic": "HL.MISUB",
+      "status": "executable-subset"
+    },
+    "hl_mul_48_0d059ff178fb": {
+      "mnemonic": "HL.MUL",
+      "status": "executable-subset"
+    },
+    "hl_mulu_48_85efdc81e8fc": {
+      "mnemonic": "HL.MULU",
+      "status": "executable-subset"
+    },
+    "hl_ori_48_c6d8ce28a78b": {
+      "mnemonic": "HL.ORI",
+      "status": "executable-subset"
+    },
+    "hl_oriw_48_17673d186249": {
+      "mnemonic": "HL.ORIW",
+      "status": "executable-subset"
+    },
+    "hl_prf_48_39641863bb21": {
+      "mnemonic": "HL.PRF",
+      "status": "executable-subset"
+    },
+    "hl_prf_a_48_267dc57d14f4": {
+      "mnemonic": "HL.PRF.A",
+      "status": "executable-subset"
+    },
+    "hl_prfi_u_48_be73891e376e": {
+      "mnemonic": "HL.PRFI.U",
+      "status": "executable-subset"
+    },
+    "hl_prfi_ua_48_c37fb30ecb0f": {
+      "mnemonic": "HL.PRFI.UA",
+      "status": "executable-subset"
+    },
+    "hl_qmt_48_eb9e41958045": {
+      "mnemonic": "HL.QMT",
+      "status": "executable-subset"
+    },
+    "hl_qpop_48_a2c57f5bc27b": {
+      "mnemonic": "HL.QPOP",
+      "status": "executable-subset"
+    },
+    "hl_qpush_48_3eab8e05d61a": {
+      "mnemonic": "HL.QPUSH",
+      "status": "executable-subset"
+    },
+    "hl_rem_48_3c13e08615aa": {
+      "mnemonic": "HL.REM",
+      "status": "executable-subset"
+    },
+    "hl_remu_48_3bf4e5a663c1": {
+      "mnemonic": "HL.REMU",
+      "status": "executable-subset"
+    },
+    "hl_remuw_48_26ea6e70f2fc": {
+      "mnemonic": "HL.REMUW",
+      "status": "executable-subset"
+    },
+    "hl_remw_48_3acb485d39a7": {
+      "mnemonic": "HL.REMW",
+      "status": "executable-subset"
+    },
+    "hl_sb_pcr_48_d0ba4b6e0f54": {
+      "mnemonic": "HL.SB.PCR",
+      "status": "executable-subset"
+    },
+    "hl_sb_po_48_c21837f2c14d": {
+      "mnemonic": "HL.SB.PO",
+      "status": "executable-subset"
+    },
+    "hl_sb_pr_48_40eae4513905": {
+      "mnemonic": "HL.SB.PR",
+      "status": "executable-subset"
+    },
+    "hl_sbi_48_3504e6935382": {
+      "mnemonic": "HL.SBI",
+      "status": "executable-subset"
+    },
+    "hl_sbi_po_48_493d9c8b27eb": {
+      "mnemonic": "HL.SBI.PO",
+      "status": "executable-subset"
+    },
+    "hl_sbi_pr_48_d6f48429cca5": {
+      "mnemonic": "HL.SBI.PR",
+      "status": "executable-subset"
+    },
+    "hl_sbip_48_48a212ee655e": {
+      "mnemonic": "HL.SBIP",
+      "status": "executable-subset"
+    },
+    "hl_sbp_48_12e03c011f0a": {
+      "mnemonic": "HL.SBP",
+      "status": "executable-subset"
+    },
+    "hl_sd_pcr_48_8ed6bb942a78": {
+      "mnemonic": "HL.SD.PCR",
+      "status": "executable-subset"
+    },
+    "hl_sd_po_48_9ced722101a8": {
+      "mnemonic": "HL.SD.PO",
+      "status": "executable-subset"
+    },
+    "hl_sd_pr_48_4f96249f5efe": {
+      "mnemonic": "HL.SD.PR",
+      "status": "executable-subset"
+    },
+    "hl_sd_upo_48_ba930fbec5c7": {
+      "mnemonic": "HL.SD.UPO",
+      "status": "executable-subset"
+    },
+    "hl_sd_upr_48_af7118270a90": {
+      "mnemonic": "HL.SD.UPR",
+      "status": "executable-subset"
+    },
+    "hl_sdi_48_3203094081da": {
+      "mnemonic": "HL.SDI",
+      "status": "executable-subset"
+    },
+    "hl_sdi_po_48_4b6af4b433bb": {
+      "mnemonic": "HL.SDI.PO",
+      "status": "executable-subset"
+    },
+    "hl_sdi_pr_48_8b2688251991": {
+      "mnemonic": "HL.SDI.PR",
+      "status": "executable-subset"
+    },
+    "hl_sdi_u_48_d9597eeba6b4": {
+      "mnemonic": "HL.SDI.U",
+      "status": "executable-subset"
+    },
+    "hl_sdi_upo_48_0ceed9e5fdb0": {
+      "mnemonic": "HL.SDI.UPO",
+      "status": "executable-subset"
+    },
+    "hl_sdi_upr_48_f8aba43b65d5": {
+      "mnemonic": "HL.SDI.UPR",
+      "status": "executable-subset"
+    },
+    "hl_sdip_48_6d622cf167ca": {
+      "mnemonic": "HL.SDIP",
+      "status": "executable-subset"
+    },
+    "hl_sdip_u_48_3260b03bb762": {
+      "mnemonic": "HL.SDIP.U",
+      "status": "executable-subset"
+    },
+    "hl_sdp_48_5884c49a7e55": {
+      "mnemonic": "HL.SDP",
+      "status": "executable-subset"
+    },
+    "hl_sdp_u_48_66de58724f2f": {
+      "mnemonic": "HL.SDP.U",
+      "status": "executable-subset"
+    },
+    "hl_setc_andi_48_f27796612fb3": {
+      "mnemonic": "HL.SETC.ANDI",
+      "status": "executable-subset"
+    },
+    "hl_setc_eqi_48_0fe891fb0890": {
+      "mnemonic": "HL.SETC.EQI",
+      "status": "executable-subset"
+    },
+    "hl_setc_gei_48_9563d6395d06": {
+      "mnemonic": "HL.SETC.GEI",
+      "status": "executable-subset"
+    },
+    "hl_setc_geui_48_2390319baf54": {
+      "mnemonic": "HL.SETC.GEUI",
+      "status": "executable-subset"
+    },
+    "hl_setc_lti_48_ad4ffebe877c": {
+      "mnemonic": "HL.SETC.LTI",
+      "status": "executable-subset"
+    },
+    "hl_setc_ltui_48_cb7a12ba6ead": {
+      "mnemonic": "HL.SETC.LTUI",
+      "status": "executable-subset"
+    },
+    "hl_setc_nei_48_f0bcf6586274": {
+      "mnemonic": "HL.SETC.NEI",
+      "status": "executable-subset"
+    },
+    "hl_setc_ori_48_137bce8aeb04": {
+      "mnemonic": "HL.SETC.ORI",
+      "status": "executable-subset"
+    },
+    "hl_setret_48_302bb793a800": {
+      "mnemonic": "HL.SETRET",
+      "status": "executable-subset"
+    },
+    "hl_sh_pcr_48_705ea4062d0b": {
+      "mnemonic": "HL.SH.PCR",
+      "status": "executable-subset"
+    },
+    "hl_sh_po_48_e0b543d5b724": {
+      "mnemonic": "HL.SH.PO",
+      "status": "executable-subset"
+    },
+    "hl_sh_pr_48_40ab17f5a580": {
+      "mnemonic": "HL.SH.PR",
+      "status": "executable-subset"
+    },
+    "hl_sh_upo_48_5bfb8ea0c992": {
+      "mnemonic": "HL.SH.UPO",
+      "status": "executable-subset"
+    },
+    "hl_sh_upr_48_719102d66e45": {
+      "mnemonic": "HL.SH.UPR",
+      "status": "executable-subset"
+    },
+    "hl_shi_48_38ea3f0a4f08": {
+      "mnemonic": "HL.SHI",
+      "status": "executable-subset"
+    },
+    "hl_shi_po_48_636fea832c7b": {
+      "mnemonic": "HL.SHI.PO",
+      "status": "executable-subset"
+    },
+    "hl_shi_pr_48_1020eb4dff56": {
+      "mnemonic": "HL.SHI.PR",
+      "status": "executable-subset"
+    },
+    "hl_shi_u_48_79dbaa14d2c2": {
+      "mnemonic": "HL.SHI.U",
+      "status": "executable-subset"
+    },
+    "hl_shi_upo_48_de81eed370cf": {
+      "mnemonic": "HL.SHI.UPO",
+      "status": "executable-subset"
+    },
+    "hl_shi_upr_48_ca9f1acbb1b2": {
+      "mnemonic": "HL.SHI.UPR",
+      "status": "executable-subset"
+    },
+    "hl_ship_48_156afe74f95b": {
+      "mnemonic": "HL.SHIP",
+      "status": "executable-subset"
+    },
+    "hl_ship_u_48_fa5e1d981a8a": {
+      "mnemonic": "HL.SHIP.U",
+      "status": "executable-subset"
+    },
+    "hl_shp_48_ccc507e71a27": {
+      "mnemonic": "HL.SHP",
+      "status": "executable-subset"
+    },
+    "hl_shp_u_48_232b2200b7b9": {
+      "mnemonic": "HL.SHP.U",
+      "status": "executable-subset"
+    },
+    "hl_ssrget_48_fde37e58a3c4": {
+      "mnemonic": "HL.SSRGET",
+      "status": "executable-subset"
+    },
+    "hl_ssrset_48_dd25753307c2": {
+      "mnemonic": "HL.SSRSET",
+      "status": "executable-subset"
+    },
+    "hl_subi_48_e1f491a8aead": {
+      "mnemonic": "HL.SUBI",
+      "status": "executable-subset"
+    },
+    "hl_subiw_48_adc7b127a2f8": {
+      "mnemonic": "HL.SUBIW",
+      "status": "executable-subset"
+    },
+    "hl_sw_pcr_48_8f8900dfac6b": {
+      "mnemonic": "HL.SW.PCR",
+      "status": "executable-subset"
+    },
+    "hl_sw_po_48_84cf0cd97fde": {
+      "mnemonic": "HL.SW.PO",
+      "status": "executable-subset"
+    },
+    "hl_sw_pr_48_d80424b0a9cb": {
+      "mnemonic": "HL.SW.PR",
+      "status": "executable-subset"
+    },
+    "hl_sw_upo_48_59be7b468f8a": {
+      "mnemonic": "HL.SW.UPO",
+      "status": "executable-subset"
+    },
+    "hl_sw_upr_48_d4ccb513944a": {
+      "mnemonic": "HL.SW.UPR",
+      "status": "executable-subset"
+    },
+    "hl_swi_48_13deb2849df5": {
+      "mnemonic": "HL.SWI",
+      "status": "executable-subset"
+    },
+    "hl_swi_po_48_66a80d0fa7f5": {
+      "mnemonic": "HL.SWI.PO",
+      "status": "executable-subset"
+    },
+    "hl_swi_pr_48_68b9003e0421": {
+      "mnemonic": "HL.SWI.PR",
+      "status": "executable-subset"
+    },
+    "hl_swi_u_48_fac636330fd6": {
+      "mnemonic": "HL.SWI.U",
+      "status": "executable-subset"
+    },
+    "hl_swi_upo_48_243d3c38cd1a": {
+      "mnemonic": "HL.SWI.UPO",
+      "status": "executable-subset"
+    },
+    "hl_swi_upr_48_15c2fb96aab0": {
+      "mnemonic": "HL.SWI.UPR",
+      "status": "executable-subset"
+    },
+    "hl_swip_48_e2fca8cde001": {
+      "mnemonic": "HL.SWIP",
+      "status": "executable-subset"
+    },
+    "hl_swip_u_48_e2dc917c8505": {
+      "mnemonic": "HL.SWIP.U",
+      "status": "executable-subset"
+    },
+    "hl_swp_48_d0efe96e09f0": {
+      "mnemonic": "HL.SWP",
+      "status": "executable-subset"
+    },
+    "hl_swp_u_48_c244a576be8e": {
+      "mnemonic": "HL.SWP.U",
+      "status": "executable-subset"
+    },
+    "hl_xori_48_b4d85f91aad8": {
+      "mnemonic": "HL.XORI",
+      "status": "executable-subset"
+    },
+    "hl_xoriw_48_9a3edbd09746": {
+      "mnemonic": "HL.XORIW",
+      "status": "executable-subset"
+    },
+    "ic_iall_32_854f0d4d906a": {
+      "mnemonic": "IC.IALL",
+      "status": "executable-subset"
+    },
+    "ic_iva_32_11b9a61dd8b5": {
+      "mnemonic": "IC.IVA",
+      "status": "executable-subset"
+    },
+    "j_32_a303cf05af42": {
+      "mnemonic": "J",
+      "status": "executable-subset"
+    },
+    "jr_32_c4128e843b05": {
+      "mnemonic": "JR",
+      "status": "executable-subset"
+    },
+    "l_bstart_fp_64_098e57019d7b": {
+      "mnemonic": "L.BSTART.FP",
+      "status": "executable-subset"
+    },
+    "l_bstart_fp_64_0cac9941f7d4": {
+      "mnemonic": "L.BSTART.FP",
+      "status": "executable-subset"
+    },
+    "l_bstart_fp_64_2067ad6667ed": {
+      "mnemonic": "L.BSTART.FP",
+      "status": "executable-subset"
+    },
+    "l_bstart_fp_64_8115c042ef26": {
+      "mnemonic": "L.BSTART.FP",
+      "status": "executable-subset"
+    },
+    "l_bstart_std_64_37e84068ce61": {
+      "mnemonic": "L.BSTART.STD",
+      "status": "executable-subset"
+    },
+    "l_bstart_std_64_463a1567da91": {
+      "mnemonic": "L.BSTART.STD",
+      "status": "executable-subset"
+    },
+    "l_bstart_std_64_72d502fcd30d": {
+      "mnemonic": "L.BSTART.STD",
+      "status": "executable-subset"
+    },
+    "l_bstart_std_64_899592f9c5bc": {
+      "mnemonic": "L.BSTART.STD",
+      "status": "executable-subset"
+    },
+    "l_bstart_sys_64_919e576c79e4": {
+      "mnemonic": "L.BSTART.SYS",
+      "status": "executable-subset"
+    },
+    "lb_32_b718aa88e28f": {
+      "mnemonic": "LB",
+      "status": "executable-subset"
+    },
+    "lb_pcr_32_3fa2540b22d0": {
+      "mnemonic": "LB.PCR",
+      "status": "executable-subset"
+    },
+    "lbi_32_9af2cdbeb38f": {
+      "mnemonic": "LBI",
+      "status": "executable-subset"
+    },
+    "lbu_32_a9a58ab4ea22": {
+      "mnemonic": "LBU",
+      "status": "executable-subset"
+    },
+    "lbu_pcr_32_5b571b0c8dc2": {
+      "mnemonic": "LBU.PCR",
+      "status": "executable-subset"
+    },
+    "lbui_32_c39b9aa11f02": {
+      "mnemonic": "LBUI",
+      "status": "executable-subset"
+    },
+    "ld_32_7c48838bc4e6": {
+      "mnemonic": "LD",
+      "status": "executable-subset"
+    },
+    "ld_add_32_a4038a6c7e86": {
+      "mnemonic": "LD.ADD",
+      "status": "executable-subset"
+    },
+    "ld_and_32_2a46b3003480": {
+      "mnemonic": "LD.AND",
+      "status": "executable-subset"
+    },
+    "ld_or_32_456d270cfc7d": {
+      "mnemonic": "LD.OR",
+      "status": "executable-subset"
+    },
+    "ld_pcr_32_99bc3d2d487b": {
+      "mnemonic": "LD.PCR",
+      "status": "executable-subset"
+    },
+    "ld_smax_32_a3aad6120226": {
+      "mnemonic": "LD.SMAX",
+      "status": "executable-subset"
+    },
+    "ld_smin_32_9461d345718f": {
+      "mnemonic": "LD.SMIN",
+      "status": "executable-subset"
+    },
+    "ld_umax_32_a84af75745d9": {
+      "mnemonic": "LD.UMAX",
+      "status": "executable-subset"
+    },
+    "ld_umin_32_4bf2f357eff3": {
+      "mnemonic": "LD.UMIN",
+      "status": "executable-subset"
+    },
+    "ld_xor_32_33072c0fde61": {
+      "mnemonic": "LD.XOR",
+      "status": "executable-subset"
+    },
+    "ldi_32_d82a643f7a2b": {
+      "mnemonic": "LDI",
+      "status": "executable-subset"
+    },
+    "ldi_u_32_111bb521a439": {
+      "mnemonic": "LDI.U",
+      "status": "executable-subset"
+    },
+    "lh_32_d0f04d7d7696": {
+      "mnemonic": "LH",
+      "status": "executable-subset"
+    },
+    "lh_pcr_32_aabf46d21e49": {
+      "mnemonic": "LH.PCR",
+      "status": "executable-subset"
+    },
+    "lhi_32_46a45ec7074d": {
+      "mnemonic": "LHI",
+      "status": "executable-subset"
+    },
+    "lhi_u_32_bb0c81c6e61d": {
+      "mnemonic": "LHI.U",
+      "status": "executable-subset"
+    },
+    "lhu_32_730caf67ecd1": {
+      "mnemonic": "LHU",
+      "status": "executable-subset"
+    },
+    "lhu_pcr_32_9f4a1c04f258": {
+      "mnemonic": "LHU.PCR",
+      "status": "executable-subset"
+    },
+    "lhui_32_6da39bba900b": {
+      "mnemonic": "LHUI",
+      "status": "executable-subset"
+    },
+    "lhui_u_32_748b15cd2ced": {
+      "mnemonic": "LHUI.U",
+      "status": "executable-subset"
+    },
+    "lr_b_32_cf80903a761a": {
+      "mnemonic": "LR.B",
+      "status": "executable-subset"
+    },
+    "lr_d_32_84d21a553dc1": {
+      "mnemonic": "LR.D",
+      "status": "executable-subset"
+    },
+    "lr_h_32_f936df218d63": {
+      "mnemonic": "LR.H",
+      "status": "executable-subset"
+    },
+    "lr_w_32_efecc735bb75": {
+      "mnemonic": "LR.W",
+      "status": "executable-subset"
+    },
+    "lsrget_32_448b17d7c20a": {
+      "mnemonic": "LSRGET",
+      "status": "executable-subset"
+    },
+    "lui_32_982113b541d6": {
+      "mnemonic": "LUI",
+      "status": "executable-subset"
+    },
+    "lw_32_3a77ffafcb34": {
+      "mnemonic": "LW",
+      "status": "executable-subset"
+    },
+    "lw_add_32_5be3ad1ad081": {
+      "mnemonic": "LW.ADD",
+      "status": "executable-subset"
+    },
+    "lw_and_32_f8dd9866b069": {
+      "mnemonic": "LW.AND",
+      "status": "executable-subset"
+    },
+    "lw_or_32_d6d2f87706fd": {
+      "mnemonic": "LW.OR",
+      "status": "executable-subset"
+    },
+    "lw_pcr_32_d135a1aa4ffb": {
+      "mnemonic": "LW.PCR",
+      "status": "executable-subset"
+    },
+    "lw_smax_32_838b8c673c91": {
+      "mnemonic": "LW.SMAX",
+      "status": "executable-subset"
+    },
+    "lw_smin_32_44452ae44d02": {
+      "mnemonic": "LW.SMIN",
+      "status": "executable-subset"
+    },
+    "lw_umax_32_3c6a5a534674": {
+      "mnemonic": "LW.UMAX",
+      "status": "executable-subset"
+    },
+    "lw_umin_32_fd9b7bb538a3": {
+      "mnemonic": "LW.UMIN",
+      "status": "executable-subset"
+    },
+    "lw_xor_32_4d4aa82c676a": {
+      "mnemonic": "LW.XOR",
+      "status": "executable-subset"
+    },
+    "lwi_32_7085c98058fa": {
+      "mnemonic": "LWI",
+      "status": "executable-subset"
+    },
+    "lwi_u_32_4a7426a70f10": {
+      "mnemonic": "LWI.U",
+      "status": "executable-subset"
+    },
+    "lwu_32_678935925636": {
+      "mnemonic": "LWU",
+      "status": "executable-subset"
+    },
+    "lwu_pcr_32_df27ea51c564": {
+      "mnemonic": "LWU.PCR",
+      "status": "executable-subset"
+    },
+    "lwui_32_b435f946eb71": {
+      "mnemonic": "LWUI",
+      "status": "executable-subset"
+    },
+    "lwui_u_32_1fcbb98df571": {
+      "mnemonic": "LWUI.U",
+      "status": "executable-subset"
+    },
+    "madd_32_6208e8e59303": {
+      "mnemonic": "MADD",
+      "status": "executable-subset"
+    },
+    "maddw_32_9f922b15e674": {
+      "mnemonic": "MADDW",
+      "status": "executable-subset"
+    },
+    "max_32_9166468a1db7": {
+      "mnemonic": "MAX",
+      "status": "executable-subset"
+    },
+    "maxu_32_b8789571339d": {
+      "mnemonic": "MAXU",
+      "status": "executable-subset"
+    },
+    "mcopy_32_4fc4a803e995": {
+      "mnemonic": "MCOPY",
+      "status": "executable-subset"
+    },
+    "min_32_25692b799267": {
+      "mnemonic": "MIN",
+      "status": "executable-subset"
+    },
+    "minu_32_9bdb71ef7b19": {
+      "mnemonic": "MINU",
+      "status": "executable-subset"
+    },
+    "mset_32_0b932f291932": {
+      "mnemonic": "MSET",
+      "status": "executable-subset"
+    },
+    "mul_32_9f2affd8efb8": {
+      "mnemonic": "MUL",
+      "status": "executable-subset"
+    },
+    "mulu_32_10b9d1936631": {
+      "mnemonic": "MULU",
+      "status": "executable-subset"
+    },
+    "muluw_32_8f52b3d45e53": {
+      "mnemonic": "MULUW",
+      "status": "executable-subset"
+    },
+    "mulw_32_b90cb6a30a23": {
+      "mnemonic": "MULW",
+      "status": "executable-subset"
+    },
+    "or_32_a7fb80e78831": {
+      "mnemonic": "OR",
+      "status": "executable-subset"
+    },
+    "ori_32_413a6cc76e9a": {
+      "mnemonic": "ORI",
+      "status": "executable-subset"
+    },
+    "oriw_32_91608caf1ba6": {
+      "mnemonic": "ORIW",
+      "status": "executable-subset"
+    },
+    "orw_32_84f7ac2ed68f": {
+      "mnemonic": "ORW",
+      "status": "executable-subset"
+    },
+    "prf_32_30e6dfe4e3ce": {
+      "mnemonic": "PRF",
+      "status": "executable-subset"
+    },
+    "prfi_u_32_167b42882547": {
+      "mnemonic": "PRFI.U",
+      "status": "executable-subset"
+    },
+    "rem_32_0abbd6a3b865": {
+      "mnemonic": "REM",
+      "status": "executable-subset"
+    },
+    "remu_32_d7a5d1ebbbf5": {
+      "mnemonic": "REMU",
+      "status": "executable-subset"
+    },
+    "remuw_32_f10ade2f5ccb": {
+      "mnemonic": "REMUW",
+      "status": "executable-subset"
+    },
+    "remw_32_22659af46ec0": {
+      "mnemonic": "REMW",
+      "status": "executable-subset"
+    },
+    "rev_32_58badc109d49": {
+      "mnemonic": "REV",
+      "status": "executable-subset"
+    },
+    "sb_32_43c106ae3749": {
+      "mnemonic": "SB",
+      "status": "executable-subset"
+    },
+    "sb_pcr_32_7625a9a24c59": {
+      "mnemonic": "SB.PCR",
+      "status": "executable-subset"
+    },
+    "sbi_32_f3c6b796f0d9": {
+      "mnemonic": "SBI",
+      "status": "executable-subset"
+    },
+    "sc_b_32_baf609e1d5c3": {
+      "mnemonic": "SC.B",
+      "status": "executable-subset"
+    },
+    "sc_d_32_2e714149031c": {
+      "mnemonic": "SC.D",
+      "status": "executable-subset"
+    },
+    "sc_h_32_108941eabac6": {
+      "mnemonic": "SC.H",
+      "status": "executable-subset"
+    },
+    "sc_w_32_14b238f02bfd": {
+      "mnemonic": "SC.W",
+      "status": "executable-subset"
+    },
+    "scvtf_32_01861bbd5ef2": {
+      "mnemonic": "SCVTF",
+      "status": "executable-subset"
+    },
+    "sd_32_9dbc40328653": {
+      "mnemonic": "SD",
+      "status": "executable-subset"
+    },
+    "sd_add_32_2a55ae1228bd": {
+      "mnemonic": "SD.ADD",
+      "status": "executable-subset"
+    },
+    "sd_and_32_71963e1769c2": {
+      "mnemonic": "SD.AND",
+      "status": "executable-subset"
+    },
+    "sd_or_32_2a65eedfae0f": {
+      "mnemonic": "SD.OR",
+      "status": "executable-subset"
+    },
+    "sd_pcr_32_2340e0085413": {
+      "mnemonic": "SD.PCR",
+      "status": "executable-subset"
+    },
+    "sd_smax_32_e59bf90b50c3": {
+      "mnemonic": "SD.SMAX",
+      "status": "executable-subset"
+    },
+    "sd_smin_32_188d93125032": {
+      "mnemonic": "SD.SMIN",
+      "status": "executable-subset"
+    },
+    "sd_u_32_1602c58c2031": {
+      "mnemonic": "SD.U",
+      "status": "executable-subset"
+    },
+    "sd_umax_32_89c5ec42be68": {
+      "mnemonic": "SD.UMAX",
+      "status": "executable-subset"
+    },
+    "sd_umin_32_2388cbb378ac": {
+      "mnemonic": "SD.UMIN",
+      "status": "executable-subset"
+    },
+    "sd_xor_32_7655ceaf9497": {
+      "mnemonic": "SD.XOR",
+      "status": "executable-subset"
+    },
+    "sdi_32_fab563230a66": {
+      "mnemonic": "SDI",
+      "status": "executable-subset"
+    },
+    "sdi_u_32_cba5a4a04e7b": {
+      "mnemonic": "SDI.U",
+      "status": "executable-subset"
+    },
+    "setc_and_32_90b4e93ef9d4": {
+      "mnemonic": "SETC.AND",
+      "status": "executable-subset"
+    },
+    "setc_andi_32_32fe61c0559b": {
+      "mnemonic": "SETC.ANDI",
+      "status": "executable-subset"
+    },
+    "setc_eq_32_fb06e1dddc5c": {
+      "mnemonic": "SETC.EQ",
+      "status": "executable-subset"
+    },
+    "setc_eqi_32_5b2366a4e55d": {
+      "mnemonic": "SETC.EQI",
+      "status": "executable-subset"
+    },
+    "setc_ge_32_56a2b539b072": {
+      "mnemonic": "SETC.GE",
+      "status": "executable-subset"
+    },
+    "setc_gei_32_c3f4fdc4adcc": {
+      "mnemonic": "SETC.GEI",
+      "status": "executable-subset"
+    },
+    "setc_geu_32_494f1f79099e": {
+      "mnemonic": "SETC.GEU",
+      "status": "executable-subset"
+    },
+    "setc_geui_32_6c34bc4ad314": {
+      "mnemonic": "SETC.GEUI",
+      "status": "executable-subset"
+    },
+    "setc_lt_32_10de99f3ad6a": {
+      "mnemonic": "SETC.LT",
+      "status": "executable-subset"
+    },
+    "setc_lti_32_89d74d948b74": {
+      "mnemonic": "SETC.LTI",
+      "status": "executable-subset"
+    },
+    "setc_ltu_32_4a1ff65ecafb": {
+      "mnemonic": "SETC.LTU",
+      "status": "executable-subset"
+    },
+    "setc_ltui_32_7908d25901c6": {
+      "mnemonic": "SETC.LTUI",
+      "status": "executable-subset"
+    },
+    "setc_ne_32_77576a5c690c": {
+      "mnemonic": "SETC.NE",
+      "status": "executable-subset"
+    },
+    "setc_nei_32_fa01e973ab76": {
+      "mnemonic": "SETC.NEI",
+      "status": "executable-subset"
+    },
+    "setc_or_32_740134c709d2": {
+      "mnemonic": "SETC.OR",
+      "status": "executable-subset"
+    },
+    "setc_ori_32_183dc15fad54": {
+      "mnemonic": "SETC.ORI",
+      "status": "executable-subset"
+    },
+    "setc_tgt_32_c02656d3a2b8": {
+      "mnemonic": "SETC.TGT",
+      "status": "executable-subset"
+    },
+    "setret_32_72003dcf3b59": {
+      "mnemonic": "SETRET",
+      "status": "executable-subset"
+    },
+    "sh_32_bc7d4a7dea28": {
+      "mnemonic": "SH",
+      "status": "executable-subset"
+    },
+    "sh_pcr_32_14ba505eb3c2": {
+      "mnemonic": "SH.PCR",
+      "status": "executable-subset"
+    },
+    "sh_u_32_fa87afbf8f24": {
+      "mnemonic": "SH.U",
+      "status": "executable-subset"
+    },
+    "shi_32_21351c202204": {
+      "mnemonic": "SHI",
+      "status": "executable-subset"
+    },
+    "shi_u_32_caaf3ed72a8f": {
+      "mnemonic": "SHI.U",
+      "status": "executable-subset"
+    },
+    "sll_32_a100b8961e21": {
+      "mnemonic": "SLL",
+      "status": "executable-subset"
+    },
+    "slli_32_b43ca2454e3a": {
+      "mnemonic": "SLLI",
+      "status": "executable-subset"
+    },
+    "slliw_32_c6bf463b97ae": {
+      "mnemonic": "SLLIW",
+      "status": "executable-subset"
+    },
+    "sllw_32_a37b63c16b27": {
+      "mnemonic": "SLLW",
+      "status": "executable-subset"
+    },
+    "sra_32_ba03eea6386b": {
+      "mnemonic": "SRA",
+      "status": "executable-subset"
+    },
+    "srai_32_e471ea84d4fd": {
+      "mnemonic": "SRAI",
+      "status": "executable-subset"
+    },
+    "sraiw_32_db04a6299504": {
+      "mnemonic": "SRAIW",
+      "status": "executable-subset"
+    },
+    "sraw_32_5baf37f34241": {
+      "mnemonic": "SRAW",
+      "status": "executable-subset"
+    },
+    "srl_32_5cfca42c59f3": {
+      "mnemonic": "SRL",
+      "status": "executable-subset"
+    },
+    "srli_32_dd29ca058cfe": {
+      "mnemonic": "SRLI",
+      "status": "executable-subset"
+    },
+    "srliw_32_ef4aa650f46e": {
+      "mnemonic": "SRLIW",
+      "status": "executable-subset"
+    },
+    "srlw_32_2c6458b2aadb": {
+      "mnemonic": "SRLW",
+      "status": "executable-subset"
+    },
+    "ssrget_32_959957ab6b75": {
+      "mnemonic": "SSRGET",
+      "status": "executable-subset"
+    },
+    "ssrset_32_4dd3b71802c6": {
+      "mnemonic": "SSRSET",
+      "status": "executable-subset"
+    },
+    "ssrswap_32_a01c7e2c7c29": {
+      "mnemonic": "SSRSWAP",
+      "status": "executable-subset"
+    },
+    "sub_32_af383d4a2b42": {
+      "mnemonic": "SUB",
+      "status": "executable-subset"
+    },
+    "subi_32_a0c87f5e7ac4": {
+      "mnemonic": "SUBI",
+      "status": "executable-subset"
+    },
+    "subiw_32_51019ff77d0a": {
+      "mnemonic": "SUBIW",
+      "status": "executable-subset"
+    },
+    "subw_32_3a8d45653c98": {
+      "mnemonic": "SUBW",
+      "status": "executable-subset"
+    },
+    "sw_32_28ad317b1b41": {
+      "mnemonic": "SW",
+      "status": "executable-subset"
+    },
+    "sw_add_32_3dca755552cb": {
+      "mnemonic": "SW.ADD",
+      "status": "executable-subset"
+    },
+    "sw_and_32_7ef0872d5502": {
+      "mnemonic": "SW.AND",
+      "status": "executable-subset"
+    },
+    "sw_or_32_354579538c4e": {
+      "mnemonic": "SW.OR",
+      "status": "executable-subset"
+    },
+    "sw_pcr_32_436677679523": {
+      "mnemonic": "SW.PCR",
+      "status": "executable-subset"
+    },
+    "sw_smax_32_8bab38a878d7": {
+      "mnemonic": "SW.SMAX",
+      "status": "executable-subset"
+    },
+    "sw_smin_32_773e7d83b011": {
+      "mnemonic": "SW.SMIN",
+      "status": "executable-subset"
+    },
+    "sw_u_32_718a61f75d33": {
+      "mnemonic": "SW.U",
+      "status": "executable-subset"
+    },
+    "sw_umax_32_5530dfa23323": {
+      "mnemonic": "SW.UMAX",
+      "status": "executable-subset"
+    },
+    "sw_umin_32_3ce114819cfc": {
+      "mnemonic": "SW.UMIN",
+      "status": "executable-subset"
+    },
+    "sw_xor_32_874c32572226": {
+      "mnemonic": "SW.XOR",
+      "status": "executable-subset"
+    },
+    "swapb_32_80733f03b77f": {
+      "mnemonic": "SWAPB",
+      "status": "executable-subset"
+    },
+    "swapd_32_cd31ccde2303": {
+      "mnemonic": "SWAPD",
+      "status": "executable-subset"
+    },
+    "swaph_32_8c2d4a28bf25": {
+      "mnemonic": "SWAPH",
+      "status": "executable-subset"
+    },
+    "swapw_32_ef15c3ebac33": {
+      "mnemonic": "SWAPW",
+      "status": "executable-subset"
+    },
+    "swi_32_147e55489c41": {
+      "mnemonic": "SWI",
+      "status": "executable-subset"
+    },
+    "swi_u_32_1630e926da1a": {
+      "mnemonic": "SWI.U",
+      "status": "executable-subset"
+    },
+    "tlb_ia_32_e794d6bf347e": {
+      "mnemonic": "TLB.IA",
+      "status": "executable-subset"
+    },
+    "tlb_iall_32_0fb421b85c88": {
+      "mnemonic": "TLB.IALL",
+      "status": "executable-subset"
+    },
+    "tlb_iav_32_95f4937d2917": {
+      "mnemonic": "TLB.IAV",
+      "status": "executable-subset"
+    },
+    "tlb_iv_32_bf0a5d1ea211": {
+      "mnemonic": "TLB.IV",
+      "status": "executable-subset"
+    },
+    "ucvtf_32_987f4e019c32": {
+      "mnemonic": "UCVTF",
+      "status": "executable-subset"
+    },
+    "v_add_64_394294cc5946": {
+      "mnemonic": "V.ADD",
+      "status": "executable-subset"
+    },
+    "v_addi_64_2b2209683a13": {
+      "mnemonic": "V.ADDI",
+      "status": "executable-subset"
+    },
+    "v_and_64_1ecd348ef07b": {
+      "mnemonic": "V.AND",
+      "status": "executable-subset"
+    },
+    "v_andi_64_169f397546d5": {
+      "mnemonic": "V.ANDI",
+      "status": "executable-subset"
+    },
+    "v_bcnt_64_42c09bd34fa3": {
+      "mnemonic": "V.BCNT",
+      "status": "executable-subset"
+    },
+    "v_bic_64_e87942a9adfa": {
+      "mnemonic": "V.BIC",
+      "status": "executable-subset"
+    },
+    "v_bis_64_cefe4375764b": {
+      "mnemonic": "V.BIS",
+      "status": "executable-subset"
+    },
+    "v_bxs_64_6227f276c17d": {
+      "mnemonic": "V.BXS",
+      "status": "executable-subset"
+    },
+    "v_bxu_64_c8bf73694717": {
+      "mnemonic": "V.BXU",
+      "status": "executable-subset"
+    },
+    "v_clz_64_193df5d3df15": {
+      "mnemonic": "V.CLZ",
+      "status": "executable-subset"
+    },
+    "v_cmp_and_64_5b3efc0f7b0a": {
+      "mnemonic": "V.CMP.AND",
+      "status": "executable-subset"
+    },
+    "v_cmp_andi_64_84769d4e8fa2": {
+      "mnemonic": "V.CMP.ANDI",
+      "status": "executable-subset"
+    },
+    "v_cmp_eq_64_81fb556b62ca": {
+      "mnemonic": "V.CMP.EQ",
+      "status": "executable-subset"
+    },
+    "v_cmp_eqi_64_e6769858459e": {
+      "mnemonic": "V.CMP.EQI",
+      "status": "executable-subset"
+    },
+    "v_cmp_ge_64_77301f1e67a9": {
+      "mnemonic": "V.CMP.GE",
+      "status": "executable-subset"
+    },
+    "v_cmp_gei_64_f226c4f0d640": {
+      "mnemonic": "V.CMP.GEI",
+      "status": "executable-subset"
+    },
+    "v_cmp_geu_64_5f66721154a8": {
+      "mnemonic": "V.CMP.GEU",
+      "status": "executable-subset"
+    },
+    "v_cmp_geui_64_ae111c2828e9": {
+      "mnemonic": "V.CMP.GEUI",
+      "status": "executable-subset"
+    },
+    "v_cmp_lt_64_3ef2162a77ba": {
+      "mnemonic": "V.CMP.LT",
+      "status": "executable-subset"
+    },
+    "v_cmp_lti_64_75af9c62bdfe": {
+      "mnemonic": "V.CMP.LTI",
+      "status": "executable-subset"
+    },
+    "v_cmp_ltu_64_48ae80b99c15": {
+      "mnemonic": "V.CMP.LTU",
+      "status": "executable-subset"
+    },
+    "v_cmp_ltui_64_d1b1db22be04": {
+      "mnemonic": "V.CMP.LTUI",
+      "status": "executable-subset"
+    },
+    "v_cmp_ne_64_84c9e143b8b1": {
+      "mnemonic": "V.CMP.NE",
+      "status": "executable-subset"
+    },
+    "v_cmp_nei_64_56b66e30a15d": {
+      "mnemonic": "V.CMP.NEI",
+      "status": "executable-subset"
+    },
+    "v_cmp_or_64_c3444f939f6f": {
+      "mnemonic": "V.CMP.OR",
+      "status": "executable-subset"
+    },
+    "v_cmp_ori_64_2e06ef6e16e7": {
+      "mnemonic": "V.CMP.ORI",
+      "status": "executable-subset"
+    },
+    "v_csel_64_791e57f8ff22": {
+      "mnemonic": "V.CSEL",
+      "status": "executable-subset"
+    },
+    "v_ctz_64_7be9efa90a00": {
+      "mnemonic": "V.CTZ",
+      "status": "executable-subset"
+    },
+    "v_div_64_74152b35b49c": {
+      "mnemonic": "V.DIV",
+      "status": "executable-subset"
+    },
+    "v_fabs_64_cd9c01ef8cc4": {
+      "mnemonic": "V.FABS",
+      "status": "executable-subset"
+    },
+    "v_fadd_64_c5c08b2ac830": {
+      "mnemonic": "V.FADD",
+      "status": "executable-subset"
+    },
+    "v_fclass_64_628ee3eaf4ba": {
+      "mnemonic": "V.FCLASS",
+      "status": "executable-subset"
+    },
+    "v_fcvt_64_da9f59421cae": {
+      "mnemonic": "V.FCVT",
+      "status": "executable-subset"
+    },
+    "v_fcvti_64_00dd1644b48d": {
+      "mnemonic": "V.FCVTI",
+      "status": "executable-subset"
+    },
+    "v_fdiv_64_0e6eb42a8167": {
+      "mnemonic": "V.FDIV",
+      "status": "executable-subset"
+    },
+    "v_feq_64_310fa4a0c71c": {
+      "mnemonic": "V.FEQ",
+      "status": "executable-subset"
+    },
+    "v_feqs_64_fa03903879d5": {
+      "mnemonic": "V.FEQS",
+      "status": "executable-subset"
+    },
+    "v_fexp_64_9fb55afd6ae9": {
+      "mnemonic": "V.FEXP",
+      "status": "executable-subset"
+    },
+    "v_fge_64_6472fe8862ea": {
+      "mnemonic": "V.FGE",
+      "status": "executable-subset"
+    },
+    "v_fges_64_6cad59141271": {
+      "mnemonic": "V.FGES",
+      "status": "executable-subset"
+    },
+    "v_flt_64_1f2a82b04cd1": {
+      "mnemonic": "V.FLT",
+      "status": "executable-subset"
+    },
+    "v_flts_64_d39b1c33de29": {
+      "mnemonic": "V.FLTS",
+      "status": "executable-subset"
+    },
+    "v_fmadd_64_813d061de8ca": {
+      "mnemonic": "V.FMADD",
+      "status": "executable-subset"
+    },
+    "v_fmax_64_b170fb3ede0f": {
+      "mnemonic": "V.FMAX",
+      "status": "executable-subset"
+    },
+    "v_fmin_64_86ba368048a2": {
+      "mnemonic": "V.FMIN",
+      "status": "executable-subset"
+    },
+    "v_fmsub_64_19c6d15b8a1d": {
+      "mnemonic": "V.FMSUB",
+      "status": "executable-subset"
+    },
+    "v_fmul_64_3e2b1576cbfe": {
+      "mnemonic": "V.FMUL",
+      "status": "executable-subset"
+    },
+    "v_fne_64_10a12315c34e": {
+      "mnemonic": "V.FNE",
+      "status": "executable-subset"
+    },
+    "v_fnes_64_ae92608cb0ea": {
+      "mnemonic": "V.FNES",
+      "status": "executable-subset"
+    },
+    "v_fnmadd_64_81449b1d3451": {
+      "mnemonic": "V.FNMADD",
+      "status": "executable-subset"
+    },
+    "v_fnmsub_64_837584633904": {
+      "mnemonic": "V.FNMSUB",
+      "status": "executable-subset"
+    },
+    "v_frecip_64_2d3f96b8d7db": {
+      "mnemonic": "V.FRECIP",
+      "status": "executable-subset"
+    },
+    "v_fsqrt_64_80e65f8380da": {
+      "mnemonic": "V.FSQRT",
+      "status": "executable-subset"
+    },
+    "v_fsub_64_09953704a14a": {
+      "mnemonic": "V.FSUB",
+      "status": "executable-subset"
+    },
+    "v_icvt_64_c8fd1bad81c1": {
+      "mnemonic": "V.ICVT",
+      "status": "executable-subset"
+    },
+    "v_icvtf_64_a0f027af74bd": {
+      "mnemonic": "V.ICVTF",
+      "status": "executable-subset"
+    },
+    "v_lb_64_67d7ec296657": {
+      "mnemonic": "V.LB",
+      "status": "executable-subset"
+    },
+    "v_lb_brg_64_8766090710da": {
+      "mnemonic": "V.LB.BRG",
+      "status": "executable-subset"
+    },
+    "v_lbi_64_5338c0a4b01c": {
+      "mnemonic": "V.LBI",
+      "status": "executable-subset"
+    },
+    "v_lbi_brg_64_5223a985d13b": {
+      "mnemonic": "V.LBI.BRG",
+      "status": "executable-subset"
+    },
+    "v_lbu_64_08cfacc47e8b": {
+      "mnemonic": "V.LBU",
+      "status": "executable-subset"
+    },
+    "v_lbu_brg_64_8981c96ac2c4": {
+      "mnemonic": "V.LBU.BRG",
+      "status": "executable-subset"
+    },
+    "v_lbui_64_129c6d28d8fa": {
+      "mnemonic": "V.LBUI",
+      "status": "executable-subset"
+    },
+    "v_lbui_brg_64_0d4264b0b4fe": {
+      "mnemonic": "V.LBUI.BRG",
+      "status": "executable-subset"
+    },
+    "v_ld_64_0bb4e0cd9760": {
+      "mnemonic": "V.LD",
+      "status": "executable-subset"
+    },
+    "v_ld_add_64_b880252ca4af": {
+      "mnemonic": "V.LD.ADD",
+      "status": "executable-subset"
+    },
+    "v_ld_and_64_18248e48be84": {
+      "mnemonic": "V.LD.AND",
+      "status": "executable-subset"
+    },
+    "v_ld_brg_64_44d932c2c42b": {
+      "mnemonic": "V.LD.BRG",
+      "status": "executable-subset"
+    },
+    "v_ld_max_64_e35d8e7957c3": {
+      "mnemonic": "V.LD.MAX",
+      "status": "executable-subset"
+    },
+    "v_ld_min_64_71f54b9b61ae": {
+      "mnemonic": "V.LD.MIN",
+      "status": "executable-subset"
+    },
+    "v_ld_or_64_4568b99c9e57": {
+      "mnemonic": "V.LD.OR",
+      "status": "executable-subset"
+    },
+    "v_ld_xor_64_c7a54911a5fa": {
+      "mnemonic": "V.LD.XOR",
+      "status": "executable-subset"
+    },
+    "v_ldi_64_c2dd6f17ebd3": {
+      "mnemonic": "V.LDI",
+      "status": "executable-subset"
+    },
+    "v_ldi_brg_64_1696b123572b": {
+      "mnemonic": "V.LDI.BRG",
+      "status": "executable-subset"
+    },
+    "v_ldi_u_64_35ef4d60d802": {
+      "mnemonic": "V.LDI.U",
+      "status": "executable-subset"
+    },
+    "v_ldi_u_brg_64_d8020ef56426": {
+      "mnemonic": "V.LDI.U.BRG",
+      "status": "executable-subset"
+    },
+    "v_lh_64_4cc8701b698e": {
+      "mnemonic": "V.LH",
+      "status": "executable-subset"
+    },
+    "v_lh_brg_64_dc8629a69767": {
+      "mnemonic": "V.LH.BRG",
+      "status": "executable-subset"
+    },
+    "v_lhi_64_66ae52eb7684": {
+      "mnemonic": "V.LHI",
+      "status": "executable-subset"
+    },
+    "v_lhi_brg_64_d3af43d94f66": {
+      "mnemonic": "V.LHI.BRG",
+      "status": "executable-subset"
+    },
+    "v_lhi_u_64_17c014a96651": {
+      "mnemonic": "V.LHI.U",
+      "status": "executable-subset"
+    },
+    "v_lhi_u_brg_64_97603a7ac88f": {
+      "mnemonic": "V.LHI.U.BRG",
+      "status": "executable-subset"
+    },
+    "v_lhu_64_83e59201d9ae": {
+      "mnemonic": "V.LHU",
+      "status": "executable-subset"
+    },
+    "v_lhu_brg_64_5e9d77a562d0": {
+      "mnemonic": "V.LHU.BRG",
+      "status": "executable-subset"
+    },
+    "v_lhui_64_0d3046ae3eb8": {
+      "mnemonic": "V.LHUI",
+      "status": "executable-subset"
+    },
+    "v_lhui_brg_64_e3dba0cc2fea": {
+      "mnemonic": "V.LHUI.BRG",
+      "status": "executable-subset"
+    },
+    "v_lhui_u_64_85625cdca25f": {
+      "mnemonic": "V.LHUI.U",
+      "status": "executable-subset"
+    },
+    "v_lhui_u_brg_64_3d2e899ff00f": {
+      "mnemonic": "V.LHUI.U.BRG",
+      "status": "executable-subset"
+    },
+    "v_lw_64_5a07f2297805": {
+      "mnemonic": "V.LW",
+      "status": "executable-subset"
+    },
+    "v_lw_add_64_d603802b2bed": {
+      "mnemonic": "V.LW.ADD",
+      "status": "executable-subset"
+    },
+    "v_lw_and_64_c511f6c6aad9": {
+      "mnemonic": "V.LW.AND",
+      "status": "executable-subset"
+    },
+    "v_lw_brg_64_6163b7a621fc": {
+      "mnemonic": "V.LW.BRG",
+      "status": "executable-subset"
+    },
+    "v_lw_max_64_c7e26075c749": {
+      "mnemonic": "V.LW.MAX",
+      "status": "executable-subset"
+    },
+    "v_lw_min_64_24160fd76a35": {
+      "mnemonic": "V.LW.MIN",
+      "status": "executable-subset"
+    },
+    "v_lw_or_64_baf9868390da": {
+      "mnemonic": "V.LW.OR",
+      "status": "executable-subset"
+    },
+    "v_lw_xor_64_a520a467a6d4": {
+      "mnemonic": "V.LW.XOR",
+      "status": "executable-subset"
+    },
+    "v_lwi_64_4170735058bc": {
+      "mnemonic": "V.LWI",
+      "status": "executable-subset"
+    },
+    "v_lwi_brg_64_3932bb713dc5": {
+      "mnemonic": "V.LWI.BRG",
+      "status": "executable-subset"
+    },
+    "v_lwi_u_64_d1beea8b7141": {
+      "mnemonic": "V.LWI.U",
+      "status": "executable-subset"
+    },
+    "v_lwi_u_brg_64_b45d0f75f04f": {
+      "mnemonic": "V.LWI.U.BRG",
+      "status": "executable-subset"
+    },
+    "v_lwu_64_aa72372808ed": {
+      "mnemonic": "V.LWU",
+      "status": "executable-subset"
+    },
+    "v_lwu_brg_64_c457e812a9a5": {
+      "mnemonic": "V.LWU.BRG",
+      "status": "executable-subset"
+    },
+    "v_lwui_64_f96d1ab639ad": {
+      "mnemonic": "V.LWUI",
+      "status": "executable-subset"
+    },
+    "v_lwui_brg_64_340c2e2b1ddb": {
+      "mnemonic": "V.LWUI.BRG",
+      "status": "executable-subset"
+    },
+    "v_lwui_u_64_88aa7700d8b1": {
+      "mnemonic": "V.LWUI.U",
+      "status": "executable-subset"
+    },
+    "v_lwui_u_brg_64_2b7c4722c62c": {
+      "mnemonic": "V.LWUI.U.BRG",
+      "status": "executable-subset"
+    },
+    "v_madd_64_2f35316993e7": {
+      "mnemonic": "V.MADD",
+      "status": "executable-subset"
+    },
+    "v_max_64_55094376ca8f": {
+      "mnemonic": "V.MAX",
+      "status": "executable-subset"
+    },
+    "v_min_64_12f02fa489a3": {
+      "mnemonic": "V.MIN",
+      "status": "executable-subset"
+    },
+    "v_mul_64_06ac4ba10daf": {
+      "mnemonic": "V.MUL",
+      "status": "executable-subset"
+    },
+    "v_or_64_78638ca1ae6f": {
+      "mnemonic": "V.OR",
+      "status": "executable-subset"
+    },
+    "v_ori_64_291c8721af33": {
+      "mnemonic": "V.ORI",
+      "status": "executable-subset"
+    },
+    "v_psel_64_81ba051be364": {
+      "mnemonic": "V.PSEL",
+      "status": "executable-subset"
+    },
+    "v_qpop_64_7938584b79ed": {
+      "mnemonic": "V.QPOP",
+      "status": "executable-subset"
+    },
+    "v_qpush_64_b1e840184b4c": {
+      "mnemonic": "V.QPUSH",
+      "status": "executable-subset"
+    },
+    "v_rdadd_64_63d092ba608e": {
+      "mnemonic": "V.RDADD",
+      "status": "executable-subset"
+    },
+    "v_rdand_64_fe7c23ec9e7d": {
+      "mnemonic": "V.RDAND",
+      "status": "executable-subset"
+    },
+    "v_rdfadd_64_bc0fe646d243": {
+      "mnemonic": "V.RDFADD",
+      "status": "executable-subset"
+    },
+    "v_rdfmax_64_ca8b0184cd49": {
+      "mnemonic": "V.RDFMAX",
+      "status": "executable-subset"
+    },
+    "v_rdfmin_64_f5219d0eca5d": {
+      "mnemonic": "V.RDFMIN",
+      "status": "executable-subset"
+    },
+    "v_rdmax_64_97dc8ada3b96": {
+      "mnemonic": "V.RDMAX",
+      "status": "executable-subset"
+    },
+    "v_rdmin_64_5b3c823f5a19": {
+      "mnemonic": "V.RDMIN",
+      "status": "executable-subset"
+    },
+    "v_rdor_64_ef5693869e58": {
+      "mnemonic": "V.RDOR",
+      "status": "executable-subset"
+    },
+    "v_rdxor_64_6d27d9e02c62": {
+      "mnemonic": "V.RDXOR",
+      "status": "executable-subset"
+    },
+    "v_rem_64_b3ed504ae3f4": {
+      "mnemonic": "V.REM",
+      "status": "executable-subset"
+    },
+    "v_rev_64_3670c780708d": {
+      "mnemonic": "V.REV",
+      "status": "executable-subset"
+    },
+    "v_sb_64_271c7fb69b1d": {
+      "mnemonic": "V.SB",
+      "status": "executable-subset"
+    },
+    "v_sb_brg_64_e267665cc8e1": {
+      "mnemonic": "V.SB.BRG",
+      "status": "executable-subset"
+    },
+    "v_sbi_64_7ee65c84adb3": {
+      "mnemonic": "V.SBI",
+      "status": "executable-subset"
+    },
+    "v_sbi_brg_64_2c1623f8e7ec": {
+      "mnemonic": "V.SBI.BRG",
+      "status": "executable-subset"
+    },
+    "v_sd_64_babe74d4ce5e": {
+      "mnemonic": "V.SD",
+      "status": "executable-subset"
+    },
+    "v_sd_add_64_9d01cd1060a2": {
+      "mnemonic": "V.SD.ADD",
+      "status": "executable-subset"
+    },
+    "v_sd_and_64_bd9bc82be46e": {
+      "mnemonic": "V.SD.AND",
+      "status": "executable-subset"
+    },
+    "v_sd_brg_64_e63e61e10a94": {
+      "mnemonic": "V.SD.BRG",
+      "status": "executable-subset"
+    },
+    "v_sd_max_64_498ca2576e7c": {
+      "mnemonic": "V.SD.MAX",
+      "status": "executable-subset"
+    },
+    "v_sd_min_64_0cd2fc3707d5": {
+      "mnemonic": "V.SD.MIN",
+      "status": "executable-subset"
+    },
+    "v_sd_or_64_67395fafaca6": {
+      "mnemonic": "V.SD.OR",
+      "status": "executable-subset"
+    },
+    "v_sd_u_64_69b8bc4ab948": {
+      "mnemonic": "V.SD.U",
+      "status": "executable-subset"
+    },
+    "v_sd_u_brg_64_08efd0674013": {
+      "mnemonic": "V.SD.U.BRG",
+      "status": "executable-subset"
+    },
+    "v_sd_xor_64_8549b91dcf30": {
+      "mnemonic": "V.SD.XOR",
+      "status": "executable-subset"
+    },
+    "v_sdi_64_f297b9d43bbe": {
+      "mnemonic": "V.SDI",
+      "status": "executable-subset"
+    },
+    "v_sdi_brg_64_dccd7436a506": {
+      "mnemonic": "V.SDI.BRG",
+      "status": "executable-subset"
+    },
+    "v_sdi_u_64_b26a79626935": {
+      "mnemonic": "V.SDI.U",
+      "status": "executable-subset"
+    },
+    "v_sdi_u_brg_64_0473fe6671f7": {
+      "mnemonic": "V.SDI.U.BRG",
+      "status": "executable-subset"
+    },
+    "v_sh_64_06aa6975e679": {
+      "mnemonic": "V.SH",
+      "status": "executable-subset"
+    },
+    "v_sh_brg_64_755523148db8": {
+      "mnemonic": "V.SH.BRG",
+      "status": "executable-subset"
+    },
+    "v_sh_u_64_7944c8319265": {
+      "mnemonic": "V.SH.U",
+      "status": "executable-subset"
+    },
+    "v_sh_u_brg_64_fd1b68d36363": {
+      "mnemonic": "V.SH.U.BRG",
+      "status": "executable-subset"
+    },
+    "v_shfl_bfly_64_3ebce3493a01": {
+      "mnemonic": "V.SHFL.BFLY",
+      "status": "executable-subset"
+    },
+    "v_shfl_down_64_7b9a1851d32c": {
+      "mnemonic": "V.SHFL.DOWN",
+      "status": "executable-subset"
+    },
+    "v_shfl_idx_64_f2e31314195c": {
+      "mnemonic": "V.SHFL.IDX",
+      "status": "executable-subset"
+    },
+    "v_shfl_up_64_05a2a5b0d9c5": {
+      "mnemonic": "V.SHFL.UP",
+      "status": "executable-subset"
+    },
+    "v_shfli_bfly_64_6d0ac980b3e9": {
+      "mnemonic": "V.SHFLI.BFLY",
+      "status": "executable-subset"
+    },
+    "v_shfli_down_64_95a67c6ded00": {
+      "mnemonic": "V.SHFLI.DOWN",
+      "status": "executable-subset"
+    },
+    "v_shfli_idx_64_468726b85bf8": {
+      "mnemonic": "V.SHFLI.IDX",
+      "status": "executable-subset"
+    },
+    "v_shfli_up_64_6fa557b5a93d": {
+      "mnemonic": "V.SHFLI.UP",
+      "status": "executable-subset"
+    },
+    "v_shi_64_fb4b951ffd01": {
+      "mnemonic": "V.SHI",
+      "status": "executable-subset"
+    },
+    "v_shi_brg_64_df38ab889894": {
+      "mnemonic": "V.SHI.BRG",
+      "status": "executable-subset"
+    },
+    "v_shi_u_64_b6cdb14d38de": {
+      "mnemonic": "V.SHI.U",
+      "status": "executable-subset"
+    },
+    "v_shi_u_brg_64_74e1295ffdda": {
+      "mnemonic": "V.SHI.U.BRG",
+      "status": "executable-subset"
+    },
+    "v_sll_64_4d67efb816b8": {
+      "mnemonic": "V.SLL",
+      "status": "executable-subset"
+    },
+    "v_slli_64_1b2532001de6": {
+      "mnemonic": "V.SLLI",
+      "status": "executable-subset"
+    },
+    "v_sra_64_068f59a0b708": {
+      "mnemonic": "V.SRA",
+      "status": "executable-subset"
+    },
+    "v_srai_64_cf7be1dfb701": {
+      "mnemonic": "V.SRAI",
+      "status": "executable-subset"
+    },
+    "v_srl_64_889ad1b7ceb9": {
+      "mnemonic": "V.SRL",
+      "status": "executable-subset"
+    },
+    "v_srli_64_cdec0ca1c073": {
+      "mnemonic": "V.SRLI",
+      "status": "executable-subset"
+    },
+    "v_sub_64_3c88cf0158f8": {
+      "mnemonic": "V.SUB",
+      "status": "executable-subset"
+    },
+    "v_subi_64_0226b3e654bf": {
+      "mnemonic": "V.SUBI",
+      "status": "executable-subset"
+    },
+    "v_sw_64_47af61b44300": {
+      "mnemonic": "V.SW",
+      "status": "executable-subset"
+    },
+    "v_sw_add_64_559073c4e3f7": {
+      "mnemonic": "V.SW.ADD",
+      "status": "executable-subset"
+    },
+    "v_sw_and_64_9773aef54030": {
+      "mnemonic": "V.SW.AND",
+      "status": "executable-subset"
+    },
+    "v_sw_brg_64_d78368c708bd": {
+      "mnemonic": "V.SW.BRG",
+      "status": "executable-subset"
+    },
+    "v_sw_max_64_2404ff65efac": {
+      "mnemonic": "V.SW.MAX",
+      "status": "executable-subset"
+    },
+    "v_sw_min_64_1ee3543106bd": {
+      "mnemonic": "V.SW.MIN",
+      "status": "executable-subset"
+    },
+    "v_sw_or_64_c82ad77db84c": {
+      "mnemonic": "V.SW.OR",
+      "status": "executable-subset"
+    },
+    "v_sw_u_64_0cf3ad373367": {
+      "mnemonic": "V.SW.U",
+      "status": "executable-subset"
+    },
+    "v_sw_u_brg_64_702c78da59f4": {
+      "mnemonic": "V.SW.U.BRG",
+      "status": "executable-subset"
+    },
+    "v_sw_xor_64_db3db9f0dce5": {
+      "mnemonic": "V.SW.XOR",
+      "status": "executable-subset"
+    },
+    "v_swi_64_da10b8e7bf20": {
+      "mnemonic": "V.SWI",
+      "status": "executable-subset"
+    },
+    "v_swi_brg_64_a9cdf55c0d1b": {
+      "mnemonic": "V.SWI.BRG",
+      "status": "executable-subset"
+    },
+    "v_swi_u_64_ff93f1677aa7": {
+      "mnemonic": "V.SWI.U",
+      "status": "executable-subset"
+    },
+    "v_swi_u_brg_64_5b46ac2ed36c": {
+      "mnemonic": "V.SWI.U.BRG",
+      "status": "executable-subset"
+    },
+    "v_xor_64_d6d77c14a0be": {
+      "mnemonic": "V.XOR",
+      "status": "executable-subset"
+    },
+    "v_xori_64_16519d21b271": {
+      "mnemonic": "V.XORI",
+      "status": "executable-subset"
+    },
+    "xb_32_40ad190a0a7f": {
+      "mnemonic": "XB",
+      "status": "executable-subset"
+    },
+    "xor_32_33510860c585": {
+      "mnemonic": "XOR",
+      "status": "executable-subset"
+    },
+    "xori_32_5cf7e5be17e7": {
+      "mnemonic": "XORI",
+      "status": "executable-subset"
+    },
+    "xoriw_32_1f8c6f43e2bd": {
+      "mnemonic": "XORIW",
+      "status": "executable-subset"
+    },
+    "xorw_32_32282566e32d": {
+      "mnemonic": "XORW",
+      "status": "executable-subset"
+    }
   },
-  "schema_version": "linx-sail-status-v0.56"
+  "schema_version": "linx-sail-status-v0.56.5",
+  "spec_version": "0.56.5"
 }

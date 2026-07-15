@@ -43,6 +43,7 @@ test.o
 .cursor/
 __pycache__/
 *.pyc
+node_modules/
 
 # LinxISA ISA manual build artifacts
 docs/architecture/isa-manual/build/

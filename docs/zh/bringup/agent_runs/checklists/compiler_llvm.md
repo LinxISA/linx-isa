@@ -58,7 +58,7 @@
   状态：✅ 通过 (2026-02-23) - `check_tepl_encoding.py` 返回 `OK`（日志：`docs/bringup/gates/logs/2026-02-23-r2-pin-reassess/pin/compiler_tepl.log`）。- [x] ID：LLVM-004 当运行时门需要时，为目标模式重建 C++ 运行时覆盖。
   命令：`bash tools/build_linx_llvm_cpp_runtimes.sh --profile spec --mode phase-c`
   完成意味着：运行时覆盖工件存在于 sysroot 中并且可链接。
-  状态：✅ 通过 (2026-02-23) - C++ 运行时覆盖构建以 `ok: ZXTERMEN45QXZ C++ runtimes ready` 完成（日志：`docs/bringup/gates/logs/2026-02-23-r2-pin-reassess/pin/compiler_cpp_runtime_phasec.log`）。
+  状态：✅ 通过 (2026-02-23) - C++ 运行时覆盖构建以 `ok: Linx C++ runtimes ready` 完成（日志：`docs/bringup/gates/logs/2026-02-23-r2-pin-reassess/pin/compiler_cpp_runtime_phasec.log`）。
 
 - [x] ID：LLVM-005 记录 LLVM 更改的提交 SHA 和子模块碰撞证据。
   完成意味着：SHA 在门报告通道清单中捕获并在变更注释中引用。

@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_ctz.svg[V.CTZ encoding,width=800]
+image::../encodings/enc_v_ctz_parts.svg[V.CTZ encoding,width=800]
 
 *Uop-Class:* VEC
 

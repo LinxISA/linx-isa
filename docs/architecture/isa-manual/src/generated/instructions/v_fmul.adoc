@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_fmul.svg[V.FMUL encoding,width=800]
+image::../encodings/enc_v_fmul_parts.svg[V.FMUL encoding,width=800]
 
 *Uop-Class:* VEC
 

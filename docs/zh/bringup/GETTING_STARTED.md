@@ -26,7 +26,7 @@
 ## 2. 克隆子模块
 
 ```bash
-git clone --recurse-submodules git@github.com:ZXTERMEN40QXZ/linx-isa.git
+git clone --recurse-submodules git@github.com:LinxISA/linx-isa.git
 cd linx-isa
 git submodule sync --recursive
 git submodule update --init --recursive
@@ -34,14 +34,14 @@ git submodule update --init --recursive
 
 子模块图：
 
-- `compiler/llvm` -> `ZXTERMEN40QXZ/llvm-project`
-- `emulator/qemu` -> `ZXTERMEN40QXZ/qemu`
-- `kernel/linux` -> `ZXTERMEN40QXZ/linux`
-- `rtl/ZXTERMEN45QXZCore` -> `ZXTERMEN40QXZ/ZXTERMEN45QXZCore`
-- `tools/pyCircuit` -> `ZXTERMEN40QXZ/pyCircuit`
-- `lib/glibc` -> `ZXTERMEN40QXZ/glibc`
-- `lib/musl` -> `ZXTERMEN40QXZ/musl`
-- `workloads/pto_kernels` -> `ZXTERMEN40QXZ/PTO-Kernel`
+- `compiler/llvm` -> `LinxISA/llvm-project`
+- `emulator/qemu` -> `LinxISA/qemu`
+- `kernel/linux` -> `LinxISA/linux`
+- `rtl/LinxCore` -> `LinxISA/LinxCore`
+- `tools/pyCircuit` -> `LinxISA/pyCircuit`
+- `lib/glibc` -> `LinxISA/glibc`
+- `lib/musl` -> `LinxISA/musl`
+- `workloads/pto_kernels` -> `LinxISA/PTO-Kernel`
 
 ## 3. 验证基线
 
@@ -89,8 +89,8 @@ python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test
 子模块凹凸命令：
 
 ```bash
-git submodule update --remote compiler/llvm emulator/qemu kernel/linux rtl/ZXTERMEN45QXZCore tools/pyCircuit lib/glibc lib/musl workloads/pto_kernels
-git add .gitmodules compiler/llvm emulator/qemu kernel/linux rtl/ZXTERMEN45QXZCore tools/pyCircuit lib/glibc lib/musl workloads/pto_kernels
+git submodule update --remote compiler/llvm emulator/qemu kernel/linux rtl/LinxCore tools/pyCircuit lib/glibc lib/musl workloads/pto_kernels
+git add .gitmodules compiler/llvm emulator/qemu kernel/linux rtl/LinxCore tools/pyCircuit lib/glibc lib/musl workloads/pto_kernels
 git commit -m "chore(submodules): bump ecosystem revisions"
 ```
 

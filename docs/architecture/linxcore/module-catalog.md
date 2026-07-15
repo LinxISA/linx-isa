@@ -491,9 +491,29 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   data extraction, atomic ResolveQ+LRET acceptance, fair drain, typed precise
   pruning, and the parameterized `ScalarLSULoadReturnPipeline` W1/W2 owner.
   The reduced timing top retains its detailed single-pipe sink proof until its
-  live ROB/RF/wakeup arbiters consume the canonical outputs. Cache/miss and
-  cross-line queues remain outside `ScalarLSU`; this must not yet be reported
-  as a complete integrated LSU.
+  live ROB/RF/wakeup arbiters consume the canonical outputs. R673 adds the
+  cacheable scalar load miss queue and R674 adds bounded dual-ingress refill
+  transport beneath this owner. R675 adds one-row sequential cross-line scalar
+  execution, per-line forwarding/miss/refill ownership, and one final assembled
+  return. R676 adds the canonical parameterized `ScalarL1D` array beneath this
+  path and shares its SCB write-side port through `ScalarLSU`. Memory-attribute
+  classification, translation/protection, and the complete coherence fabric
+  remain outside `ScalarLSU`, so this is not yet a complete LSU.
+
+### `chisel/.../lsu/ScalarL1D.scala`
+
+- Owns the only canonical scalar L1D tag, line-data, write-permission, dirty,
+  and LRU state. Set and way counts are independent `ScalarLsuParams` fields.
+- Provides one active-phase scalar load lookup and one SCB tag/permission
+  lookup. A writable SCB hit applies a full-line byte mask and marks the line
+  dirty.
+- Installs retained read refills with duplicate-line preservation. Replacement
+  is invalid-first then LRU; every valid victim is held on an explicit eviction
+  interface until accepted.
+- Does not consume Linx recovery identity. Cache state survives typed recovery
+  and backend hard restart because it is physical, non-speculative state.
+- Does not define ARM memory types, exception levels, exclusives, barriers,
+  acquire/release semantics, or any ISA-specific coherence state.
 
 ### `chisel/.../lsu/ScalarLSULoadReturnQueue.scala`
 
@@ -522,6 +542,37 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 - Generates MDB lookup on accepted scalar allocation, applies accepted MDB wait
   plans and atomic failed-wait releases through the LIQ-native mutation port,
   and includes MDB transient state in quiescence.
+- Reserves worst-case miss capacity at launch, transfers every E4 data miss to
+  `LoadMissQueue`, and routes exact miss responses back through LIQ refill.
+  Miss queue state and reservations participate in quiescence.
+- Owns `ScalarL1D`, sources E2 base-line validity only from its lookup or a
+  retained LIQ refill, and installs each accepted read refill before LIQ wakeup.
+  Duplicate refills use resident cache data so a stale response cannot erase a
+  newer committed-store byte update.
+
+### `chisel/.../lsu/LoadMissQueue.scala`
+
+- Owns parameterized cacheable scalar unique-line miss residency beneath
+  `ScalarLSULoadPath`.
+- Coalesces same-line LIQ dependents, emits one irrevocable FIFO lower-memory
+  request, and matches responses by miss slot plus generation and line address.
+- Stores complete PE/STID/TID/BID/GID/RID/full-LSID dependent identity so typed
+  Linx recovery prunes exact loads. Issued empty entries remain orphaned until
+  their response drains; unissued empty entries cancel without traffic.
+- Does not implement cache arrays, replacement/coherence, Device/MMIO,
+  cache-maintenance, tile memory, or ARM architectural behavior.
+
+### `chisel/.../lsu/LoadRefillTransport.scala`
+
+- Owns parameterized retained serialization between exact miss responses,
+  external cache refills, and LIQ line wakeup.
+- Accepts both sources in one cycle with deterministic miss-then-external FIFO
+  order and uses post-dequeue capacity for independent ready signals.
+- Backpressures exact read-response retirement until refill retention is
+  guaranteed. Typed recovery holds buffered physical data; hard flush clears
+  it. Simultaneous legal ingress is diagnostic, not an error.
+- Does not own cache arrays, coherence/replacement, memory classes, Device/MMIO,
+  cross-line assembly, or ARM architectural behavior.
 
 ### `chisel/.../lsu/ScalarLSULoadReturnPipeline.scala`
 
@@ -566,15 +617,51 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 
 ### `chisel/.../execute/ReducedScalarIssueQueue.scala`
 
-- Retains renamed issue rows and per-source readiness. Global P readiness is
-  initialized from `ScalarGPRFile.readyMask`; local T/U readiness remains on
-  separate scoped inputs.
+- Is the resident row bank used beneath `ScalarIssueFabric`. It retains renamed
+  uops, per-source readiness, and the `inflight` lock until exact release.
+- Forms one oldest-ready candidate per represented STID, then round-robins
+  across those candidates without comparing unrelated per-STID RIDs.
 - Consumes a committed P writeback event from `ScalarGPRFile.write.fire` and
   matches it against every valid, non-issued P source by physical tag. The IQ
   next state and global ready table therefore observe one accepted producer
   event together, matching model `IssueQueue::WakeupIQTag` ordering.
 - A request-only or uncommitted write cannot wake an IQ row. A committed P
   wakeup is pick-visible on the next cycle, never in the current selection.
+- Publishes resident BRU/Linx redirect and store rows to the fabric without
+  surrendering exact row/release ownership.
+
+### `chisel/.../execute/ScalarIssueCandidateArbiter.scala`
+
+- Accepts one candidate per physical bank, suppresses every candidate except
+  the oldest RID within each matching STID, and round-robins across surviving
+  banks. It never compares RIDs from different STIDs.
+- Advances fairness only when the selected read or issue transaction advances.
+  Invalid candidate RIDs are protocol errors rather than implicit bank zero.
+
+### `chisel/.../execute/ScalarIssueFabric.scala`
+
+- Partitions total scalar issue capacity evenly across a parameterized
+  power-of-two bank count and routes each one-uop enqueue to the least-occupied
+  non-full bank with stable lower-bank tie priority.
+- Broadcasts committed P wakeup and exact primary/secondary release identities
+  to every resident bank while retaining one aggregate compatibility surface
+  for the live RF/ALU tops.
+- Arbitrates simultaneous bank I1 attempts atomically onto one three-source RF
+  read group. A loser clears only its bank-local `inflight` attempt and retries;
+  a bank held behind a full I2 does not issue a false cancellation.
+- Arbitrates resident I2 outputs separately, preserving oldest-within-STID and
+  fair cross-STID selection. Bank occupancy, simultaneous pick, read loss,
+  cancellation, and I2 contention are top-visible proof counters.
+- Blocks younger same-STID work behind resident BRU/Linx `FRET.STK` control
+  frontiers and blocks only younger stores behind the oldest resident store.
+  Cross-STID RID comparison remains forbidden.
+
+### `chisel/.../execute/ScalarIssueExternalControlFence.scala`
+
+- Retains the exact `(STID, BID, RID)` of a redirecting scalar control row after
+  its resident IQ row releases and until central recovery accepts cleanup.
+- Extends the issue control frontier across the Linx marker-restart gap without
+  globally clearing unrelated or older IQ/store ownership.
 
 ### `chisel/.../top/ScalarLoadGPRCompletionSink.scala`
 

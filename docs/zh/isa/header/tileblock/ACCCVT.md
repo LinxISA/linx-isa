@@ -72,7 +72,6 @@ ACCCVT Layout.{canon, normal}, <LB0:Row, LB1:Col, SrcType, DstType>, ACC, [RegSr
 - [B.IOT](../../header/B.IOT.md) , ->DstTile0< TileSize0>
 - [B.IOT](../../header/B.IOT.md) last, ->DstTile1< TileSize1>
 - [B.IOR](../../header/B.IOR.md) RegSrc
-- [B.IOD](../../header/B.IOD.md) DepSrc0, DepSrc1, DepSrc2, ->DepDst
 
 ## 布局与数据类型
 

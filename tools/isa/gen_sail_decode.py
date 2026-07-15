@@ -86,6 +86,9 @@ def norm_exec_name(mnemonic: str) -> str:
 EXEC_ALIASES = {
     "exec_oriw": "exec_orizw",
     "exec_hl_bstart_call": "exec_bstart_call",
+    "exec_l_bstart_fp": "exec_bstart_fp",
+    "exec_l_bstart_std": "exec_bstart_std",
+    "exec_l_bstart_sys": "exec_bstart_sys",
 }
 
 
@@ -115,12 +118,15 @@ BLOCK_TYPE_CODES = {
     "C.BSTART": "0b0000",
     "C.BSTART.STD": "0b0000",
     "HL.BSTART.STD": "0b0000",
+    "L.BSTART.STD": "0b0000",
     "BSTART.SYS": "0b0001",
     "C.BSTART.SYS": "0b0001",
     "HL.BSTART.SYS": "0b0001",
+    "L.BSTART.SYS": "0b0001",
     "BSTART.FP": "0b0010",
     "C.BSTART.FP": "0b0010",
     "HL.BSTART.FP": "0b0010",
+    "L.BSTART.FP": "0b0010",
     "BSTART.VPAR": "0b0011",
     "C.BSTART.VPAR": "0b0011",
     "BSTART.VSEQ": "0b0100",
@@ -129,7 +135,6 @@ BLOCK_TYPE_CODES = {
     "C.BSTART.MPAR": "0b0101",
     "BSTART.MSEQ": "0b0110",
     "C.BSTART.MSEQ": "0b0110",
-    "BSTART.PAR": "0b0111",
     "BSTART.TLOAD": "0b1000",
     "BSTART.TSTORE": "0b1001",
     "BSTART.TMOV": "0b1010",
@@ -162,7 +167,6 @@ CONTRACT_KIND_CODES = {
     "BSTART.FIXP": "0b0110",
     "BSTART.TMA": "0b0110",
     "BSTART.CUBE": "0b0110",
-    "BSTART.PAR": "0b0110",
 }
 
 
@@ -323,8 +327,8 @@ def constraint_expr(inst: dict, field_name: str, op: str, value: str) -> str:
         rhs = SYMBOLIC_VALUES[value]
     else:
         rhs = bit_const(width, int(value, 0))
-    if op == "!=":
-        return f"({expr} != {rhs})"
+    if op in {"==", "!="}:
+        return f"({expr} {op} {rhs})"
     if op == ">=":
         return f"(unsigned({expr}) >= {int(value, 0)})"
     raise ValueError(f"unsupported constraint op {op!r} for {inst['mnemonic']}")
@@ -388,6 +392,8 @@ def block_target_expr(inst: dict, raw_fields: dict[str, tuple[str, int]]) -> str
         return f"decode_block_target17({raw_fields['simm17'][0]})"
     if "simm25" in fields:
         return f"decode_block_target25({raw_fields['simm25'][0]})"
+    if "simm" in fields and raw_fields["simm"][1] == 42:
+        return f"decode_block_target42({raw_fields['simm'][0]})"
     if "simm" in fields:
         return f"decode_block_target30({raw_fields['simm'][0]})"
     if "BrType" in inst["asm"]:
@@ -502,7 +508,12 @@ def prelude_lines(inst: dict, raw_fields: dict[str, tuple[str, int]], width: int
             f"{raw_fields['RegDst'][0]});"
         )
 
-    if mnemonic.startswith("BSTART") or mnemonic.startswith("C.BSTART") or mnemonic.startswith("HL.BSTART"):
+    if (
+        mnemonic.startswith("BSTART")
+        or mnemonic.startswith("C.BSTART")
+        or mnemonic.startswith("HL.BSTART")
+        or mnemonic.startswith("L.BSTART")
+    ):
         block_type = BLOCK_TYPE_CODES.get(mnemonic, "0b0000")
         contract_kind = CONTRACT_KIND_CODES.get(mnemonic, "0b0000")
         lines.append(f"decoded_block_target_pc_shadow = {block_target_expr(inst, raw_fields)};")
@@ -673,6 +684,10 @@ def render(spec: dict, exec_text: str) -> str:
         "",
         "function decode_block_target30(simm30 : bits(30)) -> bits(64) = {",
         "  read_pc_or_tpc() + sext30_to64(simm30)",
+        "}",
+        "",
+        "function decode_block_target42(simm42 : bits(42)) -> bits(64) = {",
+        "  read_pc_or_tpc() + sail_shiftleft(sext42_to64(simm42), 1)",
         "}",
         "",
     ]

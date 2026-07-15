@@ -8,7 +8,7 @@
 ## Reason
 
 `pto-kernel-gemm_performance` is now promoted through source, compiler, QEMU,
-and `model/LinxCoreModel/bin/gfsim -f <elf>` using its `PTO_QEMU_SMOKE`
+and `tools/LinxCoreModel/bin/gfsim -f <elf>` using its `PTO_QEMU_SMOKE`
 bit-pattern copy branch.
 
 The reusable boundary is that this case keeps `repeat_tiles=3` but verifies the

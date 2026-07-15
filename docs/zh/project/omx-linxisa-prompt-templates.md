@@ -47,7 +47,7 @@ $ralplan "For repinning <module>, verify the new SHA has leaf proof, list the cr
 在叶修复或超级项目拥有的集成更改后使用。
 
 ```text
-$ralph "Run the ZXTERMEN40QXZ PR-tier closure sequence for <task>: static policy guard, AVS contract, AVS tier closure, and strict_cross_repo. Record exact commands, lane, pass/fail, and artifact paths. Treat latest.json as the source of truth."
+$ralph "Run the LinxISA PR-tier closure sequence for <task>: static policy guard, AVS contract, AVS tier closure, and strict_cross_repo. Record exact commands, lane, pass/fail, and artifact paths. Treat latest.json as the source of truth."
 ```
 
 ## 6. 双车道融合

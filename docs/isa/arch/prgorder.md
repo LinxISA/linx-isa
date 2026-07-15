@@ -40,7 +40,7 @@ The following is a "header → Expand → PO" comparison of three common blocks,
 **header (the order of appearance is L1-IPO):**
 
 ```asm
-BSTART.PAR TMATMUL, FP16       ; 配置：做 FP16 的 A×B
+BSTART.TEPL TMATMUL, FP16      ; 配置：做 FP16 的 A×B
 B.DIM     rM, 128, ->M        ; M=128
 B.DIM     rN, 128, ->N        ; N=128
 B.DIM     rK, 256, ->K        ; K=256
@@ -57,7 +57,7 @@ B.ARG     CD2RD                ; 结果默认行主序，无额外变换
 **Final PO (Semantic Order):**
 
 ```
-BSTART.PAR → B.DIM → B.DIM → B.DIM → B.IOT → B.ARG → 
+BSTART.TEPL → B.DIM → B.DIM → B.DIM → B.IOT → B.ARG →
 加载分片 → 乘累加到 ACC → ACC 写回 Tile
 ```
 
@@ -68,7 +68,7 @@ BSTART.PAR → B.DIM → B.DIM → B.DIM → B.IOT → B.ARG →
 **header：**
 
 ```asm
-BSTART.PAR TMATMUL, FP16
+BSTART.TEPL TMATMUL, FP16
 B.DIM     zero, 64,  ->M
 B.DIM     zero, 64,  ->N
 B.DIM     zero, 256, ->K
@@ -98,7 +98,7 @@ ZXTERMZH39QXZ顺序 → 读取/预取 → 乘累加到 ACC → TCVT 边搬边转
 **header：**
 
 ```asm
-BSTART.PAR TMATMULMX, INT8
+BSTART.TEPL TMATMULMX, INT8
 B.DIM     zero, 128, ->M
 B.DIM     zero, 128, ->N
 B.DIM     zero, 256, ->K

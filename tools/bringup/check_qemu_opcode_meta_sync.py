@@ -15,9 +15,9 @@ Known supported layouts:
     - target/linx/block48.decode
     - target/linx/block32_private_fvec.decode
 
-Legacy generated opcode id/meta headers may be absent on modern lines. In that
-case this audit degrades to a decode-surface presence check instead of failing
-on removed legacy files.
+Canonical generated opcode id/meta headers are required in strict mode. A
+non-strict audit may still inspect a decode-only development line, but such a
+line can never satisfy a release gate.
 """
 
 from __future__ import annotations
@@ -155,13 +155,13 @@ def main(argv: list[str]) -> int:
     for name in decode_files:
         decode_patterns |= _parse_decode_patterns(linx_root / name)
 
-    have_legacy_meta = meta_path.is_file() and ids_path.is_file()
+    have_opcode_meta = meta_path.is_file() and ids_path.is_file()
     meta_ids: set[int] = set()
     ids_enum: set[int] = set()
     meta_patterns: set[str] = set()
     meta_internal: set[str] = set()
     meta_non_internal: set[str] = set()
-    if have_legacy_meta:
+    if have_opcode_meta:
         meta_ids, meta_by_source = _parse_meta(meta_path)
         ids_enum = _parse_ids(ids_path)
         for source_file, mnems in meta_by_source.items():
@@ -182,7 +182,7 @@ def main(argv: list[str]) -> int:
     else:
         allow_path = None
 
-    if have_legacy_meta:
+    if have_opcode_meta:
         decode_only = sorted(decode_patterns - meta_patterns)
         meta_only = sorted(meta_patterns - decode_patterns)
         decode_only_unexpected = sorted(set(decode_only) - allow_decode_only)
@@ -194,6 +194,14 @@ def main(argv: list[str]) -> int:
             if ok
             else "qemu_opcode_meta_sync_unexpected_drift"
         )
+    elif args.strict:
+        decode_only = sorted(decode_patterns)
+        meta_only = []
+        decode_only_unexpected = sorted(decode_patterns)
+        meta_only_unexpected = []
+        id_mismatch = []
+        ok = False
+        classification = "qemu_opcode_meta_sync_missing_canonical_tables"
     else:
         decode_only = sorted(decode_patterns)
         meta_only = []
@@ -207,7 +215,7 @@ def main(argv: list[str]) -> int:
         "generated_at_utc": _utc_now(),
         "qemu_root": str(qemu_root),
         "allowlist": str(allow_path) if allow_path else "",
-        "have_legacy_meta": have_legacy_meta,
+        "have_opcode_meta": have_opcode_meta,
         "decode_unique_patterns": len(decode_patterns),
         "meta_unique_decode_patterns": len(meta_patterns),
         "meta_unique_non_internal": len(meta_non_internal),

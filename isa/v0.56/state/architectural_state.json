@@ -3,8 +3,8 @@
     "Architectural state is intentionally minimal here: this repo treats the compiled catalog as the primary machine-readable source.",
     "v0.56 keeps the v0.2 architectural baseline and promotes the canonical shader-kernel and rendering contracts.",
     "Contradictory raw legacy fragments are archived history only and are reserved/illegal in canonical v0.56.",
-    "v0.56.4 keeps PRED with plen[1:0] plus p0..p3 mask bits.",
-    "v0.56.4 keeps the 64-logical-tile model with dynamic capacity descriptors."
+    "v0.56.5 keeps PRED with plen[1:0] plus p0..p3 mask bits.",
+    "v0.56.5 keeps the 64-logical-tile model with dynamic capacity descriptors."
   ],
   "state": {
     "block_control_predicate": {

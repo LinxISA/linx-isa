@@ -1,7 +1,7 @@
 # 灵犀核心模块目录
 
 > 此发布的页面镜像了规范的 灵犀Core 源代码
-> `rtl/ZXTERMEN45QXZCore/docs/architecture/module-catalog.md`。
+> `rtl/LinxCore/docs/architecture/module-catalog.md`。
 
 
 本章定义了现场直播下 灵犀Core 的规范模块结构
@@ -36,7 +36,7 @@
 - 拥有顶级配置参数，例如内存大小和获取包
   宽度别名。
 
-### `src/top/modules/export_core.py`- 定义 `ZXTERMEN45QXZCoreTopExport`，启动/导出集成 shell。
+### `src/top/modules/export_core.py`- 定义 `LinxCoreTopExport`，启动/导出集成 shell。
 - 组成后端、内存、探针导出、块控制、LSU 和引擎
   适配器。
 - 拥有由锁步和跟踪通道使用的主机馈送指令缓冲区路径。
@@ -45,7 +45,7 @@
 
 ### `src/top/top.py`
 
-- 定义 `ZXTERMEN45QXZCoreTop`，具有显式 IFU 的完整顶级组合
+- 定义 `LinxCoreTop`，具有显式 IFU 的完整顶级组合
   舞台链。
 - 实例化 IFU 模块 `F0` 到 `F4`、后端、块控制
   路径、LSU、内存和引擎适配器。
@@ -131,7 +131,7 @@
 - 执行可变长度拼接/组装、静态预测、块边界
   指令缓冲区传递之前的注释和模板流控制。
 
-### `src/top/modules/ib.py`- 拥有 `ZXTERMEN45QXZCoreTopIb`，这是由主机提供的指令缓冲区模块
+### `src/top/modules/ib.py`- 拥有 `LinxCoreTopIb`，这是由主机提供的指令缓冲区模块
   导出外壳。
 - 保留相同的下游指令缓冲区所有权模型
   QEMU/主机注入取代了启动通道中的本机 IFU 源。
@@ -216,60 +216,60 @@
 
 ### `src/bcc/backend/backend.py`
 
-- 定义 `ZXTERMEN45QXZCoreBackend`，规范的后端包装器。
+- 定义 `LinxCoreBackend`，规范的后端包装器。
 - 将实时后端组合委托给跟踪导出支持的核心构建。
 
 ### `src/bcc/backend/decode.py`
 
-- 定义 `ZXTERMEN45QXZCoreDecodeStage`。
+- 定义 `LinxCoreDecodeStage`。
 - 拥有功能管道的后端本地解码打包。
 
 ### `src/bcc/backend/rename.py`
 
-- 定义 `ZXTERMEN45QXZCoreRenameStage` 和 `ZXTERMEN45QXZCoreCommitRenameStage`。
+- 定义 `LinxCoreRenameStage` 和 `LinxCoreCommitRenameStage`。
 - 拥有重命名分配和提交端重命名发布。
 
-### `src/bcc/backend/dispatch.py`- 定义`ZXTERMEN45QXZCoreDispatchStage`。
+### `src/bcc/backend/dispatch.py`- 定义`LinxCoreDispatchStage`。
 - 拥有从解码/重命名到后端的 ROB、IQ 和 LSU 分配切换
   执行机。
 
 ### `src/bcc/backend/issue.py`
 
-- 定义 `ZXTERMEN45QXZCoreIssuePicker`、`ZXTERMEN45QXZCoreIssueStage` 和
-  `ZXTERMEN45QXZCoreIqUpdateStage`。
+- 定义 `LinxCoreIssuePicker`、`LinxCoreIssueStage` 和
+  `LinxCoreIqUpdateStage`。
 - 拥有 IQ 就绪、最早优先选择、`inflight` 保留和发布
   合法性。
 
 ### `src/bcc/backend/prf.py`
 
-- 定义`ZXTERMEN45QXZCorePrf`。
+- 定义`LinxCorePrf`。
 - 拥有物理寄存器文件状态和问题使用的读/写可见性
   写回。
 
 ### `src/bcc/backend/lsu.py`
 
-- 定义`ZXTERMEN45QXZCoreLsuStage`。
+- 定义`LinxCoreLsuStage`。
 - 拥有后端 LSU 阶段行为及其与问题/提交的集成。
 
 ### `src/bcc/backend/rob.py`
 
-- 定义ROB阶段模块，例如`ZXTERMEN45QXZCoreRobCommitReadStage`，
-  `ZXTERMEN45QXZCoreRobCtrlStage` 和 `ZXTERMEN45QXZCoreRobEntryUpdateStage`。
+- 定义ROB阶段模块，例如`LinxCoreRobCommitReadStage`，
+  `LinxCoreRobCtrlStage` 和 `LinxCoreRobEntryUpdateStage`。
 - 拥有精确的退休簿记和ROB端查询/更新边界。
 
 ### `src/bcc/backend/commit.py`
 
-- 定义 `ZXTERMEN45QXZCoreCommitHeadStage` 和 `ZXTERMEN45QXZCoreCommitCtrlStage`。
+- 定义 `LinxCoreCommitHeadStage` 和 `LinxCoreCommitCtrlStage`。
 - 拥有架构提交选择和有序退出端控制。
 
 ### `src/bcc/backend/wakeup.py`
 
-- 定义 `ZXTERMEN45QXZCoreHeadWaitStage`。
+- 定义 `LinxCoreHeadWaitStage`。
 - 拥有唤醒、头部等待和重放端可见性约束。
 
 ### `src/bcc/backend/engine.py`
 
-- 定义`ZXTERMEN45QXZCoreCommitSelectStage`和规范的后端组成
+- 定义`LinxCoreCommitSelectStage`和规范的后端组成
   帮手。
 - 拥有提交端选择、块状态更新和执行系列
   组成胶水。

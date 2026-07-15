@@ -1,17 +1,17 @@
 # ISA vs QEMU Coverage Snapshot
 
-- Generated (UTC): `2026-07-05 11:59:31Z`
-- Spec unique mnemonics: `710`
-- QEMU unique decode mnemonics (non-internal): `652`
-- QEMU mapped spec mnemonics: `615`
-- Mnemonic coverage: `615/710` (`86.62%`)
-- Spec legal forms: `740`
-- QEMU mapped spec forms: `614`
-- Form coverage: `614/740` (`82.97%`)
-- Missing spec mnemonics: `95`
+- Generated (UTC): `2026-07-15 10:11:15Z`
+- Spec unique mnemonics: `711`
+- QEMU unique decode mnemonics (non-internal): `645`
+- QEMU mapped spec mnemonics: `618`
+- Mnemonic coverage: `618/711` (`86.92%`)
+- Spec legal forms: `747`
+- QEMU mapped spec forms: `621`
+- Form coverage: `621/747` (`83.13%`)
+- Missing spec mnemonics: `93`
 - Missing spec forms: `126`
 - Reserved spec forms: `0`
-- Unmapped QEMU mnemonics: `17`
+- Unmapped QEMU mnemonics: `6`
 
 ## Mnemonic Coverage By Prefix
 
@@ -27,13 +27,13 @@
 - `ANDIW`: `1`
 - `ANDW`: `1`
 - `ASSERT`: `1`
-- `B`: `14`
+- `B`: `15`
 - `BC`: `2`
 - `BCNT`: `1`
 - `BIC`: `1`
 - `BIS`: `1`
 - `BSE`: `1`
-- `BSTART`: `20`
+- `BSTART`: `19`
 - `BSTOP`: `1`
 - `BWE`: `1`
 - `BWI`: `1`
@@ -89,6 +89,7 @@
 - `IC`: `2`
 - `J`: `1`
 - `JR`: `1`
+- `L`: `3`
 - `LB`: `2`
 - `LBI`: `1`
 - `LBU`: `2`
@@ -174,7 +175,7 @@
 
 ## Missing Mnemonics By Prefix
 
-- `B`: `3`
+- `B`: `1`
 - `C`: `1`
 - `V`: `90`
 - `XB`: `1`
@@ -193,13 +194,13 @@
 - `ANDIW`: `1`
 - `ANDW`: `1`
 - `ASSERT`: `1`
-- `B`: `19`
+- `B`: `23`
 - `BC`: `2`
 - `BCNT`: `1`
 - `BIC`: `1`
 - `BIS`: `1`
 - `BSE`: `1`
-- `BSTART`: `19`
+- `BSTART`: `18`
 - `BSTOP`: `1`
 - `BWE`: `1`
 - `BWI`: `1`
@@ -255,6 +256,7 @@
 - `IC`: `2`
 - `J`: `1`
 - `JR`: `1`
+- `L`: `4`
 - `LB`: `2`
 - `LBI`: `1`
 - `LBU`: `2`
@@ -340,39 +342,27 @@
 
 ## Missing Forms By Prefix
 
-- `B`: `8`
+- `B`: `3`
 - `BSTART`: `14`
 - `C`: `2`
 - `DC`: `2`
 - `HL`: `5`
+- `L`: `5`
 - `LR`: `2`
 - `V`: `92`
 - `XB`: `1`
 
 ## Unmapped QEMU Mnemonics
 
-- `b_attr`
 - `b_dim_lb0`
 - `b_dim_lb1`
 - `b_dim_lb2`
-- `b_ioti`
 - `bstart_fall`
 - `bstart_split_cond`
 - `bstart_split_direct`
-- `l_bstart_fp_call`
-- `l_bstart_fp_cond`
-- `l_bstart_fp_direct`
-- `l_bstart_fp_fall`
-- `l_bstart_std_call`
-- `l_bstart_std_cond`
-- `l_bstart_std_direct`
-- `l_bstart_std_fall`
-- `l_bstart_sys`
 
 ## Missing Spec Mnemonics (First 200)
 
-- `B.CATR`
-- `B.DATR`
 - `B.DIM`
 - `C.SETRET`
 - `V.LB`
@@ -469,14 +459,9 @@
 
 ## Missing Spec Forms (First 200)
 
-- `B.CATR [len=32 mask=0x7fff match=0x23]`
-- `B.DATR [len=32 mask=0x707f match=0x1023]`
 - `B.DIM [len=32 mask=0x707f match=0x1043]`
 - `B.DIM [len=32 mask=0x707f match=0x2043]`
 - `B.DIM [len=32 mask=0x707f match=0x43]`
-- `B.IOT [len=32 mask=0x707f match=0x4013]`
-- `B.IOT [len=32 mask=0x803f707f match=0x5013]`
-- `B.IOT [len=32 mask=0xc03fffff match=0x6013]`
 - `BSTART CALL [len=32 mask=0xf83f000f match=0x50160002]`
 - `BSTART [len=32 mask=0x7f match=0x11]`
 - `BSTART [len=32 mask=0x7f match=0x21]`
@@ -500,6 +485,11 @@
 - `HL.CCAT [len=64 mask=0xffff0000707f07ff match=0x105d000e]`
 - `HL.CCATW [len=64 mask=0xffff0000707f07ff match=0x205d000e]`
 - `HL.PRF [len=64 mask=0xffff00007fff07ff match=0x7009000e]`
+- `L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x10810000000f]`
+- `L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x20810000000f]`
+- `L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x30810000000f]`
+- `L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x40810000000f]`
+- `L.BSTART.SYS [len=64 mask=0x7fff0000007f match=0x10110000000f]`
 - `LR.D [len=32 mask=0xf000707f match=0x3000000b]`
 - `LR.W [len=32 mask=0xf000707f match=0x2000000b]`
 - `V.FABS [len=64 mask=0xfff0707ffff0707f match=0x7b0000007f]`

@@ -1,4 +1,4 @@
-# LinxISA opcode database (generated via tools/isa/split_compiled.py)
+# Canonical LinxISA v0.56 opcode source (consumed by tools/isa/build_golden.py)
 #
 # Format:
 #   MNEMONIC [<json meta>] : <bit-assignments> [| <bit-assignments>] ; <operands> ; <constraints>
@@ -7,6 +7,16 @@
 #   - If MNEMONIC contains spaces, it is written as a JSON string literal.
 #   - Meta is a JSON object containing at least: {asm, group, length_bits}.
 #   - Constraints apply to encoding part 0 and are written as tokens like Field!=0.
+
+L.BSTART.STD [{"asm":"L.BSTART.STD FALL<, fixup_label>","group":"BSTART","length_bits":64}] : 31..7=simm[24:0] 6..4=3'b000 3..1=3'b111 0=1 | 31..15=simm[41:25] 14..12=3'b001 11..7=5'b0_0000 6..4=3'b000 3..1=3'b000 0=1 ; simm ; -
+L.BSTART.STD [{"asm":"L.BSTART.STD DIRECT, <label>","group":"BSTART","length_bits":64}] : 31..7=simm[24:0] 6..4=3'b000 3..1=3'b111 0=1 | 31..15=simm[41:25] 14..12=3'b010 11..7=5'b0_0000 6..4=3'b000 3..1=3'b000 0=1 ; simm ; -
+L.BSTART.STD [{"asm":"L.BSTART.STD COND, <label>","group":"BSTART","length_bits":64}] : 31..7=simm[24:0] 6..4=3'b000 3..1=3'b111 0=1 | 31..15=simm[41:25] 14..12=3'b011 11..7=5'b0_0000 6..4=3'b000 3..1=3'b000 0=1 ; simm ; -
+L.BSTART.STD [{"asm":"L.BSTART.STD CALL, <label>","group":"BSTART","length_bits":64,"note":"Bare L.BSTART.STD CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label."}] : 31..7=simm[24:0] 6..4=3'b000 3..1=3'b111 0=1 | 31..15=simm[41:25] 14..12=3'b100 11..7=5'b0_0000 6..4=3'b000 3..1=3'b000 0=1 ; simm ; -
+L.BSTART.FP [{"asm":"L.BSTART.FP FALL<, fixup_label>","group":"BSTART","length_bits":64}] : 31..7=simm[24:0] 6..4=3'b000 3..1=3'b111 0=1 | 31..15=simm[41:25] 14..12=3'b001 11..7=5'b0_0001 6..4=3'b000 3..1=3'b000 0=1 ; simm ; -
+L.BSTART.FP [{"asm":"L.BSTART.FP DIRECT, <label>","group":"BSTART","length_bits":64}] : 31..7=simm[24:0] 6..4=3'b000 3..1=3'b111 0=1 | 31..15=simm[41:25] 14..12=3'b010 11..7=5'b0_0001 6..4=3'b000 3..1=3'b000 0=1 ; simm ; -
+L.BSTART.FP [{"asm":"L.BSTART.FP COND, <label>","group":"BSTART","length_bits":64}] : 31..7=simm[24:0] 6..4=3'b000 3..1=3'b111 0=1 | 31..15=simm[41:25] 14..12=3'b011 11..7=5'b0_0001 6..4=3'b000 3..1=3'b000 0=1 ; simm ; -
+L.BSTART.FP [{"asm":"L.BSTART.FP CALL, <label>","group":"BSTART","length_bits":64,"note":"Bare L.BSTART.FP CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label."}] : 31..7=simm[24:0] 6..4=3'b000 3..1=3'b111 0=1 | 31..15=simm[41:25] 14..12=3'b100 11..7=5'b0_0001 6..4=3'b000 3..1=3'b000 0=1 ; simm ; -
+L.BSTART.SYS [{"asm":"L.BSTART.SYS FALL<, fixup_label>","group":"BSTART","length_bits":64}] : 31..7=simm[24:0] 6..4=3'b000 3..1=3'b111 0=1 | 31..15=simm[41:25] 14..12=3'b001 11..7=5'b0_0000 6..4=3'b001 3..1=3'b000 0=1 ; simm ; -
 
 V.ADD [{"asm":"v.add SrcL, SrcR<.neg><<<shamt>, ->Dst","group":"Arithmetic Operation","length_bits":64}] : 31..27=5'b0_0000 26..25=2'b00 24..20=SrcR[9:5] 19..15=SrcL[9:5] 14=0 13=0 12=0 11..7=RegDst[9:5] 6..4=3'b111 3..1=3'b111 0=1 | 31..27=shamt 26..25=SrcRType 24..20=SrcR[4:0] 19..15=SrcL[4:0] 14=0 13=0 12=0 11..7=RegDst[4:0] 6..4=3'b000 3..1=3'b010 0=1 ; RegDst SrcL SrcR SrcRType shamt ; -
 V.ADDI [{"asm":"v.addi SrcL, uimm, ->Dst","group":"Arithmetic Operation","length_bits":64}] : 31..20=12'b0000_0000_0000 19..15=SrcL[9:5] 14=0 13=0 12=0 11..7=RegDst[9:5] 6..4=3'b111 3..1=3'b111 0=1 | 31..20=uimm12 19..15=SrcL[4:0] 14=0 13=0 12=0 11..7=RegDst[4:0] 6..4=3'b001 3..1=3'b010 0=1 ; RegDst SrcL uimm12 ; -

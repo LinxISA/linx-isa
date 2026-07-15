@@ -28,8 +28,6 @@ TLOAD.Layout <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, [RegSrc0
 | **Size** | B.IOT | 输出Tile寄存器的空间大小（有效范围参见：[Tile寄存器](../../register/common/tilereg.md)）。 | 否 |
 | **RegSrc0** | B.IOR  | 表示搬移的数据块的基地址（BaseAddress），即搬运的第一个元素的地址。 | 否 |
 | **RegSrc1** | B.IOR  | 表示内存中两组数据的首地址间隔Stride（单位：字节）（如果两组数据之间地址是连续的则可缺省） | 是，默认连续 |
-| **DepSrc0 / DepSrc1 / DepSrc2** | B.IOD | 表示本块指令最多显式记录 3 个前序 `D` 依赖槽位。 | 是，默认无依赖 |
-| **DepDst** | B.IOD | 表示本块指令对后序引用该标识的块指令的屏障。 | 是，默认无屏障 |
 
 其中DataType的可选类型如下表：
 
@@ -54,7 +52,6 @@ TLOAD.Layout <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, [RegSrc0
 - ...
 - [B.IOT](../../header/B.IOT.md) `last, ->DstTile7<Size>`
 - [B.IOR](../../header/B.IOR.md) `RegSrc0, RegSrc1`
-- [B.IOD](../../header/B.IOD.md) `DepSrc0, DepSrc1, DepSrc2, ->DepDst`
 
 ## 实现方式
 

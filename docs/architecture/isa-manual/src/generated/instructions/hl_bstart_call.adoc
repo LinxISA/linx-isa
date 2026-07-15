@@ -5,13 +5,13 @@
 [[inst_hl_bstart_call]]
 ==== HL.BSTART CALL
 
-*Syntax:* HL.BSTART.CALL, <br_label>, <rt_label>, -> ra
+*Syntax:* HL.BSTART.CALL <br_label>
 
-*Description:* Long 48-bit instruction encoding (prefix + 32-bit main form).
+*Description:* Bare HL.BSTART.CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.
 
 *Encoding:*
 
-image::../generated/encodings/enc_hl_bstart_call.svg[HL.BSTART CALL encoding,width=800]
+image::../encodings/enc_hl_bstart_call.svg[HL.BSTART CALL encoding,width=800]
 
 *Uop-Class:* BBD
 

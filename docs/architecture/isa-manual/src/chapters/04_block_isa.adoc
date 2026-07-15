@@ -426,7 +426,6 @@ The v0.56 catalog includes the following descriptor families:
 * **Block I/O binding**
   - `B.IOR`: binds GPR inputs/outputs for a block.
   - `B.IOT`: binds tile inputs/outputs for a block (including optional input reuse and transfer sizing).
-  - `B.IOD`: obsolete compatibility descriptor in canonical v0.56 streams.
 * **Block arguments**
   - `B.ARG`: writes a per-block argument used by TMA tile load/store pipelines (layout format + pad policy).
   - `B.DIM`: writes a block argument register (`LB0`–`LB2`) used for loop bounds, dimensions, and valid masks.
@@ -652,7 +651,6 @@ The architectural interface between the first and second layer is a block comman
 ** `B.IOT`: performs tile rename, computes input/output tile base addresses, and packs those addresses into the command
    payload.
 ** `B.ARG` / `B.CATR/B.DATR`: pack block-type-defined immediates/attributes.
-** `B.IOD` (compat/obsolete): encodes dummy dependence edges for legacy streams.
 ** `B.DIM`: packs block dimensions (`LB0..LB2`) for SIMT/vector replay and for tile engines.
 ** `B.TEXT`: packs the out-of-line body `TPC` for decoupled blocks.
 * `BSTOP` (or an implicit boundary at the next block start marker) finalizes the command and dispatches it to the
@@ -697,16 +695,15 @@ invalid/reserved encoding and as the block-stop marker in current conventions.
 In the current toolchain bring-up:
 
 * Calls are represented as a block transition (`BSTART.STD CALL, <target>`).
-* Source-level direct calls should use the fused form `BSTART.STD CALL, <target>, ra=<return_label>`.
-* Lowered object code may materialize the return address in `ra` using adjacent `addpc/hl.addpc` or `setret/c.setret`
-  patterns.
+* Bare calls use `BSTART.STD CALL, <target>` and preserve `ra`.
+* Returning calls materialize the explicit return label in `ra` using an adjacent `SETRET` or `C.SETRET`.
 * `FRET.STK` is treated as a `ret`-class encoding extension by some tooling (e.g. callgraph analysis).
 
 **Constraint (call header pairing):**
 
 When `SETRET`/`C.SETRET` is used to materialize the return address for a call transition, it must appear **immediately
-after** the call-type block start marker (e.g. `BSTART.STD CALL, <target>` / `C.BSTART CALL`). Tooling and hardware may
-treat the `BSTART`+`SETRET` pair as a fused call header; no other instruction may be placed between them.
+before** the call-type block start marker (e.g. `BSTART.STD CALL, <target>` / `C.BSTART CALL`). Tooling and hardware may
+treat the `SETRET`+`BSTART` pair as a fused call header; no other instruction may be placed between them.
 
 [[blockisa-examples]]
 === Example patterns

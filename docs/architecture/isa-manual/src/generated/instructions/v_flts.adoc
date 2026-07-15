@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_flts.svg[V.FLTS encoding,width=800]
+image::../encodings/enc_v_flts_parts.svg[V.FLTS encoding,width=800]
 
 *Uop-Class:* VEC
 

@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_add.svg[ADD encoding,width=800]
+image::../encodings/enc_add.svg[ADD encoding,width=800]
 
 *Uop-Class:* ALU
 

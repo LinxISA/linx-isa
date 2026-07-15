@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_icvtf.svg[V.ICVTF encoding,width=800]
+image::../encodings/enc_v_icvtf_parts.svg[V.ICVTF encoding,width=800]
 
 *Uop-Class:* VEC
 

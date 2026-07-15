@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_subi.svg[V.SUBI encoding,width=800]
+image::../encodings/enc_v_subi_parts.svg[V.SUBI encoding,width=800]
 
 *Uop-Class:* VEC
 

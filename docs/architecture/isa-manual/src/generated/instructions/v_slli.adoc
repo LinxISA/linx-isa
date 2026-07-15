@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_slli.svg[V.SLLI encoding,width=800]
+image::../encodings/enc_v_slli_parts.svg[V.SLLI encoding,width=800]
 
 *Uop-Class:* VEC
 

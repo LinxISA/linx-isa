@@ -37,7 +37,7 @@
 
 扩展 向量/tile 字段（当 向量/tile 子集正在测试时）：
 
-- `block_kind` (`ZXTERMEN44QXZ|vpar|vseq|tma|cube|tepl|call|ret|sys`)
+- `block_kind` (`scalar|vpar|vseq|tma|cube|tepl|call|ret|sys`)
 - `lane_id`（用于通道范围的 向量 提交）
 - `tile_meta`（磁贴问题/提交的描述符摘要）
 - `tile_ref_src` / `tile_ref_dst`（相对参考令牌）

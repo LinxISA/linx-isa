@@ -205,6 +205,99 @@ def _validate_engine_ops(spec: Dict[str, Any], errors: List[str]) -> None:
     _validate_tepl_packing(tepl, selector_by_name, errors)
 
 
+def _validate_field_definitions(spec: Dict[str, Any], errors: List[str]) -> Dict[str, Any]:
+    field_definitions = spec.get("field_definitions")
+    if not isinstance(field_definitions, dict) or not isinstance(field_definitions.get("fields"), dict):
+        errors.append("missing compiled field_definitions.fields")
+        return {}
+
+    definitions = field_definitions["fields"]
+    observed: Dict[str, Dict[str, set[Any]]] = {}
+    for inst in spec.get("instructions", []):
+        for part in inst.get("encoding", {}).get("parts", []):
+            for field in part.get("fields", []):
+                name = str(field.get("name") or "")
+                width = sum(int(piece.get("width", 0)) for piece in field.get("pieces", []))
+                item = observed.setdefault(name, {"widths": set(), "signed": set()})
+                item["widths"].add(width)
+                if field.get("signed") is not None:
+                    item["signed"].add(bool(field["signed"]))
+
+    missing = sorted(set(observed) - set(definitions))
+    unknown = sorted(
+        name
+        for name in set(definitions) - set(observed)
+        if not isinstance(definitions[name], dict) or definitions[name].get("documented_only") is not True
+    )
+    if missing:
+        errors.append(f"compiled field definitions are missing observed fields: {missing}")
+    if unknown:
+        errors.append(f"compiled field definitions contain unknown fields: {unknown}")
+
+    valid_namespaces = {"immediate", "operand", "register-or-identifier", "reserved", "selector"}
+    for name, definition in definitions.items():
+        if not isinstance(definition, dict):
+            errors.append(f"field definition {name!r} must be an object")
+            continue
+        widths = definition.get("widths")
+        if (
+            not isinstance(widths, list)
+            or not widths
+            or not all(isinstance(width, int) and width > 0 for width in widths)
+            or widths != sorted(set(widths))
+        ):
+            errors.append(f"field definition {name!r} has invalid widths {widths!r}")
+            continue
+        if name not in observed and definition.get("documented_only") is not True:
+            errors.append(f"unobserved field definition {name!r} requires documented_only=true")
+        if name in observed and definition.get("documented_only") is True:
+            errors.append(f"observed field definition {name!r} cannot be documented_only")
+        if name in observed and widths != sorted(observed[name]["widths"]):
+            errors.append(
+                f"field definition {name!r} widths {widths} do not match observed {sorted(observed[name]['widths'])}"
+            )
+        namespace = definition.get("namespace")
+        if namespace not in valid_namespaces:
+            errors.append(f"field definition {name!r} has invalid namespace {namespace!r}")
+            continue
+        if namespace == "immediate":
+            if not isinstance(definition.get("signed"), bool):
+                errors.append(f"immediate field {name!r} must declare boolean signedness")
+            scale = definition.get("scale")
+            if not isinstance(scale, int) or isinstance(scale, bool) or scale <= 0:
+                errors.append(f"immediate field {name!r} has invalid scale {scale!r}")
+        if namespace == "selector":
+            reserved_values = definition.get("reserved_values")
+            if not isinstance(reserved_values, list) or not all(
+                isinstance(value, int) and not isinstance(value, bool) and 0 <= value < (1 << min(widths))
+                for value in reserved_values
+            ):
+                errors.append(f"selector field {name!r} has invalid reserved_values {reserved_values!r}")
+            maximum = (1 << min(widths)) - 1
+            reserved_ranges = definition.get("reserved_ranges", [])
+            if not isinstance(reserved_ranges, list) or not all(
+                isinstance(item, list)
+                and len(item) == 2
+                and all(isinstance(value, int) and not isinstance(value, bool) for value in item)
+                and 0 <= item[0] <= item[1] <= maximum
+                for item in reserved_ranges
+            ):
+                errors.append(f"selector field {name!r} has invalid reserved_ranges {reserved_ranges!r}")
+        if namespace == "reserved":
+            allowed_values = definition.get("allowed_values")
+            if not isinstance(allowed_values, list) or not allowed_values or not all(
+                isinstance(value, int) and not isinstance(value, bool) and 0 <= value < (1 << min(widths))
+                for value in allowed_values
+            ):
+                errors.append(f"reserved field {name!r} has invalid allowed_values {allowed_values!r}")
+        seen_signed = observed.get(name, {}).get("signed", set())
+        if len(seen_signed) == 1 and definition.get("signed") is not next(iter(seen_signed)):
+            errors.append(
+                f"field definition {name!r} signedness {definition.get('signed')!r} disagrees with encoded pieces"
+            )
+    return definitions
+
+
 def validate(path: str) -> List[str]:
     with open(path, "r", encoding="utf-8") as f:
         spec = json.load(f)
@@ -250,6 +343,20 @@ def validate(path: str) -> List[str]:
 
     _validate_engine_ops(spec, errors)
 
+    compiled_fields = _validate_field_definitions(spec, errors)
+
+    if not isinstance(spec.get("semantics_conventions"), dict):
+        errors.append("missing compiled semantics_conventions")
+
+    retired = spec.get("retired_encodings")
+    retired_entries = retired.get("entries") if isinstance(retired, dict) else None
+    if not isinstance(retired_entries, list):
+        errors.append("missing compiled retired_encodings.entries")
+    else:
+        retired_names = {str(entry.get("retired_mnemonic") or "") for entry in retired_entries}
+        if retired_names != {"B.IOD", "BSTART.PAR"}:
+            errors.append(f"retired encoding identities must be exactly B.IOD and BSTART.PAR, got {retired_names}")
+
     for inst in spec.get("instructions", []):
         inst_id = inst.get("id", inst.get("mnemonic", "<missing-id>"))
         mnemonic = str(inst.get("mnemonic", "")).strip().upper()
@@ -257,8 +364,19 @@ def validate(path: str) -> List[str]:
         # Historical cleanup guard: the vector block headers are VPAR/VSEQ.
         # If an older mnemonic spelling ("BSTART.VEC") reappears in golden/spec,
         # treat it as a hard error so it cannot silently regress.
-        if mnemonic == "BSTART.VEC":
-            errors.append(f"{inst_id}: forbidden mnemonic present in spec: BSTART.VEC (use BSTART.VPAR/VSEQ)")
+        forbidden_mnemonics = {
+            "BSTART.VEC": "use BSTART.VPAR/VSEQ",
+            "BSTART.PAR": "use BSTART.TEPL",
+            "B.IOD": "use B.IOR/B.IOT",
+        }
+        if mnemonic in forbidden_mnemonics:
+            errors.append(
+                f"{inst_id}: forbidden mnemonic present in spec: {mnemonic} "
+                f"({forbidden_mnemonics[mnemonic]})"
+            )
+
+        if not inst.get("uop_big_kind") or not isinstance(inst.get("uop_class"), dict):
+            errors.append(f"{inst_id}: missing canonical uop classification")
 
         parts = inst.get("parts", [])
         enc = inst.get("encoding", {})
@@ -302,6 +420,19 @@ def validate(path: str) -> List[str]:
                     errors.append(
                         f"{inst_id}: part[{i}] pattern-derived mask/match disagree "
                         f"(mask {pmask:#x} vs {mask:#x}, match {pmatch:#x} vs {match:#x})"
+                    )
+
+            for field in enc_part.get("fields", []):
+                name = str(field.get("name") or "").strip()
+                definition = compiled_fields.get(name)
+                if not isinstance(definition, dict):
+                    errors.append(f"{inst_id}: field {name!r} missing from compiled field definitions")
+                    continue
+                width = sum(int(piece.get("width", 0)) for piece in field.get("pieces", []))
+                if width not in definition.get("widths", []):
+                    errors.append(
+                        f"{inst_id}: field {name!r} width {width} is absent from definition widths "
+                        f"{definition.get('widths')}"
                     )
 
     return errors

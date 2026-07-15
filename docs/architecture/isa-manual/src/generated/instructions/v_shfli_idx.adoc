@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_shfli_idx.svg[V.SHFLI.IDX encoding,width=800]
+image::../encodings/enc_v_shfli_idx_parts.svg[V.SHFLI.IDX encoding,width=800]
 
 *Uop-Class:* VEC
 

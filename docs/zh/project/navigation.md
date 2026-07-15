@@ -10,7 +10,7 @@
 - `compiler/` — 编译器端子模块（`compiler/llvm`、`compiler/ptoas`）
 - `emulator/` — 上游 QEMU 子模块 (`emulator/qemu`)
 - `kernel/` — 上游 Linux 子模块 (`kernel/linux`)
-- `rtl/` — 灵犀Core 子模块 (`rtl/ZXTERMEN45QXZCore`) + rtl 注释
+- `rtl/` — 灵犀Core 子模块 (`rtl/LinxCore`) + rtl 注释
 - `tools/` — 生成器、回归、pyCircuit 子模块
 - `workloads/` — 基准运行程序 + 生成的工件 + PTO 内核子模块
 - `isa/` — ISA 事实来源和生成的目录

@@ -1,12 +1,12 @@
 {
-  "coverage_count": 615,
-  "coverage_ratio_percent": 86.62,
-  "form_coverage_count": 614,
-  "form_coverage_ratio_percent": 82.97,
+  "coverage_count": 618,
+  "coverage_ratio_percent": 86.92,
+  "form_coverage_count": 621,
+  "form_coverage_ratio_percent": 83.13,
   "form_missing_count": 126,
-  "generated_at_utc": "2026-07-05 11:59:31Z",
-  "legal_form_count": 740,
-  "legal_mnemonic_count": 710,
+  "generated_at_utc": "2026-07-15 10:11:15Z",
+  "legal_form_count": 747,
+  "legal_mnemonic_count": 711,
   "mapped_by_prefix": {
     "ACRC": 1,
     "ACRE": 1,
@@ -20,13 +20,13 @@
     "ANDIW": 1,
     "ANDW": 1,
     "ASSERT": 1,
-    "B": 14,
+    "B": 15,
     "BC": 2,
     "BCNT": 1,
     "BIC": 1,
     "BIS": 1,
     "BSE": 1,
-    "BSTART": 20,
+    "BSTART": 19,
     "BSTOP": 1,
     "BWE": 1,
     "BWI": 1,
@@ -82,6 +82,7 @@
     "IC": 2,
     "J": 1,
     "JR": 1,
+    "L": 3,
     "LB": 2,
     "LBI": 1,
     "LBU": 2,
@@ -178,13 +179,13 @@
     "ANDIW": 1,
     "ANDW": 1,
     "ASSERT": 1,
-    "B": 19,
+    "B": 23,
     "BC": 2,
     "BCNT": 1,
     "BIC": 1,
     "BIS": 1,
     "BSE": 1,
-    "BSTART": 19,
+    "BSTART": 18,
     "BSTOP": 1,
     "BWE": 1,
     "BWI": 1,
@@ -240,6 +241,7 @@
     "IC": 2,
     "J": 1,
     "JR": 1,
+    "L": 4,
     "LB": 2,
     "LBI": 1,
     "LBU": 2,
@@ -378,6 +380,12 @@
     "b_arg_nz2dn": [
       "B.ARG"
     ],
+    "b_catr": [
+      "B.CATR"
+    ],
+    "b_datr": [
+      "B.DATR"
+    ],
     "b_eq": [
       "B.EQ"
     ],
@@ -392,9 +400,6 @@
     ],
     "b_hint_trace": [
       "B.HINT"
-    ],
-    "b_iod": [
-      "B.IOD"
     ],
     "b_ior": [
       "B.IOR"
@@ -500,7 +505,6 @@
     ],
     "bstart_tepl": [
       "BSTART.TEPL",
-      "BSTART.PAR",
       "BSTART.TLOAD",
       "BSTART.TSTORE",
       "BSTART.TMATMUL",
@@ -1501,6 +1505,15 @@
     "jr": [
       "JR"
     ],
+    "l_bstart_fp": [
+      "L.BSTART.FP"
+    ],
+    "l_bstart_std": [
+      "L.BSTART.STD"
+    ],
+    "l_bstart_sys": [
+      "L.BSTART.SYS"
+    ],
     "lb": [
       "LB"
     ],
@@ -2265,31 +2278,27 @@
     ]
   },
   "missing_by_prefix": {
-    "B": 3,
+    "B": 1,
     "C": 1,
     "V": 90,
     "XB": 1
   },
-  "missing_count": 95,
+  "missing_count": 93,
   "missing_forms_by_prefix": {
-    "B": 8,
+    "B": 3,
     "BSTART": 14,
     "C": 2,
     "DC": 2,
     "HL": 5,
+    "L": 5,
     "LR": 2,
     "V": 92,
     "XB": 1
   },
   "missing_spec_forms": [
-    "B.CATR [len=32 mask=0x7fff match=0x23]",
-    "B.DATR [len=32 mask=0x707f match=0x1023]",
     "B.DIM [len=32 mask=0x707f match=0x1043]",
     "B.DIM [len=32 mask=0x707f match=0x2043]",
     "B.DIM [len=32 mask=0x707f match=0x43]",
-    "B.IOT [len=32 mask=0x707f match=0x4013]",
-    "B.IOT [len=32 mask=0x803f707f match=0x5013]",
-    "B.IOT [len=32 mask=0xc03fffff match=0x6013]",
     "BSTART CALL [len=32 mask=0xf83f000f match=0x50160002]",
     "BSTART [len=32 mask=0x7f match=0x11]",
     "BSTART [len=32 mask=0x7f match=0x21]",
@@ -2313,6 +2322,11 @@
     "HL.CCAT [len=64 mask=0xffff0000707f07ff match=0x105d000e]",
     "HL.CCATW [len=64 mask=0xffff0000707f07ff match=0x205d000e]",
     "HL.PRF [len=64 mask=0xffff00007fff07ff match=0x7009000e]",
+    "L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x10810000000f]",
+    "L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x20810000000f]",
+    "L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x30810000000f]",
+    "L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x40810000000f]",
+    "L.BSTART.SYS [len=64 mask=0x7fff0000007f match=0x10110000000f]",
     "LR.D [len=32 mask=0xf000707f match=0x3000000b]",
     "LR.W [len=32 mask=0xf000707f match=0x2000000b]",
     "V.FABS [len=64 mask=0xfff0707ffff0707f match=0x7b0000007f]",
@@ -2410,8 +2424,6 @@
     "XB [len=32 mask=0x7fff match=0x6f81]"
   ],
   "missing_spec_mnemonics": [
-    "B.CATR",
-    "B.DATR",
     "B.DIM",
     "C.SETRET",
     "V.LB",
@@ -2506,14 +2518,14 @@
     "V.SWI.U.BRG",
     "XB"
   ],
-  "qemu_mapped_spec_forms": 614,
-  "qemu_mapped_spec_mnemonics": 615,
-  "qemu_meta_mnemonics": 651,
+  "qemu_mapped_spec_forms": 621,
+  "qemu_mapped_spec_mnemonics": 618,
+  "qemu_meta_mnemonics": 645,
   "qemu_meta_path": "/Users/zhoubot/linx-isa/emulator/qemu/target/linx/linx_opcode_meta_gen.h",
   "qemu_root": "/Users/zhoubot/linx-isa/emulator/qemu",
   "qemu_source_kind": "decode",
-  "qemu_unique_forms": 652,
-  "qemu_unique_mnemonics": 652,
+  "qemu_unique_forms": 653,
+  "qemu_unique_mnemonics": 645,
   "reserved_form_count": 0,
   "reserved_mnemonic_count": 0,
   "result": {
@@ -2522,25 +2534,14 @@
   },
   "schema_version": "qemu-isa-coverage-v2",
   "spec_path": "/Users/zhoubot/linx-isa/isa/v0.56/linxisa-v0.56.json",
-  "spec_total_forms": 740,
-  "spec_unique_mnemonics": 710,
+  "spec_total_forms": 747,
+  "spec_unique_mnemonics": 711,
   "unmapped_qemu_mnemonics": [
-    "b_attr",
     "b_dim_lb0",
     "b_dim_lb1",
     "b_dim_lb2",
-    "b_ioti",
     "bstart_fall",
     "bstart_split_cond",
-    "bstart_split_direct",
-    "l_bstart_fp_call",
-    "l_bstart_fp_cond",
-    "l_bstart_fp_direct",
-    "l_bstart_fp_fall",
-    "l_bstart_std_call",
-    "l_bstart_std_cond",
-    "l_bstart_std_direct",
-    "l_bstart_std_fall",
-    "l_bstart_sys"
+    "bstart_split_direct"
   ]
 }

@@ -2,7 +2,7 @@
 
 规范源存储库：
 
-- `lib/musl` (`git@github.com:ZXTERMEN40QXZ/musl.git`)
+- `lib/musl` (`git@github.com:LinxISA/musl.git`)
 
 ## 目标
 

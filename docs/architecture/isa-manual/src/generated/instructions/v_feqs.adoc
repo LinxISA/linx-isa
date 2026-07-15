@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_feqs.svg[V.FEQS encoding,width=800]
+image::../encodings/enc_v_feqs_parts.svg[V.FEQS encoding,width=800]
 
 *Uop-Class:* VEC
 

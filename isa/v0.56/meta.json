@@ -7,11 +7,12 @@
   ],
   "isa": "LinxISA",
   "notes": [
-    "This directory is the authoritative staged golden ISA definition for v0.56.4.",
-    "v0.56.4 is the live canonical LinxISA profile for this repository.",
-    "v0.56.4 retains the expanded 16-entry-per-hand tile register file, dynamic tile capacity descriptors, and the canonical B.IOT/B.CATR/B.DATR block descriptor spellings.",
+    "This directory is the authoritative staged golden ISA definition for v0.56.5.",
+    "v0.56.5 is the live canonical LinxISA profile for this repository.",
+    "v0.56.5 retains the expanded 16-entry-per-hand tile register file, dynamic tile capacity descriptors, and the canonical B.IOR/B.IOT/B.CATR/B.DATR block descriptor spellings.",
+    "B.IOD is a reserved encoding. BSTART.PAR is a retired spelling whose former bit pattern decodes only as BSTART.TEPL.",
     "Historical pre-v0.56 profile material is removed from active repository surfaces after this profile validates."
   ],
   "status": "canonical",
-  "version": "0.56.4"
+  "version": "0.56.5"
 }

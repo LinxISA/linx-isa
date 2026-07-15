@@ -18,9 +18,14 @@
 
 <div class="enc-diagram">
 
-<figure>
-<img src="../wavedrom/enc_b_hint.svg" alt="B.HINT encoding" width="100%" />
-<figcaption>Bitfield encoding diagram. MSB is on the left, LSB on the right.</figcaption>
+<figure id="encoding-b_hint_32_69d942ff1583">
+<img src="../wavedrom/enc_b_hint_32_69d942ff1583.svg" alt="B.HINT encoding form b_hint_32_69d942ff1583" width="100%" />
+<figcaption><code>b_hint_32_69d942ff1583</code> — <code>B.HINT {BR.{likely, unlikely}, TEMP.{hot, warm, cool, none}, PRFSIZE}</code>. MSB is on the left, LSB is on the right.</figcaption>
+</figure>
+
+<figure id="encoding-b_hint_32_f7d01d734925">
+<img src="../wavedrom/enc_b_hint_32_f7d01d734925.svg" alt="B.HINT encoding form b_hint_32_f7d01d734925" width="100%" />
+<figcaption><code>b_hint_32_f7d01d734925</code> — <code>B.HINT TRACE.{begin, end}</code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
 </div>
@@ -37,14 +42,14 @@ Instruction from the Block Hint group.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `Bits 31:16 are reserved zero.`
 
 ## Full Catalog Forms
 
-| Assembly | Length | Decode |
-|----------|--------|--------|
-| `B.HINT {BR.{likely, unlikely}, TEMP.{hot, warm, cool, none}, PRFSIZE}` | 32 | — |
-| `B.HINT TRACE.{begin, end}` | 32 | — |
+| Form ID | Assembly | Length | Decode | Encoding |
+|---------|----------|--------|--------|----------|
+| `b_hint_32_69d942ff1583` | `B.HINT {BR.{likely, unlikely}, TEMP.{hot, warm, cool, none}, PRFSIZE}` | 32 | — | [SVG](../wavedrom/enc_b_hint_32_69d942ff1583.svg) |
+| `b_hint_32_f7d01d734925` | `B.HINT TRACE.{begin, end}` | 32 | — | [SVG](../wavedrom/enc_b_hint_32_f7d01d734925.svg) |
 
 <div class="insn-nav">
 

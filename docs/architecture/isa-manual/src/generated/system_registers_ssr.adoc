@@ -19,7 +19,7 @@ SSR access instructions:
 
 |`0x0000` |`TP` |RW |Thread pointer (TLS base).
 |`0x0001` |`GP` |RW |Global pointer (global data base).
-|`0x0010` |`TIME` |RO |Timer counter.
+|`0x0010` |`TIME` |RO |Monotonic time counter in nanoseconds. Reads return elapsed monotonic time modulo 2^64 and are not affected by wall-clock adjustments.
 |`0x0020` |`CSTATE` |RW |Common state (privilege + execution state). Includes active ACR and interrupt mask.
 |`0x0021` |`LXLCID` |RO |Linx logical core ID.
 |`0x0022` |`VENDOR` |RO |Vendor ID.

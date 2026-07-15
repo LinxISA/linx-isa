@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_sbi_brg.svg[V.SBI.BRG encoding,width=800]
+image::../encodings/enc_v_sbi_brg_parts.svg[V.SBI.BRG encoding,width=800]
 
 *Uop-Class:* VEC
 

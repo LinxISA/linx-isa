@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_dc_cisw.svg[DC.CISW encoding,width=800]
+image::../encodings/enc_dc_cisw.svg[DC.CISW encoding,width=800]
 
 *Uop-Class:* SYS
 

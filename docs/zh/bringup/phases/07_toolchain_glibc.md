@@ -2,7 +2,7 @@
 
 规范源存储库：
 
-- `lib/glibc` (`git@github.com:ZXTERMEN40QXZ/glibc.git`)
+- `lib/glibc` (`git@github.com:LinxISA/glibc.git`)
 
 ## 目标
 

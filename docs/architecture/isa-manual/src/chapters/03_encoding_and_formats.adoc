@@ -198,19 +198,19 @@ image::../generated/encodings/enc_v_add_parts.svg[V.ADD encoding,width=800]
 
 [NOTE]
 ====
-A complete set of encoding diagrams for all 740+ instruction forms is available in the
+A complete set of encoding diagrams for all 747 instruction forms is available in the
 `generated/encodings/` directory.  The diagrams use a consistent color scheme:
 
 [cols="2,1,3",options="header"]
-!===
-!Color !Field type !Examples
-!#2E7D32 (green) !Destination register !Rd, RegDst
-!#1565C0 (blue) !First source register !Rs1, SrcL
-!#00796B (teal) !Second source register !Rs2, SrcR
-!#E65100 (orange) !Third source / FMA operand !Rs3, SrcD, SrcA
-!#6A1B9A (purple) !Opcode / funct / rounding mode !funct3, funct7, opcode, RST_Type
-!#AD1457 (pink) !Shift amount !shamt
-!#C62828 (red) !Immediate / offset !uimm12, simm12, offset, pred, succ
-!#90A4AE (gray) !Zeroed / reserved constant !(0)
-!===
+|===
+|Color |Field type |Examples
+|`#2E7D32` (green) |Destination register |Rd, RegDst
+|`#1565C0` (blue) |First source register |Rs1, SrcL
+|`#00796B` (teal) |Second source register |Rs2, SrcR
+|`#E65100` (orange) |Third source / FMA operand |Rs3, SrcD, SrcA
+|`#6A1B9A` (purple) |Opcode / funct / rounding mode |funct3, funct7, opcode, RST_Type
+|`#AD1457` (pink) |Shift amount |shamt
+|`#C62828` (red) |Immediate / offset |uimm12, simm12, offset, pred, succ
+|`#90A4AE` (gray) |Zeroed / reserved constant |(0)
+|===
 ====

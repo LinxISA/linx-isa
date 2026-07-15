@@ -5,8 +5,8 @@
 <span class="ch-tag ch-tag-04">Ch 04</span>
 &nbsp; <strong>Block ISA — Block-structured Control Flow</strong> &nbsp;|&nbsp;
 **Group:** Block Split &nbsp;|&nbsp;
-**Forms:** 45 &nbsp;|&nbsp;
-**Unique mnemonics:** 31
+**Forms:** 44 &nbsp;|&nbsp;
+**Unique mnemonics:** 30
 
 </div>
 
@@ -23,7 +23,6 @@ Block structural instructions (BSTART, BSTOP, FENTRY, etc.).
 | [BSTART.FP](../instructions/bstart_fp.md) | `BSTART.FP RET` | 32 | — | Terminates the current block and begins the next. |
 | [BSTART.MPAR](../instructions/bstart_mpar.md) | `BSTART.MPAR <VS8, VS16>` | 32 | — | Terminates the current block and begins the next. |
 | [BSTART.MSEQ](../instructions/bstart_mseq.md) | `BSTART.MSEQ <VS8, VS16>` | 32 | — | Terminates the current block and begins the next. |
-| [BSTART.PAR](../instructions/bstart_par.md) | `BSTART.PAR TileOpcode, DataType` | 32 | — | Terminates the current block and begins the next. |
 | [BSTART.STD](../instructions/bstart_std.md) | `BSTART.STD COND, <label>` | 32 | — | Terminates the current block and begins the next. |
 | [BSTART.SYS](../instructions/bstart_sys.md) | `BSTART.SYS FALL<, fixup_label>` | 32 | — | Terminates the current block and begins the next. |
 | [BSTART.TEPL](../instructions/bstart_tepl.md) | `BSTART.TEPL TileOpcode, DataType` | 32 | — | Terminates the current block and begins the next. |

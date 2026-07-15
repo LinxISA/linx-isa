@@ -108,12 +108,12 @@
         {
           "id": "tsvc-compile-only-floor",
           "timeout_seconds": 900,
-          "command": "python3 workloads/tsvc/run_tsvc.py --clang \"${CLANG:-$PWD/compiler/llvm/build-linxisa-clang/bin/clang}\" --lld \"${LLD:-$PWD/compiler/llvm/build-linxisa-clang/bin/ld.lld}\" --vector-mode auto --strict-fail-under \"${TSVC_STRICT_FAIL_UNDER:-148}\" --source-policy linx-v03-parity --no-run-qemu --out-dir \"${TSVC_OUT_DIR:-$PWD/workloads/generated/tsvc-pr-compile}\""
+          "command": "python3 workloads/tsvc/run_tsvc.py --clang \"${CLANG:-$PWD/compiler/llvm/build-linxisa-clang/bin/clang}\" --lld \"${LLD:-$PWD/compiler/llvm/build-linxisa-clang/bin/ld.lld}\" --vector-mode auto --strict-fail-under \"${TSVC_STRICT_FAIL_UNDER:-148}\" --source-policy linx-v056 --no-run-qemu --out-dir \"${TSVC_OUT_DIR:-$PWD/workloads/generated/tsvc-pr-compile}\""
         },
         {
           "id": "tsvc-qemu-batched",
           "timeout_seconds": 3600,
-          "command": "python3 workloads/tsvc/run_tsvc_batched.py --out-dir \"${TSVC_QEMU_OUT_DIR:-$PWD/workloads/generated/tsvc-pr-qemu}\" --batch-size \"${TSVC_BATCH_SIZE:-20}\" --strict-fail-under \"${TSVC_STRICT_FAIL_UNDER:-148}\" --vector-mode auto --clang \"${CLANG:-$PWD/compiler/llvm/build-linxisa-clang/bin/clang}\" --lld \"${LLD:-$PWD/compiler/llvm/build-linxisa-clang/bin/ld.lld}\" --qemu \"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\" --source-policy linx-v03-parity --qemu-timeout \"${TSVC_QEMU_TIMEOUT:-240}\""
+          "command": "python3 workloads/tsvc/run_tsvc_batched.py --out-dir \"${TSVC_QEMU_OUT_DIR:-$PWD/workloads/generated/tsvc-pr-qemu}\" --batch-size \"${TSVC_BATCH_SIZE:-20}\" --strict-fail-under \"${TSVC_STRICT_FAIL_UNDER:-148}\" --vector-mode auto --clang \"${CLANG:-$PWD/compiler/llvm/build-linxisa-clang/bin/clang}\" --lld \"${LLD:-$PWD/compiler/llvm/build-linxisa-clang/bin/ld.lld}\" --qemu \"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\" --source-policy linx-v056 --qemu-timeout \"${TSVC_QEMU_TIMEOUT:-240}\""
         }
       ]
     },

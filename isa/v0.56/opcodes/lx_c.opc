@@ -1,4 +1,4 @@
-# LinxISA opcode database (generated via tools/isa/split_compiled.py)
+# Canonical LinxISA v0.56 opcode source (consumed by tools/isa/build_golden.py)
 #
 # Format:
 #   MNEMONIC [<json meta>] : <bit-assignments> [| <bit-assignments>] ; <operands> ; <constraints>

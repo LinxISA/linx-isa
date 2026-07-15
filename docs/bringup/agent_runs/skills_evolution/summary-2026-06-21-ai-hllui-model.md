@@ -15,7 +15,7 @@
 ## Rationale
 
 `pto-kernel-argmax_fp32` passed QEMU but previously timed out in
-`model/LinxCoreModel/bin/gfsim` because the model treated the 48-bit `LUI`
+`tools/LinxCoreModel/bin/gfsim` because the model treated the 48-bit `LUI`
 form as high-half materialization. Sail and QEMU define `HL.LUI` and `HL.LIS`
 as sign-extending the decoded 32-bit immediate, while `HL.LIU` zero-extends it.
 This contract is reusable for future scalar loop-divergence triage.

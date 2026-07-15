@@ -1,7 +1,7 @@
 # 灵犀Core v0.56 微架构合约
 
 > 此发布的页面镜像了规范的 灵犀Core 源代码
-> `rtl/ZXTERMEN45QXZCore/docs/architecture/microarchitecture.md`。
+> `rtl/LinxCore/docs/architecture/microarchitecture.md`。
 
 
 ## 基线 super标量 合约
@@ -70,8 +70,8 @@
 
 详细的结构目录规范如下：
 
-- `rtl/ZXTERMEN45QXZCore/docs/architecture/module-catalog.md`
-- `rtl/ZXTERMEN45QXZCore/docs/architecture/pipeline-stage-catalog.md`
+- `rtl/LinxCore/docs/architecture/module-catalog.md`
+- `rtl/LinxCore/docs/architecture/pipeline-stage-catalog.md`
 
 ## 管道合同（LC-MA-PIPE-001）- 阶段所有权必须在前端、解码、重命名、发布、
   执行并提交；不允许隐藏的直通塌陷。
@@ -428,8 +428,8 @@
 
 详细的恢复行为记录在：
 
-- `rtl/ZXTERMEN45QXZCore/docs/architecture/branch_recovery_rules.md`
-- `rtl/ZXTERMEN45QXZCore/docs/architecture/linxisa_block_control_flow.md`
+- `rtl/LinxCore/docs/architecture/branch_recovery_rules.md`
+- `rtl/LinxCore/docs/architecture/linxisa_block_control_flow.md`
 
 ## BID 和 BROB 合约
 
@@ -437,8 +437,8 @@
 - 默认 BID 编码为 `BID = (uniq << 7) | slot_id`，
   `slot_id = BID[6:0]`为默认128条。
 - 对于 PE 响应路由，`cmd_tag` 必须等于 `bid[7:0]`。
-- 块完成是 `ZXTERMEN44QXZ_done && (needs_engine ? engine_done : 1)`。
-- `ZXTERMEN44QXZ_done` 在 `BSTART` 退休和 `BSTOP` 退休时触发。
+- 块完成是 `scalar_done && (needs_engine ? engine_done : 1)`。
+- `scalar_done` 在 `BSTART` 退休和 `BSTOP` 退休时触发。
 - 刷新和重定向行为在每个 BID 承载队列中都是基于 BID 的：
   保留`bid <= flush_bid`，杀死`bid > flush_bid`。
 - BROB、BISQ 和每个块承载路径必须保留全角 BID
@@ -450,14 +450,14 @@
 - 动态块实例完全崩溃为三种架构之一
   参与者集：
   - `{}` 用于空/仅控制 标量 系列实例，
-  - `{ZXTERMEN44QXZ}` 适用于 标量 系列实例，具有真正的 标量 块体，
-  - `{non-ZXTERMEN44QXZ}` 适用于规范的非 标量 块类型。
+  - `{scalar}` 适用于 标量 系列实例，具有真正的 标量 块体，
+  - `{non-scalar}` 适用于规范的非 标量 块类型。
 - 仅 标量/控制系列块允许动态退化为 `{}`
   类型。
-- 规范的非 标量 块类型 始终带有 `{non-ZXTERMEN44QXZ}` 完成
+- 规范的非 标量 块类型 始终带有 `{non-scalar}` 完成
   义务。
-- 架构`{non-ZXTERMEN44QXZ}`参与者具有单点解析
-  语义：`BROB` 和退休观察每个 `non-ZXTERMEN44QXZ-done` 事件
+- 架构`{non-scalar}`参与者具有单点解析
+  语义：`BROB` 和退休观察每个 `non-scalar-done` 事件
   块实例。
 
 ### 区块生命周期规则
@@ -471,8 +471,8 @@
 
 详细的 BROB 和块结构行为仍然记录在：
 
-- `rtl/ZXTERMEN45QXZCore/docs/architecture/stages/BROB.md`
-- `rtl/ZXTERMEN45QXZCore/docs/architecture/block_fabric_contract.md`
+- `rtl/LinxCore/docs/architecture/stages/BROB.md`
+- `rtl/LinxCore/docs/architecture/block_fabric_contract.md`
 
 ## 特权/陷阱合约 (LC-MA-PRV-001)- U->S 陷阱条目和 `SRET` 返回必须保留架构控制和状态
   过渡。
@@ -517,7 +517,7 @@
 
 详细的排序行为记录在：
 
-- `rtl/ZXTERMEN45QXZCore/docs/architecture/lsid_memory_ordering.md`
+- `rtl/LinxCore/docs/architecture/lsid_memory_ordering.md`
 
 ## 发动机集成合同（LC-MA-ENG-001）
 
@@ -549,4 +549,4 @@
 
 本文档中每个合约 ID 的门映射定义如下：
 
-- `rtl/ZXTERMEN45QXZCore/docs/architecture/verification-matrix.md`
+- `rtl/LinxCore/docs/architecture/verification-matrix.md`

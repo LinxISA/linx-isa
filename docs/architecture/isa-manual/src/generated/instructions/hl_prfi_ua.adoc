@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_hl_prfi_ua.svg[HL.PRFI.UA encoding,width=800]
+image::../encodings/enc_hl_prfi_ua.svg[HL.PRFI.UA encoding,width=800]
 
 *Uop-Class:* LDA
 

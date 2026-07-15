@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_cmp_ltu.svg[CMP.LTU encoding,width=800]
+image::../encodings/enc_cmp_ltu.svg[CMP.LTU encoding,width=800]
 
 *Uop-Class:* BRU
 

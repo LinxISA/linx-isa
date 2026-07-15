@@ -19,7 +19,7 @@ PTO_PARITY_STOP_AFTER_STAGE=PTO_PARITY_STAGE_FLASH_ATTENTION_MASKED
 ```
 
 The reusable boundary is that this case proves the stage prefix through the
-`flash_attention_masked` digest and plain `model/LinxCoreModel/bin/gfsim -f
+`flash_attention_masked` digest and plain `tools/LinxCoreModel/bin/gfsim -f
 <elf>`, while the full smoke-sized `avs-pto-parity` row remains the maturity
 target.
 

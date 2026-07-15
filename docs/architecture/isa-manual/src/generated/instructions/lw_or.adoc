@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_lw_or.svg[LW.OR encoding,width=800]
+image::../encodings/enc_lw_or.svg[LW.OR encoding,width=800]
 
 *Uop-Class:* AMO
 

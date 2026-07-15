@@ -22,8 +22,8 @@
       "rule": "Prefer the current in-repo build-linx QEMU binary for local AI bring-up unless QEMU or a matching clean-build marker explicitly selects another binary."
     },
     "model": {
-      "model_root": "model/LinxCoreModel",
-      "binary": "model/LinxCoreModel/bin/gfsim",
+      "model_root": "tools/LinxCoreModel",
+      "binary": "tools/LinxCoreModel/bin/gfsim",
       "cmake_options": [
         "-DOPT_LEVEL=O3",
         "-DDISABLE_DEBUG_SYMBOLS=ON"
@@ -166,7 +166,7 @@
       ],
       "owner": "model",
       "hard_break": true,
-      "why": "Final execution target: run only QEMU-passing ELFs through model/LinxCoreModel/bin/gfsim.",
+      "why": "Final execution target: run only QEMU-passing ELFs through tools/LinxCoreModel/bin/gfsim.",
       "promotes": "model-passing cases or model-owned fix packets with stop reason, log, optional trace, digest evidence, finisher/assertion markers, and latest BROB head progress"
     },
     {
@@ -278,13 +278,13 @@
     ]
   },
   "final_target": {
-    "model_root": "model/LinxCoreModel",
-    "binary": "model/LinxCoreModel/bin/gfsim",
-    "command": "model/LinxCoreModel/bin/gfsim -f <linx.elf>",
+    "model_root": "tools/LinxCoreModel",
+    "binary": "tools/LinxCoreModel/bin/gfsim",
+    "command": "tools/LinxCoreModel/bin/gfsim -f <linx.elf>",
     "artifact": "Linx ELF"
   },
   "model_diagnostics": {
-    "source": "model/LinxCoreModel/bin/gfsim stdout/stderr log",
+    "source": "tools/LinxCoreModel/bin/gfsim stdout/stderr log",
     "report_fields": [
       "finisher_value",
       "finisher_status",

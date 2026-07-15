@@ -38,7 +38,7 @@
 | A6.11 | 向量串行块内只允许多个group按照程序序以group id由小到大顺序提交，最后一个group提交后则向量串行块整体提交。 |
 | A6.12 | 向量串行块内的不同group间的load/store local 允许地址重合，但需要按照group id的顺序按序修改。 |
 | A6.13 | 向量串行块内的同一个group内的load/store local 基于地址保序，不同group的load/store local按照地址顺序进行全局保序。 |
-| A7 | **向量并行块**（BSTART.PAR）：提供向量计算能力。拆成多个Group执行，Group间访存不需要保序执行。特征如下： |
+| A7 | **模板块**（`BSTART.TEPL`）：提供生成式向量/Tile 计算能力。拆成多个 Group 执行，Group 间访存不需要保序执行。特征如下： |
 | A7.1 | 向量并行块只支持分离块形式的块结构 |
 | A7.2 | 向量并行块仅支持Fall跳转方式 |
 | A7.3 | 向量并行块允许访问 全局寄存器GGPR，系统寄存器SSR，以及Tile寄存器等全局状态。不允许访问内存。 |

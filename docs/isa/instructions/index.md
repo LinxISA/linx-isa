@@ -1,6 +1,6 @@
 # All Instructions
 
-Complete alphabetical index of all **740** instruction forms in the LinxISA v0.56 catalog.
+Complete alphabetical index of all **747** instruction forms in the LinxISA v0.56 catalog.
 
 Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 
@@ -28,15 +28,24 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | Mnemonic | Group | Bits | Description |
 |----------|-------|------|-------------|
 | [B.ARG](b_arg.md) | [Block Argument](../groups/block_argument.md) | 32 | Instruction from the Block Argument group. |
+| [B.ARG](b_arg.md) | [Block Argument](../groups/block_argument.md) | 32 | Instruction from the Block Argument group. |
+| [B.ARG](b_arg.md) | [Block Argument](../groups/block_argument.md) | 32 | Instruction from the Block Argument group. |
+| [B.ARG](b_arg.md) | [Block Argument](../groups/block_argument.md) | 32 | Instruction from the Block Argument group. |
+| [B.ARG](b_arg.md) | [Block Argument](../groups/block_argument.md) | 32 | Instruction from the Block Argument group. |
+| [B.ARG](b_arg.md) | [Block Argument](../groups/block_argument.md) | 32 | Instruction from the Block Argument group. |
 | [B.CATR](b_catr.md) | [Block Control Attribute](../groups/block_control_attribute.md) | 32 | Instruction from the Block Control Attribute group. |
 | [B.DATR](b_datr.md) | [Block Data Attribute](../groups/block_data_attribute.md) | 32 | Instruction from the Block Data Attribute group. |
+| [B.DIM](b_dim.md) | [Block Argument](../groups/block_argument.md) | 32 | Instruction from the Block Argument group. |
+| [B.DIM](b_dim.md) | [Block Argument](../groups/block_argument.md) | 32 | Instruction from the Block Argument group. |
 | [B.DIM](b_dim.md) | [Block Argument](../groups/block_argument.md) | 32 | Instruction from the Block Argument group. |
 | [B.EQ](b_eq.md) | [Branch](../groups/branch.md) | 32 | Conditional branch taken when SrcL equals SrcR. |
 | [B.GE](b_ge.md) | [Branch](../groups/branch.md) | 32 | Conditional branch taken when SrcL is greater than or equal to SrcR (signed). |
 | [B.GEU](b_geu.md) | [Branch](../groups/branch.md) | 32 | Conditional branch taken when SrcL is greater than or equal to SrcR (unsigned). |
 | [B.HINT](b_hint.md) | [Block Hint](../groups/block_hint.md) | 32 | Instruction from the Block Hint group. |
-| [B.IOD](b_iod.md) | [Block Input & Output](../groups/block_input_output.md) | 32 | Instruction from the Block Input & Output group. |
+| [B.HINT](b_hint.md) | [Block Hint](../groups/block_hint.md) | 32 | Instruction from the Block Hint group. |
 | [B.IOR](b_ior.md) | [Block Input & Output](../groups/block_input_output.md) | 32 | Instruction from the Block Input & Output group. |
+| [B.IOT](b_iot.md) | [Block Input & Output](../groups/block_input_output.md) | 32 | Instruction from the Block Input & Output group. |
+| [B.IOT](b_iot.md) | [Block Input & Output](../groups/block_input_output.md) | 32 | Instruction from the Block Input & Output group. |
 | [B.IOT](b_iot.md) | [Block Input & Output](../groups/block_input_output.md) | 32 | Instruction from the Block Input & Output group. |
 | [B.LT](b_lt.md) | [Branch](../groups/branch.md) | 32 | Conditional branch taken when SrcL is less than SrcR (signed). |
 | [B.LTU](b_ltu.md) | [Branch](../groups/branch.md) | 32 | Conditional branch taken when SrcL is less than SrcR (unsigned). |
@@ -51,14 +60,26 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [BIS](bis.md) | [Bit Operation](../groups/bit_operation.md) | 32 | Bit set / OR. |
 | [BSE](bse.md) | [Execution Control](../groups/execution_control.md) | 32 | Execution control instruction. |
 | [BSTART](bstart.md) | [Block Split](../groups/block_split.md) | 32 | Block split marker. Terminates the current basic block and begins the next. Encodes block type and transition kind. |
-| [BSTART CALL](bstart_call.md) | [BSTART](../groups/bstart.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART](bstart.md) | [Block Split](../groups/block_split.md) | 32 | Block split marker. Terminates the current basic block and begins the next. Encodes block type and transition kind. |
+| [BSTART CALL](bstart_call.md) | [BSTART](../groups/bstart.md) | 32 | Unconditionally transfers to a call block. The instruction preserves `ra`; returning calls require an adjacent `SETRET` or `C.SETRET`. |
 | [BSTART.ACCCVT](bstart_acccvt.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.CUBE](bstart_cube.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.FIXP](bstart_fixp.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.FP](bstart_fp.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.FP](bstart_fp.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.FP](bstart_fp.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.FP](bstart_fp.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.FP](bstart_fp.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.FP](bstart_fp.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.FP](bstart_fp.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.MPAR](bstart_mpar.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.MSEQ](bstart_mseq.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.PAR](bstart_par.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.STD](bstart_std.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.STD](bstart_std.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.STD](bstart_std.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.STD](bstart_std.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.STD](bstart_std.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.STD](bstart_std.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.STD](bstart_std.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.SYS](bstart_sys.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.TEPL](bstart_tepl.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
@@ -86,6 +107,7 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [C.AND](c_and.md) | [Arithmetic Operation](../groups/arithmetic_operation.md) | 16 | [16-bit C.] Bitwise AND. |
 | [C.B.DIM](c_b_dim.md) | [Block Dimension](../groups/block_dimension.md) | 16 | [16-bit C.] Instruction from the Block Dimension group. |
 | [C.B.DIMI](c_b_dimi.md) | [Block Dimension](../groups/block_dimension.md) | 16 | [16-bit C.] Instruction from the Block Dimension group. |
+| [C.BSTART](c_bstart.md) | [Block Split](../groups/block_split.md) | 16 | [16-bit C.] Terminates the current block and begins the next. |
 | [C.BSTART](c_bstart.md) | [Block Split](../groups/block_split.md) | 16 | [16-bit C.] Terminates the current block and begins the next. |
 | [C.BSTART.FP](c_bstart_fp.md) | [C.BSTART](../groups/c_bstart.md) | 16 | [16-bit C.] Terminates the current block and begins the next. |
 | [C.BSTART.MPAR](c_bstart_mpar.md) | [C.BSTART](../groups/c_bstart.md) | 16 | [16-bit C.] Terminates the current block and begins the next. |
@@ -213,8 +235,14 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [HL.ANDI](hl_andi.md) | [Arithmetic Operation 64bit](../groups/arithmetic_operation_64bit.md) | 48 | [48-bit HL.] Instruction from the Arithmetic Operation 64bit group. |
 | [HL.ANDIW](hl_andiw.md) | [Arithmetic Operation 32bit](../groups/arithmetic_operation_32bit.md) | 48 | [48-bit HL.] Instruction from the Arithmetic Operation 32bit group. |
 | [HL.BFI](hl_bfi.md) | [RESERVE](../groups/reserve.md) | 48 | [48-bit HL.] Bit-field insert. |
-| [HL.BSTART CALL](hl_bstart_call.md) | [BSTART](../groups/bstart.md) | 48 | [48-bit HL.] Terminates the current block and begins the next. |
+| [HL.BSTART CALL](hl_bstart_call.md) | [BSTART](../groups/bstart.md) | 48 | [48-bit HL.] Unconditionally transfers to a call block. The instruction preserves `ra`; returning calls require an adjacent `SETRET` or `C.SETRET`. |
 | [HL.BSTART.FP](hl_bstart_fp.md) | [BSTART](../groups/bstart.md) | 48 | [48-bit HL.] Terminates the current block and begins the next. |
+| [HL.BSTART.FP](hl_bstart_fp.md) | [BSTART](../groups/bstart.md) | 48 | [48-bit HL.] Terminates the current block and begins the next. |
+| [HL.BSTART.FP](hl_bstart_fp.md) | [BSTART](../groups/bstart.md) | 48 | [48-bit HL.] Terminates the current block and begins the next. |
+| [HL.BSTART.FP](hl_bstart_fp.md) | [BSTART](../groups/bstart.md) | 48 | [48-bit HL.] Terminates the current block and begins the next. |
+| [HL.BSTART.STD](hl_bstart_std.md) | [BSTART](../groups/bstart.md) | 48 | [48-bit HL.] Terminates the current block and begins the next. |
+| [HL.BSTART.STD](hl_bstart_std.md) | [BSTART](../groups/bstart.md) | 48 | [48-bit HL.] Terminates the current block and begins the next. |
+| [HL.BSTART.STD](hl_bstart_std.md) | [BSTART](../groups/bstart.md) | 48 | [48-bit HL.] Terminates the current block and begins the next. |
 | [HL.BSTART.STD](hl_bstart_std.md) | [BSTART](../groups/bstart.md) | 48 | [48-bit HL.] Terminates the current block and begins the next. |
 | [HL.BSTART.SYS](hl_bstart_sys.md) | [BSTART](../groups/bstart.md) | 48 | [48-bit HL.] Terminates the current block and begins the next. |
 | [HL.CASB](hl_casb.md) | [Atomic](../groups/atomic.md) | 48 | [48-bit HL.] Atomic memory read-modify-write operation. |
@@ -420,6 +448,15 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 
 | Mnemonic | Group | Bits | Description |
 |----------|-------|------|-------------|
+| [L.BSTART.FP](l_bstart_fp.md) | [BSTART](../groups/bstart.md) | 64 | Instruction from the BSTART group. |
+| [L.BSTART.FP](l_bstart_fp.md) | [BSTART](../groups/bstart.md) | 64 | Instruction from the BSTART group. |
+| [L.BSTART.FP](l_bstart_fp.md) | [BSTART](../groups/bstart.md) | 64 | Instruction from the BSTART group. |
+| [L.BSTART.FP](l_bstart_fp.md) | [BSTART](../groups/bstart.md) | 64 | Instruction from the BSTART group. |
+| [L.BSTART.STD](l_bstart_std.md) | [BSTART](../groups/bstart.md) | 64 | Instruction from the BSTART group. |
+| [L.BSTART.STD](l_bstart_std.md) | [BSTART](../groups/bstart.md) | 64 | Instruction from the BSTART group. |
+| [L.BSTART.STD](l_bstart_std.md) | [BSTART](../groups/bstart.md) | 64 | Instruction from the BSTART group. |
+| [L.BSTART.STD](l_bstart_std.md) | [BSTART](../groups/bstart.md) | 64 | Instruction from the BSTART group. |
+| [L.BSTART.SYS](l_bstart_sys.md) | [BSTART](../groups/bstart.md) | 64 | Instruction from the BSTART group. |
 | [LB](lb.md) | [Load Register Offset](../groups/load_register_offset.md) | 32 | Loads a signed 8-bit value from memory. |
 | [LB.PCR](lb_pcr.md) | [Load Symbol](../groups/load_symbol.md) | 32 | Loads a value from memory into a register. |
 | [LBI](lbi.md) | [Load Immediate Offset](../groups/load_immediate_offset.md) | 32 | Loads a value from memory into a register. |

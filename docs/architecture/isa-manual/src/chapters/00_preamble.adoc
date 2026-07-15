@@ -1,13 +1,13 @@
 [[preamble]]
 = Preamble
 
-**Document Version**: v0.56.4 |
+**Document Version**: v0.56.5 |
 **Architecture**: Block-Structured LinxISA with unified shader-kernel execution |
 **Classification**: Public Specification
 
 '''
 
-This document is the canonical manual for the **block-structured Linx Instruction Set Architecture (Linx ISA)**, version **v0.56.4**.
+This document is the canonical manual for the **block-structured Linx Instruction Set Architecture (Linx ISA)**, version **v0.56.5**.
 
 == Authority and Source of Truth
 
@@ -34,7 +34,7 @@ The LinxISA brand mark is a stylized **Lingxi** form that preserves the original
 [[preamble-scope]]
 == Scope and Maturity
 
-This manual describes the live **v0.56.4 Linx ISA** profile:
+This manual describes the live **v0.56.5 Linx ISA** profile:
 
 * the v0.2 privilege/MMU baseline and block-structured control-flow model,
 * structured `MPAR`/`MSEQ` shader kernels selected by `B.TEXT`,
@@ -43,7 +43,7 @@ This manual describes the live **v0.56.4 Linx ISA** profile:
 * canonical bridged kernel memory through `l.*.brg` and `v.*.brg`,
 * the first frozen rendering profile: 4KB `1024x1` row-major SoA fragment/state carriers, TAU tile-to-tile only, and descriptor-vs-StateTile state placement rules.
 
-The v0.56.4 profile remains the only live canonical profile in this repository;
+The v0.56.5 profile remains the only live canonical profile in this repository;
 future ISA deltas must be introduced as new explicit contract pages before any
 toolchain, emulator, RTL, or manual surface treats them as live behavior.
 

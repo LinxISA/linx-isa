@@ -12,7 +12,7 @@
 
 ## 当前政策
 
-- 调出增量存在于分叉历史记录中（`ZXTERMEN40QXZ/glibc`、`ZXTERMEN40QXZ/musl`）。
+- 调出增量存在于分叉历史记录中（`LinxISA/glibc`、`LinxISA/musl`）。
 - 该存储库提供编排、运行时烟雾和状态跟踪。
 - 发布严格门控使用来自 `docs/bringup/gates/latest.json` 的规范工件。
 

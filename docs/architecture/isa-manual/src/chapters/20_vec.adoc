@@ -80,7 +80,6 @@ include::../generated/instructions/v_sbi.adoc[]
 include::../generated/instructions/v_shi.adoc[]
 include::../generated/instructions/v_swi.adoc[]
 include::../generated/instructions/v_sdi.adoc[]
-include::../generated/instructions/v_sd.adoc[]
 
 === Vector Stores (Bridged Global)
 
@@ -88,7 +87,6 @@ include::../generated/instructions/v_sbi_brg.adoc[]
 include::../generated/instructions/v_shi_brg.adoc[]
 include::../generated/instructions/v_swi_brg.adoc[]
 include::../generated/instructions/v_sdi_brg.adoc[]
-include::../generated/instructions/v_sd_brg.adoc[]
 
 === Vector Memory with Scalar Base (Register Offset)
 

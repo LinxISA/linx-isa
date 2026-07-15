@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_hl_shi_pr.svg[HL.SHI.PR encoding,width=800]
+image::../encodings/enc_hl_shi_pr.svg[HL.SHI.PR encoding,width=800]
 
 *Uop-Class:* STA/PRE_INDEX
 

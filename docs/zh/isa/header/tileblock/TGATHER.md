@@ -45,12 +45,11 @@
 
 本指令拆分成以下指令进行编码：
 
-- [BSTART.PAR](../../header/BSTART.PAR.md) `TGATHER, DataType`。
+- [BSTART.TEPL](../../instructions/bstart_tepl.md) `TGATHER, DataType`。
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->Row`。
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->Col`。
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->Dep`。
 - [B.IOT](../../header/B.IOT.md) `SrcTile<.reuse>, group=0, ->DstTile<TileSize>`。
-- [B.IOD](../../header/B.IOD.md) `DepSrc0, DepSrc1, DepSrc2, ->DepDst`。
  -->
 
 ## 执行模型

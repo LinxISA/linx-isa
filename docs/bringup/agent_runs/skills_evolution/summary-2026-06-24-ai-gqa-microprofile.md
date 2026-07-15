@@ -24,7 +24,7 @@ PTO_GQA_SMOKE_DIM=1
 ```
 
 The reusable boundary is that this case proves the stage prefix through the
-`gqa` digest under plain `model/LinxCoreModel/bin/gfsim -f <elf>`. The full
+`gqa` digest under plain `tools/LinxCoreModel/bin/gfsim -f <elf>`. The full
 smoke-sized `avs-pto-parity` row remains the sparse/full-shape maturity target.
 
 ## Evidence

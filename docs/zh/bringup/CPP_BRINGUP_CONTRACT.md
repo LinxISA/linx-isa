@@ -8,7 +8,7 @@
 - 主要运行时堆栈：`compiler-rt` + `libunwind` + `libc++abi` + `libc++`。
 - 语言基线：`-std=c++17`。
 - 调出配置文件 `CXX17_NOEH`：
-  - `-fno-ZXTERMEN38QXZs`
+  - `-fno-exceptions`
   - `-fno-rtti`
 - libc 顺序：musl 通道第一，glibc 通道第二。
 - 优惠政策：`pin`和`external`车道均须通过。

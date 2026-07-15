@@ -1,7 +1,7 @@
 # 灵犀Core 管道阶段目录
 
 > 此发布的页面镜像了规范的 灵犀Core 源代码
-> `rtl/ZXTERMEN45QXZCore/docs/architecture/pipeline-stage-catalog.md`。
+> `rtl/LinxCore/docs/architecture/pipeline-stage-catalog.md`。
 
 
 本章定义了架构上可见的 灵犀Core 舞台布景和
@@ -53,7 +53,7 @@
 
 - 所有者模块：
   - 完整 IFU 路径：`src/bcc/ifu/f3.py`
-  - 导出/调出路径：`src/top/modules/ib.py` (`ZXTERMEN45QXZCoreTopIb`)
+  - 导出/调出路径：`src/top/modules/ib.py` (`LinxCoreTopIb`)
 - 设计角色：每线程指令缓冲区组提供对齐解码
   组。
 
@@ -95,9 +95,9 @@
 - 设计作用：将实际IQ条目写入选定的物理队列。
 
 ### 智商- 所有者模块：
-  - `src/bcc/backend/dispatch.py` (`ZXTERMEN45QXZCoreDispatchStage`)
-  - `src/bcc/backend/issue.py` (`ZXTERMEN45QXZCoreIssueStage`,
-    `ZXTERMEN45QXZCoreIqUpdateStage`、`ZXTERMEN45QXZCoreIssuePicker`）
+  - `src/bcc/backend/dispatch.py` (`LinxCoreDispatchStage`)
+  - `src/bcc/backend/issue.py` (`LinxCoreIssueStage`,
+    `LinxCoreIqUpdateStage`、`LinxCoreIssuePicker`）
 - 设计角色：队列分配、就绪跟踪、最早优先选择以及
   `inflight` 居住地。
 
@@ -106,22 +106,22 @@
 ### P1
 
 - 所有者模块：
-  - `src/bcc/backend/issue.py`（`ZXTERMEN45QXZCoreIssuePicker`、`ZXTERMEN45QXZCoreIssueStage`）
+  - `src/bcc/backend/issue.py`（`LinxCoreIssuePicker`、`LinxCoreIssueStage`）
 - 设计角色：IQ挑选阶段选择准备好的、非`inflight`的条目和
   断言 `inflight`。
 
 ### I1
 
 - 所有者模块：
-  - `src/bcc/backend/issue.py` (`ZXTERMEN45QXZCoreIssueStage`)
-  - `src/bcc/backend/prf.py` (`ZXTERMEN45QXZCorePrf`)
+  - `src/bcc/backend/issue.py` (`LinxCoreIssueStage`)
+  - `src/bcc/backend/prf.py` (`LinxCorePrf`)
 - 设计作用：操作数读取规划和射频读取端口仲裁。
 
 ### I2
 
 - 所有者模块：
-  - `src/bcc/backend/issue.py` (`ZXTERMEN45QXZCoreIssueStage`)
-  - `src/bcc/backend/modules/exec_pipe_cluster.py` (`ZXTERMEN45QXZCoreBackendExecPipe`)
+  - `src/bcc/backend/issue.py` (`LinxCoreIssueStage`)
+  - `src/bcc/backend/modules/exec_pipe_cluster.py` (`LinxCoreBackendExecPipe`)
 - 设计角色：问题确认边界和IQ解除分配点。
 
 ### E1
@@ -135,8 +135,8 @@
 ### W1
 
 - 所有者模块：
-  - `src/bcc/backend/wakeup.py` (`ZXTERMEN45QXZCoreHeadWaitStage`)
-  - `src/bcc/backend/commit.py` (`ZXTERMEN45QXZCoreCommitHeadStage`)
+  - `src/bcc/backend/wakeup.py` (`LinxCoreHeadWaitStage`)
+  - `src/bcc/backend/commit.py` (`LinxCoreCommitHeadStage`)
 - 设计角色：基线后期唤醒和解析阶段。
 
 ## 稍后的执行和内存阶段
@@ -158,7 +158,7 @@
   进展。
 
 ### E4- 所有者模块：
-  - `src/bcc/backend/lsu.py` (`ZXTERMEN45QXZCoreLsuStage`)
+  - `src/bcc/backend/lsu.py` (`LinxCoreLsuStage`)
   - `src/bcc/lsu/l1d.py`、`src/bcc/lsu/mdb.py`
 - 设计角色：加载数据返回可见性、漏检和转发
   `E4 -> consumer-I2`使用的点。
@@ -186,7 +186,7 @@
 
 - 所有者模块：
   - `src/bcc/backend/commit.py`
-  - `src/bcc/backend/engine.py` (`ZXTERMEN45QXZCoreCommitSelectStage`)
+  - `src/bcc/backend/engine.py` (`LinxCoreCommitSelectStage`)
   - `src/bcc/backend/modules/commit_slot_step.py`
 - 设计角色：有序的架构提交、块可见的退休以及
   提交有效负载生成。
@@ -265,7 +265,7 @@
 
 ### 血管内皮细胞
 
-- 所有者模块：`src/vec/vec.py` (`ZXTERMEN45QXZCoreVec`)
+- 所有者模块：`src/vec/vec.py` (`LinxCoreVec`)
 - 设计角色：向量-引擎命令/响应边界。
 
 ### 牛
@@ -281,7 +281,7 @@
 
 ### XCHK
 
-- 所有者模块：`src/top/modules/xchk.py` (`ZXTERMEN45QXZCoreXchkStage`)
+- 所有者模块：`src/top/modules/xchk.py` (`LinxCoreXchkStage`)
 - 设计角色：提交时使用的严格交叉检查/导出相关边界
   验证和 灵犀Trace 注释。
 
@@ -310,7 +310,7 @@
 
 ### 血管内皮细胞
 
-- 所有者模块：`src/vec/vec.py` (`ZXTERMEN45QXZCoreVec`)
+- 所有者模块：`src/vec/vec.py` (`LinxCoreVec`)
 - 设计角色：块控制下的可编程SIMT引擎边界。
 
 ### 牛

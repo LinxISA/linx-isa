@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_lhi_u.svg[LHI.U encoding,width=800]
+image::../encodings/enc_lhi_u.svg[LHI.U encoding,width=800]
 
 *Uop-Class:* LDA/UNSCALED
 

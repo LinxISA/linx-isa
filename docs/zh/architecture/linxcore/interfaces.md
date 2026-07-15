@@ -54,11 +54,11 @@ pyCircuit/灵犀Core 集成合约已进行版本控制并由网关强制执行�
 
 ## 跨工具同步合约（LC-IF-SYNC-001）当跟踪/管道合同发生变化时，以下内容必须保持同步：
 
-- `rtl/ZXTERMEN45QXZCore/src/common/stage_tokens.py`
-- `rtl/ZXTERMEN45QXZCore/tb/tb_linxcore_top.cpp`
-- `rtl/ZXTERMEN45QXZCore/tools/trace/build_linxtrace_view.py`
-- `rtl/ZXTERMEN45QXZCore/tools/linxcoresight/lint_linxtrace.py`
-- `rtl/ZXTERMEN45QXZCore/tools/linxcoresight/lint_trace_contract_sync.py`
+- `rtl/LinxCore/src/common/stage_tokens.py`
+- `rtl/LinxCore/tb/tb_linxcore_top.cpp`
+- `rtl/LinxCore/tools/trace/build_linxtrace_view.py`
+- `rtl/LinxCore/tools/linxcoresight/lint_linxtrace.py`
+- `rtl/LinxCore/tools/linxcoresight/lint_trace_contract_sync.py`
 
 查看器端合约同步通过 灵犀Trace 门进行验证。
 
@@ -73,7 +73,7 @@ pyCircuit/灵犀Core 集成合约已进行版本控制并由网关强制执行�
 灵犀Core **微架构**接口合约详解（两层区块机、面向BROB的解析、
 原始引擎结构、引擎/块类型映射）属于：
 
-- `rtl/ZXTERMEN45QXZCore/docs/architecture/`
+- `rtl/LinxCore/docs/architecture/`
 - `docs/architecture/linxcore/microarchitecture.md`
 
 对于当前的架构编写阶段，升级阶段合同来自

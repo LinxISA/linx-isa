@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_hl_ldp.svg[HL.LDP encoding,width=800]
+image::../encodings/enc_hl_ldp.svg[HL.LDP encoding,width=800]
 
 *Uop-Class:* LDA/PAIR
 

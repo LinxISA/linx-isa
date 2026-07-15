@@ -136,10 +136,16 @@ def _load_uop_class_map(uop_root: Path) -> Dict[str, Dict[str, Any]]:
             continue
         obj = _read_json(p)
         big = str(obj.get("big_kind") or "").strip()
-        for it in obj.get("instructions", []) or []:
+        entries = obj.get("instructions", []) or []
+        declared_count = obj.get("count")
+        if declared_count is not None and int(declared_count) != len(entries):
+            raise ValueError(f"{p}: count={declared_count} does not match {len(entries)} instruction entries")
+        for it in entries:
             m = str(it.get("mnemonic") or "").strip()
             if not m:
                 continue
+            if m in out:
+                raise ValueError(f"{p}: duplicate uop classification for {m}")
             out[m] = {
                 "big_kind": big,
                 "class": it.get("class") or {},
@@ -169,6 +175,16 @@ def _augment_with_uop_classification(in_dir: Path, instructions: List[Dict[str, 
     profile_name = in_dir.name
     uop_root = in_dir / f"uop_classification_{profile_name}"
     uop_map = _load_uop_class_map(uop_root)
+    instruction_mnemonics = {str(inst.get("mnemonic") or "").strip() for inst in instructions}
+    missing = sorted(instruction_mnemonics - set(uop_map))
+    extra = sorted(set(uop_map) - instruction_mnemonics)
+    if missing or extra:
+        details = []
+        if missing:
+            details.append(f"missing={missing}")
+        if extra:
+            details.append(f"extra={extra}")
+        raise ValueError(f"uop classification must cover canonical mnemonics exactly: {'; '.join(details)}")
     for inst in instructions:
         m = str(inst.get("mnemonic") or "").strip()
         u = uop_map.get(m)
@@ -177,6 +193,188 @@ def _augment_with_uop_classification(in_dir: Path, instructions: List[Dict[str, 
         inst["uop_class"] = u.get("class") or {}
         inst["uop_big_kind"] = str(u.get("big_kind") or "").strip()
         inst["uop_group"] = _uop_group_str(u)
+
+
+def _compile_field_definitions(in_dir: Path, instructions: List[Dict[str, Any]]) -> Dict[str, Any]:
+    source = _read_json(in_dir / "encoding" / "fields.json")
+    definitions = source.get("fields")
+    if not isinstance(definitions, dict):
+        raise ValueError("encoding/fields.json: fields must be an object")
+
+    observed: Dict[str, Dict[str, Any]] = {}
+    for inst in instructions:
+        for part in inst.get("encoding", {}).get("parts", []):
+            for field in part.get("fields", []):
+                name = str(field.get("name") or "").strip()
+                width = sum(int(piece.get("width") or 0) for piece in field.get("pieces", []))
+                item = observed.setdefault(name, {"widths": set(), "signed": set()})
+                item["widths"].add(width)
+                if field.get("signed") is not None:
+                    item["signed"].add(bool(field["signed"]))
+
+    missing = sorted(set(observed) - set(definitions))
+    unknown = sorted(
+        name
+        for name in set(definitions) - set(observed)
+        if not isinstance(definitions[name], dict) or definitions[name].get("documented_only") is not True
+    )
+    if missing or unknown:
+        details = []
+        if missing:
+            details.append(f"missing={missing}")
+        if unknown:
+            details.append(f"unknown={unknown}")
+        raise ValueError(
+            "encoding/fields.json must define every observed field exactly: "
+            + "; ".join(details)
+        )
+
+    compiled: Dict[str, Any] = {}
+    for name in sorted(definitions):
+        seen = observed.get(name)
+        entry = definitions[name]
+        if not isinstance(entry, dict):
+            raise ValueError(f"encoding/fields.json: fields.{name} must be an object")
+        allowed_keys = {
+            "allowed_values",
+            "description",
+            "documented_only",
+            "namespace",
+            "reserved_ranges",
+            "reserved_values",
+            "scale",
+            "signed",
+            "widths",
+        }
+        extra_keys = sorted(set(entry) - allowed_keys)
+        if extra_keys:
+            raise ValueError(f"encoding/fields.json: fields.{name} has unknown keys {extra_keys}")
+
+        widths = entry.get("widths")
+        if (
+            not isinstance(widths, list)
+            or not widths
+            or not all(isinstance(width, int) and width > 0 for width in widths)
+            or widths != sorted(set(widths))
+        ):
+            raise ValueError(
+                f"encoding/fields.json: fields.{name}.widths must be a sorted, unique list of positive integers"
+            )
+        documented_only = entry.get("documented_only", False)
+        if not isinstance(documented_only, bool):
+            raise ValueError(f"encoding/fields.json: fields.{name}.documented_only must be boolean")
+        if seen is None and not documented_only:
+            raise ValueError(f"encoding/fields.json: fields.{name} is unobserved without documented_only=true")
+        if seen is not None and documented_only:
+            raise ValueError(f"encoding/fields.json: fields.{name} is observed and cannot be documented_only")
+        observed_widths = sorted(seen["widths"]) if seen is not None else widths
+        if widths != observed_widths:
+            raise ValueError(
+                f"encoding/fields.json: fields.{name}.widths={widths} "
+                f"does not match observed {observed_widths}"
+            )
+
+        namespace = entry.get("namespace")
+        valid_namespaces = {"immediate", "operand", "register-or-identifier", "reserved", "selector"}
+        if namespace not in valid_namespaces:
+            raise ValueError(
+                f"encoding/fields.json: fields.{name}.namespace must be one of {sorted(valid_namespaces)}"
+            )
+
+        signed = entry.get("signed")
+        if namespace == "immediate":
+            if not isinstance(signed, bool):
+                raise ValueError(
+                    f"encoding/fields.json: fields.{name}.signed must be explicit for immediate fields"
+                )
+            scale = entry.get("scale")
+            if not isinstance(scale, int) or isinstance(scale, bool) or scale <= 0:
+                raise ValueError(
+                    f"encoding/fields.json: fields.{name}.scale must be a positive integer"
+                )
+        elif "scale" in entry:
+            raise ValueError(
+                f"encoding/fields.json: fields.{name}.scale is only valid for immediate fields"
+            )
+
+        if seen is not None and len(seen["signed"]) == 1 and signed is not next(iter(seen["signed"])):
+            raise ValueError(
+                f"encoding/fields.json: fields.{name}.signed={signed!r} disagrees with opcode signedness"
+            )
+
+        reserved_values = entry.get("reserved_values")
+        if namespace == "selector":
+            if not isinstance(reserved_values, list) or not all(
+                isinstance(value, int) and not isinstance(value, bool) and value >= 0
+                for value in reserved_values
+            ):
+                raise ValueError(
+                    f"encoding/fields.json: fields.{name}.reserved_values must be a list of non-negative integers"
+                )
+            if len(reserved_values) != len(set(reserved_values)):
+                raise ValueError(
+                    f"encoding/fields.json: fields.{name}.reserved_values contains duplicates"
+                )
+            maximum = (1 << min(widths)) - 1
+            if any(value > maximum for value in reserved_values):
+                raise ValueError(
+                    f"encoding/fields.json: fields.{name}.reserved_values must fit every declared width"
+                )
+            reserved_ranges = entry.get("reserved_ranges", [])
+            if not isinstance(reserved_ranges, list) or not all(
+                isinstance(item, list)
+                and len(item) == 2
+                and all(isinstance(value, int) and not isinstance(value, bool) for value in item)
+                and 0 <= item[0] <= item[1] <= maximum
+                for item in reserved_ranges
+            ):
+                raise ValueError(
+                    f"encoding/fields.json: fields.{name}.reserved_ranges must contain [lo, hi] pairs that fit every width"
+                )
+            ordered_ranges = sorted((item[0], item[1]) for item in reserved_ranges)
+            if any(right[0] <= left[1] for left, right in zip(ordered_ranges, ordered_ranges[1:])):
+                raise ValueError(
+                    f"encoding/fields.json: fields.{name}.reserved_ranges overlap"
+                )
+            if any(any(lo <= value <= hi for lo, hi in ordered_ranges) for value in reserved_values):
+                raise ValueError(
+                    f"encoding/fields.json: fields.{name} repeats a reserved value inside reserved_ranges"
+                )
+        elif "reserved_values" in entry:
+            raise ValueError(
+                f"encoding/fields.json: fields.{name}.reserved_values is only valid for selector fields"
+            )
+        elif "reserved_ranges" in entry:
+            raise ValueError(
+                f"encoding/fields.json: fields.{name}.reserved_ranges is only valid for selector fields"
+            )
+
+        allowed_values = entry.get("allowed_values")
+        if namespace == "reserved":
+            if not isinstance(allowed_values, list) or not allowed_values or not all(
+                isinstance(value, int) and not isinstance(value, bool) and value >= 0
+                for value in allowed_values
+            ):
+                raise ValueError(
+                    f"encoding/fields.json: fields.{name}.allowed_values must be a non-empty list of non-negative integers"
+                )
+            if len(allowed_values) != len(set(allowed_values)):
+                raise ValueError(
+                    f"encoding/fields.json: fields.{name}.allowed_values contains duplicates"
+                )
+            maximum = (1 << min(widths)) - 1
+            if any(value > maximum for value in allowed_values):
+                raise ValueError(
+                    f"encoding/fields.json: fields.{name}.allowed_values must fit every declared width"
+                )
+        elif "allowed_values" in entry:
+            raise ValueError(
+                f"encoding/fields.json: fields.{name}.allowed_values is only valid for reserved fields"
+            )
+
+        compiled[name] = dict(entry)
+
+    return {"fields": compiled, "notes": source.get("notes") or []}
 
 
 def _augment_with_compression_kind(instructions: List[Dict[str, Any]]) -> None:
@@ -607,6 +805,9 @@ def build(in_dir: Path) -> Dict[str, Any]:
     # Attach uop classification + compression kind (documentation + downstream decoders).
     _augment_with_uop_classification(in_dir, instructions)
     _augment_with_compression_kind(instructions)
+    field_definitions = _compile_field_definitions(in_dir, instructions)
+    semantics_conventions = _read_json(in_dir / "semantics_conventions.json")
+    retired_encodings = _read_json(in_dir / "encoding" / "retired_encodings.json")
 
     # strip internal fields
     for inst in instructions:
@@ -622,6 +823,9 @@ def build(in_dir: Path) -> Dict[str, Any]:
         "instruction_count": len(instructions),
         "instructions": instructions,
         "registers": registers,
+        "field_definitions": field_definitions,
+        "semantics_conventions": semantics_conventions,
+        "retired_encodings": retired_encodings,
         "state": state,
     }
 
@@ -634,6 +838,12 @@ def _parse_field_token(token: str) -> Tuple[str, Optional[int], Optional[int], O
     """
     token = token.strip()
     constraint: Optional[Dict[str, str]] = None
+
+    # A handful of source operands carry a role annotation such as
+    # RegSrc0=BasePtr. The role is descriptive; the architectural field name
+    # and its register namespace remain RegSrc0.
+    if "=" in token and not any(op in token for op in ("!=", "==", "<=", ">=")):
+        token = token.split("=", 1)[0].strip()
 
     # Handle simple "not equal" constraints encoded inline (historical draft style).
     for op in ("≠", "!="):

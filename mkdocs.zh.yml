@@ -1,23 +1,29 @@
-site_name: LinxISA
-site_description: LinxISA documentation
+site_name: 灵犀指令集架构
+site_description: LinxISA 中文参考文档（英文文档为规范来源）
 site_url: https://linxisa.github.io/
 repo_url: https://github.com/LinxISA/linx-isa
 repo_name: LinxISA/linx-isa
-edit_uri: edit/main/docs/
-docs_dir: docs
+edit_uri: edit/main/docs/zh/
+docs_dir: docs/zh
 
 exclude_docs: |
   /README.md
-  zh/**
+  archive/**
   architecture/isa-manual/.bundle/**
   architecture/isa-manual/build/**
   architecture/isa-manual/vendor/**
 
 theme:
   name: material
+  language: zh
+  logo: assets/linxisa-logo.svg
+  favicon: assets/linxisa-favicon.svg
 
 plugins:
   - search
+
+extra_css:
+  - stylesheets/linxisa-site.css
 
 markdown_extensions:
   - admonition
@@ -181,7 +187,6 @@ nav:
             - B.TEXT: isa/header/B.TEXT.md
             - B.IOR: isa/header/B.IOR.md
             - B.IOT: isa/header/B.IOT.md
-            - B.IOD: isa/header/B.IOD.md
             - B.DIM: isa/header/B.DIM.md
             - C.B.DIM: isa/header/C.B.DIM.md
             - BSTOP: isa/header/BSTOP.md
@@ -1271,8 +1276,3 @@ nav:
         - V0.43设计更新: change_log/update_v0.43.md
         - V0.50设计更新: change_log/update_v0.50.md
         - V0.51设计更新: change_log/update_v0.51.md
-        - V0.52设计更新: change_log/update_v0.52.md
-        - V0.53设计更新: change_log/update_v0.53.md
-        - V0.54设计更新: change_log/update_v0.54.md
-        - V0.55设计更新: change_log/update_v0.55.md
-        - V0.56设计更新: change_log/update_v0.56.md

@@ -1,14 +1,16 @@
 # LinxISA Maturity Plan (Tier-1 Track vs ARM/x86)
 
-Last updated: 2026-07-05
+Last updated: 2026-07-15
 
 ## Baseline
 
-- Latest canonical run: `2026-04-18-r9-pin-linuxlibc-refresh`
-- Latest canonical report generation: `2026-04-18 02:11:34Z`
+- Latest maintenance run: `2026-07-15-v0565-maintenance`
+- Latest maintenance evidence: TSVC batched auto passes 151/151; BusyBox rootfs
+  fails with no UART output in two 120-second attempts.
 - Canonical report: `docs/bringup/gates/latest.json`
 - Latest diagnostic strict rerun: `2026-04-17-r7-pin-recovery` (non-canonical; BusyBox rootfs skipped to expose downstream blockers in `docs/bringup/gates/logs/2026-04-17-r7-pin-recovery/pin/reg_strict_cross_repo.log`)
-- The checked-in canonical report now includes the April 18 pin-lane recovery evidence. It clears the stale March false blockers for AVS PR-tier closure, model-diff, LinxCore/Testbench/Trace/pyCircuit leaf PR gates, glibc runtime, musl runtime, PTO parity, and TSVC compile-only PR coverage.
+- The v0.56.5 packet is deliberately non-green: it clears the TSVC hard break
+  but records the separate Linux/MMU failure and all unrun nightly gates.
 - Active governance phase remains `LINUX-RUNTIME`; `docs/bringup/agent_runs/waivers.yaml` contains no waivers.
 - Latest non-canonical Linux smoke diagnostic: 2026-05-17 local bring-up iterations move well past DT, percpu, log-buffer, proc/ns/pidfs pseudo-fs setup, and the pre-`rest_init()` late-init lane. The live boundary is now the first task-creation handoff after `rest_init()`, specifically `user_mode_thread()` / `kernel_clone()` / `copy_process()` on the Linx tiny-RCU configuration.
 - June 14, 2026 flow reset: benchmark work now uses

@@ -49,7 +49,7 @@
 - `QEMU_ROOT` = `${LINXISA_ROOT}/emulator/qemu`
 - `LINUX_ROOT` = `${LINXISA_ROOT}/kernel/linux`
 - `PYCIRCUIT_ROOT` = `${LINXISA_ROOT}/tools/pyCircuit`
-- `LINXCORE_ROOT` = `${LINXISA_ROOT}/rtl/ZXTERMEN45QXZCore`
+- `LINXCORE_ROOT` = `${LINXISA_ROOT}/rtl/LinxCore`
 - `GLIBC_ROOT` = `${LINXISA_ROOT}/lib/glibc`
 - `MUSL_ROOT` = `${LINXISA_ROOT}/lib/musl`对于“外部”通道，将这些变量设置为指向您的外部克隆/构建
 如果您故意将工具链保留在超级项目之外。

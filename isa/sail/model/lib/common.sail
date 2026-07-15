@@ -1,14 +1,5 @@
 // LinxISA Sail common helpers for the canonical v0.56 model.
 
-// IMPORTANT POLICY:
-// - Missing semantics MUST be explicit (no guessed behavior).
-// - `linx_unimplemented("MNEMONIC")` should be used until behavior is confirmed.
-
-function linx_unimplemented(mnemonic : string) -> unit = {
-  // Placeholder: in the final model this should raise a defined exception.
-  ()
-}
-
 // Basic bit utilities.
 function zext32(x : bits(64)) -> bits(64) = {
   sail_zeros(32) @ x[31..0]
@@ -82,6 +73,10 @@ function sext29_to64(imm29 : bits(29)) -> bits(64) = {
 
 function sext30_to64(imm30 : bits(30)) -> bits(64) = {
   if imm30[29] == 0b1 then sail_ones(34) @ imm30 else sail_zeros(34) @ imm30
+}
+
+function sext42_to64(imm42 : bits(42)) -> bits(64) = {
+  if imm42[41] == 0b1 then sail_ones(22) @ imm42 else sail_zeros(22) @ imm42
 }
 
 function sext32_to64(imm32 : bits(32)) -> bits(64) = {

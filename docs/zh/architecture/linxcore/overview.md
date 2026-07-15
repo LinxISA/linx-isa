@@ -1,7 +1,7 @@
 # 灵犀Core v0.56 Super标量 启动概述
 
 > 此发布的页面镜像了规范的 灵犀Core 源代码
-> `rtl/ZXTERMEN45QXZCore/docs/architecture/overview.md`。
+> `rtl/LinxCore/docs/architecture/overview.md`。
 
 
 ## 范围
@@ -32,9 +32,9 @@
 - 基础 ISA 架构合约：`docs/architecture/v0.56-architecture-contract.md`
 - 工作负载到引擎模型：`docs/architecture/v0.56-workload-engine-model.md`
 - 渲染命令型号：`docs/architecture/v0.56-rendering-command-contract.md`
-- 灵犀核心微架构合约：`rtl/ZXTERMEN45QXZCore/docs/architecture/microarchitecture.md`
-- 灵犀核心接口合约：`rtl/ZXTERMEN45QXZCore/docs/architecture/interfaces.md`
-- 灵犀核心验证矩阵：`rtl/ZXTERMEN45QXZCore/docs/architecture/verification-matrix.md`当措辞出现分歧时，灵犀指令集 架构页面和 灵犀Core
+- 灵犀核心微架构合约：`rtl/LinxCore/docs/architecture/microarchitecture.md`
+- 灵犀核心接口合约：`rtl/LinxCore/docs/architecture/interfaces.md`
+- 灵犀核心验证矩阵：`rtl/LinxCore/docs/architecture/verification-matrix.md`当措辞出现分歧时，灵犀指令集 架构页面和 灵犀Core
 上面列出的合同页是规范的。深入实施说明是
 下属。
 
@@ -130,11 +130,11 @@ super标量-核心规格：
 
 ## 真实来源模型
 
-- Canonical 灵犀Core 合约编写位于 `rtl/ZXTERMEN45QXZCore/docs/architecture/` 中。
+- Canonical 灵犀Core 合约编写位于 `rtl/LinxCore/docs/architecture/` 中。
 - 已发布的超级项目镜像在 `docs/architecture/linxcore/` 中运行。
 - `tools/bringup/check_linxcore_arch_contract.py` 验证了规范
   页面和生成的镜像。
-- 独立树如`/Users/zhoubot/ZXTERMEN45QXZCore`是开发镜像，
+- 独立树如`/Users/zhoubot/LinxCore`是开发镜像，
   不是合同权力。
 
 ## 所需的关闭目标本规范的实时关闭目标是：

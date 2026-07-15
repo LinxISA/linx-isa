@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_lh_brg.svg[V.LH.BRG encoding,width=800]
+image::../encodings/enc_v_lh_brg_parts.svg[V.LH.BRG encoding,width=800]
 
 *Uop-Class:* VEC
 

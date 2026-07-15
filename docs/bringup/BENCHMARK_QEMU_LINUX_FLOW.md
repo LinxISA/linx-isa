@@ -10,11 +10,17 @@ runner is `tools/bringup/run_benchmark_linux_flow.py`.
 Evidence:
 
 - `docs/bringup/gates/qemu_isa_coverage_latest.md` was regenerated on
-  2026-06-14 and records QEMU implementation coverage at `615/710` mapped
-  spec mnemonics and `614/740` mapped legal forms.
-- Recent TSVC evidence splits cleanly into compile coverage and QEMU runtime:
-  compile coverage may be green while the PR benchmark lane still hard-breaks
-  on TSVC/QEMU timeout or runtime completion.
+  2026-07-15 and records QEMU implementation coverage at `618/711` mapped
+  spec mnemonics and `621/747` mapped legal forms. LLVM and the AVS translation
+  corpus both cover `711/711`; QEMU semantic breadth remains intentionally red.
+- The v0.56.5 TSVC hard break is closed on clean QEMU
+  `cdc5d976242d6e81c6938f192fc6b1849aa2f0df`: 8/8 deterministic batches,
+  `151/151` strict-vectorized kernels, and `151/151` QEMU completions in
+  10.587 seconds. The unbatched all-mode diagnostic is not the PR hard-break
+  contract and may exceed its per-process timeout.
+- The separately ordered BusyBox lane remains red on the same clean QEMU: two
+  120-second attempts produced no UART output. This is tracked as the distinct
+  Linux/MMU regression and does not invalidate the completed TSVC hard break.
 - `workloads/generated/linux-busybox-latest-qemu-20260703-r1/report.json`
   records the current latest-QEMU Linux rootfs proof: QEMU
   `v10.2.0-1004-ga3061b963f3` boots the current `vmlinux` and virtio-blk

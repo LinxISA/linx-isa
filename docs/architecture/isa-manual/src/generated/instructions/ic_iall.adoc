@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_ic_iall.svg[IC.IALL encoding,width=800]
+image::../encodings/enc_ic_iall.svg[IC.IALL encoding,width=800]
 
 *Uop-Class:* SYS
 

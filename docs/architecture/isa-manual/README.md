@@ -1,7 +1,7 @@
 # Linx Instruction Set Architecture Manual (AsciiDoc)
 
 This directory contains the AsciiDoc ISA manual for the **Linx Instruction Set
-Architecture (Linx ISA)**. The latest stable profile is v0.56.4. The manual is
+Architecture (Linx ISA)**. The latest stable profile is v0.56.5. The manual is
 written in **AsciiDoc** and built to **PDF** using `asciidoctor-pdf` (via
 Bundler).
 
@@ -21,7 +21,7 @@ Outputs:
 
 ## Release artifacts
 
-- Current stable manual release notes: `docs/releases/v0.56.4.md`
+- Current stable manual release notes: `docs/releases/v0.56.5.md`
 - Latest release page: https://github.com/LinxISA/linx-isa/releases/latest
 
 ## Regenerate generated sections

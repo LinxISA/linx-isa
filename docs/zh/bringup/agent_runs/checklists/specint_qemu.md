@@ -3,11 +3,11 @@
 - [ ] ID：SPEC-001 为 灵犀 (`phase-c`) 构建 SPEC CPU2017 内部二进制文件，无需修补 SPEC 源。
   命令：`MODE=phase-c bash tools/spec2017/build_int_rate_linx.sh --build-runtimes`
   完成意味着：在每个工作台 `exe/` 目录下生成预期的 灵犀 可执行文件。
-  状态： ❌ NIGHTLY/RUNTIME BLOCKER (2026-05-17) - `MODE=phase-c` 现在重现具体的托管通道拦截器：`out/libc/musl/logs/phase-c-summary.txt` 记录 `m3=blocked`，因为共享 musl 打包因 `ld.lld: error: relocation R_ZXTERMEN45QXZV5_64_BNEXT cannot be used against symbol 'malloc'; recompile with -fPIC` 失败，因此 `phase-c/lib/libc.so` 仍然不存在于动态工作台中。
+  状态： ❌ NIGHTLY/RUNTIME BLOCKER (2026-05-17) - `MODE=phase-c` 现在重现具体的托管通道拦截器：`out/libc/musl/logs/phase-c-summary.txt` 记录 `m3=blocked`，因为共享 musl 打包因 `ld.lld: error: relocation R_LinxV5_64_BNEXT cannot be used against symbol 'malloc'; recompile with -fPIC` 失败，因此 `phase-c/lib/libc.so` 仍然不存在于动态工作台中。
 
 - [ ] ID：SPEC-002 验证生成的可执行文件是否为 灵犀 机器类型。
   命令：`llvm-readelf -h benchspec/CPU/<bench>/exe/<binary>`
-  完成意味着：块头 报告 `Machine: ZXTERMEN45QXZ`。
+  完成意味着：块头 报告 `Machine: Linx`。
   状态：⚠️ 未测试 (2026-02-23)- [ ] ID：SPEC-003 Stage A 在 QEMU 矩阵（9p + initramfs）下运行的快速子集。
   长凳：`999.specrand_ir`、`505.mcf_r`、`531.deepsjeng_r`
   命令：`python3 tools/spec2017/run_stage_qemu_matrix.py --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 --stage a --input-set test --transports 9p,initramfs --strict --out-dir workloads/generated/spec2017/stage_a_xcheck/qemu_matrix`

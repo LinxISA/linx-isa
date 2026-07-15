@@ -18,9 +18,14 @@
 
 <div class="enc-diagram">
 
-<figure>
-<img src="../wavedrom/enc_bstart.svg" alt="BSTART encoding" width="100%" />
-<figcaption>Bitfield encoding diagram. MSB is on the left, LSB on the right.</figcaption>
+<figure id="encoding-bstart_32_7eb93b649748">
+<img src="../wavedrom/enc_bstart_32_7eb93b649748.svg" alt="BSTART encoding form bstart_32_7eb93b649748" width="100%" />
+<figcaption><code>bstart_32_7eb93b649748</code> — <code>BSTART {DIRECT, CALL}, <label></code>. MSB is on the left, LSB is on the right.</figcaption>
+</figure>
+
+<figure id="encoding-bstart_32_e11e678a32ac">
+<img src="../wavedrom/enc_bstart_32_e11e678a32ac.svg" alt="BSTART encoding form bstart_32_e11e678a32ac" width="100%" />
+<figcaption><code>bstart_32_e11e678a32ac</code> — <code>BSTART COND, <label></code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
 </div>
@@ -41,10 +46,10 @@ _No additional encoding notes._
 
 ## Full Catalog Forms
 
-| Assembly | Length | Decode |
-|----------|--------|--------|
-| `BSTART {DIRECT, CALL}, <label>` | 32 | — |
-| `BSTART COND, <label>` | 32 | — |
+| Form ID | Assembly | Length | Decode | Encoding |
+|---------|----------|--------|--------|----------|
+| `bstart_32_7eb93b649748` | `BSTART {DIRECT, CALL}, <label>` | 32 | — | [SVG](../wavedrom/enc_bstart_32_7eb93b649748.svg) |
+| `bstart_32_e11e678a32ac` | `BSTART COND, <label>` | 32 | — | [SVG](../wavedrom/enc_bstart_32_e11e678a32ac.svg) |
 
 <div class="insn-nav">
 

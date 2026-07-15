@@ -464,6 +464,16 @@ Detailed local-register lifetime and recovery rules are documented in
 - If more same-cycle enqueue attempts target one IQ than it can accept, the
   older instructions in the current decode-width group win by decode-slot
   order.
+- Scalar issue capacity and physical banking are independent parameters. The
+  live scalar ALU slice uses `scalarIssueBanks` equal banks and divides its
+  configured total entry count evenly across them; every bank has at least two
+  resident rows. This two-bank slice represents `alu_iq0` plus the scalar
+  spill path into `shared_iq1`. It does not replace the complete BRU/AGU/STD/
+  CMD physical layout above.
+- A one-uop live dispatch selects the non-full scalar bank with the least
+  occupancy; equal occupancy uses the lower physical bank index. Future
+  multi-uop S1/S2 dispatch must preserve decode-slot age before applying the
+  same capacity rule.
 
 #### Ready-table initialization
 
@@ -473,7 +483,7 @@ Detailed local-register lifetime and recovery rules are documented in
   the 24 architectural identity tags ready and all additional physical tags
   not-ready. Rename allocation clears the new destination tag; committed
   writeback stores data and sets that same tag ready atomically.
-- `gprPhysRegs` and `gprWritePorts` are scalar-backend parameters independent
+- `gprPhysRegs`, `gprReadPorts`, and `gprWritePorts` are scalar-backend parameters independent
   from ROB, LIQ, STQ, LRET, and cache capacities. The physical-tag width must
   address exactly the configured GPR capacity at every connected boundary.
 - A ready-table bit may be set only when the corresponding produced value is
@@ -501,6 +511,11 @@ Detailed local-register lifetime and recovery rules are documented in
 - Pick policy is oldest-ready-first within each STID. A shared IQ forms one or
   more per-STID candidates and uses a fair/RR cross-STID grant; per-STID ROB
   ages are never compared globally.
+- Each scalar bank first removes all but its oldest selectable row for every
+  represented STID, then round-robins across those per-STID candidates. A
+  second shared arbiter applies the same rule across bank candidates. RID
+  comparison is legal only when candidate STIDs match; different STIDs are
+  ordered only by the implementation fairness pointer.
 - Pick does not immediately remove an entry from the IQ.
 - When an entry is picked, the entry remains valid and transitions to an
   `inflight` state.
@@ -575,12 +590,31 @@ Detailed local-register lifetime and recovery rules are documented in
 ### Register-file arbitration
 
 - Read ports may contend; the default `int_rf_rports` is 3.
+- Chisel names this physical parameter `gprReadPorts`; it must provide at least
+  three ports so one scalar uop's three source lanes receive an atomic grant.
+  Additional ports are legal and remain available for wider future issue.
 - `I1` performs global read-port arbitration.
 - Arbitration is oldest-first by ROB age within each STID, followed by a
   fair/RR grant across STIDs for shared ports. It never compares unrelated
   per-STID ROB ages.
 - Failure to win arbitration cancels the in-flight attempt without deallocating
   the IQ entry.
+- A younger row may not enter I1 while an older unresolved control row in the
+  same STID remains resident. BRU classification is generic backend policy;
+  Linx `FRET.STK` is additionally classified because its W2 result redirects
+  block flow. Its exact `(STID, BID, RID)` frontier is retained until accepted
+  central recovery, not merely until IQ release.
+- Stores issue oldest-first within each STID even across physical IQ banks so
+  FIFO STA/STD and STQ owners observe program-order store completion. This does
+  not serialize independent STIDs or prevent eligible non-store work from
+  bypassing an older store.
+- Read admission is whole-uop atomic. Partial source grants are forbidden: one
+  bank wins all source reads needed by its I1 attempt, while every losing bank
+  clears only `inflight` and retries from its unchanged resident row.
+- The current C++ model services every scalar read request and therefore has no
+  scalar-port denial. Finite Chisel arbitration is an ISA-neutral physical
+  upgrade; its cancellation and retry path must remain architecturally
+  invisible and compare against the model at commit.
 - A producer may request a write port before its complete side-effect bundle
   is authorized, but data and readiness mutate only on the request's explicit
   commit/fire event. Port reservation is not writeback.
@@ -948,13 +982,71 @@ it only with equivalent TSO, precise recovery, and forward-progress evidence.
 The canonical scalar LSU is one parameterized owner. Its queue capacities are
 implementation choices and must not change architectural identity widths:
 
-- ROB identity capacity defines the internal BID/GID/RID/LSID slot-plus-wrap
-  width carried by store requests, flush requests, STQ rows, commit-queue rows,
-  and SCB drain requests.
+- ROB identity capacity defines the internal BID/GID/RID slot-plus-wrap width
+  carried by store requests, flush requests, STQ rows, commit-queue rows, and
+  SCB drain requests. LSID is not a ROB slot identifier: its canonical width is
+  `lsidWidth` and it remains independent of ROB and queue capacities.
 - STQ, store-commit, SCB, LIQ, ResolveQ, MDB SSIT, MDB command/output, MDB
   wait-plan, load-return queue, return-pipe, cache-line, and MapQ resources are
   independent sizing parameters.
   No implementation may infer ROB identity width from any queue capacity.
+- Physical STQ row indices and masks use `stqEntries`; store-commit FIFO
+  pointers use `commitQueueEntries`; issue lanes use `commitIssueWidth`; SCB
+  row indices use `scbEntries`. A request crossing these owners carries its
+  physical STQ index separately from its ROB-sized BID/GID/RID and full-width
+  LSID ordering identity.
+- The Chisel reduced live path must source these sizes from `ScalarLsuParams`.
+  Compatibility defaults may make capacities equal, but unequal-size
+  elaboration is a required contract test. A local compressed `ROBID` view of
+  LSID is transitional implementation state and must not define ordering,
+  recovery, forwarding, or the golden interface.
+- R670 closes the first complete full-width transport: decode/ROB
+  `lsidWidth` flows through store dispatch, split-half merge identity, STQ row
+  residency, scalar early-safe commit authorization, the sorted store-commit
+  FIFO, split drain requests, SCB admission, and the committed-memory overlay.
+  Same-block store age uses modulo serial arithmetic with explicit half-range
+  ambiguity; BID remains ROB-sized and cross-block age remains BROB-owned.
+  The compressed STQ LSID projection is retained only for still-unconverted
+  typed recovery and load forwarding/replay/MDB boundaries. Those consumers
+  remain an implementation gap and may not be cited as full LSID closure.
+- R671 promotes full-LSID-capable central recovery and scalar-redirect STQ
+  pruning. `FullBidFlushReq`, retained recovery
+  queues, source arbitration, class merge, `RecoveryCleanupIntent.flush`, and
+  `FlushReq` carry `lsIdFullValid` plus the parameterized full LSID beside the
+  transitional ring projection. Scalar redirects capture execute's all-row
+  full LSID before retention. `STQFlushPrune` uses `(STID, BID, full LSID)`
+  modular order for non-BID scalar cleanup and refuses to prune when full-LSID
+  authority is absent or exactly half-range ambiguous. BID-only cleanup does
+  not require LSID. Physical STQ size, ROB ring width, and LSID width remain
+  independent through the composed decode/recovery/store path.
+- Recovery arbitration continues to use typed Linx BID/RID priority; LSID does
+  not replace block age, select across STIDs, or add an architectural ordering
+  mode. The new full field is a payload authority for memory-row consumers.
+  Recovery sources from unconverted owners leave `lsIdFullValid` clear and may
+  not consume the scalar-redirect recovery claim. They never supply a
+  placeholder full LSID to authoritative STQ pruning.
+- R672-A promotes the canonical scalar load graph to full-LSID authority.
+  `LoadInflightAlloc`, LIQ/LHQ/ResolveQ rows, MDB conflict and command queues,
+  SSIT dependency offsets, wait-store metadata, retained MDB recovery, and
+  scalar return queue/W1/W2 payloads preserve validity plus the parameterized
+  full value. Same-BID ResolveQ cleanup/retirement and MDB conflict selection
+  use modular `LSIDOrder`; same-BID group cleanup also requires full authority,
+  while cross-BID age remains ROB/BROB-ring-owned. MDB wait mutation is blocked
+  until the predicted store has a valid full LSID. BID/GID/RID widths do not
+  change. R672-B supersedes the former reduced forwarding boundary.
+- R672-B promotes the reduced replay snapshot request/token/response graph and
+  reduced forwarding order.
+  Live-load capture, wait-store relaunch candidates, LIQ allocation, request
+  FIFO rows, the accepted-query token, response FIFO rows, and
+  wait-store response state retain `CoreParams.lsidWidth` plus validity. Their
+  same-BID selective cleanup uses `STQFlushPrune.matchesFlush` and refuses
+  missing authority. The projection-only cleanup helper is deleted. Physical
+  cluster/entry routing and ROBID-shaped compatibility fields remain distinct
+  from canonical memory-order authority. Forwarding retains BID/BROB order
+  across blocks; within one BID, eligibility, nearest-store choice per byte,
+  and the final wait-store choice require full authority and use modular
+  `LSIDOrder`. Missing or exactly half-range-ambiguous comparisons fail closed
+  and are observable instead of falling back to the projection.
 - The scalar LSU owns speculative STQ state and committed SCB state beneath one
   top-level boundary. A core is idle only when both retirement state and the
   LSU's speculative/response state are quiescent.
@@ -971,7 +1063,27 @@ implementation choices and must not change architectural identity widths:
   owns the parameterized scoped W1/W2 return pipeline and its atomic
   resolve/writeback/wakeup rendezvous. The reduced timing path retains its
   detailed single-pipe proof surface until the live sinks consume the canonical
-  outputs. Miss-queue, cache, and cross-line ownership remain staged.
+  outputs. The miss queue, bounded refill transport, and parameterized scalar
+  L1D arrays are now canonical; memory classification remains staged. R675
+  adds scalar cross-line ownership beneath the same load identity, and R676
+  makes both phases use the shared L1D owner.
+- R675 splits a scalar 1/2/4/8-byte request that crosses one cache-line
+  boundary into two phase-local requests while retaining the original Linx
+  `(PE, STID, TID, BID, GID, RID, LSID, load ID)` identity in one LIQ row. The
+  first phase covers `[byte_offset, line_bytes)` and the second covers
+  `[0, size - first_size)`. Each phase independently uses forwarding, miss
+  coalescing, refill, and replay against its aligned line address.
+- The LIQ retains the completed first line and byte-valid metadata, but the
+  first phase is never an architectural hit: it emits no ResolveQ record,
+  LRET, writeback, or wakeup. Only a complete second phase may assemble the
+  little-endian scalar value, apply the original sign/zero extension, and
+  atomically publish one ResolveQ+LRET transaction.
+- The current Chisel owner launches the two phases sequentially. This is an
+  architectural match and a throughput divergence from LinxCoreModel's two
+  cross-half entries and `processCrossRtn` merge. A future parallel launcher
+  may replace the scheduling policy only if it preserves one final result,
+  per-line forwarding/miss ownership, typed recovery, and identical ordering
+  identity. It must not create a second architectural load.
 
 - A scalar store splits into address (`STA`) and data (`STD`) work with one
   shared instruction, BID, RID, SID, and LSID identity.
@@ -986,8 +1098,19 @@ implementation choices and must not change architectural identity widths:
 - A committed ROB store event may arrive before its block enters the strong
   non-flush prefix. The store owner retains the event with its full block BID
   and rechecks membership against the selected STID's `(head_bid,
-  prefix_count)` window. It may request the STQ `Wait -> Commit` transition
-  only after that proof succeeds; BID magnitude alone is never sufficient.
+  prefix_count)` window.
+- Scalar STQ liveness has a second, model-derived proof. A ready scalar row in
+  the exact commit-head `(STID, BID)` block may request `Wait -> Commit` when
+  its wrap-qualified LSID is strictly older than the ROB head's LSID snapshot.
+  The ROB head is the oldest instruction that can still redirect or fault, so
+  an older scalar store is no longer recoverable even while the block remains
+  incomplete. This proof scans resident rows directly and must not depend on a
+  previously observed store-commit identity or on STA/STD merge timing.
+- The strong-prefix and oldest-ROB/LSID predicates are alternative
+  authorizations. Both require exact owner identity and typed recovery state;
+  BID magnitude and plain unsigned LSID comparison are forbidden. The
+  oldest-ROB predicate applies only to scalar IEX rows. Tile/template stores
+  require their own issued/non-flush proof and cannot reuse the scalar rule.
 - SCB owns committed, non-flushable, physical-cacheline coalescing. It must not
   merge new bytes into a row that has issued ownership traffic and is awaiting
   its response.
@@ -1006,7 +1129,8 @@ implementation choices and must not change architectural identity widths:
   consecutive count-certain blocks without unsigned BID comparisons.
 - Recovery reuses the first killed block's saved start ID when an already
   assigned suffix is removed. Store ranges do not authorize SCB admission;
-  R652 strong non-flush proof remains mandatory.
+  either the strong block prefix or the exact scalar oldest-ROB/LSID predicate
+  must authorize STQ promotion.
 - Explicit template/tile store counts use a retained, exact `(STID, full BID)`
   publication boundary. The event is admitted only inside the live BROB
   window, survives range-sink backpressure, and is canceled by the same
@@ -1055,6 +1179,97 @@ implementation choices and must not change architectural identity widths:
   through to an older value for that byte.
 - Cache, SCB, refill, and store-forward data may merge only with explicit byte
   validity and matching live-row identity.
+- For a scalar cross-line row, forwarding, SCB/store wakeup, miss allocation,
+  and refill matching use the active phase's aligned line address and
+  phase-local byte mask. The original address and size remain unchanged for
+  architectural return and ResolveQ conflict overlap. A first-line refill may
+  not satisfy a second-line phase, and a second-line store may not merge into
+  first-line state.
+- Each sequential phase is a normal LIQ launch and therefore reserves and
+  releases miss and return capacity independently at E4. A first-phase E4 hit
+  releases its launch reservations without allocating return-queue state. A
+  second-phase miss enters the ordinary parameterized miss queue and returns
+  through the retained refill transport before relaunch.
+- Hard Linx recovery clears both phase state and retained first-line data.
+  Typed precise recovery prunes a matching row by the existing full identity;
+  a surviving row preserves completed first-line state. If its active phase
+  occupied E3/E4, the payload is canceled and the same phase returns to
+  `Wait`. ARM exception levels, memory types, exclusives, barriers, and
+  acquire/release behavior are not introduced by this mechanism.
+- `ScalarL1D` is the single scalar data-cache array owner. `l1dSets`,
+  `l1dWays`, and `lineBytes` are independent parameters; none is derived from
+  ROB, LIQ, STQ, SCB, miss-queue, or return-queue sizing. Each resident way
+  retains an aligned physical line address, full-line data, readable validity,
+  writable permission, dirty state, and replacement age.
+- A scalar LIQ launch performs one combinational tag/data lookup for the active
+  line phase. The L1D response, SCB return, and speculative STQ forwarding are
+  merged by the registered E2-to-E3 load-forwarding boundary. A tag miss
+  returns an explicit empty byte-valid mask; externally injected base-line
+  data is not a canonical load source.
+- Refill installation has priority over load and committed-store array access.
+  The refill head remains retained in `LoadRefillTransport` while L1D cannot
+  accept it. A refill first searches for the same line. A duplicate returns the
+  resident data to LIQ and may add write permission, but never overwrites
+  resident bytes or clears dirty state with a potentially stale lower-memory
+  response.
+- A new line selects the first invalid way; otherwise it selects the least
+  recently used way. Any valid victim is published with line address, data,
+  and dirty state and the refill remains backpressured until the eviction owner
+  accepts that payload. Silent clean or dirty replacement is forbidden.
+- The committed SCB path queries the same tags. A tag hit without write
+  permission emits an ownership-upgrade request; a writable hit applies the
+  SCB byte mask to the resident line and marks it dirty. The cache array does
+  not infer permission from Linx opcodes, block boundaries, or ARM memory
+  types. Lower-memory/coherence logic grants permission explicitly. When an
+  accepted SCB response is decoded as an upgrade for a resident line, the L1D
+  sets that line writable before the SCB retries its lookup. A write response
+  for a missing line still requires the staged lower-memory refill-data path;
+  permission alone must not allocate uninitialized cache data.
+- L1D contents are physical, non-speculative state. Typed Linx recovery and
+  hard backend restart prune LIQ, miss, refill-transport, and speculative store
+  ownership as specified, but do not invalidate cache lines. Reset initializes
+  every line invalid. Explicit coherence, cache-maintenance, and platform reset
+  messages are separate future interfaces and must not be synthesized from a
+  BID, LSID, exception level, barrier, or acquire/release operation.
+- Cacheable scalar L1 misses enter a parameterized load miss queue before any
+  lower-memory request is emitted. Queue depth is independent of LIQ, ROB,
+  STQ, and return-queue capacity. Every accepted E2 launch reserves worst-case
+  miss capacity until its E4 result is known, so an E4 miss cannot become an
+  untracked one-cycle event.
+- One miss entry owns one aligned cache line and one slot-plus-generation
+  transaction identity. The first miss allocates the entry and an irrevocable
+  FIFO request token; later same-line misses coalesce as dependent LIQ
+  identities and do not emit duplicate lower-memory reads. Backpressure holds
+  request valid, transaction identity, line address, and metadata stable.
+- Each dependent retains LIQ slot plus generation, PE, STID, TID, BID, GID,
+  RID, projected load LSID, and full-LSID validity/value. Precise recovery
+  prunes dependents with the canonical Linx load flush predicate. It does not
+  cancel an already issued cacheable read: an entry with no surviving
+  dependents becomes an issued orphan and remains reserved until its exact
+  response arrives. An unissued empty entry is discarded without traffic.
+- Lower-memory responses match both miss slot generation and line address.
+  A stale or malformed response is consumed without LIQ wakeup and is reported
+  as a protocol diagnostic; it cannot free or otherwise mutate a live miss
+  entry. A matching valid read response frees the entry and broadcasts one
+  full-line refill to the LIQ,
+  where only live cacheable scalar rows on that line may relaunch.
+- Exact miss refills and external cache/refill packets enter one parameterized
+  dual-ingress transport before LIQ wakeup. Its depth is independent of LIQ,
+  miss queue, ROB, STQ, return queues, and LSID width. Both sources may be
+  accepted in one cycle; miss-queue data occupies the older same-cycle FIFO
+  position and external data occupies the next. A simultaneous legal ingress
+  is not a collision or protocol error.
+- The refill transport emits at most one stable line packet per cycle and
+  backpressures both producers from post-dequeue capacity. An exact valid-read
+  miss response cannot free its miss entry until its refill packet is accepted
+  into this retained transport. Hard flush clears buffered packets; typed
+  precise recovery holds ingress/egress for the recovery cycle but preserves
+  physical line data for surviving LIQ rows.
+- Hard reset/restart removes dependents and unissued work, but issued
+  transactions retain orphan identity until their response is drained. This
+  prevents a pre-restart response from aliasing a post-restart miss. Device,
+  MMIO, tile, cache-maintenance, and other side-effecting memory classes must
+  use their dedicated non-coalescing owners and are not admitted to this queue.
 - Load speculation follows the `LD_E1` wakeup / `LD_E4` data contract above.
   `miss_pending` remains asserted until the affected load has been relaunched
   after refill and returns through a non-miss path.

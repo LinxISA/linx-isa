@@ -75,12 +75,12 @@ def derived_selector_mnemonics(mnemonic: str, operands: list[str]) -> set[str]:
         ("BSTART.CUBE", "ACCCVT"): "BSTART.ACCCVT",
         ("BSTART.CUBE", "TMATMUL"): "BSTART.TMATMUL",
         ("BSTART.CUBE", "TMATMUL.ACC"): "BSTART.TMATMUL.ACC",
-        ("BSTART.PAR", "TLOAD"): "BSTART.TLOAD",
-        ("BSTART.PAR", "TSTORE"): "BSTART.TSTORE",
-        ("BSTART.PAR", "TMOV"): "BSTART.TMOV",
-        ("BSTART.PAR", "TMATMUL"): "BSTART.TMATMUL",
-        ("BSTART.PAR", "TMATMUL.ACC"): "BSTART.TMATMUL.ACC",
-        ("BSTART.PAR", "ACCCVT"): "BSTART.ACCCVT",
+        ("BSTART.TEPL", "TLOAD"): "BSTART.TLOAD",
+        ("BSTART.TEPL", "TSTORE"): "BSTART.TSTORE",
+        ("BSTART.TEPL", "TMOV"): "BSTART.TMOV",
+        ("BSTART.TEPL", "TMATMUL"): "BSTART.TMATMUL",
+        ("BSTART.TEPL", "TMATMUL.ACC"): "BSTART.TMATMUL.ACC",
+        ("BSTART.TEPL", "ACCCVT"): "BSTART.ACCCVT",
         ("BSTART.TMA", "TLOAD"): "BSTART.TLOAD",
         ("BSTART.TMA", "TSTORE"): "BSTART.TSTORE",
         ("BSTART.TMA", "TMOV"): "BSTART.TMOV",
@@ -165,8 +165,6 @@ def close_aliases(covered_spec: set[str], spec_mnemonics: set[str]) -> None:
             "BSTART.MSEQ",
         )
     ):
-        if "BSTART.PAR" in spec_mnemonics:
-            covered_spec.add("BSTART.PAR")
         if "BSTART.TEPL" in spec_mnemonics:
             covered_spec.add("BSTART.TEPL")
 

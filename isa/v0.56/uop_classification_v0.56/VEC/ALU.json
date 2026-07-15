@@ -121,17 +121,6 @@
     },
     {
       "class": {
-        "source": "group_rule",
-        "uop_kind": "VEC_ALU"
-      },
-      "group": "Bit Manipulation",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "V.ROR"
-    },
-    {
-      "class": {
         "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
         "source": "override",
         "uop_kind": "VEC",

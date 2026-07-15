@@ -1,11 +1,12 @@
-# LinxISA Sail Model (v0.56.4)
+# LinxISA Sail Model (v0.56.5)
 
-This directory contains the active **Sail** formal and executable model for the canonical LinxISA `v0.56.4` profile.
+This directory contains the active **Sail** formal and executable model for the canonical LinxISA `v0.56.5` profile.
 
 Scope policy:
 
-- The Sail model is an executable reference for `v0.56.4` semantics and legality checks.
-- Semantic readiness is tracked only in `isa/sail/semantics_status.json`.
+- The Sail model is an executable reference for `v0.56.5` semantics and legality checks.
+- `toolchain.json` pins the required OCaml and Sail versions.
+- Semantic readiness is graded by stable instruction form ID in `semantics_status.json`.
 - Coverage is tracked as data in `isa/sail/coverage.json`.
 
 ## Coverage report
@@ -13,12 +14,13 @@ Scope policy:
 `isa/sail/coverage.json` is generated from:
 
 - the compiled ISA catalog: `isa/v0.56/linxisa-v0.56.json`
-- the semantic status map: `isa/sail/semantics_status.json`
+- the generated form status map: `isa/sail/semantics_status.json`
 
 Regenerate:
 
 ```bash
-python3 tools/bringup/check_sail_model.py --require-parser
+python3 tools/bringup/check_sail_model.py --require-parser --require-c-backend
+python3 tools/isa/gen_sail_status.py --check
 ```
 
 ## Layout
@@ -29,4 +31,7 @@ python3 tools/bringup/check_sail_model.py --require-parser
 - `isa/sail/model/state/`: architectural state definitions
 - `isa/sail/model/decode/`: decode model
 - `isa/sail/model/execute/`: per-unit execute semantics
+- `isa/sail/tests/directed.sail`: executable block/return/trap/atomic/FP edge checks
 - `isa/sail/semantics_status.json`: machine-readable semantic readiness status
+- `isa/sail/semantics_policy.json`: default grade and explicit form-ID overrides
+- `isa/sail/toolchain.json`: hermetic Sail/OCaml version pin

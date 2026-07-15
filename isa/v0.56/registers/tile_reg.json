@@ -2,7 +2,7 @@
   "allocation_model": "dynamic_per_descriptor",
   "count": 64,
   "depth_per_hand": 16,
-  "description": "LinxISA v0.56.4 tile registers. 64 logical tiles organized as T/U/M/N hands with 16 queue entries per hand; each active tile has dynamic descriptor-defined capacity under the per-thread total-capacity limit.",
+  "description": "LinxISA v0.56.5 tile registers. 64 logical tiles organized as T/U/M/N hands with 16 queue entries per hand; each active tile has dynamic descriptor-defined capacity under the per-thread total-capacity limit.",
   "entries": [
     {
       "code": 0,
@@ -399,13 +399,13 @@
   "min_size_bytes": 256,
   "name": "tile_reg",
   "notes": [
-    "v0.56.4 architectural tile register file: 64 logical tiles (T/U/M/N hands x depth 16).",
+    "v0.56.5 architectural tile register file: 64 logical tiles (T/U/M/N hands x depth 16).",
     "Source tile fields in B.IOT are 6-bit values: T#1..T#16=0..15, U#1..U#16=16..31, M#1..M#16=32..47, N#1..N#16=48..63.",
     "Single active tile capacity is descriptor-defined in the range 256B..256KB for normal non-empty tiles; imm4=0 denotes an empty 0B output tile.",
     "All active tiles in one thread must fit within 512KB total tile capacity.",
-    "The legacy zero-based tile names names are not canonical in v0.56.4."
+    "The legacy zero-based tile names are not canonical in v0.56.5."
   ],
   "physical_contiguity": "each active tile occupies contiguous physical storage",
-  "source": "/Users/zhoubot/Documents/linxisa.csv plus LinxISA 0.56/0.56.1/0.56.2/0.56.4 changelog",
+  "source": "isa/v0.56/registers/tile_reg.json",
   "total_active_bytes_max": 524288
 }

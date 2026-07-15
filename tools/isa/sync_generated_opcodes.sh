@@ -3,7 +3,7 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
-LLVM_PROJECT="${LLVM_PROJECT:-$HOME/llvm-project}"
+LLVM_PROJECT="${LLVM_PROJECT:-$REPO_ROOT/compiler/llvm}"
 DEST_DIR="$LLVM_PROJECT/llvm/lib/Target/LinxISA/MCTargetDesc"
 
 SRC_C="$REPO_ROOT/isa/generated/codecs/linxisa_opcodes.c"

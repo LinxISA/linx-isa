@@ -5,16 +5,41 @@
 [[inst_b_dim]]
 ==== B.DIM
 
-*Syntax:* B.DIM RegSrc, uimm, ->LB1
-
 *Description:* Block block argument: B.DIM.
+
+[[inst_b_dim_32_1caa1aa2944a]]
+===== Form `b_dim_32_1caa1aa2944a`
+
+*Syntax:* B.DIM RegSrc, uimm, ->LB2
 
 *Encoding:*
 
-image::../generated/encodings/enc_b_dim.svg[B.DIM encoding,width=800]
-
-*Uop-Class:* CMD
+image::../encodings/enc_b_dim_32_1caa1aa2944a.svg[B.DIM encoding form b_dim_32_1caa1aa2944a,width=800]
 
 *Compression:* L32 (len=32)
+
+[[inst_b_dim_32_27602ab68929]]
+===== Form `b_dim_32_27602ab68929`
+
+*Syntax:* B.DIM RegSrc, uimm, ->LB0
+
+*Encoding:*
+
+image::../encodings/enc_b_dim_32_27602ab68929.svg[B.DIM encoding form b_dim_32_27602ab68929,width=800]
+
+*Compression:* L32 (len=32)
+
+[[inst_b_dim_32_4191099a5f4d]]
+===== Form `b_dim_32_4191099a5f4d`
+
+*Syntax:* B.DIM RegSrc, uimm, ->LB1
+
+*Encoding:*
+
+image::../encodings/enc_b_dim_32_4191099a5f4d.svg[B.DIM encoding form b_dim_32_4191099a5f4d,width=800]
+
+*Compression:* L32 (len=32)
+
+*Uop-Class:* CMD
 
 *Uop-Class payload:* `{"cmd_kind": "BLOCK_ARGUMENT", "note": "User confirmed A", "source": "group_rule", "uop_kind": "CMD"}`

@@ -1,4 +1,4 @@
-= Linx Instruction Set Architecture Manual (v0.56.4)
+= Linx Instruction Set Architecture Manual (v0.56.5)
 :doctype: book
 :toc: left
 :toclevels: 4
@@ -19,7 +19,7 @@
 :imagesdir: images
 
 // Manual metadata (override when publishing).
-:revnumber: v0.56.4
+:revnumber: v0.56.5
 :revdate: {localdate}
 
 include::chapters/00_preamble.adoc[]

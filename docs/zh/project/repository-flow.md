@@ -14,7 +14,7 @@ git submodule update --init --recursive
 - `compiler/llvm`
 - `emulator/qemu`
 - `kernel/linux`
-- `rtl/ZXTERMEN45QXZCore`
+- `rtl/LinxCore`
 - `tools/pyCircuit`
 - `lib/glibc`
 - `lib/musl`

@@ -348,19 +348,16 @@ def _inst_overlap(a: InstPat, b: InstPat) -> bool:
     return all(_parts_overlap(pa, pb) for pa, pb in zip(a.parts, b.parts))
 
 
-_ALLOWED_ALIAS_OVERLAP_MNEMONICS = {
-    "BSTART.PAR",
-    "BSTART.TEPL",
-    "BSTART.MPAR",
-    "BSTART.MSEQ",
-    "BSTART.VPAR",
-    "BSTART.VSEQ",
+_ALLOWED_ALIAS_OVERLAP_PAIRS = {
+    frozenset(("BSTART.TEPL", "BSTART.MPAR")),
+    frozenset(("BSTART.TEPL", "BSTART.MSEQ")),
+    frozenset(("BSTART.TEPL", "BSTART.VPAR")),
+    frozenset(("BSTART.TEPL", "BSTART.VSEQ")),
 }
 
 
 def _is_allowed_overlap(a: InstPat, b: InstPat) -> bool:
-    mnems = {a.mnemonic, b.mnemonic}
-    return mnems.issubset(_ALLOWED_ALIAS_OVERLAP_MNEMONICS)
+    return frozenset((a.mnemonic, b.mnemonic)) in _ALLOWED_ALIAS_OVERLAP_PAIRS
 
 
 def _conflicts_by_signature(insts: List[InstPat]) -> Dict[Tuple[int, ...], List[Tuple[InstPat, InstPat]]]:
@@ -464,8 +461,7 @@ def _display_path(path: Path) -> str:
         return str(path)
 
 
-def _write_report(
-    out_path: Path,
+def _render_report(
     *,
     spec_path: Path,
     conflicts_by_sig: Dict[Tuple[int, ...], List[Tuple[InstPat, InstPat]]],
@@ -475,7 +471,7 @@ def _write_report(
     multi16_examples: List[Tuple[int, List[str]]],
     hole16_ranges: List[Tuple[int, int]],
     prefix_conflicts: List[Tuple[InstPat, InstPat]],
-) -> None:
+) -> str:
     def fmt_ranges(indices: List[int], *, width_bits: int) -> str:
         """
         Format a sorted list of small indices (e.g. major opcode slots) as
@@ -577,8 +573,7 @@ def _write_report(
         lines.append("\n## Status\n")
         lines.append("- OK: no encoding conflicts detected\n")
 
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text("".join(lines), encoding="utf-8")
+    return "".join(lines)
 
 
 def main(argv: List[str] | None = None) -> int:
@@ -657,8 +652,7 @@ def main(argv: List[str] | None = None) -> int:
     # For HL48-major use the packed order [3:0],[16],[19:17] => LSB..MSB positions.
     add_slot_lists("HL48-major[19:17,16,3:0]", occ48, [0, 1, 2, 3, 16, 17, 18, 19], 1 << 8)
 
-    _write_report(
-        args.out,
+    report = _render_report(
         spec_path=args.spec,
         conflicts_by_sig=conflicts_by_sig,
         major_tables=major_tables,
@@ -670,8 +664,12 @@ def main(argv: List[str] | None = None) -> int:
     )
 
     has_conf = any(conflicts_by_sig[s] for s in conflicts_by_sig) or (multi16 != 0) or bool(prefix_conflicts)
-    if args.check and has_conf:
-        return 1
+    if args.check:
+        if has_conf:
+            return 1
+        return 0
+    args.out.parent.mkdir(parents=True, exist_ok=True)
+    args.out.write_text(report, encoding="utf-8")
     return 0
 
 

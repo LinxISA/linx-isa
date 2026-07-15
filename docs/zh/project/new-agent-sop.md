@@ -129,7 +129,7 @@ bash tools/bringup/run_runtime_convergence.sh --lane external --run-id <run-id-e
 |运行时 AVS、严格系统、操作码同步 | `emulator/qemu` |
 | Linux 烟雾/完全启动，`vmlinux` 构建 | `kernel/linux` |
 | musl/glibc 运行时或构建闭包 | `lib/musl`、`lib/glibc` |
-| cosim、舞台/连接、perf 地板 | `rtl/ZXTERMEN45QXZCore` |
+| cosim、舞台/连接、perf 地板 | `rtl/LinxCore` |
 |模型差异，接口契约| `tools/pyCircuit` |
 |合同文档、架构 lint、AVS 合同 | `isa`、`docs` |
 |通道奇偶性、门一致性、证据包装 |超级项目|

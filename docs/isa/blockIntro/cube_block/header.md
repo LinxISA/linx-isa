@@ -37,7 +37,6 @@ A complete matrix data block instructionheader needs to be split into the follow
 - [B.IOT](../../header/B.IOT.md) SrcTile0<.reuse>, SrcTile1<.reuse>, ->DstTile0<TileSize0>
 -...
 - [B.IOT](../../header/B.IOT.md) SrcTile6<.reuse>, SrcTile7<.reuse>, last, ->DstTile3<TileSize3>
-- [B.IOD](../../header/B.IOD.md) DepSrc0, DepSrc1, DepSrc2, ->DepDst
 
 Among them, the encoding format of the BSTART.CUBE instruction is as follows:
 

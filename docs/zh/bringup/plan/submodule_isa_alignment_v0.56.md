@@ -18,7 +18,7 @@
 | `compiler/llvm` |导入 v0.56 操作码和寄存器目录后固定已提交的 LLVM 后端更新。 |刷新 TableGen/汇编器/反汇编器编码、块边界合法性、向量 内存格式以及针对生成的目录的调用/返回降低。 |在 `avs/compiler/linx-llvm/tests/` 加上严格的跨存储库编译通道下编译 AVS 测试。 |
 | `emulator/qemu` |登陆并固定 QEMU v0.56 解码/运行时更新。 |重新生成操作码元数据，对齐 CPU 状态/寄存器定义，实施 v0.56 向量 和内存编码更改，并保留断点/半主机分割。 | `avs/qemu/` 下的运行时 AVS、QEMU 解码烟雾测试和严格的跨存储库运行时通道。 |
 | `kernel/linux` |在 QEMU 可以启动新合约后，登陆并固定 Linux ABI/运行时更新。 |更新 灵犀指令集 ABI 注释、进程/线程上下文处理、调度程序/抢占诊断和 v0.56 运行时假设的 rootfs 脚本。 | Busybox/rootfs 启动烟雾、ctx-tu/ctx-tq 诊断和严格的跨存储库运行时通道。 |
-| `rtl/ZXTERMEN45QXZCore` |一旦本地 ISA 对齐编辑落地，就固定提交的 灵犀Core 操作码目录刷新。 |将操作码目录、解码元数据、块结构合约、ROB/簿记、跟踪模式和 cosim 锁步行为与 v0.56 对齐。 | 灵犀Core 单元测试，生成 RTL 安全门、cosim 锁步烟雾和 灵犀Trace lint。 |
+| `rtl/LinxCore` |一旦本地 ISA 对齐编辑落地，就固定提交的 灵犀Core 操作码目录刷新。 |将操作码目录、解码元数据、块结构合约、ROB/簿记、跟踪模式和 cosim 锁步行为与 v0.56 对齐。 | 灵犀Core 单元测试，生成 RTL 安全门、cosim 锁步烟雾和 灵犀Trace lint。 |
 | `tools/model` |本地 ISA 执行更新落地后固定已提交的模型固定分支。 |刷新 v0.56 目录的 `minst` 编解码器生成、执行状态、ELF/程序加载、主机系统调用行为和 JSON 跟踪格式。 |通过 `tests/checks/check_avs_runtime_smoke.py` 进行模型单元/系统测试以及 AVS 运行时烟雾。 |
 | `tools/pyCircuit` |在上游活动分支后固定 pyCircuit PTO/手动源更新。 |保持 pyCircuit 流程和 PTO 手动生成与 v0.56 块、图块和编码术语一致。 | pyCircuit C++ 后端烟雾、QEMU-vs-pyC 比较流程以及 PTO 手动生成检查。 |
 | `lib/glibc` |保持当前引脚，除非 ABI 更改需要 libc 刷新。 |验证编译器、QEMU 和内核收敛后的加载程序/共享库行为。 | glibc 加载器烟雾和严格的跨存储库 libc 通道。 |

@@ -8,7 +8,7 @@
 
 它故意比完整的架构计划更窄。其重点是
 当前的编译器实现集中于
-`compiler/llvm/llvm/lib/Target/ZXTERMEN40QXZ/ZXTERMEN40QXZSIMTAutoVectorize.cpp`，加上
+`compiler/llvm/llvm/lib/Target/LinxISA/LinxISASIMTAutoVectorize.cpp`，加上
 将其从启动子集提升为所需的测试和执行证据
 稳定的 SIMT 编译器配置文件。
 
@@ -74,7 +74,7 @@
 
 状态：- 2026年3月9日部分实施
 - 当前着陆包括：
-  - 显式布局策略选择（`auto`、`ZXTERMEN44QXZ-replay`、`grouped`）
+  - 显式布局策略选择（`auto`、`scalar-replay`、`grouped`）
   - 目前的规范单组和露天雷发射编队
     计算单位步幅子集
   - 分组单组、分组露天采矿和强制照明覆盖

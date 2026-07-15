@@ -4,7 +4,7 @@
 
 本页记录了 LLVM 灵犀 SIMT **当前实现的子集**
 降低集中于
-`compiler/llvm/llvm/lib/Target/ZXTERMEN40QXZ/ZXTERMEN40QXZSIMTAutoVectorize.cpp`。
+`compiler/llvm/llvm/lib/Target/LinxISA/LinxISASIMTAutoVectorize.cpp`。
 
 它是一个实现状态页面，而不是架构契约。现场直播
 架构方向定义为
@@ -96,7 +96,7 @@ JSON 注释现在还公开了面向编译器的控制流分类
 
 - `auto`：当当前实现可以时更喜欢规范的分组布局
   证明安全的静态映射
-- `ZXTERMEN44QXZ-replay`：强制保守的`LB0=1`、`LB1=tripcount`重播路径
+- `scalar-replay`：强制保守的`LB0=1`、`LB1=tripcount`重播路径
 - `grouped`：要求规范分组降低并拒绝循环，如果
   目前的实现不能满足它
 
@@ -189,8 +189,8 @@ JSON 注释现在还公开了面向编译器的控制流分类
   在运行时和编译阶段从无分支 `min(a[i], b[i])` 进行验证
   源形状以 `v.flt + v.csel + v.sw.brg` 分组。
 - 编译器覆盖范围现在还显式锁定 TSVC 分割：
-  `ZXTERMEN42QXZ_min_select_store`是一组`if-converted-single-block`正，
-  而 `ZXTERMEN42QXZ_shift_half_index` 仍然是显式的 标量/拒绝边界
+  `scalar_min_select_store`是一组`if-converted-single-block`正，
+  而 `scalar_shift_half_index` 仍然是显式的 标量/拒绝边界
   （`non_float_store_value`）而不是分组阳性。
 - 现在也锁定了一个额外的 TSVC 式仿射正值：
   恒定移位输出存储（`a[i + 32] = a[i] + b[i]`）低于
@@ -262,10 +262,10 @@ JSON 注释现在还公开了面向编译器的控制流分类
 - 规范的 `v0.56` 解析拒绝 `l.add ...` 旧语法，
 - 因此目前没有公认的组域规范 asm 形状
   `p` 通过 标量 载体保存/恢复。现在已被 MC 回归锁定
-`compiler/llvm/llvm/test/MC/ZXTERMEN40QXZ/simt-p-save-restore-gap.s`。
+`compiler/llvm/llvm/test/MC/LinxISA/simt-p-save-restore-gap.s`。
 
 相关运行时警告：当前分组/嵌套 QEMU 回归
-`v03_ZXTERMEN42QXZ` 仍然是面向重放的执行通道的证据，而不是
+`v03_scalar` 仍然是面向重放的执行通道的证据，而不是
 完整的架构执行掩码恢复。这些测试练习分组为 块体 CFG
 在当前的重播模式下，但它们并没有被证明是一流的
 保存/恢复 `p` 或真正的子集掩码重新收敛的载波。
@@ -294,7 +294,7 @@ JSON 注释现在还公开了面向编译器的控制流分类
   建筑执行掩码保存/恢复故事。
 
 该分组拒绝边界被锁定
-`compiler/llvm/llvm/test/CodeGen/ZXTERMEN40QXZ/autovec_grouped_exec_mask_save_restore_reject.ll`。
+`compiler/llvm/llvm/test/CodeGen/LinxISA/autovec_grouped_exec_mask_save_restore_reject.ll`。
 
 ## 拒绝分类法
 
@@ -464,7 +464,7 @@ JSON 注释现在还公开了面向编译器的控制流分类
 - `too_many_reductions`
 - `unsupported_reduction_value`
 - `reduction_bind_exhausted`
-- `ZXTERMEN42QXZ_reg_exhausted`
+- `scalar_reg_exhausted`
 - `active_bind_exhausted`
 
 释义：
@@ -494,7 +494,7 @@ JSON 注释现在还公开了面向编译器的控制流分类
 - 选择模式
 - `lane_count`
 - `group_count`
-- `force_ZXTERMEN44QXZ_lane`
+- `force_scalar_lane`
 - 重复/记忆/行程计数元数据
 
 推荐解读：

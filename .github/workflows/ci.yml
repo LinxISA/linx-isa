@@ -18,17 +18,31 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
+      - name: Initialize canonical QEMU leaf
+        run: git submodule update --init emulator/qemu
       - name: Check v0.56 golden artifacts
         run: python3 tools/isa/build_golden.py --profile v0.56 --check
       - name: Validate v0.56 ISA spec
-        run: python3 tools/isa/validate_spec.py --profile v0.56
+        run: |
+          python3 tools/isa/validate_spec.py --profile v0.56
+          python3 tools/isa/test_golden_contract.py
+          python3 tools/isa/report_encoding_space.py --check
+          python3 tools/isa/gen_qemu_codec.py --check
+          python3 tools/isa/gen_c_codec.py --check
+          python3 tools/isa/gen_sail_decode.py --check
+          python3 tools/isa/gen_sail_status.py --check
       - name: Enforce canonical v0.56 guard
         run: python3 tools/isa/check_canonical_v056.py --root .
+      - name: Enforce canonical QEMU opcode metadata
+        run: python3 tools/bringup/check_qemu_opcode_meta_sync.py --strict
       - name: Enforce Repository Layout
         run: bash tools/ci/check_repo_layout.sh
 
   avs-contract:
     runs-on: ubuntu-latest
+    env:
+      OPAMROOT: ${{ runner.temp }}/opam
+      XDG_CACHE_HOME: ${{ runner.temp }}/xdg-cache
     steps:
       - uses: actions/checkout@v6
         with:
@@ -36,16 +50,32 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
+      - uses: ocaml/setup-ocaml@v3
+        with:
+          ocaml-compiler: "4.14.3"
       - name: Init top-level LinxISA submodules
         run: |
           git submodule sync -- workloads/pto_kernels
           git submodule update --init workloads/pto_kernels
       - name: Install deps
         run: python -m pip install --upgrade pip pyyaml
+      - name: Install pinned Sail toolchain
+        run: opam install --yes sail.0.20.2
       - name: Run AVS contract gate
         run: python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml
+      - name: Test shared freestanding math services
+        run: |
+          cc -std=c11 -Wall -Wextra -Werror -fno-builtin \
+            -Iavs/runtime/freestanding/include \
+            avs/runtime/freestanding/src/math/math.c \
+            avs/runtime/freestanding/tests/math_test.c \
+            -o "${RUNNER_TEMP}/linx-freestanding-math-test"
+          "${RUNNER_TEMP}/linx-freestanding-math-test"
       - name: Run Sail model gate
-        run: python3 tools/bringup/check_sail_model.py
+        run: |
+          eval "$(opam env)"
+          python3 tools/bringup/check_sail_model.py --require-parser --require-c-backend
+          python3 tools/isa/sail_coverage.py --check
 
   docs:
     runs-on: ubuntu-latest
@@ -56,10 +86,27 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+      - name: Initialize LinxCore documentation source
+        run: git submodule update --init rtl/LinxCore
       - name: Install deps
-        run: python -m pip install --upgrade pip "mkdocs<2" mkdocs-material
-      - name: Build docs (MkDocs)
-        run: mkdocs build --strict
+        run: |
+          python -m pip install --upgrade pip "mkdocs<2" mkdocs-material
+          bundle install
+        working-directory: docs/architecture/isa-manual
+      - name: Check documentation projections
+        run: |
+          python3 docs/check_documentation.py --root .
+          python3 tools/bringup/check_linxcore_arch_contract.py --root . --strict --require-mkdocs
+      - name: Build normative English documentation
+        run: mkdocs build --strict --site-dir "${RUNNER_TEMP}/site-en"
+      - name: Build secondary Chinese documentation
+        run: mkdocs build --strict --config-file mkdocs.zh.yml --site-dir "${RUNNER_TEMP}/site-zh"
+      - name: Render the ISA manual strictly
+        run: bundle exec asciidoctor --failure-level WARN -o "${RUNNER_TEMP}/linxisa-isa-manual.html" src/linxisa-isa-manual.adoc
+        working-directory: docs/architecture/isa-manual
 
   lint:
     runs-on: ubuntu-latest

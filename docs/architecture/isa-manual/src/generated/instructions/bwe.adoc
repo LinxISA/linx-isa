@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_bwe.svg[BWE encoding,width=800]
+image::../encodings/enc_bwe.svg[BWE encoding,width=800]
 
 *Uop-Class:* SYS
 

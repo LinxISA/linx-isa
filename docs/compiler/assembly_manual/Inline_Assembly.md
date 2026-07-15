@@ -68,7 +68,7 @@ foo:
 Inline assembly error reporting rules:
 
 1. Standard block: Inline assembly starting with scalarBSTART or template block. No special checks are performed for the time being, and you can write casually.
-2. Tile instruction: Inline assembly starting with Tile pseudo-instruction or BSTART.PAR. Only block modification instructions are received. When encountering microinstructions or non-block modification instructions such as the new header, an error will be reported directly.
+2. Tile instruction: Inline assembly starting with a Tile pseudo-instruction or `BSTART.TEPL`. Only block-modification instructions are accepted. A microinstruction or a second block header is rejected.
 3. Parallel block instruction multiple instructions: Start with a microinstruction. If there are multiple microinstructions, they must end with bstop. Used to hand-write complete parallel block function bodies through inline assembly
 4. Parallel block instruction single instruction: only one microinstruction
 5. Escape: The error reporting rules may be expanded or changed in the future. First provide the `.unsafeasm` directive to ensure that these rules can be bypassed.

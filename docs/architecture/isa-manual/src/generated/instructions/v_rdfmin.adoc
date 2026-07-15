@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_rdfmin.svg[V.RDFMIN encoding,width=800]
+image::../encodings/enc_v_rdfmin_parts.svg[V.RDFMIN encoding,width=800]
 
 *Uop-Class:* VEC
 

@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_fence_i.svg[FENCE.I encoding,width=800]
+image::../encodings/enc_fence_i.svg[FENCE.I encoding,width=800]
 
 *Uop-Class:* SYS
 

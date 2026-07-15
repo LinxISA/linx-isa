@@ -10,7 +10,7 @@
 |-----|------|
 | **块起始指令** | [BSTART](../header/BSTART.md), [XB](../header/XB.md) |
 | **块结束指令** | [BSTOP](../header/BSTOP.md) |
-| **块描述指令** | [B.IOR](../header/B.IOR.md), [B.IOT](../header/B.IOT.md), [B.IOD](../header/B.IOD.md), [B.TEXT](../header/B.TEXT.md), [B.CATR](../header/B.CATR.md), [B.DATR](../header/B.DATR.md), [B.HINT](../header/B.HINT.md), [B.DIM](../header/B.DIM.md) |
+| **块描述指令** | [B.IOR](../header/B.IOR.md), [B.IOT](../header/B.IOT.md), [B.TEXT](../header/B.TEXT.md), [B.CATR](../header/B.CATR.md), [B.DATR](../header/B.DATR.md), [B.HINT](../header/B.HINT.md), [B.DIM](../header/B.DIM.md) |
 | **模版块指令** | [MCOPY](../header/templateblock/MCOPY.md), [MSET](../header/templateblock/MSET.md), [FENTRY](../header/templateblock/FENTRY.md), [FRET.RA](../header/templateblock/FRET.RA.md), [FEXIT](../header/templateblock/FEXIT.md), [FRET.STK](../header/templateblock/FRET.STK.md) |
 
 ## <span id="BaseI">微指令</span>

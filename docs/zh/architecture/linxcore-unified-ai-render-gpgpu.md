@@ -153,7 +153,7 @@
 使用灵犀Core既定的“区块”机制：
 - 块通过 CMD uops 发出 CP/引擎命令
 - 块完成：
-  - `complete = ZXTERMEN44QXZ_done && engine_done`
+  - `complete = scalar_done && engine_done`
 - 在刷新/重定向时：通过 BID 杀死较年轻的块（`bid > flush_bid`）
 
 这为您提供了 CPU 式的推测/控制 + 长延迟引擎工作以及干净的取消规则。

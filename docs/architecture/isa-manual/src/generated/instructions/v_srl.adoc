@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_srl.svg[V.SRL encoding,width=800]
+image::../encodings/enc_v_srl_parts.svg[V.SRL encoding,width=800]
 
 *Uop-Class:* VEC
 

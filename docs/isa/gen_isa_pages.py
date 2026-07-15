@@ -7,7 +7,7 @@ Creates:
   docs/isa/encoding.md           — Encoding formats overview
   docs/isa/groups/index.md        — Instruction group index
   docs/isa/groups/*.md           — Per-group pages (all 66 groups)
-  docs/isa/instructions/index.md — Master instruction index (all 740)
+  docs/isa/instructions/index.md — Master instruction index (all canonical forms)
   docs/isa/instructions/*.md     — Per-instruction detail pages
 
 Each instruction page embeds the WaveDrom SVG encoding diagram and includes:
@@ -30,10 +30,12 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import filecmp
 import json
 import os
 import re
 import sys
+import tempfile
 from collections import OrderedDict
 from typing import Any
 
@@ -52,6 +54,19 @@ def _slug(s: str) -> str:
     s = re.sub(r"\.+", "_", s.strip().lower())
     s = re.sub(r"[^a-z0-9_]+", "_", s)
     return re.sub(r"_+", "_", s).strip("_") or "x"
+
+
+def _encoding_asset_filename(inst: dict, mnemonic_count: int) -> str:
+    """Mirror the canonical form-aware naming contract in gen_encoding_svg.py."""
+    if mnemonic_count > 1:
+        form_id = str(inst.get("id") or "").strip()
+        if not re.fullmatch(r"[a-z0-9_]+", form_id):
+            raise ValueError(
+                f"instruction {inst.get('mnemonic')!r} has an invalid stable form ID {form_id!r}"
+            )
+        return f"enc_{form_id}.svg"
+    suffix = "_parts" if len(inst.get("parts", [])) > 1 else ""
+    return f"enc_{_slug(str(inst['mnemonic']))}{suffix}.svg"
 
 
 def _esc(s: str) -> str:
@@ -366,6 +381,12 @@ def _describe_instruction(mnemonic: str, group: str, asm: str) -> str:
     # Block control
     if root in ("BSTART", "BSTOP", "SETC", "B"):
         if root == "BSTART":
+            if sub == "CALL":
+                return (
+                    f"{prefix}Unconditionally transfers to a call block. "
+                    "The instruction preserves `ra`; returning calls require "
+                    "an adjacent `SETRET` or `C.SETRET`."
+                )
             return f"{prefix}Terminates the current block and begins the next."
         if root == "BSTOP":
             return f"{prefix}Marks the end of the current block."
@@ -416,6 +437,7 @@ def _build_index_page(
     groups: OrderedDict[str, list[dict]],
     instructions: list[dict],
     out_path: str,
+    spec_version: str,
 ) -> None:
     """Build the ISA index page with hero, chapter grid, group grid, and mnemonics."""
     n_groups = len(groups)
@@ -425,7 +447,7 @@ def _build_index_page(
     hero = """<!-- Hero Banner -->
 <div class="isa-hero">
 
-**ISA Version:** v0.56.4 &nbsp;·&nbsp; **740 instruction forms** &nbsp;·&nbsp; **66 groups** &nbsp;·&nbsp; **4 encoding formats**
+**ISA Version:** v0.56.5 &nbsp;·&nbsp; **747 instruction forms** &nbsp;·&nbsp; **66 groups** &nbsp;·&nbsp; **4 encoding formats**
 
 ---
 
@@ -487,6 +509,11 @@ The LinxISA manual is organized into 12 chapters covering distinct functional un
 
 <div class="group-card-grid">
 """
+    hero = (
+        hero.replace("v0.56.5", f"v{spec_version}")
+        .replace("747 instruction forms", f"{n_instr} instruction forms")
+        .replace("66 groups", f"{n_groups} groups")
+    )
 
     # ── Group card grid ─────────────────────────────────────────────────────
     all_items = sorted(groups.items(), key=lambda x: x[0])
@@ -542,21 +569,22 @@ Use **Ctrl+F** / **Cmd+F** to search, or browse the [full alphabetical list](ins
         group_grid,
         "\n".join(mnem_rows),
         "",
-        "[View all 740 instructions →](instructions/index.md)",
+        f"[View all {n_instr} instruction forms →](instructions/index.md)",
     ]
 
     full_content = "\n".join(content_parts)
 
     with open(out_path, "w", encoding="utf-8") as f:
-        f.write(full_content)
+        f.write(full_content + "\n")
 
 
 def _render_index_page(
     groups: OrderedDict[str, list[dict]],
     instructions: list[dict],
     out_path: str,
+    spec_version: str,
 ) -> None:
-    _build_index_page(groups, instructions, out_path)
+    _build_index_page(groups, instructions, out_path, spec_version)
 
 
 _ENCODING_PAGE = """# Instruction Encoding Formats
@@ -621,6 +649,10 @@ Each instruction carries a decode `Type` tag describing its operand field layout
 See [Encoding Space Analysis](../reference/encoding_space_report.md) for the full
 conflict-free allocation table.
 
+The [PTO ISA encoding workbook](encoding/PTO-ISA-Encoding.xlsx) is provided
+only as a non-normative review aid. It is not a generator input and cannot
+override the checked-in v0.56 JSON/opcode sources.
+
 ## Field Colour Key
 
 ![Encoding legend](wavedrom/encoding_legend.svg)
@@ -657,9 +689,9 @@ conflict-free allocation table.
 - [Encoding Space Analysis](../reference/encoding_space_report.md)
 """
 
-def _render_encoding_page(out_path: str) -> None:
+def _render_encoding_page(out_path: str, spec_version: str) -> None:
     with open(out_path, "w", encoding="utf-8") as f:
-        f.write(_ENCODING_PAGE)
+        f.write(_ENCODING_PAGE.replace("v0.56.4", f"v{spec_version}"))
 
 
 def _render_group_index(groups: OrderedDict, out_path: str) -> None:
@@ -890,8 +922,7 @@ _INSN_PAGE_TEMPLATE = """# {mnemonic}
 
 ## Full Catalog Forms
 
-| Assembly | Length | Decode |
-|----------|--------|--------|
+{forms_table_header}
 {all_forms_table}
 
 <div class="insn-nav">
@@ -926,18 +957,31 @@ def _render_instruction_page(
             asm_list.append(a)
     asm_block = "\n".join(f"- `{a}`" for a in asm_list) if asm_list else "_No assembly forms defined._"
 
-    # WaveDrom SVG
-    svg_slug = _slug(mnemonic)
-    svg_file = f"enc_{svg_slug}.svg"
-    # Multi-part SVGs have _parts suffix
-    if len(inst.get("parts", [])) > 1:
-        svg_file = f"enc_{svg_slug}_parts.svg"
-    svg_rel = f"../wavedrom/{svg_file}"
-    svg_abs = os.path.join(svg_dir, svg_file) if svg_dir else ""
-    if svg_dir and os.path.exists(svg_abs):
-        wavedrom_svg = f'<figure>\n<img src="{svg_rel}" alt="{mnemonic} encoding" width="100%" />\n<figcaption>Bitfield encoding diagram. MSB is on the left, LSB on the right.</figcaption>\n</figure>'
-    else:
-        wavedrom_svg = f'_Encoding diagram not yet generated. See [wavedrom directory](../wavedrom/)._'
+    # One stable asset per form. Duplicate mnemonics must not overwrite one
+    # another, so their filenames are based on the catalog form ID.
+    figures: list[str] = []
+    for form in all_forms:
+        svg_file = _encoding_asset_filename(form, len(all_forms))
+        svg_abs = os.path.join(svg_dir, svg_file) if svg_dir else ""
+        if not svg_dir or not os.path.isfile(svg_abs):
+            raise FileNotFoundError(
+                f"missing generated encoding asset {svg_abs or svg_file}; run gen_encoding_svg.py"
+            )
+        if len(all_forms) == 1:
+            figures.append(
+                f'<figure>\n<img src="../wavedrom/{svg_file}" alt="{mnemonic} encoding" width="100%" />\n'
+                "<figcaption>Bitfield encoding diagram. MSB is on the left, LSB on the right.</figcaption>\n</figure>"
+            )
+        else:
+            form_id = str(form["id"])
+            form_asm = _collapse_ws(str(form.get("asm") or mnemonic))
+            figures.append(
+                f'<figure id="encoding-{form_id}">\n'
+                f'<img src="../wavedrom/{svg_file}" alt="{mnemonic} encoding form {form_id}" width="100%" />\n'
+                f'<figcaption><code>{form_id}</code> — <code>{form_asm}</code>. '
+                "MSB is on the left, LSB is on the right.</figcaption>\n</figure>"
+            )
+    wavedrom_svg = "\n\n".join(figures)
 
     # Pseudocode
     pseudo = _derive_pseudocode(mnemonic, group, asm)
@@ -960,8 +1004,23 @@ def _render_instruction_page(
         fa = f.get("asm", "—")
         fl = f.get("length_bits", "?")
         fd = f.get("parts", [{}])[0].get("decode", "—") or "—"
-        form_rows.append(f"| `{fa}` | {fl} | {fd} |")
-    all_forms_table = "\n".join(form_rows) if form_rows else "| — | — | — |"
+        if len(all_forms) == 1:
+            form_rows.append(f"| `{fa}` | {fl} | {fd} |")
+        else:
+            form_id = str(f["id"])
+            svg_file = _encoding_asset_filename(f, len(all_forms))
+            form_rows.append(
+                f"| `{form_id}` | `{fa}` | {fl} | {fd} | [SVG](../wavedrom/{svg_file}) |"
+            )
+    if len(all_forms) == 1:
+        forms_table_header = "| Assembly | Length | Decode |\n|----------|--------|--------|"
+        all_forms_table = "\n".join(form_rows) if form_rows else "| — | — | — |"
+    else:
+        forms_table_header = (
+            "| Form ID | Assembly | Length | Decode | Encoding |\n"
+            "|---------|----------|--------|--------|----------|"
+        )
+        all_forms_table = "\n".join(form_rows) if form_rows else "| — | — | — | — | — |"
 
     # Mnemonic badge (C./HL./V.) — uses CSS classes for professional styling
     if mnemonic.startswith("C."):
@@ -992,6 +1051,7 @@ def _render_instruction_page(
         description=desc,
         pseudocode=pseudo_block,
         encoding_notes=notes_block,
+        forms_table_header=forms_table_header,
         all_forms_table=all_forms_table,
         chapter_num=ch_num,
         chapter_title=ch_title,
@@ -1007,6 +1067,12 @@ def _derive_pseudocode(mnemonic: str, group: str, asm: str) -> str:
     sub = parts[1].upper() if len(parts) > 1 else ""
 
     if root == "BSTART":
+        if sub == "CALL":
+            return (
+                "// BSTART.CALL preserves ra. Returning source forms place "
+                "SETRET/C.SETRET adjacent to the header.\n"
+                "EndBlock(); BeginNextBlock(CALL);"
+            )
         return "EndBlock(); BeginNextBlock(/* kind */);"
     if root == "BSTOP":
         return "EndBlock();"
@@ -1100,7 +1166,7 @@ def _derive_pseudocode(mnemonic: str, group: str, asm: str) -> str:
 # ─────────────────────────────────────────────────────────────────────────────
 
 def _render_instruction_index(instructions: list[dict], groups: OrderedDict, out_path: str) -> None:
-    """Build docs/isa/instructions/index.md — a searchable alphabetical list of all 740 instructions."""
+    """Build the searchable alphabetical index of all canonical instruction forms."""
 
     # Build alphabetical index by first letter
     by_letter: dict[str, list[dict]] = {}
@@ -1155,7 +1221,13 @@ def main() -> int:
     spec_version = str(spec.get("version", "?"))
     instructions: list[dict] = list(spec.get("instructions", []))
 
-    out_dir = args.out_dir
+    requested_out_dir = os.path.abspath(args.out_dir)
+    temp_root: tempfile.TemporaryDirectory[str] | None = None
+    if args.check:
+        temp_root = tempfile.TemporaryDirectory(prefix="linxisa-doc-check-")
+        out_dir = os.path.join(temp_root.name, "isa")
+    else:
+        out_dir = requested_out_dir
     svg_dir = args.svg_dir
 
     # Ensure subdirectories exist
@@ -1168,12 +1240,14 @@ def main() -> int:
         print(f"[gen_isa_pages] ISA v{spec_version} — {len(instructions)} forms, {len(groups)} groups")
 
     # ── Index page ────────────────────────────────────────────────────────────
-    _render_index_page(groups, instructions, os.path.join(out_dir, "index.md"))
+    _render_index_page(
+        groups, instructions, os.path.join(out_dir, "index.md"), spec_version
+    )
     if args.verbose:
         print(f"  wrote index.md")
 
     # ── Encoding page ─────────────────────────────────────────────────────────
-    _render_encoding_page(os.path.join(out_dir, "encoding.md"))
+    _render_encoding_page(os.path.join(out_dir, "encoding.md"), spec_version)
     if args.verbose:
         print(f"  wrote encoding.md")
 
@@ -1210,6 +1284,47 @@ def main() -> int:
         _render_instruction_page(forms[0], forms, svg_dir, out_path)
         if args.verbose:
             print(f"  wrote instructions/{slug}.md")
+
+    if args.check:
+        generated_files = {
+            os.path.relpath(os.path.join(root, name), out_dir)
+            for root, _, names in os.walk(out_dir)
+            for name in names
+        }
+        managed_existing = {"index.md", "encoding.md"}
+        for sub in ("groups", "instructions"):
+            existing_dir = os.path.join(requested_out_dir, sub)
+            if os.path.isdir(existing_dir):
+                managed_existing.update(
+                    os.path.join(sub, name)
+                    for name in os.listdir(existing_dir)
+                    if name.endswith(".md")
+                )
+
+        missing = sorted(generated_files - managed_existing)
+        unexpected = sorted(managed_existing - generated_files)
+        drift = sorted(
+            rel
+            for rel in generated_files & managed_existing
+            if not filecmp.cmp(
+                os.path.join(out_dir, rel),
+                os.path.join(requested_out_dir, rel),
+                shallow=False,
+            )
+        )
+        temp_root.cleanup()
+        if missing or unexpected or drift:
+            for rel in missing:
+                print(f"error: missing generated page: {rel}", file=sys.stderr)
+            for rel in unexpected:
+                print(f"error: unexpected generated page: {rel}", file=sys.stderr)
+            for rel in drift:
+                print(f"error: generated page drift: {rel}", file=sys.stderr)
+            return 1
+        print(
+            f"ok: {len(mnem_map)} instruction pages and {len(groups)} group pages are current"
+        )
+        return 0
 
     print(f"\n[gen_isa_pages] Done — {len(mnem_map)} instruction pages, {len(groups)} group pages.")
     return 0

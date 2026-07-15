@@ -2,6 +2,10 @@
 title: LinxISA
 ---
 
+!!! warning "非规范翻译"
+    本站是英文规范文档的辅助中文翻译。发生差异时，以英文文档和
+    `isa/v0.56/linxisa-v0.56.json` 为准。指令助记符、字段名、路径和代码标识符保持原文。
+
 <section class="linx-home-hero" markdown="1">
 <div class="linx-home-hero__copy" markdown="1">
 
@@ -27,11 +31,11 @@ LinxISA 把程序组织成一组组块指令。每个块同时说明控制流、
 
 <section class="linx-home-strip" markdown="1">
 <div markdown="1">
-**v0.56.4**
+**v0.56.5**
 : 当前公开规范版本
 </div>
 <div markdown="1">
-**740**
+**747**
 : 指令形式
 </div>
 <div markdown="1">

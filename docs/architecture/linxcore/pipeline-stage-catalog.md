@@ -408,8 +408,20 @@ canonical meanings above.
 
 ### L1D
 
-- Owner module: `src/bcc/lsu/l1d.py` (`JanusBccLsuL1D`)
-- Design role: data-cache-side interface boundary.
+- Golden owner: `chisel/src/main/scala/linxcore/lsu/ScalarL1D.scala`
+  (`ScalarL1D`). The reduced pyCircuit module is an adapter, not a second
+  architectural definition.
+- Design role: parameterized scalar data-cache tag/data/permission owner.
+  `ScalarLSULoadPath` supplies the active LIQ phase lookup and retained refill;
+  `ScalarLSU` connects SCB write-side lookup and byte update to the same owner.
+- Port priority is refill, committed SCB update/lookup, then scalar load LRU
+  touch. Refill blocks new array launches until duplicate installation or
+  victim eviction is accepted. The E2 lookup result is registered and merged
+  with SCB/STQ data in E3.
+- `LoadMissQueue` separately owns unique-line lower requests and exact response
+  identity. `LoadRefillTransport` separately owns refill retention. The
+  lower-memory fabric, coherence acquisition, explicit invalidation, and cache
+  maintenance remain separate interfaces.
 
 ## Block-control stages
 

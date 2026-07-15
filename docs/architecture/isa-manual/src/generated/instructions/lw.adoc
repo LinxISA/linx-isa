@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_lw.svg[LW encoding,width=800]
+image::../encodings/enc_lw.svg[LW encoding,width=800]
 
 *Uop-Class:* LDA/BASE_REG
 

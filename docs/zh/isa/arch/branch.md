@@ -142,7 +142,7 @@
     BSTART.SYS FALL
     ...
 .block2:
-    BSTART.PAR FALL
+    BSTART.TEPL FALL
     ...
 ```
 

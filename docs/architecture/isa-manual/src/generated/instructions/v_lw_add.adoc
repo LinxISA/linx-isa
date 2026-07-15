@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_lw_add.svg[V.LW.ADD encoding,width=800]
+image::../encodings/enc_v_lw_add_parts.svg[V.LW.ADD encoding,width=800]
 
 *Uop-Class:* VEC
 

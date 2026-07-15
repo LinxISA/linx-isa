@@ -36,7 +36,7 @@ Instruction from the Block Control Attribute group.
 
 ## Encoding Notes
 
-- `v0.56 split of legacy B.CATR/B.DATR control fields.`
+- `v0.56 split of legacy B.CATR/B.DATR control fields. Bits 25:15 are reserved zero.`
 
 ## Full Catalog Forms
 

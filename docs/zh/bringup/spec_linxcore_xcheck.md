@@ -24,7 +24,7 @@
 运行：
 
 ```bash
-bash rtl/ZXTERMEN45QXZCore/tests/test_specint_stage_a_xcheck.sh
+bash rtl/LinxCore/tests/test_specint_stage_a_xcheck.sh
 ```
 
 管道：
@@ -40,7 +40,7 @@ bash rtl/ZXTERMEN45QXZCore/tests/test_specint_stage_a_xcheck.sh
 运行（仅报告默认值）：
 
 ```bash
-SPEC_NIGHTLY_REPORT_ONLY=1 bash rtl/ZXTERMEN45QXZCore/tests/test_specint_full_xcheck_nightly.sh
+SPEC_NIGHTLY_REPORT_ONLY=1 bash rtl/LinxCore/tests/test_specint_full_xcheck_nightly.sh
 ```
 
 管道：

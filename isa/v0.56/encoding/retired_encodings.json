@@ -1,0 +1,23 @@
+{
+  "entries": [
+    {
+      "disposition": "reserved",
+      "length_bits": 32,
+      "mask": "0x0600707f",
+      "match": "0x00001013",
+      "retired_mnemonic": "B.IOD"
+    },
+    {
+      "disposition": "canonical-redecode",
+      "length_bits": 32,
+      "mask": "0x06007fff",
+      "match": "0x02001181",
+      "replacement_mnemonic": "BSTART.TEPL",
+      "retired_mnemonic": "BSTART.PAR"
+    }
+  ],
+  "notes": [
+    "Retired spellings are assembler errors.",
+    "B.IOD's bit pattern is reserved. The former BSTART.PAR bit pattern remains active only as BSTART.TEPL."
+  ]
+}

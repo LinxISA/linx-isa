@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_psel.svg[V.PSEL encoding,width=800]
+image::../encodings/enc_v_psel_parts.svg[V.PSEL encoding,width=800]
 
 *Uop-Class:* VEC
 

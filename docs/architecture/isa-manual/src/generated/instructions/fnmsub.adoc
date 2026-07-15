@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_fnmsub.svg[FNMSUB encoding,width=800]
+image::../encodings/enc_fnmsub.svg[FNMSUB encoding,width=800]
 
 *Uop-Class:* FSU
 

@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_tlb_ia.svg[TLB.IA encoding,width=800]
+image::../encodings/enc_tlb_ia.svg[TLB.IA encoding,width=800]
 
 *Uop-Class:* SYS
 

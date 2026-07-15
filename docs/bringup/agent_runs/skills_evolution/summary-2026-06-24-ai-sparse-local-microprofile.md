@@ -23,7 +23,7 @@ PTO_SPARSE_LOCAL_SMOKE_DIM=1
 
 The reusable boundary is that this case proves the stage prefix through the
 `sparse_attention_local` digest under plain
-`model/LinxCoreModel/bin/gfsim -f <elf>`. The full smoke-sized
+`tools/LinxCoreModel/bin/gfsim -f <elf>`. The full smoke-sized
 `avs-pto-parity` row remains the normalization and full-shape maturity target.
 
 ## Evidence

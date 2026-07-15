@@ -2620,7 +2620,6 @@ function exec_bstart_mpar() -> unit = { exec_bstart() }
 function exec_bstart_mseq() -> unit = { exec_bstart() }
 function exec_bstart_vpar() -> unit = { exec_bstart() }
 function exec_bstart_vseq() -> unit = { exec_bstart() }
-function exec_bstart_par() -> unit = { exec_bstart() }
 function exec_bstart_cube() -> unit = { exec_bstart() }
 function exec_bstart_tma() -> unit = { exec_bstart() }
 function exec_bstart_tepl() -> unit = { exec_bstart() }
@@ -2704,8 +2703,6 @@ function exec_b_datr() -> unit = {
   bdatr_raw = decoded_bdatr_raw()
 }
 function exec_b_hint() -> unit = { () }
-function exec_b_iod() -> unit = { () }
-
 // -----------------------------------------------------------------------------
 // V.* vector instructions (staged bring-up)
 //

@@ -21,7 +21,7 @@ PTO_RMSNORM_SMOKE_CHANNELS=1
 The reusable boundary is not model-green promotion. Current evidence proves
 source, compiler, and QEMU, then emits a model-owned timeout packet for
 LinxCoreModel. Keep this case in the model lane until plain
-`model/LinxCoreModel/bin/gfsim -f <elf>` exits naturally or newer static
+`tools/LinxCoreModel/bin/gfsim -f <elf>` exits naturally or newer static
 legality evidence changes ownership.
 
 ## Evidence

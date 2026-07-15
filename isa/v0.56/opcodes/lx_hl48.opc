@@ -1,4 +1,4 @@
-# LinxISA opcode database (generated via tools/isa/split_compiled.py)
+# Canonical LinxISA v0.56 opcode source (consumed by tools/isa/build_golden.py)
 #
 # Format:
 #   MNEMONIC [<json meta>] : <bit-assignments> [| <bit-assignments>] ; <operands> ; <constraints>
@@ -14,7 +14,7 @@ HL.ADDTPC [{"asm":"hl.addtpc imm, ->{t, u, Rd}","group":"PC-Relative","length_bi
 HL.ANDI [{"asm":"hl.andi SrcL, simm, ->{t, u, Rd}","group":"Arithmetic Operation 64bit","length_bits":48}] : 47..36=simm24[11:0] 35..31=SrcL 30..28=3'b010 27..23=RegDst 22..20=3'b001 19..17=3'b010 16=1 15..4=simm24[23:12] 3..1=3'b111 0=0 ; RegDst SrcL simm24 ; -
 HL.ANDIW [{"asm":"hl.andiw SrcL, simm, ->{t, u, Rd}","group":"Arithmetic Operation 32bit","length_bits":48}] : 47..36=simm24[11:0] 35..31=SrcL 30..28=3'b010 27..23=RegDst 22..20=3'b011 19..17=3'b010 16=1 15..4=simm24[23:12] 3..1=3'b111 0=0 ; RegDst SrcL simm24 ; -
 HL.BFI [{"asm":"hl.bfi SrcL, SrcR, M, N, ->{t, u, Rd}","group":"RESERVE","length_bits":48}] : 47..41=7'b000_0000 40..36=SrcR 35..31=SrcL 30..28=3'b010 27..23=RegDst 22..20=3'b100 19..17=3'b110 16=1 15..10=imms 9..4=immr 3..1=3'b111 0=0 ; RegDst SrcL SrcR immr imms ; -
-"HL.BSTART CALL" [{"asm":"HL.BSTART.CALL, <br_label>, <rt_label>, -> ra","group":"BSTART","length_bits":48}] : 47..43=5'b0_1010(RA) 42..38=uimm5 37..36=2'b01 35..33=3'b011 32=0 31..7=simm25 6..4=3'b001 3..1=3'b000 0=1 ; 5'b0_1010(RA) simm25 uimm5 ; -
+"HL.BSTART CALL" [{"asm":"HL.BSTART.CALL <br_label>","group":"BSTART","length_bits":48,"note":"Bare HL.BSTART.CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label."}] : 47..43=5'b0_1010(RA) 42..38=uimm5 37..36=2'b01 35..33=3'b011 32=0 31..7=simm25 6..4=3'b001 3..1=3'b000 0=1 ; 5'b0_1010(RA) simm25 uimm5 ; -
 HL.BSTART.FP [{"asm":"HL.BSTART.FP COND, <label>","group":"BSTART","length_bits":48}] : 47..31=simm[17:1] 30..28=3'b011 27..23=5'b0_0010 22..20=3'b000 19..17=3'b000 16=1 15..4=simm[29:18] 3..1=3'b111 0=0 ; simm ; -
 HL.BSTART.FP [{"asm":"HL.BSTART.FP FALL<, fixup_label>","group":"BSTART","length_bits":48}] : 47..31=simm[17:1] 30..28=3'b001 27..23=5'b0_0010 22..20=3'b000 19..17=3'b000 16=1 15..4=simm[29:18] 3..1=3'b111 0=0 ; simm ; -
 HL.BSTART.FP [{"asm":"HL.BSTART.FP CALL, <label>","group":"BSTART","length_bits":48}] : 47..31=simm[17:1] 30..28=3'b100 27..23=5'b0_0010 22..20=3'b000 19..17=3'b000 16=1 15..4=simm[29:18] 3..1=3'b111 0=0 ; simm ; -

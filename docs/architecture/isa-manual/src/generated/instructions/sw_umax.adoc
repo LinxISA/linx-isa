@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_sw_umax.svg[SW.UMAX encoding,width=800]
+image::../encodings/enc_sw_umax.svg[SW.UMAX encoding,width=800]
 
 *Uop-Class:* AMO
 

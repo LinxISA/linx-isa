@@ -31,7 +31,7 @@
 - 在 `docs/bringup/agent_runs/waivers.yaml` 中记录明确的弃权。
 
 超级项目不应成为 `llvm`、`qemu`、`linux` 的卷影副本，
-`glibc`、`musl`、`ZXTERMEN45QXZCore` 或 `pyCircuit`。如果 bug 存在于叶模块中，
+`glibc`、`musl`、`LinxCore` 或 `pyCircuit`。如果 bug 存在于叶模块中，
 首先在该模块中修复它，然后重新固定超级项目。
 
 ## 核心设计原则### 规范优先
@@ -153,7 +153,7 @@
 |模拟器| `emulator/qemu` |运行时 AVS、严格系统、操作码同步 |
 |内核| `kernel/linux` | initramfs 烟雾/完全启动，`vmlinux` 关闭 |
 |图书馆 | `lib/glibc`、`lib/musl` | libc 阶段门，运行时烟雾 |
-|左转 | `rtl/ZXTERMEN45QXZCore` |阶段/连接 lint、cosim、perf 地板 |
+|左转 | `rtl/LinxCore` |阶段/连接 lint、cosim、perf 地板 |
 |型号| `tools/pyCircuit` |模型差异，接口契约|
 |整合|超级项目|严格的跨回购封闭，双通道平价 |
 
@@ -354,7 +354,7 @@ git submodule update --remote \
   compiler/llvm \
   emulator/qemu \
   kernel/linux \
-  rtl/ZXTERMEN45QXZCore \
+  rtl/LinxCore \
   tools/pyCircuit \
   lib/glibc \
   lib/musl \
@@ -437,7 +437,7 @@ python3 tools/bringup/check_gate_consistency.py \
 - 编译覆盖失败-> `compiler/llvm`
 - 严格的系统/运行时故障 -> `emulator/qemu`
 - Linux启动失败-> `kernel/linux`
-- cosim 或 perf-floor 故障 -> `rtl/ZXTERMEN45QXZCore`
+- cosim 或 perf-floor 故障 -> `rtl/LinxCore`
 
 ### 最后集成失败
 

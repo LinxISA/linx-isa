@@ -74,7 +74,7 @@ git submodule update --remote \
   compiler/llvm \
   emulator/qemu \
   kernel/linux \
-  rtl/ZXTERMEN45QXZCore \
+  rtl/LinxCore \
   tools/pyCircuit \
   lib/glibc \
   lib/musl \
@@ -159,7 +159,7 @@ python3 tools/bringup/check_gate_consistency.py \
 | `kernel/linux` | `vmlinux` 构建，initramfs 冒烟/完全启动 |
 | `lib/glibc` |适用于当前配置文件的 G1a/G1b 阶段闸门 |
 | `lib/musl` |构建闭包和运行时烟雾（如适用）
-| `rtl/ZXTERMEN45QXZCore` |适合该阶段的 lint/cosim/perf 门 |
+| `rtl/LinxCore` |适合该阶段的 lint/cosim/perf 门 |
 | `tools/pyCircuit` |界面契约和模型差异表面|
 | `isa`、`docs` |合同检查和任何生成的工件刷新它们意味着 |
 

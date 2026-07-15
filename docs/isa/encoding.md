@@ -1,6 +1,6 @@
 # Instruction Encoding Formats
 
-> **ISA Version:** v0.56.4 &nbsp;|&nbsp; **Chapter 03** of the ISA Manual
+> **ISA Version:** v0.56.5 &nbsp;|&nbsp; **Chapter 03** of the ISA Manual
 
 LinxISA v0.56 supports four instruction lengths in a little-endian
 halfword-oriented model. Bit positions are shown as `[msb:0]`
@@ -59,6 +59,10 @@ Each instruction carries a decode `Type` tag describing its operand field layout
 
 See [Encoding Space Analysis](../reference/encoding_space_report.md) for the full
 conflict-free allocation table.
+
+The [PTO ISA encoding workbook](encoding/PTO-ISA-Encoding.xlsx) is provided
+only as a non-normative review aid. It is not a generator input and cannot
+override the checked-in v0.56 JSON/opcode sources.
 
 ## Field Colour Key
 

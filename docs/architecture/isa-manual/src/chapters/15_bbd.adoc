@@ -6,7 +6,7 @@
 
 The Block Boundary Delimiters (BBD) group defines the instructions that mark the beginning and end of template blocks and carry block-transition metadata. The block-structured control-flow model is defined in <<blockisa>>; this chapter documents the individual instruction forms.
 
-**Block start** (`BSTART.*`): a `BSTART.*` both terminates the current block and begins the next block. It encodes the target block type (`.STD`, `.SYS`, `.FP`, `.MPAR`, `.MSEQ`, `.VPAR`, `.VSEQ`, `.TMA`, `.CUBE`, `.TEPL`, `.FIXP`) and the transition kind (`FALL`, `DIRECT`, `COND`, `CALL`, `IND`, `ICALL`, `RET`). For `CALL` transitions, `BSTART.CALL` additionally records a branch-label, a return-label, and a return-address destination (`ra`). Compressed `C.BSTART.*` forms encode the most common transitions in 16 bits.
+**Block start** (`BSTART.*`): a `BSTART.*` both terminates the current block and begins the next block. It encodes the target block type (`.STD`, `.SYS`, `.FP`, `.MPAR`, `.MSEQ`, `.VPAR`, `.VSEQ`, `.TMA`, `.CUBE`, `.TEPL`, `.FIXP`) and the transition kind (`FALL`, `DIRECT`, `COND`, `CALL`, `IND`, `ICALL`, `RET`). A bare `CALL` transition records only its branch target and preserves `ra`; a returning call is preceded immediately by `SETRET` or `C.SETRET` carrying an explicit return label. Compressed `C.BSTART.*` forms encode the most common transitions in 16 bits.
 
 **Block stop** (`BSTOP` / `C.BSTOP`): terminates the current block and commits the block state in `BARG`. For decoupled blocks, this is the point where the PE receives and begins executing the command. Note: `C.BSTOP` is encoded as all-zeros in the 16-bit space; it also serves as an invalid/reserved encoding in some tooling conventions.
 

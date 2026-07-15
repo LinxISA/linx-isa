@@ -1,6 +1,6 @@
 {
   "big_kind": "BBD",
-  "count": 12,
+  "count": 15,
   "instructions": [
     {
       "class": {
@@ -157,6 +157,45 @@
         48
       ],
       "mnemonic": "HL.BSTART.SYS"
+    },
+    {
+      "class": {
+        "bbd_kind": "BSTART",
+        "note": "Canonical 64-bit long-range block start",
+        "source": "group_rule",
+        "uop_kind": "BBD"
+      },
+      "group": "BSTART",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "L.BSTART.FP"
+    },
+    {
+      "class": {
+        "bbd_kind": "BSTART",
+        "note": "Canonical 64-bit long-range block start",
+        "source": "group_rule",
+        "uop_kind": "BBD"
+      },
+      "group": "BSTART",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "L.BSTART.STD"
+    },
+    {
+      "class": {
+        "bbd_kind": "BSTART",
+        "note": "Canonical 64-bit long-range block start",
+        "source": "group_rule",
+        "uop_kind": "BBD"
+      },
+      "group": "BSTART",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "L.BSTART.SYS"
     }
   ],
   "sub_kind": "BSTART"

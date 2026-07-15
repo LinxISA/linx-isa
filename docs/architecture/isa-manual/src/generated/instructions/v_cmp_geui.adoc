@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_cmp_geui.svg[V.CMP.GEUI encoding,width=800]
+image::../encodings/enc_v_cmp_geui_parts.svg[V.CMP.GEUI encoding,width=800]
 
 *Uop-Class:* VEC
 

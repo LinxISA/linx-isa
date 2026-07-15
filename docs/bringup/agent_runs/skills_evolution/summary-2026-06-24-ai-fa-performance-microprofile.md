@@ -16,7 +16,7 @@ PTO_PARITY_STOP_AFTER_STAGE=PTO_PARITY_STAGE_FA_PERFORMANCE
 ```
 
 The reusable boundary is that this case proves the stage prefix through the
-`fa_performance` digest and plain `model/LinxCoreModel/bin/gfsim -f <elf>`.
+`fa_performance` digest and plain `tools/LinxCoreModel/bin/gfsim -f <elf>`.
 The full smoke-sized `avs-pto-parity` row remains the maturity target.
 
 ## Evidence

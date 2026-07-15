@@ -5,16 +5,30 @@
 [[inst_c_bstart]]
 ==== C.BSTART
 
-*Syntax:* C.BSTART DIRECT, label
-
 *Description:* Compressed 16-bit instruction variant.
+
+[[inst_c_bstart_16_c4e238a9227a]]
+===== Form `c_bstart_16_c4e238a9227a`
+
+*Syntax:* C.BSTART COND,  label
 
 *Encoding:*
 
-image::../generated/encodings/enc_c_bstart.svg[C.BSTART encoding,width=800]
-
-*Uop-Class:* CMD
+image::../encodings/enc_c_bstart_16_c4e238a9227a.svg[C.BSTART encoding form c_bstart_16_c4e238a9227a,width=800]
 
 *Compression:* C16 (len=16)
+
+[[inst_c_bstart_16_f833d2a4753c]]
+===== Form `c_bstart_16_f833d2a4753c`
+
+*Syntax:* C.BSTART DIRECT, label
+
+*Encoding:*
+
+image::../encodings/enc_c_bstart_16_f833d2a4753c.svg[C.BSTART encoding form c_bstart_16_f833d2a4753c,width=800]
+
+*Compression:* C16 (len=16)
+
+*Uop-Class:* CMD
 
 *Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "User corrected to A", "source": "group_rule", "uop_kind": "CMD"}`

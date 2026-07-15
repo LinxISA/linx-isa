@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_frecip.svg[V.FRECIP encoding,width=800]
+image::../encodings/enc_v_frecip_parts.svg[V.FRECIP encoding,width=800]
 
 *Uop-Class:* VEC
 

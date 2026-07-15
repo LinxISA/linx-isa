@@ -8,7 +8,7 @@ BUILD_DIR ?= build
 PDF ?= $(BUILD_DIR)/linxisa-isa-manual.pdf
 HTML ?= $(BUILD_DIR)/linxisa-isa-manual.html
 
-.PHONY: all pdf html gen clean bundle-check
+.PHONY: all pdf html gen check-generated clean bundle-check
 
 all: pdf
 
@@ -17,10 +17,15 @@ bundle-check:
 
 gen:
 	@mkdir -p $(GEN_DIR)/encodings $(GEN_DIR)/instructions
-	python3 ../../../tools/isa/gen_manual_adoc.py --spec $(SPEC) --out-dir $(GEN_DIR)
 	python3 ../../../tools/isa/gen_encoding_svg.py --spec $(SPEC) --out-dir $(GEN_DIR)/encodings
-	python3 ../../../tools/isa/gen_instruction_fragments.py --spec $(SPEC) --uop-root ../../../isa/v0.56/uop_classification_v0.56 --out-dir $(GEN_DIR)/instructions --enc-rel-dir ../generated/encodings
+	python3 ../../../tools/isa/gen_manual_adoc.py --spec $(SPEC) --out-dir $(GEN_DIR) --svg-dir $(GEN_DIR)/encodings
+	python3 ../../../tools/isa/gen_instruction_fragments.py --spec $(SPEC) --uop-root ../../../isa/v0.56/uop_classification_v0.56 --out-dir $(GEN_DIR)/instructions --enc-rel-dir ../encodings
 	python3 ../../../tools/isa/gen_ssr_adoc.py --spec $(SPEC) --out-dir $(GEN_DIR)
+
+check-generated:
+	python3 ../../../tools/isa/gen_encoding_svg.py --spec $(SPEC) --out-dir $(GEN_DIR)/encodings --check
+	python3 ../../../tools/isa/gen_manual_adoc.py --spec $(SPEC) --out-dir $(GEN_DIR) --svg-dir $(GEN_DIR)/encodings --check
+	python3 ../../../tools/isa/gen_instruction_fragments.py --spec $(SPEC) --uop-root ../../../isa/v0.56/uop_classification_v0.56 --out-dir $(GEN_DIR)/instructions --enc-rel-dir ../encodings --check
 
 $(BUILD_DIR):
 	@mkdir -p $(BUILD_DIR)

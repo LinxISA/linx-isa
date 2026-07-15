@@ -6,7 +6,7 @@
 
 - `/Users/zhoubot/linx-simt.c` 中的源意图
 - 规范的 `v0.56` ISA 手册
-- `compiler/llvm/llvm/lib/Target/ZXTERMEN40QXZ/ZXTERMEN40QXZSIMTAutoVectorize.cpp` 中当前的 LLVM 灵犀 SIMT 降低
+- `compiler/llvm/llvm/lib/Target/LinxISA/LinxISASIMTAutoVectorize.cpp` 中当前的 LLVM 灵犀 SIMT 降低
 - `emulator/qemu/target/linx/translate.c` 中的当前 QEMU 灵犀 向量-块体 执行模型
 
 主要结果是，有趣的差距大多不是原始操作码的缺失。生成的程序集已使用大量现有的 向量/SIMT 表单。真正的差距在于围绕通道分组、发散、再收敛、通道本地状态的架构 SIMT 合约，以及使这些形式组成强大的 GPU 风格的 执行模型 所需的编译器/运行时模型。
@@ -119,7 +119,7 @@
   - 块体 充满了 `c.movr`、`l.ori`、`v.ori` 和 `p` 的 标量 化为 `t/u` 寄存器（`/Users/zhoubot/linx-simt.s:76-81`、`/Users/zhoubot/linx-simt.s:88-96`、 `/Users/zhoubot/linx-simt.s:164-173`、`/Users/zhoubot/linx-simt.s:211-217`、`/Users/zhoubot/linx-simt.s:245-257`）。
   - 这不仅仅是正常的 SSA 噪音。它是编译器支付操作数模型税来在 向量、掩码和 标量 控制域之间移动信息。
 - 当前规范设计：
-  - 标量统一指令在 `GPR`/`t/u`/`p` 中运行； 向量指令在`vt/vu/vm/vn`中运行；直接 `v.* -> ZXTERMEN44QXZ` 写入是非法的，除非减少或掩码生成形式 (`docs/architecture/isa-manual/src/chapters/03_programming_model.adoc:123-157`)。
+  - 标量统一指令在 `GPR`/`t/u`/`p` 中运行； 向量指令在`vt/vu/vm/vn`中运行；直接 `v.* -> scalar` 写入是非法的，除非减少或掩码生成形式 (`docs/architecture/isa-manual/src/chapters/03_programming_model.adoc:123-157`)。
   -向量指令必须通过`ri*`或允许的标量操作数导入标量值；在 `V.*` 形式中直接任意使用 标量 GPR 是非法的（`docs/architecture/isa-manual/src/chapters/04_block_isa.adoc:624-625`）。
 - 为什么这是一个差距：
   - 当前的分割对于简单的 向量 算术来说是干净的。
@@ -165,7 +165,7 @@
   - 内核 块体 包含许多内部控制流区域和重复重新进入探测循环（`/Users/zhoubot/linx-simt.s:84-96`、`/Users/zhoubot/linx-simt.s:152-174`、`/Users/zhoubot/linx-simt.s:176-218`、`/Users/zhoubot/linx-simt.s:220-258`）。
 - 当前规范设计：
   - 手册明确了`B.TEXT`进入合法性和终止条件（`docs/architecture/isa-manual/src/chapters/04_block_isa.adoc:523-532`、`docs/architecture/isa-manual/src/chapters/08_tile_blocks.adoc:40-50`）。
-  - QEMU 通过输入 `cpu_ZXTERMEN46QXZ_tpc` 来镜像该模型，重播直到 `linx_vec_ZXTERMEN46QXZ_next`，然后返回到 块头 延续（`emulator/qemu/target/linx/translate.c:454-480`、`emulator/qemu/target/linx/translate.c:484-520`）。
+  - QEMU 通过输入 `cpu_body_tpc` 来镜像该模型，重播直到 `linx_vec_body_next`，然后返回到 块头 延续（`emulator/qemu/target/linx/translate.c:454-480`、`emulator/qemu/target/linx/translate.c:484-520`）。
 - 为什么这是一个差距：
   - 指定进入和终止。
   - 部分活动车道的重新加入语义不是。
@@ -185,7 +185,7 @@
 - 观察到的汇编证据：
   - 块体 期望 `.local` 中保存的掩码更新、分支和状态之间进行细粒度交互。
 - 当前规范实施：
-  - QEMU 通过从 `LB/LC` 状态步进到 `linx_vec_ZXTERMEN46QXZ_next` 来重放 块体，然后在 块体 终止 (`emulator/qemu/target/linx/translate.c:454-480`) 处返回。
+  - QEMU 通过从 `LB/LC` 状态步进到 `linx_vec_body_next` 来重放 块体，然后在 块体 终止 (`emulator/qemu/target/linx/translate.c:454-480`) 处返回。
   - 它将 `B.TEXT` 视为具有合法性检查的解耦 块头/块体 传输 (`emulator/qemu/target/linx/translate.c:484-520`)。
 - 为什么这是一个差距：
   - 这对于当前面向重播的子集来说已经足够了。
@@ -204,9 +204,9 @@
 - 观察到的汇编证据：
   - 替代编译器显然愿意发出具有真正的 in-块体 分支的控制密集型 MPAR 块体，向量 比较馈送 `p`、`v.psel`、`.local` 溢出状态和基于模的探测循环（`/Users/zhoubot/linx-simt.s:60-258`）。
 - 当前 LLVM 降低：
-  - LLVM 拒绝许多循环形状并默认为 `mseq`，除非独立性在结构上是明显的 (`compiler/llvm/llvm/lib/Target/ZXTERMEN40QXZ/ZXTERMEN40QXZSIMTAutoVectorize.cpp:700-860`)。
-  - 它明确强制通过 `LB1` 在启动路径 (`compiler/llvm/llvm/lib/Target/ZXTERMEN40QXZ/ZXTERMEN40QXZSIMTAutoVectorize.cpp:1589-1649`) 中重放 标量 通道。
-  - 其内部控制流回退将 向量 谓词减少为使用 `v.rdor ... ->t#1` (`compiler/llvm/llvm/lib/Target/ZXTERMEN40QXZ/ZXTERMEN40QXZSIMTAutoVectorize.cpp:4182-4275`) 的 标量 `any-active-lane` 分支。
+  - LLVM 拒绝许多循环形状并默认为 `mseq`，除非独立性在结构上是明显的 (`compiler/llvm/llvm/lib/Target/LinxISA/LinxISASIMTAutoVectorize.cpp:700-860`)。
+  - 它明确强制通过 `LB1` 在启动路径 (`compiler/llvm/llvm/lib/Target/LinxISA/LinxISASIMTAutoVectorize.cpp:1589-1649`) 中重放 标量 通道。
+  - 其内部控制流回退将 向量 谓词减少为使用 `v.rdor ... ->t#1` (`compiler/llvm/llvm/lib/Target/LinxISA/LinxISASIMTAutoVectorize.cpp:4182-4275`) 的 标量 `any-active-lane` 分支。
 - 为什么这是一个差距：
   - 目前的实施并没有“错误”；这是故意保守的。
   - 但没有稳定的编译器合约规定何时更激进的 MPAR 降低（例如替代编译器的输出）是规范且合法的。

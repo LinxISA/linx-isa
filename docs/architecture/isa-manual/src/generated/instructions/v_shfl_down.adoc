@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_shfl_down.svg[V.SHFL.DOWN encoding,width=800]
+image::../encodings/enc_v_shfl_down_parts.svg[V.SHFL.DOWN encoding,width=800]
 
 *Uop-Class:* VEC
 

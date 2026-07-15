@@ -1,152 +1,23 @@
 #!/usr/bin/env python3
-"""
-Generate the complete register reference table for the LinxISA manual.
+"""Generate the architectural reg5 table from the checked-in ISA catalog."""
 
-Sources:
-  ~/Documents/linxisa.csv (GB2312) — register names, aliases, Chinese descriptions
-  isa/v0.56/linxisa-v0.56.json — canonical code numbers
-
-The golden CSV is a sparse matrix with 18 columns spanning 5 logical register sections:
-
-  col[0-2]  GPR:         name | alias | description
-  col[5-8]  Tile Regs:   T# name | T# desc | M# name | M# desc
-                          (ACC and S also appear in this section)
-  col[11-13] Scalar blk:  name | alias | description
-  col[15-17] Data blk:     name | alias | description
-  col[18-20] (used by data blk rows: IO + Loop + Mask entries)
-
-For RI, RO, LB, LC, P: their names appear in col[15] and descriptions in col[17].
-"""
 from __future__ import annotations
 
 import argparse
-import csv as _csv
-import os
+import json
 import re
-from typing import Dict, List, Tuple
+import sys
+from pathlib import Path
+from typing import Any
 
 
-# ── Load golden CSV ────────────────────────────────────────────────────────────
-_GOLDEN: Dict[str, str] = {}  # canonical name → Chinese description
-_PATH = os.path.expanduser("~/Documents/linxisa.csv")
-if os.path.exists(_PATH):
-    try:
-        with open(_PATH, encoding="gb2312", errors="replace") as _fh:
-            for _row in _csv.reader(_fh):
-                if len(_row) < 3:
-                    continue
-                # col[0-2]: GPR name | alias | description
-                _n = _row[0].strip()
-                _d = _row[2].strip()
-                if _n.startswith("R") and _d:
-                    _GOLDEN[_n] = _d
-                # col[0-2]: GPR name | alias | description
-                # col[5-8]: Tile register section
-                _n = _row[5].strip()
-                _d = _row[6].strip()
-                if _n and _d:
-                    _GOLDEN[_n] = _d
-                _n = _row[7].strip()
-                _d = _row[8].strip()
-                if _n and _d:
-                    _GOLDEN[_n] = _d
-                # col[11-13]: Scalar block second-layer (TR/UR)
-                _n = _row[11].strip()
-                _d = _row[13].strip()
-                if _n and _d:
-                    _GOLDEN[_n] = _d
-                # col[15-17]: Data block second-layer (VTR/etc) + IO + Loop + Mask
-                #   Rows with VTR/VUR/VMR/VNR names → data block
-                #   Rows with RI/RO/LB/LC/P names → IO / Loop / Mask
-                _n = _row[15].strip()
-                _d = _row[17].strip()
-                if _n and _d:
-                    _GOLDEN[_n] = _d
-    except Exception:
-        pass
+_KIND_TITLES = {
+    "gpr": "General-Purpose Registers (GPR)",
+    "tq": "T Result Queue Registers",
+    "uq": "U Result Queue Registers",
+}
 
-
-# ── Register table ───────────────────────────────────────────────────────────
-# (section_label, [(canonical_name, preferred_asm, [aliases])])
-_REGS: List[Tuple[str, List[Tuple[str, str, List[str]]]]] = [
-    ("General-Purpose Registers (GPR)", [
-        ("R0",  "zero",  ["zero", "r0"]),
-        ("R1",  "sp",    ["sp", "r1"]),
-        ("R2",  "a0",    ["a0", "r2"]),
-        ("R3",  "a1",    ["a1", "r3"]),
-        ("R4",  "a2",    ["a2", "r4"]),
-        ("R5",  "a3",    ["a3", "r5"]),
-        ("R6",  "a4",    ["a4", "r6"]),
-        ("R7",  "a5",    ["a5", "r7"]),
-        ("R8",  "a6",    ["a6", "r8"]),
-        ("R9",  "a7",    ["a7", "r9"]),
-        ("R10", "ra",    ["ra", "r10"]),
-        ("R11", "s0",    ["s0", "r11", "fp"]),
-        ("R12", "s1",    ["s1", "r12"]),
-        ("R13", "s2",    ["s2", "r13"]),
-        ("R14", "s3",    ["s3", "r14"]),
-        ("R15", "s4",    ["s4", "r15"]),
-        ("R16", "s5",    ["s5", "r16"]),
-        ("R17", "s6",    ["s6", "r17"]),
-        ("R18", "s7",    ["s7", "r18"]),
-        ("R19", "s8",    ["s8", "r19"]),
-        ("R20", "x0",    ["x0", "r20"]),
-        ("R21", "x1",    ["x1", "r21"]),
-        ("R22", "x2",    ["x2", "r22"]),
-        ("R23", "x3",    ["x3", "r23"]),
-    ]),
-    ("Tile Registers (T#/U#/M#/N#)", [
-        *[(f"T#{i}",  f"t#{i}",  [f"t#{i}"])  for i in range(1, 17)],
-        *[(f"U#{i}",  f"u#{i}",  [f"u#{i}"])  for i in range(1, 17)],
-        *[(f"M#{i}",  f"m#{i}",  [f"m#{i}"])  for i in range(1, 17)],
-        *[(f"N#{i}",  f"n#{i}",  [f"n#{i}"])  for i in range(1, 17)],
-    ]),
-    ("Special: ACC and S", [
-        ("ACC", "acc", ["acc"]),
-        ("S",   "s",   ["s"]),
-    ]),
-    ("Scalar Block Layer-2 Aliases", [
-        ("TR1", "tr1", ["t#1"]),  ("TR2", "tr2", ["t#2"]),
-        ("TR3", "tr3", ["t#3"]),  ("TR4", "tr4", ["t#4"]),
-        ("UR1", "ur1", ["u#1"]),  ("UR2", "ur2", ["u#2"]),
-        ("UR3", "ur3", ["u#3", "u"]),  ("UR4", "ur4", ["u#4", "t"]),
-    ]),
-    ("Data Block Layer-2 Aliases", [
-        ("VTR1", "vtr1", ["vt#1"]),  ("VTR2", "vtr2", ["vt#2"]),
-        ("VTR3", "vtr3", ["vt#3"]),  ("VTR4", "vtr4", ["vt#4"]),
-        ("VUR1", "vur1", ["vu#1"]),  ("VUR2", "vur2", ["vu#2"]),
-        ("VUR3", "vur3", ["vu#3"]),  ("VUR4", "vur4", ["vu#4"]),
-        ("VMR1", "vmr1", ["vm#1"]),  ("VMR2", "vmr2", ["vm#2"]),
-        ("VMR3", "vmr3", ["vm#3"]),  ("VMR4", "vmr4", ["vm#4"]),
-        ("VNR1", "vnr1", ["vn#1"]),  ("VNR2", "vnr2", ["vn#2"]),
-        ("VNR3", "vnr3", ["vn#3"]),  ("VNR4", "vnr4", ["vn#4"]),
-    ]),
-    ("IO Parameters (Shader-Kernel Canonical)", [
-        ("RI0",  "ri0",  ["ri0"]),   ("RI1",  "ri1",  ["ri1"]),
-        ("RI2",  "ri2",  ["ri2"]),   ("RI3",  "ri3",  ["ri3"]),
-        ("RI4",  "ri4",  ["ri4"]),   ("RI5",  "ri5",  ["ri5"]),
-        ("RI6",  "ri6",  ["ri6"]),   ("RI7",  "ri7",  ["ri7"]),
-        ("RI8",  "ri8",  ["ri8"]),   ("RI9",  "ri9",  ["ri9"]),
-        ("RI10", "ri10", ["ri10"]),  ("RI11", "ri11", ["ri11"]),
-        ("RO0",  "ro0",  ["ro0"]),   ("RO1",  "ro1",  ["ro1"]),
-        ("RO2",  "ro2",  ["ro2"]),   ("RO3",  "ro3",  ["ro3"]),
-    ]),
-    ("Loop Control", [
-        ("LB0", "lb0", ["lb0"]),  ("LB1", "lb1", ["lb1"]),  ("LB2", "lb2", ["lb2"]),
-        ("LC0", "lc0", ["lc0"]),  ("LC1", "lc1", ["lc1"]),  ("LC2", "lc2", ["lc2"]),
-    ]),
-    ("EXEC Mask", [
-        ("P", "p", ["p"]),
-    ]),
-]
-
-
-def _anchor(label: str) -> str:
-    s = re.sub(r"[^a-z0-9]+", "-", label.lower()).strip("-")
-    return f"reg5-{s}"
-
-
-_GPR_DESCRIPTIONS: Dict[str, str] = {
+_DESCRIPTIONS = {
     "R0": "Constant zero",
     "R1": "Stack pointer register",
     "R2": "Function argument 0",
@@ -157,7 +28,7 @@ _GPR_DESCRIPTIONS: Dict[str, str] = {
     "R7": "Function argument 5",
     "R8": "Function argument 6",
     "R9": "Function argument 7",
-    "R10": "Function return value",
+    "R10": "Function return-address register",
     "R11": "Frame pointer / callee-saved register 0",
     "R12": "Callee-saved register 1",
     "R13": "Callee-saved register 2",
@@ -171,99 +42,104 @@ _GPR_DESCRIPTIONS: Dict[str, str] = {
     "R21": "Caller-saved register 1",
     "R22": "Caller-saved register 2",
     "R23": "Caller-saved register 3",
-    "ACC": "Matrix multiply-accumulate register",
-    "S": "Stack-space register",
-    "P": "EXEC mask register",
 }
 
 
-def _english_desc(name: str, golden_desc: str) -> str:
-    if name in _GPR_DESCRIPTIONS:
-        return _GPR_DESCRIPTIONS[name]
-
-    m = re.fullmatch(r"([TUMN])#(\d+)", name)
-    if m:
-        bank, idx = m.groups()
-        return f"{bank} result queue entry {idx}"
-
-    m = re.fullmatch(r"([TU])R(\d+)", name)
-    if m:
-        bank, idx = m.groups()
-        return f"Scalar {bank} result queue alias {idx}"
-
-    m = re.fullmatch(r"V([TUMN])R(\d+)", name)
-    if m:
-        bank, idx = m.groups()
-        return f"Vector {bank} result queue alias {idx}"
-
-    m = re.fullmatch(r"RI(\d+)", name)
-    if m:
-        return f"Scalar input parameter register {m.group(1)}"
-
-    m = re.fullmatch(r"RO(\d+)", name)
-    if m:
-        return f"Scalar output parameter register {m.group(1)}"
-
-    m = re.fullmatch(r"LB(\d+)", name)
-    if m:
-        return f"Block iteration bound register {m.group(1)}"
-
-    m = re.fullmatch(r"LC(\d+)", name)
-    if m:
-        return f"Block iteration count register {m.group(1)}"
-
-    if golden_desc and all(ord(ch) < 128 for ch in golden_desc):
-        return golden_desc
-    return ""
+def _anchor(label: str) -> str:
+    return "reg5-" + re.sub(r"[^a-z0-9]+", "-", label.lower()).strip("-")
 
 
-def generate(out_path: str) -> int:
-    lines: List[str] = []
-    lines.append("// Generated file; do not edit by hand.")
-    lines.append("// Source: ~/Documents/linxisa.csv (golden contract)")
-    lines.append("")
+def _description(entry: dict[str, Any]) -> str:
+    name = str(entry["name"])
+    if name in _DESCRIPTIONS:
+        return _DESCRIPTIONS[name]
+    kind = str(entry.get("kind") or "")
+    if kind == "tq":
+        return f"T result queue entry {name.removeprefix('T#')}"
+    if kind == "uq":
+        return f"U result queue entry {name.removeprefix('U#')}"
+    return "Architectural five-bit register"
 
-    code = 0
-    total = 0
-    for label, entries in _REGS:
-        lines.append(f"[[{_anchor(label)}]]")
-        lines.append(f"==== {label}")
-        lines.append("")
-        lines.append('[cols="1,1,2,4",options="header"]')
-        lines.append("|===")
-        lines.append("|Code |Name |Preferred asm |Description")
-        lines.append("")
 
-        for name, asm, aliases in entries:
-            desc = _english_desc(name, _GOLDEN.get(name, ""))
-            aliases_s = ", ".join(aliases)
-            lines.append(f"|`{code}`")
-            lines.append(f"|`{name}`")
-            lines.append(f"|`{asm}`")
-            if desc:
-                lines.append(f"|{desc}  __({aliases_s})__")
-            else:
-                lines.append(f"|__({aliases_s})__")
-            code += 1
-            total += 1
+def render(spec_path: Path) -> tuple[str, int]:
+    spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    reg5 = (spec.get("registers") or {}).get("reg5") or {}
+    if int(reg5.get("bits") or 0) != 5:
+        raise ValueError(f"{spec_path}: registers.reg5.bits must be 5")
+    entries = reg5.get("entries")
+    if not isinstance(entries, list):
+        raise ValueError(f"{spec_path}: registers.reg5.entries must be a list")
 
-        lines.append("|===")
-        lines.append("")
+    codes = [int(entry["code"]) for entry in entries]
+    if sorted(codes) != list(range(32)) or len(set(codes)) != 32:
+        raise ValueError(f"{spec_path}: reg5 must define each encoding 0..31 exactly once")
 
-    os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
-    with open(out_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(lines))
-    return total
+    resolved_parts = spec_path.resolve().parts
+    try:
+        isa_index = max(index for index, part in enumerate(resolved_parts) if part == "isa")
+    except ValueError:
+        source_label = spec_path.name
+    else:
+        source_label = Path(*resolved_parts[isa_index:]).as_posix()
+
+    lines = [
+        "// Generated file; do not edit by hand.",
+        f"// Source: {source_label} registers.reg5",
+        "",
+    ]
+    kinds: list[str] = []
+    for entry in sorted(entries, key=lambda item: int(item["code"])):
+        kind = str(entry.get("kind") or "other")
+        if kind not in kinds:
+            kinds.append(kind)
+
+    for kind in kinds:
+        title = _KIND_TITLES.get(kind, kind.upper())
+        lines.extend(
+            [
+                f"[[{_anchor(title)}]]",
+                f"==== {title}",
+                "",
+                '[cols="1,1,2,4",options="header"]',
+                "|===",
+                "|Code |Name |Preferred asm |Description",
+                "",
+            ]
+        )
+        for entry in sorted(entries, key=lambda item: int(item["code"])):
+            if str(entry.get("kind") or "other") != kind:
+                continue
+            aliases = ", ".join(str(alias) for alias in entry.get("aliases", []))
+            lines.extend(
+                [
+                    f"|`{int(entry['code'])}`",
+                    f"|`{entry['name']}`",
+                    f"|`{entry['asm']}`",
+                    f"|{_description(entry)}  __({aliases})__",
+                ]
+            )
+        lines.extend(["|===", ""])
+
+    return "\n".join(lines), len(entries)
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Generate registers_reg5.adoc from golden CSV")
-    ap.add_argument("--out-dir",
-                   default="docs/architecture/isa-manual/src/generated")
-    args = ap.parse_args()
-    out = os.path.join(args.out_dir, "registers_reg5.adoc")
-    n = generate(out)
-    print(f"Wrote {out}  ({n} registers)")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--spec", type=Path, default=Path("isa/v0.56/linxisa-v0.56.json"))
+    parser.add_argument("--out-dir", type=Path, default=Path("docs/architecture/isa-manual/src/generated"))
+    parser.add_argument("--check", action="store_true", help="Compare output without writing")
+    args = parser.parse_args()
+    out = args.out_dir / "registers_reg5.adoc"
+    rendered, count = render(args.spec)
+    if args.check:
+        if not out.is_file() or out.read_text(encoding="utf-8") != rendered:
+            print(f"error: {out} is out of date", file=sys.stderr)
+            return 2
+        print("OK")
+        return 0
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(rendered, encoding="utf-8")
+    print(f"Wrote {out} ({count} architectural reg5 encodings)")
     return 0
 
 

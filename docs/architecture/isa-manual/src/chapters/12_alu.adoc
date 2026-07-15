@@ -132,15 +132,6 @@ include::../generated/instructions/hl_maddw.adoc[]
 include::../generated/instructions/hl_ccat.adoc[]
 include::../generated/instructions/hl_ccatw.adoc[]
 
-=== Bit Field Operations
-
-include::../generated/instructions/hl_bfi.adoc[]
-
-=== Indexed Multiply
-
-include::../generated/instructions/hl_miadd.adoc[]
-include::../generated/instructions/hl_misub.adoc[]
-
 === Compressed
 
 include::../generated/instructions/c_add.adoc[]

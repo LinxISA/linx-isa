@@ -16,7 +16,7 @@ PTO_PARITY_STOP_AFTER_STAGE=PTO_PARITY_STAGE_MLA_ATTENTION
 ```
 
 The reusable boundary is that this case proves the stage prefix through the
-`mla_attention` digest and plain `model/LinxCoreModel/bin/gfsim -f <elf>`.
+`mla_attention` digest and plain `tools/LinxCoreModel/bin/gfsim -f <elf>`.
 The full smoke-sized `avs-pto-parity` row remains the maturity target.
 
 ## Evidence

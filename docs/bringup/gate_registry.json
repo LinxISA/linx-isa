@@ -254,7 +254,7 @@
       "gate_key": "Workloads::ctuning smoke",
       "domain": "Workloads",
       "owner": "integration",
-      "command": "if [[ -d \"${CTUNING_ROOT:-$HOME/ctuning-programs}/program\" ]]; then python3 \"$ROOT/workloads/ctuning/run_milepost_codelets.py\" --ctuning-root \"${CTUNING_ROOT:-$HOME/ctuning-programs}\" --clang \"$CLANG\" --lld \"$LLD\" --qemu \"$QEMU\" --target \"${BENCH_TARGET:-linx64-linx-none-elf}\" --run --limit \"${CTUNING_LIMIT:-5}\"; else echo \"note: skipping ctuning; source tree not found\"; fi",
+      "command": "if [[ -n \"${CTUNING_ROOT:-}\" && -d \"$CTUNING_ROOT/program\" ]]; then python3 \"$ROOT/workloads/ctuning/run_milepost_codelets.py\" --ctuning-root \"$CTUNING_ROOT\" --clang \"$CLANG\" --lld \"$LLD\" --qemu \"$QEMU\" --target \"${BENCH_TARGET:-linx64-linx-none-elf}\" --run --limit \"${CTUNING_LIMIT:-5}\"; else echo \"note: skipping ctuning; set CTUNING_ROOT to an explicit source tree\"; fi",
       "profiles": ["release-strict"],
       "tiers": ["pr", "nightly"],
       "required": false,

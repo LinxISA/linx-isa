@@ -1,12 +1,12 @@
 # 测试平台验证清单
 
 - [ ] ID：TB-001 通过ROB记账门。
-  命令：`bash rtl/ZXTERMEN45QXZCore/tests/test_rob_bookkeeping.sh`
+  命令：`bash rtl/LinxCore/tests/test_rob_bookkeeping.sh`
   完成意味着：多次提交 ROB 排序和簿记检查通过。
-  状态：❌失败 (2026-03-15) - 最新的 pin-lane 运行在重新生成 灵犀Core 抵押品时中止，因为 `rtl/ZXTERMEN45QXZCore/tools/lib/workspace_paths.sh` 丢失（日志：`docs/bringup/gates/logs/2026-03-15-r2-pin/pin/testbench_rob_bookkeeping.log`）。
+  状态：❌失败 (2026-03-15) - 最新的 pin-lane 运行在重新生成 灵犀Core 抵押品时中止，因为 `rtl/LinxCore/tools/lib/workspace_paths.sh` 丢失（日志：`docs/bringup/gates/logs/2026-03-15-r2-pin/pin/testbench_rob_bookkeeping.log`）。
 
 - [ ] ID：TB-002 通块结构pyCircuit流烟门。
-  命令：`bash rtl/ZXTERMEN45QXZCore/tests/test_block_struct_pyc_flow.sh`
+  命令：`bash rtl/LinxCore/tests/test_block_struct_pyc_flow.sh`
   完成意味着：块结构流集成完成，没有合约漂移。
   状态：❌失败 (2026-03-15) - 在 pyCircuit 流程可以编译示例之前，最新的引脚通道运行因 `missing pycc` 中止（日志：`docs/bringup/gates/logs/2026-03-15-r2-pin/pin/testbench_block_struct_pyc.log`）。
 

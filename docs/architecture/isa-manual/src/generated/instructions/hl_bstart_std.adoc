@@ -5,16 +5,52 @@
 [[inst_hl_bstart_std]]
 ==== HL.BSTART.STD
 
-*Syntax:* HL.BSTART.STD DIRECT, <label>
-
 *Description:* Long 48-bit instruction encoding (prefix + 32-bit main form).
+
+[[inst_hl_bstart_std_48_51f78942222e]]
+===== Form `hl_bstart_std_48_51f78942222e`
+
+*Syntax:* HL.BSTART.STD CALL, <label>
 
 *Encoding:*
 
-image::../generated/encodings/enc_hl_bstart_std.svg[HL.BSTART.STD encoding,width=800]
-
-*Uop-Class:* BBD
+image::../encodings/enc_hl_bstart_std_48_51f78942222e.svg[HL.BSTART.STD encoding form hl_bstart_std_48_51f78942222e,width=800]
 
 *Compression:* HL48 (len=48)
+
+[[inst_hl_bstart_std_48_9ba705710872]]
+===== Form `hl_bstart_std_48_9ba705710872`
+
+*Syntax:* HL.BSTART.STD FALL<, fixup_label>
+
+*Encoding:*
+
+image::../encodings/enc_hl_bstart_std_48_9ba705710872.svg[HL.BSTART.STD encoding form hl_bstart_std_48_9ba705710872,width=800]
+
+*Compression:* HL48 (len=48)
+
+[[inst_hl_bstart_std_48_b13f22c7c4a3]]
+===== Form `hl_bstart_std_48_b13f22c7c4a3`
+
+*Syntax:* HL.BSTART.STD COND, <label>
+
+*Encoding:*
+
+image::../encodings/enc_hl_bstart_std_48_b13f22c7c4a3.svg[HL.BSTART.STD encoding form hl_bstart_std_48_b13f22c7c4a3,width=800]
+
+*Compression:* HL48 (len=48)
+
+[[inst_hl_bstart_std_48_d814d26508a4]]
+===== Form `hl_bstart_std_48_d814d26508a4`
+
+*Syntax:* HL.BSTART.STD DIRECT, <label>
+
+*Encoding:*
+
+image::../encodings/enc_hl_bstart_std_48_d814d26508a4.svg[HL.BSTART.STD encoding form hl_bstart_std_48_d814d26508a4,width=800]
+
+*Compression:* HL48 (len=48)
+
+*Uop-Class:* BBD
 
 *Uop-Class payload:* `{"bbd_kind": "BSTART", "note": "User confirmed A", "source": "group_rule", "uop_kind": "BBD"}`

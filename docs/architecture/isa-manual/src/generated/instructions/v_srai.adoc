@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_srai.svg[V.SRAI encoding,width=800]
+image::../encodings/enc_v_srai_parts.svg[V.SRAI encoding,width=800]
 
 *Uop-Class:* VEC
 

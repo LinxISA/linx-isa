@@ -102,7 +102,7 @@
         "bits": 16
     },
     {
-        "####": "C.BSTART.PAR",
+        "####": "C.BSTART.VPAR",
         "name": 0,
         "bits": 1,
         "type": 17

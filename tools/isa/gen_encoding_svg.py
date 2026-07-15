@@ -5,7 +5,7 @@ SVG Bitfield Diagram Generator for LinxISA v0.56.
 Produces professional instruction-encoding diagrams as inline SVG.
 Used by the AsciiDoc ISA manual via the ``image`` macro:
 
-    image::../generated/encodings/enc_add.svg[opts="width=800"]
+    image::../encodings/enc_add.svg[opts="width=800"]
 
 Color coding (consistent across diagrams):
     green  = destination register (Rd, RegDst)
@@ -25,12 +25,16 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import filecmp
 import json
 import math
 import os
 import re
 import sys
+import tempfile
+from collections import Counter
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 
@@ -288,17 +292,33 @@ def _slug(mnemonic: str) -> str:
     return re.sub(r"_+", "_", s).strip("_") or "inst"
 
 
+def encoding_asset_filename(inst: dict[str, Any], mnemonic_count: int) -> str:
+    """Return the canonical asset name for one stable catalog form."""
+    if mnemonic_count > 1:
+        form_id = str(inst.get("id") or "").strip()
+        if not re.fullmatch(r"[a-z0-9_]+", form_id):
+            raise ValueError(
+                f"instruction {inst.get('mnemonic')!r} has an invalid stable form ID {form_id!r}"
+            )
+        return f"enc_{form_id}.svg"
+    suffix = "_parts" if len(inst.get("parts", [])) > 1 else ""
+    return f"enc_{_slug(str(inst['mnemonic']))}{suffix}.svg"
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
-def generate_all(spec_path: str, out_dir: str) -> int:
+def generate_all(spec_path: str, out_dir: str, *, prune: bool = True) -> int:
     """Generate SVG encoding diagrams for every instruction in the catalog."""
     with open(spec_path, encoding="utf-8") as f:
         spec = json.load(f)
 
     os.makedirs(out_dir, exist_ok=True)
 
+    instructions = list(spec.get("instructions", []))
+    mnemonic_counts = Counter(str(inst["mnemonic"]) for inst in instructions)
+    expected: set[str] = {"encoding_legend.svg"}
     count = 0
-    for inst in spec.get("instructions", []):
+    for inst in instructions:
         mnemonic = inst["mnemonic"]
         parts = _build_parts(inst)
         if not parts:
@@ -307,10 +327,11 @@ def generate_all(spec_path: str, out_dir: str) -> int:
         total_bits = sum(p.width_bits for p in parts)
         svg = _svg_for_parts(mnemonic, parts, total_bits)
 
-        if len(parts) == 1:
-            path = os.path.join(out_dir, f"enc_{_slug(mnemonic)}.svg")
-        else:
-            path = os.path.join(out_dir, f"enc_{_slug(mnemonic)}_parts.svg")
+        filename = encoding_asset_filename(inst, mnemonic_counts[mnemonic])
+        if filename in expected:
+            raise ValueError(f"generated SVG asset collision: {filename}")
+        expected.add(filename)
+        path = os.path.join(out_dir, filename)
 
         with open(path, "w", encoding="utf-8") as fh:
             fh.write(svg)
@@ -321,8 +342,40 @@ def generate_all(spec_path: str, out_dir: str) -> int:
     with open(legend_path, "w", encoding="utf-8") as fh:
         fh.write(LEGEND_SVG)
 
-    sys.stderr.write(f"Generated {count + 1} SVGs in {out_dir}\n")
+    if prune:
+        for path in Path(out_dir).glob("*.svg"):
+            if path.name not in expected:
+                path.unlink()
+
+    sys.stderr.write(f"Generated {len(expected)} SVGs in {out_dir}\n")
     return count
+
+
+def check_all(spec_path: str, out_dir: str) -> int:
+    """Verify content and the exact owned SVG file set without touching output."""
+    requested = Path(out_dir).resolve()
+    with tempfile.TemporaryDirectory(prefix="linxisa-svg-check-") as temp_dir:
+        generated = Path(temp_dir)
+        generate_all(spec_path, str(generated), prune=False)
+        expected = {path.name for path in generated.glob("*.svg")}
+        existing = {path.name for path in requested.glob("*.svg")} if requested.is_dir() else set()
+        missing = sorted(expected - existing)
+        unexpected = sorted(existing - expected)
+        drift = sorted(
+            name
+            for name in expected & existing
+            if not filecmp.cmp(generated / name, requested / name, shallow=False)
+        )
+    for name in missing:
+        print(f"error: missing generated SVG: {name}", file=sys.stderr)
+    for name in unexpected:
+        print(f"error: unexpected generated SVG: {name}", file=sys.stderr)
+    for name in drift:
+        print(f"error: generated SVG drift: {name}", file=sys.stderr)
+    if missing or unexpected or drift:
+        return 1
+    print(f"ok: {len(expected)} generated SVGs are current")
+    return 0
 
 
 def main() -> int:
@@ -330,7 +383,10 @@ def main() -> int:
     ap.add_argument("--spec", default="isa/v0.56/linxisa-v0.56.json")
     ap.add_argument("--out-dir",
                    default="docs/architecture/isa-manual/src/generated/encodings")
+    ap.add_argument("--check", action="store_true", help="Check exact SVG set and content")
     args = ap.parse_args()
+    if args.check:
+        return check_all(args.spec, args.out_dir)
     n = generate_all(args.spec, args.out_dir)
     return 0 if n > 0 else 1
 

@@ -20,12 +20,12 @@
   - `docs/architecture/linxcore/module-catalog.md`
   - `docs/architecture/linxcore/pipeline-stage-catalog.md`
 - 规范的 灵犀Core 创作源：
-  - `rtl/ZXTERMEN45QXZCore/docs/architecture/overview.md`
-  - `rtl/ZXTERMEN45QXZCore/docs/architecture/microarchitecture.md`
-  - `rtl/ZXTERMEN45QXZCore/docs/architecture/interfaces.md`
-  - `rtl/ZXTERMEN45QXZCore/docs/architecture/verification-matrix.md`
-  - `rtl/ZXTERMEN45QXZCore/docs/architecture/module-catalog.md`
-  - `rtl/ZXTERMEN45QXZCore/docs/architecture/pipeline-stage-catalog.md`
+  - `rtl/LinxCore/docs/architecture/overview.md`
+  - `rtl/LinxCore/docs/architecture/microarchitecture.md`
+  - `rtl/LinxCore/docs/architecture/interfaces.md`
+  - `rtl/LinxCore/docs/architecture/verification-matrix.md`
+  - `rtl/LinxCore/docs/architecture/module-catalog.md`
+  - `rtl/LinxCore/docs/architecture/pipeline-stage-catalog.md`
 
 ## ISA 手册
 
@@ -49,7 +49,7 @@
 但它们必须与这些规范来源保持同步。
 
 ## 治理说明- 灵犀Arch 页面是启动和门的规范架构合约。
-- 灵犀核心合约编​​写位于`rtl/ZXTERMEN45QXZCore/docs/architecture/`；的
+- 灵犀核心合约编​​写位于`rtl/LinxCore/docs/architecture/`；的
   超级项目`docs/architecture/linxcore/`页面生成发布
   镜子。
 - 子模块中特定于实现的深入研究必须链接回这些

@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_hl_lhi_upr.svg[HL.LHI.UPR encoding,width=800]
+image::../encodings/enc_hl_lhi_upr.svg[HL.LHI.UPR encoding,width=800]
 
 *Uop-Class:* LDA/PRE_INDEX
 

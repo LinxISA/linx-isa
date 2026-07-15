@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_bc_iva.svg[BC.IVA encoding,width=800]
+image::../encodings/enc_bc_iva.svg[BC.IVA encoding,width=800]
 
 *Uop-Class:* SYS
 

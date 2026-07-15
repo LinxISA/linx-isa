@@ -38,6 +38,19 @@ def _collapse_ws(s: str) -> str:
     return re.sub(r"\s+", " ", s).strip()
 
 
+def _encoding_asset_filename(inst: Dict[str, Any], mnemonic_count: int) -> str:
+    if mnemonic_count > 1:
+        form_id = str(inst.get("id") or "").strip()
+        if not re.fullmatch(r"[a-z0-9_]+", form_id):
+            raise ValueError(
+                f"instruction {inst.get('mnemonic')!r} has an invalid stable form ID {form_id!r}"
+            )
+        return f"enc_{form_id}.svg"
+    suffix = "_parts" if len(inst.get("parts", [])) > 1 else ""
+    slug = _anchorize(str(inst["mnemonic"])).replace("-", "_")
+    return f"enc_{slug}{suffix}.svg"
+
+
 def _has_non_ascii(s: str) -> bool:
     return any(ord(ch) > 127 for ch in s)
 
@@ -117,10 +130,8 @@ def _group_instructions(instructions: List[Dict[str, Any]]) -> "OrderedDict[str,
 def _filter_canonical_instructions(
     instructions: List[Dict[str, Any]], spec_version: str
 ) -> List[Dict[str, Any]]:
-    out = list(instructions)
-    if spec_version.startswith("0.3"):
-        out = [inst for inst in out if str(inst.get("mnemonic") or "").strip() != "BSTART.PAR"]
-    return out
+    del spec_version
+    return list(instructions)
 
 
 def _format_expr(expr: str) -> str:
@@ -1221,13 +1232,22 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
     return None
 
 
-def _write_registers_reg5(spec: Dict[str, Any], out_path: str, source_comment: str) -> None:
+def _write_registers_reg5(
+    spec: Dict[str, Any], out_path: str, source_comment: str, spec_path: str
+) -> None:
     """Delegate to the dedicated registers generator subprocess."""
     import subprocess
 
     script = os.path.join(os.path.dirname(__file__), "gen_registers_reg5.py")
     result = subprocess.run(
-        [sys.executable, script, "--out-dir", os.path.dirname(out_path)],
+        [
+            sys.executable,
+            script,
+            "--spec",
+            spec_path,
+            "--out-dir",
+            os.path.dirname(out_path),
+        ],
         capture_output=True, text=True,
     )
     if result.returncode != 0:
@@ -1400,19 +1420,28 @@ def _write_instruction_details(
                 for a in asm_forms:
                     lines.append(f"* `{_escape_table_cell(a)}`")
 
-            # Embed encoding SVG if available
+            # Embed every form's encoding. Duplicate mnemonics use stable
+            # form-ID asset names so no catalog form can overwrite another.
             if svg_dir:
-                svg_filename = f"enc_{mnemonic.lower()}.svg"
-                svg_path = os.path.join(svg_dir, svg_filename)
-                if os.path.exists(svg_path):
-                    # IMPORTANT: AsciiDoc image:: paths must be POSIX-style (forward slashes)
-                    # even when generating on Windows.
+                lines.append("")
+                lines.append("Encoding::")
+                lines.append("+")
+                for form in forms:
+                    svg_filename = _encoding_asset_filename(form, len(forms))
+                    svg_path = os.path.join(svg_dir, svg_filename)
+                    if not os.path.isfile(svg_path):
+                        raise FileNotFoundError(
+                            f"missing generated encoding asset {svg_path}; run gen_encoding_svg.py"
+                        )
+                    # IMPORTANT: AsciiDoc image:: paths must be POSIX-style.
                     rel_path = f"encodings/{svg_filename}"
-                    lines.append("")
-                    lines.append("Encoding::")
-                    lines.append("+")
-                    lines.append(f"image::{rel_path}[{mnemonic} encoding diagram,align=\"center\"]")
-                    lines.append("")
+                    form_id = str(form["id"])
+                    form_asm = _normalize_asm(str(form.get("asm") or mnemonic))
+                    lines.append(f".`{form_id}` — `{_escape_table_cell(form_asm)}`")
+                    lines.append(
+                        f"image::{rel_path}[{mnemonic} encoding form {form_id},align=\"center\"]"
+                    )
+                lines.append("")
 
             if notes:
                 lines.append("")
@@ -1537,7 +1566,12 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     def _emit(out_dir: str, svg_dir: str) -> None:
         _mkdirp(out_dir)
-        _write_registers_reg5(spec, os.path.join(out_dir, "registers_reg5.adoc"), source_comment)
+        _write_registers_reg5(
+            spec,
+            os.path.join(out_dir, "registers_reg5.adoc"),
+            source_comment,
+            spec_path,
+        )
         _write_instruction_group_summary(groups, os.path.join(out_dir, "instruction_group_summary.adoc"))
         _write_instruction_reference(groups, os.path.join(out_dir, "instruction_reference.adoc"))
         _write_mnemonic_index(instructions, os.path.join(out_dir, "mnemonic_index.adoc"), spec_version)

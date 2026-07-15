@@ -1,6 +1,6 @@
 {
   "big_kind": "ALU",
-  "count": 78,
+  "count": 77,
   "instructions": [
     {
       "class": {
@@ -149,17 +149,6 @@
         32
       ],
       "mnemonic": "BXU"
-    },
-    {
-      "class": {
-        "source": "group_rule",
-        "uop_kind": "ALU"
-      },
-      "group": "Bit Operation",
-      "length_bits": [
-        32
-      ],
-      "mnemonic": "ROR"
     },
     {
       "class": {

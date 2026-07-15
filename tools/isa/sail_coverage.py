@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate a Sail semantics coverage report.
-
-Coverage is computed as:
-  implemented mnemonics / total instruction forms in the compiled catalog.
+Generate a form-ID Sail semantics coverage report.
 """
 
 from __future__ import annotations
@@ -12,7 +9,8 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Set
+from collections import Counter
+from typing import Any, Dict, List
 
 
 def _read_json(path: Path) -> Dict[str, Any]:
@@ -20,14 +18,12 @@ def _read_json(path: Path) -> Dict[str, Any]:
         return json.load(f)
 
 
-def _read_implemented(status_path: Path) -> Set[str]:
-    if not status_path.exists():
-        return set()
+def _read_form_statuses(status_path: Path) -> Dict[str, Dict[str, str]]:
     status = _read_json(status_path)
-    mnemonics = status.get("mnemonics")
-    if not isinstance(mnemonics, dict):
-        raise SystemExit(f"error: {status_path} missing object field 'mnemonics'")
-    return {name for name, state in mnemonics.items() if str(state).strip() == "implemented"}
+    forms = status.get("forms")
+    if not isinstance(forms, dict):
+        raise SystemExit(f"error: {status_path} missing object field 'forms'")
+    return forms
 
 
 def _write_json(path: Path, obj: Any, pretty: bool) -> None:
@@ -56,7 +52,7 @@ def main() -> int:
     ap.add_argument(
         "--status",
         default="isa/sail/semantics_status.json",
-        help="Semantic status JSON mapping mnemonics to implemented|stubbed|unimplemented",
+        help="Semantic status JSON mapping stable form IDs to semantic grades",
     )
     ap.add_argument("--out", default="isa/sail/coverage.json", help="Output JSON path")
     ap.add_argument("--pretty", action="store_true", help="Pretty-print JSON")
@@ -65,23 +61,34 @@ def main() -> int:
 
     repo_root = Path(__file__).resolve().parents[2]
     spec = _read_json(Path(args.spec))
-    implemented = _read_implemented(Path(args.status))
+    form_statuses = _read_form_statuses(Path(args.status))
 
     insts: List[Dict[str, Any]] = list(spec.get("instructions", []))
     total_forms = len(insts)
 
-    implemented_forms = [i for i in insts if str(i.get("mnemonic") or "") in implemented]
-    missing_forms = [i for i in insts if str(i.get("mnemonic") or "") not in implemented]
+    canonical_ids = {str(inst.get("id") or "") for inst in insts}
+    missing_ids = sorted(canonical_ids - set(form_statuses))
+    extra_ids = sorted(set(form_statuses) - canonical_ids)
+    if missing_ids or extra_ids:
+        raise SystemExit(f"error: form status mismatch: missing={missing_ids[:20]} extra={extra_ids[:20]}")
+
+    grade_counts = Counter(str(form_statuses[form_id].get("status") or "") for form_id in canonical_ids)
+    modeled = canonical_ids - {
+        form_id for form_id in canonical_ids if form_statuses[form_id].get("status") == "decode-only"
+    }
+    modeled_mnemonics = sorted(
+        {str(inst.get("mnemonic") or "") for inst in insts if str(inst.get("id") or "") in modeled}
+    )
 
     out_obj = {
         # Keep the report deterministic: avoid embedding absolute paths.
         "spec": _relpath_in_repo(Path(args.spec), repo_root),
         "semantic_status": _relpath_in_repo(Path(args.status), repo_root),
         "total_forms": total_forms,
-        "implemented_forms": len(implemented_forms),
-        "missing_forms": len(missing_forms),
-        "implemented_mnemonics": sorted(implemented),
-        "missing_mnemonics": sorted({str(i.get("mnemonic") or "") for i in missing_forms}),
+        "grade_counts": dict(sorted(grade_counts.items())),
+        "modeled_forms": len(modeled),
+        "decode_only_forms": int(grade_counts.get("decode-only", 0)),
+        "modeled_mnemonics": modeled_mnemonics,
     }
 
     out_path = Path(args.out)

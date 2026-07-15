@@ -89,6 +89,6 @@
 
 ## 另请参阅
 
-- [完整 ISA 手册概述](https://github.com/ZXTERMEN40QXZ/linx-isa/tree/main/docs/architecture/isa-manual/src)
+- [完整 ISA 手册概述](https://github.com/LinxISA/linx-isa/tree/main/docs/architecture/isa-manual/src)
 - [指令参考索引](index.md)
 - [编码空间分析](../reference/encoding_space_report.md)

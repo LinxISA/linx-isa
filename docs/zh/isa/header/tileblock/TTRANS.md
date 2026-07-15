@@ -46,11 +46,10 @@
 
 该TileOp模版块编码为以下指令：
 
-- [BSTART.PAR](../../header/BSTART.PAR.md) `TTRANS, DataType`。
+- [BSTART.TEPL](../../instructions/bstart_tepl.md) `TTRANS, DataType`。
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->Row`。
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->Col`。
 - [B.IOT](../../header/B.IOT.md) `SrcTile<.reuse>, group=0, ->DstTile<TileSize>`。
-- [B.IOD](../../header/B.IOD.md) `DepSrc0, DepSrc1, DepSrc2, ->DepDst`。
  -->
 
 ## 执行模型

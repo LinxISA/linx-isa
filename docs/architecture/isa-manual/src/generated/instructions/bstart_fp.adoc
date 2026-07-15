@@ -5,16 +5,85 @@
 [[inst_bstart_fp]]
 ==== BSTART.FP
 
-*Syntax:* BSTART.FP FALL<, fixup_label>
+*Description:* Bits 31:15 are reserved zero.
 
-*Description:* Block start marker: BSTART.FP with split semantics.
+[[inst_bstart_fp_32_0c671a644214]]
+===== Form `bstart_fp_32_0c671a644214`
+
+*Syntax:* BSTART.FP RET
 
 *Encoding:*
 
-image::../generated/encodings/enc_bstart_fp.svg[BSTART.FP encoding,width=800]
-
-*Uop-Class:* CMD
+image::../encodings/enc_bstart_fp_32_0c671a644214.svg[BSTART.FP encoding form bstart_fp_32_0c671a644214,width=800]
 
 *Compression:* L32 (len=32)
+
+[[inst_bstart_fp_32_24db3966d6ba]]
+===== Form `bstart_fp_32_24db3966d6ba`
+
+*Syntax:* BSTART.FP ICALL
+
+*Encoding:*
+
+image::../encodings/enc_bstart_fp_32_24db3966d6ba.svg[BSTART.FP encoding form bstart_fp_32_24db3966d6ba,width=800]
+
+*Compression:* L32 (len=32)
+
+[[inst_bstart_fp_32_58ad7954fb49]]
+===== Form `bstart_fp_32_58ad7954fb49`
+
+*Syntax:* BSTART.FP COND, <label>
+
+*Encoding:*
+
+image::../encodings/enc_bstart_fp_32_58ad7954fb49.svg[BSTART.FP encoding form bstart_fp_32_58ad7954fb49,width=800]
+
+*Compression:* L32 (len=32)
+
+[[inst_bstart_fp_32_7978795a29a1]]
+===== Form `bstart_fp_32_7978795a29a1`
+
+*Syntax:* BSTART.FP IND
+
+*Encoding:*
+
+image::../encodings/enc_bstart_fp_32_7978795a29a1.svg[BSTART.FP encoding form bstart_fp_32_7978795a29a1,width=800]
+
+*Compression:* L32 (len=32)
+
+[[inst_bstart_fp_32_d00a708a81f0]]
+===== Form `bstart_fp_32_d00a708a81f0`
+
+*Syntax:* BSTART.FP DIRECT, <label>
+
+*Encoding:*
+
+image::../encodings/enc_bstart_fp_32_d00a708a81f0.svg[BSTART.FP encoding form bstart_fp_32_d00a708a81f0,width=800]
+
+*Compression:* L32 (len=32)
+
+[[inst_bstart_fp_32_dd7bc8dd694c]]
+===== Form `bstart_fp_32_dd7bc8dd694c`
+
+*Syntax:* BSTART.FP CALL, <label>
+
+*Encoding:*
+
+image::../encodings/enc_bstart_fp_32_dd7bc8dd694c.svg[BSTART.FP encoding form bstart_fp_32_dd7bc8dd694c,width=800]
+
+*Compression:* L32 (len=32)
+
+[[inst_bstart_fp_32_face4f238d84]]
+===== Form `bstart_fp_32_face4f238d84`
+
+*Syntax:* BSTART.FP FALL<, fixup_label>
+
+*Encoding:*
+
+image::../encodings/enc_bstart_fp_32_face4f238d84.svg[BSTART.FP encoding form bstart_fp_32_face4f238d84,width=800]
+
+*Compression:* L32 (len=32)
+
+*Uop-Class:* CMD
 
 *Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "User corrected to A", "source": "group_rule", "uop_kind": "CMD"}`

@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_fabs.svg[V.FABS encoding,width=800]
+image::../encodings/enc_v_fabs_parts.svg[V.FABS encoding,width=800]
 
 *Uop-Class:* VEC
 

@@ -111,7 +111,7 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`B.CATR` |32 |- |`B.CATR {trap, atomic, <aq, rl, aqrl>, far, dr}` |v0.56 split of legacy B.CATR/B.DATR control fields.
+|`B.CATR` |32 |- |`B.CATR {trap, atomic, <aq, rl, aqrl>, far, dr}` |v0.56 split of legacy B.CATR/B.DATR control fields. Bits 25:15 are reserved zero.
 |===
 
 [[insnref-block-data-attribute]]
@@ -148,7 +148,7 @@
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`B.HINT` |32 |- |`B.HINT {BR.{likely, unlikely}, TEMP.{hot, warm, cool, none}, PRFSIZE}` |-
-|`B.HINT` |32 |- |`B.HINT TRACE.{begin, end}` |-
+|`B.HINT` |32 |- |`B.HINT TRACE.{begin, end}` |Bits 31:16 are reserved zero.
 |===
 
 [[insnref-block-input-output]]
@@ -157,7 +157,6 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`B.IOD` |32 |- |`B.IOD DepSrc0, DepSrc1, DepSrc2, ->DepDst` |-
 |`B.IOR` |32 |- |`B.IOR [RegSrc0, RegSrc1, RegSrc2],[RegDst]` |-
 |`B.IOT` |32 |- |`B.IOT SrcTile0<.reuse>, <last>, ->DstTile<Size>` |v0.56 one-input immediate-size tile descriptor; function=101 means only SrcTile0 is valid.
 |`B.IOT` |32 |- |`B.IOT SrcTile0<.reuse>, SrcTile1<.reuse>, <last>, ->DstTile<Size>` |v0.56 two-input immediate-size tile descriptor. SrcTile0/1 are independent 6-bit fields; imm4 encodes 0B..512KB.
@@ -224,22 +223,21 @@
 |`BSTART.ACCCVT` |32 |- |`BSTART.ACCCVT DataType` |Alias of BSTART.CUBE Function=8. ACCCVT requires quantization args via B.ARG+B.IOR (scale/zero-point required in strict profile).
 |`BSTART.CUBE` |32 |- |`BSTART.CUBE Function, DataType` |Generic CUBE selector form. Function=0/2/8 are emitted as BSTART.TMATMUL/BSTART.TMATMUL.ACC/BSTART.ACCCVT aliases.
 |`BSTART.FIXP` |32 |- |`BSTART.FIXP TileOp, DataType` |-
-|`BSTART.FP` |32 |- |`BSTART.FP RET` |-
-|`BSTART.FP` |32 |- |`BSTART.FP IND` |-
+|`BSTART.FP` |32 |- |`BSTART.FP RET` |Bits 31:15 are reserved zero.
+|`BSTART.FP` |32 |- |`BSTART.FP ICALL` |Bits 31:15 are reserved zero.
 |`BSTART.FP` |32 |- |`BSTART.FP COND, <label>` |-
+|`BSTART.FP` |32 |- |`BSTART.FP IND` |Bits 31:15 are reserved zero.
 |`BSTART.FP` |32 |- |`BSTART.FP DIRECT, <label>` |-
-|`BSTART.FP` |32 |- |`BSTART.FP ICALL` |-
 |`BSTART.FP` |32 |- |`BSTART.FP CALL, <label>` |-
 |`BSTART.FP` |32 |- |`BSTART.FP FALL<, fixup_label>` |-
 |`BSTART.MPAR` |32 |- |`BSTART.MPAR <VS8, VS16>` |-
 |`BSTART.MSEQ` |32 |- |`BSTART.MSEQ <VS8, VS16>` |-
-|`BSTART.PAR` |32 |- |`BSTART.PAR TileOpcode, DataType` |Legacy compatibility TEPL spelling; canonical v0.56 output uses BSTART.TEPL TileOpcode, DataType.
 |`BSTART.STD` |32 |- |`BSTART.STD COND, <label>` |-
-|`BSTART.STD` |32 |- |`BSTART.STD RET` |-
+|`BSTART.STD` |32 |- |`BSTART.STD ICALL` |Bits 31:15 are reserved zero.
 |`BSTART.STD` |32 |- |`BSTART.STD FALL<, fixup_label>` |-
-|`BSTART.STD` |32 |- |`BSTART.STD ICALL` |-
+|`BSTART.STD` |32 |- |`BSTART.STD RET` |Bits 31:15 are reserved zero.
+|`BSTART.STD` |32 |- |`BSTART.STD IND` |Bits 31:15 are reserved zero.
 |`BSTART.STD` |32 |- |`BSTART.STD CALL, <label>` |-
-|`BSTART.STD` |32 |- |`BSTART.STD IND` |-
 |`BSTART.STD` |32 |- |`BSTART.STD DIRECT, <label>` |-
 |`BSTART.SYS` |32 |- |`BSTART.SYS FALL<, fixup_label>` |-
 |`BSTART.TEPL` |32 |- |`BSTART.TEPL TileOpcode, DataType` |Tile opcode selects PTO template ops. Canonical v0.56 standardized assignments require TileOpcode[9:6]=0 and pack TileOpcode[5]=Mode with TileOpcode[4:0]=Function; unassigned values remain reserved for future template extension.
@@ -272,8 +270,8 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`BSTART CALL` |32 |- |`BSTART.CALL, <br_label>, <rt_label>, ->ra` |-
-|`HL.BSTART CALL` |48 |- |`HL.BSTART.CALL, <br_label>, <rt_label>, ->ra` |-
+|`BSTART CALL` |32 |- |`BSTART.CALL <br_label>` |Bare BSTART.CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.
+|`HL.BSTART CALL` |48 |- |`HL.BSTART.CALL <br_label>` |Bare HL.BSTART.CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.
 |`HL.BSTART.FP` |48 |- |`HL.BSTART.FP COND, <label>` |-
 |`HL.BSTART.FP` |48 |- |`HL.BSTART.FP FALL<, fixup_label>` |-
 |`HL.BSTART.FP` |48 |- |`HL.BSTART.FP CALL, <label>` |-
@@ -283,6 +281,15 @@
 |`HL.BSTART.STD` |48 |- |`HL.BSTART.STD COND, <label>` |-
 |`HL.BSTART.STD` |48 |- |`HL.BSTART.STD DIRECT, <label>` |-
 |`HL.BSTART.SYS` |48 |- |`HL.BSTART.SYS FALL<, fixup_label>` |-
+|`L.BSTART.FP` |64 |- |`L.BSTART.FP COND, <label>` |-
+|`L.BSTART.FP` |64 |- |`L.BSTART.FP DIRECT, <label>` |-
+|`L.BSTART.FP` |64 |- |`L.BSTART.FP CALL, <label>` |Bare L.BSTART.FP CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.
+|`L.BSTART.FP` |64 |- |`L.BSTART.FP FALL<, fixup_label>` |-
+|`L.BSTART.STD` |64 |- |`L.BSTART.STD DIRECT, <label>` |-
+|`L.BSTART.STD` |64 |- |`L.BSTART.STD CALL, <label>` |Bare L.BSTART.STD CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.
+|`L.BSTART.STD` |64 |- |`L.BSTART.STD COND, <label>` |-
+|`L.BSTART.STD` |64 |- |`L.BSTART.STD FALL<, fixup_label>` |-
+|`L.BSTART.SYS` |64 |- |`L.BSTART.SYS FALL<, fixup_label>` |-
 |===
 
 [[insnref-arithmetic-operation]]

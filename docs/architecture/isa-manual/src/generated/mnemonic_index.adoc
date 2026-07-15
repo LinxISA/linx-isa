@@ -3,7 +3,7 @@
 [[mnemonic-index]]
 === Mnemonic index
 
-This table lists unique mnemonics in the v0.56.4 catalog. Each mnemonic may have multiple encodable forms (different lengths, operand layouts, or suffix variants).
+This table lists unique mnemonics in the v0.56.5 catalog. Each mnemonic may have multiple encodable forms (different lengths, operand layouts, or suffix variants).
 
 [cols="2,3,1,1",options="header"]
 |===
@@ -28,7 +28,6 @@ This table lists unique mnemonics in the v0.56.4 catalog. Each mnemonic may have
 |`B.GE` |Branch |32 |1
 |`B.GEU` |Branch |32 |1
 |`B.HINT` |Block Hint |32 |2
-|`B.IOD` |Block Input & Output |32 |1
 |`B.IOR` |Block Input & Output |32 |1
 |`B.IOT` |Block Input & Output |32 |3
 |`B.LT` |Branch |32 |1
@@ -51,7 +50,6 @@ This table lists unique mnemonics in the v0.56.4 catalog. Each mnemonic may have
 |`BSTART.FP` |Block Split |32 |7
 |`BSTART.MPAR` |Block Split |32 |1
 |`BSTART.MSEQ` |Block Split |32 |1
-|`BSTART.PAR` |Block Split |32 |1
 |`BSTART.STD` |Block Split |32 |7
 |`BSTART.SYS` |Block Split |32 |1
 |`BSTART.TEPL` |Block Split |32 |1
@@ -373,6 +371,9 @@ This table lists unique mnemonics in the v0.56.4 catalog. Each mnemonic may have
 |`IC.IVA` |Cache Maintain |32 |1
 |`J` |Branch |32 |1
 |`JR` |Branch |32 |1
+|`L.BSTART.FP` |BSTART |64 |4
+|`L.BSTART.STD` |BSTART |64 |4
+|`L.BSTART.SYS` |BSTART |64 |1
 |`LB` |Load Register Offset |32 |1
 |`LB.PCR` |Load Symbol |32 |1
 |`LBI` |Load Immediate Offset |32 |1

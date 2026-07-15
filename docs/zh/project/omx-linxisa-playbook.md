@@ -81,7 +81,7 @@ $ralplan "Approve module scope, gate order, repin policy, and closeout evidence 
 ## 场景 2：Leaf Fix 然后 Repin
 
 当问题属于`compiler/llvm`、`emulator/qemu`时使用此，
-`kernel/linux`、`lib/*`、`rtl/ZXTERMEN45QXZCore` 或 `tools/pyCircuit`。1. 首先确认叶子所有者和叶子门。
+`kernel/linux`、`lib/*`、`rtl/LinxCore` 或 `tools/pyCircuit`。1. 首先确认叶子所有者和叶子门。
 2.修复所属叶子模块中的问题。
 3. 重新运行叶子校样，直至其变成绿色。
 4. 仅重新固定预期的子模块 SHA。

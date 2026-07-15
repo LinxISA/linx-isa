@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_b_z.svg[B.Z encoding,width=800]
+image::../encodings/enc_b_z.svg[B.Z encoding,width=800]
 
 *Uop-Class:* BRU
 

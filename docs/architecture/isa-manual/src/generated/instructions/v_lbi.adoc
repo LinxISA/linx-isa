@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_lbi.svg[V.LBI encoding,width=800]
+image::../encodings/enc_v_lbi_parts.svg[V.LBI encoding,width=800]
 
 *Uop-Class:* VEC
 

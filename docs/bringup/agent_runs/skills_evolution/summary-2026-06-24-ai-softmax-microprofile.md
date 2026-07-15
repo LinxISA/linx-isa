@@ -22,7 +22,7 @@ PTO_FLASH_TILE_K=1
 ```
 
 The reusable boundary is that this case proves the stage prefix through the
-`flash_attention_softmax` digest and plain `model/LinxCoreModel/bin/gfsim -f
+`flash_attention_softmax` digest and plain `tools/LinxCoreModel/bin/gfsim -f
 <elf>`, while the full smoke-sized `avs-pto-parity` row remains the maturity
 target.
 

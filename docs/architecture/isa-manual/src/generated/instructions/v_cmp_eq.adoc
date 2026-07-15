@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_cmp_eq.svg[V.CMP.EQ encoding,width=800]
+image::../encodings/enc_v_cmp_eq_parts.svg[V.CMP.EQ encoding,width=800]
 
 *Uop-Class:* VEC
 

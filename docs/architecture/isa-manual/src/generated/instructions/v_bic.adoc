@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../generated/encodings/enc_v_bic.svg[V.BIC encoding,width=800]
+image::../encodings/enc_v_bic_parts.svg[V.BIC encoding,width=800]
 
 *Uop-Class:* VEC
 

@@ -1,7 +1,7 @@
 # AI Workload Bring-up Flow
 
 This is the canonical hard-break loop for maturing LinxISA AI workloads until
-QEMU-passing Linx ELFs also run in the C++ `model/LinxCoreModel` target.
+QEMU-passing Linx ELFs also run in the C++ `tools/LinxCoreModel` target.
 
 Machine-readable flow:
 
@@ -34,12 +34,12 @@ Prefix the selector with `=` for exact matching, for example
 Use `--clang`, `--clangxx`, `--lld`, `--qemu`, `--model-root`, or `--gfsim`
 when testing an external lane. The pin lane defaults to in-repo Linx LLVM,
 `emulator/qemu/build-linx/qemu-system-linx64`, and
-`model/LinxCoreModel/bin/gfsim`.
+`tools/LinxCoreModel/bin/gfsim`.
 
 Timeouts are lane-specific: `--model-build-timeout` gates CMake configure/build
 and generated model-smoke ELF compilation, while `--model-timeout` gates
 `gfsim -f <elf>` smoke and workload runs. Non-dry runs rebuild
-`model/LinxCoreModel/bin/gfsim` unless `--skip-model-build` is passed. The
+`tools/LinxCoreModel/bin/gfsim` unless `--skip-model-build` is passed. The
 runner configures `gfsim` with `-DOPT_LEVEL=O3 -DDISABLE_DEBUG_SYMBOLS=ON` so
 model workload probes use the optimized bring-up binary by default.
 
@@ -48,7 +48,7 @@ model workload probes use the optimized bring-up binary by default.
 1. `source-contract`: validate PTO catalogs, SuperNPUBench manifests, source paths, hashes, and normalized case records.
 2. `compiler-contract`: compile with `compiler/llvm/build-linxisa-clang/bin`, produce ELF/object/asm evidence, and run static checks.
 3. `qemu-execution`: run compiler-passing executable cases in Linx QEMU and capture logs/digests.
-4. `model-build-smoke`: rebuild or locate `model/LinxCoreModel/bin/gfsim`, then run a known tiny Linx smoke ELF. By default the runner generates `cases/_model/linx-model-smoke.{cpp,ld,elf}`; `--model-smoke-elf` can override it.
+4. `model-build-smoke`: rebuild or locate `tools/LinxCoreModel/bin/gfsim`, then run a known tiny Linx smoke ELF. By default the runner generates `cases/_model/linx-model-smoke.{cpp,ld,elf}`; `--model-smoke-elf` can override it.
 5. `linxcoremodel-execution`: run only QEMU-passing ELFs through `gfsim -f <elf>`.
    On model failures, the runner parses the `gfsim` log for finisher writes,
    assertion text, UART breadcrumbs, and the latest periodic BROB head progress

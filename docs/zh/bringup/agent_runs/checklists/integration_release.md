@@ -102,11 +102,11 @@
   命令：`python3 workloads/ctuning/run_milepost_codelets.py --ctuning-root workloads/ctuning --target linx64-unknown-linux-musl --clang compiler/llvm/build-linxisa-clang/bin/clang --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --qemu emulator/qemu/build/qemu-system-linx64 --limit 5 --run --summary-json workloads/generated/ctuning_result.json`
   完成意味着：策划的 ctuning 子集在 QEMU 下完成并写入规范的摘要 JSON。
   状态： ✅ PASS (2026-04-18) - 最新的pin-lane运行记录`Regression::ctuning curated subset`为`pass`。- [x] ID：INT-025 在所需的通行楼层保持 TSVC 严格编译覆盖率绿色。
-  命令：`python3 workloads/tsvc/run_tsvc.py --clang compiler/llvm/build-linxisa-clang/bin/clang --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --ZXTERMEN42QXZ-mode auto --strict-fail-under 148 --source-policy linx-v03-parity --no-run-qemu --out-dir workloads/generated`
+  命令：`python3 workloads/tsvc/run_tsvc.py --clang compiler/llvm/build-linxisa-clang/bin/clang --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --vector-mode auto --strict-fail-under 148 --source-policy linx-v056 --no-run-qemu --out-dir workloads/generated`
   完成意味着：仅编译 TSVC 通道完成并满足严格的通行楼层，无需 QEMU 运行时。
   状态： ✅ PASS (2026-04-18) - 最新的 pin-lane 运行记录 `Regression::TSVC strict coverage gate` 在 `148/151` 为 `pass`。
 
 - [ ] ID：INT-026 在运行时传递层保持 TSVC 严格 QEMU 回归绿色。
-  命令：`python3 workloads/tsvc/run_tsvc.py --clang compiler/llvm/build-linxisa-clang/bin/clang --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --qemu emulator/qemu/build/qemu-system-linx64 --ZXTERMEN42QXZ-mode auto --strict-fail-under 148 --source-policy linx-v03-parity --out-dir workloads/generated`
+  命令：`python3 workloads/tsvc/run_tsvc.py --clang compiler/llvm/build-linxisa-clang/bin/clang --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --qemu emulator/qemu/build/qemu-system-linx64 --vector-mode auto --strict-fail-under 148 --source-policy linx-v056 --out-dir workloads/generated`
   Done 表示：TSVC 通道在 QEMU 下完成并满足配置的严格通行楼层。
   状态： ❌ 失败 (2026-05-15) - 不存在规范的运行时通行证。最新的诊断严格重新运行（`docs/bringup/gates/logs/2026-04-17-r7-pin-recovery/pin/reg_strict_cross_repo.log`）仅在跳过 BusyBox rootfs 时才达到 TSVC，然后在 `tsvc.auto.elf` 上 240 秒后超时； 4 月 18 日的规范报告仍然证明仅编译严格报道。

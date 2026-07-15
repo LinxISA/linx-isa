@@ -31,7 +31,7 @@ PTO_FLASH_VEC_YDIM=1
 
 The reusable boundary is that these cases prove the stage prefix through the
 `flash_attention_cube` and `flash_attention_vec` digests under plain
-`model/LinxCoreModel/bin/gfsim -f <elf>`. The full smoke-sized
+`tools/LinxCoreModel/bin/gfsim -f <elf>`. The full smoke-sized
 `avs-pto-parity` row remains the maturity target; GQA is the next unpromoted
 attention boundary.
 

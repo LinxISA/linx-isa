@@ -1,0 +1,153 @@
+# ISA Reconciliation Issues
+
+Date: 2026-03-07
+Scope: `isa.txt.txt`, `/Users/zhoubot/linxisa-v0.3.txt`, and archived bring-up contract notes
+
+1. Legacy TEPL encoding conflicts with canonical v0.4 TEPL.
+   Raw sources:
+   - `isa.txt.txt:345-346` encodes `BSTART.TEPL` as `DataType + Mode + Function`.
+   - `isa.txt.txt:1655-1657` assigns `TEPL Function=30/31` to `ESAVE` / `ERCOV`.
+   Live v0.4:
+   - `isa/v0.4/opcodes/lx_32.opc:85-88` encodes TEPL as `BSTART.TEPL TileOpcode, DataType`.
+   - `docs/architecture/isa-manual/src/chapters/07_templates.adoc:91-110` keeps `ESAVE` / `ERCOV` as template blocks, not TEPL selectors.
+   Decision:
+   - Do not promote the raw TEPL `Mode+Function` model.
+   - Treat the raw TEPL `ESAVE` / `ERCOV` mapping as archived legacy only.
+
+2. Legacy TMA function expansion conflicts with canonical v0.4 TMA freeze.
+   Raw sources:
+   - `isa.txt.txt:1642-1647` assigns `TMA Function=2..5` to `TCOPY`, `TCVT`, `MGATHER`, `MSCATTER`.
+   Live v0.4:
+   - `isa/v0.4/opcodes/lx_32.opc:87-92` and `docs/architecture/isa-manual/src/chapters/04_block_isa.adoc:302-307` freeze `Function=0/1/2` as `TLOAD/TSTORE/TMOV` and reserve `3..31`.
+   Decision:
+   - Promote only the `0/1/2` encoding.
+   - Leave raw `TCOPY/TCVT/MGATHER/MSCATTER` as archived history until a future v0.4+ selector assignment is agreed.
+
+3. Raw Janus/MCALL memory-mode text is not directly compatible with canonical v0.4 shader kernels.
+   Raw sources:
+   - `/Users/zhoubot/linxisa-v0.3.txt:11-19` defines `Tile Mode` vs `MCALL Mode`.
+   - `/Users/zhoubot/linxisa-v0.3.txt:55-77` defines `BSTART.MCALL` mode switching, BCC closure, and MTC-only execution.
+   - `/Users/zhoubot/linxisa-v0.3.txt:326-343` describes `MCALL` as a programmable memory-call block.
+   Live v0.4:
+   - `docs/architecture/isa-manual/src/chapters/04_block_isa.adoc:85-93` and `docs/architecture/isa-manual/src/chapters/09_memory_operations.adoc:41-47,140-149` use `MPAR` / `MSEQ` structured kernel bodies with bridged `l.*.brg` / `v.*.brg` memory.
+   Decision:
+   - Promote only the compatible boundary-ordering intuition (entry acquire / exit release / BCC memory closure while active).
+   - Do not restore `BSTART.MCALL` as a live canonical block type.
+
+4. Legacy SSR naming does not match the canonical v0.4 trap/MMU register file.
+   Raw source:
+   - `isa.txt.txt:40-91` uses older names such as `EBPC_ACRn`, `EBARG_ACRn`, `ETPC_ACRn`, `MMTBASE_ACRn`, `MMCONFIG_ACRn`.
+   Live v0.4:
+   - `isa/v0.4/state/system_registers.json:32-80` uses `ECSTATE_ACRn`, `TRAPNO_ACRn`, `TTBR0_ACR1`, `TTBR1_ACR1`, `TCR_ACR1`, `MAIR_ACR1`, `EBARG_BPC_CUR_ACRn`, `EBARG_BPC_TGT_ACRn`, `EBARG_TPC_ACRn`.
+   Decision:
+   - Keep the canonical v0.4 names.
+   - Treat the raw names as historical aliases only; do not reintroduce them into the live golden.
+
+5. Extra raw kernel operand names are not fully assigned in canonical v0.4.
+   Raw sources:
+   - `isa.txt.txt:1592-1604` and `/Users/zhoubot/linxisa-v0.3.txt:1511-1533` expose `TA..TH`, `TO`, `TO1/TS`, `TO2`, `TO3`, and `P`.
+   Live v0.4:
+   - `docs/architecture/isa-manual/src/chapters/04_block_isa.adoc:564-590` previously guaranteed only `ri*`, `TA/TB/TC/TD`, `TO`, `TS`, and `p`.
+   Decision:
+   - Promote `ri0..ri11`, `lc0..lc2`, `lb0..lb2`, `TA/TB/TC/TD`, `TO`, `TS`, `p`, and `zero`.
+   - Leave raw `TE..TH` and `TO1/TO2/TO3` as reserved/unassigned until a binding algorithm and legality rules are defined.
+
+6. Canonical v0.4 TEPL selector allocation is frozen as a packed mode/function profile.
+   Decision date:
+   - 2026-03-07 user decision during v0.4 canonicalization.
+   Live v0.4:
+   - `isa/v0.4/opcodes/lx_32.opc` keeps the public header syntax as `BSTART.TEPL TileOpcode, DataType`.
+   - `isa/v0.4/state/engine_ops.json` and `docs/architecture/isa-manual/src/chapters/04_block_isa.adoc` now define the
+     canonical packed rule:
+     - `TileOpcode[9:6] = 0`
+     - `TileOpcode[5] = Mode`
+     - `TileOpcode[4:0] = Function`
+     - `TileOpcode = (Mode << 5) | Function`
+   Canonical packed assignments:
+   - `Mode=0` is the 32-entry base TEPL function set (`TADD` through `TROWEXPAND`).
+   - `Mode=1` is the scalar-RHS extension window (`TADDS` through `TSHRS`); `Function=11..31` remains reserved.
+   Enforcement:
+   - `python3 tools/isa/check_canonical_v04.py --root .` validates the packed table in `engine_ops.json` and catalog
+     alignment with `docs/bringup/tepl_status.yaml`.
+   - `python3 tools/isa/validate_spec.py --profile v0.4` now rejects compiled golden TEPL state that drifts from the
+     packed `Mode/Function` rule.
+
+7. `TPREFETCH` raw material remains archived legacy only.
+   Raw source:
+   - `/Users/zhoubot/linxisa-v0.3.txt:140-145,178,211-223` describes `TPREFETCH` behavior.
+   Resolution in live v0.4:
+   - Active `v0.4` manual/state text no longer treats `TPREFETCH` as a canonical memory-tile operation.
+   - No `BSTART.TPREFETCH` or equivalent selector exists in `isa/v0.4/opcodes/lx_32.opc`.
+   Decision:
+   - Keep `TPREFETCH` archived as historical Janus text until a future revision assigns an explicit encoded form.
+
+8. Downstream TEPL consumer migration is complete.
+   Live canonical v0.4:
+   - `isa/v0.4/state/engine_ops.json` now uses the packed `TileOpcode = (Mode << 5) | Function` assignment.
+   Resolution:
+   - `compiler/llvm/llvm/lib/Target/LinxISA/AsmParser/LinxISAAsmParser.cpp`,
+     `compiler/llvm/llvm/lib/Target/LinxISA/MCTargetDesc/LinxISAInstPrinter.cpp`,
+     `compiler/llvm/llvm/lib/Target/LinxISA/LinxISAISelDAGToDAG.cpp`,
+     `compiler/llvm/llvm/lib/Target/LinxISA/LinxISABlockify.cpp`,
+     `compiler/llvm/llvm/lib/Target/LinxISA/LinxISAMCInstLower.cpp`,
+     `compiler/llvm/llvm/lib/Target/LinxISA/MCTargetDesc/linxisa_opcodes.[ch]`,
+     `workloads/pto_kernels/include/common/pto_tileop.hpp`, and
+     `workloads/pto_kernels/include/pto/linx/impl/backend.hpp`
+     now use the packed canonical selector map and no longer accept the archived sparse values.
+   Gate update:
+   - `python3 tools/bringup/check_tepl_encoding.py --root .` now reads the workspace copy of PTO headers first, so the
+     superproject gate validates the actual checked-out migration state instead of stale submodule `HEAD`.
+
+9. Sail semantic closure is materially stronger, and the canonical decode layer is now live.
+   Current state:
+   - `isa/sail/model/state/state.sail` now has concrete BARG/commit state, decoder shadow registers, manager-ACR SSR
+     shadows for `ECSTATE`/`ECONFIG`/`EBARG_*`, and executable `ACRC`/`ACRE`/`ESAVE`/`ERCOV` plumbing.
+   - The vector register file is now decoded as the live RegId10 class/index space (`base scalar` / `ri*` / `lc*` /
+     `vt*` / `vu*` / `vm*` / `vn*` / tile-base) with 32-bit lane carriers, and decode now latches per-operand type
+     shadows from explicit instruction type fields when present and current carrier-domain defaults otherwise.
+   - `isa/sail/model/execute/execute.sail` now implements the remaining vector reduction and vector FP batches
+     (`V.FADD`/`V.FSUB`/`V.FMUL`/`V.FDIV`/`V.FSQRT`/`V.FRECIP`/`V.FEXP`/`V.FABS`/`V.FCLASS`/`V.FCVT`/`V.FCVTI`/
+     `V.FMADD`/`V.FMSUB`/`V.FNMADD`/`V.FNMSUB`) instead of deterministic zero shims.
+   - `isa/sail/model/decode/decode.sail` is now generated from the compiled `isa/v0.4/linxisa-v0.4.json` catalog and
+     provides real bit-level decode/dispatch for all `710` legal canonical mnemonics; `check_sail_model.py` now also
+     enforces generator freshness via `tools/isa/gen_sail_decode.py --check`.
+   - `tools/bringup/check_sail_model.py --require-parser` now fails on active `linx_unimplemented(...)` / `vfp_unimpl`
+     / `vrd_unimpl` placeholders in the live Sail model files.
+   Remaining gaps:
+   - The following execute functions remain architecturally modeled as intentional no-ops in the current Sail lane,
+     per the canonical `v0.4` decision:
+     `DC.IALL`, `IC.IALL`, `BC.IALL`, `BWT`, `BWI`, `BWE`, `BSE`, `B.HINT`, `B.IOD`.
+   - Resolved: the live `v0.4` opcode/manual surface no longer advertises synthetic `.<T>` / `.<W>` selectors on
+     non-convert `v.*` forms, and the generated per-instruction manual fragments are now checked as part of the
+     canonical `v0.4` gate.
+   - Resolved: non-convert integer `V.*` arithmetic, compare, shift, reduction, and 32-bit atomic-RMW paths now
+     consume mnemonic-defined decoded `u32` / `s32` type shadows and execute as numeric cast/cvt over the 32-bit
+     vector carrier file instead of operating as untyped raw carriers.
+
+10. QEMU `v0.4` decode closure has advanced, but full emulator closure is still open.
+   Current state:
+   - `target/linx/insn16.decode`, `insn32.decode`, `insn48.decode`, and `translate.c` now include the promoted
+     canonical `v0.4` block-header/system tranche added during this bring-up step:
+     compact `C.BSTART.{FP,MPAR,MSEQ,SYS,VPAR,VSEQ}`, canonical `BSTART.{FP,SYS,FIXP,TEPL}`,
+     compare-and-branch `B.{EQ,NE,LT,GE,LTU,GEU}`, and the selected maintenance/TLB/hint forms.
+   - `tools/bringup/report_qemu_isa_coverage.py` now measures coverage from QEMU decodetree sources first, not only
+     from `linx_opcode_meta_gen.h`, and it credits canonical alias families where one QEMU decode surface implements
+     multiple public spec mnemonics (for example `BSTART` vs `BSTART.STD`, `BSTART.TEPL` vs the archived PAR aliases,
+     and several `HL.{LD/LW/SD/SW}` alias pairs).
+   - `rtl/LinxCore/src/common/opcode_catalog.yaml`,
+     `rtl/LinxCore/src/common/opcode_{ids,meta}_gen.py`,
+     `emulator/qemu/target/linx/linx_opcode_{ids,meta}_gen.h`
+     are resynchronized with the current QEMU decode files; `check_decode_parity.py` and
+     `check_qemu_opcode_meta_sync.py --strict` now pass again.
+   Coverage status:
+   - `tools/bringup/report_qemu_isa_coverage.py` now reports `378/710` legal `v0.4` mnemonics covered from the live
+     QEMU decode surface (up from the earlier `315/710` pre-cutover baseline).
+   Remaining gaps:
+   - The dominant uncovered families are still real implementation gaps, not reporting drift:
+     `V.*` (`152`), `HL.*` (`106`), `SD.*` atomics (`8`), `SW.*` atomics (`8`), `LD.*` atomics (`7`),
+     `LW.*` atomics (`7`), compact/system leftovers (`C.*`, `LR.*`, `SC.*`), and a few scalar FP rounding ops.
+   Environment note:
+   - The decodetree generation layer is now clean, but the local QEMU object compile is currently blocked by the
+     workspace toolchain environment (`glib.h` missing from the configured Homebrew include path) rather than by an
+     additional Linx decode/translator error. The next semantic bring-up step should therefore focus on the remaining
+     uncovered instruction families, not on the already-fixed block-header decode conflicts.

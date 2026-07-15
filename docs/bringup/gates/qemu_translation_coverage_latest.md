@@ -1,9 +1,9 @@
 # AVS QEMU Translation Coverage
 
-- Generated (UTC): `2026-05-21 02:28:35Z`
-- Spec unique mnemonics: `710`
-- AVS object files scanned: `84`
-- Covered spec mnemonics: `710/710` (`100.0%`)
+- Generated (UTC): `2026-07-15 10:37:55Z`
+- Spec unique mnemonics: `711`
+- AVS object files scanned: `5`
+- Covered spec mnemonics: `711/711` (`100.0%`)
 - Missing spec mnemonics: `0`
 
 ## Coverage By Prefix
@@ -20,13 +20,13 @@
 - `ANDIW`: `1`
 - `ANDW`: `1`
 - `ASSERT`: `1`
-- `B`: `17`
+- `B`: `16`
 - `BC`: `2`
 - `BCNT`: `1`
 - `BIC`: `1`
 - `BIS`: `1`
 - `BSE`: `1`
-- `BSTART`: `20`
+- `BSTART`: `19`
 - `BSTOP`: `1`
 - `BWE`: `1`
 - `BWI`: `1`
@@ -83,6 +83,7 @@
 - `IC`: `2`
 - `J`: `1`
 - `JR`: `1`
+- `L`: `3`
 - `LB`: `2`
 - `LBI`: `1`
 - `LBU`: `2`
@@ -173,30 +174,10 @@
 
 ## Top Covering Objects
 
-- `99_spec_decode_qemu.o`: `710`
-- `gqa.o`: `85`
-- `sparse_attention_local.o`: `84`
-- `flash_attention_cube.o`: `82`
-- `flash_attention_vec.o`: `82`
-- `rmsnorm.o`: `81`
-- `10_tile_matmul.o`: `79`
-- `gemm_demo.o`: `78`
-- `gemm_performance.o`: `78`
-- `gemm_scaled.o`: `78`
-- `flash_attention_masked.o`: `77`
-- `gemm_basic.o`: `77`
-- `softmax.o`: `76`
-- `batchnorm.o`: `75`
-- `tmatmul_acc.o`: `75`
-- `layernorm.o`: `74`
-- `softfp.o`: `74`
-- `flash_attention.o`: `73`
-- `gelu.o`: `73`
-- `argmax.o`: `72`
-- `gemm.o`: `72`
-- `mamulb.o`: `72`
-- `permute_nhwc_nchw.o`: `72`
-- `swiglu.o`: `72`
-- `tanh.o`: `72`
+- `99_spec_decode_qemu.o`: `711`
+- `11_system.o`: `62`
+- `41_v056_isa_forms.o`: `30`
+- `mem.o`: `26`
+- `main.o`: `12`
 
 ## Missing Spec Mnemonics (First 200)

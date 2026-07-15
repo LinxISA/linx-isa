@@ -5,16 +5,30 @@
 [[inst_bstart]]
 ==== BSTART
 
-*Syntax:* BSTART COND, <label>
-
 *Description:* Block start marker: terminates the current block and begins the next block.
+
+[[inst_bstart_32_7eb93b649748]]
+===== Form `bstart_32_7eb93b649748`
+
+*Syntax:* BSTART {DIRECT, CALL}, <label>
 
 *Encoding:*
 
-image::../generated/encodings/enc_bstart.svg[BSTART encoding,width=800]
-
-*Uop-Class:* CMD
+image::../encodings/enc_bstart_32_7eb93b649748.svg[BSTART encoding form bstart_32_7eb93b649748,width=800]
 
 *Compression:* L32 (len=32)
+
+[[inst_bstart_32_e11e678a32ac]]
+===== Form `bstart_32_e11e678a32ac`
+
+*Syntax:* BSTART COND, <label>
+
+*Encoding:*
+
+image::../encodings/enc_bstart_32_e11e678a32ac.svg[BSTART encoding form bstart_32_e11e678a32ac,width=800]
+
+*Compression:* L32 (len=32)
+
+*Uop-Class:* CMD
 
 *Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "User corrected to A", "source": "group_rule", "uop_kind": "CMD"}`

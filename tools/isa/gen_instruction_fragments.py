@@ -48,6 +48,18 @@ def _slug(mnemonic: str) -> str:
     return s or "inst"
 
 
+def _encoding_asset_filename(inst: Dict[str, Any], mnemonic_count: int) -> str:
+    if mnemonic_count > 1:
+        form_id = str(inst.get("id") or "").strip()
+        if not re.fullmatch(r"[a-z0-9_]+", form_id):
+            raise ValueError(
+                f"instruction {inst.get('mnemonic')!r} has an invalid stable form ID {form_id!r}"
+            )
+        return f"enc_{form_id}.svg"
+    suffix = "_parts" if len(inst.get("parts", [])) > 1 else ""
+    return f"enc_{_slug(str(inst['mnemonic']))}{suffix}.svg"
+
+
 def _load_uop_class_map(uop_root: Path) -> Dict[str, Dict[str, Any]]:
     """Return mnemonic -> {big_kind, class, group_hint?} map."""
     out: Dict[str, Dict[str, Any]] = {}
@@ -530,16 +542,17 @@ def _inst_description(inst: Dict[str, Any]) -> str:
     return f"{group}: {base} operation."
 
 
-def _emit_fragment(inst: Dict[str, Any], uop: Optional[Dict[str, Any]], out_dir: Path, enc_rel_dir: str) -> None:
+def _emit_fragment(
+    forms: List[Dict[str, Any]],
+    uop: Optional[Dict[str, Any]],
+    out_dir: Path,
+    enc_rel_dir: str,
+) -> None:
+    inst = forms[0]
     mnemonic = str(inst.get("mnemonic") or "").strip()
-    asm = str(inst.get("asm") or "").strip()
-    length_bits = int(inst.get("length_bits") or 0)
 
     desc = _inst_description(inst)
     uop_group = _uop_group_str(uop)
-    comp = _compression_str(length_bits, mnemonic)
-
-    enc_svg = f"enc_{_slug(mnemonic)}.svg"
 
     anchor = f"inst_{_slug(mnemonic)}"
 
@@ -550,18 +563,52 @@ def _emit_fragment(inst: Dict[str, Any], uop: Optional[Dict[str, Any]], out_dir:
     lines.append("")
     lines.append(f"[[{anchor}]]")
     lines.append(f"==== {mnemonic}")
-    lines.append("")
-    lines.append(f"*Syntax:* {asm}" if asm else "*Syntax:* -")
-    lines.append("")
-    lines.append(f"*Description:* {desc}")
-    lines.append("")
-    lines.append("*Encoding:*")
-    lines.append("")
-    lines.append(f"image::{enc_rel_dir}/{enc_svg}[{mnemonic} encoding,width=800]")
-    lines.append("")
-    lines.append(f"*Uop-Class:* {uop_group}")
-    lines.append("")
-    lines.append(f"*Compression:* {comp} (len={length_bits})")
+    if len(forms) == 1:
+        form = forms[0]
+        asm = str(form.get("asm") or "").strip()
+        length_bits = int(form.get("length_bits") or 0)
+        comp = _compression_str(length_bits, mnemonic)
+        enc_svg = _encoding_asset_filename(form, 1)
+        lines.extend(
+            [
+                "",
+                f"*Syntax:* {asm}" if asm else "*Syntax:* -",
+                "",
+                f"*Description:* {desc}",
+                "",
+                "*Encoding:*",
+                "",
+                f"image::{enc_rel_dir}/{enc_svg}[{mnemonic} encoding,width=800]",
+                "",
+                f"*Uop-Class:* {uop_group}",
+                "",
+                f"*Compression:* {comp} (len={length_bits})",
+            ]
+        )
+    else:
+        lines.extend(["", f"*Description:* {desc}"])
+        for form in forms:
+            form_id = str(form["id"])
+            asm = str(form.get("asm") or "").strip()
+            length_bits = int(form.get("length_bits") or 0)
+            comp = _compression_str(length_bits, mnemonic)
+            enc_svg = _encoding_asset_filename(form, len(forms))
+            lines.extend(
+                [
+                    "",
+                    f"[[inst_{form_id}]]",
+                    f"===== Form `{form_id}`",
+                    "",
+                    f"*Syntax:* {asm}" if asm else "*Syntax:* -",
+                    "",
+                    "*Encoding:*",
+                    "",
+                    f"image::{enc_rel_dir}/{enc_svg}[{mnemonic} encoding form {form_id},width=800]",
+                    "",
+                    f"*Compression:* {comp} (len={length_bits})",
+                ]
+            )
+        lines.extend(["", f"*Uop-Class:* {uop_group}"])
 
     # Include the raw class dict to make the doc self-contained.
     if uop and uop.get("class"):
@@ -580,14 +627,18 @@ def _emit_all(spec_path: Path, uop_root: Path, out_dir: Path, enc_rel_dir: str) 
     uop_map = _load_uop_class_map(uop_root)
 
     _mkdirp(out_dir)
-    expected_names: List[str] = []
+    by_mnemonic: Dict[str, List[Dict[str, Any]]] = {}
     for inst in insts:
         m = str(inst.get("mnemonic") or "").strip()
         if not m:
             continue
+        by_mnemonic.setdefault(m, []).append(inst)
+
+    expected_names: List[str] = []
+    for m, forms in by_mnemonic.items():
         expected_names.append(f"{_slug(m)}.adoc")
         uop = uop_map.get(m)
-        _emit_fragment(inst, uop, out_dir, enc_rel_dir)
+        _emit_fragment(forms, uop, out_dir, enc_rel_dir)
     return sorted(set(expected_names))
 
 
@@ -608,7 +659,7 @@ def main() -> int:
     )
     ap.add_argument(
         "--enc-rel-dir",
-        default="../generated/encodings",
+        default="../encodings",
         help="Relative path from instructions/ to encodings/ for image:: includes",
     )
     ap.add_argument("--check", action="store_true", help="Fail if outputs are not up-to-date")

@@ -19,9 +19,19 @@
 
 <div class="enc-diagram">
 
-<figure>
-<img src="../wavedrom/enc_b_iot.svg" alt="B.IOT encoding" width="100%" />
-<figcaption>Bitfield encoding diagram. MSB is on the left, LSB on the right.</figcaption>
+<figure id="encoding-b_iot_32_10db6db84f5d">
+<img src="../wavedrom/enc_b_iot_32_10db6db84f5d.svg" alt="B.IOT encoding form b_iot_32_10db6db84f5d" width="100%" />
+<figcaption><code>b_iot_32_10db6db84f5d</code> — <code>B.IOT SrcTile0<.reuse>, <last>, ->DstTile<Size></code>. MSB is on the left, LSB is on the right.</figcaption>
+</figure>
+
+<figure id="encoding-b_iot_32_8b8bce6bffe8">
+<img src="../wavedrom/enc_b_iot_32_8b8bce6bffe8.svg" alt="B.IOT encoding form b_iot_32_8b8bce6bffe8" width="100%" />
+<figcaption><code>b_iot_32_8b8bce6bffe8</code> — <code>B.IOT SrcTile0<.reuse>, SrcTile1<.reuse>, <last>, ->DstTile<Size></code>. MSB is on the left, LSB is on the right.</figcaption>
+</figure>
+
+<figure id="encoding-b_iot_32_efa0fe3fe49a">
+<img src="../wavedrom/enc_b_iot_32_efa0fe3fe49a.svg" alt="B.IOT encoding form b_iot_32_efa0fe3fe49a" width="100%" />
+<figcaption><code>b_iot_32_efa0fe3fe49a</code> — <code>B.IOT <last>, ->DstTile<Size></code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
 </div>
@@ -44,11 +54,11 @@ Instruction from the Block Input & Output group.
 
 ## Full Catalog Forms
 
-| Assembly | Length | Decode |
-|----------|--------|--------|
-| `B.IOT SrcTile0<.reuse>, <last>, ->DstTile<Size>` | 32 | — |
-| `B.IOT SrcTile0<.reuse>, SrcTile1<.reuse>, <last>, ->DstTile<Size>` | 32 | — |
-| `B.IOT <last>, ->DstTile<Size>` | 32 | — |
+| Form ID | Assembly | Length | Decode | Encoding |
+|---------|----------|--------|--------|----------|
+| `b_iot_32_10db6db84f5d` | `B.IOT SrcTile0<.reuse>, <last>, ->DstTile<Size>` | 32 | — | [SVG](../wavedrom/enc_b_iot_32_10db6db84f5d.svg) |
+| `b_iot_32_8b8bce6bffe8` | `B.IOT SrcTile0<.reuse>, SrcTile1<.reuse>, <last>, ->DstTile<Size>` | 32 | — | [SVG](../wavedrom/enc_b_iot_32_8b8bce6bffe8.svg) |
+| `b_iot_32_efa0fe3fe49a` | `B.IOT <last>, ->DstTile<Size>` | 32 | — | [SVG](../wavedrom/enc_b_iot_32_efa0fe3fe49a.svg) |
 
 <div class="insn-nav">
 

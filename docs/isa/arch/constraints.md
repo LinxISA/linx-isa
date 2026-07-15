@@ -35,7 +35,7 @@ In order to ensure the correctness and safety of program execution, LinxISA impo
 | A6.11 | Only multiple groups are allowed to be submitted in the vector serial block in ascending order of group ids according to program order. After the last group is submitted, the vector serial block is submitted as a whole. |
 | A6.12 | The load/store local between different groups in the vector serial block allows address overlap, but needs to be modified in order according to the order of the group id. |
 | A6.13 | vector The load/store local in the same group within the vector serial block is based on address order preservation, and the load/store local in different groups is in global order preservation according to the address order. |
-| A7 | **vector parallel block** (BSTART.PAR): Provides vector computing capabilities. Split into multiple groups for execution, and memory access between groups does not require order-preserving execution. The characteristics are as follows: |
+| A7 | **template block** (`BSTART.TEPL`): Provides generated vector/tile computation. Split into multiple groups for execution, and memory access between groups does not require order-preserving execution. The characteristics are as follows: |
 | A7.1 | vector parallel block only supports block structure in split block form |
 | A7.2 | vector parallel block only supports Fall jump mode |
 | A7.3 | The vector parallel block allows access to global registers GGPR, system registerSSR, and Tile registers and other global states. Access to memory is not allowed. |

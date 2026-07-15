@@ -27,6 +27,7 @@ SKIP_PARTS = {
 }
 SKIP_FILES = {'check_canonical_v056.py'}
 ARCHIVE_PREFIXES = (
+    'docs/bringup/archive/',
     'docs/bringup/plan/',
     'docs/releases/',
     'docs/architecture/research/',
@@ -94,10 +95,20 @@ def check_spec(root: Path) -> list[str]:
         return [f'missing canonical spec: {spec_path}']
     spec = json.loads(spec_path.read_text())
     mnems = {str(i.get('mnemonic')) for i in spec.get('instructions', [])}
-    for banned in ['B.IOTI','B.ATTR','TCOPY']:
+    if str(spec.get('version') or '') != '0.56.5':
+        errors.append(f'{spec_path}: canonical maintenance version must be 0.56.5')
+    for banned in ['B.IOTI','B.ATTR','TCOPY','B.IOD','BSTART.PAR']:
         if banned in mnems:
             errors.append(f'{spec_path}: banned mnemonic remains in canonical catalog: {banned}')
-    for required in ['B.IOT','B.CATR','B.DATR','BSTART.TMOV']:
+    for required in [
+        'B.IOT',
+        'B.CATR',
+        'B.DATR',
+        'BSTART.TMOV',
+        'L.BSTART.FP',
+        'L.BSTART.STD',
+        'L.BSTART.SYS',
+    ]:
         if required not in mnems:
             errors.append(f'{spec_path}: required v0.56 mnemonic missing: {required}')
     tile = root / 'isa/v0.56/registers/tile_reg.json'

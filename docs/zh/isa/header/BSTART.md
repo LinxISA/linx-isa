@@ -25,7 +25,7 @@
 | 标量块（.STD）  | fall, direct, call, cond, ind, icall, ret |
 | 系统块（.SYS）  | fall, direct, call, cond, ind, icall, ret |
 | 浮点块（.FP）   | fall, direct, call, cond, ind, icall, ret |
-| 并行块（.PAR）  | fall  |
+| 模板块（.TEPL） | fall  |
 
 ## 编码格式
 
@@ -42,7 +42,7 @@ BlockType 用于指示执行该块指令的引擎类型，具体编码如下：
 | 0         | Standard Block       | .STD      | 标量块，块内支持基础标量运算指令和复合操作指令               |
 | 1         | System Block         | .SYS      | 系统块（也称为辅助块），块内支持基础标量运算指令和系统控制指令               |
 | 2         | Floating-point Block | .FP       | 浮点块，块内支持基础标量运算指令和浮点运算指令               |
-| 3         | Parallel Block       | .PAR/.VEC | 并行块，块内支持并行运算指令（.PAR：Parallel执行模式；.VEC：vector执行模式）  |
+| 3         | Template Block       | .TEPL     | 模板块，块体由架构定义的模板生成。 |
 | 4-30      | RESERVE              | RESERVE   | 保留                                                     |
 
 - **BrType 域**
@@ -82,5 +82,5 @@ PayLoad 域用于编码块指令执行时需要的其他参数。不同的块类
     BSTART.SYS ind
     BSTART.SYS icall
     BSTART.FP  ret
-    BSTART.PAR
+    BSTART.TEPL
 ```
