@@ -2,7 +2,7 @@
   "admitted": [
     {
       "disassembly": "C.BSTART COND, 0x1146a",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r4/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r5/linx-qemu-tests.elf",
       "elf_sha256": "be5c2dbeb9e4315970b9aa921d4b5dc056f3fd919dd112793faf3a402a2ef8c9",
       "form_id": "c_bstart_16_c4e238a9227a",
       "form_key": {
@@ -12,7 +12,7 @@
       },
       "max_level": "L3",
       "mnemonic": "C.BSTART",
-      "object": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r4/14_callret_templates.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r5/14_callret_templates.o",
       "object_sha256": "033db51de71ae95c64dc24a3955f6113105968f2b22eef79f63b5cdfd6a78ba7",
       "oracle": {
         "expected": "0x6655",
@@ -22,16 +22,16 @@
       },
       "pc": "0x1145a",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "a8093de98800eb2ba4ea5f9fd074a1004c9f128e",
+      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
       "raw_bytes_le": "8400",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r4/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r5/run-evidence.json",
       "suite": "callret",
       "symbol": "callret_tpl_c_bstart_cond_taken",
       "test_id": "0x0000140f"
     },
     {
       "disassembly": "C.BSTART.STD RET",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r4/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r5/linx-qemu-tests.elf",
       "elf_sha256": "be5c2dbeb9e4315970b9aa921d4b5dc056f3fd919dd112793faf3a402a2ef8c9",
       "form_id": "c_bstart_std_16_8b40f078c14a",
       "form_key": {
@@ -41,7 +41,7 @@
       },
       "max_level": "L3",
       "mnemonic": "C.BSTART.STD",
-      "object": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r4/14_callret_templates.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r5/14_callret_templates.o",
       "object_sha256": "033db51de71ae95c64dc24a3955f6113105968f2b22eef79f63b5cdfd6a78ba7",
       "oracle": {
         "expected": "0x1234",
@@ -51,16 +51,16 @@
       },
       "pc": "0x11434",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "a8093de98800eb2ba4ea5f9fd074a1004c9f128e",
+      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
       "raw_bytes_le": "0038",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r4/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r5/run-evidence.json",
       "suite": "callret",
       "symbol": "callret_tpl_ret_error_trailer_success",
       "test_id": "0x0000140d"
     },
     {
       "disassembly": "FENTRY [ra ~ ra], sp!, 16",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r4/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r5/linx-qemu-tests.elf",
       "elf_sha256": "be5c2dbeb9e4315970b9aa921d4b5dc056f3fd919dd112793faf3a402a2ef8c9",
       "form_id": "fentry_32_a47584ec13b6",
       "form_key": {
@@ -70,7 +70,7 @@
       },
       "max_level": "L3",
       "mnemonic": "FENTRY",
-      "object": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r4/14_callret_templates.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r5/14_callret_templates.o",
       "object_sha256": "033db51de71ae95c64dc24a3955f6113105968f2b22eef79f63b5cdfd6a78ba7",
       "oracle": {
         "expected": "0x22",
@@ -80,16 +80,16 @@
       },
       "pc": "0x113ec",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "a8093de98800eb2ba4ea5f9fd074a1004c9f128e",
+      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
       "raw_bytes_le": "4100a504",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r4/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r5/run-evidence.json",
       "suite": "callret",
       "symbol": "callret_tpl_fret_stk_slot_redirect",
       "test_id": "0x0000140b"
     },
     {
       "disassembly": "FRET.RA [ra ~ ra], sp!, 16",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r4/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r5/linx-qemu-tests.elf",
       "elf_sha256": "be5c2dbeb9e4315970b9aa921d4b5dc056f3fd919dd112793faf3a402a2ef8c9",
       "form_id": "fret_ra_32_659c886221c1",
       "form_key": {
@@ -99,7 +99,7 @@
       },
       "max_level": "L3",
       "mnemonic": "FRET.RA",
-      "object": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r4/14_callret_templates.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r5/14_callret_templates.o",
       "object_sha256": "033db51de71ae95c64dc24a3955f6113105968f2b22eef79f63b5cdfd6a78ba7",
       "oracle": {
         "expected": "0x33",
@@ -109,16 +109,16 @@
       },
       "pc": "0x11426",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "a8093de98800eb2ba4ea5f9fd074a1004c9f128e",
+      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
       "raw_bytes_le": "4120a504",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r4/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r5/run-evidence.json",
       "suite": "callret",
       "symbol": "callret_tpl_fret_ra_slot_redirect",
       "test_id": "0x0000140c"
     },
     {
       "disassembly": "FRET.STK [ra ~ ra], sp!, 16",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r4/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r5/linx-qemu-tests.elf",
       "elf_sha256": "be5c2dbeb9e4315970b9aa921d4b5dc056f3fd919dd112793faf3a402a2ef8c9",
       "form_id": "fret_stk_32_4fe246bd8241",
       "form_key": {
@@ -128,7 +128,7 @@
       },
       "max_level": "L3",
       "mnemonic": "FRET.STK",
-      "object": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r4/14_callret_templates.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r5/14_callret_templates.o",
       "object_sha256": "033db51de71ae95c64dc24a3955f6113105968f2b22eef79f63b5cdfd6a78ba7",
       "oracle": {
         "expected": "0x22",
@@ -138,16 +138,16 @@
       },
       "pc": "0x11402",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "a8093de98800eb2ba4ea5f9fd074a1004c9f128e",
+      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
       "raw_bytes_le": "4130a504",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r4/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r5/run-evidence.json",
       "suite": "callret",
       "symbol": "callret_tpl_fret_stk_slot_redirect",
       "test_id": "0x0000140b"
     },
     {
       "disassembly": "J 6",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r4/linx-qemu-tests.elf",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r5/linx-qemu-tests.elf",
       "elf_sha256": "be5c2dbeb9e4315970b9aa921d4b5dc056f3fd919dd112793faf3a402a2ef8c9",
       "form_id": "j_32_a303cf05af42",
       "form_key": {
@@ -157,7 +157,7 @@
       },
       "max_level": "L3",
       "mnemonic": "J",
-      "object": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r4/14_callret_templates.o",
+      "object": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r5/14_callret_templates.o",
       "object_sha256": "033db51de71ae95c64dc24a3955f6113105968f2b22eef79f63b5cdfd6a78ba7",
       "oracle": {
         "expected": "0x77",
@@ -167,9 +167,9 @@
       },
       "pc": "0x11492",
       "qemu_binary_verification": "local_binary_sha256",
-      "qemu_sha": "a8093de98800eb2ba4ea5f9fd074a1004c9f128e",
+      "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
       "raw_bytes_le": "37000300",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r4/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r5/run-evidence.json",
       "suite": "callret",
       "symbol": "callret_tpl_j_skip_poison",
       "test_id": "0x00001410"
@@ -200,7 +200,7 @@
         "kind": "test_event_sequence",
         "value": "START/PASS"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r4/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r5/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "callret",
@@ -218,7 +218,7 @@
         "kind": "test_event_sequence",
         "value": "START/PASS"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r4/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r5/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "callret",
@@ -236,7 +236,7 @@
         "kind": "test_event_sequence",
         "value": "START/PASS"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r4/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r5/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "callret",
@@ -254,7 +254,7 @@
         "kind": "test_event_sequence",
         "value": "START/PASS"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r4/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r5/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "callret",
@@ -272,7 +272,7 @@
         "kind": "test_event_sequence",
         "value": "START/PASS"
       },
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r4/run-evidence.json",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-f40b22b-20260716-r5/run-evidence.json",
       "stalled": false,
       "status": "PASS",
       "suite": "callret",
@@ -299,10 +299,10 @@
       "timeout_after_fail": true
     }
   ],
-  "generated_at_utc": "2026-07-15T18:25:55Z",
+  "generated_at_utc": "2026-07-15T18:46:30Z",
   "inputs": {
     "manifest": "avs/qemu/qemu_executable_coverage_manifest.json",
-    "qemu_sha": "a8093de98800eb2ba4ea5f9fd074a1004c9f128e",
+    "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
     "spec": "isa/v0.56/linxisa-v0.56.json"
   },
   "policy": {
