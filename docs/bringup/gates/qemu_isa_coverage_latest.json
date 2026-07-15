@@ -18,16 +18,16 @@
     "L2": {
       "availability": "available",
       "claim": "runtime_execution",
-      "form_count": 20,
-      "mnemonic_count": 20,
+      "form_count": 36,
+      "mnemonic_count": 36,
       "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
       "source": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_executable_coverage_latest.json"
     },
     "L3": {
       "availability": "available",
       "claim": "semantic_oracle",
-      "form_count": 20,
-      "mnemonic_count": 20,
+      "form_count": 36,
+      "mnemonic_count": 36,
       "qemu_sha": "f40b22bb275cdaf4d9a5a36d50f1ee091a9da3a1",
       "source": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_executable_coverage_latest.json"
     }
@@ -36,7 +36,7 @@
   "form_coverage_count": 625,
   "form_coverage_ratio_percent": 83.67,
   "form_missing_count": 122,
-  "generated_at_utc": "2026-07-15 20:34:39Z",
+  "generated_at_utc": "2026-07-15 21:28:13Z",
   "legal_form_count": 747,
   "legal_mnemonic_count": 711,
   "limitations": [
