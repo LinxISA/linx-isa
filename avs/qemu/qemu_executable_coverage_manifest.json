@@ -5,7 +5,7 @@
     "L3": "available"
   },
   "producer": {
-    "suite_command": "LINX_VIRT_TEST_FINISHER=1 python3 avs/qemu/run_tests.py --suite callret --require-test-id 0x140b --require-test-id 0x140c --out-dir avs/qemu/out/executable-coverage-r2 --evidence-out avs/qemu/out/executable-coverage-r2/run-evidence.json --qemu emulator/qemu/build-linx/qemu-system-linx64 --clang compiler/llvm/build-linxisa-clang/bin/clang --clangxx compiler/llvm/build-linxisa-clang/bin/clang++ --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --llvm-objdump compiler/llvm/build-linxisa-clang/bin/llvm-objdump --llc compiler/llvm/build-linxisa-clang/bin/llc --timeout 20",
+    "suite_command": "LINX_VIRT_TEST_FINISHER=1 python3 avs/qemu/run_tests.py --suite callret --require-test-id 0x140b --require-test-id 0x140c --out-dir avs/qemu/out/executable-coverage-r3 --evidence-out avs/qemu/out/executable-coverage-r3/run-evidence.json --qemu emulator/qemu/build-linx/qemu-system-linx64 --clang compiler/llvm/build-linxisa-clang/bin/clang --clangxx compiler/llvm/build-linxisa-clang/bin/clang++ --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --llvm-objdump compiler/llvm/build-linxisa-clang/bin/llvm-objdump --llc compiler/llvm/build-linxisa-clang/bin/llc --timeout 20",
     "bundle_policy": "Preserve the five audited artifacts under docs/bringup/gates/evidence/qemu-executable/<run-id>/ and update run_evidence_sha256.",
     "report_command": "python3 tools/bringup/report_qemu_executable_coverage.py --require-nonzero --require-clean"
   },
@@ -20,8 +20,8 @@
       },
       "suite": "callret",
       "test_id": "0x0000140b",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-5b6dbb3-20260716-r2/linx-qemu-tests.elf",
-      "object": "docs/bringup/gates/evidence/qemu-executable/callret-5b6dbb3-20260716-r2/14_callret_templates.o",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r3/linx-qemu-tests.elf",
+      "object": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r3/14_callret_templates.o",
       "instruction": {
         "raw_bytes_le": "4100a504",
         "disassembly": "FENTRY [ra ~ ra], sp!, 16",
@@ -35,9 +35,9 @@
         "test_symbol": "test_fret_stk_uses_stack_ra",
         "target_symbol": "callret_tpl_fret_stk_slot_redirect"
       },
-      "qemu_sha": "5b6dbb3c1647f8b96ac178f0df6a3b5d703df046",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-5b6dbb3-20260716-r2/run-evidence.json",
-      "run_evidence_sha256": "51daa6e327f36e23fb9b5c48d200d74b4708431ee8456ac09c6c2e5f6e8eb703",
+      "qemu_sha": "a8093de98800eb2ba4ea5f9fd074a1004c9f128e",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r3/run-evidence.json",
+      "run_evidence_sha256": "65d78887f1901e4e74ad7dd266c354872855d7ba206346ba536def6e2b21740a",
       "oracle": {
         "kind": "exact_value",
         "source": "avs/qemu/tests/14_callret.c",
@@ -58,8 +58,8 @@
       },
       "suite": "callret",
       "test_id": "0x0000140b",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-5b6dbb3-20260716-r2/linx-qemu-tests.elf",
-      "object": "docs/bringup/gates/evidence/qemu-executable/callret-5b6dbb3-20260716-r2/14_callret_templates.o",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r3/linx-qemu-tests.elf",
+      "object": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r3/14_callret_templates.o",
       "instruction": {
         "raw_bytes_le": "4130a504",
         "disassembly": "FRET.STK [ra ~ ra], sp!, 16",
@@ -73,9 +73,9 @@
         "test_symbol": "test_fret_stk_uses_stack_ra",
         "target_symbol": "callret_tpl_fret_stk_slot_redirect"
       },
-      "qemu_sha": "5b6dbb3c1647f8b96ac178f0df6a3b5d703df046",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-5b6dbb3-20260716-r2/run-evidence.json",
-      "run_evidence_sha256": "51daa6e327f36e23fb9b5c48d200d74b4708431ee8456ac09c6c2e5f6e8eb703",
+      "qemu_sha": "a8093de98800eb2ba4ea5f9fd074a1004c9f128e",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r3/run-evidence.json",
+      "run_evidence_sha256": "65d78887f1901e4e74ad7dd266c354872855d7ba206346ba536def6e2b21740a",
       "oracle": {
         "kind": "exact_value",
         "source": "avs/qemu/tests/14_callret.c",
@@ -96,8 +96,8 @@
       },
       "suite": "callret",
       "test_id": "0x0000140c",
-      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-5b6dbb3-20260716-r2/linx-qemu-tests.elf",
-      "object": "docs/bringup/gates/evidence/qemu-executable/callret-5b6dbb3-20260716-r2/14_callret_templates.o",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r3/linx-qemu-tests.elf",
+      "object": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r3/14_callret_templates.o",
       "instruction": {
         "raw_bytes_le": "4120a504",
         "disassembly": "FRET.RA [ra ~ ra], sp!, 16",
@@ -111,9 +111,9 @@
         "test_symbol": "test_fret_ra_uses_snapshot_ra",
         "target_symbol": "callret_tpl_fret_ra_slot_redirect"
       },
-      "qemu_sha": "5b6dbb3c1647f8b96ac178f0df6a3b5d703df046",
-      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-5b6dbb3-20260716-r2/run-evidence.json",
-      "run_evidence_sha256": "51daa6e327f36e23fb9b5c48d200d74b4708431ee8456ac09c6c2e5f6e8eb703",
+      "qemu_sha": "a8093de98800eb2ba4ea5f9fd074a1004c9f128e",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/callret-a8093de-20260716-r3/run-evidence.json",
+      "run_evidence_sha256": "65d78887f1901e4e74ad7dd266c354872855d7ba206346ba536def6e2b21740a",
       "oracle": {
         "kind": "exact_value",
         "source": "avs/qemu/tests/14_callret.c",
