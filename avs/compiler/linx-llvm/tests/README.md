@@ -67,13 +67,16 @@ Current Bisheng compiler note:
 
 ## Curated assembly tests
 
-- `41_v056_isa_forms.s` — positive assembler/disassembler coverage for v0.56 block, tile, vector, system, FSU, and AMO forms that are not guaranteed to appear in C output.
+- `41_v056_isa_forms.s` — positive assembler/disassembler coverage for v0.56 block, tile, vector, system, FSU, and AMO forms that are not guaranteed to appear in C output, including all nine canonical v0.56.5 64-bit `L.BSTART.{STD,FP,SYS}` forms.
 
 Notes:
 - The runner links each test object with a tiny runtime via `ld.lld` to resolve relocations, then extracts `.text` to
   a raw `.bin`.
 - Assembly tests are assembled with `llvm-mc`, disassembled with `llvm-objdump`,
   linked, extracted to `.bin`, and checked for required mnemonic spellings.
+- The `L.BSTART` gate reads the real `llvm-objdump` artifact and requires the exact
+  `STD/FP` `FALL/DIRECT/COND/CALL` plus `SYS FALL` matrix; source comments do not
+  contribute to this gate. A negative assembly test rejects non-`FALL` `SYS` forms.
 - Call/ret tests (`33`-`40`) include a relocation gate:
   generated `.s` must keep fused `ra=` direct-call headers; object relocations must still preserve the paired call/return-address fixups when present.
   Enable strict relocation-only mode with `LINX_STRICT_CALLRET_RELOCS=1`.

@@ -2,7 +2,7 @@
 """
 Analyze LinxISA instruction coverage from compiled test artifacts.
 
-Coverage model:
+Coverage model (observed disassembly mnemonic breadth only):
 - The ISA spec enumerates *mnemonics* (some mnemonics appear multiple times with
   different encodings/lengths; coverage is computed over unique mnemonics).
 - The compiler tests produce `llvm-objdump` disassembly; we extract instruction
@@ -11,6 +11,9 @@ Coverage model:
   spelled out as separate mnemonics in the spec. For such cases, an emitted
   mnemonic is mapped to the spec by progressively stripping suffix components
   until a spec mnemonic matches.
+
+This report does not measure encoding/form-level coverage, source-assembly
+acceptance, or C-CodeGen coverage.
 """
 
 from __future__ import annotations
@@ -24,11 +27,10 @@ from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 
 
-_HEX_TOKEN_RE = re.compile(r"^[0-9a-fA-F]{2,16}$")
+_HEX_TOKEN_RE = re.compile(r"^(?:[0-9a-fA-F]{2}|[0-9a-fA-F]{8}|[0-9a-fA-F]{16})$")
 _OBJDUMP_INSN_RE = re.compile(r"^\s*[0-9a-fA-F]+:\s+")
-_SPEC_DECODE_COMMENT_RE = re.compile(
-    r"^\s*#\s+([A-Za-z][A-Za-z0-9_. ]*)\s+\([^)]+\)\s+\[\d+\]\s*$"
-)
+
+
 def canonicalize_mnemonic(mnemonic: str) -> str:
     s = mnemonic.strip()
     if not s:
@@ -42,15 +44,26 @@ def canonicalize_mnemonic(mnemonic: str) -> str:
     # Example: `HL.PRFI.UA{.L1,.L2,.L3}`.
     s = re.sub(r"\{[^}]*\}$", "", s)
     s = s.rstrip(",")
-    # Work around tokenization glitches for variable-length encodings where the last byte
-    # may be concatenated with the mnemonic (e.g. `00HL.BSTART.STD` or `00FENTRY`).
+    # Work around the observed variable-length tokenization glitch where the final
+    # encoding byte is concatenated with the mnemonic (for example, `ffBSTART.STD`).
     # Keep the heuristic narrow so real mnemonics like `ACRC`, `ACRE`, and selector
     # operands like `ACCCVT` are not mangled.
     m = re.match(r"^[0-9a-fA-F]{2}([A-Za-z].*)$", s)
     if m:
         candidate = m.group(1)
-        if "." in candidate or candidate.startswith(
-            ("BSTART", "BSTOP", "FENTRY", "FEXIT", "FRET")
+        if candidate.startswith(
+            (
+                "BSTART",
+                "BSTOP",
+                "C.BSTART",
+                "C.BSTOP",
+                "FENTRY",
+                "FEXIT",
+                "FRET",
+                "HL.",
+                "L.BSTART",
+                "L.BSTOP",
+            )
         ):
             s = candidate
     s = s.upper()
@@ -116,22 +129,6 @@ def extract_mnemonics_from_objdump(path: Path) -> Set[str]:
     return mnems
 
 
-def extract_mnemonics_from_spec_decode_source(path: Path) -> Set[str]:
-    """Extract generated v0.56 vector mnemonics from 99_spec_decode.s comments."""
-    mnems: Set[str] = set()
-    try:
-        for line in path.read_text(errors="replace").splitlines():
-            m = _SPEC_DECODE_COMMENT_RE.match(line)
-            if not m:
-                continue
-            mnem = canonicalize_mnemonic(m.group(1))
-            if mnem:
-                mnems.add(mnem)
-    except Exception as e:
-        print(f"warning: error reading {path}: {e}", file=sys.stderr)
-    return mnems
-
-
 def load_isa_spec(spec_path: Path) -> Dict:
     raw = json.loads(spec_path.read_text())
     instructions = raw.get("instructions", [])
@@ -179,9 +176,13 @@ def analyze_coverage(
     out_dir: Path,
     llvm_backend_path: Path = None
 ) -> Dict:
-    objdump_files = sorted(
-        p for p in out_dir.glob("**/*.objdump") if "_roundtrip_probe" not in p.parts
-    )
+    objdump_files = []
+    for test_dir in sorted(out_dir.iterdir()):
+        if not test_dir.is_dir() or test_dir.name.startswith("_"):
+            continue
+        primary = test_dir / f"{test_dir.name}.objdump"
+        if primary.is_file():
+            objdump_files.append(primary)
     if not objdump_files:
         raise SystemExit(f"error: no *.objdump files found under {out_dir}")
 
@@ -199,12 +200,6 @@ def analyze_coverage(
     for od in objdump_files:
         test_name = od.parent.name
         raw_mnems = extract_mnemonics_from_objdump(od)
-        if test_name == "99_spec_decode":
-            spec_decode_source = od.with_suffix(".s")
-            if spec_decode_source.exists():
-                raw_mnems |= extract_mnemonics_from_spec_decode_source(
-                    spec_decode_source
-                )
         emitted_raw |= raw_mnems
         emitted_by_test[test_name] = raw_mnems
 
@@ -243,6 +238,13 @@ def analyze_coverage(
             missing_by_group[group] = group_missing
 
     return {
+        "metric": "observed_disassembly_mnemonic_breadth",
+        "metric_scope": "unique ISA mnemonics observed in *.objdump instruction lines",
+        "not_measured": [
+            "encoding/form-level coverage",
+            "source-assembly acceptance coverage",
+            "C-CodeGen coverage",
+        ],
         "spec_total_defs": spec_data["spec_total_defs"],
         "spec_unique_mnemonics": len(spec_mnems),
         "emitted_unique_mnemonics": len(emitted_raw),
@@ -261,8 +263,11 @@ def analyze_coverage(
 def print_report(results: Dict, verbose: bool = False):
     """Print coverage report."""
     print("=" * 70)
-    print("LinxISA Instruction Coverage Report")
+    print("LinxISA Observed Disassembly Mnemonic Breadth Report")
     print("=" * 70)
+    print()
+    print("Metric: unique ISA mnemonics observed in *.objdump instruction lines")
+    print("Not measured: encoding/form-level, source-assembly, or C-CodeGen coverage")
     print()
     
     print(f"ISA Spec:")
@@ -270,11 +275,11 @@ def print_report(results: Dict, verbose: bool = False):
     print(f"  Unique mnemonics:       {results['spec_unique_mnemonics']:4d}")
     print()
     
-    print(f"Test Coverage:")
-    print(f"  Emitted mnemonics:      {results['emitted_unique_mnemonics']:4d}")
+    print(f"Observed Disassembly:")
+    print(f"  Observed mnemonics:     {results['emitted_unique_mnemonics']:4d}")
     print(f"  Covered spec mnemonics: {results['covered_spec_mnemonics']:4d}")
     print(f"  Missing spec mnemonics: {results['missing_spec_mnemonics']:4d}")
-    print(f"  Coverage:              {results['coverage_percent']:5.1f}%")
+    print(f"  Mnemonic breadth:      {results['coverage_percent']:5.1f}%")
     print()
     
     if results["missing_mnemonics"]:
@@ -315,7 +320,13 @@ def print_report(results: Dict, verbose: bool = False):
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Analyze instruction coverage from compiled tests"
+        description=(
+            "Measure observed disassembly mnemonic breadth.\n"
+            "Not form-level coverage.\n"
+            "Not source-assembly coverage.\n"
+            "Not C-CodeGen coverage."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
         "--out-dir",
@@ -323,7 +334,7 @@ def main() -> int:
         default=None,
         help=(
             "Directory containing compiled test outputs. "
-            "Default: auto-detect (prefer out-linx64/out-linx32 if present, else out)."
+            "Default: the adjacent out directory, matching run.sh."
         ),
     )
     parser.add_argument(
@@ -351,27 +362,17 @@ def main() -> int:
         "--fail-under",
         type=float,
         default=None,
-        help="Fail (exit 2) if coverage percent is below this threshold"
+        help=(
+            "Fail (exit 2) if observed disassembly mnemonic breadth is below "
+            "this percentage"
+        )
     )
     
     args = parser.parse_args()
 
     if args.out_dir is None:
         root = Path(__file__).resolve().parent
-        candidates = [
-            root / "out-linx64",
-            root / "out-linx32",
-            root / "out",
-        ]
-        # Pick the first candidate that exists and contains objdump artifacts.
-        # This avoids false failures when a stale `out/` directory lingers next
-        # to newer `out-linx{32,64}/` outputs.
-        for c in candidates:
-            if c.exists() and any(c.glob("**/*.objdump")):
-                args.out_dir = c
-                break
-        if args.out_dir is None:
-            args.out_dir = root / "out"
+        args.out_dir = root / "out"
     
     if not args.spec.exists():
         print(f"Error: spec file not found: {args.spec}", file=sys.stderr)

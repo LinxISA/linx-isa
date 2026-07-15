@@ -15,6 +15,17 @@ v056_isa_forms:
     BSTART.VSEQ VS16
     BSTOP
 
+    L.BSTART.STD FALL
+    L.BSTART.STD DIRECT, .Ll_bstart_target
+    L.BSTART.STD COND, .Ll_bstart_target
+    L.BSTART.STD CALL, .Ll_bstart_target
+    L.BSTART.FP FALL
+    L.BSTART.FP DIRECT, .Ll_bstart_target
+    L.BSTART.FP COND, .Ll_bstart_target
+    L.BSTART.FP CALL, .Ll_bstart_target
+    L.BSTART.SYS FALL
+.Ll_bstart_target:
+
     C.BSTART.MPAR
     C.BSTART.MSEQ
     C.BSTART.SYS

@@ -280,6 +280,9 @@ if [[ -d "$ASM_DIR" ]]; then
           --require FRET.STK \
           --require HL.CASW.AQRLF \
           --require HL.CASD.AQRLF
+        python3 "$ROOT/check_l_bstart64_forms.py" \
+          --objdump "$OUT/$BASE.objdump" \
+          --label "$BASE"
         ;;
     esac
   done
@@ -340,6 +343,17 @@ if [[ -d "$NEG_DIR" ]]; then
   if ! grep -Eq "legacy alias 'L\\.BSTOP' is not allowed in canonical v0\\.56; use 'C\\.BSTOP'" "$NEG_OUT/legacy_alias_l_bstop.err"; then
     echo "error: legacy L.BSTOP rejection did not report the canonical spelling guidance" >&2
     cat "$NEG_OUT/legacy_alias_l_bstop.err" >&2
+    exit 1
+  fi
+
+  echo "[neg] L.BSTART.SYS non-FALL rejection"
+  if "$LLVMMC" -triple="$TARGET" -filetype=obj "$NEG_DIR/l_bstart64_invalid_sys_kind.s" -o "$NEG_OUT/l_bstart64_invalid_sys_kind.o" 2>"$NEG_OUT/l_bstart64_invalid_sys_kind.err"; then
+    echo "error: invalid L.BSTART.SYS branch kind unexpectedly assembled" >&2
+    exit 1
+  fi
+  if ! grep -Eq "branch kind does not match BSTART encoding" "$NEG_OUT/l_bstart64_invalid_sys_kind.err"; then
+    echo "error: invalid L.BSTART.SYS rejection did not report a branch-kind failure" >&2
+    cat "$NEG_OUT/l_bstart64_invalid_sys_kind.err" >&2
     exit 1
   fi
 
