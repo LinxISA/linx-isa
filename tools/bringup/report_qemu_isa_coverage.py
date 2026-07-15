@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Generate or enforce a machine-readable ISA-vs-QEMU coverage snapshot."""
+"""Generate an ISA-vs-QEMU decoder/source-mapping snapshot.
+
+This reporter provides L1 source evidence only. It does not ingest runtime
+execution traces or semantic result oracles.
+"""
 
 from __future__ import annotations
 
@@ -767,20 +771,29 @@ def _render_markdown(report: dict[str, object], out_path: Path) -> None:
     mapped_forms_prefix = report["mapped_forms_by_prefix"]
     missing_forms_prefix = report["missing_forms_by_prefix"]
     lines: list[str] = []
-    lines.append("# ISA vs QEMU Coverage Snapshot")
+    evidence = report["evidence"]
+    lines.append("# ISA vs QEMU Decoder/Source Mapping Snapshot")
     lines.append("")
     lines.append(f"- Generated (UTC): `{report['generated_at_utc']}`")
+    lines.append(f"- Evidence level: `{report['evidence_level']}`")
+    lines.append(f"- Claim: `{report['claim']}`")
+    lines.append(f"- L2 runtime execution: `{evidence['L2']['availability']}`")
+    lines.append(f"- L3 semantic oracle: `{evidence['L3']['availability']}`")
+    lines.append(
+        "- Limitation: this report does not prove that an instruction executed "
+        "in QEMU or produced an architecturally correct result."
+    )
     lines.append(f"- Spec unique mnemonics: `{report['spec_unique_mnemonics']}`")
     lines.append(f"- QEMU unique decode mnemonics (non-internal): `{report['qemu_unique_mnemonics']}`")
     lines.append(f"- QEMU mapped spec mnemonics: `{report['qemu_mapped_spec_mnemonics']}`")
     lines.append(
-        f"- Mnemonic coverage: `{report['coverage_count']}/{report['spec_unique_mnemonics']}` "
+        f"- L1 mnemonic mapping: `{report['coverage_count']}/{report['spec_unique_mnemonics']}` "
         f"(`{report['coverage_ratio_percent']}%`)"
     )
     lines.append(f"- Spec legal forms: `{report['spec_total_forms']}`")
     lines.append(f"- QEMU mapped spec forms: `{report['form_coverage_count']}`")
     lines.append(
-        f"- Form coverage: `{report['form_coverage_count']}/{report['spec_total_forms']}` "
+        f"- L1 form mapping: `{report['form_coverage_count']}/{report['spec_total_forms']}` "
         f"(`{report['form_coverage_ratio_percent']}%`)"
     )
     lines.append(f"- Missing spec mnemonics: `{report['missing_count']}`")
@@ -788,7 +801,7 @@ def _render_markdown(report: dict[str, object], out_path: Path) -> None:
     lines.append(f"- Reserved spec forms: `{report['reserved_form_count']}`")
     lines.append(f"- Unmapped QEMU mnemonics: `{len(unmapped)}`")
     lines.append("")
-    lines.append("## Mnemonic Coverage By Prefix")
+    lines.append("## L1 Mnemonic Mapping By Prefix")
     lines.append("")
     for key in sorted(mapped_prefix):
         lines.append(f"- `{key}`: `{mapped_prefix[key]}`")
@@ -798,7 +811,7 @@ def _render_markdown(report: dict[str, object], out_path: Path) -> None:
     for key in sorted(missing_prefix):
         lines.append(f"- `{key}`: `{missing_prefix[key]}`")
     lines.append("")
-    lines.append("## Form Coverage By Prefix")
+    lines.append("## L1 Form Mapping By Prefix")
     lines.append("")
     for key in sorted(mapped_forms_prefix):
         lines.append(f"- `{key}`: `{mapped_forms_prefix[key]}`")
@@ -830,7 +843,7 @@ def _render_markdown(report: dict[str, object], out_path: Path) -> None:
 
 
 def main(argv: list[str]) -> int:
-    ap = argparse.ArgumentParser(description="Generate ISA-vs-QEMU coverage report")
+    ap = argparse.ArgumentParser(description="Generate ISA-vs-QEMU decoder/source-mapping report")
     ap.add_argument("--spec", default="isa/v0.56/linxisa-v0.56.json", help="Path to compiled ISA JSON")
     ap.add_argument(
         "--qemu-root",
@@ -844,8 +857,17 @@ def main(argv: list[str]) -> int:
     )
     ap.add_argument("--report-out", default="", help="Optional JSON report path")
     ap.add_argument("--out-md", default="", help="Optional Markdown summary path")
-    ap.add_argument("--fail-under-count", type=int, default=0, help="Fail if mnemonic coverage is lower than this value.")
-    ap.add_argument("--require-full", action="store_true", help="Fail unless mnemonic and form coverage are complete.")
+    ap.add_argument(
+        "--fail-under-count",
+        type=int,
+        default=0,
+        help="Fail if L1 mnemonic source mapping is lower than this value.",
+    )
+    ap.add_argument(
+        "--require-full",
+        action="store_true",
+        help="Fail unless L1 mnemonic and form source mapping are complete.",
+    )
     args = ap.parse_args(argv)
 
     spec_path = Path(args.spec).resolve()
@@ -950,7 +972,39 @@ def main(argv: list[str]) -> int:
 
     report: dict[str, object] = {
         "generated_at_utc": _utc_now(),
-        "schema_version": "qemu-isa-coverage-v2",
+        "schema_version": "qemu-isa-coverage-v3",
+        "evidence_level": "L1",
+        "claim": "decoder_source_mapping",
+        "capabilities": [
+            "decoder_source_to_isa_mnemonic_mapping",
+            "decoder_mask_to_isa_form_matching",
+        ],
+        "limitations": [
+            "no_runtime_execution_evidence",
+            "no_semantic_oracle_evidence",
+        ],
+        "evidence": {
+            "L1": {
+                "availability": "available",
+                "claim": "decoder_source_mapping",
+                "mnemonic_count": coverage_count,
+                "form_count": form_coverage_count,
+            },
+            "L2": {
+                "availability": "unavailable",
+                "claim": "runtime_execution",
+                "mnemonic_count": None,
+                "form_count": None,
+                "reason": "runtime_execution_evidence_not_ingested",
+            },
+            "L3": {
+                "availability": "unavailable",
+                "claim": "semantic_oracle",
+                "mnemonic_count": None,
+                "form_count": None,
+                "reason": "semantic_oracle_evidence_not_ingested",
+            },
+        },
         "spec_path": str(spec_path),
         "qemu_root": str(qemu_root),
         "qemu_meta_path": str(qemu_meta_path) if qemu_meta_path else "",
@@ -999,13 +1053,13 @@ def main(argv: list[str]) -> int:
 
     if ok:
         print(
-            "ok: generated ISA-vs-QEMU coverage report "
+            "ok: generated ISA-vs-QEMU L1 decoder/source-mapping report "
             f"(mnemonics={coverage_count}/{spec_count}, forms={form_coverage_count}/{spec_form_count})"
         )
         return 0
 
     print(
-        "error: ISA-vs-QEMU coverage below required bar "
+        "error: ISA-vs-QEMU L1 decoder/source mapping below required bar "
         f"(mnemonics={coverage_count}/{spec_count}, forms={form_coverage_count}/{spec_form_count})",
         file=sys.stderr,
     )

@@ -1,38 +1,38 @@
-# ISA-LLVM-QEMU Coverage Coherence
+# ISA-LLVM-QEMU L1 Mapping Coherence
 
-- Generated (UTC): `2026-07-15 10:37:55Z`
+- Generated (UTC): `2026-07-15 16:03:16Z`
 - Spec unique mnemonics: `711`
+- QEMU evidence: `L1 decoder_source_mapping`
+- L2 runtime execution: `unavailable`
+- L3 semantic oracle: `unavailable`
+- This report does not claim runtime or semantic completeness.
 
 | Surface | Covered | Ratio |
 | --- | --- | --- |
-| LLVM compiled coverage | `711/711` | `100.0%` |
-| QEMU mapped implementation coverage | `618/711` | `86.92%` |
-| QEMU AVS translation coverage | `711/711` | `100.0%` |
+| LLVM compiled coverage | `708/711` | `99.58%` |
+| QEMU L1 decoder/source mapping | `620/711` | `87.2%` |
+| QEMU AVS translation inventory | `711/711` | `100.0%` |
 
 ## Inconsistency Summary
 
-- Compiler-covered but missing from QEMU implementation: `93`
-- QEMU-implemented but missing from AVS translation coverage: `0`
-- AVS translation-covered but not mapped in QEMU implementation: `93`
+- Compiler-covered but missing from QEMU L1 mapping: `91`
+- QEMU L1-mapped but missing from AVS translation inventory: `0`
+- AVS translation-listed but absent from QEMU L1 mapping: `91`
 - Compiler-covered but missing from AVS translation coverage: `0`
 
-### Compiler vs QEMU implementation
+### Compiler vs QEMU L1 mapping
 
 - `V`: `90`
-- `B`: `1`
-- `C`: `1`
 - `XB`: `1`
 
-### QEMU implementation vs AVS translation
+### QEMU L1 mapping vs AVS translation
 
 
 ### Compiler vs AVS translation
 
 
-## Missing From QEMU Implementation (First 200)
+## Missing From QEMU L1 Mapping (First 200)
 
-- `B.DIM`
-- `C.SETRET`
 - `V.LB`
 - `V.LBI`
 - `V.LBI.BRG`

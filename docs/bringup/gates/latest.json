@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-07-15 15:26:30Z",
+  "generated_at_utc": "2026-07-15 16:07:06Z",
   "runs": [
     {
       "gates": [
@@ -74,17 +74,18 @@
           "waived": false
         },
         {
-          "classification": "linux-mmu-no-uart",
-          "command": "python3 kernel/linux/busybox_rootfs/boot.py --qemu /tmp/linx-qemu-clean-build/qemu-system-linx64 --timeout 120",
+          "classification": "provisional-pass-source-incomplete",
+          "command": "O=/tmp/fishtoucher-torvalds-linux-build KERNEL=/tmp/fishtoucher-torvalds-linux-build/vmlinux ROOTFS_IMG=/tmp/fishtoucher-cerf-rootfs-out/rootfs.ext2 QEMU=/tmp/linx-qemu-clean-build/qemu-system-linx64 SKIP_BUILD=1 python3 kernel/linux/tools/linxisa/busybox_rootfs/boot.py",
           "domain": "linux",
           "evidence": [
-            "Two explicit clean-QEMU attempts produced no UART output within 120 seconds"
+            "Exploratory kernel reached userspace in 3.17s; BusyBox primary attempt passed with timer IRQ 30->34",
+            "Not reproducible from Linux SHA: 13 required local .S sources are ignored/untracked; blocked by LinxISA/linux#24"
           ],
           "evidence_type": "generated-json",
           "gate": "BusyBox rootfs boot after TSVC closure",
           "owner": "linux",
           "required": true,
-          "status": "fail",
+          "status": "partial",
           "waived": false
         },
         {
@@ -124,10 +125,10 @@
           "command": "python3 tools/bringup/report_qemu_isa_coverage.py --qemu-root emulator/qemu --require-full",
           "domain": "qemu",
           "evidence": [
-            "620/711 mnemonics and 625/747 encoding-signature forms have source-backed QEMU implementation evidence; remaining 90 V.* plus XB"
+            "L1 decoder/source mapping is 620/711 mnemonics and 625/747 forms; L2 runtime execution and L3 semantic-oracle counts are unavailable"
           ],
           "evidence_type": "gate-output",
-          "gate": "Canonical ISA executable semantic breadth",
+          "gate": "Canonical ISA L1 decoder/source mapping breadth",
           "owner": "qemu",
           "required": true,
           "status": "partial",
@@ -219,15 +220,29 @@
         },
         {
           "classification": "closed",
-          "command": "python3 workloads/tsvc/run_tsvc_batched.py --batch-size 20 --strict-fail-under 151 --vector-mode auto --qemu /tmp/linx-qemu-clean-build/qemu-system-linx64",
+          "command": "CLANG=compiler/llvm/build-linxisa-clang/bin/clang QEMU=/tmp/linx-qemu-clean-build/qemu-system-linx64 python3 workloads/tsvc/run_tsvc_batched.py --batch-size 20 --strict-fail-under 151 --vector-mode auto",
           "domain": "runtime",
           "evidence": [
-            "8/8 batches; 151/151 vectorized and completed; 10.587 seconds; zero failed batches"
+            "Current LLVM 7eee9db and clean QEMU 97b08e4: 8/8 batches; 151/151 vectorized and completed; 13.786 seconds"
           ],
           "evidence_type": "generated-json",
           "gate": "TSVC required batched auto-vector hard break",
           "owner": "runtime",
           "required": true,
+          "status": "pass",
+          "waived": false
+        },
+        {
+          "classification": "nonrequired-current-sha-sentinel",
+          "command": "LINX_VIRT_TEST_FINISHER=1 python3 workloads/ctuning/run_milepost_codelets.py --target linx64-linx-none-elf --run --limit 5",
+          "domain": "runtime",
+          "evidence": [
+            "Current LLVM 7eee9db and clean QEMU 97b08e4: selected=5 passed=5 failed=0; corpus a7136ec8"
+          ],
+          "evidence_type": "generated-json",
+          "gate": "ctuning Milepost freestanding C sentinel",
+          "owner": "runtime",
+          "required": false,
           "status": "pass",
           "waived": false
         },
@@ -274,7 +289,7 @@
           "waived": false
         }
       ],
-      "generated_at_utc": "2026-07-15 15:26:30Z",
+      "generated_at_utc": "2026-07-15 16:07:03Z",
       "lane": "pin",
       "lane_policy": "pin-only",
       "profile": "release-strict",
@@ -293,12 +308,12 @@
         "linx-isa": {
           "dirty": true,
           "path": "${LINXISA_ROOT}",
-          "sha": "4a47f4ab548f49b991dd7f48e2760591ff0a512f"
+          "sha": "f6a70f128404399a85fe3289ad85d6ec0ffb5fa8"
         },
         "linx-skills": {
           "dirty": false,
           "path": "${LINXISA_ROOT}/skills/linx-skills",
-          "sha": "dda5018926e39b19d647d72edb30f2ce60215d46"
+          "sha": "39ef2773a6cbffc87f628d010e95f0abb162efb4"
         },
         "linxcore": {
           "dirty": false,

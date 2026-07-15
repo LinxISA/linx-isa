@@ -290,8 +290,8 @@
       "translation_sha256": "b1e9c8d23087e58e80b4f6b53491cc872ec42af3805c6b79b91b26069d5774f0"
     },
     "bringup/gates/qemu_isa_coverage_latest.md": {
-      "source_sha256": "a1b1a86a3ffd4a1a33d65adf3755ba5bd0d8fcbb3f84519d24567a4144f24172",
-      "translation_sha256": "b84ba70d7d912466ebe4c757b194fe40d9cda92ebe4a41c152bb3a277baf19b8"
+      "source_sha256": "8d8b3ea71a4e250ac5a931f5eff27e3122759691b73def63464f0b359415a5f5",
+      "translation_sha256": "e1f9d5565f16fae1d143ba9bbe8c74e30cb01c71e144ce665a1f9f9f36ecefe4"
     },
     "bringup/gates/qemu_opcode_sync_latest.md": {
       "source_sha256": "1a0fcc8d43a1c0a13270d030b52ef8a16eca76bdc9baaf770ae9b3e197c9c423",

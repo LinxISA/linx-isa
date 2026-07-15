@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate a combined ISA-LLVM-QEMU coverage coherence report."""
+"""Generate combined ISA/LLVM/QEMU L1 mapping coherence."""
 
 from __future__ import annotations
 
@@ -51,12 +51,40 @@ def _top_counts(counts: dict[str, int], limit: int = 25) -> list[list[object]]:
     return [[k, v] for k, v in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))[:limit]]
 
 
+def _validate_qemu_l1_report(report: dict[str, object]) -> str | None:
+    if report.get("schema_version") != "qemu-isa-coverage-v3":
+        return "expected qemu-isa-coverage-v3"
+    if report.get("evidence_level") != "L1":
+        return "expected evidence_level=L1"
+    if report.get("claim") != "decoder_source_mapping":
+        return "expected claim=decoder_source_mapping"
+    evidence = report.get("evidence")
+    if not isinstance(evidence, dict):
+        return "missing evidence map"
+    l1 = evidence.get("L1")
+    if not isinstance(l1, dict) or l1.get("availability") != "available":
+        return "L1 evidence is unavailable"
+    if l1.get("mnemonic_count") != report.get("coverage_count"):
+        return "L1 mnemonic count disagrees with compatibility count"
+    if l1.get("form_count") != report.get("form_coverage_count"):
+        return "L1 form count disagrees with compatibility count"
+    return None
+
+
 def _render_markdown(report: dict[str, object], out_path: Path) -> None:
     lines: list[str] = []
-    lines.append("# ISA-LLVM-QEMU Coverage Coherence")
+    lines.append("# ISA-LLVM-QEMU L1 Mapping Coherence")
     lines.append("")
     lines.append(f"- Generated (UTC): `{report['generated_at_utc']}`")
     lines.append(f"- Spec unique mnemonics: `{report['spec_unique_mnemonics']}`")
+    lines.append("- QEMU evidence: `L1 decoder_source_mapping`")
+    lines.append(
+        f"- L2 runtime execution: `{report['qemu_evidence']['L2']['availability']}`"
+    )
+    lines.append(
+        f"- L3 semantic oracle: `{report['qemu_evidence']['L3']['availability']}`"
+    )
+    lines.append("- This report does not claim runtime or semantic completeness.")
     lines.append("")
     lines.append("| Surface | Covered | Ratio |")
     lines.append("| --- | --- | --- |")
@@ -64,30 +92,30 @@ def _render_markdown(report: dict[str, object], out_path: Path) -> None:
         f"| LLVM compiled coverage | `{report['llvm']['coverage_count']}/{report['spec_unique_mnemonics']}` | `{report['llvm']['coverage_ratio_percent']}%` |"
     )
     lines.append(
-        f"| QEMU mapped implementation coverage | `{report['qemu_impl']['coverage_count']}/{report['spec_unique_mnemonics']}` | `{report['qemu_impl']['coverage_ratio_percent']}%` |"
+        f"| QEMU L1 decoder/source mapping | `{report['qemu_l1_mapping']['coverage_count']}/{report['spec_unique_mnemonics']}` | `{report['qemu_l1_mapping']['coverage_ratio_percent']}%` |"
     )
     lines.append(
-        f"| QEMU AVS translation coverage | `{report['qemu_translation']['coverage_count']}/{report['spec_unique_mnemonics']}` | `{report['qemu_translation']['coverage_ratio_percent']}%` |"
+        f"| QEMU AVS translation inventory | `{report['qemu_translation']['coverage_count']}/{report['spec_unique_mnemonics']}` | `{report['qemu_translation']['coverage_ratio_percent']}%` |"
     )
     lines.append("")
     lines.append("## Inconsistency Summary")
     lines.append("")
     lines.append(
-        f"- Compiler-covered but missing from QEMU implementation: `{report['inconsistencies']['compiler_only_vs_qemu_impl_count']}`"
+        f"- Compiler-covered but missing from QEMU L1 mapping: `{report['inconsistencies']['compiler_only_vs_qemu_l1_mapping_count']}`"
     )
     lines.append(
-        f"- QEMU-implemented but missing from AVS translation coverage: `{report['inconsistencies']['qemu_impl_only_vs_translation_count']}`"
+        f"- QEMU L1-mapped but missing from AVS translation inventory: `{report['inconsistencies']['qemu_l1_mapping_only_vs_translation_count']}`"
     )
     lines.append(
-        f"- AVS translation-covered but not mapped in QEMU implementation: `{report['inconsistencies']['translation_without_qemu_impl_count']}`"
+        f"- AVS translation-listed but absent from QEMU L1 mapping: `{report['inconsistencies']['translation_without_qemu_l1_mapping_count']}`"
     )
     lines.append(
         f"- Compiler-covered but missing from AVS translation coverage: `{report['inconsistencies']['compiler_only_vs_translation_count']}`"
     )
     lines.append("")
     for title, key in (
-        ("Compiler vs QEMU implementation", "compiler_only_vs_qemu_impl_by_prefix"),
-        ("QEMU implementation vs AVS translation", "qemu_impl_only_vs_translation_by_prefix"),
+        ("Compiler vs QEMU L1 mapping", "compiler_only_vs_qemu_l1_mapping_by_prefix"),
+        ("QEMU L1 mapping vs AVS translation", "qemu_l1_mapping_only_vs_translation_by_prefix"),
         ("Compiler vs AVS translation", "compiler_only_vs_translation_by_prefix"),
     ):
         lines.append(f"### {title}")
@@ -95,9 +123,9 @@ def _render_markdown(report: dict[str, object], out_path: Path) -> None:
         for prefix, count in report["inconsistencies"][key]:
             lines.append(f"- `{prefix}`: `{count}`")
         lines.append("")
-    lines.append("## Missing From QEMU Implementation (First 200)")
+    lines.append("## Missing From QEMU L1 Mapping (First 200)")
     lines.append("")
-    for item in report["inconsistencies"]["compiler_only_vs_qemu_impl"][:200]:
+    for item in report["inconsistencies"]["compiler_only_vs_qemu_l1_mapping"][:200]:
         lines.append(f"- `{item}`")
     lines.append("")
     lines.append("## Missing From AVS Translation Coverage (First 200)")
@@ -125,7 +153,7 @@ def main(argv: list[str]) -> int:
     ap.add_argument(
         "--qemu-isa-report",
         default="docs/bringup/gates/qemu_isa_coverage_latest.json",
-        help="Path to the machine-generated ISA-vs-QEMU implementation coverage report",
+        help="Path to the machine-generated ISA-vs-QEMU L1 source-mapping report",
     )
     ap.add_argument(
         "--qemu-translation-report",
@@ -137,7 +165,7 @@ def main(argv: list[str]) -> int:
     ap.add_argument(
         "--require-coherent",
         action="store_true",
-        help="Fail unless LLVM, QEMU implementation, and AVS translation coverage are all complete and aligned",
+        help="Fail unless LLVM, QEMU L1 mapping, and AVS translation inventory are complete and aligned",
     )
     args = ap.parse_args(argv)
 
@@ -168,6 +196,10 @@ def main(argv: list[str]) -> int:
     llvm_covered = spec_mnemonics - set(llvm_results["missing_mnemonics"])
 
     qemu_isa_report = json.loads(qemu_isa_report_path.read_text(encoding="utf-8"))
+    validation_error = _validate_qemu_l1_report(qemu_isa_report)
+    if validation_error is not None:
+        print(f"error: invalid QEMU L1 mapping report: {validation_error}", file=sys.stderr)
+        return 1
     qemu_impl_covered = spec_mnemonics - set(qemu_isa_report["missing_spec_mnemonics"])
 
     qemu_translation_report = json.loads(qemu_translation_report_path.read_text(encoding="utf-8"))
@@ -187,7 +219,8 @@ def main(argv: list[str]) -> int:
 
     report: dict[str, object] = {
         "generated_at_utc": _utc_now(),
-        "schema_version": "isa-llvm-qemu-coverage-v1",
+        "schema_version": "isa-llvm-qemu-l1-coherence-v2",
+        "claim": "l1_mapping_coherence",
         "spec_path": str(spec_path),
         "compiler_analyzer": str(analyzer_path),
         "compiler_out_dir": str(compiler_out_dir),
@@ -199,17 +232,36 @@ def main(argv: list[str]) -> int:
             "coverage_ratio_percent": round(len(llvm_covered) / len(spec_mnemonics) * 100.0, 2) if spec_mnemonics else 0.0,
             "missing_count": len(spec_mnemonics - llvm_covered),
         },
-        "qemu_impl": {
+        "qemu_l1_mapping": {
+            "evidence_level": "L1",
+            "claim": "decoder_source_mapping",
             "coverage_count": len(qemu_impl_covered),
             "coverage_ratio_percent": qemu_isa_report["coverage_ratio_percent"],
             "missing_count": len(spec_mnemonics - qemu_impl_covered),
         },
+        "qemu_impl": {
+            "deprecated_alias_for": "qemu_l1_mapping",
+            "evidence_level": "L1",
+            "claim": "decoder_source_mapping",
+            "coverage_count": len(qemu_impl_covered),
+            "coverage_ratio_percent": qemu_isa_report["coverage_ratio_percent"],
+            "missing_count": len(spec_mnemonics - qemu_impl_covered),
+        },
+        "qemu_evidence": qemu_isa_report["evidence"],
         "qemu_translation": {
             "coverage_count": len(qemu_translation_covered),
             "coverage_ratio_percent": qemu_translation_report["coverage_ratio_percent"],
             "missing_count": len(spec_mnemonics - qemu_translation_covered),
         },
         "inconsistencies": {
+            "compiler_only_vs_qemu_l1_mapping_count": len(compiler_only_vs_qemu_impl),
+            "compiler_only_vs_qemu_l1_mapping": compiler_only_vs_qemu_impl,
+            "compiler_only_vs_qemu_l1_mapping_by_prefix": _top_counts(_bucket_counts(set(compiler_only_vs_qemu_impl))),
+            "qemu_l1_mapping_only_vs_translation_count": len(qemu_impl_only_vs_translation),
+            "qemu_l1_mapping_only_vs_translation": qemu_impl_only_vs_translation,
+            "qemu_l1_mapping_only_vs_translation_by_prefix": _top_counts(_bucket_counts(set(qemu_impl_only_vs_translation))),
+            "translation_without_qemu_l1_mapping_count": len(translation_without_qemu_impl),
+            "translation_without_qemu_l1_mapping": translation_without_qemu_impl,
             "compiler_only_vs_qemu_impl_count": len(compiler_only_vs_qemu_impl),
             "compiler_only_vs_qemu_impl": compiler_only_vs_qemu_impl,
             "compiler_only_vs_qemu_impl_by_prefix": _top_counts(_bucket_counts(set(compiler_only_vs_qemu_impl))),
@@ -224,7 +276,9 @@ def main(argv: list[str]) -> int:
         },
         "result": {
             "ok": coherent if args.require_coherent else True,
-            "classification": "isa_llvm_qemu_coverage_coherent" if coherent else "isa_llvm_qemu_coverage_inconsistent",
+            "classification": "isa_llvm_qemu_l1_mapping_coherent" if coherent else "isa_llvm_qemu_l1_mapping_inconsistent",
+            "runtime_execution_complete": None,
+            "semantic_oracle_complete": None,
         },
     }
 
@@ -238,7 +292,7 @@ def main(argv: list[str]) -> int:
 
     if args.require_coherent and not coherent:
         print(
-            "error: ISA-LLVM-QEMU coverage is inconsistent "
+            "error: ISA-LLVM-QEMU L1 mapping is inconsistent "
             f"(compiler_vs_qemu_impl={len(compiler_only_vs_qemu_impl)}, "
             f"qemu_impl_vs_translation={len(qemu_impl_only_vs_translation)}, "
             f"translation_without_qemu_impl={len(translation_without_qemu_impl)})",
@@ -247,7 +301,7 @@ def main(argv: list[str]) -> int:
         return 1
 
     print(
-        "ok: generated ISA-LLVM-QEMU coverage report "
+        "ok: generated ISA-LLVM-QEMU L1 mapping coherence report "
         f"(llvm={len(llvm_covered)}/{len(spec_mnemonics)}, "
         f"qemu_impl={len(qemu_impl_covered)}/{len(spec_mnemonics)}, "
         f"qemu_translation={len(qemu_translation_covered)}/{len(spec_mnemonics)})"

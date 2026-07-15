@@ -134,6 +134,7 @@ static void decode(uint16_t hw)
                 encoding="utf-8",
             )
             report_path = root / "report.json"
+            markdown_path = root / "report.md"
 
             rc = coverage.main(
                 [
@@ -145,16 +146,134 @@ static void decode(uint16_t hw)
                     str(meta_path),
                     "--report-out",
                     str(report_path),
+                    "--out-md",
+                    str(markdown_path),
                     "--require-full",
                 ]
             )
             report = json.loads(report_path.read_text(encoding="utf-8"))
+            markdown = markdown_path.read_text(encoding="utf-8")
 
             self.assertEqual(rc, 0)
             self.assertEqual(report["qemu_source_kind"], "meta")
             self.assertEqual(report["coverage_count"], 1)
             self.assertEqual(report["form_coverage_count"], 1)
             self.assertEqual(report["qemu_manual_translate_mnemonics"], ["C.SETRET"])
+            self.assertEqual(report["evidence_level"], "L1")
+            self.assertEqual(report["claim"], "decoder_source_mapping")
+            self.assertEqual(
+                report["capabilities"],
+                [
+                    "decoder_source_to_isa_mnemonic_mapping",
+                    "decoder_mask_to_isa_form_matching",
+                ],
+            )
+            self.assertEqual(
+                report["limitations"],
+                [
+                    "no_runtime_execution_evidence",
+                    "no_semantic_oracle_evidence",
+                ],
+            )
+            self.assertEqual(
+                report["evidence"]["L1"],
+                {
+                    "availability": "available",
+                    "claim": "decoder_source_mapping",
+                    "form_count": 1,
+                    "mnemonic_count": 1,
+                },
+            )
+            self.assertEqual(
+                report["coverage_count"],
+                report["evidence"]["L1"]["mnemonic_count"],
+            )
+            self.assertEqual(
+                report["form_coverage_count"],
+                report["evidence"]["L1"]["form_count"],
+            )
+            for level, claim in (("L2", "runtime_execution"), ("L3", "semantic_oracle")):
+                with self.subTest(level=level):
+                    self.assertEqual(report["evidence"][level]["availability"], "unavailable")
+                    self.assertEqual(report["evidence"][level]["claim"], claim)
+                    self.assertIsNone(report["evidence"][level]["mnemonic_count"])
+                    self.assertIsNone(report["evidence"][level]["form_count"])
+            self.assertIn("Evidence level: `L1`", markdown)
+            self.assertIn("Claim: `decoder_source_mapping`", markdown)
+            self.assertIn("L2 runtime execution: `unavailable`", markdown)
+            self.assertIn("L3 semantic oracle: `unavailable`", markdown)
+            self.assertNotIn("executable coverage", markdown.lower())
+
+    def test_l1_thresholds_do_not_imply_runtime_closure(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            qemu_root = root / "qemu"
+            linx_dir = qemu_root / "target" / "linx"
+            linx_dir.mkdir(parents=True)
+            (linx_dir / "translate.c").write_text(
+                """
+static bool linx_is_c_setret_hw(uint16_t hw)
+{
+    return (hw & 0xf83f) == 0x5016;
+}
+static void decode(uint16_t hw)
+{
+    if (false) {
+    } else if (linx_is_c_setret_hw(hw)) {
+        decoded = linx_setret_common(ctx, immediate);
+    }
+}
+""",
+                encoding="utf-8",
+            )
+            spec_path = root / "spec.json"
+            spec_path.write_text(
+                json.dumps(
+                    {
+                        "instructions": [
+                            {
+                                "mnemonic": "C.SETRET",
+                                "encoding": {
+                                    "length_bits": 16,
+                                    "parts": [{"mask": "0xf83f", "match": "0x5016"}],
+                                },
+                            },
+                            {
+                                "mnemonic": "FOO",
+                                "encoding": {
+                                    "length_bits": 16,
+                                    "parts": [{"mask": "0xffff", "match": "0xabcd"}],
+                                },
+                            },
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            meta_path = root / "linx_opcode_meta_gen.h"
+            meta_path.write_text(
+                '{.insn_len=16, .mask=UINT64_C(0x3f), '
+                '.match=UINT64_C(0x16), .mnemonic="c_movi"},\n',
+                encoding="utf-8",
+            )
+            base_args = [
+                "--spec",
+                str(spec_path),
+                "--qemu-root",
+                str(qemu_root),
+                "--qemu-meta",
+                str(meta_path),
+                "--report-out",
+                str(root / "report.json"),
+            ]
+
+            self.assertEqual(coverage.main([*base_args, "--fail-under-count", "1"]), 0)
+            self.assertEqual(coverage.main([*base_args, "--fail-under-count", "2"]), 1)
+            self.assertEqual(coverage.main([*base_args, "--require-full"]), 1)
+            report = json.loads((root / "report.json").read_text(encoding="utf-8"))
+            self.assertEqual(report["evidence"]["L1"]["mnemonic_count"], 1)
+            self.assertEqual(report["evidence"]["L2"]["availability"], "unavailable")
+            self.assertEqual(report["evidence"]["L3"]["availability"], "unavailable")
 
 
 if __name__ == "__main__":

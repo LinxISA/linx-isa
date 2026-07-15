@@ -1,5 +1,6 @@
 {
-  "generated_at_utc": "2026-05-22 08:17:23Z",
+  "claim": "l1_mapping_coherence",
+  "generated_at_utc": "2026-07-15 16:03:16Z",
   "llvm": {
     "compiler_analyzer": "/Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/analyze_coverage.py",
     "compiler_out_dir": "/Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/out-linx64",
@@ -12,6 +13,8 @@
     "roundtrip_stable_ratio_percent": 100.0
   },
   "qemu": {
+    "claim": "decoder_source_mapping",
+    "evidence_level": "L1",
     "isa_report": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_isa_coverage_latest.json",
     "mapped_form_count": 200,
     "mapped_form_ratio_percent": 100.0,
@@ -21,11 +24,35 @@
     "translation_mnemonic_coverage_ratio_percent": 100.0,
     "translation_report": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_translation_coverage_latest.json"
   },
-  "result": {
-    "classification": "48bit_implementation_complete",
-    "ok": true
+  "qemu_evidence": {
+    "L1": {
+      "availability": "available",
+      "claim": "decoder_source_mapping",
+      "form_count": 625,
+      "mnemonic_count": 620
+    },
+    "L2": {
+      "availability": "unavailable",
+      "claim": "runtime_execution",
+      "form_count": null,
+      "mnemonic_count": null,
+      "reason": "runtime_execution_evidence_not_ingested"
+    },
+    "L3": {
+      "availability": "unavailable",
+      "claim": "semantic_oracle",
+      "form_count": null,
+      "mnemonic_count": null,
+      "reason": "semantic_oracle_evidence_not_ingested"
+    }
   },
-  "schema_version": "linx-48bit-implementation-v1",
+  "result": {
+    "classification": "48bit_l1_mapping_coherent",
+    "ok": true,
+    "runtime_execution_complete": null,
+    "semantic_oracle_complete": null
+  },
+  "schema_version": "linx-48bit-l1-coherence-v2",
   "spec": {
     "form_count": 200,
     "mnemonic_count": 194,

@@ -1,19 +1,24 @@
-# ISA vs QEMU Coverage Snapshot
+# ISA vs QEMU Decoder/Source Mapping Snapshot
 
-- Generated (UTC): `2026-07-15 10:11:15Z`
+- Generated (UTC): `2026-07-15 15:52:09Z`
+- Evidence level: `L1`
+- Claim: `decoder_source_mapping`
+- L2 runtime execution: `unavailable`
+- L3 semantic oracle: `unavailable`
+- Limitation: this report does not prove that an instruction executed in QEMU or produced an architecturally correct result.
 - Spec unique mnemonics: `711`
-- QEMU unique decode mnemonics (non-internal): `645`
-- QEMU mapped spec mnemonics: `618`
-- Mnemonic coverage: `618/711` (`86.92%`)
+- QEMU unique decode mnemonics (non-internal): `646`
+- QEMU mapped spec mnemonics: `620`
+- L1 mnemonic mapping: `620/711` (`87.2%`)
 - Spec legal forms: `747`
-- QEMU mapped spec forms: `621`
-- Form coverage: `621/747` (`83.13%`)
-- Missing spec mnemonics: `93`
-- Missing spec forms: `126`
+- QEMU mapped spec forms: `625`
+- L1 form mapping: `625/747` (`83.67%`)
+- Missing spec mnemonics: `91`
+- Missing spec forms: `122`
 - Reserved spec forms: `0`
-- Unmapped QEMU mnemonics: `6`
+- Unmapped QEMU mnemonics: `3`
 
-## Mnemonic Coverage By Prefix
+## L1 Mnemonic Mapping By Prefix
 
 - `ACRC`: `1`
 - `ACRE`: `1`
@@ -27,7 +32,7 @@
 - `ANDIW`: `1`
 - `ANDW`: `1`
 - `ASSERT`: `1`
-- `B`: `15`
+- `B`: `16`
 - `BC`: `2`
 - `BCNT`: `1`
 - `BIC`: `1`
@@ -40,7 +45,7 @@
 - `BWT`: `1`
 - `BXS`: `1`
 - `BXU`: `1`
-- `C`: `37`
+- `C`: `38`
 - `CLZ`: `1`
 - `CMP`: `16`
 - `CSEL`: `1`
@@ -175,12 +180,10 @@
 
 ## Missing Mnemonics By Prefix
 
-- `B`: `1`
-- `C`: `1`
 - `V`: `90`
 - `XB`: `1`
 
-## Form Coverage By Prefix
+## L1 Form Mapping By Prefix
 
 - `ACRC`: `1`
 - `ACRE`: `1`
@@ -194,7 +197,7 @@
 - `ANDIW`: `1`
 - `ANDW`: `1`
 - `ASSERT`: `1`
-- `B`: `23`
+- `B`: `26`
 - `BC`: `2`
 - `BCNT`: `1`
 - `BIC`: `1`
@@ -207,7 +210,7 @@
 - `BWT`: `1`
 - `BXS`: `1`
 - `BXU`: `1`
-- `C`: `37`
+- `C`: `38`
 - `CLZ`: `1`
 - `CMP`: `16`
 - `CSEL`: `1`
@@ -342,9 +345,8 @@
 
 ## Missing Forms By Prefix
 
-- `B`: `3`
 - `BSTART`: `14`
-- `C`: `2`
+- `C`: `1`
 - `DC`: `2`
 - `HL`: `5`
 - `L`: `5`
@@ -354,17 +356,12 @@
 
 ## Unmapped QEMU Mnemonics
 
-- `b_dim_lb0`
-- `b_dim_lb1`
-- `b_dim_lb2`
 - `bstart_fall`
 - `bstart_split_cond`
 - `bstart_split_direct`
 
 ## Missing Spec Mnemonics (First 200)
 
-- `B.DIM`
-- `C.SETRET`
 - `V.LB`
 - `V.LBI`
 - `V.LBI.BRG`
@@ -459,9 +456,6 @@
 
 ## Missing Spec Forms (First 200)
 
-- `B.DIM [len=32 mask=0x707f match=0x1043]`
-- `B.DIM [len=32 mask=0x707f match=0x2043]`
-- `B.DIM [len=32 mask=0x707f match=0x43]`
 - `BSTART CALL [len=32 mask=0xf83f000f match=0x50160002]`
 - `BSTART [len=32 mask=0x7f match=0x11]`
 - `BSTART [len=32 mask=0x7f match=0x21]`
@@ -477,7 +471,6 @@
 - `BSTART.VPAR [len=32 mask=0xf9ffffff match=0x21181]`
 - `BSTART.VSEQ [len=32 mask=0xf9ffffff match=0x29181]`
 - `C.BSTART.STD [len=16 mask=0xc7ff match=0x0]`
-- `C.SETRET [len=16 mask=0xf83f match=0x5016]`
 - `DC.ISW [len=32 mask=0xfff07fff match=0x40602b]`
 - `DC.ZVA [len=32 mask=0xfff07fff match=0x70602b]`
 - `HL.BSTART CALL [len=64 mask=0xfffff83f0000007f match=0x501600000011]`
