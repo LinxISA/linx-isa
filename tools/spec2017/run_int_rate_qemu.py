@@ -1302,12 +1302,15 @@ def _prepare_run_dir(
     src_run = bench_root / "run" / cfg["src_run"]
     dst_run = bench_root / "run" / cfg["linx_run"]
 
-    if not src_run.exists():
+    if not src_run.exists() and input_set == "refrate":
         raise SystemExit(f"error: missing source run dir: {src_run}")
 
     if dst_run.exists():
         shutil.rmtree(dst_run)
-    shutil.copytree(src_run, dst_run, symlinks=preserve_symlinks)
+    if src_run.exists():
+        shutil.copytree(src_run, dst_run, symlinks=preserve_symlinks)
+    else:
+        dst_run.mkdir(parents=True)
     _overlay_input_set(bench_root, dst_run, input_set)
 
     for exe_name in cfg["exes"]:
