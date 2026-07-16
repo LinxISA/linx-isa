@@ -124,6 +124,36 @@ class RunGatesTests(unittest.TestCase):
             self.assertFalse(state["ok"])
             self.assertEqual(state["artifacts"][0]["status"], "stale")
 
+    def test_compiler_registry_has_symmetric_arch_coverage_reports(self) -> None:
+        root = Path(__file__).resolve().parents[2]
+        registry = run_gates.load_registry(root / "docs/bringup/gate_registry.json")
+        by_key = {gate["gate_key"]: gate for gate in registry["gates"]}
+
+        expected = {
+            "linx64": {
+                "compile": "Compiler::AVS compile suites linx64",
+                "coverage": "Compiler::Coverage 100% linx64",
+                "out_dir": "avs/compiler/linx-llvm/tests/out",
+            },
+            "linx32": {
+                "compile": "Compiler::AVS compile suites linx32",
+                "coverage": "Compiler::Coverage 100% linx32",
+                "out_dir": "avs/compiler/linx-llvm/tests/out-linx32",
+            },
+        }
+        for arch, contract in expected.items():
+            with self.subTest(arch=arch):
+                compile_gate = by_key[contract["compile"]]
+                coverage_gate = by_key[contract["coverage"]]
+                report = f"{contract['out_dir']}/coverage.json"
+                self.assertIn(f"TARGET=\"{arch}-linx-none-elf\"", compile_gate["command"])
+                self.assertIn(f'OUT_DIR=\"$ROOT/{contract["out_dir"]}\"', compile_gate["command"])
+                self.assertIn(f'--out-dir \"$ROOT/{contract["out_dir"]}\"', coverage_gate["command"])
+                self.assertIn(f'--report-out \"$ROOT/{report}\"', coverage_gate["command"])
+                self.assertEqual(coverage_gate["artifacts"], [report])
+                self.assertTrue(compile_gate["required"])
+                self.assertTrue(coverage_gate["required"])
+
     def test_regression_wrapper_dry_run(self) -> None:
         root = Path(__file__).resolve().parents[2]
         env = os.environ.copy()

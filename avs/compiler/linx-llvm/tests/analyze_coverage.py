@@ -20,8 +20,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
+import tempfile
 from collections import defaultdict
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
@@ -289,7 +291,6 @@ def print_report(results: Dict, verbose: bool = False):
         if len(results["missing_mnemonics"]) > 20:
             print(f"  ... and {len(results['missing_mnemonics']) - 20} more")
         print()
-
     if results["unmapped_emitted_mnemonics"]:
         print("Unmapped Emitted Mnemonics (not in spec):")
         for mnem in results["unmapped_emitted_mnemonics"][:20]:
@@ -316,6 +317,31 @@ def print_report(results: Dict, verbose: bool = False):
                 for mnem in mnems:
                     print(f"    - {mnem}")
         print()
+
+
+def write_json_atomic(path: Path, results: Dict) -> None:
+    """Atomically publish a machine-readable coverage report."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temp_path: Optional[Path] = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            dir=path.parent,
+            prefix=f".{path.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as stream:
+            temp_path = Path(stream.name)
+            json.dump(results, stream, indent=2)
+            stream.write("\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+        temp_path.replace(path)
+        temp_path = None
+    finally:
+        if temp_path is not None:
+            temp_path.unlink(missing_ok=True)
 
 
 def main() -> int:
@@ -359,6 +385,11 @@ def main() -> int:
         help="Output results as JSON"
     )
     parser.add_argument(
+        "--report-out",
+        type=Path,
+        help="Atomically write the JSON report to this path",
+    )
+    parser.add_argument(
         "--fail-under",
         type=float,
         default=None,
@@ -385,9 +416,11 @@ def main() -> int:
     
     spec_data = load_isa_spec(args.spec)
     results = analyze_coverage(spec_data, args.out_dir, args.llvm_backend)
+
+    if args.report_out is not None:
+        write_json_atomic(args.report_out, results)
     
     if args.json:
-        import json
         print(json.dumps(results, indent=2))
     else:
         print_report(results, args.verbose)

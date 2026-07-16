@@ -14,10 +14,12 @@ Run:
 CLANG=/path/to/clang ./avs/compiler/linx-llvm/tests/run.sh
 ```
 
-Current Bisheng compiler note:
-- the checked-in Bisheng LLVM branch registers `linx64` and `linx64be`;
-- `run.sh` now fails immediately if you request an unregistered target such as `linx32-linx-none-elf`;
-- archived `out-linx32` artifacts may still exist in historical gate evidence, but they are not part of the active branch closure.
+Current compiler target contract:
+- the in-repo LLVM build registers both `linx64` and `linx32`;
+- the canonical compiler gate runs `linx64-linx-none-elf` in `out/` and
+  `linx32-linx-none-elf` in `out-linx32/`;
+- `run.sh` fails immediately when the selected Clang does not register the
+  requested target, so archived output never substitutes for a fresh run.
 
 ## C test programs
 
@@ -98,7 +100,14 @@ python3 ./avs/compiler/linx-llvm/tests/report_isa_coverage.py
 For detailed coverage analysis:
 
 ```bash
-python3 ./avs/compiler/linx-llvm/tests/analyze_coverage.py --verbose
+python3 ./avs/compiler/linx-llvm/tests/analyze_coverage.py \
+  --out-dir ./avs/compiler/linx-llvm/tests/out \
+  --fail-under 100 \
+  --report-out ./avs/compiler/linx-llvm/tests/out/coverage.json
+python3 ./avs/compiler/linx-llvm/tests/analyze_coverage.py \
+  --out-dir ./avs/compiler/linx-llvm/tests/out-linx32 \
+  --fail-under 100 \
+  --report-out ./avs/compiler/linx-llvm/tests/out-linx32/coverage.json
 ```
 
 This will show:

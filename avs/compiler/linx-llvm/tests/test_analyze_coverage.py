@@ -180,6 +180,54 @@ class AnalyzeCoverageTest(unittest.TestCase):
             self.assertIn("observed disassembly mnemonic breadth", proc.stdout.lower())
             self.assertIn("coverage 50.0% < 100.0%", proc.stderr)
 
+    def test_report_out_is_written_even_when_threshold_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            spec_path = self.write_spec(root, "XOR", "SUB")
+            out_dir = root / "out"
+            report_path = root / "reports" / "coverage.json"
+            self.write_objdump(out_dir, "one", "XOR")
+
+            proc = self.run_script(
+                SCRIPT,
+                "--spec",
+                spec_path,
+                "--out-dir",
+                out_dir,
+                "--fail-under",
+                100,
+                "--report-out",
+                report_path,
+            )
+
+            self.assertEqual(proc.returncode, 2)
+            report = json.loads(report_path.read_text())
+            self.assertEqual(report["covered_spec_mnemonics"], 1)
+            self.assertEqual(report["missing_mnemonics"], ["SUB"])
+            self.assertEqual(list(report_path.parent.glob(".coverage.json.*.tmp")), [])
+
+    def test_report_out_matches_json_stdout(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            spec_path = self.write_spec(root, "XOR")
+            out_dir = root / "out"
+            report_path = root / "coverage.json"
+            self.write_objdump(out_dir, "one", "XOR")
+
+            proc = self.run_script(
+                SCRIPT,
+                "--spec",
+                spec_path,
+                "--out-dir",
+                out_dir,
+                "--json",
+                "--report-out",
+                report_path,
+            )
+
+            self.assertEqual(proc.returncode, 0, proc.stderr)
+            self.assertEqual(json.loads(report_path.read_text()), json.loads(proc.stdout))
+
     def test_empty_output_is_an_error_not_zero_percent_report(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
@@ -203,6 +251,7 @@ class AnalyzeCoverageTest(unittest.TestCase):
         self.assertIn("not form-level", proc.stdout.lower())
         self.assertIn("not source-assembly", proc.stdout.lower())
         self.assertIn("not c-codegen", proc.stdout.lower())
+        self.assertIn("--report-out", proc.stdout)
 
 
 if __name__ == "__main__":

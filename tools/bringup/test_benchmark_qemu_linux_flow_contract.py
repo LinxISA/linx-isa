@@ -49,6 +49,76 @@ class BenchmarkFlowContractTests(unittest.TestCase):
     def test_canonical_flow_requires_head_matched_clean_qemu(self) -> None:
         self.assertTrue(self.flow["require_clean_qemu"])
 
+    def test_compiler_contract_covers_linx64_then_linx32(self) -> None:
+        commands = self.stages["compiler-contract"]["commands"]
+        self.assertEqual(
+            [command["id"] for command in commands],
+            ["linx64-compile-coverage", "linx32-compile-coverage"],
+        )
+        self.assertIn("Compiler::AVS compile suites linx64", commands[0]["command"])
+        self.assertIn("Compiler::Coverage 100% linx64", commands[0]["command"])
+        self.assertIn("Compiler::AVS compile suites linx32", commands[1]["command"])
+        self.assertIn("Compiler::Coverage 100% linx32", commands[1]["command"])
+
+    def test_nightly_coverage_closure_precedes_expensive_runtime_lanes(self) -> None:
+        stage_ids = [stage["id"] for stage in self.flow["stages"]]
+        coverage_index = stage_ids.index("coverage-closure")
+        self.assertGreater(coverage_index, stage_ids.index("qemu-contract"))
+        for downstream in (
+            "tsvc-qemu-hardbreak",
+            "linux-userspace-entry",
+            "specint-fast-gate",
+            "full-benchmarks",
+        ):
+            with self.subTest(downstream=downstream):
+                self.assertLess(coverage_index, stage_ids.index(downstream))
+
+        stage = self.stages["coverage-closure"]
+        self.assertEqual(stage["profiles"], ["nightly"])
+        self.assertTrue(stage["hard_break"])
+        commands = stage["commands"]
+        self.assertEqual(
+            [command["id"] for command in commands],
+            [
+                "llvm-c-codegen-breadth",
+                "qemu-isa-l1-full",
+                "qemu-translation-full",
+                "isa-llvm-qemu-coherent",
+            ],
+        )
+        self.assertIn(
+            "Compiler::C-CodeGen mnemonic breadth report", commands[0]["command"]
+        )
+        self.assertIn(
+            "Emulator::ISA vs QEMU coverage report", commands[1]["command"]
+        )
+        self.assertIn(
+            "Emulator::AVS QEMU translation coverage report", commands[2]["command"]
+        )
+        self.assertIn(
+            "Integration::ISA-LLVM-QEMU coverage coherence report",
+            commands[3]["command"],
+        )
+
+        isa_l1_strict = "QEMU_ISA_COVERAGE_REQUIRE_FULL=1"
+        translation_strict = "QEMU_TRANSLATION_COVERAGE_REQUIRE_FULL=1"
+        coherence_strict = "ISA_LLVM_QEMU_COVERAGE_REQUIRE_COHERENT=1"
+        for strict_variable in (
+            isa_l1_strict,
+            translation_strict,
+            coherence_strict,
+        ):
+            self.assertNotIn(strict_variable, commands[0]["command"])
+        self.assertIn(isa_l1_strict, commands[1]["command"])
+        self.assertNotIn(translation_strict, commands[1]["command"])
+        self.assertNotIn(coherence_strict, commands[1]["command"])
+        self.assertNotIn(isa_l1_strict, commands[2]["command"])
+        self.assertIn(translation_strict, commands[2]["command"])
+        self.assertNotIn(coherence_strict, commands[2]["command"])
+        self.assertNotIn(isa_l1_strict, commands[3]["command"])
+        self.assertNotIn(translation_strict, commands[3]["command"])
+        self.assertIn(coherence_strict, commands[3]["command"])
+
     def test_source_contract_checks_linux_source_completeness(self) -> None:
         commands = self.stages["source-contract"]["commands"]
         self.assertEqual(commands[1]["id"], "linux-source-completeness")
@@ -222,6 +292,45 @@ class BenchmarkFlowContractTests(unittest.TestCase):
             commands = payload["stages"][0]["commands"]
             self.assertEqual([row["status"] for row in commands], ["not_run"] * 3)
             self.assertTrue(all(row["resolved_qemu"] is None for row in commands))
+
+    def test_coverage_closure_is_visible_only_in_nightly_dry_run(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            for profile in ("pr", "linux", "nightly"):
+                with self.subTest(profile=profile):
+                    report = root / f"{profile}.json"
+                    env = os.environ.copy()
+                    env.pop("QEMU", None)
+                    result = subprocess.run(
+                        [
+                            sys.executable,
+                            str(RUNNER),
+                            "--profile",
+                            profile,
+                            "--dry-run",
+                            "--report-out",
+                            str(report),
+                        ],
+                        cwd=ROOT,
+                        env=env,
+                        check=False,
+                        capture_output=True,
+                        text=True,
+                    )
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    payload = json.loads(report.read_text(encoding="utf-8"))
+                    stages = {stage["id"]: stage for stage in payload["stages"]}
+                    if profile == "nightly":
+                        self.assertIn("coverage-closure", stages)
+                        self.assertEqual(
+                            [
+                                row["status"]
+                                for row in stages["coverage-closure"]["commands"]
+                            ],
+                            ["not_run", "not_run", "not_run", "not_run"],
+                        )
+                    else:
+                        self.assertNotIn("coverage-closure", stages)
 
     def test_timeout_kills_the_entire_command_process_group(self) -> None:
         with tempfile.TemporaryDirectory() as td:

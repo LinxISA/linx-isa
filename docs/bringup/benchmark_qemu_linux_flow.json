@@ -70,6 +70,11 @@
           "id": "linx64-compile-coverage",
           "timeout_seconds": 900,
           "command": "python3 tools/bringup/run_gates.py --profile release-strict --tier pr --gate 'Compiler::AVS compile suites linx64' --gate 'Compiler::Coverage 100% linx64'"
+        },
+        {
+          "id": "linx32-compile-coverage",
+          "timeout_seconds": 900,
+          "command": "python3 tools/bringup/run_gates.py --profile release-strict --tier pr --gate 'Compiler::AVS compile suites linx32' --gate 'Compiler::Coverage 100% linx32'"
         }
       ]
     },
@@ -98,6 +103,37 @@
           "id": "qemu-coverage-visibility",
           "timeout_seconds": 300,
           "command": "python3 tools/bringup/run_gates.py --profile release-strict --tier pr --gate 'Emulator::QEMU opcode meta/id sync audit' --gate 'Emulator::ISA vs QEMU coverage report'"
+        }
+      ]
+    },
+    {
+      "id": "coverage-closure",
+      "profiles": [
+        "nightly"
+      ],
+      "owner": "integration",
+      "hard_break": true,
+      "why": "Stop before TSVC, Linux, or SPEC if C-CodeGen breadth, QEMU ISA L1 mapping, QEMU translation inventory, and ISA-LLVM-QEMU coverage coherence are not closed.",
+      "commands": [
+        {
+          "id": "llvm-c-codegen-breadth",
+          "timeout_seconds": 900,
+          "command": "python3 tools/bringup/run_gates.py --profile release-strict --tier nightly --gate 'Compiler::C-CodeGen mnemonic breadth report'"
+        },
+        {
+          "id": "qemu-isa-l1-full",
+          "timeout_seconds": 300,
+          "command": "QEMU_ISA_COVERAGE_REQUIRE_FULL=1 python3 tools/bringup/run_gates.py --profile release-strict --tier nightly --gate 'Emulator::ISA vs QEMU coverage report'"
+        },
+        {
+          "id": "qemu-translation-full",
+          "timeout_seconds": 900,
+          "command": "QEMU_TRANSLATION_COVERAGE_REQUIRE_FULL=1 python3 tools/bringup/run_gates.py --profile release-strict --tier nightly --gate 'Emulator::AVS QEMU translation coverage report'"
+        },
+        {
+          "id": "isa-llvm-qemu-coherent",
+          "timeout_seconds": 300,
+          "command": "ISA_LLVM_QEMU_COVERAGE_REQUIRE_COHERENT=1 python3 tools/bringup/run_gates.py --profile release-strict --tier nightly --gate 'Integration::ISA-LLVM-QEMU coverage coherence report'"
         }
       ]
     },
