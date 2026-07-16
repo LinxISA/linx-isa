@@ -227,7 +227,7 @@
         {
           "id": "specint-fast-test-train",
           "timeout_seconds": 3600,
-          "command": "QEMU_BIN=\"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\"; python3 tools/bringup/run_specint_fast_gate.py --profile \"${SPECINT_FAST_PROFILE:-pr}\" --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 --qemu \"$QEMU_BIN\" --sysroot \"${WORKLOAD_SYSROOT:-$PWD/out/libc/musl/install/phase-b}\" --out-dir \"${SPECINT_FAST_OUT_DIR:-$PWD/workloads/generated/specint-fast-gate}\" --append-extra \"${SPEC_APPEND_EXTRA:-norandmaps}\" --guest-heartbeat-sec \"${SPEC_GUEST_HEARTBEAT_SEC:-0}\" --heartbeat-sec \"${SPEC_HEARTBEAT_SEC:-30}\" --qemu-heartbeat-interval \"${SPEC_QEMU_HEARTBEAT_INTERVAL:-1000000000}\" --no-progress-timeout \"${SPEC_NO_PROGRESS_TIMEOUT:-180}\" --stack-limit \"${SPEC_STACK_LIMIT:-2G}\""
+          "command": "QEMU_BIN=\"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\"; python3 tools/bringup/run_specint_fast_gate.py --profile \"${SPECINT_FAST_PROFILE:-pr}\" --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 --qemu \"$QEMU_BIN\" --kernel \"${LINUX_VMLINUX_OUT_DIR:-/tmp/linx-linux-vmlinux-clean-build}/vmlinux\" --sysroot \"${WORKLOAD_SYSROOT:-$PWD/out/libc/musl/install/phase-b}\" --out-dir \"${SPECINT_FAST_OUT_DIR:-$PWD/workloads/generated/specint-fast-gate}\" --append-extra \"${SPEC_APPEND_EXTRA:-norandmaps}\" --guest-heartbeat-sec \"${SPEC_GUEST_HEARTBEAT_SEC:-0}\" --heartbeat-sec \"${SPEC_HEARTBEAT_SEC:-30}\" --qemu-heartbeat-interval \"${SPEC_QEMU_HEARTBEAT_INTERVAL:-1000000000}\" --no-progress-timeout \"${SPEC_NO_PROGRESS_TIMEOUT:-180}\" --stack-limit \"${SPEC_STACK_LIMIT:-2G}\""
         }
       ],
       "outputs": [
@@ -274,7 +274,7 @@
         {
           "id": "specint-nightly-test-train",
           "timeout_seconds": 14400,
-          "command": "QEMU_BIN=\"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\"; python3 tools/bringup/run_specint_fast_gate.py --profile nightly --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 --qemu \"$QEMU_BIN\" --sysroot \"${WORKLOAD_SYSROOT:-$PWD/out/libc/musl/install/phase-b}\" --out-dir \"${SPECINT_NIGHTLY_OUT_DIR:-$PWD/workloads/generated/specint-nightly-test-train}\" --append-extra \"${SPEC_APPEND_EXTRA:-norandmaps}\" --guest-heartbeat-sec \"${SPEC_GUEST_HEARTBEAT_SEC:-0}\" --heartbeat-sec \"${SPEC_HEARTBEAT_SEC:-30}\" --qemu-heartbeat-interval \"${SPEC_QEMU_HEARTBEAT_INTERVAL:-1000000000}\" --no-progress-timeout \"${SPEC_NO_PROGRESS_TIMEOUT:-180}\" --stack-limit \"${SPEC_STACK_LIMIT:-2G}\" --continue-on-fail"
+          "command": "QEMU_BIN=\"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\"; python3 tools/bringup/run_specint_fast_gate.py --profile nightly --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 --qemu \"$QEMU_BIN\" --kernel \"${LINUX_VMLINUX_OUT_DIR:-/tmp/linx-linux-vmlinux-clean-build}/vmlinux\" --sysroot \"${WORKLOAD_SYSROOT:-$PWD/out/libc/musl/install/phase-b}\" --out-dir \"${SPECINT_NIGHTLY_OUT_DIR:-$PWD/workloads/generated/specint-nightly-test-train}\" --append-extra \"${SPEC_APPEND_EXTRA:-norandmaps}\" --guest-heartbeat-sec \"${SPEC_GUEST_HEARTBEAT_SEC:-0}\" --heartbeat-sec \"${SPEC_HEARTBEAT_SEC:-30}\" --qemu-heartbeat-interval \"${SPEC_QEMU_HEARTBEAT_INTERVAL:-1000000000}\" --no-progress-timeout \"${SPEC_NO_PROGRESS_TIMEOUT:-180}\" --stack-limit \"${SPEC_STACK_LIMIT:-2G}\" --continue-on-fail"
         }
       ],
       "outputs": [

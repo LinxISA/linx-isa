@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import hashlib
 import json
 import os
 import shlex
@@ -239,6 +240,26 @@ def _default_qemu() -> str:
         return str(Path(os.path.expanduser(env)).resolve())
     qemu = default_qemu_binary(REPO_ROOT)
     return str(qemu.resolve())
+
+
+def _default_kernel() -> str:
+    explicit = os.environ.get("LINX_SPEC_KERNEL", "").strip()
+    if explicit:
+        return str(Path(os.path.expanduser(explicit)).resolve())
+    out_dir = os.environ.get("LINUX_VMLINUX_OUT_DIR", "/tmp/linx-linux-vmlinux-clean-build")
+    return str((Path(os.path.expanduser(out_dir)) / "vmlinux").resolve())
+
+
+def _file_provenance(path: Path) -> dict[str, Any]:
+    digest = hashlib.sha256()
+    with path.open("rb") as fp:
+        for chunk in iter(lambda: fp.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return {
+        "path": str(path),
+        "sha256": digest.hexdigest(),
+        "size_bytes": path.stat().st_size,
+    }
 
 
 def _qemu_extra_args() -> list[str]:
@@ -476,6 +497,7 @@ def _suite_command(
     runner: Path,
     spec_dir: Path,
     qemu: Path,
+    kernel: Path,
     sysroot: Path,
     out_dir: Path,
     append_extra: str,
@@ -552,6 +574,8 @@ def _suite_command(
         str(spec_dir),
         "--qemu",
         str(qemu),
+        "--kernel",
+        str(kernel),
         "--stage",
         suite.stage,
         "--input-set",
@@ -677,6 +701,8 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
         f"- qemu_repo_head: `{(summary.get('qemu_provenance') or {}).get('qemu_repo_head', '-')}`",
         "- qemu_clean_build_for_head: "
         f"`{str(bool((summary.get('qemu_provenance') or {}).get('clean_build_for_head', False))).lower()}`",
+        f"- kernel: `{summary.get('kernel') or '-'}`",
+        f"- kernel_sha256: `{(summary.get('kernel_provenance') or {}).get('sha256', '-')}`",
         f"- qemu_machine_extra: `{summary.get('qemu_machine_extra') or '-'}`",
         "- qemu_extra_args: "
         f"`{shlex.join([str(arg) for arg in summary.get('qemu_extra_args') or []]) or '-'}`",
@@ -754,6 +780,7 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--spec-dir", default=str(DEFAULT_SPEC_DIR))
     parser.add_argument("--runner", default=str(DEFAULT_RUNNER))
     parser.add_argument("--qemu", default=_default_qemu())
+    parser.add_argument("--kernel", default=_default_kernel())
     parser.add_argument("--sysroot", default=str(REPO_ROOT / "out" / "libc" / "musl" / "install" / "phase-b"))
     parser.add_argument("--out-dir", default=str(REPO_ROOT / "workloads" / "generated" / "specint-fast-gate"))
     parser.add_argument("--append-extra", default=os.environ.get("SPEC_APPEND_EXTRA", os.environ.get("LINX_SPEC_APPEND_EXTRA", "norandmaps")))
@@ -1051,6 +1078,7 @@ def main(argv: list[str]) -> int:
     spec_dir = Path(os.path.expanduser(args.spec_dir)).resolve()
     runner = Path(os.path.expanduser(args.runner)).resolve()
     qemu = Path(os.path.expanduser(args.qemu)).resolve()
+    kernel = Path(os.path.expanduser(args.kernel)).resolve()
     sysroot = Path(os.path.expanduser(args.sysroot)).resolve()
     out_dir = Path(os.path.expanduser(args.out_dir)).resolve()
 
@@ -1060,8 +1088,16 @@ def main(argv: list[str]) -> int:
         raise SystemExit(f"error: missing SPEC dir: {spec_dir}")
     if not qemu.exists():
         raise SystemExit(f"error: missing QEMU binary: {qemu}")
+    if not kernel.is_file():
+        raise SystemExit(f"error: missing kernel image: {kernel}")
 
     runner_has_qemu_heartbeat = _runner_supports_option(runner, "--qemu-heartbeat-interval")
+    runner_has_kernel = _runner_supports_option(runner, "--kernel")
+    if not runner_has_kernel:
+        raise SystemExit(
+            "error: local SPEC matrix runner does not support --kernel; "
+            "update tools/spec2017/run_stage_qemu_matrix.py"
+        )
     runner_has_qemu_heartbeat_regs = _runner_supports_option(runner, "--qemu-heartbeat-regs")
     runner_has_qemu_heartbeat_code_bytes = _runner_supports_option(runner, "--qemu-heartbeat-code-bytes")
     runner_has_qemu_heartbeat_same_site_warn = _runner_supports_option(runner, "--qemu-heartbeat-same-site-warn")
@@ -1320,6 +1356,7 @@ def main(argv: list[str]) -> int:
                 runner=runner,
                 spec_dir=spec_dir,
                 qemu=qemu,
+                kernel=kernel,
                 sysroot=sysroot,
                 out_dir=out_dir,
                 append_extra=args.append_extra,
@@ -1443,6 +1480,8 @@ def main(argv: list[str]) -> int:
         "spec_dir": str(spec_dir),
         "qemu": str(qemu),
         "qemu_provenance": qemu_binary_provenance(REPO_ROOT, qemu),
+        "kernel": str(kernel),
+        "kernel_provenance": _file_provenance(kernel),
         "qemu_machine_extra": os.environ.get("LINX_SPEC_QEMU_MACHINE_EXTRA", "").strip(),
         "qemu_extra_args": _qemu_extra_args(),
         "sysroot": str(sysroot),

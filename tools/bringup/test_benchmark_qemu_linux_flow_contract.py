@@ -141,6 +141,23 @@ class BenchmarkFlowContractTests(unittest.TestCase):
                 self.assertIn('--attestation "$BUILD_ATTESTATION"', command)
                 self.assertIn(" && ", command)
 
+    def test_spec_runtime_lanes_bind_the_fresh_kernel(self) -> None:
+        cases = (
+            ("specint-fast-gate", "specint-fast-test-train"),
+            ("full-benchmarks", "specint-nightly-test-train"),
+        )
+        for stage_id, command_id in cases:
+            command = next(
+                row["command"]
+                for row in self.stages[stage_id]["commands"]
+                if row["id"] == command_id
+            )
+            with self.subTest(stage=stage_id):
+                self.assertIn(
+                    '--kernel "${LINUX_VMLINUX_OUT_DIR:-/tmp/linx-linux-vmlinux-clean-build}/vmlinux"',
+                    command,
+                )
+
     def test_full_benchmark_stage_has_attested_default_runtime_launcher(self) -> None:
         row = next(
             row

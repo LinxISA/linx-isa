@@ -12,6 +12,19 @@ import run_stage_qemu_matrix as matrix
 
 
 class StageQemuMatrixTests(unittest.TestCase):
+    def test_file_provenance_binds_kernel_bytes(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            kernel = Path(td) / "vmlinux"
+            kernel.write_bytes(b"kernel")
+            provenance = matrix._file_provenance(kernel)
+
+        self.assertEqual(provenance["path"], str(kernel))
+        self.assertEqual(provenance["size_bytes"], 6)
+        self.assertEqual(
+            provenance["sha256"],
+            "6923dd1bc0460082c5d55a831908c24a282860b7f1cd6c2b79cf1bc8857c639c",
+        )
+
     def test_format_tb_hot_uses_max_delta_pc(self) -> None:
         text = matrix._format_tb_hot(
             {
