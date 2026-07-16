@@ -1,6 +1,6 @@
 # ISA vs QEMU Decoder/Source Mapping Snapshot
 
-- Generated (UTC): `2026-07-16 22:43:22Z`
+- Generated (UTC): `2026-07-16 23:18:26Z`
 - Evidence level: `L1`
 - Claim: `decoder_source_mapping`
 - L2 runtime execution: `available`; `60` forms / `60` mnemonics
