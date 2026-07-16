@@ -8,6 +8,7 @@ import tempfile
 import time
 import unittest
 from pathlib import Path
+from unittest import mock
 
 import run_gates
 
@@ -123,6 +124,21 @@ class RunGatesTests(unittest.TestCase):
             state = run_gates.check_artifacts(root, gate)
             self.assertFalse(state["ok"])
             self.assertEqual(state["artifacts"][0]["status"], "stale")
+
+    def test_prepare_env_supplies_every_registry_toolchain_variable(self) -> None:
+        root = Path(__file__).resolve().parents[2]
+        with mock.patch.dict(os.environ, {}, clear=True):
+            env = run_gates.prepare_env(root, "release-strict", "nightly")
+        expected = {
+            "CLANG": "clang",
+            "CLANGXX": "clang++",
+            "LLD": "ld.lld",
+            "LLVM_OBJDUMP": "llvm-objdump",
+        }
+        for variable, basename in expected.items():
+            with self.subTest(variable=variable):
+                self.assertTrue(env[variable], variable)
+                self.assertEqual(Path(env[variable]).name, basename)
 
     def test_compiler_registry_has_symmetric_arch_coverage_reports(self) -> None:
         root = Path(__file__).resolve().parents[2]

@@ -1038,7 +1038,12 @@ def main(argv: list[str]) -> int:
         default=float(os.environ.get("LINX_QEMU_NO_PROGRESS_TIMEOUT", "0")),
         help="Fail if no QEMU stdout/stderr output is seen for this many seconds (0 to disable).",
     )
-    parser.add_argument("--compile-only", action="store_true", help="Only compile/link; do not run QEMU")
+    parser.add_argument("--compile-only", action="store_true", help="Only compile/relocatable-link; do not build the direct-boot ELF or run QEMU")
+    parser.add_argument(
+        "--prepare-only",
+        action="store_true",
+        help="Compile and link the direct-boot ELF, then stop before QEMU.",
+    )
     parser.add_argument(
         "--smoke-source-overrides",
         action="store_true",
@@ -1083,6 +1088,10 @@ def main(argv: list[str]) -> int:
     )
     args = parser.parse_args(argv)
 
+    if args.compile_only and args.prepare_only:
+        raise SystemExit("error: --compile-only and --prepare-only are mutually exclusive")
+    if args.prepare_only and (args.evidence_out or args.evidence_pc):
+        raise SystemExit("error: --prepare-only does not emit runtime evidence")
     if args.timeout <= 0:
         raise SystemExit("error: --timeout must be > 0")
     if args.heartbeat_sec < 0:
@@ -1110,7 +1119,7 @@ def main(argv: list[str]) -> int:
     llc = _path_or_none(args.llc) or _default_llc(clang)
     qemu = _path_or_none(args.qemu) or _default_qemu()
     clang_builtin_include_dir = _clang_builtin_include_dir(clang)
-    if not qemu and not args.compile_only:
+    if not qemu and not args.compile_only and not args.prepare_only:
         raise SystemExit("error: qemu-system-linx64 not found; set --qemu or QEMU")
     if clang_builtin_include_dir is None:
         raise SystemExit(
@@ -1422,6 +1431,9 @@ def main(argv: list[str]) -> int:
         raise SystemExit("error: direct-boot link failed")
 
     print(f"ok: built {directboot_elf}")
+
+    if args.prepare_only:
+        return 0
 
     assert qemu is not None
     evidence_trace = out_dir / "qemu-executable-coverage-in_asm.log"

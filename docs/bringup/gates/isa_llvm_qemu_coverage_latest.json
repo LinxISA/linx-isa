@@ -2,7 +2,7 @@
   "claim": "l1_mapping_coherence",
   "compiler_analyzer": "/Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/analyze_coverage.py",
   "compiler_out_dir": "/Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/out",
-  "generated_at_utc": "2026-07-15 22:49:12Z",
+  "generated_at_utc": "2026-07-16 16:34:00Z",
   "inconsistencies": {
     "compiler_only_vs_qemu_impl": [
       "V.LBI",
@@ -404,30 +404,30 @@
     "L1": {
       "availability": "available",
       "claim": "decoder_source_mapping",
-      "form_count": 631,
-      "mnemonic_count": 626
+      "form_count": 653,
+      "mnemonic_count": 625
     },
     "L2": {
       "availability": "available",
       "claim": "runtime_execution",
-      "form_count": 51,
-      "mnemonic_count": 51,
-      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
+      "form_count": 60,
+      "mnemonic_count": 60,
+      "qemu_sha": "ca3e11ba7b4539d846377f9c42baa067d458188f",
       "source": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_executable_coverage_latest.json"
     },
     "L3": {
       "availability": "available",
       "claim": "semantic_oracle",
-      "form_count": 51,
-      "mnemonic_count": 51,
-      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
+      "form_count": 60,
+      "mnemonic_count": 60,
+      "qemu_sha": "ca3e11ba7b4539d846377f9c42baa067d458188f",
       "source": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_executable_coverage_latest.json"
     }
   },
   "qemu_impl": {
     "claim": "decoder_source_mapping",
     "coverage_count": 626,
-    "coverage_ratio_percent": 88.05,
+    "coverage_ratio_percent": 87.9,
     "deprecated_alias_for": "qemu_l1_mapping",
     "evidence_level": "L1",
     "missing_count": 85
@@ -436,7 +436,7 @@
   "qemu_l1_mapping": {
     "claim": "decoder_source_mapping",
     "coverage_count": 626,
-    "coverage_ratio_percent": 88.05,
+    "coverage_ratio_percent": 87.9,
     "evidence_level": "L1",
     "missing_count": 85
   },
@@ -452,7 +452,7 @@
   "qemu_translation_report": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_translation_coverage_latest.json",
   "result": {
     "classification": "isa_llvm_qemu_l1_mapping_inconsistent",
-    "ok": true,
+    "ok": false,
     "runtime_execution_complete": null,
     "semantic_oracle_complete": null
   },

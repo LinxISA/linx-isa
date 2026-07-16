@@ -1,6 +1,6 @@
 # LLVM C/C++ CodeGen ISA Mnemonic Breadth
 
-- Generated (UTC): `2026-07-16 04:18:54Z`
+- Generated (UTC): `2026-07-16 16:33:03Z`
 - Status: `MEASURED` (no target threshold is asserted)
 - Pure CodeGen direct coverage: `142/711`
 - Pure CodeGen after alias closure: `143/711`
@@ -9,7 +9,7 @@
 - Frozen plain-C reachable contract: `143/143` (`PASS`)
 - Included C/C++ artifacts: `43`
 - Excluded disassembly artifacts: `5`
-- Compiler identity: `clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git acc80b0e133d3d400647acca043736bfe85fdda3)`
+- Compiler identity: `clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b7cab73f1e1c0ef196c90cd690e2ceb96b816d3a)`
 
 Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. The broader source-oriented boundary includes those tests but does not relabel their source-directed instructions as compiler-selected CodeGen. Neither metric reuses generated `99_spec_decode` or hand-authored assembly-lane artifacts.
 
