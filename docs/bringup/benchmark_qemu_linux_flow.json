@@ -133,6 +133,11 @@
       "why": "Stop before hosted benchmarks if the firmwareless Linux/QEMU path cannot enter trivial userspace or boot the rootfs.",
       "commands": [
         {
+          "id": "smp-head-clean-build",
+          "timeout_seconds": 900,
+          "command": "bash tools/bringup/run_linux_smp_head_build_clean.sh --linux-root \"$PWD/kernel/linux\" --out-dir \"${LINUX_SMP_HEAD_OUT_DIR:-/tmp/linx-linux-smp-head-build}\" --clang \"${CLANG:-$PWD/compiler/llvm/build-linxisa-clang/bin/clang}\" --gmake \"${GMAKE:-/opt/homebrew/bin/gmake}\""
+        },
+        {
           "id": "vmlinux-clean-build",
           "timeout_seconds": 7200,
           "command": "bash tools/bringup/run_linux_vmlinux_build_clean.sh --linux-root \"$PWD/kernel/linux\" --out-dir \"$PWD/kernel/linux/build-linx-fixed\" --clang \"${CLANG:-$PWD/compiler/llvm/build-linxisa-clang/bin/clang}\" --gmake \"${GMAKE:-/opt/homebrew/bin/gmake}\" --target vmlinux --refresh-defconfig"

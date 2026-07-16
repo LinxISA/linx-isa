@@ -51,6 +51,14 @@ class BenchmarkFlowContractTests(unittest.TestCase):
         self.assertEqual(commands[1]["id"], "linux-source-completeness")
         self.assertIn("check_linux_source_completeness.py", commands[1]["command"])
 
+    def test_linux_stage_builds_smp_head_before_vmlinux(self) -> None:
+        commands = self.stages["linux-userspace-entry"]["commands"]
+        self.assertEqual(
+            [command["id"] for command in commands[:2]],
+            ["smp-head-clean-build", "vmlinux-clean-build"],
+        )
+        self.assertIn("run_linux_smp_head_build_clean.sh", commands[0]["command"])
+
     def test_attestation_commands_bind_build_manifest_and_verify(self) -> None:
         cases = {
             "specint-fast-gate": (
