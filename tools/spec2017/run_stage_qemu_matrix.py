@@ -159,10 +159,17 @@ QEMU_FENTRY_TRACE_BOOL_ARGS = {
 }
 
 
-def _default_qemu() -> str:
+def _qemu_argument_default() -> str:
     env = os.environ.get("QEMU", "").strip()
     if env:
         return str(Path(os.path.expanduser(env)).resolve())
+    return ""
+
+
+def _resolve_qemu_argument(value: str) -> str:
+    explicit = value.strip()
+    if explicit:
+        return str(Path(os.path.expanduser(explicit)).resolve())
     return str(default_qemu_binary(REPO_ROOT).resolve())
 
 
@@ -860,7 +867,7 @@ def main(argv: list[str]) -> int:
     )
     ap.add_argument(
         "--qemu",
-        default=_default_qemu(),
+        default=_qemu_argument_default(),
         help="QEMU binary passed through to the per-transport runner.",
     )
     ap.add_argument(
@@ -1302,6 +1309,11 @@ def main(argv: list[str]) -> int:
         help="Output directory for matrix logs/summaries (default: <spec-dir>/tmp/linx-qemu-matrix/stage_<stage>).",
     )
     args = ap.parse_args(argv)
+
+    try:
+        args.qemu = _resolve_qemu_argument(args.qemu)
+    except FileNotFoundError as exc:
+        raise SystemExit(f"error: {exc}") from exc
 
     spec_dir = Path(os.path.expanduser(args.spec_dir)).resolve()
     kernel = Path(os.path.expanduser(args.kernel)).resolve()

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import io
 import os
 import tempfile
 from pathlib import Path
@@ -12,6 +13,24 @@ import run_stage_qemu_matrix as matrix
 
 
 class StageQemuMatrixTests(unittest.TestCase):
+    def test_help_does_not_resolve_missing_default_qemu(self) -> None:
+        with mock.patch.dict(os.environ, {}, clear=True), mock.patch.object(
+            matrix, "default_qemu_binary", side_effect=FileNotFoundError("missing")
+        ) as default_qemu, mock.patch("sys.stdout", new_callable=io.StringIO):
+            with self.assertRaises(SystemExit) as raised:
+                matrix.main(["--help"])
+
+        self.assertEqual(raised.exception.code, 0)
+        default_qemu.assert_not_called()
+
+    def test_explicit_qemu_bypasses_missing_default(self) -> None:
+        with mock.patch.dict(os.environ, {}, clear=True), mock.patch.object(
+            matrix, "default_qemu_binary", side_effect=FileNotFoundError("missing")
+        ) as default_qemu:
+            self.assertEqual(matrix._resolve_qemu_argument("/bin/true"), "/bin/true")
+
+        default_qemu.assert_not_called()
+
     def test_file_provenance_binds_kernel_bytes(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             kernel = Path(td) / "vmlinux"
