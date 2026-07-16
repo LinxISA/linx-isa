@@ -141,28 +141,29 @@ class BenchmarkFlowContractTests(unittest.TestCase):
                 self.assertIn('--attestation "$BUILD_ATTESTATION"', command)
                 self.assertIn(" && ", command)
 
-    def test_full_benchmark_stage_requires_runtime_launcher(self) -> None:
-        command = next(
-            row["command"]
+    def test_full_benchmark_stage_has_attested_default_runtime_launcher(self) -> None:
+        row = next(
+            row
             for row in self.stages["full-benchmarks"]["commands"]
             if row["id"] == "coremark-dhrystone"
         )
-        self.assertIn('BENCHMARK_RUN_COMMAND="${LINX_BENCHMARK_RUN_COMMAND:-}"', command)
-        self.assertIn('if [[ -z "$BENCHMARK_RUN_COMMAND" ]]', command)
+        command = row["command"]
+        self.assertIn('if [[ -n "${LINX_BENCHMARK_RUN_COMMAND:-}" ]]', command)
+        self.assertIn("tools/bringup/run_c_benchmark_matrix.py", command)
+        self.assertIn("--kernel ${LINUX_VMLINUX_OUT_DIR", command)
+        self.assertIn("--qemu ${QEMU", command)
+        self.assertIn("--exe {exe}", command)
+        self.assertIn('--coremark-iterations "${LINX_COREMARK_ITERATIONS:-15000}"', command)
+        self.assertIn('--dhrystone-runs "${LINX_DHRYSTONE_RUNS:-1}"', command)
         self.assertIn('--run-command "$BENCHMARK_RUN_COMMAND"', command)
-        self.assertIn("exit 2", command)
-        env = os.environ.copy()
-        env.pop("LINX_BENCHMARK_RUN_COMMAND", None)
-        result = subprocess.run(
-            ["bash", "-c", command],
-            cwd=ROOT,
-            env=env,
-            check=False,
-            capture_output=True,
-            text=True,
+        self.assertIn('${LINX_BENCHMARK_TRANSCRIPT:-', command)
+        self.assertEqual(
+            row["artifact_env"],
+            {
+                "report": "LINX_BENCHMARK_RESULT",
+                "transcript": "LINX_BENCHMARK_TRANSCRIPT",
+            },
         )
-        self.assertEqual(result.returncode, 2)
-        self.assertIn("LINX_BENCHMARK_RUN_COMMAND is required", result.stderr)
 
     def test_every_command_is_valid_bash_syntax(self) -> None:
         for stage in self.flow["stages"]:

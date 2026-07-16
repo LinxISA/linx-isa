@@ -117,6 +117,13 @@ class BenchmarkEvidenceTests(unittest.TestCase):
         self.assertIn("-DSEED_METHOD=SEED_VOLATILE", flags)
         RUNNER._validate_run_parameters(coremark_iterations=0, dhrystone_runs=1, timeout=1)
 
+    def test_dhrystone_fixed_iteration_macro_bypasses_guest_stdin(self) -> None:
+        source = (Path(__file__).parent / "dhrystone" / "upstream" / "dhry_1.c").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("#ifdef DHRY_ITERS", source)
+        self.assertIn("Number_Of_Runs = DHRY_ITERS;", source)
+
     def test_negative_coremark_iterations_are_rejected(self) -> None:
         with self.assertRaisesRegex(SystemExit, "zero .* or positive"):
             RUNNER._validate_run_parameters(coremark_iterations=-1, dhrystone_runs=1, timeout=1)
