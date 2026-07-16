@@ -1,9 +1,9 @@
 # AVS QEMU Translation Coverage
 
-- Generated (UTC): `2026-07-16 18:26:49Z`
-- Spec unique mnemonics: `711`
+- Generated (UTC): `2026-07-16 19:20:54Z`
+- Spec unique mnemonics: `710`
 - AVS object files scanned: `24`
-- Covered spec mnemonics: `711/711` (`100.0%`)
+- Covered spec mnemonics: `710/710` (`100.0%`)
 - Missing spec mnemonics: `0`
 
 ## Coverage By Prefix
@@ -26,7 +26,7 @@
 - `BIC`: `1`
 - `BIS`: `1`
 - `BSE`: `1`
-- `BSTART`: `19`
+- `BSTART`: `18`
 - `BSTOP`: `1`
 - `BWE`: `1`
 - `BWI`: `1`
@@ -174,7 +174,7 @@
 
 ## Top Covering Objects
 
-- `99_spec_decode_qemu.o`: `711`
+- `99_spec_decode_qemu.o`: `710`
 - `softfp.o`: `73`
 - `12_v03_vector_tile.o`: `72`
 - `11_system.o`: `64`

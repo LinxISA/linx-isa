@@ -1,7 +1,7 @@
 # ISA-LLVM-QEMU L1 Mapping Coherence
 
-- Generated (UTC): `2026-07-16 18:26:50Z`
-- Spec unique mnemonics: `711`
+- Generated (UTC): `2026-07-16 19:24:32Z`
+- Spec unique mnemonics: `710`
 - QEMU evidence: `L1 decoder_source_mapping`
 - L2 runtime execution: `available`
 - L3 semantic oracle: `available`
@@ -10,22 +10,23 @@
 
 | Surface | Covered | Ratio |
 | --- | --- | --- |
-| LLVM observed disassembly mnemonic breadth | `711/711` | `100.0%` |
-| QEMU L1 decoder/source mapping | `626/711` | `87.9%` |
-| QEMU AVS translation inventory | `711/711` | `100.0%` |
+| LLVM observed disassembly mnemonic breadth | `710/710` | `100.0%` |
+| QEMU L1 decoder/source mapping | `624/710` | `87.89%` |
+| QEMU AVS translation inventory | `710/710` | `100.0%` |
 
 - Non-spec translation inventory tokens: `0`
 
 ## Inconsistency Summary
 
-- Compiler-covered but missing from QEMU L1 mapping: `85`
+- Compiler-covered but missing from QEMU L1 mapping: `86`
 - QEMU L1-mapped but missing from AVS translation inventory: `0`
-- AVS translation-listed but absent from QEMU L1 mapping: `85`
+- AVS translation-listed but absent from QEMU L1 mapping: `86`
 - Compiler-covered but missing from AVS translation coverage: `0`
 
 ### Compiler vs QEMU L1 mapping
 
 - `V`: `84`
+- `HL.BSTART`: `1`
 - `XB`: `1`
 
 ### QEMU L1 mapping vs AVS translation
@@ -36,6 +37,7 @@
 
 ## Missing From QEMU L1 Mapping (First 200)
 
+- `HL.BSTART.CALL`
 - `V.LBI`
 - `V.LBI.BRG`
 - `V.LBUI`

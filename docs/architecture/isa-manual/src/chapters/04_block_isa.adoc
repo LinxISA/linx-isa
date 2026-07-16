@@ -293,7 +293,7 @@ v0.56 tile `DataType` field assignments (u5):
 
 v0.56 alias policy (normative):
 
-* Canonical encoded headers are `BSTART.TMA`, `BSTART.CUBE`, `BSTART.TEPL`, `BSTART.VPAR`, `BSTART.VSEQ`.
+* TMA, CUBE, and TEPL name binary encoding families. In v0.56, the TMA family has no generic legal assembly form: only the exact `BSTART.TLOAD`, `BSTART.TSTORE`, and `BSTART.TMOV` forms are legal.
 * Alias mnemonics are explicit v0.56 instruction forms in the golden catalog and resolve to encoding selectors:
 ** `BSTART.TLOAD` -> `BSTART.TMA Function=0`
 ** `BSTART.TSTORE` -> `BSTART.TMA Function=1`
@@ -302,6 +302,7 @@ v0.56 alias policy (normative):
 ** `BSTART.TMATMUL.ACC` (`BSTART.MAMULB.ACC`) -> `BSTART.CUBE Function=2`
 ** `BSTART.ACCCVT` -> `BSTART.CUBE Function=8`
 ** `BSTART.TADD`, `BSTART.TSUB`, `BSTART.TROWMAX`, ... -> `BSTART.TEPL TileOpcode=<assigned code>`
+* TMA `Function=3..31` encodings are reserved and MUST raise an illegal-instruction exception. They are not instruction forms and MUST NOT contribute to legal-form or executable-coverage denominators.
 * Preferred v0.56 textual spellings in docs/tests are the alias mnemonics (`BSTART.TLOAD`, `BSTART.TSTORE`,
   `BSTART.TMOV`, `BSTART.TMATMUL`, `BSTART.TMATMUL.ACC`, `BSTART.ACCCVT`, `BSTART.<TEPL-op>`), while the encoded
   contract remains `BSTART.TMA/CUBE/TEPL + selector field`.

@@ -1,15 +1,15 @@
 # LLVM C/C++ CodeGen ISA Mnemonic Breadth
 
-- Generated (UTC): `2026-07-16 18:26:16Z`
+- Generated (UTC): `2026-07-16 19:20:54Z`
 - Status: `MEASURED` (no target threshold is asserted)
-- Pure CodeGen direct coverage: `142/711`
-- Pure CodeGen after alias closure: `143/711`
-- C/C++ source-oriented direct coverage: `143/711` (`20.113%`)
-- C/C++ source-oriented after explicit alias closure: `144/711` (`20.253%`)
+- Pure CodeGen direct coverage: `142/710`
+- Pure CodeGen after alias closure: `143/710`
+- C/C++ source-oriented direct coverage: `143/710` (`20.141%`)
+- C/C++ source-oriented after explicit alias closure: `144/710` (`20.282%`)
 - Frozen plain-C reachable contract: `143/143` (`PASS`)
 - Included C/C++ artifacts: `43`
 - Excluded disassembly artifacts: `6`
-- Compiler identity: `clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 19631a66485e9ff87d1f6cf2c5ffcbd897864bd6)`
+- Compiler identity: `clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)`
 
 Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. The broader source-oriented boundary includes those tests but does not relabel their source-directed instructions as compiler-selected CodeGen. Neither metric reuses generated `99_spec_decode` or hand-authored assembly-lane artifacts.
 
@@ -130,7 +130,6 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 - `BSTART.SYS`
 - `BSTART.TEPL`
 - `BSTART.TLOAD`
-- `BSTART.TMA`
 - `BSTART.TMATMUL`
 - `BSTART.TMATMUL.ACC`
 - `BSTART.TMOV`

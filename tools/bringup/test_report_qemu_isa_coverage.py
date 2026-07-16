@@ -13,6 +13,32 @@ import report_qemu_isa_coverage as coverage
 
 
 class ReportQemuIsaCoverageTests(unittest.TestCase):
+    def test_reserved_selector_family_stays_outside_legal_forms(self) -> None:
+        families = coverage._reserved_encoding_families(
+            {
+                "state": {
+                    "engine_ops": {
+                        "tma": {
+                            "reserved_function_range": [3, 31],
+                            "reserved_behavior": "illegal_instruction",
+                        }
+                    }
+                }
+            }
+        )
+        self.assertEqual(
+            families,
+            [
+                {
+                    "family": "TMA",
+                    "selector_field": "Function",
+                    "reserved_range": [3, 31],
+                    "reserved_value_count": 29,
+                    "behavior": "illegal_instruction",
+                }
+            ],
+        )
+
     def test_checked_in_l2_l3_counts_match_executable_ledger(self) -> None:
         root = Path(__file__).resolve().parents[2]
         executable = json.loads(
@@ -171,15 +197,8 @@ class ReportQemuIsaCoverageTests(unittest.TestCase):
                     mnemonics,
                 )
 
-    def test_generic_tile_decoders_prove_only_audited_canonical_subforms(self) -> None:
+    def test_generic_cube_decoder_proves_only_audited_canonical_subforms(self) -> None:
         instructions = [
-            {
-                "mnemonic": "BSTART.TMOV",
-                "encoding": {
-                    "length_bits": 32,
-                    "parts": [{"mask": "0x07ffffff", "match": "0x00211181"}],
-                },
-            },
             {
                 "mnemonic": "BSTART.ACCCVT",
                 "encoding": {
@@ -189,12 +208,6 @@ class ReportQemuIsaCoverageTests(unittest.TestCase):
             },
         ]
         entries = [
-            {
-                "mnemonic": "bstart_tma",
-                "insn_len": 32,
-                "mask": 0x060FFFFF,
-                "match": 0x00011181,
-            },
             {
                 "mnemonic": "bstart_cube",
                 "insn_len": 32,
@@ -207,10 +220,10 @@ class ReportQemuIsaCoverageTests(unittest.TestCase):
             {coverage._spec_form_key(inst) for inst in instructions},
         )
 
-        entries[0]["match"] = 0x00031181
+        entries[0]["match"] = 0x00011181
         self.assertEqual(
             coverage._canonical_specialization_forms(instructions, entries),
-            {coverage._spec_form_key(instructions[1])},
+            set(),
         )
 
     def test_constraint_union_requires_the_complete_legal_partition(self) -> None:

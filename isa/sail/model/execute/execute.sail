@@ -2621,7 +2621,6 @@ function exec_bstart_mseq() -> unit = { exec_bstart() }
 function exec_bstart_vpar() -> unit = { exec_bstart() }
 function exec_bstart_vseq() -> unit = { exec_bstart() }
 function exec_bstart_cube() -> unit = { exec_bstart() }
-function exec_bstart_tma() -> unit = { exec_bstart() }
 function exec_bstart_tepl() -> unit = { exec_bstart() }
 function exec_bstart_fixp() -> unit = { exec_bstart() }
 function exec_bstart_tload() -> unit = { exec_bstart() }

@@ -161,6 +161,62 @@ def _validate_engine_ops(spec: Dict[str, Any], errors: List[str]) -> None:
         errors.append("state.engine_ops must be a mapping")
         return
 
+    tma = engine_ops.get("tma")
+    expected_tma_aliases = [
+        {"function": 0, "mnemonic": "BSTART.TLOAD"},
+        {"function": 1, "mnemonic": "BSTART.TSTORE"},
+        {"function": 2, "mnemonic": "BSTART.TMOV"},
+    ]
+    if not isinstance(tma, dict):
+        errors.append("state.engine_ops.tma must be a mapping")
+    else:
+        if tma.get("kind") != "function_u5":
+            errors.append("state.engine_ops.tma.kind must be function_u5")
+        if tma.get("function_field_bits") != [0, 4]:
+            errors.append("state.engine_ops.tma.function_field_bits must be [0, 4]")
+        if tma.get("legal_aliases") != expected_tma_aliases:
+            errors.append("state.engine_ops.tma.legal_aliases must assign only TLOAD=0, TSTORE=1, TMOV=2")
+        if tma.get("reserved_function_range") != [3, 31]:
+            errors.append("state.engine_ops.tma.reserved_function_range must be [3, 31]")
+        if tma.get("reserved_behavior") != "illegal_instruction":
+            errors.append("state.engine_ops.tma.reserved_behavior must be illegal_instruction")
+
+    instructions = spec.get("instructions", [])
+    if any(str(inst.get("mnemonic") or "") == "BSTART.TMA" for inst in instructions):
+        errors.append("BSTART.TMA is an encoding-family name, not a legal v0.56 instruction form")
+
+    one_part_32 = []
+    for inst in instructions:
+        parts = inst.get("encoding", {}).get("parts", [])
+        if len(parts) != 1 or int(inst.get("length_bits", 0)) != 32:
+            continue
+        one_part_32.append(
+            (
+                str(inst.get("mnemonic") or ""),
+                int(parts[0]["mask"], 0),
+                int(parts[0]["match"], 0),
+            )
+        )
+
+    tma_base = 0x00011181
+    for function, expected in enumerate(("BSTART.TLOAD", "BSTART.TSTORE", "BSTART.TMOV")):
+        word = (1 << 27) | (function << 20) | tma_base
+        matches = sorted(name for name, mask, match in one_part_32 if word & mask == match)
+        if matches != [expected]:
+            errors.append(
+                f"TMA Function={function} FP32 must decode only as {expected}, got {matches}"
+            )
+
+    for dtype in range(32):
+        for function in range(3, 32):
+            word = (dtype << 27) | (function << 20) | tma_base
+            matches = sorted(name for name, mask, match in one_part_32 if word & mask == match)
+            if matches:
+                errors.append(
+                    f"reserved TMA dtype={dtype} Function={function} matches legal forms {matches}"
+                )
+                return
+
     tepl = engine_ops.get("tepl")
     if tepl is None:
         return

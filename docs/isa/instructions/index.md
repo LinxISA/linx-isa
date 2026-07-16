@@ -1,6 +1,6 @@
 # All Instructions
 
-Complete alphabetical index of all **747** instruction forms in the LinxISA v0.56 catalog.
+Complete alphabetical index of all **746** instruction forms in the LinxISA v0.56 catalog.
 
 Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 
@@ -84,7 +84,6 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [BSTART.SYS](bstart_sys.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.TEPL](bstart_tepl.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.TLOAD](bstart_tload.md) | [Block Split](../groups/block_split.md) | 32 | Loads a 64-bit value from memory. |
-| [BSTART.TMA](bstart_tma.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.TMATMUL](bstart_tmatmul.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.TMATMUL.ACC](bstart_tmatmul_acc.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.TMOV](bstart_tmov.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |

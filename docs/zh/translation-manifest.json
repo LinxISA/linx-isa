@@ -166,7 +166,7 @@
       "translation_sha256": "09695516edf09e05a158cdfe2f6da13d91d9ce47b1dd28951d738809f9a8bf6d"
     },
     "bringup/ALIGNMENT_MATRIX.md": {
-      "source_sha256": "2ac6ac81a00de406904a9cf5193d1254dedb09de90c83024ec1f13cdd2565f46",
+      "source_sha256": "8da0f0b97be67f749b2b9c722c8d2c81b17fb2c83e2e2c07db69d629f4360fac",
       "translation_sha256": "83f1657750c08da48ff55f378d25ee0cd46a2d38f1c52e2beb5d9787eca2e2d4"
     },
     "bringup/AVS_CONTRACT.md": {
@@ -186,7 +186,7 @@
       "translation_sha256": "daa71b3132df03b69b01a7f312d21faba28c290651432597392ef3fd775e540e"
     },
     "bringup/ISA_GAP_ANALYSIS.md": {
-      "source_sha256": "efcba5ccdc7f627add3bbce0a30668d7191421c0279a345ee8c0e3e2a701c1f5",
+      "source_sha256": "85c0724808e60bfc6133650ec555ec324917596e3e10b8c59d38ecd56d1ca9b1",
       "translation_sha256": "24c62e4f3db81e7eb715661e465068bf6a4657f2d9b1dcbfc692336e6d570d97"
     },
     "bringup/LINX_ASM_ABI_UNWIND_CONTEXT_CHECKLIST.md": {
@@ -202,7 +202,7 @@
       "translation_sha256": "c456557ec6fa1ce6b516a8c282d36a82225a606274524fc2d9cfe536e4f3ec36"
     },
     "bringup/README.md": {
-      "source_sha256": "02496691a6aabc88c80e6b8c40e62e35517172e65d7aecbb7b74953cd576fe19",
+      "source_sha256": "d88f2a657dd4b5a7d468d36cfc1f14475a5b3d6ba24b1d6148abe97af4a7d0d4",
       "translation_sha256": "41b6193f565816a5635bc1347cbc163a2870123c338b0b865be48184b3bb9e9d"
     },
     "bringup/SIMT_COMPILER_MATURITY_PLAN.md": {
@@ -290,11 +290,11 @@
       "translation_sha256": "b1e9c8d23087e58e80b4f6b53491cc872ec42af3805c6b79b91b26069d5774f0"
     },
     "bringup/gates/qemu_isa_coverage_latest.md": {
-      "source_sha256": "8d8b3ea71a4e250ac5a931f5eff27e3122759691b73def63464f0b359415a5f5",
+      "source_sha256": "6bbb2df8913fc757743018c044e02d28280dcf104f8a4794003b53cb228211ec",
       "translation_sha256": "e1f9d5565f16fae1d143ba9bbe8c74e30cb01c71e144ce665a1f9f9f36ecefe4"
     },
     "bringup/gates/qemu_opcode_sync_latest.md": {
-      "source_sha256": "1a0fcc8d43a1c0a13270d030b52ef8a16eca76bdc9baaf770ae9b3e197c9c423",
+      "source_sha256": "8f8b6df0cc0ec111c7245f0ad088083cf0e033bc5c59eb7b0787bd387a1ea1ea",
       "translation_sha256": "28aeac6e6fb1afeca0c8a40b888d6969c317d25208ef45ab2b3fd4d078c7956c"
     },
     "bringup/libc_status.md": {
@@ -1118,7 +1118,7 @@
       "translation_sha256": "982f7181a3c24bd07c3217ea0168d5de59814554695a013803fbe7bbee4fbfe4"
     },
     "isa/groups/block_split.md": {
-      "source_sha256": "591a0717995a9be181a05561c40a763d51e588a9f97854cc2bb2bc92ec173da9",
+      "source_sha256": "f3e16022e57df03863a6127aca8b7dca54cb10e2d8688de36e88ff039ee67743",
       "translation_sha256": "255fb16e91a91401bb68c4b50956959ba02901ba2b732769454b2397e58f954e"
     },
     "isa/groups/branch.md": {
@@ -1190,7 +1190,7 @@
       "translation_sha256": "08a29192998e6477c9719dd68cda2863027e81331d7fb2aec5dd57e08972df97"
     },
     "isa/groups/index.md": {
-      "source_sha256": "c10c8e86d32e3969c104a5f9471751b62d364e85b65602195aa1c8be4a2c052a",
+      "source_sha256": "78d5ecc8e5d759d130c30fdaf5ac53a71b49accd1e65f85891f611de87a11deb",
       "translation_sha256": "58baec8167f6d5cabc3f9823de78311e4cbd859eb8b29b666dff62a6cc137f76"
     },
     "isa/groups/load_immediate_offset.md": {
@@ -1830,7 +1830,7 @@
       "translation_sha256": "c023a28ba0d0e108b8de9b351e8fd0c84a15ef66fa23980d49e2cd0e6a07f7e2"
     },
     "isa/index.md": {
-      "source_sha256": "427d4a176d815fa36c4c878d65f59b633152cc3a9b4a76262d399a9311a9700d",
+      "source_sha256": "3b12605cdeb42c36c7ce58a01e5b45d8505042b6805634a26bc84ccd434aa0c5",
       "translation_sha256": "b44e4289b38a8ec6100ea5ba6c23ec50da7f1c4cf73c427c5a6666b970db0dea"
     },
     "isa/inst/LibPseudoCode.md": {
@@ -5245,10 +5245,6 @@
       "source_sha256": "92c7c08a9673d27598495cb51c6dd4ba1521906c57a7a421080c5a3b412244f7",
       "translation_sha256": "ffc84bcf31f7391963e516583e11f9dd5f476f5744a378a5bc9745c694fe28c4"
     },
-    "isa/instructions/bstart_tma.md": {
-      "source_sha256": "130575b232468835cba13a7afda5cbe09edc652c12b62529241f4a1f8b27d980",
-      "translation_sha256": "39e4a88f827c4fb8d4515fd93758e0453ef3545a829968000996a3742de0a9b2"
-    },
     "isa/instructions/bstart_tmatmul.md": {
       "source_sha256": "9a7c2c4151c382305a957da4787df21eb63c17997d4b2f87c42c56a9a1e2caed",
       "translation_sha256": "717e1f7a91da06221ef89b4096b07c1532c69dc0e408f6eccbed1d83626fc2d5"
@@ -6506,7 +6502,7 @@
       "translation_sha256": "77a2c05e2e1a76c24bf10a9e9973947d6f087fad502c009c39deceef1d8265d2"
     },
     "isa/instructions/index.md": {
-      "source_sha256": "ee6d339c47e12ea43bc0b329242fc4ed1cff6a6b217e3f8efacfd34f03a9f19d",
+      "source_sha256": "85c2a4770f6798353ae13a3a6227da463e2e4b3a5e22b0a1ab21f9da513eb6da",
       "translation_sha256": "e431843538eea1226c59c05a0d6fd7582635b1f1e8355ceff6539611a7485ab4"
     },
     "isa/instructions/j.md": {

@@ -1,5 +1,5 @@
 {
-  "coverage_count": 711,
+  "coverage_count": 710,
   "coverage_ratio_percent": 100.0,
   "covered_by_object": {
     "01_arithmetic.o": [
@@ -810,7 +810,6 @@
       "BSTART.SYS",
       "BSTART.TEPL",
       "BSTART.TLOAD",
-      "BSTART.TMA",
       "BSTART.TMATMUL",
       "BSTART.TMATMUL.ACC",
       "BSTART.TMOV",
@@ -1768,7 +1767,7 @@
     "BIC": 1,
     "BIS": 1,
     "BSE": 1,
-    "BSTART": 19,
+    "BSTART": 18,
     "BSTOP": 1,
     "BWE": 1,
     "BWI": 1,
@@ -2244,9 +2243,6 @@
     ],
     "BSTART.TLOAD": [
       "41_v056_isa_forms.o",
-      "99_spec_decode_qemu.o"
-    ],
-    "BSTART.TMA": [
       "99_spec_decode_qemu.o"
     ],
     "BSTART.TMATMUL": [
@@ -5033,7 +5029,7 @@
       "softfp.o"
     ]
   },
-  "generated_at_utc": "2026-07-16 18:26:49Z",
+  "generated_at_utc": "2026-07-16 19:20:54Z",
   "llvm_objdump": "/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/llvm-objdump",
   "missing_by_prefix": {},
   "missing_count": 0,
@@ -5046,11 +5042,11 @@
   },
   "schema_version": "qemu-avs-translation-coverage-v1",
   "spec_path": "/Users/zhoubot/linx-isa/isa/v0.56/linxisa-v0.56.json",
-  "spec_unique_mnemonics": 711,
+  "spec_unique_mnemonics": 710,
   "top_covering_objects": [
     [
       "99_spec_decode_qemu.o",
-      711
+      710
     ],
     [
       "softfp.o",

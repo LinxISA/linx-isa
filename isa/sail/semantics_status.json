@@ -276,10 +276,6 @@
       "mnemonic": "BSTART.TLOAD",
       "status": "executable-subset"
     },
-    "bstart_tma_32_f949c94c39c7": {
-      "mnemonic": "BSTART.TMA",
-      "status": "executable-subset"
-    },
     "bstart_tmatmul_32_f9da70e4e0ad": {
       "mnemonic": "BSTART.TMATMUL",
       "status": "executable-subset"

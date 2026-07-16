@@ -224,7 +224,12 @@ def main(argv: list[str]) -> int:
     if validation_error is not None:
         print(f"error: invalid QEMU L1 mapping report: {validation_error}", file=sys.stderr)
         return 1
-    qemu_impl_covered = spec_mnemonics - set(qemu_isa_report["missing_spec_mnemonics"])
+    qemu_missing = {
+        analyzer.canonicalize_mnemonic(str(mnemonic))
+        for mnemonic in qemu_isa_report["missing_spec_mnemonics"]
+    }
+    qemu_missing.discard("")
+    qemu_impl_covered = spec_mnemonics - qemu_missing
 
     qemu_translation_report = json.loads(qemu_translation_report_path.read_text(encoding="utf-8"))
     qemu_translation_inventory = set(

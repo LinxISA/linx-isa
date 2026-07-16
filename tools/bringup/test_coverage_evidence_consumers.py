@@ -67,6 +67,15 @@ class CoverageEvidenceConsumerTests(unittest.TestCase):
         )
         self.assertEqual(translation["non_spec_count"], 0)
 
+        qemu_l1 = aggregate["qemu_l1_mapping"]
+        qemu_source = json.loads(
+            (root / "docs/bringup/gates/qemu_isa_coverage_latest.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        self.assertEqual(qemu_l1["coverage_count"], qemu_source["coverage_count"])
+        self.assertEqual(qemu_l1["missing_count"], qemu_source["missing_count"])
+
     def test_current_bringup_views_match_authoritative_qemu_l1_counts(self) -> None:
         root = Path(__file__).resolve().parents[2]
         for relative in (
@@ -75,10 +84,10 @@ class CoverageEvidenceConsumerTests(unittest.TestCase):
         ):
             with self.subTest(document=relative):
                 text = (root / relative).read_text(encoding="utf-8")
-                self.assertIn("620/711", text)
-                self.assertIn("625/747", text)
-                self.assertNotIn("618/711", text)
-                self.assertNotIn("621/747", text)
+                self.assertIn("624/710", text)
+                self.assertIn("655/746", text)
+                self.assertNotIn("620/711", text)
+                self.assertNotIn("625/747", text)
 
     def test_checked_in_reports_publish_the_llvm_metric_contract(self) -> None:
         root = Path(__file__).resolve().parents[2]

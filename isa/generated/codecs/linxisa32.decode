@@ -288,9 +288,6 @@ bstart_tepl_32_d022db6dacb3 .... .01. .... .... .001 0001 1000 0001 DataType=%Da
 # BSTART.TLOAD | BSTART.TLOAD DataType | opcodes/lx_32.opc:85
 bstart_tload_32_d0c18bb0ab15 .... .000 0000 0001 0001 0001 1000 0001 DataType=%DataType_27_5
 
-# BSTART.TMA | BSTART.TMA Function, DataType | opcodes/lx_32.opc:86
-bstart_tma_32_f949c94c39c7 .... .00. .... 0001 0001 0001 1000 0001 DataType=%DataType_27_5 %Function
-
 # BSTART.TMATMUL | BSTART.TMATMUL DataType | opcodes/lx_32.opc:87
 bstart_tmatmul_32_f9da70e4e0ad .... .000 0000 0011 0001 0001 1000 0001 DataType=%DataType_27_5
 

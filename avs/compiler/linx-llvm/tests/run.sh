@@ -397,6 +397,17 @@ if [[ -d "$NEG_DIR" ]]; then
     cat "$NEG_OUT/tepl_tileop_range.err" >&2
     exit 1
   fi
+
+  echo "[neg] reserved TMA selector rejection"
+  if "$LLVMMC" -triple="$TARGET" -filetype=obj "$NEG_DIR/tma_reserved_selector.s" -o /dev/null 2>"$NEG_OUT/tma_reserved_selector.err"; then
+    echo "error: reserved TMA selector unexpectedly assembled" >&2
+    exit 1
+  fi
+  if ! grep -Eq "BSTART\.TMA Function must be in range 0\.\.2 in canonical v0\.56" "$NEG_OUT/tma_reserved_selector.err"; then
+    echo "error: reserved TMA selector rejection did not report an operand/match failure" >&2
+    cat "$NEG_OUT/tma_reserved_selector.err" >&2
+    exit 1
+  fi
 fi
 
 if [[ -n "$READOBJ" ]]; then

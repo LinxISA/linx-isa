@@ -95,6 +95,32 @@
   },
   "note": "Authoritative semantic catalog for accelerator engine ops in LinxISA v0.56.5.",
   "profile": "v0.56",
+  "tma": {
+    "function_field_bits": [
+      0,
+      4
+    ],
+    "kind": "function_u5",
+    "legal_aliases": [
+      {
+        "function": 0,
+        "mnemonic": "BSTART.TLOAD"
+      },
+      {
+        "function": 1,
+        "mnemonic": "BSTART.TSTORE"
+      },
+      {
+        "function": 2,
+        "mnemonic": "BSTART.TMOV"
+      }
+    ],
+    "reserved_behavior": "illegal_instruction",
+    "reserved_function_range": [
+      3,
+      31
+    ]
+  },
   "tepl": {
     "kind": "TileOpcode",
     "ops": [

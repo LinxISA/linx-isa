@@ -126,7 +126,6 @@ SPECIAL_MAP: dict[str, str | list[str]] = {
     "hl_bstart_std_cond": "HL.BSTART.STD",
     "hl_bstart_std_direct": "HL.BSTART.STD",
     "hl_bstart_std_fall": "HL.BSTART.STD",
-    "bstart_tma": ["BSTART.TMA", "BSTART.TMOV"],
     "bstart_cube": ["BSTART.CUBE", "BSTART.ACCCVT"],
     "bstart_tepl": [
         "BSTART.TEPL",
@@ -225,9 +224,40 @@ SPECIAL_MAP: dict[str, str | list[str]] = {
 CANONICAL_SPECIALIZATION_PROOFS: dict[str, set[str]] = {
     # These architectural names freeze one Function value of a generic tile
     # decoder. The generic translator forwards the decoded Function unchanged.
-    "bstart_tma": {"BSTART.TMOV"},
     "bstart_cube": {"BSTART.ACCCVT"},
 }
+
+
+def _reserved_encoding_families(spec: dict[str, object]) -> list[dict[str, object]]:
+    """Return reserved selector families without adding them to legal coverage."""
+    state = spec.get("state")
+    if not isinstance(state, dict):
+        return []
+    engine_ops = state.get("engine_ops")
+    if not isinstance(engine_ops, dict):
+        return []
+    tma = engine_ops.get("tma")
+    if not isinstance(tma, dict):
+        return []
+    reserved_range = tma.get("reserved_function_range")
+    if (
+        not isinstance(reserved_range, list)
+        or len(reserved_range) != 2
+        or not all(isinstance(value, int) for value in reserved_range)
+    ):
+        return []
+    lo, hi = reserved_range
+    if not 0 <= lo <= hi <= 31:
+        return []
+    return [
+        {
+            "family": "TMA",
+            "selector_field": "Function",
+            "reserved_range": [lo, hi],
+            "reserved_value_count": hi - lo + 1,
+            "behavior": str(tma.get("reserved_behavior") or ""),
+        }
+    ]
 
 MANUAL_TRANSLATE_EVIDENCE: tuple[dict[str, object], ...] = (
     {
@@ -1106,6 +1136,7 @@ def main(argv: list[str]) -> int:
         return 1
 
     instructions = [inst for inst in spec_data.get("instructions", []) if str(inst.get("mnemonic", "")).strip()]
+    reserved_encoding_families = _reserved_encoding_families(spec_data)
     spec_set = {str(inst.get("mnemonic", "")).strip() for inst in instructions}
     spec_forms = {_spec_form_key(inst) for inst in instructions}
     spec_forms_by_id = {
@@ -1320,7 +1351,8 @@ def main(argv: list[str]) -> int:
         "legal_mnemonic_count": spec_count,
         "reserved_mnemonic_count": 0,
         "legal_form_count": spec_form_count,
-        "reserved_form_count": 0,
+        "reserved_form_count": len(reserved_encoding_families),
+        "reserved_encoding_families": reserved_encoding_families,
         "mapped_by_prefix": mapped_by_prefix,
         "missing_by_prefix": missing_by_prefix,
         "mapped_forms_by_prefix": mapped_forms_by_prefix,

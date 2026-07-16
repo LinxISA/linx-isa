@@ -639,16 +639,6 @@ function decode_execute32(inst : bits(32)) -> unit = {
     decoded_block_contract_kind_shadow = 0b0110;
     exec_bstart_fixp()
   }
-  else if (inst & 0x060fffff) == 0x00011181 & (unsigned(inst[24..20]) >= 3) then {
-    // BSTART.TMA | BSTART.TMA Function, DataType | {'file': 'opcodes/lx_32.opc', 'line': 86}
-    let datatype : bits(5) = inst[31..27];
-    let function_field : bits(5) = inst[24..20];
-    decoded_block_target_pc_shadow = read_pc_or_tpc();
-    decoded_block_type_shadow = 0b1100;
-    decoded_block_xfer_kind_shadow = block_xfer_fall();
-    decoded_block_contract_kind_shadow = 0b0110;
-    exec_bstart_tma()
-  }
   else if (inst & 0xf9f0707f) == 0x0000007b then {
     // FABS | fabs.{T} SrcL, ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 131}
     let regdst : bits(5) = inst[11..7];

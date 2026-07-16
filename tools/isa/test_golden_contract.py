@@ -70,6 +70,33 @@ def main() -> int:
     assert field_source["fields"]["reserve"]["documented_only"] is True
     assert field_source["fields"]["TileOpcode"]["reserved_ranges"] == [[64, 1023]]
 
+    tma = spec["state"]["engine_ops"]["tma"]
+    assert tma == {
+        "function_field_bits": [0, 4],
+        "kind": "function_u5",
+        "legal_aliases": [
+            {"function": 0, "mnemonic": "BSTART.TLOAD"},
+            {"function": 1, "mnemonic": "BSTART.TSTORE"},
+            {"function": 2, "mnemonic": "BSTART.TMOV"},
+        ],
+        "reserved_behavior": "illegal_instruction",
+        "reserved_function_range": [3, 31],
+    }
+    assert "BSTART.TMA" not in mnemonics
+    exact_tma = {
+        inst["mnemonic"]: inst["encoding"]["parts"][0]
+        for inst in instructions
+        if inst["mnemonic"] in {"BSTART.TLOAD", "BSTART.TSTORE", "BSTART.TMOV"}
+    }
+    assert {
+        name: (int(part["mask"], 0), int(part["match"], 0))
+        for name, part in exact_tma.items()
+    } == {
+        "BSTART.TLOAD": (0x07FFFFFF, 0x00011181),
+        "BSTART.TSTORE": (0x07FFFFFF, 0x00111181),
+        "BSTART.TMOV": (0x07FFFFFF, 0x00211181),
+    }
+
     observed_fields = {
         field["name"]
         for inst in instructions

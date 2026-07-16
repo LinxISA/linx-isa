@@ -5,8 +5,8 @@
 <span class="ch-tag ch-tag-04">Ch 04</span>
 &nbsp; <strong>Block ISA — Block-structured Control Flow</strong> &nbsp;|&nbsp;
 **Group:** Block Split &nbsp;|&nbsp;
-**Forms:** 44 &nbsp;|&nbsp;
-**Unique mnemonics:** 30
+**Forms:** 43 &nbsp;|&nbsp;
+**Unique mnemonics:** 29
 
 </div>
 
@@ -27,7 +27,6 @@ Block structural instructions (BSTART, BSTOP, FENTRY, etc.).
 | [BSTART.SYS](../instructions/bstart_sys.md) | `BSTART.SYS FALL<, fixup_label>` | 32 | — | Terminates the current block and begins the next. |
 | [BSTART.TEPL](../instructions/bstart_tepl.md) | `BSTART.TEPL TileOpcode, DataType` | 32 | — | Terminates the current block and begins the next. |
 | [BSTART.TLOAD](../instructions/bstart_tload.md) | `BSTART.TLOAD DataType` | 32 | — | Loads a 64-bit value from memory. |
-| [BSTART.TMA](../instructions/bstart_tma.md) | `BSTART.TMA Function, DataType` | 32 | — | Terminates the current block and begins the next. |
 | [BSTART.TMATMUL](../instructions/bstart_tmatmul.md) | `BSTART.TMATMUL DataType` | 32 | — | Terminates the current block and begins the next. |
 | [BSTART.TMATMUL.ACC](../instructions/bstart_tmatmul_acc.md) | `BSTART.TMATMUL.ACC DataType` | 32 | — | Terminates the current block and begins the next. |
 | [BSTART.TMOV](../instructions/bstart_tmov.md) | `BSTART.TMOV DataType` | 32 | — | Terminates the current block and begins the next. |

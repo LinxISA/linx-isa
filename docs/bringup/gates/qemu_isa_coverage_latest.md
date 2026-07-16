@@ -1,21 +1,21 @@
 # ISA vs QEMU Decoder/Source Mapping Snapshot
 
-- Generated (UTC): `2026-07-16 18:26:50Z`
+- Generated (UTC): `2026-07-16 19:21:05Z`
 - Evidence level: `L1`
 - Claim: `decoder_source_mapping`
 - L2 runtime execution: `available`; `60` forms / `60` mnemonics
 - L3 semantic oracle: `available`; `60` forms / `60` mnemonics
 - Limitation: L1 mapping does not imply execution; L2/L3 counts are independently audited per-form evidence and remain partial.
-- Spec unique mnemonics: `711`
+- Spec unique mnemonics: `710`
 - QEMU unique decode mnemonics (non-internal): `656`
-- QEMU mapped spec mnemonics: `625`
-- L1 mnemonic mapping: `625/711` (`87.9%`)
-- Spec legal forms: `747`
-- QEMU mapped spec forms: `656`
-- L1 form mapping: `656/747` (`87.82%`)
+- QEMU mapped spec mnemonics: `624`
+- L1 mnemonic mapping: `624/710` (`87.89%`)
+- Spec legal forms: `746`
+- QEMU mapped spec forms: `655`
+- L1 form mapping: `655/746` (`87.8%`)
 - Missing spec mnemonics: `86`
 - Missing spec forms: `91`
-- Reserved spec forms: `0`
+- Reserved spec forms: `1`
 - Unmapped QEMU mnemonics: `0`
 
 ## L1 Mnemonic Mapping By Prefix
@@ -38,7 +38,7 @@
 - `BIC`: `1`
 - `BIS`: `1`
 - `BSE`: `1`
-- `BSTART`: `19`
+- `BSTART`: `18`
 - `BSTOP`: `1`
 - `BWE`: `1`
 - `BWI`: `1`
@@ -204,7 +204,7 @@
 - `BIC`: `1`
 - `BIS`: `1`
 - `BSE`: `1`
-- `BSTART`: `27`
+- `BSTART`: `26`
 - `BSTOP`: `1`
 - `BWE`: `1`
 - `BWI`: `1`

@@ -2912,35 +2912,6 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
-[[insndesc-block-split-bstart-tma]]
-===== BSTART.TMA
-
-Terminates the current block and begins the next block, encoding both block type and transition kind.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `BSTART.TMA Function, DataType`
-
-Encoding::
-+
-.`bstart_tma_32_f949c94c39c7` — `BSTART.TMA Function, DataType`
-image::encodings/enc_bstart_tma.svg[BSTART.TMA encoding form bstart_tma_32_f949c94c39c7,align="center"]
-
-
-Encoding notes (informative)::
-+
-* Generic TMA selector form. Function=0/1/2 are emitted as BSTART.TLOAD/BSTART.TSTORE/BSTART.TMOV aliases; 3..31 are reserved in v0.56 (architecturally illegal/UNPREDICTABLE): software must not generate them and implementations must not assign ad-hoc semantics.
-
-Operation (informative)::
-+
-[source]
-----
-EndBlock()
-BeginNextBlock(/* type/kind/target as encoded */)
-----
-
 [[insndesc-block-split-bstart-tmatmul]]
 ===== BSTART.TMATMUL
 

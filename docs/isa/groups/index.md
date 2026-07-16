@@ -18,7 +18,7 @@ See the [chapter index](index.md) for the manual organization.
 | [Block Offset](block_offset.md) | 1 | **Ch 4** — [source](index.md) | `B.TEXT` |
 | [Cache Maintain](cache_maintain.md) | 16 | **Ch 19** — [source](index.md) | `BC.IALL`, `BC.IVA`, `DC.CISW`, `DC.CIVA`, `DC.CSW`, `DC.CVA`, `DC.IALL`, `DC.ISW` +8 |
 | [Bit Operation](bit_operation.md) | 8 | **Ch 12** — [source](index.md) | `BCNT`, `BIC`, `BIS`, `BXS`, `BXU`, `CLZ`, `CTZ`, `REV` |
-| [Block Split](block_split.md) | 44 | **Ch 4** — [source](index.md) | `BSTART`, `BSTART.ACCCVT`, `BSTART.CUBE`, `BSTART.FIXP`, `BSTART.FP`, `BSTART.MPAR`, `BSTART.MSEQ`, `BSTART.STD` +22 |
+| [Block Split](block_split.md) | 43 | **Ch 4** — [source](index.md) | `BSTART`, `BSTART.ACCCVT`, `BSTART.CUBE`, `BSTART.FIXP`, `BSTART.FP`, `BSTART.MPAR`, `BSTART.MSEQ`, `BSTART.STD` +21 |
 | [BSTART](bstart.md) | 20 | **Ch 4** — [source](index.md) | `BSTART CALL`, `HL.BSTART CALL`, `HL.BSTART.FP`, `HL.BSTART.STD`, `HL.BSTART.SYS`, `L.BSTART.FP`, `L.BSTART.STD`, `L.BSTART.SYS` |
 | [Arithmetic Operation](arithmetic_operation.md) | 20 | **Ch 12** — [source](index.md) | `C.ADD`, `C.AND`, `C.OR`, `C.SUB`, `V.ADD`, `V.ADDI`, `V.AND`, `V.ANDI` +12 |
 | [Arithmetic](arithmetic.md) | 1 | **Ch 12** — [source](index.md) | `C.ADDI` |

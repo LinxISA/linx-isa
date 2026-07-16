@@ -2,9 +2,10 @@
   "claim": "l1_mapping_coherence",
   "compiler_analyzer": "/Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/analyze_coverage.py",
   "compiler_out_dir": "/Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/out",
-  "generated_at_utc": "2026-07-16 18:26:50Z",
+  "generated_at_utc": "2026-07-16 19:24:32Z",
   "inconsistencies": {
     "compiler_only_vs_qemu_impl": [
+      "HL.BSTART.CALL",
       "V.LBI",
       "V.LBI.BRG",
       "V.LBUI",
@@ -97,12 +98,17 @@
         84
       ],
       [
+        "HL.BSTART",
+        1
+      ],
+      [
         "XB",
         1
       ]
     ],
-    "compiler_only_vs_qemu_impl_count": 85,
+    "compiler_only_vs_qemu_impl_count": 86,
     "compiler_only_vs_qemu_l1_mapping": [
+      "HL.BSTART.CALL",
       "V.LBI",
       "V.LBI.BRG",
       "V.LBUI",
@@ -195,11 +201,15 @@
         84
       ],
       [
+        "HL.BSTART",
+        1
+      ],
+      [
         "XB",
         1
       ]
     ],
-    "compiler_only_vs_qemu_l1_mapping_count": 85,
+    "compiler_only_vs_qemu_l1_mapping_count": 86,
     "compiler_only_vs_translation": [],
     "compiler_only_vs_translation_by_prefix": [],
     "compiler_only_vs_translation_count": 0,
@@ -212,6 +222,7 @@
     "translation_non_spec_count": 0,
     "translation_non_spec_mnemonics": [],
     "translation_without_qemu_impl": [
+      "HL.BSTART.CALL",
       "V.LBI",
       "V.LBI.BRG",
       "V.LBUI",
@@ -298,8 +309,9 @@
       "V.SWI.U.BRG",
       "XB"
     ],
-    "translation_without_qemu_impl_count": 85,
+    "translation_without_qemu_impl_count": 86,
     "translation_without_qemu_l1_mapping": [
+      "HL.BSTART.CALL",
       "V.LBI",
       "V.LBI.BRG",
       "V.LBUI",
@@ -386,11 +398,11 @@
       "V.SWI.U.BRG",
       "XB"
     ],
-    "translation_without_qemu_l1_mapping_count": 85
+    "translation_without_qemu_l1_mapping_count": 86
   },
   "llvm": {
     "claim": "observed_disassembly_mnemonic_breadth",
-    "coverage_count": 711,
+    "coverage_count": 710,
     "coverage_ratio_percent": 100.0,
     "metric_scope": "unique ISA mnemonics observed in *.objdump instruction lines",
     "missing_count": 0,
@@ -404,15 +416,15 @@
     "L1": {
       "availability": "available",
       "claim": "decoder_source_mapping",
-      "form_count": 656,
-      "mnemonic_count": 625
+      "form_count": 655,
+      "mnemonic_count": 624
     },
     "L2": {
       "availability": "available",
       "claim": "runtime_execution",
       "form_count": 60,
       "mnemonic_count": 60,
-      "qemu_sha": "ca3e11ba7b4539d846377f9c42baa067d458188f",
+      "qemu_sha": "107cb00916f6cf3c30de6610a2a4ab36fc312511",
       "source": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_executable_coverage_latest.json"
     },
     "L3": {
@@ -420,30 +432,30 @@
       "claim": "semantic_oracle",
       "form_count": 60,
       "mnemonic_count": 60,
-      "qemu_sha": "ca3e11ba7b4539d846377f9c42baa067d458188f",
+      "qemu_sha": "107cb00916f6cf3c30de6610a2a4ab36fc312511",
       "source": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_executable_coverage_latest.json"
     }
   },
   "qemu_impl": {
     "claim": "decoder_source_mapping",
-    "coverage_count": 626,
-    "coverage_ratio_percent": 87.9,
+    "coverage_count": 624,
+    "coverage_ratio_percent": 87.89,
     "deprecated_alias_for": "qemu_l1_mapping",
     "evidence_level": "L1",
-    "missing_count": 85
+    "missing_count": 86
   },
   "qemu_isa_report": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_isa_coverage_latest.json",
   "qemu_l1_mapping": {
     "claim": "decoder_source_mapping",
-    "coverage_count": 626,
-    "coverage_ratio_percent": 87.9,
+    "coverage_count": 624,
+    "coverage_ratio_percent": 87.89,
     "evidence_level": "L1",
-    "missing_count": 85
+    "missing_count": 86
   },
   "qemu_translation": {
-    "coverage_count": 711,
+    "coverage_count": 710,
     "coverage_ratio_percent": 100.0,
-    "inventory_count": 711,
+    "inventory_count": 710,
     "missing_count": 0,
     "missing_spec_mnemonics": [],
     "non_spec_count": 0,
@@ -458,5 +470,5 @@
   },
   "schema_version": "isa-llvm-qemu-l1-coherence-v3",
   "spec_path": "/Users/zhoubot/linx-isa/isa/v0.56/linxisa-v0.56.json",
-  "spec_unique_mnemonics": 711
+  "spec_unique_mnemonics": 710
 }

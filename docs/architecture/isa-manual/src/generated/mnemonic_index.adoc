@@ -54,7 +54,6 @@ This table lists unique mnemonics in the v0.56.5 catalog. Each mnemonic may have
 |`BSTART.SYS` |Block Split |32 |1
 |`BSTART.TEPL` |Block Split |32 |1
 |`BSTART.TLOAD` |Block Split |32 |1
-|`BSTART.TMA` |Block Split |32 |1
 |`BSTART.TMATMUL` |Block Split |32 |1
 |`BSTART.TMATMUL.ACC` |Block Split |32 |1
 |`BSTART.TMOV` |Block Split |32 |1

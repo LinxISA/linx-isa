@@ -10,8 +10,8 @@ runner is `tools/bringup/run_benchmark_linux_flow.py`.
 Evidence:
 
 - `docs/bringup/gates/qemu_isa_coverage_latest.md` was regenerated on
-  2026-07-15 and records QEMU L1 decoder/source mapping at `620/711` mapped
-  spec mnemonics and `625/747` mapped legal forms. LLVM observed-disassembly
+  2026-07-17 and records QEMU L1 decoder/source mapping at `624/710` mapped
+  spec mnemonics and `655/746` mapped legal forms. LLVM observed-disassembly
   breadth and the AVS translation inventory both cover `711/711`; executable
   semantic breadth remains a separate, intentionally red evidence level.
 - The v0.56.5 TSVC hard break is closed on clean QEMU
