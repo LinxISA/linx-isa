@@ -94,5 +94,59 @@ class QemuFinisherTests(unittest.TestCase):
                 )
 
 
+class ProvenanceValidationTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.runner = _load_runner_module()
+        self.llvm_head = "a" * 40
+        self.qemu_head = "b" * 40
+        self.receipt = {
+            "tools": {
+                name: {
+                    "path": f"/tools/{name}",
+                    "sha256": char * 64,
+                    "size_bytes": 123,
+                }
+                for name, char in (
+                    ("clang", "1"),
+                    ("lld", "2"),
+                    ("llvm_objdump", "3"),
+                    ("qemu", "4"),
+                )
+            },
+            "clang_revision": self.llvm_head,
+            "llvm_head": self.llvm_head,
+            "qemu": {
+                "qemu_repo_head": self.qemu_head,
+                "clean_build_marker": f"{self.qemu_head}:worktree",
+                "clean_build_marker_matches_head": True,
+                "clean_build_for_head": True,
+            },
+            "scoped_dirty": {
+                "tsvc": {"available": True, "dirty_paths": []},
+                "llvm": {"available": True, "dirty_paths": []},
+                "qemu": {"available": True, "dirty_paths": []},
+            },
+        }
+
+    def test_valid_receipt_passes(self) -> None:
+        self.runner._validate_provenance_receipt(self.receipt, require_qemu=True)
+
+    def test_stale_clang_revision_fails_closed(self) -> None:
+        self.receipt["clang_revision"] = "c" * 40
+        with self.assertRaisesRegex(SystemExit, "clang revision does not match LLVM HEAD"):
+            self.runner._validate_provenance_receipt(self.receipt, require_qemu=True)
+
+    def test_qemu_marker_mismatch_fails_closed(self) -> None:
+        self.receipt["qemu"]["clean_build_marker_matches_head"] = False
+        self.receipt["qemu"]["clean_build_for_head"] = False
+        with self.assertRaisesRegex(SystemExit, "HEAD-matched clean QEMU"):
+            self.runner._validate_provenance_receipt(self.receipt, require_qemu=True)
+
+    def test_scoped_dirty_fails_closed(self) -> None:
+        self.receipt["scoped_dirty"]["llvm"]["dirty_paths"] = ["lib/Target/Linx/Foo.cpp"]
+        with self.assertRaisesRegex(SystemExit, "dirty provenance scope: llvm"):
+            self.runner._validate_provenance_receipt(self.receipt, require_qemu=True)
+
+
 if __name__ == "__main__":
     unittest.main()
