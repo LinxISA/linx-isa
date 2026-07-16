@@ -1,6 +1,7 @@
 """Shared QEMU binary selection and provenance for bring-up runners."""
 from __future__ import annotations
 
+import hashlib
 import os
 import subprocess
 from pathlib import Path
@@ -43,6 +44,16 @@ def _qemu_version(binary: Path) -> str:
     except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
         return f"unavailable: {exc}"
     return output.splitlines()[0] if output.splitlines() else ""
+
+
+def _sha256(binary: Path) -> str:
+    if not binary.is_file():
+        return ""
+    digest = hashlib.sha256()
+    with binary.open("rb") as fp:
+        for chunk in iter(lambda: fp.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def _matching_clean_qemu(root: Path, target: str = "qemu-system-linx64") -> Path | None:
@@ -112,6 +123,7 @@ def qemu_binary_provenance(
 
     return {
         "path": str(binary),
+        "sha256": _sha256(binary),
         "relative_to_qemu": relative_to_qemu,
         "version": _qemu_version(binary) if binary.is_file() else "",
         "qemu_repo_head": head or "",
@@ -122,3 +134,18 @@ def qemu_binary_provenance(
         "clean_build_for_head": marker_matches_head and not bool(dirty),
         "target": target,
     }
+
+
+def require_clean_qemu_binary(
+    root: Path,
+    binary: Path,
+    target: str = "qemu-system-linx64",
+) -> dict[str, Any]:
+    provenance = qemu_binary_provenance(root, binary, target=target)
+    if not provenance["clean_build_for_head"]:
+        raise RuntimeError(
+            "canonical flow requires a HEAD-matched clean QEMU build: "
+            f"path={provenance['path']} head={provenance['qemu_repo_head']} "
+            f"marker={provenance['clean_build_marker'] or 'missing'}"
+        )
+    return provenance

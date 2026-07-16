@@ -70,6 +70,10 @@ class QemuBuildPathsTests(unittest.TestCase):
         self.assertTrue(info["clean_build_marker_matches_head"])
         self.assertTrue(info["clean_build_for_head"])
         self.assertEqual(info["version"], "QEMU test version")
+        self.assertEqual(
+            info["sha256"],
+            "a8076d3d28d21e02012b20eaf7dbf75409a6277134439025f282e368e3305abf",
+        )
 
     def test_qemu_binary_provenance_flags_missing_marker(self) -> None:
         with tempfile.TemporaryDirectory() as td:
@@ -91,6 +95,25 @@ class QemuBuildPathsTests(unittest.TestCase):
         self.assertEqual(info["clean_build_marker"], "")
         self.assertFalse(info["clean_build_marker_matches_head"])
         self.assertFalse(info["clean_build_for_head"])
+        self.assertEqual(
+            info["sha256"],
+            "a8076d3d28d21e02012b20eaf7dbf75409a6277134439025f282e368e3305abf",
+        )
+
+    def test_require_clean_qemu_rejects_unattested_binary(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            (root / "emulator" / "qemu").mkdir(parents=True)
+            binary = root / "qemu-system-linx64"
+            binary.write_text("#!/bin/sh\n", encoding="utf-8")
+            binary.chmod(0o755)
+            with (
+                mock.patch.object(qemu_build_paths, "_qemu_head", return_value="abc123"),
+                mock.patch.object(qemu_build_paths, "_qemu_tracked_dirty", return_value=False),
+                mock.patch.object(qemu_build_paths, "_qemu_version", return_value="QEMU test version"),
+            ):
+                with self.assertRaisesRegex(RuntimeError, "HEAD-matched clean QEMU"):
+                    qemu_build_paths.require_clean_qemu_binary(root, binary)
 
 
 if __name__ == "__main__":

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -11,6 +12,49 @@ import run_musl_smoke
 
 
 class QemuInstructionFailureTests(unittest.TestCase):
+    def test_explicit_kernel_overrides_legacy_build_search(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            kernel = root / "fresh" / "vmlinux"
+            kernel.parent.mkdir()
+            kernel.write_bytes(b"fresh")
+
+            self.assertEqual(
+                run_musl_smoke._resolve_kernel(root / "linux", str(kernel)),
+                kernel.resolve(),
+            )
+
+    def test_reusable_musl_requires_complete_summary_and_assets(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            sysroot = root / "sysroot"
+            runtime = root / "runtime" / "liblinx_builtin_rt.a"
+            for path in (
+                sysroot / "lib" / "libc.a",
+                sysroot / "lib" / "libc.so",
+                sysroot / "lib" / "ld-musl-linx64.so.1",
+                runtime,
+            ):
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(b"asset")
+
+            self.assertEqual(
+                run_musl_smoke._musl_reuse_errors(
+                    {"m1": "pass", "m2": "pass", "m3": "pass"},
+                    sysroot,
+                    runtime,
+                ),
+                [],
+            )
+            runtime.unlink()
+            errors = run_musl_smoke._musl_reuse_errors(
+                {"m1": "pass", "m2": "pass", "m3": "fail"},
+                sysroot,
+                runtime,
+            )
+            self.assertIn("m3", errors)
+            self.assertIn(str(runtime), errors)
+
     def test_decode32_failure_is_not_left_as_a_generic_timeout(self) -> None:
         text = (
             "Linx: illegal instruction @ 0xffffffff80000000\n"
@@ -66,14 +110,38 @@ class QemuInstructionFailureTests(unittest.TestCase):
             )
         )
 
-    def test_pass_markers_keep_timeout_pass_compatibility(self) -> None:
-        self.assertIsNone(
+    def test_pass_markers_do_not_hide_timeout(self) -> None:
+        self.assertEqual(
             run_musl_smoke._classify_system_runtime_failure(
                 "MUSL_SMOKE_START\nMUSL_SMOKE_PASS\nLinx: illegal instruction at PC=0x4\n",
                 timed_out=True,
                 start_seen=True,
                 pass_seen=True,
                 qemu_rc=124,
+                timeout=5,
+            ),
+            ("runtime_timeout", "timeout after 5s after pass marker"),
+        )
+
+    def test_system_runtime_requires_clean_shutdown(self) -> None:
+        self.assertEqual(
+            run_musl_smoke._classify_system_runtime_failure(
+                "MUSL_SMOKE_START\nMUSL_SMOKE_PASS\n",
+                timed_out=False,
+                start_seen=True,
+                pass_seen=True,
+                qemu_rc=0,
+                timeout=5,
+            ),
+            ("runtime_missing_shutdown", "pass marker observed without LINX_REBOOT lisc_shutdown"),
+        )
+        self.assertIsNone(
+            run_musl_smoke._classify_system_runtime_failure(
+                "MUSL_SMOKE_START\nMUSL_SMOKE_PASS\nLINX_REBOOT lisc_shutdown\n",
+                timed_out=False,
+                start_seen=True,
+                pass_seen=True,
+                qemu_rc=0,
                 timeout=5,
             )
         )

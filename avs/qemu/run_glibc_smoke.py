@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import select
@@ -110,8 +111,32 @@ def _find_kernel(linux_root: Path) -> Path:
     raise SystemExit(f"error: could not find kernel image under {linux_root}")
 
 
-def _find_gen_init_cpio(linux_root: Path, out_dir: Path) -> Path:
+def _resolve_kernel(linux_root: Path, explicit: str) -> Path:
+    kernel = Path(os.path.expanduser(explicit)).resolve() if explicit else _find_kernel(linux_root)
+    if not kernel.is_file():
+        raise SystemExit(f"error: kernel image not found: {kernel}")
+    return kernel
+
+
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as fp:
+        for chunk in iter(lambda: fp.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _file_evidence(path: Path) -> dict[str, Any]:
+    return {
+        "path": str(path.resolve()),
+        "sha256": _sha256(path),
+        "size_bytes": path.stat().st_size,
+    }
+
+
+def _find_gen_init_cpio(linux_root: Path, out_dir: Path, kernel: Path | None = None) -> Path:
     cands = [
+        *(([kernel.parent / "usr" / "gen_init_cpio"]) if kernel is not None else []),
         linux_root / "build-linx-fixed" / "usr" / "gen_init_cpio",
         linux_root / "usr" / "gen_init_cpio",
     ]
@@ -204,6 +229,7 @@ def _select_variants(raw: list[str] | None, *, runner: str) -> list[str]:
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description="Run the glibc dynamic-runtime hello matrix on Linux+QEMU.")
     parser.add_argument("--linux-root", default=str(REPO_ROOT / "kernel" / "linux"))
+    parser.add_argument("--kernel", default="", help="Explicit vmlinux for full-system runtime lanes.")
     parser.add_argument("--glibc-build", default=str(REPO_ROOT / "out" / "libc" / "glibc" / "build"))
     parser.add_argument("--clang", default=str(REPO_ROOT / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "clang"))
     parser.add_argument("--qemu", default=str(_default_qemu()))
@@ -285,8 +311,11 @@ def main(argv: list[str]) -> int:
         _write_summary(summary_path, summary)
 
     if args.runner == "system":
-        kernel = _find_kernel(linux_root)
-        gen_init_cpio = _find_gen_init_cpio(linux_root, out_dir)
+        kernel = _resolve_kernel(linux_root, args.kernel)
+        gen_init_cpio = _find_gen_init_cpio(linux_root, out_dir, kernel)
+        summary["paths"]["kernel"] = str(kernel)
+        summary["kernel_sha256"] = _sha256(kernel)
+        _write_summary(summary_path, summary)
     wrapper = (
         Path(os.path.expanduser(args.wrapper)).resolve()
         if args.wrapper
@@ -346,6 +375,11 @@ def main(argv: list[str]) -> int:
         summary["result"] = {"ok": False, "classification": "glibc_runtime_asset_missing"}
         _write_summary(summary_path, summary)
         return 2
+
+    summary["runtime_assets"] = {
+        name: _file_evidence(path) for name, path in required_files.items()
+    }
+    _write_summary(summary_path, summary)
 
     add_stage(
         "asset-check",

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import shlex
@@ -14,6 +15,10 @@ from typing import Any
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parents[1]
+sys.path.insert(0, str(REPO_ROOT / "tools" / "bringup"))
+
+from qemu_build_paths import qemu_binary_provenance  # noqa: E402
+
 _EXTRA_SUMMARY_PATH: Path | None = None
 
 SAMPLES: dict[str, dict[str, str]] = {
@@ -229,8 +234,32 @@ def _find_kernel(linux_root: Path) -> Path:
     raise SystemExit(f"error: could not find kernel image under {linux_root}")
 
 
-def _find_gen_init_cpio(linux_root: Path, out_dir: Path) -> Path:
+def _resolve_kernel(linux_root: Path, explicit: str) -> Path:
+    kernel = Path(os.path.expanduser(explicit)).resolve() if explicit else _find_kernel(linux_root)
+    if not kernel.is_file():
+        raise SystemExit(f"error: kernel image not found: {kernel}")
+    return kernel
+
+
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as fp:
+        for chunk in iter(lambda: fp.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _file_evidence(path: Path) -> dict[str, Any]:
+    return {
+        "path": str(path.resolve()),
+        "sha256": _sha256(path),
+        "size_bytes": path.stat().st_size,
+    }
+
+
+def _find_gen_init_cpio(linux_root: Path, out_dir: Path, kernel: Path | None = None) -> Path:
     cands = [
+        *(([kernel.parent / "usr" / "gen_init_cpio"]) if kernel is not None else []),
         linux_root / "build-linx-fixed" / "usr" / "gen_init_cpio",
         linux_root / "usr" / "gen_init_cpio",
     ]
@@ -268,6 +297,22 @@ def _parse_mode_summary(path: Path) -> dict[str, str]:
         k, v = ln.split("=", 1)
         out[k.strip()] = v.strip()
     return out
+
+
+def _musl_reuse_errors(
+    mode_summary: dict[str, str],
+    sysroot: Path,
+    runtime_lib: Path,
+) -> list[str]:
+    errors = [key for key in ("m1", "m2", "m3") if mode_summary.get(key) != "pass"]
+    required = [
+        sysroot / "lib" / "libc.a",
+        sysroot / "lib" / "libc.so",
+        sysroot / "lib" / "ld-musl-linx64.so.1",
+        runtime_lib,
+    ]
+    errors.extend(str(path) for path in required if not path.is_file())
+    return errors
 
 
 def _write_summary(path: Path, payload: dict[str, Any]) -> None:
@@ -318,7 +363,17 @@ def _classify_system_runtime_failure(
     qemu_rc: int,
     timeout: int,
 ) -> tuple[str, str] | None:
+    if timed_out and start_seen and pass_seen:
+        return "runtime_timeout", f"timeout after {timeout}s after pass marker"
+
     if start_seen and pass_seen:
+        if qemu_rc != 0:
+            return "runtime_exit_failure", f"pass marker observed with qemu_rc={qemu_rc}"
+        if "LINX_REBOOT lisc_shutdown" not in text:
+            return (
+                "runtime_missing_shutdown",
+                "pass marker observed without LINX_REBOOT lisc_shutdown",
+            )
         return None
 
     panic_seen = "Kernel panic - not syncing" in text
@@ -418,6 +473,10 @@ def _run_split_link_modes(args: argparse.Namespace, out_dir: Path, selected_samp
             "--out-dir",
             str(out_dir),
         ]
+        if args.kernel:
+            cmd.extend(["--kernel", args.kernel])
+        if args.skip_build:
+            cmd.append("--skip-build")
         if args.disable_timer_irq:
             cmd.append("--disable-timer-irq")
         for sample in selected_samples:
@@ -453,9 +512,24 @@ def _run_split_link_modes(args: argparse.Namespace, out_dir: Path, selected_samp
             "summary": str(mode_summary_path),
             "run_log": str(run_log),
             "command": shlex.join(cmd),
+            "kernel": (mode_summary.get("paths") or {}).get("kernel", ""),
+            "kernel_sha256": mode_summary.get("kernel_sha256", ""),
+            "qemu_provenance": mode_summary.get("qemu_provenance", {}),
+            "runtime_assets": mode_summary.get("runtime_assets", {}),
         }
 
-    overall_ok = all(mode_results[m]["ok"] for m in ("static", "shared"))
+    evidence_keys = {
+        (
+            mode_results[mode]["kernel_sha256"],
+            json.dumps(mode_results[mode]["qemu_provenance"], sort_keys=True),
+            json.dumps(mode_results[mode]["runtime_assets"], sort_keys=True),
+        )
+        for mode in ("static", "shared")
+    }
+    provenance_ok = len(evidence_keys) == 1 and all(
+        key[0] and key[1] != "{}" and key[2] != "{}" for key in evidence_keys
+    )
+    overall_ok = all(mode_results[m]["ok"] for m in ("static", "shared")) and provenance_ok
     summary: dict[str, Any] = {
         "schema_version": "musl-smoke-v2",
         "mode": args.mode,
@@ -478,7 +552,11 @@ def _run_split_link_modes(args: argparse.Namespace, out_dir: Path, selected_samp
         "mode_results": mode_results,
         "result": {
             "ok": overall_ok,
-            "classification": "runtime_pass" if overall_ok else "runtime_mode_failure",
+            "classification": (
+                "runtime_pass"
+                if overall_ok
+                else ("runtime_provenance_mismatch" if not provenance_ok else "runtime_mode_failure")
+            ),
         },
     }
     _write_summary(out_dir / "summary.json", summary)
@@ -494,6 +572,7 @@ def _run_split_link_modes(args: argparse.Namespace, out_dir: Path, selected_samp
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description="Run Linx musl malloc/printf runtime smoke on QEMU.")
     parser.add_argument("--linux-root", default=str(REPO_ROOT / "kernel" / "linux"))
+    parser.add_argument("--kernel", default="", help="Explicit vmlinux for full-system runtime lanes.")
     parser.add_argument("--musl-root", default=str(REPO_ROOT / "lib" / "musl"))
     parser.add_argument("--clang", default=str(_default_clang()))
     parser.add_argument("--clangxx", default="")
@@ -531,6 +610,11 @@ def main(argv: list[str]) -> int:
         ),
     )
     parser.add_argument("--timeout", type=int, default=90)
+    parser.add_argument(
+        "--skip-build",
+        action="store_true",
+        help="Reuse a previously completed musl build after validating its summary and runtime assets.",
+    )
     parser.add_argument(
         "--append",
         default="lpj=1000000 loglevel=1 console=ttyS0 kfence.sample_interval=0",
@@ -623,6 +707,7 @@ def main(argv: list[str]) -> int:
     lld = _check_exe(lld, "ld.lld")
     if args.runner == "system":
         qemu = _check_exe(qemu, "qemu-system-linx64")
+        summary["qemu_provenance"] = qemu_binary_provenance(REPO_ROOT, qemu)
     else:
         qemu_user = _check_exe(qemu_user, "qemu-linx")
 
@@ -633,6 +718,8 @@ def main(argv: list[str]) -> int:
         _write_summary(summary_path, summary)
         return 2
 
+    sysroot = REPO_ROOT / "out" / "libc" / "musl" / "install" / args.mode
+    runtime_lib = REPO_ROOT / "out" / "libc" / "musl" / "runtime" / args.mode / "liblinx_builtin_rt.a"
     build_log = out_dir / "musl_build.log"
     env = os.environ.copy()
     env["MODE"] = args.mode
@@ -647,37 +734,57 @@ def main(argv: list[str]) -> int:
     env["STRIP"] = str(llvm_bin / "llvm-strip")
     env["READELF"] = str(llvm_bin / "llvm-readelf")
 
-    with build_log.open("w", encoding="utf-8") as fp:
-        fp.write("+ " + shlex.join([str(build_script)]) + "\n")
-        rc = subprocess.run(
-            [str(build_script)],
-            cwd=str(musl_root),
-            env=env,
-            stdout=fp,
-            stderr=subprocess.STDOUT,
-            check=False,
-        ).returncode
-
     mode_summary = _parse_mode_summary(REPO_ROOT / "out" / "libc" / "musl" / "logs" / f"{args.mode}-summary.txt")
-    if rc != 0:
-        classification = "musl_build_failure"
-        if mode_summary.get("m1") == "fail":
-            classification = "musl_configure_failure"
-        elif mode_summary.get("m2") == "fail":
-            classification = "musl_static_lib_failure"
-        add_stage("musl-build", "fail", f"musl build failed (mode={args.mode})", str(build_log))
-        summary["result"] = {"ok": False, "classification": classification}
-        _write_summary(summary_path, summary)
-        return 2
-    add_stage("musl-build", "pass", f"m1={mode_summary.get('m1', 'unknown')} m2={mode_summary.get('m2', 'unknown')} m3={mode_summary.get('m3', 'unknown')}", str(build_log))
-
-    sysroot = REPO_ROOT / "out" / "libc" / "musl" / "install" / args.mode
-    runtime_lib = REPO_ROOT / "out" / "libc" / "musl" / "runtime" / args.mode / "liblinx_builtin_rt.a"
+    if args.skip_build:
+        reuse_errors = _musl_reuse_errors(mode_summary, sysroot, runtime_lib)
+        if reuse_errors:
+            add_stage("musl-build", "fail", "invalid reusable musl build: " + ", ".join(reuse_errors))
+            summary["result"] = {"ok": False, "classification": "musl_reuse_validation_failure"}
+            _write_summary(summary_path, summary)
+            return 2
+        add_stage("musl-build", "pass", "reused validated m1/m2/m3 outputs")
+    else:
+        with build_log.open("w", encoding="utf-8") as fp:
+            fp.write("+ " + shlex.join([str(build_script)]) + "\n")
+            rc = subprocess.run(
+                [str(build_script)],
+                cwd=str(musl_root),
+                env=env,
+                stdout=fp,
+                stderr=subprocess.STDOUT,
+                check=False,
+            ).returncode
+        mode_summary = _parse_mode_summary(REPO_ROOT / "out" / "libc" / "musl" / "logs" / f"{args.mode}-summary.txt")
+        if rc != 0:
+            classification = "musl_build_failure"
+            if mode_summary.get("m1") == "fail":
+                classification = "musl_configure_failure"
+            elif mode_summary.get("m2") == "fail":
+                classification = "musl_static_lib_failure"
+            add_stage("musl-build", "fail", f"musl build failed (mode={args.mode})", str(build_log))
+            summary["result"] = {"ok": False, "classification": classification}
+            _write_summary(summary_path, summary)
+            return 2
+        add_stage("musl-build", "pass", f"m1={mode_summary.get('m1', 'unknown')} m2={mode_summary.get('m2', 'unknown')} m3={mode_summary.get('m3', 'unknown')}", str(build_log))
+    reusable_assets = {
+        "libc.a": sysroot / "lib" / "libc.a",
+        "libc.so": sysroot / "lib" / "libc.so",
+        "loader": sysroot / "lib" / "ld-musl-linx64.so.1",
+        "runtime_builtins": runtime_lib,
+    }
+    summary["runtime_assets"] = {
+        name: _file_evidence(path)
+        for name, path in reusable_assets.items()
+        if path.is_file()
+    }
     env_compile = os.environ.copy()
     env_compile["PATH"] = f"{lld.parent}:{env_compile.get('PATH', '')}"
     if args.runner == "system":
-        kernel = _find_kernel(linux_root)
-        gen_init_cpio = _find_gen_init_cpio(linux_root, out_dir)
+        kernel = _resolve_kernel(linux_root, args.kernel)
+        gen_init_cpio = _find_gen_init_cpio(linux_root, out_dir, kernel)
+        summary["paths"]["kernel"] = str(kernel)
+        summary["kernel_sha256"] = _sha256(kernel)
+        _write_summary(summary_path, summary)
 
     if args.link == "both":
         link_modes = ["static", "shared"]
@@ -1164,14 +1271,6 @@ def main(argv: list[str]) -> int:
 
             start_seen = sample_meta["start"] in text
             pass_seen = sample_meta["pass"] in text
-            if timed_out and start_seen and pass_seen:
-                add_stage(
-                    f"qemu-runtime[{sample_name}:{link_mode}]",
-                    "pass",
-                    f"markers observed before timeout; qemu_rc={qemu_rc}",
-                    str(qemu_log),
-                )
-                continue
             runtime_failure = _classify_system_runtime_failure(
                 text,
                 timed_out=timed_out,
