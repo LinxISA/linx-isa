@@ -192,6 +192,23 @@ def _reachable_contract_fixture() -> tuple[dict, dict]:
 
 
 class LLVMCodeGenCoverageTests(unittest.TestCase):
+    def test_compiler_identity_must_match_current_llvm_head(self) -> None:
+        head = "a" * 40
+        identity = (
+            "clang version 23.0.0git "
+            f"(https://github.com/LinxISA/llvm-project.git {head})"
+        )
+
+        self.assertEqual(
+            coverage._verify_compiler_identity_revision(identity, head), head
+        )
+        with self.assertRaisesRegex(coverage.ProvenanceError, "does not match"):
+            coverage._verify_compiler_identity_revision(identity, "b" * 40)
+        with self.assertRaisesRegex(coverage.ProvenanceError, "does not report"):
+            coverage._verify_compiler_identity_revision(
+                "clang version 23.0.0git", head
+            )
+
     def _verify_fixture_manifest(
         self, root: Path, manifest: dict, paths: dict[str, Path]
     ) -> None:

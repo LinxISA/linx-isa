@@ -31,6 +31,7 @@ CANONICAL_REACHABLE_CONTRACT_ANCHOR = {
 }
 SOURCE_SUFFIXES = (".c", ".cc", ".cpp", ".cxx")
 CLANG_IDENT_RE = re.compile(r'^\s*\.ident\s+"(clang version [^"]+)"', re.MULTILINE)
+FULL_GIT_REVISION_RE = re.compile(r"(?<![0-9a-f])([0-9a-f]{40})(?![0-9a-f])")
 SOURCE_DIRECTIVE_RE = re.compile(
     r"\b(?:asm|__asm|__asm__)\b|\b__builtin_[A-Za-z0-9_]+\b"
 )
@@ -105,6 +106,32 @@ def _tool_identity(path: Path) -> str:
     return subprocess.run(
         [str(path), "--version"], check=True, capture_output=True, text=True
     ).stdout.splitlines()[0]
+
+
+def _verify_compiler_identity_revision(identity: str, llvm_head: str) -> str:
+    """Require the Clang build stamp to name the exact current LLVM commit."""
+    revisions = FULL_GIT_REVISION_RE.findall(identity.lower())
+    if len(revisions) != 1:
+        raise ProvenanceError(
+            "canonical Clang identity does not report exactly one full Git revision"
+        )
+    revision = revisions[0]
+    if revision != llvm_head.lower():
+        raise ProvenanceError(
+            "canonical Clang revision does not match current compiler/llvm HEAD: "
+            f"{revision} != {llvm_head}"
+        )
+    return revision
+
+
+def _current_llvm_head(root: Path) -> str:
+    llvm_root = root / "compiler/llvm"
+    return subprocess.run(
+        ["git", "-C", str(llvm_root), "rev-parse", "HEAD"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
 
 
 def _expected_compile_flags(root: Path, target: str, stem: str) -> list[str]:
@@ -645,6 +672,7 @@ def build_report(
     manifest_path: Path | None = None,
     reachable_contract_path: Path | None = None,
     replay_manifest: bool = False,
+    llvm_source_head: str | None = None,
     generated_at_utc: str | None = None,
 ) -> dict[str, Any]:
     manifest = None
@@ -741,6 +769,7 @@ def build_report(
             "c_source_dir": _relative(c_source_dir, root),
             "compiler_out_dir": _relative(out_dir, root),
             "compiler_identity": compiler_identity,
+            "llvm_source_head": llvm_source_head,
             "clang": _relative(clang_path, root) if clang_path is not None else None,
             "clang_sha256": _sha256(clang_path) if clang_path is not None else None,
             "llvm_objdump": (
@@ -1014,6 +1043,8 @@ def main(argv: list[str]) -> int:
 
     try:
         clang_version = _tool_identity(clang_path)
+        llvm_source_head = _current_llvm_head(root)
+        _verify_compiler_identity_revision(clang_version, llvm_source_head)
         report = build_report(
             root=root,
             spec_path=spec_path,
@@ -1027,6 +1058,7 @@ def main(argv: list[str]) -> int:
             manifest_path=manifest_path,
             reachable_contract_path=reachable_contract_path,
             replay_manifest=True,
+            llvm_source_head=llvm_source_head,
         )
     except (
         OSError,
