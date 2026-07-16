@@ -10,11 +10,46 @@ OBJ_DIR="${OBJ_DIR:-/tmp/linx-linux-rootfs-clean-build}"
 ROOTFS_IMG="${ROOTFS_IMG:-$OUT_DIR/rootfs.ext2}"
 LLVM_BUILD="${LLVM_BUILD:-$ROOT/compiler/llvm/build-linxisa-clang}"
 
+sha256_file() {
+  if command -v sha256sum >/dev/null 2>&1; then
+    sha256sum "$1" | awk '{print $1}'
+  elif command -v shasum >/dev/null 2>&1; then
+    shasum -a 256 "$1" | awk '{print $1}'
+  else
+    echo "error: sha256sum or shasum is required" >&2
+    return 2
+  fi
+}
+
 abs_path() {
+  local candidate component separator
+  local -a path_parts normalized_parts
   case "$1" in
-    /*) printf '%s\n' "$1" ;;
-    *) printf '%s/%s\n' "$CALLER_PWD" "$1" ;;
+    /*) candidate="$1" ;;
+    *) candidate="$CALLER_PWD/$1" ;;
   esac
+
+  IFS='/' read -r -a path_parts <<< "$candidate"
+  normalized_parts=()
+  for component in "${path_parts[@]}"; do
+    case "$component" in
+      ''|.) ;;
+      ..)
+        if [[ "${#normalized_parts[@]}" -gt 0 ]]; then
+          unset "normalized_parts[$((${#normalized_parts[@]} - 1))]"
+        fi
+        ;;
+      *) normalized_parts[${#normalized_parts[@]}]="$component" ;;
+    esac
+  done
+
+  printf '/'
+  separator=''
+  for component in "${normalized_parts[@]}"; do
+    printf '%s%s' "$separator" "$component"
+    separator='/'
+  done
+  printf '\n'
 }
 
 usage() {
@@ -88,14 +123,28 @@ if [[ ! -x "$LLVM_BUILD/bin/clang" ]]; then
   echo "error: clang not found under LLVM_BUILD=$LLVM_BUILD" >&2
   exit 2
 fi
+if [[ ! -x "$LLVM_BUILD/bin/ld.lld" ]]; then
+  echo "error: ld.lld not found under LLVM_BUILD=$LLVM_BUILD" >&2
+  exit 2
+fi
 
 HEAD_SHA="$(git -C "$LINUX_ROOT" rev-parse HEAD)"
 MARKER="$OUT_DIR/.linx_linux_rootfs_clean_head"
+PRISTINE_IMG="$OUT_DIR/rootfs.pristine.ext2"
+CLANG_SHA="$(sha256_file "$LLVM_BUILD/bin/clang")"
+LD_LLD_SHA="$(sha256_file "$LLVM_BUILD/bin/ld.lld")"
+EXPECTED_MARKER="$(printf 'format=2\nlinux_head=%s\nclang_sha256=%s\nld_lld_sha256=%s\n' \
+  "$HEAD_SHA" "$CLANG_SHA" "$LD_LLD_SHA")"
+
+if [[ "$ROOTFS_IMG" == "$PRISTINE_IMG" ]]; then
+  echo "error: rootfs work image must differ from pristine cache: $PRISTINE_IMG" >&2
+  exit 2
+fi
 
 reset_clean_tree() {
   git -C "$LINUX_ROOT" worktree remove --force "$WORKTREE_DIR" >/dev/null 2>&1 || true
   git -C "$LINUX_ROOT" worktree prune >/dev/null 2>&1 || true
-  rm -rf "$WORKTREE_DIR" "$OBJ_DIR" "$OUT_DIR"
+  rm -rf "$WORKTREE_DIR" "$OBJ_DIR"
 }
 
 need_worktree_refresh=0
@@ -112,25 +161,32 @@ if [[ "$need_worktree_refresh" == "1" ]]; then
 fi
 
 need_rebuild=0
-if [[ ! -f "$ROOTFS_IMG" ]]; then
+if [[ ! -f "$PRISTINE_IMG" ]]; then
   need_rebuild=1
-elif [[ ! -f "$MARKER" || "$(cat "$MARKER" 2>/dev/null || true)" != "$HEAD_SHA" ]]; then
+elif [[ ! -f "$MARKER" || "$(cat "$MARKER" 2>/dev/null || true)" != "$EXPECTED_MARKER" ]]; then
   need_rebuild=1
 fi
 
 if [[ "$need_rebuild" == "1" ]]; then
   echo "info: building clean busybox rootfs in $OUT_DIR" >&2
-  rm -rf "$OBJ_DIR" "$OUT_DIR"
+  rm -rf "$OBJ_DIR"
   mkdir -p "$OBJ_DIR" "$OUT_DIR"
   O="$OBJ_DIR" LLVM_BUILD="$LLVM_BUILD" \
     bash "$WORKTREE_DIR/tools/linxisa/busybox_rootfs/build_rootfs.sh" >&2
-  cp "$OBJ_DIR/linx-busybox-rootfs/rootfs.ext2" "$ROOTFS_IMG"
-  printf '%s\n' "$HEAD_SHA" > "$MARKER"
+  if [[ ! -f "$OBJ_DIR/linx-busybox-rootfs/rootfs.ext2" ]]; then
+    echo "error: built rootfs image not found under object directory" >&2
+    exit 1
+  fi
+  rm -f "$PRISTINE_IMG.tmp" "$MARKER.tmp"
+  cp "$OBJ_DIR/linx-busybox-rootfs/rootfs.ext2" "$PRISTINE_IMG.tmp"
+  mv "$PRISTINE_IMG.tmp" "$PRISTINE_IMG"
+  printf '%s\n' "$EXPECTED_MARKER" > "$MARKER.tmp"
+  mv "$MARKER.tmp" "$MARKER"
 fi
 
-if [[ ! -f "$ROOTFS_IMG" ]]; then
-  echo "error: built rootfs image not found: $ROOTFS_IMG" >&2
-  exit 1
-fi
+mkdir -p "$(dirname "$ROOTFS_IMG")"
+rm -f "$ROOTFS_IMG.tmp"
+cp "$PRISTINE_IMG" "$ROOTFS_IMG.tmp"
+mv "$ROOTFS_IMG.tmp" "$ROOTFS_IMG"
 
 printf '%s\n' "$ROOTFS_IMG"
