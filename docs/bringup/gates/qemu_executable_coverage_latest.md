@@ -1,6 +1,6 @@
 # QEMU Executable Coverage Ledger
 
-Generated: `2026-07-15T22:48:37Z`
+Generated: `2026-07-16T04:04:17Z`
 
 This ledger counts only per-form evidence bound to golden identity, bytes, test ID,
 artifacts, QEMU SHA, a test-specific terminal PASS, and an oracle. Suite exit 0 and stdout alone do not count.
@@ -9,8 +9,8 @@ artifacts, QEMU SHA, a test-specific terminal PASS, and an oracle. Suite exit 0 
 
 | Level | Availability | Forms | Mnemonics |
 | --- | --- | ---: | ---: |
-| L2 | `available` | 51 | 51 |
-| L3 | `available` | 51 | 51 |
+| L2 | `available` | 58 | 58 |
+| L3 | `available` | 58 | 58 |
 
 ## Admitted Forms
 
@@ -66,6 +66,13 @@ artifacts, QEMU SHA, a test-specific terminal PASS, and an oracle. Suite exit 0 
 | `srl_32_5cfca42c59f3` | `executable_scalar / 0x00002507` | `L3` | `exact_value` | `05d14100` |
 | `sub_32_af383d4a2b42` | `executable_scalar / 0x00002502` | `L3` | `exact_value` | `05914106` |
 | `sw_32_28ad317b1b41` | `executable_scalar / 0x0000250f` | `L3` | `architectural_state` | `49205216` |
+| `v_add_64_394294cc5946` | `v03_vector_ops / 0x00001370` | `L3` | `exact_value` | `7f02520005801000` |
+| `v_cmp_lt_64_3ef2162a77ba` | `v03_vector_ops / 0x00001320` | `L3` | `exact_value` | `7f82110045401000` |
+| `v_fadd_64_c5c08b2ac830` | `v03_vector_ops / 0x00001374` | `L3` | `exact_value` | `7f0212004b802000` |
+| `v_fmul_64_3e2b1576cbfe` | `v03_vector_ops / 0x00001375` | `L3` | `exact_value` | `7f0212004ba03000` |
+| `v_lw_brg_64_6163b7a621fc` | `v03_vector_ops / 0x00001372` | `L3` | `exact_value` | `7fa2000009200000` |
+| `v_sub_64_3c88cf0158f8` | `v03_vector_ops / 0x00001371` | `L3` | `exact_value` | `7f02520005101100` |
+| `v_sw_brg_64_d78368c708bd` | `v03_vector_ops / 0x00001373` | `L3` | `exact_value` | `7fa0002049200108` |
 | `xor_32_33510860c585` | `executable_scalar / 0x00002505` | `L3` | `exact_value` | `05c14106` |
 
 ## Failed / Rejected Evidence
@@ -124,4 +131,11 @@ None.
 - `executable_integer / 0x0000260d`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
 - `executable_integer / 0x0000260e`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
 - `executable_integer / 0x0000260f`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `v03_vector_ops / 0x00001372`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `v03_vector_ops / 0x00001370`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `v03_vector_ops / 0x00001373`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `v03_vector_ops / 0x00001371`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `v03_vector_ops / 0x00001374`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `v03_vector_ops / 0x00001375`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `v03_vector_ops / 0x00001320`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
 - `v03_vector_ops / 0x00001321`: status `FAIL`, oracle `FAIL`, timeout-after-fail `True`, failure `0x00001321` expected `0x0000000000000053` actual `0x0000000000000011`, test-contract `invalid`, attribution `test_contract`, note: Historical first-red evidence. The AVS source used invalid VT/VU lifetime and relative-index semantics; the corrected source and authored B.IOR binding now pass 0x1300, 0x1310, and 0x1320.

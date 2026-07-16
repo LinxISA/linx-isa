@@ -236,6 +236,81 @@ def _parse_executed_pcs(trace: str) -> list[str]:
     return sorted(pcs, key=lambda value: int(value, 16))
 
 
+_TARGET_PC_WATCH_RE = re.compile(
+    r"^linx_pc_watch:\s+pc=0x([0-9a-fA-F]+)\s+"
+    r"hit=([0-9]+)\s+printed=([0-9]+)\s+count=([0-9]+)(?:\s|$)"
+)
+
+
+def _parse_target_pc_watch_packets(
+    stderr: bytes, requested_pcs: list[int]
+) -> list[dict[str, object]]:
+    """Extract runtime helper hits, never translation-block listings."""
+    requested = set(requested_pcs)
+    hits: dict[int, dict[str, object]] = {}
+    for line in stderr.decode("utf-8", errors="replace").splitlines():
+        match = _TARGET_PC_WATCH_RE.match(line)
+        if match is None:
+            continue
+        pc = int(match.group(1), 16)
+        hit = int(match.group(2), 10)
+        printed = int(match.group(3), 10)
+        count = int(match.group(4), 10)
+        if pc not in requested or hit < 1 or printed < 1:
+            continue
+        hits.setdefault(
+            pc,
+            {
+                "pc": f"0x{pc:016x}",
+                "hit": hit,
+                "count": count,
+                "evidence_kind": "qemu_target_pc_watch_v1",
+            },
+        )
+    return [hits[pc] for pc in sorted(hits)]
+
+
+def _parse_evidence_pcs(values: list[str]) -> list[int]:
+    pcs: list[int] = []
+    for value in values:
+        try:
+            pc = int(value, 0)
+        except ValueError as exc:
+            raise SystemExit(f"error: invalid --evidence-pc: {value}") from exc
+        if pc < 0 or pc > 0xFFFFFFFFFFFFFFFF:
+            raise SystemExit(f"error: --evidence-pc must fit uint64: {value}")
+        if pc not in pcs:
+            pcs.append(pc)
+    if len(pcs) > 16:
+        raise SystemExit("error: at most 16 --evidence-pc values are supported by QEMU")
+    return pcs
+
+
+def _target_pc_watch_env(pcs: list[int]) -> dict[str, str]:
+    if not pcs:
+        return {}
+    return {
+        "LINX_DEBUG_PC_WATCH": ",".join(f"0x{pc:x}" for pc in pcs),
+        "LINX_DEBUG_PC_WATCH_HIT_LIMIT": "1",
+        "LINX_DEBUG_PC_WATCH_PRINT": "1",
+    }
+
+
+def _configure_target_pc_watch_env(
+    env: dict[str, str], pcs: list[int]
+) -> dict[str, str]:
+    debug_env = _target_pc_watch_env(pcs)
+    if not debug_env:
+        return debug_env
+    for name in list(env):
+        if name == "LINX_DEBUG_PC_WATCH" or name.startswith(
+            "LINX_DEBUG_PC_WATCH_"
+        ):
+            env.pop(name)
+    env.update(debug_env)
+    return debug_env
+
+
 def _repo_relative(path: Path) -> str:
     resolved = path.resolve()
     try:
@@ -299,12 +374,21 @@ def _write_execution_evidence(
     completed: subprocess.CompletedProcess[bytes],
     verdict: dict[str, object],
     trace_path: Path,
+    evidence_pcs: list[int],
+    qemu_debug_env: dict[str, str],
 ) -> None:
     stdout = completed.stdout or b""
     events = verdict["events"]
     failure = verdict["failure"]
     status = verdict["status"]
-    trace = trace_path.read_text(encoding="utf-8", errors="replace") if trace_path.is_file() else ""
+    target_packets = _parse_target_pc_watch_packets(
+        completed.stderr or b"", evidence_pcs
+    )
+    trace = (
+        trace_path.read_text(encoding="utf-8", errors="replace")
+        if trace_path.is_file() and not evidence_pcs
+        else ""
+    )
     payload = {
         "schema_version": 1,
         "status": status,
@@ -314,7 +398,11 @@ def _write_execution_evidence(
             {event["test_id"] for event in events if event["kind"] == "START"}
         ),
         "test_events": events,
-        "pc_hits": [{"pc": pc} for pc in _parse_executed_pcs(trace)],
+        "pc_hits": (
+            target_packets
+            if evidence_pcs
+            else [{"pc": pc} for pc in _parse_executed_pcs(trace)]
+        ),
         "artifacts": {
             "elf": {"path": _repo_relative(elf), "sha256": _sha256(elf)},
             "object": {
@@ -350,6 +438,13 @@ def _write_execution_evidence(
         },
         "failure": failure,
     }
+    if evidence_pcs:
+        payload["pc_evidence"] = {
+            "kind": "qemu_target_pc_watch_v1",
+            "requested_pcs": [f"0x{pc:016x}" for pc in evidence_pcs],
+            "packet_prefix": "linx_pc_watch:",
+        }
+        payload["qemu_debug_env"] = qemu_debug_env
     path.parent.mkdir(parents=True, exist_ok=True)
     uart_path = path.with_suffix(".uart.log")
     uart_path.write_bytes(stdout)
@@ -357,7 +452,14 @@ def _write_execution_evidence(
         "path": _repo_relative(uart_path),
         "sha256": _sha256(uart_path),
     }
-    if trace_path.is_file():
+    if evidence_pcs:
+        pc_watch_path = path.with_suffix(".pc-watch.log")
+        pc_watch_path.write_bytes(completed.stderr or b"")
+        payload["artifacts"]["pc_watch"] = {
+            "path": _repo_relative(pc_watch_path),
+            "sha256": _sha256(pc_watch_path),
+        }
+    elif trace_path.is_file():
         payload["artifacts"]["pc_trace"] = {
             "path": _repo_relative(trace_path),
             "sha256": _sha256(trace_path),
@@ -966,6 +1068,15 @@ def main(argv: list[str]) -> int:
         default=None,
         help="Write structured runtime evidence JSON and enable bounded PC tracing.",
     )
+    parser.add_argument(
+        "--evidence-pc",
+        action="append",
+        default=[],
+        help=(
+            "Record an exact pre-execution QEMU PC-watch packet for this uint64 PC "
+            "(repeatable; requires --evidence-out; max 16)."
+        ),
+    )
     args = parser.parse_args(argv)
 
     if args.timeout <= 0:
@@ -974,6 +1085,9 @@ def main(argv: list[str]) -> int:
         raise SystemExit("error: --heartbeat-sec must be >= 0")
     if args.no_progress_timeout < 0:
         raise SystemExit("error: --no-progress-timeout must be >= 0")
+    evidence_pcs = _parse_evidence_pcs(args.evidence_pc)
+    if evidence_pcs and not args.evidence_out:
+        raise SystemExit("error: --evidence-pc requires --evidence-out")
 
     if args.list_suites:
         for name, meta in SUITES.items():
@@ -1012,6 +1126,7 @@ def main(argv: list[str]) -> int:
         _check_exe(qemu, "qemu-system-linx64")
     qemu_env = os.environ.copy()
     qemu_env.setdefault("LINX_VIRT_TEST_FINISHER", "1")
+    qemu_debug_env = _configure_target_pc_watch_env(qemu_env, evidence_pcs)
 
     selected = _suite_selection(args)
     if args.all_suites:
@@ -1307,7 +1422,9 @@ def main(argv: list[str]) -> int:
     assert qemu is not None
     evidence_trace = out_dir / "qemu-executable-coverage-in_asm.log"
     evidence_trace_args = (
-        ["-d", "in_asm", "-D", str(evidence_trace)] if args.evidence_out else []
+        ["-d", "in_asm", "-D", str(evidence_trace)]
+        if args.evidence_out and not evidence_pcs
+        else []
     )
     qemu_cmd = [
         str(qemu),
@@ -1354,6 +1471,8 @@ def main(argv: list[str]) -> int:
             completed=p,
             verdict=verdict,
             trace_path=evidence_trace,
+            evidence_pcs=evidence_pcs,
+            qemu_debug_env=qemu_debug_env,
         )
 
     if verdict["reason"] == "guest_failure":

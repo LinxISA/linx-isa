@@ -197,6 +197,66 @@ IN: callret_tpl_fret_stk_slot_redirect
             ["0x0000000000010016", "0x000000000001001a"],
         )
 
+    def test_target_pc_watch_parser_accepts_only_requested_runtime_packets(self) -> None:
+        stderr = (
+            b"IN: translated-only\n"
+            b"0x0000000000010016: V.ADD\n"
+            b"linx_pc_watch: pc=0x10016 hit=1 printed=1 count=44 sp=0x0\n"
+            b"linx_pc_watch: pc=0x10018 hit=1 printed=1 count=45 sp=0x0\n"
+        )
+        self.assertEqual(
+            run_tests._parse_target_pc_watch_packets(stderr, [0x10016]),
+            [
+                {
+                    "pc": "0x0000000000010016",
+                    "hit": 1,
+                    "count": 44,
+                    "evidence_kind": "qemu_target_pc_watch_v1",
+                }
+            ],
+        )
+
+    def test_target_pc_watch_parser_rejects_malformed_or_unprinted_hits(self) -> None:
+        stderr = (
+            b"prefix linx_pc_watch: pc=0x10016 hit=1 printed=1 count=44\n"
+            b"linx_pc_watch: pc=0x10016 hit=0 printed=1 count=44\n"
+            b"linx_pc_watch: pc=0x10016 hit=1 printed=0 count=44\n"
+        )
+        self.assertEqual(
+            run_tests._parse_target_pc_watch_packets(stderr, [0x10016]), []
+        )
+
+    def test_target_pc_watch_env_is_bounded_and_reproducible(self) -> None:
+        self.assertEqual(
+            run_tests._target_pc_watch_env([0x10016, 0x1001A]),
+            {
+                "LINX_DEBUG_PC_WATCH": "0x10016,0x1001a",
+                "LINX_DEBUG_PC_WATCH_HIT_LIMIT": "1",
+                "LINX_DEBUG_PC_WATCH_PRINT": "1",
+            },
+        )
+        self.assertEqual(run_tests._parse_evidence_pcs(["0x10", "16"]), [16])
+        with self.assertRaises(SystemExit):
+            run_tests._parse_evidence_pcs([str(value) for value in range(17)])
+
+        inherited = {
+            "PATH": "/bin",
+            "LINX_DEBUG_PC_WATCH": "0xdead",
+            "LINX_DEBUG_PC_WATCH_COUNT_LO": "999",
+            "LINX_DEBUG_PC_WATCH_RING": "1",
+        }
+        recorded = run_tests._configure_target_pc_watch_env(inherited, [0x10016])
+        self.assertEqual(
+            inherited,
+            {
+                "PATH": "/bin",
+                "LINX_DEBUG_PC_WATCH": "0x10016",
+                "LINX_DEBUG_PC_WATCH_HIT_LIMIT": "1",
+                "LINX_DEBUG_PC_WATCH_PRINT": "1",
+            },
+        )
+        self.assertEqual(recorded, {key: inherited[key] for key in recorded})
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -256,6 +256,44 @@ def _trace_pcs(text: str) -> set[int]:
     }
 
 
+TARGET_PC_WATCH_KIND = "qemu_target_pc_watch_v1"
+TARGET_PC_WATCH_RE = re.compile(
+    r"^linx_pc_watch:\s+pc=0x([0-9a-fA-F]+)\s+"
+    r"hit=([0-9]+)\s+printed=([0-9]+)\s+count=([0-9]+)(?:\s|$)"
+)
+
+
+def _target_pc_watch_packets(text: str) -> set[tuple[int, int, int]]:
+    packets: set[tuple[int, int, int]] = set()
+    for line in text.splitlines():
+        match = TARGET_PC_WATCH_RE.match(line)
+        if match is None:
+            continue
+        pc = int(match.group(1), 16)
+        hit = int(match.group(2), 10)
+        printed = int(match.group(3), 10)
+        count = int(match.group(4), 10)
+        if hit >= 1 and printed >= 1:
+            packets.add((pc, hit, count))
+    return packets
+
+
+def _parse_pc_watch_env(value: object) -> list[int]:
+    if not isinstance(value, str) or not value:
+        raise ValueError("target PC-watch environment is missing")
+    pcs: list[int] = []
+    for token in value.split(","):
+        pc = _parse_int(token.strip(), "target PC-watch environment")
+        if pc < 0 or pc > 0xFFFFFFFFFFFFFFFF:
+            raise ValueError("target PC-watch PC must fit uint64")
+        if pc in pcs:
+            raise ValueError("target PC-watch environment contains duplicate PCs")
+        pcs.append(pc)
+    if len(pcs) > 16:
+        raise ValueError("target PC-watch environment exceeds QEMU's 16-PC limit")
+    return pcs
+
+
 def _normalize_disassembly(text: str) -> str:
     return re.sub(r"\s+", " ", text.strip().lower())
 
@@ -673,8 +711,56 @@ def _validate_entry(
         if sorted(matching_events) != matching_events or [kind for _, kind in matching_events] != ["START", "PASS"]:
             reasons.append("test-specific START/PASS events are missing, duplicate, or out of order")
 
+        pc_evidence = run.get("pc_evidence")
+        target_pc_watch = (
+            isinstance(pc_evidence, dict)
+            and pc_evidence.get("kind") == TARGET_PC_WATCH_KIND
+        )
+        requested_watch_pcs: list[int] = []
+        if target_pc_watch:
+            if pc_evidence.get("packet_prefix") != "linx_pc_watch:":
+                reasons.append("target PC-watch packet prefix is invalid")
+            requested = pc_evidence.get("requested_pcs")
+            if not isinstance(requested, list) or not requested:
+                reasons.append("target PC-watch requested PC list is missing")
+            else:
+                try:
+                    requested_watch_pcs = [
+                        _parse_int(value, "target PC-watch requested PC")
+                        for value in requested
+                    ]
+                    if (
+                        len(set(requested_watch_pcs)) != len(requested_watch_pcs)
+                        or any(pc < 0 or pc > 0xFFFFFFFFFFFFFFFF for pc in requested_watch_pcs)
+                    ):
+                        raise ValueError("target PC-watch requested PCs are invalid or duplicate")
+                except ValueError as exc:
+                    requested_watch_pcs = []
+                    reasons.append(str(exc))
+            debug_env = run.get("qemu_debug_env")
+            if not isinstance(debug_env, dict):
+                reasons.append("target PC-watch QEMU debug environment is missing")
+            else:
+                try:
+                    env_watch_pcs = _parse_pc_watch_env(
+                        debug_env.get("LINX_DEBUG_PC_WATCH")
+                    )
+                    if env_watch_pcs != requested_watch_pcs:
+                        reasons.append(
+                            "target PC-watch requested PCs disagree with QEMU debug environment"
+                        )
+                except ValueError as exc:
+                    reasons.append(str(exc))
+                if debug_env.get("LINX_DEBUG_PC_WATCH_HIT_LIMIT") != "1":
+                    reasons.append("target PC-watch hit limit must be one")
+                if debug_env.get("LINX_DEBUG_PC_WATCH_PRINT") != "1":
+                    reasons.append("target PC-watch printing must be enabled")
+            if instruction_pc is not None and instruction_pc not in requested_watch_pcs:
+                reasons.append("instruction PC was not requested from target PC-watch")
+
         pc_hits = run.get("pc_hits")
         exact_pc_hit = False
+        selected_watch_packet: tuple[int, int, int] | None = None
         if isinstance(pc_hits, list) and instruction_pc is not None and elf_offset is not None and raw_bytes is not None:
             for hit in pc_hits:
                 if not isinstance(hit, dict):
@@ -683,9 +769,21 @@ def _validate_entry(
                     hit_pc = _parse_int(hit.get("pc"), "pc hit")
                 except ValueError:
                     continue
-                if hit_pc == instruction_pc:
-                    exact_pc_hit = True
-                    break
+                if hit_pc != instruction_pc:
+                    continue
+                if target_pc_watch:
+                    if hit.get("evidence_kind") != TARGET_PC_WATCH_KIND:
+                        continue
+                    try:
+                        hit_index = _parse_int(hit.get("hit"), "target PC-watch hit")
+                        hit_count = _parse_int(hit.get("count"), "target PC-watch count")
+                    except ValueError:
+                        continue
+                    if hit_index < 1 or hit_count < 0:
+                        continue
+                    selected_watch_packet = (hit_pc, hit_index, hit_count)
+                exact_pc_hit = True
+                break
         if not exact_pc_hit:
             reasons.append("exact executed PC hit is missing")
         run_qemu_sha = None
@@ -841,7 +939,7 @@ def _validate_entry(
                     reasons.append(f"run {label} SHA-256 does not match artifact")
             except ValueError as exc:
                 reasons.append(str(exc))
-        for label in ("uart", "pc_trace"):
+        for label in ("uart",):
             artifact = artifacts.get(label) if isinstance(artifacts.get(label), dict) else {}
             try:
                 artifact_path = _repo_path(
@@ -854,15 +952,49 @@ def _validate_entry(
                     encoding="utf-8", errors="replace"
                 ):
                     reasons.append("suite UART marker is absent from the hashed UART artifact")
-                elif label == "pc_trace" and (
-                    instruction_pc is None
-                    or instruction_pc not in _trace_pcs(
-                        artifact_path.read_text(encoding="utf-8", errors="replace")
-                    )
-                ):
-                    reasons.append("claimed PC hit is absent from the hashed PC trace")
             except ValueError as exc:
                 reasons.append(str(exc))
+
+        pc_artifact_label = "pc_watch" if target_pc_watch else "pc_trace"
+        pc_artifact = (
+            artifacts.get(pc_artifact_label)
+            if isinstance(artifacts.get(pc_artifact_label), dict)
+            else {}
+        )
+        try:
+            pc_artifact_path = _repo_path(
+                repo_root,
+                pc_artifact.get("path"),
+                f"run.artifacts.{pc_artifact_label}.path",
+            )
+            pc_artifact_digest = pc_artifact.get("sha256")
+            if (
+                not pc_artifact_path.is_file()
+                or not isinstance(pc_artifact_digest, str)
+                or pc_artifact_digest != _sha256(pc_artifact_path)
+            ):
+                reasons.append(
+                    f"run {pc_artifact_label} SHA-256 does not match artifact"
+                )
+            else:
+                pc_text = pc_artifact_path.read_text(
+                    encoding="utf-8", errors="replace"
+                )
+                if target_pc_watch:
+                    if (
+                        selected_watch_packet is None
+                        or selected_watch_packet not in _target_pc_watch_packets(pc_text)
+                    ):
+                        reasons.append(
+                            "claimed exact PC hit is absent from the hashed target PC-watch packet"
+                        )
+                elif (
+                    instruction_pc is None
+                    or instruction_pc not in _trace_pcs(pc_text)
+                ):
+                    reasons.append("claimed PC hit is absent from the hashed PC trace")
+        except ValueError as exc:
+            reasons.append(str(exc))
 
     max_level = entry.get("max_level")
     if max_level not in {"L2", "L3"}:

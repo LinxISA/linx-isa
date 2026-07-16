@@ -297,6 +297,45 @@ class ReportQemuExecutableCoverageTests(unittest.TestCase):
         run_path.write_text(json.dumps(run), encoding="utf-8")
         entry["run_evidence_sha256"] = _sha256(run_path)
 
+    def _use_target_pc_watch(
+        self,
+        root: Path,
+        run_path: Path,
+        manifest: dict[str, object],
+        run: dict[str, object],
+    ) -> Path:
+        pc_watch = run_path.with_suffix(".pc-watch.log")
+        pc_watch.write_text(
+            "linx_pc_watch: pc=0x10016 hit=1 printed=1 count=44 sp=0x0\n",
+            encoding="utf-8",
+        )
+        run["artifacts"].pop("pc_trace", None)
+        run["artifacts"]["pc_watch"] = {
+            "path": str(pc_watch.relative_to(root)),
+            "sha256": _sha256(pc_watch),
+        }
+        run["pc_evidence"] = {
+            "kind": coverage.TARGET_PC_WATCH_KIND,
+            "requested_pcs": ["0x0000000000010016"],
+            "packet_prefix": "linx_pc_watch:",
+        }
+        run["qemu_debug_env"] = {
+            "LINX_DEBUG_PC_WATCH": "0x10016",
+            "LINX_DEBUG_PC_WATCH_HIT_LIMIT": "1",
+            "LINX_DEBUG_PC_WATCH_PRINT": "1",
+        }
+        run["pc_hits"] = [
+            {
+                "pc": "0x0000000000010016",
+                "hit": 1,
+                "count": 44,
+                "evidence_kind": coverage.TARGET_PC_WATCH_KIND,
+            }
+        ]
+        run_path.write_text(json.dumps(run), encoding="utf-8")
+        manifest["evidence"][0]["run_evidence_sha256"] = _sha256(run_path)
+        return pc_watch
+
     def test_complete_form_evidence_enters_l2_and_l3(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
@@ -308,6 +347,88 @@ class ReportQemuExecutableCoverageTests(unittest.TestCase):
         self.assertEqual(report["evidence"]["L3"]["form_count"], 1)
         self.assertEqual(report["admitted"][0]["form_id"], FORM_ID)
         self.assertEqual(report["rejected"], [])
+
+    def test_target_scoped_pc_watch_packet_enters_l2_and_l3(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            spec, run_path, manifest, run = self._fixture(root)
+            self._use_target_pc_watch(root, run_path, manifest, run)
+            report = self._report(root, spec, manifest)
+
+        self.assertEqual(report["evidence"]["L2"]["form_count"], 1)
+        self.assertEqual(report["evidence"]["L3"]["form_count"], 1)
+        self.assertEqual(report["rejected"], [])
+
+    def test_target_pc_watch_forgery_missing_packet_and_wrong_digest_are_rejected(self) -> None:
+        mutations = {
+            "forged-json": (
+                lambda run, packet: packet.write_text(
+                    "linx_pc_watch: pc=0x10018 hit=1 printed=1 count=44\n",
+                    encoding="utf-8",
+                ),
+                "hashed target PC-watch packet",
+            ),
+            "missing-packet": (
+                lambda run, packet: packet.write_text(
+                    "IN: translation-only\n0x0000000000010016: FRET.STK\n",
+                    encoding="utf-8",
+                ),
+                "hashed target PC-watch packet",
+            ),
+            "wrong-digest": (
+                lambda run, packet: run["artifacts"]["pc_watch"].update(
+                    {"sha256": "0" * 64}
+                ),
+                "SHA-256",
+            ),
+        }
+        for label, (mutate, expected_reason) in mutations.items():
+            with self.subTest(case=label), tempfile.TemporaryDirectory() as td:
+                root = Path(td)
+                spec, run_path, manifest, run = self._fixture(root)
+                packet = self._use_target_pc_watch(root, run_path, manifest, run)
+                mutate(run, packet)
+                if label != "wrong-digest":
+                    run["artifacts"]["pc_watch"]["sha256"] = _sha256(packet)
+                run_path.write_text(json.dumps(run), encoding="utf-8")
+                manifest["evidence"][0]["run_evidence_sha256"] = _sha256(run_path)
+                report = self._report(root, spec, manifest)
+
+                self.assertEqual(report["evidence"]["L2"]["form_count"], 0)
+                self.assertEqual(report["evidence"]["L3"]["form_count"], 0)
+                self.assertIn(
+                    expected_reason, " ".join(report["rejected"][0]["reasons"])
+                )
+
+    def test_target_pc_watch_wrong_pc_and_wrong_qemu_sha_are_rejected(self) -> None:
+        for label in ("wrong-pc", "wrong-qemu-sha"):
+            with self.subTest(case=label), tempfile.TemporaryDirectory() as td:
+                root = Path(td)
+                spec, run_path, manifest, run = self._fixture(root)
+                packet = self._use_target_pc_watch(root, run_path, manifest, run)
+                if label == "wrong-pc":
+                    packet.write_text(
+                        "linx_pc_watch: pc=0x10018 hit=1 printed=1 count=44\n",
+                        encoding="utf-8",
+                    )
+                    run["artifacts"]["pc_watch"]["sha256"] = _sha256(packet)
+                    run["pc_hits"][0]["pc"] = "0x0000000000010018"
+                else:
+                    run["qemu"]["sha"] = "2" * 40
+                run_path.write_text(json.dumps(run), encoding="utf-8")
+                manifest["evidence"][0]["run_evidence_sha256"] = _sha256(run_path)
+                report = self._report(root, spec, manifest)
+
+                self.assertEqual(report["evidence"]["L2"]["form_count"], 0)
+                self.assertEqual(report["evidence"]["L3"]["form_count"], 0)
+                expected_reason = (
+                    "exact executed PC hit"
+                    if label == "wrong-pc"
+                    else "run QEMU SHA disagrees"
+                )
+                self.assertIn(
+                    expected_reason, " ".join(report["rejected"][0]["reasons"])
+                )
 
     def test_two_part_64_bit_form_evidence_is_admitted(self) -> None:
         with tempfile.TemporaryDirectory() as td:

@@ -1,0 +1,29 @@
+Linx QEMU tests
+  Test 0x00001401: PASS
+  Test 0x00001402: PASS
+  Test 0x00001403: PASS
+  Test 0x00001404: PASS
+  Test 0x00001405: PASS
+  Test 0x00001406: PASS
+  Test 0x00001407: PASS
+  Test 0x00001408: PASS
+  Test 0x00001409: PASS
+  Test 0x0000140A: PASS
+  Test 0x0000140B: PASS
+  Test 0x0000140C: PASS
+  Test 0x0000140D: PASS
+  Test 0x0000140E: PASS
+  Test 0x0000140F: PASS
+  Test 0x00001410: PASS
+  Test 0x00001411: PASS
+  Test 0x00001412: PASS
+
+=================================================
+              TEST SUITE COMPLETE                
+=================================================
+
+All tests completed successfully!
+
+Note: Check UART output for individual test results.
+      Each test suite prints PASS for each test.
+
