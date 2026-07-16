@@ -129,20 +129,26 @@ def _sha256(path: Path) -> str:
 
 
 def _tool_receipt(path: Path) -> dict[str, object]:
-    resolved = path.resolve()
+    # Preserve the selected basename when invoking multicall tools.  ld.lld is
+    # commonly a symlink to the generic `lld` binary, whose driver mode is
+    # selected from argv[0]; resolving the symlink before execution changes
+    # its behavior and makes a valid linker fail `--version`.
+    selected = path.expanduser().absolute()
+    resolved = selected.resolve()
     p = _run(
-        [str(resolved), "--version"],
+        [str(selected), "--version"],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         timeout=5.0,
     )
     version = (p.stdout or b"").decode("utf-8", errors="replace").strip()
     if p.returncode != 0 or not version:
-        raise SystemExit(f"error: failed to identify tool binary: {resolved}")
+        raise SystemExit(f"error: failed to identify tool binary: {selected}")
     return {
-        "path": str(resolved),
-        "sha256": _sha256(resolved),
-        "size_bytes": resolved.stat().st_size,
+        "path": str(selected),
+        "resolved_path": str(resolved),
+        "sha256": _sha256(selected),
+        "size_bytes": selected.stat().st_size,
         "version": version.splitlines()[0],
         "version_output": version,
     }

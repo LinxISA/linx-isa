@@ -147,6 +147,28 @@ class ProvenanceValidationTests(unittest.TestCase):
         with self.assertRaisesRegex(SystemExit, "dirty provenance scope: llvm"):
             self.runner._validate_provenance_receipt(self.receipt, require_qemu=True)
 
+    def test_tool_receipt_preserves_multicall_symlink_name(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            driver = root / "lld"
+            driver.write_text(
+                "#!/bin/sh\n"
+                "case \"$0\" in\n"
+                "  *ld.lld) echo 'LLD test revision'; exit 0 ;;\n"
+                "  *) exit 1 ;;\n"
+                "esac\n",
+                encoding="utf-8",
+            )
+            driver.chmod(0o755)
+            linker = root / "ld.lld"
+            linker.symlink_to(driver.name)
+
+            receipt = self.runner._tool_receipt(linker)
+
+            self.assertEqual(receipt["path"], str(linker.absolute()))
+            self.assertEqual(receipt["resolved_path"], str(driver.resolve()))
+            self.assertEqual(receipt["version"], "LLD test revision")
+
 
 if __name__ == "__main__":
     unittest.main()
