@@ -46,6 +46,9 @@ class BenchmarkFlowContractTests(unittest.TestCase):
                     command_ids,
                 )
 
+    def test_canonical_flow_requires_head_matched_clean_qemu(self) -> None:
+        self.assertTrue(self.flow["require_clean_qemu"])
+
     def test_source_contract_checks_linux_source_completeness(self) -> None:
         commands = self.stages["source-contract"]["commands"]
         self.assertEqual(commands[1]["id"], "linux-source-completeness")
@@ -71,6 +74,41 @@ class BenchmarkFlowContractTests(unittest.TestCase):
             {
                 "report": "LINX_BUSYBOX_BOOT_REPORT",
                 "transcript": "LINX_BUSYBOX_BOOT_TRANSCRIPT",
+            },
+        )
+
+    def test_libc_runtime_reuses_one_build_and_binds_fresh_kernel_evidence(self) -> None:
+        commands = self.stages["libc-hosted-runtime"]["commands"]
+        self.assertEqual(
+            [command["id"] for command in commands],
+            [
+                "musl-build-phase-b",
+                "cpp-runtime-noeh-phase-b",
+                "musl-runtime-both",
+                "glibc-build-g1b",
+                "glibc-runtime",
+            ],
+        )
+        musl = commands[2]
+        self.assertIn("--skip-build", musl["command"])
+        self.assertIn("--kernel", musl["command"])
+        self.assertIn("LINUX_VMLINUX_OUT_DIR", musl["command"])
+        self.assertEqual(
+            musl["artifact_env"],
+            {
+                "report": "LINX_MUSL_RUNTIME_REPORT",
+                "transcript": "LINX_MUSL_RUNTIME_TRANSCRIPT",
+            },
+        )
+        self.assertIn("GLIBC_G1B_ALLOW_BLOCKED=0", commands[3]["command"])
+        glibc = commands[4]
+        self.assertIn("--kernel", glibc["command"])
+        self.assertIn("LINUX_VMLINUX_OUT_DIR", glibc["command"])
+        self.assertEqual(
+            glibc["artifact_env"],
+            {
+                "report": "LINX_GLIBC_RUNTIME_REPORT",
+                "transcript": "LINX_GLIBC_RUNTIME_TRANSCRIPT",
             },
         )
 
@@ -205,7 +243,7 @@ class BenchmarkFlowContractTests(unittest.TestCase):
                 encoding="utf-8",
             )
             env = os.environ.copy()
-            env["QEMU"] = "/bin/true"
+            env["QEMU"] = "/usr/bin/true"
             result = subprocess.run(
                 [sys.executable, str(RUNNER), "--flow", str(flow), "--profile", "pr"],
                 cwd=ROOT,

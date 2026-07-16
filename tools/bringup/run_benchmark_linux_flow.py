@@ -13,7 +13,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from qemu_build_paths import default_qemu_binary
+from qemu_build_paths import default_qemu_binary, require_clean_qemu_binary
 
 
 VALID_PROFILES = {"pr", "linux", "nightly"}
@@ -38,6 +38,8 @@ def load_flow(path: Path) -> dict[str, Any]:
         raise SystemExit(f"error: invalid flow JSON {path}: {exc}") from exc
     if data.get("schema_version") != 1:
         raise SystemExit(f"error: unsupported flow schema_version in {path}")
+    if not isinstance(data.get("require_clean_qemu", False), bool):
+        raise SystemExit(f"error: require_clean_qemu must be a boolean in {path}")
     stages = data.get("stages")
     if not isinstance(stages, list) or not stages:
         raise SystemExit(f"error: flow has no stages: {path}")
@@ -339,7 +341,14 @@ def main(argv: list[str]) -> int:
     env.setdefault("LINXISA_ROOT", str(root))
     env.setdefault("CLANG", str(root / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "clang"))
     env.setdefault("LLD", str(root / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "ld.lld"))
-    qemu_was_explicit = "QEMU" in env
+    if not args.dry_run:
+        qemu = default_qemu_binary(root)
+        if flow.get("require_clean_qemu", False):
+            try:
+                require_clean_qemu_binary(root, qemu)
+            except RuntimeError as exc:
+                raise SystemExit(f"error: {exc}") from exc
+        env["QEMU"] = str(qemu)
 
     report_path = Path(args.report_out).resolve() if args.report_out else None
     log_dir = None
@@ -359,8 +368,6 @@ def main(argv: list[str]) -> int:
         command_rows: list[dict[str, Any]] = []
         for command in stage["commands"]:
             command_env = env.copy()
-            if not qemu_was_explicit and not args.dry_run:
-                command_env["QEMU"] = str(default_qemu_binary(root))
             row = run_command(
                 root=root,
                 stage_id=stage_id,

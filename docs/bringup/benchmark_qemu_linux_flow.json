@@ -1,6 +1,7 @@
 {
   "schema_version": 1,
   "flow_id": "benchmark-qemu-linux-hardbreak",
+  "require_clean_qemu": true,
   "description": "Fail-fast bring-up flow for reaching full benchmark execution on QEMU with Linux.",
   "artifact_policy": {
     "canonical_root": "workloads/generated",
@@ -181,12 +182,25 @@
         {
           "id": "musl-runtime-both",
           "timeout_seconds": 600,
-          "command": "python3 avs/qemu/run_musl_smoke.py --mode phase-b --link both --sample all --qemu \"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\" --timeout \"${MUSL_TIMEOUT:-90}\""
+          "command": "python3 avs/qemu/run_musl_smoke.py --mode phase-b --link both --sample all --skip-build --kernel \"${LINUX_VMLINUX_OUT_DIR:-/tmp/linx-linux-vmlinux-clean-build}/vmlinux\" --qemu \"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\" --timeout \"${MUSL_TIMEOUT:-90}\" && cp avs/qemu/out/musl-smoke/summary.json \"$LINX_MUSL_RUNTIME_REPORT\" && cat avs/qemu/out/musl-smoke/qemu_*.log > \"$LINX_MUSL_RUNTIME_TRANSCRIPT\"",
+          "artifact_env": {
+            "report": "LINX_MUSL_RUNTIME_REPORT",
+            "transcript": "LINX_MUSL_RUNTIME_TRANSCRIPT"
+          }
+        },
+        {
+          "id": "glibc-build-g1b",
+          "timeout_seconds": 3600,
+          "command": "GLIBC_G1B_ALLOW_BLOCKED=0 JOBS=\"${GLIBC_BUILD_JOBS:-${SPEC_BUILD_JOBS:-10}}\" bash lib/glibc/tools/linx/build_linx64_glibc_g1b.sh"
         },
         {
           "id": "glibc-runtime",
           "timeout_seconds": 600,
-          "command": "python3 avs/qemu/run_glibc_smoke.py --qemu \"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\" --timeout \"${GLIBC_TIMEOUT:-30}\""
+          "command": "python3 avs/qemu/run_glibc_smoke.py --kernel \"${LINUX_VMLINUX_OUT_DIR:-/tmp/linx-linux-vmlinux-clean-build}/vmlinux\" --qemu \"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\" --timeout \"${GLIBC_TIMEOUT:-30}\" && cp avs/qemu/out/glibc-smoke/summary.json \"$LINX_GLIBC_RUNTIME_REPORT\" && cat avs/qemu/out/glibc-smoke/qemu_glibc_runtime_*.log > \"$LINX_GLIBC_RUNTIME_TRANSCRIPT\"",
+          "artifact_env": {
+            "report": "LINX_GLIBC_RUNTIME_REPORT",
+            "transcript": "LINX_GLIBC_RUNTIME_TRANSCRIPT"
+          }
         }
       ]
     },
