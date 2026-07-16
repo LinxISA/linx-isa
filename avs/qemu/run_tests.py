@@ -600,6 +600,10 @@ COMPILE_ONLY_SUITE_SOURCE_OVERRIDE: dict[str, str] = {
 def _extra_sources_for_suite(suite: str) -> list[str]:
     if suite == "tile":
         return [_pto_kernel_src(name) for name in PTO_TILE_KERNEL_NAMES]
+    if suite == "atomic":
+        return [
+            "avs/qemu/tests/07_atomic_lr_srczero.S",
+        ]
     if suite == "callret":
         return [
             "avs/qemu/tests/14_callret_templates.S",

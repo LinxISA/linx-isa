@@ -1,6 +1,6 @@
 # QEMU Executable Coverage Ledger
 
-Generated: `2026-07-16T04:04:17Z`
+Generated: `2026-07-16T04:40:59Z`
 
 This ledger counts only per-form evidence bound to golden identity, bytes, test ID,
 artifacts, QEMU SHA, a test-specific terminal PASS, and an oracle. Suite exit 0 and stdout alone do not count.
@@ -9,8 +9,8 @@ artifacts, QEMU SHA, a test-specific terminal PASS, and an oracle. Suite exit 0 
 
 | Level | Availability | Forms | Mnemonics |
 | --- | --- | ---: | ---: |
-| L2 | `available` | 58 | 58 |
-| L3 | `available` | 58 | 58 |
+| L2 | `available` | 60 | 60 |
+| L3 | `available` | 60 | 60 |
 
 ## Admitted Forms
 
@@ -52,6 +52,8 @@ artifacts, QEMU SHA, a test-specific terminal PASS, and an oracle. Suite exit 0 
 | `ld_32_7c48838bc4e6` | `executable_scalar / 0x0000250c` | `L3` | `exact_value` | `09b14106` |
 | `lh_32_d0f04d7d7696` | `executable_scalar / 0x0000250a` | `L3` | `exact_value` | `09914106` |
 | `lhu_32_730caf67ecd1` | `executable_integer / 0x00002602` | `L3` | `exact_value` | `09d14106` |
+| `lr_d_32_84d21a553dc1` | `atomic / 0x00007163` | `L3` | `exact_value` | `0b011131` |
+| `lr_w_32_efecc735bb75` | `atomic / 0x00007162` | `L3` | `exact_value` | `0b01f121` |
 | `lw_32_3a77ffafcb34` | `executable_scalar / 0x0000250b` | `L3` | `exact_value` | `09a14106` |
 | `lwu_32_678935925636` | `executable_integer / 0x00002603` | `L3` | `exact_value` | `09e14106` |
 | `mul_32_9f2affd8efb8` | `executable_integer / 0x00002604` | `L3` | `exact_value` | `47814100` |
@@ -138,4 +140,6 @@ None.
 - `v03_vector_ops / 0x00001374`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
 - `v03_vector_ops / 0x00001375`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
 - `v03_vector_ops / 0x00001320`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `atomic / 0x00007162`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
+- `atomic / 0x00007163`: status `PASS`, oracle `PASS`, timeout-after-fail `False`, test-contract `valid`, attribution `none`
 - `v03_vector_ops / 0x00001321`: status `FAIL`, oracle `FAIL`, timeout-after-fail `True`, failure `0x00001321` expected `0x0000000000000053` actual `0x0000000000000011`, test-contract `invalid`, attribution `test_contract`, note: Historical first-red evidence. The AVS source used invalid VT/VU lifetime and relative-index semantics; the corrected source and authored B.IOR binding now pass 0x1300, 0x1310, and 0x1320.

@@ -1,9 +1,7 @@
 {
   "capabilities": [
     "decoder_source_to_isa_mnemonic_mapping",
-    "decoder_mask_to_isa_form_matching",
-    "audited_per_form_runtime_evidence_ingestion",
-    "audited_per_form_semantic_oracle_ingestion"
+    "decoder_mask_to_isa_form_matching"
   ],
   "claim": "decoder_source_mapping",
   "coverage_count": 626,
@@ -12,37 +10,34 @@
     "L1": {
       "availability": "available",
       "claim": "decoder_source_mapping",
-      "form_count": 631,
+      "form_count": 640,
       "mnemonic_count": 626
     },
     "L2": {
-      "availability": "available",
+      "availability": "unavailable",
       "claim": "runtime_execution",
-      "form_count": 51,
-      "mnemonic_count": 51,
-      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
-      "source": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_executable_coverage_latest.json"
+      "form_count": null,
+      "mnemonic_count": null,
+      "reason": "runtime_execution_evidence_not_ingested"
     },
     "L3": {
-      "availability": "available",
+      "availability": "unavailable",
       "claim": "semantic_oracle",
-      "form_count": 51,
-      "mnemonic_count": 51,
-      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
-      "source": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_executable_coverage_latest.json"
+      "form_count": null,
+      "mnemonic_count": null,
+      "reason": "semantic_oracle_evidence_not_ingested"
     }
   },
   "evidence_level": "L1",
-  "form_coverage_count": 631,
-  "form_coverage_ratio_percent": 84.47,
-  "form_missing_count": 116,
-  "generated_at_utc": "2026-07-15 22:49:03Z",
+  "form_coverage_count": 640,
+  "form_coverage_ratio_percent": 85.68,
+  "form_missing_count": 107,
+  "generated_at_utc": "2026-07-16 04:31:59Z",
   "legal_form_count": 747,
   "legal_mnemonic_count": 711,
   "limitations": [
-    "runtime_execution_evidence_is_partial",
-    "semantic_oracle_evidence_is_partial",
-    "l2_l3_counts_do_not_extend_the_l1_mapping_claim"
+    "no_runtime_execution_evidence",
+    "no_semantic_oracle_evidence"
   ],
   "mapped_by_prefix": {
     "ACRC": 1,
@@ -234,7 +229,7 @@
     "CMP": 16,
     "CSEL": 1,
     "CTZ": 1,
-    "DC": 6,
+    "DC": 8,
     "DIV": 1,
     "DIVU": 1,
     "DIVUW": 1,
@@ -278,7 +273,7 @@
     "IC": 2,
     "J": 1,
     "JR": 1,
-    "L": 4,
+    "L": 9,
     "LB": 2,
     "LBI": 1,
     "LBU": 2,
@@ -289,7 +284,7 @@
     "LHI": 2,
     "LHU": 2,
     "LHUI": 2,
-    "LR": 2,
+    "LR": 4,
     "LSRGET": 1,
     "LUI": 1,
     "LW": 10,
@@ -2352,10 +2347,7 @@
   "missing_forms_by_prefix": {
     "BSTART": 14,
     "C": 1,
-    "DC": 2,
     "HL": 5,
-    "L": 5,
-    "LR": 2,
     "V": 86,
     "XB": 1
   },
@@ -2375,20 +2367,11 @@
     "BSTART.VPAR [len=32 mask=0xf9ffffff match=0x21181]",
     "BSTART.VSEQ [len=32 mask=0xf9ffffff match=0x29181]",
     "C.BSTART.STD [len=16 mask=0xc7ff match=0x0]",
-    "DC.ISW [len=32 mask=0xfff07fff match=0x40602b]",
-    "DC.ZVA [len=32 mask=0xfff07fff match=0x70602b]",
     "HL.BSTART CALL [len=64 mask=0xfffff83f0000007f match=0x501600000011]",
     "HL.BSTART.STD [len=64 mask=0xffff00007fff000f match=0x4001000e]",
     "HL.CCAT [len=64 mask=0xffff0000707f07ff match=0x105d000e]",
     "HL.CCATW [len=64 mask=0xffff0000707f07ff match=0x205d000e]",
     "HL.PRF [len=64 mask=0xffff00007fff07ff match=0x7009000e]",
-    "L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x10810000000f]",
-    "L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x20810000000f]",
-    "L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x30810000000f]",
-    "L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x40810000000f]",
-    "L.BSTART.SYS [len=64 mask=0x7fff0000007f match=0x10110000000f]",
-    "LR.D [len=32 mask=0xf000707f match=0x3000000b]",
-    "LR.W [len=32 mask=0xf000707f match=0x2000000b]",
     "V.FABS [len=64 mask=0xfff0707ffff0707f match=0x7b0000007f]",
     "V.LBI [len=64 mask=0x707f0000207f match=0x190000007f]",
     "V.LBI.BRG [len=64 mask=0x707f0000207f match=0x190000207f]",
@@ -2567,7 +2550,7 @@
   "qemu_manual_translate_mnemonics": [
     "C.SETRET"
   ],
-  "qemu_mapped_spec_forms": 631,
+  "qemu_mapped_spec_forms": 640,
   "qemu_mapped_spec_mnemonics": 626,
   "qemu_meta_mnemonics": 651,
   "qemu_meta_path": "/Users/zhoubot/linx-isa/emulator/qemu/target/linx/linx_opcode_meta_gen.h",

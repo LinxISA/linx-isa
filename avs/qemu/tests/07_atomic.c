@@ -10,6 +10,13 @@
 static volatile uint32_t atomic_u32 = 0;
 static volatile uint64_t atomic_u64 = 0;
 static volatile uint8_t  atomic_u8 = 0;
+static volatile uint32_t atomic_lr_srczero_u32 __attribute__((aligned(8))) =
+    0x1234ABCDu;
+static volatile uint64_t atomic_lr_srczero_u64 __attribute__((aligned(8))) =
+    0x0123456789ABCDEFULL;
+
+extern uint64_t atomic_lr_w_nonzero_srczero(const volatile uint32_t *addr);
+extern uint64_t atomic_lr_d_nonzero_srczero(const volatile uint64_t *addr);
 
 /* Test basic load (used as baseline for atomic) */
 static void test_load_basic(void) {
@@ -41,6 +48,16 @@ static void test_lr_sc_basic(void) {
     } else {
         test_fail(0x7020, 100, observed);
     }
+}
+
+static void test_lr_w_nonzero_srczero(void) {
+    const uint64_t result = atomic_lr_w_nonzero_srczero(&atomic_lr_srczero_u32);
+    TEST_EQ64(result, 0x1234ABCDu, 0x7162);
+}
+
+static void test_lr_d_nonzero_srczero(void) {
+    const uint64_t result = atomic_lr_d_nonzero_srczero(&atomic_lr_srczero_u64);
+    TEST_EQ64(result, 0x0123456789ABCDEFULL, 0x7163);
 }
 
 /* Test atomic add */
@@ -308,7 +325,9 @@ void run_atomic_tests(void) {
     
     /* SC success/failure */
     RUN_TEST(test_sc_success, 0x7150);
+    RUN_TEST(test_lr_w_nonzero_srczero, 0x7162);
+    RUN_TEST(test_lr_d_nonzero_srczero, 0x7163);
     RUN_TEST(test_sc_fail, 0x7160);
     
-    test_suite_end(25, 25);
+    test_suite_end(27, 27);
 }

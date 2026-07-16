@@ -1,20 +1,20 @@
 # ISA vs QEMU Decoder/Source Mapping Snapshot
 
-- Generated (UTC): `2026-07-15 22:49:03Z`
+- Generated (UTC): `2026-07-16 04:31:59Z`
 - Evidence level: `L1`
 - Claim: `decoder_source_mapping`
-- L2 runtime execution: `available`; `51` forms / `51` mnemonics
-- L3 semantic oracle: `available`; `51` forms / `51` mnemonics
-- Limitation: L1 mapping does not imply execution; L2/L3 counts are independently audited per-form evidence and remain partial.
+- L2 runtime execution: `unavailable`
+- L3 semantic oracle: `unavailable`
+- Limitation: this report does not prove that an instruction executed in QEMU or produced an architecturally correct result.
 - Spec unique mnemonics: `711`
 - QEMU unique decode mnemonics (non-internal): `652`
 - QEMU mapped spec mnemonics: `626`
 - L1 mnemonic mapping: `626/711` (`88.05%`)
 - Spec legal forms: `747`
-- QEMU mapped spec forms: `631`
-- L1 form mapping: `631/747` (`84.47%`)
+- QEMU mapped spec forms: `640`
+- L1 form mapping: `640/747` (`85.68%`)
 - Missing spec mnemonics: `85`
-- Missing spec forms: `116`
+- Missing spec forms: `107`
 - Reserved spec forms: `0`
 - Unmapped QEMU mnemonics: `3`
 
@@ -215,7 +215,7 @@
 - `CMP`: `16`
 - `CSEL`: `1`
 - `CTZ`: `1`
-- `DC`: `6`
+- `DC`: `8`
 - `DIV`: `1`
 - `DIVU`: `1`
 - `DIVUW`: `1`
@@ -259,7 +259,7 @@
 - `IC`: `2`
 - `J`: `1`
 - `JR`: `1`
-- `L`: `4`
+- `L`: `9`
 - `LB`: `2`
 - `LBI`: `1`
 - `LBU`: `2`
@@ -270,7 +270,7 @@
 - `LHI`: `2`
 - `LHU`: `2`
 - `LHUI`: `2`
-- `LR`: `2`
+- `LR`: `4`
 - `LSRGET`: `1`
 - `LUI`: `1`
 - `LW`: `10`
@@ -347,10 +347,7 @@
 
 - `BSTART`: `14`
 - `C`: `1`
-- `DC`: `2`
 - `HL`: `5`
-- `L`: `5`
-- `LR`: `2`
 - `V`: `86`
 - `XB`: `1`
 
@@ -465,20 +462,11 @@
 - `BSTART.VPAR [len=32 mask=0xf9ffffff match=0x21181]`
 - `BSTART.VSEQ [len=32 mask=0xf9ffffff match=0x29181]`
 - `C.BSTART.STD [len=16 mask=0xc7ff match=0x0]`
-- `DC.ISW [len=32 mask=0xfff07fff match=0x40602b]`
-- `DC.ZVA [len=32 mask=0xfff07fff match=0x70602b]`
 - `HL.BSTART CALL [len=64 mask=0xfffff83f0000007f match=0x501600000011]`
 - `HL.BSTART.STD [len=64 mask=0xffff00007fff000f match=0x4001000e]`
 - `HL.CCAT [len=64 mask=0xffff0000707f07ff match=0x105d000e]`
 - `HL.CCATW [len=64 mask=0xffff0000707f07ff match=0x205d000e]`
 - `HL.PRF [len=64 mask=0xffff00007fff07ff match=0x7009000e]`
-- `L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x10810000000f]`
-- `L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x20810000000f]`
-- `L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x30810000000f]`
-- `L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x40810000000f]`
-- `L.BSTART.SYS [len=64 mask=0x7fff0000007f match=0x10110000000f]`
-- `LR.D [len=32 mask=0xf000707f match=0x3000000b]`
-- `LR.W [len=32 mask=0xf000707f match=0x2000000b]`
 - `V.FABS [len=64 mask=0xfff0707ffff0707f match=0x7b0000007f]`
 - `V.LBI [len=64 mask=0x707f0000207f match=0x190000007f]`
 - `V.LBI.BRG [len=64 mask=0x707f0000207f match=0x190000207f]`
