@@ -171,6 +171,104 @@ class ReportQemuIsaCoverageTests(unittest.TestCase):
                     mnemonics,
                 )
 
+    def test_generic_tile_decoders_prove_only_audited_canonical_subforms(self) -> None:
+        instructions = [
+            {
+                "mnemonic": "BSTART.TMOV",
+                "encoding": {
+                    "length_bits": 32,
+                    "parts": [{"mask": "0x07ffffff", "match": "0x00211181"}],
+                },
+            },
+            {
+                "mnemonic": "BSTART.ACCCVT",
+                "encoding": {
+                    "length_bits": 32,
+                    "parts": [{"mask": "0x07ffffff", "match": "0x00831181"}],
+                },
+            },
+        ]
+        entries = [
+            {
+                "mnemonic": "bstart_tma",
+                "insn_len": 32,
+                "mask": 0x060FFFFF,
+                "match": 0x00011181,
+            },
+            {
+                "mnemonic": "bstart_cube",
+                "insn_len": 32,
+                "mask": 0x060FFFFF,
+                "match": 0x00031181,
+            },
+        ]
+        self.assertEqual(
+            coverage._canonical_specialization_forms(instructions, entries),
+            {coverage._spec_form_key(inst) for inst in instructions},
+        )
+
+        entries[0]["match"] = 0x00031181
+        self.assertEqual(
+            coverage._canonical_specialization_forms(instructions, entries),
+            {coverage._spec_form_key(instructions[1])},
+        )
+
+    def test_constraint_union_requires_the_complete_legal_partition(self) -> None:
+        instruction = {
+            "mnemonic": "C.BSTART.STD",
+            "encoding": {
+                "length_bits": 16,
+                "parts": [
+                    {
+                        "mask": "0xc7ff",
+                        "match": "0x0000",
+                        "constraints": [
+                            {"field": "BrType", "op": "!=", "value": "0"}
+                        ],
+                        "fields": [
+                            {
+                                "name": "BrType",
+                                "pieces": [
+                                    {"insn_lsb": 11, "insn_msb": 13}
+                                ],
+                            }
+                        ],
+                    }
+                ],
+            },
+        }
+        tokens = [
+            "c_bstart_std_fall",
+            "c_bstart_std_direct",
+            "c_bstart_std_cond",
+            "c_bstart_std_call",
+            "c_bstart_std_ind",
+            "c_bstart_std_icall",
+            "c_bstart_std_ret",
+        ]
+        entries = [
+            {
+                "mnemonic": token,
+                "insn_len": 16,
+                "mask": 0xFFFF,
+                "match": brtype << 11,
+            }
+            for brtype, token in enumerate(tokens, start=1)
+        ]
+        expected = {coverage._spec_form_key(instruction)}
+        self.assertEqual(
+            coverage._constraint_union_forms(
+                [instruction], entries, {"C.BSTART.STD"}
+            ),
+            expected,
+        )
+        self.assertEqual(
+            coverage._constraint_union_forms(
+                [instruction], entries[:-1], {"C.BSTART.STD"}
+            ),
+            set(),
+        )
+
     def test_c_setret_manual_translate_evidence_provides_exact_form(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             qemu_root = Path(td)

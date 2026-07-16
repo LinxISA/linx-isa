@@ -127,6 +127,7 @@ SPECIAL_MAP: dict[str, str | list[str]] = {
     "hl_bstart_std_direct": "HL.BSTART.STD",
     "hl_bstart_std_fall": "HL.BSTART.STD",
     "bstart_tma": ["BSTART.TMA", "BSTART.TMOV"],
+    "bstart_cube": ["BSTART.CUBE", "BSTART.ACCCVT"],
     "bstart_tepl": [
         "BSTART.TEPL",
         "BSTART.TLOAD",
@@ -219,6 +220,13 @@ SPECIAL_MAP: dict[str, str | list[str]] = {
     "datr": "B.DATR",
     "qpush": ["HL.QPUSH", "V.QPUSH"],
     "qpop": ["HL.QPOP", "V.QPOP"],
+}
+
+CANONICAL_SPECIALIZATION_PROOFS: dict[str, set[str]] = {
+    # These architectural names freeze one Function value of a generic tile
+    # decoder. The generic translator forwards the decoded Function unchanged.
+    "bstart_tma": {"BSTART.TMOV"},
+    "bstart_cube": {"BSTART.ACCCVT"},
 }
 
 MANUAL_TRANSLATE_EVIDENCE: tuple[dict[str, object], ...] = (
@@ -821,6 +829,128 @@ def _spec_form_key(inst: dict[str, object]) -> tuple[str, int, int, int]:
     return (mnemonic, length_bits, mask, match)
 
 
+def _canonical_specialization_forms(
+    instructions: list[dict[str, object]],
+    form_entries: list[dict[str, object]],
+) -> set[tuple[str, int, int, int]]:
+    """Prove named canonical subforms contained by audited generic decoders."""
+    forms_by_mnemonic: dict[str, list[tuple[str, int, int, int]]] = {}
+    for inst in instructions:
+        forms_by_mnemonic.setdefault(str(inst.get("mnemonic", "")), []).append(
+            _spec_form_key(inst)
+        )
+    proved: set[tuple[str, int, int, int]] = set()
+    for entry in form_entries:
+        token = str(entry["mnemonic"])
+        targets = CANONICAL_SPECIALIZATION_PROOFS.get(token, set())
+        qemu_length = int(entry["insn_len"])
+        qemu_mask = int(entry["mask"])
+        qemu_match = int(entry["match"])
+        for target in targets:
+            for form in forms_by_mnemonic.get(target, []):
+                _, length, spec_mask, spec_match = form
+                if (
+                    length == qemu_length
+                    and qemu_mask & spec_mask == qemu_mask
+                    and spec_match & qemu_mask == qemu_match
+                ):
+                    proved.add(form)
+    return proved
+
+
+def _constraint_projection(
+    inst: dict[str, object],
+) -> tuple[int, set[int]] | None:
+    """Return one constrained field mask and its legal encoded assignments."""
+    encoding = inst.get("encoding")
+    if not isinstance(encoding, dict):
+        return None
+    parts = encoding.get("parts")
+    if not isinstance(parts, list) or len(parts) != 1 or not isinstance(parts[0], dict):
+        return None
+    part = parts[0]
+    constraints = part.get("constraints")
+    fields = part.get("fields")
+    if not isinstance(constraints, list) or not constraints or not isinstance(fields, list):
+        return None
+    constrained_names = {item.get("field") for item in constraints if isinstance(item, dict)}
+    if len(constrained_names) != 1:
+        return None
+    field_name = next(iter(constrained_names))
+    field = next(
+        (item for item in fields if isinstance(item, dict) and item.get("name") == field_name),
+        None,
+    )
+    pieces = field.get("pieces") if isinstance(field, dict) else None
+    if not isinstance(pieces, list) or len(pieces) != 1 or not isinstance(pieces[0], dict):
+        return None
+    piece = pieces[0]
+    lsb = int(piece.get("insn_lsb", -1))
+    msb = int(piece.get("insn_msb", -1))
+    width = msb - lsb + 1
+    if lsb < 0 or width <= 0 or width > 8:
+        return None
+    legal_values = set(range(1 << width))
+    for constraint in constraints:
+        if not isinstance(constraint, dict) or constraint.get("field") != field_name:
+            return None
+        try:
+            value = _parse_int(str(constraint.get("value")))
+        except ValueError:
+            return None
+        op = constraint.get("op")
+        if op == "!=":
+            legal_values.discard(value)
+        elif op == "==":
+            legal_values &= {value}
+        else:
+            return None
+    field_mask = ((1 << width) - 1) << lsb
+    return field_mask, {value << lsb for value in legal_values}
+
+
+def _constraint_union_forms(
+    instructions: list[dict[str, object]],
+    form_entries: list[dict[str, object]],
+    spec_set: set[str],
+) -> set[tuple[str, int, int, int]]:
+    """Prove a constrained form only when decoder subpatterns exactly partition it."""
+    proved: set[tuple[str, int, int, int]] = set()
+    for inst in instructions:
+        projection = _constraint_projection(inst)
+        if projection is None:
+            continue
+        field_mask, legal_assignments = projection
+        form = _spec_form_key(inst)
+        mnemonic, length, spec_mask, spec_match = form
+        candidates: list[tuple[int, int]] = []
+        for entry in form_entries:
+            if int(entry["insn_len"]) != length:
+                continue
+            mapped = _canonicalize_qemu_mnemonic(str(entry["mnemonic"]), spec_set)
+            if mnemonic not in mapped:
+                continue
+            qemu_mask = int(entry["mask"])
+            qemu_match = int(entry["match"])
+            if qemu_mask & spec_mask != spec_mask:
+                continue
+            if qemu_match & spec_mask != spec_match:
+                continue
+            if qemu_mask & ~(spec_mask | field_mask):
+                continue
+            candidates.append((qemu_mask, qemu_match))
+        accepted: set[int] = set()
+        field_lsb = (field_mask & -field_mask).bit_length() - 1
+        for value in range(1 << field_mask.bit_count()):
+            encoded_value = value << field_lsb
+            word = spec_match | encoded_value
+            if any(word & mask == match for mask, match in candidates):
+                accepted.add(encoded_value)
+        if accepted == legal_assignments:
+            proved.add(form)
+    return proved
+
+
 def _format_form(key: tuple[str, int, int, int]) -> str:
     mnemonic, length_bits, mask, match = key
     return f"{mnemonic} [len={length_bits} mask=0x{mask:x} match=0x{match:x}]"
@@ -1071,6 +1201,15 @@ def main(argv: list[str]) -> int:
         for spec_name in mapped:
             qemu_form_keys.add((spec_name, int(entry["insn_len"]), int(entry["mask"]), int(entry["match"])))
 
+    canonical_specialization_forms = _canonical_specialization_forms(
+        instructions, form_entries
+    )
+    constraint_union_forms = _constraint_union_forms(
+        instructions, form_entries, spec_set
+    )
+    qemu_form_keys |= canonical_specialization_forms
+    qemu_form_keys |= constraint_union_forms
+
     mapped_spec_forms = sorted(spec_forms & qemu_form_keys)
     missing_spec_forms = sorted(_format_form(key) for key in (spec_forms - qemu_form_keys))
 
@@ -1185,6 +1324,12 @@ def main(argv: list[str]) -> int:
         "mapped_by_prefix": mapped_by_prefix,
         "missing_by_prefix": missing_by_prefix,
         "mapped_forms_by_prefix": mapped_forms_by_prefix,
+        "canonical_specialization_forms": sorted(
+            _format_form(key) for key in canonical_specialization_forms
+        ),
+        "constraint_union_forms": sorted(
+            _format_form(key) for key in constraint_union_forms
+        ),
         "missing_forms_by_prefix": missing_forms_by_prefix,
         "unmapped_qemu_mnemonics": sorted(unmapped),
         "mapped_qemu_to_spec": dict(sorted(mapped_pairs.items())),

@@ -1,6 +1,6 @@
 # ISA vs QEMU Decoder/Source Mapping Snapshot
 
-- Generated (UTC): `2026-07-16 16:33:04Z`
+- Generated (UTC): `2026-07-16 16:46:13Z`
 - Evidence level: `L1`
 - Claim: `decoder_source_mapping`
 - L2 runtime execution: `available`; `60` forms / `60` mnemonics
@@ -11,10 +11,10 @@
 - QEMU mapped spec mnemonics: `625`
 - L1 mnemonic mapping: `625/711` (`87.9%`)
 - Spec legal forms: `747`
-- QEMU mapped spec forms: `653`
-- L1 form mapping: `653/747` (`87.42%`)
+- QEMU mapped spec forms: `656`
+- L1 form mapping: `656/747` (`87.82%`)
 - Missing spec mnemonics: `86`
-- Missing spec forms: `94`
+- Missing spec forms: `91`
 - Reserved spec forms: `0`
 - Unmapped QEMU mnemonics: `0`
 
@@ -204,14 +204,14 @@
 - `BIC`: `1`
 - `BIS`: `1`
 - `BSE`: `1`
-- `BSTART`: `25`
+- `BSTART`: `27`
 - `BSTOP`: `1`
 - `BWE`: `1`
 - `BWI`: `1`
 - `BWT`: `1`
 - `BXS`: `1`
 - `BXU`: `1`
-- `C`: `38`
+- `C`: `39`
 - `CLZ`: `1`
 - `CMP`: `16`
 - `CSEL`: `1`
@@ -346,8 +346,7 @@
 
 ## Missing Forms By Prefix
 
-- `BSTART`: `7`
-- `C`: `1`
+- `BSTART`: `5`
 - `HL`: `1`
 - `V`: `84`
 - `XB`: `1`
@@ -448,13 +447,10 @@
 ## Missing Spec Forms (First 200)
 
 - `BSTART CALL [len=32 mask=0xf83f000f match=0x50160002]`
-- `BSTART.ACCCVT [len=32 mask=0x7ffffff match=0x831181]`
 - `BSTART.MPAR [len=32 mask=0xf9ffffff match=0x1181]`
 - `BSTART.MSEQ [len=32 mask=0xf9ffffff match=0x9181]`
-- `BSTART.TMOV [len=32 mask=0x7ffffff match=0x211181]`
 - `BSTART.VPAR [len=32 mask=0xf9ffffff match=0x21181]`
 - `BSTART.VSEQ [len=32 mask=0xf9ffffff match=0x29181]`
-- `C.BSTART.STD [len=16 mask=0xc7ff match=0x0]`
 - `HL.BSTART CALL [len=64 mask=0xfffff83f0000007f match=0x501600000011]`
 - `V.LBI [len=64 mask=0x707f0000207f match=0x190000007f]`
 - `V.LBI.BRG [len=64 mask=0x707f0000207f match=0x190000207f]`
