@@ -12,21 +12,21 @@
   "constraint_union_forms": [
     "C.BSTART.STD [len=16 mask=0xc7ff match=0x0]"
   ],
-  "coverage_count": 624,
-  "coverage_ratio_percent": 87.89,
+  "coverage_count": 625,
+  "coverage_ratio_percent": 88.03,
   "evidence": {
     "L1": {
       "availability": "available",
       "claim": "decoder_source_mapping",
-      "form_count": 655,
-      "mnemonic_count": 624
+      "form_count": 657,
+      "mnemonic_count": 625
     },
     "L2": {
       "availability": "available",
       "claim": "runtime_execution",
       "form_count": 60,
       "mnemonic_count": 60,
-      "qemu_sha": "107cb00916f6cf3c30de6610a2a4ab36fc312511",
+      "qemu_sha": "2a6602c2d65b1e9262cb5a8b1fdbf6e18951c6ec",
       "source": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_executable_coverage_latest.json"
     },
     "L3": {
@@ -34,15 +34,15 @@
       "claim": "semantic_oracle",
       "form_count": 60,
       "mnemonic_count": 60,
-      "qemu_sha": "107cb00916f6cf3c30de6610a2a4ab36fc312511",
+      "qemu_sha": "2a6602c2d65b1e9262cb5a8b1fdbf6e18951c6ec",
       "source": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_executable_coverage_latest.json"
     }
   },
   "evidence_level": "L1",
-  "form_coverage_count": 655,
-  "form_coverage_ratio_percent": 87.8,
-  "form_missing_count": 91,
-  "generated_at_utc": "2026-07-16 19:21:05Z",
+  "form_coverage_count": 657,
+  "form_coverage_ratio_percent": 88.07,
+  "form_missing_count": 89,
+  "generated_at_utc": "2026-07-16 22:43:22Z",
   "legal_form_count": 746,
   "legal_mnemonic_count": 710,
   "limitations": [
@@ -121,7 +121,7 @@
     "FRET": 2,
     "FSQRT": 1,
     "FSUB": 1,
-    "HL": 193,
+    "HL": 194,
     "IC": 2,
     "J": 1,
     "JR": 1,
@@ -228,7 +228,7 @@
     "BIC": 1,
     "BIS": 1,
     "BSE": 1,
-    "BSTART": 26,
+    "BSTART": 27,
     "BSTOP": 1,
     "BWE": 1,
     "BWI": 1,
@@ -280,7 +280,7 @@
     "FRET": 2,
     "FSQRT": 1,
     "FSUB": 1,
-    "HL": 199,
+    "HL": 200,
     "IC": 2,
     "J": 1,
     "JR": 1,
@@ -1980,6 +1980,16 @@
     "ssrswap": [
       "SSRSWAP"
     ],
+    "start_call_32": [
+      "BSTART CALL",
+      "BSTART.STD",
+      "HL.BSTART CALL",
+      "HL.BSTART.STD"
+    ],
+    "start_call_48": [
+      "HL.BSTART CALL",
+      "HL.BSTART.STD"
+    ],
     "sub": [
       "SUB"
     ],
@@ -2372,24 +2382,20 @@
     ]
   },
   "missing_by_prefix": {
-    "HL": 1,
     "V": 84,
     "XB": 1
   },
-  "missing_count": 86,
+  "missing_count": 85,
   "missing_forms_by_prefix": {
-    "BSTART": 5,
-    "HL": 1,
+    "BSTART": 4,
     "V": 84,
     "XB": 1
   },
   "missing_spec_forms": [
-    "BSTART CALL [len=32 mask=0xf83f000f match=0x50160002]",
     "BSTART.MPAR [len=32 mask=0xf9ffffff match=0x1181]",
     "BSTART.MSEQ [len=32 mask=0xf9ffffff match=0x9181]",
     "BSTART.VPAR [len=32 mask=0xf9ffffff match=0x21181]",
     "BSTART.VSEQ [len=32 mask=0xf9ffffff match=0x29181]",
-    "HL.BSTART CALL [len=64 mask=0xfffff83f0000007f match=0x501600000011]",
     "V.LBI [len=64 mask=0x707f0000207f match=0x190000007f]",
     "V.LBI.BRG [len=64 mask=0x707f0000207f match=0x190000207f]",
     "V.LBUI [len=64 mask=0x707f0000207f match=0x40190000007f]",
@@ -2477,7 +2483,6 @@
     "XB [len=32 mask=0x7fff match=0x6f81]"
   ],
   "missing_spec_mnemonics": [
-    "HL.BSTART CALL",
     "V.LBI",
     "V.LBI.BRG",
     "V.LBUI",
@@ -2567,14 +2572,14 @@
   "qemu_manual_translate_mnemonics": [
     "C.SETRET"
   ],
-  "qemu_mapped_spec_forms": 655,
-  "qemu_mapped_spec_mnemonics": 624,
-  "qemu_meta_mnemonics": 655,
+  "qemu_mapped_spec_forms": 657,
+  "qemu_mapped_spec_mnemonics": 625,
+  "qemu_meta_mnemonics": 657,
   "qemu_meta_path": "/Users/zhoubot/linx-isa/emulator/qemu/target/linx/linx_opcode_meta_gen.h",
   "qemu_root": "/Users/zhoubot/linx-isa/emulator/qemu",
   "qemu_source_kind": "decode",
-  "qemu_unique_forms": 664,
-  "qemu_unique_mnemonics": 656,
+  "qemu_unique_forms": 666,
+  "qemu_unique_mnemonics": 658,
   "reserved_encoding_families": [
     {
       "behavior": "illegal_instruction",

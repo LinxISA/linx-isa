@@ -1,20 +1,20 @@
 # ISA vs QEMU Decoder/Source Mapping Snapshot
 
-- Generated (UTC): `2026-07-16 19:21:05Z`
+- Generated (UTC): `2026-07-16 22:43:22Z`
 - Evidence level: `L1`
 - Claim: `decoder_source_mapping`
 - L2 runtime execution: `available`; `60` forms / `60` mnemonics
 - L3 semantic oracle: `available`; `60` forms / `60` mnemonics
 - Limitation: L1 mapping does not imply execution; L2/L3 counts are independently audited per-form evidence and remain partial.
 - Spec unique mnemonics: `710`
-- QEMU unique decode mnemonics (non-internal): `656`
-- QEMU mapped spec mnemonics: `624`
-- L1 mnemonic mapping: `624/710` (`87.89%`)
+- QEMU unique decode mnemonics (non-internal): `658`
+- QEMU mapped spec mnemonics: `625`
+- L1 mnemonic mapping: `625/710` (`88.03%`)
 - Spec legal forms: `746`
-- QEMU mapped spec forms: `655`
-- L1 form mapping: `655/746` (`87.8%`)
-- Missing spec mnemonics: `86`
-- Missing spec forms: `91`
+- QEMU mapped spec forms: `657`
+- L1 form mapping: `657/746` (`88.07%`)
+- Missing spec mnemonics: `85`
+- Missing spec forms: `89`
 - Reserved spec forms: `1`
 - Unmapped QEMU mnemonics: `0`
 
@@ -90,7 +90,7 @@
 - `FRET`: `2`
 - `FSQRT`: `1`
 - `FSUB`: `1`
-- `HL`: `193`
+- `HL`: `194`
 - `IC`: `2`
 - `J`: `1`
 - `JR`: `1`
@@ -180,7 +180,6 @@
 
 ## Missing Mnemonics By Prefix
 
-- `HL`: `1`
 - `V`: `84`
 - `XB`: `1`
 
@@ -204,7 +203,7 @@
 - `BIC`: `1`
 - `BIS`: `1`
 - `BSE`: `1`
-- `BSTART`: `26`
+- `BSTART`: `27`
 - `BSTOP`: `1`
 - `BWE`: `1`
 - `BWI`: `1`
@@ -256,7 +255,7 @@
 - `FRET`: `2`
 - `FSQRT`: `1`
 - `FSUB`: `1`
-- `HL`: `199`
+- `HL`: `200`
 - `IC`: `2`
 - `J`: `1`
 - `JR`: `1`
@@ -346,8 +345,7 @@
 
 ## Missing Forms By Prefix
 
-- `BSTART`: `5`
-- `HL`: `1`
+- `BSTART`: `4`
 - `V`: `84`
 - `XB`: `1`
 
@@ -357,7 +355,6 @@
 
 ## Missing Spec Mnemonics (First 200)
 
-- `HL.BSTART CALL`
 - `V.LBI`
 - `V.LBI.BRG`
 - `V.LBUI`
@@ -446,12 +443,10 @@
 
 ## Missing Spec Forms (First 200)
 
-- `BSTART CALL [len=32 mask=0xf83f000f match=0x50160002]`
 - `BSTART.MPAR [len=32 mask=0xf9ffffff match=0x1181]`
 - `BSTART.MSEQ [len=32 mask=0xf9ffffff match=0x9181]`
 - `BSTART.VPAR [len=32 mask=0xf9ffffff match=0x21181]`
 - `BSTART.VSEQ [len=32 mask=0xf9ffffff match=0x29181]`
-- `HL.BSTART CALL [len=64 mask=0xfffff83f0000007f match=0x501600000011]`
 - `V.LBI [len=64 mask=0x707f0000207f match=0x190000007f]`
 - `V.LBI.BRG [len=64 mask=0x707f0000207f match=0x190000207f]`
 - `V.LBUI [len=64 mask=0x707f0000207f match=0x40190000007f]`
