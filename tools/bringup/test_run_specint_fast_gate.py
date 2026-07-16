@@ -38,6 +38,20 @@ def _stack_args(**overrides: bool) -> SimpleNamespace:
 
 
 class SpecintFastGateTests(unittest.TestCase):
+    def test_nightly_covers_each_test_and_train_benchmark_once(self) -> None:
+        suites = gate._select_suites("nightly", [])
+
+        for input_set in ("test", "train"):
+            scheduled = [
+                bench
+                for suite in suites
+                if suite.input_set == input_set
+                for bench in suite.benches
+            ]
+            with self.subTest(input_set=input_set):
+                self.assertEqual(set(scheduled), set(gate.SPECINT_STAGE_B_BENCHES))
+                self.assertEqual(len(scheduled), len(gate.SPECINT_STAGE_B_BENCHES))
+
     def test_all_suite_routes_large_payload_bench_to_9p(self) -> None:
         units = gate._suite_execution_units(gate.SUITES["test-all"], "")
 

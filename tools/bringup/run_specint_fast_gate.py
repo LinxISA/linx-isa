@@ -54,12 +54,6 @@ SPECINT_STAGE_B_BENCHES = (
     "999.specrand_ir",
 )
 
-SPECINT_TRAIN_PROMOTION_BENCHES = tuple(
-    bench
-    for bench in SPECINT_STAGE_B_BENCHES
-    if bench not in {"505.mcf_r", "531.deepsjeng_r", "999.specrand_ir"}
-)
-
 LARGE_PAYLOAD_TRANSPORTS: dict[str, str] = {
     "525.x264_r": "9p",
 }
@@ -86,46 +80,6 @@ SUITES: dict[str, Suite] = {
         timeout_default=300,
         description="fast train-input sentinel without refrate cost",
     ),
-    "train-cpu-stress": Suite(
-        name="train-cpu-stress",
-        stage="a",
-        input_set="train",
-        benches=("531.deepsjeng_r",),
-        transports="initramfs",
-        timeout_env="SPECINT_TRAIN_CPU_STRESS_TIMEOUT",
-        timeout_default=900,
-        description="isolated train-input CPU/control-flow stress check",
-    ),
-    "test-cpu-stress": Suite(
-        name="test-cpu-stress",
-        stage="a",
-        input_set="test",
-        benches=("531.deepsjeng_r",),
-        transports="initramfs",
-        timeout_env="SPECINT_TEST_CPU_STRESS_TIMEOUT",
-        timeout_default=900,
-        description="isolated test-input CPU/control-flow stress check",
-    ),
-    "test-vm-stress": Suite(
-        name="test-vm-stress",
-        stage="a",
-        input_set="test",
-        benches=("505.mcf_r",),
-        transports="initramfs",
-        timeout_env="SPECINT_TEST_VM_STRESS_TIMEOUT",
-        timeout_default=900,
-        description="isolated mcf VM/allocation stress check",
-    ),
-    "train-vm-stress": Suite(
-        name="train-vm-stress",
-        stage="a",
-        input_set="train",
-        benches=("505.mcf_r",),
-        transports="initramfs",
-        timeout_env="SPECINT_TRAIN_VM_STRESS_TIMEOUT",
-        timeout_default=1200,
-        description="train-input mcf VM/allocation stress check",
-    ),
     "test-all": Suite(
         name="test-all",
         stage="b",
@@ -135,16 +89,6 @@ SUITES: dict[str, Suite] = {
         timeout_env="SPECINT_TEST_ALL_TIMEOUT",
         timeout_default=120,
         description="bounded all-SPECint test-input diagnostic gate",
-    ),
-    "train-promotion": Suite(
-        name="train-promotion",
-        stage="b",
-        input_set="train",
-        benches=SPECINT_TRAIN_PROMOTION_BENCHES,
-        transports="initramfs",
-        timeout_env="SPECINT_TRAIN_PROMOTION_TIMEOUT",
-        timeout_default=1800,
-        description="nightly train-input SPECint promotion breadth",
     ),
     "train-all": Suite(
         name="train-all",
@@ -156,6 +100,26 @@ SUITES: dict[str, Suite] = {
         timeout_default=180,
         description="bounded all-SPECint train-input diagnostic gate",
     ),
+    "nightly-test-all": Suite(
+        name="nightly-test-all",
+        stage="b",
+        input_set="test",
+        benches=SPECINT_STAGE_B_BENCHES,
+        transports="initramfs",
+        timeout_env="SPECINT_NIGHTLY_TEST_TIMEOUT",
+        timeout_default=900,
+        description="nightly full SPECint test-input compatibility gate",
+    ),
+    "nightly-train-all": Suite(
+        name="nightly-train-all",
+        stage="b",
+        input_set="train",
+        benches=SPECINT_STAGE_B_BENCHES,
+        transports="initramfs",
+        timeout_env="SPECINT_NIGHTLY_TRAIN_TIMEOUT",
+        timeout_default=1800,
+        description="nightly full SPECint train-input compatibility gate",
+    ),
 }
 
 PROFILE_SUITES: dict[str, tuple[str, ...]] = {
@@ -164,15 +128,7 @@ PROFILE_SUITES: dict[str, tuple[str, ...]] = {
     "test": ("test-all",),
     "train": ("train-all",),
     "test-train": ("test-all", "train-all"),
-    "nightly": (
-        "test-smoke",
-        "train-smoke",
-        "test-cpu-stress",
-        "test-vm-stress",
-        "train-cpu-stress",
-        "train-vm-stress",
-        "train-promotion",
-    ),
+    "nightly": ("nightly-test-all", "nightly-train-all"),
 }
 
 
