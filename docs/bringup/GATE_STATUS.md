@@ -2,7 +2,7 @@
 
 This file is generated from `docs/bringup/gates/latest.json` via `python3 tools/bringup/gate_report.py render`.
 
-Last generated (UTC): `2026-07-16 19:29:08Z`
+Last generated (UTC): `2026-07-16 19:31:46Z`
 
 ## Lane `pin` (`2026-07-15-v0565-maintenance`)
 
@@ -52,14 +52,14 @@ Last generated (UTC): `2026-07-16 19:29:08Z`
 
 ## Lane `pin` (`2026-07-17-fishtoucher-dev`)
 
-- Timestamp (UTC): `2026-07-16 19:29:08Z`
+- Timestamp (UTC): `2026-07-16 19:31:43Z`
 - Profile: `dev`
 - Lane policy: `pin-only`
 - Trace schema version: `1.0`
 - SHA manifest:
   - `glibc`: `785d1b51ecc2042a94873665ec4b745d85473504` (`${LINXISA_ROOT}/lib/glibc`)
   - `linux`: `90834082e829771ce29392e3be12ad2dc6d38716` (`${LINXISA_ROOT}/kernel/linux`)
-  - `linx-isa`: `33304d81c8811f403be5dc698789a6b31fa59c8e` (`${LINXISA_ROOT}`)
+  - `linx-isa`: `1b2601dfe3d6f871fc9116f6665eabad17f60455` (`${LINXISA_ROOT}`)
   - `linx-skills`: `6a1007379be984d4eed9ba297e8541168bb0f9b5` (`${LINXISA_ROOT}/skills/linx-skills`)
   - `linxcore`: `5ecec7b9608de674738327f83e126ca7e9b31b16` (`${LINXISA_ROOT}/rtl/LinxCore`)
   - `linxcore-model`: `3bc1e6e2ceb2d578204013220cb14f67043c8eb7` (`${LINXISA_ROOT}/tools/LinxCoreModel`)
