@@ -46,6 +46,11 @@ class BenchmarkFlowContractTests(unittest.TestCase):
                     command_ids,
                 )
 
+    def test_source_contract_checks_linux_source_completeness(self) -> None:
+        commands = self.stages["source-contract"]["commands"]
+        self.assertEqual(commands[1]["id"], "linux-source-completeness")
+        self.assertIn("check_linux_source_completeness.py", commands[1]["command"])
+
     def test_attestation_commands_bind_build_manifest_and_verify(self) -> None:
         cases = {
             "specint-fast-gate": (

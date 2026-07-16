@@ -38,6 +38,11 @@
           "command": "bash tools/ci/check_repo_layout.sh"
         },
         {
+          "id": "linux-source-completeness",
+          "timeout_seconds": 60,
+          "command": "python3 tools/bringup/check_linux_source_completeness.py --linux-root \"$PWD/kernel/linux\""
+        },
+        {
           "id": "isa-golden",
           "timeout_seconds": 180,
           "command": "python3 tools/bringup/run_gates.py --profile release-strict --tier pr --gate 'ISA::Golden catalog check' --gate 'ISA::Canonical v0.56 guard'"
