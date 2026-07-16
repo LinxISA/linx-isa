@@ -1,7 +1,9 @@
 {
   "capabilities": [
     "decoder_source_to_isa_mnemonic_mapping",
-    "decoder_mask_to_isa_form_matching"
+    "decoder_mask_to_isa_form_matching",
+    "audited_per_form_runtime_evidence_ingestion",
+    "audited_per_form_semantic_oracle_ingestion"
   ],
   "claim": "decoder_source_mapping",
   "coverage_count": 626,
@@ -14,30 +16,33 @@
       "mnemonic_count": 626
     },
     "L2": {
-      "availability": "unavailable",
+      "availability": "available",
       "claim": "runtime_execution",
-      "form_count": null,
-      "mnemonic_count": null,
-      "reason": "runtime_execution_evidence_not_ingested"
+      "form_count": 60,
+      "mnemonic_count": 60,
+      "qemu_sha": "32c2c2e2507ea6fe408646359c32ee25c01e41b5",
+      "source": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_executable_coverage_latest.json"
     },
     "L3": {
-      "availability": "unavailable",
+      "availability": "available",
       "claim": "semantic_oracle",
-      "form_count": null,
-      "mnemonic_count": null,
-      "reason": "semantic_oracle_evidence_not_ingested"
+      "form_count": 60,
+      "mnemonic_count": 60,
+      "qemu_sha": "32c2c2e2507ea6fe408646359c32ee25c01e41b5",
+      "source": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_executable_coverage_latest.json"
     }
   },
   "evidence_level": "L1",
   "form_coverage_count": 640,
   "form_coverage_ratio_percent": 85.68,
   "form_missing_count": 107,
-  "generated_at_utc": "2026-07-16 04:31:59Z",
+  "generated_at_utc": "2026-07-16 04:59:39Z",
   "legal_form_count": 747,
   "legal_mnemonic_count": 711,
   "limitations": [
-    "no_runtime_execution_evidence",
-    "no_semantic_oracle_evidence"
+    "runtime_execution_evidence_is_partial",
+    "semantic_oracle_evidence_is_partial",
+    "l2_l3_counts_do_not_extend_the_l1_mapping_claim"
   ],
   "mapped_by_prefix": {
     "ACRC": 1,
@@ -2561,8 +2566,8 @@
   "reserved_form_count": 0,
   "reserved_mnemonic_count": 0,
   "result": {
-    "classification": "qemu_isa_coverage_report_generated",
-    "ok": true
+    "classification": "qemu_isa_coverage_incomplete",
+    "ok": false
   },
   "schema_version": "qemu-isa-coverage-v3",
   "spec_path": "/Users/zhoubot/linx-isa/isa/v0.56/linxisa-v0.56.json",
