@@ -26,6 +26,7 @@ jobs:
         run: |
           python3 tools/isa/validate_spec.py --profile v0.56
           python3 tools/isa/test_golden_contract.py
+          python3 tools/isa/test_fused_call_contract.py
           python3 tools/isa/report_encoding_space.py --check
           python3 tools/isa/gen_qemu_codec.py --check
           python3 tools/isa/gen_c_codec.py --check

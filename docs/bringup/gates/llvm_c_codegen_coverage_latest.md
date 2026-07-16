@@ -1,15 +1,15 @@
 # LLVM C/C++ CodeGen ISA Mnemonic Breadth
 
-- Generated (UTC): `2026-07-16 19:20:54Z`
+- Generated (UTC): `2026-07-16 22:02:53Z`
 - Status: `MEASURED` (no target threshold is asserted)
-- Pure CodeGen direct coverage: `142/710`
-- Pure CodeGen after alias closure: `143/710`
-- C/C++ source-oriented direct coverage: `143/710` (`20.141%`)
-- C/C++ source-oriented after explicit alias closure: `144/710` (`20.282%`)
-- Frozen plain-C reachable contract: `143/143` (`PASS`)
-- Included C/C++ artifacts: `43`
+- Pure CodeGen direct coverage: `145/710`
+- Pure CodeGen after alias closure: `146/710`
+- C/C++ source-oriented direct coverage: `146/710` (`20.563%`)
+- C/C++ source-oriented after explicit alias closure: `147/710` (`20.704%`)
+- Frozen plain-C reachable contract: `146/146` (`PASS`)
+- Included C/C++ artifacts: `44`
 - Excluded disassembly artifacts: `6`
-- Compiler identity: `clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)`
+- Compiler identity: `clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)`
 
 Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. The broader source-oriented boundary includes those tests but does not relabel their source-directed instructions as compiler-selected CodeGen. Neither metric reuses generated `99_spec_decode` or hand-authored assembly-lane artifacts.
 
@@ -24,9 +24,10 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 
 ## Frozen Plain-C Reachability Tranches
 
-- Canonical non-regression anchor: `PASS`; minimum `143`; tranche-chain SHA-256 `5fec4133e1b6ff70bddd22344c4a4470140f5d068b71fee8f41f8d56fe7613b8`
+- Canonical non-regression anchor: `PASS`; minimum `146`; tranche-chain SHA-256 `e319dd83314027a4a7c2552516fd02e253b46b72fa877166c0166d8f03bcff09`
 - `frances-allen-plain-c-1`: baseline `119` -> `137`; new direct: `CMP.AND`, `CMP.ANDI`, `CMP.EQI`, `CMP.GEUI`, `CMP.NEI`, `CMP.OR`, `FEQ`, `HL.ANDI`, `HL.LB.PCR`, `HL.LBU.PCR`, `HL.LH.PCR`, `HL.LHU.PCR`, `HL.LW.PCR`, `HL.LWI.PO`, `HL.SB.PCR`, `HL.SH.PCR`, `HL.SW.PCR`, `HL.SWI.PO`
 - `frances-allen-plain-c-2`: baseline `137` -> `143`; new direct: `C.ADDI`, `C.CMP.NEI`, `HL.LDI.PO`, `HL.LWU.PCR`, `HL.LWUI.PO`, `HL.SDI.PO`
+- `barbara-liskov-plain-c-sub-immediate`: baseline `143` -> `146`; new direct: `HL.SUBI`, `HL.SUBIW`, `SUBI`
 
 ## Source-Directed C/C++ Tests Excluded from Pure CodeGen
 
@@ -84,6 +85,7 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 - `avs/compiler/linx-llvm/tests/out/41_plain_c_compare/41_plain_c_compare.objdump` <- `avs/compiler/linx-llvm/tests/c/41_plain_c_compare.c`
 - `avs/compiler/linx-llvm/tests/out/42_plain_c_memory/42_plain_c_memory.objdump` <- `avs/compiler/linx-llvm/tests/c/42_plain_c_memory.c`
 - `avs/compiler/linx-llvm/tests/out/43_plain_c_cursor/43_plain_c_cursor.objdump` <- `avs/compiler/linx-llvm/tests/c/43_plain_c_cursor.c`
+- `avs/compiler/linx-llvm/tests/out/44_plain_c_sub_immediate/44_plain_c_sub_immediate.objdump` <- `avs/compiler/linx-llvm/tests/c/44_plain_c_sub_immediate.c`
 
 ## Excluded Artifacts
 
@@ -352,8 +354,6 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 - `HL.SHP.U`
 - `HL.SSRGET`
 - `HL.SSRSET`
-- `HL.SUBI`
-- `HL.SUBIW`
 - `HL.SW.PO`
 - `HL.SW.PR`
 - `HL.SW.UPO`
@@ -456,7 +456,6 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 - `SSRGET`
 - `SSRSET`
 - `SSRSWAP`
-- `SUBI`
 - `SW.ADD`
 - `SW.AND`
 - `SW.OR`

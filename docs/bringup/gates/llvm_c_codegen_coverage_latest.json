@@ -1,6 +1,6 @@
 {
   "schema_version": "linx-llvm-c-codegen-coverage-v1",
-  "generated_at_utc": "2026-07-16 19:20:54Z",
+  "generated_at_utc": "2026-07-16 22:02:53Z",
   "claim": "c_cpp_source_oriented_observed_disassembly_mnemonic_breadth",
   "status": "MEASURED",
   "threshold": null,
@@ -14,29 +14,30 @@
   "provenance_rule": "require a complete canonical run.sh build manifest with the exact current source set, exact flags, artifact and tool hashes; recompile every source with the manifest flags and regenerate objdump before accepting source-to-object-to-disassembly provenance",
   "inputs": {
     "spec": "isa/v0.56/linxisa-v0.56.json",
-    "spec_sha256": "f83977a50d44f26758531beb17ebf9a92de347e4e390bec271373f293194b69c",
+    "spec_sha256": "75b5fb187c14ed2fa2a797b6cd97ed6cde9b6945107a803c2832b9387df07cb3",
     "compiler_analyzer": "avs/compiler/linx-llvm/tests/analyze_coverage.py",
     "compiler_analyzer_sha256": "f3d5d0f6d6494bc85d854c8974ca1f6f039e31fc10521a9ac7dc7b07f0507527",
     "c_source_dir": "avs/compiler/linx-llvm/tests/c",
     "compiler_out_dir": "avs/compiler/linx-llvm/tests/out",
-    "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
-    "llvm_source_head": "b3ff7eee5cd091e04d292db781fd4d33980f3629",
+    "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
+    "llvm_source_head": "5859cce12e160c3499c7e10a9542257f95300f08",
+    "llvm_source_clean": true,
     "clang": "compiler/llvm/build-linxisa-clang/bin/clang-23",
-    "clang_sha256": "17762888c24e8d05998a6434b860d6464779386eb8c28784f324f44a03514661",
+    "clang_sha256": "902021916ba7c1aac4d23fa3def2f6c6a4aadf503547d9d40c52c25d3ae905cc",
     "llvm_objdump": "compiler/llvm/build-linxisa-clang/bin/llvm-objdump",
-    "llvm_objdump_sha256": "0e627d4250fe6db1da29440c3cfd02db50f97c8c430af0ffca10d7c1ff778638",
+    "llvm_objdump_sha256": "2d15bc50951e3f0ce8fbde80af617c9a611400c2422135bcd38c7dcfbc089a5b",
     "build_manifest": "avs/compiler/linx-llvm/tests/out/c-codegen-build-manifest.json",
-    "build_manifest_sha256": "ed48a614d785bdeddf4692108f2bd276c409341ccc3f03dbf40393ff9f5cf541",
+    "build_manifest_sha256": "fb65e646c054dbb9844554b775110eb15b486b2d5920f7e26e6a24e18718de04",
     "manifest_status": "complete",
     "target": "linx64-linx-none-elf",
-    "replay_verified_source_count": 43,
+    "replay_verified_source_count": 44,
     "plain_c_reachable_contract": "avs/compiler/linx-llvm/tests/plain_c_reachable_contract.json"
   },
   "spec_unique_mnemonics": 710,
   "direct": {
-    "coverage_count": 143,
+    "coverage_count": 146,
     "coverage_denominator": 710,
-    "coverage_ratio_percent": 20.141,
+    "coverage_ratio_percent": 20.563,
     "covered_mnemonics": [
       "ADD",
       "ADDI",
@@ -120,6 +121,8 @@
       "HL.SDI.PO",
       "HL.SDIP",
       "HL.SH.PCR",
+      "HL.SUBI",
+      "HL.SUBIW",
       "HL.SW.PCR",
       "HL.SWI.PO",
       "HL.SWIP",
@@ -173,6 +176,7 @@
       "SRLIW",
       "SRLW",
       "SUB",
+      "SUBI",
       "SUBIW",
       "SUBW",
       "SW",
@@ -182,7 +186,7 @@
       "XORIW",
       "XORW"
     ],
-    "missing_count": 567,
+    "missing_count": 564,
     "missing_mnemonics": [
       "ACRC",
       "ACRE",
@@ -441,8 +445,6 @@
       "HL.SHP.U",
       "HL.SSRGET",
       "HL.SSRSET",
-      "HL.SUBI",
-      "HL.SUBIW",
       "HL.SW.PO",
       "HL.SW.PR",
       "HL.SW.UPO",
@@ -545,7 +547,6 @@
       "SSRGET",
       "SSRSET",
       "SSRSWAP",
-      "SUBI",
       "SW.ADD",
       "SW.AND",
       "SW.OR",
@@ -754,9 +755,9 @@
     ]
   },
   "alias_closure": {
-    "coverage_count": 144,
+    "coverage_count": 147,
     "coverage_denominator": 710,
-    "coverage_ratio_percent": 20.282,
+    "coverage_ratio_percent": 20.704,
     "covered_mnemonics": [
       "ADD",
       "ADDI",
@@ -841,6 +842,8 @@
       "HL.SDI.PO",
       "HL.SDIP",
       "HL.SH.PCR",
+      "HL.SUBI",
+      "HL.SUBIW",
       "HL.SW.PCR",
       "HL.SWI.PO",
       "HL.SWIP",
@@ -894,6 +897,7 @@
       "SRLIW",
       "SRLW",
       "SUB",
+      "SUBI",
       "SUBIW",
       "SUBW",
       "SW",
@@ -903,7 +907,7 @@
       "XORIW",
       "XORW"
     ],
-    "missing_count": 566,
+    "missing_count": 563,
     "missing_mnemonics": [
       "ACRC",
       "ACRE",
@@ -1161,8 +1165,6 @@
       "HL.SHP.U",
       "HL.SSRGET",
       "HL.SSRSET",
-      "HL.SUBI",
-      "HL.SUBIW",
       "HL.SW.PO",
       "HL.SW.PR",
       "HL.SW.UPO",
@@ -1265,7 +1267,6 @@
       "SSRGET",
       "SSRSET",
       "SSRSWAP",
-      "SUBI",
       "SW.ADD",
       "SW.AND",
       "SW.OR",
@@ -1480,7 +1481,7 @@
     ]
   },
   "pure_codegen": {
-    "source_count": 39,
+    "source_count": 40,
     "excluded_source_directed_count": 4,
     "excluded_source_directed_sources": [
       {
@@ -1508,8 +1509,8 @@
         ]
       }
     ],
-    "direct_coverage_count": 142,
-    "alias_closure_coverage_count": 143,
+    "direct_coverage_count": 145,
+    "alias_closure_coverage_count": 146,
     "coverage_denominator": 710,
     "direct_covered_mnemonics": [
       "ADD",
@@ -1593,6 +1594,8 @@
       "HL.SDI.PO",
       "HL.SDIP",
       "HL.SH.PCR",
+      "HL.SUBI",
+      "HL.SUBIW",
       "HL.SW.PCR",
       "HL.SWI.PO",
       "HL.SWIP",
@@ -1646,6 +1649,7 @@
       "SRLIW",
       "SRLW",
       "SUB",
+      "SUBI",
       "SUBIW",
       "SUBW",
       "SW",
@@ -1738,6 +1742,8 @@
       "HL.SDI.PO",
       "HL.SDIP",
       "HL.SH.PCR",
+      "HL.SUBI",
+      "HL.SUBIW",
       "HL.SW.PCR",
       "HL.SWI.PO",
       "HL.SWIP",
@@ -1791,6 +1797,7 @@
       "SRLIW",
       "SRLW",
       "SUB",
+      "SUBI",
       "SUBIW",
       "SUBW",
       "SW",
@@ -2058,8 +2065,6 @@
       "HL.SHP.U",
       "HL.SSRGET",
       "HL.SSRSET",
-      "HL.SUBI",
-      "HL.SUBIW",
       "HL.SW.PO",
       "HL.SW.PR",
       "HL.SW.UPO",
@@ -2162,7 +2167,6 @@
       "SSRGET",
       "SSRSET",
       "SSRSWAP",
-      "SUBI",
       "SW.ADD",
       "SW.AND",
       "SW.OR",
@@ -2379,11 +2383,11 @@
   "plain_c_reachable_contract": {
     "schema_version": "linx-plain-c-reachable-contract-v2",
     "path": "avs/compiler/linx-llvm/tests/plain_c_reachable_contract.json",
-    "sha256": "d27f9a13230c6844c6b65426ec3f6da272b76b239c8c1479e83e53b5b6d8f261",
+    "sha256": "70d3e6b65821811a6bc6f4d42257ad8cd35814210fb05309fa73856765025050",
     "target": "linx64-linx-none-elf",
     "status": "PASS",
-    "coverage_count": 143,
-    "coverage_denominator": 143,
+    "coverage_count": 146,
+    "coverage_denominator": 146,
     "missing_count": 0,
     "missing_mnemonics": [],
     "baseline_alias_closure_count": 119,
@@ -2411,7 +2415,10 @@
       "HL.LDI.PO",
       "HL.LWU.PCR",
       "HL.LWUI.PO",
-      "HL.SDI.PO"
+      "HL.SDI.PO",
+      "HL.SUBI",
+      "HL.SUBIW",
+      "SUBI"
     ],
     "tranches": [
       {
@@ -2458,17 +2465,30 @@
           "HL.SDI.PO"
         ],
         "expected_coverage_count": 143
+      },
+      {
+        "id": "barbara-liskov-plain-c-sub-immediate",
+        "sources": [
+          "avs/compiler/linx-llvm/tests/c/44_plain_c_sub_immediate.c"
+        ],
+        "baseline_alias_closure_count": 143,
+        "new_direct_mnemonics": [
+          "HL.SUBI",
+          "HL.SUBIW",
+          "SUBI"
+        ],
+        "expected_coverage_count": 146
       }
     ],
     "canonical_non_regression_anchor": {
       "status": "PASS",
-      "minimum_coverage_count": 143,
-      "tranche_chain_sha256": "5fec4133e1b6ff70bddd22344c4a4470140f5d068b71fee8f41f8d56fe7613b8"
+      "minimum_coverage_count": 146,
+      "tranche_chain_sha256": "e319dd83314027a4a7c2552516fd02e253b46b72fa877166c0166d8f03bcff09"
     }
   },
-  "emitted_unique_mnemonics": 145,
+  "emitted_unique_mnemonics": 148,
   "unmapped_emitted_mnemonics": [],
-  "included_artifact_count": 43,
+  "included_artifact_count": 44,
   "included_artifacts": [
     {
       "source": "avs/compiler/linx-llvm/tests/c/01_arith.c",
@@ -2476,9 +2496,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/01_arith/01_arith.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/01_arith/01_arith.objdump",
       "source_sha256": "6c4087ae77fd6016deb4bb055c2fc2f92288cbbe74fb9fcfbc72d2260217bb26",
-      "object_sha256": "41625d0c71c39c401015ad331688e1c5e1e954ff1437971b12e92fa02d9f7d3e",
-      "objdump_sha256": "ad69ce9883f42dc56bb7a8bb5622fc4af57e8a52d8a2cd6f2267e68753210565",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "object_sha256": "b2ce67022e15e9cf54d8b0fa4be8a5627454815523077b949bce8aa3eae96617",
+      "objdump_sha256": "e846b490612e0d1c38f5e67f46dd6d46d7946d5bb8f2569d3ce52578dcda9267",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2488,9 +2508,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/02_control_flow/02_control_flow.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/02_control_flow/02_control_flow.objdump",
       "source_sha256": "472eb0084b4a58fd73fc4a79664cb920c4fb9b0783cc68dc41749a3080ad28cc",
-      "object_sha256": "715355a573d76e9ba34186667e0b9dcb4468b755639e1c017ca58bee5f6090bf",
-      "objdump_sha256": "77e3ded6fc213fb1de4e6dd9ec5fc39794ba7d78e0bba39bca5007428ecef612",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "object_sha256": "e47b823907f2f7a6c6a1e9175bbb222c576539130ad21ff1b9cf0271903a3bba",
+      "objdump_sha256": "8f3aec57e7aa8d5d47d894ad6531b9ed4ec9ce6057e4318e0be11d3876be35ea",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2500,9 +2520,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/03_arrays/03_arrays.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/03_arrays/03_arrays.objdump",
       "source_sha256": "7189784fbc1012c80702eee7edf0bc3a7b397da7d26f31d5f23e501dfd2a8ec8",
-      "object_sha256": "94bb623eb1d29d935bd6c7c97732eafbb77980a555306af4ae16add6772b8276",
-      "objdump_sha256": "1fcc2611d76c75ec65fb1bc8bc8957efab48bb1eab3982a0277c01c7c813a511",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "object_sha256": "6099dda1502fc838085fb18fac4a8bee46ed6f905a27b021c5d23ee686e7aa9b",
+      "objdump_sha256": "64aa476922d88d7fc97cfd1eb16d2c6c6ca30e1c300f56c5d8c90fb50642f4da",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2512,9 +2532,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/04_structs/04_structs.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/04_structs/04_structs.objdump",
       "source_sha256": "1c59c538f98954d4dcd1569b63850a724a2929578b2b778d498cd0fbc363f3e9",
-      "object_sha256": "067c43bd4849e6d8acae4dc0c804ec6bd22938c4d51a6efce49c3770b9dc4fce",
+      "object_sha256": "58ccb822db969907d7213b196b1379d6ceed0cb23dd5009dc7eba8eaea93ba0a",
       "objdump_sha256": "0851e130b792cd5f3f4f7929e1acd6114671b4475ac1935a241be19bf676b7d4",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2524,9 +2544,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/05_switch/05_switch.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/05_switch/05_switch.objdump",
       "source_sha256": "a13399a606721d6a1ac72189ffb5268368cd35b9bf1881a6bd337f4cede8d9f2",
-      "object_sha256": "b59d4c22e46c0b1f538f798749e42bc22271deafb485187f61602647093bb195",
+      "object_sha256": "0c581567a11b562c6294571e045d60ce314434c1c296054bb14e0e54904990df",
       "objdump_sha256": "1a272dd95fbc384e7bd17e82c330c8209ff0570b93fe1701ad07a2362450a6f9",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2536,9 +2556,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/06_recursion/06_recursion.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/06_recursion/06_recursion.objdump",
       "source_sha256": "92591d5edbca981ff8b25136ac5200a23097f7cc69fa663f11926c89addc7fc3",
-      "object_sha256": "b44ff867bdbbba2865eb4161481932c489f4357a59a811f780204441fddbd8ab",
-      "objdump_sha256": "01b4d08e66c74885dafd25a77402ba23ff26fd1f5bff7fddde7832c2514c5665",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "object_sha256": "5e96e3138ee722d08576d97f3f471a2ec37835d46b4a71c2e5b556550f98e986",
+      "objdump_sha256": "4e82cc01e5dd58db4416108fc537020fc41086d5caaf8b389256e21261ef79ad",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2548,9 +2568,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/07_constants/07_constants.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/07_constants/07_constants.objdump",
       "source_sha256": "8af76cfa6013ed9a8350ee9d04a883375837226f828e0e0adfade4c610fcc013",
-      "object_sha256": "faad19033838046bb56879bb213095505d5169240c389c31f420ff6be2957c7d",
+      "object_sha256": "cecd484462a7837d8c96d00a59c6f2c9394f7284d2837af7b185aae1ec9a520a",
       "objdump_sha256": "839b3d49abe403ea674f0f361c7400c9f43fa7a70ac321ae58780b36c70552d0",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2560,9 +2580,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/08_loadstore/08_loadstore.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/08_loadstore/08_loadstore.objdump",
       "source_sha256": "99720444922bd291e86ce69a898ee851e8ff7e8cfe1a2c5c837ddf1d1a67cde2",
-      "object_sha256": "c8ed460292abdf288e5f820ae017871f4efb2f564a7d75f2e20217fd86adf8cc",
+      "object_sha256": "bcf049cd111666f865039369eb361b8c720196478f356d83fae585d0bd380ad2",
       "objdump_sha256": "6746cecd5741f480413e16f6a2fff8d95daf42679899a4fd4c3681527eeab235",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2572,9 +2592,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/09_bitops/09_bitops.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/09_bitops/09_bitops.objdump",
       "source_sha256": "3baca0a1f0c18f752a2effad031d6623238c7e63afe6c30603ad97953b7c0f55",
-      "object_sha256": "4f677ea8e40c68b8767d38aa4052c352de43c94f453accda46a24f17d8987c15",
+      "object_sha256": "0b398b01550cb1c3971a227b12a3c702c3a3e47adf81d547bb44b5da9afe6e83",
       "objdump_sha256": "7945be805ac6144e747f17e26593d9cd1a0b1b245b6c039e1fbcc9559466a366",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2584,9 +2604,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/10_select/10_select.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/10_select/10_select.objdump",
       "source_sha256": "e251dd6aeb0362b55a2337e2f9a3f06cb9da6a3ace14f2da8da3ea8414cda373",
-      "object_sha256": "bfe30005328532913712c4c9c2a1bc2b055c14dc8883ae8042fb3319fbfc4ddc",
+      "object_sha256": "396db84fc8ac5b5516f381ee236a68c5010f84266aa10dd33620dee0839cffee",
       "objdump_sha256": "dcd4362159cde2d05493282f87e5b5d1fb763a83d8a5befb06add33bf362d423",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2596,9 +2616,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/11_minmax/11_minmax.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/11_minmax/11_minmax.objdump",
       "source_sha256": "b5699fa6c2da310745afaf0578ddfed9284f43ef4a7a010cccf0405845f9405b",
-      "object_sha256": "2c57b58c1aaa1314e6f6c93dd85bca046eb2d94f7be90054287a0ea842349df0",
+      "object_sha256": "f26d40d355fe7922e1ddbd282164921a7725e13ca8893fd761ac56881243beac",
       "objdump_sha256": "4921b34a481f37ecb6bd235d108a100b179e784ff9eb55282c6df07af8bb3063",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2608,9 +2628,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/12_more_ops/12_more_ops.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/12_more_ops/12_more_ops.objdump",
       "source_sha256": "b79ff9a6426d6df262378e74c9055ecea88d3434e0a4e9ed309eede04c53ff49",
-      "object_sha256": "f63debf0fd905317d093163f49aa972e8e177a211d98d567cc9d6131b1f06c15",
-      "objdump_sha256": "6d65e8a81f609e5cff921fcde35c6a5d15a37e89580f5114d592517a2a68cb39",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "object_sha256": "6bf68f7ccf14d120d74c6d7f2a18f6b29ab5c882a79aca5bd8bdb28bb35328d5",
+      "objdump_sha256": "ef4d0bd6dee3e26acb41cbf624db37ec47cd44f81f20e0fd7a7aee832fca5210",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2620,9 +2640,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/13_br_ge/13_br_ge.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/13_br_ge/13_br_ge.objdump",
       "source_sha256": "a4a6728f2febc9ec331b85dcf4bbd6f104cc72c53779569797ea41555e06c765",
-      "object_sha256": "4a158192b7032dcc8a07d292bb6592bef9a1cd5dd0f29d85206aa7723b8b66a5",
-      "objdump_sha256": "2a6f2f4d59c78fab4d0f607c54bc1d85f2cb8d25fce6ef6dc6f91fb846e4a050",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "object_sha256": "87be37e8c42d9d9c658c7458605b248ebc189a03902da7576613e528eb80f39e",
+      "objdump_sha256": "33490891f3863fd6002125ff7a75cc0dc1ea516720736616aaa07f35923e463f",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2632,9 +2652,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/14_lui/14_lui.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/14_lui/14_lui.objdump",
       "source_sha256": "df4e30c3a9ebf784e0a3dc312881d706b9f5e127bcbd6ca099c03b0a98250bbb",
-      "object_sha256": "2544e8b3dd29c8bb847ae981017fc140c085e01f3de4b46e2a94c11991e39178",
+      "object_sha256": "d20bb678079f1709cf95b683a1609458741fac254830e7d0a157600f88996285",
       "objdump_sha256": "8d423c6603aa9287a585337cf0ad259cb13d0a7c350c4f16bd13f4e3df2682fd",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2644,9 +2664,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/15_i32_imms/15_i32_imms.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/15_i32_imms/15_i32_imms.objdump",
       "source_sha256": "704e369027004b4df0287e223ccdf8daa184c4bc27f6e2a2c392daa5a59c54c7",
-      "object_sha256": "5c4acc9a8df4a81d7e2632dc3c0eb5ed02f0fd3e6fba0bc3ae41bd6715026e79",
+      "object_sha256": "67e63d65975b2f0cd8c6ab0b9313230841c8c60b8af9043cde272522615e91f2",
       "objdump_sha256": "6b1043dfae8469d1fdfaa4c97578dc31cbba5b67c2d4c3a5ec3035d7cac8c3dd",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2656,9 +2676,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/16_andorw/16_andorw.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/16_andorw/16_andorw.objdump",
       "source_sha256": "0534740a91e8342a91e9861cfd34c736342223e5b9bfc544a1e23b1276f8ea0d",
-      "object_sha256": "acf3cf8d81aad04cba2b9771441ded99d73da713d23705eb52f6d4eeb0e46b16",
+      "object_sha256": "8f89d3faa6719708cabfe9877ef2eb1e1253dd56de9adaac1bb7b322a9fe99fe",
       "objdump_sha256": "78a52fbe5075fc5bd46c466cb4eb80e2c974b2afd3fa35434bc57aedd186fb23",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2668,9 +2688,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/17_indexed/17_indexed.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/17_indexed/17_indexed.objdump",
       "source_sha256": "713d8b9729b4b9eee479fa0d33c35ef836a470d935895bd32a4ce0adc24943a3",
-      "object_sha256": "359dd12698ddebbd0860d52a6492c0f24255b4a172a57f9eee2e37e0ad41d518",
+      "object_sha256": "f3683454f5478333ebf2ba177a330e38ae1c225faa5b90c6b878231dc4ee4cb2",
       "objdump_sha256": "2016844c36326d40f287880aeaaab828b8a3208aa8fd7c91d6941e7450affe5f",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2680,9 +2700,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/18_setret_relax/18_setret_relax.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/18_setret_relax/18_setret_relax.objdump",
       "source_sha256": "cb3ee81ee92e99b35fbbff694545c6d3e1ccaf4a6024513c9bc643e7e7854c1d",
-      "object_sha256": "28ac04469affe0aaee4f949f720c65933d53cd8ea8307971491957c8e0aa7c1d",
+      "object_sha256": "9f16d9ed926a4eddf807015b35fb706037d6fd48de1842fa45e9b4ab6bdfd4b7",
       "objdump_sha256": "384c4ae35fba971d3f5b3bc78667fe49ab09b63b2f0b1fb44045864ab9bc5e1a",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2692,9 +2712,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/19_shifted_add/19_shifted_add.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/19_shifted_add/19_shifted_add.objdump",
       "source_sha256": "ffc9408140e8bc7c3780b7c752ed44418ed34462751e0bcfd9b032a2f8a6dbad",
-      "object_sha256": "9b2b2f3b4208cbb6de5adf4bd455060a1a42e75288a2b89c3251293e38b71cc6",
+      "object_sha256": "3fd53c51a2430f1d63674821df2c910bad8e891e205e2abb843accd8c523195b",
       "objdump_sha256": "d633ab20fff4c496beaa32d2452bda6a316efecc528ea0a22cb3aa51126f1215",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2704,9 +2724,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/20_floating_point/20_floating_point.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/20_floating_point/20_floating_point.objdump",
       "source_sha256": "dc2190af9aa14b7836e957602665d0b37bedde519bbda29b59ccbe780854a79e",
-      "object_sha256": "1068c388a540b41e34f534f3f4a0bc0629cff64286810c5a1d078a2abd26b8ce",
+      "object_sha256": "95e68919b1d4c79bf5b0b42555c0821896eadcd668c66d47875ce07c73989912",
       "objdump_sha256": "25a24d00efd192835543353621dd60557adfb741e5ee7611d987099e6fd79fed",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2716,9 +2736,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/21_atomic/21_atomic.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/21_atomic/21_atomic.objdump",
       "source_sha256": "d8fca2f6ad4d7bfe778ef59354b66787f8b9e8e170d090c8a55cc9c1c299dbf6",
-      "object_sha256": "94636d371ebaab968b61f07bcedb4eee02d3f865411f4a055a75f5155e008d9d",
+      "object_sha256": "ce1443ab2c4519c4549c9f52547cb03552f6c0c61fd295edeca8a89cc1e7ecce",
       "objdump_sha256": "4766bf8a0324e06b4a6d4006f30ea7b237833cc9480a75978a765401f3546c6e",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2728,9 +2748,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/22_memory_ops/22_memory_ops.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/22_memory_ops/22_memory_ops.objdump",
       "source_sha256": "c9062926ef70fbcee7585dad26bc5c71d4bc78b14a17ea2bb5cb7fcd73804345",
-      "object_sha256": "f23691bd49bb8ba8f43c9dfbae8a4ebd5954b58dd69ee4060ee575ca185866ed",
+      "object_sha256": "8812b6378295398a5f96275e2dd30502840eef691b384164f393c2ec07797388",
       "objdump_sha256": "02473d84dd06465d550bbfe18dabd0fa20db432a4dd0aa00615178df51acacfb",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2740,9 +2760,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/23_bit_manipulation/23_bit_manipulation.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/23_bit_manipulation/23_bit_manipulation.objdump",
       "source_sha256": "cfcb8a21759c423df208891fcd1387eadc5629d9cffcae5779fa5e2bccb8490d",
-      "object_sha256": "bdb516ff1c7a1a2b6d91f8765e49a9a44f5a9198bc3ba26c24bfb0dd8ee3803b",
-      "objdump_sha256": "2dfdbdc0a64a3ea9e89007d755344ae7bdd758d0393bfe0f69231a834f48ab1c",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "object_sha256": "3140db1e30ba55121521545eaae32432d7a693bf8c8e29d42e1b2b080ce2c1b1",
+      "objdump_sha256": "1f0f6364b48b9d6f3d996d2700779446b56f63d22c0d054ca49eee0afa0950fb",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2752,9 +2772,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/24_block_isa/24_block_isa.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/24_block_isa/24_block_isa.objdump",
       "source_sha256": "ddb00a0a8dce1b8f2901d5de1dccb0cdf26c8e55cf6d4eb3ae89af117d3d2c7a",
-      "object_sha256": "7c91392615a8615e3f51d0079f3ca577f0de2bd68b03f11c3ec7f35ccb3380cb",
-      "objdump_sha256": "92675e0f0a9426c532988b62c76990830a7f70c988ab6cdc08c1fa47e8640706",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "object_sha256": "b8fb210ee4276823c9012df1b441a5507fa0e88bd724dcb9eb6b70c8ab401c70",
+      "objdump_sha256": "1d4c156a845c6d8fffed1106ae8539721da3120cdb5c7b0b79489ede0350a564",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2764,9 +2784,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/25_immediate_materialization/25_immediate_materialization.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/25_immediate_materialization/25_immediate_materialization.objdump",
       "source_sha256": "5e201aa88a198b62930f1901ac214727732df35958b87330f8cbecca7e3c8ee6",
-      "object_sha256": "70e2a00b3e170e4b6c63145d8f139f815f21cb145a8ce7a2f50100dfd8285fa8",
-      "objdump_sha256": "d3881d2dcf65335d9ccdbb89688384f1ed88fbb7dcb2b795902d89154501d577",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "object_sha256": "035db02ef4053cfc6c4dadb51682b348fbfd77d63fa5e36393d453afe0c80d75",
+      "objdump_sha256": "657396c7e61707c682191967cd9b72e6b3930164a7eef783861906bea25c1f9f",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2776,9 +2796,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/26_reduce_operations/26_reduce_operations.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/26_reduce_operations/26_reduce_operations.objdump",
       "source_sha256": "532e101fea83e6f7b18d18626e142024320d847e32f7caaaaaa3c755b649e0b8",
-      "object_sha256": "a55a2c84e636a7fda2f51119e15480d7bd86959671dcd72bee2c976225fb201d",
-      "objdump_sha256": "72e3915c6dd9e38c558ae2575009b11d3aa8fd741367745ff578a51a02333b46",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "object_sha256": "008d9f3b914f8764e0f49ce27e7d4606987a16e385be48357871401e3ff8ab5a",
+      "objdump_sha256": "5961a9a262352062952d8a74f87b51b8f3d97ab82053ca65434bbb1d8adc154a",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2788,9 +2808,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/27_three_source/27_three_source.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/27_three_source/27_three_source.objdump",
       "source_sha256": "91075887c531d99075b9aeb35250eea852e2141f7d4d2983834a6eb939d84251",
-      "object_sha256": "5fba9502d07edd1b4a4f3fd012adff9acd631016bf42ee40c08ee0f8f82cf23d",
+      "object_sha256": "f6340e35f39bec8b1cfb3bd5ad95a9ab07441bdc179e26cbe5a84a706eaf5e3c",
       "objdump_sha256": "4fada9052bf72934dc60f414b5977772c04ca5b1b38083bdd407274646ec2b34",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2800,9 +2820,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/28_prefetch/28_prefetch.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/28_prefetch/28_prefetch.objdump",
       "source_sha256": "7ba2fde43f1c1df8e2d42283bb2a8bae17d9fe62a682c0cd0410d9cb9726a91e",
-      "object_sha256": "0c105745ebe24d114b19c73455ff919a4e4546de9d16d6686d0857553c2fefdc",
+      "object_sha256": "84bc0a8bc24b7d47cb0659691e00c7f372730de6a128fd94e24c001200b0279f",
       "objdump_sha256": "02181e5738b29e54549cd335647454eb42e1d5d34d45ddad7d9aa15c8586b78f",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "source_directed",
       "source_directives": [
         "__builtin_prefetch"
@@ -2814,9 +2834,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/29_cache_ops/29_cache_ops.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/29_cache_ops/29_cache_ops.objdump",
       "source_sha256": "685fca5f09d21e0206f4ff7cc75f792f7be1b671a5a880f6fff87cc20c9d1060",
-      "object_sha256": "f9e5da57f6dd8287292fc6b550a7920c605492e997a03b70e1162e91d202e8dd",
-      "objdump_sha256": "d9a5e1bc2e9b3f18588505180d28fa640127da89389bf9eb8cb74d17256033ad",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "object_sha256": "b54884df847f68084605558f5713a9cecd134a78575ad6b442c500f7271195da",
+      "objdump_sha256": "a9d4128e8aece276b2e9a333130588dec9fc2dfb6a392436f62f1f1a90ff2c49",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2826,9 +2846,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/30_compressed/30_compressed.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/30_compressed/30_compressed.objdump",
       "source_sha256": "da6e3499743297b361df23702c830d04712abee33f18897d025b832231ac41db",
-      "object_sha256": "4eb02e0fc410278f4c36312eb3d1025bb87f6021a6a14304a96f672df9ef19f4",
+      "object_sha256": "4696a104d19da5be482e2fb10ed15c0f17378910809e67379b144f197132c650",
       "objdump_sha256": "cf31230afa8e0408e62f871f037c572a4418fd345296419c60b51972688834d3",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2838,9 +2858,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/31_jump_tables/31_jump_tables.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/31_jump_tables/31_jump_tables.objdump",
       "source_sha256": "cb30abc3090e6a9748fa8791bfb7a2b4aaac1a6d686412321bddbe2ebc72dfed",
-      "object_sha256": "ad7c414dc8cac60ba0e38e738dc035342ba74bedfd97e63060293ea6885dc52a",
+      "object_sha256": "6c0c8a78073c45cf0c734ce2cf71c96f90641354ca63c2de20ab70122941ac4b",
       "objdump_sha256": "d2524dcff740247cde400ce80b561e3a894063b8ac84968f06c8e8d057aa8270",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2850,9 +2870,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/32_descriptor_marker/32_descriptor_marker.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/32_descriptor_marker/32_descriptor_marker.objdump",
       "source_sha256": "5b35677e1a78d1bee5f480b2aa409ba1281d9cf6ba5119e971fc9f2a95d9e031",
-      "object_sha256": "b441c7a1302db72df5386ee035d3682f5ad6fd2298754c1acc263d9fa1cf744e",
+      "object_sha256": "c2c0c19c0ad8f11c2511b69be8d5ff1b26f2062a2e04c262ff09025b86ca2513",
       "objdump_sha256": "45fbca83004aa23a01558f83978fe51e5320d0bb9ab2edfe61edcdffe72aa4a7",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "source_directed",
       "source_directives": [
         "__asm__"
@@ -2864,9 +2884,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/33_callret_direct/33_callret_direct.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/33_callret_direct/33_callret_direct.objdump",
       "source_sha256": "20f0229de7e1f1d11af4bce7abe1341868d0911ef94b9972bf1e03c880f68f6e",
-      "object_sha256": "e4ac23465ea40e26e8378dcf17adcc9b9d0d2b68e874270361a64325309dbfe0",
-      "objdump_sha256": "5b0aa7e207f81525b4fdd411c805ed8159c95c36b9f5f348a9771ddc1d57470c",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "object_sha256": "106db794e8a0172cd69ae229dedd625e8a11b17cb582d9f67655a8c1208399af",
+      "objdump_sha256": "65e7b53d20c3561fae28364066eb28500f06f7a5c25ad7858a299f8a97e56a1e",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2876,9 +2896,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/34_callret_nested/34_callret_nested.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/34_callret_nested/34_callret_nested.objdump",
       "source_sha256": "c09ce2e7da2a3119d816c2c75eb4c66aee4b1171a43c06a7a423c3fb4eacbdb3",
-      "object_sha256": "8192a3dd2175b41536cbb7448541f2400ca3e6e5d3903f3d0e58fdc4f3b4ae99",
-      "objdump_sha256": "d917121834d2aa121ff80b70628f332d39402e3822a2b42ebf22b04b03b3b1ae",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "object_sha256": "afc734f2a863f59259b6ee12cb5ba289650d1b52d3866b4e0d75837e76e7e85b",
+      "objdump_sha256": "66a2b2cb6123487d4a8ea4cd65ae4aeaffc114ec98d2f002dee4f748bfe018d5",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2888,9 +2908,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/35_callret_recursive/35_callret_recursive.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/35_callret_recursive/35_callret_recursive.objdump",
       "source_sha256": "63313709401ab0c68db0866fcfcb5bf7f7d6d187b7f2cee1535c31286e639ceb",
-      "object_sha256": "1b1ff7b8150a7649dd657fb50e9a6f8315e8bee642cc2a034f18ce6929ff69a8",
-      "objdump_sha256": "9e50454ed19d6f7a702d126e685488f838027ec74cbe6ca7be45bc2f94eeea2f",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "object_sha256": "43327a449a3a79e670f11f516f35e9837107b86c31d91275f40edbdbe3b674d7",
+      "objdump_sha256": "261312abb18bcc50a5442559cefa6ba6554e5906df85d4fd6f4af1a86e20e075",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2900,9 +2920,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/36_callret_indirect/36_callret_indirect.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/36_callret_indirect/36_callret_indirect.objdump",
       "source_sha256": "6412a99ff79155030fb16de5383d22295e7f1d9a24f252feefce15c0669420e6",
-      "object_sha256": "5421b93fda6f20dae25ebafbd31b34fc0febb09ae638cc88c2491fce8e2b600d",
-      "objdump_sha256": "65477db620048bdf295f36c686a6720afcb57f6abd4132ddb90876c5a24d4623",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "object_sha256": "1ba09e3468546f98de95888526a53f397250735b37938301dbb63b39501fcbf4",
+      "objdump_sha256": "78116cfed5a013bc053f41b6fcdd2161123dd82ac6f0780b8b2d2896a5493d7c",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2912,9 +2932,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/37_callret_tail_musttail/37_callret_tail_musttail.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/37_callret_tail_musttail/37_callret_tail_musttail.objdump",
       "source_sha256": "47a4b03d62ede5e4b500c2dac872bc9ac81dcda07e55b97ba879927237e15310",
-      "object_sha256": "e7034b450161ff5f7661cee805a379167619a5c88ccc326f05f887ca1ad23f6e",
+      "object_sha256": "e7ca6996cbc1b9d80142a1ae79487459f0d1cedc52167f73d20b8d591d2a959d",
       "objdump_sha256": "8a7b42b02010a32cc45fc4baf9f2aaf52840b54bd2be287dbbda1a834a67aea7",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2924,9 +2944,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/38_callret_local_reloc/38_callret_local_reloc.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/38_callret_local_reloc/38_callret_local_reloc.objdump",
       "source_sha256": "90a354eeb6b8228c608e6d64a0684dd51cf4442fec678fe45f9c37c7dd1add3c",
-      "object_sha256": "58511fc81c1e6a9eed293753fb11b578da7686d42d1f5b43dacebb95e8f3abea",
+      "object_sha256": "e9254a57309b7558c9b6acda71ccdbab6df37ab3a6c2fa06b91b687c6823f630",
       "objdump_sha256": "bf958ed4b8928a9a3b6602c17d39136dd476597604439bfb3d1c6f5d606b7d31",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2936,9 +2956,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/39_callret_noreturn/39_callret_noreturn.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/39_callret_noreturn/39_callret_noreturn.objdump",
       "source_sha256": "7dc085a212411810cb0328590301b06d2f138ec2f6228a26f91f0db0d2598e2f",
-      "object_sha256": "c9f3e5bf7577d90529a7e92d3a30ead46dcfbada315e36cba29af8ef4ef55fa5",
+      "object_sha256": "449951315b12bc03961899b7dccecade431013cb8572c407f80f9202429db133",
       "objdump_sha256": "726be274796aafc42f1a3a7c16cec077df7230fe7988bbca620ebb21bff31650",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "source_directed",
       "source_directives": [
         "__asm__"
@@ -2950,9 +2970,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/40_callret_hl_setret/40_callret_hl_setret.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/40_callret_hl_setret/40_callret_hl_setret.objdump",
       "source_sha256": "f1e817260b99f62ce5fae5304f2d0e166f3da974e0cdddd999d44d06b95bbf32",
-      "object_sha256": "1f880a7437f2fdca96bc406c472e94a866f5577bbec9c41732ec0d459e38b268",
+      "object_sha256": "8fac39c9562772811cd88b1298592791b4d6d7529d8ec1c2080d45733d52eb56",
       "objdump_sha256": "34cad8fe1cb3869d5f02659795098c42690958e484a94e79ded9548d79a7feae",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "source_directed",
       "source_directives": [
         "__asm__"
@@ -2964,9 +2984,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/41_plain_c_compare/41_plain_c_compare.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/41_plain_c_compare/41_plain_c_compare.objdump",
       "source_sha256": "c2d15e3b2e0560ad660d7908486a25d0acbcaa1f58b34048ed0a85739271ee86",
-      "object_sha256": "c46b47b967e06575f7723f571b31b2008432c66bf8261b6960edb6bbbf7c64ba",
+      "object_sha256": "d9f2680c0b5fb979f6ac32408d7752216be1cff3b771e70f25d6dc628d0e8ece",
       "objdump_sha256": "9dc671647e375c37c9d407895beeda70701262f8b6cd7698aaf0a043ff348200",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2976,9 +2996,9 @@
       "object": "avs/compiler/linx-llvm/tests/out/42_plain_c_memory/42_plain_c_memory.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/42_plain_c_memory/42_plain_c_memory.objdump",
       "source_sha256": "c580935dd064e05dc6e4dd7eb68eba2ca4a56c8ba0f35b11017466956cc25287",
-      "object_sha256": "84af030b826cc51eaa5d84b4133fe537fd62dd0fb83db09f7592ef74e6012d8e",
+      "object_sha256": "f3c50b18e336d3a53c8187bc6c858957420ab86715485782498d9feb92c135e9",
       "objdump_sha256": "ba0dffde396579a4508a850217166bfa443409bcd3bea7018e88f41289b82893",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     },
@@ -2988,9 +3008,21 @@
       "object": "avs/compiler/linx-llvm/tests/out/43_plain_c_cursor/43_plain_c_cursor.o",
       "objdump": "avs/compiler/linx-llvm/tests/out/43_plain_c_cursor/43_plain_c_cursor.objdump",
       "source_sha256": "86d9f0e5c1679825e427ea06f6eed3e2b68603d3741383e676a1b826d5ddae05",
-      "object_sha256": "7177cf8399121c88234a1c270b7534c3e19e2c7005bb164ba35ca538ead06f5e",
+      "object_sha256": "73e0502b1c15c691ebc1fe2fe6e3059da70fe3cb959f7189822630050098add1",
       "objdump_sha256": "8de1d7c3d106e181e6f7801a761690dab0d4420e06fc36f4ae782af44cac0bd0",
-      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git b3ff7eee5cd091e04d292db781fd4d33980f3629)",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
+      "provenance_class": "pure_c_cpp",
+      "source_directives": []
+    },
+    {
+      "source": "avs/compiler/linx-llvm/tests/c/44_plain_c_sub_immediate.c",
+      "generated_assembly": "avs/compiler/linx-llvm/tests/out/44_plain_c_sub_immediate/44_plain_c_sub_immediate.s",
+      "object": "avs/compiler/linx-llvm/tests/out/44_plain_c_sub_immediate/44_plain_c_sub_immediate.o",
+      "objdump": "avs/compiler/linx-llvm/tests/out/44_plain_c_sub_immediate/44_plain_c_sub_immediate.objdump",
+      "source_sha256": "56bd6b4f33826797d44062d88429fe0c9499ed280a048efb7edec161c3cbacc0",
+      "object_sha256": "352cd9b76c0044cb25cb2d923ec33ec16076f3a9936424e3a95c7e1f2dac1a24",
+      "objdump_sha256": "15ddb2f868ff5ef48eefd13eb5fc7fefa4f7f34c2432a5af87063b73d86f79b1",
+      "compiler_identity": "clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 5859cce12e160c3499c7e10a9542257f95300f08)",
       "provenance_class": "pure_c_cpp",
       "source_directives": []
     }
@@ -3026,13 +3058,14 @@
     "avs/compiler/linx-llvm/tests/c/01_arith.c": [
       "ADD",
       "ADDW",
+      "C.ADD",
       "C.BSTART.STD",
       "C.SUB",
       "DIVU",
       "DIVUW",
       "FENTRY",
       "FRET.STK",
-      "HL.LUI",
+      "HL.SUBI",
       "MUL",
       "MULW",
       "ORI",
@@ -3061,6 +3094,7 @@
       "SETC.LTI",
       "SRLI",
       "SUB",
+      "SUBIW",
       "XOR"
     ],
     "avs/compiler/linx-llvm/tests/c/03_arrays.c": [
@@ -3084,6 +3118,7 @@
       "SETC.LTI",
       "SLL",
       "SRL",
+      "SUBI",
       "SWI"
     ],
     "avs/compiler/linx-llvm/tests/c/04_structs.c": [
@@ -3123,7 +3158,6 @@
       "XORW"
     ],
     "avs/compiler/linx-llvm/tests/c/06_recursion.c": [
-      "ADD",
       "ADDI",
       "ADDW",
       "BSTART.STD",
@@ -3137,7 +3171,9 @@
       "SETC.LTI",
       "SETC.LTU",
       "SLL",
-      "SRL"
+      "SRL",
+      "SUBI",
+      "SUBIW"
     ],
     "avs/compiler/linx-llvm/tests/c/07_constants.c": [
       "ADDI",
@@ -3206,7 +3242,6 @@
       "ANDI",
       "C.BSTART",
       "C.BSTART.STD",
-      "C.MOVI",
       "C.MOVR",
       "C.SEXT.W",
       "C.ZEXT.W",
@@ -3236,6 +3271,7 @@
       "SRLI",
       "SRLIW",
       "SRLW",
+      "SUBIW",
       "SUBW",
       "XORI",
       "XORIW"
@@ -3255,7 +3291,8 @@
       "SETC.GE",
       "SETC.GEU",
       "SLL",
-      "SRL"
+      "SRL",
+      "SUBIW"
     ],
     "avs/compiler/linx-llvm/tests/c/14_lui.c": [
       "ADDI",
@@ -3399,6 +3436,7 @@
       "SRL",
       "SRLIW",
       "SRLW",
+      "SUBIW",
       "XORIW"
     ],
     "avs/compiler/linx-llvm/tests/c/24_block_isa.c": [
@@ -3428,6 +3466,7 @@
       "SLLIW",
       "SRAIW",
       "SRL",
+      "SUBIW",
       "SUBW",
       "XORW"
     ],
@@ -3449,6 +3488,7 @@
       "FRET.STK",
       "HL.LD.PCR",
       "HL.LUI",
+      "HL.SUBIW",
       "ORW",
       "SLL",
       "SLLIW",
@@ -3479,6 +3519,7 @@
       "SETC.LTI",
       "SLL",
       "SRL",
+      "SUBI",
       "XORW"
     ],
     "avs/compiler/linx-llvm/tests/c/27_three_source.c": [
@@ -3528,7 +3569,6 @@
       "SW"
     ],
     "avs/compiler/linx-llvm/tests/c/29_cache_ops.c": [
-      "ADD",
       "ADDI",
       "C.BSTART",
       "C.BSTART.STD",
@@ -3545,7 +3585,8 @@
       "LBI",
       "LWI",
       "SLL",
-      "SRL"
+      "SRL",
+      "SUBI"
     ],
     "avs/compiler/linx-llvm/tests/c/30_compressed.c": [
       "ADDW",
@@ -3583,16 +3624,14 @@
       "FRET.STK"
     ],
     "avs/compiler/linx-llvm/tests/c/33_callret_direct.c": [
-      "ADD",
       "ADDI",
       "BSTART.STD",
       "C.BSTART.STD",
-      "C.MOVI",
       "FENTRY",
-      "FRET.STK"
+      "FRET.STK",
+      "SUBI"
     ],
     "avs/compiler/linx-llvm/tests/c/34_callret_nested.c": [
-      "ADD",
       "ADDI",
       "BSTART.STD",
       "C.BSTART.STD",
@@ -3601,6 +3640,7 @@
       "FENTRY",
       "FRET.STK",
       "MUL",
+      "SUBI",
       "XOR"
     ],
     "avs/compiler/linx-llvm/tests/c/35_callret_recursive.c": [
@@ -3610,7 +3650,6 @@
       "C.ADD",
       "C.BSTART",
       "C.BSTART.STD",
-      "C.MOVI",
       "C.MOVR",
       "C.OR",
       "CMP.LTU",
@@ -3622,7 +3661,8 @@
       "SLL",
       "SRL",
       "SRLI",
-      "SUB"
+      "SUB",
+      "SUBI"
     ],
     "avs/compiler/linx-llvm/tests/c/36_callret_indirect.c": [
       "ADD",
@@ -3636,7 +3676,8 @@
       "C.SETRET",
       "FENTRY",
       "FRET.STK",
-      "MUL"
+      "MUL",
+      "SUBI"
     ],
     "avs/compiler/linx-llvm/tests/c/37_callret_tail_musttail.c": [
       "ADDI",
@@ -3734,6 +3775,18 @@
       "LHUI",
       "SBI",
       "SHI"
+    ],
+    "avs/compiler/linx-llvm/tests/c/44_plain_c_sub_immediate.c": [
+      "ADD",
+      "ADDW",
+      "C.BSTART.STD",
+      "FENTRY",
+      "FRET.STK",
+      "HL.SUBI",
+      "HL.SUBIW",
+      "LUI",
+      "SUBI",
+      "SUBIW"
     ]
   }
 }

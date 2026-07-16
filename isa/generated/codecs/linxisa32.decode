@@ -219,7 +219,7 @@ bstart_32_7eb93b649748 .... .... .... .... .... .... .001 0001 %simm25
 # BSTART | BSTART COND, <label> | opcodes/lx_32.opc:56
 bstart_32_e11e678a32ac .... .... .... .... .... .... .010 0001 %simm25
 
-# BSTART CALL | BSTART.CALL <br_label> | opcodes/lx_32.opc:57
+# BSTART CALL | BSTART.CALL <br_label>, <rt_label>, ->ra | opcodes/lx_32.opc:57
 bstart_call_32_9404418d1ae5 0101 0... ..01 0110 .... .... .... 0010 simm12=%simm12_4_s12 %uimm5
 
 # BSTART.ACCCVT | BSTART.ACCCVT DataType | opcodes/lx_32.opc:64

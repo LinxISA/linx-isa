@@ -85,7 +85,6 @@ def norm_exec_name(mnemonic: str) -> str:
 
 EXEC_ALIASES = {
     "exec_oriw": "exec_orizw",
-    "exec_hl_bstart_call": "exec_bstart_call",
     "exec_l_bstart_fp": "exec_bstart_fp",
     "exec_l_bstart_std": "exec_bstart_std",
     "exec_l_bstart_sys": "exec_bstart_sys",

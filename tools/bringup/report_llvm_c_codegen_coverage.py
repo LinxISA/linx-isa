@@ -26,8 +26,8 @@ CANONICAL_REACHABLE_CONTRACT_PATH = Path(
 # This compact pin is intentionally outside the mutable contract. Additive
 # tranches require one reviewed anchor update; the minimum must never decrease.
 CANONICAL_REACHABLE_CONTRACT_ANCHOR = {
-    "minimum_coverage_count": 143,
-    "tranche_chain_sha256": "5fec4133e1b6ff70bddd22344c4a4470140f5d068b71fee8f41f8d56fe7613b8",
+    "minimum_coverage_count": 146,
+    "tranche_chain_sha256": "e319dd83314027a4a7c2552516fd02e253b46b72fa877166c0166d8f03bcff09",
 }
 SOURCE_SUFFIXES = (".c", ".cc", ".cpp", ".cxx")
 CLANG_IDENT_RE = re.compile(r'^\s*\.ident\s+"(clang version [^"]+)"', re.MULTILINE)
@@ -132,6 +132,24 @@ def _current_llvm_head(root: Path) -> str:
         capture_output=True,
         text=True,
     ).stdout.strip()
+
+
+def _verify_clean_llvm_worktree(root: Path) -> None:
+    """Fail closed when source state is not exactly the reported LLVM commit."""
+    llvm_root = root / "compiler/llvm"
+    status = subprocess.run(
+        ["git", "-C", str(llvm_root), "status", "--porcelain=v1", "--untracked-files=all"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    if status:
+        changed = ", ".join(line[3:] for line in status.splitlines()[:5])
+        suffix = "" if len(status.splitlines()) <= 5 else ", ..."
+        raise ProvenanceError(
+            "compiler/llvm worktree is dirty; coverage cannot be bound to HEAD: "
+            f"{changed}{suffix}"
+        )
 
 
 def _expected_compile_flags(root: Path, target: str, stem: str) -> list[str]:
@@ -587,32 +605,40 @@ def _verify_reachable_contract(
             "tranche_chain_sha256": actual_digest,
         }
 
-    cumulative_direct: set[str] = set()
-    for source in pure_sources - all_tranche_sources:
-        cumulative_direct.update(observed_by_source[source])
-    initial_closed, _ = _apply_alias_closure(cumulative_direct, spec_mnemonics)
+    # Tranches are frozen review history, not a request to reconstruct the
+    # compiler state that existed when each source was added. A later generic
+    # lowering can legitimately make an older source emit a mnemonic first
+    # introduced by a newer tranche. Re-deriving tranche deltas from today's
+    # source-set subtraction would then invalidate sound historical evidence.
+    tranche_mnemonics: set[str] = set()
+    for _, _, new_direct, _, _ in parsed_tranches:
+        overlap = tranche_mnemonics & set(new_direct)
+        if overlap:
+            raise ProvenanceError(
+                "plain-C tranche mnemonic history overlaps: "
+                + ", ".join(sorted(overlap))
+            )
+        tranche_mnemonics.update(new_direct)
+
+    historical_covered = seen - tranche_mnemonics
+    initial_closed, _ = _apply_alias_closure(historical_covered, spec_mnemonics)
     verified_tranches: list[dict[str, Any]] = []
     aggregate_new_direct: list[str] = []
     for tranche_id, sources, new_direct, baseline_count, tranche_expected in parsed_tranches:
-        baseline_closed, _ = _apply_alias_closure(cumulative_direct, spec_mnemonics)
+        baseline_closed, _ = _apply_alias_closure(
+            historical_covered, spec_mnemonics
+        )
         if baseline_count != len(baseline_closed):
             raise ProvenanceError(
                 f"plain-C tranche baseline is inconsistent: {tranche_id}"
-            )
-        next_direct = set(cumulative_direct)
-        for source in sources:
-            next_direct.update(observed_by_source[source])
-        actual_delta = next_direct - cumulative_direct
-        if set(new_direct) != actual_delta:
-            raise ProvenanceError(
-                f"plain-C tranche direct delta is inconsistent: {tranche_id}"
             )
         for mnemonic in new_direct:
             if entry_by_mnemonic[mnemonic]["witness_source"] not in sources:
                 raise ProvenanceError(
                     f"plain-C tranche mnemonic witness is outside tranche sources: {mnemonic}"
                 )
-        next_closed, _ = _apply_alias_closure(next_direct, spec_mnemonics)
+        next_covered = historical_covered | set(new_direct)
+        next_closed, _ = _apply_alias_closure(next_covered, spec_mnemonics)
         if tranche_expected != len(next_closed):
             raise ProvenanceError(
                 f"plain-C tranche expected coverage is inconsistent: {tranche_id}"
@@ -627,16 +653,16 @@ def _verify_reachable_contract(
             }
         )
         aggregate_new_direct.extend(new_direct)
-        cumulative_direct = next_direct
+        historical_covered = next_covered
 
-    independently_reachable, _ = _apply_alias_closure(
-        cumulative_direct, spec_mnemonics
+    historical_closed, _ = _apply_alias_closure(
+        historical_covered, spec_mnemonics
     )
     if (
-        cumulative_direct != pure_direct
-        or independently_reachable != pure_closed
-        or len(independently_reachable) != expected_coverage_count
-        or seen != independently_reachable
+        historical_closed != seen
+        or pure_closed != seen
+        or not pure_direct.issubset(pure_closed)
+        or len(historical_closed) != expected_coverage_count
     ):
         raise ProvenanceError(
             "plain-C contract mnemonic set differs from independent baseline plus delta"
@@ -673,6 +699,7 @@ def build_report(
     reachable_contract_path: Path | None = None,
     replay_manifest: bool = False,
     llvm_source_head: str | None = None,
+    llvm_source_clean: bool | None = None,
     generated_at_utc: str | None = None,
 ) -> dict[str, Any]:
     manifest = None
@@ -770,6 +797,7 @@ def build_report(
             "compiler_out_dir": _relative(out_dir, root),
             "compiler_identity": compiler_identity,
             "llvm_source_head": llvm_source_head,
+            "llvm_source_clean": llvm_source_clean,
             "clang": _relative(clang_path, root) if clang_path is not None else None,
             "clang_sha256": _sha256(clang_path) if clang_path is not None else None,
             "llvm_objdump": (
@@ -1044,6 +1072,7 @@ def main(argv: list[str]) -> int:
     try:
         clang_version = _tool_identity(clang_path)
         llvm_source_head = _current_llvm_head(root)
+        _verify_clean_llvm_worktree(root)
         _verify_compiler_identity_revision(clang_version, llvm_source_head)
         report = build_report(
             root=root,
@@ -1059,6 +1088,7 @@ def main(argv: list[str]) -> int:
             reachable_contract_path=reachable_contract_path,
             replay_manifest=True,
             llvm_source_head=llvm_source_head,
+            llvm_source_clean=True,
         )
     except (
         OSError,

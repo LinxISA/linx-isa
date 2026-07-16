@@ -61,7 +61,7 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [BSE](bse.md) | [Execution Control](../groups/execution_control.md) | 32 | Execution control instruction. |
 | [BSTART](bstart.md) | [Block Split](../groups/block_split.md) | 32 | Block split marker. Terminates the current basic block and begins the next. Encodes block type and transition kind. |
 | [BSTART](bstart.md) | [Block Split](../groups/block_split.md) | 32 | Block split marker. Terminates the current basic block and begins the next. Encodes block type and transition kind. |
-| [BSTART CALL](bstart_call.md) | [BSTART](../groups/bstart.md) | 32 | Unconditionally transfers to a call block. The instruction preserves `ra`; returning calls require an adjacent `SETRET` or `C.SETRET`. |
+| [BSTART CALL](bstart_call.md) | [BSTART](../groups/bstart.md) | 32 | Atomic fused call with independent call-target and return-target fields; transfers to the call block and writes `ra`. This exact aggregate is distinct from the generic bare-call form, which preserves `ra` and requires an adjacent `SETRET` or `C.SETRET`. |
 | [BSTART.ACCCVT](bstart_acccvt.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.CUBE](bstart_cube.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.FIXP](bstart_fixp.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
@@ -234,7 +234,7 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [HL.ANDI](hl_andi.md) | [Arithmetic Operation 64bit](../groups/arithmetic_operation_64bit.md) | 48 | [48-bit HL.] Instruction from the Arithmetic Operation 64bit group. |
 | [HL.ANDIW](hl_andiw.md) | [Arithmetic Operation 32bit](../groups/arithmetic_operation_32bit.md) | 48 | [48-bit HL.] Instruction from the Arithmetic Operation 32bit group. |
 | [HL.BFI](hl_bfi.md) | [RESERVE](../groups/reserve.md) | 48 | [48-bit HL.] Bit-field insert. |
-| [HL.BSTART CALL](hl_bstart_call.md) | [BSTART](../groups/bstart.md) | 48 | [48-bit HL.] Unconditionally transfers to a call block. The instruction preserves `ra`; returning calls require an adjacent `SETRET` or `C.SETRET`. |
+| [HL.BSTART CALL](hl_bstart_call.md) | [BSTART](../groups/bstart.md) | 48 | [48-bit HL.] Atomic fused call with independent call-target and return-target fields; transfers to the call block and writes `ra`. This exact aggregate is distinct from the generic bare-call form, which preserves `ra` and requires an adjacent `SETRET` or `C.SETRET`. |
 | [HL.BSTART.FP](hl_bstart_fp.md) | [BSTART](../groups/bstart.md) | 48 | [48-bit HL.] Terminates the current block and begins the next. |
 | [HL.BSTART.FP](hl_bstart_fp.md) | [BSTART](../groups/bstart.md) | 48 | [48-bit HL.] Terminates the current block and begins the next. |
 | [HL.BSTART.FP](hl_bstart_fp.md) | [BSTART](../groups/bstart.md) | 48 | [48-bit HL.] Terminates the current block and begins the next. |

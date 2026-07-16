@@ -1103,14 +1103,14 @@ function decode_execute32(inst : bits(32)) -> unit = {
     exec_srli(regdst, srcl, shamt)
   }
   else if (inst & 0xf83f000f) == 0x50160002 then {
-    // BSTART CALL | BSTART.CALL <br_label> | {'file': 'opcodes/lx_32.opc', 'line': 57}
+    // BSTART CALL | BSTART.CALL <br_label>, <rt_label>, ->ra | {'file': 'opcodes/lx_32.opc', 'line': 57}
     let simm12 : bits(12) = inst[15..4];
     let uimm5 : bits(5) = inst[26..22];
     decoded_block_target_pc_shadow = decode_block_target12(simm12);
     decoded_block_type_shadow = 0b0000;
     decoded_block_xfer_kind_shadow = block_xfer_call();
     decoded_block_contract_kind_shadow = 0b0000;
-    exec_bstart_call()
+    exec_bstart_call(uimm5)
   }
   else if (inst & 0x00007fff) == 0x00003101 then {
     // BSTART.FP | BSTART.FP COND, <label> | {'file': 'opcodes/lx_32.opc', 'line': 69}
@@ -3387,14 +3387,14 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_ssrset(srcl, ssr_id)
   }
   else if (inst & 0xf83f0000007f) == 0x501600000011 then {
-    // HL.BSTART CALL | HL.BSTART.CALL <br_label> | {'file': 'opcodes/lx_hl48.opc', 'line': 17}
+    // HL.BSTART CALL | HL.BSTART.CALL <br_label>, <rt_label>, ->ra | {'file': 'opcodes/lx_hl48.opc', 'line': 17}
     let simm25 : bits(25) = inst[31..7];
     let uimm5 : bits(5) = inst[42..38];
     decoded_block_target_pc_shadow = decode_block_target25(simm25);
     decoded_block_type_shadow = 0b0000;
     decoded_block_xfer_kind_shadow = block_xfer_call();
     decoded_block_contract_kind_shadow = 0b0000;
-    exec_bstart_call()
+    exec_hl_bstart_call(uimm5)
   }
   else if (inst & 0x0000707f003f) == 0x00000019000e then {
     // HL.LBI | hl.lbi [SrcL, simm], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 48}

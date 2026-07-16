@@ -64,7 +64,7 @@ hl_andiw_48_878c6594c6ff .... .... .... .... .010 .... .011 0101 .... .... .... 
 # HL.BFI | hl.bfi SrcL, SrcR, M, N, ->{t, u, Rd} | opcodes/lx_hl48.opc:16
 hl_bfi_48_8adfd476aacc 0000 000. .... .... .010 .... .100 1101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %SrcR %immr %imms
 
-# HL.BSTART CALL | HL.BSTART.CALL <br_label> | opcodes/lx_hl48.opc:17
+# HL.BSTART CALL | HL.BSTART.CALL <br_label>, <rt_label>, ->ra | opcodes/lx_hl48.opc:17
 hl_bstart_call_48_3c784c583c90 0101 0... ..01 0110 .... .... .... .... .... .... .001 0001 %simm25 %uimm5
 
 # HL.BSTART.FP | HL.BSTART.FP COND, <label> | opcodes/lx_hl48.opc:18

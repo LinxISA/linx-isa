@@ -92,6 +92,31 @@
     "hl48": {
       "hl.addtpc": "uses imm32 with SignExtend, then <<1",
       "hl.setret": "uses imm32 with ZeroExtend, then <<1"
+    },
+    "fused_bstart_call": {
+      "atomic": true,
+      "description": "The exact 32-bit and 48-bit BSTART.CALL forms embed a call transfer and C.SETRET. Their adjacent immediate fields remain independent operands.",
+      "forms": {
+        "bstart_call_32_9404418d1ae5": {
+          "call_target": "P + (SignExtend(simm12) << 1)",
+          "call_relocation": "CBSTART12_PCREL",
+          "return_relocation": "CSETRET5_PCREL",
+          "return_target": "(P + 2) + (ZeroExtend(uimm5) << 1)"
+        },
+        "hl_bstart_call_48_3c784c583c90": {
+          "call_target": "P + (SignExtend(simm25) << 1)",
+          "call_relocation": "B25_PCREL",
+          "return_relocation": "CSETRET5_PCREL",
+          "return_target": "(P + 4) + (ZeroExtend(uimm5) << 1)"
+        }
+      },
+      "operand_rule": "simm12/simm25 and uimm5 are independently relocatable PC-relative operands; they MUST NOT be concatenated into one target.",
+      "p_definition": "P is the address of the first byte of the fused form.",
+      "return_delta_range_bytes": [
+        0,
+        62
+      ],
+      "target_alignment_bytes": 2
     }
   },
   "immediate_materialization": {

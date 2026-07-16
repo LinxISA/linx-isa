@@ -607,6 +607,21 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
     g = group.strip()
     m = mnemonic.strip()
 
+    if m == "BSTART CALL":
+        return [
+            "P = CurrentPC()",
+            "call_target = P + (SignExtend(simm12) << 1)",
+            "ra = (P + 2) + (ZeroExtend(uimm5) << 1)",
+            "AtomicCallTransfer(call_target, ra)",
+        ]
+    if m == "HL.BSTART CALL":
+        return [
+            "P = CurrentPC()",
+            "call_target = P + (SignExtend(simm25) << 1)",
+            "ra = (P + 4) + (ZeroExtend(uimm5) << 1)",
+            "AtomicCallTransfer(call_target, ra)",
+        ]
+
     enc, core, parts = _mnemonic_core(m)
     root = parts[0].upper() if parts else core.upper()
     sub = parts[1].upper() if len(parts) > 1 else ""
@@ -1419,6 +1434,27 @@ def _write_instruction_details(
                 lines.append("+")
                 for a in asm_forms:
                     lines.append(f"* `{_escape_table_cell(a)}`")
+
+            contract_forms = [
+                form for form in forms if form.get("exact_relocations") or form.get("operand_roles")
+            ]
+            if contract_forms:
+                lines.append("")
+                lines.append("Exact operand contract (catalog-derived)::")
+                lines.append("+")
+                for form in contract_forms:
+                    form_id = str(form["id"])
+                    relocations = ", ".join(
+                        f"`{reloc['field']}` → `{reloc['name']}`"
+                        for reloc in form.get("exact_relocations", [])
+                    )
+                    roles = ", ".join(
+                        f"`{role['syntax']}` → {role['role']} ({role.get('pc_base', 'n/a')})"
+                        for role in form.get("operand_roles", [])
+                    )
+                    lines.append(
+                        f"* `{form_id}`: relocations {relocations}; roles {roles}."
+                    )
 
             # Embed every form's encoding. Duplicate mnemonics use stable
             # form-ID asset names so no catalog form can overwrite another.

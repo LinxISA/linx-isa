@@ -142,8 +142,8 @@ Use **Ctrl+F** / **Cmd+F** to search, or browse the [full alphabetical list](ins
 | [BSTART.CUBE](instructions/bstart_cube.md) | block_split | 32 | Terminates the current block and begins the next. |
 | [BSTART.FIXP](instructions/bstart_fixp.md) | block_split | 32 | Terminates the current block and begins the next. |
 | [BSTART.FP](instructions/bstart_fp.md) | block_split | 32 | Terminates the current block and begins the next. |
-| [BSTART CALL](instructions/bstart_call.md) | bstart | 32 | Unconditionally transfers to a call block. The instruction preserves `ra`; returning calls require an adjacent `SETRET` or `C.SETRET`. |
-| [HL.BSTART CALL](instructions/hl_bstart_call.md) | bstart | 48 | [48-bit HL.] Unconditionally transfers to a call block. The instruction preserves `ra`; returning calls require an adjacent `SETRET` or `C.SETRET`. |
+| [BSTART CALL](instructions/bstart_call.md) | bstart | 32 | Atomic fused call with independent call-target and return-target fields; transfers to the call block and writes `ra`. This exact aggregate is distinct from the generic bare-call form, which preserves `ra` and requires an adjacent `SETRET` or `C.SETRET`. |
+| [HL.BSTART CALL](instructions/hl_bstart_call.md) | bstart | 48 | [48-bit HL.] Atomic fused call with independent call-target and return-target fields; transfers to the call block and writes `ra`. This exact aggregate is distinct from the generic bare-call form, which preserves `ra` and requires an adjacent `SETRET` or `C.SETRET`. |
 | [HL.BSTART.FP](instructions/hl_bstart_fp.md) | bstart | 48 | [48-bit HL.] Terminates the current block and begins the next. |
 | [HL.BSTART.STD](instructions/hl_bstart_std.md) | bstart | 48 | [48-bit HL.] Terminates the current block and begins the next. |
 | [HL.BSTART.SYS](instructions/hl_bstart_sys.md) | bstart | 48 | [48-bit HL.] Terminates the current block and begins the next. |

@@ -46,7 +46,7 @@
       "translation_sha256": "10aca99be3898eab078badc119a3c0c92caa0e3694f747ca09529c0c73682375"
     },
     "architecture/v0.56-architecture-contract.md": {
-      "source_sha256": "97d7b0bcd457f7db1192b370a7ddd35826689bc9fcd0fe41b4569dbc592d9f14",
+      "source_sha256": "40483ce70f68c5872c49b9c35b82395c806f128294c61f8fef7a2d62158b6c0b",
       "translation_sha256": "7f2709c0dac4da3655fe6d6d5661cbce8a08ffba5fb058e8911e1bd0b616ab74"
     },
     "architecture/v0.56-hardening-policy.md": {
@@ -290,11 +290,11 @@
       "translation_sha256": "b1e9c8d23087e58e80b4f6b53491cc872ec42af3805c6b79b91b26069d5774f0"
     },
     "bringup/gates/qemu_isa_coverage_latest.md": {
-      "source_sha256": "6bbb2df8913fc757743018c044e02d28280dcf104f8a4794003b53cb228211ec",
+      "source_sha256": "74217e8d7782c3fc911bdd1e85d6805d99178d5190c31c72a40b856757335714",
       "translation_sha256": "e1f9d5565f16fae1d143ba9bbe8c74e30cb01c71e144ce665a1f9f9f36ecefe4"
     },
     "bringup/gates/qemu_opcode_sync_latest.md": {
-      "source_sha256": "8f8b6df0cc0ec111c7245f0ad088083cf0e033bc5c59eb7b0787bd387a1ea1ea",
+      "source_sha256": "e299c1c0401ab6d4b544b851dec129937b638671538624db570e66f76040712b",
       "translation_sha256": "28aeac6e6fb1afeca0c8a40b888d6969c317d25208ef45ab2b3fd4d078c7956c"
     },
     "bringup/libc_status.md": {
@@ -1126,7 +1126,7 @@
       "translation_sha256": "219dd303048d232a3a80de1661a9739958a1f36035cd6fbd7bf78b4a7b543525"
     },
     "isa/groups/bstart.md": {
-      "source_sha256": "34036e1b9386149bb0f837d5d32a3e742cfc9d1ba6a91d5548eac6ce7cd4a8dd",
+      "source_sha256": "e19220202ecf19f30706f0ad6d76f865c5a96f8bd6e7b80ba7cffd325d1e9082",
       "translation_sha256": "50fee8454fbd5ed65824b3afbd94a351b2322fd9d69cbc8319fa69c08cad5c27"
     },
     "isa/groups/c_bstart.md": {
@@ -1830,7 +1830,7 @@
       "translation_sha256": "c023a28ba0d0e108b8de9b351e8fd0c84a15ef66fa23980d49e2cd0e6a07f7e2"
     },
     "isa/index.md": {
-      "source_sha256": "3b12605cdeb42c36c7ce58a01e5b45d8505042b6805634a26bc84ccd434aa0c5",
+      "source_sha256": "e5c42f3a8d62d24fdecef278f17ff1dbe61820ec82f01b60c22fa2264c3105d4",
       "translation_sha256": "b44e4289b38a8ec6100ea5ba6c23ec50da7f1c4cf73c427c5a6666b970db0dea"
     },
     "isa/inst/LibPseudoCode.md": {
@@ -5206,7 +5206,7 @@
       "translation_sha256": "acb6e6a34aa6dd3314a90cc09fa80b1602b5b5a6515b24a5dffd0d28bf61bf42"
     },
     "isa/instructions/bstart_call.md": {
-      "source_sha256": "8d95de22f28f0fc6f395a4c458938b9ebb72c9d41aeac83207ec3a38aaafea5e",
+      "source_sha256": "430e9c1f4438cf2520f14cd6f07f860484ce487bba170ea7fcb47ea5a87305d1",
       "translation_sha256": "89157ed6b56eaa31a770bfd927f905db9dff74f765228c46987b2753f7bb6947"
     },
     "isa/instructions/bstart_cube.md": {
@@ -5742,7 +5742,7 @@
       "translation_sha256": "ee4734e7d7190e32d64c0497a1ef6637fa2815677e8fa2a045c8e3177b3998de"
     },
     "isa/instructions/hl_bstart_call.md": {
-      "source_sha256": "645f06e1e0d713c4fc9f5a82baa899eff327675c212d7b32674b721996124a0e",
+      "source_sha256": "6d4a6519442b9e0939334ebbc3a5922e8c427ebe6e7dafc24e5daaf9141d1991",
       "translation_sha256": "bed1a837eb276539a5ab8703b0a7fa44191167c147ba6cff75cf7352eadcd0ca"
     },
     "isa/instructions/hl_bstart_fp.md": {
@@ -6502,7 +6502,7 @@
       "translation_sha256": "77a2c05e2e1a76c24bf10a9e9973947d6f087fad502c009c39deceef1d8265d2"
     },
     "isa/instructions/index.md": {
-      "source_sha256": "85c2a4770f6798353ae13a3a6227da463e2e4b3a5e22b0a1ab21f9da513eb6da",
+      "source_sha256": "48b626110ddea7496854d3f49d5cb27efa6bf08cd66a269be8334ae2f8168180",
       "translation_sha256": "e431843538eea1226c59c05a0d6fd7582635b1f1e8355ceff6539611a7485ab4"
     },
     "isa/instructions/j.md": {

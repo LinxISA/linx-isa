@@ -37,14 +37,30 @@ def main() -> int:
     assert retired["B.IOD"]["disposition"] == "reserved"
     assert retired["BSTART.PAR"]["replacement_mnemonic"] == "BSTART.TEPL"
 
-    calls = [
+    exact_calls = [
         inst
         for inst in instructions
         if inst["mnemonic"] in {"BSTART CALL", "HL.BSTART CALL"}
-        or (str(inst["mnemonic"]).startswith("L.BSTART.") and " CALL," in inst["asm"])
     ]
-    assert len(calls) == 4
-    for call in calls:
+    assert len(exact_calls) == 2
+    for call in exact_calls:
+        note = str(call.get("note") or "")
+        assert "Atomic fused CALL" in note
+        assert "independently relocatable" in note
+        assert [role["role"] for role in call["operand_roles"]] == [
+            "call_target",
+            "return_target",
+            "link_destination",
+        ]
+        assert call["semantic_contract"]["atomic"] is True
+
+    generic_long_calls = [
+        inst
+        for inst in instructions
+        if str(inst["mnemonic"]).startswith("L.BSTART.") and " CALL," in inst["asm"]
+    ]
+    assert len(generic_long_calls) == 2
+    for call in generic_long_calls:
         note = str(call.get("note") or "")
         assert "preserves ra" in note
         assert "SETRET or C.SETRET" in note

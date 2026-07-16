@@ -47,9 +47,22 @@
         "HL.SDI.PO"
       ],
       "expected_coverage_count": 143
+    },
+    {
+      "id": "barbara-liskov-plain-c-sub-immediate",
+      "sources": [
+        "avs/compiler/linx-llvm/tests/c/44_plain_c_sub_immediate.c"
+      ],
+      "baseline_alias_closure_count": 143,
+      "new_direct_mnemonics": [
+        "HL.SUBI",
+        "HL.SUBIW",
+        "SUBI"
+      ],
+      "expected_coverage_count": 146
     }
   ],
-  "expected_coverage_count": 143,
+  "expected_coverage_count": 146,
   "entries": [
     {
       "mnemonic": "ADD",
@@ -394,7 +407,7 @@
     },
     {
       "mnemonic": "HL.LUI",
-      "witness_source": "avs/compiler/linx-llvm/tests/c/01_arith.c",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/07_constants.c",
       "evidence_kind": "direct"
     },
     {
@@ -765,6 +778,21 @@
     {
       "mnemonic": "HL.SDI.PO",
       "witness_source": "avs/compiler/linx-llvm/tests/c/43_plain_c_cursor.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.SUBI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/44_plain_c_sub_immediate.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.SUBIW",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/44_plain_c_sub_immediate.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SUBI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/44_plain_c_sub_immediate.c",
       "evidence_kind": "direct"
     }
   ]

@@ -3390,24 +3390,30 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `BSTART.CALL <br_label>`
+* `BSTART.CALL <br_label>, <rt_label>, ->ra`
+
+Exact operand contract (catalog-derived)::
++
+* `bstart_call_32_9404418d1ae5`: relocations `simm12` → `CBSTART12_PCREL`, `uimm5` → `CSETRET5_PCREL`; roles `<br_label>` → call_target (P), `<rt_label>` → return_target (P+2), `->ra` → link_destination (n/a).
 
 Encoding::
 +
-.`bstart_call_32_9404418d1ae5` — `BSTART.CALL <br_label>`
+.`bstart_call_32_9404418d1ae5` — `BSTART.CALL <br_label>, <rt_label>, ->ra`
 image::encodings/enc_bstart_call.svg[BSTART CALL encoding form bstart_call_32_9404418d1ae5,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Bare BSTART.CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.
+* Atomic fused CALL: call_target = P + (SignExtend(simm12) << 1); ra = (P + 2) + (ZeroExtend(uimm5) << 1). Both labels are explicit and independently relocatable.
 
 Operation (informative)::
 +
 [source]
 ----
-EndBlock()
-BeginNextBlock(/* type/kind/target as encoded */)
+P = CurrentPC()
+call_target = P + (SignExtend(simm12) << 1)
+ra = (P + 2) + (ZeroExtend(uimm5) << 1)
+AtomicCallTransfer(call_target, ra)
 ----
 
 [[insndesc-bstart-hl-bstart-call]]
@@ -3419,24 +3425,30 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `HL.BSTART.CALL <br_label>`
+* `HL.BSTART.CALL <br_label>, <rt_label>, ->ra`
+
+Exact operand contract (catalog-derived)::
++
+* `hl_bstart_call_48_3c784c583c90`: relocations `simm25` → `B25_PCREL`, `uimm5` → `CSETRET5_PCREL`; roles `<br_label>` → call_target (P), `<rt_label>` → return_target (P+4), `->ra` → link_destination (n/a).
 
 Encoding::
 +
-.`hl_bstart_call_48_3c784c583c90` — `HL.BSTART.CALL <br_label>`
+.`hl_bstart_call_48_3c784c583c90` — `HL.BSTART.CALL <br_label>, <rt_label>, ->ra`
 image::encodings/enc_hl_bstart_call.svg[HL.BSTART CALL encoding form hl_bstart_call_48_3c784c583c90,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Bare HL.BSTART.CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.
+* Atomic fused CALL: call_target = P + (SignExtend(simm25) << 1); ra = (P + 4) + (ZeroExtend(uimm5) << 1). Both labels are explicit and independently relocatable.
 
 Operation (informative)::
 +
 [source]
 ----
-EndBlock()
-BeginNextBlock(/* type/kind/target as encoded */)
+P = CurrentPC()
+call_target = P + (SignExtend(simm25) << 1)
+ra = (P + 4) + (ZeroExtend(uimm5) << 1)
+AtomicCallTransfer(call_target, ra)
 ----
 
 [[insndesc-bstart-hl-bstart-fp]]

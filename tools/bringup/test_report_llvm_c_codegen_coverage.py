@@ -6,6 +6,7 @@ import importlib.util
 import io
 import json
 import os
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -208,6 +209,35 @@ class LLVMCodeGenCoverageTests(unittest.TestCase):
             coverage._verify_compiler_identity_revision(
                 "clang version 23.0.0git", head
             )
+
+    def test_dirty_llvm_worktree_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            llvm_root = root / "compiler/llvm"
+            llvm_root.mkdir(parents=True)
+            subprocess.run(["git", "init", "-q", str(llvm_root)], check=True)
+            subprocess.run(
+                ["git", "-C", str(llvm_root), "config", "user.name", "Test"],
+                check=True,
+            )
+            subprocess.run(
+                ["git", "-C", str(llvm_root), "config", "user.email", "test@example.com"],
+                check=True,
+            )
+            tracked = llvm_root / "tracked.txt"
+            tracked.write_text("clean\n", encoding="utf-8")
+            subprocess.run(["git", "-C", str(llvm_root), "add", "tracked.txt"], check=True)
+            subprocess.run(
+                ["git", "-C", str(llvm_root), "commit", "-q", "-m", "fixture"],
+                check=True,
+            )
+
+            coverage._verify_clean_llvm_worktree(root)
+            tracked.write_text("dirty\n", encoding="utf-8")
+            with self.assertRaisesRegex(
+                coverage.ProvenanceError, "worktree is dirty"
+            ):
+                coverage._verify_clean_llvm_worktree(root)
 
     def _verify_fixture_manifest(
         self, root: Path, manifest: dict, paths: dict[str, Path]
@@ -476,7 +506,7 @@ class LLVMCodeGenCoverageTests(unittest.TestCase):
             old_as_new["tranches"][0]["new_direct_mnemonics"][0] = base[
                 "entries"
             ][0]["mnemonic"]
-            cases.append((old_as_new, "direct delta is inconsistent"))
+            cases.append((old_as_new, "witness is outside tranche sources"))
 
             synchronized_delete = deepcopy(base)
             removed = synchronized_delete["tranches"][-1][
@@ -500,7 +530,7 @@ class LLVMCodeGenCoverageTests(unittest.TestCase):
                 if entry["mnemonic"] not in removed_mnemonics
             ]
             deleted_tranche["expected_coverage_count"] -= len(removed_mnemonics)
-            cases.append((deleted_tranche, "baseline is inconsistent"))
+            cases.append((deleted_tranche, "contract mnemonic set differs"))
 
             for contract, message in cases:
                 with self.subTest(message=message):
@@ -511,6 +541,18 @@ class LLVMCodeGenCoverageTests(unittest.TestCase):
             directed_context["included"][1]["provenance_class"] = "source_directed"
             with self.assertRaisesRegex(coverage.ProvenanceError, "source-directed"):
                 self._verify_contract_fixture(root, base, directed_context)
+
+    def test_reachable_contract_survives_new_lowering_in_older_source(self) -> None:
+        contract, context = _reachable_contract_fixture()
+        # A generic backend improvement can make a pre-tranche source emit an
+        # instruction whose reviewed witness remains in a later tranche. The
+        # historical chain stays valid as long as current pure-C disassembly
+        # still proves every frozen entry and contains no unregistered gap.
+        context["observed_by_source"]["c/baseline.c"].append("DELTA.3")
+        with tempfile.TemporaryDirectory() as td:
+            result = self._verify_contract_fixture(Path(td), contract, context)
+        self.assertEqual(result["status"], "PASS")
+        self.assertEqual(result["coverage_count"], 6)
 
     def test_canonical_anchor_rejects_coordinated_corpus_and_contract_shrink(
         self,
@@ -562,7 +604,7 @@ class LLVMCodeGenCoverageTests(unittest.TestCase):
                 self._verify_contract_fixture(
                     root, renamed_contract, context
                 )["coverage_count"],
-                143,
+                146,
             )
             with self.assertRaisesRegex(
                 coverage.ProvenanceError, "non-regression anchor"
@@ -583,10 +625,18 @@ class LLVMCodeGenCoverageTests(unittest.TestCase):
                 for entry in shrunk_contract["entries"]
                 if entry["mnemonic"] not in removed_mnemonics
             ]
-            shrunk_contract["expected_coverage_count"] = 137
+            shrunk_contract["expected_coverage_count"] = removed_tranche[
+                "baseline_alias_closure_count"
+            ]
 
             shrunk_context = deepcopy(context)
             shrunk_context["observed_by_source"].pop(removed_source)
+            for source, mnemonics in shrunk_context["observed_by_source"].items():
+                shrunk_context["observed_by_source"][source] = [
+                    mnemonic
+                    for mnemonic in mnemonics
+                    if mnemonic not in removed_mnemonics
+                ]
             shrunk_context["included"] = [
                 artifact
                 for artifact in shrunk_context["included"]
@@ -600,7 +650,7 @@ class LLVMCodeGenCoverageTests(unittest.TestCase):
             unanchored = self._verify_contract_fixture(
                 root, shrunk_contract, shrunk_context
             )
-            self.assertEqual(unanchored["coverage_count"], 137)
+            self.assertEqual(unanchored["coverage_count"], 143)
             self.assertIsNone(unanchored["canonical_non_regression_anchor"])
             with self.assertRaisesRegex(
                 coverage.ProvenanceError, "non-regression minimum"
@@ -669,30 +719,30 @@ class LLVMCodeGenCoverageTests(unittest.TestCase):
         markdown = markdown_path.read_text(encoding="utf-8")
 
         self.assertEqual(report["schema_version"], coverage.SCHEMA_VERSION)
-        self.assertEqual(report["direct"]["coverage_count"], 143)
-        self.assertEqual(report["alias_closure"]["coverage_count"], 144)
-        self.assertEqual(report["pure_codegen"]["direct_coverage_count"], 142)
-        self.assertEqual(report["pure_codegen"]["alias_closure_coverage_count"], 143)
+        self.assertEqual(report["direct"]["coverage_count"], 146)
+        self.assertEqual(report["alias_closure"]["coverage_count"], 147)
+        self.assertEqual(report["pure_codegen"]["direct_coverage_count"], 145)
+        self.assertEqual(report["pure_codegen"]["alias_closure_coverage_count"], 146)
         self.assertEqual(report["spec_unique_mnemonics"], 710)
-        self.assertIn("`143/710`", markdown)
-        self.assertIn("`144/710`", markdown)
-        self.assertIn("`142/710`", markdown)
-        self.assertIn("`143/143` (`PASS`)", markdown)
-        self.assertIn("`frances-allen-plain-c-2`", markdown)
-        self.assertIn("`HL.LWUI.PO`", markdown)
+        self.assertIn("`146/710`", markdown)
+        self.assertIn("`147/710`", markdown)
+        self.assertIn("`145/710`", markdown)
+        self.assertIn("`146/146` (`PASS`)", markdown)
+        self.assertIn("`barbara-liskov-plain-c-sub-immediate`", markdown)
+        self.assertIn("`HL.SUBIW`", markdown)
         self.assertIsNone(report["threshold"])
         self.assertIsNone(report["threshold_met"])
         self.assertEqual(report["inputs"]["manifest_status"], "complete")
         self.assertEqual(report["inputs"]["target"], coverage.CANONICAL_TARGET)
-        self.assertEqual(report["inputs"]["replay_verified_source_count"], 43)
+        self.assertEqual(report["inputs"]["replay_verified_source_count"], 44)
         self.assertEqual(len(report["inputs"]["clang_sha256"]), 64)
         contract = report["plain_c_reachable_contract"]
         self.assertEqual(contract["status"], "PASS")
-        self.assertEqual(contract["coverage_count"], 143)
-        self.assertEqual(contract["coverage_denominator"], 143)
-        self.assertEqual(len(contract["new_direct_mnemonics"]), 24)
+        self.assertEqual(contract["coverage_count"], 146)
+        self.assertEqual(contract["coverage_denominator"], 146)
+        self.assertEqual(len(contract["new_direct_mnemonics"]), 27)
         self.assertEqual(contract["baseline_alias_closure_count"], 119)
-        self.assertEqual(len(contract["tranches"]), 2)
+        self.assertEqual(len(contract["tranches"]), 3)
         self.assertEqual(
             contract["canonical_non_regression_anchor"],
             {
@@ -703,12 +753,9 @@ class LLVMCodeGenCoverageTests(unittest.TestCase):
         self.assertEqual(
             contract["tranches"][-1]["new_direct_mnemonics"],
             [
-                "C.ADDI",
-                "C.CMP.NEI",
-                "HL.LDI.PO",
-                "HL.LWU.PCR",
-                "HL.LWUI.PO",
-                "HL.SDI.PO",
+                "HL.SUBI",
+                "HL.SUBIW",
+                "SUBI",
             ],
         )
         excluded = {item["artifact"] for item in report["excluded_artifacts"]}

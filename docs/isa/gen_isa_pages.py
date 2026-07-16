@@ -383,9 +383,10 @@ def _describe_instruction(mnemonic: str, group: str, asm: str) -> str:
         if root == "BSTART":
             if sub == "CALL":
                 return (
-                    f"{prefix}Unconditionally transfers to a call block. "
-                    "The instruction preserves `ra`; returning calls require "
-                    "an adjacent `SETRET` or `C.SETRET`."
+                    f"{prefix}Atomic fused call with independent call-target and "
+                    "return-target fields; transfers to the call block and writes `ra`. "
+                    "This exact aggregate is distinct from the generic bare-call form, "
+                    "which preserves `ra` and requires an adjacent `SETRET` or `C.SETRET`."
                 )
             return f"{prefix}Terminates the current block and begins the next."
         if root == "BSTOP":
@@ -1068,10 +1069,13 @@ def _derive_pseudocode(mnemonic: str, group: str, asm: str) -> str:
 
     if root == "BSTART":
         if sub == "CALL":
+            call_imm = "simm25" if enc == "HL" else "simm12"
+            setret_base = 4 if enc == "HL" else 2
             return (
-                "// BSTART.CALL preserves ra. Returning source forms place "
-                "SETRET/C.SETRET adjacent to the header.\n"
-                "EndBlock(); BeginNextBlock(CALL);"
+                "P = CurrentPC();\n"
+                f"call_target = P + (SignExtend({call_imm}) << 1);\n"
+                f"ra = (P + {setret_base}) + (ZeroExtend(uimm5) << 1);\n"
+                "AtomicCallTransfer(call_target, ra);"
             )
         return "EndBlock(); BeginNextBlock(/* kind */);"
     if root == "BSTOP":

@@ -2629,7 +2629,33 @@ function exec_bstart_tmov() -> unit = { exec_bstart() }
 function exec_bstart_tmatmul() -> unit = { exec_bstart() }
 function exec_bstart_tmatmul_acc() -> unit = { exec_bstart() }
 function exec_bstart_acccvt() -> unit = { exec_bstart() }
-function exec_bstart_call() -> unit = { exec_bstart() }
+function exec_fused_bstart_call(uimm5 : bits(5), embedded_setret_bytes : bits(64)) -> unit = {
+  // The exact aggregate form is one atomic CALL transition composed from a
+  // block-start target and an embedded C.SETRET.  The fields are independent:
+  // simm12/simm25 selects decoded_block_target_pc(), while uimm5 selects ra.
+  let tgt = decoded_block_target_pc();
+  if not_bool(is_block_start_marker(tgt)) then {
+    trap_block_cfi(0x1, read_pc_or_tpc())
+  } else {
+    let return_base = read_pc_or_tpc() + embedded_setret_bytes;
+    let return_off = sail_shiftleft(sail_zero_extend(uimm5, 64), 1);
+    block_commit_boundary();
+    barg_reset_at_block_start();
+    bdesc_reset();
+    barg_set_block_type(decoded_block_type());
+    barg_set_xfer_kind(block_xfer_call());
+    barg_set_next_pc_target(tgt);
+    write_regdst(0b01010, return_base + return_off)
+  }
+}
+
+function exec_bstart_call(uimm5 : bits(5)) -> unit = {
+  exec_fused_bstart_call(uimm5, sail_zeros(64) + 2)
+}
+
+function exec_hl_bstart_call(uimm5 : bits(5)) -> unit = {
+  exec_fused_bstart_call(uimm5, sail_zeros(64) + 4)
+}
 
 function exec_hl_bstart_std() -> unit = { exec_bstart() }
 function exec_hl_bstart_fp() -> unit = { exec_bstart() }

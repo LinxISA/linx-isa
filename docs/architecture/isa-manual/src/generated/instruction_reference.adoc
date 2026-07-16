@@ -269,8 +269,8 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`BSTART CALL` |32 |- |`BSTART.CALL <br_label>` |Bare BSTART.CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.
-|`HL.BSTART CALL` |48 |- |`HL.BSTART.CALL <br_label>` |Bare HL.BSTART.CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.
+|`BSTART CALL` |32 |- |`BSTART.CALL <br_label>, <rt_label>, ->ra` |Atomic fused CALL: call_target = P + (SignExtend(simm12) << 1); ra = (P + 2) + (ZeroExtend(uimm5) << 1). Both labels are explicit and independently relocatable.
+|`HL.BSTART CALL` |48 |- |`HL.BSTART.CALL <br_label>, <rt_label>, ->ra` |Atomic fused CALL: call_target = P + (SignExtend(simm25) << 1); ra = (P + 4) + (ZeroExtend(uimm5) << 1). Both labels are explicit and independently relocatable.
 |`HL.BSTART.FP` |48 |- |`HL.BSTART.FP COND, <label>` |-
 |`HL.BSTART.FP` |48 |- |`HL.BSTART.FP FALL<, fixup_label>` |-
 |`HL.BSTART.FP` |48 |- |`HL.BSTART.FP CALL, <label>` |-
