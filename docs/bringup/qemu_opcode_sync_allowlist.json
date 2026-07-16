@@ -7,9 +7,7 @@
     "hl_lwui_upo",
     "hl_lwui_upr",
     "hl_lwuip_u",
-    "hl_swi_upr",
-    "v_fabs",
-    "v_mul"
+    "hl_swi_upr"
   ],
   "meta_only_allow": [
     "hl_sbip",

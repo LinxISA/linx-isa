@@ -3,7 +3,8 @@
  *
  * Coverage intent:
  * - Integer vector ALU + bridged path: v.add / v.sub + v.lw.brg / v.sw.brg
- * - Floating-point vector ALU: v.fadd / v.fmul
+ * - Integer vector multiply: v.mul
+ * - Floating-point vector ALU: v.fadd / v.fmul / v.fabs
  */
 
 #include "linx_test.h"
@@ -54,6 +55,29 @@ __asm__(
 
 __asm__(
     ".p2align 3\n"
+    ".globl __linx_v03_ops_fabs_body\n"
+    ".type __linx_v03_ops_fabs_body, @function\n"
+    "__linx_v03_ops_fabs_body:\n"
+    "  v.lw.brg [ri0.sd, lc0<<2, zero.sd], ->vt.w\n"
+    "  v.fabs vt#1.fs, ->vt.w\n"
+    "  v.sw.brg vt#1.sw, [ri1.sd, lc0<<2, zero.sd]\n"
+    "  C.BSTOP\n"
+    ".size __linx_v03_ops_fabs_body, .-__linx_v03_ops_fabs_body\n");
+
+__asm__(
+    ".p2align 3\n"
+    ".globl __linx_v03_ops_mul_body\n"
+    ".type __linx_v03_ops_mul_body, @function\n"
+    "__linx_v03_ops_mul_body:\n"
+    "  v.lw.brg [ri0.sd, lc0<<2, zero.sd], ->vt.w\n"
+    "  v.lw.brg [ri1.sd, lc0<<2, zero.sd], ->vu.w\n"
+    "  v.mul vt#1.sw, vu#1.sw, ->vt.w\n"
+    "  v.sw.brg vt#1.sw, [ri2.sd, lc0<<2, zero.sd]\n"
+    "  C.BSTOP\n"
+    ".size __linx_v03_ops_mul_body, .-__linx_v03_ops_mul_body\n");
+
+__asm__(
+    ".p2align 3\n"
     ".globl __linx_v03_ops_mixed_pred_body\n"
     ".type __linx_v03_ops_mixed_pred_body, @function\n"
     "__linx_v03_ops_mixed_pred_body:\n"
@@ -90,6 +114,29 @@ LINX_V03_ASM_WRAPPER(
     "  C.BSTART\n",
     "")
 
+extern void linx_v03_launch_ops_fabs(uint64_t src_base, uint64_t dst_base);
+LINX_V03_ASM_WRAPPER(
+    linx_v03_launch_ops_fabs,
+    "  C.BSTART\n"
+    "  BSTART.MSEQ 0\n"
+    "  B.TEXT __linx_v03_ops_fabs_body\n"
+    "  B.IOR [a0, a1],[]\n"
+    "  C.B.DIMI 32, ->lb0\n"
+    "  C.BSTART\n",
+    "")
+
+extern void linx_v03_launch_ops_mul(uint64_t lhs_base, uint64_t rhs_base,
+                                    uint64_t dst_base);
+LINX_V03_ASM_WRAPPER(
+    linx_v03_launch_ops_mul,
+    "  C.BSTART\n"
+    "  BSTART.MSEQ 0\n"
+    "  B.TEXT __linx_v03_ops_mul_body\n"
+    "  B.IOR [a0, a1, a2],[]\n"
+    "  C.B.DIMI 32, ->lb0\n"
+    "  C.BSTART\n",
+    "")
+
 extern uint64_t linx_v03_launch_ops_mixed_pred(uint64_t out_base,
                                                uint64_t threshold);
 LINX_V03_ASM_WRAPPER(
@@ -105,6 +152,8 @@ LINX_V03_ASM_WRAPPER(
 
 extern void __linx_v03_ops_add_sub_body(void);
 extern void __linx_v03_ops_float_body(void);
+extern void __linx_v03_ops_fabs_body(void);
+extern void __linx_v03_ops_mul_body(void);
 extern void __linx_v03_ops_mixed_pred_body(void);
 
 static uint32_t evidence_v_add;
@@ -223,6 +272,58 @@ static void test_v_fmul_evidence(void)
     TEST_EQ32(evidence_v_fmul, 0x40200000u, 0x1375u);
 }
 
+static void test_v_fabs_matrix(void)
+{
+    enum { N = 32 };
+    static const uint32_t negative_inputs[4] = {
+        0x80000000u, /* -0.0f */
+        0xbfc00000u, /* -1.5f */
+        0xff800000u, /* -infinity */
+        0xc2480000u, /* -50.0f */
+    };
+    static uint32_t src[N];
+    static uint32_t dst[N];
+
+    for (unsigned i = 0; i < N; i++) {
+        src[i] = negative_inputs[i & 3u];
+        dst[i] = 0xdead0000u + i;
+    }
+
+    linx_v03_launch_ops_fabs((uint64_t)(uintptr_t)&src[0],
+                             (uint64_t)(uintptr_t)&dst[0]);
+
+    for (unsigned i = 0; i < N; i++) {
+        TEST_EQ32(dst[i], src[i] & 0x7fffffffu, 0x1380u + i);
+    }
+
+    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v03_ops_fabs_body));
+}
+
+static void test_v_mul_matrix(void)
+{
+    enum { N = 32 };
+    static uint32_t lhs[N];
+    static uint32_t rhs[N];
+    static uint32_t dst[N];
+
+    for (unsigned i = 0; i < N; i++) {
+        lhs[i] = 0x00010003u + i * 0x101u;
+        rhs[i] = 0x00000011u + i * 0x7u;
+        dst[i] = 0xcafe0000u + i;
+    }
+
+    linx_v03_launch_ops_mul((uint64_t)(uintptr_t)&lhs[0],
+                            (uint64_t)(uintptr_t)&rhs[0],
+                            (uint64_t)(uintptr_t)&dst[0]);
+
+    for (unsigned i = 0; i < N; i++) {
+        const uint32_t expect = (uint32_t)((uint64_t)lhs[i] * rhs[i]);
+        TEST_EQ32(dst[i], expect, 0x13a0u + i);
+    }
+
+    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v03_ops_mul_body));
+}
+
 static void test_v_mixed_scalar_vector_predicate(void)
 {
     enum { N = 32 };
@@ -288,6 +389,16 @@ void run_v03_vector_ops_matrix_tests(void)
     test_start(0x1375);
     uart_puts("v0.56 V.FMUL evidence ... ");
     test_v_fmul_evidence();
+    test_pass();
+
+    test_start(0x1376);
+    uart_puts("v0.56 V.FABS evidence ... ");
+    test_v_fabs_matrix();
+    test_pass();
+
+    test_start(0x1377);
+    uart_puts("v0.56 V.MUL evidence ... ");
+    test_v_mul_matrix();
     test_pass();
 
     test_start(0x1320);
