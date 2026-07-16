@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "run_id": "2026-07-17-fishtoucher-dev",
+  "lane": "pin",
+  "profile": "dev",
+  "same_manifest_closure": false,
+  "root_worktree_dirty": true,
+  "repos": {
+    "linx-isa": "c376ab0a3741f246d46e528f50ece834ff432b36",
+    "llvm": "19631a66485e9ff87d1f6cf2c5ffcbd897864bd6",
+    "ptoas": "939e9e0fe1a3a2349207e36d848fc6232faa135c",
+    "qemu": "ca3e11ba7b4539d846377f9c42baa067d458188f",
+    "linux": "90834082e829771ce29392e3be12ad2dc6d38716",
+    "linxcore": "1971ecb228e434d7c1e692385c60e9b9d81f36e9",
+    "linxcore-model": "3bc1e6e2ceb2d578204013220cb14f67043c8eb7",
+    "model": "e535af57b563cc3da0f1c9d3ae9c36be7d0dccec",
+    "pycircuit": "1d7b6fcf42c0b59bb2c5b5bced220df90fb0f54f",
+    "glibc": "785d1b51ecc2042a94873665ec4b745d85473504",
+    "mesa3d": "11c1663090d31ee744059281c4fa8f347e10e023",
+    "musl": "4ab3c65fc33279c4004f9821bebdd87e19f87c21",
+    "pto-kernels": "43e606b6c90d8ffbc939f4f23c70fcc8b37080f0",
+    "supernpu-bench": "497cf3f7ebf7c5c18c707b82481e2285d0b0e07f",
+    "linx-skills": "6a1007379be984d4eed9ba297e8541168bb0f9b5"
+  },
+  "note": "Leaf reports and diagnostic workloads were produced across several root commits while the named LLVM/QEMU assets stayed fixed; this packet is not release-strict same-manifest evidence."
+}
