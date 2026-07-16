@@ -76,6 +76,21 @@ def load_flow(path: Path) -> dict[str, Any]:
             seen_commands.add(command_id)
             if not str(command.get("command", "")).strip():
                 raise SystemExit(f"error: stage {stage_id}/{command_id} missing command")
+            artifact_env = command.get("artifact_env")
+            if artifact_env is not None:
+                if not isinstance(artifact_env, dict):
+                    raise SystemExit(
+                        f"error: stage {stage_id}/{command_id} artifact_env must be an object"
+                    )
+                if set(artifact_env) != {"report", "transcript"}:
+                    raise SystemExit(
+                        f"error: stage {stage_id}/{command_id} artifact_env requires report and transcript"
+                    )
+                for value in artifact_env.values():
+                    if not isinstance(value, str) or not value.strip():
+                        raise SystemExit(
+                            f"error: stage {stage_id}/{command_id} artifact_env values must be names"
+                        )
     return data
 
 
@@ -151,14 +166,16 @@ def run_command(
     command_env = env.copy()
     artifact_report_path = None
     artifact_transcript_path = None
-    if log_path is not None:
+    artifact_env = command.get("artifact_env")
+    if log_path is not None and isinstance(artifact_env, dict):
         artifact_report_path = log_path.with_suffix(".report.json")
         artifact_transcript_path = log_path.with_suffix(".transcript.txt")
+        command_env[str(artifact_env["report"])] = str(artifact_report_path)
+        command_env[str(artifact_env["transcript"])] = str(artifact_transcript_path)
+    if log_path is not None:
         command_env["LINX_FLOW_STAGE_ID"] = stage_id
         command_env["LINX_FLOW_COMMAND_ID"] = command_id
         command_env["LINX_FLOW_COMMAND_LOG"] = str(log_path)
-        command_env["LINX_FLOW_COMMAND_REPORT"] = str(artifact_report_path)
-        command_env["LINX_FLOW_COMMAND_TRANSCRIPT"] = str(artifact_transcript_path)
     print(f"-- {stage_id}/{command_id}")
     print(rendered)
     if log_path is not None:
@@ -232,11 +249,25 @@ def run_command(
                 pass
             proc.wait(timeout=5)
     reader.join(timeout=5)
+    if proc.stdout is not None:
+        proc.stdout.close()
     if log_fp is not None:
         log_fp.close()
 
     if timed_out:
         return result_row("timeout", returncode)
+    if returncode == 0 and artifact_report_path is not None:
+        missing_artifacts = [
+            str(path)
+            for path in (artifact_report_path, artifact_transcript_path)
+            if path is not None and not path.is_file()
+        ]
+        if missing_artifacts:
+            print(
+                "error: command passed without declared artifacts: "
+                + ", ".join(missing_artifacts)
+            )
+            return result_row("fail", 3)
     status = "pass" if returncode == 0 else "fail"
     return result_row(status, returncode)
 

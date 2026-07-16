@@ -64,6 +64,15 @@ class BenchmarkFlowContractTests(unittest.TestCase):
         self.assertIn('O="${LINUX_VMLINUX_OUT_DIR', commands[3]["command"])
         self.assertIn('KERNEL="${LINUX_VMLINUX_OUT_DIR', commands[3]["command"])
         self.assertIn('KERNEL_CONFIG="${LINUX_VMLINUX_OUT_DIR', commands[3]["command"])
+        self.assertIn("LINX_BUSYBOX_BOOT_RETRY=0", commands[3]["command"])
+        self.assertIn("LINX_BUSYBOX_BOOT_BLIND_SEND_AFTER=0", commands[3]["command"])
+        self.assertEqual(
+            commands[3]["artifact_env"],
+            {
+                "report": "LINX_BUSYBOX_BOOT_REPORT",
+                "transcript": "LINX_BUSYBOX_BOOT_TRANSCRIPT",
+            },
+        )
 
     def test_attestation_commands_bind_build_manifest_and_verify(self) -> None:
         cases = {
