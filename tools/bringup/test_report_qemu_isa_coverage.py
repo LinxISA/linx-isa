@@ -156,6 +156,21 @@ class ReportQemuIsaCoverageTests(unittest.TestCase):
             ["HL.BSTART.STD"],
         )
 
+    def test_bstart_split_and_fall_tokens_keep_their_exact_forms(self) -> None:
+        spec_set = {"BSTART", "BSTART.STD"}
+
+        expected = {
+            "bstart_split_direct": ["BSTART"],
+            "bstart_split_cond": ["BSTART"],
+            "bstart_fall": ["BSTART.STD"],
+        }
+        for token, mnemonics in expected.items():
+            with self.subTest(token=token):
+                self.assertEqual(
+                    coverage._canonicalize_qemu_mnemonic(token, spec_set),
+                    mnemonics,
+                )
+
     def test_c_setret_manual_translate_evidence_provides_exact_form(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             qemu_root = Path(td)
