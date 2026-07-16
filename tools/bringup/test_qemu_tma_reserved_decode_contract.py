@@ -108,6 +108,24 @@ class QemuTmaReservedDecodeContractTests(unittest.TestCase):
                     body,
                 )
 
+    def test_reserved_decode_miss_routes_to_illegal_instruction(self) -> None:
+        translate = (self.linx / "translate.c").read_text(encoding="utf-8")
+        decode32 = re.search(
+            r"decoded\s*=\s*decode_insn32\(ctx,\s*insn_val\);\s*"
+            r"if\s*\(!decoded\)\s*\{(?P<body>.*?)\n\s*\}",
+            translate,
+            re.DOTALL,
+        )
+        self.assertIsNotNone(decode32)
+        self.assertIn("linx_illegal(ctx)", decode32.group("body"))
+
+        illegal = re.search(r"static bool linx_illegal\([^)]*\)\s*\{", translate)
+        self.assertIsNotNone(illegal)
+        body = coverage._extract_c_block(translate, illegal.end() - 1)
+        self.assertIsNotNone(body)
+        self.assertIn("gen_helper_raise_exception", body)
+        self.assertIn("LINX_EXCP_ILLEGAL_INST", body)
+
     def test_generator_preserves_the_shared_tma_opcode_id(self) -> None:
         generator = (
             self.root / "rtl/LinxCore/tools/generate/opcode_catalog_lib.py"
