@@ -13,6 +13,7 @@ DEFCONFIG_TARGET="${DEFCONFIG_TARGET:-linx_v150_defconfig}"
 KALLSYMS_EXTRA_PASS="${KALLSYMS_EXTRA_PASS:-128}"
 JOBS="${JOBS:-}"
 REFRESH_DEFCONFIG="${LINX_KERNEL_REFRESH_DEFCONFIG:-0}"
+FRESH="${LINX_KERNEL_FRESH_BUILD:-0}"
 
 usage() {
   cat <<'USAGE'
@@ -28,11 +29,13 @@ Options:
   --target NAME       Make target (default: vmlinux)
   --defconfig NAME    Defconfig target for fresh O= dirs (default: linx_v150_defconfig)
   --refresh-defconfig Re-seed O=.config from the selected defconfig before building
+  --fresh             Remove and recreate O= before building; O= must be outside the source tree
   --jobs N            Parallel job count for gmake/make
 
 Behavior:
-  Reuses the same O= directory incrementally. It only stashes source-tree
-  generated/config files that would otherwise contaminate the in-tree build.
+  Reuses the same O= directory incrementally unless --fresh is selected. It
+  only stashes source-tree generated/config files that would otherwise
+  contaminate the in-tree build.
 USAGE
 }
 
@@ -74,6 +77,10 @@ while [[ $# -gt 0 ]]; do
       REFRESH_DEFCONFIG=1
       shift
       ;;
+    --fresh)
+      FRESH=1
+      shift
+      ;;
     --jobs)
       JOBS="$2"
       shift 2
@@ -107,6 +114,36 @@ if [[ -z "$OUT_DIR" ]]; then
   OUT_DIR="$LINUX_ROOT/build-linx-fixed"
 elif [[ "$OUT_DIR" != /* ]]; then
   OUT_DIR="$ROOT/$OUT_DIR"
+fi
+OUT_PARENT="$(dirname "$OUT_DIR")"
+mkdir -p "$OUT_PARENT"
+OUT_DIR="$(cd "$OUT_PARENT" && pwd)/$(basename "$OUT_DIR")"
+if [[ "$FRESH" == "1" ]]; then
+  MARKER="$OUT_DIR/.linx_linux_vmlinux_build_dir"
+  EXPECTED_MARKER="$(printf 'format=1\nlinux_root=%s\n' "$LINUX_ROOT")"
+  if [[ -L "$OUT_DIR" ]]; then
+    echo "error: fresh output directory must not be a symbolic link: $OUT_DIR" >&2
+    exit 2
+  fi
+  if [[ "$OUT_DIR" == "/" || "$OUT_DIR" == "$ROOT" ||
+        "$OUT_DIR" == "$LINUX_ROOT" || "$OUT_DIR" == "$LINUX_ROOT"/* ||
+        "$LINUX_ROOT" == "$OUT_DIR"/* ]]; then
+    echo "error: fresh output directory must be outside the Linux source tree and its ancestors: $OUT_DIR" >&2
+    exit 2
+  fi
+  if [[ -e "$OUT_DIR" && ! -d "$OUT_DIR" ]]; then
+    echo "error: fresh output path is not a directory: $OUT_DIR" >&2
+    exit 2
+  fi
+  if [[ -d "$OUT_DIR" && -n "$(find "$OUT_DIR" -mindepth 1 -maxdepth 1 -print -quit)" ]]; then
+    if [[ ! -f "$MARKER" || "$(cat "$MARKER")" != "$EXPECTED_MARKER" ]]; then
+      echo "error: refusing to remove unowned non-empty output directory: $OUT_DIR" >&2
+      exit 2
+    fi
+  fi
+  rm -rf "$OUT_DIR"
+  mkdir -p "$OUT_DIR"
+  printf '%s\n' "$EXPECTED_MARKER" > "$MARKER"
 fi
 if [[ -z "$JOBS" ]]; then
   JOBS="$(sysctl -n hw.ncpu 2>/dev/null || true)"
@@ -194,3 +231,8 @@ fi
 env "PATH=$(dirname "$CLANG_BIN"):$PATH" \
   "${make_common[@]}" \
   "$TARGET"
+
+if [[ "$TARGET" == "vmlinux" && ! -s "$OUT_DIR/vmlinux" ]]; then
+  echo "error: vmlinux was not produced: $OUT_DIR/vmlinux" >&2
+  exit 1
+fi

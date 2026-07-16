@@ -58,6 +58,12 @@ class BenchmarkFlowContractTests(unittest.TestCase):
             ["smp-head-clean-build", "vmlinux-clean-build"],
         )
         self.assertIn("run_linux_smp_head_build_clean.sh", commands[0]["command"])
+        self.assertIn("--fresh", commands[1]["command"])
+        self.assertIn("/tmp/linx-linux-vmlinux-clean-build", commands[1]["command"])
+        self.assertIn('O="${LINUX_VMLINUX_OUT_DIR', commands[2]["command"])
+        self.assertIn('O="${LINUX_VMLINUX_OUT_DIR', commands[3]["command"])
+        self.assertIn('KERNEL="${LINUX_VMLINUX_OUT_DIR', commands[3]["command"])
+        self.assertIn('KERNEL_CONFIG="${LINUX_VMLINUX_OUT_DIR', commands[3]["command"])
 
     def test_attestation_commands_bind_build_manifest_and_verify(self) -> None:
         cases = {

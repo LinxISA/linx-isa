@@ -140,17 +140,17 @@
         {
           "id": "vmlinux-clean-build",
           "timeout_seconds": 7200,
-          "command": "bash tools/bringup/run_linux_vmlinux_build_clean.sh --linux-root \"$PWD/kernel/linux\" --out-dir \"$PWD/kernel/linux/build-linx-fixed\" --clang \"${CLANG:-$PWD/compiler/llvm/build-linxisa-clang/bin/clang}\" --gmake \"${GMAKE:-/opt/homebrew/bin/gmake}\" --target vmlinux --refresh-defconfig"
+          "command": "bash tools/bringup/run_linux_vmlinux_build_clean.sh --linux-root \"$PWD/kernel/linux\" --out-dir \"${LINUX_VMLINUX_OUT_DIR:-/tmp/linx-linux-vmlinux-clean-build}\" --clang \"${CLANG:-$PWD/compiler/llvm/build-linxisa-clang/bin/clang}\" --gmake \"${GMAKE:-/opt/homebrew/bin/gmake}\" --target vmlinux --refresh-defconfig --fresh"
         },
         {
           "id": "tiny-userspace-proof",
           "timeout_seconds": 180,
-          "command": "TIMEOUT=\"${TINY_USERSPACE_TIMEOUT:-30}\" QEMU=\"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\" SKIP_BUILD=1 python3 kernel/linux/tools/linxisa/initramfs/boot_userspace_proof.py"
+          "command": "O=\"${LINUX_VMLINUX_OUT_DIR:-/tmp/linx-linux-vmlinux-clean-build}\" TIMEOUT=\"${TINY_USERSPACE_TIMEOUT:-30}\" QEMU=\"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\" SKIP_BUILD=1 python3 kernel/linux/tools/linxisa/initramfs/boot_userspace_proof.py"
         },
         {
           "id": "busybox-rootfs",
           "timeout_seconds": 900,
-          "command": "TIMEOUT=\"${BUSYBOX_ROOTFS_TIMEOUT:-120}\" ROOTFS_IMG=\"$(bash tools/bringup/run_linux_busybox_rootfs_build_clean.sh --linux-root \"$PWD/kernel/linux\" --out-dir \"${LINUX_BUSYBOX_ROOTFS_CLEAN_OUT_DIR:-/tmp/linx-linux-rootfs-clean-out}\" --llvm-build \"$PWD/compiler/llvm/build-linxisa-clang\")\" QEMU=\"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\" QEMU_EXTRA_ARGS='-bios none' SKIP_BUILD=1 python3 kernel/linux/tools/linxisa/busybox_rootfs/boot.py"
+          "command": "O=\"${LINUX_VMLINUX_OUT_DIR:-/tmp/linx-linux-vmlinux-clean-build}\" KERNEL=\"${LINUX_VMLINUX_OUT_DIR:-/tmp/linx-linux-vmlinux-clean-build}/vmlinux\" KERNEL_CONFIG=\"${LINUX_VMLINUX_OUT_DIR:-/tmp/linx-linux-vmlinux-clean-build}/.config\" TIMEOUT=\"${BUSYBOX_ROOTFS_TIMEOUT:-120}\" ROOTFS_IMG=\"$(bash tools/bringup/run_linux_busybox_rootfs_build_clean.sh --linux-root \"$PWD/kernel/linux\" --out-dir \"${LINUX_BUSYBOX_ROOTFS_CLEAN_OUT_DIR:-/tmp/linx-linux-rootfs-clean-out}\" --llvm-build \"$PWD/compiler/llvm/build-linxisa-clang\")\" QEMU=\"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\" QEMU_EXTRA_ARGS='-bios none' SKIP_BUILD=1 python3 kernel/linux/tools/linxisa/busybox_rootfs/boot.py"
         }
       ]
     },
