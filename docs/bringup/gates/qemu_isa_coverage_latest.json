@@ -12,7 +12,7 @@
     "L1": {
       "availability": "available",
       "claim": "decoder_source_mapping",
-      "form_count": 640,
+      "form_count": 641,
       "mnemonic_count": 626
     },
     "L2": {
@@ -20,7 +20,7 @@
       "claim": "runtime_execution",
       "form_count": 60,
       "mnemonic_count": 60,
-      "qemu_sha": "32c2c2e2507ea6fe408646359c32ee25c01e41b5",
+      "qemu_sha": "c044b4113f91b738495d0f3210ab7570aa629f60",
       "source": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_executable_coverage_latest.json"
     },
     "L3": {
@@ -28,15 +28,15 @@
       "claim": "semantic_oracle",
       "form_count": 60,
       "mnemonic_count": 60,
-      "qemu_sha": "32c2c2e2507ea6fe408646359c32ee25c01e41b5",
+      "qemu_sha": "c044b4113f91b738495d0f3210ab7570aa629f60",
       "source": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_executable_coverage_latest.json"
     }
   },
   "evidence_level": "L1",
-  "form_coverage_count": 640,
-  "form_coverage_ratio_percent": 85.68,
-  "form_missing_count": 107,
-  "generated_at_utc": "2026-07-16 04:59:39Z",
+  "form_coverage_count": 641,
+  "form_coverage_ratio_percent": 85.81,
+  "form_missing_count": 106,
+  "generated_at_utc": "2026-07-16 12:43:18Z",
   "legal_form_count": 747,
   "legal_mnemonic_count": 711,
   "limitations": [
@@ -274,7 +274,7 @@
     "FRET": 2,
     "FSQRT": 1,
     "FSUB": 1,
-    "HL": 195,
+    "HL": 196,
     "IC": 2,
     "J": 1,
     "JR": 1,
@@ -2352,7 +2352,7 @@
   "missing_forms_by_prefix": {
     "BSTART": 14,
     "C": 1,
-    "HL": 5,
+    "HL": 4,
     "V": 86,
     "XB": 1
   },
@@ -2376,7 +2376,6 @@
     "HL.BSTART.STD [len=64 mask=0xffff00007fff000f match=0x4001000e]",
     "HL.CCAT [len=64 mask=0xffff0000707f07ff match=0x105d000e]",
     "HL.CCATW [len=64 mask=0xffff0000707f07ff match=0x205d000e]",
-    "HL.PRF [len=64 mask=0xffff00007fff07ff match=0x7009000e]",
     "V.FABS [len=64 mask=0xfff0707ffff0707f match=0x7b0000007f]",
     "V.LBI [len=64 mask=0x707f0000207f match=0x190000007f]",
     "V.LBI.BRG [len=64 mask=0x707f0000207f match=0x190000207f]",
@@ -2555,7 +2554,7 @@
   "qemu_manual_translate_mnemonics": [
     "C.SETRET"
   ],
-  "qemu_mapped_spec_forms": 640,
+  "qemu_mapped_spec_forms": 641,
   "qemu_mapped_spec_mnemonics": 626,
   "qemu_meta_mnemonics": 651,
   "qemu_meta_path": "/Users/zhoubot/linx-isa/emulator/qemu/target/linx/linx_opcode_meta_gen.h",
@@ -2566,8 +2565,8 @@
   "reserved_form_count": 0,
   "reserved_mnemonic_count": 0,
   "result": {
-    "classification": "qemu_isa_coverage_incomplete",
-    "ok": false
+    "classification": "qemu_isa_coverage_report_generated",
+    "ok": true
   },
   "schema_version": "qemu-isa-coverage-v3",
   "spec_path": "/Users/zhoubot/linx-isa/isa/v0.56/linxisa-v0.56.json",

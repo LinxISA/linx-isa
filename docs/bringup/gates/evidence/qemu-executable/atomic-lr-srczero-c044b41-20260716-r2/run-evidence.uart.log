@@ -1,0 +1,39 @@
+Linx QEMU tests
+  Test 0x00007001: PASS
+  Test 0x00007010: PASS
+  Test 0x00007020: PASS
+  Test 0x00007030: PASS
+  Test 0x00007040: PASS
+  Test 0x00007050: PASS
+  Test 0x00007060: PASS
+  Test 0x00007070: PASS
+  Test 0x00007080: PASS
+  Test 0x00007090: PASS
+  Test 0x000070A0: PASS
+  Test 0x000070B0: PASS
+  Test 0x000070C0: PASS
+  Test 0x000070D0: PASS
+  Test 0x000070E0: PASS
+  Test 0x000070E1: PASS
+  Test 0x000070E2: PASS
+  Test 0x000070F0: PASS
+  Test 0x00007100: PASS
+  Test 0x00007110: PASS
+  Test 0x00007111: PASS
+  Test 0x00007120: PASS
+  Test 0x00007130: PASS
+  Test 0x00007140: PASS
+  Test 0x00007150: PASS
+  Test 0x00007162: PASS
+  Test 0x00007163: PASS
+  Test 0x00007160: PASS
+
+=================================================
+              TEST SUITE COMPLETE                
+=================================================
+
+All tests completed successfully!
+
+Note: Check UART output for individual test results.
+      Each test suite prints PASS for each test.
+

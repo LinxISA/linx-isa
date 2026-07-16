@@ -1,6 +1,6 @@
 # ISA vs QEMU Decoder/Source Mapping Snapshot
 
-- Generated (UTC): `2026-07-16 04:59:39Z`
+- Generated (UTC): `2026-07-16 12:43:18Z`
 - Evidence level: `L1`
 - Claim: `decoder_source_mapping`
 - L2 runtime execution: `available`; `60` forms / `60` mnemonics
@@ -11,10 +11,10 @@
 - QEMU mapped spec mnemonics: `626`
 - L1 mnemonic mapping: `626/711` (`88.05%`)
 - Spec legal forms: `747`
-- QEMU mapped spec forms: `640`
-- L1 form mapping: `640/747` (`85.68%`)
+- QEMU mapped spec forms: `641`
+- L1 form mapping: `641/747` (`85.81%`)
 - Missing spec mnemonics: `85`
-- Missing spec forms: `107`
+- Missing spec forms: `106`
 - Reserved spec forms: `0`
 - Unmapped QEMU mnemonics: `3`
 
@@ -255,7 +255,7 @@
 - `FRET`: `2`
 - `FSQRT`: `1`
 - `FSUB`: `1`
-- `HL`: `195`
+- `HL`: `196`
 - `IC`: `2`
 - `J`: `1`
 - `JR`: `1`
@@ -347,7 +347,7 @@
 
 - `BSTART`: `14`
 - `C`: `1`
-- `HL`: `5`
+- `HL`: `4`
 - `V`: `86`
 - `XB`: `1`
 
@@ -466,7 +466,6 @@
 - `HL.BSTART.STD [len=64 mask=0xffff00007fff000f match=0x4001000e]`
 - `HL.CCAT [len=64 mask=0xffff0000707f07ff match=0x105d000e]`
 - `HL.CCATW [len=64 mask=0xffff0000707f07ff match=0x205d000e]`
-- `HL.PRF [len=64 mask=0xffff00007fff07ff match=0x7009000e]`
 - `V.FABS [len=64 mask=0xfff0707ffff0707f match=0x7b0000007f]`
 - `V.LBI [len=64 mask=0x707f0000207f match=0x190000007f]`
 - `V.LBI.BRG [len=64 mask=0x707f0000207f match=0x190000207f]`
