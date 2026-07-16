@@ -146,6 +146,16 @@ class ReportQemuIsaCoverageTests(unittest.TestCase):
                     ["B.DIM"],
                 )
 
+    def test_hl_bstart_std_call_keeps_its_block_type(self) -> None:
+        spec_set = {"HL.BSTART CALL", "HL.BSTART.STD"}
+
+        self.assertEqual(
+            coverage._canonicalize_qemu_mnemonic(
+                "hl_bstart_std_call", spec_set
+            ),
+            ["HL.BSTART.STD"],
+        )
+
     def test_c_setret_manual_translate_evidence_provides_exact_form(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             qemu_root = Path(td)

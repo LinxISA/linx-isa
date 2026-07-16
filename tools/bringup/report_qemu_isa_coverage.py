@@ -114,7 +114,7 @@ DECODE_48_AS_64_FILES = {"block48.decode", "insn48.decode"}
 
 SPECIAL_MAP: dict[str, str | list[str]] = {
     "bstart_call": ["BSTART CALL", "BSTART.STD"],
-    "hl_bstart_std_call": "HL.BSTART CALL",
+    "hl_bstart_std_call": "HL.BSTART.STD",
     "bstart_direct": ["BSTART", "BSTART.STD"],
     "bstart_cond": ["BSTART", "BSTART.STD"],
     "bstart_ind": ["BSTART", "BSTART.STD"],
