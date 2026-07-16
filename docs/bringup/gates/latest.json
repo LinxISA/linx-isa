@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-07-16 18:56:30Z",
+  "generated_at_utc": "2026-07-16 19:29:08Z",
   "runs": [
     {
       "gates": [
@@ -380,7 +380,7 @@
           "command": "TARGET=linx32/linx64 avs/compiler/linx-llvm/tests/run.sh && report_llvm_c_codegen_coverage.py",
           "domain": "compiler",
           "evidence": [
-            "LLVM 19631a; linx32=711/711; linx64=711/711; pure C-CodeGen alias-closed=143/711; docs/bringup/gates/llvm_c_codegen_coverage_latest.json"
+            "LLVM b3ff7eee; strict roundtrip=746/746; mnemonic breadth=710/710; pure C-CodeGen alias-closed=143/710; docs/bringup/gates/llvm_c_codegen_coverage_latest.json"
           ],
           "evidence_type": "generated-json",
           "gate": "LLVM current-SHA mnemonic and C-CodeGen breadth",
@@ -394,7 +394,7 @@
           "command": "python3 tools/bringup/report_isa_llvm_qemu_coverage.py",
           "domain": "integration",
           "evidence": [
-            "LLVM and translation inventories are complete; QEMU L1 remains incomplete; docs/bringup/gates/logs/2026-07-17-fishtoucher-dev/pin/coverage_summary.json"
+            "ISA reserved-selector contract and LLVM/translation inventories are closed; QEMU L1 still misses the same issue-owned 91 legal forms; docs/bringup/gates/isa_llvm_qemu_coverage_latest.json"
           ],
           "evidence_type": "generated-json",
           "gate": "ISA-LLVM-QEMU coverage closure",
@@ -404,17 +404,17 @@
           "waived": false
         },
         {
-          "classification": "reserved-form-contract-inconsistent",
-          "command": "SPEC_ROUNDTRIP_POLICY=strict avs/compiler/linx-llvm/tests/run.sh",
+          "classification": "reserved-selector-contract-closed",
+          "command": "tools/isa/test_golden_contract.py && tools/isa/validate_spec.py && avs/compiler/linx-llvm/tests/run.sh",
           "domain": "isa",
           "evidence": [
-            "BSTART.TMA Function>=3 conflicts with reserved/illegal contract; LinxISA/linx-isa#152; 746/747 assembler-stable forms"
+            "746 legal forms; 710 legal mnemonics; TMA Function 3..31 tracked as one reserved family with 29 values; 928 raw words reject; strict LLVM=746/746; LinxISA/linx-isa#152"
           ],
           "evidence_type": "issue-and-gate",
           "gate": "v0.56 legal selector and reserved-form contract",
           "owner": "isa",
           "required": true,
-          "status": "fail",
+          "status": "pass",
           "waived": false
         },
         {
@@ -460,11 +460,11 @@
           "waived": false
         },
         {
-          "classification": "blocked-at-isa-and-coverage-closure",
+          "classification": "blocked-at-qemu-l1-closure",
           "command": "python3 tools/bringup/run_benchmark_linux_flow.py --profile nightly",
           "domain": "nightly",
           "evidence": [
-            "Blocked by reserved-form contract issue #152 and QEMU L1 656/747; downstream results are diagnostics only"
+            "ISA issue #152 is fixed; nightly remains blocked by QEMU L1 655/746 with 91 issue-owned forms missing; downstream Linux/workload results remain diagnostics until the hard break closes"
           ],
           "evidence_type": "ordered-plan",
           "gate": "Same-manifest nightly closure",
@@ -478,7 +478,7 @@
           "command": "python3 tools/bringup/report_qemu_translation_coverage.py --require-full",
           "domain": "qemu",
           "evidence": [
-            "711/711 mnemonics; current LLVM objects; docs/bringup/gates/qemu_translation_coverage_latest.json"
+            "710/710 mnemonics from current LLVM b3ff7eee objects; docs/bringup/gates/qemu_translation_coverage_latest.json"
           ],
           "evidence_type": "generated-json",
           "gate": "AVS translation inventory",
@@ -492,7 +492,7 @@
           "command": "python3 tools/bringup/report_qemu_isa_coverage.py",
           "domain": "qemu",
           "evidence": [
-            "QEMU ca3e11b; L1=625/711 mnemonics; 656/747 forms; 91 forms missing; docs/bringup/gates/qemu_isa_coverage_latest.json"
+            "QEMU 107cb009; L1=624/710 mnemonics and 655/746 legal forms; 91 forms missing; reserved TMA family excluded from denominator; docs/bringup/gates/qemu_isa_coverage_latest.json"
           ],
           "evidence_type": "generated-json",
           "gate": "Canonical ISA L1 decoder/source mapping breadth",
@@ -506,7 +506,7 @@
           "command": "python3 tools/bringup/report_qemu_executable_coverage.py --require-nonzero --require-clean",
           "domain": "qemu",
           "evidence": [
-            "QEMU ca3e11b; L2=60 forms; L3=60 forms; rejected=0; does not extend the L1 claim"
+            "QEMU 107cb009; current-SHA L2=60 forms; L3=60 forms; rejected=0; does not extend the incomplete L1 claim"
           ],
           "evidence_type": "generated-json",
           "gate": "Executable semantic evidence subset",
@@ -544,7 +544,7 @@
           "waived": false
         }
       ],
-      "generated_at_utc": "2026-07-16 18:56:30Z",
+      "generated_at_utc": "2026-07-16 19:29:08Z",
       "lane": "pin",
       "lane_policy": "pin-only",
       "profile": "dev",
@@ -563,7 +563,7 @@
         "linx-isa": {
           "dirty": true,
           "path": "${LINXISA_ROOT}",
-          "sha": "97758c194d9476ecccbee63d79a3632a4689c5f3"
+          "sha": "33304d81c8811f403be5dc698789a6b31fa59c8e"
         },
         "linx-skills": {
           "dirty": false,
@@ -573,7 +573,7 @@
         "linxcore": {
           "dirty": false,
           "path": "${LINXISA_ROOT}/rtl/LinxCore",
-          "sha": "1971ecb228e434d7c1e692385c60e9b9d81f36e9"
+          "sha": "5ecec7b9608de674738327f83e126ca7e9b31b16"
         },
         "linxcore-model": {
           "dirty": false,
@@ -583,7 +583,7 @@
         "llvm": {
           "dirty": false,
           "path": "${LINXISA_ROOT}/compiler/llvm",
-          "sha": "19631a66485e9ff87d1f6cf2c5ffcbd897864bd6"
+          "sha": "b3ff7eee5cd091e04d292db781fd4d33980f3629"
         },
         "mesa3d": {
           "dirty": false,
@@ -618,7 +618,7 @@
         "qemu": {
           "dirty": false,
           "path": "${LINXISA_ROOT}/emulator/qemu",
-          "sha": "ca3e11ba7b4539d846377f9c42baa067d458188f"
+          "sha": "107cb00916f6cf3c30de6610a2a4ab36fc312511"
         },
         "supernpu-bench": {
           "dirty": false,

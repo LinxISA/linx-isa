@@ -2,7 +2,7 @@
 
 This file is generated from `docs/bringup/gates/latest.json` via `python3 tools/bringup/gate_report.py render`.
 
-Last generated (UTC): `2026-07-16 18:56:30Z`
+Last generated (UTC): `2026-07-16 19:29:08Z`
 
 ## Lane `pin` (`2026-07-15-v0565-maintenance`)
 
@@ -52,38 +52,38 @@ Last generated (UTC): `2026-07-16 18:56:30Z`
 
 ## Lane `pin` (`2026-07-17-fishtoucher-dev`)
 
-- Timestamp (UTC): `2026-07-16 18:56:30Z`
+- Timestamp (UTC): `2026-07-16 19:29:08Z`
 - Profile: `dev`
 - Lane policy: `pin-only`
 - Trace schema version: `1.0`
 - SHA manifest:
   - `glibc`: `785d1b51ecc2042a94873665ec4b745d85473504` (`${LINXISA_ROOT}/lib/glibc`)
   - `linux`: `90834082e829771ce29392e3be12ad2dc6d38716` (`${LINXISA_ROOT}/kernel/linux`)
-  - `linx-isa`: `97758c194d9476ecccbee63d79a3632a4689c5f3` (`${LINXISA_ROOT}`)
+  - `linx-isa`: `33304d81c8811f403be5dc698789a6b31fa59c8e` (`${LINXISA_ROOT}`)
   - `linx-skills`: `6a1007379be984d4eed9ba297e8541168bb0f9b5` (`${LINXISA_ROOT}/skills/linx-skills`)
-  - `linxcore`: `1971ecb228e434d7c1e692385c60e9b9d81f36e9` (`${LINXISA_ROOT}/rtl/LinxCore`)
+  - `linxcore`: `5ecec7b9608de674738327f83e126ca7e9b31b16` (`${LINXISA_ROOT}/rtl/LinxCore`)
   - `linxcore-model`: `3bc1e6e2ceb2d578204013220cb14f67043c8eb7` (`${LINXISA_ROOT}/tools/LinxCoreModel`)
-  - `llvm`: `19631a66485e9ff87d1f6cf2c5ffcbd897864bd6` (`${LINXISA_ROOT}/compiler/llvm`)
+  - `llvm`: `b3ff7eee5cd091e04d292db781fd4d33980f3629` (`${LINXISA_ROOT}/compiler/llvm`)
   - `mesa3d`: `11c1663090d31ee744059281c4fa8f347e10e023` (`${LINXISA_ROOT}/lib/mesa3d`)
   - `model`: `e535af57b563cc3da0f1c9d3ae9c36be7d0dccec` (`${LINXISA_ROOT}/tools/model`)
   - `musl`: `4ab3c65fc33279c4004f9821bebdd87e19f87c21` (`${LINXISA_ROOT}/lib/musl`)
   - `pto-kernels`: `43e606b6c90d8ffbc939f4f23c70fcc8b37080f0` (`${LINXISA_ROOT}/workloads/pto_kernels`)
   - `ptoas`: `939e9e0fe1a3a2349207e36d848fc6232faa135c` (`${LINXISA_ROOT}/compiler/ptoas`)
   - `pycircuit`: `1d7b6fcf42c0b59bb2c5b5bced220df90fb0f54f` (`${LINXISA_ROOT}/tools/pyCircuit`)
-  - `qemu`: `ca3e11ba7b4539d846377f9c42baa067d458188f` (`${LINXISA_ROOT}/emulator/qemu`)
+  - `qemu`: `107cb00916f6cf3c30de6610a2a4ab36fc312511` (`${LINXISA_ROOT}/emulator/qemu`)
   - `supernpu-bench`: `497cf3f7ebf7c5c18c707b82481e2285d0b0e07f` (`${LINXISA_ROOT}/workloads/SuperNPUBench`)
 
 | Domain | Gate | Required | Waived | Owner | Command | Result | Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| compiler | LLVM current-SHA mnemonic and C-CodeGen breadth | yes | no | `compiler` | `TARGET=linx32/linx64 avs/compiler/linx-llvm/tests/run.sh && report_llvm_c_codegen_coverage.py` | ✅ pass (`current-sha-codec-measured`) | `LLVM 19631a; linx32=711/711; linx64=711/711; pure C-CodeGen alias-closed=143/711; docs/bringup/gates/llvm_c_codegen_coverage_latest.json` |
-| integration | ISA-LLVM-QEMU coverage closure | yes | no | `superproject` | `python3 tools/bringup/report_isa_llvm_qemu_coverage.py` | ❌ fail (`blocked-qemu-l1-form-gap`) | `LLVM and translation inventories are complete; QEMU L1 remains incomplete; docs/bringup/gates/logs/2026-07-17-fishtoucher-dev/pin/coverage_summary.json` |
-| isa | v0.56 legal selector and reserved-form contract | yes | no | `isa` | `SPEC_ROUNDTRIP_POLICY=strict avs/compiler/linx-llvm/tests/run.sh` | ❌ fail (`reserved-form-contract-inconsistent`) | `BSTART.TMA Function>=3 conflicts with reserved/illegal contract; LinxISA/linx-isa#152; 746/747 assembler-stable forms` |
+| compiler | LLVM current-SHA mnemonic and C-CodeGen breadth | yes | no | `compiler` | `TARGET=linx32/linx64 avs/compiler/linx-llvm/tests/run.sh && report_llvm_c_codegen_coverage.py` | ✅ pass (`current-sha-codec-measured`) | `LLVM b3ff7eee; strict roundtrip=746/746; mnemonic breadth=710/710; pure C-CodeGen alias-closed=143/710; docs/bringup/gates/llvm_c_codegen_coverage_latest.json` |
+| integration | ISA-LLVM-QEMU coverage closure | yes | no | `superproject` | `python3 tools/bringup/report_isa_llvm_qemu_coverage.py` | ❌ fail (`blocked-qemu-l1-form-gap`) | `ISA reserved-selector contract and LLVM/translation inventories are closed; QEMU L1 still misses the same issue-owned 91 legal forms; docs/bringup/gates/isa_llvm_qemu_coverage_latest.json` |
+| isa | v0.56 legal selector and reserved-form contract | yes | no | `isa` | `tools/isa/test_golden_contract.py && tools/isa/validate_spec.py && avs/compiler/linx-llvm/tests/run.sh` | ✅ pass (`reserved-selector-contract-closed`) | `746 legal forms; 710 legal mnemonics; TMA Function 3..31 tracked as one reserved family with 29 values; 928 raw words reject; strict LLVM=746/746; LinxISA/linx-isa#152` |
 | libc | musl phase-b static and shared runtime diagnostics | no | no | `libc-validation` | `run_musl_smoke.py --sample all --link static/shared` | ✅ pass (`out-of-order-diagnostic-pass`) | `static 16/16 runtime_pass; shared 16/16 runtime_pass; runtime_diagnostic_summary.json` |
 | libc-spec | SPECint train matrix and focused speed-stack diagnostic | no | no | `spec-performance` | `run_stage_qemu_matrix.py --stage b --input-set train` | ❌ fail (`train-matrix-incomplete-live-timeout`) | `1/10 strict completion; 9 live-timeouts; 999 strict hash PASS; 523 300s=47B; 523 900s=130B and specdiff incomplete; runtime_diagnostic_summary.json` |
 | linux | Current kernel smoke full boot and BusyBox rootfs | no | no | `linux-validation` | `smoke.py && full_boot.py && busybox_rootfs/boot.py` | ✅ pass (`out-of-order-diagnostic-pass`) | `BusyBox PASS in 3.174s; timer IRQ 31->36; rootfs preserved; runtime_diagnostic_summary.json` |
-| nightly | Same-manifest nightly closure | yes | no | `superproject` | `python3 tools/bringup/run_benchmark_linux_flow.py --profile nightly` | ⏸ not_run (`blocked-at-isa-and-coverage-closure`) | `Blocked by reserved-form contract issue #152 and QEMU L1 656/747; downstream results are diagnostics only` |
-| qemu | AVS translation inventory | yes | no | `isa-validation` | `python3 tools/bringup/report_qemu_translation_coverage.py --require-full` | ✅ pass (`translation-inventory-complete`) | `711/711 mnemonics; current LLVM objects; docs/bringup/gates/qemu_translation_coverage_latest.json` |
-| qemu | Canonical ISA L1 decoder/source mapping breadth | yes | no | `qemu` | `python3 tools/bringup/report_qemu_isa_coverage.py` | ❌ fail (`coverage-gap`) | `QEMU ca3e11b; L1=625/711 mnemonics; 656/747 forms; 91 forms missing; docs/bringup/gates/qemu_isa_coverage_latest.json` |
-| qemu | Executable semantic evidence subset | no | no | `qemu-validation` | `python3 tools/bringup/report_qemu_executable_coverage.py --require-nonzero --require-clean` | ✅ pass (`partial-l2-l3-subset`) | `QEMU ca3e11b; L2=60 forms; L3=60 forms; rejected=0; does not extend the L1 claim` |
+| nightly | Same-manifest nightly closure | yes | no | `superproject` | `python3 tools/bringup/run_benchmark_linux_flow.py --profile nightly` | ⏸ not_run (`blocked-at-qemu-l1-closure`) | `ISA issue #152 is fixed; nightly remains blocked by QEMU L1 655/746 with 91 issue-owned forms missing; downstream Linux/workload results remain diagnostics until the hard break closes` |
+| qemu | AVS translation inventory | yes | no | `isa-validation` | `python3 tools/bringup/report_qemu_translation_coverage.py --require-full` | ✅ pass (`translation-inventory-complete`) | `710/710 mnemonics from current LLVM b3ff7eee objects; docs/bringup/gates/qemu_translation_coverage_latest.json` |
+| qemu | Canonical ISA L1 decoder/source mapping breadth | yes | no | `qemu` | `python3 tools/bringup/report_qemu_isa_coverage.py` | ❌ fail (`coverage-gap`) | `QEMU 107cb009; L1=624/710 mnemonics and 655/746 legal forms; 91 forms missing; reserved TMA family excluded from denominator; docs/bringup/gates/qemu_isa_coverage_latest.json` |
+| qemu | Executable semantic evidence subset | no | no | `qemu-validation` | `python3 tools/bringup/report_qemu_executable_coverage.py --require-nonzero --require-clean` | ✅ pass (`partial-l2-l3-subset`) | `QEMU 107cb009; current-SHA L2=60 forms; L3=60 forms; rejected=0; does not extend the incomplete L1 claim` |
 | runtime | CoreMark Dhrystone and PolyBench MINI diagnostics | no | no | `workload-validation` | `run_benchmarks.py && run_polybench.py -DMINI_DATASET` | ✅ pass (`out-of-order-diagnostic-pass`) | `CoreMark RUN_PASS; Dhrystone RUN_PASS; gemm PASS; jacobi-2d PASS; runtime_diagnostic_summary.json` |
 | runtime | TSVC differential and full batched diagnostics | no | no | `compiler-validation` | `run_tsvc_batched.py --strict-fail-under 150` | ✅ pass (`out-of-order-diagnostic-pass`) | `8/8 batches; 151/151 completed; 150 strict-lowered; s451 checksum mismatch=0; runtime_diagnostic_summary.json` |
