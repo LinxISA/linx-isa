@@ -29,6 +29,7 @@
 __asm__(
     ".p2align 3\n"
     ".globl __linx_v03_ops_add_sub_body\n"
+    ".type __linx_v03_ops_add_sub_body, @function\n"
     "__linx_v03_ops_add_sub_body:\n"
     "  v.lw.brg [ri0.sd, lc0<<2, zero.sd], ->vt.w\n"
     "  v.lw.brg [ri1.sd, lc0<<2, zero.sd], ->vu.w\n"
@@ -36,26 +37,31 @@ __asm__(
     "  v.sw.brg vt#1.sw, [ri2.sd, lc0<<2, zero.sd]\n"
     "  v.sub vt#2.sw, vu#1.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri3.sd, lc0<<2, zero.sd]\n"
-    "  C.BSTOP\n");
+    "  C.BSTOP\n"
+    ".size __linx_v03_ops_add_sub_body, .-__linx_v03_ops_add_sub_body\n");
 
 __asm__(
     ".p2align 3\n"
     ".globl __linx_v03_ops_float_body\n"
+    ".type __linx_v03_ops_float_body, @function\n"
     "__linx_v03_ops_float_body:\n"
     "  v.lw.brg [ri0.sd, lc0<<2, zero.sd], ->vt.w\n"
     "  v.fadd vt#1.fs, ri2.fs, ->vt.w\n"
     "  v.fmul vt#1.fs, ri3.fs, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri1.sd, lc0<<2, zero.sd]\n"
-    "  C.BSTOP\n");
+    "  C.BSTOP\n"
+    ".size __linx_v03_ops_float_body, .-__linx_v03_ops_float_body\n");
 
 __asm__(
     ".p2align 3\n"
     ".globl __linx_v03_ops_mixed_pred_body\n"
+    ".type __linx_v03_ops_mixed_pred_body, @function\n"
     "__linx_v03_ops_mixed_pred_body:\n"
     "  addi a7, 1, ->a7\n"
     "  v.cmp.lt lc0.sw, ri1.sw, ->vt.d\n"
     "  v.sw.brg vt#1.sd, [ri0.sd, lc0<<2, zero.sd]\n"
-    "  C.BSTOP\n");
+    "  C.BSTOP\n"
+    ".size __linx_v03_ops_mixed_pred_body, .-__linx_v03_ops_mixed_pred_body\n");
 
 extern void linx_v03_launch_ops_add_sub(uint64_t a_base, uint64_t b_base,
                                         uint64_t sum_base,
@@ -97,6 +103,17 @@ LINX_V03_ASM_WRAPPER(
     "  C.BSTART\n",
     "  add a7, zero, ->a0\n")
 
+extern void __linx_v03_ops_add_sub_body(void);
+extern void __linx_v03_ops_float_body(void);
+extern void __linx_v03_ops_mixed_pred_body(void);
+
+static uint32_t evidence_v_add;
+static uint32_t evidence_v_sub;
+static uint32_t evidence_v_lw_brg;
+static uint32_t evidence_v_sw_brg;
+static uint32_t evidence_v_fadd;
+static uint32_t evidence_v_fmul;
+
 static void test_v_add_sub_matrix(void)
 {
     enum { N = 32 };
@@ -124,6 +141,11 @@ static void test_v_add_sub_matrix(void)
         TEST_EQ32(sum[i], a[i] + b[i], 0x1301u + i);
         TEST_EQ32(diff[i], a[i] - b[i], 0x1321u + i);
     }
+
+    evidence_v_add = sum[0];
+    evidence_v_sub = diff[0];
+    evidence_v_lw_brg = sum[1];
+    evidence_v_sw_brg = diff[1];
 }
 
 static void test_v_float_matrix(void)
@@ -154,6 +176,51 @@ static void test_v_float_matrix(void)
         expect.f = (src[i] + 1.0f) * 2.0f;
         TEST_EQ32(actual.u, expect.u, 0x1340u + i);
     }
+
+    union {
+        float f;
+        uint32_t u;
+    } fadd_summary, fmul_summary;
+    fadd_summary.f = dst[0];
+    fmul_summary.f = dst[1];
+    evidence_v_fadd = fadd_summary.u;
+    evidence_v_fmul = fmul_summary.u;
+}
+
+static void test_v_add_evidence(void)
+{
+    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v03_ops_add_sub_body));
+    TEST_EQ32(evidence_v_add, 0x75u, 0x1370u);
+}
+
+static void test_v_sub_evidence(void)
+{
+    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v03_ops_add_sub_body));
+    TEST_EQ32(evidence_v_sub, 0x53u, 0x1371u);
+}
+
+static void test_v_lw_brg_evidence(void)
+{
+    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v03_ops_add_sub_body));
+    TEST_EQ32(evidence_v_lw_brg, 0x79u, 0x1372u);
+}
+
+static void test_v_sw_brg_evidence(void)
+{
+    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v03_ops_add_sub_body));
+    TEST_EQ32(evidence_v_sw_brg, 0x55u, 0x1373u);
+}
+
+static void test_v_fadd_evidence(void)
+{
+    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v03_ops_float_body));
+    TEST_EQ32(evidence_v_fadd, 0x40000000u, 0x1374u);
+}
+
+static void test_v_fmul_evidence(void)
+{
+    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v03_ops_float_body));
+    TEST_EQ32(evidence_v_fmul, 0x40200000u, 0x1375u);
 }
 
 static void test_v_mixed_scalar_vector_predicate(void)
@@ -176,6 +243,9 @@ static void test_v_mixed_scalar_vector_predicate(void)
         const uint32_t expect = (i < threshold) ? 1u : 0u;
         TEST_EQ32(out[i], expect, 0x1361u + i);
     }
+
+    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v03_ops_mixed_pred_body));
+    TEST_EQ32(out[0], 0x1u, 0x1320u);
 }
 
 void run_v03_vector_ops_matrix_tests(void)
@@ -188,6 +258,36 @@ void run_v03_vector_ops_matrix_tests(void)
     test_start(0x1310);
     uart_puts("v0.56 vector float matrix ... ");
     test_v_float_matrix();
+    test_pass();
+
+    test_start(0x1370);
+    uart_puts("v0.56 V.ADD evidence ... ");
+    test_v_add_evidence();
+    test_pass();
+
+    test_start(0x1371);
+    uart_puts("v0.56 V.SUB evidence ... ");
+    test_v_sub_evidence();
+    test_pass();
+
+    test_start(0x1372);
+    uart_puts("v0.56 V.LW.BRG evidence ... ");
+    test_v_lw_brg_evidence();
+    test_pass();
+
+    test_start(0x1373);
+    uart_puts("v0.56 V.SW.BRG evidence ... ");
+    test_v_sw_brg_evidence();
+    test_pass();
+
+    test_start(0x1374);
+    uart_puts("v0.56 V.FADD evidence ... ");
+    test_v_fadd_evidence();
+    test_pass();
+
+    test_start(0x1375);
+    uart_puts("v0.56 V.FMUL evidence ... ");
+    test_v_fmul_evidence();
     test_pass();
 
     test_start(0x1320);
