@@ -1,6 +1,6 @@
 # ISA vs QEMU Decoder/Source Mapping Snapshot
 
-- Generated (UTC): `2026-07-16 12:43:18Z`
+- Generated (UTC): `2026-07-16 13:02:49Z`
 - Evidence level: `L1`
 - Claim: `decoder_source_mapping`
 - L2 runtime execution: `available`; `60` forms / `60` mnemonics
@@ -8,15 +8,15 @@
 - Limitation: L1 mapping does not imply execution; L2/L3 counts are independently audited per-form evidence and remain partial.
 - Spec unique mnemonics: `711`
 - QEMU unique decode mnemonics (non-internal): `652`
-- QEMU mapped spec mnemonics: `626`
-- L1 mnemonic mapping: `626/711` (`88.05%`)
+- QEMU mapped spec mnemonics: `625`
+- L1 mnemonic mapping: `625/711` (`87.9%`)
 - Spec legal forms: `747`
-- QEMU mapped spec forms: `641`
-- L1 form mapping: `641/747` (`85.81%`)
-- Missing spec mnemonics: `85`
-- Missing spec forms: `106`
+- QEMU mapped spec forms: `645`
+- L1 form mapping: `645/747` (`86.35%`)
+- Missing spec mnemonics: `86`
+- Missing spec forms: `102`
 - Reserved spec forms: `0`
-- Unmapped QEMU mnemonics: `3`
+- Unmapped QEMU mnemonics: `0`
 
 ## L1 Mnemonic Mapping By Prefix
 
@@ -90,7 +90,7 @@
 - `FRET`: `2`
 - `FSQRT`: `1`
 - `FSUB`: `1`
-- `HL`: `194`
+- `HL`: `193`
 - `IC`: `2`
 - `J`: `1`
 - `JR`: `1`
@@ -180,6 +180,7 @@
 
 ## Missing Mnemonics By Prefix
 
+- `HL`: `1`
 - `V`: `84`
 - `XB`: `1`
 
@@ -203,7 +204,7 @@
 - `BIC`: `1`
 - `BIS`: `1`
 - `BSE`: `1`
-- `BSTART`: `18`
+- `BSTART`: `21`
 - `BSTOP`: `1`
 - `BWE`: `1`
 - `BWI`: `1`
@@ -255,7 +256,7 @@
 - `FRET`: `2`
 - `FSQRT`: `1`
 - `FSUB`: `1`
-- `HL`: `196`
+- `HL`: `197`
 - `IC`: `2`
 - `J`: `1`
 - `JR`: `1`
@@ -345,20 +346,19 @@
 
 ## Missing Forms By Prefix
 
-- `BSTART`: `14`
+- `BSTART`: `11`
 - `C`: `1`
-- `HL`: `4`
+- `HL`: `3`
 - `V`: `86`
 - `XB`: `1`
 
 ## Unmapped QEMU Mnemonics
 
-- `bstart_fall`
-- `bstart_split_cond`
-- `bstart_split_direct`
+- none
 
 ## Missing Spec Mnemonics (First 200)
 
+- `HL.BSTART CALL`
 - `V.LBI`
 - `V.LBI.BRG`
 - `V.LBUI`
@@ -448,12 +448,9 @@
 ## Missing Spec Forms (First 200)
 
 - `BSTART CALL [len=32 mask=0xf83f000f match=0x50160002]`
-- `BSTART [len=32 mask=0x7f match=0x11]`
-- `BSTART [len=32 mask=0x7f match=0x21]`
 - `BSTART.ACCCVT [len=32 mask=0x7ffffff match=0x831181]`
 - `BSTART.MPAR [len=32 mask=0xf9ffffff match=0x1181]`
 - `BSTART.MSEQ [len=32 mask=0xf9ffffff match=0x9181]`
-- `BSTART.STD [len=32 mask=0x7fff match=0x1001]`
 - `BSTART.TLOAD [len=32 mask=0x7ffffff match=0x11181]`
 - `BSTART.TMATMUL [len=32 mask=0x7ffffff match=0x31181]`
 - `BSTART.TMATMUL.ACC [len=32 mask=0x7ffffff match=0x231181]`
@@ -463,7 +460,6 @@
 - `BSTART.VSEQ [len=32 mask=0xf9ffffff match=0x29181]`
 - `C.BSTART.STD [len=16 mask=0xc7ff match=0x0]`
 - `HL.BSTART CALL [len=64 mask=0xfffff83f0000007f match=0x501600000011]`
-- `HL.BSTART.STD [len=64 mask=0xffff00007fff000f match=0x4001000e]`
 - `HL.CCAT [len=64 mask=0xffff0000707f07ff match=0x105d000e]`
 - `HL.CCATW [len=64 mask=0xffff0000707f07ff match=0x205d000e]`
 - `V.FABS [len=64 mask=0xfff0707ffff0707f match=0x7b0000007f]`

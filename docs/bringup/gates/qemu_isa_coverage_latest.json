@@ -6,14 +6,14 @@
     "audited_per_form_semantic_oracle_ingestion"
   ],
   "claim": "decoder_source_mapping",
-  "coverage_count": 626,
-  "coverage_ratio_percent": 88.05,
+  "coverage_count": 625,
+  "coverage_ratio_percent": 87.9,
   "evidence": {
     "L1": {
       "availability": "available",
       "claim": "decoder_source_mapping",
-      "form_count": 641,
-      "mnemonic_count": 626
+      "form_count": 645,
+      "mnemonic_count": 625
     },
     "L2": {
       "availability": "available",
@@ -33,10 +33,10 @@
     }
   },
   "evidence_level": "L1",
-  "form_coverage_count": 641,
-  "form_coverage_ratio_percent": 85.81,
-  "form_missing_count": 106,
-  "generated_at_utc": "2026-07-16 12:43:18Z",
+  "form_coverage_count": 645,
+  "form_coverage_ratio_percent": 86.35,
+  "form_missing_count": 102,
+  "generated_at_utc": "2026-07-16 13:02:49Z",
   "legal_form_count": 747,
   "legal_mnemonic_count": 711,
   "limitations": [
@@ -115,7 +115,7 @@
     "FRET": 2,
     "FSQRT": 1,
     "FSUB": 1,
-    "HL": 194,
+    "HL": 193,
     "IC": 2,
     "J": 1,
     "JR": 1,
@@ -222,7 +222,7 @@
     "BIC": 1,
     "BIS": 1,
     "BSE": 1,
-    "BSTART": 18,
+    "BSTART": 21,
     "BSTOP": 1,
     "BWE": 1,
     "BWI": 1,
@@ -274,7 +274,7 @@
     "FRET": 2,
     "FSQRT": 1,
     "FSUB": 1,
-    "HL": 196,
+    "HL": 197,
     "IC": 2,
     "J": 1,
     "JR": 1,
@@ -507,6 +507,9 @@
       "BSTART",
       "BSTART.STD"
     ],
+    "bstart_fall": [
+      "BSTART.STD"
+    ],
     "bstart_fixp": [
       "BSTART.FIXP"
     ],
@@ -548,6 +551,12 @@
     "bstart_ret": [
       "BSTART",
       "BSTART.STD"
+    ],
+    "bstart_split_cond": [
+      "BSTART"
+    ],
+    "bstart_split_direct": [
+      "BSTART"
     ],
     "bstart_sys": [
       "BSTART.SYS"
@@ -955,7 +964,7 @@
       "HL.BSTART.FP"
     ],
     "hl_bstart_std_call": [
-      "HL.BSTART CALL"
+      "HL.BSTART.STD"
     ],
     "hl_bstart_std_cond": [
       "HL.BSTART.STD"
@@ -2345,25 +2354,23 @@
     ]
   },
   "missing_by_prefix": {
+    "HL": 1,
     "V": 84,
     "XB": 1
   },
-  "missing_count": 85,
+  "missing_count": 86,
   "missing_forms_by_prefix": {
-    "BSTART": 14,
+    "BSTART": 11,
     "C": 1,
-    "HL": 4,
+    "HL": 3,
     "V": 86,
     "XB": 1
   },
   "missing_spec_forms": [
     "BSTART CALL [len=32 mask=0xf83f000f match=0x50160002]",
-    "BSTART [len=32 mask=0x7f match=0x11]",
-    "BSTART [len=32 mask=0x7f match=0x21]",
     "BSTART.ACCCVT [len=32 mask=0x7ffffff match=0x831181]",
     "BSTART.MPAR [len=32 mask=0xf9ffffff match=0x1181]",
     "BSTART.MSEQ [len=32 mask=0xf9ffffff match=0x9181]",
-    "BSTART.STD [len=32 mask=0x7fff match=0x1001]",
     "BSTART.TLOAD [len=32 mask=0x7ffffff match=0x11181]",
     "BSTART.TMATMUL [len=32 mask=0x7ffffff match=0x31181]",
     "BSTART.TMATMUL.ACC [len=32 mask=0x7ffffff match=0x231181]",
@@ -2373,7 +2380,6 @@
     "BSTART.VSEQ [len=32 mask=0xf9ffffff match=0x29181]",
     "C.BSTART.STD [len=16 mask=0xc7ff match=0x0]",
     "HL.BSTART CALL [len=64 mask=0xfffff83f0000007f match=0x501600000011]",
-    "HL.BSTART.STD [len=64 mask=0xffff00007fff000f match=0x4001000e]",
     "HL.CCAT [len=64 mask=0xffff0000707f07ff match=0x105d000e]",
     "HL.CCATW [len=64 mask=0xffff0000707f07ff match=0x205d000e]",
     "V.FABS [len=64 mask=0xfff0707ffff0707f match=0x7b0000007f]",
@@ -2465,6 +2471,7 @@
     "XB [len=32 mask=0x7fff match=0x6f81]"
   ],
   "missing_spec_mnemonics": [
+    "HL.BSTART CALL",
     "V.LBI",
     "V.LBI.BRG",
     "V.LBUI",
@@ -2554,11 +2561,11 @@
   "qemu_manual_translate_mnemonics": [
     "C.SETRET"
   ],
-  "qemu_mapped_spec_forms": 641,
-  "qemu_mapped_spec_mnemonics": 626,
+  "qemu_mapped_spec_forms": 645,
+  "qemu_mapped_spec_mnemonics": 625,
   "qemu_meta_mnemonics": 651,
-  "qemu_meta_path": "/Users/zhoubot/linx-isa/emulator/qemu/target/linx/linx_opcode_meta_gen.h",
-  "qemu_root": "/Users/zhoubot/linx-isa/emulator/qemu",
+  "qemu_meta_path": "/private/tmp/linx-qemu-c044-report/target/linx/linx_opcode_meta_gen.h",
+  "qemu_root": "/private/tmp/linx-qemu-c044-report",
   "qemu_source_kind": "decode",
   "qemu_unique_forms": 660,
   "qemu_unique_mnemonics": 652,
@@ -2572,9 +2579,5 @@
   "spec_path": "/Users/zhoubot/linx-isa/isa/v0.56/linxisa-v0.56.json",
   "spec_total_forms": 747,
   "spec_unique_mnemonics": 711,
-  "unmapped_qemu_mnemonics": [
-    "bstart_fall",
-    "bstart_split_cond",
-    "bstart_split_direct"
-  ]
+  "unmapped_qemu_mnemonics": []
 }
