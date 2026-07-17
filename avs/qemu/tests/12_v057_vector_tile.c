@@ -12,7 +12,7 @@
 
 #include "linx_test.h"
 
-#define LINX_V03_ASM_WRAPPER(name, body, cont) \
+#define LINX_V057_ASM_WRAPPER(name, body, cont) \
     __asm__(                                   \
         ".p2align 2\n"                         \
         ".globl " #name "\n"                   \
@@ -44,283 +44,283 @@ static __attribute__((noinline)) void linx_store_u32(volatile uint32_t *ptr,
  */
 __asm__(
     ".p2align 3\n"
-    ".globl __linx_v03_simt_body\n"
-    "__linx_v03_simt_body:\n"
+    ".globl __linx_v057_simt_body\n"
+    "__linx_v057_simt_body:\n"
     "  v.add lc0.sw, lc1.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri0.sd, lc0<<2, lc1.uh<<10]\n"
     "  C.BSTOP\n"
-    "__linx_v03_simt_body_end:\n");
+    "__linx_v057_simt_body_end:\n");
 
 __asm__(
     ".p2align 3\n"
-    ".globl __linx_v03_simt_copy_body\n"
-    "__linx_v03_simt_copy_body:\n"
+    ".globl __linx_v057_simt_copy_body\n"
+    "__linx_v057_simt_copy_body:\n"
     "  v.lw.brg [ri0.sd, lc0<<2, lc1.uh<<10], ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri1.sd, lc0<<2, lc1.uh<<10]\n"
     "  C.BSTOP\n"
-    "__linx_v03_simt_copy_body_end:\n");
+    "__linx_v057_simt_copy_body_end:\n");
 
 __asm__(
     ".p2align 3\n"
-    ".globl __linx_v03_simt_tile_body\n"
-    "__linx_v03_simt_tile_body:\n"
+    ".globl __linx_v057_simt_tile_body\n"
+    "__linx_v057_simt_tile_body:\n"
     "  v.add lc0.sw, lc1.sw, ->vt.w\n"
     "  v.sw.local vt#1.sw, [to, lc0<<2, lc1.uh<<6]\n"
     "  C.BSTOP\n"
-    "__linx_v03_simt_tile_body_end:\n");
+    "__linx_v057_simt_tile_body_end:\n");
 
 __asm__(
     ".p2align 3\n"
-    ".globl __linx_v03_simt_f32_body\n"
-    "__linx_v03_simt_f32_body:\n"
+    ".globl __linx_v057_simt_f32_body\n"
+    "__linx_v057_simt_f32_body:\n"
     "  v.lw.brg [ri0.sd, lc0<<2, zero.sd], ->vt.w\n"
     "  v.fadd vt#1.fs, ri2.fs, ->vt.w\n"
     "  v.fmul vt#1.fs, ri3.fs, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri1.sd, lc0<<2, zero.sd]\n"
     "  C.BSTOP\n"
-    "__linx_v03_simt_f32_body_end:\n");
+    "__linx_v057_simt_f32_body_end:\n");
 
 __asm__(
     ".p2align 3\n"
-    ".globl __linx_v03_simt_ri_order_body\n"
-    "__linx_v03_simt_ri_order_body:\n"
+    ".globl __linx_v057_simt_ri_order_body\n"
+    "__linx_v057_simt_ri_order_body:\n"
     "  v.add zero.sw, ri6.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri0.sd, lc0<<2, zero.sd]\n"
     "  v.add zero.sw, ri7.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri0.sd, lc0<<2, ri1.sd]\n"
     "  C.BSTOP\n"
-    "__linx_v03_simt_ri_order_body_end:\n");
+    "__linx_v057_simt_ri_order_body_end:\n");
 
 __asm__(
     ".p2align 3\n"
-    ".globl __linx_v03_branch_nz_body\n"
-    "__linx_v03_branch_nz_body:\n"
+    ".globl __linx_v057_branch_nz_body\n"
+    "__linx_v057_branch_nz_body:\n"
     "  v.cmp.ltui lc0.ud, 2, ->p\n"
-    "  b.nz __linx_v03_branch_nz_true\n"
+    "  b.nz __linx_v057_branch_nz_true\n"
     "  v.add zero.sw, ri2.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri0.sd, lc0<<2, zero.sd]\n"
     "  C.BSTOP\n"
-    "__linx_v03_branch_nz_true:\n"
+    "__linx_v057_branch_nz_true:\n"
     "  v.add zero.sw, ri1.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri0.sd, lc0<<2, zero.sd]\n"
     "  C.BSTOP\n"
-    "__linx_v03_branch_nz_body_end:\n");
+    "__linx_v057_branch_nz_body_end:\n");
 
 __asm__(
     ".p2align 3\n"
-    ".globl __linx_v03_branch_z_body\n"
-    "__linx_v03_branch_z_body:\n"
+    ".globl __linx_v057_branch_z_body\n"
+    "__linx_v057_branch_z_body:\n"
     "  v.cmp.ltui lc0.ud, 2, ->p\n"
-    "  b.z __linx_v03_branch_z_true\n"
+    "  b.z __linx_v057_branch_z_true\n"
     "  v.add zero.sw, ri1.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri0.sd, lc0<<2, zero.sd]\n"
     "  C.BSTOP\n"
-    "__linx_v03_branch_z_true:\n"
+    "__linx_v057_branch_z_true:\n"
     "  v.add zero.sw, ri2.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri0.sd, lc0<<2, zero.sd]\n"
     "  C.BSTOP\n"
-    "__linx_v03_branch_z_body_end:\n");
+    "__linx_v057_branch_z_body_end:\n");
 
 __asm__(
     ".p2align 3\n"
-    ".globl __linx_v03_branch_nested_body\n"
-    "__linx_v03_branch_nested_body:\n"
+    ".globl __linx_v057_branch_nested_body\n"
+    "__linx_v057_branch_nested_body:\n"
     "  v.cmp.ltui lc0.ud, 2, ->p\n"
-    "  b.nz __linx_v03_branch_nested_lt2\n"
+    "  b.nz __linx_v057_branch_nested_lt2\n"
     "  v.cmp.ltui lc0.ud, 6, ->p\n"
-    "  b.nz __linx_v03_branch_nested_lt6\n"
+    "  b.nz __linx_v057_branch_nested_lt6\n"
     "  v.add zero.sw, ri3.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri0.sd, lc0<<2, zero.sd]\n"
     "  C.BSTOP\n"
-    "__linx_v03_branch_nested_lt2:\n"
+    "__linx_v057_branch_nested_lt2:\n"
     "  v.cmp.ltui lc0.ud, 1, ->p\n"
-    "  b.nz __linx_v03_branch_nested_lt1\n"
+    "  b.nz __linx_v057_branch_nested_lt1\n"
     "  v.add zero.sw, ri1.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri0.sd, lc0<<2, zero.sd]\n"
     "  C.BSTOP\n"
-    "__linx_v03_branch_nested_lt1:\n"
+    "__linx_v057_branch_nested_lt1:\n"
     "  v.add zero.sw, zero.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri0.sd, lc0<<2, zero.sd]\n"
     "  C.BSTOP\n"
-    "__linx_v03_branch_nested_lt6:\n"
+    "__linx_v057_branch_nested_lt6:\n"
     "  v.add zero.sw, ri2.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri0.sd, lc0<<2, zero.sd]\n"
     "  C.BSTOP\n"
-    "__linx_v03_branch_nested_body_end:\n");
+    "__linx_v057_branch_nested_body_end:\n");
 
 __asm__(
     ".p2align 3\n"
-    ".globl __linx_v03_active_replay_body\n"
-    "__linx_v03_active_replay_body:\n"
+    ".globl __linx_v057_active_replay_body\n"
+    "__linx_v057_active_replay_body:\n"
     "  v.lw.brg [ri0.sd, lc0<<2, lc1.uh<<2], ->vt.w\n"
     "  v.cmp.eq vt#1.sw, zero.sw, ->vt.d\n"
     "  c.movr zero, ->t\n"
     "  v.rdor vt#1.sd, ->t.d\n"
-    "  b.ne t, zero, __linx_v03_active_replay_done\n"
+    "  b.ne t, zero, __linx_v057_active_replay_done\n"
     "  v.add zero.sw, ri2.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri1.sd, lc0<<2, lc1.uh<<2]\n"
     "  C.BSTOP\n"
-    "__linx_v03_active_replay_done:\n"
-    "__linx_v03_active_replay_body_end:\n");
+    "__linx_v057_active_replay_done:\n"
+    "__linx_v057_active_replay_body_end:\n");
 
 __asm__(
     ".p2align 3\n"
-    ".globl __linx_v03_active_replay_else_body\n"
-    "__linx_v03_active_replay_else_body:\n"
+    ".globl __linx_v057_active_replay_else_body\n"
+    "__linx_v057_active_replay_else_body:\n"
     "  v.cmp.ltui lc1.ud, 2, ->p\n"
-    "  b.nz __linx_v03_active_replay_else_then\n"
-    "  j __linx_v03_active_replay_else_else\n"
-    "__linx_v03_active_replay_else_then:\n"
+    "  b.nz __linx_v057_active_replay_else_then\n"
+    "  j __linx_v057_active_replay_else_else\n"
+    "__linx_v057_active_replay_else_then:\n"
     "  v.add zero.sw, ri1.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri0.sd, lc0<<2, lc1.uh<<2]\n"
-    "  j __linx_v03_active_replay_else_join\n"
-    "__linx_v03_active_replay_else_else:\n"
+    "  j __linx_v057_active_replay_else_join\n"
+    "__linx_v057_active_replay_else_else:\n"
     "  c.movr zero, ->zero\n"
     "  c.movr zero, ->zero\n"
     "  v.add zero.sw, ri2.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri0.sd, lc0<<2, lc1.uh<<2]\n"
-    "__linx_v03_active_replay_else_join:\n"
+    "__linx_v057_active_replay_else_join:\n"
     "  C.BSTOP\n"
-    "__linx_v03_active_replay_else_body_end:\n");
+    "__linx_v057_active_replay_else_body_end:\n");
 
 __asm__(
     ".p2align 3\n"
-    ".globl __linx_v03_grouped_else_body\n"
-    "__linx_v03_grouped_else_body:\n"
+    ".globl __linx_v057_grouped_else_body\n"
+    "__linx_v057_grouped_else_body:\n"
     "  v.cmp.ltui lc0.ud, 2, ->p\n"
-    "  b.nz __linx_v03_grouped_else_then\n"
-    "  j __linx_v03_grouped_else_else\n"
-    "__linx_v03_grouped_else_then:\n"
+    "  b.nz __linx_v057_grouped_else_then\n"
+    "  j __linx_v057_grouped_else_else\n"
+    "__linx_v057_grouped_else_then:\n"
     "  v.add zero.sw, ri1.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri0.sd, lc0<<2, zero.sd]\n"
-    "  j __linx_v03_grouped_else_join\n"
-    "__linx_v03_grouped_else_else:\n"
+    "  j __linx_v057_grouped_else_join\n"
+    "__linx_v057_grouped_else_else:\n"
     "  c.movr zero, ->zero\n"
     "  c.movr zero, ->zero\n"
     "  v.add zero.sw, ri2.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri0.sd, lc0<<2, zero.sd]\n"
-    "__linx_v03_grouped_else_join:\n"
+    "__linx_v057_grouped_else_join:\n"
     "  C.BSTOP\n"
-    "__linx_v03_grouped_else_body_end:\n");
+    "__linx_v057_grouped_else_body_end:\n");
 
 __asm__(
     ".p2align 3\n"
-    ".globl __linx_v03_grouped_nested_rejoin_body\n"
-    "__linx_v03_grouped_nested_rejoin_body:\n"
+    ".globl __linx_v057_grouped_nested_rejoin_body\n"
+    "__linx_v057_grouped_nested_rejoin_body:\n"
     "  v.cmp.ltui lc0.ud, 2, ->p\n"
-    "  b.nz __linx_v03_grouped_nested_rejoin_lt2\n"
-    "  j __linx_v03_grouped_nested_rejoin_ge2\n"
-    "__linx_v03_grouped_nested_rejoin_lt2:\n"
+    "  b.nz __linx_v057_grouped_nested_rejoin_lt2\n"
+    "  j __linx_v057_grouped_nested_rejoin_ge2\n"
+    "__linx_v057_grouped_nested_rejoin_lt2:\n"
     "  v.cmp.ltui lc0.ud, 1, ->p\n"
-    "  b.nz __linx_v03_grouped_nested_rejoin_lane0\n"
-    "  j __linx_v03_grouped_nested_rejoin_lane1\n"
-    "__linx_v03_grouped_nested_rejoin_lane0:\n"
+    "  b.nz __linx_v057_grouped_nested_rejoin_lane0\n"
+    "  j __linx_v057_grouped_nested_rejoin_lane1\n"
+    "__linx_v057_grouped_nested_rejoin_lane0:\n"
     "  v.add zero.sw, ri1.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri0.sd, lc0<<2, zero.sd]\n"
-    "  j __linx_v03_grouped_nested_rejoin_join\n"
-    "__linx_v03_grouped_nested_rejoin_lane1:\n"
+    "  j __linx_v057_grouped_nested_rejoin_join\n"
+    "__linx_v057_grouped_nested_rejoin_lane1:\n"
     "  v.add zero.sw, ri2.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri0.sd, lc0<<2, zero.sd]\n"
-    "  j __linx_v03_grouped_nested_rejoin_join\n"
-    "__linx_v03_grouped_nested_rejoin_ge2:\n"
+    "  j __linx_v057_grouped_nested_rejoin_join\n"
+    "__linx_v057_grouped_nested_rejoin_ge2:\n"
     "  v.cmp.ltui lc0.ud, 3, ->p\n"
-    "  b.nz __linx_v03_grouped_nested_rejoin_lane2\n"
-    "  j __linx_v03_grouped_nested_rejoin_lane3\n"
-    "__linx_v03_grouped_nested_rejoin_lane2:\n"
+    "  b.nz __linx_v057_grouped_nested_rejoin_lane2\n"
+    "  j __linx_v057_grouped_nested_rejoin_lane3\n"
+    "__linx_v057_grouped_nested_rejoin_lane2:\n"
     "  v.add zero.sw, ri3.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri0.sd, lc0<<2, zero.sd]\n"
-    "  j __linx_v03_grouped_nested_rejoin_join\n"
-    "__linx_v03_grouped_nested_rejoin_lane3:\n"
+    "  j __linx_v057_grouped_nested_rejoin_join\n"
+    "__linx_v057_grouped_nested_rejoin_lane3:\n"
     "  v.add zero.sw, ri4.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri0.sd, lc0<<2, zero.sd]\n"
-    "  j __linx_v03_grouped_nested_rejoin_join\n"
-    "__linx_v03_grouped_nested_rejoin_join:\n"
+    "  j __linx_v057_grouped_nested_rejoin_join\n"
+    "__linx_v057_grouped_nested_rejoin_join:\n"
     "  v.add lc0.sw, ri5.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri6.sd, lc0<<2, zero.sd]\n"
     "  C.BSTOP\n"
-    "__linx_v03_grouped_nested_rejoin_body_end:\n");
+    "__linx_v057_grouped_nested_rejoin_body_end:\n");
 
 __asm__(
     ".p2align 3\n"
-    ".globl __linx_v03_grouped_backward_loop_body\n"
-    "__linx_v03_grouped_backward_loop_body:\n"
+    ".globl __linx_v057_grouped_backward_loop_body\n"
+    "__linx_v057_grouped_backward_loop_body:\n"
     "  v.add zero.sw, zero.sw, ->vt.w\n"
-    "__linx_v03_grouped_backward_loop_head:\n"
+    "__linx_v057_grouped_backward_loop_head:\n"
     "  v.cmp.ltu vt#1.sw, lc0.ud, ->p\n"
-    "  b.z __linx_v03_grouped_backward_loop_done\n"
+    "  b.z __linx_v057_grouped_backward_loop_done\n"
     "  v.add vt#1.sw, ri1.sw, ->vt.w\n"
-    "  j __linx_v03_grouped_backward_loop_head\n"
-    "__linx_v03_grouped_backward_loop_done:\n"
+    "  j __linx_v057_grouped_backward_loop_head\n"
+    "__linx_v057_grouped_backward_loop_done:\n"
     "  v.add vt#1.sw, ri1.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri0.sd, lc0<<2, zero.sd]\n"
     "  C.BSTOP\n"
-    "__linx_v03_grouped_backward_loop_body_end:\n");
+    "__linx_v057_grouped_backward_loop_body_end:\n");
 
 __asm__(
     ".p2align 3\n"
-    ".globl __linx_v03_grouped_active_state_body\n"
-    "__linx_v03_grouped_active_state_body:\n"
+    ".globl __linx_v057_grouped_active_state_body\n"
+    "__linx_v057_grouped_active_state_body:\n"
     "  v.lw.brg [ri2.sd, lc0<<2, zero.sd], ->vt.w\n"
     "  v.cmp.eq vt#1.sw, zero.sw, ->p\n"
-    "  b.nz __linx_v03_grouped_active_state_done\n"
+    "  b.nz __linx_v057_grouped_active_state_done\n"
     "  v.lw.brg [ri1.sd, lc0<<2, zero.sd], ->vt.w\n"
     "  v.cmp.ltu lc1.ud, vt#1.sw, ->p\n"
-    "  b.nz __linx_v03_grouped_active_state_count\n"
+    "  b.nz __linx_v057_grouped_active_state_count\n"
     "  v.add zero.sw, zero.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri2.sd, lc0<<2, zero.sd]\n"
-    "  j __linx_v03_grouped_active_state_done\n"
-    "__linx_v03_grouped_active_state_count:\n"
+    "  j __linx_v057_grouped_active_state_done\n"
+    "__linx_v057_grouped_active_state_count:\n"
     "  v.lw.brg [ri0.sd, lc0<<2, zero.sd], ->vt.w\n"
     "  v.add vt#1.sw, ri3.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri0.sd, lc0<<2, zero.sd]\n"
-    "__linx_v03_grouped_active_state_done:\n"
+    "__linx_v057_grouped_active_state_done:\n"
     "  C.BSTOP\n"
-    "__linx_v03_grouped_active_state_body_end:\n");
+    "__linx_v057_grouped_active_state_body_end:\n");
 
 /* Empty decoupled body used by typed block-start smoke tests. */
 __asm__(
     ".p2align 2\n"
-    ".globl __linx_v03_empty_body\n"
-    "__linx_v03_empty_body:\n"
+    ".globl __linx_v057_empty_body\n"
+    "__linx_v057_empty_body:\n"
     "  C.BSTOP\n"
-    "__linx_v03_empty_body_end:\n");
+    "__linx_v057_empty_body_end:\n");
 
-extern void linx_v03_launch_typed_block_starts_smoke(void);
-LINX_V03_ASM_WRAPPER(
-    linx_v03_launch_typed_block_starts_smoke,
+extern void linx_v057_launch_typed_block_starts_smoke(void);
+LINX_V057_ASM_WRAPPER(
+    linx_v057_launch_typed_block_starts_smoke,
     "  C.BSTART\n"
     "  BSTART.MSEQ 0\n"
-    "  B.TEXT __linx_v03_empty_body\n"
+    "  B.TEXT __linx_v057_empty_body\n"
     "  C.BSTART\n"
     "  BSTART.MPAR 0\n"
-    "  B.TEXT __linx_v03_empty_body\n"
+    "  B.TEXT __linx_v057_empty_body\n"
     "  C.BSTART\n"
     "  BSTART.VPAR 0\n"
-    "  B.TEXT __linx_v03_empty_body\n"
+    "  B.TEXT __linx_v057_empty_body\n"
     "  C.BSTART\n"
     "  BSTART.VSEQ 0\n"
-    "  B.TEXT __linx_v03_empty_body\n"
+    "  B.TEXT __linx_v057_empty_body\n"
     "  C.BSTART\n",
     "")
 
-extern void linx_v03_launch_mseq_simt_store(uint64_t base);
-LINX_V03_ASM_WRAPPER(
-    linx_v03_launch_mseq_simt_store,
+extern void linx_v057_launch_mseq_simt_store(uint64_t base);
+LINX_V057_ASM_WRAPPER(
+    linx_v057_launch_mseq_simt_store,
     "  C.BSTART\n"
     "  BSTART.MSEQ 0\n"
-    "  B.TEXT __linx_v03_simt_body\n"
+    "  B.TEXT __linx_v057_simt_body\n"
     "  B.IOR [a0],[]\n"
     "  C.B.DIMI 64, ->lb0\n"
     "  C.B.DIMI 32, ->lb1\n"
     "  C.BSTART\n",
     "")
 
-extern void linx_v03_launch_mseq_simt_copy(uint64_t src_base, uint64_t dst_base);
-LINX_V03_ASM_WRAPPER(
-    linx_v03_launch_mseq_simt_copy,
+extern void linx_v057_launch_mseq_simt_copy(uint64_t src_base, uint64_t dst_base);
+LINX_V057_ASM_WRAPPER(
+    linx_v057_launch_mseq_simt_copy,
     "  C.BSTART\n"
     "  BSTART.MSEQ 0\n"
-    "  B.TEXT __linx_v03_simt_copy_body\n"
+    "  B.TEXT __linx_v057_simt_copy_body\n"
     "  B.IOR [a0],[]\n"
     "  B.IOR [a1],[]\n"
     "  C.B.DIMI 64, ->lb0\n"
@@ -334,27 +334,27 @@ LINX_V03_ASM_WRAPPER(
  * vector/SIMT runtime suite compiling and executing while the local-tile B.IOT
  * asm surface is refreshed on the compiler side.
  */
-static __attribute__((noinline)) void linx_v03_launch_vseq_local_tile_body(void) {}
-static __attribute__((noinline)) void linx_v03_launch_tstore_local_tile(uint64_t out_base)
+static __attribute__((noinline)) void linx_v057_launch_vseq_local_tile_body(void) {}
+static __attribute__((noinline)) void linx_v057_launch_tstore_local_tile(uint64_t out_base)
 {
     (void)out_base;
 }
 
-extern void linx_v03_launch_mseq_simt_f32(uint64_t src_base, uint64_t dst_base,
+extern void linx_v057_launch_mseq_simt_f32(uint64_t src_base, uint64_t dst_base,
                                           uint64_t add1_f32,
                                           uint64_t mul2_f32);
-LINX_V03_ASM_WRAPPER(
-    linx_v03_launch_mseq_simt_f32,
+LINX_V057_ASM_WRAPPER(
+    linx_v057_launch_mseq_simt_f32,
     "  C.BSTART\n"
     "  BSTART.MSEQ 0\n"
-    "  B.TEXT __linx_v03_simt_f32_body\n"
+    "  B.TEXT __linx_v057_simt_f32_body\n"
     "  B.IOR [a0, a1, a2],[]\n"
     "  B.IOR [a3],[]\n"
     "  C.B.DIMI 64, ->lb0\n"
     "  C.BSTART\n",
     "")
 
-extern void linx_v03_launch_mseq_ri_order(uint64_t out_base,
+extern void linx_v057_launch_mseq_ri_order(uint64_t out_base,
                                           uint64_t out_word_index,
                                           uint64_t filler2,
                                           uint64_t filler3,
@@ -362,11 +362,11 @@ extern void linx_v03_launch_mseq_ri_order(uint64_t out_base,
                                           uint64_t filler5,
                                           uint64_t expect_ri6,
                                           uint64_t expect_ri7);
-LINX_V03_ASM_WRAPPER(
-    linx_v03_launch_mseq_ri_order,
+LINX_V057_ASM_WRAPPER(
+    linx_v057_launch_mseq_ri_order,
     "  C.BSTART\n"
     "  BSTART.MSEQ 0\n"
-    "  B.TEXT __linx_v03_simt_ri_order_body\n"
+    "  B.TEXT __linx_v057_simt_ri_order_body\n"
     "  B.IOR [a0, a1],[]\n"
     "  B.IOR [a2],[a3]\n"
     "  B.IOR [a4],[a5]\n"
@@ -375,69 +375,69 @@ LINX_V03_ASM_WRAPPER(
     "  C.BSTART\n",
     "")
 
-extern void linx_v03_launch_mseq_branch_nz(uint64_t out_base,
+extern void linx_v057_launch_mseq_branch_nz(uint64_t out_base,
                                            uint64_t branch_true,
                                            uint64_t branch_false);
-LINX_V03_ASM_WRAPPER(
-    linx_v03_launch_mseq_branch_nz,
+LINX_V057_ASM_WRAPPER(
+    linx_v057_launch_mseq_branch_nz,
     "  C.BSTART\n"
     "  BSTART.MSEQ 0\n"
-    "  B.TEXT __linx_v03_branch_nz_body\n"
+    "  B.TEXT __linx_v057_branch_nz_body\n"
     "  B.IOR [a0, a1, a2],[]\n"
     "  C.B.DIMI 4, ->lb0\n"
     "  C.BSTART\n",
     "")
 
-extern void linx_v03_launch_mseq_branch_z(uint64_t out_base,
+extern void linx_v057_launch_mseq_branch_z(uint64_t out_base,
                                           uint64_t branch_true,
                                           uint64_t branch_false);
-LINX_V03_ASM_WRAPPER(
-    linx_v03_launch_mseq_branch_z,
+LINX_V057_ASM_WRAPPER(
+    linx_v057_launch_mseq_branch_z,
     "  C.BSTART\n"
     "  BSTART.MSEQ 0\n"
-    "  B.TEXT __linx_v03_branch_z_body\n"
+    "  B.TEXT __linx_v057_branch_z_body\n"
     "  B.IOR [a0, a1, a2],[]\n"
     "  C.B.DIMI 4, ->lb0\n"
     "  C.BSTART\n",
     "")
 
-extern void linx_v03_launch_mseq_branch_nested(uint64_t out_base,
+extern void linx_v057_launch_mseq_branch_nested(uint64_t out_base,
                                                uint64_t lane1_value,
                                                uint64_t lane25_value,
                                                uint64_t lane67_value);
-LINX_V03_ASM_WRAPPER(
-    linx_v03_launch_mseq_branch_nested,
+LINX_V057_ASM_WRAPPER(
+    linx_v057_launch_mseq_branch_nested,
     "  C.BSTART\n"
     "  BSTART.MSEQ 0\n"
-    "  B.TEXT __linx_v03_branch_nested_body\n"
+    "  B.TEXT __linx_v057_branch_nested_body\n"
     "  B.IOR [a0, a1, a2],[]\n"
     "  B.IOR [a3],[]\n"
     "  C.B.DIMI 8, ->lb0\n"
     "  C.BSTART\n",
     "")
 
-extern void linx_v03_launch_mseq_active_replay(uint64_t in_base,
+extern void linx_v057_launch_mseq_active_replay(uint64_t in_base,
                                                uint64_t out_base,
                                                uint64_t store_value);
-LINX_V03_ASM_WRAPPER(
-    linx_v03_launch_mseq_active_replay,
+LINX_V057_ASM_WRAPPER(
+    linx_v057_launch_mseq_active_replay,
     "  C.BSTART\n"
     "  BSTART.MSEQ 0\n"
-    "  B.TEXT __linx_v03_active_replay_body\n"
+    "  B.TEXT __linx_v057_active_replay_body\n"
     "  B.IOR [a0, a1, a2],[]\n"
     "  C.B.DIMI 1, ->lb0\n"
     "  C.B.DIMI 4, ->lb1\n"
     "  C.BSTART\n",
     "")
 
-extern void linx_v03_launch_mseq_active_replay_else(uint64_t out_base,
+extern void linx_v057_launch_mseq_active_replay_else(uint64_t out_base,
                                                     uint64_t true_value,
                                                     uint64_t false_value);
-LINX_V03_ASM_WRAPPER(
-    linx_v03_launch_mseq_active_replay_else,
+LINX_V057_ASM_WRAPPER(
+    linx_v057_launch_mseq_active_replay_else,
     "  C.BSTART\n"
     "  BSTART.MSEQ 0\n"
-    "  B.TEXT __linx_v03_active_replay_else_body\n"
+    "  B.TEXT __linx_v057_active_replay_else_body\n"
     "  B.IOR [a0, a1],[]\n"
     "  B.IOR [a2],[]\n"
     "  C.B.DIMI 1, ->lb0\n"
@@ -445,14 +445,14 @@ LINX_V03_ASM_WRAPPER(
     "  C.BSTART\n",
     "")
 
-extern void linx_v03_launch_mseq_grouped_else(uint64_t out_base,
+extern void linx_v057_launch_mseq_grouped_else(uint64_t out_base,
                                               uint64_t true_value,
                                               uint64_t false_value);
-LINX_V03_ASM_WRAPPER(
-    linx_v03_launch_mseq_grouped_else,
+LINX_V057_ASM_WRAPPER(
+    linx_v057_launch_mseq_grouped_else,
     "  C.BSTART\n"
     "  BSTART.MSEQ 0\n"
-    "  B.TEXT __linx_v03_grouped_else_body\n"
+    "  B.TEXT __linx_v057_grouped_else_body\n"
     "  B.IOR [a0, a1],[]\n"
     "  B.IOR [a2],[]\n"
     "  C.B.DIMI 4, ->lb0\n"
@@ -460,18 +460,18 @@ LINX_V03_ASM_WRAPPER(
     "  C.BSTART\n",
     "")
 
-extern void linx_v03_launch_mseq_grouped_nested(uint64_t primary_base,
+extern void linx_v057_launch_mseq_grouped_nested(uint64_t primary_base,
                                                 uint64_t lane0_value,
                                                 uint64_t lane1_value,
                                                 uint64_t lane2_value,
                                                 uint64_t lane3_value,
                                                 uint64_t tail_seed,
                                                 uint64_t tail_base);
-LINX_V03_ASM_WRAPPER(
-    linx_v03_launch_mseq_grouped_nested,
+LINX_V057_ASM_WRAPPER(
+    linx_v057_launch_mseq_grouped_nested,
     "  C.BSTART\n"
     "  BSTART.MSEQ 0\n"
-    "  B.TEXT __linx_v03_grouped_nested_rejoin_body\n"
+    "  B.TEXT __linx_v057_grouped_nested_rejoin_body\n"
     "  B.IOR [a0, a1, a2],[]\n"
     "  B.IOR [a3, a4, a5],[]\n"
     "  B.IOR [a6],[]\n"
@@ -480,28 +480,28 @@ LINX_V03_ASM_WRAPPER(
     "  C.BSTART\n",
     "")
 
-extern void linx_v03_launch_mseq_grouped_backward_loop(uint64_t out_base,
+extern void linx_v057_launch_mseq_grouped_backward_loop(uint64_t out_base,
                                                        uint64_t one);
-LINX_V03_ASM_WRAPPER(
-    linx_v03_launch_mseq_grouped_backward_loop,
+LINX_V057_ASM_WRAPPER(
+    linx_v057_launch_mseq_grouped_backward_loop,
     "  C.BSTART\n"
     "  BSTART.MSEQ 0\n"
-    "  B.TEXT __linx_v03_grouped_backward_loop_body\n"
+    "  B.TEXT __linx_v057_grouped_backward_loop_body\n"
     "  B.IOR [a0, a1],[]\n"
     "  C.B.DIMI 4, ->lb0\n"
     "  C.B.DIMI 1, ->lb1\n"
     "  C.BSTART\n",
     "")
 
-extern void linx_v03_launch_mseq_grouped_active_state(uint64_t counts_base,
+extern void linx_v057_launch_mseq_grouped_active_state(uint64_t counts_base,
                                                       uint64_t limits_base,
                                                       uint64_t active_base,
                                                       uint64_t one);
-LINX_V03_ASM_WRAPPER(
-    linx_v03_launch_mseq_grouped_active_state,
+LINX_V057_ASM_WRAPPER(
+    linx_v057_launch_mseq_grouped_active_state,
     "  C.BSTART\n"
     "  BSTART.MSEQ 0\n"
-    "  B.TEXT __linx_v03_grouped_active_state_body\n"
+    "  B.TEXT __linx_v057_grouped_active_state_body\n"
     "  B.IOR [a0, a1, a2],[]\n"
     "  B.IOR [a3],[]\n"
     "  C.B.DIMI 4, ->lb0\n"
@@ -516,7 +516,7 @@ static void test_typed_block_starts_smoke(void)
      * We close each empty typed block by starting a new fall-through STD block
      * using C.BSTART. This ensures subsequent C code is still within a block.
      */
-    linx_v03_launch_typed_block_starts_smoke();
+    linx_v057_launch_typed_block_starts_smoke();
 }
 
 static void test_mseq_simt_store(void)
@@ -535,7 +535,7 @@ static void test_mseq_simt_store(void)
     }
 
     const uint64_t base = (uint64_t)(uintptr_t)&a[0][0];
-    linx_v03_launch_mseq_simt_store(base);
+    linx_v057_launch_mseq_simt_store(base);
 
     for (unsigned i = 0; i < N; i++) {
         for (unsigned j = 0; j < M; j++) {
@@ -566,7 +566,7 @@ static void test_mseq_simt_copy(void)
 
     const uint64_t src_base = (uint64_t)(uintptr_t)&src[0][0];
     const uint64_t dst_base = (uint64_t)(uintptr_t)&dst[0][0];
-    linx_v03_launch_mseq_simt_copy(src_base, dst_base);
+    linx_v057_launch_mseq_simt_copy(src_base, dst_base);
 
     for (unsigned i = 0; i < N; i++) {
         for (unsigned j = 0; j < M; j++) {
@@ -600,7 +600,7 @@ static void test_mseq_simt_f32_smoke(void)
     const uint64_t add1_f32 = 0x3f800000u; /* 1.0f */
     const uint64_t mul2_f32 = 0x40000000u; /* 2.0f */
 
-    linx_v03_launch_mseq_simt_f32(src_base, dst_base, add1_f32, mul2_f32);
+    linx_v057_launch_mseq_simt_f32(src_base, dst_base, add1_f32, mul2_f32);
 
     for (unsigned i = 0; i < N; i++) {
         union {
@@ -633,7 +633,7 @@ static void test_mseq_ri_order_guard(void)
      * as the producer of ri6/ri7 without relying on deprecated zero-hole
      * operand spelling.
      */
-    linx_v03_launch_mseq_ri_order(out_base, out_word_index, filler2, filler3,
+    linx_v057_launch_mseq_ri_order(out_base, out_word_index, filler2, filler3,
                                   filler4, filler5, expect_ri6, expect_ri7);
 
     TEST_EQ32(out[0], (uint32_t)expect_ri6, 0x1240);
@@ -651,7 +651,7 @@ static void test_mseq_branch_nz_on_p(void)
         out[i] = 0xDEADBEEFu;
     }
 
-    linx_v03_launch_mseq_branch_nz(out_base, branch_true, branch_false);
+    linx_v057_launch_mseq_branch_nz(out_base, branch_true, branch_false);
 
     TEST_EQ32(out[0], (uint32_t)branch_true, 0x1260);
     TEST_EQ32(out[1], (uint32_t)branch_true, 0x1261);
@@ -670,7 +670,7 @@ static void test_mseq_branch_z_on_p(void)
         out[i] = 0xDEADBEEFu;
     }
 
-    linx_v03_launch_mseq_branch_z(out_base, branch_true, branch_false);
+    linx_v057_launch_mseq_branch_z(out_base, branch_true, branch_false);
 
     TEST_EQ32(out[0], (uint32_t)branch_true, 0x1270);
     TEST_EQ32(out[1], (uint32_t)branch_true, 0x1271);
@@ -690,7 +690,7 @@ static void test_mseq_nested_branch_on_p(void)
         out[i] = 0xDEADBEEFu;
     }
 
-    linx_v03_launch_mseq_branch_nested(out_base, lane1_value, lane25_value,
+    linx_v057_launch_mseq_branch_nested(out_base, lane1_value, lane25_value,
                                        lane67_value);
 
     TEST_EQ32(out[0], 0u, 0x1290);
@@ -729,10 +729,10 @@ static void test_mseq_active_replay_break_runtime(void)
         linx_store_u32(&out_skip[i], 0xDEADBEEFu);
     }
 
-    linx_v03_launch_mseq_active_replay(match_in_base, match_out_base,
+    linx_v057_launch_mseq_active_replay(match_in_base, match_out_base,
                                        store_value);
 
-    linx_v03_launch_mseq_active_replay(skip_in_base, skip_out_base,
+    linx_v057_launch_mseq_active_replay(skip_in_base, skip_out_base,
                                        store_value);
 
     TEST_EQ32(out_match[0], (uint32_t)store_value, 0x12A0);
@@ -757,7 +757,7 @@ static void test_mseq_active_replay_else_rejoin_runtime(void)
         out[i] = 0xDEADBEEFu;
     }
 
-    linx_v03_launch_mseq_active_replay_else(out_base, true_value,
+    linx_v057_launch_mseq_active_replay_else(out_base, true_value,
                                             false_value);
 
     TEST_EQ32(out[0], (uint32_t)true_value, 0x12B0);
@@ -777,7 +777,7 @@ static void test_mseq_grouped_else_rejoin_runtime(void)
         out[i] = 0xDEADBEEFu;
     }
 
-    linx_v03_launch_mseq_grouped_else(out_base, true_value, false_value);
+    linx_v057_launch_mseq_grouped_else(out_base, true_value, false_value);
 
     TEST_EQ32(out[0], (uint32_t)true_value, 0x12C0);
     TEST_EQ32(out[1], (uint32_t)true_value, 0x12C1);
@@ -802,7 +802,7 @@ static void test_mseq_grouped_nested_rejoin_runtime(void)
         out_tail[i] = 0xDEADBEEFu;
     }
 
-    linx_v03_launch_mseq_grouped_nested(primary_base, lane0_value, lane1_value,
+    linx_v057_launch_mseq_grouped_nested(primary_base, lane0_value, lane1_value,
                                         lane2_value, lane3_value, tail_seed,
                                         tail_base);
 
@@ -827,7 +827,7 @@ static void test_mseq_grouped_backward_loop_runtime(void)
         out[i] = 0xDEADBEEFu;
     }
 
-    linx_v03_launch_mseq_grouped_backward_loop(out_base, one);
+    linx_v057_launch_mseq_grouped_backward_loop(out_base, one);
 
     TEST_EQ32(out[0], 1u, 0x12E0);
     TEST_EQ32(out[1], 2u, 0x12E1);
@@ -860,7 +860,7 @@ static void test_mseq_grouped_active_state_runtime(void)
     linx_store_u32(&active[2], 1u);
     linx_store_u32(&active[3], 1u);
 
-    linx_v03_launch_mseq_grouped_active_state(counts_base, limits_base,
+    linx_v057_launch_mseq_grouped_active_state(counts_base, limits_base,
                                               active_base, one);
 
     TEST_EQ32(counts[0], 1u, 0x12F0);
@@ -874,7 +874,7 @@ static void test_mseq_grouped_active_state_runtime(void)
     TEST_EQ32(active[3], 0u, 0x12F7);
 }
 
-void run_v03_vector_tile_tests(void)
+void run_v057_vector_tile_tests(void)
 {
     test_start(0x1200);
     uart_puts("v0.57 typed BSTART.* smoke ... ");

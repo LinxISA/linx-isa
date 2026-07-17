@@ -9,7 +9,7 @@
 
 #include "linx_test.h"
 
-#define LINX_V03_ASM_WRAPPER(name, body, cont) \
+#define LINX_V057_ASM_WRAPPER(name, body, cont) \
     __asm__(                                   \
         ".p2align 2\n"                         \
         ".globl " #name "\n"                   \
@@ -29,9 +29,9 @@
 
 __asm__(
     ".p2align 3\n"
-    ".globl __linx_v03_ops_add_sub_body\n"
-    ".type __linx_v03_ops_add_sub_body, @function\n"
-    "__linx_v03_ops_add_sub_body:\n"
+    ".globl __linx_v057_ops_add_sub_body\n"
+    ".type __linx_v057_ops_add_sub_body, @function\n"
+    "__linx_v057_ops_add_sub_body:\n"
     "  v.lw.brg [ri0.sd, lc0<<2, zero.sd], ->vt.w\n"
     "  v.lw.brg [ri1.sd, lc0<<2, zero.sd], ->vu.w\n"
     "  v.add vt#1.reuse.sw, vu#1.reuse.sw, ->vt.w\n"
@@ -39,122 +39,122 @@ __asm__(
     "  v.sub vt#2.sw, vu#1.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri3.sd, lc0<<2, zero.sd]\n"
     "  C.BSTOP\n"
-    ".size __linx_v03_ops_add_sub_body, .-__linx_v03_ops_add_sub_body\n");
+    ".size __linx_v057_ops_add_sub_body, .-__linx_v057_ops_add_sub_body\n");
 
 __asm__(
     ".p2align 3\n"
-    ".globl __linx_v03_ops_float_body\n"
-    ".type __linx_v03_ops_float_body, @function\n"
-    "__linx_v03_ops_float_body:\n"
+    ".globl __linx_v057_ops_float_body\n"
+    ".type __linx_v057_ops_float_body, @function\n"
+    "__linx_v057_ops_float_body:\n"
     "  v.lw.brg [ri0.sd, lc0<<2, zero.sd], ->vt.w\n"
     "  v.fadd vt#1.fs, ri2.fs, ->vt.w\n"
     "  v.fmul vt#1.fs, ri3.fs, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri1.sd, lc0<<2, zero.sd]\n"
     "  C.BSTOP\n"
-    ".size __linx_v03_ops_float_body, .-__linx_v03_ops_float_body\n");
+    ".size __linx_v057_ops_float_body, .-__linx_v057_ops_float_body\n");
 
 __asm__(
     ".p2align 3\n"
-    ".globl __linx_v03_ops_fabs_body\n"
-    ".type __linx_v03_ops_fabs_body, @function\n"
-    "__linx_v03_ops_fabs_body:\n"
+    ".globl __linx_v057_ops_fabs_body\n"
+    ".type __linx_v057_ops_fabs_body, @function\n"
+    "__linx_v057_ops_fabs_body:\n"
     "  v.lw.brg [ri0.sd, lc0<<2, zero.sd], ->vt.w\n"
     "  v.fabs vt#1.fs, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri1.sd, lc0<<2, zero.sd]\n"
     "  C.BSTOP\n"
-    ".size __linx_v03_ops_fabs_body, .-__linx_v03_ops_fabs_body\n");
+    ".size __linx_v057_ops_fabs_body, .-__linx_v057_ops_fabs_body\n");
 
 __asm__(
     ".p2align 3\n"
-    ".globl __linx_v03_ops_mul_body\n"
-    ".type __linx_v03_ops_mul_body, @function\n"
-    "__linx_v03_ops_mul_body:\n"
+    ".globl __linx_v057_ops_mul_body\n"
+    ".type __linx_v057_ops_mul_body, @function\n"
+    "__linx_v057_ops_mul_body:\n"
     "  v.lw.brg [ri0.sd, lc0<<2, zero.sd], ->vt.w\n"
     "  v.lw.brg [ri1.sd, lc0<<2, zero.sd], ->vu.w\n"
     "  v.mul vt#1.sw, vu#1.sw, ->vt.w\n"
     "  v.sw.brg vt#1.sw, [ri2.sd, lc0<<2, zero.sd]\n"
     "  C.BSTOP\n"
-    ".size __linx_v03_ops_mul_body, .-__linx_v03_ops_mul_body\n");
+    ".size __linx_v057_ops_mul_body, .-__linx_v057_ops_mul_body\n");
 
 __asm__(
     ".p2align 3\n"
-    ".globl __linx_v03_ops_mixed_pred_body\n"
-    ".type __linx_v03_ops_mixed_pred_body, @function\n"
-    "__linx_v03_ops_mixed_pred_body:\n"
+    ".globl __linx_v057_ops_mixed_pred_body\n"
+    ".type __linx_v057_ops_mixed_pred_body, @function\n"
+    "__linx_v057_ops_mixed_pred_body:\n"
     "  addi a7, 1, ->a7\n"
     "  v.cmp.lt lc0.sw, ri1.sw, ->vt.d\n"
     "  v.sw.brg vt#1.sd, [ri0.sd, lc0<<2, zero.sd]\n"
     "  C.BSTOP\n"
-    ".size __linx_v03_ops_mixed_pred_body, .-__linx_v03_ops_mixed_pred_body\n");
+    ".size __linx_v057_ops_mixed_pred_body, .-__linx_v057_ops_mixed_pred_body\n");
 
-extern void linx_v03_launch_ops_add_sub(uint64_t a_base, uint64_t b_base,
+extern void linx_v057_launch_ops_add_sub(uint64_t a_base, uint64_t b_base,
                                         uint64_t sum_base,
                                         uint64_t diff_base);
-LINX_V03_ASM_WRAPPER(
-    linx_v03_launch_ops_add_sub,
+LINX_V057_ASM_WRAPPER(
+    linx_v057_launch_ops_add_sub,
     "  C.BSTART\n"
     "  BSTART.MSEQ 0\n"
-    "  B.TEXT __linx_v03_ops_add_sub_body\n"
+    "  B.TEXT __linx_v057_ops_add_sub_body\n"
     "  B.IOR [a0, a1, a2],[]\n"
     "  B.IOR [a3],[]\n"
     "  C.B.DIMI 32, ->lb0\n"
     "  C.BSTART\n",
     "")
 
-extern void linx_v03_launch_ops_float(uint64_t src_base, uint64_t dst_base,
+extern void linx_v057_launch_ops_float(uint64_t src_base, uint64_t dst_base,
                                       uint64_t add_f32, uint64_t mul_f32);
-LINX_V03_ASM_WRAPPER(
-    linx_v03_launch_ops_float,
+LINX_V057_ASM_WRAPPER(
+    linx_v057_launch_ops_float,
     "  C.BSTART\n"
     "  BSTART.MSEQ 0\n"
-    "  B.TEXT __linx_v03_ops_float_body\n"
+    "  B.TEXT __linx_v057_ops_float_body\n"
     "  B.IOR [a0, a1, a2],[]\n"
     "  B.IOR [a3],[]\n"
     "  C.B.DIMI 32, ->lb0\n"
     "  C.BSTART\n",
     "")
 
-extern void linx_v03_launch_ops_fabs(uint64_t src_base, uint64_t dst_base);
-LINX_V03_ASM_WRAPPER(
-    linx_v03_launch_ops_fabs,
+extern void linx_v057_launch_ops_fabs(uint64_t src_base, uint64_t dst_base);
+LINX_V057_ASM_WRAPPER(
+    linx_v057_launch_ops_fabs,
     "  C.BSTART\n"
     "  BSTART.MSEQ 0\n"
-    "  B.TEXT __linx_v03_ops_fabs_body\n"
+    "  B.TEXT __linx_v057_ops_fabs_body\n"
     "  B.IOR [a0, a1],[]\n"
     "  C.B.DIMI 32, ->lb0\n"
     "  C.BSTART\n",
     "")
 
-extern void linx_v03_launch_ops_mul(uint64_t lhs_base, uint64_t rhs_base,
+extern void linx_v057_launch_ops_mul(uint64_t lhs_base, uint64_t rhs_base,
                                     uint64_t dst_base);
-LINX_V03_ASM_WRAPPER(
-    linx_v03_launch_ops_mul,
+LINX_V057_ASM_WRAPPER(
+    linx_v057_launch_ops_mul,
     "  C.BSTART\n"
     "  BSTART.MSEQ 0\n"
-    "  B.TEXT __linx_v03_ops_mul_body\n"
+    "  B.TEXT __linx_v057_ops_mul_body\n"
     "  B.IOR [a0, a1, a2],[]\n"
     "  C.B.DIMI 32, ->lb0\n"
     "  C.BSTART\n",
     "")
 
-extern uint64_t linx_v03_launch_ops_mixed_pred(uint64_t out_base,
+extern uint64_t linx_v057_launch_ops_mixed_pred(uint64_t out_base,
                                                uint64_t threshold);
-LINX_V03_ASM_WRAPPER(
-    linx_v03_launch_ops_mixed_pred,
+LINX_V057_ASM_WRAPPER(
+    linx_v057_launch_ops_mixed_pred,
     "  C.BSTART\n"
     "  addi zero, 0, ->a7\n"
     "  BSTART.MSEQ 0\n"
-    "  B.TEXT __linx_v03_ops_mixed_pred_body\n"
+    "  B.TEXT __linx_v057_ops_mixed_pred_body\n"
     "  B.IOR [a0, a1],[]\n"
     "  C.B.DIMI 32, ->lb0\n"
     "  C.BSTART\n",
     "  add a7, zero, ->a0\n")
 
-extern void __linx_v03_ops_add_sub_body(void);
-extern void __linx_v03_ops_float_body(void);
-extern void __linx_v03_ops_fabs_body(void);
-extern void __linx_v03_ops_mul_body(void);
-extern void __linx_v03_ops_mixed_pred_body(void);
+extern void __linx_v057_ops_add_sub_body(void);
+extern void __linx_v057_ops_float_body(void);
+extern void __linx_v057_ops_fabs_body(void);
+extern void __linx_v057_ops_mul_body(void);
+extern void __linx_v057_ops_mixed_pred_body(void);
 
 static uint32_t evidence_v_add;
 static uint32_t evidence_v_sub;
@@ -184,7 +184,7 @@ static void test_v_add_sub_matrix(void)
     const uint64_t sum_base = (uint64_t)(uintptr_t)&sum[0];
     const uint64_t diff_base = (uint64_t)(uintptr_t)&diff[0];
 
-    linx_v03_launch_ops_add_sub(a_base, b_base, sum_base, diff_base);
+    linx_v057_launch_ops_add_sub(a_base, b_base, sum_base, diff_base);
 
     for (unsigned i = 0; i < N; i++) {
         TEST_EQ32(sum[i], a[i] + b[i], 0x1301u + i);
@@ -214,7 +214,7 @@ static void test_v_float_matrix(void)
     const uint64_t add_f32 = 0x3f800000u; /* +1.0f */
     const uint64_t mul_f32 = 0x40000000u; /* *2.0f */
 
-    linx_v03_launch_ops_float(src_base, dst_base, add_f32, mul_f32);
+    linx_v057_launch_ops_float(src_base, dst_base, add_f32, mul_f32);
 
     for (unsigned i = 0; i < N; i++) {
         union {
@@ -238,37 +238,37 @@ static void test_v_float_matrix(void)
 
 static void test_v_add_evidence(void)
 {
-    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v03_ops_add_sub_body));
+    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v057_ops_add_sub_body));
     TEST_EQ32(evidence_v_add, 0x75u, 0x1370u);
 }
 
 static void test_v_sub_evidence(void)
 {
-    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v03_ops_add_sub_body));
+    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v057_ops_add_sub_body));
     TEST_EQ32(evidence_v_sub, 0x53u, 0x1371u);
 }
 
 static void test_v_lw_brg_evidence(void)
 {
-    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v03_ops_add_sub_body));
+    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v057_ops_add_sub_body));
     TEST_EQ32(evidence_v_lw_brg, 0x79u, 0x1372u);
 }
 
 static void test_v_sw_brg_evidence(void)
 {
-    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v03_ops_add_sub_body));
+    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v057_ops_add_sub_body));
     TEST_EQ32(evidence_v_sw_brg, 0x55u, 0x1373u);
 }
 
 static void test_v_fadd_evidence(void)
 {
-    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v03_ops_float_body));
+    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v057_ops_float_body));
     TEST_EQ32(evidence_v_fadd, 0x40000000u, 0x1374u);
 }
 
 static void test_v_fmul_evidence(void)
 {
-    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v03_ops_float_body));
+    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v057_ops_float_body));
     TEST_EQ32(evidence_v_fmul, 0x40200000u, 0x1375u);
 }
 
@@ -289,14 +289,14 @@ static void test_v_fabs_matrix(void)
         dst[i] = 0xdead0000u + i;
     }
 
-    linx_v03_launch_ops_fabs((uint64_t)(uintptr_t)&src[0],
+    linx_v057_launch_ops_fabs((uint64_t)(uintptr_t)&src[0],
                              (uint64_t)(uintptr_t)&dst[0]);
 
     for (unsigned i = 0; i < N; i++) {
         TEST_EQ32(dst[i], src[i] & 0x7fffffffu, 0x1380u + i);
     }
 
-    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v03_ops_fabs_body));
+    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v057_ops_fabs_body));
 }
 
 static void test_v_mul_matrix(void)
@@ -312,7 +312,7 @@ static void test_v_mul_matrix(void)
         dst[i] = 0xcafe0000u + i;
     }
 
-    linx_v03_launch_ops_mul((uint64_t)(uintptr_t)&lhs[0],
+    linx_v057_launch_ops_mul((uint64_t)(uintptr_t)&lhs[0],
                             (uint64_t)(uintptr_t)&rhs[0],
                             (uint64_t)(uintptr_t)&dst[0]);
 
@@ -321,7 +321,7 @@ static void test_v_mul_matrix(void)
         TEST_EQ32(dst[i], expect, 0x13a0u + i);
     }
 
-    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v03_ops_mul_body));
+    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v057_ops_mul_body));
 }
 
 static void test_v_mixed_scalar_vector_predicate(void)
@@ -336,7 +336,7 @@ static void test_v_mixed_scalar_vector_predicate(void)
     const uint64_t out_base = (uint64_t)(uintptr_t)&out[0];
     const uint64_t threshold = 12u;
     const uint64_t lane_counter =
-        linx_v03_launch_ops_mixed_pred(out_base, threshold);
+        linx_v057_launch_ops_mixed_pred(out_base, threshold);
 
     TEST_EQ64(lane_counter, N, 0x1360);
 
@@ -345,11 +345,11 @@ static void test_v_mixed_scalar_vector_predicate(void)
         TEST_EQ32(out[i], expect, 0x1361u + i);
     }
 
-    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v03_ops_mixed_pred_body));
+    __asm__ volatile("" : : "r"((uintptr_t)&__linx_v057_ops_mixed_pred_body));
     TEST_EQ32(out[0], 0x1u, 0x1320u);
 }
 
-void run_v03_vector_ops_matrix_tests(void)
+void run_v057_vector_ops_matrix_tests(void)
 {
     test_start(0x1300);
     uart_puts("v0.57 vector add/sub matrix ... ");

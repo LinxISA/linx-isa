@@ -26,8 +26,8 @@ class StructuredEvidenceParsingTests(unittest.TestCase):
         )
         system_index = main_source.index("run_system_tests();")
         for invocation in (
-            "run_v03_vector_tile_tests();",
-            "run_v03_vector_ops_matrix_tests();",
+            "run_v057_vector_tile_tests();",
+            "run_v057_vector_ops_matrix_tests();",
             "run_callret_tests();",
             "run_freestanding_runtime_tests();",
         ):

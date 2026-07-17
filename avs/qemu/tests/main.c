@@ -41,14 +41,14 @@
 #ifndef LINX_TEST_ENABLE_SYSTEM
 #define LINX_TEST_ENABLE_SYSTEM 1
 #endif
-#ifndef LINX_TEST_ENABLE_V03_VECTOR
-#define LINX_TEST_ENABLE_V03_VECTOR 0
+#ifndef LINX_TEST_ENABLE_V057_VECTOR
+#define LINX_TEST_ENABLE_V057_VECTOR 0
 #endif
-#ifndef LINX_TEST_ENABLE_V03_VECTOR_OPS
-#define LINX_TEST_ENABLE_V03_VECTOR_OPS 0
+#ifndef LINX_TEST_ENABLE_V057_VECTOR_OPS
+#define LINX_TEST_ENABLE_V057_VECTOR_OPS 0
 #endif
-#ifndef LINX_TEST_ENABLE_V03_VECTOR_BODY_FAULT
-#define LINX_TEST_ENABLE_V03_VECTOR_BODY_FAULT 0
+#ifndef LINX_TEST_ENABLE_V057_VECTOR_BODY_FAULT
+#define LINX_TEST_ENABLE_V057_VECTOR_BODY_FAULT 0
 #endif
 #ifndef LINX_TEST_ENABLE_CALLRET
 #define LINX_TEST_ENABLE_CALLRET 0
@@ -97,14 +97,14 @@ void run_tile_tests(void);
 #if LINX_TEST_ENABLE_SYSTEM
 void run_system_tests(void);
 #endif
-#if LINX_TEST_ENABLE_V03_VECTOR
-void run_v03_vector_tile_tests(void);
+#if LINX_TEST_ENABLE_V057_VECTOR
+void run_v057_vector_tile_tests(void);
 #endif
-#if LINX_TEST_ENABLE_V03_VECTOR_OPS
-void run_v03_vector_ops_matrix_tests(void);
+#if LINX_TEST_ENABLE_V057_VECTOR_OPS
+void run_v057_vector_ops_matrix_tests(void);
 #endif
-#if LINX_TEST_ENABLE_V03_VECTOR_BODY_FAULT
-void run_v03_vector_body_fault_tests(void);
+#if LINX_TEST_ENABLE_V057_VECTOR_BODY_FAULT
+void run_v057_vector_body_fault_tests(void);
 #endif
 #if LINX_TEST_ENABLE_CALLRET
 void run_callret_tests(void);
@@ -158,14 +158,14 @@ void _start(void) {
 #if LINX_TEST_ENABLE_TILE
     run_tile_tests();
 #endif
-#if LINX_TEST_ENABLE_V03_VECTOR
-    run_v03_vector_tile_tests();
+#if LINX_TEST_ENABLE_V057_VECTOR
+    run_v057_vector_tile_tests();
 #endif
-#if LINX_TEST_ENABLE_V03_VECTOR_OPS
-    run_v03_vector_ops_matrix_tests();
+#if LINX_TEST_ENABLE_V057_VECTOR_OPS
+    run_v057_vector_ops_matrix_tests();
 #endif
-#if LINX_TEST_ENABLE_V03_VECTOR_BODY_FAULT
-    run_v03_vector_body_fault_tests();
+#if LINX_TEST_ENABLE_V057_VECTOR_BODY_FAULT
+    run_v057_vector_body_fault_tests();
 #endif
 #if LINX_TEST_ENABLE_CALLRET
     run_callret_tests();

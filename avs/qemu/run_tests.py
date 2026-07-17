@@ -67,8 +67,8 @@ COMPLETION_TEST_IDS_BY_SUITE = {
     "atomic": 0x00007160,
     "jumptable": 0x00008002,
     "varargs": 0x00009004,
-    "v03_vector": 0x000012F0,
-    "v03_vector_ops": 0x00001320,
+    "v057_vector": 0x000012F0,
+    "v057_vector_ops": 0x00001320,
     "callret": 0x00001412,
     "runtime": 0x00002110,
     "executable_memory": 0x0000220D,
@@ -554,14 +554,14 @@ SUITES: dict[str, dict[str, str]] = {
     "tile": {"src": "tests/10_tile_matmul.cpp", "macro": "LINX_TEST_ENABLE_TILE"},
     "pto_parity": {"src": "tests/16_pto_kernel_parity.cpp", "macro": "LINX_TEST_ENABLE_PTO_PARITY"},
     "system": {"src": "tests/11_system.c", "macro": "LINX_TEST_ENABLE_SYSTEM"},
-    "v03_vector": {"src": "tests/12_v03_vector_tile.c", "macro": "LINX_TEST_ENABLE_V03_VECTOR"},
-    "v03_vector_ops": {
-        "src": "tests/13_v03_vector_ops_matrix.c",
-        "macro": "LINX_TEST_ENABLE_V03_VECTOR_OPS",
+    "v057_vector": {"src": "tests/12_v057_vector_tile.c", "macro": "LINX_TEST_ENABLE_V057_VECTOR"},
+    "v057_vector_ops": {
+        "src": "tests/13_v057_vector_ops_matrix.c",
+        "macro": "LINX_TEST_ENABLE_V057_VECTOR_OPS",
     },
-    "v03_vector_body_fault": {
-        "src": "tests/18_v03_vector_body_fault.c",
-        "macro": "LINX_TEST_ENABLE_V03_VECTOR_BODY_FAULT",
+    "v057_vector_body_fault": {
+        "src": "tests/18_v057_vector_body_fault.c",
+        "macro": "LINX_TEST_ENABLE_V057_VECTOR_BODY_FAULT",
     },
     "translation_corpus": {
         "src": "tests/20_translation_corpus_stub.c",
@@ -670,7 +670,7 @@ EXPERIMENTAL_SUITES: set[str] = {
     # symbol lowering and objdump expectations are refreshed for canonical B.IOT.
     "simt_autovec",
     # Standalone negative trap regression; not a normal smoke lane.
-    "v03_vector_body_fault",
+    "v057_vector_body_fault",
     # Compile-only per-instruction translation corpus used by coverage/reporting.
     "translation_corpus",
     # Evidence carrier: run explicitly so it never collides with the ordinary
@@ -1242,8 +1242,8 @@ def main(argv: list[str]) -> int:
             add_source(REPO_ROOT / rel)
     softfp_suites = {
         "float",
-        "v03_vector",
-        "v03_vector_ops",
+        "v057_vector",
+        "v057_vector_ops",
         "v04_vector_ops",
         "simt_autovec",
         "tile",

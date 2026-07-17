@@ -283,7 +283,7 @@ This is now locked by the MC regression
 `compiler/llvm/llvm/test/MC/LinxISA/simt-p-save-restore-gap.s`.
 
 Related runtime caveat: the current grouped/nested QEMU regressions in
-`v03_vector` are still evidence for the replay-oriented execution lane, not for
+`v057_vector` are still evidence for the replay-oriented execution lane, not for
 full architectural EXEC-mask restoration. Those tests exercise grouped body CFG
 under the current replay model, but they do not prove a first-class
 save/restore carrier for `p` or true subset-mask reconvergence.

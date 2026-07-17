@@ -36,7 +36,7 @@ SUITE_PREFIXES = {
     "executable_memory": "executable-memory",
     "executable_scalar": "executable-scalar",
     "executable_integer": "executable-integer",
-    "v03_vector_ops": "v03-vector-ops",
+    "v057_vector_ops": "v057-vector-ops",
     "atomic": "atomic-lr-srczero",
 }
 SUITE_ORDER = tuple(SUITE_PREFIXES)
