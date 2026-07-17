@@ -5,7 +5,8 @@ Last updated: 2026-07-15
 ## Baseline
 
 - Latest maintenance run: `2026-07-17-v057-release`
-- Latest maintenance evidence: TSVC batched auto passes 151/151; BusyBox rootfs
+- Latest maintenance evidence: TSVC batched auto executes 151/151 with 150/151
+  strict-vectorized (`s451` is the scalar transcendental-call case); BusyBox rootfs
   fails with no UART output in two 120-second attempts.
 - Canonical report: `docs/bringup/gates/latest.json`
 - Latest diagnostic strict rerun: `2026-04-17-r7-pin-recovery` (non-canonical; BusyBox rootfs skipped to expose downstream blockers in `docs/bringup/gates/logs/2026-04-17-r7-pin-recovery/pin/reg_strict_cross_repo.log`)

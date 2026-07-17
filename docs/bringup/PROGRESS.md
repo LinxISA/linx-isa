@@ -35,7 +35,8 @@ Last updated: 2026-07-15
     BusyBox proof.
 - SPEC bringup-subset runtime remains a nightly/runtime blocker; the static train-all lane now reaches SPEC userspace, builds all supported C/C++ rows, and passes `999.specrand_ir`, but remaining rows split into throughput, C++ resource/kill, and kernel panic-loop classes.
   - TSVC QEMU runtime is green in the required batched auto lane: 8/8 batches,
-    `151/151` strict-vectorized and executed kernels in 10.587 seconds.
+    `150/151` strict-vectorized and `151/151` executed kernels; `s451` is the
+    intentional scalar transcendental-call case.
   - Some call/ret negative-contract and C++ runtime-overlay follow-up work remains outside the PR closure subset.
 
 ## Capability Status

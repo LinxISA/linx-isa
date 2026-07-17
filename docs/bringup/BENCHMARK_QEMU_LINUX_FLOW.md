@@ -15,10 +15,11 @@ Evidence:
   breadth and the AVS translation inventory both cover `711/711`; executable
   semantic breadth remains a separate, intentionally red evidence level.
 - The v0.57 TSVC hard break is closed on clean QEMU
-  `cdc5d976242d6e81c6938f192fc6b1849aa2f0df`: 8/8 deterministic batches,
-  `151/151` strict-vectorized kernels, and `151/151` QEMU completions in
-  10.587 seconds. The unbatched all-mode diagnostic is not the PR hard-break
-  contract and may exceed its per-process timeout.
+  `b270924c2240d7a1dc9bad4672345cc098510341`: 8/8 deterministic batches,
+  `150/151` strict-vectorized kernels, and `151/151` QEMU completions. `s451`
+  remains the intentional scalar transcendental-call case. The unbatched
+  all-mode diagnostic is not the PR hard-break contract and may exceed its
+  per-process timeout.
 - The separately ordered BusyBox lane remains red on the same clean QEMU: two
   120-second attempts produced no UART output. This is tracked as the distinct
   Linux/MMU regression and does not invalidate the completed TSVC hard break.
