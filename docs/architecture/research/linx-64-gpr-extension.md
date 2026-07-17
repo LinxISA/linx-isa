@@ -24,7 +24,7 @@ standard ABI path, such as a naked function or trap entry.
 
 ## 2. Current Constraint
 
-The current v0.56 frame-template encoding is a 32-bit instruction family:
+The current v0.57 frame-template encoding is a 32-bit instruction family:
 
 ```text
 31..25 = uimm[9:3]

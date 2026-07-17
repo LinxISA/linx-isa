@@ -40,7 +40,7 @@ MGATHER.MASK <LB0:Col, LB1:Row, DataType, PadValue>, SrcTile<.reuse>, MaskTile<.
 
 该 TileOp 编码为以下指令：
 
-- [BSTART.TMA](../../blockIntro/tma_block/header.md) `MGATHER.MASK, DataType`
+- [BSTART.MGATHER.MASK](../../blockIntro/tma_block/header.md) `DataType`
 - [B.DATR](../../header/B.DATR.md) `PadValue` *（可选）*
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0` *（`Col`）*
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1` *（`Row`）*

@@ -1,4 +1,4 @@
-# 灵犀Core v0.56 验证矩阵
+# 灵犀Core v0.57 验证矩阵
 
 > 此发布的页面镜像了规范的 灵犀Core 源代码
 > `rtl/LinxCore/docs/architecture/verification-matrix.md`。

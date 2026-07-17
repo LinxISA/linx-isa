@@ -8,7 +8,7 @@
 
 它是一个实现状态页面，而不是架构契约。现场直播
 架构方向定义为
-`docs/architecture/v0.56-simt-compiler-contract.md`。
+`docs/architecture/v0.57-simt-compiler-contract.md`。
 
 ## 目的
 
@@ -51,7 +51,7 @@ JSON 注释现在还公开了面向编译器的控制流分类
 这意味着该通行证目前最好理解为：
 
 - 用于窄规范循环子集的可用 SIMT 内核生成器，
-- 加上一个通往新冻结的发散型 `v0.56` SIMT 的实验桥
+- 加上一个通往新冻结的发散型 `v0.57` SIMT 的实验桥
   合同。
 
 ## 当前接受的循环形状
@@ -114,7 +114,7 @@ JSON 注释现在还公开了面向编译器的控制流分类
 - 分组布局时逻辑线程索引保持为`lc0 + lc1 * LB0`
   使用多个组。
 
-这是实施状态，而不是最终预期的 `v0.56` SIMT 合约。## 当前内部控制流行为
+这是实施状态，而不是最终预期的 `v0.57` SIMT 合约。## 当前内部控制流行为
 
 该通行证现在可以发出第一个规范的 `p` 形式的结构化分支
 内部控制流程：
@@ -210,7 +210,7 @@ JSON 注释现在还公开了面向编译器的控制流分类
 
 这些额外的优点与标准 SIMT 编译器技术一致：
 早期的 标量 优化可以将简单的菱形转换为谓词并
-选择形式，分组内核可以保留在当前规范的 `v0.56` 内
+选择形式，分组内核可以保留在当前规范的 `v0.57` 内
 块体 合约（`BSTART.MSEQ`、`B.TEXT`、分组 `LB0/LB1`、向量 比较，以及
 选择），无需一流的 EXEC 掩码保存/恢复或拆分/重新加入
 重新收敛。
@@ -259,7 +259,7 @@ JSON 注释现在还公开了面向编译器的控制流分类
 
 - 普通 标量 `add p, zero, ->t` / `add t, zero, ->p` 失败，因为
   标量形式仅携带5位寄存器字段，
-- 规范的 `v0.56` 解析拒绝 `l.add ...` 旧语法，
+- 规范的 `v0.57` 解析拒绝 `l.add ...` 旧语法，
 - 因此目前没有公认的组域规范 asm 形状
   `p` 通过 标量 载体保存/恢复。现在已被 MC 回归锁定
 `compiler/llvm/llvm/test/MC/LinxISA/simt-p-save-restore-gap.s`。
@@ -518,9 +518,9 @@ JSON 注释现在还公开了面向编译器的控制流分类
 ## 与其他页面的关系
 
 - 建筑合同：
-  `docs/architecture/v0.56-simt-compiler-contract.md`
+  `docs/architecture/v0.57-simt-compiler-contract.md`
 - 架构规划：
-  `docs/architecture/v0.56-simt-compiler-contract-plan.md`
+  `docs/architecture/v0.57-simt-compiler-contract-plan.md`
 - 编译器成熟度路线图：
   `docs/bringup/SIMT_COMPILER_MATURITY_PLAN.md`
 

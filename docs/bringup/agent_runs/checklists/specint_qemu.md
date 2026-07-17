@@ -1008,7 +1008,7 @@
   Evidence: `workloads/generated/specint-500-preexec-20260628/initramfs/500_perlbench_r/run_001/qemu.log` shows `stat=0`, `open=6`, `read4=4`, and ELF magic `0x7f454c46`.
   Follow-up: the prior `Math::BigInt` range failure is closed by the Linx LLVM f64 extload fix. The current all-train run reaches a later `500.perlbench_r` command: run_001 passes by hash, and run_002 traps at bad target `0x003f7fee56880000`; track that under the active 500 branch/syscall-return correctness lane.
 
-- [x] ID: SPEC-M05-FIXUP-500 Linx Linux recognizes v0.56 faultable usercopy fixup blocks.
+- [x] ID: SPEC-M05-FIXUP-500 Linx Linux recognizes v0.57 faultable usercopy fixup blocks.
   Resolution: `arch/linx/mm/extable.c` now accepts nonzero-offset 32-bit and 48-bit `BSTART.{STD,SYS,FP} FALL<, fixup_label>` fixup encodings before the legacy 128-bit block-header fallback.
   Evidence: `workloads/generated/specint-500-fixup-20260628/initramfs/500_perlbench_r/run_001/qemu.log` no longer stops at the earlier `sys_fcntl` usercopy `HL.BSTART.STD FALL` Oops.
   Verification: `run_linux_vmlinux_build_clean.sh --target vmlinux` rebuilt `kernel/linux/build-linx-fixed/vmlinux`; focused 500 rerun advanced to a different Oops.

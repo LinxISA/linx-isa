@@ -1,20 +1,20 @@
 # ISA vs QEMU Decoder/Source Mapping Snapshot
 
-- Generated (UTC): `2026-07-16 23:18:26Z`
+- Generated (UTC): `2026-07-17 06:07:09Z`
 - Evidence level: `L1`
 - Claim: `decoder_source_mapping`
 - L2 runtime execution: `available`; `60` forms / `60` mnemonics
 - L3 semantic oracle: `available`; `60` forms / `60` mnemonics
 - Limitation: L1 mapping does not imply execution; L2/L3 counts are independently audited per-form evidence and remain partial.
-- Spec unique mnemonics: `710`
-- QEMU unique decode mnemonics (non-internal): `658`
-- QEMU mapped spec mnemonics: `625`
-- L1 mnemonic mapping: `625/710` (`88.03%`)
-- Spec legal forms: `746`
-- QEMU mapped spec forms: `657`
-- L1 form mapping: `657/746` (`88.07%`)
+- Spec unique mnemonics: `731`
+- QEMU unique decode mnemonics (non-internal): `679`
+- QEMU mapped spec mnemonics: `646`
+- L1 mnemonic mapping: `646/731` (`88.37%`)
+- Spec legal forms: `769`
+- QEMU mapped spec forms: `678`
+- L1 form mapping: `678/769` (`88.17%`)
 - Missing spec mnemonics: `85`
-- Missing spec forms: `89`
+- Missing spec forms: `91`
 - Reserved spec forms: `1`
 - Unmapped QEMU mnemonics: `0`
 
@@ -38,7 +38,7 @@
 - `BIC`: `1`
 - `BIS`: `1`
 - `BSE`: `1`
-- `BSTART`: `18`
+- `BSTART`: `34`
 - `BSTOP`: `1`
 - `BWE`: `1`
 - `BWI`: `1`
@@ -46,6 +46,10 @@
 - `BXS`: `1`
 - `BXU`: `1`
 - `C`: `38`
+- `CASB`: `1`
+- `CASD`: `1`
+- `CASH`: `1`
+- `CASW`: `1`
 - `CLZ`: `1`
 - `CMP`: `16`
 - `CSEL`: `1`
@@ -55,6 +59,7 @@
 - `DIVU`: `1`
 - `DIVUW`: `1`
 - `DIVW`: `1`
+- `DMA`: `1`
 - `EBREAK`: `1`
 - `ERCOV`: `1`
 - `ESAVE`: `1`
@@ -203,7 +208,7 @@
 - `BIC`: `1`
 - `BIS`: `1`
 - `BSE`: `1`
-- `BSTART`: `27`
+- `BSTART`: `43`
 - `BSTOP`: `1`
 - `BWE`: `1`
 - `BWI`: `1`
@@ -211,6 +216,10 @@
 - `BXS`: `1`
 - `BXU`: `1`
 - `C`: `39`
+- `CASB`: `1`
+- `CASD`: `1`
+- `CASH`: `1`
+- `CASW`: `1`
 - `CLZ`: `1`
 - `CMP`: `16`
 - `CSEL`: `1`
@@ -220,6 +229,7 @@
 - `DIVU`: `1`
 - `DIVUW`: `1`
 - `DIVW`: `1`
+- `DMA`: `1`
 - `EBREAK`: `1`
 - `ERCOV`: `1`
 - `ESAVE`: `1`
@@ -345,6 +355,7 @@
 
 ## Missing Forms By Prefix
 
+- `B`: `2`
 - `BSTART`: `4`
 - `V`: `84`
 - `XB`: `1`
@@ -443,6 +454,8 @@
 
 ## Missing Spec Forms (First 200)
 
+- `B.IOT [len=32 mask=0x1fc0707f match=0x1c04013]`
+- `B.IOT [len=32 mask=0x9fff707f match=0x1c05013]`
 - `BSTART.MPAR [len=32 mask=0xf9ffffff match=0x1181]`
 - `BSTART.MSEQ [len=32 mask=0xf9ffffff match=0x9181]`
 - `BSTART.VPAR [len=32 mask=0xf9ffffff match=0x21181]`

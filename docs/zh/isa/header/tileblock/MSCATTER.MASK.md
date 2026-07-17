@@ -38,7 +38,7 @@ MSCATTER.MASK <LB0:Col, LB1:Row, DataType>, SrcTile0<.reuse>, SrcTile1<.reuse>, 
 
 该 TileOp 编码为以下指令：
 
-- [BSTART.TMA](../../blockIntro/tma_block/header.md) `MSCATTER.MASK, DataType`
+- [BSTART.MSCATTER.MASK](../../blockIntro/tma_block/header.md) `DataType`
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0` *（`Col`）*
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1` *（`Row`）*
 - [B.IOT](../../header/B.IOT.md) `SrcTile0<.reuse>, SrcTile1<.reuse>, MaskTile<.reuse>, last`

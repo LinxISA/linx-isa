@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_dma]]
+==== DMA
+
+*Syntax:* dma [SrcL], SrcR
+
+*Description:* v0.57 encoding for the inherited DMA operation: copy 64 bytes from the source address in SrcL to the destination address in SrcR and complete before submission.
+
+*Encoding:*
+
+image::encodings/enc_dma.svg[DMA encoding,width=800]
+
+*Uop-Class:* AMO
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"amo_kind": "DMA", "note": "v0.57 DMA transfer initiation", "source": "group_rule", "uop_kind": "AMO"}`

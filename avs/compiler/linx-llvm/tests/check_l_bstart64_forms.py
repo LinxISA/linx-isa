@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check the canonical v0.56.5 64-bit L.BSTART form matrix."""
+"""Check the canonical v0.57 64-bit L.BSTART form matrix."""
 
 from __future__ import annotations
 

@@ -4,12 +4,12 @@ Last updated: 2026-07-15
 
 ## Baseline
 
-- Latest maintenance run: `2026-07-15-v0565-maintenance`
+- Latest maintenance run: `2026-07-17-v057-release`
 - Latest maintenance evidence: TSVC batched auto passes 151/151; BusyBox rootfs
   fails with no UART output in two 120-second attempts.
 - Canonical report: `docs/bringup/gates/latest.json`
 - Latest diagnostic strict rerun: `2026-04-17-r7-pin-recovery` (non-canonical; BusyBox rootfs skipped to expose downstream blockers in `docs/bringup/gates/logs/2026-04-17-r7-pin-recovery/pin/reg_strict_cross_repo.log`)
-- The v0.56.5 packet is deliberately non-green: it clears the TSVC hard break
+- The v0.57 packet is deliberately non-green: it clears the TSVC hard break
   but records the separate Linux/MMU failure and all unrun nightly gates.
 - Active governance phase remains `LINUX-RUNTIME`; `docs/bringup/agent_runs/waivers.yaml` contains no waivers.
 - Latest non-canonical Linux smoke diagnostic: 2026-05-17 local bring-up iterations move well past DT, percpu, log-buffer, proc/ns/pidfs pseudo-fs setup, and the pre-`rest_init()` late-init lane. The live boundary is now the first task-creation handoff after `rest_init()`, specifically `user_mode_thread()` / `kernel_clone()` / `copy_process()` on the Linx tiny-RCU configuration.
@@ -164,7 +164,7 @@ Current milestone interpretation:
 ## SIMT-Specific Planning Pages
 
 - Architecture detail plan:
-  `docs/architecture/v0.56-simt-compiler-contract-plan.md`
+  `docs/architecture/v0.57-simt-compiler-contract-plan.md`
 - Compiler maturation plan:
   `docs/bringup/SIMT_COMPILER_MATURITY_PLAN.md`
 

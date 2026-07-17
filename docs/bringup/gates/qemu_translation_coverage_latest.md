@@ -1,9 +1,9 @@
 # AVS QEMU Translation Coverage
 
-- Generated (UTC): `2026-07-16 19:20:54Z`
-- Spec unique mnemonics: `710`
-- AVS object files scanned: `24`
-- Covered spec mnemonics: `710/710` (`100.0%`)
+- Generated (UTC): `2026-07-17 06:07:02Z`
+- Spec unique mnemonics: `731`
+- AVS object files scanned: `66`
+- Covered spec mnemonics: `731/731` (`100.0%`)
 - Missing spec mnemonics: `0`
 
 ## Coverage By Prefix
@@ -26,7 +26,7 @@
 - `BIC`: `1`
 - `BIS`: `1`
 - `BSE`: `1`
-- `BSTART`: `18`
+- `BSTART`: `34`
 - `BSTOP`: `1`
 - `BWE`: `1`
 - `BWI`: `1`
@@ -35,6 +35,10 @@
 - `BXU`: `1`
 - `C`: `30`
 - `C.BSTART`: `8`
+- `CASB`: `1`
+- `CASD`: `1`
+- `CASH`: `1`
+- `CASW`: `1`
 - `CLZ`: `1`
 - `CMP`: `16`
 - `CSEL`: `1`
@@ -44,6 +48,7 @@
 - `DIVU`: `1`
 - `DIVUW`: `1`
 - `DIVW`: `1`
+- `DMA`: `1`
 - `EBREAK`: `1`
 - `ERCOV`: `1`
 - `ESAVE`: `1`
@@ -174,29 +179,30 @@
 
 ## Top Covering Objects
 
-- `99_spec_decode_qemu.o`: `710`
-- `softfp.o`: `73`
-- `12_v03_vector_tile.o`: `72`
+- `99_spec_decode_qemu.o`: `731`
+- `16_pto_kernel_parity.o`: `75`
+- `12_v03_vector_tile.o`: `73`
+- `softfp.o`: `72`
+- `13_v03_vector_ops_matrix.o`: `69`
 - `11_system.o`: `64`
-- `13_v03_vector_ops_matrix.o`: `63`
+- `sparse_attention_local_fp16.o`: `62`
+- `flash_attention_cube_fp16.o`: `59`
+- `flash_attention_vec_fp16.o`: `59`
+- `gqa_fp16.o`: `59`
 - `03_loadstore.o`: `58`
 - `07_atomic.o`: `56`
-- `14_callret.o`: `53`
+- `14_callret.o`: `54`
 - `math.o`: `51`
 - `06_floating_point.o`: `49`
+- `rmsnorm_fp16.o`: `49`
 - `04_branch.o`: `46`
-- `stdlib.o`: `43`
+- `stdlib.o`: `44`
+- `09_varargs.o`: `42`
 - `21_freestanding_runtime.o`: `42`
-- `09_varargs.o`: `41`
 - `syscall.o`: `40`
 - `08_jumptable.o`: `38`
+- `softmax_fp32.o`: `38`
 - `05_move.o`: `37`
-- `41_v056_isa_forms.o`: `33`
-- `01_arithmetic.o`: `28`
-- `main.o`: `27`
-- `02_bitwise.o`: `26`
-- `mem.o`: `26`
-- `14_callret_templates.o`: `15`
-- `07_atomic_lr_srczero.o`: `6`
+- `flash_attention_vec_fp32.o`: `35`
 
 ## Missing Spec Mnemonics (First 200)

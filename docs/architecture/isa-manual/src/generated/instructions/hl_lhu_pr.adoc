@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_hl_lhu_pr.svg[HL.LHU.PR encoding,width=800]
+image::encodings/enc_hl_lhu_pr.svg[HL.LHU.PR encoding,width=800]
 
 *Uop-Class:* LDA/PRE_INDEX
 

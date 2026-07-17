@@ -34,7 +34,7 @@ written. Canonical forms allow `u16`, `u32`, or `u64` offsets.
 
 `MSCATTER.MASK` expands to:
 
-- [BSTART.TMA](../../blockIntro/tma_block/header.md) `MSCATTER.MASK, DataType`
+- [BSTART.MSCATTER.MASK](../../instructions/bstart_mscatter_mask.md) `DataType`
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0` (`Col`)
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1` (`Row`)
 - [B.IOT](../../header/B.IOT.md) `SrcTile0<.reuse>, SrcTile1<.reuse>, MaskTile<.reuse>, last`

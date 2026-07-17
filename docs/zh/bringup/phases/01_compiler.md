@@ -19,7 +19,7 @@
 
 ## 必需的不变量
 
-- 编码和解码假设必须匹配 `isa/v0.56/linxisa-v0.56.json`。
+- 编码和解码假设必须匹配 `isa/v0.57/linxisa-v0.57.json`。
 - 块 ISA 控制流不变量必须保持。
 - 调用 块头 邻接规则 (`BSTART CALL` + `SETRET`) 必须成立。
 

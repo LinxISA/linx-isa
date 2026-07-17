@@ -1,13 +1,13 @@
-== Tile / Vector Block Instructions (v0.56)
+== Tile / Vector Block Instructions (v0.57)
 
-This chapter defines the **normative header contracts** for tile/vector/tensor-style block types in the live v0.56
+This chapter defines the **normative header contracts** for tile/vector/tensor-style block types in the live v0.57
 profile.
 
 It complements:
 
 * <<blockisa-forms>> (block forms, coupled vs decoupled vs template),
 * <<memory>> (architectural memory model + ordering), and
-* the opcode catalog notes (e.g. `isa/v0.56/opcodes/lx_32.opc`).
+* the opcode catalog notes (e.g. `isa/v0.57/opcodes/lx_32.opc`).
 
 Unless stated otherwise:
 
@@ -71,9 +71,9 @@ Other descriptors (tile inputs, register in/out bindings, etc.) are kernel-defin
 kernels but are not universally required by the ISA.
 
 [[tileblocks-rendering-profile]]
-=== Rendering profile (v0.56 canonical)
+=== Rendering profile (v0.57 canonical)
 
-The first frozen rendering-oriented v0.56 profile uses the following tile conventions:
+The rendering-oriented v0.57 profile inherits the frozen v0.57 tile conventions unless a v0.57 delta explicitly changes them:
 
 * tiles remain general-purpose intermediate-state storage; they are not inherently screen-space tiles,
 * the canonical carrier is a 4KB `1024x1` row-major tile,

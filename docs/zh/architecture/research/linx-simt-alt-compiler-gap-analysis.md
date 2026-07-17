@@ -5,7 +5,7 @@
 本文分析了 `/Users/zhoubot/linx-simt.s` 中的替代编译器输出：
 
 - `/Users/zhoubot/linx-simt.c` 中的源意图
-- 规范的 `v0.56` ISA 手册
+- 规范的 `v0.57` ISA 手册
 - `compiler/llvm/llvm/lib/Target/LinxISA/LinxISASIMTAutoVectorize.cpp` 中当前的 LLVM 灵犀 SIMT 降低
 - `emulator/qemu/target/linx/translate.c` 中的当前 QEMU 灵犀 向量-块体 执行模型
 
@@ -46,7 +46,7 @@
   - 块体 充满了数据相关的退出和重新进入点：`b.ne` / `j` 将 块体 分成许多内部块（`/Users/zhoubot/linx-simt.s:71-72`、`/Users/zhoubot/linx-simt.s:95-96`、`/Users/zhoubot/linx-simt.s:173-174`、`/Users/zhoubot/linx-simt.s:191-192`、 `/Users/zhoubot/linx-simt.s:233-234`）。
   - 编译器在 `v.psel`、重复的 `v.cmp.* ->p` 和许多 `.local` 溢出/重新加载（`/Users/zhoubot/linx-simt.s:154-173`、`/Users/zhoubot/linx-simt.s:178-210`、`/Users/zhoubot/linx-simt.s:239-257`）的拆分中保持通道状态处于活动状态。
 - 当前规范设计：
-  - `v0.56` 手册为每组定义了一个 标量 统一控制流上下文以及 EXEC 掩码 `p` (`docs/architecture/isa-manual/src/chapters/03_programming_model.adoc:121-167`)。
+  - `v0.57` 手册为每组定义了一个 标量 统一控制流上下文以及 EXEC 掩码 `p` (`docs/architecture/isa-manual/src/chapters/03_programming_model.adoc:121-167`)。
   - SIMT 主体被定义为通过 `lc0..lc2` 元组 (`docs/architecture/isa-manual/src/chapters/04_block_isa.adoc:500-521`) 重放的单通道主体。
 - 为什么这是一个差距：
   - 该合同足以满足重播风格的 向量 循环。
@@ -66,7 +66,7 @@
   - 块体 反复将 向量 条件转换为 `p`，然后将 `p` 物化回 标量 临时条件，然后分支（`/Users/zhoubot/linx-simt.s:68-71`、`/Users/zhoubot/linx-simt.s:88-96`、`/Users/zhoubot/linx-simt.s:163-173`、`/Users/zhoubot/linx-simt.s:184-191`）。
   - 它还使用 `v.psel` 手动合并每通道状态 (`/Users/zhoubot/linx-simt.s:154-160`)。
 - 当前规范设计：
-  - `v0.56` 显式地将块控制谓词状态 (`BARG.CARG`) 与内核 EXEC 掩码 `p` (`docs/architecture/isa-manual/src/chapters/03_programming_model.adoc:109-119`) 分开。
+  - `v0.57` 显式地将块控制谓词状态 (`BARG.CARG`) 与内核 EXEC 掩码 `p` (`docs/architecture/isa-manual/src/chapters/03_programming_model.adoc:109-119`) 分开。
   - `SETC.*` 不屏蔽 向量 通道； `V.CMP.* ->p`是规范的口罩生产商（`docs/architecture/isa-manual/src/chapters/04_block_isa.adoc:618-625`）。
 - 为什么这是一个差距：
   - 当前模型提供了掩码寄存器，但没有提供用于发散执行的完整掩码控制代数。
@@ -83,7 +83,7 @@
   - 定义一个小的规范 EXEC 控制子模型：
     -掩码查询操作（`any`、`all`、`none`）
     - 掩码保存/恢复或堆栈操作- 内部分支的显式收敛语义
-  - 如果这对于 `v0.56` 来说太大，则编纂一个严格的仅预测子集并禁止像这样的代码形状从规范降低。
+  - 如果这对于 `v0.57` 来说太大，则编纂一个严格的仅预测子集并禁止像这样的代码形状从规范降低。
 
 #### 差距 3：对于替代 SIMT 编译器未指定启动几何结构和组宽度- 分类：设计间隙
 - 观察到的汇编证据：
@@ -223,7 +223,7 @@
 
 ## 总体评估
 
-替代编译器主要不是暴露丢失的单个指令。它暴露出当前的 `v0.56` SIMT 故事仍然是部分强化的重放模型，而这个哈希表内核需要更明确的类似 GPU 的执行合约。
+替代编译器主要不是暴露丢失的单个指令。它暴露出当前的 `v0.57` SIMT 故事仍然是部分强化的重放模型，而这个哈希表内核需要更明确的类似 GPU 的执行合约。
 
 最深的缺失是建筑方面的：
 

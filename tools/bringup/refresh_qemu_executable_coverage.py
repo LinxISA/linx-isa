@@ -602,7 +602,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         report = reporter.build_report(
             repo_root=repo_root,
-            spec_path=repo_root / "isa/v0.56/linxisa-v0.56.json",
+            spec_path=repo_root / "isa/v0.57/linxisa-v0.57.json",
             manifest_path=candidate_manifest,
             current_qemu_sha=qemu_sha,
             qemu_root=qemu_root,

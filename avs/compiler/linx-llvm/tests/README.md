@@ -69,7 +69,7 @@ Current compiler target contract:
 
 ## Curated assembly tests
 
-- `41_v056_isa_forms.s` — positive assembler/disassembler coverage for v0.56 block, tile, vector, system, FSU, and AMO forms that are not guaranteed to appear in C output, including all nine canonical v0.56.5 64-bit `L.BSTART.{STD,FP,SYS}` forms.
+- `41_v057_isa_forms.s` — positive assembler/disassembler coverage for v0.57 block, tile, vector, system, FSU, and AMO forms that are not guaranteed to appear in C output, including all nine canonical v0.57 64-bit `L.BSTART.{STD,FP,SYS}` forms.
 
 Notes:
 - The runner links each test object with a tiny runtime via `ld.lld` to resolve relocations, then extracts `.text` to

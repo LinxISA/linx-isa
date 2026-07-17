@@ -1,6 +1,6 @@
 # Instruction Groups
 
-Alphabetical list of all 66 instruction groups in the LinxISA v0.56 catalog.
+Alphabetical list of all 67 instruction groups in the LinxISA v0.57.0 catalog.
 See the [chapter index](index.md) for the manual organization.
 
 | Group | Forms | Chapter | Sample mnemonics |
@@ -14,11 +14,11 @@ See the [chapter index](index.md) for the manual organization.
 | [Block Data Attribute](block_data_attribute.md) | 1 | **Ch 17** — [source](index.md) | `B.DATR` |
 | [Branch](branch.md) | 10 | **Ch 16** — [source](index.md) | `B.EQ`, `B.GE`, `B.GEU`, `B.LT`, `B.LTU`, `B.NE`, `B.NZ`, `B.Z` +2 |
 | [Block Hint](block_hint.md) | 2 | **Ch 17** — [source](index.md) | `B.HINT` |
-| [Block Input & Output](block_input_output.md) | 4 | **Ch 4** — [source](index.md) | `B.IOR`, `B.IOT` |
+| [Block Input & Output](block_input_output.md) | 6 | **Ch 4** — [source](index.md) | `B.IOR`, `B.IOT` |
 | [Block Offset](block_offset.md) | 1 | **Ch 4** — [source](index.md) | `B.TEXT` |
 | [Cache Maintain](cache_maintain.md) | 16 | **Ch 19** — [source](index.md) | `BC.IALL`, `BC.IVA`, `DC.CISW`, `DC.CIVA`, `DC.CSW`, `DC.CVA`, `DC.IALL`, `DC.ISW` +8 |
 | [Bit Operation](bit_operation.md) | 8 | **Ch 12** — [source](index.md) | `BCNT`, `BIC`, `BIS`, `BXS`, `BXU`, `CLZ`, `CTZ`, `REV` |
-| [Block Split](block_split.md) | 43 | **Ch 4** — [source](index.md) | `BSTART`, `BSTART.ACCCVT`, `BSTART.CUBE`, `BSTART.FIXP`, `BSTART.FP`, `BSTART.MPAR`, `BSTART.MSEQ`, `BSTART.STD` +21 |
+| [Block Split](block_split.md) | 59 | **Ch 4** — [source](index.md) | `BSTART`, `BSTART.ACCCVT`, `BSTART.CUBE`, `BSTART.FIXP`, `BSTART.FP`, `BSTART.MGATHER`, `BSTART.MGATHER.CAS`, `BSTART.MGATHER.MASK` +37 |
 | [BSTART](bstart.md) | 20 | **Ch 4** — [source](index.md) | `BSTART CALL`, `HL.BSTART CALL`, `HL.BSTART.FP`, `HL.BSTART.STD`, `HL.BSTART.SYS`, `L.BSTART.FP`, `L.BSTART.STD`, `L.BSTART.SYS` |
 | [Arithmetic Operation](arithmetic_operation.md) | 20 | **Ch 12** — [source](index.md) | `C.ADD`, `C.AND`, `C.OR`, `C.SUB`, `V.ADD`, `V.ADDI`, `V.AND`, `V.ANDI` +12 |
 | [Arithmetic](arithmetic.md) | 1 | **Ch 12** — [source](index.md) | `C.ADDI` |
@@ -30,9 +30,11 @@ See the [chapter index](index.md) for the manual organization.
 | [Store Immediate Offset](store_immediate_offset.md) | 9 | **Ch 11** — [source](index.md) | `C.SDI`, `C.SWI`, `SBI`, `SDI`, `SDI.U`, `SHI`, `SHI.U`, `SWI` +1 |
 | [Set Commit Argument](set_commit_argument.md) | 26 | **Ch 16** — [source](index.md) | `C.SETC.EQ`, `C.SETC.NE`, `HL.SETC.ANDI`, `HL.SETC.EQI`, `HL.SETC.GEI`, `HL.SETC.GEUI`, `HL.SETC.LTI`, `HL.SETC.LTUI` +18 |
 | [C.UNARY](c_unary.md) | 7 | **Ch 12** — [source](index.md) | `C.SETC.TGT`, `C.SEXT.B`, `C.SEXT.H`, `C.SEXT.W`, `C.ZEXT.B`, `C.ZEXT.H`, `C.ZEXT.W` |
+| [Atomic Operation](atomic_operation.md) | 72 | **Ch 14** — [source](index.md) | `CASB`, `CASD`, `CASH`, `CASW`, `LD.ADD`, `LD.AND`, `LD.OR`, `LD.SMAX` +64 |
 | [Compare Instruction](compare_instruction.md) | 40 | **Ch 16** — [source](index.md) | `CMP.AND`, `CMP.ANDI`, `CMP.EQ`, `CMP.EQI`, `CMP.GE`, `CMP.GEI`, `CMP.GEU`, `CMP.GEUI` +32 |
 | [Compound Operation](compound_operation.md) | 1 | **Ch 12** — [source](index.md) | `CSEL` |
 | [Multi-Cycle ALU](multi_cycle_alu.md) | 28 | **Ch 12** — [source](index.md) | `DIV`, `DIVU`, `DIVUW`, `DIVW`, `HL.DIV`, `HL.DIVU`, `HL.DIVUW`, `HL.DIVW` +20 |
+| [DMA Operation](dma_operation.md) | 1 | — | `DMA` |
 | [Floating-point Arithmetic](floating_point_arithmetic.md) | 12 | **Ch 13** — [source](index.md) | `FABS`, `FADD`, `FDIV`, `FEXP`, `FMADD`, `FMSUB`, `FMUL`, `FNMADD` +4 |
 | [Format Convert](format_convert.md) | 12 | **Ch 13** — [source](index.md) | `FCVT`, `FCVTA`, `FCVTM`, `FCVTN`, `FCVTP`, `FCVTZ`, `SCVTF`, `UCVTF` +4 |
 | [Floating-point Compare](floating_point_compare.md) | 8 | **Ch 13** — [source](index.md) | `FEQ`, `FEQS`, `FGE`, `FGES`, `FLT`, `FLTS`, `FNE`, `FNES` |
@@ -57,7 +59,6 @@ See the [chapter index](index.md) for the manual organization.
 | [SSR Access](ssr_access.md) | 7 | **Ch 19** — [source](index.md) | `HL.SSRGET`, `HL.SSRSET`, `LSRGET`, `SETC.TGT`, `SSRGET`, `SSRSET`, `SSRSWAP` |
 | [Load Register Offset](load_register_offset.md) | 22 | **Ch 11** — [source](index.md) | `LB`, `LBU`, `LD`, `LH`, `LHU`, `LW`, `LWU`, `PRF` +14 |
 | [Load Symbol](load_symbol.md) | 7 | **Ch 11** — [source](index.md) | `LB.PCR`, `LBU.PCR`, `LD.PCR`, `LH.PCR`, `LHU.PCR`, `LW.PCR`, `LWU.PCR` |
-| [Atomic Operation](atomic_operation.md) | 68 | **Ch 14** — [source](index.md) | `LD.ADD`, `LD.AND`, `LD.OR`, `LD.SMAX`, `LD.SMIN`, `LD.UMAX`, `LD.UMIN`, `LD.XOR` +60 |
 | [Load UnScaled](load_unscaled.md) | 16 | **Ch 11** — [source](index.md) | `LDI.U`, `LHI.U`, `LHUI.U`, `LWI.U`, `LWUI.U`, `PRFI.U`, `V.LDI.U`, `V.LDI.U.BRG` +8 |
 | [Store Register Offset](store_register_offset.md) | 21 | **Ch 11** — [source](index.md) | `SB`, `SD`, `SD.U`, `SH`, `SH.U`, `SW`, `SW.U`, `V.SB` +13 |
 | [Store Symbol](store_symbol.md) | 4 | **Ch 11** — [source](index.md) | `SB.PCR`, `SD.PCR`, `SH.PCR`, `SW.PCR` |

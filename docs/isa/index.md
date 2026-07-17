@@ -3,7 +3,7 @@
 <!-- Hero Banner -->
 <div class="isa-hero">
 
-**ISA Version:** v0.56.5 &nbsp;·&nbsp; **746 instruction forms** &nbsp;·&nbsp; **66 groups** &nbsp;·&nbsp; **4 encoding formats**
+**ISA Version:** v0.57.0 &nbsp;·&nbsp; **769 instruction forms** &nbsp;·&nbsp; **67 groups** &nbsp;·&nbsp; **4 encoding formats**
 
 ---
 
@@ -65,22 +65,22 @@ The LinxISA manual is organized into 12 chapters covering distinct functional un
 
 <div class="group-card-grid">
 [Arithmetic (1)](groups/arithmetic.md){.group-card} [Arithmetic Operation (20)](groups/arithmetic_operation.md){.group-card} [Arithmetic Operation 32bit (21)](groups/arithmetic_operation_32bit.md){.group-card} [Arithmetic Operation 64bit (21)](groups/arithmetic_operation_64bit.md){.group-card}
-[Atomic (4)](groups/atomic.md){.group-card} [Atomic Operation (68)](groups/atomic_operation.md){.group-card} [BSTART (20)](groups/bstart.md){.group-card} [Bit Manipulation (8)](groups/bit_manipulation.md){.group-card}
+[Atomic (4)](groups/atomic.md){.group-card} [Atomic Operation (72)](groups/atomic_operation.md){.group-card} [BSTART (20)](groups/bstart.md){.group-card} [Bit Manipulation (8)](groups/bit_manipulation.md){.group-card}
 [Bit Operation (8)](groups/bit_operation.md){.group-card} [Block Argument (9)](groups/block_argument.md){.group-card} [Block Control Attribute (1)](groups/block_control_attribute.md){.group-card} [Block Data Attribute (1)](groups/block_data_attribute.md){.group-card}
-[Block Dimension (2)](groups/block_dimension.md){.group-card} [Block Hint (2)](groups/block_hint.md){.group-card} [Block Input & Output (4)](groups/block_input_output.md){.group-card} [Block Offset (1)](groups/block_offset.md){.group-card}
-[Block Split (43)](groups/block_split.md){.group-card} [Branch (10)](groups/branch.md){.group-card} [C.BSTART (7)](groups/c_bstart.md){.group-card} [C.TINST (6)](groups/c_tinst.md){.group-card}
+[Block Dimension (2)](groups/block_dimension.md){.group-card} [Block Hint (2)](groups/block_hint.md){.group-card} [Block Input & Output (6)](groups/block_input_output.md){.group-card} [Block Offset (1)](groups/block_offset.md){.group-card}
+[Block Split (59)](groups/block_split.md){.group-card} [Branch (10)](groups/branch.md){.group-card} [C.BSTART (7)](groups/c_bstart.md){.group-card} [C.TINST (6)](groups/c_tinst.md){.group-card}
 [C.UNARY (7)](groups/c_unary.md){.group-card} [Cache Maintain (16)](groups/cache_maintain.md){.group-card} [Compare Instruction (40)](groups/compare_instruction.md){.group-card} [Compound Operation (1)](groups/compound_operation.md){.group-card}
-[Concat (2)](groups/concat.md){.group-card} [Division (2)](groups/division.md){.group-card} [Execution Control (10)](groups/execution_control.md){.group-card} [Floating Point Arithmetic (5)](groups/floating_point_arithmetic.md){.group-card}
-[Floating-point Arithmetic (12)](groups/floating_point_arithmetic.md){.group-card} [Floating-point Compare (8)](groups/floating_point_compare.md){.group-card} [Format Convert (12)](groups/format_convert.md){.group-card} [General (3)](groups/general.md){.group-card}
-[General Manager (2)](groups/general_manager.md){.group-card} [Immediate (2)](groups/immediate.md){.group-card} [Load Immediate Offset (23)](groups/load_immediate_offset.md){.group-card} [Load Long Offset (12)](groups/load_long_offset.md){.group-card}
-[Load PC-Relative (7)](groups/load_pc_relative.md){.group-card} [Load Pair (19)](groups/load_pair.md){.group-card} [Load Post-Index (19)](groups/load_post_index.md){.group-card} [Load Pre-Index (19)](groups/load_pre_index.md){.group-card}
-[Load Register Offset (22)](groups/load_register_offset.md){.group-card} [Load Symbol (7)](groups/load_symbol.md){.group-card} [Load UnScaled (16)](groups/load_unscaled.md){.group-card} [Long Immediate (2)](groups/long_immediate.md){.group-card}
-[Max-Min (6)](groups/max_min.md){.group-card} [Move (3)](groups/move.md){.group-card} [Multi-Cycle ALU (28)](groups/multi_cycle_alu.md){.group-card} [PC-Relative (4)](groups/pc_relative.md){.group-card}
-[Prefetch (4)](groups/prefetch.md){.group-card} [RESERVE (3)](groups/reserve.md){.group-card} [Reduce Operation with Register (9)](groups/reduce_operation_with_register.md){.group-card} [SSR Access (7)](groups/ssr_access.md){.group-card}
-[Set Commit Argument (26)](groups/set_commit_argument.md){.group-card} [Shuffle (8)](groups/shuffle.md){.group-card} [Store Immediate Offset (9)](groups/store_immediate_offset.md){.group-card} [Store Long Offset (7)](groups/store_long_offset.md){.group-card}
-[Store Offset (14)](groups/store_offset.md){.group-card} [Store PC-Relative (4)](groups/store_pc_relative.md){.group-card} [Store Pair (14)](groups/store_pair.md){.group-card} [Store Post-Index (14)](groups/store_post_index.md){.group-card}
-[Store Pre-Index (14)](groups/store_pre_index.md){.group-card} [Store Register Offset (21)](groups/store_register_offset.md){.group-card} [Store Symbol (4)](groups/store_symbol.md){.group-card} [Three Source Integer (2)](groups/three_source_integer.md){.group-card}
-[Three-Source Floating Point (8)](groups/three_source_floating_point.md){.group-card} [Two-Source Floating Point (12)](groups/two_source_floating_point.md){.group-card}
+[Concat (2)](groups/concat.md){.group-card} [DMA Operation (1)](groups/dma_operation.md){.group-card} [Division (2)](groups/division.md){.group-card} [Execution Control (10)](groups/execution_control.md){.group-card}
+[Floating Point Arithmetic (5)](groups/floating_point_arithmetic.md){.group-card} [Floating-point Arithmetic (12)](groups/floating_point_arithmetic.md){.group-card} [Floating-point Compare (8)](groups/floating_point_compare.md){.group-card} [Format Convert (12)](groups/format_convert.md){.group-card}
+[General (3)](groups/general.md){.group-card} [General Manager (2)](groups/general_manager.md){.group-card} [Immediate (2)](groups/immediate.md){.group-card} [Load Immediate Offset (23)](groups/load_immediate_offset.md){.group-card}
+[Load Long Offset (12)](groups/load_long_offset.md){.group-card} [Load PC-Relative (7)](groups/load_pc_relative.md){.group-card} [Load Pair (19)](groups/load_pair.md){.group-card} [Load Post-Index (19)](groups/load_post_index.md){.group-card}
+[Load Pre-Index (19)](groups/load_pre_index.md){.group-card} [Load Register Offset (22)](groups/load_register_offset.md){.group-card} [Load Symbol (7)](groups/load_symbol.md){.group-card} [Load UnScaled (16)](groups/load_unscaled.md){.group-card}
+[Long Immediate (2)](groups/long_immediate.md){.group-card} [Max-Min (6)](groups/max_min.md){.group-card} [Move (3)](groups/move.md){.group-card} [Multi-Cycle ALU (28)](groups/multi_cycle_alu.md){.group-card}
+[PC-Relative (4)](groups/pc_relative.md){.group-card} [Prefetch (4)](groups/prefetch.md){.group-card} [RESERVE (3)](groups/reserve.md){.group-card} [Reduce Operation with Register (9)](groups/reduce_operation_with_register.md){.group-card}
+[SSR Access (7)](groups/ssr_access.md){.group-card} [Set Commit Argument (26)](groups/set_commit_argument.md){.group-card} [Shuffle (8)](groups/shuffle.md){.group-card} [Store Immediate Offset (9)](groups/store_immediate_offset.md){.group-card}
+[Store Long Offset (7)](groups/store_long_offset.md){.group-card} [Store Offset (14)](groups/store_offset.md){.group-card} [Store PC-Relative (4)](groups/store_pc_relative.md){.group-card} [Store Pair (14)](groups/store_pair.md){.group-card}
+[Store Post-Index (14)](groups/store_post_index.md){.group-card} [Store Pre-Index (14)](groups/store_pre_index.md){.group-card} [Store Register Offset (21)](groups/store_register_offset.md){.group-card} [Store Symbol (4)](groups/store_symbol.md){.group-card}
+[Three Source Integer (2)](groups/three_source_integer.md){.group-card} [Three-Source Floating Point (8)](groups/three_source_floating_point.md){.group-card} [Two-Source Floating Point (12)](groups/two_source_floating_point.md){.group-card}
 
 </div>
 
@@ -188,6 +188,11 @@ Use **Ctrl+F** / **Cmd+F** to search, or browse the [full alphabetical list](ins
 | [C.SEXT.H](instructions/c_sext_h.md) | c_unary | 16 | [16-bit C.] Instruction from the C.UNARY group. |
 | [C.SEXT.W](instructions/c_sext_w.md) | c_unary | 16 | [16-bit C.] Instruction from the C.UNARY group. |
 | [C.ZEXT.B](instructions/c_zext_b.md) | c_unary | 16 | [16-bit C.] Instruction from the C.UNARY group. |
+| [CASB](instructions/casb.md) | atomic_operation | 32 | Atomic memory read-modify-write operation. |
+| [CASD](instructions/casd.md) | atomic_operation | 32 | Atomic memory read-modify-write operation. |
+| [CASH](instructions/cash.md) | atomic_operation | 32 | Atomic memory read-modify-write operation. |
+| [CASW](instructions/casw.md) | atomic_operation | 32 | Atomic memory read-modify-write operation. |
+| [LD.ADD](instructions/ld_add.md) | atomic_operation | 32 | Atomic memory read-modify-write operation. |
 | [CMP.AND](instructions/cmp_and.md) | compare_instruction | 32 | Instruction from the Compare Instruction group. |
 | [CMP.ANDI](instructions/cmp_andi.md) | compare_instruction | 32 | Instruction from the Compare Instruction group. |
 | [CMP.EQ](instructions/cmp_eq.md) | compare_instruction | 32 | Compare equal. Sets destination to 1 if operands are equal. |
@@ -199,6 +204,7 @@ Use **Ctrl+F** / **Cmd+F** to search, or browse the [full alphabetical list](ins
 | [DIVUW](instructions/divuw.md) | multi_cycle_alu | 32 | 32-bit word unsigned integer division. |
 | [DIVW](instructions/divw.md) | multi_cycle_alu | 32 | 32-bit word signed integer division. |
 | [HL.DIV](instructions/hl_div.md) | multi_cycle_alu | 48 | [48-bit HL.] Signed integer division. |
+| [DMA](instructions/dma.md) | dma_operation | 32 | Instruction from the DMA Operation group. |
 | [FABS](instructions/fabs.md) | floating_point_arithmetic | 32 | Floating-point absolute value. |
 | [FADD](instructions/fadd.md) | floating_point_arithmetic | 32 | Floating-point addition. |
 | [FDIV](instructions/fdiv.md) | floating_point_arithmetic | 32 | Floating-point division. |
@@ -303,11 +309,6 @@ Use **Ctrl+F** / **Cmd+F** to search, or browse the [full alphabetical list](ins
 | [LD.PCR](instructions/ld_pcr.md) | load_symbol | 32 | Loads a value from memory into a register. |
 | [LH.PCR](instructions/lh_pcr.md) | load_symbol | 32 | Loads a value from memory into a register. |
 | [LHU.PCR](instructions/lhu_pcr.md) | load_symbol | 32 | Loads a value from memory into a register. |
-| [LD.ADD](instructions/ld_add.md) | atomic_operation | 32 | Atomic memory read-modify-write operation. |
-| [LD.AND](instructions/ld_and.md) | atomic_operation | 32 | Atomic memory read-modify-write operation. |
-| [LD.OR](instructions/ld_or.md) | atomic_operation | 32 | Atomic memory read-modify-write operation. |
-| [LD.SMAX](instructions/ld_smax.md) | atomic_operation | 32 | Atomic memory read-modify-write operation. |
-| [LD.SMIN](instructions/ld_smin.md) | atomic_operation | 32 | Atomic memory read-modify-write operation. |
 | [LDI.U](instructions/ldi_u.md) | load_unscaled | 32 | Loads a value from memory into a register. |
 | [LHI.U](instructions/lhi_u.md) | load_unscaled | 32 | Loads a value from memory into a register. |
 | [LHUI.U](instructions/lhui_u.md) | load_unscaled | 32 | Loads a value from memory into a register. |
@@ -364,4 +365,4 @@ Use **Ctrl+F** / **Cmd+F** to search, or browse the [full alphabetical list](ins
 | [V.SHFL.UP](instructions/v_shfl_up.md) | shuffle | 64 | [64-bit V.] Instruction from the Shuffle group. |
 | [V.SHFLI.BFLY](instructions/v_shfli_bfly.md) | shuffle | 64 | [64-bit V.] Instruction from the Shuffle group. |
 
-[View all 746 instruction forms →](instructions/index.md)
+[View all 769 instruction forms →](instructions/index.md)

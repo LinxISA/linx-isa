@@ -3,7 +3,7 @@
 [[mnemonic-index]]
 === Mnemonic index
 
-This table lists unique mnemonics in the v0.56.5 catalog. Each mnemonic may have multiple encodable forms (different lengths, operand layouts, or suffix variants).
+This table lists unique mnemonics in the v0.57.0 catalog. Each mnemonic may have multiple encodable forms (different lengths, operand layouts, or suffix variants).
 
 [cols="2,3,1,1",options="header"]
 |===
@@ -29,7 +29,7 @@ This table lists unique mnemonics in the v0.56.5 catalog. Each mnemonic may have
 |`B.GEU` |Branch |32 |1
 |`B.HINT` |Block Hint |32 |2
 |`B.IOR` |Block Input & Output |32 |1
-|`B.IOT` |Block Input & Output |32 |3
+|`B.IOT` |Block Input & Output |32 |5
 |`B.LT` |Branch |32 |1
 |`B.LTU` |Branch |32 |1
 |`B.NE` |Branch |32 |1
@@ -48,15 +48,31 @@ This table lists unique mnemonics in the v0.56.5 catalog. Each mnemonic may have
 |`BSTART.CUBE` |Block Split |32 |1
 |`BSTART.FIXP` |Block Split |32 |1
 |`BSTART.FP` |Block Split |32 |7
+|`BSTART.MGATHER` |Block Split |32 |1
+|`BSTART.MGATHER.CAS` |Block Split |32 |1
+|`BSTART.MGATHER.MASK` |Block Split |32 |1
 |`BSTART.MPAR` |Block Split |32 |1
+|`BSTART.MSCATTER` |Block Split |32 |1
+|`BSTART.MSCATTER.MASK` |Block Split |32 |1
 |`BSTART.MSEQ` |Block Split |32 |1
 |`BSTART.STD` |Block Split |32 |7
 |`BSTART.SYS` |Block Split |32 |1
 |`BSTART.TEPL` |Block Split |32 |1
+|`BSTART.TGEMV` |Block Split |32 |1
+|`BSTART.TGEMV.ACC` |Block Split |32 |1
+|`BSTART.TGEMV.BIAS` |Block Split |32 |1
+|`BSTART.TGEMVMX` |Block Split |32 |1
+|`BSTART.TGEMVMX.ACC` |Block Split |32 |1
+|`BSTART.TGEMVMX.BIAS` |Block Split |32 |1
 |`BSTART.TLOAD` |Block Split |32 |1
 |`BSTART.TMATMUL` |Block Split |32 |1
 |`BSTART.TMATMUL.ACC` |Block Split |32 |1
+|`BSTART.TMATMUL.BIAS` |Block Split |32 |1
+|`BSTART.TMATMULMX` |Block Split |32 |1
+|`BSTART.TMATMULMX.ACC` |Block Split |32 |1
+|`BSTART.TMATMULMX.BIAS` |Block Split |32 |1
 |`BSTART.TMOV` |Block Split |32 |1
+|`BSTART.TPREFETCH` |Block Split |32 |1
 |`BSTART.TSTORE` |Block Split |32 |1
 |`BSTART.VPAR` |Block Split |32 |1
 |`BSTART.VSEQ` |Block Split |32 |1
@@ -104,6 +120,10 @@ This table lists unique mnemonics in the v0.56.5 catalog. Each mnemonic may have
 |`C.ZEXT.B` |C.UNARY |16 |1
 |`C.ZEXT.H` |C.UNARY |16 |1
 |`C.ZEXT.W` |C.UNARY |16 |1
+|`CASB` |Atomic Operation |32 |1
+|`CASD` |Atomic Operation |32 |1
+|`CASH` |Atomic Operation |32 |1
+|`CASW` |Atomic Operation |32 |1
 |`CLZ` |Bit Operation |32 |1
 |`CMP.AND` |Compare Instruction |32 |1
 |`CMP.ANDI` |Compare Instruction |32 |1
@@ -135,6 +155,7 @@ This table lists unique mnemonics in the v0.56.5 catalog. Each mnemonic may have
 |`DIVU` |Multi-Cycle ALU |32 |1
 |`DIVUW` |Multi-Cycle ALU |32 |1
 |`DIVW` |Multi-Cycle ALU |32 |1
+|`DMA` |DMA Operation |32 |1
 |`EBREAK` |Execution Control |32 |1
 |`ERCOV` |Block Split |32 |1
 |`ESAVE` |Block Split |32 |1

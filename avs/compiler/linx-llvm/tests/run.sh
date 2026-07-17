@@ -281,7 +281,7 @@ if [[ -d "$ASM_DIR" ]]; then
     wc -c "$OUT/$BASE.bin" >"$OUT/$BASE.bin.size"
 
     case "$BASE" in
-      41_v056_isa_forms)
+      41_v057_isa_forms)
         python3 "$ROOT/check_required_mnemonics.py" \
           --objdump "$OUT/$BASE.objdump" \
           --label "$BASE" \
@@ -318,7 +318,7 @@ if [[ -d "$ASM_DIR" ]]; then
   done
 fi
 
-SPEC="${SPEC:-$ROOT/../../../../isa/v0.56/linxisa-v0.56.json}"
+SPEC="${SPEC:-$ROOT/../../../../isa/v0.57/linxisa-v0.57.json}"
 GEN_VECTORS="$ROOT/gen_disasm_vectors.py"
 ROUNDTRIP_CHECK="$ROOT/check_disasm_roundtrip.py"
 SPEC_ROUNDTRIP_POLICY="${SPEC_ROUNDTRIP_POLICY:-audit}" # audit|strict
@@ -370,7 +370,7 @@ if [[ -d "$NEG_DIR" ]]; then
     echo "error: legacy L.BSTOP spelling unexpectedly assembled" >&2
     exit 1
   fi
-  if ! grep -Eq "legacy alias 'L\\.BSTOP' is not allowed in canonical v0\\.56; use 'C\\.BSTOP'" "$NEG_OUT/legacy_alias_l_bstop.err"; then
+  if ! grep -Eq "legacy alias 'L\\.BSTOP' is not allowed in canonical v0\\.57; use 'C\\.BSTOP'" "$NEG_OUT/legacy_alias_l_bstop.err"; then
     echo "error: legacy L.BSTOP rejection did not report the canonical spelling guidance" >&2
     cat "$NEG_OUT/legacy_alias_l_bstop.err" >&2
     exit 1
@@ -398,13 +398,13 @@ if [[ -d "$NEG_DIR" ]]; then
     exit 1
   fi
 
-  echo "[neg] reserved TMA selector rejection"
+  echo "[neg] legacy generic BSTART.TMA rejection"
   if "$LLVMMC" -triple="$TARGET" -filetype=obj "$NEG_DIR/tma_reserved_selector.s" -o /dev/null 2>"$NEG_OUT/tma_reserved_selector.err"; then
-    echo "error: reserved TMA selector unexpectedly assembled" >&2
+    echo "error: legacy generic BSTART.TMA unexpectedly assembled" >&2
     exit 1
   fi
-  if ! grep -Eq "BSTART\.TMA Function must be in range 0\.\.2 in canonical v0\.56" "$NEG_OUT/tma_reserved_selector.err"; then
-    echo "error: reserved TMA selector rejection did not report an operand/match failure" >&2
+  if ! grep -Eqi "unrecognized instruction 'bstart\\.tma'" "$NEG_OUT/tma_reserved_selector.err"; then
+    echo "error: legacy generic BSTART.TMA rejection did not report an unrecognized instruction" >&2
     cat "$NEG_OUT/tma_reserved_selector.err" >&2
     exit 1
   fi

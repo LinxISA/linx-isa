@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_c_swi.svg[C.SWI encoding,width=800]
+image::encodings/enc_c_swi.svg[C.SWI encoding,width=800]
 
 *Uop-Class:* STA/BASE_IMM
 

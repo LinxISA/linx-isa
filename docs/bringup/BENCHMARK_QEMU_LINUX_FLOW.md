@@ -14,7 +14,7 @@ Evidence:
   spec mnemonics and `655/746` mapped legal forms. LLVM observed-disassembly
   breadth and the AVS translation inventory both cover `711/711`; executable
   semantic breadth remains a separate, intentionally red evidence level.
-- The v0.56.5 TSVC hard break is closed on clean QEMU
+- The v0.57 TSVC hard break is closed on clean QEMU
   `cdc5d976242d6e81c6938f192fc6b1849aa2f0df`: 8/8 deterministic batches,
   `151/151` strict-vectorized kernels, and `151/151` QEMU completions in
   10.587 seconds. The unbatched all-mode diagnostic is not the PR hard-break
@@ -293,7 +293,7 @@ Inference:
 
 | Stage | Owner | Stop Rule | Purpose |
 | --- | --- | --- | --- |
-| `source-contract` | integration | hard break | Validate layout, canonical v0.56 catalog, and agent ownership map before build work. |
+| `source-contract` | integration | hard break | Validate layout, canonical v0.57 catalog, and agent ownership map before build work. |
 | `compiler-contract` | llvm | hard break | Prove active `clang` can build and cover the Linx64 AVS compile corpus. |
 | `qemu-contract` | qemu | hard break | Prove strict QEMU AVS runtime and keep decode coverage visible. |
 | `tsvc-qemu-hardbreak` | integration | hard break | Run compile-only TSVC floor, then batched QEMU TSVC before Linux rootfs or SPEC. |

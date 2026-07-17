@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_bstart_tmov.svg[BSTART.TMOV encoding,width=800]
+image::encodings/enc_bstart_tmov.svg[BSTART.TMOV encoding,width=800]
 
 *Uop-Class:* CMD
 

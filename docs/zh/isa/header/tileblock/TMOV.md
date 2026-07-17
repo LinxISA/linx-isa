@@ -67,7 +67,7 @@ for r in 0..(Rv-1):          // 遍历所有行
 
 该TileOp模版块编码为以下指令：
 
-- [BSTART.TMA](../../blockIntro/tma_block/header.md) `TMOV, DataType`
+- [BSTART.TMOV](../../blockIntro/tma_block/header.md) `DataType`
 - [B.DATR](../../header/B.DATR.md) `Layout, PadValue`
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0`   （注：*ValidCol*）
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`   （注：*ValidRow*）

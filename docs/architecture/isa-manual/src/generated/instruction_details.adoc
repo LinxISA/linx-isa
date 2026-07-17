@@ -3,7 +3,7 @@
 [[insnref-details]]
 === Instruction descriptions (by mnemonic)
 
-This section provides per-mnemonic descriptions. The tables above remain the authoritative listing of encodable forms and decode layouts in the v0.56.5 catalog. Descriptions and pseudocode here are derived from mnemonic naming conventions plus catalog assembly templates/notes and are intended to be *informative*.
+This section provides per-mnemonic descriptions. The tables above remain the authoritative listing of encodable forms and decode layouts in the v0.57.0 catalog. Descriptions and pseudocode here are derived from mnemonic naming conventions plus catalog assembly templates/notes and are intended to be *informative*.
 
 [[insndesc-execution-control]]
 ==== Execution Control
@@ -1574,7 +1574,7 @@ image::encodings/enc_b_catr.svg[B.CATR encoding form b_catr_32_e90bd52fa480,alig
 
 Encoding notes (informative)::
 +
-* v0.56 split of legacy B.CATR/B.DATR control fields. Bits 25:15 are reserved zero.
+* canonical split of legacy B.CATR/B.DATR control fields. Bits 25:15 are reserved zero.
 
 Operation (informative)::
 +
@@ -1605,7 +1605,7 @@ image::encodings/enc_b_datr.svg[B.DATR encoding form b_datr_32_c161a042ff38,alig
 
 Encoding notes (informative)::
 +
-* v0.56 split of legacy B.CATR/B.DATR data fields. CMode is 3 bits; RMode is 3 bits; Sat is bit 31.
+* canonical split of legacy B.CATR/B.DATR data fields. CMode is 3 bits; RMode is 3 bits; Sat is bit 31.
 
 Operation (informative)::
 +
@@ -1931,29 +1931,37 @@ DeclareBlockGprIO(/* GPR IO bindings as encoded */)
 
 Declares block input/output bindings for registers/tiles (header metadata for accelerated blocks; tooling and scheduling metadata).
 
-Catalog forms:: 3 form(s) (32 bits).
+Catalog forms:: 5 form(s) (32 bits).
 
 Assembly forms::
 +
 * `B.IOT SrcTile0<.reuse>, <last>, ->DstTile<Size>`
+* `B.IOT SrcTile0<.reuse>, SrcTile1<.reuse>, <last>`
 * `B.IOT SrcTile0<.reuse>, SrcTile1<.reuse>, <last>, ->DstTile<Size>`
+* `B.IOT SrcTile0<.reuse>, <last>`
 * `B.IOT <last>, ->DstTile<Size>`
 
 Encoding::
 +
 .`b_iot_32_10db6db84f5d` — `B.IOT SrcTile0<.reuse>, <last>, ->DstTile<Size>`
 image::encodings/enc_b_iot_32_10db6db84f5d.svg[B.IOT encoding form b_iot_32_10db6db84f5d,align="center"]
+.`b_iot_32_2c07e7177fad` — `B.IOT SrcTile0<.reuse>, SrcTile1<.reuse>, <last>`
+image::encodings/enc_b_iot_32_2c07e7177fad.svg[B.IOT encoding form b_iot_32_2c07e7177fad,align="center"]
 .`b_iot_32_8b8bce6bffe8` — `B.IOT SrcTile0<.reuse>, SrcTile1<.reuse>, <last>, ->DstTile<Size>`
 image::encodings/enc_b_iot_32_8b8bce6bffe8.svg[B.IOT encoding form b_iot_32_8b8bce6bffe8,align="center"]
+.`b_iot_32_c11eb189dd83` — `B.IOT SrcTile0<.reuse>, <last>`
+image::encodings/enc_b_iot_32_c11eb189dd83.svg[B.IOT encoding form b_iot_32_c11eb189dd83,align="center"]
 .`b_iot_32_efa0fe3fe49a` — `B.IOT <last>, ->DstTile<Size>`
 image::encodings/enc_b_iot_32_efa0fe3fe49a.svg[B.IOT encoding form b_iot_32_efa0fe3fe49a,align="center"]
 
 
 Encoding notes (informative)::
 +
-* v0.56 one-input immediate-size tile descriptor; function=101 means only SrcTile0 is valid.
-* v0.56 two-input immediate-size tile descriptor. SrcTile0/1 are independent 6-bit fields; imm4 encodes 0B..512KB.
-* v0.56 no-input immediate-size tile descriptor; function=110 means only the destination allocation is valid.
+* canonical one-input immediate-size tile descriptor; function=101 means only SrcTile0 is valid. v0.57 excludes DstTile=111 from this destination-producing form.
+* v0.57 two-input source-only tile descriptor required by multi-descriptor PTO expansions. DstTile=111 denotes no output and the unused size field is canonically zero.
+* canonical two-input immediate-size tile descriptor. SrcTile0/1 are independent 6-bit fields; imm4 encodes 0B..512KB. v0.57 excludes DstTile=111 from this destination-producing form.
+* v0.57 one-input source-only tile descriptor required by multi-descriptor PTO expansions. DstTile=111 denotes no output and the unused size field is canonically zero.
+* canonical no-input immediate-size tile descriptor; function=110 means only the destination allocation is valid.
 
 Operation (informative)::
 +
@@ -2650,7 +2658,7 @@ image::encodings/enc_bstart_cube.svg[BSTART.CUBE encoding form bstart_cube_32_bd
 
 Encoding notes (informative)::
 +
-* Generic CUBE selector form. Function=0/2/8 are emitted as BSTART.TMATMUL/BSTART.TMATMUL.ACC/BSTART.ACCCVT aliases.
+* Generic CUBE selector form for unnamed functions. Functions 0/1/2/4/5/6/8/16/17/18/20/21/22 decode through their canonical named forms.
 
 Operation (informative)::
 +
@@ -2732,6 +2740,93 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
+[[insndesc-block-split-bstart-mgather]]
+===== BSTART.MGATHER
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.MGATHER DataType`
+
+Encoding::
++
+.`bstart_mgather_32_c9defbf18276` — `BSTART.MGATHER DataType`
+image::encodings/enc_bstart_mgather.svg[BSTART.MGATHER encoding form bstart_mgather_32_c9defbf18276,align="center"]
+
+
+Encoding notes (informative)::
++
+* Named TMA-family Function=4. Memory gather uses B.ARG/B.IOR/B.IOT descriptor state; detailed PTO selector manifest is defined out-of-band for v0.57.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-block-split-bstart-mgather-cas]]
+===== BSTART.MGATHER.CAS
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.MGATHER.CAS DataType`
+
+Encoding::
++
+.`bstart_mgather_cas_32_fd8c8a3b720a` — `BSTART.MGATHER.CAS DataType`
+image::encodings/enc_bstart_mgather_cas.svg[BSTART.MGATHER.CAS encoding form bstart_mgather_cas_32_fd8c8a3b720a,align="center"]
+
+
+Encoding notes (informative)::
++
+* Named TMA-family Function=8. Per-element atomic compare-and-swap gather; detailed PTO selector manifest is defined out-of-band for v0.57.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-block-split-bstart-mgather-mask]]
+===== BSTART.MGATHER.MASK
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.MGATHER.MASK DataType`
+
+Encoding::
++
+.`bstart_mgather_mask_32_5573241cd944` — `BSTART.MGATHER.MASK DataType`
+image::encodings/enc_bstart_mgather_mask.svg[BSTART.MGATHER.MASK encoding form bstart_mgather_mask_32_5573241cd944,align="center"]
+
+
+Encoding notes (informative)::
++
+* Named TMA-family Function=6. Masked memory gather; detailed PTO selector manifest is defined out-of-band for v0.57.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
 [[insndesc-block-split-bstart-mpar]]
 ===== BSTART.MPAR
 
@@ -2748,6 +2843,64 @@ Encoding::
 .`bstart_mpar_32_2d163417c615` — `BSTART.MPAR <VS8, VS16>`
 image::encodings/enc_bstart_mpar.svg[BSTART.MPAR encoding form bstart_mpar_32_2d163417c615,align="center"]
 
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-block-split-bstart-mscatter]]
+===== BSTART.MSCATTER
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.MSCATTER DataType`
+
+Encoding::
++
+.`bstart_mscatter_32_0f0ba08bd798` — `BSTART.MSCATTER DataType`
+image::encodings/enc_bstart_mscatter.svg[BSTART.MSCATTER encoding form bstart_mscatter_32_0f0ba08bd798,align="center"]
+
+
+Encoding notes (informative)::
++
+* Named TMA-family Function=5. Memory scatter uses B.ARG/B.IOR/B.IOT descriptor state; detailed PTO selector manifest is defined out-of-band for v0.57.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-block-split-bstart-mscatter-mask]]
+===== BSTART.MSCATTER.MASK
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.MSCATTER.MASK DataType`
+
+Encoding::
++
+.`bstart_mscatter_mask_32_2a33eed646f7` — `BSTART.MSCATTER.MASK DataType`
+image::encodings/enc_bstart_mscatter_mask.svg[BSTART.MSCATTER.MASK encoding form bstart_mscatter_mask_32_2a33eed646f7,align="center"]
+
+
+Encoding notes (informative)::
++
+* Named TMA-family Function=7. Masked memory scatter; detailed PTO selector manifest is defined out-of-band for v0.57.
 
 Operation (informative)::
 +
@@ -2873,7 +3026,181 @@ image::encodings/enc_bstart_tepl.svg[BSTART.TEPL encoding form bstart_tepl_32_d0
 
 Encoding notes (informative)::
 +
-* Tile opcode selects PTO template ops. Canonical v0.56 standardized assignments require TileOpcode[9:6]=0 and pack TileOpcode[5]=Mode with TileOpcode[4:0]=Function; unassigned values remain reserved for future template extension.
+* Tile opcode selects PTO template ops. Canonical established assignments require TileOpcode[9:6]=0 and pack TileOpcode[5]=Mode with TileOpcode[4:0]=Function; unassigned values remain reserved for future template extension.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-block-split-bstart-tgemv]]
+===== BSTART.TGEMV
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.TGEMV DataType`
+
+Encoding::
++
+.`bstart_tgemv_32_ae19f5b678f5` — `BSTART.TGEMV DataType`
+image::encodings/enc_bstart_tgemv.svg[BSTART.TGEMV encoding form bstart_tgemv_32_ae19f5b678f5,align="center"]
+
+
+Encoding notes (informative)::
++
+* Named CUBE-family Function=16. Matrix-vector multiply; requires B.DIM and CUBE tile bindings.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-block-split-bstart-tgemv-acc]]
+===== BSTART.TGEMV.ACC
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.TGEMV.ACC DataType`
+
+Encoding::
++
+.`bstart_tgemv_acc_32_9a471b21913e` — `BSTART.TGEMV.ACC DataType`
+image::encodings/enc_bstart_tgemv_acc.svg[BSTART.TGEMV.ACC encoding form bstart_tgemv_acc_32_9a471b21913e,align="center"]
+
+
+Encoding notes (informative)::
++
+* Named CUBE-family Function=18. Matrix-vector multiply-accumulate; requires B.DIM and CUBE tile bindings.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-block-split-bstart-tgemv-bias]]
+===== BSTART.TGEMV.BIAS
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.TGEMV.BIAS DataType`
+
+Encoding::
++
+.`bstart_tgemv_bias_32_186ee96c0a8b` — `BSTART.TGEMV.BIAS DataType`
+image::encodings/enc_bstart_tgemv_bias.svg[BSTART.TGEMV.BIAS encoding form bstart_tgemv_bias_32_186ee96c0a8b,align="center"]
+
+
+Encoding notes (informative)::
++
+* Named CUBE-family Function=17. Matrix-vector multiply with bias; requires B.DIM and CUBE tile bindings.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-block-split-bstart-tgemvmx]]
+===== BSTART.TGEMVMX
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.TGEMVMX DataType`
+
+Encoding::
++
+.`bstart_tgemvmx_32_ae5e005f6589` — `BSTART.TGEMVMX DataType`
+image::encodings/enc_bstart_tgemvmx.svg[BSTART.TGEMVMX encoding form bstart_tgemvmx_32_ae5e005f6589,align="center"]
+
+
+Encoding notes (informative)::
++
+* Named CUBE-family Function=20. Micro-scaled matrix-vector multiply; requires B.DIM and CUBE tile bindings.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-block-split-bstart-tgemvmx-acc]]
+===== BSTART.TGEMVMX.ACC
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.TGEMVMX.ACC DataType`
+
+Encoding::
++
+.`bstart_tgemvmx_acc_32_368647b04bb0` — `BSTART.TGEMVMX.ACC DataType`
+image::encodings/enc_bstart_tgemvmx_acc.svg[BSTART.TGEMVMX.ACC encoding form bstart_tgemvmx_acc_32_368647b04bb0,align="center"]
+
+
+Encoding notes (informative)::
++
+* Named CUBE-family Function=22. Micro-scaled matrix-vector multiply-accumulate; requires B.DIM and CUBE tile bindings.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-block-split-bstart-tgemvmx-bias]]
+===== BSTART.TGEMVMX.BIAS
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.TGEMVMX.BIAS DataType`
+
+Encoding::
++
+.`bstart_tgemvmx_bias_32_d23011f15171` — `BSTART.TGEMVMX.BIAS DataType`
+image::encodings/enc_bstart_tgemvmx_bias.svg[BSTART.TGEMVMX.BIAS encoding form bstart_tgemvmx_bias_32_d23011f15171,align="center"]
+
+
+Encoding notes (informative)::
++
+* Named CUBE-family Function=21. Micro-scaled matrix-vector multiply with bias; requires B.DIM and CUBE tile bindings.
 
 Operation (informative)::
 +
@@ -2970,6 +3297,122 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
+[[insndesc-block-split-bstart-tmatmul-bias]]
+===== BSTART.TMATMUL.BIAS
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.TMATMUL.BIAS DataType`
+
+Encoding::
++
+.`bstart_tmatmul_bias_32_4d5a498d12f3` — `BSTART.TMATMUL.BIAS DataType`
+image::encodings/enc_bstart_tmatmul_bias.svg[BSTART.TMATMUL.BIAS encoding form bstart_tmatmul_bias_32_4d5a498d12f3,align="center"]
+
+
+Encoding notes (informative)::
++
+* Named CUBE-family Function=1. Matrix multiply with bias; requires B.DIM and CUBE tile bindings.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-block-split-bstart-tmatmulmx]]
+===== BSTART.TMATMULMX
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.TMATMULMX DataType`
+
+Encoding::
++
+.`bstart_tmatmulmx_32_e26cb3874648` — `BSTART.TMATMULMX DataType`
+image::encodings/enc_bstart_tmatmulmx.svg[BSTART.TMATMULMX encoding form bstart_tmatmulmx_32_e26cb3874648,align="center"]
+
+
+Encoding notes (informative)::
++
+* Named CUBE-family Function=4. Micro-scaled matrix multiply; requires B.DIM and CUBE tile bindings.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-block-split-bstart-tmatmulmx-acc]]
+===== BSTART.TMATMULMX.ACC
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.TMATMULMX.ACC DataType`
+
+Encoding::
++
+.`bstart_tmatmulmx_acc_32_70fa59b0ab4c` — `BSTART.TMATMULMX.ACC DataType`
+image::encodings/enc_bstart_tmatmulmx_acc.svg[BSTART.TMATMULMX.ACC encoding form bstart_tmatmulmx_acc_32_70fa59b0ab4c,align="center"]
+
+
+Encoding notes (informative)::
++
+* Named CUBE-family Function=6. Micro-scaled matrix multiply-accumulate; requires B.DIM and CUBE tile bindings.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-block-split-bstart-tmatmulmx-bias]]
+===== BSTART.TMATMULMX.BIAS
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.TMATMULMX.BIAS DataType`
+
+Encoding::
++
+.`bstart_tmatmulmx_bias_32_098c7efa51b0` — `BSTART.TMATMULMX.BIAS DataType`
+image::encodings/enc_bstart_tmatmulmx_bias.svg[BSTART.TMATMULMX.BIAS encoding form bstart_tmatmulmx_bias_32_098c7efa51b0,align="center"]
+
+
+Encoding notes (informative)::
++
+* Named CUBE-family Function=5. Micro-scaled matrix multiply with bias; requires B.DIM and CUBE tile bindings.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
 [[insndesc-block-split-bstart-tmov]]
 ===== BSTART.TMOV
 
@@ -2990,6 +3433,35 @@ image::encodings/enc_bstart_tmov.svg[BSTART.TMOV encoding form bstart_tmov_32_21
 Encoding notes (informative)::
 +
 * Alias of BSTART.TMA Function=2. TMOV is tile-state only (no GM memory access) and destination allocation is queue-push only.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-block-split-bstart-tprefetch]]
+===== BSTART.TPREFETCH
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.TPREFETCH DataType`
+
+Encoding::
++
+.`bstart_tprefetch_32_d5f83e5aadf6` — `BSTART.TPREFETCH DataType`
+image::encodings/enc_bstart_tprefetch.svg[BSTART.TPREFETCH encoding form bstart_tprefetch_32_d5f83e5aadf6,align="center"]
+
+
+Encoding notes (informative)::
++
+* Named TMA-family Function=3. TPREFETCH has the same address, layout, memory, fault, ordering, and restart contract as TLOAD, with destination binding/allocation/writeback effects removed.
 
 Operation (informative)::
 +
@@ -6375,6 +6847,1997 @@ Operation (informative)::
 Execute operation as selected by the mnemonic and encoded modifiers.
 ----
 
+[[insndesc-atomic-operation]]
+==== Atomic Operation
+
+[[insndesc-atomic-operation-casb]]
+===== CASB
+
+Atomic memory operation.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `casb<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}`
+
+Encoding::
++
+.`casb_32_7e529b871832` — `casb<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}`
+image::encodings/enc_casb.svg[CASB encoding form casb_32_7e529b871832,align="center"]
+
+
+Encoding notes (informative)::
++
+* v0.57 32-bit compare-and-swap byte: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
+
+Operation (informative)::
++
+[source]
+----
+Execute operation as selected by the mnemonic and encoded modifiers.
+----
+
+[[insndesc-atomic-operation-casd]]
+===== CASD
+
+Atomic memory operation.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `casd<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}`
+
+Encoding::
++
+.`casd_32_5852c57277a6` — `casd<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}`
+image::encodings/enc_casd.svg[CASD encoding form casd_32_5852c57277a6,align="center"]
+
+
+Encoding notes (informative)::
++
+* v0.57 32-bit compare-and-swap doubleword: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
+
+Operation (informative)::
++
+[source]
+----
+Execute operation as selected by the mnemonic and encoded modifiers.
+----
+
+[[insndesc-atomic-operation-cash]]
+===== CASH
+
+Atomic memory operation.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `cash<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}`
+
+Encoding::
++
+.`cash_32_cb1315ff6cb5` — `cash<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}`
+image::encodings/enc_cash.svg[CASH encoding form cash_32_cb1315ff6cb5,align="center"]
+
+
+Encoding notes (informative)::
++
+* v0.57 32-bit compare-and-swap halfword: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
+
+Operation (informative)::
++
+[source]
+----
+Execute operation as selected by the mnemonic and encoded modifiers.
+----
+
+[[insndesc-atomic-operation-casw]]
+===== CASW
+
+Atomic memory operation.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `casw<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}`
+
+Encoding::
++
+.`casw_32_cb29e4287223` — `casw<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}`
+image::encodings/enc_casw.svg[CASW encoding form casw_32_cb29e4287223,align="center"]
+
+
+Encoding notes (informative)::
++
+* v0.57 32-bit compare-and-swap word: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
+
+Operation (informative)::
++
+[source]
+----
+Execute operation as selected by the mnemonic and encoded modifiers.
+----
+
+[[insndesc-atomic-operation-ld-add]]
+===== LD.ADD
+
+Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `ld.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`ld_add_32_a4038a6c7e86` — `ld.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_ld_add.svg[LD.ADD encoding form ld_add_32_a4038a6c7e86,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = old + Read(SrcR)
+AtomicStore64(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-ld-and]]
+===== LD.AND
+
+Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `ld.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`ld_and_32_2a46b3003480` — `ld.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_ld_and.svg[LD.AND encoding form ld_and_32_2a46b3003480,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = old & Read(SrcR)
+AtomicStore64(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-ld-or]]
+===== LD.OR
+
+Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `ld.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`ld_or_32_456d270cfc7d` — `ld.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_ld_or.svg[LD.OR encoding form ld_or_32_456d270cfc7d,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = old | Read(SrcR)
+AtomicStore64(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-ld-smax]]
+===== LD.SMAX
+
+Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `ld.smax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`ld_smax_32_a3aad6120226` — `ld.smax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_ld_smax.svg[LD.SMAX encoding form ld_smax_32_a3aad6120226,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = smax(old, Read(SrcR))
+AtomicStore64(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-ld-smin]]
+===== LD.SMIN
+
+Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `ld.smin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`ld_smin_32_9461d345718f` — `ld.smin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_ld_smin.svg[LD.SMIN encoding form ld_smin_32_9461d345718f,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = smin(old, Read(SrcR))
+AtomicStore64(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-ld-umax]]
+===== LD.UMAX
+
+Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `ld.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`ld_umax_32_a84af75745d9` — `ld.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_ld_umax.svg[LD.UMAX encoding form ld_umax_32_a84af75745d9,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = umax(old, Read(SrcR))
+AtomicStore64(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-ld-umin]]
+===== LD.UMIN
+
+Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `ld.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`ld_umin_32_4bf2f357eff3` — `ld.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_ld_umin.svg[LD.UMIN encoding form ld_umin_32_4bf2f357eff3,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = umin(old, Read(SrcR))
+AtomicStore64(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-ld-xor]]
+===== LD.XOR
+
+Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`ld_xor_32_33072c0fde61` — `ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_ld_xor.svg[LD.XOR encoding form ld_xor_32_33072c0fde61,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = old ^ Read(SrcR)
+AtomicStore64(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-lr-b]]
+===== LR.B
+
+Load-reserved: performs an atomic load and establishes a reservation for a subsequent store-conditional.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `lr.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`lr_b_32_cf80903a761a` — `lr.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}`
+image::encodings/enc_lr_b.svg[LR.B encoding form lr_b_32_cf80903a761a,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+value = LoadReserved8 (addr)
+Write(Dst, value)
+----
+
+[[insndesc-atomic-operation-lr-d]]
+===== LR.D
+
+Load-reserved: performs an atomic load and establishes a reservation for a subsequent store-conditional.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `lr.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`lr_d_32_84d21a553dc1` — `lr.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}`
+image::encodings/enc_lr_d.svg[LR.D encoding form lr_d_32_84d21a553dc1,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+value = LoadReserved64 (addr)
+Write(Dst, value)
+----
+
+[[insndesc-atomic-operation-lr-h]]
+===== LR.H
+
+Load-reserved: performs an atomic load and establishes a reservation for a subsequent store-conditional.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `lr.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`lr_h_32_f936df218d63` — `lr.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}`
+image::encodings/enc_lr_h.svg[LR.H encoding form lr_h_32_f936df218d63,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+value = LoadReserved16 (addr)
+Write(Dst, value)
+----
+
+[[insndesc-atomic-operation-lr-w]]
+===== LR.W
+
+Load-reserved: performs an atomic load and establishes a reservation for a subsequent store-conditional.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `lr.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`lr_w_32_efecc735bb75` — `lr.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}`
+image::encodings/enc_lr_w.svg[LR.W encoding form lr_w_32_efecc735bb75,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+value = LoadReserved32 (addr)
+Write(Dst, value)
+----
+
+[[insndesc-atomic-operation-lw-add]]
+===== LW.ADD
+
+Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `lw.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`lw_add_32_5be3ad1ad081` — `lw.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_lw_add.svg[LW.ADD encoding form lw_add_32_5be3ad1ad081,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = old + Read(SrcR)
+AtomicStore32(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-lw-and]]
+===== LW.AND
+
+Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `lw.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`lw_and_32_f8dd9866b069` — `lw.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_lw_and.svg[LW.AND encoding form lw_and_32_f8dd9866b069,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = old & Read(SrcR)
+AtomicStore32(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-lw-or]]
+===== LW.OR
+
+Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `lw.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`lw_or_32_d6d2f87706fd` — `lw.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_lw_or.svg[LW.OR encoding form lw_or_32_d6d2f87706fd,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = old | Read(SrcR)
+AtomicStore32(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-lw-smax]]
+===== LW.SMAX
+
+Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `lw.smax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`lw_smax_32_838b8c673c91` — `lw.smax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_lw_smax.svg[LW.SMAX encoding form lw_smax_32_838b8c673c91,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = smax(old, Read(SrcR))
+AtomicStore32(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-lw-smin]]
+===== LW.SMIN
+
+Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `lw.smin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`lw_smin_32_44452ae44d02` — `lw.smin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_lw_smin.svg[LW.SMIN encoding form lw_smin_32_44452ae44d02,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = smin(old, Read(SrcR))
+AtomicStore32(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-lw-umax]]
+===== LW.UMAX
+
+Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `lw.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`lw_umax_32_3c6a5a534674` — `lw.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_lw_umax.svg[LW.UMAX encoding form lw_umax_32_3c6a5a534674,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = umax(old, Read(SrcR))
+AtomicStore32(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-lw-umin]]
+===== LW.UMIN
+
+Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `lw.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`lw_umin_32_fd9b7bb538a3` — `lw.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_lw_umin.svg[LW.UMIN encoding form lw_umin_32_fd9b7bb538a3,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = umin(old, Read(SrcR))
+AtomicStore32(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-lw-xor]]
+===== LW.XOR
+
+Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `lw.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`lw_xor_32_4d4aa82c676a` — `lw.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_lw_xor.svg[LW.XOR encoding form lw_xor_32_4d4aa82c676a,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = old ^ Read(SrcR)
+AtomicStore32(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-sc-b]]
+===== SC.B
+
+Store-conditional: attempts an atomic store that succeeds only if the reservation is still valid; returns a status code.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `sc.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`sc_b_32_baf609e1d5c3` — `sc.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}`
+image::encodings/enc_sc_b.svg[SC.B encoding form sc_b_32_baf609e1d5c3,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcR)
+status = StoreConditional8(addr, Read(SrcL))
+Write(Dst, status)
+----
+
+[[insndesc-atomic-operation-sc-d]]
+===== SC.D
+
+Store-conditional: attempts an atomic store that succeeds only if the reservation is still valid; returns a status code.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `sc.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`sc_d_32_2e714149031c` — `sc.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}`
+image::encodings/enc_sc_d.svg[SC.D encoding form sc_d_32_2e714149031c,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcR)
+status = StoreConditional64(addr, Read(SrcL))
+Write(Dst, status)
+----
+
+[[insndesc-atomic-operation-sc-h]]
+===== SC.H
+
+Store-conditional: attempts an atomic store that succeeds only if the reservation is still valid; returns a status code.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `sc.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`sc_h_32_108941eabac6` — `sc.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}`
+image::encodings/enc_sc_h.svg[SC.H encoding form sc_h_32_108941eabac6,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcR)
+status = StoreConditional16(addr, Read(SrcL))
+Write(Dst, status)
+----
+
+[[insndesc-atomic-operation-sc-w]]
+===== SC.W
+
+Store-conditional: attempts an atomic store that succeeds only if the reservation is still valid; returns a status code.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `sc.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`sc_w_32_14b238f02bfd` — `sc.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}`
+image::encodings/enc_sc_w.svg[SC.W encoding form sc_w_32_14b238f02bfd,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcR)
+status = StoreConditional32(addr, Read(SrcL))
+Write(Dst, status)
+----
+
+[[insndesc-atomic-operation-sd-add]]
+===== SD.ADD
+
+Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `sd.add<.{rl, f, rlf}> [SrcL], SrcR`
+
+Encoding::
++
+.`sd_add_32_2a55ae1228bd` — `sd.add<.{rl, f, rlf}> [SrcL], SrcR`
+image::encodings/enc_sd_add.svg[SD.ADD encoding form sd_add_32_2a55ae1228bd,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = old + Read(SrcR)
+AtomicStore64(addr, new)
+----
+
+[[insndesc-atomic-operation-sd-and]]
+===== SD.AND
+
+Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `sd.and<.{rl, f, rlf}> [SrcL], SrcR`
+
+Encoding::
++
+.`sd_and_32_71963e1769c2` — `sd.and<.{rl, f, rlf}> [SrcL], SrcR`
+image::encodings/enc_sd_and.svg[SD.AND encoding form sd_and_32_71963e1769c2,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = old & Read(SrcR)
+AtomicStore64(addr, new)
+----
+
+[[insndesc-atomic-operation-sd-or]]
+===== SD.OR
+
+Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `sd.or<.{rl, f, rlf}> [SrcL], SrcR`
+
+Encoding::
++
+.`sd_or_32_2a65eedfae0f` — `sd.or<.{rl, f, rlf}> [SrcL], SrcR`
+image::encodings/enc_sd_or.svg[SD.OR encoding form sd_or_32_2a65eedfae0f,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = old | Read(SrcR)
+AtomicStore64(addr, new)
+----
+
+[[insndesc-atomic-operation-sd-smax]]
+===== SD.SMAX
+
+Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `sd.smax<.{rl, f, rlf}> [SrcL], SrcR`
+
+Encoding::
++
+.`sd_smax_32_e59bf90b50c3` — `sd.smax<.{rl, f, rlf}> [SrcL], SrcR`
+image::encodings/enc_sd_smax.svg[SD.SMAX encoding form sd_smax_32_e59bf90b50c3,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = smax(old, Read(SrcR))
+AtomicStore64(addr, new)
+----
+
+[[insndesc-atomic-operation-sd-smin]]
+===== SD.SMIN
+
+Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `sd.smin<.{rl, f, rlf}> [SrcL], SrcR`
+
+Encoding::
++
+.`sd_smin_32_188d93125032` — `sd.smin<.{rl, f, rlf}> [SrcL], SrcR`
+image::encodings/enc_sd_smin.svg[SD.SMIN encoding form sd_smin_32_188d93125032,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = smin(old, Read(SrcR))
+AtomicStore64(addr, new)
+----
+
+[[insndesc-atomic-operation-sd-umax]]
+===== SD.UMAX
+
+Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `sd.umax<.{rl, f, rlf}> [SrcL], SrcR`
+
+Encoding::
++
+.`sd_umax_32_89c5ec42be68` — `sd.umax<.{rl, f, rlf}> [SrcL], SrcR`
+image::encodings/enc_sd_umax.svg[SD.UMAX encoding form sd_umax_32_89c5ec42be68,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = umax(old, Read(SrcR))
+AtomicStore64(addr, new)
+----
+
+[[insndesc-atomic-operation-sd-umin]]
+===== SD.UMIN
+
+Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `sd.umin<.{rl, f, rlf}> [SrcL], SrcR`
+
+Encoding::
++
+.`sd_umin_32_2388cbb378ac` — `sd.umin<.{rl, f, rlf}> [SrcL], SrcR`
+image::encodings/enc_sd_umin.svg[SD.UMIN encoding form sd_umin_32_2388cbb378ac,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = umin(old, Read(SrcR))
+AtomicStore64(addr, new)
+----
+
+[[insndesc-atomic-operation-sd-xor]]
+===== SD.XOR
+
+Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `sd.xor<.{rl, f, rlf}> [SrcL], SrcR`
+
+Encoding::
++
+.`sd_xor_32_7655ceaf9497` — `sd.xor<.{rl, f, rlf}> [SrcL], SrcR`
+image::encodings/enc_sd_xor.svg[SD.XOR encoding form sd_xor_32_7655ceaf9497,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = old ^ Read(SrcR)
+AtomicStore64(addr, new)
+----
+
+[[insndesc-atomic-operation-sw-add]]
+===== SW.ADD
+
+Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `sw.add<.{rl, f, rlf}> [SrcL], SrcR`
+
+Encoding::
++
+.`sw_add_32_3dca755552cb` — `sw.add<.{rl, f, rlf}> [SrcL], SrcR`
+image::encodings/enc_sw_add.svg[SW.ADD encoding form sw_add_32_3dca755552cb,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = old + Read(SrcR)
+AtomicStore32(addr, new)
+----
+
+[[insndesc-atomic-operation-sw-and]]
+===== SW.AND
+
+Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `sw.and<.{rl, f, rlf}> [SrcL], SrcR`
+
+Encoding::
++
+.`sw_and_32_7ef0872d5502` — `sw.and<.{rl, f, rlf}> [SrcL], SrcR`
+image::encodings/enc_sw_and.svg[SW.AND encoding form sw_and_32_7ef0872d5502,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = old & Read(SrcR)
+AtomicStore32(addr, new)
+----
+
+[[insndesc-atomic-operation-sw-or]]
+===== SW.OR
+
+Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `sw.or<.{rl, f, rlf}> [SrcL], SrcR`
+
+Encoding::
++
+.`sw_or_32_354579538c4e` — `sw.or<.{rl, f, rlf}> [SrcL], SrcR`
+image::encodings/enc_sw_or.svg[SW.OR encoding form sw_or_32_354579538c4e,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = old | Read(SrcR)
+AtomicStore32(addr, new)
+----
+
+[[insndesc-atomic-operation-sw-smax]]
+===== SW.SMAX
+
+Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `sw.smax<.{rl, f, rlf}> [SrcL], SrcR`
+
+Encoding::
++
+.`sw_smax_32_8bab38a878d7` — `sw.smax<.{rl, f, rlf}> [SrcL], SrcR`
+image::encodings/enc_sw_smax.svg[SW.SMAX encoding form sw_smax_32_8bab38a878d7,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = smax(old, Read(SrcR))
+AtomicStore32(addr, new)
+----
+
+[[insndesc-atomic-operation-sw-smin]]
+===== SW.SMIN
+
+Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `sw.smin<.{rl, f, rlf}> [SrcL], SrcR`
+
+Encoding::
++
+.`sw_smin_32_773e7d83b011` — `sw.smin<.{rl, f, rlf}> [SrcL], SrcR`
+image::encodings/enc_sw_smin.svg[SW.SMIN encoding form sw_smin_32_773e7d83b011,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = smin(old, Read(SrcR))
+AtomicStore32(addr, new)
+----
+
+[[insndesc-atomic-operation-sw-umax]]
+===== SW.UMAX
+
+Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `sw.umax<.{rl, f, rlf}> [SrcL], SrcR`
+
+Encoding::
++
+.`sw_umax_32_5530dfa23323` — `sw.umax<.{rl, f, rlf}> [SrcL], SrcR`
+image::encodings/enc_sw_umax.svg[SW.UMAX encoding form sw_umax_32_5530dfa23323,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = umax(old, Read(SrcR))
+AtomicStore32(addr, new)
+----
+
+[[insndesc-atomic-operation-sw-umin]]
+===== SW.UMIN
+
+Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `sw.umin<.{rl, f, rlf}> [SrcL], SrcR`
+
+Encoding::
++
+.`sw_umin_32_3ce114819cfc` — `sw.umin<.{rl, f, rlf}> [SrcL], SrcR`
+image::encodings/enc_sw_umin.svg[SW.UMIN encoding form sw_umin_32_3ce114819cfc,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = umin(old, Read(SrcR))
+AtomicStore32(addr, new)
+----
+
+[[insndesc-atomic-operation-sw-xor]]
+===== SW.XOR
+
+Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `sw.xor<.{rl, f, rlf}> [SrcL], SrcR`
+
+Encoding::
++
+.`sw_xor_32_874c32572226` — `sw.xor<.{rl, f, rlf}> [SrcL], SrcR`
+image::encodings/enc_sw_xor.svg[SW.XOR encoding form sw_xor_32_874c32572226,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = old ^ Read(SrcR)
+AtomicStore32(addr, new)
+----
+
+[[insndesc-atomic-operation-swapb]]
+===== SWAPB
+
+Atomic swap: atomically exchanges a memory value with a register value and returns the old value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `swapb<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`swapb_32_80733f03b77f` — `swapb<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_swapb.svg[SWAPB encoding form swapb_32_80733f03b77f,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicSwap8(addr, Read(SrcR))
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-swapd]]
+===== SWAPD
+
+Atomic swap: atomically exchanges a memory value with a register value and returns the old value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `swapd<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`swapd_32_cd31ccde2303` — `swapd<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_swapd.svg[SWAPD encoding form swapd_32_cd31ccde2303,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicSwap64(addr, Read(SrcR))
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-swaph]]
+===== SWAPH
+
+Atomic swap: atomically exchanges a memory value with a register value and returns the old value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `swaph<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`swaph_32_8c2d4a28bf25` — `swaph<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_swaph.svg[SWAPH encoding form swaph_32_8c2d4a28bf25,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicSwap16(addr, Read(SrcR))
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-swapw]]
+===== SWAPW
+
+Atomic swap: atomically exchanges a memory value with a register value and returns the old value.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `swapw<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+
+Encoding::
++
+.`swapw_32_ef15c3ebac33` — `swapw<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_swapw.svg[SWAPW encoding form swapw_32_ef15c3ebac33,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+addr = Read(SrcL)
+old = AtomicSwap32(addr, Read(SrcR))
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-v-ld-add]]
+===== V.LD.ADD
+
+This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (64 bits).
+
+Assembly forms::
++
+* `v.ld.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
+
+Encoding::
++
+.`v_ld_add_64_b880252ca4af` — `v.ld.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
+image::encodings/enc_v_ld_add_parts.svg[V.LD.ADD encoding form v_ld_add_64_b880252ca4af,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+for each active element:
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = old + Read(SrcR)
+AtomicStore64(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-v-ld-and]]
+===== V.LD.AND
+
+This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (64 bits).
+
+Assembly forms::
++
+* `v.ld.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
+
+Encoding::
++
+.`v_ld_and_64_18248e48be84` — `v.ld.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
+image::encodings/enc_v_ld_and_parts.svg[V.LD.AND encoding form v_ld_and_64_18248e48be84,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+for each active element:
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = old & Read(SrcR)
+AtomicStore64(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-v-ld-max]]
+===== V.LD.MAX
+
+This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (64 bits).
+
+Assembly forms::
++
+* `v.ld.max<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
+
+Encoding::
++
+.`v_ld_max_64_e35d8e7957c3` — `v.ld.max<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
+image::encodings/enc_v_ld_max_parts.svg[V.LD.MAX encoding form v_ld_max_64_e35d8e7957c3,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+for each active element:
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = max(old, Read(SrcR))
+AtomicStore64(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-v-ld-min]]
+===== V.LD.MIN
+
+This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (64 bits).
+
+Assembly forms::
++
+* `v.ld.min<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
+
+Encoding::
++
+.`v_ld_min_64_71f54b9b61ae` — `v.ld.min<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
+image::encodings/enc_v_ld_min_parts.svg[V.LD.MIN encoding form v_ld_min_64_71f54b9b61ae,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+for each active element:
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = min(old, Read(SrcR))
+AtomicStore64(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-v-ld-or]]
+===== V.LD.OR
+
+This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (64 bits).
+
+Assembly forms::
++
+* `v.ld.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
+
+Encoding::
++
+.`v_ld_or_64_4568b99c9e57` — `v.ld.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
+image::encodings/enc_v_ld_or_parts.svg[V.LD.OR encoding form v_ld_or_64_4568b99c9e57,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+for each active element:
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = old | Read(SrcR)
+AtomicStore64(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-v-ld-xor]]
+===== V.LD.XOR
+
+This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (64 bits).
+
+Assembly forms::
++
+* `v.ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
+
+Encoding::
++
+.`v_ld_xor_64_c7a54911a5fa` — `v.ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
+image::encodings/enc_v_ld_xor_parts.svg[V.LD.XOR encoding form v_ld_xor_64_c7a54911a5fa,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+for each active element:
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = old ^ Read(SrcR)
+AtomicStore64(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-v-lw-add]]
+===== V.LW.ADD
+
+This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (64 bits).
+
+Assembly forms::
++
+* `v.lw.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
+
+Encoding::
++
+.`v_lw_add_64_d603802b2bed` — `v.lw.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
+image::encodings/enc_v_lw_add_parts.svg[V.LW.ADD encoding form v_lw_add_64_d603802b2bed,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+for each active element:
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = old + Read(SrcR)
+AtomicStore32(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-v-lw-and]]
+===== V.LW.AND
+
+This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (64 bits).
+
+Assembly forms::
++
+* `v.lw.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
+
+Encoding::
++
+.`v_lw_and_64_c511f6c6aad9` — `v.lw.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
+image::encodings/enc_v_lw_and_parts.svg[V.LW.AND encoding form v_lw_and_64_c511f6c6aad9,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+for each active element:
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = old & Read(SrcR)
+AtomicStore32(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-v-lw-max]]
+===== V.LW.MAX
+
+This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (64 bits).
+
+Assembly forms::
++
+* `v.lw.max<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
+
+Encoding::
++
+.`v_lw_max_64_c7e26075c749` — `v.lw.max<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
+image::encodings/enc_v_lw_max_parts.svg[V.LW.MAX encoding form v_lw_max_64_c7e26075c749,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+for each active element:
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = max(old, Read(SrcR))
+AtomicStore32(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-v-lw-min]]
+===== V.LW.MIN
+
+This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (64 bits).
+
+Assembly forms::
++
+* `v.lw.min<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
+
+Encoding::
++
+.`v_lw_min_64_24160fd76a35` — `v.lw.min<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
+image::encodings/enc_v_lw_min_parts.svg[V.LW.MIN encoding form v_lw_min_64_24160fd76a35,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+for each active element:
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = min(old, Read(SrcR))
+AtomicStore32(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-v-lw-or]]
+===== V.LW.OR
+
+This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (64 bits).
+
+Assembly forms::
++
+* `v.lw.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
+
+Encoding::
++
+.`v_lw_or_64_baf9868390da` — `v.lw.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
+image::encodings/enc_v_lw_or_parts.svg[V.LW.OR encoding form v_lw_or_64_baf9868390da,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+for each active element:
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = old | Read(SrcR)
+AtomicStore32(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-v-lw-xor]]
+===== V.LW.XOR
+
+This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that returns the original memory value.
+
+Catalog forms:: 1 form(s) (64 bits).
+
+Assembly forms::
++
+* `v.lw.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
+
+Encoding::
++
+.`v_lw_xor_64_a520a467a6d4` — `v.lw.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
+image::encodings/enc_v_lw_xor_parts.svg[V.LW.XOR encoding form v_lw_xor_64_a520a467a6d4,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+for each active element:
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = old ^ Read(SrcR)
+AtomicStore32(addr, new)
+Write(Dst, old)
+----
+
+[[insndesc-atomic-operation-v-sd-add]]
+===== V.SD.ADD
+
+This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (64 bits).
+
+Assembly forms::
++
+* `v.sd.add<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
+
+Encoding::
++
+.`v_sd_add_64_9d01cd1060a2` — `v.sd.add<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
+image::encodings/enc_v_sd_add_parts.svg[V.SD.ADD encoding form v_sd_add_64_9d01cd1060a2,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+for each active element:
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = old + Read(SrcR)
+AtomicStore64(addr, new)
+----
+
+[[insndesc-atomic-operation-v-sd-and]]
+===== V.SD.AND
+
+This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (64 bits).
+
+Assembly forms::
++
+* `v.sd.and<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
+
+Encoding::
++
+.`v_sd_and_64_bd9bc82be46e` — `v.sd.and<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
+image::encodings/enc_v_sd_and_parts.svg[V.SD.AND encoding form v_sd_and_64_bd9bc82be46e,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+for each active element:
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = old & Read(SrcR)
+AtomicStore64(addr, new)
+----
+
+[[insndesc-atomic-operation-v-sd-max]]
+===== V.SD.MAX
+
+This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (64 bits).
+
+Assembly forms::
++
+* `v.sd.max<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
+
+Encoding::
++
+.`v_sd_max_64_498ca2576e7c` — `v.sd.max<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
+image::encodings/enc_v_sd_max_parts.svg[V.SD.MAX encoding form v_sd_max_64_498ca2576e7c,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+for each active element:
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = max(old, Read(SrcR))
+AtomicStore64(addr, new)
+----
+
+[[insndesc-atomic-operation-v-sd-min]]
+===== V.SD.MIN
+
+This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (64 bits).
+
+Assembly forms::
++
+* `v.sd.min<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
+
+Encoding::
++
+.`v_sd_min_64_0cd2fc3707d5` — `v.sd.min<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
+image::encodings/enc_v_sd_min_parts.svg[V.SD.MIN encoding form v_sd_min_64_0cd2fc3707d5,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+for each active element:
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = min(old, Read(SrcR))
+AtomicStore64(addr, new)
+----
+
+[[insndesc-atomic-operation-v-sd-or]]
+===== V.SD.OR
+
+This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (64 bits).
+
+Assembly forms::
++
+* `v.sd.or<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
+
+Encoding::
++
+.`v_sd_or_64_67395fafaca6` — `v.sd.or<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
+image::encodings/enc_v_sd_or_parts.svg[V.SD.OR encoding form v_sd_or_64_67395fafaca6,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+for each active element:
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = old | Read(SrcR)
+AtomicStore64(addr, new)
+----
+
+[[insndesc-atomic-operation-v-sd-xor]]
+===== V.SD.XOR
+
+This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (64 bits).
+
+Assembly forms::
++
+* `v.sd.xor<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
+
+Encoding::
++
+.`v_sd_xor_64_8549b91dcf30` — `v.sd.xor<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
+image::encodings/enc_v_sd_xor_parts.svg[V.SD.XOR encoding form v_sd_xor_64_8549b91dcf30,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+for each active element:
+addr = Read(SrcL)
+old = AtomicLoad64(addr)
+new = old ^ Read(SrcR)
+AtomicStore64(addr, new)
+----
+
+[[insndesc-atomic-operation-v-sw-add]]
+===== V.SW.ADD
+
+This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (64 bits).
+
+Assembly forms::
++
+* `v.sw.add<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
+
+Encoding::
++
+.`v_sw_add_64_559073c4e3f7` — `v.sw.add<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
+image::encodings/enc_v_sw_add_parts.svg[V.SW.ADD encoding form v_sw_add_64_559073c4e3f7,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+for each active element:
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = old + Read(SrcR)
+AtomicStore32(addr, new)
+----
+
+[[insndesc-atomic-operation-v-sw-and]]
+===== V.SW.AND
+
+This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (64 bits).
+
+Assembly forms::
++
+* `v.sw.and<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
+
+Encoding::
++
+.`v_sw_and_64_9773aef54030` — `v.sw.and<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
+image::encodings/enc_v_sw_and_parts.svg[V.SW.AND encoding form v_sw_and_64_9773aef54030,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+for each active element:
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = old & Read(SrcR)
+AtomicStore32(addr, new)
+----
+
+[[insndesc-atomic-operation-v-sw-max]]
+===== V.SW.MAX
+
+This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (64 bits).
+
+Assembly forms::
++
+* `v.sw.max<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
+
+Encoding::
++
+.`v_sw_max_64_2404ff65efac` — `v.sw.max<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
+image::encodings/enc_v_sw_max_parts.svg[V.SW.MAX encoding form v_sw_max_64_2404ff65efac,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+for each active element:
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = max(old, Read(SrcR))
+AtomicStore32(addr, new)
+----
+
+[[insndesc-atomic-operation-v-sw-min]]
+===== V.SW.MIN
+
+This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (64 bits).
+
+Assembly forms::
++
+* `v.sw.min<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
+
+Encoding::
++
+.`v_sw_min_64_1ee3543106bd` — `v.sw.min<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
+image::encodings/enc_v_sw_min_parts.svg[V.SW.MIN encoding form v_sw_min_64_1ee3543106bd,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+for each active element:
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = min(old, Read(SrcR))
+AtomicStore32(addr, new)
+----
+
+[[insndesc-atomic-operation-v-sw-or]]
+===== V.SW.OR
+
+This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (64 bits).
+
+Assembly forms::
++
+* `v.sw.or<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
+
+Encoding::
++
+.`v_sw_or_64_c82ad77db84c` — `v.sw.or<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
+image::encodings/enc_v_sw_or_parts.svg[V.SW.OR encoding form v_sw_or_64_c82ad77db84c,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+for each active element:
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = old | Read(SrcR)
+AtomicStore32(addr, new)
+----
+
+[[insndesc-atomic-operation-v-sw-xor]]
+===== V.SW.XOR
+
+This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that updates memory without returning a value.
+
+Catalog forms:: 1 form(s) (64 bits).
+
+Assembly forms::
++
+* `v.sw.xor<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
+
+Encoding::
++
+.`v_sw_xor_64_db3db9f0dce5` — `v.sw.xor<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
+image::encodings/enc_v_sw_xor_parts.svg[V.SW.XOR encoding form v_sw_xor_64_db3db9f0dce5,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+for each active element:
+addr = Read(SrcL)
+old = AtomicLoad32(addr)
+new = old ^ Read(SrcR)
+AtomicStore32(addr, new)
+----
+
 [[insndesc-compare-instruction]]
 ==== Compare Instruction
 
@@ -8320,6 +10783,37 @@ a = Read(SrcL)
 b = Read(SrcR)
 result = LowProduct(a, b)
 Write(Dst, result)
+----
+
+[[insndesc-dma-operation]]
+==== DMA Operation
+
+[[insndesc-dma-operation-dma]]
+===== DMA
+
+Loads a value from memory using the addressing form shown in the syntax and writes the result to the selected destination.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `dma [SrcL], SrcR`
+
+Encoding::
++
+.`dma_32_a168aeca5fa5` — `dma [SrcL], SrcR`
+image::encodings/enc_dma.svg[DMA encoding form dma_32_a168aeca5fa5,align="center"]
+
+
+Encoding notes (informative)::
++
+* v0.57 encoding for the inherited DMA operation: copy 64 bytes from the source address in SrcL to the destination address in SrcR and complete before submission.
+
+Operation (informative)::
++
+[source]
+----
+Execute operation as selected by the mnemonic and encoded modifiers.
 ----
 
 [[insndesc-floating-point-arithmetic]]
@@ -14267,1885 +16761,6 @@ addr = ComputeAddress(/* per syntax */)
 value = Load32(addr)
 value = ZeroExtend(value)
 Write(Dst, value)
-----
-
-[[insndesc-atomic-operation]]
-==== Atomic Operation
-
-[[insndesc-atomic-operation-ld-add]]
-===== LD.ADD
-
-Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `ld.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`ld_add_32_a4038a6c7e86` — `ld.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_ld_add.svg[LD.ADD encoding form ld_add_32_a4038a6c7e86,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = old + Read(SrcR)
-AtomicStore64(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-ld-and]]
-===== LD.AND
-
-Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `ld.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`ld_and_32_2a46b3003480` — `ld.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_ld_and.svg[LD.AND encoding form ld_and_32_2a46b3003480,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = old & Read(SrcR)
-AtomicStore64(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-ld-or]]
-===== LD.OR
-
-Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `ld.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`ld_or_32_456d270cfc7d` — `ld.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_ld_or.svg[LD.OR encoding form ld_or_32_456d270cfc7d,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = old | Read(SrcR)
-AtomicStore64(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-ld-smax]]
-===== LD.SMAX
-
-Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `ld.smax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`ld_smax_32_a3aad6120226` — `ld.smax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_ld_smax.svg[LD.SMAX encoding form ld_smax_32_a3aad6120226,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = smax(old, Read(SrcR))
-AtomicStore64(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-ld-smin]]
-===== LD.SMIN
-
-Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `ld.smin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`ld_smin_32_9461d345718f` — `ld.smin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_ld_smin.svg[LD.SMIN encoding form ld_smin_32_9461d345718f,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = smin(old, Read(SrcR))
-AtomicStore64(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-ld-umax]]
-===== LD.UMAX
-
-Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `ld.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`ld_umax_32_a84af75745d9` — `ld.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_ld_umax.svg[LD.UMAX encoding form ld_umax_32_a84af75745d9,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = umax(old, Read(SrcR))
-AtomicStore64(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-ld-umin]]
-===== LD.UMIN
-
-Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `ld.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`ld_umin_32_4bf2f357eff3` — `ld.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_ld_umin.svg[LD.UMIN encoding form ld_umin_32_4bf2f357eff3,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = umin(old, Read(SrcR))
-AtomicStore64(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-ld-xor]]
-===== LD.XOR
-
-Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`ld_xor_32_33072c0fde61` — `ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_ld_xor.svg[LD.XOR encoding form ld_xor_32_33072c0fde61,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = old ^ Read(SrcR)
-AtomicStore64(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-lr-b]]
-===== LR.B
-
-Load-reserved: performs an atomic load and establishes a reservation for a subsequent store-conditional.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `lr.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`lr_b_32_cf80903a761a` — `lr.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}`
-image::encodings/enc_lr_b.svg[LR.B encoding form lr_b_32_cf80903a761a,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-value = LoadReserved8 (addr)
-Write(Dst, value)
-----
-
-[[insndesc-atomic-operation-lr-d]]
-===== LR.D
-
-Load-reserved: performs an atomic load and establishes a reservation for a subsequent store-conditional.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `lr.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`lr_d_32_84d21a553dc1` — `lr.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}`
-image::encodings/enc_lr_d.svg[LR.D encoding form lr_d_32_84d21a553dc1,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-value = LoadReserved64 (addr)
-Write(Dst, value)
-----
-
-[[insndesc-atomic-operation-lr-h]]
-===== LR.H
-
-Load-reserved: performs an atomic load and establishes a reservation for a subsequent store-conditional.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `lr.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`lr_h_32_f936df218d63` — `lr.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}`
-image::encodings/enc_lr_h.svg[LR.H encoding form lr_h_32_f936df218d63,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-value = LoadReserved16 (addr)
-Write(Dst, value)
-----
-
-[[insndesc-atomic-operation-lr-w]]
-===== LR.W
-
-Load-reserved: performs an atomic load and establishes a reservation for a subsequent store-conditional.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `lr.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`lr_w_32_efecc735bb75` — `lr.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}`
-image::encodings/enc_lr_w.svg[LR.W encoding form lr_w_32_efecc735bb75,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-value = LoadReserved32 (addr)
-Write(Dst, value)
-----
-
-[[insndesc-atomic-operation-lw-add]]
-===== LW.ADD
-
-Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `lw.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`lw_add_32_5be3ad1ad081` — `lw.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_lw_add.svg[LW.ADD encoding form lw_add_32_5be3ad1ad081,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = old + Read(SrcR)
-AtomicStore32(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-lw-and]]
-===== LW.AND
-
-Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `lw.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`lw_and_32_f8dd9866b069` — `lw.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_lw_and.svg[LW.AND encoding form lw_and_32_f8dd9866b069,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = old & Read(SrcR)
-AtomicStore32(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-lw-or]]
-===== LW.OR
-
-Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `lw.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`lw_or_32_d6d2f87706fd` — `lw.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_lw_or.svg[LW.OR encoding form lw_or_32_d6d2f87706fd,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = old | Read(SrcR)
-AtomicStore32(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-lw-smax]]
-===== LW.SMAX
-
-Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `lw.smax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`lw_smax_32_838b8c673c91` — `lw.smax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_lw_smax.svg[LW.SMAX encoding form lw_smax_32_838b8c673c91,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = smax(old, Read(SrcR))
-AtomicStore32(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-lw-smin]]
-===== LW.SMIN
-
-Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `lw.smin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`lw_smin_32_44452ae44d02` — `lw.smin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_lw_smin.svg[LW.SMIN encoding form lw_smin_32_44452ae44d02,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = smin(old, Read(SrcR))
-AtomicStore32(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-lw-umax]]
-===== LW.UMAX
-
-Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `lw.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`lw_umax_32_3c6a5a534674` — `lw.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_lw_umax.svg[LW.UMAX encoding form lw_umax_32_3c6a5a534674,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = umax(old, Read(SrcR))
-AtomicStore32(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-lw-umin]]
-===== LW.UMIN
-
-Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `lw.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`lw_umin_32_fd9b7bb538a3` — `lw.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_lw_umin.svg[LW.UMIN encoding form lw_umin_32_fd9b7bb538a3,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = umin(old, Read(SrcR))
-AtomicStore32(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-lw-xor]]
-===== LW.XOR
-
-Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `lw.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`lw_xor_32_4d4aa82c676a` — `lw.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_lw_xor.svg[LW.XOR encoding form lw_xor_32_4d4aa82c676a,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = old ^ Read(SrcR)
-AtomicStore32(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-sc-b]]
-===== SC.B
-
-Store-conditional: attempts an atomic store that succeeds only if the reservation is still valid; returns a status code.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `sc.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`sc_b_32_baf609e1d5c3` — `sc.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}`
-image::encodings/enc_sc_b.svg[SC.B encoding form sc_b_32_baf609e1d5c3,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcR)
-status = StoreConditional8(addr, Read(SrcL))
-Write(Dst, status)
-----
-
-[[insndesc-atomic-operation-sc-d]]
-===== SC.D
-
-Store-conditional: attempts an atomic store that succeeds only if the reservation is still valid; returns a status code.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `sc.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`sc_d_32_2e714149031c` — `sc.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}`
-image::encodings/enc_sc_d.svg[SC.D encoding form sc_d_32_2e714149031c,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcR)
-status = StoreConditional64(addr, Read(SrcL))
-Write(Dst, status)
-----
-
-[[insndesc-atomic-operation-sc-h]]
-===== SC.H
-
-Store-conditional: attempts an atomic store that succeeds only if the reservation is still valid; returns a status code.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `sc.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`sc_h_32_108941eabac6` — `sc.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}`
-image::encodings/enc_sc_h.svg[SC.H encoding form sc_h_32_108941eabac6,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcR)
-status = StoreConditional16(addr, Read(SrcL))
-Write(Dst, status)
-----
-
-[[insndesc-atomic-operation-sc-w]]
-===== SC.W
-
-Store-conditional: attempts an atomic store that succeeds only if the reservation is still valid; returns a status code.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `sc.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`sc_w_32_14b238f02bfd` — `sc.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}`
-image::encodings/enc_sc_w.svg[SC.W encoding form sc_w_32_14b238f02bfd,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcR)
-status = StoreConditional32(addr, Read(SrcL))
-Write(Dst, status)
-----
-
-[[insndesc-atomic-operation-sd-add]]
-===== SD.ADD
-
-Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `sd.add<.{rl, f, rlf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`sd_add_32_2a55ae1228bd` — `sd.add<.{rl, f, rlf}> [SrcL], SrcR`
-image::encodings/enc_sd_add.svg[SD.ADD encoding form sd_add_32_2a55ae1228bd,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = old + Read(SrcR)
-AtomicStore64(addr, new)
-----
-
-[[insndesc-atomic-operation-sd-and]]
-===== SD.AND
-
-Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `sd.and<.{rl, f, rlf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`sd_and_32_71963e1769c2` — `sd.and<.{rl, f, rlf}> [SrcL], SrcR`
-image::encodings/enc_sd_and.svg[SD.AND encoding form sd_and_32_71963e1769c2,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = old & Read(SrcR)
-AtomicStore64(addr, new)
-----
-
-[[insndesc-atomic-operation-sd-or]]
-===== SD.OR
-
-Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `sd.or<.{rl, f, rlf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`sd_or_32_2a65eedfae0f` — `sd.or<.{rl, f, rlf}> [SrcL], SrcR`
-image::encodings/enc_sd_or.svg[SD.OR encoding form sd_or_32_2a65eedfae0f,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = old | Read(SrcR)
-AtomicStore64(addr, new)
-----
-
-[[insndesc-atomic-operation-sd-smax]]
-===== SD.SMAX
-
-Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `sd.smax<.{rl, f, rlf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`sd_smax_32_e59bf90b50c3` — `sd.smax<.{rl, f, rlf}> [SrcL], SrcR`
-image::encodings/enc_sd_smax.svg[SD.SMAX encoding form sd_smax_32_e59bf90b50c3,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = smax(old, Read(SrcR))
-AtomicStore64(addr, new)
-----
-
-[[insndesc-atomic-operation-sd-smin]]
-===== SD.SMIN
-
-Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `sd.smin<.{rl, f, rlf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`sd_smin_32_188d93125032` — `sd.smin<.{rl, f, rlf}> [SrcL], SrcR`
-image::encodings/enc_sd_smin.svg[SD.SMIN encoding form sd_smin_32_188d93125032,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = smin(old, Read(SrcR))
-AtomicStore64(addr, new)
-----
-
-[[insndesc-atomic-operation-sd-umax]]
-===== SD.UMAX
-
-Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `sd.umax<.{rl, f, rlf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`sd_umax_32_89c5ec42be68` — `sd.umax<.{rl, f, rlf}> [SrcL], SrcR`
-image::encodings/enc_sd_umax.svg[SD.UMAX encoding form sd_umax_32_89c5ec42be68,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = umax(old, Read(SrcR))
-AtomicStore64(addr, new)
-----
-
-[[insndesc-atomic-operation-sd-umin]]
-===== SD.UMIN
-
-Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `sd.umin<.{rl, f, rlf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`sd_umin_32_2388cbb378ac` — `sd.umin<.{rl, f, rlf}> [SrcL], SrcR`
-image::encodings/enc_sd_umin.svg[SD.UMIN encoding form sd_umin_32_2388cbb378ac,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = umin(old, Read(SrcR))
-AtomicStore64(addr, new)
-----
-
-[[insndesc-atomic-operation-sd-xor]]
-===== SD.XOR
-
-Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `sd.xor<.{rl, f, rlf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`sd_xor_32_7655ceaf9497` — `sd.xor<.{rl, f, rlf}> [SrcL], SrcR`
-image::encodings/enc_sd_xor.svg[SD.XOR encoding form sd_xor_32_7655ceaf9497,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = old ^ Read(SrcR)
-AtomicStore64(addr, new)
-----
-
-[[insndesc-atomic-operation-sw-add]]
-===== SW.ADD
-
-Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `sw.add<.{rl, f, rlf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`sw_add_32_3dca755552cb` — `sw.add<.{rl, f, rlf}> [SrcL], SrcR`
-image::encodings/enc_sw_add.svg[SW.ADD encoding form sw_add_32_3dca755552cb,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = old + Read(SrcR)
-AtomicStore32(addr, new)
-----
-
-[[insndesc-atomic-operation-sw-and]]
-===== SW.AND
-
-Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `sw.and<.{rl, f, rlf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`sw_and_32_7ef0872d5502` — `sw.and<.{rl, f, rlf}> [SrcL], SrcR`
-image::encodings/enc_sw_and.svg[SW.AND encoding form sw_and_32_7ef0872d5502,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = old & Read(SrcR)
-AtomicStore32(addr, new)
-----
-
-[[insndesc-atomic-operation-sw-or]]
-===== SW.OR
-
-Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `sw.or<.{rl, f, rlf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`sw_or_32_354579538c4e` — `sw.or<.{rl, f, rlf}> [SrcL], SrcR`
-image::encodings/enc_sw_or.svg[SW.OR encoding form sw_or_32_354579538c4e,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = old | Read(SrcR)
-AtomicStore32(addr, new)
-----
-
-[[insndesc-atomic-operation-sw-smax]]
-===== SW.SMAX
-
-Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `sw.smax<.{rl, f, rlf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`sw_smax_32_8bab38a878d7` — `sw.smax<.{rl, f, rlf}> [SrcL], SrcR`
-image::encodings/enc_sw_smax.svg[SW.SMAX encoding form sw_smax_32_8bab38a878d7,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = smax(old, Read(SrcR))
-AtomicStore32(addr, new)
-----
-
-[[insndesc-atomic-operation-sw-smin]]
-===== SW.SMIN
-
-Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `sw.smin<.{rl, f, rlf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`sw_smin_32_773e7d83b011` — `sw.smin<.{rl, f, rlf}> [SrcL], SrcR`
-image::encodings/enc_sw_smin.svg[SW.SMIN encoding form sw_smin_32_773e7d83b011,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = smin(old, Read(SrcR))
-AtomicStore32(addr, new)
-----
-
-[[insndesc-atomic-operation-sw-umax]]
-===== SW.UMAX
-
-Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `sw.umax<.{rl, f, rlf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`sw_umax_32_5530dfa23323` — `sw.umax<.{rl, f, rlf}> [SrcL], SrcR`
-image::encodings/enc_sw_umax.svg[SW.UMAX encoding form sw_umax_32_5530dfa23323,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = umax(old, Read(SrcR))
-AtomicStore32(addr, new)
-----
-
-[[insndesc-atomic-operation-sw-umin]]
-===== SW.UMIN
-
-Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `sw.umin<.{rl, f, rlf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`sw_umin_32_3ce114819cfc` — `sw.umin<.{rl, f, rlf}> [SrcL], SrcR`
-image::encodings/enc_sw_umin.svg[SW.UMIN encoding form sw_umin_32_3ce114819cfc,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = umin(old, Read(SrcR))
-AtomicStore32(addr, new)
-----
-
-[[insndesc-atomic-operation-sw-xor]]
-===== SW.XOR
-
-Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `sw.xor<.{rl, f, rlf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`sw_xor_32_874c32572226` — `sw.xor<.{rl, f, rlf}> [SrcL], SrcR`
-image::encodings/enc_sw_xor.svg[SW.XOR encoding form sw_xor_32_874c32572226,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = old ^ Read(SrcR)
-AtomicStore32(addr, new)
-----
-
-[[insndesc-atomic-operation-swapb]]
-===== SWAPB
-
-Atomic swap: atomically exchanges a memory value with a register value and returns the old value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `swapb<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`swapb_32_80733f03b77f` — `swapb<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_swapb.svg[SWAPB encoding form swapb_32_80733f03b77f,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicSwap8(addr, Read(SrcR))
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-swapd]]
-===== SWAPD
-
-Atomic swap: atomically exchanges a memory value with a register value and returns the old value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `swapd<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`swapd_32_cd31ccde2303` — `swapd<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_swapd.svg[SWAPD encoding form swapd_32_cd31ccde2303,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicSwap64(addr, Read(SrcR))
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-swaph]]
-===== SWAPH
-
-Atomic swap: atomically exchanges a memory value with a register value and returns the old value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `swaph<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`swaph_32_8c2d4a28bf25` — `swaph<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_swaph.svg[SWAPH encoding form swaph_32_8c2d4a28bf25,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicSwap16(addr, Read(SrcR))
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-swapw]]
-===== SWAPW
-
-Atomic swap: atomically exchanges a memory value with a register value and returns the old value.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `swapw<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-
-Encoding::
-+
-.`swapw_32_ef15c3ebac33` — `swapw<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_swapw.svg[SWAPW encoding form swapw_32_ef15c3ebac33,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-addr = Read(SrcL)
-old = AtomicSwap32(addr, Read(SrcR))
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-v-ld-add]]
-===== V.LD.ADD
-
-This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (64 bits).
-
-Assembly forms::
-+
-* `v.ld.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
-
-Encoding::
-+
-.`v_ld_add_64_b880252ca4af` — `v.ld.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
-image::encodings/enc_v_ld_add_parts.svg[V.LD.ADD encoding form v_ld_add_64_b880252ca4af,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-for each active element:
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = old + Read(SrcR)
-AtomicStore64(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-v-ld-and]]
-===== V.LD.AND
-
-This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (64 bits).
-
-Assembly forms::
-+
-* `v.ld.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
-
-Encoding::
-+
-.`v_ld_and_64_18248e48be84` — `v.ld.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
-image::encodings/enc_v_ld_and_parts.svg[V.LD.AND encoding form v_ld_and_64_18248e48be84,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-for each active element:
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = old & Read(SrcR)
-AtomicStore64(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-v-ld-max]]
-===== V.LD.MAX
-
-This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (64 bits).
-
-Assembly forms::
-+
-* `v.ld.max<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
-
-Encoding::
-+
-.`v_ld_max_64_e35d8e7957c3` — `v.ld.max<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
-image::encodings/enc_v_ld_max_parts.svg[V.LD.MAX encoding form v_ld_max_64_e35d8e7957c3,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-for each active element:
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = max(old, Read(SrcR))
-AtomicStore64(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-v-ld-min]]
-===== V.LD.MIN
-
-This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (64 bits).
-
-Assembly forms::
-+
-* `v.ld.min<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
-
-Encoding::
-+
-.`v_ld_min_64_71f54b9b61ae` — `v.ld.min<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
-image::encodings/enc_v_ld_min_parts.svg[V.LD.MIN encoding form v_ld_min_64_71f54b9b61ae,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-for each active element:
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = min(old, Read(SrcR))
-AtomicStore64(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-v-ld-or]]
-===== V.LD.OR
-
-This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (64 bits).
-
-Assembly forms::
-+
-* `v.ld.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
-
-Encoding::
-+
-.`v_ld_or_64_4568b99c9e57` — `v.ld.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
-image::encodings/enc_v_ld_or_parts.svg[V.LD.OR encoding form v_ld_or_64_4568b99c9e57,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-for each active element:
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = old | Read(SrcR)
-AtomicStore64(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-v-ld-xor]]
-===== V.LD.XOR
-
-This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (64 bits).
-
-Assembly forms::
-+
-* `v.ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
-
-Encoding::
-+
-.`v_ld_xor_64_c7a54911a5fa` — `v.ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
-image::encodings/enc_v_ld_xor_parts.svg[V.LD.XOR encoding form v_ld_xor_64_c7a54911a5fa,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-for each active element:
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = old ^ Read(SrcR)
-AtomicStore64(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-v-lw-add]]
-===== V.LW.ADD
-
-This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (64 bits).
-
-Assembly forms::
-+
-* `v.lw.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
-
-Encoding::
-+
-.`v_lw_add_64_d603802b2bed` — `v.lw.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
-image::encodings/enc_v_lw_add_parts.svg[V.LW.ADD encoding form v_lw_add_64_d603802b2bed,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-for each active element:
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = old + Read(SrcR)
-AtomicStore32(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-v-lw-and]]
-===== V.LW.AND
-
-This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (64 bits).
-
-Assembly forms::
-+
-* `v.lw.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
-
-Encoding::
-+
-.`v_lw_and_64_c511f6c6aad9` — `v.lw.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
-image::encodings/enc_v_lw_and_parts.svg[V.LW.AND encoding form v_lw_and_64_c511f6c6aad9,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-for each active element:
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = old & Read(SrcR)
-AtomicStore32(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-v-lw-max]]
-===== V.LW.MAX
-
-This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (64 bits).
-
-Assembly forms::
-+
-* `v.lw.max<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
-
-Encoding::
-+
-.`v_lw_max_64_c7e26075c749` — `v.lw.max<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
-image::encodings/enc_v_lw_max_parts.svg[V.LW.MAX encoding form v_lw_max_64_c7e26075c749,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-for each active element:
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = max(old, Read(SrcR))
-AtomicStore32(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-v-lw-min]]
-===== V.LW.MIN
-
-This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (64 bits).
-
-Assembly forms::
-+
-* `v.lw.min<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
-
-Encoding::
-+
-.`v_lw_min_64_24160fd76a35` — `v.lw.min<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
-image::encodings/enc_v_lw_min_parts.svg[V.LW.MIN encoding form v_lw_min_64_24160fd76a35,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-for each active element:
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = min(old, Read(SrcR))
-AtomicStore32(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-v-lw-or]]
-===== V.LW.OR
-
-This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (64 bits).
-
-Assembly forms::
-+
-* `v.lw.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
-
-Encoding::
-+
-.`v_lw_or_64_baf9868390da` — `v.lw.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
-image::encodings/enc_v_lw_or_parts.svg[V.LW.OR encoding form v_lw_or_64_baf9868390da,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-for each active element:
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = old | Read(SrcR)
-AtomicStore32(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-v-lw-xor]]
-===== V.LW.XOR
-
-This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that returns the original memory value.
-
-Catalog forms:: 1 form(s) (64 bits).
-
-Assembly forms::
-+
-* `v.lw.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
-
-Encoding::
-+
-.`v_lw_xor_64_a520a467a6d4` — `v.lw.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst`
-image::encodings/enc_v_lw_xor_parts.svg[V.LW.XOR encoding form v_lw_xor_64_a520a467a6d4,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-for each active element:
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = old ^ Read(SrcR)
-AtomicStore32(addr, new)
-Write(Dst, old)
-----
-
-[[insndesc-atomic-operation-v-sd-add]]
-===== V.SD.ADD
-
-This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (64 bits).
-
-Assembly forms::
-+
-* `v.sd.add<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`v_sd_add_64_9d01cd1060a2` — `v.sd.add<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
-image::encodings/enc_v_sd_add_parts.svg[V.SD.ADD encoding form v_sd_add_64_9d01cd1060a2,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-for each active element:
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = old + Read(SrcR)
-AtomicStore64(addr, new)
-----
-
-[[insndesc-atomic-operation-v-sd-and]]
-===== V.SD.AND
-
-This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (64 bits).
-
-Assembly forms::
-+
-* `v.sd.and<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`v_sd_and_64_bd9bc82be46e` — `v.sd.and<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
-image::encodings/enc_v_sd_and_parts.svg[V.SD.AND encoding form v_sd_and_64_bd9bc82be46e,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-for each active element:
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = old & Read(SrcR)
-AtomicStore64(addr, new)
-----
-
-[[insndesc-atomic-operation-v-sd-max]]
-===== V.SD.MAX
-
-This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (64 bits).
-
-Assembly forms::
-+
-* `v.sd.max<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`v_sd_max_64_498ca2576e7c` — `v.sd.max<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
-image::encodings/enc_v_sd_max_parts.svg[V.SD.MAX encoding form v_sd_max_64_498ca2576e7c,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-for each active element:
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = max(old, Read(SrcR))
-AtomicStore64(addr, new)
-----
-
-[[insndesc-atomic-operation-v-sd-min]]
-===== V.SD.MIN
-
-This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (64 bits).
-
-Assembly forms::
-+
-* `v.sd.min<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`v_sd_min_64_0cd2fc3707d5` — `v.sd.min<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
-image::encodings/enc_v_sd_min_parts.svg[V.SD.MIN encoding form v_sd_min_64_0cd2fc3707d5,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-for each active element:
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = min(old, Read(SrcR))
-AtomicStore64(addr, new)
-----
-
-[[insndesc-atomic-operation-v-sd-or]]
-===== V.SD.OR
-
-This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (64 bits).
-
-Assembly forms::
-+
-* `v.sd.or<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`v_sd_or_64_67395fafaca6` — `v.sd.or<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
-image::encodings/enc_v_sd_or_parts.svg[V.SD.OR encoding form v_sd_or_64_67395fafaca6,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-for each active element:
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = old | Read(SrcR)
-AtomicStore64(addr, new)
-----
-
-[[insndesc-atomic-operation-v-sd-xor]]
-===== V.SD.XOR
-
-This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (64 bits).
-
-Assembly forms::
-+
-* `v.sd.xor<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`v_sd_xor_64_8549b91dcf30` — `v.sd.xor<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
-image::encodings/enc_v_sd_xor_parts.svg[V.SD.XOR encoding form v_sd_xor_64_8549b91dcf30,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-for each active element:
-addr = Read(SrcL)
-old = AtomicLoad64(addr)
-new = old ^ Read(SrcR)
-AtomicStore64(addr, new)
-----
-
-[[insndesc-atomic-operation-v-sw-add]]
-===== V.SW.ADD
-
-This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (64 bits).
-
-Assembly forms::
-+
-* `v.sw.add<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`v_sw_add_64_559073c4e3f7` — `v.sw.add<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
-image::encodings/enc_v_sw_add_parts.svg[V.SW.ADD encoding form v_sw_add_64_559073c4e3f7,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-for each active element:
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = old + Read(SrcR)
-AtomicStore32(addr, new)
-----
-
-[[insndesc-atomic-operation-v-sw-and]]
-===== V.SW.AND
-
-This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (64 bits).
-
-Assembly forms::
-+
-* `v.sw.and<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`v_sw_and_64_9773aef54030` — `v.sw.and<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
-image::encodings/enc_v_sw_and_parts.svg[V.SW.AND encoding form v_sw_and_64_9773aef54030,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-for each active element:
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = old & Read(SrcR)
-AtomicStore32(addr, new)
-----
-
-[[insndesc-atomic-operation-v-sw-max]]
-===== V.SW.MAX
-
-This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (64 bits).
-
-Assembly forms::
-+
-* `v.sw.max<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`v_sw_max_64_2404ff65efac` — `v.sw.max<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
-image::encodings/enc_v_sw_max_parts.svg[V.SW.MAX encoding form v_sw_max_64_2404ff65efac,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-for each active element:
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = max(old, Read(SrcR))
-AtomicStore32(addr, new)
-----
-
-[[insndesc-atomic-operation-v-sw-min]]
-===== V.SW.MIN
-
-This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (64 bits).
-
-Assembly forms::
-+
-* `v.sw.min<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`v_sw_min_64_1ee3543106bd` — `v.sw.min<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
-image::encodings/enc_v_sw_min_parts.svg[V.SW.MIN encoding form v_sw_min_64_1ee3543106bd,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-for each active element:
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = min(old, Read(SrcR))
-AtomicStore32(addr, new)
-----
-
-[[insndesc-atomic-operation-v-sw-or]]
-===== V.SW.OR
-
-This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (64 bits).
-
-Assembly forms::
-+
-* `v.sw.or<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`v_sw_or_64_c82ad77db84c` — `v.sw.or<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
-image::encodings/enc_v_sw_or_parts.svg[V.SW.OR encoding form v_sw_or_64_c82ad77db84c,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-for each active element:
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = old | Read(SrcR)
-AtomicStore32(addr, new)
-----
-
-[[insndesc-atomic-operation-v-sw-xor]]
-===== V.SW.XOR
-
-This mnemonic has a 64-bit vector encoding (prefix + main). Atomic read-modify-write operation that updates memory without returning a value.
-
-Catalog forms:: 1 form(s) (64 bits).
-
-Assembly forms::
-+
-* `v.sw.xor<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
-
-Encoding::
-+
-.`v_sw_xor_64_db3db9f0dce5` — `v.sw.xor<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR`
-image::encodings/enc_v_sw_xor_parts.svg[V.SW.XOR encoding form v_sw_xor_64_db3db9f0dce5,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-for each active element:
-addr = Read(SrcL)
-old = AtomicLoad32(addr)
-new = old ^ Read(SrcR)
-AtomicStore32(addr, new)
 ----
 
 [[insndesc-load-unscaled]]

@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_hl_sdi_upr.svg[HL.SDI.UPR encoding,width=800]
+image::encodings/enc_hl_sdi_upr.svg[HL.SDI.UPR encoding,width=800]
 
 *Uop-Class:* STA/PRE_INDEX
 

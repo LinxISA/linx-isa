@@ -65,7 +65,7 @@ def targets(raw: int, contract: dict, p: int) -> tuple[int, int]:
 
 
 def main() -> int:
-    spec = json.loads((ROOT / "isa/v0.56/linxisa-v0.56.json").read_text(encoding="utf-8"))
+    spec = json.loads((ROOT / "isa/v0.57/linxisa-v0.57.json").read_text(encoding="utf-8"))
     by_id = {inst["id"]: inst for inst in spec["instructions"]}
     sail = (ROOT / "isa/sail/model/decode/decode.sail").read_text(encoding="utf-8")
     directed = (ROOT / "isa/sail/tests/directed.sail").read_text(encoding="utf-8")

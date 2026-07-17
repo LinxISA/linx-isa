@@ -29,7 +29,12 @@ TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7
 
 一条完整矩阵数据块指令块头需要拆分成以下多条指令进行编码，其中包括：
 
-- BSTART.CUBE TileOp, DataType
+- 命名块头：`BSTART.TMATMUL DataTypeA`、`BSTART.TMATMUL.BIAS DataTypeA`、
+  `BSTART.TMATMUL.ACC DataTypeA`、`BSTART.TMATMULMX DataTypeA`、
+  `BSTART.TMATMULMX.BIAS DataTypeA`、`BSTART.TMATMULMX.ACC DataTypeA`、
+  `BSTART.ACCCVT SrcType`、`BSTART.TGEMV DataType`、`BSTART.TGEMV.BIAS DataType`、
+  `BSTART.TGEMV.ACC DataType`、`BSTART.TGEMVMX DataType`、
+  `BSTART.TGEMVMX.BIAS DataType`、`BSTART.TGEMVMX.ACC DataType`
 - [B.DATR](../../header/B.DATR.md) Layout.{canon, normal}, DataType
 - [B.DIM](../../header/B.DIM.md) reg, imm, ->LB0
 - [B.DIM](../../header/B.DIM.md) reg, imm, ->LB1
@@ -38,7 +43,10 @@ TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7
 - ...
 - [B.IOT](../../header/B.IOT.md) SrcTile6<.reuse>, SrcTile7<.reuse>, last, ->DstTile3< TileSize3>
 
-其中，BSTART.CUBE指令的编码格式如下：
+其中，CUBE 命名块头共享 BSTART.CUBE 编码族。活动汇编对下表中的命名函数使用
+命名块头；泛化 `BSTART.CUBE` 只保留给未命名函数编码，不能覆盖已命名函数。
+
+其中，BSTART.CUBE 编码族格式如下：
 
 ![BSTART.CUBE](../../../figs/bitfield/svg/BlockHeader_32bit/BSTART.CUBE.svg)
 

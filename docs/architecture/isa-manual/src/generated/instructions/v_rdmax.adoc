@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_v_rdmax_parts.svg[V.RDMAX encoding,width=800]
+image::encodings/enc_v_rdmax_parts.svg[V.RDMAX encoding,width=800]
 
 *Uop-Class:* VEC
 

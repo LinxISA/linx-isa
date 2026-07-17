@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_v_lw_max_parts.svg[V.LW.MAX encoding,width=800]
+image::encodings/enc_v_lw_max_parts.svg[V.LW.MAX encoding,width=800]
 
 *Uop-Class:* VEC
 

@@ -36,7 +36,7 @@ Instruction from the Block Data Attribute group.
 
 ## Encoding Notes
 
-- `v0.56 split of legacy B.CATR/B.DATR data fields. CMode is 3 bits; RMode is 3 bits; Sat is bit 31.`
+- `canonical split of legacy B.CATR/B.DATR data fields. CMode is 3 bits; RMode is 3 bits; Sat is bit 31.`
 
 ## Full Catalog Forms
 

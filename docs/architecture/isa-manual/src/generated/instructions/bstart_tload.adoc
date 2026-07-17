@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_bstart_tload.svg[BSTART.TLOAD encoding,width=800]
+image::encodings/enc_bstart_tload.svg[BSTART.TLOAD encoding,width=800]
 
 *Uop-Class:* CMD
 

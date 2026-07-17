@@ -12,14 +12,14 @@
   "constraint_union_forms": [
     "C.BSTART.STD [len=16 mask=0xc7ff match=0x0]"
   ],
-  "coverage_count": 625,
-  "coverage_ratio_percent": 88.03,
+  "coverage_count": 646,
+  "coverage_ratio_percent": 88.37,
   "evidence": {
     "L1": {
       "availability": "available",
       "claim": "decoder_source_mapping",
-      "form_count": 657,
-      "mnemonic_count": 625
+      "form_count": 678,
+      "mnemonic_count": 646
     },
     "L2": {
       "availability": "available",
@@ -39,12 +39,12 @@
     }
   },
   "evidence_level": "L1",
-  "form_coverage_count": 657,
-  "form_coverage_ratio_percent": 88.07,
-  "form_missing_count": 89,
-  "generated_at_utc": "2026-07-16 23:18:26Z",
-  "legal_form_count": 746,
-  "legal_mnemonic_count": 710,
+  "form_coverage_count": 678,
+  "form_coverage_ratio_percent": 88.17,
+  "form_missing_count": 91,
+  "generated_at_utc": "2026-07-17 06:07:09Z",
+  "legal_form_count": 769,
+  "legal_mnemonic_count": 731,
   "limitations": [
     "runtime_execution_evidence_is_partial",
     "semantic_oracle_evidence_is_partial",
@@ -69,7 +69,7 @@
     "BIC": 1,
     "BIS": 1,
     "BSE": 1,
-    "BSTART": 18,
+    "BSTART": 34,
     "BSTOP": 1,
     "BWE": 1,
     "BWI": 1,
@@ -77,6 +77,10 @@
     "BXS": 1,
     "BXU": 1,
     "C": 38,
+    "CASB": 1,
+    "CASD": 1,
+    "CASH": 1,
+    "CASW": 1,
     "CLZ": 1,
     "CMP": 16,
     "CSEL": 1,
@@ -86,6 +90,7 @@
     "DIVU": 1,
     "DIVUW": 1,
     "DIVW": 1,
+    "DMA": 1,
     "EBREAK": 1,
     "ERCOV": 1,
     "ESAVE": 1,
@@ -228,7 +233,7 @@
     "BIC": 1,
     "BIS": 1,
     "BSE": 1,
-    "BSTART": 27,
+    "BSTART": 43,
     "BSTOP": 1,
     "BWE": 1,
     "BWI": 1,
@@ -236,6 +241,10 @@
     "BXS": 1,
     "BXU": 1,
     "C": 39,
+    "CASB": 1,
+    "CASD": 1,
+    "CASH": 1,
+    "CASW": 1,
     "CLZ": 1,
     "CMP": 16,
     "CSEL": 1,
@@ -245,6 +254,7 @@
     "DIVU": 1,
     "DIVUW": 1,
     "DIVW": 1,
+    "DMA": 1,
     "EBREAK": 1,
     "ERCOV": 1,
     "ESAVE": 1,
@@ -549,8 +559,23 @@
       "BSTART",
       "BSTART.STD"
     ],
+    "bstart_mgather": [
+      "BSTART.MGATHER"
+    ],
+    "bstart_mgather_cas": [
+      "BSTART.MGATHER.CAS"
+    ],
+    "bstart_mgather_mask": [
+      "BSTART.MGATHER.MASK"
+    ],
     "bstart_mpar": [
       "BSTART.MPAR"
+    ],
+    "bstart_mscatter": [
+      "BSTART.MSCATTER"
+    ],
+    "bstart_mscatter_mask": [
+      "BSTART.MSCATTER.MASK"
     ],
     "bstart_mseq": [
       "BSTART.MSEQ"
@@ -576,6 +601,24 @@
       "BSTART.TMATMUL.ACC",
       "BSTART.ACCCVT"
     ],
+    "bstart_tgemv": [
+      "BSTART.TGEMV"
+    ],
+    "bstart_tgemv_acc": [
+      "BSTART.TGEMV.ACC"
+    ],
+    "bstart_tgemv_bias": [
+      "BSTART.TGEMV.BIAS"
+    ],
+    "bstart_tgemvmx": [
+      "BSTART.TGEMVMX"
+    ],
+    "bstart_tgemvmx_acc": [
+      "BSTART.TGEMVMX.ACC"
+    ],
+    "bstart_tgemvmx_bias": [
+      "BSTART.TGEMVMX.BIAS"
+    ],
     "bstart_tload": [
       "BSTART.TLOAD"
     ],
@@ -585,8 +628,23 @@
     "bstart_tmatmul_acc": [
       "BSTART.TMATMUL.ACC"
     ],
+    "bstart_tmatmul_bias": [
+      "BSTART.TMATMUL.BIAS"
+    ],
+    "bstart_tmatmulmx": [
+      "BSTART.TMATMULMX"
+    ],
+    "bstart_tmatmulmx_acc": [
+      "BSTART.TMATMULMX.ACC"
+    ],
+    "bstart_tmatmulmx_bias": [
+      "BSTART.TMATMULMX.BIAS"
+    ],
     "bstart_tmov": [
       "BSTART.TMOV"
+    ],
+    "bstart_tprefetch": [
+      "BSTART.TPREFETCH"
     ],
     "bstart_tstore": [
       "BSTART.TSTORE"
@@ -747,6 +805,18 @@
     "c_zext_w": [
       "C.ZEXT.W"
     ],
+    "casb": [
+      "CASB"
+    ],
+    "casd": [
+      "CASD"
+    ],
+    "cash": [
+      "CASH"
+    ],
+    "casw": [
+      "CASW"
+    ],
     "clz": [
       "CLZ"
     ],
@@ -839,6 +909,9 @@
     ],
     "divw": [
       "DIVW"
+    ],
+    "dma": [
+      "DMA"
     ],
     "ebreak": [
       "EBREAK"
@@ -2387,11 +2460,14 @@
   },
   "missing_count": 85,
   "missing_forms_by_prefix": {
+    "B": 2,
     "BSTART": 4,
     "V": 84,
     "XB": 1
   },
   "missing_spec_forms": [
+    "B.IOT [len=32 mask=0x1fc0707f match=0x1c04013]",
+    "B.IOT [len=32 mask=0x9fff707f match=0x1c05013]",
     "BSTART.MPAR [len=32 mask=0xf9ffffff match=0x1181]",
     "BSTART.MSEQ [len=32 mask=0xf9ffffff match=0x9181]",
     "BSTART.VPAR [len=32 mask=0xf9ffffff match=0x21181]",
@@ -2572,23 +2648,23 @@
   "qemu_manual_translate_mnemonics": [
     "C.SETRET"
   ],
-  "qemu_mapped_spec_forms": 657,
-  "qemu_mapped_spec_mnemonics": 625,
-  "qemu_meta_mnemonics": 657,
+  "qemu_mapped_spec_forms": 678,
+  "qemu_mapped_spec_mnemonics": 646,
+  "qemu_meta_mnemonics": 678,
   "qemu_meta_path": "/Users/zhoubot/linx-isa/emulator/qemu/target/linx/linx_opcode_meta_gen.h",
   "qemu_root": "/Users/zhoubot/linx-isa/emulator/qemu",
   "qemu_source_kind": "decode",
-  "qemu_unique_forms": 666,
-  "qemu_unique_mnemonics": 658,
+  "qemu_unique_forms": 687,
+  "qemu_unique_mnemonics": 679,
   "reserved_encoding_families": [
     {
       "behavior": "illegal_instruction",
       "family": "TMA",
       "reserved_range": [
-        3,
+        9,
         31
       ],
-      "reserved_value_count": 29,
+      "reserved_value_count": 23,
       "selector_field": "Function"
     }
   ],
@@ -2599,8 +2675,8 @@
     "ok": true
   },
   "schema_version": "qemu-isa-coverage-v3",
-  "spec_path": "/Users/zhoubot/linx-isa/isa/v0.56/linxisa-v0.56.json",
-  "spec_total_forms": 746,
-  "spec_unique_mnemonics": 710,
+  "spec_path": "/Users/zhoubot/linx-isa/isa/v0.57/linxisa-v0.57.json",
+  "spec_total_forms": 769,
+  "spec_unique_mnemonics": 731,
   "unmapped_qemu_mnemonics": []
 }

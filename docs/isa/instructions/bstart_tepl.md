@@ -36,7 +36,7 @@ EndBlock(); BeginNextBlock(/* kind */);
 
 ## Encoding Notes
 
-- `Tile opcode selects PTO template ops. Canonical v0.56 standardized assignments require TileOpcode[9:6]=0 and pack TileOpcode[5]=Mode with TileOpcode[4:0]=Function; unassigned values remain reserved for future template extension.`
+- `Tile opcode selects PTO template ops. Canonical established assignments require TileOpcode[9:6]=0 and pack TileOpcode[5]=Mode with TileOpcode[4:0]=Function; unassigned values remain reserved for future template extension.`
 
 ## Full Catalog Forms
 

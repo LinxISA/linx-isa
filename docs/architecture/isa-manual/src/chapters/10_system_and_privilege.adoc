@@ -1,7 +1,7 @@
 [[system]]
-== System and privileged architecture (v0.56)
+== System and privileged architecture (v0.57)
 
-This chapter defines the v0.56 privileged architecture: Access Control Rings (ACR), privileged system registers
+This chapter defines the v0.57 privileged architecture: Access Control Rings (ACR), privileged system registers
 (SSR), and the trap envelope for exceptions and interrupts.
 
 Where platform-specific details are required, the chapter notes this with [PLATFORM] markers. See Linux bring-up status for implementation progress.
@@ -12,7 +12,7 @@ Where platform-specific details are required, the chapter notes this with [PLATF
 Linx partitions privileged state using **Access Control Rings** (**ACR**). The architecture defines up to **16**
 rings, named **ACR0..ACR15**.
 
-Bring-up conventions (v0.56 current profile):
+Bring-up conventions (v0.57 current profile):
 
 * On reset, an LXCPU starts executing in **ACR0**.
 * **ACR0 is the root / most privileged** ring. Rings with larger numeric IDs MAY be used for progressively less
@@ -21,7 +21,7 @@ Bring-up conventions (v0.56 current profile):
 * Some privileged SSRs are **ACR-scoped** (banked per ring). In this manual those registers are written with an
   `*_ACRn` suffix.
 
-Informative software role mapping (v0.56 current profile):
+Informative software role mapping (v0.57 current profile):
 
 [%header,cols="1,4"]
 |===
@@ -328,7 +328,7 @@ Instruction-related traps (`E_INST`)::
 +|`EC_XBDEF`   |`0x11` |`XB` definition invalid (`CAC_TABLE` entry missing/invalid, bad `B.TEXT`, etc.).
 +|===
 +
-+NOTE: earlier draft text previously used `E_INST(EC_ILLEGAL)` and `E_INST(EC_PARAM)` informally without allocating numeric encodings. Canonical `v0.56` allocates concrete `EC_*` values above.
++NOTE: earlier draft text previously used `E_INST(EC_ILLEGAL)` and `E_INST(EC_PARAM)` informally without allocating numeric encodings. Canonical `v0.57` inherits the concrete `EC_*` values above.
 +
 
 [%header,cols="2,1,1,1,1"]
@@ -660,6 +660,6 @@ The following items require platform-specific or profile-specific definition for
 
 [NOTE]
 ====
-These items remain platform-specific policy inputs on top of the canonical v0.56 privileged architecture.
+These items remain platform-specific policy inputs on top of the canonical v0.57 privileged architecture.
 See `docs/bringup/PROGRESS.md` for current implementation status in this repository.
 ====

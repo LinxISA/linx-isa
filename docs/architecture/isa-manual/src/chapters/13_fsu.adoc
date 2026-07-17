@@ -1,5 +1,5 @@
 // Generated file; do not edit by hand.
-// Auto-generated from isa/v0.56/linxisa-v0.56.json and uop_classification_v0.56.json
+// Auto-generated from isa/v0.57/linxisa-v0.57.json and uop_classification_v0.57.json
 
 [[chapter_fsu]]
 == FSU - Floating-point / SIMD Unit
@@ -9,7 +9,7 @@ The Floating-point/SIMD Unit (FSU) provides all scalar floating-point operations
 **Floating-point control** is managed through the FCSR register (see <<progmodel-fcsr>>):
 
 * Rounding mode is selected by `FCSR[10:8]`. The default is round-to-nearest-even (RNE).
-* Exception flags (`NV`, `DZ`, `OF`, `UF`, `NX`) are sticky and set but do not trap by default in the v0.56 bring-up profile.
+* Exception flags (`NV`, `DZ`, `OF`, `UF`, `NX`) are sticky and set but do not trap by default in the v0.57 bring-up profile.
 
 **FMA variants** (`FMADD`, `FMSUB`, `FNMADD`, `FNMSUB`) perform a fused multiply-add in a single rounding step:
 `FMADD`: `(+/-(Rs1 * Rs2)) +/- Rs3` -- the sign of the addend follows the instruction variant.

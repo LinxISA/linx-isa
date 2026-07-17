@@ -17,7 +17,7 @@ is first rewritten to match the checked-in `LinxV5` branch topology.
 ## Phase 1: Core Instruction Support
 
 ### TableGen Definitions
-- [ ] Regenerate the canonical C codec from `isa/v0.56/linxisa-v0.56.json`
+- [ ] Regenerate the canonical C codec from `isa/v0.57/linxisa-v0.57.json`
 - [ ] Integrate generated patterns into `LinxInstrInfo.td`
 - [ ] Define instruction formats in `LinxInstrFormats.td`:
   - [ ] 16-bit compressed format
@@ -219,7 +219,7 @@ is first rewritten to match the checked-in `LinxV5` branch topology.
 ```bash
 # Generate canonical LLVM MC codec tables
 python3 tools/isa/gen_c_codec.py \
-  --spec isa/v0.56/linxisa-v0.56.json \
+  --spec isa/v0.57/linxisa-v0.57.json \
   --out-dir compiler/llvm/llvm/lib/Target/LinxISA/MCTargetDesc
 
 # Run tests

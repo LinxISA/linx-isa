@@ -5,7 +5,7 @@
 <span class="ch-tag ch-tag-04">Ch 04</span>
 &nbsp; <strong>Block ISA — Block-structured Control Flow</strong> &nbsp;|&nbsp;
 **Group:** Block Input & Output &nbsp;|&nbsp;
-**Forms:** 4 &nbsp;|&nbsp;
+**Forms:** 6 &nbsp;|&nbsp;
 **Unique mnemonics:** 2
 
 </div>

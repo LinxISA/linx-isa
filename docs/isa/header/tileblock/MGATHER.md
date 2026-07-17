@@ -39,7 +39,7 @@ written. Canonical forms allow `u16`, `u32`, or `u64` offsets.
 
 `MGATHER` expands to:
 
-- [BSTART.TMA](../../blockIntro/tma_block/header.md) `MGATHER, DataType`
+- [BSTART.MGATHER](../../instructions/bstart_mgather.md) `DataType`
 - [B.DATR](../../header/B.DATR.md) `PadValue` (optional)
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0` (`validCol`)
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1` (`validRow`)

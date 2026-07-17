@@ -50,7 +50,7 @@ Done means:
 ### CORE-M03 Emulator Runtime Baseline
 
 Goal:
-- QEMU strict-system and AVS runtime suites are stable on the active v0.56 line.
+- QEMU strict-system and AVS runtime suites are stable on the active v0.57 line.
 
 Done means:
 - runtime/system gates pass

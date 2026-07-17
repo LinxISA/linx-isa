@@ -15,6 +15,12 @@ EXPECTED = {
     "bstart_tload": (0x07FFFFFF, 0x00011181, 0),
     "bstart_tstore": (0x07FFFFFF, 0x00111181, 1),
     "bstart_tmov": (0x07FFFFFF, 0x00211181, 2),
+    "bstart_tprefetch": (0x07FFFFFF, 0x00311181, 3),
+    "bstart_mgather": (0x07FFFFFF, 0x00411181, 4),
+    "bstart_mscatter": (0x07FFFFFF, 0x00511181, 5),
+    "bstart_mgather_mask": (0x07FFFFFF, 0x00611181, 6),
+    "bstart_mscatter_mask": (0x07FFFFFF, 0x00711181, 7),
+    "bstart_mgather_cas": (0x07FFFFFF, 0x00811181, 8),
 }
 META_WITH_ID_RE = re.compile(
     r"\.op_id=(?P<op_id>\d+),.*?"
@@ -47,8 +53,7 @@ class QemuTmaReservedDecodeContractTests(unittest.TestCase):
         decoded = {
             entry["mnemonic"]: (entry["mask"], entry["match"])
             for entry in self.decode_entries
-            if entry["mnemonic"].startswith("bstart_tm")
-            or entry["mnemonic"] in {"bstart_tload", "bstart_tstore"}
+            if entry["mnemonic"] in EXPECTED or entry["mnemonic"] == "bstart_tma"
         }
         self.assertNotIn("bstart_tma", decoded)
         for token, (mask, match, _) in EXPECTED.items():
@@ -78,7 +83,7 @@ class QemuTmaReservedDecodeContractTests(unittest.TestCase):
             ]
             self.assertEqual(matches, [token])
 
-        for function, word in ((3, 0x08311181), (31, 0x09F11181)):
+        for function, word in ((9, 0x08911181), (31, 0x09F11181)):
             with self.subTest(function=function):
                 decode_matches = [
                     entry["mnemonic"]
@@ -94,7 +99,7 @@ class QemuTmaReservedDecodeContractTests(unittest.TestCase):
                 self.assertEqual(decode_matches, [])
                 self.assertEqual(meta_matches, [])
 
-    def test_translators_freeze_the_three_legal_function_values(self) -> None:
+    def test_translators_freeze_the_nine_legal_function_values(self) -> None:
         translate = (self.linx / "translate.c").read_text(encoding="utf-8")
         self.assertIsNone(re.search(r"\btrans_bstart_tma\s*\(", translate))
         for token, (_, _, function) in EXPECTED.items():

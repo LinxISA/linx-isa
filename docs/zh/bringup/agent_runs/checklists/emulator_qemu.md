@@ -55,7 +55,7 @@
   完成意味着：操作码审计报告没有意外的解码/元漂移，也没有枚举/元操作 ID 不匹配。
   状态： ✅ 通过 (2026-03-07) - 从标准化 `insn48.decode` 目录重新生成 灵犀Core/QEMU 操作码表后，操作码同步审核返回 `qemu_opcode_meta_sync_ok` 以及 `decode_only_unexpected=0`、`meta_only_unexpected=0` 和 `id_mismatch_count=0`（工件： `docs/bringup/gates/qemu_opcode_sync_latest.json`、`docs/bringup/gates/qemu_opcode_sync_latest.md`）。
 
-- [x] ID：QEMU-004 验证陷阱语义与 CFI/BLOCKFMT/BFETCH 的实时 v0.56 说明相匹配。
+- [x] ID：QEMU-004 验证陷阱语义与 CFI/BLOCKFMT/BFETCH 的实时 v0.57 说明相匹配。
   完成意味着：在严格系统和模型差异门中没有观察到冲突的陷阱行为。
   状态：✅ PASS (2026-02-25) -严格系统和模型差异在运行 `2026-02-25-r2-pin-lanefix` 时都是绿色的（日志：`docs/bringup/gates/logs/2026-02-25-r2-pin-lanefix/pin/emu_strict_system.log`、`docs/bringup/gates/logs/2026-02-25-r2-pin-lanefix/pin/model_diff_suite.log`）。- [x] ID：QEMU-005 ISA 规范与 QEMU 实现差距分析。
   命令：`python3 tools/bringup/report_qemu_isa_coverage.py --report-out docs/bringup/gates/qemu_isa_coverage_latest.json --out-md docs/bringup/gates/qemu_isa_coverage_latest.md`
@@ -66,10 +66,10 @@
   完成意味着：Linux 内核启动，计时器 中断 工作，完整的系统调用可用。
   状态： ✅ 通过 (2026-02-25) - 在运行 `2026-02-25-r2-pin-lanefix` 时，完整操作系统关闭门为绿色（`strict_cross_repo.sh` 通行证和 BusyBox rootfs 引导通行证在 `kernel_busybox_rootfs.log` 中）。当前恢复工作的注意事项：合并的 灵犀64 恢复通道现在期望直接内核/rootfs 引导运行无固件 (`-bios none`)，因此本地 rootfs/SPEC 重新运行应保留 QEMU 调用策略。
 
-- [x] ID：QEMU-007 在 v0.56 解码/翻译传播后构建固定的 `qemu-system-linx64`。
+- [x] ID：QEMU-007 在 v0.57 解码/翻译传播后构建固定的 `qemu-system-linx64`。
   命令：`ninja -C emulator/qemu/build qemu-system-linx64`
   完成意味着：固定的 QEMU 工作区使用当前解码/转换器状态编译 灵犀 系统模拟器二进制文件。
-  状态： ✅ 通过 (2026-03-08) - 在 v0.56 传播修复和操作码同步刷新后，固定 QEMU `043390f788da` 成功构建 `emulator/qemu/build/qemu-system-linx64`。- [ ] ID：QEMU-008 保持 标量 调用/ret 合约覆盖范围与融合直接调用源语法一致。
+  状态： ✅ 通过 (2026-03-08) - 在 v0.57 传播修复和操作码同步刷新后，固定 QEMU `043390f788da` 成功构建 `emulator/qemu/build/qemu-system-linx64`。- [ ] ID：QEMU-008 保持 标量 调用/ret 合约覆盖范围与融合直接调用源语法一致。
   命令：`python3 avs/qemu/run_callret_contract.py`
   完成意味着：标量 直接呼叫源案例使用融合的 `CALL ..., ra=...`，畸形或缺失的 setret 降低仍然是故障，并且积极的 标量 直接呼叫案例仍然是无故障。
   状态： ✅ 通过 (2026-05-15) - 将 标量 直接调用源案例转换为融合的 `BSTART.STD CALL, ..., ra=...` 后，`run_callret_contract.py` 通过。阴性畸形/缺失固定病例仍被困住，阳性融合直接呼叫病例仍无过错。

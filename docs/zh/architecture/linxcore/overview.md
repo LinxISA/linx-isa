@@ -1,4 +1,4 @@
-# 灵犀Core v0.56 Super标量 启动概述
+# 灵犀Core v0.57 Super标量 启动概述
 
 > 此发布的页面镜像了规范的 灵犀Core 源代码
 > `rtl/LinxCore/docs/architecture/overview.md`。
@@ -7,7 +7,7 @@
 ## 范围
 
 本文档是 灵犀Core 下的顶级规范概述
-实时 灵犀指令集 `v0.56` 合约。
+实时 灵犀指令集 `v0.57` 合约。
 
 灵犀Core 此处指定为：
 
@@ -17,7 +17,7 @@
 - 精确退休、恢复、中断、MMU、痕迹可见的拥有者
   执行行为，
 - 下游编译器、模拟器、pyCircuit 和测试平台的机器
-  工作必须以规范的 `v0.56` 行为为目标。
+  工作必须以规范的 `v0.57` 行为为目标。
 
 该规范不是性能愿望清单，也不是历史记录
 日志。它定义了实施必须保留的实时合同。
@@ -29,9 +29,9 @@
 
 ## 规范链接
 
-- 基础 ISA 架构合约：`docs/architecture/v0.56-architecture-contract.md`
-- 工作负载到引擎模型：`docs/architecture/v0.56-workload-engine-model.md`
-- 渲染命令型号：`docs/architecture/v0.56-rendering-command-contract.md`
+- 基础 ISA 架构合约：`docs/architecture/v0.57-architecture-contract.md`
+- 工作负载到引擎模型：`docs/architecture/v0.57-workload-engine-model.md`
+- 渲染命令型号：`docs/architecture/v0.57-rendering-command-contract.md`
 - 灵犀核心微架构合约：`rtl/LinxCore/docs/architecture/microarchitecture.md`
 - 灵犀核心接口合约：`rtl/LinxCore/docs/architecture/interfaces.md`
 - 灵犀核心验证矩阵：`rtl/LinxCore/docs/architecture/verification-matrix.md`当措辞出现分歧时，灵犀指令集 架构页面和 灵犀Core
@@ -59,7 +59,7 @@
 
 ## 灵犀指令集 中的架构角色
 
-在`v0.56`下，灵犀Core是多工作负载的执行基板
+在`v0.57`下，灵犀Core是多工作负载的执行基板
 灵犀指令集 型号。- BCC和块结构提供架构控制和提交
   路径。
 - `VEC` 是用于并行循环工作的通用可编程 SIMT 引擎。
@@ -72,9 +72,9 @@
 
 该组合规则需要与以下内容保持一致：
 
-- `docs/architecture/v0.56-architecture-contract.md`
-- `docs/architecture/v0.56-workload-engine-model.md`
-- `docs/architecture/v0.56-rendering-command-contract.md`
+- `docs/architecture/v0.57-architecture-contract.md`
+- `docs/architecture/v0.57-workload-engine-model.md`
+- `docs/architecture/v0.57-rendering-command-contract.md`
 
 ## 当前架构闭包切片
 
@@ -139,7 +139,7 @@ super标量-核心规格：
 
 ## 所需的关闭目标本规范的实时关闭目标是：
 
-- 灵犀指令集 `v0.56` 架构行为，
+- 灵犀指令集 `v0.57` 架构行为，
 - U+S特权行为，
 - MMU 和 中断 正确性，
 - 双通道重现性（`pin` 和 `external`），
@@ -154,6 +154,6 @@ super标量-核心规格：
 
 - 最终频率、面积或功率目标，
 - 超出当前实时合约的未来宽度缩放，
-- 灵犀指令集 `v0.56` 尚未涵盖的未来发动机添加
+- 灵犀指令集 `v0.57` 尚未涵盖的未来发动机添加
   建筑合同，
 - 历史性的引导策略不再是实时行为的一部分。

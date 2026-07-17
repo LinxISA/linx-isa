@@ -103,7 +103,7 @@
 ## SIMT 特定规划页面
 
 - 建筑详细规划：
-  `docs/architecture/v0.56-simt-compiler-contract-plan.md`
+  `docs/architecture/v0.57-simt-compiler-contract-plan.md`
 - 编译器成熟计划：
   `docs/bringup/SIMT_COMPILER_MATURITY_PLAN.md`
 

@@ -1,9 +1,9 @@
-// LinxISA architectural state model for canonical v0.56.
+// LinxISA architectural state model for canonical v0.57.
 // The state model grows incrementally while strict legality and execution coverage expand.
 //
 // NOTE: The current bring-up model still relies on decoder shadow metadata for some
 // block/header fields, but the architectural state and execute layers carry concrete
-// behavior for active v0.56 instructions.
+// behavior for active v0.57 instructions.
 
 $include <prelude.sail>
 $include <arith.sail>
@@ -272,9 +272,9 @@ function vec_init_p_for_group(lc1 : bits(64)) -> unit = {
 }
 
 // -----------------------------------------------------------------------------
-// Vector lane register file (canonical v0.56 decode carrier)
+// Vector lane register file (canonical v0.57 decode carrier)
 //
-// Live LLVM/QEMU v0.56 uses a class/index RegId10 encoding:
+// Live LLVM/QEMU v0.57 uses a class/index RegId10 encoding:
 //   (Class << 5) | Index
 //   Class 1 = ri*    (ordered B.IOR import namespace)
 //   Class 3 = lc*    (lane/group counters)
@@ -661,7 +661,7 @@ function set_decoded_vec_regids(srcl : bits(10), srcr : bits(10), srca : bits(10
 
 // Decode-provided vector operand typing shadows.
 //
-// In the v0.56 bring-up profile, RegId10 itself only carries class/index.
+// In the v0.57 bring-up profile, RegId10 itself only carries class/index.
 // These shadows therefore come from explicit instruction type fields when present,
 // or from the current default carrier-domain rules for the consuming opcode family.
 register decoded_vec_srcl_type_shadow : bits(5) = 0b00001
@@ -867,7 +867,7 @@ register ssr_ebarg_extctx_meta_acr2 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID
 // (ssr_lcfr/ssr_lb0..2 declared earlier for vec bring-up)
 
 // -----------------------------------------------------------------------------
-// XBINFO / CAC_TABLE (current v0.56 bring-up profile)
+// XBINFO / CAC_TABLE (current v0.57 bring-up profile)
 //
 // XBINFO provides the base address of the CAC_TABLE for a given target ACR.
 // The full system-call-block mechanism is platform-defined; the staged Sail model
@@ -882,7 +882,7 @@ register xbinfo_acr1 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x1F30
 register xbinfo_acr2 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x2F30
 
 // Resolved XB dispatch request.
-// The generic v0.56 architecture standardizes legality, permission, and
+// The generic v0.57 architecture standardizes legality, permission, and
 // CAC-table selection, but the binary entry layout remains platform-defined.
 // The Sail model therefore records the resolved dispatch request instead of
 // inventing a non-canonical in-entry block-header decoder.
@@ -997,7 +997,7 @@ function record_xb_dispatch(acr : bits(4), cid : bits(7), entry_ea : bits(64), w
 }
 
 // -----------------------------------------------------------------------------
-// ILLEGAL_INST / E_INST helpers (current v0.56 bring-up contract)
+// ILLEGAL_INST / E_INST helpers (current v0.57 bring-up contract)
 //
 // TRAPNUM major class:
 //   ILLEGAL_INST = 4
@@ -1132,7 +1132,7 @@ function swap_system_register(id24 : bits(24), v : bits(64)) -> bits(64) = {
 }
 
 // -----------------------------------------------------------------------------
-// CSTATE floating-point control/status fields (v0.56 staged profile)
+// CSTATE floating-point control/status fields (v0.57 staged profile)
 //
 // Architectural contract (per user + spec alignment):
 // - CSTATE.FFLAGS[36:32] are IEEE754 sticky exception flags: NV/DZ/OF/UF/NX
@@ -1161,7 +1161,7 @@ function cstate_set_frm(rm : bits(3)) -> unit = {
 }
 
 // -----------------------------------------------------------------------------
-// BLOCK_TRAP / E_BLOCK helpers (v0.56 bring-up contract)
+// BLOCK_TRAP / E_BLOCK helpers (v0.57 bring-up contract)
 //
 // Normative sources:
 // - docs/architecture/isa-manual/src/chapters/09_system_and_privilege.adoc
@@ -1209,7 +1209,7 @@ function trap_bfetch(fault_va : bits(64)) -> unit = {
 }
 
 // -----------------------------------------------------------------------------
-// Block boundary + BARG state (current v0.56 bring-up contract)
+// Block boundary + BARG state (current v0.57 bring-up contract)
 //
 // The Sail model keeps an explicit architectural BARG shadow so block-control
 // instructions have concrete semantics even before fetch/decode is fully wired.

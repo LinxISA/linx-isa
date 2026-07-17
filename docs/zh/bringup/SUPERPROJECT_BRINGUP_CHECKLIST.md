@@ -171,7 +171,7 @@
 
   ```bash
   python3 workloads/pto_kernels/tools/run_pto_kernel_parity.py --timeout 120
-  python3 workloads/tsvc/run_tsvc.py --clang compiler/llvm/build-linxisa-clang/bin/clang --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --vector-mode auto --strict-fail-under 148 --source-policy linx-v056 --no-run-qemu --out-dir workloads/generated
+  python3 workloads/tsvc/run_tsvc.py --clang compiler/llvm/build-linxisa-clang/bin/clang --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --vector-mode auto --strict-fail-under 148 --source-policy linx-v057 --no-run-qemu --out-dir workloads/generated
   ```
 
 - [ ] 重新运行集成广度检查：

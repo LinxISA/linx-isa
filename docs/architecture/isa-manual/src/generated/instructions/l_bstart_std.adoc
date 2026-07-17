@@ -14,7 +14,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_l_bstart_std_64_37e84068ce61.svg[L.BSTART.STD encoding form l_bstart_std_64_37e84068ce61,width=800]
+image::encodings/enc_l_bstart_std_64_37e84068ce61.svg[L.BSTART.STD encoding form l_bstart_std_64_37e84068ce61,width=800]
 
 *Compression:* L64 (len=64)
 
@@ -25,7 +25,7 @@ image::../encodings/enc_l_bstart_std_64_37e84068ce61.svg[L.BSTART.STD encoding f
 
 *Encoding:*
 
-image::../encodings/enc_l_bstart_std_64_463a1567da91.svg[L.BSTART.STD encoding form l_bstart_std_64_463a1567da91,width=800]
+image::encodings/enc_l_bstart_std_64_463a1567da91.svg[L.BSTART.STD encoding form l_bstart_std_64_463a1567da91,width=800]
 
 *Compression:* L64 (len=64)
 
@@ -36,7 +36,7 @@ image::../encodings/enc_l_bstart_std_64_463a1567da91.svg[L.BSTART.STD encoding f
 
 *Encoding:*
 
-image::../encodings/enc_l_bstart_std_64_72d502fcd30d.svg[L.BSTART.STD encoding form l_bstart_std_64_72d502fcd30d,width=800]
+image::encodings/enc_l_bstart_std_64_72d502fcd30d.svg[L.BSTART.STD encoding form l_bstart_std_64_72d502fcd30d,width=800]
 
 *Compression:* L64 (len=64)
 
@@ -47,7 +47,7 @@ image::../encodings/enc_l_bstart_std_64_72d502fcd30d.svg[L.BSTART.STD encoding f
 
 *Encoding:*
 
-image::../encodings/enc_l_bstart_std_64_899592f9c5bc.svg[L.BSTART.STD encoding form l_bstart_std_64_899592f9c5bc,width=800]
+image::encodings/enc_l_bstart_std_64_899592f9c5bc.svg[L.BSTART.STD encoding form l_bstart_std_64_899592f9c5bc,width=800]
 
 *Compression:* L64 (len=64)
 

@@ -7,7 +7,7 @@ body:
     id: location
     attributes:
       label: Spec location
-      description: Link to the relevant doc/section (e.g. `docs/architecture/v0.56-architecture-contract.md#...`).
+      description: Link to the relevant doc/section (e.g. `docs/architecture/v0.57-architecture-contract.md#...`).
     validations:
       required: true
   - type: textarea

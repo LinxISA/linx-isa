@@ -241,7 +241,7 @@ def main(argv: List[str]) -> int:
     )
     ap.add_argument(
         "--spec",
-        default="isa/v0.56/linxisa-v0.56.json",
+        default="isa/v0.57/linxisa-v0.57.json",
         help="ISA spec JSON for register name extraction.",
     )
     ap.add_argument(

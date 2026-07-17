@@ -231,7 +231,7 @@ def render_markdown(report: dict[str, object], out_path: Path) -> None:
 
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description="Generate AVS QEMU translation coverage report")
-    ap.add_argument("--spec", default="isa/v0.56/linxisa-v0.56.json", help="Path to compiled ISA JSON")
+    ap.add_argument("--spec", default="isa/v0.57/linxisa-v0.57.json", help="Path to compiled ISA JSON")
     ap.add_argument("--obj-dir", default="avs/qemu/out/obj", help="Directory containing per-source AVS QEMU objects")
     ap.add_argument(
         "--llvm-objdump",

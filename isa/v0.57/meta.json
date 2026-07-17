@@ -1,0 +1,19 @@
+{
+  "instruction_lengths_bits": [
+    16,
+    32,
+    48,
+    64
+  ],
+  "isa": "LinxISA",
+  "notes": [
+    "This directory is the authoritative staged golden ISA definition for v0.57.",
+    "v0.57 is the sole active LinxISA profile and incorporates the complete established ISA contract.",
+    "v0.57 adds reviewed TMA Function 3..8 aliases, named PTO selectors, source-only B.IOT forms, and scalar CASB/CASH/CASW/CASD and DMA encodings.",
+    "The normalized PTO 0.57 inventory classifies all 111 workbook rows into 97 TEPL, 6 TMA, and 8 CUBE dispositions; named CUBE aliases retain the inherited generic BSTART.CUBE form.",
+    "B.IOD remains a reserved encoding. BSTART.PAR remains a retired spelling whose former bit pattern decodes only as BSTART.TEPL.",
+    "BSTART.TMA remains an encoding-family name, not a legal textual instruction."
+  ],
+  "status": "stable",
+  "version": "0.57.0"
+}

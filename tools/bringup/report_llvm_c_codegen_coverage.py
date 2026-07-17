@@ -773,7 +773,7 @@ def build_report(
         "threshold": None,
         "threshold_met": None,
         "metric_scope": (
-            "unique v0.56 ISA mnemonics observed in llvm-objdump disassembly of objects "
+            "unique v0.57 ISA mnemonics observed in llvm-objdump disassembly of objects "
             "whose stems match current AVS C/C++ sources; pure CodeGen excludes sources "
             "with inline asm/builtins, and explicit alias closure is separate"
         ),
@@ -975,7 +975,7 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
     default_root = Path(__file__).resolve().parents[2]
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", default=str(default_root))
-    parser.add_argument("--spec", default="isa/v0.56/linxisa-v0.56.json")
+    parser.add_argument("--spec", default="isa/v0.57/linxisa-v0.57.json")
     parser.add_argument(
         "--compiler-analyzer",
         default="avs/compiler/linx-llvm/tests/analyze_coverage.py",
@@ -1030,7 +1030,7 @@ def main(argv: list[str]) -> int:
     out_md = _under_root(root, args.out_md)
 
     canonical = {
-        "spec": root / "isa/v0.56/linxisa-v0.56.json",
+        "spec": root / "isa/v0.57/linxisa-v0.57.json",
         "compiler analyzer": root / "avs/compiler/linx-llvm/tests/analyze_coverage.py",
         "C/C++ source directory": root / "avs/compiler/linx-llvm/tests/c",
         "assembly source directory": root / "avs/compiler/linx-llvm/tests/asm",

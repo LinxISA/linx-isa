@@ -1,4 +1,4 @@
-= Linx Instruction Set Architecture Manual (v0.56.5)
+= Linx Instruction Set Architecture Manual (v0.57)
 :doctype: book
 :toc: left
 :toclevels: 4
@@ -16,10 +16,10 @@
 :stem: latexmath
 
 // Keep paths relative to this file.
-:imagesdir: images
+:imagesdir: generated
 
 // Manual metadata (override when publishing).
-:revnumber: v0.56.5
+:revnumber: v0.57
 :revdate: {localdate}
 
 include::chapters/00_preamble.adoc[]

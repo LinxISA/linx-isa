@@ -46,13 +46,20 @@ class BuildManifestEvidenceTest(unittest.TestCase):
         self.root = Path(self._tmp.name).resolve()
         self._init_repo(self.root)
         (self.root / ".gitignore").write_text(
-            "compiler/\nlib/\nout/\ntools/\nspec/\n", encoding="utf-8"
+            "compiler/\nemulator/\nkernel/\nlib/\nout/\ntools/\nspec/\n", encoding="utf-8"
         )
         self._commit_all(self.root, "root")
 
         self.llvm = self.root / "compiler" / "llvm"
+        self.qemu = self.root / "emulator" / "qemu"
+        self.linux = self.root / "kernel" / "linux"
         self.musl = self.root / "lib" / "musl"
-        for repo, label in ((self.llvm, "llvm"), (self.musl, "musl")):
+        for repo, label in (
+            (self.llvm, "llvm"),
+            (self.qemu, "qemu"),
+            (self.linux, "linux"),
+            (self.musl, "musl"),
+        ):
             repo.mkdir(parents=True)
             self._init_repo(repo)
             (repo / "identity.txt").write_text(label + "\n", encoding="utf-8")
@@ -187,8 +194,20 @@ fi
         _run("git", "add", ".", cwd=path)
         _run("git", "commit", "-q", "-m", message, cwd=path)
 
-    def _attest(self) -> dict[str, object]:
-        return checker.build_attestation(self.root, self.manifest)
+    def _attest(
+        self,
+        *,
+        selected_benchmarks: list[str] | None = None,
+        bound_repo_heads: dict[str, str] | None = None,
+        bound_artifacts: dict[str, str] | None = None,
+    ) -> dict[str, object]:
+        return checker.build_attestation(
+            self.root,
+            self.manifest,
+            selected_benchmarks=selected_benchmarks,
+            bound_repo_heads=bound_repo_heads,
+            bound_artifacts=bound_artifacts,
+        )
 
     def test_refresh_source_drift_removes_stale_files_and_reports_current_drift(self) -> None:
         diff_out = self.baseline.with_name("src-drift.diff")
@@ -228,6 +247,84 @@ fi
             ).strip(),
         )
         self.assertEqual(attestation["evidence"]["tools"]["clang"]["identity"], "clang version test-1")
+
+    def test_explicit_subset_attests_only_selected_benchmark(self) -> None:
+        self.select_manifest_benchmarks(["999.specrand_ir"])
+        attestation = self._attest(selected_benchmarks=["999.specrand_ir"])
+        self.assertEqual(attestation["counts"], {"benchmarks": 1, "executables": 1})
+        self.assertEqual(
+            [row["benchmark"] for row in attestation["evidence"]["executables"]],
+            ["999.specrand_ir"],
+        )
+        self.assertEqual(
+            attestation["input"]["attestation_options"]["selected_benchmarks"],
+            ["999.specrand_ir"],
+        )
+        checker.verify_attestation(self.root, attestation)
+
+    def test_explicit_subset_rejects_unapproved_benchmark(self) -> None:
+        with self.assertRaisesRegex(checker.EvidenceError, "unsupported selected benchmark"):
+            self._attest(selected_benchmarks=["998.not-approved"])
+
+    def test_explicit_subset_rejects_missing_requested_benchmark(self) -> None:
+        self.select_manifest_benchmarks([])
+        with self.assertRaisesRegex(checker.EvidenceError, "does not match requested subset"):
+            self._attest(selected_benchmarks=["999.specrand_ir"])
+
+    def test_default_mode_still_rejects_subset_manifest(self) -> None:
+        self.select_manifest_benchmarks(["999.specrand_ir"])
+        with self.assertRaisesRegex(checker.EvidenceError, "required exact 10"):
+            self._attest()
+
+    def test_verify_subset_rejects_selected_elf_hash_drift(self) -> None:
+        self.select_manifest_benchmarks(["999.specrand_ir"])
+        attestation = self._attest(selected_benchmarks=["999.specrand_ir"])
+        self.first_elf("999.specrand_ir").write_bytes(b"changed-selected-elf")
+        with self.assertRaisesRegex(checker.EvidenceError, "attestation does not match"):
+            checker.verify_attestation(self.root, attestation)
+
+    def test_caller_bindings_cover_stack_heads_and_runtime_artifacts(self) -> None:
+        self.select_manifest_benchmarks(["999.specrand_ir"])
+        test_summary = self.root / "out" / "test-summary.json"
+        train_summary = self.root / "out" / "train-summary.json"
+        provenance = self.root / "out" / "vmlinux.provenance.json"
+        for path, content in (
+            (test_summary, b"test-summary"),
+            (train_summary, b"train-summary"),
+            (provenance, b"vmlinux-provenance"),
+        ):
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(content)
+        repo_heads = {
+            name: subprocess.check_output(
+                ["git", "-C", str(repo), "rev-parse", "HEAD"], text=True
+            ).strip()
+            for name, repo in (
+                ("root", self.root),
+                ("llvm", self.llvm),
+                ("qemu", self.qemu),
+                ("linux", self.linux),
+                ("musl", self.musl),
+            )
+        }
+        artifacts = {
+            "vmlinux-provenance": str(provenance),
+            "test-summary": str(test_summary),
+            "train-summary": str(train_summary),
+        }
+        attestation = self._attest(
+            selected_benchmarks=["999.specrand_ir"],
+            bound_repo_heads=repo_heads,
+            bound_artifacts=artifacts,
+        )
+        self.assertEqual(
+            set(attestation["evidence"]["caller_bindings"]["repo_heads"]),
+            set(repo_heads),
+        )
+        checker.verify_attestation(self.root, attestation)
+        train_summary.write_bytes(b"changed-train-summary")
+        with self.assertRaisesRegex(checker.EvidenceError, "attestation does not match"):
+            checker.verify_attestation(self.root, attestation)
 
     def test_verify_rejects_wrong_pin(self) -> None:
         attestation = self._attest()
@@ -430,9 +527,20 @@ fi
         with self.assertRaisesRegex(checker.EvidenceError, "attestation does not match"):
             checker.verify_attestation(self.root, attestation)
 
-    def first_elf(self) -> Path:
-        first = next(iter(EXPECTED_EXECUTABLES))
+    def first_elf(self, bench: str | None = None) -> Path:
+        first = bench or next(iter(EXPECTED_EXECUTABLES))
         return Path(self.manifest_payload()["bench_results"][first]["executables"][0]["path"])
+
+    def select_manifest_benchmarks(self, benches: list[str]) -> None:
+        payload = self.manifest_payload()
+        payload["selected_benchmarks"] = benches
+        payload["bench_results"] = {
+            bench: payload["bench_results"][bench] for bench in benches
+        }
+        payload["bench_optimize_flags"] = {
+            bench: payload["bench_optimize_flags"][bench] for bench in benches
+        }
+        self.manifest.write_text(json.dumps(payload), encoding="utf-8")
 
     @staticmethod
     def _append(path: Path, text: str) -> None:

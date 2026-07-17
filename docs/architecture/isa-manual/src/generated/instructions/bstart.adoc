@@ -14,7 +14,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_bstart_32_7eb93b649748.svg[BSTART encoding form bstart_32_7eb93b649748,width=800]
+image::encodings/enc_bstart_32_7eb93b649748.svg[BSTART encoding form bstart_32_7eb93b649748,width=800]
 
 *Compression:* L32 (len=32)
 
@@ -25,7 +25,7 @@ image::../encodings/enc_bstart_32_7eb93b649748.svg[BSTART encoding form bstart_3
 
 *Encoding:*
 
-image::../encodings/enc_bstart_32_e11e678a32ac.svg[BSTART encoding form bstart_32_e11e678a32ac,width=800]
+image::encodings/enc_bstart_32_e11e678a32ac.svg[BSTART encoding form bstart_32_e11e678a32ac,width=800]
 
 *Compression:* L32 (len=32)
 

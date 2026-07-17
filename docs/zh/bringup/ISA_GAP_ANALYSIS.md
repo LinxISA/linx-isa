@@ -20,7 +20,7 @@
 ## 当前的优势（回购协议中的证据）
 
 - 黄金操作码数据库和生成的 JSON 目录：
-  - `isa/v0.56/` -> `isa/v0.56/linxisa-v0.56.json`
+  - `isa/v0.57/` -> `isa/v0.57/linxisa-v0.57.json`
 - 编码冲突检查和漏洞报告：
   - `python3 tools/isa/report_encoding_space.py --check`
   - 报告：`docs/reference/encoding_space_report.md`
@@ -49,7 +49,7 @@
 ### SIMT
 
 - 指令集：
-  - 记录了规范的 `v0.56` 分组背离合约，包括
+  - 记录了规范的 `v0.57` 分组背离合约，包括
     显式 EXEC 掩码 (`p`) 控制
 - 编译器：
   - 仅关闭记录的启动子集

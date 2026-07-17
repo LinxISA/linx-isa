@@ -36,7 +36,7 @@
 - 编码明确地将位[11:7]（在32位SETC.*I中）专用于`shamt`，建议采用更广泛的立即编码方案。
 
 后续行动：
-- 在 `removed-pre-v056-profile/semantics_conventions.json` 中记录此约定。
+- 在 `retired-profile/semantics_conventions.json` 中记录此约定。
 - 更新 ISA 手动生成器中 SETC.*I 自动生成的伪代码。
 - 实现相应的Sail语义。
 
@@ -54,7 +54,7 @@
 - 保持严格的配置文件确定性，而不会为遗留流引入额外的非法编码。
 
 后续行动：
-- 记录在`srcrtype.restricted_forms`下的`removed-pre-v056-profile/semantics_conventions.json`中。
+- 记录在`srcrtype.restricted_forms`下的`retired-profile/semantics_conventions.json`中。
 - 更新受限 CMP/SETC 表单的 Sail 语义以清理 11→00。
 
 ---

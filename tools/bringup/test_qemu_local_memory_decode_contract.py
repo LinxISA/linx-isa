@@ -28,7 +28,7 @@ class QemuLocalMemoryDecodeContractTests(unittest.TestCase):
         cls.root = Path(__file__).resolve().parents[2]
         cls.qemu_linx = cls.root / "emulator/qemu/target/linx"
         cls.spec = json.loads(
-            (cls.root / "isa/v0.56/linxisa-v0.56.json").read_text(
+            (cls.root / "isa/v0.57/linxisa-v0.57.json").read_text(
                 encoding="utf-8"
             )
         )

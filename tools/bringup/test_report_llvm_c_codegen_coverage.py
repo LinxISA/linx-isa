@@ -570,7 +570,7 @@ class LLVMCodeGenCoverageTests(unittest.TestCase):
         spec_mnemonics = {
             instruction["mnemonic"].upper()
             for instruction in json.loads(
-                (ROOT / "isa/v0.56/linxisa-v0.56.json").read_text(
+                (ROOT / "isa/v0.57/linxisa-v0.57.json").read_text(
                     encoding="utf-8"
                 )
             )["instructions"]

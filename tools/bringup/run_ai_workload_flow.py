@@ -2488,6 +2488,47 @@ def selected_stages(
     return stages
 
 
+def validate_execution_stage_prefix(
+    flow: dict[str, Any],
+    profile: str,
+    requested: list[str],
+    stages: list[dict[str, Any]],
+) -> None:
+    """Require executable stage selections to start at the profile root."""
+    enabled_ids = [
+        stage["id"]
+        for stage in flow["stages"]
+        if profile in {str(p) for p in stage.get("profiles", [])}
+    ]
+    if not enabled_ids:
+        raise SystemExit(f"error: profile {profile} has no enabled execution stages")
+    selected_ids = [stage["id"] for stage in stages]
+
+    def reject(label: str, stage_ids: list[str]) -> None:
+        selected = set(stage_ids)
+        furthest = max(
+            (enabled_ids.index(stage_id) for stage_id in stage_ids if stage_id in enabled_ids),
+            default=-1,
+        )
+        required = enabled_ids[: furthest + 1]
+        missing = [stage_id for stage_id in required if stage_id not in selected]
+        detail = (
+            "missing prerequisite stage(s): " + ", ".join(missing)
+            if missing
+            else "expected canonical prefix: "
+            + ", ".join(enabled_ids[: len(stage_ids)])
+        )
+        raise SystemExit(
+            f"error: {label} must be an exact canonical stage prefix starting at "
+            f"{enabled_ids[0]}; {detail}"
+        )
+
+    if requested and requested != enabled_ids[: len(requested)]:
+        reject("--stage arguments", requested)
+    if selected_ids != enabled_ids[: len(selected_ids)]:
+        reject("execution stage selection", selected_ids)
+
+
 def profile_tiers(flow: dict[str, Any], profile: str, override: list[int]) -> set[int]:
     if override:
         return set(override)
@@ -4043,7 +4084,7 @@ def emit_bpc_disassembly_window(
 def static_check_text(text: str, *, require_entry: bool) -> tuple[bool, list[str]]:
     findings: list[str] = []
     if FORBIDDEN_ASM_RE.search(text):
-        findings.append("forbidden retired pre-v0.56 token found")
+        findings.append("forbidden retired pre-canonical token found")
     if require_entry and not re.search(r"(\b_start\b|\bmain\b)", text):
         findings.append("missing _start/main symbol in objdump evidence")
     return not findings, findings
@@ -5330,6 +5371,8 @@ def main(argv: list[str]) -> int:
     flow_path = Path(args.flow).resolve()
     flow = load_flow(flow_path)
     stages = selected_stages(flow, args.profile, args.stage, args.start_at, args.stop_after)
+    if not args.list:
+        validate_execution_stage_prefix(flow, args.profile, args.stage, stages)
     tiers = profile_tiers(flow, args.profile, args.tier)
     all_cases = discover_cases(root)
     cases = filter_cases(all_cases, tiers, args.kind, args.case, args.limit)

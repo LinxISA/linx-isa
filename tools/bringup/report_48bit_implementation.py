@@ -122,7 +122,7 @@ _MISSING_FORM_RE = re.compile(r"^(?P<mnemonic>.+?) \[len=(?P<len>\d+) ")
 
 def _parse_args(argv: list[str]) -> argparse.Namespace:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--spec", default="isa/v0.56/linxisa-v0.56.json")
+    ap.add_argument("--spec", default="isa/v0.57/linxisa-v0.57.json")
     ap.add_argument(
         "--compiler-analyzer",
         default="avs/compiler/linx-llvm/tests/analyze_coverage.py",

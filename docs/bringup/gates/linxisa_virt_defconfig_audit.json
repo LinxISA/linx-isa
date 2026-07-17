@@ -1,6 +1,6 @@
 {
   "defconfig": "/Users/zhoubot/linx-isa/kernel/linux/arch/linx/configs/linx_v150_defconfig",
-  "generated_at_utc": "2026-07-02 10:06:51Z",
+  "generated_at_utc": "2026-07-17 06:18:23Z",
   "mismatched": [],
   "missing": [],
   "required_option_count": 15,

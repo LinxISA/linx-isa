@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_bstart_mscatter]]
+==== BSTART.MSCATTER
+
+*Syntax:* BSTART.MSCATTER DataType
+
+*Description:* Named TMA-family Function=5. Memory scatter uses B.ARG/B.IOR/B.IOT descriptor state; detailed PTO selector manifest is defined out-of-band for v0.57.
+
+*Encoding:*
+
+image::encodings/enc_bstart_mscatter.svg[BSTART.MSCATTER encoding,width=800]
+
+*Uop-Class:* CMD
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "v0.57 TMA Function=5", "source": "group_rule", "uop_kind": "CMD"}`

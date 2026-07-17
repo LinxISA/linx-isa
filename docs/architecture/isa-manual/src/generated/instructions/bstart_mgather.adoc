@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_bstart_mgather]]
+==== BSTART.MGATHER
+
+*Syntax:* BSTART.MGATHER DataType
+
+*Description:* Named TMA-family Function=4. Memory gather uses B.ARG/B.IOR/B.IOT descriptor state; detailed PTO selector manifest is defined out-of-band for v0.57.
+
+*Encoding:*
+
+image::encodings/enc_bstart_mgather.svg[BSTART.MGATHER encoding,width=800]
+
+*Uop-Class:* CMD
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "v0.57 TMA Function=4", "source": "group_rule", "uop_kind": "CMD"}`

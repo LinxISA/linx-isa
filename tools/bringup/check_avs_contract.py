@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Validate the canonical AVS matrix used as the public v0.56 bring-up contract.
+Validate the canonical AVS matrix used as the public v0.57 bring-up contract.
 """
 
 from __future__ import annotations
@@ -84,8 +84,8 @@ def main(argv: list[str]) -> int:
 
     data = _load_yaml_or_json(matrix_path)
     version = str(data.get("version", "")).strip()
-    if version != "linx-avs-v0.56":
-        raise SystemExit(f"error: matrix.version must be 'linx-avs-v0.56' (got {version!r})")
+    if version != "linx-avs-v0.57":
+        raise SystemExit(f"error: matrix.version must be 'linx-avs-v0.57' (got {version!r})")
     status = str(data.get("status", "")).strip()
     if status != "canonical":
         raise SystemExit(f"error: matrix.status must be 'canonical' (got {status!r})")

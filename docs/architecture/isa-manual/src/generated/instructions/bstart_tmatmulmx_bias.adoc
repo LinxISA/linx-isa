@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_bstart_tmatmulmx_bias]]
+==== BSTART.TMATMULMX.BIAS
+
+*Syntax:* BSTART.TMATMULMX.BIAS DataType
+
+*Description:* Named CUBE-family Function=5. Micro-scaled matrix multiply with bias; requires B.DIM and CUBE tile bindings.
+
+*Encoding:*
+
+image::encodings/enc_bstart_tmatmulmx_bias.svg[BSTART.TMATMULMX.BIAS encoding,width=800]
+
+*Uop-Class:* CMD
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "v0.57 CUBE Function=5", "source": "group_rule", "uop_kind": "CMD"}`

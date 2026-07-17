@@ -1,6 +1,6 @@
 # 第 2 阶段：ISA 规范集成
 
-事实来源：`isa/v0.56/**`（编译为`isa/v0.56/linxisa-v0.56.json`）
+事实来源：`isa/v0.57/**`（编译为`isa/v0.57/linxisa-v0.57.json`）
 
 支持上下文：
 - `isa/README.md`
@@ -13,6 +13,6 @@
 ## 再生
 
 ```bash
-python3 tools/isa/build_golden.py --profile v0.56 --pretty
-python3 tools/isa/validate_spec.py --spec isa/v0.56/linxisa-v0.56.json
+python3 tools/isa/build_golden.py --profile v0.57 --pretty
+python3 tools/isa/validate_spec.py --spec isa/v0.57/linxisa-v0.57.json
 ```

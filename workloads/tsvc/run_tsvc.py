@@ -57,7 +57,7 @@ FALLBACK_TSVC_SRC = WORKLOADS_DIR / "third_party" / "TSVC_2" / "src"
 
 _RE_TSVC_ROW = re.compile(r"^\s*([A-Za-z_][A-Za-z0-9_]*)\s+(\S+)\s+(\S+)\s*$")
 _VECTOR_MODES = ("off", "mseq", "mpar", "auto")
-_SOURCE_POLICIES = ("linx-v056", "upstream")
+_SOURCE_POLICIES = ("linx-v057", "upstream")
 _CANONICAL_ITERATIONS = 32
 _CANONICAL_LEN_1D = 320
 _CANONICAL_LEN_2D = 16
@@ -527,7 +527,7 @@ def _stage_tsvc_sources(
     if n != 1:
         raise SystemExit(f"error: expected to patch exactly 1 time_function, got {n}")
 
-    if source_policy == "linx-v056":
+    if source_policy == "linx-v057":
         tsvc_text, source_canonicalizations = _canonicalize_s2111_divide_literals(
             tsvc_text
         )
@@ -867,7 +867,7 @@ def main(argv: list[str]) -> int:
     ap.add_argument(
         "--source-policy",
         choices=_SOURCE_POLICIES,
-        default="linx-v056",
+        default="linx-v057",
         help="Staged source policy for parity gates.",
     )
     ap.add_argument("--strict-fail-under", type=int, default=None, help="Fail if strict vectorized kernels are below this threshold.")

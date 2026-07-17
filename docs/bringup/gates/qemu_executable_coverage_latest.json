@@ -2837,11 +2837,11 @@
       "timeout_after_fail": true
     }
   ],
-  "generated_at_utc": "2026-07-16T23:18:25Z",
+  "generated_at_utc": "2026-07-17T06:07:09Z",
   "inputs": {
     "manifest": "avs/qemu/qemu_executable_coverage_manifest.json",
     "qemu_sha": "2a6602c2d65b1e9262cb5a8b1fdbf6e18951c6ec",
-    "spec": "isa/v0.56/linxisa-v0.56.json"
+    "spec": "isa/v0.57/linxisa-v0.57.json"
   },
   "policy": {
     "L1_suite_exit_is_coverage": false,

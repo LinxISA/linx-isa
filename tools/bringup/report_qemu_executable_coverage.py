@@ -1261,7 +1261,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     root = args.repo_root.resolve()
-    spec = (args.spec or root / "isa/v0.56/linxisa-v0.56.json").resolve()
+    spec = (args.spec or root / "isa/v0.57/linxisa-v0.57.json").resolve()
     manifest = (args.manifest or root / "avs/qemu/qemu_executable_coverage_manifest.json").resolve()
     qemu_root = (args.qemu_root or root / "emulator/qemu").resolve()
     report_out = (args.report_out or root / "docs/bringup/gates/qemu_executable_coverage_latest.json").resolve()

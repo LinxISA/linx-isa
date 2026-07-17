@@ -21,8 +21,8 @@ PTO_KERNEL_ROOT = REPO_ROOT / "workloads" / "pto_kernels" / "kernels"
 PTO_KERNEL_CATALOG = PTO_KERNEL_ROOT / "catalog.txt"
 LLVM_AVS_ROOT = REPO_ROOT / "avs" / "compiler" / "linx-llvm" / "tests"
 LLVM_AVS_DISASM_VECTOR_GEN = LLVM_AVS_ROOT / "gen_disasm_vectors.py"
-LLVM_AVS_V056_FORMS = LLVM_AVS_ROOT / "asm" / "41_v056_isa_forms.s"
-LLVM_AVS_SPEC = REPO_ROOT / "isa" / "v0.56" / "linxisa-v0.56.json"
+LLVM_AVS_V057_FORMS = LLVM_AVS_ROOT / "asm" / "41_v057_isa_forms.s"
+LLVM_AVS_SPEC = REPO_ROOT / "isa" / "v0.57" / "linxisa-v0.57.json"
 DIRECT_BOOT_LINK_SCRIPT = """ENTRY(_start)
 PHDRS {
   text PT_LOAD FLAGS(5);
@@ -666,7 +666,7 @@ EXPERIMENTAL_SUITES: set[str] = {
     # Requires tile builtin-enabled clang and PTO kernel headers.
     "tile",
     "pto_parity",
-    # v0.56 migration keeps this behind --all-suites until the vblock body
+    # v0.57 migration keeps this behind --all-suites until the vblock body
     # symbol lowering and objdump expectations are refreshed for canonical B.IOT.
     "simt_autovec",
     # Standalone negative trap regression; not a normal smoke lane.
@@ -1184,8 +1184,8 @@ def main(argv: list[str]) -> int:
             sys.stderr.buffer.write(p.stderr)
             raise SystemExit("error: failed to generate QEMU translation corpus")
         generated_translation_sources.append(generated_spec_decode)
-        if LLVM_AVS_V056_FORMS.is_file():
-            generated_translation_sources.append(LLVM_AVS_V056_FORMS)
+        if LLVM_AVS_V057_FORMS.is_file():
+            generated_translation_sources.append(LLVM_AVS_V057_FORMS)
 
     include_dir = SCRIPT_DIR / "lib"
     libc_include_dir = REPO_ROOT / "avs" / "runtime" / "freestanding" / "include"
@@ -1306,7 +1306,7 @@ def main(argv: list[str]) -> int:
     ]
     if any(s in selected for s in ("tile", "pto_parity")):
         # Keep tile-suite bring-up deterministic: SIMT autovec currently
-        # triggers a mid-end crash on migrated PTO kernels under strict v0.56.
+        # triggers a mid-end crash on migrated PTO kernels under strict v0.57.
         common_cflags += ["-mllvm", "-linx-simt-autovec=false"]
     if any(s in selected for s in ("tile", "pto_parity")):
         # Runtime policy: migrated PTO kernels run in smoke profile under QEMU.

@@ -15,9 +15,11 @@ compiler (LLVM), emulator (QEMU), Linux, RTL, libc, and validation suites.
 
 ```bash
 bash tools/ci/check_repo_layout.sh
-python3 tools/isa/build_golden.py --profile v0.56 --check
-python3 tools/isa/validate_spec.py --profile v0.56
-python3 tools/isa/check_canonical_v056.py --root .
+python3 tools/isa/build_golden.py --profile v0.57 --check
+python3 tools/isa/validate_spec.py --profile v0.57
+python3 tools/isa/check_canonical_v057.py --root .
+python3 tools/isa/test_v057_profile.py
+python3 tools/isa/check_pto_v057_manifest.py --root .
 mkdocs build --strict
 ```
 

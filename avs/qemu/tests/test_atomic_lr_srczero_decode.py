@@ -35,7 +35,7 @@ class AtomicLrSrcZeroDecodeTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         golden = json.loads(
-            (REPO_ROOT / "isa" / "v0.56" / "linxisa-v0.56.json").read_text(
+            (REPO_ROOT / "isa" / "v0.57" / "linxisa-v0.57.json").read_text(
                 encoding="utf-8"
             )
         )

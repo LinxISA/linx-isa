@@ -1,5 +1,5 @@
 // Generated file; do not edit by hand.
-// Auto-generated from isa/v0.56/linxisa-v0.56.json and uop_classification_v0.56.json
+// Auto-generated from isa/v0.57/linxisa-v0.57.json and uop_classification_v0.57.json
 
 [[chapter_cmd]]
 == CMD - Command and Control
@@ -36,11 +36,26 @@ include::../generated/instructions/bstart_fixp.adoc[]
 include::../generated/instructions/bstart_acccvt.adoc[]
 include::../generated/instructions/bstart_tepl.adoc[]
 include::../generated/instructions/bstart_tload.adoc[]
-include::../generated/instructions/bstart_tma.adoc[]
-include::../generated/instructions/bstart_tmatmul.adoc[]
-include::../generated/instructions/bstart_tmatmul_acc.adoc[]
-include::../generated/instructions/bstart_tmov.adoc[]
 include::../generated/instructions/bstart_tstore.adoc[]
+include::../generated/instructions/bstart_tmov.adoc[]
+include::../generated/instructions/bstart_tprefetch.adoc[]
+include::../generated/instructions/bstart_mgather.adoc[]
+include::../generated/instructions/bstart_mscatter.adoc[]
+include::../generated/instructions/bstart_mgather_mask.adoc[]
+include::../generated/instructions/bstart_mscatter_mask.adoc[]
+include::../generated/instructions/bstart_mgather_cas.adoc[]
+include::../generated/instructions/bstart_tmatmul.adoc[]
+include::../generated/instructions/bstart_tmatmul_bias.adoc[]
+include::../generated/instructions/bstart_tmatmul_acc.adoc[]
+include::../generated/instructions/bstart_tmatmulmx.adoc[]
+include::../generated/instructions/bstart_tmatmulmx_bias.adoc[]
+include::../generated/instructions/bstart_tmatmulmx_acc.adoc[]
+include::../generated/instructions/bstart_tgemv.adoc[]
+include::../generated/instructions/bstart_tgemv_bias.adoc[]
+include::../generated/instructions/bstart_tgemv_acc.adoc[]
+include::../generated/instructions/bstart_tgemvmx.adoc[]
+include::../generated/instructions/bstart_tgemvmx_bias.adoc[]
+include::../generated/instructions/bstart_tgemvmx_acc.adoc[]
 include::../generated/instructions/bstop.adoc[]
 
 === Context Management

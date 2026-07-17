@@ -1,0 +1,20 @@
+{
+  "big_kind": "AMO",
+  "count": 1,
+  "instructions": [
+    {
+      "class": {
+        "amo_kind": "DMA",
+        "note": "v0.57 DMA transfer initiation",
+        "source": "group_rule",
+        "uop_kind": "AMO"
+      },
+      "group": "DMA Operation",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "DMA"
+    }
+  ],
+  "sub_kind": "DMA"
+}

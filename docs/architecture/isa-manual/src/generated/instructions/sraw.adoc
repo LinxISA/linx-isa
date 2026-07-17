@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_sraw.svg[SRAW encoding,width=800]
+image::encodings/enc_sraw.svg[SRAW encoding,width=800]
 
 *Uop-Class:* ALU
 

@@ -1,4 +1,4 @@
-// Directed executable checks for the canonical LinxISA v0.56.5 Sail model.
+// Directed executable checks for the canonical LinxISA v0.57 Sail model.
 
 $include "../model/linxisa.sail"
 

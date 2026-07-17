@@ -1,5 +1,5 @@
 /*
- * v0.56 Vector operation matrix tests (MSEQ body execution path).
+ * v0.57 Vector operation matrix tests (MSEQ body execution path).
  *
  * Coverage intent:
  * - Integer vector ALU + bridged path: v.add / v.sub + v.lw.brg / v.sw.brg
@@ -352,57 +352,57 @@ static void test_v_mixed_scalar_vector_predicate(void)
 void run_v03_vector_ops_matrix_tests(void)
 {
     test_start(0x1300);
-    uart_puts("v0.56 vector add/sub matrix ... ");
+    uart_puts("v0.57 vector add/sub matrix ... ");
     test_v_add_sub_matrix();
     test_pass();
 
     test_start(0x1310);
-    uart_puts("v0.56 vector float matrix ... ");
+    uart_puts("v0.57 vector float matrix ... ");
     test_v_float_matrix();
     test_pass();
 
     test_start(0x1370);
-    uart_puts("v0.56 V.ADD evidence ... ");
+    uart_puts("v0.57 V.ADD evidence ... ");
     test_v_add_evidence();
     test_pass();
 
     test_start(0x1371);
-    uart_puts("v0.56 V.SUB evidence ... ");
+    uart_puts("v0.57 V.SUB evidence ... ");
     test_v_sub_evidence();
     test_pass();
 
     test_start(0x1372);
-    uart_puts("v0.56 V.LW.BRG evidence ... ");
+    uart_puts("v0.57 V.LW.BRG evidence ... ");
     test_v_lw_brg_evidence();
     test_pass();
 
     test_start(0x1373);
-    uart_puts("v0.56 V.SW.BRG evidence ... ");
+    uart_puts("v0.57 V.SW.BRG evidence ... ");
     test_v_sw_brg_evidence();
     test_pass();
 
     test_start(0x1374);
-    uart_puts("v0.56 V.FADD evidence ... ");
+    uart_puts("v0.57 V.FADD evidence ... ");
     test_v_fadd_evidence();
     test_pass();
 
     test_start(0x1375);
-    uart_puts("v0.56 V.FMUL evidence ... ");
+    uart_puts("v0.57 V.FMUL evidence ... ");
     test_v_fmul_evidence();
     test_pass();
 
     test_start(0x1376);
-    uart_puts("v0.56 V.FABS evidence ... ");
+    uart_puts("v0.57 V.FABS evidence ... ");
     test_v_fabs_matrix();
     test_pass();
 
     test_start(0x1377);
-    uart_puts("v0.56 V.MUL evidence ... ");
+    uart_puts("v0.57 V.MUL evidence ... ");
     test_v_mul_matrix();
     test_pass();
 
     test_start(0x1320);
-    uart_puts("v0.56 mixed scalar/vector predicate ... ");
+    uart_puts("v0.57 mixed scalar/vector predicate ... ");
     test_v_mixed_scalar_vector_predicate();
     test_pass();
 }

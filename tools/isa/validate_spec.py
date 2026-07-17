@@ -141,12 +141,96 @@ def _validate_tepl_packing(
     for name, selector in sorted(selector_by_name.items()):
         if selector > 0x03F:
             errors.append(
-                f"state.engine_ops.tepl: {name}=0x{selector:03X} uses reserved high tile-opcode bits outside the packed v0.56 profile"
+                f"state.engine_ops.tepl: {name}=0x{selector:03X} uses reserved high tile-opcode bits outside the packed v0.57 profile"
             )
         if name not in expected_by_name:
             errors.append(
                 f"state.engine_ops.tepl: {name}=0x{selector:03X} is not described by the packed TEPL allocation table"
             )
+
+
+def _expected_v057_tepl_selectors() -> Dict[str, int]:
+    return {
+        "TCMP": 0x02B,
+        "TSEL": 0x02C,
+        "TABS": 0x02D,
+        "TNOT": 0x02E,
+        "TNEG": 0x02F,
+        "TREM": 0x030,
+        "TAXPY": 0x031,
+        "TREMS": 0x032,
+        "TCMPS": 0x033,
+        "TSELS": 0x034,
+        "TROWPROD": 0x035,
+        "TROWARGMAX": 0x036,
+        "TROWARGMIN": 0x037,
+        "TCOLPROD": 0x038,
+        "TCOLARGMAX": 0x039,
+        "TCOLARGMIN": 0x03A,
+        "TROWEXPANDADD": 0x03B,
+        "TROWEXPANDSUB": 0x03C,
+        "TROWEXPANDMUL": 0x03D,
+        "TROWEXPANDDIV": 0x03E,
+        "TROWEXPANDMAX": 0x03F,
+        "TROWEXPANDMIN": 0x040,
+        "TROWEXPANDEXPDIF": 0x041,
+        "TCOLEXPANDADD": 0x042,
+        "TCOLEXPANDSUB": 0x043,
+        "TCOLEXPANDMUL": 0x044,
+        "TCOLEXPANDDIV": 0x045,
+        "TCOLEXPANDMAX": 0x046,
+        "TCOLEXPANDMIN": 0x047,
+        "TCOLEXPANDEXPDIF": 0x048,
+        "TCI": 0x080,
+        "TTRI": 0x081,
+        "TFILLPAD": 0x082,
+        "TQUANT": 0x083,
+        "TDEQUANT": 0x084,
+        "TEXTRACT": 0x085,
+        "TINSERT": 0x086,
+        "TCONCAT": 0x087,
+        "TIMG2COL": 0x088,
+        "TGATHERB": 0x089,
+        "TDEINTERLEAVE": 0x08A,
+        "TINTERLEAVE": 0x08B,
+        "TSORT": 0x0C0,
+        "TMRGSORT": 0x0C1,
+        "THISTOGRAM": 0x0C2,
+        "TPARTADD": 0x0C3,
+        "TPARTMUL": 0x0C4,
+        "TPARTMAX": 0x0C5,
+        "TPARTMIN": 0x0C6,
+        "TPARTARGMAX": 0x0C7,
+        "TPARTARGMIN": 0x0C8,
+        "TPUSH": 0x0E0,
+        "TPOP": 0x0E1,
+        "TALLOC": 0x0E2,
+        "TFREE": 0x0E3,
+    }
+
+
+def _validate_v057_tepl_extensions(tepl: Dict[str, Any], selector_by_name: Dict[str, int], errors: List[str]) -> None:
+    expected = _expected_v057_tepl_selectors()
+    for name, selector in sorted(expected.items(), key=lambda item: item[1]):
+        got = selector_by_name.get(name)
+        if got != selector:
+            errors.append(f"state.engine_ops.tepl: v0.57 requires {name}=0x{selector:03X}, got {got!r}")
+
+    forbidden = {"TFMOD", "TPOW", "TRANDOM", "TEXRACT"}
+    present_forbidden = sorted(forbidden & set(selector_by_name))
+    if present_forbidden:
+        errors.append(f"state.engine_ops.tepl: review-only/typo names must not be architectural: {present_forbidden}")
+
+    policy = tepl.get("extension_policy_v057")
+    if not isinstance(policy, dict):
+        errors.append("state.engine_ops.tepl.extension_policy_v057 must describe v0.57 TEPL ranges")
+        return
+    if policy.get("preserve_selectors") != [[0x000, 0x02A]]:
+        errors.append("state.engine_ops.tepl.extension_policy_v057.preserve_selectors must be [[0x000, 0x02A]]")
+    if policy.get("new_selector_ranges") != [[0x02B, 0x048], [0x080, 0x08B], [0x0C0, 0x0C8], [0x0E0, 0x0E3]]:
+        errors.append("state.engine_ops.tepl.extension_policy_v057.new_selector_ranges do not match the frozen v0.57 map")
+    if policy.get("reserved_selector_ranges") != [[0x049, 0x07F], [0x08C, 0x0BF], [0x0C9, 0x0DF], [0x0E4, 0x3FF]]:
+        errors.append("state.engine_ops.tepl.extension_policy_v057.reserved_selector_ranges do not match the frozen v0.57 map")
 
 
 def _validate_engine_ops(spec: Dict[str, Any], errors: List[str]) -> None:
@@ -162,11 +246,24 @@ def _validate_engine_ops(spec: Dict[str, Any], errors: List[str]) -> None:
         return
 
     tma = engine_ops.get("tma")
+    version = str(spec.get("version") or "")
+    is_v057 = version.startswith("0.57")
     expected_tma_aliases = [
         {"function": 0, "mnemonic": "BSTART.TLOAD"},
         {"function": 1, "mnemonic": "BSTART.TSTORE"},
         {"function": 2, "mnemonic": "BSTART.TMOV"},
     ]
+    if is_v057:
+        expected_tma_aliases.extend(
+            [
+                {"function": 3, "mnemonic": "BSTART.TPREFETCH", "semantic_delta": "Same address, layout, memory, fault, ordering, and restart contract as BSTART.TLOAD, with destination binding, destination allocation, and destination writeback removed."},
+                {"function": 4, "mnemonic": "BSTART.MGATHER"},
+                {"function": 5, "mnemonic": "BSTART.MSCATTER"},
+                {"function": 6, "mnemonic": "BSTART.MGATHER.MASK"},
+                {"function": 7, "mnemonic": "BSTART.MSCATTER.MASK"},
+                {"function": 8, "mnemonic": "BSTART.MGATHER.CAS"},
+            ]
+        )
     if not isinstance(tma, dict):
         errors.append("state.engine_ops.tma must be a mapping")
     else:
@@ -175,15 +272,19 @@ def _validate_engine_ops(spec: Dict[str, Any], errors: List[str]) -> None:
         if tma.get("function_field_bits") != [0, 4]:
             errors.append("state.engine_ops.tma.function_field_bits must be [0, 4]")
         if tma.get("legal_aliases") != expected_tma_aliases:
-            errors.append("state.engine_ops.tma.legal_aliases must assign only TLOAD=0, TSTORE=1, TMOV=2")
-        if tma.get("reserved_function_range") != [3, 31]:
-            errors.append("state.engine_ops.tma.reserved_function_range must be [3, 31]")
+            if is_v057:
+                errors.append("state.engine_ops.tma.legal_aliases must assign v0.57 TMA Functions 0..8 exactly")
+            else:
+                errors.append("state.engine_ops.tma.legal_aliases must assign only TLOAD=0, TSTORE=1, TMOV=2")
+        expected_reserved = [9, 31] if is_v057 else [3, 31]
+        if tma.get("reserved_function_range") != expected_reserved:
+            errors.append(f"state.engine_ops.tma.reserved_function_range must be {expected_reserved}")
         if tma.get("reserved_behavior") != "illegal_instruction":
             errors.append("state.engine_ops.tma.reserved_behavior must be illegal_instruction")
 
     instructions = spec.get("instructions", [])
     if any(str(inst.get("mnemonic") or "") == "BSTART.TMA" for inst in instructions):
-        errors.append("BSTART.TMA is an encoding-family name, not a legal v0.56 instruction form")
+        errors.append("BSTART.TMA is an encoding-family name, not a legal instruction form")
 
     one_part_32 = []
     for inst in instructions:
@@ -199,7 +300,20 @@ def _validate_engine_ops(spec: Dict[str, Any], errors: List[str]) -> None:
         )
 
     tma_base = 0x00011181
-    for function, expected in enumerate(("BSTART.TLOAD", "BSTART.TSTORE", "BSTART.TMOV")):
+    expected_tma_decodes = ("BSTART.TLOAD", "BSTART.TSTORE", "BSTART.TMOV")
+    if is_v057:
+        expected_tma_decodes = (
+            "BSTART.TLOAD",
+            "BSTART.TSTORE",
+            "BSTART.TMOV",
+            "BSTART.TPREFETCH",
+            "BSTART.MGATHER",
+            "BSTART.MSCATTER",
+            "BSTART.MGATHER.MASK",
+            "BSTART.MSCATTER.MASK",
+            "BSTART.MGATHER.CAS",
+        )
+    for function, expected in enumerate(expected_tma_decodes):
         word = (1 << 27) | (function << 20) | tma_base
         matches = sorted(name for name, mask, match in one_part_32 if word & mask == match)
         if matches != [expected]:
@@ -207,8 +321,13 @@ def _validate_engine_ops(spec: Dict[str, Any], errors: List[str]) -> None:
                 f"TMA Function={function} FP32 must decode only as {expected}, got {matches}"
             )
 
+    legal_tma_functions = set(range(len(expected_tma_decodes)))
+    if is_v057:
+        legal_tma_functions.update(range(4, 9))
     for dtype in range(32):
-        for function in range(3, 32):
+        for function in range(32):
+            if function in legal_tma_functions:
+                continue
             word = (dtype << 27) | (function << 20) | tma_base
             matches = sorted(name for name, mask, match in one_part_32 if word & mask == match)
             if matches:
@@ -216,6 +335,60 @@ def _validate_engine_ops(spec: Dict[str, Any], errors: List[str]) -> None:
                     f"reserved TMA dtype={dtype} Function={function} matches legal forms {matches}"
                 )
                 return
+
+    if is_v057:
+        expected_cube_aliases = [
+            {"function": 0, "mnemonic": "BSTART.TMATMUL"},
+            {"function": 1, "mnemonic": "BSTART.TMATMUL.BIAS"},
+            {"function": 2, "mnemonic": "BSTART.TMATMUL.ACC"},
+            {"function": 4, "mnemonic": "BSTART.TMATMULMX"},
+            {"function": 5, "mnemonic": "BSTART.TMATMULMX.BIAS"},
+            {"function": 6, "mnemonic": "BSTART.TMATMULMX.ACC"},
+            {"function": 8, "mnemonic": "BSTART.ACCCVT"},
+            {"function": 16, "mnemonic": "BSTART.TGEMV"},
+            {"function": 17, "mnemonic": "BSTART.TGEMV.BIAS"},
+            {"function": 18, "mnemonic": "BSTART.TGEMV.ACC"},
+            {"function": 20, "mnemonic": "BSTART.TGEMVMX"},
+            {"function": 21, "mnemonic": "BSTART.TGEMVMX.BIAS"},
+            {"function": 22, "mnemonic": "BSTART.TGEMVMX.ACC"},
+        ]
+        unassigned_cube_aliases = [3, 7, *range(9, 16), 19, *range(23, 32)]
+        cube = engine_ops.get("cube")
+        if not isinstance(cube, dict):
+            errors.append("state.engine_ops.cube must be a mapping for v0.57")
+        else:
+            if cube.get("kind") != "function_u5":
+                errors.append("state.engine_ops.cube.kind must be function_u5")
+            if cube.get("function_field_bits") != [0, 4]:
+                errors.append("state.engine_ops.cube.function_field_bits must be [0, 4]")
+            if cube.get("legal_aliases") != expected_cube_aliases:
+                errors.append("state.engine_ops.cube.legal_aliases must match the frozen v0.57 CUBE map")
+            if cube.get("unassigned_alias_functions") != unassigned_cube_aliases:
+                errors.append("state.engine_ops.cube.unassigned_alias_functions must match the frozen v0.57 CUBE map")
+            if cube.get("unassigned_alias_behavior") != "inherit_generic_bstart_cube_decode_without_canonical_alias":
+                errors.append("state.engine_ops.cube must preserve the inherited generic BSTART.CUBE decode")
+
+        cube_base = 0x00031181
+        expected_cube_decodes = {
+            entry["function"]: entry["mnemonic"] for entry in expected_cube_aliases
+        }
+        for dtype in range(32):
+            for function in range(32):
+                word = (dtype << 27) | (function << 20) | cube_base
+                matches = sorted(
+                    name for name, mask, match in one_part_32 if word & mask == match
+                )
+                expected = expected_cube_decodes.get(function)
+                if expected is None:
+                    if matches != ["BSTART.CUBE"]:
+                        errors.append(
+                            f"unassigned CUBE alias dtype={dtype} Function={function} must retain only BSTART.CUBE, got {matches}"
+                        )
+                        return
+                elif matches != sorted(["BSTART.CUBE", expected]):
+                    errors.append(
+                        f"CUBE dtype={dtype} Function={function} must decode as BSTART.CUBE plus {expected}, got {matches}"
+                    )
 
     tepl = engine_ops.get("tepl")
     if tepl is None:
@@ -258,7 +431,10 @@ def _validate_engine_ops(spec: Dict[str, Any], errors: List[str]) -> None:
             rendered = ", ".join(unique_names)
             errors.append(f"state.engine_ops.tepl: duplicate tile opcode 0x{selector:03X} shared by {rendered}")
 
-    _validate_tepl_packing(tepl, selector_by_name, errors)
+    if is_v057:
+        _validate_v057_tepl_extensions(tepl, selector_by_name, errors)
+    else:
+        _validate_tepl_packing(tepl, selector_by_name, errors)
 
 
 def _validate_field_definitions(spec: Dict[str, Any], errors: List[str]) -> Dict[str, Any]:
@@ -515,7 +691,7 @@ def validate_active_surfaces(root: Path) -> List[str]:
         root / "docs" / "README.md",
         root / "docs" / "index.md",
         root / "docs" / "architecture" / "README.md",
-        root / "docs" / "architecture" / "v0.56-architecture-contract.md",
+        root / "docs" / "architecture" / "v0.57-architecture-contract.md",
         root / "docs" / "bringup" / "README.md",
         root / "docs" / "bringup" / "AVS_CONTRACT.md",
         root / "docs" / "bringup" / "GETTING_STARTED.md",
@@ -544,9 +720,9 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--profile",
-        choices=["v0.56"],
-        default="v0.56",
-        help="ISA profile for default --spec path (v0.56 is canonical)",
+        choices=["v0.57"],
+        default="v0.57",
+        help="ISA profile for default --spec path",
     )
     ap.add_argument(
         "--spec",
@@ -555,7 +731,7 @@ def main() -> int:
     )
     args = ap.parse_args()
 
-    default_spec = "isa/v0.56/linxisa-v0.56.json"
+    default_spec = f"isa/{args.profile}/linxisa-{args.profile}.json"
     errors = validate(args.spec or default_spec)
     errors.extend(validate_active_surfaces(Path(".")))
     if errors:

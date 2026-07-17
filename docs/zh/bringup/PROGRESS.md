@@ -1,8 +1,8 @@
-# 显示进度（v0.56 工作区）
+# 显示进度（v0.57 工作区）
 
 最后更新: 2026-04-25
 
-## 关闭快照- `v0.56` 黄金/规格是规范且经过验证的。
+## 关闭快照- `v0.57` 黄金/规格是规范且经过验证的。
 - AVS 现在是唯一实时公开的培育合同。
 - 最新签入的规范报告是 `2026-04-18 02:11:34Z` 生成的 `docs/bringup/gates/latest.json`；其最新运行是`2026-04-18-r9-pin-linuxlibc-refresh`。
 - 主动治理阶段仍然是`LINUX-RUNTIME`，并且`docs/bringup/agent_runs/waivers.yaml`仍然具有零豁免。
@@ -27,7 +27,7 @@
 
 |相|状态 |证据|
 | --- | --- | --- |
-| 1.Canonical `v0.56` 金色+手动冻结 | ✅ 通过 | `python3 tools/isa/build_golden.py --profile v0.56 --check`; `python3 tools/isa/validate_spec.py --profile v0.56` |
+| 1.Canonical `v0.57` 金色+手动冻结 | ✅ 通过 | `python3 tools/isa/build_golden.py --profile v0.57 --check`; `python3 tools/isa/validate_spec.py --profile v0.57` |
 | 2. AVS公共合约割接 | ✅ 来源完整 | `python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml` |
 | 3. LLVM MC/CodeGen 基线对齐 | ✅ 当前密码 | `avs/compiler/linx-llvm/tests/run.sh`; `analyze_coverage.py --fail-under 100`; `ninja -C compiler/llvm/build-linxisa-clang llvm-ar llvm-nm llvm-strip llvm-readelf` |
 | 4. QEMU 运行时/系统基线 | ✅ 当前密码 | `avs/qemu/check_system_strict.sh`； `avs/qemu/run_tests.sh --all`; `ninja -C emulator/qemu/build qemu-system-linx64` |
@@ -42,7 +42,7 @@
 
 |门 |状态 |命令 |
 | --- | --- | --- |
-|黄金/规格验证 | ✅ | `python3 tools/isa/build_golden.py --profile v0.56 --check`; `python3 tools/isa/validate_spec.py --profile v0.56` |
+|黄金/规格验证 | ✅ | `python3 tools/isa/build_golden.py --profile v0.57 --check`; `python3 tools/isa/validate_spec.py --profile v0.57` |
 | AVS 合约架构 | ✅ | `python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml` |
 | AVS矩阵状态审计| ✅ | `python3 tools/bringup/check_avs_matrix_status.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json` |
 | AVS 层关闭 | ✅ PR 子集绿色（需要 `31/31`）| `python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier pr` |

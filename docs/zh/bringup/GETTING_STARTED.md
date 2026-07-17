@@ -99,7 +99,7 @@ git commit -m "chore(submodules): bump ecosystem revisions"
 - AVS 使用的独立 libc 支持：`avs/runtime/freestanding/`
 - Linux libc 源代码分支：`lib/glibc/`、`lib/musl/`
 - PTO内核块头s：`workloads/pto_kernels/include/`
-- 组装样品包：`docs/reference/examples/v0.56/`
+- 组装样品包：`docs/reference/examples/v0.57/`
 
 ## 6. 协调参考
 

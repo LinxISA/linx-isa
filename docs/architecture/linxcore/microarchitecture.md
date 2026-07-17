@@ -1,7 +1,7 @@
 <!-- AUTO-GENERATED FILE. DO NOT EDIT DIRECTLY. -->
 <!-- Source: rtl/LinxCore/docs/architecture/microarchitecture.md -->
 
-# LinxCore v0.56 Microarchitecture Contract
+# LinxCore v0.57 Microarchitecture Contract
 
 > This published page mirrors the canonical LinxCore source in
 > `rtl/LinxCore/docs/architecture/microarchitecture.md`.
@@ -9,7 +9,7 @@
 
 ## Baseline superscalar contract
 
-LinxCore is the canonical superscalar out-of-order core for LinxISA `v0.56`.
+LinxCore is the canonical superscalar out-of-order core for LinxISA `v0.57`.
 It retires precisely, executes out of order, and preserves a block-ordered
 architectural control model across scalar and engine-backed work.
 
@@ -29,7 +29,7 @@ the same ordering, recovery, and observability contracts.
 
 LinxCore must preserve the following architectural state classes:
 
-- scalar, control, and privilege state defined by LinxISA `v0.56`,
+- scalar, control, and privilege state defined by LinxISA `v0.57`,
 - CSR, trap, MMU, and interrupt-visible state,
 - block-visible architectural state for `BSTART`, `BSTOP`, and
   boundary-authoritative redirect,
@@ -934,7 +934,7 @@ owners are not yet proven complete by the reduced RTL paths.
 ## MMU contract (LC-MA-MMU-001)
 
 - Translation success and failure must produce deterministic trap envelopes.
-- MMU behavior must remain aligned with the `v0.56` privileged contract wording.
+- MMU behavior must remain aligned with the `v0.57` privileged contract wording.
 - MMU fault paths must preserve precise retirement and recovery ordering.
 
 ## Interrupt contract (LC-MA-IRQ-001)

@@ -7,11 +7,11 @@
 
 *Syntax:* B.CATR {trap, atomic, <aq, rl, aqrl>, far, dr}
 
-*Description:* v0.56 split of legacy B.CATR/B.DATR control fields. Bits 25:15 are reserved zero.
+*Description:* canonical split of legacy B.CATR/B.DATR control fields. Bits 25:15 are reserved zero.
 
 *Encoding:*
 
-image::../encodings/enc_b_catr.svg[B.CATR encoding,width=800]
+image::encodings/enc_b_catr.svg[B.CATR encoding,width=800]
 
 *Uop-Class:* CMD
 

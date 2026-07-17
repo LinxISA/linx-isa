@@ -73,7 +73,7 @@ def canonicalize_mnemonic(mnemonic: str) -> str:
 
 
 def derived_selector_mnemonics(mnemonic: str, operands: list[str]) -> Set[str]:
-    """Recover strict v0.56 aliases from selector-style objdump output."""
+    """Recover strict current-profile aliases from selector-style objdump output."""
     selector = canonicalize_mnemonic(mnemonic)
     if selector == "B.DATR":
         return {"B.ARG"}
@@ -185,6 +185,12 @@ def analyze_coverage(
         primary = test_dir / f"{test_dir.name}.objdump"
         if primary.is_file():
             objdump_files.append(primary)
+        # The strict round-trip view disables friendly selector aliases and is
+        # therefore the only disassembly artifact that can expose generic
+        # selector mnemonics such as BSTART.TEPL.
+        strict_roundtrip = test_dir / f"{test_dir.name}.roundtrip.strict.objdump"
+        if strict_roundtrip.is_file():
+            objdump_files.append(strict_roundtrip)
     if not objdump_files:
         raise SystemExit(f"error: no *.objdump files found under {out_dir}")
 
@@ -366,7 +372,7 @@ def main() -> int:
     parser.add_argument(
         "--spec",
         type=Path,
-        default=Path(__file__).resolve().parents[4] / "isa/v0.56/linxisa-v0.56.json",
+        default=Path(__file__).resolve().parents[4] / "isa/v0.57/linxisa-v0.57.json",
         help="Path to ISA spec JSON"
     )
     parser.add_argument(

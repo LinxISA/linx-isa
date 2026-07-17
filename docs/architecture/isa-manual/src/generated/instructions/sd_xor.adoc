@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_sd_xor.svg[SD.XOR encoding,width=800]
+image::encodings/enc_sd_xor.svg[SD.XOR encoding,width=800]
 
 *Uop-Class:* AMO
 

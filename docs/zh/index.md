@@ -4,7 +4,7 @@ title: LinxISA
 
 !!! warning "非规范翻译"
     本站是英文规范文档的辅助中文翻译。发生差异时，以英文文档和
-    `isa/v0.56/linxisa-v0.56.json` 为准。指令助记符、字段名、路径和代码标识符保持原文。
+    `isa/v0.57/linxisa-v0.57.json` 为准。指令助记符、字段名、路径和代码标识符保持原文。
 
 <section class="linx-home-hero" markdown="1">
 <div class="linx-home-hero__copy" markdown="1">
@@ -31,11 +31,11 @@ LinxISA 把程序组织成一组组块指令。每个块同时说明控制流、
 
 <section class="linx-home-strip" markdown="1">
 <div markdown="1">
-**v0.56.5**
+**v0.57**
 : 当前公开规范版本
 </div>
 <div markdown="1">
-**747**
+**767**
 : 指令形式
 </div>
 <div markdown="1">
@@ -96,7 +96,8 @@ LinxISA 把程序组织成一组组块指令。每个块同时说明控制流、
 | 文档面 | 用途 |
 |---|---|
 | [总体架构](isa/arch/bisa.md) | 块指令、跳转、执行模型、程序序和异常处理 |
-| [v0.56 架构合同](architecture/v0.56-architecture-contract.md) | 架构可见行为的规范性合同 |
+| [v0.57 架构合同](architecture/v0.57-architecture-contract.md) | 基于 v0.57 的严格增量规范性合同 |
+| [v0.57 编码决策](architecture/v0.57-encoding-decisions.md) | 新增标量、TMA、CUBE 与 TEPL 编码 |
 | [ISA 附录参考](isa/index.md) | 机器生成的精确索引和附录页面 |
 | [Call/Ret 合同](reference/linxisa-call-ret-contract.md) | 跨栈调用、返回和保存恢复规则 |
 | [Bring-up 指南](bringup/GETTING_STARTED.md) | QEMU、LLVM、AVS 和运行环境入口 |

@@ -31,6 +31,12 @@ Use `--tier`, `--kind`, `--case`, and `--limit` to narrow local debugging.
 By default `--case` is a substring filter across case id, suite, and kind.
 Prefix the selector with `=` for exact matching, for example
 `--case '=supernpu-tileop_api-TAdds'`.
+Execution-stage selection does not resume artifacts from an earlier run. Repeat
+`--stage` only for a canonical prefix beginning with `source-contract`, or use
+`--stop-after` to stop a normal run at a prefix boundary. A downstream-only
+`--stage`, non-root `--start-at`, or gapped/reordered stage list fails before
+case discovery and artifact creation, naming the missing prerequisite stages.
+`--list` remains available for inspecting an arbitrary stage subset.
 Use `--clang`, `--clangxx`, `--lld`, `--qemu`, `--model-root`, or `--gfsim`
 when testing an external lane. The pin lane defaults to in-repo Linx LLVM,
 `emulator/qemu/build-linx/qemu-system-linx64`, and

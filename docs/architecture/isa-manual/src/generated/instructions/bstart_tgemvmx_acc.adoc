@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_bstart_tgemvmx_acc]]
+==== BSTART.TGEMVMX.ACC
+
+*Syntax:* BSTART.TGEMVMX.ACC DataType
+
+*Description:* Named CUBE-family Function=22. Micro-scaled matrix-vector multiply-accumulate; requires B.DIM and CUBE tile bindings.
+
+*Encoding:*
+
+image::encodings/enc_bstart_tgemvmx_acc.svg[BSTART.TGEMVMX.ACC encoding,width=800]
+
+*Uop-Class:* CMD
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "v0.57 CUBE Function=22", "source": "group_rule", "uop_kind": "CMD"}`

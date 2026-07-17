@@ -5,8 +5,8 @@
 <span class="ch-tag ch-tag-14">Ch 14</span>
 &nbsp; <strong>AMO — Atomic Memory Operations</strong> &nbsp;|&nbsp;
 **Group:** Atomic Operation &nbsp;|&nbsp;
-**Forms:** 68 &nbsp;|&nbsp;
-**Unique mnemonics:** 68
+**Forms:** 72 &nbsp;|&nbsp;
+**Unique mnemonics:** 72
 
 </div>
 
@@ -16,6 +16,10 @@ Atomic read-modify-write operations on memory.
 
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
+| [CASB](../instructions/casb.md) | `casb<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` | 32 | — | Atomic memory read-modify-write operation. |
+| [CASD](../instructions/casd.md) | `casd<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` | 32 | — | Atomic memory read-modify-write operation. |
+| [CASH](../instructions/cash.md) | `cash<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` | 32 | — | Atomic memory read-modify-write operation. |
+| [CASW](../instructions/casw.md) | `casw<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` | 32 | — | Atomic memory read-modify-write operation. |
 | [LD.ADD](../instructions/ld_add.md) | `ld.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}` | 32 | — | Atomic memory read-modify-write operation. |
 | [LD.AND](../instructions/ld_and.md) | `ld.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}` | 32 | — | Atomic memory read-modify-write operation. |
 | [LD.OR](../instructions/ld_or.md) | `ld.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}` | 32 | — | Atomic memory read-modify-write operation. |

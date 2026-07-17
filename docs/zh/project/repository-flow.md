@@ -1,4 +1,4 @@
-# 灵犀指令集 存储库流程 (v0.56)
+# 灵犀指令集 存储库流程 (v0.57)
 
 工作区是规范优先和子模块优先的。
 
@@ -22,8 +22,8 @@ git submodule update --init --recursive
 
 ## 流程
 
-1.`isa/v0.56/`中的ISA定义
-2、`isa/v0.56/linxisa-v0.56.json`中编译目录
+1.`isa/v0.57/`中的ISA定义
+2、`isa/v0.57/linxisa-v0.57.json`中编译目录
 3.在`isa/generated/codecs/`中生成解码资产
 4. AVS 中的验证（`avs/`）
 5. 通过子模块固定进行跨存储库对齐

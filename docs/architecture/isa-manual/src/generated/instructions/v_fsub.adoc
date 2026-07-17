@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_v_fsub_parts.svg[V.FSUB encoding,width=800]
+image::encodings/enc_v_fsub_parts.svg[V.FSUB encoding,width=800]
 
 *Uop-Class:* VEC
 

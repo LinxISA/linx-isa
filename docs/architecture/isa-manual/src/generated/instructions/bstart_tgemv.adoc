@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_bstart_tgemv]]
+==== BSTART.TGEMV
+
+*Syntax:* BSTART.TGEMV DataType
+
+*Description:* Named CUBE-family Function=16. Matrix-vector multiply; requires B.DIM and CUBE tile bindings.
+
+*Encoding:*
+
+image::encodings/enc_bstart_tgemv.svg[BSTART.TGEMV encoding,width=800]
+
+*Uop-Class:* CMD
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "v0.57 CUBE Function=16", "source": "group_rule", "uop_kind": "CMD"}`

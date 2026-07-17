@@ -44,7 +44,7 @@ Each ACR maintains an independent call table, `CAC_TABLE`, with the following fi
 
 `XBINFO` architectural exposure (bring-up)::
 +
-+In the current `v0.56` bring-up contract, `XBINFO` is an **ACR-scoped SSR** with index `0xF30`.
++In the current `v0.57` bring-up contract, `XBINFO` is an **ACR-scoped SSR** with index `0xF30`.
 +The full 16-bit `SSR_ID` is `0x nF30` for ACR`n`.
 +
 +* Name: `XBINFO_ACRn`
