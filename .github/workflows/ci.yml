@@ -12,7 +12,7 @@ jobs:
   guards:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - uses: actions/setup-python@v6
@@ -47,7 +47,7 @@ jobs:
       OPAMROOT: ${{ github.workspace }}/.ci-opam
       XDG_CACHE_HOME: ${{ github.workspace }}/.ci-xdg-cache
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - uses: actions/setup-python@v6
@@ -85,7 +85,7 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - uses: actions/setup-python@v6
@@ -112,7 +112,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - uses: actions/setup-python@v6
@@ -138,7 +138,7 @@ jobs:
   model:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - uses: actions/setup-python@v6
