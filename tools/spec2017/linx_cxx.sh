@@ -11,14 +11,10 @@ CXX_RUNTIME_ROOT="${LINX_CXX_RUNTIME_ROOT:-$ROOT/out/cpp-runtime/musl-cxx17-spec
 
 CLANGXX="${LINX_CLANGXX:-}"
 if [[ -z "$CLANGXX" ]]; then
-  for cand in \
-    "$ROOT/compiler/llvm/build-linxisa-clang/bin/clang++"
-  do
-    if [[ -x "$cand" ]]; then
-      CLANGXX="$cand"
-      break
-    fi
-  done
+  cand="$ROOT/compiler/llvm/build-linxisa-clang/bin/clang++"
+  if [[ -x "$cand" ]]; then
+    CLANGXX="$cand"
+  fi
 fi
 if [[ -z "$CLANGXX" || ! -x "$CLANGXX" ]]; then
   echo "error: linx_cxx.sh could not find clang++; set LINX_CLANGXX" >&2

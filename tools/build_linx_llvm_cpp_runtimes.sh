@@ -160,14 +160,10 @@ install_linux_uapi_headers
 
 CLANG="${CLANG:-}"
 if [[ -z "$CLANG" ]]; then
-  for cand in \
-    "$ROOT/compiler/llvm/build-linxisa-clang/bin/clang"
-  do
-    if [[ -x "$cand" ]]; then
-      CLANG="$cand"
-      break
-    fi
-  done
+  cand="$ROOT/compiler/llvm/build-linxisa-clang/bin/clang"
+  if [[ -x "$cand" ]]; then
+    CLANG="$cand"
+  fi
 fi
 if [[ -z "$CLANG" || ! -x "$CLANG" ]]; then
   echo "error: CLANG not found; set CLANG=/path/to/clang" >&2

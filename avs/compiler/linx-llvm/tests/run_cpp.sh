@@ -13,14 +13,10 @@ LINK_MODE="${LINK_MODE:-both}" # static|shared|both
 
 CLANGXX="${CLANGXX:-}"
 if [[ -z "$CLANGXX" ]]; then
-  for cand in \
-    "$REPO_ROOT/compiler/llvm/build-linxisa-clang/bin/clang++"
-  do
-    if [[ -x "$cand" ]]; then
-      CLANGXX="$cand"
-      break
-    fi
-  done
+  cand="$REPO_ROOT/compiler/llvm/build-linxisa-clang/bin/clang++"
+  if [[ -x "$cand" ]]; then
+    CLANGXX="$cand"
+  fi
 fi
 if [[ -z "$CLANGXX" || ! -x "$CLANGXX" ]]; then
   echo "error: clang++ not found; set CLANGXX=/path/to/clang++" >&2
