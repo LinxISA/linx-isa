@@ -12,7 +12,7 @@ svg_encodingspace = '''<?xml version="1.0" encoding="UTF-8"?>
     .bits-label { font-size: 11px; fill: #333; }
   </style>
 
-  <text x="10" y="25" class="title">LinxISA v0.56 Instruction Encoding Space</text>
+  <text x="10" y="25" class="title">LinxISA v0.57 Instruction Encoding Space</text>
 
   <!-- Row of format boxes -->
   <g transform="translate(50, 50)">

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import hashlib
 import json
 import os
 import re
@@ -763,6 +764,18 @@ def _utc_now() -> str:
     return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M:%SZ")
 
 
+def _file_provenance(path: Path) -> dict[str, Any]:
+    digest = hashlib.sha256()
+    with path.open("rb") as fp:
+        for chunk in iter(lambda: fp.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return {
+        "path": str(path),
+        "sha256": digest.hexdigest(),
+        "size_bytes": path.stat().st_size,
+    }
+
+
 def _env_bool(name: str, default: bool = False) -> bool:
     value = os.environ.get(name, "").strip().lower()
     if not value:
@@ -1302,12 +1315,15 @@ def _prepare_run_dir(
     src_run = bench_root / "run" / cfg["src_run"]
     dst_run = bench_root / "run" / cfg["linx_run"]
 
-    if not src_run.exists():
+    if not src_run.exists() and input_set == "refrate":
         raise SystemExit(f"error: missing source run dir: {src_run}")
 
     if dst_run.exists():
         shutil.rmtree(dst_run)
-    shutil.copytree(src_run, dst_run, symlinks=preserve_symlinks)
+    if src_run.exists():
+        shutil.copytree(src_run, dst_run, symlinks=preserve_symlinks)
+    else:
+        dst_run.mkdir(parents=True)
     _overlay_input_set(bench_root, dst_run, input_set)
 
     for exe_name in cfg["exes"]:
@@ -6241,6 +6257,7 @@ def main(argv: list[str]) -> int:
         "qemu": str(qemu),
         "qemu_provenance": qemu_binary_provenance(REPO_ROOT, qemu),
         "kernel": str(kernel),
+        "kernel_provenance": _file_provenance(kernel),
         "sysroot": str(sysroot),
         "sysroot_provenance": _sysroot_provenance(sysroot),
         "memory_mb": args.memory_mb,

@@ -26,7 +26,7 @@ RETIRED_PAGE_SLUGS = (
     "b_" + "attr",
     "b_" + "ioti",
 )
-CURRENT_RETIREMENT_NOTICES = {Path("docs/releases/v0.56.5.md")}
+CURRENT_RETIREMENT_NOTICES = {Path("docs/releases/v0.57.0.md")}
 
 
 def _error(errors: list[str], message: str) -> None:
@@ -100,9 +100,9 @@ def _check_retired_surfaces(root: Path, errors: list[str]) -> None:
         if path.exists():
             _error(errors, f"obsolete active instruction page exists: {path.relative_to(root)}")
 
-    duplicate_uops = root / "docs/bringup/golden/uop_classification_v0.56"
+    duplicate_uops = root / "docs/bringup/golden/uop_classification_v0.57"
     if duplicate_uops.exists():
-        _error(errors, "duplicate documentation uop mirror exists; use isa/v0.56/uop_classification_v0.56")
+        _error(errors, "duplicate documentation uop mirror exists; use isa/v0.57/uop_classification_v0.57")
 
     for rel in (
         Path("docs/bringup/gates/qemu_isa_coverage_latest.json"),
@@ -143,8 +143,13 @@ def _check_generated_image_links(root: Path, errors: list[str]) -> None:
                 target_text = match.group(1)
                 if "://" in target_text or target_text.startswith("/"):
                     continue
-                target = (source.parent / target_text).resolve()
-                if not target.is_file():
+                targets = [(source.parent / target_text).resolve()]
+                # AsciiDoc instruction fragments are included from the
+                # generated manual root, so image:: paths are resolved against
+                # that include context rather than the fragment directory.
+                if source.parent.name == "instructions":
+                    targets.append((source.parent.parent / target_text).resolve())
+                if not any(target.is_file() for target in targets):
                     _error(
                         errors,
                         f"broken generated SVG link in {source.relative_to(root)}: {target_text}",
@@ -199,7 +204,7 @@ def main() -> int:
     else:
         if manifest.get("normative_language") != "en":
             _error(errors, "translation manifest must declare English as normative")
-        if manifest.get("canonical_isa") != "isa/v0.56/linxisa-v0.56.json":
+        if manifest.get("canonical_isa") != "isa/v0.57/linxisa-v0.57.json":
             _error(errors, "translation manifest points at a non-canonical ISA source")
         pages = manifest.get("pages")
         if not isinstance(pages, dict) or not pages:

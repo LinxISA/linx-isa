@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_dc_csw.svg[DC.CSW encoding,width=800]
+image::encodings/enc_dc_csw.svg[DC.CSW encoding,width=800]
 
 *Uop-Class:* SYS
 

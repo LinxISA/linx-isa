@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import json
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import run_ai_workload_flow
@@ -102,6 +104,166 @@ class AiWorkloadFlowTests(unittest.TestCase):
             cases, {1}, [], ["=supernpu-tileop_api-TSub"], 0
         )
         self.assertEqual([case.id for case in selected], ["supernpu-tileop_api-TSub"])
+
+    def test_execution_stage_prefix_accepts_full_profile(self) -> None:
+        flow = self.flow()
+        stages = run_ai_workload_flow.selected_stages(flow, "smoke", [], None, None)
+
+        run_ai_workload_flow.validate_execution_stage_prefix(flow, "smoke", [], stages)
+
+    def test_execution_stage_prefix_rejects_profile_without_enabled_stages(self) -> None:
+        flow = {
+            "profiles": {"smoke": {"tiers": [0]}, "other": {"tiers": [0]}},
+            "stages": [{"id": "other-only", "profiles": ["other"]}],
+        }
+
+        with self.assertRaisesRegex(
+            SystemExit, r"profile smoke has no enabled execution stages"
+        ):
+            run_ai_workload_flow.validate_execution_stage_prefix(
+                flow, "smoke", [], []
+            )
+
+    def test_execution_stage_prefix_accepts_repeated_stage_prefix(self) -> None:
+        flow = self.flow()
+        requested = ["source-contract", "compiler-contract"]
+        stages = run_ai_workload_flow.selected_stages(
+            flow, "smoke", requested, None, None
+        )
+
+        run_ai_workload_flow.validate_execution_stage_prefix(
+            flow, "smoke", requested, stages
+        )
+
+    def test_execution_stage_prefix_accepts_stop_after(self) -> None:
+        flow = self.flow()
+        stages = run_ai_workload_flow.selected_stages(
+            flow, "smoke", [], None, "compiler-contract"
+        )
+
+        run_ai_workload_flow.validate_execution_stage_prefix(flow, "smoke", [], stages)
+
+    def test_execution_stage_prefix_rejects_qemu_only(self) -> None:
+        flow = self.flow()
+        requested = ["qemu-execution"]
+        stages = run_ai_workload_flow.selected_stages(
+            flow, "smoke", requested, None, None
+        )
+
+        with self.assertRaisesRegex(
+            SystemExit,
+            r"missing prerequisite stage\(s\): source-contract, compiler-contract",
+        ):
+            run_ai_workload_flow.validate_execution_stage_prefix(
+                flow, "smoke", requested, stages
+            )
+
+    def test_execution_stage_prefix_rejects_non_root_start_at(self) -> None:
+        flow = self.flow()
+        stages = run_ai_workload_flow.selected_stages(
+            flow, "smoke", [], "qemu-execution", None
+        )
+
+        with self.assertRaisesRegex(
+            SystemExit,
+            r"missing prerequisite stage\(s\): source-contract, compiler-contract",
+        ):
+            run_ai_workload_flow.validate_execution_stage_prefix(
+                flow, "smoke", [], stages
+            )
+
+    def test_execution_stage_prefix_rejects_gap(self) -> None:
+        flow = self.flow()
+        requested = ["source-contract", "qemu-execution"]
+        stages = run_ai_workload_flow.selected_stages(
+            flow, "smoke", requested, None, None
+        )
+
+        with self.assertRaisesRegex(
+            SystemExit,
+            r"missing prerequisite stage\(s\): compiler-contract",
+        ):
+            run_ai_workload_flow.validate_execution_stage_prefix(
+                flow, "smoke", requested, stages
+            )
+
+    def test_execution_stage_prefix_rejects_reordered_arguments(self) -> None:
+        flow = self.flow()
+        requested = ["compiler-contract", "source-contract"]
+        stages = run_ai_workload_flow.selected_stages(
+            flow, "smoke", requested, None, None
+        )
+
+        with self.assertRaisesRegex(
+            SystemExit,
+            r"expected canonical prefix: source-contract, compiler-contract",
+        ):
+            run_ai_workload_flow.validate_execution_stage_prefix(
+                flow, "smoke", requested, stages
+            )
+
+    def test_invalid_execution_stage_prefix_creates_no_output_directory(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            out_dir = Path(td) / "must-not-exist"
+            with self.assertRaisesRegex(SystemExit, r"missing prerequisite stage"):
+                run_ai_workload_flow.main(
+                    [
+                        "--profile",
+                        "smoke",
+                        "--stage",
+                        "qemu-execution",
+                        "--dry-run",
+                        "--out-dir",
+                        str(out_dir),
+                    ]
+                )
+
+            self.assertFalse(out_dir.exists())
+
+    def test_empty_execution_profile_fails_before_discovery_or_output(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            temp_dir = Path(td)
+            flow_path = temp_dir / "flow.json"
+            out_dir = temp_dir / "must-not-exist"
+            flow_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": 1,
+                        "profiles": {
+                            "smoke": {"tiers": [0]},
+                            "other": {"tiers": [0]},
+                        },
+                        "stages": [
+                            {
+                                "id": "other-only",
+                                "profiles": ["other"],
+                                "owner": "test",
+                                "hard_break": True,
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            with mock.patch.object(run_ai_workload_flow, "discover_cases") as discover:
+                with self.assertRaisesRegex(
+                    SystemExit, r"profile smoke has no enabled execution stages"
+                ):
+                    run_ai_workload_flow.main(
+                        [
+                            "--flow",
+                            str(flow_path),
+                            "--profile",
+                            "smoke",
+                            "--dry-run",
+                            "--out-dir",
+                            str(out_dir),
+                        ]
+                    )
+
+            discover.assert_not_called()
+            self.assertFalse(out_dir.exists())
 
     def test_supernpu_matmul_source_uses_type_when_testcase_is_generic(self) -> None:
         with tempfile.TemporaryDirectory() as td:
@@ -337,6 +499,12 @@ class AiWorkloadFlowTests(unittest.TestCase):
             produces_elf=True,
             expected="test",
             metadata={},
+        )
+
+    def flow(self) -> dict[str, object]:
+        root = run_ai_workload_flow.repo_root()
+        return run_ai_workload_flow.load_flow(
+            run_ai_workload_flow.default_flow_path(root)
         )
 
 

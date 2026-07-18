@@ -824,7 +824,7 @@ __attribute__((noreturn)) static void linx_after_ri_step_trap_exit(void)
     TEST_EQ64(step_ecstate & CSTATE_ACR_MASK, 2, TESTID_RI_STEP_TRAP_POLLUTE_RESUME + 10);
     /*
      * Descriptor-payload materialization is already covered by the dedicated
-     * RI-order/vector body gate in 12_v03_vector_tile.c. Keep this test scoped
+     * RI-order/vector body gate in 12_v057_vector_tile.c. Keep this test scoped
      * to step-trap resume, manager-state pollution, and ACR2 body-state restore.
      */
 

@@ -20,12 +20,12 @@ Comparable to Arm/x86/RISC-V maturity means:
 ## Current Strengths (Evidence in Repo)
 
 - Golden opcode database and generated JSON catalog:
-  - `isa/v0.56/` -> `isa/v0.56/linxisa-v0.56.json`
+  - `isa/v0.57/` -> `isa/v0.57/linxisa-v0.57.json`
 - Encoding conflict checks and hole reporting:
   - `python3 tools/isa/report_encoding_space.py --check`
   - Report: `docs/reference/encoding_space_report.md`
 - LLVM backend has full mnemonic disassembly coverage when using the per-target outputs:
-  - `python3 avs/compiler/linx-llvm/tests/analyze_coverage.py --out-dir avs/compiler/linx-llvm/tests/out-linx64 --fail-under 100`
+  - `python3 avs/compiler/linx-llvm/tests/analyze_coverage.py --out-dir avs/compiler/linx-llvm/tests/out --fail-under 100`
 - Benchmark harness exists with static and dynamic instruction statistics:
   - `python3 workloads/run_benchmarks.py --dynamic-hist`
 
@@ -51,7 +51,7 @@ Comparable to Arm/x86/RISC-V maturity means:
 ### SIMT
 
 - ISA:
-  - canonical `v0.56` grouped divergence contract is documented, including
+  - canonical `v0.57` grouped divergence contract is documented, including
     explicit EXEC-mask (`p`) control
 - Compiler:
   - only the documented bring-up subset is closed
@@ -126,8 +126,8 @@ Comparable to Arm/x86/RISC-V maturity means:
   - Evidence: `avs/compiler/linx-llvm/tests/run.sh` has PIC relocation checks, shared-lib gated.
 
 - Disasm coverage gate ergonomics:
-  - Stale `avs/compiler/linx-llvm/tests/out/` directories can cause false failures if used.
-  - Mitigation: `avs/compiler/linx-llvm/tests/analyze_coverage.py` auto-detects `out-linx*`.
+  - Stale alternate `out-linx*` directories can produce wrong-lane evidence when passed explicitly.
+  - Mitigation: canonical gates bind `avs/compiler/linx-llvm/tests/out/` and do not merge sibling output lanes.
 
 ## Gaps: Emulator (QEMU)
 

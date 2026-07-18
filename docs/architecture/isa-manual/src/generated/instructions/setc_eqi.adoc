@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_setc_eqi.svg[SETC.EQI encoding,width=800]
+image::encodings/enc_setc_eqi.svg[SETC.EQI encoding,width=800]
 
 *Uop-Class:* BRU
 

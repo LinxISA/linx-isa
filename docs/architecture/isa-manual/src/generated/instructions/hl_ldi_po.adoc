@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_hl_ldi_po.svg[HL.LDI.PO encoding,width=800]
+image::encodings/enc_hl_ldi_po.svg[HL.LDI.PO encoding,width=800]
 
 *Uop-Class:* LDA/POST_INDEX
 

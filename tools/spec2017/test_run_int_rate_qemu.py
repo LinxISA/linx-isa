@@ -1563,6 +1563,51 @@ class RunIntRateQemuTests(unittest.TestCase):
             self.assertEqual((dst_run / "lib" / "helper.pm").read_text(encoding="utf-8"), "lib")
             self.assertEqual((dst_run / "train.in").read_text(encoding="utf-8"), "input")
 
+    def test_prepare_run_dir_builds_test_input_without_refrate_run_dir(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            spec_dir = Path(td)
+            bench_root = spec_dir / "benchspec" / "CPU" / "999.specrand_ir"
+            test_input = bench_root / "data" / "test" / "input"
+            exe_dir = bench_root / "exe"
+            test_input.mkdir(parents=True)
+            exe_dir.mkdir(parents=True)
+            (test_input / "control").write_text("1 2\n", encoding="utf-8")
+            (exe_dir / "specrand").write_text("binary", encoding="utf-8")
+
+            run_dir = runner._prepare_run_dir(
+                spec_dir,
+                "999.specrand_ir",
+                {
+                    "src_run": runner.SRC_RUN_DIR,
+                    "linx_run": "run_base_test_linx-m64.0000",
+                    "exes": ["specrand"],
+                    "runs": [],
+                    "compares": [],
+                },
+                preserve_symlinks=False,
+                input_set="test",
+            )
+
+            self.assertEqual((run_dir / "control").read_text(encoding="utf-8"), "1 2\n")
+            self.assertEqual((run_dir / "specrand").read_text(encoding="utf-8"), "binary")
+
+    def test_prepare_run_dir_requires_source_run_for_refrate(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            with self.assertRaisesRegex(SystemExit, "missing source run dir"):
+                runner._prepare_run_dir(
+                    Path(td),
+                    "999.specrand_ir",
+                    {
+                        "src_run": runner.SRC_RUN_DIR,
+                        "linx_run": "run_base_refrate_linx-m64.0000",
+                        "exes": [],
+                        "runs": [],
+                        "compares": [],
+                    },
+                    preserve_symlinks=False,
+                    input_set="refrate",
+                )
+
     def test_select_run_indices_keeps_matching_compares(self) -> None:
         cfg = {
             "runs": [

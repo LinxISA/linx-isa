@@ -1,0 +1,31 @@
+{
+  "cases": [
+    {
+      "id": "MODEL-SCALAR-COMMIT-SMOKE",
+      "status": "pass"
+    },
+    {
+      "id": "MODEL-SCALAR-MCOPY-MSET",
+      "status": "pass"
+    },
+    {
+      "id": "MODEL-VECTOR-LANE-CONTROL",
+      "status": "pass"
+    },
+    {
+      "id": "MODEL-TILE-DESCRIPTOR-LEGALITY",
+      "status": "pass"
+    },
+    {
+      "id": "MODEL-TILE-CONTROL-FLOW",
+      "status": "pass"
+    },
+    {
+      "id": "MODEL-PRIVILEGED-EXCEPTION-EDGE",
+      "status": "pass"
+    }
+  ],
+  "profile": "release-strict",
+  "suite": "/Users/zhoubot/linx-isa/avs/model/linx_model_diff_suite.yaml",
+  "trace_schema_version": "1.0"
+}

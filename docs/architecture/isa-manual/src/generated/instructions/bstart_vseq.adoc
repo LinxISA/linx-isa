@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_bstart_vseq.svg[BSTART.VSEQ encoding,width=800]
+image::encodings/enc_bstart_vseq.svg[BSTART.VSEQ encoding,width=800]
 
 *Uop-Class:* CMD
 

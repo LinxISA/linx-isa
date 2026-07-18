@@ -115,11 +115,16 @@ main ()
     printf ("\n");
   }
   printf ("Please give the number of runs through the benchmark: ");
+#ifdef DHRY_ITERS
+  Number_Of_Runs = DHRY_ITERS;
+  printf ("%d", Number_Of_Runs);
+#else
   {
     int n;
     scanf ("%d", &n);
     Number_Of_Runs = n;
   }
+#endif
   printf ("\n");
 
   printf ("Execution starts, %d runs through Dhrystone\n", Number_Of_Runs);
@@ -381,5 +386,4 @@ register int    l;
         while (l--) *d++ = *s++;
 }
 #endif
-
 

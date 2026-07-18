@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Validate the Sail model status and active-surface wording for v0.56.
+Validate the Sail model status and active-surface wording for v0.57.
 """
 
 from __future__ import annotations
@@ -139,20 +139,28 @@ def _run_sail_directed_tests(test_path: Path, expected_version: str) -> tuple[bo
     return True, f"directed semantic tests executed with Sail {expected_version}"
 
 
-def _check_generated_decode() -> tuple[bool, str]:
-    cmd = [sys.executable, "tools/isa/gen_sail_decode.py", "--check"]
+def _check_generated_decode(spec_path: Path) -> tuple[bool, str]:
+    cmd = [sys.executable, "tools/isa/gen_sail_decode.py", "--spec", str(spec_path), "--check"]
     proc = subprocess.run(cmd, check=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     if proc.returncode != 0:
         return False, (proc.stderr or proc.stdout or "decode generator drift").strip()
     return True, "decode.sail matches generator"
 
 
-def _check_generated_status() -> tuple[bool, str]:
-    cmd = [sys.executable, "tools/isa/gen_sail_status.py", "--check"]
+def _check_generated_status(spec_path: Path) -> tuple[bool, str]:
+    cmd = [sys.executable, "tools/isa/gen_sail_status.py", "--spec", str(spec_path), "--check"]
     proc = subprocess.run(cmd, check=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     if proc.returncode != 0:
         return False, (proc.stderr or proc.stdout or "semantic status generator drift").strip()
     return True, "semantics_status.json matches form-ID policy"
+
+
+def _check_coverage(spec_path: Path) -> tuple[bool, str]:
+    cmd = [sys.executable, "tools/isa/sail_coverage.py", "--spec", str(spec_path), "--check"]
+    proc = subprocess.run(cmd, check=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    if proc.returncode != 0:
+        return False, (proc.stderr or proc.stdout or "Sail coverage drift").strip()
+    return True, "coverage.json matches semantic status"
 
 
 def _collect_stale_hits(paths: list[Path]) -> list[str]:
@@ -180,8 +188,8 @@ def _collect_impl_gap_hits(paths: list[Path]) -> list[str]:
 
 
 def main(argv: list[str]) -> int:
-    ap = argparse.ArgumentParser(description="Validate Sail model status for canonical v0.56")
-    ap.add_argument("--spec", default="isa/v0.56/linxisa-v0.56.json")
+    ap = argparse.ArgumentParser(description="Validate Sail model status for canonical v0.57")
+    ap.add_argument("--spec", default="isa/v0.57/linxisa-v0.57.json")
     ap.add_argument("--status", default="isa/sail/semantics_status.json")
     ap.add_argument("--entry", default="isa/sail/model/linxisa.sail")
     ap.add_argument("--toolchain", default="isa/sail/toolchain.json")
@@ -190,7 +198,8 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--require-c-backend", action="store_true", help="Require Sail C backend generation")
     args = ap.parse_args(argv)
 
-    spec = _read_json(Path(args.spec))
+    spec_path = Path(args.spec)
+    spec = _read_json(spec_path)
     status = _load_status(Path(args.status))
     toolchain = _load_status(Path(args.toolchain))
     expected_sail_version = str(toolchain.get("sail_version") or "").strip()
@@ -200,8 +209,8 @@ def main(argv: list[str]) -> int:
     instructions = spec.get("instructions")
     if not isinstance(instructions, list):
         raise SystemExit(f"error: malformed spec file: {args.spec}")
-    if str(status.get("schema_version", "")).strip() != "linx-sail-status-v0.56.5":
-        raise SystemExit("error: semantics_status.schema_version must be 'linx-sail-status-v0.56.5'")
+    if str(status.get("schema_version", "")).strip() != "linx-sail-status-v0.57.0":
+        raise SystemExit("error: semantics_status.schema_version must be 'linx-sail-status-v0.57.0'")
     form_statuses = status.get("forms")
     if not isinstance(form_statuses, dict):
         raise SystemExit("error: semantics_status.forms must be an object")
@@ -227,8 +236,9 @@ def main(argv: list[str]) -> int:
     parser_ok, parser_detail = _run_sail_entry(entry_path, expected_sail_version)
     if args.require_parser and not parser_ok:
         raise SystemExit(f"error: Sail parser check failed: {parser_detail}")
-    decode_ok, decode_detail = _check_generated_decode()
-    status_ok, status_detail = _check_generated_status()
+    decode_ok, decode_detail = _check_generated_decode(spec_path)
+    status_ok, status_detail = _check_generated_status(spec_path)
+    coverage_ok, coverage_detail = _check_coverage(spec_path)
     c_backend_ok, c_backend_detail = _run_sail_c_backend(entry_path) if args.require_c_backend else (True, "optional-skip")
     directed_ok, directed_detail = _run_sail_directed_tests(Path(args.directed_tests), expected_sail_version)
 
@@ -262,9 +272,14 @@ def main(argv: list[str]) -> int:
         failures.append(f"Sail decode generator check failed: {decode_detail}")
     if not status_ok:
         failures.append(f"Sail semantic status generator check failed: {status_detail}")
+    if not coverage_ok:
+        failures.append(f"Sail coverage check failed: {coverage_detail}")
     if not c_backend_ok:
         failures.append(f"Sail C backend check failed: {c_backend_detail}")
-    if not directed_ok:
+    directed_unavailable = directed_detail.startswith("sail binary not found") or directed_detail.startswith(
+        "directed tests require Sail "
+    )
+    if not directed_ok and (args.require_parser or not directed_unavailable):
         failures.append(f"Sail directed semantic tests failed: {directed_detail}")
 
     if failures:
@@ -277,7 +292,7 @@ def main(argv: list[str]) -> int:
         "ok: sail model validated "
         f"(forms={len(canonical_forms)}, grades={grade_counts}, parser={parser_summary}, "
         f"decode={decode_detail}, status={status_detail}, directed={directed_detail}, "
-        f"c_backend={c_backend_detail})"
+        f"coverage={coverage_detail}, c_backend={c_backend_detail})"
     )
     return 0
 

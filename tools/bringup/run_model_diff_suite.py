@@ -27,6 +27,7 @@ def main(argv: list[str]) -> int:
     runner = root / "tools" / "model" / "tests" / "avs" / "run_model_diff_suite.py"
 
     env = dict(os.environ)
+    env["LINX_VIRT_TEST_FINISHER"] = "1"
     cmd = [
         sys.executable,
         str(runner),
@@ -34,6 +35,10 @@ def main(argv: list[str]) -> int:
         str(root),
         "--suite",
         args.suite,
+        "--qemu",
+        str(root / "emulator" / "qemu" / "build-linx" / "qemu-system-linx64"),
+        "--qemu-bios",
+        "none",
     ]
     if args.workdir:
         cmd.extend(["--workdir", args.workdir])

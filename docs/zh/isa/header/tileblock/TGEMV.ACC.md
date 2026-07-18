@@ -54,7 +54,7 @@ TGEMV.ACC <LB0:M, LB1:N, LB2:K, DataType> SrcTile0<.reuse>, SrcTile1<.reuse>, AC
 
 该TileOp模版块编码为以下指令：
 
-- [BSTART.CUBE](../../blockIntro/cube_block/header.md) `TGEMV.ACC, DataType`
+- [BSTART.TGEMV.ACC](../../blockIntro/cube_block/header.md) `DataType`
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0`    （注：*M*）
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`    （注：*N*）
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB2`    （注：*K*）

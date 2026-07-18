@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Focused regression checks for the v0.56.5 hard-break ISA contract."""
+"""Focused regression checks for the standalone v0.57 ISA contract."""
 
 from __future__ import annotations
 
@@ -11,10 +11,10 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def main() -> int:
-    spec = json.loads((ROOT / "isa/v0.56/linxisa-v0.56.json").read_text(encoding="utf-8"))
+    spec = json.loads((ROOT / "isa/v0.57/linxisa-v0.57.json").read_text(encoding="utf-8"))
     instructions = spec["instructions"]
     mnemonics = {str(inst["mnemonic"]) for inst in instructions}
-    assert spec["version"] == "0.56.5"
+    assert spec["version"] == "0.57.0"
     assert "B.IOD" not in mnemonics
     assert "BSTART.PAR" not in mnemonics
     assert {
@@ -37,14 +37,30 @@ def main() -> int:
     assert retired["B.IOD"]["disposition"] == "reserved"
     assert retired["BSTART.PAR"]["replacement_mnemonic"] == "BSTART.TEPL"
 
-    calls = [
+    exact_calls = [
         inst
         for inst in instructions
         if inst["mnemonic"] in {"BSTART CALL", "HL.BSTART CALL"}
-        or (str(inst["mnemonic"]).startswith("L.BSTART.") and " CALL," in inst["asm"])
     ]
-    assert len(calls) == 4
-    for call in calls:
+    assert len(exact_calls) == 2
+    for call in exact_calls:
+        note = str(call.get("note") or "")
+        assert "Atomic fused CALL" in note
+        assert "independently relocatable" in note
+        assert [role["role"] for role in call["operand_roles"]] == [
+            "call_target",
+            "return_target",
+            "link_destination",
+        ]
+        assert call["semantic_contract"]["atomic"] is True
+
+    generic_long_calls = [
+        inst
+        for inst in instructions
+        if str(inst["mnemonic"]).startswith("L.BSTART.") and " CALL," in inst["asm"]
+    ]
+    assert len(generic_long_calls) == 2
+    for call in generic_long_calls:
         note = str(call.get("note") or "")
         assert "preserves ra" in note
         assert "SETRET or C.SETRET" in note
@@ -56,7 +72,7 @@ def main() -> int:
     assert spec["semantics_conventions"]
 
     field_source = json.loads(
-        (ROOT / "isa/v0.56/encoding/fields.json").read_text(encoding="utf-8")
+        (ROOT / "isa/v0.57/encoding/fields.json").read_text(encoding="utf-8")
     )
     assert spec["field_definitions"] == field_source
     for name, definition in field_source["fields"].items():
@@ -68,7 +84,52 @@ def main() -> int:
             assert isinstance(definition["reserved_values"], list), name
     assert field_source["fields"]["reserve"]["allowed_values"] == [0]
     assert field_source["fields"]["reserve"]["documented_only"] is True
-    assert field_source["fields"]["TileOpcode"]["reserved_ranges"] == [[64, 1023]]
+    assert field_source["fields"]["TileOpcode"]["reserved_ranges"] == [
+        [73, 127],
+        [140, 191],
+        [201, 223],
+        [228, 1023],
+    ]
+
+    tma = spec["state"]["engine_ops"]["tma"]
+    assert tma["function_field_bits"] == [0, 4]
+    assert tma["kind"] == "function_u5"
+    assert {
+        (entry["function"], entry["mnemonic"])
+        for entry in tma["legal_aliases"]
+    } == {
+        (0, "BSTART.TLOAD"),
+        (1, "BSTART.TSTORE"),
+        (2, "BSTART.TMOV"),
+        (3, "BSTART.TPREFETCH"),
+        (4, "BSTART.MGATHER"),
+        (5, "BSTART.MSCATTER"),
+        (6, "BSTART.MGATHER.MASK"),
+        (7, "BSTART.MSCATTER.MASK"),
+        (8, "BSTART.MGATHER.CAS"),
+    }
+    assert tma["reserved_behavior"] == "illegal_instruction"
+    assert tma["reserved_function_range"] == [9, 31]
+    assert "BSTART.TMA" not in mnemonics
+    exact_tma = {
+        inst["mnemonic"]: inst["encoding"]["parts"][0]
+        for inst in instructions
+        if inst["mnemonic"] in {
+            "BSTART.TLOAD",
+            "BSTART.TSTORE",
+            "BSTART.TMOV",
+            "BSTART.TPREFETCH",
+        }
+    }
+    assert {
+        name: (int(part["mask"], 0), int(part["match"], 0))
+        for name, part in exact_tma.items()
+    } == {
+        "BSTART.TLOAD": (0x07FFFFFF, 0x00011181),
+        "BSTART.TSTORE": (0x07FFFFFF, 0x00111181),
+        "BSTART.TMOV": (0x07FFFFFF, 0x00211181),
+        "BSTART.TPREFETCH": (0x07FFFFFF, 0x00311181),
+    }
 
     observed_fields = {
         field["name"]
@@ -83,7 +144,7 @@ def main() -> int:
     assert int(trace_hint["encoding"]["parts"][0]["mask"], 0) == 0xFFFF7FFF
 
     status = json.loads((ROOT / "isa/sail/semantics_status.json").read_text(encoding="utf-8"))
-    assert set(status["forms"]) == set(form_ids)
+    assert set(form_ids) == set(status["forms"])
     assert {
         entry["status"] for entry in status["forms"].values()
     } <= {"decode-only", "executable-subset", "architecturally-complete"}

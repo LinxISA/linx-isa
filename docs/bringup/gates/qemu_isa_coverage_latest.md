@@ -1,19 +1,24 @@
-# ISA vs QEMU Coverage Snapshot
+# ISA vs QEMU Decoder/Source Mapping Snapshot
 
-- Generated (UTC): `2026-07-15 10:11:15Z`
-- Spec unique mnemonics: `711`
-- QEMU unique decode mnemonics (non-internal): `645`
-- QEMU mapped spec mnemonics: `618`
-- Mnemonic coverage: `618/711` (`86.92%`)
-- Spec legal forms: `747`
-- QEMU mapped spec forms: `621`
-- Form coverage: `621/747` (`83.13%`)
-- Missing spec mnemonics: `93`
-- Missing spec forms: `126`
-- Reserved spec forms: `0`
-- Unmapped QEMU mnemonics: `6`
+- Generated (UTC): `2026-07-18 02:41:46Z`
+- Evidence level: `L1`
+- Claim: `decoder_source_mapping`
+- L2 runtime execution: `available`; `60` forms / `60` mnemonics
+- L3 semantic oracle: `available`; `60` forms / `60` mnemonics
+- Limitation: L1 mapping does not imply execution; L2/L3 counts are independently audited per-form evidence and remain partial.
+- Spec unique mnemonics: `731`
+- QEMU unique decode mnemonics (non-internal): `679`
+- QEMU mapped spec mnemonics: `646`
+- L1 mnemonic mapping: `646/731` (`88.37%`)
+- Spec legal forms: `769`
+- QEMU mapped spec forms: `678`
+- L1 form mapping: `678/769` (`88.17%`)
+- Missing spec mnemonics: `85`
+- Missing spec forms: `91`
+- Reserved spec forms: `1`
+- Unmapped QEMU mnemonics: `0`
 
-## Mnemonic Coverage By Prefix
+## L1 Mnemonic Mapping By Prefix
 
 - `ACRC`: `1`
 - `ACRE`: `1`
@@ -27,20 +32,24 @@
 - `ANDIW`: `1`
 - `ANDW`: `1`
 - `ASSERT`: `1`
-- `B`: `15`
+- `B`: `16`
 - `BC`: `2`
 - `BCNT`: `1`
 - `BIC`: `1`
 - `BIS`: `1`
 - `BSE`: `1`
-- `BSTART`: `19`
+- `BSTART`: `34`
 - `BSTOP`: `1`
 - `BWE`: `1`
 - `BWI`: `1`
 - `BWT`: `1`
 - `BXS`: `1`
 - `BXU`: `1`
-- `C`: `37`
+- `C`: `38`
+- `CASB`: `1`
+- `CASD`: `1`
+- `CASH`: `1`
+- `CASW`: `1`
 - `CLZ`: `1`
 - `CMP`: `16`
 - `CSEL`: `1`
@@ -50,6 +59,7 @@
 - `DIVU`: `1`
 - `DIVUW`: `1`
 - `DIVW`: `1`
+- `DMA`: `1`
 - `EBREAK`: `1`
 - `ERCOV`: `1`
 - `ESAVE`: `1`
@@ -167,7 +177,7 @@
 - `SWI`: `2`
 - `TLB`: `4`
 - `UCVTF`: `1`
-- `V`: `94`
+- `V`: `100`
 - `XOR`: `1`
 - `XORI`: `1`
 - `XORIW`: `1`
@@ -175,12 +185,10 @@
 
 ## Missing Mnemonics By Prefix
 
-- `B`: `1`
-- `C`: `1`
-- `V`: `90`
+- `V`: `84`
 - `XB`: `1`
 
-## Form Coverage By Prefix
+## L1 Form Mapping By Prefix
 
 - `ACRC`: `1`
 - `ACRE`: `1`
@@ -194,29 +202,34 @@
 - `ANDIW`: `1`
 - `ANDW`: `1`
 - `ASSERT`: `1`
-- `B`: `23`
+- `B`: `26`
 - `BC`: `2`
 - `BCNT`: `1`
 - `BIC`: `1`
 - `BIS`: `1`
 - `BSE`: `1`
-- `BSTART`: `18`
+- `BSTART`: `43`
 - `BSTOP`: `1`
 - `BWE`: `1`
 - `BWI`: `1`
 - `BWT`: `1`
 - `BXS`: `1`
 - `BXU`: `1`
-- `C`: `37`
+- `C`: `39`
+- `CASB`: `1`
+- `CASD`: `1`
+- `CASH`: `1`
+- `CASW`: `1`
 - `CLZ`: `1`
 - `CMP`: `16`
 - `CSEL`: `1`
 - `CTZ`: `1`
-- `DC`: `6`
+- `DC`: `8`
 - `DIV`: `1`
 - `DIVU`: `1`
 - `DIVUW`: `1`
 - `DIVW`: `1`
+- `DMA`: `1`
 - `EBREAK`: `1`
 - `ERCOV`: `1`
 - `ESAVE`: `1`
@@ -252,11 +265,11 @@
 - `FRET`: `2`
 - `FSQRT`: `1`
 - `FSUB`: `1`
-- `HL`: `195`
+- `HL`: `200`
 - `IC`: `2`
 - `J`: `1`
 - `JR`: `1`
-- `L`: `4`
+- `L`: `9`
 - `LB`: `2`
 - `LBI`: `1`
 - `LBU`: `2`
@@ -267,7 +280,7 @@
 - `LHI`: `2`
 - `LHU`: `2`
 - `LHUI`: `2`
-- `LR`: `2`
+- `LR`: `4`
 - `LSRGET`: `1`
 - `LUI`: `1`
 - `LW`: `10`
@@ -334,7 +347,7 @@
 - `SWI`: `2`
 - `TLB`: `4`
 - `UCVTF`: `1`
-- `V`: `92`
+- `V`: `100`
 - `XOR`: `1`
 - `XORI`: `1`
 - `XORIW`: `1`
@@ -342,33 +355,19 @@
 
 ## Missing Forms By Prefix
 
-- `B`: `3`
-- `BSTART`: `14`
-- `C`: `2`
-- `DC`: `2`
-- `HL`: `5`
-- `L`: `5`
-- `LR`: `2`
-- `V`: `92`
+- `B`: `2`
+- `BSTART`: `4`
+- `V`: `84`
 - `XB`: `1`
 
 ## Unmapped QEMU Mnemonics
 
-- `b_dim_lb0`
-- `b_dim_lb1`
-- `b_dim_lb2`
-- `bstart_fall`
-- `bstart_split_cond`
-- `bstart_split_direct`
+- none
 
 ## Missing Spec Mnemonics (First 200)
 
-- `B.DIM`
-- `C.SETRET`
-- `V.LB`
 - `V.LBI`
 - `V.LBI.BRG`
-- `V.LBU`
 - `V.LBUI`
 - `V.LBUI.BRG`
 - `V.LD`
@@ -383,12 +382,10 @@
 - `V.LDI.BRG`
 - `V.LDI.U`
 - `V.LDI.U.BRG`
-- `V.LH`
 - `V.LHI`
 - `V.LHI.BRG`
 - `V.LHI.U`
 - `V.LHI.U.BRG`
-- `V.LHU`
 - `V.LHUI`
 - `V.LHUI.BRG`
 - `V.LHUI.U`
@@ -411,7 +408,6 @@
 - `V.LWUI.U.BRG`
 - `V.QPOP`
 - `V.QPUSH`
-- `V.SB`
 - `V.SBI`
 - `V.SBI.BRG`
 - `V.SD`
@@ -428,7 +424,6 @@
 - `V.SDI.BRG`
 - `V.SDI.U`
 - `V.SDI.U.BRG`
-- `V.SH`
 - `V.SH.U`
 - `V.SH.U.BRG`
 - `V.SHFL.BFLY`
@@ -459,44 +454,14 @@
 
 ## Missing Spec Forms (First 200)
 
-- `B.DIM [len=32 mask=0x707f match=0x1043]`
-- `B.DIM [len=32 mask=0x707f match=0x2043]`
-- `B.DIM [len=32 mask=0x707f match=0x43]`
-- `BSTART CALL [len=32 mask=0xf83f000f match=0x50160002]`
-- `BSTART [len=32 mask=0x7f match=0x11]`
-- `BSTART [len=32 mask=0x7f match=0x21]`
-- `BSTART.ACCCVT [len=32 mask=0x7ffffff match=0x831181]`
+- `B.IOT [len=32 mask=0x1fc0707f match=0x1c04013]`
+- `B.IOT [len=32 mask=0x9fff707f match=0x1c05013]`
 - `BSTART.MPAR [len=32 mask=0xf9ffffff match=0x1181]`
 - `BSTART.MSEQ [len=32 mask=0xf9ffffff match=0x9181]`
-- `BSTART.STD [len=32 mask=0x7fff match=0x1001]`
-- `BSTART.TLOAD [len=32 mask=0x7ffffff match=0x11181]`
-- `BSTART.TMATMUL [len=32 mask=0x7ffffff match=0x31181]`
-- `BSTART.TMATMUL.ACC [len=32 mask=0x7ffffff match=0x231181]`
-- `BSTART.TMOV [len=32 mask=0x7ffffff match=0x211181]`
-- `BSTART.TSTORE [len=32 mask=0x7ffffff match=0x111181]`
 - `BSTART.VPAR [len=32 mask=0xf9ffffff match=0x21181]`
 - `BSTART.VSEQ [len=32 mask=0xf9ffffff match=0x29181]`
-- `C.BSTART.STD [len=16 mask=0xc7ff match=0x0]`
-- `C.SETRET [len=16 mask=0xf83f match=0x5016]`
-- `DC.ISW [len=32 mask=0xfff07fff match=0x40602b]`
-- `DC.ZVA [len=32 mask=0xfff07fff match=0x70602b]`
-- `HL.BSTART CALL [len=64 mask=0xfffff83f0000007f match=0x501600000011]`
-- `HL.BSTART.STD [len=64 mask=0xffff00007fff000f match=0x4001000e]`
-- `HL.CCAT [len=64 mask=0xffff0000707f07ff match=0x105d000e]`
-- `HL.CCATW [len=64 mask=0xffff0000707f07ff match=0x205d000e]`
-- `HL.PRF [len=64 mask=0xffff00007fff07ff match=0x7009000e]`
-- `L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x10810000000f]`
-- `L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x20810000000f]`
-- `L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x30810000000f]`
-- `L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x40810000000f]`
-- `L.BSTART.SYS [len=64 mask=0x7fff0000007f match=0x10110000000f]`
-- `LR.D [len=32 mask=0xf000707f match=0x3000000b]`
-- `LR.W [len=32 mask=0xf000707f match=0x2000000b]`
-- `V.FABS [len=64 mask=0xfff0707ffff0707f match=0x7b0000007f]`
-- `V.LB [len=64 mask=0x600707ffe00207f match=0x90000007f]`
 - `V.LBI [len=64 mask=0x707f0000207f match=0x190000007f]`
 - `V.LBI.BRG [len=64 mask=0x707f0000207f match=0x190000207f]`
-- `V.LBU [len=64 mask=0x600707ffe00207f match=0x40090000007f]`
 - `V.LBUI [len=64 mask=0x707f0000207f match=0x40190000007f]`
 - `V.LBUI.BRG [len=64 mask=0x707f0000207f match=0x40190000207f]`
 - `V.LD [len=64 mask=0x600707ffe00207f match=0x30090000007f]`
@@ -511,12 +476,10 @@
 - `V.LDI.BRG [len=64 mask=0x707f0000207f match=0x30190000207f]`
 - `V.LDI.U [len=64 mask=0x707f0000207f match=0x30290000007f]`
 - `V.LDI.U.BRG [len=64 mask=0x707f0000207f match=0x30290000207f]`
-- `V.LH [len=64 mask=0x600707ffe00207f match=0x10090000007f]`
 - `V.LHI [len=64 mask=0x707f0000207f match=0x10190000007f]`
 - `V.LHI.BRG [len=64 mask=0x707f0000207f match=0x10190000207f]`
 - `V.LHI.U [len=64 mask=0x707f0000207f match=0x10290000007f]`
 - `V.LHI.U.BRG [len=64 mask=0x707f0000207f match=0x10290000207f]`
-- `V.LHU [len=64 mask=0x600707ffe00207f match=0x50090000007f]`
 - `V.LHUI [len=64 mask=0x707f0000207f match=0x50190000007f]`
 - `V.LHUI.BRG [len=64 mask=0x707f0000207f match=0x50190000207f]`
 - `V.LHUI.U [len=64 mask=0x707f0000207f match=0x50290000007f]`
@@ -537,10 +500,8 @@
 - `V.LWUI.BRG [len=64 mask=0x707f0000207f match=0x60190000207f]`
 - `V.LWUI.U [len=64 mask=0x707f0000207f match=0x60290000007f]`
 - `V.LWUI.U.BRG [len=64 mask=0x707f0000207f match=0x60290000207f]`
-- `V.MUL [len=64 mask=0xfe00707ffe00707f match=0x470000007f]`
 - `V.QPOP [len=64 mask=0xfff0707ffff0707f match=0x207d0000007f]`
 - `V.QPUSH [len=64 mask=0xfe00707ffe00707f match=0x107d0000007f]`
-- `V.SB [len=64 mask=0x6007fff0600207f match=0x490000007f]`
 - `V.SBI [len=64 mask=0x707f0000207f match=0x590000007f]`
 - `V.SBI.BRG [len=64 mask=0x707f0000207f match=0x590000207f]`
 - `V.SD [len=64 mask=0x6007fff0600207f match=0x30490000007f]`
@@ -557,7 +518,6 @@
 - `V.SDI.BRG [len=64 mask=0x707f0000207f match=0x30590000207f]`
 - `V.SDI.U [len=64 mask=0x707f0000207f match=0x70590000007f]`
 - `V.SDI.U.BRG [len=64 mask=0x707f0000207f match=0x70590000207f]`
-- `V.SH [len=64 mask=0x6007fff0600207f match=0x10490000007f]`
 - `V.SH.U [len=64 mask=0x6007fff0600207f match=0x50490000007f]`
 - `V.SH.U.BRG [len=64 mask=0x6007fff0600207f match=0x50490000207f]`
 - `V.SHFL.BFLY [len=64 mask=0x7f0707f07f0707f match=0x201d0000007f]`

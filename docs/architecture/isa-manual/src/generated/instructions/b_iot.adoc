@@ -5,7 +5,7 @@
 [[inst_b_iot]]
 ==== B.IOT
 
-*Description:* v0.56 one-input immediate-size tile descriptor; function=101 means only SrcTile0 is valid.
+*Description:* canonical one-input immediate-size tile descriptor; function=101 means only SrcTile0 is valid. v0.57 excludes DstTile=111 from this destination-producing form.
 
 [[inst_b_iot_32_10db6db84f5d]]
 ===== Form `b_iot_32_10db6db84f5d`
@@ -14,7 +14,18 @@
 
 *Encoding:*
 
-image::../encodings/enc_b_iot_32_10db6db84f5d.svg[B.IOT encoding form b_iot_32_10db6db84f5d,width=800]
+image::encodings/enc_b_iot_32_10db6db84f5d.svg[B.IOT encoding form b_iot_32_10db6db84f5d,width=800]
+
+*Compression:* L32 (len=32)
+
+[[inst_b_iot_32_2c07e7177fad]]
+===== Form `b_iot_32_2c07e7177fad`
+
+*Syntax:* B.IOT SrcTile0<.reuse>, SrcTile1<.reuse>, <last>
+
+*Encoding:*
+
+image::encodings/enc_b_iot_32_2c07e7177fad.svg[B.IOT encoding form b_iot_32_2c07e7177fad,width=800]
 
 *Compression:* L32 (len=32)
 
@@ -25,7 +36,18 @@ image::../encodings/enc_b_iot_32_10db6db84f5d.svg[B.IOT encoding form b_iot_32_1
 
 *Encoding:*
 
-image::../encodings/enc_b_iot_32_8b8bce6bffe8.svg[B.IOT encoding form b_iot_32_8b8bce6bffe8,width=800]
+image::encodings/enc_b_iot_32_8b8bce6bffe8.svg[B.IOT encoding form b_iot_32_8b8bce6bffe8,width=800]
+
+*Compression:* L32 (len=32)
+
+[[inst_b_iot_32_c11eb189dd83]]
+===== Form `b_iot_32_c11eb189dd83`
+
+*Syntax:* B.IOT SrcTile0<.reuse>, <last>
+
+*Encoding:*
+
+image::encodings/enc_b_iot_32_c11eb189dd83.svg[B.IOT encoding form b_iot_32_c11eb189dd83,width=800]
 
 *Compression:* L32 (len=32)
 
@@ -36,7 +58,7 @@ image::../encodings/enc_b_iot_32_8b8bce6bffe8.svg[B.IOT encoding form b_iot_32_8
 
 *Encoding:*
 
-image::../encodings/enc_b_iot_32_efa0fe3fe49a.svg[B.IOT encoding form b_iot_32_efa0fe3fe49a,width=800]
+image::encodings/enc_b_iot_32_efa0fe3fe49a.svg[B.IOT encoding form b_iot_32_efa0fe3fe49a,width=800]
 
 *Compression:* L32 (len=32)
 

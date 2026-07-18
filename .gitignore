@@ -73,6 +73,8 @@ workloads/cpu2017v118_x64_gcc12_avx2.zip
 tools/spec2017/*
 !tools/spec2017/
 !tools/spec2017/build_int_rate_linx.sh
+!tools/spec2017/check_build_manifest.py
+!tools/spec2017/test_check_build_manifest.py
 !tools/spec2017/compat/
 !tools/spec2017/compat/**
 !tools/spec2017/linx_cc.sh

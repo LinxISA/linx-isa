@@ -3,8 +3,8 @@
   "decode_only": [],
   "decode_only_unexpected": [],
   "decode_only_unexpected_count": 0,
-  "decode_unique_patterns": 645,
-  "generated_at_utc": "2026-07-15 10:11:15Z",
+  "decode_unique_patterns": 678,
+  "generated_at_utc": "2026-07-18 02:41:45Z",
   "have_opcode_meta": true,
   "id_mismatch": [],
   "id_mismatch_count": 0,
@@ -16,11 +16,13 @@
   "meta_only": [],
   "meta_only_unexpected": [],
   "meta_only_unexpected_count": 0,
-  "meta_unique_decode_patterns": 645,
-  "meta_unique_non_internal": 645,
+  "meta_unique_decode_patterns": 678,
+  "meta_unique_non_internal": 678,
   "qemu_root": "/Users/zhoubot/linx-isa/emulator/qemu",
   "result": {
     "classification": "qemu_opcode_meta_sync_ok",
     "ok": true
-  }
+  },
+  "signature_mismatch_count": 0,
+  "signature_mismatches": []
 }

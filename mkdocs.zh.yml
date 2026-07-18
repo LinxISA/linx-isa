@@ -42,6 +42,10 @@ markdown_extensions:
   - md_in_html
 
 nav:
+    - v0.57 架构:
+        - 架构合约: architecture/v0.57-architecture-contract.md
+        - 编码决策: architecture/v0.57-encoding-decisions.md
+        - 发布说明: releases/v0.57.0.md
     - 设计背景: background/index.md
     - 总体架构:
         - 块指令定义: isa/arch/bisa.md
@@ -1189,10 +1193,12 @@ nav:
             - TLOAD: isa/header/tileblock/TLOAD.md
             - TSTORE: isa/header/tileblock/TSTORE.md
             - TMOV: isa/header/tileblock/TMOV.md
+            - TPREFETCH: isa/header/tileblock/TPREFETCH.md
             - MGATHER: isa/header/tileblock/MGATHER.md
             - MGATHER.MASK: isa/header/tileblock/MGATHER.MASK.md
             - MSCATTER: isa/header/tileblock/MSCATTER.md
             - MSCATTER.MASK: isa/header/tileblock/MSCATTER.MASK.md
+            - MGATHER.CAS: isa/header/tileblock/MGATHER.CAS.md
         - 复杂操作:
             - THISTOGRAM: isa/header/tileblock/THISTOGRAM.md
     - 模版指令集:

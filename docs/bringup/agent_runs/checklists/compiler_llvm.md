@@ -39,7 +39,7 @@
     sync
 - Current evidence:
   - `LLVM-003`
-  - `41_v056_isa_forms.s` compile/objdump coverage in the AVS suite
+  - `41_v057_isa_forms.s` compile/objdump coverage in the AVS suite
 - Remaining gap:
   - tile/CUBE/TEPL loop bodies are still outside the generic SIMT compiler
     subset and are not part of scalar closure
@@ -54,7 +54,7 @@
   Done means: every required active baremetal target reports 100% mnemonic coverage with no missing mnemonics.
   Status: ✅ PASS (2026-05-14) - `analyze_coverage.py --fail-under 100` reports `Coverage: 100.0%` for `out-linx64` (710/710 unique mnemonics). No current `linx32` output is required because the branch does not register that target.
 
-- [x] ID: LLVM-003 Confirm canonical v0.56 TEPL tile opcodes in LLVM stay aligned with the manual and other consumers.
+- [x] ID: LLVM-003 Confirm canonical v0.57 TEPL tile opcodes in LLVM stay aligned with the manual and other consumers.
   Command: `python3 tools/bringup/check_tepl_encoding.py --root .`
   Done means: script returns `OK` and no legacy TEPL encoding is present.
   Status: ✅ PASS (2026-02-23) - `check_tepl_encoding.py` returns `OK` (log: `docs/bringup/gates/logs/2026-02-23-r2-pin-reassess/pin/compiler_tepl.log`).
@@ -76,7 +76,7 @@
 - [ ] ID: LLVM-007 Keep scalar direct-call source closure on fused `BSTART ... , ra=...`.
   Command: `cd avs/compiler/linx-llvm/tests && CLANG=compiler/llvm/build-linxisa-clang/bin/clang TARGET=linx64-linx-none-elf OUT_DIR=avs/compiler/linx-llvm/tests/out-linx64 ./run.sh`
   Done means: scalar direct-call sources and handwritten startup asm use fused `ra=` call headers, while object-level relocation checks still accept the lowered adjacent `setret` pair.
-  Status: ✅ PASS (2026-05-15) - `run.sh` passed after converting scalar handwritten direct calls to fused `BSTART.STD CALL, ..., ra=...` source syntax. The relocation/template gates still passed for the call/ret AVS lane, including `18_setret_relax`, `33`-`40`, and `41_v056_isa_forms`.
+  Status: ✅ PASS (2026-05-15) - `run.sh` passed after converting scalar handwritten direct calls to fused `BSTART.STD CALL, ..., ra=...` source syntax. The relocation/template gates still passed for the call/ret AVS lane, including `18_setret_relax`, `33`-`40`, and `41_v057_isa_forms`.
 
 - [x] ID: LLVM-008 Keep whole-stack coverage coherent with ISA and QEMU.
   Command: `python3 tools/bringup/report_isa_llvm_qemu_coverage.py --compiler-analyzer avs/compiler/linx-llvm/tests/analyze_coverage.py --compiler-out-dir avs/compiler/linx-llvm/tests/out-linx64 --qemu-isa-report docs/bringup/gates/qemu_isa_coverage_latest.json --qemu-translation-report docs/bringup/gates/qemu_translation_coverage_latest.json --report-out docs/bringup/gates/isa_llvm_qemu_coverage_latest.json --out-md docs/bringup/gates/isa_llvm_qemu_coverage_latest.md --require-coherent`

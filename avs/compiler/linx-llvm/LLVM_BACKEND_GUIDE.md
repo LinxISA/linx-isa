@@ -25,14 +25,14 @@ compiler/llvm/llvm/lib/Target/LinxV5/
 
 ## Generating Instruction Patterns
 
-Use the live v0.56 spec and the checked-in compiler tree. Historical references
-to `removed-pre-v056-profile` inputs are obsolete.
+Use the live v0.57 spec and the checked-in compiler tree. Historical references
+to `retired-profile` inputs are obsolete.
 
 TableGen/codegen generation helpers still come from this repo:
 
 ```bash
 python3 tools/isa/gen_c_codec.py \
-  --spec isa/v0.56/linxisa-v0.56.json \
+  --spec isa/v0.57/linxisa-v0.57.json \
   --out-dir /tmp/linxisa-llvm-codec-check
 ```
 
@@ -160,7 +160,7 @@ branch. Follow the checked-in implementation names:
 
 ## Resources
 
-- ISA Spec: `isa/v0.56/linxisa-v0.56.json`
+- ISA Spec: `isa/v0.57/linxisa-v0.57.json`
 - Active backend: `compiler/llvm/llvm/lib/Target/LinxV5/`
 - Test Programs: `avs/compiler/linx-llvm/tests/c/*.c`
 - Coverage Tool: `avs/compiler/linx-llvm/tests/analyze_coverage.py`

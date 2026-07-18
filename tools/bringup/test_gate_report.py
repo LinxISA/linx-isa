@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import argparse
 import sys
 import tempfile
 import unittest
@@ -54,6 +55,28 @@ class GateReportTests(unittest.TestCase):
             self.assertEqual(markdown_path.read_text(), expected)
             self.assertEqual(list(root.glob(".latest.json.*")), [])
             self.assertEqual(list(root.glob(".GATE_STATUS.md.*")), [])
+
+    def test_retain_run_keeps_all_lanes_for_one_run_id(self) -> None:
+        report = {
+            "schema_version": gate_report.SCHEMA_VERSION,
+            "generated_at_utc": "2026-07-15 00:00:00Z",
+            "runs": [
+                {"run_id": "old", "lane": "pin", "profile": "dev", "gates": []},
+                {"run_id": "release", "lane": "pin", "profile": "release-strict", "gates": []},
+                {"run_id": "release", "lane": "external", "profile": "release-strict", "gates": []},
+            ],
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            report_path = Path(directory) / "latest.json"
+            gate_report._save_report(report_path, report)
+            gate_report.cmd_retain_run(
+                argparse.Namespace(report=str(report_path), run_id="release")
+            )
+            retained = json.loads(report_path.read_text())["runs"]
+            self.assertEqual(
+                [(run["lane"], run["run_id"]) for run in retained],
+                [("external", "release"), ("pin", "release")],
+            )
 
 
 if __name__ == "__main__":

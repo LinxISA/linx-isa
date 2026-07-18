@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import signal
 import subprocess
 import sys
 import threading
@@ -12,7 +13,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from qemu_build_paths import default_qemu_binary
+from qemu_build_paths import default_qemu_binary, require_clean_qemu_binary
 
 
 VALID_PROFILES = {"pr", "linux", "nightly"}
@@ -37,6 +38,8 @@ def load_flow(path: Path) -> dict[str, Any]:
         raise SystemExit(f"error: invalid flow JSON {path}: {exc}") from exc
     if data.get("schema_version") != 1:
         raise SystemExit(f"error: unsupported flow schema_version in {path}")
+    if not isinstance(data.get("require_clean_qemu", False), bool):
+        raise SystemExit(f"error: require_clean_qemu must be a boolean in {path}")
     stages = data.get("stages")
     if not isinstance(stages, list) or not stages:
         raise SystemExit(f"error: flow has no stages: {path}")
@@ -75,6 +78,21 @@ def load_flow(path: Path) -> dict[str, Any]:
             seen_commands.add(command_id)
             if not str(command.get("command", "")).strip():
                 raise SystemExit(f"error: stage {stage_id}/{command_id} missing command")
+            artifact_env = command.get("artifact_env")
+            if artifact_env is not None:
+                if not isinstance(artifact_env, dict):
+                    raise SystemExit(
+                        f"error: stage {stage_id}/{command_id} artifact_env must be an object"
+                    )
+                if set(artifact_env) != {"report", "transcript"}:
+                    raise SystemExit(
+                        f"error: stage {stage_id}/{command_id} artifact_env requires report and transcript"
+                    )
+                for value in artifact_env.values():
+                    if not isinstance(value, str) or not value.strip():
+                        raise SystemExit(
+                            f"error: stage {stage_id}/{command_id} artifact_env values must be names"
+                        )
     return data
 
 
@@ -150,14 +168,16 @@ def run_command(
     command_env = env.copy()
     artifact_report_path = None
     artifact_transcript_path = None
-    if log_path is not None:
+    artifact_env = command.get("artifact_env")
+    if log_path is not None and isinstance(artifact_env, dict):
         artifact_report_path = log_path.with_suffix(".report.json")
         artifact_transcript_path = log_path.with_suffix(".transcript.txt")
+        command_env[str(artifact_env["report"])] = str(artifact_report_path)
+        command_env[str(artifact_env["transcript"])] = str(artifact_transcript_path)
+    if log_path is not None:
         command_env["LINX_FLOW_STAGE_ID"] = stage_id
         command_env["LINX_FLOW_COMMAND_ID"] = command_id
         command_env["LINX_FLOW_COMMAND_LOG"] = str(log_path)
-        command_env["LINX_FLOW_COMMAND_REPORT"] = str(artifact_report_path)
-        command_env["LINX_FLOW_COMMAND_TRANSCRIPT"] = str(artifact_transcript_path)
     print(f"-- {stage_id}/{command_id}")
     print(rendered)
     if log_path is not None:
@@ -204,6 +224,7 @@ def run_command(
         encoding="utf-8",
         errors="replace",
         bufsize=1,
+        start_new_session=True,
     )
     reader = threading.Thread(
         target=stream_output,
@@ -216,19 +237,39 @@ def run_command(
         returncode = proc.wait(timeout=timeout if timeout > 0 else None)
     except subprocess.TimeoutExpired:
         timed_out = True
-        proc.kill()
         returncode = 124
+        try:
+            os.killpg(proc.pid, signal.SIGTERM)
+        except ProcessLookupError:
+            pass
         try:
             proc.wait(timeout=5)
         except subprocess.TimeoutExpired:
-            proc.kill()
+            try:
+                os.killpg(proc.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
             proc.wait(timeout=5)
     reader.join(timeout=5)
+    if proc.stdout is not None:
+        proc.stdout.close()
     if log_fp is not None:
         log_fp.close()
 
     if timed_out:
         return result_row("timeout", returncode)
+    if returncode == 0 and artifact_report_path is not None:
+        missing_artifacts = [
+            str(path)
+            for path in (artifact_report_path, artifact_transcript_path)
+            if path is not None and not path.is_file()
+        ]
+        if missing_artifacts:
+            print(
+                "error: command passed without declared artifacts: "
+                + ", ".join(missing_artifacts)
+            )
+            return result_row("fail", 3)
     status = "pass" if returncode == 0 else "fail"
     return result_row(status, returncode)
 
@@ -300,7 +341,14 @@ def main(argv: list[str]) -> int:
     env.setdefault("LINXISA_ROOT", str(root))
     env.setdefault("CLANG", str(root / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "clang"))
     env.setdefault("LLD", str(root / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "ld.lld"))
-    qemu_was_explicit = "QEMU" in env
+    if not args.dry_run:
+        qemu = default_qemu_binary(root)
+        if flow.get("require_clean_qemu", False):
+            try:
+                require_clean_qemu_binary(root, qemu)
+            except RuntimeError as exc:
+                raise SystemExit(f"error: {exc}") from exc
+        env["QEMU"] = str(qemu)
 
     report_path = Path(args.report_out).resolve() if args.report_out else None
     log_dir = None
@@ -320,8 +368,6 @@ def main(argv: list[str]) -> int:
         command_rows: list[dict[str, Any]] = []
         for command in stage["commands"]:
             command_env = env.copy()
-            if not qemu_was_explicit:
-                command_env["QEMU"] = str(default_qemu_binary(root))
             row = run_command(
                 root=root,
                 stage_id=stage_id,

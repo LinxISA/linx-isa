@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_v_fdiv_parts.svg[V.FDIV encoding,width=800]
+image::encodings/enc_v_fdiv_parts.svg[V.FDIV encoding,width=800]
 
 *Uop-Class:* VEC
 

@@ -5,13 +5,13 @@
 [[inst_hl_bstart_call]]
 ==== HL.BSTART CALL
 
-*Syntax:* HL.BSTART.CALL <br_label>
+*Syntax:* HL.BSTART.CALL <br_label>, <rt_label>, ->ra
 
-*Description:* Bare HL.BSTART.CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.
+*Description:* Atomic fused CALL: call_target = P + (SignExtend(simm25) << 1); ra = (P + 4) + (ZeroExtend(uimm5) << 1). Both labels are explicit and independently relocatable.
 
 *Encoding:*
 
-image::../encodings/enc_hl_bstart_call.svg[HL.BSTART CALL encoding,width=800]
+image::encodings/enc_hl_bstart_call.svg[HL.BSTART CALL encoding,width=800]
 
 *Uop-Class:* BBD
 

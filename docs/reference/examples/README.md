@@ -2,6 +2,6 @@
 
 Canonical LinxISA sample pack:
 
-- `docs/reference/examples/v0.56/`
+- `docs/reference/examples/v0.57/`
 
-This location is canonical in v0.56 and no longer redirects to `examples/`.
+This location is canonical in v0.57 and no longer redirects to `examples/`.

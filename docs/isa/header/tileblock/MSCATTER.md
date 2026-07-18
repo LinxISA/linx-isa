@@ -36,7 +36,7 @@ written. Canonical forms allow `u16`, `u32`, or `u64` offsets.
 
 `MSCATTER` expands to:
 
-- [BSTART.TMA](../../blockIntro/tma_block/header.md) `MSCATTER, DataType`
+- [BSTART.MSCATTER](../../instructions/bstart_mscatter.md) `DataType`
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0` (`validCol`)
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1` (`validRow`)
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB2` (`Col`, optional)

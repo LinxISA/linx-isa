@@ -1,0 +1,799 @@
+{
+  "schema_version": "linx-plain-c-reachable-contract-v2",
+  "target": "linx64-linx-none-elf",
+  "status": "frozen",
+  "tranches": [
+    {
+      "id": "frances-allen-plain-c-1",
+      "sources": [
+        "avs/compiler/linx-llvm/tests/c/41_plain_c_compare.c",
+        "avs/compiler/linx-llvm/tests/c/42_plain_c_memory.c"
+      ],
+      "baseline_alias_closure_count": 119,
+      "new_direct_mnemonics": [
+        "CMP.AND",
+        "CMP.ANDI",
+        "CMP.EQI",
+        "CMP.GEUI",
+        "CMP.NEI",
+        "CMP.OR",
+        "FEQ",
+        "HL.ANDI",
+        "HL.LB.PCR",
+        "HL.LBU.PCR",
+        "HL.LH.PCR",
+        "HL.LHU.PCR",
+        "HL.LW.PCR",
+        "HL.LWI.PO",
+        "HL.SB.PCR",
+        "HL.SH.PCR",
+        "HL.SW.PCR",
+        "HL.SWI.PO"
+      ],
+      "expected_coverage_count": 137
+    },
+    {
+      "id": "frances-allen-plain-c-2",
+      "sources": [
+        "avs/compiler/linx-llvm/tests/c/43_plain_c_cursor.c"
+      ],
+      "baseline_alias_closure_count": 137,
+      "new_direct_mnemonics": [
+        "C.ADDI",
+        "C.CMP.NEI",
+        "HL.LDI.PO",
+        "HL.LWU.PCR",
+        "HL.LWUI.PO",
+        "HL.SDI.PO"
+      ],
+      "expected_coverage_count": 143
+    },
+    {
+      "id": "barbara-liskov-plain-c-sub-immediate",
+      "sources": [
+        "avs/compiler/linx-llvm/tests/c/44_plain_c_sub_immediate.c"
+      ],
+      "baseline_alias_closure_count": 143,
+      "new_direct_mnemonics": [
+        "HL.SUBI",
+        "HL.SUBIW",
+        "SUBI"
+      ],
+      "expected_coverage_count": 146
+    }
+  ],
+  "expected_coverage_count": 146,
+  "entries": [
+    {
+      "mnemonic": "ADD",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/01_arith.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "ADDI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/02_control_flow.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "ADDIW",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/03_arrays.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "ADDTPC",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/25_immediate_materialization.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "ADDW",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/01_arith.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "AND",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/07_constants.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "ANDI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/02_control_flow.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "ANDIW",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/02_control_flow.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "ANDW",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/16_andorw.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "BSTART",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/06_recursion.c",
+      "evidence_kind": "alias",
+      "observed_mnemonic": "BSTART.STD"
+    },
+    {
+      "mnemonic": "BSTART.STD",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/06_recursion.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "BXU",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/07_constants.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "C.ADD",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/22_memory_ops.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "C.AND",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/07_constants.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "C.BSTART",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/02_control_flow.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "C.BSTART.STD",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/01_arith.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "C.BSTOP",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/37_callret_tail_musttail.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "C.CMP.EQI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/02_control_flow.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "C.LDI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/04_structs.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "C.LWI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/03_arrays.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "C.MOVI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/02_control_flow.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "C.MOVR",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/02_control_flow.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "C.OR",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/25_immediate_materialization.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "C.SDI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/04_structs.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "C.SETC.EQ",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/02_control_flow.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "C.SETC.NE",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/02_control_flow.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "C.SETC.TGT",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/36_callret_indirect.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "C.SETRET",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/36_callret_indirect.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "C.SEXT.W",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/02_control_flow.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "C.SUB",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/01_arith.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "C.SWI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/04_structs.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "C.ZEXT.W",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/12_more_ops.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "CMP.AND",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/41_plain_c_compare.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "CMP.ANDI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/41_plain_c_compare.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "CMP.EQ",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/25_immediate_materialization.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "CMP.EQI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/41_plain_c_compare.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "CMP.GE",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/12_more_ops.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "CMP.GEI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/02_control_flow.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "CMP.GEU",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/12_more_ops.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "CMP.GEUI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/41_plain_c_compare.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "CMP.LT",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/10_select.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "CMP.LTI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/02_control_flow.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "CMP.LTU",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/10_select.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "CMP.LTUI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/24_block_isa.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "CMP.NE",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/12_more_ops.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "CMP.NEI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/41_plain_c_compare.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "CMP.OR",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/41_plain_c_compare.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "CSEL",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/02_control_flow.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "DIV",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/12_more_ops.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "DIVU",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/01_arith.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "DIVUW",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/01_arith.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "DIVW",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/12_more_ops.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "FCVT",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/20_floating_point.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "FCVTZ",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/20_floating_point.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "FENTRY",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/01_arith.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "FEQ",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/41_plain_c_compare.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "FEXIT",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/37_callret_tail_musttail.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "FGE",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/20_floating_point.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "FLT",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/20_floating_point.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "FRET.STK",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/01_arith.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.ADDI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/07_constants.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.ANDI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/41_plain_c_compare.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.BSTART.STD",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/13_br_ge.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.LB.PCR",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/42_plain_c_memory.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.LBU.PCR",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/42_plain_c_memory.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.LD.PCR",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/20_floating_point.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.LH.PCR",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/42_plain_c_memory.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.LHU.PCR",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/42_plain_c_memory.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.LUI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/07_constants.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.LW.PCR",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/42_plain_c_memory.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.LWI.PO",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/42_plain_c_memory.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.LWIP",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/04_structs.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.SB.PCR",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/42_plain_c_memory.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.SD.PCR",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/22_memory_ops.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.SDIP",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/22_memory_ops.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.SH.PCR",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/42_plain_c_memory.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.SW.PCR",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/42_plain_c_memory.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.SWI.PO",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/42_plain_c_memory.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.SWIP",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/22_memory_ops.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "LB",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/17_indexed.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "LBI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/04_structs.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "LBUI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/08_loadstore.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "LD",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/17_indexed.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "LDI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/08_loadstore.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "LHI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/08_loadstore.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "LHUI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/08_loadstore.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "LUI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/14_lui.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "LW",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/17_indexed.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "LWI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/03_arrays.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "LWUI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/08_loadstore.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "MADD",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/03_arrays.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "MUL",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/01_arith.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "MULW",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/01_arith.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "OR",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/09_bitops.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "ORI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/01_arith.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "ORIW",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/01_arith.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "ORW",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/16_andorw.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "REM",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/12_more_ops.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "REMU",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/12_more_ops.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "REMUW",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/12_more_ops.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "REMW",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/12_more_ops.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SB",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/17_indexed.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SBI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/04_structs.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SCVTF",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/20_floating_point.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SD",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/17_indexed.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SDI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/08_loadstore.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SETC.EQI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/12_more_ops.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SETC.GE",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/13_br_ge.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SETC.GEI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/05_switch.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SETC.GEU",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/13_br_ge.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SETC.GEUI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/31_jump_tables.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SETC.LT",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/03_arrays.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SETC.LTI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/02_control_flow.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SETC.LTU",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/06_recursion.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SETC.NEI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/05_switch.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SHI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/08_loadstore.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SLL",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/03_arrays.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SLLI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/09_bitops.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SLLIW",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/05_switch.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SLLW",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/12_more_ops.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SRA",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/12_more_ops.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SRAI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/12_more_ops.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SRAIW",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/05_switch.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SRAW",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/12_more_ops.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SRL",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/03_arrays.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SRLI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/02_control_flow.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SRLIW",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/12_more_ops.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SRLW",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/12_more_ops.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SUB",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/02_control_flow.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SUBIW",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/25_immediate_materialization.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SUBW",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/01_arith.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SW",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/17_indexed.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SWI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/03_arrays.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "XOR",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/02_control_flow.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "XORI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/12_more_ops.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "XORIW",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/04_structs.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "XORW",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/05_switch.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "C.ADDI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/43_plain_c_cursor.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "C.CMP.NEI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/43_plain_c_cursor.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.LDI.PO",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/43_plain_c_cursor.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.LWU.PCR",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/43_plain_c_cursor.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.LWUI.PO",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/43_plain_c_cursor.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.SDI.PO",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/43_plain_c_cursor.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.SUBI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/44_plain_c_sub_immediate.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "HL.SUBIW",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/44_plain_c_sub_immediate.c",
+      "evidence_kind": "direct"
+    },
+    {
+      "mnemonic": "SUBI",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/44_plain_c_sub_immediate.c",
+      "evidence_kind": "direct"
+    }
+  ]
+}

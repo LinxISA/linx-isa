@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-WaveDrom SVG Generator for LinxISA v0.56 Instruction Encodings.
+WaveDrom SVG Generator for LinxISA v0.57 Instruction Encodings.
 
 Converts LinxISA instruction definitions into WaveDrom JSON and renders them
 as beautiful bitfield SVG diagrams via the WaveDrom Node.js library.
@@ -14,7 +14,7 @@ The output format is inspired by ARM DDI0500 and RISC-V ISA manual diagrams:
 
 Usage:
     python3 gen_wavedrom_svg.py \\
-        --spec isa/v0.56/linxisa-v0.56.json \\
+        --spec isa/v0.57/linxisa-v0.57.json \\
         --out-dir docs/isa/wavedrom \\
         --wavedrom tools/wavedrom
 
@@ -521,10 +521,10 @@ def _render_legend() -> str:
 
 def main() -> int:
     ap = argparse.ArgumentParser(
-        description="WaveDrom SVG bitfield generator for LinxISA v0.56"
+        description="WaveDrom SVG bitfield generator for LinxISA v0.57"
     )
     ap.add_argument(
-        "--spec", default="isa/v0.56/linxisa-v0.56.json",
+        "--spec", default="isa/v0.57/linxisa-v0.57.json",
         help="Path to linxisa-v*.json catalog",
     )
     ap.add_argument(

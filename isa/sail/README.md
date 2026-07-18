@@ -1,10 +1,11 @@
-# LinxISA Sail Model (v0.56.5)
+# LinxISA Sail Model (v0.57)
 
-This directory contains the active **Sail** formal and executable model for the canonical LinxISA `v0.56.5` profile.
+This directory contains the active **Sail** formal and executable model for the canonical LinxISA `v0.57` profile.
 
 Scope policy:
 
-- The Sail model is an executable reference for `v0.56.5` semantics and legality checks.
+- The Sail model is an executable reference for `v0.57` semantics and legality checks.
+- The v0.57 surface is built on the v0.57 executable subset; new v0.57 forms are explicit deltas in `semantics_policy.json`.
 - `toolchain.json` pins the required OCaml and Sail versions.
 - Semantic readiness is graded by stable instruction form ID in `semantics_status.json`.
 - Coverage is tracked as data in `isa/sail/coverage.json`.
@@ -13,7 +14,7 @@ Scope policy:
 
 `isa/sail/coverage.json` is generated from:
 
-- the compiled ISA catalog: `isa/v0.56/linxisa-v0.56.json`
+- the compiled ISA catalog: `isa/v0.57/linxisa-v0.57.json`
 - the generated form status map: `isa/sail/semantics_status.json`
 
 Regenerate:
@@ -21,6 +22,7 @@ Regenerate:
 ```bash
 python3 tools/bringup/check_sail_model.py --require-parser --require-c-backend
 python3 tools/isa/gen_sail_status.py --check
+python3 tools/isa/sail_coverage.py --spec isa/v0.57/linxisa-v0.57.json --check
 ```
 
 ## Layout

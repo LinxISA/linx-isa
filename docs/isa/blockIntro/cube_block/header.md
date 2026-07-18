@@ -27,9 +27,22 @@ Each parameter is explained as follows:
 
 ## Encoding method
 
-A complete matrix data block instructionheader needs to be split into the following instructions for encoding, including:
+A complete matrix data block header is encoded as a named CUBE header followed
+by its descriptor records. For example:
 
-- BSTART.CUBE TileOp, DataType
+- `BSTART.TMATMUL DataType`
+- `BSTART.TMATMUL.BIAS DataType`
+- `BSTART.TMATMUL.ACC DataType`
+- `BSTART.TMATMULMX DataType`
+- `BSTART.TMATMULMX.BIAS DataType`
+- `BSTART.TMATMULMX.ACC DataType`
+- `BSTART.ACCCVT DataType`
+- `BSTART.TGEMV DataType`
+- `BSTART.TGEMV.BIAS DataType`
+- `BSTART.TGEMV.ACC DataType`
+- `BSTART.TGEMVMX DataType`
+- `BSTART.TGEMVMX.BIAS DataType`
+- `BSTART.TGEMVMX.ACC DataType`
 - [B.DATR](../../header/B.DATR.md) Layout.{canon, normal}, DataType
 - [B.DIM](../../header/B.DIM.md) reg, imm, ->LB0
 - [B.DIM](../../header/B.DIM.md) reg, imm, ->LB1
@@ -38,9 +51,13 @@ A complete matrix data block instructionheader needs to be split into the follow
 -...
 - [B.IOT](../../header/B.IOT.md) SrcTile6<.reuse>, SrcTile7<.reuse>, last, ->DstTile3<TileSize3>
 
-Among them, the encoding format of the BSTART.CUBE instruction is as follows:
+All named CUBE headers share the CUBE encoding family shown below. The generic
+`BSTART.CUBE Function, DataType` syntax is reserved for unnamed function
+values; named function values must use their canonical mnemonics.
 
-![BSTART.CUBE](../../../figs/bitfield/svg/BlockHeader_32bit/BSTART.CUBE.svg)Among them, the function field is used to encode specific matrix operations/FIXPIPE instructions. The encoding method is as follows:
+![CUBE encoding family](../../../figs/bitfield/svg/BlockHeader_32bit/BSTART.CUBE.svg)
+
+The function field encodes matrix and FIXPIPE operations as follows:
 
 | Mode | Function | Operation |
 |------|----------|------------------|

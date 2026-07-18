@@ -4,19 +4,23 @@
 
 **B.IOT(Block Input and Output Tile Register)**
 
-本指令用于数据块指令块头中定义输入输出的[Tile寄存器](../register/common/tilereg.md)，并且指示输出的Tile 寄存器的大小。
+本指令用于数据块指令块头中按程序顺序定义输入输出的[Tile寄存器](../register/common/tilereg.md)。带输出的形式同时指示输出 Tile 寄存器的大小；v0.57 新增的纯输入形式不分配输出 Tile。
 
 ## 汇编格式
 
 ```asm
     B.IOT SrcTile0<.reuse>, SrcTile1<.reuse> <,last>, ->DstTile<Size>
+    B.IOT SrcTile0<.reuse> <,last>, ->DstTile<Size>
+    B.IOT <last>, ->DstTile<Size>
+    B.IOT SrcTile0<.reuse>, SrcTile1<.reuse> <,last>  # v0.57 纯输入
+    B.IOT SrcTile0<.reuse> <,last>                    # v0.57 纯输入
 ```
 
 * **SrcTile0, SrcTile1**: 指定两个输入 Tile 寄存器。
 * **reuse**: 输入 Tile 寄存器的可选后缀。当存在时，表示所在块指令提交后，硬件不能释放对应的 Tile 寄存器（该寄存器将被后续指令再次读取）。
 * **last**: 指示本指令是当前块的最后一条 B.IOT 指令。便于处理器判断一个块内的 B.IOT 指令序列是否完整表达了所需信息。
-* **DstTile**: 指定输出 Tile 寄存器的类型：`T`, `U`, `M`, `N`, `ACC` 或 `S`。
-* **Size**: 指定输出 Tile 寄存器空间大小的立即数。其有效范围请见[Tile寄存器](../register/common/tilereg.md)介绍。
+* **DstTile**: 指定输出 Tile 寄存器的类型：`T`, `U`, `M`, `N` 或 `S`。省略输出时，编码字段固定为 `3b111`，表示无输出。
+* **Size**: 指定输出 Tile 寄存器空间大小的立即数。纯输入形式省略该操作数，并将未使用的 `imm4` 字段规范编码为零。
 
 输出 Tile 寄存器的大小通过立即数 imm4 指定，计算公式为：`Size = 16 Byte * (2^imm4)`。其中 imm4 的有效取值范围为 0 到 15。
 
@@ -46,6 +50,15 @@
 | 3b101 | 一输入：仅第一个源Tile有效。 |
 | 3b110 | 无输入：无源Tile，只有目标输出Tile。 |
 | others | 其他编码均视为无效编码 |
+
+`Func` 只表示有效输入数量。是否存在输出由 `DstTile` 独立决定：
+
+- `DstTile=3b111`：无输出，不分配 Tile，不产生 Tile 写回；
+- 其他合法 `DstTile`：存在一个输出，`imm4` 指示其大小。
+
+因此，v0.57 的纯输入形式复用 `Func=3b100/3b101`，并固定
+`DstTile=3b111`、`imm4=0`。这一形式用于 `MGATHER.CAS`、
+`MSCATTER.MASK` 等需要多条 `B.IOT` 顺序表达三个或更多输入的 PTO。
 
 **SrcTile0** 和 **SrcTile1** 字段的编码方式如下：
 
@@ -82,7 +95,7 @@
 | 0 | 输出到 **T队列** | 4 | 保留 |
 | 1 | 输出到 **U队列** | 5 | 输出到 **S队列** |
 | 2 | 输出到 **M队列** | 6 | 保留 |
-| 3 | 输出到 **N队列** | 7 | 本字段无效 |
+| 3 | 输出到 **N队列** | 7 | 无输出 |
 
 ## 汇编示例
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate a focused LLVM/QEMU implementation report for 48-bit ISA forms."""
+"""Generate focused LLVM/QEMU L1 mapping coherence for 48-bit ISA forms."""
 
 from __future__ import annotations
 
@@ -26,27 +26,59 @@ def _load_module(path: Path):
     return mod
 
 
+def _validate_qemu_l1_report(report: dict[str, object]) -> str | None:
+    if report.get("schema_version") != "qemu-isa-coverage-v3":
+        return "expected qemu-isa-coverage-v3"
+    if report.get("evidence_level") != "L1":
+        return "expected evidence_level=L1"
+    if report.get("claim") != "decoder_source_mapping":
+        return "expected claim=decoder_source_mapping"
+    evidence = report.get("evidence")
+    if not isinstance(evidence, dict):
+        return "missing evidence map"
+    l1 = evidence.get("L1")
+    if not isinstance(l1, dict) or l1.get("availability") != "available":
+        return "L1 evidence is unavailable"
+    if l1.get("mnemonic_count") != report.get("coverage_count"):
+        return "L1 mnemonic count disagrees with compatibility count"
+    if l1.get("form_count") != report.get("form_coverage_count"):
+        return "L1 form count disagrees with compatibility count"
+    return None
+
+
 def _render_markdown(report: dict[str, object], out_path: Path) -> None:
     lines: list[str] = []
-    lines.append("# 48-bit LLVM/QEMU Implementation Status")
+    lines.append("# 48-bit LLVM/QEMU L1 Mapping Coherence")
     lines.append("")
     lines.append(f"- Generated (UTC): `{report['generated_at_utc']}`")
     lines.append(f"- Spec 48-bit forms: `{report['spec']['form_count']}`")
     lines.append(f"- Spec 48-bit mnemonics: `{report['spec']['mnemonic_count']}`")
+    lines.append("- QEMU evidence: `L1 decoder_source_mapping`")
+    lines.append(
+        f"- L2 runtime execution: `{report['qemu_evidence']['L2']['availability']}`"
+    )
+    lines.append(
+        f"- L3 semantic oracle: `{report['qemu_evidence']['L3']['availability']}`"
+    )
+    lines.append(
+        "- LLVM mnemonic evidence is observed disassembly mnemonic breadth; "
+        "it does not measure C-CodeGen coverage."
+    )
+    lines.append("- This report does not claim runtime or semantic completeness.")
     lines.append("")
     lines.append("| Surface | Covered | Ratio |")
     lines.append("| --- | --- | --- |")
     lines.append(
-        f"| LLVM mnemonic coverage | `{report['llvm']['mnemonic_coverage_count']}/{report['spec']['mnemonic_count']}` | `{report['llvm']['mnemonic_coverage_ratio_percent']}%` |"
+        f"| LLVM observed disassembly mnemonic breadth (48-bit subset) | `{report['llvm']['mnemonic_coverage_count']}/{report['spec']['mnemonic_count']}` | `{report['llvm']['mnemonic_coverage_ratio_percent']}%` |"
     )
     lines.append(
         f"| LLVM roundtrip-stable forms | `{report['llvm']['roundtrip_stable_form_count']}/{report['spec']['form_count']}` | `{report['llvm']['roundtrip_stable_ratio_percent']}%` |"
     )
     lines.append(
-        f"| QEMU mapped forms | `{report['qemu']['mapped_form_count']}/{report['spec']['form_count']}` | `{report['qemu']['mapped_form_ratio_percent']}%` |"
+        f"| QEMU L1 mapped forms | `{report['qemu']['mapped_form_count']}/{report['spec']['form_count']}` | `{report['qemu']['mapped_form_ratio_percent']}%` |"
     )
     lines.append(
-        f"| QEMU translation mnemonics | `{report['qemu']['translation_mnemonic_coverage_count']}/{report['spec']['mnemonic_count']}` | `{report['qemu']['translation_mnemonic_coverage_ratio_percent']}%` |"
+        f"| QEMU translation inventory | `{report['qemu']['translation_mnemonic_coverage_count']}/{report['spec']['mnemonic_count']}` | `{report['qemu']['translation_mnemonic_coverage_ratio_percent']}%` |"
     )
     lines.append("")
     lines.append("## Missing LLVM 48-bit Mnemonics")
@@ -57,7 +89,7 @@ def _render_markdown(report: dict[str, object], out_path: Path) -> None:
     else:
         lines.append("- None")
     lines.append("")
-    lines.append("## Missing QEMU 48-bit Forms")
+    lines.append("## Missing QEMU L1-Mapped 48-bit Forms")
     lines.append("")
     if report["qemu"]["missing_forms"]:
         for item in report["qemu"]["missing_forms"]:
@@ -88,20 +120,20 @@ def _render_markdown(report: dict[str, object], out_path: Path) -> None:
 _MISSING_FORM_RE = re.compile(r"^(?P<mnemonic>.+?) \[len=(?P<len>\d+) ")
 
 
-def main(argv: list[str]) -> int:
+def _parse_args(argv: list[str]) -> argparse.Namespace:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--spec", default="isa/v0.56/linxisa-v0.56.json")
+    ap.add_argument("--spec", default="isa/v0.57/linxisa-v0.57.json")
     ap.add_argument(
         "--compiler-analyzer",
         default="avs/compiler/linx-llvm/tests/analyze_coverage.py",
     )
     ap.add_argument(
         "--compiler-out-dir",
-        default="avs/compiler/linx-llvm/tests/out-linx64",
+        default="avs/compiler/linx-llvm/tests/out",
     )
     ap.add_argument(
         "--compiler-roundtrip-json",
-        default="avs/compiler/linx-llvm/tests/out-linx64/99_spec_decode/99_spec_decode.roundtrip.json",
+        default="avs/compiler/linx-llvm/tests/out/99_spec_decode/99_spec_decode.roundtrip.json",
     )
     ap.add_argument(
         "--qemu-isa-report",
@@ -114,7 +146,11 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--report-out", default="")
     ap.add_argument("--out-md", default="")
     ap.add_argument("--require-full", action="store_true")
-    args = ap.parse_args(argv)
+    return ap.parse_args(argv)
+
+
+def main(argv: list[str]) -> int:
+    args = _parse_args(argv)
 
     spec_path = Path(args.spec).resolve()
     analyzer_path = Path(args.compiler_analyzer).resolve()
@@ -165,6 +201,10 @@ def main(argv: list[str]) -> int:
     roundtrip_stable_form_count = form_count - len(roundtrip_skipped_forms)
 
     qemu_isa_report = json.loads(qemu_isa_report_path.read_text(encoding="utf-8"))
+    validation_error = _validate_qemu_l1_report(qemu_isa_report)
+    if validation_error is not None:
+        print(f"error: invalid QEMU L1 mapping report: {validation_error}", file=sys.stderr)
+        return 1
     qemu_missing_form_strings = qemu_isa_report.get("missing_spec_forms", [])
     qemu_missing_mnemonic_counter: Counter[str] = Counter()
     for item in qemu_missing_form_strings:
@@ -209,13 +249,17 @@ def main(argv: list[str]) -> int:
 
     report: dict[str, object] = {
         "generated_at_utc": _utc_now(),
-        "schema_version": "linx-48bit-implementation-v1",
+        "schema_version": "linx-48bit-l1-coherence-v2",
+        "claim": "l1_mapping_coherence",
         "spec": {
             "path": str(spec_path),
             "form_count": form_count,
             "mnemonic_count": mnemonic_count,
         },
         "llvm": {
+            "claim": llvm_results["metric"],
+            "metric_scope": llvm_results["metric_scope"],
+            "not_measured": llvm_results["not_measured"],
             "compiler_analyzer": str(analyzer_path),
             "compiler_out_dir": str(compiler_out_dir),
             "roundtrip_report": str(roundtrip_path),
@@ -227,6 +271,8 @@ def main(argv: list[str]) -> int:
             "roundtrip_skipped_forms": roundtrip_skipped_forms,
         },
         "qemu": {
+            "evidence_level": "L1",
+            "claim": "decoder_source_mapping",
             "isa_report": str(qemu_isa_report_path),
             "translation_report": str(qemu_translation_report_path),
             "mapped_form_count": qemu_mapped_form_count,
@@ -236,9 +282,12 @@ def main(argv: list[str]) -> int:
             "translation_mnemonic_coverage_ratio_percent": round(qemu_translation_coverage_count / mnemonic_count * 100.0, 2) if mnemonic_count else 0.0,
             "translation_missing_mnemonics": qemu_translation_missing_mnemonics,
         },
+        "qemu_evidence": qemu_isa_report["evidence"],
         "result": {
             "ok": ok,
-            "classification": "48bit_implementation_complete" if ok else "48bit_implementation_incomplete",
+            "classification": "48bit_l1_mapping_coherent" if ok else "48bit_l1_mapping_incomplete",
+            "runtime_execution_complete": None,
+            "semantic_oracle_complete": None,
         },
     }
 
@@ -250,11 +299,11 @@ def main(argv: list[str]) -> int:
         _render_markdown(report, Path(args.out_md).resolve())
 
     if args.require_full and not ok:
-        print("error: 48-bit LLVM/QEMU implementation subset is incomplete", file=sys.stderr)
+        print("error: 48-bit LLVM/QEMU L1 mapping subset is incomplete", file=sys.stderr)
         return 1
 
     print(
-        "ok: 48-bit implementation report generated "
+        "ok: 48-bit L1 mapping coherence report generated "
         f"(llvm_mnemonics={llvm_mnemonic_coverage_count}/{mnemonic_count}, "
         f"llvm_forms={roundtrip_stable_form_count}/{form_count}, "
         f"qemu_forms={qemu_mapped_form_count}/{form_count}, "

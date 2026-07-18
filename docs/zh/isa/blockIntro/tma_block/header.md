@@ -31,7 +31,10 @@ TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7
 
 一条完整数据搬运块指令块头需要拆分成以下多条指令进行编码，其中包括：
 
-- `BSTART.TMA TileOp, DataType`
+- 命名块头：`BSTART.TLOAD DataType`、`BSTART.TSTORE DataType`、`BSTART.TMOV DataType`、
+  `BSTART.TPREFETCH DataType`、`BSTART.MGATHER DataType`、`BSTART.MSCATTER DataType`、
+  `BSTART.MGATHER.MASK DataType`、`BSTART.MSCATTER.MASK DataType`、
+  `BSTART.MGATHER.CAS DataType`
 - [B.DATR](../../header/B.DATR.md) `Layout, PadValue`
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0`
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`
@@ -43,7 +46,11 @@ TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7
 - ...
 - [B.IOR](../../header/B.IOR.md) `RegSrc9, RegSrc10, RegSrc11, ->RegDst4`
 
-其中，BSTART.TMA指令的编码格式如下：
+其中，TMA 命名块头共享同一个相邻编码族；`function` 字段选择具体 TileOp。
+旧的泛化文本汇编形式已退役，活动汇编必须使用命名块头。
+TPREFETCH 与 TLOAD 相邻编码，是没有目标 Tile 的预取形式。
+
+TMA 编码族的格式如下：
 
 ![BSTART.TMA](../../../figs/bitfield/svg/BlockHeader_32bit/BSTART.TMA.svg)
 
@@ -54,12 +61,13 @@ TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7
 | 0 | [TLOAD](../../header/tileblock/TLOAD.md)   | 从内存加载数据到Tile寄存器中 |
 | 1 | [TSTORE](../../header/tileblock/TSTORE.md) | 把Tile寄存器数据搬运到内存中 |
 | 2 | [TMOV](../../header/tileblock/TMOV.md)     | Tile寄存器之间的数据移动/复制，支持存储布局（分形）变换 |
-| 3 | -                                          | 保留 |
+| 3 | [TPREFETCH](../../header/tileblock/TPREFETCH.md) | 与 TLOAD 使用相同地址/尺寸描述，但不写目标 Tile；用于预取 |
 | 4 | [MGATHER](../../header/tileblock/MGATHER.md) | 将离散的内存空间中的数据聚集到Tile寄存器中。 |
 | 5 | [MSCATTER](../../header/tileblock/MSCATTER.md) | 将Tile寄存器中的数据存储到离散的内存空间。  |
 | 6 | [MGATHER.MASK](../../header/tileblock/MGATHER.MASK.md) | 带掩码的内存聚集，仅当 MaskTile 中对应标志位为 1 时才执行聚集。 |
 | 7 | [MSCATTER.MASK](../../header/tileblock/MSCATTER.MASK.md) | 带掩码的内存分散，仅当 MaskTile 中对应标志位为 1 时才执行分散。 |
-| 8-31 | 暂时保留 |
+| 8 | [MGATHER.CAS](../../header/tileblock/MGATHER.CAS.md) | 基于 offset 的聚集比较交换；返回旧值到目标 Tile |
+| 9-31 | 暂时保留 |
 
 DataType字段编码方式如下：
 

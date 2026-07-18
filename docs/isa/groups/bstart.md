@@ -16,8 +16,8 @@ Block split instructions with CALL/RET/commit argument encoding.
 
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
-| [BSTART CALL](../instructions/bstart_call.md) | `BSTART.CALL <br_label>` | 32 | — | Unconditionally transfers to a call block. The instruction preserves `ra`; returning calls require an adjacent `SETRET` or `C.SETRET`. |
-| [HL.BSTART CALL](../instructions/hl_bstart_call.md) | `HL.BSTART.CALL <br_label>` | 48 | — | [48-bit HL.] Unconditionally transfers to a call block. The instruction preserves `ra`; returning calls require an adjacent `SETRET` or `C.SETRET`. |
+| [BSTART CALL](../instructions/bstart_call.md) | `BSTART.CALL <br_label>, <rt_label>, ->ra` | 32 | — | Atomic fused call with independent call-target and return-target fields; transfers to the call block and writes `ra`. This exact aggregate is distinct from the generic bare-call form, which preserves `ra` and requires an adjacent `SETRET` or `C.SETRET`. |
+| [HL.BSTART CALL](../instructions/hl_bstart_call.md) | `HL.BSTART.CALL <br_label>, <rt_label>, ->ra` | 48 | — | [48-bit HL.] Atomic fused call with independent call-target and return-target fields; transfers to the call block and writes `ra`. This exact aggregate is distinct from the generic bare-call form, which preserves `ra` and requires an adjacent `SETRET` or `C.SETRET`. |
 | [HL.BSTART.FP](../instructions/hl_bstart_fp.md) | `HL.BSTART.FP COND, <label>` | 48 | — | [48-bit HL.] Terminates the current block and begins the next. |
 | [HL.BSTART.STD](../instructions/hl_bstart_std.md) | `HL.BSTART.STD CALL, <label>` | 48 | — | [48-bit HL.] Terminates the current block and begins the next. |
 | [HL.BSTART.SYS](../instructions/hl_bstart_sys.md) | `HL.BSTART.SYS FALL<, fixup_label>` | 48 | — | [48-bit HL.] Terminates the current block and begins the next. |

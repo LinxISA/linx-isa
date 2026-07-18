@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_casb]]
+==== CASB
+
+*Syntax:* casb<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}
+
+*Description:* v0.57 32-bit compare-and-swap byte: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
+
+*Encoding:*
+
+image::encodings/enc_casb.svg[CASB encoding,width=800]
+
+*Uop-Class:* AMO
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"amo_kind": "CAS", "note": "v0.57 32-bit local compare-and-swap", "source": "group_rule", "uop_kind": "AMO"}`

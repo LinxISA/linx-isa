@@ -10,14 +10,16 @@ runner is `tools/bringup/run_benchmark_linux_flow.py`.
 Evidence:
 
 - `docs/bringup/gates/qemu_isa_coverage_latest.md` was regenerated on
-  2026-07-15 and records QEMU implementation coverage at `618/711` mapped
-  spec mnemonics and `621/747` mapped legal forms. LLVM and the AVS translation
-  corpus both cover `711/711`; QEMU semantic breadth remains intentionally red.
-- The v0.56.5 TSVC hard break is closed on clean QEMU
-  `cdc5d976242d6e81c6938f192fc6b1849aa2f0df`: 8/8 deterministic batches,
-  `151/151` strict-vectorized kernels, and `151/151` QEMU completions in
-  10.587 seconds. The unbatched all-mode diagnostic is not the PR hard-break
-  contract and may exceed its per-process timeout.
+  2026-07-17 and records QEMU L1 decoder/source mapping at `624/710` mapped
+  spec mnemonics and `655/746` mapped legal forms. LLVM observed-disassembly
+  breadth and the AVS translation inventory both cover `711/711`; executable
+  semantic breadth remains a separate, intentionally red evidence level.
+- The v0.57 TSVC hard break is closed on clean QEMU
+  `b270924c2240d7a1dc9bad4672345cc098510341`: 8/8 deterministic batches,
+  `150/151` strict-vectorized kernels, and `151/151` QEMU completions. `s451`
+  remains the intentional scalar transcendental-call case. The unbatched
+  all-mode diagnostic is not the PR hard-break contract and may exceed its
+  per-process timeout.
 - The separately ordered BusyBox lane remains red on the same clean QEMU: two
   120-second attempts produced no UART output. This is tracked as the distinct
   Linux/MMU regression and does not invalidate the completed TSVC hard break.
@@ -35,6 +37,19 @@ Evidence:
 - `docs/bringup/agent_runs/checklists/specint_qemu.md` records SPECint as a
   fast `test`/`train` gate first, with `505.mcf_r` isolated as VM stress rather
   than mixed into every cheap regression check.
+- Both canonical SPEC lanes now hard-break between static build and runtime on
+  `tools/spec2017/check_build_manifest.py attest` followed immediately by
+  `verify`. The attestation binds the current superproject/LLVM/musl state,
+  tool binaries, sysroot, immutable source tree, and the exact 10-benchmark / 12
+  static-Linx-ELF set. It deliberately makes no claim about licensed SPEC input
+  content, authorization, or test/train execution; those remain runtime-gate
+  responsibilities.
+- The nightly `full-benchmarks` stage requires an explicit
+  `LINX_BENCHMARK_RUN_COMMAND` and passes it to the CoreMark/Dhrystone runner.
+  A build-only result cannot satisfy this stage; each workload must return
+  `RUN_PASS` with its workload-specific semantic markers. The launcher command
+  remains explicit because the authoritative Linux image is still governed by
+  the source-completeness gate rather than an unchecked local kernel.
 - `docs/bringup/QEMU_SPECINT_PERFORMANCE_PLAN.md` records the current QEMU
   SPECint profile and the prioritized speedups for the Linx target.
 - `workloads/generated/specint-train-all-current-clean-qemu-20260706-r2/` is
@@ -279,7 +294,7 @@ Inference:
 
 | Stage | Owner | Stop Rule | Purpose |
 | --- | --- | --- | --- |
-| `source-contract` | integration | hard break | Validate layout, canonical v0.56 catalog, and agent ownership map before build work. |
+| `source-contract` | integration | hard break | Validate layout, canonical v0.57 catalog, and agent ownership map before build work. |
 | `compiler-contract` | llvm | hard break | Prove active `clang` can build and cover the Linx64 AVS compile corpus. |
 | `qemu-contract` | qemu | hard break | Prove strict QEMU AVS runtime and keep decode coverage visible. |
 | `tsvc-qemu-hardbreak` | integration | hard break | Run compile-only TSVC floor, then batched QEMU TSVC before Linux rootfs or SPEC. |

@@ -1,0 +1,39 @@
+{
+  "dry_run": false,
+  "flow_id": "benchmark-qemu-linux-hardbreak",
+  "generated_at_utc": "2026-07-18 02:31:40Z",
+  "ok": true,
+  "profile": "pr",
+  "schema_version": 1,
+  "stages": [
+    {
+      "commands": [
+        {
+          "artifact_report": null,
+          "artifact_transcript": null,
+          "command": "python3 workloads/tsvc/run_tsvc.py --clang \"${CLANG:-$PWD/compiler/llvm/build-linxisa-clang/bin/clang}\" --lld \"${LLD:-$PWD/compiler/llvm/build-linxisa-clang/bin/ld.lld}\" --vector-mode auto --strict-fail-under \"${TSVC_STRICT_FAIL_UNDER:-148}\" --source-policy linx-v057 --no-run-qemu --out-dir \"${TSVC_OUT_DIR:-$PWD/workloads/generated/tsvc-pr-compile}\"",
+          "id": "tsvc-compile-only-floor",
+          "log": "/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-07-18-v057-release/tsvc/tsvc-qemu-hardbreak-tsvc-compile-only-floor.log",
+          "resolved_qemu": "/Users/zhoubot/linx-isa/emulator/qemu/build-v057-release/qemu-system-linx64",
+          "returncode": 0,
+          "status": "pass",
+          "timeout_seconds": 900
+        },
+        {
+          "artifact_report": null,
+          "artifact_transcript": null,
+          "command": "python3 workloads/tsvc/run_tsvc_batched.py --out-dir \"${TSVC_QEMU_OUT_DIR:-$PWD/workloads/generated/tsvc-pr-qemu}\" --batch-size \"${TSVC_BATCH_SIZE:-20}\" --strict-fail-under \"${TSVC_STRICT_FAIL_UNDER:-148}\" --vector-mode auto --clang \"${CLANG:-$PWD/compiler/llvm/build-linxisa-clang/bin/clang}\" --lld \"${LLD:-$PWD/compiler/llvm/build-linxisa-clang/bin/ld.lld}\" --qemu \"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\" --source-policy linx-v057 --qemu-timeout \"${TSVC_QEMU_TIMEOUT:-240}\"",
+          "id": "tsvc-qemu-batched",
+          "log": "/Users/zhoubot/linx-isa/docs/bringup/gates/logs/2026-07-18-v057-release/tsvc/tsvc-qemu-hardbreak-tsvc-qemu-batched.log",
+          "resolved_qemu": "/Users/zhoubot/linx-isa/emulator/qemu/build-v057-release/qemu-system-linx64",
+          "returncode": 0,
+          "status": "pass",
+          "timeout_seconds": 3600
+        }
+      ],
+      "hard_break": true,
+      "id": "tsvc-qemu-hardbreak",
+      "owner": "integration"
+    }
+  ]
+}

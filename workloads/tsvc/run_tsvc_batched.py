@@ -22,6 +22,22 @@ class BatchFailure(Exception):
         self.payload = payload
 
 
+def _require_matching_provenance(
+    expected: dict[str, object], actual: dict[str, object], batch_index: int
+) -> None:
+    if expected != actual:
+        raise BatchFailure(
+            {
+                "batch_index": batch_index,
+                "status": "fail",
+                "returncode": 1,
+                "error": f"batch {batch_index} provenance mismatch",
+                "expected_provenance": expected,
+                "actual_provenance": actual,
+            }
+        )
+
+
 def _exact_kernel_regex(kernels: list[str]) -> str:
     return "^(" + "|".join(re.escape(k) for k in kernels) + ")$"
 
@@ -174,6 +190,28 @@ def _run_batch(python: str,
     qemu_dir = batch_out / "qemu" / "tsvc"
     coverage = _read_json(reports_dir / "vectorization_coverage.json")
     gate = _read_json(reports_dir / "gate_result.json")
+    provenance = gate.get("provenance")
+    if not isinstance(provenance, dict):
+        raise BatchFailure(
+            {
+                "batch_index": batch_index,
+                "status": "fail",
+                "returncode": 1,
+                "error": f"batch {batch_index} missing provenance receipt",
+            }
+        )
+    try:
+        core._validate_provenance_receipt(provenance, require_qemu=True)
+    except SystemExit as exc:
+        raise BatchFailure(
+            {
+                "batch_index": batch_index,
+                "status": "fail",
+                "returncode": 1,
+                "error": f"batch {batch_index} invalid provenance: {exc}",
+                "provenance": provenance,
+            }
+        ) from exc
     stdout_path = qemu_dir / f"tsvc.{mode}.stdout.txt"
     stderr_path = qemu_dir / f"tsvc.{mode}.stderr.txt"
     return {
@@ -184,6 +222,7 @@ def _run_batch(python: str,
         "kernels": kernels,
         "coverage": coverage,
         "gate": gate,
+        "provenance": provenance,
         "stdout_path": stdout_path,
         "stderr_path": stderr_path,
         "driver_stdout": paths["driver_stdout"],
@@ -232,6 +271,8 @@ def main(argv: list[str]) -> int:
     vectorized = 0
     total = 0
     batch_payloads: list[dict[str, object]] = []
+    expected_provenance: dict[str, object] | None = None
+    provenance_error: str | None = None
 
     failed_batch: dict[str, object] | None = None
     started_at = time.monotonic()
@@ -253,6 +294,26 @@ def main(argv: list[str]) -> int:
             failed_batch = exc.payload
             batch_payloads.append(failed_batch)
             break
+        batch_provenance = payload["provenance"]
+        assert isinstance(batch_provenance, dict)
+        if expected_provenance is None:
+            expected_provenance = batch_provenance
+        else:
+            try:
+                _require_matching_provenance(
+                    expected_provenance, batch_provenance, idx
+                )
+            except BatchFailure as exc:
+                provenance_error = str(exc)
+                failed_batch = {
+                    **exc.payload,
+                    "elapsed_seconds": float(payload.get("elapsed_seconds", 0.0)),
+                    "kernel_count": len(batch),
+                    "kernels": batch,
+                    "out_dir": str(batch_out),
+                }
+                batch_payloads.append(failed_batch)
+                break
         coverage = payload["coverage"]
         vectorized += int(coverage.get("vectorized", 0))
         total += int(coverage.get("total", 0))
@@ -284,6 +345,7 @@ def main(argv: list[str]) -> int:
                 "driver_stderr": str(payload["driver_stderr"]),
                 "vectorized": int(coverage.get("vectorized", 0)),
                 "total": int(coverage.get("total", 0)),
+                "provenance": batch_provenance,
             }
         )
 
@@ -307,9 +369,12 @@ def main(argv: list[str]) -> int:
     if failed_batch is not None:
         status = "fail"
         returncode = int(failed_batch.get("returncode", 1))
-        error = (
-            f"batch {failed_batch.get('batch_index')} failed "
-            f"(returncode={returncode})"
+        error = str(
+            failed_batch.get("error")
+            or (
+                f"batch {failed_batch.get('batch_index')} failed "
+                f"(returncode={returncode})"
+            )
         )
     elif strict_floor_failed:
         status = "fail"
@@ -342,7 +407,17 @@ def main(argv: list[str]) -> int:
         "failed_batch": failed_batch,
         "source": str(src_dir),
         "batches": batch_payloads,
-        "sha_manifest": core._build_sha_manifest(),
+        "provenance": expected_provenance,
+        "provenance_consistent": (
+            expected_provenance is not None
+            and provenance_error is None
+            and failed_batch is None
+        ),
+        "sha_manifest": (
+            expected_provenance.get("sha_manifest")
+            if expected_provenance is not None
+            else core._build_sha_manifest()
+        ),
         "merged_qemu_stdout": str(merged_stdout_path),
         "merged_qemu_stderr": str(merged_stderr_path),
     }

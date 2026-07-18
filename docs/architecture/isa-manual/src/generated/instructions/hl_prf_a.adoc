@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_hl_prf_a.svg[HL.PRF.A encoding,width=800]
+image::encodings/enc_hl_prf_a.svg[HL.PRF.A encoding,width=800]
 
 *Uop-Class:* LDA
 

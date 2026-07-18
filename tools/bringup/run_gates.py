@@ -111,7 +111,14 @@ def prepare_env(root: Path, profile: str, tier: str) -> dict[str, str]:
     env.setdefault("LINX_DISABLE_TIMER_IRQ", "0")
     env.setdefault("LINX_EMU_DISABLE_TIMER_IRQ", "0")
     env.setdefault("CLANG", default_tool(root, "compiler/llvm/build-linxisa-clang/bin/clang"))
+    env.setdefault(
+        "CLANGXX", default_tool(root, "compiler/llvm/build-linxisa-clang/bin/clang++")
+    )
     env.setdefault("LLD", default_tool(root, "compiler/llvm/build-linxisa-clang/bin/ld.lld"))
+    env.setdefault(
+        "LLVM_OBJDUMP",
+        default_tool(root, "compiler/llvm/build-linxisa-clang/bin/llvm-objdump"),
+    )
     if not env.get("QEMU"):
         try:
             env["QEMU"] = str(default_qemu_binary(root))

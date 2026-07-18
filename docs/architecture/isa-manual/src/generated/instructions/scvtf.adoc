@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_scvtf.svg[SCVTF encoding,width=800]
+image::encodings/enc_scvtf.svg[SCVTF encoding,width=800]
 
 *Uop-Class:* FSU
 

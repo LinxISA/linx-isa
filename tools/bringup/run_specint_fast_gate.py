@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import hashlib
 import json
 import os
 import shlex
@@ -54,12 +55,6 @@ SPECINT_STAGE_B_BENCHES = (
     "999.specrand_ir",
 )
 
-SPECINT_TRAIN_PROMOTION_BENCHES = tuple(
-    bench
-    for bench in SPECINT_STAGE_B_BENCHES
-    if bench not in {"505.mcf_r", "531.deepsjeng_r", "999.specrand_ir"}
-)
-
 LARGE_PAYLOAD_TRANSPORTS: dict[str, str] = {
     "525.x264_r": "9p",
 }
@@ -86,46 +81,6 @@ SUITES: dict[str, Suite] = {
         timeout_default=300,
         description="fast train-input sentinel without refrate cost",
     ),
-    "train-cpu-stress": Suite(
-        name="train-cpu-stress",
-        stage="a",
-        input_set="train",
-        benches=("531.deepsjeng_r",),
-        transports="initramfs",
-        timeout_env="SPECINT_TRAIN_CPU_STRESS_TIMEOUT",
-        timeout_default=900,
-        description="isolated train-input CPU/control-flow stress check",
-    ),
-    "test-cpu-stress": Suite(
-        name="test-cpu-stress",
-        stage="a",
-        input_set="test",
-        benches=("531.deepsjeng_r",),
-        transports="initramfs",
-        timeout_env="SPECINT_TEST_CPU_STRESS_TIMEOUT",
-        timeout_default=900,
-        description="isolated test-input CPU/control-flow stress check",
-    ),
-    "test-vm-stress": Suite(
-        name="test-vm-stress",
-        stage="a",
-        input_set="test",
-        benches=("505.mcf_r",),
-        transports="initramfs",
-        timeout_env="SPECINT_TEST_VM_STRESS_TIMEOUT",
-        timeout_default=900,
-        description="isolated mcf VM/allocation stress check",
-    ),
-    "train-vm-stress": Suite(
-        name="train-vm-stress",
-        stage="a",
-        input_set="train",
-        benches=("505.mcf_r",),
-        transports="initramfs",
-        timeout_env="SPECINT_TRAIN_VM_STRESS_TIMEOUT",
-        timeout_default=1200,
-        description="train-input mcf VM/allocation stress check",
-    ),
     "test-all": Suite(
         name="test-all",
         stage="b",
@@ -135,16 +90,6 @@ SUITES: dict[str, Suite] = {
         timeout_env="SPECINT_TEST_ALL_TIMEOUT",
         timeout_default=120,
         description="bounded all-SPECint test-input diagnostic gate",
-    ),
-    "train-promotion": Suite(
-        name="train-promotion",
-        stage="b",
-        input_set="train",
-        benches=SPECINT_TRAIN_PROMOTION_BENCHES,
-        transports="initramfs",
-        timeout_env="SPECINT_TRAIN_PROMOTION_TIMEOUT",
-        timeout_default=1800,
-        description="nightly train-input SPECint promotion breadth",
     ),
     "train-all": Suite(
         name="train-all",
@@ -156,6 +101,26 @@ SUITES: dict[str, Suite] = {
         timeout_default=180,
         description="bounded all-SPECint train-input diagnostic gate",
     ),
+    "nightly-test-all": Suite(
+        name="nightly-test-all",
+        stage="b",
+        input_set="test",
+        benches=SPECINT_STAGE_B_BENCHES,
+        transports="initramfs",
+        timeout_env="SPECINT_NIGHTLY_TEST_TIMEOUT",
+        timeout_default=900,
+        description="nightly full SPECint test-input compatibility gate",
+    ),
+    "nightly-train-all": Suite(
+        name="nightly-train-all",
+        stage="b",
+        input_set="train",
+        benches=SPECINT_STAGE_B_BENCHES,
+        transports="initramfs",
+        timeout_env="SPECINT_NIGHTLY_TRAIN_TIMEOUT",
+        timeout_default=1800,
+        description="nightly full SPECint train-input compatibility gate",
+    ),
 }
 
 PROFILE_SUITES: dict[str, tuple[str, ...]] = {
@@ -164,15 +129,7 @@ PROFILE_SUITES: dict[str, tuple[str, ...]] = {
     "test": ("test-all",),
     "train": ("train-all",),
     "test-train": ("test-all", "train-all"),
-    "nightly": (
-        "test-smoke",
-        "train-smoke",
-        "test-cpu-stress",
-        "test-vm-stress",
-        "train-cpu-stress",
-        "train-vm-stress",
-        "train-promotion",
-    ),
+    "nightly": ("nightly-test-all", "nightly-train-all"),
 }
 
 
@@ -283,6 +240,26 @@ def _default_qemu() -> str:
         return str(Path(os.path.expanduser(env)).resolve())
     qemu = default_qemu_binary(REPO_ROOT)
     return str(qemu.resolve())
+
+
+def _default_kernel() -> str:
+    explicit = os.environ.get("LINX_SPEC_KERNEL", "").strip()
+    if explicit:
+        return str(Path(os.path.expanduser(explicit)).resolve())
+    out_dir = os.environ.get("LINUX_VMLINUX_OUT_DIR", "/tmp/linx-linux-vmlinux-clean-build")
+    return str((Path(os.path.expanduser(out_dir)) / "vmlinux").resolve())
+
+
+def _file_provenance(path: Path) -> dict[str, Any]:
+    digest = hashlib.sha256()
+    with path.open("rb") as fp:
+        for chunk in iter(lambda: fp.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return {
+        "path": str(path),
+        "sha256": digest.hexdigest(),
+        "size_bytes": path.stat().st_size,
+    }
 
 
 def _qemu_extra_args() -> list[str]:
@@ -520,6 +497,7 @@ def _suite_command(
     runner: Path,
     spec_dir: Path,
     qemu: Path,
+    kernel: Path,
     sysroot: Path,
     out_dir: Path,
     append_extra: str,
@@ -596,6 +574,8 @@ def _suite_command(
         str(spec_dir),
         "--qemu",
         str(qemu),
+        "--kernel",
+        str(kernel),
         "--stage",
         suite.stage,
         "--input-set",
@@ -721,6 +701,8 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
         f"- qemu_repo_head: `{(summary.get('qemu_provenance') or {}).get('qemu_repo_head', '-')}`",
         "- qemu_clean_build_for_head: "
         f"`{str(bool((summary.get('qemu_provenance') or {}).get('clean_build_for_head', False))).lower()}`",
+        f"- kernel: `{summary.get('kernel') or '-'}`",
+        f"- kernel_sha256: `{(summary.get('kernel_provenance') or {}).get('sha256', '-')}`",
         f"- qemu_machine_extra: `{summary.get('qemu_machine_extra') or '-'}`",
         "- qemu_extra_args: "
         f"`{shlex.join([str(arg) for arg in summary.get('qemu_extra_args') or []]) or '-'}`",
@@ -798,6 +780,7 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--spec-dir", default=str(DEFAULT_SPEC_DIR))
     parser.add_argument("--runner", default=str(DEFAULT_RUNNER))
     parser.add_argument("--qemu", default=_default_qemu())
+    parser.add_argument("--kernel", default=_default_kernel())
     parser.add_argument("--sysroot", default=str(REPO_ROOT / "out" / "libc" / "musl" / "install" / "phase-b"))
     parser.add_argument("--out-dir", default=str(REPO_ROOT / "workloads" / "generated" / "specint-fast-gate"))
     parser.add_argument("--append-extra", default=os.environ.get("SPEC_APPEND_EXTRA", os.environ.get("LINX_SPEC_APPEND_EXTRA", "norandmaps")))
@@ -1095,6 +1078,7 @@ def main(argv: list[str]) -> int:
     spec_dir = Path(os.path.expanduser(args.spec_dir)).resolve()
     runner = Path(os.path.expanduser(args.runner)).resolve()
     qemu = Path(os.path.expanduser(args.qemu)).resolve()
+    kernel = Path(os.path.expanduser(args.kernel)).resolve()
     sysroot = Path(os.path.expanduser(args.sysroot)).resolve()
     out_dir = Path(os.path.expanduser(args.out_dir)).resolve()
 
@@ -1104,8 +1088,16 @@ def main(argv: list[str]) -> int:
         raise SystemExit(f"error: missing SPEC dir: {spec_dir}")
     if not qemu.exists():
         raise SystemExit(f"error: missing QEMU binary: {qemu}")
+    if not kernel.is_file():
+        raise SystemExit(f"error: missing kernel image: {kernel}")
 
     runner_has_qemu_heartbeat = _runner_supports_option(runner, "--qemu-heartbeat-interval")
+    runner_has_kernel = _runner_supports_option(runner, "--kernel")
+    if not runner_has_kernel:
+        raise SystemExit(
+            "error: local SPEC matrix runner does not support --kernel; "
+            "update tools/spec2017/run_stage_qemu_matrix.py"
+        )
     runner_has_qemu_heartbeat_regs = _runner_supports_option(runner, "--qemu-heartbeat-regs")
     runner_has_qemu_heartbeat_code_bytes = _runner_supports_option(runner, "--qemu-heartbeat-code-bytes")
     runner_has_qemu_heartbeat_same_site_warn = _runner_supports_option(runner, "--qemu-heartbeat-same-site-warn")
@@ -1364,6 +1356,7 @@ def main(argv: list[str]) -> int:
                 runner=runner,
                 spec_dir=spec_dir,
                 qemu=qemu,
+                kernel=kernel,
                 sysroot=sysroot,
                 out_dir=out_dir,
                 append_extra=args.append_extra,
@@ -1487,6 +1480,8 @@ def main(argv: list[str]) -> int:
         "spec_dir": str(spec_dir),
         "qemu": str(qemu),
         "qemu_provenance": qemu_binary_provenance(REPO_ROOT, qemu),
+        "kernel": str(kernel),
+        "kernel_provenance": _file_provenance(kernel),
         "qemu_machine_extra": os.environ.get("LINX_SPEC_QEMU_MACHINE_EXTRA", "").strip(),
         "qemu_extra_args": _qemu_extra_args(),
         "sysroot": str(sysroot),

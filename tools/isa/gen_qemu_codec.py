@@ -322,9 +322,9 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--profile",
-        choices=["v0.56"],
-        default="v0.56",
-        help="ISA profile for default --spec path (v0.56 is canonical)",
+        choices=["v0.57"],
+        default="v0.57",
+        help="ISA profile for default --spec path (v0.57 is current)",
     )
     ap.add_argument(
         "--spec",
@@ -343,7 +343,7 @@ def main() -> int:
     )
     args = ap.parse_args()
 
-    default_spec = os.path.join("isa", "v0.56", "linxisa-v0.56.json")
+    default_spec = os.path.join("isa", args.profile, f"linxisa-{args.profile}.json")
     spec_path = args.spec or default_spec
 
     with open(spec_path, "r", encoding="utf-8") as f:

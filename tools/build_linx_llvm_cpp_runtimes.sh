@@ -431,7 +431,7 @@ if [[ "$MERGE_SYSROOT" == "1" ]]; then
     fi
   fi
 
-  ensure_linux_compat_headers
+  install_linux_uapi_headers
 fi
 
 python3 - <<PY

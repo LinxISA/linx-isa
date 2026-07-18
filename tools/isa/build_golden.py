@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Build the compiled LinxISA v0.56 catalog from the multi-file golden sources.
+Build the compiled LinxISA catalog from the multi-file golden sources.
 
 Golden sources live under:
-  isa/v0.56/
+  isa/<profile>/
 
 Compiled output is checked in at:
-  isa/v0.56/linxisa-v0.56.json
+  isa/<profile>/linxisa-<profile>.json
 
 This builder is intentionally deterministic:
   - no timestamps
@@ -877,7 +877,7 @@ def _canonical_json(obj: Any) -> str:
     return json.dumps(obj, sort_keys=True, separators=(",", ":"))
 
 
-def _profile_defaults(profile: str = "v0.56") -> Tuple[str, str]:
+def _profile_defaults(profile: str = "v0.57") -> Tuple[str, str]:
     return f"isa/{profile}", f"isa/{profile}/linxisa-{profile}.json"
 
 
@@ -885,9 +885,9 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--profile",
-        choices=["v0.56"],
-        default="v0.56",
-        help="ISA profile for default in/out paths (v0.56 is canonical)",
+        choices=["v0.57"],
+        default="v0.57",
+        help="ISA profile for default in/out paths",
     )
     ap.add_argument("--in", dest="in_dir", default=None, help="Golden source directory")
     ap.add_argument("--out", default=None, help="Output catalog JSON path")

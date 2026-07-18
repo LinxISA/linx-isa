@@ -1,0 +1,685 @@
+# LLVM C/C++ CodeGen ISA Mnemonic Breadth
+
+- Generated (UTC): `2026-07-18 02:41:42Z`
+- Status: `MEASURED` (no target threshold is asserted)
+- Pure CodeGen direct coverage: `145/731`
+- Pure CodeGen after alias closure: `146/731`
+- C/C++ source-oriented direct coverage: `146/731` (`19.973%`)
+- C/C++ source-oriented after explicit alias closure: `147/731` (`20.109%`)
+- Frozen plain-C reachable contract: `146/146` (`PASS`)
+- Included C/C++ artifacts: `44`
+- Excluded disassembly artifacts: `7`
+- Compiler identity: `clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git c39f7d86ce08489b8beb0f0da9f614445a4aa8e5)`
+
+Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. The broader source-oriented boundary includes those tests but does not relabel their source-directed instructions as compiler-selected CodeGen. Neither metric reuses generated `99_spec_decode` or hand-authored assembly-lane artifacts.
+
+## Measurement Contract
+
+- Metric scope: unique v0.57 ISA mnemonics observed in llvm-objdump disassembly of objects whose stems match current AVS C/C++ sources; pure CodeGen excludes sources with inline asm/builtins, and explicit alias closure is separate
+- Provenance rule: require a complete canonical run.sh build manifest with the exact current source set, exact flags, artifact and tool hashes; recompile every source with the manifest flags and regenerate objdump before accepting source-to-object-to-disassembly provenance
+- Not measured:
+  - encoding/form acceptance
+  - hand-authored assembly coverage
+  - runtime execution or semantic correctness
+
+## Frozen Plain-C Reachability Tranches
+
+- Canonical non-regression anchor: `PASS`; minimum `146`; tranche-chain SHA-256 `e319dd83314027a4a7c2552516fd02e253b46b72fa877166c0166d8f03bcff09`
+- `frances-allen-plain-c-1`: baseline `119` -> `137`; new direct: `CMP.AND`, `CMP.ANDI`, `CMP.EQI`, `CMP.GEUI`, `CMP.NEI`, `CMP.OR`, `FEQ`, `HL.ANDI`, `HL.LB.PCR`, `HL.LBU.PCR`, `HL.LH.PCR`, `HL.LHU.PCR`, `HL.LW.PCR`, `HL.LWI.PO`, `HL.SB.PCR`, `HL.SH.PCR`, `HL.SW.PCR`, `HL.SWI.PO`
+- `frances-allen-plain-c-2`: baseline `137` -> `143`; new direct: `C.ADDI`, `C.CMP.NEI`, `HL.LDI.PO`, `HL.LWU.PCR`, `HL.LWUI.PO`, `HL.SDI.PO`
+- `barbara-liskov-plain-c-sub-immediate`: baseline `143` -> `146`; new direct: `HL.SUBI`, `HL.SUBIW`, `SUBI`
+
+## Source-Directed C/C++ Tests Excluded from Pure CodeGen
+
+- `avs/compiler/linx-llvm/tests/c/28_prefetch.c`: `__builtin_prefetch`
+- `avs/compiler/linx-llvm/tests/c/32_descriptor_marker.c`: `__asm__`
+- `avs/compiler/linx-llvm/tests/c/39_callret_noreturn.c`: `__asm__`
+- `avs/compiler/linx-llvm/tests/c/40_callret_hl_setret.c`: `__asm__`
+
+## Explicit Alias Additions
+
+- `BSTART.STD` -> `BSTART`
+
+## Included Artifacts
+
+- `avs/compiler/linx-llvm/tests/out/01_arith/01_arith.objdump` <- `avs/compiler/linx-llvm/tests/c/01_arith.c`
+- `avs/compiler/linx-llvm/tests/out/02_control_flow/02_control_flow.objdump` <- `avs/compiler/linx-llvm/tests/c/02_control_flow.c`
+- `avs/compiler/linx-llvm/tests/out/03_arrays/03_arrays.objdump` <- `avs/compiler/linx-llvm/tests/c/03_arrays.c`
+- `avs/compiler/linx-llvm/tests/out/04_structs/04_structs.objdump` <- `avs/compiler/linx-llvm/tests/c/04_structs.c`
+- `avs/compiler/linx-llvm/tests/out/05_switch/05_switch.objdump` <- `avs/compiler/linx-llvm/tests/c/05_switch.c`
+- `avs/compiler/linx-llvm/tests/out/06_recursion/06_recursion.objdump` <- `avs/compiler/linx-llvm/tests/c/06_recursion.c`
+- `avs/compiler/linx-llvm/tests/out/07_constants/07_constants.objdump` <- `avs/compiler/linx-llvm/tests/c/07_constants.c`
+- `avs/compiler/linx-llvm/tests/out/08_loadstore/08_loadstore.objdump` <- `avs/compiler/linx-llvm/tests/c/08_loadstore.c`
+- `avs/compiler/linx-llvm/tests/out/09_bitops/09_bitops.objdump` <- `avs/compiler/linx-llvm/tests/c/09_bitops.c`
+- `avs/compiler/linx-llvm/tests/out/10_select/10_select.objdump` <- `avs/compiler/linx-llvm/tests/c/10_select.c`
+- `avs/compiler/linx-llvm/tests/out/11_minmax/11_minmax.objdump` <- `avs/compiler/linx-llvm/tests/c/11_minmax.c`
+- `avs/compiler/linx-llvm/tests/out/12_more_ops/12_more_ops.objdump` <- `avs/compiler/linx-llvm/tests/c/12_more_ops.c`
+- `avs/compiler/linx-llvm/tests/out/13_br_ge/13_br_ge.objdump` <- `avs/compiler/linx-llvm/tests/c/13_br_ge.c`
+- `avs/compiler/linx-llvm/tests/out/14_lui/14_lui.objdump` <- `avs/compiler/linx-llvm/tests/c/14_lui.c`
+- `avs/compiler/linx-llvm/tests/out/15_i32_imms/15_i32_imms.objdump` <- `avs/compiler/linx-llvm/tests/c/15_i32_imms.c`
+- `avs/compiler/linx-llvm/tests/out/16_andorw/16_andorw.objdump` <- `avs/compiler/linx-llvm/tests/c/16_andorw.c`
+- `avs/compiler/linx-llvm/tests/out/17_indexed/17_indexed.objdump` <- `avs/compiler/linx-llvm/tests/c/17_indexed.c`
+- `avs/compiler/linx-llvm/tests/out/18_setret_relax/18_setret_relax.objdump` <- `avs/compiler/linx-llvm/tests/c/18_setret_relax.c`
+- `avs/compiler/linx-llvm/tests/out/19_shifted_add/19_shifted_add.objdump` <- `avs/compiler/linx-llvm/tests/c/19_shifted_add.c`
+- `avs/compiler/linx-llvm/tests/out/20_floating_point/20_floating_point.objdump` <- `avs/compiler/linx-llvm/tests/c/20_floating_point.c`
+- `avs/compiler/linx-llvm/tests/out/21_atomic/21_atomic.objdump` <- `avs/compiler/linx-llvm/tests/c/21_atomic.c`
+- `avs/compiler/linx-llvm/tests/out/22_memory_ops/22_memory_ops.objdump` <- `avs/compiler/linx-llvm/tests/c/22_memory_ops.c`
+- `avs/compiler/linx-llvm/tests/out/23_bit_manipulation/23_bit_manipulation.objdump` <- `avs/compiler/linx-llvm/tests/c/23_bit_manipulation.c`
+- `avs/compiler/linx-llvm/tests/out/24_block_isa/24_block_isa.objdump` <- `avs/compiler/linx-llvm/tests/c/24_block_isa.c`
+- `avs/compiler/linx-llvm/tests/out/25_immediate_materialization/25_immediate_materialization.objdump` <- `avs/compiler/linx-llvm/tests/c/25_immediate_materialization.c`
+- `avs/compiler/linx-llvm/tests/out/26_reduce_operations/26_reduce_operations.objdump` <- `avs/compiler/linx-llvm/tests/c/26_reduce_operations.c`
+- `avs/compiler/linx-llvm/tests/out/27_three_source/27_three_source.objdump` <- `avs/compiler/linx-llvm/tests/c/27_three_source.c`
+- `avs/compiler/linx-llvm/tests/out/28_prefetch/28_prefetch.objdump` <- `avs/compiler/linx-llvm/tests/c/28_prefetch.c`
+- `avs/compiler/linx-llvm/tests/out/29_cache_ops/29_cache_ops.objdump` <- `avs/compiler/linx-llvm/tests/c/29_cache_ops.c`
+- `avs/compiler/linx-llvm/tests/out/30_compressed/30_compressed.objdump` <- `avs/compiler/linx-llvm/tests/c/30_compressed.c`
+- `avs/compiler/linx-llvm/tests/out/31_jump_tables/31_jump_tables.objdump` <- `avs/compiler/linx-llvm/tests/c/31_jump_tables.c`
+- `avs/compiler/linx-llvm/tests/out/32_descriptor_marker/32_descriptor_marker.objdump` <- `avs/compiler/linx-llvm/tests/c/32_descriptor_marker.c`
+- `avs/compiler/linx-llvm/tests/out/33_callret_direct/33_callret_direct.objdump` <- `avs/compiler/linx-llvm/tests/c/33_callret_direct.c`
+- `avs/compiler/linx-llvm/tests/out/34_callret_nested/34_callret_nested.objdump` <- `avs/compiler/linx-llvm/tests/c/34_callret_nested.c`
+- `avs/compiler/linx-llvm/tests/out/35_callret_recursive/35_callret_recursive.objdump` <- `avs/compiler/linx-llvm/tests/c/35_callret_recursive.c`
+- `avs/compiler/linx-llvm/tests/out/36_callret_indirect/36_callret_indirect.objdump` <- `avs/compiler/linx-llvm/tests/c/36_callret_indirect.c`
+- `avs/compiler/linx-llvm/tests/out/37_callret_tail_musttail/37_callret_tail_musttail.objdump` <- `avs/compiler/linx-llvm/tests/c/37_callret_tail_musttail.c`
+- `avs/compiler/linx-llvm/tests/out/38_callret_local_reloc/38_callret_local_reloc.objdump` <- `avs/compiler/linx-llvm/tests/c/38_callret_local_reloc.c`
+- `avs/compiler/linx-llvm/tests/out/39_callret_noreturn/39_callret_noreturn.objdump` <- `avs/compiler/linx-llvm/tests/c/39_callret_noreturn.c`
+- `avs/compiler/linx-llvm/tests/out/40_callret_hl_setret/40_callret_hl_setret.objdump` <- `avs/compiler/linx-llvm/tests/c/40_callret_hl_setret.c`
+- `avs/compiler/linx-llvm/tests/out/41_plain_c_compare/41_plain_c_compare.objdump` <- `avs/compiler/linx-llvm/tests/c/41_plain_c_compare.c`
+- `avs/compiler/linx-llvm/tests/out/42_plain_c_memory/42_plain_c_memory.objdump` <- `avs/compiler/linx-llvm/tests/c/42_plain_c_memory.c`
+- `avs/compiler/linx-llvm/tests/out/43_plain_c_cursor/43_plain_c_cursor.objdump` <- `avs/compiler/linx-llvm/tests/c/43_plain_c_cursor.c`
+- `avs/compiler/linx-llvm/tests/out/44_plain_c_sub_immediate/44_plain_c_sub_immediate.objdump` <- `avs/compiler/linx-llvm/tests/c/44_plain_c_sub_immediate.c`
+
+## Excluded Artifacts
+
+- `avs/compiler/linx-llvm/tests/out/41_v056_isa_forms/41_v056_isa_forms.objdump`: no current C/C++ source with the same stem
+- `avs/compiler/linx-llvm/tests/out/41_v057_isa_forms/41_v057_isa_forms.objdump`: hand-authored assembly source; not C/C++ CodeGen
+- `avs/compiler/linx-llvm/tests/out/99_spec_decode/99_spec_decode.objdump`: generated ISA disassembly vector; not C/C++ CodeGen
+- `avs/compiler/linx-llvm/tests/out/99_spec_decode/99_spec_decode.roundtrip.objdump`: roundtrip-only artifact; not C/C++ CodeGen
+- `avs/compiler/linx-llvm/tests/out/99_spec_decode/99_spec_decode.roundtrip.strict.objdump`: roundtrip-only artifact; not C/C++ CodeGen
+- `avs/compiler/linx-llvm/tests/out/_neg/legacy_alias_l_bstop.objdump`: no current C/C++ source with the same stem
+- `avs/compiler/linx-llvm/tests/out/grace-l-bstart-smoke/forms.objdump`: no current C/C++ source with the same stem
+
+## Missing Mnemonics After Alias Closure
+
+- `ACRC`
+- `ACRE`
+- `ASSERT`
+- `B.CATR`
+- `B.DATR`
+- `B.DIM`
+- `B.EQ`
+- `B.GE`
+- `B.GEU`
+- `B.HINT`
+- `B.IOR`
+- `B.IOT`
+- `B.LT`
+- `B.LTU`
+- `B.NE`
+- `B.NZ`
+- `B.TEXT`
+- `B.Z`
+- `BC.IALL`
+- `BC.IVA`
+- `BCNT`
+- `BIC`
+- `BIS`
+- `BSE`
+- `BSTART.ACCCVT`
+- `BSTART.CALL`
+- `BSTART.CUBE`
+- `BSTART.FIXP`
+- `BSTART.FP`
+- `BSTART.MGATHER`
+- `BSTART.MGATHER.CAS`
+- `BSTART.MGATHER.MASK`
+- `BSTART.MPAR`
+- `BSTART.MSCATTER`
+- `BSTART.MSCATTER.MASK`
+- `BSTART.MSEQ`
+- `BSTART.SYS`
+- `BSTART.TEPL`
+- `BSTART.TGEMV`
+- `BSTART.TGEMV.ACC`
+- `BSTART.TGEMV.BIAS`
+- `BSTART.TGEMVMX`
+- `BSTART.TGEMVMX.ACC`
+- `BSTART.TGEMVMX.BIAS`
+- `BSTART.TLOAD`
+- `BSTART.TMATMUL`
+- `BSTART.TMATMUL.ACC`
+- `BSTART.TMATMUL.BIAS`
+- `BSTART.TMATMULMX`
+- `BSTART.TMATMULMX.ACC`
+- `BSTART.TMATMULMX.BIAS`
+- `BSTART.TMOV`
+- `BSTART.TPREFETCH`
+- `BSTART.TSTORE`
+- `BSTART.VPAR`
+- `BSTART.VSEQ`
+- `BSTOP`
+- `BWE`
+- `BWI`
+- `BWT`
+- `BXS`
+- `C.B.DIM`
+- `C.B.DIMI`
+- `C.BSTART.FP`
+- `C.BSTART.MPAR`
+- `C.BSTART.MSEQ`
+- `C.BSTART.SYS`
+- `C.BSTART.VPAR`
+- `C.BSTART.VSEQ`
+- `C.EBREAK`
+- `C.SEXT.B`
+- `C.SEXT.H`
+- `C.SLLI`
+- `C.SRLI`
+- `C.SSRGET`
+- `C.ZEXT.B`
+- `C.ZEXT.H`
+- `CASB`
+- `CASD`
+- `CASH`
+- `CASW`
+- `CLZ`
+- `CMP.ORI`
+- `CTZ`
+- `DC.CISW`
+- `DC.CIVA`
+- `DC.CSW`
+- `DC.CVA`
+- `DC.IALL`
+- `DC.ISW`
+- `DC.IVA`
+- `DC.ZVA`
+- `DMA`
+- `EBREAK`
+- `ERCOV`
+- `ESAVE`
+- `FABS`
+- `FADD`
+- `FCVTA`
+- `FCVTM`
+- `FCVTN`
+- `FCVTP`
+- `FDIV`
+- `FENCE.D`
+- `FENCE.I`
+- `FEQS`
+- `FEXP`
+- `FGES`
+- `FLTS`
+- `FMADD`
+- `FMAX`
+- `FMIN`
+- `FMSUB`
+- `FMUL`
+- `FNE`
+- `FNES`
+- `FNMADD`
+- `FNMSUB`
+- `FRECIP`
+- `FRET.RA`
+- `FSQRT`
+- `FSUB`
+- `HL.ADDIW`
+- `HL.ADDTPC`
+- `HL.ANDIW`
+- `HL.BFI`
+- `HL.BSTART.CALL`
+- `HL.BSTART.FP`
+- `HL.BSTART.SYS`
+- `HL.CASB`
+- `HL.CASD`
+- `HL.CASH`
+- `HL.CASW`
+- `HL.CCAT`
+- `HL.CCATW`
+- `HL.CMP.ANDI`
+- `HL.CMP.EQI`
+- `HL.CMP.GEI`
+- `HL.CMP.GEUI`
+- `HL.CMP.LTI`
+- `HL.CMP.LTUI`
+- `HL.CMP.NEI`
+- `HL.CMP.ORI`
+- `HL.DIV`
+- `HL.DIVU`
+- `HL.DIVUW`
+- `HL.DIVW`
+- `HL.LB.PO`
+- `HL.LB.PR`
+- `HL.LBI`
+- `HL.LBI.PO`
+- `HL.LBI.PR`
+- `HL.LBIP`
+- `HL.LBP`
+- `HL.LBU.PO`
+- `HL.LBU.PR`
+- `HL.LBUI`
+- `HL.LBUI.PO`
+- `HL.LBUI.PR`
+- `HL.LBUIP`
+- `HL.LBUP`
+- `HL.LD.PO`
+- `HL.LD.PR`
+- `HL.LDI`
+- `HL.LDI.PR`
+- `HL.LDI.U`
+- `HL.LDI.UPO`
+- `HL.LDI.UPR`
+- `HL.LDIP`
+- `HL.LDIP.U`
+- `HL.LDP`
+- `HL.LH.PO`
+- `HL.LH.PR`
+- `HL.LHI`
+- `HL.LHI.PO`
+- `HL.LHI.PR`
+- `HL.LHI.U`
+- `HL.LHI.UPO`
+- `HL.LHI.UPR`
+- `HL.LHIP`
+- `HL.LHIP.U`
+- `HL.LHP`
+- `HL.LHU.PO`
+- `HL.LHU.PR`
+- `HL.LHUI`
+- `HL.LHUI.PO`
+- `HL.LHUI.PR`
+- `HL.LHUI.U`
+- `HL.LHUI.UPO`
+- `HL.LHUI.UPR`
+- `HL.LHUIP`
+- `HL.LHUIP.U`
+- `HL.LHUP`
+- `HL.LIS`
+- `HL.LIU`
+- `HL.LW.PO`
+- `HL.LW.PR`
+- `HL.LWI`
+- `HL.LWI.PR`
+- `HL.LWI.U`
+- `HL.LWI.UPO`
+- `HL.LWI.UPR`
+- `HL.LWIP.U`
+- `HL.LWP`
+- `HL.LWU.PO`
+- `HL.LWU.PR`
+- `HL.LWUI`
+- `HL.LWUI.PR`
+- `HL.LWUI.U`
+- `HL.LWUI.UPO`
+- `HL.LWUI.UPR`
+- `HL.LWUIP`
+- `HL.LWUIP.U`
+- `HL.LWUP`
+- `HL.MADD`
+- `HL.MADDW`
+- `HL.MIADD`
+- `HL.MISUB`
+- `HL.MUL`
+- `HL.MULU`
+- `HL.ORI`
+- `HL.ORIW`
+- `HL.PRF`
+- `HL.PRF.A`
+- `HL.PRFI.U`
+- `HL.PRFI.UA`
+- `HL.QMT`
+- `HL.QPOP`
+- `HL.QPUSH`
+- `HL.REM`
+- `HL.REMU`
+- `HL.REMUW`
+- `HL.REMW`
+- `HL.SB.PO`
+- `HL.SB.PR`
+- `HL.SBI`
+- `HL.SBI.PO`
+- `HL.SBI.PR`
+- `HL.SBIP`
+- `HL.SBP`
+- `HL.SD.PO`
+- `HL.SD.PR`
+- `HL.SD.UPO`
+- `HL.SD.UPR`
+- `HL.SDI`
+- `HL.SDI.PR`
+- `HL.SDI.U`
+- `HL.SDI.UPO`
+- `HL.SDI.UPR`
+- `HL.SDIP.U`
+- `HL.SDP`
+- `HL.SDP.U`
+- `HL.SETC.ANDI`
+- `HL.SETC.EQI`
+- `HL.SETC.GEI`
+- `HL.SETC.GEUI`
+- `HL.SETC.LTI`
+- `HL.SETC.LTUI`
+- `HL.SETC.NEI`
+- `HL.SETC.ORI`
+- `HL.SETRET`
+- `HL.SH.PO`
+- `HL.SH.PR`
+- `HL.SH.UPO`
+- `HL.SH.UPR`
+- `HL.SHI`
+- `HL.SHI.PO`
+- `HL.SHI.PR`
+- `HL.SHI.U`
+- `HL.SHI.UPO`
+- `HL.SHI.UPR`
+- `HL.SHIP`
+- `HL.SHIP.U`
+- `HL.SHP`
+- `HL.SHP.U`
+- `HL.SSRGET`
+- `HL.SSRSET`
+- `HL.SW.PO`
+- `HL.SW.PR`
+- `HL.SW.UPO`
+- `HL.SW.UPR`
+- `HL.SWI`
+- `HL.SWI.PR`
+- `HL.SWI.U`
+- `HL.SWI.UPO`
+- `HL.SWI.UPR`
+- `HL.SWIP.U`
+- `HL.SWP`
+- `HL.SWP.U`
+- `HL.XORI`
+- `HL.XORIW`
+- `IC.IALL`
+- `IC.IVA`
+- `J`
+- `JR`
+- `L.BSTART.FP`
+- `L.BSTART.STD`
+- `L.BSTART.SYS`
+- `LB.PCR`
+- `LBU`
+- `LBU.PCR`
+- `LD.ADD`
+- `LD.AND`
+- `LD.OR`
+- `LD.PCR`
+- `LD.SMAX`
+- `LD.SMIN`
+- `LD.UMAX`
+- `LD.UMIN`
+- `LD.XOR`
+- `LDI.U`
+- `LH`
+- `LH.PCR`
+- `LHI.U`
+- `LHU`
+- `LHU.PCR`
+- `LHUI.U`
+- `LR.B`
+- `LR.D`
+- `LR.H`
+- `LR.W`
+- `LSRGET`
+- `LW.ADD`
+- `LW.AND`
+- `LW.OR`
+- `LW.PCR`
+- `LW.SMAX`
+- `LW.SMIN`
+- `LW.UMAX`
+- `LW.UMIN`
+- `LW.XOR`
+- `LWI.U`
+- `LWU`
+- `LWU.PCR`
+- `LWUI.U`
+- `MADDW`
+- `MAX`
+- `MAXU`
+- `MCOPY`
+- `MIN`
+- `MINU`
+- `MSET`
+- `MULU`
+- `MULUW`
+- `PRF`
+- `PRFI.U`
+- `REV`
+- `SB.PCR`
+- `SC.B`
+- `SC.D`
+- `SC.H`
+- `SC.W`
+- `SD.ADD`
+- `SD.AND`
+- `SD.OR`
+- `SD.PCR`
+- `SD.SMAX`
+- `SD.SMIN`
+- `SD.U`
+- `SD.UMAX`
+- `SD.UMIN`
+- `SD.XOR`
+- `SDI.U`
+- `SETC.AND`
+- `SETC.ANDI`
+- `SETC.EQ`
+- `SETC.LTUI`
+- `SETC.NE`
+- `SETC.OR`
+- `SETC.ORI`
+- `SETC.TGT`
+- `SETRET`
+- `SH`
+- `SH.PCR`
+- `SH.U`
+- `SHI.U`
+- `SSRGET`
+- `SSRSET`
+- `SSRSWAP`
+- `SW.ADD`
+- `SW.AND`
+- `SW.OR`
+- `SW.PCR`
+- `SW.SMAX`
+- `SW.SMIN`
+- `SW.U`
+- `SW.UMAX`
+- `SW.UMIN`
+- `SW.XOR`
+- `SWAPB`
+- `SWAPD`
+- `SWAPH`
+- `SWAPW`
+- `SWI.U`
+- `TLB.IA`
+- `TLB.IALL`
+- `TLB.IAV`
+- `TLB.IV`
+- `UCVTF`
+- `V.ADD`
+- `V.ADDI`
+- `V.AND`
+- `V.ANDI`
+- `V.BCNT`
+- `V.BIC`
+- `V.BIS`
+- `V.BXS`
+- `V.BXU`
+- `V.CLZ`
+- `V.CMP.AND`
+- `V.CMP.ANDI`
+- `V.CMP.EQ`
+- `V.CMP.EQI`
+- `V.CMP.GE`
+- `V.CMP.GEI`
+- `V.CMP.GEU`
+- `V.CMP.GEUI`
+- `V.CMP.LT`
+- `V.CMP.LTI`
+- `V.CMP.LTU`
+- `V.CMP.LTUI`
+- `V.CMP.NE`
+- `V.CMP.NEI`
+- `V.CMP.OR`
+- `V.CMP.ORI`
+- `V.CSEL`
+- `V.CTZ`
+- `V.DIV`
+- `V.FABS`
+- `V.FADD`
+- `V.FCLASS`
+- `V.FCVT`
+- `V.FCVTI`
+- `V.FDIV`
+- `V.FEQ`
+- `V.FEQS`
+- `V.FEXP`
+- `V.FGE`
+- `V.FGES`
+- `V.FLT`
+- `V.FLTS`
+- `V.FMADD`
+- `V.FMAX`
+- `V.FMIN`
+- `V.FMSUB`
+- `V.FMUL`
+- `V.FNE`
+- `V.FNES`
+- `V.FNMADD`
+- `V.FNMSUB`
+- `V.FRECIP`
+- `V.FSQRT`
+- `V.FSUB`
+- `V.ICVT`
+- `V.ICVTF`
+- `V.LB`
+- `V.LB.BRG`
+- `V.LBI`
+- `V.LBI.BRG`
+- `V.LBU`
+- `V.LBU.BRG`
+- `V.LBUI`
+- `V.LBUI.BRG`
+- `V.LD`
+- `V.LD.ADD`
+- `V.LD.AND`
+- `V.LD.BRG`
+- `V.LD.MAX`
+- `V.LD.MIN`
+- `V.LD.OR`
+- `V.LD.XOR`
+- `V.LDI`
+- `V.LDI.BRG`
+- `V.LDI.U`
+- `V.LDI.U.BRG`
+- `V.LH`
+- `V.LH.BRG`
+- `V.LHI`
+- `V.LHI.BRG`
+- `V.LHI.U`
+- `V.LHI.U.BRG`
+- `V.LHU`
+- `V.LHU.BRG`
+- `V.LHUI`
+- `V.LHUI.BRG`
+- `V.LHUI.U`
+- `V.LHUI.U.BRG`
+- `V.LW`
+- `V.LW.ADD`
+- `V.LW.AND`
+- `V.LW.BRG`
+- `V.LW.MAX`
+- `V.LW.MIN`
+- `V.LW.OR`
+- `V.LW.XOR`
+- `V.LWI`
+- `V.LWI.BRG`
+- `V.LWI.U`
+- `V.LWI.U.BRG`
+- `V.LWU`
+- `V.LWU.BRG`
+- `V.LWUI`
+- `V.LWUI.BRG`
+- `V.LWUI.U`
+- `V.LWUI.U.BRG`
+- `V.MADD`
+- `V.MAX`
+- `V.MIN`
+- `V.MUL`
+- `V.OR`
+- `V.ORI`
+- `V.PSEL`
+- `V.QPOP`
+- `V.QPUSH`
+- `V.RDADD`
+- `V.RDAND`
+- `V.RDFADD`
+- `V.RDFMAX`
+- `V.RDFMIN`
+- `V.RDMAX`
+- `V.RDMIN`
+- `V.RDOR`
+- `V.RDXOR`
+- `V.REM`
+- `V.REV`
+- `V.SB`
+- `V.SB.BRG`
+- `V.SBI`
+- `V.SBI.BRG`
+- `V.SD`
+- `V.SD.ADD`
+- `V.SD.AND`
+- `V.SD.BRG`
+- `V.SD.MAX`
+- `V.SD.MIN`
+- `V.SD.OR`
+- `V.SD.U`
+- `V.SD.U.BRG`
+- `V.SD.XOR`
+- `V.SDI`
+- `V.SDI.BRG`
+- `V.SDI.U`
+- `V.SDI.U.BRG`
+- `V.SH`
+- `V.SH.BRG`
+- `V.SH.U`
+- `V.SH.U.BRG`
+- `V.SHFL.BFLY`
+- `V.SHFL.DOWN`
+- `V.SHFL.IDX`
+- `V.SHFL.UP`
+- `V.SHFLI.BFLY`
+- `V.SHFLI.DOWN`
+- `V.SHFLI.IDX`
+- `V.SHFLI.UP`
+- `V.SHI`
+- `V.SHI.BRG`
+- `V.SHI.U`
+- `V.SHI.U.BRG`
+- `V.SLL`
+- `V.SLLI`
+- `V.SRA`
+- `V.SRAI`
+- `V.SRL`
+- `V.SRLI`
+- `V.SUB`
+- `V.SUBI`
+- `V.SW`
+- `V.SW.ADD`
+- `V.SW.AND`
+- `V.SW.BRG`
+- `V.SW.MAX`
+- `V.SW.MIN`
+- `V.SW.OR`
+- `V.SW.U`
+- `V.SW.U.BRG`
+- `V.SW.XOR`
+- `V.SWI`
+- `V.SWI.BRG`
+- `V.SWI.U`
+- `V.SWI.U.BRG`
+- `V.XOR`
+- `V.XORI`
+- `XB`

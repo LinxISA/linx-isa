@@ -2874,7 +2874,7 @@ from the real kernel/runtime failures:
 - The first focused failure was a Linux Oops in `sys_fcntl` usercopy with BPC
   at `HL.BSTART.STD FALL<, fixup_label>`. The old Linux `fixup_exception`
   path only recognized legacy 128-bit block headers with the fixup attribute.
-- `arch/linx/mm/extable.c` now recognizes the current v0.56 32-bit and
+- `arch/linx/mm/extable.c` now recognizes the current v0.57 32-bit and
   48-bit `BSTART.{STD,SYS,FP} FALL` fixup encodings before falling back to the
   legacy header parser. Zero-offset FALL blocks are deliberately ignored so
   ordinary fallthrough blocks are not converted into recovery handlers.
@@ -2920,7 +2920,7 @@ Next 500-specific solution path:
    `workloads/generated/specint-train-all-queue-inline-hbguard-20260629-r1/`,
    so the next loop should inspect the symbolized musl `__syscall_cp_c` /
    `sccp` origin before changing kernel/QEMU liveness policy.
-3. Keep the v0.56 fixup parser as a prerequisite for all uaccess-heavy SPEC
+3. Keep the v0.57 fixup parser as a prerequisite for all uaccess-heavy SPEC
    work; without it, normal faultable usercopy recovery is misclassified as an
    unhandled kernel page fault.
 

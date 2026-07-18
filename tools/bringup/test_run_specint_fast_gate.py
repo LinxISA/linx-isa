@@ -38,6 +38,20 @@ def _stack_args(**overrides: bool) -> SimpleNamespace:
 
 
 class SpecintFastGateTests(unittest.TestCase):
+    def test_nightly_covers_each_test_and_train_benchmark_once(self) -> None:
+        suites = gate._select_suites("nightly", [])
+
+        for input_set in ("test", "train"):
+            scheduled = [
+                bench
+                for suite in suites
+                if suite.input_set == input_set
+                for bench in suite.benches
+            ]
+            with self.subTest(input_set=input_set):
+                self.assertEqual(set(scheduled), set(gate.SPECINT_STAGE_B_BENCHES))
+                self.assertEqual(len(scheduled), len(gate.SPECINT_STAGE_B_BENCHES))
+
     def test_all_suite_routes_large_payload_bench_to_9p(self) -> None:
         units = gate._suite_execution_units(gate.SUITES["test-all"], "")
 
@@ -178,6 +192,8 @@ class SpecintFastGateTests(unittest.TestCase):
                         "qemu_repo_head": "abc123",
                         "clean_build_for_head": True,
                     },
+                    "kernel": "/tmp/vmlinux",
+                    "kernel_provenance": {"sha256": "kernel-sha"},
                     "qemu_machine_extra": "dumpdtb=/tmp/virt.dtb",
                     "qemu_extra_args": ["-accel", "tcg,split-wx=off"],
                     "spec_dir": "/spec",
@@ -202,6 +218,8 @@ class SpecintFastGateTests(unittest.TestCase):
         self.assertIn("qemu_version: `QEMU emulator version 10.2.50`", text)
         self.assertIn("qemu_repo_head: `abc123`", text)
         self.assertIn("qemu_clean_build_for_head: `true`", text)
+        self.assertIn("kernel: `/tmp/vmlinux`", text)
+        self.assertIn("kernel_sha256: `kernel-sha`", text)
         self.assertIn("qemu_machine_extra: `dumpdtb=/tmp/virt.dtb`", text)
         self.assertIn("qemu_extra_args: `-accel tcg,split-wx=off`", text)
         self.assertIn("qemu_speed_stack: `true`", text)
@@ -216,6 +234,7 @@ class SpecintFastGateTests(unittest.TestCase):
             runner=Path("/runner.py"),
             spec_dir=Path("/spec"),
             qemu=Path("/qemu"),
+            kernel=Path("/kernel"),
             sysroot=Path("/sysroot"),
             out_dir=Path("/out"),
             append_extra="norandmaps",
@@ -286,6 +305,7 @@ class SpecintFastGateTests(unittest.TestCase):
         )
 
         self.assertIn("--qemu-heartbeat-regs", cmd)
+        self.assertEqual(cmd[cmd.index("--kernel") + 1], "/kernel")
         self.assertIn("--qemu-heartbeat-code-bytes", cmd)
         self.assertEqual(cmd[cmd.index("--qemu-heartbeat-code-bytes") + 1], "16")
         self.assertIn("--qemu-heartbeat-same-site-warn", cmd)

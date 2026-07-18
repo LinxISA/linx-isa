@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "run_id": "2026-07-17-fishtoucher-dev",
+  "classification": "out-of-order-diagnostic-after-qemu-l1-hard-break",
+  "required": false,
+  "same_manifest_closure": false,
+  "fixed_assets": {
+    "llvm_head": "19631a66485e9ff87d1f6cf2c5ffcbd897864bd6",
+    "qemu_head": "ca3e11ba7b4539d846377f9c42baa067d458188f",
+    "qemu_sha256": "7aaaab0728dc46705b1c76c470dcf78b1ac4a1c21932903c6cd2cb3b4f11291b",
+    "kernel_sha256": "2568cd51d348cc06ba1782363bb532afa3eddb46e17e80badb0af07a391330ef"
+  },
+  "results": {
+    "linux_busybox": {
+      "status": "pass",
+      "duration_seconds": 3.174283,
+      "timer_irq_counts": [31, 36],
+      "rootfs_preserved": true
+    },
+    "tsvc": {
+      "status": "pass",
+      "completed": "151/151",
+      "strict_lowered": "150/151",
+      "threshold": 150,
+      "s451_off_auto_checksum_mismatches": 0
+    },
+    "musl": {
+      "static_runtime_pass": "16/16",
+      "shared_runtime_pass": "16/16"
+    },
+    "c_workloads": {
+      "coremark": "RUN_PASS",
+      "dhrystone": "RUN_PASS",
+      "polybench_mini_gemm": "PASS",
+      "polybench_mini_jacobi_2d": "PASS"
+    },
+    "specint_train_all_baseline": {
+      "status": "fail",
+      "strict_completions": "1/10",
+      "specrand_strict_hash": "pass",
+      "live_timeouts": 9,
+      "large_525_transport": "9p",
+      "timeout_contract": "site progress, no stall, no trap, no panic"
+    },
+    "specint_speed_stack": {
+      "specrand_strict_hash": "pass",
+      "specrand_output": "871 bytes; fnv1a32=0x973dcfc2",
+      "xalancbmk_300s": "live-timeout; 47000000007 instructions; +38.24% versus 34000000004 baseline",
+      "xalancbmk_900s": "live-timeout; 130000000013 instructions; specdiff not available",
+      "correctness_closed": false
+    }
+  },
+  "sources": [
+    {"path": "workloads/generated/fishtoucher-linux-gates-731055e-19631a-ca3e11b-20260717-r4/busybox_rootfs_report.json", "sha256": "6f0ecffd57b4027becaa8af5f06574e51a94d11f287e5bcda862f8be17d460c1"},
+    {"path": "workloads/generated/fishtoucher-tsvc151-19631a-ca3e11b-20260717-r2/reports/tsvc/gate_result.json", "sha256": "245ee27e43bc40c025ec648a4c35c916b227f48ed48b03545f25b0dd9233d773"},
+    {"path": "workloads/generated/fishtoucher-tsvc-s451-auto-19631a-ca3e11b-20260717-r1/reports/tsvc/checksum_compare.auto.json", "sha256": "d86f3b61dafaf0fd3ee1f0bcefd6d4af60caba2a2278b021ce137ca8f26c4236"},
+    {"path": "workloads/generated/fishtoucher-musl-static-all-19631a-ca3e11b-20260717-r1/summary.json", "sha256": "f0597924a42a68bf7932b468d0d8a6168aa04bec3537fa93317ceb837e702eac"},
+    {"path": "workloads/generated/fishtoucher-musl-shared-all-19631a-ca3e11b-20260717-r1/summary.json", "sha256": "e9b92c8bd5b8f7cf7b85481977910a79dd44dfed7ef8e87e4970ccffe0119a14"},
+    {"path": "workloads/generated/fishtoucher-c-workloads-ca3e11b-20260717-r1/benchmarks_result.json", "sha256": "237034560f85a93b2b1972b8b04338c23ba5f9c7a978eb88b05b1f36f4cae7d4"},
+    {"path": "workloads/generated/fishtoucher-c-workloads-ca3e11b-20260717-r1/polybench_result_r3.json", "sha256": "6088ec6c2bc696d34f1b9a2c49f2cabfc715b1b5861b391f06b161825b5fe4ad"},
+    {"path": "workloads/generated/fishtoucher-specint-train-all-ca3e11b-20260717-r1/train-all/qemu_matrix_summary.json", "sha256": "1cf773cf537b4b8d1ddc2d80dfd417e01f796ce26800745c2100ed88de070110"},
+    {"path": "workloads/generated/fishtoucher-specint-train-all-ca3e11b-20260717-r1/train-all-large-9p/qemu_matrix_summary.json", "sha256": "3069eeeab096b71f30d58beedcb518663c6433982dcf2dcffb88f016fc5ef68b"},
+    {"path": "workloads/generated/fishtoucher-specint-999-speedstack-19631a-ca3e11b-20260717-r1/qemu_matrix_summary.json", "sha256": "032069c9e6ad3fcb77faedb5cb5bf099f0435bbd8cc0e8feeb0a21a5402e79d4"},
+    {"path": "workloads/generated/fishtoucher-specint-523-speedstack-19631a-ca3e11b-20260717-r1/qemu_matrix_summary.json", "sha256": "ef79d0f42c6ec1a9cceb16b08d9efa0802ddb7e185e4be87af1ed99619067eec"},
+    {"path": "workloads/generated/fishtoucher-specint-523-speedstack-900s-19631a-ca3e11b-20260717-r1/qemu_matrix_summary.json", "sha256": "3684a57a618d0ec2bffdd64dffe6af36e19672c626874fc21c29a05f893f540b"}
+  ]
+}

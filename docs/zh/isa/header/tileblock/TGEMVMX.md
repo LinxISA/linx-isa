@@ -103,7 +103,7 @@ TGEMVMX <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcTile1<.
 
 该TileOp模版块编码为以下指令：
 
-- [BSTART.CUBE](../../blockIntro/cube_block/header.md) `TGEMVMX, DataType`
+- [BSTART.TGEMVMX](../../blockIntro/cube_block/header.md) `DataType`
 - [B.DATR](../../header/B.DATR.md) `DataTypeB`    （注：与DataTypeA相同时可缺省）
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0`    （注：*M*）
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`    （注：*N*）

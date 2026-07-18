@@ -1,6 +1,7 @@
-# 灵犀指令集 启动（公共 v0.56）
+# 灵犀指令集 启动（公共 v0.57）
 
-该目录跟踪 `v0.56` 架构和实现一致性，AVS 是唯一实时公开启动合约。
+该目录跟踪 `v0.57` 架构和实现一致性。v0.57 是相对不可变 v0.57
+基线的严格增量，AVS 是唯一实时公开启动合约。
 
 ## 从这里开始
 
@@ -9,7 +10,7 @@
 
 ## 规范合同
 
-- 架构合约：`docs/architecture/v0.56-architecture-contract.md`
+- 架构合约：`docs/architecture/v0.57-architecture-contract.md`
 - AVS合约页面：`docs/bringup/AVS_CONTRACT.md`
 - 规范 AVS 矩阵：`avs/linx_avs_v1_test_matrix.yaml`
 - 合约门：`python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml`

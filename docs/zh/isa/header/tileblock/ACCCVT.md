@@ -65,7 +65,7 @@ ACCCVT Layout.{canon, normal}, <LB0:Row, LB1:Col, SrcType, DstType>, ACC, [RegSr
 
 `ACCCVT` 块需要拆分成以下指令进行编码：
 
-- [BSTART.CUBE](../../blockIntro/cube_block/header.md) ACCCVT, SrcType
+- [BSTART.ACCCVT](../../blockIntro/cube_block/header.md) `SrcType`
 - [B.DATR](../../header/B.DATR.md) Layout.{canon, normal}, DstType
 - [B.DIM](../../header/B.DIM.md) reg, imm, ->LB0
 - [B.DIM](../../header/B.DIM.md) reg, imm, ->LB1

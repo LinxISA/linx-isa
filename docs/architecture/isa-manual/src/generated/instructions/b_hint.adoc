@@ -14,7 +14,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_b_hint_32_69d942ff1583.svg[B.HINT encoding form b_hint_32_69d942ff1583,width=800]
+image::encodings/enc_b_hint_32_69d942ff1583.svg[B.HINT encoding form b_hint_32_69d942ff1583,width=800]
 
 *Compression:* L32 (len=32)
 
@@ -25,7 +25,7 @@ image::../encodings/enc_b_hint_32_69d942ff1583.svg[B.HINT encoding form b_hint_3
 
 *Encoding:*
 
-image::../encodings/enc_b_hint_32_f7d01d734925.svg[B.HINT encoding form b_hint_32_f7d01d734925,width=800]
+image::encodings/enc_b_hint_32_f7d01d734925.svg[B.HINT encoding form b_hint_32_f7d01d734925,width=800]
 
 *Compression:* L32 (len=32)
 

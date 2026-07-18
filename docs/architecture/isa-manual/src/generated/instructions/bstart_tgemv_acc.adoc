@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_bstart_tgemv_acc]]
+==== BSTART.TGEMV.ACC
+
+*Syntax:* BSTART.TGEMV.ACC DataType
+
+*Description:* Named CUBE-family Function=18. Matrix-vector multiply-accumulate; requires B.DIM and CUBE tile bindings.
+
+*Encoding:*
+
+image::encodings/enc_bstart_tgemv_acc.svg[BSTART.TGEMV.ACC encoding,width=800]
+
+*Uop-Class:* CMD
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "v0.57 CUBE Function=18", "source": "group_rule", "uop_kind": "CMD"}`

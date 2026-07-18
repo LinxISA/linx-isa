@@ -1,63 +1,70 @@
-# ISA 与 QEMU 覆盖率快照
+# ISA ä¸ QEMU è§£ç å¨/æºç æ å°å¿«ç§
 
-- 生成（UTC）：`2026-05-08 15:41:23Z`
-- Spec独特助记符：`710`
-- QEMU独特的解码助记符（非内部）：`640`
-- QEMU 映射规范助记符：`616`
-- 助记词覆盖范围：`616/710` (`86.76%`)
-- 规范法律形式：`740`
-- QEMU 映射规格表：`612`
-- 表格覆盖范围：`612/740` (`82.7%`)
-- 缺少规格助记符：`94`
-- 缺少规格表：`128`
-- 预留规格表：`0`
-- 未映射的 QEMU 助记符：`7`
+- çææ¶é´ï¼UTCï¼ï¼ `2026-07-15 15:52:09Z`
+- è¯æ®å±çº§ï¼`L1`
+- å£°æï¼`decoder_source_mapping`
+- L2 è¿è¡æ¶æ§è¡ï¼`unavailable`
+- L3 è¯­ä¹å¤å®ï¼`unavailable`
+- éå¶ï¼æ¬æ¥åä¸è¯ææä»¤å·²å¨ QEMU ä¸­æ§è¡ï¼ä¹ä¸è¯æç»æç¬¦åä½ç³»ç»æè¯­ä¹ã
+- è§èå¯ä¸å©è®°ç¬¦ï¼`711`
+- QEMU å¯ä¸è§£ç å©è®°ç¬¦ï¼ä¸å«åé¨é¡¹ï¼ï¼`646`
+- QEMU æ å°å°çè§èå©è®°ç¬¦ï¼`620`
+- L1 å©è®°ç¬¦æ å°ï¼`620/711` (`87.2%`)
+- è§èåæ³å½¢å¼ï¼`747`
+- QEMU æ å°å°çè§èå½¢å¼ï¼`625`
+- L1 å½¢å¼æ å°ï¼`625/747` (`83.67%`)
+- ç¼ºå¤±çè§èå©è®°ç¬¦ï¼`91`
+- ç¼ºå¤±çè§èå½¢å¼ï¼`122`
+- ä¿ççè§èå½¢å¼ï¼`0`
+- æªæ å°ç QEMU å©è®°ç¬¦ï¼`3`
 
-## 前缀助记符覆盖率- `ACRC`：`1`
+## æåç¼ç»è®¡ç L1 å©è®°ç¬¦æ å°
+
+- `ACRC`: `1`
 - `ACRE`: `1`
-- `ADD`：`1`
+- `ADD`: `1`
 - `ADDI`: `1`
-- `ADDIW`：`1`
-- `ADDTPC`：`1`
+- `ADDIW`: `1`
+- `ADDTPC`: `1`
 - `ADDW`: `1`
 - `AND`: `1`
 - `ANDI`: `1`
 - `ANDIW`: `1`
 - `ANDW`: `1`
 - `ASSERT`: `1`
-- `B`: `15`
+- `B`: `16`
 - `BC`: `2`
-- `BCNT`：`1`
-- `BIC`：`1`
+- `BCNT`: `1`
+- `BIC`: `1`
 - `BIS`: `1`
-- `BSE`：`1`
-- `BSTART`：`20`
+- `BSE`: `1`
+- `BSTART`: `19`
 - `BSTOP`: `1`
-- `BWE`：`1`
+- `BWE`: `1`
 - `BWI`: `1`
 - `BWT`: `1`
 - `BXS`: `1`
 - `BXU`: `1`
-- `C`：`37`
+- `C`: `38`
 - `CLZ`: `1`
 - `CMP`: `16`
 - `CSEL`: `1`
 - `CTZ`: `1`
-- `DC`：`8`
+- `DC`: `8`
 - `DIV`: `1`
 - `DIVU`: `1`
-- `DIVUW`：`1`
+- `DIVUW`: `1`
 - `DIVW`: `1`
 - `EBREAK`: `1`
-- `ERCOV`：`1`
+- `ERCOV`: `1`
 - `ESAVE`: `1`
 - `FABS`: `1`
 - `FADD`: `1`
-- `FCVT`：`1`
+- `FCVT`: `1`
 - `FCVTA`: `1`
-- `FCVTM`：`1`
-- `FCVTN`：`1`
-- `FCVTP`：`1`
+- `FCVTM`: `1`
+- `FCVTN`: `1`
+- `FCVTP`: `1`
 - `FCVTZ`: `1`
 - `FDIV`: `1`
 - `FENCE`: `2`
@@ -66,8 +73,9 @@
 - `FEQS`: `1`
 - `FEXIT`: `1`
 - `FEXP`: `1`
-- `FGE`: `1`- `FGES`: `1`
-- `FLT`：`1`
+- `FGE`: `1`
+- `FGES`: `1`
+- `FLT`: `1`
 - `FLTS`: `1`
 - `FMADD`: `1`
 - `FMAX`: `1`
@@ -77,186 +85,27 @@
 - `FNE`: `1`
 - `FNES`: `1`
 - `FNMADD`: `1`
-- `FNMSUB`：`1`
+- `FNMSUB`: `1`
 - `FRECIP`: `1`
 - `FRET`: `2`
 - `FSQRT`: `1`
 - `FSUB`: `1`
-- `HL`：`194`
+- `HL`: `194`
 - `IC`: `2`
 - `J`: `1`
 - `JR`: `1`
+- `L`: `3`
 - `LB`: `2`
 - `LBI`: `1`
 - `LBU`: `2`
 - `LBUI`: `1`
 - `LD`: `10`
-- `LDI`：`2`
-- `LH`：`2`
+- `LDI`: `2`
+- `LH`: `2`
 - `LHI`: `2`
 - `LHU`: `2`
 - `LHUI`: `2`
 - `LR`: `4`
-- `LSRGET`：`1`
-- `LUI`: `1`
-- `LW`: `10`
-- `LWI`: `2`
-- `LWU`：`2`
-- `LWUI`：`2`
-- `MADD`：`1`
-- `MADDW`：`1`
-- `MAX`：`1`
-- `MAXU`：`1`
-- `MCOPY`：`1`
-- `MIN`：`1`
-- `MINU`：`1`
-- `MSET`: `1`
-- `MUL`: `1`
-- `MULU`：`1`
-- `MULUW`: `1`
-- `MULW`: `1`
-- `OR`: `1`
-- `ORI`：`1`- `ORIW`：`1`
-- `ORW`: `1`
-- `PRF`：`1`
-- `PRFI`: `1`
-- `REM`：`1`
-- `REMU`：`1`
-- `REMUW`: `1`
-- `REMW`: `1`
-- `REV`: `1`
-- `SB`：`2`
-- `SBI`：`1`
-- `SC`: `4`
-- `SCVTF`：`1`
-- `SD`: `11`
-- `SDI`: `2`
-- `SETC`：`17`
-- `SETRET`: `1`
-- `SH`: `3`
-- `SHI`: `2`
-- `SLL`: `1`
-- `SLLI`：`1`
-- `SLLIW`: `1`
-- `SLLW`: `1`
-- `SRA`: `1`
-- `SRAI`: `1`
-- `SRAIW`：`1`
-- `SRAW`: `1`
-- `SRL`: `1`
-- `SRLI`: `1`
-- `SRLIW`: `1`
-- `SRLW`：`1`
-- `SSRGET`: `1`
-- `SSRSET`: `1`
-- `SSRSWAP`: `1`
-- `SUB`: `1`
-- `SUBI`：`1`
-- `SUBIW`: `1`
-- `SUBW`：`1`
-- `SW`: `11`
-- `SWAPB`: `1`
-- `SWAPD`：`1`
-- `SWAPH`: `1`
-- `SWAPW`: `1`
-- `SWI`: `2`
-- `TLB`: `4`
-- `UCVTF`: `1`
-- `V`: `94`
-- `XOR`: `1`
-- `XORI`: `1`
-- `XORIW`：`1`
-- `XORW`：`1`## 按前缀丢失的助记符
-
-- `B`: `2`
-- `C`: `1`
-- `V`: `90`
-- `XB`：`1`
-
-## 按前缀形成覆盖率- `ACRC`：`1`
-- `ACRE`: `1`
-- `ADD`: `1`
-- `ADDI`: `1`
-- `ADDIW`：`1`
-- `ADDTPC`：`1`
-- `ADDW`: `1`
-- `AND`: `1`
-- `ANDI`: `1`
-- `ANDIW`：`1`
-- `ANDW`：`1`
-- `ASSERT`: `1`
-- `B`: `17`
-- `BC`: `2`
-- `BCNT`: `1`
-- `BIC`: `1`
-- `BIS`: `1`
-- `BSE`: `1`
-- `BSTART`: `19`
-- `BSTOP`：`1`
-- `BWE`：`1`
-- `BWI`: `1`
-- `BWT`: `1`
-- `BXS`: `1`
-- `BXU`：`1`
-- `C`：`37`
-- `CLZ`: `1`
-- `CMP`: `16`
-- `CSEL`: `1`
-- `CTZ`：`1`
-- `DC`：`6`
-- `DIV`: `1`
-- `DIVU`：`1`
-- `DIVUW`: `1`
-- `DIVW`：`1`
-- `EBREAK`：`1`
-- `ERCOV`：`1`
-- `ESAVE`：`1`
-- `FABS`: `1`
-- `FADD`：`1`
-- `FCVT`：`1`
-- `FCVTA`: `1`
-- `FCVTM`: `1`
-- `FCVTN`: `1`
-- `FCVTP`：`1`
-- `FCVTZ`：`1`
-- `FDIV`: `1`
-- `FENCE`：`2`
-- `FENTRY`：`1`
-- `FEQ`：`1`
-- `FEQS`：`1`- `FEXIT`: `1`
-- `FEXP`：`1`
-- `FGE`：`1`
-- `FGES`：`1`
-- `FLT`：`1`
-- `FLTS`: `1`
-- `FMADD`：`1`
-- `FMAX`：`1`
-- `FMIN`：`1`
-- `FMSUB`：`1`
-- `FMUL`: `1`
-- `FNE`：`1`
-- `FNES`: `1`
-- `FNMADD`：`1`
-- `FNMSUB`：`1`
-- `FRECIP`: `1`
-- `FRET`: `2`
-- `FSQRT`：`1`
-- `FSUB`：`1`
-- `HL`：`195`
-- `IC`：`2`
-- `J`：`1`
-- `JR`：`1`
-- `LB`：`2`
-- `LBI`：`1`
-- `LBU`：`2`
-- `LBUI`：`1`
-- `LD`：`10`
-- `LDI`：`2`
-- `LH`：`2`
-- `LHI`：`2`
-- `LHU`：`2`
-- `LHUI`: `2`
-- `LR`: `2`
 - `LSRGET`: `1`
 - `LUI`: `1`
 - `LW`: `10`
@@ -273,7 +122,8 @@
 - `MSET`: `1`
 - `MUL`: `1`
 - `MULU`: `1`
-- `MULUW`: `1`- `MULW`: `1`
+- `MULUW`: `1`
+- `MULW`: `1`
 - `OR`: `1`
 - `ORI`: `1`
 - `ORIW`: `1`
@@ -296,7 +146,172 @@
 - `SH`: `3`
 - `SHI`: `2`
 - `SLL`: `1`
-- `SLLI`：`1`
+- `SLLI`: `1`
+- `SLLIW`: `1`
+- `SLLW`: `1`
+- `SRA`: `1`
+- `SRAI`: `1`
+- `SRAIW`: `1`
+- `SRAW`: `1`
+- `SRL`: `1`
+- `SRLI`: `1`
+- `SRLIW`: `1`
+- `SRLW`: `1`
+- `SSRGET`: `1`
+- `SSRSET`: `1`
+- `SSRSWAP`: `1`
+- `SUB`: `1`
+- `SUBI`: `1`
+- `SUBIW`: `1`
+- `SUBW`: `1`
+- `SW`: `11`
+- `SWAPB`: `1`
+- `SWAPD`: `1`
+- `SWAPH`: `1`
+- `SWAPW`: `1`
+- `SWI`: `2`
+- `TLB`: `4`
+- `UCVTF`: `1`
+- `V`: `94`
+- `XOR`: `1`
+- `XORI`: `1`
+- `XORIW`: `1`
+- `XORW`: `1`
+
+## æåç¼ç»è®¡çç¼ºå¤±å©è®°ç¬¦
+
+- `V`: `90`
+- `XB`: `1`
+
+## æåç¼ç»è®¡ç L1 å½¢å¼æ å°
+
+- `ACRC`: `1`
+- `ACRE`: `1`
+- `ADD`: `1`
+- `ADDI`: `1`
+- `ADDIW`: `1`
+- `ADDTPC`: `1`
+- `ADDW`: `1`
+- `AND`: `1`
+- `ANDI`: `1`
+- `ANDIW`: `1`
+- `ANDW`: `1`
+- `ASSERT`: `1`
+- `B`: `26`
+- `BC`: `2`
+- `BCNT`: `1`
+- `BIC`: `1`
+- `BIS`: `1`
+- `BSE`: `1`
+- `BSTART`: `18`
+- `BSTOP`: `1`
+- `BWE`: `1`
+- `BWI`: `1`
+- `BWT`: `1`
+- `BXS`: `1`
+- `BXU`: `1`
+- `C`: `38`
+- `CLZ`: `1`
+- `CMP`: `16`
+- `CSEL`: `1`
+- `CTZ`: `1`
+- `DC`: `6`
+- `DIV`: `1`
+- `DIVU`: `1`
+- `DIVUW`: `1`
+- `DIVW`: `1`
+- `EBREAK`: `1`
+- `ERCOV`: `1`
+- `ESAVE`: `1`
+- `FABS`: `1`
+- `FADD`: `1`
+- `FCVT`: `1`
+- `FCVTA`: `1`
+- `FCVTM`: `1`
+- `FCVTN`: `1`
+- `FCVTP`: `1`
+- `FCVTZ`: `1`
+- `FDIV`: `1`
+- `FENCE`: `2`
+- `FENTRY`: `1`
+- `FEQ`: `1`
+- `FEQS`: `1`
+- `FEXIT`: `1`
+- `FEXP`: `1`
+- `FGE`: `1`
+- `FGES`: `1`
+- `FLT`: `1`
+- `FLTS`: `1`
+- `FMADD`: `1`
+- `FMAX`: `1`
+- `FMIN`: `1`
+- `FMSUB`: `1`
+- `FMUL`: `1`
+- `FNE`: `1`
+- `FNES`: `1`
+- `FNMADD`: `1`
+- `FNMSUB`: `1`
+- `FRECIP`: `1`
+- `FRET`: `2`
+- `FSQRT`: `1`
+- `FSUB`: `1`
+- `HL`: `195`
+- `IC`: `2`
+- `J`: `1`
+- `JR`: `1`
+- `L`: `4`
+- `LB`: `2`
+- `LBI`: `1`
+- `LBU`: `2`
+- `LBUI`: `1`
+- `LD`: `10`
+- `LDI`: `2`
+- `LH`: `2`
+- `LHI`: `2`
+- `LHU`: `2`
+- `LHUI`: `2`
+- `LR`: `2`
+- `LSRGET`: `1`
+- `LUI`: `1`
+- `LW`: `10`
+- `LWI`: `2`
+- `LWU`: `2`
+- `LWUI`: `2`
+- `MADD`: `1`
+- `MADDW`: `1`
+- `MAX`: `1`
+- `MAXU`: `1`
+- `MCOPY`: `1`
+- `MIN`: `1`
+- `MINU`: `1`
+- `MSET`: `1`
+- `MUL`: `1`
+- `MULU`: `1`
+- `MULUW`: `1`
+- `MULW`: `1`
+- `OR`: `1`
+- `ORI`: `1`
+- `ORIW`: `1`
+- `ORW`: `1`
+- `PRF`: `1`
+- `PRFI`: `1`
+- `REM`: `1`
+- `REMU`: `1`
+- `REMUW`: `1`
+- `REMW`: `1`
+- `REV`: `1`
+- `SB`: `2`
+- `SBI`: `1`
+- `SC`: `4`
+- `SCVTF`: `1`
+- `SD`: `11`
+- `SDI`: `2`
+- `SETC`: `17`
+- `SETRET`: `1`
+- `SH`: `3`
+- `SHI`: `2`
+- `SLL`: `1`
+- `SLLI`: `1`
 - `SLLIW`: `1`
 - `SLLW`: `1`
 - `SRA`: `1`
@@ -323,34 +338,30 @@
 - `TLB`: `4`
 - `UCVTF`: `1`
 - `V`: `92`
-- `XOR`: `1`- `XORI`: `1`
-- `XORIW`：`1`
-- `XORW`：`1`
+- `XOR`: `1`
+- `XORI`: `1`
+- `XORIW`: `1`
+- `XORW`: `1`
 
-## 按前缀缺失表格
+## æåç¼ç»è®¡çç¼ºå¤±å½¢å¼
 
-- `B`: `10`
 - `BSTART`: `14`
-- `C`: `2`
+- `C`: `1`
 - `DC`: `2`
-- `HL`：`5`
+- `HL`: `5`
+- `L`: `5`
 - `LR`: `2`
 - `V`: `92`
 - `XB`: `1`
 
-## 未映射的 QEMU 助记符
+## æªæ å°ç QEMU å©è®°ç¬¦
 
-- `b_arg_dn2nz`
-- `b_arg_dn2zn`
-- `b_arg_nd2zn`
-- `b_arg_norm`
-- `b_arg_nz2dn`
-- `b_attr`
-- `b_ioti`
+- `bstart_fall`
+- `bstart_split_cond`
+- `bstart_split_direct`
 
-## 缺失规格助记符（前 200 个）- `B.CATR`
-- `B.DATR`
-- `C.SETRET`
+## ç¼ºå¤±çè§èå©è®°ç¬¦ï¼å 200 é¡¹ï¼
+
 - `V.LB`
 - `V.LBI`
 - `V.LBI.BRG`
@@ -443,16 +454,8 @@
 - `V.SWI.U.BRG`
 - `XB`
 
-## 缺少规格表（前 200 个）- `B.ARG [len=32 mask=0xffffffff match=0x1800a4a3]`
-- `B.ARG [len=32 mask=0xffffffff match=0x180221a3]`
-- `B.ARG [len=32 mask=0xffffffff match=0x18022423]`
-- `B.ARG [len=32 mask=0xffffffff match=0x20fae23]`
-- `B.ARG [len=32 mask=0xffffffff match=0xfa023]`
-- `B.CATR [len=32 mask=0x7fff match=0x23]`
-- `B.DATR [len=32 mask=0x707f match=0x1023]`
-- `B.IOT [len=32 mask=0x707f match=0x4013]`
-- `B.IOT [len=32 mask=0x803f707f match=0x5013]`
-- `B.IOT [len=32 mask=0xc03fffff match=0x6013]`
+## ç¼ºå¤±çè§èå½¢å¼ï¼å 200 é¡¹ï¼
+
 - `BSTART CALL [len=32 mask=0xf83f000f match=0x50160002]`
 - `BSTART [len=32 mask=0x7f match=0x11]`
 - `BSTART [len=32 mask=0x7f match=0x21]`
@@ -468,7 +471,6 @@
 - `BSTART.VPAR [len=32 mask=0xf9ffffff match=0x21181]`
 - `BSTART.VSEQ [len=32 mask=0xf9ffffff match=0x29181]`
 - `C.BSTART.STD [len=16 mask=0xc7ff match=0x0]`
-- `C.SETRET [len=16 mask=0xf83f match=0x5016]`
 - `DC.ISW [len=32 mask=0xfff07fff match=0x40602b]`
 - `DC.ZVA [len=32 mask=0xfff07fff match=0x70602b]`
 - `HL.BSTART CALL [len=64 mask=0xfffff83f0000007f match=0x501600000011]`
@@ -476,6 +478,11 @@
 - `HL.CCAT [len=64 mask=0xffff0000707f07ff match=0x105d000e]`
 - `HL.CCATW [len=64 mask=0xffff0000707f07ff match=0x205d000e]`
 - `HL.PRF [len=64 mask=0xffff00007fff07ff match=0x7009000e]`
+- `L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x10810000000f]`
+- `L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x20810000000f]`
+- `L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x30810000000f]`
+- `L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x40810000000f]`
+- `L.BSTART.SYS [len=64 mask=0x7fff0000007f match=0x10110000000f]`
 - `LR.D [len=32 mask=0xf000707f match=0x3000000b]`
 - `LR.W [len=32 mask=0xf000707f match=0x2000000b]`
 - `V.FABS [len=64 mask=0xfff0707ffff0707f match=0x7b0000007f]`
@@ -542,7 +549,8 @@
 - `V.SDI [len=64 mask=0x707f0000207f match=0x30590000007f]`
 - `V.SDI.BRG [len=64 mask=0x707f0000207f match=0x30590000207f]`
 - `V.SDI.U [len=64 mask=0x707f0000207f match=0x70590000007f]`
-- `V.SDI.U.BRG [len=64 mask=0x707f0000207f match=0x70590000207f]`- `V.SH [len=64 mask=0x6007fff0600207f match=0x10490000007f]`
+- `V.SDI.U.BRG [len=64 mask=0x707f0000207f match=0x70590000207f]`
+- `V.SH [len=64 mask=0x6007fff0600207f match=0x10490000007f]`
 - `V.SH.U [len=64 mask=0x6007fff0600207f match=0x50490000007f]`
 - `V.SH.U.BRG [len=64 mask=0x6007fff0600207f match=0x50490000207f]`
 - `V.SHFL.BFLY [len=64 mask=0x7f0707f07f0707f match=0x201d0000007f]`

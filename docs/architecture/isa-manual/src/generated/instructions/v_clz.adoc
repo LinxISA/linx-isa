@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_v_clz_parts.svg[V.CLZ encoding,width=800]
+image::encodings/enc_v_clz_parts.svg[V.CLZ encoding,width=800]
 
 *Uop-Class:* VEC
 

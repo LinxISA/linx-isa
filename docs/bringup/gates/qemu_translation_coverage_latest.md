@@ -1,9 +1,9 @@
 # AVS QEMU Translation Coverage
 
-- Generated (UTC): `2026-07-15 10:37:55Z`
-- Spec unique mnemonics: `711`
-- AVS object files scanned: `5`
-- Covered spec mnemonics: `711/711` (`100.0%`)
+- Generated (UTC): `2026-07-18 02:41:47Z`
+- Spec unique mnemonics: `731`
+- AVS object files scanned: `69`
+- Covered spec mnemonics: `731/731` (`100.0%`)
 - Missing spec mnemonics: `0`
 
 ## Coverage By Prefix
@@ -26,7 +26,7 @@
 - `BIC`: `1`
 - `BIS`: `1`
 - `BSE`: `1`
-- `BSTART`: `19`
+- `BSTART`: `34`
 - `BSTOP`: `1`
 - `BWE`: `1`
 - `BWI`: `1`
@@ -35,6 +35,10 @@
 - `BXU`: `1`
 - `C`: `30`
 - `C.BSTART`: `8`
+- `CASB`: `1`
+- `CASD`: `1`
+- `CASH`: `1`
+- `CASW`: `1`
 - `CLZ`: `1`
 - `CMP`: `16`
 - `CSEL`: `1`
@@ -44,6 +48,7 @@
 - `DIVU`: `1`
 - `DIVUW`: `1`
 - `DIVW`: `1`
+- `DMA`: `1`
 - `EBREAK`: `1`
 - `ERCOV`: `1`
 - `ESAVE`: `1`
@@ -56,6 +61,7 @@
 - `FCVTP`: `1`
 - `FCVTZ`: `1`
 - `FDIV`: `1`
+- `FENCE`: `2`
 - `FENTRY`: `1`
 - `FEQ`: `1`
 - `FEQS`: `1`
@@ -113,7 +119,6 @@
 - `MULU`: `1`
 - `MULUW`: `1`
 - `MULW`: `1`
-- `NCE`: `2`
 - `OR`: `1`
 - `ORI`: `1`
 - `ORIW`: `1`
@@ -174,10 +179,30 @@
 
 ## Top Covering Objects
 
-- `99_spec_decode_qemu.o`: `711`
-- `11_system.o`: `62`
-- `41_v056_isa_forms.o`: `30`
-- `mem.o`: `26`
-- `main.o`: `12`
+- `99_spec_decode_qemu.o`: `731`
+- `16_pto_kernel_parity.o`: `75`
+- `12_v03_vector_tile.o`: `73`
+- `12_v057_vector_tile.o`: `73`
+- `softfp.o`: `72`
+- `13_v03_vector_ops_matrix.o`: `69`
+- `13_v057_vector_ops_matrix.o`: `69`
+- `11_system.o`: `64`
+- `sparse_attention_local_fp16.o`: `62`
+- `flash_attention_cube_fp16.o`: `59`
+- `flash_attention_vec_fp16.o`: `59`
+- `gqa_fp16.o`: `59`
+- `03_loadstore.o`: `58`
+- `07_atomic.o`: `56`
+- `14_callret.o`: `54`
+- `math.o`: `51`
+- `06_floating_point.o`: `49`
+- `rmsnorm_fp16.o`: `49`
+- `04_branch.o`: `46`
+- `stdlib.o`: `44`
+- `09_varargs.o`: `42`
+- `21_freestanding_runtime.o`: `42`
+- `syscall.o`: `40`
+- `08_jumptable.o`: `38`
+- `softmax_fp32.o`: `38`
 
 ## Missing Spec Mnemonics (First 200)

@@ -1,17 +1,33 @@
 {
-  "generated_at_utc": "2026-05-22 08:17:23Z",
+  "claim": "l1_mapping_coherence",
+  "generated_at_utc": "2026-07-17 08:54:27Z",
   "llvm": {
+    "claim": "observed_disassembly_mnemonic_breadth",
     "compiler_analyzer": "/Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/analyze_coverage.py",
-    "compiler_out_dir": "/Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/out-linx64",
+    "compiler_out_dir": "/Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/out",
+    "metric_scope": "unique ISA mnemonics observed in *.objdump instruction lines",
     "missing_mnemonics": [],
     "mnemonic_coverage_count": 194,
     "mnemonic_coverage_ratio_percent": 100.0,
-    "roundtrip_report": "/Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/out-linx64/99_spec_decode/99_spec_decode.roundtrip.json",
-    "roundtrip_skipped_forms": [],
-    "roundtrip_stable_form_count": 200,
-    "roundtrip_stable_ratio_percent": 100.0
+    "not_measured": [
+      "encoding/form-level coverage",
+      "source-assembly acceptance coverage",
+      "C-CodeGen coverage"
+    ],
+    "roundtrip_report": "/Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/out/99_spec_decode/99_spec_decode.roundtrip.json",
+    "roundtrip_skipped_forms": [
+      {
+        "asm": "HL.BSTART.CALL <br_label>, <rt_label>, ->ra",
+        "index": 218,
+        "mnemonic": "HL.BSTART CALL"
+      }
+    ],
+    "roundtrip_stable_form_count": 199,
+    "roundtrip_stable_ratio_percent": 99.5
   },
   "qemu": {
+    "claim": "decoder_source_mapping",
+    "evidence_level": "L1",
     "isa_report": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_isa_coverage_latest.json",
     "mapped_form_count": 200,
     "mapped_form_ratio_percent": 100.0,
@@ -21,14 +37,40 @@
     "translation_mnemonic_coverage_ratio_percent": 100.0,
     "translation_report": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_translation_coverage_latest.json"
   },
-  "result": {
-    "classification": "48bit_implementation_complete",
-    "ok": true
+  "qemu_evidence": {
+    "L1": {
+      "availability": "available",
+      "claim": "decoder_source_mapping",
+      "form_count": 678,
+      "mnemonic_count": 646
+    },
+    "L2": {
+      "availability": "available",
+      "claim": "runtime_execution",
+      "form_count": 60,
+      "mnemonic_count": 60,
+      "qemu_sha": "b270924c2240d7a1dc9bad4672345cc098510341",
+      "source": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_executable_coverage_latest.json"
+    },
+    "L3": {
+      "availability": "available",
+      "claim": "semantic_oracle",
+      "form_count": 60,
+      "mnemonic_count": 60,
+      "qemu_sha": "b270924c2240d7a1dc9bad4672345cc098510341",
+      "source": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_executable_coverage_latest.json"
+    }
   },
-  "schema_version": "linx-48bit-implementation-v1",
+  "result": {
+    "classification": "48bit_l1_mapping_incomplete",
+    "ok": false,
+    "runtime_execution_complete": null,
+    "semantic_oracle_complete": null
+  },
+  "schema_version": "linx-48bit-l1-coherence-v2",
   "spec": {
     "form_count": 200,
     "mnemonic_count": 194,
-    "path": "/Users/zhoubot/linx-isa/isa/v0.56/linxisa-v0.56.json"
+    "path": "/Users/zhoubot/linx-isa/isa/v0.57/linxisa-v0.57.json"
   }
 }

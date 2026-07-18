@@ -1,5 +1,5 @@
 // Generated file; do not edit by hand.
-// Auto-generated from isa/v0.56/linxisa-v0.56.json and uop_classification_v0.56.json
+// Auto-generated from isa/v0.57/linxisa-v0.57.json and uop_classification_v0.57.json
 
 [[chapter_amo]]
 == AMO - Atomic Memory Operations
@@ -18,7 +18,7 @@ The Atomic Memory Operations (AMO) group provides load-reserve/store-conditional
 * `.f`: no ordering constraint beyond what the memory model guarantees (used in explicit store-only forms like `SW.ADD`).
 * `.aqf`, `.rlf`, `.aqrlf`: variants with an additional failure code written to the destination.
 
-**Compare-and-Swap** (`HL.CASB/D/W`): the 48-bit `HL.CAS` forms perform a double-word compare-and-swap. The processor loads the memory location, compares it with `SrcR`, and if equal, writes `SrcD` back to memory -- all atomically. The old value is always written to the destination. CAS always has both `.aq` and `.rl` semantics implicitly.
+**Compare-and-Swap** (`CASB/CASH/CASW/CASD`, `HL.CASB/D/W`): CAS forms load the memory location, compare it with `SrcR`, and if equal, write `SrcD` back to memory -- all atomically. The old value is always written to the destination. The v0.57 32-bit `CAS*` forms support `.aq`, `.rl`, and `.aqrl` ordering suffixes without `.f`; the inherited `HL.CAS*` forms retain their suffix set.
 
 === Load Reserved / Store Conditional
 
@@ -82,7 +82,15 @@ include::../generated/instructions/swapd.adoc[]
 
 === Compare and Swap
 
+include::../generated/instructions/casb.adoc[]
+include::../generated/instructions/cash.adoc[]
+include::../generated/instructions/casw.adoc[]
+include::../generated/instructions/casd.adoc[]
 include::../generated/instructions/hl_casb.adoc[]
 include::../generated/instructions/hl_cash.adoc[]
 include::../generated/instructions/hl_casw.adoc[]
 include::../generated/instructions/hl_casd.adoc[]
+
+=== DMA
+
+include::../generated/instructions/dma.adoc[]

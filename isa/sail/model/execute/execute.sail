@@ -1,6 +1,6 @@
-// LinxISA execute semantics for the canonical v0.56 model.
+// LinxISA execute semantics for the canonical v0.57 model.
 
-// This file holds the live execute semantics used by the v0.56 Sail gate.
+// This file holds the live execute semantics used by the v0.57 Sail gate.
 // Coverage is incomplete in some units, but active mnemonics are tracked in
 // semantics_status.json rather than via staged placeholder wording here.
 
@@ -272,7 +272,7 @@ function exec_hl_misub(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), uimm19 
 
 // Queue ops (QMT/QPUSH/QPOP): reserved.
 // These interact with block-local queue state (ClockHands / TQ/UQ) but are not
-// architecturally specified in v0.56 semantics yet.
+// architecturally specified in v0.57 semantics yet.
 //
 // Bring-up policy: treat them as no-ops with deterministic register results,
 // so the interpreter can run larger tests without tripping "unimplemented".
@@ -631,7 +631,7 @@ function exec_rev(RegDst : bits(5), SrcL : bits(5), Nminus1 : bits(6), M : bits(
 }
 
 // -----------------------------------------------------------------------------
-// BRU: comparisons and commit-argument setting (strict v0.56 staged).
+// BRU: comparisons and commit-argument setting (strict v0.57 staged).
 //
 // NOTE: these are scalar boolean results (0/1) written via RegDst or to the
 // block-control commit-argument domain (BARG.CARG).
@@ -639,7 +639,7 @@ function exec_rev(RegDst : bits(5), SrcL : bits(5), Nminus1 : bits(6), M : bits(
 // (bool_to_u64 defined near top of file)
 
 function sanitize_srcrtype_swuw(t : bits(2)) -> bits(2) = {
-  // For forms whose assembly only allows {.sw,.uw}, strict v0.56 treats 11 as 00.
+  // For forms whose assembly only allows {.sw,.uw}, strict v0.57 treats 11 as 00.
   if t == 0b11 then 0b00 else t
 }
 
@@ -1002,7 +1002,7 @@ function exec_c_setc_tgt(SrcL : bits(5)) -> unit = {
 // -----------------------------------------------------------------------------
 // BRU: control-transfer (vec-engine scalar lane; updates TPC)
 //
-// Contract summary (strict v0.56 staged):
+// Contract summary (strict v0.57 staged):
 // - Vec-engine scalar-lane only (scalar blocks executing these trap: TRAPNUM=4).
 // - Updates TPC (body-local PC), not architectural global PC.
 // - PC-relative base is *current instruction* TPC.
@@ -1071,7 +1071,7 @@ function exec_b_z(simm22 : bits(22)) -> unit = {
 }
 
 function exec_jr(SrcL : bits(5), simm12 : bits(12)) -> unit = {
-  // NOTE: JR encoding also contains a SrcZero field; strict v0.56 ignores it.
+  // NOTE: JR encoding also contains a SrcZero field; strict v0.57 ignores it.
   let base = read_reg5(SrcL);
   let off = sail_shiftleft(sext12_to64(simm12), 1);
   write_tpc(base + off)
@@ -1117,7 +1117,7 @@ function exec_c_setret(uimm5 : bits(5)) -> unit = {
 
 function exec_csel(RegDst : bits(5), SrcP : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   // Decision (review): if Read(SrcP) != 0 then select SrcL else select SrcR.
-  // Strict v0.56: SrcRType encodes optional .neg; other values are treated as 00.
+  // Strict v0.57: SrcRType encodes optional .neg; other values are treated as 00.
   let p = read_reg5(SrcP);
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
@@ -2621,7 +2621,6 @@ function exec_bstart_mseq() -> unit = { exec_bstart() }
 function exec_bstart_vpar() -> unit = { exec_bstart() }
 function exec_bstart_vseq() -> unit = { exec_bstart() }
 function exec_bstart_cube() -> unit = { exec_bstart() }
-function exec_bstart_tma() -> unit = { exec_bstart() }
 function exec_bstart_tepl() -> unit = { exec_bstart() }
 function exec_bstart_fixp() -> unit = { exec_bstart() }
 function exec_bstart_tload() -> unit = { exec_bstart() }
@@ -2630,7 +2629,49 @@ function exec_bstart_tmov() -> unit = { exec_bstart() }
 function exec_bstart_tmatmul() -> unit = { exec_bstart() }
 function exec_bstart_tmatmul_acc() -> unit = { exec_bstart() }
 function exec_bstart_acccvt() -> unit = { exec_bstart() }
-function exec_bstart_call() -> unit = { exec_bstart() }
+function exec_bstart_mgather() -> unit = { exec_bstart() }
+function exec_bstart_mgather_cas() -> unit = { exec_bstart() }
+function exec_bstart_mgather_mask() -> unit = { exec_bstart() }
+function exec_bstart_mscatter() -> unit = { exec_bstart() }
+function exec_bstart_mscatter_mask() -> unit = { exec_bstart() }
+function exec_bstart_tgemv() -> unit = { exec_bstart() }
+function exec_bstart_tgemv_acc() -> unit = { exec_bstart() }
+function exec_bstart_tgemv_bias() -> unit = { exec_bstart() }
+function exec_bstart_tgemvmx() -> unit = { exec_bstart() }
+function exec_bstart_tgemvmx_acc() -> unit = { exec_bstart() }
+function exec_bstart_tgemvmx_bias() -> unit = { exec_bstart() }
+function exec_bstart_tmatmul_bias() -> unit = { exec_bstart() }
+function exec_bstart_tmatmulmx() -> unit = { exec_bstart() }
+function exec_bstart_tmatmulmx_acc() -> unit = { exec_bstart() }
+function exec_bstart_tmatmulmx_bias() -> unit = { exec_bstart() }
+function exec_bstart_tprefetch() -> unit = { exec_bstart_tload() }
+function exec_fused_bstart_call(uimm5 : bits(5), embedded_setret_bytes : bits(64)) -> unit = {
+  // The exact aggregate form is one atomic CALL transition composed from a
+  // block-start target and an embedded C.SETRET.  The fields are independent:
+  // simm12/simm25 selects decoded_block_target_pc(), while uimm5 selects ra.
+  let tgt = decoded_block_target_pc();
+  if not_bool(is_block_start_marker(tgt)) then {
+    trap_block_cfi(0x1, read_pc_or_tpc())
+  } else {
+    let return_base = read_pc_or_tpc() + embedded_setret_bytes;
+    let return_off = sail_shiftleft(sail_zero_extend(uimm5, 64), 1);
+    block_commit_boundary();
+    barg_reset_at_block_start();
+    bdesc_reset();
+    barg_set_block_type(decoded_block_type());
+    barg_set_xfer_kind(block_xfer_call());
+    barg_set_next_pc_target(tgt);
+    write_regdst(0b01010, return_base + return_off)
+  }
+}
+
+function exec_bstart_call(uimm5 : bits(5)) -> unit = {
+  exec_fused_bstart_call(uimm5, sail_zeros(64) + 2)
+}
+
+function exec_hl_bstart_call(uimm5 : bits(5)) -> unit = {
+  exec_fused_bstart_call(uimm5, sail_zeros(64) + 4)
+}
 
 function exec_hl_bstart_std() -> unit = { exec_bstart() }
 function exec_hl_bstart_fp() -> unit = { exec_bstart() }
@@ -2684,7 +2725,7 @@ function exec_b_ior() -> unit = {
   let src1 : bits(5) = decoded_bior_regsrc1();
   let src2 : bits(5) = decoded_bior_regsrc2();
   let _dst : bits(5) = decoded_bior_regdst();
-  // Live v0.56 bring-up follows the shipped LLVM/QEMU ordering for ri* capture:
+  // Live v0.57 bring-up follows the shipped LLVM/QEMU ordering for ri* capture:
   // RegSrc1, then RegSrc0, then RegSrc2; zero-valued GPR slots are skipped.
   if src1 != 0b00000 then allocate_ri_binding(src1) else ();
   if src0 != 0b00000 then allocate_ri_binding(src0) else ();
@@ -3572,7 +3613,7 @@ function exec_v_rem(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit
 }
 
 function exec_v_rev(SrcL_k : bits(5), immr : bits(6), imml : bits(6), Dst_k : bits(5)) -> unit = {
-  // Strict v0.56: per-lane byte-swap of 32-bit elements (bswap32).
+  // Strict v0.57: per-lane byte-swap of 32-bit elements (bswap32).
   // immr/imml currently ignored in strict bring-up.
   let _ = immr; let _ = imml;
   let vw : int = vec_length_from_lcfr();
@@ -4695,7 +4736,7 @@ function int_xor_nonneg(a : int, b : int) -> int = {
 }
 
 function exec_v_shfl_bfly(SrcL_k : bits(5), SrcP_k : bits(5), Dst_k : bits(5)) -> unit = {
-  // Strict v0.56 group-local shuffle. BFLY variant.
+  // Strict v0.57 group-local shuffle. BFLY variant.
   // range is fixed to lanenum (whole group); delt from SrcP; src_id = laneid XOR delt.
   let vw : int = vec_length_from_lcfr();
   let lb0_i : int = unsigned(ssr_lb0[31..0]);
@@ -4718,7 +4759,7 @@ function exec_v_shfl_bfly(SrcL_k : bits(5), SrcP_k : bits(5), Dst_k : bits(5)) -
 }
 
 function exec_v_shfl_down(SrcL_k : bits(5), SrcR_k : bits(5), SrcP_k : bits(5), Dst_k : bits(5)) -> unit = {
-  // Strict v0.56 group-local shuffle. DOWN variant.
+  // Strict v0.57 group-local shuffle. DOWN variant.
   let vw : int = vec_length_from_lcfr();
   let lb0_i : int = unsigned(ssr_lb0[31..0]);
   let lanenum : int = if lb0_i == 0 then vw else (if lb0_i < vw then lb0_i else vw);
@@ -4744,7 +4785,7 @@ function exec_v_shfl_down(SrcL_k : bits(5), SrcR_k : bits(5), SrcP_k : bits(5), 
 }
 
 function exec_v_shfl_idx(SrcL_k : bits(5), SrcR_k : bits(5), SrcP_k : bits(5), Dst_k : bits(5)) -> unit = {
-  // Strict v0.56 group-local shuffle. IDX variant.
+  // Strict v0.57 group-local shuffle. IDX variant.
   // range from SrcR; idx from SrcP; out-of-segment falls back to self.
   let vw : int = vec_length_from_lcfr();
   let lb0_i : int = unsigned(ssr_lb0[31..0]);
@@ -4771,7 +4812,7 @@ function exec_v_shfl_idx(SrcL_k : bits(5), SrcR_k : bits(5), SrcP_k : bits(5), D
 }
 
 function exec_v_shfl_up(SrcL_k : bits(5), SrcR_k : bits(5), SrcP_k : bits(5), Dst_k : bits(5)) -> unit = {
-  // Strict v0.56 group-local shuffle. UP variant.
+  // Strict v0.57 group-local shuffle. UP variant.
   let vw : int = vec_length_from_lcfr();
   let lb0_i : int = unsigned(ssr_lb0[31..0]);
   let lanenum : int = if lb0_i == 0 then vw else (if lb0_i < vw then lb0_i else vw);
@@ -4892,7 +4933,7 @@ function exec_v_shfli_up(SrcL_k : bits(5), SrcR_k : bits(5), imm7 : bits(14), Ds
 // Vector queue ops / reductions / format-convert shims (staged)
 
 function exec_v_qpush(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> unit = {
-  // Strict v0.56 memory-queue push.
+  // Strict v0.57 memory-queue push.
   // Per active lane (P=1):
   //   base = SrcL[lane] (u32 address)
   //   val  = SrcR[lane]
@@ -4947,7 +4988,7 @@ function exec_v_qpush(SrcL_k : bits(5), SrcR_k : bits(5), Dst_k : bits(5)) -> un
 }
 
 function exec_v_qpop(SrcL_k : bits(5), Dst_k : bits(5)) -> unit = {
-  // Strict v0.56 memory-queue pop.
+  // Strict v0.57 memory-queue pop.
   // Per active lane (P=1):
   //   base = SrcL[lane] (u32 address)
   // If empty: Dst[lane]=0 and queue not modified.
@@ -5354,7 +5395,7 @@ function exec_v_icvtf(SrcL_k : bits(5), SrcType : bits(5), DstType : bits(5), Ds
 
 function exec_xb(acr_id : bits(12), cross_bid : bits(8)) -> unit = {
   // Strict bring-up: XB is a controlled cross-block call dispatcher.
-  // The generic v0.56 contract standardizes legality, permission, and lookup.
+  // The generic v0.57 contract standardizes legality, permission, and lookup.
   // The binary entry layout remains platform-defined, so the model records the
   // resolved dispatch request instead of decoding a non-canonical block body.
   //
@@ -6310,7 +6351,7 @@ function exec_fneg(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit 
 }
 
 // ============================================================
-// AGU / Load-Store (staged bring-up; strict v0.56 conventions)
+// AGU / Load-Store (staged bring-up; strict v0.57 conventions)
 // ============================================================
 
 // -----------------------------------------------------------------------------
@@ -6469,6 +6510,27 @@ function exec_hl_casd(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcD : b
   let new64 : bits(64) = read_reg5(SrcD);
   if old64 == exp64 then mem_store64_le(ea, new64) else ();
   write_regdst(RegDst, old64)
+}
+
+function exec_casb(RegDst : bits(5), SrcD : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), rl : bits(1)) -> unit = {
+  exec_hl_casb(RegDst, SrcL, SrcR, SrcD, aq, 0b0, rl)
+}
+
+function exec_cash(RegDst : bits(5), SrcD : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), rl : bits(1)) -> unit = {
+  exec_hl_cash(RegDst, SrcL, SrcR, SrcD, aq, 0b0, rl)
+}
+
+function exec_casw(RegDst : bits(5), SrcD : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), rl : bits(1)) -> unit = {
+  exec_hl_casw(RegDst, SrcL, SrcR, SrcD, aq, 0b0, rl)
+}
+
+function exec_casd(RegDst : bits(5), SrcD : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), rl : bits(1)) -> unit = {
+  exec_hl_casd(RegDst, SrcL, SrcR, SrcD, aq, 0b0, rl)
+}
+
+function exec_dma(SrcL : bits(5), SrcR : bits(5)) -> unit = {
+  let _ = SrcL; let _ = SrcR;
+  trap_illegal_inst(read_pc_or_tpc())
 }
 
 

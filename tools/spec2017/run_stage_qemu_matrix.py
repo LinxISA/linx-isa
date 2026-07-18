@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import hashlib
 import json
 import os
 import shlex
@@ -20,6 +21,18 @@ if str(BRINGUP_DIR) not in sys.path:
     sys.path.insert(0, str(BRINGUP_DIR))
 
 from qemu_build_paths import default_qemu_binary, qemu_binary_provenance
+
+
+def _file_provenance(path: Path) -> dict[str, Any]:
+    digest = hashlib.sha256()
+    with path.open("rb") as fp:
+        for chunk in iter(lambda: fp.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return {
+        "path": str(path),
+        "sha256": digest.hexdigest(),
+        "size_bytes": path.stat().st_size,
+    }
 QEMU_FAULT_TRACE_FILTER_ARGS = {
     "qemu_fault_trace_pc": "LINX_QEMU_FAULT_TRACE_PC",
     "qemu_fault_trace_pc_lo": "LINX_QEMU_FAULT_TRACE_PC_LO",
@@ -146,10 +159,17 @@ QEMU_FENTRY_TRACE_BOOL_ARGS = {
 }
 
 
-def _default_qemu() -> str:
+def _qemu_argument_default() -> str:
     env = os.environ.get("QEMU", "").strip()
     if env:
         return str(Path(os.path.expanduser(env)).resolve())
+    return ""
+
+
+def _resolve_qemu_argument(value: str) -> str:
+    explicit = value.strip()
+    if explicit:
+        return str(Path(os.path.expanduser(explicit)).resolve())
     return str(default_qemu_binary(REPO_ROOT).resolve())
 
 
@@ -703,6 +723,10 @@ def _write_md(path: Path, summary: dict[str, Any]) -> None:
             "- qemu_clean_build_for_head: "
             f"`{str(bool(qemu_provenance.get('clean_build_for_head', False))).lower()}`"
         )
+    lines.append(f"- kernel: `{summary.get('kernel', '-')}`")
+    lines.append(
+        f"- kernel_sha256: `{(summary.get('kernel_provenance') or {}).get('sha256', '-')}`"
+    )
     qemu_machine_extra = str(summary.get("qemu_machine_extra") or "")
     qemu_extra_args = summary.get("qemu_extra_args") or []
     qemu_extra_text = shlex.join([str(arg) for arg in qemu_extra_args]) if qemu_extra_args else "-"
@@ -843,8 +867,13 @@ def main(argv: list[str]) -> int:
     )
     ap.add_argument(
         "--qemu",
-        default=_default_qemu(),
+        default=_qemu_argument_default(),
         help="QEMU binary passed through to the per-transport runner.",
+    )
+    ap.add_argument(
+        "--kernel",
+        default=str(REPO_ROOT / "kernel" / "linux" / "build-linx-fixed" / "vmlinux"),
+        help="Kernel image passed through to the per-transport runner.",
     )
     ap.add_argument("--stage", choices=("a", "b"), default="a")
     ap.add_argument("--input-set", choices=("refrate", "test", "train"), default="test")
@@ -1281,11 +1310,19 @@ def main(argv: list[str]) -> int:
     )
     args = ap.parse_args(argv)
 
+    try:
+        args.qemu = _resolve_qemu_argument(args.qemu)
+    except FileNotFoundError as exc:
+        raise SystemExit(f"error: {exc}") from exc
+
     spec_dir = Path(os.path.expanduser(args.spec_dir)).resolve()
+    kernel = Path(os.path.expanduser(args.kernel)).resolve()
     if not (spec_dir / "benchspec" / "CPU").is_dir():
         raise SystemExit(f"error: invalid SPEC dir: {spec_dir}")
     if not RUNNER.is_file():
         raise SystemExit(f"error: missing runner: {RUNNER}")
+    if not kernel.is_file():
+        raise SystemExit(f"error: missing kernel image: {kernel}")
     if args.timeout <= 0:
         raise SystemExit("error: --timeout must be > 0")
     if args.memory_mb <= 0:
@@ -1515,6 +1552,8 @@ def main(argv: list[str]) -> int:
             str(spec_dir),
             "--qemu",
             str(Path(os.path.expanduser(args.qemu)).resolve()),
+            "--kernel",
+            str(kernel),
             "--stage",
             args.stage,
             "--transport",
@@ -1738,6 +1777,8 @@ def main(argv: list[str]) -> int:
             REPO_ROOT,
             Path(os.path.expanduser(args.qemu)).resolve(),
         ),
+        "kernel": str(kernel),
+        "kernel_provenance": _file_provenance(kernel),
         "qemu_machine_extra": os.environ.get("LINX_SPEC_QEMU_MACHINE_EXTRA", "").strip(),
         "qemu_extra_args": _qemu_extra_args(),
         "transports": transports,

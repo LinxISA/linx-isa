@@ -45,7 +45,7 @@ TMATMULMX.ACC <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcT
 
 本指令将拆分成以下进行编码：
 
-- [BSTART.CUBE](../../blockIntro/cube_block/header.md) `MAMULBMX.ACC, DataTypeA`
+- [BSTART.TMATMULMX.ACC](../../blockIntro/cube_block/header.md) `DataTypeA`
 - [B.DATR](../../header/B.DATR.md) `DataTypeB`   *(注：DataTypeB 和 DataTypeA 相同时可缺省)*
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0`    *(注：M)*
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`    *(注：N)*

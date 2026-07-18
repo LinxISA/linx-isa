@@ -111,7 +111,7 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`B.CATR` |32 |- |`B.CATR {trap, atomic, <aq, rl, aqrl>, far, dr}` |v0.56 split of legacy B.CATR/B.DATR control fields. Bits 25:15 are reserved zero.
+|`B.CATR` |32 |- |`B.CATR {trap, atomic, <aq, rl, aqrl>, far, dr}` |canonical split of legacy B.CATR/B.DATR control fields. Bits 25:15 are reserved zero.
 |===
 
 [[insnref-block-data-attribute]]
@@ -120,7 +120,7 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`B.DATR` |32 |- |`B.DATR {layout.{canon, normal}, datatype, padvalue, cmode, rmode, sat}` |v0.56 split of legacy B.CATR/B.DATR data fields. CMode is 3 bits; RMode is 3 bits; Sat is bit 31.
+|`B.DATR` |32 |- |`B.DATR {layout.{canon, normal}, datatype, padvalue, cmode, rmode, sat}` |canonical split of legacy B.CATR/B.DATR data fields. CMode is 3 bits; RMode is 3 bits; Sat is bit 31.
 |===
 
 [[insnref-branch]]
@@ -158,9 +158,11 @@
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`B.IOR` |32 |- |`B.IOR [RegSrc0, RegSrc1, RegSrc2],[RegDst]` |-
-|`B.IOT` |32 |- |`B.IOT SrcTile0<.reuse>, <last>, ->DstTile<Size>` |v0.56 one-input immediate-size tile descriptor; function=101 means only SrcTile0 is valid.
-|`B.IOT` |32 |- |`B.IOT SrcTile0<.reuse>, SrcTile1<.reuse>, <last>, ->DstTile<Size>` |v0.56 two-input immediate-size tile descriptor. SrcTile0/1 are independent 6-bit fields; imm4 encodes 0B..512KB.
-|`B.IOT` |32 |- |`B.IOT <last>, ->DstTile<Size>` |v0.56 no-input immediate-size tile descriptor; function=110 means only the destination allocation is valid.
+|`B.IOT` |32 |- |`B.IOT SrcTile0<.reuse>, <last>, ->DstTile<Size>` |canonical one-input immediate-size tile descriptor; function=101 means only SrcTile0 is valid. v0.57 excludes DstTile=111 from this destination-producing form.
+|`B.IOT` |32 |- |`B.IOT SrcTile0<.reuse>, SrcTile1<.reuse>, <last>` |v0.57 two-input source-only tile descriptor required by multi-descriptor PTO expansions. DstTile=111 denotes no output and the unused size field is canonically zero.
+|`B.IOT` |32 |- |`B.IOT SrcTile0<.reuse>, SrcTile1<.reuse>, <last>, ->DstTile<Size>` |canonical two-input immediate-size tile descriptor. SrcTile0/1 are independent 6-bit fields; imm4 encodes 0B..512KB. v0.57 excludes DstTile=111 from this destination-producing form.
+|`B.IOT` |32 |- |`B.IOT SrcTile0<.reuse>, <last>` |v0.57 one-input source-only tile descriptor required by multi-descriptor PTO expansions. DstTile=111 denotes no output and the unused size field is canonically zero.
+|`B.IOT` |32 |- |`B.IOT <last>, ->DstTile<Size>` |canonical no-input immediate-size tile descriptor; function=110 means only the destination allocation is valid.
 |===
 
 [[insnref-block-offset]]
@@ -221,7 +223,7 @@
 |`BSTART` |32 |- |`BSTART {DIRECT, CALL}, <label>` |-
 |`BSTART` |32 |- |`BSTART COND, <label>` |-
 |`BSTART.ACCCVT` |32 |- |`BSTART.ACCCVT DataType` |Alias of BSTART.CUBE Function=8. ACCCVT requires quantization args via B.ARG+B.IOR (scale/zero-point required in strict profile).
-|`BSTART.CUBE` |32 |- |`BSTART.CUBE Function, DataType` |Generic CUBE selector form. Function=0/2/8 are emitted as BSTART.TMATMUL/BSTART.TMATMUL.ACC/BSTART.ACCCVT aliases.
+|`BSTART.CUBE` |32 |- |`BSTART.CUBE Function, DataType` |Generic CUBE selector form for unnamed functions. Functions 0/1/2/4/5/6/8/16/17/18/20/21/22 decode through their canonical named forms.
 |`BSTART.FIXP` |32 |- |`BSTART.FIXP TileOp, DataType` |-
 |`BSTART.FP` |32 |- |`BSTART.FP RET` |Bits 31:15 are reserved zero.
 |`BSTART.FP` |32 |- |`BSTART.FP ICALL` |Bits 31:15 are reserved zero.
@@ -230,7 +232,12 @@
 |`BSTART.FP` |32 |- |`BSTART.FP DIRECT, <label>` |-
 |`BSTART.FP` |32 |- |`BSTART.FP CALL, <label>` |-
 |`BSTART.FP` |32 |- |`BSTART.FP FALL<, fixup_label>` |-
+|`BSTART.MGATHER` |32 |- |`BSTART.MGATHER DataType` |Named TMA-family Function=4. Memory gather uses B.ARG/B.IOR/B.IOT descriptor state; detailed PTO selector manifest is defined out-of-band for v0.57.
+|`BSTART.MGATHER.CAS` |32 |- |`BSTART.MGATHER.CAS DataType` |Named TMA-family Function=8. Per-element atomic compare-and-swap gather; detailed PTO selector manifest is defined out-of-band for v0.57.
+|`BSTART.MGATHER.MASK` |32 |- |`BSTART.MGATHER.MASK DataType` |Named TMA-family Function=6. Masked memory gather; detailed PTO selector manifest is defined out-of-band for v0.57.
 |`BSTART.MPAR` |32 |- |`BSTART.MPAR <VS8, VS16>` |-
+|`BSTART.MSCATTER` |32 |- |`BSTART.MSCATTER DataType` |Named TMA-family Function=5. Memory scatter uses B.ARG/B.IOR/B.IOT descriptor state; detailed PTO selector manifest is defined out-of-band for v0.57.
+|`BSTART.MSCATTER.MASK` |32 |- |`BSTART.MSCATTER.MASK DataType` |Named TMA-family Function=7. Masked memory scatter; detailed PTO selector manifest is defined out-of-band for v0.57.
 |`BSTART.MSEQ` |32 |- |`BSTART.MSEQ <VS8, VS16>` |-
 |`BSTART.STD` |32 |- |`BSTART.STD COND, <label>` |-
 |`BSTART.STD` |32 |- |`BSTART.STD ICALL` |Bits 31:15 are reserved zero.
@@ -240,12 +247,22 @@
 |`BSTART.STD` |32 |- |`BSTART.STD CALL, <label>` |-
 |`BSTART.STD` |32 |- |`BSTART.STD DIRECT, <label>` |-
 |`BSTART.SYS` |32 |- |`BSTART.SYS FALL<, fixup_label>` |-
-|`BSTART.TEPL` |32 |- |`BSTART.TEPL TileOpcode, DataType` |Tile opcode selects PTO template ops. Canonical v0.56 standardized assignments require TileOpcode[9:6]=0 and pack TileOpcode[5]=Mode with TileOpcode[4:0]=Function; unassigned values remain reserved for future template extension.
+|`BSTART.TEPL` |32 |- |`BSTART.TEPL TileOpcode, DataType` |Tile opcode selects PTO template ops. Canonical established assignments require TileOpcode[9:6]=0 and pack TileOpcode[5]=Mode with TileOpcode[4:0]=Function; unassigned values remain reserved for future template extension.
+|`BSTART.TGEMV` |32 |- |`BSTART.TGEMV DataType` |Named CUBE-family Function=16. Matrix-vector multiply; requires B.DIM and CUBE tile bindings.
+|`BSTART.TGEMV.ACC` |32 |- |`BSTART.TGEMV.ACC DataType` |Named CUBE-family Function=18. Matrix-vector multiply-accumulate; requires B.DIM and CUBE tile bindings.
+|`BSTART.TGEMV.BIAS` |32 |- |`BSTART.TGEMV.BIAS DataType` |Named CUBE-family Function=17. Matrix-vector multiply with bias; requires B.DIM and CUBE tile bindings.
+|`BSTART.TGEMVMX` |32 |- |`BSTART.TGEMVMX DataType` |Named CUBE-family Function=20. Micro-scaled matrix-vector multiply; requires B.DIM and CUBE tile bindings.
+|`BSTART.TGEMVMX.ACC` |32 |- |`BSTART.TGEMVMX.ACC DataType` |Named CUBE-family Function=22. Micro-scaled matrix-vector multiply-accumulate; requires B.DIM and CUBE tile bindings.
+|`BSTART.TGEMVMX.BIAS` |32 |- |`BSTART.TGEMVMX.BIAS DataType` |Named CUBE-family Function=21. Micro-scaled matrix-vector multiply with bias; requires B.DIM and CUBE tile bindings.
 |`BSTART.TLOAD` |32 |- |`BSTART.TLOAD DataType` |Alias of BSTART.TMA Function=0. Requires B.ARG layout/pad and B.IOR stride/base plus B.IOT tile binding.
-|`BSTART.TMA` |32 |- |`BSTART.TMA Function, DataType` |Generic TMA selector form. Function=0/1/2 are emitted as BSTART.TLOAD/BSTART.TSTORE/BSTART.TMOV aliases; 3..31 are reserved in v0.56 (architecturally illegal/UNPREDICTABLE): software must not generate them and implementations must not assign ad-hoc semantics.
 |`BSTART.TMATMUL` |32 |- |`BSTART.TMATMUL DataType` |Alias of BSTART.CUBE Function=0. Requires B.DIM (LB0/LB1/LB2 as m,n,k) and tile bindings via B.IOT.
 |`BSTART.TMATMUL.ACC` |32 |- |`BSTART.TMATMUL.ACC DataType` |Alias of BSTART.CUBE Function=2. Requires B.DIM (LB0/LB1/LB2 as m,n,k) and tile bindings via B.IOT.
+|`BSTART.TMATMUL.BIAS` |32 |- |`BSTART.TMATMUL.BIAS DataType` |Named CUBE-family Function=1. Matrix multiply with bias; requires B.DIM and CUBE tile bindings.
+|`BSTART.TMATMULMX` |32 |- |`BSTART.TMATMULMX DataType` |Named CUBE-family Function=4. Micro-scaled matrix multiply; requires B.DIM and CUBE tile bindings.
+|`BSTART.TMATMULMX.ACC` |32 |- |`BSTART.TMATMULMX.ACC DataType` |Named CUBE-family Function=6. Micro-scaled matrix multiply-accumulate; requires B.DIM and CUBE tile bindings.
+|`BSTART.TMATMULMX.BIAS` |32 |- |`BSTART.TMATMULMX.BIAS DataType` |Named CUBE-family Function=5. Micro-scaled matrix multiply with bias; requires B.DIM and CUBE tile bindings.
 |`BSTART.TMOV` |32 |- |`BSTART.TMOV DataType` |Alias of BSTART.TMA Function=2. TMOV is tile-state only (no GM memory access) and destination allocation is queue-push only.
+|`BSTART.TPREFETCH` |32 |- |`BSTART.TPREFETCH DataType` |Named TMA-family Function=3. TPREFETCH has the same address, layout, memory, fault, ordering, and restart contract as TLOAD, with destination binding/allocation/writeback effects removed.
 |`BSTART.TSTORE` |32 |- |`BSTART.TSTORE DataType` |Alias of BSTART.TMA Function=1. Requires B.ARG layout/pad and B.IOR stride/base plus B.IOT tile binding.
 |`BSTART.VPAR` |32 |- |`BSTART.VPAR <VS8, VS16>` |TVEC-equivalent parallel SIMT header; requires B.TEXT body target in decoupled form.
 |`BSTART.VSEQ` |32 |- |`BSTART.VSEQ <VS8, VS16>` |TVEC-equivalent sequential SIMT header; requires B.TEXT body target in decoupled form.
@@ -270,8 +287,8 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`BSTART CALL` |32 |- |`BSTART.CALL <br_label>` |Bare BSTART.CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.
-|`HL.BSTART CALL` |48 |- |`HL.BSTART.CALL <br_label>` |Bare HL.BSTART.CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.
+|`BSTART CALL` |32 |- |`BSTART.CALL <br_label>, <rt_label>, ->ra` |Atomic fused CALL: call_target = P + (SignExtend(simm12) << 1); ra = (P + 2) + (ZeroExtend(uimm5) << 1). Both labels are explicit and independently relocatable.
+|`HL.BSTART CALL` |48 |- |`HL.BSTART.CALL <br_label>, <rt_label>, ->ra` |Atomic fused CALL: call_target = P + (SignExtend(simm25) << 1); ra = (P + 4) + (ZeroExtend(uimm5) << 1). Both labels are explicit and independently relocatable.
 |`HL.BSTART.FP` |48 |- |`HL.BSTART.FP COND, <label>` |-
 |`HL.BSTART.FP` |48 |- |`HL.BSTART.FP FALL<, fixup_label>` |-
 |`HL.BSTART.FP` |48 |- |`HL.BSTART.FP CALL, <label>` |-
@@ -476,6 +493,86 @@
 |`C.ZEXT.W` |16 |- |`c.zext.w srcL, ->t` |-
 |===
 
+[[insnref-atomic-operation]]
+=== Atomic Operation
+
+[cols="1,1,2,4,6",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`CASB` |32 |- |`casb<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |v0.57 32-bit compare-and-swap byte: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
+|`CASD` |32 |- |`casd<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |v0.57 32-bit compare-and-swap doubleword: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
+|`CASH` |32 |- |`cash<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |v0.57 32-bit compare-and-swap halfword: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
+|`CASW` |32 |- |`casw<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |v0.57 32-bit compare-and-swap word: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
+|`LD.ADD` |32 |- |`ld.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
+|`LD.AND` |32 |- |`ld.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
+|`LD.OR` |32 |- |`ld.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
+|`LD.SMAX` |32 |- |`ld.smax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
+|`LD.SMIN` |32 |- |`ld.smin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
+|`LD.UMAX` |32 |- |`ld.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
+|`LD.UMIN` |32 |- |`ld.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
+|`LD.XOR` |32 |- |`ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
+|`LR.B` |32 |- |`lr.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}` |-
+|`LR.D` |32 |- |`lr.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}` |-
+|`LR.H` |32 |- |`lr.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}` |-
+|`LR.W` |32 |- |`lr.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}` |-
+|`LW.ADD` |32 |- |`lw.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
+|`LW.AND` |32 |- |`lw.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
+|`LW.OR` |32 |- |`lw.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
+|`LW.SMAX` |32 |- |`lw.smax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
+|`LW.SMIN` |32 |- |`lw.smin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
+|`LW.UMAX` |32 |- |`lw.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
+|`LW.UMIN` |32 |- |`lw.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
+|`LW.XOR` |32 |- |`lw.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
+|`SC.B` |32 |- |`sc.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}` |-
+|`SC.D` |32 |- |`sc.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}` |-
+|`SC.H` |32 |- |`sc.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}` |-
+|`SC.W` |32 |- |`sc.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}` |-
+|`SD.ADD` |32 |- |`sd.add<.{rl, f, rlf}> [SrcL], SrcR` |-
+|`SD.AND` |32 |- |`sd.and<.{rl, f, rlf}> [SrcL], SrcR` |-
+|`SD.OR` |32 |- |`sd.or<.{rl, f, rlf}> [SrcL], SrcR` |-
+|`SD.SMAX` |32 |- |`sd.smax<.{rl, f, rlf}> [SrcL], SrcR` |-
+|`SD.SMIN` |32 |- |`sd.smin<.{rl, f, rlf}> [SrcL], SrcR` |-
+|`SD.UMAX` |32 |- |`sd.umax<.{rl, f, rlf}> [SrcL], SrcR` |-
+|`SD.UMIN` |32 |- |`sd.umin<.{rl, f, rlf}> [SrcL], SrcR` |-
+|`SD.XOR` |32 |- |`sd.xor<.{rl, f, rlf}> [SrcL], SrcR` |-
+|`SW.ADD` |32 |- |`sw.add<.{rl, f, rlf}> [SrcL], SrcR` |-
+|`SW.AND` |32 |- |`sw.and<.{rl, f, rlf}> [SrcL], SrcR` |-
+|`SW.OR` |32 |- |`sw.or<.{rl, f, rlf}> [SrcL], SrcR` |-
+|`SW.SMAX` |32 |- |`sw.smax<.{rl, f, rlf}> [SrcL], SrcR` |-
+|`SW.SMIN` |32 |- |`sw.smin<.{rl, f, rlf}> [SrcL], SrcR` |-
+|`SW.UMAX` |32 |- |`sw.umax<.{rl, f, rlf}> [SrcL], SrcR` |-
+|`SW.UMIN` |32 |- |`sw.umin<.{rl, f, rlf}> [SrcL], SrcR` |-
+|`SW.XOR` |32 |- |`sw.xor<.{rl, f, rlf}> [SrcL], SrcR` |-
+|`SWAPB` |32 |- |`swapb<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
+|`SWAPD` |32 |- |`swapd<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
+|`SWAPH` |32 |- |`swaph<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
+|`SWAPW` |32 |- |`swapw<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
+|`V.LD.ADD` |64 |- |`v.ld.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
+|`V.LD.AND` |64 |- |`v.ld.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
+|`V.LD.MAX` |64 |- |`v.ld.max<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
+|`V.LD.MIN` |64 |- |`v.ld.min<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
+|`V.LD.OR` |64 |- |`v.ld.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
+|`V.LD.XOR` |64 |- |`v.ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
+|`V.LW.ADD` |64 |- |`v.lw.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
+|`V.LW.AND` |64 |- |`v.lw.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
+|`V.LW.MAX` |64 |- |`v.lw.max<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
+|`V.LW.MIN` |64 |- |`v.lw.min<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
+|`V.LW.OR` |64 |- |`v.lw.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
+|`V.LW.XOR` |64 |- |`v.lw.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
+|`V.SD.ADD` |64 |- |`v.sd.add<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
+|`V.SD.AND` |64 |- |`v.sd.and<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
+|`V.SD.MAX` |64 |- |`v.sd.max<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
+|`V.SD.MIN` |64 |- |`v.sd.min<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
+|`V.SD.OR` |64 |- |`v.sd.or<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
+|`V.SD.XOR` |64 |- |`v.sd.xor<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
+|`V.SW.ADD` |64 |- |`v.sw.add<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
+|`V.SW.AND` |64 |- |`v.sw.and<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
+|`V.SW.MAX` |64 |- |`v.sw.max<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
+|`V.SW.MIN` |64 |- |`v.sw.min<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
+|`V.SW.OR` |64 |- |`v.sw.or<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
+|`V.SW.XOR` |64 |- |`v.sw.xor<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
+|===
+
 [[insnref-compare-instruction]]
 === Compare Instruction
 
@@ -567,6 +664,15 @@
 |`REMW` |32 |- |`remw SrcL, SrcR, ->{t, u, Rd}` |-
 |`V.MADD` |64 |- |`v.madd SrcL, SrcR, SrcD, ->Dst` |-
 |`V.MUL` |64 |- |`v.mul SrcL, SrcR, ->Dst` |-
+|===
+
+[[insnref-dma-operation]]
+=== DMA Operation
+
+[cols="1,1,2,4,6",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`DMA` |32 |- |`dma [SrcL], SrcR` |v0.57 encoding for the inherited DMA operation: copy 64 bytes from the source address in SrcL to the destination address in SrcR and complete before submission.
 |===
 
 [[insnref-floating-point-arithmetic]]
@@ -982,82 +1088,6 @@
 |`LHU.PCR` |32 |- |`lhu.pcr [symbol], ->{t, u, Rd}` |-
 |`LW.PCR` |32 |- |`lw.pcr [symbol], ->{t, u, Rd}` |-
 |`LWU.PCR` |32 |- |`lwu.pcr [symbol], ->{t, u, Rd}` |-
-|===
-
-[[insnref-atomic-operation]]
-=== Atomic Operation
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`LD.ADD` |32 |- |`ld.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
-|`LD.AND` |32 |- |`ld.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
-|`LD.OR` |32 |- |`ld.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
-|`LD.SMAX` |32 |- |`ld.smax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
-|`LD.SMIN` |32 |- |`ld.smin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
-|`LD.UMAX` |32 |- |`ld.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
-|`LD.UMIN` |32 |- |`ld.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
-|`LD.XOR` |32 |- |`ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
-|`LR.B` |32 |- |`lr.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}` |-
-|`LR.D` |32 |- |`lr.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}` |-
-|`LR.H` |32 |- |`lr.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}` |-
-|`LR.W` |32 |- |`lr.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}` |-
-|`LW.ADD` |32 |- |`lw.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
-|`LW.AND` |32 |- |`lw.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
-|`LW.OR` |32 |- |`lw.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
-|`LW.SMAX` |32 |- |`lw.smax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
-|`LW.SMIN` |32 |- |`lw.smin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
-|`LW.UMAX` |32 |- |`lw.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
-|`LW.UMIN` |32 |- |`lw.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
-|`LW.XOR` |32 |- |`lw.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
-|`SC.B` |32 |- |`sc.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}` |-
-|`SC.D` |32 |- |`sc.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}` |-
-|`SC.H` |32 |- |`sc.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}` |-
-|`SC.W` |32 |- |`sc.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}` |-
-|`SD.ADD` |32 |- |`sd.add<.{rl, f, rlf}> [SrcL], SrcR` |-
-|`SD.AND` |32 |- |`sd.and<.{rl, f, rlf}> [SrcL], SrcR` |-
-|`SD.OR` |32 |- |`sd.or<.{rl, f, rlf}> [SrcL], SrcR` |-
-|`SD.SMAX` |32 |- |`sd.smax<.{rl, f, rlf}> [SrcL], SrcR` |-
-|`SD.SMIN` |32 |- |`sd.smin<.{rl, f, rlf}> [SrcL], SrcR` |-
-|`SD.UMAX` |32 |- |`sd.umax<.{rl, f, rlf}> [SrcL], SrcR` |-
-|`SD.UMIN` |32 |- |`sd.umin<.{rl, f, rlf}> [SrcL], SrcR` |-
-|`SD.XOR` |32 |- |`sd.xor<.{rl, f, rlf}> [SrcL], SrcR` |-
-|`SW.ADD` |32 |- |`sw.add<.{rl, f, rlf}> [SrcL], SrcR` |-
-|`SW.AND` |32 |- |`sw.and<.{rl, f, rlf}> [SrcL], SrcR` |-
-|`SW.OR` |32 |- |`sw.or<.{rl, f, rlf}> [SrcL], SrcR` |-
-|`SW.SMAX` |32 |- |`sw.smax<.{rl, f, rlf}> [SrcL], SrcR` |-
-|`SW.SMIN` |32 |- |`sw.smin<.{rl, f, rlf}> [SrcL], SrcR` |-
-|`SW.UMAX` |32 |- |`sw.umax<.{rl, f, rlf}> [SrcL], SrcR` |-
-|`SW.UMIN` |32 |- |`sw.umin<.{rl, f, rlf}> [SrcL], SrcR` |-
-|`SW.XOR` |32 |- |`sw.xor<.{rl, f, rlf}> [SrcL], SrcR` |-
-|`SWAPB` |32 |- |`swapb<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
-|`SWAPD` |32 |- |`swapd<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
-|`SWAPH` |32 |- |`swaph<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
-|`SWAPW` |32 |- |`swapw<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
-|`V.LD.ADD` |64 |- |`v.ld.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
-|`V.LD.AND` |64 |- |`v.ld.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
-|`V.LD.MAX` |64 |- |`v.ld.max<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
-|`V.LD.MIN` |64 |- |`v.ld.min<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
-|`V.LD.OR` |64 |- |`v.ld.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
-|`V.LD.XOR` |64 |- |`v.ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
-|`V.LW.ADD` |64 |- |`v.lw.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
-|`V.LW.AND` |64 |- |`v.lw.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
-|`V.LW.MAX` |64 |- |`v.lw.max<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
-|`V.LW.MIN` |64 |- |`v.lw.min<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
-|`V.LW.OR` |64 |- |`v.lw.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
-|`V.LW.XOR` |64 |- |`v.lw.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
-|`V.SD.ADD` |64 |- |`v.sd.add<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
-|`V.SD.AND` |64 |- |`v.sd.and<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
-|`V.SD.MAX` |64 |- |`v.sd.max<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
-|`V.SD.MIN` |64 |- |`v.sd.min<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
-|`V.SD.OR` |64 |- |`v.sd.or<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
-|`V.SD.XOR` |64 |- |`v.sd.xor<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
-|`V.SW.ADD` |64 |- |`v.sw.add<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
-|`V.SW.AND` |64 |- |`v.sw.and<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
-|`V.SW.MAX` |64 |- |`v.sw.max<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
-|`V.SW.MIN` |64 |- |`v.sw.min<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
-|`V.SW.OR` |64 |- |`v.sw.or<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
-|`V.SW.XOR` |64 |- |`v.sw.xor<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
 |===
 
 [[insnref-load-unscaled]]

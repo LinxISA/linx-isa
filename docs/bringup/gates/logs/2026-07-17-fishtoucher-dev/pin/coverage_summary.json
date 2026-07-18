@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "run_id": "2026-07-17-fishtoucher-dev",
+  "classification": "blocked-qemu-l1-form-gap",
+  "same_manifest_closure": false,
+  "llvm": {
+    "head": "19631a66485e9ff87d1f6cf2c5ffcbd897864bd6",
+    "linx32_mnemonic_breadth": "711/711",
+    "linx64_mnemonic_breadth": "711/711",
+    "catalog_forms_audited": 747,
+    "assembler_stable_forms": 746,
+    "reserved_form_issue": "https://github.com/LinxISA/linx-isa/issues/152",
+    "c_codegen": {
+      "pure_direct": "142/711",
+      "pure_alias_closed": "143/711",
+      "source_oriented_direct": "143/711",
+      "source_oriented_alias_closed": "144/711"
+    }
+  },
+  "qemu": {
+    "head": "ca3e11ba7b4539d846377f9c42baa067d458188f",
+    "l1_mnemonics": "625/711",
+    "l1_forms": "656/747",
+    "missing_forms": 91,
+    "translation_inventory": "711/711",
+    "l2_forms": 60,
+    "l3_forms": 60,
+    "rejected_executable_records": 0
+  },
+  "sources": [
+    {
+      "path": "docs/bringup/gates/llvm_c_codegen_coverage_latest.json",
+      "sha256": "1ba5d9bba76d4ca15b1c80fe042ef7dde33b504670491c7a674f144efe011dfd"
+    },
+    {
+      "path": "docs/bringup/gates/qemu_translation_coverage_latest.json",
+      "sha256": "e4cd96ed60a1d34f918a8ff84b0d28aa50f4ae4ad110d48fba50fc11874b5590"
+    },
+    {
+      "path": "docs/bringup/gates/qemu_isa_coverage_latest.json",
+      "sha256": "747d42c45d029f5874902f9e8e0ee795394ded7ec5bf14bdb22c9d8880f9ca35"
+    },
+    {
+      "path": "docs/bringup/gates/qemu_executable_coverage_latest.json",
+      "sha256": "4e84fedb410411c1661f5cef054ef7fc1525e9e40cce88e26c6990d3e55bcabb"
+    },
+    {
+      "path": "docs/bringup/gates/isa_llvm_qemu_coverage_latest.json",
+      "sha256": "c2651b460c42df5e28be95e7869b636a2fa031f55454f3d3a5a21de904196b46"
+    }
+  ]
+}

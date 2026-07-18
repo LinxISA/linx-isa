@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_c_zext_w.svg[C.ZEXT.W encoding,width=800]
+image::encodings/enc_c_zext_w.svg[C.ZEXT.W encoding,width=800]
 
 *Uop-Class:* ALU
 

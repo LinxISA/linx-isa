@@ -20,19 +20,22 @@ jobs:
           python-version: "3.11"
       - name: Initialize canonical QEMU leaf
         run: git submodule update --init emulator/qemu
-      - name: Check v0.56 golden artifacts
-        run: python3 tools/isa/build_golden.py --profile v0.56 --check
-      - name: Validate v0.56 ISA spec
+      - name: Check v0.57 golden artifacts
+        run: python3 tools/isa/build_golden.py --profile v0.57 --check
+      - name: Validate standalone v0.57 ISA spec
         run: |
-          python3 tools/isa/validate_spec.py --profile v0.56
+          python3 tools/isa/validate_spec.py --profile v0.57
+          python3 tools/isa/test_v057_profile.py
+          python3 tools/isa/check_pto_v057_manifest.py --root .
           python3 tools/isa/test_golden_contract.py
+          python3 tools/isa/test_fused_call_contract.py
           python3 tools/isa/report_encoding_space.py --check
           python3 tools/isa/gen_qemu_codec.py --check
           python3 tools/isa/gen_c_codec.py --check
           python3 tools/isa/gen_sail_decode.py --check
           python3 tools/isa/gen_sail_status.py --check
-      - name: Enforce canonical v0.56 guard
-        run: python3 tools/isa/check_canonical_v056.py --root .
+      - name: Enforce canonical v0.57 release guard
+        run: python3 tools/isa/check_canonical_v057.py --root .
       - name: Enforce canonical QEMU opcode metadata
         run: python3 tools/bringup/check_qemu_opcode_meta_sync.py --strict
       - name: Enforce Repository Layout

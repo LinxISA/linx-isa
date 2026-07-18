@@ -14,10 +14,12 @@ Run:
 CLANG=/path/to/clang ./avs/compiler/linx-llvm/tests/run.sh
 ```
 
-Current Bisheng compiler note:
-- the checked-in Bisheng LLVM branch registers `linx64` and `linx64be`;
-- `run.sh` now fails immediately if you request an unregistered target such as `linx32-linx-none-elf`;
-- archived `out-linx32` artifacts may still exist in historical gate evidence, but they are not part of the active branch closure.
+Current compiler target contract:
+- the in-repo LLVM build registers both `linx64` and `linx32`;
+- the canonical compiler gate runs `linx64-linx-none-elf` in `out/` and
+  `linx32-linx-none-elf` in `out-linx32/`;
+- `run.sh` fails immediately when the selected Clang does not register the
+  requested target, so archived output never substitutes for a fresh run.
 
 ## C test programs
 
@@ -67,13 +69,16 @@ Current Bisheng compiler note:
 
 ## Curated assembly tests
 
-- `41_v056_isa_forms.s` — positive assembler/disassembler coverage for v0.56 block, tile, vector, system, FSU, and AMO forms that are not guaranteed to appear in C output.
+- `41_v057_isa_forms.s` — positive assembler/disassembler coverage for v0.57 block, tile, vector, system, FSU, and AMO forms that are not guaranteed to appear in C output, including all nine canonical v0.57 64-bit `L.BSTART.{STD,FP,SYS}` forms.
 
 Notes:
 - The runner links each test object with a tiny runtime via `ld.lld` to resolve relocations, then extracts `.text` to
   a raw `.bin`.
 - Assembly tests are assembled with `llvm-mc`, disassembled with `llvm-objdump`,
   linked, extracted to `.bin`, and checked for required mnemonic spellings.
+- The `L.BSTART` gate reads the real `llvm-objdump` artifact and requires the exact
+  `STD/FP` `FALL/DIRECT/COND/CALL` plus `SYS FALL` matrix; source comments do not
+  contribute to this gate. A negative assembly test rejects non-`FALL` `SYS` forms.
 - Call/ret tests (`33`-`40`) include a relocation gate:
   generated `.s` must keep fused `ra=` direct-call headers; object relocations must still preserve the paired call/return-address fixups when present.
   Enable strict relocation-only mode with `LINX_STRICT_CALLRET_RELOCS=1`.
@@ -95,7 +100,14 @@ python3 ./avs/compiler/linx-llvm/tests/report_isa_coverage.py
 For detailed coverage analysis:
 
 ```bash
-python3 ./avs/compiler/linx-llvm/tests/analyze_coverage.py --verbose
+python3 ./avs/compiler/linx-llvm/tests/analyze_coverage.py \
+  --out-dir ./avs/compiler/linx-llvm/tests/out \
+  --fail-under 100 \
+  --report-out ./avs/compiler/linx-llvm/tests/out/coverage.json
+python3 ./avs/compiler/linx-llvm/tests/analyze_coverage.py \
+  --out-dir ./avs/compiler/linx-llvm/tests/out-linx32 \
+  --fail-under 100 \
+  --report-out ./avs/compiler/linx-llvm/tests/out-linx32/coverage.json
 ```
 
 This will show:

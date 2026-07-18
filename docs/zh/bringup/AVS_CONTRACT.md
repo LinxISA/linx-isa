@@ -1,12 +1,12 @@
-# AVS 合约 (v0.56)
+# AVS 合约 (v0.57)
 
-`avs/linx_avs_v1_test_matrix.yaml` 是 灵犀指令集 `v0.56` 唯一的实时公开启动合约。
+`avs/linx_avs_v1_test_matrix.yaml` 是 灵犀指令集 `v0.57` 唯一的实时公开启动合约。
 
 ## 规范文件
 
 - 矩阵：`avs/linx_avs_v1_test_matrix.yaml`
 - 状态：`avs/linx_avs_v1_test_matrix_status.json`
-- 架构合约：`docs/architecture/v0.56-architecture-contract.md`
+- 架构合约：`docs/architecture/v0.57-architecture-contract.md`
 
 ## 必需的条目元数据
 
@@ -15,7 +15,7 @@
 - `state`：`active` 或 `archived`
 - `profiles`：架构或子系统覆盖范围
 - `must_pass_in_tier`：`pr` 和 `nightly` 等门层
-- `spec_refs`：规范的 `v0.56` 规范、手册或状态参考
+- `spec_refs`：规范的 `v0.57` 规范、手册或状态参考
 - `requirement` 和 `pass_fail`：规范闭包语句
 
 只有 `state: active` 条目参与层级关闭。

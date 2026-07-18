@@ -8,6 +8,7 @@ import tempfile
 import time
 import unittest
 from pathlib import Path
+from unittest import mock
 
 import run_gates
 
@@ -124,6 +125,51 @@ class RunGatesTests(unittest.TestCase):
             self.assertFalse(state["ok"])
             self.assertEqual(state["artifacts"][0]["status"], "stale")
 
+    def test_prepare_env_supplies_every_registry_toolchain_variable(self) -> None:
+        root = Path(__file__).resolve().parents[2]
+        with mock.patch.dict(os.environ, {}, clear=True):
+            env = run_gates.prepare_env(root, "release-strict", "nightly")
+        expected = {
+            "CLANG": "clang",
+            "CLANGXX": "clang++",
+            "LLD": "ld.lld",
+            "LLVM_OBJDUMP": "llvm-objdump",
+        }
+        for variable, basename in expected.items():
+            with self.subTest(variable=variable):
+                self.assertTrue(env[variable], variable)
+                self.assertEqual(Path(env[variable]).name, basename)
+
+    def test_compiler_registry_has_symmetric_arch_coverage_reports(self) -> None:
+        root = Path(__file__).resolve().parents[2]
+        registry = run_gates.load_registry(root / "docs/bringup/gate_registry.json")
+        by_key = {gate["gate_key"]: gate for gate in registry["gates"]}
+
+        expected = {
+            "linx64": {
+                "compile": "Compiler::AVS compile suites linx64",
+                "coverage": "Compiler::Coverage 100% linx64",
+                "out_dir": "avs/compiler/linx-llvm/tests/out",
+            },
+            "linx32": {
+                "compile": "Compiler::AVS compile suites linx32",
+                "coverage": "Compiler::Coverage 100% linx32",
+                "out_dir": "avs/compiler/linx-llvm/tests/out-linx32",
+            },
+        }
+        for arch, contract in expected.items():
+            with self.subTest(arch=arch):
+                compile_gate = by_key[contract["compile"]]
+                coverage_gate = by_key[contract["coverage"]]
+                report = f"{contract['out_dir']}/coverage.json"
+                self.assertIn(f"TARGET=\"{arch}-linx-none-elf\"", compile_gate["command"])
+                self.assertIn(f'OUT_DIR=\"$ROOT/{contract["out_dir"]}\"', compile_gate["command"])
+                self.assertIn(f'--out-dir \"$ROOT/{contract["out_dir"]}\"', coverage_gate["command"])
+                self.assertIn(f'--report-out \"$ROOT/{report}\"', coverage_gate["command"])
+                self.assertEqual(coverage_gate["artifacts"], [report])
+                self.assertTrue(compile_gate["required"])
+                self.assertTrue(coverage_gate["required"])
+
     def test_regression_wrapper_dry_run(self) -> None:
         root = Path(__file__).resolve().parents[2]
         env = os.environ.copy()
@@ -163,6 +209,54 @@ class RunGatesTests(unittest.TestCase):
         )
         self.assertEqual(proc.returncode, 0, proc.stderr)
         self.assertIn("Kernel::Linux initramfs smoke", proc.stdout)
+
+    def test_qemu_isa_gate_short_circuits_when_executable_producer_fails(self) -> None:
+        root = Path(__file__).resolve().parents[2]
+        registry = json.loads(
+            (root / "docs/bringup/gate_registry.json").read_text(encoding="utf-8")
+        )
+        command = next(
+            gate["command"]
+            for gate in registry["gates"]
+            if gate["gate_key"] == "Emulator::ISA vs QEMU coverage report"
+        )
+        with tempfile.TemporaryDirectory() as td:
+            temp = Path(td)
+            log = temp / "python-calls.log"
+            shim = temp / "python3"
+            shim.write_text(
+                "#!/bin/sh\n"
+                "printf '%s\\n' \"$1\" >> \"$PYTHON_CALL_LOG\"\n"
+                "case \"$1\" in\n"
+                "  *report_qemu_executable_coverage.py) exit 7 ;;\n"
+                "  *) exit 0 ;;\n"
+                "esac\n",
+                encoding="utf-8",
+            )
+            shim.chmod(0o755)
+            env = os.environ.copy()
+            env.update(
+                {
+                    "PATH": f"{temp}:{env['PATH']}",
+                    "PYTHON_CALL_LOG": str(log),
+                    "ROOT": str(root),
+                }
+            )
+            proc = subprocess.run(
+                ["bash", "-c", command],
+                cwd=root,
+                env=env,
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+            calls = log.read_text(encoding="utf-8").splitlines()
+
+        self.assertEqual(proc.returncode, 7, proc.stderr)
+        self.assertEqual(
+            calls,
+            [str(root / "tools/bringup/report_qemu_executable_coverage.py")],
+        )
 
 
 if __name__ == "__main__":

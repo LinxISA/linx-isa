@@ -1,6 +1,8 @@
-# LinxISA Bring-up (Public v0.56)
+# LinxISA Bring-up (Public v0.57)
 
-This directory tracks `v0.56` architecture and implementation alignment, with AVS as the only live public bring-up contract.
+This directory tracks the active `v0.57` architecture and implementation
+alignment. v0.57 is a strict delta on the immutable v0.57 baseline, and AVS
+is the only live public bring-up contract.
 
 ## Start Here
 
@@ -11,7 +13,7 @@ This directory tracks `v0.56` architecture and implementation alignment, with AV
 
 ## Normative Contract
 
-- Architecture contract: `docs/architecture/v0.56-architecture-contract.md`
+- Architecture contract: `docs/architecture/v0.57-architecture-contract.md`
 - AVS contract page: `docs/bringup/AVS_CONTRACT.md`
 - canonical AVS matrix: `avs/linx_avs_v1_test_matrix.yaml`
 - contract gate: `python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml`
@@ -104,9 +106,11 @@ Release-strict bring-up consistency checks:
 - `python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier ${LINX_GATE_TIER:-pr}`
 - `python3 tools/bringup/check_sail_model.py`
 - `python3 tools/bringup/check_qemu_opcode_meta_sync.py --allowlist docs/bringup/qemu_opcode_sync_allowlist.json --report-out docs/bringup/gates/qemu_opcode_sync_latest.json --out-md docs/bringup/gates/qemu_opcode_sync_latest.md`
-- `python3 tools/bringup/report_qemu_isa_coverage.py --report-out docs/bringup/gates/qemu_isa_coverage_latest.json --out-md docs/bringup/gates/qemu_isa_coverage_latest.md --require-full` (mnemonic + per-form closure)
+- `python3 tools/bringup/report_qemu_executable_coverage.py --require-nonzero --require-clean` (audited per-form L2 runtime and L3 semantic-oracle ledger)
+- `python3 tools/bringup/report_qemu_isa_coverage.py --spec isa/v0.57/linxisa-v0.57.json --qemu-root emulator/qemu --qemu-meta emulator/qemu/target/linx/linx_opcode_meta_gen.h --executable-report docs/bringup/gates/qemu_executable_coverage_latest.json --report-out docs/bringup/gates/qemu_isa_coverage_latest.json --out-md docs/bringup/gates/qemu_isa_coverage_latest.md --require-full` (L1 mnemonic/form mapping plus independently audited partial L2/L3 counts)
 - `python3 tools/bringup/report_qemu_translation_coverage.py --obj-dir avs/qemu/out/obj --llvm-objdump compiler/llvm/build-linxisa-clang/bin/llvm-objdump --report-out docs/bringup/gates/qemu_translation_coverage_latest.json --out-md docs/bringup/gates/qemu_translation_coverage_latest.md --require-full` (per-source AVS QEMU translation coverage)
-- `python3 tools/bringup/report_isa_llvm_qemu_coverage.py --compiler-analyzer avs/compiler/linx-llvm/tests/analyze_coverage.py --compiler-out-dir avs/compiler/linx-llvm/tests/out-linx64 --qemu-isa-report docs/bringup/gates/qemu_isa_coverage_latest.json --qemu-translation-report docs/bringup/gates/qemu_translation_coverage_latest.json --report-out docs/bringup/gates/isa_llvm_qemu_coverage_latest.json --out-md docs/bringup/gates/isa_llvm_qemu_coverage_latest.md --require-coherent` (whole ISA-LLVM-QEMU consistency view)
-- `python3 tools/bringup/report_48bit_implementation.py --compiler-analyzer avs/compiler/linx-llvm/tests/analyze_coverage.py --compiler-out-dir avs/compiler/linx-llvm/tests/out-linx64 --compiler-roundtrip-json avs/compiler/linx-llvm/tests/out-linx64/99_spec_decode/99_spec_decode.roundtrip.json --qemu-isa-report docs/bringup/gates/qemu_isa_coverage_latest.json --qemu-translation-report docs/bringup/gates/qemu_translation_coverage_latest.json --report-out docs/bringup/gates/isa_48bit_implementation_latest.json --out-md docs/bringup/gates/isa_48bit_implementation_latest.md --require-full` (focused 48-bit LLVM/QEMU implementation audit)
+- `python3 tools/bringup/report_llvm_c_codegen_coverage.py --build-manifest avs/compiler/linx-llvm/tests/out/c-codegen-build-manifest.json --report-out docs/bringup/gates/llvm_c_codegen_coverage_latest.json --out-md docs/bringup/gates/llvm_c_codegen_coverage_latest.md` (manifest-bound and replayed pure CodeGen vs source-directed C/C++ mnemonic breadth; no target threshold asserted)
+- `python3 tools/bringup/report_isa_llvm_qemu_coverage.py --compiler-analyzer avs/compiler/linx-llvm/tests/analyze_coverage.py --compiler-out-dir avs/compiler/linx-llvm/tests/out --qemu-isa-report docs/bringup/gates/qemu_isa_coverage_latest.json --qemu-translation-report docs/bringup/gates/qemu_translation_coverage_latest.json --report-out docs/bringup/gates/isa_llvm_qemu_coverage_latest.json --out-md docs/bringup/gates/isa_llvm_qemu_coverage_latest.md --require-coherent` (whole ISA-LLVM-QEMU consistency view)
+- `python3 tools/bringup/report_48bit_implementation.py --compiler-analyzer avs/compiler/linx-llvm/tests/analyze_coverage.py --compiler-out-dir avs/compiler/linx-llvm/tests/out --compiler-roundtrip-json avs/compiler/linx-llvm/tests/out/99_spec_decode/99_spec_decode.roundtrip.json --qemu-isa-report docs/bringup/gates/qemu_isa_coverage_latest.json --qemu-translation-report docs/bringup/gates/qemu_translation_coverage_latest.json --report-out docs/bringup/gates/isa_48bit_implementation_latest.json --out-md docs/bringup/gates/isa_48bit_implementation_latest.md --require-full` (focused 48-bit LLVM/QEMU implementation audit)
 - `python3 tools/bringup/check_linx_virt_defconfig_spec.py --report-out docs/bringup/gates/linxisa_virt_defconfig_audit.json`
 - `python3 tools/bringup/check_gate_consistency.py --report docs/bringup/gates/latest.json --progress docs/bringup/PROGRESS.md --gate-status docs/bringup/GATE_STATUS.md --libc-status docs/bringup/libc_status.md --avs-matrix-audit docs/bringup/gates/avs_matrix_status_audit.json --qemu-opcode-sync docs/bringup/gates/qemu_opcode_sync_latest.json --qemu-isa-coverage docs/bringup/gates/qemu_isa_coverage_latest.json --linux-defconfig-audit docs/bringup/gates/linxisa_virt_defconfig_audit.json --require-maturity-artifacts --profile release-strict --lane-policy external+pin-required --trace-schema-version 1.0 --multi-agent-summary docs/bringup/gates/logs/<run-id>/<lane>/multi_agent_summary.json --max-age-hours 24`

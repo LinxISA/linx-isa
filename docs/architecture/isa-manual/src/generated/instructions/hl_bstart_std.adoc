@@ -14,7 +14,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_hl_bstart_std_48_51f78942222e.svg[HL.BSTART.STD encoding form hl_bstart_std_48_51f78942222e,width=800]
+image::encodings/enc_hl_bstart_std_48_51f78942222e.svg[HL.BSTART.STD encoding form hl_bstart_std_48_51f78942222e,width=800]
 
 *Compression:* HL48 (len=48)
 
@@ -25,7 +25,7 @@ image::../encodings/enc_hl_bstart_std_48_51f78942222e.svg[HL.BSTART.STD encoding
 
 *Encoding:*
 
-image::../encodings/enc_hl_bstart_std_48_9ba705710872.svg[HL.BSTART.STD encoding form hl_bstart_std_48_9ba705710872,width=800]
+image::encodings/enc_hl_bstart_std_48_9ba705710872.svg[HL.BSTART.STD encoding form hl_bstart_std_48_9ba705710872,width=800]
 
 *Compression:* HL48 (len=48)
 
@@ -36,7 +36,7 @@ image::../encodings/enc_hl_bstart_std_48_9ba705710872.svg[HL.BSTART.STD encoding
 
 *Encoding:*
 
-image::../encodings/enc_hl_bstart_std_48_b13f22c7c4a3.svg[HL.BSTART.STD encoding form hl_bstart_std_48_b13f22c7c4a3,width=800]
+image::encodings/enc_hl_bstart_std_48_b13f22c7c4a3.svg[HL.BSTART.STD encoding form hl_bstart_std_48_b13f22c7c4a3,width=800]
 
 *Compression:* HL48 (len=48)
 
@@ -47,7 +47,7 @@ image::../encodings/enc_hl_bstart_std_48_b13f22c7c4a3.svg[HL.BSTART.STD encoding
 
 *Encoding:*
 
-image::../encodings/enc_hl_bstart_std_48_d814d26508a4.svg[HL.BSTART.STD encoding form hl_bstart_std_48_d814d26508a4,width=800]
+image::encodings/enc_hl_bstart_std_48_d814d26508a4.svg[HL.BSTART.STD encoding form hl_bstart_std_48_d814d26508a4,width=800]
 
 *Compression:* HL48 (len=48)
 

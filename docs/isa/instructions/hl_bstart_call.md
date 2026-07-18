@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `HL.BSTART.CALL <br_label>`
+- `HL.BSTART.CALL <br_label>, <rt_label>, ->ra`
 
 ## Encoding
 
@@ -26,24 +26,26 @@
 
 ## Description
 
-[48-bit HL.] Unconditionally transfers to a call block. The instruction preserves `ra`; returning calls require an adjacent `SETRET` or `C.SETRET`.
+[48-bit HL.] Atomic fused call with independent call-target and return-target fields; transfers to the call block and writes `ra`. This exact aggregate is distinct from the generic bare-call form, which preserves `ra` and requires an adjacent `SETRET` or `C.SETRET`.
 
 ## Pseudocode (informative)
 
 ```c
-// BSTART.CALL preserves ra. Returning source forms place SETRET/C.SETRET adjacent to the header.
-EndBlock(); BeginNextBlock(CALL);
+P = CurrentPC();
+call_target = P + (SignExtend(simm25) << 1);
+ra = (P + 4) + (ZeroExtend(uimm5) << 1);
+AtomicCallTransfer(call_target, ra);
 ```
 
 ## Encoding Notes
 
-- `Bare HL.BSTART.CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.`
+- `Atomic fused CALL: call_target = P + (SignExtend(simm25) << 1); ra = (P + 4) + (ZeroExtend(uimm5) << 1). Both labels are explicit and independently relocatable.`
 
 ## Full Catalog Forms
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `HL.BSTART.CALL <br_label>` | 48 | — |
+| `HL.BSTART.CALL <br_label>, <rt_label>, ->ra` | 48 | — |
 
 <div class="insn-nav">
 

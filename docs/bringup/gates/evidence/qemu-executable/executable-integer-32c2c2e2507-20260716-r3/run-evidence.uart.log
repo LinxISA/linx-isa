@@ -1,0 +1,26 @@
+Linx QEMU tests
+  Test 0x00002601: PASS
+  Test 0x00002602: PASS
+  Test 0x00002603: PASS
+  Test 0x00002604: PASS
+  Test 0x00002605: PASS
+  Test 0x00002606: PASS
+  Test 0x00002607: PASS
+  Test 0x00002608: PASS
+  Test 0x00002609: PASS
+  Test 0x0000260A: PASS
+  Test 0x0000260B: PASS
+  Test 0x0000260C: PASS
+  Test 0x0000260D: PASS
+  Test 0x0000260E: PASS
+  Test 0x0000260F: PASS
+
+=================================================
+              TEST SUITE COMPLETE                
+=================================================
+
+All tests completed successfully!
+
+Note: Check UART output for individual test results.
+      Each test suite prints PASS for each test.
+

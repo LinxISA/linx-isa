@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "run_id": "2026-07-17-fishtoucher-dev",
+  "protocol": "name-role-req/resp",
+  "manager": "Codex｜乱序摸鱼管家",
+  "entries": [
+    {
+      "name": "Grace Hopper",
+      "role": "Current-SHA Coverage Evidence Auditor",
+      "req": "Audit stale/current LLVM and QEMU coverage leaves; return exact refresh commands and acceptance; read-only, no QEMU.",
+      "resp": "LLVM C-CodeGen and translation evidence were stale; refresh LLVM 19631a leaves before coherence; preserve QEMU L1 656/747 as a hard break; found reserved BSTART.TMA strict-roundtrip mismatch."
+    },
+    {
+      "name": "Barbara Liskov",
+      "role": "QEMU ISA Gap Architect",
+      "req": "Partition 91 QEMU form gaps and identify a safe semantic implementation batch; read-only, no QEMU.",
+      "resp": "All 91 forms are owned by open architecture issues #140/#141/#144/#148/#149/#150/#151; no safe mapping-only or L2/L3 batch. BSTART.TMA reserved-selector inconsistency is outside the 91 and belongs to ISA issue #152."
+    },
+    {
+      "name": "John Backus",
+      "role": "SPEC Train Experiment Verifier",
+      "req": "Validate the 999 sentinel and focused 523 speed-stack experiment against current CLI/assets; read-only, no QEMU.",
+      "resp": "Corrected the command to stage-b train with explicit QEMU and four expanded speed flags; froze 38B promotion threshold and kept timeout throughput distinct from specdiff correctness."
+    }
+  ],
+  "manager_decisions": [
+    "Refreshed current-SHA compiler/translation leaves and retained QEMU L1 hard break.",
+    "Created LinxISA/linx-isa issue #152 instead of widening LLVM or assigning QEMU semantics to reserved selectors.",
+    "Ran 999 strict sentinel, 523 300-second promotion probe, and one bounded 900-second correctness attempt serially.",
+    "Stopped after 900-second live-timeout; did not claim SPEC train closure.",
+    "Fixed explicit --qemu parsing so future focused runs do not require a redundant QEMU environment variable."
+  ]
+}

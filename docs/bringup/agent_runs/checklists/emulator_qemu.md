@@ -57,7 +57,7 @@
   Done means: opcode audit reports no unexpected live decode-surface drift for the current QEMU line; legacy generated opcode meta/id headers are treated as optional when absent.
   Status: ✅ PASS (2026-05-21) - the audit surface is updated to the current decode files and no longer depends on removed legacy header paths.
 
-- [x] ID: QEMU-004 Validate trap semantics match the live v0.56 clarifications for CFI/BLOCKFMT/BFETCH.
+- [x] ID: QEMU-004 Validate trap semantics match the live v0.57 clarifications for CFI/BLOCKFMT/BFETCH.
   Done means: no conflicting trap behavior is observed in strict-system and model-diff gates.
   Status: ✅ PASS (2026-02-25) - strict system and model-diff are both green in run `2026-02-25-r2-pin-lanefix` (logs: `docs/bringup/gates/logs/2026-02-25-r2-pin-lanefix/pin/emu_strict_system.log`, `docs/bringup/gates/logs/2026-02-25-r2-pin-lanefix/pin/model_diff_suite.log`).
 
@@ -68,7 +68,7 @@
 
 - [ ] ID: QEMU-005A AVS translation coverage reaches 100% at the per-source object level.
   Command: `python3 tools/bringup/report_qemu_translation_coverage.py --obj-dir avs/qemu/out/obj --llvm-objdump compiler/llvm/build-linxisa-clang/bin/llvm-objdump --report-out docs/bringup/gates/qemu_translation_coverage_latest.json --out-md docs/bringup/gates/qemu_translation_coverage_latest.md --require-full`
-  Done means: Every canonical v0.56 instruction mnemonic is covered by at least one AVS QEMU unit-test object, and the machine-generated report exits 0 in hard-fail mode.
+  Done means: Every canonical v0.57 instruction mnemonic is covered by at least one AVS QEMU unit-test object, and the machine-generated report exits 0 in hard-fail mode.
   Status: ✅ PASS (2026-05-21) - the framework now builds a compile-only `translation_corpus` suite from generated spec-decode vectors plus canonical hand-written forms, and the machine-generated report reaches `710/710` canonical mnemonics (`100.0%`) from `84` AVS QEMU object files.
 
 - [x] ID: QEMU-005B Keep the whole-stack coverage report free of translation-only anomalies.
@@ -80,7 +80,7 @@
   Done means: Linux kernel boots with timer interrupts working, full syscalls available.
   Status: ✅ PASS (2026-02-25) - full-OS closure gate is green in run `2026-02-25-r2-pin-lanefix` (`strict_cross_repo.sh` pass and BusyBox rootfs boot pass evidence in `kernel_busybox_rootfs.log`). Note for current recovery work: the merged Linx64 recovery lane now expects direct kernel/rootfs boot to run firmwareless (`-bios none`), so local rootfs/SPEC reruns should preserve that QEMU invocation policy.
 
-- [x] ID: QEMU-007 Build pinned `qemu-system-linx64` after v0.56 decode/translate propagation.
+- [x] ID: QEMU-007 Build pinned `qemu-system-linx64` after v0.57 decode/translate propagation.
   Command: `bash tools/bringup/run_qemu_build_clean.sh --qemu-root $PWD/emulator/qemu --out-dir /tmp/linx-qemu-clean-build --target qemu-system-linx64`
   Done means: the pinned QEMU workspace compiles the Linx system emulator binary with the current decode/translator state, reusing the same output directory incrementally across iterations.
   Status: ✅ PASS (2026-05-21) - the clean helper remains reproducible while still reusing its configured out dir incrementally; the local bring-up lane also builds successfully at `/tmp/linx-qemu-local-build/qemu-system-linx64`.

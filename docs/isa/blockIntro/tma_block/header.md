@@ -29,9 +29,14 @@ Each parameter is explained as follows:
 
 ## Encoding method
 
-A complete data transfer block instructionheader needs to be split into the following multiple instructions for encoding, including:
+A complete data transfer block header is encoded as one named TMA header
+followed by its descriptor records:
 
-- `BSTART.TMA TileOp, DataType`
+- `BSTART.TLOAD DataType`, `BSTART.TSTORE DataType`,
+  `BSTART.TMOV DataType`, `BSTART.TPREFETCH DataType`,
+  `BSTART.MGATHER DataType`, `BSTART.MSCATTER DataType`,
+  `BSTART.MGATHER.MASK DataType`, `BSTART.MSCATTER.MASK DataType`, or
+  `BSTART.MGATHER.CAS DataType`
 - [B.DATR](../../header/B.DATR.md) `Layout, PadValue`
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0`
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`
@@ -43,7 +48,10 @@ A complete data transfer block instructionheader needs to be split into the foll
 -...
 - [B.IOR](../../header/B.IOR.md) `RegSrc9, RegSrc10, RegSrc11, ->RegDst4`
 
-Among them, the encoding format of the BSTART.TMA instruction is as follows:![BSTART.TMA](../../../figs/bitfield/svg/BlockHeader_32bit/BSTART.TMA.svg)
+All named TMA headers share the TMA encoding family shown below. The textual
+generic selector form is not part of the v0.57 assembly language.
+
+![TMA encoding family](../../../figs/bitfield/svg/BlockHeader_32bit/BSTART.TMA.svg)
 
 Among them, the function field is used to encode specific TileOp information. The encoding method is as follows:
 
@@ -52,12 +60,13 @@ Among them, the function field is used to encode specific TileOp information. Th
 | 0 | [TLOAD](../../header/tileblock/TLOAD.md) | Load data from memory into Tile register |
 | 1 | [TSTORE](../../header/tileblock/TSTORE.md) | Move Tile register data to memory |
 | 2 | [TMOV](../../header/tileblock/TMOV.md) | Data movement/copying between Tile registers, supporting storage layout (fractal) transformation |
-| 3 | - | Reserved |
+| 3 | [TPREFETCH](../../header/tileblock/TPREFETCH.md) | TLOAD-equivalent memory access without a destination Tile |
 | 4 | [MGATHER](../../header/tileblock/MGATHER.md) | Gather data in discrete memory space into Tile registers. |
 | 5 | [MSCATTER](../../header/tileblock/MSCATTER.md) | Store the data in the Tile register into discrete memory space.  |
 | 6 | [MGATHER.MASK](../../header/tileblock/MGATHER.MASK.md) | Masked memory gather. Reads only lanes whose mask bit is set. |
 | 7 | [MSCATTER.MASK](../../header/tileblock/MSCATTER.MASK.md) | Masked memory scatter. Writes only lanes whose mask bit is set. |
-| 8-31 | Temporarily reserved |
+| 8 | [MGATHER.CAS](../../header/tileblock/MGATHER.CAS.md) | Per-element atomic compare-and-swap gather; returns the old values |
+| 9-31 | Reserved |
 
 The DataType field is encoded as follows:
 

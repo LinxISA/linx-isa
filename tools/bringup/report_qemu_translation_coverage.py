@@ -46,11 +46,24 @@ def canonicalize_mnemonic(mnemonic: str) -> str:
     s = s.rstrip(",")
     s = re.sub(r"\{[^}]*\}$", "", s)
     s = s.rstrip(",")
+    # Keep the glued-byte workaround narrow.  A generic "two hex chars"
+    # rule corrupts real mnemonics such as FENCE.D into NCE.D.
     m = re.match(r"^[0-9a-fA-F]{2}([A-Za-z].*)$", s)
     if m:
         candidate = m.group(1)
-        if "." in candidate or candidate.startswith(
-            ("BSTART", "BSTOP", "FENTRY", "FEXIT", "FRET")
+        if candidate.startswith(
+            (
+                "BSTART",
+                "BSTOP",
+                "C.BSTART",
+                "C.BSTOP",
+                "FENTRY",
+                "FEXIT",
+                "FRET",
+                "HL.",
+                "L.BSTART",
+                "L.BSTOP",
+            )
         ):
             s = candidate
     s = s.upper()
@@ -218,7 +231,7 @@ def render_markdown(report: dict[str, object], out_path: Path) -> None:
 
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description="Generate AVS QEMU translation coverage report")
-    ap.add_argument("--spec", default="isa/v0.56/linxisa-v0.56.json", help="Path to compiled ISA JSON")
+    ap.add_argument("--spec", default="isa/v0.57/linxisa-v0.57.json", help="Path to compiled ISA JSON")
     ap.add_argument("--obj-dir", default="avs/qemu/out/obj", help="Directory containing per-source AVS QEMU objects")
     ap.add_argument(
         "--llvm-objdump",

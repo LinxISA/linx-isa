@@ -1,12 +1,12 @@
-# Bring-up Progress (v0.56 workspace)
+# Bring-up Progress (v0.57 workspace)
 
 Last updated: 2026-07-15
 
 ## Closure Snapshot
 
-- `v0.56` golden/spec is canonical and validated.
+- `v0.57` golden/spec is canonical and validated.
 - AVS is now the only live public bring-up contract.
-- The v0.56.5 maintenance packet replaces the April aggregate with one
+- The v0.57 maintenance packet replaces the April aggregate with one
   SHA-manifested run; it must remain non-green while BusyBox/MMU, QEMU semantic
   breadth, and unrun nightly gates are open.
 - Active governance phase remains `LINUX-RUNTIME`, and `docs/bringup/agent_runs/waivers.yaml` still carries zero waivers.
@@ -35,18 +35,19 @@ Last updated: 2026-07-15
     BusyBox proof.
 - SPEC bringup-subset runtime remains a nightly/runtime blocker; the static train-all lane now reaches SPEC userspace, builds all supported C/C++ rows, and passes `999.specrand_ir`, but remaining rows split into throughput, C++ resource/kill, and kernel panic-loop classes.
   - TSVC QEMU runtime is green in the required batched auto lane: 8/8 batches,
-    `151/151` strict-vectorized and executed kernels in 10.587 seconds.
+    `150/151` strict-vectorized and `151/151` executed kernels; `s451` is the
+    intentional scalar transcendental-call case.
   - Some call/ret negative-contract and C++ runtime-overlay follow-up work remains outside the PR closure subset.
 
 ## Capability Status
 
 | Phase | Status | Evidence |
 | --- | --- | --- |
-| 1. Canonical `v0.56` golden + manual freeze | ✅ Passed | `python3 tools/isa/build_golden.py --profile v0.56 --check`; `python3 tools/isa/validate_spec.py --profile v0.56` |
+| 1. Canonical `v0.57` golden + manual freeze | ✅ Passed | `python3 tools/isa/build_golden.py --profile v0.57 --check`; `python3 tools/isa/validate_spec.py --profile v0.57` |
 | 2. AVS public contract cutover | ✅ Source complete | `python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml` |
 | 3. LLVM MC/CodeGen baseline alignment | ✅ Current pin pass | `avs/compiler/linx-llvm/tests/run.sh`; `analyze_coverage.py --fail-under 100`; `ninja -C compiler/llvm/build-linxisa-clang llvm-ar llvm-nm llvm-strip llvm-readelf` |
 | 4. QEMU runtime/system baseline | ✅ Current pin pass | `avs/qemu/check_system_strict.sh`; `avs/qemu/run_tests.sh --all`; `bash tools/bringup/run_qemu_build_clean.sh --qemu-root $PWD/emulator/qemu --out-dir /tmp/linx-qemu-clean-build --target qemu-system-linx64` |
-| 5. Linux userspace boot path | ❌ Current-pin BusyBox failure | The v0.56.5 clean-QEMU run produced no UART output in two 120-second attempts. Older green rootfs evidence is historical and does not override this result. |
+| 5. Linux userspace boot path | ❌ Current-pin BusyBox failure | The v0.57 clean-QEMU run produced no UART output in two 120-second attempts. Older green rootfs evidence is historical and does not override this result. |
 | 6. musl/glibc baseline runtime | ✅ Current clean-QEMU pass | musl build/runtime and glibc G1a/G1b are green, and both `run_musl_smoke.py` and `run_glibc_smoke.py` now pass again on the clean pinned QEMU path. |
 | 7. Sail/model verification | ✅ Sail pass; model breadth open | Sail 0.20.2 parses, typechecks, generates C, and executes directed tests for all 747 form-ID records. Full current-pin cross-model/nightly breadth was not run. |
 | 8. AVS tier closure | ✅ Current PR pass | `python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier pr` now reports `required_tests=31`, `failure_count=0`; nightly breadth remains `32/54`. |
@@ -57,7 +58,7 @@ Last updated: 2026-07-15
 
 | Gate | Status | Command |
 | --- | --- | --- |
-| Golden/spec validation | ✅ | `python3 tools/isa/build_golden.py --profile v0.56 --check`; `python3 tools/isa/validate_spec.py --profile v0.56` |
+| Golden/spec validation | ✅ | `python3 tools/isa/build_golden.py --profile v0.57 --check`; `python3 tools/isa/validate_spec.py --profile v0.57` |
 | AVS contract schema | ✅ | `python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml` |
 | AVS matrix status audit | ✅ | `python3 tools/bringup/check_avs_matrix_status.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json` |
 | AVS tier closure | ✅ PR subset green (`31/31` required) | `python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier pr` |

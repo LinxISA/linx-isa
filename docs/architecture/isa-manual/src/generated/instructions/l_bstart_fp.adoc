@@ -14,7 +14,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_l_bstart_fp_64_098e57019d7b.svg[L.BSTART.FP encoding form l_bstart_fp_64_098e57019d7b,width=800]
+image::encodings/enc_l_bstart_fp_64_098e57019d7b.svg[L.BSTART.FP encoding form l_bstart_fp_64_098e57019d7b,width=800]
 
 *Compression:* L64 (len=64)
 
@@ -25,7 +25,7 @@ image::../encodings/enc_l_bstart_fp_64_098e57019d7b.svg[L.BSTART.FP encoding for
 
 *Encoding:*
 
-image::../encodings/enc_l_bstart_fp_64_0cac9941f7d4.svg[L.BSTART.FP encoding form l_bstart_fp_64_0cac9941f7d4,width=800]
+image::encodings/enc_l_bstart_fp_64_0cac9941f7d4.svg[L.BSTART.FP encoding form l_bstart_fp_64_0cac9941f7d4,width=800]
 
 *Compression:* L64 (len=64)
 
@@ -36,7 +36,7 @@ image::../encodings/enc_l_bstart_fp_64_0cac9941f7d4.svg[L.BSTART.FP encoding for
 
 *Encoding:*
 
-image::../encodings/enc_l_bstart_fp_64_2067ad6667ed.svg[L.BSTART.FP encoding form l_bstart_fp_64_2067ad6667ed,width=800]
+image::encodings/enc_l_bstart_fp_64_2067ad6667ed.svg[L.BSTART.FP encoding form l_bstart_fp_64_2067ad6667ed,width=800]
 
 *Compression:* L64 (len=64)
 
@@ -47,7 +47,7 @@ image::../encodings/enc_l_bstart_fp_64_2067ad6667ed.svg[L.BSTART.FP encoding for
 
 *Encoding:*
 
-image::../encodings/enc_l_bstart_fp_64_8115c042ef26.svg[L.BSTART.FP encoding form l_bstart_fp_64_8115c042ef26,width=800]
+image::encodings/enc_l_bstart_fp_64_8115c042ef26.svg[L.BSTART.FP encoding form l_bstart_fp_64_8115c042ef26,width=800]
 
 *Compression:* L64 (len=64)
 

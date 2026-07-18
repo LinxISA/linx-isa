@@ -36,7 +36,7 @@ EndBlock(); BeginNextBlock(/* kind */);
 
 ## Encoding Notes
 
-- `Generic CUBE selector form. Function=0/2/8 are emitted as BSTART.TMATMUL/BSTART.TMATMUL.ACC/BSTART.ACCCVT aliases.`
+- `Generic CUBE selector form for unnamed functions. Functions 0/1/2/4/5/6/8/16/17/18/20/21/22 decode through their canonical named forms.`
 
 ## Full Catalog Forms
 

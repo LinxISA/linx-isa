@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import os
 import re
 import select
@@ -19,8 +21,8 @@ PTO_KERNEL_ROOT = REPO_ROOT / "workloads" / "pto_kernels" / "kernels"
 PTO_KERNEL_CATALOG = PTO_KERNEL_ROOT / "catalog.txt"
 LLVM_AVS_ROOT = REPO_ROOT / "avs" / "compiler" / "linx-llvm" / "tests"
 LLVM_AVS_DISASM_VECTOR_GEN = LLVM_AVS_ROOT / "gen_disasm_vectors.py"
-LLVM_AVS_V056_FORMS = LLVM_AVS_ROOT / "asm" / "41_v056_isa_forms.s"
-LLVM_AVS_SPEC = REPO_ROOT / "isa" / "v0.56" / "linxisa-v0.56.json"
+LLVM_AVS_V057_FORMS = LLVM_AVS_ROOT / "asm" / "41_v057_isa_forms.s"
+LLVM_AVS_SPEC = REPO_ROOT / "isa" / "v0.57" / "linxisa-v0.57.json"
 DIRECT_BOOT_LINK_SCRIPT = """ENTRY(_start)
 PHDRS {
   text PT_LOAD FLAGS(5);
@@ -48,8 +50,421 @@ FINISHER_RESET_LOW8 = 0x77
 SUCCESS_UART_MARKERS = (
     b"REGRESSION PASSED",
     b"TEST SUITE COMPLETE",
-    b"PASS\r\n",
+    b"LINX TESTS PASS",
 )
+TERMINAL_TEST_IDS_BY_SUITE = {
+    # The final system trap continuation intentionally exits through the
+    # finisher instead of returning to tests/main.c.
+    "system": 0x0000110D,
+}
+COMPLETION_TEST_IDS_BY_SUITE = {
+    "arithmetic": 0x0000A091,
+    "bitwise": 0x0000B0F1,
+    "loadstore": 0x0000C140,
+    "branch": 0x0000D0E2,
+    "move": 0x0000E141,
+    "float": 0x0000F0F0,
+    "atomic": 0x00007160,
+    "jumptable": 0x00008002,
+    "varargs": 0x00009004,
+    "v057_vector": 0x000012F0,
+    "v057_vector_ops": 0x00001320,
+    "callret": 0x00001412,
+    "runtime": 0x00002110,
+    "executable_memory": 0x0000220D,
+    "executable_scalar": 0x00002510,
+    "executable_integer": 0x0000260F,
+    "system": 0x0000110D,
+}
+
+
+def _sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _parse_test_events(output: bytes) -> list[dict[str, object]]:
+    events: list[dict[str, object]] = []
+    pattern = re.compile(r"Test\s+0x([0-9a-fA-F]{1,8}):.*?\b(PASS|FAIL)\s*$")
+    for line in output.decode("utf-8", errors="replace").splitlines():
+        match = pattern.search(line)
+        if match is None:
+            continue
+        test_id = f"0x{int(match.group(1), 16):08x}"
+        events.append({"seq": len(events), "kind": "START", "test_id": test_id})
+        if match.group(2) == "PASS":
+            events.append({"seq": len(events), "kind": "PASS", "test_id": test_id})
+        else:
+            events.append({"seq": len(events), "kind": "FAIL", "test_id": test_id})
+    return events
+
+
+def _test_events_are_clean_pass(events: list[dict[str, object]]) -> bool:
+    if not events or len(events) % 2:
+        return False
+    for index in range(0, len(events), 2):
+        start, terminal = events[index : index + 2]
+        if (
+            start.get("seq") != index
+            or terminal.get("seq") != index + 1
+            or start.get("kind") != "START"
+            or terminal.get("kind") != "PASS"
+            or start.get("test_id") != terminal.get("test_id")
+        ):
+            return False
+    return True
+
+
+def _runtime_verdict(
+    stdout: bytes,
+    returncode: int,
+    *,
+    timed_out: bool = False,
+    stalled: bool = False,
+    required_test_ids: list[int] | None = None,
+    terminal_test_ids: list[int] | None = None,
+    suite_completion_test_ids: list[int] | None = None,
+) -> dict[str, object]:
+    events = _parse_test_events(stdout)
+    failure = _parse_failure(stdout)
+    observed_ids = {
+        int(str(event["test_id"]), 16)
+        for event in events
+        if event["kind"] == "START"
+    }
+    missing_ids = sorted(set(required_test_ids or []) - observed_ids)
+    missing_suite_ids = sorted(set(suite_completion_test_ids or []) - observed_ids)
+    declared_terminal_ids = set(terminal_test_ids or [])
+    has_fail_event = any(event["kind"] == "FAIL" for event in events)
+    clean_events = not events or _test_events_are_clean_pass(events)
+    terminal_event_id = (
+        int(str(events[-1]["test_id"]), 16)
+        if events and events[-1]["kind"] == "PASS"
+        else None
+    )
+    success_marker = next(
+        (marker for marker in SUCCESS_UART_MARKERS if marker in stdout),
+        None,
+    )
+
+    pass_marker: dict[str, str] | None = None
+    if (
+        not failure
+        and not has_fail_event
+        and clean_events
+        and not missing_ids
+        and not missing_suite_ids
+        and not timed_out
+        and not stalled
+    ):
+        if returncode & 0xFF == FINISHER_PASS_LOW8:
+            pass_marker = {"kind": "finisher_exit_low8", "value": "0x55"}
+        elif returncode == 0 and success_marker is not None:
+            pass_marker = {
+                "kind": "uart_success_marker",
+                "value": success_marker.decode("ascii", errors="replace").strip(),
+            }
+        elif returncode == 0 and terminal_event_id in declared_terminal_ids:
+            pass_marker = {
+                "kind": "terminal_test_id",
+                "value": f"0x{terminal_event_id:08x}",
+            }
+
+    if failure or has_fail_event:
+        status, reason = "FAIL", "guest_failure"
+    elif timed_out:
+        status, reason = "TIMEOUT", "timeout"
+    elif stalled:
+        status, reason = "STALLED", "no_progress"
+    elif missing_ids:
+        status, reason = "FAIL", "missing_required_test_ids"
+    elif missing_suite_ids:
+        status, reason = "FAIL", "missing_suite_completion_test_ids"
+    elif pass_marker is not None:
+        status, reason = "PASS", "clean_terminal_oracle"
+    elif returncode == 0:
+        status, reason = "FAIL", "missing_terminal_oracle"
+    else:
+        status, reason = "FAIL", "nonzero_exit"
+
+    return {
+        "status": status,
+        "oracle_verdict": "PASS" if status == "PASS" else (
+            "FAIL" if failure or has_fail_event or missing_ids or missing_suite_ids else "UNAVAILABLE"
+        ),
+        "reason": reason,
+        "pass_marker": pass_marker,
+        "failure": failure,
+        "events": events,
+        "timed_out": timed_out,
+        "stalled": stalled,
+        "declared_terminal_test_ids": [
+            f"0x{test_id:08x}" for test_id in sorted(declared_terminal_ids)
+        ],
+        "declared_suite_completion_test_ids": [
+            f"0x{test_id:08x}" for test_id in sorted(set(suite_completion_test_ids or []))
+        ],
+        "missing_required_test_ids": [f"0x{test_id:08x}" for test_id in missing_ids],
+        "missing_suite_completion_test_ids": [
+            f"0x{test_id:08x}" for test_id in missing_suite_ids
+        ],
+    }
+
+
+def _parse_failure(output: bytes) -> dict[str, str] | None:
+    text = output.decode("utf-8", errors="replace")
+    match = re.search(
+        r"Test ID:\s*(0x[0-9a-fA-F]+).*?"
+        r"Expected:\s*(0x[0-9a-fA-F]+).*?"
+        r"Actual:\s*(0x[0-9a-fA-F]+)",
+        text,
+        re.DOTALL,
+    )
+    if match is None:
+        return None
+    return {
+        "test_id": f"0x{int(match.group(1), 16):08x}",
+        "expected": f"0x{int(match.group(2), 16):016x}",
+        "actual": f"0x{int(match.group(3), 16):016x}",
+    }
+
+
+def _parse_executed_pcs(trace: str) -> list[str]:
+    pcs = {
+        f"0x{int(match.group(1), 16):016x}"
+        for match in re.finditer(r"^\s*0x([0-9a-fA-F]+):", trace, re.MULTILINE)
+    }
+    return sorted(pcs, key=lambda value: int(value, 16))
+
+
+_TARGET_PC_WATCH_RE = re.compile(
+    r"^linx_pc_watch:\s+pc=0x([0-9a-fA-F]+)\s+"
+    r"hit=([0-9]+)\s+printed=([0-9]+)\s+count=([0-9]+)(?:\s|$)"
+)
+
+
+def _parse_target_pc_watch_packets(
+    stderr: bytes, requested_pcs: list[int]
+) -> list[dict[str, object]]:
+    """Extract runtime helper hits, never translation-block listings."""
+    requested = set(requested_pcs)
+    hits: dict[int, dict[str, object]] = {}
+    for line in stderr.decode("utf-8", errors="replace").splitlines():
+        match = _TARGET_PC_WATCH_RE.match(line)
+        if match is None:
+            continue
+        pc = int(match.group(1), 16)
+        hit = int(match.group(2), 10)
+        printed = int(match.group(3), 10)
+        count = int(match.group(4), 10)
+        if pc not in requested or hit < 1 or printed < 1:
+            continue
+        hits.setdefault(
+            pc,
+            {
+                "pc": f"0x{pc:016x}",
+                "hit": hit,
+                "count": count,
+                "evidence_kind": "qemu_target_pc_watch_v1",
+            },
+        )
+    return [hits[pc] for pc in sorted(hits)]
+
+
+def _parse_evidence_pcs(values: list[str]) -> list[int]:
+    pcs: list[int] = []
+    for value in values:
+        try:
+            pc = int(value, 0)
+        except ValueError as exc:
+            raise SystemExit(f"error: invalid --evidence-pc: {value}") from exc
+        if pc < 0 or pc > 0xFFFFFFFFFFFFFFFF:
+            raise SystemExit(f"error: --evidence-pc must fit uint64: {value}")
+        if pc not in pcs:
+            pcs.append(pc)
+    if len(pcs) > 16:
+        raise SystemExit("error: at most 16 --evidence-pc values are supported by QEMU")
+    return pcs
+
+
+def _target_pc_watch_env(pcs: list[int]) -> dict[str, str]:
+    if not pcs:
+        return {}
+    return {
+        "LINX_DEBUG_PC_WATCH": ",".join(f"0x{pc:x}" for pc in pcs),
+        "LINX_DEBUG_PC_WATCH_HIT_LIMIT": "1",
+        "LINX_DEBUG_PC_WATCH_PRINT": "1",
+    }
+
+
+def _configure_target_pc_watch_env(
+    env: dict[str, str], pcs: list[int]
+) -> dict[str, str]:
+    debug_env = _target_pc_watch_env(pcs)
+    if not debug_env:
+        return debug_env
+    for name in list(env):
+        if name == "LINX_DEBUG_PC_WATCH" or name.startswith(
+            "LINX_DEBUG_PC_WATCH_"
+        ):
+            env.pop(name)
+    env.update(debug_env)
+    return debug_env
+
+
+def _repo_relative(path: Path) -> str:
+    resolved = path.resolve()
+    try:
+        return str(resolved.relative_to(REPO_ROOT.resolve()))
+    except ValueError:
+        return str(resolved)
+
+
+def _qemu_source_sha() -> str:
+    proc = subprocess.run(
+        ["git", "-C", str(REPO_ROOT / "emulator" / "qemu"), "rev-parse", "HEAD"],
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    if proc.returncode != 0:
+        raise SystemExit(f"error: cannot determine QEMU source SHA: {proc.stderr.strip()}")
+    return proc.stdout.strip()
+
+
+def _qemu_provenance(qemu: Path) -> dict[str, object]:
+    source_root = REPO_ROOT / "emulator" / "qemu"
+    status = subprocess.run(
+        ["git", "-C", str(source_root), "status", "--short", "--untracked-files=no"],
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    diff = subprocess.run(
+        ["git", "-C", str(source_root), "diff", "--binary", "HEAD"],
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    version = subprocess.run(
+        [str(qemu), "--version"],
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+    )
+    if status.returncode != 0 or diff.returncode != 0 or version.returncode != 0:
+        raise SystemExit("error: cannot capture QEMU dirty/version provenance")
+    dirty = bool(status.stdout.strip())
+    return {
+        "version": version.stdout.splitlines()[0] if version.stdout else "unknown",
+        "source_dirty": dirty,
+        "patch_sha256": hashlib.sha256(diff.stdout).hexdigest() if dirty else None,
+    }
+
+
+def _write_execution_evidence(
+    path: Path,
+    *,
+    selected: list[str],
+    objects: list[Path],
+    aggregate_object: Path,
+    elf: Path,
+    qemu: Path,
+    completed: subprocess.CompletedProcess[bytes],
+    verdict: dict[str, object],
+    trace_path: Path,
+    evidence_pcs: list[int],
+    qemu_debug_env: dict[str, str],
+) -> None:
+    stdout = completed.stdout or b""
+    events = verdict["events"]
+    failure = verdict["failure"]
+    status = verdict["status"]
+    target_packets = _parse_target_pc_watch_packets(
+        completed.stderr or b"", evidence_pcs
+    )
+    trace = (
+        trace_path.read_text(encoding="utf-8", errors="replace")
+        if trace_path.is_file() and not evidence_pcs
+        else ""
+    )
+    payload = {
+        "schema_version": 1,
+        "status": status,
+        "oracle_verdict": verdict["oracle_verdict"],
+        "suites": selected,
+        "required_test_ids_observed": sorted(
+            {event["test_id"] for event in events if event["kind"] == "START"}
+        ),
+        "test_events": events,
+        "pc_hits": (
+            target_packets
+            if evidence_pcs
+            else [{"pc": pc} for pc in _parse_executed_pcs(trace)]
+        ),
+        "artifacts": {
+            "elf": {"path": _repo_relative(elf), "sha256": _sha256(elf)},
+            "object": {
+                "path": _repo_relative(aggregate_object),
+                "sha256": _sha256(aggregate_object),
+            },
+            "objects": [
+                {"path": _repo_relative(obj), "sha256": _sha256(obj)} for obj in objects
+            ],
+        },
+        "qemu": {
+            "path": str(qemu),
+            "binary_sha256": _sha256(qemu),
+            "sha": _qemu_source_sha(),
+            **_qemu_provenance(qemu),
+        },
+        "run": {
+            "exit_code": completed.returncode,
+            "timed_out": verdict["timed_out"],
+            "stalled": verdict["stalled"],
+            "timeout_after_fail": bool(verdict["timed_out"] and failure),
+            "pass_marker": verdict["pass_marker"],
+            "verdict_reason": verdict["reason"],
+            "missing_required_test_ids": verdict["missing_required_test_ids"],
+            "missing_suite_completion_test_ids": verdict[
+                "missing_suite_completion_test_ids"
+            ],
+            "declared_terminal_test_ids": verdict["declared_terminal_test_ids"],
+            "declared_suite_completion_test_ids": verdict[
+                "declared_suite_completion_test_ids"
+            ],
+            "stdout_sha256": hashlib.sha256(stdout).hexdigest(),
+        },
+        "failure": failure,
+    }
+    if evidence_pcs:
+        payload["pc_evidence"] = {
+            "kind": "qemu_target_pc_watch_v1",
+            "requested_pcs": [f"0x{pc:016x}" for pc in evidence_pcs],
+            "packet_prefix": "linx_pc_watch:",
+        }
+        payload["qemu_debug_env"] = qemu_debug_env
+    path.parent.mkdir(parents=True, exist_ok=True)
+    uart_path = path.with_suffix(".uart.log")
+    uart_path.write_bytes(stdout)
+    payload["artifacts"]["uart"] = {
+        "path": _repo_relative(uart_path),
+        "sha256": _sha256(uart_path),
+    }
+    if evidence_pcs:
+        pc_watch_path = path.with_suffix(".pc-watch.log")
+        pc_watch_path.write_bytes(completed.stderr or b"")
+        payload["artifacts"]["pc_watch"] = {
+            "path": _repo_relative(pc_watch_path),
+            "sha256": _sha256(pc_watch_path),
+        }
+    elif trace_path.is_file():
+        payload["artifacts"]["pc_trace"] = {
+            "path": _repo_relative(trace_path),
+            "sha256": _sha256(trace_path),
+        }
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 def _load_pto_kernel_catalog() -> dict[str, str]:
@@ -139,14 +554,14 @@ SUITES: dict[str, dict[str, str]] = {
     "tile": {"src": "tests/10_tile_matmul.cpp", "macro": "LINX_TEST_ENABLE_TILE"},
     "pto_parity": {"src": "tests/16_pto_kernel_parity.cpp", "macro": "LINX_TEST_ENABLE_PTO_PARITY"},
     "system": {"src": "tests/11_system.c", "macro": "LINX_TEST_ENABLE_SYSTEM"},
-    "v03_vector": {"src": "tests/12_v03_vector_tile.c", "macro": "LINX_TEST_ENABLE_V03_VECTOR"},
-    "v03_vector_ops": {
-        "src": "tests/13_v03_vector_ops_matrix.c",
-        "macro": "LINX_TEST_ENABLE_V03_VECTOR_OPS",
+    "v057_vector": {"src": "tests/12_v057_vector_tile.c", "macro": "LINX_TEST_ENABLE_V057_VECTOR"},
+    "v057_vector_ops": {
+        "src": "tests/13_v057_vector_ops_matrix.c",
+        "macro": "LINX_TEST_ENABLE_V057_VECTOR_OPS",
     },
-    "v03_vector_body_fault": {
-        "src": "tests/18_v03_vector_body_fault.c",
-        "macro": "LINX_TEST_ENABLE_V03_VECTOR_BODY_FAULT",
+    "v057_vector_body_fault": {
+        "src": "tests/18_v057_vector_body_fault.c",
+        "macro": "LINX_TEST_ENABLE_V057_VECTOR_BODY_FAULT",
     },
     "translation_corpus": {
         "src": "tests/20_translation_corpus_stub.c",
@@ -158,6 +573,21 @@ SUITES: dict[str, dict[str, str]] = {
     },
     "callret": {"src": "tests/14_callret.c", "macro": "LINX_TEST_ENABLE_CALLRET"},
     "runtime": {"src": "tests/21_freestanding_runtime.c", "macro": "LINX_TEST_ENABLE_RUNTIME"},
+    # A dedicated, single-suite executable-coverage carrier.  It deliberately
+    # reuses main.c's load/store entry point so the generic runner need not grow
+    # a coverage-only dispatch surface.
+    "executable_memory": {
+        "src": "tests/22_executable_memory.c",
+        "macro": "LINX_TEST_ENABLE_LOADSTORE",
+    },
+    "executable_scalar": {
+        "src": "tests/23_executable_scalar.c",
+        "macro": "LINX_TEST_ENABLE_ARITHMETIC",
+    },
+    "executable_integer": {
+        "src": "tests/24_executable_integer.c",
+        "macro": "LINX_TEST_ENABLE_MOVE",
+    },
 }
 
 COMPILE_ONLY_SUITE_SOURCE_OVERRIDE: dict[str, str] = {
@@ -170,6 +600,10 @@ COMPILE_ONLY_SUITE_SOURCE_OVERRIDE: dict[str, str] = {
 def _extra_sources_for_suite(suite: str) -> list[str]:
     if suite == "tile":
         return [_pto_kernel_src(name) for name in PTO_TILE_KERNEL_NAMES]
+    if suite == "atomic":
+        return [
+            "avs/qemu/tests/07_atomic_lr_srczero.S",
+        ]
     if suite == "callret":
         return [
             "avs/qemu/tests/14_callret_templates.S",
@@ -232,13 +666,24 @@ EXPERIMENTAL_SUITES: set[str] = {
     # Requires tile builtin-enabled clang and PTO kernel headers.
     "tile",
     "pto_parity",
-    # v0.56 migration keeps this behind --all-suites until the vblock body
+    # v0.57 migration keeps this behind --all-suites until the vblock body
     # symbol lowering and objdump expectations are refreshed for canonical B.IOT.
     "simt_autovec",
     # Standalone negative trap regression; not a normal smoke lane.
-    "v03_vector_body_fault",
+    "v057_vector_body_fault",
     # Compile-only per-instruction translation corpus used by coverage/reporting.
     "translation_corpus",
+    # Evidence carrier: run explicitly so it never collides with the ordinary
+    # loadstore suite that owns the same main.c entry point.
+    "executable_memory",
+    "executable_scalar",
+    "executable_integer",
+}
+
+DEDICATED_EVIDENCE_SUITES: set[str] = {
+    "executable_memory",
+    "executable_scalar",
+    "executable_integer",
 }
 
 CORE_SUITES: list[str] = [
@@ -593,7 +1038,12 @@ def main(argv: list[str]) -> int:
         default=float(os.environ.get("LINX_QEMU_NO_PROGRESS_TIMEOUT", "0")),
         help="Fail if no QEMU stdout/stderr output is seen for this many seconds (0 to disable).",
     )
-    parser.add_argument("--compile-only", action="store_true", help="Only compile/link; do not run QEMU")
+    parser.add_argument("--compile-only", action="store_true", help="Only compile/relocatable-link; do not build the direct-boot ELF or run QEMU")
+    parser.add_argument(
+        "--prepare-only",
+        action="store_true",
+        help="Compile and link the direct-boot ELF, then stop before QEMU.",
+    )
     parser.add_argument(
         "--smoke-source-overrides",
         action="store_true",
@@ -622,14 +1072,35 @@ def main(argv: list[str]) -> int:
         default=[],
         help="Require UART evidence of test_start for this uint32 test id (hex/dec)",
     )
+    parser.add_argument(
+        "--evidence-out",
+        default=None,
+        help="Write structured runtime evidence JSON and enable bounded PC tracing.",
+    )
+    parser.add_argument(
+        "--evidence-pc",
+        action="append",
+        default=[],
+        help=(
+            "Record an exact pre-execution QEMU PC-watch packet for this uint64 PC "
+            "(repeatable; requires --evidence-out; max 16)."
+        ),
+    )
     args = parser.parse_args(argv)
 
+    if args.compile_only and args.prepare_only:
+        raise SystemExit("error: --compile-only and --prepare-only are mutually exclusive")
+    if args.prepare_only and (args.evidence_out or args.evidence_pc):
+        raise SystemExit("error: --prepare-only does not emit runtime evidence")
     if args.timeout <= 0:
         raise SystemExit("error: --timeout must be > 0")
     if args.heartbeat_sec < 0:
         raise SystemExit("error: --heartbeat-sec must be >= 0")
     if args.no_progress_timeout < 0:
         raise SystemExit("error: --no-progress-timeout must be >= 0")
+    evidence_pcs = _parse_evidence_pcs(args.evidence_pc)
+    if evidence_pcs and not args.evidence_out:
+        raise SystemExit("error: --evidence-pc requires --evidence-out")
 
     if args.list_suites:
         for name, meta in SUITES.items():
@@ -648,7 +1119,7 @@ def main(argv: list[str]) -> int:
     llc = _path_or_none(args.llc) or _default_llc(clang)
     qemu = _path_or_none(args.qemu) or _default_qemu()
     clang_builtin_include_dir = _clang_builtin_include_dir(clang)
-    if not qemu and not args.compile_only:
+    if not qemu and not args.compile_only and not args.prepare_only:
         raise SystemExit("error: qemu-system-linx64 not found; set --qemu or QEMU")
     if clang_builtin_include_dir is None:
         raise SystemExit(
@@ -668,10 +1139,11 @@ def main(argv: list[str]) -> int:
         _check_exe(qemu, "qemu-system-linx64")
     qemu_env = os.environ.copy()
     qemu_env.setdefault("LINX_VIRT_TEST_FINISHER", "1")
+    qemu_debug_env = _configure_target_pc_watch_env(qemu_env, evidence_pcs)
 
     selected = _suite_selection(args)
     if args.all_suites:
-        selected = list(SUITES.keys())
+        selected = [s for s in SUITES.keys() if s not in DEDICATED_EVIDENCE_SUITES]
     if any(s in LLC_PIPELINE_SUITES for s in selected) and not llc:
         raise SystemExit("error: llc not found; set --llc or LLC")
     if any(s in OBJDUMP_ASSERTS_BY_SUITE for s in selected) and not llvm_objdump:
@@ -712,8 +1184,8 @@ def main(argv: list[str]) -> int:
             sys.stderr.buffer.write(p.stderr)
             raise SystemExit("error: failed to generate QEMU translation corpus")
         generated_translation_sources.append(generated_spec_decode)
-        if LLVM_AVS_V056_FORMS.is_file():
-            generated_translation_sources.append(LLVM_AVS_V056_FORMS)
+        if LLVM_AVS_V057_FORMS.is_file():
+            generated_translation_sources.append(LLVM_AVS_V057_FORMS)
 
     include_dir = SCRIPT_DIR / "lib"
     libc_include_dir = REPO_ROOT / "avs" / "runtime" / "freestanding" / "include"
@@ -770,8 +1242,8 @@ def main(argv: list[str]) -> int:
             add_source(REPO_ROOT / rel)
     softfp_suites = {
         "float",
-        "v03_vector",
-        "v03_vector_ops",
+        "v057_vector",
+        "v057_vector_ops",
         "v04_vector_ops",
         "simt_autovec",
         "tile",
@@ -782,10 +1254,34 @@ def main(argv: list[str]) -> int:
         add_source(REPO_ROOT / "avs" / "runtime" / "freestanding" / "src" / "softfp" / "softfp.c")
         add_source(REPO_ROOT / "avs" / "runtime" / "freestanding" / "src" / "math" / "math.c")
 
-    suite_macros: list[str] = []
+    suite_macro_values: dict[str, bool] = {}
     for name, meta in SUITES.items():
-        suite_macros.append(f"-D{meta['macro']}={'1' if name in selected else '0'}")
-    emit_test_logs = args.verbose or bool(required_test_ids)
+        macro = meta["macro"]
+        suite_macro_values[macro] = suite_macro_values.get(macro, False) or name in selected
+    suite_macros = [
+        f"-D{macro}={'1' if enabled else '0'}"
+        for macro, enabled in suite_macro_values.items()
+    ]
+    terminal_test_ids = [
+        TERMINAL_TEST_IDS_BY_SUITE[suite]
+        for suite in selected
+        if suite in TERMINAL_TEST_IDS_BY_SUITE
+    ]
+    emit_test_logs = (
+        args.verbose
+        or bool(required_test_ids)
+        or bool(args.evidence_out)
+        or bool(terminal_test_ids)
+    )
+    suite_completion_test_ids = (
+        [
+            COMPLETION_TEST_IDS_BY_SUITE[suite]
+            for suite in selected
+            if suite in COMPLETION_TEST_IDS_BY_SUITE
+        ]
+        if emit_test_logs
+        else []
+    )
 
     common_cflags = [
         "-target",
@@ -810,7 +1306,7 @@ def main(argv: list[str]) -> int:
     ]
     if any(s in selected for s in ("tile", "pto_parity")):
         # Keep tile-suite bring-up deterministic: SIMT autovec currently
-        # triggers a mid-end crash on migrated PTO kernels under strict v0.56.
+        # triggers a mid-end crash on migrated PTO kernels under strict v0.57.
         common_cflags += ["-mllvm", "-linx-simt-autovec=false"]
     if any(s in selected for s in ("tile", "pto_parity")):
         # Runtime policy: migrated PTO kernels run in smoke profile under QEMU.
@@ -936,7 +1432,16 @@ def main(argv: list[str]) -> int:
 
     print(f"ok: built {directboot_elf}")
 
+    if args.prepare_only:
+        return 0
+
     assert qemu is not None
+    evidence_trace = out_dir / "qemu-executable-coverage-in_asm.log"
+    evidence_trace_args = (
+        ["-d", "in_asm", "-D", str(evidence_trace)]
+        if args.evidence_out and not evidence_pcs
+        else []
+    )
     qemu_cmd = [
         str(qemu),
         "-machine",
@@ -948,6 +1453,7 @@ def main(argv: list[str]) -> int:
         "-nographic",
         "-monitor",
         "none",
+        *evidence_trace_args,
         *args.qemu_arg,
     ]
 
@@ -959,6 +1465,39 @@ def main(argv: list[str]) -> int:
         heartbeat_sec=args.heartbeat_sec,
         no_progress_timeout=args.no_progress_timeout,
     )
+
+    verdict = _runtime_verdict(
+        p.stdout or b"",
+        p.returncode,
+        timed_out=timed_out,
+        stalled=stalled,
+        required_test_ids=required_test_ids,
+        terminal_test_ids=terminal_test_ids,
+        suite_completion_test_ids=suite_completion_test_ids,
+    )
+
+    if args.evidence_out:
+        _write_execution_evidence(
+            Path(os.path.expanduser(args.evidence_out)),
+            selected=selected,
+            objects=objects,
+            aggregate_object=out_obj,
+            elf=directboot_elf,
+            qemu=qemu,
+            completed=p,
+            verdict=verdict,
+            trace_path=evidence_trace,
+            evidence_pcs=evidence_pcs,
+            qemu_debug_env=qemu_debug_env,
+        )
+
+    if verdict["reason"] == "guest_failure":
+        sys.stderr.write("FAIL (guest reported a test failure)\n")
+        if not args.verbose and p.stdout:
+            sys.stderr.write("---- guest stdout (tail) ----\n")
+            sys.stderr.buffer.write(_tail(p.stdout))
+            sys.stderr.write("\n")
+        return p.returncode if p.returncode > 0 else 1
 
     if timed_out:
         stdout = p.stdout or b""
@@ -991,31 +1530,43 @@ def main(argv: list[str]) -> int:
 
     finisher_low8 = p.returncode & 0xFF if p.returncode is not None else -1
 
-    if p.returncode == 0 or finisher_low8 == FINISHER_PASS_LOW8:
-        if emit_test_logs and not any(marker in p.stdout for marker in SUCCESS_UART_MARKERS):
-            sys.stderr.write(
-                "warning: exit=0 but did not see a known success marker in UART output\n"
-            )
-            return 2
-        if required_test_ids:
-            missing: list[int] = []
-            for test_id in required_test_ids:
-                marker = f"Test 0x{test_id:08X}:".encode()
-                if marker not in p.stdout:
-                    missing.append(test_id)
-            if missing:
-                sys.stderr.write(
-                    "error: missing required test id marker(s) in UART output: "
-                    + ", ".join(f"0x{tid:08X}" for tid in missing)
-                    + "\n"
-                )
-                if not args.verbose and p.stdout:
-                    sys.stderr.write("---- guest stdout (tail) ----\n")
-                    sys.stderr.buffer.write(_tail(p.stdout))
-                    sys.stderr.write("\n")
-                return 3
+    if verdict["status"] == "PASS":
         print("PASS")
         return 0
+
+    if verdict["missing_required_test_ids"]:
+        sys.stderr.write(
+            "error: missing required test id marker(s) in UART output: "
+            + ", ".join(verdict["missing_required_test_ids"])
+            + "\n"
+        )
+        if not args.verbose and p.stdout:
+            sys.stderr.write("---- guest stdout (tail) ----\n")
+            sys.stderr.buffer.write(_tail(p.stdout))
+            sys.stderr.write("\n")
+        return 3
+
+    if verdict["missing_suite_completion_test_ids"]:
+        sys.stderr.write(
+            "error: selected suite completion marker(s) missing from UART output: "
+            + ", ".join(verdict["missing_suite_completion_test_ids"])
+            + "\n"
+        )
+        if not args.verbose and p.stdout:
+            sys.stderr.write("---- guest stdout (tail) ----\n")
+            sys.stderr.buffer.write(_tail(p.stdout))
+            sys.stderr.write("\n")
+        return 4
+
+    if p.returncode == 0:
+        sys.stderr.write(
+            "error: exit=0 without a clean finisher or UART success oracle\n"
+        )
+        if not args.verbose and p.stdout:
+            sys.stderr.write("---- guest stdout (tail) ----\n")
+            sys.stderr.buffer.write(_tail(p.stdout))
+            sys.stderr.write("\n")
+        return 2
 
     if finisher_low8 == FINISHER_FAIL_LOW8:
         sys.stderr.write(f"FAIL (guest finisher fail exit={p.returncode})\n")

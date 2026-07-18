@@ -7,12 +7,13 @@ This directory contains the complete documentation suite for LinxISA.
 ```
 docs/
 ├── architecture/           # ISA specification and manual
-│   ├── v0.56-architecture-contract.md    # ISA v0.56 contract
-│   ├── v0.56-hardening-policy.md         # Hardening selection and fallback policy
-│   ├── v0.56-workload-engine-model.md    # Workload-class to engine mapping
-│   ├── v0.56-rendering-kernel-authoring.md # Rendering kernel authoring guide
-│   ├── v0.56-rendering-pto-contract.md   # Rendering PTO carrier and selector contract
-│   ├── v0.56-rendering-command-contract.md # Rendering command lowering contract
+│   ├── v0.57-architecture-contract.md    # ISA v0.57 contract
+│   ├── v0.57-encoding-decisions.md       # ISA v0.57 encoding decisions
+│   ├── v0.57-hardening-policy.md         # Hardening selection and fallback policy
+│   ├── v0.57-workload-engine-model.md    # Workload-class to engine mapping
+│   ├── v0.57-rendering-kernel-authoring.md # Rendering kernel authoring guide
+│   ├── v0.57-rendering-pto-contract.md   # Rendering PTO carrier and selector contract
+│   ├── v0.57-rendering-command-contract.md # Rendering command lowering contract
 │   └── isa-manual/                      # Full ISA manual (AsciiDoc)
 │
 ├── bringup/               # Bring-up and validation
@@ -31,7 +32,7 @@ docs/
 │   └── phases/                         # Phased bring-up plans
 │
 ├── reference/              # Examples and guides
-│   ├── examples/v0.56/    # Assembly sample pack
+│   ├── examples/v0.57/    # Assembly sample pack
 │   ├── linxisa-call-ret-contract.md   # ABI contract
 │   └── encoding_space_report.md       # Encoding analysis
 │
@@ -60,12 +61,13 @@ docs/
 | Topic | File |
 |-------|------|
 | **New Contributors** | [bringup/GETTING_STARTED.md](bringup/GETTING_STARTED.md) |
-| **ISA Specification** | [architecture/v0.56-architecture-contract.md](architecture/v0.56-architecture-contract.md) |
-| **Hardening Policy** | [architecture/v0.56-hardening-policy.md](architecture/v0.56-hardening-policy.md) |
-| **Workload Engine Model** | [architecture/v0.56-workload-engine-model.md](architecture/v0.56-workload-engine-model.md) |
-| **Rendering Kernel Guide** | [architecture/v0.56-rendering-kernel-authoring.md](architecture/v0.56-rendering-kernel-authoring.md) |
-| **Rendering PTO Contract** | [architecture/v0.56-rendering-pto-contract.md](architecture/v0.56-rendering-pto-contract.md) |
-| **Rendering Command Contract** | [architecture/v0.56-rendering-command-contract.md](architecture/v0.56-rendering-command-contract.md) |
+| **ISA Specification** | [architecture/v0.57-architecture-contract.md](architecture/v0.57-architecture-contract.md) |
+| **v0.57 Encoding Decisions** | [architecture/v0.57-encoding-decisions.md](architecture/v0.57-encoding-decisions.md) |
+| **Hardening Policy** | [architecture/v0.57-hardening-policy.md](architecture/v0.57-hardening-policy.md) |
+| **Workload Engine Model** | [architecture/v0.57-workload-engine-model.md](architecture/v0.57-workload-engine-model.md) |
+| **Rendering Kernel Guide** | [architecture/v0.57-rendering-kernel-authoring.md](architecture/v0.57-rendering-kernel-authoring.md) |
+| **Rendering PTO Contract** | [architecture/v0.57-rendering-pto-contract.md](architecture/v0.57-rendering-pto-contract.md) |
+| **Rendering Command Contract** | [architecture/v0.57-rendering-command-contract.md](architecture/v0.57-rendering-command-contract.md) |
 | **Matmul Research** | [matmul/low-precision-inner-vs-outer-product.md](matmul/low-precision-inner-vs-outer-product.md) |
 | **AVS Contract** | [bringup/AVS_CONTRACT.md](bringup/AVS_CONTRACT.md) |
 | **Rendering Bring-up** | [bringup/rendering_vulkan_bringup.md](bringup/rendering_vulkan_bringup.md) |
@@ -94,7 +96,7 @@ See [bringup/PROGRESS.md](bringup/PROGRESS.md) for current gate status.
 
 ### Architecture Contract
 
-The ISA v0.56 contract defines mandatory behaviors:
+The active v0.57 contract defines the complete mandatory architecture:
 
 1. Block-structured execution is mandatory
 2. Control-flow targets MUST resolve to legal block boundaries

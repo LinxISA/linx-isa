@@ -646,8 +646,8 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--profile",
-        choices=["v0.56"],
-        default="v0.56",
+        choices=["v0.57"],
+        default="v0.57",
         help="ISA profile for default --spec and --uop-root paths",
     )
     ap.add_argument("--spec", default=None, help="Path to ISA catalog JSON")
@@ -659,8 +659,8 @@ def main() -> int:
     )
     ap.add_argument(
         "--enc-rel-dir",
-        default="../encodings",
-        help="Relative path from instructions/ to encodings/ for image:: includes",
+        default="encodings",
+        help="Path under the manual imagesdir used by image:: includes",
     )
     ap.add_argument("--check", action="store_true", help="Fail if outputs are not up-to-date")
     args = ap.parse_args()

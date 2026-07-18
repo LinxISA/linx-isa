@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import datetime
+import hashlib
 import json
 import os
 import re
@@ -19,6 +20,11 @@ TSVC_DIR = Path(__file__).resolve().parent
 WORKLOADS_DIR = TSVC_DIR.parent
 REPO_ROOT = WORKLOADS_DIR.parent
 GENERATED_DIR = WORKLOADS_DIR / "generated"
+BRINGUP_TOOLS_DIR = REPO_ROOT / "tools" / "bringup"
+if str(BRINGUP_TOOLS_DIR) not in sys.path:
+    sys.path.insert(0, str(BRINGUP_TOOLS_DIR))
+
+from qemu_build_paths import qemu_binary_provenance  # noqa: E402
 
 DIRECT_BOOT_LINK_SCRIPT = """ENTRY(_start)
 PHDRS {
@@ -51,7 +57,7 @@ FALLBACK_TSVC_SRC = WORKLOADS_DIR / "third_party" / "TSVC_2" / "src"
 
 _RE_TSVC_ROW = re.compile(r"^\s*([A-Za-z_][A-Za-z0-9_]*)\s+(\S+)\s+(\S+)\s*$")
 _VECTOR_MODES = ("off", "mseq", "mpar", "auto")
-_SOURCE_POLICIES = ("linx-v056", "upstream")
+_SOURCE_POLICIES = ("linx-v057", "upstream")
 _CANONICAL_ITERATIONS = 32
 _CANONICAL_LEN_1D = 320
 _CANONICAL_LEN_2D = 16
@@ -112,6 +118,181 @@ def _build_sha_manifest() -> dict[str, str | None]:
         "musl": REPO_ROOT / "lib" / "musl",
     }
     return {name: _git_head(path) if path.exists() else None for name, path in roots.items()}
+
+
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as fp:
+        for chunk in iter(lambda: fp.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _tool_receipt(path: Path) -> dict[str, object]:
+    # Preserve the selected basename when invoking multicall tools.  ld.lld is
+    # commonly a symlink to the generic `lld` binary, whose driver mode is
+    # selected from argv[0]; resolving the symlink before execution changes
+    # its behavior and makes a valid linker fail `--version`.
+    selected = path.expanduser().absolute()
+    resolved = selected.resolve()
+    p = _run(
+        [str(selected), "--version"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        timeout=5.0,
+    )
+    version = (p.stdout or b"").decode("utf-8", errors="replace").strip()
+    if p.returncode != 0 or not version:
+        raise SystemExit(f"error: failed to identify tool binary: {selected}")
+    return {
+        "path": str(selected),
+        "resolved_path": str(resolved),
+        "sha256": _sha256(selected),
+        "size_bytes": selected.stat().st_size,
+        "version": version.splitlines()[0],
+        "version_output": version,
+    }
+
+
+def _clang_revision(version_output: str) -> str | None:
+    match = re.search(r"(?<![0-9a-f])[0-9a-f]{40}(?![0-9a-f])", version_output, re.I)
+    return match.group(0).lower() if match else None
+
+
+def _scoped_dirty_receipt(repo: Path, pathspec: str | None = None) -> dict[str, object]:
+    cmd = [
+        "git",
+        "-C",
+        str(repo),
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=all",
+    ]
+    if pathspec is not None:
+        cmd.extend(["--", pathspec])
+    p = _run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if p.returncode != 0:
+        return {
+            "available": False,
+            "repo": str(repo.resolve()),
+            "pathspec": pathspec,
+            "dirty_paths": [],
+            "error": (p.stderr or b"").decode("utf-8", errors="replace").strip(),
+        }
+    status_lines = (p.stdout or b"").decode("utf-8", errors="replace").splitlines()
+    return {
+        "available": True,
+        "repo": str(repo.resolve()),
+        "pathspec": pathspec,
+        "dirty_paths": [line[3:] if len(line) > 3 else line for line in status_lines],
+        "status_lines": status_lines,
+    }
+
+
+def _validate_provenance_receipt(
+    receipt: dict[str, object], *, require_qemu: bool
+) -> None:
+    tools = receipt.get("tools")
+    if not isinstance(tools, dict):
+        raise SystemExit("error: missing tool binary provenance")
+    required_tools = ["clang", "lld", "llvm_objdump"]
+    if require_qemu:
+        required_tools.append("qemu")
+    for name in required_tools:
+        tool = tools.get(name)
+        if not isinstance(tool, dict):
+            raise SystemExit(f"error: missing {name} binary provenance")
+        digest = tool.get("sha256")
+        if not isinstance(digest, str) or re.fullmatch(r"[0-9a-f]{64}", digest) is None:
+            raise SystemExit(f"error: invalid {name} binary digest")
+
+    clang_revision = receipt.get("clang_revision")
+    llvm_head = receipt.get("llvm_head")
+    if not isinstance(clang_revision, str) or not isinstance(llvm_head, str):
+        raise SystemExit("error: clang revision or LLVM HEAD is unavailable")
+    if clang_revision.lower() != llvm_head.lower():
+        raise SystemExit(
+            "error: clang revision does not match LLVM HEAD: "
+            f"clang={clang_revision} llvm={llvm_head}"
+        )
+
+    scoped_dirty = receipt.get("scoped_dirty")
+    if not isinstance(scoped_dirty, dict):
+        raise SystemExit("error: scoped dirty receipt is unavailable")
+    required_scopes = ["tsvc", "llvm"] + (["qemu"] if require_qemu else [])
+    for name in required_scopes:
+        scope = scoped_dirty.get(name)
+        if not isinstance(scope, dict) or scope.get("available") is not True:
+            raise SystemExit(f"error: dirty provenance scope unavailable: {name}")
+        dirty_paths = scope.get("dirty_paths")
+        if not isinstance(dirty_paths, list):
+            raise SystemExit(f"error: malformed dirty provenance scope: {name}")
+        if dirty_paths:
+            raise SystemExit(
+                f"error: dirty provenance scope: {name}: "
+                + ", ".join(str(path) for path in dirty_paths[:8])
+            )
+
+    if require_qemu:
+        qemu = receipt.get("qemu")
+        if not isinstance(qemu, dict):
+            raise SystemExit("error: missing QEMU build provenance")
+        marker = qemu.get("clean_build_marker")
+        qemu_head = qemu.get("qemu_repo_head")
+        marker_head = marker.split(":", 1)[0] if isinstance(marker, str) else ""
+        if (
+            qemu.get("clean_build_marker_matches_head") is not True
+            or qemu.get("clean_build_for_head") is not True
+            or not isinstance(qemu_head, str)
+            or not qemu_head
+            or marker_head != qemu_head
+        ):
+            raise SystemExit(
+                "error: TSVC requires a HEAD-matched clean QEMU build: "
+                f"head={qemu_head or 'unavailable'} marker={marker or 'missing'}"
+            )
+
+
+def _collect_provenance(
+    *,
+    clang: Path,
+    lld: Path,
+    llvm_objdump: Path,
+    qemu: Path | None,
+    require_qemu: bool,
+) -> dict[str, object]:
+    tool_paths = {
+        "clang": clang,
+        "lld": lld,
+        "llvm_objdump": llvm_objdump,
+    }
+    tools = {name: _tool_receipt(path) for name, path in tool_paths.items()}
+    qemu_provenance = (
+        qemu_binary_provenance(REPO_ROOT, qemu) if qemu is not None else None
+    )
+    if qemu is not None and qemu_provenance is not None:
+        tools["qemu"] = {
+            "path": qemu_provenance["path"],
+            "sha256": qemu_provenance["sha256"],
+            "size_bytes": qemu.resolve().stat().st_size,
+            "version": qemu_provenance["version"],
+        }
+    llvm_head = _git_head(REPO_ROOT / "compiler" / "llvm")
+    clang_revision = _clang_revision(str(tools["clang"].get("version_output", "")))
+    receipt: dict[str, object] = {
+        "tools": tools,
+        "clang_revision": clang_revision,
+        "llvm_head": llvm_head,
+        "qemu": qemu_provenance,
+        "scoped_dirty": {
+            "tsvc": _scoped_dirty_receipt(REPO_ROOT, "workloads/tsvc"),
+            "llvm": _scoped_dirty_receipt(REPO_ROOT / "compiler" / "llvm"),
+            "qemu": _scoped_dirty_receipt(REPO_ROOT / "emulator" / "qemu"),
+        },
+        "sha_manifest": _build_sha_manifest(),
+    }
+    _validate_provenance_receipt(receipt, require_qemu=require_qemu)
+    return receipt
 
 
 def _classify_lane(path: Path | None) -> str:
@@ -346,7 +527,7 @@ def _stage_tsvc_sources(
     if n != 1:
         raise SystemExit(f"error: expected to patch exactly 1 time_function, got {n}")
 
-    if source_policy == "linx-v056":
+    if source_policy == "linx-v057":
         tsvc_text, source_canonicalizations = _canonicalize_s2111_divide_literals(
             tsvc_text
         )
@@ -686,7 +867,7 @@ def main(argv: list[str]) -> int:
     ap.add_argument(
         "--source-policy",
         choices=_SOURCE_POLICIES,
-        default="linx-v056",
+        default="linx-v057",
         help="Staged source policy for parity gates.",
     )
     ap.add_argument("--strict-fail-under", type=int, default=None, help="Fail if strict vectorized kernels are below this threshold.")
@@ -758,6 +939,14 @@ def main(argv: list[str]) -> int:
         _check_exe(qemu, "qemu-system-linx64")
     if args.compare_baseline_log and args.no_run_qemu:
         raise SystemExit("error: --compare-baseline-log requires QEMU execution")
+
+    provenance = _collect_provenance(
+        clang=clang,
+        lld=lld,
+        llvm_objdump=llvm_objdump,
+        qemu=qemu,
+        require_qemu=not args.no_run_qemu,
+    )
 
     tsvc_src = _resolve_tsvc_src(args.tsvc_src)
     required = ["common.h", "tsvc.c", "common.c", "dummy.c", "array_defs.h"]
@@ -1012,7 +1201,8 @@ def main(argv: list[str]) -> int:
             "llvm_objdump": str(llvm_objdump),
             "qemu": str(qemu) if qemu else None,
         },
-        "sha_manifest": _build_sha_manifest(),
+        "provenance": provenance,
+        "sha_manifest": provenance["sha_manifest"],
         "target": args.target,
         "kernel_count": len(kernels),
         "selected_artifacts": {

@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_sc_w.svg[SC.W encoding,width=800]
+image::encodings/enc_sc_w.svg[SC.W encoding,width=800]
 
 *Uop-Class:* AMO
 

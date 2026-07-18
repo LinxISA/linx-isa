@@ -73,7 +73,7 @@
   Command: `python3 tools/bringup/check_linxcore_perf_floor.py --root . --max-regression 10.0 ...`
   Done means: measured throughput regression is within configured threshold or run is rejected.
 
-- [ ] ID: INT-017 Require pinned build closure for compiler, QEMU, Linux, and libc after v0.56 propagation.
+- [ ] ID: INT-017 Require pinned build closure for compiler, QEMU, Linux, and libc after v0.57 propagation.
   Command: `cd avs/compiler/linx-llvm/tests && CLANG=compiler/llvm/build-linxisa-clang/bin/clang TARGET=linx64-linx-none-elf OUT_DIR=out-linx64 ./run.sh`; `bash tools/bringup/run_qemu_build_clean.sh --qemu-root $PWD/emulator/qemu --out-dir /tmp/linx-qemu-clean-build --target qemu-system-linx64`; `bash lib/glibc/tools/linx/build_linx64_glibc.sh`; `bash lib/glibc/tools/linx/build_linx64_glibc_g1b.sh`; `MODE=phase-b lib/musl/tools/linx/build_linx64_musl.sh`; `env PATH=$PWD/compiler/llvm/build-linxisa-clang/bin:$PATH /opt/homebrew/bin/gmake -C kernel/linux ARCH=linx LLVM=$PWD/compiler/llvm/build-linxisa-clang/bin/ 'CC=$PWD/compiler/llvm/build-linxisa-clang/bin/clang --target=linx64-unknown-linux-gnu -fintegrated-as' HOSTCC=/usr/bin/clang HOSTCXX=/usr/bin/clang++ O=$PWD/kernel/linux/build-linx-fixed vmlinux -j$(sysctl -n hw.ncpu 2>/dev/null || nproc)`
   Done means: the pinned workspace compiles the propagated toolchain/emulator stack and produces Linux + libc artifacts without build failures, with compiler AVS closure evaluated over the baremetal targets that are still registered by the active compiler branch.
   Status: ✅ PASS (2026-04-18) - the latest pin-lane run records compiler, QEMU, musl, glibc, and clean-helper Linux `vmlinux` build closure as pass.
@@ -114,7 +114,7 @@
   Status: ✅ PASS (2026-04-18) - the latest pin-lane run records `Regression::ctuning curated subset` as `pass`.
 
 - [x] ID: INT-025 Keep TSVC strict compile coverage green at the required pass floor.
-  Command: `python3 workloads/tsvc/run_tsvc.py --clang compiler/llvm/build-linxisa-clang/bin/clang --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --vector-mode auto --strict-fail-under 148 --source-policy linx-v056 --no-run-qemu --out-dir workloads/generated`
+  Command: `python3 workloads/tsvc/run_tsvc.py --clang compiler/llvm/build-linxisa-clang/bin/clang --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --vector-mode auto --strict-fail-under 148 --source-policy linx-v057 --no-run-qemu --out-dir workloads/generated`
   Done means: the compile-only TSVC lane completes and meets the strict pass floor without requiring QEMU runtime.
   Status: ✅ PASS (2026-04-18) - the latest pin-lane run records `Regression::TSVC strict coverage gate` as `pass` at `148/151`.
 
@@ -124,6 +124,6 @@
   Status: ✅ PASS (2026-05-21) - the combined report now reconciles the canonical ISA set cleanly: LLVM, QEMU implementation, and QEMU AVS translation each cover `710/710` canonical mnemonics.
 
 - [ ] ID: INT-026 Keep TSVC strict QEMU regression green at the runtime pass floor.
-  Command: `python3 workloads/tsvc/run_tsvc.py --clang compiler/llvm/build-linxisa-clang/bin/clang --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --qemu emulator/qemu/build/qemu-system-linx64 --vector-mode auto --strict-fail-under 148 --source-policy linx-v056 --out-dir workloads/generated`
+  Command: `python3 workloads/tsvc/run_tsvc.py --clang compiler/llvm/build-linxisa-clang/bin/clang --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --qemu emulator/qemu/build/qemu-system-linx64 --vector-mode auto --strict-fail-under 148 --source-policy linx-v057 --out-dir workloads/generated`
   Done means: the TSVC lane completes under QEMU and meets the configured strict pass floor.
   Status: ❌ FAIL (2026-05-15) - no canonical runtime pass exists. The latest diagnostic strict rerun (`docs/bringup/gates/logs/2026-04-17-r7-pin-recovery/pin/reg_strict_cross_repo.log`) reaches TSVC only when BusyBox rootfs is skipped and then times out after 240 seconds on `tsvc.auto.elf`; the canonical April 18 report still proves only compile-only strict coverage.

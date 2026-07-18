@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-SVG Bitfield Diagram Generator for LinxISA v0.56.
+SVG Bitfield Diagram Generator for LinxISA v0.57.
 
 Produces professional instruction-encoding diagrams as inline SVG.
 Used by the AsciiDoc ISA manual via the ``image`` macro:
@@ -19,7 +19,7 @@ Color coding (consistent across diagrams):
 
 Usage:
     python3 gen_encoding_svg.py \\
-        --spec isa/v0.56/linxisa-v0.56.json \\
+        --spec isa/v0.57/linxisa-v0.57.json \\
         --out-dir docs/architecture/isa-manual/src/generated/encodings
 """
 from __future__ import annotations
@@ -380,7 +380,7 @@ def check_all(spec_path: str, out_dir: str) -> int:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="SVG bitfield diagram generator for LinxISA")
-    ap.add_argument("--spec", default="isa/v0.56/linxisa-v0.56.json")
+    ap.add_argument("--spec", default="isa/v0.57/linxisa-v0.57.json")
     ap.add_argument("--out-dir",
                    default="docs/architecture/isa-manual/src/generated/encodings")
     ap.add_argument("--check", action="store_true", help="Check exact SVG set and content")

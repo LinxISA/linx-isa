@@ -15,7 +15,7 @@ assembly inspection.
 python3 workloads/tsvc/run_tsvc.py \
   --clang $PWD/compiler/llvm/build-linxisa-clang/bin/clang \
   --qemu $PWD/emulator/qemu/build/qemu-system-linx64 \
-  --source-policy linx-v056 \
+  --source-policy linx-v057 \
   --vector-mode auto
 ```
 
@@ -38,7 +38,7 @@ Artifacts are written under `workloads/generated/`:
 python3 workloads/tsvc/run_tsvc.py \
   --clang $PWD/compiler/llvm/build-linxisa-clang/bin/clang \
   --qemu $PWD/emulator/qemu/build/qemu-system-linx64 \
-  --source-policy linx-v056 \
+  --source-policy linx-v057 \
   --vector-mode off
 ```
 
@@ -48,7 +48,7 @@ python3 workloads/tsvc/run_tsvc.py \
 python3 workloads/tsvc/run_tsvc.py \
   --clang $PWD/compiler/llvm/build-linxisa-clang/bin/clang \
   --qemu $PWD/emulator/qemu/build/qemu-system-linx64 \
-  --source-policy linx-v056 \
+  --source-policy linx-v057 \
   --vector-mode auto \
   --compare-baseline-log workloads/generated/qemu/tsvc/tsvc.off.stdout.txt \
   --fail-on-checksum-mismatch
@@ -56,6 +56,6 @@ python3 workloads/tsvc/run_tsvc.py \
 
 `--source-policy` controls staged-source behavior only:
 
-- `linx-v056` (default): applies canonical Linx v0.56 source normalizations in staged
+- `linx-v057` (default): applies the inherited canonical Linx source normalizations in staged
   `tsvc.c` (currently `s2111` `/1.9 -> /1.9f`).
 - `upstream`: uses staged sources without parity canonicalization.

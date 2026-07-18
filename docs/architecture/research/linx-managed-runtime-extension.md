@@ -123,7 +123,7 @@ states, analogous to the DBT `BT_CODE` and `BT_HANDLER` model.
 
 ### 3.4 Unmanaged FIXUP Blocks
 
-Strict v0.56 already defines unmanaged fixup blocks as:
+Strict v0.57 already defines unmanaged fixup blocks as:
 
 ```text
 BSTART.SYS FALL<, fixup_label

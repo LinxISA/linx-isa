@@ -30,9 +30,19 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
-META_RE = re.compile(r"\{\.op_id=(\d+),.*?\.mnemonic=\"([^\"]+)\".*?\.source_file=\"([^\"]+)\"")
+META_RE = re.compile(
+    r"\{\.op_id=(?P<op_id>\d+),.*?"
+    r"\.insn_len=(?P<insn_len>\d+),.*?"
+    r"\.mask=UINT64_C\((?P<mask>0x[0-9a-fA-F]+)\),\s*"
+    r"\.match=UINT64_C\((?P<match>0x[0-9a-fA-F]+)\),.*?"
+    r"\.mnemonic=\"(?P<mnemonic>[^\"]+)\".*?"
+    r"\.source_file=\"(?P<source_file>[^\"]+)\""
+)
 DECODE_TOKEN_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+DECODE_BITS_RE = re.compile(r"^[01.]+$")
 IDS_RE = re.compile(r"^\s*LINX_OP_[A-Z0-9_]+\s*=\s*(\d+),\s*$")
+
+FormKey = tuple[str, int, int, int]
 
 
 def _utc_now() -> str:
@@ -52,15 +62,72 @@ def _parse_decode_patterns(path: Path) -> set[str]:
     return out
 
 
-def _parse_meta(path: Path) -> tuple[set[int], dict[str, set[str]]]:
+def _parse_decode_forms(path: Path) -> set[FormKey]:
+    """Return exact decoder signatures from one Linx decodetree source."""
+    width_match = re.search(r"(?:insn|block)(16|32|48|64)", path.name)
+    if width_match is None:
+        return set()
+    raw_width = int(width_match.group(1))
+    insn_len = 64 if raw_width == 48 else raw_width
+    out: set[FormKey] = set()
+    for raw in path.read_text(encoding="utf-8", errors="replace").splitlines():
+        line = raw.split("#", 1)[0].strip()
+        if not line or line.startswith(("%", "{", "}")):
+            continue
+        fields = line.split()
+        mnemonic = fields[0]
+        if not DECODE_TOKEN_RE.match(mnemonic):
+            continue
+        bits = "".join(part for part in fields[1:] if DECODE_BITS_RE.match(part))
+        if raw_width == 48 and len(bits) == 48:
+            bits = ("0" * 16) + bits
+        elif len(bits) != insn_len:
+            continue
+        mask = 0
+        match = 0
+        for bit in bits:
+            mask <<= 1
+            match <<= 1
+            if bit == "1":
+                mask |= 1
+                match |= 1
+            elif bit == "0":
+                mask |= 1
+        out.add((mnemonic, insn_len, mask, match))
+    return out
+
+
+def _parse_meta(
+    path: Path,
+) -> tuple[set[int], dict[str, set[str]], dict[str, set[FormKey]]]:
     text = path.read_text(encoding="utf-8", errors="replace")
     ids: set[int] = set()
     by_source: dict[str, set[str]] = {}
-    for op_id_s, mnemonic, source_file in META_RE.findall(text):
-        op_id = int(op_id_s)
+    forms_by_source: dict[str, set[FormKey]] = {}
+    for item in META_RE.finditer(text):
+        op_id = int(item.group("op_id"))
+        mnemonic = item.group("mnemonic")
+        source_file = item.group("source_file")
         ids.add(op_id)
         by_source.setdefault(source_file, set()).add(mnemonic)
-    return ids, by_source
+        forms_by_source.setdefault(source_file, set()).add(
+            (
+                mnemonic,
+                int(item.group("insn_len")),
+                int(item.group("mask"), 0),
+                int(item.group("match"), 0),
+            )
+        )
+    return ids, by_source, forms_by_source
+
+
+def _form_json(form: FormKey) -> dict[str, object]:
+    _, insn_len, mask, match = form
+    return {
+        "insn_len": insn_len,
+        "mask": f"0x{mask:x}",
+        "match": f"0x{match:x}",
+    }
 
 
 def _parse_ids(path: Path) -> set[int]:
@@ -99,6 +166,7 @@ def _render_md(report: dict[str, object], out_md: Path) -> None:
     lines.append(f"- Decode-only (unexpected): `{report['decode_only_unexpected_count']}`")
     lines.append(f"- Meta-only (unexpected): `{report['meta_only_unexpected_count']}`")
     lines.append(f"- Enum/meta op-id mismatch count: `{report['id_mismatch_count']}`")
+    lines.append(f"- Decoder/meta form mismatch count: `{report['signature_mismatch_count']}`")
     lines.append("")
     if report["decode_only_unexpected"]:
         lines.append("### Decode-only Unexpected")
@@ -109,6 +177,14 @@ def _render_md(report: dict[str, object], out_md: Path) -> None:
         lines.append("### Meta-only Unexpected")
         for item in report["meta_only_unexpected"]:
             lines.append(f"- `{item}`")
+        lines.append("")
+    if report["signature_mismatches"]:
+        lines.append("### Decoder/Metadata Form Mismatches")
+        for item in report["signature_mismatches"]:
+            lines.append(
+                f"- `{item['mnemonic']}`: decode-only `{len(item['decode_only'])}`, "
+                f"meta-only `{len(item['meta_only'])}`"
+            )
         lines.append("")
     out_md.parent.mkdir(parents=True, exist_ok=True)
     out_md.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
@@ -152,21 +228,25 @@ def main(argv: list[str]) -> int:
         return 1
 
     decode_patterns: set[str] = set()
+    decode_forms: set[FormKey] = set()
     for name in decode_files:
         decode_patterns |= _parse_decode_patterns(linx_root / name)
+        decode_forms |= _parse_decode_forms(linx_root / name)
 
     have_opcode_meta = meta_path.is_file() and ids_path.is_file()
     meta_ids: set[int] = set()
     ids_enum: set[int] = set()
     meta_patterns: set[str] = set()
+    meta_forms: set[FormKey] = set()
     meta_internal: set[str] = set()
     meta_non_internal: set[str] = set()
     if have_opcode_meta:
-        meta_ids, meta_by_source = _parse_meta(meta_path)
+        meta_ids, meta_by_source, meta_forms_by_source = _parse_meta(meta_path)
         ids_enum = _parse_ids(ids_path)
         for source_file, mnems in meta_by_source.items():
             if source_file in decode_files:
                 meta_patterns |= mnems
+                meta_forms |= meta_forms_by_source.get(source_file, set())
         meta_internal = set(meta_by_source.get("internal", set()))
         meta_non_internal = meta_patterns | (set().union(*[v for k, v in meta_by_source.items() if k != "internal"]) if meta_by_source else set())
         meta_non_internal -= {m for m in meta_non_internal if m.startswith("internal_")}
@@ -188,7 +268,26 @@ def main(argv: list[str]) -> int:
         decode_only_unexpected = sorted(set(decode_only) - allow_decode_only)
         meta_only_unexpected = sorted(set(meta_only) - allow_meta_only)
         id_mismatch = sorted(meta_ids ^ ids_enum)
-        ok = not decode_only_unexpected and not meta_only_unexpected and (not args.strict or not id_mismatch)
+        signature_mismatches: list[dict[str, object]] = []
+        for mnemonic in sorted(decode_patterns & meta_patterns):
+            decode_for_name = {form for form in decode_forms if form[0] == mnemonic}
+            meta_for_name = {form for form in meta_forms if form[0] == mnemonic}
+            missing_meta_forms = sorted(decode_for_name - meta_for_name)
+            stale_meta_forms = sorted(meta_for_name - decode_for_name)
+            if missing_meta_forms or stale_meta_forms:
+                signature_mismatches.append(
+                    {
+                        "mnemonic": mnemonic,
+                        "decode_only": [_form_json(form) for form in missing_meta_forms],
+                        "meta_only": [_form_json(form) for form in stale_meta_forms],
+                    }
+                )
+        ok = (
+            not decode_only_unexpected
+            and not meta_only_unexpected
+            and not signature_mismatches
+            and (not args.strict or not id_mismatch)
+        )
         classification = (
             "qemu_opcode_meta_sync_ok"
             if ok
@@ -200,6 +299,7 @@ def main(argv: list[str]) -> int:
         decode_only_unexpected = sorted(decode_patterns)
         meta_only_unexpected = []
         id_mismatch = []
+        signature_mismatches = []
         ok = False
         classification = "qemu_opcode_meta_sync_missing_canonical_tables"
     else:
@@ -208,6 +308,7 @@ def main(argv: list[str]) -> int:
         decode_only_unexpected = []
         meta_only_unexpected = []
         id_mismatch = []
+        signature_mismatches = []
         ok = True
         classification = "qemu_opcode_meta_sync_decode_only_line"
 
@@ -228,6 +329,8 @@ def main(argv: list[str]) -> int:
         "meta_only_unexpected_count": len(meta_only_unexpected),
         "id_mismatch": id_mismatch,
         "id_mismatch_count": len(id_mismatch),
+        "signature_mismatches": signature_mismatches,
+        "signature_mismatch_count": len(signature_mismatches),
         "result": {
             "ok": ok,
             "classification": classification,
@@ -246,14 +349,16 @@ def main(argv: list[str]) -> int:
         print(
             "ok: qemu opcode meta/id audit passed "
             f"(decode_only_unexpected={len(decode_only_unexpected)}, "
-            f"meta_only_unexpected={len(meta_only_unexpected)})"
+            f"meta_only_unexpected={len(meta_only_unexpected)}, "
+            f"signature_mismatch={len(signature_mismatches)})"
         )
         return 0
 
     print(
         "error: qemu opcode meta/id audit found unexpected drift "
         f"(decode_only_unexpected={len(decode_only_unexpected)}, "
-        f"meta_only_unexpected={len(meta_only_unexpected)})",
+        f"meta_only_unexpected={len(meta_only_unexpected)}, "
+        f"signature_mismatch={len(signature_mismatches)})",
         file=sys.stderr,
     )
     return 1

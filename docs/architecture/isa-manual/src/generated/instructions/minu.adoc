@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_minu.svg[MINU encoding,width=800]
+image::encodings/enc_minu.svg[MINU encoding,width=800]
 
 *Uop-Class:* ALU
 

@@ -10,7 +10,7 @@
 
 </div>
 
-Instructions in the **Floating Point Arithmetic** group of the LinxISA v0.56 catalog.
+Instructions in the **Floating Point Arithmetic** group of the LinxISA v0.57.0 catalog.
 
 ## Instructions
 

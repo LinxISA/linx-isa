@@ -11,7 +11,7 @@
 
 *Encoding:*
 
-image::../encodings/enc_hl_lwuip_u.svg[HL.LWUIP.U encoding,width=800]
+image::encodings/enc_hl_lwuip_u.svg[HL.LWUIP.U encoding,width=800]
 
 *Uop-Class:* LDA/PAIR
 

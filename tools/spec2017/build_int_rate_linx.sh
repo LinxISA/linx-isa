@@ -130,9 +130,13 @@ BASELINE_MANIFEST="$LOG_DIR/src-baseline.sha256"
 POST_MANIFEST="$LOG_DIR/src-postbuild.sha256"
 DRIFT_DIFF="$LOG_DIR/src-drift.diff"
 DRIFT_PATHS="$LOG_DIR/src-drift-paths.txt"
+SOURCE_ROOT="$SPEC_DIR/benchspec/CPU"
+
+python3 "$ROOT/tools/spec2017/check_build_manifest.py" check-source-symlinks \
+  --source-root "$SOURCE_ROOT"
 
 if [[ ! -f "$BASELINE_MANIFEST" ]]; then
-  find "$SPEC_DIR/benchspec/CPU" -type f -path '*/src/*' -print0 \
+  find "$SOURCE_ROOT" -type f -path '*/src/*' -print0 \
     | LC_ALL=C sort -z \
     | xargs -0 shasum -a 256 > "$BASELINE_MANIFEST"
 fi
@@ -173,6 +177,12 @@ if [[ -z "$LLVM_READELF" ]] && command -v llvm-readelf >/dev/null 2>&1; then
 fi
 if [[ -z "$LLVM_READELF" || ! -x "$LLVM_READELF" ]]; then
   echo "error: llvm-readelf not found; set LLVM_READELF=/path/to/llvm-readelf" >&2
+  exit 2
+fi
+
+LINX_CLANG_RESOLVED="${LINX_CLANG:-$ROOT/compiler/llvm/build-linxisa-clang/bin/clang}"
+if [[ ! -x "$LINX_CLANG_RESOLVED" ]]; then
+  echo "error: clang not found; set LINX_CLANG=/path/to/clang" >&2
   exit 2
 fi
 
@@ -505,16 +515,19 @@ for bench in "${benchmarks[@]}"; do
   fi
 done
 
-find "$SPEC_DIR/benchspec/CPU" -type f -path '*/src/*' -print0 \
+python3 "$ROOT/tools/spec2017/check_build_manifest.py" check-source-symlinks \
+  --source-root "$SOURCE_ROOT"
+
+find "$SOURCE_ROOT" -type f -path '*/src/*' -print0 \
   | LC_ALL=C sort -z \
   | xargs -0 shasum -a 256 > "$POST_MANIFEST"
 
-if ! cmp -s "$BASELINE_MANIFEST" "$POST_MANIFEST"; then
-  diff -u "$BASELINE_MANIFEST" "$POST_MANIFEST" > "$DRIFT_DIFF" || true
-  grep -E '^[+-][0-9a-f]{64}  ' "$DRIFT_DIFF" \
-    | sed -E 's/^[+-][0-9a-f]{64}  //' \
-    | sort -u > "$DRIFT_PATHS" || true
-  echo "error: SPEC source drift detected; see $DRIFT_PATHS" >&2
+if ! python3 "$ROOT/tools/spec2017/check_build_manifest.py" refresh-source-drift \
+  --baseline "$BASELINE_MANIFEST" \
+  --post "$POST_MANIFEST" \
+  --diff-out "$DRIFT_DIFF" \
+  --paths-out "$DRIFT_PATHS"
+then
   failed+=("__src_drift__")
 fi
 
@@ -533,7 +546,7 @@ if [[ -n "$EMIT_MANIFEST" ]]; then
 
   benchmarks_csv="$(IFS=,; echo "${benchmarks[*]-}")"
   failed_csv="$(IFS=,; echo "${failed[*]-}")"
-  python3 - "$manifest_out" "$SPEC_DIR" "$MODE" "$OPTIMIZE_FLAGS" "$BENCH_OPTIMIZE_MANIFEST" "canonical-crt" "$LINX_SPEC_FORCE_STATIC" "$LLVM_READELF" "$LOG_DIR" "$BASELINE_MANIFEST" "$POST_MANIFEST" "$DRIFT_PATHS" "$benchmarks_csv" "$failed_csv" <<'PY'
+  python3 - "$manifest_out" "$SPEC_DIR" "$MODE" "$OPTIMIZE_FLAGS" "$BENCH_OPTIMIZE_MANIFEST" "canonical-crt" "$LINX_SPEC_FORCE_STATIC" "$LLVM_READELF" "$LINX_CLANG_RESOLVED" "$LINX_SYSROOT" "${LINX_TARGET:-linx64-unknown-linux-musl}" "$LOG_DIR" "$BASELINE_MANIFEST" "$POST_MANIFEST" "$DRIFT_PATHS" "$benchmarks_csv" "$failed_csv" <<'PY'
 import datetime as dt
 import json
 import subprocess
@@ -548,12 +561,15 @@ bench_optimize_manifest = Path(sys.argv[5]).resolve()
 link_mode = sys.argv[6]
 force_static = sys.argv[7] == "1"
 llvm_readelf = Path(sys.argv[8])
-log_dir = Path(sys.argv[9]).resolve()
-baseline_manifest = Path(sys.argv[10]).resolve()
-post_manifest = Path(sys.argv[11]).resolve()
-drift_paths = Path(sys.argv[12]).resolve()
-benchmarks = [x for x in sys.argv[13].split(",") if x]
-failed = {x for x in sys.argv[14].split(",") if x}
+clang = Path(sys.argv[9]).resolve()
+sysroot = Path(sys.argv[10]).resolve()
+target = sys.argv[11]
+log_dir = Path(sys.argv[12]).resolve()
+baseline_manifest = Path(sys.argv[13]).resolve()
+post_manifest = Path(sys.argv[14]).resolve()
+drift_paths = Path(sys.argv[15]).resolve()
+benchmarks = [x for x in sys.argv[16].split(",") if x]
+failed = {x for x in sys.argv[17].split(",") if x}
 
 bench_optimize_flags = {}
 if bench_optimize_manifest.exists():
@@ -705,6 +721,9 @@ manifest = {
     "bench_optimize_flags": {bench: bench_optimize_flags.get(bench, optimize_flags) for bench in benchmarks},
     "link_mode": link_mode,
     "force_static": force_static,
+    "target": target,
+    "sysroot": str(sysroot),
+    "clang": str(clang),
     "llvm_readelf": str(llvm_readelf),
     "selected_benchmarks": benchmarks,
     "bench_results": bench_results,

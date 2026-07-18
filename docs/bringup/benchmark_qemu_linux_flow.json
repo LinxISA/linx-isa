@@ -1,6 +1,7 @@
 {
   "schema_version": 1,
   "flow_id": "benchmark-qemu-linux-hardbreak",
+  "require_clean_qemu": true,
   "description": "Fail-fast bring-up flow for reaching full benchmark execution on QEMU with Linux.",
   "artifact_policy": {
     "canonical_root": "workloads/generated",
@@ -38,9 +39,14 @@
           "command": "bash tools/ci/check_repo_layout.sh"
         },
         {
+          "id": "linux-source-completeness",
+          "timeout_seconds": 60,
+          "command": "python3 tools/bringup/check_linux_source_completeness.py --linux-root \"$PWD/kernel/linux\""
+        },
+        {
           "id": "isa-golden",
           "timeout_seconds": 180,
-          "command": "python3 tools/bringup/run_gates.py --profile release-strict --tier pr --gate 'ISA::Golden catalog check' --gate 'ISA::Canonical v0.56 guard'"
+          "command": "python3 tools/bringup/run_gates.py --profile release-strict --tier pr --gate 'ISA::Golden catalog check' --gate 'ISA::Canonical v0.57 guard'"
         },
         {
           "id": "agent-static-map",
@@ -64,6 +70,11 @@
           "id": "linx64-compile-coverage",
           "timeout_seconds": 900,
           "command": "python3 tools/bringup/run_gates.py --profile release-strict --tier pr --gate 'Compiler::AVS compile suites linx64' --gate 'Compiler::Coverage 100% linx64'"
+        },
+        {
+          "id": "linx32-compile-coverage",
+          "timeout_seconds": 900,
+          "command": "python3 tools/bringup/run_gates.py --profile release-strict --tier pr --gate 'Compiler::AVS compile suites linx32' --gate 'Compiler::Coverage 100% linx32'"
         }
       ]
     },
@@ -96,6 +107,37 @@
       ]
     },
     {
+      "id": "coverage-closure",
+      "profiles": [
+        "nightly"
+      ],
+      "owner": "integration",
+      "hard_break": true,
+      "why": "Stop before TSVC, Linux, or SPEC if C-CodeGen breadth, QEMU ISA L1 mapping, QEMU translation inventory, and ISA-LLVM-QEMU coverage coherence are not closed.",
+      "commands": [
+        {
+          "id": "llvm-c-codegen-breadth",
+          "timeout_seconds": 900,
+          "command": "python3 tools/bringup/run_gates.py --profile release-strict --tier nightly --gate 'Compiler::C-CodeGen mnemonic breadth report'"
+        },
+        {
+          "id": "qemu-isa-l1-full",
+          "timeout_seconds": 300,
+          "command": "QEMU_ISA_COVERAGE_REQUIRE_FULL=1 python3 tools/bringup/run_gates.py --profile release-strict --tier nightly --gate 'Emulator::ISA vs QEMU coverage report'"
+        },
+        {
+          "id": "qemu-translation-full",
+          "timeout_seconds": 900,
+          "command": "QEMU_TRANSLATION_COVERAGE_REQUIRE_FULL=1 python3 tools/bringup/run_gates.py --profile release-strict --tier nightly --gate 'Emulator::AVS QEMU translation coverage report'"
+        },
+        {
+          "id": "isa-llvm-qemu-coherent",
+          "timeout_seconds": 300,
+          "command": "ISA_LLVM_QEMU_COVERAGE_REQUIRE_COHERENT=1 python3 tools/bringup/run_gates.py --profile release-strict --tier nightly --gate 'Integration::ISA-LLVM-QEMU coverage coherence report'"
+        }
+      ]
+    },
+    {
       "id": "tsvc-qemu-hardbreak",
       "profiles": [
         "pr",
@@ -108,12 +150,12 @@
         {
           "id": "tsvc-compile-only-floor",
           "timeout_seconds": 900,
-          "command": "python3 workloads/tsvc/run_tsvc.py --clang \"${CLANG:-$PWD/compiler/llvm/build-linxisa-clang/bin/clang}\" --lld \"${LLD:-$PWD/compiler/llvm/build-linxisa-clang/bin/ld.lld}\" --vector-mode auto --strict-fail-under \"${TSVC_STRICT_FAIL_UNDER:-148}\" --source-policy linx-v056 --no-run-qemu --out-dir \"${TSVC_OUT_DIR:-$PWD/workloads/generated/tsvc-pr-compile}\""
+          "command": "python3 workloads/tsvc/run_tsvc.py --clang \"${CLANG:-$PWD/compiler/llvm/build-linxisa-clang/bin/clang}\" --lld \"${LLD:-$PWD/compiler/llvm/build-linxisa-clang/bin/ld.lld}\" --vector-mode auto --strict-fail-under \"${TSVC_STRICT_FAIL_UNDER:-148}\" --source-policy linx-v057 --no-run-qemu --out-dir \"${TSVC_OUT_DIR:-$PWD/workloads/generated/tsvc-pr-compile}\""
         },
         {
           "id": "tsvc-qemu-batched",
           "timeout_seconds": 3600,
-          "command": "python3 workloads/tsvc/run_tsvc_batched.py --out-dir \"${TSVC_QEMU_OUT_DIR:-$PWD/workloads/generated/tsvc-pr-qemu}\" --batch-size \"${TSVC_BATCH_SIZE:-20}\" --strict-fail-under \"${TSVC_STRICT_FAIL_UNDER:-148}\" --vector-mode auto --clang \"${CLANG:-$PWD/compiler/llvm/build-linxisa-clang/bin/clang}\" --lld \"${LLD:-$PWD/compiler/llvm/build-linxisa-clang/bin/ld.lld}\" --qemu \"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\" --source-policy linx-v056 --qemu-timeout \"${TSVC_QEMU_TIMEOUT:-240}\""
+          "command": "python3 workloads/tsvc/run_tsvc_batched.py --out-dir \"${TSVC_QEMU_OUT_DIR:-$PWD/workloads/generated/tsvc-pr-qemu}\" --batch-size \"${TSVC_BATCH_SIZE:-20}\" --strict-fail-under \"${TSVC_STRICT_FAIL_UNDER:-148}\" --vector-mode auto --clang \"${CLANG:-$PWD/compiler/llvm/build-linxisa-clang/bin/clang}\" --lld \"${LLD:-$PWD/compiler/llvm/build-linxisa-clang/bin/ld.lld}\" --qemu \"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\" --source-policy linx-v057 --qemu-timeout \"${TSVC_QEMU_TIMEOUT:-240}\""
         }
       ]
     },
@@ -128,19 +170,28 @@
       "why": "Stop before hosted benchmarks if the firmwareless Linux/QEMU path cannot enter trivial userspace or boot the rootfs.",
       "commands": [
         {
+          "id": "smp-head-clean-build",
+          "timeout_seconds": 900,
+          "command": "bash tools/bringup/run_linux_smp_head_build_clean.sh --linux-root \"$PWD/kernel/linux\" --out-dir \"${LINUX_SMP_HEAD_OUT_DIR:-/tmp/linx-linux-smp-head-build}\" --clang \"${CLANG:-$PWD/compiler/llvm/build-linxisa-clang/bin/clang}\" --gmake \"${GMAKE:-/opt/homebrew/bin/gmake}\""
+        },
+        {
           "id": "vmlinux-clean-build",
           "timeout_seconds": 7200,
-          "command": "bash tools/bringup/run_linux_vmlinux_build_clean.sh --linux-root \"$PWD/kernel/linux\" --out-dir \"$PWD/kernel/linux/build-linx-fixed\" --clang \"${CLANG:-$PWD/compiler/llvm/build-linxisa-clang/bin/clang}\" --gmake \"${GMAKE:-/opt/homebrew/bin/gmake}\" --target vmlinux --refresh-defconfig"
+          "command": "bash tools/bringup/run_linux_vmlinux_build_clean.sh --linux-root \"$PWD/kernel/linux\" --out-dir \"${LINUX_VMLINUX_OUT_DIR:-/tmp/linx-linux-vmlinux-clean-build}\" --clang \"${CLANG:-$PWD/compiler/llvm/build-linxisa-clang/bin/clang}\" --gmake \"${GMAKE:-/opt/homebrew/bin/gmake}\" --target vmlinux --refresh-defconfig --fresh"
         },
         {
           "id": "tiny-userspace-proof",
           "timeout_seconds": 180,
-          "command": "TIMEOUT=\"${TINY_USERSPACE_TIMEOUT:-30}\" QEMU=\"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\" SKIP_BUILD=1 python3 kernel/linux/tools/linxisa/initramfs/boot_userspace_proof.py"
+          "command": "O=\"${LINUX_VMLINUX_OUT_DIR:-/tmp/linx-linux-vmlinux-clean-build}\" TIMEOUT=\"${TINY_USERSPACE_TIMEOUT:-30}\" QEMU=\"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\" SKIP_BUILD=1 python3 kernel/linux/tools/linxisa/initramfs/boot_userspace_proof.py"
         },
         {
           "id": "busybox-rootfs",
           "timeout_seconds": 900,
-          "command": "TIMEOUT=\"${BUSYBOX_ROOTFS_TIMEOUT:-120}\" ROOTFS_IMG=\"$(bash tools/bringup/run_linux_busybox_rootfs_build_clean.sh --linux-root \"$PWD/kernel/linux\" --out-dir \"${LINUX_BUSYBOX_ROOTFS_CLEAN_OUT_DIR:-/tmp/linx-linux-rootfs-clean-out}\" --llvm-build \"$PWD/compiler/llvm/build-linxisa-clang\")\" QEMU=\"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\" QEMU_EXTRA_ARGS='-bios none' SKIP_BUILD=1 python3 kernel/linux/tools/linxisa/busybox_rootfs/boot.py"
+          "command": "O=\"${LINUX_VMLINUX_OUT_DIR:-/tmp/linx-linux-vmlinux-clean-build}\" KERNEL=\"${LINUX_VMLINUX_OUT_DIR:-/tmp/linx-linux-vmlinux-clean-build}/vmlinux\" KERNEL_CONFIG=\"${LINUX_VMLINUX_OUT_DIR:-/tmp/linx-linux-vmlinux-clean-build}/.config\" TIMEOUT=\"${BUSYBOX_ROOTFS_TIMEOUT:-120}\" LINX_BUSYBOX_BOOT_RETRY=0 LINX_BUSYBOX_BOOT_BLIND_SEND_AFTER=0 ROOTFS_IMG=\"$(bash tools/bringup/run_linux_busybox_rootfs_build_clean.sh --linux-root \"$PWD/kernel/linux\" --out-dir \"${LINUX_BUSYBOX_ROOTFS_CLEAN_OUT_DIR:-/tmp/linx-linux-rootfs-clean-out}\" --llvm-build \"$PWD/compiler/llvm/build-linxisa-clang\")\" QEMU=\"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\" QEMU_EXTRA_ARGS='-bios none' SKIP_BUILD=1 python3 kernel/linux/tools/linxisa/busybox_rootfs/boot.py",
+          "artifact_env": {
+            "report": "LINX_BUSYBOX_BOOT_REPORT",
+            "transcript": "LINX_BUSYBOX_BOOT_TRANSCRIPT"
+          }
         }
       ]
     },
@@ -167,12 +218,25 @@
         {
           "id": "musl-runtime-both",
           "timeout_seconds": 600,
-          "command": "python3 avs/qemu/run_musl_smoke.py --mode phase-b --link both --sample all --qemu \"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\" --timeout \"${MUSL_TIMEOUT:-90}\""
+          "command": "python3 avs/qemu/run_musl_smoke.py --mode phase-b --link both --sample all --skip-build --kernel \"${LINUX_VMLINUX_OUT_DIR:-/tmp/linx-linux-vmlinux-clean-build}/vmlinux\" --qemu \"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\" --timeout \"${MUSL_TIMEOUT:-90}\" && cp avs/qemu/out/musl-smoke/summary.json \"$LINX_MUSL_RUNTIME_REPORT\" && cat avs/qemu/out/musl-smoke/qemu_*.log > \"$LINX_MUSL_RUNTIME_TRANSCRIPT\"",
+          "artifact_env": {
+            "report": "LINX_MUSL_RUNTIME_REPORT",
+            "transcript": "LINX_MUSL_RUNTIME_TRANSCRIPT"
+          }
+        },
+        {
+          "id": "glibc-build-g1b",
+          "timeout_seconds": 3600,
+          "command": "GLIBC_G1B_ALLOW_BLOCKED=0 JOBS=\"${GLIBC_BUILD_JOBS:-${SPEC_BUILD_JOBS:-10}}\" bash lib/glibc/tools/linx/build_linx64_glibc_g1b.sh"
         },
         {
           "id": "glibc-runtime",
           "timeout_seconds": 600,
-          "command": "python3 avs/qemu/run_glibc_smoke.py --qemu \"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\" --timeout \"${GLIBC_TIMEOUT:-30}\""
+          "command": "python3 avs/qemu/run_glibc_smoke.py --kernel \"${LINUX_VMLINUX_OUT_DIR:-/tmp/linx-linux-vmlinux-clean-build}/vmlinux\" --qemu \"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\" --timeout \"${GLIBC_TIMEOUT:-30}\" && cp avs/qemu/out/glibc-smoke/summary.json \"$LINX_GLIBC_RUNTIME_REPORT\" && cat avs/qemu/out/glibc-smoke/qemu_glibc_runtime_*.log > \"$LINX_GLIBC_RUNTIME_TRANSCRIPT\"",
+          "artifact_env": {
+            "report": "LINX_GLIBC_RUNTIME_REPORT",
+            "transcript": "LINX_GLIBC_RUNTIME_TRANSCRIPT"
+          }
         }
       ]
     },
@@ -192,12 +256,18 @@
           "command": "LINX_SPEC_BENCH_OPTIMIZE=\"${LINX_SPEC_BENCH_OPTIMIZE:-${SPEC_BENCH_OPTIMIZE:-502.gcc_r=-O0 -fno-vectorize -fno-slp-vectorize -fwrapv}}\" MODE=phase-b bash tools/spec2017/build_int_rate_linx.sh --force-static --build-runtimes --jobs \"${SPEC_BUILD_JOBS:-10}\" --emit-manifest \"${SPECINT_BUILD_MANIFEST:-$PWD/workloads/generated/specint-fast-gate/build-manifest.json}\""
         },
         {
+          "id": "specint-attest-static-phase-b",
+          "timeout_seconds": 900,
+          "command": "BUILD_MANIFEST=\"${SPECINT_BUILD_MANIFEST:-$PWD/workloads/generated/specint-fast-gate/build-manifest.json}\"; BUILD_ATTESTATION=\"${SPECINT_BUILD_ATTESTATION:-$PWD/workloads/generated/specint-fast-gate/build-attestation.json}\"; BUILD_ATTESTATION_MD=\"${SPECINT_BUILD_ATTESTATION_MD:-$PWD/workloads/generated/specint-fast-gate/build-attestation.md}\"; python3 tools/spec2017/check_build_manifest.py attest --repo-root \"$PWD\" --manifest \"$BUILD_MANIFEST\" --out \"$BUILD_ATTESTATION\" --out-md \"$BUILD_ATTESTATION_MD\" && python3 tools/spec2017/check_build_manifest.py verify --repo-root \"$PWD\" --attestation \"$BUILD_ATTESTATION\""
+        },
+        {
           "id": "specint-fast-test-train",
           "timeout_seconds": 3600,
-          "command": "QEMU_BIN=\"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\"; python3 tools/bringup/run_specint_fast_gate.py --profile \"${SPECINT_FAST_PROFILE:-pr}\" --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 --qemu \"$QEMU_BIN\" --sysroot \"${WORKLOAD_SYSROOT:-$PWD/out/libc/musl/install/phase-b}\" --out-dir \"${SPECINT_FAST_OUT_DIR:-$PWD/workloads/generated/specint-fast-gate}\" --append-extra \"${SPEC_APPEND_EXTRA:-norandmaps}\" --guest-heartbeat-sec \"${SPEC_GUEST_HEARTBEAT_SEC:-0}\" --heartbeat-sec \"${SPEC_HEARTBEAT_SEC:-30}\" --qemu-heartbeat-interval \"${SPEC_QEMU_HEARTBEAT_INTERVAL:-1000000000}\" --no-progress-timeout \"${SPEC_NO_PROGRESS_TIMEOUT:-180}\" --stack-limit \"${SPEC_STACK_LIMIT:-2G}\""
+          "command": "QEMU_BIN=\"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\"; python3 tools/bringup/run_specint_fast_gate.py --profile \"${SPECINT_FAST_PROFILE:-pr}\" --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 --qemu \"$QEMU_BIN\" --kernel \"${LINUX_VMLINUX_OUT_DIR:-/tmp/linx-linux-vmlinux-clean-build}/vmlinux\" --sysroot \"${WORKLOAD_SYSROOT:-$PWD/out/libc/musl/install/phase-b}\" --out-dir \"${SPECINT_FAST_OUT_DIR:-$PWD/workloads/generated/specint-fast-gate}\" --append-extra \"${SPEC_APPEND_EXTRA:-norandmaps}\" --guest-heartbeat-sec \"${SPEC_GUEST_HEARTBEAT_SEC:-0}\" --heartbeat-sec \"${SPEC_HEARTBEAT_SEC:-30}\" --qemu-heartbeat-interval \"${SPEC_QEMU_HEARTBEAT_INTERVAL:-1000000000}\" --no-progress-timeout \"${SPEC_NO_PROGRESS_TIMEOUT:-180}\" --stack-limit \"${SPEC_STACK_LIMIT:-2G}\""
         }
       ],
       "outputs": [
+        "build-attestation.json binding the current workspace, toolchain, sysroot, sources, and 12 static Linx ELFs",
         "specint_fast_gate_summary.json",
         "qemu_matrix_summary.json",
         "stage_b_summary.json with heartbeat_running, heartbeat_site_progress, heartbeat_last_bpc, and heartbeat_last_progress"
@@ -220,8 +290,12 @@
       "commands": [
         {
           "id": "coremark-dhrystone",
-          "timeout_seconds": 1800,
-          "command": "LINX_CLANG=\"${CLANG:-$PWD/compiler/llvm/build-linxisa-clang/bin/clang}\" LINX_SYSROOT=\"${LINX_SYSROOT:-$PWD/out/libc/musl/install/phase-b}\" python3 workloads/run_benchmarks.py --cc tools/spec2017/linx_cc.sh --target linx64-unknown-linux-musl --sysroot \"${LINX_SYSROOT:-$PWD/out/libc/musl/install/phase-b}\" --json-out workloads/generated/benchmarks_result.json"
+          "timeout_seconds": 3600,
+          "command": "BENCH_OUT=\"${LINX_BENCHMARK_OUT_DIR:-$PWD/workloads/generated/benchmarks}\"; BENCHMARK_RESULT=\"${LINX_BENCHMARK_RESULT:-$PWD/workloads/generated/benchmarks_result.json}\"; BENCHMARK_TRANSCRIPT=\"${LINX_BENCHMARK_TRANSCRIPT:-$PWD/workloads/generated/benchmarks_transcript.txt}\"; if [[ -n \"${LINX_BENCHMARK_RUN_COMMAND:-}\" ]]; then BENCHMARK_RUN_COMMAND=\"$LINX_BENCHMARK_RUN_COMMAND\"; else BENCHMARK_RUN_COMMAND=\"python3 tools/bringup/run_c_benchmark_matrix.py --kernel ${LINUX_VMLINUX_OUT_DIR:-/tmp/linx-linux-vmlinux-clean-build}/vmlinux --qemu ${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64} --sysroot ${LINX_SYSROOT:-$PWD/out/libc/musl/install/phase-b} --clang ${CLANG:-$PWD/compiler/llvm/build-linxisa-clang/bin/clang} --timeout ${LINX_BENCHMARK_GUEST_TIMEOUT:-900} --exe {exe}\"; fi; LINX_CLANG=\"${CLANG:-$PWD/compiler/llvm/build-linxisa-clang/bin/clang}\" LINX_SYSROOT=\"${LINX_SYSROOT:-$PWD/out/libc/musl/install/phase-b}\" python3 workloads/run_benchmarks.py --cc tools/spec2017/linx_cc.sh --target linx64-unknown-linux-musl --sysroot \"${LINX_SYSROOT:-$PWD/out/libc/musl/install/phase-b}\" --coremark-iterations \"${LINX_COREMARK_ITERATIONS:-15000}\" --dhrystone-runs \"${LINX_DHRYSTONE_RUNS:-1}\" --run-command \"$BENCHMARK_RUN_COMMAND\" --timeout \"${LINX_BENCHMARK_TIMEOUT:-1200}\" --out-dir \"$BENCH_OUT\" --json-out \"$BENCHMARK_RESULT\" && { for LOG in \"$BENCH_OUT\"/logs/*.runtime.stdout.txt \"$BENCH_OUT\"/logs/*.runtime.stderr.txt; do if [[ -f \"$LOG\" ]]; then cat \"$LOG\"; fi; done; } > \"$BENCHMARK_TRANSCRIPT\"",
+          "artifact_env": {
+            "report": "LINX_BENCHMARK_RESULT",
+            "transcript": "LINX_BENCHMARK_TRANSCRIPT"
+          }
         },
         {
           "id": "specint-build-static-nightly",
@@ -229,10 +303,22 @@
           "command": "LINX_SPEC_BENCH_OPTIMIZE=\"${LINX_SPEC_BENCH_OPTIMIZE:-${SPEC_BENCH_OPTIMIZE:-502.gcc_r=-O0 -fno-vectorize -fno-slp-vectorize -fwrapv}}\" MODE=phase-b bash tools/spec2017/build_int_rate_linx.sh --force-static --build-runtimes --jobs \"${SPEC_BUILD_JOBS:-10}\" --emit-manifest \"${SPECINT_NIGHTLY_BUILD_MANIFEST:-$PWD/workloads/generated/specint-nightly-test-train/build-manifest.json}\""
         },
         {
+          "id": "specint-attest-static-nightly",
+          "timeout_seconds": 900,
+          "command": "BUILD_MANIFEST=\"${SPECINT_NIGHTLY_BUILD_MANIFEST:-$PWD/workloads/generated/specint-nightly-test-train/build-manifest.json}\"; BUILD_ATTESTATION=\"${SPECINT_NIGHTLY_BUILD_ATTESTATION:-$PWD/workloads/generated/specint-nightly-test-train/build-attestation.json}\"; BUILD_ATTESTATION_MD=\"${SPECINT_NIGHTLY_BUILD_ATTESTATION_MD:-$PWD/workloads/generated/specint-nightly-test-train/build-attestation.md}\"; python3 tools/spec2017/check_build_manifest.py attest --repo-root \"$PWD\" --manifest \"$BUILD_MANIFEST\" --out \"$BUILD_ATTESTATION\" --out-md \"$BUILD_ATTESTATION_MD\" && python3 tools/spec2017/check_build_manifest.py verify --repo-root \"$PWD\" --attestation \"$BUILD_ATTESTATION\""
+        },
+        {
           "id": "specint-nightly-test-train",
           "timeout_seconds": 14400,
-          "command": "QEMU_BIN=\"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\"; python3 tools/bringup/run_specint_fast_gate.py --profile nightly --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 --qemu \"$QEMU_BIN\" --sysroot \"${WORKLOAD_SYSROOT:-$PWD/out/libc/musl/install/phase-b}\" --out-dir \"${SPECINT_NIGHTLY_OUT_DIR:-$PWD/workloads/generated/specint-nightly-test-train}\" --append-extra \"${SPEC_APPEND_EXTRA:-norandmaps}\" --guest-heartbeat-sec \"${SPEC_GUEST_HEARTBEAT_SEC:-0}\" --heartbeat-sec \"${SPEC_HEARTBEAT_SEC:-30}\" --qemu-heartbeat-interval \"${SPEC_QEMU_HEARTBEAT_INTERVAL:-1000000000}\" --no-progress-timeout \"${SPEC_NO_PROGRESS_TIMEOUT:-180}\" --stack-limit \"${SPEC_STACK_LIMIT:-2G}\" --continue-on-fail"
+          "command": "QEMU_BIN=\"${QEMU:-$PWD/emulator/qemu/build-linx/qemu-system-linx64}\"; python3 tools/bringup/run_specint_fast_gate.py --profile nightly --spec-dir workloads/spec2017/cpu2017v118_x64_gcc12_avx2 --qemu \"$QEMU_BIN\" --kernel \"${LINUX_VMLINUX_OUT_DIR:-/tmp/linx-linux-vmlinux-clean-build}/vmlinux\" --sysroot \"${WORKLOAD_SYSROOT:-$PWD/out/libc/musl/install/phase-b}\" --out-dir \"${SPECINT_NIGHTLY_OUT_DIR:-$PWD/workloads/generated/specint-nightly-test-train}\" --append-extra \"${SPEC_APPEND_EXTRA:-norandmaps}\" --guest-heartbeat-sec \"${SPEC_GUEST_HEARTBEAT_SEC:-0}\" --heartbeat-sec \"${SPEC_HEARTBEAT_SEC:-30}\" --qemu-heartbeat-interval \"${SPEC_QEMU_HEARTBEAT_INTERVAL:-1000000000}\" --no-progress-timeout \"${SPEC_NO_PROGRESS_TIMEOUT:-180}\" --stack-limit \"${SPEC_STACK_LIMIT:-2G}\" --continue-on-fail"
         }
+      ],
+      "outputs": [
+        "benchmarks_result.json with RUN_PASS for both CoreMark and Dhrystone; build-only is rejected",
+        "build-attestation.json binding the current workspace, toolchain, sysroot, sources, and 12 static Linx ELFs",
+        "specint_fast_gate_summary.json",
+        "qemu_matrix_summary.json",
+        "stage_b_summary.json with per-row test/train outcomes and heartbeat progress"
       ]
     }
   ]

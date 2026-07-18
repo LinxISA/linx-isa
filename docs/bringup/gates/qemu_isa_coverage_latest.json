@@ -1,12 +1,55 @@
 {
-  "coverage_count": 618,
-  "coverage_ratio_percent": 86.92,
-  "form_coverage_count": 621,
-  "form_coverage_ratio_percent": 83.13,
-  "form_missing_count": 126,
-  "generated_at_utc": "2026-07-15 10:11:15Z",
-  "legal_form_count": 747,
-  "legal_mnemonic_count": 711,
+  "canonical_specialization_forms": [
+    "BSTART.ACCCVT [len=32 mask=0x7ffffff match=0x831181]"
+  ],
+  "capabilities": [
+    "decoder_source_to_isa_mnemonic_mapping",
+    "decoder_mask_to_isa_form_matching",
+    "audited_per_form_runtime_evidence_ingestion",
+    "audited_per_form_semantic_oracle_ingestion"
+  ],
+  "claim": "decoder_source_mapping",
+  "constraint_union_forms": [
+    "C.BSTART.STD [len=16 mask=0xc7ff match=0x0]"
+  ],
+  "coverage_count": 646,
+  "coverage_ratio_percent": 88.37,
+  "evidence": {
+    "L1": {
+      "availability": "available",
+      "claim": "decoder_source_mapping",
+      "form_count": 678,
+      "mnemonic_count": 646
+    },
+    "L2": {
+      "availability": "available",
+      "claim": "runtime_execution",
+      "form_count": 60,
+      "mnemonic_count": 60,
+      "qemu_sha": "d0e88a99f575f87436137d91341b410e6f2f445b",
+      "source": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_executable_coverage_latest.json"
+    },
+    "L3": {
+      "availability": "available",
+      "claim": "semantic_oracle",
+      "form_count": 60,
+      "mnemonic_count": 60,
+      "qemu_sha": "d0e88a99f575f87436137d91341b410e6f2f445b",
+      "source": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_executable_coverage_latest.json"
+    }
+  },
+  "evidence_level": "L1",
+  "form_coverage_count": 678,
+  "form_coverage_ratio_percent": 88.17,
+  "form_missing_count": 91,
+  "generated_at_utc": "2026-07-18 02:41:46Z",
+  "legal_form_count": 769,
+  "legal_mnemonic_count": 731,
+  "limitations": [
+    "runtime_execution_evidence_is_partial",
+    "semantic_oracle_evidence_is_partial",
+    "l2_l3_counts_do_not_extend_the_l1_mapping_claim"
+  ],
   "mapped_by_prefix": {
     "ACRC": 1,
     "ACRE": 1,
@@ -20,20 +63,24 @@
     "ANDIW": 1,
     "ANDW": 1,
     "ASSERT": 1,
-    "B": 15,
+    "B": 16,
     "BC": 2,
     "BCNT": 1,
     "BIC": 1,
     "BIS": 1,
     "BSE": 1,
-    "BSTART": 19,
+    "BSTART": 34,
     "BSTOP": 1,
     "BWE": 1,
     "BWI": 1,
     "BWT": 1,
     "BXS": 1,
     "BXU": 1,
-    "C": 37,
+    "C": 38,
+    "CASB": 1,
+    "CASD": 1,
+    "CASH": 1,
+    "CASW": 1,
     "CLZ": 1,
     "CMP": 16,
     "CSEL": 1,
@@ -43,6 +90,7 @@
     "DIVU": 1,
     "DIVUW": 1,
     "DIVW": 1,
+    "DMA": 1,
     "EBREAK": 1,
     "ERCOV": 1,
     "ESAVE": 1,
@@ -160,7 +208,7 @@
     "SWI": 2,
     "TLB": 4,
     "UCVTF": 1,
-    "V": 94,
+    "V": 100,
     "XOR": 1,
     "XORI": 1,
     "XORIW": 1,
@@ -179,29 +227,34 @@
     "ANDIW": 1,
     "ANDW": 1,
     "ASSERT": 1,
-    "B": 23,
+    "B": 26,
     "BC": 2,
     "BCNT": 1,
     "BIC": 1,
     "BIS": 1,
     "BSE": 1,
-    "BSTART": 18,
+    "BSTART": 43,
     "BSTOP": 1,
     "BWE": 1,
     "BWI": 1,
     "BWT": 1,
     "BXS": 1,
     "BXU": 1,
-    "C": 37,
+    "C": 39,
+    "CASB": 1,
+    "CASD": 1,
+    "CASH": 1,
+    "CASW": 1,
     "CLZ": 1,
     "CMP": 16,
     "CSEL": 1,
     "CTZ": 1,
-    "DC": 6,
+    "DC": 8,
     "DIV": 1,
     "DIVU": 1,
     "DIVUW": 1,
     "DIVW": 1,
+    "DMA": 1,
     "EBREAK": 1,
     "ERCOV": 1,
     "ESAVE": 1,
@@ -237,11 +290,11 @@
     "FRET": 2,
     "FSQRT": 1,
     "FSUB": 1,
-    "HL": 195,
+    "HL": 200,
     "IC": 2,
     "J": 1,
     "JR": 1,
-    "L": 4,
+    "L": 9,
     "LB": 2,
     "LBI": 1,
     "LBU": 2,
@@ -252,7 +305,7 @@
     "LHI": 2,
     "LHU": 2,
     "LHUI": 2,
-    "LR": 2,
+    "LR": 4,
     "LSRGET": 1,
     "LUI": 1,
     "LW": 10,
@@ -319,13 +372,16 @@
     "SWI": 2,
     "TLB": 4,
     "UCVTF": 1,
-    "V": 92,
+    "V": 100,
     "XOR": 1,
     "XORI": 1,
     "XORIW": 1,
     "XORW": 1
   },
   "mapped_qemu_to_spec": {
+    "C.SETRET": [
+      "C.SETRET"
+    ],
     "acrc": [
       "ACRC"
     ],
@@ -385,6 +441,15 @@
     ],
     "b_datr": [
       "B.DATR"
+    ],
+    "b_dim_lb0": [
+      "B.DIM"
+    ],
+    "b_dim_lb1": [
+      "B.DIM"
+    ],
+    "b_dim_lb2": [
+      "B.DIM"
     ],
     "b_eq": [
       "B.EQ"
@@ -452,10 +517,14 @@
       "BSTART.STD"
     ],
     "bstart_cube": [
-      "BSTART.CUBE"
+      "BSTART.CUBE",
+      "BSTART.ACCCVT"
     ],
     "bstart_direct": [
       "BSTART",
+      "BSTART.STD"
+    ],
+    "bstart_fall": [
       "BSTART.STD"
     ],
     "bstart_fixp": [
@@ -490,8 +559,23 @@
       "BSTART",
       "BSTART.STD"
     ],
+    "bstart_mgather": [
+      "BSTART.MGATHER"
+    ],
+    "bstart_mgather_cas": [
+      "BSTART.MGATHER.CAS"
+    ],
+    "bstart_mgather_mask": [
+      "BSTART.MGATHER.MASK"
+    ],
     "bstart_mpar": [
       "BSTART.MPAR"
+    ],
+    "bstart_mscatter": [
+      "BSTART.MSCATTER"
+    ],
+    "bstart_mscatter_mask": [
+      "BSTART.MSCATTER.MASK"
     ],
     "bstart_mseq": [
       "BSTART.MSEQ"
@@ -499,6 +583,12 @@
     "bstart_ret": [
       "BSTART",
       "BSTART.STD"
+    ],
+    "bstart_split_cond": [
+      "BSTART"
+    ],
+    "bstart_split_direct": [
+      "BSTART"
     ],
     "bstart_sys": [
       "BSTART.SYS"
@@ -511,9 +601,53 @@
       "BSTART.TMATMUL.ACC",
       "BSTART.ACCCVT"
     ],
-    "bstart_tma": [
-      "BSTART.TMA",
+    "bstart_tgemv": [
+      "BSTART.TGEMV"
+    ],
+    "bstart_tgemv_acc": [
+      "BSTART.TGEMV.ACC"
+    ],
+    "bstart_tgemv_bias": [
+      "BSTART.TGEMV.BIAS"
+    ],
+    "bstart_tgemvmx": [
+      "BSTART.TGEMVMX"
+    ],
+    "bstart_tgemvmx_acc": [
+      "BSTART.TGEMVMX.ACC"
+    ],
+    "bstart_tgemvmx_bias": [
+      "BSTART.TGEMVMX.BIAS"
+    ],
+    "bstart_tload": [
+      "BSTART.TLOAD"
+    ],
+    "bstart_tmatmul": [
+      "BSTART.TMATMUL"
+    ],
+    "bstart_tmatmul_acc": [
+      "BSTART.TMATMUL.ACC"
+    ],
+    "bstart_tmatmul_bias": [
+      "BSTART.TMATMUL.BIAS"
+    ],
+    "bstart_tmatmulmx": [
+      "BSTART.TMATMULMX"
+    ],
+    "bstart_tmatmulmx_acc": [
+      "BSTART.TMATMULMX.ACC"
+    ],
+    "bstart_tmatmulmx_bias": [
+      "BSTART.TMATMULMX.BIAS"
+    ],
+    "bstart_tmov": [
       "BSTART.TMOV"
+    ],
+    "bstart_tprefetch": [
+      "BSTART.TPREFETCH"
+    ],
+    "bstart_tstore": [
+      "BSTART.TSTORE"
     ],
     "bstart_vpar": [
       "BSTART.VPAR"
@@ -671,6 +805,18 @@
     "c_zext_w": [
       "C.ZEXT.W"
     ],
+    "casb": [
+      "CASB"
+    ],
+    "casd": [
+      "CASD"
+    ],
+    "cash": [
+      "CASH"
+    ],
+    "casw": [
+      "CASW"
+    ],
     "clz": [
       "CLZ"
     ],
@@ -763,6 +909,9 @@
     ],
     "divw": [
       "DIVW"
+    ],
+    "dma": [
+      "DMA"
     ],
     "ebreak": [
       "EBREAK"
@@ -906,7 +1055,7 @@
       "HL.BSTART.FP"
     ],
     "hl_bstart_std_call": [
-      "HL.BSTART CALL"
+      "HL.BSTART.STD"
     ],
     "hl_bstart_std_cond": [
       "HL.BSTART.STD"
@@ -1904,6 +2053,16 @@
     "ssrswap": [
       "SSRSWAP"
     ],
+    "start_call_32": [
+      "BSTART CALL",
+      "BSTART.STD",
+      "HL.BSTART CALL",
+      "HL.BSTART.STD"
+    ],
+    "start_call_48": [
+      "HL.BSTART CALL",
+      "HL.BSTART.STD"
+    ],
     "sub": [
       "SUB"
     ],
@@ -2150,14 +2309,26 @@
     "v_icvtf": [
       "V.ICVTF"
     ],
+    "v_lb": [
+      "V.LB"
+    ],
     "v_lb_brg": [
       "V.LB.BRG"
+    ],
+    "v_lbu": [
+      "V.LBU"
     ],
     "v_lbu_brg": [
       "V.LBU.BRG"
     ],
+    "v_lh": [
+      "V.LH"
+    ],
     "v_lh_brg": [
       "V.LH.BRG"
+    ],
+    "v_lhu": [
+      "V.LHU"
     ],
     "v_lhu_brg": [
       "V.LHU.BRG"
@@ -2222,8 +2393,14 @@
     "v_rev": [
       "V.REV"
     ],
+    "v_sb": [
+      "V.SB"
+    ],
     "v_sb_brg": [
       "V.SB.BRG"
+    ],
+    "v_sh": [
+      "V.SH"
     ],
     "v_sh_brg": [
       "V.SH.BRG"
@@ -2278,62 +2455,25 @@
     ]
   },
   "missing_by_prefix": {
-    "B": 1,
-    "C": 1,
-    "V": 90,
+    "V": 84,
     "XB": 1
   },
-  "missing_count": 93,
+  "missing_count": 85,
   "missing_forms_by_prefix": {
-    "B": 3,
-    "BSTART": 14,
-    "C": 2,
-    "DC": 2,
-    "HL": 5,
-    "L": 5,
-    "LR": 2,
-    "V": 92,
+    "B": 2,
+    "BSTART": 4,
+    "V": 84,
     "XB": 1
   },
   "missing_spec_forms": [
-    "B.DIM [len=32 mask=0x707f match=0x1043]",
-    "B.DIM [len=32 mask=0x707f match=0x2043]",
-    "B.DIM [len=32 mask=0x707f match=0x43]",
-    "BSTART CALL [len=32 mask=0xf83f000f match=0x50160002]",
-    "BSTART [len=32 mask=0x7f match=0x11]",
-    "BSTART [len=32 mask=0x7f match=0x21]",
-    "BSTART.ACCCVT [len=32 mask=0x7ffffff match=0x831181]",
+    "B.IOT [len=32 mask=0x1fc0707f match=0x1c04013]",
+    "B.IOT [len=32 mask=0x9fff707f match=0x1c05013]",
     "BSTART.MPAR [len=32 mask=0xf9ffffff match=0x1181]",
     "BSTART.MSEQ [len=32 mask=0xf9ffffff match=0x9181]",
-    "BSTART.STD [len=32 mask=0x7fff match=0x1001]",
-    "BSTART.TLOAD [len=32 mask=0x7ffffff match=0x11181]",
-    "BSTART.TMATMUL [len=32 mask=0x7ffffff match=0x31181]",
-    "BSTART.TMATMUL.ACC [len=32 mask=0x7ffffff match=0x231181]",
-    "BSTART.TMOV [len=32 mask=0x7ffffff match=0x211181]",
-    "BSTART.TSTORE [len=32 mask=0x7ffffff match=0x111181]",
     "BSTART.VPAR [len=32 mask=0xf9ffffff match=0x21181]",
     "BSTART.VSEQ [len=32 mask=0xf9ffffff match=0x29181]",
-    "C.BSTART.STD [len=16 mask=0xc7ff match=0x0]",
-    "C.SETRET [len=16 mask=0xf83f match=0x5016]",
-    "DC.ISW [len=32 mask=0xfff07fff match=0x40602b]",
-    "DC.ZVA [len=32 mask=0xfff07fff match=0x70602b]",
-    "HL.BSTART CALL [len=64 mask=0xfffff83f0000007f match=0x501600000011]",
-    "HL.BSTART.STD [len=64 mask=0xffff00007fff000f match=0x4001000e]",
-    "HL.CCAT [len=64 mask=0xffff0000707f07ff match=0x105d000e]",
-    "HL.CCATW [len=64 mask=0xffff0000707f07ff match=0x205d000e]",
-    "HL.PRF [len=64 mask=0xffff00007fff07ff match=0x7009000e]",
-    "L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x10810000000f]",
-    "L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x20810000000f]",
-    "L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x30810000000f]",
-    "L.BSTART.FP [len=64 mask=0x7fff0000007f match=0x40810000000f]",
-    "L.BSTART.SYS [len=64 mask=0x7fff0000007f match=0x10110000000f]",
-    "LR.D [len=32 mask=0xf000707f match=0x3000000b]",
-    "LR.W [len=32 mask=0xf000707f match=0x2000000b]",
-    "V.FABS [len=64 mask=0xfff0707ffff0707f match=0x7b0000007f]",
-    "V.LB [len=64 mask=0x600707ffe00207f match=0x90000007f]",
     "V.LBI [len=64 mask=0x707f0000207f match=0x190000007f]",
     "V.LBI.BRG [len=64 mask=0x707f0000207f match=0x190000207f]",
-    "V.LBU [len=64 mask=0x600707ffe00207f match=0x40090000007f]",
     "V.LBUI [len=64 mask=0x707f0000207f match=0x40190000007f]",
     "V.LBUI.BRG [len=64 mask=0x707f0000207f match=0x40190000207f]",
     "V.LD [len=64 mask=0x600707ffe00207f match=0x30090000007f]",
@@ -2348,12 +2488,10 @@
     "V.LDI.BRG [len=64 mask=0x707f0000207f match=0x30190000207f]",
     "V.LDI.U [len=64 mask=0x707f0000207f match=0x30290000007f]",
     "V.LDI.U.BRG [len=64 mask=0x707f0000207f match=0x30290000207f]",
-    "V.LH [len=64 mask=0x600707ffe00207f match=0x10090000007f]",
     "V.LHI [len=64 mask=0x707f0000207f match=0x10190000007f]",
     "V.LHI.BRG [len=64 mask=0x707f0000207f match=0x10190000207f]",
     "V.LHI.U [len=64 mask=0x707f0000207f match=0x10290000007f]",
     "V.LHI.U.BRG [len=64 mask=0x707f0000207f match=0x10290000207f]",
-    "V.LHU [len=64 mask=0x600707ffe00207f match=0x50090000007f]",
     "V.LHUI [len=64 mask=0x707f0000207f match=0x50190000007f]",
     "V.LHUI.BRG [len=64 mask=0x707f0000207f match=0x50190000207f]",
     "V.LHUI.U [len=64 mask=0x707f0000207f match=0x50290000007f]",
@@ -2374,10 +2512,8 @@
     "V.LWUI.BRG [len=64 mask=0x707f0000207f match=0x60190000207f]",
     "V.LWUI.U [len=64 mask=0x707f0000207f match=0x60290000007f]",
     "V.LWUI.U.BRG [len=64 mask=0x707f0000207f match=0x60290000207f]",
-    "V.MUL [len=64 mask=0xfe00707ffe00707f match=0x470000007f]",
     "V.QPOP [len=64 mask=0xfff0707ffff0707f match=0x207d0000007f]",
     "V.QPUSH [len=64 mask=0xfe00707ffe00707f match=0x107d0000007f]",
-    "V.SB [len=64 mask=0x6007fff0600207f match=0x490000007f]",
     "V.SBI [len=64 mask=0x707f0000207f match=0x590000007f]",
     "V.SBI.BRG [len=64 mask=0x707f0000207f match=0x590000207f]",
     "V.SD [len=64 mask=0x6007fff0600207f match=0x30490000007f]",
@@ -2394,7 +2530,6 @@
     "V.SDI.BRG [len=64 mask=0x707f0000207f match=0x30590000207f]",
     "V.SDI.U [len=64 mask=0x707f0000207f match=0x70590000007f]",
     "V.SDI.U.BRG [len=64 mask=0x707f0000207f match=0x70590000207f]",
-    "V.SH [len=64 mask=0x6007fff0600207f match=0x10490000007f]",
     "V.SH.U [len=64 mask=0x6007fff0600207f match=0x50490000007f]",
     "V.SH.U.BRG [len=64 mask=0x6007fff0600207f match=0x50490000207f]",
     "V.SHFL.BFLY [len=64 mask=0x7f0707f07f0707f match=0x201d0000007f]",
@@ -2424,12 +2559,8 @@
     "XB [len=32 mask=0x7fff match=0x6f81]"
   ],
   "missing_spec_mnemonics": [
-    "B.DIM",
-    "C.SETRET",
-    "V.LB",
     "V.LBI",
     "V.LBI.BRG",
-    "V.LBU",
     "V.LBUI",
     "V.LBUI.BRG",
     "V.LD",
@@ -2444,12 +2575,10 @@
     "V.LDI.BRG",
     "V.LDI.U",
     "V.LDI.U.BRG",
-    "V.LH",
     "V.LHI",
     "V.LHI.BRG",
     "V.LHI.U",
     "V.LHI.U.BRG",
-    "V.LHU",
     "V.LHUI",
     "V.LHUI.BRG",
     "V.LHUI.U",
@@ -2472,7 +2601,6 @@
     "V.LWUI.U.BRG",
     "V.QPOP",
     "V.QPUSH",
-    "V.SB",
     "V.SBI",
     "V.SBI.BRG",
     "V.SD",
@@ -2489,7 +2617,6 @@
     "V.SDI.BRG",
     "V.SDI.U",
     "V.SDI.U.BRG",
-    "V.SH",
     "V.SH.U",
     "V.SH.U.BRG",
     "V.SHFL.BFLY",
@@ -2518,30 +2645,38 @@
     "V.SWI.U.BRG",
     "XB"
   ],
-  "qemu_mapped_spec_forms": 621,
-  "qemu_mapped_spec_mnemonics": 618,
-  "qemu_meta_mnemonics": 645,
+  "qemu_manual_translate_mnemonics": [
+    "C.SETRET"
+  ],
+  "qemu_mapped_spec_forms": 678,
+  "qemu_mapped_spec_mnemonics": 646,
+  "qemu_meta_mnemonics": 678,
   "qemu_meta_path": "/Users/zhoubot/linx-isa/emulator/qemu/target/linx/linx_opcode_meta_gen.h",
   "qemu_root": "/Users/zhoubot/linx-isa/emulator/qemu",
   "qemu_source_kind": "decode",
-  "qemu_unique_forms": 653,
-  "qemu_unique_mnemonics": 645,
-  "reserved_form_count": 0,
+  "qemu_unique_forms": 687,
+  "qemu_unique_mnemonics": 679,
+  "reserved_encoding_families": [
+    {
+      "behavior": "illegal_instruction",
+      "family": "TMA",
+      "reserved_range": [
+        9,
+        31
+      ],
+      "reserved_value_count": 23,
+      "selector_field": "Function"
+    }
+  ],
+  "reserved_form_count": 1,
   "reserved_mnemonic_count": 0,
   "result": {
     "classification": "qemu_isa_coverage_report_generated",
     "ok": true
   },
-  "schema_version": "qemu-isa-coverage-v2",
-  "spec_path": "/Users/zhoubot/linx-isa/isa/v0.56/linxisa-v0.56.json",
-  "spec_total_forms": 747,
-  "spec_unique_mnemonics": 711,
-  "unmapped_qemu_mnemonics": [
-    "b_dim_lb0",
-    "b_dim_lb1",
-    "b_dim_lb2",
-    "bstart_fall",
-    "bstart_split_cond",
-    "bstart_split_direct"
-  ]
+  "schema_version": "qemu-isa-coverage-v3",
+  "spec_path": "/Users/zhoubot/linx-isa/isa/v0.57/linxisa-v0.57.json",
+  "spec_total_forms": 769,
+  "spec_unique_mnemonics": 731,
+  "unmapped_qemu_mnemonics": []
 }

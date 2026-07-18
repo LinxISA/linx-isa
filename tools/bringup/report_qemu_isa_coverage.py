@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Generate or enforce a machine-readable ISA-vs-QEMU coverage snapshot."""
+"""Generate ISA-vs-QEMU L1 mapping plus independently audited L2/L3 counts."""
 
 from __future__ import annotations
 
 import argparse
 import json
 import re
+import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -21,6 +22,78 @@ QEMU_META_RE = re.compile(
 DECODE_TOKEN_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 DECODE_BITS_RE = re.compile(r"^[01.\-]+$")
 TRAILING_WIDTH_RE = re.compile(r"_(16|32|48)$")
+
+
+def _validate_executable_evidence(
+    report: dict[str, object],
+    spec_forms_by_id: dict[str, str],
+    qemu_sha: str,
+) -> dict[str, dict[str, object]]:
+    if report.get("schema_version") != 1:
+        raise ValueError("expected executable evidence schema_version=1")
+    if report.get("claim") != "per_form_qemu_executable_coverage":
+        raise ValueError("unexpected executable evidence claim")
+    inputs = report.get("inputs")
+    if not isinstance(inputs, dict) or inputs.get("qemu_sha") != qemu_sha:
+        raise ValueError("executable evidence QEMU SHA does not match current source")
+    rejected = report.get("rejected")
+    if not isinstance(rejected, list) or rejected:
+        raise ValueError("executable evidence must contain an empty rejected list")
+    admitted = report.get("admitted")
+    if not isinstance(admitted, list):
+        raise ValueError("executable evidence admitted list is missing")
+
+    by_level: dict[str, list[dict[str, object]]] = {"L2": [], "L3": []}
+    seen_form_ids: set[str] = set()
+    for index, item in enumerate(admitted):
+        if not isinstance(item, dict):
+            raise ValueError(f"admitted[{index}] must be an object")
+        form_id = item.get("form_id")
+        mnemonic = item.get("mnemonic")
+        max_level = item.get("max_level")
+        if not isinstance(form_id, str) or form_id not in spec_forms_by_id:
+            raise ValueError(f"admitted[{index}] has an unknown golden form_id")
+        if form_id in seen_form_ids:
+            raise ValueError(f"duplicate admitted form_id: {form_id}")
+        if mnemonic != spec_forms_by_id[form_id]:
+            raise ValueError(f"admitted[{index}] mnemonic disagrees with golden form")
+        if max_level not in {"L2", "L3"}:
+            raise ValueError(f"admitted[{index}] has invalid max_level")
+        if item.get("qemu_sha") != qemu_sha:
+            raise ValueError(f"admitted[{index}] QEMU SHA mismatch")
+        seen_form_ids.add(form_id)
+        by_level["L2"].append(item)
+        if max_level == "L3":
+            by_level["L3"].append(item)
+
+    declared = report.get("evidence")
+    if not isinstance(declared, dict):
+        raise ValueError("executable evidence level summary is missing")
+    result: dict[str, dict[str, object]] = {}
+    for level, claim in (("L2", "runtime_execution"), ("L3", "semantic_oracle")):
+        items = by_level[level]
+        form_count = len(items)
+        mnemonic_count = len({str(item["mnemonic"]) for item in items})
+        summary = declared.get(level)
+        if not isinstance(summary, dict):
+            raise ValueError(f"executable evidence {level} summary is missing")
+        if summary.get("claim") != claim:
+            raise ValueError(f"executable evidence {level} claim mismatch")
+        if summary.get("form_count") != form_count:
+            raise ValueError(f"executable evidence {level} form count mismatch")
+        if summary.get("mnemonic_count") != mnemonic_count:
+            raise ValueError(f"executable evidence {level} mnemonic count mismatch")
+        expected_availability = "available" if form_count else "unavailable"
+        if summary.get("availability") != expected_availability:
+            raise ValueError(f"executable evidence {level} availability mismatch")
+        result[level] = {
+            "availability": expected_availability,
+            "claim": claim,
+            "form_count": form_count,
+            "mnemonic_count": mnemonic_count,
+            "qemu_sha": qemu_sha,
+        }
+    return result
 
 DECODE_LAYOUT_SPECS: tuple[tuple[tuple[str, int], ...], ...] = (
     (
@@ -41,7 +114,10 @@ DECODE_48_AS_64_FILES = {"block48.decode", "insn48.decode"}
 
 SPECIAL_MAP: dict[str, str | list[str]] = {
     "bstart_call": ["BSTART CALL", "BSTART.STD"],
-    "hl_bstart_std_call": "HL.BSTART CALL",
+    "bstart_split_direct": "BSTART",
+    "bstart_split_cond": "BSTART",
+    "bstart_fall": "BSTART.STD",
+    "hl_bstart_std_call": "HL.BSTART.STD",
     "bstart_direct": ["BSTART", "BSTART.STD"],
     "bstart_cond": ["BSTART", "BSTART.STD"],
     "bstart_ind": ["BSTART", "BSTART.STD"],
@@ -50,7 +126,7 @@ SPECIAL_MAP: dict[str, str | list[str]] = {
     "hl_bstart_std_cond": "HL.BSTART.STD",
     "hl_bstart_std_direct": "HL.BSTART.STD",
     "hl_bstart_std_fall": "HL.BSTART.STD",
-    "bstart_tma": ["BSTART.TMA", "BSTART.TMOV"],
+    "bstart_cube": ["BSTART.CUBE", "BSTART.ACCCVT"],
     "bstart_tepl": [
         "BSTART.TEPL",
         "BSTART.TLOAD",
@@ -145,6 +221,55 @@ SPECIAL_MAP: dict[str, str | list[str]] = {
     "qpop": ["HL.QPOP", "V.QPOP"],
 }
 
+CANONICAL_SPECIALIZATION_PROOFS: dict[str, set[str]] = {
+    # These architectural names freeze one Function value of a generic tile
+    # decoder. The generic translator forwards the decoded Function unchanged.
+    "bstart_cube": {"BSTART.ACCCVT"},
+}
+
+
+def _reserved_encoding_families(spec: dict[str, object]) -> list[dict[str, object]]:
+    """Return reserved selector families without adding them to legal coverage."""
+    state = spec.get("state")
+    if not isinstance(state, dict):
+        return []
+    engine_ops = state.get("engine_ops")
+    if not isinstance(engine_ops, dict):
+        return []
+    tma = engine_ops.get("tma")
+    if not isinstance(tma, dict):
+        return []
+    reserved_range = tma.get("reserved_function_range")
+    if (
+        not isinstance(reserved_range, list)
+        or len(reserved_range) != 2
+        or not all(isinstance(value, int) for value in reserved_range)
+    ):
+        return []
+    lo, hi = reserved_range
+    if not 0 <= lo <= hi <= 31:
+        return []
+    return [
+        {
+            "family": "TMA",
+            "selector_field": "Function",
+            "reserved_range": [lo, hi],
+            "reserved_value_count": hi - lo + 1,
+            "behavior": str(tma.get("reserved_behavior") or ""),
+        }
+    ]
+
+MANUAL_TRANSLATE_EVIDENCE: tuple[dict[str, object], ...] = (
+    {
+        "mnemonic": "C.SETRET",
+        "insn_len": 16,
+        "source_file": "translate.c",
+        "predicate": "linx_is_c_setret_hw",
+        "operand": "hw",
+        "translator": "linx_setret_common",
+    },
+)
+
 
 def _utc_now() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%SZ")
@@ -219,6 +344,84 @@ def _load_qemu_decode_entries(qemu_root: Path) -> list[dict[str, object]]:
     for name, width_bits in selected_layout:
         out.extend(_parse_decode_entries(linx_dir / name, width_bits))
     return out
+
+
+def _extract_c_block(text: str, opening_brace: int) -> str | None:
+    """Return a balanced C block, including its braces."""
+    if opening_brace >= len(text) or text[opening_brace] != "{":
+        return None
+    depth = 0
+    for index in range(opening_brace, len(text)):
+        char = text[index]
+        if char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                return text[opening_brace : index + 1]
+    return None
+
+
+def _load_manual_translate_entries(qemu_root: Path) -> list[dict[str, object]]:
+    """Load non-decodetree instructions only when their C evidence is intact."""
+    linx_dir = qemu_root / "target" / "linx"
+    source_cache: dict[str, str] = {}
+    entries: list[dict[str, object]] = []
+
+    for evidence in MANUAL_TRANSLATE_EVIDENCE:
+        source_file = str(evidence["source_file"])
+        source_path = linx_dir / source_file
+        if not source_path.is_file():
+            continue
+        text = source_cache.setdefault(
+            source_file,
+            source_path.read_text(encoding="utf-8", errors="replace"),
+        )
+
+        predicate = str(evidence["predicate"])
+        operand = str(evidence["operand"])
+        function_match = re.search(
+            rf"\b{re.escape(predicate)}\s*\([^)]*\)\s*\{{",
+            text,
+        )
+        if function_match is None:
+            continue
+        predicate_body = _extract_c_block(text, function_match.end() - 1)
+        if predicate_body is None:
+            continue
+        encoding_match = re.search(
+            rf"\breturn\s*\(\s*{re.escape(operand)}\s*&\s*"
+            r"(?P<mask>0x[0-9a-fA-F]+)\s*\)\s*==\s*"
+            r"(?P<match>0x[0-9a-fA-F]+)\s*;",
+            predicate_body,
+        )
+        if encoding_match is None:
+            continue
+
+        dispatch_match = re.search(
+            rf"\belse\s+if\s*\(\s*{re.escape(predicate)}\s*\(\s*"
+            rf"{re.escape(operand)}\s*\)\s*\)\s*\{{",
+            text,
+        )
+        if dispatch_match is None:
+            continue
+        dispatch_body = _extract_c_block(text, dispatch_match.end() - 1)
+        translator = str(evidence["translator"])
+        if dispatch_body is None or re.search(
+            rf"\b{re.escape(translator)}\s*\(", dispatch_body
+        ) is None:
+            continue
+
+        entries.append(
+            {
+                "mnemonic": str(evidence["mnemonic"]),
+                "insn_len": int(evidence["insn_len"]),
+                "mask": _parse_int(encoding_match.group("mask")),
+                "match": _parse_int(encoding_match.group("match")),
+                "source_file": source_file,
+            }
+        )
+    return entries
 
 
 def _parse_int(value: str) -> int:
@@ -538,7 +741,7 @@ def _canonicalize_scalar_mnemonic(stem: str) -> str | list[str] | None:
         return header_map[stem]
     if stem.startswith("b_arg_"):
         return "B.ARG"
-    if stem.startswith("bdim_"):
+    if stem.startswith(("bdim_", "b_dim_")):
         return "B.DIM"
 
     family = _canonicalize_load_store_family(stem)
@@ -656,6 +859,128 @@ def _spec_form_key(inst: dict[str, object]) -> tuple[str, int, int, int]:
     return (mnemonic, length_bits, mask, match)
 
 
+def _canonical_specialization_forms(
+    instructions: list[dict[str, object]],
+    form_entries: list[dict[str, object]],
+) -> set[tuple[str, int, int, int]]:
+    """Prove named canonical subforms contained by audited generic decoders."""
+    forms_by_mnemonic: dict[str, list[tuple[str, int, int, int]]] = {}
+    for inst in instructions:
+        forms_by_mnemonic.setdefault(str(inst.get("mnemonic", "")), []).append(
+            _spec_form_key(inst)
+        )
+    proved: set[tuple[str, int, int, int]] = set()
+    for entry in form_entries:
+        token = str(entry["mnemonic"])
+        targets = CANONICAL_SPECIALIZATION_PROOFS.get(token, set())
+        qemu_length = int(entry["insn_len"])
+        qemu_mask = int(entry["mask"])
+        qemu_match = int(entry["match"])
+        for target in targets:
+            for form in forms_by_mnemonic.get(target, []):
+                _, length, spec_mask, spec_match = form
+                if (
+                    length == qemu_length
+                    and qemu_mask & spec_mask == qemu_mask
+                    and spec_match & qemu_mask == qemu_match
+                ):
+                    proved.add(form)
+    return proved
+
+
+def _constraint_projection(
+    inst: dict[str, object],
+) -> tuple[int, set[int]] | None:
+    """Return one constrained field mask and its legal encoded assignments."""
+    encoding = inst.get("encoding")
+    if not isinstance(encoding, dict):
+        return None
+    parts = encoding.get("parts")
+    if not isinstance(parts, list) or len(parts) != 1 or not isinstance(parts[0], dict):
+        return None
+    part = parts[0]
+    constraints = part.get("constraints")
+    fields = part.get("fields")
+    if not isinstance(constraints, list) or not constraints or not isinstance(fields, list):
+        return None
+    constrained_names = {item.get("field") for item in constraints if isinstance(item, dict)}
+    if len(constrained_names) != 1:
+        return None
+    field_name = next(iter(constrained_names))
+    field = next(
+        (item for item in fields if isinstance(item, dict) and item.get("name") == field_name),
+        None,
+    )
+    pieces = field.get("pieces") if isinstance(field, dict) else None
+    if not isinstance(pieces, list) or len(pieces) != 1 or not isinstance(pieces[0], dict):
+        return None
+    piece = pieces[0]
+    lsb = int(piece.get("insn_lsb", -1))
+    msb = int(piece.get("insn_msb", -1))
+    width = msb - lsb + 1
+    if lsb < 0 or width <= 0 or width > 8:
+        return None
+    legal_values = set(range(1 << width))
+    for constraint in constraints:
+        if not isinstance(constraint, dict) or constraint.get("field") != field_name:
+            return None
+        try:
+            value = _parse_int(str(constraint.get("value")))
+        except ValueError:
+            return None
+        op = constraint.get("op")
+        if op == "!=":
+            legal_values.discard(value)
+        elif op == "==":
+            legal_values &= {value}
+        else:
+            return None
+    field_mask = ((1 << width) - 1) << lsb
+    return field_mask, {value << lsb for value in legal_values}
+
+
+def _constraint_union_forms(
+    instructions: list[dict[str, object]],
+    form_entries: list[dict[str, object]],
+    spec_set: set[str],
+) -> set[tuple[str, int, int, int]]:
+    """Prove a constrained form only when decoder subpatterns exactly partition it."""
+    proved: set[tuple[str, int, int, int]] = set()
+    for inst in instructions:
+        projection = _constraint_projection(inst)
+        if projection is None:
+            continue
+        field_mask, legal_assignments = projection
+        form = _spec_form_key(inst)
+        mnemonic, length, spec_mask, spec_match = form
+        candidates: list[tuple[int, int]] = []
+        for entry in form_entries:
+            if int(entry["insn_len"]) != length:
+                continue
+            mapped = _canonicalize_qemu_mnemonic(str(entry["mnemonic"]), spec_set)
+            if mnemonic not in mapped:
+                continue
+            qemu_mask = int(entry["mask"])
+            qemu_match = int(entry["match"])
+            if qemu_mask & spec_mask != spec_mask:
+                continue
+            if qemu_match & spec_mask != spec_match:
+                continue
+            if qemu_mask & ~(spec_mask | field_mask):
+                continue
+            candidates.append((qemu_mask, qemu_match))
+        accepted: set[int] = set()
+        field_lsb = (field_mask & -field_mask).bit_length() - 1
+        for value in range(1 << field_mask.bit_count()):
+            encoded_value = value << field_lsb
+            word = spec_match | encoded_value
+            if any(word & mask == match for mask, match in candidates):
+                accepted.add(encoded_value)
+        if accepted == legal_assignments:
+            proved.add(form)
+    return proved
+
+
 def _format_form(key: tuple[str, int, int, int]) -> str:
     mnemonic, length_bits, mask, match = key
     return f"{mnemonic} [len={length_bits} mask=0x{mask:x} match=0x{match:x}]"
@@ -678,20 +1003,42 @@ def _render_markdown(report: dict[str, object], out_path: Path) -> None:
     mapped_forms_prefix = report["mapped_forms_by_prefix"]
     missing_forms_prefix = report["missing_forms_by_prefix"]
     lines: list[str] = []
-    lines.append("# ISA vs QEMU Coverage Snapshot")
+    evidence = report["evidence"]
+    lines.append("# ISA vs QEMU Decoder/Source Mapping Snapshot")
     lines.append("")
     lines.append(f"- Generated (UTC): `{report['generated_at_utc']}`")
+    lines.append(f"- Evidence level: `{report['evidence_level']}`")
+    lines.append(f"- Claim: `{report['claim']}`")
+    for level, label in (("L2", "runtime execution"), ("L3", "semantic oracle")):
+        item = evidence[level]
+        suffix = ""
+        if item["availability"] == "available":
+            suffix = (
+                f"; `{item['form_count']}` forms / "
+                f"`{item['mnemonic_count']}` mnemonics"
+            )
+        lines.append(f"- {level} {label}: `{item['availability']}`{suffix}")
+    if evidence["L2"]["availability"] == "available":
+        lines.append(
+            "- Limitation: L1 mapping does not imply execution; L2/L3 counts are "
+            "independently audited per-form evidence and remain partial."
+        )
+    else:
+        lines.append(
+            "- Limitation: this report does not prove that an instruction executed "
+            "in QEMU or produced an architecturally correct result."
+        )
     lines.append(f"- Spec unique mnemonics: `{report['spec_unique_mnemonics']}`")
     lines.append(f"- QEMU unique decode mnemonics (non-internal): `{report['qemu_unique_mnemonics']}`")
     lines.append(f"- QEMU mapped spec mnemonics: `{report['qemu_mapped_spec_mnemonics']}`")
     lines.append(
-        f"- Mnemonic coverage: `{report['coverage_count']}/{report['spec_unique_mnemonics']}` "
+        f"- L1 mnemonic mapping: `{report['coverage_count']}/{report['spec_unique_mnemonics']}` "
         f"(`{report['coverage_ratio_percent']}%`)"
     )
     lines.append(f"- Spec legal forms: `{report['spec_total_forms']}`")
     lines.append(f"- QEMU mapped spec forms: `{report['form_coverage_count']}`")
     lines.append(
-        f"- Form coverage: `{report['form_coverage_count']}/{report['spec_total_forms']}` "
+        f"- L1 form mapping: `{report['form_coverage_count']}/{report['spec_total_forms']}` "
         f"(`{report['form_coverage_ratio_percent']}%`)"
     )
     lines.append(f"- Missing spec mnemonics: `{report['missing_count']}`")
@@ -699,7 +1046,7 @@ def _render_markdown(report: dict[str, object], out_path: Path) -> None:
     lines.append(f"- Reserved spec forms: `{report['reserved_form_count']}`")
     lines.append(f"- Unmapped QEMU mnemonics: `{len(unmapped)}`")
     lines.append("")
-    lines.append("## Mnemonic Coverage By Prefix")
+    lines.append("## L1 Mnemonic Mapping By Prefix")
     lines.append("")
     for key in sorted(mapped_prefix):
         lines.append(f"- `{key}`: `{mapped_prefix[key]}`")
@@ -709,7 +1056,7 @@ def _render_markdown(report: dict[str, object], out_path: Path) -> None:
     for key in sorted(missing_prefix):
         lines.append(f"- `{key}`: `{missing_prefix[key]}`")
     lines.append("")
-    lines.append("## Form Coverage By Prefix")
+    lines.append("## L1 Form Mapping By Prefix")
     lines.append("")
     for key in sorted(mapped_forms_prefix):
         lines.append(f"- `{key}`: `{mapped_forms_prefix[key]}`")
@@ -741,8 +1088,8 @@ def _render_markdown(report: dict[str, object], out_path: Path) -> None:
 
 
 def main(argv: list[str]) -> int:
-    ap = argparse.ArgumentParser(description="Generate ISA-vs-QEMU coverage report")
-    ap.add_argument("--spec", default="isa/v0.56/linxisa-v0.56.json", help="Path to compiled ISA JSON")
+    ap = argparse.ArgumentParser(description="Generate ISA-vs-QEMU decoder/source-mapping report")
+    ap.add_argument("--spec", default="isa/v0.57/linxisa-v0.57.json", help="Path to compiled ISA JSON")
     ap.add_argument(
         "--qemu-root",
         default="emulator/qemu",
@@ -753,15 +1100,32 @@ def main(argv: list[str]) -> int:
         default="",
         help="Optional path to QEMU Linx opcode metadata header. When omitted, decode-source coverage remains authoritative.",
     )
+    ap.add_argument(
+        "--executable-report",
+        default="",
+        help="Optional audited per-form executable coverage report to ingest as L2/L3 evidence.",
+    )
     ap.add_argument("--report-out", default="", help="Optional JSON report path")
     ap.add_argument("--out-md", default="", help="Optional Markdown summary path")
-    ap.add_argument("--fail-under-count", type=int, default=0, help="Fail if mnemonic coverage is lower than this value.")
-    ap.add_argument("--require-full", action="store_true", help="Fail unless mnemonic and form coverage are complete.")
+    ap.add_argument(
+        "--fail-under-count",
+        type=int,
+        default=0,
+        help="Fail if L1 mnemonic source mapping is lower than this value.",
+    )
+    ap.add_argument(
+        "--require-full",
+        action="store_true",
+        help="Fail unless L1 mnemonic and form source mapping are complete.",
+    )
     args = ap.parse_args(argv)
 
     spec_path = Path(args.spec).resolve()
     qemu_root = Path(args.qemu_root).resolve()
     qemu_meta_path = Path(args.qemu_meta).resolve() if args.qemu_meta else Path()
+    executable_report_path = (
+        Path(args.executable_report).resolve() if args.executable_report else None
+    )
     if not spec_path.is_file():
         print(f"error: ISA spec not found: {spec_path}", file=sys.stderr)
         return 1
@@ -772,14 +1136,57 @@ def main(argv: list[str]) -> int:
         return 1
 
     instructions = [inst for inst in spec_data.get("instructions", []) if str(inst.get("mnemonic", "")).strip()]
+    reserved_encoding_families = _reserved_encoding_families(spec_data)
     spec_set = {str(inst.get("mnemonic", "")).strip() for inst in instructions}
     spec_forms = {_spec_form_key(inst) for inst in instructions}
+    spec_forms_by_id = {
+        str(inst["id"]): str(inst["mnemonic"]).strip()
+        for inst in instructions
+        if isinstance(inst.get("id"), str)
+    }
+
+    executable_evidence: dict[str, dict[str, object]] | None = None
+    if executable_report_path is not None:
+        if not executable_report_path.is_file():
+            print(
+                f"error: executable evidence report not found: {executable_report_path}",
+                file=sys.stderr,
+            )
+            return 1
+        qemu_head = subprocess.run(
+            ["git", "-C", str(qemu_root), "rev-parse", "HEAD"],
+            check=False,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        if qemu_head.returncode != 0:
+            print("error: cannot determine current QEMU source SHA", file=sys.stderr)
+            return 1
+        try:
+            executable_report = json.loads(
+                executable_report_path.read_text(encoding="utf-8")
+            )
+            if not isinstance(executable_report, dict):
+                raise ValueError("top-level report must be an object")
+            executable_evidence = _validate_executable_evidence(
+                executable_report,
+                spec_forms_by_id,
+                qemu_head.stdout.strip(),
+            )
+        except (json.JSONDecodeError, ValueError) as error:
+            print(f"error: invalid executable evidence report: {error}", file=sys.stderr)
+            return 1
+        for level in ("L2", "L3"):
+            executable_evidence[level]["source"] = str(executable_report_path)
 
     qemu_source_kind = "decode"
     qemu_meta_all: set[str] = set()
     decode_entries: list[dict[str, object]] = []
+    manual_translate_entries = _load_manual_translate_entries(qemu_root)
     try:
         decode_entries = _load_qemu_decode_entries(qemu_root)
+        decode_entries.extend(manual_translate_entries)
         qemu_all = {str(entry["mnemonic"]) for entry in decode_entries}
     except FileNotFoundError:
         if not qemu_meta_path or not qemu_meta_path.is_file():
@@ -791,7 +1198,9 @@ def main(argv: list[str]) -> int:
             return 1
         qemu_source_kind = "meta"
         qemu_meta_all = set(QEMU_MNEMONIC_RE.findall(qemu_meta_path.read_text(encoding="utf-8", errors="replace")))
-        qemu_all = qemu_meta_all
+        qemu_all = qemu_meta_all | {
+            str(entry["mnemonic"]) for entry in manual_translate_entries
+        }
 
     meta_entries: list[dict[str, object]] = []
     if qemu_meta_path and qemu_meta_path.is_file():
@@ -812,12 +1221,25 @@ def main(argv: list[str]) -> int:
     mapped_spec = sorted({spec_name for values in mapped_pairs.values() for spec_name in values})
     missing_spec = sorted(spec_set - set(mapped_spec))
 
-    form_entries = decode_entries if decode_entries else meta_entries
+    form_entries = (
+        decode_entries
+        if decode_entries
+        else [*meta_entries, *manual_translate_entries]
+    )
     qemu_form_keys: set[tuple[str, int, int, int]] = set()
     for entry in form_entries:
         mapped = _canonicalize_qemu_mnemonic(str(entry["mnemonic"]), spec_set)
         for spec_name in mapped:
             qemu_form_keys.add((spec_name, int(entry["insn_len"]), int(entry["mask"]), int(entry["match"])))
+
+    canonical_specialization_forms = _canonical_specialization_forms(
+        instructions, form_entries
+    )
+    constraint_union_forms = _constraint_union_forms(
+        instructions, form_entries, spec_set
+    )
+    qemu_form_keys |= canonical_specialization_forms
+    qemu_form_keys |= constraint_union_forms
 
     mapped_spec_forms = sorted(spec_forms & qemu_form_keys)
     missing_spec_forms = sorted(_format_form(key) for key in (spec_forms - qemu_form_keys))
@@ -851,9 +1273,61 @@ def main(argv: list[str]) -> int:
         ok = False
         classification = "qemu_isa_coverage_incomplete"
 
+    if executable_evidence is None:
+        l2_evidence = {
+            "availability": "unavailable",
+            "claim": "runtime_execution",
+            "mnemonic_count": None,
+            "form_count": None,
+            "reason": "runtime_execution_evidence_not_ingested",
+        }
+        l3_evidence = {
+            "availability": "unavailable",
+            "claim": "semantic_oracle",
+            "mnemonic_count": None,
+            "form_count": None,
+            "reason": "semantic_oracle_evidence_not_ingested",
+        }
+        capabilities = [
+            "decoder_source_to_isa_mnemonic_mapping",
+            "decoder_mask_to_isa_form_matching",
+        ]
+        limitations = [
+            "no_runtime_execution_evidence",
+            "no_semantic_oracle_evidence",
+        ]
+    else:
+        l2_evidence = executable_evidence["L2"]
+        l3_evidence = executable_evidence["L3"]
+        capabilities = [
+            "decoder_source_to_isa_mnemonic_mapping",
+            "decoder_mask_to_isa_form_matching",
+            "audited_per_form_runtime_evidence_ingestion",
+            "audited_per_form_semantic_oracle_ingestion",
+        ]
+        limitations = [
+            "runtime_execution_evidence_is_partial",
+            "semantic_oracle_evidence_is_partial",
+            "l2_l3_counts_do_not_extend_the_l1_mapping_claim",
+        ]
+
     report: dict[str, object] = {
         "generated_at_utc": _utc_now(),
-        "schema_version": "qemu-isa-coverage-v2",
+        "schema_version": "qemu-isa-coverage-v3",
+        "evidence_level": "L1",
+        "claim": "decoder_source_mapping",
+        "capabilities": capabilities,
+        "limitations": limitations,
+        "evidence": {
+            "L1": {
+                "availability": "available",
+                "claim": "decoder_source_mapping",
+                "mnemonic_count": coverage_count,
+                "form_count": form_coverage_count,
+            },
+            "L2": l2_evidence,
+            "L3": l3_evidence,
+        },
         "spec_path": str(spec_path),
         "qemu_root": str(qemu_root),
         "qemu_meta_path": str(qemu_meta_path) if qemu_meta_path else "",
@@ -862,6 +1336,9 @@ def main(argv: list[str]) -> int:
         "spec_unique_mnemonics": spec_count,
         "qemu_unique_mnemonics": len(qemu_non_internal),
         "qemu_unique_forms": len(form_entries),
+        "qemu_manual_translate_mnemonics": sorted(
+            str(entry["mnemonic"]) for entry in manual_translate_entries
+        ),
         "qemu_mapped_spec_mnemonics": coverage_count,
         "qemu_mapped_spec_forms": form_coverage_count,
         "coverage_count": coverage_count,
@@ -874,10 +1351,17 @@ def main(argv: list[str]) -> int:
         "legal_mnemonic_count": spec_count,
         "reserved_mnemonic_count": 0,
         "legal_form_count": spec_form_count,
-        "reserved_form_count": 0,
+        "reserved_form_count": len(reserved_encoding_families),
+        "reserved_encoding_families": reserved_encoding_families,
         "mapped_by_prefix": mapped_by_prefix,
         "missing_by_prefix": missing_by_prefix,
         "mapped_forms_by_prefix": mapped_forms_by_prefix,
+        "canonical_specialization_forms": sorted(
+            _format_form(key) for key in canonical_specialization_forms
+        ),
+        "constraint_union_forms": sorted(
+            _format_form(key) for key in constraint_union_forms
+        ),
         "missing_forms_by_prefix": missing_forms_by_prefix,
         "unmapped_qemu_mnemonics": sorted(unmapped),
         "mapped_qemu_to_spec": dict(sorted(mapped_pairs.items())),
@@ -899,13 +1383,13 @@ def main(argv: list[str]) -> int:
 
     if ok:
         print(
-            "ok: generated ISA-vs-QEMU coverage report "
+            "ok: generated ISA-vs-QEMU L1 decoder/source-mapping report "
             f"(mnemonics={coverage_count}/{spec_count}, forms={form_coverage_count}/{spec_form_count})"
         )
         return 0
 
     print(
-        "error: ISA-vs-QEMU coverage below required bar "
+        "error: ISA-vs-QEMU L1 decoder/source mapping below required bar "
         f"(mnemonics={coverage_count}/{spec_count}, forms={form_coverage_count}/{spec_form_count})",
         file=sys.stderr,
     )

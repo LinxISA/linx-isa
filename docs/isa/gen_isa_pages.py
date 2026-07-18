@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate MkDocs-compatible instruction reference pages for LinxISA v0.56.
+Generate MkDocs-compatible instruction reference pages for LinxISA v0.57.
 
 Creates:
   docs/isa/index.md              — ISA instruction reference hub
@@ -21,7 +21,7 @@ Each instruction page embeds the WaveDrom SVG encoding diagram and includes:
 
 Usage:
     python3 gen_isa_pages.py \\
-        --spec isa/v0.56/linxisa-v0.56.json \\
+        --spec isa/v0.57/linxisa-v0.57.json \\
         --out-dir docs/isa \\
         --svg-dir docs/isa/wavedrom \\
         --verbose
@@ -83,7 +83,7 @@ def _collapse_ws(s: str) -> str:
 # ─────────────────────────────────────────────────────────────────────────────
 
 # Canonical group → (manual_chapter_num, manual_chapter_title)
-# These correspond to the actual LinxISA v0.56 manual chapters.
+# These correspond to the active LinxISA v0.57 manual chapters.
 MANUAL_CHAPTERS: dict[str, tuple[int, str]] = {
     "Arithmetic":                     (12, "ALU — Arithmetic Logic Unit"),
     "Arithmetic Operation":           (12, "ALU — Arithmetic Logic Unit"),
@@ -383,9 +383,10 @@ def _describe_instruction(mnemonic: str, group: str, asm: str) -> str:
         if root == "BSTART":
             if sub == "CALL":
                 return (
-                    f"{prefix}Unconditionally transfers to a call block. "
-                    "The instruction preserves `ra`; returning calls require "
-                    "an adjacent `SETRET` or `C.SETRET`."
+                    f"{prefix}Atomic fused call with independent call-target and "
+                    "return-target fields; transfers to the call block and writes `ra`. "
+                    "This exact aggregate is distinct from the generic bare-call form, "
+                    "which preserves `ra` and requires an adjacent `SETRET` or `C.SETRET`."
                 )
             return f"{prefix}Terminates the current block and begins the next."
         if root == "BSTOP":
@@ -447,7 +448,7 @@ def _build_index_page(
     hero = """<!-- Hero Banner -->
 <div class="isa-hero">
 
-**ISA Version:** v0.56.5 &nbsp;·&nbsp; **747 instruction forms** &nbsp;·&nbsp; **66 groups** &nbsp;·&nbsp; **4 encoding formats**
+**ISA Version:** __SPEC_VERSION__ &nbsp;·&nbsp; **__FORM_COUNT__ instruction forms** &nbsp;·&nbsp; **__GROUP_COUNT__ groups** &nbsp;·&nbsp; **4 encoding formats**
 
 ---
 
@@ -510,9 +511,9 @@ The LinxISA manual is organized into 12 chapters covering distinct functional un
 <div class="group-card-grid">
 """
     hero = (
-        hero.replace("v0.56.5", f"v{spec_version}")
-        .replace("747 instruction forms", f"{n_instr} instruction forms")
-        .replace("66 groups", f"{n_groups} groups")
+        hero.replace("__SPEC_VERSION__", f"v{spec_version}")
+        .replace("__FORM_COUNT__", str(n_instr))
+        .replace("__GROUP_COUNT__", str(n_groups))
     )
 
     # ── Group card grid ─────────────────────────────────────────────────────
@@ -589,9 +590,9 @@ def _render_index_page(
 
 _ENCODING_PAGE = """# Instruction Encoding Formats
 
-> **ISA Version:** v0.56.4 &nbsp;|&nbsp; **Chapter 03** of the ISA Manual
+> **ISA Version:** v{spec_version} &nbsp;|&nbsp; **Chapter 03** of the ISA Manual
 
-LinxISA v0.56 supports four instruction lengths in a little-endian
+LinxISA v{spec_version} supports four instruction lengths in a little-endian
 halfword-oriented model. Bit positions are shown as `[msb:0]`
 (MSB leftmost, LSB rightmost), matching ARM and RISC-V conventions.
 
@@ -651,7 +652,7 @@ conflict-free allocation table.
 
 The [PTO ISA encoding workbook](encoding/PTO-ISA-Encoding.xlsx) is provided
 only as a non-normative review aid. It is not a generator input and cannot
-override the checked-in v0.56 JSON/opcode sources.
+override the checked-in v0.57 JSON/opcode sources.
 
 ## Field Colour Key
 
@@ -691,10 +692,12 @@ override the checked-in v0.56 JSON/opcode sources.
 
 def _render_encoding_page(out_path: str, spec_version: str) -> None:
     with open(out_path, "w", encoding="utf-8") as f:
-        f.write(_ENCODING_PAGE.replace("v0.56.4", f"v{spec_version}"))
+        f.write(_ENCODING_PAGE.format(spec_version=spec_version))
 
 
-def _render_group_index(groups: OrderedDict, out_path: str) -> None:
+def _render_group_index(
+    groups: OrderedDict, out_path: str, spec_version: str
+) -> None:
     """Build docs/isa/groups/index.md."""
     rows = []
     for group, insts in groups.items():
@@ -713,9 +716,9 @@ def _render_group_index(groups: OrderedDict, out_path: str) -> None:
             samples += f" +{len(mnems) - 8}"
         rows.append(f"| [{group}]({slug}.md) | {count} | {ch_cell} | {samples} |")
 
-    header = """# Instruction Groups
+    header = f"""# Instruction Groups
 
-Alphabetical list of all 66 instruction groups in the LinxISA v0.56 catalog.
+Alphabetical list of all {len(groups)} instruction groups in the LinxISA v{spec_version} catalog.
 See the [chapter index](index.md) for the manual organization.
 
 | Group | Forms | Chapter | Sample mnemonics |
@@ -762,13 +765,14 @@ def _render_group_page(
     group: str,
     insts: list[dict],
     out_path: str,
+    spec_version: str,
 ) -> None:
     mnems = sorted(set(i["mnemonic"] for i in insts))
     form_count = len(insts)
     mnem_count = len(mnems)
 
     # Intro paragraph
-    intro = _get_group_intro(group)
+    intro = _get_group_intro(group, spec_version)
 
     # Instruction table
     rows = []
@@ -806,7 +810,7 @@ def _render_group_page(
         f.write(content)
 
 
-def _get_group_intro(group: str) -> str:
+def _get_group_intro(group: str, spec_version: str) -> str:
     intros = {
         "Arithmetic": "Integer arithmetic instructions operating on general-purpose registers.",
         "Arithmetic Operation": "Extended integer arithmetic, including 64-bit forms and vector variants.",
@@ -876,7 +880,10 @@ def _get_group_intro(group: str) -> str:
         "Bit Manipulation": "Bit manipulation operations (vector forms).",
         "Bit Operation": "Bit manipulation operations (scalar forms).",
     }
-    return intros.get(group, f"Instructions in the **{group}** group of the LinxISA v0.56 catalog.")
+    return intros.get(
+        group,
+        f"Instructions in the **{group}** group of the LinxISA v{spec_version} catalog.",
+    )
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -1068,10 +1075,13 @@ def _derive_pseudocode(mnemonic: str, group: str, asm: str) -> str:
 
     if root == "BSTART":
         if sub == "CALL":
+            call_imm = "simm25" if enc == "HL" else "simm12"
+            setret_base = 4 if enc == "HL" else 2
             return (
-                "// BSTART.CALL preserves ra. Returning source forms place "
-                "SETRET/C.SETRET adjacent to the header.\n"
-                "EndBlock(); BeginNextBlock(CALL);"
+                "P = CurrentPC();\n"
+                f"call_target = P + (SignExtend({call_imm}) << 1);\n"
+                f"ra = (P + {setret_base}) + (ZeroExtend(uimm5) << 1);\n"
+                "AtomicCallTransfer(call_target, ra);"
             )
         return "EndBlock(); BeginNextBlock(/* kind */);"
     if root == "BSTOP":
@@ -1165,7 +1175,12 @@ def _derive_pseudocode(mnemonic: str, group: str, asm: str) -> str:
 # Master instruction index page
 # ─────────────────────────────────────────────────────────────────────────────
 
-def _render_instruction_index(instructions: list[dict], groups: OrderedDict, out_path: str) -> None:
+def _render_instruction_index(
+    instructions: list[dict],
+    groups: OrderedDict,
+    out_path: str,
+    spec_version: str,
+) -> None:
     """Build the searchable alphabetical index of all canonical instruction forms."""
 
     # Build alphabetical index by first letter
@@ -1190,7 +1205,7 @@ def _render_instruction_index(instructions: list[dict], groups: OrderedDict, out
 
     header = f"""# All Instructions
 
-Complete alphabetical index of all **{len(instructions)}** instruction forms in the LinxISA v0.56 catalog.
+Complete alphabetical index of all **{len(instructions)}** instruction forms in the LinxISA v{spec_version} catalog.
 
 Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 
@@ -1210,7 +1225,7 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--spec", default="isa/v0.56/linxisa-v0.56.json")
+    ap.add_argument("--spec", default="isa/v0.57/linxisa-v0.57.json")
     ap.add_argument("--out-dir", default="docs/isa")
     ap.add_argument("--svg-dir", default="docs/isa/wavedrom")
     ap.add_argument("--verbose", action="store_true")
@@ -1252,7 +1267,9 @@ def main() -> int:
         print(f"  wrote encoding.md")
 
     # ── Group index ────────────────────────────────────────────────────────────
-    _render_group_index(groups, os.path.join(out_dir, "groups", "index.md"))
+    _render_group_index(
+        groups, os.path.join(out_dir, "groups", "index.md"), spec_version
+    )
     if args.verbose:
         print(f"  wrote groups/index.md")
 
@@ -1260,13 +1277,16 @@ def main() -> int:
     for group, insts in groups.items():
         slug = _slug(group)
         out_path = os.path.join(out_dir, "groups", f"{slug}.md")
-        _render_group_page(group, insts, out_path)
+        _render_group_page(group, insts, out_path, spec_version)
         if args.verbose:
             print(f"  wrote groups/{slug}.md")
 
     # ── Master instruction index ───────────────────────────────────────────────
     _render_instruction_index(
-        instructions, groups, os.path.join(out_dir, "instructions", "index.md")
+        instructions,
+        groups,
+        os.path.join(out_dir, "instructions", "index.md"),
+        spec_version,
     )
     if args.verbose:
         print(f"  wrote instructions/index.md")

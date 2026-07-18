@@ -14,6 +14,7 @@ from pathlib import Path
 ID_RE = re.compile(r"^\s*-\s*id:\s*([A-Z0-9-]+)\s*$")
 PROFILES_RE = re.compile(r"^\s{4}profiles:\s*\[(.*?)\]\s*$")
 PASS_TIER_RE = re.compile(r"^\s{4}must_pass_in_tier:\s*\[(.*?)\]\s*$")
+STATE_RE = re.compile(r"^\s{4}state:\s*([A-Za-z0-9_-]+)\s*$")
 VALIDATED_RE = {"pass", "fail", "not_run", "partial"}
 
 
@@ -25,16 +26,20 @@ def _parse_csv_list(raw: str) -> list[str]:
     return [item.strip().strip('"').strip("'") for item in raw.split(",") if item.strip()]
 
 
-def _load_matrix_meta(path: Path) -> dict[str, dict[str, list[str]]]:
-    out: dict[str, dict[str, list[str]]] = {}
+def _load_matrix_meta(path: Path) -> dict[str, dict[str, object]]:
+    out: dict[str, dict[str, object]] = {}
     current_id: str | None = None
     for raw in path.read_text(encoding="utf-8", errors="replace").splitlines():
         m_id = ID_RE.match(raw)
         if m_id:
             current_id = m_id.group(1)
-            out[current_id] = {"profiles": [], "must_pass_in_tier": []}
+            out[current_id] = {"state": "", "profiles": [], "must_pass_in_tier": []}
             continue
         if current_id is None:
+            continue
+        m_state = STATE_RE.match(raw)
+        if m_state:
+            out[current_id]["state"] = m_state.group(1)
             continue
         m_profiles = PROFILES_RE.match(raw)
         if m_profiles:
@@ -86,9 +91,9 @@ def main(argv: list[str]) -> int:
     extra_status = sorted(status_set - matrix_set)
 
     schema_version = str(status_data.get("schema_version", "")).strip()
-    if schema_version != "linx-avs-v0.56-status-v3":
+    if schema_version != "linx-avs-v0.57-status-v1":
         print(
-            f"error: status JSON schema_version must be 'linx-avs-v0.56-status-v3' (got {schema_version!r})",
+            f"error: status JSON schema_version must be 'linx-avs-v0.57-status-v1' (got {schema_version!r})",
             file=sys.stderr,
         )
         return 1
@@ -140,13 +145,14 @@ def main(argv: list[str]) -> int:
                 slot["implemented"] += 1
             if validated == "pass":
                 slot["pass"] += 1
-        for tier in meta.get("must_pass_in_tier", []):
-            slot = tier_summaries.setdefault(tier, {"tests": 0, "implemented": 0, "pass": 0})
-            slot["tests"] += 1
-            if bool(item.get("implemented", False)):
-                slot["implemented"] += 1
-            if validated == "pass":
-                slot["pass"] += 1
+        if str(meta.get("state", "")).strip() == "active":
+            for tier in meta.get("must_pass_in_tier", []):
+                slot = tier_summaries.setdefault(tier, {"tests": 0, "implemented": 0, "pass": 0})
+                slot["tests"] += 1
+                if bool(item.get("implemented", False)):
+                    slot["implemented"] += 1
+                if validated == "pass":
+                    slot["pass"] += 1
 
     if implemented < args.min_implemented:
         print(

@@ -465,7 +465,7 @@ run_gate() {
   echo "== [$domain] $gate"
   echo "cmd: $command"
   set +e
-  bash -lc "$command" >"$log" 2>&1
+  bash -c "$command" >"$log" 2>&1
   local rc=$?
   set -e
 
@@ -720,7 +720,7 @@ if [[ "$RUN_LINXCORE_PR_GATES" == "1" ]]; then
   run_gate \
     "LinxCore" \
     "cosim smoke" \
-    "bash $ROOT/rtl/LinxCore/tests/test_cosim_smoke.sh" \
+    "QEMU_BIN=$QEMU_BIN bash $ROOT/rtl/LinxCore/tests/test_cosim_smoke.sh" \
     "linxcore_cosim_smoke_pass" \
     "linxcore_cosim_smoke_fail" \
     "linxcore_cosim_smoke" \
@@ -771,7 +771,7 @@ if [[ "$RUN_PYC_PR_GATES" == "1" ]]; then
   run_gate \
     "pyCircuit" \
     "QEMU vs pyCircuit trace diff" \
-    "bash $ROOT/tools/pyCircuit/contrib/linx/flows/tools/run_linx_qemu_vs_pyc.sh" \
+    "QEMU_BIN=$QEMU_BIN bash $ROOT/tools/pyCircuit/contrib/linx/flows/tools/run_linx_qemu_vs_pyc.sh" \
     "pyc_trace_diff_pass" \
     "pyc_trace_diff_fail" \
     "pyc_trace_diff" \
@@ -937,7 +937,7 @@ fi
 run_gate \
   "Integration" \
   "Pinned workspace build closure" \
-  "test -x $ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-ar && test -x $ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-nm && test -x $ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-readelf && test -x $ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-strip && test -x $ROOT/emulator/qemu/build-linx/qemu-system-linx64 && test -f $LINUX_ROOT/build-linx-fixed/vmlinux && test -f $ROOT/out/libc/glibc/build/linkobj/libc.so && test -f $ROOT/out/libc/glibc/logs/g1b-summary.txt && test -f $ROOT/out/libc/musl/logs/phase-b-summary.txt" \
+  "test -x $ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-ar && test -x $ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-nm && test -x $ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-readelf && test -x $ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-strip && test -x $QEMU_BIN && test -f $LINUX_ROOT/build-linx-fixed/vmlinux && test -f $ROOT/out/libc/glibc/build/linkobj/libc.so && test -f $ROOT/out/libc/glibc/logs/g1b-summary.txt && test -f $ROOT/out/libc/musl/logs/phase-b-summary.txt" \
   "pinned_workspace_build_closure_pass" \
   "pinned_workspace_build_closure_fail" \
   "integration_pinned_build_closure" \
@@ -963,7 +963,7 @@ run_gate \
 run_gate \
   "Regression" \
   "Workload polybench" \
-  "LINX_CLANG=$CLANG_BIN LINX_SYSROOT=${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} python3 $ROOT/workloads/run_polybench.py --cc $ROOT/tools/spec2017/linx_cc.sh --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --json-out ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/polybench_result.json" \
+  "LINX_SPEC_FORCE_STATIC=1 LINX_CLANG=$CLANG_BIN LINX_SYSROOT=${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} python3 $ROOT/workloads/run_polybench.py --cc $ROOT/tools/spec2017/linx_cc.sh --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --json-out ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/polybench_result.json" \
   "workload_polybench_pass" \
   "workload_polybench_fail" \
   "workload_polybench"
@@ -979,18 +979,28 @@ run_gate \
 run_gate \
   "Regression" \
   "PTO kernel parity" \
-  "python3 $ROOT/workloads/pto_kernels/tools/run_pto_kernel_parity.py --out-dir ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}" \
+  "QEMU=$QEMU_BIN python3 $ROOT/workloads/pto_kernels/tools/run_pto_kernel_parity.py --out-dir ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}" \
   "workload_pto_parity_pass" \
   "workload_pto_parity_fail" \
   "workload_pto_parity"
 
-run_gate \
-  "Regression" \
-  "ctuning curated subset" \
-  "python3 $ROOT/workloads/ctuning/run_milepost_codelets.py --ctuning-root $ROOT/workloads/ctuning --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --clang $CLANG_BIN --lld $LLD_BIN --qemu $QEMU_BIN --limit ${LINX_CTUNING_LIMIT:-5} --run --summary-json ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/ctuning_result.json" \
-  "workload_ctuning_pass" \
-  "workload_ctuning_fail" \
-  "workload_ctuning"
+if [[ -n "${CTUNING_ROOT:-}" && -d "${CTUNING_ROOT}/program" ]]; then
+  run_gate \
+    "Regression" \
+    "ctuning curated subset" \
+    "python3 $ROOT/workloads/ctuning/run_milepost_codelets.py --ctuning-root $CTUNING_ROOT --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --clang $CLANG_BIN --lld $LLD_BIN --qemu $QEMU_BIN --limit ${LINX_CTUNING_LIMIT:-5} --run --summary-json ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/ctuning_result.json" \
+    "workload_ctuning_pass" \
+    "workload_ctuning_fail" \
+    "workload_ctuning"
+else
+  record_skipped_gate \
+    "Regression" \
+    "ctuning curated subset" \
+    "python3 $ROOT/workloads/ctuning/run_milepost_codelets.py --ctuning-root \$CTUNING_ROOT ..." \
+    "CTUNING_ROOT is not an explicit Milepost source tree" \
+    "integration" \
+    "no"
+fi
 
 if [[ "${RUN_SPEC_PR_GATES:-0}" == "1" ]]; then
   run_gate \
@@ -1197,6 +1207,15 @@ run_gate \
   "integration_gate_status_render" \
   "yes" \
   "integration"
+
+# run_gate records the render result in the JSON report after the command
+# completes, so refresh the Markdown once more to include that final record.
+if ! python3 "$ROOT/tools/bringup/gate_report.py" render \
+  --report "$REPORT" \
+  --out-md "$ROOT/docs/bringup/GATE_STATUS.md"; then
+  echo "error: failed to refresh gate status after recording render gate" >&2
+  FAIL_COUNT=$((FAIL_COUNT + 1))
+fi
 
 MULTI_AGENT_SUMMARY="$RUN_LOG_DIR/multi_agent_summary.json"
 RUNTIME_PHASE_ARGS=()

@@ -408,6 +408,7 @@ canonical meanings above.
 
 ### L1D
 
+- Adapter owner module: `src/bcc/lsu/l1d.py` (`JanusBccLsuL1D`).
 - Golden owner: `chisel/src/main/scala/linxcore/lsu/ScalarL1D.scala`
   (`ScalarL1D`). The reduced pyCircuit module is an adapter, not a second
   architectural definition.

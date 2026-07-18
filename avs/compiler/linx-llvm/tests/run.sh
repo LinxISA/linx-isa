@@ -74,6 +74,24 @@ SOFTFP_STUBS_SRC="$ROOT/support/softfp_stubs.c"
 ATOMIC_BUILTINS_SRC="$LIBC_DIR/src/atomic/atomic_builtins.c"
 SUPPORT_SYMBOLS_SRC="$ROOT/support/symbols.c"
 
+MANIFEST_HELPER="$ROOT/write_c_codegen_manifest.py"
+CODEGEN_MANIFEST="$OUT_DIR/c-codegen-build-manifest.json"
+mkdir -p "$OUT_DIR"
+rm -f "$CODEGEN_MANIFEST"
+CODEGEN_RECORDS="$(mktemp "$OUT_DIR/.c-codegen-records.XXXXXX")"
+CODEGEN_MANIFEST_COMPLETE=0
+cleanup_codegen_manifest() {
+  rm -f "$CODEGEN_RECORDS"
+  if [[ "$CODEGEN_MANIFEST_COMPLETE" != "1" ]]; then
+    rm -f "$CODEGEN_MANIFEST"
+  fi
+}
+trap cleanup_codegen_manifest EXIT
+if [[ ! -f "$MANIFEST_HELPER" ]]; then
+  echo "error: missing C-CodeGen manifest helper: $MANIFEST_HELPER" >&2
+  exit 1
+fi
+
 RUNTIME_OUT="$OUT_DIR/_runtime"
 mkdir -p "$RUNTIME_OUT"
 
@@ -131,8 +149,6 @@ if [[ -n "${EXTRA_CFLAGS:-}" ]]; then
   EXTRA_FLAGS=(${EXTRA_CFLAGS})
 fi
 
-mkdir -p "$OUT_DIR"
-
 FAILED=0
 for SRC in "$SRC_DIR"/*.c; do
   BASE="$(basename "$SRC" .c)"
@@ -168,7 +184,21 @@ for SRC in "$SRC_DIR"/*.c; do
   "$CLANG" "${FLAGS[@]}" -S -o "$OUT/$BASE.s" "$SRC"
   "$CLANG" "${FLAGS[@]}" -c -o "$OUT/$BASE.o" "$SRC"
 
-  "$OBJDUMP" -d --triple="$TARGET" "$OUT/$BASE.o" >"$OUT/$BASE.objdump"
+  (cd "$OUT" && "$OBJDUMP" -d --triple="$TARGET" "$BASE.o") >"$OUT/$BASE.objdump"
+
+  RECORD_CMD=(
+    python3 "$MANIFEST_HELPER" record
+    --repo-root "$REPO_ROOT"
+    --records-jsonl "$CODEGEN_RECORDS"
+    --source "$SRC"
+    --generated-assembly "$OUT/$BASE.s"
+    --object "$OUT/$BASE.o"
+    --objdump "$OUT/$BASE.objdump"
+  )
+  for F in "${FLAGS[@]}"; do
+    RECORD_CMD+=("--compile-flag=$F")
+  done
+  "${RECORD_CMD[@]}"
 
   # Link a standalone ELF to resolve relocations before extracting a raw .bin.
   #
@@ -251,7 +281,7 @@ if [[ -d "$ASM_DIR" ]]; then
     wc -c "$OUT/$BASE.bin" >"$OUT/$BASE.bin.size"
 
     case "$BASE" in
-      41_v056_isa_forms)
+      41_v057_isa_forms)
         python3 "$ROOT/check_required_mnemonics.py" \
           --objdump "$OUT/$BASE.objdump" \
           --label "$BASE" \
@@ -280,12 +310,15 @@ if [[ -d "$ASM_DIR" ]]; then
           --require FRET.STK \
           --require HL.CASW.AQRLF \
           --require HL.CASD.AQRLF
+        python3 "$ROOT/check_l_bstart64_forms.py" \
+          --objdump "$OUT/$BASE.objdump" \
+          --label "$BASE"
         ;;
     esac
   done
 fi
 
-SPEC="${SPEC:-$ROOT/../../../../isa/v0.56/linxisa-v0.56.json}"
+SPEC="${SPEC:-$ROOT/../../../../isa/v0.57/linxisa-v0.57.json}"
 GEN_VECTORS="$ROOT/gen_disasm_vectors.py"
 ROUNDTRIP_CHECK="$ROOT/check_disasm_roundtrip.py"
 SPEC_ROUNDTRIP_POLICY="${SPEC_ROUNDTRIP_POLICY:-audit}" # audit|strict
@@ -337,9 +370,20 @@ if [[ -d "$NEG_DIR" ]]; then
     echo "error: legacy L.BSTOP spelling unexpectedly assembled" >&2
     exit 1
   fi
-  if ! grep -Eq "legacy alias 'L\\.BSTOP' is not allowed in canonical v0\\.56; use 'C\\.BSTOP'" "$NEG_OUT/legacy_alias_l_bstop.err"; then
+  if ! grep -Eq "legacy alias 'L\\.BSTOP' is not allowed in canonical v0\\.57; use 'C\\.BSTOP'" "$NEG_OUT/legacy_alias_l_bstop.err"; then
     echo "error: legacy L.BSTOP rejection did not report the canonical spelling guidance" >&2
     cat "$NEG_OUT/legacy_alias_l_bstop.err" >&2
+    exit 1
+  fi
+
+  echo "[neg] L.BSTART.SYS non-FALL rejection"
+  if "$LLVMMC" -triple="$TARGET" -filetype=obj "$NEG_DIR/l_bstart64_invalid_sys_kind.s" -o "$NEG_OUT/l_bstart64_invalid_sys_kind.o" 2>"$NEG_OUT/l_bstart64_invalid_sys_kind.err"; then
+    echo "error: invalid L.BSTART.SYS branch kind unexpectedly assembled" >&2
+    exit 1
+  fi
+  if ! grep -Eq "branch kind does not match BSTART encoding" "$NEG_OUT/l_bstart64_invalid_sys_kind.err"; then
+    echo "error: invalid L.BSTART.SYS rejection did not report a branch-kind failure" >&2
+    cat "$NEG_OUT/l_bstart64_invalid_sys_kind.err" >&2
     exit 1
   fi
 
@@ -351,6 +395,17 @@ if [[ -d "$NEG_DIR" ]]; then
   if ! grep -Eq "TileOp10 must be in range 0\\.\\.1023|TileOpcode must be in range 0\\.\\.1023|Match Instruction Error!" "$NEG_OUT/tepl_tileop_range.err"; then
     echo "error: TEPL range negative test did not report a range/match failure" >&2
     cat "$NEG_OUT/tepl_tileop_range.err" >&2
+    exit 1
+  fi
+
+  echo "[neg] legacy generic BSTART.TMA rejection"
+  if "$LLVMMC" -triple="$TARGET" -filetype=obj "$NEG_DIR/tma_reserved_selector.s" -o /dev/null 2>"$NEG_OUT/tma_reserved_selector.err"; then
+    echo "error: legacy generic BSTART.TMA unexpectedly assembled" >&2
+    exit 1
+  fi
+  if ! grep -Eqi "unrecognized instruction 'bstart\\.tma'" "$NEG_OUT/tma_reserved_selector.err"; then
+    echo "error: legacy generic BSTART.TMA rejection did not report an unrecognized instruction" >&2
+    cat "$NEG_OUT/tma_reserved_selector.err" >&2
     exit 1
   fi
 fi
@@ -390,5 +445,23 @@ C
 else
   echo "warning: PIC relocation test skipped (missing llvm-readobj)" >&2
 fi
+
+COMPLETE_MANIFEST_CMD=(
+  python3 "$MANIFEST_HELPER" complete
+  --repo-root "$REPO_ROOT"
+  --records-jsonl "$CODEGEN_RECORDS"
+  --source-dir "$SRC_DIR"
+  --target "$TARGET"
+  --clang "$CLANG"
+  --llvm-objdump "$OBJDUMP"
+  --output "$CODEGEN_MANIFEST"
+)
+if [[ ${#EXTRA_FLAGS[@]} -ne 0 ]]; then
+  for F in "${EXTRA_FLAGS[@]}"; do
+    COMPLETE_MANIFEST_CMD+=("--extra-flag=$F")
+  done
+fi
+"${COMPLETE_MANIFEST_CMD[@]}"
+CODEGEN_MANIFEST_COMPLETE=1
 
 echo "ok: outputs in $OUT_DIR"

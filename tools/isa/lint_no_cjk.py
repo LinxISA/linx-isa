@@ -71,15 +71,26 @@ def _skip_extension(path: str) -> bool:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--repo-root", default=".", help="Repo root (for git ls-files)")
+    ap.add_argument(
+        "--include-prefix",
+        action="append",
+        default=[],
+        help="Only lint paths under this prefix (repeatable; default: all tracked paths)",
+    )
     ap.add_argument("--allow-prefix", action="append", default=[], help="Allow path prefix (repeatable)")
     args = ap.parse_args()
 
     repo_root = Path(args.repo_root).resolve()
+    include_paths = [p.rstrip("/") for p in args.include_prefix]
     allow_paths = [p.rstrip("/") for p in args.allow_prefix]
 
     failures: List[str] = []
     for rel in _git_ls_files(repo_root):
         if _skip_extension(rel):
+            continue
+        if include_paths and not any(
+            rel == p or rel.startswith(p + "/") or rel.startswith(p + ".") for p in include_paths
+        ):
             continue
         if any(rel == p or rel.startswith(p + "/") or rel.startswith(p + ".") for p in allow_paths):
             continue

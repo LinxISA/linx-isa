@@ -76,7 +76,6 @@ def _parse_linx_insn_count(stdout: bytes, stderr: bytes) -> int | None:
 def _codelet_base_dir(ctuning_root: Path) -> Path | None:
     candidates = [
         ctuning_root / "program",
-        ctuning_root / "out",
         ctuning_root,
     ]
     for candidate in candidates:
@@ -289,12 +288,14 @@ def main(argv: list[str]) -> int:
 
     passed = 0
     failed = 0
+    skipped = 0
     summary_rows: list[dict[str, object]] = []
 
     for d in codelet_dirs:
         codelets, wrappers = _find_sources(d)
         if not wrappers or not codelets:
             print(f"[skip] {d.name} (missing wrapper/codelet sources)", file=sys.stderr)
+            skipped += 1
             summary_rows.append({"codelet": d.name, "status": "skipped_missing_sources"})
             continue
 
@@ -438,7 +439,7 @@ def main(argv: list[str]) -> int:
             }
         )
 
-    print(f"summary: passed={passed} failed={failed}")
+    print(f"summary: passed={passed} failed={failed} skipped={skipped}")
     if counts_fp:
         counts_fp.close()
         print(f"wrote: {counts_path}")
@@ -455,12 +456,13 @@ def main(argv: list[str]) -> int:
         "selected_codelets": len(codelet_dirs),
         "passed": passed,
         "failed": failed,
+        "skipped": skipped,
         "results": summary_rows,
-        "all_pass": failed == 0,
+        "all_pass": failed == 0 and skipped == 0 and passed == len(codelet_dirs),
     }
     summary_path.write_text(json.dumps(summary_payload, indent=2) + "\n", encoding="utf-8")
     print(f"wrote: {summary_path}")
-    return 0 if failed == 0 else 1
+    return 0 if summary_payload["all_pass"] else 1
 
 
 if __name__ == "__main__":

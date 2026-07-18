@@ -1,42 +1,43 @@
-# ISA-LLVM-QEMU Coverage Coherence
+# ISA-LLVM-QEMU L1 Mapping Coherence
 
-- Generated (UTC): `2026-07-15 10:37:55Z`
-- Spec unique mnemonics: `711`
+- Generated (UTC): `2026-07-18 02:41:48Z`
+- Spec unique mnemonics: `731`
+- QEMU evidence: `L1 decoder_source_mapping`
+- L2 runtime execution: `available`
+- L3 semantic oracle: `available`
+- LLVM evidence is observed disassembly mnemonic breadth; it does not measure C-CodeGen or form-level coverage.
+- This report does not claim runtime or semantic completeness.
 
 | Surface | Covered | Ratio |
 | --- | --- | --- |
-| LLVM compiled coverage | `711/711` | `100.0%` |
-| QEMU mapped implementation coverage | `618/711` | `86.92%` |
-| QEMU AVS translation coverage | `711/711` | `100.0%` |
+| LLVM observed disassembly mnemonic breadth | `731/731` | `100.0%` |
+| QEMU L1 decoder/source mapping | `646/731` | `88.37%` |
+| QEMU AVS translation inventory | `731/731` | `100.0%` |
+
+- Non-spec translation inventory tokens: `0`
 
 ## Inconsistency Summary
 
-- Compiler-covered but missing from QEMU implementation: `93`
-- QEMU-implemented but missing from AVS translation coverage: `0`
-- AVS translation-covered but not mapped in QEMU implementation: `93`
+- Compiler-covered but missing from QEMU L1 mapping: `85`
+- QEMU L1-mapped but missing from AVS translation inventory: `0`
+- AVS translation-listed but absent from QEMU L1 mapping: `85`
 - Compiler-covered but missing from AVS translation coverage: `0`
 
-### Compiler vs QEMU implementation
+### Compiler vs QEMU L1 mapping
 
-- `V`: `90`
-- `B`: `1`
-- `C`: `1`
+- `V`: `84`
 - `XB`: `1`
 
-### QEMU implementation vs AVS translation
+### QEMU L1 mapping vs AVS translation
 
 
 ### Compiler vs AVS translation
 
 
-## Missing From QEMU Implementation (First 200)
+## Missing From QEMU L1 Mapping (First 200)
 
-- `B.DIM`
-- `C.SETRET`
-- `V.LB`
 - `V.LBI`
 - `V.LBI.BRG`
-- `V.LBU`
 - `V.LBUI`
 - `V.LBUI.BRG`
 - `V.LD`
@@ -51,12 +52,10 @@
 - `V.LDI.BRG`
 - `V.LDI.U`
 - `V.LDI.U.BRG`
-- `V.LH`
 - `V.LHI`
 - `V.LHI.BRG`
 - `V.LHI.U`
 - `V.LHI.U.BRG`
-- `V.LHU`
 - `V.LHUI`
 - `V.LHUI.BRG`
 - `V.LHUI.U`
@@ -79,7 +78,6 @@
 - `V.LWUI.U.BRG`
 - `V.QPOP`
 - `V.QPUSH`
-- `V.SB`
 - `V.SBI`
 - `V.SBI.BRG`
 - `V.SD`
@@ -96,7 +94,6 @@
 - `V.SDI.BRG`
 - `V.SDI.U`
 - `V.SDI.U.BRG`
-- `V.SH`
 - `V.SH.U`
 - `V.SH.U.BRG`
 - `V.SHFL.BFLY`

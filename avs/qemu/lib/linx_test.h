@@ -37,6 +37,8 @@
 #define UART_BASE          0x10000000
 #define TEST_FINISHER_MMIO 0x10009000
 #define UART_DR            (*(volatile uint32_t *)(UART_BASE + 0x00))
+#define UART_FR            (*(volatile uint32_t *)(UART_BASE + 0x18))
+#define UART_FR_TXFF       (1u << 5)
 #define TEST_FINISHER      (*(volatile uint32_t *)(TEST_FINISHER_MMIO))
 
 #define FINISHER_FAIL  0x3333u
@@ -63,7 +65,14 @@ static volatile test_result_t *g_test_result = (volatile test_result_t *)TEST_RE
 /*
  * Output a character to UART
  */
-static inline void uart_putc(char c) {
+static __attribute__((noinline)) void uart_putc(char c) {
+    /*
+     * A full multi-suite run can outpace the PL011 transmit FIFO.  Writes
+     * issued while TXFF is set are not reliable evidence: QEMU may discard a
+     * contiguous part of a test marker even though the guest keeps running.
+     */
+    while ((UART_FR & UART_FR_TXFF) != 0u) {
+    }
     UART_DR = (uint32_t)(unsigned char)c;
 }
 

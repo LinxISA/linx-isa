@@ -130,6 +130,22 @@ hydrate_worktree_submodules_from_source() {
   done < <(git -C "$QEMU_ROOT" submodule status | awk '{print $2}')
 }
 
+hydrate_wrap_subprojects_from_source() {
+  local src rel dst
+
+  for src in "$QEMU_ROOT"/subprojects/*; do
+    [[ -d "$src" ]] || continue
+    [[ -f "$src/meson.build" ]] || continue
+    [[ -f "$src/.meson-subproject-wrap-hash.txt" ]] || continue
+    rel="subprojects/${src##*/}"
+    dst="$WORKTREE_DIR/$rel"
+    if [[ ! -f "$dst/meson.build" ]]; then
+      echo "info: hydrating Meson wrap subproject $rel from local source tree" >&2
+      copy_submodule_tree "$src" "$dst"
+    fi
+  done
+}
+
 have_qemu_submodule_content() {
   local tree="$1"
   [[ -f "$tree/roms/seabios/README" ]] \
@@ -160,6 +176,8 @@ if ! have_qemu_submodule_content "$WORKTREE_DIR"; then
     hydrate_worktree_submodules_from_source
   fi
 fi
+
+hydrate_wrap_subprojects_from_source
 
 if ! have_qemu_submodule_content "$WORKTREE_DIR"; then
   echo "info: populating clean qemu worktree submodules" >&2

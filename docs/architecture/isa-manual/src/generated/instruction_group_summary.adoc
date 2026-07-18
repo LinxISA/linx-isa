@@ -15,11 +15,11 @@
 |Block Data Attribute |1 |1
 |Branch |10 |10
 |Block Hint |2 |1
-|Block Input & Output |4 |2
+|Block Input & Output |6 |2
 |Block Offset |1 |1
 |Cache Maintain |16 |16
 |Bit Operation |8 |8
-|Block Split |44 |30
+|Block Split |59 |45
 |BSTART |20 |8
 |Arithmetic Operation |20 |20
 |Arithmetic |1 |1
@@ -31,9 +31,11 @@
 |Store Immediate Offset |9 |9
 |Set Commit Argument |26 |26
 |C.UNARY |7 |7
+|Atomic Operation |72 |72
 |Compare Instruction |40 |40
 |Compound Operation |1 |1
 |Multi-Cycle ALU |28 |28
+|DMA Operation |1 |1
 |Floating-point Arithmetic |12 |12
 |Format Convert |12 |12
 |Floating-point Compare |8 |8
@@ -58,7 +60,6 @@
 |SSR Access |7 |7
 |Load Register Offset |22 |22
 |Load Symbol |7 |7
-|Atomic Operation |68 |68
 |Load UnScaled |16 |16
 |Store Register Offset |21 |21
 |Store Symbol |4 |4

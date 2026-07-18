@@ -62,7 +62,7 @@ cd avs/qemu
 Active runtime note:
 
 - the live QEMU runtime lane keeps the `system`, `callret`, scalar, and the
-  still-supported handwritten `v03` SIMT/vector suites;
+  still-supported handwritten `v057` SIMT/vector suites;
 - the older handwritten `v04_vector_ops` runtime suite is removed from the
   active surface on this Bisheng branch because the current compiler/MC stack
   does not accept that handwritten asm dialect reliably enough for gating.

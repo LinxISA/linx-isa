@@ -120,7 +120,15 @@
       "mnemonic": "B.IOT",
       "status": "executable-subset"
     },
+    "b_iot_32_2c07e7177fad": {
+      "mnemonic": "B.IOT",
+      "status": "executable-subset"
+    },
     "b_iot_32_8b8bce6bffe8": {
+      "mnemonic": "B.IOT",
+      "status": "executable-subset"
+    },
+    "b_iot_32_c11eb189dd83": {
       "mnemonic": "B.IOT",
       "status": "executable-subset"
     },
@@ -228,9 +236,29 @@
       "mnemonic": "BSTART.FP",
       "status": "executable-subset"
     },
+    "bstart_mgather_32_c9defbf18276": {
+      "mnemonic": "BSTART.MGATHER",
+      "status": "decode-only"
+    },
+    "bstart_mgather_cas_32_fd8c8a3b720a": {
+      "mnemonic": "BSTART.MGATHER.CAS",
+      "status": "decode-only"
+    },
+    "bstart_mgather_mask_32_5573241cd944": {
+      "mnemonic": "BSTART.MGATHER.MASK",
+      "status": "decode-only"
+    },
     "bstart_mpar_32_2d163417c615": {
       "mnemonic": "BSTART.MPAR",
       "status": "executable-subset"
+    },
+    "bstart_mscatter_32_0f0ba08bd798": {
+      "mnemonic": "BSTART.MSCATTER",
+      "status": "decode-only"
+    },
+    "bstart_mscatter_mask_32_2a33eed646f7": {
+      "mnemonic": "BSTART.MSCATTER.MASK",
+      "status": "decode-only"
     },
     "bstart_mseq_32_39343a456ec5": {
       "mnemonic": "BSTART.MSEQ",
@@ -272,12 +300,32 @@
       "mnemonic": "BSTART.TEPL",
       "status": "executable-subset"
     },
+    "bstart_tgemv_32_ae19f5b678f5": {
+      "mnemonic": "BSTART.TGEMV",
+      "status": "decode-only"
+    },
+    "bstart_tgemv_acc_32_9a471b21913e": {
+      "mnemonic": "BSTART.TGEMV.ACC",
+      "status": "decode-only"
+    },
+    "bstart_tgemv_bias_32_186ee96c0a8b": {
+      "mnemonic": "BSTART.TGEMV.BIAS",
+      "status": "decode-only"
+    },
+    "bstart_tgemvmx_32_ae5e005f6589": {
+      "mnemonic": "BSTART.TGEMVMX",
+      "status": "decode-only"
+    },
+    "bstart_tgemvmx_acc_32_368647b04bb0": {
+      "mnemonic": "BSTART.TGEMVMX.ACC",
+      "status": "decode-only"
+    },
+    "bstart_tgemvmx_bias_32_d23011f15171": {
+      "mnemonic": "BSTART.TGEMVMX.BIAS",
+      "status": "decode-only"
+    },
     "bstart_tload_32_d0c18bb0ab15": {
       "mnemonic": "BSTART.TLOAD",
-      "status": "executable-subset"
-    },
-    "bstart_tma_32_f949c94c39c7": {
-      "mnemonic": "BSTART.TMA",
       "status": "executable-subset"
     },
     "bstart_tmatmul_32_f9da70e4e0ad": {
@@ -288,9 +336,29 @@
       "mnemonic": "BSTART.TMATMUL.ACC",
       "status": "executable-subset"
     },
+    "bstart_tmatmul_bias_32_4d5a498d12f3": {
+      "mnemonic": "BSTART.TMATMUL.BIAS",
+      "status": "decode-only"
+    },
+    "bstart_tmatmulmx_32_e26cb3874648": {
+      "mnemonic": "BSTART.TMATMULMX",
+      "status": "decode-only"
+    },
+    "bstart_tmatmulmx_acc_32_70fa59b0ab4c": {
+      "mnemonic": "BSTART.TMATMULMX.ACC",
+      "status": "decode-only"
+    },
+    "bstart_tmatmulmx_bias_32_098c7efa51b0": {
+      "mnemonic": "BSTART.TMATMULMX.BIAS",
+      "status": "decode-only"
+    },
     "bstart_tmov_32_211446509efb": {
       "mnemonic": "BSTART.TMOV",
       "status": "executable-subset"
+    },
+    "bstart_tprefetch_32_d5f83e5aadf6": {
+      "mnemonic": "BSTART.TPREFETCH",
+      "status": "decode-only"
     },
     "bstart_tstore_32_4048b6e8b0f4": {
       "mnemonic": "BSTART.TSTORE",
@@ -484,6 +552,22 @@
       "mnemonic": "C.ZEXT.W",
       "status": "executable-subset"
     },
+    "casb_32_7e529b871832": {
+      "mnemonic": "CASB",
+      "status": "executable-subset"
+    },
+    "casd_32_5852c57277a6": {
+      "mnemonic": "CASD",
+      "status": "executable-subset"
+    },
+    "cash_32_cb1315ff6cb5": {
+      "mnemonic": "CASH",
+      "status": "executable-subset"
+    },
+    "casw_32_cb29e4287223": {
+      "mnemonic": "CASW",
+      "status": "executable-subset"
+    },
     "clz_32_f890415c15b6": {
       "mnemonic": "CLZ",
       "status": "executable-subset"
@@ -607,6 +691,10 @@
     "divw_32_b6366c50ac8c": {
       "mnemonic": "DIVW",
       "status": "executable-subset"
+    },
+    "dma_32_a168aeca5fa5": {
+      "mnemonic": "DMA",
+      "status": "decode-only"
     },
     "ebreak_32_4f122d1e6be3": {
       "mnemonic": "EBREAK",
@@ -2989,6 +3077,6 @@
       "status": "executable-subset"
     }
   },
-  "schema_version": "linx-sail-status-v0.56.5",
-  "spec_version": "0.56.5"
+  "schema_version": "linx-sail-status-v0.57.0",
+  "spec_version": "0.57.0"
 }

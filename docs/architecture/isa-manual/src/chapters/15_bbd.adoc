@@ -1,5 +1,5 @@
 // Generated file; do not edit by hand.
-// Auto-generated from isa/v0.56/linxisa-v0.56.json and uop_classification_v0.56.json
+// Auto-generated from isa/v0.57/linxisa-v0.57.json and uop_classification_v0.57.json
 
 [[chapter_bbd]]
 == BBD - Block Boundary Delimiters
