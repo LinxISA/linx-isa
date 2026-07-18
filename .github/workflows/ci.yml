@@ -62,6 +62,8 @@ jobs:
           git submodule update --init workloads/pto_kernels
       - name: Install deps
         run: python -m pip install --upgrade pip pyyaml
+      - name: Install Sail system dependencies
+        run: sudo apt-get update && sudo apt-get install -y z3
       - name: Install pinned Sail toolchain
         run: opam install --yes sail.0.20.2
       - name: Run AVS contract gate
@@ -126,7 +128,7 @@ jobs:
         shell: bash
         run: |
           shopt -s nullglob
-          files=( $(git ls-files '*.sh') )
+          mapfile -t files < <(git ls-files '*.sh')
           if [[ ${#files[@]} -eq 0 ]]; then
             echo "No shell scripts found."
             exit 0
