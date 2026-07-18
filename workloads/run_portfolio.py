@@ -25,10 +25,22 @@ class StepResult:
     summary_json: str | None = None
 
 
-def _run(cmd: list[str], *, verbose: bool = False) -> subprocess.CompletedProcess[bytes]:
+def _run(
+    cmd: list[str],
+    *,
+    env: dict[str, str] | None = None,
+    verbose: bool = False,
+) -> subprocess.CompletedProcess[bytes]:
     if verbose:
         print("+", " ".join(shlex.quote(c) for c in cmd), file=sys.stderr)
-    return subprocess.run(cmd, cwd=str(REPO_ROOT), check=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    return subprocess.run(
+        cmd,
+        cwd=str(REPO_ROOT),
+        env=env,
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
 
 
 def _resolve_cc(arg_cc: str | None) -> str:
@@ -81,7 +93,9 @@ def main(argv: list[str]) -> int:
     if args.verbose:
         run_bench_cmd.append("--verbose")
 
-    p = _run(run_bench_cmd, verbose=args.verbose)
+    benchmark_env = os.environ.copy()
+    benchmark_env.pop("LINX_SPEC_FORCE_STATIC", None)
+    p = _run(run_bench_cmd, env=benchmark_env, verbose=args.verbose)
     sys.stdout.buffer.write(p.stdout)
     sys.stderr.buffer.write(p.stderr)
     results.append(
@@ -115,7 +129,9 @@ def main(argv: list[str]) -> int:
         if args.verbose:
             run_poly_cmd.append("--verbose")
 
-        p = _run(run_poly_cmd, verbose=args.verbose)
+        polybench_env = os.environ.copy()
+        polybench_env["LINX_SPEC_FORCE_STATIC"] = "1"
+        p = _run(run_poly_cmd, env=polybench_env, verbose=args.verbose)
         sys.stdout.buffer.write(p.stdout)
         sys.stderr.buffer.write(p.stderr)
         results.append(

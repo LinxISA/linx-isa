@@ -62,7 +62,7 @@
     }
   },
   "extra_status_entries": [],
-  "generated_at_utc": "2026-07-18 02:41:08Z",
+  "generated_at_utc": "2026-07-18 02:41:04Z",
   "implemented_count": 33,
   "matrix": "/Users/zhoubot/linx-isa/avs/linx_avs_v1_test_matrix.yaml",
   "matrix_test_count": 56,

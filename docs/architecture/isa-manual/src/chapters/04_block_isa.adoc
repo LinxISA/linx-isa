@@ -498,7 +498,7 @@ Strict runtime checks required by current bring-up profile:
 * For SIMT-body blocks (`MPAR`/`MSEQ`/`VPAR`/`VSEQ`), descriptor legality is enforced at header ingestion:
   max 3 unique tile inputs and max 1 tile output descriptor binding.
 
-[[blockisa-v03-ai]]
+[[blockisa-v057-ai]]
 === v0.57 AI extension rules
 
 The canonical v0.57 profile integrates only reviewed and machine-readable
@@ -511,7 +511,7 @@ AI-oriented behavior:
 * PTO operation names and selectors come only from
   `isa/v0.57/state/pto_encoding_map.json`.
 
-[[blockisa-v03-pto-map]]
+[[blockisa-v057-pto-map]]
 === v0.57 canonical PTO-to-TAU mapping (auto-mode profile)
 
 The canonical v0.57 auto-mode profile maps PTO tile primitives to typed TAU block headers and descriptors:

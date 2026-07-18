@@ -1,6 +1,6 @@
 {
   "claim": "l1_mapping_coherence",
-  "generated_at_utc": "2026-07-15 22:49:12Z",
+  "generated_at_utc": "2026-07-17 08:54:27Z",
   "llvm": {
     "claim": "observed_disassembly_mnemonic_breadth",
     "compiler_analyzer": "/Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/analyze_coverage.py",
@@ -15,9 +15,15 @@
       "C-CodeGen coverage"
     ],
     "roundtrip_report": "/Users/zhoubot/linx-isa/avs/compiler/linx-llvm/tests/out/99_spec_decode/99_spec_decode.roundtrip.json",
-    "roundtrip_skipped_forms": [],
-    "roundtrip_stable_form_count": 200,
-    "roundtrip_stable_ratio_percent": 100.0
+    "roundtrip_skipped_forms": [
+      {
+        "asm": "HL.BSTART.CALL <br_label>, <rt_label>, ->ra",
+        "index": 218,
+        "mnemonic": "HL.BSTART CALL"
+      }
+    ],
+    "roundtrip_stable_form_count": 199,
+    "roundtrip_stable_ratio_percent": 99.5
   },
   "qemu": {
     "claim": "decoder_source_mapping",
@@ -35,29 +41,29 @@
     "L1": {
       "availability": "available",
       "claim": "decoder_source_mapping",
-      "form_count": 631,
-      "mnemonic_count": 626
+      "form_count": 678,
+      "mnemonic_count": 646
     },
     "L2": {
       "availability": "available",
       "claim": "runtime_execution",
-      "form_count": 51,
-      "mnemonic_count": 51,
-      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
+      "form_count": 60,
+      "mnemonic_count": 60,
+      "qemu_sha": "b270924c2240d7a1dc9bad4672345cc098510341",
       "source": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_executable_coverage_latest.json"
     },
     "L3": {
       "availability": "available",
       "claim": "semantic_oracle",
-      "form_count": 51,
-      "mnemonic_count": 51,
-      "qemu_sha": "2856230890045899f074c18bcb2c2e37bbd09a0c",
+      "form_count": 60,
+      "mnemonic_count": 60,
+      "qemu_sha": "b270924c2240d7a1dc9bad4672345cc098510341",
       "source": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_executable_coverage_latest.json"
     }
   },
   "result": {
-    "classification": "48bit_l1_mapping_coherent",
-    "ok": true,
+    "classification": "48bit_l1_mapping_incomplete",
+    "ok": false,
     "runtime_execution_complete": null,
     "semantic_oracle_complete": null
   },
@@ -65,6 +71,6 @@
   "spec": {
     "form_count": 200,
     "mnemonic_count": 194,
-    "path": "/Users/zhoubot/linx-isa/isa/v0.56/linxisa-v0.56.json"
+    "path": "/Users/zhoubot/linx-isa/isa/v0.57/linxisa-v0.57.json"
   }
 }

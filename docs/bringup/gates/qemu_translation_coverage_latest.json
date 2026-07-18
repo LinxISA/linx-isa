@@ -549,7 +549,153 @@
       "V.SW",
       "V.SW.BRG"
     ],
+    "12_v057_vector_tile.o": [
+      "ADDI",
+      "ADDIW",
+      "ADDTPC",
+      "ADDW",
+      "AND",
+      "ANDI",
+      "ANDIW",
+      "B.IOR",
+      "B.NE",
+      "B.NZ",
+      "B.TEXT",
+      "B.Z",
+      "BSTART",
+      "BSTART.CALL",
+      "BSTART.MPAR",
+      "BSTART.MSEQ",
+      "BSTART.STD",
+      "BSTART.TEPL",
+      "BSTART.VPAR",
+      "BSTART.VSEQ",
+      "BSTOP",
+      "C.ADD",
+      "C.ADDI",
+      "C.B.DIMI",
+      "C.BSTART",
+      "C.BSTART.MPAR",
+      "C.BSTART.MSEQ",
+      "C.BSTART.STD",
+      "C.BSTOP",
+      "C.LWI",
+      "C.MOVI",
+      "C.MOVR",
+      "C.SETC.EQ",
+      "C.SETC.NE",
+      "C.SETC.TGT",
+      "C.SEXT.W",
+      "C.SWI",
+      "C.ZEXT.W",
+      "FENTRY",
+      "FRET.STK",
+      "HL.BSTART.CALL",
+      "HL.BSTART.STD",
+      "HL.LUI",
+      "HL.LW.PCR",
+      "HL.SUBIW",
+      "HL.SW.PCR",
+      "J",
+      "LB",
+      "LBUI",
+      "LDI",
+      "LUI",
+      "LW",
+      "LWUI",
+      "OR",
+      "SDI",
+      "SETC.NEI",
+      "SLL",
+      "SRA",
+      "SRL",
+      "SRLI",
+      "SRLIW",
+      "SWI",
+      "UCVTF",
+      "V.ADD",
+      "V.CMP.EQ",
+      "V.CMP.LTU",
+      "V.CMP.LTUI",
+      "V.FADD",
+      "V.FMUL",
+      "V.LW.BRG",
+      "V.RDOR",
+      "V.SW",
+      "V.SW.BRG"
+    ],
     "13_v03_vector_ops_matrix.o": [
+      "ADDI",
+      "ADDIW",
+      "ADDTPC",
+      "ADDW",
+      "AND",
+      "ANDI",
+      "ANDIW",
+      "ANDW",
+      "B.IOR",
+      "B.TEXT",
+      "BSTART",
+      "BSTART.CALL",
+      "BSTART.MSEQ",
+      "BSTART.STD",
+      "BSTART.TEPL",
+      "BSTOP",
+      "C.ADD",
+      "C.ADDI",
+      "C.B.DIMI",
+      "C.BSTART",
+      "C.BSTART.MSEQ",
+      "C.BSTART.STD",
+      "C.BSTOP",
+      "C.LWI",
+      "C.MOVI",
+      "C.MOVR",
+      "C.SETC.EQ",
+      "C.SETC.NE",
+      "C.SETC.TGT",
+      "C.SEXT.W",
+      "C.SWI",
+      "C.ZEXT.W",
+      "CMP.LTUI",
+      "FENTRY",
+      "FRET.STK",
+      "HL.BSTART.CALL",
+      "HL.BSTART.STD",
+      "HL.LUI",
+      "HL.LW.PCR",
+      "HL.SW.PCR",
+      "LB",
+      "LBUI",
+      "LUI",
+      "LW",
+      "LWI",
+      "MULW",
+      "OR",
+      "ORW",
+      "SDI",
+      "SETC.NEI",
+      "SLL",
+      "SLLI",
+      "SRA",
+      "SRL",
+      "SRLI",
+      "SRLIW",
+      "SUBIW",
+      "SUBW",
+      "SWI",
+      "UCVTF",
+      "V.ADD",
+      "V.CMP.LT",
+      "V.FABS",
+      "V.FADD",
+      "V.FMUL",
+      "V.LW.BRG",
+      "V.MUL",
+      "V.SUB",
+      "V.SW.BRG"
+    ],
+    "13_v057_vector_ops_matrix.o": [
       "ADDI",
       "ADDIW",
       "ADDTPC",
@@ -815,6 +961,41 @@
       "SWI"
     ],
     "41_v056_isa_forms.o": [
+      "B.ARG",
+      "B.DIM",
+      "B.IOR",
+      "BSTART.ACCCVT",
+      "BSTART.CUBE",
+      "BSTART.FIXP",
+      "BSTART.MPAR",
+      "BSTART.MSEQ",
+      "BSTART.TEPL",
+      "BSTART.TLOAD",
+      "BSTART.TMATMUL",
+      "BSTART.TMATMUL.ACC",
+      "BSTART.TMOV",
+      "BSTART.TSTORE",
+      "BSTART.VPAR",
+      "BSTART.VSEQ",
+      "BSTOP",
+      "C.BSTART.MPAR",
+      "C.BSTART.MSEQ",
+      "C.BSTART.SYS",
+      "C.BSTART.VPAR",
+      "C.BSTART.VSEQ",
+      "C.BSTOP",
+      "C.SSRGET",
+      "ERCOV",
+      "ESAVE",
+      "FENTRY",
+      "FRET.STK",
+      "HL.CASD",
+      "HL.CASW",
+      "L.BSTART.FP",
+      "L.BSTART.STD",
+      "L.BSTART.SYS"
+    ],
+    "41_v057_isa_forms.o": [
       "B.ARG",
       "B.DIM",
       "B.IOR",
@@ -3125,7 +3306,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "14_callret_templates.o",
       "16_pto_kernel_parity.o",
@@ -3191,7 +3374,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
@@ -3218,7 +3403,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "14_callret_templates.o",
       "16_pto_kernel_parity.o",
@@ -3240,7 +3427,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
       "99_spec_decode_qemu.o",
@@ -3272,7 +3461,9 @@
       "07_atomic.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "99_spec_decode_qemu.o",
       "math.o",
@@ -3291,7 +3482,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
@@ -3316,7 +3509,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
@@ -3331,6 +3526,7 @@
     ],
     "ANDW": [
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "16_pto_kernel_parity.o",
       "99_spec_decode_qemu.o",
       "flash_attention_cube_fp16.o",
@@ -3345,6 +3541,7 @@
     ],
     "B.ARG": [
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "B.CATR": [
@@ -3356,6 +3553,7 @@
     ],
     "B.DIM": [
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "B.EQ": [
@@ -3373,8 +3571,11 @@
     "B.IOR": [
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "B.IOT": [
@@ -3388,20 +3589,25 @@
     ],
     "B.NE": [
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "99_spec_decode_qemu.o"
     ],
     "B.NZ": [
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "99_spec_decode_qemu.o"
     ],
     "B.TEXT": [
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "99_spec_decode_qemu.o"
     ],
     "B.Z": [
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "99_spec_decode_qemu.o"
     ],
     "BC.IALL": [
@@ -3435,7 +3641,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
@@ -3445,6 +3653,7 @@
     ],
     "BSTART.ACCCVT": [
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "BSTART.CALL": [
@@ -3459,7 +3668,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
@@ -3469,10 +3680,12 @@
     ],
     "BSTART.CUBE": [
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "BSTART.FIXP": [
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "BSTART.FP": [
@@ -3489,7 +3702,9 @@
     ],
     "BSTART.MPAR": [
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "BSTART.MSCATTER": [
@@ -3501,8 +3716,11 @@
     "BSTART.MSEQ": [
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "BSTART.STD": [
@@ -3517,7 +3735,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
@@ -3532,8 +3752,11 @@
     "BSTART.TEPL": [
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "BSTART.TGEMV": [
@@ -3556,14 +3779,17 @@
     ],
     "BSTART.TLOAD": [
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "BSTART.TMATMUL": [
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "BSTART.TMATMUL.ACC": [
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "BSTART.TMATMUL.BIAS": [
@@ -3580,6 +3806,7 @@
     ],
     "BSTART.TMOV": [
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "BSTART.TPREFETCH": [
@@ -3587,16 +3814,21 @@
     ],
     "BSTART.TSTORE": [
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "BSTART.VPAR": [
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "BSTART.VSEQ": [
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "BSTOP": [
@@ -3609,10 +3841,13 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "21_freestanding_runtime.o",
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o",
       "main.o"
     ],
@@ -3636,7 +3871,9 @@
     "C.ADD": [
       "07_atomic.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "99_spec_decode_qemu.o",
@@ -3672,7 +3909,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
@@ -3696,7 +3935,9 @@
     "C.B.DIMI": [
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "99_spec_decode_qemu.o"
     ],
     "C.BSTART": [
@@ -3712,7 +3953,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "14_callret_templates.o",
       "16_pto_kernel_parity.o",
@@ -3771,14 +4014,19 @@
     ],
     "C.BSTART.MPAR": [
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "C.BSTART.MSEQ": [
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "C.BSTART.STD": [
@@ -3794,7 +4042,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "14_callret_templates.o",
       "16_pto_kernel_parity.o",
@@ -3850,14 +4100,17 @@
     ],
     "C.BSTART.SYS": [
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "C.BSTART.VPAR": [
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "C.BSTART.VSEQ": [
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "C.BSTOP": [
@@ -3871,11 +4124,14 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "14_callret_templates.o",
       "21_freestanding_runtime.o",
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o",
       "main.o",
       "mem.o",
@@ -3938,7 +4194,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
@@ -3961,7 +4219,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
@@ -4016,7 +4276,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "14_callret_templates.o",
       "16_pto_kernel_parity.o",
@@ -4115,7 +4377,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
@@ -4153,7 +4417,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
@@ -4207,7 +4473,9 @@
     "C.SETC.TGT": [
       "07_atomic_lr_srczero.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "14_callret_templates.o",
       "99_spec_decode_qemu.o",
@@ -4236,7 +4504,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
@@ -4286,6 +4556,7 @@
     ],
     "C.SSRGET": [
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "C.SUB": [
@@ -4307,7 +4578,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
@@ -4348,7 +4621,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "21_freestanding_runtime.o",
       "99_spec_decode_qemu.o",
@@ -4446,6 +4721,7 @@
     ],
     "CMP.LTUI": [
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "99_spec_decode_qemu.o"
     ],
     "CMP.NE": [
@@ -4552,10 +4828,12 @@
     ],
     "ERCOV": [
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "ESAVE": [
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "FABS": [
@@ -4605,12 +4883,15 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "14_callret_templates.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o",
       "add_custom.o",
       "argmax_fp32.o",
@@ -4760,12 +5041,15 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "14_callret_templates.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o",
       "add_custom.o",
       "argmax_fp32.o",
@@ -4843,7 +5127,9 @@
       "06_floating_point.o",
       "07_atomic.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
@@ -4877,7 +5163,9 @@
       "06_floating_point.o",
       "07_atomic.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
@@ -4912,6 +5200,7 @@
     ],
     "HL.CASD": [
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "HL.CASH": [
@@ -4919,6 +5208,7 @@
     ],
     "HL.CASW": [
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "HL.CCAT": [
@@ -5153,7 +5443,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
@@ -5177,7 +5469,9 @@
       "03_loadstore.o",
       "07_atomic.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "99_spec_decode_qemu.o",
       "stdlib.o"
     ],
@@ -5498,6 +5792,7 @@
     ],
     "HL.SUBIW": [
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "16_pto_kernel_parity.o",
       "99_spec_decode_qemu.o"
     ],
@@ -5505,7 +5800,9 @@
       "03_loadstore.o",
       "07_atomic.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "16_pto_kernel_parity.o",
       "99_spec_decode_qemu.o",
       "stdlib.o",
@@ -5584,6 +5881,7 @@
     ],
     "J": [
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "14_callret_templates.o",
       "99_spec_decode_qemu.o"
     ],
@@ -5592,15 +5890,18 @@
     ],
     "L.BSTART.FP": [
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "L.BSTART.STD": [
       "14_callret_templates.o",
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "L.BSTART.SYS": [
       "41_v056_isa_forms.o",
+      "41_v057_isa_forms.o",
       "99_spec_decode_qemu.o"
     ],
     "LB": [
@@ -5615,7 +5916,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
@@ -5647,7 +5950,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
@@ -5695,6 +6000,7 @@
       "04_branch.o",
       "06_floating_point.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
@@ -5780,7 +6086,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
@@ -5809,7 +6117,9 @@
     "LW": [
       "08_jumptable.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "16_pto_kernel_parity.o",
       "99_spec_decode_qemu.o",
       "add_custom.o",
@@ -5862,6 +6172,7 @@
     "LWI": [
       "01_arithmetic.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "16_pto_kernel_parity.o",
       "99_spec_decode_qemu.o",
       "flash_attention_cube_fp16.o",
@@ -5898,6 +6209,7 @@
     ],
     "LWUI": [
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "16_pto_kernel_parity.o",
       "99_spec_decode_qemu.o",
       "argmax_fp32.o",
@@ -5974,6 +6286,7 @@
     ],
     "MULW": [
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "16_pto_kernel_parity.o",
       "99_spec_decode_qemu.o",
       "flash_attention_cube_fp16.o",
@@ -5991,7 +6304,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
@@ -6015,6 +6330,7 @@
     ],
     "ORW": [
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "16_pto_kernel_parity.o",
       "99_spec_decode_qemu.o",
       "flash_attention_cube_fp16.o",
@@ -6125,7 +6441,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "14_callret_templates.o",
       "16_pto_kernel_parity.o",
@@ -6266,7 +6584,9 @@
       "07_atomic.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "99_spec_decode_qemu.o",
       "flash_attention_cube_fp16.o",
       "flash_attention_vec_fp16.o",
@@ -6321,7 +6641,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
@@ -6369,6 +6691,7 @@
     "SLLI": [
       "08_jumptable.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "99_spec_decode_qemu.o",
@@ -6430,7 +6753,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
@@ -6458,7 +6783,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
@@ -6514,7 +6841,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
@@ -6532,7 +6861,9 @@
       "07_atomic.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "99_spec_decode_qemu.o",
@@ -6603,6 +6934,7 @@
       "07_atomic.o",
       "09_varargs.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "16_pto_kernel_parity.o",
       "99_spec_decode_qemu.o",
       "flash_attention_cube_fp16.o",
@@ -6618,6 +6950,7 @@
     ],
     "SUBW": [
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "16_pto_kernel_parity.o",
       "99_spec_decode_qemu.o",
       "flash_attention_cube_fp16.o",
@@ -6705,7 +7038,9 @@
       "09_varargs.o",
       "11_system.o",
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "14_callret.o",
       "16_pto_kernel_parity.o",
       "21_freestanding_runtime.o",
@@ -6745,7 +7080,9 @@
     ],
     "UCVTF": [
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "16_pto_kernel_parity.o",
       "99_spec_decode_qemu.o",
       "flash_attention_cube_fp16.o",
@@ -6762,7 +7099,9 @@
     ],
     "V.ADD": [
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "99_spec_decode_qemu.o"
     ],
     "V.ADDI": [
@@ -6800,6 +7139,7 @@
     ],
     "V.CMP.EQ": [
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "99_spec_decode_qemu.o"
     ],
     "V.CMP.EQI": [
@@ -6819,6 +7159,7 @@
     ],
     "V.CMP.LT": [
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "99_spec_decode_qemu.o"
     ],
     "V.CMP.LTI": [
@@ -6826,10 +7167,12 @@
     ],
     "V.CMP.LTU": [
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "99_spec_decode_qemu.o"
     ],
     "V.CMP.LTUI": [
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "99_spec_decode_qemu.o"
     ],
     "V.CMP.NE": [
@@ -6855,11 +7198,14 @@
     ],
     "V.FABS": [
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "99_spec_decode_qemu.o"
     ],
     "V.FADD": [
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "99_spec_decode_qemu.o"
     ],
     "V.FCLASS": [
@@ -6909,7 +7255,9 @@
     ],
     "V.FMUL": [
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "99_spec_decode_qemu.o"
     ],
     "V.FNE": [
@@ -7046,7 +7394,9 @@
     ],
     "V.LW.BRG": [
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "99_spec_decode_qemu.o"
     ],
     "V.LW.MAX": [
@@ -7102,6 +7452,7 @@
     ],
     "V.MUL": [
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "99_spec_decode_qemu.o"
     ],
     "V.OR": [
@@ -7142,6 +7493,7 @@
     ],
     "V.RDOR": [
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "99_spec_decode_qemu.o"
     ],
     "V.RDXOR": [
@@ -7275,6 +7627,7 @@
     ],
     "V.SUB": [
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "99_spec_decode_qemu.o"
     ],
     "V.SUBI": [
@@ -7282,6 +7635,7 @@
     ],
     "V.SW": [
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "99_spec_decode_qemu.o"
     ],
     "V.SW.ADD": [
@@ -7292,7 +7646,9 @@
     ],
     "V.SW.BRG": [
       "12_v03_vector_tile.o",
+      "12_v057_vector_tile.o",
       "13_v03_vector_ops_matrix.o",
+      "13_v057_vector_ops_matrix.o",
       "99_spec_decode_qemu.o"
     ],
     "V.SW.MAX": [
@@ -7364,13 +7720,13 @@
       "softfp.o"
     ]
   },
-  "generated_at_utc": "2026-07-17 06:07:02Z",
+  "generated_at_utc": "2026-07-18 02:41:47Z",
   "llvm_objdump": "/Users/zhoubot/linx-isa/compiler/llvm/build-linxisa-clang/bin/llvm-objdump",
   "missing_by_prefix": {},
   "missing_count": 0,
   "missing_spec_mnemonics": [],
   "obj_dir": "/Users/zhoubot/linx-isa/avs/qemu/out/obj",
-  "object_files_scanned": 66,
+  "object_files_scanned": 69,
   "result": {
     "classification": "qemu_avs_translation_coverage_complete",
     "ok": true
@@ -7392,11 +7748,19 @@
       73
     ],
     [
+      "12_v057_vector_tile.o",
+      73
+    ],
+    [
       "softfp.o",
       72
     ],
     [
       "13_v03_vector_ops_matrix.o",
+      69
+    ],
+    [
+      "13_v057_vector_ops_matrix.o",
       69
     ],
     [
@@ -7470,14 +7834,6 @@
     [
       "softmax_fp32.o",
       38
-    ],
-    [
-      "05_move.o",
-      37
-    ],
-    [
-      "flash_attention_vec_fp32.o",
-      35
     ]
   ],
   "unmapped_by_object": {
@@ -7503,7 +7859,16 @@
       "A5",
       "S6"
     ],
+    "12_v057_vector_tile.o": [
+      "A0",
+      "A1",
+      "A5",
+      "S6"
+    ],
     "13_v03_vector_ops_matrix.o": [
+      "A7"
+    ],
+    "13_v057_vector_ops_matrix.o": [
       "A7"
     ],
     "14_callret.o": [
@@ -7524,6 +7889,7 @@
       "U#1"
     ],
     "41_v056_isa_forms.o": [],
+    "41_v057_isa_forms.o": [],
     "99_spec_decode_qemu.o": [
       "A1"
     ],

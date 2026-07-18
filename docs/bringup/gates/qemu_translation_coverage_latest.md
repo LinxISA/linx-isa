@@ -1,8 +1,8 @@
 # AVS QEMU Translation Coverage
 
-- Generated (UTC): `2026-07-17 06:07:02Z`
+- Generated (UTC): `2026-07-18 02:41:47Z`
 - Spec unique mnemonics: `731`
-- AVS object files scanned: `66`
+- AVS object files scanned: `69`
 - Covered spec mnemonics: `731/731` (`100.0%`)
 - Missing spec mnemonics: `0`
 
@@ -182,8 +182,10 @@
 - `99_spec_decode_qemu.o`: `731`
 - `16_pto_kernel_parity.o`: `75`
 - `12_v03_vector_tile.o`: `73`
+- `12_v057_vector_tile.o`: `73`
 - `softfp.o`: `72`
 - `13_v03_vector_ops_matrix.o`: `69`
+- `13_v057_vector_ops_matrix.o`: `69`
 - `11_system.o`: `64`
 - `sparse_attention_local_fp16.o`: `62`
 - `flash_attention_cube_fp16.o`: `59`
@@ -202,7 +204,5 @@
 - `syscall.o`: `40`
 - `08_jumptable.o`: `38`
 - `softmax_fp32.o`: `38`
-- `05_move.o`: `37`
-- `flash_attention_vec_fp32.o`: `35`
 
 ## Missing Spec Mnemonics (First 200)

@@ -370,6 +370,21 @@ def cmd_reset_run(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_retain_run(args: argparse.Namespace) -> int:
+    report_path = Path(args.report).resolve()
+    report = _load_report(report_path)
+    retained = [run for run in report["runs"] if str(run.get("run_id", "")) == args.run_id]
+    if not retained:
+        raise SystemExit(f"error: run_id not found: {args.run_id}")
+
+    report["runs"] = sorted(retained, key=_run_sort_key)
+    report["generated_at_utc"] = _utc_now()
+    _save_report(report_path, report)
+    lanes = ", ".join(str(run.get("lane", "unknown")) for run in report["runs"])
+    print(f"ok: retained run_id={args.run_id} lanes={lanes} ({report_path})")
+    return 0
+
+
 def cmd_upsert_gate(args: argparse.Namespace) -> int:
     report_path = Path(args.report).resolve()
     report = _load_report(report_path)
@@ -519,6 +534,14 @@ def main(argv: list[str]) -> int:
         help="Also clear the run SHA manifest (default keeps last captured manifest).",
     )
     ap_reset.set_defaults(func=cmd_reset_run)
+
+    ap_retain = sub.add_parser(
+        "retain-run",
+        help="Remove other run IDs while retaining every lane for one canonical run.",
+    )
+    ap_retain.add_argument("--report", default=str(DEFAULT_REPORT))
+    ap_retain.add_argument("--run-id", required=True)
+    ap_retain.set_defaults(func=cmd_retain_run)
 
     ap_upsert = sub.add_parser("upsert-gate", help="Insert or update one gate row in one run")
     ap_upsert.add_argument("--report", default=str(DEFAULT_REPORT))

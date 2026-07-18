@@ -4,6 +4,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 PROFILE="${LINX_BRINGUP_PROFILE:-release-strict}"
 TIER="${LINX_GATE_TIER:-pr}"
+export LINX_TRACE_SCHEMA_VERSION="${LINX_TRACE_SCHEMA_VERSION:-1.0}"
 
 # Keep the historical strict-cross entrypoint as the heavier compatibility
 # lane while delegating gate selection/execution to the canonical registry.

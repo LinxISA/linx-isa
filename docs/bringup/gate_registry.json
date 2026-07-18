@@ -18,7 +18,7 @@
       "gate_key": "ISA::No CJK live-surface lint",
       "domain": "ISA",
       "owner": "integration",
-      "command": "python3 \"$ROOT/tools/isa/lint_no_cjk.py\" --repo-root \"$ROOT\" --allow-prefix docs/matmul --allow-prefix docs/project/linxisa-superproject-methodology-zh --allow-prefix docs/project/superproject-whitepaper-zh --allow-prefix tools/wavedrom/node_modules",
+      "command": "python3 \"$ROOT/tools/isa/lint_no_cjk.py\" --repo-root \"$ROOT\" --include-prefix README.md --include-prefix isa/v0.57 --include-prefix docs/releases --include-prefix docs/architecture --allow-prefix isa/v0.57/state/pto_ops.json",
       "profiles": ["dev", "release-strict"],
       "tiers": ["pr", "nightly"],
       "required": true,

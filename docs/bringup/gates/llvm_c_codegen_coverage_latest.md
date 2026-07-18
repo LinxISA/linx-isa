@@ -1,21 +1,21 @@
 # LLVM C/C++ CodeGen ISA Mnemonic Breadth
 
-- Generated (UTC): `2026-07-16 23:15:14Z`
+- Generated (UTC): `2026-07-18 02:41:42Z`
 - Status: `MEASURED` (no target threshold is asserted)
-- Pure CodeGen direct coverage: `145/710`
-- Pure CodeGen after alias closure: `146/710`
-- C/C++ source-oriented direct coverage: `146/710` (`20.563%`)
-- C/C++ source-oriented after explicit alias closure: `147/710` (`20.704%`)
+- Pure CodeGen direct coverage: `145/731`
+- Pure CodeGen after alias closure: `146/731`
+- C/C++ source-oriented direct coverage: `146/731` (`19.973%`)
+- C/C++ source-oriented after explicit alias closure: `147/731` (`20.109%`)
 - Frozen plain-C reachable contract: `146/146` (`PASS`)
 - Included C/C++ artifacts: `44`
-- Excluded disassembly artifacts: `6`
-- Compiler identity: `clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 826749839574b55e01c752dbde3c73e68854aad1)`
+- Excluded disassembly artifacts: `7`
+- Compiler identity: `clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git c39f7d86ce08489b8beb0f0da9f614445a4aa8e5)`
 
 Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. The broader source-oriented boundary includes those tests but does not relabel their source-directed instructions as compiler-selected CodeGen. Neither metric reuses generated `99_spec_decode` or hand-authored assembly-lane artifacts.
 
 ## Measurement Contract
 
-- Metric scope: unique v0.56 ISA mnemonics observed in llvm-objdump disassembly of objects whose stems match current AVS C/C++ sources; pure CodeGen excludes sources with inline asm/builtins, and explicit alias closure is separate
+- Metric scope: unique v0.57 ISA mnemonics observed in llvm-objdump disassembly of objects whose stems match current AVS C/C++ sources; pure CodeGen excludes sources with inline asm/builtins, and explicit alias closure is separate
 - Provenance rule: require a complete canonical run.sh build manifest with the exact current source set, exact flags, artifact and tool hashes; recompile every source with the manifest flags and regenerate objdump before accepting source-to-object-to-disassembly provenance
 - Not measured:
   - encoding/form acceptance
@@ -89,7 +89,8 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 
 ## Excluded Artifacts
 
-- `avs/compiler/linx-llvm/tests/out/41_v056_isa_forms/41_v056_isa_forms.objdump`: hand-authored assembly source; not C/C++ CodeGen
+- `avs/compiler/linx-llvm/tests/out/41_v056_isa_forms/41_v056_isa_forms.objdump`: no current C/C++ source with the same stem
+- `avs/compiler/linx-llvm/tests/out/41_v057_isa_forms/41_v057_isa_forms.objdump`: hand-authored assembly source; not C/C++ CodeGen
 - `avs/compiler/linx-llvm/tests/out/99_spec_decode/99_spec_decode.objdump`: generated ISA disassembly vector; not C/C++ CodeGen
 - `avs/compiler/linx-llvm/tests/out/99_spec_decode/99_spec_decode.roundtrip.objdump`: roundtrip-only artifact; not C/C++ CodeGen
 - `avs/compiler/linx-llvm/tests/out/99_spec_decode/99_spec_decode.roundtrip.strict.objdump`: roundtrip-only artifact; not C/C++ CodeGen
@@ -127,14 +128,30 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 - `BSTART.CUBE`
 - `BSTART.FIXP`
 - `BSTART.FP`
+- `BSTART.MGATHER`
+- `BSTART.MGATHER.CAS`
+- `BSTART.MGATHER.MASK`
 - `BSTART.MPAR`
+- `BSTART.MSCATTER`
+- `BSTART.MSCATTER.MASK`
 - `BSTART.MSEQ`
 - `BSTART.SYS`
 - `BSTART.TEPL`
+- `BSTART.TGEMV`
+- `BSTART.TGEMV.ACC`
+- `BSTART.TGEMV.BIAS`
+- `BSTART.TGEMVMX`
+- `BSTART.TGEMVMX.ACC`
+- `BSTART.TGEMVMX.BIAS`
 - `BSTART.TLOAD`
 - `BSTART.TMATMUL`
 - `BSTART.TMATMUL.ACC`
+- `BSTART.TMATMUL.BIAS`
+- `BSTART.TMATMULMX`
+- `BSTART.TMATMULMX.ACC`
+- `BSTART.TMATMULMX.BIAS`
 - `BSTART.TMOV`
+- `BSTART.TPREFETCH`
 - `BSTART.TSTORE`
 - `BSTART.VPAR`
 - `BSTART.VSEQ`
@@ -159,6 +176,10 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 - `C.SSRGET`
 - `C.ZEXT.B`
 - `C.ZEXT.H`
+- `CASB`
+- `CASD`
+- `CASH`
+- `CASW`
 - `CLZ`
 - `CMP.ORI`
 - `CTZ`
@@ -170,6 +191,7 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 - `DC.ISW`
 - `DC.IVA`
 - `DC.ZVA`
+- `DMA`
 - `EBREAK`
 - `ERCOV`
 - `ESAVE`
