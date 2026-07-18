@@ -163,14 +163,10 @@ fi
 
 LLVM_READELF="${LLVM_READELF:-}"
 if [[ -z "$LLVM_READELF" ]]; then
-  for cand in \
-    "$ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-readelf"
-  do
-    if [[ -x "$cand" ]]; then
-      LLVM_READELF="$cand"
-      break
-    fi
-  done
+  cand="$ROOT/compiler/llvm/build-linxisa-clang/bin/llvm-readelf"
+  if [[ -x "$cand" ]]; then
+    LLVM_READELF="$cand"
+  fi
 fi
 if [[ -z "$LLVM_READELF" ]] && command -v llvm-readelf >/dev/null 2>&1; then
   LLVM_READELF="$(command -v llvm-readelf)"

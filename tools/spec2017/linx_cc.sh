@@ -10,14 +10,10 @@ STATIC_IMAGE_BASE="${LINX_SPEC_IMAGE_BASE:-0x40000000}"
 
 CLANG="${LINX_CLANG:-}"
 if [[ -z "$CLANG" ]]; then
-  for cand in \
-    "$ROOT/compiler/llvm/build-linxisa-clang/bin/clang"
-  do
-    if [[ -x "$cand" ]]; then
-      CLANG="$cand"
-      break
-    fi
-  done
+  cand="$ROOT/compiler/llvm/build-linxisa-clang/bin/clang"
+  if [[ -x "$cand" ]]; then
+    CLANG="$cand"
+  fi
 fi
 if [[ -z "$CLANG" || ! -x "$CLANG" ]]; then
   echo "error: linx_cc.sh could not find clang; set LINX_CLANG" >&2

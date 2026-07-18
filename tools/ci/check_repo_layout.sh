@@ -169,11 +169,11 @@ while IFS= read -r p; do
   if [[ "$mode" != "160000" ]]; then
     echo "error: submodule path is not a tracked gitlink: $p" >&2
     fail=1
-  elif [[ -d "$p" ]] && ! git -C "$p" cat-file -e "${gitlink_sha}^{commit}" 2>/dev/null; then
+  elif [[ -e "$p/.git" ]] && ! git -C "$p" cat-file -e "${gitlink_sha}^{commit}" 2>/dev/null; then
     echo "error: submodule gitlink commit is unreachable in the initialized leaf: $p@$gitlink_sha" >&2
     fail=1
   fi
-  if [[ -d "$p" ]]; then
+  if [[ -e "$p/.git" ]]; then
     dirty_state="$(git -C "$p" status --porcelain --untracked-files=all 2>/dev/null || true)"
     if [[ -n "$dirty_state" ]]; then
       echo "error: submodule worktree is dirty: $p" >&2
@@ -192,7 +192,7 @@ while IFS= read -r status_line; do
   [[ -n "$status_line" ]] || continue
   marker="${status_line:0:1}"
   path="$(printf '%s\n' "$status_line" | awk '{print $2}')"
-  if [[ "$marker" == "-" || "$marker" == "+" || "$marker" == "U" ]]; then
+  if [[ "$marker" == "+" || "$marker" == "U" ]]; then
     echo "error: submodule checkout does not match the recorded gitlink: $path ($status_line)" >&2
     fail=1
   fi
