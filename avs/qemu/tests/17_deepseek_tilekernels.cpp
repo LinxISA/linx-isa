@@ -7,20 +7,21 @@ namespace {
 constexpr int kRows = 32;
 constexpr int kCols = 32;
 constexpr int kElements = kRows * kCols;
+constexpr int kStorageElements = 2048;
 
-alignas(64) float f0[kElements];
-alignas(64) float f1[kElements];
-alignas(64) float f2[kElements];
-alignas(64) float f3[kElements];
-alignas(64) int i0[kElements];
-alignas(64) int i1[kElements];
-alignas(64) int i2[kElements];
+alignas(64) float f0[kStorageElements];
+alignas(64) float f1[kStorageElements];
+alignas(64) float f2[kStorageElements];
+alignas(64) float f3[kStorageElements];
+alignas(64) int i0[kStorageElements];
+alignas(64) int i1[kStorageElements];
+alignas(64) int i2[kStorageElements];
 alignas(64) int8_t q0[4096];
 alignas(64) int8_t q1[4096];
 alignas(64) uint16_t h0[2048];
 alignas(64) uint16_t h1[2048];
-alignas(64) uint32_t u0[kElements];
-alignas(64) int64_t l0[kElements];
+alignas(64) uint32_t u0[kStorageElements];
+alignas(64) int64_t l0[kStorageElements];
 
 float absf(float value) { return value < 0.0f ? -value : value; }
 
@@ -72,6 +73,19 @@ void test_transpose() {
       TEST_ASSERT(f2[c * kRows + r] == f0[r * kCols + c], id, 1,
                   static_cast<uint64_t>(r * kCols + c));
   TEST_ASSERT(digest_f32(f2) != 0, id, 2, 0);
+
+  constexpr int tail_rows = 35;
+  constexpr int tail_cols = 37;
+  constexpr int tail_elements = tail_rows * tail_cols;
+  for (int i = 0; i < tail_elements; ++i) {
+    f0[i] = static_cast<float>(i + 1);
+    f2[i] = -1.0f;
+  }
+  deepseek_batched_transpose_f32(f2, f0, 1, tail_rows, tail_cols);
+  for (int r = 0; r < tail_rows; ++r)
+    for (int c = 0; c < tail_cols; ++c)
+      TEST_ASSERT(f2[c * tail_rows + r] == f0[r * tail_cols + c], id, 3,
+                  static_cast<uint64_t>(r * tail_cols + c));
   test_pass();
 }
 
@@ -108,6 +122,19 @@ void test_moe() {
                 static_cast<uint64_t>(r));
   }
 
+  constexpr int tail_rows = 3;
+  constexpr int tail_cols = 5;
+  for (int i = 0; i < tail_rows * tail_cols; ++i)
+    f2[i] = static_cast<float>((i % tail_cols) + 1);
+  deepseek_moe_normalize_weight_f32(f2, tail_rows, tail_cols);
+  for (int r = 0; r < tail_rows; ++r) {
+    float sum = 0.0f;
+    for (int c = 0; c < tail_cols; ++c)
+      sum += f2[r * tail_cols + c];
+    TEST_ASSERT(absf(sum - 1.0f) < 0.001f, id, 8,
+                static_cast<uint64_t>(r));
+  }
+
   deepseek_moe_topk_gate_f32(f2, i1, f0, kRows, kCols, 2);
   deepseek_moe_top2_sum_gate_f32(f2, i1, f1, kRows, kCols);
   deepseek_moe_topk_sum_group_f32(f2, i1, f1, kRows, 4, 8, 2);
@@ -131,8 +158,7 @@ void test_quant() {
 
   deepseek_quant_per_token_i8(q0, f2, f0, kRows, kCols);
   for (int r = 0; r < kRows; ++r)
-    TEST_ASSERT(f2[r * kCols] > 0.0f, id, 1,
-                static_cast<uint64_t>(r));
+    TEST_ASSERT(f2[r] > 0.0f, id, 1, static_cast<uint64_t>(r));
   deepseek_quant_cast_back_f32(f3, q0, f2, kRows, kCols, true);
   for (int i = 0; i < kElements; ++i)
     TEST_ASSERT(absf(f3[i] - f0[i]) < 0.03f, id, 2,
@@ -158,6 +184,21 @@ void test_quant() {
       q0, q1, f2, f3, f1, f0, f1, kRows, kCols);
   TEST_ASSERT(q0[0] != 0 || q1[0] != 0 || q0[1] != 0 || q1[1] != 0, id, 4,
               0);
+
+  constexpr int tail_rows = 3;
+  constexpr int tail_cols = 5;
+  for (int i = 0; i < tail_rows * tail_cols; ++i)
+    f0[i] = static_cast<float>((i % 9) - 4) * 0.5f;
+  deepseek_quant_per_token_i8(q0, f2, f0, tail_rows, tail_cols);
+  deepseek_quant_cast_back_f32(f3, q0, f2, tail_rows, tail_cols, true);
+  for (int r = 0; r < tail_rows; ++r) {
+    TEST_ASSERT(f2[r] > 0.0f, id, 5, static_cast<uint64_t>(r));
+    for (int c = 0; c < tail_cols; ++c) {
+      const int i = r * tail_cols + c;
+      TEST_ASSERT(absf(f3[i] - f0[i]) < 0.03f, id, 6,
+                  static_cast<uint64_t>(i));
+    }
+  }
   test_pass();
 }
 
@@ -216,6 +257,22 @@ void test_mhc() {
     TEST_ASSERT(absf(square_sum / static_cast<float>(kCols) - 1.0f) <
                     0.01f,
                 id, 1, static_cast<uint64_t>(r));
+  }
+
+  constexpr int tail_rows = 3;
+  constexpr int tail_cols = 5;
+  for (int i = 0; i < tail_rows * tail_cols; ++i)
+    f0[i] = static_cast<float>((i % 7) + 1) * 0.25f;
+  deepseek_mhc_norm_fwd_f32(f2, f0, tail_rows, tail_cols, 0.00001f);
+  for (int r = 0; r < tail_rows; ++r) {
+    float square_sum = 0.0f;
+    for (int c = 0; c < tail_cols; ++c) {
+      const float value = f2[r * tail_cols + c];
+      square_sum += value * value;
+    }
+    TEST_ASSERT(absf(square_sum / static_cast<float>(tail_cols) - 1.0f) <
+                    0.01f,
+                id, 4, static_cast<uint64_t>(r));
   }
 
   deepseek_mhc_pre_split_mixes_fwd_f32(f2, f3, f0, kRows, kCols);
