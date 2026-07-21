@@ -75,6 +75,7 @@ COMPLETION_TEST_IDS_BY_SUITE = {
     "executable_scalar": 0x00002510,
     "executable_integer": 0x0000260F,
     "system": 0x0000110D,
+    "deepseek_tilekernels": 0x00001705,
 }
 
 
@@ -540,6 +541,14 @@ PTO_PARITY_KERNEL_NAMES = [
     "unique_i32",
 ]
 
+DEEPSEEK_TILEKERNEL_NAMES = [
+    "engram",
+    "mhc",
+    "moe",
+    "quant",
+    "transpose",
+]
+
 
 SUITES: dict[str, dict[str, str]] = {
     "arithmetic": {"src": "tests/01_arithmetic.c", "macro": "LINX_TEST_ENABLE_ARITHMETIC"},
@@ -553,6 +562,10 @@ SUITES: dict[str, dict[str, str]] = {
     "varargs": {"src": "tests/09_varargs.c", "macro": "LINX_TEST_ENABLE_VARARGS"},
     "tile": {"src": "tests/10_tile_matmul.cpp", "macro": "LINX_TEST_ENABLE_TILE"},
     "pto_parity": {"src": "tests/16_pto_kernel_parity.cpp", "macro": "LINX_TEST_ENABLE_PTO_PARITY"},
+    "deepseek_tilekernels": {
+        "src": "tests/17_deepseek_tilekernels.cpp",
+        "macro": "LINX_TEST_ENABLE_DEEPSEEK_TILEKERNELS",
+    },
     "system": {"src": "tests/11_system.c", "macro": "LINX_TEST_ENABLE_SYSTEM"},
     "v057_vector": {"src": "tests/12_v057_vector_tile.c", "macro": "LINX_TEST_ENABLE_V057_VECTOR"},
     "v057_vector_ops": {
@@ -616,6 +629,8 @@ def _extra_sources_for_suite(suite: str) -> list[str]:
         ]
     if suite == "pto_parity":
         return [_pto_kernel_src(name) for name in PTO_PARITY_KERNEL_NAMES]
+    if suite == "deepseek_tilekernels":
+        return [_pto_kernel_src(name) for name in DEEPSEEK_TILEKERNEL_NAMES]
     return []
 
 LLC_PIPELINE_SUITES: set[str] = set()
@@ -1202,7 +1217,7 @@ def main(argv: list[str]) -> int:
         default_include = REPO_ROOT / "workloads" / "pto_kernels" / "include"
         if default_include.exists():
             pto_kernel_include_dir = default_include
-    if any(s in selected for s in ("tile", "pto_parity")) and pto_kernel_include_dir is None:
+    if any(s in selected for s in ("tile", "pto_parity", "deepseek_tilekernels")) and pto_kernel_include_dir is None:
         raise SystemExit(
             "error: tile suite requires PTO headers; looked for "
             f"{REPO_ROOT / 'workloads' / 'pto_kernels' / 'include'} "
@@ -1248,6 +1263,7 @@ def main(argv: list[str]) -> int:
         "simt_autovec",
         "tile",
         "pto_parity",
+        "deepseek_tilekernels",
         "runtime",
     }
     if any(s in softfp_suites for s in selected):
@@ -1304,11 +1320,11 @@ def main(argv: list[str]) -> int:
         f"-DLINX_TEST_QUIET={'0' if emit_test_logs else '1'}",
         *args.extra_cflag,
     ]
-    if any(s in selected for s in ("tile", "pto_parity")):
+    if any(s in selected for s in ("tile", "pto_parity", "deepseek_tilekernels")):
         # Keep tile-suite bring-up deterministic: SIMT autovec currently
         # triggers a mid-end crash on migrated PTO kernels under strict v0.57.
         common_cflags += ["-mllvm", "-linx-simt-autovec=false"]
-    if any(s in selected for s in ("tile", "pto_parity")):
+    if any(s in selected for s in ("tile", "pto_parity", "deepseek_tilekernels")):
         # Runtime policy: migrated PTO kernels run in smoke profile under QEMU.
         # Full-profile coverage remains in compile/objdump gates.
         common_cflags += ["-DPTO_QEMU_SMOKE=1"]

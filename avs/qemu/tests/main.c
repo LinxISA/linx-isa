@@ -56,6 +56,9 @@
 #ifndef LINX_TEST_ENABLE_PTO_PARITY
 #define LINX_TEST_ENABLE_PTO_PARITY 0
 #endif
+#ifndef LINX_TEST_ENABLE_DEEPSEEK_TILEKERNELS
+#define LINX_TEST_ENABLE_DEEPSEEK_TILEKERNELS 0
+#endif
 #ifndef LINX_TEST_ENABLE_SIMT_AUTOVEC
 #define LINX_TEST_ENABLE_SIMT_AUTOVEC 0
 #endif
@@ -111,6 +114,9 @@ void run_callret_tests(void);
 #endif
 #if LINX_TEST_ENABLE_PTO_PARITY
 void run_pto_parity_tests(void);
+#endif
+#if LINX_TEST_ENABLE_DEEPSEEK_TILEKERNELS
+void run_deepseek_tilekernels_tests(void);
 #endif
 #if LINX_TEST_ENABLE_SIMT_AUTOVEC
 void run_simt_autovec_tests(void);
@@ -172,6 +178,9 @@ void _start(void) {
 #endif
 #if LINX_TEST_ENABLE_PTO_PARITY
     run_pto_parity_tests();
+#endif
+#if LINX_TEST_ENABLE_DEEPSEEK_TILEKERNELS
+    run_deepseek_tilekernels_tests();
 #endif
 #if LINX_TEST_ENABLE_SIMT_AUTOVEC
     run_simt_autovec_tests();
