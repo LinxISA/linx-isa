@@ -21,6 +21,10 @@ void linx_tcmp_u8_lt(const uint8_t *, const uint8_t *, uint32_t *);
 void linx_tcmp_f32_ne(const float *, const float *, uint32_t *);
 void linx_tcmp_f32_ge(const float *, const float *, uint32_t *);
 void linx_tcmp_f16_lt(const uint16_t *, const uint16_t *, uint32_t *);
+void linx_tmax_s8(const int8_t *, const int8_t *, int8_t *);
+void linx_tshr_s8(const int8_t *, const int8_t *, int8_t *);
+void linx_tabs_s8(const int8_t *, int8_t *);
+void linx_tdiv_s16(const int16_t *, const int16_t *, int16_t *);
 }
 
 static void run_tadd_test()
@@ -245,9 +249,79 @@ static void run_tcmp_test()
     test_pass();
 }
 
+static uint8_t arithmetic_shift_right_s8(uint8_t value, unsigned shift)
+{
+    shift &= 31u;
+    if (shift >= 8u) {
+        return (value & 0x80u) != 0u ? 0xffu : 0u;
+    }
+    if (shift == 0u || (value & 0x80u) == 0u) {
+        return value >> shift;
+    }
+    return (uint8_t)((value >> shift) | (0xffu << (8u - shift)));
+}
+
+static void run_signed_narrow_lane_test()
+{
+    test_start(0x000A0015);
+    uart_puts("PTO TEPL signed narrow lanes ... ");
+
+    alignas(16) static int8_t lhs8[1024];
+    alignas(16) static int8_t rhs8[1024];
+    alignas(16) static int8_t out8[1024];
+    alignas(16) static int16_t lhs16[1024];
+    alignas(16) static int16_t rhs16[1024];
+    alignas(16) static int16_t out16[1024];
+    static const int8_t values8[] = {-128, -63, -7, -1, 0, 1, 9, 127};
+    static const int16_t values16[] = {
+        -32768, -30001, -257, -1, 0, 1, 257, 32767,
+    };
+    static const int16_t divisors16[] = {-1, 3, -7, 11, -13, 17, -19, 23};
+
+    for (unsigned i = 0; i < 1024; i++) {
+        lhs8[i] = values8[i % 8u];
+        rhs8[i] = values8[(i * 3u + 1u) % 8u];
+        lhs16[i] = values16[i % 8u];
+        rhs16[i] = divisors16[(i * 5u + 2u) % 8u];
+    }
+
+    linx_tmax_s8(lhs8, rhs8, out8);
+    for (unsigned i = 0; i < 1024; i++) {
+        const int8_t expected = lhs8[i] > rhs8[i] ? lhs8[i] : rhs8[i];
+        TEST_EQ32((uint8_t)out8[i], (uint8_t)expected, 0x000B0000u + i);
+    }
+
+    for (unsigned i = 0; i < 1024; i++) {
+        rhs8[i] = (int8_t)(i % 10u);
+    }
+    linx_tshr_s8(lhs8, rhs8, out8);
+    for (unsigned i = 0; i < 1024; i++) {
+        const uint8_t expected =
+            arithmetic_shift_right_s8((uint8_t)lhs8[i], (uint8_t)rhs8[i]);
+        TEST_EQ32((uint8_t)out8[i], expected, 0x000B1000u + i);
+    }
+
+    linx_tabs_s8(lhs8, out8);
+    for (unsigned i = 0; i < 1024; i++) {
+        const int16_t value = lhs8[i];
+        const uint8_t expected = (uint8_t)(value < 0 ? -value : value);
+        TEST_EQ32((uint8_t)out8[i], expected, 0x000B2000u + i);
+    }
+
+    linx_tdiv_s16(lhs16, rhs16, out16);
+    for (unsigned i = 0; i < 1024; i++) {
+        const int16_t expected =
+            (int16_t)((int32_t)lhs16[i] / (int32_t)rhs16[i]);
+        TEST_EQ32((uint16_t)out16[i], (uint16_t)expected,
+                  0x000B3000u + i);
+    }
+    test_pass();
+}
+
 extern "C" void run_tile_tepl_tests(void)
 {
     run_tadd_test();
     run_tsub_test();
     run_tcmp_test();
+    run_signed_narrow_lane_test();
 }
