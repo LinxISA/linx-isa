@@ -560,7 +560,7 @@ SUITES: dict[str, dict[str, str]] = {
     "atomic": {"src": "tests/07_atomic.c", "macro": "LINX_TEST_ENABLE_ATOMIC"},
     "jumptable": {"src": "tests/08_jumptable.c", "macro": "LINX_TEST_ENABLE_JUMPTABLE"},
     "varargs": {"src": "tests/09_varargs.c", "macro": "LINX_TEST_ENABLE_VARARGS"},
-    "tile": {"src": "tests/10_tile_matmul.cpp", "macro": "LINX_TEST_ENABLE_TILE"},
+    "tile": {"src": "tests/10_tile.cpp", "macro": "LINX_TEST_ENABLE_TILE"},
     "pto_parity": {"src": "tests/16_pto_kernel_parity.cpp", "macro": "LINX_TEST_ENABLE_PTO_PARITY"},
     "deepseek_tilekernels": {
         "src": "tests/17_deepseek_tilekernels.cpp",
@@ -612,7 +612,13 @@ COMPILE_ONLY_SUITE_SOURCE_OVERRIDE: dict[str, str] = {
 
 def _extra_sources_for_suite(suite: str) -> list[str]:
     if suite == "tile":
-        return [_pto_kernel_src(name) for name in PTO_TILE_KERNEL_NAMES]
+        return [
+            "avs/qemu/tests/10_tile_tma.cpp",
+            "avs/qemu/tests/10_tile_cube.cpp",
+            "avs/qemu/tests/10_tile_tepl.cpp",
+            "avs/qemu/tests/10_tile_integration.cpp",
+            *[_pto_kernel_src(name) for name in PTO_TILE_KERNEL_NAMES],
+        ]
     if suite == "atomic":
         return [
             "avs/qemu/tests/07_atomic_lr_srczero.S",
