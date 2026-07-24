@@ -617,6 +617,7 @@ def _extra_sources_for_suite(suite: str) -> list[str]:
             "avs/qemu/tests/10_tile_cube.cpp",
             "avs/qemu/tests/10_tile_tepl.cpp",
             "avs/qemu/tests/10_tile_integration.cpp",
+            "avs/qemu/tests/10_tile_tepl_tcmp.S",
             *[_pto_kernel_src(name) for name in PTO_TILE_KERNEL_NAMES],
         ]
     if suite == "atomic":
