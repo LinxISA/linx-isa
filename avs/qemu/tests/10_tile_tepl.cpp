@@ -58,6 +58,10 @@ void linx_tfillpad_s8_max(const int8_t *, int8_t *);
 void linx_tfillpad_s8_min(const int8_t *, int8_t *);
 void linx_tfillpad_u8_max(const uint8_t *, uint8_t *);
 void linx_tfillpad_u8_min(const uint8_t *, uint8_t *);
+void linx_tpartadd_f32(const float *, const float *, float *);
+void linx_tpartmul_f32(const float *, const float *, float *);
+void linx_tpartmax_f32(const float *, const float *, float *);
+void linx_tpartmin_f32(const float *, const float *, float *);
 void linx_tmax_s8(const int8_t *, const int8_t *, int8_t *);
 void linx_tshr_s8(const int8_t *, const int8_t *, int8_t *);
 void linx_tabs_s8(const int8_t *, int8_t *);
@@ -638,6 +642,55 @@ static void run_fillpad_test()
     test_pass();
 }
 
+static void run_partial_binary_test()
+{
+    test_start(0x000A001F);
+    uart_puts("PTO tile partial-valid binary ops ... ");
+
+    alignas(16) static float full[128];
+    alignas(16) static float partial[128];
+    alignas(16) static float out[128];
+    using PartKernel = void (*)(const float *, const float *, float *);
+    const PartKernel kernels[4] = {
+        linx_tpartadd_f32,
+        linx_tpartmul_f32,
+        linx_tpartmax_f32,
+        linx_tpartmin_f32,
+    };
+
+    for (unsigned i = 0; i < 128; i++) {
+        full[i] = (float)(i + 1u);
+        partial[i] = (float)(20u - i);
+    }
+    for (unsigned operation = 0; operation < 4; operation++) {
+        for (unsigned i = 0; i < 128; i++) {
+            out[i] = -23.0f;
+        }
+        kernels[operation](full, partial, out);
+        for (unsigned r = 0; r < 32; r++) {
+            for (unsigned c = 0; c < 4; c++) {
+                const unsigned lane = r * 4u + c;
+                uint32_t expected = 0u;
+                if (r < 3u) {
+                    const float lhs = full[lane];
+                    float value = lhs;
+                    if (r < 2u && c < 2u) {
+                        const float rhs = partial[r * 2u + c];
+                        value = operation == 0u ? lhs + rhs :
+                                operation == 1u ? lhs * rhs :
+                                operation == 2u ? (lhs > rhs ? lhs : rhs) :
+                                                  (lhs < rhs ? lhs : rhs);
+                    }
+                    expected = f32_bits(value);
+                }
+                TEST_EQ32(f32_bits(out[lane]), expected,
+                          0x000BFC00u + operation * 0x100u + lane);
+            }
+        }
+    }
+    test_pass();
+}
+
 static uint8_t arithmetic_shift_right_s8(uint8_t value, unsigned shift)
 {
     shift &= 31u;
@@ -860,6 +913,7 @@ extern "C" void run_tile_tepl_tests(void)
     run_reduce_extension_test();
     run_expand_extension_test();
     run_fillpad_test();
+    run_partial_binary_test();
     run_signed_narrow_lane_test();
     run_float16_lane_test();
     run_persistent_shape_test();
