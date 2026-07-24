@@ -169,4 +169,42 @@ linx_tgatherb_u8:
     FRET.STK [ra ~ ra], sp!, 8
     .size linx_tgatherb_u8, .-linx_tgatherb_u8
 
+    .globl linx_tci_s32
+    .type linx_tci_s32,@function
+linx_tci_s32:
+    FENTRY [ra ~ ra], sp!, 8
+    BSTART.TCI INT32
+    C.B.DIMI 8, ->lb0
+    B.ARG VS
+    B.IOR [a0],[a1]
+    B.IOT last, ->t<512B>
+    BSTART.TSTORE INT32
+    C.B.DIMI 128, ->lb0
+    B.ARG NORM.normal
+    B.IOR [a2],[]
+    B.IOT t#1, last, ->t<512B>
+    FRET.STK [ra ~ ra], sp!, 8
+    .size linx_tci_s32, .-linx_tci_s32
+
+    .globl linx_ttri_s32
+    .type linx_ttri_s32,@function
+linx_ttri_s32:
+    FENTRY [ra ~ ra], sp!, 8
+    BSTART.TTRI INT32
+    C.B.DIMI 4, ->lb0
+    C.B.DIMI 4, ->lb1
+    C.B.DIMI 4, ->lb2
+    B.ARG VS
+    B.IOR [a0],[a1]
+    B.IOT last, ->t<512B>
+    BSTART.TSTORE INT32
+    C.B.DIMI 4, ->lb0
+    C.B.DIMI 32, ->lb1
+    C.B.DIMI 4, ->lb2
+    B.ARG NORM.normal
+    B.IOR [a2],[]
+    B.IOT t#1, last, ->t<512B>
+    FRET.STK [ra ~ ra], sp!, 8
+    .size linx_ttri_s32, .-linx_ttri_s32
+
     .section ".note.GNU-stack","",@progbits

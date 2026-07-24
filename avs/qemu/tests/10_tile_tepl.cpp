@@ -65,6 +65,8 @@ void linx_tpartmin_f32(const float *, const float *, float *);
 void linx_treshape_bytes(const uint8_t *, uint8_t *);
 void linx_tconcat_f32(const float *, const float *, float *);
 void linx_tgatherb_u8(const uint8_t *, const uint32_t *, uint8_t *);
+void linx_tci_s32(int32_t, uint32_t, int32_t *);
+void linx_ttri_s32(int32_t, uint32_t, int32_t *);
 void linx_tmax_s8(const int8_t *, const int8_t *, int8_t *);
 void linx_tshr_s8(const int8_t *, const int8_t *, int8_t *);
 void linx_tabs_s8(const int8_t *, int8_t *);
@@ -751,6 +753,45 @@ static void run_layout_extension_test()
     test_pass();
 }
 
+static void run_tile_generation_test()
+{
+    test_start(0x000A0021);
+    uart_puts("PTO tile TCI/TTRI ... ");
+
+    alignas(16) static int32_t out[128];
+    linx_tci_s32(-3, 0u, out);
+    for (unsigned i = 0; i < 128; i++) {
+        TEST_EQ32((uint32_t)out[i],
+                  i < 8u ? (uint32_t)(-3 + (int32_t)i) : 0u,
+                  0x000C0500u + i);
+    }
+    linx_tci_s32(20, 1u, out);
+    for (unsigned i = 0; i < 128; i++) {
+        TEST_EQ32((uint32_t)out[i], i < 8u ? 20u - i : 0u,
+                  0x000C0600u + i);
+    }
+
+    linx_ttri_s32(0, 0u, out);
+    for (unsigned r = 0; r < 32; r++) {
+        for (unsigned c = 0; c < 4; c++) {
+            const unsigned lane = r * 4u + c;
+            const uint32_t expected = r < 4u && c <= r ? 1u : 0u;
+            TEST_EQ32((uint32_t)out[lane], expected,
+                      0x000C0700u + lane);
+        }
+    }
+    linx_ttri_s32(1, 1u, out);
+    for (unsigned r = 0; r < 32; r++) {
+        for (unsigned c = 0; c < 4; c++) {
+            const unsigned lane = r * 4u + c;
+            const uint32_t expected = r < 4u && c >= r + 1u ? 1u : 0u;
+            TEST_EQ32((uint32_t)out[lane], expected,
+                      0x000C0800u + lane);
+        }
+    }
+    test_pass();
+}
+
 static uint8_t arithmetic_shift_right_s8(uint8_t value, unsigned shift)
 {
     shift &= 31u;
@@ -975,6 +1016,7 @@ extern "C" void run_tile_tepl_tests(void)
     run_fillpad_test();
     run_partial_binary_test();
     run_layout_extension_test();
+    run_tile_generation_test();
     run_signed_narrow_lane_test();
     run_float16_lane_test();
     run_persistent_shape_test();
