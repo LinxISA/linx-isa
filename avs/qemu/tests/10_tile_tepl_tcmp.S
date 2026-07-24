@@ -46,6 +46,41 @@
     .size \name, .-\name
     .endm
 
+    .macro TCMPS_KERNEL name, dtype, cmode
+    .globl \name
+    .type \name,@function
+\name:
+    FENTRY [ra ~ ra], sp!, 8
+
+    BSTART.TLOAD \dtype
+    C.B.DIMI 32, ->lb0
+    C.B.DIMI 32, ->lb1
+    C.B.DIMI 32, ->lb2
+    B.ARG NORM.normal
+    B.IOR [a0],[]
+    B.IOT last, ->t<4KB>
+
+    BSTART.TCMPS \dtype
+    C.B.DIMI 31, ->lb0
+    C.B.DIMI 32, ->lb1
+    C.B.DIMI 32, ->lb2
+    B.ARG VS
+    B.DATR normal, \dtype, ZERO, cmode\cmode, rmode0
+    B.IOR [a1],[]
+    B.IOT t#1, last, ->t<4KB>
+
+    BSTART.TSTORE UINT32
+    C.B.DIMI 32, ->lb0
+    C.B.DIMI 32, ->lb1
+    C.B.DIMI 32, ->lb2
+    B.ARG NORM.normal
+    B.IOR [a2],[]
+    B.IOT t#1, last, ->t<4KB>
+
+    FRET.STK [ra ~ ra], sp!, 8
+    .size \name, .-\name
+    .endm
+
     TCMP_KERNEL linx_tcmp_s32_eq, INT32, 0
     TCMP_KERNEL linx_tcmp_s32_ne, INT32, 1
     TCMP_KERNEL linx_tcmp_s32_lt, INT32, 2
@@ -61,5 +96,7 @@
     TCMP_KERNEL linx_tcmp_f32_ne, FP32, 1
     TCMP_KERNEL linx_tcmp_f32_ge, FP32, 5
     TCMP_KERNEL linx_tcmp_f16_lt, FP16, 2
+
+    TCMPS_KERNEL linx_tcmps_s32_lt, INT32, 2
 
     .section ".note.GNU-stack","",@progbits

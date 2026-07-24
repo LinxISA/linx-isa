@@ -21,6 +21,7 @@ void linx_tcmp_u8_lt(const uint8_t *, const uint8_t *, uint32_t *);
 void linx_tcmp_f32_ne(const float *, const float *, uint32_t *);
 void linx_tcmp_f32_ge(const float *, const float *, uint32_t *);
 void linx_tcmp_f16_lt(const uint16_t *, const uint16_t *, uint32_t *);
+void linx_tcmps_s32_lt(const int32_t *, int32_t, uint32_t *);
 void linx_tmax_s8(const int8_t *, const int8_t *, int8_t *);
 void linx_tshr_s8(const int8_t *, const int8_t *, int8_t *);
 void linx_tabs_s8(const int8_t *, int8_t *);
@@ -255,6 +256,39 @@ static void run_tcmp_test()
     test_pass();
 }
 
+static void run_tcmps_test()
+{
+    test_start(0x000A001A);
+    uart_puts("PTO tile tcmps packed mask ... ");
+
+    alignas(16) static int32_t src[1024];
+    alignas(16) static uint32_t mask[1024];
+    uint32_t expected[32] = {};
+    const int32_t scalar = -1;
+
+    for (unsigned i = 0; i < 1024; i++) {
+        src[i] = (int32_t)(i % 17u) - 8;
+        mask[i] = 0xdeadbeefu;
+    }
+    for (unsigned row = 0; row < 32; row++) {
+        for (unsigned col = 0; col < 31; col++) {
+            const unsigned lane = row * 32u + col;
+            if (src[lane] < scalar) {
+                expected[row] |= 1u << col;
+            }
+        }
+    }
+
+    linx_tcmps_s32_lt(src, scalar, mask);
+    for (unsigned i = 0; i < 32; i++) {
+        TEST_EQ32(mask[i], expected[i], 0x000BA000u + i);
+    }
+    for (unsigned i = 32; i < 64; i++) {
+        TEST_EQ32(mask[i], 0u, 0x000BA040u + i);
+    }
+    test_pass();
+}
+
 static uint8_t arithmetic_shift_right_s8(uint8_t value, unsigned shift)
 {
     shift &= 31u;
@@ -472,6 +506,7 @@ extern "C" void run_tile_tepl_tests(void)
     run_tadd_test();
     run_tsub_test();
     run_tcmp_test();
+    run_tcmps_test();
     run_signed_narrow_lane_test();
     run_float16_lane_test();
     run_persistent_shape_test();
