@@ -27,6 +27,7 @@ void linx_tabs_s8(const int8_t *, int8_t *);
 void linx_tdiv_s16(const int16_t *, const int16_t *, int16_t *);
 void linx_tadd_f16(const uint16_t *, const uint16_t *, uint16_t *);
 void linx_tmul_bf16(const uint16_t *, const uint16_t *, uint16_t *);
+void linx_tadd_rect_s32(const int32_t *, const int32_t *, int32_t *);
 }
 
 static void run_tadd_test()
@@ -373,6 +374,32 @@ static void run_float16_lane_test()
     test_pass();
 }
 
+static void run_persistent_shape_test()
+{
+    test_start(0x000A0017);
+    uart_puts("PTO tile persistent rectangular shape ... ");
+
+    alignas(16) static int32_t lhs[1024];
+    alignas(16) static int32_t rhs[1024];
+    alignas(16) static int32_t out[1024];
+    for (unsigned i = 0; i < 1024; i++) {
+        lhs[i] = (int32_t)(10u + i);
+        rhs[i] = (int32_t)(100u + i * 3u);
+        out[i] = -1;
+    }
+
+    linx_tadd_rect_s32(lhs, rhs, out);
+    for (unsigned i = 0; i < 6; i++) {
+        TEST_EQ32((uint32_t)out[i], (uint32_t)(lhs[i] + rhs[i]),
+                  0x000B6000u + i);
+    }
+    for (unsigned i = 6; i < 16; i++) {
+        TEST_EQ32((uint32_t)out[i], UINT32_C(0xffffffff),
+                  0x000B6100u + i);
+    }
+    test_pass();
+}
+
 extern "C" void run_tile_tepl_tests(void)
 {
     run_tadd_test();
@@ -380,4 +407,5 @@ extern "C" void run_tile_tepl_tests(void)
     run_tcmp_test();
     run_signed_narrow_lane_test();
     run_float16_lane_test();
+    run_persistent_shape_test();
 }
