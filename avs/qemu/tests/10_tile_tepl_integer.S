@@ -79,6 +79,7 @@
     TILE_BINARY linx_tmax_s8, TMAX, INT8, 1KB
     TILE_BINARY linx_tshr_s8, TSHR, INT8, 1KB
     TILE_UNARY linx_tabs_s8, TABS, INT8, 1KB
+    TILE_UNARY linx_tneg_s16, TNEG, INT16, 2KB
     TILE_BINARY linx_tdiv_s16, TDIV, INT16, 2KB
     TILE_BINARY linx_tadd_f16, TADD, FP16, 2KB
     TILE_BINARY linx_tmul_bf16, TMUL, BF16, 2KB

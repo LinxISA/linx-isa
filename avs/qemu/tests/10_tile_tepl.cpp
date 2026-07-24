@@ -24,6 +24,7 @@ void linx_tcmp_f16_lt(const uint16_t *, const uint16_t *, uint32_t *);
 void linx_tmax_s8(const int8_t *, const int8_t *, int8_t *);
 void linx_tshr_s8(const int8_t *, const int8_t *, int8_t *);
 void linx_tabs_s8(const int8_t *, int8_t *);
+void linx_tneg_s16(const int16_t *, int16_t *);
 void linx_tdiv_s16(const int16_t *, const int16_t *, int16_t *);
 void linx_tadd_f16(const uint16_t *, const uint16_t *, uint16_t *);
 void linx_tmul_bf16(const uint16_t *, const uint16_t *, uint16_t *);
@@ -400,6 +401,29 @@ static void run_persistent_shape_test()
     test_pass();
 }
 
+static void run_tneg_test()
+{
+    test_start(0x000A0018);
+    uart_puts("PTO tile tneg signed lanes ... ");
+
+    alignas(16) static int16_t src[1024];
+    alignas(16) static int16_t out[1024];
+    static const int16_t values[] = {
+        0, 1, -1, 32767, (int16_t)0x8000, 1234, -2345, 42,
+    };
+    for (unsigned i = 0; i < 1024; i++) {
+        src[i] = values[i % (sizeof(values) / sizeof(values[0]))];
+        out[i] = 0;
+    }
+
+    linx_tneg_s16(src, out);
+    for (unsigned i = 0; i < 1024; i++) {
+        const uint16_t expected = (uint16_t)(0u - (uint16_t)src[i]);
+        TEST_EQ32((uint16_t)out[i], expected, 0x000B7000u + i);
+    }
+    test_pass();
+}
+
 extern "C" void run_tile_tepl_tests(void)
 {
     run_tadd_test();
@@ -408,4 +432,5 @@ extern "C" void run_tile_tepl_tests(void)
     run_signed_narrow_lane_test();
     run_float16_lane_test();
     run_persistent_shape_test();
+    run_tneg_test();
 }
