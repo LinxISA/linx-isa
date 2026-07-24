@@ -50,6 +50,14 @@ DECLARE_EXPAND_BINARY(linx_tcolexpandexpdif_f32);
 #undef DECLARE_EXPAND_BINARY
 void linx_trowexpand_f32(const float *, float *);
 void linx_tcolexpand_f32(const float *, float *);
+void linx_tfillpad_f32_default(const float *, float *);
+void linx_tfillpad_f32_zero(const float *, float *);
+void linx_tfillpad_f32_max(const float *, float *);
+void linx_tfillpad_f32_min(const float *, float *);
+void linx_tfillpad_s8_max(const int8_t *, int8_t *);
+void linx_tfillpad_s8_min(const int8_t *, int8_t *);
+void linx_tfillpad_u8_max(const uint8_t *, uint8_t *);
+void linx_tfillpad_u8_min(const uint8_t *, uint8_t *);
 void linx_tmax_s8(const int8_t *, const int8_t *, int8_t *);
 void linx_tshr_s8(const int8_t *, const int8_t *, int8_t *);
 void linx_tabs_s8(const int8_t *, int8_t *);
@@ -552,6 +560,84 @@ static void run_expand_extension_test()
     test_pass();
 }
 
+static void run_fillpad_test()
+{
+    test_start(0x000A001E);
+    uart_puts("PTO tile TFILLPAD ... ");
+
+    alignas(16) static float source[128];
+    alignas(16) static float out[128];
+    using FillPadKernel = void (*)(const float *, float *);
+    const FillPadKernel kernels[4] = {
+        linx_tfillpad_f32_default,
+        linx_tfillpad_f32_zero,
+        linx_tfillpad_f32_max,
+        linx_tfillpad_f32_min,
+    };
+    const uint32_t pad_bits[4] = {
+        0x00000000u,
+        0x00000000u,
+        0x7f800000u,
+        0xff800000u,
+    };
+
+    for (unsigned i = 0; i < 128; i++) {
+        source[i] = (float)(i + 1u);
+    }
+    for (unsigned mode = 0; mode < 4; mode++) {
+        for (unsigned i = 0; i < 128; i++) {
+            out[i] = -17.0f;
+        }
+        kernels[mode](source, out);
+        for (unsigned r = 0; r < 32; r++) {
+            for (unsigned c = 0; c < 4; c++) {
+                const unsigned lane = r * 4u + c;
+                const uint32_t expected = r < 2u && c < 3u
+                                              ? f32_bits(source[r * 3u + c])
+                                              : pad_bits[mode];
+                TEST_EQ32(f32_bits(out[lane]), expected,
+                          0x000BF000u + mode * 0x100u + lane);
+            }
+        }
+    }
+
+    alignas(16) static int8_t signed_source[512];
+    alignas(16) static int8_t signed_out[512];
+    alignas(16) static uint8_t unsigned_source[512];
+    alignas(16) static uint8_t unsigned_out[512];
+    for (unsigned i = 0; i < 512; i++) {
+        signed_source[i] = (int8_t)(i + 1u);
+        unsigned_source[i] = (uint8_t)(i + 1u);
+    }
+    linx_tfillpad_s8_max(signed_source, signed_out);
+    linx_tfillpad_u8_max(unsigned_source, unsigned_out);
+    for (unsigned lane = 0; lane < 512; lane++) {
+        const unsigned r = lane / 4u;
+        const unsigned c = lane % 4u;
+        const bool valid = r < 2u && c < 3u;
+        TEST_EQ32((uint8_t)signed_out[lane],
+                  valid ? (uint8_t)signed_source[r * 3u + c] : 0x7fu,
+                  0x000BF400u + lane);
+        TEST_EQ32(unsigned_out[lane],
+                  valid ? unsigned_source[r * 3u + c] : 0xffu,
+                  0x000BF600u + lane);
+    }
+    linx_tfillpad_s8_min(signed_source, signed_out);
+    linx_tfillpad_u8_min(unsigned_source, unsigned_out);
+    for (unsigned lane = 0; lane < 512; lane++) {
+        const unsigned r = lane / 4u;
+        const unsigned c = lane % 4u;
+        const bool valid = r < 2u && c < 3u;
+        TEST_EQ32((uint8_t)signed_out[lane],
+                  valid ? (uint8_t)signed_source[r * 3u + c] : 0x80u,
+                  0x000BF800u + lane);
+        TEST_EQ32(unsigned_out[lane],
+                  valid ? unsigned_source[r * 3u + c] : 0x00u,
+                  0x000BFA00u + lane);
+    }
+    test_pass();
+}
+
 static uint8_t arithmetic_shift_right_s8(uint8_t value, unsigned shift)
 {
     shift &= 31u;
@@ -773,6 +859,7 @@ extern "C" void run_tile_tepl_tests(void)
     run_tsel_test();
     run_reduce_extension_test();
     run_expand_extension_test();
+    run_fillpad_test();
     run_signed_narrow_lane_test();
     run_float16_lane_test();
     run_persistent_shape_test();
