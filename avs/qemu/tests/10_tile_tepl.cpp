@@ -68,6 +68,7 @@ void linx_tgatherb_u8(const uint8_t *, const uint32_t *, uint8_t *);
 void linx_tci_s32(int32_t, uint32_t, int32_t *);
 void linx_ttri_s32(int32_t, uint32_t, int32_t *);
 void linx_textract_f32(const float *, uint32_t, uint32_t, float *);
+void linx_tdequant_s8_f32(const int8_t *, const float *, const float *, float *);
 void linx_tmax_s8(const int8_t *, const int8_t *, int8_t *);
 void linx_tshr_s8(const int8_t *, const int8_t *, int8_t *);
 void linx_tabs_s8(const int8_t *, int8_t *);
@@ -819,6 +820,40 @@ static void run_extract_test()
     test_pass();
 }
 
+static void run_dequant_test()
+{
+    test_start(0x000A0023);
+    uart_puts("PTO tile TDEQUANT ... ");
+
+    alignas(16) static int8_t source[512];
+    alignas(16) static float scale[128];
+    alignas(16) static float offset[128];
+    alignas(16) static float out[128];
+    const float row_scale[3] = {0.5f, 2.0f, -1.0f};
+    const float row_offset[3] = {1.0f, -2.0f, 3.0f};
+    for (unsigned i = 0; i < 512; i++) {
+        source[i] = (int8_t)((int)(i % 17u) - 8);
+    }
+    for (unsigned i = 0; i < 128; i++) {
+        scale[i] = i < 3u ? row_scale[i] : 0.0f;
+        offset[i] = i < 3u ? row_offset[i] : 0.0f;
+        out[i] = -1.0f;
+    }
+    linx_tdequant_s8_f32(source, scale, offset, out);
+    for (unsigned r = 0; r < 32; r++) {
+        for (unsigned c = 0; c < 4; c++) {
+            const unsigned lane = r * 4u + c;
+            const float expected = r < 3u
+                                       ? ((float)source[lane] - row_offset[r]) *
+                                             row_scale[r]
+                                       : 0.0f;
+            TEST_EQ32(f32_bits(out[lane]), f32_bits(expected),
+                      0x000C0A00u + lane);
+        }
+    }
+    test_pass();
+}
+
 static uint8_t arithmetic_shift_right_s8(uint8_t value, unsigned shift)
 {
     shift &= 31u;
@@ -1045,6 +1080,7 @@ extern "C" void run_tile_tepl_tests(void)
     run_layout_extension_test();
     run_tile_generation_test();
     run_extract_test();
+    run_dequant_test();
     run_signed_narrow_lane_test();
     run_float16_lane_test();
     run_persistent_shape_test();

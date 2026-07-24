@@ -235,4 +235,47 @@ linx_textract_f32:
     FRET.STK [ra ~ ra], sp!, 8
     .size linx_textract_f32, .-linx_textract_f32
 
+    .globl linx_tdequant_s8_f32
+    .type linx_tdequant_s8_f32,@function
+linx_tdequant_s8_f32:
+    FENTRY [ra ~ ra], sp!, 8
+    BSTART.TLOAD INT8
+    C.B.DIMI 4, ->lb0
+    C.B.DIMI 3, ->lb1
+    C.B.DIMI 4, ->lb2
+    B.ARG NORM.normal
+    B.IOR [a0],[]
+    B.IOT last, ->t<512B>
+    BSTART.TLOAD FP32
+    C.B.DIMI 1, ->lb0
+    C.B.DIMI 3, ->lb1
+    C.B.DIMI 1, ->lb2
+    B.ARG NORM.normal
+    B.IOR [a1],[]
+    B.IOT last, ->t<512B>
+    BSTART.TLOAD FP32
+    C.B.DIMI 1, ->lb0
+    C.B.DIMI 3, ->lb1
+    C.B.DIMI 1, ->lb2
+    B.ARG NORM.normal
+    B.IOR [a2],[]
+    B.IOT last, ->t<512B>
+    BSTART.TDEQUANT FP32
+    C.B.DIMI 4, ->lb0
+    C.B.DIMI 3, ->lb1
+    C.B.DIMI 4, ->lb2
+    B.ARG VV
+    B.DATR normal, INT8, ZERO, cmode0, rmode0
+    B.IOT t#3, t#2
+    B.IOT t#1, last, ->t<512B>
+    BSTART.TSTORE FP32
+    C.B.DIMI 4, ->lb0
+    C.B.DIMI 32, ->lb1
+    C.B.DIMI 4, ->lb2
+    B.ARG NORM.normal
+    B.IOR [a3],[]
+    B.IOT t#1, last, ->t<512B>
+    FRET.STK [ra ~ ra], sp!, 8
+    .size linx_tdequant_s8_f32, .-linx_tdequant_s8_f32
+
     .section ".note.GNU-stack","",@progbits
