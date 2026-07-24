@@ -6,6 +6,11 @@
 
 using namespace linx::test::tile;
 
+extern "C" {
+void linx_tgemv_s32(const int32_t *, const int32_t *, int32_t *);
+void linx_tgemv_acc_s32(const int32_t *, const int32_t *, int32_t *);
+}
+
 static void run_tmatmul_test()
 {
     test_start(0x000A0001);
@@ -69,6 +74,67 @@ static void run_tmatmul_acc_test()
         const int32_t accumulated = (int32_t)((int64_t)expected[i] * 2);
         TEST_EQ32((uint32_t)c[i], (uint32_t)accumulated, 0x000A3000u + i);
     }
+    test_pass();
+}
+
+static void run_tgemv_test()
+{
+    test_start(0x000A0024);
+    uart_puts("PTO TGEMV/TGEMV.ACC (8x1 i32) ... ");
+
+    alignas(16) static int32_t a[128];
+    alignas(16) static int32_t b[128];
+    alignas(16) static int32_t out[128];
+
+    for (unsigned i = 0; i < 128; i++) {
+        a[i] = 0;
+        b[i] = 0;
+        out[i] = 0x55555555;
+    }
+    for (unsigned r = 0; r < 8; r++) {
+        for (unsigned k = 0; k < 8; k++) {
+            a[r * 8u + k] = (int32_t)(r + 1u) - (int32_t)(2u * k);
+        }
+        b[r * 8u] = (int32_t)(r + 1u);
+    }
+
+    linx_tgemv_s32(a, b, out);
+    for (unsigned r = 0; r < 8; r++) {
+        int32_t expected = 0;
+        for (unsigned k = 0; k < 8; k++) {
+            expected += a[r * 8u + k] * b[k * 8u];
+        }
+        TEST_EQ32((uint32_t)out[r * 8u], (uint32_t)expected,
+                  0x000A2400u + r);
+        for (unsigned c = 1; c < 8; c++) {
+            TEST_EQ32((uint32_t)out[r * 8u + c], 0,
+                      0x000A2440u + r * 8u + c);
+        }
+    }
+    for (unsigned i = 64; i < 128; i++) {
+        TEST_EQ32((uint32_t)out[i], 0, 0x000A2480u + i);
+    }
+
+    for (unsigned i = 0; i < 128; i++) {
+        out[i] = 0x55555555;
+    }
+    linx_tgemv_acc_s32(a, b, out);
+    for (unsigned r = 0; r < 8; r++) {
+        int32_t expected = 0;
+        for (unsigned k = 0; k < 8; k++) {
+            expected += a[r * 8u + k] * b[k * 8u];
+        }
+        TEST_EQ32((uint32_t)out[r * 8u], (uint32_t)(expected * 2),
+                  0x000A2500u + r);
+        for (unsigned c = 1; c < 8; c++) {
+            TEST_EQ32((uint32_t)out[r * 8u + c], 0,
+                      0x000A2540u + r * 8u + c);
+        }
+    }
+    for (unsigned i = 64; i < 128; i++) {
+        TEST_EQ32((uint32_t)out[i], 0, 0x000A2580u + i);
+    }
+
     test_pass();
 }
 
@@ -153,6 +219,7 @@ extern "C" void run_tile_cube_tests(void)
 {
     run_tmatmul_test();
     run_tmatmul_acc_test();
+    run_tgemv_test();
     run_auto_mode_gemm_test();
     run_auto_mode_flash_test();
 }
