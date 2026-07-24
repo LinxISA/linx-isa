@@ -25,6 +25,8 @@ void linx_tmax_s8(const int8_t *, const int8_t *, int8_t *);
 void linx_tshr_s8(const int8_t *, const int8_t *, int8_t *);
 void linx_tabs_s8(const int8_t *, int8_t *);
 void linx_tneg_s16(const int16_t *, int16_t *);
+void linx_trem_s32(const int32_t *, const int32_t *, int32_t *);
+void linx_trems_s32(const int32_t *, int32_t, int32_t *);
 void linx_tdiv_s16(const int16_t *, const int16_t *, int16_t *);
 void linx_tadd_f16(const uint16_t *, const uint16_t *, uint16_t *);
 void linx_tmul_bf16(const uint16_t *, const uint16_t *, uint16_t *);
@@ -424,6 +426,47 @@ static void run_tneg_test()
     test_pass();
 }
 
+static int32_t floor_rem_s32(int32_t lhs, int32_t rhs)
+{
+    int32_t rem = lhs % rhs;
+    if (rem != 0 && ((rem < 0) != (rhs < 0))) {
+        rem += rhs;
+    }
+    return rem;
+}
+
+static void run_trem_test()
+{
+    test_start(0x000A0019);
+    uart_puts("PTO tile floor remainder ... ");
+
+    alignas(16) static int32_t lhs[1024];
+    alignas(16) static int32_t rhs[1024];
+    alignas(16) static int32_t out[1024];
+    static const int32_t dividends[] = {-17, -7, -1, 0, 1, 7, 17, 12345};
+    static const int32_t divisors[] = {5, 3, -5, -3, 7, -7, 11, -13};
+    for (unsigned i = 0; i < 1024; i++) {
+        lhs[i] = dividends[i % 8u];
+        rhs[i] = divisors[(i / 8u) % 8u];
+        out[i] = 0;
+    }
+
+    linx_trem_s32(lhs, rhs, out);
+    for (unsigned i = 0; i < 1024; i++) {
+        TEST_EQ32((uint32_t)out[i],
+                  (uint32_t)floor_rem_s32(lhs[i], rhs[i]),
+                  0x000B8000u + i);
+    }
+
+    linx_trems_s32(lhs, -7, out);
+    for (unsigned i = 0; i < 1024; i++) {
+        TEST_EQ32((uint32_t)out[i],
+                  (uint32_t)floor_rem_s32(lhs[i], -7),
+                  0x000B9000u + i);
+    }
+    test_pass();
+}
+
 extern "C" void run_tile_tepl_tests(void)
 {
     run_tadd_test();
@@ -433,4 +476,5 @@ extern "C" void run_tile_tepl_tests(void)
     run_float16_lane_test();
     run_persistent_shape_test();
     run_tneg_test();
+    run_trem_test();
 }

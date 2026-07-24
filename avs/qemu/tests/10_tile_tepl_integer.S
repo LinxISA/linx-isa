@@ -84,4 +84,38 @@
     TILE_BINARY linx_tadd_f16, TADD, FP16, 2KB
     TILE_BINARY linx_tmul_bf16, TMUL, BF16, 2KB
 
+    TILE_BINARY linx_trem_s32, TREM, INT32, 4KB
+
+    .globl linx_trems_s32
+    .type linx_trems_s32,@function
+linx_trems_s32:
+    FENTRY [ra ~ ra], sp!, 8
+
+    BSTART.TLOAD INT32
+    C.B.DIMI 32, ->lb0
+    C.B.DIMI 32, ->lb1
+    C.B.DIMI 32, ->lb2
+    B.ARG NORM.normal
+    B.IOR [a0],[]
+    B.IOT last, ->t<4KB>
+
+    BSTART.TREMS INT32
+    C.B.DIMI 32, ->lb0
+    C.B.DIMI 32, ->lb1
+    C.B.DIMI 32, ->lb2
+    B.ARG VS
+    B.IOR [a1],[]
+    B.IOT t#1, last, ->t<4KB>
+
+    BSTART.TSTORE INT32
+    C.B.DIMI 32, ->lb0
+    C.B.DIMI 32, ->lb1
+    C.B.DIMI 32, ->lb2
+    B.ARG NORM.normal
+    B.IOR [a2],[]
+    B.IOT t#1, last, ->t<4KB>
+
+    FRET.STK [ra ~ ra], sp!, 8
+    .size linx_trems_s32, .-linx_trems_s32
+
     .section ".note.GNU-stack","",@progbits
