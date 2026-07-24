@@ -619,6 +619,7 @@ def _extra_sources_for_suite(suite: str) -> list[str]:
             "avs/qemu/tests/10_tile_integration.cpp",
             "avs/qemu/tests/10_tile_tepl_tcmp.S",
             "avs/qemu/tests/10_tile_tepl_integer.S",
+            "avs/qemu/tests/10_tile_tepl_reduce.S",
             "avs/qemu/tests/10_tile_tepl_select.S",
             "avs/qemu/tests/10_tile_tepl_shape.S",
             *[_pto_kernel_src(name) for name in PTO_TILE_KERNEL_NAMES],

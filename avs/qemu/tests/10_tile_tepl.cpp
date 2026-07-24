@@ -25,6 +25,12 @@ void linx_tcmps_s32_lt(const int32_t *, int32_t, uint32_t *);
 void linx_tsel_s32(const uint32_t *, const int32_t *, const int32_t *,
                    int32_t *);
 void linx_tsels_s32(const uint32_t *, const int32_t *, int32_t, int32_t *);
+void linx_trowprod_s32(const int32_t *, int32_t *);
+void linx_tcolprod_s32(const int32_t *, int32_t *);
+void linx_trowargmax_f32(const float *, uint32_t *);
+void linx_trowargmin_f32(const float *, uint32_t *);
+void linx_tcolargmax_f32(const float *, uint32_t *);
+void linx_tcolargmin_f32(const float *, uint32_t *);
 void linx_tmax_s8(const int8_t *, const int8_t *, int8_t *);
 void linx_tshr_s8(const int8_t *, const int8_t *, int8_t *);
 void linx_tabs_s8(const int8_t *, int8_t *);
@@ -337,6 +343,95 @@ static void run_tsel_test()
     test_pass();
 }
 
+static void run_reduce_extension_test()
+{
+    test_start(0x000A001C);
+    uart_puts("PTO tile product/arg reductions ... ");
+
+    alignas(16) static int32_t product_src[1024];
+    alignas(16) static int32_t product_out[1024];
+    alignas(16) static float arg_src[1024];
+    alignas(16) static uint32_t arg_out[1024];
+
+    for (unsigned i = 0; i < 1024; i++) {
+        product_src[i] = 1;
+        product_out[i] = 0;
+        arg_src[i] = 0.0f;
+        arg_out[i] = 0xdeadbeefu;
+    }
+    for (unsigned r = 0; r < 8; r++) {
+        for (unsigned c = 0; c < 8; c++) {
+            product_src[r * 8u + c] = (int32_t)((r + c) % 3u) + 1;
+            arg_src[r * 8u + c] =
+                (float)((int32_t)((r * 13u + c * 7u) % 23u) - 11);
+        }
+    }
+    for (unsigned c = 0; c < 8; c++) {
+        arg_src[c] = 5.0f;
+    }
+    for (unsigned r = 0; r < 8; r++) {
+        arg_src[r * 8u] = 5.0f;
+    }
+
+    linx_trowprod_s32(product_src, product_out);
+    for (unsigned r = 0; r < 8; r++) {
+        int32_t expected = 1;
+        for (unsigned c = 0; c < 8; c++) {
+            expected *= product_src[r * 8u + c];
+        }
+        TEST_EQ32((uint32_t)product_out[r], (uint32_t)expected,
+                  0x000BD000u + r);
+    }
+
+    linx_tcolprod_s32(product_src, product_out);
+    for (unsigned c = 0; c < 8; c++) {
+        int32_t expected = 1;
+        for (unsigned r = 0; r < 8; r++) {
+            expected *= product_src[r * 8u + c];
+        }
+        TEST_EQ32((uint32_t)product_out[c], (uint32_t)expected,
+                  0x000BD100u + c);
+    }
+
+    using ArgKernel = void (*)(const float *, uint32_t *);
+    const ArgKernel row_kernels[2] = {
+        linx_trowargmax_f32, linx_trowargmin_f32,
+    };
+    const ArgKernel col_kernels[2] = {
+        linx_tcolargmax_f32, linx_tcolargmin_f32,
+    };
+    for (unsigned find_min = 0; find_min < 2; find_min++) {
+        row_kernels[find_min](arg_src, arg_out);
+        for (unsigned r = 0; r < 8; r++) {
+            unsigned expected = 0;
+            for (unsigned c = 1; c < 8; c++) {
+                const float value = arg_src[r * 8u + c];
+                const float best = arg_src[r * 8u + expected];
+                if (find_min ? value < best : value > best) {
+                    expected = c;
+                }
+            }
+            TEST_EQ32(arg_out[r], expected,
+                      0x000BD200u + find_min * 0x40u + r);
+        }
+
+        col_kernels[find_min](arg_src, arg_out);
+        for (unsigned c = 0; c < 8; c++) {
+            unsigned expected = 0;
+            for (unsigned r = 1; r < 8; r++) {
+                const float value = arg_src[r * 8u + c];
+                const float best = arg_src[expected * 8u + c];
+                if (find_min ? value < best : value > best) {
+                    expected = r;
+                }
+            }
+            TEST_EQ32(arg_out[c], expected,
+                      0x000BD300u + find_min * 0x40u + c);
+        }
+    }
+    test_pass();
+}
+
 static uint8_t arithmetic_shift_right_s8(uint8_t value, unsigned shift)
 {
     shift &= 31u;
@@ -556,6 +651,7 @@ extern "C" void run_tile_tepl_tests(void)
     run_tcmp_test();
     run_tcmps_test();
     run_tsel_test();
+    run_reduce_extension_test();
     run_signed_narrow_lane_test();
     run_float16_lane_test();
     run_persistent_shape_test();
