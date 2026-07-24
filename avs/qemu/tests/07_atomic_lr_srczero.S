@@ -11,6 +11,16 @@ atomic_lr_w_nonzero_srczero:
 	C.BSTOP
 	.size atomic_lr_w_nonzero_srczero, .-atomic_lr_w_nonzero_srczero
 
+	.globl atomic_lr_w_signext
+	.type atomic_lr_w_signext,@function
+atomic_lr_w_signext:
+	C.BSTART.STD RET
+	# LR.W RegDst=a0, SrcL=a0, SrcZero=31.
+	.4byte 0x21f1010b
+	c.setc.tgt ra
+	C.BSTOP
+	.size atomic_lr_w_signext, .-atomic_lr_w_signext
+
 	.globl atomic_lr_d_nonzero_srczero
 	.type atomic_lr_d_nonzero_srczero,@function
 atomic_lr_d_nonzero_srczero:
