@@ -62,6 +62,9 @@ void linx_tpartadd_f32(const float *, const float *, float *);
 void linx_tpartmul_f32(const float *, const float *, float *);
 void linx_tpartmax_f32(const float *, const float *, float *);
 void linx_tpartmin_f32(const float *, const float *, float *);
+void linx_treshape_bytes(const uint8_t *, uint8_t *);
+void linx_tconcat_f32(const float *, const float *, float *);
+void linx_tgatherb_u8(const uint8_t *, const uint32_t *, uint8_t *);
 void linx_tmax_s8(const int8_t *, const int8_t *, int8_t *);
 void linx_tshr_s8(const int8_t *, const int8_t *, int8_t *);
 void linx_tabs_s8(const int8_t *, int8_t *);
@@ -691,6 +694,63 @@ static void run_partial_binary_test()
     test_pass();
 }
 
+static void run_layout_extension_test()
+{
+    test_start(0x000A0020);
+    uart_puts("PTO tile reshape/concat/gatherb ... ");
+
+    alignas(16) static uint8_t bytes_in[512];
+    alignas(16) static uint8_t bytes_out[512];
+    for (unsigned i = 0; i < 512; i++) {
+        bytes_in[i] = (uint8_t)(i * 37u + 11u);
+        bytes_out[i] = 0u;
+    }
+    linx_treshape_bytes(bytes_in, bytes_out);
+    for (unsigned i = 0; i < 512; i++) {
+        TEST_EQ32(bytes_out[i], bytes_in[i], 0x000C0000u + i);
+    }
+
+    alignas(16) static float concat0[128];
+    alignas(16) static float concat1[128];
+    alignas(16) static float concat_out[128];
+    for (unsigned i = 0; i < 128; i++) {
+        concat0[i] = (float)(i + 1u);
+        concat1[i] = (float)(100u + i);
+        concat_out[i] = -1.0f;
+    }
+    linx_tconcat_f32(concat0, concat1, concat_out);
+    for (unsigned r = 0; r < 16; r++) {
+        for (unsigned c = 0; c < 8; c++) {
+            const unsigned lane = r * 8u + c;
+            uint32_t expected = 0u;
+            if (r < 2u && c < 5u) {
+                expected = c < 3u
+                               ? f32_bits(concat0[r * 3u + c])
+                               : f32_bits(concat1[r * 2u + c - 3u]);
+            }
+            TEST_EQ32(f32_bits(concat_out[lane]), expected,
+                      0x000C0200u + lane);
+        }
+    }
+
+    alignas(16) static uint32_t offsets[128];
+    const uint32_t selected[8] = {0u, 3u, 15u, 127u,
+                                  255u, 500u, 511u, 999u};
+    for (unsigned i = 0; i < 128; i++) {
+        offsets[i] = i < 8u ? selected[i] : 0u;
+        bytes_out[i] = 0xffu;
+    }
+    linx_tgatherb_u8(bytes_in, offsets, bytes_out);
+    for (unsigned i = 0; i < 512; i++) {
+        const uint8_t expected = i < 8u
+                                     ? bytes_in[selected[i] < 512u
+                                                    ? selected[i] : 511u]
+                                     : 0u;
+        TEST_EQ32(bytes_out[i], expected, 0x000C0300u + i);
+    }
+    test_pass();
+}
+
 static uint8_t arithmetic_shift_right_s8(uint8_t value, unsigned shift)
 {
     shift &= 31u;
@@ -914,6 +974,7 @@ extern "C" void run_tile_tepl_tests(void)
     run_expand_extension_test();
     run_fillpad_test();
     run_partial_binary_test();
+    run_layout_extension_test();
     run_signed_narrow_lane_test();
     run_float16_lane_test();
     run_persistent_shape_test();

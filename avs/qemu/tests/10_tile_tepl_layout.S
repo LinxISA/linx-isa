@@ -82,4 +82,91 @@
     TFILLPAD_INT8_KERNEL linx_tfillpad_u8_max, UINT8, MAX
     TFILLPAD_INT8_KERNEL linx_tfillpad_u8_min, UINT8, MIN
 
+    .globl linx_treshape_bytes
+    .type linx_treshape_bytes,@function
+linx_treshape_bytes:
+    FENTRY [ra ~ ra], sp!, 8
+    BSTART.TLOAD FP32
+    C.B.DIMI 4, ->lb0
+    C.B.DIMI 32, ->lb1
+    C.B.DIMI 4, ->lb2
+    B.ARG NORM.normal
+    B.IOR [a0],[]
+    B.IOT last, ->t<512B>
+    BSTART.TRESHAPE INT16
+    C.B.DIMI 8, ->lb0
+    C.B.DIMI 32, ->lb1
+    C.B.DIMI 8, ->lb2
+    B.ARG VV
+    B.IOT t#1, last, ->t<512B>
+    BSTART.TSTORE INT16
+    C.B.DIMI 8, ->lb0
+    C.B.DIMI 32, ->lb1
+    C.B.DIMI 8, ->lb2
+    B.ARG NORM.normal
+    B.IOR [a1],[]
+    B.IOT t#1, last, ->t<512B>
+    FRET.STK [ra ~ ra], sp!, 8
+    .size linx_treshape_bytes, .-linx_treshape_bytes
+
+    .globl linx_tconcat_f32
+    .type linx_tconcat_f32,@function
+linx_tconcat_f32:
+    FENTRY [ra ~ ra], sp!, 8
+    BSTART.TLOAD FP32
+    C.B.DIMI 3, ->lb0
+    C.B.DIMI 2, ->lb1
+    C.B.DIMI 4, ->lb2
+    B.ARG NORM.normal
+    B.IOR [a0],[]
+    B.IOT last, ->t<512B>
+    BSTART.TLOAD FP32
+    C.B.DIMI 2, ->lb0
+    C.B.DIMI 2, ->lb1
+    C.B.DIMI 4, ->lb2
+    B.ARG NORM.normal
+    B.IOR [a1],[]
+    B.IOT last, ->t<512B>
+    BSTART.TCONCAT FP32
+    C.B.DIMI 5, ->lb0
+    C.B.DIMI 2, ->lb1
+    C.B.DIMI 8, ->lb2
+    B.ARG VV
+    B.IOT t#2, t#1, last, ->t<512B>
+    BSTART.TSTORE FP32
+    C.B.DIMI 8, ->lb0
+    C.B.DIMI 16, ->lb1
+    C.B.DIMI 8, ->lb2
+    B.ARG NORM.normal
+    B.IOR [a2],[]
+    B.IOT t#1, last, ->t<512B>
+    FRET.STK [ra ~ ra], sp!, 8
+    .size linx_tconcat_f32, .-linx_tconcat_f32
+
+    .globl linx_tgatherb_u8
+    .type linx_tgatherb_u8,@function
+linx_tgatherb_u8:
+    FENTRY [ra ~ ra], sp!, 8
+    BSTART.TLOAD UINT8
+    C.B.DIMI 512, ->lb0
+    B.ARG NORM.normal
+    B.IOR [a0],[]
+    B.IOT last, ->t<512B>
+    BSTART.TLOAD UINT32
+    C.B.DIMI 8, ->lb0
+    B.ARG NORM.normal
+    B.IOR [a1],[]
+    B.IOT last, ->t<512B>
+    BSTART.TGATHERB UINT8
+    C.B.DIMI 8, ->lb0
+    B.ARG VV
+    B.IOT t#2, t#1, last, ->t<512B>
+    BSTART.TSTORE UINT8
+    C.B.DIMI 512, ->lb0
+    B.ARG NORM.normal
+    B.IOR [a2],[]
+    B.IOT t#1, last, ->t<512B>
+    FRET.STK [ra ~ ra], sp!, 8
+    .size linx_tgatherb_u8, .-linx_tgatherb_u8
+
     .section ".note.GNU-stack","",@progbits
