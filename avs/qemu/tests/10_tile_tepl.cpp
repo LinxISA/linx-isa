@@ -22,6 +22,9 @@ void linx_tcmp_f32_ne(const float *, const float *, uint32_t *);
 void linx_tcmp_f32_ge(const float *, const float *, uint32_t *);
 void linx_tcmp_f16_lt(const uint16_t *, const uint16_t *, uint32_t *);
 void linx_tcmps_s32_lt(const int32_t *, int32_t, uint32_t *);
+void linx_tsel_s32(const uint32_t *, const int32_t *, const int32_t *,
+                   int32_t *);
+void linx_tsels_s32(const uint32_t *, const int32_t *, int32_t, int32_t *);
 void linx_tmax_s8(const int8_t *, const int8_t *, int8_t *);
 void linx_tshr_s8(const int8_t *, const int8_t *, int8_t *);
 void linx_tabs_s8(const int8_t *, int8_t *);
@@ -289,6 +292,51 @@ static void run_tcmps_test()
     test_pass();
 }
 
+static bool packed_mask_lane(const uint32_t *mask, unsigned lane)
+{
+    const unsigned row = lane / 64u;
+    const unsigned col = lane % 64u;
+    return ((mask[row * 2u + col / 32u] >> (col & 31u)) & 1u) != 0u;
+}
+
+static void run_tsel_test()
+{
+    test_start(0x000A001B);
+    uart_puts("PTO tile tsel/tsels packed mask ... ");
+
+    alignas(16) static uint32_t mask[1024];
+    alignas(16) static int32_t src0[1024];
+    alignas(16) static int32_t src1[1024];
+    alignas(16) static int32_t out[1024];
+    static const uint32_t patterns[] = {
+        0xaaaaaaaau, 0x55555555u, 0x80000001u, 0x00000000u,
+        0xffffffffu, 0x01234567u, 0x89abcdefu, 0x7ffffffeu,
+    };
+
+    for (unsigned i = 0; i < 1024; i++) {
+        mask[i] = i < 32u ? patterns[i % 8u] : 0u;
+        src0[i] = (int32_t)(0x10000000u + i);
+        src1[i] = -(int32_t)(0x00100000u + i);
+        out[i] = 0;
+    }
+
+    linx_tsel_s32(mask, src0, src1, out);
+    for (unsigned i = 0; i < 1024; i++) {
+        const int32_t expected = packed_mask_lane(mask, i) ? src0[i] : src1[i];
+        TEST_EQ32((uint32_t)out[i], (uint32_t)expected,
+                  0x000BB000u + i);
+    }
+
+    const int32_t scalar = -1234567;
+    linx_tsels_s32(mask, src0, scalar, out);
+    for (unsigned i = 0; i < 1024; i++) {
+        const int32_t expected = packed_mask_lane(mask, i) ? src0[i] : scalar;
+        TEST_EQ32((uint32_t)out[i], (uint32_t)expected,
+                  0x000BC000u + i);
+    }
+    test_pass();
+}
+
 static uint8_t arithmetic_shift_right_s8(uint8_t value, unsigned shift)
 {
     shift &= 31u;
@@ -507,6 +555,7 @@ extern "C" void run_tile_tepl_tests(void)
     run_tsub_test();
     run_tcmp_test();
     run_tcmps_test();
+    run_tsel_test();
     run_signed_narrow_lane_test();
     run_float16_lane_test();
     run_persistent_shape_test();
