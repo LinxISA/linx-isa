@@ -35,6 +35,7 @@ is the only live public bring-up contract.
 - `docs/bringup/rendering_vulkan_bringup.md`
 - `docs/bringup/CPP_BRINGUP_CONTRACT.md`
 - `docs/bringup/PROGRESS.md`
+- `docs/bringup/qemu_v057_pto_tile_support.md`
 - `docs/bringup/gates/latest.json` (canonical machine-readable gate report)
 - `docs/bringup/gate_registry.json` (canonical profile/tier gate registry)
 - `docs/bringup/GATE_STATUS.md` (generated from gate report JSON)
