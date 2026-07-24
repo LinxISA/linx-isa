@@ -616,6 +616,7 @@ def _extra_sources_for_suite(suite: str) -> list[str]:
             "avs/qemu/tests/10_tile_tma.cpp",
             "avs/qemu/tests/10_tile_cube.cpp",
             "avs/qemu/tests/10_tile_tepl.cpp",
+            "avs/qemu/tests/10_tile_tepl_expand.S",
             "avs/qemu/tests/10_tile_integration.cpp",
             "avs/qemu/tests/10_tile_tepl_tcmp.S",
             "avs/qemu/tests/10_tile_tepl_integer.S",

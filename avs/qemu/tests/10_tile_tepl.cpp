@@ -31,6 +31,25 @@ void linx_trowargmax_f32(const float *, uint32_t *);
 void linx_trowargmin_f32(const float *, uint32_t *);
 void linx_tcolargmax_f32(const float *, uint32_t *);
 void linx_tcolargmin_f32(const float *, uint32_t *);
+#define DECLARE_EXPAND_BINARY(name) \
+    void name(const float *, const float *, float *)
+DECLARE_EXPAND_BINARY(linx_trowexpandadd_f32);
+DECLARE_EXPAND_BINARY(linx_trowexpandsub_f32);
+DECLARE_EXPAND_BINARY(linx_trowexpandmul_f32);
+DECLARE_EXPAND_BINARY(linx_trowexpanddiv_f32);
+DECLARE_EXPAND_BINARY(linx_trowexpandmax_f32);
+DECLARE_EXPAND_BINARY(linx_trowexpandmin_f32);
+DECLARE_EXPAND_BINARY(linx_trowexpandexpdif_f32);
+DECLARE_EXPAND_BINARY(linx_tcolexpandadd_f32);
+DECLARE_EXPAND_BINARY(linx_tcolexpandsub_f32);
+DECLARE_EXPAND_BINARY(linx_tcolexpandmul_f32);
+DECLARE_EXPAND_BINARY(linx_tcolexpanddiv_f32);
+DECLARE_EXPAND_BINARY(linx_tcolexpandmax_f32);
+DECLARE_EXPAND_BINARY(linx_tcolexpandmin_f32);
+DECLARE_EXPAND_BINARY(linx_tcolexpandexpdif_f32);
+#undef DECLARE_EXPAND_BINARY
+void linx_trowexpand_f32(const float *, float *);
+void linx_tcolexpand_f32(const float *, float *);
 void linx_tmax_s8(const int8_t *, const int8_t *, int8_t *);
 void linx_tshr_s8(const int8_t *, const int8_t *, int8_t *);
 void linx_tabs_s8(const int8_t *, int8_t *);
@@ -432,6 +451,107 @@ static void run_reduce_extension_test()
     test_pass();
 }
 
+static uint32_t f32_bits(float value)
+{
+    union {
+        float f;
+        uint32_t u;
+    } cvt = {value};
+    return cvt.u;
+}
+
+static void run_expand_extension_test()
+{
+    test_start(0x000A001D);
+    uart_puts("PTO tile row/column expand variants ... ");
+
+    alignas(16) static float base[1024];
+    alignas(16) static float exp_base[1024];
+    alignas(16) static float row_vector[1024];
+    alignas(16) static float col_vector[1024];
+    alignas(16) static float out[1024];
+    using ExpandKernel = void (*)(const float *, const float *, float *);
+    const ExpandKernel row_kernels[7] = {
+        linx_trowexpandadd_f32, linx_trowexpandsub_f32,
+        linx_trowexpandmul_f32, linx_trowexpanddiv_f32,
+        linx_trowexpandmax_f32, linx_trowexpandmin_f32,
+        linx_trowexpandexpdif_f32,
+    };
+    const ExpandKernel col_kernels[7] = {
+        linx_tcolexpandadd_f32, linx_tcolexpandsub_f32,
+        linx_tcolexpandmul_f32, linx_tcolexpanddiv_f32,
+        linx_tcolexpandmax_f32, linx_tcolexpandmin_f32,
+        linx_tcolexpandexpdif_f32,
+    };
+
+    for (unsigned i = 0; i < 1024; i++) {
+        base[i] = 0.0f;
+        exp_base[i] = 0.0f;
+        row_vector[i] = 0.0f;
+        col_vector[i] = 0.0f;
+        out[i] = 0.0f;
+    }
+    for (unsigned r = 0; r < 4; r++) {
+        row_vector[r] = (float)(r + 1u);
+        for (unsigned c = 0; c < 8; c++) {
+            col_vector[c] = (float)(c + 1u);
+            base[r * 8u + c] =
+                2.0f * (float)(r + 1u) * (float)(c + 1u);
+        }
+    }
+
+    linx_trowexpand_f32(row_vector, out);
+    for (unsigned r = 0; r < 4; r++) {
+        for (unsigned c = 0; c < 8; c++) {
+            TEST_EQ32(f32_bits(out[r * 8u + c]), f32_bits(row_vector[r]),
+                      0x000BE000u + r * 8u + c);
+        }
+    }
+    linx_tcolexpand_f32(col_vector, out);
+    for (unsigned r = 0; r < 4; r++) {
+        for (unsigned c = 0; c < 8; c++) {
+            TEST_EQ32(f32_bits(out[r * 8u + c]), f32_bits(col_vector[c]),
+                      0x000BE100u + r * 8u + c);
+        }
+    }
+
+    for (unsigned axis = 0; axis < 2; axis++) {
+        const ExpandKernel *kernels = axis == 0u ? row_kernels : col_kernels;
+        const float *vector = axis == 0u ? row_vector : col_vector;
+        for (unsigned operation = 0; operation < 7; operation++) {
+            for (unsigned r = 0; r < 4; r++) {
+                for (unsigned c = 0; c < 8; c++) {
+                    exp_base[r * 8u + c] =
+                        axis == 0u ? row_vector[r] : col_vector[c];
+                    out[r * 8u + c] = 0.0f;
+                }
+            }
+            kernels[operation](operation == 6u ? exp_base : base,
+                               vector, out);
+            for (unsigned r = 0; r < 4; r++) {
+                for (unsigned c = 0; c < 8; c++) {
+                    const unsigned lane = r * 8u + c;
+                    const float expanded =
+                        axis == 0u ? row_vector[r] : col_vector[c];
+                    const float source = operation == 6u ? expanded : base[lane];
+                    const float expected =
+                        operation == 0u ? source + expanded :
+                        operation == 1u ? source - expanded :
+                        operation == 2u ? source * expanded :
+                        operation == 3u ? source / expanded :
+                        operation == 4u ? (source > expanded ? source : expanded) :
+                        operation == 5u ? (source < expanded ? source : expanded) :
+                                          1.0f;
+                    TEST_EQ32(f32_bits(out[lane]), f32_bits(expected),
+                              0x000BE200u + axis * 0x400u +
+                                  operation * 0x40u + lane);
+                }
+            }
+        }
+    }
+    test_pass();
+}
+
 static uint8_t arithmetic_shift_right_s8(uint8_t value, unsigned shift)
 {
     shift &= 31u;
@@ -652,6 +772,7 @@ extern "C" void run_tile_tepl_tests(void)
     run_tcmps_test();
     run_tsel_test();
     run_reduce_extension_test();
+    run_expand_extension_test();
     run_signed_narrow_lane_test();
     run_float16_lane_test();
     run_persistent_shape_test();
