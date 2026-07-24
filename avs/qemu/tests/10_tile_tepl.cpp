@@ -25,6 +25,8 @@ void linx_tmax_s8(const int8_t *, const int8_t *, int8_t *);
 void linx_tshr_s8(const int8_t *, const int8_t *, int8_t *);
 void linx_tabs_s8(const int8_t *, int8_t *);
 void linx_tdiv_s16(const int16_t *, const int16_t *, int16_t *);
+void linx_tadd_f16(const uint16_t *, const uint16_t *, uint16_t *);
+void linx_tmul_bf16(const uint16_t *, const uint16_t *, uint16_t *);
 }
 
 static void run_tadd_test()
@@ -318,10 +320,64 @@ static void run_signed_narrow_lane_test()
     test_pass();
 }
 
+static void run_float16_lane_test()
+{
+    test_start(0x000A0016);
+    uart_puts("PTO TEPL FP16/BF16 softfloat lanes ... ");
+
+    alignas(16) static uint16_t lhs[1024];
+    alignas(16) static uint16_t rhs[1024];
+    alignas(16) static uint16_t out[1024];
+    static const uint16_t f16_lhs[8] = {
+        0x3c00, 0xbc00, 0xc000, 0x0000,
+        0x4400, 0x3400, 0x7bff, 0x0400,
+    };
+    static const uint16_t f16_rhs[8] = {
+        0x4000, 0x3800, 0x3c00, 0x8000,
+        0xc000, 0x3400, 0x0000, 0x0400,
+    };
+    static const uint16_t f16_expected[8] = {
+        0x4200, 0xb800, 0xbc00, 0x0000,
+        0x4000, 0x3800, 0x7bff, 0x0800,
+    };
+    static const uint16_t bf16_lhs[8] = {
+        0x3f80, 0xbf80, 0xc000, 0x0000,
+        0x4040, 0x3e80, 0x3f00, 0x0080,
+    };
+    static const uint16_t bf16_rhs[8] = {
+        0x4000, 0x3f00, 0xc000, 0xbf80,
+        0x3f00, 0x4080, 0x4000, 0x4000,
+    };
+    static const uint16_t bf16_expected[8] = {
+        0x4000, 0xbf00, 0x4080, 0x8000,
+        0x3fc0, 0x3f80, 0x3f80, 0x0100,
+    };
+
+    for (unsigned i = 0; i < 1024; i++) {
+        lhs[i] = f16_lhs[i % 8u];
+        rhs[i] = f16_rhs[i % 8u];
+    }
+    linx_tadd_f16(lhs, rhs, out);
+    for (unsigned i = 0; i < 1024; i++) {
+        TEST_EQ32(out[i], f16_expected[i % 8u], 0x000B4000u + i);
+    }
+
+    for (unsigned i = 0; i < 1024; i++) {
+        lhs[i] = bf16_lhs[i % 8u];
+        rhs[i] = bf16_rhs[i % 8u];
+    }
+    linx_tmul_bf16(lhs, rhs, out);
+    for (unsigned i = 0; i < 1024; i++) {
+        TEST_EQ32(out[i], bf16_expected[i % 8u], 0x000B5000u + i);
+    }
+    test_pass();
+}
+
 extern "C" void run_tile_tepl_tests(void)
 {
     run_tadd_test();
     run_tsub_test();
     run_tcmp_test();
     run_signed_narrow_lane_test();
+    run_float16_lane_test();
 }
