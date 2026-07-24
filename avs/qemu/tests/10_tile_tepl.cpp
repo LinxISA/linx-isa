@@ -67,6 +67,7 @@ void linx_tconcat_f32(const float *, const float *, float *);
 void linx_tgatherb_u8(const uint8_t *, const uint32_t *, uint8_t *);
 void linx_tci_s32(int32_t, uint32_t, int32_t *);
 void linx_ttri_s32(int32_t, uint32_t, int32_t *);
+void linx_textract_f32(const float *, uint32_t, uint32_t, float *);
 void linx_tmax_s8(const int8_t *, const int8_t *, int8_t *);
 void linx_tshr_s8(const int8_t *, const int8_t *, int8_t *);
 void linx_tabs_s8(const int8_t *, int8_t *);
@@ -792,6 +793,32 @@ static void run_tile_generation_test()
     test_pass();
 }
 
+static void run_extract_test()
+{
+    test_start(0x000A0022);
+    uart_puts("PTO tile TEXTRACT ... ");
+
+    alignas(16) static float source[128];
+    alignas(16) static float out[128];
+    for (unsigned i = 0; i < 128; i++) {
+        source[i] = (float)(i + 1u);
+        out[i] = -1.0f;
+    }
+    linx_textract_f32(source, 1u, 2u, out);
+    for (unsigned r = 0; r < 32; r++) {
+        for (unsigned c = 0; c < 4; c++) {
+            const unsigned lane = r * 4u + c;
+            const uint32_t expected = r < 2u && c < 3u
+                                          ? f32_bits(source[(r + 1u) * 8u +
+                                                            c + 2u])
+                                          : 0u;
+            TEST_EQ32(f32_bits(out[lane]), expected,
+                      0x000C0900u + lane);
+        }
+    }
+    test_pass();
+}
+
 static uint8_t arithmetic_shift_right_s8(uint8_t value, unsigned shift)
 {
     shift &= 31u;
@@ -1017,6 +1044,7 @@ extern "C" void run_tile_tepl_tests(void)
     run_partial_binary_test();
     run_layout_extension_test();
     run_tile_generation_test();
+    run_extract_test();
     run_signed_narrow_lane_test();
     run_float16_lane_test();
     run_persistent_shape_test();

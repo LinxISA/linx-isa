@@ -207,4 +207,32 @@ linx_ttri_s32:
     FRET.STK [ra ~ ra], sp!, 8
     .size linx_ttri_s32, .-linx_ttri_s32
 
+    .globl linx_textract_f32
+    .type linx_textract_f32,@function
+linx_textract_f32:
+    FENTRY [ra ~ ra], sp!, 8
+    BSTART.TLOAD FP32
+    C.B.DIMI 8, ->lb0
+    C.B.DIMI 4, ->lb1
+    C.B.DIMI 8, ->lb2
+    B.ARG NORM.normal
+    B.IOR [a0],[]
+    B.IOT last, ->t<512B>
+    BSTART.TEXTRACT FP32
+    C.B.DIMI 3, ->lb0
+    C.B.DIMI 2, ->lb1
+    C.B.DIMI 4, ->lb2
+    B.ARG VS
+    B.IOR [a1],[a2]
+    B.IOT t#1, last, ->t<512B>
+    BSTART.TSTORE FP32
+    C.B.DIMI 4, ->lb0
+    C.B.DIMI 32, ->lb1
+    C.B.DIMI 4, ->lb2
+    B.ARG NORM.normal
+    B.IOR [a3],[]
+    B.IOT t#1, last, ->t<512B>
+    FRET.STK [ra ~ ra], sp!, 8
+    .size linx_textract_f32, .-linx_textract_f32
+
     .section ".note.GNU-stack","",@progbits
