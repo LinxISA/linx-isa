@@ -79,6 +79,10 @@ void linx_tdiv_s16(const int16_t *, const int16_t *, int16_t *);
 void linx_tadd_f16(const uint16_t *, const uint16_t *, uint16_t *);
 void linx_tmul_bf16(const uint16_t *, const uint16_t *, uint16_t *);
 void linx_tadd_rect_s32(const int32_t *, const int32_t *, int32_t *);
+void linx_tinterleave_s32(const int32_t *, const int32_t *, int32_t *,
+                          int32_t *);
+void linx_tdeinterleave_s32(const int32_t *, const int32_t *, int32_t *,
+                            int32_t *);
 }
 
 static void run_tadd_test()
@@ -1066,6 +1070,66 @@ static void run_trem_test()
     test_pass();
 }
 
+static void run_interleave_test()
+{
+    test_start(0x000A0027);
+    uart_puts("PTO tile TINTERLEAVE/TDEINTERLEAVE ... ");
+
+    alignas(16) static int32_t src0[128];
+    alignas(16) static int32_t src1[128];
+    alignas(16) static int32_t half0[128];
+    alignas(16) static int32_t half1[128];
+    alignas(16) static int32_t recovered0[128];
+    alignas(16) static int32_t recovered1[128];
+
+    for (unsigned i = 0; i < 128; i++) {
+        src0[i] = i < 16u ? (int32_t)(100 + i * 3u) : 0;
+        src1[i] = i < 16u ? (int32_t)(-200 - (int32_t)i * 5) : 0;
+        half0[i] = (int32_t)0x55555555;
+        half1[i] = (int32_t)0x55555555;
+        recovered0[i] = (int32_t)0x55555555;
+        recovered1[i] = (int32_t)0x55555555;
+    }
+
+    linx_tinterleave_s32(src0, src1, half0, half1);
+    for (unsigned row = 0; row < 2; row++) {
+        for (unsigned col = 0; col < 8; col++) {
+            const unsigned lane = row * 8u + col;
+            const unsigned stream_pos = col;
+            const unsigned src_col = stream_pos / 2u;
+            const int32_t expected0 = (stream_pos & 1u) == 0u
+                                          ? src0[row * 8u + src_col]
+                                          : src1[row * 8u + src_col];
+            const unsigned upper_pos = col + 8u;
+            const unsigned upper_src_col = upper_pos / 2u;
+            const int32_t expected1 = (upper_pos & 1u) == 0u
+                                          ? src0[row * 8u + upper_src_col]
+                                          : src1[row * 8u + upper_src_col];
+            TEST_EQ32((uint32_t)half0[lane], (uint32_t)expected0,
+                      0x000C1000u + lane);
+            TEST_EQ32((uint32_t)half1[lane], (uint32_t)expected1,
+                      0x000C1100u + lane);
+        }
+    }
+    for (unsigned i = 16; i < 128; i++) {
+        TEST_EQ32((uint32_t)half0[i], 0u, 0x000C1200u + i);
+        TEST_EQ32((uint32_t)half1[i], 0u, 0x000C1300u + i);
+    }
+
+    linx_tdeinterleave_s32(half0, half1, recovered0, recovered1);
+    for (unsigned i = 0; i < 16; i++) {
+        TEST_EQ32((uint32_t)recovered0[i], (uint32_t)src0[i],
+                  0x000C1400u + i);
+        TEST_EQ32((uint32_t)recovered1[i], (uint32_t)src1[i],
+                  0x000C1500u + i);
+    }
+    for (unsigned i = 16; i < 128; i++) {
+        TEST_EQ32((uint32_t)recovered0[i], 0u, 0x000C1600u + i);
+        TEST_EQ32((uint32_t)recovered1[i], 0u, 0x000C1700u + i);
+    }
+    test_pass();
+}
+
 extern "C" void run_tile_tepl_tests(void)
 {
     run_tadd_test();
@@ -1086,4 +1150,5 @@ extern "C" void run_tile_tepl_tests(void)
     run_persistent_shape_test();
     run_tneg_test();
     run_trem_test();
+    run_interleave_test();
 }
