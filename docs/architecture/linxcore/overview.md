@@ -170,23 +170,33 @@ This composition rule is required for consistency with:
 
 ## Current architecture closure slice
 
-The canonical pipeline taxonomy follows the ISA-neutral coordinate system from
-the ARM reference while correcting the Linx-specific ownership boundaries.
-There are four fetch stages (`F1..F4`) after `F0` frontend control, `F4` is the
-instruction buffer, and result stages (`W1..W3`) overlay execution stages
-rather than following them as a serial tail.
+The IFU is composed of two independently backpressured engines:
+
+- **I-SIDE** fetches and prepares instructions. It owns the literal
+  `I-F0 -> I-F1 -> I-F2 -> I-F3 -> I-F4` pipeline and writes normalized instructions
+  into the Instruction Buffer.
+- **B-SIDE** owns control-flow prediction and communicates with I-SIDE only
+  through explicit decoupled request, prediction, training, and redirect
+  channels. It owns `B-F0 -> B-F1 -> B-F2 -> B-F3 -> B-F4`.
+
+The I- and B-prefixed stages are independent and do not advance in lockstep.
+The Instruction Buffer is a queue after I-F4. Result stages (`W1..W3`)
+overlay execution stages rather than following them as a serial tail.
 
 Stage lineup in this pass:
 
-- `F0`: per-thread arbitration, redirect selection, and next-PC control.
-- `F1`: translation and I-cache request/lookup launch.
-- `F2`: fetch-return staging and integrity/ECC handling.
-- `F3`: variable-length assembly, cross-line carry, and byte-stream ordering.
-- `F4/IB`: final predecode/prediction and block-boundary metadata, plus the
-  per-thread instruction buffer and D1 handoff. It is the fourth fetch stage,
-  not a four-slot decode stage.
-- `D1`: early decode, exception detection, split/fuse recognition, and group
-  formation.
+- `I-F0`: accept/select the PC request and allocate I-SIDE request identity.
+- `I-F1`: launch ITLB and L1I lookup in parallel for the same PC.
+- `I-F2`: join translation/cache lookup state; an ITLB miss generates an I-SIDE
+  inner flush and suppresses stale cache-return consumption.
+- `I-F3`: capture one cacheline, integrity/ECC and refill state, byte cursor, and
+  cross-line carry.
+- `I-F4`: predecode only instruction length and `BSTART`/`BSTOP` boundaries,
+  zero-extend every 2/4/6/8-byte instruction into a 64-bit container, and
+  write Instruction Buffer entries.
+- `D1`: read four 64-bit instructions from the Instruction Buffer and perform
+  full opcode/operand/immediate decode, exception detection, split/fuse
+  recognition, and group formation.
 - `D2`: operand extraction, boundary resolution, and resource-demand
   preparation.
 - `D3`: atomic resource admission, physical rename, ordering-ID acceptance,
@@ -207,9 +217,12 @@ Stage lineup in this pass:
 - `R0..R4`: completion intake, retirement decision, R2 commit/flush
   publication, recovery processing, and R4 restart.
 
-Serial `IB -> F4` naming and decode helpers named `F4DecodeWindow` remain
-migration work. They are implementation evidence, not alternate canonical
-stage definitions.
+B-SIDE staging is: B-F0 L0/NLP plus checkpoint, B-F1 uBTB/RAS, B-F2
+PBTB/BTB+BIM, B-F3 short/medium TAGE plus IBTB launch, and B-F4 long TAGE,
+IBTB/loop results, and final arbitration. A later prediction correction that
+has already driven fetch inner-flushes I-SIDE and restarts I-F0. A
+backend-resolved misprediction instead enters typed recovery and publishes the
+frontend restart. The complete contract is specified in [`ifu.md`](./ifu.md).
 
 ## Specification set
 
@@ -228,6 +241,9 @@ superscalar-core specification:
 - `module-catalog.md`: canonical module families and top-level composition.
 - `pipeline-stage-catalog.md`: per-stage design, ownership, and stage-to-module
   mapping.
+- `ifu.md`: normative I-SIDE/B-SIDE decomposition, decoupled interfaces,
+  I-F0..I-F4 and B-F0..B-F4 responsibilities, Instruction Buffer, and
+  four-wide D1 contract.
 
 The remaining files in this directory are implementation deep dives. They may
 expand a mechanism, but they must not weaken or redefine the live contract.

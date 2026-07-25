@@ -8294,7 +8294,7 @@
       "translation_sha256": "4fe65229d8c39b98fa17f905906bfdf0c712cc91fcebd3e2b50582acae7f600f"
     },
     "reference/linxisa-call-ret-contract.md": {
-      "source_sha256": "5d9506e49e92f952b1e3f78b7b39273a9d335127df8eea95c46c2fca66fcccb6",
+      "source_sha256": "07facc4e7e325fda578a37b20910c8bce09e7dbda52e72987c4dd1abbdc4a395",
       "translation_sha256": "807d7a0a5f8b1e66436a6344fbe03b1ea608a18551fda4963654919c755dfe44"
     },
     "releases/v0.3.0.md": {

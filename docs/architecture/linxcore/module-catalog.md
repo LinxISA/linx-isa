@@ -50,11 +50,11 @@ stage owners.
 
 ### `src/top/top.py`
 
-- Defines `LinxCoreTop`, the full top-level composition with the explicit IFU
-  stage chain.
-- Instantiates the current IFU implementation modules and must converge them to
-  the canonical `F0 -> F1 -> F2 -> F3 -> F4/IB` chain before claiming
-  frontend stage ownership.
+- Defines `LinxCoreTop`, the full top-level composition with decoupled I-SIDE
+  and B-SIDE engines.
+- Instantiates the canonical
+  `I-F0 -> I-F1 -> I-F2 -> I-F3 -> I-F4 -> Instruction Buffer -> D1`
+  I-SIDE chain and independent `B-F0 -> ... -> B-F4` B-SIDE chain.
 - Serves as the reference composition for stage-to-stage wiring names.
 - Must converge toward a connection-only composition shell as stage-local trace
   and bring-up logic is pushed into dedicated children.
@@ -85,8 +85,7 @@ canonical build-time configuration rules.
 - `src/common/decode32.py`
 - `src/common/decode48.py`
 - `src/common/decode64.py`
-- `src/common/decode_f4.py` (legacy filename for a D1-ingress compatibility
-  helper; not an F4 stage owner)
+- boundary-only I-F4 predecode metadata and D1 full-decode tables
 
 These files define opcode identity and decode behavior consumed by the
 frontend/decode stages.
@@ -102,52 +101,47 @@ frontend/decode stages.
 These files define the stage-token catalog, common signal bundles, uop
 metadata, and UID allocation required by the stage, block, and trace contracts.
 
-## Frontend and fetch modules
+## IFU modules
 
-### `src/bcc/ifu/f0.py`
+The normative IFU decomposition and interfaces are defined in
+[`ifu.md`](./ifu.md).
 
-- Owns canonical F0 thread arbitration, redirect/next-PC selection, and the
-  registered request context handed to F1.
-- F0 is frontend control and is not counted as a fifth fetch-data stage.
+### I-SIDE
 
-### `src/bcc/ifu/f1.py`
+- `i_f0`: accepts/selects PC, allocates request/STID/epoch identity, and
+  registers the stage-zero request.
+- `i_f1`: launches ITLB and L1I access in parallel.
+- `i_f2`: joins translation/cache state, initiates refill, and generates an
+  I-SIDE inner flush on ITLB miss.
+- `i_f3`: owns returned-cacheline, ECC/refill, byte-cursor, and cross-line carry
+  state.
+- `i_f4`: parses 2/4/6/8-byte lengths, recognizes only
+  `BSTART`/`BSTOP` boundaries, zero-extends complete instructions to 64 bits,
+  and writes the Instruction Buffer.
+- `instruction_buffer`: owns per-STID instruction residency after I-F4 and
+  presents four contiguous 64-bit entries to D1.
+- `itlb` and `l1i`: are I-SIDE services. Any header/fetch-cache implementation
+  is an L1I implementation detail and never belongs to B-SIDE.
 
-- Must converge on canonical F1 iTLB/I-cache request/lookup launch for the
-  F0-selected thread and PC.
-- Preserves the architecture-facing per-thread fetch-control model even though
-  the current physical I-cache read path is single-ported.
+### B-SIDE
 
-### `src/bcc/ifu/icache.py`
+- `b_f0`: L0/NLP next-line prediction, checkpoint allocation, GHR/GHRQ
+  snapshot.
+- `b_f1`: uBTB and speculative RAS.
+- `b_f2`: PBTB/BTB and BIM.
+- `b_f3`: short/medium-history TAGE and IBTB launch.
+- `b_f4`: long-history TAGE, IBTB/loop result, and final arbitration.
+- `prediction_arbiter`: applies
+  `B-F4 > B-F3 > B-F2 > B-F1 > B-F0 > sequential`; exact RAS/high-confidence
+  IBTB target rules; `loop > long-TAGE > short-TAGE > BIM` direction rank;
+  and BTB direct targets.
+- `prediction_training`: consumes resolved outcomes independently of I-SIDE
+  fetch backpressure.
 
-- Owns the fetch-cache access module used by the IFU path.
-- Produces bundle, hit/miss, and refill-facing metadata for downstream stages.
-
-### `src/bcc/ifu/f2.py`
-
-- Current mixed fetch-return/decode-window helper. Its cache-return,
-  integrity/ECC-facing work contributes to F2; assembly work belongs to F3.
-- Any four-lane window extraction in this module is D1-ingress behavior, not a
-  reason to name the module F4.
-
-### `src/bcc/ifu/ctrl.py`
-
-- Owns IFU control metadata such as checkpoint flow and flush interaction.
-- Coordinates frontend-side control decisions without redefining stage
-  ownership.
-
-### `src/bcc/ifu/f3.py`
-
-- Contributes variable-length assembly, cross-line carry, and byte-stream
-  ordering to F3. Its prediction, boundary-predecode, and template-ordering
-  logic must converge under F4/IB ownership.
-- Its internal instruction-buffer instance is target F4/IB state and must be
-  separated from F3 combinational ownership in the final stage mapping.
-
-### `src/top/modules/ib.py`
-
-- Owns `LinxCoreTopIb`, the host-fed form of canonical F4/IB used by the export
-  shell.
-- `IB` aliases F4; host injection must not create a serial `IB -> F4` stage.
+The I- and B-side modules are independently backpressured and do not advance
+in lockstep. Backend restart has highest priority as a typed-recovery source.
+A later B-stage correction of an already-used prediction inner-flushes I-SIDE
+and restarts I-F0.
 
 ### `src/top/modules/xchk.py`
 
@@ -161,27 +155,14 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 - Pulls local store-drain state and helper instances out of
   `export_core.py` so the top shell remains closer to pure composition.
 
-### `src/bcc/ifu/f4.py`
-
-- Legacy-misnamed register/window slicer. Its continuous-view extraction is a
-  D1 ingress helper; it is not the canonical F4 stage.
-- New code must not extend the `F4DecodeWindow` naming. The target F4 owner is
-  the instruction-buffer state described above.
-
-### `src/bcc/frontend/`
-
-- Contains auxiliary frontend support modules such as `frontend.py`, `bpu.py`,
-  `ftq.py`, `ibuffer.py`, and `ifetch.py`.
-- These files may support alternative decomposition or experimentation, but
-  they do not supersede the canonical stage owners above.
-
 ## Decode, rename, and post-rename dispatch modules
 
 ### `src/bcc/ooo/dec1.py`
 
 - Owns `D1`.
-- Reads contiguous F4/IB entries, performs early decode/fault detection,
-  recognizes split/fuse shapes, and forms the decode group.
+- Reads four contiguous 64-bit Instruction Buffer entries, performs full
+  opcode/operand/immediate decode and fault detection, recognizes split/fuse
+  shapes, and forms the decode group.
 - Computes demand but does not mutate ROB/BROB/rename/IQ state.
 
 ### `src/bcc/ooo/dec2.py`

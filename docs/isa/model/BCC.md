@@ -1,36 +1,20 @@
-# BCC (Block Control Core)
+# BCC / LinxCoreModel Mapping
 
-The purpose of this chapter is to help you quickly understand the implementation of LinxISA microarchitecture.
+LinxCoreModel is an executable behavioral reference, not the owner of
+architectural stage names.
 
-## Main content
+For the IFU:
 
-1. block instruction level assembly line
-2. Briefly describe the functions or purposes of the main modules of BCC [[For details, see: Introduction to Block Control Core BCC]] (../../bcc/overview.md) and the code description to implement its functions.
+- map cacheline-fetch mechanisms to I-SIDE;
+- map predictor algorithms to the decoupled B-SIDE engine;
+- map I-SIDE to I-F0..I-F4 and B-SIDE to B-F0..B-F4;
+- preserve their independent backpressure and non-lockstep progress;
+- map model BFU sequencing to the B-stage responsibilities and provider rank;
+- feed four fixed 64-bit Instruction Buffer entries into D1 full decode.
 
-## Description
+Downstream decode, rename, issue, BROB/ROB, LSU, execution, and recovery retain
+their documented owners.
 
-How data flows to the next level:
-(1) Write the next status of the next flow level;
-(2) Write to a queue (the data entered in this queue will only be visible in the next cycle);
-(3) Set a status for each flow level, and assign it to the next flow level after the work is completed.
-
-## BCC overall pipeline
-
-- **BCC pipeline**
-
-![BCC pipeline](../../figs/model/model_detail/BCC.svg)
-
-## BPC reset - execute first block
-
-*sim->core->setBPC(start_addr);*
-\=> *bctrl->interrupt(req);*
-\===> *blockFetchUnit.jumpTo(req.initPC);*
-\=====> *bfu->createNewF0(bpc, 0, true); // Set the first level pipeline according to BPC*
-
-## Execution of each stage
-
-- [View BIFU](./BIFU.md)
+- [View IFU model mapping](./BIFU.md)
 - [View Decode](./BCTRL.md)
-- [View BRename](./BRename.md)
-- [View BIssue](./BIssue.md)
 - [View BROB](./BROB.md)

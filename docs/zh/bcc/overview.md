@@ -1,19 +1,13 @@
-# 块控制核 (Block Control Core, BCC)
+# LinxCore 块控制前端
 
-块控制核是块头的处理和分发单元。其通过乱序下发指令块到各个PE，使得各个PE能够并行的处理不同的指令块，从而最大层度上利用了块间并行度 (Block Parallelism)。在块控制核中，硬件处理的整体是块指令 (Block Header)，与普通处理器一样，块控制核也被分为了前后端：
+LinxCore 前端取普通指令流，并保留由 `BSTART`/`BSTOP` 表达的架构块边界。
 
-## 块控制核前端流水线 (BCC Frontend)
+IFU 分为：
 
-其包括块指令[分支预测单元](./bp.md)、[取指单元](./bifu.md)、[译码](./bdecode.md)、[调度单元](./bdispatch.md)等。主要负责取指块头指令并通过算法将块分发到适合的执行引擎。
+- [I-SIDE 与 IFU 总体](./bifu.md)：拥有 I-F0..I-F4 取指流水和
+  Instruction Buffer 写入；
+- [B-SIDE](./bp.md)：拥有解耦 B-F0..B-F4 跳转预测流水。
 
-## 块控制核后端流水线 (BCC Backend)
-
-其包括[通用寄存器重命名](./bren.md)、[重排序缓存](./brob.md)、发射管道、[通用寄存器堆](./brf.md)，[块地址缓存](./bhcache.md)，[PE执行引擎](../pe/ope.md)等，负责块指令的处理及高效执行。
-
-为了能够有效的扩展后端执行引擎的数量，并且有效降低硬件走线代价，微架构将 BCC 的后端逻辑尽可能的按块的维度解耦到各个执行引擎并与该执行引擎绑定，绑定后的结构被称为 **PE Tile**。因此，架构呈现出的是一个整体的块控制核前端流水线和 N 个块控制核后端流水线的结构。具体如下：
-
-![架构BCC](../figs/uArch/bcc_overview.png){ width="800" }
-
-## BCC整体流水线
-
-![BCC整体流水线](../figs/model/BCC.png)
+两条流水独立反压、不锁步。D1 从 Instruction Buffer 每周期读取四条
+固定 64-bit 指令，再把完整
+译码组交给 OOO 资源准备。

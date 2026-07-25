@@ -7,6 +7,8 @@
 本章定义了架构上可见的 灵犀Core 舞台布景和
 拥有每个阶段的模块。
 
+IFU 的规范分解和接口字段见 [`ifu.md`](./ifu.md)。
+
 本文档中的阶段名称与规范的阶段令牌目录一致
 按照 `src/common/stage_tokens.py` 和 灵犀Trace 阶段顺序。如果是艺名
 在跟踪、比较工具或阶段连接检查中可见，它必须
@@ -23,53 +25,89 @@
 - 启动旁路路径可以取代阶段输入的生成器，但它们可能
   不删除下游逻辑和跟踪工具看到的阶段边界。
 
-## 前端阶段
+## IFU 组织
 
-### F0
+IFU 由 I-SIDE 与 B-SIDE 两个 decoupled engine 组成。I-SIDE 使用
+I-F0..I-F4，B-SIDE 使用 B-F0..B-F4；两条流水独立反压、不锁步。
 
-- 所有者模块：`src/bcc/ifu/f0.py` (`JanusBccIfuF0`)
-- 设计角色：PC选择阶段，从多个PC中选择下一个获取PC
-  候选 PC 并呈现已注册的 `F0 -> F1` 边界。
+### I-F0
 
-### F1
+- 接受/选择 PC，分配 request/STID/epoch 身份；
+- 寄存请求并向 B-SIDE 发送相关联的预测请求。
 
-- 所有者模块：`src/bcc/ifu/f1.py` (`JanusBccIfuF1`)
-- 设计角色：I-cache查找阶段，拥有标签/数据查找控制和
-  缺失/背压产生。
-- 架构说明：控制是每个线程的，而当前的物理
-  实现跨线程仲裁单个 I-cache 读取端口。
+### I-F1
 
-### F2- 所有者模块：`src/bcc/ifu/f2.py` (`JanusBccIfuF2`)
-- 设计角色：I-cache数据阶段和ECC检查阶段。
-- 仅将 ECC 干净的原始缓存数据和线程/PC 上下文转发到 `F3`。
+- 对同一 PC 和请求身份并行启动 ITLB 与 L1I。
 
-### F3
+### I-F2
 
-- 所有者模块：`src/bcc/ifu/f3.py` (`JanusBccIfuF3`)
-- 设计角色：可变长度缝合/组装、静态预测、
-  块边界注释和模板识别/扩展控制。
+- 汇合 ITLB 与 L1I 状态；
+- ITLB miss 产生 I-SIDE inner flush 并清除对应 STID/epoch 的年轻
+  I-SIDE 工作；
+- L1I miss 保留请求身份并进入 refill。
 
-### 国际文凭
+### I-F3
 
-- 所有者模块：
-  - 完整 IFU 路径：`src/bcc/ifu/f3.py`
-  - 导出/调出路径：`src/top/modules/ib.py` (`LinxCoreTopIb`)
-- 设计角色：每线程指令缓冲区组提供对齐解码
-  组。
+- 保存一个 cacheline、ECC/refill、byte cursor 和跨 line carry；
+- 向 I-F4 提供有序字节流。
 
-### F4
+### I-F4
 
-- 所有者模块：`src/bcc/ifu/f4.py` (`JanusBccIfuF4`)
-- 设计角色：4 时隙解码窗口生成，每时隙连续 64 位
-  从插槽PC查看。
+- 是真实第 4 级，与 Instruction Buffer 独立；
+- 判断 2/4/6/8-byte 长度，拼成完整指令；
+- 只识别 `BSTART`/`BSTOP` boundary；
+- 零扩展成固定 64-bit `insn64` 并写 Instruction Buffer。
+
+### Instruction Buffer
+
+- 位于 I-F4 与 D1 之间，按 STID 分区；
+- 保存 PC、长度、`insn64`、boundary、fault、request/checkpoint 和
+  prediction metadata；
+- 每周期向 D1 提供最多四条连续 64-bit 指令。
+
+### B-F0
+
+- L0/NLP next-line prediction；
+- 分配投机 prediction checkpoint 并保存 GHR/GHRQ 快照。
+
+### B-F1
+
+- uBTB 类型/目标查询；
+- 投机 RAS push/pop/read。
+
+### B-F2
+
+- PBTB/BTB 类型/目标查询；
+- BIM 基础方向预测。
+
+### B-F3
+
+- short/medium-history TAGE 查询；
+- 启动 IBTB 间接目标查询。
+
+### B-F4
+
+- 汇合 long-history TAGE、IBTB、loop predictor/buffer；
+- 完成最终预测仲裁；
+- provider rank 为
+  `B-F4 > B-F3 > B-F2 > B-F1 > B-F0 > sequential`；
+- B-F4 内 exact RAS return 或 high-confidence IBTB 赢得对应 target；
+  direction rank 为 `loop > long-TAGE > short-TAGE > BIM`，direct target
+  由 BTB 提供。
+
+backend restart 优先于所有 provider，但属于 typed recovery source，不是
+prediction provider。B-SIDE 后级若纠正已经驱动取指的预测，
+inner-flush I-SIDE 并重启 I-F0；backend misprediction 进入 typed recovery
+并发布 frontend restart。B-SIDE 不拥有 ITLB、L1I、refill、predecode 或
+Instruction Buffer。
 
 ## 解码和预发行阶段
 
 ### D1
 
 - 所有者模块：`src/bcc/ooo/dec1.py` (`JanusBccOooDec1`)
-- 设计角色：解码、连续组形成和 `RID/BID/LSID`
-  分配。
+- 设计角色：读取四条 64-bit Instruction Buffer entry，首次完成完整
+  opcode/operand/immediate/异常/split-fuse 译码并形成连续组。
 
 ### D2
 

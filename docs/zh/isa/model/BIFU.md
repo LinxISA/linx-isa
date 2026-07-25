@@ -1,27 +1,24 @@
-# BIFU
+# IFU Model 映射
 
-## 功能
+目标 IFU 由两个解耦引擎组成：
 
-1. 分支预测。依据BPC预测当前块的跳转类型、方向和目的地址。
-2. 取块头。跟据BPC从I-Cache中取指，并进行预解码，得到跳转类型和下一个块的地址，以便在此取指阶段进行分支预测的初步检查并作出最终预测。
+- I-SIDE：`I-F0 -> I-F1 -> I-F2 -> I-F3 -> I-F4 -> Instruction Buffer -> D1`；
+- B-SIDE：`B-F0 -> B-F1 -> B-F2 -> B-F3 -> B-F4`。
 
-## 实现
+LinxCoreModel BFU 只作为 BTB 类结构、GHR/GHRQ、TAGE、BIM、RAS、
+IBTB、loop prediction、预测仲裁、BRQ/checkpoint 和恢复算法的参考。
+Model BFU 的内部 stage 标签不覆盖目标 I/B 前缀。映射为 B-F0
+L0/NLP+checkpoint、B-F1 uBTB/RAS、B-F2 PBTB/BTB+BIM、B-F3
+short/medium TAGE+IBTB launch、B-F4 long TAGE/IBTB/loop/final
+arbitration。
 
-![BIFU](../../figs/model/model_detail/BIFU.svg)
+provider rank 为
+`B-F4 > B-F3 > B-F2 > B-F1 > B-F0 > sequential`。I/B 两侧解耦、不锁步；
+后级预测纠正 inner-flush I-SIDE 并重启 I-F0，backend misprediction 走
+typed recovery 加 frontend restart。
 
-### 压入最旧的失败预测到resolveQ【*be_bfu_rslv_q.write(oldestMispred.mhdr);*】
+I-SIDE 在 I-F1 并行访问 ITLB/L1I，并独立拥有 ITLB-miss inner flush、cacheline
+处理、边界预解码、64-bit 定长化和 Instruction Buffer 写入。D1 每周期
+读取四条 `insn64` 并完成完整译码。
 
-### 取指流水线【1】——F1阶段
-    进行跳转方向和下一个BPC的预测。【*BFU::runF1()*】
-
-### 取指流水线【2】——F2/Ft阶段
-    从Cache中取指。【*BFU::runF2() => bhc.fetch(fb); => getHeader(fb, n);*】
-
-### 取指流水线【3】——F3阶段
-    作出最终的分支预测。【*BFU::runF3() => sp.predict(fb); // 预解码 doMainPrediction(fb); // 作出一个最终的分支预测*】； 
- 
-    将指令送到解码模块。【*BFU::pipeMove() => brq.push(pipe[F3].fb); => bfu->deliverHeader(fb->mhdr[pos]); => intf.bfu_be_q->write(h);*】
-
-## 备注
-
-BFU内部流水线往后移动【*BFU::pipeMove()*】
+规范见 [LinxCore IFU 架构](../../architecture/linxcore/ifu.md)。

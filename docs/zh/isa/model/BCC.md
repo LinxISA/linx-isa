@@ -1,37 +1,16 @@
-# BCC(Block Control Core)
+# BCC / LinxCoreModel 映射
 
-本章节目的是为了帮助快速了解LinxISA微架构的实现。
+LinxCoreModel 是可执行行为参考，不拥有目标架构 stage 命名。
 
-## 主要内容
+IFU 映射规则：
 
-1. 块指令级别的流水线
-2. 简要说明BCC主要模块的功能或目的[【详见：块控制核BCC介绍】](../../bcc/overview.md)以及实现其功能的代码说明。
+- cacheline 取指机制映射到 I-SIDE；
+- 预测算法映射到解耦 B-SIDE；
+- I-SIDE 映射 I-F0..I-F4，B-SIDE 映射 B-F0..B-F4；
+- 两条流水独立反压、不锁步；
+- Model BFU 内部顺序映射为 B-stage 职责和 provider rank；
+- D1 从 Instruction Buffer 读取四条固定 64-bit 指令。
 
-## 说明
-
-数据流向下一流水级的方式：  
-（1）写入下一流水级的next状态；  
-（2）写入一个队列（此队列输入的数据下一周期才可见）；  
-（3）为每一流水级设有一个状态，工作完成后赋给下一流水级。
-
-## BCC整体流水线
-
-- **BCC流水线**
-
-![BCC流水线](../../figs/model/model_detail/BCC.svg)
-
-## BPC复位——执行第一个块
-
-*sim->core->setBPC(start_addr);*  
-\=> *bctrl->interrupt(req);*  
-\===> *blockFetchUnit.jumpTo(req.initPC);*  
-\=====> *bfu->createNewF0(bpc, 0, true); // 依据BPC设置第一级流水*
-
-## 各阶段执行
-
-- [查看BIFU](./BIFU.md)
-- [查看Decode](./BCTRL.md)
-- [查看BRename](./BRename.md)
-- [查看BIssue](./BIssue.md)
-- [查看BROB](./BROB.md)
-
+- [查看 IFU Model 映射](./BIFU.md)
+- [查看 Decode](./BCTRL.md)
+- [查看 BROB](./BROB.md)

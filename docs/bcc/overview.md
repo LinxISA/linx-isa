@@ -1,19 +1,19 @@
-# Block Control Core (BCC)
+# LinxCore Block-Control Frontend
 
-The block control core is the processing and distribution unit of header. It delivers instruction blocks to each PE out of order, allowing each PE to process different instruction blocks in parallel, thus utilizing inter-block parallelism (Block Parallelism) to the maximum extent. In the block control core, the overall hardware processing is block instruction (Block Header). Like ordinary processors, the block control core is also divided into front and rear ends:
+The LinxCore frontend fetches a normal instruction stream and preserves
+architectural block boundaries expressed by `BSTART` and `BSTOP`.
 
-## Block Control Core Frontend Pipeline (BCC Frontend)
+Its IFU is split into:
 
-It includes block instruction [branch prediction unit] (./bp.md), [fetch unit] (./bifu.md), [decoding] (./bdecode.md), [scheduling unit] (./bdispatch.md), etc. Mainly responsible for fetching instructions header instruction and distributing blocks to appropriate execution engines through algorithms.
+- [I-SIDE and overall IFU](./bifu.md), which owns the I-F0..I-F4 fetch
+  pipeline and Instruction Buffer production;
+- [B-SIDE](./bp.md), which owns the decoupled B-F0..B-F4 prediction pipeline.
 
-## Block Control Core Backend Pipeline (BCC Backend)
+I-SIDE and B-SIDE exchange explicitly identified request, prediction,
+training, and redirect messages; they do not advance in lockstep. D1 reads
+four fixed 64-bit instructions from
+the Instruction Buffer and hands decoded groups to OOO resource preparation.
 
-It includes [general-purpose register rename] (./bren.md), [reorder cache] (./brob.md), emission pipeline, [general-purpose register heap] (ZXM DLINK6QXZ), [Block Address Cache] (./bhcache.md), [PE Execution Engine] (../pe/ope.md), etc., are responsible for the processing and efficient execution of block instruction.
-
-In order to effectively expand the number of back-end execution engines and effectively reduce hardware wiring costs, the microarchitecture decouples the back-end logic of BCC to each execution engine as much as possible in the block dimension and binds it to the execution engine. The bound structure is called **PE Tile**. Therefore, the architecture presents the structure of an overall block control core front-end pipeline and N block control core back-end pipelines. The details are as follows:
-
-![Architecture BCC](../figs/uArch/bcc_overview.png){ width="800" }
-
-## BCC overall pipeline
-
-![BCC overall pipeline](../figs/model/BCC.png)
+Downstream block tracking, rename, scheduling, execution, BROB/ROB retirement,
+and recovery remain separate owners and must not be folded into IFU prediction
+or predecode.

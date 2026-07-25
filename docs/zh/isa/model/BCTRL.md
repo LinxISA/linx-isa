@@ -1,23 +1,14 @@
-# Decode & Dispatch【*BCtrlUnit::decodeBlockHeader()*】
+# Decode 与 Dispatch Model 映射
 
-## 功能
+目标后端输入是 D1 从 Instruction Buffer 读取的最多四条固定 64-bit
+指令组成的 group。
 
-进一步解码，将块头分发至BROB、与PE绑定的BIQ。
+1. D1 完成 opcode、operand、immediate、异常和 split/fuse 完整译码；
+2. D2 计算 BROB/ROB、rename、IQ、memory-order 完整资源需求并解析
+   block boundary ownership；
+3. D3 原子接纳整个 group，否则不改变任何分配状态；
+4. Dispatch 把已接纳 uop 路由到对应 execution-class issue structure。
 
-## 实现
-
-![Decode](../../figs/model/model_detail/Decode.svg)
-
-### 1）获取块头【*FullBlockHeader header = blockFetchUnit.getBlockHeader(pos);*】
-    获取预解码过的块头MachineHeader【*NS_CORE::PtrMHdr h = bfu_be_q.read();*】，转换为FullBlockHeader【*convertHeader(fbh, h);*】。
-
-### 2）分配BROB表项【*ROBID bSeq = blockROB.allocBlock(header, pos);*】
-
-### 3）向块重命名模块发出重命名请求【*blockRenameUnit.renameBlock(header);*】
-
-### 4）作出分发至哪个PE的决定【*DispatchDecision decision = header.hyper ? blockDispatchUnit.getDispatch(header, hyper_cnt++) : blockDispatchUnit.getDispatch(header, pos);*】
-    分配策略：1. 循环分配 2. 负载均衡
-
-### 5）向PE IFU发出块内微指令预取请求【*core->ifuArray[decision.peID]->setPrefetchQ(header.payloadPC, header.size);*】
-
-### 6）分配BIQ表项【*blockIssueQ.allocateBlock(header.bSeq, decision.peID,header.size);*】
+`bfu_be_q`、`MachineHeader`、`decodeBlockHeader()` 等名称只描述当前
+可执行 Model 的代码组织，可用于行为对照，但不是目标 IFU-to-OOO
+接口，也不定义独立块头译码路径。

@@ -86,10 +86,11 @@
 ### 当前提升的关闭切片
 
 当前推广阶段合约涵盖前端/解码路径、
-重命名后调度路径，以及来自 `F0` 的基线问题/唤醒切片
+重命名后调度路径，以及来自 `I-F0` 的基线问题/唤醒切片
 通过`W1`：
 
-- `F0`、`F1`、`F2`、`F3`、`IB`、`F4`
+- `I-F0`、`I-F1`、`I-F2`、`I-F3`、`I-F4`、`Instruction Buffer`
+- `B-F0`、`B-F1`、`B-F2`、`B-F3`、`B-F4`
 - `D1`、`D2`、`D3`
 - `S1`、`S2`、`IQ`
 - `P1`、`I1`、`I2`、`E1`、`W1`
@@ -97,71 +98,81 @@
 除了提升的切片之外的后续执行/写回细节可以通过以下方式细化
 未来的规范更新，但不得与以下规则相矛盾。
 
-### 前端合约详细信息（`F0` 到 `F4`）
+### IFU 合约（I-SIDE 与 B-SIDE）
 
-#### F0- `F0` 是专用的 PC 选择级。
-- `F0` 接收多个候选 PC 并在控制逻辑下选择一台。
-- `F0 -> F1` 是已注册的管道边界。
-- 面向架构的 `F0 -> F1` 接口是每个线程的，而不是一个
-  具有显式线程多路复用的单个共享端口。
+IFU 由两个解耦引擎组成。I-SIDE 拥有 I-F0..I-F4 和 Instruction
+Buffer；B-SIDE 拥有 B-F0..B-F4。两个引擎通过 request、prediction、
+training、redirect ready/valid 接口交互，独立反压、不锁步。
 
-#### F1
+#### I-F0
 
-- `F1` 拥有 I-cache 查找和标记检查语义。
-- `F1` 确定命中或未命中，并在未命中时应用前端背压。
-- 架构模型保留每个线程未命中的独立性。
-- 当前物理I-cache读取路径是单端口的，因此`F1`仲裁
-  每个周期在线程和服务之间最多进行一次线程查找。
-- `F1 -> F2` 是已注册的边界。
+- 接受/选择 PC；
+- 分配 request ID、STID 和 epoch；
+- 寄存 I-SIDE 请求并发送相关联的 B-SIDE 预测请求。
 
-#### F2
+#### I-F1
 
-- `F2` 从 `F1` 接收缓存读取数据以及线程和 PC 上下文。
-- `F2` 执行 ECC 检查并暂存原始缓存读取结果。
-- 当 ECC 错误时，`F2` 阻止正常传送到 `F3` 并报告获取端
-  错误而不是转发正常的带有标志的捆绑包形式。
-- `F2`不具备变长拼接或十字线组装功能。
+- 对同一虚拟 PC 和请求身份并行启动 ITLB 与 L1I；
+- 不允许串行实现为 ITLB 完成后才启动 L1I。
 
-#### F3- `F3`拥有可变长度指令汇编和每线程进位/缝合
-  缓冲。
-- `F3` 执行静态预测。
-- `F3` 必须至少识别 `BSTART` 和 `BSTOP` 并明确注释
-  块边界元数据。
-- 主要边界元数据是语义 `start_of_block` 且
-  `end_of_block`，不是原始操作码标签残留。
-- 模板指令（`FENTRY`、`FEXIT`、`FRET.*`）可能会被
-  CTU 不会强制同一提取包中的后续指令消失。
-  那些后面的指令可以保留在前端队列中，但它们不能
-  在该模板的 CTU 扩展子流之前输入 `IB`。
-- 当 CTU 子流主动注入指令时，`IB` 写入端口
-  源选择是 CTU 优先级，普通 IFU 写入会等到
-  活动子流完成。
+#### I-F2
 
-#### 国际文凭
+- 汇合 ITLB 结果和 L1I tag/data 查询状态；
+- ITLB miss 启动页表遍历并产生 I-SIDE inner flush；
+- inner flush 只清除对应 STID/epoch 的年轻 I-SIDE 工作和陈旧 cache
+  响应，不是 OOO/global flush；
+- L1I miss 保留请求身份并进入 refill。
 
-- `IB` 按线程分区；每个线程拥有一个独立的bank或FIFO。
-- `IB` 条目可以合法地跨越块边界。
-- 块元数据按指令携带，而不是作为每个条目一个摘要位。
-- 每个存储的指令都携带其自己的长度元数据。
-- PC 编码使用 `entry_base_pc` 加上每条指令的偏移量和长度
-  而不是每条指令都有一个完全显式的 PC。
-- 每个线程 `IB` 存储体每个周期提供最多 `decodeWidth` 通道读取
-  因此`D1`可以组装一个解码宽度对齐的连续解码组。
+#### I-F3
 
-#### F4- `F4` 每个周期提供 4 个时隙窗口。
-- 每个插槽都是来自其自己的 PC 的连续 64 位视图。
-- 解码严格按顺序消耗槽。
-- 解码不得跨槽连接形成 48 位或 64 位
-  说明。
-- 槽位消耗在第一个无效或被杀死的槽位处停止；没有插槽
-  允许压缩或跳过。
+- 保存一个 cacheline、ECC/refill、byte cursor 和跨 line carry；
+- 向 I-F4 提供有序字节流；
+- 不做完整译码，也不做跳转预测。
+
+#### I-F4
+
+- 是真实第 4 级，与 Instruction Buffer 相互独立；
+- 判断 2/4/6/8-byte 长度并拼成完整指令；
+- 只识别 `BSTART`/`BSTOP` 类 block boundary；
+- 把每条指令零扩展成固定 64-bit `insn64`；
+- 按程序顺序写入 Instruction Buffer；
+- 不译码通用 opcode、operand、immediate、branch kind/target 或
+  template。
+
+#### Instruction Buffer
+
+- 按 STID 分区，位于 I-F4 与 D1 之间；
+- 每项保存 PC、原始长度、`insn64`、boundary bits、fault、
+  request/checkpoint 和相关 B-SIDE prediction metadata；
+- 每周期向 D1 提供最多四条连续 64-bit 指令。
+
+#### B-F0..B-F4
+
+- `B-F0`：L0/NLP next-line prediction、投机 checkpoint、GHR/GHRQ 快照；
+- `B-F1`：uBTB 类型/目标和投机 RAS；
+- `B-F2`：PBTB/BTB 类型/目标和 BIM 方向；
+- `B-F3`：short/medium-history TAGE，启动 IBTB；
+- `B-F4`：long-history TAGE、IBTB/loop 结果和 final arbitration。
+
+provider rank 为
+`B-F4 > B-F3 > B-F2 > B-F1 > B-F0 > sequential`。B-F4 内 exact RAS
+return 或 high-confidence IBTB 赢得对应 target；direction rank 为
+`loop > long-TAGE > short-TAGE > BIM`；BTB 提供 direct target。backend
+restart 优先级更高，但属于 typed-recovery source，不是 prediction
+provider。
+
+后级 B-stage 纠正已经驱动 I-SIDE 的预测时，inner-flush I-SIDE 并从
+I-F0 重启。backend misprediction 进入 typed recovery，恢复选定状态并
+发布 frontend restart。
 
 ### 解码并重命名-uop 合约（`D1` 至 `D3`）
 
 #### D1
 
-- `D1` 从 `IB` 读取程序顺序连续解码组。
-- `D1` 执行指令解码并分配 `RID`、`BID` 和 `LSID`。
+- `D1` 每周期从 Instruction Buffer 读取最多四条程序顺序连续的
+  64-bit 指令。
+- `D1` 首次完成完整 opcode、operand、immediate、异常及 split/fuse
+  译码。下游不再重新切分变长字节流。
 - 解码组的分配是全有或全无；如果整个小组不能
   分配成功，管道停止并重试整个组。
 - `D1` 可以拆分或融合解码的工作，但必须发出较旧的拆分工作

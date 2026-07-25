@@ -26,15 +26,23 @@ Architectural details
 ## Module introduction
 **OPE** can be roughly divided into the following modules
 
-### IFU
-**IFU** (Instruction Fetch Unit) is responsible for receiving the header instruction sent by the upstream and parsing the microinstruction PC from header instruction. Then the microinstruction PC is used to sequentially fetch 4 instructions from the instruction cache and send them to the decoding unit.
-Similar to BFU, the entire IFU is divided into two parts, namely **ISIDE** and **BSIDE**. Among them, ISIDE is mainly responsible for reading the correct microinstructions from the instruction cache through the microinstruction PC and issuing them. BSIDE is mainly responsible for predicting the address and direction of the jump through the existing microinstruction PC, so that the microinstructions in the block can be launched efficiently.
-For its specific microarchitecture, please refer to: (TODO)
+### IFU ingress
+
+OPE does not define a second nested fetch unit. The core-level IFU owns the
+single decoupled I-SIDE/B-SIDE architecture. I-SIDE writes complete 64-bit
+instructions into the Instruction Buffer, and D1 reads up to four entries per
+cycle for full decode. OPE receives admitted decoded/renamed uops after the
+D1/D2/D3 group contract; it does not receive a block header and fetch another
+four-instruction stream from a micro-PC.
+
+See [LinxCore IFU Architecture](../architecture/linxcore/ifu.md).
 
 ### DEC and DISP
-**DEC** (Decode) is responsible for parsing the instructions sent by the IFU and obtaining detailed instruction data, including instruction type, physical register number, immediate data, etc., and uses these control signals to indicate the execution of subsequent microinstructions, and guides its downstream DISP module to correctly distribute microinstructions.
+**DEC** is the core D1/D2 decode-group path. D1 performs full decode on four
+fixed 64-bit instructions; D2 computes resource demand and boundary ownership.
 
-**DISP** (Dispatch) is responsible for receiving the instruction data sent by DEC, and receiving the virtual register and physical register mapping information sent from PE ROB. At the same time, DISP will give priority to sending instructions to the cache that occupies less space in ISQ. There is no cache inside this module, only forwarding logic.
+**DISP** receives only D3-atomically-admitted uops and routes them to the
+appropriate issue structures. It does not repeat fetch or prediction.
 
 ### PE ROB
 

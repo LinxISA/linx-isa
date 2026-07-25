@@ -26,15 +26,21 @@
 ## 模块介绍
 **OPE** 大致的可以分为以下几个模块
 
-### IFU
-**IFU** (Instruction Fetch Unit) 负责接收上游发送的块头指令，并从块头指令中解析出微指令 PC。之后使用微指令 PC 从指令缓存中顺序取出4条指令并发送给解码单元。
-与 BFU 类似的，整个 IFU 被分为两个部分，即 **ISIDE** 与 **BSIDE**。其中 ISIDE 主要负责通过微指令 PC 从指令缓存中读取正确的微指令下发。而 BSIDE 主要负责通过现有的微指令 PC 预测跳转的地址与方向，以便块内微指令可以高效的发射。
-其具体微架构，请参考：（TODO）
+### IFU ingress
+
+OPE 不再定义第二套嵌套 IFU。core-level IFU 唯一拥有解耦 I-SIDE/B-SIDE
+架构。I-SIDE 把完整 64-bit 指令写入 Instruction Buffer，D1 每周期读取
+最多四条并完成完整译码。OPE 接收 D1/D2/D3 group 原子接纳后的
+decoded/renamed uop；它不接收块头后再从 micro-PC 重新取四条指令。
+
+规范见 [LinxCore IFU 架构](../architecture/linxcore/ifu.md)。
 
 ### DEC 与 DISP
-**DEC** (Decode) 负责解析 IFU 发送的指令，并得到详细的指令数据，包含指令类型、物理寄存器编号、立即数等，并以这些控制信号指示后续微指令的执行，并指导其下游 DISP 模块正确的分发微指令。
+**DEC** 是 core D1/D2 decode-group 路径。D1 对四条固定 64-bit 指令做
+完整译码；D2 计算资源需求和 boundary ownership。
 
-**DISP** (Dispatch) 负责接收 DEC 发送的指令数据，并且接收来自 PE ROB 发送的虚拟寄存器与物理寄存器映射信息。同时 DISP 会优先将指令发送到 ISQ 中占用较少的缓存。此模块内部无缓存只有转发逻辑。
+**DISP** 只接收 D3 原子接纳后的 uop，并路由到对应 issue structure；
+它不重复取指或预测。
 
 ### PE ROB
 

@@ -21,6 +21,7 @@
   - `docs/architecture/linxcore/verification-matrix.md`
   - `docs/architecture/linxcore/module-catalog.md`
   - `docs/architecture/linxcore/pipeline-stage-catalog.md`
+  - `docs/architecture/linxcore/ifu.md`
 - 规范的 灵犀Core 创作源：
   - `rtl/LinxCore/docs/architecture/overview.md`
   - `rtl/LinxCore/docs/architecture/microarchitecture.md`
@@ -28,6 +29,7 @@
   - `rtl/LinxCore/docs/architecture/verification-matrix.md`
   - `rtl/LinxCore/docs/architecture/module-catalog.md`
   - `rtl/LinxCore/docs/architecture/pipeline-stage-catalog.md`
+  - `rtl/LinxCore/docs/architecture/ifu.md`
 
 ## ISA 手册
 

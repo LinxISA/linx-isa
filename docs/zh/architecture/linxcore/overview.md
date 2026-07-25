@@ -78,22 +78,33 @@
 
 ## 当前架构闭包切片
 
-当前的架构编写阶段涵盖了升级的前端/解码，
-重命名后调度，以及来自 `IFU/F0` 的基线问题/唤醒切片
-`W1`。
+IFU 由两个独立反压的 decoupled engine 组成：
 
-本次舞台阵容：- `F0`：PC选择阶段；从多个候选 PC 中选择下一个获取 PC
-  并呈现已注册的 `F0 -> F1` 边界。
-- `F1`：指令缓存查找阶段；面向架构的控制仍然是每个线程的，
-  而当前的物理实现仲裁单个 I-cache 读取
-  跨线程的端口。
-- `F2`：I-cache数据分级和ECC检查；仅转发 ECC 干净的原始缓存
-  数据和线程/PC 上下文。
-- `F3`：可变长度缝合/组装、静态预测、块边界
-  注释和模板识别/扩展控制。
-- `IB`：每线程指令缓冲区组提供对齐的解码组。
-- `F4`：4 时隙解码窗口生成，具有连续的每时隙 64 位视图。
-- `D1`：解码、连续组形成和 `RID/BID/LSID` 分配。
+- **I-SIDE** 拥有真实
+  `I-F0 -> I-F1 -> I-F2 -> I-F3 -> I-F4 -> Instruction Buffer -> D1` 流水；
+- **B-SIDE** 拥有跳转预测，只通过显式 request、prediction、training
+  和 redirect 接口与 I-SIDE 交互，并拥有
+  `B-F0 -> B-F1 -> B-F2 -> B-F3 -> B-F4`。
+
+两条流水相互解耦、不锁步：
+
+- `I-F0`：接受/选择 PC，分配 request/STID/epoch 身份；
+- `I-F1`：对同一 PC 并行启动 ITLB 与 L1I；
+- `I-F2`：汇合翻译和 cache 状态；ITLB miss 产生 I-SIDE inner flush；
+- `I-F3`：保存一个 cacheline、ECC/refill、byte cursor 和跨 line carry；
+- `I-F4`：判断 2/4/6/8-byte 长度，只识别 `BSTART`/`BSTOP`，把完整
+  指令零扩展成 64-bit 并写入独立 Instruction Buffer；
+- `D1`：每周期从 Instruction Buffer 读取四条 64-bit 指令，完成完整
+  opcode、operand、immediate、异常和 split/fuse 译码。
+
+B-SIDE 分级为：B-F0 L0/NLP+checkpoint，B-F1 uBTB/RAS，B-F2
+PBTB/BTB+BIM，B-F3 short/medium TAGE+IBTB launch，B-F4 long
+TAGE/IBTB/loop/final arbitration。后级纠正已经驱动取指的预测时，
+inner-flush I-SIDE 并重启 I-F0；backend misprediction 进入 typed recovery
+并发布 frontend restart。
+
+其余阶段：
+
 - `D2`：重命名请求/转换阶段和 ROB 可见边界解析。
 - `D3`：重命名-uop 锁存点。
 - `S1`：重命名后调度准备（路由和就绪查询）。
@@ -117,6 +128,8 @@
 - `interfaces.md`：pyCircuit、提交跟踪、灵犀Trace、块结构和
   跨工具同步合约。
 - `verification-matrix.md`：合约 ID、门映射和所需证据。
+- `ifu.md`：I-SIDE/B-SIDE 解耦、I-F0..I-F4、B-F0..B-F4、Instruction
+  Buffer、四宽 D1 和预测器接口的规范。
 
 两个结构章节扩展了这些合同页面，并且是实时的一部分
 super标量-核心规格：

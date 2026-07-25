@@ -76,11 +76,12 @@ pyCircuit/灵犀Core 集成合约已进行版本控制并由网关强制执行�
 - `rtl/LinxCore/docs/architecture/`
 - `docs/architecture/linxcore/microarchitecture.md`
 
-对于当前的架构编写阶段，升级阶段合同来自
-`F0` 通过基线发出/唤醒片（`S1/S2/P1/I1/I2/E1/W1`）
-在 `docs/architecture/linxcore/microarchitecture.md` 中规范捕获，
-虽然本文档仍然仅限于外部/面向工具的接口
-治理。
+IFU 接口按解耦 I-SIDE/B-SIDE 定义。I-SIDE stage token 为
+`I-F0 -> I-F1 -> I-F2 -> I-F3 -> I-F4 -> Instruction Buffer -> D1`；
+B-SIDE 为 `B-F0 -> B-F1 -> B-F2 -> B-F3 -> B-F4`。两条流水独立反压、
+不锁步。I-F4 与 Instruction Buffer 是不同边界，D1 每周期读取四条
+64-bit 指令。后级预测纠正可以 inner-flush I-SIDE 并重启 I-F0；
+backend misprediction 仍走 typed recovery 加 frontend restart。
 
 ## 接口变更控制
 

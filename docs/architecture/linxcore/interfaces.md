@@ -82,11 +82,17 @@ The following must stay synchronized when trace/pipeline contracts change:
 
 Viewer-side contract sync is validated through LinxTrace gates.
 
-The canonical stage taxonomy is `F0` control followed by `F1..F4/IB`,
-`D1..D3`, `S1..S3`, optional
+The canonical I-SIDE taxonomy is
+`I-F0 -> I-F1 -> I-F2 -> I-F3 -> I-F4 -> Instruction Buffer -> D1..D3`,
+followed by
+`S1..S3`, optional
 `P0`, `P1/I1/I2`, per-pipe `E1..En` with `W1..Wn` result overlays, and
-`R0..R4`. The current LinxTrace v1 `F0` token is canonical, but its separate
-serial `IB/F4` tokens and incomplete `W`/`R` coverage are legacy. Removing or
+`R0..R4`. B-SIDE uses `B-F0 -> B-F1 -> B-F2 -> B-F3 -> B-F4`. The two
+pipelines do not advance in lockstep. The Instruction Buffer is written by
+I-F4 and read four-wide by D1. Prediction messages carry provider-stage and
+checkpoint identity; a later correction may inner-flush I-SIDE and restart
+I-F0. Backend misprediction remains typed recovery plus frontend restart.
+Removing or
 reordering fields is a breaking trace change and requires a new schema major
 plus synchronized producer, linter, viewer, sample, and compatibility
 evidence.
@@ -96,7 +102,8 @@ evidence.
 `LinxISA/LinxCoreModel` is the current executable reference for the most
 accurate Janus Core simulation lane. LinxCore changes that alter
 architecture-visible execution, direct-boot workload flow, block/engine
-completion, BFU recovery, ELF loading, or MMIO finisher behavior must identify
+completion, B-SIDE predictor recovery, ELF loading, or MMIO finisher behavior
+must identify
 whether LinxCoreModel already implements the intended behavior.
 
 Required model checkout:

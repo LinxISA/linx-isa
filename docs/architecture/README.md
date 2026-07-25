@@ -21,6 +21,7 @@ Architecture-facing documentation lives under `docs/architecture/`.
   - `docs/architecture/linxcore/verification-matrix.md`
   - `docs/architecture/linxcore/module-catalog.md`
   - `docs/architecture/linxcore/pipeline-stage-catalog.md`
+  - `docs/architecture/linxcore/ifu.md`
 - canonical LinxCore authoring source:
   - `rtl/LinxCore/docs/architecture/overview.md`
   - `rtl/LinxCore/docs/architecture/microarchitecture.md`
@@ -28,6 +29,7 @@ Architecture-facing documentation lives under `docs/architecture/`.
   - `rtl/LinxCore/docs/architecture/verification-matrix.md`
   - `rtl/LinxCore/docs/architecture/module-catalog.md`
   - `rtl/LinxCore/docs/architecture/pipeline-stage-catalog.md`
+  - `rtl/LinxCore/docs/architecture/ifu.md`
 
 ## ISA manual
 

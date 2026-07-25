@@ -18,7 +18,7 @@
 |合约编号 |面积 |规范性声明|
 |---|---|---|
 | `LC-ARCH-DOC-001` |架构文档 | Canonical 灵犀Core 文档位于 `rtl/LinxCore/docs/architecture` 中，镜像到 `docs/architecture/linxcore` 中，并在 灵犀Arch 文档中保持导航连接 |
-| `LC-MA-PIPE-001` |管道|保留舞台所有权和精确的 super标量 退休 |
+| `LC-MA-PIPE-001` |管道|IFU 为独立反压、不锁步的 I-SIDE `I-F0..I-F4` 和 B-SIDE `B-F0..B-F4`；I-F1 并行 ITLB/L1I，ITLB miss inner flush，I-F4 只做边界预解码和 64-bit 定长化，D1 读四条；B-F0 L0/NLP+checkpoint，B-F1 uBTB/RAS，B-F2 PBTB/BTB+BIM，B-F3 short/medium TAGE+IBTB launch，B-F4 long TAGE/IBTB/loop/final arbitration；后级预测纠正 inner-flush I-SIDE 并重启 I-F0，backend misprediction 走 typed recovery 加 frontend restart |
 | `LC-MA-HAZ-001` |危险/重赛 |重放、重定向、唤醒和发出行为不违反正确性 |
 | `LC-MA-BLK-001` |块控制流| `BSTART`/`BSTOP`、BID 和恢复到边界的合法性被保留 |
 | `LC-MA-PRV-001` |特权/陷阱|美国陷阱进入/返回和 CSR 可见的副作用是精确的 |

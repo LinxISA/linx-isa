@@ -1,7 +1,12 @@
-# 块解析单元 (Block Decode)
+# D1 译码
 
-块解析单元主要负责对 BFU 取回的一条 128-bit 块指令进行解析，并获取其中的 输入，输出，微指令代码偏移，块类型，块特性 等信息，这些信息将在其下游模块进行使用。
+D1 是第一次完整指令译码阶段。
 
-## BlockID 生成
+D1 每周期从独立 Instruction Buffer 读取最多四条连续 entry。每项已包含
+完整 64-bit `insn64`、原始 2/4/6/8-byte 长度、PC、
+`BSTART`/`BSTOP` boundary、fault 和 request/checkpoint metadata。
 
-由于 Block ROB 被切分到了各个 PE 之中，微架构需要在解析单元设置一个集中的模块产生一个全局连续的 Block ROBID 传给下游及各个PE
+D1 对四个 lane 完成完整 opcode、operand、immediate、异常和 split/fuse
+译码。它不再获取独立块头，也不重新切分变长字节流。boundary metadata
+用于形成 block group；D2/D3 再计算并原子接纳 BROB/ROB、rename、IQ 和
+memory-order 资源。

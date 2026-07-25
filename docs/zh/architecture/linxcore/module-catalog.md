@@ -45,9 +45,11 @@
 
 ### `src/top/top.py`
 
-- 定义 `LinxCoreTop`，具有显式 IFU 的完整顶级组合
-  舞台链。
-- 实例化 IFU 模块 `F0` 到 `F4`、后端、块控制
+- 定义 `LinxCoreTop`，组合解耦 I-SIDE 与 B-SIDE。
+- 实例化 I-SIDE
+  `I-F0 -> I-F1 -> I-F2 -> I-F3 -> I-F4 -> Instruction Buffer -> D1`、
+  B-SIDE `B-F0 -> ... -> B-F4`、
+  后端、块控制
   路径、LSU、内存和引擎适配器。
 - 用作级与级接线名称的参考组合。
 - 必须收敛到仅连接的组合外壳作为阶段本地跟踪
@@ -93,48 +95,38 @@
 这些文件定义了阶段令牌目录、通用信号包、uop
 阶段、区块和跟踪合约所需的元数据和 UID 分配。
 
-## 前端和获取模块
+## IFU 模块
 
-### `src/bcc/ifu/f0.py`
+完整规范见 [`ifu.md`](./ifu.md)。
 
-- 拥有 `F0` 边界。
-- 从引导、重定向或顺序候选中选择下一个获取 PC。
-- 呈现已注册的 `F0 -> F1` 边界。
+### I-SIDE
 
-### `src/bcc/ifu/f1.py`
+- `i_f0`：接受/选择 PC，分配 request/STID/epoch 身份；
+- `i_f1`：并行启动 ITLB 与 L1I；
+- `i_f2`：汇合翻译/cache 状态，ITLB miss 产生 I-SIDE inner flush；
+- `i_f3`：拥有 cacheline、ECC/refill、byte cursor 和跨 line carry；
+- `i_f4`：判断 2/4/6/8-byte 长度，只识别 `BSTART`/`BSTOP`，零扩展为
+  64-bit 并写 Instruction Buffer；
+- `instruction_buffer`：位于 I-F4 与 D1 之间，按 STID 保存指令并向 D1
+  提供四条连续 `insn64`；
+- `itlb` 和 `l1i`：只属于 I-SIDE。任何 BHC/fetch-cache 实现都是 L1I
+  的实现细节，不属于 B-SIDE。
 
-- 拥有 `F1` 边界。
-- 保留 I-cache 查找/标签检查控制和前端未命中/背压
-  一代。
-- 保留面向体系结构的每线程获取控制模型，即使
-  当前物理 I-cache 读取路径是单端口的。
+### B-SIDE
 
-### `src/bcc/ifu/icache.py`
+- `b_f0`：L0/NLP、checkpoint、GHR/GHRQ 快照；
+- `b_f1`：uBTB 和投机 RAS；
+- `b_f2`：PBTB/BTB 和 BIM；
+- `b_f3`：short/medium TAGE 并启动 IBTB；
+- `b_f4`：long TAGE、IBTB/loop 和 final arbitration；
+- arbiter 使用
+  `B-F4 > B-F3 > B-F2 > B-F1 > B-F0 > sequential`，B-F4 内使用 exact
+  RAS/high-confidence IBTB target、`loop > long-TAGE > short-TAGE > BIM`
+  direction 和 BTB direct target。
 
-- 拥有 IFU 路径使用的获取高速缓存访问模块。
-- 为下游阶段生成捆绑、命中/未命中和面向重新填充的元数据。
-
-### `src/bcc/ifu/f2.py`
-
-- 拥有 `F2` 边界。
-- 在可变长度组装之前暂存原始缓存读取数据和 ECC 状态。
-
-### `src/bcc/ifu/ctrl.py`
-
-- 拥有 IFU 控制元数据，例如检查点流和刷新交互。
-- 协调前端控制决策，无需重新定义阶段
-  所有权。
-
-### `src/bcc/ifu/f3.py`
-
-- 拥有 `F3` 边界和完整的 IFU 指令缓冲区入口行为。
-- 执行可变长度拼接/组装、静态预测、块边界
-  指令缓冲区传递之前的注释和模板流控制。
-
-### `src/top/modules/ib.py`- 拥有 `LinxCoreTopIb`，这是由主机提供的指令缓冲区模块
-  导出外壳。
-- 保留相同的下游指令缓冲区所有权模型
-  QEMU/主机注入取代了启动通道中的本机 IFU 源。
+I/B 两侧独立反压、不锁步。backend restart 作为 typed recovery source
+优先级最高；后级 B-stage 纠正已使用预测时 inner-flush I-SIDE 并重启
+I-F0。
 
 ### `src/top/modules/xchk.py`
 
@@ -148,25 +140,13 @@
 - 将本地存储耗尽状态和辅助实例拉出
   `export_core.py` 因此顶壳仍然更接近纯粹的成分。
 
-### `src/bcc/ifu/f4.py`
-
-- 拥有 `F4` 边界。
-- 呈现架构解码合约使用的 4 时隙解码窗口。
-
-### `src/bcc/frontend/`
-
-- 包含辅助前端支持模块，例如`frontend.py`、`bpu.py`、
-  `ftq.py`、`ibuffer.py` 和 `ifetch.py`。
-- 这些文件可能支持替代分解或实验，但是
-  他们不会取代上面的规范舞台所有者。
-
 ## 解码、重命名和重命名后调度模块
 
 ### `src/bcc/ooo/dec1.py`
 
 - 拥有`D1`。
-- 将 `F4` 时隙窗口解码为 uop 候选并分配 `RID`、`BID`、
-  和`LSID`。
+- 从 Instruction Buffer 读取四条 `insn64` 并做完整译码；资源身份由
+  后续 admission owner 原子分配。
 
 ### `src/bcc/ooo/dec2.py`
 

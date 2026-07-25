@@ -21,7 +21,7 @@ It is the normative mapping between:
 | Contract ID | Area | Normative statement |
 |---|---|---|
 | `LC-ARCH-DOC-001` | Architecture docs | Canonical LinxCore docs live in `rtl/LinxCore/docs/architecture`, are mirrored into `docs/architecture/linxcore`, and stay nav-wired in LinxArch docs |
-| `LC-MA-PIPE-001` | Pipeline | F0 controls thread/PC selection; fetch is `F1..F4/IB`; decode/dispatch is `D1..D3/S1..S3`; E stages are absolute execute cycles; W alignment is declared per producer; precise completion/commit/recovery uses R0..R4 with CMT/FLS at R2 and restart at R4 |
+| `LC-MA-PIPE-001` | Pipeline | IFU contains independently backpressured, non-lockstep I-SIDE `I-F0..I-F4` and B-SIDE `B-F0..B-F4`; I-F1 accesses ITLB/L1I in parallel, ITLB miss causes an I-SIDE inner flush, I-F4 boundary-only predecode emits 64-bit entries, and D1 reads four; B-F0 is L0/NLP+checkpoint, B-F1 uBTB/RAS, B-F2 PBTB/BTB+BIM, B-F3 short/medium TAGE+IBTB launch, B-F4 long TAGE/IBTB/loop/final arbitration; late prediction correction inner-flushes I-SIDE and restarts I-F0, while backend misprediction uses typed recovery plus frontend restart |
 | `LC-MA-RES-001` | Resource admission | Decode groups reserve ROB/BROB, rename, IQ, and memory-order resources atomically or make no state change |
 | `LC-MA-ROB-001` | ROB/retirement | Instruction rows allocate in order, commit contiguously, retain cleanup sidecars through deallocation, and recover precisely |
 | `LC-MA-HAZ-001` | Hazards/replay | Replay, redirect, wakeup, and issue behavior do not violate correctness |
@@ -136,10 +136,14 @@ Mandatory scenario families:
 - MMU translation and page or permission fault paths
 - timer interrupt delivery and boundary interactions
 - branch, block, and recovery legality
-- stage taxonomy: F0 owns frontend PC/thread control but is not one of the four
-  fetch-data stages, F4 aliases IB and owns final predecode/prediction, decode
-  width does not name F4, S3 is IQ visibility, W alignment is declared per
-  producer, CMT/FLS publish at R2, and restart state publishes at R4
+- stage taxonomy: I-F0..I-F4 are I-SIDE and B-F0..B-F4 are B-SIDE; I-F1
+  launches ITLB/L1I in
+  parallel; ITLB miss causes an I-SIDE inner flush; I-F4 performs only length
+  and `BSTART`/`BSTOP` boundary predecode plus 64-bit normalization; the
+  independent Instruction Buffer feeds four 64-bit entries to D1; the B-side
+  provider rank and correction/recovery rules match `ifu.md`; S3 is IQ
+  visibility; W alignment is declared per producer;
+  CMT/FLS publish at R2, and restart state publishes at R4
 - atomic decode-group admission failure with no partial RID/BID/rename/store
   allocation
 - contiguous ROB commit, delayed deallocation, precise head fault/nuke, and
