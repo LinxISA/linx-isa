@@ -1,0 +1,506 @@
+{
+  "admitted": [
+    {
+      "disassembly": "hl.setc.andi a0, 5, 74565",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/linx-qemu-tests.elf",
+      "elf_sha256": "f8395d4e9ccc0d75ef7d0518a58611a312ca6bb1e80412aa54ac5e3cd2e83b95",
+      "form_id": "hl_setc_andi_48_f27796612fb3",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x707f000f",
+        "match": "0x2075000e"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.SETC.ANDI",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/obj/26_executable_setc_imm.o",
+      "object_sha256": "a6585eccc45227b99115388765042ad4bcf018c2483beec48d26e4afecb04534",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "exact_value",
+        "locator": "test_hl_setc_andi",
+        "source": "avs/qemu/tests/26_executable_setc_imm.c"
+      },
+      "pc": "0x1037c",
+      "qemu_binary_verification": "local_binary_sha256",
+      "qemu_sha": "b4df5c31d06eaee04b602b4b6fd8b6f2c2592b4c",
+      "raw_bytes_le": "2e01f5225134",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "suite": "executable_setc_imm",
+      "symbol": "executable_setc_imm_hl_setc_andi",
+      "test_id": "0x00002803"
+    },
+    {
+      "disassembly": "hl.setc.eqi a0, 5, 74565",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/linx-qemu-tests.elf",
+      "elf_sha256": "f8395d4e9ccc0d75ef7d0518a58611a312ca6bb1e80412aa54ac5e3cd2e83b95",
+      "form_id": "hl_setc_eqi_48_0fe891fb0890",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x707f000f",
+        "match": "0x75000e"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.SETC.EQI",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/obj/26_executable_setc_imm.o",
+      "object_sha256": "a6585eccc45227b99115388765042ad4bcf018c2483beec48d26e4afecb04534",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "exact_value",
+        "locator": "test_hl_setc_eqi",
+        "source": "avs/qemu/tests/26_executable_setc_imm.c"
+      },
+      "pc": "0x103fe",
+      "qemu_binary_verification": "local_binary_sha256",
+      "qemu_sha": "b4df5c31d06eaee04b602b4b6fd8b6f2c2592b4c",
+      "raw_bytes_le": "2e01f5025134",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "suite": "executable_setc_imm",
+      "symbol": "executable_setc_imm_hl_setc_eqi",
+      "test_id": "0x00002804"
+    },
+    {
+      "disassembly": "hl.setc.gei a0, 5, -74565",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/linx-qemu-tests.elf",
+      "elf_sha256": "f8395d4e9ccc0d75ef7d0518a58611a312ca6bb1e80412aa54ac5e3cd2e83b95",
+      "form_id": "hl_setc_gei_48_9563d6395d06",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x707f000f",
+        "match": "0x5075000e"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.SETC.GEI",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/obj/26_executable_setc_imm.o",
+      "object_sha256": "a6585eccc45227b99115388765042ad4bcf018c2483beec48d26e4afecb04534",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "exact_value",
+        "locator": "test_hl_setc_gei",
+        "source": "avs/qemu/tests/26_executable_setc_imm.c"
+      },
+      "pc": "0x10480",
+      "qemu_binary_verification": "local_binary_sha256",
+      "qemu_sha": "b4df5c31d06eaee04b602b4b6fd8b6f2c2592b4c",
+      "raw_bytes_le": "defef552b1cb",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "suite": "executable_setc_imm",
+      "symbol": "executable_setc_imm_hl_setc_gei",
+      "test_id": "0x00002805"
+    },
+    {
+      "disassembly": "hl.setc.geui a0, 5, 74565",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/linx-qemu-tests.elf",
+      "elf_sha256": "f8395d4e9ccc0d75ef7d0518a58611a312ca6bb1e80412aa54ac5e3cd2e83b95",
+      "form_id": "hl_setc_geui_48_2390319baf54",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x707f000f",
+        "match": "0x7075000e"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.SETC.GEUI",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/obj/26_executable_setc_imm.o",
+      "object_sha256": "a6585eccc45227b99115388765042ad4bcf018c2483beec48d26e4afecb04534",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "exact_value",
+        "locator": "test_hl_setc_geui",
+        "source": "avs/qemu/tests/26_executable_setc_imm.c"
+      },
+      "pc": "0x10502",
+      "qemu_binary_verification": "local_binary_sha256",
+      "qemu_sha": "b4df5c31d06eaee04b602b4b6fd8b6f2c2592b4c",
+      "raw_bytes_le": "2e01f5725134",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "suite": "executable_setc_imm",
+      "symbol": "executable_setc_imm_hl_setc_geui",
+      "test_id": "0x00002806"
+    },
+    {
+      "disassembly": "hl.setc.lti a0, 5, -74565",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/linx-qemu-tests.elf",
+      "elf_sha256": "f8395d4e9ccc0d75ef7d0518a58611a312ca6bb1e80412aa54ac5e3cd2e83b95",
+      "form_id": "hl_setc_lti_48_ad4ffebe877c",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x707f000f",
+        "match": "0x4075000e"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.SETC.LTI",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/obj/26_executable_setc_imm.o",
+      "object_sha256": "a6585eccc45227b99115388765042ad4bcf018c2483beec48d26e4afecb04534",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "exact_value",
+        "locator": "test_hl_setc_lti",
+        "source": "avs/qemu/tests/26_executable_setc_imm.c"
+      },
+      "pc": "0x10584",
+      "qemu_binary_verification": "local_binary_sha256",
+      "qemu_sha": "b4df5c31d06eaee04b602b4b6fd8b6f2c2592b4c",
+      "raw_bytes_le": "defef542b1cb",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "suite": "executable_setc_imm",
+      "symbol": "executable_setc_imm_hl_setc_lti",
+      "test_id": "0x00002807"
+    },
+    {
+      "disassembly": "hl.setc.ltui a0, 5, 74565",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/linx-qemu-tests.elf",
+      "elf_sha256": "f8395d4e9ccc0d75ef7d0518a58611a312ca6bb1e80412aa54ac5e3cd2e83b95",
+      "form_id": "hl_setc_ltui_48_cb7a12ba6ead",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x707f000f",
+        "match": "0x6075000e"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.SETC.LTUI",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/obj/26_executable_setc_imm.o",
+      "object_sha256": "a6585eccc45227b99115388765042ad4bcf018c2483beec48d26e4afecb04534",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "exact_value",
+        "locator": "test_hl_setc_ltui",
+        "source": "avs/qemu/tests/26_executable_setc_imm.c"
+      },
+      "pc": "0x10606",
+      "qemu_binary_verification": "local_binary_sha256",
+      "qemu_sha": "b4df5c31d06eaee04b602b4b6fd8b6f2c2592b4c",
+      "raw_bytes_le": "2e01f5625134",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "suite": "executable_setc_imm",
+      "symbol": "executable_setc_imm_hl_setc_ltui",
+      "test_id": "0x00002808"
+    },
+    {
+      "disassembly": "hl.setc.nei a0, 5, -74565",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/linx-qemu-tests.elf",
+      "elf_sha256": "f8395d4e9ccc0d75ef7d0518a58611a312ca6bb1e80412aa54ac5e3cd2e83b95",
+      "form_id": "hl_setc_nei_48_f0bcf6586274",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x707f000f",
+        "match": "0x1075000e"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.SETC.NEI",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/obj/26_executable_setc_imm.o",
+      "object_sha256": "a6585eccc45227b99115388765042ad4bcf018c2483beec48d26e4afecb04534",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "exact_value",
+        "locator": "test_hl_setc_nei",
+        "source": "avs/qemu/tests/26_executable_setc_imm.c"
+      },
+      "pc": "0x10684",
+      "qemu_binary_verification": "local_binary_sha256",
+      "qemu_sha": "b4df5c31d06eaee04b602b4b6fd8b6f2c2592b4c",
+      "raw_bytes_le": "defef512b1cb",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "suite": "executable_setc_imm",
+      "symbol": "executable_setc_imm_hl_setc_nei",
+      "test_id": "0x00002809"
+    },
+    {
+      "disassembly": "hl.setc.ori a0, 5, 74565",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/linx-qemu-tests.elf",
+      "elf_sha256": "f8395d4e9ccc0d75ef7d0518a58611a312ca6bb1e80412aa54ac5e3cd2e83b95",
+      "form_id": "hl_setc_ori_48_137bce8aeb04",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x707f000f",
+        "match": "0x3075000e"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.SETC.ORI",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/obj/26_executable_setc_imm.o",
+      "object_sha256": "a6585eccc45227b99115388765042ad4bcf018c2483beec48d26e4afecb04534",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "exact_value",
+        "locator": "test_hl_setc_ori",
+        "source": "avs/qemu/tests/26_executable_setc_imm.c"
+      },
+      "pc": "0x106fc",
+      "qemu_binary_verification": "local_binary_sha256",
+      "qemu_sha": "b4df5c31d06eaee04b602b4b6fd8b6f2c2592b4c",
+      "raw_bytes_le": "2e01f5325134",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "suite": "executable_setc_imm",
+      "symbol": "executable_setc_imm_hl_setc_ori",
+      "test_id": "0x0000280a"
+    },
+    {
+      "disassembly": "setc.andi a0, 4096",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/linx-qemu-tests.elf",
+      "elf_sha256": "f8395d4e9ccc0d75ef7d0518a58611a312ca6bb1e80412aa54ac5e3cd2e83b95",
+      "form_id": "setc_andi_32_32fe61c0559b",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x707f",
+        "match": "0x2075"
+      },
+      "max_level": "L3",
+      "mnemonic": "SETC.ANDI",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/obj/26_executable_setc_imm.o",
+      "object_sha256": "a6585eccc45227b99115388765042ad4bcf018c2483beec48d26e4afecb04534",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "exact_value",
+        "locator": "test_setc_andi",
+        "source": "avs/qemu/tests/26_executable_setc_imm.c"
+      },
+      "pc": "0x1028c",
+      "qemu_binary_verification": "local_binary_sha256",
+      "qemu_sha": "b4df5c31d06eaee04b602b4b6fd8b6f2c2592b4c",
+      "raw_bytes_le": "75261100",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "suite": "executable_setc_imm",
+      "symbol": "executable_setc_imm_setc_andi",
+      "test_id": "0x00002801"
+    },
+    {
+      "disassembly": "setc.ori a0, 4096",
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/linx-qemu-tests.elf",
+      "elf_sha256": "f8395d4e9ccc0d75ef7d0518a58611a312ca6bb1e80412aa54ac5e3cd2e83b95",
+      "form_id": "setc_ori_32_183dc15fad54",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x707f",
+        "match": "0x3075"
+      },
+      "max_level": "L3",
+      "mnemonic": "SETC.ORI",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/obj/26_executable_setc_imm.o",
+      "object_sha256": "a6585eccc45227b99115388765042ad4bcf018c2483beec48d26e4afecb04534",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "exact_value",
+        "locator": "test_setc_ori",
+        "source": "avs/qemu/tests/26_executable_setc_imm.c"
+      },
+      "pc": "0x10300",
+      "qemu_binary_verification": "local_binary_sha256",
+      "qemu_sha": "b4df5c31d06eaee04b602b4b6fd8b6f2c2592b4c",
+      "raw_bytes_le": "75361100",
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "suite": "executable_setc_imm",
+      "symbol": "executable_setc_imm_setc_ori",
+      "test_id": "0x00002802"
+    }
+  ],
+  "claim": "per_form_qemu_executable_coverage",
+  "evidence": {
+    "L2": {
+      "availability": "available",
+      "claim": "runtime_execution",
+      "form_count": 10,
+      "mnemonic_count": 10
+    },
+    "L3": {
+      "availability": "available",
+      "claim": "semantic_oracle",
+      "form_count": 10,
+      "mnemonic_count": 10
+    }
+  },
+  "execution_observations": [
+    {
+      "exit_code": 0,
+      "failure": null,
+      "failure_attribution": "none",
+      "oracle_verdict": "PASS",
+      "pass_marker": {
+        "kind": "uart_success_marker",
+        "value": "TEST SUITE COMPLETE"
+      },
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "stalled": false,
+      "status": "PASS",
+      "suite": "executable_setc_imm",
+      "test_contract": "valid",
+      "test_id": "0x00002801",
+      "timed_out": false,
+      "timeout_after_fail": false
+    },
+    {
+      "exit_code": 0,
+      "failure": null,
+      "failure_attribution": "none",
+      "oracle_verdict": "PASS",
+      "pass_marker": {
+        "kind": "uart_success_marker",
+        "value": "TEST SUITE COMPLETE"
+      },
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "stalled": false,
+      "status": "PASS",
+      "suite": "executable_setc_imm",
+      "test_contract": "valid",
+      "test_id": "0x00002802",
+      "timed_out": false,
+      "timeout_after_fail": false
+    },
+    {
+      "exit_code": 0,
+      "failure": null,
+      "failure_attribution": "none",
+      "oracle_verdict": "PASS",
+      "pass_marker": {
+        "kind": "uart_success_marker",
+        "value": "TEST SUITE COMPLETE"
+      },
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "stalled": false,
+      "status": "PASS",
+      "suite": "executable_setc_imm",
+      "test_contract": "valid",
+      "test_id": "0x00002803",
+      "timed_out": false,
+      "timeout_after_fail": false
+    },
+    {
+      "exit_code": 0,
+      "failure": null,
+      "failure_attribution": "none",
+      "oracle_verdict": "PASS",
+      "pass_marker": {
+        "kind": "uart_success_marker",
+        "value": "TEST SUITE COMPLETE"
+      },
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "stalled": false,
+      "status": "PASS",
+      "suite": "executable_setc_imm",
+      "test_contract": "valid",
+      "test_id": "0x00002804",
+      "timed_out": false,
+      "timeout_after_fail": false
+    },
+    {
+      "exit_code": 0,
+      "failure": null,
+      "failure_attribution": "none",
+      "oracle_verdict": "PASS",
+      "pass_marker": {
+        "kind": "uart_success_marker",
+        "value": "TEST SUITE COMPLETE"
+      },
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "stalled": false,
+      "status": "PASS",
+      "suite": "executable_setc_imm",
+      "test_contract": "valid",
+      "test_id": "0x00002805",
+      "timed_out": false,
+      "timeout_after_fail": false
+    },
+    {
+      "exit_code": 0,
+      "failure": null,
+      "failure_attribution": "none",
+      "oracle_verdict": "PASS",
+      "pass_marker": {
+        "kind": "uart_success_marker",
+        "value": "TEST SUITE COMPLETE"
+      },
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "stalled": false,
+      "status": "PASS",
+      "suite": "executable_setc_imm",
+      "test_contract": "valid",
+      "test_id": "0x00002806",
+      "timed_out": false,
+      "timeout_after_fail": false
+    },
+    {
+      "exit_code": 0,
+      "failure": null,
+      "failure_attribution": "none",
+      "oracle_verdict": "PASS",
+      "pass_marker": {
+        "kind": "uart_success_marker",
+        "value": "TEST SUITE COMPLETE"
+      },
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "stalled": false,
+      "status": "PASS",
+      "suite": "executable_setc_imm",
+      "test_contract": "valid",
+      "test_id": "0x00002807",
+      "timed_out": false,
+      "timeout_after_fail": false
+    },
+    {
+      "exit_code": 0,
+      "failure": null,
+      "failure_attribution": "none",
+      "oracle_verdict": "PASS",
+      "pass_marker": {
+        "kind": "uart_success_marker",
+        "value": "TEST SUITE COMPLETE"
+      },
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "stalled": false,
+      "status": "PASS",
+      "suite": "executable_setc_imm",
+      "test_contract": "valid",
+      "test_id": "0x00002808",
+      "timed_out": false,
+      "timeout_after_fail": false
+    },
+    {
+      "exit_code": 0,
+      "failure": null,
+      "failure_attribution": "none",
+      "oracle_verdict": "PASS",
+      "pass_marker": {
+        "kind": "uart_success_marker",
+        "value": "TEST SUITE COMPLETE"
+      },
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "stalled": false,
+      "status": "PASS",
+      "suite": "executable_setc_imm",
+      "test_contract": "valid",
+      "test_id": "0x00002809",
+      "timed_out": false,
+      "timeout_after_fail": false
+    },
+    {
+      "exit_code": 0,
+      "failure": null,
+      "failure_attribution": "none",
+      "oracle_verdict": "PASS",
+      "pass_marker": {
+        "kind": "uart_success_marker",
+        "value": "TEST SUITE COMPLETE"
+      },
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-setc-imm-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "stalled": false,
+      "status": "PASS",
+      "suite": "executable_setc_imm",
+      "test_contract": "valid",
+      "test_id": "0x0000280a",
+      "timed_out": false,
+      "timeout_after_fail": false
+    }
+  ],
+  "generated_at_utc": "2026-07-25T06:53:21Z",
+  "inputs": {
+    "manifest": "avs/qemu/qemu_executable_setc_imm_manifest.json",
+    "qemu_sha": "b4df5c31d06eaee04b602b4b6fd8b6f2c2592b4c",
+    "spec": "isa/v0.57/linxisa-v0.57.json"
+  },
+  "policy": {
+    "L1_suite_exit_is_coverage": false,
+    "L3_requires_oracle_pass": true,
+    "exit_zero_or_stdout_alone_is_coverage": false,
+    "failed_execution_is_counted": false,
+    "failed_execution_is_persisted": true
+  },
+  "rejected": [],
+  "schema_version": 1
+}

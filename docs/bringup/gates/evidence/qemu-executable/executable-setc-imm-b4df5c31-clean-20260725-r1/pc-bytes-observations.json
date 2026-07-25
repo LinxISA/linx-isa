@@ -1,0 +1,115 @@
+{
+  "observations": [
+    {
+      "disassembly": "setc.andi a0, 4096",
+      "elf_offset": "0x128c",
+      "form_id": "setc_andi_32_32fe61c0559b",
+      "mnemonic": "SETC.ANDI",
+      "object_offset": "0x58",
+      "pc": "0x000000000001028c",
+      "raw_bytes_le": "75261100",
+      "symbol": "executable_setc_imm_setc_andi",
+      "test_id": "0x2801"
+    },
+    {
+      "disassembly": "setc.ori a0, 4096",
+      "elf_offset": "0x1300",
+      "form_id": "setc_ori_32_183dc15fad54",
+      "mnemonic": "SETC.ORI",
+      "object_offset": "0xcc",
+      "pc": "0x0000000000010300",
+      "raw_bytes_le": "75361100",
+      "symbol": "executable_setc_imm_setc_ori",
+      "test_id": "0x2802"
+    },
+    {
+      "disassembly": "hl.setc.andi a0, 5, 74565",
+      "elf_offset": "0x137c",
+      "form_id": "hl_setc_andi_48_f27796612fb3",
+      "mnemonic": "HL.SETC.ANDI",
+      "object_offset": "0x148",
+      "pc": "0x000000000001037c",
+      "raw_bytes_le": "2e01f5225134",
+      "symbol": "executable_setc_imm_hl_setc_andi",
+      "test_id": "0x2803"
+    },
+    {
+      "disassembly": "hl.setc.eqi a0, 5, 74565",
+      "elf_offset": "0x13fe",
+      "form_id": "hl_setc_eqi_48_0fe891fb0890",
+      "mnemonic": "HL.SETC.EQI",
+      "object_offset": "0x1ca",
+      "pc": "0x00000000000103fe",
+      "raw_bytes_le": "2e01f5025134",
+      "symbol": "executable_setc_imm_hl_setc_eqi",
+      "test_id": "0x2804"
+    },
+    {
+      "disassembly": "hl.setc.gei a0, 5, -74565",
+      "elf_offset": "0x1480",
+      "form_id": "hl_setc_gei_48_9563d6395d06",
+      "mnemonic": "HL.SETC.GEI",
+      "object_offset": "0x24c",
+      "pc": "0x0000000000010480",
+      "raw_bytes_le": "defef552b1cb",
+      "symbol": "executable_setc_imm_hl_setc_gei",
+      "test_id": "0x2805"
+    },
+    {
+      "disassembly": "hl.setc.geui a0, 5, 74565",
+      "elf_offset": "0x1502",
+      "form_id": "hl_setc_geui_48_2390319baf54",
+      "mnemonic": "HL.SETC.GEUI",
+      "object_offset": "0x2ce",
+      "pc": "0x0000000000010502",
+      "raw_bytes_le": "2e01f5725134",
+      "symbol": "executable_setc_imm_hl_setc_geui",
+      "test_id": "0x2806"
+    },
+    {
+      "disassembly": "hl.setc.lti a0, 5, -74565",
+      "elf_offset": "0x1584",
+      "form_id": "hl_setc_lti_48_ad4ffebe877c",
+      "mnemonic": "HL.SETC.LTI",
+      "object_offset": "0x350",
+      "pc": "0x0000000000010584",
+      "raw_bytes_le": "defef542b1cb",
+      "symbol": "executable_setc_imm_hl_setc_lti",
+      "test_id": "0x2807"
+    },
+    {
+      "disassembly": "hl.setc.ltui a0, 5, 74565",
+      "elf_offset": "0x1606",
+      "form_id": "hl_setc_ltui_48_cb7a12ba6ead",
+      "mnemonic": "HL.SETC.LTUI",
+      "object_offset": "0x3d2",
+      "pc": "0x0000000000010606",
+      "raw_bytes_le": "2e01f5625134",
+      "symbol": "executable_setc_imm_hl_setc_ltui",
+      "test_id": "0x2808"
+    },
+    {
+      "disassembly": "hl.setc.nei a0, 5, -74565",
+      "elf_offset": "0x1684",
+      "form_id": "hl_setc_nei_48_f0bcf6586274",
+      "mnemonic": "HL.SETC.NEI",
+      "object_offset": "0x450",
+      "pc": "0x0000000000010684",
+      "raw_bytes_le": "defef512b1cb",
+      "symbol": "executable_setc_imm_hl_setc_nei",
+      "test_id": "0x2809"
+    },
+    {
+      "disassembly": "hl.setc.ori a0, 5, 74565",
+      "elf_offset": "0x16fc",
+      "form_id": "hl_setc_ori_48_137bce8aeb04",
+      "mnemonic": "HL.SETC.ORI",
+      "object_offset": "0x4c8",
+      "pc": "0x00000000000106fc",
+      "raw_bytes_le": "2e01f5325134",
+      "symbol": "executable_setc_imm_hl_setc_ori",
+      "test_id": "0x280a"
+    }
+  ],
+  "schema_version": 1
+}
