@@ -14,9 +14,9 @@ with `pto-isa/docs/isa/tile/` as a secondary reference.
 | Family | v0.57 workbook operations | QEMU execution paths | Remaining fail-closed |
 | --- | ---: | ---: | ---: |
 | TMA | 6 | 6 | 0 |
-| CUBE | 8 | 4 | 4 |
+| CUBE | 8 | 5 | 3 |
 | TEPL | 97 | 82 | 15 |
-| Total | 111 | 92 | 19 |
+| Total | 111 | 93 | 18 |
 
 An execution path means QEMU performs a defined operation on Tile, ACC, or
 memory state. It does not imply that every dtype, layout, shape, rounding mode,
@@ -37,8 +37,13 @@ TLOAD TSTORE TMOV TPREFETCH MGATHER MSCATTER
 CUBE has execution paths for:
 
 ```text
-TMATMUL TMATMUL_ACC TGEMV TGEMV_ACC
+TMATMUL TMATMUL_BIAS TMATMUL_ACC TGEMV TGEMV_ACC
 ```
+
+`TMATMUL_BIAS` currently implements the same bounded S32 8x8 compatibility
+profile as `TMATMUL`: exactly three frozen sources in A, B, Bias order, with a
+one-row S32 bias broadcast across result rows. Packed S8 and floating-point
+CUBE layouts remain outside this profile.
 
 TEPL has 82 executable selectors covering:
 
@@ -61,9 +66,10 @@ dst[r,c] = (src[r,c] - offset[r]) * scale[r]
 
 ## Deliberately unsupported operations
 
-The remaining CUBE operations are `TMATMUL_BIAS`, `TGEMV_BIAS`, `TMATMUL_MX`,
-and `TGEMV_MX`. Their extra bias/scale Tile roles and mixed-precision
-reconstruction profiles are not represented by the current QEMU collector.
+The remaining CUBE operations are `TGEMV_BIAS`, `TMATMUL_MX`, and `TGEMV_MX`.
+The latest PTO `TGEMV_BIAS` direction conflicts with the existing QEMU TGEMV
+compatibility profile, while the MX operations still lack a closed scale,
+packing, and reconstruction contract.
 
 The remaining TEPL operations are:
 
@@ -97,7 +103,7 @@ Tests are separated by PTO family:
 | Family | Sources |
 | --- | --- |
 | TMA | `avs/qemu/tests/10_tile_tma.cpp` |
-| CUBE | `avs/qemu/tests/10_tile_cube.cpp`, `10_tile_cube_gemv.S` |
+| CUBE | `avs/qemu/tests/10_tile_cube.cpp`, `10_tile_cube_bias.S`, `10_tile_cube_gemv.S` |
 | TEPL | `avs/qemu/tests/10_tile_tepl.cpp`, `10_tile_tepl_*.S` |
 | Cross-family | `avs/qemu/tests/10_tile_integration.cpp` |
 
@@ -117,6 +123,7 @@ Recent exact-value evidence includes:
 | `0x000A0022` | plain TEXTRACT |
 | `0x000A0023` | S8/S16 to FP32 TDEQUANT |
 | `0x000A0024` | S32 TGEMV and TGEMV_ACC |
+| `0x000A0026` | S32 TMATMUL_BIAS, column broadcast, and multi-B.IOT source order |
 
 The focused regression command is:
 
@@ -143,5 +150,5 @@ This change closes the QEMU implementation and reference-result side of issue
 1. implement the same defined selector/profile subset in `gfrun`;
 2. run the same ELF/input data through QEMU and gfrun and compare result memory;
 3. use the resulting gfrun behavior as one side of the gfrun/gfsim regression;
-4. retain the 19 fail-closed operations in the report until their ISA-visible
+4. retain the 18 fail-closed operations in the report until their ISA-visible
    operand and profile contracts are closed.
