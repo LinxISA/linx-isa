@@ -107,8 +107,9 @@ I-F3 owns the returned cacheline context:
 - byte cursor from the requested PC;
 - incomplete instruction carry at a cacheline boundary.
 
-I-F3 supplies an ordered byte stream to I-F4. It does not perform full instruction
-decode or branch prediction.
+I-F3 determines the 2/4/6/8-byte encoded length, completes cross-line
+assembly, and supplies complete instruction candidates to I-F4. It does not
+perform full instruction decode or branch prediction.
 
 ### 3.5 I-F4 — boundary predecode and 64-bit normalization
 
@@ -116,8 +117,7 @@ I-F4 is the fourth I-SIDE stage. It is not the Instruction Buffer.
 
 I-F4:
 
-- determines each instruction's encoded length: 2, 4, 6, or 8 bytes;
-- assembles instructions that use the I-F3 cross-line carry;
+- accepts and retains the encoded length determined by I-F3;
 - recognizes only `BSTART`/`BSTOP`-class block boundaries;
 - zero-extends the encoded bytes into a fixed 64-bit `insn64` container;
 - writes complete program-order entries into the Instruction Buffer.
@@ -187,8 +187,9 @@ its own five-stage pipeline, independent of I-SIDE:
 | B-F3 | short- and medium-history TAGE lookup; launch IBTB indirect-target lookup |
 | B-F4 | static predictor, long-history TAGE, final IBTB result, loop predictor/buffer result, final RAS check, and unified direction/type/target arbitration |
 
-B-F0 may provide the first usable next-PC prediction. B-F1 through B-F4 may
-confirm it or publish a better prediction for the same
+B-F0 may provide the first usable next-PC prediction. If I-F0 has already
+adopted the sequential path, a differing B-F0 result is itself a correction.
+B-F1 through B-F4 may confirm it or publish a better prediction for the same
 `{fetch_id, stid, epoch, pc, checkpoint}`. Because B-SIDE and I-SIDE do not
 advance in lockstep, every candidate and correction is correlated by identity.
 
@@ -206,14 +207,16 @@ corresponding target selection. Direction override order is
 final fallback and consumes identity-matched I-F4 boundary metadata; it never
 runs in I-F4. BTB-family metadata supplies direct targets.
 
-If a later B-SIDE stage differs from an accepted earlier result in
-`{taken, branch_pc, target, kind}`, it corrects that exact prediction. If the
-earlier result has already driven I-SIDE, the correction generates an
+If any B-SIDE stage differs from the steering result already accepted for the
+same request in `{taken, branch_pc, target, kind}`, it corrects that exact
+prediction. If the replaced result has already driven I-SIDE, the correction
+generates an
 identity-qualified I-SIDE inner flush, restores the matching GHR/GHRQ/RAS
 checkpoint, changes the fetch epoch, cancels matching and younger I-SIDE and
 B-SIDE work, and restarts the corrected PC at I-F0. This prediction correction
 does not by itself flush backend architectural state. B-F4 is the last stage
-allowed to issue a prediction-driven inner flush.
+allowed to issue a prediction-driven inner flush. A candidate selected before
+any path is accepted is initial steering and does not require a flush.
 
 After B-F4 seals the effective prediction, the record follows the instruction
 bundle through the Instruction Buffer and is attached to every D1 lane.
@@ -319,11 +322,11 @@ specification.
 2. The two engines are decoupled and never rely on lockstep stage alignment.
 3. ITLB and L1I access starts in parallel at I-F1.
 4. ITLB miss causes an I-SIDE inner flush, not an OOO/global flush.
-5. B-F1..B-F4 may correct an already-used prediction and inner-flush I-SIDE;
+5. B-F0..B-F4 may correct an already-used steering result and inner-flush I-SIDE;
    B-F4 is the final such point.
 6. BHC/fetch-cache behavior belongs to I-SIDE L1I, never B-SIDE.
-7. Predecode recognizes instruction length and `BSTART`/`BSTOP` boundaries
-   only.
+7. I-F3 determines instruction length and completes assembly; I-F4 predecode
+   recognizes only `BSTART`/`BSTOP` boundaries.
 8. Every Instruction Buffer entry contains one complete 64-bit instruction
    container.
 9. D1 reads four 64-bit entries, carries the complete effective prediction

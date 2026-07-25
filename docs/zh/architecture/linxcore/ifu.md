@@ -66,7 +66,8 @@ I-F3 保存：
 - 从请求 PC 开始的 byte cursor；
 - 跨 cacheline 的未完成指令 carry。
 
-I-F3 只向 I-F4 提供有序字节流和 carry，不做完整指令译码，也不做跳转预测。
+I-F3 判断 2/4/6/8-byte 编码长度，完成跨 cacheline 拼接，并向 I-F4 提供
+完整 instruction candidate；它不做完整指令译码，也不做跳转预测。
 
 ### I-F4：边界预解码和 64 位定长化
 
@@ -74,8 +75,7 @@ I-F4 是 I-SIDE 的真实第 4 级，不是 Instruction Buffer。
 
 I-F4：
 
-- 判断 2/4/6/8-byte 指令长度；
-- 结合 I-F3 carry 拼成完整指令；
+- 接收并保留 I-F3 已确定的编码长度；
 - 只识别 `BSTART`/`BSTOP` 类 block boundary；
 - 把编码字节零扩展成固定 64-bit `insn64`；
 - 按程序顺序写入 Instruction Buffer。
@@ -116,7 +116,8 @@ B-SIDE 参考 LinxCoreModel 的预测算法，并拥有独立五级流水：
 | B-F3 | short/medium-history TAGE 查询并启动 IBTB 间接目标查询 |
 | B-F4 | static predictor、long-history TAGE、final IBTB、loop predictor/buffer、RAS final check 和统一方向/类型/目标仲裁 |
 
-B-F0 可以产生首个可用 next-PC。B-F1 至 B-F4 可以确认或纠正同一
+B-F0 可以产生首个可用 next-PC；若 I-F0 已采用顺序路径，不同的 B-F0
+结果本身就是 correction。B-F1 至 B-F4 可以确认或纠正同一
 `{fetch_id, stid, epoch, pc, checkpoint}` 的预测。由于 B-SIDE 与 I-SIDE
 不锁步，每个候选和纠正都必须按身份匹配。
 
@@ -134,12 +135,13 @@ target 选择；方向 override 顺序为
 fallback，消费按身份匹配的 I-F4 boundary metadata，但不在 I-F4 内运行；
 direct target 由 BTB family 提供。
 
-后级 B-SIDE 结果若与已接受的早期结果在
+任一 B-SIDE stage 若与同一请求已经接受的 steering result 在
 `{taken, branch_pc, target, kind}` 任一字段不同，则纠正该精确预测身份。若
-早期结果已经驱动 I-SIDE，纠正必须产生 identity-qualified I-SIDE inner
+被替代结果已经驱动 I-SIDE，纠正必须产生 identity-qualified I-SIDE inner
 flush，恢复匹配的 GHR/GHRQ/RAS checkpoint，切换 fetch epoch，取消匹配项及
 更年轻的 I-SIDE/B-SIDE 工作，并从纠正 PC 重启 I-F0；这本身不清除 backend
 架构状态。B-F4 是最后一个允许产生 prediction-driven inner flush 的 stage。
+若候选在任何路径被采用前成为首次 steering，则不需要 flush。
 
 B-F4 封存 effective prediction 后，预测记录随 instruction bundle 进入
 Instruction Buffer，并附着到每个 D1 lane。无需运行时 operand 的 direct/call
@@ -202,10 +204,11 @@ Dispatch 增加无需运行时 operand 的 direct/call 校验。
 2. 两个引擎相互解耦、不依赖锁步 stage 对齐。
 3. I-F1 并行启动 ITLB 与 L1I。
 4. ITLB miss 产生 I-SIDE inner flush，而不是 OOO/global flush。
-5. B-F1..B-F4 可纠正已使用预测并 inner-flush I-SIDE；B-F4 是最后一个
+5. B-F0..B-F4 可纠正已使用 steering result 并 inner-flush I-SIDE；B-F4 是最后一个
    此类点。
 6. BHC/fetch-cache 行为属于 I-SIDE L1I，不属于 B-SIDE。
-7. 预解码只判断长度和 `BSTART`/`BSTOP` 边界。
+7. I-F3 判断指令长度并完成拼接；I-F4 预解码只识别
+   `BSTART`/`BSTOP` 边界。
 8. 每个 Instruction Buffer entry 保存一条完整 `insn64`。
 9. D1 每周期读取四条 64-bit 指令，每个 valid lane 携带完整 effective
    prediction record，并完成完整译码。
