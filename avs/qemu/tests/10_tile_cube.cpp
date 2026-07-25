@@ -9,6 +9,8 @@ using namespace linx::test::tile;
 extern "C" {
 void linx_tgemv_s32(const int32_t *, const int32_t *, int32_t *);
 void linx_tgemv_acc_s32(const int32_t *, const int32_t *, int32_t *);
+void linx_tmatmul_bias_s32(const int32_t *, const int32_t *,
+                           const int32_t *, int32_t *);
 }
 
 static void run_tmatmul_test()
@@ -73,6 +75,47 @@ static void run_tmatmul_acc_test()
     for (unsigned i = 0; i < 64; i++) {
         const int32_t accumulated = (int32_t)((int64_t)expected[i] * 2);
         TEST_EQ32((uint32_t)c[i], (uint32_t)accumulated, 0x000A3000u + i);
+    }
+    test_pass();
+}
+
+static void run_tmatmul_bias_test()
+{
+    test_start(0x000A0026);
+    uart_puts("PTO TMATMUL.BIAS (8x8 i32) ... ");
+
+    alignas(16) static int32_t a[128];
+    alignas(16) static int32_t b[128];
+    alignas(16) static int32_t bias[128];
+    alignas(16) static int32_t out[128];
+    alignas(16) static int32_t expected[64];
+
+    for (unsigned i = 0; i < 128; i++) {
+        a[i] = 0;
+        b[i] = 0;
+        bias[i] = 0;
+        out[i] = (int32_t)0x55555555;
+        if (i < 64) {
+            a[i] = (int32_t)((int)(i * 3u) % 11 - 5);
+            b[i] = (int32_t)((int)(i * 5u) % 13 - 6);
+        }
+    }
+    for (unsigned col = 0; col < 8; col++) {
+        bias[col] = (int32_t)(17 - (int)(col * 5u));
+    }
+
+    linx_tmatmul_bias_s32(a, b, bias, out);
+    matmul_ref_i32_8x8(expected, a, b);
+    for (unsigned row = 0; row < 8; row++) {
+        for (unsigned col = 0; col < 8; col++) {
+            const unsigned lane = row * 8u + col;
+            const int32_t want = expected[lane] + bias[col];
+            TEST_EQ32((uint32_t)out[lane], (uint32_t)want,
+                      0x000A6000u + lane);
+        }
+    }
+    for (unsigned i = 64; i < 128; i++) {
+        TEST_EQ32((uint32_t)out[i], 0, 0x000A6080u + i);
     }
     test_pass();
 }
@@ -219,6 +262,7 @@ extern "C" void run_tile_cube_tests(void)
 {
     run_tmatmul_test();
     run_tmatmul_acc_test();
+    run_tmatmul_bias_test();
     run_tgemv_test();
     run_auto_mode_gemm_test();
     run_auto_mode_flash_test();
