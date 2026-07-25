@@ -1,0 +1,295 @@
+{
+  "availability": {
+    "L2": "available",
+    "L3": "available"
+  },
+  "evidence": [
+    {
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-hl-cmp-b4df5c31-clean-20260725-r1/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_cmp_eqi_48_887accd218b1",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x707f000f",
+        "match": "0x55000e"
+      },
+      "instruction": {
+        "disassembly": "hl.cmp.eqi a0, -1, ->a1",
+        "elf_offset": "0x127c",
+        "object_offset": "0x48",
+        "pc": "0x000000000001027c",
+        "raw_bytes_le": "feffd501f1ff",
+        "symbol": "executable_hl_cmp_eqi"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.CMP.EQI",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-hl-cmp-b4df5c31-clean-20260725-r1/obj/25_executable_hl_cmp.o",
+      "oracle": {
+        "expected": "0x1",
+        "kind": "exact_value",
+        "locator": "test_hl_cmp_eqi",
+        "source": "avs/qemu/tests/25_executable_hl_cmp.c"
+      },
+      "qemu_sha": "b4df5c31d06eaee04b602b4b6fd8b6f2c2592b4c",
+      "reachability": {
+        "source": "avs/qemu/tests/25_executable_hl_cmp.c",
+        "target_symbol": "executable_hl_cmp_eqi",
+        "test_symbol": "test_hl_cmp_eqi"
+      },
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-hl-cmp-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "run_evidence_sha256": "f5c6f78536070310f2cf9ca81d1aaa351d55f83043e19b57585b16743ab40e48",
+      "suite": "executable_hl_cmp",
+      "suite_completion_test_id": "0x00002707",
+      "test_contract": "valid",
+      "test_id": "0x00002701"
+    },
+    {
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-hl-cmp-b4df5c31-clean-20260725-r1/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_cmp_nei_48_e77da507704a",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x707f000f",
+        "match": "0x1055000e"
+      },
+      "instruction": {
+        "disassembly": "hl.cmp.nei a0, -1, ->a1",
+        "elf_offset": "0x12ae",
+        "object_offset": "0x7a",
+        "pc": "0x00000000000102ae",
+        "raw_bytes_le": "feffd511f1ff",
+        "symbol": "executable_hl_cmp_nei"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.CMP.NEI",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-hl-cmp-b4df5c31-clean-20260725-r1/obj/25_executable_hl_cmp.o",
+      "oracle": {
+        "expected": "0x1",
+        "kind": "exact_value",
+        "locator": "test_hl_cmp_nei",
+        "source": "avs/qemu/tests/25_executable_hl_cmp.c"
+      },
+      "qemu_sha": "b4df5c31d06eaee04b602b4b6fd8b6f2c2592b4c",
+      "reachability": {
+        "source": "avs/qemu/tests/25_executable_hl_cmp.c",
+        "target_symbol": "executable_hl_cmp_nei",
+        "test_symbol": "test_hl_cmp_nei"
+      },
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-hl-cmp-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "run_evidence_sha256": "f5c6f78536070310f2cf9ca81d1aaa351d55f83043e19b57585b16743ab40e48",
+      "suite": "executable_hl_cmp",
+      "suite_completion_test_id": "0x00002707",
+      "test_contract": "valid",
+      "test_id": "0x00002702"
+    },
+    {
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-hl-cmp-b4df5c31-clean-20260725-r1/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_cmp_gei_48_b3703d4c4619",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x707f000f",
+        "match": "0x5055000e"
+      },
+      "instruction": {
+        "disassembly": "hl.cmp.gei a0, -8388608, ->a1",
+        "elf_offset": "0x12da",
+        "object_offset": "0xa6",
+        "pc": "0x00000000000102da",
+        "raw_bytes_le": "0e80d5510100",
+        "symbol": "executable_hl_cmp_gei"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.CMP.GEI",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-hl-cmp-b4df5c31-clean-20260725-r1/obj/25_executable_hl_cmp.o",
+      "oracle": {
+        "expected": "0x1",
+        "kind": "exact_value",
+        "locator": "test_hl_cmp_gei",
+        "source": "avs/qemu/tests/25_executable_hl_cmp.c"
+      },
+      "qemu_sha": "b4df5c31d06eaee04b602b4b6fd8b6f2c2592b4c",
+      "reachability": {
+        "source": "avs/qemu/tests/25_executable_hl_cmp.c",
+        "target_symbol": "executable_hl_cmp_gei",
+        "test_symbol": "test_hl_cmp_gei"
+      },
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-hl-cmp-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "run_evidence_sha256": "f5c6f78536070310f2cf9ca81d1aaa351d55f83043e19b57585b16743ab40e48",
+      "suite": "executable_hl_cmp",
+      "suite_completion_test_id": "0x00002707",
+      "test_contract": "valid",
+      "test_id": "0x00002703"
+    },
+    {
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-hl-cmp-b4df5c31-clean-20260725-r1/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_cmp_geui_48_c71f4fb29e6b",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x707f000f",
+        "match": "0x7055000e"
+      },
+      "instruction": {
+        "disassembly": "hl.cmp.geui a0, 8388608, ->a1",
+        "elf_offset": "0x130c",
+        "object_offset": "0xd8",
+        "pc": "0x000000000001030c",
+        "raw_bytes_le": "0e80d5710100",
+        "symbol": "executable_hl_cmp_geui"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.CMP.GEUI",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-hl-cmp-b4df5c31-clean-20260725-r1/obj/25_executable_hl_cmp.o",
+      "oracle": {
+        "expected": "0x1",
+        "kind": "exact_value",
+        "locator": "test_hl_cmp_geui",
+        "source": "avs/qemu/tests/25_executable_hl_cmp.c"
+      },
+      "qemu_sha": "b4df5c31d06eaee04b602b4b6fd8b6f2c2592b4c",
+      "reachability": {
+        "source": "avs/qemu/tests/25_executable_hl_cmp.c",
+        "target_symbol": "executable_hl_cmp_geui",
+        "test_symbol": "test_hl_cmp_geui"
+      },
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-hl-cmp-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "run_evidence_sha256": "f5c6f78536070310f2cf9ca81d1aaa351d55f83043e19b57585b16743ab40e48",
+      "suite": "executable_hl_cmp",
+      "suite_completion_test_id": "0x00002707",
+      "test_contract": "valid",
+      "test_id": "0x00002704"
+    },
+    {
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-hl-cmp-b4df5c31-clean-20260725-r1/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_cmp_lti_48_bec21b77021a",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x707f000f",
+        "match": "0x4055000e"
+      },
+      "instruction": {
+        "disassembly": "hl.cmp.lti a0, -8388608, ->a1",
+        "elf_offset": "0x133e",
+        "object_offset": "0x10a",
+        "pc": "0x000000000001033e",
+        "raw_bytes_le": "0e80d5410100",
+        "symbol": "executable_hl_cmp_lti"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.CMP.LTI",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-hl-cmp-b4df5c31-clean-20260725-r1/obj/25_executable_hl_cmp.o",
+      "oracle": {
+        "expected": "0x1",
+        "kind": "exact_value",
+        "locator": "test_hl_cmp_lti",
+        "source": "avs/qemu/tests/25_executable_hl_cmp.c"
+      },
+      "qemu_sha": "b4df5c31d06eaee04b602b4b6fd8b6f2c2592b4c",
+      "reachability": {
+        "source": "avs/qemu/tests/25_executable_hl_cmp.c",
+        "target_symbol": "executable_hl_cmp_lti",
+        "test_symbol": "test_hl_cmp_lti"
+      },
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-hl-cmp-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "run_evidence_sha256": "f5c6f78536070310f2cf9ca81d1aaa351d55f83043e19b57585b16743ab40e48",
+      "suite": "executable_hl_cmp",
+      "suite_completion_test_id": "0x00002707",
+      "test_contract": "valid",
+      "test_id": "0x00002705"
+    },
+    {
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-hl-cmp-b4df5c31-clean-20260725-r1/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_cmp_ltui_48_d12167277d58",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x707f000f",
+        "match": "0x6055000e"
+      },
+      "instruction": {
+        "disassembly": "hl.cmp.ltui a0, 8388608, ->a1",
+        "elf_offset": "0x136e",
+        "object_offset": "0x13a",
+        "pc": "0x000000000001036e",
+        "raw_bytes_le": "0e80d5610100",
+        "symbol": "executable_hl_cmp_ltui"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.CMP.LTUI",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-hl-cmp-b4df5c31-clean-20260725-r1/obj/25_executable_hl_cmp.o",
+      "oracle": {
+        "expected": "0x1",
+        "kind": "exact_value",
+        "locator": "test_hl_cmp_ltui",
+        "source": "avs/qemu/tests/25_executable_hl_cmp.c"
+      },
+      "qemu_sha": "b4df5c31d06eaee04b602b4b6fd8b6f2c2592b4c",
+      "reachability": {
+        "source": "avs/qemu/tests/25_executable_hl_cmp.c",
+        "target_symbol": "executable_hl_cmp_ltui",
+        "test_symbol": "test_hl_cmp_ltui"
+      },
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-hl-cmp-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "run_evidence_sha256": "f5c6f78536070310f2cf9ca81d1aaa351d55f83043e19b57585b16743ab40e48",
+      "suite": "executable_hl_cmp",
+      "suite_completion_test_id": "0x00002707",
+      "test_contract": "valid",
+      "test_id": "0x00002706"
+    },
+    {
+      "elf": "docs/bringup/gates/evidence/qemu-executable/executable-hl-cmp-b4df5c31-clean-20260725-r1/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_cmp_ori_48_4167568cb50b",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x707f000f",
+        "match": "0x3055000e"
+      },
+      "instruction": {
+        "disassembly": "hl.cmp.ori a0, 0, ->a1",
+        "elf_offset": "0x139a",
+        "object_offset": "0x166",
+        "pc": "0x000000000001039a",
+        "raw_bytes_le": "0e00d5310100",
+        "symbol": "executable_hl_cmp_ori"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.CMP.ORI",
+      "object": "docs/bringup/gates/evidence/qemu-executable/executable-hl-cmp-b4df5c31-clean-20260725-r1/obj/25_executable_hl_cmp.o",
+      "oracle": {
+        "expected": "0x2",
+        "kind": "exact_value",
+        "locator": "test_hl_cmp_ori",
+        "source": "avs/qemu/tests/25_executable_hl_cmp.c"
+      },
+      "qemu_sha": "b4df5c31d06eaee04b602b4b6fd8b6f2c2592b4c",
+      "reachability": {
+        "source": "avs/qemu/tests/25_executable_hl_cmp.c",
+        "target_symbol": "executable_hl_cmp_ori",
+        "test_symbol": "test_hl_cmp_ori"
+      },
+      "run_evidence": "docs/bringup/gates/evidence/qemu-executable/executable-hl-cmp-b4df5c31-clean-20260725-r1/run-evidence.json",
+      "run_evidence_sha256": "f5c6f78536070310f2cf9ca81d1aaa351d55f83043e19b57585b16743ab40e48",
+      "suite": "executable_hl_cmp",
+      "suite_completion_test_id": "0x00002707",
+      "test_contract": "valid",
+      "test_id": "0x00002707"
+    }
+  ],
+  "execution_observations": [],
+  "producer": {
+    "llvm_sha": "53388eed435037fbfc323e171969d8d74d1db827",
+    "qemu_binary_sha256": "2f9ec9b242bb8fdd43778280f10e9b91c342655350c653286b017ae2cb534103",
+    "qemu_patch_sha256": null,
+    "qemu_sha": "b4df5c31d06eaee04b602b4b6fd8b6f2c2592b4c",
+    "qemu_source_dirty": false,
+    "refresh_command": "manual scoped HL.CMP clean-worktree evidence binding; generated from run-evidence.json and linked ELF/object bytes",
+    "report_command": "python3 tools/bringup/report_qemu_executable_coverage.py --manifest avs/qemu/qemu_executable_hl_cmp_manifest.json --qemu-root emulator/qemu-clean-b4df5c31 --require-nonzero --require-clean",
+    "suite_commands": [
+      "LINX_VIRT_TEST_FINISHER=1 python3 avs/qemu/run_tests.py --suite executable_hl_cmp --out-dir docs/bringup/gates/evidence/qemu-executable/executable-hl-cmp-b4df5c31-clean-20260725-r1 --qemu emulator/qemu-clean-b4df5c31/build-linx-clean/qemu-system-linx64 --clang compiler/llvm/build-linxisa-clang/bin/clang --clangxx compiler/llvm/build-linxisa-clang/bin/clang++ --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --llvm-objdump compiler/llvm/build-linxisa-clang/bin/llvm-objdump --llc compiler/llvm/build-linxisa-clang/bin/llc --timeout 30 --require-test-id 0x00002701 --require-test-id 0x00002702 --require-test-id 0x00002703 --require-test-id 0x00002704 --require-test-id 0x00002705 --require-test-id 0x00002706 --require-test-id 0x00002707 --evidence-out docs/bringup/gates/evidence/qemu-executable/executable-hl-cmp-b4df5c31-clean-20260725-r1/run-evidence.json --evidence-pc 0x000000000001027c --evidence-pc 0x00000000000102ae --evidence-pc 0x00000000000102da --evidence-pc 0x000000000001030c --evidence-pc 0x000000000001033e --evidence-pc 0x000000000001036e --evidence-pc 0x000000000001039a"
+    ]
+  },
+  "schema_version": 1
+}
