@@ -4,9 +4,7 @@
   ],
   "capabilities": [
     "decoder_source_to_isa_mnemonic_mapping",
-    "decoder_mask_to_isa_form_matching",
-    "audited_per_form_runtime_evidence_ingestion",
-    "audited_per_form_semantic_oracle_ingestion"
+    "decoder_mask_to_isa_form_matching"
   ],
   "claim": "decoder_source_mapping",
   "constraint_union_forms": [
@@ -22,33 +20,30 @@
       "mnemonic_count": 646
     },
     "L2": {
-      "availability": "available",
+      "availability": "unavailable",
       "claim": "runtime_execution",
-      "form_count": 60,
-      "mnemonic_count": 60,
-      "qemu_sha": "d0e88a99f575f87436137d91341b410e6f2f445b",
-      "source": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_executable_coverage_latest.json"
+      "form_count": null,
+      "mnemonic_count": null,
+      "reason": "runtime_execution_evidence_not_ingested"
     },
     "L3": {
-      "availability": "available",
+      "availability": "unavailable",
       "claim": "semantic_oracle",
-      "form_count": 60,
-      "mnemonic_count": 60,
-      "qemu_sha": "d0e88a99f575f87436137d91341b410e6f2f445b",
-      "source": "/Users/zhoubot/linx-isa/docs/bringup/gates/qemu_executable_coverage_latest.json"
+      "form_count": null,
+      "mnemonic_count": null,
+      "reason": "semantic_oracle_evidence_not_ingested"
     }
   },
   "evidence_level": "L1",
   "form_coverage_count": 678,
   "form_coverage_ratio_percent": 88.17,
   "form_missing_count": 91,
-  "generated_at_utc": "2026-07-18 02:41:46Z",
+  "generated_at_utc": "2026-07-25 03:02:19Z",
   "legal_form_count": 769,
   "legal_mnemonic_count": 731,
   "limitations": [
-    "runtime_execution_evidence_is_partial",
-    "semantic_oracle_evidence_is_partial",
-    "l2_l3_counts_do_not_extend_the_l1_mapping_claim"
+    "no_runtime_execution_evidence",
+    "no_semantic_oracle_evidence"
   ],
   "mapped_by_prefix": {
     "ACRC": 1,
@@ -2651,8 +2646,8 @@
   "qemu_mapped_spec_forms": 678,
   "qemu_mapped_spec_mnemonics": 646,
   "qemu_meta_mnemonics": 678,
-  "qemu_meta_path": "/Users/zhoubot/linx-isa/emulator/qemu/target/linx/linx_opcode_meta_gen.h",
-  "qemu_root": "/Users/zhoubot/linx-isa/emulator/qemu",
+  "qemu_meta_path": "/home/jialewang/workspace/superscalarNPU/linx-isa/emulator/qemu/target/linx/linx_opcode_meta_gen.h",
+  "qemu_root": "/home/jialewang/workspace/superscalarNPU/linx-isa/emulator/qemu",
   "qemu_source_kind": "decode",
   "qemu_unique_forms": 687,
   "qemu_unique_mnemonics": 679,
@@ -2675,7 +2670,7 @@
     "ok": true
   },
   "schema_version": "qemu-isa-coverage-v3",
-  "spec_path": "/Users/zhoubot/linx-isa/isa/v0.57/linxisa-v0.57.json",
+  "spec_path": "/home/jialewang/workspace/superscalarNPU/linx-isa/isa/v0.57/linxisa-v0.57.json",
   "spec_total_forms": 769,
   "spec_unique_mnemonics": 731,
   "unmapped_qemu_mnemonics": []
