@@ -74,6 +74,7 @@ COMPLETION_TEST_IDS_BY_SUITE = {
     "executable_memory": 0x0000220D,
     "executable_scalar": 0x00002510,
     "executable_integer": 0x0000260F,
+    "executable_hl_cmp": 0x00002707,
     "system": 0x0000110D,
     "deepseek_tilekernels": 0x00001705,
 }
@@ -320,9 +321,20 @@ def _repo_relative(path: Path) -> str:
         return str(resolved)
 
 
-def _qemu_source_sha() -> str:
+def _qemu_source_root(qemu: Path) -> Path:
+    resolved = qemu.resolve()
+    for parent in resolved.parents:
+        if parent.name.startswith("build") and parent.parent.exists():
+            candidate = parent.parent
+            if (candidate / ".git").exists():
+                return candidate
+    return REPO_ROOT / "emulator" / "qemu"
+
+
+def _qemu_source_sha(qemu: Path) -> str:
+    source_root = _qemu_source_root(qemu)
     proc = subprocess.run(
-        ["git", "-C", str(REPO_ROOT / "emulator" / "qemu"), "rev-parse", "HEAD"],
+        ["git", "-C", str(source_root), "rev-parse", "HEAD"],
         check=False,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -334,7 +346,7 @@ def _qemu_source_sha() -> str:
 
 
 def _qemu_provenance(qemu: Path) -> dict[str, object]:
-    source_root = REPO_ROOT / "emulator" / "qemu"
+    source_root = _qemu_source_root(qemu)
     status = subprocess.run(
         ["git", "-C", str(source_root), "status", "--short", "--untracked-files=no"],
         check=False,
@@ -417,7 +429,7 @@ def _write_execution_evidence(
         "qemu": {
             "path": str(qemu),
             "binary_sha256": _sha256(qemu),
-            "sha": _qemu_source_sha(),
+            "sha": _qemu_source_sha(qemu),
             **_qemu_provenance(qemu),
         },
         "run": {
@@ -601,6 +613,10 @@ SUITES: dict[str, dict[str, str]] = {
         "src": "tests/24_executable_integer.c",
         "macro": "LINX_TEST_ENABLE_MOVE",
     },
+    "executable_hl_cmp": {
+        "src": "tests/25_executable_hl_cmp.c",
+        "macro": "LINX_TEST_ENABLE_HL_CMP",
+    },
 }
 
 COMPILE_ONLY_SUITE_SOURCE_OVERRIDE: dict[str, str] = {
@@ -693,12 +709,14 @@ EXPERIMENTAL_SUITES: set[str] = {
     "executable_memory",
     "executable_scalar",
     "executable_integer",
+    "executable_hl_cmp",
 }
 
 DEDICATED_EVIDENCE_SUITES: set[str] = {
     "executable_memory",
     "executable_scalar",
     "executable_integer",
+    "executable_hl_cmp",
 }
 
 CORE_SUITES: list[str] = [
