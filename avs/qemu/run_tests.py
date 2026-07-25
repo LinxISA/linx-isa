@@ -76,6 +76,7 @@ COMPLETION_TEST_IDS_BY_SUITE = {
     "executable_integer": 0x0000260F,
     "executable_hl_cmp": 0x00002707,
     "executable_setc_imm": 0x0000280A,
+    "executable_maddw_bfi_mi": 0x00002904,
     "system": 0x0000110D,
     "deepseek_tilekernels": 0x00001705,
 }
@@ -622,6 +623,10 @@ SUITES: dict[str, dict[str, str]] = {
         "src": "tests/26_executable_setc_imm.c",
         "macro": "LINX_TEST_ENABLE_SETC_IMM",
     },
+    "executable_maddw_bfi_mi": {
+        "src": "tests/27_executable_maddw_bfi_mi.c",
+        "macro": "LINX_TEST_ENABLE_MADDW_BFI_MI",
+    },
 }
 
 COMPILE_ONLY_SUITE_SOURCE_OVERRIDE: dict[str, str] = {
@@ -716,6 +721,7 @@ EXPERIMENTAL_SUITES: set[str] = {
     "executable_integer",
     "executable_hl_cmp",
     "executable_setc_imm",
+    "executable_maddw_bfi_mi",
 }
 
 DEDICATED_EVIDENCE_SUITES: set[str] = {
@@ -724,6 +730,7 @@ DEDICATED_EVIDENCE_SUITES: set[str] = {
     "executable_integer",
     "executable_hl_cmp",
     "executable_setc_imm",
+    "executable_maddw_bfi_mi",
 }
 
 CORE_SUITES: list[str] = [

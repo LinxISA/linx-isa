@@ -71,6 +71,9 @@
 #ifndef LINX_TEST_ENABLE_SETC_IMM
 #define LINX_TEST_ENABLE_SETC_IMM 0
 #endif
+#ifndef LINX_TEST_ENABLE_MADDW_BFI_MI
+#define LINX_TEST_ENABLE_MADDW_BFI_MI 0
+#endif
 
 /* Forward declarations for test suite functions */
 #if LINX_TEST_ENABLE_ARITHMETIC
@@ -135,6 +138,9 @@ void run_hl_cmp_tests(void);
 #endif
 #if LINX_TEST_ENABLE_SETC_IMM
 void run_setc_imm_tests(void);
+#endif
+#if LINX_TEST_ENABLE_MADDW_BFI_MI
+void run_maddw_bfi_mi_tests(void);
 #endif
 
 /*
@@ -205,6 +211,9 @@ void _start(void) {
 #endif
 #if LINX_TEST_ENABLE_SETC_IMM
     run_setc_imm_tests();
+#endif
+#if LINX_TEST_ENABLE_MADDW_BFI_MI
+    run_maddw_bfi_mi_tests();
 #endif
 #if LINX_TEST_ENABLE_SYSTEM
     /* This suite exits through its final trap continuation; keep it last. */
