@@ -189,11 +189,22 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 
 ### `src/bcc/ooo/dec1.py`
 
-- Owns `D1`.
+- Owns the pyCircuit implementation of `D1`.
 - Reads up to four contiguous fixed 64-bit Instruction Buffer entries,
   performs the first full opcode/operand/immediate decode and fault detection,
   recognizes split/fuse shapes, and forms the decode group.
 - Computes demand but does not mutate ROB/BROB/rename/IQ state.
+
+### `chisel/src/main/scala/linxcore/frontend/D1InstructionDecodeStage.scala`
+
+- Owns the Chisel production `Instruction Buffer -> D1` boundary.
+- Consumes `D1InstructionGroup` directly, decodes four fixed 64-bit instruction
+  containers without conversion through `F4Slot`, and preserves each lane's
+  final B-F4 prediction sidecar and dynamic instruction UID.
+- Applies an identity-qualified inner flush before decode: a full kill consumes
+  the group, while a suffix kill publishes only the dense older prefix.
+- Shares the single-instruction decode leaf with the packet/window verification
+  fixture so opcode and operand semantics cannot drift between the two paths.
 
 ### `src/bcc/ooo/dec2.py`
 

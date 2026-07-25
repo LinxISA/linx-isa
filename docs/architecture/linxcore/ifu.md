@@ -347,6 +347,14 @@ specification.
 11. I-SIDE and B-SIDE communicate only through explicit decoupled interfaces
    with request/STID/epoch correlation.
 
+The production D1 implementation is `D1InstructionDecodeStage`. It consumes a
+four-entry `D1InstructionGroup` directly, performs full decode without an
+intermediate byte-window/slot representation, and copies the complete final
+prediction record into each decoded uop. I-F3 derives a dynamic instruction
+UID from fetch-packet identity plus the six-bit byte offset within the
+architectural 64-byte line, preventing lane-local UID reuse across consecutive
+groups from the same line.
+
 ## 9. Generated-RTL throughput gate
 
 The canonical hot-cache supply gate is:

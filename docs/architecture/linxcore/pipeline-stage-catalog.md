@@ -170,10 +170,14 @@ pipelines are not lockstep.
 
 ### D1
 
-- Owner family: `src/bcc/ooo/dec1.py` and the canonical decode helpers.
+- Owner family: `src/bcc/ooo/dec1.py`, Chisel
+  `frontend/D1InstructionDecodeStage.scala`, and their canonical decode helpers.
 - Reads up to four contiguous Instruction Buffer entries from one STID.
 - Receives four fixed 64-bit instruction payloads; no byte-window
   reconstruction or neighboring-entry concatenation is allowed.
+- Each Chisel lane preserves the final B-F4 prediction sidecar and dynamic
+  instruction UID; `FrontendDecodeStage` remains a packet/window verification
+  fixture and is not the production D1 composition boundary.
 - Performs the first full opcode/operand/immediate decode, detects illegal
   encodings and early exceptions, identifies split/fuse forms, and forms the
   decode group.
