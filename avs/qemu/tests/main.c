@@ -68,6 +68,9 @@
 #ifndef LINX_TEST_ENABLE_HL_CMP
 #define LINX_TEST_ENABLE_HL_CMP 0
 #endif
+#ifndef LINX_TEST_ENABLE_SETC_IMM
+#define LINX_TEST_ENABLE_SETC_IMM 0
+#endif
 
 /* Forward declarations for test suite functions */
 #if LINX_TEST_ENABLE_ARITHMETIC
@@ -129,6 +132,9 @@ void run_freestanding_runtime_tests(void);
 #endif
 #if LINX_TEST_ENABLE_HL_CMP
 void run_hl_cmp_tests(void);
+#endif
+#if LINX_TEST_ENABLE_SETC_IMM
+void run_setc_imm_tests(void);
 #endif
 
 /*
@@ -196,6 +202,9 @@ void _start(void) {
 #endif
 #if LINX_TEST_ENABLE_HL_CMP
     run_hl_cmp_tests();
+#endif
+#if LINX_TEST_ENABLE_SETC_IMM
+    run_setc_imm_tests();
 #endif
 #if LINX_TEST_ENABLE_SYSTEM
     /* This suite exits through its final trap continuation; keep it last. */
