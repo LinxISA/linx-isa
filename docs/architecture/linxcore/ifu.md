@@ -346,3 +346,18 @@ specification.
     prediction-driven inner flush.
 11. I-SIDE and B-SIDE communicate only through explicit decoupled interfaces
    with request/STID/epoch correlation.
+
+## 9. Generated-RTL throughput gate
+
+The canonical hot-cache supply gate is:
+
+```bash
+bash rtl/LinxCore/tools/chisel/run_chisel_ifu_throughput_gate.sh
+```
+
+It emits `LinxCoreIfu` with architectural 64-byte cachelines and requires
+thirty-two consecutive full four-entry D1 groups, final B-F4 metadata on every
+lane, and multiple prediction joins plus ordered line contexts in flight. This
+gate proves eligible dense sequential IFU supply. It does not prove mixed
+instruction lengths, prediction-recovery stress, production decode/dispatch
+acceptance, or CoreMark/Dhrystone throughput.
