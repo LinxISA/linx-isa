@@ -1,7 +1,7 @@
-/* v0.57 TEPL execution carriers. */
+/* PTO ISA v0.2 TEPL execution carriers. */
 
     .text
-/* v0.57 TEPL row/column broadcast and expand-arithmetic kernels. */
+/* PTO ISA v0.2 TEPL row/column broadcast and expand-arithmetic kernels. */
 
 
     .macro LOAD_FP32 reg, cols, rows, stride
@@ -82,7 +82,7 @@
     EXPAND_BINARY linx_tcolexpandmin_f32, TCOLEXPANDMIN, 8, 1, 8
     EXPAND_BINARY linx_tcolexpandexpdif_f32, TCOLEXPANDEXPDIF, 8, 1, 8
 
-/* v0.57 TEPL layout and padding kernels. */
+/* PTO ISA v0.2 TEPL layout and padding kernels. */
 
 
     .macro TFILLPAD_KERNEL name, pad, emit_datr=1
@@ -415,7 +415,7 @@ linx_tdequant_s8_f32:
     INTERLEAVE_KERNEL linx_tinterleave_s32, TINTERLEAVE
     INTERLEAVE_KERNEL linx_tdeinterleave_s32, TDEINTERLEAVE
 
-/* v0.57 TEPL partial-valid binary kernels. */
+/* PTO ISA v0.2 TEPL partial-valid binary kernels. */
 
 
     .macro TPART_KERNEL name, op
@@ -533,7 +533,7 @@ linx_tdequant_s8_f32:
     PART_ARG_KERNEL linx_tpartargmax_f32_u32, TPARTARGMAX
     PART_ARG_KERNEL linx_tpartargmin_f32_u32, TPARTARGMIN
 
-/* v0.57 TCMP mode carriers. The generic TEPL builtin does not expose
+/* PTO ISA v0.2 TCMP mode carriers. The generic TEPL builtin does not expose
  * B.DATR.CMode, so these focused kernels provide L2/L3 coverage for all six
  * architectural comparison modes without changing the compiler API. */
 
@@ -752,7 +752,7 @@ linx_trems_s32:
     FRET.STK [ra ~ ra], sp!, 8
     .size linx_trems_s32, .-linx_trems_s32
 
-/* v0.57 TEPL product and index-reduction kernels. */
+/* PTO ISA v0.2 TEPL product and index-reduction kernels. */
 
 
     .macro REDUCE_KERNEL name, op, src_dtype, dst_dtype, dst_cols, dst_rows, dst_stride
@@ -795,7 +795,7 @@ linx_trems_s32:
     REDUCE_KERNEL linx_tcolargmax_f32, TCOLARGMAX, FP32, UINT32, 8, 1, 8
     REDUCE_KERNEL linx_tcolargmin_f32, TCOLARGMIN, FP32, UINT32, 8, 1, 8
 
-/* v0.57 TEPL packed-predicate selection kernels. */
+/* PTO ISA v0.2 TEPL packed-predicate selection kernels. */
 
 
     .globl linx_tsel_s32

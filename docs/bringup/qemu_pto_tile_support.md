@@ -1,17 +1,18 @@
-# QEMU v0.57 PTO Tile execution status
+# QEMU PTO ISA v0.2 Tile execution status
 
-This page records the LinxISA superproject evidence for the v0.57 PTO Tile
-execution work in `emulator/qemu`. It supports the QEMU subtask tracked by
+This page records the LinxISA superproject evidence for PTO ISA v0.2 Tile
+execution on the LinxISA v0.57 encoding profile in `emulator/qemu`. It supports
+the QEMU subtask tracked by
 [LinxISA/SuperScalarModel#31](https://github.com/LinxISA/SuperScalarModel/issues/31).
 
-The authoritative operation identities and selectors come from
-`isa/v0.57/state/pto_encoding_map.json`. Detailed execution semantics were
-cross-checked against the DavinciOO intrinsic workbook and operation pages,
-with `pto-isa/docs/isa/tile/` as a secondary reference.
+The authoritative encoded operation identities and selectors come from the
+LinxISA v0.57 catalog at `isa/v0.57/state/pto_encoding_map.json`. PTO ISA v0.2
+execution semantics were cross-checked against the DavinciOO intrinsic workbook
+and operation pages, with `pto-isa/docs/isa/tile/` as a secondary reference.
 
 ## Status summary
 
-| Family | v0.57 workbook operations | QEMU execution paths | Remaining fail-closed |
+| Family | PTO ISA v0.2 operations | QEMU execution paths | Remaining fail-closed |
 | --- | ---: | ---: | ---: |
 | TMA | 6 | 6 | 0 |
 | CUBE | 8 | 5 | 3 |
@@ -24,7 +25,7 @@ exception, or target-specific profile is complete. Unsupported tuples and
 selectors are rejected instead of passing through a write-zero fallback.
 
 The QEMU-local operation list and profile limits are documented in
-`emulator/qemu/docs/linxisa/pto-v057-tile-support.md`.
+`emulator/qemu/docs/linxisa/pto-tile-support.md`.
 
 ## Implemented groups
 
@@ -101,7 +102,7 @@ They remain fail-closed for concrete contract reasons:
 
 `TQUANT` selector `0x083` is therefore decoded but rejected by the executable
 selector gate before the destination is modified. QEMU does not guess one
-quantization formula and report it as general v0.57 support.
+quantization formula and report it as general PTO ISA v0.2 support.
 
 ## AVS organization
 
