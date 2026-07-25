@@ -169,12 +169,12 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   B-F3 short/medium TAGE+IBTB; and B-F4
   static+long-TAGE+IBTB/loop/final arbitration.
 - Accepts identity-qualified cancellation and backend training.
-- Owns per-STID speculative GHR and exact request-owned B-F0 GHRQ rows; all
-  later TAGE lookup/training consumes the immutable B-F0 snapshot.
+- Owns per-STID speculative GHR/RAS and exact request-owned B-F0 history rows;
+  later TAGE lookup/training and RAS lookup consume immutable B-F0 snapshots.
 - B-F1..B-F4 correction of an accepted lower-ranked prediction emits an
   identity-qualified inner flush. The correction proposal only marks recovery
-  pending; its returned canonical prune restores GHR, applies the corrected
-  conditional delta and removes younger rows before I-F0 restart. B-F4 is the
+  pending; its returned canonical prune restores GHR/RAS, applies the corrected
+  conditional or Call/Return delta and removes younger rows before I-F0 restart. B-F4 is the
   final such point. Its record passes through every valid D1 lane, and
   post-B-F4 mismatch uses Dispatch/BRU flush/recover.
 

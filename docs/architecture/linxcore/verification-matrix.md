@@ -148,8 +148,9 @@ Mandatory scenario families:
   target
 - B-F1..B-F4 correction of an accepted lower-ranked prediction produces an
   identity-qualified inner flush and marks predictor recovery pending; the
-  returned canonical prune restores the request-owned snapshot, applies the
-  corrected conditional delta, removes younger checkpoints, and restarts I-F0
+  returned canonical prune restores the request-owned GHR/RAS snapshots,
+  applies the corrected conditional or Call/Return delta, removes younger
+  checkpoints, and restarts I-F0
   without backend flush. B-F4 is the final such point. Post-B-F4
   Dispatch/BRU mismatch exercises BRU flush/recover and I-F0 restart
 - atomic decode-group admission failure with no partial RID/BID/rename/store

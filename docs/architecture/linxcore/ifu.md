@@ -181,7 +181,7 @@ its own five-stage pipeline, independent of I-SIDE:
 
 | Stage | Predictor responsibility |
 |---|---|
-| B-F0 | L0/NLP next-line prediction; atomically allocate a prediction tag and exact GHRQ row with full request identity and immutable `ghrBefore` |
+| B-F0 | L0/NLP next-line prediction; atomically allocate a prediction tag and exact history row with full request identity, immutable `ghrBefore`, and complete RAS image/pointer/count |
 | B-F1 | uBTB target/type lookup, fast RAS lookup, and launch of larger-table accesses |
 | B-F2 | PBTB/BTB target/type lookup and BIM base direction prediction |
 | B-F3 | short- and medium-history TAGE lookup; launch IBTB indirect-target lookup |
@@ -212,11 +212,12 @@ same request in `{taken, branch_pc, target, kind}`, it corrects that exact
 prediction. If the replaced result has already driven I-SIDE, the correction
 generates an
 identity-qualified I-SIDE inner flush and marks the STID history recovery
-pending without immediately changing GHR. When that proposal returns from the
+pending without immediately changing GHR/RAS. When that proposal returns from the
 redirect arbiter as the canonical prune, B-SIDE restores the exact request-owned
-`ghrBefore`, appends the corrected conditional direction once, preserves the
-producer, removes younger checkpoints/work, and restarts the corrected PC at
-I-F0. RAS/path-history state must reuse the same canonical recovery ordering.
+GHR/RAS snapshots, appends the corrected conditional direction or applies the
+typed Call/Return push/pop once, preserves the producer, removes younger
+checkpoints/work, and restarts the corrected PC at I-F0. Path-history state must
+reuse the same canonical recovery ordering.
 This prediction correction does not by itself flush backend architectural state. B-F4 is the last stage
 allowed to issue a prediction-driven inner flush. A candidate selected before
 any path is accepted is initial steering and does not require a flush.
@@ -293,7 +294,9 @@ Redirect carries STID, new PC, new epoch, request/packet/prediction identity,
 typed history action, and optional conditional delta. I-SIDE uses it to restart
 I-F0 and kill stale work; B-SIDE applies history recovery only when that event
 returns as canonical prune. ITLB may use an unkeyed oldest-killed snapshot
-fallback; start explicitly resets the selected STID history.
+fallback; prediction and backend `RestoreTrigger` events must carry and match
+an exact request-owned history key. Start explicitly resets the selected STID
+history.
 
 ## 7. superscalarNPU comparison
 
