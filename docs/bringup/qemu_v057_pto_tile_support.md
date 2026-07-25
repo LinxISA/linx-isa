@@ -15,8 +15,8 @@ with `pto-isa/docs/isa/tile/` as a secondary reference.
 | --- | ---: | ---: | ---: |
 | TMA | 6 | 6 | 0 |
 | CUBE | 8 | 5 | 3 |
-| TEPL | 97 | 82 | 15 |
-| Total | 111 | 93 | 18 |
+| TEPL | 97 | 84 | 13 |
+| Total | 111 | 95 | 16 |
 
 An execution path means QEMU performs a defined operation on Tile, ACC, or
 memory state. It does not imply that every dtype, layout, shape, rounding mode,
@@ -45,7 +45,7 @@ profile as `TMATMUL`: exactly three frozen sources in A, B, Bias order, with a
 one-row S32 bias broadcast across result rows. Packed S8 and floating-point
 CUBE layouts remain outside this profile.
 
-TEPL has 82 executable selectors covering:
+TEPL has 84 executable selectors covering:
 
 - base and scalar elementwise arithmetic and logic;
 - packed comparison and selection;
@@ -54,6 +54,7 @@ TEPL has 82 executable selectors covering:
 - transpose, reshape, gather/scatter, concat, gather-by-byte, and extraction;
 - sequence and triangular generation, fill padding, and dequantization;
 - partial add, multiply, minimum, and maximum.
+- two-source, two-output interleave and de-interleave.
 
 Important implemented profiles include row-packed U32 predicates for
 `TCMP/TCMPS`, matching consumption by `TSEL/TSELS`; persistent rectangular
@@ -63,6 +64,13 @@ offset:
 ```text
 dst[r,c] = (src[r,c] - offset[r]) * scale[r]
 ```
+
+`TINTERLEAVE/TDEINTERLEAVE` use the canonical descriptor operand order
+`dst1, dst0, src1, src0`, require equal row-major shapes with even valid
+columns, and publish both outputs in descriptor order. The single-source
+`TDEINTERLEAVE` overload remains rejected because its distinct source and
+destination shapes are not independently expressible by the current header
+profile.
 
 ## Deliberately unsupported operations
 
@@ -74,8 +82,8 @@ packing, and reconstruction contract.
 The remaining TEPL operations are:
 
 ```text
-TAXPY TQUANT TINSERT TIMG2COL TDEINTERLEAVE TINTERLEAVE
-TSORT TMRGSORT THISTOGRAM TPARTARGMAX TPARTARGMIN
+TAXPY TQUANT TINSERT TIMG2COL TSORT TMRGSORT THISTOGRAM
+TPARTARGMAX TPARTARGMIN
 TPUSH TPOP TALLOC TFREE
 ```
 
@@ -85,8 +93,8 @@ They remain fail-closed for concrete contract reasons:
   preserved, while the current TEPL output is a fresh allocation.
 - `TQUANT` has distinct INT8, MXFP8, and MXFP4 metadata, output, and packing
   profiles that the current header/collector cannot uniquely bind.
-- `TDEINTERLEAVE`, `TINTERLEAVE`, `TSORT`, `TPARTARGMAX`, and `TPARTARGMIN`
-  require compound or multiple outputs.
+- `TSORT`, `TPARTARGMAX`, and `TPARTARGMIN` require compound or additional
+  multiple-output contracts not yet closed by their current profiles.
 - `TIMG2COL`, `TMRGSORT`, and `THISTOGRAM` lack a closed configuration,
   variable-operand, or attribute contract in the current decoder path.
 - `TPUSH`, `TPOP`, `TALLOC`, and `TFREE` require a Pipe/control ABI rather than
@@ -124,6 +132,7 @@ Recent exact-value evidence includes:
 | `0x000A0023` | S8/S16 to FP32 TDEQUANT |
 | `0x000A0024` | S32 TGEMV and TGEMV_ACC |
 | `0x000A0026` | S32 TMATMUL_BIAS, column broadcast, and multi-B.IOT source order |
+| `0x000A0027` | S32 two-source TINTERLEAVE/TDEINTERLEAVE, both output Tiles, and inverse recovery |
 
 The focused regression command is:
 
