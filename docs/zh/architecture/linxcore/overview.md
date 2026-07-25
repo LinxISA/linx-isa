@@ -98,10 +98,10 @@ IFU 由两个独立反压的 decoupled engine 组成：
   opcode、operand、immediate、异常和 split/fuse 译码。
 
 B-SIDE 分级为：B-F0 L0/NLP+checkpoint，B-F1 uBTB/RAS，B-F2
-PBTB/BTB+BIM，B-F3 short/medium TAGE+IBTB launch，B-F4 long
-TAGE/IBTB/loop/final arbitration。后级纠正已经驱动取指的预测时，
-inner-flush I-SIDE 并重启 I-F0；backend misprediction 进入 typed recovery
-并发布 frontend restart。
+PBTB/BTB+BIM，B-F3 short/medium TAGE+IBTB launch，B-F4
+static+long-TAGE/IBTB/loop/final arbitration。B-F4 是最后一个
+prediction-driven inner flush 点；final record 随每条指令进入 D1，后续
+Dispatch/BRU mismatch 使用 BRU flush/recover 并发布 frontend restart。
 
 其余阶段：
 

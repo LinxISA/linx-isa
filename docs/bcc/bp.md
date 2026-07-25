@@ -10,15 +10,17 @@ Instruction Buffer.
 - **B-F1** queries uBTB and fast RAS, then launches larger-table accesses.
 - **B-F2** queries PBTB/BTB and BIM.
 - **B-F3** queries short/medium TAGE and launches IBTB.
-- **B-F4** collects long TAGE, final IBTB, loop, and final RAS results and
-  performs unified arbitration.
+- **B-F4** runs the static predictor from matched I-F4 boundary metadata,
+  collects long TAGE, final IBTB, loop, and final RAS results, and performs
+  unified arbitration.
 - **Training/update logic** consumes resolved outcomes and updates structures
   independently of I-SIDE fetch backpressure.
 
 Provider rank is
 `B-F4 > B-F3 > B-F2 > B-F1 > B-F0 > sequential`. B-F4 target selection
 prefers exact RAS return or high-confidence IBTB when applicable; direction
-rank is `loop > long-TAGE > short-TAGE > BIM`; BTB supplies direct targets.
+rank is `loop > long-TAGE > short-TAGE > BIM > static`; BTB supplies direct
+targets.
 Backend restart is higher priority but is a typed-recovery source rather than
 a prediction provider.
 
@@ -31,7 +33,9 @@ responses from being consumed.
 
 The B-F0..B-F4 and I-F0..I-F4 pipelines are decoupled and non-lockstep. If a
 later B-stage corrects an already-used prediction, I-SIDE inner-flushes and
-restarts I-F0. Backend-resolved misprediction uses typed recovery plus the
-frontend restart.
+restarts I-F0; B-F4 is the last prediction-driven inner-flush point. Its final
+record follows every instruction into D1. Dispatch validates direct/call
+properties, while BRU E1 validates conditional direction and indirect/return
+targets; any mismatch uses BRU flush/recover plus the frontend restart.
 
 See [LinxCore IFU Architecture](../architecture/linxcore/ifu.md).

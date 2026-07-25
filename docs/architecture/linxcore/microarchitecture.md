@@ -63,8 +63,7 @@ frontend field named `thread_id` maps one-to-one to STID. Engine or PE-local
 `tid` and PE ID may remain separate subordinate qualifiers; they never replace
 STID on shared block, memory, or recovery interfaces.
 
-- I-F0 PC/redirect state, Instruction Buffer residency, checkpoints,
-  speculative/committed
+- I-SIDE PC/request state, Instruction Buffer residency, checkpoints, speculative/committed
   rename maps, local T/U managers, instruction-ROB/RID head state, BROB,
   CARG/BARG, and LSID allocation are either physically partitioned per STID or
   stored in shared structures with an explicit STID tag on every row.
@@ -155,124 +154,133 @@ historical input as compatibility behavior.
 The canonical pipeline is:
 
 ```text
-I-F0 -> I-F1 -> I-F2 -> I-F3 -> I-F4 -> Instruction Buffer -> D1 -> D2 -> D3
-                                        |
-                                        v
-                               S1 -> S2 -> S3/IQ
-                                        |
-                                        v
-                               [P0] -> P1 -> I1 -> I2 -> E1 -> E2 -> E3 -> ...
-                                                          \---- W1/W2/W3 overlay
+I-SIDE: I-F0 -> I-F1 -> I-F2 -> I-F3 -> I-F4 -> Instruction Buffer -> D1 -> D2 -> D3
+B-SIDE: B-F0 -> B-F1 -> B-F2 -> B-F3 -> B-F4 -> response/correction
+
+                                                              D3 -> S1 -> S2 -> S3/IQ
+                                                                              |
+                                                                              v
+                                                                     [P0] -> P1 -> I1 -> I2 -> E1 -> E2 -> E3 -> ...
+                                                                                                \---- W1/W2/W3 overlay
                      resolve/ROB -> R0 -> R1 -> R2 -> R3 -> R4
                                                   |               |
-                                               CMT/FLS       restart -> I-F0
+                                               CMT/FLS       typed restart -> I-F0
 ```
 
-The IFU contains two decoupled engines. I-SIDE owns I-F0..I-F4 and writes the
-Instruction Buffer. B-SIDE owns B-F0..B-F4 branch prediction and
-exchanges request, prediction, training, and redirect messages with I-SIDE
-through explicit ready/valid channels. The engines do not advance in lockstep.
-`W` stages describe
-producer-relative actual data-bypass/result/writeback age and overlay `E` stages; they
-are not a serial tail after execute. Full ownership and implementation-alias
-rules are normative in `pipeline-stage-catalog.md`.
+`I-F0..I-F4` and `B-F0..B-F4` are two independently backpressured five-stage
+pipelines. Instruction Buffer is the queue after I-F4 and before D1. Equal
+stage suffixes do not imply lockstep timing. `W` stages describe
+producer-relative actual data-bypass/result/writeback age and overlay `E`
+stages; they are not a serial tail after execute. The complete IFU contract is
+normative in `ifu.md`.
 
-### I-SIDE contract details (`I-F0` to Instruction Buffer)
+### IFU contract details
+
+The IFU is composed of I-SIDE and B-SIDE decoupled engines. They exchange
+identity-qualified prediction requests/responses, inner-flush cancellation,
+boundary metadata, and backend training. Equal progress or same-cycle stage
+alignment is never assumed.
 
 #### I-F0
 
-- `I-F0` accepts or selects a PC, allocates an I-SIDE request identity, and
-  launches one registered request context toward I-F1.
-- Redirect state delivered by R4 is consumed by I-F0 before new sequential or
+- `I-F0` captures a selected STID/PC, aligns the L1I line
+  address, and allocates request, epoch, and checkpoint identity.
+- It submits an independent prediction request to B-SIDE.
+- Typed redirect state delivered by R4 is consumed by I-F0 before new sequential or
   predicted work for that thread.
 
 #### I-F1
 
-- `I-F1` launches ITLB and L1I lookup in parallel for the identical PC and
-  request identity.
-- Fetch packet and checkpoint identity are assigned before leaving I-F1.
+- `I-F1` launches ITLB and L1I lookup in parallel for the I-F0-selected PC.
+- Both paths carry the same request ID, STID, fetch epoch, and checkpoint.
 
 #### I-F2
 
-- `I-F2` joins the ITLB result and L1I tag/data lookup context.
-- An ITLB miss generates an I-SIDE inner flush, cancels younger I-SIDE work for
-  the affected STID/epoch, and prevents a stale L1I return from becoming an
-  instruction. This is not a backend architectural flush.
-- An L1I miss enters the refill path while retaining request identity.
+- `I-F2` joins ITLB and L1I results by request identity and
+  validates permission, physical tag, integrity/ECC, and hit/miss state.
+- ITLB miss produces a per-STID, epoch-qualified inner flush, cancels younger
+  I-SIDE work and stale B-SIDE responses, and creates translation replay. It
+  does not flush architectural backend state.
+- L1I miss allocates or joins the instruction-refill transaction.
 - Physical port sharing is an implementation parameter and must preserve
   independent per-thread architectural state.
 
 #### I-F3
 
-- `I-F3` captures one returned cacheline, integrity/ECC status, refill result,
-  byte cursor, and cross-line carry state. A failed integrity check produces a
-  fetch fault instead of normal instruction entries.
-- I-F3 presents ordered bytes and carry context to I-F4. It does not perform full
-  opcode decode or own branch prediction.
+- `I-F3` captures a complete cache line, aligns bytes from
+  the requested PC, and retains/joins cross-line carry.
+- I-F3 presents an ordered byte stream to I-F4. It does not determine instruction
+  length or perform predecode.
+- A failed I-F2 integrity check produces a fetch fault rather than a normal
+  instruction entry.
 
 #### I-F4
 
-- `I-F4` is the fourth I-SIDE stage. It is a processing stage before the
-  Instruction Buffer, not the buffer itself.
-- I-F4 parses 2/4/6/8-byte instruction lengths, assembles complete instructions,
-  zero-extends each instruction into a 64-bit container, and recognizes only
-  `BSTART`/`BSTOP`-class block boundaries.
-- I-F4 does not perform general opcode, operand, immediate, branch-kind, target,
-  or template decode. Those are D1 responsibilities.
-- D1 may recognize a template (`FENTRY`, `FEXIT`, `FRET.*`) from `insn64` and
-  mark it as a template parent for D2/D3. The Instruction Buffer retains later
-  ordinary records for that STID. I-F4 does not decode templates, allocate BID,
-  or start child execution.
-- D3 atomically allocates the template's `(STID,BID)`, checkpoint, resource
-  reservation, and ordered ROB group: child rows first and one final template
-  completion/trace row last. Only then does CTU emit children into their
-  reserved rows through the normal rename/execute/LSU path.
-- Children reuse the parent's `(STID,BID)` and do not allocate another BROB
-  slot unless a child is itself an architecturally legal boundary. The final
-  template row completes only after expansion and every child completes, so
-  children retire before template completion/redirect becomes visible.
-- Flush kills filled and unfilled reserved rows plus CTU state by STID and
-  checkpoint.
-- The Instruction Buffer is partitioned by thread; each thread owns an
-  independent bank or FIFO.
-- Every stored instruction carries PC, original byte length, fixed `insn64`,
-  boundary bits, request/checkpoint identity, and correlated B-SIDE prediction
-  metadata.
-- The Instruction Buffer presents up to four contiguous program-order 64-bit
-  entries to D1 each cycle.
+- I-F4 determines 2/4/6/8-byte encoded length, completes instruction assembly,
+  zero-extends the instruction into `inst[63:0]`, and predecodes only `BSTART`
+  and `BSTOP` boundaries.
+- It does not perform branch prediction, full opcode decode,
+  operand/immediate extraction, split/fuse analysis, or template expansion.
+- I-F4 writes complete records into Instruction Buffer and holds them stable
+  under buffer backpressure.
+
+#### Instruction Buffer
+
+- Instruction Buffer is a per-STID queue after I-F4 and before D1.
+- Every stored entry contains `inst[63:0]`, PC, encoded byte length, request/
+  epoch/checkpoint identity, BSTART/BSTOP hints, prediction metadata, and fault
+  state.
+- It presents up to four contiguous same-STID instructions to D1.
 - Consumption stops at the first invalid, killed, or structurally blocked
   entry. No compaction or younger-entry skipping is allowed.
 
-### B-SIDE contract details (`B-F0` to `B-F4`)
+#### B-F0
 
-- `B-F0`: L0/NLP next-line prediction plus speculative checkpoint and
-  GHR/GHRQ snapshot.
-- `B-F1`: uBTB type/target lookup and speculative RAS access.
-- `B-F2`: PBTB/BTB type/target lookup plus BIM direction.
-- `B-F3`: short/medium-history TAGE and IBTB launch.
-- `B-F4`: long-history TAGE, IBTB/loop results, and final arbitration.
+- Performs L0/NLP lookup and snapshots request-local GHR/GHRQ/RAS state.
 
-Provider rank is
-`B-F4 > B-F3 > B-F2 > B-F1 > B-F0 > sequential`. Within B-F4, exact RAS
-return or high-confidence IBTB wins the corresponding target; direction rank
-is `loop > long-TAGE > short-TAGE > BIM`; BTB supplies direct targets.
-Backend restart has higher priority but is a typed-recovery source, not a
-prediction provider.
+#### B-F1
 
-A later B-stage correction that has already driven I-SIDE causes an I-SIDE
-inner flush and restart at I-F0. A backend-resolved misprediction enters typed
-recovery, restores the selected architectural/speculative state, and publishes
-the frontend restart.
+- Performs uBTB and RAS lookup and may publish an early prediction.
+
+#### B-F2
+
+- Performs PBTB/BTB and BIM lookup from the B-F0 history snapshot.
+
+#### B-F3
+
+- Performs short/medium-history TAGE and IBTB lookup.
+
+#### B-F4
+
+- Runs static prediction from matched I-F4 boundary metadata, collects
+  long-history TAGE, final IBTB, loop predictor, and loop-buffer results, and
+  performs final arbitration.
+- Accepted provider rank is `B-F4 > B-F3 > B-F2 > B-F1 > B-F0 >
+  sequential`. Backend typed restart is not a provider and has higher priority
+  than every prediction.
+- Within B-F4, exact RAS return and high-confidence IBTB indirect target are
+  same-rank target authorities. Direction override order is
+  `loop > long-TAGE > short-TAGE > BIM > static`; BTB supplies direct
+  targets.
+- Any B-F1..B-F4 correction of an accepted lower-ranked prediction emits an
+  identity-qualified inner flush, restores GHR/GHRQ/RAS, and restarts I-F0;
+  B-F4 is the final such point.
+- The B-F4 final record follows every valid D1 lane. Dispatch validates
+  direct/call properties; BRU E1 validates conditional direction and
+  indirect/return targets. Mismatch uses BRU flush/recover and is not a
+  frontend inner flush.
 
 ### Decode and renamed-uop contract (`D1` to `D3`)
 
 #### D1
 
-- `D1` reads up to four program-order contiguous 64-bit instructions from the
-  Instruction Buffer.
-- `D1` performs full opcode, operand, and immediate decode, illegal-instruction
-  and early-exception detection, uop split/fuse recognition, and decode-group
-  formation. No downstream stage reparses variable-length byte streams.
+- `D1` reads up to four program-order contiguous entries from one Instruction
+  Buffer bank.
+- Each D1 input is already one fixed 64-bit instruction. D1 never reconstructs
+  a variable-length byte window or concatenates neighboring entries.
+- `D1` performs the first full opcode, operand, and immediate decode,
+  illegal-instruction and early-exception detection, uop split/fuse
+  recognition, and decode-group formation.
 - D1 calculates per-row shape and group demand but does not mutate ROB, BROB,
   rename, LSID, or IQ state.
 - `D1` may split or fuse decoded work, but older split work must be emitted
@@ -282,15 +290,13 @@ the frontend restart.
   the first candidate, D1 ends the current group before it. A group beginning
   with `BSTART` may include following body rows only up to the next boundary;
   a template-parent group contains only that parent.
-- D1 output carries decoded opcode/uop semantics, raw instruction identity,
-  length, early fault state, and the information D2 needs for operand
-  extraction and resource calculation.
+- D1 output carries fixed `inst[63:0]`, decoded opcode/uop semantics, operand
+  and immediate information, early fault state, and group demand.
 
 #### D2
 
-- `D2` extracts architectural source/destination operands and immediates,
-  resolves block-boundary metadata, and calculates the complete resource
-  demand of the group.
+- `D2` resolves block-boundary metadata and calculates the complete resource
+  demand of the already decoded group.
 - `D2` preserves decode-slot program order across one decode group.
 - D2 marks the single boundary allocation, if present, and partitions row
   ownership so the `BSTART` row plus every following row in that group receives
@@ -1658,13 +1664,10 @@ Detailed ordering behavior remains documented in:
 
 ### LinxCoreModel executable-reference rules
 
-- LinxCoreModel's BFU predictor algorithms are executable reference material
-  for B-SIDE prediction, checkpoint, and recovery behavior; its stage names do
-  not define I-SIDE. LinxCoreModel also provides executable reference behavior
-  for CUBE, ELF loading, direct boot, and the MMIO finisher.
-- Invalid model predictor states, missing local-pipe ownership, unsupported
-  CUBE data conversions, and unsupported tile fill/element forms are
-  model-invalid states.
+- LinxCoreModel is the executable reference for Janus-Core-visible BFU, CUBE,
+  ELF loading, direct-boot, and MMIO finisher behavior.
+- Invalid BFU pipe states, missing local-pipe ownership, unsupported CUBE data
+  conversions, and unsupported tile fill/element forms are model-invalid states.
   They must fail fast in debug/reference execution rather than silently
   selecting a replacement architectural behavior.
 - Fallback return values that exist only to satisfy host compiler control-flow

@@ -21,22 +21,24 @@ I-SIDE 使用 I-F0..I-F4：
 | I-F3 | 保存一个 cacheline、ECC/refill、byte cursor 和跨 line carry |
 | I-F4 | 判断 2/4/6/8-byte 长度，只识别 `BSTART`/`BSTOP`，零扩展为 64-bit，写 Instruction Buffer |
 
-Instruction Buffer 位于 I-F4 之后。D1 每周期读取四条连续 64-bit 指令，
-完成完整 opcode、operand、immediate、异常和 split/fuse 译码。D1 之后
-统一使用 64-bit 指令容器。
+Instruction Buffer 位于 I-F4 之后。每个 entry 保存完整 effective prediction
+record。D1 每周期读取四条连续 64-bit 指令，每个 valid lane 携带该完整记录，
+并完成完整 opcode、operand、immediate、异常和 split/fuse 译码。D1 之后统一
+使用 64-bit 指令容器。
 
 ## B-SIDE
 
 B-SIDE 使用 B-F0..B-F4：B-F0 L0/NLP+checkpoint，B-F1 uBTB/RAS，
-B-F2 PBTB/BTB+BIM，B-F3 short/medium TAGE+IBTB launch，B-F4 long
-TAGE/IBTB/loop/final arbitration。provider rank 为
+B-F2 PBTB/BTB+BIM，B-F3 short/medium TAGE+IBTB launch，B-F4
+static+long-TAGE/IBTB/loop/final arbitration。provider rank 为
 `B-F4 > B-F3 > B-F2 > B-F1 > B-F0 > sequential`；B-F4 内使用 exact
-RAS/high-confidence IBTB target、`loop > long-TAGE > short-TAGE > BIM`
+RAS/high-confidence IBTB target、
+`loop > long-TAGE > short-TAGE > BIM > static`
 direction 和 BTB direct target。
 
 I/B 两条流水解耦、不锁步。后级 B-stage 纠正已使用预测时 inner-flush
-I-SIDE 并重启 I-F0；backend misprediction 走 typed recovery 加
-frontend restart。
+I-SIDE 并重启 I-F0；B-F4 是最后一个 prediction-driven inner flush 点。
+此后 Dispatch/BRU 的校验错误使用 BRU flush/recover 加 frontend restart。
 
 ITLB、L1I、cacheline refill、predecode 和 Instruction Buffer 只属于
 I-SIDE。

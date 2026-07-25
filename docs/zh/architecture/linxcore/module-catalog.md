@@ -118,15 +118,18 @@
 - `b_f1`：uBTB 和投机 RAS；
 - `b_f2`：PBTB/BTB 和 BIM；
 - `b_f3`：short/medium TAGE 并启动 IBTB；
-- `b_f4`：long TAGE、IBTB/loop 和 final arbitration；
+- `b_f4`：基于匹配 I-F4 boundary metadata 的 static prediction、
+  long TAGE、IBTB/loop 和 final arbitration；
 - arbiter 使用
   `B-F4 > B-F3 > B-F2 > B-F1 > B-F0 > sequential`，B-F4 内使用 exact
-  RAS/high-confidence IBTB target、`loop > long-TAGE > short-TAGE > BIM`
-  direction 和 BTB direct target。
+  RAS/high-confidence IBTB target、
+  `loop > long-TAGE > short-TAGE > BIM > static` direction 和 BTB direct
+  target。
 
 I/B 两侧独立反压、不锁步。backend restart 作为 typed recovery source
 优先级最高；后级 B-stage 纠正已使用预测时 inner-flush I-SIDE 并重启
-I-F0。
+I-F0，B-F4 是最后一个此类点。final record 逐 lane 进入 D1；post-B-F4
+mismatch 使用 Dispatch/BRU flush/recover。
 
 ### `src/top/modules/xchk.py`
 

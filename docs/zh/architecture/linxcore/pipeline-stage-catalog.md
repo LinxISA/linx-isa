@@ -87,19 +87,21 @@ I-F0..I-F4，B-SIDE 使用 B-F0..B-F4；两条流水独立反压、不锁步。
 
 ### B-F4
 
-- 汇合 long-history TAGE、IBTB、loop predictor/buffer；
+- 基于匹配的 I-F4 boundary metadata 运行 static predictor，并汇合
+  long-history TAGE、IBTB、loop predictor/buffer；
 - 完成最终预测仲裁；
 - provider rank 为
   `B-F4 > B-F3 > B-F2 > B-F1 > B-F0 > sequential`；
 - B-F4 内 exact RAS return 或 high-confidence IBTB 赢得对应 target；
-  direction rank 为 `loop > long-TAGE > short-TAGE > BIM`，direct target
-  由 BTB 提供。
+  direction rank 为 `loop > long-TAGE > short-TAGE > BIM > static`，
+  direct target 由 BTB 提供。
 
 backend restart 优先于所有 provider，但属于 typed recovery source，不是
 prediction provider。B-SIDE 后级若纠正已经驱动取指的预测，
-inner-flush I-SIDE 并重启 I-F0；backend misprediction 进入 typed recovery
-并发布 frontend restart。B-SIDE 不拥有 ITLB、L1I、refill、predecode 或
-Instruction Buffer。
+inner-flush I-SIDE 并重启 I-F0；B-F4 是最后一个 prediction-driven inner
+flush 点。其 final record 随每个 valid D1 lane 传递；post-B-F4
+Dispatch/BRU mismatch 进入 BRU flush/recover 并发布 frontend restart。
+B-SIDE 不拥有 ITLB、L1I、refill、predecode 或 Instruction Buffer。
 
 ## 解码和预发行阶段
 

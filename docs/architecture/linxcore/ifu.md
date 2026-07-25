@@ -142,7 +142,16 @@ insn64                // zero-extended fixed-width container
 is_bstart
 is_bstop
 fetch_fault
-prediction_id / prediction metadata
+prediction_record {
+  valid
+  prediction_id
+  branch_pc
+  taken
+  target
+  kind
+  provider
+  checkpoint_id
+}
 ```
 
 I-F4 observes normal queue backpressure. Flush and inner-flush pruning use STID
@@ -157,6 +166,10 @@ Instruction Buffer -> D1DecodeGroup[4] -> D2
 ```
 
 D1 performs full opcode, operand, immediate, exception, and split/fuse decode.
+Every valid D1 lane carries the complete effective `prediction_record`, even
+when only one instruction in the block will resolve control flow. An
+implementation may share immutable backing storage, but no downstream stage may
+recover prediction state from a global “current prediction” register.
 After D1, all instruction-bearing interfaces use the 64-bit instruction
 container. Downstream stages never reslice the original variable-length byte
 stream.
@@ -172,7 +185,7 @@ its own five-stage pipeline, independent of I-SIDE:
 | B-F1 | uBTB target/type lookup, fast RAS lookup, and launch of larger-table accesses |
 | B-F2 | PBTB/BTB target/type lookup and BIM base direction prediction |
 | B-F3 | short- and medium-history TAGE lookup; launch IBTB indirect-target lookup |
-| B-F4 | long-history TAGE, final IBTB result, loop predictor/buffer result, final RAS check, and unified direction/type/target arbitration |
+| B-F4 | static predictor, long-history TAGE, final IBTB result, loop predictor/buffer result, final RAS check, and unified direction/type/target arbitration |
 
 B-F0 may provide the first usable next-PC prediction. B-F1 through B-F4 may
 confirm it or publish a better prediction for the same
@@ -189,8 +202,9 @@ backend restart
 Backend restart is a recovery source, not a prediction provider. Within B-F4,
 an exact RAS return target or a high-confidence IBTB indirect target wins the
 corresponding target selection. Direction override order is
-`loop > long-TAGE > short-TAGE > BIM`. BTB-family metadata supplies direct
-targets.
+`loop > long-TAGE > short-TAGE > BIM > static`. The static predictor is the
+final fallback and consumes identity-matched I-F4 boundary metadata; it never
+runs in I-F4. BTB-family metadata supplies direct targets.
 
 If a later B-SIDE stage differs from an accepted earlier result in
 `{taken, branch_pc, target, kind}`, it corrects that exact prediction. If the
@@ -198,11 +212,17 @@ earlier result has already driven I-SIDE, the correction generates an
 identity-qualified I-SIDE inner flush, restores the matching GHR/GHRQ/RAS
 checkpoint, changes the fetch epoch, cancels matching and younger I-SIDE and
 B-SIDE work, and restarts the corrected PC at I-F0. This prediction correction
-does not by itself flush backend architectural state.
+does not by itself flush backend architectural state. B-F4 is the last stage
+allowed to issue a prediction-driven inner flush.
 
-A backend-resolved misprediction is different: it enters typed recovery,
-restores predictor/rename/block state according to the recovery class, and
-also publishes a frontend restart to I-F0.
+After B-F4 seals the effective prediction, the record follows the instruction
+bundle through the Instruction Buffer and is attached to every D1 lane.
+Operand-independent direct/call checks occur at Dispatch. Conditional
+`setc.*` direction and indirect/return `setc.tgt` target checks occur when BRU
+E1 has the runtime operands. A type-specific mismatch after B-F4 always enters
+`BRU flush + recover`, restores predictor/rename/block state according to the
+recovery class, and publishes a frontend restart to I-F0; it is never reported
+as another inner flush.
 
 B-SIDE contains:
 
@@ -271,13 +291,19 @@ dependency. It provides useful evidence for a decoupled branch/instruction
 frontend: FTQ-separated B/I paths, per-thread PC/GHR/RAS state,
 MBTB/TAGE/IBTB predictors, and an Instruction Buffer.
 
+The latest reference interface exposes prediction taken/target independently
+for D1 slots 0..3, carries prediction metadata to BRU, and reports
+target/address mispredict at E1. Linx generalizes that per-lane contract to the
+complete `PredictionRecord`, retains data-dependent validation in BRU E1, and
+adds operand-independent direct/call validation in Dispatch.
+
 The reference organization is not copied directly:
 
 | Area | superscalarNPU reference | LinxCore target |
 |---|---|---|
 | Stage shape | B0–B4 plus I-F1–I-F3 | I-F0..I-F4 plus B-F0..B-F4 |
 | Translation/cache | no TLB; PIPT fetch assumption | parallel ITLB/L1I at I-F1 and identity-retained miss/refill |
-| Early prediction | uBTB and intra-flush removed | uBTB at B-F1; late B-stage correction inner-flushes I-SIDE and restarts I-F0 |
+| Early prediction | uBTB and intra-flush removed | uBTB at B-F1; B-F4 is the final prediction-driven inner-flush point |
 | Predictor grouping | B2/B3 group multiple predictor operations | staged predictor quality from L0/NLP through long TAGE/IBTB/loop arbitration |
 | Fetch completion | SN I-F3 static/context work and variable-width IB payload | I-F4 boundary-only predecode, complete 64-bit entries, D1 full decode |
 
@@ -293,13 +319,16 @@ specification.
 2. The two engines are decoupled and never rely on lockstep stage alignment.
 3. ITLB and L1I access starts in parallel at I-F1.
 4. ITLB miss causes an I-SIDE inner flush, not an OOO/global flush.
-5. A later B-SIDE correction of an already-used prediction inner-flushes
-   I-SIDE and restarts I-F0; backend misprediction uses typed recovery.
+5. B-F1..B-F4 may correct an already-used prediction and inner-flush I-SIDE;
+   B-F4 is the final such point.
 6. BHC/fetch-cache behavior belongs to I-SIDE L1I, never B-SIDE.
 7. Predecode recognizes instruction length and `BSTART`/`BSTOP` boundaries
    only.
 8. Every Instruction Buffer entry contains one complete 64-bit instruction
    container.
-9. D1 reads four 64-bit entries and owns full decode.
-10. I-SIDE and B-SIDE communicate only through explicit decoupled interfaces
+9. D1 reads four 64-bit entries, carries the complete effective prediction
+   record on every valid lane, and owns full decode.
+10. Post-B-F4 Dispatch/BRU mismatch uses BRU flush/recover, never another
+    prediction-driven inner flush.
+11. I-SIDE and B-SIDE communicate only through explicit decoupled interfaces
    with request/STID/epoch correlation.

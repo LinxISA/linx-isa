@@ -152,18 +152,22 @@ training、redirect ready/valid 接口交互，独立反压、不锁步。
 - `B-F1`：uBTB 类型/目标和投机 RAS；
 - `B-F2`：PBTB/BTB 类型/目标和 BIM 方向；
 - `B-F3`：short/medium-history TAGE，启动 IBTB；
-- `B-F4`：long-history TAGE、IBTB/loop 结果和 final arbitration。
+- `B-F4`：基于匹配 I-F4 boundary metadata 的 static prediction、
+  long-history TAGE、IBTB/loop 结果和 final arbitration。
 
 provider rank 为
 `B-F4 > B-F3 > B-F2 > B-F1 > B-F0 > sequential`。B-F4 内 exact RAS
 return 或 high-confidence IBTB 赢得对应 target；direction rank 为
-`loop > long-TAGE > short-TAGE > BIM`；BTB 提供 direct target。backend
+`loop > long-TAGE > short-TAGE > BIM > static`；BTB 提供 direct
+target。backend
 restart 优先级更高，但属于 typed-recovery source，不是 prediction
 provider。
 
 后级 B-stage 纠正已经驱动 I-SIDE 的预测时，inner-flush I-SIDE 并从
-I-F0 重启。backend misprediction 进入 typed recovery，恢复选定状态并
-发布 frontend restart。
+I-F0 重启；B-F4 是最后一个 prediction-driven inner flush 点。其 final
+prediction record 随每条指令进入 D1。B-F4 之后，Dispatch 校验
+direct/call，BRU E1 校验 conditional direction 和 indirect/return target；
+mismatch 使用 BRU flush/recover 并发布 frontend restart。
 
 ### 解码并重命名-uop 合约（`D1` 至 `D3`）
 

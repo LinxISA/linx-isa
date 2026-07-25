@@ -8,12 +8,13 @@
 
 
 This chapter defines the canonical LinxCore stage names, their timing
-coordinates, and the behavior owned at each boundary. I-SIDE uses
-`I-F0..I-F4`; B-SIDE uses `B-F0..B-F4`. The pipelines are independently
-backpressured and do not advance in lockstep.
+coordinates, and the behavior owned at each boundary. The names follow the
+ARM-reference taxonomy where that taxonomy is ISA-neutral, while the behavior
+is rebound to LinxISA block, BID, recovery, and memory contracts.
 
-The normative IFU decomposition and interface payloads are defined in
-[`ifu.md`](./ifu.md).
+The catalog is a target contract. Current pyCircuit, Chisel, and LinxTrace
+names that disagree with it are legacy implementation aliases and must not be
+used to redefine the stage meanings below.
 
 ## Stage ownership rules
 
@@ -35,131 +36,143 @@ The normative IFU decomposition and interface payloads are defined in
 ## Canonical pipeline overview
 
 ```text
-I-F0 -> I-F1 -> I-F2 -> I-F3 -> I-F4 -> Instruction Buffer -> D1 -> D2 -> D3
-                                                              |
-                                                              v
-                                                     S1 -> S2 -> S3/IQ
-                                                              |
-                                                              v
-                                                     [P0] -> P1 -> I1 -> I2
-                                                                       |
-                                                                       v
-                                                              E1 -> E2 -> E3 -> ...
-                                                               \---- W1/W2/W3 overlay
+I-SIDE: I-F0 -> I-F1 -> I-F2 -> I-F3 -> I-F4 -> Instruction Buffer -> D1 -> D2 -> D3
+                                                                      |
+                                                                      v
+                                                             S1 -> S2 -> S3/IQ
+                                                                      |
+                                                                      v
+                                                             [P0] -> P1 -> I1 -> I2 -> E1 -> E2 -> E3 -> ...
+                                                                                        \---- W1/W2/W3 overlay
+
+B-SIDE: B-F0 -> B-F1 -> B-F2 -> B-F3 -> B-F4 -> response/correction
 
 resolve/ROB -> R0 -> R1 -> R2 -> R3 -> R4
                             |               |
-                         CMT/FLS       restart -> I-F0
+                         CMT/FLS       typed restart -> I-F0
 ```
 
 `P0` is optional unless it is a registered, trace-visible preselect boundary.
 All other named stages above are canonical.
 
-## IFU organization
+## IFU engines
 
-The IFU contains decoupled I-SIDE and B-SIDE engines. I-SIDE owns I-F0..I-F4,
-translation, L1I, predecode, and Instruction Buffer production. B-SIDE owns
-B-F0..B-F4, BTB/uBTB/PBTB, GHR/GHRQ, TAGE, BIM, RAS, IBTB,
-loop predictor/buffer, and prediction checkpoints. The engines communicate through
-explicit request, prediction, training, and redirect channels correlated by
-request ID, STID, PC, and epoch.
-
-## I-SIDE stages
+The IFU architecture is defined normatively in `ifu.md`. I-SIDE and B-SIDE
+are independently backpressured engines joined only by decoupled,
+identity-qualified request, response, cancellation, boundary, and training
+channels. I-SIDE uses `I-F0..I-F4`; B-SIDE uses `B-F0..B-F4`. The two
+pipelines are not lockstep.
 
 ### I-F0
 
-- Accepts/selects a PC and allocates request/STID/epoch identity.
-- Launches a registered request context toward I-F1.
-- Is literally stage zero.
+- Owner module: `src/bcc/ifu/f0.py`.
+- Is I-SIDE stage 0.
+- Captures the selected STID/PC, aligns the cache-line address, and allocates
+  request/epoch/checkpoint identity.
+- Launches independent I-SIDE and B-SIDE requests through decoupled channels.
 
 ### I-F1
 
-- Launches ITLB and L1I access in parallel for the same PC and request.
-- Carries fetch-packet and checkpoint identity.
+- Target owner: `src/bcc/ifu/f1.py` after responsibility convergence.
+- Is I-SIDE stage 1.
+- Launches ITLB and L1I lookups in parallel for the same I-F0 request.
+- Carries request ID, STID, PC, epoch, and checkpoint identity.
 
 ### I-F2
 
-- Joins ITLB and L1I lookup state.
-- Generates an I-SIDE inner flush on ITLB miss and suppresses stale L1I
-  responses for the affected STID/epoch.
-- Retains L1I miss/refill identity and matching thread/PC context.
-- Physical port arbitration may be parameterized; it must not collapse
-  per-thread architectural state.
+- Target state owner: `src/bcc/ifu/f2.py`; `src/bcc/ifu/icache.py` is the cache
+  service owner after stage-boundary convergence.
+- Is I-SIDE stage 2.
+- Joins ITLB and L1I results by request identity and validates translation,
+  permission, physical tag, integrity, and hit/miss state.
+- An ITLB miss produces an identity-qualified inner flush and translation
+  replay for that STID. It is frontend-local and does not flush architectural
+  backend state.
+- An L1I miss allocates or joins an instruction-refill transaction.
 
 ### I-F3
 
-- Captures one cacheline, integrity/ECC and refill state, byte cursor, and
-  cross-line carry context.
-- Presents ordered cacheline bytes and carry state to I-F4.
-- Does not perform full instruction decode or branch prediction.
+- Target state owner: `src/bcc/ifu/f3.py`.
+- Is I-SIDE stage 3.
+- Captures one complete L1I cache line, aligns the byte stream from the
+  requested PC, and retains/joins cross-line carry.
+- Presents ordered bytes to I-F4 without determining instruction length or
+  performing predecode.
 
 ### I-F4
 
-- Is literally stage four and is distinct from the Instruction Buffer it
-  writes.
-- Parses 2/4/6/8-byte lengths, assembles complete instructions, zero-extends
-  every instruction into a 64-bit container, and recognizes only
-  `BSTART`/`BSTOP`-class boundaries.
-- Does not perform full opcode, operand, immediate, branch-kind, target, or
-  template decode.
-- Writes program-order `insn64` entries and metadata into the Instruction
-  Buffer.
+- Target state owner: `src/bcc/ifu/f4.py` after responsibility convergence.
+- Is I-SIDE stage 4.
+- Determines 2/4/6/8-byte encoded length, completes instruction assembly,
+  zero-extends each instruction to 64 bits, and predecodes only
+  `BSTART`/`BSTOP`.
+- Writes complete 64-bit instruction records and metadata into the
+  Instruction Buffer.
+- Does not own branch prediction, general opcode decode, operand decode,
+  immediate extraction, split/fuse analysis, or template expansion.
+- Holds its output stable under Instruction Buffer backpressure.
 
 ### Instruction Buffer
 
-- Is a per-STID queue after I-F4 and before D1.
-- Stores PC, original byte length, fixed `insn64`, boundary bits,
-  request/checkpoint identity, fetch-fault state, and correlated B-SIDE
-  prediction metadata.
-- Presents up to four contiguous entries to D1 each cycle.
-- Applies backpressure to I-F4 and prunes entries by STID/epoch on redirect or
-  I-SIDE inner flush.
+- Owner module: `src/top/modules/ib.py` after interface convergence.
+- Is a queue boundary between I-F4 and D1; it is not another name for I-F4.
+- Stores a 64-bit instruction payload, PC, encoded length, STID, request ID,
+  epoch/checkpoint, BSTART/BSTOP hints, prediction metadata, and fetch fault.
+- Presents up to four consecutive same-STID records to D1 and never compacts
+  past an invalid, cancelled, faulting, or different-STID entry.
 
 ### B-F0
 
-- Runs L0/NLP next-line prediction.
-- Allocates the speculative prediction checkpoint and snapshots GHR/GHRQ.
+- Owns B-SIDE L0/NLP lookup and GHR/GHRQ/RAS history snapshot.
+- Accepts decoupled PC/request/epoch/checkpoint identity from I-F0.
 
 ### B-F1
 
-- Looks up uBTB target/type information.
-- Performs speculative RAS push/pop/read.
+- Owns uBTB and RAS lookup.
+- May publish an early identity-qualified target prediction.
 
 ### B-F2
 
-- Looks up PBTB/BTB target/type information.
-- Produces the BIM base direction prediction.
+- Owns PBTB/BTB and BIM lookup.
+- Carries the B-F0 history snapshot rather than resampling live history.
 
 ### B-F3
 
-- Looks up short- and medium-history TAGE providers.
-- Launches IBTB indirect-target lookup.
+- Owns short/medium-history TAGE providers and IBTB lookup.
+- Produces the current direction/target/confidence candidate.
 
 ### B-F4
 
-- Collects long-history TAGE, IBTB, and loop predictor/buffer results.
-- Performs final prediction arbitration.
-- Applies provider rank
-  `B-F4 > B-F3 > B-F2 > B-F1 > B-F0 > sequential`.
-- Within B-F4, exact RAS return or high-confidence IBTB wins the matching
-  target; direction rank is `loop > long-TAGE > short-TAGE > BIM`, and BTB
-  supplies direct targets.
-
-Backend restart has priority above every provider but is a typed-recovery
-source, not a prediction provider. A later B-stage correction that has already
-driven fetch inner-flushes I-SIDE and restarts I-F0. A backend-resolved
-misprediction enters typed recovery and also publishes the frontend restart.
-B-SIDE does not own ITLB, L1I, refill, predecode, or Instruction Buffer.
+- Runs static prediction from matched I-F4 boundary metadata, owns
+  long-history TAGE, final IBTB/loop predictor/loop-buffer results, and final
+  provider arbitration.
+- Provider rank is `B-F4 > B-F3 > B-F2 > B-F1 > B-F0 > sequential`.
+- Exact RAS return and high-confidence IBTB indirect target are same-rank B-F4
+  target authorities. Direction override order is
+  `loop > long-TAGE > short-TAGE > BIM > static`; BTB supplies direct
+  targets.
+- Backend typed restart is not a provider and has highest restart priority.
+- Publishes the retained final prediction response and speculative GHR/GHRQ/
+  RAS update.
+- Any B-F1..B-F4 result that corrects an accepted lower-ranked prediction emits an
+  identity-qualified inner flush, restores predictor history, and restarts
+  I-F0 at the corrected PC; B-F4 is the final such point.
+- B-F4 seals the record carried by every valid D1 lane. Dispatch validates
+  direct/call properties, while BRU E1 validates conditional direction and
+  indirect/return targets; mismatch enters BRU flush/recover and publishes its
+  restart to I-F0.
 
 ## Decode, rename, and dispatch stages
 
 ### D1
 
 - Owner family: `src/bcc/ooo/dec1.py` and the canonical decode helpers.
-- Reads up to four contiguous 64-bit Instruction Buffer entries in program
-  order.
-- Performs full opcode/operand/immediate decode, detects illegal encodings and
-  early exceptions, identifies split/fuse forms, and forms the decode group.
+- Reads up to four contiguous Instruction Buffer entries from one STID.
+- Receives four fixed 64-bit instruction payloads; no byte-window
+  reconstruction or neighboring-entry concatenation is allowed.
+- Performs the first full opcode/operand/immediate decode, detects illegal
+  encodings and early exceptions, identifies split/fuse forms, and forms the
+  decode group.
 - With one BROB allocation port, stops before a second new-block boundary and
   starts a non-leading BSTART/template in the next group.
 - May compute resource demand, but does not mutate rename, ROB, BROB, or IQ
@@ -389,14 +402,30 @@ and dependency/recovery timing are updated consistently.
 - Semantic flush broadcast published coherently with CMT at R2; not a W stage.
   The corresponding restart PC/restored state becomes visible at R4.
 
-## Trace naming rules
+## Current implementation-name migration
 
-- Trace producers emit separate I-F4 and Instruction Buffer events when each
-  boundary is observed.
-- B-SIDE predictor events use B-F0..B-F4 plus training and recovery names;
-  I-SIDE events use I-F0..I-F4.
-- The IQ entry becomes resident and pick-visible at S3; IQ is the structure,
-  not a serial stage before S1 or S2.
+| Current implementation name | Canonical interpretation |
+|---|---|
+| `src/bcc/ifu/f0.py` | Target I-F0 owner |
+| `src/bcc/ifu/f3.py` internal `ibuffer` | Instruction Buffer implementation contributor |
+| `src/bcc/ifu/f4.py`, Chisel `F4DecodeWindow` | Non-conforming implementation names; replace with I-F4 predecode/write and fixed-width D1 decode owners |
+| incorrectly ordered frontend trace tokens | Migrate to ordered `I-F4 -> IB -> D1` events |
+| commit-head or trace-prep `W1/W2` probes | Incorrect W ownership; move to producer result/writeback state |
+| missing `S3`, `E5`, `E6`, `W3`, and `R0..R4` tokens | Trace/implementation promotion gap |
+
+Specifications and new interfaces must use only the canonical meanings above.
+
+### IB
+
+- Owner module: `src/top/modules/ib.py`.
+- Canonically IB is the queue after I-F4 and before D1.
+
+### IQ
+
+- Legacy trace owner: `src/bcc/backend/issue.py`.
+- Compatibility-only token for the current schema. Canonically the IQ entry
+  becomes resident and pick-visible at S3; IQ is the structure, not a serial
+  stage before S1 or S2.
 
 ## LSU stage family
 

@@ -30,11 +30,12 @@ the affected STID/epoch. It is not an OOO/global flush.
 
 The Instruction Buffer is after I-F4. It stores one complete `insn64` per entry
 plus PC, original length, boundary bits, request/checkpoint identity, fault,
-and correlated prediction metadata.
+and a complete effective prediction record.
 
 D1 reads four contiguous 64-bit entries per cycle and performs full opcode,
 operand, immediate, exception, and split/fuse decode. All instruction
-interfaces after D1 remain fixed-width 64-bit.
+interfaces after D1 remain fixed-width 64-bit, and every valid D1 lane carries
+that complete prediction record.
 
 ## B-SIDE prediction engine
 
@@ -44,14 +45,18 @@ B-SIDE uses B-F0 through B-F4:
 - B-F1: uBTB and speculative RAS;
 - B-F2: PBTB/BTB plus BIM;
 - B-F3: short/medium TAGE plus IBTB launch;
-- B-F4: long TAGE, IBTB/loop result, and final arbitration.
+- B-F4: static prediction from matched I-F4 boundary metadata, long TAGE,
+  IBTB/loop result, and final arbitration.
 
 Provider rank is
 `B-F4 > B-F3 > B-F2 > B-F1 > B-F0 > sequential`; B-F4 uses exact RAS or
-high-confidence IBTB targets, `loop > long-TAGE > short-TAGE > BIM`
+high-confidence IBTB targets, `loop > long-TAGE > short-TAGE > BIM > static`
 direction, and BTB direct targets. Backend restart has higher priority as a
 typed-recovery source. A later B-stage correction of an already-used
-prediction inner-flushes I-SIDE and restarts I-F0.
+prediction inner-flushes I-SIDE and restarts I-F0; B-F4 is the final such
+point. After B-F4, Dispatch validates direct/call records and BRU E1 validates
+conditional direction and indirect/return targets; mismatch uses BRU
+flush/recover.
 
 The I- and B-side pipelines are decoupled and do not advance in lockstep.
 ITLB, L1I, refill, predecode, and Instruction Buffer belong only to I-SIDE.

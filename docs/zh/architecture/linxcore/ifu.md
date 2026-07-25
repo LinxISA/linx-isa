@@ -92,11 +92,16 @@ valid, stid, fetch_id, epoch, pc
 encoded_length, insn64
 is_bstart, is_bstop
 fetch_fault
-prediction_id / prediction metadata
+prediction_record {
+  valid, prediction_id, branch_pc
+  taken, target, kind, provider, checkpoint_id
+}
 ```
 
 D1 每周期从一个 STID 读取最多四条连续的 64-bit 指令，完成完整
-opcode、operand、immediate、异常和 split/fuse 译码。D1 之后所有携带
+opcode、operand、immediate、异常和 split/fuse 译码。每个有效 D1 lane
+都携带完整的 effective `prediction_record`；实现可以共享只读 backing
+storage，但下游不得从全局“current prediction”寄存器恢复预测状态。D1 之后所有携带
 指令的接口都使用 64-bit 定长容器，下游不再切分变长原始字节流。
 
 ## 4. B-SIDE 预测引擎
@@ -109,7 +114,7 @@ B-SIDE 参考 LinxCoreModel 的预测算法，并拥有独立五级流水：
 | B-F1 | uBTB 类型/目标查询、fast RAS 查询并启动较大预测表访问 |
 | B-F2 | PBTB/BTB 类型/目标查询以及 BIM 基础方向预测 |
 | B-F3 | short/medium-history TAGE 查询并启动 IBTB 间接目标查询 |
-| B-F4 | long-history TAGE、final IBTB、loop predictor/buffer、RAS final check 和统一方向/类型/目标仲裁 |
+| B-F4 | static predictor、long-history TAGE、final IBTB、loop predictor/buffer、RAS final check 和统一方向/类型/目标仲裁 |
 
 B-F0 可以产生首个可用 next-PC。B-F1 至 B-F4 可以确认或纠正同一
 `{fetch_id, stid, epoch, pc, checkpoint}` 的预测。由于 B-SIDE 与 I-SIDE
@@ -125,18 +130,24 @@ backend restart
 backend restart 是 recovery source，不是 prediction provider。B-F4 内，
 exact RAS return target 或 high-confidence IBTB indirect target 赢得对应
 target 选择；方向 override 顺序为
-`loop > long-TAGE > short-TAGE > BIM`；direct target 由 BTB family 提供。
+`loop > long-TAGE > short-TAGE > BIM > static`。static predictor 是最终
+fallback，消费按身份匹配的 I-F4 boundary metadata，但不在 I-F4 内运行；
+direct target 由 BTB family 提供。
 
 后级 B-SIDE 结果若与已接受的早期结果在
 `{taken, branch_pc, target, kind}` 任一字段不同，则纠正该精确预测身份。若
 早期结果已经驱动 I-SIDE，纠正必须产生 identity-qualified I-SIDE inner
 flush，恢复匹配的 GHR/GHRQ/RAS checkpoint，切换 fetch epoch，取消匹配项及
 更年轻的 I-SIDE/B-SIDE 工作，并从纠正 PC 重启 I-F0；这本身不清除 backend
-架构状态。
+架构状态。B-F4 是最后一个允许产生 prediction-driven inner flush 的 stage。
 
-backend 已解析的 misprediction 必须进入 typed recovery，按 recovery
-class 恢复 predictor/rename/block 状态，同时发布 frontend restart 到
-I-F0。
+B-F4 封存 effective prediction 后，预测记录随 instruction bundle 进入
+Instruction Buffer，并附着到每个 D1 lane。无需运行时 operand 的 direct/call
+校验在 Dispatch 完成；conditional `setc.*` 的 direction，以及
+indirect/return `setc.tgt` 的 target，在 BRU E1 获得运行时 operand 后校验。
+B-F4 之后任一按类型校验失败都产生 `BRU flush + recover`，按 recovery class
+恢复 predictor/rename/block 状态并向 I-F0 发布 restart，不能再称为 inner
+flush。
 
 B-SIDE 包含：
 
@@ -168,11 +179,16 @@ cache 响应与 prediction 响应都必须按身份匹配，不能依赖同周�
 可复用证据包括 FTQ 解耦的 B/I path、per-thread PC/GHR/RAS、
 MBTB/TAGE/IBTB 和 Instruction Buffer。
 
+最新参考接口已经为 D1 slot 0..3 分别提供 prediction taken/target，并把
+prediction metadata 传入 BRU，在 E1 报告 target/address mispredict。Linx 将
+它扩展为完整 per-lane `PredictionRecord`，保留 BRU E1 的数据相关校验，并在
+Dispatch 增加无需运行时 operand 的 direct/call 校验。
+
 | 项目 | superscalarNPU 参考 | LinxCore 目标 |
 |---|---|---|
 | stage | B0–B4 加 I-F1–I-F3 | I-F0..I-F4 加 B-F0..B-F4 |
 | translation/cache | 无 TLB，PIPT 假设 | I-F1 并行 ITLB/L1I，miss/refill 保留身份 |
-| early prediction | 移除 uBTB 与 intra-flush | B-F1 保留 uBTB；后级纠正 inner-flush I-SIDE 并重启 I-F0 |
+| early prediction | 移除 uBTB 与 intra-flush | B-F1 保留 uBTB；B-F4 是最后一个 prediction-driven inner flush 点 |
 | predictor grouping | B2/B3 聚合多种 predictor | 从 L0/NLP 到 long TAGE/IBTB/loop 的分级质量 |
 | fetch completion | SN I-F3 static/context，加 variable-width IB | I-F4 只做 boundary predecode 和 64-bit entry，D1 完整译码 |
 
@@ -186,10 +202,13 @@ MBTB/TAGE/IBTB 和 Instruction Buffer。
 2. 两个引擎相互解耦、不依赖锁步 stage 对齐。
 3. I-F1 并行启动 ITLB 与 L1I。
 4. ITLB miss 产生 I-SIDE inner flush，而不是 OOO/global flush。
-5. B-SIDE 后级纠正已使用预测时 inner-flush I-SIDE 并重启 I-F0；
-   backend misprediction 走 typed recovery。
+5. B-F1..B-F4 可纠正已使用预测并 inner-flush I-SIDE；B-F4 是最后一个
+   此类点。
 6. BHC/fetch-cache 行为属于 I-SIDE L1I，不属于 B-SIDE。
 7. 预解码只判断长度和 `BSTART`/`BSTOP` 边界。
 8. 每个 Instruction Buffer entry 保存一条完整 `insn64`。
-9. D1 每周期读取四条 64-bit 指令并完成完整译码。
-10. I-SIDE 与 B-SIDE 只通过显式解耦接口交互。
+9. D1 每周期读取四条 64-bit 指令，每个 valid lane 携带完整 effective
+   prediction record，并完成完整译码。
+10. Post-B-F4 Dispatch/BRU mismatch 使用 BRU flush/recover，不再产生
+    prediction-driven inner flush。
+11. I-SIDE 与 B-SIDE 只通过显式解耦接口交互。

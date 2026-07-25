@@ -21,7 +21,7 @@ It is the normative mapping between:
 | Contract ID | Area | Normative statement |
 |---|---|---|
 | `LC-ARCH-DOC-001` | Architecture docs | Canonical LinxCore docs live in `rtl/LinxCore/docs/architecture`, are mirrored into `docs/architecture/linxcore`, and stay nav-wired in LinxArch docs |
-| `LC-MA-PIPE-001` | Pipeline | IFU contains independently backpressured, non-lockstep I-SIDE `I-F0..I-F4` and B-SIDE `B-F0..B-F4`; I-F1 accesses ITLB/L1I in parallel, ITLB miss causes an I-SIDE inner flush, I-F4 boundary-only predecode emits 64-bit entries, and D1 reads four; B-F0 is L0/NLP+checkpoint, B-F1 uBTB/RAS, B-F2 PBTB/BTB+BIM, B-F3 short/medium TAGE+IBTB launch, B-F4 long TAGE/IBTB/loop/final arbitration; late prediction correction inner-flushes I-SIDE and restarts I-F0, while backend misprediction uses typed recovery plus frontend restart |
+| `LC-MA-PIPE-001` | Pipeline | IFU is non-lockstep decoupled I-SIDE `I-F0..I-F4` and B-SIDE `B-F0..B-F4`; I-F4 is followed by Instruction Buffer and four-wide fixed-64-bit D1 with a complete prediction record per valid lane; B-F4 runs static/final arbitration and is the last prediction-driven inner-flush point; post-B-F4 Dispatch/BRU mismatch uses BRU flush/recover and I-F0 restart |
 | `LC-MA-RES-001` | Resource admission | Decode groups reserve ROB/BROB, rename, IQ, and memory-order resources atomically or make no state change |
 | `LC-MA-ROB-001` | ROB/retirement | Instruction rows allocate in order, commit contiguously, retain cleanup sidecars through deallocation, and recover precisely |
 | `LC-MA-HAZ-001` | Hazards/replay | Replay, redirect, wakeup, and issue behavior do not violate correctness |
@@ -136,14 +136,20 @@ Mandatory scenario families:
 - MMU translation and page or permission fault paths
 - timer interrupt delivery and boundary interactions
 - branch, block, and recovery legality
-- stage taxonomy: I-F0..I-F4 are I-SIDE and B-F0..B-F4 are B-SIDE; I-F1
-  launches ITLB/L1I in
-  parallel; ITLB miss causes an I-SIDE inner flush; I-F4 performs only length
-  and `BSTART`/`BSTOP` boundary predecode plus 64-bit normalization; the
-  independent Instruction Buffer feeds four 64-bit entries to D1; the B-side
-  provider rank and correction/recovery rules match `ifu.md`; S3 is IQ
-  visibility; W alignment is declared per producer;
-  CMT/FLS publish at R2, and restart state publishes at R4
+- stage taxonomy: I-F0..I-F4 and B-F0..B-F4 are independent pipelines, I-F4
+  writes a distinct Instruction Buffer, D1 reads four
+  fixed 64-bit instructions, S3 is IQ visibility, W alignment is declared per
+  producer, CMT/FLS publish at R2, and restart state publishes at R4
+- B-SIDE provider arbitration:
+  `backend typed restart > B-F4 > B-F3 > B-F2 > B-F1 > B-F0 > sequential`;
+  within B-F4 exact RAS return/high-confidence IBTB are type-selected target
+  authorities, direction override is
+  `loop > long-TAGE > short-TAGE > BIM > static`, and BTB supplies direct
+  target
+- B-F1..B-F4 correction of an accepted lower-ranked prediction produces an
+  identity-qualified inner flush, restores GHR/GHRQ/RAS, and restarts I-F0
+  without backend flush; B-F4 is the final such point. Post-B-F4
+  Dispatch/BRU mismatch exercises BRU flush/recover and I-F0 restart
 - atomic decode-group admission failure with no partial RID/BID/rename/store
   allocation
 - contiguous ROB commit, delayed deallocation, precise head fault/nuke, and

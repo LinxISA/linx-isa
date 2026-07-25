@@ -6,8 +6,8 @@
   "normative_language": "en",
   "pages": {
     "architecture/README.md": {
-      "source_sha256": "e69ec4b18dc938f1d6b8429bf7e2e1b8f1919a5c260d97561537870e80a884e6",
-      "translation_sha256": "f2abe9fb7640ec2b9bdc0fc9354ab4f6bddeabc8c7a346da93457ac8bd83a53e"
+      "source_sha256": "df2c8a447c03022fd4f145315199cd701a934c4ac2003e14ce8bd5c260c0eb93",
+      "translation_sha256": "5c49a7401e288bbd0877b0b3ea7b4e67f30f1b51fb75b37668caeeba07ac7242"
     },
     "architecture/isa-manual/README.md": {
       "source_sha256": "5ff491822aec64ef943b90f523886d71b24582a868232cf034df70cbb0e43326",
@@ -17,29 +17,33 @@
       "source_sha256": "66f490c5e429970eded66669dff3511789c61a5fd042367ed6bb82a6bfa7157e",
       "translation_sha256": "ea9067ed6b1ae4943571580193a6a52e6ee58e20235260559491ccc38bb93075"
     },
+    "architecture/linxcore/ifu.md": {
+      "source_sha256": "15c1b6d52b196863ccbdf4b7e0a54bf824b7819f17bc1d7ecae0c9fb4833fc47",
+      "translation_sha256": "aaeadfbd1ef57283cb88393908760b3c148a582bbd911fcec4e3cf7349187d22"
+    },
     "architecture/linxcore/interfaces.md": {
-      "source_sha256": "99513e05bf21ccd217a425c7d1271d0241a9af40505dbc454168423ba5287630",
-      "translation_sha256": "bc2ddf917279af8f8fc8056257abb46dc6200981b5cd8138f1ada5c35ea1222e"
+      "source_sha256": "226a689c7a5415a23e10b5e22eb790deb4818998caea46ea6976efccad17c67c",
+      "translation_sha256": "cbb38e387779fef27254d476bc55188a073516aaa8e8dc03d3c86830820d1299"
     },
     "architecture/linxcore/microarchitecture.md": {
-      "source_sha256": "8907e840e6cfdbe194ab72e27da7d936afacca3e9a92228e7c589e880879a894",
-      "translation_sha256": "966b49ff1b1a32c0d4df960b6f9b5324e6cc569cb43b2908e389f1f212a23afc"
+      "source_sha256": "d6387a9d78d1688682fbe4c8e40a6f229c58357959bdc525dde232cd2095850d",
+      "translation_sha256": "2334ae3a6f38906881599dd0e6c4f24ef74e69b90279e6933e94a33f976d9528"
     },
     "architecture/linxcore/module-catalog.md": {
-      "source_sha256": "59f45779923dcd0ecc3c2e64f060c542086ba8984ad8c13b1cdf5fcb02e58cae",
-      "translation_sha256": "70cd36f13201742151ad213fb9e56d2a2490928c87f0f321b22edf27a121f45e"
+      "source_sha256": "bf2a7b39738669716f35a42e13e47c37bed307de8a2c7e4096f00333b2741589",
+      "translation_sha256": "6b088ca7c2a04784e7fa4553197da49507b6b501b1d9dc3b01cfdded3ce5e47a"
     },
     "architecture/linxcore/overview.md": {
-      "source_sha256": "35b7999be3b8f80c74991759dc4fe9c246330d9030efca4e25ddfcc8141f7c4f",
-      "translation_sha256": "ff22b955f2596c670847dd4b060b823dfd3abf42867a7976bf18b0efe1a2568f"
+      "source_sha256": "7167d849484aa7197829ec43c4b24e8ec697da10b3e7706b2648976a4e7e6b14",
+      "translation_sha256": "fec0806b26d477f0b540b934affe17dde59a56e5d93c8e5e9c6d23d7071e4885"
     },
     "architecture/linxcore/pipeline-stage-catalog.md": {
-      "source_sha256": "b08fbb50ccf274136f26236b2cfb7249b15361a729a6c1d4c74cb0d0b9a2f0e4",
-      "translation_sha256": "045cb3206148779caae638601c76792a8b559ecb527f7ac014b6a171870e802e"
+      "source_sha256": "1c6b6fc0014cf657b8a87eddf984616db36f5a5d98889384487e6f80968eb1fa",
+      "translation_sha256": "4f3c6be815f7be913f4f460c6adaea009654cddff4a630ae13979b0a4c09716d"
     },
     "architecture/linxcore/verification-matrix.md": {
-      "source_sha256": "92600fa1e2f55f5a09ff482a3959bb68d55b5cd12ab8bf71c73c82c02ec20013",
-      "translation_sha256": "8df94e9aab35c0340cb1181ed66c4cc2ec020688da7c806b9cd19da817fc1b02"
+      "source_sha256": "c0522a77edefb9d9e0efcfe656a3f632c392acde4f8a1ae79496f7f991640ef2",
+      "translation_sha256": "e632d81fa6f2e27204f1e9615b4701f194b523e636e548e39b9661927e35b484"
     },
     "architecture/research/linx-simt-alt-compiler-gap-analysis.md": {
       "source_sha256": "fdc0d71b16ff7030d91ec756b52690072a6288bd70ed5f1547f8e5d901875e2e",
@@ -130,24 +134,24 @@
       "translation_sha256": "2f73349cfc4630255319c6c8dfc1b46a8996ace9d14d8e07563b165915918ec2"
     },
     "bcc/bdecode.md": {
-      "source_sha256": "2442a79dc50faad8ae85868519515d88e2e82ea8662f85ac4bb8e0dc6b7b24c9",
-      "translation_sha256": "170159896f4d9fa92d11ec954db972d8d1afbc872db4b1e8689e3ded864447ef"
+      "source_sha256": "4750a6fd63f56107847469036bae4252e9cab053b035fcb67925d777a2526825",
+      "translation_sha256": "545a01289a6aa5a064df55b901125c7b473fb8f64f559e2e5538e39ba0133184"
     },
     "bcc/bdispatch.md": {
-      "source_sha256": "38edb04ca2f5a8ffb8e2cb985d5ad1860fbf591b0e41a19fa39bccc960b4d967",
-      "translation_sha256": "ce44f937e5002bc3762fa49dd22e321c8aac3fec0d981fb649dcd943aaf1cd3f"
+      "source_sha256": "f1e2f427cc7f723fa096ff9f5055a80898a6ba0541e5e5fcef139a6f0bdd0fbd",
+      "translation_sha256": "3be6a4903c1186ef177415b0e97e3defe70f767685cda561c06c05d4381cb1a6"
     },
     "bcc/bhcache.md": {
-      "source_sha256": "edcc7e4bc6ef6a811d56b8e2e5c19556b2bd425e9cb0e4c61bd21d823a9821e5",
-      "translation_sha256": "1f21c3030668f768a9e35bff34871bf1408c064fbb30c86b285ad6aff3100abe"
+      "source_sha256": "0b6536aaed52a150115f764d72df8f9ae12d38ae6925ba67f7f272fecc552c24",
+      "translation_sha256": "dc9c3f684593e11c9748059632d28f1ae63f1f7af7ce550531f593d1b1d89c95"
     },
     "bcc/bifu.md": {
-      "source_sha256": "7cba6ace19e81cb7ff2c04d7f7496e88a71285fa607f3f32b921ed91beffba7f",
-      "translation_sha256": "570dd88af39ce420a0b156a03d5272ace849b80e5be2637a29a58e0a6bc0dc3b"
+      "source_sha256": "3aa537ba6232e1711ee0f693b154edd893d896b44d6deeb1c515f52f3737a7d8",
+      "translation_sha256": "726aeade217b281cd6711fecb1b5f32f55516c999c14b32cc7656bd9efe47e51"
     },
     "bcc/bp.md": {
-      "source_sha256": "1fc40d34f5afd9eb89979eac481dfceead4824569f6c31fbce7503021ac93ea7",
-      "translation_sha256": "f2bab21b5d346b4e1ad9c02591d84063fe5d2e1ece3800f929d04b7429ac5cd0"
+      "source_sha256": "8091138af3711dd6414757654627d49699564d9da4309538c868a6f9c11af771",
+      "translation_sha256": "81ffe0a1e9d0c27c6b7d735de31814aaba62dbfcc7f175f754fd9557e6f02bc8"
     },
     "bcc/bren.md": {
       "source_sha256": "c14bade24fbdf9184e3e0594ec16d6d442647027baa1788b0d59dc9a846a748d",
@@ -162,8 +166,8 @@
       "translation_sha256": "56a22c852c01a796281c4b04ab6128465c1af9f2ff0db3b0d7e9e481ab704e3e"
     },
     "bcc/overview.md": {
-      "source_sha256": "dd4351081fa6726e36d3c36a2b6c5d6aa3b8a6b3578efc9c21f536bc9b64ec1e",
-      "translation_sha256": "09695516edf09e05a158cdfe2f6da13d91d9ce47b1dd28951d738809f9a8bf6d"
+      "source_sha256": "7c80305ebb3b438ce041c0f38bb0cfdc451db2b92cba883775c72e5d05d97349",
+      "translation_sha256": "ac906ca7fa565897747fdbf2117a393755580598746e0eda25389d8010039650"
     },
     "bringup/ALIGNMENT_MATRIX.md": {
       "source_sha256": "f499a3aeeb34b66a0d4fab05355e0301f8254954a8cfcc422361c9ca72803122",
@@ -290,7 +294,7 @@
       "translation_sha256": "661807c8fe839be781a2c8e46b9f8040fafd227cff6844e25e97d248c140ec09"
     },
     "bringup/gates/qemu_isa_coverage_latest.md": {
-      "source_sha256": "ca8dcba27e898f3ab96b4878fcf20ebba9101930b2b0e8dc06e04421ba129bdd",
+      "source_sha256": "3c12a2cbaab043f1f9323066ae42df3b75a6430d299f533a88270fcd1780b10f",
       "translation_sha256": "e1f9d5565f16fae1d143ba9bbe8c74e30cb01c71e144ce665a1f9f9f36ecefe4"
     },
     "bringup/gates/qemu_opcode_sync_latest.md": {
@@ -7922,16 +7926,16 @@
       "translation_sha256": "1b6ce93496c4842eaaf65a6125be452676fd4b2c5535a9c6439db6eca6551a46"
     },
     "isa/model/BCC.md": {
-      "source_sha256": "eff791a00466a1367f4d4c3d8d786af46958128c9c19a600ef37244e8d838681",
-      "translation_sha256": "10a84160aa7ad8ae3a2b3d00ad9c2f8133da884d97e11b3c93d6ef5c48f31e20"
+      "source_sha256": "ebe624155096b32647680b44fd1ad362d2c88fa80b8a0784985e6090ab8c7919",
+      "translation_sha256": "8e41a55fcee97580a449370a962a9215a5a59dddd9a70035637335af61a0619b"
     },
     "isa/model/BCTRL.md": {
-      "source_sha256": "065094574532611a92ec0c2d3a9950567cf8694fdc7e1e2055cca7630a3f8afb",
-      "translation_sha256": "91187a622005965f14e13b58d8a54b9dc788221e26293b83814eb0fedf096b9f"
+      "source_sha256": "4fda0749171dab0abdeb8552d7c3e3108620991d144afd97ef6a15006808d92c",
+      "translation_sha256": "268142a7b7a8d44941888105108a9721e553f90835f89da99b183195326d21b0"
     },
     "isa/model/BIFU.md": {
-      "source_sha256": "52893c46ec607a9288b4d730c86e45fa6765c4081aef0c29a1d75bed97e70af5",
-      "translation_sha256": "92f355b61c56b8d4195cc481f6217ac44f7ee62f460b30cb97d817c05fdb9d03"
+      "source_sha256": "ec46eb10d1905a80ce76547dd9dc62c43c18f697ebb7b60c99819b88e7bceaa0",
+      "translation_sha256": "ade5ce4c18c09bd348ee20b2e81848f8b20cabc10689cff79e07ef9b76165736"
     },
     "isa/model/BIssue.md": {
       "source_sha256": "2d7621586196f3ede6b81f50d5e846ebbe548a05bf46738b0ae8c914a4a051c0",
@@ -7962,8 +7966,8 @@
       "translation_sha256": "53b5a02cd2f5ed3e9688c2241440c11307363ef44ea5c7dc864c7d3e878013ec"
     },
     "isa/model/pe_ifu.md": {
-      "source_sha256": "e2efbb9f25934ec999059658ec8548ae1a5f7610cba5d16ce90e1b6e3b10c7e8",
-      "translation_sha256": "be2068adc7ee8c333b318d88aab485ae90ac2dfd598cb0a62a79b0c054e6aa14"
+      "source_sha256": "78c052f8779caa6ed5b8ee3add13b296007f4299b39301a6087f9dd505791109",
+      "translation_sha256": "1ea8f291b65fade5a310594706e273aad53026c6ae2aa8b775ec448e03a47d73"
     },
     "isa/model/pe_rob.md": {
       "source_sha256": "557bffd2e87d16c6d3d93d88b8631a9d2983c30119b8ec9005f8a5829828d7be",
@@ -8218,8 +8222,8 @@
       "translation_sha256": "74ad33add7a41ecd43dbce888cb43779ad4da8d3046cbc3c094602b9a99aaf03"
     },
     "pe/ope.md": {
-      "source_sha256": "943d4e297b916fff1a960225223dc62fc44c2ab2bd7592a9b377ce805a815941",
-      "translation_sha256": "7abb3e524ab6cf840a9bdfadfa4e161d3fce0c2dbc51514a8244a7a8326cca6c"
+      "source_sha256": "2b4fdc7fbf15682210dba6427ebaaab9f0d7de19885248cec57385beca7eb6a6",
+      "translation_sha256": "0d786b0a948fdc17496fec673b9222ee8d8eefc8b2a1bd13c374de2bf3d4625b"
     },
     "performance/regUsageFrequency.md": {
       "source_sha256": "4f1015d93b2f6d0cdbf483b0e3f36e3b0585520133e0d108066c7b20b4d7459a",
@@ -8294,7 +8298,7 @@
       "translation_sha256": "4fe65229d8c39b98fa17f905906bfdf0c712cc91fcebd3e2b50582acae7f600f"
     },
     "reference/linxisa-call-ret-contract.md": {
-      "source_sha256": "07facc4e7e325fda578a37b20910c8bce09e7dbda52e72987c4dd1abbdc4a395",
+      "source_sha256": "5d9506e49e92f952b1e3f78b7b39273a9d335127df8eea95c46c2fca66fcccb6",
       "translation_sha256": "807d7a0a5f8b1e66436a6344fbe03b1ea608a18551fda4963654919c755dfe44"
     },
     "releases/v0.3.0.md": {
