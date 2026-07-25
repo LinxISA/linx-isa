@@ -83,6 +83,10 @@ void linx_tinterleave_s32(const int32_t *, const int32_t *, int32_t *,
                           int32_t *);
 void linx_tdeinterleave_s32(const int32_t *, const int32_t *, int32_t *,
                             int32_t *);
+void linx_tpartargmax_f32_u32(const float *, const float *, const uint32_t *,
+                              const uint32_t *, float *, uint32_t *);
+void linx_tpartargmin_f32_u32(const float *, const float *, const uint32_t *,
+                              const uint32_t *, float *, uint32_t *);
 }
 
 static void run_tadd_test()
@@ -1130,6 +1134,62 @@ static void run_interleave_test()
     test_pass();
 }
 
+static void run_part_arg_test()
+{
+    test_start(0x000A0028);
+    uart_puts("PTO tile TPARTARGMAX/TPARTARGMIN ... ");
+
+    alignas(16) static float value0[128];
+    alignas(16) static float value1[128];
+    alignas(16) static uint32_t index0[128];
+    alignas(16) static uint32_t index1[128];
+    alignas(16) static float out_value[128];
+    alignas(16) static uint32_t out_index[128];
+
+    for (unsigned i = 0; i < 128; i++) {
+        value0[i] = i < 16u ? (float)((int)(i % 7u) - 3) : 0.0f;
+        value1[i] = i < 16u ? (float)((int)((i * 3u) % 9u) - 4) : 0.0f;
+        if (i == 5u || i == 12u) {
+            value1[i] = value0[i];
+        }
+        index0[i] = 1000u + i;
+        index1[i] = 2000u + i;
+        out_value[i] = -99.0f;
+        out_index[i] = 0xffffffffu;
+    }
+
+    linx_tpartargmax_f32_u32(value0, value1, index0, index1,
+                              out_value, out_index);
+    for (unsigned i = 0; i < 16; i++) {
+        const bool take0 = value0[i] > value1[i];
+        TEST_EQ32(f32_bits(out_value[i]),
+                  f32_bits(take0 ? value0[i] : value1[i]),
+                  0x000C2000u + i);
+        TEST_EQ32(out_index[i], take0 ? index0[i] : index1[i],
+                  0x000C2100u + i);
+    }
+    for (unsigned i = 16; i < 128; i++) {
+        TEST_EQ32(f32_bits(out_value[i]), 0u, 0x000C2200u + i);
+        TEST_EQ32(out_index[i], 0u, 0x000C2300u + i);
+    }
+
+    linx_tpartargmin_f32_u32(value0, value1, index0, index1,
+                              out_value, out_index);
+    for (unsigned i = 0; i < 16; i++) {
+        const bool take0 = value0[i] < value1[i];
+        TEST_EQ32(f32_bits(out_value[i]),
+                  f32_bits(take0 ? value0[i] : value1[i]),
+                  0x000C2400u + i);
+        TEST_EQ32(out_index[i], take0 ? index0[i] : index1[i],
+                  0x000C2500u + i);
+    }
+    for (unsigned i = 16; i < 128; i++) {
+        TEST_EQ32(f32_bits(out_value[i]), 0u, 0x000C2600u + i);
+        TEST_EQ32(out_index[i], 0u, 0x000C2700u + i);
+    }
+    test_pass();
+}
+
 extern "C" void run_tile_tepl_tests(void)
 {
     run_tadd_test();
@@ -1151,4 +1211,5 @@ extern "C" void run_tile_tepl_tests(void)
     run_tneg_test();
     run_trem_test();
     run_interleave_test();
+    run_part_arg_test();
 }
