@@ -110,8 +110,8 @@ Tests are separated by PTO family:
 | Family | Sources |
 | --- | --- |
 | TMA | `avs/qemu/tests/10_tile_tma.cpp` |
-| CUBE | `avs/qemu/tests/10_tile_cube.cpp`, `10_tile_cube_bias.S`, `10_tile_cube_gemv.S` |
-| TEPL | `avs/qemu/tests/10_tile_tepl.cpp`, `10_tile_tepl_*.S` |
+| CUBE | `avs/qemu/tests/10_tile_cube.cpp`, `10_tile_cube_asm.S` |
+| TEPL | `avs/qemu/tests/10_tile_tepl.cpp`, `10_tile_tepl_asm.S` |
 | Cross-family | `avs/qemu/tests/10_tile_integration.cpp` |
 
 Recent exact-value evidence includes:
