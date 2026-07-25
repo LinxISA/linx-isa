@@ -38,6 +38,8 @@ SUITE_PREFIXES = {
     "executable_integer": "executable-integer",
     "v057_vector_ops": "v057-vector-ops",
     "atomic": "atomic-lr-srczero",
+    "executable_setc_imm": "executable-setc-imm",
+    "executable_maddw_bfi_mi": "executable-maddw-bfi-mi",
 }
 SUITE_ORDER = tuple(SUITE_PREFIXES)
 RUN_ID_RE = re.compile(r"^[a-z0-9][a-z0-9._-]*$")
@@ -219,6 +221,16 @@ def _require_clean_git(path: Path, label: str) -> str:
     return head
 
 
+def _git_head_and_dirty(path: Path, label: str) -> tuple[str, bool]:
+    head = _capture(["git", "rev-parse", "HEAD"], cwd=path)
+    if re.fullmatch(r"[0-9a-f]{40}", head) is None:
+        raise ValueError(f"invalid {label} HEAD: {head}")
+    dirty = bool(
+        _capture(["git", "status", "--porcelain", "--untracked-files=no"], cwd=path)
+    )
+    return head, dirty
+
+
 def _parse_int(value: object, field: str) -> int:
     try:
         if isinstance(value, bool):
@@ -228,7 +240,11 @@ def _parse_int(value: object, field: str) -> int:
         raise ValueError(f"invalid {field}") from exc
 
 
-def _suite_entries(manifest: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
+def _suite_entries(
+    manifest: dict[str, Any],
+    *,
+    require_all_suites: bool = True,
+) -> dict[str, list[dict[str, Any]]]:
     entries = manifest.get("evidence")
     if not isinstance(entries, list) or not entries:
         raise ValueError("manifest.evidence must be a non-empty array")
@@ -245,16 +261,17 @@ def _suite_entries(manifest: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
             raise ValueError(f"missing or duplicate form_id: {form_id}")
         form_ids.add(form_id)
         grouped[suite].append(entry)
-    if any(not grouped[suite] for suite in SUITE_ORDER):
-        raise ValueError("manifest must contain all six executable evidence suites")
+    if require_all_suites and any(not grouped[suite] for suite in SUITE_ORDER):
+        raise ValueError("manifest must contain all executable evidence suites")
     if any(len(grouped[suite]) > 16 for suite in SUITE_ORDER):
         raise ValueError("a suite exceeds QEMU's 16-PC watch limit")
+    grouped = {suite: items for suite, items in grouped.items() if items}
     return grouped
 
 
-def _select_candidate(old_relative: int, candidates: list[int], identity: str) -> int:
+def _select_candidate(old_relative: int | None, candidates: list[int], identity: str) -> int:
     unique = sorted(set(candidates))
-    if old_relative in unique:
+    if old_relative is not None and old_relative in unique:
         return old_relative
     if len(unique) == 1:
         return unique[0]
@@ -286,13 +303,24 @@ def _resolve_entry(
     size = (_parse_int(form_key.get("length_bits"), "length_bits") + 7) // 8
     mask = _parse_int(form_key.get("mask"), "mask")
     match = _parse_int(form_key.get("match"), "match")
-    old_elf = Elf64(repo_root / str(old_entry["elf"]))
-    old_symbol = old_elf.symbol(symbol_name)
-    old_pc = _parse_int(instruction.get("pc"), "instruction.pc")
-    old_relative = old_pc - old_symbol.value
+    old_relative: int | None = None
+    old_elf_path = repo_root / str(old_entry["elf"])
+    if old_elf_path.is_file():
+        old_elf = Elf64(old_elf_path)
+        old_symbol = old_elf.symbol(symbol_name)
+        old_pc = _parse_int(instruction.get("pc"), "instruction.pc")
+        old_relative = old_pc - old_symbol.value
 
     new_elf = Elf64(new_elf_path)
     new_symbol = new_elf.symbol(symbol_name)
+    if old_relative is None:
+        try:
+            old_pc = _parse_int(instruction.get("pc"), "instruction.pc")
+            pc_relative = old_pc - new_symbol.value
+            if 0 <= pc_relative <= new_symbol.size - size:
+                old_relative = pc_relative
+        except ValueError:
+            pass
     candidates: list[int] = []
     for relative in range(0, new_symbol.size - size + 1, 2):
         pc = new_symbol.value + relative
@@ -381,9 +409,15 @@ def _tool_paths(repo_root: Path, args: argparse.Namespace) -> dict[str, Path]:
             selected = repo_root / selected
         if not selected.is_file() or not os.access(selected, os.X_OK):
             raise ValueError(f"missing executable {name}: {selected}")
-        _repo_relative(repo_root, selected)
         tools[name] = selected
     return tools
+
+
+def _command_path(repo_root: Path, path: Path) -> str:
+    try:
+        return _repo_relative(repo_root, path)
+    except ValueError:
+        return str(path)
 
 
 def _runner_command(
@@ -407,15 +441,15 @@ def _runner_command(
         "--qemu",
         _repo_relative(repo_root, qemu),
         "--clang",
-        _repo_relative(repo_root, tools["clang"]),
+        _command_path(repo_root, tools["clang"]),
         "--clangxx",
-        _repo_relative(repo_root, tools["clangxx"]),
+        _command_path(repo_root, tools["clangxx"]),
         "--lld",
-        _repo_relative(repo_root, tools["lld"]),
+        _command_path(repo_root, tools["lld"]),
         "--llvm-objdump",
-        _repo_relative(repo_root, tools["llvm_objdump"]),
+        _command_path(repo_root, tools["llvm_objdump"]),
         "--llc",
-        _repo_relative(repo_root, tools["llc"]),
+        _command_path(repo_root, tools["llc"]),
         "--timeout",
         str(timeout),
     ]
@@ -448,17 +482,34 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--repo-root", type=Path, default=REPO_ROOT)
     parser.add_argument("--manifest", type=Path)
     parser.add_argument("--run-id", required=True, help="Unique suffix, e.g. ca3e11b-20260717-r1")
+    parser.add_argument("--qemu-root", type=Path, default=Path("emulator/qemu"))
     parser.add_argument("--qemu", type=Path, required=True)
     parser.add_argument("--clang", type=Path)
     parser.add_argument("--clangxx", type=Path)
     parser.add_argument("--lld", type=Path)
     parser.add_argument("--llvm-objdump", dest="llvm_objdump", type=Path)
     parser.add_argument("--llc", type=Path)
+    parser.add_argument("--llvm-root", type=Path, default=Path("compiler/llvm"))
     parser.add_argument("--timeout", type=float, default=30.0)
     parser.add_argument(
         "--apply",
         action="store_true",
         help="Create bundles and publish the validated manifest/reports. Default is preflight only.",
+    )
+    parser.add_argument(
+        "--allow-partial-manifest",
+        action="store_true",
+        help="Allow a manifest containing only the suites present in its evidence list.",
+    )
+    parser.add_argument(
+        "--prune-generated-artifacts",
+        action="store_true",
+        help="After strict validation and publication, remove generated ELF/object/linker files from evidence bundles.",
+    )
+    parser.add_argument(
+        "--allow-dirty-llvm-tools",
+        action="store_true",
+        help="Allow dirty LLVM tool source when using existing compiler binaries; QEMU source must still be clean.",
     )
     return parser
 
@@ -472,9 +523,9 @@ def main(argv: list[str] | None = None) -> int:
         raise SystemExit("error: --timeout must be positive")
     manifest_path = (args.manifest or repo_root / "avs/qemu/qemu_executable_coverage_manifest.json").resolve()
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    grouped = _suite_entries(manifest)
+    grouped = _suite_entries(manifest, require_all_suites=not args.allow_partial_manifest)
 
-    qemu_root = (repo_root / "emulator/qemu").resolve()
+    qemu_root = (args.qemu_root if args.qemu_root.is_absolute() else repo_root / args.qemu_root).resolve()
     qemu = (args.qemu if args.qemu.is_absolute() else repo_root / args.qemu).resolve()
     try:
         qemu_relative = qemu.relative_to(qemu_root)
@@ -488,33 +539,44 @@ def main(argv: list[str] | None = None) -> int:
     ):
         raise SystemExit("error: --qemu must name emulator/qemu/build*/qemu-system-linx64")
     qemu_sha = _require_clean_git(qemu_root, "QEMU")
-    llvm_root = (repo_root / "compiler/llvm").resolve()
-    llvm_sha = _require_clean_git(llvm_root, "LLVM")
+    llvm_root = (args.llvm_root if args.llvm_root.is_absolute() else repo_root / args.llvm_root).resolve()
+    llvm_sha, llvm_dirty = _git_head_and_dirty(llvm_root, "LLVM")
+    if llvm_dirty and not args.allow_dirty_llvm_tools:
+        raise ValueError("LLVM source is dirty; pass --allow-dirty-llvm-tools to use existing compiler binaries")
     tools = _tool_paths(repo_root, args)
+    os.environ["PATH"] = (
+        str(tools["llvm_objdump"].parent) + os.pathsep + os.environ.get("PATH", "")
+    )
 
     evidence_root = (repo_root / EVIDENCE_ROOT).resolve()
     bundles = {
         suite: evidence_root / f"{SUITE_PREFIXES[suite]}-{args.run_id}"
-        for suite in SUITE_ORDER
+        for suite in grouped
     }
     existing = [str(path) for path in bundles.values() if path.exists()]
     if existing:
         raise SystemExit("error: refusing to overwrite evidence bundles: " + ", ".join(existing))
 
-    print(f"preflight: QEMU={qemu_sha} LLVM={llvm_sha} forms={sum(map(len, grouped.values()))}")
-    for suite in SUITE_ORDER:
+    print(
+        f"preflight: QEMU={qemu_sha} LLVM={llvm_sha} "
+        f"llvm_dirty={llvm_dirty} forms={sum(map(len, grouped.values()))}"
+    )
+    for suite in grouped:
         print(f"preflight: {suite}: forms={len(grouped[suite])} bundle={bundles[suite].relative_to(repo_root)}")
     if not args.apply:
         print("preflight complete; rerun with --apply to create and publish evidence")
         return 0
 
     candidate = copy.deepcopy(manifest)
-    candidate_grouped = _suite_entries(candidate)
+    candidate_grouped = _suite_entries(
+        candidate,
+        require_all_suites=not args.allow_partial_manifest,
+    )
     suite_commands: list[str] = []
     pc_deltas: list[dict[str, str]] = []
     env = os.environ.copy()
     env["LINX_VIRT_TEST_FINISHER"] = "1"
-    for suite in SUITE_ORDER:
+    for suite in grouped:
         bundle = bundles[suite]
         bundle.mkdir(parents=True, exist_ok=False)
         test_ids = sorted({_parse_int(entry["test_id"], "test_id") for entry in grouped[suite]})
@@ -589,11 +651,13 @@ def main(argv: list[str] | None = None) -> int:
 
     candidate["producer"] = {
         "refresh_command": "python3 tools/bringup/refresh_qemu_executable_coverage.py "
-        f"--run-id {args.run_id} --qemu {_repo_relative(repo_root, qemu)} --apply",
+        f"--run-id {args.run_id} --qemu-root {_repo_relative(repo_root, qemu_root)} "
+        f"--qemu {_repo_relative(repo_root, qemu)} --llvm-root {_command_path(repo_root, llvm_root)} --apply",
         "suite_commands": suite_commands,
         "qemu_sha": qemu_sha,
         "llvm_sha": llvm_sha,
-        "bundle_policy": "Never overwrite old evidence bundles; publish only after all six suites pass strict validation.",
+        "llvm_source_dirty": llvm_dirty,
+        "bundle_policy": "Never overwrite old evidence bundles; publish only after all selected suites pass strict validation.",
         "report_command": "python3 tools/bringup/report_qemu_executable_coverage.py --require-nonzero --require-clean",
     }
     candidate_bytes = (json.dumps(candidate, indent=2) + "\n").encode()
@@ -640,6 +704,23 @@ def main(argv: list[str] | None = None) -> int:
             + "\n"
         ).encode(),
     )
+    if args.prune_generated_artifacts:
+        for suite in grouped:
+            bundle = bundles.get(suite)
+            if bundle is None or not bundle.exists():
+                continue
+            for pattern in (
+                "linx-qemu-tests.elf",
+                "linx-qemu-tests.o",
+                "linx-qemu-tests-directboot.ld",
+                "obj/*.o",
+                "obj/*.s",
+            ):
+                for path in bundle.glob(pattern):
+                    path.unlink()
+            obj_dir = bundle / "obj"
+            if obj_dir.exists() and not any(obj_dir.iterdir()):
+                obj_dir.rmdir()
     print(f"published: L2={l2} L3={l3} rejected=0 summary={summary_path.relative_to(repo_root)}")
     return 0
 

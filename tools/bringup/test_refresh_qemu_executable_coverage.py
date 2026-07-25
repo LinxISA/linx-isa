@@ -16,8 +16,11 @@ class RefreshQemuExecutableCoverageTests(unittest.TestCase):
     def test_relative_candidate_is_preferred_without_pc_shift_guessing(self) -> None:
         self.assertEqual(refresh._select_candidate(6, [2, 6, 10], "form"), 6)
         self.assertEqual(refresh._select_candidate(6, [10], "form"), 10)
+        self.assertEqual(refresh._select_candidate(None, [10], "form"), 10)
         with self.assertRaisesRegex(ValueError, "ambiguous"):
             refresh._select_candidate(6, [2, 10], "form")
+        with self.assertRaisesRegex(ValueError, "ambiguous"):
+            refresh._select_candidate(None, [2, 10], "form")
         with self.assertRaisesRegex(ValueError, "no fresh"):
             refresh._select_candidate(6, [], "form")
 

@@ -1,0 +1,15 @@
+Linx QEMU tests
+  Test 0x00002901: PASS
+  Test 0x00002902: PASS
+  Test 0x00002903: PASS
+  Test 0x00002904: PASS
+
+=================================================
+              TEST SUITE COMPLETE                
+=================================================
+
+All tests completed successfully!
+
+Note: Check UART output for individual test results.
+      Each test suite prints PASS for each test.
+
