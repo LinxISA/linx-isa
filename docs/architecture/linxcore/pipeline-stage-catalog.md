@@ -153,10 +153,13 @@ pipelines are not lockstep.
   targets.
 - Backend typed restart is not a provider and has highest restart priority.
 - Publishes the retained final prediction response and speculative GHR/GHRQ/
-  RAS update.
+  RAS recovery intent. The live GHR update occurs only when the same redirect
+  returns as the canonical prune.
 - Any B-F1..B-F4 result that corrects an accepted lower-ranked prediction emits an
-  identity-qualified inner flush, restores predictor history, and restarts
-  I-F0 at the corrected PC; B-F4 is the final such point.
+  identity-qualified inner flush; canonical prune restores the immutable B-F0
+  snapshot, appends the corrected conditional direction once, kills younger
+  history rows, and restarts I-F0 at the corrected PC. B-F4 is the final such
+  point.
 - B-F4 seals the record carried by every valid D1 lane. Dispatch validates
   direct/call properties, while BRU E1 validates conditional direction and
   indirect/return targets; mismatch enters BRU flush/recover and publishes its

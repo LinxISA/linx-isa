@@ -236,7 +236,9 @@ alignment is never assumed.
 
 #### B-F0
 
-- Performs L0/NLP lookup and snapshots request-local GHR/GHRQ/RAS state.
+- Performs L0/NLP lookup, atomically allocates the exact prediction-tagged GHRQ
+  row, and freezes request-local `ghrBefore`; later lookup and training use this
+  snapshot rather than live GHR.
 
 #### B-F1
 
@@ -263,8 +265,10 @@ alignment is never assumed.
   `loop > long-TAGE > short-TAGE > BIM > static`; BTB supplies direct
   targets.
 - Any B-F1..B-F4 correction of an accepted lower-ranked prediction emits an
-  identity-qualified inner flush, restores GHR/GHRQ/RAS, and restarts I-F0;
-  B-F4 is the final such point.
+  identity-qualified inner flush and marks history recovery pending. Only the
+  returned canonical prune restores request-owned history, applies the corrected
+  conditional delta, prunes younger checkpoints, and restarts I-F0; B-F4 is the
+  final such point.
 - The B-F4 final record follows every valid D1 lane. Dispatch validates
   direct/call properties; BRU E1 validates conditional direction and
   indirect/return targets. Mismatch uses BRU flush/recover and is not a

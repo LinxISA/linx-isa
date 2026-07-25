@@ -181,7 +181,7 @@ its own five-stage pipeline, independent of I-SIDE:
 
 | Stage | Predictor responsibility |
 |---|---|
-| B-F0 | L0/NLP next-line prediction, allocate the speculative prediction checkpoint, and snapshot GHR/GHRQ/RAS state |
+| B-F0 | L0/NLP next-line prediction; atomically allocate a prediction tag and exact GHRQ row with full request identity and immutable `ghrBefore` |
 | B-F1 | uBTB target/type lookup, fast RAS lookup, and launch of larger-table accesses |
 | B-F2 | PBTB/BTB target/type lookup and BIM base direction prediction |
 | B-F3 | short- and medium-history TAGE lookup; launch IBTB indirect-target lookup |
@@ -211,10 +211,13 @@ If any B-SIDE stage differs from the steering result already accepted for the
 same request in `{taken, branch_pc, target, kind}`, it corrects that exact
 prediction. If the replaced result has already driven I-SIDE, the correction
 generates an
-identity-qualified I-SIDE inner flush, restores the matching GHR/GHRQ/RAS
-checkpoint, changes the fetch epoch, cancels matching and younger I-SIDE and
-B-SIDE work, and restarts the corrected PC at I-F0. This prediction correction
-does not by itself flush backend architectural state. B-F4 is the last stage
+identity-qualified I-SIDE inner flush and marks the STID history recovery
+pending without immediately changing GHR. When that proposal returns from the
+redirect arbiter as the canonical prune, B-SIDE restores the exact request-owned
+`ghrBefore`, appends the corrected conditional direction once, preserves the
+producer, removes younger checkpoints/work, and restarts the corrected PC at
+I-F0. RAS/path-history state must reuse the same canonical recovery ordering.
+This prediction correction does not by itself flush backend architectural state. B-F4 is the last stage
 allowed to issue a prediction-driven inner flush. A candidate selected before
 any path is accepted is initial steering and does not require a flush.
 
@@ -278,14 +281,19 @@ by identity, never by same-cycle position.
 ### 6.3 Resolve/training
 
 The branch-resolution owner sends B-SIDE the resolved PC, actual direction,
-actual target, branch kind, and checkpoint identity. Training is accepted
-independently of I-SIDE fetch backpressure.
+actual target, branch kind, checkpoint identity, and explicit mispredict bit.
+Training uses the request-owned pre-branch history rather than live GHR. A
+correct resolve releases its row; a mispredict resolve retains the row until
+keyed backend recovery supplies the actual conditional delta. Stale training
+may update neither learned tables nor speculative state.
 
 ### 6.4 Redirect/cancel
 
-Redirect carries STID, new PC, new epoch, and recovery/checkpoint identity.
-I-SIDE uses it to restart I-F0 and kill stale work; B-SIDE uses it to recover
-speculative history and invalidate stale prediction responses.
+Redirect carries STID, new PC, new epoch, request/packet/prediction identity,
+typed history action, and optional conditional delta. I-SIDE uses it to restart
+I-F0 and kill stale work; B-SIDE applies history recovery only when that event
+returns as canonical prune. ITLB may use an unkeyed oldest-killed snapshot
+fallback; start explicitly resets the selected STID history.
 
 ## 7. superscalarNPU comparison
 
