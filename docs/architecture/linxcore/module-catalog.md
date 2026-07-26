@@ -185,6 +185,19 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 - These files may support alternative decomposition or experimentation, but
   they do not supersede the canonical stage owners above.
 
+### `chisel/src/main/scala/linxcore/top/IfuLineMemoryBridge.scala`
+
+- Owns the production transport between `LinxCoreIfu` physical line misses and
+  an external tagged 64-byte instruction-memory port.
+- Retains the complete IFU request behind a monotonic opaque tag and allows
+  several reads to remain outstanding with out-of-order response.
+- Requires tag plus physical-line agreement, retains returned data until IFU
+  acceptance, and reconstructs every IFU refill identity from the saved row.
+- Does not cancel accepted requests on speculative recovery; the IFU miss table
+  owns orphaning and physical L1I refill.
+- Does not own I-F2 miss classification, L1I state, or lower-memory error
+  semantics.
+
 ## Decode, rename, and post-rename dispatch modules
 
 ### `src/bcc/ooo/dec1.py`

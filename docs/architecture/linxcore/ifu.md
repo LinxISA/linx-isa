@@ -97,6 +97,16 @@ affected STID/epoch. It does not flush OOO state, retire state, or another
 STID, and it does not directly mutate B-SIDE predictor tables. Any B-SIDE
 request cancellation is sent over the explicit redirect/cancel channel.
 
+The production Chisel line-memory bridge retains each complete accepted I-F2
+miss behind a monotonic opaque tag. External 64-byte responses may return out
+of order, but a response must match both the retained tag and physical line.
+The bridge reconstructs every refill identity from the retained request rather
+than deriving transaction, packet, STID, epoch, checkpoint, or virtual-line
+state from an address. An accepted request is not cancelled independently by a
+speculative flush: the miss table records it as orphaned, accepts the eventual
+physical refill after the flush cycle, and suppresses stale retry. A refill may
+mutate the miss row only when every retained identity field matches exactly.
+
 ### 3.4 I-F3 — cacheline response and byte-stream state
 
 I-F3 owns the returned cacheline context:
