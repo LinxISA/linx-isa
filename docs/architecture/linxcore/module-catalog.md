@@ -198,6 +198,23 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 - Does not own I-F2 miss classification, L1I state, or lower-memory error
   semantics.
 
+### `chisel/src/main/scala/linxcore/top/LinxCoreProductionComposition.scala`
+
+- Is the single promoted frontend composition owner for `LinxCoreIfu`,
+  `IfuLineMemoryBridge`, `D1InstructionDecodeStage`, and
+  `IfuBackendFeedbackBridge`.
+- Enforces architectural 64-byte cache lines and line-bridge capacity no
+  smaller than the IFU miss table.
+- Connects tagged lower-memory transport to exact IFU refill, fixed-width D1
+  grouping to four-wide full decode, and retained backend validation to B-SIDE
+  training plus canonical BRU recovery.
+- Rebases a prediction-correction survivor's request-owned history key into the
+  canonical new epoch, and permits only its exact paired mispredict training to
+  consume before the matching backend prune.
+- Exposes Dispatch/BRU validation as an external production-backend boundary;
+  it does not claim four-lane rename/dispatch/issue event generation,
+  full-BID ROB/BROB cleanup, or natural benchmark integration.
+
 ## Decode, rename, and post-rename dispatch modules
 
 ### `src/bcc/ooo/dec1.py`
