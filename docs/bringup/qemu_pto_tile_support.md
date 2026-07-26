@@ -1,18 +1,22 @@
-# QEMU PTO ISA v0.2 Tile execution status
+# QEMU PTO Tile execution status
 
-This page records the LinxISA superproject evidence for PTO ISA v0.2 Tile
-execution on the LinxISA v0.57 encoding profile in `emulator/qemu`. It supports
-the QEMU subtask tracked by
+This page records the LinxISA superproject evidence for PTO Tile execution in
+`emulator/qemu`. PTO ISA v0.1 is the previous baseline; the current adaptation
+target is PTO ISA v0.2. Encodings are carried by the separate LinxISA v0.57
+profile. This page supports the QEMU subtask tracked by
 [LinxISA/SuperScalarModel#31](https://github.com/LinxISA/SuperScalarModel/issues/31).
 
 The authoritative encoded operation identities and selectors come from the
 LinxISA v0.57 catalog at `isa/v0.57/state/pto_encoding_map.json`. PTO ISA v0.2
-execution semantics were cross-checked against the DavinciOO intrinsic workbook
+semantics were cross-checked against the updated DavinciOO intrinsic workbook
 and operation pages, with `pto-isa/docs/isa/tile/` as a secondary reference.
+Operations unchanged by v0.2 retain their v0.1 baseline behavior. The counts
+below describe the complete v0.2 target set, not the number of operations newly
+introduced in v0.2.
 
 ## Status summary
 
-| Family | PTO ISA v0.2 operations | QEMU execution paths | Remaining fail-closed |
+| Family | PTO ISA v0.2 target operations | QEMU execution paths | Remaining fail-closed |
 | --- | ---: | ---: | ---: |
 | TMA | 6 | 6 | 0 |
 | CUBE | 8 | 5 | 3 |

@@ -1,7 +1,7 @@
-/* PTO ISA v0.2 CUBE execution carriers. */
+/* PTO ISA CUBE execution carriers. */
 
     .text
-/* PTO ISA v0.2 CUBE TMATMUL.BIAS execution carrier. */
+/* PTO ISA CUBE TMATMUL.BIAS execution carrier. */
 
 
     .globl linx_tmatmul_bias_s32
@@ -54,7 +54,7 @@ linx_tmatmul_bias_s32:
     FRET.STK [ra ~ ra], sp!, 8
     .size linx_tmatmul_bias_s32, .-linx_tmatmul_bias_s32
 
-/* PTO ISA v0.2 CUBE TGEMV and TGEMV.ACC execution carrier. */
+/* PTO ISA CUBE TGEMV and TGEMV.ACC execution carrier. */
 
 
     .globl linx_tgemv_s32
