@@ -206,6 +206,22 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 - Shares the single-instruction decode leaf with the packet/window verification
   fixture so opcode and operand semantics cannot drift between the two paths.
 
+### `chisel/src/main/scala/linxcore/frontend/IfuBackendFeedbackBridge.scala`
+
+- Owns the Chisel post-B-F4 feedback wrapper between Dispatch/BRU validation
+  events and the canonical B-SIDE training plus IFU backend-restart ports.
+- Validates Fall/Direct/Call at Dispatch and conditional direction or
+  indirect/ICall/Return target at BRU E1, with explicit SETC owner classes.
+- Retains transaction ID, packet UID, fetch sequence, request PC, prediction
+  tag, checkpoint, and epoch independently; no identity is inferred from
+  another field.
+- Publishes mispredict training and exact-keyed `BruRecovery` atomically under
+  backpressure, restoring request-owned GHR/RAS state before the canonical
+  redirect arbiter allocates a new epoch.
+- Does not compute SETC operands, produce Dispatch/BRU validation events, or
+  own full-BID ROB/BROB cleanup; those remain production backend-composition
+  responsibilities.
+
 ### `src/bcc/ooo/dec2.py`
 
 - Owns `D2`.

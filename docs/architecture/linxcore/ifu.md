@@ -231,6 +231,13 @@ E1 has the runtime operands. A type-specific mismatch after B-F4 always enters
 recovery class, and publishes a frontend restart to I-F0; it is never reported
 as another inner flush.
 
+The Chisel `IfuBackendFeedbackBridge` implements this comparison and IFU
+feedback boundary. It retains transaction ID, packet UID, fetch sequence,
+request PC, prediction tag, epoch, and checkpoint independently. Correct
+validation emits only actual-result training; mismatch training and the keyed
+backend restart advance atomically. Dispatch/BRU event production and full-BID
+ROB/BROB cleanup remain backend-composition responsibilities.
+
 B-SIDE contains:
 
 - BTB-family target structures: BTB, uBTB and PBTB;

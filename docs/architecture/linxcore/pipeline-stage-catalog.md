@@ -165,6 +165,11 @@ pipelines are not lockstep.
   direct/call properties, while BRU E1 validates conditional direction and
   indirect/return targets; mismatch enters BRU flush/recover and publishes its
   restart to I-F0.
+- Chisel `IfuBackendFeedbackBridge` implements that type-specific comparison
+  and atomically publishes actual-result training plus exact-keyed backend
+  restart. Dispatch/BRU event production and full-BID ROB/BROB cleanup remain
+  production composition owners; the wrapper does not close those paths by
+  itself.
 
 ## Decode, rename, and dispatch stages
 
