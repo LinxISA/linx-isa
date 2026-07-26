@@ -258,6 +258,14 @@ training event consumes the immutable checkpoint before the matching
 production as an explicit backend port; it does not claim full-BID ROB/BROB
 cleanup or four-lane rename/dispatch/issue closure.
 
+`D1DecodeRenameROBIngress` closes the next transport seam. It atomically
+buffers the four decoded lanes, retains original lane and final prediction
+identity, and sends each already-decoded uop directly to the current
+rename/ROB admission owner. Its production elaboration disables the
+verification packet decoder and contains no packet/window/F4Slot
+reconstruction. Precise IFU recovery prunes only ingress-resident lanes;
+backend-resident rows remain owned by full-BID recovery.
+
 B-SIDE contains:
 
 - BTB-family target structures: BTB, uBTB and PBTB;
@@ -376,6 +384,8 @@ specification.
 12. The production composition connects tagged line transport, final-prediction
     D1 decode, and exact backend feedback without address- or packet-derived
     identity reconstruction.
+13. The production D1-to-backend ingress consumes decoded lanes directly; it
+    may not recreate a fetch packet, byte window, or F4 slot.
 
 The production D1 implementation is `D1InstructionDecodeStage`. It consumes a
 four-entry `D1InstructionGroup` directly, performs full decode without an
@@ -411,3 +421,16 @@ through four-wide full D1 decode, plus a real direct block whose target
 mismatch trains the retained new-epoch checkpoint before canonical BRU
 recovery. It does not supply Dispatch/BRU event producers, full-BID cleanup, or
 natural benchmark execution.
+
+The fixed-width D1-to-backend ingress gate is:
+
+```bash
+bash rtl/LinxCore/tools/chisel/run_chisel_d1_decode_rename_rob_ingress_probe.sh
+```
+
+It elaborates and Verilator-lints the real lane queue, rename path, and ROB
+allocator, and fails if packet/window decoder modules appear. Focused tests
+add prediction-sidecar preservation, backpressure, precise prune/rebase, real
+ROB allocation, completion, and retire evidence. The current backend still
+admits one decoded row per cycle, so this gate does not claim four-row atomic
+D2/D3 admission or natural workload promotion.

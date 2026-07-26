@@ -252,6 +252,23 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
   own full-BID ROB/BROB cleanup; those remain production backend-composition
   responsibilities.
 
+### `chisel/src/main/scala/linxcore/frontend/D1DecodedLaneQueue.scala`
+
+- Owns atomic buffering of one four-wide decoded D1 group and serialized
+  program-order delivery into the current backend admission width.
+- Preserves each lane's decoded uop, opcode metadata, original lane, and final
+  prediction sidecar without rebuilding a fetch packet or byte window.
+- Applies identity-qualified IFU prune while resident and rebases a preserved
+  correction trigger to the canonical new epoch.
+
+### `chisel/src/main/scala/linxcore/backend/D1DecodeRenameROBIngress.scala`
+
+- Owns the production fixed-width D1 handoff into `DecodeRenameROBPath`.
+- Disables the verification packet decoder at elaboration and directly drives
+  the predecoded D1 input plus exact same-group successor sidecar.
+- Proves real rename/ROB allocation and retirement, but does not claim
+  four-row atomic backend admission, issue, execution, or natural workloads.
+
 ### `src/bcc/ooo/dec2.py`
 
 - Owns `D2`.
@@ -932,7 +949,7 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 - The target architecture splits southbound memory transport into the shared
   CSU/L2 boundary; that owner is not yet promoted in this repository.
 - Its present 64-bit BID ports and unsigned numeric flush comparison are
-  legacy implementation behavior; convergence must replace them with
+  transitional implementation behavior; convergence must replace them with
   `BID_W` ports and BROB-provided kill context.
 
 ### `src/cube/cube.py`
