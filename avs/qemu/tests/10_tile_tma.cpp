@@ -98,7 +98,7 @@ static void run_tma_layout_and_padding_tests()
 
     bool saw_non_sentinel = false;
     const unsigned pad_samples[4] = {
-        8u * 64u, 8u * 64u + 9u, 9u * 64u + 13u, 15u * 64u + 63u,
+        8u, 63u, 8u * 64u, 15u * 64u + 63u,
     };
     for (unsigned sample : pad_samples) {
         if ((uint32_t)pad_dump[sample] != 0x5a5a5a5au) {

@@ -172,6 +172,8 @@ void linx_trems_s32(const int32_t *, int32_t, int32_t *);
 void linx_tdiv_s16(const int16_t *, const int16_t *, int16_t *);
 void linx_tadd_f16(const uint16_t *, const uint16_t *, uint16_t *);
 void linx_tmul_bf16(const uint16_t *, const uint16_t *, uint16_t *);
+void linx_tcvt_f32_f16(const float *, uint16_t *);
+void linx_tcvt_bf16_f32(const uint16_t *, float *);
 void linx_tadd_rect_s32(const int32_t *, const int32_t *, int32_t *);
 void linx_tinterleave_s32(const int32_t *, const int32_t *, int32_t *,
                           int32_t *);
@@ -1074,6 +1076,38 @@ static void run_float16_lane_test()
     linx_tmul_bf16(lhs, rhs, out);
     for (unsigned i = 0; i < 1024; i++) {
         TEST_EQ32(out[i], bf16_expected[i % 8u], 0x000B5000u + i);
+    }
+
+    alignas(16) static float f32_src[1024];
+    alignas(16) static float f32_out[1024];
+    static const float f32_values[8] = {
+        1.0f, -1.0f, 2.5f, 0.0f, -2.0f, 0.5f, 65504.0f,
+        0.00006103515625f,
+    };
+    static const uint16_t f16_converted[8] = {
+        0x3c00, 0xbc00, 0x4100, 0x0000,
+        0xc000, 0x3800, 0x7bff, 0x0400,
+    };
+    for (unsigned i = 0; i < 1024; i++) {
+        f32_src[i] = f32_values[i % 8u];
+    }
+    linx_tcvt_f32_f16(f32_src, out);
+    for (unsigned i = 0; i < 1024; i++) {
+        TEST_EQ32(out[i], f16_converted[i % 8u], 0x000B5400u + i);
+    }
+
+    static const uint16_t bf16_converted[8] = {
+        0x3f80, 0xbf80, 0x4020, 0x0000,
+        0xc000, 0x3f00, 0x7f7f, 0x0080,
+    };
+    for (unsigned i = 0; i < 1024; i++) {
+        lhs[i] = bf16_converted[i % 8u];
+    }
+    linx_tcvt_bf16_f32(lhs, f32_out);
+    for (unsigned i = 0; i < 1024; i++) {
+        TEST_EQ32(f32_bits(f32_out[i]),
+                  (uint32_t)bf16_converted[i % 8u] << 16,
+                  0x000B5800u + i);
     }
     test_pass();
 }

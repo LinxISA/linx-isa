@@ -132,7 +132,7 @@ Recent exact-value evidence includes:
 | --- | --- |
 | `0x000A0013` | TCMP packed predicates and compare modes |
 | `0x000A0015` | signed S8/S16 lanes |
-| `0x000A0016` | FP16/BF16 raw-bit arithmetic |
+| `0x000A0016` | FP16/BF16 raw-bit arithmetic and exact FP32/FP16/BF16 TCVT encodings |
 | `0x000A0017` | persistent rectangular Tile shape |
 | `0x000A001D` | row/column expanded binary operations |
 | `0x000A001E` | TFILLPAD Zero/Max/Min |

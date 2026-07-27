@@ -770,6 +770,42 @@ linx_tdequant_s8_f32:
     TILE_BINARY linx_tadd_f16, TADD, FP16, 2KB
     TILE_BINARY linx_tmul_bf16, TMUL, BF16, 2KB
 
+    .macro TILE_CONVERT name, src_dtype, src_footprint, dst_dtype, dst_footprint
+    .globl \name
+    .type \name,@function
+\name:
+    FENTRY [ra ~ ra], sp!, 8
+
+    BSTART.TLOAD \src_dtype
+    C.B.DIMI 32, ->lb0
+    C.B.DIMI 32, ->lb1
+    C.B.DIMI 32, ->lb2
+    B.ARG NORM.normal
+    B.IOR [a0],[]
+    B.IOT last, ->t<\src_footprint>
+
+    BSTART.TCVT \dst_dtype
+    C.B.DIMI 32, ->lb0
+    C.B.DIMI 32, ->lb1
+    C.B.DIMI 32, ->lb2
+    B.ARG VV
+    B.IOT t#1, last, ->t<\dst_footprint>
+
+    BSTART.TSTORE \dst_dtype
+    C.B.DIMI 32, ->lb0
+    C.B.DIMI 32, ->lb1
+    C.B.DIMI 32, ->lb2
+    B.ARG NORM.normal
+    B.IOR [a1],[]
+    B.IOT t#1, last, ->t<\dst_footprint>
+
+    FRET.STK [ra ~ ra], sp!, 8
+    .size \name, .-\name
+    .endm
+
+    TILE_CONVERT linx_tcvt_f32_f16, FP32, 4KB, FP16, 2KB
+    TILE_CONVERT linx_tcvt_bf16_f32, BF16, 2KB, FP32, 4KB
+
     TILE_BINARY linx_trem_s32, TREM, INT32, 4KB
 
     .globl linx_trems_s32
