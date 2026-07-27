@@ -6,6 +6,100 @@
 
 using namespace linx::test::tile;
 
+namespace {
+
+enum : uint32_t {
+    kSsrRejectSrc = 0x0033,
+    kSsrRejectDump = 0x0034,
+    kSsrRejectResume = 0x0035,
+    kSsrRejectTrapNo = 0x0036,
+    kSsrEvbaseAcr0 = 0x0f01,
+};
+
+alignas(16) uint16_t reject_src[1024];
+alignas(16) uint16_t reject_dump[1024];
+
+static inline uint64_t ssrget_uimm(uint32_t ssrid)
+{
+    uint64_t value;
+    __asm__ volatile("ssrget %1, ->%0" : "=r"(value) : "i"(ssrid) : "memory");
+    return value;
+}
+
+static inline void ssrset_uimm(uint32_t ssrid, uint64_t value)
+{
+    __asm__ volatile("ssrset %0, %1" : : "r"(value), "i"(ssrid) : "memory");
+}
+
+static inline uint64_t trapno_is_exception(uint64_t trapno)
+{
+    return (trapno >> 63) & 1u;
+}
+
+static inline uint64_t trapno_trapnum(uint64_t trapno)
+{
+    return trapno & 0x3fu;
+}
+
+extern "C" void linx_tepl_reject_texp_fp16_user(void);
+extern "C" void linx_tepl_reject_texp_fp16_resume(void);
+extern "C" void linx_tepl_reject_tlog_bf16_user(void);
+extern "C" void linx_tepl_reject_tlog_bf16_resume(void);
+extern "C" void linx_tepl_reject_acr0_trap_handler(void);
+
+static void run_rejected_profile(void (*user)(void), void (*resume)(void))
+{
+    ssrset_uimm(kSsrRejectTrapNo, 0);
+    ssrset_uimm(kSsrRejectSrc,
+                reinterpret_cast<uint64_t>(reject_src));
+    ssrset_uimm(kSsrRejectDump,
+                reinterpret_cast<uint64_t>(reject_dump));
+    ssrset_uimm(kSsrRejectResume, reinterpret_cast<uint64_t>(resume));
+    ssrset_uimm(kSsrEvbaseAcr0,
+                reinterpret_cast<uint64_t>(
+                    &linx_tepl_reject_acr0_trap_handler));
+    user();
+}
+
+static void init_reject_buffers(uint16_t salt)
+{
+    for (unsigned i = 0; i < 1024; i++) {
+        reject_src[i] = static_cast<uint16_t>(salt + i * 13u);
+        reject_dump[i] = 0x5a5au;
+    }
+}
+
+static void check_rejected_profile(uint32_t test_id)
+{
+    const uint64_t trapno = ssrget_uimm(kSsrRejectTrapNo);
+    TEST_EQ64(trapno_is_exception(trapno), 1, test_id + 1u);
+    TEST_EQ64(trapno_trapnum(trapno), 0, test_id + 2u);
+    for (unsigned i = 0; i < 1024; i++) {
+        TEST_EQ32(reject_dump[i], reject_src[i], test_id + 0x100u + i);
+    }
+}
+
+} // namespace
+
+extern "C" void run_tile_tepl_reject_tests(void)
+{
+    test_start(0x000A0029u);
+    uart_puts("PTO TEPL rejects FP16 TEXP before queue publish ... ");
+    init_reject_buffers(0x3c00u);
+    run_rejected_profile(&linx_tepl_reject_texp_fp16_user,
+                         &linx_tepl_reject_texp_fp16_resume);
+    check_rejected_profile(0x000A0029u);
+    test_pass();
+
+    test_start(0x000A002Au);
+    uart_puts("PTO TEPL rejects BF16 TLOG before queue publish ... ");
+    init_reject_buffers(0x3f80u);
+    run_rejected_profile(&linx_tepl_reject_tlog_bf16_user,
+                         &linx_tepl_reject_tlog_bf16_resume);
+    check_rejected_profile(0x000A002Au);
+    test_pass();
+}
+
 extern "C" {
 void linx_tcmp_s32_eq(const int32_t *, const int32_t *, uint32_t *);
 void linx_tcmp_s32_ne(const int32_t *, const int32_t *, uint32_t *);

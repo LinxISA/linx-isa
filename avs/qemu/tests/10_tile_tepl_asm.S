@@ -1,6 +1,58 @@
 /* PTO ISA TEPL execution carriers. */
 
     .text
+
+/* Rejected dtype profiles. The ACR0 trap handler resumes at the TSTORE below,
+ * which must observe the original source as the queue head. */
+
+    .macro TEPL_REJECT_USER name, resume, op, dtype
+    .globl \name
+    .type \name,@function
+\name:
+    FENTRY [ra ~ ra], sp!, 8
+
+    ssrget 0x0033, ->a0
+    BSTART.TLOAD \dtype
+    B.ARG NORM.normal
+    B.IOR [a0],[]
+    B.IOT last, ->t<2KB>
+
+    BSTART.\op \dtype
+    B.ARG VV
+    B.IOT t#1, last, ->t<2KB>
+
+    .globl \resume
+\resume:
+    ssrget 0x0034, ->a0
+    BSTART.TSTORE \dtype
+    B.ARG NORM.normal
+    B.IOR [a0],[]
+    B.IOT t#1, last, ->t<2KB>
+
+    FRET.STK [ra ~ ra], sp!, 8
+    .size \name, .-\name
+    .endm
+
+    TEPL_REJECT_USER linx_tepl_reject_texp_fp16_user, \
+                     linx_tepl_reject_texp_fp16_resume, TEXP, FP16
+    TEPL_REJECT_USER linx_tepl_reject_tlog_bf16_user, \
+                     linx_tepl_reject_tlog_bf16_resume, TLOG, BF16
+
+    .globl linx_tepl_reject_acr0_trap_handler
+    .type linx_tepl_reject_acr0_trap_handler,@function
+linx_tepl_reject_acr0_trap_handler:
+    C.BSTART
+    ssrget 0x0f02, ->a0
+    ssrset a0, 0x0036
+    addi zero, 0, ->a1
+    ssrset a1, 0x0f00
+    ssrget 0x0035, ->a0
+    ssrset a0, 0x0f41
+    ssrset a0, 0x0f43
+    acre 0
+    .size linx_tepl_reject_acr0_trap_handler, \
+          .-linx_tepl_reject_acr0_trap_handler
+
 /* PTO ISA TEPL row/column broadcast and expand-arithmetic kernels. */
 
 

@@ -1286,6 +1286,8 @@ def main(argv: list[str]) -> int:
         f"-D{macro}={'1' if enabled else '0'}"
         for macro, enabled in suite_macro_values.items()
     ]
+    if "tile" in selected:
+        suite_macros.append("-DLINX_TEST_ENABLE_TMA_DESC=1")
     terminal_test_ids = [
         TERMINAL_TEST_IDS_BY_SUITE[suite]
         for suite in selected

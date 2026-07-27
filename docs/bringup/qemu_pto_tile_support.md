@@ -26,7 +26,9 @@ introduced in v0.2.
 An execution path means QEMU performs a defined operation on Tile, ACC, or
 memory state. It does not imply that every dtype, layout, shape, rounding mode,
 exception, or target-specific profile is complete. Unsupported tuples and
-selectors are rejected instead of passing through a write-zero fallback.
+selectors are rejected during `B.IOT` binding, before source pinning, output
+reservation, or destination clearing, instead of passing through a write-zero
+fallback.
 
 The QEMU-local operation list and profile limits are documented in
 `emulator/qemu/docs/linxisa/pto-tile-support.md`.
@@ -70,6 +72,11 @@ offset:
 ```text
 dst[r,c] = (src[r,c] - offset[r]) * scale[r]
 ```
+
+The per-selector profile gate rejects FP8/FPL8 arithmetic rather than routing
+same-width encodings through integer math. `TEXP`, `TLOG`, `TSQRT`, `TRSQRT`,
+and `TRECIP` are currently FP32-only in QEMU; FP16 and BF16 tuples trap before
+the destination queue or backing storage is changed.
 
 `TINTERLEAVE/TDEINTERLEAVE` use the canonical descriptor operand order
 `dst1, dst0, src1, src0`, require equal row-major shapes with even valid
@@ -138,6 +145,8 @@ Recent exact-value evidence includes:
 | `0x000A0026` | S32 TMATMUL_BIAS, column broadcast, and multi-B.IOT source order |
 | `0x000A0027` | S32 two-source TINTERLEAVE/TDEINTERLEAVE, both output Tiles, and inverse recovery |
 | `0x000A0028` | FP32 TPARTARGMAX/TPARTARGMIN with U32 selected-index output and tie handling |
+| `0x000A0029` | FP16 TEXP rejection and unchanged source queue head after trap return |
+| `0x000A002A` | BF16 TLOG rejection and unchanged source queue head after trap return |
 
 The focused regression command is:
 
@@ -151,10 +160,17 @@ At this snapshot, the QEMU incremental build, focused Tile suite, and
 unrelated known liveness blocker at DeepSeek test `0x00001702`, so focused Tile
 success must not be reported as a complete AVS pass.
 
-The illegal-instruction expected-trap harness is also not a stable negative L3
-oracle on this baseline: it may re-enter the test entry rather than return to
-the continuation. Unsupported selectors are implemented as fail-closed, but
-negative runtime evidence remains pending that harness repair.
+The focused Tile command now defines `LINX_TEST_ENABLE_TMA_DESC=1`, so its TMA
+evidence includes NORM, ND/NZ layout conversion, padding visibility,
+non-power-of-two shape, and ordering cases in `10_tile_tma.cpp`. The same suite
+also provides representative negative L3 evidence for rejected TEPL dtype
+tuples through the stable same-ACR trap-return path. This focused evidence is
+separate from `qemu_isa_coverage_latest`, whose machine-readable L2 and L3
+fields remain `unavailable`; that report is an L1 decoder/source-mapping report
+and must not be read as runtime or semantic closure.
+
+The separate cross-ACR standalone expected-trap lane can still re-enter its
+test entry and is not used as general negative L3 evidence.
 
 ## Cross-model handoff
 
@@ -164,5 +180,5 @@ This change closes the QEMU implementation and reference-result side of issue
 1. implement the same defined selector/profile subset in `gfrun`;
 2. run the same ELF/input data through QEMU and gfrun and compare result memory;
 3. use the resulting gfrun behavior as one side of the gfrun/gfsim regression;
-4. retain the 18 fail-closed operations in the report until their ISA-visible
+4. retain the 14 fail-closed operations in the report until their ISA-visible
    operand and profile contracts are closed.

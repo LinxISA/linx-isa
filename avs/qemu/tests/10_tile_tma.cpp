@@ -88,9 +88,12 @@ static void run_tma_layout_and_padding_tests()
         pto::linx::tload<kTileSizeCode, kFmtND2NZ, 8, 8, 64>(pad_src);
     pto::linx::tstore<kTileSizeCode, kFmtND2NZ, 64, 16, 64>(pad_dump,
                                                             pad_tile);
-    for (unsigned i = 0; i < 64; i++) {
-        TEST_EQ32((uint32_t)pad_dump[i], (uint32_t)pad_src[i],
-                  0x000A10000u + i);
+    for (unsigned r = 0; r < 8; r++) {
+        for (unsigned c = 0; c < 8; c++) {
+            TEST_EQ32((uint32_t)pad_dump[r * 64u + c],
+                      (uint32_t)pad_src[r * 8u + c],
+                      0x000A10000u + r * 8u + c);
+        }
     }
 
     bool saw_non_sentinel = false;
