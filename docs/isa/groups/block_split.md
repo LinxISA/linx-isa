@@ -5,8 +5,8 @@
 <span class="ch-tag ch-tag-04">Ch 04</span>
 &nbsp; <strong>Block ISA — Block-structured Control Flow</strong> &nbsp;|&nbsp;
 **Group:** Block Split &nbsp;|&nbsp;
-**Forms:** 59 &nbsp;|&nbsp;
-**Unique mnemonics:** 45
+**Forms:** 58 &nbsp;|&nbsp;
+**Unique mnemonics:** 44
 
 </div>
 
@@ -18,7 +18,6 @@ Block structural instructions (BSTART, BSTOP, FENTRY, etc.).
 |----------|----------|--------|--------|-------------|
 | [BSTART](../instructions/bstart.md) | `BSTART {DIRECT, CALL}, <label>` | 32 | — | Block split marker. Terminates the current basic block and begins the next. Encodes block type and transition kind. |
 | [BSTART.ACCCVT](../instructions/bstart_acccvt.md) | `BSTART.ACCCVT DataType` | 32 | — | Terminates the current block and begins the next. |
-| [BSTART.CUBE](../instructions/bstart_cube.md) | `BSTART.CUBE Function, DataType` | 32 | — | Terminates the current block and begins the next. |
 | [BSTART.FIXP](../instructions/bstart_fixp.md) | `BSTART.FIXP TileOp, DataType` | 32 | — | Terminates the current block and begins the next. |
 | [BSTART.FP](../instructions/bstart_fp.md) | `BSTART.FP RET` | 32 | — | Terminates the current block and begins the next. |
 | [BSTART.MGATHER](../instructions/bstart_mgather.md) | `BSTART.MGATHER DataType` | 32 | — | Terminates the current block and begins the next. |
@@ -30,7 +29,7 @@ Block structural instructions (BSTART, BSTOP, FENTRY, etc.).
 | [BSTART.MSEQ](../instructions/bstart_mseq.md) | `BSTART.MSEQ <VS8, VS16>` | 32 | — | Terminates the current block and begins the next. |
 | [BSTART.STD](../instructions/bstart_std.md) | `BSTART.STD COND, <label>` | 32 | — | Terminates the current block and begins the next. |
 | [BSTART.SYS](../instructions/bstart_sys.md) | `BSTART.SYS FALL<, fixup_label>` | 32 | — | Terminates the current block and begins the next. |
-| [BSTART.TEPL](../instructions/bstart_tepl.md) | `BSTART.TEPL TileOpcode, DataType` | 32 | — | Terminates the current block and begins the next. |
+| [BSTART.TEPL](../instructions/bstart_tepl.md) | `BSTART.TEPL Mode, Function, DataType` | 32 | — | Terminates the current block and begins the next. |
 | [BSTART.TGEMV](../instructions/bstart_tgemv.md) | `BSTART.TGEMV DataType` | 32 | — | Terminates the current block and begins the next. |
 | [BSTART.TGEMV.ACC](../instructions/bstart_tgemv_acc.md) | `BSTART.TGEMV.ACC DataType` | 32 | — | Terminates the current block and begins the next. |
 | [BSTART.TGEMV.BIAS](../instructions/bstart_tgemv_bias.md) | `BSTART.TGEMV.BIAS DataType` | 32 | — | Terminates the current block and begins the next. |

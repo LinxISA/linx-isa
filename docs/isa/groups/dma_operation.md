@@ -10,7 +10,7 @@
 
 </div>
 
-Instructions in the **DMA Operation** group of the LinxISA v0.57.0 catalog.
+Instructions in the **DMA Operation** group of the LinxISA v0.57.1 catalog.
 
 ## Instructions
 

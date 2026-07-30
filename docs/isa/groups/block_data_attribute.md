@@ -16,7 +16,7 @@ Block data annotation instructions.
 
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
-| [B.DATR](../instructions/b_datr.md) | `B.DATR {layout.{canon, normal}, datatype, padvalue, cmode, rmode, sat}` | 32 | — | Instruction from the Block Data Attribute group. |
+| [B.DATR](../instructions/b_datr.md) | `B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize}` | 32 | — | Instruction from the Block Data Attribute group. |
 
 ## See Also
 

@@ -3,7 +3,7 @@
 [[mnemonic-index]]
 === Mnemonic index
 
-This table lists unique mnemonics in the v0.57.0 catalog. Each mnemonic may have multiple encodable forms (different lengths, operand layouts, or suffix variants).
+This table lists unique mnemonics in the v0.57.1 catalog. Each mnemonic may have multiple encodable forms (different lengths, operand layouts, or suffix variants).
 
 [cols="2,3,1,1",options="header"]
 |===
@@ -45,7 +45,6 @@ This table lists unique mnemonics in the v0.57.0 catalog. Each mnemonic may have
 |`BSTART` |Block Split |32 |2
 |`BSTART CALL` |BSTART |32 |1
 |`BSTART.ACCCVT` |Block Split |32 |1
-|`BSTART.CUBE` |Block Split |32 |1
 |`BSTART.FIXP` |Block Split |32 |1
 |`BSTART.FP` |Block Split |32 |7
 |`BSTART.MGATHER` |Block Split |32 |1

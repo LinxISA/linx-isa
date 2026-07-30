@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `B.DATR {layout.{canon, normal}, datatype, padvalue, cmode, rmode, sat}`
+- `B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize}`
 
 ## Encoding
 
@@ -36,13 +36,13 @@ Instruction from the Block Data Attribute group.
 
 ## Encoding Notes
 
-- `canonical split of legacy B.CATR/B.DATR data fields. CMode is 3 bits; RMode is 3 bits; Sat is bit 31.`
+- `PTO ISA 0.57.1 data attributes. PadValueOrByteId is an opcode-defined two-bit union; bits 19:18 are reserved zero.`
 
 ## Full Catalog Forms
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `B.DATR {layout.{canon, normal}, datatype, padvalue, cmode, rmode, sat}` | 32 | — |
+| `B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize}` | 32 | — |
 
 <div class="insn-nav">
 

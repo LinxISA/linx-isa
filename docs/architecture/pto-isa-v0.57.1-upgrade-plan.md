@@ -58,7 +58,8 @@ positions are classified as one of 98 accepted or 30 reserved positions.
 DataType code 31 is illegal. Complete `DataType × Mode × Function` evidence
 must classify all 4096 header values without collision or fallback.
 
-`B.IOD`, generic public `BSTART.TLSU`, generic unallocated `BSTART.CUBE`, and
+The retired legacy Tile descriptor header, generic public `BSTART.TLSU`,
+generic unallocated `BSTART.CUBE`, and
 `BSTART.FIXP` are not executable 0.57.1 forms. Typed
 `BSTART.<TMA-operation> DataType` is canonical. TMA descriptors are owned by
 the operation schema plus B.IOR, B.DATR, and applicable B.DIM fields, not by
@@ -115,7 +116,8 @@ glibc, and musl have independent copies of encodings or ABI assumptions.
 The latest `isa/intrinsic` tree has no delta between its local intrinsic commit
 and fetched `origin/main`, but its workbook contains only 87 TEPL, 5 TMA, and
 8 CUBE rows. It includes deleted operations, misses retained PTO operations,
-contains a duplicate/wrong TSEL assignment, and describes legacy B.IOD,
+contains a duplicate/wrong TSEL assignment, and describes a retired Tile
+descriptor header,
 TPREFETCH, ACC, layout, and descriptor rules. Nearly all authored and generated
 intrinsic content contains Linx branding, and generation has neither a locked
 pto-spec input nor an exact-file-set check.
