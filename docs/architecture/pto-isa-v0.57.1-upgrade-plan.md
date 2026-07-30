@@ -25,6 +25,12 @@ encoding-manifest identity. Producers, linkers, loaders, and bare-metal launch
 manifests reject missing, old, mixed, or mismatched identities. There is no
 untagged dual decoder; legacy source is reassembled or recompiled.
 
+ELF identity uses `.note.pto.isa` with owner bytes `PTO\0`, owner-local note
+type `1` (`PTO_NT_ISA_IDENTITY`), and four-byte alignment. Its descriptor is
+the canonical compact JSON identity object without a trailing NUL byte. These
+wire details come from the locked pto-spec release manifest and are shared by
+LLVM, LLD, the kernel, and dynamic loaders.
+
 ## Frozen architecture delta
 
 ### Direct operations
