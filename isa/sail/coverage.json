@@ -2,9 +2,9 @@
   "decode_only_forms": 17,
   "grade_counts": {
     "decode-only": 17,
-    "executable-subset": 751
+    "executable-subset": 744
   },
-  "modeled_forms": 751,
+  "modeled_forms": 744,
   "modeled_mnemonics": [
     "ACRC",
     "ACRE",
@@ -18,7 +18,6 @@
     "ANDIW",
     "ANDW",
     "ASSERT",
-    "B.ARG",
     "B.CATR",
     "B.DATR",
     "B.DIM",
@@ -43,7 +42,6 @@
     "BSTART",
     "BSTART CALL",
     "BSTART.ACCCVT",
-    "BSTART.FIXP",
     "BSTART.FP",
     "BSTART.MPAR",
     "BSTART.MSEQ",
@@ -722,5 +720,5 @@
   ],
   "semantic_status": "isa/sail/semantics_status.json",
   "spec": "isa/v0.57/linxisa-v0.57.json",
-  "total_forms": 768
+  "total_forms": 761
 }

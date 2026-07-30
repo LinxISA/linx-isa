@@ -285,12 +285,10 @@ if [[ -d "$ASM_DIR" ]]; then
         python3 "$ROOT/check_required_mnemonics.py" \
           --objdump "$OUT/$BASE.objdump" \
           --label "$BASE" \
-          --require B.ARG \
+          --require B.DATR \
           --require B.DIM \
           --require B.IOR \
           --require BSTART.ACCCVT \
-          --require BSTART.CUBE \
-          --require BSTART.FIXP \
           --require BSTART.TLOAD \
           --require BSTART.TMATMUL \
           --require BSTART.TMATMUL.ACC \

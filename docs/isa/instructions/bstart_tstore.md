@@ -36,7 +36,7 @@ EndBlock(); BeginNextBlock(/* kind */);
 
 ## Encoding Notes
 
-- `Alias of BSTART.TMA Function=1. Requires B.ARG layout/pad and B.IOR stride/base plus B.IOT tile binding.`
+- `TMA Function=1. Uses B.DATR layout/pad and B.IOR stride/base plus B.IOT tile binding.`
 
 ## Full Catalog Forms
 

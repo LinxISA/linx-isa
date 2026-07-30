@@ -34,12 +34,25 @@ The matrix data block belongs to the instruction type that only has header but n
 
 Example:
 ```asm
-    TMATMUL <M:64, N:32, K:64, FP32> T#4, T#3, ->ACC<16KB>
-    TMATMUL.ACC <M:64, N:32, K:64, FP32> T#1, T#2, ACC, ->ACC<8KB>
-    ACCCVT NORM <Row:64, Col:64, FP32> ACC, ->T<16KB>
+    BSTART.TMATMUL FP32
+    C.B.DIMI 64, ->lb0
+    C.B.DIMI 32, ->lb1
+    C.B.DIMI 64, ->lb2
+    B.DATR normal, FP32, ZERO, cmode0, rmode0
+    B.IOT t#4, t#3, last
+
+    BSTART.TMATMUL.ACC FP32
+    B.DATR normal, FP32, ZERO, cmode0, rmode0
+    B.IOT t#1, t#2, last
+
+    BSTART.ACCCVT FP32
+    B.DATR normal, FP32, ZERO, cmode0, rmode0
+    B.IOT last, ->t<16KB>
 ```
 
-In the above example, the `TMATMUL` instruction is written to the ACC register, which is then read by the subsequent `TMATMUL.ACC` instruction and used for the multiply-accumulate operation. Finally, the result is moved to the T-type Tile register through the `ACCCVT` instruction.
+In the above example, the CUBE opcode selects implicit ACC state; ACC is never
+encoded in `B.IOT`. `TMATMUL` initializes ACC, `TMATMUL.ACC` reads and updates
+it, and `ACCCVT` publishes the result to an ordinary T-type Tile.
 
 ## Input requirements
 

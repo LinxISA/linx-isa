@@ -2862,7 +2862,6 @@ function exec_bstart_vpar() -> unit = { exec_bstart() }
 function exec_bstart_vseq() -> unit = { exec_bstart() }
 function exec_bstart_cube() -> unit = { exec_bstart() }
 function exec_bstart_tepl() -> unit = { exec_bstart() }
-function exec_bstart_fixp() -> unit = { exec_bstart() }
 function exec_bstart_tload() -> unit = { exec_bstart() }
 function exec_bstart_tstore() -> unit = { exec_bstart() }
 function exec_bstart_tmov() -> unit = { exec_bstart() }
@@ -2959,7 +2958,6 @@ function exec_c_b_dim() -> unit = { exec_b_dim() }
 function exec_c_b_dimi() -> unit = { exec_b_dim() }
 
 function exec_b_text() -> unit = { bdesc_mark_text() }
-function exec_b_arg() -> unit = { bdesc_mark_arg() }
 function exec_b_ior() -> unit = {
   let src0 : bits(5) = decoded_bior_regsrc0();
   let src1 : bits(5) = decoded_bior_regsrc1();
@@ -2981,7 +2979,8 @@ function exec_b_catr() -> unit = {
 
 function exec_b_datr() -> unit = {
   // Staged semantics: latch raw data-attribute word so datatype/layout/rmode/sat can be consulted.
-  bdatr_raw = decoded_bdatr_raw()
+  bdatr_raw = decoded_bdatr_raw();
+  bdesc_mark_datr()
 }
 function exec_b_hint() -> unit = { () }
 // -----------------------------------------------------------------------------

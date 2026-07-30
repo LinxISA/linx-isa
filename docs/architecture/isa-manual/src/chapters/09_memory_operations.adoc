@@ -63,7 +63,7 @@ Rules:
 
 * Address footprint is 2D and derived from descriptor state:
   - dimensions from `LB0/LB1/LB2` (`B.DIM` / `C.B.DIM*`)
-  - layout-conversion selector and pad policy from `B.ARG`
+  - layout-conversion selector and pad policy from `B.DATR`
   - GPR bindings from one-or-more `B.IOR` descriptors
   - tile IO bindings and transfer size from one-or-more `B.IOT`
   - element data type from `BSTART.TMA`
@@ -75,13 +75,11 @@ Layout and dimension contract (v0.57 current profile for TMA):
   - `DN` (column-major),
   - `NZ` (inner-block row-major + inter-block column-major),
   - `ZN` (inner-block column-major + inter-block row-major).
-* `B.ARG` encodes one unified format selector for the current TMA tile-memory operation.
-* The only legal format selectors are:
-  - `NORM.normal` (source and destination layout are the same),
-  - `ND2NZ.normal`,
-  - `ND2ZN.normal`,
-  - `DN2NZ.normal`,
-  - `DN2ZN.normal`.
+* `B.DATR.Layout` encodes the layout selector for the current TMA operation.
+* `NORM` (code 0) is mandatory. Accepted conversion codes are
+  `1, 3, 4, 6, 8, 9, 17, 18, 20, 27, 28, 30`; they require an advertised
+  capability and fault precisely before effects when unsupported. Layouts
+  involving `ZZ` or `NN` are reserved.
 * For both `TLOAD` and `TSTORE`, `NZ`/`ZN` always denotes the TR-side layout; GM-side layout is `ND` or `DN`.
 * `LB0/LB1/LB2` are interpreted for TLOAD/TSTORE as:
   - `LB0`: GM-side inner element count
@@ -110,7 +108,7 @@ Layout and dimension contract (v0.57 current profile for TMA):
 Padding contract (TLOAD):
 
 * If TR-side logical size is larger than GM-side logical size, elements outside the GM-side footprint are synthesized in
-  TR according to the pad policy encoded in `B.ARG`.
+  TR according to the operation-applicable pad policy encoded in `B.DATR`.
 * Required pad policies are:
   - `Null`: implementation-defined non-deterministic fill (bring-up model may use deterministic pseudo-random fill),
   - `Zero`: fill with numeric zero,

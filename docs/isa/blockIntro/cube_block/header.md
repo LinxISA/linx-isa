@@ -51,9 +51,9 @@ by its descriptor records. For example:
 -...
 - [B.IOT](../../header/B.IOT.md) SrcTile6<.reuse>, SrcTile7<.reuse>, last, ->DstTile3<TileSize3>
 
-All named CUBE headers share the CUBE encoding family shown below. The generic
-`BSTART.CUBE Function, DataType` syntax is reserved for unnamed function
-values; named function values must use their canonical mnemonics.
+All named CUBE headers share the CUBE encoding family shown below. Only the 13
+assigned named functions are legal; unassigned function values are illegal and
+there is no generic executable `BSTART.CUBE Function, DataType` spelling.
 
 ![CUBE encoding family](../../../figs/bitfield/svg/BlockHeader_32bit/BSTART.CUBE.svg)
 

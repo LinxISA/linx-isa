@@ -4,7 +4,7 @@
 [[chapter_cmd]]
 == CMD - Command and Control
 
-The Command (CMD) group covers the block-split instruction forms (typed `BSTART.*`, `BSTOP`), template blocks (`FENTRY`, `FEXIT`, `FRET.*`), memory-block operations (`MCOPY`, `MSET`), cross-block calls (`XB`), and the header-descriptor instructions (`B.IOT`, `B.IOR`, `B.ARG`, `B.DIM`, `B.TEXT`, `B.HINT`, `B.CATR`, `B.DATR`) that carry per-block metadata for accelerator execution.
+The Command (CMD) group covers the block-split instruction forms (typed `BSTART.*`, `BSTOP`), template blocks (`FENTRY`, `FEXIT`, `FRET.*`), memory-block operations (`MCOPY`, `MSET`), cross-block calls (`XB`), and the header-descriptor instructions (`B.IOT`, `B.IOR`, `B.DIM`, `B.TEXT`, `B.HINT`, `B.CATR`, `B.DATR`) that carry per-block metadata for accelerator execution.
 
 **Block split instructions** (`BSTART.*`, `BSTOP`): these are the canonical forms for block-structured control flow. The typed `BSTART.<type>` forms select the execution model:
 

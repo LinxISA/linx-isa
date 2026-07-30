@@ -64,7 +64,7 @@ MissingDescFamily numeric IDs (from `TRAPARG0[7:0]`, for quick reference):
 * `0 = B.* (generic descriptor stream / non-family-specific)`
 * `1 = B.DIM`
 * `2 = B.TEXT`
-* `3 = B.ARG`
+* `3 = B.CATR/B.DATR`
 * `4 = B.IOR`
 * `5 = B.IOT`
 Other descriptors (tile inputs, register in/out bindings, etc.) are kernel-defined and may be mandatory for specific
@@ -79,7 +79,7 @@ The rendering-oriented v0.57 profile inherits the frozen v0.57 tile conventions 
 * the canonical carrier is a 4KB `1024x1` row-major tile,
 * fragment and hot-state transport is SoA-oriented,
 * TAU operations are tile-to-tile only,
-* small or rarely-changing state is descriptor-driven (`B.ARG`, `B.IOR`), while hot/large state uses dedicated StateTiles,
+* small or rarely-changing state is descriptor-driven (`B.DATR`, `B.DIM`, `B.IOR`), while hot/large state uses dedicated StateTiles,
 * `MPAR` VEC kernels are the required functional fallback for rendering PTOs when no TAU hardening exists.
 
 [[tileblocks-tma]]

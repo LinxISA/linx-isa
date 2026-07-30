@@ -161,7 +161,6 @@ SPECIAL_MAP: dict[str, str | list[str]] = {
     "bstart_fp_icall": "BSTART.FP",
     "bstart_fp_ret": "BSTART.FP",
     "bstart_sys": "BSTART.SYS",
-    "bstart_fixp": "BSTART.FIXP",
     "hl_bstart_fp_fall": "HL.BSTART.FP",
     "hl_bstart_fp_direct": "HL.BSTART.FP",
     "hl_bstart_fp_cond": "HL.BSTART.FP",
@@ -590,10 +589,7 @@ def _canonicalize_scalar_mnemonic(stem: str) -> str | list[str] | None:
             "BSTART.SYS",
             "HL.BSTART.FP",
             "HL.BSTART.SYS",
-            "BSTART.FIXP",
-            "BSTART.CUBE",
             "BSTART.TEPL",
-            "BSTART.TMA",
             "BSTART.VPAR",
             "BSTART.VSEQ",
             "BSTART.MPAR",
@@ -612,10 +608,7 @@ def _canonicalize_scalar_mnemonic(stem: str) -> str | list[str] | None:
             "BSTART.SYS",
             "HL.BSTART.FP",
             "HL.BSTART.SYS",
-            "BSTART.FIXP",
-            "BSTART.CUBE",
             "BSTART.TEPL",
-            "BSTART.TMA",
             "BSTART.VPAR",
             "BSTART.VSEQ",
             "BSTART.MPAR",
@@ -634,10 +627,7 @@ def _canonicalize_scalar_mnemonic(stem: str) -> str | list[str] | None:
             "BSTART.SYS",
             "HL.BSTART.FP",
             "HL.BSTART.SYS",
-            "BSTART.FIXP",
-            "BSTART.CUBE",
             "BSTART.TEPL",
-            "BSTART.TMA",
             "BSTART.VPAR",
             "BSTART.VSEQ",
             "BSTART.MPAR",
@@ -739,8 +729,6 @@ def _canonicalize_scalar_mnemonic(stem: str) -> str | list[str] | None:
     }
     if stem in header_map:
         return header_map[stem]
-    if stem.startswith("b_arg_"):
-        return "B.ARG"
     if stem.startswith(("bdim_", "b_dim_")):
         return "B.DIM"
 

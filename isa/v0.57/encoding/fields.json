@@ -56,7 +56,6 @@
     "atom": {"widths": [1], "namespace": "operand"},
     "e": {"widths": [1], "namespace": "operand"},
     "far": {"widths": [1], "namespace": "operand"},
-    "format": {"widths": [5], "namespace": "selector", "reserved_values": []},
     "h": {"widths": [1], "namespace": "operand"},
     "i": {"widths": [1], "namespace": "operand"},
     "imm": {"widths": [7, 32], "namespace": "immediate", "signed": false, "scale": 1},

@@ -18,7 +18,7 @@ C[i, j] = Σ(k=0 to K-1) (A[i, k] * ScaleA[i, k]) × (B[k, j] * ScaleB[k, j]) + 
 ## 汇编语法
 
 ```asm
-TMATMULMX.BIAS <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcTile1<.reuse>, SrcTile2<.reuse>, SrcTile3<.reuse>, SrcTile4<.reuse>, ->ACC<Size>
+TMATMULMX.BIAS <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcTile1<.reuse>, SrcTile2<.reuse>, SrcTile3<.reuse>, SrcTile4<.reuse>
 ```
 
 ## 汇编符号
@@ -36,7 +36,7 @@ TMATMULMX.BIAS <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, Src
 - **SrcTile4**：存储 **偏置向量Bias** (Bias Vector) 的 [Tile 寄存器](../../register/common/tilereg.md)。
 - **reuse**：指示当前指令提交后保留寄存器（若无此标识，允许硬件自动释放）。
 - **ACC**：存储结果矩阵的 [Tile 寄存器](../../register/common/tilereg.md) 类型。
-- **Size**：指示输出 Tile 寄存器空间大小的立即数，例如 `` `ACC<64KB>` ``。
+- **ACC**：由 CUBE opcode 隐式选择，不在 `B.IOT` 中编码，也没有目的 Tile size 字段。
 
 ---
 
@@ -71,7 +71,7 @@ TMATMULMX.BIAS <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, Src
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB2`    *(注：K)*
 - [B.IOT](../../header/B.IOT.md) `SrcTile0<.reuse>, SrcTile1<.reuse>`   *(A, ScaleA)*
 - [B.IOT](../../header/B.IOT.md) `SrcTile2<.reuse>, SrcTile3<.reuse>`   *(B, ScaleB)*
-- [B.IOT](../../header/B.IOT.md) `SrcTile4<.reuse>, last, ->ACC<Size>`  *(Bias, Out)*
+- [B.IOT](../../header/B.IOT.md) `SrcTile4<.reuse>, last`  *(Bias, Out)*
 
 ## 执行模型
 
@@ -102,7 +102,7 @@ void TMATMULMX_BIAS(Tile __out__ C, Tile __in__ A, Tile __in__ ScaleA,
 ## 汇编示例
 
 ```asm
-TMATMULMX.BIAS <LB0:100, LB1:a0, LB2:a1+10, e5m2, e1m2x2>, T#1, U#1, M#1, N#1, T#2, ->ACC<64KB>
+TMATMULMX.BIAS <LB0:100, LB1:a0, LB2:a1+10, e5m2, e1m2x2>, T#1, U#1, M#1, N#1, T#2
 ```
 
 - **输入输出**：
@@ -111,7 +111,7 @@ TMATMULMX.BIAS <LB0:100, LB1:a0, LB2:a1+10, e5m2, e1m2x2>, T#1, U#1, M#1, N#1, T
     - `SrcTile2 = M#1`：存放 B 矩阵。
     - `SrcTile3 = N#1`：存放 B 缩放矩阵。
     - `SrcTile4 = T#2`：存放 **Bias 偏置向量** (1xN)。
-    - `DstTile = ACC`：存放结果矩阵。
+    - ACC 为隐式状态，不通过 `B.IOT` 编码。
 - **尺寸参数设定**:
     - A 的维度为 `M×K = 100 × (a1 + 10)`。
     - B 的维度为 `K×N = (a1 + 10) × a0`。

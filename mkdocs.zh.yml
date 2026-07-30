@@ -1105,7 +1105,6 @@ nav:
             - TMUL: isa/header/tileblock/TMUL.md
             - TDIV: isa/header/tileblock/TDIV.md
             - TREM: isa/header/tileblock/TREM.md
-            - TFMOD: isa/header/tileblock/TFMOD.md
             - TAND: isa/header/tileblock/TAND.md
             - TOR: isa/header/tileblock/TOR.md
             - TXOR: isa/header/tileblock/TXOR.md
@@ -1124,8 +1123,6 @@ nav:
             - TSQRT: isa/header/tileblock/TSQRT.md
             - TRSQRT: isa/header/tileblock/TRSQRT.md
             - TRELU: isa/header/tileblock/TRELU.md
-            - TADDC: isa/header/tileblock/TADDC.md
-            - TSUBC: isa/header/tileblock/TSUBC.md
             - TSEL: isa/header/tileblock/TSEL.md
             - TCVT: isa/header/tileblock/TCVT.md
         - 逐元素和标量操作:
@@ -1134,7 +1131,6 @@ nav:
             - TMULS: isa/header/tileblock/TMULS.md
             - TDIVS: isa/header/tileblock/TDIVS.md
             - TREMS: isa/header/tileblock/TREMS.md
-            - TFMODS: isa/header/tileblock/TFMODS.md
             - TANDS: isa/header/tileblock/TANDS.md
             - TORS: isa/header/tileblock/TORS.md
             - TXORS: isa/header/tileblock/TXORS.md
@@ -1143,9 +1139,6 @@ nav:
             - TMAXS: isa/header/tileblock/TMAXS.md
             - TMINS: isa/header/tileblock/TMINS.md
             - TCMPS: isa/header/tileblock/TCMPS.md
-            - TLRELU: isa/header/tileblock/TLRELU.md
-            - TADDSC: isa/header/tileblock/TADDSC.md
-            - TSUBSC: isa/header/tileblock/TSUBSC.md
             - TSELS: isa/header/tileblock/TSELS.md
             - TEXPANDS: isa/header/tileblock/TEXPANDS.md
         - 按轴逐元素操作:

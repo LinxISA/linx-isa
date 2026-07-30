@@ -1480,78 +1480,6 @@ off = (ZeroExtend(imm20) << 1)
 ra = base + off
 ----
 
-[[insndesc-block-argument]]
-==== Block Argument
-
-[[insndesc-block-argument-b-arg]]
-===== B.ARG
-
-Block metadata instruction (sub-operation selected by the mnemonic suffix).
-
-Catalog forms:: 6 form(s) (32 bits).
-
-Assembly forms::
-+
-* `B.ARG NORM.normal`
-* `B.ARG format`
-* `B.ARG NZ2DN.canon`
-* `B.ARG ND2ZN.normal, FP16, Null`
-* `B.ARG DN2ZN.normal, FP16, Null`
-* `B.ARG DN2NZ.normal, FP32, Null`
-
-Encoding::
-+
-.`b_arg_32_374ec956affe` — `B.ARG NORM.normal`
-image::encodings/enc_b_arg_32_374ec956affe.svg[B.ARG encoding form b_arg_32_374ec956affe,align="center"]
-.`b_arg_32_47e8ac50ac96` — `B.ARG format`
-image::encodings/enc_b_arg_32_47e8ac50ac96.svg[B.ARG encoding form b_arg_32_47e8ac50ac96,align="center"]
-.`b_arg_32_5c8bfa662370` — `B.ARG NZ2DN.canon`
-image::encodings/enc_b_arg_32_5c8bfa662370.svg[B.ARG encoding form b_arg_32_5c8bfa662370,align="center"]
-.`b_arg_32_95152c29a268` — `B.ARG ND2ZN.normal, FP16, Null`
-image::encodings/enc_b_arg_32_95152c29a268.svg[B.ARG encoding form b_arg_32_95152c29a268,align="center"]
-.`b_arg_32_c6d5c49a4ad7` — `B.ARG DN2ZN.normal, FP16, Null`
-image::encodings/enc_b_arg_32_c6d5c49a4ad7.svg[B.ARG encoding form b_arg_32_c6d5c49a4ad7,align="center"]
-.`b_arg_32_f19d18f2126b` — `B.ARG DN2NZ.normal, FP32, Null`
-image::encodings/enc_b_arg_32_f19d18f2126b.svg[B.ARG encoding form b_arg_32_f19d18f2126b,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-UpdateBlockMetadata(/* fields as encoded */)
-----
-
-[[insndesc-block-argument-b-dim]]
-===== B.DIM
-
-Sets a block loop bound/dimension register for structured execution.
-
-Catalog forms:: 3 form(s) (32 bits).
-
-Assembly forms::
-+
-* `B.DIM RegSrc, uimm, ->LB2`
-* `B.DIM RegSrc, uimm, ->LB0`
-* `B.DIM RegSrc, uimm, ->LB1`
-
-Encoding::
-+
-.`b_dim_32_1caa1aa2944a` — `B.DIM RegSrc, uimm, ->LB2`
-image::encodings/enc_b_dim_32_1caa1aa2944a.svg[B.DIM encoding form b_dim_32_1caa1aa2944a,align="center"]
-.`b_dim_32_27602ab68929` — `B.DIM RegSrc, uimm, ->LB0`
-image::encodings/enc_b_dim_32_27602ab68929.svg[B.DIM encoding form b_dim_32_27602ab68929,align="center"]
-.`b_dim_32_4191099a5f4d` — `B.DIM RegSrc, uimm, ->LB1`
-image::encodings/enc_b_dim_32_4191099a5f4d.svg[B.DIM encoding form b_dim_32_4191099a5f4d,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-LBx = Read(RegSrc) + uimm  // x selected by encoding (LB0/LB1/LB2)
-----
-
 [[insndesc-block-control-attribute]]
 ==== Block Control Attribute
 
@@ -1612,6 +1540,39 @@ Operation (informative)::
 [source]
 ----
 UpdateBlockMetadata(/* fields as encoded */)
+----
+
+[[insndesc-block-argument]]
+==== Block Argument
+
+[[insndesc-block-argument-b-dim]]
+===== B.DIM
+
+Sets a block loop bound/dimension register for structured execution.
+
+Catalog forms:: 3 form(s) (32 bits).
+
+Assembly forms::
++
+* `B.DIM RegSrc, uimm, ->LB2`
+* `B.DIM RegSrc, uimm, ->LB0`
+* `B.DIM RegSrc, uimm, ->LB1`
+
+Encoding::
++
+.`b_dim_32_1caa1aa2944a` — `B.DIM RegSrc, uimm, ->LB2`
+image::encodings/enc_b_dim_32_1caa1aa2944a.svg[B.DIM encoding form b_dim_32_1caa1aa2944a,align="center"]
+.`b_dim_32_27602ab68929` — `B.DIM RegSrc, uimm, ->LB0`
+image::encodings/enc_b_dim_32_27602ab68929.svg[B.DIM encoding form b_dim_32_27602ab68929,align="center"]
+.`b_dim_32_4191099a5f4d` — `B.DIM RegSrc, uimm, ->LB1`
+image::encodings/enc_b_dim_32_4191099a5f4d.svg[B.DIM encoding form b_dim_32_4191099a5f4d,align="center"]
+
+
+Operation (informative)::
++
+[source]
+----
+LBx = Read(RegSrc) + uimm  // x selected by encoding (LB0/LB1/LB2)
 ----
 
 [[insndesc-branch]]
@@ -2629,32 +2590,7 @@ image::encodings/enc_bstart_acccvt.svg[BSTART.ACCCVT encoding form bstart_acccvt
 
 Encoding notes (informative)::
 +
-* Alias of BSTART.CUBE Function=8. ACCCVT requires quantization args via B.ARG+B.IOR (scale/zero-point required in strict profile).
-
-Operation (informative)::
-+
-[source]
-----
-EndBlock()
-BeginNextBlock(/* type/kind/target as encoded */)
-----
-
-[[insndesc-block-split-bstart-fixp]]
-===== BSTART.FIXP
-
-Terminates the current block and begins the next block, encoding both block type and transition kind.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `BSTART.FIXP TileOp, DataType`
-
-Encoding::
-+
-.`bstart_fixp_32_3b0ae11126a6` — `BSTART.FIXP TileOp, DataType`
-image::encodings/enc_bstart_fixp.svg[BSTART.FIXP encoding form bstart_fixp_32_3b0ae11126a6,align="center"]
-
+* CUBE Function=8. ACCCVT reads implicit ACC and uses B.DATR conversion controls before publishing an ordinary Tile.
 
 Operation (informative)::
 +
@@ -2730,7 +2666,7 @@ image::encodings/enc_bstart_mgather.svg[BSTART.MGATHER encoding form bstart_mgat
 
 Encoding notes (informative)::
 +
-* Named TMA-family Function=4. Memory gather uses B.ARG/B.IOR/B.IOT descriptor state; detailed PTO selector manifest is defined out-of-band for v0.57.
+* TMA Function=4. Memory gather uses B.DATR/B.IOR/B.IOT descriptor state.
 
 Operation (informative)::
 +
@@ -2842,7 +2778,7 @@ image::encodings/enc_bstart_mscatter.svg[BSTART.MSCATTER encoding form bstart_ms
 
 Encoding notes (informative)::
 +
-* Named TMA-family Function=5. Memory scatter uses B.ARG/B.IOR/B.IOT descriptor state; detailed PTO selector manifest is defined out-of-band for v0.57.
+* TMA Function=5. Memory scatter uses B.DATR/B.IOR/B.IOT descriptor state.
 
 Operation (informative)::
 +
@@ -3200,7 +3136,7 @@ image::encodings/enc_bstart_tload.svg[BSTART.TLOAD encoding form bstart_tload_32
 
 Encoding notes (informative)::
 +
-* Alias of BSTART.TMA Function=0. Requires B.ARG layout/pad and B.IOR stride/base plus B.IOT tile binding.
+* TMA Function=0. Uses B.DATR layout/pad and B.IOR stride/base plus B.IOT tile binding.
 
 Operation (informative)::
 +
@@ -3461,7 +3397,7 @@ image::encodings/enc_bstart_tstore.svg[BSTART.TSTORE encoding form bstart_tstore
 
 Encoding notes (informative)::
 +
-* Alias of BSTART.TMA Function=1. Requires B.ARG layout/pad and B.IOR stride/base plus B.IOT tile binding.
+* TMA Function=1. Uses B.DATR layout/pad and B.IOR stride/base plus B.IOT tile binding.
 
 Operation (informative)::
 +

@@ -40,12 +40,16 @@ The following is a "header → Expand → PO" comparison of three common blocks,
 **header (the order of appearance is L1-IPO):**
 
 ```asm
-BSTART.TEPL TMATMUL, FP16      ; 配置：做 FP16 的 A×B
+BSTART.TMATMUL FP16           ; 配置：做 FP16 的 A×B
 B.DIM     rM, 128, ->M        ; M=128
 B.DIM     rN, 128, ->N        ; N=128
 B.DIM     rK, 256, ->K        ; K=256
-B.IOT     [TA, TB], group=0, ->ACC<64KB>   ; 绑定 A/B 到 ACC
-B.ARG     CD2RD                ; 结果默认行主序，无额外变换
+B.DATR    normal, FP16, ZERO, cmode0, rmode0
+B.IOT     TA, TB, last        ; ACC 由 CUBE opcode 隐式选择
+
+BSTART.ACCCVT FP16            ; 将隐式 ACC 发布到普通 Tile
+B.DATR    normal, FP16, ZERO, cmode0, rmode0
+B.IOT     last, ->t<32KB>
 ```
 
 **Expanded block body steps (sequential replacement):**
@@ -57,7 +61,7 @@ B.ARG     CD2RD                ; 结果默认行主序，无额外变换
 **Final PO (Semantic Order):**
 
 ```
-BSTART.TEPL → B.DIM → B.DIM → B.DIM → B.IOT → B.ARG →
+BSTART.TMATMUL → B.DIM → B.DIM → B.DIM → B.DATR → B.IOT →
 加载分片 → 乘累加到 ACC → ACC 写回 Tile
 ```
 
@@ -68,12 +72,16 @@ BSTART.TEPL → B.DIM → B.DIM → B.DIM → B.IOT → B.ARG →
 **header：**
 
 ```asm
-BSTART.TEPL TMATMUL, FP16
+BSTART.TMATMUL FP16
 B.DIM     zero, 64,  ->M
 B.DIM     zero, 64,  ->N
 B.DIM     zero, 256, ->K
-B.IOT     [TA, TB], group=0, ->ACC<64KB>
-B.ARG     ZZ2RD                  ; 指定 TCVT 的布局变换（例）
+B.DATR    normal, FP16, ZERO, cmode0, rmode0
+B.IOT     TA, TB, last
+
+BSTART.ACCCVT FP16
+B.DATR    zn, FP16, ZERO, cmode0, rmode0  ; 指定转换布局（例）
+B.IOT     last, ->t<16KB>
 ```
 
 **Expanded block body (sequential replacement):**
@@ -98,14 +106,17 @@ ZXTERMZH39QXZ顺序 → 读取/预取 → 乘累加到 ACC → TCVT 边搬边转
 **header：**
 
 ```asm
-BSTART.TEPL TMATMULMX, INT8
+BSTART.TMATMULMX INT8
 B.DIM     zero, 128, ->M
 B.DIM     zero, 128, ->N
 B.DIM     zero, 256, ->K
-B.IOT     [TA, TSA], group=0, ->ACC<64KB>  ; A 与 ScaleA
-B.IOT     [TB, TSB], group=1               ; B 与 ScaleB
-; 可选：B.IOT [TC], group=2               ; 若做 +C
-B.ARG     CD2RD
+B.DATR    normal, INT8, ZERO, cmode0, rmode0
+B.IOT     TA, TSA                           ; A 与 ScaleA
+B.IOT     TB, TSB, last                     ; B 与 ScaleB；ACC 隐式选择
+
+BSTART.ACCCVT INT8
+B.DATR    normal, INT8, ZERO, cmode0, rmode0
+B.IOT     last, ->t<32KB>
 ```
 
 **Block body (sequential replacement):**1. Load A, ScaleA and B, ScaleB;

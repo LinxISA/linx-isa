@@ -26,7 +26,7 @@
     "packed_output": "RGBA8_UNORM may be packed as one uint32_t per element"
   },
   "state_placement": {
-    "descriptor_state": "small or rarely-changing values use B.ARG and B.IOR",
+    "descriptor_state": "small or rarely-changing values use B.DATR, B.DIM, and B.IOR",
     "state_tiles": "large or hot rendering state uses dedicated StateTiles in the tile register file"
   },
   "tau_policy": {

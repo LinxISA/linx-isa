@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.TLOAD DataType
 
-*Description:* Alias of BSTART.TMA Function=0. Requires B.ARG layout/pad and B.IOR stride/base plus B.IOT tile binding.
+*Description:* TMA Function=0. Uses B.DATR layout/pad and B.IOR stride/base plus B.IOT tile binding.
 
 *Encoding:*
 

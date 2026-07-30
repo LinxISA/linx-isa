@@ -15,7 +15,7 @@
 ## 汇编语法
 
 ```asm
-ACCCVT Layout.{canon, normal}, <LB0:Row, LB1:Col, SrcType, DstType>, ACC, [RegSrc], DepSrc0, DepSrc1, DepSrc2,
+ACCCVT Layout.{canon, normal}, <LB0:Row, LB1:Col, SrcType, DstType>, [RegSrc], DepSrc0, DepSrc1, DepSrc2,
                                ->DstTile0<TileSize0>, DstTile1<TileSize1>, DepDst
 ```
 
@@ -28,14 +28,14 @@ ACCCVT Layout.{canon, normal}, <LB0:Row, LB1:Col, SrcType, DstType>, ACC, [RegSr
 - **Row、Col**：表示输入矩阵的尺寸，可分别通过`全局寄存器`、`立即数`或`全局寄存器加立即数`的形式设置。
     - **Row**：表示输入矩阵的行数。
     - **Col**：表示输入矩阵的列数。
-- **ACC**：指示输入ACC类型[Tile 寄存器](../../register/common/tilereg.md)。
+- **ACC**：由 `BSTART.ACCCVT` opcode 隐式选择，不在 `B.IOT` 中编码。
 - **RegSrc**：指示输入的[全局寄存器](../../register/common/ggpr.md)，用于存储scale值。该参数数据类型必须与ACC Tile的数据类型保持一致，否则指令不保证计算结果的正确性。如果不执行scale操作则可缺省。
 - **DstTile0**：指示第一个输出的[Tile 寄存器](../../register/common/tilereg.md)类型，可选T, U, M, N。用于存储随路运算主结果。
 - **DstTile1**：指示第二个输出的[Tile 寄存器](../../register/common/tilereg.md)类型，可选T, U, M, N。用于存储RowMax结果，如果不执行RowMax则缺省。
 - **TileSize0**：指示第一个输出[Tile 寄存器](../../register/common/tilereg.md)的空间大小，可以通过立即数或者全局寄存器传参。
 - **TileSize1**：指示第二个输出[Tile 寄存器](../../register/common/tilereg.md)的空间大小，可以通过立即数或者全局寄存器传参。跟随DstTile1缺省。
 - **DepSrc0 / DepSrc1 / DepSrc2**：表示本块指令最多显式记录 3 个前序 `D` 依赖槽位。
-- **DepDst**：表示本块指令对后序引用该标识的块指令的屏障。
+- **DepDst**：仅表示调度依赖元数据，不构成内存屏障或 fence。
 
 输入ACC寄存器中元素的数据格式（SrcType）可以是以下几种：
 
@@ -69,7 +69,7 @@ ACCCVT Layout.{canon, normal}, <LB0:Row, LB1:Col, SrcType, DstType>, ACC, [RegSr
 - [B.DATR](../../header/B.DATR.md) Layout.{canon, normal}, DstType
 - [B.DIM](../../header/B.DIM.md) reg, imm, ->LB0
 - [B.DIM](../../header/B.DIM.md) reg, imm, ->LB1
-- [B.IOT](../../header/B.IOT.md) , ->DstTile0< TileSize0>
+- [B.IOT](../../header/B.IOT.md) last, ->DstTile0< TileSize0>
 - [B.IOT](../../header/B.IOT.md) last, ->DstTile1< TileSize1>
 - [B.IOR](../../header/B.IOR.md) RegSrc
 

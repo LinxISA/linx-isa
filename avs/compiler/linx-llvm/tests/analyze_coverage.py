@@ -75,19 +75,11 @@ def canonicalize_mnemonic(mnemonic: str) -> str:
 def derived_selector_mnemonics(mnemonic: str, operands: list[str]) -> Set[str]:
     """Recover strict current-profile aliases from selector-style objdump output."""
     selector = canonicalize_mnemonic(mnemonic)
-    if selector == "B.DATR":
-        return {"B.ARG"}
     if not operands:
         return set()
 
     tileop = canonicalize_mnemonic(operands[0])
     aliases = {
-        ("BSTART.CUBE", "ACCCVT"): "BSTART.ACCCVT",
-        ("BSTART.CUBE", "TMATMUL"): "BSTART.TMATMUL",
-        ("BSTART.CUBE", "TMATMUL.ACC"): "BSTART.TMATMUL.ACC",
-        ("BSTART.TMA", "TLOAD"): "BSTART.TLOAD",
-        ("BSTART.TMA", "TSTORE"): "BSTART.TSTORE",
-        ("BSTART.TMA", "TMOV"): "BSTART.TMOV",
         ("BSTART.TEPL", "ERCOV"): "ERCOV",
         ("BSTART.TEPL", "ESAVE"): "ESAVE",
     }

@@ -165,7 +165,7 @@ In the bring-up model, BARG includes (non-exhaustive):
 Additional bring-up fields used by tooling and trap recovery include:
 
 * block addresses (`BPC` / `BPCN`),
-* ordering/atomic qualifiers (e.g. `AQ`/`RL` from `B.CATR/B.DATR`), and
+* ordering/atomic qualifiers (`AQ`/`RL` from `B.CATR` only), and
 * output register mapping for split blocks.
 
 **BARG lifetime rules (bring-up):**
@@ -193,9 +193,8 @@ The bring-up profile constrains certain combinations (examples):
   memory-sequential execution modes.
 * `.FP` blocks mirror `.STD` transitions but mark a floating-point execution context.
 
-Block types beyond the scalar core (e.g. `.TMA`, `.CUBE`, `.TEPL`, `.VPAR`, `.VSEQ`, `.FIXP`) appear in the catalog as
-Block Split forms. `TMA`, `CUBE`, and `TEPL` selector/descriptor semantics are defined by the v0.57 catalog; selector
-space not explicitly assigned by the catalog is reserved and must not acquire ad hoc semantics.
+Block types beyond the scalar core use the named TMA and CUBE direct forms plus the raw TEPL Mode/Function form.
+Selector space not explicitly assigned by the PTO ISA 0.57.1 catalog is reserved and must not acquire ad hoc semantics.
 
 [[blockisa-tile]]
 === Tile blocks (TAU)
@@ -673,7 +672,7 @@ The architectural interface between the first and second layer is a block comman
    live-outs.
 ** `B.IOT`: performs tile rename, computes input/output tile base addresses, and packs those addresses into the command
    payload.
-** `B.ARG` / `B.CATR/B.DATR`: pack block-type-defined immediates/attributes.
+** `B.CATR/B.DATR`: pack block-type-defined control and data attributes.
 ** `B.DIM`: packs block dimensions (`LB0..LB2`) for SIMT/vector replay and for tile engines.
 ** `B.TEXT`: packs the out-of-line body `TPC` for decoupled blocks.
 * `BSTOP` (or an implicit boundary at the next block start marker) finalizes the command and dispatches it to the

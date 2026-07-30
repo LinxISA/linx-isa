@@ -13,19 +13,18 @@
 
     ssrget 0x0033, ->a0
     BSTART.TLOAD \dtype
-    B.ARG NORM.normal
+    B.DATR normal, \dtype, ZERO, cmode0, rmode0
     B.IOR [a0],[]
     B.IOT last, ->t<2KB>
 
     BSTART.\op \dtype
-    B.ARG VV
     B.IOT t#1, last, ->t<2KB>
 
     .globl \resume
 \resume:
     ssrget 0x0034, ->a0
     BSTART.TSTORE \dtype
-    B.ARG NORM.normal
+    B.DATR normal, \dtype, ZERO, cmode0, rmode0
     B.IOR [a0],[]
     B.IOT t#1, last, ->t<2KB>
 
@@ -61,7 +60,7 @@ linx_tepl_reject_acr0_trap_handler:
     C.B.DIMI \cols, ->lb0
     C.B.DIMI \rows, ->lb1
     C.B.DIMI \stride, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, FP32, ZERO, cmode0, rmode0
     B.IOR [\reg],[]
     B.IOT last, ->t<4KB>
     .endm
@@ -71,7 +70,7 @@ linx_tepl_reject_acr0_trap_handler:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 4, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, FP32, ZERO, cmode0, rmode0
     B.IOR [\reg],[]
     B.IOT t#1, last, ->t<4KB>
     .endm
@@ -88,7 +87,6 @@ linx_tepl_reject_acr0_trap_handler:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 4, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG VV
     B.IOT t#2, t#1, last, ->t<4KB>
 
     STORE_FP32 a2
@@ -107,7 +105,6 @@ linx_tepl_reject_acr0_trap_handler:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 4, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG VV
     B.IOT t#1, last, ->t<4KB>
 
     STORE_FP32 a1
@@ -147,7 +144,7 @@ linx_tepl_reject_acr0_trap_handler:
     C.B.DIMI 3, ->lb0
     C.B.DIMI 2, ->lb1
     C.B.DIMI 4, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, FP32, ZERO, cmode0, rmode0
     B.IOR [a0],[]
     B.IOT last, ->t<512B>
 
@@ -155,7 +152,6 @@ linx_tepl_reject_acr0_trap_handler:
     C.B.DIMI 3, ->lb0
     C.B.DIMI 2, ->lb1
     C.B.DIMI 4, ->lb2
-    B.ARG VV
     .if \emit_datr
     B.DATR normal, FP32, \pad, cmode0, rmode0
     .endif
@@ -165,7 +161,7 @@ linx_tepl_reject_acr0_trap_handler:
     C.B.DIMI 4, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 4, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, FP32, ZERO, cmode0, rmode0
     B.IOR [a1],[]
     B.IOT t#1, last, ->t<512B>
 
@@ -188,7 +184,7 @@ linx_tepl_reject_acr0_trap_handler:
     C.B.DIMI 3, ->lb0
     C.B.DIMI 2, ->lb1
     C.B.DIMI 4, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, \dtype, ZERO, cmode0, rmode0
     B.IOR [a0],[]
     B.IOT last, ->t<512B>
 
@@ -196,7 +192,6 @@ linx_tepl_reject_acr0_trap_handler:
     C.B.DIMI 3, ->lb0
     C.B.DIMI 2, ->lb1
     C.B.DIMI 4, ->lb2
-    B.ARG VV
     B.DATR normal, \dtype, \pad, cmode0, rmode0
     B.IOT t#1, last, ->t<512B>
 
@@ -204,7 +199,7 @@ linx_tepl_reject_acr0_trap_handler:
     C.B.DIMI 4, ->lb0
     C.B.DIMI 128, ->lb1
     C.B.DIMI 4, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, \dtype, ZERO, cmode0, rmode0
     B.IOR [a1],[]
     B.IOT t#1, last, ->t<512B>
 
@@ -225,20 +220,19 @@ linx_treshape_bytes:
     C.B.DIMI 4, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 4, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, FP32, ZERO, cmode0, rmode0
     B.IOR [a0],[]
     B.IOT last, ->t<512B>
     BSTART.TRESHAPE INT16
     C.B.DIMI 8, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG VV
     B.IOT t#1, last, ->t<512B>
     BSTART.TSTORE INT16
     C.B.DIMI 8, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT16, ZERO, cmode0, rmode0
     B.IOR [a1],[]
     B.IOT t#1, last, ->t<512B>
     FRET.STK [ra ~ ra], sp!, 8
@@ -252,27 +246,26 @@ linx_tconcat_f32:
     C.B.DIMI 3, ->lb0
     C.B.DIMI 2, ->lb1
     C.B.DIMI 4, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, FP32, ZERO, cmode0, rmode0
     B.IOR [a0],[]
     B.IOT last, ->t<512B>
     BSTART.TLOAD FP32
     C.B.DIMI 2, ->lb0
     C.B.DIMI 2, ->lb1
     C.B.DIMI 4, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, FP32, ZERO, cmode0, rmode0
     B.IOR [a1],[]
     B.IOT last, ->t<512B>
     BSTART.TCONCAT FP32
     C.B.DIMI 5, ->lb0
     C.B.DIMI 2, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG VV
     B.IOT t#2, t#1, last, ->t<512B>
     BSTART.TSTORE FP32
     C.B.DIMI 8, ->lb0
     C.B.DIMI 16, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, FP32, ZERO, cmode0, rmode0
     B.IOR [a2],[]
     B.IOT t#1, last, ->t<512B>
     FRET.STK [ra ~ ra], sp!, 8
@@ -284,21 +277,20 @@ linx_tgatherb_u8:
     FENTRY [ra ~ ra], sp!, 8
     BSTART.TLOAD UINT8
     C.B.DIMI 512, ->lb0
-    B.ARG NORM.normal
+    B.DATR normal, UINT8, ZERO, cmode0, rmode0
     B.IOR [a0],[]
     B.IOT last, ->t<512B>
     BSTART.TLOAD UINT32
     C.B.DIMI 8, ->lb0
-    B.ARG NORM.normal
+    B.DATR normal, UINT32, ZERO, cmode0, rmode0
     B.IOR [a1],[]
     B.IOT last, ->t<512B>
     BSTART.TGATHERB UINT8
     C.B.DIMI 8, ->lb0
-    B.ARG VV
     B.IOT t#2, t#1, last, ->t<512B>
     BSTART.TSTORE UINT8
     C.B.DIMI 512, ->lb0
-    B.ARG NORM.normal
+    B.DATR normal, UINT8, ZERO, cmode0, rmode0
     B.IOR [a2],[]
     B.IOT t#1, last, ->t<512B>
     FRET.STK [ra ~ ra], sp!, 8
@@ -310,12 +302,11 @@ linx_tci_s32:
     FENTRY [ra ~ ra], sp!, 8
     BSTART.TCI INT32
     C.B.DIMI 8, ->lb0
-    B.ARG VS
     B.IOR [a0],[a1]
     B.IOT last, ->t<512B>
     BSTART.TSTORE INT32
     C.B.DIMI 128, ->lb0
-    B.ARG NORM.normal
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOR [a2],[]
     B.IOT t#1, last, ->t<512B>
     FRET.STK [ra ~ ra], sp!, 8
@@ -329,14 +320,13 @@ linx_ttri_s32:
     C.B.DIMI 4, ->lb0
     C.B.DIMI 4, ->lb1
     C.B.DIMI 4, ->lb2
-    B.ARG VS
     B.IOR [a0],[a1]
     B.IOT last, ->t<512B>
     BSTART.TSTORE INT32
     C.B.DIMI 4, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 4, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOR [a2],[]
     B.IOT t#1, last, ->t<512B>
     FRET.STK [ra ~ ra], sp!, 8
@@ -350,21 +340,20 @@ linx_textract_f32:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 4, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, FP32, ZERO, cmode0, rmode0
     B.IOR [a0],[]
     B.IOT last, ->t<512B>
     BSTART.TEXTRACT FP32
     C.B.DIMI 3, ->lb0
     C.B.DIMI 2, ->lb1
     C.B.DIMI 4, ->lb2
-    B.ARG VS
     B.IOR [a1],[a2]
     B.IOT t#1, last, ->t<512B>
     BSTART.TSTORE FP32
     C.B.DIMI 4, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 4, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, FP32, ZERO, cmode0, rmode0
     B.IOR [a3],[]
     B.IOT t#1, last, ->t<512B>
     FRET.STK [ra ~ ra], sp!, 8
@@ -378,28 +367,27 @@ linx_tdequant_s8_f32:
     C.B.DIMI 4, ->lb0
     C.B.DIMI 3, ->lb1
     C.B.DIMI 4, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT8, ZERO, cmode0, rmode0
     B.IOR [a0],[]
     B.IOT last, ->t<512B>
     BSTART.TLOAD FP32
     C.B.DIMI 1, ->lb0
     C.B.DIMI 3, ->lb1
     C.B.DIMI 1, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, FP32, ZERO, cmode0, rmode0
     B.IOR [a1],[]
     B.IOT last, ->t<512B>
     BSTART.TLOAD FP32
     C.B.DIMI 1, ->lb0
     C.B.DIMI 3, ->lb1
     C.B.DIMI 1, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, FP32, ZERO, cmode0, rmode0
     B.IOR [a2],[]
     B.IOT last, ->t<512B>
     BSTART.TDEQUANT FP32
     C.B.DIMI 4, ->lb0
     C.B.DIMI 3, ->lb1
     C.B.DIMI 4, ->lb2
-    B.ARG VV
     B.DATR normal, INT8, ZERO, cmode0, rmode0
     B.IOT t#3, t#2
     B.IOT t#1, last, ->t<512B>
@@ -407,7 +395,7 @@ linx_tdequant_s8_f32:
     C.B.DIMI 4, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 4, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, FP32, ZERO, cmode0, rmode0
     B.IOR [a3],[]
     B.IOT t#1, last, ->t<512B>
     FRET.STK [ra ~ ra], sp!, 8
@@ -423,7 +411,7 @@ linx_tdequant_s8_f32:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 2, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOR [a0],[]
     B.IOT last, ->t<512B>
 
@@ -431,7 +419,7 @@ linx_tdequant_s8_f32:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 2, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOR [a1],[]
     B.IOT last, ->t<512B>
 
@@ -439,7 +427,6 @@ linx_tdequant_s8_f32:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 2, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG VV
     B.IOT t#1, t#2, ->t<512B>
     B.IOT last, ->t<512B>
 
@@ -448,7 +435,7 @@ linx_tdequant_s8_f32:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 16, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOR [a2],[]
     B.IOT t#1, last, ->t<512B>
 
@@ -456,7 +443,7 @@ linx_tdequant_s8_f32:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 16, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOR [a3],[]
     B.IOT t#1, last, ->t<512B>
 
@@ -480,7 +467,7 @@ linx_tdequant_s8_f32:
     C.B.DIMI 4, ->lb0
     C.B.DIMI 3, ->lb1
     C.B.DIMI 4, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, FP32, ZERO, cmode0, rmode0
     B.IOR [a0],[]
     B.IOT last, ->t<512B>
 
@@ -488,7 +475,7 @@ linx_tdequant_s8_f32:
     C.B.DIMI 2, ->lb0
     C.B.DIMI 2, ->lb1
     C.B.DIMI 4, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, FP32, ZERO, cmode0, rmode0
     B.IOR [a1],[]
     B.IOT last, ->t<512B>
 
@@ -496,14 +483,13 @@ linx_tdequant_s8_f32:
     C.B.DIMI 4, ->lb0
     C.B.DIMI 3, ->lb1
     C.B.DIMI 4, ->lb2
-    B.ARG VV
     B.IOT t#2, t#1, last, ->t<512B>
 
     BSTART.TSTORE FP32
     C.B.DIMI 4, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 4, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, FP32, ZERO, cmode0, rmode0
     B.IOR [a2],[]
     B.IOT t#1, last, ->t<512B>
 
@@ -526,7 +512,7 @@ linx_tdequant_s8_f32:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 2, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, FP32, ZERO, cmode0, rmode0
     B.IOR [a0],[]
     B.IOT last, ->t<512B>
 
@@ -534,7 +520,7 @@ linx_tdequant_s8_f32:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 2, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, FP32, ZERO, cmode0, rmode0
     B.IOR [a1],[]
     B.IOT last, ->t<512B>
 
@@ -542,7 +528,7 @@ linx_tdequant_s8_f32:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 2, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, UINT32, ZERO, cmode0, rmode0
     B.IOR [a2],[]
     B.IOT last, ->t<512B>
 
@@ -550,7 +536,7 @@ linx_tdequant_s8_f32:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 2, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, UINT32, ZERO, cmode0, rmode0
     B.IOR [a3],[]
     B.IOT last, ->t<512B>
 
@@ -558,7 +544,6 @@ linx_tdequant_s8_f32:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 2, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG VV
     B.IOT t#4, t#3, ->t<512B>
     B.IOT t#2, t#1, last, ->u<512B>
 
@@ -566,7 +551,7 @@ linx_tdequant_s8_f32:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 16, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, FP32, ZERO, cmode0, rmode0
     B.IOR [a4],[]
     B.IOT t#1, last, ->t<512B>
 
@@ -574,7 +559,7 @@ linx_tdequant_s8_f32:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 16, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, UINT32, ZERO, cmode0, rmode0
     B.IOR [a5],[]
     B.IOT u#1, last, ->u<512B>
 
@@ -600,7 +585,7 @@ linx_tdequant_s8_f32:
     C.B.DIMI 32, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 32, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, \dtype, ZERO, cmode0, rmode0
     B.IOR [a0],[]
     B.IOT last, ->t<4KB>
 
@@ -608,7 +593,7 @@ linx_tdequant_s8_f32:
     C.B.DIMI 32, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 32, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, \dtype, ZERO, cmode0, rmode0
     B.IOR [a1],[]
     B.IOT last, ->t<4KB>
 
@@ -616,7 +601,6 @@ linx_tdequant_s8_f32:
     C.B.DIMI 31, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 32, ->lb2
-    B.ARG VV
     B.DATR normal, \dtype, ZERO, cmode\cmode, rmode0
     B.IOT t#2, t#1, last, ->t<4KB>
 
@@ -624,7 +608,7 @@ linx_tdequant_s8_f32:
     C.B.DIMI 32, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 32, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, UINT32, ZERO, cmode0, rmode0
     B.IOR [a2],[]
     B.IOT t#1, last, ->t<4KB>
 
@@ -642,7 +626,7 @@ linx_tdequant_s8_f32:
     C.B.DIMI 32, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 32, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, \dtype, ZERO, cmode0, rmode0
     B.IOR [a0],[]
     B.IOT last, ->t<4KB>
 
@@ -650,7 +634,6 @@ linx_tdequant_s8_f32:
     C.B.DIMI 31, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 32, ->lb2
-    B.ARG VS
     B.DATR normal, \dtype, ZERO, cmode\cmode, rmode0
     B.IOR [a1],[]
     B.IOT t#1, last, ->t<4KB>
@@ -659,7 +642,7 @@ linx_tdequant_s8_f32:
     C.B.DIMI 32, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 32, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, UINT32, ZERO, cmode0, rmode0
     B.IOR [a2],[]
     B.IOT t#1, last, ->t<4KB>
 
@@ -698,7 +681,7 @@ linx_tdequant_s8_f32:
     C.B.DIMI 32, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 32, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, \dtype, ZERO, cmode0, rmode0
     B.IOR [a0],[]
     B.IOT last, ->t<\footprint>
 
@@ -706,7 +689,7 @@ linx_tdequant_s8_f32:
     C.B.DIMI 32, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 32, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, \dtype, ZERO, cmode0, rmode0
     B.IOR [a1],[]
     B.IOT last, ->t<\footprint>
 
@@ -714,14 +697,13 @@ linx_tdequant_s8_f32:
     C.B.DIMI 32, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 32, ->lb2
-    B.ARG VV
     B.IOT t#2, t#1, last, ->t<\footprint>
 
     BSTART.TSTORE \dtype
     C.B.DIMI 32, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 32, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, \dtype, ZERO, cmode0, rmode0
     B.IOR [a2],[]
     B.IOT t#1, last, ->t<\footprint>
 
@@ -739,7 +721,7 @@ linx_tdequant_s8_f32:
     C.B.DIMI 32, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 32, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, \dtype, ZERO, cmode0, rmode0
     B.IOR [a0],[]
     B.IOT last, ->t<\footprint>
 
@@ -747,14 +729,13 @@ linx_tdequant_s8_f32:
     C.B.DIMI 32, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 32, ->lb2
-    B.ARG VV
     B.IOT t#1, last, ->t<\footprint>
 
     BSTART.TSTORE \dtype
     C.B.DIMI 32, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 32, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, \dtype, ZERO, cmode0, rmode0
     B.IOR [a1],[]
     B.IOT t#1, last, ->t<\footprint>
 
@@ -780,7 +761,7 @@ linx_tdequant_s8_f32:
     C.B.DIMI 32, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 32, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, \src_dtype, ZERO, cmode0, rmode0
     B.IOR [a0],[]
     B.IOT last, ->t<\src_footprint>
 
@@ -788,14 +769,13 @@ linx_tdequant_s8_f32:
     C.B.DIMI 32, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 32, ->lb2
-    B.ARG VV
     B.IOT t#1, last, ->t<\dst_footprint>
 
     BSTART.TSTORE \dst_dtype
     C.B.DIMI 32, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 32, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, \dst_dtype, ZERO, cmode0, rmode0
     B.IOR [a1],[]
     B.IOT t#1, last, ->t<\dst_footprint>
 
@@ -817,7 +797,7 @@ linx_trems_s32:
     C.B.DIMI 32, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 32, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOR [a0],[]
     B.IOT last, ->t<4KB>
 
@@ -825,7 +805,6 @@ linx_trems_s32:
     C.B.DIMI 32, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 32, ->lb2
-    B.ARG VS
     B.IOR [a1],[]
     B.IOT t#1, last, ->t<4KB>
 
@@ -833,7 +812,7 @@ linx_trems_s32:
     C.B.DIMI 32, ->lb0
     C.B.DIMI 32, ->lb1
     C.B.DIMI 32, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOR [a2],[]
     B.IOT t#1, last, ->t<4KB>
 
@@ -853,7 +832,7 @@ linx_trems_s32:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 8, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, \src_dtype, ZERO, cmode0, rmode0
     B.IOR [a0],[]
     B.IOT last, ->t<4KB>
 
@@ -861,14 +840,13 @@ linx_trems_s32:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 8, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG VV
     B.IOT t#1, last, ->t<4KB>
 
     BSTART.TSTORE \dst_dtype
     C.B.DIMI \dst_cols, ->lb0
     C.B.DIMI \dst_rows, ->lb1
     C.B.DIMI \dst_stride, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, \dst_dtype, ZERO, cmode0, rmode0
     B.IOR [a1],[]
     B.IOT t#1, last, ->t<4KB>
 
@@ -895,7 +873,7 @@ linx_tsel_s32:
     C.B.DIMI 2, ->lb0
     C.B.DIMI 16, ->lb1
     C.B.DIMI 2, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, UINT32, ZERO, cmode0, rmode0
     B.IOR [a0],[]
     B.IOT last, ->t<4KB>
 
@@ -903,7 +881,7 @@ linx_tsel_s32:
     C.B.DIMI 64, ->lb0
     C.B.DIMI 16, ->lb1
     C.B.DIMI 64, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOR [a1],[]
     B.IOT last, ->t<4KB>
 
@@ -911,7 +889,7 @@ linx_tsel_s32:
     C.B.DIMI 64, ->lb0
     C.B.DIMI 16, ->lb1
     C.B.DIMI 64, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOR [a2],[]
     B.IOT last, ->t<4KB>
 
@@ -919,7 +897,6 @@ linx_tsel_s32:
     C.B.DIMI 64, ->lb0
     C.B.DIMI 16, ->lb1
     C.B.DIMI 64, ->lb2
-    B.ARG VV
     B.IOT t#3, t#2
     B.IOT t#1, last, ->t<4KB>
 
@@ -927,7 +904,7 @@ linx_tsel_s32:
     C.B.DIMI 64, ->lb0
     C.B.DIMI 16, ->lb1
     C.B.DIMI 64, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOR [a3],[]
     B.IOT t#1, last, ->t<4KB>
 
@@ -943,7 +920,7 @@ linx_tsels_s32:
     C.B.DIMI 2, ->lb0
     C.B.DIMI 16, ->lb1
     C.B.DIMI 2, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, UINT32, ZERO, cmode0, rmode0
     B.IOR [a0],[]
     B.IOT last, ->t<4KB>
 
@@ -951,7 +928,7 @@ linx_tsels_s32:
     C.B.DIMI 64, ->lb0
     C.B.DIMI 16, ->lb1
     C.B.DIMI 64, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOR [a1],[]
     B.IOT last, ->t<4KB>
 
@@ -959,7 +936,6 @@ linx_tsels_s32:
     C.B.DIMI 64, ->lb0
     C.B.DIMI 16, ->lb1
     C.B.DIMI 64, ->lb2
-    B.ARG VS
     B.IOR [a2],[]
     B.IOT t#2, t#1, last, ->t<4KB>
 
@@ -967,7 +943,7 @@ linx_tsels_s32:
     C.B.DIMI 64, ->lb0
     C.B.DIMI 16, ->lb1
     C.B.DIMI 64, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOR [a3],[]
     B.IOT t#1, last, ->t<4KB>
 
@@ -986,7 +962,7 @@ linx_tadd_rect_s32:
     C.B.DIMI 3, ->lb0
     C.B.DIMI 2, ->lb1
     C.B.DIMI 4, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOR [a0],[]
     B.IOT last, ->t<4KB>
 
@@ -994,7 +970,7 @@ linx_tadd_rect_s32:
     C.B.DIMI 3, ->lb0
     C.B.DIMI 2, ->lb1
     C.B.DIMI 4, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOR [a1],[]
     B.IOT last, ->t<4KB>
 
@@ -1002,14 +978,13 @@ linx_tadd_rect_s32:
     C.B.DIMI 3, ->lb0
     C.B.DIMI 2, ->lb1
     C.B.DIMI 4, ->lb2
-    B.ARG VV
     B.IOT t#2, t#1, last, ->t<4KB>
 
     BSTART.TSTORE INT32
     C.B.DIMI 3, ->lb0
     C.B.DIMI 2, ->lb1
     C.B.DIMI 4, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOR [a2],[]
     B.IOT t#1, last, ->t<4KB>
 

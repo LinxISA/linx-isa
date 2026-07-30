@@ -1,11 +1,9 @@
 .text
 v057_isa_forms:
-    B.ARG NORM.normal
+    B.DATR normal, FP32, ZERO, cmode0, rmode0
     B.DIM sp, 129, ->lb1
     B.IOR [sp,sp,sp],[a0]
     BSTART.ACCCVT FP32
-    BSTART.CUBE 3, FP32
-    BSTART.FIXP 31, FP32
     BSTART.TLOAD FP32
     BSTART.TSTORE FP32
     BSTART.TMATMUL FP16

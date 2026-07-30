@@ -261,7 +261,7 @@ NOTE: Restartable body-fetch faults are represented by the underlying MMU transl
       - `0 = B.* (generic descriptor stream / non-family-specific)`
       - `1 = B.DIM`
       - `2 = B.TEXT`
-      - `3 = B.ARG`
+      - `3 = B.CATR/B.DATR`
       - `4 = B.IOR`
       - `5 = B.IOT`
     - `TRAPARG0[15:8] = MissingDetail` (standard meanings):
@@ -272,7 +272,7 @@ NOTE: Restartable body-fetch faults are represented by the underlying MMU transl
     - upper bits reserved `0`
   - If multiple mandatory descriptor families are missing, implementations MUST report exactly one missing family.
     The reporting priority order is:
-    1. `B.ARG`
+    1. `B.CATR/B.DATR`
     2. `B.TEXT`
     3. `B.IOT`
     4. `B.IOR`

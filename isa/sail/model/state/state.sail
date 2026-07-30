@@ -221,7 +221,7 @@ function set_decoded_bior(regsrc0 : bits(5), regsrc1 : bits(5), regsrc2 : bits(5
 register bcatr_raw : bits(64) = 0x0000_0000_0000_0000
 register bdatr_raw : bits(64) = 0x0000_0000_0000_0000
 function bcatr_dr() -> bool = { bcatr_raw[26] == 0b1 }
-function bdatr_sat() -> bool = { bdatr_raw[31] == 0b1 }
+function bdatr_sat() -> bool = { bdatr_raw[26] == 0b1 }
 
 // LCFR (core feature) (staged): only LaneNum is currently consulted.
 // LaneNum is encoded in LCFR[19:16] and represents log2(vec_length).
@@ -1549,20 +1549,20 @@ function template_integrity_assert_fail(reason : bits(8)) -> unit = {
 // - docs/bringup/plan/isa_clarifications.md
 //
 // MissingDescFamily IDs (TRAPARG0[7:0]):
-//   1=B.DIM, 2=B.TEXT, 3=B.ARG, 4=B.IOR, 5=B.IOT
+//   1=B.DIM, 2=B.TEXT, 3=B.DATR, 4=B.IOR, 5=B.IOT
 // MissingDetail (TRAPARG0[15:8]):
 //   0x00 missing, 0x01 invalid/out-of-range, 0x02 illegal combination
 
 register bdesc_seen_dim : bool = false
 register bdesc_seen_text : bool = false
-register bdesc_seen_arg : bool = false
+register bdesc_seen_datr : bool = false
 register bdesc_seen_ior : bool = false
 register bdesc_seen_iot : bool = false
 
 function bdesc_reset() -> unit = {
   bdesc_seen_dim = false;
   bdesc_seen_text = false;
-  bdesc_seen_arg = false;
+  bdesc_seen_datr = false;
   bdesc_seen_ior = false;
   bdesc_seen_iot = false;
   clear_ri_bindings()
@@ -1570,7 +1570,7 @@ function bdesc_reset() -> unit = {
 
 function bdesc_mark_dim() -> unit = { bdesc_seen_dim = true }
 function bdesc_mark_text() -> unit = { bdesc_seen_text = true }
-function bdesc_mark_arg() -> unit = { bdesc_seen_arg = true }
+function bdesc_mark_datr() -> unit = { bdesc_seen_datr = true }
 function bdesc_mark_ior() -> unit = { bdesc_seen_ior = true }
 function bdesc_mark_iot() -> unit = { bdesc_seen_iot = true }
 
@@ -1593,7 +1593,7 @@ function bdesc_illegal_combo_or_trap(family : bits(8), src_pc_or_tpc : bits(64))
 function bdesc_validate_header_end(src_pc_or_tpc : bits(64)) -> unit = {
   // Enforce mandatory descriptor families per tile/vector block type.
   // If multiple are missing, report exactly one using the priority order:
-  //   B.ARG > B.TEXT > B.IOT > B.IOR > B.DIM
+  //   B.DATR > B.TEXT > B.IOT > B.IOR > B.DIM
   let k = decoded_block_contract_kind();
   match k {
     // VEC: SIMT vector blocks (VPAR/VSEQ/MPAR/MSEQ): require DIM + TEXT.
@@ -1605,10 +1605,10 @@ function bdesc_validate_header_end(src_pc_or_tpc : bits(64)) -> unit = {
         vec_init_p_for_group(ssr_lc1)
       }
     },
-    // TMA: TLOAD/TSTORE: require ARG + IOR + IOT; TEXT illegal.
+    // TMA: require DATR + IOR + IOT; TEXT illegal.
     0b0010 => {
       if bdesc_seen_text then bdesc_illegal_combo_or_trap(0x02, src_pc_or_tpc)
-      else if not_bool(bdesc_seen_arg) then trap_blockfmt(0x03, 0x00, src_pc_or_tpc)
+      else if not_bool(bdesc_seen_datr) then trap_blockfmt(0x03, 0x00, src_pc_or_tpc)
       else if not_bool(bdesc_seen_iot) then trap_blockfmt(0x05, 0x00, src_pc_or_tpc)
       else if not_bool(bdesc_seen_ior) then trap_blockfmt(0x04, 0x00, src_pc_or_tpc)
       else ()
@@ -1619,21 +1619,19 @@ function bdesc_validate_header_end(src_pc_or_tpc : bits(64)) -> unit = {
       else if not_bool(bdesc_seen_iot) then trap_blockfmt(0x05, 0x00, src_pc_or_tpc)
       else ()
     },
-    // CUBE: require DIM + IOT + ARG; TEXT illegal.
+    // CUBE: require DIM + IOT + DATR; TEXT illegal.
     0b0100 => {
       if bdesc_seen_text then bdesc_illegal_combo_or_trap(0x02, src_pc_or_tpc)
-      else if not_bool(bdesc_seen_arg) then trap_blockfmt(0x03, 0x00, src_pc_or_tpc)
+      else if not_bool(bdesc_seen_datr) then trap_blockfmt(0x03, 0x00, src_pc_or_tpc)
       else if not_bool(bdesc_seen_iot) then trap_blockfmt(0x05, 0x00, src_pc_or_tpc)
       else if not_bool(bdesc_seen_dim) then trap_blockfmt(0x01, 0x00, src_pc_or_tpc)
       else ()
     },
-    // ACCCVT: require DIM + IOT + ARG + IOR; TEXT illegal.
+    // ACCCVT: require DATR + destination IOT; shape is inherited from ACC.
     0b0101 => {
       if bdesc_seen_text then bdesc_illegal_combo_or_trap(0x02, src_pc_or_tpc)
-      else if not_bool(bdesc_seen_arg) then trap_blockfmt(0x03, 0x00, src_pc_or_tpc)
+      else if not_bool(bdesc_seen_datr) then trap_blockfmt(0x03, 0x00, src_pc_or_tpc)
       else if not_bool(bdesc_seen_iot) then trap_blockfmt(0x05, 0x00, src_pc_or_tpc)
-      else if not_bool(bdesc_seen_ior) then trap_blockfmt(0x04, 0x00, src_pc_or_tpc)
-      else if not_bool(bdesc_seen_dim) then trap_blockfmt(0x01, 0x00, src_pc_or_tpc)
       else ()
     },
     // HDRDRV: header-driven engine ops: TEXT illegal; mandatory families are op-specific.

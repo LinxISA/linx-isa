@@ -3,7 +3,7 @@
 <!-- Hero Banner -->
 <div class="isa-hero">
 
-**ISA Version:** v0.57.1 &nbsp;·&nbsp; **768 instruction forms** &nbsp;·&nbsp; **67 groups** &nbsp;·&nbsp; **4 encoding formats**
+**ISA Version:** v0.57.1 &nbsp;·&nbsp; **761 instruction forms** &nbsp;·&nbsp; **67 groups** &nbsp;·&nbsp; **4 encoding formats**
 
 ---
 
@@ -25,7 +25,7 @@ The LinxISA manual is organized into 12 chapters covering distinct functional un
 : Bit numbering, instruction lengths, decode tags, field colour key
 
 [![](assets/ch04.svg){: style="width:120px;height:80px"} **Ch 04 — Block ISA**{.chapter-card style="--ch04-color:#8b5cf6"}
-: BSTART, BSTOP, B.ARG, B.DIM, tile/SIMT control flow
+: BSTART, BSTOP, B.DATR, B.DIM, B.IOT, tile/SIMT control flow
 
 [![](assets/ch11.svg){: style="width:120px;height:80px"} **Ch 11 — AGU**{.chapter-card style="--ch11-color:#059669"}
 : Loads, stores, prefetch, all addressing modes
@@ -66,9 +66,9 @@ The LinxISA manual is organized into 12 chapters covering distinct functional un
 <div class="group-card-grid">
 [Arithmetic (1)](groups/arithmetic.md){.group-card} [Arithmetic Operation (20)](groups/arithmetic_operation.md){.group-card} [Arithmetic Operation 32bit (21)](groups/arithmetic_operation_32bit.md){.group-card} [Arithmetic Operation 64bit (21)](groups/arithmetic_operation_64bit.md){.group-card}
 [Atomic (4)](groups/atomic.md){.group-card} [Atomic Operation (72)](groups/atomic_operation.md){.group-card} [BSTART (20)](groups/bstart.md){.group-card} [Bit Manipulation (8)](groups/bit_manipulation.md){.group-card}
-[Bit Operation (8)](groups/bit_operation.md){.group-card} [Block Argument (9)](groups/block_argument.md){.group-card} [Block Control Attribute (1)](groups/block_control_attribute.md){.group-card} [Block Data Attribute (1)](groups/block_data_attribute.md){.group-card}
+[Bit Operation (8)](groups/bit_operation.md){.group-card} [Block Argument (3)](groups/block_argument.md){.group-card} [Block Control Attribute (1)](groups/block_control_attribute.md){.group-card} [Block Data Attribute (1)](groups/block_data_attribute.md){.group-card}
 [Block Dimension (2)](groups/block_dimension.md){.group-card} [Block Hint (2)](groups/block_hint.md){.group-card} [Block Input & Output (6)](groups/block_input_output.md){.group-card} [Block Offset (1)](groups/block_offset.md){.group-card}
-[Block Split (58)](groups/block_split.md){.group-card} [Branch (10)](groups/branch.md){.group-card} [C.BSTART (7)](groups/c_bstart.md){.group-card} [C.TINST (6)](groups/c_tinst.md){.group-card}
+[Block Split (57)](groups/block_split.md){.group-card} [Branch (10)](groups/branch.md){.group-card} [C.BSTART (7)](groups/c_bstart.md){.group-card} [C.TINST (6)](groups/c_tinst.md){.group-card}
 [C.UNARY (7)](groups/c_unary.md){.group-card} [Cache Maintain (16)](groups/cache_maintain.md){.group-card} [Compare Instruction (40)](groups/compare_instruction.md){.group-card} [Compound Operation (1)](groups/compound_operation.md){.group-card}
 [Concat (2)](groups/concat.md){.group-card} [DMA Operation (1)](groups/dma_operation.md){.group-card} [Division (2)](groups/division.md){.group-card} [Execution Control (10)](groups/execution_control.md){.group-card}
 [Floating Point Arithmetic (5)](groups/floating_point_arithmetic.md){.group-card} [Floating-point Arithmetic (12)](groups/floating_point_arithmetic.md){.group-card} [Floating-point Compare (8)](groups/floating_point_compare.md){.group-card} [Format Convert (12)](groups/format_convert.md){.group-card}
@@ -114,10 +114,9 @@ Use **Ctrl+F** / **Cmd+F** to search, or browse the [full alphabetical list](ins
 | [HL.ADDTPC](instructions/hl_addtpc.md) | pc_relative | 48 | [48-bit HL.] Instruction from the PC-Relative group. |
 | [HL.SETRET](instructions/hl_setret.md) | pc_relative | 48 | [48-bit HL.] Instruction from the PC-Relative group. |
 | [SETRET](instructions/setret.md) | pc_relative | 32 | Materializes a return address (ra) using a PC-relative offset. Used in call headers. |
-| [B.ARG](instructions/b_arg.md) | block_argument | 32 | Instruction from the Block Argument group. |
-| [B.DIM](instructions/b_dim.md) | block_argument | 32 | Instruction from the Block Argument group. |
 | [B.CATR](instructions/b_catr.md) | block_control_attribute | 32 | Instruction from the Block Control Attribute group. |
 | [B.DATR](instructions/b_datr.md) | block_data_attribute | 32 | Instruction from the Block Data Attribute group. |
+| [B.DIM](instructions/b_dim.md) | block_argument | 32 | Instruction from the Block Argument group. |
 | [B.EQ](instructions/b_eq.md) | branch | 32 | Conditional branch taken when SrcL equals SrcR. |
 | [B.GE](instructions/b_ge.md) | branch | 32 | Conditional branch taken when SrcL is greater than or equal to SrcR (signed). |
 | [B.GEU](instructions/b_geu.md) | branch | 32 | Conditional branch taken when SrcL is greater than or equal to SrcR (unsigned). |
@@ -139,9 +138,9 @@ Use **Ctrl+F** / **Cmd+F** to search, or browse the [full alphabetical list](ins
 | [BXU](instructions/bxu.md) | bit_operation | 32 | Bit-field extract unsigned. |
 | [BSTART](instructions/bstart.md) | block_split | 32 | Block split marker. Terminates the current basic block and begins the next. Encodes block type and transition kind. |
 | [BSTART.ACCCVT](instructions/bstart_acccvt.md) | block_split | 32 | Terminates the current block and begins the next. |
-| [BSTART.FIXP](instructions/bstart_fixp.md) | block_split | 32 | Terminates the current block and begins the next. |
 | [BSTART.FP](instructions/bstart_fp.md) | block_split | 32 | Terminates the current block and begins the next. |
 | [BSTART.MGATHER](instructions/bstart_mgather.md) | block_split | 32 | Terminates the current block and begins the next. |
+| [BSTART.MGATHER.CAS](instructions/bstart_mgather_cas.md) | block_split | 32 | Terminates the current block and begins the next. |
 | [BSTART CALL](instructions/bstart_call.md) | bstart | 32 | Atomic fused call with independent call-target and return-target fields; transfers to the call block and writes `ra`. This exact aggregate is distinct from the generic bare-call form, which preserves `ra` and requires an adjacent `SETRET` or `C.SETRET`. |
 | [HL.BSTART CALL](instructions/hl_bstart_call.md) | bstart | 48 | [48-bit HL.] Atomic fused call with independent call-target and return-target fields; transfers to the call block and writes `ra`. This exact aggregate is distinct from the generic bare-call form, which preserves `ra` and requires an adjacent `SETRET` or `C.SETRET`. |
 | [HL.BSTART.FP](instructions/hl_bstart_fp.md) | bstart | 48 | [48-bit HL.] Terminates the current block and begins the next. |
@@ -365,4 +364,4 @@ Use **Ctrl+F** / **Cmd+F** to search, or browse the [full alphabetical list](ins
 | [V.SHFL.UP](instructions/v_shfl_up.md) | shuffle | 64 | [64-bit V.] Instruction from the Shuffle group. |
 | [V.SHFLI.BFLY](instructions/v_shfli_bfly.md) | shuffle | 64 | [64-bit V.] Instruction from the Shuffle group. |
 
-[View all 768 instruction forms →](instructions/index.md)
+[View all 761 instruction forms →](instructions/index.md)

@@ -13,7 +13,7 @@ linx_tmatmul_bias_s32:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 8, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOR [a0],[]
     B.IOT last, ->t<512B>
 
@@ -21,7 +21,7 @@ linx_tmatmul_bias_s32:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 8, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOR [a1],[]
     B.IOT last, ->t<512B>
 
@@ -29,7 +29,7 @@ linx_tmatmul_bias_s32:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 1, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOR [a2],[]
     B.IOT last, ->t<512B>
 
@@ -37,17 +37,19 @@ linx_tmatmul_bias_s32:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 8, ->lb1
     C.B.DIMI 8, ->lb2
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOT t#3, t#2
-    B.IOT t#1, last, ->acc<512B>
+    B.IOT t#1, last
 
     BSTART.ACCCVT INT32
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOT last, ->m<512B>
 
     BSTART.TSTORE INT32
     C.B.DIMI 8, ->lb0
     C.B.DIMI 16, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOR [a3],[]
     B.IOT m#1, last, ->m<512B>
 
@@ -66,7 +68,7 @@ linx_tgemv_s32:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 8, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOR [a0],[]
     B.IOT last, ->t<512B>
 
@@ -74,7 +76,7 @@ linx_tgemv_s32:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 8, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOR [a1],[]
     B.IOT last, ->t<512B>
 
@@ -82,16 +84,18 @@ linx_tgemv_s32:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 1, ->lb1
     C.B.DIMI 8, ->lb2
-    B.IOT t#2, t#1, last, ->acc<512B>
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
+    B.IOT t#2, t#1, last
 
     BSTART.ACCCVT INT32
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOT last, ->m<512B>
 
     BSTART.TSTORE INT32
     C.B.DIMI 8, ->lb0
     C.B.DIMI 16, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOR [a2],[]
     B.IOT m#1, last, ->m<512B>
 
@@ -107,7 +111,7 @@ linx_tgemv_acc_s32:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 8, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOR [a0],[]
     B.IOT last, ->t<512B>
 
@@ -115,7 +119,7 @@ linx_tgemv_acc_s32:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 8, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOR [a1],[]
     B.IOT last, ->t<512B>
 
@@ -123,25 +127,29 @@ linx_tgemv_acc_s32:
     C.B.DIMI 8, ->lb0
     C.B.DIMI 1, ->lb1
     C.B.DIMI 8, ->lb2
-    B.IOT t#2.reuse, t#1.reuse, last, ->acc<512B>
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
+    B.IOT t#2.reuse, t#1.reuse, last
 
     BSTART.ACCCVT INT32
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOT last, ->m<512B>
 
     BSTART.TGEMV.ACC INT32
     C.B.DIMI 8, ->lb0
     C.B.DIMI 1, ->lb1
     C.B.DIMI 8, ->lb2
-    B.IOT t#2, t#1, last, ->acc<512B>
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
+    B.IOT t#2, t#1, last
 
     BSTART.ACCCVT INT32
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOT last, ->m<512B>
 
     BSTART.TSTORE INT32
     C.B.DIMI 8, ->lb0
     C.B.DIMI 16, ->lb1
     C.B.DIMI 8, ->lb2
-    B.ARG NORM.normal
+    B.DATR normal, INT32, ZERO, cmode0, rmode0
     B.IOR [a2],[]
     B.IOT m#1, last, ->m<512B>
 

@@ -18,6 +18,7 @@ ABI = "pto-isa-0.57.1-mode-function-v1"
 LOCK_REF = "isa/v0.57/pto-spec.lock.json"
 HASH = re.compile(r"^[0-9a-f]{64}$")
 ALIASES = {"TTRANSPOSE": "TTRANS", "TSORT32": "TSORT"}
+RETIRED_COMMAND_MNEMONICS = {"B.ARG", "BSTART.CUBE", "BSTART.FIXP"}
 
 
 def _load(path: Path) -> Any:
@@ -209,6 +210,11 @@ def validate(root: Path) -> list[str]:
     if families != Counter({"CMD": 74, "BBD": 25}):
         errors.append(f"command source families differ from 74 CMD / 25 BBD: {dict(families)}")
     _validate_compiled_forms(root, commands, errors)
+    compiled_mnemonics = {str(item.get("mnemonic")) for item in _load(
+        root / "isa/v0.57/linxisa-v0.57.json").get("instructions", [])}
+    retired_leaks = sorted(RETIRED_COMMAND_MNEMONICS & compiled_mnemonics)
+    if retired_leaks:
+        errors.append(f"retired PTO command forms remain executable: {retired_leaks}")
     return errors
 
 

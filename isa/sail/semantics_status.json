@@ -48,30 +48,6 @@
       "mnemonic": "ASSERT",
       "status": "executable-subset"
     },
-    "b_arg_32_374ec956affe": {
-      "mnemonic": "B.ARG",
-      "status": "executable-subset"
-    },
-    "b_arg_32_47e8ac50ac96": {
-      "mnemonic": "B.ARG",
-      "status": "executable-subset"
-    },
-    "b_arg_32_5c8bfa662370": {
-      "mnemonic": "B.ARG",
-      "status": "executable-subset"
-    },
-    "b_arg_32_95152c29a268": {
-      "mnemonic": "B.ARG",
-      "status": "executable-subset"
-    },
-    "b_arg_32_c6d5c49a4ad7": {
-      "mnemonic": "B.ARG",
-      "status": "executable-subset"
-    },
-    "b_arg_32_f19d18f2126b": {
-      "mnemonic": "B.ARG",
-      "status": "executable-subset"
-    },
     "b_catr_32_8f94bdb16d29": {
       "mnemonic": "B.CATR",
       "status": "executable-subset"
@@ -198,10 +174,6 @@
     },
     "bstart_call_32_9404418d1ae5": {
       "mnemonic": "BSTART CALL",
-      "status": "executable-subset"
-    },
-    "bstart_fixp_32_3b0ae11126a6": {
-      "mnemonic": "BSTART.FIXP",
       "status": "executable-subset"
     },
     "bstart_fp_32_0c671a644214": {
