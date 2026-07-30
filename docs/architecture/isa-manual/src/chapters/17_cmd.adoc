@@ -14,7 +14,6 @@ The Command (CMD) group covers the block-split instruction forms (typed `BSTART.
 * TMA-family typed starts such as `TLOAD`, `TSTORE`, and `TMOV` -- tile memory access.
 * CUBE-family typed starts such as `TMATMUL`, `TMATMUL.ACC`, and `ACCCVT` -- tile matrix operations.
 * `BSTART.TEPL` with Mode/Function selection -- template operations such as `TADD`.
-* `.FIXP` -- fixed-point block type.
 
 Typed block starts are the only public spellings for TMA and CUBE operations. TEPL uses the public `BSTART.TEPL` raw form with Mode/Function fields; unassigned selectors are illegal instructions.
 
@@ -31,7 +30,6 @@ include::../generated/instructions/bstart_mseq.adoc[]
 include::../generated/instructions/bstart_mpar.adoc[]
 include::../generated/instructions/bstart_vseq.adoc[]
 include::../generated/instructions/bstart_vpar.adoc[]
-include::../generated/instructions/bstart_fixp.adoc[]
 include::../generated/instructions/bstart_acccvt.adoc[]
 include::../generated/instructions/bstart_tepl.adoc[]
 include::../generated/instructions/bstart_tload.adoc[]
@@ -76,7 +74,6 @@ include::../generated/instructions/xb.adoc[]
 
 include::../generated/instructions/b_iot.adoc[]
 include::../generated/instructions/b_ior.adoc[]
-include::../generated/instructions/b_arg.adoc[]
 include::../generated/instructions/b_catr.adoc[]
 include::../generated/instructions/b_datr.adoc[]
 include::../generated/instructions/b_hint.adoc[]
