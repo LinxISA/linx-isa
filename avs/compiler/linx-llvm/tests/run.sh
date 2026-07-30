@@ -390,8 +390,8 @@ if [[ -d "$NEG_DIR" ]]; then
     echo "error: TEPL range negative test unexpectedly assembled" >&2
     exit 1
   fi
-  if ! grep -Eq "TileOp10 must be in range 0\\.\\.1023|TileOpcode must be in range 0\\.\\.1023|Match Instruction Error!" "$NEG_OUT/tepl_tileop_range.err"; then
-    echo "error: TEPL range negative test did not report a range/match failure" >&2
+  if ! grep -Eq "BSTART\\.TEPL requires Mode 0\\.\\.3 and Function 0\\.\\.31|Match Instruction Error!" "$NEG_OUT/tepl_tileop_range.err"; then
+    echo "error: TEPL range negative test did not report the Mode/Function range failure" >&2
     cat "$NEG_OUT/tepl_tileop_range.err" >&2
     exit 1
   fi

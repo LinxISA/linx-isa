@@ -15,6 +15,12 @@ assert SPEC and SPEC.loader
 coverage = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(coverage)
 
+VECTOR_SCRIPT = Path(__file__).with_name("gen_disasm_vectors.py")
+VECTOR_SPEC = importlib.util.spec_from_file_location("gen_disasm_vectors", VECTOR_SCRIPT)
+assert VECTOR_SPEC and VECTOR_SPEC.loader
+vectors = importlib.util.module_from_spec(VECTOR_SPEC)
+VECTOR_SPEC.loader.exec_module(vectors)
+
 
 class AnalyzeCoverageTest(unittest.TestCase):
     def write_spec(self, root: Path, *mnemonics: str) -> Path:
@@ -158,6 +164,28 @@ class AnalyzeCoverageTest(unittest.TestCase):
 
             self.assertEqual(report["covered_spec_mnemonics"], 1)
             self.assertEqual(report["unmapped_emitted_mnemonics"], [])
+
+    def test_tepl_friendly_alias_covers_raw_carrier_not_generic_bstart(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            spec_data = coverage.load_isa_spec(
+                self.write_spec(root, "BSTART", "BSTART.TEPL")
+            )
+            self.write_objdump(root / "out", "tepl", "BSTART.TDIVS")
+
+            report = coverage.analyze_coverage(spec_data, root / "out")
+
+            self.assertEqual(report["covered_spec_mnemonics"], 1)
+            self.assertEqual(report["missing_mnemonics"], ["BSTART"])
+            self.assertEqual(report["mapped_by_test"]["tepl"], ["BSTART.TEPL"])
+
+    def test_frame_vector_seed_uses_legal_minimum_stack_size(self) -> None:
+        for mnemonic in ("FENTRY", "FEXIT", "FRET.RA", "FRET.STK"):
+            self.assertEqual(
+                vectors._default_field_value("DstBegin", 5, mnemonic), 10
+            )
+            self.assertEqual(vectors._default_field_value("DstEnd", 5, mnemonic), 10)
+            self.assertEqual(vectors._default_field_value("uimm", 12, mnemonic), 8)
 
     def test_fail_under_returns_two_for_incomplete_observed_coverage(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
