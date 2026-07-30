@@ -172,7 +172,9 @@ CONTRACT_KIND_CODES = {
     "C.BSTART.MPAR": "0b0001",
     "C.BSTART.MSEQ": "0b0001",
     "BSTART.TLOAD": "0b0010",
-    "BSTART.TPREFETCH": "0b0010",
+    # TPREFETCH is scalar-address/byte-count driven and has no Tile IO.
+    # Its exact DATR+IOR contract is enforced by the tile transaction envelope.
+    "BSTART.TPREFETCH": "0b0110",
     "BSTART.MGATHER": "0b0010",
     "BSTART.MGATHER.CAS": "0b0010",
     "BSTART.MGATHER.MASK": "0b0010",
@@ -345,6 +347,31 @@ def canonical_redecode_entries(retired_metadata: dict[str, Any] | None) -> list[
             }
         )
     return canonical
+
+
+def reserved_encoding_entries(
+    retired_metadata: dict[str, Any] | None,
+    width: int,
+) -> list[dict[str, Any]]:
+    if retired_metadata is None:
+        return []
+    entries = retired_metadata.get("entries")
+    if not isinstance(entries, list):
+        raise ValueError("retired encoding metadata must contain an entries list")
+
+    reserved = []
+    for idx, entry in enumerate(entries):
+        if entry.get("disposition") != "reserved" or entry.get("length_bits") != width:
+            continue
+        missing = [key for key in ("mask", "match", "retired_mnemonic") if key not in entry]
+        if missing:
+            raise ValueError(f"reserved entry {idx} is missing required field(s): {', '.join(missing)}")
+        mask = parse_hexish(entry["mask"])
+        match = parse_hexish(entry["match"])
+        if match & ~mask:
+            raise ValueError(f"reserved entry {idx} has match bits outside mask")
+        reserved.append({"mask": mask, "match": match, "retired_mnemonic": entry["retired_mnemonic"]})
+    return reserved
 
 
 def one_part_pattern(inst: dict[str, Any]) -> tuple[int, int] | None:
@@ -529,7 +556,17 @@ def branch_condition(inst: dict) -> str:
             conditions.append(
                 constraint_expr(inst, constraint["field"], constraint["op"], constraint["value"])
             )
-    return " & ".join(conditions)
+    while len(conditions) > 1:
+        combined: list[str] = []
+        for idx in range(0, len(conditions), 2):
+            if idx + 1 == len(conditions):
+                combined.append(conditions[idx])
+            else:
+                combined.append(
+                    f"and_bool_no_flow({conditions[idx]}, {conditions[idx + 1]})"
+                )
+        conditions = combined
+    return conditions[0]
 
 
 def decode_vector_type_expr(raw_name: str, mnemonic: str) -> str:
@@ -686,6 +723,9 @@ def prelude_lines(inst: dict, raw_fields: dict[str, tuple[str, int]], width: int
             f"{raw_fields['RegDst'][0]});"
         )
 
+    elif mnemonic == "B.IOT":
+        lines.append("decoded_biot_raw_shadow = sail_zero_extend(inst, 64);")
+
     if (
         mnemonic.startswith("BSTART")
         or mnemonic.startswith("C.BSTART")
@@ -698,6 +738,8 @@ def prelude_lines(inst: dict, raw_fields: dict[str, tuple[str, int]], width: int
         lines.append(f"decoded_block_type_shadow = {block_type};")
         lines.append(f"decoded_block_xfer_kind_shadow = {block_xfer_expr(inst, raw_fields)};")
         lines.append(f"decoded_block_contract_kind_shadow = {contract_kind};")
+        if "DataType" in raw_fields:
+            lines.append(f"decoded_tile_datatype_shadow = {raw_fields['DataType'][0]};")
 
     if mnemonic.startswith(VECTOR_ALL_MNEMONICS_PREFIX):
         srcl_t = "decoded_vec_srcl_type_shadow"
@@ -792,21 +834,228 @@ def render_decode_function(
     retired_metadata: dict[str, Any] | None = None,
 ) -> list[str]:
     func_name = WIDTH_FUNCS[width]
-    lines = [f"function {func_name}(inst : bits({width})) -> unit = {{"]  # noqa: E231
+    ordered = order_decode_entries(entries, retired_metadata)
+    reserved = reserved_encoding_entries(retired_metadata, width)
+    if width == 32:
+        return render_decode32_partitioned(func_name, ordered, exec_params, reserved)
+
+    lines: list[str] = []
+    for idx, inst in enumerate(ordered):
+        lines.extend(render_decode_match_predicate(func_name, idx, width, inst))
+    lines.append(f"function {func_name}(inst : bits({width})) -> unit = {{")  # noqa: E231
     if width == 64:
         lines.append("  let part0 : bits(32) = inst[63..32];")
         lines.append("  let part1 : bits(32) = inst[31..0];")
-    ordered = order_decode_entries(entries, retired_metadata)
+    branch_index = 0
+    for rule in reserved:
+        prefix = "if" if branch_index == 0 else "else if"
+        lines.append(
+            f"  {prefix} (inst & {hex_const(rule['mask'], width)}) == "
+            f"{hex_const(rule['match'], width)} then {{"
+        )
+        lines.append(f"    // Reserved retired encoding: {rule['retired_mnemonic']}")
+        lines.append("    trap_illegal_inst(read_pc_or_tpc())")
+        lines.append("  }")
+        branch_index += 1
     for idx, inst in enumerate(ordered):
-        prefix = "if" if idx == 0 else "else if"
-        lines.append(f"  {prefix} {branch_condition(inst)} then {{")
+        prefix = "if" if branch_index == 0 else "else if"
+        lines.append(f"  {prefix} {func_name}_match_{idx}(inst) then {{")
         for stmt in branch_body(inst, exec_params):
             lines.append(f"    {stmt}")
         lines.append("  }")
+        branch_index += 1
     lines.append("  else {")
     lines.append("    trap_illegal_inst(read_pc_or_tpc())")
     lines.append("  }")
     lines.append("}")
+    return lines
+
+
+def render_decode_match_predicate(
+    func_name: str,
+    idx: int,
+    width: int,
+    inst: dict,
+) -> list[str]:
+    """Hide encoding refinements behind a bool-valued function boundary."""
+
+    lines = [f"function {func_name}_match_{idx}(inst : bits({width})) -> bool = {{"]
+    if width == 64:
+        lines.append("  let part0 : bits(32) = inst[63..32];")
+        lines.append("  let part1 : bits(32) = inst[31..0];")
+    lines.append(f"  {branch_condition(inst)}")
+    lines.append("}")
+    lines.append("")
+    return lines
+
+
+def render_decode32_partitioned(
+    func_name: str,
+    ordered: list[dict],
+    exec_params: dict[str, list[str]],
+    reserved: list[dict[str, Any]],
+) -> list[str]:
+    """Render the 32-bit catalog behind an exact low-opcode dispatcher.
+
+    A single 329-arm else-if chain makes Sail retain every prior singleton
+    negation as a flow fact and causes type checking to grow beyond CI-scale
+    time. All but the BSTART.CALL form fix inst[6..0], so route those disjoint
+    sets first and keep only genuinely broad encodings in the outer chain.
+    """
+
+    exact_groups: dict[int, list[dict]] = defaultdict(list)
+    broad: list[dict] = []
+    for inst in ordered:
+        part = inst["encoding"]["parts"][0]
+        mask = parse_hexish(part["mask"])
+        match = parse_hexish(part["match"])
+        if (mask & 0x7F) == 0x7F:
+            exact_groups[match & 0x7F].append(inst)
+        else:
+            broad.append(inst)
+
+    for broad_inst in broad:
+        broad_part = broad_inst["encoding"]["parts"][0]
+        broad_pattern = (parse_hexish(broad_part["mask"]), parse_hexish(broad_part["match"]))
+        for group in exact_groups.values():
+            for exact_inst in group:
+                exact_part = exact_inst["encoding"]["parts"][0]
+                exact_pattern = (parse_hexish(exact_part["mask"]), parse_hexish(exact_part["match"]))
+                if encoding_patterns_overlap(*broad_pattern, *exact_pattern):
+                    raise ValueError(
+                        "cannot partition overlapping 32-bit broad/exact encodings: "
+                        f"{broad_inst['mnemonic']} and {exact_inst['mnemonic']}"
+                    )
+
+    lines: list[str] = []
+    for opcode, group in sorted(exact_groups.items()):
+        lines.extend(render_decode32_opcode_group(func_name, opcode, group, exec_params))
+
+    lines.append(f"function {func_name}(inst : bits(32)) -> unit = {{")
+    branch_index = 0
+    for rule in reserved:
+        prefix = "if" if branch_index == 0 else "else if"
+        lines.append(
+            f"  {prefix} (inst & {hex_const(rule['mask'], 32)}) == "
+            f"{hex_const(rule['match'], 32)} then {{"
+        )
+        lines.append(f"    // Reserved retired encoding: {rule['retired_mnemonic']}")
+        lines.append("    trap_illegal_inst(read_pc_or_tpc())")
+        lines.append("  }")
+        branch_index += 1
+    for inst in broad:
+        prefix = "if" if branch_index == 0 else "else if"
+        lines.append(f"  {prefix} {branch_condition(inst)} then {{")
+        for stmt in branch_body(inst, exec_params):
+            lines.append(f"    {stmt}")
+        lines.append("  }")
+        branch_index += 1
+    if branch_index:
+        lines.append("  else {")
+        indent = "    "
+    else:
+        indent = "  "
+    lines.append(f"{indent}match inst[6..0] {{")
+    arms = [
+        f"{indent}  {bit_const(7, opcode)} => {func_name}_opcode_{bit_const(7, opcode)}(inst)"
+        for opcode in sorted(exact_groups)
+    ]
+    arms.append(f"{indent}  _ => trap_illegal_inst(read_pc_or_tpc())")
+    lines.append(",\n".join(arms))
+    lines.append(f"{indent}}}")
+    if branch_index:
+        lines.append("  }")
+    lines.append("}")
+    return lines
+
+
+def append_decode32_chain(
+    lines: list[str],
+    helper: str,
+    entries: list[dict],
+    exec_params: dict[str, list[str]],
+    fallback: str,
+) -> None:
+    for idx, inst in enumerate(entries):
+        lines.extend(render_decode_match_predicate(helper, idx, 32, inst))
+    lines.append(f"function {helper}(inst : bits(32)) -> unit = {{")
+    for idx, inst in enumerate(entries):
+        prefix = "if" if idx == 0 else "else if"
+        lines.append(f"  {prefix} {helper}_match_{idx}(inst) then {{")
+        for stmt in branch_body(inst, exec_params):
+            lines.append(f"    {stmt}")
+        lines.append("  }")
+    lines.append("  else {")
+    lines.append(f"    {fallback}")
+    lines.append("  }")
+    lines.append("}")
+    lines.append("")
+
+
+def render_decode32_opcode_group(
+    func_name: str,
+    opcode: int,
+    ordered: list[dict],
+    exec_params: dict[str, list[str]],
+) -> list[str]:
+    """Partition one exact opcode group again by the fixed funct3 field."""
+
+    helper = f"{func_name}_opcode_{bit_const(7, opcode)}"
+    exact_groups: dict[int, list[dict]] = defaultdict(list)
+    broad: list[dict] = []
+    positions = {id(inst): idx for idx, inst in enumerate(ordered)}
+    for inst in ordered:
+        part = inst["encoding"]["parts"][0]
+        mask = parse_hexish(part["mask"])
+        match = parse_hexish(part["match"])
+        if (mask & 0x7000) == 0x7000:
+            exact_groups[(match >> 12) & 0x7].append(inst)
+        else:
+            broad.append(inst)
+
+    for broad_inst in broad:
+        broad_part = broad_inst["encoding"]["parts"][0]
+        broad_pattern = (parse_hexish(broad_part["mask"]), parse_hexish(broad_part["match"]))
+        for group in exact_groups.values():
+            for exact_inst in group:
+                exact_part = exact_inst["encoding"]["parts"][0]
+                exact_pattern = (parse_hexish(exact_part["mask"]), parse_hexish(exact_part["match"]))
+                if (
+                    encoding_patterns_overlap(*broad_pattern, *exact_pattern)
+                    and positions[id(broad_inst)] < positions[id(exact_inst)]
+                ):
+                    raise ValueError(
+                        "cannot preserve 32-bit funct3 precedence while partitioning: "
+                        f"{broad_inst['mnemonic']} precedes {exact_inst['mnemonic']}"
+                    )
+
+    lines: list[str] = []
+    broad_helper = f"{helper}_fallback"
+    if broad:
+        append_decode32_chain(
+            lines,
+            broad_helper,
+            broad,
+            exec_params,
+            "trap_illegal_inst(read_pc_or_tpc())",
+        )
+
+    fallback = f"{broad_helper}(inst)" if broad else "trap_illegal_inst(read_pc_or_tpc())"
+    for funct3, group in sorted(exact_groups.items()):
+        funct3_helper = f"{helper}_funct3_{bit_const(3, funct3)}"
+        append_decode32_chain(lines, funct3_helper, group, exec_params, fallback)
+
+    lines.append(f"function {helper}(inst : bits(32)) -> unit = {{")
+    lines.append("  match inst[14..12] {")
+    arms = [
+        f"    {bit_const(3, funct3)} => {helper}_funct3_{bit_const(3, funct3)}(inst)"
+        for funct3 in sorted(exact_groups)
+    ]
+    arms.append(f"    _ => {fallback}")
+    lines.append(",\n".join(arms))
+    lines.append("  }")
+    lines.append("}")
+    lines.append("")
     return lines
 
 

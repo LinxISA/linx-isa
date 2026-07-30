@@ -64,6 +64,28 @@ def test_tepl_mode_function_decode_render_selects_tepl_first() -> None:
     assert "decoded_block_type_shadow = 0b1101;" in tepl_body
 
 
+def test_decode32_dispatch_is_partitioned_by_exact_opcode() -> None:
+    spec = _load_spec()
+    retired = _load_retired()
+    execute_text = (ROOT / "isa/sail/model/execute/execute.sail").read_text(encoding="utf-8")
+    rendered = gen_sail_decode.render(spec, execute_text, "isa/v0.57/linxisa-v0.57.json", retired)
+
+    assert "function decode_execute32_opcode_0b0001011" in rendered
+    assert "function decode_execute32_opcode_0b0001011_funct3_0b010" in rendered
+    assert "function decode_execute32_opcode_0b0001011_funct3_0b010_match_0" in rendered
+    assert "match inst[6..0]" in rendered
+    assert "match inst[14..12]" in rendered
+    assert "0b0001011 => decode_execute32_opcode_0b0001011(inst)" in rendered
+
+    assert "and_bool_no_flow" in rendered
+
+    dispatcher = rendered[rendered.index("function decode_execute32(inst") :]
+    reserved_pos = dispatcher.index("(inst & 0x06007fff) == 0x02001181")
+    wildcard_pos = dispatcher.index("// BSTART CALL |")
+    match_pos = dispatcher.index("match inst[6..0]")
+    assert reserved_pos < wildcard_pos < match_pos
+
+
 def test_malformed_canonical_redecode_metadata_fails_closed() -> None:
     bad = {"entries": [{"disposition": "canonical-redecode", "length_bits": 32}]}
     try:
@@ -130,6 +152,7 @@ def main() -> int:
         test_tepl_mode_function_decode_precedes_broad_overlaps,
         test_tepl_mode_function_decode_is_deterministic,
         test_tepl_mode_function_decode_render_selects_tepl_first,
+        test_decode32_dispatch_is_partitioned_by_exact_opcode,
         test_malformed_canonical_redecode_metadata_fails_closed,
         test_unresolved_canonical_redecode_metadata_fails_closed,
         test_ambiguous_canonical_redecode_metadata_fails_closed,

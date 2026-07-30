@@ -30,6 +30,18 @@ function reset_fused_call_case(base_pc : bits(64), ra_seed : bits(64)) -> unit =
   bdesc_reset()
 }
 
+function reset_tile_effect_case() -> unit = {
+  tile_effect_reset_arch();
+  bdesc_reset();
+  bcatr_raw = sail_zeros(64);
+  bdatr_raw = sail_zeros(64);
+  ssr_lb0 = 0x0000_0000_0000_0002;
+  ssr_lb1 = 0x0000_0000_0000_0003;
+  ssr_lb2 = 0x0000_0000_0000_0041;
+  last_trapnum = sail_zeros(6);
+  block_marker_strict = false
+}
+
 function main() : unit -> unit = {
   // SrcRType arithmetic codes are 00=.sw, 01=.uw, 10=.neg, 11=none.
   assert(apply_srcrtype_arith64(0b00, 0x1234_5678_8000_0001) == 0xFFFF_FFFF_8000_0001);
@@ -124,15 +136,14 @@ function main() : unit -> unit = {
   exec_c_setret(0b00101);
   assert(read_reg5(0b01010) == 0x0000_0000_0000_100A);
 
-  // Retired B.IOD encoding space must trap as illegal; the old PAR spelling is
-  // not represented in Sail and its bit pattern decodes as canonical TEPL.
+  // Retired B.IOD and legacy BSTART.PAR encoding space must trap as illegal;
+  // neither spelling or bit pattern canonical-redecodes in PTO ISA 0.57.1.
   last_trapnum = sail_zeros(6);
   decode_execute32(0x0000_1013);
   assert(last_trapnum == trapnum_illegal_inst());
   last_trapnum = sail_zeros(6);
   decode_execute32(0x0200_1181);
-  assert(last_trapnum == sail_zeros(6));
-  assert(barg_block_type_cur == 0b1101);
+  assert(last_trapnum == trapnum_illegal_inst());
 
   // Trap records retain precise source state and the block-interrupted bit.
   trap_block_cfi(0x1, 0xCAFE_BABE_DEAD_BEEF);
@@ -155,5 +166,123 @@ function main() : unit -> unit = {
   assert(fp32_eq(0x0000_0000, 0x8000_0000));
   assert(fp32_class_mask(0x7F80_0000) == 0x0000_0080);
   assert(fp64_is_nan(0x7FF8_0000_0000_0001));
-  assert(fp64_eq(0x0000_0000_0000_0000, 0x8000_0000_0000_0000))
+  assert(fp64_eq(0x0000_0000_0000_0000, 0x8000_0000_0000_0000));
+
+  // PTO 0.57.1 differential operand maps match the frozen catalog/QEMU
+  // function identities, including implicit ACC and MX scale operands.
+  assert(tile_tma_required_sources(0b00100) == 0b00_0001);
+  assert(tile_tma_required_sources(0b00110) == 0b00_0010);
+  assert(tile_tma_required_sources(0b00101) == 0b00_0010);
+  assert(tile_tma_required_sources(0b00111) == 0b00_0011);
+  assert(tile_tma_required_sources(0b01000) == 0b00_0011);
+  assert(tile_cube_required_sources(0b10000) == 0b00_0010);
+  assert(tile_cube_required_sources(0b10001) == 0b00_0011);
+  assert(tile_cube_required_sources(0b10100) == 0b00_0100);
+  assert(tile_cube_required_sources(0b10101) == 0b00_0101);
+  assert(tile_cube_required_sources(0b10110) == 0b00_0100);
+  assert(tile_mask_lane_effect(false) == 0b0000);
+  assert(tile_mask_lane_effect(true) == 0b1111);
+
+  // Positive masked gather: one descriptor carries indices+mask and one
+  // destination.  Only a successful complete preflight publishes effects and
+  // last-use releases; false mask lanes are recorded as access-suppressing.
+  reset_tile_effect_case();
+  bdesc_mark_datr();
+  bdesc_mark_ior();
+  bdatr_raw = 0x0000_0000_0800_0000; // PadValue=01
+  decoded_tile_datatype_shadow = 0b00001;
+  tile_effect_begin(0b01, 0b00110);
+  tile_effect_append_iot(0x0000_0000_0819_C013);
+  assert(tile_effect_finalize());
+  assert(tile_effect_commit_seq == 0x0000_0000_0000_0001);
+  assert(tile_effect_memory_seq == 0x0000_0000_0000_0001);
+  assert(tile_effect_tile_seq == 0x0000_0000_0000_0001);
+  assert(tile_effect_lifetime_releases == 0x0000_0000_0000_0002);
+  assert(tile_effect_last_masked);
+  assert(tile_effect_last_mask_suppresses_access);
+  assert(tile_effect_last_pad == 0b01);
+
+  // Negative/retry path: a failed full access-set preflight reports the first
+  // original address and commits no memory, Tile, ACC, or lifetime effect.
+  reset_tile_effect_case();
+  bdesc_mark_datr();
+  bdesc_mark_ior();
+  decoded_tile_datatype_shadow = 0b00001;
+  tile_effect_begin(0b01, 0b00100);
+  tile_effect_append_iot(0x0000_0000_0019_D013); // one source + dst, size=3
+  tile_effect_access_set_valid = false;
+  tile_effect_fault_address = 0x0000_0000_DEAD_0040;
+  assert(not_bool(tile_effect_finalize()));
+  assert(tile_effect_pending);
+  assert(tile_effect_restart_pending);
+  assert(tile_effect_commit_seq == 0x0000_0000_0000_0000);
+  assert(tile_effect_memory_seq == 0x0000_0000_0000_0000);
+  assert(tile_effect_tile_seq == 0x0000_0000_0000_0000);
+  assert(tile_effect_lifetime_releases == 0x0000_0000_0000_0000);
+  assert(last_trapnum == trapnum_data_page_fault());
+  assert(last_traparg0 == 0x0000_0000_DEAD_0040);
+  tile_effect_access_set_valid = true;
+  assert(tile_effect_finalize());
+  assert(tile_effect_commit_seq == 0x0000_0000_0000_0001);
+  assert(tile_effect_memory_seq == 0x0000_0000_0000_0001);
+  assert(tile_effect_tile_seq == 0x0000_0000_0000_0001);
+
+  // TPREFETCH performs the same complete address/translation preflight but is
+  // destination-free and publishes no memory-data or Tile payload effect.
+  reset_tile_effect_case();
+  bdesc_mark_datr();
+  bdesc_mark_ior();
+  decoded_tile_datatype_shadow = 0b00001;
+  tile_effect_begin(0b01, 0b00011);
+  assert(tile_effect_finalize());
+  assert(tile_effect_preflight_seq == 0x0000_0000_0000_0001);
+  assert(tile_effect_memory_seq == 0x0000_0000_0000_0000);
+  assert(tile_effect_tile_seq == 0x0000_0000_0000_0000);
+
+  // MX+BIAS uses authored source order A,B,ScaleA,ScaleB,Bias.  E8M0 scales
+  // cover ceil(K/32)=3 groups for K=65 and ordinary/MX writes implicit ACC.
+  reset_tile_effect_case();
+  bdesc_mark_datr();
+  bdesc_mark_dim();
+  decoded_tile_datatype_shadow = 0b00001; // FP32 header/ACC for MX
+  tile_effect_begin(0b10, 0b10101);
+  tile_effect_append_iot(0x0000_0000_0810_4013);
+  tile_effect_append_iot(0x0000_0000_1030_4013);
+  tile_effect_append_iot(0x0000_0000_0058_5013);
+  assert(tile_effect_finalize());
+  assert(tile_acc_valid);
+  assert(tile_effect_acc_seq == 0x0000_0000_0000_0001);
+  assert(tile_effect_last_mx);
+  assert(tile_effect_last_bias);
+  assert(tile_effect_last_scale_a_rows == 0x0000_0000_0000_0002);
+  assert(tile_effect_last_scale_a_cols == 0x0000_0000_0000_0003);
+  assert(tile_effect_last_scale_b_rows == 0x0000_0000_0000_0003);
+  assert(tile_effect_last_scale_b_cols == 0x0000_0000_0000_0003);
+  assert(tile_effect_last_scale_a_source == 0b00_0010);
+  assert(tile_effect_last_scale_b_source == 0b00_0011);
+
+  // .ACC is implicit: it has no B.IOT pseudo-destination and must preserve the
+  // prior accumulator on descriptor/shape failure, then update it on success.
+  reset_tile_effect_case();
+  bdesc_mark_datr();
+  bdesc_mark_dim();
+  decoded_tile_datatype_shadow = 0b00001;
+  tile_effect_begin(0b10, 0b10010);
+  tile_effect_append_iot(0x0000_0000_0818_4013);
+  assert(not_bool(tile_effect_finalize()));
+  assert(tile_effect_acc_seq == 0x0000_0000_0000_0000);
+  assert(not_bool(tile_acc_valid));
+  tile_effect_pending = false;
+  tile_effect_restart_pending = false;
+  tile_effect_reset_descriptors();
+  tile_effect_begin(0b10, 0b10000);
+  tile_effect_append_iot(0x0000_0000_0818_4013);
+  assert(tile_effect_finalize());
+  assert(tile_acc_valid);
+  tile_effect_reset_descriptors();
+  tile_effect_begin(0b10, 0b10010);
+  tile_effect_append_iot(0x0000_0000_0818_4013);
+  assert(tile_effect_finalize());
+  assert(tile_effect_acc_seq == 0x0000_0000_0000_0002);
+  assert(tile_effect_last_accumulate)
 }

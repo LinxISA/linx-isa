@@ -206,15 +206,15 @@
     },
     "bstart_mgather_32_c9defbf18276": {
       "mnemonic": "BSTART.MGATHER",
-      "status": "decode-only"
+      "status": "executable-subset"
     },
     "bstart_mgather_cas_32_fd8c8a3b720a": {
       "mnemonic": "BSTART.MGATHER.CAS",
-      "status": "decode-only"
+      "status": "executable-subset"
     },
     "bstart_mgather_mask_32_5573241cd944": {
       "mnemonic": "BSTART.MGATHER.MASK",
-      "status": "decode-only"
+      "status": "executable-subset"
     },
     "bstart_mpar_32_2d163417c615": {
       "mnemonic": "BSTART.MPAR",
@@ -222,11 +222,11 @@
     },
     "bstart_mscatter_32_0f0ba08bd798": {
       "mnemonic": "BSTART.MSCATTER",
-      "status": "decode-only"
+      "status": "executable-subset"
     },
     "bstart_mscatter_mask_32_2a33eed646f7": {
       "mnemonic": "BSTART.MSCATTER.MASK",
-      "status": "decode-only"
+      "status": "executable-subset"
     },
     "bstart_mseq_32_39343a456ec5": {
       "mnemonic": "BSTART.MSEQ",
@@ -270,27 +270,27 @@
     },
     "bstart_tgemv_32_ae19f5b678f5": {
       "mnemonic": "BSTART.TGEMV",
-      "status": "decode-only"
+      "status": "executable-subset"
     },
     "bstart_tgemv_acc_32_9a471b21913e": {
       "mnemonic": "BSTART.TGEMV.ACC",
-      "status": "decode-only"
+      "status": "executable-subset"
     },
     "bstart_tgemv_bias_32_186ee96c0a8b": {
       "mnemonic": "BSTART.TGEMV.BIAS",
-      "status": "decode-only"
+      "status": "executable-subset"
     },
     "bstart_tgemvmx_32_ae5e005f6589": {
       "mnemonic": "BSTART.TGEMVMX",
-      "status": "decode-only"
+      "status": "executable-subset"
     },
     "bstart_tgemvmx_acc_32_368647b04bb0": {
       "mnemonic": "BSTART.TGEMVMX.ACC",
-      "status": "decode-only"
+      "status": "executable-subset"
     },
     "bstart_tgemvmx_bias_32_d23011f15171": {
       "mnemonic": "BSTART.TGEMVMX.BIAS",
-      "status": "decode-only"
+      "status": "executable-subset"
     },
     "bstart_tload_32_d0c18bb0ab15": {
       "mnemonic": "BSTART.TLOAD",
@@ -306,19 +306,19 @@
     },
     "bstart_tmatmul_bias_32_4d5a498d12f3": {
       "mnemonic": "BSTART.TMATMUL.BIAS",
-      "status": "decode-only"
+      "status": "executable-subset"
     },
     "bstart_tmatmulmx_32_e26cb3874648": {
       "mnemonic": "BSTART.TMATMULMX",
-      "status": "decode-only"
+      "status": "executable-subset"
     },
     "bstart_tmatmulmx_acc_32_70fa59b0ab4c": {
       "mnemonic": "BSTART.TMATMULMX.ACC",
-      "status": "decode-only"
+      "status": "executable-subset"
     },
     "bstart_tmatmulmx_bias_32_098c7efa51b0": {
       "mnemonic": "BSTART.TMATMULMX.BIAS",
-      "status": "decode-only"
+      "status": "executable-subset"
     },
     "bstart_tmov_32_211446509efb": {
       "mnemonic": "BSTART.TMOV",
@@ -326,7 +326,7 @@
     },
     "bstart_tprefetch_32_d5f83e5aadf6": {
       "mnemonic": "BSTART.TPREFETCH",
-      "status": "decode-only"
+      "status": "executable-subset"
     },
     "bstart_tstore_32_4048b6e8b0f4": {
       "mnemonic": "BSTART.TSTORE",
