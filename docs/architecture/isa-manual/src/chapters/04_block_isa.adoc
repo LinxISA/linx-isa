@@ -283,10 +283,12 @@ v0.57.1 tile header encoding families:
 
 v0.57 tile `DataType` field assignments (u5, inherited unchanged):
 
-* Floating: `FP64=0`, `FP32=1`, `FP16=2`, `FP8=3`, `BF16=6`, `FPL8=7`, `FP4=11`, `FPL4=12`.
-* Signed integer: `INT64=16`, `INT32=17`, `INT16=18`, `INT8=19`, `INT4=20`.
-* Unsigned integer: `UINT64=24`, `UINT32=25`, `UINT16=26`, `UINT8=27`, `UINT4=28`.
-* Unassigned values are reserved and MUST NOT appear in canonical streams.
+* Floating: `FP64=0`, `FP32=1`, `TF32=2`, `HF32=3`, `FP16=4`, `BF16=5`,
+  `HiF8=6`, `E4M3=7`, `E5M2=8`, `E3M2=9`, `E2M3=10`,
+  `E2M1X2=11`, `E1M2X2=12`, `E8M0=13`, and `HiF4X2=14`.
+* Signed integer: `S64=16`, `S32=17`, `S16=18`, `S8=19`, `S4X2=20`.
+* Unsigned integer: `U64=24`, `U32=25`, `U16=26`, `U8=27`, `U4X2=28`.
+* Codes 15, 21-23, and 29-30 are reserved. Code 31 is illegal.
 
 v0.57 named-form policy (normative):
 
@@ -296,18 +298,18 @@ v0.57 named-form policy (normative):
   mode/function pairs come from the locked catalog.
 * Named mnemonics are explicit v0.57 instruction forms in the golden catalog
   and resolve to encoding selectors:
-** `BSTART.TLOAD` -> `BSTART.TMA Function=0`
-** `BSTART.TSTORE` -> `BSTART.TMA Function=1`
-** `BSTART.TMOV` -> `BSTART.TMA Function=2`
-** `BSTART.TPREFETCH` -> `BSTART.TMA Function=3`
-** `BSTART.MGATHER` -> `BSTART.TMA Function=4`
-** `BSTART.MSCATTER` -> `BSTART.TMA Function=5`
-** `BSTART.MGATHER.MASK` -> `BSTART.TMA Function=6`
-** `BSTART.MSCATTER.MASK` -> `BSTART.TMA Function=7`
-** `BSTART.MGATHER.CAS` -> `BSTART.TMA Function=8`
-** `BSTART.TMATMUL` -> `BSTART.CUBE Function=0`
-** `BSTART.TMATMUL.ACC` -> `BSTART.CUBE Function=2`
-** `BSTART.ACCCVT` -> `BSTART.CUBE Function=8`
+** `BSTART.TLOAD` -> TMA `Function=0`
+** `BSTART.TSTORE` -> TMA `Function=1`
+** `BSTART.TMOV` -> TMA `Function=2`
+** `BSTART.TPREFETCH` -> TMA `Function=3`
+** `BSTART.MGATHER` -> TMA `Function=4`
+** `BSTART.MSCATTER` -> TMA `Function=5`
+** `BSTART.MGATHER.MASK` -> TMA `Function=6`
+** `BSTART.MSCATTER.MASK` -> TMA `Function=7`
+** `BSTART.MGATHER.CAS` -> TMA `Function=8`
+** `BSTART.TMATMUL` -> CUBE `Function=0`
+** `BSTART.TMATMUL.ACC` -> CUBE `Function=2`
+** `BSTART.ACCCVT` -> CUBE `Function=8`
 ** `TADD`, `TSUB`, `TROWMAX`, ... -> `BSTART.TEPL Mode=<assigned mode>, Function=<assigned function>`
 * TMA `Function=9..31` encodings are reserved and MUST raise an
   illegal-instruction exception. They are not instruction forms and MUST NOT
@@ -387,25 +389,23 @@ v0.57 TMA assignments:
 
 v0.57 block split patterns and per-family constraints:
 
-* `BSTART.TLOAD` / `BSTART.TSTORE` (alias of `BSTART.TMA Function=0/1`):
+* `BSTART.TLOAD` / `BSTART.TSTORE` (named TMA Functions 0/1):
 ** use operation-applicable `B.DATR` layout/pad controls; inapplicable non-zero fields are illegal.
 ** require at least one `B.IOR` binding carrying base/stride arguments (strict profile convention: stride and base are explicit scalar inputs).
 ** strict binding convention is `RegSrc0=stride/ld`, `RegSrc1=base` when both are present.
 ** require tile binding via `B.IOT`.
 ** are header-driven block commands (no SIMT body; do not use `B.TEXT`).
 * `BSTART.TMATMUL`, `BSTART.TMATMUL.BIAS`, `BSTART.TMATMUL.ACC`, `BSTART.TMATMULMX*`,
-  `BSTART.TGEMV*`, and `BSTART.TGEMVMX*` (named aliases of their assigned CUBE functions):
+  `BSTART.TGEMV*`, and `BSTART.TGEMVMX*` (assigned named CUBE-family functions):
 ** require `B.DIM`/`C.B.DIM*` with `LB0/LB1/LB2` bound as `m/n/k`.
-** require two source tile inputs via `B.IOT`.
-** both commands target the singleton implicit accumulator domain (`->acc`).
+** bind the exact source roles from `pto_ops.json` via `B.IOT` (left/right, plus bias or scale sources where applicable).
+** write the singleton implicit accumulator; B.IOT carries no ACC source or destination code.
 ** `TMATMUL` seeds/replaces accumulator state; `TMATMUL.ACC` accumulates into the current accumulator state.
 ** no explicit accumulator tile id is encoded in the inherited descriptors.
 ** strict chain contract: `TMATMUL` starts ACC state, `TMATMUL.ACC` may repeat, and `ACCCVT` materializes tile output.
 ** are header-driven block commands (no SIMT body; do not use `B.TEXT`).
-* `BSTART.ACCCVT` (alias of `BSTART.CUBE Function=8`):
-** requires quantization arguments.
-** quantization controls are carried by operation-applicable `B.DATR` fields plus `B.IOR` scalar bindings (`scale` and
-   `zero-point` are required; optional extra scalar controls are profile-defined).
+* `BSTART.ACCCVT` (named CUBE-family Function 8):
+** conversion controls are carried by the operation-applicable `B.DATR` fields `Sat`, `Canonicalize`, `DataType`, `RMode`, and `Layout`.
 ** consumes the singleton implicit accumulator state and writes a converted tile destination.
 ** descriptors bind only destination tile metadata (`->t/u/m/n<size>`); no accumulator source id is encoded.
 ** is header-driven (no SIMT body; do not use `B.TEXT`).

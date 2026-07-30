@@ -116,7 +116,9 @@ Optional descriptors:
 [[tileblocks-cube]]
 === CUBE / tensor blocks (`TMATMUL`, `TMATMUL.ACC`, `ACCCVT`)
 
-`BSTART.TMATMUL` / `BSTART.TMATMUL.ACC` / `BSTART.ACCCVT` are aliases of `BSTART.CUBE` selectors.
+`BSTART.TMATMUL`, `BSTART.TMATMUL.ACC`, and `BSTART.ACCCVT` are named
+CUBE-family forms. Their assigned function values are part of the frozen
+0.57.1 selector map; no generic executable `BSTART.CUBE` form exists.
 
 These blocks do not have a SIMT body (`B.TEXT` is not used).
 

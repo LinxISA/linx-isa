@@ -36,7 +36,7 @@ EndBlock(); BeginNextBlock(/* kind */);
 
 ## Encoding Notes
 
-- `CUBE Function=8. ACCCVT reads implicit ACC and uses B.DATR conversion controls before publishing an ordinary Tile.`
+- `Named CUBE-family Function=8. ACCCVT reads implicit ACC and uses B.DATR conversion controls before publishing an ordinary Tile.`
 
 ## Full Catalog Forms
 

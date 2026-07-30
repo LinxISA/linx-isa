@@ -216,7 +216,7 @@
 |Mnemonic |Len |Decode |Assembly |Notes
 |`BSTART` |32 |- |`BSTART {DIRECT, CALL}, <label>` |-
 |`BSTART` |32 |- |`BSTART COND, <label>` |-
-|`BSTART.ACCCVT` |32 |- |`BSTART.ACCCVT DataType` |CUBE Function=8. ACCCVT reads implicit ACC and uses B.DATR conversion controls before publishing an ordinary Tile.
+|`BSTART.ACCCVT` |32 |- |`BSTART.ACCCVT DataType` |Named CUBE-family Function=8. ACCCVT reads implicit ACC and uses B.DATR conversion controls before publishing an ordinary Tile.
 |`BSTART.FP` |32 |- |`BSTART.FP RET` |Bits 31:15 are reserved zero.
 |`BSTART.FP` |32 |- |`BSTART.FP ICALL` |Bits 31:15 are reserved zero.
 |`BSTART.FP` |32 |- |`BSTART.FP COND, <label>` |-
@@ -247,8 +247,8 @@
 |`BSTART.TGEMVMX.ACC` |32 |- |`BSTART.TGEMVMX.ACC DataType` |Named CUBE-family Function=22. Micro-scaled matrix-vector multiply-accumulate; requires B.DIM and CUBE tile bindings.
 |`BSTART.TGEMVMX.BIAS` |32 |- |`BSTART.TGEMVMX.BIAS DataType` |Named CUBE-family Function=21. Micro-scaled matrix-vector multiply with bias; requires B.DIM and CUBE tile bindings.
 |`BSTART.TLOAD` |32 |- |`BSTART.TLOAD DataType` |TMA Function=0. Uses B.DATR layout/pad and B.IOR stride/base plus B.IOT tile binding.
-|`BSTART.TMATMUL` |32 |- |`BSTART.TMATMUL DataType` |Alias of BSTART.CUBE Function=0. Requires B.DIM (LB0/LB1/LB2 as m,n,k) and tile bindings via B.IOT.
-|`BSTART.TMATMUL.ACC` |32 |- |`BSTART.TMATMUL.ACC DataType` |Alias of BSTART.CUBE Function=2. Requires B.DIM (LB0/LB1/LB2 as m,n,k) and tile bindings via B.IOT.
+|`BSTART.TMATMUL` |32 |- |`BSTART.TMATMUL DataType` |Named CUBE-family Function=0. Requires B.DIM (LB0/LB1/LB2 as m,n,k) and tile bindings via B.IOT.
+|`BSTART.TMATMUL.ACC` |32 |- |`BSTART.TMATMUL.ACC DataType` |Named CUBE-family Function=2. Requires B.DIM (LB0/LB1/LB2 as m,n,k) and tile bindings via B.IOT.
 |`BSTART.TMATMUL.BIAS` |32 |- |`BSTART.TMATMUL.BIAS DataType` |Named CUBE-family Function=1. Matrix multiply with bias; requires B.DIM and CUBE tile bindings.
 |`BSTART.TMATMULMX` |32 |- |`BSTART.TMATMULMX DataType` |Named CUBE-family Function=4. Micro-scaled matrix multiply; requires B.DIM and CUBE tile bindings.
 |`BSTART.TMATMULMX.ACC` |32 |- |`BSTART.TMATMULMX.ACC DataType` |Named CUBE-family Function=6. Micro-scaled matrix multiply-accumulate; requires B.DIM and CUBE tile bindings.

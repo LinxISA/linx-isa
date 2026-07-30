@@ -54,7 +54,7 @@
       "translation_sha256": "319ab99b5a675fe72cc5e3e494f2acc47e4d45c8d0c113fb3c38c5a8dfbc0d1f"
     },
     "architecture/v0.57-encoding-decisions.md": {
-      "source_sha256": "979d3ea40f612ca8c9ea8081ec1021dce676ea6cc0711841e5748123b0ea155a",
+      "source_sha256": "aa661ece06a09e22dd9f68fcd0104f4577419bf81d43492e4971ca11939df864",
       "translation_sha256": "d6a4d8135182010f77c9ee184ad9fd75f87c7cecb72b52c5ef0fd364ff426577"
     },
     "architecture/v0.57-hardening-policy.md": {
@@ -5178,7 +5178,7 @@
       "translation_sha256": "50fee8454fbd5ed65824b3afbd94a351b2322fd9d69cbc8319fa69c08cad5c27"
     },
     "isa/instructions/bstart_acccvt.md": {
-      "source_sha256": "a1466f96c7ee8e0d2266bf47e16d4e73a6e8aa6675aa40a1ce06af437946425c",
+      "source_sha256": "a3a6c8f0d3cc104650eb7233d27c1f9f98d73008b7bb5e96dcc6580667254c70",
       "translation_sha256": "acb6e6a34aa6dd3314a90cc09fa80b1602b5b5a6515b24a5dffd0d28bf61bf42"
     },
     "isa/instructions/bstart_call.md": {
@@ -5214,11 +5214,11 @@
       "translation_sha256": "ffc84bcf31f7391963e516583e11f9dd5f476f5744a378a5bc9745c694fe28c4"
     },
     "isa/instructions/bstart_tmatmul.md": {
-      "source_sha256": "9a7c2c4151c382305a957da4787df21eb63c17997d4b2f87c42c56a9a1e2caed",
+      "source_sha256": "599aacd1c1346c2beb1f118064d39b139ce4c40923f3efbb475c791dc4873d4f",
       "translation_sha256": "717e1f7a91da06221ef89b4096b07c1532c69dc0e408f6eccbed1d83626fc2d5"
     },
     "isa/instructions/bstart_tmatmul_acc.md": {
-      "source_sha256": "46674d8307c1f6e6a99d6dd24d85d867cb6e2d9a54834240de7c21619abcd7ea",
+      "source_sha256": "4a1c242a210a9f334e51ef5e3026b2c89857784e085f3a992b84045916dbf16a",
       "translation_sha256": "946515dc3d4ef4cd323b5c4179c5ff2213d48a8916bc8a38f1df2618c72a42e2"
     },
     "isa/instructions/bstart_tmov.md": {

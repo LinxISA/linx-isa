@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.ACCCVT DataType
 
-*Description:* CUBE Function=8. ACCCVT reads implicit ACC and uses B.DATR conversion controls before publishing an ordinary Tile.
+*Description:* Named CUBE-family Function=8. ACCCVT reads implicit ACC and uses B.DATR conversion controls before publishing an ordinary Tile.
 
 *Encoding:*
 

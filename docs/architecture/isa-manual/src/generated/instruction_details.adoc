@@ -2590,7 +2590,7 @@ image::encodings/enc_bstart_acccvt.svg[BSTART.ACCCVT encoding form bstart_acccvt
 
 Encoding notes (informative)::
 +
-* CUBE Function=8. ACCCVT reads implicit ACC and uses B.DATR conversion controls before publishing an ordinary Tile.
+* Named CUBE-family Function=8. ACCCVT reads implicit ACC and uses B.DATR conversion controls before publishing an ordinary Tile.
 
 Operation (informative)::
 +
@@ -3165,7 +3165,7 @@ image::encodings/enc_bstart_tmatmul.svg[BSTART.TMATMUL encoding form bstart_tmat
 
 Encoding notes (informative)::
 +
-* Alias of BSTART.CUBE Function=0. Requires B.DIM (LB0/LB1/LB2 as m,n,k) and tile bindings via B.IOT.
+* Named CUBE-family Function=0. Requires B.DIM (LB0/LB1/LB2 as m,n,k) and tile bindings via B.IOT.
 
 Operation (informative)::
 +
@@ -3194,7 +3194,7 @@ image::encodings/enc_bstart_tmatmul_acc.svg[BSTART.TMATMUL.ACC encoding form bst
 
 Encoding notes (informative)::
 +
-* Alias of BSTART.CUBE Function=2. Requires B.DIM (LB0/LB1/LB2 as m,n,k) and tile bindings via B.IOT.
+* Named CUBE-family Function=2. Requires B.DIM (LB0/LB1/LB2 as m,n,k) and tile bindings via B.IOT.
 
 Operation (informative)::
 +
