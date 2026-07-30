@@ -346,7 +346,7 @@ NOTE: earlier draft text previously used `E_INST(EC_ILLEGAL)` and `E_INST(EC_PAR
 For system calls (`TRAPNUM=SCALL` in v0.2), routing is defined by the `ACRC` `request_type` rules above.
 
 [[system-template-integrity-fail]]
-====== Template-integrity `ASSERT_FAIL`
+===== Template-integrity `ASSERT_FAIL`
 
 `ASSERT_FAIL (52)` has two distinct producers in v0.57:
 
