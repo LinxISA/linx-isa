@@ -125,74 +125,23 @@ def main() -> int:
             word = (dtype << 27) | (function << 20) | cube_base
             matches = sorted(name for name, mask, match in one_part_32 if word & mask == match)
             if function in expected_cube:
-                assert matches == sorted(["BSTART.CUBE", expected_cube[function]]), (dtype, function, matches)
+                assert matches == [expected_cube[function]], (dtype, function, matches)
             else:
-                assert matches == ["BSTART.CUBE"], (dtype, function, matches)
+                assert matches == [], (dtype, function, matches)
 
+    tepl_ops = v057["state"]["engine_ops"]["tepl"]["ops"]
     v057_tepl = {
-        op["name"]: int(op["tile_opcode"])
-        for op in v057["state"]["engine_ops"]["tepl"]["ops"]
+        op["name"]: (op["mode"], op["function"], op["logical_selector"])
+        for op in tepl_ops
     }
-    expected_new_tepl = {
-        "TCMP": 0x02B,
-        "TSEL": 0x02C,
-        "TABS": 0x02D,
-        "TNOT": 0x02E,
-        "TNEG": 0x02F,
-        "TREM": 0x030,
-        "TAXPY": 0x031,
-        "TREMS": 0x032,
-        "TCMPS": 0x033,
-        "TSELS": 0x034,
-        "TROWPROD": 0x035,
-        "TROWARGMAX": 0x036,
-        "TROWARGMIN": 0x037,
-        "TCOLPROD": 0x038,
-        "TCOLARGMAX": 0x039,
-        "TCOLARGMIN": 0x03A,
-        "TROWEXPANDADD": 0x03B,
-        "TROWEXPANDSUB": 0x03C,
-        "TROWEXPANDMUL": 0x03D,
-        "TROWEXPANDDIV": 0x03E,
-        "TROWEXPANDMAX": 0x03F,
-        "TROWEXPANDMIN": 0x040,
-        "TROWEXPANDEXPDIF": 0x041,
-        "TCOLEXPANDADD": 0x042,
-        "TCOLEXPANDSUB": 0x043,
-        "TCOLEXPANDMUL": 0x044,
-        "TCOLEXPANDDIV": 0x045,
-        "TCOLEXPANDMAX": 0x046,
-        "TCOLEXPANDMIN": 0x047,
-        "TCOLEXPANDEXPDIF": 0x048,
-        "TCI": 0x080,
-        "TTRI": 0x081,
-        "TFILLPAD": 0x082,
-        "TQUANT": 0x083,
-        "TDEQUANT": 0x084,
-        "TEXTRACT": 0x085,
-        "TINSERT": 0x086,
-        "TCONCAT": 0x087,
-        "TIMG2COL": 0x088,
-        "TGATHERB": 0x089,
-        "TDEINTERLEAVE": 0x08A,
-        "TINTERLEAVE": 0x08B,
-        "TSORT": 0x0C0,
-        "TMRGSORT": 0x0C1,
-        "THISTOGRAM": 0x0C2,
-        "TPARTADD": 0x0C3,
-        "TPARTMUL": 0x0C4,
-        "TPARTMAX": 0x0C5,
-        "TPARTMIN": 0x0C6,
-        "TPARTARGMAX": 0x0C7,
-        "TPARTARGMIN": 0x0C8,
-        "TPUSH": 0x0E0,
-        "TPOP": 0x0E1,
-        "TALLOC": 0x0E2,
-        "TFREE": 0x0E3,
-    }
-    for name, selector in expected_new_tepl.items():
-        assert v057_tepl[name] == selector
-    assert {"TFMOD", "TPOW", "TRANDOM", "TEXRACT"} & set(v057_tepl) == set()
+    assert len(v057_tepl) == 98
+    assert len({selector for _, _, selector in v057_tepl.values()}) == 98
+    for mode, function, selector in v057_tepl.values():
+        assert selector == (mode << 5) | function
+    assert {
+        "TADDC", "TADDSC", "TFMA", "TFMOD", "TFMODS", "TLRELU",
+        "TRANDOM", "TSUBC", "TSUBSC", "TTRANSPOSE", "TSORT32",
+    } & set(v057_tepl) == set()
 
     frame = v057["semantics_conventions"]["frame_templates_r975"]
     assert frame["step_index"]["meaning"] == "next_uncommitted_phase_one_event"

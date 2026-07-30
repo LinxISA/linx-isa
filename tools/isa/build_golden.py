@@ -504,6 +504,68 @@ def _assign_stable_ids(instructions: List[Dict[str, Any]]) -> None:
         inst["id"] = f"{_slug(str(inst.get('mnemonic','inst')))}_{inst.get('length_bits',0)}_{uid}"
 
 
+def _attach_pto_source_form_ids(in_dir: Path, instructions: List[Dict[str, Any]]) -> None:
+    """Attach the sole-source PTO form identity without replacing Linx stable IDs."""
+    source_path = in_dir / "state" / "pto_command_forms.json"
+    if not source_path.is_file():
+        return
+    source = _read_json(source_path)
+    if source.get("form_count") != 99:
+        raise ValueError(f"{source_path}: expected exactly 99 PTO command forms")
+
+    def source_key(form: Dict[str, Any]) -> Tuple[Any, ...]:
+        encoding = tuple(
+            (int(part["mask"], 0), int(part["match"], 0), int(part["width_bits"]))
+            for part in form.get("encoding", [])
+        )
+        return (form.get("mnemonic"), form.get("asm"), int(form.get("length_bits", 0)), encoding)
+
+    def instruction_key(inst: Dict[str, Any]) -> Tuple[Any, ...]:
+        encoding = tuple(
+            (int(part["mask"], 0), int(part["match"], 0), int(part["width_bits"]))
+            for part in inst.get("encoding", {}).get("parts", [])
+        )
+        return (inst.get("mnemonic"), inst.get("asm"), int(inst.get("length_bits", 0)), encoding)
+
+    by_key: Dict[Tuple[Any, ...], List[Dict[str, Any]]] = {}
+    for inst in instructions:
+        by_key.setdefault(instruction_key(inst), []).append(inst)
+    attached = set()
+    for form in source.get("forms", []):
+        key = source_key(form)
+        matches = by_key.get(key, [])
+        if len(matches) != 1:
+            raise ValueError(
+                f"{source_path}: PTO form {form.get('form_id')} has {len(matches)} exact Linx encoding matches"
+            )
+        form_id = str(form["form_id"])
+        matched = matches[0]
+        matched["pto_source_form_id"] = form_id
+        for part in matched.get("encoding", {}).get("parts", []):
+            part.pop("constraints", None)
+        widths = {str(field["name"]): int(field["width"]) for field in form.get("fields", [])}
+        compiled_constraints = []
+        for constraint in form.get("constraints", []):
+            field = str(constraint["field"])
+            if constraint["operator"] == "one-of":
+                allowed = {int(value) for value in constraint["values"]}
+                rejected = sorted(set(range(1 << widths[field])) - allowed)
+            elif constraint["operator"] == "not-equal":
+                rejected = [int(constraint["value"])]
+            else:
+                raise ValueError(
+                    f"{source_path}: unsupported constraint operator {constraint['operator']!r}"
+                )
+            compiled_constraints.extend(
+                {"field": field, "op": "!=", "value": str(value)} for value in rejected
+            )
+        if compiled_constraints:
+            matched["encoding"]["parts"][0]["constraints"] = compiled_constraints
+        attached.add(form_id)
+    if len(attached) != 99:
+        raise ValueError(f"{source_path}: PTO source form identities are not unique")
+
+
 @dataclass(frozen=True)
 class _OpcodeLine:
     mnemonic: str
@@ -801,6 +863,7 @@ def build(in_dir: Path) -> Dict[str, Any]:
 
     _augment_with_encoding(instructions)
     _assign_stable_ids(instructions)
+    _attach_pto_source_form_ids(in_dir, instructions)
 
     # Attach uop classification + compression kind (documentation + downstream decoders).
     _augment_with_uop_classification(in_dir, instructions)

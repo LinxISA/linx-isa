@@ -1,0 +1,27 @@
+{
+  "$schema": "https://docs.openclaw.ai/schemas/linxisa/pto_spec_lock.v1.json",
+  "catalogs": {
+    "command_forms": {
+      "path": "spec/catalog/command-forms.json",
+      "sha256": "c53db18b30fbf53676f1d733e215122f65ad681a778ae0728cc6c4a3674df61e",
+      "count": 99
+    },
+    "tile_operations": {
+      "path": "spec/catalog/tile-operations.json",
+      "sha256": "2a49616fbbd34ee4ff00b971d56de6dd7b8c1698fa7312db0b20b6119965bc26",
+      "count": 120
+    }
+  },
+  "content_sha256": "3bdd4cb7b8ed48442ebffeb0fdf95c9454b0f823e08c0bcb985425434ad492df",
+  "encoding_abi": "pto-isa-0.57.1-mode-function-v1",
+  "encoding_projection_sha256": "34f6602cf29ea6363d41d896111dad4de0f70ec36517138aa89e292857909da4",
+  "release": "0.57.1",
+  "release_manifest": {
+    "path": "spec/release-manifest.json",
+    "sha256": "9716abc5bf9421660e6a64c5309bf1624e967b3cbc02a0487e838ec3c30e9af2"
+  },
+  "source": {
+    "commit": "852b53773555aa55bc94581c3d4d343ecea2b9ea",
+    "repository": "https://github.com/PTO-ISA/pto-spec.git"
+  }
+}

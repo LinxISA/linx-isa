@@ -5,6 +5,7 @@ Architecture-facing documentation lives under `docs/architecture/`.
 ## Canonical contract pages
 
 - v0.57 canonical pages:
+  - `docs/architecture/pto-isa-v0.57.1-upgrade-plan.md` (accepted cross-repository implementation plan; pto-spec remains normative)
   - `docs/architecture/v0.57-architecture-contract.md`
   - `docs/architecture/v0.57-encoding-decisions.md`
   - `docs/architecture/v0.57-hardening-policy.md`

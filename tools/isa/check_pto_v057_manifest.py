@@ -1,210 +1,214 @@
 #!/usr/bin/env python3
-"""Validate the normalized PTO 0.57 inventory and its Linx encoding map."""
+"""Validate the locked PTO ISA 0.57.1 projections and compiled command ABI."""
 
 from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE_SHA256 = "0387b39f108599f2469c2e2374a46ea4b832a96fee7bf7aa5d7cc575fdc7864a"
-EXPORT_SHA256 = "4c75f961e8f2f63e35bce51dec21c97f75c50e2189a0f8c83f95577403984d21"
-EXPECTED_NAMES = """
-TADD TSUB TMUL TMAX TMIN TAND TOR TXOR TSHL TSHR TCMP TSEL TABS TNOT TNEG TRELU
-TDIV TREM TSQRT TLOG TRECIP TEXP TRSQRT TADDS TAXPY TSUBS TMULS TDIVS TMINS TMAXS
-TREMS TANDS TORS TXORS TCMPS TSELS TSHLS TSHRS TROWSUM TROWPROD TROWMAX TROWMIN
-TROWARGMAX TROWARGMIN TCOLSUM TCOLPROD TCOLMAX TCOLMIN TCOLARGMAX TCOLARGMIN
-TROWEXPAND TROWEXPANDADD TROWEXPANDSUB TROWEXPANDMUL TROWEXPANDDIV TROWEXPANDMAX
-TROWEXPANDMIN TROWEXPANDEXPDIF TCOLEXPAND TCOLEXPANDADD TCOLEXPANDSUB TCOLEXPANDMUL
-TCOLEXPANDDIV TCOLEXPANDMAX TCOLEXPANDMIN TCOLEXPANDEXPDIF TMATMUL TMATMUL_BIAS
-TMATMUL_ACC TMATMUL_MX TGEMV TGEMV_BIAS TGEMV_ACC TGEMV_MX TLOAD TSTORE TPREFETCH
-MGATHER MSCATTER TEXPANDS TCI TTRI TFILLPAD TCVT TQUANT TDEQUANT TEXTRACT TINSERT
-TGATHER TSCATTER TCONCAT TTRANS TIMG2COL TMOV TGATHERB TDEINTERLEAVE TINTERLEAVE
-TRESHAPE TSORT TMRGSORT THISTOGRAM TPARTADD TPARTMUL TPARTMAX TPARTMIN TPARTARGMAX
-TPARTARGMIN TPUSH TPOP TALLOC TFREE
-""".split()
-
-EXPECTED_TMA = {
-    "TLOAD": ("BSTART.TLOAD", 0),
-    "TSTORE": ("BSTART.TSTORE", 1),
-    "TMOV": ("BSTART.TMOV", 2),
-    "TPREFETCH": ("BSTART.TPREFETCH", 3),
-    "MGATHER": ("BSTART.MGATHER", 4),
-    "MSCATTER": ("BSTART.MSCATTER", 5),
-}
-EXPECTED_CUBE = {
-    "TMATMUL": ("BSTART.TMATMUL", 0),
-    "TMATMUL_BIAS": ("BSTART.TMATMUL.BIAS", 1),
-    "TMATMUL_ACC": ("BSTART.TMATMUL.ACC", 2),
-    "TMATMUL_MX": ("BSTART.TMATMULMX", 4),
-    "TGEMV": ("BSTART.TGEMV", 16),
-    "TGEMV_BIAS": ("BSTART.TGEMV.BIAS", 17),
-    "TGEMV_ACC": ("BSTART.TGEMV.ACC", 18),
-    "TGEMV_MX": ("BSTART.TGEMVMX", 20),
-}
-EXPECTED_SUPPLEMENTAL = {
-    ("BSTART.MGATHER.MASK", "TMA", 6),
-    ("BSTART.MSCATTER.MASK", "TMA", 7),
-    ("BSTART.MGATHER.CAS", "TMA", 8),
-}
-REJECTED_NAMES = {
-    "TEXRACT",
-    "TFILL/TEXPANDS",
-    "TFMOD",
-    "TFMODS",
-    "TLRELU？",
-    "TPOW",
-    "TPOWS",
-    "TPRELU？",
-    "TRANDOM",
-}
+RELEASE = "0.57.1"
+ABI = "pto-isa-0.57.1-mode-function-v1"
+LOCK_REF = "isa/v0.57/pto-spec.lock.json"
+HASH = re.compile(r"^[0-9a-f]{64}$")
+ALIASES = {"TTRANSPOSE": "TTRANS", "TSORT32": "TSORT"}
 
 
 def _load(path: Path) -> Any:
-    with path.open("r", encoding="utf-8") as stream:
-        return json.load(stream)
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _piece_signature(fields: list[dict[str, Any]], compiled: bool) -> dict[str, tuple[tuple[int, int], ...]]:
+    grouped: dict[str, list[tuple[int, int]]] = {}
+    for field in fields:
+        pieces = field.get("pieces", [])
+        if compiled:
+            value = [(int(piece["insn_lsb"]), int(piece["width"])) for piece in pieces]
+        else:
+            value = [(int(piece["instruction_lsb"]), int(piece["width"])) for piece in pieces]
+        grouped.setdefault(str(field["name"]), []).extend(value)
+    return {name: tuple(sorted(pieces)) for name, pieces in grouped.items()}
+
+
+def _constraints_match(form: dict[str, Any], item: dict[str, Any]) -> bool:
+    widths = {str(field["name"]): int(field["width"]) for field in form.get("fields", [])}
+    expected: dict[str, set[int]] = {}
+    for constraint in form.get("constraints", []):
+        field = str(constraint["field"])
+        domain = set(range(1 << widths[field]))
+        if constraint["operator"] == "one-of":
+            allowed = {int(value) for value in constraint["values"]}
+        elif constraint["operator"] == "not-equal":
+            allowed = domain - {int(constraint["value"])}
+        else:
+            raise ValueError(f"unsupported PTO constraint operator {constraint['operator']!r}")
+        expected[field] = expected.get(field, domain) & allowed
+
+    actual: dict[str, set[int]] = {}
+    for part in item.get("encoding", {}).get("parts", []):
+        for constraint in part.get("constraints", []) or []:
+            field = str(constraint["field"])
+            if field not in widths or constraint.get("op") != "!=":
+                raise ValueError(f"unsupported compiled constraint for {form['form_id']}: {constraint!r}")
+            domain = set(range(1 << widths[field]))
+            actual.setdefault(field, domain).discard(int(str(constraint["value"]), 0))
+    normalized_expected = {name: tuple(sorted(values)) for name, values in expected.items()}
+    normalized_actual = {name: tuple(sorted(values)) for name, values in actual.items()}
+    return normalized_actual == normalized_expected
+
+
+def _validate_compiled_forms(root: Path, source: dict[str, Any], errors: list[str]) -> None:
+    spec_path = root / "isa/v0.57/linxisa-v0.57.json"
+    if not spec_path.is_file():
+        errors.append(f"missing compiled spec: {spec_path}")
+        return
+    spec = _load(spec_path)
+    compiled = {
+        str(item["pto_source_form_id"]): item
+        for item in spec.get("instructions", [])
+        if item.get("pto_source_form_id")
+    }
+    for form in source["forms"]:
+        form_id = str(form["form_id"])
+        item = compiled.get(form_id)
+        if item is None:
+            errors.append(f"compiled command form missing source identity {form_id}")
+            continue
+        if item.get("mnemonic") != form.get("mnemonic") or item.get("length_bits") != form.get("length_bits"):
+            errors.append(f"{form_id}: mnemonic/length differs from PTO source")
+        actual_encoding = [
+            (int(part["mask"], 0), int(part["match"], 0), int(part["width_bits"]))
+            for part in item.get("encoding", {}).get("parts", [])
+        ]
+        expected_encoding = [
+            (int(part["mask"], 0), int(part["match"], 0), int(part["width_bits"]))
+            for part in form.get("encoding", [])
+        ]
+        if actual_encoding != expected_encoding:
+            errors.append(f"{form_id}: mask/match differs from PTO source")
+        actual_fields = []
+        instruction_offset = 0
+        for part in item.get("encoding", {}).get("parts", []):
+            for field in part.get("fields", []):
+                actual_fields.append({
+                    "name": field["name"],
+                    "pieces": [
+                        {**piece, "insn_lsb": int(piece["insn_lsb"]) + instruction_offset}
+                        for piece in field.get("pieces", [])
+                    ],
+                })
+            instruction_offset += int(part["width_bits"])
+        if _piece_signature(actual_fields, True) != _piece_signature(form.get("fields", []), False):
+            errors.append(f"{form_id}: field layout differs from PTO source")
+        if not _constraints_match(form, item):
+            errors.append(f"{form_id}: legality constraints differ from PTO source")
 
 
 def validate(root: Path) -> list[str]:
     errors: list[str] = []
-    ops_path = root / "isa/v0.57/state/pto_ops.json"
-    map_path = root / "isa/v0.57/state/pto_encoding_map.json"
-    engine_path = root / "isa/v0.57/state/engine_ops.json"
-    for path in (ops_path, map_path, engine_path):
-        if not path.is_file():
-            errors.append(f"missing required v0.57 PTO state file: {path}")
-    if errors:
+    profile = root / "isa/v0.57"
+    paths = {
+        "lock": profile / "pto-spec.lock.json",
+        "operations": profile / "state/pto_ops.json",
+        "encoding": profile / "state/pto_encoding_map.json",
+        "commands": profile / "state/pto_command_forms.json",
+        "engine": profile / "state/engine_ops.json",
+        "release": profile / "release_manifest.json",
+    }
+    missing = [str(path) for path in paths.values() if not path.is_file()]
+    if missing:
+        return [f"missing PTO 0.57.1 projection: {path}" for path in missing]
+    documents = {name: _load(path) for name, path in paths.items()}
+    lock = documents["lock"]
+    if lock.get("release") != RELEASE or lock.get("encoding_abi") != ABI:
+        errors.append("pto-spec lock has the wrong release or encoding ABI")
+    for label, value in (
+        ("content_sha256", lock.get("content_sha256")),
+        ("encoding_projection_sha256", lock.get("encoding_projection_sha256")),
+        ("release manifest hash", lock.get("release_manifest", {}).get("sha256")),
+        ("tile catalog hash", lock.get("catalogs", {}).get("tile_operations", {}).get("sha256")),
+        ("command catalog hash", lock.get("catalogs", {}).get("command_forms", {}).get("sha256")),
+    ):
+        if not isinstance(value, str) or HASH.fullmatch(value) is None:
+            errors.append(f"pto-spec lock {label} is not a SHA-256")
+    if lock.get("catalogs", {}).get("tile_operations", {}).get("count") != 120:
+        errors.append("pto-spec lock must freeze exactly 120 tile operations")
+    if lock.get("catalogs", {}).get("command_forms", {}).get("count") != 99:
+        errors.append("pto-spec lock must freeze exactly 99 command forms")
+
+    for name in ("operations", "encoding", "commands", "engine", "release"):
+        document = documents[name]
+        if name != "commands" and document.get("version") != RELEASE:
+            errors.append(f"{name}: version must be {RELEASE}")
+        if document.get("source_lock") != LOCK_REF:
+            errors.append(f"{name}: source_lock must be {LOCK_REF}")
+
+    operations = documents["operations"].get("operations", [])
+    entries = documents["encoding"].get("entries", [])
+    engine = documents["engine"]
+    if len(operations) != 120 or len(entries) != 120:
+        errors.append("PTO tile projections must contain exactly 120 entries")
         return errors
-
-    inventory = _load(ops_path)
-    encoding_map = _load(map_path)
-    engine = _load(engine_path)
-    for label, document in (("inventory", inventory), ("encoding map", encoding_map)):
-        if document.get("profile") != "v0.57":
-            errors.append(f"{label}: profile must be v0.57")
-        if document.get("version") != "0.57.0":
-            errors.append(f"{label}: version must be 0.57.0")
-        source = document.get("source", {})
-        if source.get("original_sha256") != SOURCE_SHA256:
-            errors.append(f"{label}: original workbook SHA-256 mismatch")
-        if source.get("review_export_sha256") != EXPORT_SHA256:
-            errors.append(f"{label}: review export SHA-256 mismatch")
-
-    operations = inventory.get("operations")
-    entries = encoding_map.get("entries")
-    if not isinstance(operations, list) or not isinstance(entries, list):
-        return errors + ["PTO operations and encoding entries must be lists"]
-    names = [str(operation.get("name") or "") for operation in operations]
-    if names != EXPECTED_NAMES:
-        errors.append("PTO inventory names/order do not match the frozen 111-row workbook")
+    counts = Counter(str(item.get("family")) for item in operations)
+    if counts != Counter({"TEPL": 98, "TMA": 9, "CUBE": 13}):
+        errors.append(f"tile family counts differ from 98/9/13: {dict(counts)}")
+    names = [str(item.get("name")) for item in operations]
     if len(names) != len(set(names)):
-        errors.append("PTO inventory contains duplicate names")
-    if [operation.get("source_row") for operation in operations] != list(range(2, 113)):
-        errors.append("PTO inventory source rows must be exactly 2..112")
-    if inventory.get("operation_count") != 111 or encoding_map.get("entry_count") != 111:
-        errors.append("PTO inventory and encoding map must each contain 111 workbook rows")
-
-    by_name = {operation["name"]: operation for operation in operations}
-    map_by_name = {entry["pto_name"]: entry for entry in entries}
-    if set(map_by_name) != set(by_name) or len(map_by_name) != len(entries):
-        errors.append("PTO encoding map must contain each inventory operation exactly once")
-
-    tepl_by_name = {
-        str(operation["name"]): int(operation["tile_opcode"])
-        for operation in engine.get("tepl", {}).get("ops", [])
-    }
-    tma_state = {
-        (entry["mnemonic"], int(entry["function"]))
-        for entry in engine.get("tma", {}).get("legal_aliases", [])
-    }
-    cube_state = {
-        (entry["mnemonic"], int(entry["function"]))
-        for entry in engine.get("cube", {}).get("legal_aliases", [])
-    }
-    seen_tepl: dict[int, str] = {}
-    family_counts = {"TEPL": 0, "TMA": 0, "CUBE": 0}
-    for name in names:
-        operation = by_name[name]
-        entry = map_by_name.get(name, {})
-        disposition = operation.get("disposition", {})
-        family = disposition.get("family")
-        if family not in family_counts:
-            errors.append(f"{name}: invalid disposition family {family!r}")
-            continue
-        family_counts[family] += 1
-        if entry.get("canonical_name") != operation.get("canonical_name"):
-            errors.append(f"{name}: encoding map disagrees with canonical_name")
-        for key in ("canonical_name", "family", "encoding_mnemonic", "selector", "function"):
-            if key in disposition and entry.get(key) != disposition.get(key):
-                errors.append(f"{name}: encoding map disagrees with inventory field {key}")
-
-        if name in EXPECTED_TMA:
-            mnemonic, function = EXPECTED_TMA[name]
-            if disposition != {
-                "family": "TMA",
-                "function": function,
-                "encoding_mnemonic": mnemonic,
-            }:
-                errors.append(f"{name}: incorrect TMA disposition")
-            if (mnemonic, function) not in tma_state:
-                errors.append(f"{name}: TMA disposition missing from engine state")
-        elif name in EXPECTED_CUBE:
-            mnemonic, function = EXPECTED_CUBE[name]
-            if disposition != {
-                "family": "CUBE",
-                "function": function,
-                "encoding_mnemonic": mnemonic,
-            }:
-                errors.append(f"{name}: incorrect CUBE disposition")
-            if (mnemonic, function) not in cube_state:
-                errors.append(f"{name}: CUBE disposition missing from engine state")
-        else:
-            canonical = "TTRANSPOSE" if name == "TTRANS" else name
-            selector = tepl_by_name.get(canonical)
-            rendered = None if selector is None else f"0x{selector:03X}"
-            if disposition != {
-                "family": "TEPL",
-                "selector": rendered,
-                "encoding_mnemonic": "BSTART.TEPL",
-            }:
-                errors.append(f"{name}: incorrect TEPL disposition")
-            if selector is not None:
-                previous = seen_tepl.get(selector)
-                if previous is not None and previous != canonical:
-                    errors.append(
-                        f"TEPL selector 0x{selector:03X} is shared by {previous} and {canonical}"
-                    )
-                seen_tepl[selector] = canonical
-
-    expected_counts = {"TEPL": 97, "TMA": 6, "CUBE": 8}
-    if family_counts != expected_counts:
-        errors.append(f"PTO family counts mismatch: {family_counts}")
-    if inventory.get("family_counts") != expected_counts:
-        errors.append("PTO inventory family_counts field is stale")
-    if encoding_map.get("family_counts") != expected_counts:
-        errors.append("PTO encoding map family_counts field is stale")
-
-    supplemental = {
-        (
-            entry.get("canonical_name"),
-            entry.get("family"),
-            entry.get("function"),
-        )
-        for entry in encoding_map.get("supplemental_entries", [])
-    }
-    if supplemental != EXPECTED_SUPPLEMENTAL:
-        errors.append("supplemental PR #123/#133 TMA mappings are incomplete")
-
-    all_names = set(names) | {
-        str(entry.get("canonical_name") or "") for entry in entries
-    }
-    leaked = sorted(REJECTED_NAMES & all_names)
+        errors.append("PTO tile operation names are not unique")
+    if any(item.get("contract_status") != "reviewed-complete" for item in operations):
+        errors.append("all 120 tile contracts must be reviewed-complete")
+    deleted = set(documents["operations"].get("deleted_names", []))
+    rejected = set(documents["operations"].get("rejected_names", []))
+    leaked = sorted((deleted | rejected | set(ALIASES)) & set(names))
     if leaked:
-        errors.append(f"review-only or typo PTO names leaked into v0.57: {leaked}")
+        errors.append(f"deleted/rejected/migration-only names leaked into tile operations: {leaked}")
+    if documents["encoding"].get("migration_aliases") != ALIASES:
+        errors.append("encoding migration aliases must be exactly TTRANSPOSE/TTRANS and TSORT32/TSORT")
+    if documents["encoding"].get("policy", {}).get("legacy_decode_allowed") is not False:
+        errors.append("legacy PTO decodes must be disabled")
+
+    tepl = [item for item in operations if item.get("family") == "TEPL"]
+    selectors = []
+    for item in tepl:
+        expected = (int(item["mode"]) << 5) | int(item["function"])
+        if int(str(item["selector"]), 0) != expected:
+            errors.append(f"{item.get('name')}: selector is not (Mode<<5)|Function")
+        selectors.append(expected)
+    if len(set(selectors)) != 98:
+        errors.append("TEPL Mode/Function assignments are not 98 unique selectors")
+    engine_tepl = {
+        item["name"]: (item.get("mode"), item.get("function"), item.get("logical_selector"))
+        for item in engine.get("tepl", {}).get("ops", [])
+    }
+    expected_tepl = {
+        item["name"]: (item["mode"], item["function"], int(str(item["selector"]), 0))
+        for item in tepl
+    }
+    if engine.get("tepl", {}).get("kind") != "mode_function" or engine_tepl != expected_tepl:
+        errors.append("engine TEPL projection differs from the 98-operation source map")
+    tma_functions = {int(item["function"]) for item in operations if item.get("family") == "TMA"}
+    cube_functions = {int(item["function"]) for item in operations if item.get("family") == "CUBE"}
+    if tma_functions != set(range(9)):
+        errors.append("TMA functions must be exactly 0..8")
+    if cube_functions != {0, 1, 2, 4, 5, 6, 8, 16, 17, 18, 20, 21, 22}:
+        errors.append("CUBE functions differ from the 13 named source operations")
+    if engine.get("cube", {}).get("unassigned_function_behavior") != "illegal_instruction":
+        errors.append("unassigned CUBE functions must trap as illegal instructions")
+
+    commands = documents["commands"]
+    forms = commands.get("forms", [])
+    if commands.get("form_count") != 99 or len(forms) != 99:
+        errors.append("PTO command source must contain exactly 99 forms")
+    families = Counter(str(item.get("semantic_family")) for item in forms)
+    if families != Counter({"CMD": 74, "BBD": 25}):
+        errors.append(f"command source families differ from 74 CMD / 25 BBD: {dict(families)}")
+    _validate_compiled_forms(root, commands, errors)
     return errors
 
 

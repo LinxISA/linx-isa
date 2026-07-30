@@ -72,11 +72,11 @@
       "mnemonic": "B.ARG",
       "status": "executable-subset"
     },
-    "b_catr_32_e90bd52fa480": {
+    "b_catr_32_8f94bdb16d29": {
       "mnemonic": "B.CATR",
       "status": "executable-subset"
     },
-    "b_datr_32_c161a042ff38": {
+    "b_datr_32_840f4b8d579d": {
       "mnemonic": "B.DATR",
       "status": "executable-subset"
     },
@@ -116,23 +116,23 @@
       "mnemonic": "B.IOR",
       "status": "executable-subset"
     },
-    "b_iot_32_10db6db84f5d": {
+    "b_iot_32_0f23e46d6176": {
       "mnemonic": "B.IOT",
       "status": "executable-subset"
     },
-    "b_iot_32_2c07e7177fad": {
+    "b_iot_32_3a6945dec034": {
       "mnemonic": "B.IOT",
       "status": "executable-subset"
     },
-    "b_iot_32_8b8bce6bffe8": {
+    "b_iot_32_778f84340400": {
       "mnemonic": "B.IOT",
       "status": "executable-subset"
     },
-    "b_iot_32_c11eb189dd83": {
+    "b_iot_32_a06b9b6c1965": {
       "mnemonic": "B.IOT",
       "status": "executable-subset"
     },
-    "b_iot_32_efa0fe3fe49a": {
+    "b_iot_32_f1ca66bbcce1": {
       "mnemonic": "B.IOT",
       "status": "executable-subset"
     },
@@ -198,10 +198,6 @@
     },
     "bstart_call_32_9404418d1ae5": {
       "mnemonic": "BSTART CALL",
-      "status": "executable-subset"
-    },
-    "bstart_cube_32_bd3f337acb9d": {
-      "mnemonic": "BSTART.CUBE",
       "status": "executable-subset"
     },
     "bstart_fixp_32_3b0ae11126a6": {
@@ -296,7 +292,7 @@
       "mnemonic": "BSTART.SYS",
       "status": "executable-subset"
     },
-    "bstart_tepl_32_d022db6dacb3": {
+    "bstart_tepl_32_bff5143d4fe3": {
       "mnemonic": "BSTART.TEPL",
       "status": "executable-subset"
     },
@@ -3077,6 +3073,6 @@
       "status": "executable-subset"
     }
   },
-  "schema_version": "linx-sail-status-v0.57.0",
-  "spec_version": "0.57.0"
+  "schema_version": "linx-sail-status-v0.57.1",
+  "spec_version": "0.57.1"
 }
