@@ -132,6 +132,8 @@ def validate(root: Path) -> list[str]:
     for label, value in (
         ("content_sha256", lock.get("content_sha256")),
         ("encoding_projection_sha256", lock.get("encoding_projection_sha256")),
+        ("hardware profile hash", lock.get("hardware_conformance_profile", {}).get("sha256")),
+        ("numeric vectors hash", lock.get("numeric_conformance_vectors", {}).get("sha256")),
         ("release manifest hash", lock.get("release_manifest", {}).get("sha256")),
         ("tile catalog hash", lock.get("catalogs", {}).get("tile_operations", {}).get("sha256")),
         ("command catalog hash", lock.get("catalogs", {}).get("command_forms", {}).get("sha256")),
@@ -142,6 +144,21 @@ def validate(root: Path) -> list[str]:
         errors.append("pto-spec lock must freeze exactly 120 tile operations")
     if lock.get("catalogs", {}).get("command_forms", {}).get("count") != 99:
         errors.append("pto-spec lock must freeze exactly 99 command forms")
+    if (
+        lock.get("hardware_conformance_profile", {}).get("path")
+        != "spec/hardware-conformance-profile.json"
+    ):
+        errors.append("pto-spec lock must freeze the hardware conformance profile")
+    if (
+        lock.get("hardware_conformance_profile", {}).get("profile_id")
+        != "pto-hardware-numeric-0.57.1-ieee-v1"
+    ):
+        errors.append("pto-spec lock has the wrong hardware conformance profile identity")
+    if (
+        lock.get("numeric_conformance_vectors", {}).get("path")
+        != "spec/evidence/pto-isa-0571-hardware-numeric-vectors.json"
+    ):
+        errors.append("pto-spec lock must freeze the hardware numeric conformance vectors")
 
     for name in ("operations", "encoding", "commands", "engine", "release"):
         document = documents[name]

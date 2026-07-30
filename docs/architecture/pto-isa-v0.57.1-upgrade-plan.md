@@ -97,6 +97,37 @@ the six legacy TMA-oriented B.ARG forms.
 - TSORT is stable over 32-element groups and produces values plus U32 original
   indices. NaNs follow numeric values while retaining input order.
 
+### Numeric and matrix conformance
+
+The hardware numeric identity is
+`pto-hardware-numeric-0.57.1-ieee-v1`. The release lock freezes both the
+hardware profile and its executable vectors; sharing only the encoding hash is
+not a conformance claim.
+
+- The assigned low-precision formats are the exact OCP `E4M3`, `E5M2`,
+  `E3M2`, `E2M3`, `E2M1`, and `E8M0` encodings. `HiF8` uses the Ascend
+  dynamic Dot/Exponent/Mantissa encoding. `HiF4X2` uses the public E1M2 value
+  table but remains a distinct DataType identity from `E1M2X2`.
+- Packed DataTypes use logical lanes: lane `2*i` is the low nibble and lane
+  `2*i+1` is the high nibble. Shape, matrix, and scale dimensions count these
+  logical lanes, not carrier bytes.
+- Ordinary matrix operations accept the 24 assigned non-`E8M0` DataTypes with
+  identical left, right, header, and logical bias types. Physical ACC is FP64
+  for FP64, FP32 for other floating formats, S64 for signed integer formats,
+  and U64 for unsigned integer formats.
+- MX accepts all four ordered pairs over `E4M3`/`E5M2` and all four ordered
+  pairs over `E2M1X2`/`HiF4X2`. Header, ACC, and bias are FP32; both scale
+  inputs are E8M0. One scale covers 32 logical K elements, with ScaleA shape
+  `M x ceil(K/32)` and ScaleB shape `ceil(K/32) x N`, and scaling occurs before
+  each fused multiply-add.
+- BIAS is added after the complete dot product in the logical result type;
+  MX BIAS is FP32. `.ACC` starts from the old ACC and adds the newly scaled
+  product. ACCCVT publishes the complete rounded Tile before releasing ACC.
+- Invalid float-to-signed conversion produces the destination minimum; invalid
+  float-to-unsigned conversion produces the destination maximum. Packed lanes
+  convert independently. RHB means nearest with exact ties toward positive
+  infinity.
+
 ## Baseline differences that must close
 
 ### pto-spec

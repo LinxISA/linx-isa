@@ -42,23 +42,27 @@ def pretty(document: Any) -> str:
     return json.dumps(document, indent=2, ensure_ascii=False) + "\n"
 
 
-def source_paths(source_root: Path) -> tuple[Path, Path, Path]:
+def source_paths(source_root: Path) -> tuple[Path, Path, Path, Path, Path]:
     return (
         source_root / "spec" / "release-manifest.json",
         source_root / "spec" / "catalog" / "tile-operations.json",
         source_root / "spec" / "catalog" / "command-forms.json",
+        source_root / "spec" / "hardware-conformance-profile.json",
+        source_root / "spec" / "evidence" / "pto-isa-0571-hardware-numeric-vectors.json",
     )
 
 
 def validate_source(source_root: Path) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
-    manifest_path, tile_path, command_path = source_paths(source_root)
-    for path in (manifest_path, tile_path, command_path):
+    manifest_path, tile_path, command_path, hardware_path, vectors_path = source_paths(source_root)
+    for path in (manifest_path, tile_path, command_path, hardware_path, vectors_path):
         if not path.is_file():
             raise ValueError(f"missing upstream PTO source: {path}")
 
     manifest = load_json(manifest_path)
     tiles = load_json(tile_path)
     commands = load_json(command_path)
+    hardware = load_json(hardware_path)
+    vectors = load_json(vectors_path)
     if manifest.get("release") != RELEASE:
         raise ValueError(f"upstream release must be {RELEASE}")
     if manifest.get("encoding_abi") != EXPECTED_ABI:
@@ -77,11 +81,25 @@ def validate_source(source_root: Path) -> tuple[dict[str, Any], dict[str, Any], 
         actual = sha256(path)
         if canonical.get(rel) != actual:
             raise ValueError(f"{rel} does not match the release manifest: {actual}")
+
+    hardware_manifest = manifest.get("hardware_conformance_profile") or {}
+    if hardware_manifest.get("path") != "spec/hardware-conformance-profile.json":
+        raise ValueError("release manifest names the wrong hardware conformance profile")
+    if hardware_manifest.get("evidence") != "spec/evidence/pto-isa-0571-hardware-numeric-vectors.json":
+        raise ValueError("release manifest names the wrong hardware numeric evidence")
+    if hardware_manifest.get("sha256") != sha256(hardware_path):
+        raise ValueError("hardware conformance profile does not match the release manifest")
+    if hardware.get("profile_id") != hardware_manifest.get("profile_id"):
+        raise ValueError("hardware profile identity differs from the release manifest")
+    if vectors.get("hardware_profile_id") != hardware.get("profile_id"):
+        raise ValueError("numeric vectors target a different hardware profile")
+    if vectors.get("hardware_profile_sha256") != sha256(hardware_path):
+        raise ValueError("numeric vectors target a different hardware profile hash")
     return manifest, tiles, commands
 
 
 def build_lock(source_root: Path, manifest: dict[str, Any]) -> dict[str, Any]:
-    manifest_path, tile_path, command_path = source_paths(source_root)
+    manifest_path, tile_path, command_path, hardware_path, vectors_path = source_paths(source_root)
     try:
         commit = subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=source_root, text=True
@@ -105,6 +123,15 @@ def build_lock(source_root: Path, manifest: dict[str, Any]) -> dict[str, Any]:
         "content_sha256": manifest["content_sha256"],
         "encoding_abi": manifest["encoding_abi"],
         "encoding_projection_sha256": manifest["encoding_projection_sha256"],
+        "hardware_conformance_profile": {
+            "path": "spec/hardware-conformance-profile.json",
+            "profile_id": manifest["hardware_conformance_profile"]["profile_id"],
+            "sha256": sha256(hardware_path),
+        },
+        "numeric_conformance_vectors": {
+            "path": "spec/evidence/pto-isa-0571-hardware-numeric-vectors.json",
+            "sha256": sha256(vectors_path),
+        },
         "release": manifest["release"],
         "release_manifest": {
             "path": "spec/release-manifest.json",
