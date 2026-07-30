@@ -18,19 +18,19 @@
       "translation_sha256": "ea9067ed6b1ae4943571580193a6a52e6ee58e20235260559491ccc38bb93075"
     },
     "architecture/linxcore/ifu.md": {
-      "source_sha256": "15c1b6d52b196863ccbdf4b7e0a54bf824b7819f17bc1d7ecae0c9fb4833fc47",
-      "translation_sha256": "aaeadfbd1ef57283cb88393908760b3c148a582bbd911fcec4e3cf7349187d22"
+      "source_sha256": "c53e8a6f6a732b18cfd6e7db07b47e6674e66e1ddc25260d753fbc854de589cf",
+      "translation_sha256": "d96ccba71a1a91d0512c15a1c7d457761aff53cf9f0e4045679ad95154ec161f"
     },
     "architecture/linxcore/interfaces.md": {
       "source_sha256": "226a689c7a5415a23e10b5e22eb790deb4818998caea46ea6976efccad17c67c",
       "translation_sha256": "cbb38e387779fef27254d476bc55188a073516aaa8e8dc03d3c86830820d1299"
     },
     "architecture/linxcore/microarchitecture.md": {
-      "source_sha256": "d6387a9d78d1688682fbe4c8e40a6f229c58357959bdc525dde232cd2095850d",
+      "source_sha256": "3f4bcb43421815ec55a12111eb64fba6d46c8cd43a79a4a895e8d00aa0ac739c",
       "translation_sha256": "2334ae3a6f38906881599dd0e6c4f24ef74e69b90279e6933e94a33f976d9528"
     },
     "architecture/linxcore/module-catalog.md": {
-      "source_sha256": "bf2a7b39738669716f35a42e13e47c37bed307de8a2c7e4096f00333b2741589",
+      "source_sha256": "2d57d617f47d15d53d8129f1fb98052c06262aa95dc2f2fbf1ef9bbbbb783b56",
       "translation_sha256": "6b088ca7c2a04784e7fa4553197da49507b6b501b1d9dc3b01cfdded3ce5e47a"
     },
     "architecture/linxcore/overview.md": {
@@ -38,11 +38,11 @@
       "translation_sha256": "fec0806b26d477f0b540b934affe17dde59a56e5d93c8e5e9c6d23d7071e4885"
     },
     "architecture/linxcore/pipeline-stage-catalog.md": {
-      "source_sha256": "1c6b6fc0014cf657b8a87eddf984616db36f5a5d98889384487e6f80968eb1fa",
+      "source_sha256": "d11cddead08a6776dbf9c457c33413de232d10a541be304909e3a7dc7a9101ce",
       "translation_sha256": "4f3c6be815f7be913f4f460c6adaea009654cddff4a630ae13979b0a4c09716d"
     },
     "architecture/linxcore/verification-matrix.md": {
-      "source_sha256": "c0522a77edefb9d9e0efcfe656a3f632c392acde4f8a1ae79496f7f991640ef2",
+      "source_sha256": "2f3ead3df40bc338a1a208f9c36a1e49891d63c03936600c0637365d0e8704af",
       "translation_sha256": "e632d81fa6f2e27204f1e9615b4701f194b523e636e548e39b9661927e35b484"
     },
     "architecture/research/linx-simt-alt-compiler-gap-analysis.md": {
@@ -8298,7 +8298,7 @@
       "translation_sha256": "4fe65229d8c39b98fa17f905906bfdf0c712cc91fcebd3e2b50582acae7f600f"
     },
     "reference/linxisa-call-ret-contract.md": {
-      "source_sha256": "5d9506e49e92f952b1e3f78b7b39273a9d335127df8eea95c46c2fca66fcccb6",
+      "source_sha256": "07facc4e7e325fda578a37b20910c8bce09e7dbda52e72987c4dd1abbdc4a395",
       "translation_sha256": "807d7a0a5f8b1e66436a6344fbe03b1ea608a18551fda4963654919c755dfe44"
     },
     "releases/v0.3.0.md": {
