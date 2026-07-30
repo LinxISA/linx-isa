@@ -5,11 +5,24 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 LINUX_ROOT="${1:-${LINUX_ROOT:-$REPO_ROOT/kernel/linux}}"
+LINUX_BUILD_ROOT="${LINUX_BUILD_DIR:-${LINUX_VMLINUX_OUT_DIR:-}}"
+
+BUILD_ROOTS=()
+if [[ -n "$LINUX_BUILD_ROOT" ]]; then
+  BUILD_ROOTS+=("$LINUX_BUILD_ROOT")
+fi
+BUILD_ROOTS+=(
+  "$LINUX_ROOT/build-linx-fixed"
+  "$LINUX_ROOT/build-linx"
+)
+
 VMLINUX=""
-for cand in \
-  "$LINUX_ROOT/build-linx-fixed/vmlinux" \
-  "$LINUX_ROOT/build-linx/vmlinux" \
-  "$LINUX_ROOT/vmlinux"; do
+VMLINUX_CANDIDATES=()
+for build_root in "${BUILD_ROOTS[@]}"; do
+  VMLINUX_CANDIDATES+=("$build_root/vmlinux")
+done
+VMLINUX_CANDIDATES+=("$LINUX_ROOT/vmlinux")
+for cand in "${VMLINUX_CANDIDATES[@]}"; do
   if [[ -f "$cand" ]]; then
     VMLINUX="$cand"
     break
@@ -26,17 +39,23 @@ pick_first_exists() {
   return 1
 }
 
-SWITCH_O="$(pick_first_exists \
-  "$LINUX_ROOT/build-linx-fixed/arch/linx/kernel/switch_to.o" \
-  "$LINUX_ROOT/build-linx/arch/linx/kernel/switch_to.o" \
-  "$LINUX_ROOT/arch/linx/kernel/switch_to.o" \
-  "$LINUX_ROOT/build-linx-fixed/arch/linx/kernel/entry.o" \
-  "$LINUX_ROOT/build-linx/arch/linx/kernel/entry.o" \
-  "$LINUX_ROOT/arch/linx/kernel/entry.o" || true)"
-ENTRY_O="$(pick_first_exists \
-  "$LINUX_ROOT/build-linx-fixed/arch/linx/kernel/entry.o" \
-  "$LINUX_ROOT/build-linx/arch/linx/kernel/entry.o" \
-  "$LINUX_ROOT/arch/linx/kernel/entry.o" || true)"
+SWITCH_CANDIDATES=()
+ENTRY_CANDIDATES=()
+for build_root in "${BUILD_ROOTS[@]}"; do
+  SWITCH_CANDIDATES+=(
+    "$build_root/arch/linx/kernel/switch_to.o"
+    "$build_root/arch/linx/kernel/entry.o"
+  )
+  ENTRY_CANDIDATES+=("$build_root/arch/linx/kernel/entry.o")
+done
+SWITCH_CANDIDATES+=(
+  "$LINUX_ROOT/arch/linx/kernel/switch_to.o"
+  "$LINUX_ROOT/arch/linx/kernel/entry.o"
+)
+ENTRY_CANDIDATES+=("$LINUX_ROOT/arch/linx/kernel/entry.o")
+
+SWITCH_O="$(pick_first_exists "${SWITCH_CANDIDATES[@]}" || true)"
+ENTRY_O="$(pick_first_exists "${ENTRY_CANDIDATES[@]}" || true)"
 
 if [[ -n "${LLVM_OBJDUMP:-}" ]]; then
   OBJDUMP="$LLVM_OBJDUMP"
@@ -81,14 +100,14 @@ trap 'rm -rf "$tmpdir"' EXIT
 
 audit_objs=("$ENTRY_O")
 SELECTED_BUILD_ROOT=""
-case "$ENTRY_O" in
-  "$LINUX_ROOT/build-linx-fixed/"*)
-    SELECTED_BUILD_ROOT="$LINUX_ROOT/build-linx-fixed"
-    ;;
-  "$LINUX_ROOT/build-linx/"*)
-    SELECTED_BUILD_ROOT="$LINUX_ROOT/build-linx"
-    ;;
-esac
+for build_root in "${BUILD_ROOTS[@]}"; do
+  case "$ENTRY_O" in
+    "$build_root/"*)
+      SELECTED_BUILD_ROOT="$build_root"
+      break
+      ;;
+  esac
+done
 if [[ -n "$SELECTED_BUILD_ROOT" && -f "$SELECTED_BUILD_ROOT/kernel/printk/printk.o" ]]; then
   audit_objs+=("$SELECTED_BUILD_ROOT/kernel/printk/printk.o")
 fi

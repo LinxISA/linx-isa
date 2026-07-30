@@ -1256,8 +1256,9 @@ def _qemu_fentry_trace_from_args(args: argparse.Namespace) -> dict[str, str]:
     return trace
 
 
-def _find_gen_init_cpio(linux_root: Path, out_dir: Path) -> Path:
+def _find_gen_init_cpio(linux_root: Path, out_dir: Path, kernel: Path | None = None) -> Path:
     cands = [
+        *(([kernel.parent / "usr" / "gen_init_cpio"]) if kernel is not None else []),
         linux_root / "build-linx-fixed" / "usr" / "gen_init_cpio",
         linux_root / "usr" / "gen_init_cpio",
     ]
@@ -6242,7 +6243,7 @@ def main(argv: list[str]) -> int:
     started_at_utc = _utc_now()
     start_wall = time.monotonic()
 
-    gen_init_cpio = _find_gen_init_cpio(linux_root, out_dir)
+    gen_init_cpio = _find_gen_init_cpio(linux_root, out_dir, kernel)
     if args.stage == "a":
         benches = args.bench if args.bench else STAGE_A_BENCHES
     else:
