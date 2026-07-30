@@ -504,7 +504,6 @@ def _pto_kernel_src(name: str) -> str:
 
 PTO_TILE_KERNEL_NAMES = [
     "tload_store",
-    "mamulb",
     "tmatmul_acc",
     "gemm",
     "flash_attention",
@@ -513,7 +512,6 @@ PTO_TILE_KERNEL_NAMES = [
 
 PTO_PARITY_KERNEL_NAMES = [
     "tload_store",
-    "mamulb",
     "tmatmul_acc",
     "gemm",
     "gemm_basic",

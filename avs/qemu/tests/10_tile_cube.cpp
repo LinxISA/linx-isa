@@ -35,7 +35,7 @@ static void run_tmatmul_test()
 
     auto ta = pto::linx::tload<kTileSizeCode>(a);
     auto tb = pto::linx::tload<kTileSizeCode>(b);
-    auto tc = pto::linx::mamulb<8, 8, 8>(ta, tb);
+    auto tc = pto::linx::tmatmul<8, 8, 8>(ta, tb);
     pto::linx::tstore<kTileSizeCode>(c, tc);
 
     matmul_ref_i32_8x8(expected, a, b);
@@ -67,7 +67,7 @@ static void run_tmatmul_acc_test()
 
     auto ta = pto::linx::tload<kTileSizeCode>(a);
     auto tb = pto::linx::tload<kTileSizeCode>(b);
-    auto seed = pto::linx::mamulb<8, 8, 8>(ta, tb);
+    auto seed = pto::linx::tmatmul<8, 8, 8>(ta, tb);
     auto out = pto::linx::tmatmul_acc<8, 8, 8>(seed, ta, tb);
     pto::linx::tstore<kTileSizeCode>(c, out);
 

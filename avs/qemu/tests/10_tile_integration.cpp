@@ -26,14 +26,12 @@ extern "C" void run_tile_integration_tests(void)
 
 #if PTO_QEMU_SMOKE
     constexpr uint64_t kDigestTloadStore = UINT64_C(0xA1248F48FF3C7199);
-    constexpr uint64_t kDigestMamulb = UINT64_C(0x5400A6A0D6991D4D);
     constexpr uint64_t kDigestTmatmulAcc = UINT64_C(0x2A37199ED1CBD94D);
     constexpr uint64_t kDigestGemm = UINT64_C(0x5400A6A0D6991D4D);
     constexpr uint64_t kDigestFlash = UINT64_C(0x754D619AB6075DA1);
     constexpr uint64_t kDigestFlashMasked = UINT64_C(0xE56690EBAB5372C9);
 #else
     constexpr uint64_t kDigestTloadStore = UINT64_C(0xABFA311400C734C3);
-    constexpr uint64_t kDigestMamulb = UINT64_C(0xACA73824B88635A3);
     constexpr uint64_t kDigestTmatmulAcc = UINT64_C(0xBA7AB93F72C13823);
     constexpr uint64_t kDigestGemm = UINT64_C(0xACA73824B88635A3);
     constexpr uint64_t kDigestFlash = UINT64_C(0x88745CBAC7A57629);
@@ -73,14 +71,6 @@ extern "C" void run_tile_integration_tests(void)
     pto::kernels::pto_tload_store(vec_dst, vec_src, nullptr);
     TEST_EQ64(fnv1a_bytes(vec_dst, sizeof(vec_dst)), kDigestTloadStore,
               0x000A6001u);
-    test_pass();
-
-    test_start(0x000A0007);
-    uart_puts("PTO kernel mamulb digest ... ");
-    zero(mat_c, kMatElems);
-    pto::kernels::pto_mamulb(mat_c, mat_a, mat_b, nullptr);
-    TEST_EQ64(fnv1a_bytes(mat_c, sizeof(mat_c)), kDigestMamulb,
-              0x000A7001u);
     test_pass();
 
     test_start(0x000A0008);
