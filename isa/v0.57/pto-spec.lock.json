@@ -12,16 +12,16 @@
       "count": 120
     }
   },
-  "content_sha256": "3bdd4cb7b8ed48442ebffeb0fdf95c9454b0f823e08c0bcb985425434ad492df",
+  "content_sha256": "45575361fa5b180c454500360a3e4e75d34fba663e60f3741ef38dc9a514bc13",
   "encoding_abi": "pto-isa-0.57.1-mode-function-v1",
   "encoding_projection_sha256": "34f6602cf29ea6363d41d896111dad4de0f70ec36517138aa89e292857909da4",
   "release": "0.57.1",
   "release_manifest": {
     "path": "spec/release-manifest.json",
-    "sha256": "9716abc5bf9421660e6a64c5309bf1624e967b3cbc02a0487e838ec3c30e9af2"
+    "sha256": "6b72e6242bb971ddc14335884f560e2e97b3c6f8acd7ab0ee2e8b189ca8e243d"
   },
   "source": {
-    "commit": "852b53773555aa55bc94581c3d4d343ecea2b9ea",
+    "commit": "b30ed3df4f1a7fd0c2d19b02a90b049cb452fd87",
     "repository": "https://github.com/PTO-ISA/pto-spec.git"
   }
 }

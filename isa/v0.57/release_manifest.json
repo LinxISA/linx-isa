@@ -45,16 +45,20 @@
     "TPOWS"
   ],
   "elf_identity": {
+    "alignment_bytes": 4,
     "descriptor_encoding": "UTF-8 JSON with lexicographically sorted keys and no insignificant whitespace",
     "descriptor_fields": [
       "release",
       "encoding_abi",
       "encoding_projection_sha256"
     ],
+    "descriptor_nul_terminated": false,
     "link_policy": "all input identities must be present and exactly equal",
     "load_policy": "the image identity must exactly match the implementation identity",
+    "name_size_bytes": 4,
     "note_name": "PTO",
     "note_type": "PTO_NT_ISA_IDENTITY",
+    "note_type_value": 1,
     "section": ".note.pto.isa"
   }
 }
