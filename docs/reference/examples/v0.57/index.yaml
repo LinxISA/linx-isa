@@ -1,55 +1,27 @@
-profile: v0.57
-commit: 36c45461f934ddb693a21d31fa84a4f7429edefd
-generated_at: 2026-02-14T05:53:06Z
+schema_version: 2
+profile: v0.57.1
+generated_at: 2026-07-31
+toolchain:
+  llvm_commit: 487db9698c9c748de9afe33aa160c6a52be961ab
+  pto_kernel_commit: 7b379eaa855dcba6c5bff5cd0f6136c1767ad440
+  compiler: compiler/llvm/build-linxisa-clang/bin/clang++
+  flags: >-
+    -target linx64-linx-none-elf -O2 -S -ffreestanding -fno-builtin
+    -fno-stack-protector -fno-exceptions -fno-rtti -nostdlib
+    -Iworkloads/pto_kernels/include
 entries:
   - path: docs/reference/examples/v0.57/curated/disasm_example.s
-    source: docs/reference/examples/v0.57/legacy-reference/disasm_example.s
+    source: historical reviewed disassembly fixture
     generation: manual-curation
-  - path: docs/reference/examples/v0.57/curated/linxisa-v0.57-normalized.asm
-    source: docs/reference/examples/v0.57/curated/linxisa-v0.57-normalized.asm
-    generation: manual-curation
-  - path: docs/reference/examples/v0.57/scratch-legacy/simple.s
-    source: avs/scratch/simple.s
-    generation: migrated-allowlist
-  - path: docs/reference/examples/v0.57/scratch-legacy/test_asm_call.S
-    source: avs/scratch/test_asm_call.S
-    generation: migrated-allowlist
-  - path: docs/reference/examples/v0.57/scratch-legacy/test_branch.s
-    source: avs/scratch/test_branch.s
-    generation: migrated-allowlist
-  - path: docs/reference/examples/v0.57/scratch-legacy/test_branch2.s
-    source: avs/scratch/test_branch2.s
-    generation: migrated-allowlist
-  - path: docs/reference/examples/v0.57/scratch-legacy/test_csel.s
-    source: avs/scratch/test_csel.s
-    generation: migrated-allowlist
-  - path: docs/reference/examples/v0.57/scratch-legacy/test_or.s
-    source: avs/scratch/test_or.s
-    generation: migrated-allowlist
-  - path: docs/reference/examples/v0.57/scratch-legacy/test_regs.s
-    source: avs/scratch/test_regs.s
-    generation: migrated-allowlist
-  - path: docs/reference/examples/v0.57/scratch-legacy/test_simple.s
-    source: avs/scratch/test_simple.s
-    generation: migrated-allowlist
-  - path: docs/reference/examples/v0.57/scratch-legacy/test_simple_fixed.s
-    source: avs/scratch/test_simple_fixed.s
-    generation: migrated-allowlist
-  - path: docs/reference/examples/v0.57/generated/flash_attention.s
-    source: workloads/pto_kernels/kernels/attention/flash_attention.cpp
-    generation: RUN_QEMU_TILE=0 bash workloads/pto_kernels/tools/run_pto_to_linx.sh
-  - path: docs/reference/examples/v0.57/generated/flash_attention_masked.s
-    source: workloads/pto_kernels/kernels/attention/flash_attention_masked.cpp
-    generation: RUN_QEMU_TILE=0 bash workloads/pto_kernels/tools/run_pto_to_linx.sh
-  - path: docs/reference/examples/v0.57/generated/gemm.s
-    source: workloads/pto_kernels/kernels/matmul/gemm.cpp
-    generation: RUN_QEMU_TILE=0 bash workloads/pto_kernels/tools/run_pto_to_linx.sh
-  - path: docs/reference/examples/v0.57/generated/mamulb.s
-    source: workloads/pto_kernels/kernels/matmul/mamulb.cpp
-    generation: RUN_QEMU_TILE=0 bash workloads/pto_kernels/tools/run_pto_to_linx.sh
-  - path: docs/reference/examples/v0.57/generated/tload_store.s
-    source: workloads/pto_kernels/kernels/memory/tload_store.cpp
-    generation: RUN_QEMU_TILE=0 bash workloads/pto_kernels/tools/run_pto_to_linx.sh
-  - path: docs/reference/examples/v0.57/generated/tmatmul_acc.s
-    source: workloads/pto_kernels/kernels/matmul/tmatmul_acc.cpp
-    generation: RUN_QEMU_TILE=0 bash workloads/pto_kernels/tools/run_pto_to_linx.sh
+  - path: docs/reference/examples/v0.57/generated/pto_flash_attention_auto.s
+    source: workloads/pto_kernels/tools/examples/pto_flash_attention_auto.cpp
+    generation: compile-with-recorded-toolchain
+  - path: docs/reference/examples/v0.57/generated/pto_gemm_auto.s
+    source: workloads/pto_kernels/tools/examples/pto_gemm_auto.cpp
+    generation: compile-with-recorded-toolchain
+  - path: docs/reference/examples/v0.57/generated/pto_tload_store.s
+    source: workloads/pto_kernels/tools/examples/pto_tload_store.cpp
+    generation: compile-with-recorded-toolchain
+  - path: docs/reference/examples/v0.57/generated/pto_tmatmul_acc.s
+    source: workloads/pto_kernels/tools/examples/pto_tmatmul_acc.cpp
+    generation: compile-with-recorded-toolchain
