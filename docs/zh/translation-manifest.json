@@ -206,7 +206,7 @@
       "translation_sha256": "cecca74a5d5e77bf69b2e3e2d87ee27f8eb936bdb3201287b01572eca8198640"
     },
     "bringup/README.md": {
-      "source_sha256": "c1c0ecc62595223ae35a76a59380639ace538582098103abdac82762648b0c23",
+      "source_sha256": "f758b18c7ad0c2dd850781553178c8578e9d234875b8969a152fb814ea8d4207",
       "translation_sha256": "f81c854c1020d671c449e986b37bbcf2ff53955a288703ac2eefed69bdc395b5"
     },
     "bringup/SIMT_COMPILER_MATURITY_PLAN.md": {
@@ -298,7 +298,7 @@
       "translation_sha256": "e1f9d5565f16fae1d143ba9bbe8c74e30cb01c71e144ce665a1f9f9f36ecefe4"
     },
     "bringup/gates/qemu_opcode_sync_latest.md": {
-      "source_sha256": "81b2a1bc8766d7db86d87e396106daaa452df2e2a9ae3391ddafd1ad79201676",
+      "source_sha256": "dcbae1bbaf8cb0f91a90ef0f9214c76d46e858282fe3e18882db2217c903d7d7",
       "translation_sha256": "28aeac6e6fb1afeca0c8a40b888d6969c317d25208ef45ab2b3fd4d078c7956c"
     },
     "bringup/libc_status.md": {
