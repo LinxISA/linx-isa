@@ -27,7 +27,7 @@ For `TemplateKind.class=0` (marker/template opcodes), the following mnemonic-enu
 * `8 = ERCOV`
 * `9..255` reserved
 
-NOTE: For `TemplateKind.class=1` (TEPL templates), identification uses the tile opcode selector (`TileOpcode`), not this enum.
+NOTE: For `TemplateKind.class=1` (TEPL templates), identification uses `(Mode << 5) | Function`, not this enum.
 
 Template blocks execute via a **code-template generator** that emits a sequence of internal micro-operations
 (*micro-ops*) based on architectural register inputs.

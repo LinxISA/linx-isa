@@ -136,11 +136,10 @@ Bring-up (auto-mode) binding convention for `B.IOR` in `TLOAD/TSTORE`:
 
 Canonical v0.57 profile constraints:
 
-* `B.ARG + B.IOR` are mandatory in descriptor-rich `TLOAD/TSTORE` headers.
-* TMA execution state is not sourced from `B.CATR/B.DATR`; `TLOAD/TSTORE` consume only `BSTART/B.ARG/B.DIM/B.IOR/B.IOT`.
+* Applicable `B.DATR` fields plus `B.IOR` are mandatory in descriptor-rich `TLOAD/TSTORE` headers.
+* TMA execution consumes the typed block start and applicable `B.CATR/B.DATR/B.DIM/B.IOR/B.IOT` state.
 * Repeated `B.IOR` and repeated `B.IOT` are legal and are consumed in header order.
-* `B.IOT` dynamic-size descriptors are legal only when `RegSrc` resolves to strict `0B..512KB`; runtime rejects invalid
-  dynamic sizes.
+* A runtime-resolved `B.IOT` size is legal only when it equals an accepted 128 B through 8 KiB footprint.
 * For bring-up code size, emit `C.B.DIMI` for `LB0/LB1/LB2` when the value fits in `imm8` (and `RegSrc=zero`).
 * Raw `group=2` material and broad fixed-pipe/TCVT metadata flows are reserved/illegal in canonical v0.57 until a future
   catalog revision assigns explicit semantics.
@@ -155,7 +154,7 @@ For completeness: v0.57 also permits non-memory typed TMA headers `BSTART.TMOV <
 (encoding: `BSTART.TMA Function=2`), but those are governed by <<blockisa-tile>> (not by memory-operation semantics).
 
 `B.IOT` descriptor rendering uses `last` for the terminal descriptor and prints transfer footprints in KiB (for example
-`->t<1KB>`, `->acc<4KB>`). The strict architectural range is `0B..512KB`.
+`->t<1KB>`). ACC is implicit and is never encoded as a `B.IOT` identity.
 
 [[memory-mcall]]
 === Shader-kernel boundary semantics (`MPAR` / `MSEQ`)

@@ -22,9 +22,9 @@ Unless stated otherwise:
 Tile/vector block headers use the standard descriptor families:
 
 * `B.DIM`  — dimension/loop counters and/or operand extents
-* `B.ARG`  — layout and per-op argument payload (layout defaults may exist per-op)
+* `B.DATR` — operation-applicable datatype, layout, rounding, comparison, and pad/byte controls
 * `B.IOR`  — stride/base/scalar register bindings (memory addressing)
-* `B.IOT` — tile binding and tile size (strict range `0B..512KB`)
+* `B.IOT` — tile binding and tile size (codes 3 through 9 select 128 B through 8 KiB)
 * `B.TEXT` — body pointer for SIMT vector blocks (group-granular kernel body)
 
 [[tileblocks-vvec]]
@@ -91,7 +91,7 @@ These blocks do not have a SIMT body (`B.TEXT` is not used).
 
 Mandatory header descriptors:
 
-* `B.ARG` is **mandatory** (layout/pad).
+* `B.DATR` is required when the operation uses non-default layout/pad controls.
 * `B.IOR` is **mandatory** (stride/base).
 * `B.IOT` is **mandatory** (tile binding + tile size).
 
@@ -111,9 +111,7 @@ Mandatory header descriptors:
 
 Optional descriptors:
 
-* `B.ARG` is optional when the layout is default **ND**.
-  - Normative defaulting: if `B.ARG` is absent, the layout is **ND**.
-* `B.ARG` is required when non-default layout/transform is requested (e.g. transpose/reshape).
+* `B.DATR` selects an operation-applicable layout conversion; NORM is the mandatory default and other layouts are capability gated.
 
 [[tileblocks-cube]]
 === CUBE / tensor blocks (`TMATMUL`, `TMATMUL.ACC`, `ACCCVT`)
@@ -128,7 +126,7 @@ Mandatory header descriptors:
 
 * `B.DIM` is **mandatory** and specifies `m/n/k` via `LB0/LB1/LB2`.
 * `B.IOT` is **mandatory** (bind operand tiles and sizes).
-* `B.ARG` is **mandatory** (CUBE uses a fixed layout contract for left/right matrices).
+* `B.DATR` is required when a non-default, supported matrix layout is selected.
 
 ==== `ACCCVT`
 
@@ -141,4 +139,4 @@ Mandatory header descriptors:
 
 * `B.DIM` is **mandatory**.
 * `B.IOT` is **mandatory** (bind destination tile + size).
-* `B.ARG` + `B.IOR` are **mandatory** (quantization arguments and scalar bindings).
+* Applicable `B.DATR` fields plus `B.IOR` are **mandatory** for quantization controls and scalar bindings.

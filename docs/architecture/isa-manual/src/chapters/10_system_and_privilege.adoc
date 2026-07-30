@@ -223,7 +223,7 @@ Template replay flags (bring-up):
 * Implementations SHOULD expose a single EBARG register `EBARG_TPLFLAGS_ACRm` with template trap/replay flags. The bit layout is defined in <<ssr-ebarg>> (see `EBARG_TPLFLAGS_ACRn`).
 * `TPL_ID` for marker templates (`TemplateKind.class=0`) uses the mnemonic-enum mapping in <<templates-tplid>>.
 * For marker templates (`TemplateKind.class=0`), `TPL_ID_PRESENT` MUST be `1` (reporting is required).
-* For TEPL templates (`TemplateKind.class=1`), `TPL_ID_PRESENT` MUST be `1` and `TPL_ID` MUST carry the raw tile opcode selector (`TileOpcode`).
+* For TEPL templates (`TemplateKind.class=1`), `TPL_ID_PRESENT` MUST be `1` and `TPL_ID` MUST carry `(Mode << 5) | Function`.
 * `TPL_REDO_OK=1`: handler may restart the template from the beginning only when no externally visible partial side effects exist.
 * `TPL_RESUME_OK=1`: template supports and permits resume via an `EBSTATE` snapshot.
 * `TPL_PHASE` standard meanings:
@@ -490,7 +490,7 @@ Unless otherwise specified, fields are **XLEN** wide. Addresses are byte address
 * `BSTATE.Template` (template blocks such as `FENTRY`/`FEXIT`/`FRET.*`/`MCOPY`/`MSET`):
 ** `TemplateKind`: which template is executing (packed `class,id`).
 *** `class=0`: marker/template opcodes (`FENTRY`/`FEXIT`/`FRET.*`/`MCOPY`/`MSET`/...) with `id` = opcode-specific enum.
-*** `class=1`: `BSTART.TEPL` templates with `id` = tile opcode (`TileOpcode`, 0..1023).
+*** `class=1`: TEPL templates with `id = (Mode << 5) | Function` (0..127).
 *** `class=2`: reserved for future (implementation-defined templates).
 *** `class=3`: reserved.
 ** `StepIndex`: micro-op progress cursor.
