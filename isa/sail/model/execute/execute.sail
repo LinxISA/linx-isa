@@ -2281,80 +2281,316 @@ function exec_ucvtf(DstType : bits(5), RegDst : bits(5), SrcL : bits(5), SrcType
 }
 
 // Template blocks: FENTRY/FEXIT/FRET.*
-// Spec source: docs/architecture/isa-manual/src/chapters/06_templates.adoc
-//
-// Bring-up semantics implemented here:
-// - `uimm15` is a byte stack adjustment (must preserve 16B alignment by convention).
-// - Register range is inclusive.
-// - Frame layout (staged):
-//     new_sp = sp - (uimm + 8*nregs)
-//     locals = [new_sp, new_sp+uimm)
-//     save area starts at (new_sp+uimm), regs stored in ascending reg# order.
-//
-// ABI mapping (docs/reference/linxisa-assembly-agent-guide.md):
-// - R1 = sp
-// - R10 = ra
+// R975/R980 architectural semantics: immediate-only F arithmetic, inclusive
+// R2..R23 ring ranges, high-end frame slots, and retained event progress.
 
 function template_sp() -> bits(5) = { 0b00001 }
 
-function template_save_range(base_sp : bits(64), begin : bits(5), endv : bits(5), uimm : int) -> unit = {
+function template_ra() -> bits(5) = { 0b01010 }
+
+function template_endpoint_valid(r : bits(5)) -> bool = {
+  let x : int = unsigned(r);
+  (x >= 2) & (x <= 23)
+}
+
+function template_range_count(begin : bits(5), endv : bits(5)) -> int = {
   let b : int = unsigned(begin);
   let e : int = unsigned(endv);
-  let n : int = if e >= b then (e - b + 1) else 0;
-  var k : int = 0;
-  while k < n do {
-    let r : bits(5) = sail_zeros(5) + (b + k);
-    let v : bits(64) = read_reg5(r);
-    let ea : bits(64) = base_sp + (sail_zeros(64) + (uimm + 8*k));
-    mem_store64_le(ea, v);
-    k = k + 1
+  if e >= b then (e - b + 1) else ((24 - b) + (e - 2) + 1)
+}
+
+function template_reg_at(begin : bits(5), idx : int) -> bits(5) = {
+  let raw : int = unsigned(begin) + idx;
+  if raw <= 23 then (sail_zeros(5) + raw) else (sail_zeros(5) + (2 + (raw - 24)))
+}
+
+function template_frame_legal(begin : bits(5), endv : bits(5), f : int, require_r10_begin : bool) -> bool = {
+  let n : int = template_range_count(begin, endv);
+  template_endpoint_valid(begin)
+  & template_endpoint_valid(endv)
+  & (n >= 1)
+  & (n <= 22)
+  & (tmod_int(f, 8) == 0)
+  & (f >= (8 * n))
+  & (not_bool(require_r10_begin) | (begin == template_ra()))
+}
+
+function template_slot_addr(caller_sp : bits(64), idx : int) -> bits(64) = {
+  sub_bits(caller_sp, sail_zeros(64) + (8 * (idx + 1)))
+}
+
+function template_marker_proven(addr : bits(64)) -> bool = {
+  template_marker_check_count = template_marker_check_count + 0x0000_0000_0000_0001;
+  (block_marker0_valid & (block_marker0_pc == addr))
+  | (block_marker1_valid & (block_marker1_pc == addr))
+  | (block_marker2_valid & (block_marker2_pc == addr))
+  | (block_marker3_valid & (block_marker3_pc == addr))
+}
+
+function template_vload_admitted() -> bool = {
+  template_vload_admission_check_count = template_vload_admission_check_count + 0x0000_0000_0000_0001;
+  template_vload_class == 0b001
+}
+
+function template_load64(ea : bits(64)) -> bits(64) = {
+  if template_memory_hook_enabled then {
+    let _ = ea;
+    template_memory_hook_load_count = template_memory_hook_load_count + 0x0000_0000_0000_0001;
+    template_memory_hook_load_value
+  } else mem_load64_le(ea)
+}
+
+function template_store64(ea : bits(64), v : bits(64)) -> unit = {
+  if template_memory_hook_enabled then {
+    let _ = ea;
+    let _ = v;
+    template_memory_hook_store_count = template_memory_hook_store_count + 0x0000_0000_0000_0001
+  } else mem_store64_le(ea, v)
+}
+
+function template_publish_target(tgt : bits(64)) -> unit = {
+  set_commit_target_value(tgt);
+  template_target_publish_count = template_target_publish_count + 0x0000_0000_0000_0001
+}
+
+function template_complete_event(kind : bits(8)) -> unit = {
+  template_last_event_kind = kind;
+  template_event_commit_count = template_event_commit_count + 0x0000_0000_0000_0001;
+  template_step_index = template_step_index + 0x01;
+  if template_step_index == template_event_count then template_phase = 0b10 else ()
+}
+
+function template_capture_entry_values(begin : bits(5), nregs : int) -> unit = {
+  var i : int = 0;
+  while i < nregs do {
+    template_set_saved_value(i, read_reg5(template_reg_at(begin, i)));
+    i = i + 1
   }
 }
 
-function template_restore_range(base_sp : bits(64), begin : bits(5), endv : bits(5), uimm : int) -> unit = {
-  let b : int = unsigned(begin);
-  let e : int = unsigned(endv);
-  let n : int = if e >= b then (e - b + 1) else 0;
-  var k : int = 0;
-  while k < n do {
-    let r : bits(5) = sail_zeros(5) + (b + k);
-    let ea : bits(64) = base_sp + (sail_zeros(64) + (uimm + 8*k));
-    let v : bits(64) = mem_load64_le(ea);
-    write_reg5(r, v);
-    k = k + 1
+function template_maybe_stop_event(kind : bits(8), faultarg : bits(64)) -> bool = {
+  if template_data_fault_step == template_step_index then {
+    if (kind == 0x02) | (kind == 0x04) then {
+      template_raise_phase1_data_fault(faultarg);
+      false
+    } else {
+      template_data_fault_ignored_count = template_data_fault_ignored_count + 0x0000_0000_0000_0001;
+      if template_interrupt_step == template_step_index then {
+        template_raise_phase1_interrupt(kind);
+        false
+      } else true
+    }
+  } else if template_interrupt_step == template_step_index then {
+    template_raise_phase1_interrupt(kind);
+    false
+  } else true
+}
+
+function template_execute_one_event() -> bool = {
+  if not_bool(template_valid & (template_phase == 0b01)) then false
+  else {
+    let step : int = unsigned(template_step_index);
+    let form : bits(3) = template_form;
+    if form == 0b001 then {
+      if step == 0 then {
+        if template_maybe_stop_event(0x01, 0x0000_0000_0000_0000) then {
+          write_reg5(template_sp(), template_sp_a);
+          template_complete_event(0x01);
+          true
+        } else false
+      } else {
+        let i : int = step - 1;
+        let slot : bits(64) = template_slot_addr(template_sp_c, i);
+        if template_maybe_stop_event(0x02, slot) then {
+          template_store64(slot, template_get_saved_value(i));
+          template_complete_event(0x02);
+          true
+        } else false
+      }
+    } else if form == 0b010 then {
+      if step == 0 then {
+        if template_maybe_stop_event(0x03, 0x0000_0000_0000_0000) then {
+          write_reg5(template_sp(), template_sp_c);
+          template_complete_event(0x03);
+          true
+        } else false
+      } else {
+        let i : int = step - 1;
+        let slot : bits(64) = template_slot_addr(template_sp_c, i);
+        if template_maybe_stop_event(0x04, slot) then {
+          let r : bits(5) = template_reg_at(template_begin, i);
+          let v : bits(64) = template_load64(slot);
+          write_reg5(r, v);
+          template_complete_event(0x04);
+          true
+        } else false
+      }
+    } else if form == 0b011 then {
+      if step == 0 then {
+        if template_maybe_stop_event(0x05, 0x0000_0000_0000_0000) then {
+          template_publish_target(template_retained_target);
+          template_complete_event(0x05);
+          true
+        } else false
+      } else if step == 1 then {
+        if template_maybe_stop_event(0x03, 0x0000_0000_0000_0000) then {
+          write_reg5(template_sp(), template_sp_c);
+          template_complete_event(0x03);
+          true
+        } else false
+      } else {
+        let i : int = step - 2;
+        let slot : bits(64) = template_slot_addr(template_sp_c, i);
+        if template_maybe_stop_event(0x04, slot) then {
+          let r : bits(5) = template_reg_at(template_begin, i);
+          let v : bits(64) = template_load64(slot);
+          write_reg5(r, v);
+          template_complete_event(0x04);
+          true
+        } else false
+      }
+    } else if form == 0b100 then {
+      if step == 0 then {
+        if template_maybe_stop_event(0x03, 0x0000_0000_0000_0000) then {
+          write_reg5(template_sp(), template_sp_c);
+          template_complete_event(0x03);
+          true
+        } else false
+      } else if step == 1 then {
+        if template_maybe_stop_event(0x06, 0x0000_0000_0000_0000) then {
+          write_reg5(template_ra(), template_retained_slot0);
+          template_restore_r10_count = template_restore_r10_count + 0x0000_0000_0000_0001;
+          template_complete_event(0x06);
+          true
+        } else false
+      } else if step == 2 then {
+        if template_maybe_stop_event(0x05, 0x0000_0000_0000_0000) then {
+          template_publish_target(template_retained_target);
+          template_complete_event(0x05);
+          true
+        } else false
+      } else {
+        let i : int = step - 2;
+        let slot : bits(64) = template_slot_addr(template_sp_c, i);
+        if template_maybe_stop_event(0x04, slot) then {
+          let r : bits(5) = template_reg_at(template_begin, i);
+          let v : bits(64) = template_load64(slot);
+          write_reg5(r, v);
+          template_complete_event(0x04);
+          true
+        } else false
+      }
+    } else false
   }
+}
+
+function template_final_boundary() -> unit = {
+  if template_valid & (template_phase == 0b10) then {
+    if (template_form == 0b011) | (template_form == 0b100) then {
+      barg_valid = true;
+      barg_bpc_cur = template_source_pc;
+      set_commit_target_value(template_retained_target);
+      block_commit_boundary()
+    } else ();
+    template_final_count = template_final_count + 0x0000_0000_0000_0001;
+    template_clear()
+  } else ()
+}
+
+function template_run_current() -> unit = {
+  var keep_going : bool = true;
+  while keep_going & template_valid & (template_phase == 0b01) do {
+    keep_going = template_execute_one_event()
+  };
+  if template_valid & (template_phase == 0b10) then template_final_boundary() else ()
+}
+
+function template_start_frame(form : bits(3), begin : bits(5), endv : bits(5), f : int, sp_a : bits(64), sp_c : bits(64), event_count : int) -> unit = {
+  let nregs : int = template_range_count(begin, endv);
+  if form == 0b001 then template_capture_entry_values(begin, nregs) else ();
+  template_enter_phase1(form, read_pc_or_tpc(), begin, endv, nregs, f, sp_a, sp_c, event_count);
+  template_run_current()
 }
 
 function exec_fentry(SrcBegin : bits(5), SrcEnd : bits(5), uimm15 : bits(15)) -> unit = {
-  let uimm : int = unsigned(uimm15);
-  let sp0 : bits(64) = read_reg5(template_sp());
-  let b : int = unsigned(SrcBegin);
-  let e : int = unsigned(SrcEnd);
-  let nregs : int = if e >= b then (e - b + 1) else 0;
-  let frame : int = uimm + 8*nregs;
-  let sp1 : bits(64) = sub_bits(sp0, sail_zeros(64) + frame);
-  write_reg5(template_sp(), sp1);
-  template_save_range(sp1, SrcBegin, SrcEnd, uimm)
+  let f : int = unsigned(uimm15);
+  let src_pc = read_pc_or_tpc();
+  if not_bool(template_frame_legal(SrcBegin, SrcEnd, f, false)) then {
+    template_record_phase0(0b001, src_pc);
+    trap_illegal_inst(src_pc)
+  } else {
+    let c : bits(64) = read_reg5(template_sp());
+    let a : bits(64) = sub_bits(c, sail_zeros(64) + f);
+    template_start_frame(0b001, SrcBegin, SrcEnd, f, a, c, template_range_count(SrcBegin, SrcEnd) + 1)
+  }
 }
 
 function exec_fexit(DstBegin : bits(5), DstEnd : bits(5), uimm15 : bits(15)) -> unit = {
-  let uimm : int = unsigned(uimm15);
-  let sp0 : bits(64) = read_reg5(template_sp());
-  let b : int = unsigned(DstBegin);
-  let e : int = unsigned(DstEnd);
-  let nregs : int = if e >= b then (e - b + 1) else 0;
-  template_restore_range(sp0, DstBegin, DstEnd, uimm);
-  let frame : int = uimm + 8*nregs;
-  write_reg5(template_sp(), sp0 + (sail_zeros(64) + frame))
+  let f : int = unsigned(uimm15);
+  let src_pc = read_pc_or_tpc();
+  if not_bool(template_frame_legal(DstBegin, DstEnd, f, false)) then {
+    template_record_phase0(0b010, src_pc);
+    trap_illegal_inst(src_pc)
+  } else {
+    let a : bits(64) = read_reg5(template_sp());
+    let c : bits(64) = a + (sail_zeros(64) + f);
+    template_start_frame(0b010, DstBegin, DstEnd, f, a, c, template_range_count(DstBegin, DstEnd) + 1)
+  }
 }
 
 function exec_fret_ra(DstBegin : bits(5), DstEnd : bits(5), uimm15 : bits(15)) -> unit = {
-  // Return control-flow is expressed via explicit RET blocks + SETC.TGT in this model.
-  exec_fexit(DstBegin, DstEnd, uimm15)
+  let f : int = unsigned(uimm15);
+  let src_pc = read_pc_or_tpc();
+  if not_bool(template_frame_legal(DstBegin, DstEnd, f, false)) then {
+    template_record_phase0(0b011, src_pc);
+    trap_illegal_inst(src_pc)
+  } else if not_bool(template_marker_proven(src_pc)) then {
+    template_record_phase0(0b011, src_pc);
+    trap_block_cfi(0x1, src_pc)
+  } else {
+    let target : bits(64) = read_reg5(template_ra());
+    if not_bool(template_marker_proven(target)) then {
+      template_record_phase0(0b011, src_pc);
+      trap_block_cfi(0x1, src_pc)
+    } else {
+      let a : bits(64) = read_reg5(template_sp());
+      let c : bits(64) = a + (sail_zeros(64) + f);
+      template_retained_target = target;
+      template_start_frame(0b011, DstBegin, DstEnd, f, a, c, template_range_count(DstBegin, DstEnd) + 2)
+    }
+  }
 }
 
 function exec_fret_stk(DstBegin : bits(5), DstEnd : bits(5), uimm15 : bits(15)) -> unit = {
-  exec_fexit(DstBegin, DstEnd, uimm15)
+  let f : int = unsigned(uimm15);
+  let src_pc = read_pc_or_tpc();
+  if not_bool(template_frame_legal(DstBegin, DstEnd, f, true)) then {
+    template_record_phase0(0b100, src_pc);
+    trap_illegal_inst(src_pc)
+  } else if not_bool(template_marker_proven(src_pc)) then {
+    template_record_phase0(0b100, src_pc);
+    trap_block_cfi(0x1, src_pc)
+  } else {
+    let a : bits(64) = read_reg5(template_sp());
+    let c : bits(64) = a + (sail_zeros(64) + f);
+    let slot0 : bits(64) = template_slot_addr(c, 0);
+    if not_bool(template_vload_admitted()) then {
+      template_record_phase0(0b100, src_pc);
+      template_vload_forbidden_zero_read_count = template_vload_forbidden_zero_read_count + 0x0000_0000_0000_0001;
+      template_trap_vload_mmu_perm(slot0)
+    } else {
+      template_vload_read_count = template_vload_read_count + 0x0000_0000_0000_0001;
+      let target : bits(64) = template_load64(slot0);
+      if not_bool(template_marker_proven(target)) then {
+        template_record_phase0(0b100, src_pc);
+        trap_block_cfi(0x1, src_pc)
+      } else {
+        template_retained_slot0 = target;
+        template_retained_target = target;
+        template_start_frame(0b100, DstBegin, DstEnd, f, a, c, template_range_count(DstBegin, DstEnd) + 2)
+      }
+    }
+  }
 }
 
 // Bulk memory templates.
@@ -2456,6 +2692,10 @@ function exec_acre(RRA_Type : bits(4)) -> unit = {
   let target_acr : bits(4) = ecstate_target_acr(ecstate);
   if not_bool((RRA_Type == 0x0) | (RRA_Type == 0x1)) then {
     trap_illegal_inst(read_pc_or_tpc())
+  } else if template_valid & template_dirty & (RRA_Type == 0x0) then {
+    template_integrity_assert_fail(0x01)
+  } else if template_valid & template_dirty & template_resume_ok & (RRA_Type == 0x1) then {
+    template_run_current()
   } else if not_bool(unsigned(target_acr) >= unsigned(cur_acr)) then {
     trap_e_inst(0x02, 0x00, read_pc_or_tpc())
   } else {

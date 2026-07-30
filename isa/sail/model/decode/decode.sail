@@ -395,42 +395,6 @@ function decode_execute32(inst : bits(32)) -> unit = {
     let b_e : bits(1) = inst[15];
     exec_b_hint()
   }
-  else if (inst & 0xf9ffffff) == 0x00001181 then {
-    // BSTART.MPAR | BSTART.MPAR <VS8, VS16> | {'file': 'opcodes/lx_32.opc', 'line': 76}
-    let mode : bits(2) = inst[26..25];
-    decoded_block_target_pc_shadow = read_pc_or_tpc();
-    decoded_block_type_shadow = 0b0101;
-    decoded_block_xfer_kind_shadow = block_xfer_fall();
-    decoded_block_contract_kind_shadow = 0b0001;
-    exec_bstart_mpar()
-  }
-  else if (inst & 0xf9ffffff) == 0x00009181 then {
-    // BSTART.MSEQ | BSTART.MSEQ <VS8, VS16> | {'file': 'opcodes/lx_32.opc', 'line': 77}
-    let mode : bits(2) = inst[26..25];
-    decoded_block_target_pc_shadow = read_pc_or_tpc();
-    decoded_block_type_shadow = 0b0110;
-    decoded_block_xfer_kind_shadow = block_xfer_fall();
-    decoded_block_contract_kind_shadow = 0b0001;
-    exec_bstart_mseq()
-  }
-  else if (inst & 0xf9ffffff) == 0x00021181 then {
-    // BSTART.VPAR | BSTART.VPAR <VS8, VS16> | {'file': 'opcodes/lx_32.opc', 'line': 109}
-    let mode : bits(2) = inst[26..25];
-    decoded_block_target_pc_shadow = read_pc_or_tpc();
-    decoded_block_type_shadow = 0b0011;
-    decoded_block_xfer_kind_shadow = block_xfer_fall();
-    decoded_block_contract_kind_shadow = 0b0001;
-    exec_bstart_vpar()
-  }
-  else if (inst & 0xf9ffffff) == 0x00029181 then {
-    // BSTART.VSEQ | BSTART.VSEQ <VS8, VS16> | {'file': 'opcodes/lx_32.opc', 'line': 110}
-    let mode : bits(2) = inst[26..25];
-    decoded_block_target_pc_shadow = read_pc_or_tpc();
-    decoded_block_type_shadow = 0b0100;
-    decoded_block_xfer_kind_shadow = block_xfer_fall();
-    decoded_block_contract_kind_shadow = 0b0001;
-    exec_bstart_vseq()
-  }
   else if (inst & 0xff0fffff) == 0x0000302b then {
     // ACRC | acrc rst_type | {'file': 'opcodes/lx_32.opc', 'line': 11}
     let rst_type : bits(4) = inst[23..20];
@@ -1035,6 +999,42 @@ function decode_execute32(inst : bits(32)) -> unit = {
     decoded_block_xfer_kind_shadow = block_xfer_fall();
     decoded_block_contract_kind_shadow = 0b0110;
     exec_bstart_tepl()
+  }
+  else if (inst & 0xf9ffffff) == 0x00001181 then {
+    // BSTART.MPAR | BSTART.MPAR <VS8, VS16> | {'file': 'opcodes/lx_32.opc', 'line': 76}
+    let mode : bits(2) = inst[26..25];
+    decoded_block_target_pc_shadow = read_pc_or_tpc();
+    decoded_block_type_shadow = 0b0101;
+    decoded_block_xfer_kind_shadow = block_xfer_fall();
+    decoded_block_contract_kind_shadow = 0b0001;
+    exec_bstart_mpar()
+  }
+  else if (inst & 0xf9ffffff) == 0x00009181 then {
+    // BSTART.MSEQ | BSTART.MSEQ <VS8, VS16> | {'file': 'opcodes/lx_32.opc', 'line': 77}
+    let mode : bits(2) = inst[26..25];
+    decoded_block_target_pc_shadow = read_pc_or_tpc();
+    decoded_block_type_shadow = 0b0110;
+    decoded_block_xfer_kind_shadow = block_xfer_fall();
+    decoded_block_contract_kind_shadow = 0b0001;
+    exec_bstart_mseq()
+  }
+  else if (inst & 0xf9ffffff) == 0x00021181 then {
+    // BSTART.VPAR | BSTART.VPAR <VS8, VS16> | {'file': 'opcodes/lx_32.opc', 'line': 109}
+    let mode : bits(2) = inst[26..25];
+    decoded_block_target_pc_shadow = read_pc_or_tpc();
+    decoded_block_type_shadow = 0b0011;
+    decoded_block_xfer_kind_shadow = block_xfer_fall();
+    decoded_block_contract_kind_shadow = 0b0001;
+    exec_bstart_vpar()
+  }
+  else if (inst & 0xf9ffffff) == 0x00029181 then {
+    // BSTART.VSEQ | BSTART.VSEQ <VS8, VS16> | {'file': 'opcodes/lx_32.opc', 'line': 110}
+    let mode : bits(2) = inst[26..25];
+    decoded_block_target_pc_shadow = read_pc_or_tpc();
+    decoded_block_type_shadow = 0b0100;
+    decoded_block_xfer_kind_shadow = block_xfer_fall();
+    decoded_block_contract_kind_shadow = 0b0001;
+    exec_bstart_vseq()
   }
   else if (inst & 0xfe00707f) == 0x00000057 then {
     // DIV | div SrcL, SrcR, ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 149}

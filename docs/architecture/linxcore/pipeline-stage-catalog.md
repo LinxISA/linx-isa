@@ -177,8 +177,9 @@ pipelines are not lockstep.
 
 - Owner family: `src/bcc/ooo/dec1.py`, Chisel
   `frontend/D1InstructionDecodeStage.scala`, and their canonical decode helpers.
-- Reads up to four contiguous Instruction Buffer entries from one STID.
-- Receives four fixed 64-bit instruction payloads; no byte-window
+- Reads up to `instructionDecodeWidth` contiguous Instruction Buffer entries
+  from one STID; supported OOO widths are 2, 4, and 6.
+- Receives fixed 64-bit instruction payloads; no byte-window
   reconstruction or neighboring-entry concatenation is allowed.
 - Each Chisel lane preserves the final B-F4 prediction sidecar and dynamic
   instruction UID; `FrontendDecodeStage` remains a packet/window verification
@@ -196,7 +197,7 @@ pipelines are not lockstep.
 - Owner family: `src/bcc/ooo/dec2.py`.
 - Extracts architectural operands and immediates, resolves Linx boundary
   metadata, and calculates ROB/BROB/rename/IQ/memory-order demand.
-- Produces one coherent admission request for the D3 group.
+- Produces one coherent virtual RID/group and resource-demand plan for D3.
 - Marks which single boundary allocates BID and assigns that new BID to the
   boundary plus following rows in slot order.
 - Does not claim physical tags or advance architectural ordering pointers.
@@ -204,19 +205,23 @@ pipelines are not lockstep.
 ### D3
 
 - Owner family: `src/bcc/ooo/ren.py` plus the ROB/BROB admission owners.
-- Atomically accepts all required resources or accepts none.
+- Provisionally reserves all required resources or reserves none.
 - Allocates at most `BROB_ALLOC_PER_CYCLE` BIDs and stamps boundary ownership in
   decode-slot order; the baseline admits adjacent BSTARTs in separate groups.
-- Performs scalar `P` and local `T/U` physical rename, receives ROB-owned RID,
+- Performs scalar `P` and local `T/U` physical rename, receives grouped
+  ROB-owned RID,
   BROB-owned `BID_W`-bit BID, and memory-order identities, and writes the
   corresponding speculative side structures.
-- Selects the dispatch route and forms the admitted renamed-uop packet.
+- Selects the dispatch route and retains the complete reservation transaction
+  until S1 publication.
 
 ### S1
 
 - Owner family: `src/bcc/ooo/s1.py`.
-- Captures admitted D3 packets in the per-IQ speculative write-port buffer.
-- Carries execution class, route, readiness seed, age, and cancellation state.
+- Atomically publishes the grouped ROB members, speculative rename/MapQ state,
+  and retained IEX speculative slots.
+- Carries execution class, route, readiness seed, exact reservation identity,
+  age, and cancellation state until IEX acceptance.
 
 ### S2
 

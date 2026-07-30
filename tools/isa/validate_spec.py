@@ -530,6 +530,428 @@ def _validate_field_definitions(spec: Dict[str, Any], errors: List[str]) -> Dict
     return definitions
 
 
+def _validate_frame_template_contract(spec: Dict[str, Any], errors: List[str]) -> None:
+    expected_owner_fields = {
+        "placement": [
+            "lxcpu_id",
+            "lxcpu_context_generation",
+            "pe_id",
+            "stid",
+            "engine_local_tid",
+        ],
+        "group": [
+            "bid",
+            "bid_robid(valid,wrap,value)",
+            "gid",
+            "gid_robid(valid,wrap,value)",
+            "group_base_rid",
+            "group_base_rid_robid(valid,wrap,value)",
+            "group_base_rob_slot",
+            "group_row_count",
+            "checkpoint_id",
+            "template_generation",
+            "source_pc",
+            "source_raw",
+            "form_id",
+            "encoded_N",
+        ],
+        "row": [
+            "row_present",
+            "row_kind",
+            "child_ordinal",
+            "rid",
+            "rid_robid(valid,wrap,value)",
+            "rob_slot",
+            "row_generation",
+        ],
+        "memory": [
+            "lsid_valid",
+            "lsid_value",
+            "lsid_wrap_or_generation",
+            "load_id_valid",
+            "load_id_value",
+            "load_id_generation",
+            "load_replay_generation",
+            "store_id_valid",
+            "store_id_value",
+            "store_id_generation",
+        ],
+    }
+    expected_lease_id = [
+        "lease_generation",
+        "validation_generation",
+        "validation_token_hash",
+        "exact_vtgt_TemplateOwnerID",
+        "exact_vload_TemplateOwnerID_or_canonical_invalid",
+        "retained_target_mapping_visibility_share_domain_key",
+    ]
+    expected_txn_base_fields = [
+        "producer_domain",
+        "producer_kind",
+        "producer_lxcpu_id",
+        "producer_context_generation",
+        "producer_pe_id",
+        "producer_stid_valid",
+        "producer_stid",
+        "producer_tid_valid",
+        "producer_engine_local_tid",
+        "producer_endpoint_id",
+        "transaction_sequence_value",
+        "transaction_sequence_wrap_or_generation",
+        "architectural_operation",
+        "exact_operation_scope",
+    ]
+    expected_txn_id_fields = [
+        "complete InvalidationTxnBase",
+        "matched_LeaseID_or_explicit_NO_LEASE",
+        "lease_directory_generation_at_lookup",
+        "status_generation",
+    ]
+    expected_ack_id_fields = [
+        "complete InvalidationTxnID",
+        "exact_lease_owner_TemplateOwnerID_or_canonical_invalid",
+        "terminal_kind",
+    ]
+    expected_target_proof = {
+        "actual_current_marker_proof": "required before every FRET effect",
+        "coherent_marker_provenance_cache": "legal only when it proves the same target marker bytes, address-space state, code-visibility epoch, and invalidation scope as an actual current marker proof",
+        "metadata_only_continuation_or_fallthrough": "non-conforming compatibility; must be rejected",
+        "deferred_demand_paging": "qualified only while every FRET effect remains withheld",
+        "fault_owner": "VTGT owns translation, execute-permission, marker, and CFI faults",
+    }
+    expected_event_zero_seal_transaction = [
+        "recheck_all_identities_and_generations",
+        "acquire_complete_FRET_lease",
+        "retire_successful_validation_rows_with_distinct_traces",
+        "commit_event_zero",
+        "advance_StepIndex_0_to_1",
+    ]
+    expected_ebstate_recoverable_retention = [
+        "exact TemplateOwnerID",
+        "phase and StepIndex cursors",
+        "sealed VLOAD state when applicable",
+        "validation token",
+        "retained lease",
+        "complete pending InvalidationTxnID/status set",
+    ]
+    expected_ebstate_retention_forbidden = [
+        "renumber pending invalidation entries",
+        "merge pending invalidation entries",
+        "reacquire lease entries",
+        "restore a pre-template checkpoint",
+    ]
+    expected_final_identity = {
+        "required_matches": [
+            "group",
+            "checkpoint",
+            "template",
+            "validation",
+            "lease",
+            "VTGT key",
+            "VLOAD key or canonical invalid",
+            "visibility/share-domain",
+            "FINAL RID/slot/generation",
+            "final ordinal",
+        ],
+        "shortcut_authority_forbidden": ["queue head", "BID", "RID value", "PC", "opcode", "hash alone"],
+    }
+    expected_fatal_teardown_order = [
+        "stop source-context issue, commit, wakeup, redirect, FINAL transfer, and new lease acquisition",
+        "snapshot exact envelope, state, owner, token, and pending transactions",
+        "advance template, row, and load generations",
+        "cancel every uncommitted row and request",
+        "invalidate VLOAD data, VTGT proof, token, and queued transfer",
+        "obtain quiescence from every listed owner before releasing the lease",
+        "atomically release the lease and create one RELEASED_AFTER_ABORT per pending matching invalidation",
+        "publish the fatal record for managing-ring inspection",
+    ]
+    expected_reset_reuse = {
+        "platform_reset_only": True,
+        "new_context_generation_required": True,
+        "global_quiescence_before_reset": True,
+        "no_pre_reset_ack_after_new_context_generation": True,
+        "pre_template_state_restore": "forbidden",
+    }
+    expected_exact_scope_fields = [
+        "ACR/regime/root/ASID",
+        "VA/PA page or marker range",
+        "TLB/code/coherence domain",
+        "global/wildcard selectors",
+    ]
+    expected_physical_sharing_rule = (
+        "physical lookup/cancel/drain/release work may be shared only for transactions "
+        "matching the same exact LeaseID; producer transaction bases, status, and AckID remain independent"
+    )
+    expected_stale_ack_rule = (
+        "wrong producer, sequence, operation/scope, match, directory, owner, or status-generation is rejected; "
+        "identical terminal AckID retransmission is idempotent"
+    )
+    expected_status_rules = [
+        "each state transition increments status_generation",
+        "matching post-seal transactions independently record DEFERRED_ACTIVE",
+        "FINAL creates one RELEASED_AFTER_FINAL per pending match",
+        "fatal release creates one RELEASED_AFTER_ABORT per pending match",
+        "post-release admission performs a new lookup at new directory generation",
+    ]
+    expected_terminal_rules = [
+        "NO_MATCH after lookup at the transaction directory generation for nonmatches",
+        "CANCELED_PRE_EVENT only after cancellation prevents stale event-zero seal",
+        "DEFERRED_ACTIVE recorded independently for each post-seal match and is nonterminal",
+        "RELEASED_AFTER_FINAL created atomically by FINAL per pending match",
+        "RELEASED_AFTER_ABORT created atomically by fatal release per pending match after quiescence",
+        "post-release admission performs a new lookup at the new directory generation and normally receives NO_MATCH",
+    ]
+
+    def expect_exact(path: str, got: Any, expected: Any) -> None:
+        if got != expected:
+            errors.append(f"{path} must exactly equal {expected!r}")
+
+    conventions = spec.get("semantics_conventions")
+    if not isinstance(conventions, dict):
+        errors.append("missing compiled semantics_conventions")
+        return
+
+    frame = conventions.get("frame_templates_r975")
+    if not isinstance(frame, dict):
+        errors.append("semantics_conventions.frame_templates_r975 must be present")
+        return
+
+    if frame.get("applies_to") != ["FENTRY", "FEXIT", "FRET.RA", "FRET.STK"]:
+        errors.append("frame_templates_r975.applies_to must name the four canonical frame forms")
+    if frame.get("arithmetic", {}).get("kind") != "immediate_only":
+        errors.append("frame_templates_r975.arithmetic.kind must be immediate_only")
+    if frame.get("register_ring", {}).get("inclusive_range") != [2, 23]:
+        errors.append("frame_templates_r975.register_ring.inclusive_range must be [2, 23]")
+    target_proof = frame.get("target_proof")
+    if not isinstance(target_proof, dict):
+        errors.append("frame_templates_r975.target_proof must be present")
+    else:
+        expect_exact("frame_templates_r975.target_proof", target_proof, expected_target_proof)
+
+    legality = frame.get("legality")
+    if not isinstance(legality, dict):
+        errors.append("frame_templates_r975.legality must be a mapping")
+    else:
+        if legality.get("fret_ra_target") != "fixed pre-restore R10":
+            errors.append("frame_templates_r975 must fix FRET.RA target to pre-restore R10")
+        if legality.get("fret_stk_target") != "fixed R10 restored from slot zero":
+            errors.append("frame_templates_r975 must fix FRET.STK target to restored R10")
+        stk = legality.get("fret_stk_stack_slot_zero")
+        if not isinstance(stk, dict):
+            errors.append("frame_templates_r975.legality.fret_stk_stack_slot_zero must be a mapping")
+        else:
+            if stk.get("required_memory_type") != "Normal" or stk.get("requires_idempotent") is not True:
+                errors.append("FRET.STK slot-zero VLOAD must require Normal idempotent memory")
+            zero_read = str(stk.get("device_mmio_or_mixed_or_non_idempotent") or "")
+            if "before any cache, fabric, device, or MMIO physical read" not in zero_read:
+                errors.append("FRET.STK Device/MMIO rejection must occur before any physical read")
+
+    expected_forms = {
+        "FENTRY": ("N+3", {"N=1": 4, "N=22": 25}, "N+2=FINAL"),
+        "FEXIT": ("N+3", {"N=1": 4, "N=22": 25}, "N+2=FINAL"),
+        "FRET.RA": ("N+5", {"N=1": 6, "N=22": 27}, "N+4=FINAL"),
+        "FRET.STK": ("N+6", {"N=1": 7, "N=22": 28}, "N+5=FINAL"),
+    }
+    forms = frame.get("forms")
+    if not isinstance(forms, dict):
+        errors.append("frame_templates_r975.forms must be a mapping")
+    else:
+        for name, (total, examples, final_ordinal) in expected_forms.items():
+            form = forms.get(name)
+            if not isinstance(form, dict):
+                errors.append(f"frame_templates_r975.forms.{name} must be present")
+                continue
+            if form.get("d3_total_rows") != total:
+                errors.append(f"frame_templates_r975.forms.{name}.d3_total_rows must be {total}")
+            if form.get("examples") != examples:
+                errors.append(f"frame_templates_r975.forms.{name}.examples must be {examples}")
+            if final_ordinal not in form.get("ordinals", []):
+                errors.append(f"frame_templates_r975.forms.{name}.ordinals must include {final_ordinal}")
+        malformed = forms.get("malformed")
+        if not isinstance(malformed, dict) or malformed.get("d3_total_rows") != 1 or malformed.get("final_row_present") is not False:
+            errors.append("frame_templates_r975.forms.malformed must be exactly one VFORM_TRAP row with no FINAL")
+
+    ownership = frame.get("d3_ownership")
+    if not isinstance(ownership, dict):
+        errors.append("frame_templates_r975.d3_ownership must be a mapping")
+    else:
+        for forbidden in ("hidden_parent_row", "private_validator", "rowless_validator"):
+            if ownership.get(forbidden) is not False:
+                errors.append(f"frame_templates_r975.d3_ownership.{forbidden} must be false")
+
+    vload = frame.get("vload")
+    if not isinstance(vload, dict):
+        errors.append("frame_templates_r975.vload must be a mapping")
+    else:
+        if "Device/MMIO" not in vload.get("forbidden_memory_zero_read", []):
+            errors.append("frame_templates_r975.vload.forbidden_memory_zero_read must include Device/MMIO")
+        if vload.get("post_seal_replacement") != "forbidden; enters template_integrity_fail FatalReason=2":
+            errors.append("frame_templates_r975.vload.post_seal_replacement must be fatal reason 2")
+        expect_exact(
+            "frame_templates_r975.vload.identity_fields",
+            vload.get("identity_fields"),
+            [
+                "owner_key",
+                "VA",
+                "translation_generation",
+                "permission_type_generation",
+                "LSID",
+                "load_id",
+                "older_store_forwarding_state",
+                "response_source",
+                "miss_refill_coherence_generation",
+                "load_generation",
+                "data",
+            ],
+        )
+
+    recovery = frame.get("seal_and_recovery")
+    if not isinstance(recovery, dict):
+        errors.append("frame_templates_r975.seal_and_recovery must be a mapping")
+    else:
+        expect_exact(
+            "frame_templates_r975.seal_and_recovery.event_zero_seal_transaction",
+            recovery.get("event_zero_seal_transaction"),
+            expected_event_zero_seal_transaction,
+        )
+        expect_exact(
+            "frame_templates_r975.seal_and_recovery.before_seal_invalidation",
+            recovery.get("before_seal_invalidation"),
+            "wins and cancels phase zero with no effect",
+        )
+        expect_exact(
+            "frame_templates_r975.seal_and_recovery.after_seal_invalidation",
+            recovery.get("after_seal_invalidation"),
+            "lease wins; producer completion waits through traps, ACRE, suspension, FINAL, or fatal release",
+        )
+        expect_exact(
+            "frame_templates_r975.seal_and_recovery.rollback_after_seal",
+            recovery.get("rollback_after_seal"),
+            "forbidden for SP, GPR, memory, target, progress, and trace effects",
+        )
+        expect_exact(
+            "frame_templates_r975.seal_and_recovery.final",
+            recovery.get("final"),
+            "qualifies full token, performs boundary transfer/retirement, and releases lease atomically",
+        )
+        expect_exact(
+            "frame_templates_r975.seal_and_recovery.ebstate_recoverable_retention",
+            recovery.get("ebstate_recoverable_retention"),
+            expected_ebstate_recoverable_retention,
+        )
+        expect_exact(
+            "frame_templates_r975.seal_and_recovery.ebstate_retention_forbidden",
+            recovery.get("ebstate_retention_forbidden"),
+            expected_ebstate_retention_forbidden,
+        )
+        expect_exact(
+            "frame_templates_r975.seal_and_recovery.lease_directory_suspend_rule",
+            recovery.get("lease_directory_suspend_rule"),
+            "lease directory retains discoverability during suspension; a manager must resume through FINAL or choose fatal abandonment and cannot wait on its own deferred invalidation",
+        )
+        final_identity = recovery.get("final_identity")
+        if not isinstance(final_identity, dict):
+            errors.append("frame_templates_r975.seal_and_recovery.final_identity must be present")
+        else:
+            expect_exact("frame_templates_r975.seal_and_recovery.final_identity", final_identity, expected_final_identity)
+
+    fatal = frame.get("template_integrity_fail")
+    if not isinstance(fatal, dict):
+        errors.append("frame_templates_r975.template_integrity_fail must be a mapping")
+    else:
+        if fatal.get("trapnum") != "ASSERT_FAIL (52)" or fatal.get("maskable_by_ECONFIG3") is not False:
+            errors.append("template_integrity_fail must be unmaskable ASSERT_FAIL (52)")
+        reasons = fatal.get("fatal_reasons")
+        expected_reasons = {
+            "0": "explicit abandonment",
+            "1": "dirty-template RRAT_DEFAULT",
+            "2": "sealed-VLOAD replay/withdrawal",
+            "3": "poisoned response/token",
+            "4": "exact-live ownership/generation/lease/FINAL contradiction",
+            "5": "suspended drain failure",
+            "6..255": "reserved",
+        }
+        if reasons != expected_reasons:
+            errors.append("template_integrity_fail.fatal_reasons must match R975 exactly")
+        expect_exact(
+            "frame_templates_r975.template_integrity_fail.fatal_teardown_order",
+            fatal.get("fatal_teardown_order"),
+            expected_fatal_teardown_order,
+        )
+        reset_reuse = fatal.get("reset_reuse")
+        if not isinstance(reset_reuse, dict):
+            errors.append("template_integrity_fail.reset_reuse must be present")
+        else:
+            expect_exact(
+                "frame_templates_r975.template_integrity_fail.reset_reuse",
+                reset_reuse,
+                expected_reset_reuse,
+            )
+
+    owner = frame.get("template_owner_id")
+    if not isinstance(owner, dict):
+        errors.append("frame_templates_r975.template_owner_id must be a mapping")
+    else:
+        groups = owner.get("field_groups")
+        if not isinstance(groups, dict):
+            errors.append("template_owner_id.field_groups must be a mapping")
+        else:
+            expect_exact("template_owner_id.field_groups", groups, expected_owner_fields)
+        if owner.get("exact_live_post_seal_contradiction") != "template_integrity_fail FatalReason=4":
+            errors.append("template_owner_id exact-live post-seal contradiction must be fatal reason 4")
+    expect_exact("frame_templates_r975.lease_id", frame.get("lease_id"), expected_lease_id)
+
+    invalidation = frame.get("invalidation")
+    if not isinstance(invalidation, dict):
+        errors.append("frame_templates_r975.invalidation must be a mapping")
+    else:
+        if invalidation.get("producer_bases_coalesce") is not False:
+            errors.append("invalidation producer transaction bases must not coalesce")
+        if invalidation.get("terminal_kinds") != [
+            "NO_MATCH",
+            "CANCELED_PRE_EVENT",
+            "RELEASED_AFTER_FINAL",
+            "RELEASED_AFTER_ABORT",
+        ]:
+            errors.append("invalidation terminal kinds must match R975")
+        if invalidation.get("nonterminal_kinds") != ["DEFERRED_ACTIVE"]:
+            errors.append("invalidation DEFERRED_ACTIVE must be nonterminal")
+        expect_exact("invalidation.txn_base_fields", invalidation.get("txn_base_fields"), expected_txn_base_fields)
+        expect_exact("invalidation.txn_id_fields", invalidation.get("txn_id_fields"), expected_txn_id_fields)
+        expect_exact("invalidation.ack_id_fields", invalidation.get("ack_id_fields"), expected_ack_id_fields)
+        expect_exact("invalidation.exact_scope_fields", invalidation.get("exact_scope_fields"), expected_exact_scope_fields)
+        expect_exact("invalidation.physical_sharing_rule", invalidation.get("physical_sharing_rule"), expected_physical_sharing_rule)
+        expect_exact("invalidation.stale_ack_rule", invalidation.get("stale_ack_rule"), expected_stale_ack_rule)
+        expect_exact("invalidation.status_rules", invalidation.get("status_rules"), expected_status_rules)
+        expect_exact("invalidation.terminal_rules", invalidation.get("terminal_rules"), expected_terminal_rules)
+        expect_exact(
+            "invalidation.admission_rules",
+            invalidation.get("admission_rules"),
+            [
+                "capacity may backpressure before admission",
+                "an admitted transaction cannot be dropped",
+                "an admitted matching transaction cannot complete before FINAL or fatal release",
+                "a manager cannot roll back or wait on its own deferred invalidation",
+            ],
+        )
+
+    fixup = conventions.get("fixup_blocks", {})
+    assert_contract = fixup.get("assert", {}) if isinstance(fixup, dict) else {}
+    masking = assert_contract.get("masking", {}) if isinstance(assert_contract, dict) else {}
+    if masking.get("scope") != "ASSERT-instruction-generated ASSERT_FAIL only (other synchronous exceptions are unaffected)":
+        errors.append("instruction ASSERT masking scope must not cover template-integrity ASSERT_FAIL")
+    producers = fixup.get("assert_fail_producers") if isinstance(fixup, dict) else None
+    if not isinstance(producers, dict):
+        errors.append("fixup_blocks.assert_fail_producers must describe both ASSERT_FAIL producers")
+    else:
+        instruction = producers.get("instruction_assert", {})
+        integrity = producers.get("template_integrity_fail", {})
+        if instruction.get("ecconfig_maskable") is not True or instruction.get("local_fixup") != "existing instruction behavior":
+            errors.append("instruction ASSERT producer must preserve masking and local fixup")
+        if integrity.get("ecconfig_maskable") is not False or integrity.get("local_fixup") != "forbidden":
+            errors.append("template-integrity ASSERT_FAIL producer must be unmaskable with no fixup")
+
+
 def validate(path: str) -> List[str]:
     with open(path, "r", encoding="utf-8") as f:
         spec = json.load(f)
@@ -577,8 +999,7 @@ def validate(path: str) -> List[str]:
 
     compiled_fields = _validate_field_definitions(spec, errors)
 
-    if not isinstance(spec.get("semantics_conventions"), dict):
-        errors.append("missing compiled semantics_conventions")
+    _validate_frame_template_contract(spec, errors)
 
     retired = spec.get("retired_encodings")
     retired_entries = retired.get("entries") if isinstance(retired, dict) else None

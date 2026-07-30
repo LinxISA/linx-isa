@@ -360,7 +360,7 @@
         "policy": "masked_by_global_exception_enable",
         "enable_bit": "ECONFIG[3]",
         "when_disabled": "ASSERT is treated as NOP (no trap, no trap-envelope update)",
-        "scope": "ASSERT_FAIL only (other synchronous exceptions are unaffected)"
+        "scope": "ASSERT-instruction-generated ASSERT_FAIL only (other synchronous exceptions are unaffected)"
       }
     },
     "traparg0": {
@@ -371,6 +371,482 @@
       "E": 0,
       "ARGV": 1,
       "CAUSE": "populated (profile-defined per TRAPNUM)"
+    },
+    "assert_fail_producers": {
+      "instruction_assert": {
+        "producer": "executed ASSERT instruction",
+        "trapnum": "ASSERT_FAIL (52)",
+        "cause": 0,
+        "ecconfig_maskable": true,
+        "mask_bit": "ECONFIG[3]",
+        "local_fixup": "existing instruction behavior",
+        "bi": 0,
+        "continuation": "existing precise ASSERT behavior"
+      },
+      "template_integrity_fail": {
+        "producer": "R975 hardware-generated frame-template integrity fail-stop",
+        "trapnum": "ASSERT_FAIL (52)",
+        "cause": 0,
+        "ecconfig_maskable": false,
+        "local_fixup": "forbidden",
+        "bi": 1,
+        "continuation": "forbidden; reset-only source context reuse",
+        "traparg0": "source template PC/TPC",
+        "route": "default E_ASSERT managing-ring route",
+        "acre_continuation": "ACRE RRAT_RESTORE and RRAT_DEFAULT both raise E_INST(EC_PARAM) in the manager for the fail-stopped source"
+      }
+    }
+  },
+  "frame_templates_r975": {
+    "source_contract": "R975 Template Fatal-State and Canonical Identity Contract",
+    "profile": "v0.57 range-mode frame templates",
+    "applies_to": [
+      "FENTRY",
+      "FEXIT",
+      "FRET.RA",
+      "FRET.STK"
+    ],
+    "arithmetic": {
+      "kind": "immediate_only",
+      "stack_adjustment_operand": "uimm"
+    },
+    "register_ring": {
+      "inclusive_range": [
+        2,
+        23
+      ],
+      "allows_singleton": true,
+      "allows_full_ring": true,
+      "allows_wrap": true
+    },
+    "legality": {
+      "pre_effect_checks": [
+        "well_formed_endpoints",
+        "sufficient_F_pre_effect",
+        "FRET.STK_Begin_is_R10"
+      ],
+      "malformed_effects": "zero template effect",
+      "fret_ra_target": "fixed pre-restore R10",
+      "fret_stk_target": "fixed R10 restored from slot zero",
+      "fret_stk_stack_slot_zero": {
+        "required_memory_type": "Normal",
+        "requires_idempotent": true,
+        "device_mmio_or_mixed_or_non_idempotent": "phase_zero E_DATA/MMU_PERM before any cache, fabric, device, or MMIO physical read"
+      }
+    },
+    "step_index": {
+      "meaning": "next_uncommitted_phase_one_event",
+      "event_effect_and_cursor_advance": "atomic"
+    },
+    "phase_fault_envelopes": {
+      "phase_zero": {
+        "bi": 0,
+        "phase": 0,
+        "step_index": 0,
+        "dirty": 0,
+        "redo_ok": 1,
+        "resume_ok": 0,
+        "template_effect": "none"
+      },
+      "phase_one_recoverable": {
+        "bi": 1,
+        "dirty": 1,
+        "redo_ok": 0,
+        "resume_ok": 1,
+        "step_index": "faulting_or_next_uncommitted_event",
+        "prior_events": "remain_visible",
+        "acre_restore": "retry exactly saved event; do not reissue VLOAD, reacquire lease, or repeat earlier events"
+      },
+      "post_seal_fatal": {
+        "trapnum": "ASSERT_FAIL (52)",
+        "cause": 0,
+        "e": 0,
+        "argv": 1,
+        "traparg0": "source template PC/TPC",
+        "bi": 1,
+        "dirty": 1,
+        "redo_ok": 0,
+        "resume_ok": 0,
+        "reuse_boundary": "platform reset only"
+      }
+    },
+    "forms": {
+      "FENTRY": {
+        "phase_one_events": [
+          "SP_SUB",
+          "STORE_i[0..N-1]"
+        ],
+        "phase_one_count": "N+1",
+        "d3_total_rows": "N+3",
+        "examples": {
+          "N=1": 4,
+          "N=22": 25
+        },
+        "ordinals": [
+          "0=VFORM",
+          "1=SP_SUB",
+          "2+i=STORE_i",
+          "N+2=FINAL"
+        ]
+      },
+      "FEXIT": {
+        "phase_one_events": [
+          "SP_ADD",
+          "LOAD_i[0..N-1]"
+        ],
+        "phase_one_count": "N+1",
+        "d3_total_rows": "N+3",
+        "examples": {
+          "N=1": 4,
+          "N=22": 25
+        },
+        "ordinals": [
+          "0=VFORM",
+          "1=SP_ADD",
+          "2+i=LOAD_i",
+          "N+2=FINAL"
+        ]
+      },
+      "FRET.RA": {
+        "phase_zero_validation": [
+          "VFORM",
+          "VTGT"
+        ],
+        "phase_one_events": [
+          "TARGET_PUBLISH",
+          "SP_ADD",
+          "LOAD_i[0..N-1]"
+        ],
+        "phase_one_count": "N+2",
+        "d3_total_rows": "N+5",
+        "examples": {
+          "N=1": 6,
+          "N=22": 27
+        },
+        "ordinals": [
+          "0=VFORM",
+          "1=VTGT",
+          "2=TARGET_PUBLISH",
+          "3=SP_ADD",
+          "4+i=LOAD_i",
+          "N+4=FINAL"
+        ]
+      },
+      "FRET.STK": {
+        "phase_zero_validation": [
+          "VFORM",
+          "VLOAD",
+          "VTGT"
+        ],
+        "phase_one_events": [
+          "SP_ADD",
+          "RESTORE_R10",
+          "TARGET_PUBLISH",
+          "LOAD_i[1..N-1]"
+        ],
+        "phase_one_count": "N+2",
+        "d3_total_rows": "N+6",
+        "examples": {
+          "N=1": 7,
+          "N=22": 28
+        },
+        "ordinals": [
+          "0=VFORM",
+          "1=VLOAD",
+          "2=VTGT",
+          "3=SP_ADD",
+          "4=RESTORE_R10",
+          "5=TARGET_PUBLISH",
+          "5+i=LOAD_i for i=1..N-1",
+          "N+5=FINAL"
+        ]
+      },
+      "malformed": {
+        "ordinals": [
+          "0=VFORM_TRAP"
+        ],
+        "d3_total_rows": 1,
+        "final_row_present": false
+      }
+    },
+    "d3_ownership": {
+      "hidden_parent_row": false,
+      "private_validator": false,
+      "rowless_validator": false,
+      "validation_rows": {
+        "VFORM": "normal ROB/block-control trap/completion/trace owner",
+        "VLOAD": "normal ROB/IQ/LIQ/LSU precise data-fault owner with no rename destination",
+        "VTGT": "normal ROB/block-control target row with owned translation and I-cache request"
+      },
+      "final_row": "normal ROB/block-control transfer/retirement/trace owner",
+      "successful_validation_retirement": "validation rows may complete but retire only in the event-zero seal transaction"
+    },
+    "vload": {
+      "eligible_memory": "complete eight-byte Normal and explicitly idempotent",
+      "forbidden_memory_zero_read": [
+        "Device/MMIO",
+        "mixed_type",
+        "unspecified_non_idempotent"
+      ],
+      "identity_fields": [
+        "owner_key",
+        "VA",
+        "translation_generation",
+        "permission_type_generation",
+        "LSID",
+        "load_id",
+        "older_store_forwarding_state",
+        "response_source",
+        "miss_refill_coherence_generation",
+        "load_generation",
+        "data"
+      ],
+      "lifecycle": [
+        "EMPTY",
+        "ISSUED",
+        "RESPONDED",
+        "ORDER_QUALIFIED",
+        "TARGET_VALIDATED",
+        "EVENT0_SEALED"
+      ],
+      "pre_seal_replay_action": [
+        "advance_load_generation",
+        "discard_value_vtgt_proof_and_lease_candidate",
+        "reject_late_old_generation_responses",
+        "rerun_VTGT_even_if_data_bit_identical"
+      ],
+      "sampling_point": "event_zero_seal",
+      "post_seal_replacement": "forbidden; enters template_integrity_fail FatalReason=2"
+    },
+    "seal_and_recovery": {
+      "event_zero_seal_transaction": [
+        "recheck_all_identities_and_generations",
+        "acquire_complete_FRET_lease",
+        "retire_successful_validation_rows_with_distinct_traces",
+        "commit_event_zero",
+        "advance_StepIndex_0_to_1"
+      ],
+      "before_seal_invalidation": "wins and cancels phase zero with no effect",
+      "after_seal_invalidation": "lease wins; producer completion waits through traps, ACRE, suspension, FINAL, or fatal release",
+      "rollback_after_seal": "forbidden for SP, GPR, memory, target, progress, and trace effects",
+      "final": "qualifies full token, performs boundary transfer/retirement, and releases lease atomically",
+      "ebstate_recoverable_retention": [
+        "exact TemplateOwnerID",
+        "phase and StepIndex cursors",
+        "sealed VLOAD state when applicable",
+        "validation token",
+        "retained lease",
+        "complete pending InvalidationTxnID/status set"
+      ],
+      "ebstate_retention_forbidden": [
+        "renumber pending invalidation entries",
+        "merge pending invalidation entries",
+        "reacquire lease entries",
+        "restore a pre-template checkpoint"
+      ],
+      "lease_directory_suspend_rule": "lease directory retains discoverability during suspension; a manager must resume through FINAL or choose fatal abandonment and cannot wait on its own deferred invalidation",
+      "final_identity": {
+        "required_matches": [
+          "group",
+          "checkpoint",
+          "template",
+          "validation",
+          "lease",
+          "VTGT key",
+          "VLOAD key or canonical invalid",
+          "visibility/share-domain",
+          "FINAL RID/slot/generation",
+          "final ordinal"
+        ],
+        "shortcut_authority_forbidden": [
+          "queue head",
+          "BID",
+          "RID value",
+          "PC",
+          "opcode",
+          "hash alone"
+        ]
+      }
+    },
+    "template_integrity_fail": {
+      "trapnum": "ASSERT_FAIL (52)",
+      "cause": 0,
+      "maskable_by_ECONFIG3": false,
+      "fixup_allowed": false,
+      "acre_continuation_allowed": false,
+      "reset_only": true,
+      "fatal_reasons": {
+        "0": "explicit abandonment",
+        "1": "dirty-template RRAT_DEFAULT",
+        "2": "sealed-VLOAD replay/withdrawal",
+        "3": "poisoned response/token",
+        "4": "exact-live ownership/generation/lease/FINAL contradiction",
+        "5": "suspended drain failure",
+        "6..255": "reserved"
+      },
+      "quiescence_owners": [
+        "ROB",
+        "LSU",
+        "target-validation",
+        "block-control",
+        "recovery",
+        "trace",
+        "redirect/transfer",
+        "lease-directory"
+      ],
+      "release_ack": "one RELEASED_AFTER_ABORT per pending matching invalidation after quiescence",
+      "fatal_teardown_order": [
+        "stop source-context issue, commit, wakeup, redirect, FINAL transfer, and new lease acquisition",
+        "snapshot exact envelope, state, owner, token, and pending transactions",
+        "advance template, row, and load generations",
+        "cancel every uncommitted row and request",
+        "invalidate VLOAD data, VTGT proof, token, and queued transfer",
+        "obtain quiescence from every listed owner before releasing the lease",
+        "atomically release the lease and create one RELEASED_AFTER_ABORT per pending matching invalidation",
+        "publish the fatal record for managing-ring inspection"
+      ],
+      "reset_reuse": {
+        "platform_reset_only": true,
+        "new_context_generation_required": true,
+        "global_quiescence_before_reset": true,
+        "no_pre_reset_ack_after_new_context_generation": true,
+        "pre_template_state_restore": "forbidden"
+      }
+    },
+    "template_owner_id": {
+      "equality": "all fields participate; mismatch is never alias",
+      "field_groups": {
+        "placement": [
+          "lxcpu_id",
+          "lxcpu_context_generation",
+          "pe_id",
+          "stid",
+          "engine_local_tid"
+        ],
+        "group": [
+          "bid",
+          "bid_robid(valid,wrap,value)",
+          "gid",
+          "gid_robid(valid,wrap,value)",
+          "group_base_rid",
+          "group_base_rid_robid(valid,wrap,value)",
+          "group_base_rob_slot",
+          "group_row_count",
+          "checkpoint_id",
+          "template_generation",
+          "source_pc",
+          "source_raw",
+          "form_id",
+          "encoded_N"
+        ],
+        "row": [
+          "row_present",
+          "row_kind",
+          "child_ordinal",
+          "rid",
+          "rid_robid(valid,wrap,value)",
+          "rob_slot",
+          "row_generation"
+        ],
+        "memory": [
+          "lsid_valid",
+          "lsid_value",
+          "lsid_wrap_or_generation",
+          "load_id_valid",
+          "load_id_value",
+          "load_id_generation",
+          "load_replay_generation",
+          "store_id_valid",
+          "store_id_value",
+          "store_id_generation"
+        ]
+      },
+      "reuse_rule": "advance applicable ROBID wrap or template/row/LSID/load/store generation before numeric reuse",
+      "late_mismatch": "reject without live mutation",
+      "exact_live_post_seal_contradiction": "template_integrity_fail FatalReason=4"
+    },
+    "lease_id": [
+      "lease_generation",
+      "validation_generation",
+      "validation_token_hash",
+      "exact_vtgt_TemplateOwnerID",
+      "exact_vload_TemplateOwnerID_or_canonical_invalid",
+      "retained_target_mapping_visibility_share_domain_key"
+    ],
+    "invalidation": {
+      "producer_bases_coalesce": false,
+      "txn_base_fields": [
+        "producer_domain",
+        "producer_kind",
+        "producer_lxcpu_id",
+        "producer_context_generation",
+        "producer_pe_id",
+        "producer_stid_valid",
+        "producer_stid",
+        "producer_tid_valid",
+        "producer_engine_local_tid",
+        "producer_endpoint_id",
+        "transaction_sequence_value",
+        "transaction_sequence_wrap_or_generation",
+        "architectural_operation",
+        "exact_operation_scope"
+      ],
+      "txn_id_fields": [
+        "complete InvalidationTxnBase",
+        "matched_LeaseID_or_explicit_NO_LEASE",
+        "lease_directory_generation_at_lookup",
+        "status_generation"
+      ],
+      "ack_id_fields": [
+        "complete InvalidationTxnID",
+        "exact_lease_owner_TemplateOwnerID_or_canonical_invalid",
+        "terminal_kind"
+      ],
+      "terminal_kinds": [
+        "NO_MATCH",
+        "CANCELED_PRE_EVENT",
+        "RELEASED_AFTER_FINAL",
+        "RELEASED_AFTER_ABORT"
+      ],
+      "nonterminal_kinds": [
+        "DEFERRED_ACTIVE"
+      ],
+      "status_rules": [
+        "each state transition increments status_generation",
+        "matching post-seal transactions independently record DEFERRED_ACTIVE",
+        "FINAL creates one RELEASED_AFTER_FINAL per pending match",
+        "fatal release creates one RELEASED_AFTER_ABORT per pending match",
+        "post-release admission performs a new lookup at new directory generation"
+      ],
+      "stale_ack_rule": "wrong producer, sequence, operation/scope, match, directory, owner, or status-generation is rejected; identical terminal AckID retransmission is idempotent",
+      "exact_scope_fields": [
+        "ACR/regime/root/ASID",
+        "VA/PA page or marker range",
+        "TLB/code/coherence domain",
+        "global/wildcard selectors"
+      ],
+      "physical_sharing_rule": "physical lookup/cancel/drain/release work may be shared only for transactions matching the same exact LeaseID; producer transaction bases, status, and AckID remain independent",
+      "admission_rules": [
+        "capacity may backpressure before admission",
+        "an admitted transaction cannot be dropped",
+        "an admitted matching transaction cannot complete before FINAL or fatal release",
+        "a manager cannot roll back or wait on its own deferred invalidation"
+      ],
+      "terminal_rules": [
+        "NO_MATCH after lookup at the transaction directory generation for nonmatches",
+        "CANCELED_PRE_EVENT only after cancellation prevents stale event-zero seal",
+        "DEFERRED_ACTIVE recorded independently for each post-seal match and is nonterminal",
+        "RELEASED_AFTER_FINAL created atomically by FINAL per pending match",
+        "RELEASED_AFTER_ABORT created atomically by fatal release per pending match after quiescence",
+        "post-release admission performs a new lookup at the new directory generation and normally receives NO_MATCH"
+      ]
+    },
+    "target_proof": {
+      "actual_current_marker_proof": "required before every FRET effect",
+      "coherent_marker_provenance_cache": "legal only when it proves the same target marker bytes, address-space state, code-visibility epoch, and invalidation scope as an actual current marker proof",
+      "metadata_only_continuation_or_fallthrough": "non-conforming compatibility; must be rejected",
+      "deferred_demand_paging": "qualified only while every FRET effect remains withheld",
+      "fault_owner": "VTGT owns translation, execute-permission, marker, and CFI faults"
     }
   }
 }

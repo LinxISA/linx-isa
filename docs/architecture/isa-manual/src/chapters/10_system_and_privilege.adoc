@@ -198,52 +198,52 @@ Routing (bring-up):
   - architectural control flow into the interior of a coupled block body, or
   - architectural control flow to an engine-internal entrypoint (e.g. decoupled `BodyTPC` or a vector-body `B.TEXT` target) via architectural control flow, or
   - fallthrough/linear-stream execution expects a block start marker but the next linear instruction is not a valid block start marker.
-+
-+Cause encoding (bring-up normative):
-+
-+* `EC_CFI = 0x1` within the `E_BLOCK` cause space.
-+* `TRAPNO_ACRm.CAUSE[3:0]` = `EC_CFI_KIND` (4-bit subcause) when `E_BLOCK(EC_CFI)` is reported.
-+* `TRAPNO_ACRm.CAUSE[7:4]` is reserved for future CFI subkind and MUST be `0`.
-+* `EC_CFI_KIND` mapping:
-+  - `0`: reserved
-+  - `1`: `CFI_BAD_TARGET` (direct/indirect/ret target is not a block start marker)
-+  - `2`: reserved
-+  - `3`: `CFI_MISSING_NEXT_MARKER` (fallthrough expected but next linear instruction is not a block start marker)
-+  - `4`: reserved
-+
-+Reporting (bring-up):
-+
-+* `TRAPARG0_ACRm` MUST be set to the **source PC/TPC** of the control-flow instruction (or boundary marker) that triggered the CFI violation.
-+* `ECSTATE_ACRm.BI` MUST be set to `0` (treat as a header/control-flow legality failure).
-+* Precision: `E_BLOCK(EC_CFI)` is **precise** — no architectural state changes from the offending control-flow instruction are committed.
-+* Resume PC: `EBARG_TPC_ACRm` is profile-defined/handler-defined for `E_BLOCK(EC_CFI)`.
-+
-+* Template replay flags (bring-up): implementations SHOULD expose a single EBARG register `EBARG_TPLFLAGS_ACRm` with template trap/replay flags. The bit layout is defined in <<ssr-ebarg>> (see `EBARG_TPLFLAGS_ACRn`).
-    - `TPL_ID` for marker templates (`TemplateKind.class=0`) uses the mnemonic-enum mapping in <<templates-tplid>>.
-    - For marker templates (`TemplateKind.class=0`), `TPL_ID_PRESENT` MUST be `1` (reporting is required).
-    - For TEPL templates (`TemplateKind.class=1`), `TPL_ID_PRESENT` MUST be `1` and `TPL_ID` MUST carry the raw tile opcode selector (`TileOpcode`).
-+    - `TPL_REDO_OK=1`: handler may restart the template from the beginning (no externally visible partial side effects).
-+    - `TPL_RESUME_OK=1`: template supports/permits resume via `EBSTATE` snapshot (template-defined FSM/cursors). Templates that may commit to memory mid-execution MUST set `TPL_REDO_OK=0` and `TPL_RESUME_OK=1`.
-+  - `TPL_PHASE` standard meanings:
-+    - `0`: decode/validate
-+    - `1`: executing
-+    - `2`: finishing/commit
-+    - `3`: reserved
-+  - For `FENTRY`/`FEXIT`/`FRET.*` templates, the expanded uop stream (including `SETC_TGT`) is `TPL_PHASE=1`; `TPL_PHASE=2` is reserved for the final completion/commit boundary cycle.
-+  - `TPL_DIRTY` MUST be set once any template uop executes / internal template state advances.
-+  - For `FENTRY`/`FEXIT`/`FRET.*` templates:
-+    - once `TPL_PHASE>=1`, `TPL_REDO_OK` MUST be `0` (redo-from-beginning is not permitted after execution begins).
-+    - once `TPL_PHASE>=1`, `TPL_RESUME_OK` MUST be `1` (resume via EBSTATE is required).
-+  - TEPL templates (`TemplateKind.class=1` / `BSTART.TEPL`) are accelerator-driven (not uop-expanded).
-+    - `TPL_PHASE` for TEPL is defined by the selected tile opcode but MUST respect the top-level meanings; `TPL_PHASE=0` is decode/validate only and MUST NOT be used once execution begins.
-+    - `TPL_REDO_OK` MUST be `0` once execution begins.
-+    - `TPL_RESUME_OK` is defined by the selected tile opcode.
-+    - `TPL_DIRTY` is set if the TEPL engine state actually progresses and requires restore.
-+    - `ECSTATE.BI` for TEPL traps: `BI=0` when `TPL_PHASE=0`, and `BI=1` when `TPL_PHASE=1/2`.
-+  - Canonical resume cursor: `BSTATE.Template.StepIndex` is the architectural micro-op progress cursor for template replay.
-+  - Template-specific fine-grain subphase/state for replay belongs in `EBSTATE` (template-defined).
-+
-+* Block-format validation failures (missing/invalid mandatory descriptors) MUST trap with `E_BLOCK(EC_BLOCKFMT)`.
+
+Cause encoding (bring-up normative):
+
+* `EC_CFI = 0x1` within the `E_BLOCK` cause space.
+* `TRAPNO_ACRm.CAUSE[3:0]` = `EC_CFI_KIND` (4-bit subcause) when `E_BLOCK(EC_CFI)` is reported.
+* `TRAPNO_ACRm.CAUSE[7:4]` is reserved for future CFI subkind and MUST be `0`.
+* `EC_CFI_KIND` mapping:
+  - `0`: reserved
+  - `1`: `CFI_BAD_TARGET` (direct/indirect/ret target is not a block start marker)
+  - `2`: reserved
+  - `3`: `CFI_MISSING_NEXT_MARKER` (fallthrough expected but next linear instruction is not a block start marker)
+  - `4`: reserved
+
+Reporting (bring-up):
+
+* `TRAPARG0_ACRm` MUST be set to the **source PC/TPC** of the control-flow instruction (or boundary marker) that triggered the CFI violation.
+* `ECSTATE_ACRm.BI` MUST be set to `0` (treat as a header/control-flow legality failure).
+* Precision: `E_BLOCK(EC_CFI)` is **precise**; no architectural state changes from the offending control-flow instruction are committed.
+* Resume PC: `EBARG_TPC_ACRm` is profile-defined/handler-defined for `E_BLOCK(EC_CFI)`.
+
+Template replay flags (bring-up):
+
+* Implementations SHOULD expose a single EBARG register `EBARG_TPLFLAGS_ACRm` with template trap/replay flags. The bit layout is defined in <<ssr-ebarg>> (see `EBARG_TPLFLAGS_ACRn`).
+* `TPL_ID` for marker templates (`TemplateKind.class=0`) uses the mnemonic-enum mapping in <<templates-tplid>>.
+* For marker templates (`TemplateKind.class=0`), `TPL_ID_PRESENT` MUST be `1` (reporting is required).
+* For TEPL templates (`TemplateKind.class=1`), `TPL_ID_PRESENT` MUST be `1` and `TPL_ID` MUST carry the raw tile opcode selector (`TileOpcode`).
+* `TPL_REDO_OK=1`: handler may restart the template from the beginning only when no externally visible partial side effects exist.
+* `TPL_RESUME_OK=1`: template supports and permits resume via an `EBSTATE` snapshot.
+* `TPL_PHASE` standard meanings:
+  - `0`: decode/validate
+  - `1`: executing
+  - `2`: finishing/commit
+  - `3`: reserved
+* For `FENTRY`/`FEXIT`/`FRET.*` templates, phase zero is validation, phase one is the ordered event stream defined in <<templates-frame-contract>>, and phase two is the final boundary transfer/retirement row.
+* For recoverable `FENTRY`/`FEXIT`/`FRET.*` phase-one traps, `TPL_REDO_OK` MUST be `0` and `TPL_RESUME_OK` MUST be `1`.
+* `TPL_RESUME_OK=0` is the required terminal exception for the post-seal template-integrity fail-stop in <<system-template-integrity-fail>>; it does not permit rollback of committed template effects.
+* TEPL templates (`TemplateKind.class=1` / `BSTART.TEPL`) are accelerator-driven (not uop-expanded).
+  - `TPL_PHASE` for TEPL is defined by the selected tile opcode but MUST respect the top-level meanings; `TPL_PHASE=0` is decode/validate only and MUST NOT be used once execution begins.
+  - `TPL_REDO_OK` MUST be `0` once execution begins.
+  - `TPL_RESUME_OK` is defined by the selected tile opcode.
+  - `TPL_DIRTY` is set if the TEPL engine state actually progresses and requires restore.
+  - `ECSTATE.BI` for TEPL traps: `BI=0` when `TPL_PHASE=0`, and `BI=1` when `TPL_PHASE=1/2`.
+* Canonical resume cursor: `BSTATE.Template.StepIndex` is the architectural micro-op progress cursor for template replay.
+* Template-specific fine-grain subphase/state for replay belongs in `EBSTATE` (template-defined).
+
+* Block-format validation failures (missing/invalid mandatory descriptors) MUST trap with `E_BLOCK(EC_BLOCKFMT)`.
   - Cause encoding (bring-up normative): `EC_BLOCKFMT = 0x2` within the `E_BLOCK` cause space.
 
 * Block body fetch faults (for decoupled bodies and `B.TEXT` vector bodies) are split into:
@@ -308,27 +308,27 @@ The `CAUSE` encoding is **trap-class specific**.
 
 Instruction-related traps (`E_INST`)::
 +
-+Bring-up uses `TRAPNUM = ILLEGAL_INST (4)` to report illegal instruction encodings, invalid parameter encodings, and permission-policy violations.
+Bring-up uses `TRAPNUM = ILLEGAL_INST (4)` to report illegal instruction encodings, invalid parameter encodings, and permission-policy violations.
 +
-+`E_INST` cause packing (bring-up normative)::
+`E_INST` cause packing (bring-up normative)::
 +
-+* `TRAPNO.CAUSE[15:8]` = `EC_*` (8-bit subcause class)
-+* `TRAPNO.CAUSE[7:0]` = `detail` (8-bit detail; `0` unless specified)
+* `TRAPNO.CAUSE[15:8]` = `EC_*` (8-bit subcause class)
+* `TRAPNO.CAUSE[7:0]` = `detail` (8-bit detail; `0` unless specified)
 +
-+`E_INST` subcause classes (bring-up normative)::
+`E_INST` subcause classes (bring-up normative)::
 +
-+[%header,cols="2,1,5"]
-+|===
-+|Name |EC |Meaning
+[%header,cols="2,1,5"]
+|===
+|Name |EC |Meaning
 +
-+|`EC_ILLEGAL` |`0x01` |Illegal instruction encoding / reserved values.
-+|`EC_PARAM`   |`0x02` |Invalid parameter / out-of-range / invalid combination.
-+|`EC_PERM`    |`0x03` |Permission / ACR policy violation.
-+|`EC_XBID`    |`0x10` |`XB` ID/index invalid (illegal `acr-id` encoding or `c-id` out of range).
-+|`EC_XBDEF`   |`0x11` |`XB` definition invalid (`CAC_TABLE` entry missing/invalid, bad `B.TEXT`, etc.).
-+|===
+|`EC_ILLEGAL` |`0x01` |Illegal instruction encoding / reserved values.
+|`EC_PARAM`   |`0x02` |Invalid parameter / out-of-range / invalid combination.
+|`EC_PERM`    |`0x03` |Permission / ACR policy violation.
+|`EC_XBID`    |`0x10` |`XB` ID/index invalid (illegal `acr-id` encoding or `c-id` out of range).
+|`EC_XBDEF`   |`0x11` |`XB` definition invalid (`CAC_TABLE` entry missing/invalid, bad `B.TEXT`, etc.).
+|===
 +
-+NOTE: earlier draft text previously used `E_INST(EC_ILLEGAL)` and `E_INST(EC_PARAM)` informally without allocating numeric encodings. Canonical `v0.57` inherits the concrete `EC_*` values above.
+NOTE: earlier draft text previously used `E_INST(EC_ILLEGAL)` and `E_INST(EC_PARAM)` informally without allocating numeric encodings. Canonical `v0.57` inherits the concrete `EC_*` values above.
 +
 
 [%header,cols="2,1,1,1,1"]
@@ -344,6 +344,75 @@ Instruction-related traps (`E_INST`)::
 |===
 
 For system calls (`TRAPNUM=SCALL` in v0.2), routing is defined by the `ACRC` `request_type` rules above.
+
+[[system-template-integrity-fail]]
+====== Template-integrity `ASSERT_FAIL`
+
+`ASSERT_FAIL (52)` has two distinct producers in v0.57:
+
+[%header,cols="2,1,1,1,3"]
+|===
+|Producer |ECONFIG[3] maskable |Local fixup |`BI` |Continuation
+
+|Executed `ASSERT` instruction |yes |existing instruction behavior |0 |existing precise ASSERT behavior
+|Frame-template integrity fail-stop |no |forbidden |1 |forbidden; source-context reuse is reset-only
+|===
+
+The frame-template integrity producer is hardware-generated. It is not execution
+of the `ASSERT` instruction, is not masked by `ECONFIG[3]`, and does not use
+instruction-local fixup-label routing. It follows the default `E_ASSERT`
+managing-ring route and writes:
+
+* `TRAPNUM = ASSERT_FAIL (52)`
+* `TRAPNO.CAUSE = 0`
+* `TRAPNO.E = 0`
+* `TRAPNO.ARGV = 1`
+* `TRAPARG0 = source template PC/TPC`
+* `ECSTATE.BI = 1`
+* `EBARG_TPC = source template PC/TPC` as diagnostic state only
+* `TPL_PHASE = current phase (1 or 2)`
+* `StepIndex = next event/final boundary not committed`
+* `TPL_DIRTY = 1`
+* `TPL_REDO_OK = 0`
+* `TPL_RESUME_OK = 0`
+
+`EBSTATE.Template.FatalReason` is:
+
+[%header,cols="1,4"]
+|===
+|Value |Trigger
+
+|0 |explicit abandonment
+|1 |dirty-template `RRAT_DEFAULT`
+|2 |sealed-VLOAD replay/withdrawal
+|3 |poisoned response/token
+|4 |exact-live ownership/generation/lease/FINAL contradiction
+|5 |suspended drain failure
+|6..255 |reserved
+|===
+
+The fatal snapshot is the architectural state after the last committed
+frame-template event and before the failing event or `FINAL`. No committed
+effect or trace is removed; the failing and younger operations have no effect.
+
+Fatal handling MUST stop source-context issue, commit, wakeup, redirect, `FINAL`
+transfer, and new lease acquisition; snapshot the exact state, owner, token, and
+pending invalidation transactions; advance the relevant template/row/load
+generations; cancel every uncommitted row and request; invalidate VLOAD data,
+VTGT proof, token, and queued transfer; obtain quiescence from ROB, LSU,
+target-validation, block-control, recovery, trace, redirect/transfer, and the
+lease directory so no stale action can commit, wake, transfer, or recreate a
+lease; and only then release the lease and create one `RELEASED_AFTER_ABORT`
+acknowledgement for every pending matching invalidation. No terminal
+acknowledgement is observable before quiescence.
+
+The managing ring may inspect and log the frozen state, then reset the LXCPU.
+It cannot return to the source context: `ACRE RRAT_RESTORE` and
+`ACRE RRAT_DEFAULT` both raise `E_INST(EC_PARAM)` in the manager and leave the
+source fail-stopped. Platform reset is the only reuse boundary and creates a new
+context generation. Reset during fatal teardown must first provide global
+quiescence. No pre-reset acknowledgement may appear after the new context
+generation, and reset never restores pre-template state.
 
 [[system-bstate-ebstate]]
 === Block engine state (`BSTATE` / `EBSTATE`)
@@ -377,6 +446,14 @@ Dirty vs clean `BSTATE` (bring-up):
 * If `BSTATE` is dirty, the implementation saves it into the selected `EBSTATE` storage and sets `CSTATE.ebv = 1`.
   - Completeness requirement (bring-up): when `ACRE RRAT_RESTORE` is used, the saved `EBSTATE` snapshot MUST be **complete and internally consistent** for replay/resume (no partial snapshots).
 * If `BSTATE` is clean, `EBSTATE` storage remains unchanged and `CSTATE.ebv = 0`.
+
+For retained frame-template execution, a complete dirty `EBSTATE` snapshot
+includes the exact owner identity, phase and `StepIndex` cursors, sealed VLOAD
+state when present, validation token, retained lease, and complete pending
+invalidation transaction/status set. `ACRE RRAT_RESTORE` must resume with those
+identities unchanged. The implementation MUST NOT renumber, merge, drop, or
+reacquire pending invalidation entries, and the lease directory must remain
+discoverable while the source context is suspended.
 
 [[system-bstate-bi]]
 ==== `BI` (trap location: header vs body)

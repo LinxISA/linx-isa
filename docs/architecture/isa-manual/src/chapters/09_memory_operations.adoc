@@ -202,6 +202,30 @@ If a platform exposes additional subtypes (e.g. non-cacheable Normal, write
 combining, etc.), it MUST specify how they map onto the `FENCE.D` classes (`R`,
 `W`, `O`) and what extra ordering they guarantee.
 
+[[memory-frame-template-vload]]
+==== Frame-template validation loads
+
+`FRET.STK` performs a phase-zero provisional validation load of stack slot zero
+to prove the return target before any phase-one frame effect. That VLOAD is an
+ordinary LSU transaction for ordering, replay, fault, and ownership purposes,
+but it has no architectural register destination.
+
+The complete eight-byte VLOAD access MUST be classified Normal and explicitly
+idempotent before any physical read occurs. Device/MMIO, mixed Normal/Device
+footprints, and unspecified non-idempotent memory MUST raise the retained
+phase-zero `E_DATA/MMU_PERM` envelope before any cache, fabric, device, or MMIO
+read. This zero-read rule is required because Device/MMIO reads may have side
+effects and because a phase-zero FRET fault has no template effect.
+
+The value sampled by a legal VLOAD is not final until event-zero seal. Before
+seal, any forwarding, dependence, translation/type, permission, coherence,
+miss/refill, flush, replay, replacement response, or completion-withdrawal
+change invalidates the value and target proof and requires revalidation. At
+event-zero seal the load value, ordering state, response source, coherence state,
+and target proof become retained template state. After that point, the value may
+not be replaced; an impossible replay or withdrawal enters the
+template-integrity fail-stop.
+
 [[memory-observability]]
 ==== Observability and order (informal model)
 
@@ -359,6 +383,32 @@ Recommended usage patterns:
 `FENCE.I` is the architectural boundary for self-modifying code and runtime code
 generation. After `FENCE.I`, instruction fetch MUST observe any prior committed
 stores from the same LXCPU to memory that may be executed as instructions.
+
+For retained frame-template target leases, `FENCE.I`, coherent marker writes,
+mapping/permission changes, ASID/root/regime/ACR changes, and local or remote
+TLB operations are lease-matching producers when their architectural scope
+covers the retained target VA/marker range, translated page, code-visibility
+epoch, or TLB/coherence share domain. Before event-zero seal these producers
+cancel phase-zero validation. After seal they must wait for `FINAL` or the
+template-integrity fatal release and receive the transaction-specific terminal
+acknowledgement defined by the frame-template contract.
+
+Each admitted invalidation retains its producer domain, kind, LXCPU/context,
+PE/STID/TID, endpoint, transaction sequence value and wrap/generation,
+architectural operation, and exact operation scope. Scope includes the relevant
+ACR/regime/root/ASID, VA/PA page or marker range, TLB/code/coherence domain,
+and global or wildcard selectors. Producers with overlapping scope MUST NOT
+coalesce their transaction bases. Hardware may share physical lookup, cancel,
+drain, or release work only after two transactions match the same exact retained
+`LeaseID`; each producer still retains independent status generation and
+terminal `AckID`.
+
+Capacity may apply backpressure before an invalidation is admitted. Once
+admitted, an invalidation cannot be dropped and a matching post-seal transaction
+cannot complete before `FINAL` or fatal release. `DEFERRED_ACTIVE` is a
+nonterminal state, including when the managing ring owns the producer; a manager
+cannot roll back or wait on its own deferred invalidation and must either resume
+the source through `FINAL` or choose the fatal abandonment path.
 
 In Arm-like terms, `FENCE.I` is analogous to an instruction-synchronization
 barrier for the issuing LXCPU (comparable to `ISB`) with the additional

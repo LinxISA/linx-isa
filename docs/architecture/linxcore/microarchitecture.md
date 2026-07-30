@@ -146,8 +146,11 @@ historical input as compatibility behavior.
   a declared owner family.
 - Commit behavior must remain precise and ordered by architectural retirement.
 - ROB bookkeeping must remain coherent across multi-commit cycles.
-- `BSTART` and `BSTOP` are ROB-visible boundary uops resolved by `D2`; they do
-  not require IQ or FU issue to become architecturally visible.
+- `BSTART` and `BSTOP` remain ROB-visible architectural parents, but do not
+  require standalone execution uops. D1 normally fuses BSTART forward and
+  BSTOP backward into a surviving member's `{stop,start}` boundary bits. A
+  standalone boundary member is used only when fusion is illegal and may be
+  fast-resolved after its ROB/BROB state is published.
 
 ### Canonical stage taxonomy
 
@@ -230,7 +233,9 @@ alignment is never assumed.
 - Every stored entry contains `inst[63:0]`, PC, encoded byte length, request/
   epoch/checkpoint identity, BSTART/BSTOP hints, prediction metadata, and fault
   state.
-- It presents up to four contiguous same-STID instructions to D1.
+- It presents a contiguous same-STID prefix to the OOO ingress. IFU fetch and
+  cacheline geometry remain four-entry concerns; the OOO instruction-decode
+  width is an independent parameter with supported values 2, 4, and 6.
 - Consumption stops at the first invalid, killed, or structurally blocked
   entry. No compaction or younger-entry skipping is allowed.
 
@@ -275,48 +280,64 @@ alignment is never assumed.
   indirect/return targets. Mismatch uses BRU flush/recover and is not a
   frontend inner flush.
 
-### Decode and renamed-uop contract (`D1` to `D3`)
+### OOO decode, rename, and publish contract (`D1` to `S1`)
+
+`LinxCoreOoo` is one independently testable module covering D1, D2, D3, and
+S1. The default product has four STIDs. D2, D3, and S1 each own private
+per-STID staging state and shared combinational logic; each stage advances at
+most one STID per cycle, while different stages may advance different STIDs in
+the same cycle.
 
 #### D1
 
-- `D1` reads up to four program-order contiguous entries from one Instruction
-  Buffer bank.
+- `D1` reads up to `instructionDecodeWidth` program-order contiguous entries
+  from one selected Instruction Buffer bank. Supported widths are 2, 4, and 6.
 - Each D1 input is already one fixed 64-bit instruction. D1 never reconstructs
   a variable-length byte window or concatenates neighboring entries.
-- `D1` performs the first full opcode, operand, and immediate decode,
-  illegal-instruction and early-exception detection, uop split/fuse
-  recognition, and decode-group formation.
+- `D1` performs full opcode, operand, and immediate decode,
+  illegal-instruction and early-exception detection, ordinary uop expansion,
+  block-boundary fusion, and decode-group formation. Illegal detection occurs
+  before expansion or fusion.
 - D1 calculates per-row shape and group demand but does not mutate ROB, BROB,
   rename, LSID, or IQ state.
-- `D1` may split or fuse decoded work, but older split work must be emitted
-  before younger instructions are consumed.
+- One architectural instruction may produce several canonical uops. Every
+  child retains parent identity, ordinal/count, and trace ownership. Fusion
+  may map BSTART, a carrier, and BSTOP parents to one surviving uop while
+  retaining all original PCs, encodings, lengths, and precise-exception
+  attribution. Older split work must be emitted before younger instructions
+  are consumed.
 - With baseline `BROB_ALLOC_PER_CYCLE=1`, D1 never forms a group containing
   two new-block allocation boundaries. If a `BSTART`/template boundary is not
   the first candidate, D1 ends the current group before it. A group beginning
   with `BSTART` may include following body rows only up to the next boundary;
   a template-parent group contains only that parent.
+- Fusion never mints, increments, or rewrites BID. It records opening and
+  closing block obligations; the BROB preview/allocation owner supplies exact
+  native BID and generation.
 - D1 output carries fixed `inst[63:0]`, decoded opcode/uop semantics, operand
-  and immediate information, early fault state, and group demand.
+  and immediate information, parent vectors, early fault state, and group
+  demand.
 
 #### D2
 
 - `D2` resolves block-boundary metadata and calculates the complete resource
-  demand of the already decoded group.
+  demand of the already decoded/expanded group.
 - `D2` preserves decode-slot program order across one decode group.
-- D2 marks the single boundary allocation, if present, and partitions row
-  ownership so the `BSTART` row plus every following row in that group receives
-  the newly allocated BID.
-- `D2` prepares one coherent D3 admission request; it does not allocate
-  physical tags, BID, RID, LSID, or IQ rows.
+- D2 computes virtual RID-group placement, BROB/BID preview, PC-buffer demand,
+  PTag-staging demand, T/U sequential demand, MapQ demand, memory IDs, and
+  per-class/per-bank dispatch credits. These are preview tokens, not physical
+  mutations.
+- `D2` prepares one coherent D3 reservation request; it does not allocate
+  physical tags, BID, RID, LSID, PC-buffer rows, or IQ rows.
 - `BSTART`, `BSTOP`, and macro boundaries are fully classified by D2 so D3 can
   reserve the correct BROB/ROB and checkpoint resources.
 
 #### D3
 
-- `D3` is the atomic-admission and physical-rename stage.
+- `D3` is the provisional atomic-reservation and physical-rename stage.
 - D3 accepts the entire prepared group only when ROB, BROB, scalar/local
   rename, IQ write, checkpoint, and memory-order capacity are all available.
-- On acceptance, the instruction ROB supplies native RID, BROB supplies the
+- On acceptance, the instruction ROB reserves a grouped RID, BROB supplies the
   `BID_W`-bit BID, the memory-order owner stamps the pre-increment LSID
   snapshot and advances only for memory operations, and rename supplies
   physical tags.
@@ -325,8 +346,16 @@ alignment is never assumed.
   admitted in separate groups/cycles. A wider design may allocate multiple
   BIDs only by raising `BROB_ALLOC_PER_CYCLE` and preserving the same slot-order
   ownership atomically.
-- D3 writes the corresponding speculative state and emits the canonical
-  renamed-uop shape:
+- D3 consumes PTags only from banked staging FIFOs refilled by D2; it never
+  selects directly from the global free list. P rename applies oldest-to-
+  youngest RAW/WAW inlining and retains `{ptag, producer/IQID, ready}` in
+  SMAP. T and U remain independent sequential relative-index renamers.
+- D3 retains the complete reservation transaction until S1 publication. A
+  recovery or stale preview before publication returns every provisional
+  resource without creating a ROB hole or visible partial rename.
+- S1 is the atomic publication point for grouped ROB members, speculative
+  rename/MapQ state, and retained IEX speculative-slot reservations. It emits
+  the canonical renamed-uop shape:
 
 ```text
 {
@@ -425,10 +454,11 @@ that its rows will consume. The admission check includes, as applicable:
 - marker lifecycle and checkpoint storage;
 - BISQ/BCTRL command capacity for block-fabric work.
 
-At D3 the group either reserves all required resources in program order or
-makes no state change. A reduced harness may serialize or bypass one of these resources,
+At D3 the group either provisionally reserves all required resources in
+program order or makes no state change. At S1 the complete retained
+transaction either publishes atomically or remains held. A reduced harness may serialize or bypass one of these resources,
 but it must label that behavior as reduced and must not redefine the full-core
-admission contract. Atomic admission prevents duplicate RIDs/BIDs, holes in
+admission contract. Atomic reserve/publish prevents duplicate RIDs/BIDs, holes in
 same-cycle rename order, and one-half allocation of a split store.
 
 Capacity numbers from LinxCoreModel or an ARM reference implementation are
@@ -442,14 +472,15 @@ Detailed local-register lifetime and recovery rules are documented in
 
 #### S1
 
-- `S1` captures admitted D3 packets into the speculative issue-buffer/write-
-  port boundary. The packet already carries its execution class and selected
-  physical route; S1 retains the readiness seed and cancellation state.
+- `S1` publishes admitted D3 packets into retained speculative issue slots.
+  The packet carries its execution class and selected physical route; S1
+  retains payload, target, readiness seed, exact reservation identity, and
+  cancellation state until IEX accepts it.
 
 #### S2
 
-- `S2` selects a free physical IQ row and writes the S1 packet plus initial
-  source readiness.
+- `S2` binds the S1 speculative reservation to its already credited physical
+  IQ row and writes the packet plus initial source readiness.
 
 #### S3/IQ
 
@@ -705,9 +736,11 @@ Detailed local-register lifetime and recovery rules are documented in
 
 ## ROB and precise retirement contract (LC-MA-ROB-001)
 
-The instruction ROB is the precise instruction-side authority. BROB is a
-separate block-lifetime and engine-completion authority; it does not replace
-instruction-row retirement.
+The instruction ROB is the precise instruction-side authority. RID identifies
+a ROB group, not one uop. A group belongs to exactly one `(PE, STID, BID)` and
+contains a bounded ordered member set plus architectural-parent trace owners.
+BROB is a separate block-lifetime and engine-completion authority; it does not
+replace grouped instruction retirement.
 
 The physical retirement/recovery pipeline uses `R0..R4`:
 
@@ -725,18 +758,23 @@ The physical retirement/recovery pipeline uses `R0..R4`:
   state to I-F0. Deallocation may trail R4 and remains a ROB operation, not
   W-stage writeback.
 
-ROB rows progress through distinct ownership states:
+ROB groups progress through distinct ownership states:
 
 ```text
-Free -> Allocated -> Renamed -> Issued -> Completed -> Retired -> Free
-                       \---------------------> Fault/NeedFlush
+Free -> Provisional -> Published -> Issued -> Completed -> Retired -> Free
+                         \--------------------> Fault/NeedFlush
 ```
 
 Required behavior:
 
-- Allocation is in program order. Completion may be out of order.
-- Commit walks a contiguous prefix of completed head rows and stops at the
-  first invalid, incomplete, faulting, or blocked row.
+- Reservation and publication are in program order. Completion may be out of
+  order by exact member key.
+- Each group records member-valid, expected-resolve, completed, exception, and
+  parent-trace ownership. Duplicate, stale-generation, wrong-STID/BID, or
+  wrong-member completions cause zero mutation.
+- Commit walks a contiguous prefix of completed head groups and their ordered
+  architectural parents, stopping at the first invalid, incomplete, faulting,
+  or blocked group.
 - Commit and deallocation are separate operations. A retired row remains
   resident until scalar-map release, local `T/U` relation cleanup, memory
   side effects, block-last processing, and trace publication no longer need
@@ -860,11 +898,15 @@ Detailed recovery behavior remains documented in:
 - A shared retire port selects eligible STID heads fairly and must hold its
   selected `(STID,BID)` stable under backpressure. Metadata free, head advance,
   occupancy decrement, and downstream block-commit publication are one fire.
-- BROB derives a strong non-flush prefix independently for each STID from the
-  exact commit head and bounded live count. The prefix stops at the first
-  missing, stale, unsafe, or exception-bearing row. Its `head_bid` plus
-  `prefix_count` is the ordering proof; the youngest safe BID is observability,
-  not an unsigned age threshold.
+- The ROB/commit-control owner derives a non-flush window independently for
+  each STID from a contiguous safe ROB-group prefix. The exact publication is
+  `{STID, headRobGroupKey, prefixCount, epoch}`. BROB completion is typed input
+  to that proof, not a second completion or commit path. The prefix stops at
+  the first missing, stale, unsafe, or exception-bearing group; a youngest BID
+  is observability, not an unsigned age threshold.
+- Non-flush may authorize explicitly nonspeculative execution or selected
+  resource release, but never updates CMAP, frees speculative PTags, emits
+  architectural trace, retires ROB/BROB state, or commits a store by itself.
 - The initial promoted Chisel predicate is conservative: a row is safe only
   after full block completion and only when it has no exception. Earlier safe
   release for branch-resolved scalar non-memory blocks and authoritatively

@@ -8,6 +8,7 @@ import json
 import re
 from collections import defaultdict
 from pathlib import Path
+from typing import Any
 
 
 WIDTH_FUNCS = {
@@ -289,6 +290,156 @@ def popcount(hexish: str | int) -> int:
     if bit_count is not None:
         return bit_count()
     return bin(value).count("1")
+
+
+def canonical_redecode_entries(retired_metadata: dict[str, Any] | None) -> list[dict[str, Any]]:
+    if retired_metadata is None:
+        return []
+    entries = retired_metadata.get("entries")
+    if not isinstance(entries, list):
+        raise ValueError("retired encoding metadata must contain an entries list")
+
+    canonical = []
+    seen_patterns: dict[tuple[int, int, int], str] = {}
+    for idx, entry in enumerate(entries):
+        if entry.get("disposition") != "canonical-redecode":
+            continue
+        missing = [
+            key
+            for key in ("length_bits", "mask", "match", "replacement_mnemonic", "retired_mnemonic")
+            if key not in entry
+        ]
+        if missing:
+            raise ValueError(
+                f"canonical-redecode entry {idx} is missing required field(s): {', '.join(missing)}"
+            )
+        length_bits = entry["length_bits"]
+        replacement = entry["replacement_mnemonic"]
+        retired = entry["retired_mnemonic"]
+        if not isinstance(length_bits, int) or length_bits <= 0:
+            raise ValueError(f"canonical-redecode entry {idx} has invalid length_bits")
+        if not isinstance(replacement, str) or not replacement:
+            raise ValueError(f"canonical-redecode entry {idx} has invalid replacement_mnemonic")
+        if not isinstance(retired, str) or not retired:
+            raise ValueError(f"canonical-redecode entry {idx} has invalid retired_mnemonic")
+        try:
+            mask = parse_hexish(entry["mask"])
+            match = parse_hexish(entry["match"])
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"canonical-redecode entry {idx} has invalid mask/match") from exc
+        if match & ~mask:
+            raise ValueError(f"canonical-redecode entry {idx} has match bits outside mask")
+        pattern = (length_bits, mask, match)
+        prior = seen_patterns.get(pattern)
+        if prior is not None and prior != replacement:
+            raise ValueError(
+                f"canonical-redecode pattern {hex(match)} under {hex(mask)} maps to both "
+                f"{prior} and {replacement}"
+            )
+        seen_patterns[pattern] = replacement
+        canonical.append(
+            {
+                "length_bits": length_bits,
+                "mask": mask,
+                "match": match,
+                "replacement_mnemonic": replacement,
+                "retired_mnemonic": retired,
+            }
+        )
+    return canonical
+
+
+def one_part_pattern(inst: dict[str, Any]) -> tuple[int, int] | None:
+    parts = inst["encoding"]["parts"]
+    if len(parts) != 1:
+        return None
+    return parse_hexish(parts[0]["mask"]), parse_hexish(parts[0]["match"])
+
+
+def encoding_patterns_overlap(left_mask: int, left_match: int, right_mask: int, right_match: int) -> bool:
+    common = left_mask & right_mask
+    return (left_match & common) == (right_match & common)
+
+
+def base_decode_sort_key(entry: dict[str, Any]) -> tuple[int, str, str]:
+    return (
+        -sum(popcount(part["mask"]) for part in entry["encoding"]["parts"]),
+        entry["mnemonic"],
+        entry["uid"],
+    )
+
+
+def canonical_redecode_edges(
+    entries: list[dict[str, Any]], retired_metadata: dict[str, Any] | None
+) -> set[tuple[str, str]]:
+    edges: set[tuple[str, str]] = set()
+    for rule in canonical_redecode_entries(retired_metadata):
+        same_width = [entry for entry in entries if entry["length_bits"] == rule["length_bits"]]
+        if not same_width:
+            continue
+        replacements = [
+            entry
+            for entry in same_width
+            if entry["mnemonic"] == rule["replacement_mnemonic"]
+            and one_part_pattern(entry) is not None
+            and encoding_patterns_overlap(rule["mask"], rule["match"], *one_part_pattern(entry))
+        ]
+        if len(replacements) != 1:
+            raise ValueError(
+                "canonical-redecode entry for "
+                f"{rule['retired_mnemonic']} must resolve to exactly one "
+                f"{rule['replacement_mnemonic']} replacement; found {len(replacements)}"
+            )
+        replacement = replacements[0]
+        replacement_pattern = one_part_pattern(replacement)
+        if replacement_pattern != (rule["mask"], rule["match"]):
+            raise ValueError(
+                "canonical-redecode replacement "
+                f"{rule['replacement_mnemonic']} must exactly match retired pattern "
+                f"mask={hex(rule['mask'])} match={hex(rule['match'])}"
+            )
+        for entry in same_width:
+            if entry["uid"] == replacement["uid"]:
+                continue
+            pattern = one_part_pattern(entry)
+            if pattern is None:
+                continue
+            if encoding_patterns_overlap(rule["mask"], rule["match"], *pattern):
+                edges.add((replacement["uid"], entry["uid"]))
+    return edges
+
+
+def order_decode_entries(
+    entries: list[dict[str, Any]], retired_metadata: dict[str, Any] | None = None
+) -> list[dict[str, Any]]:
+    base_order = sorted(entries, key=base_decode_sort_key)
+    if not retired_metadata:
+        return base_order
+
+    by_uid = {entry["uid"]: entry for entry in base_order}
+    incoming: dict[str, set[str]] = {entry["uid"]: set() for entry in base_order}
+    outgoing: dict[str, set[str]] = {entry["uid"]: set() for entry in base_order}
+    for before, after in canonical_redecode_edges(entries, retired_metadata):
+        if before not in by_uid or after not in by_uid:
+            continue
+        outgoing[before].add(after)
+        incoming[after].add(before)
+
+    original_index = {entry["uid"]: idx for idx, entry in enumerate(base_order)}
+    ready = [entry["uid"] for entry in base_order if not incoming[entry["uid"]]]
+    ordered_uids: list[str] = []
+    while ready:
+        ready.sort(key=original_index.__getitem__)
+        uid = ready.pop(0)
+        ordered_uids.append(uid)
+        for after in sorted(outgoing[uid], key=original_index.__getitem__):
+            incoming[after].remove(uid)
+            if not incoming[after]:
+                ready.append(after)
+
+    if len(ordered_uids) != len(base_order):
+        raise ValueError("canonical-redecode precedence graph contains a cycle")
+    return [by_uid[uid] for uid in ordered_uids]
 
 
 def piece_expr(piece: dict, width: int) -> str:
@@ -636,20 +787,18 @@ def branch_body(inst: dict, exec_params: dict[str, list[str]]) -> list[str]:
     return lines
 
 
-def render_decode_function(width: int, entries: list[dict], exec_params: dict[str, list[str]]) -> list[str]:
+def render_decode_function(
+    width: int,
+    entries: list[dict],
+    exec_params: dict[str, list[str]],
+    retired_metadata: dict[str, Any] | None = None,
+) -> list[str]:
     func_name = WIDTH_FUNCS[width]
     lines = [f"function {func_name}(inst : bits({width})) -> unit = {{"]  # noqa: E231
     if width == 64:
         lines.append("  let part0 : bits(32) = inst[63..32];")
         lines.append("  let part1 : bits(32) = inst[31..0];")
-    ordered = sorted(
-        entries,
-        key=lambda entry: (
-            -sum(popcount(part["mask"]) for part in entry["encoding"]["parts"]),
-            entry["mnemonic"],
-            entry["uid"],
-        ),
-    )
+    ordered = order_decode_entries(entries, retired_metadata)
     for idx, inst in enumerate(ordered):
         prefix = "if" if idx == 0 else "else if"
         lines.append(f"  {prefix} {branch_condition(inst)} then {{")
@@ -663,7 +812,12 @@ def render_decode_function(width: int, entries: list[dict], exec_params: dict[st
     return lines
 
 
-def render(spec: dict, exec_text: str, spec_path: str) -> str:
+def render(
+    spec: dict,
+    exec_text: str,
+    spec_path: str,
+    retired_metadata: dict[str, Any] | None = None,
+) -> str:
     exec_params = execute_signatures(exec_text)
     by_width: dict[int, list[dict]] = defaultdict(list)
     for inst in spec["instructions"]:
@@ -723,7 +877,7 @@ def render(spec: dict, exec_text: str, spec_path: str) -> str:
 
     for width in (16, 32, 48, 64):
         if by_width.get(width):
-            lines.extend(render_decode_function(width, by_width[width], exec_params))
+            lines.extend(render_decode_function(width, by_width[width], exec_params, retired_metadata))
             lines.append("")
 
     return "\n".join(lines).rstrip() + "\n"
@@ -739,13 +893,15 @@ def main() -> int:
 
     spec_path = Path(args.spec).resolve()
     spec = json.loads(spec_path.read_text())
+    retired_path = spec_path.parent / "encoding" / "retired_encodings.json"
+    retired_metadata = json.loads(retired_path.read_text()) if retired_path.exists() else None
     execute_text = Path(args.execute).read_text()
     repo_root = Path(__file__).resolve().parents[2]
     try:
         provenance = spec_path.relative_to(repo_root).as_posix()
     except ValueError:
         provenance = spec_path.as_posix()
-    rendered = render(spec, execute_text, provenance)
+    rendered = render(spec, execute_text, provenance, retired_metadata)
     out_path = Path(args.out)
     if args.check:
         current = out_path.read_text() if out_path.exists() else ""

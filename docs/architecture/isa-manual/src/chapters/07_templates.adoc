@@ -32,7 +32,7 @@ NOTE: For `TemplateKind.class=1` (TEPL templates), identification uses the tile 
 Template blocks execute via a **code-template generator** that emits a sequence of internal micro-operations
 (*micro-ops*) based on architectural register inputs.
 
-Restartability contract (v0.2 bring-up profile):
+Restartability contract (v0.57 bring-up profile):
 
 * A template block MUST be **restartable**: interrupts and exceptions MAY be taken between generated micro-ops.
 * When a trap is taken during template micro-op execution, the trap-save logic MUST record progress in
@@ -57,6 +57,149 @@ These forms encode:
 
 * a contiguous register range (`*Begin`..`*End` fields in the catalog), and
 * an immediate stack adjustment (`uimm`)
+
+[[templates-frame-contract]]
+==== Frame-template architectural contract
+
+The canonical v0.57 frame-template contract is machine-readable in
+`isa/v0.57/semantics_conventions.json` under `frame_templates_r975`; this
+section is the normative manual rendering of that contract.
+
+Frame arithmetic is immediate-only. The register range is the inclusive
+callee-save ring `R2..R23`; singleton, full-ring, and wrap ranges are legal.
+Malformed endpoints, insufficient pre-effect frame size `F`, and non-`R10`
+`FRET.STK` `Begin` fail before any template effect.
+
+`StepIndex` identifies the next uncommitted phase-one event. Each event effect
+and its `StepIndex` advance commit atomically:
+
+[%header,cols="1,4,1"]
+|===
+|Form |Ordered phase-one events |Count
+
+|`FENTRY` |`SP_SUB`, then `STORE_i` for `i=0..N-1` |`N+1`
+|`FEXIT` |`SP_ADD`, then `LOAD_i` for `i=0..N-1` |`N+1`
+|`FRET.RA` |`TARGET_PUBLISH`, `SP_ADD`, then `LOAD_i` for `i=0..N-1` |`N+2`
+|`FRET.STK` |`SP_ADD`, `RESTORE_R10`, `TARGET_PUBLISH`, then `LOAD_i` for `i=1..N-1` |`N+2`
+|===
+
+`FRET.RA` publishes a target from fixed pre-restore `R10`. `FRET.STK`
+publishes a target from fixed `R10` restored from stack slot zero. The slot-zero
+provisional load for `FRET.STK` may physically read only a complete eight-byte
+Normal, explicitly idempotent access. Device/MMIO, mixed-type, and unspecified
+non-idempotent accesses MUST raise the retained phase-zero `E_DATA/MMU_PERM`
+envelope before any cache, fabric, device, or MMIO physical read.
+
+Phase-zero validation faults have no template effect and report `BI=0`,
+`TPL_PHASE=0`, `StepIndex=0`, `TPL_DIRTY=0`, `TPL_REDO_OK=1`, and
+`TPL_RESUME_OK=0`. Recoverable phase-one faults are precise to the named event:
+all prior event effects remain visible, the faulting event has no effect,
+`BI=1`, `TPL_DIRTY=1`, `TPL_REDO_OK=0`, `TPL_RESUME_OK=1`, and
+`ACRE RRAT_RESTORE` retries exactly the saved event. It MUST NOT reissue a
+sealed `FRET.STK` VLOAD, reacquire the FRET lease, or repeat earlier events.
+
+After event-zero seal, no trap, interrupt, suspension, invalidation, migration,
+or recovery may undo or repeat committed SP, GPR, memory, target, progress, or
+trace effects. `ACRE RRAT_DEFAULT`, explicit abandonment, sealed-VLOAD
+replay/withdrawal, poison, exact-live ownership/generation/lease/FINAL
+contradiction, or suspended drain failure enters the template-integrity
+fail-stop described in <<system-template-integrity-fail>>.
+
+[[templates-frame-d3]]
+==== Implementation-owned D3, ownership, and lease obligations
+
+The D3/ROB/LSU identity terms in this section are nonarchitectural ownership
+names, but the equality, stale rejection, lease, and acknowledgement obligations
+are normative implementation conformance requirements.
+
+There is no hidden parent ROB row and no private or rowless validator. Legal
+templates allocate the group and every ordered row key atomically:
+
+[%header,cols="1,4,1,1,1"]
+|===
+|Form |Exact ordinals |Total |`N=1` |`N=22`
+
+|`FENTRY` |`0=VFORM`, `1=SP_SUB`, `2+i=STORE_i`, `N+2=FINAL` |`N+3` |4 |25
+|`FEXIT` |`0=VFORM`, `1=SP_ADD`, `2+i=LOAD_i`, `N+2=FINAL` |`N+3` |4 |25
+|`FRET.RA` |`0=VFORM`, `1=VTGT`, `2=TARGET_PUBLISH`, `3=SP_ADD`, `4+i=LOAD_i`, `N+4=FINAL` |`N+5` |6 |27
+|`FRET.STK` |`0=VFORM`, `1=VLOAD`, `2=VTGT`, `3=SP_ADD`, `4=RESTORE_R10`, `5=TARGET_PUBLISH`, `5+i=LOAD_i` for `i=1..N-1`, `N+5=FINAL` |`N+6` |7 |28
+|Malformed |`0=VFORM_TRAP` only |1 |1 |1
+|===
+
+`VFORM`, `VLOAD`, and `VTGT` are phase-zero rows excluded from `StepIndex`.
+`VFORM` uses normal ROB/block-control trap, completion, and trace ownership.
+`VLOAD` uses normal ROB/IQ/LIQ/LSU and precise data-fault ownership with no
+rename destination. `VTGT` uses a normal ROB/block-control target row plus owned
+translation and I-cache requests. `FINAL` uses normal ROB/block-control
+transfer, retirement, and trace ownership.
+
+The `FRET.STK` VLOAD identity includes the complete owner key, VA,
+translation, permission/type, LSID/load ID, older-store/forwarding state,
+response source, miss/refill/coherence generation, load generation, and data.
+Before event-zero seal, any forwarding, dependence, coherence, translation/type,
+miss/refill, flush, replay, replacement-response, or completion-withdrawal
+change MUST advance the load generation, discard the VLOAD value, VTGT proof,
+and lease candidate, reject late old-generation responses, and rerun VTGT even
+when replacement data is bit-identical. Event-zero seal is the sampling point;
+post-seal value replacement is forbidden and enters template-integrity fatal
+reason 2.
+
+Every ROB/IQ/LSU request or response, VTGT, completion, trap, replay, recovery,
+commit, trace, validation token, lease entry, and FINAL carries a complete
+`TemplateOwnerID`. Its placement, group, row, and memory fields all participate
+in equality. Narrow BID/GID/RID identities must equal their full ROBID
+projections, explicit slots must match full-RID projections, and inapplicable
+memory fields use valid=0 with canonical-zero values. A mismatching late
+message is stale and rejected without live mutation; an exact-live post-seal
+contradiction enters template-integrity fatal reason 4.
+
+`FRET.RA` and `FRET.STK` target validation requires actual-current marker
+proof before every FRET effect, or a coherent marker-provenance cache that
+proves the same target marker bytes, address-space state, code-visibility
+epoch, and invalidation scope. Metadata-only continuation or fallthrough
+acceptance is non-conforming. Demand paging of target proof may be deferred
+only while every FRET effect remains withheld.
+
+Target validation leases bind the exact target VA/marker range and hash, form,
+ACR/privilege/regime, ASID/root/TCR/MAIR/address-space generations, translated
+page and execute permission/attribute generation, instruction/code-visibility
+epoch, I-cache/coherence/TLB share domains, and for `FRET.STK` the sealed VLOAD
+data/order/response/coherence generations. Before seal, a matching
+invalidation wins and cancels phase zero. After seal, the lease wins and the
+producer waits through recoverable traps, `ACRE`, context suspension, and
+`FINAL` or fatal release.
+
+For a recoverable phase-one trap or suspension, `EBSTATE` retains the exact
+`TemplateOwnerID`, phase and `StepIndex` cursors, sealed VLOAD state when
+applicable, validation token, retained lease, and the complete pending
+`InvalidationTxnID`/status set. It MUST NOT renumber, merge, or reacquire
+pending invalidation entries or restore a pre-template checkpoint. The lease
+directory remains discoverable during suspension. A manager must resume through
+`FINAL` or explicitly choose fatal abandonment; it cannot roll back or wait on
+its own deferred invalidation.
+
+`FINAL` carries its own exact per-form final-row key. It must match group,
+checkpoint, template, validation, lease, VTGT key, VLOAD key or canonical
+invalid, visibility/share-domain, `FINAL` RID/slot/generation, and final
+ordinal fields. Queue head, BID, RID value, PC, opcode, or a hash alone is
+never ownership authority.
+
+Invalidation transaction bases never coalesce. Each admitted producer operation
+has an independent transaction identity, status generation, and acknowledgement
+identity. Terminal acknowledgements are exactly `NO_MATCH`,
+`CANCELED_PRE_EVENT`, `RELEASED_AFTER_FINAL`, and `RELEASED_AFTER_ABORT`;
+`DEFERRED_ACTIVE` is nonterminal. `FINAL` atomically creates one
+`RELEASED_AFTER_FINAL` per pending matching transaction, and fatal teardown
+atomically creates one `RELEASED_AFTER_ABORT` per pending matching transaction
+only after source-context quiescence.
+
+Physical lookup, cancel, drain, or release work may be shared only for
+transactions matching the same exact `LeaseID`; producer transaction bases,
+status generations, and `AckID` values remain independent. Capacity may
+backpressure a producer before admission, but an admitted transaction cannot be
+dropped, cannot complete early, and cannot be hidden by another producer with a
+similar scope. A transaction admitted after release performs a new lookup at the
+new directory generation and normally receives its own `NO_MATCH`.
 
 Additional macro blocks appear in the v0.57 catalog for future use (examples):
 

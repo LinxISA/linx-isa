@@ -1259,6 +1259,13 @@ function barg_set_next_pc_target(tgt : bits(64)) -> unit = {
   barg_bpc_tgt = tgt
 }
 
+function set_commit_target_value(tgt : bits(64)) -> unit = {
+  barg_tgt_reg_valid = false;
+  barg_tgt_reg = 0b00000;
+  barg_bpc_tgt = tgt;
+  barg_xfer_kind_cur = block_xfer_direct()
+}
+
 function block_commit_boundary() -> unit = {
   if barg_valid then {
     var take_target : bool = false;
@@ -1297,6 +1304,8 @@ register decoded_block_target_pc_shadow : bits(64) = 0x0000_0000_0000_0000
 register decoded_block_type_shadow : block_type = 0b0000
 register decoded_block_xfer_kind_shadow : block_xfer_kind = 0b0000
 register decoded_block_contract_kind_shadow : bits(4) = 0b0000
+// Generic block-control tests may use the relaxed hook. FRET template
+// admission uses its own proof-only predicate in execute.sail.
 register block_marker_strict : bool = false
 register block_marker0_valid : bool = false
 register block_marker0_pc : bits(64) = 0x0000_0000_0000_0000
@@ -1326,6 +1335,206 @@ function is_block_start_marker(addr : bits(64)) -> bool = {
      |  (block_marker1_valid & (block_marker1_pc == addr))
      |  (block_marker2_valid & (block_marker2_pc == addr))
      |  (block_marker3_valid & (block_marker3_pc == addr)))
+}
+
+// Architectural frame-template progress state and deterministic model hooks.
+// Form IDs: 0=invalid, 1=FENTRY, 2=FEXIT, 3=FRET.RA, 4=FRET.STK.
+register template_valid : bool = false
+register template_form : bits(3) = 0b000
+register template_phase : bits(2) = 0b00
+register template_step_index : bits(8) = 0x00
+register template_event_count : bits(8) = 0x00
+register template_dirty : bool = false
+register template_redo_ok : bool = false
+register template_resume_ok : bool = false
+register template_source_pc : bits(64) = 0x0000_0000_0000_0000
+register template_begin : bits(5) = 0b00000
+register template_end : bits(5) = 0b00000
+register template_nregs : bits(8) = 0x00
+register template_frame_f : bits(64) = 0x0000_0000_0000_0000
+register template_sp_a : bits(64) = 0x0000_0000_0000_0000
+register template_sp_c : bits(64) = 0x0000_0000_0000_0000
+register template_retained_target : bits(64) = 0x0000_0000_0000_0000
+register template_retained_slot0 : bits(64) = 0x0000_0000_0000_0000
+register template_saved_value0 : bits(64) = 0x0000_0000_0000_0000
+register template_saved_value1 : bits(64) = 0x0000_0000_0000_0000
+register template_saved_value2 : bits(64) = 0x0000_0000_0000_0000
+register template_saved_value3 : bits(64) = 0x0000_0000_0000_0000
+register template_saved_value4 : bits(64) = 0x0000_0000_0000_0000
+register template_saved_value5 : bits(64) = 0x0000_0000_0000_0000
+register template_saved_value6 : bits(64) = 0x0000_0000_0000_0000
+register template_saved_value7 : bits(64) = 0x0000_0000_0000_0000
+register template_saved_value8 : bits(64) = 0x0000_0000_0000_0000
+register template_saved_value9 : bits(64) = 0x0000_0000_0000_0000
+register template_saved_value10 : bits(64) = 0x0000_0000_0000_0000
+register template_saved_value11 : bits(64) = 0x0000_0000_0000_0000
+register template_saved_value12 : bits(64) = 0x0000_0000_0000_0000
+register template_saved_value13 : bits(64) = 0x0000_0000_0000_0000
+register template_saved_value14 : bits(64) = 0x0000_0000_0000_0000
+register template_saved_value15 : bits(64) = 0x0000_0000_0000_0000
+register template_saved_value16 : bits(64) = 0x0000_0000_0000_0000
+register template_saved_value17 : bits(64) = 0x0000_0000_0000_0000
+register template_saved_value18 : bits(64) = 0x0000_0000_0000_0000
+register template_saved_value19 : bits(64) = 0x0000_0000_0000_0000
+register template_saved_value20 : bits(64) = 0x0000_0000_0000_0000
+register template_saved_value21 : bits(64) = 0x0000_0000_0000_0000
+register template_fatal_reason : bits(8) = 0x00
+
+// Explicit FRET.STK slot-zero admission evidence. The fail-closed default is
+// unknown; only 1 proves a complete eight-byte Normal, idempotent access.
+// 0=unknown, 1=Normal+idempotent, 2=Device/MMIO, 3=mixed,
+// 4=unspecified/non-idempotent.
+register template_vload_class : bits(3) = 0b000
+register template_data_fault_step : bits(8) = 0xFF
+register template_interrupt_step : bits(8) = 0xFF
+register template_interrupt_id : bits(8) = 0x00
+register template_memory_hook_enabled : bool = false
+register template_memory_hook_load_value : bits(64) = 0x0000_0000_0000_0000
+
+register template_last_event_kind : bits(8) = 0x00
+register template_last_interrupted_event_kind : bits(8) = 0x00
+register template_event_commit_count : bits(64) = 0x0000_0000_0000_0000
+register template_final_count : bits(64) = 0x0000_0000_0000_0000
+register template_vload_read_count : bits(64) = 0x0000_0000_0000_0000
+register template_vload_forbidden_zero_read_count : bits(64) = 0x0000_0000_0000_0000
+register template_vload_admission_check_count : bits(64) = 0x0000_0000_0000_0000
+register template_marker_check_count : bits(64) = 0x0000_0000_0000_0000
+register template_data_fault_injection_count : bits(64) = 0x0000_0000_0000_0000
+register template_data_fault_ignored_count : bits(64) = 0x0000_0000_0000_0000
+register template_interrupt_count : bits(64) = 0x0000_0000_0000_0000
+register template_target_publish_count : bits(64) = 0x0000_0000_0000_0000
+register template_restore_r10_count : bits(64) = 0x0000_0000_0000_0000
+register template_memory_hook_load_count : bits(64) = 0x0000_0000_0000_0000
+register template_memory_hook_store_count : bits(64) = 0x0000_0000_0000_0000
+
+function template_clear() -> unit = {
+  template_valid = false;
+  template_form = 0b000;
+  template_phase = 0b00;
+  template_step_index = 0x00;
+  template_event_count = 0x00;
+  template_dirty = false;
+  template_redo_ok = false;
+  template_resume_ok = false;
+  template_fatal_reason = 0x00
+}
+
+function template_record_phase0(form : bits(3), src_pc : bits(64)) -> unit = {
+  template_valid = true;
+  template_form = form;
+  template_phase = 0b00;
+  template_step_index = 0x00;
+  template_event_count = 0x00;
+  template_dirty = false;
+  template_redo_ok = true;
+  template_resume_ok = false;
+  template_source_pc = src_pc;
+  template_retained_target = 0x0000_0000_0000_0000;
+  template_retained_slot0 = 0x0000_0000_0000_0000
+}
+
+function template_enter_phase1(form : bits(3), src_pc : bits(64), begin : bits(5), endv : bits(5), nregs : int, f : int, sp_a : bits(64), sp_c : bits(64), event_count : int) -> unit = {
+  template_valid = true;
+  template_form = form;
+  template_phase = 0b01;
+  template_step_index = 0x00;
+  template_event_count = sail_zeros(8) + event_count;
+  template_dirty = true;
+  template_redo_ok = false;
+  template_resume_ok = true;
+  template_source_pc = src_pc;
+  template_begin = begin;
+  template_end = endv;
+  template_nregs = sail_zeros(8) + nregs;
+  template_frame_f = sail_zeros(64) + f;
+  template_sp_a = sp_a;
+  template_sp_c = sp_c
+}
+
+function template_raise_phase1_data_fault(faultarg : bits(64)) -> unit = {
+  template_phase = 0b01;
+  template_dirty = true;
+  template_redo_ok = false;
+  template_resume_ok = true;
+  template_data_fault_injection_count = template_data_fault_injection_count + 0x0000_0000_0000_0001;
+  raise_trap(trapnum_data_page_fault(), sail_zeros(24), faultarg, 0b1)
+}
+
+function template_raise_phase1_interrupt(event_kind : bits(8)) -> unit = {
+  template_phase = 0b01;
+  template_dirty = true;
+  template_redo_ok = false;
+  template_resume_ok = true;
+  template_last_interrupted_event_kind = event_kind;
+  template_interrupt_count = template_interrupt_count + 0x0000_0000_0000_0001;
+  raise_trap((sail_zeros(6) + 44), sail_zeros(24), sail_zero_extend(template_interrupt_id, 64), 0b1)
+}
+
+function template_trap_vload_mmu_perm(fault_va : bits(64)) -> unit = {
+  // DATA_PAGE_FAULT load permission syndrome in the active v0.57 profile.
+  raise_trap(trapnum_data_page_fault(), (sail_zeros(24) + 2), fault_va, 0b0)
+}
+
+function template_set_saved_value(idx : int, v : bits(64)) -> unit = {
+  if idx == 0 then template_saved_value0 = v
+  else if idx == 1 then template_saved_value1 = v
+  else if idx == 2 then template_saved_value2 = v
+  else if idx == 3 then template_saved_value3 = v
+  else if idx == 4 then template_saved_value4 = v
+  else if idx == 5 then template_saved_value5 = v
+  else if idx == 6 then template_saved_value6 = v
+  else if idx == 7 then template_saved_value7 = v
+  else if idx == 8 then template_saved_value8 = v
+  else if idx == 9 then template_saved_value9 = v
+  else if idx == 10 then template_saved_value10 = v
+  else if idx == 11 then template_saved_value11 = v
+  else if idx == 12 then template_saved_value12 = v
+  else if idx == 13 then template_saved_value13 = v
+  else if idx == 14 then template_saved_value14 = v
+  else if idx == 15 then template_saved_value15 = v
+  else if idx == 16 then template_saved_value16 = v
+  else if idx == 17 then template_saved_value17 = v
+  else if idx == 18 then template_saved_value18 = v
+  else if idx == 19 then template_saved_value19 = v
+  else if idx == 20 then template_saved_value20 = v
+  else if idx == 21 then template_saved_value21 = v
+  else ()
+}
+
+function template_get_saved_value(idx : int) -> bits(64) = {
+  if idx == 0 then template_saved_value0
+  else if idx == 1 then template_saved_value1
+  else if idx == 2 then template_saved_value2
+  else if idx == 3 then template_saved_value3
+  else if idx == 4 then template_saved_value4
+  else if idx == 5 then template_saved_value5
+  else if idx == 6 then template_saved_value6
+  else if idx == 7 then template_saved_value7
+  else if idx == 8 then template_saved_value8
+  else if idx == 9 then template_saved_value9
+  else if idx == 10 then template_saved_value10
+  else if idx == 11 then template_saved_value11
+  else if idx == 12 then template_saved_value12
+  else if idx == 13 then template_saved_value13
+  else if idx == 14 then template_saved_value14
+  else if idx == 15 then template_saved_value15
+  else if idx == 16 then template_saved_value16
+  else if idx == 17 then template_saved_value17
+  else if idx == 18 then template_saved_value18
+  else if idx == 19 then template_saved_value19
+  else if idx == 20 then template_saved_value20
+  else if idx == 21 then template_saved_value21
+  else 0x0000_0000_0000_0000
+}
+
+function template_integrity_assert_fail(reason : bits(8)) -> unit = {
+  template_valid = true;
+  if template_phase == 0b00 then template_phase = 0b01 else ();
+  template_dirty = true;
+  template_redo_ok = false;
+  template_resume_ok = false;
+  template_fatal_reason = reason;
+  raise_trap((sail_zeros(6) + 52), (sail_zeros(24) + 0), template_source_pc, 0b1)
 }
 
 // -----------------------------------------------------------------------------

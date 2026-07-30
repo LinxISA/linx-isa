@@ -123,7 +123,7 @@ def _run_sail_directed_tests(test_path: Path, expected_version: str) -> tuple[bo
                 "-i",
                 str(test_path),
             ],
-            input="main()\n",
+            input="main()\n:run\n",
             check=False,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -134,8 +134,8 @@ def _run_sail_directed_tests(test_path: Path, expected_version: str) -> tuple[bo
         return False, output.strip() or "Sail interpreter failed"
     if "assert(false" in output or "Assertion failed" in output:
         return False, output.strip()
-    if "main()" not in output:
-        return False, "Sail interpreter did not evaluate the directed test main()"
+    if "Result = ()" not in output:
+        return False, "Sail interpreter did not report successful main() execution"
     return True, f"directed semantic tests executed with Sail {expected_version}"
 
 
@@ -234,8 +234,6 @@ def main(argv: list[str]) -> int:
 
     entry_path = Path(args.entry)
     parser_ok, parser_detail = _run_sail_entry(entry_path, expected_sail_version)
-    if args.require_parser and not parser_ok:
-        raise SystemExit(f"error: Sail parser check failed: {parser_detail}")
     decode_ok, decode_detail = _check_generated_decode(spec_path)
     status_ok, status_detail = _check_generated_status(spec_path)
     coverage_ok, coverage_detail = _check_coverage(spec_path)
@@ -267,7 +265,7 @@ def main(argv: list[str]) -> int:
     if impl_gap_hits:
         failures.extend(impl_gap_hits)
     if args.require_parser and not parser_ok:
-        failures.append(f"Sail parser check skipped/failed: {parser_detail}")
+        failures.append(f"Sail parser check failed: {parser_detail}")
     if not decode_ok:
         failures.append(f"Sail decode generator check failed: {decode_detail}")
     if not status_ok:

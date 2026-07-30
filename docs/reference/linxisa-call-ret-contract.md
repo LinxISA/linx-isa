@@ -21,8 +21,14 @@ Tail-transfer path:
 
 ## 2) Return-Target Semantics
 
-- `FRET.STK`: return target comes from restored `ra` state loaded from the frame.
-- `FRET.RA`: return target comes from `ra` before stack-restore return resolution.
+- `FRET.STK`: return target comes from fixed `R10` after `R10` is restored from stack slot zero.
+- `FRET.RA`: return target comes from fixed pre-restore `R10`.
+- In the standard linx64 ABI, `ra` is the architectural name bound to `R10`.
+- The `FRET.STK` slot-zero target load is legal only for a complete 8-byte Normal, explicitly idempotent stack access.
+  Device/MMIO, mixed-type, or unspecified non-idempotent stack mappings must fault before any physical read.
+- `FRET.RA` and `FRET.STK` target validation requires actual-current marker proof, or a coherent marker-provenance
+  cache with the same marker bytes, address-space state, code-visibility epoch, and invalidation scope.
+  Metadata-only continuation or fallthrough acceptance is non-conforming.
 - `BSTART.RET` blocks must include explicit target setup:
   - `setc.tgt <src>` where `<src>` resolves to `ra` for normal returns.
 
@@ -103,6 +109,8 @@ Non-conforming sequences (`setc.tgt` missing, or non-adjacent `SETRET` in return
 ## 5) Dynamic Target Safety Rule
 
 Dynamic control-flow targets from `RET`/`IND`/`ICALL` must resolve to legal block start markers (`BSTART*`, `C.BSTART*`, template block starts like `FENTRY/FEXIT/FRET.*`). Non-block targets must fault.
+
+`FRET.RA` and `FRET.STK` perform phase-zero target validation before any frame effect. A recoverable phase-one trap resumes at the recorded next event without repeating committed SP/GPR/memory/target effects or reissuing sealed target proof. After event-zero seal, rollback is not permitted; abandonment or an exact-live target/lease/ownership contradiction enters the unmaskable template-integrity `ASSERT_FAIL` fail-stop. That fail-stop is reset-only: the managing ring may inspect the frozen source state, but cannot return to the source with `ACRE`.
 
 ## 6) Cross-Stack Validation Anchors
 

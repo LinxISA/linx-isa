@@ -31,6 +31,30 @@ function reset_fused_call_case(base_pc : bits(64), ra_seed : bits(64)) -> unit =
 }
 
 function main() : unit -> unit = {
+  // SrcRType arithmetic codes are 00=.sw, 01=.uw, 10=.neg, 11=none.
+  assert(apply_srcrtype_arith64(0b00, 0x1234_5678_8000_0001) == 0xFFFF_FFFF_8000_0001);
+  assert(apply_srcrtype_arith64(0b01, 0x1234_5678_8000_0001) == 0x0000_0000_8000_0001);
+  assert(apply_srcrtype_arith64(0b10, 0x1234_5678_8000_0001) == 0xEDCB_A987_7FFF_FFFF);
+  assert(apply_srcrtype_arith64(0b11, 0x1234_5678_8000_0001) == 0x1234_5678_8000_0001);
+
+  // LBU host memory is outside this REPL proof boundary: read_mem8/write_mem8
+  // require host primops here.  Mirror exec_lbu's executable composition:
+  // apply SrcRType first, shift that modifier, add base, then zext8_from8.
+  let lbu_base : bits(64) = 0x0000_0010_0000_1000;
+  let lbu_src : bits(64) = 0x0000_0001_8000_0004;
+  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b00, lbu_src), unsigned(0b00000)) == 0x0000_000F_8000_1004);
+  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b01, lbu_src), unsigned(0b00000)) == 0x0000_0010_8000_1004);
+  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b10, lbu_src), unsigned(0b00000)) == 0x0000_000E_8000_0FFC);
+  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b11, lbu_src), unsigned(0b00000)) == 0x0000_0011_8000_1004);
+  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b00, lbu_src), unsigned(0b00001)) == 0x0000_000F_0000_1008);
+  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b01, lbu_src), unsigned(0b00001)) == 0x0000_0011_0000_1008);
+  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b10, lbu_src), unsigned(0b00001)) == 0x0000_000D_0000_0FF8);
+  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b11, lbu_src), unsigned(0b00001)) == 0x0000_0013_0000_1008);
+  assert(zext8_from8(0x81) == 0x0000_0000_0000_0081);
+  assert(zext8_from8(0x42) == 0x0000_0000_0000_0042);
+  assert(zext8_from8(0xA5) == 0x0000_0000_0000_00A5);
+  assert(zext8_from8(0x7E) == 0x0000_0000_0000_007E);
+
   // Long block targets are signed, halfword-scaled PC-relative offsets.
   pc = 0x0000_0000_0000_1000;
   assert(decode_block_target42(sail_zeros(42) + 1) == 0x0000_0000_0000_1002);
@@ -108,7 +132,7 @@ function main() : unit -> unit = {
   last_trapnum = sail_zeros(6);
   decode_execute32(0x0200_1181);
   assert(last_trapnum == sail_zeros(6));
-  assert(barg_block_type_cur == 0b1011);
+  assert(barg_block_type_cur == 0b1101);
 
   // Trap records retain precise source state and the block-interrupted bit.
   trap_block_cfi(0x1, 0xCAFE_BABE_DEAD_BEEF);

@@ -194,6 +194,141 @@ def main() -> int:
         assert v057_tepl[name] == selector
     assert {"TFMOD", "TPOW", "TRANDOM", "TEXRACT"} & set(v057_tepl) == set()
 
+    frame = v057["semantics_conventions"]["frame_templates_r975"]
+    assert frame["step_index"]["meaning"] == "next_uncommitted_phase_one_event"
+    assert frame["phase_fault_envelopes"]["phase_zero"] == {
+        "bi": 0,
+        "phase": 0,
+        "step_index": 0,
+        "dirty": 0,
+        "redo_ok": 1,
+        "resume_ok": 0,
+        "template_effect": "none",
+    }
+    assert frame["phase_fault_envelopes"]["phase_one_recoverable"]["resume_ok"] == 1
+    assert frame["phase_fault_envelopes"]["phase_one_recoverable"]["redo_ok"] == 0
+    assert frame["phase_fault_envelopes"]["post_seal_fatal"]["resume_ok"] == 0
+    assert frame["phase_fault_envelopes"]["post_seal_fatal"]["reuse_boundary"] == "platform reset only"
+    assert frame["target_proof"] == {
+        "actual_current_marker_proof": "required before every FRET effect",
+        "coherent_marker_provenance_cache": "legal only when it proves the same target marker bytes, address-space state, code-visibility epoch, and invalidation scope as an actual current marker proof",
+        "metadata_only_continuation_or_fallthrough": "non-conforming compatibility; must be rejected",
+        "deferred_demand_paging": "qualified only while every FRET effect remains withheld",
+        "fault_owner": "VTGT owns translation, execute-permission, marker, and CFI faults",
+    }
+    assert frame["seal_and_recovery"]["event_zero_seal_transaction"] == [
+        "recheck_all_identities_and_generations",
+        "acquire_complete_FRET_lease",
+        "retire_successful_validation_rows_with_distinct_traces",
+        "commit_event_zero",
+        "advance_StepIndex_0_to_1",
+    ]
+    assert frame["seal_and_recovery"]["before_seal_invalidation"] == (
+        "wins and cancels phase zero with no effect"
+    )
+    assert frame["seal_and_recovery"]["after_seal_invalidation"] == (
+        "lease wins; producer completion waits through traps, ACRE, suspension, FINAL, or fatal release"
+    )
+    assert frame["seal_and_recovery"]["rollback_after_seal"] == (
+        "forbidden for SP, GPR, memory, target, progress, and trace effects"
+    )
+    assert frame["seal_and_recovery"]["final"] == (
+        "qualifies full token, performs boundary transfer/retirement, and releases lease atomically"
+    )
+    assert frame["seal_and_recovery"]["ebstate_recoverable_retention"] == [
+        "exact TemplateOwnerID",
+        "phase and StepIndex cursors",
+        "sealed VLOAD state when applicable",
+        "validation token",
+        "retained lease",
+        "complete pending InvalidationTxnID/status set",
+    ]
+    assert frame["seal_and_recovery"]["ebstate_retention_forbidden"] == [
+        "renumber pending invalidation entries",
+        "merge pending invalidation entries",
+        "reacquire lease entries",
+        "restore a pre-template checkpoint",
+    ]
+    assert frame["seal_and_recovery"]["lease_directory_suspend_rule"] == (
+        "lease directory retains discoverability during suspension; a manager must resume through FINAL or choose fatal abandonment and cannot wait on its own deferred invalidation"
+    )
+    assert frame["seal_and_recovery"]["final_identity"] == {
+        "required_matches": [
+            "group",
+            "checkpoint",
+            "template",
+            "validation",
+            "lease",
+            "VTGT key",
+            "VLOAD key or canonical invalid",
+            "visibility/share-domain",
+            "FINAL RID/slot/generation",
+            "final ordinal",
+        ],
+        "shortcut_authority_forbidden": ["queue head", "BID", "RID value", "PC", "opcode", "hash alone"],
+    }
+    assert frame["lease_id"] == [
+        "lease_generation",
+        "validation_generation",
+        "validation_token_hash",
+        "exact_vtgt_TemplateOwnerID",
+        "exact_vload_TemplateOwnerID_or_canonical_invalid",
+        "retained_target_mapping_visibility_share_domain_key",
+    ]
+    assert frame["invalidation"]["exact_scope_fields"] == [
+        "ACR/regime/root/ASID",
+        "VA/PA page or marker range",
+        "TLB/code/coherence domain",
+        "global/wildcard selectors",
+    ]
+    assert frame["invalidation"]["physical_sharing_rule"] == (
+        "physical lookup/cancel/drain/release work may be shared only for transactions matching the same exact LeaseID; producer transaction bases, status, and AckID remain independent"
+    )
+    assert frame["invalidation"]["stale_ack_rule"] == (
+        "wrong producer, sequence, operation/scope, match, directory, owner, or status-generation is rejected; identical terminal AckID retransmission is idempotent"
+    )
+    assert frame["invalidation"]["status_rules"] == [
+        "each state transition increments status_generation",
+        "matching post-seal transactions independently record DEFERRED_ACTIVE",
+        "FINAL creates one RELEASED_AFTER_FINAL per pending match",
+        "fatal release creates one RELEASED_AFTER_ABORT per pending match",
+        "post-release admission performs a new lookup at new directory generation",
+    ]
+    assert frame["invalidation"]["admission_rules"] == [
+        "capacity may backpressure before admission",
+        "an admitted transaction cannot be dropped",
+        "an admitted matching transaction cannot complete before FINAL or fatal release",
+        "a manager cannot roll back or wait on its own deferred invalidation",
+    ]
+    assert frame["invalidation"]["terminal_rules"] == [
+        "NO_MATCH after lookup at the transaction directory generation for nonmatches",
+        "CANCELED_PRE_EVENT only after cancellation prevents stale event-zero seal",
+        "DEFERRED_ACTIVE recorded independently for each post-seal match and is nonterminal",
+        "RELEASED_AFTER_FINAL created atomically by FINAL per pending match",
+        "RELEASED_AFTER_ABORT created atomically by fatal release per pending match after quiescence",
+        "post-release admission performs a new lookup at the new directory generation and normally receives NO_MATCH",
+    ]
+    assert frame["template_integrity_fail"]["fatal_teardown_order"] == [
+        "stop source-context issue, commit, wakeup, redirect, FINAL transfer, and new lease acquisition",
+        "snapshot exact envelope, state, owner, token, and pending transactions",
+        "advance template, row, and load generations",
+        "cancel every uncommitted row and request",
+        "invalidate VLOAD data, VTGT proof, token, and queued transfer",
+        "obtain quiescence from every listed owner before releasing the lease",
+        "atomically release the lease and create one RELEASED_AFTER_ABORT per pending matching invalidation",
+        "publish the fatal record for managing-ring inspection",
+    ]
+    assert frame["template_integrity_fail"]["reset_reuse"] == {
+        "platform_reset_only": True,
+        "new_context_generation_required": True,
+        "global_quiescence_before_reset": True,
+        "no_pre_reset_ack_after_new_context_generation": True,
+        "pre_template_state_restore": "forbidden",
+    }
+    assert v057["semantics_conventions"]["fixup_blocks"]["assert"]["masking"]["scope"] == (
+        "ASSERT-instruction-generated ASSERT_FAIL only (other synchronous exceptions are unaffected)"
+    )
+
     print("OK")
     return 0
 
