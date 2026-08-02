@@ -54,8 +54,8 @@ Use `HL.SSRGET/HL.SSRSET` when the full `SSR_ID` does not fit in 12 bits.
 |`0xnf05` |`ETEMP_ACRn` |RW |Exception temporary register.
 |`0xnf06` |`ETEMP0_ACRn` |RW |Exception temporary register 0 (v0.2 bring-up).
 |`0xnf07` |`ECONFIG_ACRn` |RW |Exception/interrupt configuration.
-|`0xnf08` |`IPENDING_ACRn` |RW |Interrupt pending bitmap.
-|`0xnf09` |`TOPEI_ACRn` |RW |Top pending interrupt ID.
+|`0xnf08` |`IPENDING_ACRn` |RO |Interrupt pending bitmap.
+|`0xnf09` |`TOPEI_ACRn` |RO |Top pending interrupt ID.
 |`0xnf0A` |`EOIEI_ACRn` |WO |End-of-interrupt.
 |`0xnf10` |`TTBR0_ACR1` |RW |CPU MMU table base register 0 (ACR1).
 |`0xnf11` |`TTBR1_ACR1` |RW |CPU MMU table base register 1 (ACR1).

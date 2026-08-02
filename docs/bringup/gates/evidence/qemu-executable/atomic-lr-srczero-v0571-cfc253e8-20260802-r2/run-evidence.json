@@ -1,0 +1,421 @@
+{
+  "artifacts": {
+    "elf": {
+      "path": "docs/bringup/gates/evidence/qemu-executable/atomic-lr-srczero-v0571-cfc253e8-20260802-r2/linx-qemu-tests.elf",
+      "sha256": "9f4c8b9ad623eb34b71a7ae53d73096266e127ab85fd27fadf3cd4d18fce41a2"
+    },
+    "object": {
+      "path": "docs/bringup/gates/evidence/qemu-executable/atomic-lr-srczero-v0571-cfc253e8-20260802-r2/linx-qemu-tests.o",
+      "sha256": "694bee10e1c83a36bf7271e91f4137350d4267963c78798861a31563460ee699"
+    },
+    "objects": [
+      {
+        "path": "docs/bringup/gates/evidence/qemu-executable/atomic-lr-srczero-v0571-cfc253e8-20260802-r2/obj/main.o",
+        "sha256": "3091b9ee9b7f5819cf688a61f7ead554a12f0e426b6976ba2fe27d7766a11655"
+      },
+      {
+        "path": "docs/bringup/gates/evidence/qemu-executable/atomic-lr-srczero-v0571-cfc253e8-20260802-r2/obj/mem.o",
+        "sha256": "31048812dd2be1454c0ba009c2f8381c1ca3417ebd1413a058fc89184dadecec"
+      },
+      {
+        "path": "docs/bringup/gates/evidence/qemu-executable/atomic-lr-srczero-v0571-cfc253e8-20260802-r2/obj/07_atomic.o",
+        "sha256": "0826d5f52181083891c0479467532f403fc3eb4dade4878f303d9c1f95201b2b"
+      },
+      {
+        "path": "docs/bringup/gates/evidence/qemu-executable/atomic-lr-srczero-v0571-cfc253e8-20260802-r2/obj/07_atomic_lr_srczero.o",
+        "sha256": "ae567cb616f141cfcbe80841346b3e887bc12e60804d0a8da71fca021f7a16cf"
+      }
+    ],
+    "pc_watch": {
+      "path": "docs/bringup/gates/evidence/qemu-executable/atomic-lr-srczero-v0571-cfc253e8-20260802-r2/run-evidence.pc-watch.log",
+      "sha256": "c1bd2c917b6a8d7f93456192b4e5af07cc3137aca76edc8e65ecd476ae3c7049"
+    },
+    "uart": {
+      "path": "docs/bringup/gates/evidence/qemu-executable/atomic-lr-srczero-v0571-cfc253e8-20260802-r2/run-evidence.uart.log",
+      "sha256": "a36603dc0295fd5df79737d20d74ac0b7b10840e69033ecda021be9238121edd"
+    }
+  },
+  "failure": null,
+  "oracle_verdict": "PASS",
+  "pc_evidence": {
+    "kind": "qemu_target_pc_watch_v1",
+    "packet_prefix": "linx_pc_watch:",
+    "requested_pcs": [
+      "0x000000000001151a",
+      "0x000000000001152e"
+    ]
+  },
+  "pc_hits": [
+    {
+      "count": 19539,
+      "evidence_kind": "qemu_target_pc_watch_v1",
+      "hit": 1,
+      "pc": "0x000000000001151a"
+    },
+    {
+      "count": 20286,
+      "evidence_kind": "qemu_target_pc_watch_v1",
+      "hit": 1,
+      "pc": "0x000000000001152e"
+    }
+  ],
+  "qemu": {
+    "binary_sha256": "c6176cc23eef482e5a64ee4f728a22fd44f35aac214a9d0c389fc8aa03ef0290",
+    "patch_sha256": null,
+    "path": "emulator/qemu/build-v0571-clean/qemu-system-linx64",
+    "sha": "cfc253e844f4b0d017b2190a025c4375771f899a",
+    "source_dirty": false,
+    "version": "QEMU emulator version 10.2.50 (v10.2.0-1067-gcfc253e844)"
+  },
+  "qemu_debug_env": {
+    "LINX_DEBUG_PC_WATCH": "0x1151a,0x1152e",
+    "LINX_DEBUG_PC_WATCH_HIT_LIMIT": "1",
+    "LINX_DEBUG_PC_WATCH_PRINT": "1"
+  },
+  "required_test_ids_observed": [
+    "0x00007001",
+    "0x00007010",
+    "0x00007020",
+    "0x00007030",
+    "0x00007040",
+    "0x00007050",
+    "0x00007060",
+    "0x00007070",
+    "0x00007080",
+    "0x00007090",
+    "0x000070a0",
+    "0x000070b0",
+    "0x000070c0",
+    "0x000070d0",
+    "0x000070e0",
+    "0x000070e1",
+    "0x000070e2",
+    "0x000070f0",
+    "0x00007100",
+    "0x00007110",
+    "0x00007111",
+    "0x00007120",
+    "0x00007130",
+    "0x00007140",
+    "0x00007150",
+    "0x00007160",
+    "0x00007162",
+    "0x00007163",
+    "0x00007164"
+  ],
+  "run": {
+    "declared_suite_completion_test_ids": [
+      "0x00007160"
+    ],
+    "declared_terminal_test_ids": [],
+    "exit_code": 0,
+    "missing_required_test_ids": [],
+    "missing_suite_completion_test_ids": [],
+    "pass_marker": {
+      "kind": "uart_success_marker",
+      "value": "TEST SUITE COMPLETE"
+    },
+    "stalled": false,
+    "stdout_sha256": "a36603dc0295fd5df79737d20d74ac0b7b10840e69033ecda021be9238121edd",
+    "timed_out": false,
+    "timeout_after_fail": false,
+    "verdict_reason": "clean_terminal_oracle"
+  },
+  "schema_version": 1,
+  "status": "PASS",
+  "suites": [
+    "atomic"
+  ],
+  "test_events": [
+    {
+      "kind": "START",
+      "seq": 0,
+      "test_id": "0x00007001"
+    },
+    {
+      "kind": "PASS",
+      "seq": 1,
+      "test_id": "0x00007001"
+    },
+    {
+      "kind": "START",
+      "seq": 2,
+      "test_id": "0x00007010"
+    },
+    {
+      "kind": "PASS",
+      "seq": 3,
+      "test_id": "0x00007010"
+    },
+    {
+      "kind": "START",
+      "seq": 4,
+      "test_id": "0x00007020"
+    },
+    {
+      "kind": "PASS",
+      "seq": 5,
+      "test_id": "0x00007020"
+    },
+    {
+      "kind": "START",
+      "seq": 6,
+      "test_id": "0x00007030"
+    },
+    {
+      "kind": "PASS",
+      "seq": 7,
+      "test_id": "0x00007030"
+    },
+    {
+      "kind": "START",
+      "seq": 8,
+      "test_id": "0x00007040"
+    },
+    {
+      "kind": "PASS",
+      "seq": 9,
+      "test_id": "0x00007040"
+    },
+    {
+      "kind": "START",
+      "seq": 10,
+      "test_id": "0x00007050"
+    },
+    {
+      "kind": "PASS",
+      "seq": 11,
+      "test_id": "0x00007050"
+    },
+    {
+      "kind": "START",
+      "seq": 12,
+      "test_id": "0x00007060"
+    },
+    {
+      "kind": "PASS",
+      "seq": 13,
+      "test_id": "0x00007060"
+    },
+    {
+      "kind": "START",
+      "seq": 14,
+      "test_id": "0x00007070"
+    },
+    {
+      "kind": "PASS",
+      "seq": 15,
+      "test_id": "0x00007070"
+    },
+    {
+      "kind": "START",
+      "seq": 16,
+      "test_id": "0x00007080"
+    },
+    {
+      "kind": "PASS",
+      "seq": 17,
+      "test_id": "0x00007080"
+    },
+    {
+      "kind": "START",
+      "seq": 18,
+      "test_id": "0x00007090"
+    },
+    {
+      "kind": "PASS",
+      "seq": 19,
+      "test_id": "0x00007090"
+    },
+    {
+      "kind": "START",
+      "seq": 20,
+      "test_id": "0x000070a0"
+    },
+    {
+      "kind": "PASS",
+      "seq": 21,
+      "test_id": "0x000070a0"
+    },
+    {
+      "kind": "START",
+      "seq": 22,
+      "test_id": "0x000070b0"
+    },
+    {
+      "kind": "PASS",
+      "seq": 23,
+      "test_id": "0x000070b0"
+    },
+    {
+      "kind": "START",
+      "seq": 24,
+      "test_id": "0x000070c0"
+    },
+    {
+      "kind": "PASS",
+      "seq": 25,
+      "test_id": "0x000070c0"
+    },
+    {
+      "kind": "START",
+      "seq": 26,
+      "test_id": "0x000070d0"
+    },
+    {
+      "kind": "PASS",
+      "seq": 27,
+      "test_id": "0x000070d0"
+    },
+    {
+      "kind": "START",
+      "seq": 28,
+      "test_id": "0x000070e0"
+    },
+    {
+      "kind": "PASS",
+      "seq": 29,
+      "test_id": "0x000070e0"
+    },
+    {
+      "kind": "START",
+      "seq": 30,
+      "test_id": "0x000070e1"
+    },
+    {
+      "kind": "PASS",
+      "seq": 31,
+      "test_id": "0x000070e1"
+    },
+    {
+      "kind": "START",
+      "seq": 32,
+      "test_id": "0x000070e2"
+    },
+    {
+      "kind": "PASS",
+      "seq": 33,
+      "test_id": "0x000070e2"
+    },
+    {
+      "kind": "START",
+      "seq": 34,
+      "test_id": "0x000070f0"
+    },
+    {
+      "kind": "PASS",
+      "seq": 35,
+      "test_id": "0x000070f0"
+    },
+    {
+      "kind": "START",
+      "seq": 36,
+      "test_id": "0x00007100"
+    },
+    {
+      "kind": "PASS",
+      "seq": 37,
+      "test_id": "0x00007100"
+    },
+    {
+      "kind": "START",
+      "seq": 38,
+      "test_id": "0x00007110"
+    },
+    {
+      "kind": "PASS",
+      "seq": 39,
+      "test_id": "0x00007110"
+    },
+    {
+      "kind": "START",
+      "seq": 40,
+      "test_id": "0x00007111"
+    },
+    {
+      "kind": "PASS",
+      "seq": 41,
+      "test_id": "0x00007111"
+    },
+    {
+      "kind": "START",
+      "seq": 42,
+      "test_id": "0x00007120"
+    },
+    {
+      "kind": "PASS",
+      "seq": 43,
+      "test_id": "0x00007120"
+    },
+    {
+      "kind": "START",
+      "seq": 44,
+      "test_id": "0x00007130"
+    },
+    {
+      "kind": "PASS",
+      "seq": 45,
+      "test_id": "0x00007130"
+    },
+    {
+      "kind": "START",
+      "seq": 46,
+      "test_id": "0x00007140"
+    },
+    {
+      "kind": "PASS",
+      "seq": 47,
+      "test_id": "0x00007140"
+    },
+    {
+      "kind": "START",
+      "seq": 48,
+      "test_id": "0x00007150"
+    },
+    {
+      "kind": "PASS",
+      "seq": 49,
+      "test_id": "0x00007150"
+    },
+    {
+      "kind": "START",
+      "seq": 50,
+      "test_id": "0x00007162"
+    },
+    {
+      "kind": "PASS",
+      "seq": 51,
+      "test_id": "0x00007162"
+    },
+    {
+      "kind": "START",
+      "seq": 52,
+      "test_id": "0x00007163"
+    },
+    {
+      "kind": "PASS",
+      "seq": 53,
+      "test_id": "0x00007163"
+    },
+    {
+      "kind": "START",
+      "seq": 54,
+      "test_id": "0x00007164"
+    },
+    {
+      "kind": "PASS",
+      "seq": 55,
+      "test_id": "0x00007164"
+    },
+    {
+      "kind": "START",
+      "seq": 56,
+      "test_id": "0x00007160"
+    },
+    {
+      "kind": "PASS",
+      "seq": 57,
+      "test_id": "0x00007160"
+    }
+  ]
+}

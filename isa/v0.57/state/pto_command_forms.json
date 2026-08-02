@@ -92,9 +92,9 @@
       "length_bits": 32,
       "mnemonic": "B.CATR",
       "semantic_family": "CMD",
-      "semantic_group": "Block Control Attribute",
-      "semantic_handler": "SetBlockControlAttributes",
-      "semantic_summary": "Latches block control, trap, atomic, ordering, and address-class attributes.",
+      "semantic_group": "Bundle Control Attribute",
+      "semantic_handler": "SetBundleControlAttributes",
+      "semantic_summary": "Latches bundle control, trap, atomic, ordering, and address-class attributes.",
       "status": "accepted"
     },
     {
@@ -262,8 +262,8 @@
       "length_bits": 32,
       "mnemonic": "B.DATR",
       "semantic_family": "CMD",
-      "semantic_group": "Block Data Attribute",
-      "semantic_handler": "SetBlockDataAttributes",
+      "semantic_group": "Bundle Data Attribute",
+      "semantic_handler": "SetBundleDataAttributes",
       "semantic_summary": "Latches tile layout, data type, padding, conversion, rounding, and saturation attributes.",
       "status": "accepted"
     },
@@ -314,9 +314,9 @@
       "length_bits": 32,
       "mnemonic": "B.DIM",
       "semantic_family": "CMD",
-      "semantic_group": "Block Argument",
-      "semantic_handler": "SetBlockDimension",
-      "semantic_summary": "Writes one of the three block-local dimension registers.",
+      "semantic_group": "Bundle Argument",
+      "semantic_handler": "SetBundleDimension",
+      "semantic_summary": "Writes one of the three bundle-local dimension registers.",
       "status": "accepted"
     },
     {
@@ -366,9 +366,9 @@
       "length_bits": 32,
       "mnemonic": "B.DIM",
       "semantic_family": "CMD",
-      "semantic_group": "Block Argument",
-      "semantic_handler": "SetBlockDimension",
-      "semantic_summary": "Writes one of the three block-local dimension registers.",
+      "semantic_group": "Bundle Argument",
+      "semantic_handler": "SetBundleDimension",
+      "semantic_summary": "Writes one of the three bundle-local dimension registers.",
       "status": "accepted"
     },
     {
@@ -418,9 +418,9 @@
       "length_bits": 32,
       "mnemonic": "B.DIM",
       "semantic_family": "CMD",
-      "semantic_group": "Block Argument",
-      "semantic_handler": "SetBlockDimension",
-      "semantic_summary": "Writes one of the three block-local dimension registers.",
+      "semantic_group": "Bundle Argument",
+      "semantic_handler": "SetBundleDimension",
+      "semantic_summary": "Writes one of the three bundle-local dimension registers.",
       "status": "accepted"
     },
     {
@@ -489,8 +489,8 @@
       "length_bits": 32,
       "mnemonic": "B.HINT",
       "semantic_family": "CMD",
-      "semantic_group": "Block Hint",
-      "semantic_handler": "SetBlockHint",
+      "semantic_group": "Bundle Hint",
+      "semantic_handler": "SetBundleHint",
       "semantic_summary": "Records non-functional branch, temperature, prefetch-size, or trace guidance.",
       "status": "accepted"
     },
@@ -524,8 +524,8 @@
       "length_bits": 32,
       "mnemonic": "B.HINT",
       "semantic_family": "CMD",
-      "semantic_group": "Block Hint",
-      "semantic_handler": "SetBlockHint",
+      "semantic_group": "Bundle Hint",
+      "semantic_handler": "SetBundleHint",
       "semantic_summary": "Records non-functional branch, temperature, prefetch-size, or trace guidance.",
       "status": "accepted"
     },
@@ -595,9 +595,9 @@
       "length_bits": 32,
       "mnemonic": "B.IOR",
       "semantic_family": "CMD",
-      "semantic_group": "Block Input & Output",
-      "semantic_handler": "BindBlockScalarIO",
-      "semantic_summary": "Binds encoded scalar inputs and outputs to the current block interface.",
+      "semantic_group": "Bundle Input & Output",
+      "semantic_handler": "BindBundleScalarIO",
+      "semantic_summary": "Binds encoded scalar inputs and outputs to the current bundle interface.",
       "status": "accepted"
     },
     {
@@ -702,8 +702,8 @@
       "length_bits": 32,
       "mnemonic": "B.IOT",
       "semantic_family": "CMD",
-      "semantic_group": "Block Input & Output",
-      "semantic_handler": "BindBlockTileIO",
+      "semantic_group": "Bundle Input & Output",
+      "semantic_handler": "BindBundleTileIO",
       "semantic_summary": "Binds encoded tile inputs and outputs, reuse, last-use, and allocation-size metadata.",
       "status": "accepted"
     },
@@ -785,8 +785,8 @@
       "length_bits": 32,
       "mnemonic": "B.IOT",
       "semantic_family": "CMD",
-      "semantic_group": "Block Input & Output",
-      "semantic_handler": "BindBlockTileIO",
+      "semantic_group": "Bundle Input & Output",
+      "semantic_handler": "BindBundleTileIO",
       "semantic_summary": "Binds encoded tile inputs and outputs, reuse, last-use, and allocation-size metadata.",
       "status": "accepted"
     },
@@ -916,8 +916,8 @@
       "length_bits": 32,
       "mnemonic": "B.IOT",
       "semantic_family": "CMD",
-      "semantic_group": "Block Input & Output",
-      "semantic_handler": "BindBlockTileIO",
+      "semantic_group": "Bundle Input & Output",
+      "semantic_handler": "BindBundleTileIO",
       "semantic_summary": "Binds encoded tile inputs and outputs, reuse, last-use, and allocation-size metadata.",
       "status": "accepted"
     },
@@ -975,8 +975,8 @@
       "length_bits": 32,
       "mnemonic": "B.IOT",
       "semantic_family": "CMD",
-      "semantic_group": "Block Input & Output",
-      "semantic_handler": "BindBlockTileIO",
+      "semantic_group": "Bundle Input & Output",
+      "semantic_handler": "BindBundleTileIO",
       "semantic_summary": "Binds encoded tile inputs and outputs, reuse, last-use, and allocation-size metadata.",
       "status": "accepted"
     },
@@ -1058,8 +1058,8 @@
       "length_bits": 32,
       "mnemonic": "B.IOT",
       "semantic_family": "CMD",
-      "semantic_group": "Block Input & Output",
-      "semantic_handler": "BindBlockTileIO",
+      "semantic_group": "Bundle Input & Output",
+      "semantic_handler": "BindBundleTileIO",
       "semantic_summary": "Binds encoded tile inputs and outputs, reuse, last-use, and allocation-size metadata.",
       "status": "accepted"
     },
@@ -1093,9 +1093,9 @@
       "length_bits": 32,
       "mnemonic": "B.TEXT",
       "semantic_family": "CMD",
-      "semantic_group": "Block Offset",
-      "semantic_handler": "SetBlockBodyAddress",
-      "semantic_summary": "Sets the out-of-line body entry address for a decoupled block.",
+      "semantic_group": "Bundle Offset",
+      "semantic_handler": "SetBundleBodyAddress",
+      "semantic_summary": "Sets the out-of-line body entry address for a decoupled bundle.",
       "status": "accepted"
     },
     {
@@ -1128,9 +1128,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -1163,9 +1163,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -1211,8 +1211,8 @@
       "mnemonic": "BSTART CALL",
       "semantic_family": "BBD",
       "semantic_group": "BSTART",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -1277,9 +1277,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.ACCCVT",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -1299,9 +1299,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.FP",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -1321,9 +1321,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.FP",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -1356,9 +1356,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.FP",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -1378,9 +1378,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.FP",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -1413,9 +1413,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.FP",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -1448,9 +1448,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.FP",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -1483,9 +1483,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.FP",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -1550,9 +1550,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.MGATHER",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -1617,9 +1617,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.MGATHER.CAS",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -1684,9 +1684,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.MGATHER.MASK",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -1719,9 +1719,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.MPAR",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -1786,9 +1786,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.MSCATTER",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -1853,9 +1853,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.MSCATTER.MASK",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -1888,9 +1888,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.MSEQ",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -1923,9 +1923,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.STD",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -1945,9 +1945,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.STD",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -1980,9 +1980,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.STD",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -2002,9 +2002,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.STD",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -2024,9 +2024,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.STD",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -2059,9 +2059,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.STD",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -2094,9 +2094,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.STD",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -2129,9 +2129,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.SYS",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -2220,9 +2220,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.TEPL",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -2287,9 +2287,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.TGEMV",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -2354,9 +2354,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.TGEMV.ACC",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -2421,9 +2421,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.TGEMV.BIAS",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -2488,9 +2488,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.TGEMVMX",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -2555,9 +2555,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.TGEMVMX.ACC",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -2622,9 +2622,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.TGEMVMX.BIAS",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -2689,9 +2689,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.TLOAD",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -2756,9 +2756,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.TMATMUL",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -2823,9 +2823,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.TMATMUL.ACC",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -2890,9 +2890,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.TMATMUL.BIAS",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -2957,9 +2957,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.TMATMULMX",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -3024,9 +3024,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.TMATMULMX.ACC",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -3091,9 +3091,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.TMATMULMX.BIAS",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -3158,9 +3158,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.TMOV",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -3225,9 +3225,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.TPREFETCH",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -3292,9 +3292,9 @@
       "length_bits": 32,
       "mnemonic": "BSTART.TSTORE",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -3314,9 +3314,9 @@
       "length_bits": 32,
       "mnemonic": "BSTOP",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStop",
-      "semantic_summary": "Commits the current block and transfers to its selected continuation.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStop",
+      "semantic_summary": "Commits the current bundle and transfers to its selected continuation.",
       "status": "accepted"
     },
     {
@@ -3361,9 +3361,9 @@
       "length_bits": 16,
       "mnemonic": "C.B.DIM",
       "semantic_family": "CMD",
-      "semantic_group": "Block Dimension",
-      "semantic_handler": "SetBlockDimension",
-      "semantic_summary": "Writes one of the three block-local dimension registers.",
+      "semantic_group": "Bundle Dimension",
+      "semantic_handler": "SetBundleDimension",
+      "semantic_summary": "Writes one of the three bundle-local dimension registers.",
       "status": "accepted"
     },
     {
@@ -3414,9 +3414,9 @@
       "length_bits": 16,
       "mnemonic": "C.B.DIMI",
       "semantic_family": "CMD",
-      "semantic_group": "Block Dimension",
-      "semantic_handler": "SetBlockDimension",
-      "semantic_summary": "Writes one of the three block-local dimension registers.",
+      "semantic_group": "Bundle Dimension",
+      "semantic_handler": "SetBundleDimension",
+      "semantic_summary": "Writes one of the three bundle-local dimension registers.",
       "status": "accepted"
     },
     {
@@ -3449,9 +3449,9 @@
       "length_bits": 16,
       "mnemonic": "C.BSTART",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -3484,9 +3484,9 @@
       "length_bits": 16,
       "mnemonic": "C.BSTART",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -3526,8 +3526,8 @@
       "mnemonic": "C.BSTART.FP",
       "semantic_family": "BBD",
       "semantic_group": "C.BSTART",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -3548,8 +3548,8 @@
       "mnemonic": "C.BSTART.MPAR",
       "semantic_family": "BBD",
       "semantic_group": "C.BSTART",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -3570,8 +3570,8 @@
       "mnemonic": "C.BSTART.MSEQ",
       "semantic_family": "BBD",
       "semantic_group": "C.BSTART",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -3611,8 +3611,8 @@
       "mnemonic": "C.BSTART.STD",
       "semantic_family": "BBD",
       "semantic_group": "C.BSTART",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -3633,8 +3633,8 @@
       "mnemonic": "C.BSTART.SYS",
       "semantic_family": "BBD",
       "semantic_group": "C.BSTART",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -3654,9 +3654,9 @@
       "length_bits": 16,
       "mnemonic": "C.BSTOP",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
-      "semantic_handler": "ExecuteBlockStop",
-      "semantic_summary": "Commits the current block and transfers to its selected continuation.",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStop",
+      "semantic_summary": "Commits the current bundle and transfers to its selected continuation.",
       "status": "accepted"
     },
     {
@@ -3713,7 +3713,7 @@
       "length_bits": 32,
       "mnemonic": "ERCOV",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
+      "semantic_group": "Bundle Split",
       "semantic_handler": "RecoverExecutionContext",
       "semantic_summary": "Recovers the encoded execution-context range from memory.",
       "status": "accepted"
@@ -3772,7 +3772,7 @@
       "length_bits": 32,
       "mnemonic": "ESAVE",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
+      "semantic_group": "Bundle Split",
       "semantic_handler": "SaveExecutionContext",
       "semantic_summary": "Saves the encoded execution-context range to memory.",
       "status": "accepted"
@@ -3836,7 +3836,7 @@
       "length_bits": 32,
       "mnemonic": "FENTRY",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
+      "semantic_group": "Bundle Split",
       "semantic_handler": "ExecuteFrameEntry",
       "semantic_summary": "Atomically validates and creates a frame-template entry state.",
       "status": "accepted"
@@ -3900,7 +3900,7 @@
       "length_bits": 32,
       "mnemonic": "FEXIT",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
+      "semantic_group": "Bundle Split",
       "semantic_handler": "ExecuteFrameExit",
       "semantic_summary": "Atomically validates and commits a frame-template exit state.",
       "status": "accepted"
@@ -3964,7 +3964,7 @@
       "length_bits": 32,
       "mnemonic": "FRET.RA",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
+      "semantic_group": "Bundle Split",
       "semantic_handler": "ExecuteFrameReturnAddress",
       "semantic_summary": "Restores a frame and returns through the retained return-address target.",
       "status": "accepted"
@@ -4028,7 +4028,7 @@
       "length_bits": 32,
       "mnemonic": "FRET.STK",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
+      "semantic_group": "Bundle Split",
       "semantic_handler": "ExecuteFrameReturnStack",
       "semantic_summary": "Restores a frame and returns through the validated stack target.",
       "status": "accepted"
@@ -4076,8 +4076,8 @@
       "mnemonic": "HL.BSTART CALL",
       "semantic_family": "BBD",
       "semantic_group": "BSTART",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -4116,8 +4116,8 @@
       "mnemonic": "HL.BSTART.FP",
       "semantic_family": "BBD",
       "semantic_group": "BSTART",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -4156,8 +4156,8 @@
       "mnemonic": "HL.BSTART.FP",
       "semantic_family": "BBD",
       "semantic_group": "BSTART",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -4196,8 +4196,8 @@
       "mnemonic": "HL.BSTART.FP",
       "semantic_family": "BBD",
       "semantic_group": "BSTART",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -4236,8 +4236,8 @@
       "mnemonic": "HL.BSTART.FP",
       "semantic_family": "BBD",
       "semantic_group": "BSTART",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -4276,8 +4276,8 @@
       "mnemonic": "HL.BSTART.STD",
       "semantic_family": "BBD",
       "semantic_group": "BSTART",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -4316,8 +4316,8 @@
       "mnemonic": "HL.BSTART.STD",
       "semantic_family": "BBD",
       "semantic_group": "BSTART",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -4356,8 +4356,8 @@
       "mnemonic": "HL.BSTART.STD",
       "semantic_family": "BBD",
       "semantic_group": "BSTART",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -4396,8 +4396,8 @@
       "mnemonic": "HL.BSTART.STD",
       "semantic_family": "BBD",
       "semantic_group": "BSTART",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -4436,8 +4436,8 @@
       "mnemonic": "HL.BSTART.SYS",
       "semantic_family": "BBD",
       "semantic_group": "BSTART",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -4779,8 +4779,8 @@
       "mnemonic": "L.BSTART.FP",
       "semantic_family": "BBD",
       "semantic_group": "BSTART",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -4825,8 +4825,8 @@
       "mnemonic": "L.BSTART.FP",
       "semantic_family": "BBD",
       "semantic_group": "BSTART",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -4871,8 +4871,8 @@
       "mnemonic": "L.BSTART.FP",
       "semantic_family": "BBD",
       "semantic_group": "BSTART",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -4917,8 +4917,8 @@
       "mnemonic": "L.BSTART.FP",
       "semantic_family": "BBD",
       "semantic_group": "BSTART",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -4963,8 +4963,8 @@
       "mnemonic": "L.BSTART.STD",
       "semantic_family": "BBD",
       "semantic_group": "BSTART",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -5009,8 +5009,8 @@
       "mnemonic": "L.BSTART.STD",
       "semantic_family": "BBD",
       "semantic_group": "BSTART",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -5055,8 +5055,8 @@
       "mnemonic": "L.BSTART.STD",
       "semantic_family": "BBD",
       "semantic_group": "BSTART",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -5101,8 +5101,8 @@
       "mnemonic": "L.BSTART.STD",
       "semantic_family": "BBD",
       "semantic_group": "BSTART",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -5147,8 +5147,8 @@
       "mnemonic": "L.BSTART.SYS",
       "semantic_family": "BBD",
       "semantic_group": "BSTART",
-      "semantic_handler": "ExecuteBlockStart",
-      "semantic_summary": "Closes the current block, initializes the next block descriptor, and selects its transfer and execution kind.",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
       "status": "accepted"
     },
     {
@@ -5205,7 +5205,7 @@
       "length_bits": 32,
       "mnemonic": "MCOPY",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
+      "semantic_group": "Bundle Split",
       "semantic_handler": "ExecuteMemoryCopy",
       "semantic_summary": "Copies an encoded memory range with instruction-atomic preflight and snapshot semantics.",
       "status": "accepted"
@@ -5264,7 +5264,7 @@
       "length_bits": 32,
       "mnemonic": "MSET",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
+      "semantic_group": "Bundle Split",
       "semantic_handler": "ExecuteMemorySet",
       "semantic_summary": "Fills an encoded memory range after complete access preflight.",
       "status": "accepted"
@@ -5311,9 +5311,9 @@
       "length_bits": 32,
       "mnemonic": "XB",
       "semantic_family": "CMD",
-      "semantic_group": "Block Split",
+      "semantic_group": "Bundle Split",
       "semantic_handler": "ExecuteCrossBlockTransfer",
-      "semantic_summary": "Transfers the named context value across the current block boundary.",
+      "semantic_summary": "Transfers the named context value to a target virtual core block.",
       "status": "accepted"
     }
   ],
