@@ -294,11 +294,11 @@
       "translation_sha256": "661807c8fe839be781a2c8e46b9f8040fafd227cff6844e25e97d248c140ec09"
     },
     "bringup/gates/qemu_isa_coverage_latest.md": {
-      "source_sha256": "1b07adaf655e7554d40908fe2546705fa9f7b50a6081295c5885b7908860fcc7",
+      "source_sha256": "0d8f817fe59dabf172feb963c58f84016cd66d71001403bd6a0f3cb8ade059c6",
       "translation_sha256": "e1f9d5565f16fae1d143ba9bbe8c74e30cb01c71e144ce665a1f9f9f36ecefe4"
     },
     "bringup/gates/qemu_opcode_sync_latest.md": {
-      "source_sha256": "6c8474c3d3c746401b122b6a4826a329bba6abe7e4fbc842760e80559c68abac",
+      "source_sha256": "151023f63c5c518c9d6448bc3c2d6ef6ad5c2d86c21cfde13134fec78cb9192a",
       "translation_sha256": "28aeac6e6fb1afeca0c8a40b888d6969c317d25208ef45ab2b3fd4d078c7956c"
     },
     "bringup/libc_status.md": {
