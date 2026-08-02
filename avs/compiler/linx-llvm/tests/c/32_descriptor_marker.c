@@ -1,5 +1,5 @@
-// Emit a canonical B.ARG descriptor header opcode so mnemonic coverage includes
-// descriptor-only metadata instructions in strict v0.57.
-void emit_barg_marker(void) {
-  __asm__ volatile(".long 0x180221a3" ::: "memory");
+// Emit canonical B.DATR NORM/FP32/Zero defaults so mnemonic coverage includes
+// descriptor-only metadata instructions in strict v0.57.1.
+void emit_bdatr_marker(void) {
+  __asm__ volatile(".long 0x00001023" ::: "memory");
 }

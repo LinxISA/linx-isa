@@ -1,25 +1,26 @@
-# LinxISA Assembly Sample Pack (v0.57)
+# LinxISA Assembly Sample Pack (v0.57.1)
 
-Canonical public assembly examples for LinxISA v0.57.
+Canonical public assembly examples generated from the locked PTO ISA 0.57.1
+kernel surface.
 
 ## Layout
 
-- `curated/`: reviewed hand-curated examples.
-- `scratch-legacy/`: selected migrated scratch assembly (public allowlist).
-- `generated/`: deterministic outputs generated from PTO examples.
-- `legacy-reference/`: moved historical reference examples.
-- `index.yaml`: manifest with provenance and generation commands.
+- `curated/`: reviewed hand-curated scalar/disassembly examples.
+- `generated/`: deterministic compiler outputs from
+  `workloads/pto_kernels/tools/examples/`.
+- `index.yaml`: exact source and toolchain provenance.
 
-## Canonical Example
+## Canonical tile example
 
 ```asm
-BSTART.TLOAD FP16
-B.ARG        ND2ZN.normal, FP16, Null
-B.IOT       [], last ->t<4KB>
-B.IOR        [x2,a6],[]
-C.B.DIMI     64, ->lb0
-C.B.DIMI     64, ->lb1
-C.B.DIMI     64, ->lb2
+BSTART.TLOAD INT32
+B.DIM        a3, 0, ->lb0
+B.DIM        a3, 0, ->lb1
+B.DIM        a3, 0, ->lb2
+B.IOR        [a6,a7],[]
+B.IOT        last, ->t<4KB>
 ```
 
-Source: `docs/reference/examples/v0.57/curated/linxisa-v0.57-normalized.asm`
+The 0.57.1 examples contain no `B.ARG`, generic `BSTART.TMA` or
+`BSTART.CUBE`, `MAMULB`, or deleted D-class operation. Regenerate them with the
+LLVM and PTO-Kernel commits recorded in `index.yaml`.

@@ -76,8 +76,6 @@ def canonicalize_mnemonic(mnemonic: str) -> str:
 
 def derived_selector_mnemonics(mnemonic: str, operands: list[str]) -> set[str]:
     selector = canonicalize_mnemonic(mnemonic)
-    if selector == "B.DATR":
-        return {"B.ARG"}
     if not operands:
         return set()
 
@@ -85,14 +83,6 @@ def derived_selector_mnemonics(mnemonic: str, operands: list[str]) -> set[str]:
     aliases = {
         ("BSTART.STD", "CALL"): "BSTART CALL",
         ("HL.BSTART.STD", "CALL"): "HL.BSTART CALL",
-        ("BSTART.CUBE", "ACCCVT"): "BSTART.ACCCVT",
-        ("BSTART.CUBE", "TMATMUL"): "BSTART.TMATMUL",
-        ("BSTART.CUBE", "TMATMUL.ACC"): "BSTART.TMATMUL.ACC",
-        ("BSTART.TEPL", "TLOAD"): "BSTART.TLOAD",
-        ("BSTART.TEPL", "TSTORE"): "BSTART.TSTORE",
-        ("BSTART.TEPL", "TMOV"): "BSTART.TMOV",
-        ("BSTART.TEPL", "TMATMUL"): "BSTART.TMATMUL",
-        ("BSTART.TEPL", "TMATMUL.ACC"): "BSTART.TMATMUL.ACC",
         ("BSTART.TEPL", "ACCCVT"): "BSTART.ACCCVT",
         ("BSTART.TMA", "TLOAD"): "BSTART.TLOAD",
         ("BSTART.TMA", "TSTORE"): "BSTART.TSTORE",

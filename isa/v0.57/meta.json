@@ -7,13 +7,14 @@
   ],
   "isa": "LinxISA",
   "notes": [
-    "This directory is the authoritative staged golden ISA definition for v0.57.",
-    "v0.57 is the sole active LinxISA profile and incorporates the complete established ISA contract.",
-    "v0.57 adds reviewed TMA Function 3..8 aliases, named PTO selectors, source-only B.IOT forms, and scalar CASB/CASH/CASW/CASD and DMA encodings.",
-    "The normalized PTO 0.57 inventory classifies all 111 workbook rows into 97 TEPL, 6 TMA, and 8 CUBE dispositions; named CUBE aliases retain the inherited generic BSTART.CUBE form.",
-    "B.IOD remains a reserved encoding. BSTART.PAR remains a retired spelling whose former bit pattern decodes only as BSTART.TEPL.",
+    "This directory is the authoritative staged Linx ISA projection of PTO ISA 0.57.1.",
+    "PTO-ISA/pto-spec is the sole normative source for the 120 tile operations and 99 command forms; pto-spec.lock.json freezes its identity.",
+    "TEPL uses separate Mode and Function fields; the legacy TileOpcode and all legacy decode aliases are forbidden.",
+    "The exact tile inventory is 98 TEPL, 9 TMA, and 13 CUBE operations. Unlisted selectors and unassigned CUBE functions trap as illegal instructions.",
+    "TTRANSPOSE and TSORT32 are migration-only source aliases. Deleted D-class names have no architectural spelling or decode.",
+    "B.IOD remains reserved and old BSTART.PAR/TEPL encodings remain retired.",
     "BSTART.TMA remains an encoding-family name, not a legal textual instruction."
   ],
   "status": "stable",
-  "version": "0.57.0"
+  "version": "0.57.1"
 }

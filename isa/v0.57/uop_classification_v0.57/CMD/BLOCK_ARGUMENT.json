@@ -1,20 +1,7 @@
 {
   "big_kind": "CMD",
-  "count": 2,
+  "count": 1,
   "instructions": [
-    {
-      "class": {
-        "cmd_kind": "BLOCK_ARGUMENT",
-        "note": "User confirmed A",
-        "source": "group_rule",
-        "uop_kind": "CMD"
-      },
-      "group": "Block Argument",
-      "length_bits": [
-        32
-      ],
-      "mnemonic": "B.ARG"
-    },
     {
       "class": {
         "cmd_kind": "BLOCK_ARGUMENT",

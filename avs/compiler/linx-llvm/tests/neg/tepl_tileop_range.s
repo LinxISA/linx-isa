@@ -1,3 +1,3 @@
     .text
 bad_tepl:
-    BSTART.TEPL 1024, FP16
+    BSTART.TEPL 4, 0, FP16

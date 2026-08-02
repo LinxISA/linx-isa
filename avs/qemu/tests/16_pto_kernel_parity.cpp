@@ -29,7 +29,6 @@ using pto::fp16_t;
 #endif
 
 #define PTO_PARITY_STAGE_TLOAD_STORE 1
-#define PTO_PARITY_STAGE_MAMULB 2
 #define PTO_PARITY_STAGE_TMATMUL_ACC 3
 #define PTO_PARITY_STAGE_GEMM 4
 #define PTO_PARITY_STAGE_GEMM_BASIC 5
@@ -660,12 +659,6 @@ static void run_all_kernels_emit_digest() {
   pto_tload_store(iY, iX, &mem_i32_cfg);
   emit_digest("tload_store", fnv1a_bytes(iY, sizeof(iY)));
   if (finish_after_stage(PTO_PARITY_STAGE_TLOAD_STORE))
-    return;
-
-  emit_stage("mamulb");
-  pto_mamulb(iC, iA, iB, &matmul_i32_cfg);
-  emit_digest("mamulb", fnv1a_bytes(iC, sizeof(iC)));
-  if (finish_after_stage(PTO_PARITY_STAGE_MAMULB))
     return;
 
   zero_i32(iC, kMatElems);

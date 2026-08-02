@@ -505,8 +505,6 @@ def _inst_description(inst: Dict[str, Any]) -> str:
             return "Tile input/output descriptor: binds tile operands and allocation metadata to a block."
         if base.startswith("B.IOR"):
             return "GPR input/output descriptor: binds scalar registers to a block argument slot."
-        if base.startswith("B.ARG"):
-            return "Block argument descriptor: carries layout format and pad policy for TMA operations."
         if base.startswith("B.DIM"):
             return "Block dimension descriptor: sets LB0/LB1/LB2 loop-bound registers."
         if base.startswith("B.TEXT"):
@@ -697,7 +695,10 @@ def main() -> int:
         print("OK")
         return 0
 
-    _emit_all(spec_path, uop_root, out_dir, args.enc_rel_dir)
+    expected_names = _emit_all(spec_path, uop_root, out_dir, args.enc_rel_dir)
+    for path in out_dir.glob("*.adoc"):
+        if path.name not in expected_names:
+            path.unlink()
 
     return 0
 

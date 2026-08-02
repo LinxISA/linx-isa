@@ -19,7 +19,7 @@ C[i, j] = sum_k(A[i, k] × B[k, j]) + Bias[0, j]
 ## 汇编语法
 
 ```asm
-TMATMUL.BIAS <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcTile1<.reuse>, SrcTile2<.reuse>, ->ACC<Size>
+TMATMUL.BIAS <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcTile1<.reuse>, SrcTile2<.reuse>
 ```
 
 ## 汇编符号
@@ -35,7 +35,7 @@ TMATMUL.BIAS <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcTi
 - **SrcTile2**：存储Bias矩阵的[Tile 寄存器](../../register/common/tilereg.md)。
 - **reuse**：指示当前指令提交后保留寄存器（若无此标识，允许硬件自动释放）。
 - **ACC**：存储结果矩阵的[Tile 寄存器](../../register/common/tilereg.md)类型。
-- **Size**：指示输出Tile寄存器空间大小的立即数。容量约束请见[Tile寄存器介绍](../../register/common/tilereg.md)。
+- **ACC**：由 CUBE opcode 隐式选择，不在 `B.IOT` 中编码，也没有目的 Tile size 字段。
 
 本指令 A/B矩阵支持的数据类型（DataTypeA/B）如下表所示：
 
@@ -65,7 +65,7 @@ Bias 矩阵特点：
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`    *(注：N)*
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB2`    *(注：K)*
 - [B.IOT](../../header/B.IOT.md) `SrcTile0<.reuse>, SrcTile1<.reuse>`
-- [B.IOT](../../header/B.IOT.md) `SrcTile2<.reuse>, last, ->ACC<Size>`
+- [B.IOT](../../header/B.IOT.md) `SrcTile2<.reuse>, last`
 
 ---
 
@@ -91,7 +91,7 @@ void TMATMUL.BIAS(Tile __out__ D, Tile __in__ A, Tile __in__ B, Tile __in__ Bias
 ## 汇编示例
 
 ```asm
-TMATMUL.BIAS <LB0:100, LB1:a0, LB2:a1+10, FP32>, T#1, U#1, N#1, ->ACC<64KB>
+TMATMUL.BIAS <LB0:100, LB1:a0, LB2:a1+10, FP32>, T#1, U#1, N#1
 ```
 
 - **输入/输出含义**:
@@ -99,7 +99,7 @@ TMATMUL.BIAS <LB0:100, LB1:a0, LB2:a1+10, FP32>, T#1, U#1, N#1, ->ACC<64KB>
     - SrcTile1 = U#1：存放 B 矩阵的 tile。
     - SrcTile2 = N#1：存放 Bias 矩阵的 tile（形状 1×N，按列广播到输出的每一行）。
     - 以上三个源寄存器均未带 `.reuse` 后缀，表示本条指令提交后，硬件可释放这些寄存器的占用。
-    - DstTile = ACC：存放结果矩阵 C 的 tile，容量配置为 64KB。
+    - ACC 为隐式状态，不通过 `B.IOT` 编码。
 - **尺寸参数设定**:
     - M = LB0:100，表示 A 的行数为 100。
     - N = LB1:a0，表示 B 的列数为 a0（同时也是 Bias 的列数与 C 的列数）。

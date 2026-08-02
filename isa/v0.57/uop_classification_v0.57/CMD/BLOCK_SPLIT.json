@@ -1,6 +1,6 @@
 {
   "big_kind": "CMD",
-  "count": 45,
+  "count": 43,
   "instructions": [
     {
       "class": {
@@ -27,32 +27,6 @@
         32
       ],
       "mnemonic": "BSTART.ACCCVT"
-    },
-    {
-      "class": {
-        "cmd_kind": "BLOCK_SPLIT",
-        "note": "User corrected to A",
-        "source": "group_rule",
-        "uop_kind": "CMD"
-      },
-      "group": "Block Split",
-      "length_bits": [
-        32
-      ],
-      "mnemonic": "BSTART.CUBE"
-    },
-    {
-      "class": {
-        "cmd_kind": "BLOCK_SPLIT",
-        "note": "User corrected to A",
-        "source": "group_rule",
-        "uop_kind": "CMD"
-      },
-      "group": "Block Split",
-      "length_bits": [
-        32
-      ],
-      "mnemonic": "BSTART.FIXP"
     },
     {
       "class": {

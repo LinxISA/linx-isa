@@ -36,7 +36,7 @@ EndBlock(); BeginNextBlock(/* kind */);
 
 ## Encoding Notes
 
-- `Named TMA-family Function=4. Memory gather uses B.ARG/B.IOR/B.IOT descriptor state; detailed PTO selector manifest is defined out-of-band for v0.57.`
+- `TMA Function=4. Memory gather uses B.DATR/B.IOR/B.IOT descriptor state.`
 
 ## Full Catalog Forms
 

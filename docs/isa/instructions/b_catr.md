@@ -36,7 +36,7 @@ Instruction from the Block Control Attribute group.
 
 ## Encoding Notes
 
-- `canonical split of legacy B.CATR/B.DATR control fields. Bits 25:15 are reserved zero.`
+- `PTO ISA 0.57.1 control attributes. Only DR[26], trap[19], far[18], atom[17], aq[16], and rl[15] are variable.`
 
 ## Full Catalog Forms
 

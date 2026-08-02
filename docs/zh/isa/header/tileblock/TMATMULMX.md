@@ -13,7 +13,7 @@
 ## 汇编语法
 
 ```asm
-TMATMULMX <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcTile1<.reuse>, SrcTile2<.reuse>, SrcTile3<.reuse>, ->ACC<Size>
+TMATMULMX <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcTile1<.reuse>, SrcTile2<.reuse>, SrcTile3<.reuse>
 ```
 
 ## 汇编符号
@@ -29,7 +29,7 @@ TMATMULMX <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcTile1
 - **SrcTile3**：存储 **缩放矩阵B** (Scale Matrix B) 的 [Tile 寄存器](../../register/common/tilereg.md)。
 - **reuse**：指示当前指令提交后保留寄存器（若无此标识，允许硬件自动释放）。
 - **ACC**：存储结果矩阵的 [Tile 寄存器](../../register/common/tilereg.md) 类型。
-- **Size**：指示输出 Tile 寄存器空间大小的立即数，例如 `ACC<64KB>`。
+- **ACC**：由 CUBE opcode 隐式选择，不在 `B.IOT` 中编码，也没有目的 Tile size 字段。
 
 ---
 
@@ -43,7 +43,7 @@ TMATMULMX <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcTile1
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`    *(注：N)*
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB2`    *(注：K)*
 - [B.IOT](../../header/B.IOT.md) `SrcTile0<.reuse>, SrcTile1<.reuse>`   *(A, ScaleA)*
-- [B.IOT](../../header/B.IOT.md) `SrcTile2<.reuse>, SrcTile3<.reuse>, last, ->ACC<Size>`   *(B, ScaleB)*
+- [B.IOT](../../header/B.IOT.md) `SrcTile2<.reuse>, SrcTile3<.reuse>, last`   *(B, ScaleB)*
 
 ---
 
@@ -142,7 +142,7 @@ FP8 + HiF4输入的缩放矩阵乘 实现示意图如下：
 ## 汇编示例
 
 ```asm
-TMATMULMX <LB0:100, LB1:a0, LB2:a1+10, e4m3, e1m2x2>, T#1, U#1, M#1, N#1, ->ACC<64KB>
+TMATMULMX <LB0:100, LB1:a0, LB2:a1+10, e4m3, e1m2x2>, T#1, U#1, M#1, N#1
 ```
 
 - **输入输出**：
@@ -150,7 +150,7 @@ TMATMULMX <LB0:100, LB1:a0, LB2:a1+10, e4m3, e1m2x2>, T#1, U#1, M#1, N#1, ->ACC<
     - `SrcTile1 = U#1`：存放 A 缩放矩阵 (Scale Matrix A)。
     - `SrcTile2 = M#1`：存放 B 矩阵 (Matrix B)。
     - `SrcTile3 = N#1`：存放 B 缩放矩阵 (Scale Matrix B)。
-    - `DstTile = ACC`：存放结果矩阵，分配容量为 64KB。
+    - ACC 为隐式状态，不通过 `B.IOT` 编码。
 - **指令功能**：执行带缩放的矩阵乘法 `D = (ScaleA × A) × (ScaleB × B)`。
 - **尺寸参数设定**:
     - A 的维度为 `M×K = 100 × (a1 + 10)`。

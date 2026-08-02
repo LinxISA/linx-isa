@@ -181,6 +181,8 @@ register decoded_bdim_index_shadow : bits(2) = 0b00
 register decoded_bdim_value_shadow : bits(64) = 0x0000_0000_0000_0000
 register decoded_bcatr_raw_shadow : bits(64) = 0x0000_0000_0000_0000
 register decoded_bdatr_raw_shadow : bits(64) = 0x0000_0000_0000_0000
+register decoded_biot_raw_shadow : bits(64) = 0x0000_0000_0000_0000
+register decoded_tile_datatype_shadow : bits(5) = 0b00000
 register decoded_bior_regsrc0_shadow : bits(5) = 0b00000
 register decoded_bior_regsrc1_shadow : bits(5) = 0b00000
 register decoded_bior_regsrc2_shadow : bits(5) = 0b00000
@@ -205,6 +207,9 @@ function decoded_bdatr_raw() -> bits(64) = {
   decoded_bdatr_raw_shadow
 }
 
+function decoded_biot_raw() -> bits(64) = { decoded_biot_raw_shadow }
+function decoded_tile_datatype() -> bits(5) = { decoded_tile_datatype_shadow }
+
 function decoded_bior_regsrc0() -> bits(5) = { decoded_bior_regsrc0_shadow }
 function decoded_bior_regsrc1() -> bits(5) = { decoded_bior_regsrc1_shadow }
 function decoded_bior_regsrc2() -> bits(5) = { decoded_bior_regsrc2_shadow }
@@ -221,7 +226,113 @@ function set_decoded_bior(regsrc0 : bits(5), regsrc1 : bits(5), regsrc2 : bits(5
 register bcatr_raw : bits(64) = 0x0000_0000_0000_0000
 register bdatr_raw : bits(64) = 0x0000_0000_0000_0000
 function bcatr_dr() -> bool = { bcatr_raw[26] == 0b1 }
-function bdatr_sat() -> bool = { bdatr_raw[31] == 0b1 }
+function bdatr_sat() -> bool = { bdatr_raw[26] == 0b1 }
+
+// -----------------------------------------------------------------------------
+// Tile-engine architectural effect envelope (PTO ISA 0.57.1 subset)
+//
+// The current Sail carrier does not yet contain a byte-addressable Tile payload
+// array.  These registers nevertheless model the architectural transaction:
+// decoded family/function and DataType, B.IOT legality/lifetime facts, complete
+// preflight, memory/Tile/implicit-ACC publication, and full-instruction retry.
+// Payload arithmetic remains a separately graded numeric-oracle gap.
+
+register tile_effect_pending : bool = false
+register tile_effect_family : bits(2) = 0b00 // 1=TMA, 2=CUBE
+register tile_effect_function : bits(5) = 0b00000
+register tile_effect_datatype : bits(5) = 0b00000
+register tile_effect_iot_count : bits(6) = 0b00_0000
+register tile_effect_source_count : bits(6) = 0b00_0000
+register tile_effect_output_count : bits(6) = 0b00_0000
+register tile_effect_release_count : bits(6) = 0b00_0000
+register tile_effect_iot_legal : bool = true
+register tile_effect_last_seen : bool = false
+register tile_effect_after_last : bool = false
+register tile_effect_access_set_valid : bool = true
+register tile_effect_fault_address : bits(64) = 0x0000_0000_0000_0000
+register tile_effect_restart_pending : bool = false
+
+register tile_effect_commit_seq : bits(64) = 0x0000_0000_0000_0000
+register tile_effect_preflight_seq : bits(64) = 0x0000_0000_0000_0000
+register tile_effect_memory_seq : bits(64) = 0x0000_0000_0000_0000
+register tile_effect_tile_seq : bits(64) = 0x0000_0000_0000_0000
+register tile_effect_acc_seq : bits(64) = 0x0000_0000_0000_0000
+register tile_effect_lifetime_releases : bits(64) = 0x0000_0000_0000_0000
+register tile_effect_last_family : bits(2) = 0b00
+register tile_effect_last_function : bits(5) = 0b00000
+register tile_effect_last_datatype : bits(5) = 0b00000
+register tile_effect_last_masked : bool = false
+register tile_effect_last_mask_suppresses_access : bool = false
+register tile_effect_last_pad : bits(2) = 0b00
+register tile_effect_last_mx : bool = false
+register tile_effect_last_bias : bool = false
+register tile_effect_last_accumulate : bool = false
+register tile_effect_last_scale_a_rows : bits(64) = 0x0000_0000_0000_0000
+register tile_effect_last_scale_a_cols : bits(64) = 0x0000_0000_0000_0000
+register tile_effect_last_scale_b_rows : bits(64) = 0x0000_0000_0000_0000
+register tile_effect_last_scale_b_cols : bits(64) = 0x0000_0000_0000_0000
+register tile_effect_last_scale_a_source : bits(6) = 0b00_0000
+register tile_effect_last_scale_b_source : bits(6) = 0b00_0000
+
+register tile_acc_valid : bool = false
+register tile_acc_datatype : bits(5) = 0b00000
+register tile_acc_rows : bits(64) = 0x0000_0000_0000_0000
+register tile_acc_cols : bits(64) = 0x0000_0000_0000_0000
+register tile_acc_k : bits(64) = 0x0000_0000_0000_0000
+
+function tile_effect_reset_descriptors() -> unit = {
+  tile_effect_iot_count = 0b00_0000;
+  tile_effect_source_count = 0b00_0000;
+  tile_effect_output_count = 0b00_0000;
+  tile_effect_release_count = 0b00_0000;
+  tile_effect_iot_legal = true;
+  tile_effect_last_seen = false;
+  tile_effect_after_last = false
+}
+
+function tile_effect_reset_arch() -> unit = {
+  tile_effect_pending = false;
+  tile_effect_family = 0b00;
+  tile_effect_function = 0b00000;
+  tile_effect_datatype = 0b00000;
+  tile_effect_reset_descriptors();
+  tile_effect_access_set_valid = true;
+  tile_effect_fault_address = sail_zeros(64);
+  tile_effect_restart_pending = false;
+  tile_effect_commit_seq = sail_zeros(64);
+  tile_effect_preflight_seq = sail_zeros(64);
+  tile_effect_memory_seq = sail_zeros(64);
+  tile_effect_tile_seq = sail_zeros(64);
+  tile_effect_acc_seq = sail_zeros(64);
+  tile_effect_lifetime_releases = sail_zeros(64);
+  tile_effect_last_family = 0b00;
+  tile_effect_last_function = 0b00000;
+  tile_effect_last_datatype = 0b00000;
+  tile_effect_last_masked = false;
+  tile_effect_last_mask_suppresses_access = false;
+  tile_effect_last_pad = 0b00;
+  tile_effect_last_mx = false;
+  tile_effect_last_bias = false;
+  tile_effect_last_accumulate = false;
+  tile_effect_last_scale_a_rows = sail_zeros(64);
+  tile_effect_last_scale_a_cols = sail_zeros(64);
+  tile_effect_last_scale_b_rows = sail_zeros(64);
+  tile_effect_last_scale_b_cols = sail_zeros(64);
+  tile_effect_last_scale_a_source = 0b00_0000;
+  tile_effect_last_scale_b_source = 0b00_0000;
+  tile_acc_valid = false;
+  tile_acc_datatype = 0b00000;
+  tile_acc_rows = sail_zeros(64);
+  tile_acc_cols = sail_zeros(64);
+  tile_acc_k = sail_zeros(64)
+}
+
+// False mask lanes are architecturally silent: no source read, memory access,
+// destination write, or fault check.  The bit result makes this contract easy
+// to exercise without pretending the model has a numeric Tile payload.
+function tile_mask_lane_effect(active : bool) -> bits(4) = {
+  if active then 0b1111 else 0b0000
+}
 
 // LCFR (core feature) (staged): only LaneNum is currently consulted.
 // LaneNum is encoded in LCFR[19:16] and represents log2(vec_length).
@@ -1549,28 +1660,29 @@ function template_integrity_assert_fail(reason : bits(8)) -> unit = {
 // - docs/bringup/plan/isa_clarifications.md
 //
 // MissingDescFamily IDs (TRAPARG0[7:0]):
-//   1=B.DIM, 2=B.TEXT, 3=B.ARG, 4=B.IOR, 5=B.IOT
+//   1=B.DIM, 2=B.TEXT, 3=B.DATR, 4=B.IOR, 5=B.IOT
 // MissingDetail (TRAPARG0[15:8]):
 //   0x00 missing, 0x01 invalid/out-of-range, 0x02 illegal combination
 
 register bdesc_seen_dim : bool = false
 register bdesc_seen_text : bool = false
-register bdesc_seen_arg : bool = false
+register bdesc_seen_datr : bool = false
 register bdesc_seen_ior : bool = false
 register bdesc_seen_iot : bool = false
 
 function bdesc_reset() -> unit = {
   bdesc_seen_dim = false;
   bdesc_seen_text = false;
-  bdesc_seen_arg = false;
+  bdesc_seen_datr = false;
   bdesc_seen_ior = false;
   bdesc_seen_iot = false;
-  clear_ri_bindings()
+  clear_ri_bindings();
+  tile_effect_reset_descriptors()
 }
 
 function bdesc_mark_dim() -> unit = { bdesc_seen_dim = true }
 function bdesc_mark_text() -> unit = { bdesc_seen_text = true }
-function bdesc_mark_arg() -> unit = { bdesc_seen_arg = true }
+function bdesc_mark_datr() -> unit = { bdesc_seen_datr = true }
 function bdesc_mark_ior() -> unit = { bdesc_seen_ior = true }
 function bdesc_mark_iot() -> unit = { bdesc_seen_iot = true }
 
@@ -1593,7 +1705,7 @@ function bdesc_illegal_combo_or_trap(family : bits(8), src_pc_or_tpc : bits(64))
 function bdesc_validate_header_end(src_pc_or_tpc : bits(64)) -> unit = {
   // Enforce mandatory descriptor families per tile/vector block type.
   // If multiple are missing, report exactly one using the priority order:
-  //   B.ARG > B.TEXT > B.IOT > B.IOR > B.DIM
+  //   B.DATR > B.TEXT > B.IOT > B.IOR > B.DIM
   let k = decoded_block_contract_kind();
   match k {
     // VEC: SIMT vector blocks (VPAR/VSEQ/MPAR/MSEQ): require DIM + TEXT.
@@ -1605,10 +1717,10 @@ function bdesc_validate_header_end(src_pc_or_tpc : bits(64)) -> unit = {
         vec_init_p_for_group(ssr_lc1)
       }
     },
-    // TMA: TLOAD/TSTORE: require ARG + IOR + IOT; TEXT illegal.
+    // TMA: require DATR + IOR + IOT; TEXT illegal.
     0b0010 => {
       if bdesc_seen_text then bdesc_illegal_combo_or_trap(0x02, src_pc_or_tpc)
-      else if not_bool(bdesc_seen_arg) then trap_blockfmt(0x03, 0x00, src_pc_or_tpc)
+      else if not_bool(bdesc_seen_datr) then trap_blockfmt(0x03, 0x00, src_pc_or_tpc)
       else if not_bool(bdesc_seen_iot) then trap_blockfmt(0x05, 0x00, src_pc_or_tpc)
       else if not_bool(bdesc_seen_ior) then trap_blockfmt(0x04, 0x00, src_pc_or_tpc)
       else ()
@@ -1619,21 +1731,19 @@ function bdesc_validate_header_end(src_pc_or_tpc : bits(64)) -> unit = {
       else if not_bool(bdesc_seen_iot) then trap_blockfmt(0x05, 0x00, src_pc_or_tpc)
       else ()
     },
-    // CUBE: require DIM + IOT + ARG; TEXT illegal.
+    // CUBE: require DIM + IOT + DATR; TEXT illegal.
     0b0100 => {
       if bdesc_seen_text then bdesc_illegal_combo_or_trap(0x02, src_pc_or_tpc)
-      else if not_bool(bdesc_seen_arg) then trap_blockfmt(0x03, 0x00, src_pc_or_tpc)
+      else if not_bool(bdesc_seen_datr) then trap_blockfmt(0x03, 0x00, src_pc_or_tpc)
       else if not_bool(bdesc_seen_iot) then trap_blockfmt(0x05, 0x00, src_pc_or_tpc)
       else if not_bool(bdesc_seen_dim) then trap_blockfmt(0x01, 0x00, src_pc_or_tpc)
       else ()
     },
-    // ACCCVT: require DIM + IOT + ARG + IOR; TEXT illegal.
+    // ACCCVT: require DATR + destination IOT; shape is inherited from ACC.
     0b0101 => {
       if bdesc_seen_text then bdesc_illegal_combo_or_trap(0x02, src_pc_or_tpc)
-      else if not_bool(bdesc_seen_arg) then trap_blockfmt(0x03, 0x00, src_pc_or_tpc)
+      else if not_bool(bdesc_seen_datr) then trap_blockfmt(0x03, 0x00, src_pc_or_tpc)
       else if not_bool(bdesc_seen_iot) then trap_blockfmt(0x05, 0x00, src_pc_or_tpc)
-      else if not_bool(bdesc_seen_ior) then trap_blockfmt(0x04, 0x00, src_pc_or_tpc)
-      else if not_bool(bdesc_seen_dim) then trap_blockfmt(0x01, 0x00, src_pc_or_tpc)
       else ()
     },
     // HDRDRV: header-driven engine ops: TEXT illegal; mandatory families are op-specific.

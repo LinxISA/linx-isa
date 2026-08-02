@@ -1,6 +1,6 @@
 # All Instructions
 
-Complete alphabetical index of all **769** instruction forms in the LinxISA v0.57.0 catalog.
+Complete alphabetical index of all **761** instruction forms in the LinxISA v0.57.1 catalog.
 
 Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 
@@ -27,12 +27,6 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 
 | Mnemonic | Group | Bits | Description |
 |----------|-------|------|-------------|
-| [B.ARG](b_arg.md) | [Block Argument](../groups/block_argument.md) | 32 | Instruction from the Block Argument group. |
-| [B.ARG](b_arg.md) | [Block Argument](../groups/block_argument.md) | 32 | Instruction from the Block Argument group. |
-| [B.ARG](b_arg.md) | [Block Argument](../groups/block_argument.md) | 32 | Instruction from the Block Argument group. |
-| [B.ARG](b_arg.md) | [Block Argument](../groups/block_argument.md) | 32 | Instruction from the Block Argument group. |
-| [B.ARG](b_arg.md) | [Block Argument](../groups/block_argument.md) | 32 | Instruction from the Block Argument group. |
-| [B.ARG](b_arg.md) | [Block Argument](../groups/block_argument.md) | 32 | Instruction from the Block Argument group. |
 | [B.CATR](b_catr.md) | [Block Control Attribute](../groups/block_control_attribute.md) | 32 | Instruction from the Block Control Attribute group. |
 | [B.DATR](b_datr.md) | [Block Data Attribute](../groups/block_data_attribute.md) | 32 | Instruction from the Block Data Attribute group. |
 | [B.DIM](b_dim.md) | [Block Argument](../groups/block_argument.md) | 32 | Instruction from the Block Argument group. |
@@ -65,8 +59,6 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [BSTART](bstart.md) | [Block Split](../groups/block_split.md) | 32 | Block split marker. Terminates the current basic block and begins the next. Encodes block type and transition kind. |
 | [BSTART CALL](bstart_call.md) | [BSTART](../groups/bstart.md) | 32 | Atomic fused call with independent call-target and return-target fields; transfers to the call block and writes `ra`. This exact aggregate is distinct from the generic bare-call form, which preserves `ra` and requires an adjacent `SETRET` or `C.SETRET`. |
 | [BSTART.ACCCVT](bstart_acccvt.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.CUBE](bstart_cube.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.FIXP](bstart_fixp.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.FP](bstart_fp.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.FP](bstart_fp.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.FP](bstart_fp.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |

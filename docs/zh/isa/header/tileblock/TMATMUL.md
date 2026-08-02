@@ -19,7 +19,7 @@ C[i, j] = sum_k(A[i, k] × B[k, j])
 ## 汇编语法
 
 ```asm
-TMATMUL <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcTile1<.reuse>, ->ACC<Size>
+TMATMUL <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcTile1<.reuse>
 ```
 
 ## 汇编符号
@@ -33,7 +33,7 @@ TMATMUL <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcTile1<.
 - **SrcTile1**：存储B矩阵的[Tile 寄存器](../../register/common/tilereg.md)。
 - **reuse**：指示当前指令提交后保留寄存器（若无此标识，允许硬件自动释放）。
 - **ACC**：存储结果矩阵的[Tile 寄存器](../../register/common/tilereg.md)类型。
-- **Size**：指示输出Tile寄存器空间大小的立即数。容量约束请见[Tile寄存器介绍](../../register/common/tilereg.md)。
+- **ACC**：由 CUBE opcode 隐式选择，不在 `B.IOT` 中编码，也没有目的 Tile size 字段。
 
 本指令 A/B矩阵支持的数据类型（DataTypeA/B）如下表所示：
 
@@ -56,7 +56,7 @@ TMATMUL <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcTile1<.
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0`    *(注：M)*
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`    *(注：N)*
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB2`    *(注：K)*
-- [B.IOT](../../header/B.IOT.md) `SrcTile0<.reuse>, SrcTile1<.reuse>, last, ->ACC<Size>`
+- [B.IOT](../../header/B.IOT.md) `SrcTile0<.reuse>, SrcTile1<.reuse>, last`
 
 ---
 
@@ -93,7 +93,7 @@ void TMATMUL(Tile __out__ C, Tile __in__ B, Tile __in__ A) {
 
 示例1：fp16 x fp8(e5m2)
 ```asm
-TMATMUL <LB0:32, LB1:64, LB2:16, fp16, e5m2> T#1.reuse, M#1, ->ACC<8KB>
+TMATMUL <LB0:32, LB1:64, LB2:16, fp16, e5m2> T#1.reuse, M#1
 ```
 
 - 输入左矩阵：
@@ -105,14 +105,14 @@ TMATMUL <LB0:32, LB1:64, LB2:16, fp16, e5m2> T#1.reuse, M#1, ->ACC<8KB>
     - 形状尺寸（K x N）：16 x 64
     - 数据格式：e5m2
 - 输出结果矩阵：
-    - 寄存器：DstTile = ACC，申请空间 8KB。
+    - ACC 为隐式状态，不通过 `B.IOT` 编码。
     - 形状尺寸（M x N）：32 x 64
     - 数据格式：fp32, 输入统一转换为fp32精度进行CUBE运算。
 
 
 示例2：TMATMUL的e1m2x2输入
 ```asm
-TMATMUL <LB0:32, LB1:32, LB2:64, e1m2x2>, T#1.reuse, U#1, ->ACC<4KB>
+TMATMUL <LB0:32, LB1:32, LB2:64, e1m2x2>, T#1.reuse, U#1
 ```
 
 - 输入左矩阵：
@@ -124,7 +124,7 @@ TMATMUL <LB0:32, LB1:32, LB2:64, e1m2x2>, T#1.reuse, U#1, ->ACC<4KB>
     - 形状尺寸（K x N）：64 x 32
     - 数据格式：e1m2x2
 - 输出结果矩阵：
-    - 寄存器：DstTile = ACC，申请空间 4KB。
+    - ACC 为隐式状态，不通过 `B.IOT` 编码。
     - 形状尺寸（M x N）：32 x 32
     - 数据格式：fp32, 输入统一转换为fp32精度进行CUBE运算。
 

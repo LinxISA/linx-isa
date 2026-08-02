@@ -233,6 +233,61 @@ def _validate_v057_tepl_extensions(tepl: Dict[str, Any], selector_by_name: Dict[
         errors.append("state.engine_ops.tepl.extension_policy_v057.reserved_selector_ranges do not match the frozen v0.57 map")
 
 
+def _validate_engine_ops_v0571(spec: Dict[str, Any], engine_ops: Dict[str, Any], errors: List[str]) -> None:
+    """Validate the PTO 0.57.1 projection without retaining pre-0.57.1 ABI rules."""
+    tepl = engine_ops.get("tepl", {})
+    ops = tepl.get("ops", []) if isinstance(tepl, dict) else []
+    if tepl.get("kind") != "mode_function":
+        errors.append("state.engine_ops.tepl.kind must be mode_function")
+    if tepl.get("selector_formula") != "(mode << 5) | function":
+        errors.append("state.engine_ops.tepl.selector_formula must be (mode << 5) | function")
+    if tepl.get("accepted_selector_count") != 98 or len(ops) != 98:
+        errors.append("state.engine_ops.tepl must contain exactly 98 accepted operations")
+    selectors: Dict[int, str] = {}
+    forbidden = {"TADDC", "TADDSC", "TFMA", "TFMOD", "TFMODS", "TLRELU", "TRANDOM", "TSUBC", "TSUBSC", "TTRANSPOSE", "TSORT32"}
+    for idx, op in enumerate(ops):
+        name = str(op.get("name") or "")
+        mode, function = op.get("mode"), op.get("function")
+        if not isinstance(mode, int) or not 0 <= mode <= 3 or not isinstance(function, int) or not 0 <= function <= 31:
+            errors.append(f"state.engine_ops.tepl.ops[{idx}] has invalid Mode/Function")
+            continue
+        selector = (mode << 5) | function
+        if op.get("logical_selector") != selector:
+            errors.append(f"state.engine_ops.tepl.ops[{idx}] logical_selector does not match Mode/Function")
+        if selector in selectors:
+            errors.append(f"state.engine_ops.tepl selector {selector:#04x} is shared by {selectors[selector]} and {name}")
+        selectors[selector] = name
+        if op.get("semantic_status") != "reviewed-complete":
+            errors.append(f"state.engine_ops.tepl.ops[{idx}] is not reviewed-complete")
+    leaked = sorted(forbidden & {str(op.get("name")) for op in ops})
+    if leaked:
+        errors.append(f"deleted or migration-only TEPL names leaked: {leaked}")
+
+    expected = {
+        "tma": set(range(9)),
+        "cube": {0, 1, 2, 4, 5, 6, 8, 16, 17, 18, 20, 21, 22},
+    }
+    for family, functions in expected.items():
+        state = engine_ops.get(family, {})
+        actual = {int(item["function"]) for item in state.get("legal_aliases", [])}
+        if actual != functions:
+            errors.append(f"state.engine_ops.{family} functions differ from PTO ISA 0.57.1")
+    if engine_ops.get("cube", {}).get("unassigned_function_behavior") != "illegal_instruction":
+        errors.append("state.engine_ops.cube unassigned functions must be illegal_instruction")
+
+    instructions = spec.get("instructions", [])
+    mnemonics = {str(item.get("mnemonic") or "") for item in instructions}
+    if "BSTART.CUBE" in mnemonics:
+        errors.append("generic BSTART.CUBE must not be a legal decode in PTO ISA 0.57.1")
+    tepl_forms = [item for item in instructions if item.get("mnemonic") == "BSTART.TEPL"]
+    if len(tepl_forms) != 1:
+        errors.append("PTO ISA 0.57.1 requires exactly one BSTART.TEPL form")
+    else:
+        part = tepl_forms[0].get("encoding", {}).get("parts", [{}])[0]
+        if (int(part.get("mask", "0"), 0), int(part.get("match", "0"), 0)) != (0x000FFFFF, 0x00019181):
+            errors.append("BSTART.TEPL must use the PTO ISA 0.57.1 Mode/Function encoding")
+
+
 def _validate_engine_ops(spec: Dict[str, Any], errors: List[str]) -> None:
     state = spec.get("state")
     if not isinstance(state, dict):
@@ -243,6 +298,10 @@ def _validate_engine_ops(spec: Dict[str, Any], errors: List[str]) -> None:
         return
     if not isinstance(engine_ops, dict):
         errors.append("state.engine_ops must be a mapping")
+        return
+
+    if str(spec.get("version") or "") == "0.57.1":
+        _validate_engine_ops_v0571(spec, engine_ops, errors)
         return
 
     tma = engine_ops.get("tma")

@@ -23,7 +23,7 @@ for n in 0..(N-1):         // 遍历N维度
 ## 汇编语法
 
 ```asm
-TGEMV.ACC <LB0:M, LB1:N, LB2:K, DataType> SrcTile0<.reuse>, SrcTile1<.reuse>, ACC, ->ACC<Size>
+TGEMV.ACC <LB0:M, LB1:N, LB2:K, DataType> SrcTile0<.reuse>, SrcTile1<.reuse>
 ```
 
 ## 汇编符号
@@ -37,7 +37,7 @@ TGEMV.ACC <LB0:M, LB1:N, LB2:K, DataType> SrcTile0<.reuse>, SrcTile1<.reuse>, AC
 - **SrcTile1**：存储B矩阵的[Tile 寄存器](../../register/common/tilereg.md)，支持`T`/`U`/`M`/`N`队列输入。
 - **reuse**（后缀）：指示当前指令提交后保留寄存器（若无此标识，允许硬件自动释放）。
 - **ACC**：存储结果矩阵的[Tile 寄存器](../../register/common/tilereg.md)（同时也做为输入）。
-- **Size**：输出Tile寄存器的空间大小（有效范围参见：[Tile寄存器](../../register/common/tilereg.md)）。
+- **ACC**：由 CUBE opcode 隐式选择，不在 `B.IOT` 中编码，也没有目的 Tile size 字段。
 
 本指令支持数据类型（DataType）如下表所示：
 
@@ -58,21 +58,21 @@ TGEMV.ACC <LB0:M, LB1:N, LB2:K, DataType> SrcTile0<.reuse>, SrcTile1<.reuse>, AC
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0`    （注：*M*）
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`    （注：*N*）
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB2`    （注：*K*）
-- [B.IOT](../../header/B.IOT.md) `SrcTile0<.reuse>, SrcTile1<.reuse>, last, ->ACC<Size>`
+- [B.IOT](../../header/B.IOT.md) `SrcTile0<.reuse>, SrcTile1<.reuse>, last`
 
 ---
 
 ## 汇编示例
 
 ```asm
-TGEMV.ACC <LB0:1, LB1:16, LB2:32, FP16>, T#1, U#1, ACC, ->ACC<256B>
+TGEMV.ACC <LB0:1, LB1:16, LB2:32, FP16>, T#1, U#1
 ```
 
 - **输入输出**：
     - `SrcTile0 = T#1`：存放 A 向量的 tile。
     - `SrcTile1 = U#1`：存放 B 矩阵的 tile。
     - 两者均未带 .reuse 后缀，表示本条指令提交后，硬件允许释放这些寄存器的占用。
-    - `DstTile = ACC`: 存放C矩阵的 tile，分配容量为 256B。
+    - ACC 为隐式状态，不通过 `B.IOT` 编码。
 - **尺寸参数设定**:
     - A 的维度为 `1×K = 1 × 32`，K 通过 “立即数” 设定。
     - B 的维度为 `K×N = 32 x 16`，N 通过 “立即数” 设定。

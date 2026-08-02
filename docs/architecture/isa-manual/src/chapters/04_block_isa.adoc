@@ -165,7 +165,7 @@ In the bring-up model, BARG includes (non-exhaustive):
 Additional bring-up fields used by tooling and trap recovery include:
 
 * block addresses (`BPC` / `BPCN`),
-* ordering/atomic qualifiers (e.g. `AQ`/`RL` from `B.CATR/B.DATR`), and
+* ordering/atomic qualifiers (`AQ`/`RL` from `B.CATR` only), and
 * output register mapping for split blocks.
 
 **BARG lifetime rules (bring-up):**
@@ -193,30 +193,28 @@ The bring-up profile constrains certain combinations (examples):
   memory-sequential execution modes.
 * `.FP` blocks mirror `.STD` transitions but mark a floating-point execution context.
 
-Block types beyond the scalar core (e.g. `.TMA`, `.CUBE`, `.TEPL`, `.VPAR`, `.VSEQ`, `.FIXP`) appear in the catalog as
-Block Split forms. `TMA`, `CUBE`, and `TEPL` selector/descriptor semantics are defined by the v0.57 catalog; selector
-space not explicitly assigned by the catalog is reserved and must not acquire ad hoc semantics.
+Block types beyond the scalar core use the named TMA and CUBE direct forms plus the raw TEPL Mode/Function form.
+Selector space not explicitly assigned by the PTO ISA 0.57.1 catalog is reserved and must not acquire ad hoc semantics.
 
 [[blockisa-tile]]
 === Tile blocks (TAU)
 
 Linx defines *tile blocks* for hardware-accelerated tile operations. A tile block is a basic block that:
 
-* starts with a typed tile/vector header (`BSTART.TMA`, `BSTART.CUBE`, `BSTART.TEPL`, `BSTART.MPAR`, `BSTART.MSEQ`,
-  `BSTART.VPAR`, `BSTART.VSEQ`), and
+* starts with a tile/vector header (for example `BSTART.TLOAD`, `BSTART.TMATMUL`, `BSTART.TEPL`,
+  `BSTART.MPAR`, `BSTART.MSEQ`, `BSTART.VPAR`, or `BSTART.VSEQ`), and
 * ends at `BSTOP` / `C.BSTOP` or the next block start marker.
 
 Tile blocks operate on **tile registers** (see <<progmodel-tile>>), and use explicit per-block descriptors:
 
 * `B.IOT` describes tile inputs/outputs (including relative tile references and transfer sizing)
 * `B.IOR` describes GPR inputs/outputs for the block
-* `B.ARG` carries TMA layout-format selection and pad policy for the block
+* `B.DATR` carries operation-applicable datatype, rounding, saturation, layout, comparison, and pad/byte controls
 * `B.DIM` / `C.B.DIM*` may be used to provide block-local dimensions and valid masks via `LB0..LB2`
 
 Bring-up contract (v0.57 current profile):
 
-* Typed block starts are canonical (`BSTART.TMA`, `BSTART.CUBE`, `BSTART.TEPL`, `BSTART.MPAR`, `BSTART.MSEQ`, `BSTART.VPAR`,
-  `BSTART.VSEQ`).
+* Typed operation starts are canonical for TMA and CUBE. TEPL uses `BSTART.TEPL Mode, Function, DataType`.
 * Retired PAR-style block-start spellings are illegal and MUST be rejected.
 * `TLOAD`/`TSTORE` are the canonical memory-tile baseline for AI and rendering bring-up.
 * `TMOV` is the canonical tile-state move baseline operation in the TMA family.
@@ -229,7 +227,7 @@ Bring-up contract (v0.57 current profile):
 **Immutability rule (design intent):** a tile block consumes input tiles and produces a new destination tile; it does
 not mutate the input tiles in-place.
 
-NOTE: In the strict profile contract, `B.IOT` prints transfer size in KiB (`->t<1KB>`, `->acc<4KB>`)
+NOTE: In the strict profile contract, `B.IOT` prints transfer size in KiB (for example `->t<1KB>`)
 and uses `last` to mark the terminal descriptor in a block header chain. Descriptor metadata may be carried by multiple
 `B.IOR` and `B.IOT` entries in the same header; descriptors are consumed in header order.
 
@@ -243,10 +241,8 @@ extended below):
 ** `m#k` → tile-id `16+(k-1)` (16..23)
 ** `n#k` → tile-id `24+(k-1)` (24..31)
   These tile-ids name positions within the corresponding hand’s architectural tile-register queue.
-* `B.IOT` `SizeCode` maps to bytes as `bytes = 2^(SizeCode+4)` with strict architectural clamp to `0B..512KB`.
-* `B.IOT` (dynamic-size form) uses `RegSrc` to carry runtime output size. v0.57 accepts only values that decode
-  to `0B..512KB` (either direct `SizeCode` style values `5..8` or equivalent power-of-two byte counts).
-  Compiler/runtime MUST fail fast on out-of-range dynamic sizes.
+* `B.IOT` size codes 3 through 9 map to 128 B through 8 KiB. Every other code is illegal.
+* A runtime-resolved size must equal one of those accepted footprints. Compiler/runtime MUST fail fast otherwise.
 * `S0V` / `S1V` semantics are *inverted*: `0` means the corresponding `SrcTile*` is present as an input; `1` means absent.
   When a source is absent, its corresponding `SrcTile*` field is ignored and SHOULD be encoded as `0` in canonical v0.57 output.
 * `DstTile` encodes the destination *kind* and controls where the tile-producing engine allocates the output:
@@ -254,65 +250,67 @@ extended below):
 ** `1`: `u` hand (U queue)
 ** `2`: `m` hand (M queue)
 ** `3`: `n` hand (N queue)
-** `4`: implicit accumulator (`acc`)
-  (`acc`) is a singleton architectural accumulator in v0.57 (no encoded ACC depth/index).
+** `4..6`: reserved
+** `7`: illegal
+  ACC is singleton implicit state selected by CUBE function identity; it has no `B.IOT` code or depth/index.
 * For destination kinds `t/u/m/n`, the destination tile register is allocated implicitly as a **queue push**:
 ** the output becomes the new `hand#1` definition (for example `->u<4KB>` allocates a new `u#1`),
 ** existing definitions in that hand shift down (`hand#1→hand#2`, `hand#2→hand#3`, …),
-** the oldest definition (`hand#8`) is evicted.
+** allocation that would exceed the architectural queue/capacity limit raises a precise fault; there is no eviction or spill.
 ** for `B.IOT`, the `SizeCode` updates the newly allocated (`hand#1`) tile register’s tracked byte-size.
 * Input tile references (`t#k`/`u#k`/`m#k`/`n#k`) name a position in the corresponding **tile register queue**, where `k=1`
   is the most recent definition and larger `k` values refer to older definitions.
-* `.reuse` is a staged hint bit carried on input operands. In this bring-up profile, it is required to disassemble and
-  re-encode deterministically, but it does not change the queue indexing rules defined above.
+* `.reuse=0` releases an input only after successful consumer commit; `.reuse=1` retains it. Fault, retry, and squash preserve it.
 * Each `B.IOR` descriptor carries up to three source GPR bindings plus one destination GPR binding.
 * Canonical shader-kernel scalar imports are the ordered namespace `ri0..ri11`:
 ** bindings are allocated from repeated `B.IOR` descriptors in header order,
 ** within one descriptor, imports are assigned in `RegSrc0`, `RegSrc1`, `RegSrc2` order.
 * Each `B.IOT` descriptor carries up to two source-tile references plus one destination tile kind.
-* `TMATMUL` / `TMATMUL.ACC` use `SrcTile0/SrcTile1` as the two tile inputs; the output is the implicit accumulator (`->acc<...>`).
+* `TMATMUL` / `TMATMUL.ACC` use `SrcTile0/SrcTile1` as the two tile inputs; the output is implicit ACC state.
 * `group=0` means the header descriptor chain continues.
 * `group=1` is the terminal descriptor form in bring-up streams and is rendered as `last` in disassembly.
 * Archived raw material that relies on other `group` values is not part of canonical v0.57 and remains reserved/illegal.
 * `B.IOR` disassembly omits zero GPR inputs/outputs and prints the input list in encoding order (`RegSrc0`, `RegSrc1`, `RegSrc2`)
   (for example, `[s0,a6],[]`).
 
-v0.57 tile header encoding families (the bit layout is inherited unchanged
-from v0.57):
+v0.57.1 tile header encoding families:
 
 * `BSTART.TMA`: `31..27=DataType`, `26..25=00`, `24..20=Function`, `19..15=00010`, `14..0` fixed block-split tail.
-* `BSTART.CUBE`: `31..27=DataType`, `26..25=00`, `24..20=Function`, `19..15=00110`, `14..0` fixed block-split tail.
-* `BSTART.TEPL`: `31..27=DataType`, `26..25=01`, `24..15=TileOpcode`, `14..0` fixed block-split tail.
+* CUBE-family typed forms: `31..27=DataType`, `26..25=00`, `24..20=Function`, `19..15=00110`, `14..0` fixed block-split tail.
+* TEPL-family typed forms: `31..27=DataType`, `26..25=Mode`, `24..20=Function`, `19..0` fixed block-split tail.
 * `BSTART.VPAR`: `26..25=Mode`, `19..15=00100` with fixed block-split tail.
 * `BSTART.VSEQ`: `26..25=Mode`, `19..15=00101` with fixed block-split tail.
 
 v0.57 tile `DataType` field assignments (u5, inherited unchanged):
 
-* Floating: `FP64=0`, `FP32=1`, `FP16=2`, `FP8=3`, `BF16=6`, `FPL8=7`, `FP4=11`, `FPL4=12`.
-* Signed integer: `INT64=16`, `INT32=17`, `INT16=18`, `INT8=19`, `INT4=20`.
-* Unsigned integer: `UINT64=24`, `UINT32=25`, `UINT16=26`, `UINT8=27`, `UINT4=28`.
-* Unassigned values are reserved and MUST NOT appear in canonical streams.
+* Floating: `FP64=0`, `FP32=1`, `TF32=2`, `HF32=3`, `FP16=4`, `BF16=5`,
+  `HiF8=6`, `E4M3=7`, `E5M2=8`, `E3M2=9`, `E2M3=10`,
+  `E2M1X2=11`, `E1M2X2=12`, `E8M0=13`, and `HiF4X2=14`.
+* Signed integer: `S64=16`, `S32=17`, `S16=18`, `S8=19`, `S4X2=20`.
+* Unsigned integer: `U64=24`, `U32=25`, `U16=26`, `U8=27`, `U4X2=28`.
+* Codes 15, 21-23, and 29-30 are reserved. Code 31 is illegal.
 
 v0.57 named-form policy (normative):
 
-* TMA, CUBE, and TEPL name binary encoding families. The TMA family has no
-  generic legal assembly form; each allocated function has an exact
-  `BSTART.<operation>` instruction form.
+* TMA, CUBE, and TEPL name binary encoding families. TMA and CUBE have no generic
+  legal assembly form; each allocated function has an exact `BSTART.<operation>` form.
+  TEPL has one legal `BSTART.TEPL Mode, Function, DataType` form whose accepted
+  mode/function pairs come from the locked catalog.
 * Named mnemonics are explicit v0.57 instruction forms in the golden catalog
   and resolve to encoding selectors:
-** `BSTART.TLOAD` -> `BSTART.TMA Function=0`
-** `BSTART.TSTORE` -> `BSTART.TMA Function=1`
-** `BSTART.TMOV` -> `BSTART.TMA Function=2`
-** `BSTART.TPREFETCH` -> `BSTART.TMA Function=3`
-** `BSTART.MGATHER` -> `BSTART.TMA Function=4`
-** `BSTART.MSCATTER` -> `BSTART.TMA Function=5`
-** `BSTART.MGATHER.MASK` -> `BSTART.TMA Function=6`
-** `BSTART.MSCATTER.MASK` -> `BSTART.TMA Function=7`
-** `BSTART.MGATHER.CAS` -> `BSTART.TMA Function=8`
-** `BSTART.TMATMUL` -> `BSTART.CUBE Function=0`
-** `BSTART.TMATMUL.ACC` -> `BSTART.CUBE Function=2`
-** `BSTART.ACCCVT` -> `BSTART.CUBE Function=8`
-** `BSTART.TADD`, `BSTART.TSUB`, `BSTART.TROWMAX`, ... -> `BSTART.TEPL TileOpcode=<assigned code>`
+** `BSTART.TLOAD` -> TMA `Function=0`
+** `BSTART.TSTORE` -> TMA `Function=1`
+** `BSTART.TMOV` -> TMA `Function=2`
+** `BSTART.TPREFETCH` -> TMA `Function=3`
+** `BSTART.MGATHER` -> TMA `Function=4`
+** `BSTART.MSCATTER` -> TMA `Function=5`
+** `BSTART.MGATHER.MASK` -> TMA `Function=6`
+** `BSTART.MSCATTER.MASK` -> TMA `Function=7`
+** `BSTART.MGATHER.CAS` -> TMA `Function=8`
+** `BSTART.TMATMUL` -> CUBE `Function=0`
+** `BSTART.TMATMUL.ACC` -> CUBE `Function=2`
+** `BSTART.ACCCVT` -> CUBE `Function=8`
+** `TADD`, `TSUB`, `TROWMAX`, ... -> `BSTART.TEPL Mode=<assigned mode>, Function=<assigned function>`
 * TMA `Function=9..31` encodings are reserved and MUST raise an
   illegal-instruction exception. They are not instruction forms and MUST NOT
   contribute to legal-form or executable-coverage denominators.
@@ -338,49 +336,33 @@ v0.57 CUBE named `Function` assignments:
 * `8` => `ACCCVT`
 * `16/17/18` => `TGEMV` / `TGEMV.BIAS` / `TGEMV.ACC`
 * `20/21/22` => `TGEMVMX` / `TGEMVMX.BIAS` / `TGEMVMX.ACC`
-* Other 5-bit CUBE values retain the generic
-  `BSTART.CUBE Function, DataType` spelling.
+* Other 5-bit CUBE values are reserved and raise an illegal-instruction exception.
 
-v0.57 TEPL tile opcode allocation policy:
+v0.57.1 TEPL mode/function allocation policy:
 
 * The authoritative machine-readable selector map is
   `isa/v0.57/state/pto_encoding_map.json`.
-* The inherited v0.57 assignments use a packed low-6-bit selector inside
-  the 10-bit `TileOpcode` field:
-** `TileOpcode[5]` is the 1-bit TEPL mode selector.
-** `TileOpcode[4:0]` is the TEPL function selector.
-** canonical packed rule: `TileOpcode = (Mode << 5) | Function`.
-* `Mode=0` defines the 32-entry base TEPL function set:
-** `0x00=TADD`, `0x01=TSUB`, `0x02=TMUL`, `0x03=TDIV`, `0x04=TMAX`, `0x05=TMIN`, `0x06=TAND`, `0x07=TOR`
-** `0x08=TXOR`, `0x09=TSHL`, `0x0A=TSHR`, `0x0B=TRELU`, `0x0C=TPRELU`, `0x0D=TCVT`, `0x0E=TEXP`, `0x0F=TLOG`
-** `0x10=TSQRT`, `0x11=TRSQRT`, `0x12=TROWMAX`, `0x13=TROWMIN`, `0x14=TROWSUM`, `0x15=TCOLMAX`, `0x16=TCOLMIN`,
-   `0x17=TCOLSUM`
-** `0x18=TRECIP`, `0x19=TEXPANDS`, `0x1A=TGATHER`, `0x1B=TSCATTER`, `0x1C=TRESHAPE`, `0x1D=TTRANSPOSE`,
-   `0x1E=TCOLEXPAND`, `0x1F=TROWEXPAND`
-* `Mode=1` defines the scalar-RHS TEPL extension window:
-** `0x20=TADDS`, `0x21=TSUBS`, `0x22=TMULS`, `0x23=TDIVS`, `0x24=TMAXS`, `0x25=TMINS`, `0x26=TANDS`,
-   `0x27=TORS`, `0x28=TXORS`, `0x29=TSHLS`, `0x2A=TSHRS`
-* v0.57 allocates every selector in `0x02B..0x048`, plus the explicitly
-  assigned banks `0x080..0x08B`, `0x0C0..0x0C8`, and `0x0E0..0x0E3`.
-  These values are direct 10-bit selectors and are not decoded through the
-  inherited Mode/Function interpretation.
+* The raw header carries `Mode[1:0]` and `Function[4:0]`.
+* The canonical logical selector is `(Mode << 5) | Function`.
+* The catalog assigns exactly 98 unique selectors across Modes 0 through 3;
+  the remaining 30 selector positions are reserved and illegal.
+* Canonical names include `TTRANS`; `TTRANSPOSE` and `TSORT32` are
+  migration-only source aliases and never decode as instruction identities.
 * Tile-scalar extension ops require `B.IOR` scalar RHS binding as defined by the op profile.
   - NOTE (toolchain convention): when a TEPL op requires scalar RHS data, place the binding in the first `B.IOR` entry
     where practical, even though implementations must accept any `B.IOR` position defined by the op profile.
 
-Unassigned tile opcode values are reserved/illegal in canonical v0.57.
+Unassigned TEPL mode/function pairs are reserved/illegal in canonical v0.57.1.
 Canonical toolchains MUST reject them and implementations MUST NOT assign ad
-hoc semantics. In particular, `0x049..0x07F`, `0x08C..0x0BF`,
-`0x0C9..0x0DF`, and `0x0E4..0x3FF` are reserved.
+hoc semantics.
 
 v0.57 `TMOV` contracts:
 
 * `TMOV` is a tile-state operation; it MUST NOT directly access GM memory.
 * For `DstTile` kinds `t/u/m/n`, destination allocation is queue-push only (new `hand#1`).
 * Explicit destination depth encoding (`->t#k`/`->u#k`/`->m#k`/`->n#k`) is not part of v0.57.
-* `B.IOT` size semantics for `TMOV` follow the same strict `SizeCode` clamp (`0B..512KB`) as `TLOAD/TSTORE`.
-* `B.ARG` provides TMOV mode selection in the canonical profile; `V2V` and `A2V` are defined, and all other modes are
-  reserved/illegal until a future catalog revision assigns them.
+* `B.IOT` size codes 3 through 9 select 128 B through 8 KiB; other codes are illegal.
+* Layout conversion is selected only by an operation-applicable `B.DATR.Layout` value and is capability gated.
 
 v0.57 TMA assignments:
 
@@ -401,40 +383,34 @@ v0.57 TMA assignments:
   checks and fault behavior required for the corresponding `TLOAD` footprint.
 * Generic mixed TMA textual forms remain illegal in canonical v0.57 sources. The legal public spelling is the assigned
   `BSTART.<alias>` form.
-* The expanded PTO map is frozen in `isa/v0.57/state/pto_encoding_map.json`: all 111 workbook rows have one TMA,
-  CUBE, or TEPL disposition, and review-only names are rejected.
-* v0.57 adds named CUBE aliases for Functions 1, 4-6, 16-18, and 20-22. The inherited generic
-  `BSTART.CUBE Function, DataType` form remains legal, so values without a named alias retain only the generic decode.
+* The PTO map is frozen in `isa/v0.57/state/pto_encoding_map.json`: exactly 120 operations have one TMA,
+  CUBE, or TEPL disposition, and deleted or review-only names are rejected.
+* CUBE Functions 1, 4-6, 16-18, and 20-22 have typed operation forms; every other unassigned function is illegal.
 
 v0.57 block split patterns and per-family constraints:
 
-* `BSTART.TLOAD` / `BSTART.TSTORE` (alias of `BSTART.TMA Function=0/1`):
-** require `B.ARG` for layout/pad selection.
+* `BSTART.TLOAD` / `BSTART.TSTORE` (named TMA Functions 0/1):
+** use operation-applicable `B.DATR` layout/pad controls; inapplicable non-zero fields are illegal.
 ** require at least one `B.IOR` binding carrying base/stride arguments (strict profile convention: stride and base are explicit scalar inputs).
 ** strict binding convention is `RegSrc0=stride/ld`, `RegSrc1=base` when both are present.
 ** require tile binding via `B.IOT`.
 ** are header-driven block commands (no SIMT body; do not use `B.TEXT`).
 * `BSTART.TMATMUL`, `BSTART.TMATMUL.BIAS`, `BSTART.TMATMUL.ACC`, `BSTART.TMATMULMX*`,
-  `BSTART.TGEMV*`, and `BSTART.TGEMVMX*` (named aliases of their assigned CUBE functions):
+  `BSTART.TGEMV*`, and `BSTART.TGEMVMX*` (assigned named CUBE-family functions):
 ** require `B.DIM`/`C.B.DIM*` with `LB0/LB1/LB2` bound as `m/n/k`.
-** require two source tile inputs via `B.IOT`.
-** both commands target the singleton implicit accumulator domain (`->acc`).
+** bind the exact source roles from `pto_ops.json` via `B.IOT` (left/right, plus bias or scale sources where applicable).
+** write the singleton implicit accumulator; B.IOT carries no ACC source or destination code.
 ** `TMATMUL` seeds/replaces accumulator state; `TMATMUL.ACC` accumulates into the current accumulator state.
 ** no explicit accumulator tile id is encoded in the inherited descriptors.
 ** strict chain contract: `TMATMUL` starts ACC state, `TMATMUL.ACC` may repeat, and `ACCCVT` materializes tile output.
 ** are header-driven block commands (no SIMT body; do not use `B.TEXT`).
-* `BSTART.ACCCVT` (alias of `BSTART.CUBE Function=8`):
-** requires quantization arguments.
-** quantization arguments are carried by `B.ARG` (quantization mode) plus `B.IOR` scalar bindings (`scale` and
-   `zero-point` are required; optional extra scalar controls are profile-defined).
+* `BSTART.ACCCVT` (named CUBE-family Function 8):
+** conversion controls are carried by the operation-applicable `B.DATR` fields `Sat`, `Canonicalize`, `DataType`, `RMode`, and `Layout`.
 ** consumes the singleton implicit accumulator state and writes a converted tile destination.
 ** descriptors bind only destination tile metadata (`->t/u/m/n<size>`); no accumulator source id is encoded.
 ** is header-driven (no SIMT body; do not use `B.TEXT`).
 * `BSTART.TEPL`:
-** operation is selected only by the tile opcode (`TileOpcode`).
-** inherited selectors through `0x02A` preserve the v0.57 packed
-   `Mode/Function` identity; v0.57 selectors above that range use their
-   explicit manifest values.
+** operation is selected only by the raw `Mode` and `Function` fields.
 ** descriptor requirements are op-profile-specific, but tile and scalar bindings MUST still be expressed through block descriptors.
 ** PTO template-op forms (`TADD`, `TSUB`, `TROWMAX`, etc.) are header-driven in v0.57 (no SIMT body).
 * `BSTART.VPAR` / `BSTART.VSEQ`:
@@ -448,9 +424,9 @@ Future encoding-space growth policy:
 ** `isa/v0.57/opcodes/lx_32.opc`
 ** the alias table above
 ** strict profile checks and regression tests.
-* TEPL uses a 10-bit tile opcode selector (`TileOpcode`, 0..1023). New
-  assignments MUST be added to the v0.57 manifest and MUST NOT occupy a
-  reserved hole implicitly.
+* TEPL uses a two-bit Mode and five-bit Function selector. New assignments
+  MUST be added to a later normative manifest and MUST NOT occupy a reserved
+  pair implicitly.
 * Future banks MUST be assigned explicitly by a later revision and carried by
   its machine-readable selector manifest.
 
@@ -474,12 +450,11 @@ The v0.57 catalog includes the following descriptor families:
   - `B.IOR`: binds GPR inputs/outputs for a block.
   - `B.IOT`: binds tile inputs/outputs for a block (including optional input reuse and transfer sizing).
 * **Block arguments**
-  - `B.ARG`: writes a per-block argument used by TMA tile load/store pipelines (layout format + pad policy).
   - `B.DIM`: writes a block argument register (`LB0`–`LB2`) used for loop bounds, dimensions, and valid masks.
 * **Block attributes and hints**
-  - `B.CATR/B.DATR`: full encoded fields are `{C, DR, DataLayout[4:0], DataType[4:0], PadValue[4:0], T, aq, atom, far, rl}`.
-    Strict TMA execution does not source dtype/layout/pad from `B.CATR/B.DATR`; layout/pad come from `B.ARG` and datatype from
-    `BSTART.<tile-header>`.
+  - `B.CATR`: controls dependency, trap/far, atomic, acquire, and release behavior.
+  - `B.DATR`: carries `CMode`, the PadValue/ByteId union, saturation, canonicalization,
+    datatype, rounding mode, and layout. Every non-zero field must be applicable to the selected operation.
   - `B.HINT`: sets performance hints (branch likelihood, temperature, prefetch sizing, trace markers).
 * **Text/offset annotations**
   - `B.TEXT`: in a decoupled block header, selects the out-of-line body entrypoint (`BodyTPC`). In coupled blocks it
@@ -517,25 +492,25 @@ AI-oriented behavior:
 The canonical v0.57 auto-mode profile maps PTO tile primitives to typed TAU block headers and descriptors:
 
 * `PTO TLOAD`:
-  `BSTART.TLOAD` + `B.DIM(LB0/LB1/LB2)` + `B.ARG` + `B.IOR*` + `B.IOT`
+  `BSTART.TLOAD` + `B.DIM(LB0/LB1/LB2)` + applicable `B.DATR` + `B.IOR*` + `B.IOT`
 * `PTO TSTORE`:
-  `BSTART.TSTORE` + `B.DIM(LB0/LB1/LB2)` + `B.ARG` + `B.IOR*` + `B.IOT`
+  `BSTART.TSTORE` + `B.DIM(LB0/LB1/LB2)` + applicable `B.DATR` + `B.IOR*` + `B.IOT`
 * `PTO TMOV`:
-  `BSTART.TMOV` + `B.ARG` + optional `B.DIM/B.IOR` + `B.IOT`
+  `BSTART.TMOV` + applicable `B.DATR` + optional `B.DIM/B.IOR` + `B.IOT`
 * `PTO TMATMUL`:
   `BSTART.TMATMUL` (+ ACC convert/output block when needed)
 * `PTO TMATMUL_ACC`:
   `BSTART.TMATMUL.ACC` (+ ACC convert/output block when needed)
-* `PTO vec template ops` (`TADD`, `TSUB`, `TROWMAX`, ...):
-  `BSTART.TEPL(<TileOpcode>)` + descriptor stream (`B.ARG`/`B.IOR`/`B.IOT`) as required by the op profile.
+* `PTO template ops` (`TADD`, `TSUB`, `TROWMAX`, ...):
+  `BSTART.TEPL` with assigned Mode/Function plus the descriptor stream required by the operation contract.
 
 Normative notes:
 
-* `B.ARG + B.IOR` are both required for descriptor-rich `TLOAD/TSTORE`.
+* `B.DATR + B.IOR` are required when their operation-specific contracts request datatype/layout/pad and scalar bindings.
 * `TLOAD/TSTORE` dtype comes from encoded `BSTART.TMA` selector state (surfaced as `BSTART.TLOAD/BSTART.TSTORE` aliases),
-  and pad policy comes from `B.ARG` (not `B.CATR/B.DATR`).
-* `TMOV` mode/convert policy comes from `B.ARG`; destination tile kind/size comes from `B.IOT`.
-* TEPL template-op selection is carried by `BSTART.TEPL TileOpcode`; no standalone `TVEC` header encoding exists.
+  and applicable pad/layout policy comes from `B.DATR`.
+* `TMOV` layout/convert policy comes from applicable `B.DATR` fields; destination tile kind/size comes from `B.IOT`.
+* TEPL template-op selection is carried by raw Mode/Function fields; no standalone `TVEC` header encoding exists.
 * Multiple `B.IOR` and `B.IOT` descriptors in one header are legal and consumed in order.
 * Strict CUBE chain: `TMATMUL` seeds ACC, zero or more `TMATMUL.ACC` update ACC, then `ACCCVT` materializes tile output.
 * Compiler strict checks MUST reject `TMATMUL.ACC`/`ACCCVT` when the accumulator dependency does not derive from
@@ -697,7 +672,7 @@ The architectural interface between the first and second layer is a block comman
    live-outs.
 ** `B.IOT`: performs tile rename, computes input/output tile base addresses, and packs those addresses into the command
    payload.
-** `B.ARG` / `B.CATR/B.DATR`: pack block-type-defined immediates/attributes.
+** `B.CATR/B.DATR`: pack block-type-defined control and data attributes.
 ** `B.DIM`: packs block dimensions (`LB0..LB2`) for SIMT/vector replay and for tile engines.
 ** `B.TEXT`: packs the out-of-line body `TPC` for decoupled blocks.
 * `BSTOP` (or an implicit boundary at the next block start marker) finalizes the command and dispatches it to the
@@ -714,9 +689,9 @@ The architectural interface between the first and second layer is a block comman
 `BSTART.TEPL` provides a generic extensible block type for implementation-defined in-core accelerators and for
 PTO template-op families (`TADD`, `TSUB`, `TROWMAX`, etc.).
 
-* `BSTART.TEPL` headers use the same descriptor families (`B.CATR/B.DATR`, `B.ARG`, `B.IOR`, `B.IOT`) as other decoupled
+* TEPL-family typed headers use the same descriptor families (`B.CATR/B.DATR`, `B.IOR`, `B.IOT`) as other decoupled
   blocks.
-* `TileOpcode` is the tile opcode selector; `DataType` is carried in the same header.
+* `Mode` and `Function` select the operation; `DataType` is carried in the same header.
 * TEPL template ops are header-driven and do not require a separate SIMT body selector.
 * `BSTART.TEPL` blocks must follow the same block-boundary legality rules and must not directly bypass the memory and
   privilege contracts defined in this manual.

@@ -63,7 +63,7 @@ def main() -> int:
     spec = json.loads((ROOT / "isa/v0.57/linxisa-v0.57.json").read_text(encoding="utf-8"))
     instructions = spec["instructions"]
     mnemonics = {str(inst["mnemonic"]) for inst in instructions}
-    assert spec["version"] == "0.57.0"
+    assert spec["version"] == "0.57.1"
     assert "B.IOD" not in mnemonics
     assert "BSTART.PAR" not in mnemonics
     assert {
@@ -84,7 +84,8 @@ def main() -> int:
 
     retired = {entry["retired_mnemonic"]: entry for entry in spec["retired_encodings"]["entries"]}
     assert retired["B.IOD"]["disposition"] == "reserved"
-    assert retired["BSTART.PAR"]["replacement_mnemonic"] == "BSTART.TEPL"
+    assert retired["BSTART.PAR"]["disposition"] == "reserved"
+    assert "replacement_mnemonic" not in retired["BSTART.PAR"]
 
     exact_calls = [
         inst
@@ -133,12 +134,9 @@ def main() -> int:
             assert isinstance(definition["reserved_values"], list), name
     assert field_source["fields"]["reserve"]["allowed_values"] == [0]
     assert field_source["fields"]["reserve"]["documented_only"] is True
-    assert field_source["fields"]["TileOpcode"]["reserved_ranges"] == [
-        [73, 127],
-        [140, 191],
-        [201, 223],
-        [228, 1023],
-    ]
+    assert "TileOpcode" not in field_source["fields"]
+    assert field_source["fields"]["Mode"]["widths"] == [2]
+    assert field_source["fields"]["Function"]["widths"] == [5]
 
     tma = spec["state"]["engine_ops"]["tma"]
     assert tma["function_field_bits"] == [0, 4]
@@ -188,7 +186,10 @@ def main() -> int:
     }
     assert "reserve" not in observed_fields
     b_catr = next(inst for inst in instructions if inst["mnemonic"] == "B.CATR")
-    assert int(b_catr["encoding"]["parts"][0]["mask"], 0) == 0x03FFFFFF
+    assert (
+        int(b_catr["encoding"]["parts"][0]["mask"], 0),
+        int(b_catr["encoding"]["parts"][0]["match"], 0),
+    ) == (0xFBF07FFF, 0x00000023)
     trace_hint = next(inst for inst in instructions if inst["asm"] == "B.HINT TRACE.{begin, end}")
     assert int(trace_hint["encoding"]["parts"][0]["mask"], 0) == 0xFFFF7FFF
 

@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `BSTART.TEPL TileOpcode, DataType`
+- `BSTART.TEPL Mode, Function, DataType`
 
 ## Encoding
 
@@ -36,13 +36,13 @@ EndBlock(); BeginNextBlock(/* kind */);
 
 ## Encoding Notes
 
-- `Tile opcode selects PTO template ops. Canonical established assignments require TileOpcode[9:6]=0 and pack TileOpcode[5]=Mode with TileOpcode[4:0]=Function; unassigned values remain reserved for future template extension.`
+- `PTO ISA 0.57.1 TEPL selector: logical_selector=(Mode<<5)|Function. There is no legacy 10-bit TileOpcode decode.`
 
 ## Full Catalog Forms
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `BSTART.TEPL TileOpcode, DataType` | 32 | — |
+| `BSTART.TEPL Mode, Function, DataType` | 32 | — |
 
 <div class="insn-nav">
 

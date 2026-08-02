@@ -193,8 +193,8 @@ Vector reduction contract (`V.RD*` family):
 [[progmodel-tile]]
 === Tile registers (TAU)
 
-Linx defines a tile register file used by accelerator-oriented *tile blocks* (e.g. `BSTART.TMA`, `BSTART.CUBE`,
-`BSTART.MPAR`, `BSTART.MSEQ`, `BSTART.VPAR`, `BSTART.VSEQ`).
+Linx defines a tile register file used by accelerator-oriented *tile blocks* (for example `BSTART.TLOAD`,
+`BSTART.TMATMUL`, `BSTART.TEPL`, `BSTART.MPAR`, `BSTART.MSEQ`, `BSTART.VPAR`, and `BSTART.VSEQ`).
 
 Bring-up model:
 

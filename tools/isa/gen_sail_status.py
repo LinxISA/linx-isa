@@ -50,7 +50,7 @@ def build(spec_path: Path, policy_path: Path) -> dict[str, Any]:
         }
 
     return {
-        "schema_version": "linx-sail-status-v0.57.0",
+        "schema_version": "linx-sail-status-v0.57.1",
         "spec_version": str(spec.get("version") or ""),
         "forms": forms,
     }

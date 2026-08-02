@@ -68,9 +68,12 @@ class MainClassificationTest(unittest.TestCase):
             spec = root / "spec.json"
             status = root / "status.json"
             toolchain = root / "toolchain.json"
-            spec.write_text('{"instructions": [{"id": "addi", "mnemonic": "ADDI"}]}', encoding="utf-8")
+            spec.write_text(
+                '{"version": "0.57.1", "instructions": [{"id": "addi", "mnemonic": "ADDI"}]}',
+                encoding="utf-8",
+            )
             status.write_text(
-                '{"schema_version": "linx-sail-status-v0.57.0", '
+                '{"schema_version": "linx-sail-status-v0.57.1", '
                 '"forms": {"addi": {"mnemonic": "ADDI", "status": "architecturally-complete"}}}',
                 encoding="utf-8",
             )

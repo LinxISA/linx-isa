@@ -91,8 +91,8 @@ def validate(root: Path) -> list[str]:
     if not spec_path.is_file():
         return [f"missing v0.57 compiled spec: {spec_path}"]
     spec = _load_spec(root)
-    if spec.get("version") != "0.57.0":
-        errors.append(f"{spec_path}: expected version 0.57.0, got {spec.get('version')!r}")
+    if spec.get("version") != "0.57.1":
+        errors.append(f"{spec_path}: expected version 0.57.1, got {spec.get('version')!r}")
 
     mnemonics = {str(inst.get("mnemonic") or "") for inst in spec.get("instructions", [])}
     required = {
@@ -132,10 +132,10 @@ def validate(root: Path) -> list[str]:
         errors.append(f"missing v0.57 release manifest: {release_manifest}")
     else:
         manifest = json.loads(release_manifest.read_text(encoding="utf-8"))
-        if manifest.get("profile") != "v0.57" or manifest.get("version") != "0.57.0":
-            errors.append(f"{release_manifest}: expected standalone v0.57.0 release identity")
-        if not manifest.get("policy", {}).get("standalone_release"):
-            errors.append(f"{release_manifest}: standalone_release policy is required")
+        if manifest.get("profile") != "v0.57" or manifest.get("version") != "0.57.1":
+            errors.append(f"{release_manifest}: expected standalone v0.57.1 release identity")
+        if not manifest.get("policy", {}).get("pto_spec_is_sole_source"):
+            errors.append(f"{release_manifest}: pto_spec_is_sole_source policy is required")
 
     retired_profile = root / "isa/v0.56"
     if retired_profile.exists():

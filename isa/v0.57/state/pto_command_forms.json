@@ -1,0 +1,5349 @@
+{
+  "form_count": 99,
+  "form_constraint_count": 35,
+  "forms": [
+    {
+      "asm": "B.CATR {trap, atomic, <aq, rl, aqrl>, far, dr}",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xfbf07fff",
+          "match": "0x00000023",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DR",
+          "pieces": [
+            {
+              "instruction_lsb": 26,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "trap",
+          "pieces": [
+            {
+              "instruction_lsb": 19,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "far",
+          "pieces": [
+            {
+              "instruction_lsb": 18,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "atom",
+          "pieces": [
+            {
+              "instruction_lsb": 17,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "aq",
+          "pieces": [
+            {
+              "instruction_lsb": 16,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "rl",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        }
+      ],
+      "form_id": "b_catr_32_e90bd52fa480",
+      "length_bits": 32,
+      "mnemonic": "B.CATR",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Control Attribute",
+      "semantic_handler": "SetBundleControlAttributes",
+      "semantic_summary": "Latches bundle control, trap, atomic, ordering, and address-class attributes.",
+      "status": "accepted"
+    },
+    {
+      "asm": "B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize}",
+      "constraints": [
+        {
+          "field": "CMode",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        },
+        {
+          "field": "Layout",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            3,
+            4,
+            6,
+            8,
+            9,
+            17,
+            18,
+            20,
+            27,
+            28,
+            30
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x000c707f",
+          "match": "0x00001023",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "CMode",
+          "pieces": [
+            {
+              "instruction_lsb": 29,
+              "value_lsb": 0,
+              "width": 3
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 3
+        },
+        {
+          "name": "PadValueOrByteId",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 2
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 2
+        },
+        {
+          "name": "Sat",
+          "pieces": [
+            {
+              "instruction_lsb": 26,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "Canonicalize",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "RMode",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 3
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 3
+        },
+        {
+          "name": "Layout",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "b_datr_32_c161a042ff38",
+      "length_bits": 32,
+      "mnemonic": "B.DATR",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Data Attribute",
+      "semantic_handler": "SetBundleDataAttributes",
+      "semantic_summary": "Latches tile layout, data type, padding, conversion, rounding, and saturation attributes.",
+      "status": "accepted"
+    },
+    {
+      "asm": "B.DIM RegSrc, uimm, ->LB2",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000707f",
+          "match": "0x00002043",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "RegSrc",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "uimm17",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 12
+            },
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 12,
+              "width": 5
+            }
+          ],
+          "signedness": "unsigned",
+          "width": 17
+        }
+      ],
+      "form_id": "b_dim_32_1caa1aa2944a",
+      "length_bits": 32,
+      "mnemonic": "B.DIM",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Argument",
+      "semantic_handler": "SetBundleDimension",
+      "semantic_summary": "Writes one of the three bundle-local dimension registers.",
+      "status": "accepted"
+    },
+    {
+      "asm": "B.DIM RegSrc, uimm, ->LB0",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000707f",
+          "match": "0x00000043",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "RegSrc",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "uimm17",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 12
+            },
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 12,
+              "width": 5
+            }
+          ],
+          "signedness": "unsigned",
+          "width": 17
+        }
+      ],
+      "form_id": "b_dim_32_27602ab68929",
+      "length_bits": 32,
+      "mnemonic": "B.DIM",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Argument",
+      "semantic_handler": "SetBundleDimension",
+      "semantic_summary": "Writes one of the three bundle-local dimension registers.",
+      "status": "accepted"
+    },
+    {
+      "asm": "B.DIM RegSrc, uimm, ->LB1",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000707f",
+          "match": "0x00001043",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "RegSrc",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "uimm17",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 12
+            },
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 12,
+              "width": 5
+            }
+          ],
+          "signedness": "unsigned",
+          "width": 17
+        }
+      ],
+      "form_id": "b_dim_32_4191099a5f4d",
+      "length_bits": 32,
+      "mnemonic": "B.DIM",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Argument",
+      "semantic_handler": "SetBundleDimension",
+      "semantic_summary": "Writes one of the three bundle-local dimension registers.",
+      "status": "accepted"
+    },
+    {
+      "asm": "B.HINT {BR.{likely, unlikely}, TEMP.{hot, warm, cool, none}, PRFSIZE}",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00087fff",
+          "match": "0x00000033",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "L/UL",
+          "pieces": [
+            {
+              "instruction_lsb": 16,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "V",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "prefetch_size",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 12
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 12
+        },
+        {
+          "name": "temp",
+          "pieces": [
+            {
+              "instruction_lsb": 17,
+              "value_lsb": 0,
+              "width": 2
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 2
+        }
+      ],
+      "form_id": "b_hint_32_69d942ff1583",
+      "length_bits": 32,
+      "mnemonic": "B.HINT",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Hint",
+      "semantic_handler": "SetBundleHint",
+      "semantic_summary": "Records non-functional branch, temperature, prefetch-size, or trace guidance.",
+      "status": "accepted"
+    },
+    {
+      "asm": "B.HINT TRACE.{begin, end}",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xffff7fff",
+          "match": "0x00001033",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "B/E",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        }
+      ],
+      "form_id": "b_hint_32_f7d01d734925",
+      "length_bits": 32,
+      "mnemonic": "B.HINT",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Hint",
+      "semantic_handler": "SetBundleHint",
+      "semantic_summary": "Records non-functional branch, temperature, prefetch-size, or trace guidance.",
+      "status": "accepted"
+    },
+    {
+      "asm": "B.IOR [RegSrc0, RegSrc1, RegSrc2],[RegDst]",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0600707f",
+          "match": "0x00000013",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "RegDst",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "RegSrc0",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "RegSrc1",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "RegSrc2",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "b_ior_32_c3ea71404eb3",
+      "length_bits": 32,
+      "mnemonic": "B.IOR",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Input & Output",
+      "semantic_handler": "BindBundleScalarIO",
+      "semantic_summary": "Binds encoded scalar inputs and outputs to the current bundle interface.",
+      "status": "accepted"
+    },
+    {
+      "asm": "B.IOT SrcTile0<.reuse>, <last>, ->DstTile<Size>",
+      "constraints": [
+        {
+          "field": "DstTile",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "field": "imm4",
+          "operator": "one-of",
+          "values": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xfc00787f",
+          "match": "0x00005013",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "SrcTile0",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 6
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 6
+        },
+        {
+          "name": "L",
+          "pieces": [
+            {
+              "instruction_lsb": 19,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "imm4",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 4
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 4
+        },
+        {
+          "name": "S0R",
+          "pieces": [
+            {
+              "instruction_lsb": 10,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "DstTile",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 3
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 3
+        }
+      ],
+      "form_id": "b_iot_32_10db6db84f5d",
+      "length_bits": 32,
+      "mnemonic": "B.IOT",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Input & Output",
+      "semantic_handler": "BindBundleTileIO",
+      "semantic_summary": "Binds encoded tile inputs and outputs, reuse, last-use, and allocation-size metadata.",
+      "status": "accepted"
+    },
+    {
+      "asm": "B.IOT SrcTile0<.reuse>, SrcTile1<.reuse>, <last>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0007f3ff",
+          "match": "0x00004013",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "SrcTile1",
+          "pieces": [
+            {
+              "instruction_lsb": 26,
+              "value_lsb": 0,
+              "width": 6
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 6
+        },
+        {
+          "name": "SrcTile0",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 6
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 6
+        },
+        {
+          "name": "L",
+          "pieces": [
+            {
+              "instruction_lsb": 19,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "S1R",
+          "pieces": [
+            {
+              "instruction_lsb": 11,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "S0R",
+          "pieces": [
+            {
+              "instruction_lsb": 10,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        }
+      ],
+      "form_id": "b_iot_32_2c07e7177fad",
+      "length_bits": 32,
+      "mnemonic": "B.IOT",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Input & Output",
+      "semantic_handler": "BindBundleTileIO",
+      "semantic_summary": "Binds encoded tile inputs and outputs, reuse, last-use, and allocation-size metadata.",
+      "status": "accepted"
+    },
+    {
+      "asm": "B.IOT SrcTile0<.reuse>, SrcTile1<.reuse>, <last>, ->DstTile<Size>",
+      "constraints": [
+        {
+          "field": "DstTile",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "field": "imm4",
+          "operator": "one-of",
+          "values": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000707f",
+          "match": "0x00004013",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "SrcTile1",
+          "pieces": [
+            {
+              "instruction_lsb": 26,
+              "value_lsb": 0,
+              "width": 6
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 6
+        },
+        {
+          "name": "SrcTile0",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 6
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 6
+        },
+        {
+          "name": "L",
+          "pieces": [
+            {
+              "instruction_lsb": 19,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "imm4",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 4
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 4
+        },
+        {
+          "name": "S1R",
+          "pieces": [
+            {
+              "instruction_lsb": 11,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "S0R",
+          "pieces": [
+            {
+              "instruction_lsb": 10,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "DstTile",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 3
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 3
+        }
+      ],
+      "form_id": "b_iot_32_8b8bce6bffe8",
+      "length_bits": 32,
+      "mnemonic": "B.IOT",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Input & Output",
+      "semantic_handler": "BindBundleTileIO",
+      "semantic_summary": "Binds encoded tile inputs and outputs, reuse, last-use, and allocation-size metadata.",
+      "status": "accepted"
+    },
+    {
+      "asm": "B.IOT SrcTile0<.reuse>, <last>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xfc07fbff",
+          "match": "0x00005013",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "SrcTile0",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 6
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 6
+        },
+        {
+          "name": "L",
+          "pieces": [
+            {
+              "instruction_lsb": 19,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "S0R",
+          "pieces": [
+            {
+              "instruction_lsb": 10,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        }
+      ],
+      "form_id": "b_iot_32_c11eb189dd83",
+      "length_bits": 32,
+      "mnemonic": "B.IOT",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Input & Output",
+      "semantic_handler": "BindBundleTileIO",
+      "semantic_summary": "Binds encoded tile inputs and outputs, reuse, last-use, and allocation-size metadata.",
+      "status": "accepted"
+    },
+    {
+      "asm": "B.IOT <last>, ->DstTile<Size>",
+      "constraints": [
+        {
+          "field": "DstTile",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "field": "imm4",
+          "operator": "one-of",
+          "values": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xfff07c7f",
+          "match": "0x00006013",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "L",
+          "pieces": [
+            {
+              "instruction_lsb": 19,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "imm4",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 4
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 4
+        },
+        {
+          "name": "DstTile",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 3
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 3
+        }
+      ],
+      "form_id": "b_iot_32_efa0fe3fe49a",
+      "length_bits": 32,
+      "mnemonic": "B.IOT",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Input & Output",
+      "semantic_handler": "BindBundleTileIO",
+      "semantic_summary": "Binds encoded tile inputs and outputs, reuse, last-use, and allocation-size metadata.",
+      "status": "accepted"
+    },
+    {
+      "asm": "B.TEXT <label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000007f",
+          "match": "0x00000003",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "simm25",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 25
+            }
+          ],
+          "signedness": "signed",
+          "width": 25
+        }
+      ],
+      "form_id": "b_text_32_1ce09f50e5dd",
+      "length_bits": 32,
+      "mnemonic": "B.TEXT",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Offset",
+      "semantic_handler": "SetBundleBodyAddress",
+      "semantic_summary": "Sets the out-of-line body entry address for a decoupled bundle.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART {DIRECT, CALL}, <label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000007f",
+          "match": "0x00000011",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "simm25",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 25
+            }
+          ],
+          "signedness": "signed",
+          "width": 25
+        }
+      ],
+      "form_id": "bstart_32_7eb93b649748",
+      "length_bits": 32,
+      "mnemonic": "BSTART",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART COND, <label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000007f",
+          "match": "0x00000021",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "simm25",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 25
+            }
+          ],
+          "signedness": "signed",
+          "width": 25
+        }
+      ],
+      "form_id": "bstart_32_e11e678a32ac",
+      "length_bits": 32,
+      "mnemonic": "BSTART",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.CALL <br_label>, <rt_label>, ->ra",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xf83f000f",
+          "match": "0x50160002",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "simm12",
+          "pieces": [
+            {
+              "instruction_lsb": 4,
+              "value_lsb": 0,
+              "width": 12
+            }
+          ],
+          "signedness": "signed",
+          "width": 12
+        },
+        {
+          "name": "uimm5",
+          "pieces": [
+            {
+              "instruction_lsb": 22,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "unsigned",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_call_32_9404418d1ae5",
+      "length_bits": 32,
+      "mnemonic": "BSTART CALL",
+      "semantic_family": "BBD",
+      "semantic_group": "BSTART",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.ACCCVT DataType",
+      "constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x07ffffff",
+          "match": "0x00831181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_acccvt_32_56c3ce3838c5",
+      "length_bits": 32,
+      "mnemonic": "BSTART.ACCCVT",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.FP RET",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xffffffff",
+          "match": "0x00007101",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [],
+      "form_id": "bstart_fp_32_0c671a644214",
+      "length_bits": 32,
+      "mnemonic": "BSTART.FP",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.FP ICALL",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xffffffff",
+          "match": "0x00006101",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [],
+      "form_id": "bstart_fp_32_24db3966d6ba",
+      "length_bits": 32,
+      "mnemonic": "BSTART.FP",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.FP COND, <label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff",
+          "match": "0x00003101",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "simm17",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 17
+            }
+          ],
+          "signedness": "signed",
+          "width": 17
+        }
+      ],
+      "form_id": "bstart_fp_32_58ad7954fb49",
+      "length_bits": 32,
+      "mnemonic": "BSTART.FP",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.FP IND",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xffffffff",
+          "match": "0x00005101",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [],
+      "form_id": "bstart_fp_32_7978795a29a1",
+      "length_bits": 32,
+      "mnemonic": "BSTART.FP",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.FP DIRECT, <label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff",
+          "match": "0x00002101",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "simm17",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 17
+            }
+          ],
+          "signedness": "signed",
+          "width": 17
+        }
+      ],
+      "form_id": "bstart_fp_32_d00a708a81f0",
+      "length_bits": 32,
+      "mnemonic": "BSTART.FP",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.FP CALL, <label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff",
+          "match": "0x00004101",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "simm17",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 17
+            }
+          ],
+          "signedness": "signed",
+          "width": 17
+        }
+      ],
+      "form_id": "bstart_fp_32_dd7bc8dd694c",
+      "length_bits": 32,
+      "mnemonic": "BSTART.FP",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.FP FALL<, fixup_label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff",
+          "match": "0x00001101",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "simm17",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 17
+            }
+          ],
+          "signedness": "signed",
+          "width": 17
+        }
+      ],
+      "form_id": "bstart_fp_32_face4f238d84",
+      "length_bits": 32,
+      "mnemonic": "BSTART.FP",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.MGATHER DataType",
+      "constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x07ffffff",
+          "match": "0x00411181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_mgather_32_c9defbf18276",
+      "length_bits": 32,
+      "mnemonic": "BSTART.MGATHER",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.MGATHER.CAS DataType",
+      "constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x07ffffff",
+          "match": "0x00811181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_mgather_cas_32_fd8c8a3b720a",
+      "length_bits": 32,
+      "mnemonic": "BSTART.MGATHER.CAS",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.MGATHER.MASK DataType",
+      "constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x07ffffff",
+          "match": "0x00611181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_mgather_mask_32_5573241cd944",
+      "length_bits": 32,
+      "mnemonic": "BSTART.MGATHER.MASK",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.MPAR <VS8, VS16>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xf9ffffff",
+          "match": "0x00001181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "Mode",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 2
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 2
+        }
+      ],
+      "form_id": "bstart_mpar_32_2d163417c615",
+      "length_bits": 32,
+      "mnemonic": "BSTART.MPAR",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.MSCATTER DataType",
+      "constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x07ffffff",
+          "match": "0x00511181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_mscatter_32_0f0ba08bd798",
+      "length_bits": 32,
+      "mnemonic": "BSTART.MSCATTER",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.MSCATTER.MASK DataType",
+      "constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x07ffffff",
+          "match": "0x00711181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_mscatter_mask_32_2a33eed646f7",
+      "length_bits": 32,
+      "mnemonic": "BSTART.MSCATTER.MASK",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.MSEQ <VS8, VS16>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xf9ffffff",
+          "match": "0x00009181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "Mode",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 2
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 2
+        }
+      ],
+      "form_id": "bstart_mseq_32_39343a456ec5",
+      "length_bits": 32,
+      "mnemonic": "BSTART.MSEQ",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.STD COND, <label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff",
+          "match": "0x00003001",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "simm17",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 17
+            }
+          ],
+          "signedness": "signed",
+          "width": 17
+        }
+      ],
+      "form_id": "bstart_std_32_1ef99c4cedcb",
+      "length_bits": 32,
+      "mnemonic": "BSTART.STD",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.STD ICALL",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xffffffff",
+          "match": "0x00006001",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [],
+      "form_id": "bstart_std_32_3f6980d013f7",
+      "length_bits": 32,
+      "mnemonic": "BSTART.STD",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.STD FALL<, fixup_label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff",
+          "match": "0x00001001",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "simm17",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 17
+            }
+          ],
+          "signedness": "signed",
+          "width": 17
+        }
+      ],
+      "form_id": "bstart_std_32_441ad677fffe",
+      "length_bits": 32,
+      "mnemonic": "BSTART.STD",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.STD RET",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xffffffff",
+          "match": "0x00007001",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [],
+      "form_id": "bstart_std_32_816dfa76cc4a",
+      "length_bits": 32,
+      "mnemonic": "BSTART.STD",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.STD IND",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xffffffff",
+          "match": "0x00005001",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [],
+      "form_id": "bstart_std_32_986b7ee2cf6a",
+      "length_bits": 32,
+      "mnemonic": "BSTART.STD",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.STD CALL, <label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff",
+          "match": "0x00004001",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "simm17",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 17
+            }
+          ],
+          "signedness": "signed",
+          "width": 17
+        }
+      ],
+      "form_id": "bstart_std_32_b05390d367cf",
+      "length_bits": 32,
+      "mnemonic": "BSTART.STD",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.STD DIRECT, <label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff",
+          "match": "0x00002001",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "simm17",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 17
+            }
+          ],
+          "signedness": "signed",
+          "width": 17
+        }
+      ],
+      "form_id": "bstart_std_32_c1de85e06878",
+      "length_bits": 32,
+      "mnemonic": "BSTART.STD",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.SYS FALL<, fixup_label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff",
+          "match": "0x00001081",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "simm17",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 17
+            }
+          ],
+          "signedness": "signed",
+          "width": 17
+        }
+      ],
+      "form_id": "bstart_sys_32_762d9d84a6d8",
+      "length_bits": 32,
+      "mnemonic": "BSTART.SYS",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.TEPL Mode, Function, DataType",
+      "constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x000fffff",
+          "match": "0x00019181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "Mode",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 2
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 2
+        },
+        {
+          "name": "Function",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_tepl_32_d022db6dacb3",
+      "length_bits": 32,
+      "mnemonic": "BSTART.TEPL",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.TGEMV DataType",
+      "constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x07ffffff",
+          "match": "0x01031181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_tgemv_32_ae19f5b678f5",
+      "length_bits": 32,
+      "mnemonic": "BSTART.TGEMV",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.TGEMV.ACC DataType",
+      "constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x07ffffff",
+          "match": "0x01231181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_tgemv_acc_32_9a471b21913e",
+      "length_bits": 32,
+      "mnemonic": "BSTART.TGEMV.ACC",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.TGEMV.BIAS DataType",
+      "constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x07ffffff",
+          "match": "0x01131181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_tgemv_bias_32_186ee96c0a8b",
+      "length_bits": 32,
+      "mnemonic": "BSTART.TGEMV.BIAS",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.TGEMVMX DataType",
+      "constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x07ffffff",
+          "match": "0x01431181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_tgemvmx_32_ae5e005f6589",
+      "length_bits": 32,
+      "mnemonic": "BSTART.TGEMVMX",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.TGEMVMX.ACC DataType",
+      "constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x07ffffff",
+          "match": "0x01631181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_tgemvmx_acc_32_368647b04bb0",
+      "length_bits": 32,
+      "mnemonic": "BSTART.TGEMVMX.ACC",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.TGEMVMX.BIAS DataType",
+      "constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x07ffffff",
+          "match": "0x01531181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_tgemvmx_bias_32_d23011f15171",
+      "length_bits": 32,
+      "mnemonic": "BSTART.TGEMVMX.BIAS",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.TLOAD DataType",
+      "constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x07ffffff",
+          "match": "0x00011181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_tload_32_d0c18bb0ab15",
+      "length_bits": 32,
+      "mnemonic": "BSTART.TLOAD",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.TMATMUL DataType",
+      "constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x07ffffff",
+          "match": "0x00031181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_tmatmul_32_f9da70e4e0ad",
+      "length_bits": 32,
+      "mnemonic": "BSTART.TMATMUL",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.TMATMUL.ACC DataType",
+      "constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x07ffffff",
+          "match": "0x00231181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_tmatmul_acc_32_0c8c62e5f00a",
+      "length_bits": 32,
+      "mnemonic": "BSTART.TMATMUL.ACC",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.TMATMUL.BIAS DataType",
+      "constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x07ffffff",
+          "match": "0x00131181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_tmatmul_bias_32_4d5a498d12f3",
+      "length_bits": 32,
+      "mnemonic": "BSTART.TMATMUL.BIAS",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.TMATMULMX DataType",
+      "constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x07ffffff",
+          "match": "0x00431181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_tmatmulmx_32_e26cb3874648",
+      "length_bits": 32,
+      "mnemonic": "BSTART.TMATMULMX",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.TMATMULMX.ACC DataType",
+      "constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x07ffffff",
+          "match": "0x00631181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_tmatmulmx_acc_32_70fa59b0ab4c",
+      "length_bits": 32,
+      "mnemonic": "BSTART.TMATMULMX.ACC",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.TMATMULMX.BIAS DataType",
+      "constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x07ffffff",
+          "match": "0x00531181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_tmatmulmx_bias_32_098c7efa51b0",
+      "length_bits": 32,
+      "mnemonic": "BSTART.TMATMULMX.BIAS",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.TMOV DataType",
+      "constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x07ffffff",
+          "match": "0x00211181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_tmov_32_211446509efb",
+      "length_bits": 32,
+      "mnemonic": "BSTART.TMOV",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.TPREFETCH DataType",
+      "constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x07ffffff",
+          "match": "0x00311181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_tprefetch_32_d5f83e5aadf6",
+      "length_bits": 32,
+      "mnemonic": "BSTART.TPREFETCH",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.TSTORE DataType",
+      "constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x07ffffff",
+          "match": "0x00111181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_tstore_32_4048b6e8b0f4",
+      "length_bits": 32,
+      "mnemonic": "BSTART.TSTORE",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTOP",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xffffffff",
+          "match": "0x00000001",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [],
+      "form_id": "bstop_32_d25b09fdd59c",
+      "length_bits": 32,
+      "mnemonic": "BSTOP",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStop",
+      "semantic_summary": "Commits the current bundle and transfers to its selected continuation.",
+      "status": "accepted"
+    },
+    {
+      "asm": "C.B.DIM RegSrc, ->{LB0, LB1, LB2}",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xc03f",
+          "match": "0xc03c",
+          "width_bits": 16
+        }
+      ],
+      "encoding_kind": "C16",
+      "fields": [
+        {
+          "name": "LoopNest",
+          "pieces": [
+            {
+              "instruction_lsb": 11,
+              "value_lsb": 0,
+              "width": 3
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 3
+        },
+        {
+          "name": "RegSrc",
+          "pieces": [
+            {
+              "instruction_lsb": 6,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "c_b_dim_16_14f1b8fba5e6",
+      "length_bits": 16,
+      "mnemonic": "C.B.DIM",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Dimension",
+      "semantic_handler": "SetBundleDimension",
+      "semantic_summary": "Writes one of the three bundle-local dimension registers.",
+      "status": "accepted"
+    },
+    {
+      "asm": "C.B.DIMI imm, ->{LB0, LB1, LB2}",
+      "constraints": [
+        {
+          "field": "LoopNest",
+          "operator": "not-equal",
+          "value": 3
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x003f",
+          "match": "0x003c",
+          "width_bits": 16
+        }
+      ],
+      "encoding_kind": "C16",
+      "fields": [
+        {
+          "name": "LoopNest",
+          "pieces": [
+            {
+              "instruction_lsb": 14,
+              "value_lsb": 0,
+              "width": 2
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 2
+        },
+        {
+          "name": "imm8",
+          "pieces": [
+            {
+              "instruction_lsb": 6,
+              "value_lsb": 0,
+              "width": 8
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 8
+        }
+      ],
+      "form_id": "c_b_dimi_16_3f1b113c76ce",
+      "length_bits": 16,
+      "mnemonic": "C.B.DIMI",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Dimension",
+      "semantic_handler": "SetBundleDimension",
+      "semantic_summary": "Writes one of the three bundle-local dimension registers.",
+      "status": "accepted"
+    },
+    {
+      "asm": "C.BSTART COND,  label",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x000f",
+          "match": "0x0004",
+          "width_bits": 16
+        }
+      ],
+      "encoding_kind": "C16",
+      "fields": [
+        {
+          "name": "simm12",
+          "pieces": [
+            {
+              "instruction_lsb": 4,
+              "value_lsb": 0,
+              "width": 12
+            }
+          ],
+          "signedness": "signed",
+          "width": 12
+        }
+      ],
+      "form_id": "c_bstart_16_c4e238a9227a",
+      "length_bits": 16,
+      "mnemonic": "C.BSTART",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "C.BSTART DIRECT, label",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x000f",
+          "match": "0x0002",
+          "width_bits": 16
+        }
+      ],
+      "encoding_kind": "C16",
+      "fields": [
+        {
+          "name": "simm12",
+          "pieces": [
+            {
+              "instruction_lsb": 4,
+              "value_lsb": 0,
+              "width": 12
+            }
+          ],
+          "signedness": "signed",
+          "width": 12
+        }
+      ],
+      "form_id": "c_bstart_16_f833d2a4753c",
+      "length_bits": 16,
+      "mnemonic": "C.BSTART",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "C.BSTART.FP BrType",
+      "constraints": [
+        {
+          "field": "BrType",
+          "operator": "not-equal",
+          "value": 0
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xc7ff",
+          "match": "0x0080",
+          "width_bits": 16
+        }
+      ],
+      "encoding_kind": "C16",
+      "fields": [
+        {
+          "name": "BrType",
+          "pieces": [
+            {
+              "instruction_lsb": 11,
+              "value_lsb": 0,
+              "width": 3
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 3
+        }
+      ],
+      "form_id": "c_bstart_fp_16_9dcef7e3a85b",
+      "length_bits": 16,
+      "mnemonic": "C.BSTART.FP",
+      "semantic_family": "BBD",
+      "semantic_group": "C.BSTART",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "C.BSTART.MPAR FALL",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xffff",
+          "match": "0x08c0",
+          "width_bits": 16
+        }
+      ],
+      "encoding_kind": "C16",
+      "fields": [],
+      "form_id": "c_bstart_mpar_16_66c3ef2226ec",
+      "length_bits": 16,
+      "mnemonic": "C.BSTART.MPAR",
+      "semantic_family": "BBD",
+      "semantic_group": "C.BSTART",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "C.BSTART.MSEQ FALL",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xffff",
+          "match": "0x48c0",
+          "width_bits": 16
+        }
+      ],
+      "encoding_kind": "C16",
+      "fields": [],
+      "form_id": "c_bstart_mseq_16_b5597e0e41c2",
+      "length_bits": 16,
+      "mnemonic": "C.BSTART.MSEQ",
+      "semantic_family": "BBD",
+      "semantic_group": "C.BSTART",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "C.BSTART.STD BrType",
+      "constraints": [
+        {
+          "field": "BrType",
+          "operator": "not-equal",
+          "value": 0
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xc7ff",
+          "match": "0x0000",
+          "width_bits": 16
+        }
+      ],
+      "encoding_kind": "C16",
+      "fields": [
+        {
+          "name": "BrType",
+          "pieces": [
+            {
+              "instruction_lsb": 11,
+              "value_lsb": 0,
+              "width": 3
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 3
+        }
+      ],
+      "form_id": "c_bstart_std_16_8b40f078c14a",
+      "length_bits": 16,
+      "mnemonic": "C.BSTART.STD",
+      "semantic_family": "BBD",
+      "semantic_group": "C.BSTART",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "C.BSTART.SYS FALL",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xffff",
+          "match": "0x0840",
+          "width_bits": 16
+        }
+      ],
+      "encoding_kind": "C16",
+      "fields": [],
+      "form_id": "c_bstart_sys_16_ec213ce96eb7",
+      "length_bits": 16,
+      "mnemonic": "C.BSTART.SYS",
+      "semantic_family": "BBD",
+      "semantic_group": "C.BSTART",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "C.BSTOP",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xffff",
+          "match": "0x0000",
+          "width_bits": 16
+        }
+      ],
+      "encoding_kind": "C16",
+      "fields": [],
+      "form_id": "c_bstop_16_ca4743d8a95e",
+      "length_bits": 16,
+      "mnemonic": "C.BSTOP",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStop",
+      "semantic_summary": "Commits the current bundle and transfers to its selected continuation.",
+      "status": "accepted"
+    },
+    {
+      "asm": "ERCOV [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x06007fff",
+          "match": "0x00003031",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "RegSrc0",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "RegSrc1",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "RegSrc2",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "ercov_32_dc0be14a2d8b",
+      "length_bits": 32,
+      "mnemonic": "ERCOV",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "RecoverExecutionContext",
+      "semantic_summary": "Recovers the encoded execution-context range from memory.",
+      "status": "accepted"
+    },
+    {
+      "asm": "ESAVE [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x06007fff",
+          "match": "0x00002031",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "RegSrc0",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "RegSrc1",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "RegSrc2",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "esave_32_4c4f79fe3171",
+      "length_bits": 32,
+      "mnemonic": "ESAVE",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "SaveExecutionContext",
+      "semantic_summary": "Saves the encoded execution-context range to memory.",
+      "status": "accepted"
+    },
+    {
+      "asm": "FENTRY [RegSrc0 ~ RegSrcn], sp!, uimm",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000707f",
+          "match": "0x00000041",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "SrcBegin",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcEnd",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "uimm",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 3,
+              "width": 7
+            },
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 10,
+              "width": 5
+            }
+          ],
+          "signedness": "unsigned",
+          "width": 15
+        }
+      ],
+      "form_id": "fentry_32_a47584ec13b6",
+      "length_bits": 32,
+      "mnemonic": "FENTRY",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteFrameEntry",
+      "semantic_summary": "Atomically validates and creates a frame-template entry state.",
+      "status": "accepted"
+    },
+    {
+      "asm": "FEXIT [RegDst0 ~ RegDstn], sp!, uimm",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000707f",
+          "match": "0x00001041",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DstBegin",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "DstEnd",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "uimm",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 3,
+              "width": 7
+            },
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 10,
+              "width": 5
+            }
+          ],
+          "signedness": "unsigned",
+          "width": 15
+        }
+      ],
+      "form_id": "fexit_32_37b663f2a34d",
+      "length_bits": 32,
+      "mnemonic": "FEXIT",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteFrameExit",
+      "semantic_summary": "Atomically validates and commits a frame-template exit state.",
+      "status": "accepted"
+    },
+    {
+      "asm": "FRET.RA [RegDst0 ~ RegDstn], sp!, uimm",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000707f",
+          "match": "0x00002041",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DstBegin",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "DstEnd",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "uimm",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 3,
+              "width": 7
+            },
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 10,
+              "width": 5
+            }
+          ],
+          "signedness": "unsigned",
+          "width": 15
+        }
+      ],
+      "form_id": "fret_ra_32_659c886221c1",
+      "length_bits": 32,
+      "mnemonic": "FRET.RA",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteFrameReturnAddress",
+      "semantic_summary": "Restores a frame and returns through the retained return-address target.",
+      "status": "accepted"
+    },
+    {
+      "asm": "FRET.STK [RegDst0 ~ RegDstn], sp!, uimm",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000707f",
+          "match": "0x00003041",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DstBegin",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "DstEnd",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "uimm",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 3,
+              "width": 7
+            },
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 10,
+              "width": 5
+            }
+          ],
+          "signedness": "unsigned",
+          "width": 15
+        }
+      ],
+      "form_id": "fret_stk_32_4fe246bd8241",
+      "length_bits": 32,
+      "mnemonic": "FRET.STK",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteFrameReturnStack",
+      "semantic_summary": "Restores a frame and returns through the validated stack target.",
+      "status": "accepted"
+    },
+    {
+      "asm": "HL.BSTART.CALL <br_label>, <rt_label>, ->ra",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xf83f0000007f",
+          "match": "0x501600000011",
+          "width_bits": 48
+        }
+      ],
+      "encoding_kind": "HL48",
+      "fields": [
+        {
+          "name": "simm25",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 25
+            }
+          ],
+          "signedness": "signed",
+          "width": 25
+        },
+        {
+          "name": "uimm5",
+          "pieces": [
+            {
+              "instruction_lsb": 38,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "unsigned",
+          "width": 5
+        }
+      ],
+      "form_id": "hl_bstart_call_48_3c784c583c90",
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART CALL",
+      "semantic_family": "BBD",
+      "semantic_group": "BSTART",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "HL.BSTART.FP COND, <label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff000f",
+          "match": "0x00003101000e",
+          "width_bits": 48
+        }
+      ],
+      "encoding_kind": "HL48",
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 1,
+              "width": 17
+            },
+            {
+              "instruction_lsb": 4,
+              "value_lsb": 18,
+              "width": 12
+            }
+          ],
+          "signedness": "signed",
+          "width": 30
+        }
+      ],
+      "form_id": "hl_bstart_fp_48_038e2e96cf64",
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.FP",
+      "semantic_family": "BBD",
+      "semantic_group": "BSTART",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "HL.BSTART.FP FALL<, fixup_label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff000f",
+          "match": "0x00001101000e",
+          "width_bits": 48
+        }
+      ],
+      "encoding_kind": "HL48",
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 1,
+              "width": 17
+            },
+            {
+              "instruction_lsb": 4,
+              "value_lsb": 18,
+              "width": 12
+            }
+          ],
+          "signedness": "signed",
+          "width": 30
+        }
+      ],
+      "form_id": "hl_bstart_fp_48_43530d2ebfae",
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.FP",
+      "semantic_family": "BBD",
+      "semantic_group": "BSTART",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "HL.BSTART.FP CALL, <label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff000f",
+          "match": "0x00004101000e",
+          "width_bits": 48
+        }
+      ],
+      "encoding_kind": "HL48",
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 1,
+              "width": 17
+            },
+            {
+              "instruction_lsb": 4,
+              "value_lsb": 18,
+              "width": 12
+            }
+          ],
+          "signedness": "signed",
+          "width": 30
+        }
+      ],
+      "form_id": "hl_bstart_fp_48_81b457553844",
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.FP",
+      "semantic_family": "BBD",
+      "semantic_group": "BSTART",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "HL.BSTART.FP DIRECT, <label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff000f",
+          "match": "0x00002101000e",
+          "width_bits": 48
+        }
+      ],
+      "encoding_kind": "HL48",
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 1,
+              "width": 17
+            },
+            {
+              "instruction_lsb": 4,
+              "value_lsb": 18,
+              "width": 12
+            }
+          ],
+          "signedness": "signed",
+          "width": 30
+        }
+      ],
+      "form_id": "hl_bstart_fp_48_eb938e9200eb",
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.FP",
+      "semantic_family": "BBD",
+      "semantic_group": "BSTART",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "HL.BSTART.STD CALL, <label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff000f",
+          "match": "0x00004001000e",
+          "width_bits": 48
+        }
+      ],
+      "encoding_kind": "HL48",
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 1,
+              "width": 17
+            },
+            {
+              "instruction_lsb": 4,
+              "value_lsb": 18,
+              "width": 12
+            }
+          ],
+          "signedness": "signed",
+          "width": 30
+        }
+      ],
+      "form_id": "hl_bstart_std_48_51f78942222e",
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.STD",
+      "semantic_family": "BBD",
+      "semantic_group": "BSTART",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "HL.BSTART.STD FALL<, fixup_label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff000f",
+          "match": "0x00001001000e",
+          "width_bits": 48
+        }
+      ],
+      "encoding_kind": "HL48",
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 1,
+              "width": 17
+            },
+            {
+              "instruction_lsb": 4,
+              "value_lsb": 18,
+              "width": 12
+            }
+          ],
+          "signedness": "signed",
+          "width": 30
+        }
+      ],
+      "form_id": "hl_bstart_std_48_9ba705710872",
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.STD",
+      "semantic_family": "BBD",
+      "semantic_group": "BSTART",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "HL.BSTART.STD COND, <label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff000f",
+          "match": "0x00003001000e",
+          "width_bits": 48
+        }
+      ],
+      "encoding_kind": "HL48",
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 1,
+              "width": 17
+            },
+            {
+              "instruction_lsb": 4,
+              "value_lsb": 18,
+              "width": 12
+            }
+          ],
+          "signedness": "signed",
+          "width": 30
+        }
+      ],
+      "form_id": "hl_bstart_std_48_b13f22c7c4a3",
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.STD",
+      "semantic_family": "BBD",
+      "semantic_group": "BSTART",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "HL.BSTART.STD DIRECT, <label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff000f",
+          "match": "0x00002001000e",
+          "width_bits": 48
+        }
+      ],
+      "encoding_kind": "HL48",
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 1,
+              "width": 17
+            },
+            {
+              "instruction_lsb": 4,
+              "value_lsb": 18,
+              "width": 12
+            }
+          ],
+          "signedness": "signed",
+          "width": 30
+        }
+      ],
+      "form_id": "hl_bstart_std_48_d814d26508a4",
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.STD",
+      "semantic_family": "BBD",
+      "semantic_group": "BSTART",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "HL.BSTART.SYS FALL<, fixup_label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff000f",
+          "match": "0x00001081000e",
+          "width_bits": 48
+        }
+      ],
+      "encoding_kind": "HL48",
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 1,
+              "width": 17
+            },
+            {
+              "instruction_lsb": 4,
+              "value_lsb": 18,
+              "width": 12
+            }
+          ],
+          "signedness": "signed",
+          "width": 30
+        }
+      ],
+      "form_id": "hl_bstart_sys_48_5bf0381f7bf8",
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.SYS",
+      "semantic_family": "BBD",
+      "semantic_group": "BSTART",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "hl.qmt.{i,e,s,r,ie,is,ir,es,er,ies,ier} SrcL, SrcR, ->{t, u}",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xe000707fffff",
+          "match": "0x0000007d000e",
+          "width_bits": 48
+        }
+      ],
+      "encoding_kind": "HL48",
+      "fields": [
+        {
+          "name": "RegDst",
+          "pieces": [
+            {
+              "instruction_lsb": 23,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 36,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "e",
+          "pieces": [
+            {
+              "instruction_lsb": 41,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "i",
+          "pieces": [
+            {
+              "instruction_lsb": 44,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "r",
+          "pieces": [
+            {
+              "instruction_lsb": 42,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "s",
+          "pieces": [
+            {
+              "instruction_lsb": 43,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        }
+      ],
+      "form_id": "hl_qmt_48_eb9e41958045",
+      "length_bits": 48,
+      "mnemonic": "HL.QMT",
+      "semantic_family": "CMD",
+      "semantic_group": "General",
+      "semantic_handler": "ExecuteQueueMove",
+      "semantic_summary": "Moves values between scalar temporary queues according to encoded queue controls.",
+      "status": "accepted"
+    },
+    {
+      "asm": "hl.qpop.{e,r,er} SrcL, ->Dst0, Dst1",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xf800707f07ff",
+          "match": "0x0000207d000e",
+          "width_bits": 48
+        }
+      ],
+      "encoding_kind": "HL48",
+      "fields": [
+        {
+          "name": "RegDst0",
+          "pieces": [
+            {
+              "instruction_lsb": 23,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "RegDst1",
+          "pieces": [
+            {
+              "instruction_lsb": 11,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 36,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "e",
+          "pieces": [
+            {
+              "instruction_lsb": 41,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "r",
+          "pieces": [
+            {
+              "instruction_lsb": 42,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        }
+      ],
+      "form_id": "hl_qpop_48_a2c57f5bc27b",
+      "length_bits": 48,
+      "mnemonic": "HL.QPOP",
+      "semantic_family": "CMD",
+      "semantic_group": "General",
+      "semantic_handler": "ExecuteQueuePop",
+      "semantic_summary": "Pops selected scalar queue values into encoded destinations.",
+      "status": "accepted"
+    },
+    {
+      "asm": "hl.qpush.{h,e,r,he,hr,er,her} SrcL, SrcR, ->{t, u}",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xf000707fffff",
+          "match": "0x0000107d000e",
+          "width_bits": 48
+        }
+      ],
+      "encoding_kind": "HL48",
+      "fields": [
+        {
+          "name": "RegDst",
+          "pieces": [
+            {
+              "instruction_lsb": 23,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 36,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "e",
+          "pieces": [
+            {
+              "instruction_lsb": 41,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "h",
+          "pieces": [
+            {
+              "instruction_lsb": 43,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "r",
+          "pieces": [
+            {
+              "instruction_lsb": 42,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        }
+      ],
+      "form_id": "hl_qpush_48_3eab8e05d61a",
+      "length_bits": 48,
+      "mnemonic": "HL.QPUSH",
+      "semantic_family": "CMD",
+      "semantic_group": "General",
+      "semantic_handler": "ExecuteQueuePush",
+      "semantic_summary": "Pushes the encoded scalar values to the selected temporary queue.",
+      "status": "accepted"
+    },
+    {
+      "asm": "L.BSTART.FP COND, <label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000007f",
+          "match": "0x0000000f",
+          "width_bits": 32
+        },
+        {
+          "index": 1,
+          "mask": "0x00007fff",
+          "match": "0x00003081",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L64",
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 25
+            },
+            {
+              "instruction_lsb": 47,
+              "value_lsb": 25,
+              "width": 17
+            }
+          ],
+          "signedness": "signed",
+          "width": 42
+        }
+      ],
+      "form_id": "l_bstart_fp_64_098e57019d7b",
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.FP",
+      "semantic_family": "BBD",
+      "semantic_group": "BSTART",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "L.BSTART.FP DIRECT, <label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000007f",
+          "match": "0x0000000f",
+          "width_bits": 32
+        },
+        {
+          "index": 1,
+          "mask": "0x00007fff",
+          "match": "0x00002081",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L64",
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 25
+            },
+            {
+              "instruction_lsb": 47,
+              "value_lsb": 25,
+              "width": 17
+            }
+          ],
+          "signedness": "signed",
+          "width": 42
+        }
+      ],
+      "form_id": "l_bstart_fp_64_0cac9941f7d4",
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.FP",
+      "semantic_family": "BBD",
+      "semantic_group": "BSTART",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "L.BSTART.FP CALL, <label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000007f",
+          "match": "0x0000000f",
+          "width_bits": 32
+        },
+        {
+          "index": 1,
+          "mask": "0x00007fff",
+          "match": "0x00004081",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L64",
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 25
+            },
+            {
+              "instruction_lsb": 47,
+              "value_lsb": 25,
+              "width": 17
+            }
+          ],
+          "signedness": "signed",
+          "width": 42
+        }
+      ],
+      "form_id": "l_bstart_fp_64_2067ad6667ed",
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.FP",
+      "semantic_family": "BBD",
+      "semantic_group": "BSTART",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "L.BSTART.FP FALL<, fixup_label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000007f",
+          "match": "0x0000000f",
+          "width_bits": 32
+        },
+        {
+          "index": 1,
+          "mask": "0x00007fff",
+          "match": "0x00001081",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L64",
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 25
+            },
+            {
+              "instruction_lsb": 47,
+              "value_lsb": 25,
+              "width": 17
+            }
+          ],
+          "signedness": "signed",
+          "width": 42
+        }
+      ],
+      "form_id": "l_bstart_fp_64_8115c042ef26",
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.FP",
+      "semantic_family": "BBD",
+      "semantic_group": "BSTART",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "L.BSTART.STD DIRECT, <label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000007f",
+          "match": "0x0000000f",
+          "width_bits": 32
+        },
+        {
+          "index": 1,
+          "mask": "0x00007fff",
+          "match": "0x00002001",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L64",
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 25
+            },
+            {
+              "instruction_lsb": 47,
+              "value_lsb": 25,
+              "width": 17
+            }
+          ],
+          "signedness": "signed",
+          "width": 42
+        }
+      ],
+      "form_id": "l_bstart_std_64_37e84068ce61",
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.STD",
+      "semantic_family": "BBD",
+      "semantic_group": "BSTART",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "L.BSTART.STD CALL, <label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000007f",
+          "match": "0x0000000f",
+          "width_bits": 32
+        },
+        {
+          "index": 1,
+          "mask": "0x00007fff",
+          "match": "0x00004001",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L64",
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 25
+            },
+            {
+              "instruction_lsb": 47,
+              "value_lsb": 25,
+              "width": 17
+            }
+          ],
+          "signedness": "signed",
+          "width": 42
+        }
+      ],
+      "form_id": "l_bstart_std_64_463a1567da91",
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.STD",
+      "semantic_family": "BBD",
+      "semantic_group": "BSTART",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "L.BSTART.STD COND, <label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000007f",
+          "match": "0x0000000f",
+          "width_bits": 32
+        },
+        {
+          "index": 1,
+          "mask": "0x00007fff",
+          "match": "0x00003001",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L64",
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 25
+            },
+            {
+              "instruction_lsb": 47,
+              "value_lsb": 25,
+              "width": 17
+            }
+          ],
+          "signedness": "signed",
+          "width": 42
+        }
+      ],
+      "form_id": "l_bstart_std_64_72d502fcd30d",
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.STD",
+      "semantic_family": "BBD",
+      "semantic_group": "BSTART",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "L.BSTART.STD FALL<, fixup_label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000007f",
+          "match": "0x0000000f",
+          "width_bits": 32
+        },
+        {
+          "index": 1,
+          "mask": "0x00007fff",
+          "match": "0x00001001",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L64",
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 25
+            },
+            {
+              "instruction_lsb": 47,
+              "value_lsb": 25,
+              "width": 17
+            }
+          ],
+          "signedness": "signed",
+          "width": 42
+        }
+      ],
+      "form_id": "l_bstart_std_64_899592f9c5bc",
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.STD",
+      "semantic_family": "BBD",
+      "semantic_group": "BSTART",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "L.BSTART.SYS FALL<, fixup_label>",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000007f",
+          "match": "0x0000000f",
+          "width_bits": 32
+        },
+        {
+          "index": 1,
+          "mask": "0x00007fff",
+          "match": "0x00001011",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L64",
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 25
+            },
+            {
+              "instruction_lsb": 47,
+              "value_lsb": 25,
+              "width": 17
+            }
+          ],
+          "signedness": "signed",
+          "width": 42
+        }
+      ],
+      "form_id": "l_bstart_sys_64_919e576c79e4",
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.SYS",
+      "semantic_family": "BBD",
+      "semantic_group": "BSTART",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "MCOPY [RegSrc0, RegSrc1, RegSrc2]",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x06007fff",
+          "match": "0x00000031",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "RegSrc0",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "RegSrc1",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "RegSrc2",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "mcopy_32_4fc4a803e995",
+      "length_bits": 32,
+      "mnemonic": "MCOPY",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteMemoryCopy",
+      "semantic_summary": "Copies an encoded memory range with instruction-atomic preflight and snapshot semantics.",
+      "status": "accepted"
+    },
+    {
+      "asm": "MSET [RegSrc0, RegSrc1, RegSrc2]",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x06007fff",
+          "match": "0x00001031",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "RegSrc0",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "RegSrc1",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "RegSrc2",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "mset_32_0b932f291932",
+      "length_bits": 32,
+      "mnemonic": "MSET",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteMemorySet",
+      "semantic_summary": "Fills an encoded memory range after complete access preflight.",
+      "status": "accepted"
+    },
+    {
+      "asm": "XB ACR-ID, C-ID",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff",
+          "match": "0x00006f81",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "ACR-ID",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 10
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 10
+        },
+        {
+          "name": "CROSS-BID",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 7
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 7
+        }
+      ],
+      "form_id": "xb_32_40ad190a0a7f",
+      "length_bits": 32,
+      "mnemonic": "XB",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteCrossBlockTransfer",
+      "semantic_summary": "Transfers the named context value to a target virtual core block.",
+      "status": "accepted"
+    }
+  ],
+  "isa": "PTO Instruction Set Architecture",
+  "operand_field_count": 57,
+  "operand_piece_count": 190,
+  "reviewed_encoding_overlaps": [
+    {
+      "broad_form_id": "b_iot_32_10db6db84f5d",
+      "narrow_form_id": "b_iot_32_c11eb189dd83",
+      "reason": "destination-free form fixes DstTile and imm4 to zero; destination form requires DstTile 0..3 and imm4 3..9"
+    },
+    {
+      "broad_form_id": "b_iot_32_8b8bce6bffe8",
+      "narrow_form_id": "b_iot_32_2c07e7177fad",
+      "reason": "destination-free form fixes DstTile and imm4 to zero; destination form requires DstTile 0..3 and imm4 3..9"
+    },
+    {
+      "broad_form_id": "c_b_dimi_16_3f1b113c76ce",
+      "narrow_form_id": "c_b_dim_16_14f1b8fba5e6",
+      "reason": "register form fixes the immediate-form LoopNest projection to excluded value 3"
+    },
+    {
+      "broad_form_id": "c_bstart_std_16_8b40f078c14a",
+      "narrow_form_id": "c_bstop_16_ca4743d8a95e",
+      "reason": "C.BSTOP fixes the broad C.BSTART.STD BrType field to excluded value 0"
+    }
+  ],
+  "schema_version": 2,
+  "semantic_handler_count": 21,
+  "surface": "command-and-boundary",
+  "source_lock": "isa/v0.57/pto-spec.lock.json"
+}

@@ -111,7 +111,7 @@ ReLU（Rectified Linear Unit）是一种广泛使用的激活函数，尤其在�
 
 为了解决 “神经元死亡” 问题，同时支持一些ReLU的变种：
 
-- Leaky ReLU：允许负区间有一个小的斜率（如0.01），即当 x < 0 时输出 0.01x。（参见[TLRELU](./TLRELU.md)）
+- Leaky ReLU 不属于 PTO ISA 0.57.1 的直接操作集合；`TLRELU` 已删除并保留其旧选择子。
 - Parametric ReLU：将负区间的斜率作为可学习的参数。（参见[TPRELU](./TPRELU.md)）
 
 ## 备注

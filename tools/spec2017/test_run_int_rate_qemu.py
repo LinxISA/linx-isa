@@ -62,6 +62,24 @@ class RunIntRateQemuTests(unittest.TestCase):
                 str((Path(td) / "custom-qemu").resolve()),
             )
 
+    def test_gen_init_cpio_prefers_kernel_build_output(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            linux_root = root / "linux"
+            out_dir = root / "spec-out"
+            kernel = root / "linux-build" / "vmlinux"
+            external_tool = kernel.parent / "usr" / "gen_init_cpio"
+            in_tree_tool = linux_root / "build-linx-fixed" / "usr" / "gen_init_cpio"
+            external_tool.parent.mkdir(parents=True)
+            in_tree_tool.parent.mkdir(parents=True)
+            external_tool.touch()
+            in_tree_tool.touch()
+
+            self.assertEqual(
+                runner._find_gen_init_cpio(linux_root, out_dir, kernel),
+                external_tool,
+            )
+
     def test_child_exit_failure_evidence_includes_wait_status(self) -> None:
         result = runner._classify_qemu_result(
             text=(

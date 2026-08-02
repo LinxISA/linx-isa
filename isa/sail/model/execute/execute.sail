@@ -2821,6 +2821,204 @@ function exec_bwe() -> unit = { () }
 function exec_bse() -> unit = { () }
 
 // -----------------------------------------------------------------------------
+// PTO ISA 0.57.1 tile transaction envelope
+
+function tile_effect_begin(family : bits(2), selector : bits(5)) -> unit = {
+  tile_effect_pending = true;
+  tile_effect_family = family;
+  tile_effect_function = selector;
+  tile_effect_datatype = decoded_tile_datatype();
+  tile_effect_restart_pending = false;
+  tile_effect_reset_descriptors()
+}
+
+function tile_effect_append_iot(raw : bits(64)) -> unit = {
+  let func : bits(3) = raw[14..12];
+  let source_count : bits(6) =
+    if func == 0b100 then 0b00_0010
+    else if func == 0b101 then 0b00_0001
+    else if func == 0b110 then 0b00_0000
+    else 0b00_0000;
+  let size : bits(4) = raw[18..15];
+  let dst : bits(3) = raw[9..7];
+  let output_active = (unsigned(size) >= 3) & (unsigned(size) <= 9) & (unsigned(dst) <= 3);
+  let last = raw[19] == 0b1;
+  if tile_effect_last_seen then tile_effect_after_last = true else ();
+  if last then tile_effect_last_seen = true else ();
+  tile_effect_iot_count = tile_effect_iot_count + 0b00_0001;
+  tile_effect_source_count = tile_effect_source_count + source_count;
+  if output_active then tile_effect_output_count = tile_effect_output_count + 0b00_0001 else ();
+  if (func != 0b100) & (func != 0b101) & (func != 0b110) then tile_effect_iot_legal = false else ();
+  if (size != 0b0000) & not_bool(output_active) then tile_effect_iot_legal = false else ();
+  if (unsigned(source_count) >= 1) & (raw[10] == 0b0) then
+    tile_effect_release_count = tile_effect_release_count + 0b00_0001
+  else ();
+  if (source_count == 0b00_0010) & (raw[11] == 0b0) then
+    tile_effect_release_count = tile_effect_release_count + 0b00_0001
+  else ();
+  bdesc_mark_iot()
+}
+
+function tile_tma_required_sources(selector : bits(5)) -> bits(6) = {
+  if selector == 0b00100 then 0b00_0001       // MGATHER
+  else if selector == 0b00110 then 0b00_0010  // MGATHER.MASK
+  else if selector == 0b00101 then 0b00_0010  // MSCATTER
+  else if selector == 0b00111 then 0b00_0011  // MSCATTER.MASK
+  else if selector == 0b01000 then 0b00_0011  // MGATHER.CAS
+  else 0b00_0000
+}
+
+function tile_tma_produces_output(selector : bits(5)) -> bool = {
+  (selector == 0b00100) | (selector == 0b00110) | (selector == 0b01000)
+}
+
+function tile_cube_required_sources(selector : bits(5)) -> bits(6) = {
+  if (selector == 0b00000) | (selector == 0b00010) |
+     (selector == 0b10000) | (selector == 0b10010) then 0b00_0010
+  else if (selector == 0b00001) | (selector == 0b10001) then 0b00_0011
+  else if (selector == 0b00100) | (selector == 0b00110) |
+          (selector == 0b10100) | (selector == 0b10110) then 0b00_0100
+  else if (selector == 0b00101) | (selector == 0b10101) then 0b00_0101
+  else 0b00_0000
+}
+
+function tile_cube_is_mx(selector : bits(5)) -> bool = {
+  (selector == 0b00100) | (selector == 0b00101) | (selector == 0b00110) |
+  (selector == 0b10100) | (selector == 0b10101) | (selector == 0b10110)
+}
+
+function tile_cube_is_bias(selector : bits(5)) -> bool = {
+  (selector == 0b00001) | (selector == 0b00101) |
+  (selector == 0b10001) | (selector == 0b10101)
+}
+
+function tile_cube_is_accumulate(selector : bits(5)) -> bool = {
+  (selector == 0b00010) | (selector == 0b00110) |
+  (selector == 0b10010) | (selector == 0b10110)
+}
+
+function tile_numeric_ordinary(dtype : bits(5)) -> bool = {
+  (unsigned(dtype) <= 12) | (dtype == 0b01110) |
+  ((unsigned(dtype) >= 16) & (unsigned(dtype) <= 20)) |
+  ((unsigned(dtype) >= 24) & (unsigned(dtype) <= 28))
+}
+
+function tile_cube_dim(value : bits(64)) -> bits(64) = {
+  if value == 0x0000_0000_0000_0000 then 0x0000_0000_0000_0008 else value
+}
+
+function tile_effect_header_legal() -> bool = {
+  if tile_effect_family == 0b01 then {
+    if tile_effect_function == 0b00011 then {
+      // TPREFETCH has scalar address/byte-count operands and no Tile IO.
+      bdesc_seen_datr & bdesc_seen_ior & not_bool(bdesc_seen_text) &
+      (tile_effect_iot_count == 0b00_0000)
+    } else {
+      let required = tile_tma_required_sources(tile_effect_function);
+      let output_ok =
+        if tile_tma_produces_output(tile_effect_function) then tile_effect_output_count == 0b00_0001
+        else tile_effect_output_count == 0b00_0000;
+      (required != 0b00_0000) & bdesc_seen_datr & bdesc_seen_ior & bdesc_seen_iot &
+      not_bool(bdesc_seen_text) & tile_effect_iot_legal & tile_effect_last_seen &
+      not_bool(tile_effect_after_last) & (tile_effect_source_count == required) & output_ok &
+      ((tile_effect_function != 0b01000) | (bcatr_raw[17] == 0b1))
+    }
+  } else if tile_effect_family == 0b10 then {
+    if tile_effect_function == 0b01000 then {
+      bdesc_seen_datr & bdesc_seen_iot & not_bool(bdesc_seen_text) & tile_effect_iot_legal &
+      tile_effect_last_seen & not_bool(tile_effect_after_last) & tile_acc_valid &
+      (tile_effect_source_count == 0b00_0000) & (tile_effect_output_count == 0b00_0001)
+    } else {
+      let required = tile_cube_required_sources(tile_effect_function);
+      let mx = tile_cube_is_mx(tile_effect_function);
+      let accumulate = tile_cube_is_accumulate(tile_effect_function);
+      let m = tile_cube_dim(ssr_lb0);
+      let n = tile_cube_dim(ssr_lb1);
+      let k = tile_cube_dim(ssr_lb2);
+      let dtype_ok = if mx then tile_effect_datatype == 0b00001 else tile_numeric_ordinary(tile_effect_datatype);
+      let acc_ok =
+        if accumulate then tile_acc_valid & (tile_acc_rows == m) & (tile_acc_cols == n) &
+          (tile_acc_k == k) & (tile_acc_datatype == (if mx then 0b00001 else tile_effect_datatype))
+        else true;
+      (required != 0b00_0000) & bdesc_seen_datr & bdesc_seen_dim & bdesc_seen_iot &
+      not_bool(bdesc_seen_text) & tile_effect_iot_legal & tile_effect_last_seen &
+      not_bool(tile_effect_after_last) & (tile_effect_source_count == required) &
+      (tile_effect_output_count == 0b00_0000) & dtype_ok & acc_ok
+    }
+  } else false
+}
+
+function tile_effect_publish() -> unit = {
+  let family = tile_effect_family;
+  let selector = tile_effect_function;
+  let mx = (family == 0b10) & tile_cube_is_mx(selector);
+  let bias = (family == 0b10) & tile_cube_is_bias(selector);
+  let accumulate = (family == 0b10) & tile_cube_is_accumulate(selector);
+  tile_effect_preflight_seq = tile_effect_preflight_seq + 1;
+  tile_effect_commit_seq = tile_effect_commit_seq + 1;
+  tile_effect_lifetime_releases = tile_effect_lifetime_releases + sail_zero_extend(tile_effect_release_count, 64);
+  tile_effect_last_family = family;
+  tile_effect_last_function = selector;
+  tile_effect_last_datatype = tile_effect_datatype;
+  tile_effect_last_masked = (family == 0b01) & ((selector == 0b00110) | (selector == 0b00111));
+  tile_effect_last_mask_suppresses_access = tile_effect_last_masked;
+  tile_effect_last_pad = bdatr_raw[28..27];
+  tile_effect_last_mx = mx;
+  tile_effect_last_bias = bias;
+  tile_effect_last_accumulate = accumulate;
+  if family == 0b01 then {
+    if selector != 0b00011 then tile_effect_memory_seq = tile_effect_memory_seq + 1 else ();
+    if tile_tma_produces_output(selector) then tile_effect_tile_seq = tile_effect_tile_seq + 1 else ()
+  } else if family == 0b10 then {
+    if selector == 0b01000 then {
+      tile_effect_tile_seq = tile_effect_tile_seq + 1;
+      tile_acc_valid = false
+    } else {
+      let m = tile_cube_dim(ssr_lb0);
+      let n = tile_cube_dim(ssr_lb1);
+      let k = tile_cube_dim(ssr_lb2);
+      tile_effect_acc_seq = tile_effect_acc_seq + 1;
+      tile_acc_valid = true;
+      tile_acc_datatype = if mx then 0b00001 else tile_effect_datatype;
+      tile_acc_rows = m;
+      tile_acc_cols = n;
+      tile_acc_k = k;
+      if mx then {
+        let groups_i : int = tdiv_int(unsigned(k) + 31, 32);
+        let groups : bits(64) = sail_zeros(64) + groups_i;
+        tile_effect_last_scale_a_rows = m;
+        tile_effect_last_scale_a_cols = groups;
+        tile_effect_last_scale_b_rows = groups;
+        tile_effect_last_scale_b_cols = n;
+        // B.IOT authored source order: A, B, ScaleA, ScaleB, optional Bias.
+        tile_effect_last_scale_a_source = 0b00_0010;
+        tile_effect_last_scale_b_source = 0b00_0011
+      } else ()
+    }
+  } else ();
+  tile_effect_pending = false;
+  tile_effect_restart_pending = false
+}
+
+function tile_effect_finalize() -> bool = {
+  if not_bool(tile_effect_pending) then true
+  else if not_bool(tile_effect_header_legal()) then {
+    // Descriptor/operand preflight fails before every architectural effect.
+    trap_blockfmt(0x05, 0x01, read_pc_or_tpc());
+    tile_effect_restart_pending = true;
+    false
+  } else if not_bool(tile_effect_access_set_valid) then {
+    // The host memory/IOMMU hook reports the first failing original address.
+    trap_data_page_fault(tile_effect_fault_address);
+    tile_effect_restart_pending = true;
+    false
+  } else {
+    tile_effect_publish();
+    true
+  }
+}
+
+// -----------------------------------------------------------------------------
 // CMD: Block boundary markers (BSTART/BSTOP)
 //
 // Normative: docs/architecture/isa-manual/src/chapters/04_block_isa.adoc and
@@ -2829,7 +3027,7 @@ function exec_bse() -> unit = { () }
 // Architectural rule: every control-flow target must land on a block start marker;
 // violations trap with E_BLOCK(EC_CFI), kind=CFI_BAD_TARGET.
 
-function exec_bstart() -> unit = {
+function exec_bstart_transition() -> bool = {
   // Generic BSTART (COND, <label>) form.
   // - Terminates previous block (commit boundary).
   // - Starts a new block and initializes BARG.
@@ -2839,7 +3037,12 @@ function exec_bstart() -> unit = {
   let tgt = decoded_block_target_pc();
   if not_bool(is_block_start_marker(tgt)) then {
     // EC_CFI_KIND=1 (CFI_BAD_TARGET)
-    trap_block_cfi(0x1, read_pc_or_tpc())
+    trap_block_cfi(0x1, read_pc_or_tpc());
+    false
+  } else if tile_effect_pending & not_bool(tile_effect_finalize()) then {
+    // A next BSTART also terminates the prior header.  Failed preflight leaves
+    // the old operation pending and must not install the new block.
+    false
   } else {
     block_commit_boundary();
     barg_reset_at_block_start();
@@ -2847,8 +3050,15 @@ function exec_bstart() -> unit = {
     bdesc_reset();
     barg_set_block_type(decoded_block_type());
     barg_set_xfer_kind(decoded_block_xfer_kind());
-    barg_set_next_pc_target(tgt)
+    barg_set_next_pc_target(tgt);
+    true
   }
+}
+
+function exec_bstart() -> unit = { let _accepted = exec_bstart_transition(); () }
+
+function exec_tile_bstart(family : bits(2), selector : bits(5)) -> unit = {
+  if exec_bstart_transition() then tile_effect_begin(family, selector) else ()
 }
 
 // Typed 32/48-bit BSTART variants share the same boundary semantics; the decoder
@@ -2862,29 +3072,28 @@ function exec_bstart_vpar() -> unit = { exec_bstart() }
 function exec_bstart_vseq() -> unit = { exec_bstart() }
 function exec_bstart_cube() -> unit = { exec_bstart() }
 function exec_bstart_tepl() -> unit = { exec_bstart() }
-function exec_bstart_fixp() -> unit = { exec_bstart() }
 function exec_bstart_tload() -> unit = { exec_bstart() }
 function exec_bstart_tstore() -> unit = { exec_bstart() }
 function exec_bstart_tmov() -> unit = { exec_bstart() }
-function exec_bstart_tmatmul() -> unit = { exec_bstart() }
-function exec_bstart_tmatmul_acc() -> unit = { exec_bstart() }
-function exec_bstart_acccvt() -> unit = { exec_bstart() }
-function exec_bstart_mgather() -> unit = { exec_bstart() }
-function exec_bstart_mgather_cas() -> unit = { exec_bstart() }
-function exec_bstart_mgather_mask() -> unit = { exec_bstart() }
-function exec_bstart_mscatter() -> unit = { exec_bstart() }
-function exec_bstart_mscatter_mask() -> unit = { exec_bstart() }
-function exec_bstart_tgemv() -> unit = { exec_bstart() }
-function exec_bstart_tgemv_acc() -> unit = { exec_bstart() }
-function exec_bstart_tgemv_bias() -> unit = { exec_bstart() }
-function exec_bstart_tgemvmx() -> unit = { exec_bstart() }
-function exec_bstart_tgemvmx_acc() -> unit = { exec_bstart() }
-function exec_bstart_tgemvmx_bias() -> unit = { exec_bstart() }
-function exec_bstart_tmatmul_bias() -> unit = { exec_bstart() }
-function exec_bstart_tmatmulmx() -> unit = { exec_bstart() }
-function exec_bstart_tmatmulmx_acc() -> unit = { exec_bstart() }
-function exec_bstart_tmatmulmx_bias() -> unit = { exec_bstart() }
-function exec_bstart_tprefetch() -> unit = { exec_bstart_tload() }
+function exec_bstart_tmatmul() -> unit = { exec_tile_bstart(0b10, 0b00000) }
+function exec_bstart_tmatmul_acc() -> unit = { exec_tile_bstart(0b10, 0b00010) }
+function exec_bstart_acccvt() -> unit = { exec_tile_bstart(0b10, 0b01000) }
+function exec_bstart_mgather() -> unit = { exec_tile_bstart(0b01, 0b00100) }
+function exec_bstart_mgather_cas() -> unit = { exec_tile_bstart(0b01, 0b01000) }
+function exec_bstart_mgather_mask() -> unit = { exec_tile_bstart(0b01, 0b00110) }
+function exec_bstart_mscatter() -> unit = { exec_tile_bstart(0b01, 0b00101) }
+function exec_bstart_mscatter_mask() -> unit = { exec_tile_bstart(0b01, 0b00111) }
+function exec_bstart_tgemv() -> unit = { exec_tile_bstart(0b10, 0b10000) }
+function exec_bstart_tgemv_acc() -> unit = { exec_tile_bstart(0b10, 0b10010) }
+function exec_bstart_tgemv_bias() -> unit = { exec_tile_bstart(0b10, 0b10001) }
+function exec_bstart_tgemvmx() -> unit = { exec_tile_bstart(0b10, 0b10100) }
+function exec_bstart_tgemvmx_acc() -> unit = { exec_tile_bstart(0b10, 0b10110) }
+function exec_bstart_tgemvmx_bias() -> unit = { exec_tile_bstart(0b10, 0b10101) }
+function exec_bstart_tmatmul_bias() -> unit = { exec_tile_bstart(0b10, 0b00001) }
+function exec_bstart_tmatmulmx() -> unit = { exec_tile_bstart(0b10, 0b00100) }
+function exec_bstart_tmatmulmx_acc() -> unit = { exec_tile_bstart(0b10, 0b00110) }
+function exec_bstart_tmatmulmx_bias() -> unit = { exec_tile_bstart(0b10, 0b00101) }
+function exec_bstart_tprefetch() -> unit = { exec_tile_bstart(0b01, 0b00011) }
 function exec_fused_bstart_call(uimm5 : bits(5), embedded_setret_bytes : bits(64)) -> unit = {
   // The exact aggregate form is one atomic CALL transition composed from a
   // block-start target and an embedded C.SETRET.  The fields are independent:
@@ -2930,8 +3139,12 @@ function exec_bstop() -> unit = {
   // Explicit block terminator.
   // For staged tile/vector headers, perform mandatory-descriptor validation at
   // the end of the header stream before committing the boundary.
-  bdesc_validate_header_end(read_pc_or_tpc());
-  block_commit_boundary()
+  if tile_effect_pending then {
+    if tile_effect_finalize() then block_commit_boundary() else ()
+  } else {
+    bdesc_validate_header_end(read_pc_or_tpc());
+    block_commit_boundary()
+  }
 }
 
 function exec_c_bstop() -> unit = { exec_bstop() }
@@ -2959,7 +3172,6 @@ function exec_c_b_dim() -> unit = { exec_b_dim() }
 function exec_c_b_dimi() -> unit = { exec_b_dim() }
 
 function exec_b_text() -> unit = { bdesc_mark_text() }
-function exec_b_arg() -> unit = { bdesc_mark_arg() }
 function exec_b_ior() -> unit = {
   let src0 : bits(5) = decoded_bior_regsrc0();
   let src1 : bits(5) = decoded_bior_regsrc1();
@@ -2972,7 +3184,7 @@ function exec_b_ior() -> unit = {
   if src2 != 0b00000 then allocate_ri_binding(src2) else ();
   bdesc_mark_ior()
 }
-function exec_b_iot() -> unit = { bdesc_mark_iot() }
+function exec_b_iot() -> unit = { tile_effect_append_iot(decoded_biot_raw()) }
 
 function exec_b_catr() -> unit = {
   // Staged semantics: latch raw control-attribute word so DR (bit 26) can be consulted.
@@ -2981,7 +3193,8 @@ function exec_b_catr() -> unit = {
 
 function exec_b_datr() -> unit = {
   // Staged semantics: latch raw data-attribute word so datatype/layout/rmode/sat can be consulted.
-  bdatr_raw = decoded_bdatr_raw()
+  bdatr_raw = decoded_bdatr_raw();
+  bdesc_mark_datr()
 }
 function exec_b_hint() -> unit = { () }
 // -----------------------------------------------------------------------------

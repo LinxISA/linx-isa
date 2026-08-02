@@ -1,9 +1,9 @@
 # AVS QEMU Translation Coverage
 
-- Generated (UTC): `2026-07-18 02:41:47Z`
-- Spec unique mnemonics: `731`
-- AVS object files scanned: `69`
-- Covered spec mnemonics: `731/731` (`100.0%`)
+- Generated (UTC): `2026-08-02 12:51:47Z`
+- Spec unique mnemonics: `728`
+- AVS object files scanned: `71`
+- Covered spec mnemonics: `728/728` (`100.0%`)
 - Missing spec mnemonics: `0`
 
 ## Coverage By Prefix
@@ -20,13 +20,13 @@
 - `ANDIW`: `1`
 - `ANDW`: `1`
 - `ASSERT`: `1`
-- `B`: `16`
+- `B`: `15`
 - `BC`: `2`
 - `BCNT`: `1`
 - `BIC`: `1`
 - `BIS`: `1`
 - `BSE`: `1`
-- `BSTART`: `34`
+- `BSTART`: `32`
 - `BSTOP`: `1`
 - `BWE`: `1`
 - `BWI`: `1`
@@ -179,20 +179,20 @@
 
 ## Top Covering Objects
 
-- `99_spec_decode_qemu.o`: `731`
-- `16_pto_kernel_parity.o`: `75`
-- `12_v03_vector_tile.o`: `73`
+- `99_spec_decode_qemu.o`: `728`
+- `17_deepseek_tilekernels.o`: `80`
+- `16_pto_kernel_parity.o`: `74`
 - `12_v057_vector_tile.o`: `73`
 - `softfp.o`: `72`
-- `13_v03_vector_ops_matrix.o`: `69`
 - `13_v057_vector_ops_matrix.o`: `69`
 - `11_system.o`: `64`
+- `moe.o`: `62`
 - `sparse_attention_local_fp16.o`: `62`
 - `flash_attention_cube_fp16.o`: `59`
 - `flash_attention_vec_fp16.o`: `59`
 - `gqa_fp16.o`: `59`
 - `03_loadstore.o`: `58`
-- `07_atomic.o`: `56`
+- `07_atomic.o`: `57`
 - `14_callret.o`: `54`
 - `math.o`: `51`
 - `06_floating_point.o`: `49`

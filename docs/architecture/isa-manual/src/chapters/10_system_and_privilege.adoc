@@ -223,7 +223,7 @@ Template replay flags (bring-up):
 * Implementations SHOULD expose a single EBARG register `EBARG_TPLFLAGS_ACRm` with template trap/replay flags. The bit layout is defined in <<ssr-ebarg>> (see `EBARG_TPLFLAGS_ACRn`).
 * `TPL_ID` for marker templates (`TemplateKind.class=0`) uses the mnemonic-enum mapping in <<templates-tplid>>.
 * For marker templates (`TemplateKind.class=0`), `TPL_ID_PRESENT` MUST be `1` (reporting is required).
-* For TEPL templates (`TemplateKind.class=1`), `TPL_ID_PRESENT` MUST be `1` and `TPL_ID` MUST carry the raw tile opcode selector (`TileOpcode`).
+* For TEPL templates (`TemplateKind.class=1`), `TPL_ID_PRESENT` MUST be `1` and `TPL_ID` MUST carry `(Mode << 5) | Function`.
 * `TPL_REDO_OK=1`: handler may restart the template from the beginning only when no externally visible partial side effects exist.
 * `TPL_RESUME_OK=1`: template supports and permits resume via an `EBSTATE` snapshot.
 * `TPL_PHASE` standard meanings:
@@ -261,7 +261,7 @@ NOTE: Restartable body-fetch faults are represented by the underlying MMU transl
       - `0 = B.* (generic descriptor stream / non-family-specific)`
       - `1 = B.DIM`
       - `2 = B.TEXT`
-      - `3 = B.ARG`
+      - `3 = B.CATR/B.DATR`
       - `4 = B.IOR`
       - `5 = B.IOT`
     - `TRAPARG0[15:8] = MissingDetail` (standard meanings):
@@ -272,7 +272,7 @@ NOTE: Restartable body-fetch faults are represented by the underlying MMU transl
     - upper bits reserved `0`
   - If multiple mandatory descriptor families are missing, implementations MUST report exactly one missing family.
     The reporting priority order is:
-    1. `B.ARG`
+    1. `B.CATR/B.DATR`
     2. `B.TEXT`
     3. `B.IOT`
     4. `B.IOR`
@@ -346,7 +346,7 @@ NOTE: earlier draft text previously used `E_INST(EC_ILLEGAL)` and `E_INST(EC_PAR
 For system calls (`TRAPNUM=SCALL` in v0.2), routing is defined by the `ACRC` `request_type` rules above.
 
 [[system-template-integrity-fail]]
-====== Template-integrity `ASSERT_FAIL`
+===== Template-integrity `ASSERT_FAIL`
 
 `ASSERT_FAIL (52)` has two distinct producers in v0.57:
 
@@ -490,7 +490,7 @@ Unless otherwise specified, fields are **XLEN** wide. Addresses are byte address
 * `BSTATE.Template` (template blocks such as `FENTRY`/`FEXIT`/`FRET.*`/`MCOPY`/`MSET`):
 ** `TemplateKind`: which template is executing (packed `class,id`).
 *** `class=0`: marker/template opcodes (`FENTRY`/`FEXIT`/`FRET.*`/`MCOPY`/`MSET`/...) with `id` = opcode-specific enum.
-*** `class=1`: `BSTART.TEPL` templates with `id` = tile opcode (`TileOpcode`, 0..1023).
+*** `class=1`: TEPL templates with `id = (Mode << 5) | Function` (0..127).
 *** `class=2`: reserved for future (implementation-defined templates).
 *** `class=3`: reserved.
 ** `StepIndex`: micro-op progress cursor.

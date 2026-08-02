@@ -76,7 +76,7 @@ TEPL类指令主要用于对Tile数据块进行逐元素操作、标量操作以
 | 0    | 2        | [TMUL](./TMUL.md)   | 两个Tile的逐元素乘法 |
 | 0    | 3        | [TDIV](./TDIV.md)   | 两个Tile的逐元素除法 |
 | 0    | 4        | [TREM](./TREM.md)   | 两个Tile的逐元素余数，余数符号与除数相同 |
-| 0    | 5        | [TFMOD](./TFMOD.md)  | 两个Tile的逐元素余数，余数符号与被除数相同 |
+| 0    | 5        | - | 保留/非法 |
 | 0    | 6        | [TAND](./TAND.md)   | 两个Tile的逐元素按位与 |
 | 0    | 7        | [TOR](./TOR.md)     | 两个Tile的逐元素按位或 |
 | 0    | 8        | [TXOR](./TXOR.md)   | 两个Tile的逐元素按位异或 |
@@ -95,8 +95,7 @@ TEPL类指令主要用于对Tile数据块进行逐元素操作、标量操作以
 | 0    | 21       | [TSQRT](./TSQRT.md)  | 逐元素平方根 |
 | 0    | 22       | [TRSQRT](./TRSQRT.md) | 逐元素倒数平方根 |
 | 0    | 23       | [TRELU](./TRELU.md)  | Tile的逐元素ReLU |
-| 0    | 24       | [TADDC](./TADDC.md)  | 三元逐元素加法：dst = src0 + src1 + src2 |
-| 0    | 25       | [TSUBC](./TSUBC.md)  | 三元逐元素减法：dst = src0 - src1 + src2 |
+| 0    | 24-25    | - | 保留/非法 |
 | 0    | 26       | [TSEL](./TSEL.md)   | 使用掩码Tile在两个Tile之间进行选择（逐元素选择） |
 | 0    | 27       | [TCVT](./TCVT.md)   | Tile的逐元素数据格式转换。 |
 | 0    | 28-31    | -      | 保留 |
@@ -110,7 +109,7 @@ TEPL类指令主要用于对Tile数据块进行逐元素操作、标量操作以
 | 1    | 2        | [TMULS](./TMULS.md)  | Tile与标量的逐元素乘法 |
 | 1    | 3        | [TDIVS](./TDIVS.md)  | 与标量的逐元素除法（Tile/标量或标量/Tile） |
 | 1    | 4        | [TREMS](./TREMS.md)  | 与标量的逐元素余数：remainder(src, scalar) |
-| 1    | 5        | [TFMODS](./TFMODS.md) | 与标量的逐元素余数：fmod(src, scalar) |
+| 1    | 5        | - | 保留/非法 |
 | 1    | 6        | [TANDS](./TANDS.md)  | Tile与标量的逐元素按位与 |
 | 1    | 7        | [TORS](./TORS.md)    | Tile与标量的逐元素按位或 |
 | 1    | 8        | [TXORS](./TXORS.md)  | Tile与标量的逐元素按位异或 |
@@ -119,10 +118,9 @@ TEPL类指令主要用于对Tile数据块进行逐元素操作、标量操作以
 | 1    | 11       | [TMAXS](./TMAXS.md)  | Tile与标量的逐元素最大值：max(src, scalar) |
 | 1    | 12       | [TMINS](./TMINS.md)  | Tile与标量的逐元素最小值 |
 | 1    | 13       | [TCMPS](./TCMPS.md)  | 将Tile与标量逐元素比较 |
-| 1    | 14       | [TLRELU](./TLRELU.md) | 带标量斜率的LeakyReLU |
+| 1    | 14       | - | 保留/非法 |
 | 1    | 15-23    | -      | 预留编码 |
-| 1    | 24       | [TADDSC](./TADDSC.md) | 带标量融合逐元素加法运算：dst = src0 + scalar + src1 |
-| 1    | 25       | [TSUBSC](./TSUBSC.md) | 带标量融合逐元素减法运算：dst = src0 - scalar + src1 |
+| 1    | 24-25    | - | 保留/非法 |
 | 1    | 26       | [SELS](./TSELS.md)  | 使用掩码Tile在源Tile和标量之间进行选择（源Tile逐元素选择） |
 | 1    | 27       | [TEXPANDS](./TEXPANDS.md) | 将标量广播到目标Tile中 |
 | 1    | 28-31    | -      | 预留编码 |

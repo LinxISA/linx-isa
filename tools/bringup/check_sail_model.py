@@ -209,8 +209,15 @@ def main(argv: list[str]) -> int:
     instructions = spec.get("instructions")
     if not isinstance(instructions, list):
         raise SystemExit(f"error: malformed spec file: {args.spec}")
-    if str(status.get("schema_version", "")).strip() != "linx-sail-status-v0.57.0":
-        raise SystemExit("error: semantics_status.schema_version must be 'linx-sail-status-v0.57.0'")
+    release = str(spec.get("version") or "").strip()
+    if not re.fullmatch(r"[0-9]+(?:\.[0-9]+)+", release):
+        raise SystemExit(f"error: malformed ISA release in {args.spec}")
+    expected_status_schema = f"linx-sail-status-v{release}"
+    if str(status.get("schema_version", "")).strip() != expected_status_schema:
+        raise SystemExit(
+            "error: semantics_status.schema_version must be "
+            f"{expected_status_schema!r}"
+        )
     form_statuses = status.get("forms")
     if not isinstance(form_statuses, dict):
         raise SystemExit("error: semantics_status.forms must be an object")

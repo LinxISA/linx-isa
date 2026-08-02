@@ -1,10 +1,10 @@
 {
-  "allowlist": "/home/jialewang/workspace/superscalarNPU/linx-isa/docs/bringup/qemu_opcode_sync_allowlist.json",
+  "allowlist": "/private/tmp/linx-isa-v0571/docs/bringup/qemu_opcode_sync_allowlist.json",
   "decode_only": [],
   "decode_only_unexpected": [],
   "decode_only_unexpected_count": 0,
-  "decode_unique_patterns": 678,
-  "generated_at_utc": "2026-07-25 03:02:19Z",
+  "decode_unique_patterns": 855,
+  "generated_at_utc": "2026-08-02 12:51:45Z",
   "have_opcode_meta": true,
   "id_mismatch": [],
   "id_mismatch_count": 0,
@@ -16,9 +16,9 @@
   "meta_only": [],
   "meta_only_unexpected": [],
   "meta_only_unexpected_count": 0,
-  "meta_unique_decode_patterns": 678,
-  "meta_unique_non_internal": 678,
-  "qemu_root": "/home/jialewang/workspace/superscalarNPU/linx-isa/emulator/qemu",
+  "meta_unique_decode_patterns": 855,
+  "meta_unique_non_internal": 855,
+  "qemu_root": "/private/tmp/linx-isa-v0571/emulator/qemu",
   "result": {
     "classification": "qemu_opcode_meta_sync_ok",
     "ok": true

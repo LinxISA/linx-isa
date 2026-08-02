@@ -13,7 +13,7 @@
 ## 汇编语法
 
 ```asm
-TMATMULMX.ACC <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcTile1<.reuse>, SrcTile2<.reuse>, SrcTile3<.reuse>, ACC, ->ACC<Size>
+TMATMULMX.ACC <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcTile1<.reuse>, SrcTile2<.reuse>, SrcTile3<.reuse>
 ```
 
 ## 汇编符号
@@ -31,7 +31,7 @@ TMATMULMX.ACC <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcT
 - **ACC**：**输入兼输出**。存储 **C 矩阵** (Matrix C) 及结果矩阵的 [Tile 寄存器](../../register/common/tilereg.md)。
     - 执行前：存放累加前的初始值。
     - 执行后：存放累加后的结果值。
-- **Size**：指示输出 Tile 寄存器空间大小的立即数，例如 `ACC<64KB>`。
+- **ACC**：由 CUBE opcode 隐式选择，不在 `B.IOT` 中编码，也没有目的 Tile size 字段。
 
 ---
 
@@ -51,7 +51,7 @@ TMATMULMX.ACC <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcT
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`    *(注：N)*
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB2`    *(注：K)*
 - [B.IOT](../../header/B.IOT.md) `SrcTile0<.reuse>, SrcTile1<.reuse>`   *(A, ScaleA)*
-- [B.IOT](../../header/B.IOT.md) `SrcTile2<.reuse>, SrcTile3<.reuse>, last, ACC, ->ACC<Size>`   *(B, ScaleB)*
+- [B.IOT](../../header/B.IOT.md) `SrcTile2<.reuse>, SrcTile3<.reuse>, last`   *(B, ScaleB)*
 
 ## 执行模型
 
@@ -82,7 +82,7 @@ void TMATMULMX_ACC(Tile __inout__ C, Tile __in__ A, Tile __in__ ScaleA,
 ## 汇编示例
 
 ```asm
-TMATMULMX.ACC <LB0:100, LB1:a0, LB2:a1+10, e4m3, e5m2>, T#1, U#1, M#1, N#1, ACC, ->ACC<64KB>
+TMATMULMX.ACC <LB0:100, LB1:a0, LB2:a1+10, e4m3, e5m2>, T#1, U#1, M#1, N#1
 ```
 
 - **输入输出**：

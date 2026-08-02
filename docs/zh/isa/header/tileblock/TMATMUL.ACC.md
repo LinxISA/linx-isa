@@ -15,7 +15,7 @@ Matrix_C += Matrix_A * Matrix_B
 ## 汇编语法
 
 ```asm
-TMATMUL.ACC <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcTile1<.reuse>, ACC, ->ACC<Size>
+TMATMUL.ACC <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcTile1<.reuse>
 ```
 
 ## 汇编符号
@@ -30,7 +30,7 @@ TMATMUL.ACC <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcTil
 - **SrcTile1**：存储B矩阵的[Tile 寄存器](../../register/common/tilereg.md)。
 - **reuse**：指示当前指令提交后保留寄存器（若无此标识，允许硬件自动释放）。
 - **ACC**：存储C矩阵和结果矩阵的[Tile 寄存器](../../register/common/tilereg.md)。
-- **Size**：指示输出Tile寄存器空间大小的立即数。容量约束请见[Tile寄存器介绍](../../register/common/tilereg.md)。
+- **ACC**：由 CUBE opcode 隐式选择，不在 `B.IOT` 中编码，也没有目的 Tile size 字段。
 
 本指令 A/B矩阵支持的数据类型（DataTypeA/B）如下表所示：
 
@@ -53,7 +53,7 @@ TMATMUL.ACC <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcTil
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0`    *(注：M)*
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`    *(注：N)*
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB2`    *(注：K)*
-- [B.IOT](../../header/B.IOT.md) `SrcTile0<.reuse>, SrcTile1<.reuse>, last, ->ACC<Size>`
+- [B.IOT](../../header/B.IOT.md) `SrcTile0<.reuse>, SrcTile1<.reuse>, last`
 
 注意：ACC寄存器为隐含输入。
 
@@ -81,7 +81,7 @@ void TMATMUL_ACC(Tile __out__ C, Tile __in__ B, Tile __in__ A) {
 ## 汇编示例
 
 ```asm
-TMATMUL.ACC <LB0:100, LB1:a0, LB2:a1+10, FP32>, T#1, U#1, ACC, ->ACC<64KB>
+TMATMUL.ACC <LB0:100, LB1:a0, LB2:a1+10, FP32>, T#1, U#1
 ```
 
 - **输入输出**：

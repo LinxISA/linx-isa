@@ -56,7 +56,7 @@ TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7
 | 0    | 2        | [TMUL](../../header/tileblock/TMUL.md)   | 两个Tile的逐元素乘法 |
 | 0    | 3        | [TDIV](../../header/tileblock/TDIV.md)   | 两个Tile的逐元素除法 |
 | 0    | 4        | [TREM](../../header/tileblock/TREM.md)   | 两个Tile的逐元素余数，余数符号与除数相同 |
-| 0    | 5        | [TFMOD](../../header/tileblock/TFMOD.md)  | 两个Tile的逐元素余数，余数符号与被除数相同 |
+| 0    | 5        | - | 保留/非法 |
 | 0    | 6        | [TAND](../../header/tileblock/TAND.md)   | 两个Tile的逐元素按位与 |
 | 0    | 7        | [TOR](../../header/tileblock/TOR.md)     | 两个Tile的逐元素按位或 |
 | 0    | 8        | [TXOR](../../header/tileblock/TXOR.md)   | 两个Tile的逐元素按位异或 |
@@ -75,8 +75,7 @@ TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7
 | 0    | 21       | [TSQRT](../../header/tileblock/TSQRT.md)  | 逐元素平方根 |
 | 0    | 22       | [TRSQRT](../../header/tileblock/TRSQRT.md) | 逐元素倒数平方根 |
 | 0    | 23       | [TRELU](../../header/tileblock/TRELU.md)  | Tile的逐元素ReLU |
-| 0    | 24       | [TADDC](../../header/tileblock/TADDC.md)  | 三元逐元素加法：dst = src0 + src1 + src2 |
-| 0    | 25       | [TSUBC](../../header/tileblock/TSUBC.md)  | 三元逐元素减法：dst = src0 - src1 + src2 |
+| 0    | 24-25    | - | 保留/非法 |
 | 0    | 26       | [TSEL](../../header/tileblock/TSEL.md)   | 使用掩码Tile在两个Tile之间进行选择（逐元素选择） |
 | 0    | 27       | [TCVT](../../header/tileblock/TCVT.md)   | Tile的逐元素数据格式转换。 |
 | 0    | 28-31    | -      | 保留 |
@@ -90,7 +89,7 @@ TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7
 | 1    | 2        | [TMULS](../../header/tileblock/TMULS.md)  | Tile与标量的逐元素乘法 |
 | 1    | 3        | [TDIVS](../../header/tileblock/TDIVS.md)  | 与标量的逐元素除法（Tile/标量或标量/Tile） |
 | 1    | 4        | [TREMS](../../header/tileblock/TREMS.md)  | 与标量的逐元素余数：remainder(src, scalar) |
-| 1    | 5        | [TFMODS](../../header/tileblock/TFMODS.md) | 与标量的逐元素余数：fmod(src, scalar) |
+| 1    | 5        | - | 保留/非法 |
 | 1    | 6        | [TANDS](../../header/tileblock/TANDS.md)  | Tile与标量的逐元素按位与 |
 | 1    | 7        | [TORS](../../header/tileblock/TORS.md)    | Tile与标量的逐元素按位或 |
 | 1    | 8        | [TXORS](../../header/tileblock/TXORS.md)  | Tile与标量的逐元素按位异或 |
@@ -99,10 +98,9 @@ TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7
 | 1    | 11       | [TMAXS](../../header/tileblock/TMAXS.md)  | Tile与标量的逐元素最大值：max(src, scalar) |
 | 1    | 12       | [TMINS](../../header/tileblock/TMINS.md)  | Tile与标量的逐元素最小值 |
 | 1    | 13       | [TCMPS](../../header/tileblock/TCMPS.md)  | 将Tile与标量逐元素比较 |
-| 1    | 14       | [TLRELU](../../header/tileblock/TLRELU.md) | 带标量斜率的LeakyReLU |
+| 1    | 14       | - | 保留/非法 |
 | 1    | 15-23    | -      | 预留编码 |
-| 1    | 24       | [TADDSC](../../header/tileblock/TADDSC.md) | 带标量融合逐元素加法运算：dst = src0 + scalar + src1 |
-| 1    | 25       | [TSUBSC](../../header/tileblock/TSUBSC.md) | 带标量融合逐元素减法运算：dst = src0 - scalar + src1 |
+| 1    | 24-25    | - | 保留/非法 |
 | 1    | 26       | [SELS](../../header/tileblock/TSELS.md)  | 使用掩码Tile在源Tile和标量之间进行选择（源Tile逐元素选择） |
 | 1    | 27       | [TEXPANDS](../../header/tileblock/TEXPANDS.md) | 将标量广播到目标Tile中 |
 | 1    | 28-31    | -      | 预留编码 |

@@ -1,25 +1,26 @@
-# 灵犀指令集汇编示例包 (v0.57)
+# LinxISA 汇编示例包（v0.57.1）
 
-灵犀指令集 v0.57 的规范公共汇编示例。
+本目录包含由锁定的 PTO ISA 0.57.1 kernel surface 生成的规范公共汇编示例。
 
-## 布局
+## 目录布局
 
-- `curated/`：审查了手工策划的示例。
-- `scratch-legacy/`：选定的迁移的暂存程序集（公共允许列表）。
-- `generated/`：从 PTO 示例生成的确定性输出。
-- `legacy-reference/`：移动历史参考示例。
-- `index.yaml`：带有出处和生成命令的清单。
+- `curated/`：经过审阅的手写标量与反汇编示例。
+- `generated/`：由 `workloads/pto_kernels/tools/examples/` 确定性生成的编译器输出。
+- `index.yaml`：精确记录源文件和工具链来源。
 
-## 规范示例
+## 规范 Tile 示例
 
 ```asm
-BSTART.TMA   TLOAD, FP16
-B.ARG        ND2ZN.normal, FP16, Null
-B.IOT       [], last ->t<4KB>
-B.IOR        [x2,a6],[]
-C.B.DIMI     64, ->lb0
-C.B.DIMI     64, ->lb1
-C.B.DIMI     64, ->lb2
+BSTART.TLOAD INT32
+B.DIM        a3, 0, ->lb0
+B.DIM        a3, 0, ->lb1
+B.DIM        a3, 0, ->lb2
+B.IOR        [a6,a7],[]
+B.IOT        last, ->t<4KB>
 ```
+
+0.57.1 示例不包含 `B.ARG`、通用 `BSTART.TMA` / `BSTART.CUBE`、
+`MAMULB` 或已删除的 D 类操作。请使用 `index.yaml` 记录的 LLVM 与
+PTO-Kernel 提交重新生成示例。
 
 来源：`docs/reference/examples/v0.57/`

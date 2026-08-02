@@ -1,15 +1,15 @@
 # LLVM C/C++ CodeGen ISA Mnemonic Breadth
 
-- Generated (UTC): `2026-07-18 02:41:42Z`
+- Generated (UTC): `2026-08-02 12:51:42Z`
 - Status: `MEASURED` (no target threshold is asserted)
-- Pure CodeGen direct coverage: `145/731`
-- Pure CodeGen after alias closure: `146/731`
-- C/C++ source-oriented direct coverage: `146/731` (`19.973%`)
-- C/C++ source-oriented after explicit alias closure: `147/731` (`20.109%`)
+- Pure CodeGen direct coverage: `145/728`
+- Pure CodeGen after alias closure: `146/728`
+- C/C++ source-oriented direct coverage: `146/728` (`20.055%`)
+- C/C++ source-oriented after explicit alias closure: `147/728` (`20.192%`)
 - Frozen plain-C reachable contract: `146/146` (`PASS`)
 - Included C/C++ artifacts: `44`
-- Excluded disassembly artifacts: `7`
-- Compiler identity: `clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git c39f7d86ce08489b8beb0f0da9f614445a4aa8e5)`
+- Excluded disassembly artifacts: `3`
+- Compiler identity: `clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 3feb50e4e1896105746a1831d3545d690518d3b3)`
 
 Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. The broader source-oriented boundary includes those tests but does not relabel their source-directed instructions as compiler-selected CodeGen. Neither metric reuses generated `99_spec_decode` or hand-authored assembly-lane artifacts.
 
@@ -89,13 +89,9 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 
 ## Excluded Artifacts
 
-- `avs/compiler/linx-llvm/tests/out/41_v056_isa_forms/41_v056_isa_forms.objdump`: no current C/C++ source with the same stem
 - `avs/compiler/linx-llvm/tests/out/41_v057_isa_forms/41_v057_isa_forms.objdump`: hand-authored assembly source; not C/C++ CodeGen
 - `avs/compiler/linx-llvm/tests/out/99_spec_decode/99_spec_decode.objdump`: generated ISA disassembly vector; not C/C++ CodeGen
 - `avs/compiler/linx-llvm/tests/out/99_spec_decode/99_spec_decode.roundtrip.objdump`: roundtrip-only artifact; not C/C++ CodeGen
-- `avs/compiler/linx-llvm/tests/out/99_spec_decode/99_spec_decode.roundtrip.strict.objdump`: roundtrip-only artifact; not C/C++ CodeGen
-- `avs/compiler/linx-llvm/tests/out/_neg/legacy_alias_l_bstop.objdump`: no current C/C++ source with the same stem
-- `avs/compiler/linx-llvm/tests/out/grace-l-bstart-smoke/forms.objdump`: no current C/C++ source with the same stem
 
 ## Missing Mnemonics After Alias Closure
 
@@ -103,7 +99,6 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 - `ACRE`
 - `ASSERT`
 - `B.CATR`
-- `B.DATR`
 - `B.DIM`
 - `B.EQ`
 - `B.GE`
@@ -125,8 +120,6 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 - `BSE`
 - `BSTART.ACCCVT`
 - `BSTART.CALL`
-- `BSTART.CUBE`
-- `BSTART.FIXP`
 - `BSTART.FP`
 - `BSTART.MGATHER`
 - `BSTART.MGATHER.CAS`

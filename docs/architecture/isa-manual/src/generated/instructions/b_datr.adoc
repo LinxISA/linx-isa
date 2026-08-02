@@ -5,9 +5,9 @@
 [[inst_b_datr]]
 ==== B.DATR
 
-*Syntax:* B.DATR {layout.{canon, normal}, datatype, padvalue, cmode, rmode, sat}
+*Syntax:* B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize}
 
-*Description:* canonical split of legacy B.CATR/B.DATR data fields. CMode is 3 bits; RMode is 3 bits; Sat is bit 31.
+*Description:* PTO ISA 0.57.1 data attributes. PadValueOrByteId is an opcode-defined two-bit union; bits 19:18 are reserved zero.
 
 *Encoding:*
 

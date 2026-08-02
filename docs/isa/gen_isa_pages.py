@@ -470,7 +470,7 @@ The LinxISA manual is organized into 12 chapters covering distinct functional un
 : Bit numbering, instruction lengths, decode tags, field colour key
 
 [![](assets/ch04.svg){: style="width:120px;height:80px"} **Ch 04 — Block ISA**{.chapter-card style="--ch04-color:#8b5cf6"}
-: BSTART, BSTOP, B.ARG, B.DIM, tile/SIMT control flow
+: BSTART, BSTOP, B.DATR, B.DIM, B.IOT, tile/SIMT control flow
 
 [![](assets/ch11.svg){: style="width:120px;height:80px"} **Ch 11 — AGU**{.chapter-card style="--ch11-color:#059669"}
 : Loads, stores, prefetch, all addressing modes
@@ -1345,6 +1345,21 @@ def main() -> int:
             f"ok: {len(mnem_map)} instruction pages and {len(groups)} group pages are current"
         )
         return 0
+
+    expected_managed = {
+        "index.md",
+        "encoding.md",
+        "groups/index.md",
+        "instructions/index.md",
+        *(f"groups/{_slug(group)}.md" for group in groups),
+        *(f"instructions/{_slug(mnemonic)}.md" for mnemonic in mnem_map),
+    }
+    for sub in ("groups", "instructions"):
+        managed_dir = os.path.join(out_dir, sub)
+        for name in os.listdir(managed_dir):
+            rel = os.path.join(sub, name)
+            if name.endswith(".md") and rel not in expected_managed:
+                os.unlink(os.path.join(out_dir, rel))
 
     print(f"\n[gen_isa_pages] Done — {len(mnem_map)} instruction pages, {len(groups)} group pages.")
     return 0

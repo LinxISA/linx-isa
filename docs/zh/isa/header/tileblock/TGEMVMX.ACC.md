@@ -27,7 +27,7 @@ for n in 0..(N-1):         // 遍历N维度
 ## 汇编语法
 
 ```asm
-TGEMVMX.ACC <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcTile1<.reuse>, SrcTile2<.reuse>, SrcTile3<.reuse>, ACC, ->ACC<Size>
+TGEMVMX.ACC <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcTile1<.reuse>, SrcTile2<.reuse>, SrcTile3<.reuse>
 ```
 
 ## 汇编符号
@@ -46,7 +46,7 @@ TGEMVMX.ACC <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcTil
 - **SrcTile3**：存储缩放B矩阵的[Tile 寄存器](../../register/common/tilereg.md)，支持`T`/`U`/`M`/`N`队列输入。
 - **reuse**（后缀）：指示当前指令提交后保留寄存器（若无此标识，允许硬件自动释放）。
 - **ACC**：存储结果矩阵的[Tile 寄存器](../../register/common/tilereg.md)（同时也做为输入）。
-- **Size**：输出Tile寄存器的空间大小（有效范围参见：[Tile寄存器](../../register/common/tilereg.md)）。
+- **ACC**：由 CUBE opcode 隐式选择，不在 `B.IOT` 中编码，也没有目的 Tile size 字段。
 
 ---
 
@@ -110,7 +110,7 @@ TGEMVMX.ACC <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcTil
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`    （注：*N*）
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB2`    （注：*K*）
 - [B.IOT](../../header/B.IOT.md) `SrcTile0<.reuse>, SrcTile1<.reuse>`
-- [B.IOT](../../header/B.IOT.md) `SrcTile2<.reuse>, SrcTile3<.reuse>, last, ->ACC<Size>`
+- [B.IOT](../../header/B.IOT.md) `SrcTile2<.reuse>, SrcTile3<.reuse>, last`
 
 ---
 
@@ -119,7 +119,7 @@ TGEMVMX.ACC <LB0:M, LB1:N, LB2:K, DataTypeA, DataTypeB> SrcTile0<.reuse>, SrcTil
 下面给出一个 **TGEMVMX.ACC** 汇编示例，示范如何同时传入向量 A、A 的缩放、矩阵 B 以及 B 的缩放，并累加结果矩阵 C：
 
 ```asm
-TGEMVMX.ACC <LB0:1, LB1:32, LB2:64, e3m4, e1m2X2>, T#1.reuse, U#1, M#2, N#2, ACC, ->ACC<512B>
+TGEMVMX.ACC <LB0:1, LB1:32, LB2:64, e3m4, e1m2X2>, T#1.reuse, U#1, M#2, N#2
 ```
 
 - **寄存器绑定**：
@@ -127,7 +127,7 @@ TGEMVMX.ACC <LB0:1, LB1:32, LB2:64, e3m4, e1m2X2>, T#1.reuse, U#1, M#2, N#2, ACC
     - `SrcTile1 = U#1`：存放 A 的缩放因子（`1 × K/32 = 1 × 2` 个 E8M0 值）。
     - `SrcTile2 = M#2`：存放 B 矩阵（`64 x 32`），采用 Zn 布局。
     - `SrcTile3 = N#2`：存放 B 的缩放因子（`(K/32) × N = 2 × 32`，分形为 `2 × 16`）。
-    - `DstTile = ACC<512B>`：存放累加 `1 × 32` 的 FP32 结果。
+    - ACC 为隐式状态，不通过 `B.IOT` 编码。
 - **尺寸设定**：
     - `M = 1`：A 为单行向量。
     - `N = 32`：结果/输出宽度。

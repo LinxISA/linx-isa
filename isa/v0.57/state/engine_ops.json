@@ -93,144 +93,386 @@
       "7": "RHB"
     }
   },
-  "note": "Authoritative semantic catalog for accelerator engine ops in LinxISA v0.57. v0.57 is the sole active release.",
+  "note": "Linx scheduling metadata projected onto the normative PTO ISA 0.57.1 tile catalog.",
   "profile": "v0.57",
   "tma": {
+    "kind": "function_u5",
     "function_field_bits": [
       0,
       4
     ],
-    "kind": "function_u5",
     "legal_aliases": [
       {
+        "name": "TLOAD",
         "function": 0,
-        "mnemonic": "BSTART.TLOAD"
+        "mnemonic": "BSTART.TLOAD",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "TLOAD",
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:address:base-address"
+        ]
       },
       {
+        "name": "TSTORE",
         "function": 1,
-        "mnemonic": "BSTART.TSTORE"
+        "mnemonic": "BSTART.TSTORE",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "TSTORE",
+        "state_effects": [
+          "operand:address:base-address",
+          "operand:source0:source"
+        ]
       },
       {
-        "function": 2,
-        "mnemonic": "BSTART.TMOV"
-      },
-      {
+        "name": "TPREFETCH",
         "function": 3,
         "mnemonic": "BSTART.TPREFETCH",
-        "semantic_delta": "Same address, layout, memory, fault, ordering, and restart contract as BSTART.TLOAD, with destination binding, destination allocation, and destination writeback removed."
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "TPREFETCH",
+        "state_effects": [
+          "operand:address:base-address",
+          "operand:byte_count:byte-count"
+        ]
       },
       {
+        "name": "MGATHER",
         "function": 4,
-        "mnemonic": "BSTART.MGATHER"
+        "mnemonic": "BSTART.MGATHER",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "MGATHER",
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:address:base-address",
+          "operand:source0:indices"
+        ]
       },
       {
+        "name": "MSCATTER",
         "function": 5,
-        "mnemonic": "BSTART.MSCATTER"
+        "mnemonic": "BSTART.MSCATTER",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "MSCATTER",
+        "state_effects": [
+          "operand:address:base-address",
+          "operand:source0:source",
+          "operand:source1:indices"
+        ]
       },
       {
+        "name": "MGATHER_MASK",
         "function": 6,
-        "mnemonic": "BSTART.MGATHER.MASK"
+        "mnemonic": "BSTART.MGATHER.MASK",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "MGATHER_MASK",
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:address:base-address",
+          "operand:source0:indices",
+          "operand:source1:mask"
+        ]
       },
       {
+        "name": "MSCATTER_MASK",
         "function": 7,
-        "mnemonic": "BSTART.MSCATTER.MASK"
+        "mnemonic": "BSTART.MSCATTER.MASK",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "MSCATTER_MASK",
+        "state_effects": [
+          "operand:address:base-address",
+          "operand:source0:source",
+          "operand:source1:indices",
+          "operand:source2:mask"
+        ]
       },
       {
+        "name": "MGATHER_CAS",
         "function": 8,
-        "mnemonic": "BSTART.MGATHER.CAS"
+        "mnemonic": "BSTART.MGATHER.CAS",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "MGATHER_CAS",
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:address:base-address",
+          "operand:source0:indices",
+          "operand:source1:expected",
+          "operand:source2:replacement"
+        ]
+      },
+      {
+        "name": "TMOV",
+        "function": 2,
+        "mnemonic": "BSTART.TMOV",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "TMOV",
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
       }
     ],
-    "reserved_behavior": "illegal_instruction",
     "reserved_function_range": [
       9,
       31
-    ]
+    ],
+    "reserved_behavior": "illegal_instruction"
   },
   "cube": {
+    "kind": "function_u5",
     "function_field_bits": [
       0,
       4
     ],
-    "kind": "function_u5",
     "legal_aliases": [
       {
+        "name": "TMATMUL",
         "function": 0,
-        "mnemonic": "BSTART.TMATMUL"
+        "mnemonic": "BSTART.TMATMUL",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "TMATMUL",
+        "state_effects": [
+          "operand:source0:left",
+          "operand:source1:right",
+          "implicit:ACC:write-initialize"
+        ]
       },
       {
+        "name": "TMATMUL_BIAS",
         "function": 1,
-        "mnemonic": "BSTART.TMATMUL.BIAS"
+        "mnemonic": "BSTART.TMATMUL.BIAS",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "TMATMUL_BIAS",
+        "state_effects": [
+          "operand:source0:left",
+          "operand:source1:right",
+          "operand:source2:bias",
+          "implicit:ACC:write-initialize"
+        ]
       },
       {
+        "name": "TMATMUL_ACC",
         "function": 2,
-        "mnemonic": "BSTART.TMATMUL.ACC"
+        "mnemonic": "BSTART.TMATMUL.ACC",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "TMATMUL_ACC",
+        "state_effects": [
+          "operand:source0:left",
+          "operand:source1:right",
+          "implicit:ACC:read-write"
+        ]
       },
       {
+        "name": "TMATMUL_MX",
         "function": 4,
-        "mnemonic": "BSTART.TMATMULMX"
+        "mnemonic": "BSTART.TMATMULMX",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "TMATMUL_MX",
+        "state_effects": [
+          "operand:source0:left",
+          "operand:source1:right",
+          "operand:source2:row-scale",
+          "operand:source3:column-scale",
+          "implicit:ACC:write-initialize"
+        ]
       },
       {
+        "name": "TMATMUL_MX_BIAS",
         "function": 5,
-        "mnemonic": "BSTART.TMATMULMX.BIAS"
+        "mnemonic": "BSTART.TMATMULMX.BIAS",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "TMATMUL_MX_BIAS",
+        "state_effects": [
+          "operand:source0:left",
+          "operand:source1:right",
+          "operand:source2:row-scale",
+          "operand:source3:column-scale",
+          "operand:source4:bias",
+          "implicit:ACC:write-initialize"
+        ]
       },
       {
+        "name": "TMATMUL_MX_ACC",
         "function": 6,
-        "mnemonic": "BSTART.TMATMULMX.ACC"
+        "mnemonic": "BSTART.TMATMULMX.ACC",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "TMATMUL_MX_ACC",
+        "state_effects": [
+          "operand:source0:left",
+          "operand:source1:right",
+          "operand:source2:row-scale",
+          "operand:source3:column-scale",
+          "implicit:ACC:read-write"
+        ]
       },
       {
+        "name": "ACCCVT",
         "function": 8,
-        "mnemonic": "BSTART.ACCCVT"
+        "mnemonic": "BSTART.ACCCVT",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ACCCVT",
+        "state_effects": [
+          "operand:destination0:destination",
+          "implicit:ACC:read-release-on-commit"
+        ]
       },
       {
+        "name": "TGEMV",
         "function": 16,
-        "mnemonic": "BSTART.TGEMV"
+        "mnemonic": "BSTART.TGEMV",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "TGEMV",
+        "state_effects": [
+          "operand:source0:matrix",
+          "operand:source1:vector",
+          "implicit:ACC:write-initialize"
+        ]
       },
       {
+        "name": "TGEMV_BIAS",
         "function": 17,
-        "mnemonic": "BSTART.TGEMV.BIAS"
+        "mnemonic": "BSTART.TGEMV.BIAS",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "TGEMV_BIAS",
+        "state_effects": [
+          "operand:source0:matrix",
+          "operand:source1:vector",
+          "operand:source2:bias",
+          "implicit:ACC:write-initialize"
+        ]
       },
       {
+        "name": "TGEMV_ACC",
         "function": 18,
-        "mnemonic": "BSTART.TGEMV.ACC"
+        "mnemonic": "BSTART.TGEMV.ACC",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "TGEMV_ACC",
+        "state_effects": [
+          "operand:source0:matrix",
+          "operand:source1:vector",
+          "implicit:ACC:read-write"
+        ]
       },
       {
+        "name": "TGEMV_MX",
         "function": 20,
-        "mnemonic": "BSTART.TGEMVMX"
+        "mnemonic": "BSTART.TGEMVMX",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "TGEMV_MX",
+        "state_effects": [
+          "operand:source0:matrix",
+          "operand:source1:vector",
+          "operand:source2:row-scale",
+          "operand:source3:column-scale",
+          "implicit:ACC:write-initialize"
+        ]
       },
       {
+        "name": "TGEMV_MX_BIAS",
         "function": 21,
-        "mnemonic": "BSTART.TGEMVMX.BIAS"
+        "mnemonic": "BSTART.TGEMVMX.BIAS",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "TGEMV_MX_BIAS",
+        "state_effects": [
+          "operand:source0:matrix",
+          "operand:source1:vector",
+          "operand:source2:row-scale",
+          "operand:source3:column-scale",
+          "operand:source4:bias",
+          "implicit:ACC:write-initialize"
+        ]
       },
       {
+        "name": "TGEMV_MX_ACC",
         "function": 22,
-        "mnemonic": "BSTART.TGEMVMX.ACC"
+        "mnemonic": "BSTART.TGEMVMX.ACC",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "TGEMV_MX_ACC",
+        "state_effects": [
+          "operand:source0:matrix",
+          "operand:source1:vector",
+          "operand:source2:row-scale",
+          "operand:source3:column-scale",
+          "implicit:ACC:read-write"
+        ]
       }
     ],
-    "unassigned_alias_behavior": "inherit_generic_bstart_cube_decode_without_canonical_alias",
-    "unassigned_alias_functions": [
+    "unassigned_function_behavior": "illegal_instruction",
+    "reserved_functions": [
       3,
       7,
-      9,
-      10,
-      11,
-      12,
-      13,
-      14,
-      15,
+      [
+        9,
+        15
+      ],
       19,
-      23,
-      24,
-      25,
-      26,
-      27,
-      28,
-      29,
-      30,
-      31
+      [
+        23,
+        31
+      ]
     ]
   },
   "tepl": {
-    "kind": "TileOpcode",
+    "kind": "mode_function",
+    "selector_formula": "(mode << 5) | function",
+    "mode_field_bits": [
+      0,
+      1
+    ],
+    "function_field_bits": [
+      0,
+      4
+    ],
+    "accepted_selector_count": 98,
+    "reserved_selector_ranges": [
+      [
+        "0x005",
+        "0x005"
+      ],
+      [
+        "0x018",
+        "0x019"
+      ],
+      [
+        "0x01C",
+        "0x01F"
+      ],
+      [
+        "0x025",
+        "0x025"
+      ],
+      [
+        "0x02E",
+        "0x02E"
+      ],
+      [
+        "0x030",
+        "0x039"
+      ],
+      [
+        "0x03C",
+        "0x03F"
+      ],
+      [
+        "0x04E",
+        "0x04F"
+      ],
+      [
+        "0x05E",
+        "0x05F"
+      ],
+      [
+        "0x069",
+        "0x069"
+      ],
+      [
+        "0x07E",
+        "0x07F"
+      ]
+    ],
+    "migration_aliases": {
+      "TTRANSPOSE": "TTRANS",
+      "TSORT32": "TSORT"
+    },
     "ops": [
       {
         "dim_lb_defaults": {
@@ -251,7 +493,34 @@
         "redo_ok_after_start": false,
         "resume_ok": false,
         "src_tiles": 2,
-        "tile_opcode": 0
+        "mode": 0,
+        "function": 0,
+        "logical_selector": 0,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileBinary",
+        "legality_handler": "TileOperandsLegal_ExecuteTileBinary",
+        "effect_contract": "ExecuteTileBinary",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source-left"
+          },
+          {
+            "field": "source1",
+            "role": "source-right"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source-left",
+          "operand:source1:source-right"
+        ]
       },
       {
         "dim_lb_defaults": {
@@ -272,7 +541,34 @@
         "redo_ok_after_start": false,
         "resume_ok": false,
         "src_tiles": 2,
-        "tile_opcode": 1
+        "mode": 0,
+        "function": 1,
+        "logical_selector": 1,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileBinary",
+        "legality_handler": "TileOperandsLegal_ExecuteTileBinary",
+        "effect_contract": "ExecuteTileBinary",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source-left"
+          },
+          {
+            "field": "source1",
+            "role": "source-right"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source-left",
+          "operand:source1:source-right"
+        ]
       },
       {
         "dim_lb_defaults": {
@@ -293,7 +589,621 @@
         "redo_ok_after_start": false,
         "resume_ok": false,
         "src_tiles": 2,
-        "tile_opcode": 2
+        "mode": 0,
+        "function": 2,
+        "logical_selector": 2,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileBinary",
+        "legality_handler": "TileOperandsLegal_ExecuteTileBinary",
+        "effect_contract": "ExecuteTileBinary",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source-left"
+          },
+          {
+            "field": "source1",
+            "role": "source-right"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source-left",
+          "operand:source1:source-right"
+        ]
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TMAX",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 2,
+        "mode": 0,
+        "function": 11,
+        "logical_selector": 11,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileBinary",
+        "legality_handler": "TileOperandsLegal_ExecuteTileBinary",
+        "effect_contract": "ExecuteTileBinary",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source-left"
+          },
+          {
+            "field": "source1",
+            "role": "source-right"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source-left",
+          "operand:source1:source-right"
+        ]
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TMIN",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 2,
+        "mode": 0,
+        "function": 12,
+        "logical_selector": 12,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileBinary",
+        "legality_handler": "TileOperandsLegal_ExecuteTileBinary",
+        "effect_contract": "ExecuteTileBinary",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source-left"
+          },
+          {
+            "field": "source1",
+            "role": "source-right"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source-left",
+          "operand:source1:source-right"
+        ]
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TAND",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 2,
+        "mode": 0,
+        "function": 6,
+        "logical_selector": 6,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileBinary",
+        "legality_handler": "TileOperandsLegal_ExecuteTileBinary",
+        "effect_contract": "ExecuteTileBinary",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source-left"
+          },
+          {
+            "field": "source1",
+            "role": "source-right"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source-left",
+          "operand:source1:source-right"
+        ]
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TOR",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 2,
+        "mode": 0,
+        "function": 7,
+        "logical_selector": 7,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileBinary",
+        "legality_handler": "TileOperandsLegal_ExecuteTileBinary",
+        "effect_contract": "ExecuteTileBinary",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source-left"
+          },
+          {
+            "field": "source1",
+            "role": "source-right"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source-left",
+          "operand:source1:source-right"
+        ]
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TXOR",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 2,
+        "mode": 0,
+        "function": 8,
+        "logical_selector": 8,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileBinary",
+        "legality_handler": "TileOperandsLegal_ExecuteTileBinary",
+        "effect_contract": "ExecuteTileBinary",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source-left"
+          },
+          {
+            "field": "source1",
+            "role": "source-right"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source-left",
+          "operand:source1:source-right"
+        ]
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TSHL",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 2,
+        "mode": 0,
+        "function": 9,
+        "logical_selector": 9,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileBinary",
+        "legality_handler": "TileOperandsLegal_ExecuteTileBinary",
+        "effect_contract": "ExecuteTileBinary",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source-left"
+          },
+          {
+            "field": "source1",
+            "role": "source-right"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source-left",
+          "operand:source1:source-right"
+        ]
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TSHR",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 2,
+        "mode": 0,
+        "function": 10,
+        "logical_selector": 10,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileBinary",
+        "legality_handler": "TileOperandsLegal_ExecuteTileBinary",
+        "effect_contract": "ExecuteTileBinary",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source-left"
+          },
+          {
+            "field": "source1",
+            "role": "source-right"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source-left",
+          "operand:source1:source-right"
+        ]
+      },
+      {
+        "name": "TCMP",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 0,
+        "function": 13,
+        "logical_selector": 13,
+        "semantic_handler": "ExecuteTileCompare",
+        "legality_handler": "TileOperandsLegal_ExecuteTileCompare",
+        "effect_contract": "ExecuteTileCompare",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source-left"
+          },
+          {
+            "field": "source1",
+            "role": "source-right"
+          },
+          {
+            "field": "comparison",
+            "role": "comparison"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source-left",
+          "operand:source1:source-right",
+          "operand:comparison:comparison"
+        ]
+      },
+      {
+        "name": "TSEL",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 0,
+        "function": 26,
+        "logical_selector": 26,
+        "semantic_handler": "ExecuteTileSelect",
+        "legality_handler": "TileOperandsLegal_ExecuteTileSelect",
+        "effect_contract": "ExecuteTileSelect",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "mask"
+          },
+          {
+            "field": "source1",
+            "role": "source-true"
+          },
+          {
+            "field": "source2",
+            "role": "source-false"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:mask",
+          "operand:source1:source-true",
+          "operand:source2:source-false"
+        ]
+      },
+      {
+        "name": "TABS",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 0,
+        "function": 15,
+        "logical_selector": 15,
+        "semantic_handler": "ExecuteTileUnary",
+        "legality_handler": "TileOperandsLegal_ExecuteTileUnary",
+        "effect_contract": "ExecuteTileUnary",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
+      },
+      {
+        "name": "TNOT",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 0,
+        "function": 16,
+        "logical_selector": 16,
+        "semantic_handler": "ExecuteTileUnary",
+        "legality_handler": "TileOperandsLegal_ExecuteTileUnary",
+        "effect_contract": "ExecuteTileUnary",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
+      },
+      {
+        "name": "TNEG",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 0,
+        "function": 17,
+        "logical_selector": 17,
+        "semantic_handler": "ExecuteTileUnary",
+        "legality_handler": "TileOperandsLegal_ExecuteTileUnary",
+        "effect_contract": "ExecuteTileUnary",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TRELU",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 1,
+        "mode": 0,
+        "function": 23,
+        "logical_selector": 23,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileUnary",
+        "legality_handler": "TileOperandsLegal_ExecuteTileUnary",
+        "effect_contract": "ExecuteTileUnary",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TPRELU",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 2,
+        "mode": 0,
+        "function": 14,
+        "logical_selector": 14,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "TPRELU",
+        "legality_handler": "TileOperandsLegal_TPRELU",
+        "effect_contract": "TPRELU",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "scalar0",
+            "role": "negative-slope"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:scalar0:negative-slope"
+        ]
       },
       {
         "dim_lb_defaults": {
@@ -326,265 +1236,67 @@
         "scalar_status_reduce": "or",
         "src_tiles": 2,
         "status_absent_behavior": "flags_dropped",
-        "tile_opcode": 3
+        "mode": 0,
+        "function": 3,
+        "logical_selector": 3,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileBinary",
+        "legality_handler": "TileOperandsLegal_ExecuteTileBinary",
+        "effect_contract": "ExecuteTileBinary",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source-left"
+          },
+          {
+            "field": "source1",
+            "role": "source-right"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source-left",
+          "operand:source1:source-right"
+        ]
       },
       {
-        "dim_lb_defaults": {
-          "LB1": 1,
-          "LB2": 1
-        },
-        "dim_lb_required": [
-          "LB0"
+        "name": "TREM",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 0,
+        "function": 4,
+        "logical_selector": 4,
+        "semantic_handler": "ExecuteTileBinary",
+        "legality_handler": "TileOperandsLegal_ExecuteTileBinary",
+        "effect_contract": "ExecuteTileBinary",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source-left"
+          },
+          {
+            "field": "source1",
+            "role": "source-right"
+          }
         ],
-        "dim_required": true,
-        "dirty_rule": "op-defined",
-        "dst_tiles": 1,
-        "engineop_state_bytes_max": 0,
-        "engineop_state_version": 0,
-        "has_index_tile": false,
-        "name": "TMAX",
-        "phase_model": "op-defined",
-        "redo_ok_after_start": false,
-        "resume_ok": false,
-        "src_tiles": 2,
-        "tile_opcode": 4
-      },
-      {
-        "dim_lb_defaults": {
-          "LB1": 1,
-          "LB2": 1
-        },
-        "dim_lb_required": [
-          "LB0"
-        ],
-        "dim_required": true,
-        "dirty_rule": "op-defined",
-        "dst_tiles": 1,
-        "engineop_state_bytes_max": 0,
-        "engineop_state_version": 0,
-        "has_index_tile": false,
-        "name": "TMIN",
-        "phase_model": "op-defined",
-        "redo_ok_after_start": false,
-        "resume_ok": false,
-        "src_tiles": 2,
-        "tile_opcode": 5
-      },
-      {
-        "dim_lb_defaults": {
-          "LB1": 1,
-          "LB2": 1
-        },
-        "dim_lb_required": [
-          "LB0"
-        ],
-        "dim_required": true,
-        "dirty_rule": "op-defined",
-        "dst_tiles": 1,
-        "engineop_state_bytes_max": 0,
-        "engineop_state_version": 0,
-        "has_index_tile": false,
-        "name": "TAND",
-        "phase_model": "op-defined",
-        "redo_ok_after_start": false,
-        "resume_ok": false,
-        "src_tiles": 2,
-        "tile_opcode": 6
-      },
-      {
-        "dim_lb_defaults": {
-          "LB1": 1,
-          "LB2": 1
-        },
-        "dim_lb_required": [
-          "LB0"
-        ],
-        "dim_required": true,
-        "dirty_rule": "op-defined",
-        "dst_tiles": 1,
-        "engineop_state_bytes_max": 0,
-        "engineop_state_version": 0,
-        "has_index_tile": false,
-        "name": "TOR",
-        "phase_model": "op-defined",
-        "redo_ok_after_start": false,
-        "resume_ok": false,
-        "src_tiles": 2,
-        "tile_opcode": 7
-      },
-      {
-        "dim_lb_defaults": {
-          "LB1": 1,
-          "LB2": 1
-        },
-        "dim_lb_required": [
-          "LB0"
-        ],
-        "dim_required": true,
-        "dirty_rule": "op-defined",
-        "dst_tiles": 1,
-        "engineop_state_bytes_max": 0,
-        "engineop_state_version": 0,
-        "has_index_tile": false,
-        "name": "TXOR",
-        "phase_model": "op-defined",
-        "redo_ok_after_start": false,
-        "resume_ok": false,
-        "src_tiles": 2,
-        "tile_opcode": 8
-      },
-      {
-        "dim_lb_defaults": {
-          "LB1": 1,
-          "LB2": 1
-        },
-        "dim_lb_required": [
-          "LB0"
-        ],
-        "dim_required": true,
-        "dirty_rule": "op-defined",
-        "dst_tiles": 1,
-        "engineop_state_bytes_max": 0,
-        "engineop_state_version": 0,
-        "has_index_tile": false,
-        "name": "TSHL",
-        "phase_model": "op-defined",
-        "redo_ok_after_start": false,
-        "resume_ok": false,
-        "src_tiles": 2,
-        "tile_opcode": 9
-      },
-      {
-        "dim_lb_defaults": {
-          "LB1": 1,
-          "LB2": 1
-        },
-        "dim_lb_required": [
-          "LB0"
-        ],
-        "dim_required": true,
-        "dirty_rule": "op-defined",
-        "dst_tiles": 1,
-        "engineop_state_bytes_max": 0,
-        "engineop_state_version": 0,
-        "has_index_tile": false,
-        "name": "TSHR",
-        "phase_model": "op-defined",
-        "redo_ok_after_start": false,
-        "resume_ok": false,
-        "src_tiles": 2,
-        "tile_opcode": 10
-      },
-      {
-        "dim_lb_defaults": {
-          "LB1": 1,
-          "LB2": 1
-        },
-        "dim_lb_required": [
-          "LB0"
-        ],
-        "dim_required": true,
-        "dirty_rule": "op-defined",
-        "dst_tiles": 1,
-        "engineop_state_bytes_max": 0,
-        "engineop_state_version": 0,
-        "has_index_tile": false,
-        "name": "TRELU",
-        "phase_model": "op-defined",
-        "redo_ok_after_start": false,
-        "resume_ok": false,
-        "src_tiles": 1,
-        "tile_opcode": 11
-      },
-      {
-        "dim_lb_defaults": {
-          "LB1": 1,
-          "LB2": 1
-        },
-        "dim_lb_required": [
-          "LB0"
-        ],
-        "dim_required": true,
-        "dirty_rule": "op-defined",
-        "dst_tiles": 1,
-        "engineop_state_bytes_max": 0,
-        "engineop_state_version": 0,
-        "has_index_tile": false,
-        "name": "TPRELU",
-        "phase_model": "op-defined",
-        "redo_ok_after_start": false,
-        "resume_ok": false,
-        "src_tiles": 2,
-        "tile_opcode": 12
-      },
-      {
-        "dim_lb_defaults": {
-          "LB1": 1,
-          "LB2": 1
-        },
-        "dim_lb_required": [
-          "LB0"
-        ],
-        "dim_required": true,
-        "dirty_rule": "op-defined",
-        "dst_tiles": 1,
-        "engineop_state_bytes_max": 0,
-        "engineop_state_version": 0,
-        "has_index_tile": false,
-        "missing_required_attr_desc_family": "B.CATR/B.DATR",
-        "missing_required_attr_detail": "0x00",
-        "missing_required_attr_trap": "E_BLOCK(EC_BLOCKFMT)",
-        "missing_required_ior_desc_family": "B.IOR",
-        "missing_required_ior_detail": "0x00",
-        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
-        "name": "TCVT",
-        "phase_model": "op-defined",
-        "redo_ok_after_start": false,
-        "requires_b_arg": true,
-        "requires_catr_or_datr": true,
-        "requires_b_ior": true,
-        "requires_b_iot": true,
-        "resume_ok": false,
-        "src_tiles": 1,
-        "tile_opcode": 13
-      },
-      {
-        "dim_lb_defaults": {
-          "LB1": 1,
-          "LB2": 1
-        },
-        "dim_lb_required": [
-          "LB0"
-        ],
-        "dim_required": true,
-        "dirty_rule": "op-defined",
-        "engineop_state_bytes_max": 0,
-        "engineop_state_version": 0,
-        "has_index_tile": false,
-        "name": "TEXP",
-        "phase_model": "op-defined",
-        "redo_ok_after_start": false,
-        "resume_ok": false,
-        "tile_opcode": 14
-      },
-      {
-        "dim_lb_defaults": {
-          "LB1": 1,
-          "LB2": 1
-        },
-        "dim_lb_required": [
-          "LB0"
-        ],
-        "dim_required": true,
-        "dirty_rule": "op-defined",
-        "engineop_state_bytes_max": 0,
-        "engineop_state_version": 0,
-        "has_index_tile": false,
-        "name": "TLOG",
-        "phase_model": "op-defined",
-        "redo_ok_after_start": false,
-        "resume_ok": false,
-        "tile_opcode": 15
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source-left",
+          "operand:source1:source-right"
+        ]
       },
       {
         "dim_lb_defaults": {
@@ -603,7 +1315,152 @@
         "phase_model": "op-defined",
         "redo_ok_after_start": false,
         "resume_ok": false,
-        "tile_opcode": 16
+        "mode": 0,
+        "function": 21,
+        "logical_selector": 21,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileUnary",
+        "legality_handler": "TileOperandsLegal_ExecuteTileUnary",
+        "effect_contract": "ExecuteTileUnary",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TLOG",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "mode": 0,
+        "function": 19,
+        "logical_selector": 19,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileUnary",
+        "legality_handler": "TileOperandsLegal_ExecuteTileUnary",
+        "effect_contract": "ExecuteTileUnary",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TRECIP",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "mode": 0,
+        "function": 20,
+        "logical_selector": 20,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileUnary",
+        "legality_handler": "TileOperandsLegal_ExecuteTileUnary",
+        "effect_contract": "ExecuteTileUnary",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TEXP",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "mode": 0,
+        "function": 18,
+        "logical_selector": 18,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileUnary",
+        "legality_handler": "TileOperandsLegal_ExecuteTileUnary",
+        "effect_contract": "ExecuteTileUnary",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
       },
       {
         "dim_lb_defaults": {
@@ -622,7 +1479,29 @@
         "phase_model": "op-defined",
         "redo_ok_after_start": false,
         "resume_ok": false,
-        "tile_opcode": 17
+        "mode": 0,
+        "function": 22,
+        "logical_selector": 22,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileUnary",
+        "legality_handler": "TileOperandsLegal_ExecuteTileUnary",
+        "effect_contract": "ExecuteTileUnary",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
       },
       {
         "dim_lb_defaults": {
@@ -638,12 +1517,81 @@
         "engineop_state_bytes_max": 0,
         "engineop_state_version": 0,
         "has_index_tile": false,
-        "name": "TROWMAX",
+        "missing_required_ior_desc_family": "B.IOR",
+        "missing_required_ior_detail": "0x00",
+        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "name": "TADDS",
         "phase_model": "op-defined",
         "redo_ok_after_start": false,
+        "requires_b_ior": true,
         "resume_ok": false,
+        "scalar_rhs_broadcast": true,
+        "scalar_rhs_extract": "truncate_low_bits",
+        "scalar_rhs_mixed_signedness": false,
+        "scalar_rhs_signedness": "match_tile_dtype",
+        "scalar_rhs_type": "tile_element_dtype",
         "src_tiles": 1,
-        "tile_opcode": 18
+        "mode": 1,
+        "function": 0,
+        "logical_selector": 32,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileScalar",
+        "legality_handler": "TileOperandsLegal_ExecuteTileScalar",
+        "effect_contract": "ExecuteTileScalar",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "scalar0",
+            "role": "scalar"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:scalar0:scalar"
+        ]
+      },
+      {
+        "name": "TAXPY",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 1,
+        "function": 15,
+        "logical_selector": 47,
+        "semantic_handler": "ExecuteTileAxpy",
+        "legality_handler": "TileOperandsLegal_ExecuteTileAxpy",
+        "effect_contract": "ExecuteTileAxpy",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "scalar0",
+            "role": "scalar"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:scalar0:scalar"
+        ]
       },
       {
         "dim_lb_defaults": {
@@ -659,12 +1607,670 @@
         "engineop_state_bytes_max": 0,
         "engineop_state_version": 0,
         "has_index_tile": false,
-        "name": "TROWMIN",
+        "missing_required_ior_desc_family": "B.IOR",
+        "missing_required_ior_detail": "0x00",
+        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "name": "TSUBS",
         "phase_model": "op-defined",
         "redo_ok_after_start": false,
+        "requires_b_ior": true,
         "resume_ok": false,
+        "scalar_rhs_broadcast": true,
+        "scalar_rhs_extract": "truncate_low_bits",
+        "scalar_rhs_mixed_signedness": false,
+        "scalar_rhs_signedness": "match_tile_dtype",
+        "scalar_rhs_type": "tile_element_dtype",
         "src_tiles": 1,
-        "tile_opcode": 19
+        "mode": 1,
+        "function": 1,
+        "logical_selector": 33,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileScalar",
+        "legality_handler": "TileOperandsLegal_ExecuteTileScalar",
+        "effect_contract": "ExecuteTileScalar",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "scalar0",
+            "role": "scalar"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:scalar0:scalar"
+        ]
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "missing_required_ior_desc_family": "B.IOR",
+        "missing_required_ior_detail": "0x00",
+        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "name": "TMULS",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "requires_b_ior": true,
+        "resume_ok": false,
+        "scalar_rhs_broadcast": true,
+        "scalar_rhs_extract": "truncate_low_bits",
+        "scalar_rhs_mixed_signedness": false,
+        "scalar_rhs_signedness": "match_tile_dtype",
+        "scalar_rhs_type": "tile_element_dtype",
+        "src_tiles": 1,
+        "mode": 1,
+        "function": 2,
+        "logical_selector": 34,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileScalar",
+        "legality_handler": "TileOperandsLegal_ExecuteTileScalar",
+        "effect_contract": "ExecuteTileScalar",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "scalar0",
+            "role": "scalar"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:scalar0:scalar"
+        ]
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "missing_required_ior_desc_family": "B.IOR",
+        "missing_required_ior_detail": "0x00",
+        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "name": "TDIVS",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "requires_b_ior": true,
+        "resume_ok": false,
+        "scalar_rhs_broadcast": true,
+        "scalar_rhs_extract": "truncate_low_bits",
+        "scalar_rhs_mixed_signedness": false,
+        "scalar_rhs_signedness": "match_tile_dtype",
+        "scalar_rhs_type": "tile_element_dtype",
+        "src_tiles": 1,
+        "mode": 1,
+        "function": 3,
+        "logical_selector": 35,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileScalar",
+        "legality_handler": "TileOperandsLegal_ExecuteTileScalar",
+        "effect_contract": "ExecuteTileScalar",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "scalar0",
+            "role": "scalar"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:scalar0:scalar"
+        ]
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "missing_required_ior_desc_family": "B.IOR",
+        "missing_required_ior_detail": "0x00",
+        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "name": "TMINS",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "requires_b_ior": true,
+        "resume_ok": false,
+        "scalar_rhs_broadcast": true,
+        "scalar_rhs_extract": "truncate_low_bits",
+        "scalar_rhs_mixed_signedness": false,
+        "scalar_rhs_signedness": "match_tile_dtype",
+        "scalar_rhs_type": "tile_element_dtype",
+        "src_tiles": 1,
+        "mode": 1,
+        "function": 12,
+        "logical_selector": 44,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileScalar",
+        "legality_handler": "TileOperandsLegal_ExecuteTileScalar",
+        "effect_contract": "ExecuteTileScalar",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "scalar0",
+            "role": "scalar"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:scalar0:scalar"
+        ]
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "missing_required_ior_desc_family": "B.IOR",
+        "missing_required_ior_detail": "0x00",
+        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "name": "TMAXS",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "requires_b_ior": true,
+        "resume_ok": false,
+        "scalar_rhs_broadcast": true,
+        "scalar_rhs_extract": "truncate_low_bits",
+        "scalar_rhs_mixed_signedness": false,
+        "scalar_rhs_signedness": "match_tile_dtype",
+        "scalar_rhs_type": "tile_element_dtype",
+        "src_tiles": 1,
+        "mode": 1,
+        "function": 11,
+        "logical_selector": 43,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileScalar",
+        "legality_handler": "TileOperandsLegal_ExecuteTileScalar",
+        "effect_contract": "ExecuteTileScalar",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "scalar0",
+            "role": "scalar"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:scalar0:scalar"
+        ]
+      },
+      {
+        "name": "TREMS",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 1,
+        "function": 4,
+        "logical_selector": 36,
+        "semantic_handler": "ExecuteTileScalar",
+        "legality_handler": "TileOperandsLegal_ExecuteTileScalar",
+        "effect_contract": "ExecuteTileScalar",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "scalar0",
+            "role": "scalar"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:scalar0:scalar"
+        ]
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "missing_required_ior_desc_family": "B.IOR",
+        "missing_required_ior_detail": "0x00",
+        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "name": "TANDS",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "requires_b_ior": true,
+        "resume_ok": false,
+        "scalar_rhs_broadcast": true,
+        "scalar_rhs_extract": "truncate_low_bits",
+        "scalar_rhs_mixed_signedness": false,
+        "scalar_rhs_signedness": "match_tile_dtype",
+        "scalar_rhs_type": "tile_element_dtype",
+        "src_tiles": 1,
+        "mode": 1,
+        "function": 6,
+        "logical_selector": 38,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileScalar",
+        "legality_handler": "TileOperandsLegal_ExecuteTileScalar",
+        "effect_contract": "ExecuteTileScalar",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "scalar0",
+            "role": "scalar"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:scalar0:scalar"
+        ]
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "missing_required_ior_desc_family": "B.IOR",
+        "missing_required_ior_detail": "0x00",
+        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "name": "TORS",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "requires_b_ior": true,
+        "resume_ok": false,
+        "scalar_rhs_broadcast": true,
+        "scalar_rhs_extract": "truncate_low_bits",
+        "scalar_rhs_mixed_signedness": false,
+        "scalar_rhs_signedness": "match_tile_dtype",
+        "scalar_rhs_type": "tile_element_dtype",
+        "src_tiles": 1,
+        "mode": 1,
+        "function": 7,
+        "logical_selector": 39,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileScalar",
+        "legality_handler": "TileOperandsLegal_ExecuteTileScalar",
+        "effect_contract": "ExecuteTileScalar",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "scalar0",
+            "role": "scalar"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:scalar0:scalar"
+        ]
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "missing_required_ior_desc_family": "B.IOR",
+        "missing_required_ior_detail": "0x00",
+        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "name": "TXORS",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "requires_b_ior": true,
+        "resume_ok": false,
+        "scalar_rhs_broadcast": true,
+        "scalar_rhs_extract": "truncate_low_bits",
+        "scalar_rhs_mixed_signedness": false,
+        "scalar_rhs_signedness": "match_tile_dtype",
+        "scalar_rhs_type": "tile_element_dtype",
+        "src_tiles": 1,
+        "mode": 1,
+        "function": 8,
+        "logical_selector": 40,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileScalar",
+        "legality_handler": "TileOperandsLegal_ExecuteTileScalar",
+        "effect_contract": "ExecuteTileScalar",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "scalar0",
+            "role": "scalar"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:scalar0:scalar"
+        ]
+      },
+      {
+        "name": "TCMPS",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 1,
+        "function": 13,
+        "logical_selector": 45,
+        "semantic_handler": "ExecuteTileCompareScalar",
+        "legality_handler": "TileOperandsLegal_ExecuteTileCompareScalar",
+        "effect_contract": "ExecuteTileCompareScalar",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "scalar0",
+            "role": "scalar"
+          },
+          {
+            "field": "comparison",
+            "role": "comparison"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:scalar0:scalar",
+          "operand:comparison:comparison"
+        ]
+      },
+      {
+        "name": "TSELS",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 1,
+        "function": 26,
+        "logical_selector": 58,
+        "semantic_handler": "ExecuteTileSelectScalar",
+        "legality_handler": "TileOperandsLegal_ExecuteTileSelectScalar",
+        "effect_contract": "ExecuteTileSelectScalar",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "mask"
+          },
+          {
+            "field": "source1",
+            "role": "source-true"
+          },
+          {
+            "field": "scalar0",
+            "role": "scalar-false"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:mask",
+          "operand:source1:source-true",
+          "operand:scalar0:scalar-false"
+        ]
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "missing_required_ior_desc_family": "B.IOR",
+        "missing_required_ior_detail": "0x00",
+        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "name": "TSHLS",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "requires_b_ior": true,
+        "resume_ok": false,
+        "scalar_rhs_broadcast": true,
+        "scalar_rhs_extract": "truncate_low_bits",
+        "scalar_rhs_mixed_signedness": false,
+        "scalar_rhs_signedness": "match_tile_dtype",
+        "scalar_rhs_type": "tile_element_dtype",
+        "src_tiles": 1,
+        "mode": 1,
+        "function": 9,
+        "logical_selector": 41,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileScalar",
+        "legality_handler": "TileOperandsLegal_ExecuteTileScalar",
+        "effect_contract": "ExecuteTileScalar",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "scalar0",
+            "role": "scalar"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:scalar0:scalar"
+        ]
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "missing_required_ior_desc_family": "B.IOR",
+        "missing_required_ior_detail": "0x00",
+        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "name": "TSHRS",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "requires_b_ior": true,
+        "resume_ok": false,
+        "scalar_rhs_broadcast": true,
+        "scalar_rhs_extract": "truncate_low_bits",
+        "scalar_rhs_mixed_signedness": false,
+        "scalar_rhs_signedness": "match_tile_dtype",
+        "scalar_rhs_type": "tile_element_dtype",
+        "src_tiles": 1,
+        "mode": 1,
+        "function": 10,
+        "logical_selector": 42,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileScalar",
+        "legality_handler": "TileOperandsLegal_ExecuteTileScalar",
+        "effect_contract": "ExecuteTileScalar",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "scalar0",
+            "role": "scalar"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:scalar0:scalar"
+        ]
       },
       {
         "dim_lb_defaults": {
@@ -685,7 +2291,57 @@
         "redo_ok_after_start": false,
         "resume_ok": false,
         "src_tiles": 1,
-        "tile_opcode": 20
+        "mode": 2,
+        "function": 0,
+        "logical_selector": 64,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileReduction",
+        "legality_handler": "TileOperandsLegal_ExecuteTileReduction",
+        "effect_contract": "ExecuteTileReduction",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
+      },
+      {
+        "name": "TROWPROD",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 2,
+        "function": 3,
+        "logical_selector": 67,
+        "semantic_handler": "ExecuteTileReduction",
+        "legality_handler": "TileOperandsLegal_ExecuteTileReduction",
+        "effect_contract": "ExecuteTileReduction",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
       },
       {
         "dim_lb_defaults": {
@@ -701,12 +2357,34 @@
         "engineop_state_bytes_max": 0,
         "engineop_state_version": 0,
         "has_index_tile": false,
-        "name": "TCOLMAX",
+        "name": "TROWMAX",
         "phase_model": "op-defined",
         "redo_ok_after_start": false,
         "resume_ok": false,
         "src_tiles": 1,
-        "tile_opcode": 21
+        "mode": 2,
+        "function": 1,
+        "logical_selector": 65,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileReduction",
+        "legality_handler": "TileOperandsLegal_ExecuteTileReduction",
+        "effect_contract": "ExecuteTileReduction",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
       },
       {
         "dim_lb_defaults": {
@@ -722,12 +2400,90 @@
         "engineop_state_bytes_max": 0,
         "engineop_state_version": 0,
         "has_index_tile": false,
-        "name": "TCOLMIN",
+        "name": "TROWMIN",
         "phase_model": "op-defined",
         "redo_ok_after_start": false,
         "resume_ok": false,
         "src_tiles": 1,
-        "tile_opcode": 22
+        "mode": 2,
+        "function": 2,
+        "logical_selector": 66,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileReduction",
+        "legality_handler": "TileOperandsLegal_ExecuteTileReduction",
+        "effect_contract": "ExecuteTileReduction",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
+      },
+      {
+        "name": "TROWARGMAX",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 2,
+        "function": 12,
+        "logical_selector": 76,
+        "semantic_handler": "ExecuteTileReduction",
+        "legality_handler": "TileOperandsLegal_ExecuteTileReduction",
+        "effect_contract": "ExecuteTileReduction",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
+      },
+      {
+        "name": "TROWARGMIN",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 2,
+        "function": 13,
+        "logical_selector": 77,
+        "semantic_handler": "ExecuteTileReduction",
+        "legality_handler": "TileOperandsLegal_ExecuteTileReduction",
+        "effect_contract": "ExecuteTileReduction",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
       },
       {
         "dim_lb_defaults": {
@@ -748,7 +2504,57 @@
         "redo_ok_after_start": false,
         "resume_ok": false,
         "src_tiles": 1,
-        "tile_opcode": 23
+        "mode": 2,
+        "function": 16,
+        "logical_selector": 80,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileReduction",
+        "legality_handler": "TileOperandsLegal_ExecuteTileReduction",
+        "effect_contract": "ExecuteTileReduction",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
+      },
+      {
+        "name": "TCOLPROD",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 2,
+        "function": 19,
+        "logical_selector": 83,
+        "semantic_handler": "ExecuteTileReduction",
+        "legality_handler": "TileOperandsLegal_ExecuteTileReduction",
+        "effect_contract": "ExecuteTileReduction",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
       },
       {
         "dim_lb_defaults": {
@@ -760,14 +2566,695 @@
         ],
         "dim_required": true,
         "dirty_rule": "op-defined",
+        "dst_tiles": 1,
         "engineop_state_bytes_max": 0,
         "engineop_state_version": 0,
         "has_index_tile": false,
-        "name": "TRECIP",
+        "name": "TCOLMAX",
         "phase_model": "op-defined",
         "redo_ok_after_start": false,
         "resume_ok": false,
-        "tile_opcode": 24
+        "src_tiles": 1,
+        "mode": 2,
+        "function": 17,
+        "logical_selector": 81,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileReduction",
+        "legality_handler": "TileOperandsLegal_ExecuteTileReduction",
+        "effect_contract": "ExecuteTileReduction",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TCOLMIN",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 1,
+        "mode": 2,
+        "function": 18,
+        "logical_selector": 82,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileReduction",
+        "legality_handler": "TileOperandsLegal_ExecuteTileReduction",
+        "effect_contract": "ExecuteTileReduction",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
+      },
+      {
+        "name": "TCOLARGMAX",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 2,
+        "function": 28,
+        "logical_selector": 92,
+        "semantic_handler": "ExecuteTileReduction",
+        "legality_handler": "TileOperandsLegal_ExecuteTileReduction",
+        "effect_contract": "ExecuteTileReduction",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
+      },
+      {
+        "name": "TCOLARGMIN",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 2,
+        "function": 29,
+        "logical_selector": 93,
+        "semantic_handler": "ExecuteTileReduction",
+        "legality_handler": "TileOperandsLegal_ExecuteTileReduction",
+        "effect_contract": "ExecuteTileReduction",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TROWEXPAND",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 1,
+        "mode": 2,
+        "function": 4,
+        "logical_selector": 68,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileExpand",
+        "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
+        "effect_contract": "ExecuteTileExpand",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "source1",
+            "role": "broadcast-source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:source1:broadcast-source"
+        ]
+      },
+      {
+        "name": "TROWEXPANDADD",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 2,
+        "function": 5,
+        "logical_selector": 69,
+        "semantic_handler": "ExecuteTileExpand",
+        "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
+        "effect_contract": "ExecuteTileExpand",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "source1",
+            "role": "broadcast-source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:source1:broadcast-source"
+        ]
+      },
+      {
+        "name": "TROWEXPANDSUB",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 2,
+        "function": 6,
+        "logical_selector": 70,
+        "semantic_handler": "ExecuteTileExpand",
+        "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
+        "effect_contract": "ExecuteTileExpand",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "source1",
+            "role": "broadcast-source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:source1:broadcast-source"
+        ]
+      },
+      {
+        "name": "TROWEXPANDMUL",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 2,
+        "function": 7,
+        "logical_selector": 71,
+        "semantic_handler": "ExecuteTileExpand",
+        "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
+        "effect_contract": "ExecuteTileExpand",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "source1",
+            "role": "broadcast-source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:source1:broadcast-source"
+        ]
+      },
+      {
+        "name": "TROWEXPANDDIV",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 2,
+        "function": 8,
+        "logical_selector": 72,
+        "semantic_handler": "ExecuteTileExpand",
+        "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
+        "effect_contract": "ExecuteTileExpand",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "source1",
+            "role": "broadcast-source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:source1:broadcast-source"
+        ]
+      },
+      {
+        "name": "TROWEXPANDMAX",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 2,
+        "function": 9,
+        "logical_selector": 73,
+        "semantic_handler": "ExecuteTileExpand",
+        "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
+        "effect_contract": "ExecuteTileExpand",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "source1",
+            "role": "broadcast-source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:source1:broadcast-source"
+        ]
+      },
+      {
+        "name": "TROWEXPANDMIN",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 2,
+        "function": 10,
+        "logical_selector": 74,
+        "semantic_handler": "ExecuteTileExpand",
+        "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
+        "effect_contract": "ExecuteTileExpand",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "source1",
+            "role": "broadcast-source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:source1:broadcast-source"
+        ]
+      },
+      {
+        "name": "TROWEXPANDEXPDIF",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 2,
+        "function": 11,
+        "logical_selector": 75,
+        "semantic_handler": "ExecuteTileExpand",
+        "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
+        "effect_contract": "ExecuteTileExpand",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "source1",
+            "role": "broadcast-source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:source1:broadcast-source"
+        ]
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TCOLEXPAND",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 1,
+        "mode": 2,
+        "function": 20,
+        "logical_selector": 84,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileExpand",
+        "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
+        "effect_contract": "ExecuteTileExpand",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "source1",
+            "role": "broadcast-source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:source1:broadcast-source"
+        ]
+      },
+      {
+        "name": "TCOLEXPANDADD",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 2,
+        "function": 21,
+        "logical_selector": 85,
+        "semantic_handler": "ExecuteTileExpand",
+        "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
+        "effect_contract": "ExecuteTileExpand",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "source1",
+            "role": "broadcast-source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:source1:broadcast-source"
+        ]
+      },
+      {
+        "name": "TCOLEXPANDSUB",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 2,
+        "function": 22,
+        "logical_selector": 86,
+        "semantic_handler": "ExecuteTileExpand",
+        "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
+        "effect_contract": "ExecuteTileExpand",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "source1",
+            "role": "broadcast-source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:source1:broadcast-source"
+        ]
+      },
+      {
+        "name": "TCOLEXPANDMUL",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 2,
+        "function": 23,
+        "logical_selector": 87,
+        "semantic_handler": "ExecuteTileExpand",
+        "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
+        "effect_contract": "ExecuteTileExpand",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "source1",
+            "role": "broadcast-source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:source1:broadcast-source"
+        ]
+      },
+      {
+        "name": "TCOLEXPANDDIV",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 2,
+        "function": 24,
+        "logical_selector": 88,
+        "semantic_handler": "ExecuteTileExpand",
+        "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
+        "effect_contract": "ExecuteTileExpand",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "source1",
+            "role": "broadcast-source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:source1:broadcast-source"
+        ]
+      },
+      {
+        "name": "TCOLEXPANDMAX",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 2,
+        "function": 25,
+        "logical_selector": 89,
+        "semantic_handler": "ExecuteTileExpand",
+        "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
+        "effect_contract": "ExecuteTileExpand",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "source1",
+            "role": "broadcast-source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:source1:broadcast-source"
+        ]
+      },
+      {
+        "name": "TCOLEXPANDMIN",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 2,
+        "function": 26,
+        "logical_selector": 90,
+        "semantic_handler": "ExecuteTileExpand",
+        "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
+        "effect_contract": "ExecuteTileExpand",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "source1",
+            "role": "broadcast-source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:source1:broadcast-source"
+        ]
+      },
+      {
+        "name": "TCOLEXPANDEXPDIF",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 2,
+        "function": 27,
+        "logical_selector": 91,
+        "semantic_handler": "ExecuteTileExpand",
+        "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
+        "effect_contract": "ExecuteTileExpand",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "source1",
+            "role": "broadcast-source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:source1:broadcast-source"
+        ]
       },
       {
         "dim_lb_defaults": {
@@ -798,7 +3285,333 @@
         "scalar_rhs_signedness": "match_tile_dtype",
         "scalar_rhs_type": "tile_element_dtype",
         "src_tiles": 0,
-        "tile_opcode": 25
+        "mode": 1,
+        "function": 27,
+        "logical_selector": 59,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "ExecuteTileFillScalar",
+        "legality_handler": "TileOperandsLegal_ExecuteTileFillScalar",
+        "effect_contract": "ExecuteTileFillScalar",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "scalar0",
+            "role": "scalar"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:scalar0:scalar"
+        ]
+      },
+      {
+        "name": "TCI",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 3,
+        "function": 6,
+        "logical_selector": 102,
+        "semantic_handler": "TCI",
+        "legality_handler": "TileOperandsLegal_TCI",
+        "effect_contract": "TCI",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "scalar0",
+            "role": "start"
+          },
+          {
+            "field": "flag0",
+            "role": "descending"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:scalar0:start",
+          "operand:flag0:descending"
+        ]
+      },
+      {
+        "name": "TTRI",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 3,
+        "function": 7,
+        "logical_selector": 103,
+        "semantic_handler": "TTRI",
+        "legality_handler": "TileOperandsLegal_TTRI",
+        "effect_contract": "TTRI",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "flag0",
+            "role": "upper"
+          },
+          {
+            "field": "diagonal",
+            "role": "diagonal"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:flag0:upper",
+          "operand:diagonal:diagonal"
+        ]
+      },
+      {
+        "name": "TFILLPAD",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 3,
+        "function": 5,
+        "logical_selector": 101,
+        "semantic_handler": "TFILLPAD",
+        "legality_handler": "TileOperandsLegal_TFILLPAD",
+        "effect_contract": "TFILLPAD",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "scalar0",
+            "role": "padding"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:scalar0:padding"
+        ]
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "missing_required_attr_desc_family": "B.CATR/B.DATR",
+        "missing_required_attr_detail": "0x00",
+        "missing_required_attr_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "missing_required_ior_desc_family": "B.IOR",
+        "missing_required_ior_detail": "0x00",
+        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
+        "name": "TCVT",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "requires_b_arg": true,
+        "requires_catr_or_datr": true,
+        "requires_b_ior": true,
+        "requires_b_iot": true,
+        "resume_ok": false,
+        "src_tiles": 1,
+        "mode": 0,
+        "function": 27,
+        "logical_selector": 27,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "TCVT",
+        "legality_handler": "TileOperandsLegal_TCVT",
+        "effect_contract": "TCVT",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
+      },
+      {
+        "name": "TQUANT",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 3,
+        "function": 10,
+        "logical_selector": 106,
+        "semantic_handler": "TQUANT",
+        "legality_handler": "TileOperandsLegal_TQUANT",
+        "effect_contract": "TQUANT",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "scalar0",
+            "role": "scale"
+          },
+          {
+            "field": "scalar1",
+            "role": "zero-point"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:scalar0:scale",
+          "operand:scalar1:zero-point"
+        ]
+      },
+      {
+        "name": "TDEQUANT",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 3,
+        "function": 11,
+        "logical_selector": 107,
+        "semantic_handler": "TDEQUANT",
+        "legality_handler": "TileOperandsLegal_TDEQUANT",
+        "effect_contract": "TDEQUANT",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "scalar0",
+            "role": "scale"
+          },
+          {
+            "field": "scalar1",
+            "role": "zero-point"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:scalar0:scale",
+          "operand:scalar1:zero-point"
+        ]
+      },
+      {
+        "name": "TEXTRACT",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 3,
+        "function": 2,
+        "logical_selector": 98,
+        "semantic_handler": "TEXTRACT",
+        "legality_handler": "TileOperandsLegal_TEXTRACT",
+        "effect_contract": "TEXTRACT",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "natural0",
+            "role": "row-offset"
+          },
+          {
+            "field": "natural1",
+            "role": "column-offset"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:natural0:row-offset",
+          "operand:natural1:column-offset"
+        ]
+      },
+      {
+        "name": "TINSERT",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 3,
+        "function": 3,
+        "logical_selector": 99,
+        "semantic_handler": "TINSERT",
+        "legality_handler": "TileOperandsLegal_TINSERT",
+        "effect_contract": "TINSERT",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "natural0",
+            "role": "row-offset"
+          },
+          {
+            "field": "natural1",
+            "role": "column-offset"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:natural0:row-offset",
+          "operand:natural1:column-offset"
+        ]
       },
       {
         "dim_lb_defaults": {
@@ -818,7 +3631,34 @@
         "phase_model": "op-defined",
         "redo_ok_after_start": false,
         "resume_ok": false,
-        "tile_opcode": 26
+        "mode": 3,
+        "function": 15,
+        "logical_selector": 111,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "TGATHER",
+        "legality_handler": "TileOperandsLegal_TGATHER",
+        "effect_contract": "TGATHER",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "source1",
+            "role": "indices"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:source1:indices"
+        ]
       },
       {
         "dim_lb_defaults": {
@@ -838,7 +3678,277 @@
         "phase_model": "op-defined",
         "redo_ok_after_start": false,
         "resume_ok": false,
-        "tile_opcode": 27
+        "mode": 3,
+        "function": 16,
+        "logical_selector": 112,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "TSCATTER",
+        "legality_handler": "TileOperandsLegal_TSCATTER",
+        "effect_contract": "TSCATTER",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "source1",
+            "role": "indices"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:source1:indices"
+        ]
+      },
+      {
+        "name": "TCONCAT",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 3,
+        "function": 0,
+        "logical_selector": 96,
+        "semantic_handler": "TCONCAT",
+        "legality_handler": "TileOperandsLegal_TCONCAT",
+        "effect_contract": "TCONCAT",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source-left"
+          },
+          {
+            "field": "source1",
+            "role": "source-right"
+          },
+          {
+            "field": "axis",
+            "role": "axis"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source-left",
+          "operand:source1:source-right",
+          "operand:axis:axis"
+        ]
+      },
+      {
+        "dim_lb_defaults": {
+          "LB1": 1,
+          "LB2": 1
+        },
+        "dim_lb_required": [
+          "LB0"
+        ],
+        "dim_required": true,
+        "dirty_rule": "op-defined",
+        "dst_tiles": 1,
+        "engineop_state_bytes_max": 0,
+        "engineop_state_version": 0,
+        "has_index_tile": false,
+        "name": "TTRANS",
+        "phase_model": "op-defined",
+        "redo_ok_after_start": false,
+        "resume_ok": false,
+        "src_tiles": 1,
+        "mode": 3,
+        "function": 14,
+        "logical_selector": 110,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "TTRANS",
+        "legality_handler": "TileOperandsLegal_TTRANS",
+        "effect_contract": "TTRANS",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
+      },
+      {
+        "name": "TIMG2COL",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 3,
+        "function": 4,
+        "logical_selector": 100,
+        "semantic_handler": "TIMG2COL",
+        "legality_handler": "TileOperandsLegal_TIMG2COL",
+        "effect_contract": "TIMG2COL",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "positive0",
+            "role": "kernel-rows"
+          },
+          {
+            "field": "positive1",
+            "role": "kernel-columns"
+          },
+          {
+            "field": "positive2",
+            "role": "stride-rows"
+          },
+          {
+            "field": "positive3",
+            "role": "stride-columns"
+          },
+          {
+            "field": "natural0",
+            "role": "pad-rows"
+          },
+          {
+            "field": "natural1",
+            "role": "pad-columns"
+          },
+          {
+            "field": "scalar0",
+            "role": "padding"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:positive0:kernel-rows",
+          "operand:positive1:kernel-columns",
+          "operand:positive2:stride-rows",
+          "operand:positive3:stride-columns",
+          "operand:natural0:pad-rows",
+          "operand:natural1:pad-columns",
+          "operand:scalar0:padding"
+        ]
+      },
+      {
+        "name": "TGATHERB",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 3,
+        "function": 1,
+        "logical_selector": 97,
+        "semantic_handler": "TGATHERB",
+        "legality_handler": "TileOperandsLegal_TGATHERB",
+        "effect_contract": "TGATHERB",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "source1",
+            "role": "byte-offsets"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:source1:byte-offsets"
+        ]
+      },
+      {
+        "name": "TDEINTERLEAVE",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 3,
+        "function": 24,
+        "logical_selector": 120,
+        "semantic_handler": "TDEINTERLEAVE",
+        "legality_handler": "TileOperandsLegal_TDEINTERLEAVE",
+        "effect_contract": "TDEINTERLEAVE",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination-even"
+          },
+          {
+            "field": "destination1",
+            "role": "destination-odd"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination-even",
+          "operand:destination1:destination-odd",
+          "operand:source0:source"
+        ]
+      },
+      {
+        "name": "TINTERLEAVE",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 3,
+        "function": 25,
+        "logical_selector": 121,
+        "semantic_handler": "TINTERLEAVE",
+        "legality_handler": "TileOperandsLegal_TINTERLEAVE",
+        "effect_contract": "TINTERLEAVE",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source-left"
+          },
+          {
+            "field": "source1",
+            "role": "source-right"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source-left",
+          "operand:source1:source-right"
+        ]
       },
       {
         "dim_lb_defaults": {
@@ -859,919 +3969,520 @@
         "redo_ok_after_start": false,
         "resume_ok": false,
         "src_tiles": 1,
-        "tile_opcode": 28
-      },
-      {
-        "dim_lb_defaults": {
-          "LB1": 1,
-          "LB2": 1
-        },
-        "dim_lb_required": [
-          "LB0"
+        "mode": 3,
+        "function": 23,
+        "logical_selector": 119,
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "TRESHAPE",
+        "legality_handler": "TileOperandsLegal_TRESHAPE",
+        "effect_contract": "TRESHAPE",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
         ],
-        "dim_required": true,
-        "dirty_rule": "op-defined",
-        "dst_tiles": 1,
-        "engineop_state_bytes_max": 0,
-        "engineop_state_version": 0,
-        "has_index_tile": false,
-        "name": "TTRANSPOSE",
-        "phase_model": "op-defined",
-        "redo_ok_after_start": false,
-        "resume_ok": false,
-        "src_tiles": 1,
-        "tile_opcode": 29
-      },
-      {
-        "dim_lb_defaults": {
-          "LB1": 1,
-          "LB2": 1
-        },
-        "dim_lb_required": [
-          "LB0"
-        ],
-        "dim_required": true,
-        "dirty_rule": "op-defined",
-        "dst_tiles": 1,
-        "engineop_state_bytes_max": 0,
-        "engineop_state_version": 0,
-        "has_index_tile": false,
-        "name": "TCOLEXPAND",
-        "phase_model": "op-defined",
-        "redo_ok_after_start": false,
-        "resume_ok": false,
-        "src_tiles": 1,
-        "tile_opcode": 30
-      },
-      {
-        "dim_lb_defaults": {
-          "LB1": 1,
-          "LB2": 1
-        },
-        "dim_lb_required": [
-          "LB0"
-        ],
-        "dim_required": true,
-        "dirty_rule": "op-defined",
-        "dst_tiles": 1,
-        "engineop_state_bytes_max": 0,
-        "engineop_state_version": 0,
-        "has_index_tile": false,
-        "name": "TROWEXPAND",
-        "phase_model": "op-defined",
-        "redo_ok_after_start": false,
-        "resume_ok": false,
-        "src_tiles": 1,
-        "tile_opcode": 31
-      },
-      {
-        "dim_lb_defaults": {
-          "LB1": 1,
-          "LB2": 1
-        },
-        "dim_lb_required": [
-          "LB0"
-        ],
-        "dim_required": true,
-        "dirty_rule": "op-defined",
-        "dst_tiles": 1,
-        "engineop_state_bytes_max": 0,
-        "engineop_state_version": 0,
-        "has_index_tile": false,
-        "missing_required_ior_desc_family": "B.IOR",
-        "missing_required_ior_detail": "0x00",
-        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
-        "name": "TADDS",
-        "phase_model": "op-defined",
-        "redo_ok_after_start": false,
-        "requires_b_ior": true,
-        "resume_ok": false,
-        "scalar_rhs_broadcast": true,
-        "scalar_rhs_extract": "truncate_low_bits",
-        "scalar_rhs_mixed_signedness": false,
-        "scalar_rhs_signedness": "match_tile_dtype",
-        "scalar_rhs_type": "tile_element_dtype",
-        "src_tiles": 1,
-        "tile_opcode": 32
-      },
-      {
-        "dim_lb_defaults": {
-          "LB1": 1,
-          "LB2": 1
-        },
-        "dim_lb_required": [
-          "LB0"
-        ],
-        "dim_required": true,
-        "dirty_rule": "op-defined",
-        "dst_tiles": 1,
-        "engineop_state_bytes_max": 0,
-        "engineop_state_version": 0,
-        "has_index_tile": false,
-        "missing_required_ior_desc_family": "B.IOR",
-        "missing_required_ior_detail": "0x00",
-        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
-        "name": "TSUBS",
-        "phase_model": "op-defined",
-        "redo_ok_after_start": false,
-        "requires_b_ior": true,
-        "resume_ok": false,
-        "scalar_rhs_broadcast": true,
-        "scalar_rhs_extract": "truncate_low_bits",
-        "scalar_rhs_mixed_signedness": false,
-        "scalar_rhs_signedness": "match_tile_dtype",
-        "scalar_rhs_type": "tile_element_dtype",
-        "src_tiles": 1,
-        "tile_opcode": 33
-      },
-      {
-        "dim_lb_defaults": {
-          "LB1": 1,
-          "LB2": 1
-        },
-        "dim_lb_required": [
-          "LB0"
-        ],
-        "dim_required": true,
-        "dirty_rule": "op-defined",
-        "dst_tiles": 1,
-        "engineop_state_bytes_max": 0,
-        "engineop_state_version": 0,
-        "has_index_tile": false,
-        "missing_required_ior_desc_family": "B.IOR",
-        "missing_required_ior_detail": "0x00",
-        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
-        "name": "TMULS",
-        "phase_model": "op-defined",
-        "redo_ok_after_start": false,
-        "requires_b_ior": true,
-        "resume_ok": false,
-        "scalar_rhs_broadcast": true,
-        "scalar_rhs_extract": "truncate_low_bits",
-        "scalar_rhs_mixed_signedness": false,
-        "scalar_rhs_signedness": "match_tile_dtype",
-        "scalar_rhs_type": "tile_element_dtype",
-        "src_tiles": 1,
-        "tile_opcode": 34
-      },
-      {
-        "dim_lb_defaults": {
-          "LB1": 1,
-          "LB2": 1
-        },
-        "dim_lb_required": [
-          "LB0"
-        ],
-        "dim_required": true,
-        "dirty_rule": "op-defined",
-        "dst_tiles": 1,
-        "engineop_state_bytes_max": 0,
-        "engineop_state_version": 0,
-        "has_index_tile": false,
-        "missing_required_ior_desc_family": "B.IOR",
-        "missing_required_ior_detail": "0x00",
-        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
-        "name": "TDIVS",
-        "phase_model": "op-defined",
-        "redo_ok_after_start": false,
-        "requires_b_ior": true,
-        "resume_ok": false,
-        "scalar_rhs_broadcast": true,
-        "scalar_rhs_extract": "truncate_low_bits",
-        "scalar_rhs_mixed_signedness": false,
-        "scalar_rhs_signedness": "match_tile_dtype",
-        "scalar_rhs_type": "tile_element_dtype",
-        "src_tiles": 1,
-        "tile_opcode": 35
-      },
-      {
-        "dim_lb_defaults": {
-          "LB1": 1,
-          "LB2": 1
-        },
-        "dim_lb_required": [
-          "LB0"
-        ],
-        "dim_required": true,
-        "dirty_rule": "op-defined",
-        "dst_tiles": 1,
-        "engineop_state_bytes_max": 0,
-        "engineop_state_version": 0,
-        "has_index_tile": false,
-        "missing_required_ior_desc_family": "B.IOR",
-        "missing_required_ior_detail": "0x00",
-        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
-        "name": "TMAXS",
-        "phase_model": "op-defined",
-        "redo_ok_after_start": false,
-        "requires_b_ior": true,
-        "resume_ok": false,
-        "scalar_rhs_broadcast": true,
-        "scalar_rhs_extract": "truncate_low_bits",
-        "scalar_rhs_mixed_signedness": false,
-        "scalar_rhs_signedness": "match_tile_dtype",
-        "scalar_rhs_type": "tile_element_dtype",
-        "src_tiles": 1,
-        "tile_opcode": 36
-      },
-      {
-        "dim_lb_defaults": {
-          "LB1": 1,
-          "LB2": 1
-        },
-        "dim_lb_required": [
-          "LB0"
-        ],
-        "dim_required": true,
-        "dirty_rule": "op-defined",
-        "dst_tiles": 1,
-        "engineop_state_bytes_max": 0,
-        "engineop_state_version": 0,
-        "has_index_tile": false,
-        "missing_required_ior_desc_family": "B.IOR",
-        "missing_required_ior_detail": "0x00",
-        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
-        "name": "TMINS",
-        "phase_model": "op-defined",
-        "redo_ok_after_start": false,
-        "requires_b_ior": true,
-        "resume_ok": false,
-        "scalar_rhs_broadcast": true,
-        "scalar_rhs_extract": "truncate_low_bits",
-        "scalar_rhs_mixed_signedness": false,
-        "scalar_rhs_signedness": "match_tile_dtype",
-        "scalar_rhs_type": "tile_element_dtype",
-        "src_tiles": 1,
-        "tile_opcode": 37
-      },
-      {
-        "dim_lb_defaults": {
-          "LB1": 1,
-          "LB2": 1
-        },
-        "dim_lb_required": [
-          "LB0"
-        ],
-        "dim_required": true,
-        "dirty_rule": "op-defined",
-        "dst_tiles": 1,
-        "engineop_state_bytes_max": 0,
-        "engineop_state_version": 0,
-        "has_index_tile": false,
-        "missing_required_ior_desc_family": "B.IOR",
-        "missing_required_ior_detail": "0x00",
-        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
-        "name": "TANDS",
-        "phase_model": "op-defined",
-        "redo_ok_after_start": false,
-        "requires_b_ior": true,
-        "resume_ok": false,
-        "scalar_rhs_broadcast": true,
-        "scalar_rhs_extract": "truncate_low_bits",
-        "scalar_rhs_mixed_signedness": false,
-        "scalar_rhs_signedness": "match_tile_dtype",
-        "scalar_rhs_type": "tile_element_dtype",
-        "src_tiles": 1,
-        "tile_opcode": 38
-      },
-      {
-        "dim_lb_defaults": {
-          "LB1": 1,
-          "LB2": 1
-        },
-        "dim_lb_required": [
-          "LB0"
-        ],
-        "dim_required": true,
-        "dirty_rule": "op-defined",
-        "dst_tiles": 1,
-        "engineop_state_bytes_max": 0,
-        "engineop_state_version": 0,
-        "has_index_tile": false,
-        "missing_required_ior_desc_family": "B.IOR",
-        "missing_required_ior_detail": "0x00",
-        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
-        "name": "TORS",
-        "phase_model": "op-defined",
-        "redo_ok_after_start": false,
-        "requires_b_ior": true,
-        "resume_ok": false,
-        "scalar_rhs_broadcast": true,
-        "scalar_rhs_extract": "truncate_low_bits",
-        "scalar_rhs_mixed_signedness": false,
-        "scalar_rhs_signedness": "match_tile_dtype",
-        "scalar_rhs_type": "tile_element_dtype",
-        "src_tiles": 1,
-        "tile_opcode": 39
-      },
-      {
-        "dim_lb_defaults": {
-          "LB1": 1,
-          "LB2": 1
-        },
-        "dim_lb_required": [
-          "LB0"
-        ],
-        "dim_required": true,
-        "dirty_rule": "op-defined",
-        "dst_tiles": 1,
-        "engineop_state_bytes_max": 0,
-        "engineop_state_version": 0,
-        "has_index_tile": false,
-        "missing_required_ior_desc_family": "B.IOR",
-        "missing_required_ior_detail": "0x00",
-        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
-        "name": "TXORS",
-        "phase_model": "op-defined",
-        "redo_ok_after_start": false,
-        "requires_b_ior": true,
-        "resume_ok": false,
-        "scalar_rhs_broadcast": true,
-        "scalar_rhs_extract": "truncate_low_bits",
-        "scalar_rhs_mixed_signedness": false,
-        "scalar_rhs_signedness": "match_tile_dtype",
-        "scalar_rhs_type": "tile_element_dtype",
-        "src_tiles": 1,
-        "tile_opcode": 40
-      },
-      {
-        "dim_lb_defaults": {
-          "LB1": 1,
-          "LB2": 1
-        },
-        "dim_lb_required": [
-          "LB0"
-        ],
-        "dim_required": true,
-        "dirty_rule": "op-defined",
-        "dst_tiles": 1,
-        "engineop_state_bytes_max": 0,
-        "engineop_state_version": 0,
-        "has_index_tile": false,
-        "missing_required_ior_desc_family": "B.IOR",
-        "missing_required_ior_detail": "0x00",
-        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
-        "name": "TSHLS",
-        "phase_model": "op-defined",
-        "redo_ok_after_start": false,
-        "requires_b_ior": true,
-        "resume_ok": false,
-        "scalar_rhs_broadcast": true,
-        "scalar_rhs_extract": "truncate_low_bits",
-        "scalar_rhs_mixed_signedness": false,
-        "scalar_rhs_signedness": "match_tile_dtype",
-        "scalar_rhs_type": "tile_element_dtype",
-        "src_tiles": 1,
-        "tile_opcode": 41
-      },
-      {
-        "dim_lb_defaults": {
-          "LB1": 1,
-          "LB2": 1
-        },
-        "dim_lb_required": [
-          "LB0"
-        ],
-        "dim_required": true,
-        "dirty_rule": "op-defined",
-        "dst_tiles": 1,
-        "engineop_state_bytes_max": 0,
-        "engineop_state_version": 0,
-        "has_index_tile": false,
-        "missing_required_ior_desc_family": "B.IOR",
-        "missing_required_ior_detail": "0x00",
-        "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
-        "name": "TSHRS",
-        "phase_model": "op-defined",
-        "redo_ok_after_start": false,
-        "requires_b_ior": true,
-        "resume_ok": false,
-        "scalar_rhs_broadcast": true,
-        "scalar_rhs_extract": "truncate_low_bits",
-        "scalar_rhs_mixed_signedness": false,
-        "scalar_rhs_signedness": "match_tile_dtype",
-        "scalar_rhs_type": "tile_element_dtype",
-        "src_tiles": 1,
-        "tile_opcode": 42
-      },
-      {
-        "name": "TCMP",
-        "tile_opcode": 43,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TSEL",
-        "tile_opcode": 44,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TABS",
-        "tile_opcode": 45,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TNOT",
-        "tile_opcode": 46,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TNEG",
-        "tile_opcode": 47,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TREM",
-        "tile_opcode": 48,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TAXPY",
-        "tile_opcode": 49,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TREMS",
-        "tile_opcode": 50,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TCMPS",
-        "tile_opcode": 51,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TSELS",
-        "tile_opcode": 52,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TROWPROD",
-        "tile_opcode": 53,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TROWARGMAX",
-        "tile_opcode": 54,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TROWARGMIN",
-        "tile_opcode": 55,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TCOLPROD",
-        "tile_opcode": 56,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TCOLARGMAX",
-        "tile_opcode": 57,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TCOLARGMIN",
-        "tile_opcode": 58,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TROWEXPANDADD",
-        "tile_opcode": 59,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TROWEXPANDSUB",
-        "tile_opcode": 60,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TROWEXPANDMUL",
-        "tile_opcode": 61,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TROWEXPANDDIV",
-        "tile_opcode": 62,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TROWEXPANDMAX",
-        "tile_opcode": 63,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TROWEXPANDMIN",
-        "tile_opcode": 64,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TROWEXPANDEXPDIF",
-        "tile_opcode": 65,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TCOLEXPANDADD",
-        "tile_opcode": 66,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TCOLEXPANDSUB",
-        "tile_opcode": 67,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TCOLEXPANDMUL",
-        "tile_opcode": 68,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TCOLEXPANDDIV",
-        "tile_opcode": 69,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TCOLEXPANDMAX",
-        "tile_opcode": 70,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TCOLEXPANDMIN",
-        "tile_opcode": 71,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TCOLEXPANDEXPDIF",
-        "tile_opcode": 72,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TCI",
-        "tile_opcode": 128,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TTRI",
-        "tile_opcode": 129,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TFILLPAD",
-        "tile_opcode": 130,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TQUANT",
-        "tile_opcode": 131,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TDEQUANT",
-        "tile_opcode": 132,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TEXTRACT",
-        "tile_opcode": 133,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TINSERT",
-        "tile_opcode": 134,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TCONCAT",
-        "tile_opcode": 135,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TIMG2COL",
-        "tile_opcode": 136,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TGATHERB",
-        "tile_opcode": 137,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TDEINTERLEAVE",
-        "tile_opcode": 138,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TINTERLEAVE",
-        "tile_opcode": 139,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
       },
       {
         "name": "TSORT",
-        "tile_opcode": 192,
         "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 3,
+        "function": 12,
+        "logical_selector": 108,
+        "semantic_handler": "TSORT",
+        "legality_handler": "TileOperandsLegal_TSORT",
+        "effect_contract": "TSORT",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "destination1",
+            "role": "original-indices-u32"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "flag0",
+            "role": "descending"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:destination1:original-indices-u32",
+          "operand:source0:source",
+          "operand:flag0:descending"
+        ]
       },
       {
         "name": "TMRGSORT",
-        "tile_opcode": 193,
         "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 3,
+        "function": 13,
+        "logical_selector": 109,
+        "semantic_handler": "TMRGSORT",
+        "legality_handler": "TileOperandsLegal_TMRGSORT",
+        "effect_contract": "TMRGSORT",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source-left"
+          },
+          {
+            "field": "source1",
+            "role": "source-right"
+          },
+          {
+            "field": "flag0",
+            "role": "descending"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source-left",
+          "operand:source1:source-right",
+          "operand:flag0:descending"
+        ]
       },
       {
         "name": "THISTOGRAM",
-        "tile_opcode": 194,
         "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TPARTADD",
-        "tile_opcode": 195,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TPARTMUL",
-        "tile_opcode": 196,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TPARTMAX",
-        "tile_opcode": 197,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TPARTMIN",
-        "tile_opcode": 198,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TPARTARGMAX",
-        "tile_opcode": 199,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
-      },
-      {
-        "name": "TPARTARGMIN",
-        "tile_opcode": 200,
-        "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 3,
+        "function": 8,
+        "logical_selector": 104,
+        "semantic_handler": "THISTOGRAM",
+        "legality_handler": "TileOperandsLegal_THISTOGRAM",
+        "effect_contract": "THISTOGRAM",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          },
+          {
+            "field": "source1",
+            "role": "indices"
+          },
+          {
+            "field": "selected_byte",
+            "role": "selected-byte"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:source1:indices",
+          "operand:selected_byte:selected-byte"
+        ]
       },
       {
         "name": "TPUSH",
-        "tile_opcode": 224,
         "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 3,
+        "function": 26,
+        "logical_selector": 122,
+        "semantic_handler": "TPUSH",
+        "legality_handler": "TileOperandsLegal_TPUSH",
+        "effect_contract": "TPUSH",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
       },
       {
         "name": "TPOP",
-        "tile_opcode": 225,
         "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 3,
+        "function": 27,
+        "logical_selector": 123,
+        "semantic_handler": "TPOP",
+        "legality_handler": "TileOperandsLegal_TPOP",
+        "effect_contract": "TPOP",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
       },
       {
         "name": "TALLOC",
-        "tile_opcode": 226,
         "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 3,
+        "function": 28,
+        "logical_selector": 124,
+        "semantic_handler": "TALLOC",
+        "legality_handler": "TileOperandsLegal_TALLOC",
+        "effect_contract": "TALLOC",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "byte_count",
+            "role": "capacity-bytes"
+          },
+          {
+            "field": "positive0",
+            "role": "rows"
+          },
+          {
+            "field": "positive1",
+            "role": "columns"
+          },
+          {
+            "field": "natural0",
+            "role": "valid-rows"
+          },
+          {
+            "field": "natural1",
+            "role": "valid-columns"
+          },
+          {
+            "field": "scalar0",
+            "role": "data-type-code"
+          },
+          {
+            "field": "flag0",
+            "role": "implementation-defined-layout"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:byte_count:capacity-bytes",
+          "operand:positive0:rows",
+          "operand:positive1:columns",
+          "operand:natural0:valid-rows",
+          "operand:natural1:valid-columns",
+          "operand:scalar0:data-type-code",
+          "operand:flag0:implementation-defined-layout"
+        ]
       },
       {
         "name": "TFREE",
-        "tile_opcode": 227,
         "profile": "v0.57",
-        "semantic_status": "selector_allocated_pending_pto_manifest",
-        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7"
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 3,
+        "function": 29,
+        "logical_selector": 125,
+        "semantic_handler": "TFREE",
+        "legality_handler": "TileOperandsLegal_TFREE",
+        "effect_contract": "TFREE",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination"
+        ]
+      },
+      {
+        "name": "TPARTADD",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 3,
+        "function": 17,
+        "logical_selector": 113,
+        "semantic_handler": "ExecuteTilePartial",
+        "legality_handler": "TileOperandsLegal_ExecuteTilePartial",
+        "effect_contract": "ExecuteTilePartial",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source-left"
+          },
+          {
+            "field": "source1",
+            "role": "source-right"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source-left",
+          "operand:source1:source-right"
+        ]
+      },
+      {
+        "name": "TPARTMUL",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 3,
+        "function": 18,
+        "logical_selector": 114,
+        "semantic_handler": "ExecuteTilePartial",
+        "legality_handler": "TileOperandsLegal_ExecuteTilePartial",
+        "effect_contract": "ExecuteTilePartial",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source-left"
+          },
+          {
+            "field": "source1",
+            "role": "source-right"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source-left",
+          "operand:source1:source-right"
+        ]
+      },
+      {
+        "name": "TPARTMAX",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 3,
+        "function": 19,
+        "logical_selector": 115,
+        "semantic_handler": "ExecuteTilePartial",
+        "legality_handler": "TileOperandsLegal_ExecuteTilePartial",
+        "effect_contract": "ExecuteTilePartial",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source-left"
+          },
+          {
+            "field": "source1",
+            "role": "source-right"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source-left",
+          "operand:source1:source-right"
+        ]
+      },
+      {
+        "name": "TPARTMIN",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 3,
+        "function": 20,
+        "logical_selector": 116,
+        "semantic_handler": "ExecuteTilePartial",
+        "legality_handler": "TileOperandsLegal_ExecuteTilePartial",
+        "effect_contract": "ExecuteTilePartial",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source-left"
+          },
+          {
+            "field": "source1",
+            "role": "source-right"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source-left",
+          "operand:source1:source-right"
+        ]
+      },
+      {
+        "name": "TPARTARGMAX",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 3,
+        "function": 21,
+        "logical_selector": 117,
+        "semantic_handler": "ExecuteTilePartialArg",
+        "legality_handler": "TileOperandsLegal_ExecuteTilePartialArg",
+        "effect_contract": "ExecuteTilePartialArg",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "destination1",
+            "role": "destination-indices"
+          },
+          {
+            "field": "source0",
+            "role": "source-left"
+          },
+          {
+            "field": "source1",
+            "role": "source-right"
+          },
+          {
+            "field": "source2",
+            "role": "left-indices"
+          },
+          {
+            "field": "source3",
+            "role": "right-indices"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:destination1:destination-indices",
+          "operand:source0:source-left",
+          "operand:source1:source-right",
+          "operand:source2:left-indices",
+          "operand:source3:right-indices"
+        ]
+      },
+      {
+        "name": "TPARTARGMIN",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+        "mode": 3,
+        "function": 22,
+        "logical_selector": 118,
+        "semantic_handler": "ExecuteTilePartialArg",
+        "legality_handler": "TileOperandsLegal_ExecuteTilePartialArg",
+        "effect_contract": "ExecuteTilePartialArg",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "destination1",
+            "role": "destination-indices"
+          },
+          {
+            "field": "source0",
+            "role": "source-left"
+          },
+          {
+            "field": "source1",
+            "role": "source-right"
+          },
+          {
+            "field": "source2",
+            "role": "left-indices"
+          },
+          {
+            "field": "source3",
+            "role": "right-indices"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:destination1:destination-indices",
+          "operand:source0:source-left",
+          "operand:source1:source-right",
+          "operand:source2:left-indices",
+          "operand:source3:right-indices"
+        ]
       }
-    ],
-    "packing": {
-      "function_field_bits": [
-        0,
-        4
-      ],
-      "kind": "mode_function_u6",
-      "mode_field_bits": [
-        5,
-        5
-      ],
-      "modes": [
-        {
-          "function_names": [
-            "TADD",
-            "TSUB",
-            "TMUL",
-            "TDIV",
-            "TMAX",
-            "TMIN",
-            "TAND",
-            "TOR",
-            "TXOR",
-            "TSHL",
-            "TSHR",
-            "TRELU",
-            "TPRELU",
-            "TCVT",
-            "TEXP",
-            "TLOG",
-            "TSQRT",
-            "TRSQRT",
-            "TROWMAX",
-            "TROWMIN",
-            "TROWSUM",
-            "TCOLMAX",
-            "TCOLMIN",
-            "TCOLSUM",
-            "TRECIP",
-            "TEXPANDS",
-            "TGATHER",
-            "TSCATTER",
-            "TRESHAPE",
-            "TTRANSPOSE",
-            "TCOLEXPAND",
-            "TROWEXPAND"
-          ],
-          "mode": 0,
-          "name": "base32"
-        },
-        {
-          "function_names": [
-            "TADDS",
-            "TSUBS",
-            "TMULS",
-            "TDIVS",
-            "TMAXS",
-            "TMINS",
-            "TANDS",
-            "TORS",
-            "TXORS",
-            "TSHLS",
-            "TSHRS"
-          ],
-          "mode": 1,
-          "name": "scalar_rhs_ext",
-          "reserved_function_range": [
-            11,
-            31
-          ]
-        }
-      ],
-      "reserved_high_bits_zero": true,
-      "tile_opcode_formula": "(mode << 5) | function"
-    },
-    "range": [
-      0,
-      1023
-    ],
-    "extension_policy_v057": {
-      "preserve_selectors": [
-        [
-          0,
-          42
-        ]
-      ],
-      "new_selector_ranges": [
-        [
-          43,
-          72
-        ],
-        [
-          128,
-          139
-        ],
-        [
-          192,
-          200
-        ],
-        [
-          224,
-          227
-        ]
-      ],
-      "reserved_selector_ranges": [
-        [
-          73,
-          127
-        ],
-        [
-          140,
-          191
-        ],
-        [
-          201,
-          223
-        ],
-        [
-          228,
-          1023
-        ]
-      ],
-      "manifest_files": [
-        "isa/v0.57/state/pto_ops.json",
-        "isa/v0.57/state/pto_encoding_map.json"
-      ]
-    }
+    ]
   },
   "tile_capacity_model": {
+    "kind": "dynamic_per_descriptor",
+    "cell_bytes": 128,
+    "cells_per_pe": 2048,
+    "capacity_bytes_per_pe": 262144,
     "b_iot_size_imm4_bytes": [
-      0,
-      32,
-      64,
+      null,
+      null,
+      null,
       128,
       256,
       512,
@@ -1779,18 +4490,19 @@
       2048,
       4096,
       8192,
-      16384,
-      32768,
-      65536,
-      131072,
-      262144,
-      524288
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
     ],
-    "empty_tile_bytes": 0,
-    "kind": "dynamic_per_descriptor",
-    "normal_tile_max_bytes": 262144,
-    "normal_tile_min_bytes": 256,
-    "physical_contiguity": "required",
-    "thread_total_active_bytes_max": 524288
-  }
+    "normal_tile_min_bytes": 128,
+    "normal_tile_max_bytes": 8192,
+    "resource_shortage": "precise_allocation_trap",
+    "eviction_or_spill": "forbidden",
+    "physical_contiguity": "required"
+  },
+  "version": "0.57.1",
+  "source_lock": "isa/v0.57/pto-spec.lock.json"
 }

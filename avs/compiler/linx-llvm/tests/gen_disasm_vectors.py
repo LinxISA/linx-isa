@@ -47,7 +47,23 @@ def _field_width(field: dict[str, object]) -> int:
 def _default_field_value(field_name: str, width: int, mnemonic: str) -> int:
     lower = field_name.lower()
     upper_mnemonic = mnemonic.upper()
-    if width > 5:
+    frame_template = upper_mnemonic in {
+        "FENTRY",
+        "FEXIT",
+        "FRET.RA",
+        "FRET.STK",
+    }
+    if lower in {"dstbegin", "dstend"} and frame_template:
+        # Architectural RA is register encoding 10 in frame-template range
+        # syntax; arbitrary register 1 is not a legal single-register restore
+        # range for these forms.
+        value = 10
+    elif lower == "uimm" and frame_template:
+        # Frame templates require an aligned, range-compatible stack size.
+        # The generic wide-field seed (129) encodes as 128 after the implicit
+        # low three zero bits and is illegal for a one-register range.
+        value = 8
+    elif width > 5:
         if lower == "regdst":
             value = (4 << 5) | 1  # vt#1
         elif lower == "srcl":

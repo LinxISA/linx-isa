@@ -1,0 +1,36 @@
+{
+  "$schema": "https://docs.openclaw.ai/schemas/linxisa/pto_spec_lock.v1.json",
+  "catalogs": {
+    "command_forms": {
+      "path": "spec/catalog/command-forms.json",
+      "sha256": "e5a98441098fdd88c0f5837bb3e1367d7b272ebc2ba506275e9e2be1b4c1978a",
+      "count": 99
+    },
+    "tile_operations": {
+      "path": "spec/catalog/tile-operations.json",
+      "sha256": "e77c762122dd776ea8b1b2113e6d095b2db0fe24b5b98d0c26012db9fb98e64e",
+      "count": 120
+    }
+  },
+  "content_sha256": "748c1c6ac1bd5482d219cd08b8f0a871c7eda2b8f8afb1e81d498ec742e8abe8",
+  "encoding_abi": "pto-isa-0.57.1-mode-function-v1",
+  "encoding_projection_sha256": "9705a984e2e48e0d4e856d3fbcfa07041c8578dd326d81f1c90279e826354c32",
+  "hardware_conformance_profile": {
+    "path": "spec/hardware-conformance-profile.json",
+    "profile_id": "pto-hardware-numeric-0.57.1-ieee-v1",
+    "sha256": "becfbefcc7a31408e5e5293802493f833f68a2fccebb3f9e8008d8b9f4e7658c"
+  },
+  "numeric_conformance_vectors": {
+    "path": "spec/evidence/pto-isa-0571-hardware-numeric-vectors.json",
+    "sha256": "b9f908deb9cfec412388e95f4532563cf4e462032b43d15996f0f7b4b93b4ec9"
+  },
+  "release": "0.57.1",
+  "release_manifest": {
+    "path": "spec/release-manifest.json",
+    "sha256": "d85ee1cfcd51b1b86184ba015e9fb24ee61371165cf4691a5794f79618f7e273"
+  },
+  "source": {
+    "commit": "2f3f605e289b09d56ef5a9ba39fc80b52948a5f5",
+    "repository": "https://github.com/PTO-ISA/pto-spec.git"
+  }
+}

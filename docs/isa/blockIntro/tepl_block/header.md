@@ -54,7 +54,7 @@ Among them, the mode and function fields are used to encode specific TileOp info
 | 0 | 2 | [TMUL](../../header/tileblock/TMUL.md) | Element-wise multiplication of two Tiles |
 | 0 | 3 | [TDIV](../../header/tileblock/TDIV.md) | Element-wise division of two Tiles |
 | 0 | 4 | [TREM](../../header/tileblock/TREM.md) | Element-wise remainder of two Tiles, the remainder sign is the same as the divisor |
-| 0 | 5 | [TFMOD](../../header/tileblock/TFMOD.md) | Element-wise remainder of two Tiles, the remainder sign is the same as the dividend |
+| 0 | 5 | - | Reserved/illegal |
 | 0 | 6 | [TAND](../../header/tileblock/TAND.md) | Element-wise bitwise AND of two Tiles |
 | 0 | 7 | [TOR](../../header/tileblock/TOR.md) | Element-wise bitwise OR of two Tiles |
 | 0 | 8 | [TXOR](../../header/tileblock/TXOR.md) | Element-wise bitwise XOR of two Tiles |
@@ -72,8 +72,8 @@ Among them, the mode and function fields are used to encode specific TileOp info
 | 0 | 20 | [TRECIP](../../header/tileblock/TRECIP.md) | Element-wise reciprocal of Tile |
 | 0 | 21 | [TSQRT](../../header/tileblock/TSQRT.md) | Element-wise square root |
 | 0 | 22 | [TRSQRT](../../header/tileblock/TRSQRT.md) | Element-wise reciprocal square root |
-| 0 | 23 | [TRELU](../../header/tileblock/TRELU.md) | Element-wise ReLU of Tile || 0 | 24 | [TADDC](../../header/tileblock/TADDC.md) | Ternary element-wise addition: dst = src0 + src1 + src2 |
-| 0 | 25 | [TSUBC](../../header/tileblock/TSUBC.md) | Ternary element-wise subtraction: dst = src0 - src1 + src2 |
+| 0 | 23 | [TRELU](../../header/tileblock/TRELU.md) | Element-wise ReLU of Tile |
+| 0 | 24-25 | - | Reserved/illegal |
 | 0 | 26 | [TSEL](../../header/tileblock/TSEL.md) | Select between two Tiles using a masked Tile (element-wise selection) |
 | 0 | 27 | [TCVT](../../header/tileblock/TCVT.md) | Element-by-element data format conversion of Tile. |
 | 0 | 28-31 | - | Reserved |
@@ -85,7 +85,7 @@ Among them, the mode and function fields are used to encode specific TileOp info
 | 1 | 2 | [TMULS](../../header/tileblock/TMULS.md) | Element-wise multiplication of Tile and scalar |
 | 1 | 3 | [TDIVS](../../header/tileblock/TDIVS.md) | Element-wise division with scalar (Tile/scalar or scalar/Tile) |
 | 1 | 4 | [TREMS](../../header/tileblock/TREMS.md) | Element-wise remainder with scalar: remainder(src, scalar) |
-| 1 | 5 | [TFMODS](../../header/tileblock/TFMODS.md) | Element-wise remainder with scalar: fmod(src, scalar) |
+| 1 | 5 | - | Reserved/illegal |
 | 1 | 6 | [TANDS](../../header/tileblock/TANDS.md) | Element-wise bitwise AND of Tile and scalar |
 | 1 | 7 | [TORS](../../header/tileblock/TORS.md) | Element-wise bitwise OR of Tile and scalar |
 | 1 | 8 | [TXORS](../../header/tileblock/TXORS.md) | Element-wise bitwise XOR of Tile and scalar |
@@ -94,10 +94,9 @@ Among them, the mode and function fields are used to encode specific TileOp info
 | 1 | 11 | [TMAXS](../../header/tileblock/TMAXS.md) | Element-wise maximum value of Tile and scalar: max(src, scalar) |
 | 1 | 12 | [TMINS](../../header/tileblock/TMINS.md) | Element-wise minimum value of Tile and scalar |
 | 1 | 13 | [TCMPS](../../header/tileblock/TCMPS.md) | Compare Tile with scalar element by element |
-| 1 | 14 | [TLRELU](../../header/tileblock/TLRELU.md) | LeakyReLU with scalar slope |
+| 1 | 14 | - | Reserved/illegal |
 | 1 | 15-23 | - | Reserved code |
-| 1 | 24 | [TADDSC](../../header/tileblock/TADDSC.md) | With scalar fusion element-wise addition operation: dst = src0 + scalar + src1 |
-| 1 | 25 | [TSUBSC](../../header/tileblock/TSUBSC.md) | With scalar fused element-wise subtraction operation: dst = src0 - scalar + src1 |
+| 1 | 24-25 | - | Reserved/illegal |
 | 1 | 26 | [SELS](../../header/tileblock/TSELS.md) | Use mask Tile to select between source Tile and scalar (source Tile element-wise selection) || 1 | 27 | [TEXPANDS](../../header/tileblock/TEXPANDS.md) | Broadcast scalar to the target Tile |
 | 1 | 28-31 | - | Reserved code |
 
