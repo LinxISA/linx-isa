@@ -1018,7 +1018,8 @@ def validate(path: str) -> List[str]:
     errors: List[str] = []
 
     # ---------------------------------------------------------------------
-    # v0.2 bring-up profile sanity checks (system/privileged contract)
+    # Legacy v0.2 bring-up profile sanity checks (system/privileged contract).
+    # These only activate when version == "0.2" and are inert for v0.57+.
     # ---------------------------------------------------------------------
     version = str(spec.get("version", "")).strip()
     if version == "0.2":

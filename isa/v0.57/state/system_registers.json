@@ -6,7 +6,7 @@
       "context_bp": 1,
       "watchpoint": 4
     },
-    "description": "v0.2 bring-up debug SSRs (breakpoints/watchpoints with optional linking).",
+    "description": "Debug SSRs (breakpoints/watchpoints with optional linking).",
     "entries": [
       {
         "access": "RO",
@@ -73,7 +73,7 @@
   },
   "ebarg_group": {
     "base_idx": "0xF40",
-    "description": "EBARG is the authoritative trap/context snapshot for v0.2. EBARG words are ACR-scoped manager-family SSRs (0xnf40+).",
+    "description": "EBARG is the authoritative trap/context snapshot. EBARG words are ACR-scoped manager-family SSRs (0xnf40+).",
     "entries": [
       {
         "access": "RW",
@@ -339,7 +339,7 @@
         },
         {
           "access": "RW",
-          "description": "Exception temporary register 0 (v0.2 bring-up).",
+          "description": "Exception temporary register 0.",
           "idx": "0xF06",
           "name": "ETEMP0_ACRn",
           "width_bits": 64

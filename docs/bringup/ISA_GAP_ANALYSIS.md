@@ -1,4 +1,4 @@
-# LinxISA Gap Analysis (v0.2 -> Tier-1)
+# LinxISA Gap Analysis (Current -> Tier-1)
 
 Last updated: 2026-05-15
 

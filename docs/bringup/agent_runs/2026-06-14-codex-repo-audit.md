@@ -1,9 +1,16 @@
 # LinxISA Repo Audit - 2026-06-14
 
+> **Historical snapshot**: This audit was conducted during the v0.56 era.
+> The canonical ISA spec has since been upgraded to v0.57
+> (`isa/v0.57/linxisa-v0.57.json`). Commands and paths below reflect the
+> v0.56 toolchain surface at the time of recording. For current validation
+> commands, see `docs/bringup/README.md`.
+
 ## Scope
 
-This note captures the current repository map and the validation evidence
-gathered while closing the Linux/QEMU and TSVC compiler bring-up lanes.
+This note captures the repository map and the validation evidence gathered
+while closing the Linux/QEMU and TSVC compiler bring-up lanes during the
+v0.56 cycle.
 
 It is not a generated status dashboard. It is a human-readable audit snapshot
 backed by concrete commands and current in-repo paths.

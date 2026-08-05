@@ -6,13 +6,12 @@ npm i bit-field
 
 ## Svg Generation
 
-Jsons are in ~/blockisa-doc/docs/figs/bitfield/json
-Svgs are in ~/blockisa-doc/docs/figs/bitfield/svg
-Shells are in ~/blockisa-doc/docs/figs/bitfield/shell
+JSON source files are in `docs/figs/bitfield/json`.
+SVG outputs are in `docs/figs/bitfield/svg`.
+Shell scripts are in `docs/figs/bitfield/shell`.
 
 ```
-cd ~/blockisa-doc/docs/figs/bitfield/shell
+cd docs/figs/bitfield/shell
 
 sh instruction.sh
 ```
-

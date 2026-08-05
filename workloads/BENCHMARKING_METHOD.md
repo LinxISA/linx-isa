@@ -21,7 +21,7 @@ under `workloads/`.
 
 - Fix input sizes and iteration counts; avoid wall-clock timing as a primary signal during bring-up.
 - Record revisions for every run:
-  - LinxISA spec version (`isa/v0.3/linxisa-v0.3.json`)
+  - LinxISA spec version (canonical: `isa/v0.57/linxisa-v0.57.json`)
   - LLVM revision + build dir
   - QEMU revision + build dir
   - run flags (`-O2`, `-ffreestanding`, etc.)
