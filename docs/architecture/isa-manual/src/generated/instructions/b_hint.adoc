@@ -5,27 +5,27 @@
 [[inst_b_hint]]
 ==== B.HINT
 
-*Description:* Block block hint: B.HINT.
+*Description:* Records non-functional branch, temperature, prefetch-size, or trace guidance.
 
-[[inst_b_hint_32_69d942ff1583]]
-===== Form `b_hint_32_69d942ff1583`
-
-*Syntax:* B.HINT {BR.{likely, unlikely}, TEMP.{hot, warm, cool, none}, PRFSIZE}
-
-*Encoding:*
-
-image::encodings/enc_b_hint_32_69d942ff1583.svg[B.HINT encoding form b_hint_32_69d942ff1583,width=800]
-
-*Compression:* L32 (len=32)
-
-[[inst_b_hint_32_f7d01d734925]]
-===== Form `b_hint_32_f7d01d734925`
+[[inst_b_hint_32_67e2ad8dd981]]
+===== Form `b_hint_32_67e2ad8dd981`
 
 *Syntax:* B.HINT TRACE.{begin, end}
 
 *Encoding:*
 
-image::encodings/enc_b_hint_32_f7d01d734925.svg[B.HINT encoding form b_hint_32_f7d01d734925,width=800]
+image::encodings/enc_b_hint_32_67e2ad8dd981.svg[B.HINT encoding form b_hint_32_67e2ad8dd981,width=800]
+
+*Compression:* L32 (len=32)
+
+[[inst_b_hint_32_b3e8a4e77930]]
+===== Form `b_hint_32_b3e8a4e77930`
+
+*Syntax:* B.HINT {BR.{likely, unlikely}, TEMP.{hot, warm, cool, none}, PRFSIZE}
+
+*Encoding:*
+
+image::encodings/enc_b_hint_32_b3e8a4e77930.svg[B.HINT encoding form b_hint_32_b3e8a4e77930,width=800]
 
 *Compression:* L32 (len=32)
 

@@ -1563,9 +1563,9 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument(
         "--profile",
-        choices=["v0.57"],
-        default="v0.57",
-        help="ISA profile for default --spec path (v0.57 is current)",
+        choices=["v0.57", "v0.58"],
+        default="v0.58",
+        help="ISA profile for default --spec path (v0.58 is current)",
     )
     ap.add_argument("--spec", default=None, help="Path to ISA catalog JSON")
     ap.add_argument(

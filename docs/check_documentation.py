@@ -204,7 +204,7 @@ def main() -> int:
     else:
         if manifest.get("normative_language") != "en":
             _error(errors, "translation manifest must declare English as normative")
-        if manifest.get("canonical_isa") != "isa/v0.57/linxisa-v0.57.json":
+        if manifest.get("canonical_isa") != "isa/v0.58/linxisa-v0.58.json":
             _error(errors, "translation manifest points at a non-canonical ISA source")
         pages = manifest.get("pages")
         if not isinstance(pages, dict) or not pages:

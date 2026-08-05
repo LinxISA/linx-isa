@@ -7,7 +7,7 @@
 
 *Syntax:* FRET.STK [RegDst0 ~ RegDstn], sp!, uimm
 
-*Description:* Template block FRET.STK: compact prologue/epilogue sequence.
+*Description:* Restores a frame and returns through the validated stack target.
 
 *Encoding:*
 

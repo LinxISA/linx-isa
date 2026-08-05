@@ -1,4 +1,4 @@
-/* Auto-generated from isa/v0.57/linxisa-v0.57.json. */
+/* Auto-generated from isa/v0.58/linxisa-v0.58.json. */
 /* DO NOT EDIT: run `python3 tools/isa/gen_c_codec.py` to regenerate. */
 
 #pragma once

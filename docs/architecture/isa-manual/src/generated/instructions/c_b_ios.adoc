@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_c_b_ios]]
+==== C.B.IOS
+
+*Syntax:* C.B.IOS S<SharedTID> | C.B.IOS -> S<SharedTID>
+
+*Description:* Binds one absolute core-private Shared register S0..S255; source or destination role is derived from the surrounding BSTART schema and the binder is consumed once.
+
+*Encoding:*
+
+image::encodings/enc_c_b_ios.svg[C.B.IOS encoding,width=800]
+
+*Uop-Class:* CMD
+
+*Compression:* C16 (len=16)
+
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_DIMENSION", "note": "User confirmed A", "source": "group_rule", "uop_kind": "CMD"}`

@@ -5,49 +5,49 @@
 [[inst_l_bstart_fp]]
 ==== L.BSTART.FP
 
-*Description:* BSTART: L.BSTART.FP operation.
+*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
-[[inst_l_bstart_fp_64_098e57019d7b]]
-===== Form `l_bstart_fp_64_098e57019d7b`
-
-*Syntax:* L.BSTART.FP COND, <label>
-
-*Encoding:*
-
-image::encodings/enc_l_bstart_fp_64_098e57019d7b.svg[L.BSTART.FP encoding form l_bstart_fp_64_098e57019d7b,width=800]
-
-*Compression:* L64 (len=64)
-
-[[inst_l_bstart_fp_64_0cac9941f7d4]]
-===== Form `l_bstart_fp_64_0cac9941f7d4`
+[[inst_l_bstart_fp_64_52a1fd45d908]]
+===== Form `l_bstart_fp_64_52a1fd45d908`
 
 *Syntax:* L.BSTART.FP DIRECT, <label>
 
 *Encoding:*
 
-image::encodings/enc_l_bstart_fp_64_0cac9941f7d4.svg[L.BSTART.FP encoding form l_bstart_fp_64_0cac9941f7d4,width=800]
+image::encodings/enc_l_bstart_fp_64_52a1fd45d908.svg[L.BSTART.FP encoding form l_bstart_fp_64_52a1fd45d908,width=800]
 
 *Compression:* L64 (len=64)
 
-[[inst_l_bstart_fp_64_2067ad6667ed]]
-===== Form `l_bstart_fp_64_2067ad6667ed`
-
-*Syntax:* L.BSTART.FP CALL, <label>
-
-*Encoding:*
-
-image::encodings/enc_l_bstart_fp_64_2067ad6667ed.svg[L.BSTART.FP encoding form l_bstart_fp_64_2067ad6667ed,width=800]
-
-*Compression:* L64 (len=64)
-
-[[inst_l_bstart_fp_64_8115c042ef26]]
-===== Form `l_bstart_fp_64_8115c042ef26`
+[[inst_l_bstart_fp_64_59792b6f0002]]
+===== Form `l_bstart_fp_64_59792b6f0002`
 
 *Syntax:* L.BSTART.FP FALL<, fixup_label>
 
 *Encoding:*
 
-image::encodings/enc_l_bstart_fp_64_8115c042ef26.svg[L.BSTART.FP encoding form l_bstart_fp_64_8115c042ef26,width=800]
+image::encodings/enc_l_bstart_fp_64_59792b6f0002.svg[L.BSTART.FP encoding form l_bstart_fp_64_59792b6f0002,width=800]
+
+*Compression:* L64 (len=64)
+
+[[inst_l_bstart_fp_64_9673fedb498b]]
+===== Form `l_bstart_fp_64_9673fedb498b`
+
+*Syntax:* L.BSTART.FP CALL, <label>
+
+*Encoding:*
+
+image::encodings/enc_l_bstart_fp_64_9673fedb498b.svg[L.BSTART.FP encoding form l_bstart_fp_64_9673fedb498b,width=800]
+
+*Compression:* L64 (len=64)
+
+[[inst_l_bstart_fp_64_b27a4726298b]]
+===== Form `l_bstart_fp_64_b27a4726298b`
+
+*Syntax:* L.BSTART.FP COND, <label>
+
+*Encoding:*
+
+image::encodings/enc_l_bstart_fp_64_b27a4726298b.svg[L.BSTART.FP encoding form l_bstart_fp_64_b27a4726298b,width=800]
 
 *Compression:* L64 (len=64)
 

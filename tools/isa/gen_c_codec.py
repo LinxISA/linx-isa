@@ -322,9 +322,9 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--profile",
-        choices=["v0.57"],
-        default="v0.57",
-        help="ISA profile for default --spec path (v0.57 is current)",
+        choices=["v0.57", "v0.58"],
+        default="v0.58",
+        help="ISA profile for default --spec path (v0.58 is current)",
     )
     ap.add_argument("--spec", default=None, help="Path to the ISA spec JSON")
     ap.add_argument("--out-dir", default="isa/generated/codecs", help="Output directory")

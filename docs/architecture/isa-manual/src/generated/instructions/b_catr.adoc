@@ -7,7 +7,7 @@
 
 *Syntax:* B.CATR {trap, atomic, <aq, rl, aqrl>, far, dr}
 
-*Description:* PTO ISA 0.57.1 control attributes. Only DR[26], trap[19], far[18], atom[17], aq[16], and rl[15] are variable.
+*Description:* Latches bundle control, trap, atomic, ordering, and address-class attributes.
 
 *Encoding:*
 

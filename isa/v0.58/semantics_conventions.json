@@ -1,0 +1,852 @@
+{
+  "version": "v0.58",
+  "notes": [
+    "This file records staged bring-up semantics conventions that are consumed by the Sail formal model and referenced by the manual.",
+    "These conventions are normative for v0.58. Rules not changed by the reviewed v0.58 delta are retained by v0.58."
+  ],
+  "regdst_writeback": {
+    "description": "Destination selector semantics for RegDst-like fields that can target GPRs or ClockHands pushes.",
+    "no_output": {
+      "codes": [
+        0,
+        [
+          24,
+          29
+        ]
+      ],
+      "behavior": "No architectural output is produced (silent drop). No exception is raised."
+    },
+    "gpr": {
+      "codes": [
+        [
+          1,
+          23
+        ]
+      ],
+      "behavior": "Write the selected GPR (R1..R23)."
+    },
+    "clockhands": {
+      "u_selector": {
+        "code": 30,
+        "behavior": "Push result into U-hand queue (u#1..u#4)."
+      },
+      "t_selector": {
+        "code": 31,
+        "behavior": "Push result into T-hand queue (t#1..t#4)."
+      }
+    }
+  },
+  "srcrtype": {
+    "description": "2-bit SrcRType mapping and evaluation order.",
+    "mapping": {
+      "00": "none",
+      "01": "sw (sext32)",
+      "10": "uw (zext32)",
+      "11": "neg (arithmetic families) / not (logical families)"
+    },
+    "order": "Apply SrcRType first, then apply any explicit shift (e.g. <<<shamt or <<shamt in addressing).",
+    "word_ops": "For *W (32-bit) operations, apply modifiers at 32-bit width, compute a 32-bit result, then sign-extend to 64-bit.",
+    "restricted_forms": {
+      "description": "For forms whose assembly syntax only allows {.sw,.uw} (e.g. CMP.{EQ,NE,LT,GE,LTU,GEU} and SETC.{EQ,NE,LT,GE,LTU,GEU}), SrcRType=11 is treated as 00 (no modifier) in v0.58, retained by v0.58.",
+      "policy": "11_as_00"
+    },
+    "csel": {
+      "description": "CSEL encodes an optional .neg on SrcR; other SrcRType values are treated as 00.",
+      "policy": "11_as_neg_else_00"
+    }
+  },
+  "shifts": {
+    "description": "Shift amount masking conventions.",
+    "reg_shifts": {
+      "xlen64": "mask shift amount to SrcR[5:0] (mod 64)",
+      "word32": "mask shift amount to SrcR[4:0] (mod 32)"
+    }
+  },
+  "setc_immediates": {
+    "description": "Immediate-compare conventions for SETC.*I forms with an encoded shamt field.",
+    "encoding": "SETC.*I encodes simm/uimm plus a 5-bit shamt (bits[11:7] in 32-bit forms, analogous position in HL forms).",
+    "semantics": {
+      "signed": "imm = SignExtend(simm) << shamt",
+      "unsigned": "imm = ZeroExtend(uimm) << shamt"
+    },
+    "assembly": "Assembly syntax elides shamt (prints a single immediate). Assembler/tooling may choose shamt to represent larger aligned constants when encodable."
+  },
+  "pc_relative": {
+    "description": "PC-relative immediate conventions (ADDTPC/SETRET and variants).",
+    "base": "current instruction PC (scalar blocks) or current instruction TPC (vec bodies); the instruction description says PC/TPC.",
+    "offset_unit_bytes": 2,
+    "rule": "target = base + (Extend(imm) << 1)",
+    "addtpc": {
+      "imm_kind": "signed",
+      "extend": "SignExtend",
+      "note": "ADDTPC uses a signed immediate (addtpc simm)."
+    },
+    "setret": {
+      "imm_kind": "unsigned",
+      "extend": "ZeroExtend",
+      "note": "SETRET uses an unsigned immediate (setret uimm)."
+    },
+    "compressed": {
+      "c.setret": "uses uimm5 with ZeroExtend, then <<1"
+    },
+    "hl48": {
+      "hl.addtpc": "uses imm32 with SignExtend, then <<1",
+      "hl.setret": "uses imm32 with ZeroExtend, then <<1"
+    },
+    "fused_bstart_call": {
+      "atomic": true,
+      "description": "The exact 32-bit and 48-bit BSTART.CALL forms embed a call transfer and C.SETRET. Their adjacent immediate fields remain independent operands.",
+      "forms": {
+        "bstart_call_32_9404418d1ae5": {
+          "call_target": "P + (SignExtend(simm12) << 1)",
+          "call_relocation": "CBSTART12_PCREL",
+          "return_relocation": "CSETRET5_PCREL",
+          "return_target": "(P + 2) + (ZeroExtend(uimm5) << 1)"
+        },
+        "hl_bstart_call_48_3c784c583c90": {
+          "call_target": "P + (SignExtend(simm25) << 1)",
+          "call_relocation": "B25_PCREL",
+          "return_relocation": "CSETRET5_PCREL",
+          "return_target": "(P + 4) + (ZeroExtend(uimm5) << 1)"
+        }
+      },
+      "operand_rule": "simm12/simm25 and uimm5 are independently relocatable PC-relative operands; they MUST NOT be concatenated into one target.",
+      "p_definition": "P is the address of the first byte of the fused form.",
+      "return_delta_range_bytes": [
+        0,
+        62
+      ],
+      "target_alignment_bytes": 2
+    }
+  },
+  "immediate_materialization": {
+    "description": "Constant materialization conventions.",
+    "lui": {
+      "imm_kind": "signed",
+      "rule": "Write(RegDst, SignExtend(imm20) << 12)"
+    },
+    "hl_lui": {
+      "imm_kind": "signed",
+      "rule": "Write(RegDst, SignExtend(imm32))",
+      "note": "No <<12 in HL.LUI."
+    },
+    "hl_lis": {
+      "imm_kind": "signed",
+      "rule": "Write(RegDst, SignExtend(imm32))"
+    },
+    "hl_liu": {
+      "imm_kind": "unsigned",
+      "rule": "Write(RegDst, ZeroExtend(imm32))"
+    }
+  },
+  "division": {
+    "description": "DIV/REM family conventions (v0.58, retained by v0.58).",
+    "model": "ARM-like (non-trapping, defined results)",
+    "rounding": "toward_zero",
+    "div_by_zero": {
+      "quotient": 0,
+      "remainder": "dividend"
+    },
+    "signed_overflow": {
+      "case": "MIN_INT / -1",
+      "quotient": "MIN_INT",
+      "remainder": 0
+    },
+    "word_writeback": {
+      "description": "For *W variants, compute in 32-bit domain then sign-extend result to 64-bit.",
+      "policy": "sign_extend_all_w_results",
+      "applies_to": [
+        "DIVW",
+        "DIVUW",
+        "REMW",
+        "REMUW"
+      ]
+    },
+    "hl_two_dest": {
+      "description": "HL.* multi-cycle ALU two-destination encodings.",
+      "policy": "dst0_is_quotient_dst1_is_remainder",
+      "dst0": "quotient",
+      "dst1": "remainder"
+    }
+  },
+  "multiplication": {
+    "description": "MUL family conventions (v0.58, retained by v0.58).",
+    "scalar": {
+      "model": "low_part",
+      "note": "Scalar MUL/MULU return the low 64 bits of the full product."
+    },
+    "word_writeback": {
+      "description": "For *W variants, compute in 32-bit domain then sign-extend result to 64-bit.",
+      "policy": "sign_extend_all_w_results",
+      "applies_to": [
+        "MULW",
+        "MULUW"
+      ]
+    },
+    "hl_two_dest": {
+      "description": "HL.MUL/HL.MULU return the full 128-bit product split across two destinations.",
+      "policy": "dst0_low64_dst1_high64",
+      "dst0": "low64(full_product)",
+      "dst1": "high64(full_product)"
+    },
+    "hl_madd": {
+      "description": "HL.MADD/HL.MADDW return a 128-bit accumulator split across two destinations.",
+      "acc_rule": "acc = (signed_mul(SrcL, SrcR) + signed_add(SrcD))",
+      "dst0": "low64(acc)",
+      "dst1": "high64(acc)"
+    }
+  },
+  "block_legality": {
+    "description": "Legality conventions for which instruction families may appear as payload in coupled scalar blocks vs engine bodies.",
+    "bru_control_transfer": {
+      "description": "BRU control-transfer instructions (B.* / J / JR / etc.) are not legal payload in coupled scalar blocks; they are vec-engine scalar-lane-only.",
+      "on_scalar_block_execute": {
+        "trapnum": 4,
+        "name": "ILLEGAL_INST",
+        "traparg0": "faulting source PC/TPC",
+        "note": "v0.58 requires a precise illegal-instruction trap with TRAPARG0 set to the offending scalar-block PC/TPC; this rule is retained by v0.58."
+      },
+      "vec_engine_scalar_lane": {
+        "pc_domain": "TPC",
+        "pc_relative": {
+          "offset_unit_bytes": 2,
+          "rule": "target = base + (SignExtend(offset) << 1)",
+          "base": "TPC (current instruction TPC)",
+          "note": "Base is current-instruction TPC (not next-TPC).",
+          "jr_rule": "JR target = SrcL + (SignExtend(simm12) << 1)",
+          "jr_srczero": "The encoded SrcZero field is ignored (treated as 0) in v0.58, retained by v0.58.",
+          "jr_alignment": "No forced alignment; odd target is permitted (subsequent fetch may fault).",
+          "tpc_misalignment_fault": {
+            "trapnum": 5,
+            "name": "BLOCK_TRAP",
+            "e_block": "EC_BFETCH (0x3)",
+            "bi": 1,
+            "traparg0": "faulting TPC (VA)",
+            "note": "Use E_BLOCK(EC_BFETCH) for non-MMU body fetch faults (alignment)."
+          },
+          "tpc_invalid_target_fault": {
+            "trapnum": 5,
+            "name": "BLOCK_TRAP",
+            "e_block": "EC_BFETCH (0x3)",
+            "bi": 1,
+            "traparg0": "faulting target VA",
+            "note": "Vec-engine BRU targets that are outside the vec-body fetchable region (or otherwise not fetchable) are treated as body-fetch faults (not CFI)."
+          },
+          "body_range": {
+            "policy": "implicit",
+            "note": "The fetchable body region starts at BodyTPC and spans the compiler-authored out-of-line body selected by `B.TEXT`. `BSTOP`/`C.BSTOP` and `BSTART.*`/`C.BSTART.*` remain legal body terminators when control reaches them, but an earlier lexical terminator does not by itself truncate the body if group-internal control flow branches to a later label in the same body. Targets that escape the current `B.TEXT` body region fault as `E_BLOCK(EC_BFETCH)`."
+          }
+        },
+        "predicate_register": {
+          "name": "p",
+          "domain": "64-bit kernel EXEC mask",
+          "truth_rule": "B.NZ taken iff p != 0; B.Z taken iff p == 0",
+          "width_bits": 64,
+          "vector_predication": "vector instructions are implicitly predicated by p",
+          "mask_producer": "V.CMP.* ->p",
+          "bz": "taken iff p == 0",
+          "bnz": "taken iff p != 0",
+          "note": "Within canonical MPAR/MSEQ kernel bodies, p is a normal scalar-uniform source/destination register representing EXEC state."
+        },
+        "register_domain": {
+          "description": "Vec engine scalar-lane BRU reads operands from the scalar-lane GPR file (not ClockHands queues).",
+          "jr_base": "scalar_lane_gpr",
+          "branch_operands": "scalar_lane_gpr"
+        },
+        "contract_summary": [
+          "Scope: vec-engine scalar-lane only (illegal in coupled scalar blocks => TRAPNUM=4 ILLEGAL_INST).",
+          "PC domain: updates TPC (body-local PC).",
+          "PC-relative base: current-instruction TPC.",
+          "PC-relative scaling: offset is halfword-scaled (target = base + (sext(offset) << 1)).",
+          "JR: target = SrcL + (sext(simm12) << 1); SrcZero field ignored.",
+          "Predicate: B.Z/B.NZ test vec predicate register p (all-zero vs non-zero).",
+          "Faults: misaligned/unfetchable targets => E_BLOCK(EC_BFETCH), BI=1, TRAPARG0=faulting VA.",
+          "Body range: implicit/operational (no explicit architectural [BodyTPC,BodyEnd) boundary).",
+          "Operand registers: read scalar-lane GPR domain (not ClockHands)."
+        ],
+        "note": "When executed in the vec engine scalar lane, BRU control-transfer updates the body-local TPC (not architectural global PC)."
+      }
+    }
+  },
+  "bitfields": {
+    "description": "Bitfield operations (BXS/BXU/CLZ/CTZ/BCNT/BIC/BIS/REV) parameter mapping and wrap-around semantics.",
+    "mapping": {
+      "M": "imms (or immr for REV)",
+      "Nminus1": "imml",
+      "N": "imml + 1 (range 1..64)"
+    },
+    "wrap_around": "Bit ranges are defined on a 64-bit ring. For i=0..N-1, field[i] = SrcL[(M + i) mod 64]. Equivalent: field = ROR64(SrcL, M) & mask_low(N).",
+    "alias": {
+      "ROR": "Alias of BXU with Nminus1=63 (N=64): ROR64(SrcL, M)."
+    },
+    "rev": {
+      "description": "REV performs byte-order reversal on the selected bitfield.",
+      "operation": "field = bitfield_wrap(SrcL, M, N); if (N % 8) != 0 then result=0 else reverse byte order of low N bits; high bits are zero.",
+      "invalid_n": "If N is not a multiple of 8, the result is 0 (silent)."
+    }
+  },
+  "prefetch": {
+    "description": "Prefetch / cache hint instructions (PRF/PRFI and HL variants).",
+    "faults": "suppressed (non-faulting hint)",
+    "address_writeback": {
+      "hl_prf_a": "Rd = EA",
+      "hl_prfi_ua": "Rd = EA"
+    },
+    "note": "Scalar PRF/PRFI prefetch provides a non-faulting performance hint in v0.58. This rule does not apply to BSTART.TPREFETCH, which is a destination-free TLOAD and retains TLOAD faults."
+  },
+  "floating_point_compare": {
+    "description": "Scalar floating-point compare conventions (FEQ/FLT/FGE and S-variants).",
+    "nan_behavior": "ordered (NaN => predicate false)",
+    "zero_behavior": "+0 and -0 compare equal",
+    "format_select": {
+      "field": "SrcType",
+      "mapping": {
+        "0": "fd (64-bit)",
+        "1": "fs (32-bit in low bits)"
+      },
+      "other_values": "treated as fd"
+    },
+    "s_variants": "modeled as aliases (no FP exception signaling modeled in staged Sail)",
+    "minmax": {
+      "nan_behavior": "maxNum/minNum (one NaN => other; both NaN => canonical qNaN)",
+      "canonical_qnan": {
+        "fd": "0x7ff8_0000_0000_0000",
+        "fs": "0x7fc0_0000"
+      },
+      "signed_zero": {
+        "fmax": "when both inputs are zeros, return +0",
+        "fmin": "when both inputs are zeros, return -0 iff any input is -0"
+      }
+    }
+  },
+  "fixup_blocks": {
+    "description": "Unmanaged fixup block routing rules (v0.58, retained by v0.58).",
+    "unmanaged_fixup_block": {
+      "definition": "BSTART.SYS FALL<, fixup_label (SYS block with explicit fixup_label)",
+      "has_fixup_label": true
+    },
+    "exception_routing": {
+      "when": "synchronous exception occurs while executing inside an unmanaged fixup block",
+      "handler_pc": "fixup_target (computed from fixup_label; replaces EVBASE)",
+      "entry_style": "new_block (try/catch)",
+      "requires_fixup_target_is_block_start": true,
+      "fixup_block_type": "any",
+      "write_trap_envelope": [
+        "TRAPNO",
+        "TRAPARG0",
+        "ECSTATE"
+      ],
+      "write_ebarg_optional": true,
+      "privilege_switch": "none",
+      "acr_switch": "none",
+      "ecstate_bi": 0,
+      "fault_visibility": "precise to instruction: all prior instructions commit; faulting instruction has no architectural side effects"
+    },
+    "fixup_label_addressing": {
+      "base": "BPC (block start PC)",
+      "offset_unit_bytes": 2,
+      "rule": "fixup_target = BPC + (SignExtend(fixup_label) << 1)"
+    },
+    "assert": {
+      "participates": true,
+      "trapnum": "ASSERT_FAIL (52)",
+      "cause": 0,
+      "cause_note": "TRAPNO.CAUSE is populated; for ASSERT_FAIL it is fixed to 0.",
+      "legal_blocks": [
+        "SYS"
+      ],
+      "illegal_elsewhere": "TRAPNUM=4 ILLEGAL_INST",
+      "masking": {
+        "policy": "masked_by_global_exception_enable",
+        "enable_bit": "ECONFIG[3]",
+        "when_disabled": "ASSERT is treated as NOP (no trap, no trap-envelope update)",
+        "scope": "ASSERT-instruction-generated ASSERT_FAIL only (other synchronous exceptions are unaffected)"
+      }
+    },
+    "traparg0": {
+      "assert_fail": "faulting PC/TPC",
+      "other_sync_exceptions": "faulting VA"
+    },
+    "trapno": {
+      "E": 0,
+      "ARGV": 1,
+      "CAUSE": "populated (profile-defined per TRAPNUM)"
+    },
+    "assert_fail_producers": {
+      "instruction_assert": {
+        "producer": "executed ASSERT instruction",
+        "trapnum": "ASSERT_FAIL (52)",
+        "cause": 0,
+        "ecconfig_maskable": true,
+        "mask_bit": "ECONFIG[3]",
+        "local_fixup": "existing instruction behavior",
+        "bi": 0,
+        "continuation": "existing precise ASSERT behavior"
+      },
+      "template_integrity_fail": {
+        "producer": "R975 hardware-generated frame-template integrity fail-stop",
+        "trapnum": "ASSERT_FAIL (52)",
+        "cause": 0,
+        "ecconfig_maskable": false,
+        "local_fixup": "forbidden",
+        "bi": 1,
+        "continuation": "forbidden; reset-only source context reuse",
+        "traparg0": "source template PC/TPC",
+        "route": "default E_ASSERT managing-ring route",
+        "acre_continuation": "ACRE RRAT_RESTORE and RRAT_DEFAULT both raise E_INST(EC_PARAM) in the manager for the fail-stopped source"
+      }
+    }
+  },
+  "frame_templates_r975": {
+    "source_contract": "R975 Template Fatal-State and Canonical Identity Contract",
+    "profile": "v0.58 range-mode frame templates",
+    "applies_to": [
+      "FENTRY",
+      "FEXIT",
+      "FRET.RA",
+      "FRET.STK"
+    ],
+    "arithmetic": {
+      "kind": "immediate_only",
+      "stack_adjustment_operand": "uimm"
+    },
+    "register_ring": {
+      "inclusive_range": [
+        2,
+        23
+      ],
+      "allows_singleton": true,
+      "allows_full_ring": true,
+      "allows_wrap": true
+    },
+    "legality": {
+      "pre_effect_checks": [
+        "well_formed_endpoints",
+        "sufficient_F_pre_effect",
+        "FRET.STK_Begin_is_R10"
+      ],
+      "malformed_effects": "zero template effect",
+      "fret_ra_target": "fixed pre-restore R10",
+      "fret_stk_target": "fixed R10 restored from slot zero",
+      "fret_stk_stack_slot_zero": {
+        "required_memory_type": "Normal",
+        "requires_idempotent": true,
+        "device_mmio_or_mixed_or_non_idempotent": "phase_zero E_DATA/MMU_PERM before any cache, fabric, device, or MMIO physical read"
+      }
+    },
+    "step_index": {
+      "meaning": "next_uncommitted_phase_one_event",
+      "event_effect_and_cursor_advance": "atomic"
+    },
+    "phase_fault_envelopes": {
+      "phase_zero": {
+        "bi": 0,
+        "phase": 0,
+        "step_index": 0,
+        "dirty": 0,
+        "redo_ok": 1,
+        "resume_ok": 0,
+        "template_effect": "none"
+      },
+      "phase_one_recoverable": {
+        "bi": 1,
+        "dirty": 1,
+        "redo_ok": 0,
+        "resume_ok": 1,
+        "step_index": "faulting_or_next_uncommitted_event",
+        "prior_events": "remain_visible",
+        "acre_restore": "retry exactly saved event; do not reissue VLOAD, reacquire lease, or repeat earlier events"
+      },
+      "post_seal_fatal": {
+        "trapnum": "ASSERT_FAIL (52)",
+        "cause": 0,
+        "e": 0,
+        "argv": 1,
+        "traparg0": "source template PC/TPC",
+        "bi": 1,
+        "dirty": 1,
+        "redo_ok": 0,
+        "resume_ok": 0,
+        "reuse_boundary": "platform reset only"
+      }
+    },
+    "forms": {
+      "FENTRY": {
+        "phase_one_events": [
+          "SP_SUB",
+          "STORE_i[0..N-1]"
+        ],
+        "phase_one_count": "N+1",
+        "d3_total_rows": "N+3",
+        "examples": {
+          "N=1": 4,
+          "N=22": 25
+        },
+        "ordinals": [
+          "0=VFORM",
+          "1=SP_SUB",
+          "2+i=STORE_i",
+          "N+2=FINAL"
+        ]
+      },
+      "FEXIT": {
+        "phase_one_events": [
+          "SP_ADD",
+          "LOAD_i[0..N-1]"
+        ],
+        "phase_one_count": "N+1",
+        "d3_total_rows": "N+3",
+        "examples": {
+          "N=1": 4,
+          "N=22": 25
+        },
+        "ordinals": [
+          "0=VFORM",
+          "1=SP_ADD",
+          "2+i=LOAD_i",
+          "N+2=FINAL"
+        ]
+      },
+      "FRET.RA": {
+        "phase_zero_validation": [
+          "VFORM",
+          "VTGT"
+        ],
+        "phase_one_events": [
+          "TARGET_PUBLISH",
+          "SP_ADD",
+          "LOAD_i[0..N-1]"
+        ],
+        "phase_one_count": "N+2",
+        "d3_total_rows": "N+5",
+        "examples": {
+          "N=1": 6,
+          "N=22": 27
+        },
+        "ordinals": [
+          "0=VFORM",
+          "1=VTGT",
+          "2=TARGET_PUBLISH",
+          "3=SP_ADD",
+          "4+i=LOAD_i",
+          "N+4=FINAL"
+        ]
+      },
+      "FRET.STK": {
+        "phase_zero_validation": [
+          "VFORM",
+          "VLOAD",
+          "VTGT"
+        ],
+        "phase_one_events": [
+          "SP_ADD",
+          "RESTORE_R10",
+          "TARGET_PUBLISH",
+          "LOAD_i[1..N-1]"
+        ],
+        "phase_one_count": "N+2",
+        "d3_total_rows": "N+6",
+        "examples": {
+          "N=1": 7,
+          "N=22": 28
+        },
+        "ordinals": [
+          "0=VFORM",
+          "1=VLOAD",
+          "2=VTGT",
+          "3=SP_ADD",
+          "4=RESTORE_R10",
+          "5=TARGET_PUBLISH",
+          "5+i=LOAD_i for i=1..N-1",
+          "N+5=FINAL"
+        ]
+      },
+      "malformed": {
+        "ordinals": [
+          "0=VFORM_TRAP"
+        ],
+        "d3_total_rows": 1,
+        "final_row_present": false
+      }
+    },
+    "d3_ownership": {
+      "hidden_parent_row": false,
+      "private_validator": false,
+      "rowless_validator": false,
+      "validation_rows": {
+        "VFORM": "normal ROB/block-control trap/completion/trace owner",
+        "VLOAD": "normal ROB/IQ/LIQ/LSU precise data-fault owner with no rename destination",
+        "VTGT": "normal ROB/block-control target row with owned translation and I-cache request"
+      },
+      "final_row": "normal ROB/block-control transfer/retirement/trace owner",
+      "successful_validation_retirement": "validation rows may complete but retire only in the event-zero seal transaction"
+    },
+    "vload": {
+      "eligible_memory": "complete eight-byte Normal and explicitly idempotent",
+      "forbidden_memory_zero_read": [
+        "Device/MMIO",
+        "mixed_type",
+        "unspecified_non_idempotent"
+      ],
+      "identity_fields": [
+        "owner_key",
+        "VA",
+        "translation_generation",
+        "permission_type_generation",
+        "LSID",
+        "load_id",
+        "older_store_forwarding_state",
+        "response_source",
+        "miss_refill_coherence_generation",
+        "load_generation",
+        "data"
+      ],
+      "lifecycle": [
+        "EMPTY",
+        "ISSUED",
+        "RESPONDED",
+        "ORDER_QUALIFIED",
+        "TARGET_VALIDATED",
+        "EVENT0_SEALED"
+      ],
+      "pre_seal_replay_action": [
+        "advance_load_generation",
+        "discard_value_vtgt_proof_and_lease_candidate",
+        "reject_late_old_generation_responses",
+        "rerun_VTGT_even_if_data_bit_identical"
+      ],
+      "sampling_point": "event_zero_seal",
+      "post_seal_replacement": "forbidden; enters template_integrity_fail FatalReason=2"
+    },
+    "seal_and_recovery": {
+      "event_zero_seal_transaction": [
+        "recheck_all_identities_and_generations",
+        "acquire_complete_FRET_lease",
+        "retire_successful_validation_rows_with_distinct_traces",
+        "commit_event_zero",
+        "advance_StepIndex_0_to_1"
+      ],
+      "before_seal_invalidation": "wins and cancels phase zero with no effect",
+      "after_seal_invalidation": "lease wins; producer completion waits through traps, ACRE, suspension, FINAL, or fatal release",
+      "rollback_after_seal": "forbidden for SP, GPR, memory, target, progress, and trace effects",
+      "final": "qualifies full token, performs boundary transfer/retirement, and releases lease atomically",
+      "ebstate_recoverable_retention": [
+        "exact TemplateOwnerID",
+        "phase and StepIndex cursors",
+        "sealed VLOAD state when applicable",
+        "validation token",
+        "retained lease",
+        "complete pending InvalidationTxnID/status set"
+      ],
+      "ebstate_retention_forbidden": [
+        "renumber pending invalidation entries",
+        "merge pending invalidation entries",
+        "reacquire lease entries",
+        "restore a pre-template checkpoint"
+      ],
+      "lease_directory_suspend_rule": "lease directory retains discoverability during suspension; a manager must resume through FINAL or choose fatal abandonment and cannot wait on its own deferred invalidation",
+      "final_identity": {
+        "required_matches": [
+          "group",
+          "checkpoint",
+          "template",
+          "validation",
+          "lease",
+          "VTGT key",
+          "VLOAD key or canonical invalid",
+          "visibility/share-domain",
+          "FINAL RID/slot/generation",
+          "final ordinal"
+        ],
+        "shortcut_authority_forbidden": [
+          "queue head",
+          "BID",
+          "RID value",
+          "PC",
+          "opcode",
+          "hash alone"
+        ]
+      }
+    },
+    "template_integrity_fail": {
+      "trapnum": "ASSERT_FAIL (52)",
+      "cause": 0,
+      "maskable_by_ECONFIG3": false,
+      "fixup_allowed": false,
+      "acre_continuation_allowed": false,
+      "reset_only": true,
+      "fatal_reasons": {
+        "0": "explicit abandonment",
+        "1": "dirty-template RRAT_DEFAULT",
+        "2": "sealed-VLOAD replay/withdrawal",
+        "3": "poisoned response/token",
+        "4": "exact-live ownership/generation/lease/FINAL contradiction",
+        "5": "suspended drain failure",
+        "6..255": "reserved"
+      },
+      "quiescence_owners": [
+        "ROB",
+        "LSU",
+        "target-validation",
+        "block-control",
+        "recovery",
+        "trace",
+        "redirect/transfer",
+        "lease-directory"
+      ],
+      "release_ack": "one RELEASED_AFTER_ABORT per pending matching invalidation after quiescence",
+      "fatal_teardown_order": [
+        "stop source-context issue, commit, wakeup, redirect, FINAL transfer, and new lease acquisition",
+        "snapshot exact envelope, state, owner, token, and pending transactions",
+        "advance template, row, and load generations",
+        "cancel every uncommitted row and request",
+        "invalidate VLOAD data, VTGT proof, token, and queued transfer",
+        "obtain quiescence from every listed owner before releasing the lease",
+        "atomically release the lease and create one RELEASED_AFTER_ABORT per pending matching invalidation",
+        "publish the fatal record for managing-ring inspection"
+      ],
+      "reset_reuse": {
+        "platform_reset_only": true,
+        "new_context_generation_required": true,
+        "global_quiescence_before_reset": true,
+        "no_pre_reset_ack_after_new_context_generation": true,
+        "pre_template_state_restore": "forbidden"
+      }
+    },
+    "template_owner_id": {
+      "equality": "all fields participate; mismatch is never alias",
+      "field_groups": {
+        "placement": [
+          "lxcpu_id",
+          "lxcpu_context_generation",
+          "pe_id",
+          "stid",
+          "engine_local_tid"
+        ],
+        "group": [
+          "bid",
+          "bid_robid(valid,wrap,value)",
+          "gid",
+          "gid_robid(valid,wrap,value)",
+          "group_base_rid",
+          "group_base_rid_robid(valid,wrap,value)",
+          "group_base_rob_slot",
+          "group_row_count",
+          "checkpoint_id",
+          "template_generation",
+          "source_pc",
+          "source_raw",
+          "form_id",
+          "encoded_N"
+        ],
+        "row": [
+          "row_present",
+          "row_kind",
+          "child_ordinal",
+          "rid",
+          "rid_robid(valid,wrap,value)",
+          "rob_slot",
+          "row_generation"
+        ],
+        "memory": [
+          "lsid_valid",
+          "lsid_value",
+          "lsid_wrap_or_generation",
+          "load_id_valid",
+          "load_id_value",
+          "load_id_generation",
+          "load_replay_generation",
+          "store_id_valid",
+          "store_id_value",
+          "store_id_generation"
+        ]
+      },
+      "reuse_rule": "advance applicable ROBID wrap or template/row/LSID/load/store generation before numeric reuse",
+      "late_mismatch": "reject without live mutation",
+      "exact_live_post_seal_contradiction": "template_integrity_fail FatalReason=4"
+    },
+    "lease_id": [
+      "lease_generation",
+      "validation_generation",
+      "validation_token_hash",
+      "exact_vtgt_TemplateOwnerID",
+      "exact_vload_TemplateOwnerID_or_canonical_invalid",
+      "retained_target_mapping_visibility_share_domain_key"
+    ],
+    "invalidation": {
+      "producer_bases_coalesce": false,
+      "txn_base_fields": [
+        "producer_domain",
+        "producer_kind",
+        "producer_lxcpu_id",
+        "producer_context_generation",
+        "producer_pe_id",
+        "producer_stid_valid",
+        "producer_stid",
+        "producer_tid_valid",
+        "producer_engine_local_tid",
+        "producer_endpoint_id",
+        "transaction_sequence_value",
+        "transaction_sequence_wrap_or_generation",
+        "architectural_operation",
+        "exact_operation_scope"
+      ],
+      "txn_id_fields": [
+        "complete InvalidationTxnBase",
+        "matched_LeaseID_or_explicit_NO_LEASE",
+        "lease_directory_generation_at_lookup",
+        "status_generation"
+      ],
+      "ack_id_fields": [
+        "complete InvalidationTxnID",
+        "exact_lease_owner_TemplateOwnerID_or_canonical_invalid",
+        "terminal_kind"
+      ],
+      "terminal_kinds": [
+        "NO_MATCH",
+        "CANCELED_PRE_EVENT",
+        "RELEASED_AFTER_FINAL",
+        "RELEASED_AFTER_ABORT"
+      ],
+      "nonterminal_kinds": [
+        "DEFERRED_ACTIVE"
+      ],
+      "status_rules": [
+        "each state transition increments status_generation",
+        "matching post-seal transactions independently record DEFERRED_ACTIVE",
+        "FINAL creates one RELEASED_AFTER_FINAL per pending match",
+        "fatal release creates one RELEASED_AFTER_ABORT per pending match",
+        "post-release admission performs a new lookup at new directory generation"
+      ],
+      "stale_ack_rule": "wrong producer, sequence, operation/scope, match, directory, owner, or status-generation is rejected; identical terminal AckID retransmission is idempotent",
+      "exact_scope_fields": [
+        "ACR/regime/root/ASID",
+        "VA/PA page or marker range",
+        "TLB/code/coherence domain",
+        "global/wildcard selectors"
+      ],
+      "physical_sharing_rule": "physical lookup/cancel/drain/release work may be shared only for transactions matching the same exact LeaseID; producer transaction bases, status, and AckID remain independent",
+      "admission_rules": [
+        "capacity may backpressure before admission",
+        "an admitted transaction cannot be dropped",
+        "an admitted matching transaction cannot complete before FINAL or fatal release",
+        "a manager cannot roll back or wait on its own deferred invalidation"
+      ],
+      "terminal_rules": [
+        "NO_MATCH after lookup at the transaction directory generation for nonmatches",
+        "CANCELED_PRE_EVENT only after cancellation prevents stale event-zero seal",
+        "DEFERRED_ACTIVE recorded independently for each post-seal match and is nonterminal",
+        "RELEASED_AFTER_FINAL created atomically by FINAL per pending match",
+        "RELEASED_AFTER_ABORT created atomically by fatal release per pending match after quiescence",
+        "post-release admission performs a new lookup at the new directory generation and normally receives NO_MATCH"
+      ]
+    },
+    "target_proof": {
+      "actual_current_marker_proof": "required before every FRET effect",
+      "coherent_marker_provenance_cache": "legal only when it proves the same target marker bytes, address-space state, code-visibility epoch, and invalidation scope as an actual current marker proof",
+      "metadata_only_continuation_or_fallthrough": "non-conforming compatibility; must be rejected",
+      "deferred_demand_paging": "qualified only while every FRET effect remains withheld",
+      "fault_owner": "VTGT owns translation, execute-permission, marker, and CFI faults"
+    }
+  }
+}

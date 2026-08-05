@@ -3094,6 +3094,10 @@ function exec_bstart_tmatmulmx() -> unit = { exec_tile_bstart(0b10, 0b00100) }
 function exec_bstart_tmatmulmx_acc() -> unit = { exec_tile_bstart(0b10, 0b00110) }
 function exec_bstart_tmatmulmx_bias() -> unit = { exec_tile_bstart(0b10, 0b00101) }
 function exec_bstart_tprefetch() -> unit = { exec_tile_bstart(0b01, 0b00011) }
+function exec_bstart_gmov(DataType : bits(5)) -> unit = {
+  let _datatype = DataType;
+  exec_tile_bstart(0b01, 0b01101)
+}
 function exec_fused_bstart_call(uimm5 : bits(5), embedded_setret_bytes : bits(64)) -> unit = {
   // The exact aggregate form is one atomic CALL transition composed from a
   // block-start target and an embedded C.SETRET.  The fields are independent:
@@ -3170,6 +3174,12 @@ function exec_b_dim() -> unit = {
 }
 function exec_c_b_dim() -> unit = { exec_b_dim() }
 function exec_c_b_dimi() -> unit = { exec_b_dim() }
+function exec_c_b_ios(SharedTID : bits(8)) -> unit = {
+  // Role is consumed by the surrounding BSTART schema.  The architectural
+  // index is absolute (S0..S255), not relative to a PE or queue hand.
+  shared_tile_binding_id = SharedTID;
+  shared_tile_binding_valid = true
+}
 
 function exec_b_text() -> unit = { bdesc_mark_text() }
 function exec_b_ior() -> unit = {

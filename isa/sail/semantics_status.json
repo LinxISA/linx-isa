@@ -48,23 +48,23 @@
       "mnemonic": "ASSERT",
       "status": "executable-subset"
     },
-    "b_catr_32_8f94bdb16d29": {
+    "b_catr_32_18ebd8429b53": {
       "mnemonic": "B.CATR",
       "status": "executable-subset"
     },
-    "b_datr_32_840f4b8d579d": {
+    "b_datr_32_85918343b9b5": {
       "mnemonic": "B.DATR",
       "status": "executable-subset"
     },
-    "b_dim_32_1caa1aa2944a": {
+    "b_dim_32_570ae2178c51": {
       "mnemonic": "B.DIM",
       "status": "executable-subset"
     },
-    "b_dim_32_27602ab68929": {
+    "b_dim_32_a097166c338b": {
       "mnemonic": "B.DIM",
       "status": "executable-subset"
     },
-    "b_dim_32_4191099a5f4d": {
+    "b_dim_32_f88715bdc6ea": {
       "mnemonic": "B.DIM",
       "status": "executable-subset"
     },
@@ -80,35 +80,35 @@
       "mnemonic": "B.GEU",
       "status": "executable-subset"
     },
-    "b_hint_32_69d942ff1583": {
+    "b_hint_32_67e2ad8dd981": {
       "mnemonic": "B.HINT",
       "status": "executable-subset"
     },
-    "b_hint_32_f7d01d734925": {
+    "b_hint_32_b3e8a4e77930": {
       "mnemonic": "B.HINT",
       "status": "executable-subset"
     },
-    "b_ior_32_c3ea71404eb3": {
+    "b_ior_32_df50a269be7c": {
       "mnemonic": "B.IOR",
       "status": "executable-subset"
     },
-    "b_iot_32_0f23e46d6176": {
+    "b_iot_32_36792782e584": {
       "mnemonic": "B.IOT",
       "status": "executable-subset"
     },
-    "b_iot_32_3a6945dec034": {
+    "b_iot_32_3a493c45ddfa": {
       "mnemonic": "B.IOT",
       "status": "executable-subset"
     },
-    "b_iot_32_778f84340400": {
+    "b_iot_32_437af312f86d": {
       "mnemonic": "B.IOT",
       "status": "executable-subset"
     },
-    "b_iot_32_a06b9b6c1965": {
+    "b_iot_32_84944b9c3d19": {
       "mnemonic": "B.IOT",
       "status": "executable-subset"
     },
-    "b_iot_32_f1ca66bbcce1": {
+    "b_iot_32_f17390877416": {
       "mnemonic": "B.IOT",
       "status": "executable-subset"
     },
@@ -128,7 +128,7 @@
       "mnemonic": "B.NZ",
       "status": "executable-subset"
     },
-    "b_text_32_1ce09f50e5dd": {
+    "b_text_32_6f2fe6f95841": {
       "mnemonic": "B.TEXT",
       "status": "executable-subset"
     },
@@ -160,175 +160,183 @@
       "mnemonic": "BSE",
       "status": "executable-subset"
     },
-    "bstart_32_7eb93b649748": {
+    "bstart_32_416bc417fc20": {
       "mnemonic": "BSTART",
       "status": "executable-subset"
     },
-    "bstart_32_e11e678a32ac": {
+    "bstart_32_7e66993d15d0": {
       "mnemonic": "BSTART",
       "status": "executable-subset"
     },
-    "bstart_acccvt_32_56c3ce3838c5": {
-      "mnemonic": "BSTART.ACCCVT",
-      "status": "executable-subset"
-    },
-    "bstart_call_32_9404418d1ae5": {
+    "bstart_call_32_d30ef065210c": {
       "mnemonic": "BSTART CALL",
       "status": "executable-subset"
     },
-    "bstart_fp_32_0c671a644214": {
+    "bstart_fp_32_494fe06e4fb2": {
       "mnemonic": "BSTART.FP",
       "status": "executable-subset"
     },
-    "bstart_fp_32_24db3966d6ba": {
+    "bstart_fp_32_69538a87dfb1": {
       "mnemonic": "BSTART.FP",
       "status": "executable-subset"
     },
-    "bstart_fp_32_58ad7954fb49": {
+    "bstart_fp_32_82106bc72d98": {
       "mnemonic": "BSTART.FP",
       "status": "executable-subset"
     },
-    "bstart_fp_32_7978795a29a1": {
+    "bstart_fp_32_c6cf502b7ebd": {
       "mnemonic": "BSTART.FP",
       "status": "executable-subset"
     },
-    "bstart_fp_32_d00a708a81f0": {
+    "bstart_fp_32_dea7bdf4c480": {
       "mnemonic": "BSTART.FP",
       "status": "executable-subset"
     },
-    "bstart_fp_32_dd7bc8dd694c": {
+    "bstart_fp_32_eb33ff25b92a": {
       "mnemonic": "BSTART.FP",
       "status": "executable-subset"
     },
-    "bstart_fp_32_face4f238d84": {
+    "bstart_fp_32_ed54a0ac3b7a": {
       "mnemonic": "BSTART.FP",
       "status": "executable-subset"
     },
-    "bstart_mgather_32_c9defbf18276": {
+    "bstart_gmov_32_ccfcf9904850": {
+      "mnemonic": "BSTART.GMOV",
+      "status": "executable-subset"
+    },
+    "bstart_mgather_32_477b2795765c": {
       "mnemonic": "BSTART.MGATHER",
       "status": "executable-subset"
     },
-    "bstart_mgather_cas_32_fd8c8a3b720a": {
-      "mnemonic": "BSTART.MGATHER.CAS",
-      "status": "executable-subset"
-    },
-    "bstart_mgather_mask_32_5573241cd944": {
-      "mnemonic": "BSTART.MGATHER.MASK",
-      "status": "executable-subset"
-    },
-    "bstart_mpar_32_2d163417c615": {
+    "bstart_mpar_32_beccb0565e7d": {
       "mnemonic": "BSTART.MPAR",
       "status": "executable-subset"
     },
-    "bstart_mscatter_32_0f0ba08bd798": {
+    "bstart_mscatter_32_7f76f632a75f": {
       "mnemonic": "BSTART.MSCATTER",
       "status": "executable-subset"
     },
-    "bstart_mscatter_mask_32_2a33eed646f7": {
-      "mnemonic": "BSTART.MSCATTER.MASK",
-      "status": "executable-subset"
-    },
-    "bstart_mseq_32_39343a456ec5": {
+    "bstart_mseq_32_2cdcceaf89d4": {
       "mnemonic": "BSTART.MSEQ",
       "status": "executable-subset"
     },
-    "bstart_std_32_1ef99c4cedcb": {
+    "bstart_std_32_49f2c6a8906f": {
       "mnemonic": "BSTART.STD",
       "status": "executable-subset"
     },
-    "bstart_std_32_3f6980d013f7": {
+    "bstart_std_32_696f98ac4bf1": {
       "mnemonic": "BSTART.STD",
       "status": "executable-subset"
     },
-    "bstart_std_32_441ad677fffe": {
+    "bstart_std_32_7876537dce06": {
       "mnemonic": "BSTART.STD",
       "status": "executable-subset"
     },
-    "bstart_std_32_816dfa76cc4a": {
+    "bstart_std_32_97d38b7be05e": {
       "mnemonic": "BSTART.STD",
       "status": "executable-subset"
     },
-    "bstart_std_32_986b7ee2cf6a": {
+    "bstart_std_32_a5103b49e336": {
       "mnemonic": "BSTART.STD",
       "status": "executable-subset"
     },
-    "bstart_std_32_b05390d367cf": {
+    "bstart_std_32_c386430b732a": {
       "mnemonic": "BSTART.STD",
       "status": "executable-subset"
     },
-    "bstart_std_32_c1de85e06878": {
+    "bstart_std_32_d3733f87964d": {
       "mnemonic": "BSTART.STD",
       "status": "executable-subset"
     },
-    "bstart_sys_32_762d9d84a6d8": {
+    "bstart_sys_32_7220989624e7": {
       "mnemonic": "BSTART.SYS",
       "status": "executable-subset"
     },
-    "bstart_tepl_32_bff5143d4fe3": {
+    "bstart_tepl_32_f0754cf51a8d": {
       "mnemonic": "BSTART.TEPL",
       "status": "executable-subset"
     },
-    "bstart_tgemv_32_ae19f5b678f5": {
+    "bstart_tgemv_32_5793d27aa023": {
       "mnemonic": "BSTART.TGEMV",
       "status": "executable-subset"
     },
-    "bstart_tgemv_acc_32_9a471b21913e": {
+    "bstart_tgemv_acc_32_d95ec8489341": {
       "mnemonic": "BSTART.TGEMV.ACC",
       "status": "executable-subset"
     },
-    "bstart_tgemv_bias_32_186ee96c0a8b": {
+    "bstart_tgemv_bias_32_98ff0e3b4e7b": {
       "mnemonic": "BSTART.TGEMV.BIAS",
       "status": "executable-subset"
     },
-    "bstart_tgemvmx_32_ae5e005f6589": {
+    "bstart_tgemvmx_32_a6083394d51a": {
       "mnemonic": "BSTART.TGEMVMX",
       "status": "executable-subset"
     },
-    "bstart_tgemvmx_acc_32_368647b04bb0": {
+    "bstart_tgemvmx_acc_32_750196820fcf": {
       "mnemonic": "BSTART.TGEMVMX.ACC",
       "status": "executable-subset"
     },
-    "bstart_tgemvmx_bias_32_d23011f15171": {
+    "bstart_tgemvmx_bias_32_efccafe36069": {
       "mnemonic": "BSTART.TGEMVMX.BIAS",
       "status": "executable-subset"
     },
-    "bstart_tload_32_d0c18bb0ab15": {
+    "bstart_tload_32_5178a1794614": {
       "mnemonic": "BSTART.TLOAD",
       "status": "executable-subset"
     },
-    "bstart_tmatmul_32_f9da70e4e0ad": {
+    "bstart_tmatmul_32_3bb582723869": {
       "mnemonic": "BSTART.TMATMUL",
       "status": "executable-subset"
     },
-    "bstart_tmatmul_acc_32_0c8c62e5f00a": {
+    "bstart_tmatmul_acc_32_e0bbf989304d": {
       "mnemonic": "BSTART.TMATMUL.ACC",
       "status": "executable-subset"
     },
-    "bstart_tmatmul_bias_32_4d5a498d12f3": {
+    "bstart_tmatmul_bias_32_82792b6c3b84": {
       "mnemonic": "BSTART.TMATMUL.BIAS",
       "status": "executable-subset"
     },
-    "bstart_tmatmulmx_32_e26cb3874648": {
+    "bstart_tmatmulmx_32_4df63f33e364": {
       "mnemonic": "BSTART.TMATMULMX",
       "status": "executable-subset"
     },
-    "bstart_tmatmulmx_acc_32_70fa59b0ab4c": {
+    "bstart_tmatmulmx_acc_32_3848afaeabdd": {
       "mnemonic": "BSTART.TMATMULMX.ACC",
       "status": "executable-subset"
     },
-    "bstart_tmatmulmx_bias_32_098c7efa51b0": {
+    "bstart_tmatmulmx_bias_32_5b20d174f5d9": {
       "mnemonic": "BSTART.TMATMULMX.BIAS",
       "status": "executable-subset"
     },
-    "bstart_tmov_32_211446509efb": {
+    "bstart_tmov_32_3079328b98d6": {
       "mnemonic": "BSTART.TMOV",
       "status": "executable-subset"
     },
-    "bstart_tprefetch_32_d5f83e5aadf6": {
+    "bstart_tmov_32_34d0ab432974": {
+      "mnemonic": "BSTART.TMOV",
+      "status": "executable-subset"
+    },
+    "bstart_tmov_32_68c4ed390b75": {
+      "mnemonic": "BSTART.TMOV",
+      "status": "executable-subset"
+    },
+    "bstart_tmov_32_d96181e99f01": {
+      "mnemonic": "BSTART.TMOV",
+      "status": "executable-subset"
+    },
+    "bstart_tmov_32_efe5c49fcb78": {
+      "mnemonic": "BSTART.TMOV",
+      "status": "executable-subset"
+    },
+    "bstart_tprefetch_32_3c9e83c5a42f": {
       "mnemonic": "BSTART.TPREFETCH",
       "status": "executable-subset"
     },
-    "bstart_tstore_32_4048b6e8b0f4": {
+    "bstart_tstore_32_6f6869479814": {
+      "mnemonic": "BSTART.TSTORE",
+      "status": "executable-subset"
+    },
+    "bstart_tstore_32_d592de9e15a8": {
       "mnemonic": "BSTART.TSTORE",
       "status": "executable-subset"
     },
@@ -340,7 +348,7 @@
       "mnemonic": "BSTART.VSEQ",
       "status": "executable-subset"
     },
-    "bstop_32_d25b09fdd59c": {
+    "bstop_32_1c80341ebaa2": {
       "mnemonic": "BSTOP",
       "status": "executable-subset"
     },
@@ -376,39 +384,39 @@
       "mnemonic": "C.AND",
       "status": "executable-subset"
     },
-    "c_b_dim_16_14f1b8fba5e6": {
-      "mnemonic": "C.B.DIM",
-      "status": "executable-subset"
-    },
-    "c_b_dimi_16_3f1b113c76ce": {
+    "c_b_dimi_16_f5bd6ae22b96": {
       "mnemonic": "C.B.DIMI",
       "status": "executable-subset"
     },
-    "c_bstart_16_c4e238a9227a": {
+    "c_b_ios_16_5c9d7b427740": {
+      "mnemonic": "C.B.IOS",
+      "status": "executable-subset"
+    },
+    "c_bstart_16_78ebf9b37d2d": {
       "mnemonic": "C.BSTART",
       "status": "executable-subset"
     },
-    "c_bstart_16_f833d2a4753c": {
+    "c_bstart_16_b82b9a0c292c": {
       "mnemonic": "C.BSTART",
       "status": "executable-subset"
     },
-    "c_bstart_fp_16_9dcef7e3a85b": {
+    "c_bstart_fp_16_9581dfc6187e": {
       "mnemonic": "C.BSTART.FP",
       "status": "executable-subset"
     },
-    "c_bstart_mpar_16_66c3ef2226ec": {
+    "c_bstart_mpar_16_44b1572333b1": {
       "mnemonic": "C.BSTART.MPAR",
       "status": "executable-subset"
     },
-    "c_bstart_mseq_16_b5597e0e41c2": {
+    "c_bstart_mseq_16_190877b09b0a": {
       "mnemonic": "C.BSTART.MSEQ",
       "status": "executable-subset"
     },
-    "c_bstart_std_16_8b40f078c14a": {
+    "c_bstart_std_16_f98cb0206cb1": {
       "mnemonic": "C.BSTART.STD",
       "status": "executable-subset"
     },
-    "c_bstart_sys_16_ec213ce96eb7": {
+    "c_bstart_sys_16_1c7558ab7fe7": {
       "mnemonic": "C.BSTART.SYS",
       "status": "executable-subset"
     },
@@ -420,7 +428,7 @@
       "mnemonic": "C.BSTART.VSEQ",
       "status": "executable-subset"
     },
-    "c_bstop_16_ca4743d8a95e": {
+    "c_bstop_16_08a2ad84e04b": {
       "mnemonic": "C.BSTOP",
       "status": "executable-subset"
     },
@@ -668,11 +676,11 @@
       "mnemonic": "EBREAK",
       "status": "executable-subset"
     },
-    "ercov_32_dc0be14a2d8b": {
+    "ercov_32_9b0c74795df0": {
       "mnemonic": "ERCOV",
       "status": "executable-subset"
     },
-    "esave_32_4c4f79fe3171": {
+    "esave_32_c85cb830dc0b": {
       "mnemonic": "ESAVE",
       "status": "executable-subset"
     },
@@ -720,7 +728,7 @@
       "mnemonic": "FENCE.I",
       "status": "executable-subset"
     },
-    "fentry_32_a47584ec13b6": {
+    "fentry_32_74a07f46d846": {
       "mnemonic": "FENTRY",
       "status": "executable-subset"
     },
@@ -732,7 +740,7 @@
       "mnemonic": "FEQS",
       "status": "executable-subset"
     },
-    "fexit_32_37b663f2a34d": {
+    "fexit_32_6492f41b2239": {
       "mnemonic": "FEXIT",
       "status": "executable-subset"
     },
@@ -796,11 +804,11 @@
       "mnemonic": "FRECIP",
       "status": "executable-subset"
     },
-    "fret_ra_32_659c886221c1": {
+    "fret_ra_32_b6f13adb3ea1": {
       "mnemonic": "FRET.RA",
       "status": "executable-subset"
     },
-    "fret_stk_32_4fe246bd8241": {
+    "fret_stk_32_4522597d3ce0": {
       "mnemonic": "FRET.STK",
       "status": "executable-subset"
     },
@@ -836,43 +844,43 @@
       "mnemonic": "HL.BFI",
       "status": "executable-subset"
     },
-    "hl_bstart_call_48_3c784c583c90": {
+    "hl_bstart_call_48_d71cee46ab50": {
       "mnemonic": "HL.BSTART CALL",
       "status": "executable-subset"
     },
-    "hl_bstart_fp_48_038e2e96cf64": {
+    "hl_bstart_fp_48_0368fb7424f4": {
       "mnemonic": "HL.BSTART.FP",
       "status": "executable-subset"
     },
-    "hl_bstart_fp_48_43530d2ebfae": {
+    "hl_bstart_fp_48_9955c1f823f6": {
       "mnemonic": "HL.BSTART.FP",
       "status": "executable-subset"
     },
-    "hl_bstart_fp_48_81b457553844": {
+    "hl_bstart_fp_48_9a0544563449": {
       "mnemonic": "HL.BSTART.FP",
       "status": "executable-subset"
     },
-    "hl_bstart_fp_48_eb938e9200eb": {
+    "hl_bstart_fp_48_f074f1e2c089": {
       "mnemonic": "HL.BSTART.FP",
       "status": "executable-subset"
     },
-    "hl_bstart_std_48_51f78942222e": {
+    "hl_bstart_std_48_170d04be4f7e": {
       "mnemonic": "HL.BSTART.STD",
       "status": "executable-subset"
     },
-    "hl_bstart_std_48_9ba705710872": {
+    "hl_bstart_std_48_436ff4a95f39": {
       "mnemonic": "HL.BSTART.STD",
       "status": "executable-subset"
     },
-    "hl_bstart_std_48_b13f22c7c4a3": {
+    "hl_bstart_std_48_4eff98193028": {
       "mnemonic": "HL.BSTART.STD",
       "status": "executable-subset"
     },
-    "hl_bstart_std_48_d814d26508a4": {
+    "hl_bstart_std_48_c970f578674f": {
       "mnemonic": "HL.BSTART.STD",
       "status": "executable-subset"
     },
-    "hl_bstart_sys_48_5bf0381f7bf8": {
+    "hl_bstart_sys_48_54ff489122fe": {
       "mnemonic": "HL.BSTART.SYS",
       "status": "executable-subset"
     },
@@ -1312,15 +1320,15 @@
       "mnemonic": "HL.PRFI.UA",
       "status": "executable-subset"
     },
-    "hl_qmt_48_eb9e41958045": {
+    "hl_qmt_48_e99d838fab5c": {
       "mnemonic": "HL.QMT",
       "status": "executable-subset"
     },
-    "hl_qpop_48_a2c57f5bc27b": {
+    "hl_qpop_48_15aeb8bc347e": {
       "mnemonic": "HL.QPOP",
       "status": "executable-subset"
     },
-    "hl_qpush_48_3eab8e05d61a": {
+    "hl_qpush_48_6183db9ebfd4": {
       "mnemonic": "HL.QPUSH",
       "status": "executable-subset"
     },
@@ -1628,39 +1636,39 @@
       "mnemonic": "JR",
       "status": "executable-subset"
     },
-    "l_bstart_fp_64_098e57019d7b": {
+    "l_bstart_fp_64_52a1fd45d908": {
       "mnemonic": "L.BSTART.FP",
       "status": "executable-subset"
     },
-    "l_bstart_fp_64_0cac9941f7d4": {
+    "l_bstart_fp_64_59792b6f0002": {
       "mnemonic": "L.BSTART.FP",
       "status": "executable-subset"
     },
-    "l_bstart_fp_64_2067ad6667ed": {
+    "l_bstart_fp_64_9673fedb498b": {
       "mnemonic": "L.BSTART.FP",
       "status": "executable-subset"
     },
-    "l_bstart_fp_64_8115c042ef26": {
+    "l_bstart_fp_64_b27a4726298b": {
       "mnemonic": "L.BSTART.FP",
       "status": "executable-subset"
     },
-    "l_bstart_std_64_37e84068ce61": {
+    "l_bstart_std_64_40bf385dbbff": {
       "mnemonic": "L.BSTART.STD",
       "status": "executable-subset"
     },
-    "l_bstart_std_64_463a1567da91": {
+    "l_bstart_std_64_49b7cf990e62": {
       "mnemonic": "L.BSTART.STD",
       "status": "executable-subset"
     },
-    "l_bstart_std_64_72d502fcd30d": {
+    "l_bstart_std_64_9a6081ab8f08": {
       "mnemonic": "L.BSTART.STD",
       "status": "executable-subset"
     },
-    "l_bstart_std_64_899592f9c5bc": {
+    "l_bstart_std_64_ed61315d3418": {
       "mnemonic": "L.BSTART.STD",
       "status": "executable-subset"
     },
-    "l_bstart_sys_64_919e576c79e4": {
+    "l_bstart_sys_64_3e3b45c148bc": {
       "mnemonic": "L.BSTART.SYS",
       "status": "executable-subset"
     },
@@ -1872,7 +1880,7 @@
       "mnemonic": "MAXU",
       "status": "executable-subset"
     },
-    "mcopy_32_4fc4a803e995": {
+    "mcopy_32_10262506ace5": {
       "mnemonic": "MCOPY",
       "status": "executable-subset"
     },
@@ -1884,7 +1892,7 @@
       "mnemonic": "MINU",
       "status": "executable-subset"
     },
-    "mset_32_0b932f291932": {
+    "mset_32_7a5f3c26ac6b": {
       "mnemonic": "MSET",
       "status": "executable-subset"
     },
@@ -3024,7 +3032,7 @@
       "mnemonic": "V.XORI",
       "status": "executable-subset"
     },
-    "xb_32_40ad190a0a7f": {
+    "xb_32_1c3043ef6fa8": {
       "mnemonic": "XB",
       "status": "executable-subset"
     },
@@ -3046,5 +3054,5 @@
     }
   },
   "schema_version": "linx-sail-status-v0.57.1",
-  "spec_version": "0.57.1"
+  "spec_version": "0.58.0"
 }

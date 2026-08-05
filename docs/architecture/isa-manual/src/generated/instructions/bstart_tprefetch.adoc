@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.TPREFETCH DataType
 
-*Description:* Named TMA-family Function=3. TPREFETCH has the same address, layout, memory, fault, ordering, and restart contract as TLOAD, with destination binding/allocation/writeback effects removed.
+*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 *Encoding:*
 
@@ -17,4 +17,4 @@ image::encodings/enc_bstart_tprefetch.svg[BSTART.TPREFETCH encoding,width=800]
 
 *Compression:* L32 (len=32)
 
-*Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "v0.57 TMA Function=3; TLOAD address/memory contract without destination side effects", "source": "group_rule", "uop_kind": "CMD"}`
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "v0.58 TMA Function=3; TLOAD address/memory contract without destination side effects", "source": "group_rule", "uop_kind": "CMD"}`

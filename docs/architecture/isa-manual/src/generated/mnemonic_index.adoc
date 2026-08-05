@@ -3,7 +3,7 @@
 [[mnemonic-index]]
 === Mnemonic index
 
-This table lists unique mnemonics in the v0.57.1 catalog. Each mnemonic may have multiple encodable forms (different lengths, operand layouts, or suffix variants).
+This table lists unique mnemonics in the v0.58.0 catalog. Each mnemonic may have multiple encodable forms (different lengths, operand layouts, or suffix variants).
 
 [cols="2,3,1,1",options="header"]
 |===
@@ -20,20 +20,20 @@ This table lists unique mnemonics in the v0.57.1 catalog. Each mnemonic may have
 |`ANDIW` |Arithmetic Operation 32bit |32 |1
 |`ANDW` |Arithmetic Operation 32bit |32 |1
 |`ASSERT` |Execution Control |32 |1
-|`B.CATR` |Block Control Attribute |32 |1
-|`B.DATR` |Block Data Attribute |32 |1
-|`B.DIM` |Block Argument |32 |3
+|`B.CATR` |Bundle Control Attribute |32 |1
+|`B.DATR` |Bundle Data Attribute |32 |1
+|`B.DIM` |Bundle Argument |32 |3
 |`B.EQ` |Branch |32 |1
 |`B.GE` |Branch |32 |1
 |`B.GEU` |Branch |32 |1
-|`B.HINT` |Block Hint |32 |2
-|`B.IOR` |Block Input & Output |32 |1
-|`B.IOT` |Block Input & Output |32 |5
+|`B.HINT` |Bundle Hint |32 |2
+|`B.IOR` |Bundle Input & Output |32 |1
+|`B.IOT` |Bundle Input & Output |32 |5
 |`B.LT` |Branch |32 |1
 |`B.LTU` |Branch |32 |1
 |`B.NE` |Branch |32 |1
 |`B.NZ` |Branch |32 |1
-|`B.TEXT` |Block Offset |32 |1
+|`B.TEXT` |Bundle Offset |32 |1
 |`B.Z` |Branch |32 |1
 |`BC.IALL` |Cache Maintain |32 |1
 |`BC.IVA` |Cache Maintain |32 |1
@@ -41,39 +41,36 @@ This table lists unique mnemonics in the v0.57.1 catalog. Each mnemonic may have
 |`BIC` |Bit Operation |32 |1
 |`BIS` |Bit Operation |32 |1
 |`BSE` |Execution Control |32 |1
-|`BSTART` |Block Split |32 |2
+|`BSTART` |Bundle Split |32 |2
 |`BSTART CALL` |BSTART |32 |1
-|`BSTART.ACCCVT` |Block Split |32 |1
-|`BSTART.FP` |Block Split |32 |7
-|`BSTART.MGATHER` |Block Split |32 |1
-|`BSTART.MGATHER.CAS` |Block Split |32 |1
-|`BSTART.MGATHER.MASK` |Block Split |32 |1
-|`BSTART.MPAR` |Block Split |32 |1
-|`BSTART.MSCATTER` |Block Split |32 |1
-|`BSTART.MSCATTER.MASK` |Block Split |32 |1
-|`BSTART.MSEQ` |Block Split |32 |1
-|`BSTART.STD` |Block Split |32 |7
-|`BSTART.SYS` |Block Split |32 |1
-|`BSTART.TEPL` |Block Split |32 |1
-|`BSTART.TGEMV` |Block Split |32 |1
-|`BSTART.TGEMV.ACC` |Block Split |32 |1
-|`BSTART.TGEMV.BIAS` |Block Split |32 |1
-|`BSTART.TGEMVMX` |Block Split |32 |1
-|`BSTART.TGEMVMX.ACC` |Block Split |32 |1
-|`BSTART.TGEMVMX.BIAS` |Block Split |32 |1
-|`BSTART.TLOAD` |Block Split |32 |1
-|`BSTART.TMATMUL` |Block Split |32 |1
-|`BSTART.TMATMUL.ACC` |Block Split |32 |1
-|`BSTART.TMATMUL.BIAS` |Block Split |32 |1
-|`BSTART.TMATMULMX` |Block Split |32 |1
-|`BSTART.TMATMULMX.ACC` |Block Split |32 |1
-|`BSTART.TMATMULMX.BIAS` |Block Split |32 |1
-|`BSTART.TMOV` |Block Split |32 |1
-|`BSTART.TPREFETCH` |Block Split |32 |1
-|`BSTART.TSTORE` |Block Split |32 |1
+|`BSTART.FP` |Bundle Split |32 |7
+|`BSTART.GMOV` |Bundle Split |32 |1
+|`BSTART.MGATHER` |Bundle Split |32 |1
+|`BSTART.MPAR` |Bundle Split |32 |1
+|`BSTART.MSCATTER` |Bundle Split |32 |1
+|`BSTART.MSEQ` |Bundle Split |32 |1
+|`BSTART.STD` |Bundle Split |32 |7
+|`BSTART.SYS` |Bundle Split |32 |1
+|`BSTART.TEPL` |Bundle Split |32 |1
+|`BSTART.TGEMV` |Bundle Split |32 |1
+|`BSTART.TGEMV.ACC` |Bundle Split |32 |1
+|`BSTART.TGEMV.BIAS` |Bundle Split |32 |1
+|`BSTART.TGEMVMX` |Bundle Split |32 |1
+|`BSTART.TGEMVMX.ACC` |Bundle Split |32 |1
+|`BSTART.TGEMVMX.BIAS` |Bundle Split |32 |1
+|`BSTART.TLOAD` |Bundle Split |32 |1
+|`BSTART.TMATMUL` |Bundle Split |32 |1
+|`BSTART.TMATMUL.ACC` |Bundle Split |32 |1
+|`BSTART.TMATMUL.BIAS` |Bundle Split |32 |1
+|`BSTART.TMATMULMX` |Bundle Split |32 |1
+|`BSTART.TMATMULMX.ACC` |Bundle Split |32 |1
+|`BSTART.TMATMULMX.BIAS` |Bundle Split |32 |1
+|`BSTART.TMOV` |Bundle Split |32 |5
+|`BSTART.TPREFETCH` |Bundle Split |32 |1
+|`BSTART.TSTORE` |Bundle Split |32 |2
 |`BSTART.VPAR` |Block Split |32 |1
 |`BSTART.VSEQ` |Block Split |32 |1
-|`BSTOP` |Block Split |32 |1
+|`BSTOP` |Bundle Split |32 |1
 |`BWE` |Execution Control |32 |1
 |`BWI` |Execution Control |32 |1
 |`BWT` |Execution Control |32 |1
@@ -82,9 +79,9 @@ This table lists unique mnemonics in the v0.57.1 catalog. Each mnemonic may have
 |`C.ADD` |Arithmetic Operation |16 |1
 |`C.ADDI` |Arithmetic |16 |1
 |`C.AND` |Arithmetic Operation |16 |1
-|`C.B.DIM` |Block Dimension |16 |1
-|`C.B.DIMI` |Block Dimension |16 |1
-|`C.BSTART` |Block Split |16 |2
+|`C.B.DIMI` |Bundle Dimension |16 |1
+|`C.B.IOS` |Bundle Shared Operand Binding |16 |1
+|`C.BSTART` |Bundle Split |16 |2
 |`C.BSTART.FP` |C.BSTART |16 |1
 |`C.BSTART.MPAR` |C.BSTART |16 |1
 |`C.BSTART.MSEQ` |C.BSTART |16 |1
@@ -92,7 +89,7 @@ This table lists unique mnemonics in the v0.57.1 catalog. Each mnemonic may have
 |`C.BSTART.SYS` |C.BSTART |16 |1
 |`C.BSTART.VPAR` |C.BSTART |16 |1
 |`C.BSTART.VSEQ` |C.BSTART |16 |1
-|`C.BSTOP` |Block Split |16 |1
+|`C.BSTOP` |Bundle Split |16 |1
 |`C.CMP.EQI` |C.TINST |16 |1
 |`C.CMP.NEI` |C.TINST |16 |1
 |`C.EBREAK` |C.TINST |16 |1
@@ -154,8 +151,8 @@ This table lists unique mnemonics in the v0.57.1 catalog. Each mnemonic may have
 |`DIVW` |Multi-Cycle ALU |32 |1
 |`DMA` |DMA Operation |32 |1
 |`EBREAK` |Execution Control |32 |1
-|`ERCOV` |Block Split |32 |1
-|`ESAVE` |Block Split |32 |1
+|`ERCOV` |Bundle Split |32 |1
+|`ESAVE` |Bundle Split |32 |1
 |`FABS` |Floating-point Arithmetic |32 |1
 |`FADD` |Floating-point Arithmetic |32 |1
 |`FCVT` |Format Convert |32 |1
@@ -167,10 +164,10 @@ This table lists unique mnemonics in the v0.57.1 catalog. Each mnemonic may have
 |`FDIV` |Floating-point Arithmetic |32 |1
 |`FENCE.D` |Execution Control |32 |1
 |`FENCE.I` |Execution Control |32 |1
-|`FENTRY` |Block Split |32 |1
+|`FENTRY` |Bundle Split |32 |1
 |`FEQ` |Floating-point Compare |32 |1
 |`FEQS` |Floating-point Compare |32 |1
-|`FEXIT` |Block Split |32 |1
+|`FEXIT` |Bundle Split |32 |1
 |`FEXP` |Floating-point Arithmetic |32 |1
 |`FGE` |Floating-point Compare |32 |1
 |`FGES` |Floating-point Compare |32 |1
@@ -186,8 +183,8 @@ This table lists unique mnemonics in the v0.57.1 catalog. Each mnemonic may have
 |`FNMADD` |Floating-point Arithmetic |32 |1
 |`FNMSUB` |Floating-point Arithmetic |32 |1
 |`FRECIP` |Floating-point Arithmetic |32 |1
-|`FRET.RA` |Block Split |32 |1
-|`FRET.STK` |Block Split |32 |1
+|`FRET.RA` |Bundle Split |32 |1
+|`FRET.STK` |Bundle Split |32 |1
 |`FSQRT` |Floating-point Arithmetic |32 |1
 |`FSUB` |Floating-point Arithmetic |32 |1
 |`HL.ADDI` |Arithmetic Operation 64bit |48 |1
@@ -443,10 +440,10 @@ This table lists unique mnemonics in the v0.57.1 catalog. Each mnemonic may have
 |`MADDW` |Multi-Cycle ALU |32 |1
 |`MAX` |Max-Min |32 |1
 |`MAXU` |Max-Min |32 |1
-|`MCOPY` |Block Split |32 |1
+|`MCOPY` |Bundle Split |32 |1
 |`MIN` |Max-Min |32 |1
 |`MINU` |Max-Min |32 |1
-|`MSET` |Block Split |32 |1
+|`MSET` |Bundle Split |32 |1
 |`MUL` |Multi-Cycle ALU |32 |1
 |`MULU` |Multi-Cycle ALU |32 |1
 |`MULUW` |Multi-Cycle ALU |32 |1
@@ -731,7 +728,7 @@ This table lists unique mnemonics in the v0.57.1 catalog. Each mnemonic may have
 |`V.SWI.U.BRG` |Store Offset |64 |1
 |`V.XOR` |Arithmetic Operation |64 |1
 |`V.XORI` |Arithmetic Operation |64 |1
-|`XB` |Block Split |32 |1
+|`XB` |Bundle Split |32 |1
 |`XOR` |Arithmetic Operation 64bit |32 |1
 |`XORI` |Arithmetic Operation 64bit |32 |1
 |`XORIW` |Arithmetic Operation 32bit |32 |1

@@ -1,0 +1,77 @@
+{
+  "$schema": "https://docs.openclaw.ai/schemas/linxisa/release_manifest.v1.json",
+  "profile": "v0.58",
+  "version": "0.58.0",
+  "source_lock": "isa/v0.58/pto-spec.lock.json",
+  "policy": {
+    "pto_spec_is_sole_source_for_scalar_block": true,
+    "linx_vector_extension_is_additive": true,
+    "legacy_decode_allowed": false,
+    "unlisted_selectors_reserved": true
+  },
+  "cardinality": {
+    "tile_operations": 106,
+    "tile_families": {
+      "CUBE": 12,
+      "TEPL": 87,
+      "TMA": 7
+    },
+    "command_forms": 96,
+    "command_form_families": {
+      "BBD": 25,
+      "CMD": 71
+    },
+    "scalar_forms": 474,
+    "linx_vector_reservations": 6
+  },
+  "migration_aliases": {},
+  "deleted_names": [
+    "ACCCVT",
+    "MGATHER_CAS",
+    "MGATHER_MASK",
+    "MSCATTER_MASK",
+    "TADDC",
+    "TADDSC",
+    "TALLOC",
+    "TAXPY",
+    "TDEINTERLEAVE",
+    "TFMOD",
+    "TFMODS",
+    "TFREE",
+    "TGATHERB",
+    "THISTOGRAM",
+    "TINTERLEAVE",
+    "TLRELU",
+    "TPARTARGMAX",
+    "TPARTARGMIN",
+    "TPOP",
+    "TPRELU",
+    "TPUSH",
+    "TRESHAPE",
+    "TSUBC",
+    "TSUBSC"
+  ],
+  "rejected_names": [
+    "TEXRACT",
+    "TFILL/TEXPANDS",
+    "TPOW",
+    "TPOWS"
+  ],
+  "elf_identity": {
+    "alignment_bytes": 4,
+    "descriptor_encoding": "UTF-8 JSON with lexicographically sorted keys and no insignificant whitespace",
+    "descriptor_fields": [
+      "release",
+      "encoding_abi",
+      "encoding_projection_sha256"
+    ],
+    "descriptor_nul_terminated": false,
+    "link_policy": "all input identities must be present and exactly equal",
+    "load_policy": "the image identity must exactly match the implementation identity",
+    "name_size_bytes": 4,
+    "note_name": "PTO",
+    "note_type": "PTO_NT_ISA_IDENTITY",
+    "note_type_value": 1,
+    "section": ".note.pto.isa"
+  }
+}

@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.TMATMUL.ACC DataType
 
-*Description:* Named CUBE-family Function=2. Requires B.DIM (LB0/LB1/LB2 as m,n,k) and tile bindings via B.IOT.
+*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 *Encoding:*
 

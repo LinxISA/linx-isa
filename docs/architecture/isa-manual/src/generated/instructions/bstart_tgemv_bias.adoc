@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.TGEMV.BIAS DataType
 
-*Description:* Named CUBE-family Function=17. Matrix-vector multiply with bias; requires B.DIM and CUBE tile bindings.
+*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 *Encoding:*
 
@@ -17,4 +17,4 @@ image::encodings/enc_bstart_tgemv_bias.svg[BSTART.TGEMV.BIAS encoding,width=800]
 
 *Compression:* L32 (len=32)
 
-*Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "v0.57 CUBE Function=17", "source": "group_rule", "uop_kind": "CMD"}`
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "v0.58 CUBE Function=17", "source": "group_rule", "uop_kind": "CMD"}`

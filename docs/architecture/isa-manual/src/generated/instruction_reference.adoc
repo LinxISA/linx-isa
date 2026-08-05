@@ -88,33 +88,33 @@
 |`SETRET` |32 |- |`setret uimm, ->Ra` |-
 |===
 
-[[insnref-block-control-attribute]]
-=== Block Control Attribute
+[[insnref-bundle-control-attribute]]
+=== Bundle Control Attribute
 
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`B.CATR` |32 |- |`B.CATR {trap, atomic, <aq, rl, aqrl>, far, dr}` |PTO ISA 0.57.1 control attributes. Only DR[26], trap[19], far[18], atom[17], aq[16], and rl[15] are variable.
+|`B.CATR` |32 |- |`B.CATR {trap, atomic, <aq, rl, aqrl>, far, dr}` |Latches bundle control, trap, atomic, ordering, and address-class attributes.
 |===
 
-[[insnref-block-data-attribute]]
-=== Block Data Attribute
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`B.DATR` |32 |- |`B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize}` |PTO ISA 0.57.1 data attributes. PadValueOrByteId is an opcode-defined two-bit union; bits 19:18 are reserved zero.
-|===
-
-[[insnref-block-argument]]
-=== Block Argument
+[[insnref-bundle-data-attribute]]
+=== Bundle Data Attribute
 
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`B.DIM` |32 |- |`B.DIM RegSrc, uimm, ->LB2` |-
-|`B.DIM` |32 |- |`B.DIM RegSrc, uimm, ->LB0` |-
-|`B.DIM` |32 |- |`B.DIM RegSrc, uimm, ->LB1` |-
+|`B.DATR` |32 |- |`B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize}` |Latches tile layout, data type, padding, conversion, rounding, and saturation attributes.
+|===
+
+[[insnref-bundle-argument]]
+=== Bundle Argument
+
+[cols="1,1,2,4,6",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`B.DIM` |32 |- |`B.DIM RegSrc, uimm, ->LB1` |Writes one of the three bundle-local dimension registers.
+|`B.DIM` |32 |- |`B.DIM RegSrc, uimm, ->LB0` |Writes one of the three bundle-local dimension registers.
+|`B.DIM` |32 |- |`B.DIM RegSrc, uimm, ->LB2` |Writes one of the three bundle-local dimension registers.
 |===
 
 [[insnref-branch]]
@@ -135,37 +135,37 @@
 |`JR` |32 |- |`jr SrcL, label` |-
 |===
 
-[[insnref-block-hint]]
-=== Block Hint
+[[insnref-bundle-hint]]
+=== Bundle Hint
 
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`B.HINT` |32 |- |`B.HINT {BR.{likely, unlikely}, TEMP.{hot, warm, cool, none}, PRFSIZE}` |-
-|`B.HINT` |32 |- |`B.HINT TRACE.{begin, end}` |Bits 31:16 are reserved zero.
+|`B.HINT` |32 |- |`B.HINT TRACE.{begin, end}` |Records non-functional branch, temperature, prefetch-size, or trace guidance.
+|`B.HINT` |32 |- |`B.HINT {BR.{likely, unlikely}, TEMP.{hot, warm, cool, none}, PRFSIZE}` |Records non-functional branch, temperature, prefetch-size, or trace guidance.
 |===
 
-[[insnref-block-input-output]]
-=== Block Input & Output
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`B.IOR` |32 |- |`B.IOR [RegSrc0, RegSrc1, RegSrc2],[RegDst]` |-
-|`B.IOT` |32 |- |`B.IOT SrcTile0<.reuse>, <last>, ->DstTile<Size>` |PTO ISA 0.57.1 one-source descriptor. Inactive source and reuse fields encode zero.
-|`B.IOT` |32 |- |`B.IOT SrcTile0<.reuse>, SrcTile1<.reuse>, <last>, ->DstTile<Size>` |PTO ISA 0.57.1 two-source descriptor. imm4 3..9 selects 128B..8KiB; ACC is never encoded as DstTile.
-|`B.IOT` |32 |- |`B.IOT SrcTile0<.reuse>, <last>` |PTO ISA 0.57.1 one-source destination-free descriptor. All inapplicable fields encode zero.
-|`B.IOT` |32 |- |`B.IOT <last>, ->DstTile<Size>` |PTO ISA 0.57.1 zero-source destination descriptor. Inactive source and reuse fields encode zero.
-|`B.IOT` |32 |- |`B.IOT SrcTile0<.reuse>, SrcTile1<.reuse>, <last>` |PTO ISA 0.57.1 two-source destination-free descriptor. DstTile and imm4 encode zero; zero does not name an output.
-|===
-
-[[insnref-block-offset]]
-=== Block Offset
+[[insnref-bundle-input-output]]
+=== Bundle Input & Output
 
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`B.TEXT` |32 |- |`B.TEXT <label>` |-
+|`B.IOR` |32 |- |`B.IOR [RegSrc0, RegSrc1, RegSrc2],[RegDst]` |Binds encoded scalar inputs and outputs to the current bundle interface.
+|`B.IOT` |32 |- |`B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>` |Binds v5 PE_MASK, ordered Local tile sources, last-use, and optional TSize/2-bit Local destination metadata; reuse bits do not exist.
+|`B.IOT` |32 |- |`B.IOT mask=PE_MASK, <last> <, ->DstTile<TSize>>` |Binds v5 PE_MASK, ordered Local tile sources, last-use, and optional TSize/2-bit Local destination metadata; TSize=DstTile=0 is the mask-only Shared TLOAD/TSTORE companion and PE_MASK=0000 is a legal no-op.
+|`B.IOT` |32 |- |`B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<TSize>` |Binds v5 PE_MASK, ordered Local tile sources, last-use, and optional TSize/2-bit Local destination metadata; reuse bits do not exist.
+|`B.IOT` |32 |- |`B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<TSize>` |Binds v5 PE_MASK, ordered Local tile sources, last-use, and optional TSize/2-bit Local destination metadata; reuse bits do not exist.
+|`B.IOT` |32 |- |`B.IOT SrcTile0, mask=PE_MASK, <last>` |Binds v5 PE_MASK, ordered Local tile sources, last-use, and optional TSize/2-bit Local destination metadata; reuse bits do not exist.
+|===
+
+[[insnref-bundle-offset]]
+=== Bundle Offset
+
+[cols="1,1,2,4,6",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`B.TEXT` |32 |- |`B.TEXT <label>` |Sets the out-of-line body entry address for a decoupled bundle.
 |===
 
 [[insnref-cache-maintain]]
@@ -208,69 +208,69 @@
 |`REV` |32 |- |`rev SrcL, M, N, ->{t, u, Rd}` |-
 |===
 
-[[insnref-block-split]]
-=== Block Split
+[[insnref-bundle-split]]
+=== Bundle Split
 
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`BSTART` |32 |- |`BSTART {DIRECT, CALL}, <label>` |-
-|`BSTART` |32 |- |`BSTART COND, <label>` |-
-|`BSTART.ACCCVT` |32 |- |`BSTART.ACCCVT DataType` |Named CUBE-family Function=8. ACCCVT reads implicit ACC and uses B.DATR conversion controls before publishing an ordinary Tile.
-|`BSTART.FP` |32 |- |`BSTART.FP RET` |Bits 31:15 are reserved zero.
-|`BSTART.FP` |32 |- |`BSTART.FP ICALL` |Bits 31:15 are reserved zero.
-|`BSTART.FP` |32 |- |`BSTART.FP COND, <label>` |-
-|`BSTART.FP` |32 |- |`BSTART.FP IND` |Bits 31:15 are reserved zero.
-|`BSTART.FP` |32 |- |`BSTART.FP DIRECT, <label>` |-
-|`BSTART.FP` |32 |- |`BSTART.FP CALL, <label>` |-
-|`BSTART.FP` |32 |- |`BSTART.FP FALL<, fixup_label>` |-
-|`BSTART.MGATHER` |32 |- |`BSTART.MGATHER DataType` |TMA Function=4. Memory gather uses B.DATR/B.IOR/B.IOT descriptor state.
-|`BSTART.MGATHER.CAS` |32 |- |`BSTART.MGATHER.CAS DataType` |Named TMA-family Function=8. Per-element atomic compare-and-swap gather; detailed PTO selector manifest is defined out-of-band for v0.57.
-|`BSTART.MGATHER.MASK` |32 |- |`BSTART.MGATHER.MASK DataType` |Named TMA-family Function=6. Masked memory gather; detailed PTO selector manifest is defined out-of-band for v0.57.
-|`BSTART.MPAR` |32 |- |`BSTART.MPAR <VS8, VS16>` |-
-|`BSTART.MSCATTER` |32 |- |`BSTART.MSCATTER DataType` |TMA Function=5. Memory scatter uses B.DATR/B.IOR/B.IOT descriptor state.
-|`BSTART.MSCATTER.MASK` |32 |- |`BSTART.MSCATTER.MASK DataType` |Named TMA-family Function=7. Masked memory scatter; detailed PTO selector manifest is defined out-of-band for v0.57.
-|`BSTART.MSEQ` |32 |- |`BSTART.MSEQ <VS8, VS16>` |-
-|`BSTART.STD` |32 |- |`BSTART.STD COND, <label>` |-
-|`BSTART.STD` |32 |- |`BSTART.STD ICALL` |Bits 31:15 are reserved zero.
-|`BSTART.STD` |32 |- |`BSTART.STD FALL<, fixup_label>` |-
-|`BSTART.STD` |32 |- |`BSTART.STD RET` |Bits 31:15 are reserved zero.
-|`BSTART.STD` |32 |- |`BSTART.STD IND` |Bits 31:15 are reserved zero.
-|`BSTART.STD` |32 |- |`BSTART.STD CALL, <label>` |-
-|`BSTART.STD` |32 |- |`BSTART.STD DIRECT, <label>` |-
-|`BSTART.SYS` |32 |- |`BSTART.SYS FALL<, fixup_label>` |-
-|`BSTART.TEPL` |32 |- |`BSTART.TEPL Mode, Function, DataType` |PTO ISA 0.57.1 TEPL selector: logical_selector=(Mode<<5)\|Function. There is no legacy 10-bit TileOpcode decode.
-|`BSTART.TGEMV` |32 |- |`BSTART.TGEMV DataType` |Named CUBE-family Function=16. Matrix-vector multiply; requires B.DIM and CUBE tile bindings.
-|`BSTART.TGEMV.ACC` |32 |- |`BSTART.TGEMV.ACC DataType` |Named CUBE-family Function=18. Matrix-vector multiply-accumulate; requires B.DIM and CUBE tile bindings.
-|`BSTART.TGEMV.BIAS` |32 |- |`BSTART.TGEMV.BIAS DataType` |Named CUBE-family Function=17. Matrix-vector multiply with bias; requires B.DIM and CUBE tile bindings.
-|`BSTART.TGEMVMX` |32 |- |`BSTART.TGEMVMX DataType` |Named CUBE-family Function=20. Micro-scaled matrix-vector multiply; requires B.DIM and CUBE tile bindings.
-|`BSTART.TGEMVMX.ACC` |32 |- |`BSTART.TGEMVMX.ACC DataType` |Named CUBE-family Function=22. Micro-scaled matrix-vector multiply-accumulate; requires B.DIM and CUBE tile bindings.
-|`BSTART.TGEMVMX.BIAS` |32 |- |`BSTART.TGEMVMX.BIAS DataType` |Named CUBE-family Function=21. Micro-scaled matrix-vector multiply with bias; requires B.DIM and CUBE tile bindings.
-|`BSTART.TLOAD` |32 |- |`BSTART.TLOAD DataType` |TMA Function=0. Uses B.DATR layout/pad and B.IOR stride/base plus B.IOT tile binding.
-|`BSTART.TMATMUL` |32 |- |`BSTART.TMATMUL DataType` |Named CUBE-family Function=0. Requires B.DIM (LB0/LB1/LB2 as m,n,k) and tile bindings via B.IOT.
-|`BSTART.TMATMUL.ACC` |32 |- |`BSTART.TMATMUL.ACC DataType` |Named CUBE-family Function=2. Requires B.DIM (LB0/LB1/LB2 as m,n,k) and tile bindings via B.IOT.
-|`BSTART.TMATMUL.BIAS` |32 |- |`BSTART.TMATMUL.BIAS DataType` |Named CUBE-family Function=1. Matrix multiply with bias; requires B.DIM and CUBE tile bindings.
-|`BSTART.TMATMULMX` |32 |- |`BSTART.TMATMULMX DataType` |Named CUBE-family Function=4. Micro-scaled matrix multiply; requires B.DIM and CUBE tile bindings.
-|`BSTART.TMATMULMX.ACC` |32 |- |`BSTART.TMATMULMX.ACC DataType` |Named CUBE-family Function=6. Micro-scaled matrix multiply-accumulate; requires B.DIM and CUBE tile bindings.
-|`BSTART.TMATMULMX.BIAS` |32 |- |`BSTART.TMATMULMX.BIAS DataType` |Named CUBE-family Function=5. Micro-scaled matrix multiply with bias; requires B.DIM and CUBE tile bindings.
-|`BSTART.TMOV` |32 |- |`BSTART.TMOV DataType` |Alias of BSTART.TMA Function=2. TMOV is tile-state only (no GM memory access) and destination allocation is queue-push only.
-|`BSTART.TPREFETCH` |32 |- |`BSTART.TPREFETCH DataType` |Named TMA-family Function=3. TPREFETCH has the same address, layout, memory, fault, ordering, and restart contract as TLOAD, with destination binding/allocation/writeback effects removed.
-|`BSTART.TSTORE` |32 |- |`BSTART.TSTORE DataType` |TMA Function=1. Uses B.DATR layout/pad and B.IOR stride/base plus B.IOT tile binding.
-|`BSTART.VPAR` |32 |- |`BSTART.VPAR <VS8, VS16>` |TVEC-equivalent parallel SIMT header; requires B.TEXT body target in decoupled form.
-|`BSTART.VSEQ` |32 |- |`BSTART.VSEQ <VS8, VS16>` |TVEC-equivalent sequential SIMT header; requires B.TEXT body target in decoupled form.
-|`BSTOP` |32 |- |`BSTOP` |-
-|`C.BSTART` |16 |- |`C.BSTART COND, label` |-
-|`C.BSTART` |16 |- |`C.BSTART DIRECT, label` |-
-|`C.BSTOP` |16 |- |`C.BSTOP` |-
-|`ERCOV` |32 |- |`ERCOV [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]` |-
-|`ESAVE` |32 |- |`ESAVE [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]` |-
-|`FENTRY` |32 |- |`FENTRY [RegSrc0 ~ RegSrcn], sp!, uimm` |-
-|`FEXIT` |32 |- |`FEXIT [RegDst0 ~ RegDstn], sp!, uimm` |-
-|`FRET.RA` |32 |- |`FRET.RA [RegDst0 ~ RegDstn], sp!, uimm` |-
-|`FRET.STK` |32 |- |`FRET.STK [RegDst0 ~ RegDstn], sp!, uimm` |-
-|`MCOPY` |32 |- |`MCOPY [RegSrc0, RegSrc1, RegSrc2]` |-
-|`MSET` |32 |- |`MSET [RegSrc0, RegSrc1, RegSrc2]` |-
-|`XB` |32 |- |`XB ACR-ID, C-ID` |-
+|`BSTART` |32 |- |`BSTART {DIRECT, CALL}, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART` |32 |- |`BSTART COND, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.FP` |32 |- |`BSTART.FP FALL<, fixup_label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.FP` |32 |- |`BSTART.FP ICALL` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.FP` |32 |- |`BSTART.FP RET` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.FP` |32 |- |`BSTART.FP DIRECT, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.FP` |32 |- |`BSTART.FP IND` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.FP` |32 |- |`BSTART.FP CALL, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.FP` |32 |- |`BSTART.FP COND, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.GMOV` |32 |- |`BSTART.GMOV DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.MGATHER` |32 |- |`BSTART.MGATHER DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.MPAR` |32 |- |`BSTART.MPAR <VS8, VS16>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.MSCATTER` |32 |- |`BSTART.MSCATTER DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.MSEQ` |32 |- |`BSTART.MSEQ <VS8, VS16>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.STD` |32 |- |`BSTART.STD IND` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.STD` |32 |- |`BSTART.STD COND, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.STD` |32 |- |`BSTART.STD RET` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.STD` |32 |- |`BSTART.STD CALL, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.STD` |32 |- |`BSTART.STD FALL<, fixup_label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.STD` |32 |- |`BSTART.STD ICALL` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.STD` |32 |- |`BSTART.STD DIRECT, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.SYS` |32 |- |`BSTART.SYS FALL<, fixup_label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.TEPL` |32 |- |`BSTART.TEPL Mode, Function, DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.TGEMV` |32 |- |`BSTART.TGEMV DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.TGEMV.ACC` |32 |- |`BSTART.TGEMV.ACC DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.TGEMV.BIAS` |32 |- |`BSTART.TGEMV.BIAS DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.TGEMVMX` |32 |- |`BSTART.TGEMVMX DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.TGEMVMX.ACC` |32 |- |`BSTART.TGEMVMX.ACC DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.TGEMVMX.BIAS` |32 |- |`BSTART.TGEMVMX.BIAS DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.TLOAD` |32 |- |`BSTART.TLOAD DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.TMATMUL` |32 |- |`BSTART.TMATMUL DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.TMATMUL.ACC` |32 |- |`BSTART.TMATMUL.ACC DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.TMATMUL.BIAS` |32 |- |`BSTART.TMATMUL.BIAS DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.TMATMULMX` |32 |- |`BSTART.TMATMULMX DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.TMATMULMX.ACC` |32 |- |`BSTART.TMATMULMX.ACC DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.TMATMULMX.BIAS` |32 |- |`BSTART.TMATMULMX.BIAS DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.TMOV` |32 |- |`BSTART.TMOV DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.TMOV` |32 |- |`BSTART.TMOV DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.TMOV` |32 |- |`BSTART.TMOV DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.TMOV` |32 |- |`BSTART.TMOV DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.TMOV` |32 |- |`BSTART.TMOV DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.TPREFETCH` |32 |- |`BSTART.TPREFETCH DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.TSTORE` |32 |- |`BSTART.TSTORE DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.TSTORE` |32 |- |`BSTART.TSTORE DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTOP` |32 |- |`BSTOP` |Commits the current bundle and transfers to its selected continuation.
+|`C.BSTART` |16 |- |`C.BSTART DIRECT, label` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`C.BSTART` |16 |- |`C.BSTART COND, label` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`C.BSTOP` |16 |- |`C.BSTOP` |Commits the current bundle and transfers to its selected continuation.
+|`ERCOV` |32 |- |`ERCOV [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]` |Recovers the encoded execution-context range from memory.
+|`ESAVE` |32 |- |`ESAVE [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]` |Saves the encoded execution-context range to memory.
+|`FENTRY` |32 |- |`FENTRY [RegSrc0 ~ RegSrcn], sp!, uimm` |Atomically validates and creates a frame-template entry state.
+|`FEXIT` |32 |- |`FEXIT [RegDst0 ~ RegDstn], sp!, uimm` |Atomically validates and commits a frame-template exit state.
+|`FRET.RA` |32 |- |`FRET.RA [RegDst0 ~ RegDstn], sp!, uimm` |Restores a frame and returns through the retained return-address target.
+|`FRET.STK` |32 |- |`FRET.STK [RegDst0 ~ RegDstn], sp!, uimm` |Restores a frame and returns through the validated stack target.
+|`MCOPY` |32 |- |`MCOPY [RegSrc0, RegSrc1, RegSrc2]` |Copies an encoded memory range with instruction-atomic preflight and snapshot semantics.
+|`MSET` |32 |- |`MSET [RegSrc0, RegSrc1, RegSrc2]` |Fills an encoded memory range after complete access preflight.
+|`XB` |32 |- |`XB ACR-ID, C-ID` |Transfers the named context value to a target virtual core block.
 |===
 
 [[insnref-bstart]]
@@ -279,26 +279,36 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`BSTART CALL` |32 |- |`BSTART.CALL <br_label>, <rt_label>, ->ra` |Atomic fused CALL: call_target = P + (SignExtend(simm12) << 1); ra = (P + 2) + (ZeroExtend(uimm5) << 1). Both labels are explicit and independently relocatable.
-|`HL.BSTART CALL` |48 |- |`HL.BSTART.CALL <br_label>, <rt_label>, ->ra` |Atomic fused CALL: call_target = P + (SignExtend(simm25) << 1); ra = (P + 4) + (ZeroExtend(uimm5) << 1). Both labels are explicit and independently relocatable.
-|`HL.BSTART.FP` |48 |- |`HL.BSTART.FP COND, <label>` |-
-|`HL.BSTART.FP` |48 |- |`HL.BSTART.FP FALL<, fixup_label>` |-
-|`HL.BSTART.FP` |48 |- |`HL.BSTART.FP CALL, <label>` |-
-|`HL.BSTART.FP` |48 |- |`HL.BSTART.FP DIRECT, <label>` |-
-|`HL.BSTART.STD` |48 |- |`HL.BSTART.STD CALL, <label>` |-
-|`HL.BSTART.STD` |48 |- |`HL.BSTART.STD FALL<, fixup_label>` |-
-|`HL.BSTART.STD` |48 |- |`HL.BSTART.STD COND, <label>` |-
-|`HL.BSTART.STD` |48 |- |`HL.BSTART.STD DIRECT, <label>` |-
-|`HL.BSTART.SYS` |48 |- |`HL.BSTART.SYS FALL<, fixup_label>` |-
-|`L.BSTART.FP` |64 |- |`L.BSTART.FP COND, <label>` |-
-|`L.BSTART.FP` |64 |- |`L.BSTART.FP DIRECT, <label>` |-
-|`L.BSTART.FP` |64 |- |`L.BSTART.FP CALL, <label>` |Bare L.BSTART.FP CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.
-|`L.BSTART.FP` |64 |- |`L.BSTART.FP FALL<, fixup_label>` |-
-|`L.BSTART.STD` |64 |- |`L.BSTART.STD DIRECT, <label>` |-
-|`L.BSTART.STD` |64 |- |`L.BSTART.STD CALL, <label>` |Bare L.BSTART.STD CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.
-|`L.BSTART.STD` |64 |- |`L.BSTART.STD COND, <label>` |-
-|`L.BSTART.STD` |64 |- |`L.BSTART.STD FALL<, fixup_label>` |-
-|`L.BSTART.SYS` |64 |- |`L.BSTART.SYS FALL<, fixup_label>` |-
+|`BSTART CALL` |32 |- |`BSTART.CALL <br_label>, <rt_label>, ->ra` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`HL.BSTART CALL` |48 |- |`HL.BSTART.CALL <br_label>, <rt_label>, ->ra` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`HL.BSTART.FP` |48 |- |`HL.BSTART.FP FALL<, fixup_label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`HL.BSTART.FP` |48 |- |`HL.BSTART.FP CALL, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`HL.BSTART.FP` |48 |- |`HL.BSTART.FP DIRECT, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`HL.BSTART.FP` |48 |- |`HL.BSTART.FP COND, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`HL.BSTART.STD` |48 |- |`HL.BSTART.STD FALL<, fixup_label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`HL.BSTART.STD` |48 |- |`HL.BSTART.STD COND, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`HL.BSTART.STD` |48 |- |`HL.BSTART.STD CALL, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`HL.BSTART.STD` |48 |- |`HL.BSTART.STD DIRECT, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`HL.BSTART.SYS` |48 |- |`HL.BSTART.SYS FALL<, fixup_label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`L.BSTART.FP` |64 |- |`L.BSTART.FP DIRECT, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`L.BSTART.FP` |64 |- |`L.BSTART.FP FALL<, fixup_label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`L.BSTART.FP` |64 |- |`L.BSTART.FP CALL, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`L.BSTART.FP` |64 |- |`L.BSTART.FP COND, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`L.BSTART.STD` |64 |- |`L.BSTART.STD COND, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`L.BSTART.STD` |64 |- |`L.BSTART.STD DIRECT, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`L.BSTART.STD` |64 |- |`L.BSTART.STD CALL, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`L.BSTART.STD` |64 |- |`L.BSTART.STD FALL<, fixup_label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`L.BSTART.SYS` |64 |- |`L.BSTART.SYS FALL<, fixup_label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|===
+
+[[insnref-block-split]]
+=== Block Split
+
+[cols="1,1,2,4,6",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`BSTART.VPAR` |32 |- |`BSTART.VPAR <VS8, VS16>` |TVEC-equivalent parallel SIMT header; requires B.TEXT body target in decoupled form.
+|`BSTART.VSEQ` |32 |- |`BSTART.VSEQ <VS8, VS16>` |TVEC-equivalent sequential SIMT header; requires B.TEXT body target in decoupled form.
 |===
 
 [[insnref-arithmetic-operation]]
@@ -338,14 +348,22 @@
 |`C.ADDI` |16 |- |`c.addi srcL, simm, ->t` |-
 |===
 
-[[insnref-block-dimension]]
-=== Block Dimension
+[[insnref-bundle-dimension]]
+=== Bundle Dimension
 
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`C.B.DIM` |16 |- |`C.B.DIM RegSrc, ->{LB0, LB1, LB2}` |-
-|`C.B.DIMI` |16 |- |`C.B.DIMI imm, ->{LB0, LB1, LB2}` |-
+|`C.B.DIMI` |16 |- |`C.B.DIMI imm, ->{LB0, LB1, LB2}` |Writes one of the three bundle-local dimension registers.
+|===
+
+[[insnref-bundle-shared-operand-binding]]
+=== Bundle Shared Operand Binding
+
+[cols="1,1,2,4,6",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`C.B.IOS` |16 |- |`C.B.IOS S<SharedTID> \| C.B.IOS ->S<SharedTID>` |Binds one absolute core-private Shared register S0..S255; source or destination role is derived from the surrounding BSTART schema and the binder is consumed once.
 |===
 
 [[insnref-c-bstart]]
@@ -354,11 +372,11 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`C.BSTART.FP` |16 |- |`C.BSTART.FP BrType` |-
-|`C.BSTART.MPAR` |16 |- |`C.BSTART.MPAR FALL` |-
-|`C.BSTART.MSEQ` |16 |- |`C.BSTART.MSEQ FALL` |-
-|`C.BSTART.STD` |16 |- |`C.BSTART.STD BrType` |-
-|`C.BSTART.SYS` |16 |- |`C.BSTART.SYS FALL` |-
+|`C.BSTART.FP` |16 |- |`C.BSTART.FP BrType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`C.BSTART.MPAR` |16 |- |`C.BSTART.MPAR FALL` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`C.BSTART.MSEQ` |16 |- |`C.BSTART.MSEQ FALL` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`C.BSTART.STD` |16 |- |`C.BSTART.STD BrType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`C.BSTART.SYS` |16 |- |`C.BSTART.SYS FALL` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`C.BSTART.VPAR` |16 |- |`C.BSTART.VPAR FALL` |-
 |`C.BSTART.VSEQ` |16 |- |`C.BSTART.VSEQ FALL` |-
 |===
@@ -491,10 +509,10 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`CASB` |32 |- |`casb<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |v0.57 32-bit compare-and-swap byte: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
-|`CASD` |32 |- |`casd<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |v0.57 32-bit compare-and-swap doubleword: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
-|`CASH` |32 |- |`cash<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |v0.57 32-bit compare-and-swap halfword: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
-|`CASW` |32 |- |`casw<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |v0.57 32-bit compare-and-swap word: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
+|`CASB` |32 |- |`casb<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |v0.58 32-bit compare-and-swap byte: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
+|`CASD` |32 |- |`casd<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |v0.58 32-bit compare-and-swap doubleword: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
+|`CASH` |32 |- |`cash<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |v0.58 32-bit compare-and-swap halfword: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
+|`CASW` |32 |- |`casw<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |v0.58 32-bit compare-and-swap word: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
 |`LD.ADD` |32 |- |`ld.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
 |`LD.AND` |32 |- |`ld.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
 |`LD.OR` |32 |- |`ld.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |-
@@ -664,7 +682,7 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`DMA` |32 |- |`dma [SrcL], SrcR` |v0.57 encoding for the inherited DMA operation: copy 64 bytes from the source address in SrcL to the destination address in SrcR and complete before submission.
+|`DMA` |32 |- |`dma [SrcL], SrcR` |v0.58 encoding for the inherited DMA operation: copy 64 bytes from the source address in SrcL to the destination address in SrcR and complete before submission.
 |===
 
 [[insnref-floating-point-arithmetic]]
@@ -924,9 +942,9 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`HL.QMT` |48 |- |`hl.qmt.{i,e,s,r,ie,is,ir,es,er,ies,ier} SrcL, SrcR, ->{t, u}` |-
-|`HL.QPOP` |48 |- |`hl.qpop.{e,r,er} SrcL, ->Dst0, Dst1` |-
-|`HL.QPUSH` |48 |- |`hl.qpush.{h,e,r,he,hr,er,her} SrcL, SrcR, ->{t, u}` |-
+|`HL.QMT` |48 |- |`hl.qmt.{i,e,s,r,ie,is,ir,es,er,ies,ier} SrcL, SrcR, ->{t, u}` |Moves values between scalar temporary queues according to encoded queue controls.
+|`HL.QPOP` |48 |- |`hl.qpop.{e,r,er} SrcL, ->Dst0, Dst1` |Pops selected scalar queue values into encoded destinations.
+|`HL.QPUSH` |48 |- |`hl.qpush.{h,e,r,he,hr,er,her} SrcL, SrcR, ->{t, u}` |Pushes the encoded scalar values to the selected temporary queue.
 |===
 
 [[insnref-store-pc-relative]]

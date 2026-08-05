@@ -125,7 +125,7 @@ def render(spec_path: Path) -> tuple[str, int]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--spec", type=Path, default=Path("isa/v0.57/linxisa-v0.57.json"))
+    parser.add_argument("--spec", type=Path, default=Path("isa/v0.58/linxisa-v0.58.json"))
     parser.add_argument("--out-dir", type=Path, default=Path("docs/architecture/isa-manual/src/generated"))
     parser.add_argument("--check", action="store_true", help="Compare output without writing")
     args = parser.parse_args()

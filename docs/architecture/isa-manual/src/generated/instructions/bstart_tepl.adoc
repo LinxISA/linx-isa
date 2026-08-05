@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.TEPL Mode, Function, DataType
 
-*Description:* PTO ISA 0.57.1 TEPL selector: logical_selector=(Mode<<5)|Function. There is no legacy 10-bit TileOpcode decode.
+*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 *Encoding:*
 

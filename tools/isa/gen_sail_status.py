@@ -62,7 +62,7 @@ def _canonical(value: Any) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--spec", type=Path, default=Path("isa/v0.57/linxisa-v0.57.json"))
+    parser.add_argument("--spec", type=Path, default=Path("isa/v0.58/linxisa-v0.58.json"))
     parser.add_argument("--policy", type=Path, default=Path("isa/sail/semantics_policy.json"))
     parser.add_argument("--out", type=Path, default=Path("isa/sail/semantics_status.json"))
     parser.add_argument("--check", action="store_true", help="Compare output without writing")

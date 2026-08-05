@@ -3,7 +3,7 @@
 [[insnref-details]]
 === Instruction descriptions (by mnemonic)
 
-This section provides per-mnemonic descriptions. The tables above remain the authoritative listing of encodable forms and decode layouts in the v0.57.1 catalog. Descriptions and pseudocode here are derived from mnemonic naming conventions plus catalog assembly templates/notes and are intended to be *informative*.
+This section provides per-mnemonic descriptions. The tables above remain the authoritative listing of encodable forms and decode layouts in the v0.58.0 catalog. Descriptions and pseudocode here are derived from mnemonic naming conventions plus catalog assembly templates/notes and are intended to be *informative*.
 
 [[insndesc-execution-control]]
 ==== Execution Control
@@ -1480,13 +1480,13 @@ off = (ZeroExtend(imm20) << 1)
 ra = base + off
 ----
 
-[[insndesc-block-control-attribute]]
-==== Block Control Attribute
+[[insndesc-bundle-control-attribute]]
+==== Bundle Control Attribute
 
-[[insndesc-block-control-attribute-b-catr]]
+[[insndesc-bundle-control-attribute-b-catr]]
 ===== B.CATR
 
-Block metadata instruction (sub-operation selected by the mnemonic suffix).
+Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
 
 Catalog forms:: 1 form(s) (32 bits).
 
@@ -1496,28 +1496,28 @@ Assembly forms::
 
 Encoding::
 +
-.`b_catr_32_8f94bdb16d29` — `B.CATR {trap, atomic, <aq, rl, aqrl>, far, dr}`
-image::encodings/enc_b_catr.svg[B.CATR encoding form b_catr_32_8f94bdb16d29,align="center"]
+.`b_catr_32_18ebd8429b53` — `B.CATR {trap, atomic, <aq, rl, aqrl>, far, dr}`
+image::encodings/enc_b_catr.svg[B.CATR encoding form b_catr_32_18ebd8429b53,align="center"]
 
 
 Encoding notes (informative)::
 +
-* PTO ISA 0.57.1 control attributes. Only DR[26], trap[19], far[18], atom[17], aq[16], and rl[15] are variable.
+* Latches bundle control, trap, atomic, ordering, and address-class attributes.
 
 Operation (informative)::
 +
 [source]
 ----
-UpdateBlockMetadata(/* fields as encoded */)
+Execute operation as selected by the mnemonic and encoded modifiers.
 ----
 
-[[insndesc-block-data-attribute]]
-==== Block Data Attribute
+[[insndesc-bundle-data-attribute]]
+==== Bundle Data Attribute
 
-[[insndesc-block-data-attribute-b-datr]]
+[[insndesc-bundle-data-attribute-b-datr]]
 ===== B.DATR
 
-Block metadata instruction (sub-operation selected by the mnemonic suffix).
+Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
 
 Catalog forms:: 1 form(s) (32 bits).
 
@@ -1527,52 +1527,56 @@ Assembly forms::
 
 Encoding::
 +
-.`b_datr_32_840f4b8d579d` — `B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize}`
-image::encodings/enc_b_datr.svg[B.DATR encoding form b_datr_32_840f4b8d579d,align="center"]
+.`b_datr_32_85918343b9b5` — `B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize}`
+image::encodings/enc_b_datr.svg[B.DATR encoding form b_datr_32_85918343b9b5,align="center"]
 
 
 Encoding notes (informative)::
 +
-* PTO ISA 0.57.1 data attributes. PadValueOrByteId is an opcode-defined two-bit union; bits 19:18 are reserved zero.
+* Latches tile layout, data type, padding, conversion, rounding, and saturation attributes.
 
 Operation (informative)::
 +
 [source]
 ----
-UpdateBlockMetadata(/* fields as encoded */)
+Execute operation as selected by the mnemonic and encoded modifiers.
 ----
 
-[[insndesc-block-argument]]
-==== Block Argument
+[[insndesc-bundle-argument]]
+==== Bundle Argument
 
-[[insndesc-block-argument-b-dim]]
+[[insndesc-bundle-argument-b-dim]]
 ===== B.DIM
 
-Sets a block loop bound/dimension register for structured execution.
+Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
 
 Catalog forms:: 3 form(s) (32 bits).
 
 Assembly forms::
 +
-* `B.DIM RegSrc, uimm, ->LB2`
-* `B.DIM RegSrc, uimm, ->LB0`
 * `B.DIM RegSrc, uimm, ->LB1`
+* `B.DIM RegSrc, uimm, ->LB0`
+* `B.DIM RegSrc, uimm, ->LB2`
 
 Encoding::
 +
-.`b_dim_32_1caa1aa2944a` — `B.DIM RegSrc, uimm, ->LB2`
-image::encodings/enc_b_dim_32_1caa1aa2944a.svg[B.DIM encoding form b_dim_32_1caa1aa2944a,align="center"]
-.`b_dim_32_27602ab68929` — `B.DIM RegSrc, uimm, ->LB0`
-image::encodings/enc_b_dim_32_27602ab68929.svg[B.DIM encoding form b_dim_32_27602ab68929,align="center"]
-.`b_dim_32_4191099a5f4d` — `B.DIM RegSrc, uimm, ->LB1`
-image::encodings/enc_b_dim_32_4191099a5f4d.svg[B.DIM encoding form b_dim_32_4191099a5f4d,align="center"]
+.`b_dim_32_570ae2178c51` — `B.DIM RegSrc, uimm, ->LB1`
+image::encodings/enc_b_dim_32_570ae2178c51.svg[B.DIM encoding form b_dim_32_570ae2178c51,align="center"]
+.`b_dim_32_a097166c338b` — `B.DIM RegSrc, uimm, ->LB0`
+image::encodings/enc_b_dim_32_a097166c338b.svg[B.DIM encoding form b_dim_32_a097166c338b,align="center"]
+.`b_dim_32_f88715bdc6ea` — `B.DIM RegSrc, uimm, ->LB2`
+image::encodings/enc_b_dim_32_f88715bdc6ea.svg[B.DIM encoding form b_dim_32_f88715bdc6ea,align="center"]
 
+
+Encoding notes (informative)::
++
+* Writes one of the three bundle-local dimension registers.
 
 Operation (informative)::
 +
 [source]
 ----
-LBx = Read(RegSrc) + uimm  // x selected by encoding (LB0/LB1/LB2)
+Execute operation as selected by the mnemonic and encoded modifiers.
 ----
 
 [[insndesc-branch]]
@@ -1826,47 +1830,47 @@ Operation (informative)::
 TPC = <target>
 ----
 
-[[insndesc-block-hint]]
-==== Block Hint
+[[insndesc-bundle-hint]]
+==== Bundle Hint
 
-[[insndesc-block-hint-b-hint]]
+[[insndesc-bundle-hint-b-hint]]
 ===== B.HINT
 
-Sets block execution hints (e.g., branch likelihood, temperature, prefetch sizing).
+Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
 
 Catalog forms:: 2 form(s) (32 bits).
 
 Assembly forms::
 +
-* `B.HINT {BR.{likely, unlikely}, TEMP.{hot, warm, cool, none}, PRFSIZE}`
 * `B.HINT TRACE.{begin, end}`
+* `B.HINT {BR.{likely, unlikely}, TEMP.{hot, warm, cool, none}, PRFSIZE}`
 
 Encoding::
 +
-.`b_hint_32_69d942ff1583` — `B.HINT {BR.{likely, unlikely}, TEMP.{hot, warm, cool, none}, PRFSIZE}`
-image::encodings/enc_b_hint_32_69d942ff1583.svg[B.HINT encoding form b_hint_32_69d942ff1583,align="center"]
-.`b_hint_32_f7d01d734925` — `B.HINT TRACE.{begin, end}`
-image::encodings/enc_b_hint_32_f7d01d734925.svg[B.HINT encoding form b_hint_32_f7d01d734925,align="center"]
+.`b_hint_32_67e2ad8dd981` — `B.HINT TRACE.{begin, end}`
+image::encodings/enc_b_hint_32_67e2ad8dd981.svg[B.HINT encoding form b_hint_32_67e2ad8dd981,align="center"]
+.`b_hint_32_b3e8a4e77930` — `B.HINT {BR.{likely, unlikely}, TEMP.{hot, warm, cool, none}, PRFSIZE}`
+image::encodings/enc_b_hint_32_b3e8a4e77930.svg[B.HINT encoding form b_hint_32_b3e8a4e77930,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Bits 31:16 are reserved zero.
+* Records non-functional branch, temperature, prefetch-size, or trace guidance.
 
 Operation (informative)::
 +
 [source]
 ----
-SetBlockHints(/* fields as encoded */)
+Execute operation as selected by the mnemonic and encoded modifiers.
 ----
 
-[[insndesc-block-input-output]]
-==== Block Input & Output
+[[insndesc-bundle-input-output]]
+==== Bundle Input & Output
 
-[[insndesc-block-input-output-b-ior]]
+[[insndesc-bundle-input-output-b-ior]]
 ===== B.IOR
 
-Declares block input/output bindings for registers/tiles (header metadata for accelerated blocks; tooling and scheduling metadata).
+Loads a value from memory using the addressing form shown in the syntax and writes the result to the selected destination.
 
 Catalog forms:: 1 form(s) (32 bits).
 
@@ -1876,68 +1880,69 @@ Assembly forms::
 
 Encoding::
 +
-.`b_ior_32_c3ea71404eb3` — `B.IOR [RegSrc0, RegSrc1, RegSrc2],[RegDst]`
-image::encodings/enc_b_ior.svg[B.IOR encoding form b_ior_32_c3ea71404eb3,align="center"]
+.`b_ior_32_df50a269be7c` — `B.IOR [RegSrc0, RegSrc1, RegSrc2],[RegDst]`
+image::encodings/enc_b_ior.svg[B.IOR encoding form b_ior_32_df50a269be7c,align="center"]
 
+
+Encoding notes (informative)::
++
+* Binds encoded scalar inputs and outputs to the current bundle interface.
 
 Operation (informative)::
 +
 [source]
 ----
-DeclareBlockGprIO(/* GPR IO bindings as encoded */)
+Execute operation as selected by the mnemonic and encoded modifiers.
 ----
 
-[[insndesc-block-input-output-b-iot]]
+[[insndesc-bundle-input-output-b-iot]]
 ===== B.IOT
 
-Declares block input/output bindings for registers/tiles (header metadata for accelerated blocks; tooling and scheduling metadata).
+Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
 
 Catalog forms:: 5 form(s) (32 bits).
 
 Assembly forms::
 +
-* `B.IOT SrcTile0<.reuse>, <last>, ->DstTile<Size>`
-* `B.IOT SrcTile0<.reuse>, SrcTile1<.reuse>, <last>, ->DstTile<Size>`
-* `B.IOT SrcTile0<.reuse>, <last>`
-* `B.IOT <last>, ->DstTile<Size>`
-* `B.IOT SrcTile0<.reuse>, SrcTile1<.reuse>, <last>`
+* `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>`
+* `B.IOT mask=PE_MASK, <last> <, ->DstTile<TSize>>`
+* `B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<TSize>`
+* `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<TSize>`
+* `B.IOT SrcTile0, mask=PE_MASK, <last>`
 
 Encoding::
 +
-.`b_iot_32_0f23e46d6176` — `B.IOT SrcTile0<.reuse>, <last>, ->DstTile<Size>`
-image::encodings/enc_b_iot_32_0f23e46d6176.svg[B.IOT encoding form b_iot_32_0f23e46d6176,align="center"]
-.`b_iot_32_3a6945dec034` — `B.IOT SrcTile0<.reuse>, SrcTile1<.reuse>, <last>, ->DstTile<Size>`
-image::encodings/enc_b_iot_32_3a6945dec034.svg[B.IOT encoding form b_iot_32_3a6945dec034,align="center"]
-.`b_iot_32_778f84340400` — `B.IOT SrcTile0<.reuse>, <last>`
-image::encodings/enc_b_iot_32_778f84340400.svg[B.IOT encoding form b_iot_32_778f84340400,align="center"]
-.`b_iot_32_a06b9b6c1965` — `B.IOT <last>, ->DstTile<Size>`
-image::encodings/enc_b_iot_32_a06b9b6c1965.svg[B.IOT encoding form b_iot_32_a06b9b6c1965,align="center"]
-.`b_iot_32_f1ca66bbcce1` — `B.IOT SrcTile0<.reuse>, SrcTile1<.reuse>, <last>`
-image::encodings/enc_b_iot_32_f1ca66bbcce1.svg[B.IOT encoding form b_iot_32_f1ca66bbcce1,align="center"]
+.`b_iot_32_36792782e584` — `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>`
+image::encodings/enc_b_iot_32_36792782e584.svg[B.IOT encoding form b_iot_32_36792782e584,align="center"]
+.`b_iot_32_3a493c45ddfa` — `B.IOT mask=PE_MASK, <last> <, ->DstTile<TSize>>`
+image::encodings/enc_b_iot_32_3a493c45ddfa.svg[B.IOT encoding form b_iot_32_3a493c45ddfa,align="center"]
+.`b_iot_32_437af312f86d` — `B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<TSize>`
+image::encodings/enc_b_iot_32_437af312f86d.svg[B.IOT encoding form b_iot_32_437af312f86d,align="center"]
+.`b_iot_32_84944b9c3d19` — `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<TSize>`
+image::encodings/enc_b_iot_32_84944b9c3d19.svg[B.IOT encoding form b_iot_32_84944b9c3d19,align="center"]
+.`b_iot_32_f17390877416` — `B.IOT SrcTile0, mask=PE_MASK, <last>`
+image::encodings/enc_b_iot_32_f17390877416.svg[B.IOT encoding form b_iot_32_f17390877416,align="center"]
 
 
 Encoding notes (informative)::
 +
-* PTO ISA 0.57.1 one-source descriptor. Inactive source and reuse fields encode zero.
-* PTO ISA 0.57.1 two-source descriptor. imm4 3..9 selects 128B..8KiB; ACC is never encoded as DstTile.
-* PTO ISA 0.57.1 one-source destination-free descriptor. All inapplicable fields encode zero.
-* PTO ISA 0.57.1 zero-source destination descriptor. Inactive source and reuse fields encode zero.
-* PTO ISA 0.57.1 two-source destination-free descriptor. DstTile and imm4 encode zero; zero does not name an output.
+* Binds v5 PE_MASK, ordered Local tile sources, last-use, and optional TSize/2-bit Local destination metadata; reuse bits do not exist.
+* Binds v5 PE_MASK, ordered Local tile sources, last-use, and optional TSize/2-bit Local destination metadata; TSize=DstTile=0 is the mask-only Shared TLOAD/TSTORE companion and PE_MASK=0000 is a legal no-op.
 
 Operation (informative)::
 +
 [source]
 ----
-DeclareBlockTileIO(/* tile IO bindings as encoded */)
+Execute operation as selected by the mnemonic and encoded modifiers.
 ----
 
-[[insndesc-block-offset]]
-==== Block Offset
+[[insndesc-bundle-offset]]
+==== Bundle Offset
 
-[[insndesc-block-offset-b-text]]
+[[insndesc-bundle-offset-b-text]]
 ===== B.TEXT
 
-In a decoupled block header, selects the out-of-line body entrypoint (`BodyTPC`) for header→body→return execution. In coupled blocks, may be used as a tooling label/annotation.
+Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
 
 Catalog forms:: 1 form(s) (32 bits).
 
@@ -1947,15 +1952,19 @@ Assembly forms::
 
 Encoding::
 +
-.`b_text_32_1ce09f50e5dd` — `B.TEXT <label>`
-image::encodings/enc_b_text.svg[B.TEXT encoding form b_text_32_1ce09f50e5dd,align="center"]
+.`b_text_32_6f2fe6f95841` — `B.TEXT <label>`
+image::encodings/enc_b_text.svg[B.TEXT encoding form b_text_32_6f2fe6f95841,align="center"]
 
+
+Encoding notes (informative)::
++
+* Sets the out-of-line body entry address for a decoupled bundle.
 
 Operation (informative)::
 +
 [source]
 ----
-AnnotateBlockText(/* label/offset as encoded */)
+Execute operation as selected by the mnemonic and encoded modifiers.
 ----
 
 [[insndesc-cache-maintain]]
@@ -2540,10 +2549,10 @@ Operation (informative)::
 Execute operation as selected by the mnemonic and encoded modifiers.
 ----
 
-[[insndesc-block-split]]
-==== Block Split
+[[insndesc-bundle-split]]
+==== Bundle Split
 
-[[insndesc-block-split-bstart]]
+[[insndesc-bundle-split-bstart]]
 ===== BSTART
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
@@ -2557,40 +2566,15 @@ Assembly forms::
 
 Encoding::
 +
-.`bstart_32_7eb93b649748` — `BSTART {DIRECT, CALL}, <label>`
-image::encodings/enc_bstart_32_7eb93b649748.svg[BSTART encoding form bstart_32_7eb93b649748,align="center"]
-.`bstart_32_e11e678a32ac` — `BSTART COND, <label>`
-image::encodings/enc_bstart_32_e11e678a32ac.svg[BSTART encoding form bstart_32_e11e678a32ac,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-EndBlock()
-BeginNextBlock(/* type/kind/target as encoded */)
-----
-
-[[insndesc-block-split-bstart-acccvt]]
-===== BSTART.ACCCVT
-
-Terminates the current block and begins the next block, encoding both block type and transition kind.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `BSTART.ACCCVT DataType`
-
-Encoding::
-+
-.`bstart_acccvt_32_56c3ce3838c5` — `BSTART.ACCCVT DataType`
-image::encodings/enc_bstart_acccvt.svg[BSTART.ACCCVT encoding form bstart_acccvt_32_56c3ce3838c5,align="center"]
+.`bstart_32_416bc417fc20` — `BSTART {DIRECT, CALL}, <label>`
+image::encodings/enc_bstart_32_416bc417fc20.svg[BSTART encoding form bstart_32_416bc417fc20,align="center"]
+.`bstart_32_7e66993d15d0` — `BSTART COND, <label>`
+image::encodings/enc_bstart_32_7e66993d15d0.svg[BSTART encoding form bstart_32_7e66993d15d0,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Named CUBE-family Function=8. ACCCVT reads implicit ACC and uses B.DATR conversion controls before publishing an ordinary Tile.
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -2600,7 +2584,7 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
-[[insndesc-block-split-bstart-fp]]
+[[insndesc-bundle-split-bstart-fp]]
 ===== BSTART.FP
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
@@ -2609,35 +2593,35 @@ Catalog forms:: 7 form(s) (32 bits).
 
 Assembly forms::
 +
-* `BSTART.FP RET`
-* `BSTART.FP ICALL`
-* `BSTART.FP COND, <label>`
-* `BSTART.FP IND`
-* `BSTART.FP DIRECT, <label>`
-* `BSTART.FP CALL, <label>`
 * `BSTART.FP FALL<, fixup_label>`
+* `BSTART.FP ICALL`
+* `BSTART.FP RET`
+* `BSTART.FP DIRECT, <label>`
+* `BSTART.FP IND`
+* `BSTART.FP CALL, <label>`
+* `BSTART.FP COND, <label>`
 
 Encoding::
 +
-.`bstart_fp_32_0c671a644214` — `BSTART.FP RET`
-image::encodings/enc_bstart_fp_32_0c671a644214.svg[BSTART.FP encoding form bstart_fp_32_0c671a644214,align="center"]
-.`bstart_fp_32_24db3966d6ba` — `BSTART.FP ICALL`
-image::encodings/enc_bstart_fp_32_24db3966d6ba.svg[BSTART.FP encoding form bstart_fp_32_24db3966d6ba,align="center"]
-.`bstart_fp_32_58ad7954fb49` — `BSTART.FP COND, <label>`
-image::encodings/enc_bstart_fp_32_58ad7954fb49.svg[BSTART.FP encoding form bstart_fp_32_58ad7954fb49,align="center"]
-.`bstart_fp_32_7978795a29a1` — `BSTART.FP IND`
-image::encodings/enc_bstart_fp_32_7978795a29a1.svg[BSTART.FP encoding form bstart_fp_32_7978795a29a1,align="center"]
-.`bstart_fp_32_d00a708a81f0` — `BSTART.FP DIRECT, <label>`
-image::encodings/enc_bstart_fp_32_d00a708a81f0.svg[BSTART.FP encoding form bstart_fp_32_d00a708a81f0,align="center"]
-.`bstart_fp_32_dd7bc8dd694c` — `BSTART.FP CALL, <label>`
-image::encodings/enc_bstart_fp_32_dd7bc8dd694c.svg[BSTART.FP encoding form bstart_fp_32_dd7bc8dd694c,align="center"]
-.`bstart_fp_32_face4f238d84` — `BSTART.FP FALL<, fixup_label>`
-image::encodings/enc_bstart_fp_32_face4f238d84.svg[BSTART.FP encoding form bstart_fp_32_face4f238d84,align="center"]
+.`bstart_fp_32_494fe06e4fb2` — `BSTART.FP FALL<, fixup_label>`
+image::encodings/enc_bstart_fp_32_494fe06e4fb2.svg[BSTART.FP encoding form bstart_fp_32_494fe06e4fb2,align="center"]
+.`bstart_fp_32_69538a87dfb1` — `BSTART.FP ICALL`
+image::encodings/enc_bstart_fp_32_69538a87dfb1.svg[BSTART.FP encoding form bstart_fp_32_69538a87dfb1,align="center"]
+.`bstart_fp_32_82106bc72d98` — `BSTART.FP RET`
+image::encodings/enc_bstart_fp_32_82106bc72d98.svg[BSTART.FP encoding form bstart_fp_32_82106bc72d98,align="center"]
+.`bstart_fp_32_c6cf502b7ebd` — `BSTART.FP DIRECT, <label>`
+image::encodings/enc_bstart_fp_32_c6cf502b7ebd.svg[BSTART.FP encoding form bstart_fp_32_c6cf502b7ebd,align="center"]
+.`bstart_fp_32_dea7bdf4c480` — `BSTART.FP IND`
+image::encodings/enc_bstart_fp_32_dea7bdf4c480.svg[BSTART.FP encoding form bstart_fp_32_dea7bdf4c480,align="center"]
+.`bstart_fp_32_eb33ff25b92a` — `BSTART.FP CALL, <label>`
+image::encodings/enc_bstart_fp_32_eb33ff25b92a.svg[BSTART.FP encoding form bstart_fp_32_eb33ff25b92a,align="center"]
+.`bstart_fp_32_ed54a0ac3b7a` — `BSTART.FP COND, <label>`
+image::encodings/enc_bstart_fp_32_ed54a0ac3b7a.svg[BSTART.FP encoding form bstart_fp_32_ed54a0ac3b7a,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Bits 31:15 are reserved zero.
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -2647,7 +2631,36 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
-[[insndesc-block-split-bstart-mgather]]
+[[insndesc-bundle-split-bstart-gmov]]
+===== BSTART.GMOV
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.GMOV DataType`
+
+Encoding::
++
+.`bstart_gmov_32_ccfcf9904850` — `BSTART.GMOV DataType`
+image::encodings/enc_bstart_gmov.svg[BSTART.GMOV encoding form bstart_gmov_32_ccfcf9904850,align="center"]
+
+
+Encoding notes (informative)::
++
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-bundle-split-bstart-mgather]]
 ===== BSTART.MGATHER
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
@@ -2660,13 +2673,13 @@ Assembly forms::
 
 Encoding::
 +
-.`bstart_mgather_32_c9defbf18276` — `BSTART.MGATHER DataType`
-image::encodings/enc_bstart_mgather.svg[BSTART.MGATHER encoding form bstart_mgather_32_c9defbf18276,align="center"]
+.`bstart_mgather_32_477b2795765c` — `BSTART.MGATHER DataType`
+image::encodings/enc_bstart_mgather.svg[BSTART.MGATHER encoding form bstart_mgather_32_477b2795765c,align="center"]
 
 
 Encoding notes (informative)::
 +
-* TMA Function=4. Memory gather uses B.DATR/B.IOR/B.IOT descriptor state.
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -2676,65 +2689,7 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
-[[insndesc-block-split-bstart-mgather-cas]]
-===== BSTART.MGATHER.CAS
-
-Terminates the current block and begins the next block, encoding both block type and transition kind.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `BSTART.MGATHER.CAS DataType`
-
-Encoding::
-+
-.`bstart_mgather_cas_32_fd8c8a3b720a` — `BSTART.MGATHER.CAS DataType`
-image::encodings/enc_bstart_mgather_cas.svg[BSTART.MGATHER.CAS encoding form bstart_mgather_cas_32_fd8c8a3b720a,align="center"]
-
-
-Encoding notes (informative)::
-+
-* Named TMA-family Function=8. Per-element atomic compare-and-swap gather; detailed PTO selector manifest is defined out-of-band for v0.57.
-
-Operation (informative)::
-+
-[source]
-----
-EndBlock()
-BeginNextBlock(/* type/kind/target as encoded */)
-----
-
-[[insndesc-block-split-bstart-mgather-mask]]
-===== BSTART.MGATHER.MASK
-
-Terminates the current block and begins the next block, encoding both block type and transition kind.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `BSTART.MGATHER.MASK DataType`
-
-Encoding::
-+
-.`bstart_mgather_mask_32_5573241cd944` — `BSTART.MGATHER.MASK DataType`
-image::encodings/enc_bstart_mgather_mask.svg[BSTART.MGATHER.MASK encoding form bstart_mgather_mask_32_5573241cd944,align="center"]
-
-
-Encoding notes (informative)::
-+
-* Named TMA-family Function=6. Masked memory gather; detailed PTO selector manifest is defined out-of-band for v0.57.
-
-Operation (informative)::
-+
-[source]
-----
-EndBlock()
-BeginNextBlock(/* type/kind/target as encoded */)
-----
-
-[[insndesc-block-split-bstart-mpar]]
+[[insndesc-bundle-split-bstart-mpar]]
 ===== BSTART.MPAR
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
@@ -2747,9 +2702,13 @@ Assembly forms::
 
 Encoding::
 +
-.`bstart_mpar_32_2d163417c615` — `BSTART.MPAR <VS8, VS16>`
-image::encodings/enc_bstart_mpar.svg[BSTART.MPAR encoding form bstart_mpar_32_2d163417c615,align="center"]
+.`bstart_mpar_32_beccb0565e7d` — `BSTART.MPAR <VS8, VS16>`
+image::encodings/enc_bstart_mpar.svg[BSTART.MPAR encoding form bstart_mpar_32_beccb0565e7d,align="center"]
 
+
+Encoding notes (informative)::
++
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -2759,7 +2718,7 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
-[[insndesc-block-split-bstart-mscatter]]
+[[insndesc-bundle-split-bstart-mscatter]]
 ===== BSTART.MSCATTER
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
@@ -2772,13 +2731,13 @@ Assembly forms::
 
 Encoding::
 +
-.`bstart_mscatter_32_0f0ba08bd798` — `BSTART.MSCATTER DataType`
-image::encodings/enc_bstart_mscatter.svg[BSTART.MSCATTER encoding form bstart_mscatter_32_0f0ba08bd798,align="center"]
+.`bstart_mscatter_32_7f76f632a75f` — `BSTART.MSCATTER DataType`
+image::encodings/enc_bstart_mscatter.svg[BSTART.MSCATTER encoding form bstart_mscatter_32_7f76f632a75f,align="center"]
 
 
 Encoding notes (informative)::
 +
-* TMA Function=5. Memory scatter uses B.DATR/B.IOR/B.IOT descriptor state.
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -2788,36 +2747,7 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
-[[insndesc-block-split-bstart-mscatter-mask]]
-===== BSTART.MSCATTER.MASK
-
-Terminates the current block and begins the next block, encoding both block type and transition kind.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `BSTART.MSCATTER.MASK DataType`
-
-Encoding::
-+
-.`bstart_mscatter_mask_32_2a33eed646f7` — `BSTART.MSCATTER.MASK DataType`
-image::encodings/enc_bstart_mscatter_mask.svg[BSTART.MSCATTER.MASK encoding form bstart_mscatter_mask_32_2a33eed646f7,align="center"]
-
-
-Encoding notes (informative)::
-+
-* Named TMA-family Function=7. Masked memory scatter; detailed PTO selector manifest is defined out-of-band for v0.57.
-
-Operation (informative)::
-+
-[source]
-----
-EndBlock()
-BeginNextBlock(/* type/kind/target as encoded */)
-----
-
-[[insndesc-block-split-bstart-mseq]]
+[[insndesc-bundle-split-bstart-mseq]]
 ===== BSTART.MSEQ
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
@@ -2830,9 +2760,13 @@ Assembly forms::
 
 Encoding::
 +
-.`bstart_mseq_32_39343a456ec5` — `BSTART.MSEQ <VS8, VS16>`
-image::encodings/enc_bstart_mseq.svg[BSTART.MSEQ encoding form bstart_mseq_32_39343a456ec5,align="center"]
+.`bstart_mseq_32_2cdcceaf89d4` — `BSTART.MSEQ <VS8, VS16>`
+image::encodings/enc_bstart_mseq.svg[BSTART.MSEQ encoding form bstart_mseq_32_2cdcceaf89d4,align="center"]
 
+
+Encoding notes (informative)::
++
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -2842,7 +2776,7 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
-[[insndesc-block-split-bstart-std]]
+[[insndesc-bundle-split-bstart-std]]
 ===== BSTART.STD
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
@@ -2851,35 +2785,35 @@ Catalog forms:: 7 form(s) (32 bits).
 
 Assembly forms::
 +
-* `BSTART.STD COND, <label>`
-* `BSTART.STD ICALL`
-* `BSTART.STD FALL<, fixup_label>`
-* `BSTART.STD RET`
 * `BSTART.STD IND`
+* `BSTART.STD COND, <label>`
+* `BSTART.STD RET`
 * `BSTART.STD CALL, <label>`
+* `BSTART.STD FALL<, fixup_label>`
+* `BSTART.STD ICALL`
 * `BSTART.STD DIRECT, <label>`
 
 Encoding::
 +
-.`bstart_std_32_1ef99c4cedcb` — `BSTART.STD COND, <label>`
-image::encodings/enc_bstart_std_32_1ef99c4cedcb.svg[BSTART.STD encoding form bstart_std_32_1ef99c4cedcb,align="center"]
-.`bstart_std_32_3f6980d013f7` — `BSTART.STD ICALL`
-image::encodings/enc_bstart_std_32_3f6980d013f7.svg[BSTART.STD encoding form bstart_std_32_3f6980d013f7,align="center"]
-.`bstart_std_32_441ad677fffe` — `BSTART.STD FALL<, fixup_label>`
-image::encodings/enc_bstart_std_32_441ad677fffe.svg[BSTART.STD encoding form bstart_std_32_441ad677fffe,align="center"]
-.`bstart_std_32_816dfa76cc4a` — `BSTART.STD RET`
-image::encodings/enc_bstart_std_32_816dfa76cc4a.svg[BSTART.STD encoding form bstart_std_32_816dfa76cc4a,align="center"]
-.`bstart_std_32_986b7ee2cf6a` — `BSTART.STD IND`
-image::encodings/enc_bstart_std_32_986b7ee2cf6a.svg[BSTART.STD encoding form bstart_std_32_986b7ee2cf6a,align="center"]
-.`bstart_std_32_b05390d367cf` — `BSTART.STD CALL, <label>`
-image::encodings/enc_bstart_std_32_b05390d367cf.svg[BSTART.STD encoding form bstart_std_32_b05390d367cf,align="center"]
-.`bstart_std_32_c1de85e06878` — `BSTART.STD DIRECT, <label>`
-image::encodings/enc_bstart_std_32_c1de85e06878.svg[BSTART.STD encoding form bstart_std_32_c1de85e06878,align="center"]
+.`bstart_std_32_49f2c6a8906f` — `BSTART.STD IND`
+image::encodings/enc_bstart_std_32_49f2c6a8906f.svg[BSTART.STD encoding form bstart_std_32_49f2c6a8906f,align="center"]
+.`bstart_std_32_696f98ac4bf1` — `BSTART.STD COND, <label>`
+image::encodings/enc_bstart_std_32_696f98ac4bf1.svg[BSTART.STD encoding form bstart_std_32_696f98ac4bf1,align="center"]
+.`bstart_std_32_7876537dce06` — `BSTART.STD RET`
+image::encodings/enc_bstart_std_32_7876537dce06.svg[BSTART.STD encoding form bstart_std_32_7876537dce06,align="center"]
+.`bstart_std_32_97d38b7be05e` — `BSTART.STD CALL, <label>`
+image::encodings/enc_bstart_std_32_97d38b7be05e.svg[BSTART.STD encoding form bstart_std_32_97d38b7be05e,align="center"]
+.`bstart_std_32_a5103b49e336` — `BSTART.STD FALL<, fixup_label>`
+image::encodings/enc_bstart_std_32_a5103b49e336.svg[BSTART.STD encoding form bstart_std_32_a5103b49e336,align="center"]
+.`bstart_std_32_c386430b732a` — `BSTART.STD ICALL`
+image::encodings/enc_bstart_std_32_c386430b732a.svg[BSTART.STD encoding form bstart_std_32_c386430b732a,align="center"]
+.`bstart_std_32_d3733f87964d` — `BSTART.STD DIRECT, <label>`
+image::encodings/enc_bstart_std_32_d3733f87964d.svg[BSTART.STD encoding form bstart_std_32_d3733f87964d,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Bits 31:15 are reserved zero.
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -2889,7 +2823,7 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
-[[insndesc-block-split-bstart-sys]]
+[[insndesc-bundle-split-bstart-sys]]
 ===== BSTART.SYS
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
@@ -2902,9 +2836,13 @@ Assembly forms::
 
 Encoding::
 +
-.`bstart_sys_32_762d9d84a6d8` — `BSTART.SYS FALL<, fixup_label>`
-image::encodings/enc_bstart_sys.svg[BSTART.SYS encoding form bstart_sys_32_762d9d84a6d8,align="center"]
+.`bstart_sys_32_7220989624e7` — `BSTART.SYS FALL<, fixup_label>`
+image::encodings/enc_bstart_sys.svg[BSTART.SYS encoding form bstart_sys_32_7220989624e7,align="center"]
 
+
+Encoding notes (informative)::
++
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -2914,7 +2852,7 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
-[[insndesc-block-split-bstart-tepl]]
+[[insndesc-bundle-split-bstart-tepl]]
 ===== BSTART.TEPL
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
@@ -2927,13 +2865,13 @@ Assembly forms::
 
 Encoding::
 +
-.`bstart_tepl_32_bff5143d4fe3` — `BSTART.TEPL Mode, Function, DataType`
-image::encodings/enc_bstart_tepl.svg[BSTART.TEPL encoding form bstart_tepl_32_bff5143d4fe3,align="center"]
+.`bstart_tepl_32_f0754cf51a8d` — `BSTART.TEPL Mode, Function, DataType`
+image::encodings/enc_bstart_tepl.svg[BSTART.TEPL encoding form bstart_tepl_32_f0754cf51a8d,align="center"]
 
 
 Encoding notes (informative)::
 +
-* PTO ISA 0.57.1 TEPL selector: logical_selector=(Mode<<5)\|Function. There is no legacy 10-bit TileOpcode decode.
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -2943,7 +2881,7 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
-[[insndesc-block-split-bstart-tgemv]]
+[[insndesc-bundle-split-bstart-tgemv]]
 ===== BSTART.TGEMV
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
@@ -2956,13 +2894,13 @@ Assembly forms::
 
 Encoding::
 +
-.`bstart_tgemv_32_ae19f5b678f5` — `BSTART.TGEMV DataType`
-image::encodings/enc_bstart_tgemv.svg[BSTART.TGEMV encoding form bstart_tgemv_32_ae19f5b678f5,align="center"]
+.`bstart_tgemv_32_5793d27aa023` — `BSTART.TGEMV DataType`
+image::encodings/enc_bstart_tgemv.svg[BSTART.TGEMV encoding form bstart_tgemv_32_5793d27aa023,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Named CUBE-family Function=16. Matrix-vector multiply; requires B.DIM and CUBE tile bindings.
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -2972,7 +2910,7 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
-[[insndesc-block-split-bstart-tgemv-acc]]
+[[insndesc-bundle-split-bstart-tgemv-acc]]
 ===== BSTART.TGEMV.ACC
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
@@ -2985,13 +2923,13 @@ Assembly forms::
 
 Encoding::
 +
-.`bstart_tgemv_acc_32_9a471b21913e` — `BSTART.TGEMV.ACC DataType`
-image::encodings/enc_bstart_tgemv_acc.svg[BSTART.TGEMV.ACC encoding form bstart_tgemv_acc_32_9a471b21913e,align="center"]
+.`bstart_tgemv_acc_32_d95ec8489341` — `BSTART.TGEMV.ACC DataType`
+image::encodings/enc_bstart_tgemv_acc.svg[BSTART.TGEMV.ACC encoding form bstart_tgemv_acc_32_d95ec8489341,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Named CUBE-family Function=18. Matrix-vector multiply-accumulate; requires B.DIM and CUBE tile bindings.
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -3001,7 +2939,7 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
-[[insndesc-block-split-bstart-tgemv-bias]]
+[[insndesc-bundle-split-bstart-tgemv-bias]]
 ===== BSTART.TGEMV.BIAS
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
@@ -3014,13 +2952,13 @@ Assembly forms::
 
 Encoding::
 +
-.`bstart_tgemv_bias_32_186ee96c0a8b` — `BSTART.TGEMV.BIAS DataType`
-image::encodings/enc_bstart_tgemv_bias.svg[BSTART.TGEMV.BIAS encoding form bstart_tgemv_bias_32_186ee96c0a8b,align="center"]
+.`bstart_tgemv_bias_32_98ff0e3b4e7b` — `BSTART.TGEMV.BIAS DataType`
+image::encodings/enc_bstart_tgemv_bias.svg[BSTART.TGEMV.BIAS encoding form bstart_tgemv_bias_32_98ff0e3b4e7b,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Named CUBE-family Function=17. Matrix-vector multiply with bias; requires B.DIM and CUBE tile bindings.
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -3030,7 +2968,7 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
-[[insndesc-block-split-bstart-tgemvmx]]
+[[insndesc-bundle-split-bstart-tgemvmx]]
 ===== BSTART.TGEMVMX
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
@@ -3043,13 +2981,13 @@ Assembly forms::
 
 Encoding::
 +
-.`bstart_tgemvmx_32_ae5e005f6589` — `BSTART.TGEMVMX DataType`
-image::encodings/enc_bstart_tgemvmx.svg[BSTART.TGEMVMX encoding form bstart_tgemvmx_32_ae5e005f6589,align="center"]
+.`bstart_tgemvmx_32_a6083394d51a` — `BSTART.TGEMVMX DataType`
+image::encodings/enc_bstart_tgemvmx.svg[BSTART.TGEMVMX encoding form bstart_tgemvmx_32_a6083394d51a,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Named CUBE-family Function=20. Micro-scaled matrix-vector multiply; requires B.DIM and CUBE tile bindings.
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -3059,7 +2997,7 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
-[[insndesc-block-split-bstart-tgemvmx-acc]]
+[[insndesc-bundle-split-bstart-tgemvmx-acc]]
 ===== BSTART.TGEMVMX.ACC
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
@@ -3072,13 +3010,13 @@ Assembly forms::
 
 Encoding::
 +
-.`bstart_tgemvmx_acc_32_368647b04bb0` — `BSTART.TGEMVMX.ACC DataType`
-image::encodings/enc_bstart_tgemvmx_acc.svg[BSTART.TGEMVMX.ACC encoding form bstart_tgemvmx_acc_32_368647b04bb0,align="center"]
+.`bstart_tgemvmx_acc_32_750196820fcf` — `BSTART.TGEMVMX.ACC DataType`
+image::encodings/enc_bstart_tgemvmx_acc.svg[BSTART.TGEMVMX.ACC encoding form bstart_tgemvmx_acc_32_750196820fcf,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Named CUBE-family Function=22. Micro-scaled matrix-vector multiply-accumulate; requires B.DIM and CUBE tile bindings.
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -3088,7 +3026,7 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
-[[insndesc-block-split-bstart-tgemvmx-bias]]
+[[insndesc-bundle-split-bstart-tgemvmx-bias]]
 ===== BSTART.TGEMVMX.BIAS
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
@@ -3101,13 +3039,13 @@ Assembly forms::
 
 Encoding::
 +
-.`bstart_tgemvmx_bias_32_d23011f15171` — `BSTART.TGEMVMX.BIAS DataType`
-image::encodings/enc_bstart_tgemvmx_bias.svg[BSTART.TGEMVMX.BIAS encoding form bstart_tgemvmx_bias_32_d23011f15171,align="center"]
+.`bstart_tgemvmx_bias_32_efccafe36069` — `BSTART.TGEMVMX.BIAS DataType`
+image::encodings/enc_bstart_tgemvmx_bias.svg[BSTART.TGEMVMX.BIAS encoding form bstart_tgemvmx_bias_32_efccafe36069,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Named CUBE-family Function=21. Micro-scaled matrix-vector multiply with bias; requires B.DIM and CUBE tile bindings.
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -3117,7 +3055,7 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
-[[insndesc-block-split-bstart-tload]]
+[[insndesc-bundle-split-bstart-tload]]
 ===== BSTART.TLOAD
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
@@ -3130,13 +3068,13 @@ Assembly forms::
 
 Encoding::
 +
-.`bstart_tload_32_d0c18bb0ab15` — `BSTART.TLOAD DataType`
-image::encodings/enc_bstart_tload.svg[BSTART.TLOAD encoding form bstart_tload_32_d0c18bb0ab15,align="center"]
+.`bstart_tload_32_5178a1794614` — `BSTART.TLOAD DataType`
+image::encodings/enc_bstart_tload.svg[BSTART.TLOAD encoding form bstart_tload_32_5178a1794614,align="center"]
 
 
 Encoding notes (informative)::
 +
-* TMA Function=0. Uses B.DATR layout/pad and B.IOR stride/base plus B.IOT tile binding.
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -3146,7 +3084,7 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
-[[insndesc-block-split-bstart-tmatmul]]
+[[insndesc-bundle-split-bstart-tmatmul]]
 ===== BSTART.TMATMUL
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
@@ -3159,13 +3097,13 @@ Assembly forms::
 
 Encoding::
 +
-.`bstart_tmatmul_32_f9da70e4e0ad` — `BSTART.TMATMUL DataType`
-image::encodings/enc_bstart_tmatmul.svg[BSTART.TMATMUL encoding form bstart_tmatmul_32_f9da70e4e0ad,align="center"]
+.`bstart_tmatmul_32_3bb582723869` — `BSTART.TMATMUL DataType`
+image::encodings/enc_bstart_tmatmul.svg[BSTART.TMATMUL encoding form bstart_tmatmul_32_3bb582723869,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Named CUBE-family Function=0. Requires B.DIM (LB0/LB1/LB2 as m,n,k) and tile bindings via B.IOT.
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -3175,7 +3113,7 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
-[[insndesc-block-split-bstart-tmatmul-acc]]
+[[insndesc-bundle-split-bstart-tmatmul-acc]]
 ===== BSTART.TMATMUL.ACC
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
@@ -3188,13 +3126,13 @@ Assembly forms::
 
 Encoding::
 +
-.`bstart_tmatmul_acc_32_0c8c62e5f00a` — `BSTART.TMATMUL.ACC DataType`
-image::encodings/enc_bstart_tmatmul_acc.svg[BSTART.TMATMUL.ACC encoding form bstart_tmatmul_acc_32_0c8c62e5f00a,align="center"]
+.`bstart_tmatmul_acc_32_e0bbf989304d` — `BSTART.TMATMUL.ACC DataType`
+image::encodings/enc_bstart_tmatmul_acc.svg[BSTART.TMATMUL.ACC encoding form bstart_tmatmul_acc_32_e0bbf989304d,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Named CUBE-family Function=2. Requires B.DIM (LB0/LB1/LB2 as m,n,k) and tile bindings via B.IOT.
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -3204,7 +3142,7 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
-[[insndesc-block-split-bstart-tmatmul-bias]]
+[[insndesc-bundle-split-bstart-tmatmul-bias]]
 ===== BSTART.TMATMUL.BIAS
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
@@ -3217,13 +3155,13 @@ Assembly forms::
 
 Encoding::
 +
-.`bstart_tmatmul_bias_32_4d5a498d12f3` — `BSTART.TMATMUL.BIAS DataType`
-image::encodings/enc_bstart_tmatmul_bias.svg[BSTART.TMATMUL.BIAS encoding form bstart_tmatmul_bias_32_4d5a498d12f3,align="center"]
+.`bstart_tmatmul_bias_32_82792b6c3b84` — `BSTART.TMATMUL.BIAS DataType`
+image::encodings/enc_bstart_tmatmul_bias.svg[BSTART.TMATMUL.BIAS encoding form bstart_tmatmul_bias_32_82792b6c3b84,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Named CUBE-family Function=1. Matrix multiply with bias; requires B.DIM and CUBE tile bindings.
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -3233,7 +3171,7 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
-[[insndesc-block-split-bstart-tmatmulmx]]
+[[insndesc-bundle-split-bstart-tmatmulmx]]
 ===== BSTART.TMATMULMX
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
@@ -3246,13 +3184,13 @@ Assembly forms::
 
 Encoding::
 +
-.`bstart_tmatmulmx_32_e26cb3874648` — `BSTART.TMATMULMX DataType`
-image::encodings/enc_bstart_tmatmulmx.svg[BSTART.TMATMULMX encoding form bstart_tmatmulmx_32_e26cb3874648,align="center"]
+.`bstart_tmatmulmx_32_4df63f33e364` — `BSTART.TMATMULMX DataType`
+image::encodings/enc_bstart_tmatmulmx.svg[BSTART.TMATMULMX encoding form bstart_tmatmulmx_32_4df63f33e364,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Named CUBE-family Function=4. Micro-scaled matrix multiply; requires B.DIM and CUBE tile bindings.
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -3262,7 +3200,7 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
-[[insndesc-block-split-bstart-tmatmulmx-acc]]
+[[insndesc-bundle-split-bstart-tmatmulmx-acc]]
 ===== BSTART.TMATMULMX.ACC
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
@@ -3275,13 +3213,13 @@ Assembly forms::
 
 Encoding::
 +
-.`bstart_tmatmulmx_acc_32_70fa59b0ab4c` — `BSTART.TMATMULMX.ACC DataType`
-image::encodings/enc_bstart_tmatmulmx_acc.svg[BSTART.TMATMULMX.ACC encoding form bstart_tmatmulmx_acc_32_70fa59b0ab4c,align="center"]
+.`bstart_tmatmulmx_acc_32_3848afaeabdd` — `BSTART.TMATMULMX.ACC DataType`
+image::encodings/enc_bstart_tmatmulmx_acc.svg[BSTART.TMATMULMX.ACC encoding form bstart_tmatmulmx_acc_32_3848afaeabdd,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Named CUBE-family Function=6. Micro-scaled matrix multiply-accumulate; requires B.DIM and CUBE tile bindings.
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -3291,7 +3229,7 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
-[[insndesc-block-split-bstart-tmatmulmx-bias]]
+[[insndesc-bundle-split-bstart-tmatmulmx-bias]]
 ===== BSTART.TMATMULMX.BIAS
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
@@ -3304,13 +3242,13 @@ Assembly forms::
 
 Encoding::
 +
-.`bstart_tmatmulmx_bias_32_098c7efa51b0` — `BSTART.TMATMULMX.BIAS DataType`
-image::encodings/enc_bstart_tmatmulmx_bias.svg[BSTART.TMATMULMX.BIAS encoding form bstart_tmatmulmx_bias_32_098c7efa51b0,align="center"]
+.`bstart_tmatmulmx_bias_32_5b20d174f5d9` — `BSTART.TMATMULMX.BIAS DataType`
+image::encodings/enc_bstart_tmatmulmx_bias.svg[BSTART.TMATMULMX.BIAS encoding form bstart_tmatmulmx_bias_32_5b20d174f5d9,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Named CUBE-family Function=5. Micro-scaled matrix multiply with bias; requires B.DIM and CUBE tile bindings.
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -3320,12 +3258,12 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
-[[insndesc-block-split-bstart-tmov]]
+[[insndesc-bundle-split-bstart-tmov]]
 ===== BSTART.TMOV
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
 
-Catalog forms:: 1 form(s) (32 bits).
+Catalog forms:: 5 form(s) (32 bits).
 
 Assembly forms::
 +
@@ -3333,13 +3271,21 @@ Assembly forms::
 
 Encoding::
 +
-.`bstart_tmov_32_211446509efb` — `BSTART.TMOV DataType`
-image::encodings/enc_bstart_tmov.svg[BSTART.TMOV encoding form bstart_tmov_32_211446509efb,align="center"]
+.`bstart_tmov_32_3079328b98d6` — `BSTART.TMOV DataType`
+image::encodings/enc_bstart_tmov_32_3079328b98d6.svg[BSTART.TMOV encoding form bstart_tmov_32_3079328b98d6,align="center"]
+.`bstart_tmov_32_34d0ab432974` — `BSTART.TMOV DataType`
+image::encodings/enc_bstart_tmov_32_34d0ab432974.svg[BSTART.TMOV encoding form bstart_tmov_32_34d0ab432974,align="center"]
+.`bstart_tmov_32_68c4ed390b75` — `BSTART.TMOV DataType`
+image::encodings/enc_bstart_tmov_32_68c4ed390b75.svg[BSTART.TMOV encoding form bstart_tmov_32_68c4ed390b75,align="center"]
+.`bstart_tmov_32_d96181e99f01` — `BSTART.TMOV DataType`
+image::encodings/enc_bstart_tmov_32_d96181e99f01.svg[BSTART.TMOV encoding form bstart_tmov_32_d96181e99f01,align="center"]
+.`bstart_tmov_32_efe5c49fcb78` — `BSTART.TMOV DataType`
+image::encodings/enc_bstart_tmov_32_efe5c49fcb78.svg[BSTART.TMOV encoding form bstart_tmov_32_efe5c49fcb78,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Alias of BSTART.TMA Function=2. TMOV is tile-state only (no GM memory access) and destination allocation is queue-push only.
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -3349,7 +3295,7 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
-[[insndesc-block-split-bstart-tprefetch]]
+[[insndesc-bundle-split-bstart-tprefetch]]
 ===== BSTART.TPREFETCH
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
@@ -3362,13 +3308,13 @@ Assembly forms::
 
 Encoding::
 +
-.`bstart_tprefetch_32_d5f83e5aadf6` — `BSTART.TPREFETCH DataType`
-image::encodings/enc_bstart_tprefetch.svg[BSTART.TPREFETCH encoding form bstart_tprefetch_32_d5f83e5aadf6,align="center"]
+.`bstart_tprefetch_32_3c9e83c5a42f` — `BSTART.TPREFETCH DataType`
+image::encodings/enc_bstart_tprefetch.svg[BSTART.TPREFETCH encoding form bstart_tprefetch_32_3c9e83c5a42f,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Named TMA-family Function=3. TPREFETCH has the same address, layout, memory, fault, ordering, and restart contract as TLOAD, with destination binding/allocation/writeback effects removed.
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -3378,12 +3324,12 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
-[[insndesc-block-split-bstart-tstore]]
+[[insndesc-bundle-split-bstart-tstore]]
 ===== BSTART.TSTORE
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
 
-Catalog forms:: 1 form(s) (32 bits).
+Catalog forms:: 2 form(s) (32 bits).
 
 Assembly forms::
 +
@@ -3391,13 +3337,15 @@ Assembly forms::
 
 Encoding::
 +
-.`bstart_tstore_32_4048b6e8b0f4` — `BSTART.TSTORE DataType`
-image::encodings/enc_bstart_tstore.svg[BSTART.TSTORE encoding form bstart_tstore_32_4048b6e8b0f4,align="center"]
+.`bstart_tstore_32_6f6869479814` — `BSTART.TSTORE DataType`
+image::encodings/enc_bstart_tstore_32_6f6869479814.svg[BSTART.TSTORE encoding form bstart_tstore_32_6f6869479814,align="center"]
+.`bstart_tstore_32_d592de9e15a8` — `BSTART.TSTORE DataType`
+image::encodings/enc_bstart_tstore_32_d592de9e15a8.svg[BSTART.TSTORE encoding form bstart_tstore_32_d592de9e15a8,align="center"]
 
 
 Encoding notes (informative)::
 +
-* TMA Function=1. Uses B.DATR layout/pad and B.IOR stride/base plus B.IOT tile binding.
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -3406,6 +3354,621 @@ Operation (informative)::
 EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
+
+[[insndesc-bundle-split-bstop]]
+===== BSTOP
+
+Terminates the current basic block.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTOP`
+
+Encoding::
++
+.`bstop_32_1c80341ebaa2` — `BSTOP`
+image::encodings/enc_bstop.svg[BSTOP encoding form bstop_32_1c80341ebaa2,align="center"]
+
+
+Encoding notes (informative)::
++
+* Commits the current bundle and transfers to its selected continuation.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+----
+
+[[insndesc-bundle-split-c-bstart]]
+===== C.BSTART
+
+This mnemonic has a 16-bit compressed encoding. Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 2 form(s) (16 bits).
+
+Assembly forms::
++
+* `C.BSTART DIRECT, label`
+* `C.BSTART COND, label`
+
+Encoding::
++
+.`c_bstart_16_78ebf9b37d2d` — `C.BSTART DIRECT, label`
+image::encodings/enc_c_bstart_16_78ebf9b37d2d.svg[C.BSTART encoding form c_bstart_16_78ebf9b37d2d,align="center"]
+.`c_bstart_16_b82b9a0c292c` — `C.BSTART COND, label`
+image::encodings/enc_c_bstart_16_b82b9a0c292c.svg[C.BSTART encoding form c_bstart_16_b82b9a0c292c,align="center"]
+
+
+Encoding notes (informative)::
++
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-bundle-split-c-bstop]]
+===== C.BSTOP
+
+This mnemonic has a 16-bit compressed encoding. Terminates the current basic block.
+
+Catalog forms:: 1 form(s) (16 bits).
+
+Assembly forms::
++
+* `C.BSTOP`
+
+Encoding::
++
+.`c_bstop_16_08a2ad84e04b` — `C.BSTOP`
+image::encodings/enc_c_bstop.svg[C.BSTOP encoding form c_bstop_16_08a2ad84e04b,align="center"]
+
+
+Encoding notes (informative)::
++
+* Commits the current bundle and transfers to its selected continuation.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+----
+
+[[insndesc-bundle-split-ercov]]
+===== ERCOV
+
+Loads a value from memory using the addressing form shown in the syntax and writes the result to the selected destination.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `ERCOV [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]`
+
+Encoding::
++
+.`ercov_32_9b0c74795df0` — `ERCOV [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]`
+image::encodings/enc_ercov.svg[ERCOV encoding form ercov_32_9b0c74795df0,align="center"]
+
+
+Encoding notes (informative)::
++
+* Recovers the encoded execution-context range from memory.
+
+Operation (informative)::
++
+[source]
+----
+Execute operation as selected by the mnemonic and encoded modifiers.
+----
+
+[[insndesc-bundle-split-esave]]
+===== ESAVE
+
+Loads a value from memory using the addressing form shown in the syntax and writes the result to the selected destination.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `ESAVE [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]`
+
+Encoding::
++
+.`esave_32_c85cb830dc0b` — `ESAVE [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]`
+image::encodings/enc_esave.svg[ESAVE encoding form esave_32_c85cb830dc0b,align="center"]
+
+
+Encoding notes (informative)::
++
+* Saves the encoded execution-context range to memory.
+
+Operation (informative)::
++
+[source]
+----
+Execute operation as selected by the mnemonic and encoded modifiers.
+----
+
+[[insndesc-bundle-split-fentry]]
+===== FENTRY
+
+Template-style function prologue/epilogue instruction for saving/restoring register ranges and adjusting the stack.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `FENTRY [RegSrc0 ~ RegSrcn], sp!, uimm`
+
+Encoding::
++
+.`fentry_32_74a07f46d846` — `FENTRY [RegSrc0 ~ RegSrcn], sp!, uimm`
+image::encodings/enc_fentry.svg[FENTRY encoding form fentry_32_74a07f46d846,align="center"]
+
+
+Encoding notes (informative)::
++
+* Atomically validates and creates a frame-template entry state.
+
+Operation (informative)::
++
+[source]
+----
+AdjustSPAndSaveRestoreRange(/* register range + uimm */)
+----
+
+[[insndesc-bundle-split-fexit]]
+===== FEXIT
+
+Template-style function prologue/epilogue instruction for saving/restoring register ranges and adjusting the stack.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `FEXIT [RegDst0 ~ RegDstn], sp!, uimm`
+
+Encoding::
++
+.`fexit_32_6492f41b2239` — `FEXIT [RegDst0 ~ RegDstn], sp!, uimm`
+image::encodings/enc_fexit.svg[FEXIT encoding form fexit_32_6492f41b2239,align="center"]
+
+
+Encoding notes (informative)::
++
+* Atomically validates and commits a frame-template exit state.
+
+Operation (informative)::
++
+[source]
+----
+AdjustSPAndSaveRestoreRange(/* register range + uimm */)
+----
+
+[[insndesc-bundle-split-fret-ra]]
+===== FRET.RA
+
+Template-style function prologue/epilogue instruction for saving/restoring register ranges and adjusting the stack.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `FRET.RA [RegDst0 ~ RegDstn], sp!, uimm`
+
+Encoding::
++
+.`fret_ra_32_b6f13adb3ea1` — `FRET.RA [RegDst0 ~ RegDstn], sp!, uimm`
+image::encodings/enc_fret_ra.svg[FRET.RA encoding form fret_ra_32_b6f13adb3ea1,align="center"]
+
+
+Encoding notes (informative)::
++
+* Restores a frame and returns through the retained return-address target.
+
+Operation (informative)::
++
+[source]
+----
+AdjustSPAndSaveRestoreRange(/* register range + uimm */)
+----
+
+[[insndesc-bundle-split-fret-stk]]
+===== FRET.STK
+
+Template-style function prologue/epilogue instruction for saving/restoring register ranges and adjusting the stack.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `FRET.STK [RegDst0 ~ RegDstn], sp!, uimm`
+
+Encoding::
++
+.`fret_stk_32_4522597d3ce0` — `FRET.STK [RegDst0 ~ RegDstn], sp!, uimm`
+image::encodings/enc_fret_stk.svg[FRET.STK encoding form fret_stk_32_4522597d3ce0,align="center"]
+
+
+Encoding notes (informative)::
++
+* Restores a frame and returns through the validated stack target.
+
+Operation (informative)::
++
+[source]
+----
+AdjustSPAndSaveRestoreRange(/* register range + uimm */)
+----
+
+[[insndesc-bundle-split-mcopy]]
+===== MCOPY
+
+Performs a bulk memory operation as specified by the operands (copy or set).
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `MCOPY [RegSrc0, RegSrc1, RegSrc2]`
+
+Encoding::
++
+.`mcopy_32_10262506ace5` — `MCOPY [RegSrc0, RegSrc1, RegSrc2]`
+image::encodings/enc_mcopy.svg[MCOPY encoding form mcopy_32_10262506ace5,align="center"]
+
+
+Encoding notes (informative)::
++
+* Copies an encoded memory range with instruction-atomic preflight and snapshot semantics.
+
+Operation (informative)::
++
+[source]
+----
+MemCopy(dst=RegSrc0, src=RegSrc1, size=RegSrc2)
+----
+
+[[insndesc-bundle-split-mset]]
+===== MSET
+
+Performs a bulk memory operation as specified by the operands (copy or set).
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `MSET [RegSrc0, RegSrc1, RegSrc2]`
+
+Encoding::
++
+.`mset_32_7a5f3c26ac6b` — `MSET [RegSrc0, RegSrc1, RegSrc2]`
+image::encodings/enc_mset.svg[MSET encoding form mset_32_7a5f3c26ac6b,align="center"]
+
+
+Encoding notes (informative)::
++
+* Fills an encoded memory range after complete access preflight.
+
+Operation (informative)::
++
+[source]
+----
+MemSet(dst=RegSrc0, value=RegSrc1, size=RegSrc2)
+----
+
+[[insndesc-bundle-split-xb]]
+===== XB
+
+Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `XB ACR-ID, C-ID`
+
+Encoding::
++
+.`xb_32_1c3043ef6fa8` — `XB ACR-ID, C-ID`
+image::encodings/enc_xb.svg[XB encoding form xb_32_1c3043ef6fa8,align="center"]
+
+
+Encoding notes (informative)::
++
+* Transfers the named context value to a target virtual core block.
+
+Operation (informative)::
++
+[source]
+----
+Execute operation as selected by the mnemonic and encoded modifiers.
+----
+
+[[insndesc-bstart]]
+==== BSTART
+
+[[insndesc-bstart-bstart-call]]
+===== BSTART CALL
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.CALL <br_label>, <rt_label>, ->ra`
+
+Encoding::
++
+.`bstart_call_32_d30ef065210c` — `BSTART.CALL <br_label>, <rt_label>, ->ra`
+image::encodings/enc_bstart_call.svg[BSTART CALL encoding form bstart_call_32_d30ef065210c,align="center"]
+
+
+Encoding notes (informative)::
++
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+
+Operation (informative)::
++
+[source]
+----
+P = CurrentPC()
+call_target = P + (SignExtend(simm12) << 1)
+ra = (P + 2) + (ZeroExtend(uimm5) << 1)
+AtomicCallTransfer(call_target, ra)
+----
+
+[[insndesc-bstart-hl-bstart-call]]
+===== HL.BSTART CALL
+
+This mnemonic has a 48-bit composed encoding (prefix + main). Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (48 bits).
+
+Assembly forms::
++
+* `HL.BSTART.CALL <br_label>, <rt_label>, ->ra`
+
+Encoding::
++
+.`hl_bstart_call_48_d71cee46ab50` — `HL.BSTART.CALL <br_label>, <rt_label>, ->ra`
+image::encodings/enc_hl_bstart_call.svg[HL.BSTART CALL encoding form hl_bstart_call_48_d71cee46ab50,align="center"]
+
+
+Encoding notes (informative)::
++
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+
+Operation (informative)::
++
+[source]
+----
+P = CurrentPC()
+call_target = P + (SignExtend(simm25) << 1)
+ra = (P + 4) + (ZeroExtend(uimm5) << 1)
+AtomicCallTransfer(call_target, ra)
+----
+
+[[insndesc-bstart-hl-bstart-fp]]
+===== HL.BSTART.FP
+
+This mnemonic has a 48-bit composed encoding (prefix + main). Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 4 form(s) (48 bits).
+
+Assembly forms::
++
+* `HL.BSTART.FP FALL<, fixup_label>`
+* `HL.BSTART.FP CALL, <label>`
+* `HL.BSTART.FP DIRECT, <label>`
+* `HL.BSTART.FP COND, <label>`
+
+Encoding::
++
+.`hl_bstart_fp_48_0368fb7424f4` — `HL.BSTART.FP FALL<, fixup_label>`
+image::encodings/enc_hl_bstart_fp_48_0368fb7424f4.svg[HL.BSTART.FP encoding form hl_bstart_fp_48_0368fb7424f4,align="center"]
+.`hl_bstart_fp_48_9955c1f823f6` — `HL.BSTART.FP CALL, <label>`
+image::encodings/enc_hl_bstart_fp_48_9955c1f823f6.svg[HL.BSTART.FP encoding form hl_bstart_fp_48_9955c1f823f6,align="center"]
+.`hl_bstart_fp_48_9a0544563449` — `HL.BSTART.FP DIRECT, <label>`
+image::encodings/enc_hl_bstart_fp_48_9a0544563449.svg[HL.BSTART.FP encoding form hl_bstart_fp_48_9a0544563449,align="center"]
+.`hl_bstart_fp_48_f074f1e2c089` — `HL.BSTART.FP COND, <label>`
+image::encodings/enc_hl_bstart_fp_48_f074f1e2c089.svg[HL.BSTART.FP encoding form hl_bstart_fp_48_f074f1e2c089,align="center"]
+
+
+Encoding notes (informative)::
++
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-bstart-hl-bstart-std]]
+===== HL.BSTART.STD
+
+This mnemonic has a 48-bit composed encoding (prefix + main). Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 4 form(s) (48 bits).
+
+Assembly forms::
++
+* `HL.BSTART.STD FALL<, fixup_label>`
+* `HL.BSTART.STD COND, <label>`
+* `HL.BSTART.STD CALL, <label>`
+* `HL.BSTART.STD DIRECT, <label>`
+
+Encoding::
++
+.`hl_bstart_std_48_170d04be4f7e` — `HL.BSTART.STD FALL<, fixup_label>`
+image::encodings/enc_hl_bstart_std_48_170d04be4f7e.svg[HL.BSTART.STD encoding form hl_bstart_std_48_170d04be4f7e,align="center"]
+.`hl_bstart_std_48_436ff4a95f39` — `HL.BSTART.STD COND, <label>`
+image::encodings/enc_hl_bstart_std_48_436ff4a95f39.svg[HL.BSTART.STD encoding form hl_bstart_std_48_436ff4a95f39,align="center"]
+.`hl_bstart_std_48_4eff98193028` — `HL.BSTART.STD CALL, <label>`
+image::encodings/enc_hl_bstart_std_48_4eff98193028.svg[HL.BSTART.STD encoding form hl_bstart_std_48_4eff98193028,align="center"]
+.`hl_bstart_std_48_c970f578674f` — `HL.BSTART.STD DIRECT, <label>`
+image::encodings/enc_hl_bstart_std_48_c970f578674f.svg[HL.BSTART.STD encoding form hl_bstart_std_48_c970f578674f,align="center"]
+
+
+Encoding notes (informative)::
++
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-bstart-hl-bstart-sys]]
+===== HL.BSTART.SYS
+
+This mnemonic has a 48-bit composed encoding (prefix + main). Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (48 bits).
+
+Assembly forms::
++
+* `HL.BSTART.SYS FALL<, fixup_label>`
+
+Encoding::
++
+.`hl_bstart_sys_48_54ff489122fe` — `HL.BSTART.SYS FALL<, fixup_label>`
+image::encodings/enc_hl_bstart_sys.svg[HL.BSTART.SYS encoding form hl_bstart_sys_48_54ff489122fe,align="center"]
+
+
+Encoding notes (informative)::
++
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-bstart-l-bstart-fp]]
+===== L.BSTART.FP
+
+Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
+
+Catalog forms:: 4 form(s) (64 bits).
+
+Assembly forms::
++
+* `L.BSTART.FP DIRECT, <label>`
+* `L.BSTART.FP FALL<, fixup_label>`
+* `L.BSTART.FP CALL, <label>`
+* `L.BSTART.FP COND, <label>`
+
+Encoding::
++
+.`l_bstart_fp_64_52a1fd45d908` — `L.BSTART.FP DIRECT, <label>`
+image::encodings/enc_l_bstart_fp_64_52a1fd45d908.svg[L.BSTART.FP encoding form l_bstart_fp_64_52a1fd45d908,align="center"]
+.`l_bstart_fp_64_59792b6f0002` — `L.BSTART.FP FALL<, fixup_label>`
+image::encodings/enc_l_bstart_fp_64_59792b6f0002.svg[L.BSTART.FP encoding form l_bstart_fp_64_59792b6f0002,align="center"]
+.`l_bstart_fp_64_9673fedb498b` — `L.BSTART.FP CALL, <label>`
+image::encodings/enc_l_bstart_fp_64_9673fedb498b.svg[L.BSTART.FP encoding form l_bstart_fp_64_9673fedb498b,align="center"]
+.`l_bstart_fp_64_b27a4726298b` — `L.BSTART.FP COND, <label>`
+image::encodings/enc_l_bstart_fp_64_b27a4726298b.svg[L.BSTART.FP encoding form l_bstart_fp_64_b27a4726298b,align="center"]
+
+
+Encoding notes (informative)::
++
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+
+Operation (informative)::
++
+[source]
+----
+Execute operation as selected by the mnemonic and encoded modifiers.
+----
+
+[[insndesc-bstart-l-bstart-std]]
+===== L.BSTART.STD
+
+Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
+
+Catalog forms:: 4 form(s) (64 bits).
+
+Assembly forms::
++
+* `L.BSTART.STD COND, <label>`
+* `L.BSTART.STD DIRECT, <label>`
+* `L.BSTART.STD CALL, <label>`
+* `L.BSTART.STD FALL<, fixup_label>`
+
+Encoding::
++
+.`l_bstart_std_64_40bf385dbbff` — `L.BSTART.STD COND, <label>`
+image::encodings/enc_l_bstart_std_64_40bf385dbbff.svg[L.BSTART.STD encoding form l_bstart_std_64_40bf385dbbff,align="center"]
+.`l_bstart_std_64_49b7cf990e62` — `L.BSTART.STD DIRECT, <label>`
+image::encodings/enc_l_bstart_std_64_49b7cf990e62.svg[L.BSTART.STD encoding form l_bstart_std_64_49b7cf990e62,align="center"]
+.`l_bstart_std_64_9a6081ab8f08` — `L.BSTART.STD CALL, <label>`
+image::encodings/enc_l_bstart_std_64_9a6081ab8f08.svg[L.BSTART.STD encoding form l_bstart_std_64_9a6081ab8f08,align="center"]
+.`l_bstart_std_64_ed61315d3418` — `L.BSTART.STD FALL<, fixup_label>`
+image::encodings/enc_l_bstart_std_64_ed61315d3418.svg[L.BSTART.STD encoding form l_bstart_std_64_ed61315d3418,align="center"]
+
+
+Encoding notes (informative)::
++
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+
+Operation (informative)::
++
+[source]
+----
+Execute operation as selected by the mnemonic and encoded modifiers.
+----
+
+[[insndesc-bstart-l-bstart-sys]]
+===== L.BSTART.SYS
+
+Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
+
+Catalog forms:: 1 form(s) (64 bits).
+
+Assembly forms::
++
+* `L.BSTART.SYS FALL<, fixup_label>`
+
+Encoding::
++
+.`l_bstart_sys_64_3e3b45c148bc` — `L.BSTART.SYS FALL<, fixup_label>`
+image::encodings/enc_l_bstart_sys_parts.svg[L.BSTART.SYS encoding form l_bstart_sys_64_3e3b45c148bc,align="center"]
+
+
+Encoding notes (informative)::
++
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+
+Operation (informative)::
++
+[source]
+----
+Execute operation as selected by the mnemonic and encoded modifiers.
+----
+
+[[insndesc-block-split]]
+==== Block Split
 
 [[insndesc-block-split-bstart-vpar]]
 ===== BSTART.VPAR
@@ -3463,562 +4026,6 @@ Operation (informative)::
 ----
 EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
-----
-
-[[insndesc-block-split-bstop]]
-===== BSTOP
-
-Terminates the current basic block.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `BSTOP`
-
-Encoding::
-+
-.`bstop_32_d25b09fdd59c` — `BSTOP`
-image::encodings/enc_bstop.svg[BSTOP encoding form bstop_32_d25b09fdd59c,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-EndBlock()
-----
-
-[[insndesc-block-split-c-bstart]]
-===== C.BSTART
-
-This mnemonic has a 16-bit compressed encoding. Terminates the current block and begins the next block, encoding both block type and transition kind.
-
-Catalog forms:: 2 form(s) (16 bits).
-
-Assembly forms::
-+
-* `C.BSTART COND, label`
-* `C.BSTART DIRECT, label`
-
-Encoding::
-+
-.`c_bstart_16_c4e238a9227a` — `C.BSTART COND, label`
-image::encodings/enc_c_bstart_16_c4e238a9227a.svg[C.BSTART encoding form c_bstart_16_c4e238a9227a,align="center"]
-.`c_bstart_16_f833d2a4753c` — `C.BSTART DIRECT, label`
-image::encodings/enc_c_bstart_16_f833d2a4753c.svg[C.BSTART encoding form c_bstart_16_f833d2a4753c,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-EndBlock()
-BeginNextBlock(/* type/kind/target as encoded */)
-----
-
-[[insndesc-block-split-c-bstop]]
-===== C.BSTOP
-
-This mnemonic has a 16-bit compressed encoding. Terminates the current basic block.
-
-Catalog forms:: 1 form(s) (16 bits).
-
-Assembly forms::
-+
-* `C.BSTOP`
-
-Encoding::
-+
-.`c_bstop_16_ca4743d8a95e` — `C.BSTOP`
-image::encodings/enc_c_bstop.svg[C.BSTOP encoding form c_bstop_16_ca4743d8a95e,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-EndBlock()
-----
-
-[[insndesc-block-split-ercov]]
-===== ERCOV
-
-Loads a value from memory using the addressing form shown in the syntax and writes the result to the selected destination.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `ERCOV [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]`
-
-Encoding::
-+
-.`ercov_32_dc0be14a2d8b` — `ERCOV [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]`
-image::encodings/enc_ercov.svg[ERCOV encoding form ercov_32_dc0be14a2d8b,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-Execute operation as selected by the mnemonic and encoded modifiers.
-----
-
-[[insndesc-block-split-esave]]
-===== ESAVE
-
-Loads a value from memory using the addressing form shown in the syntax and writes the result to the selected destination.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `ESAVE [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]`
-
-Encoding::
-+
-.`esave_32_4c4f79fe3171` — `ESAVE [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]`
-image::encodings/enc_esave.svg[ESAVE encoding form esave_32_4c4f79fe3171,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-Execute operation as selected by the mnemonic and encoded modifiers.
-----
-
-[[insndesc-block-split-fentry]]
-===== FENTRY
-
-Template-style function prologue/epilogue instruction for saving/restoring register ranges and adjusting the stack.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `FENTRY [RegSrc0 ~ RegSrcn], sp!, uimm`
-
-Encoding::
-+
-.`fentry_32_a47584ec13b6` — `FENTRY [RegSrc0 ~ RegSrcn], sp!, uimm`
-image::encodings/enc_fentry.svg[FENTRY encoding form fentry_32_a47584ec13b6,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-AdjustSPAndSaveRestoreRange(/* register range + uimm */)
-----
-
-[[insndesc-block-split-fexit]]
-===== FEXIT
-
-Template-style function prologue/epilogue instruction for saving/restoring register ranges and adjusting the stack.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `FEXIT [RegDst0 ~ RegDstn], sp!, uimm`
-
-Encoding::
-+
-.`fexit_32_37b663f2a34d` — `FEXIT [RegDst0 ~ RegDstn], sp!, uimm`
-image::encodings/enc_fexit.svg[FEXIT encoding form fexit_32_37b663f2a34d,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-AdjustSPAndSaveRestoreRange(/* register range + uimm */)
-----
-
-[[insndesc-block-split-fret-ra]]
-===== FRET.RA
-
-Template-style function prologue/epilogue instruction for saving/restoring register ranges and adjusting the stack.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `FRET.RA [RegDst0 ~ RegDstn], sp!, uimm`
-
-Encoding::
-+
-.`fret_ra_32_659c886221c1` — `FRET.RA [RegDst0 ~ RegDstn], sp!, uimm`
-image::encodings/enc_fret_ra.svg[FRET.RA encoding form fret_ra_32_659c886221c1,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-AdjustSPAndSaveRestoreRange(/* register range + uimm */)
-----
-
-[[insndesc-block-split-fret-stk]]
-===== FRET.STK
-
-Template-style function prologue/epilogue instruction for saving/restoring register ranges and adjusting the stack.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `FRET.STK [RegDst0 ~ RegDstn], sp!, uimm`
-
-Encoding::
-+
-.`fret_stk_32_4fe246bd8241` — `FRET.STK [RegDst0 ~ RegDstn], sp!, uimm`
-image::encodings/enc_fret_stk.svg[FRET.STK encoding form fret_stk_32_4fe246bd8241,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-AdjustSPAndSaveRestoreRange(/* register range + uimm */)
-----
-
-[[insndesc-block-split-mcopy]]
-===== MCOPY
-
-Performs a bulk memory operation as specified by the operands (copy or set).
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `MCOPY [RegSrc0, RegSrc1, RegSrc2]`
-
-Encoding::
-+
-.`mcopy_32_4fc4a803e995` — `MCOPY [RegSrc0, RegSrc1, RegSrc2]`
-image::encodings/enc_mcopy.svg[MCOPY encoding form mcopy_32_4fc4a803e995,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-MemCopy(dst=RegSrc0, src=RegSrc1, size=RegSrc2)
-----
-
-[[insndesc-block-split-mset]]
-===== MSET
-
-Performs a bulk memory operation as specified by the operands (copy or set).
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `MSET [RegSrc0, RegSrc1, RegSrc2]`
-
-Encoding::
-+
-.`mset_32_0b932f291932` — `MSET [RegSrc0, RegSrc1, RegSrc2]`
-image::encodings/enc_mset.svg[MSET encoding form mset_32_0b932f291932,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-MemSet(dst=RegSrc0, value=RegSrc1, size=RegSrc2)
-----
-
-[[insndesc-block-split-xb]]
-===== XB
-
-Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `XB ACR-ID, C-ID`
-
-Encoding::
-+
-.`xb_32_40ad190a0a7f` — `XB ACR-ID, C-ID`
-image::encodings/enc_xb.svg[XB encoding form xb_32_40ad190a0a7f,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-Execute operation as selected by the mnemonic and encoded modifiers.
-----
-
-[[insndesc-bstart]]
-==== BSTART
-
-[[insndesc-bstart-bstart-call]]
-===== BSTART CALL
-
-Terminates the current block and begins the next block, encoding both block type and transition kind.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `BSTART.CALL <br_label>, <rt_label>, ->ra`
-
-Exact operand contract (catalog-derived)::
-+
-* `bstart_call_32_9404418d1ae5`: relocations `simm12` → `CBSTART12_PCREL`, `uimm5` → `CSETRET5_PCREL`; roles `<br_label>` → call_target (P), `<rt_label>` → return_target (P+2), `->ra` → link_destination (n/a).
-
-Encoding::
-+
-.`bstart_call_32_9404418d1ae5` — `BSTART.CALL <br_label>, <rt_label>, ->ra`
-image::encodings/enc_bstart_call.svg[BSTART CALL encoding form bstart_call_32_9404418d1ae5,align="center"]
-
-
-Encoding notes (informative)::
-+
-* Atomic fused CALL: call_target = P + (SignExtend(simm12) << 1); ra = (P + 2) + (ZeroExtend(uimm5) << 1). Both labels are explicit and independently relocatable.
-
-Operation (informative)::
-+
-[source]
-----
-P = CurrentPC()
-call_target = P + (SignExtend(simm12) << 1)
-ra = (P + 2) + (ZeroExtend(uimm5) << 1)
-AtomicCallTransfer(call_target, ra)
-----
-
-[[insndesc-bstart-hl-bstart-call]]
-===== HL.BSTART CALL
-
-This mnemonic has a 48-bit composed encoding (prefix + main). Terminates the current block and begins the next block, encoding both block type and transition kind.
-
-Catalog forms:: 1 form(s) (48 bits).
-
-Assembly forms::
-+
-* `HL.BSTART.CALL <br_label>, <rt_label>, ->ra`
-
-Exact operand contract (catalog-derived)::
-+
-* `hl_bstart_call_48_3c784c583c90`: relocations `simm25` → `B25_PCREL`, `uimm5` → `CSETRET5_PCREL`; roles `<br_label>` → call_target (P), `<rt_label>` → return_target (P+4), `->ra` → link_destination (n/a).
-
-Encoding::
-+
-.`hl_bstart_call_48_3c784c583c90` — `HL.BSTART.CALL <br_label>, <rt_label>, ->ra`
-image::encodings/enc_hl_bstart_call.svg[HL.BSTART CALL encoding form hl_bstart_call_48_3c784c583c90,align="center"]
-
-
-Encoding notes (informative)::
-+
-* Atomic fused CALL: call_target = P + (SignExtend(simm25) << 1); ra = (P + 4) + (ZeroExtend(uimm5) << 1). Both labels are explicit and independently relocatable.
-
-Operation (informative)::
-+
-[source]
-----
-P = CurrentPC()
-call_target = P + (SignExtend(simm25) << 1)
-ra = (P + 4) + (ZeroExtend(uimm5) << 1)
-AtomicCallTransfer(call_target, ra)
-----
-
-[[insndesc-bstart-hl-bstart-fp]]
-===== HL.BSTART.FP
-
-This mnemonic has a 48-bit composed encoding (prefix + main). Terminates the current block and begins the next block, encoding both block type and transition kind.
-
-Catalog forms:: 4 form(s) (48 bits).
-
-Assembly forms::
-+
-* `HL.BSTART.FP COND, <label>`
-* `HL.BSTART.FP FALL<, fixup_label>`
-* `HL.BSTART.FP CALL, <label>`
-* `HL.BSTART.FP DIRECT, <label>`
-
-Encoding::
-+
-.`hl_bstart_fp_48_038e2e96cf64` — `HL.BSTART.FP COND, <label>`
-image::encodings/enc_hl_bstart_fp_48_038e2e96cf64.svg[HL.BSTART.FP encoding form hl_bstart_fp_48_038e2e96cf64,align="center"]
-.`hl_bstart_fp_48_43530d2ebfae` — `HL.BSTART.FP FALL<, fixup_label>`
-image::encodings/enc_hl_bstart_fp_48_43530d2ebfae.svg[HL.BSTART.FP encoding form hl_bstart_fp_48_43530d2ebfae,align="center"]
-.`hl_bstart_fp_48_81b457553844` — `HL.BSTART.FP CALL, <label>`
-image::encodings/enc_hl_bstart_fp_48_81b457553844.svg[HL.BSTART.FP encoding form hl_bstart_fp_48_81b457553844,align="center"]
-.`hl_bstart_fp_48_eb938e9200eb` — `HL.BSTART.FP DIRECT, <label>`
-image::encodings/enc_hl_bstart_fp_48_eb938e9200eb.svg[HL.BSTART.FP encoding form hl_bstart_fp_48_eb938e9200eb,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-EndBlock()
-BeginNextBlock(/* type/kind/target as encoded */)
-----
-
-[[insndesc-bstart-hl-bstart-std]]
-===== HL.BSTART.STD
-
-This mnemonic has a 48-bit composed encoding (prefix + main). Terminates the current block and begins the next block, encoding both block type and transition kind.
-
-Catalog forms:: 4 form(s) (48 bits).
-
-Assembly forms::
-+
-* `HL.BSTART.STD CALL, <label>`
-* `HL.BSTART.STD FALL<, fixup_label>`
-* `HL.BSTART.STD COND, <label>`
-* `HL.BSTART.STD DIRECT, <label>`
-
-Encoding::
-+
-.`hl_bstart_std_48_51f78942222e` — `HL.BSTART.STD CALL, <label>`
-image::encodings/enc_hl_bstart_std_48_51f78942222e.svg[HL.BSTART.STD encoding form hl_bstart_std_48_51f78942222e,align="center"]
-.`hl_bstart_std_48_9ba705710872` — `HL.BSTART.STD FALL<, fixup_label>`
-image::encodings/enc_hl_bstart_std_48_9ba705710872.svg[HL.BSTART.STD encoding form hl_bstart_std_48_9ba705710872,align="center"]
-.`hl_bstart_std_48_b13f22c7c4a3` — `HL.BSTART.STD COND, <label>`
-image::encodings/enc_hl_bstart_std_48_b13f22c7c4a3.svg[HL.BSTART.STD encoding form hl_bstart_std_48_b13f22c7c4a3,align="center"]
-.`hl_bstart_std_48_d814d26508a4` — `HL.BSTART.STD DIRECT, <label>`
-image::encodings/enc_hl_bstart_std_48_d814d26508a4.svg[HL.BSTART.STD encoding form hl_bstart_std_48_d814d26508a4,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-EndBlock()
-BeginNextBlock(/* type/kind/target as encoded */)
-----
-
-[[insndesc-bstart-hl-bstart-sys]]
-===== HL.BSTART.SYS
-
-This mnemonic has a 48-bit composed encoding (prefix + main). Terminates the current block and begins the next block, encoding both block type and transition kind.
-
-Catalog forms:: 1 form(s) (48 bits).
-
-Assembly forms::
-+
-* `HL.BSTART.SYS FALL<, fixup_label>`
-
-Encoding::
-+
-.`hl_bstart_sys_48_5bf0381f7bf8` — `HL.BSTART.SYS FALL<, fixup_label>`
-image::encodings/enc_hl_bstart_sys.svg[HL.BSTART.SYS encoding form hl_bstart_sys_48_5bf0381f7bf8,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-EndBlock()
-BeginNextBlock(/* type/kind/target as encoded */)
-----
-
-[[insndesc-bstart-l-bstart-fp]]
-===== L.BSTART.FP
-
-Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
-
-Catalog forms:: 4 form(s) (64 bits).
-
-Assembly forms::
-+
-* `L.BSTART.FP COND, <label>`
-* `L.BSTART.FP DIRECT, <label>`
-* `L.BSTART.FP CALL, <label>`
-* `L.BSTART.FP FALL<, fixup_label>`
-
-Encoding::
-+
-.`l_bstart_fp_64_098e57019d7b` — `L.BSTART.FP COND, <label>`
-image::encodings/enc_l_bstart_fp_64_098e57019d7b.svg[L.BSTART.FP encoding form l_bstart_fp_64_098e57019d7b,align="center"]
-.`l_bstart_fp_64_0cac9941f7d4` — `L.BSTART.FP DIRECT, <label>`
-image::encodings/enc_l_bstart_fp_64_0cac9941f7d4.svg[L.BSTART.FP encoding form l_bstart_fp_64_0cac9941f7d4,align="center"]
-.`l_bstart_fp_64_2067ad6667ed` — `L.BSTART.FP CALL, <label>`
-image::encodings/enc_l_bstart_fp_64_2067ad6667ed.svg[L.BSTART.FP encoding form l_bstart_fp_64_2067ad6667ed,align="center"]
-.`l_bstart_fp_64_8115c042ef26` — `L.BSTART.FP FALL<, fixup_label>`
-image::encodings/enc_l_bstart_fp_64_8115c042ef26.svg[L.BSTART.FP encoding form l_bstart_fp_64_8115c042ef26,align="center"]
-
-
-Encoding notes (informative)::
-+
-* Bare L.BSTART.FP CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.
-
-Operation (informative)::
-+
-[source]
-----
-Execute operation as selected by the mnemonic and encoded modifiers.
-----
-
-[[insndesc-bstart-l-bstart-std]]
-===== L.BSTART.STD
-
-Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
-
-Catalog forms:: 4 form(s) (64 bits).
-
-Assembly forms::
-+
-* `L.BSTART.STD DIRECT, <label>`
-* `L.BSTART.STD CALL, <label>`
-* `L.BSTART.STD COND, <label>`
-* `L.BSTART.STD FALL<, fixup_label>`
-
-Encoding::
-+
-.`l_bstart_std_64_37e84068ce61` — `L.BSTART.STD DIRECT, <label>`
-image::encodings/enc_l_bstart_std_64_37e84068ce61.svg[L.BSTART.STD encoding form l_bstart_std_64_37e84068ce61,align="center"]
-.`l_bstart_std_64_463a1567da91` — `L.BSTART.STD CALL, <label>`
-image::encodings/enc_l_bstart_std_64_463a1567da91.svg[L.BSTART.STD encoding form l_bstart_std_64_463a1567da91,align="center"]
-.`l_bstart_std_64_72d502fcd30d` — `L.BSTART.STD COND, <label>`
-image::encodings/enc_l_bstart_std_64_72d502fcd30d.svg[L.BSTART.STD encoding form l_bstart_std_64_72d502fcd30d,align="center"]
-.`l_bstart_std_64_899592f9c5bc` — `L.BSTART.STD FALL<, fixup_label>`
-image::encodings/enc_l_bstart_std_64_899592f9c5bc.svg[L.BSTART.STD encoding form l_bstart_std_64_899592f9c5bc,align="center"]
-
-
-Encoding notes (informative)::
-+
-* Bare L.BSTART.STD CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.
-
-Operation (informative)::
-+
-[source]
-----
-Execute operation as selected by the mnemonic and encoded modifiers.
-----
-
-[[insndesc-bstart-l-bstart-sys]]
-===== L.BSTART.SYS
-
-Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
-
-Catalog forms:: 1 form(s) (64 bits).
-
-Assembly forms::
-+
-* `L.BSTART.SYS FALL<, fixup_label>`
-
-Encoding::
-+
-.`l_bstart_sys_64_919e576c79e4` — `L.BSTART.SYS FALL<, fixup_label>`
-image::encodings/enc_l_bstart_sys_parts.svg[L.BSTART.SYS encoding form l_bstart_sys_64_919e576c79e4,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-Execute operation as selected by the mnemonic and encoded modifiers.
 ----
 
 [[insndesc-arithmetic-operation]]
@@ -4594,37 +4601,13 @@ result = lhs + rhs
 Write(Dst, result)
 ----
 
-[[insndesc-block-dimension]]
-==== Block Dimension
+[[insndesc-bundle-dimension]]
+==== Bundle Dimension
 
-[[insndesc-block-dimension-c-b-dim]]
-===== C.B.DIM
-
-This mnemonic has a 16-bit compressed encoding. Sets a block loop bound/dimension register for structured execution.
-
-Catalog forms:: 1 form(s) (16 bits).
-
-Assembly forms::
-+
-* `C.B.DIM RegSrc, ->{LB0, LB1, LB2}`
-
-Encoding::
-+
-.`c_b_dim_16_14f1b8fba5e6` — `C.B.DIM RegSrc, ->{LB0, LB1, LB2}`
-image::encodings/enc_c_b_dim.svg[C.B.DIM encoding form c_b_dim_16_14f1b8fba5e6,align="center"]
-
-
-Operation (informative)::
-+
-[source]
-----
-LBx = Read(RegSrc) + uimm  // x selected by encoding (LB0/LB1/LB2)
-----
-
-[[insndesc-block-dimension-c-b-dimi]]
+[[insndesc-bundle-dimension-c-b-dimi]]
 ===== C.B.DIMI
 
-This mnemonic has a 16-bit compressed encoding. Block metadata instruction (sub-operation selected by the mnemonic suffix).
+This mnemonic has a 16-bit compressed encoding. Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
 
 Catalog forms:: 1 form(s) (16 bits).
 
@@ -4634,15 +4617,50 @@ Assembly forms::
 
 Encoding::
 +
-.`c_b_dimi_16_3f1b113c76ce` — `C.B.DIMI imm, ->{LB0, LB1, LB2}`
-image::encodings/enc_c_b_dimi.svg[C.B.DIMI encoding form c_b_dimi_16_3f1b113c76ce,align="center"]
+.`c_b_dimi_16_f5bd6ae22b96` — `C.B.DIMI imm, ->{LB0, LB1, LB2}`
+image::encodings/enc_c_b_dimi.svg[C.B.DIMI encoding form c_b_dimi_16_f5bd6ae22b96,align="center"]
 
+
+Encoding notes (informative)::
++
+* Writes one of the three bundle-local dimension registers.
 
 Operation (informative)::
 +
 [source]
 ----
-UpdateBlockMetadata(/* fields as encoded */)
+Execute operation as selected by the mnemonic and encoded modifiers.
+----
+
+[[insndesc-bundle-shared-operand-binding]]
+==== Bundle Shared Operand Binding
+
+[[insndesc-bundle-shared-operand-binding-c-b-ios]]
+===== C.B.IOS
+
+This mnemonic has a 16-bit compressed encoding. Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
+
+Catalog forms:: 1 form(s) (16 bits).
+
+Assembly forms::
++
+* `C.B.IOS S<SharedTID> \| C.B.IOS ->S<SharedTID>`
+
+Encoding::
++
+.`c_b_ios_16_5c9d7b427740` — `C.B.IOS S<SharedTID> \| C.B.IOS ->S<SharedTID>`
+image::encodings/enc_c_b_ios.svg[C.B.IOS encoding form c_b_ios_16_5c9d7b427740,align="center"]
+
+
+Encoding notes (informative)::
++
+* Binds one absolute core-private Shared register S0..S255; source or destination role is derived from the surrounding BSTART schema and the binder is consumed once.
+
+Operation (informative)::
++
+[source]
+----
+Execute operation as selected by the mnemonic and encoded modifiers.
 ----
 
 [[insndesc-c-bstart]]
@@ -4661,9 +4679,13 @@ Assembly forms::
 
 Encoding::
 +
-.`c_bstart_fp_16_9dcef7e3a85b` — `C.BSTART.FP BrType`
-image::encodings/enc_c_bstart_fp.svg[C.BSTART.FP encoding form c_bstart_fp_16_9dcef7e3a85b,align="center"]
+.`c_bstart_fp_16_9581dfc6187e` — `C.BSTART.FP BrType`
+image::encodings/enc_c_bstart_fp.svg[C.BSTART.FP encoding form c_bstart_fp_16_9581dfc6187e,align="center"]
 
+
+Encoding notes (informative)::
++
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -4686,9 +4708,13 @@ Assembly forms::
 
 Encoding::
 +
-.`c_bstart_mpar_16_66c3ef2226ec` — `C.BSTART.MPAR FALL`
-image::encodings/enc_c_bstart_mpar.svg[C.BSTART.MPAR encoding form c_bstart_mpar_16_66c3ef2226ec,align="center"]
+.`c_bstart_mpar_16_44b1572333b1` — `C.BSTART.MPAR FALL`
+image::encodings/enc_c_bstart_mpar.svg[C.BSTART.MPAR encoding form c_bstart_mpar_16_44b1572333b1,align="center"]
 
+
+Encoding notes (informative)::
++
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -4711,9 +4737,13 @@ Assembly forms::
 
 Encoding::
 +
-.`c_bstart_mseq_16_b5597e0e41c2` — `C.BSTART.MSEQ FALL`
-image::encodings/enc_c_bstart_mseq.svg[C.BSTART.MSEQ encoding form c_bstart_mseq_16_b5597e0e41c2,align="center"]
+.`c_bstart_mseq_16_190877b09b0a` — `C.BSTART.MSEQ FALL`
+image::encodings/enc_c_bstart_mseq.svg[C.BSTART.MSEQ encoding form c_bstart_mseq_16_190877b09b0a,align="center"]
 
+
+Encoding notes (informative)::
++
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -4736,9 +4766,13 @@ Assembly forms::
 
 Encoding::
 +
-.`c_bstart_std_16_8b40f078c14a` — `C.BSTART.STD BrType`
-image::encodings/enc_c_bstart_std.svg[C.BSTART.STD encoding form c_bstart_std_16_8b40f078c14a,align="center"]
+.`c_bstart_std_16_f98cb0206cb1` — `C.BSTART.STD BrType`
+image::encodings/enc_c_bstart_std.svg[C.BSTART.STD encoding form c_bstart_std_16_f98cb0206cb1,align="center"]
 
+
+Encoding notes (informative)::
++
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -4761,9 +4795,13 @@ Assembly forms::
 
 Encoding::
 +
-.`c_bstart_sys_16_ec213ce96eb7` — `C.BSTART.SYS FALL`
-image::encodings/enc_c_bstart_sys.svg[C.BSTART.SYS encoding form c_bstart_sys_16_ec213ce96eb7,align="center"]
+.`c_bstart_sys_16_1c7558ab7fe7` — `C.BSTART.SYS FALL`
+image::encodings/enc_c_bstart_sys.svg[C.BSTART.SYS encoding form c_bstart_sys_16_1c7558ab7fe7,align="center"]
 
+
+Encoding notes (informative)::
++
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 Operation (informative)::
 +
@@ -6776,7 +6814,7 @@ image::encodings/enc_casb.svg[CASB encoding form casb_32_7e529b871832,align="cen
 
 Encoding notes (informative)::
 +
-* v0.57 32-bit compare-and-swap byte: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
+* v0.58 32-bit compare-and-swap byte: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
 
 Operation (informative)::
 +
@@ -6804,7 +6842,7 @@ image::encodings/enc_casd.svg[CASD encoding form casd_32_5852c57277a6,align="cen
 
 Encoding notes (informative)::
 +
-* v0.57 32-bit compare-and-swap doubleword: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
+* v0.58 32-bit compare-and-swap doubleword: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
 
 Operation (informative)::
 +
@@ -6832,7 +6870,7 @@ image::encodings/enc_cash.svg[CASH encoding form cash_32_cb1315ff6cb5,align="cen
 
 Encoding notes (informative)::
 +
-* v0.57 32-bit compare-and-swap halfword: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
+* v0.58 32-bit compare-and-swap halfword: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
 
 Operation (informative)::
 +
@@ -6860,7 +6898,7 @@ image::encodings/enc_casw.svg[CASW encoding form casw_32_cb29e4287223,align="cen
 
 Encoding notes (informative)::
 +
-* v0.57 32-bit compare-and-swap word: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
+* v0.58 32-bit compare-and-swap word: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
 
 Operation (informative)::
 +
@@ -10714,7 +10752,7 @@ image::encodings/enc_dma.svg[DMA encoding form dma_32_a168aeca5fa5,align="center
 
 Encoding notes (informative)::
 +
-* v0.57 encoding for the inherited DMA operation: copy 64 bytes from the source address in SrcL to the destination address in SrcR and complete before submission.
+* v0.58 encoding for the inherited DMA operation: copy 64 bytes from the source address in SrcL to the destination address in SrcR and complete before submission.
 
 Operation (informative)::
 +
@@ -14256,9 +14294,13 @@ Assembly forms::
 
 Encoding::
 +
-.`hl_qmt_48_eb9e41958045` — `hl.qmt.{i,e,s,r,ie,is,ir,es,er,ies,ier} SrcL, SrcR, ->{t, u}`
-image::encodings/enc_hl_qmt.svg[HL.QMT encoding form hl_qmt_48_eb9e41958045,align="center"]
+.`hl_qmt_48_e99d838fab5c` — `hl.qmt.{i,e,s,r,ie,is,ir,es,er,ies,ier} SrcL, SrcR, ->{t, u}`
+image::encodings/enc_hl_qmt.svg[HL.QMT encoding form hl_qmt_48_e99d838fab5c,align="center"]
 
+
+Encoding notes (informative)::
++
+* Moves values between scalar temporary queues according to encoded queue controls.
 
 Operation (informative)::
 +
@@ -14280,9 +14322,13 @@ Assembly forms::
 
 Encoding::
 +
-.`hl_qpop_48_a2c57f5bc27b` — `hl.qpop.{e,r,er} SrcL, ->Dst0, Dst1`
-image::encodings/enc_hl_qpop.svg[HL.QPOP encoding form hl_qpop_48_a2c57f5bc27b,align="center"]
+.`hl_qpop_48_15aeb8bc347e` — `hl.qpop.{e,r,er} SrcL, ->Dst0, Dst1`
+image::encodings/enc_hl_qpop.svg[HL.QPOP encoding form hl_qpop_48_15aeb8bc347e,align="center"]
 
+
+Encoding notes (informative)::
++
+* Pops selected scalar queue values into encoded destinations.
 
 Operation (informative)::
 +
@@ -14304,9 +14350,13 @@ Assembly forms::
 
 Encoding::
 +
-.`hl_qpush_48_3eab8e05d61a` — `hl.qpush.{h,e,r,he,hr,er,her} SrcL, SrcR, ->{t, u}`
-image::encodings/enc_hl_qpush.svg[HL.QPUSH encoding form hl_qpush_48_3eab8e05d61a,align="center"]
+.`hl_qpush_48_6183db9ebfd4` — `hl.qpush.{h,e,r,he,hr,er,her} SrcL, SrcR, ->{t, u}`
+image::encodings/enc_hl_qpush.svg[HL.QPUSH encoding form hl_qpush_48_6183db9ebfd4,align="center"]
 
+
+Encoding notes (informative)::
++
+* Pushes the encoded scalar values to the selected temporary queue.
 
 Operation (informative)::
 +

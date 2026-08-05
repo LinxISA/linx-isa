@@ -505,13 +505,14 @@ def _assign_stable_ids(instructions: List[Dict[str, Any]]) -> None:
 
 
 def _attach_pto_source_form_ids(in_dir: Path, instructions: List[Dict[str, Any]]) -> None:
-    """Attach the sole-source PTO form identity without replacing Linx stable IDs."""
-    source_path = in_dir / "state" / "pto_command_forms.json"
-    if not source_path.is_file():
-        return
-    source = _read_json(source_path)
-    if source.get("form_count") != 99:
-        raise ValueError(f"{source_path}: expected exactly 99 PTO command forms")
+    """Attach sole-source PTO identities without replacing Linx stable IDs."""
+    source_specs = (
+        (in_dir / "state" / "pto_scalar_forms.json", 474),
+        (
+            in_dir / "state" / "pto_command_forms.json",
+            96 if in_dir.name == "v0.58" else 99,
+        ),
+    )
 
     def source_key(form: Dict[str, Any]) -> Tuple[Any, ...]:
         encoding = tuple(
@@ -530,40 +531,56 @@ def _attach_pto_source_form_ids(in_dir: Path, instructions: List[Dict[str, Any]]
     by_key: Dict[Tuple[Any, ...], List[Dict[str, Any]]] = {}
     for inst in instructions:
         by_key.setdefault(instruction_key(inst), []).append(inst)
-    attached = set()
-    for form in source.get("forms", []):
-        key = source_key(form)
-        matches = by_key.get(key, [])
-        if len(matches) != 1:
+    for source_path, expected_count in source_specs:
+        if not source_path.is_file():
+            continue
+        source = _read_json(source_path)
+        if source.get("form_count") != expected_count:
             raise ValueError(
-                f"{source_path}: PTO form {form.get('form_id')} has {len(matches)} exact Linx encoding matches"
+                f"{source_path}: expected exactly {expected_count} PTO forms"
             )
-        form_id = str(form["form_id"])
-        matched = matches[0]
-        matched["pto_source_form_id"] = form_id
-        for part in matched.get("encoding", {}).get("parts", []):
-            part.pop("constraints", None)
-        widths = {str(field["name"]): int(field["width"]) for field in form.get("fields", [])}
-        compiled_constraints = []
-        for constraint in form.get("constraints", []):
-            field = str(constraint["field"])
-            if constraint["operator"] == "one-of":
-                allowed = {int(value) for value in constraint["values"]}
-                rejected = sorted(set(range(1 << widths[field])) - allowed)
-            elif constraint["operator"] == "not-equal":
-                rejected = [int(constraint["value"])]
-            else:
+        attached = set()
+        for form in source.get("forms", []):
+            key = source_key(form)
+            matches = by_key.get(key, [])
+            if len(matches) != 1:
                 raise ValueError(
-                    f"{source_path}: unsupported constraint operator {constraint['operator']!r}"
+                    f"{source_path}: PTO form {form.get('form_id')} has {len(matches)} exact Linx encoding matches"
                 )
-            compiled_constraints.extend(
-                {"field": field, "op": "!=", "value": str(value)} for value in rejected
+            form_id = str(form["form_id"])
+            matched = matches[0]
+            matched["pto_source_form_id"] = form_id
+            for part in matched.get("encoding", {}).get("parts", []):
+                part.pop("constraints", None)
+            widths = {
+                str(field["name"]): int(field["width"])
+                for field in form.get("fields", [])
+            }
+            compiled_constraints = []
+            for constraint in form.get("constraints", []):
+                field = str(constraint["field"])
+                if constraint["operator"] == "one-of":
+                    allowed = {int(value) for value in constraint["values"]}
+                    rejected = sorted(set(range(1 << widths[field])) - allowed)
+                elif constraint["operator"] == "not-equal":
+                    rejected = [int(constraint["value"])]
+                else:
+                    raise ValueError(
+                        f"{source_path}: unsupported constraint operator {constraint['operator']!r}"
+                    )
+                compiled_constraints.extend(
+                    {"field": field, "op": "!=", "value": str(value)}
+                    for value in rejected
+                )
+            if compiled_constraints:
+                matched["encoding"]["parts"][0]["constraints"] = (
+                    compiled_constraints
+                )
+            attached.add(form_id)
+        if len(attached) != expected_count:
+            raise ValueError(
+                f"{source_path}: PTO source form identities are not unique"
             )
-        if compiled_constraints:
-            matched["encoding"]["parts"][0]["constraints"] = compiled_constraints
-        attached.add(form_id)
-    if len(attached) != 99:
-        raise ValueError(f"{source_path}: PTO source form identities are not unique")
 
 
 @dataclass(frozen=True)
@@ -940,7 +957,7 @@ def _canonical_json(obj: Any) -> str:
     return json.dumps(obj, sort_keys=True, separators=(",", ":"))
 
 
-def _profile_defaults(profile: str = "v0.57") -> Tuple[str, str]:
+def _profile_defaults(profile: str = "v0.58") -> Tuple[str, str]:
     return f"isa/{profile}", f"isa/{profile}/linxisa-{profile}.json"
 
 
@@ -948,8 +965,8 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--profile",
-        choices=["v0.57"],
-        default="v0.57",
+        choices=["v0.57", "v0.58"],
+        default="v0.58",
         help="ISA profile for default in/out paths",
     )
     ap.add_argument("--in", dest="in_dir", default=None, help="Golden source directory")

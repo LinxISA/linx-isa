@@ -7,7 +7,7 @@
 
 *Syntax:* FRET.RA [RegDst0 ~ RegDstn], sp!, uimm
 
-*Description:* Template block FRET.RA: compact prologue/epilogue sequence.
+*Description:* Restores a frame and returns through the retained return-address target.
 
 *Encoding:*
 

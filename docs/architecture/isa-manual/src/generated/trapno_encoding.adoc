@@ -1,5 +1,5 @@
 // Generated file. Do not edit by hand.
-// Source: linxisa-v0.57.json (state.system_registers)
+// Source: linxisa-v0.58.json (state.system_registers)
 [[trapno-encoding]]
 ==== TRAPNO encoding (v0.57 bring-up)
 

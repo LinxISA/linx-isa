@@ -1,0 +1,22 @@
+{
+  "instruction_lengths_bits": [
+    16,
+    32,
+    48,
+    64
+  ],
+  "isa": "LinxISA",
+  "notes": [
+    "This directory is the authoritative stable Linx ISA 0.58 profile aligned to PTO ISA 0.58.0.",
+    "PTO-ISA/pto-spec is the sole normative source for 474 scalar forms, 96 command forms, and 106 tile operations; pto-spec.lock.json freezes its exact commit and tree.",
+    "Linx retains its additive two-level vector extension; PTO reserves the six corresponding vector encodings to prevent future conflicts.",
+    "TEPL uses separate Mode and Function fields; the legacy TileOpcode and all legacy decode aliases are forbidden.",
+    "The exact tile inventory is 87 TEPL, 7 TMA, and 12 CUBE operations. Unlisted selectors and unassigned functions trap as illegal instructions.",
+    "S0 through S255 are absolute-index shared tile registers in a core-private bank shared by the core's four PEs.",
+    "C.B.IOS names shared-register sources and destinations; an optional B.IOT PE mask predicates fixed quarters, with zero acting as a NOP.",
+    "B.IOD remains reserved and old BSTART.PAR/TEPL encodings remain retired.",
+    "BSTART.TMA remains an encoding-family name, not a legal textual instruction."
+  ],
+  "status": "stable",
+  "version": "0.58.0"
+}

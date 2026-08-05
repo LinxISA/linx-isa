@@ -1,5 +1,5 @@
 {
-  "canonical_isa": "isa/v0.57/linxisa-v0.57.json",
+  "canonical_isa": "isa/v0.58/linxisa-v0.58.json",
   "language": "zh-CN",
   "mkdocs_config": "mkdocs.zh.yml",
   "normative_docs_root": "docs",
@@ -638,7 +638,7 @@
       "translation_sha256": "16bb434410d480303055fd4b6fee8c27336ebdc108dd697b0ab272dfc3aec335"
     },
     "index.md": {
-      "source_sha256": "7bc184f98b484c4f29dbdef74e95855fa8b29a0a8677daa94cfa16723f0849dc",
+      "source_sha256": "97ecd5c4d9f5a8985584d3ad1cca4f62a4442e6fcf7f0b75553ee6ae2c1569c1",
       "translation_sha256": "5076e500f62e75bb5337a3a4a1a801e39ca384a030497b7add652718dd211fa5"
     },
     "isa/arch/acr.md": {
@@ -8242,7 +8242,7 @@
       "translation_sha256": "16b6c82f0e198f70e3e6b8b5f4a824b9d2e416625ffdd2ab075025d4f378d2a0"
     },
     "reference/encoding_space_report.md": {
-      "source_sha256": "522635c8035c26d58c27b27d457cbec38870c93d9a50f7ea8cf8a7dbd3b7c167",
+      "source_sha256": "a9cdf13e4965be44e94df958ce8302a1962b107292ffecd89aff7e7ba02a4301",
       "translation_sha256": "683f69075cd534b2271b7a50d222081b985b7a820218451f0ef5c81a49fc692f"
     },
     "reference/examples/README.md": {

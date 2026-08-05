@@ -1,0 +1,347 @@
+{
+  "big_kind": "VEC",
+  "count": 26,
+  "instructions": [
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "ALU"
+      },
+      "group": "Arithmetic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.ADD"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "ALU"
+      },
+      "group": "Arithmetic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.ADDI"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "ALU"
+      },
+      "group": "Arithmetic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.AND"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "ALU"
+      },
+      "group": "Arithmetic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.ANDI"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "ALU"
+      },
+      "group": "Bit Manipulation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.BCNT"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "ALU"
+      },
+      "group": "Bit Manipulation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.BIC"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "ALU"
+      },
+      "group": "Bit Manipulation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.BIS"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "ALU"
+      },
+      "group": "Bit Manipulation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.BXS"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "ALU"
+      },
+      "group": "Bit Manipulation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.BXU"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "ALU"
+      },
+      "group": "Bit Manipulation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.CLZ"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "ALU"
+      },
+      "group": "Bit Manipulation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.CTZ"
+    },
+    {
+      "class": {
+        "alu_kind": "ALU_MULTI_CYCLE",
+        "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "ALU"
+      },
+      "group": "Multi-Cycle ALU",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.MADD"
+    },
+    {
+      "class": {
+        "alu_kind": "ALU_MULTI_CYCLE",
+        "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "ALU"
+      },
+      "group": "Multi-Cycle ALU",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.MUL"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "ALU"
+      },
+      "group": "Arithmetic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.OR"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "ALU"
+      },
+      "group": "Arithmetic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.ORI"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "ALU"
+      },
+      "group": "Bit Manipulation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.REV"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "ALU"
+      },
+      "group": "Arithmetic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SLL"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "ALU"
+      },
+      "group": "Arithmetic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SLLI"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "ALU"
+      },
+      "group": "Arithmetic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SRA"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "ALU"
+      },
+      "group": "Arithmetic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SRAI"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "ALU"
+      },
+      "group": "Arithmetic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SRL"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "ALU"
+      },
+      "group": "Arithmetic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SRLI"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "ALU"
+      },
+      "group": "Arithmetic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SUB"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "ALU"
+      },
+      "group": "Arithmetic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SUBI"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "ALU"
+      },
+      "group": "Arithmetic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.XOR"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=ALU)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "ALU"
+      },
+      "group": "Arithmetic Operation",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.XORI"
+    }
+  ],
+  "sub_kind": "ALU"
+}

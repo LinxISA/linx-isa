@@ -10,20 +10,22 @@
 |Arithmetic Operation 64bit |21 |21
 |Arithmetic Operation 32bit |21 |21
 |PC-Relative |4 |4
-|Block Control Attribute |1 |1
-|Block Data Attribute |1 |1
-|Block Argument |3 |1
+|Bundle Control Attribute |1 |1
+|Bundle Data Attribute |1 |1
+|Bundle Argument |3 |1
 |Branch |10 |10
-|Block Hint |2 |1
-|Block Input & Output |6 |2
-|Block Offset |1 |1
+|Bundle Hint |2 |1
+|Bundle Input & Output |6 |2
+|Bundle Offset |1 |1
 |Cache Maintain |16 |16
 |Bit Operation |8 |8
-|Block Split |57 |43
+|Bundle Split |57 |38
 |BSTART |20 |8
+|Block Split |2 |2
 |Arithmetic Operation |20 |20
 |Arithmetic |1 |1
-|Block Dimension |2 |2
+|Bundle Dimension |1 |1
+|Bundle Shared Operand Binding |1 |1
 |C.BSTART |7 |7
 |C.TINST |6 |6
 |Load Immediate Offset |23 |23

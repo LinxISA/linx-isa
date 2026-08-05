@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_bstart_gmov]]
+==== BSTART.GMOV
+
+*Syntax:* BSTART.GMOV DataType
+
+*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+
+*Encoding:*
+
+image::encodings/enc_bstart_gmov.svg[BSTART.GMOV encoding,width=800]
+
+*Uop-Class:* CMD
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "PTO ISA 0.58 TMA Function=13", "source": "group_rule", "uop_kind": "CMD"}`
