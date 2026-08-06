@@ -6,7 +6,7 @@ Creates:
   docs/isa/index.md              — ISA instruction reference hub
   docs/isa/encoding.md           — Encoding formats overview
   docs/isa/groups/index.md        — Instruction group index
-  docs/isa/groups/*.md           — Per-group pages (all 66 groups)
+  docs/isa/groups/*.md           — Per-group pages (all active groups)
   docs/isa/instructions/index.md — Master instruction index (all canonical forms)
   docs/isa/instructions/*.md     — Per-instruction detail pages
 
@@ -83,7 +83,7 @@ def _collapse_ws(s: str) -> str:
 # ─────────────────────────────────────────────────────────────────────────────
 
 # Canonical group → (manual_chapter_num, manual_chapter_title)
-# These correspond to the active LinxISA v0.57 manual chapters.
+# These correspond to the active LinxISA v0.58 manual chapters.
 MANUAL_CHAPTERS: dict[str, tuple[int, str]] = {
     "Arithmetic":                     (12, "ALU — Arithmetic Logic Unit"),
     "Arithmetic Operation":           (12, "ALU — Arithmetic Logic Unit"),
@@ -652,7 +652,7 @@ conflict-free allocation table.
 
 The [PTO ISA encoding workbook](encoding/PTO-ISA-Encoding.xlsx) is provided
 only as a non-normative review aid. It is not a generator input and cannot
-override the checked-in v0.57 JSON/opcode sources.
+override the checked-in v0.58 JSON/opcode sources.
 
 ## Field Colour Key
 

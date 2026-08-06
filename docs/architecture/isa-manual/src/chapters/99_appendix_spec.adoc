@@ -6,8 +6,8 @@
 
 The Linx ISA specification is tracked in multiple forms:
 
-* Golden sources (authoritative): `isa/v0.57/`
-* Canonical machine-readable catalog (checked in): `isa/v0.57/linxisa-v0.57.json`
+* Golden sources (authoritative): `isa/v0.58/`
+* Canonical machine-readable catalog (checked in): `isa/v0.58/linxisa-v0.58.json`
 * Generated codec tables: `isa/generated/codecs/linxisa{16,32,48,64}.decode`
 * Generated C tables: `isa/generated/codecs/linxisa_opcodes.{h,c}`
 
@@ -18,10 +18,10 @@ From the repo root:
 
 [source,bash]
 ----
-python3 tools/isa/build_golden.py --profile v0.57 --pretty
-python3 tools/isa/gen_qemu_codec.py --profile v0.57 --out-dir isa/generated/codecs
-python3 tools/isa/gen_c_codec.py --profile v0.57 --out-dir isa/generated/codecs
-python3 tools/isa/validate_spec.py --profile v0.57
+python3 tools/isa/build_golden.py --profile v0.58 --pretty
+python3 tools/isa/gen_qemu_codec.py --profile v0.58 --out-dir isa/generated/codecs
+python3 tools/isa/gen_c_codec.py --profile v0.58 --out-dir isa/generated/codecs
+python3 tools/isa/validate_spec.py --profile v0.58
 ----
 
 [[appendix-build-manual]]

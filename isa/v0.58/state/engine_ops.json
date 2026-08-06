@@ -393,7 +393,8 @@
           "operand:destination0:destination",
           "operand:source0:source-left",
           "operand:source1:source-right"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -441,7 +442,8 @@
           "operand:destination0:destination",
           "operand:source0:source-left",
           "operand:source1:source-right"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -489,7 +491,8 @@
           "operand:destination0:destination",
           "operand:source0:source-left",
           "operand:source1:source-right"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -549,11 +552,12 @@
           "operand:destination0:destination",
           "operand:source0:source-left",
           "operand:source1:source-right"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "name": "TREM",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 0,
@@ -630,7 +634,8 @@
           "operand:destination0:destination",
           "operand:source0:source-left",
           "operand:source1:source-right"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -678,7 +683,8 @@
           "operand:destination0:destination",
           "operand:source0:source-left",
           "operand:source1:source-right"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -726,7 +732,8 @@
           "operand:destination0:destination",
           "operand:source0:source-left",
           "operand:source1:source-right"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -774,7 +781,8 @@
           "operand:destination0:destination",
           "operand:source0:source-left",
           "operand:source1:source-right"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -822,7 +830,8 @@
           "operand:destination0:destination",
           "operand:source0:source-left",
           "operand:source1:source-right"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -870,7 +879,8 @@
           "operand:destination0:destination",
           "operand:source0:source-left",
           "operand:source1:source-right"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -918,11 +928,12 @@
           "operand:destination0:destination",
           "operand:source0:source-left",
           "operand:source1:source-right"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "name": "TCMP",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 0,
@@ -960,7 +971,7 @@
       },
       {
         "name": "TABS",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 0,
@@ -988,7 +999,7 @@
       },
       {
         "name": "TNOT",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 0,
@@ -1016,7 +1027,7 @@
       },
       {
         "name": "TNEG",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 0,
@@ -1081,7 +1092,8 @@
         "state_effects": [
           "operand:destination0:destination",
           "operand:source0:source"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -1122,7 +1134,8 @@
         "state_effects": [
           "operand:destination0:destination",
           "operand:source0:source"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -1163,7 +1176,8 @@
         "state_effects": [
           "operand:destination0:destination",
           "operand:source0:source"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -1204,7 +1218,8 @@
         "state_effects": [
           "operand:destination0:destination",
           "operand:source0:source"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -1245,7 +1260,8 @@
         "state_effects": [
           "operand:destination0:destination",
           "operand:source0:source"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -1288,11 +1304,12 @@
         "state_effects": [
           "operand:destination0:destination",
           "operand:source0:source"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "name": "TSEL",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 0,
@@ -1384,7 +1401,8 @@
           "operand:destination0:destination",
           "operand:source0:source",
           "operand:numeric_control:rounding-and-saturation"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "name": "TFMA",
@@ -1419,6 +1437,7 @@
           "operand:source1:multiplicand-right",
           "operand:source2:addend"
         ],
+        "profile": "v0.58",
         "logical_selector": 28,
         "semantic_status": "reviewed-complete"
       },
@@ -1477,7 +1496,8 @@
           "operand:destination0:destination",
           "operand:source0:source",
           "operand:scalar0:scalar"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -1534,7 +1554,8 @@
           "operand:destination0:destination",
           "operand:source0:source",
           "operand:scalar0:scalar"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -1591,7 +1612,8 @@
           "operand:destination0:destination",
           "operand:source0:source",
           "operand:scalar0:scalar"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -1648,11 +1670,12 @@
           "operand:destination0:destination",
           "operand:source0:source",
           "operand:scalar0:scalar"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "name": "TREMS",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 1,
@@ -1738,7 +1761,8 @@
           "operand:destination0:destination",
           "operand:source0:source",
           "operand:scalar0:scalar"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -1795,7 +1819,8 @@
           "operand:destination0:destination",
           "operand:source0:source",
           "operand:scalar0:scalar"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -1852,7 +1877,8 @@
           "operand:destination0:destination",
           "operand:source0:source",
           "operand:scalar0:scalar"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -1909,7 +1935,8 @@
           "operand:destination0:destination",
           "operand:source0:source",
           "operand:scalar0:scalar"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -1966,7 +1993,8 @@
           "operand:destination0:destination",
           "operand:source0:source",
           "operand:scalar0:scalar"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -2023,7 +2051,8 @@
           "operand:destination0:destination",
           "operand:source0:source",
           "operand:scalar0:scalar"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -2080,11 +2109,12 @@
           "operand:destination0:destination",
           "operand:source0:source",
           "operand:scalar0:scalar"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "name": "TCMPS",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 1,
@@ -2122,7 +2152,7 @@
       },
       {
         "name": "TSELS",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 1,
@@ -2209,7 +2239,8 @@
         "state_effects": [
           "operand:destination0:destination",
           "operand:scalar0:scalar"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -2252,7 +2283,8 @@
         "state_effects": [
           "operand:destination0:destination",
           "operand:source0:source"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -2295,7 +2327,8 @@
         "state_effects": [
           "operand:destination0:destination",
           "operand:source0:source"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -2338,11 +2371,12 @@
         "state_effects": [
           "operand:destination0:destination",
           "operand:source0:source"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "name": "TROWPROD",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 2,
@@ -2414,11 +2448,12 @@
           "operand:destination0:destination",
           "operand:source0:source",
           "operand:source1:broadcast-source"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "name": "TROWEXPANDADD",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 2,
@@ -2451,7 +2486,7 @@
       },
       {
         "name": "TROWEXPANDSUB",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 2,
@@ -2484,7 +2519,7 @@
       },
       {
         "name": "TROWEXPANDMUL",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 2,
@@ -2517,7 +2552,7 @@
       },
       {
         "name": "TROWEXPANDDIV",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 2,
@@ -2550,7 +2585,7 @@
       },
       {
         "name": "TROWEXPANDMAX",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 2,
@@ -2583,7 +2618,7 @@
       },
       {
         "name": "TROWEXPANDMIN",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 2,
@@ -2616,7 +2651,7 @@
       },
       {
         "name": "TROWEXPANDEXPDIF",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 2,
@@ -2649,7 +2684,7 @@
       },
       {
         "name": "TROWARGMAX",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 2,
@@ -2677,7 +2712,7 @@
       },
       {
         "name": "TROWARGMIN",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 2,
@@ -2744,7 +2779,8 @@
         "state_effects": [
           "operand:destination0:destination",
           "operand:source0:source"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -2787,7 +2823,8 @@
         "state_effects": [
           "operand:destination0:destination",
           "operand:source0:source"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -2830,11 +2867,12 @@
         "state_effects": [
           "operand:destination0:destination",
           "operand:source0:source"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "name": "TCOLPROD",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 2,
@@ -2906,11 +2944,12 @@
           "operand:destination0:destination",
           "operand:source0:source",
           "operand:source1:broadcast-source"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "name": "TCOLEXPANDADD",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 2,
@@ -2943,7 +2982,7 @@
       },
       {
         "name": "TCOLEXPANDSUB",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 2,
@@ -2976,7 +3015,7 @@
       },
       {
         "name": "TCOLEXPANDMUL",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 2,
@@ -3009,7 +3048,7 @@
       },
       {
         "name": "TCOLEXPANDDIV",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 2,
@@ -3042,7 +3081,7 @@
       },
       {
         "name": "TCOLEXPANDMAX",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 2,
@@ -3075,7 +3114,7 @@
       },
       {
         "name": "TCOLEXPANDMIN",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 2,
@@ -3108,7 +3147,7 @@
       },
       {
         "name": "TCOLEXPANDEXPDIF",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 2,
@@ -3141,7 +3180,7 @@
       },
       {
         "name": "TCOLARGMAX",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 2,
@@ -3169,7 +3208,7 @@
       },
       {
         "name": "TCOLARGMIN",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 2,
@@ -3197,7 +3236,7 @@
       },
       {
         "name": "TCONCAT",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 3,
@@ -3235,7 +3274,7 @@
       },
       {
         "name": "TEXTRACT",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 3,
@@ -3273,7 +3312,7 @@
       },
       {
         "name": "TINSERT",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 3,
@@ -3311,7 +3350,7 @@
       },
       {
         "name": "TIMG2COL",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 3,
@@ -3374,7 +3413,7 @@
       },
       {
         "name": "TFILLPAD",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 3,
@@ -3407,7 +3446,7 @@
       },
       {
         "name": "TCI",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 3,
@@ -3440,7 +3479,7 @@
       },
       {
         "name": "TTRI",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 3,
@@ -3473,7 +3512,7 @@
       },
       {
         "name": "THISTOGRAM",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 3,
@@ -3511,7 +3550,7 @@
       },
       {
         "name": "TQUANT",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 3,
@@ -3554,7 +3593,7 @@
       },
       {
         "name": "TDEQUANT",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 3,
@@ -3597,7 +3636,7 @@
       },
       {
         "name": "TSORT",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 3,
@@ -3640,7 +3679,7 @@
       },
       {
         "name": "TMRGSORT",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 3,
@@ -3717,7 +3756,8 @@
         "state_effects": [
           "operand:destination0:destination",
           "operand:source0:source"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -3764,7 +3804,8 @@
           "operand:destination0:destination",
           "operand:source0:source",
           "operand:source1:indices"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "dim_lb_defaults": {
@@ -3811,11 +3852,12 @@
           "operand:destination0:destination",
           "operand:source0:source",
           "operand:source1:indices"
-        ]
+        ],
+        "profile": "v0.58"
       },
       {
         "name": "TPARTADD",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 3,
@@ -3848,7 +3890,7 @@
       },
       {
         "name": "TPARTMUL",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 3,
@@ -3881,7 +3923,7 @@
       },
       {
         "name": "TPARTMAX",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 3,
@@ -3914,7 +3956,7 @@
       },
       {
         "name": "TPARTMIN",
-        "profile": "v0.57",
+        "profile": "v0.58",
         "semantic_status": "reviewed-complete",
         "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 3,

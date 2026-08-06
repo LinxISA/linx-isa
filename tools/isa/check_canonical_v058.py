@@ -34,6 +34,15 @@ def validate(root: Path) -> list[str]:
     }
     for mnemonic in sorted(retired & mnemonics):
         errors.append(f"retired 0.57 mnemonic still decodes: {mnemonic}")
+
+    engine_ops = ((spec.get("state") or {}).get("engine_ops") or {})
+    for operation in ((engine_ops.get("tepl") or {}).get("ops") or []):
+        profile = operation.get("profile")
+        if profile is not None and profile != "v0.58":
+            errors.append(
+                "active v0.58 TEPL operation "
+                f"{operation.get('name')!r} carries stale profile {profile!r}"
+            )
     sys.path.insert(0, str(root / "tools/isa"))
     import check_pto_v058_manifest  # type: ignore
 

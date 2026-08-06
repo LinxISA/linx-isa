@@ -2,7 +2,7 @@
 """
 Generate AsciiDoc fragments for LinxISA System Status Registers (SSR) and TRAPNO encoding.
 
-Source of truth (v0.57 current): `state.system_registers` inside the compiled ISA JSON spec.
+Source of truth: `state.system_registers` inside the selected compiled ISA JSON spec.
 
 Outputs into an output directory (typically `docs/architecture/isa-manual/src/generated/`):
   - system_registers_ssr.adoc
@@ -88,7 +88,17 @@ def _adoc_header(spec_path: str) -> str:
     )
 
 
+def _profile_label(spec_path: str) -> str:
+    name = os.path.basename(os.path.normpath(spec_path))
+    prefix = "linxisa-v"
+    suffix = ".json"
+    if name.startswith(prefix) and name.endswith(suffix):
+        return f"v{name[len(prefix):-len(suffix)]}"
+    raise ValueError(f"cannot derive ISA profile from spec filename: {name}")
+
+
 def gen_system_registers_ssr(spec_path: str, sysregs: Dict[str, Any]) -> str:
+    profile = _profile_label(spec_path)
     ssr = sysregs.get("ssr", {}) or {}
     base = list(ssr.get("base", []) or [])
     mgr = ssr.get("manager_acr_family", {}) or {}
@@ -147,7 +157,7 @@ def gen_system_registers_ssr(spec_path: str, sysregs: Dict[str, Any]) -> str:
     lines.append("")
 
     lines.append("[[ssr-ebarg]]")
-    lines.append("==== EBARG group (v0.57)")
+    lines.append(f"==== EBARG group ({profile})")
     lines.append("")
     lines.append(str(ebarg.get("description") or "EBARG trap-save group.").strip())
     lines.append("")
@@ -161,7 +171,7 @@ def gen_system_registers_ssr(spec_path: str, sysregs: Dict[str, Any]) -> str:
     lines.append("")
 
     lines.append("[[ssr-debug]]")
-    lines.append("==== Debug SSRs (v0.57 bring-up)")
+    lines.append(f"==== Debug SSRs ({profile} bring-up)")
     lines.append("")
     lines.append(str(dbg.get("description") or "Debug configuration SSRs.").strip())
     lines.append("")
@@ -178,6 +188,7 @@ def gen_system_registers_ssr(spec_path: str, sysregs: Dict[str, Any]) -> str:
 
 
 def gen_trapno_encoding(spec_path: str, sysregs: Dict[str, Any]) -> str:
+    profile = _profile_label(spec_path)
     enc = sysregs.get("trapno_encoding", {}) or {}
     fields = list(enc.get("fields", []) or [])
     trapnums = list(enc.get("bringup_trapnums", []) or [])
@@ -185,7 +196,7 @@ def gen_trapno_encoding(spec_path: str, sysregs: Dict[str, Any]) -> str:
     lines: List[str] = []
     lines.append(_adoc_header(spec_path).rstrip("\n"))
     lines.append("[[trapno-encoding]]")
-    lines.append("==== TRAPNO encoding (v0.57 bring-up)")
+    lines.append(f"==== TRAPNO encoding ({profile} bring-up)")
     lines.append("")
     for n in enc.get("notes", []) or []:
         lines.append(f"* {str(n).strip()}")

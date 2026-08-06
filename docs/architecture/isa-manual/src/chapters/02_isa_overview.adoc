@@ -1,7 +1,7 @@
 [[isa-overview]]
 == Instruction set overview
 
-This chapter provides a narrative overview of the major instruction families in the v0.57 catalog. The complete,
+This chapter provides a narrative overview of the major instruction families in the v0.58 catalog. The complete,
 generated listing is in <<insnref>>.
 
 [[isa-overview-scalar]]
@@ -38,7 +38,7 @@ case compact.
 [[isa-overview-vector]]
 === Unified shader-kernel `lx64` space (`l.*` / `v.*`)
 
-The canonical shader-kernel body space in v0.57 is a unified 64-bit `lx64` encoding space used by `MPAR` and `MSEQ`
+The canonical shader-kernel body space in v0.58 is a unified 64-bit `lx64` encoding space used by `MPAR` and `MSEQ`
 kernel bodies:
 
 * if any operand names a per-lane register class (`vt`/`vu`/`vm`/`vn`), the instruction executes as `v.*`,
@@ -50,7 +50,7 @@ kernel bodies:
 
 Both `l.*.brg` and `v.*.brg` are canonical kernel memory forms.
 
-The instruction reference chapter enumerates the encodings present in the v0.57 catalog.
+The instruction reference chapter enumerates the encodings present in the v0.58 catalog.
 
 [[isa-overview-templates]]
 === Template blocks
@@ -64,8 +64,8 @@ these are treated as **standalone blocks** that map to hardware macro execution 
 The catalog also defines header-driven accelerator families:
 
 * TLSU-family typed forms such as `BSTART.TLOAD`, `BSTART.TSTORE`, and `BSTART.TMOV`,
-* CUBE-family typed forms such as `BSTART.TMATMUL`, `BSTART.TMATMUL.ACC`, and `BSTART.ACCCVT`,
+* CUBE-family typed forms such as `BSTART.TMATMUL`, `BSTART.TMATMUL.ACC`, and `BSTART.TGEMV`,
 * `BSTART.TEPL`, whose raw header carries `Mode[1:0]` and `Function[4:0]`; the logical selector is
   `(Mode << 5) | Function`.
 
-Selector values that are not explicitly assigned by the v0.57 catalog are reserved and must not acquire ad hoc semantics.
+Selector values that are not explicitly assigned by the v0.58 catalog are reserved and must not acquire ad hoc semantics.

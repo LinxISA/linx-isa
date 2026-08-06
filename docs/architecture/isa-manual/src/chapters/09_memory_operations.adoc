@@ -5,7 +5,7 @@ This chapter summarizes the addressing conventions used by the scalar memory ins
 instruction reference for the full set of encodings and per-form notes.
 
 [[memory-model]]
-=== Memory model and ordering (v0.57 current)
+=== Memory model and ordering (v0.58 current)
 
 Linx uses **TSO** as the architectural memory model. The ordering contract is expressed in Linx terms:
 
@@ -25,26 +25,26 @@ NOTE: Implementations may be stronger than TSO, but software must not depend on 
 platform profile states so.
 
 [[memory-channels]]
-=== BCC and MTC channels (v0.57 current)
+=== BCC and MTC/TLSU channels (v0.58 current)
 
-v0.57 explicitly models two architectural memory issue channels inside one TSO ordering domain:
+v0.58 explicitly models two architectural memory issue channels inside one TSO ordering domain:
 
 * **BCC channel**: scalar `load/store/atomic/fence` operations and ordering point for scalar blocks.
 * **MTC channel**: tile-oriented memory blocks (`TLOAD`, `TSTORE`) and bridged shader-kernel memory issue
   (`l.*.brg`, `v.*.brg`) through `MPAR`/`MSEQ`.
 
-Legacy naming note: historical `BSTART.MCALL` text maps to canonical `BSTART.MPAR`/`BSTART.MSEQ`.
-Legacy raw `TPREFETCH` text is archived only and is not a live encoded operation.
+Historical `BSTART.MCALL` and raw `TPREFETCH` text are not accepted v0.58 encodings.
+Canonical shader-kernel boundaries are `BSTART.MPAR` and `BSTART.MSEQ`.
 
-`TMOV` is a tile-state move operation in typed `BSTART.TMA` blocks, but it is not a memory operation and is therefore
+`TMOV` is a tile-state move operation selected by typed `BSTART.TMOV`, but it is not a memory operation and is therefore
 outside the MTC memory-ordering contract in this chapter.
 
-`BSTART.TPREFETCH` is active in the v0.57 TMA selector space as `Function=3`. Its memory
+`BSTART.TPREFETCH` is active in the v0.58 TLSU selector space as `Function=3`. Its memory
 contract is the `TLOAD` contract with destination effects removed. It participates in the same MTC ordering domain,
 performs the same address translation and permission checks, raises precise restartable faults under the same conditions,
 and completes without a tile destination, queue push, metadata writeback, or data writeback. It is not a best-effort hint.
 
-v0.57 adds the 32-bit `CASB/CASH/CASW/CASD` encodings. They atomically read `[SrcL]`, compare against `SrcR`,
+The 32-bit `CASB/CASH/CASW/CASD` encodings atomically read `[SrcL]`, compare against `SrcR`,
 conditionally store `SrcD`, and always return the old value in `RegDst`; `.aq`, `.rl`, and `.aqrl` are supported, but
 `.f` is not. The 32-bit `DMA [SrcL], SrcR` encoding preserves the inherited DMA contract: copy exactly 64 bytes from
 the source address in `SrcL` to the destination address in `SrcR` and complete before command submission.
@@ -66,16 +66,16 @@ Rules:
   - layout-conversion selector and pad policy from `B.DATR`
   - GPR bindings from one-or-more `B.IOR` descriptors
   - tile IO bindings and transfer size from one-or-more `B.IOT`
-  - element data type from `BSTART.TMA`
+  - element data type from the typed TLSU header (`BSTART.TLOAD` or `BSTART.TSTORE`)
 
-Layout and dimension contract (v0.57 current profile for TMA):
+Layout and dimension contract (v0.58 current profile for TLSU):
 
 * The four architectural tile linearization forms are:
   - `ND` (row-major),
   - `DN` (column-major),
   - `NZ` (inner-block row-major + inter-block column-major),
   - `ZN` (inner-block column-major + inter-block row-major).
-* `B.DATR.Layout` encodes the layout selector for the current TMA operation.
+* `B.DATR.Layout` encodes the layout selector for the current TLSU operation.
 * `NORM` (code 0) is mandatory. Accepted conversion codes are
   `1, 3, 4, 6, 8, 9, 17, 18, 20, 27, 28, 30`; they require an advertised
   capability and fault precisely before effects when unsupported. Layouts
@@ -129,30 +129,30 @@ Bring-up (auto-mode) binding convention for `B.IOR` in `TLOAD/TSTORE`:
 * Internal beats of one operation are not guaranteed to issue in source-program order; software must not assume row-major,
   element-major, or beat-commit order within one architectural `TLOAD`/`TSTORE`.
 * Unaligned shared-memory access is allowed unless tightened by platform policy.
-* Raw material that contradicts group-overlap semantics from archived sources is not part of canonical v0.57 behavior; selector/group
+* Raw material that contradicts group-overlap semantics from archived sources is not part of canonical v0.58 behavior; selector/group
   space not defined by the catalog is reserved/illegal.
 
-Canonical v0.57 profile constraints:
+Canonical v0.58 profile constraints:
 
 * Applicable `B.DATR` fields plus `B.IOR` are mandatory in descriptor-rich `TLOAD/TSTORE` headers.
-* TMA execution consumes the typed block start and applicable `B.CATR/B.DATR/B.DIM/B.IOR/B.IOT` state.
+* TLSU execution consumes the typed block start and applicable `B.CATR/B.DATR/B.DIM/B.IOR/B.IOT` state.
 * Repeated `B.IOR` and repeated `B.IOT` are legal and are consumed in header order.
 * A runtime-resolved `B.IOT` size is legal only when it equals an accepted 128 B through 8 KiB footprint.
 * For bring-up code size, emit `C.B.DIMI` for `LB0/LB1/LB2` when the value fits in `imm8` (and `RegSrc=zero`).
-* Raw `group=2` material and broad fixed-pipe/TCVT metadata flows are reserved/illegal in canonical v0.57 until a future
+* Raw `group=2` material and broad fixed-pipe/TCVT metadata flows are reserved/illegal in canonical v0.58 until a future
   catalog revision assigns explicit semantics.
 
-Preferred v0.57 textual form for tile memory blocks is:
+The v0.58 textual forms for tile memory blocks are:
 
-* `BSTART.TLOAD <DataType>` for tile loads (encoding: `BSTART.TMA Function=0`)
-* `BSTART.TSTORE <DataType>` for tile stores (encoding: `BSTART.TMA Function=1`)
-* Compatibility PAR-style forms and mixed TMA forms are accepted for input only and normalized to typed forms.
+* `BSTART.TLOAD <DataType>` for tile loads (TLSU `Function=0`)
+* `BSTART.TSTORE <DataType>` for tile stores (TLSU `Function=1`)
 
-For completeness: v0.57 also permits non-memory typed TMA headers `BSTART.TMOV <DataType>`
-(encoding: `BSTART.TMA Function=2`), but those are governed by <<blockisa-tile>> (not by memory-operation semantics).
+The non-memory typed header `BSTART.TMOV <DataType>` selects TLSU `Function=2`,
+but it is governed by <<blockisa-tile>> rather than memory-operation semantics.
 
 `B.IOT` descriptor rendering uses `last` for the terminal descriptor and prints transfer footprints in KiB (for example
-`->t<1KB>`). ACC is implicit and is never encoded as a `B.IOT` identity.
+`->t<1KB>`). CUBE results are explicit destinations; `.ACC` forms also bind an
+explicit accumulator source, and no architectural implicit ACC singleton exists.
 
 [[memory-mcall]]
 === Shader-kernel boundary semantics (`MPAR` / `MSEQ`)
@@ -163,9 +163,9 @@ Canonical shader-kernel behavior is expressed through `.MPAR` / `.MSEQ` executio
 * Prior side-effecting tile stores must be globally ordered before kernel-side memory issue starts (TSO-preserving barrier
   requirement).
 * Canonical kernel global-memory accesses use bridged forms only: `l.*.brg` and `v.*.brg`.
-* Archived VREG-only raw local-register fragments are not part of canonical v0.57 behavior.
+* Archived VREG-only raw local-register fragments are not part of canonical v0.58 behavior.
 
-Bridged address-formation contract (canonical v0.57):
+Bridged address-formation contract (canonical v0.58):
 
 * `l.*.brg` and `v.*.brg` use the same architectural addressing grammar.
 * The effective address is formed only from the explicitly encoded base, index, immediate, and shift terms of the
@@ -188,7 +188,7 @@ Examples:
 [[memory-types]]
 ==== Memory types (Normal vs Device)
 
-Linx platforms classify memory addresses into types. This v0.57 manual uses two
+Linx platforms classify memory addresses into types. This v0.58 manual uses two
 high-level types:
 
 * **Normal**: cacheable memory used for code and data (SRAM/DRAM).
@@ -258,7 +258,7 @@ stronger behavior unless the platform profile states so.
 [[memory-endianness]]
 === Endianness and alignment
 
-The v0.57 Linx toolchain and emulator model are **little-endian**: the least-significant byte of a multi-byte value is
+The v0.58 Linx toolchain and emulator model are **little-endian**: the least-significant byte of a multi-byte value is
 stored at the lowest address.
 
 Alignment rules are profile-defined. Unless a profile explicitly enables split/misaligned accesses, software should
@@ -306,15 +306,15 @@ bytes without the implicit shift.
 [[memory-pcrel]]
 === PC-relative loads/stores
 
-The catalog includes `*.PCR` forms that compute an address relative to the current PC/TPC (as defined by the v0.57 catalog).
+The catalog includes `*.PCR` forms that compute an address relative to the current PC/TPC (as defined by the v0.58 catalog).
 These forms are used by toolchains for efficient access to nearby constants and for position-independent code patterns.
 
 [[memory-atomics]]
 === Atomics (overview)
 
-The v0.57 catalog includes load-reserved/store-conditional (`LR.*`/`SC.*`), compare-and-swap (`CAS*`), and read-modify-write style atomic operations
+The v0.58 catalog includes load-reserved/store-conditional (`LR.*`/`SC.*`), compare-and-swap (`CAS*`), and read-modify-write style atomic operations
 with qualifier suffixes (for example `.aq`, `.rl`). The precise memory ordering semantics are defined by
-`isa/v0.57/state/memory_model.json` and the architectural model implemented by the toolchain/QEMU/RTL.
+`isa/v0.58/state/memory_model.json` and the architectural model implemented by the toolchain/QEMU/RTL.
 
 Bring-up model (ordering qualifiers):
 
@@ -332,7 +332,7 @@ memory ordering; ordering with respect to **Device/MMIO** requires selecting
 [[memory-fences]]
 === Fences
 
-The v0.57 catalog defines two fence instructions:
+The v0.58 catalog defines two fence instructions:
 
 * `FENCE.D pred_imm, succ_imm`: orders memory operations.
 * `FENCE.I`: synchronizes instruction fetch with prior data stores (self-modifying code / I-cache coherence boundary).
@@ -342,14 +342,14 @@ The v0.57 catalog defines two fence instructions:
 
 `pred_imm` and `succ_imm` are **bitmaps** selecting classes of operations.
 
-Bring-up definition (v0.57 current profile):
+Bring-up definition (v0.58 current profile):
 
 * Bit 0 (`R`): normal memory reads
 * Bit 1 (`W`): normal memory writes
 * Bit 2 (`O`): device/MMIO accesses
 * Bit 3 (`I`): instruction-fetch visibility (see `FENCE.I`)
 
-Semantics (v0.57 current profile):
+Semantics (v0.58 current profile):
 
 * `FENCE.D` orders all prior operations selected by `pred_imm` before all later
   operations selected by `succ_imm` in program order on the same LXCPU.

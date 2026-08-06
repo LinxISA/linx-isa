@@ -1,13 +1,13 @@
-== Tile / Vector Block Instructions (v0.57)
+== Tile / Vector Block Instructions (v0.58)
 
-This chapter defines the **normative header contracts** for tile/vector/tensor-style block types in the live v0.57
+This chapter defines the **normative header contracts** for tile/vector/tensor-style block types in the live v0.58
 profile.
 
 It complements:
 
 * <<blockisa-forms>> (block forms, coupled vs decoupled vs template),
 * <<memory>> (architectural memory model + ordering), and
-* the opcode catalog notes (e.g. `isa/v0.57/opcodes/lx_32.opc`).
+* the opcode catalog notes (e.g. `isa/v0.58/opcodes/lx_32.opc`).
 
 Unless stated otherwise:
 
@@ -71,9 +71,9 @@ Other descriptors (tile inputs, register in/out bindings, etc.) are kernel-defin
 kernels but are not universally required by the ISA.
 
 [[tileblocks-rendering-profile]]
-=== Rendering profile (v0.57 canonical)
+=== Rendering profile (v0.58 canonical)
 
-The rendering-oriented v0.57 profile inherits the frozen v0.57 tile conventions unless a v0.57 delta explicitly changes them:
+The rendering-oriented v0.58 profile inherits the frozen v0.58 tile conventions unless a v0.58 delta explicitly changes them:
 
 * tiles remain general-purpose intermediate-state storage; they are not inherently screen-space tiles,
 * the canonical carrier is a 4KB `1024x1` row-major tile,
@@ -130,3 +130,9 @@ Mandatory header descriptors:
 * `B.DIM` is **mandatory** and specifies `m/n/k` via `LB0/LB1/LB2`.
 * `B.IOT` is **mandatory** (bind operand tiles and sizes).
 * `B.DATR` is required when a non-default, supported matrix layout is selected.
+
+Every CUBE form has an explicit destination. An `.ACC` form additionally has
+an explicit accumulator source; the other forms do not read an accumulator.
+If destination and accumulator alias the same allocation, the operation reads
+the old accumulator value before writing the new result, and their data type,
+shape, layout, and allocation must be identical.

@@ -158066,6 +158066,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -158114,6 +158115,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -158162,6 +158164,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -158213,6 +158216,7 @@
             ],
             "optional_scalar_status": true,
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "requires_b_ior": true,
             "requires_b_iot": true,
@@ -158257,7 +158261,7 @@
                 "role": "source-right"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileBinary",
             "semantic_status": "reviewed-complete",
@@ -158303,6 +158307,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -158351,6 +158356,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -158399,6 +158405,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -158447,6 +158454,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -158495,6 +158503,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -158543,6 +158552,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -158591,6 +158601,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -158630,7 +158641,7 @@
                 "role": "comparison"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileCompare",
             "semantic_status": "reviewed-complete",
@@ -158660,7 +158671,7 @@
                 "role": "source"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileUnary",
             "semantic_status": "reviewed-complete",
@@ -158688,7 +158699,7 @@
                 "role": "source"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileUnary",
             "semantic_status": "reviewed-complete",
@@ -158716,7 +158727,7 @@
                 "role": "source"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileUnary",
             "semantic_status": "reviewed-complete",
@@ -158756,6 +158767,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -158797,6 +158809,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -158838,6 +158851,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -158879,6 +158893,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -158920,6 +158935,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -158962,6 +158978,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -159000,7 +159017,7 @@
                 "role": "source-false"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileSelect",
             "semantic_status": "reviewed-complete",
@@ -159053,6 +159070,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "requires_b_arg": true,
             "requires_b_ior": true,
@@ -159095,6 +159113,7 @@
                 "role": "addend"
               }
             ],
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "TFMA",
             "semantic_status": "reviewed-complete",
@@ -159144,6 +159163,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "requires_b_ior": true,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -159201,6 +159221,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "requires_b_ior": true,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -159258,6 +159279,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "requires_b_ior": true,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -159315,6 +159337,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "requires_b_ior": true,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -159356,7 +159379,7 @@
                 "role": "scalar"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileScalar",
             "semantic_status": "reviewed-complete",
@@ -159405,6 +159428,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "requires_b_ior": true,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -159462,6 +159486,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "requires_b_ior": true,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -159519,6 +159544,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "requires_b_ior": true,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -159576,6 +159602,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "requires_b_ior": true,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -159633,6 +159660,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "requires_b_ior": true,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -159690,6 +159718,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "requires_b_ior": true,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -159747,6 +159776,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "requires_b_ior": true,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -159792,7 +159822,7 @@
                 "role": "comparison"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileCompareScalar",
             "semantic_status": "reviewed-complete",
@@ -159830,7 +159860,7 @@
                 "role": "scalar-false"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileSelectScalar",
             "semantic_status": "reviewed-complete",
@@ -159876,6 +159906,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "requires_b_ior": true,
             "requires_b_iot": true,
@@ -159926,6 +159957,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -159969,6 +160001,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -160012,6 +160045,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -160042,7 +160076,7 @@
                 "role": "source"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileReduction",
             "semantic_status": "reviewed-complete",
@@ -160087,6 +160121,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -160122,7 +160157,7 @@
                 "role": "broadcast-source"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileExpand",
             "semantic_status": "reviewed-complete",
@@ -160155,7 +160190,7 @@
                 "role": "broadcast-source"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileExpand",
             "semantic_status": "reviewed-complete",
@@ -160188,7 +160223,7 @@
                 "role": "broadcast-source"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileExpand",
             "semantic_status": "reviewed-complete",
@@ -160221,7 +160256,7 @@
                 "role": "broadcast-source"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileExpand",
             "semantic_status": "reviewed-complete",
@@ -160254,7 +160289,7 @@
                 "role": "broadcast-source"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileExpand",
             "semantic_status": "reviewed-complete",
@@ -160287,7 +160322,7 @@
                 "role": "broadcast-source"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileExpand",
             "semantic_status": "reviewed-complete",
@@ -160320,7 +160355,7 @@
                 "role": "broadcast-source"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileExpand",
             "semantic_status": "reviewed-complete",
@@ -160349,7 +160384,7 @@
                 "role": "source"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileReduction",
             "semantic_status": "reviewed-complete",
@@ -160377,7 +160412,7 @@
                 "role": "source"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileReduction",
             "semantic_status": "reviewed-complete",
@@ -160418,6 +160453,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -160461,6 +160497,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -160504,6 +160541,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -160534,7 +160572,7 @@
                 "role": "source"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileReduction",
             "semantic_status": "reviewed-complete",
@@ -160579,6 +160617,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -160614,7 +160653,7 @@
                 "role": "broadcast-source"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileExpand",
             "semantic_status": "reviewed-complete",
@@ -160647,7 +160686,7 @@
                 "role": "broadcast-source"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileExpand",
             "semantic_status": "reviewed-complete",
@@ -160680,7 +160719,7 @@
                 "role": "broadcast-source"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileExpand",
             "semantic_status": "reviewed-complete",
@@ -160713,7 +160752,7 @@
                 "role": "broadcast-source"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileExpand",
             "semantic_status": "reviewed-complete",
@@ -160746,7 +160785,7 @@
                 "role": "broadcast-source"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileExpand",
             "semantic_status": "reviewed-complete",
@@ -160779,7 +160818,7 @@
                 "role": "broadcast-source"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileExpand",
             "semantic_status": "reviewed-complete",
@@ -160812,7 +160851,7 @@
                 "role": "broadcast-source"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileExpand",
             "semantic_status": "reviewed-complete",
@@ -160841,7 +160880,7 @@
                 "role": "source"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileReduction",
             "semantic_status": "reviewed-complete",
@@ -160869,7 +160908,7 @@
                 "role": "source"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTileReduction",
             "semantic_status": "reviewed-complete",
@@ -160905,7 +160944,7 @@
                 "role": "axis"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "TCONCAT",
             "semantic_status": "reviewed-complete",
@@ -160943,7 +160982,7 @@
                 "role": "column-offset"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "TEXTRACT",
             "semantic_status": "reviewed-complete",
@@ -160981,7 +161020,7 @@
                 "role": "column-offset"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "TINSERT",
             "semantic_status": "reviewed-complete",
@@ -161039,7 +161078,7 @@
                 "role": "padding"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "TIMG2COL",
             "semantic_status": "reviewed-complete",
@@ -161078,7 +161117,7 @@
                 "role": "padding"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "TFILLPAD",
             "semantic_status": "reviewed-complete",
@@ -161111,7 +161150,7 @@
                 "role": "descending"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "TCI",
             "semantic_status": "reviewed-complete",
@@ -161144,7 +161183,7 @@
                 "role": "diagonal"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "TTRI",
             "semantic_status": "reviewed-complete",
@@ -161181,7 +161220,7 @@
                 "role": "selected-byte"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "THISTOGRAM",
             "semantic_status": "reviewed-complete",
@@ -161223,7 +161262,7 @@
                 "role": "rounding-and-saturation"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "TQUANT",
             "semantic_status": "reviewed-complete",
@@ -161266,7 +161305,7 @@
                 "role": "rounding-and-saturation"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "TDEQUANT",
             "semantic_status": "reviewed-complete",
@@ -161309,7 +161348,7 @@
                 "role": "descending"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "TSORT",
             "semantic_status": "reviewed-complete",
@@ -161348,7 +161387,7 @@
                 "role": "descending"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "TMRGSORT",
             "semantic_status": "reviewed-complete",
@@ -161391,6 +161430,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -161438,6 +161478,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -161485,6 +161526,7 @@
               }
             ],
             "phase_model": "op-defined",
+            "profile": "v0.58",
             "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "resume_ok": false,
@@ -161519,7 +161561,7 @@
                 "role": "source-right"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTilePartial",
             "semantic_status": "reviewed-complete",
@@ -161552,7 +161594,7 @@
                 "role": "source-right"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTilePartial",
             "semantic_status": "reviewed-complete",
@@ -161585,7 +161627,7 @@
                 "role": "source-right"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTilePartial",
             "semantic_status": "reviewed-complete",
@@ -161618,7 +161660,7 @@
                 "role": "source-right"
               }
             ],
-            "profile": "v0.57",
+            "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
             "semantic_handler": "ExecuteTilePartial",
             "semantic_status": "reviewed-complete",

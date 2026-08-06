@@ -243,6 +243,7 @@ def project_engine_ops(tiles: dict[str, Any]) -> dict[str, Any]:
                 "effect_contract", "fault_contract", "restart_contract", "operands", "state_effects"
             )
         })
+        entry["profile"] = "v0.58"
         entry["logical_selector"] = int(operation["selector"], 16)
         entry["semantic_status"] = operation["contract_status"]
         tepl_ops.append(entry)

@@ -62,7 +62,7 @@ conflict-free allocation table.
 
 The [PTO ISA encoding workbook](encoding/PTO-ISA-Encoding.xlsx) is provided
 only as a non-normative review aid. It is not a generator input and cannot
-override the checked-in v0.57 JSON/opcode sources.
+override the checked-in v0.58 JSON/opcode sources.
 
 ## Field Colour Key
 

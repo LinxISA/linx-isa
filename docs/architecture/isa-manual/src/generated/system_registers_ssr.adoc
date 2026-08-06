@@ -71,7 +71,7 @@ Use `HL.SSRGET/HL.SSRSET` when the full `SSR_ID` does not fit in 12 bits.
 |===
 
 [[ssr-ebarg]]
-==== EBARG group (v0.57)
+==== EBARG group (v0.58)
 
 EBARG is the authoritative trap/context snapshot for v0.2. EBARG words are ACR-scoped manager-family SSRs (0xnf40+).
 
@@ -100,7 +100,7 @@ EBARG is the authoritative trap/context snapshot for v0.2. EBARG words are ACR-s
 |===
 
 [[ssr-debug]]
-==== Debug SSRs (v0.57 bring-up)
+==== Debug SSRs (v0.58 bring-up)
 
 v0.2 bring-up debug SSRs (breakpoints/watchpoints with optional linking).
 
