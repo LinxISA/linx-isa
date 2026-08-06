@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.MSCATTER.MASK DataType
 
-*Description:* Named TMA-family Function=7. Masked memory scatter; detailed PTO selector manifest is defined out-of-band for v0.57.
+*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 *Encoding:*
 
@@ -17,4 +17,4 @@ image::encodings/enc_bstart_mscatter_mask.svg[BSTART.MSCATTER.MASK encoding,widt
 
 *Compression:* L32 (len=32)
 
-*Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "v0.57 TMA Function=7", "source": "group_rule", "uop_kind": "CMD"}`
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "PTO ISA 0.58 TLSU Function=7", "source": "group_rule", "uop_kind": "CMD"}`

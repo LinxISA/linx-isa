@@ -49,7 +49,7 @@ block type determines what engine is needed to execute this block and the execut
 | [Memory Access and Sequel Block](../blockIntro/mem_block/intro.md)（**Memory Access and Sequel Block**） | MSEQ | Provides vector-based memory data transfer capabilities, multi-Group serial execution |
 | [vector Parallel Block](../blockIntro/vec_block/intro.md)（**Vector and Parallel Block**） | VPAR | Provides vector data computing capabilities, multi-Group parallel execution |
 | [vector serial block](../blockIntro/vec_block/intro.md) (**Vector and Sequel Block**) | VSEQ | Provides vector data computing capabilities, multi-Group serial execution |
-| [Data Movement Block](../blockIntro/tma_block/intro.md)（**Tile and Memory Access Block**） | TMA | Provides data movement capabilities between memory and Tile registers |
+| [Data Movement Block](../blockIntro/tma_block/intro.md) (**Tile Load/Store Unit**) | TLSU | Provides catalog-defined movement between memory and Tile registers |
 | [Matrix Data Block](../blockIntro/cube_block/intro.md)（**Cube Block**） | CUBE | Provides matrix operation capabilities, splits the matrix into multiple subtypes, and performs matrix operations at the granularity of subtypes |
 | [Template Data Block](../blockIntro/tepl_block/intro.md)（**Template Tile Block**） | TEPL | Provides templated data block (Tile) computing capabilities |
 | [system-call block](../blockIntro/xb_block/intro.md)（**Cross Block**） | XB | Provides lightweight system calling capabilities |

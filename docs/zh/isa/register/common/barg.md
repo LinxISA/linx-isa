@@ -51,7 +51,7 @@ BARG寄存器包含如下域段：
 | 0 | 整型标量块STD |
 | 1 | 系统块SYS |
 | 2 | 浮点标量块FP |
-| 3 | 数据块（MPAR, MSEQ, VPAR, VSEQ, CUBE, TMA） |
+| 3 | 数据块（MPAR, MSEQ, VPAR, VSEQ, CUBE, TLSU） |
 | 31 | 系统调用块XB |
 
 ### 5. **TYPE**

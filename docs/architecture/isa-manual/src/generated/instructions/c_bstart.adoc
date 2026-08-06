@@ -5,27 +5,27 @@
 [[inst_c_bstart]]
 ==== C.BSTART
 
-*Description:* Compressed 16-bit instruction variant.
+*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
-[[inst_c_bstart_16_c4e238a9227a]]
-===== Form `c_bstart_16_c4e238a9227a`
-
-*Syntax:* C.BSTART COND,  label
-
-*Encoding:*
-
-image::encodings/enc_c_bstart_16_c4e238a9227a.svg[C.BSTART encoding form c_bstart_16_c4e238a9227a,width=800]
-
-*Compression:* C16 (len=16)
-
-[[inst_c_bstart_16_f833d2a4753c]]
-===== Form `c_bstart_16_f833d2a4753c`
+[[inst_c_bstart_16_78ebf9b37d2d]]
+===== Form `c_bstart_16_78ebf9b37d2d`
 
 *Syntax:* C.BSTART DIRECT, label
 
 *Encoding:*
 
-image::encodings/enc_c_bstart_16_f833d2a4753c.svg[C.BSTART encoding form c_bstart_16_f833d2a4753c,width=800]
+image::encodings/enc_c_bstart_16_78ebf9b37d2d.svg[C.BSTART encoding form c_bstart_16_78ebf9b37d2d,width=800]
+
+*Compression:* C16 (len=16)
+
+[[inst_c_bstart_16_b82b9a0c292c]]
+===== Form `c_bstart_16_b82b9a0c292c`
+
+*Syntax:* C.BSTART COND,  label
+
+*Encoding:*
+
+image::encodings/enc_c_bstart_16_b82b9a0c292c.svg[C.BSTART encoding form c_bstart_16_b82b9a0c292c,width=800]
 
 *Compression:* C16 (len=16)
 

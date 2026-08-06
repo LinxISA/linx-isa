@@ -1,14 +1,15 @@
 # 指令编码格式
 
-> **ISA 版本：** v0.57.0 |  **ISA 手册第 03 章**
+> **ISA 版本：** v0.58.0 |  **ISA 手册第 03 章**
 
-灵犀指令集 v0.57 支持小端字节序的四种指令长度
+灵犀指令集 v0.58 支持小端字节序的四种指令长度
 面向半字的模型。位位置显示为 `[msb:0]`
 （MSB 最左边，LSB 最右边），匹配 ARM 和 RISC-V 约定。
 
-v0.57 建立在 v0.57 基线之上，只加入经过声明的增量编码。旧的泛化
-TMA 块头汇编拼写不再是活动形式；TMA TileOp 使用
-`BSTART.TLOAD`、`BSTART.TSTORE`、`BSTART.TMOV`、`BSTART.TPREFETCH` 等命名块头。
+v0.58 的标量、块命令和 Tile 编码以 PTO ISA 0.58 为共同基线。TLSU
+使用 `BSTART.TLOAD`、`BSTART.TSTORE`、`BSTART.TMOV`、
+`BSTART.MGATHER.MASK`、`BSTART.MGATHER.CAS` 等命名块头；Linx 的额外
+编码仅用于 V.* 与 VPAR/VSEQ 向量扩展，并避开 PTO 保留区间。
 
 ## 指令长度
 

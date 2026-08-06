@@ -11,13 +11,13 @@
 
 | | |
 |---|---|
-| **ISA Version** | v0.57 stable |
-| **Instruction Forms** | 769 canonical v0.57 forms |
+| **ISA Version** | v0.58 stable |
+| **Instruction Forms** | 763 canonical v0.58 forms |
 | **Instruction Groups** | 66 |
 | **Formats** | 16-bit Compressed · 32-bit Base · 48-bit HL · 64-bit Vector |
-| **Specification** | [v0.57 Contract →](architecture/v0.57-architecture-contract.md) |
+| **Specification** | [v0.58 Contract →](architecture/v0.58-architecture-contract.md) |
 | **Encoding Decisions** | [v0.57 Encoding →](architecture/v0.57-encoding-decisions.md) |
-| **Release Notes** | [v0.57.0 →](releases/v0.57.0.md) |
+| **Release Notes** | [v0.58.0 →](releases/v0.58.0.md) |
 
 </div>
 
@@ -28,7 +28,7 @@
 <div class="quick-links">
 
 [:fontawesome-solid-microchip: **ISA Reference** — Instruction Reference](isa/index.md) {.quick-link-card}
-: The complete, searchable reference for all 769 instruction forms. Browse by chapter, group, or alphabetically.
+: The complete, searchable reference for all 763 instruction forms. Browse by chapter, group, or alphabetically.
 
 [:fontawesome-solid-book: **Full ISA Manual** — AsciiDoc/PDF](architecture/isa-manual/README.md) {.quick-link-card}
 : The authoritative human-readable manual with narrative chapters, examples, and design rationale.
@@ -103,7 +103,7 @@
 
 | | |
 |---|---|
-| **ISA Version** | v0.57 stable |
+| **ISA Version** | v0.58 stable |
 | **Source** | [github.com/LinxISA/linx-isa](https://github.com/LinxISA/linx-isa) |
 | **ISA Manual Source** | [docs/architecture/isa-manual/src](https://github.com/LinxISA/linx-isa/tree/main/docs/architecture/isa-manual/src) (AsciiDoc) |
 | **QEMU Emulator** | [avs/qemu](https://github.com/LinxISA/linx-isa/tree/main/avs/qemu) |
@@ -112,5 +112,5 @@
 | **musl Port** | [`lib/musl`](https://github.com/LinxISA/linx-isa/tree/main/lib/musl) |
 
 > **Note:** The generated instruction reference is derived from the checked-in
-> v0.57 machine-readable ISA. All active semantic changes must be declared in
-> the v0.57 release manifests rather than applied to generated pages directly.
+> v0.58 machine-readable ISA. All active semantic changes must be declared in
+> the v0.58 release manifests rather than applied to generated pages directly.

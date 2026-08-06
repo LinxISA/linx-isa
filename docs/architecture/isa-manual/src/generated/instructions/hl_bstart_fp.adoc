@@ -5,49 +5,49 @@
 [[inst_hl_bstart_fp]]
 ==== HL.BSTART.FP
 
-*Description:* Long 48-bit instruction encoding (prefix + 32-bit main form).
+*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
-[[inst_hl_bstart_fp_48_038e2e96cf64]]
-===== Form `hl_bstart_fp_48_038e2e96cf64`
-
-*Syntax:* HL.BSTART.FP COND, <label>
-
-*Encoding:*
-
-image::encodings/enc_hl_bstart_fp_48_038e2e96cf64.svg[HL.BSTART.FP encoding form hl_bstart_fp_48_038e2e96cf64,width=800]
-
-*Compression:* HL48 (len=48)
-
-[[inst_hl_bstart_fp_48_43530d2ebfae]]
-===== Form `hl_bstart_fp_48_43530d2ebfae`
+[[inst_hl_bstart_fp_48_0368fb7424f4]]
+===== Form `hl_bstart_fp_48_0368fb7424f4`
 
 *Syntax:* HL.BSTART.FP FALL<, fixup_label>
 
 *Encoding:*
 
-image::encodings/enc_hl_bstart_fp_48_43530d2ebfae.svg[HL.BSTART.FP encoding form hl_bstart_fp_48_43530d2ebfae,width=800]
+image::encodings/enc_hl_bstart_fp_48_0368fb7424f4.svg[HL.BSTART.FP encoding form hl_bstart_fp_48_0368fb7424f4,width=800]
 
 *Compression:* HL48 (len=48)
 
-[[inst_hl_bstart_fp_48_81b457553844]]
-===== Form `hl_bstart_fp_48_81b457553844`
+[[inst_hl_bstart_fp_48_9955c1f823f6]]
+===== Form `hl_bstart_fp_48_9955c1f823f6`
 
 *Syntax:* HL.BSTART.FP CALL, <label>
 
 *Encoding:*
 
-image::encodings/enc_hl_bstart_fp_48_81b457553844.svg[HL.BSTART.FP encoding form hl_bstart_fp_48_81b457553844,width=800]
+image::encodings/enc_hl_bstart_fp_48_9955c1f823f6.svg[HL.BSTART.FP encoding form hl_bstart_fp_48_9955c1f823f6,width=800]
 
 *Compression:* HL48 (len=48)
 
-[[inst_hl_bstart_fp_48_eb938e9200eb]]
-===== Form `hl_bstart_fp_48_eb938e9200eb`
+[[inst_hl_bstart_fp_48_9a0544563449]]
+===== Form `hl_bstart_fp_48_9a0544563449`
 
 *Syntax:* HL.BSTART.FP DIRECT, <label>
 
 *Encoding:*
 
-image::encodings/enc_hl_bstart_fp_48_eb938e9200eb.svg[HL.BSTART.FP encoding form hl_bstart_fp_48_eb938e9200eb,width=800]
+image::encodings/enc_hl_bstart_fp_48_9a0544563449.svg[HL.BSTART.FP encoding form hl_bstart_fp_48_9a0544563449,width=800]
+
+*Compression:* HL48 (len=48)
+
+[[inst_hl_bstart_fp_48_f074f1e2c089]]
+===== Form `hl_bstart_fp_48_f074f1e2c089`
+
+*Syntax:* HL.BSTART.FP COND, <label>
+
+*Encoding:*
+
+image::encodings/enc_hl_bstart_fp_48_f074f1e2c089.svg[HL.BSTART.FP encoding form hl_bstart_fp_48_f074f1e2c089,width=800]
 
 *Compression:* HL48 (len=48)
 

@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `Pops selected scalar queue values into encoded destinations.`
 
 ## Full Catalog Forms
 

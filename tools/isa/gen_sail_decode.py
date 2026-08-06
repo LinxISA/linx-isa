@@ -1132,7 +1132,7 @@ def render(
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--spec", default="isa/v0.57/linxisa-v0.57.json")
+    ap.add_argument("--spec", default="isa/v0.58/linxisa-v0.58.json")
     ap.add_argument("--execute", default="isa/sail/model/execute/execute.sail")
     ap.add_argument("--out", default="isa/sail/model/decode/decode.sail")
     ap.add_argument("--check", action="store_true")

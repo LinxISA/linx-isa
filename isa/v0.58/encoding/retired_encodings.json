@@ -1,0 +1,38 @@
+{
+  "entries": [
+    {
+      "disposition": "reserved",
+      "length_bits": 32,
+      "mask": "0x0600707f",
+      "match": "0x00001013",
+      "retired_mnemonic": "B.IOD"
+    },
+    {
+      "disposition": "reserved",
+      "length_bits": 32,
+      "mask": "0x06007fff",
+      "match": "0x02001181",
+      "retired_mnemonic": "BSTART.PAR"
+    }
+  ],
+  "deleted_tile_names": [
+    "TADDC",
+    "TADDSC",
+    "TFMA",
+    "TFMOD",
+    "TFMODS",
+    "TLRELU",
+    "TRANDOM",
+    "TSUBC",
+    "TSUBSC"
+  ],
+  "migration_only_source_aliases": {
+    "TSORT32": "TSORT",
+    "TTRANSPOSE": "TTRANS"
+  },
+  "notes": [
+    "Retired spellings are assembler errors.",
+    "B.IOD and the former BSTART.PAR/legacy-TEPL bit pattern are reserved and must not canonical-redecode.",
+    "Deleted tile operation selectors remain unallocated in the PTO ISA 0.58.0 TEPL Mode/Function map."
+  ]
+}

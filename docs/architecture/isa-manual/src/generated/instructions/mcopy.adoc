@@ -7,7 +7,7 @@
 
 *Syntax:* MCOPY [RegSrc0, RegSrc1, RegSrc2]
 
-*Description:* Memory block MCOPY: bulk memory fill/copy operation.
+*Description:* Copies an encoded memory range with instruction-atomic preflight and snapshot semantics.
 
 *Encoding:*
 

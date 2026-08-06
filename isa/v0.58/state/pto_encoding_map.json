@@ -1,0 +1,1111 @@
+{
+  "$schema": "https://docs.openclaw.ai/schemas/linxisa/pto_encoding_map.v1.json",
+  "profile": "v0.58",
+  "version": "0.58.0",
+  "source_lock": "isa/v0.58/pto-spec.lock.json",
+  "policy": {
+    "catalog_order_allocates_encodings": false,
+    "unlisted_selectors_reserved": true,
+    "legacy_decode_allowed": false,
+    "source_aliases_are_migration_only": false
+  },
+  "entry_count": 109,
+  "family_counts": {
+    "CUBE": 12,
+    "TEPL": 87,
+    "TLSU": 10
+  },
+  "migration_aliases": {},
+  "entries": [
+    {
+      "name": "TADD",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x000",
+      "mode": 0,
+      "function": 0,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TSUB",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x001",
+      "mode": 0,
+      "function": 1,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TMUL",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x002",
+      "mode": 0,
+      "function": 2,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TDIV",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x003",
+      "mode": 0,
+      "function": 3,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TREM",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x004",
+      "mode": 0,
+      "function": 4,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TAND",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x006",
+      "mode": 0,
+      "function": 6,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TOR",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x007",
+      "mode": 0,
+      "function": 7,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TXOR",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x008",
+      "mode": 0,
+      "function": 8,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TSHL",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x009",
+      "mode": 0,
+      "function": 9,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TSHR",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x00A",
+      "mode": 0,
+      "function": 10,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TMAX",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x00B",
+      "mode": 0,
+      "function": 11,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TMIN",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x00C",
+      "mode": 0,
+      "function": 12,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TCMP",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x00D",
+      "mode": 0,
+      "function": 13,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TABS",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x00F",
+      "mode": 0,
+      "function": 15,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TNOT",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x010",
+      "mode": 0,
+      "function": 16,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TNEG",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x011",
+      "mode": 0,
+      "function": 17,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TEXP",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x012",
+      "mode": 0,
+      "function": 18,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TLOG",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x013",
+      "mode": 0,
+      "function": 19,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TRECIP",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x014",
+      "mode": 0,
+      "function": 20,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TSQRT",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x015",
+      "mode": 0,
+      "function": 21,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TRSQRT",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x016",
+      "mode": 0,
+      "function": 22,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TRELU",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x017",
+      "mode": 0,
+      "function": 23,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TSEL",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x01A",
+      "mode": 0,
+      "function": 26,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TCVT",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x01B",
+      "mode": 0,
+      "function": 27,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TFMA",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x01C",
+      "mode": 0,
+      "function": 28,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TADDS",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x020",
+      "mode": 1,
+      "function": 0,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TSUBS",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x021",
+      "mode": 1,
+      "function": 1,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TMULS",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x022",
+      "mode": 1,
+      "function": 2,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TDIVS",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x023",
+      "mode": 1,
+      "function": 3,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TREMS",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x024",
+      "mode": 1,
+      "function": 4,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TANDS",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x026",
+      "mode": 1,
+      "function": 6,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TORS",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x027",
+      "mode": 1,
+      "function": 7,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TXORS",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x028",
+      "mode": 1,
+      "function": 8,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TSHLS",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x029",
+      "mode": 1,
+      "function": 9,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TSHRS",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x02A",
+      "mode": 1,
+      "function": 10,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TMAXS",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x02B",
+      "mode": 1,
+      "function": 11,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TMINS",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x02C",
+      "mode": 1,
+      "function": 12,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TCMPS",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x02D",
+      "mode": 1,
+      "function": 13,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TSELS",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x03A",
+      "mode": 1,
+      "function": 26,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TEXPANDS",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x03B",
+      "mode": 1,
+      "function": 27,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TROWSUM",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x040",
+      "mode": 2,
+      "function": 0,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TROWMAX",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x041",
+      "mode": 2,
+      "function": 1,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TROWMIN",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x042",
+      "mode": 2,
+      "function": 2,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TROWPROD",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x043",
+      "mode": 2,
+      "function": 3,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TROWEXPAND",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x044",
+      "mode": 2,
+      "function": 4,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TROWEXPANDADD",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x045",
+      "mode": 2,
+      "function": 5,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TROWEXPANDSUB",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x046",
+      "mode": 2,
+      "function": 6,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TROWEXPANDMUL",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x047",
+      "mode": 2,
+      "function": 7,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TROWEXPANDDIV",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x048",
+      "mode": 2,
+      "function": 8,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TROWEXPANDMAX",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x049",
+      "mode": 2,
+      "function": 9,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TROWEXPANDMIN",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x04A",
+      "mode": 2,
+      "function": 10,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TROWEXPANDEXPDIF",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x04B",
+      "mode": 2,
+      "function": 11,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TROWARGMAX",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x04C",
+      "mode": 2,
+      "function": 12,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TROWARGMIN",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x04D",
+      "mode": 2,
+      "function": 13,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TCOLSUM",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x050",
+      "mode": 2,
+      "function": 16,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TCOLMAX",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x051",
+      "mode": 2,
+      "function": 17,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TCOLMIN",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x052",
+      "mode": 2,
+      "function": 18,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TCOLPROD",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x053",
+      "mode": 2,
+      "function": 19,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TCOLEXPAND",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x054",
+      "mode": 2,
+      "function": 20,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TCOLEXPANDADD",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x055",
+      "mode": 2,
+      "function": 21,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TCOLEXPANDSUB",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x056",
+      "mode": 2,
+      "function": 22,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TCOLEXPANDMUL",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x057",
+      "mode": 2,
+      "function": 23,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TCOLEXPANDDIV",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x058",
+      "mode": 2,
+      "function": 24,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TCOLEXPANDMAX",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x059",
+      "mode": 2,
+      "function": 25,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TCOLEXPANDMIN",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x05A",
+      "mode": 2,
+      "function": 26,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TCOLEXPANDEXPDIF",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x05B",
+      "mode": 2,
+      "function": 27,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TCOLARGMAX",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x05C",
+      "mode": 2,
+      "function": 28,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TCOLARGMIN",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x05D",
+      "mode": 2,
+      "function": 29,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TCONCAT",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x060",
+      "mode": 3,
+      "function": 0,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TEXTRACT",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x062",
+      "mode": 3,
+      "function": 2,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TINSERT",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x063",
+      "mode": 3,
+      "function": 3,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TIMG2COL",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x064",
+      "mode": 3,
+      "function": 4,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TFILLPAD",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x065",
+      "mode": 3,
+      "function": 5,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TCI",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x066",
+      "mode": 3,
+      "function": 6,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TTRI",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x067",
+      "mode": 3,
+      "function": 7,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "THISTOGRAM",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x068",
+      "mode": 3,
+      "function": 8,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TQUANT",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x06A",
+      "mode": 3,
+      "function": 10,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TDEQUANT",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x06B",
+      "mode": 3,
+      "function": 11,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TSORT",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x06C",
+      "mode": 3,
+      "function": 12,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TMRGSORT",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x06D",
+      "mode": 3,
+      "function": 13,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TTRANS",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x06E",
+      "mode": 3,
+      "function": 14,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TGATHER",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x06F",
+      "mode": 3,
+      "function": 15,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TSCATTER",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x070",
+      "mode": 3,
+      "function": 16,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TPARTADD",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x071",
+      "mode": 3,
+      "function": 17,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TPARTMUL",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x072",
+      "mode": 3,
+      "function": 18,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TPARTMAX",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x073",
+      "mode": 3,
+      "function": 19,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TPARTMIN",
+      "family": "TEPL",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x074",
+      "mode": 3,
+      "function": 20,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TLOAD",
+      "family": "TLSU",
+      "command_mnemonic": "BSTART.TLOAD",
+      "selector": null,
+      "mode": null,
+      "function": 0,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TSTORE",
+      "family": "TLSU",
+      "command_mnemonic": "BSTART.TSTORE",
+      "selector": null,
+      "mode": null,
+      "function": 1,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TMOV",
+      "family": "TLSU",
+      "command_mnemonic": "BSTART.TMOV",
+      "selector": null,
+      "mode": null,
+      "function": 2,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TPREFETCH",
+      "family": "TLSU",
+      "command_mnemonic": "BSTART.TPREFETCH",
+      "selector": null,
+      "mode": null,
+      "function": 3,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "MGATHER",
+      "family": "TLSU",
+      "command_mnemonic": "BSTART.MGATHER",
+      "selector": null,
+      "mode": null,
+      "function": 4,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "MSCATTER",
+      "family": "TLSU",
+      "command_mnemonic": "BSTART.MSCATTER",
+      "selector": null,
+      "mode": null,
+      "function": 5,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "MGATHER_MASK",
+      "family": "TLSU",
+      "command_mnemonic": "BSTART.MGATHER.MASK",
+      "selector": null,
+      "mode": null,
+      "function": 6,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "MSCATTER_MASK",
+      "family": "TLSU",
+      "command_mnemonic": "BSTART.MSCATTER.MASK",
+      "selector": null,
+      "mode": null,
+      "function": 7,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "MGATHER_CAS",
+      "family": "TLSU",
+      "command_mnemonic": "BSTART.MGATHER.CAS",
+      "selector": null,
+      "mode": null,
+      "function": 8,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "GMOV",
+      "family": "TLSU",
+      "command_mnemonic": "BSTART.GMOV",
+      "selector": null,
+      "mode": null,
+      "function": 13,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TMATMUL",
+      "family": "CUBE",
+      "command_mnemonic": "BSTART.TMATMUL",
+      "selector": null,
+      "mode": null,
+      "function": 0,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TMATMUL_BIAS",
+      "family": "CUBE",
+      "command_mnemonic": "BSTART.TMATMUL.BIAS",
+      "selector": null,
+      "mode": null,
+      "function": 1,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TMATMUL_ACC",
+      "family": "CUBE",
+      "command_mnemonic": "BSTART.TMATMUL.ACC",
+      "selector": null,
+      "mode": null,
+      "function": 2,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TMATMUL_MX",
+      "family": "CUBE",
+      "command_mnemonic": "BSTART.TMATMULMX",
+      "selector": null,
+      "mode": null,
+      "function": 4,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TMATMUL_MX_BIAS",
+      "family": "CUBE",
+      "command_mnemonic": "BSTART.TMATMULMX.BIAS",
+      "selector": null,
+      "mode": null,
+      "function": 5,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TMATMUL_MX_ACC",
+      "family": "CUBE",
+      "command_mnemonic": "BSTART.TMATMULMX.ACC",
+      "selector": null,
+      "mode": null,
+      "function": 6,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TGEMV",
+      "family": "CUBE",
+      "command_mnemonic": "BSTART.TGEMV",
+      "selector": null,
+      "mode": null,
+      "function": 16,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TGEMV_BIAS",
+      "family": "CUBE",
+      "command_mnemonic": "BSTART.TGEMV.BIAS",
+      "selector": null,
+      "mode": null,
+      "function": 17,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TGEMV_ACC",
+      "family": "CUBE",
+      "command_mnemonic": "BSTART.TGEMV.ACC",
+      "selector": null,
+      "mode": null,
+      "function": 18,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TGEMV_MX",
+      "family": "CUBE",
+      "command_mnemonic": "BSTART.TGEMVMX",
+      "selector": null,
+      "mode": null,
+      "function": 20,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TGEMV_MX_BIAS",
+      "family": "CUBE",
+      "command_mnemonic": "BSTART.TGEMVMX.BIAS",
+      "selector": null,
+      "mode": null,
+      "function": 21,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TGEMV_MX_ACC",
+      "family": "CUBE",
+      "command_mnemonic": "BSTART.TGEMVMX.ACC",
+      "selector": null,
+      "mode": null,
+      "function": 22,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    }
+  ]
+}

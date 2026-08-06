@@ -2,9 +2,9 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/block_split.md">Block Split</a> &nbsp;|&nbsp;
-<span class="ch-tag ch-tag-04">Ch 04</span>
-&nbsp; <strong>Block ISA — Block-structured Control Flow</strong> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/bundle_split.md">Bundle Split</a> &nbsp;|&nbsp;
+<span class="ch-tag ch-tag-00">Ch 00</span>
+&nbsp; <strong>ISA Manual</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
 
 </div>
@@ -18,14 +18,14 @@
 
 <div class="enc-diagram">
 
-<figure id="encoding-bstart_32_7eb93b649748">
-<img src="../wavedrom/enc_bstart_32_7eb93b649748.svg" alt="BSTART encoding form bstart_32_7eb93b649748" width="100%" />
-<figcaption><code>bstart_32_7eb93b649748</code> — <code>BSTART {DIRECT, CALL}, <label></code>. MSB is on the left, LSB is on the right.</figcaption>
+<figure id="encoding-bstart_32_416bc417fc20">
+<img src="../wavedrom/enc_bstart_32_416bc417fc20.svg" alt="BSTART encoding form bstart_32_416bc417fc20" width="100%" />
+<figcaption><code>bstart_32_416bc417fc20</code> — <code>BSTART {DIRECT, CALL}, <label></code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
-<figure id="encoding-bstart_32_e11e678a32ac">
-<img src="../wavedrom/enc_bstart_32_e11e678a32ac.svg" alt="BSTART encoding form bstart_32_e11e678a32ac" width="100%" />
-<figcaption><code>bstart_32_e11e678a32ac</code> — <code>BSTART COND, <label></code>. MSB is on the left, LSB is on the right.</figcaption>
+<figure id="encoding-bstart_32_7e66993d15d0">
+<img src="../wavedrom/enc_bstart_32_7e66993d15d0.svg" alt="BSTART encoding form bstart_32_7e66993d15d0" width="100%" />
+<figcaption><code>bstart_32_7e66993d15d0</code> — <code>BSTART COND, <label></code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
 </div>
@@ -42,17 +42,17 @@ EndBlock(); BeginNextBlock(/* kind */);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.`
 
 ## Full Catalog Forms
 
 | Form ID | Assembly | Length | Decode | Encoding |
 |---------|----------|--------|--------|----------|
-| `bstart_32_7eb93b649748` | `BSTART {DIRECT, CALL}, <label>` | 32 | — | [SVG](../wavedrom/enc_bstart_32_7eb93b649748.svg) |
-| `bstart_32_e11e678a32ac` | `BSTART COND, <label>` | 32 | — | [SVG](../wavedrom/enc_bstart_32_e11e678a32ac.svg) |
+| `bstart_32_416bc417fc20` | `BSTART {DIRECT, CALL}, <label>` | 32 | — | [SVG](../wavedrom/enc_bstart_32_416bc417fc20.svg) |
+| `bstart_32_7e66993d15d0` | `BSTART COND, <label>` | 32 | — | [SVG](../wavedrom/enc_bstart_32_7e66993d15d0.svg) |
 
 <div class="insn-nav">
 
-← [Block Split](../groups/block_split.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [Bundle Split](../groups/bundle_split.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

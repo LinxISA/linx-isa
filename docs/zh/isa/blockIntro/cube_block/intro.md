@@ -9,52 +9,31 @@
 - 矩阵数据块**仅支持Fall跳转方式**
 - 矩阵数据块允许访问 全局寄存器GGPR以及Tile寄存器，**不允许访问内存和系统寄存器SSR**。
 - 矩阵数据块一个块最多允许读8个Tile寄存器，写4个tile寄存器。
-- 矩阵运算结果**只允许输出到ACC寄存器**，并通过一条特定指令ACCCVT写到通用Tile寄存器中。
+- 每个矩阵操作都写入显式 Local 目的 Tile D。ACC 形式还读取显式 Local 累加输入 C；当 D 与 C 相同时，语义为读旧值、写新值。
 - 矩阵数据块无块体，**不允许使用B.TEXT指令**
 
 ## 指令列表
 
 | TileOp  |   说明    |
 |---------|------------|
-| [TMATMUL](../../header/tileblock/TMATMUL.md)            | 矩阵乘指令，A矩阵 乘 B矩阵，结果写到ACC寄存器   |
-| [TMATMUL.BIAS](../../header/tileblock/TMATMUL.BIAS.md)  | 矩阵乘加指令，A矩阵 乘 B矩阵，再加C矩阵，结果写到ACC寄存器    |
-| [TMATMUL.ACC](../../header/tileblock/TMATMUL.ACC.md)    | 矩阵乘累加指令，A矩阵 乘 B矩阵，结果累加到ACC寄存器  |
-| [TMATMULMX](../../header/tileblock/TMATMULMX.md)             | 缩放矩阵乘，结果写到ACC寄存器 |
-| [TMATMULMX.BIAS](../../header/tileblock/TMATMULMX.BIAS.md)   | 缩放矩阵乘，加偏置矩阵，结果写到ACC寄存器 |
-| [TMATMULMX.ACC](../../header/tileblock/TMATMULMX.ACC.md)     | 缩放矩阵乘，结果矩阵累加到ACC寄存器 |
-| [ACCCVT](../../header/tileblock/ACCCVT.md)              | 将ACC寄存器内的数据搬移至通用Tile寄存器 |
-| [TGEMV](../../header/tileblock/TGEMV.md)                | 通用矩阵-向量乘法，结果写到ACC寄存器 |
-| [TGEMV.BIAS](../../header/tileblock/TGEMV.BIAS.md)      | 通用矩阵-向量乘法，带偏置加法，结果写到ACC寄存器 |
-| [TGEMV.ACC](../../header/tileblock/TGEMV.ACC.md)        | 通用矩阵-向量乘法，结果累加到ACC寄存器 |
-| [TGEMVMX](../../header/tileblock/TGEMVMX.md)            | 通用缩放矩阵-向量乘法，结果写到ACC寄存器 |
-| [TGEMVMX.BIAS](../../header/tileblock/TGEMVMX.BIAS.md)  | 通用缩放矩阵-向量乘法，带偏置加法，结果写到ACC寄存器 |
-| [TGEMVMX.ACC](../../header/tileblock/TGEMVMX.ACC.md)    | 通用缩放矩阵-向量乘法，结果累加到ACC寄存器 |
+| [TMATMUL](../../header/tileblock/TMATMUL.md)            | 矩阵乘，写显式目的 D |
+| [TMATMUL.BIAS](../../header/tileblock/TMATMUL.BIAS.md)  | 矩阵乘加显式偏置，写显式目的 D |
+| [TMATMUL.ACC](../../header/tileblock/TMATMUL.ACC.md)    | 从显式累加输入 C 读值并写显式目的 D |
+| [TMATMULMX](../../header/tileblock/TMATMULMX.md)             | 带行/列 scale 的矩阵乘，写显式目的 D |
+| [TMATMULMX.BIAS](../../header/tileblock/TMATMULMX.BIAS.md)   | 带 scale 和偏置的矩阵乘，写显式目的 D |
+| [TMATMULMX.ACC](../../header/tileblock/TMATMULMX.ACC.md)     | 带 scale 的矩阵乘累加，从 C 读并写 D |
+| [TGEMV](../../header/tileblock/TGEMV.md)                | 矩阵-向量乘，写显式目的 D |
+| [TGEMV.BIAS](../../header/tileblock/TGEMV.BIAS.md)      | 矩阵-向量乘加偏置，写显式目的 D |
+| [TGEMV.ACC](../../header/tileblock/TGEMV.ACC.md)        | 矩阵-向量累加，从 C 读并写 D |
+| [TGEMVMX](../../header/tileblock/TGEMVMX.md)            | 带 scale 的矩阵-向量乘，写显式目的 D |
+| [TGEMVMX.BIAS](../../header/tileblock/TGEMVMX.BIAS.md)  | 带 scale 和偏置的矩阵-向量乘，写显式目的 D |
+| [TGEMVMX.ACC](../../header/tileblock/TGEMVMX.ACC.md)    | 带 scale 的矩阵-向量累加，从 C 读并写 D |
 
-我们提供了一个特殊的[Tile寄存器](../../register/common/tilereg.md) - **ACC**，它主要用于降低CUBE单元中乘累加操作的数据读写带宽。该寄存器是CUBE单元内一块私有的存储区域，并且只能通过矩阵运算指令和ACCCVT指令访问。
+PTO ISA 0.58 不存在隐藏的架构 ACC 状态，也没有 `ACCCVT` 操作。逻辑累加角色由普通 Local Tile 操作数承担，因此目的生命周期、别名和转换行为都由块描述符显式表达。
 
 ![acc](../../../figs/isa/arch/acc.png){ width="600" }
 
-示例：
-```asm
-    BSTART.TMATMUL FP32
-    C.B.DIMI 64, ->lb0
-    C.B.DIMI 32, ->lb1
-    C.B.DIMI 64, ->lb2
-    B.DATR normal, FP32, ZERO, cmode0, rmode0
-    B.IOT t#4, t#3, last
-
-    BSTART.TMATMUL.ACC FP32
-    B.DATR normal, FP32, ZERO, cmode0, rmode0
-    B.IOT t#1, t#2, last
-
-    BSTART.ACCCVT FP32
-    B.DATR normal, FP32, ZERO, cmode0, rmode0
-    B.IOT last, ->t<16KB>
-```
-
-上述示例中，CUBE opcode 隐式选择 ACC，`B.IOT` 永不编码 ACC。
-`TMATMUL` 初始化 ACC，`TMATMUL.ACC` 读取并更新 ACC，最后由 `ACCCVT`
-把结果发布到普通 T 类型 Tile。
+base 与 BIAS 形式由描述符指定 D 和全部矩阵/向量输入；ACC 形式额外指定累加输入 C。`D == C` 是定义良好的读旧值、写新值别名；否则读取 C 并独立更新 D。
 
 ## 输入要求
 
@@ -92,7 +71,7 @@ K0可以通过以下公式计算得到：
 
 ## 输出要求
 
-灵犀指令集中，矩阵运算后需要通过ACCCVT指令继续进行一系列的随路处理，例如激活、量化、元素级运算等。如果统一从ACC寄存器获取数据再做进一步处理，可以很大程度的简化硬件实现。因此要求矩阵运算结果 **只允许输出到ACC寄存器**。
+在 v0.58 中，矩阵结果直接写入显式 Local 目的 Tile。后续激活、量化、布局转换或逐元素操作通过普通显式操作数读取该 Tile。
 
 另一方面，根据输入矩阵的格式要求，那么结果矩阵一定是以`大N小z`的布局进行存储的。又因为以FP32或INT32格式进行运算，因此每个分形的大小固定为 **1024Byte**（16x16x4 byte）。
 
@@ -100,6 +79,6 @@ K0可以通过以下公式计算得到：
 
 | 类型 | 要求 | 
 |------|-----------|
-| 目的寄存器 | 只允许输出到ACC寄存器 |
+| 目的寄存器 | 显式 Local 目的 Tile D |
 | 输出布局   | 大N小z格式         |
 | 分形大小   | 1024Byte          |

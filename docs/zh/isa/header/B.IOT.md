@@ -4,7 +4,7 @@
 
 **B.IOT(Block Input and Output Tile Register)**
 
-本指令用于数据块指令块头中按程序顺序定义输入输出的[Tile寄存器](../register/common/tilereg.md)。带输出的形式同时指示输出 Tile 寄存器的大小；v0.57 新增的纯输入形式不分配输出 Tile。
+本指令用于数据块指令块头中按程序顺序定义输入输出的[Tile寄存器](../register/common/tilereg.md)。带输出的形式同时指示输出 Tile 寄存器的大小；纯输入形式不分配输出 Tile。
 
 ## 汇编格式
 
@@ -56,9 +56,9 @@
 - `DstTile=3b111`：无输出，不分配 Tile，不产生 Tile 写回；
 - 其他合法 `DstTile`：存在一个输出，`imm4` 指示其大小。
 
-因此，v0.57 的纯输入形式复用 `Func=3b100/3b101`，并固定
-`DstTile=3b111`、`imm4=0`。这一形式用于 `MGATHER.CAS`、
-`MSCATTER.MASK` 等需要多条 `B.IOT` 顺序表达三个或更多输入的 PTO。
+因此，纯输入形式复用 `Func=3b100/3b101`，并固定
+`DstTile=3b111`、`imm4=0`。具体操作是否允许多条纯输入 `B.IOT`
+由该操作的 v0.58 operand schema 决定。
 
 **SrcTile0** 和 **SrcTile1** 字段的编码方式如下：
 

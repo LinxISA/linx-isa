@@ -7,7 +7,7 @@
 
 *Syntax:* B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize}
 
-*Description:* PTO ISA 0.57.1 data attributes. PadValueOrByteId is an opcode-defined two-bit union; bits 19:18 are reserved zero.
+*Description:* Latches tile layout, data type, padding, conversion, rounding, and saturation attributes.
 
 *Encoding:*
 

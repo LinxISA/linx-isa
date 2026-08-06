@@ -2,9 +2,9 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/block_control_attribute.md">Block Control Attribute</a> &nbsp;|&nbsp;
-<span class="ch-tag ch-tag-17">Ch 17</span>
-&nbsp; <strong>CMD — Command and Control</strong> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/bundle_control_attribute.md">Bundle Control Attribute</a> &nbsp;|&nbsp;
+<span class="ch-tag ch-tag-00">Ch 00</span>
+&nbsp; <strong>ISA Manual</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
 
 </div>
@@ -26,17 +26,17 @@
 
 ## Description
 
-Instruction from the Block Control Attribute group.
+Instruction from the Bundle Control Attribute group.
 
 ## Pseudocode (informative)
 
 ```c
-// Execute B.CATR as defined by the Block Control Attribute semantics.
+// Execute B.CATR as defined by the Bundle Control Attribute semantics.
 ```
 
 ## Encoding Notes
 
-- `PTO ISA 0.57.1 control attributes. Only DR[26], trap[19], far[18], atom[17], aq[16], and rl[15] are variable.`
+- `Latches bundle control, trap, atomic, ordering, and address-class attributes.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ Instruction from the Block Control Attribute group.
 
 <div class="insn-nav">
 
-← [Block Control Attribute](../groups/block_control_attribute.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [Bundle Control Attribute](../groups/bundle_control_attribute.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

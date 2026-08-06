@@ -2,21 +2,21 @@
 
 ## Function Overview
 
-The TMA (Tile Memory Access) data movement block is a dedicated data movement engine in the tensor computing architecture. It is responsible for establishing an efficient and programmable data transmission path between the memory subsystem and Tile registers. This module provides continuous data supply and result write-back capabilities to the computing core through hardware-accelerated multi-dimensional data movement operations. It is a key interface connecting the storage layer and the computing unit.
+The TLSU (Tile Load/Store Unit) data movement block is the v0.58 interface between the memory subsystem and Tile registers. It executes the named TLOAD/TSTORE/TMOV/TPREFETCH, gather/scatter, masked, CAS, and GMOV operations assigned by the PTO 0.58 catalog.
 
 ## Core Competencies
 
 | Function | Description |
 |------|--------|
-| **Multi-dimensional data movement** | TMA supports structured access to multi-dimensional tensor data, and can efficiently handle matrix, tensor and other non-contiguous memory access modes. Through the built-in address generation unit, TMA can automatically calculate complex memory access patterns, including but not limited to:<br>1. Strided Access (Strided Access)<br>2. Block Transfer (Block Transfer)<br>3. Broadcast Operation (Broadcast)<br>4. Data Rearrangement (Data Rearrangement) |
-| **Asynchronous Parallel Execution** | TMA uses an independent hardware execution engine to support parallel operations with computing units:<br>1. Non-blocking transmission: data transmission deeply overlaps with the computing pipeline<br>2. Command queue: supports queuing and scheduling of multiple transmission operations<br>3. Priority management: configurable transmission priority and control |
+| **Multi-dimensional data movement** | TLSU supports strided, gather/scatter, masked, atomic CAS, collective GMOV, and Tile-register movement operations defined by the v0.58 catalog. |
+| **Asynchronous Parallel Execution** | TLSU uses an independent hardware execution engine and participates in the architectural ordering rules recorded by the v0.58 memory model. |
 | **Zero-overhead data management** | Optimized management of data transmission through dedicated hardware:<br>1. Automatic address generation: eliminates the additional overhead of software address calculation<br>2. Burst transmission optimization: maximizes memory bandwidth utilization<br>3. Data format conversion: supports transparent conversion of computing formats and storage formats |
 
 ## Architecture positioning
 
-TMA is located between the memory controller and the computing unit and serves as an intelligent scheduler for data flow:
+TLSU is located between the memory controller and the computing unit:
 ```
-内存子系统 → TMA数据搬运块 → Tile寄存器阵列 → 计算单元
+Memory subsystem → TLSU → Tile register array → Compute unit
 ```
 This design achieves the decoupling of storage access and computing execution, allowing the computing unit to focus on arithmetic and logical operations, while the data supply is guaranteed by dedicated hardware.
 

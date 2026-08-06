@@ -7,7 +7,7 @@
 
 *Syntax:* FEXIT [RegDst0 ~ RegDstn], sp!, uimm
 
-*Description:* Template block FEXIT: compact prologue/epilogue sequence.
+*Description:* Atomically validates and commits a frame-template exit state.
 
 *Encoding:*
 

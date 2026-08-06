@@ -7,7 +7,7 @@
 
 *Syntax:* C.BSTOP
 
-*Description:* Compressed 16-bit instruction variant.
+*Description:* Commits the current bundle and transfers to its selected continuation.
 
 *Encoding:*
 

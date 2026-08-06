@@ -41,7 +41,8 @@ nav:
   - Home: index.md
   - Architecture:
       - Architecture documentation: architecture/README.md
-      - v0.57 architecture contract: architecture/v0.57-architecture-contract.md
+      - v0.58 architecture contract: architecture/v0.58-architecture-contract.md
+      - v0.57 architecture contract (previous): architecture/v0.57-architecture-contract.md
       - v0.57 encoding decisions: architecture/v0.57-encoding-decisions.md
       - Workload-engine model: architecture/v0.57-workload-engine-model.md
       - SIMT compiler contract: architecture/v0.57-simt-compiler-contract.md
@@ -73,4 +74,5 @@ nav:
       - Gate status: bringup/GATE_STATUS.md
   - Project:
       - Navigation contract: project/navigation.md
+      - v0.58.0 release notes: releases/v0.58.0.md
       - v0.57.0 release notes: releases/v0.57.0.md

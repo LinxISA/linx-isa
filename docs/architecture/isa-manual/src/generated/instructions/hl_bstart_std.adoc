@@ -5,49 +5,49 @@
 [[inst_hl_bstart_std]]
 ==== HL.BSTART.STD
 
-*Description:* Long 48-bit instruction encoding (prefix + 32-bit main form).
+*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
-[[inst_hl_bstart_std_48_51f78942222e]]
-===== Form `hl_bstart_std_48_51f78942222e`
-
-*Syntax:* HL.BSTART.STD CALL, <label>
-
-*Encoding:*
-
-image::encodings/enc_hl_bstart_std_48_51f78942222e.svg[HL.BSTART.STD encoding form hl_bstart_std_48_51f78942222e,width=800]
-
-*Compression:* HL48 (len=48)
-
-[[inst_hl_bstart_std_48_9ba705710872]]
-===== Form `hl_bstart_std_48_9ba705710872`
+[[inst_hl_bstart_std_48_170d04be4f7e]]
+===== Form `hl_bstart_std_48_170d04be4f7e`
 
 *Syntax:* HL.BSTART.STD FALL<, fixup_label>
 
 *Encoding:*
 
-image::encodings/enc_hl_bstart_std_48_9ba705710872.svg[HL.BSTART.STD encoding form hl_bstart_std_48_9ba705710872,width=800]
+image::encodings/enc_hl_bstart_std_48_170d04be4f7e.svg[HL.BSTART.STD encoding form hl_bstart_std_48_170d04be4f7e,width=800]
 
 *Compression:* HL48 (len=48)
 
-[[inst_hl_bstart_std_48_b13f22c7c4a3]]
-===== Form `hl_bstart_std_48_b13f22c7c4a3`
+[[inst_hl_bstart_std_48_436ff4a95f39]]
+===== Form `hl_bstart_std_48_436ff4a95f39`
 
 *Syntax:* HL.BSTART.STD COND, <label>
 
 *Encoding:*
 
-image::encodings/enc_hl_bstart_std_48_b13f22c7c4a3.svg[HL.BSTART.STD encoding form hl_bstart_std_48_b13f22c7c4a3,width=800]
+image::encodings/enc_hl_bstart_std_48_436ff4a95f39.svg[HL.BSTART.STD encoding form hl_bstart_std_48_436ff4a95f39,width=800]
 
 *Compression:* HL48 (len=48)
 
-[[inst_hl_bstart_std_48_d814d26508a4]]
-===== Form `hl_bstart_std_48_d814d26508a4`
+[[inst_hl_bstart_std_48_4eff98193028]]
+===== Form `hl_bstart_std_48_4eff98193028`
+
+*Syntax:* HL.BSTART.STD CALL, <label>
+
+*Encoding:*
+
+image::encodings/enc_hl_bstart_std_48_4eff98193028.svg[HL.BSTART.STD encoding form hl_bstart_std_48_4eff98193028,width=800]
+
+*Compression:* HL48 (len=48)
+
+[[inst_hl_bstart_std_48_c970f578674f]]
+===== Form `hl_bstart_std_48_c970f578674f`
 
 *Syntax:* HL.BSTART.STD DIRECT, <label>
 
 *Encoding:*
 
-image::encodings/enc_hl_bstart_std_48_d814d26508a4.svg[HL.BSTART.STD encoding form hl_bstart_std_48_d814d26508a4,width=800]
+image::encodings/enc_hl_bstart_std_48_c970f578674f.svg[HL.BSTART.STD encoding form hl_bstart_std_48_c970f578674f,width=800]
 
 *Compression:* HL48 (len=48)
 

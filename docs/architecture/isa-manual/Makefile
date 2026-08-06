@@ -1,7 +1,7 @@
 SHELL := /bin/sh
 
-SPEC ?= ../../../isa/v0.57/linxisa-v0.57.json
-UOP_ROOT ?= ../../../isa/v0.57/uop_classification_v0.57
+SPEC ?= ../../../isa/v0.58/linxisa-v0.58.json
+UOP_ROOT ?= ../../../isa/v0.58/uop_classification_v0.58
 GEN_DIR ?= src/generated
 DOC ?= src/linxisa-isa-manual.adoc
 

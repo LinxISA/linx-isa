@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `Moves values between scalar temporary queues according to encoded queue controls.`
 
 ## Full Catalog Forms
 

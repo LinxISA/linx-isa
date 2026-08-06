@@ -288,6 +288,46 @@ def _validate_engine_ops_v0571(spec: Dict[str, Any], engine_ops: Dict[str, Any],
             errors.append("BSTART.TEPL must use the PTO ISA 0.57.1 Mode/Function encoding")
 
 
+def _validate_engine_ops_v058(spec: Dict[str, Any], engine_ops: Dict[str, Any], errors: List[str]) -> None:
+    """Validate the exact PTO 0.58 tile projection and Shared tile contract."""
+    tepl = engine_ops.get("tepl", {})
+    ops = tepl.get("ops", []) if isinstance(tepl, dict) else []
+    if tepl.get("kind") != "mode_function" or tepl.get("selector_formula") != "(mode << 5) | function":
+        errors.append("state.engine_ops.tepl must use the PTO 0.58 Mode/Function contract")
+    if tepl.get("accepted_selector_count") != 87 or len(ops) != 87:
+        errors.append("state.engine_ops.tepl must contain exactly 87 PTO 0.58 operations")
+    selectors = set()
+    for idx, op in enumerate(ops):
+        mode, function = op.get("mode"), op.get("function")
+        if not isinstance(mode, int) or not isinstance(function, int):
+            errors.append(f"state.engine_ops.tepl.ops[{idx}] has invalid Mode/Function")
+            continue
+        selector = (mode << 5) | function
+        if op.get("logical_selector") != selector or selector in selectors:
+            errors.append(f"state.engine_ops.tepl.ops[{idx}] has invalid or duplicate selector")
+        selectors.add(selector)
+
+    expected = {
+        "tlsu": {0, 1, 2, 3, 4, 5, 6, 7, 8, 13},
+        "cube": {0, 1, 2, 4, 5, 6, 16, 17, 18, 20, 21, 22},
+    }
+    for family, functions in expected.items():
+        state = engine_ops.get(family, {})
+        actual = {int(item["function"]) for item in state.get("legal_aliases", [])}
+        if actual != functions:
+            errors.append(f"state.engine_ops.{family} functions differ from PTO ISA 0.58")
+    if engine_ops.get("tlsu", {}).get("reserved_function_ranges") != [[15, 31]]:
+        errors.append("state.engine_ops.tlsu reserved ranges must be [[15, 31]]")
+    if engine_ops.get("cube", {}).get("unassigned_function_behavior") != "illegal_instruction":
+        errors.append("state.engine_ops.cube unassigned functions must be illegal_instruction")
+    shared = engine_ops.get("shared_tile_registers", {})
+    if shared.get("registers_per_core") != 256 or shared.get("addressing") != "absolute-index":
+        errors.append("state.engine_ops Shared tile registers must be absolute S0..S255")
+    mnemonics = {str(item.get("mnemonic") or "") for item in spec.get("instructions", [])}
+    if "C.B.IOS" not in mnemonics or "BSTART.GMOV" not in mnemonics:
+        errors.append("PTO ISA 0.58 requires C.B.IOS and BSTART.GMOV")
+
+
 def _validate_engine_ops(spec: Dict[str, Any], errors: List[str]) -> None:
     state = spec.get("state")
     if not isinstance(state, dict):
@@ -302,6 +342,9 @@ def _validate_engine_ops(spec: Dict[str, Any], errors: List[str]) -> None:
 
     if str(spec.get("version") or "") == "0.57.1":
         _validate_engine_ops_v0571(spec, engine_ops, errors)
+        return
+    if str(spec.get("version") or "") == "0.58.0":
+        _validate_engine_ops_v058(spec, engine_ops, errors)
         return
 
     tma = engine_ops.get("tma")
@@ -1201,8 +1244,8 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--profile",
-        choices=["v0.57"],
-        default="v0.57",
+        choices=["v0.57", "v0.58"],
+        default="v0.58",
         help="ISA profile for default --spec path",
     )
     ap.add_argument(

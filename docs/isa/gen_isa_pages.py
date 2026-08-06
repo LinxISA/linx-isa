@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Generate MkDocs-compatible instruction reference pages for LinxISA v0.57.
+Generate MkDocs-compatible instruction reference pages for LinxISA v0.58.
 
 Creates:
   docs/isa/index.md              — ISA instruction reference hub
   docs/isa/encoding.md           — Encoding formats overview
   docs/isa/groups/index.md        — Instruction group index
-  docs/isa/groups/*.md           — Per-group pages (all 66 groups)
+  docs/isa/groups/*.md           — Per-group pages (all active groups)
   docs/isa/instructions/index.md — Master instruction index (all canonical forms)
   docs/isa/instructions/*.md     — Per-instruction detail pages
 
@@ -21,7 +21,7 @@ Each instruction page embeds the WaveDrom SVG encoding diagram and includes:
 
 Usage:
     python3 gen_isa_pages.py \\
-        --spec isa/v0.57/linxisa-v0.57.json \\
+        --spec isa/v0.58/linxisa-v0.58.json \\
         --out-dir docs/isa \\
         --svg-dir docs/isa/wavedrom \\
         --verbose
@@ -83,7 +83,7 @@ def _collapse_ws(s: str) -> str:
 # ─────────────────────────────────────────────────────────────────────────────
 
 # Canonical group → (manual_chapter_num, manual_chapter_title)
-# These correspond to the active LinxISA v0.57 manual chapters.
+# These correspond to the active LinxISA v0.58 manual chapters.
 MANUAL_CHAPTERS: dict[str, tuple[int, str]] = {
     "Arithmetic":                     (12, "ALU — Arithmetic Logic Unit"),
     "Arithmetic Operation":           (12, "ALU — Arithmetic Logic Unit"),
@@ -652,7 +652,7 @@ conflict-free allocation table.
 
 The [PTO ISA encoding workbook](encoding/PTO-ISA-Encoding.xlsx) is provided
 only as a non-normative review aid. It is not a generator input and cannot
-override the checked-in v0.57 JSON/opcode sources.
+override the checked-in v0.58 JSON/opcode sources.
 
 ## Field Colour Key
 
@@ -1225,7 +1225,7 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--spec", default="isa/v0.57/linxisa-v0.57.json")
+    ap.add_argument("--spec", default="isa/v0.58/linxisa-v0.58.json")
     ap.add_argument("--out-dir", default="docs/isa")
     ap.add_argument("--svg-dir", default="docs/isa/wavedrom")
     ap.add_argument("--verbose", action="store_true")

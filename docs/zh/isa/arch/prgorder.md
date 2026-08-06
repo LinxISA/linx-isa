@@ -31,107 +31,30 @@
 
 ---
 
-## 3. 用三个**真实代码片段**看 PO
+## 3. PTO ISA 0.58 的 CUBE 示例
 
-下面给出三个常见块的“块头 → 展开 → PO”对照，完全不需要抽象记号。
+PTO ISA 0.58 不存在隐藏的架构 ACC 状态，也没有 `ACCCVT` 块。CUBE
+描述符始终指定显式 Local 目的 Tile D；ACC 形式还指定显式 Local 累加输入 C。
 
-### 例 1：纯 GEMM（16×16×16）并把结果写回 Tile
+### 例 1：基础矩阵乘
 
-**块头（出现顺序，就是 L1-IPO）：**
+`BSTART.TMATMUL` 及其维度、属性和 Tile 描述符展开为读取 A/B、执行矩阵乘、
+写入 D；整个展开占据该块在程序序中的位置。
 
-```asm
-BSTART.TMATMUL FP16           ; 配置：做 FP16 的 A×B
-B.DIM     rM, 128, ->M        ; M=128
-B.DIM     rN, 128, ->N        ; N=128
-B.DIM     rK, 256, ->K        ; K=256
-B.DATR    normal, FP16, ZERO, cmode0, rmode0
-B.IOT     TA, TB, last        ; ACC 由 CUBE opcode 隐式选择
+### 例 2：矩阵乘后的转换
 
-BSTART.ACCCVT FP16            ; 将隐式 ACC 发布到普通 Tile
-B.DATR    normal, FP16, ZERO, cmode0, rmode0
-B.IOT     last, ->t<32KB>
-```
-
-**展开后的块身步骤（顺序替换）：**
-
-1. 读取/预取 A、B 的分片到内部缓冲；
-2. CUBE Core 以 16×16×16 的粒度做乘累加，结果累加到 ACC；
-3. 把 ACC 写回目标 Tile（行主序）。
-
-**最终 PO（语义顺序）：**
+格式或布局转换是一个单独的显式 Tile 操作，在 CUBE 块之后读取 D；不存在隐式
+ACC→Tile 通路。程序序为：
 
 ```
-BSTART.TMATMUL → B.DIM → B.DIM → B.DIM → B.DATR → B.IOT →
-加载分片 → 乘累加到 ACC → ACC 写回 Tile
+TMATMUL 描述符 → 读取 A/B → 写 D → 转换描述符 → 读取 D → 写转换后的 Tile
 ```
 
----
+### 例 3：带 scale 的累加
 
-### 例 2：GEMM + TCVT 随路转换（ACC→Tile 之前做量化/重排）
-
-**块头：**
-
-```asm
-BSTART.TMATMUL FP16
-B.DIM     zero, 64,  ->M
-B.DIM     zero, 64,  ->N
-B.DIM     zero, 256, ->K
-B.DATR    normal, FP16, ZERO, cmode0, rmode0
-B.IOT     TA, TB, last
-
-BSTART.ACCCVT FP16
-B.DATR    zn, FP16, ZERO, cmode0, rmode0  ; 指定转换布局（例）
-B.IOT     last, ->t<16KB>
-```
-
-**展开后的块身（顺序替换）：**
-
-1. 读取/预取；
-2. CUBE 乘累加到 ACC；
-3. **TCVT FixPipe**：在“ACC→Tile 写回”的道路上，**边搬边做**格式转换（如反量化、激活、布局变换等）；
-4. 将转换后的数据写入 Tile Register。
-
-**最终 PO：**
-
-```
-块头顺序 → 读取/预取 → 乘累加到 ACC → TCVT 边搬边转 → 写回 Tile
-```
-
-> 这里的关键是：**TCVT 在“ACC→Tile 的路径上”执行**，省掉了“先落地再另起一段转换”的往返。
-
----
-
-### 例 3：TMATMULMX（微缩放）+ 可选 C Tile 累加
-
-**块头：**
-
-```asm
-BSTART.TMATMULMX INT8
-B.DIM     zero, 128, ->M
-B.DIM     zero, 128, ->N
-B.DIM     zero, 256, ->K
-B.DATR    normal, INT8, ZERO, cmode0, rmode0
-B.IOT     TA, TSA                           ; A 与 ScaleA
-B.IOT     TB, TSB, last                     ; B 与 ScaleB；ACC 隐式选择
-
-BSTART.ACCCVT INT8
-B.DATR    normal, INT8, ZERO, cmode0, rmode0
-B.IOT     last, ->t<32KB>
-```
-
-**块身（顺序替换）：**
-
-1. 装入 A、ScaleA 以及 B、ScaleB；
-2. 在乘法前，对 A、B **按 Tile 广播缩放**：`A' = A * ScaleA`，`B' = B * ScaleB`；
-3. 对缩放后的 A'、B' 做乘累加到 ACC；
-4. 如果存在 C/ACC 累加，执行相应加法；
-5. 将 ACC 写回 Tile，或继续由 TCVT 转换后写回。
-
-**最终 PO：**
-
-```
-块头顺序 → 读 A/B 与缩放 Tile → A/B 微缩放 → 乘累加到 ACC → (+C/ACC) → 写回
-```
+`BSTART.TMATMULMX.ACC` 读取 A、行 scale、B、列 scale 和累加输入 C，然后
+写 D。当 D 与 C 相同时，操作读取 C 的旧值并写入新结果；否则 C 与 D 是独立的
+显式 Tile。
 
 ---
 

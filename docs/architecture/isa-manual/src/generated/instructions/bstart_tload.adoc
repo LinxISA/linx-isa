@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.TLOAD DataType
 
-*Description:* TMA Function=0. Uses B.DATR layout/pad and B.IOR stride/base plus B.IOT tile binding.
+*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* B.IOR [RegSrc0, RegSrc1, RegSrc2],[RegDst]
 
-*Description:* Block block input & output: B.IOR.
+*Description:* Binds encoded scalar inputs and outputs to the current bundle interface.
 
 *Encoding:*
 

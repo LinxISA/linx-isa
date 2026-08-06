@@ -29,14 +29,15 @@ Each parameter is explained as follows:
 
 ## Encoding method
 
-A complete data transfer block header is encoded as one named TMA header
+A complete data transfer block header is encoded as one named TLSU header
 followed by its descriptor records:
 
 - `BSTART.TLOAD DataType`, `BSTART.TSTORE DataType`,
   `BSTART.TMOV DataType`, `BSTART.TPREFETCH DataType`,
-  `BSTART.MGATHER DataType`, `BSTART.MSCATTER DataType`,
-  `BSTART.MGATHER.MASK DataType`, `BSTART.MSCATTER.MASK DataType`, or
-  `BSTART.MGATHER.CAS DataType`
+  `BSTART.MGATHER DataType`, `BSTART.MGATHER.MASK DataType`,
+  `BSTART.MGATHER.CAS DataType`, `BSTART.MSCATTER DataType`,
+  `BSTART.MSCATTER.MASK DataType`, or
+  `BSTART.GMOV DataType`
 - [B.DATR](../../header/B.DATR.md) `Layout, PadValue`
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0`
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`
@@ -48,10 +49,10 @@ followed by its descriptor records:
 -...
 - [B.IOR](../../header/B.IOR.md) `RegSrc9, RegSrc10, RegSrc11, ->RegDst4`
 
-All named TMA headers share the TMA encoding family shown below. The textual
-generic selector form is not part of the v0.57 assembly language.
+All named TLSU headers share the TLSU encoding family shown below. The textual
+generic selector form is not part of the v0.58 assembly language.
 
-![TMA encoding family](../../../figs/bitfield/svg/BlockHeader_32bit/BSTART.TMA.svg)
+![TLSU encoding family](../../../figs/bitfield/svg/BlockHeader_32bit/BSTART.TMA.svg)
 
 Among them, the function field is used to encode specific TileOp information. The encoding method is as follows:
 
@@ -63,10 +64,16 @@ Among them, the function field is used to encode specific TileOp information. Th
 | 3 | [TPREFETCH](../../header/tileblock/TPREFETCH.md) | TLOAD-equivalent memory access without a destination Tile |
 | 4 | [MGATHER](../../header/tileblock/MGATHER.md) | Gather data in discrete memory space into Tile registers. |
 | 5 | [MSCATTER](../../header/tileblock/MSCATTER.md) | Store the data in the Tile register into discrete memory space.  |
-| 6 | [MGATHER.MASK](../../header/tileblock/MGATHER.MASK.md) | Masked memory gather. Reads only lanes whose mask bit is set. |
-| 7 | [MSCATTER.MASK](../../header/tileblock/MSCATTER.MASK.md) | Masked memory scatter. Writes only lanes whose mask bit is set. |
-| 8 | [MGATHER.CAS](../../header/tileblock/MGATHER.CAS.md) | Per-element atomic compare-and-swap gather; returns the old values |
-| 9-31 | Reserved |
+| 6 | [MGATHER.MASK](../../instructions/bstart_mgather_mask.md) | Masked gather into a Tile register |
+| 7 | [MSCATTER.MASK](../../instructions/bstart_mscatter_mask.md) | Masked scatter from a Tile register |
+| 8 | [MGATHER.CAS](../../instructions/bstart_mgather_cas.md) | Atomic indexed compare-and-swap gather |
+| 9 | [TMOV](../../header/tileblock/TMOV.md) Local-to-Shared insert | Uses `C.B.IOS` plus a Local source `B.IOT` |
+| 10 | [TMOV](../../header/tileblock/TMOV.md) Local-to-Shared publish | Uses `C.B.IOS` plus a Local source `B.IOT` |
+| 11 | [TMOV](../../header/tileblock/TMOV.md) Shared-to-Local broadcast | Uses `C.B.IOS` plus a Local destination `B.IOT` |
+| 12 | [TMOV](../../header/tileblock/TMOV.md) Shared-to-Local extract | Uses `C.B.IOS` plus a Local destination `B.IOT` |
+| 13 | [BSTART.GMOV](../../instructions/bstart_gmov.md) | Core4 collective global-memory movement |
+| 14 | `TSTORE.SPART` | Shared partition store using `C.B.IOS` plus `B.IOR` |
+| 15-31 | Reserved | Illegal |
 
 The DataType field is encoded as follows:
 

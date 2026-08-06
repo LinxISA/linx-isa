@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate form-ID Sail semantic grades from the canonical v0.57 ISA catalog."""
+"""Generate form-ID Sail semantic grades from the canonical ISA catalog."""
 
 from __future__ import annotations
 
@@ -50,7 +50,7 @@ def build(spec_path: Path, policy_path: Path) -> dict[str, Any]:
         }
 
     return {
-        "schema_version": "linx-sail-status-v0.57.1",
+        "schema_version": f"linx-sail-status-v{spec.get('version', '')}",
         "spec_version": str(spec.get("version") or ""),
         "forms": forms,
     }
@@ -62,7 +62,7 @@ def _canonical(value: Any) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--spec", type=Path, default=Path("isa/v0.57/linxisa-v0.57.json"))
+    parser.add_argument("--spec", type=Path, default=Path("isa/v0.58/linxisa-v0.58.json"))
     parser.add_argument("--policy", type=Path, default=Path("isa/sail/semantics_policy.json"))
     parser.add_argument("--out", type=Path, default=Path("isa/sail/semantics_status.json"))
     parser.add_argument("--check", action="store_true", help="Compare output without writing")

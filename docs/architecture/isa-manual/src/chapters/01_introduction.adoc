@@ -10,20 +10,20 @@ At a high level, Linx is designed to be:
 * **Specification-driven:** keep instruction encodings and toolchains aligned via a machine-readable catalog that generates decoders/encoders and the instruction reference in this manual.
 
 This manual describes the programmer-visible interface of the live LinxISA
-v0.57 catalog used by this repository (see <<preamble>>). Version 0.57 is a
+v0.58 catalog used by this repository (see <<preamble>>). Version 0.58 is a
 standalone release whose catalog and state files define the complete active
 behavior. It is not a microarchitecture document.
 
 [[intro-goals]]
-== Design Goals (v0.57)
+== Design Goals (v0.58)
 
-The v0.57 catalog and toolchain bring-up emphasize:
+The v0.58 catalog and toolchain bring-up emphasize:
 
 * **Block-structured control flow** (see <<blockisa>>): control-flow is expressed at basic-block granularity using explicit block markers. This supports a translation model where one architectural block maps naturally to one translation unit (e.g. a QEMU TB) and provides a clear boundary for block-local state.
 * **Compact temporaries** (see <<progmodel-clockhands>>): short-lived values can be carried in per-block private queues (ClockHands) to reduce architectural register pressure.
 * **Dense encodings** (see <<encoding-lengths>>): variable-length instruction forms (16/32/48/64-bit) plus composed prefix/postfix forms are used to keep common cases compact while still providing sufficient encoding space.
 * **Extensibility:** opcode space is intentionally structured so future optional domains (vector/tile/system) can grow without re-encoding the scalar core.
-* **Unified vector/tile acceleration** (v0.57): explicitly allocated TEPL tile selectors, descriptor-driven TMA/CUBE tile blocks, and structured `MPAR`/`MSEQ` shader kernels in one live canonical contract.
+* **Unified vector/tile acceleration** (v0.58): explicitly allocated TEPL tile selectors, descriptor-driven TLSU/CUBE tile blocks, and structured `MPAR`/`MSEQ` shader kernels in one live canonical contract.
 
 [[intro-normative]]
 == Normative Language and Notation

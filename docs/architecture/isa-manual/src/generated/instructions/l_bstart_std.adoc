@@ -5,49 +5,49 @@
 [[inst_l_bstart_std]]
 ==== L.BSTART.STD
 
-*Description:* BSTART: L.BSTART.STD operation.
+*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
-[[inst_l_bstart_std_64_37e84068ce61]]
-===== Form `l_bstart_std_64_37e84068ce61`
-
-*Syntax:* L.BSTART.STD DIRECT, <label>
-
-*Encoding:*
-
-image::encodings/enc_l_bstart_std_64_37e84068ce61.svg[L.BSTART.STD encoding form l_bstart_std_64_37e84068ce61,width=800]
-
-*Compression:* L64 (len=64)
-
-[[inst_l_bstart_std_64_463a1567da91]]
-===== Form `l_bstart_std_64_463a1567da91`
-
-*Syntax:* L.BSTART.STD CALL, <label>
-
-*Encoding:*
-
-image::encodings/enc_l_bstart_std_64_463a1567da91.svg[L.BSTART.STD encoding form l_bstart_std_64_463a1567da91,width=800]
-
-*Compression:* L64 (len=64)
-
-[[inst_l_bstart_std_64_72d502fcd30d]]
-===== Form `l_bstart_std_64_72d502fcd30d`
+[[inst_l_bstart_std_64_40bf385dbbff]]
+===== Form `l_bstart_std_64_40bf385dbbff`
 
 *Syntax:* L.BSTART.STD COND, <label>
 
 *Encoding:*
 
-image::encodings/enc_l_bstart_std_64_72d502fcd30d.svg[L.BSTART.STD encoding form l_bstart_std_64_72d502fcd30d,width=800]
+image::encodings/enc_l_bstart_std_64_40bf385dbbff.svg[L.BSTART.STD encoding form l_bstart_std_64_40bf385dbbff,width=800]
 
 *Compression:* L64 (len=64)
 
-[[inst_l_bstart_std_64_899592f9c5bc]]
-===== Form `l_bstart_std_64_899592f9c5bc`
+[[inst_l_bstart_std_64_49b7cf990e62]]
+===== Form `l_bstart_std_64_49b7cf990e62`
+
+*Syntax:* L.BSTART.STD DIRECT, <label>
+
+*Encoding:*
+
+image::encodings/enc_l_bstart_std_64_49b7cf990e62.svg[L.BSTART.STD encoding form l_bstart_std_64_49b7cf990e62,width=800]
+
+*Compression:* L64 (len=64)
+
+[[inst_l_bstart_std_64_9a6081ab8f08]]
+===== Form `l_bstart_std_64_9a6081ab8f08`
+
+*Syntax:* L.BSTART.STD CALL, <label>
+
+*Encoding:*
+
+image::encodings/enc_l_bstart_std_64_9a6081ab8f08.svg[L.BSTART.STD encoding form l_bstart_std_64_9a6081ab8f08,width=800]
+
+*Compression:* L64 (len=64)
+
+[[inst_l_bstart_std_64_ed61315d3418]]
+===== Form `l_bstart_std_64_ed61315d3418`
 
 *Syntax:* L.BSTART.STD FALL<, fixup_label>
 
 *Encoding:*
 
-image::encodings/enc_l_bstart_std_64_899592f9c5bc.svg[L.BSTART.STD encoding form l_bstart_std_64_899592f9c5bc,width=800]
+image::encodings/enc_l_bstart_std_64_ed61315d3418.svg[L.BSTART.STD encoding form l_bstart_std_64_ed61315d3418,width=800]
 
 *Compression:* L64 (len=64)
 

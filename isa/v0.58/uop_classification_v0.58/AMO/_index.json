@@ -1,0 +1,8 @@
+{
+  "big_kind": "AMO",
+  "sub_kinds": [
+    "AMO",
+    "CAS",
+    "DMA"
+  ]
+}

@@ -4,8 +4,10 @@ Architecture-facing documentation lives under `docs/architecture/`.
 
 ## Canonical contract pages
 
-- v0.57 canonical pages:
-  - `docs/architecture/pto-isa-v0.57.1-upgrade-plan.md` (accepted cross-repository implementation plan; pto-spec remains normative)
+- v0.58 canonical page:
+  - `docs/architecture/v0.58-architecture-contract.md`
+- retained v0.57 baseline pages:
+  - `docs/architecture/pto-isa-v0.57.1-upgrade-plan.md` (historical cross-repository implementation plan)
   - `docs/architecture/v0.57-architecture-contract.md`
   - `docs/architecture/v0.57-encoding-decisions.md`
   - `docs/architecture/v0.57-hardening-policy.md`
@@ -46,7 +48,7 @@ Architecture-facing documentation lives under `docs/architecture/`.
 - Implementation-specific deep dives in submodules must link back to these
   contract pages.
 - Any architecture-affecting change must update LinxArch first, then implementation.
-- v0.57 is the sole active profile; its sources must not revive retired
+- v0.58 is the sole active profile; its sources must not revive retired
   compatibility spellings or archived raw fragments.
 - Pre-canonical drafts and research notes are history only and must not be used
   as the live contract.

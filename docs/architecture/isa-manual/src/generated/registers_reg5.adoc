@@ -1,5 +1,5 @@
 // Generated file; do not edit by hand.
-// Source: isa/v0.57/linxisa-v0.57.json registers.reg5
+// Source: isa/v0.58/linxisa-v0.58.json registers.reg5
 
 [[reg5-general-purpose-registers-gpr]]
 ==== General-Purpose Registers (GPR)

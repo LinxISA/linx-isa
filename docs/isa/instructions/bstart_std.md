@@ -2,60 +2,60 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/block_split.md">Block Split</a> &nbsp;|&nbsp;
-<span class="ch-tag ch-tag-04">Ch 04</span>
-&nbsp; <strong>Block ISA — Block-structured Control Flow</strong> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/bundle_split.md">Bundle Split</a> &nbsp;|&nbsp;
+<span class="ch-tag ch-tag-00">Ch 00</span>
+&nbsp; <strong>ISA Manual</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
 
 </div>
 
 ## Assembly Syntax
 
-- `BSTART.STD COND, <label>`
-- `BSTART.STD ICALL`
-- `BSTART.STD FALL<, fixup_label>`
-- `BSTART.STD RET`
 - `BSTART.STD IND`
+- `BSTART.STD COND, <label>`
+- `BSTART.STD RET`
 - `BSTART.STD CALL, <label>`
+- `BSTART.STD FALL<, fixup_label>`
+- `BSTART.STD ICALL`
 - `BSTART.STD DIRECT, <label>`
 
 ## Encoding
 
 <div class="enc-diagram">
 
-<figure id="encoding-bstart_std_32_1ef99c4cedcb">
-<img src="../wavedrom/enc_bstart_std_32_1ef99c4cedcb.svg" alt="BSTART.STD encoding form bstart_std_32_1ef99c4cedcb" width="100%" />
-<figcaption><code>bstart_std_32_1ef99c4cedcb</code> — <code>BSTART.STD COND, <label></code>. MSB is on the left, LSB is on the right.</figcaption>
+<figure id="encoding-bstart_std_32_49f2c6a8906f">
+<img src="../wavedrom/enc_bstart_std_32_49f2c6a8906f.svg" alt="BSTART.STD encoding form bstart_std_32_49f2c6a8906f" width="100%" />
+<figcaption><code>bstart_std_32_49f2c6a8906f</code> — <code>BSTART.STD IND</code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
-<figure id="encoding-bstart_std_32_3f6980d013f7">
-<img src="../wavedrom/enc_bstart_std_32_3f6980d013f7.svg" alt="BSTART.STD encoding form bstart_std_32_3f6980d013f7" width="100%" />
-<figcaption><code>bstart_std_32_3f6980d013f7</code> — <code>BSTART.STD ICALL</code>. MSB is on the left, LSB is on the right.</figcaption>
+<figure id="encoding-bstart_std_32_696f98ac4bf1">
+<img src="../wavedrom/enc_bstart_std_32_696f98ac4bf1.svg" alt="BSTART.STD encoding form bstart_std_32_696f98ac4bf1" width="100%" />
+<figcaption><code>bstart_std_32_696f98ac4bf1</code> — <code>BSTART.STD COND, <label></code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
-<figure id="encoding-bstart_std_32_441ad677fffe">
-<img src="../wavedrom/enc_bstart_std_32_441ad677fffe.svg" alt="BSTART.STD encoding form bstart_std_32_441ad677fffe" width="100%" />
-<figcaption><code>bstart_std_32_441ad677fffe</code> — <code>BSTART.STD FALL<, fixup_label></code>. MSB is on the left, LSB is on the right.</figcaption>
+<figure id="encoding-bstart_std_32_7876537dce06">
+<img src="../wavedrom/enc_bstart_std_32_7876537dce06.svg" alt="BSTART.STD encoding form bstart_std_32_7876537dce06" width="100%" />
+<figcaption><code>bstart_std_32_7876537dce06</code> — <code>BSTART.STD RET</code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
-<figure id="encoding-bstart_std_32_816dfa76cc4a">
-<img src="../wavedrom/enc_bstart_std_32_816dfa76cc4a.svg" alt="BSTART.STD encoding form bstart_std_32_816dfa76cc4a" width="100%" />
-<figcaption><code>bstart_std_32_816dfa76cc4a</code> — <code>BSTART.STD RET</code>. MSB is on the left, LSB is on the right.</figcaption>
+<figure id="encoding-bstart_std_32_97d38b7be05e">
+<img src="../wavedrom/enc_bstart_std_32_97d38b7be05e.svg" alt="BSTART.STD encoding form bstart_std_32_97d38b7be05e" width="100%" />
+<figcaption><code>bstart_std_32_97d38b7be05e</code> — <code>BSTART.STD CALL, <label></code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
-<figure id="encoding-bstart_std_32_986b7ee2cf6a">
-<img src="../wavedrom/enc_bstart_std_32_986b7ee2cf6a.svg" alt="BSTART.STD encoding form bstart_std_32_986b7ee2cf6a" width="100%" />
-<figcaption><code>bstart_std_32_986b7ee2cf6a</code> — <code>BSTART.STD IND</code>. MSB is on the left, LSB is on the right.</figcaption>
+<figure id="encoding-bstart_std_32_a5103b49e336">
+<img src="../wavedrom/enc_bstart_std_32_a5103b49e336.svg" alt="BSTART.STD encoding form bstart_std_32_a5103b49e336" width="100%" />
+<figcaption><code>bstart_std_32_a5103b49e336</code> — <code>BSTART.STD FALL<, fixup_label></code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
-<figure id="encoding-bstart_std_32_b05390d367cf">
-<img src="../wavedrom/enc_bstart_std_32_b05390d367cf.svg" alt="BSTART.STD encoding form bstart_std_32_b05390d367cf" width="100%" />
-<figcaption><code>bstart_std_32_b05390d367cf</code> — <code>BSTART.STD CALL, <label></code>. MSB is on the left, LSB is on the right.</figcaption>
+<figure id="encoding-bstart_std_32_c386430b732a">
+<img src="../wavedrom/enc_bstart_std_32_c386430b732a.svg" alt="BSTART.STD encoding form bstart_std_32_c386430b732a" width="100%" />
+<figcaption><code>bstart_std_32_c386430b732a</code> — <code>BSTART.STD ICALL</code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
-<figure id="encoding-bstart_std_32_c1de85e06878">
-<img src="../wavedrom/enc_bstart_std_32_c1de85e06878.svg" alt="BSTART.STD encoding form bstart_std_32_c1de85e06878" width="100%" />
-<figcaption><code>bstart_std_32_c1de85e06878</code> — <code>BSTART.STD DIRECT, <label></code>. MSB is on the left, LSB is on the right.</figcaption>
+<figure id="encoding-bstart_std_32_d3733f87964d">
+<img src="../wavedrom/enc_bstart_std_32_d3733f87964d.svg" alt="BSTART.STD encoding form bstart_std_32_d3733f87964d" width="100%" />
+<figcaption><code>bstart_std_32_d3733f87964d</code> — <code>BSTART.STD DIRECT, <label></code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
 </div>
@@ -72,22 +72,22 @@ EndBlock(); BeginNextBlock(/* kind */);
 
 ## Encoding Notes
 
-- `Bits 31:15 are reserved zero.`
+- `Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.`
 
 ## Full Catalog Forms
 
 | Form ID | Assembly | Length | Decode | Encoding |
 |---------|----------|--------|--------|----------|
-| `bstart_std_32_1ef99c4cedcb` | `BSTART.STD COND, <label>` | 32 | — | [SVG](../wavedrom/enc_bstart_std_32_1ef99c4cedcb.svg) |
-| `bstart_std_32_3f6980d013f7` | `BSTART.STD ICALL` | 32 | — | [SVG](../wavedrom/enc_bstart_std_32_3f6980d013f7.svg) |
-| `bstart_std_32_441ad677fffe` | `BSTART.STD FALL<, fixup_label>` | 32 | — | [SVG](../wavedrom/enc_bstart_std_32_441ad677fffe.svg) |
-| `bstart_std_32_816dfa76cc4a` | `BSTART.STD RET` | 32 | — | [SVG](../wavedrom/enc_bstart_std_32_816dfa76cc4a.svg) |
-| `bstart_std_32_986b7ee2cf6a` | `BSTART.STD IND` | 32 | — | [SVG](../wavedrom/enc_bstart_std_32_986b7ee2cf6a.svg) |
-| `bstart_std_32_b05390d367cf` | `BSTART.STD CALL, <label>` | 32 | — | [SVG](../wavedrom/enc_bstart_std_32_b05390d367cf.svg) |
-| `bstart_std_32_c1de85e06878` | `BSTART.STD DIRECT, <label>` | 32 | — | [SVG](../wavedrom/enc_bstart_std_32_c1de85e06878.svg) |
+| `bstart_std_32_49f2c6a8906f` | `BSTART.STD IND` | 32 | — | [SVG](../wavedrom/enc_bstart_std_32_49f2c6a8906f.svg) |
+| `bstart_std_32_696f98ac4bf1` | `BSTART.STD COND, <label>` | 32 | — | [SVG](../wavedrom/enc_bstart_std_32_696f98ac4bf1.svg) |
+| `bstart_std_32_7876537dce06` | `BSTART.STD RET` | 32 | — | [SVG](../wavedrom/enc_bstart_std_32_7876537dce06.svg) |
+| `bstart_std_32_97d38b7be05e` | `BSTART.STD CALL, <label>` | 32 | — | [SVG](../wavedrom/enc_bstart_std_32_97d38b7be05e.svg) |
+| `bstart_std_32_a5103b49e336` | `BSTART.STD FALL<, fixup_label>` | 32 | — | [SVG](../wavedrom/enc_bstart_std_32_a5103b49e336.svg) |
+| `bstart_std_32_c386430b732a` | `BSTART.STD ICALL` | 32 | — | [SVG](../wavedrom/enc_bstart_std_32_c386430b732a.svg) |
+| `bstart_std_32_d3733f87964d` | `BSTART.STD DIRECT, <label>` | 32 | — | [SVG](../wavedrom/enc_bstart_std_32_d3733f87964d.svg) |
 
 <div class="insn-nav">
 
-← [Block Split](../groups/block_split.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [Bundle Split](../groups/bundle_split.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

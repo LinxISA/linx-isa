@@ -235,28 +235,38 @@ def _reserved_encoding_families(spec: dict[str, object]) -> list[dict[str, objec
     engine_ops = state.get("engine_ops")
     if not isinstance(engine_ops, dict):
         return []
-    tma = engine_ops.get("tma")
-    if not isinstance(tma, dict):
-        return []
-    reserved_range = tma.get("reserved_function_range")
-    if (
-        not isinstance(reserved_range, list)
-        or len(reserved_range) != 2
-        or not all(isinstance(value, int) for value in reserved_range)
+    families: list[dict[str, object]] = []
+    for state_key, family_name, range_key in (
+        ("tma", "TMA", "reserved_function_range"),
+        ("tlsu", "TLSU", "reserved_function_ranges"),
     ):
-        return []
-    lo, hi = reserved_range
-    if not 0 <= lo <= hi <= 31:
-        return []
-    return [
-        {
-            "family": "TMA",
-            "selector_field": "Function",
-            "reserved_range": [lo, hi],
-            "reserved_value_count": hi - lo + 1,
-            "behavior": str(tma.get("reserved_behavior") or ""),
-        }
-    ]
+        family = engine_ops.get(state_key)
+        if not isinstance(family, dict):
+            continue
+        raw_ranges = family.get(range_key)
+        ranges = raw_ranges if range_key.endswith("ranges") else [raw_ranges]
+        if not isinstance(ranges, list):
+            continue
+        for reserved_range in ranges:
+            if (
+                not isinstance(reserved_range, list)
+                or len(reserved_range) != 2
+                or not all(isinstance(value, int) for value in reserved_range)
+            ):
+                continue
+            lo, hi = reserved_range
+            if not 0 <= lo <= hi <= 31:
+                continue
+            families.append(
+                {
+                    "family": family_name,
+                    "selector_field": "Function",
+                    "reserved_range": [lo, hi],
+                    "reserved_value_count": hi - lo + 1,
+                    "behavior": str(family.get("reserved_behavior") or ""),
+                }
+            )
+    return families
 
 MANUAL_TRANSLATE_EVIDENCE: tuple[dict[str, object], ...] = (
     {

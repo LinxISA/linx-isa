@@ -32,7 +32,7 @@ NOTE: For `TemplateKind.class=1` (TEPL templates), identification uses `(Mode <<
 Template blocks execute via a **code-template generator** that emits a sequence of internal micro-operations
 (*micro-ops*) based on architectural register inputs.
 
-Restartability contract (v0.57 bring-up profile):
+Restartability contract (v0.58 bring-up profile):
 
 * A template block MUST be **restartable**: interrupts and exceptions MAY be taken between generated micro-ops.
 * When a trap is taken during template micro-op execution, the trap-save logic MUST record progress in
@@ -61,8 +61,8 @@ These forms encode:
 [[templates-frame-contract]]
 ==== Frame-template architectural contract
 
-The canonical v0.57 frame-template contract is machine-readable in
-`isa/v0.57/semantics_conventions.json` under `frame_templates_r975`; this
+The canonical v0.58 frame-template contract is machine-readable in
+`isa/v0.58/semantics_conventions.json` under `frame_templates_r975`; this
 section is the normative manual rendering of that contract.
 
 Frame arithmetic is immediate-only. The register range is the inclusive
@@ -201,7 +201,7 @@ dropped, cannot complete early, and cannot be hidden by another producer with a
 similar scope. A transaction admitted after release performs a new lookup at the
 new directory generation and normally receives its own `NO_MATCH`.
 
-Additional macro blocks appear in the v0.57 catalog for future use (examples):
+Additional macro blocks appear in the v0.58 catalog for future use (examples):
 
 * `MCOPY [RegSrc0, RegSrc1, RegSrc2]` (bulk copy)
 * `MSET  [RegSrc0, RegSrc1, RegSrc2]` (bulk set)
@@ -227,7 +227,7 @@ FRET.STK  [ra ~ s2], sp!, 16
 ----
 
 The precise memory layout and ordering of the save/restore operation is defined by the architectural specification
-golden sources (`isa/v0.57/`) and the canonical catalog (`isa/v0.57/linxisa-v0.57.json`).
+golden sources (`isa/v0.58/`) and the canonical catalog (`isa/v0.58/linxisa-v0.58.json`).
 
 [[templates-esave]]
 === Extended context save/restore (`ESAVE` / `ERCOV`) (v0.2 bring-up)

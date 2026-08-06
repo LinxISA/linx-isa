@@ -5,82 +5,82 @@
 [[inst_bstart_std]]
 ==== BSTART.STD
 
-*Description:* Block start marker: BSTART.STD with split semantics.
+*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
-[[inst_bstart_std_32_1ef99c4cedcb]]
-===== Form `bstart_std_32_1ef99c4cedcb`
-
-*Syntax:* BSTART.STD COND, <label>
-
-*Encoding:*
-
-image::encodings/enc_bstart_std_32_1ef99c4cedcb.svg[BSTART.STD encoding form bstart_std_32_1ef99c4cedcb,width=800]
-
-*Compression:* L32 (len=32)
-
-[[inst_bstart_std_32_3f6980d013f7]]
-===== Form `bstart_std_32_3f6980d013f7`
-
-*Syntax:* BSTART.STD ICALL
-
-*Encoding:*
-
-image::encodings/enc_bstart_std_32_3f6980d013f7.svg[BSTART.STD encoding form bstart_std_32_3f6980d013f7,width=800]
-
-*Compression:* L32 (len=32)
-
-[[inst_bstart_std_32_441ad677fffe]]
-===== Form `bstart_std_32_441ad677fffe`
-
-*Syntax:* BSTART.STD FALL<, fixup_label>
-
-*Encoding:*
-
-image::encodings/enc_bstart_std_32_441ad677fffe.svg[BSTART.STD encoding form bstart_std_32_441ad677fffe,width=800]
-
-*Compression:* L32 (len=32)
-
-[[inst_bstart_std_32_816dfa76cc4a]]
-===== Form `bstart_std_32_816dfa76cc4a`
-
-*Syntax:* BSTART.STD RET
-
-*Encoding:*
-
-image::encodings/enc_bstart_std_32_816dfa76cc4a.svg[BSTART.STD encoding form bstart_std_32_816dfa76cc4a,width=800]
-
-*Compression:* L32 (len=32)
-
-[[inst_bstart_std_32_986b7ee2cf6a]]
-===== Form `bstart_std_32_986b7ee2cf6a`
+[[inst_bstart_std_32_49f2c6a8906f]]
+===== Form `bstart_std_32_49f2c6a8906f`
 
 *Syntax:* BSTART.STD IND
 
 *Encoding:*
 
-image::encodings/enc_bstart_std_32_986b7ee2cf6a.svg[BSTART.STD encoding form bstart_std_32_986b7ee2cf6a,width=800]
+image::encodings/enc_bstart_std_32_49f2c6a8906f.svg[BSTART.STD encoding form bstart_std_32_49f2c6a8906f,width=800]
 
 *Compression:* L32 (len=32)
 
-[[inst_bstart_std_32_b05390d367cf]]
-===== Form `bstart_std_32_b05390d367cf`
+[[inst_bstart_std_32_696f98ac4bf1]]
+===== Form `bstart_std_32_696f98ac4bf1`
+
+*Syntax:* BSTART.STD COND, <label>
+
+*Encoding:*
+
+image::encodings/enc_bstart_std_32_696f98ac4bf1.svg[BSTART.STD encoding form bstart_std_32_696f98ac4bf1,width=800]
+
+*Compression:* L32 (len=32)
+
+[[inst_bstart_std_32_7876537dce06]]
+===== Form `bstart_std_32_7876537dce06`
+
+*Syntax:* BSTART.STD RET
+
+*Encoding:*
+
+image::encodings/enc_bstart_std_32_7876537dce06.svg[BSTART.STD encoding form bstart_std_32_7876537dce06,width=800]
+
+*Compression:* L32 (len=32)
+
+[[inst_bstart_std_32_97d38b7be05e]]
+===== Form `bstart_std_32_97d38b7be05e`
 
 *Syntax:* BSTART.STD CALL, <label>
 
 *Encoding:*
 
-image::encodings/enc_bstart_std_32_b05390d367cf.svg[BSTART.STD encoding form bstart_std_32_b05390d367cf,width=800]
+image::encodings/enc_bstart_std_32_97d38b7be05e.svg[BSTART.STD encoding form bstart_std_32_97d38b7be05e,width=800]
 
 *Compression:* L32 (len=32)
 
-[[inst_bstart_std_32_c1de85e06878]]
-===== Form `bstart_std_32_c1de85e06878`
+[[inst_bstart_std_32_a5103b49e336]]
+===== Form `bstart_std_32_a5103b49e336`
+
+*Syntax:* BSTART.STD FALL<, fixup_label>
+
+*Encoding:*
+
+image::encodings/enc_bstart_std_32_a5103b49e336.svg[BSTART.STD encoding form bstart_std_32_a5103b49e336,width=800]
+
+*Compression:* L32 (len=32)
+
+[[inst_bstart_std_32_c386430b732a]]
+===== Form `bstart_std_32_c386430b732a`
+
+*Syntax:* BSTART.STD ICALL
+
+*Encoding:*
+
+image::encodings/enc_bstart_std_32_c386430b732a.svg[BSTART.STD encoding form bstart_std_32_c386430b732a,width=800]
+
+*Compression:* L32 (len=32)
+
+[[inst_bstart_std_32_d3733f87964d]]
+===== Form `bstart_std_32_d3733f87964d`
 
 *Syntax:* BSTART.STD DIRECT, <label>
 
 *Encoding:*
 
-image::encodings/enc_bstart_std_32_c1de85e06878.svg[BSTART.STD encoding form bstart_std_32_c1de85e06878,width=800]
+image::encodings/enc_bstart_std_32_d3733f87964d.svg[BSTART.STD encoding form bstart_std_32_d3733f87964d,width=800]
 
 *Compression:* L32 (len=32)
 

@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.MGATHER DataType
 
-*Description:* TMA Function=4. Memory gather uses B.DATR/B.IOR/B.IOT descriptor state.
+*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 *Encoding:*
 
@@ -17,4 +17,4 @@ image::encodings/enc_bstart_mgather.svg[BSTART.MGATHER encoding,width=800]
 
 *Compression:* L32 (len=32)
 
-*Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "v0.57 TMA Function=4", "source": "group_rule", "uop_kind": "CMD"}`
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "PTO ISA 0.58 TLSU Function=4", "source": "group_rule", "uop_kind": "CMD"}`

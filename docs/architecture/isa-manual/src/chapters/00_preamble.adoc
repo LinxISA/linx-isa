@@ -1,27 +1,27 @@
 [[preamble]]
 = Preamble
 
-**Document Version**: v0.57 |
+**Document Version**: v0.58 |
 **Architecture**: Block-Structured LinxISA with unified shader-kernel execution |
 **Classification**: Public Specification
 
 '''
 
-This document is the canonical manual for the **block-structured Linx Instruction Set Architecture (Linx ISA)**, version **v0.57**.
+This document is the canonical manual for the **block-structured Linx Instruction Set Architecture (Linx ISA)**, version **v0.58**.
 
 == Authority and Source of Truth
 
 The live source of truth for this repository is:
 
-* `isa/v0.57/linxisa-v0.57.json` (compiled canonical catalog)
-* `isa/v0.57/state/{kernel_execution,rendering_profile,memory_model,system_registers}.json` (normative machine-readable state contracts)
-* `isa/generated/codecs/` (generated encode/decode tables derived from the v0.57 catalog)
+* `isa/v0.58/linxisa-v0.58.json` (compiled canonical catalog)
+* `isa/v0.58/state/{kernel_execution,rendering_profile,memory_model,system_registers}.json` (normative machine-readable state contracts)
+* `isa/generated/codecs/` (generated encode/decode tables derived from the v0.58 catalog)
 
-Where this manual and the machine-readable catalog disagree, the compiled v0.57 catalog and referenced state files MUST be treated as authoritative.
+Where this manual and the machine-readable catalog disagree, the compiled v0.58 catalog and referenced state files MUST be treated as authoritative.
 
 [IMPORTANT]
 ====
-`v0.57` is the sole live canonical ISA profile in this repository. Its catalog
+`v0.58` is the sole live canonical ISA profile in this repository. Its catalog
 and state files define the complete active contract. Historical material is
 retained for traceability only and must not be used as the active contract.
 ====
@@ -36,7 +36,7 @@ The LinxISA brand mark is a stylized **Lingxi** form that preserves the original
 [[preamble-scope]]
 == Scope and Maturity
 
-This manual describes the live **v0.57 Linx ISA** profile:
+This manual describes the live **v0.58 Linx ISA** profile:
 
 * the v0.2 privilege/MMU baseline and block-structured control-flow model,
 * structured `MPAR`/`MSEQ` shader kernels selected by `B.TEXT`,
@@ -45,13 +45,13 @@ This manual describes the live **v0.57 Linx ISA** profile:
 * canonical bridged kernel memory through `l.*.brg` and `v.*.brg`,
 * the first frozen rendering profile: 4KB `1024x1` row-major SoA fragment/state carriers, TAU tile-to-tile only, and descriptor-vs-StateTile state placement rules.
 
-The v0.57 profile is the live canonical profile in this repository; future ISA
+The v0.58 profile is the live canonical profile in this repository; future ISA
 deltas must be introduced as new explicit contract pages before any toolchain,
 emulator, RTL, or manual surface treats them as live behavior.
 
 The LinxISA project maintains alignment between:
 
-* The machine-readable catalog (`isa/v0.57/linxisa-v0.57.json`)
+* The machine-readable catalog (`isa/v0.58/linxisa-v0.58.json`)
 * The LLVM backend (`compiler/llvm/llvm/lib/Target/Linx/`)
 * The QEMU emulator (`emulator/qemu/target/linx/`)
 * The LinxCore architecture contract (`docs/architecture/linxcore/`)
@@ -64,4 +64,4 @@ This manual focuses on:
 * template instructions (for example `FENTRY`, `FRET.*`) used by toolchains,
 * the canonical shader-kernel and rendering-profile contracts,
 * privileged architecture (ACR, SSR, trap envelope), and
-* a complete instruction reference generated from the v0.57 catalog.
+* a complete instruction reference generated from the v0.58 catalog.

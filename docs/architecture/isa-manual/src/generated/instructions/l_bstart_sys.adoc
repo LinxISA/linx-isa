@@ -7,7 +7,7 @@
 
 *Syntax:* L.BSTART.SYS FALL<, fixup_label>
 
-*Description:* BSTART: L.BSTART.SYS operation.
+*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 *Encoding:*
 

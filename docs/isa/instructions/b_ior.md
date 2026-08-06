@@ -2,9 +2,9 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/block_input_output.md">Block Input & Output</a> &nbsp;|&nbsp;
-<span class="ch-tag ch-tag-04">Ch 04</span>
-&nbsp; <strong>Block ISA — Block-structured Control Flow</strong> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/bundle_input_output.md">Bundle Input & Output</a> &nbsp;|&nbsp;
+<span class="ch-tag ch-tag-00">Ch 00</span>
+&nbsp; <strong>ISA Manual</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
 
 </div>
@@ -26,17 +26,17 @@
 
 ## Description
 
-Instruction from the Block Input & Output group.
+Instruction from the Bundle Input & Output group.
 
 ## Pseudocode (informative)
 
 ```c
-// Execute B.IOR as defined by the Block Input & Output semantics.
+// Execute B.IOR as defined by the Bundle Input & Output semantics.
 ```
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `Binds encoded scalar inputs and outputs to the current bundle interface.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ _No additional encoding notes._
 
 <div class="insn-nav">
 
-← [Block Input & Output](../groups/block_input_output.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [Bundle Input & Output](../groups/bundle_input_output.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

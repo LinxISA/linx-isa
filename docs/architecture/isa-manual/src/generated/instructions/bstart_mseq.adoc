@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.MSEQ <VS8, VS16>
 
-*Description:* Block start marker: BSTART.MSEQ with split semantics.
+*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 *Encoding:*
 

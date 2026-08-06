@@ -1,0 +1,354 @@
+{
+  "big_kind": "VEC",
+  "count": 26,
+  "instructions": [
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_kind": "VEC_SEL",
+        "vec_subkind": "VEC"
+      },
+      "group": "Three Source Integer",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.CSEL"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_kind": "VEC_DIV",
+        "vec_subkind": "VEC"
+      },
+      "group": "Division",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.DIV"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_kind": "VEC_FP",
+        "vec_subkind": "VEC"
+      },
+      "group": "Floating Point Arithmetic",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.FABS"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_kind": "VEC_FP",
+        "vec_subkind": "VEC"
+      },
+      "group": "Floating Point Arithmetic",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.FCLASS"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_kind": "VEC_FP",
+        "vec_subkind": "VEC"
+      },
+      "group": "Floating Point Arithmetic",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.FEXP"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_kind": "VEC_FP",
+        "vec_subkind": "VEC"
+      },
+      "group": "Floating Point Arithmetic",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.FRECIP"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_kind": "VEC_FP",
+        "vec_subkind": "VEC"
+      },
+      "group": "Floating Point Arithmetic",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.FSQRT"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_kind": "VEC_SEL",
+        "vec_subkind": "VEC"
+      },
+      "group": "Three Source Integer",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.PSEL"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "VEC"
+      },
+      "group": "Reduce Operation with Register",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.RDADD"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "VEC"
+      },
+      "group": "Reduce Operation with Register",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.RDAND"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "VEC"
+      },
+      "group": "Reduce Operation with Register",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.RDFADD"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "VEC"
+      },
+      "group": "Reduce Operation with Register",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.RDFMAX"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "VEC"
+      },
+      "group": "Reduce Operation with Register",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.RDFMIN"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "VEC"
+      },
+      "group": "Reduce Operation with Register",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.RDMAX"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "VEC"
+      },
+      "group": "Reduce Operation with Register",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.RDMIN"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "VEC"
+      },
+      "group": "Reduce Operation with Register",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.RDOR"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "VEC"
+      },
+      "group": "Reduce Operation with Register",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.RDXOR"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_kind": "VEC_DIV",
+        "vec_subkind": "VEC"
+      },
+      "group": "Division",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.REM"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "VEC"
+      },
+      "group": "Shuffle",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SHFL.BFLY"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "VEC"
+      },
+      "group": "Shuffle",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SHFL.DOWN"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "VEC"
+      },
+      "group": "Shuffle",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SHFL.IDX"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "VEC"
+      },
+      "group": "Shuffle",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SHFL.UP"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "VEC"
+      },
+      "group": "Shuffle",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SHFLI.BFLY"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "VEC"
+      },
+      "group": "Shuffle",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SHFLI.DOWN"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "VEC"
+      },
+      "group": "Shuffle",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SHFLI.IDX"
+    },
+    {
+      "class": {
+        "note": "vector-prefix override: dispatch to VEC (subkind=VEC)",
+        "source": "override",
+        "uop_kind": "VEC",
+        "vec_subkind": "VEC"
+      },
+      "group": "Shuffle",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "V.SHFLI.UP"
+    }
+  ],
+  "sub_kind": "VEC"
+}

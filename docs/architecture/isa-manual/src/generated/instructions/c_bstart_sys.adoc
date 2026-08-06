@@ -7,7 +7,7 @@
 
 *Syntax:* C.BSTART.SYS FALL
 
-*Description:* Compressed 16-bit block start marker: BSTART.SYS (system transition).
+*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 *Encoding:*
 

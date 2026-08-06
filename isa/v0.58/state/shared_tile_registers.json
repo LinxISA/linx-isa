@@ -1,0 +1,32 @@
+{
+  "$schema": "https://docs.openclaw.ai/schemas/linxisa/shared_tile_registers.v1.json",
+  "profile": "v0.58",
+  "version": "0.58.0",
+  "source_lock": "isa/v0.58/pto-spec.lock.json",
+  "register_count": 256,
+  "register_names": {
+    "first": "S0",
+    "last": "S255",
+    "syntax": "S<absolute-index>"
+  },
+  "scope": {
+    "private_to": "core",
+    "shared_by": "four PEs in that core"
+  },
+  "semantics": {
+    "atomicity": "descriptor-and-payload read-modify-write",
+    "uninitialized_read": "undefined-register-value",
+    "architectural_order": "none beyond atomicity",
+    "conflict_avoidance": "programmer responsibility",
+    "allocation": "compiler"
+  },
+  "pe_mask": {
+    "width": 4,
+    "kind": "predicate bitmask",
+    "multiple_bits_allowed": true,
+    "absent_value": "0b1111",
+    "zero_behavior": "nop",
+    "source_read_updates_descriptor": false,
+    "destination_write_updates_descriptor": true
+  }
+}

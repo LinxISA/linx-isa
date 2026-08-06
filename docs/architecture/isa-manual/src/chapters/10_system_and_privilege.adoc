@@ -1,7 +1,7 @@
 [[system]]
-== System and privileged architecture (v0.57)
+== System and privileged architecture (v0.58)
 
-This chapter defines the v0.57 privileged architecture: Access Control Rings (ACR), privileged system registers
+This chapter defines the v0.58 privileged architecture: Access Control Rings (ACR), privileged system registers
 (SSR), and the trap envelope for exceptions and interrupts.
 
 Where platform-specific details are required, the chapter notes this with [PLATFORM] markers. See Linux bring-up status for implementation progress.
@@ -12,7 +12,7 @@ Where platform-specific details are required, the chapter notes this with [PLATF
 Linx partitions privileged state using **Access Control Rings** (**ACR**). The architecture defines up to **16**
 rings, named **ACR0..ACR15**.
 
-Bring-up conventions (v0.57 current profile):
+Bring-up conventions (v0.58 current profile):
 
 * On reset, an LXCPU starts executing in **ACR0**.
 * **ACR0 is the root / most privileged** ring. Rings with larger numeric IDs MAY be used for progressively less
@@ -21,7 +21,7 @@ Bring-up conventions (v0.57 current profile):
 * Some privileged SSRs are **ACR-scoped** (banked per ring). In this manual those registers are written with an
   `*_ACRn` suffix.
 
-Informative software role mapping (v0.57 current profile):
+Informative software role mapping (v0.58 current profile):
 
 [%header,cols="1,4"]
 |===
@@ -328,7 +328,7 @@ Bring-up uses `TRAPNUM = ILLEGAL_INST (4)` to report illegal instruction encodin
 |`EC_XBDEF`   |`0x11` |`XB` definition invalid (`CAC_TABLE` entry missing/invalid, bad `B.TEXT`, etc.).
 |===
 +
-NOTE: earlier draft text previously used `E_INST(EC_ILLEGAL)` and `E_INST(EC_PARAM)` informally without allocating numeric encodings. Canonical `v0.57` inherits the concrete `EC_*` values above.
+NOTE: earlier draft text previously used `E_INST(EC_ILLEGAL)` and `E_INST(EC_PARAM)` informally without allocating numeric encodings. Canonical `v0.58` inherits the concrete `EC_*` values above.
 +
 
 [%header,cols="2,1,1,1,1"]
@@ -348,7 +348,7 @@ For system calls (`TRAPNUM=SCALL` in v0.2), routing is defined by the `ACRC` `re
 [[system-template-integrity-fail]]
 ===== Template-integrity `ASSERT_FAIL`
 
-`ASSERT_FAIL (52)` has two distinct producers in v0.57:
+`ASSERT_FAIL (52)` has two distinct producers in v0.58:
 
 [%header,cols="2,1,1,1,3"]
 |===
@@ -497,7 +497,7 @@ Unless otherwise specified, fields are **XLEN** wide. Addresses are byte address
 ** `RemainingCount`: remaining element/iteration count (template-defined).
 ** `CursorAddr`: current memory cursor address (template-defined).
 ** `RegCursor`: current register/cursor selector (template-defined).
-* `BSTATE.TMA` (`TMA`-class blocks):
+* `BSTATE.TLSU` (`TLSU`-class blocks):
 ** `TransferCursor`: current transfer cursor (implementation-defined).
 ** `RemainingBytes` and/or `RemainingRows`: remaining transfer size (implementation-defined).
 ** `FaultRestartInfo`: sufficient information to restart after a translation or access fault.
@@ -643,7 +643,7 @@ implementations SHOULD report `CAUSE=MMU_PF` for translation faults and `CAUSE=M
 [[system-iommu]]
 ==== IOMMU (v0.2 bring-up profile)
 
-DMA-style engines (including `TMA` engines) MUST perform address translation using the IOMMU when enabled.
+DMA-style engines (including `TLSU` engines) MUST perform address translation using the IOMMU when enabled.
 
 * IOVA is treated as 48-bit canonical, identical to VA.
 * Translation uses `IOTTBR_ACR1`/`IOTCR_ACR1`/`IOMAIR_ACR1` and the same table format as the CPU MMU.
@@ -737,6 +737,6 @@ The following items require platform-specific or profile-specific definition for
 
 [NOTE]
 ====
-These items remain platform-specific policy inputs on top of the canonical v0.57 privileged architecture.
+These items remain platform-specific policy inputs on top of the canonical v0.58 privileged architecture.
 See `docs/bringup/PROGRESS.md` for current implementation status in this repository.
 ====

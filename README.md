@@ -40,9 +40,9 @@ git submodule update --init --recursive
 
 ```bash
 # Canonical ISA + AVS contract validation
-python3 tools/isa/build_golden.py --profile v0.57 --check
-python3 tools/isa/validate_spec.py --profile v0.57
-python3 tools/isa/check_canonical_v057.py --root .
+python3 tools/isa/build_golden.py --profile v0.58 --check
+python3 tools/isa/validate_spec.py --profile v0.58
+python3 tools/isa/check_canonical_v058.py --root .
 python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml
 python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier pr
 
@@ -78,7 +78,8 @@ linx-isa/
 │   └── pto_kernels/     # PTO accelerator kernels (submodule)
 │
 ├── isa/                   # ISA specification sources
-│   ├── v0.57/            # sole canonical ISA definition
+│   ├── v0.58/            # current canonical ISA definition
+│   ├── v0.57/            # retained previous stable profile
 │   └── generated/        # Generated encodings/decoders
 │
 └── docs/                  # Architecture & bring-up documentation
@@ -125,7 +126,7 @@ bash tools/ci/check_repo_layout.sh
 
 | Gate | Command | Description |
 |------|---------|-------------|
-| **AVS Contract** | `python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml` | Public `v0.57` bring-up contract schema + reference validation |
+| **AVS Contract** | `python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml` | Public `v0.58` bring-up contract schema + reference validation |
 | **AVS Closure** | `python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier pr` | Tier-scoped AVS closure status |
 | **Sail Model** | `python3 tools/bringup/check_sail_model.py` | Sail wording, status, and parser/typecheck gate |
 | **Compiler AVS** | `cd avs/compiler/linx-llvm/tests && ./run.sh` | LLVM code generation tests |
@@ -151,8 +152,8 @@ bash tools/regression/strict_cross_repo.sh
 
 - **Website**: https://linxisa.github.io/
 - **[Getting Started](docs/bringup/GETTING_STARTED.md)** - Onboarding guide
-- **[Architecture Contract](docs/architecture/v0.57-architecture-contract.md)** - ISA v0.57 specification
-- **[Encoding Decisions](docs/architecture/v0.57-encoding-decisions.md)** - Frozen v0.57 encodings
+- **[Architecture Contract](docs/architecture/v0.58-architecture-contract.md)** - ISA v0.58 specification
+- **[Encoding Decisions](docs/architecture/v0.57-encoding-decisions.md)** - Retained baseline encoding rationale
 - **[Bring-up Progress](docs/bringup/PROGRESS.md)** - Current status tracking
 - **[Navigation Guide](docs/project/navigation.md)** - Repository layout policy
 - **[ISA Manual](docs/architecture/isa-manual/README.md)** - Complete ISA documentation
@@ -161,7 +162,7 @@ bash tools/regression/strict_cross_repo.sh
 
 ## Versioning
 
-- **ISA Version**: v0.57 (current stable profile)
+- **ISA Version**: v0.58 (current stable profile)
 - **Repository**: This superproject pins specific commits of all ecosystem repos
 - **Release Notes**: See [docs/releases/](docs/releases/) for version history
 

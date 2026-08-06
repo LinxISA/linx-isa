@@ -9,50 +9,37 @@ The matrix data block belongs to the instruction type that only has header but n
 - Matrix data block **Only supports Fall jump mode**
 - The matrix data block allows access to the global register GGPR and Tile registers, but does not allow access to memory and system registerSSR**.
 - A matrix data block allows up to 8 Tile registers to be read and 4 tile registers to be written in one block.
-- The matrix operation result is only allowed to be output to the ACC register and written to the general Tile register through a specific instruction ACCCVT.
+- Every matrix operation writes an explicit Local destination D. ACC forms also read an explicit Local accumulator input C; when D and C alias, the operation reads the old value and writes the new value.
 - There is no body in the matrix data block, **B.TEXT instruction is not allowed**
 
 ## Command list
 
 | TileOp | Description |
 |---------|----------------|
-| [TMATMUL](../../header/tileblock/TMATMUL.md) | Matrix multiplication instruction, A matrix multiplies B matrix, and the result is written to the ACC register |
-| [TMATMUL.BIAS](../../header/tileblock/TMATMUL.BIAS.md) | Matrix multiplication and addition instructions, A matrix multiplies B matrix, plus C matrix, the result is written to the ACC register |
-| [TMATMUL.ACC](../../header/tileblock/TMATMUL.ACC.md) | Matrix multiply and accumulate instructions, A matrix multiplies B matrix, the result is accumulated to the ACC register |
-| [TMATMULMX](../../header/tileblock/TMATMULMX.md) | Scaling matrix multiplication, the result is written to the ACC register |
-| [TMATMULMX.BIAS](../../header/tileblock/TMATMULMX.BIAS.md) | Scale matrix multiplication, add bias matrix, write the result to ACC register |
-| [TMATMULMX.ACC](../../header/tileblock/TMATMULMX.ACC.md) | Scaling matrix multiplication, the result matrix is accumulated into the ACC register |
-| [ACCCVT](../../header/tileblock/ACCCVT.md) | Move the data in the ACC register to the general Tile register |
-| [TGEMV](../../header/tileblock/TGEMV.md) | General matrix-vector multiplication, the result is written to the ACC register |
-| [TGEMV.BIAS](../../header/tileblock/TGEMV.BIAS.md) | General matrix-vector multiplication, addition with offset, the result is written to the ACC register |
-| [TGEMV.ACC](../../header/tileblock/TGEMV.ACC.md) | General matrix-vector multiplication, the result is accumulated to the ACC register |
-| [TGEMVMX](../../header/tileblock/TGEMVMX.md) | Universal scaling matrix-vector multiplication, the result is written to the ACC register |
-| [TGEMVMX.BIAS](../../header/tileblock/TGEMVMX.BIAS.md) | Universal scaling matrix-vector multiplication, addition with offset, the result is written to the ACC register |
-| [TGEMVMX.ACC](../../header/tileblock/TGEMVMX.ACC.md) | Universal scaling matrix-vector multiplication, the result is accumulated to the ACC register |We provide a special [Tile register] (../../register/common/tilereg.md) - **ACC**, which is mainly used to reduce the data read and write bandwidth of the multiply-accumulate operation in the CUBE unit. This register is a private storage area within the CUBE unit and can only be accessed through matrix operation instructions and ACCCVT instructions.
+| [TMATMUL](../../header/tileblock/TMATMUL.md) | Matrix multiplication with an explicit destination |
+| [TMATMUL.BIAS](../../header/tileblock/TMATMUL.BIAS.md) | Matrix multiplication plus an explicit bias, with an explicit destination |
+| [TMATMUL.ACC](../../header/tileblock/TMATMUL.ACC.md) | Matrix multiply-accumulate from explicit accumulator C to explicit destination D |
+| [TMATMULMX](../../header/tileblock/TMATMULMX.md) | Scaled matrix multiplication with explicit row/column scales and destination |
+| [TMATMULMX.BIAS](../../header/tileblock/TMATMULMX.BIAS.md) | Scaled matrix multiplication plus bias, with an explicit destination |
+| [TMATMULMX.ACC](../../header/tileblock/TMATMULMX.ACC.md) | Scaled matrix multiply-accumulate from explicit C to explicit D |
+| [TGEMV](../../header/tileblock/TGEMV.md) | Matrix-vector multiplication with an explicit destination |
+| [TGEMV.BIAS](../../header/tileblock/TGEMV.BIAS.md) | Matrix-vector multiplication plus bias, with an explicit destination |
+| [TGEMV.ACC](../../header/tileblock/TGEMV.ACC.md) | Matrix-vector accumulate from explicit C to explicit D |
+| [TGEMVMX](../../header/tileblock/TGEMVMX.md) | Scaled matrix-vector multiplication with an explicit destination |
+| [TGEMVMX.BIAS](../../header/tileblock/TGEMVMX.BIAS.md) | Scaled matrix-vector multiplication plus bias, with an explicit destination |
+| [TGEMVMX.ACC](../../header/tileblock/TGEMVMX.ACC.md) | Scaled matrix-vector accumulate from explicit C to explicit D |
+
+PTO ISA 0.58 has no hidden architectural accumulator and no `ACCCVT` operation.
+The logical accumulator role is carried by an ordinary Local Tile operand. This
+keeps destination lifetime, aliasing, and conversion behavior explicit in the
+bundle descriptors.
 
 ![acc](../../../figs/isa/arch/acc.svg){ width="600" }
 
-Example:
-```asm
-    BSTART.TMATMUL FP32
-    C.B.DIMI 64, ->lb0
-    C.B.DIMI 32, ->lb1
-    C.B.DIMI 64, ->lb2
-    B.DATR normal, FP32, ZERO, cmode0, rmode0
-    B.IOT t#4, t#3, last
-
-    BSTART.TMATMUL.ACC FP32
-    B.DATR normal, FP32, ZERO, cmode0, rmode0
-    B.IOT t#1, t#2, last
-
-    BSTART.ACCCVT FP32
-    B.DATR normal, FP32, ZERO, cmode0, rmode0
-    B.IOT last, ->t<16KB>
-```
-
-In the above example, the CUBE opcode selects implicit ACC state; ACC is never
-encoded in `B.IOT`. `TMATMUL` initializes ACC, `TMATMUL.ACC` reads and updates
-it, and `ACCCVT` publishes the result to an ordinary T-type Tile.
+For base and BIAS forms, descriptors name D and all matrix/vector inputs. For
+ACC forms, descriptors additionally name accumulator input C. `D == C` is a
+defined read-old/write-new alias; otherwise C is read and D is independently
+updated.
 
 ## Input requirements
 
@@ -90,7 +77,9 @@ In addition, before matrix operations, the hardware is required to convert all e
 
 ## Output requirements
 
-In LinxISA, after matrix operations, a series of accompanying processing needs to be continued through the ACCCVT instruction, such as activation, quantization, element-level operations, etc. If the data is uniformly obtained from the ACC register for further processing, the hardware implementation can be greatly simplified. Therefore, it is required that the matrix operation result **only be output to the ACC register**.
+In v0.58, a matrix result is written directly to the explicit Local destination.
+Subsequent activation, quantization, layout conversion, or element operations
+consume that Tile through their normal explicit operands.
 
 On the other hand, according to the format requirements of the input matrix, the result matrix must be stored in the layout of `大N小z`. And because the operation is performed in FP32 or INT32 format, the size of each fractal is fixed to **1024Byte** (16x16x4 byte).
 
@@ -98,6 +87,6 @@ The output requirements for matrix operations are summarized as follows:
 
 | Type | Requirements |
 |------|-----------|
-| Destination register | Only output to ACC register allowed |
+| Destination register | Explicit Local Tile destination D |
 | Output layout | Big N small z format |
 | Fractal size | 1024Byte |

@@ -1,9 +1,9 @@
-// LinxISA architectural state model for canonical v0.57.
+// LinxISA architectural state model for canonical v0.58.
 // The state model grows incrementally while strict legality and execution coverage expand.
 //
 // NOTE: The current bring-up model still relies on decoder shadow metadata for some
 // block/header fields, but the architectural state and execute layers carry concrete
-// behavior for active v0.57 instructions.
+// behavior for active v0.58 instructions.
 
 $include <prelude.sail>
 $include <arith.sail>
@@ -182,6 +182,9 @@ register decoded_bdim_value_shadow : bits(64) = 0x0000_0000_0000_0000
 register decoded_bcatr_raw_shadow : bits(64) = 0x0000_0000_0000_0000
 register decoded_bdatr_raw_shadow : bits(64) = 0x0000_0000_0000_0000
 register decoded_biot_raw_shadow : bits(64) = 0x0000_0000_0000_0000
+// PTO/Linx 0.58 absolute-index core-private Shared tile binding.
+register shared_tile_binding_valid : bool = false
+register shared_tile_binding_id : bits(8) = 0x00
 register decoded_tile_datatype_shadow : bits(5) = 0b00000
 register decoded_bior_regsrc0_shadow : bits(5) = 0b00000
 register decoded_bior_regsrc1_shadow : bits(5) = 0b00000

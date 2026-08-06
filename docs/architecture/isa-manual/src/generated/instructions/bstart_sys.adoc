@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.SYS FALL<, fixup_label>
 
-*Description:* Block start marker: BSTART.SYS with split semantics.
+*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* B.TEXT <label>
 
-*Description:* Block block offset: B.TEXT.
+*Description:* Sets the out-of-line body entry address for a decoupled bundle.
 
 *Encoding:*
 

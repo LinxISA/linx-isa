@@ -1,13 +1,13 @@
-== Tile / Vector Block Instructions (v0.57)
+== Tile / Vector Block Instructions (v0.58)
 
-This chapter defines the **normative header contracts** for tile/vector/tensor-style block types in the live v0.57
+This chapter defines the **normative header contracts** for tile/vector/tensor-style block types in the live v0.58
 profile.
 
 It complements:
 
 * <<blockisa-forms>> (block forms, coupled vs decoupled vs template),
 * <<memory>> (architectural memory model + ordering), and
-* the opcode catalog notes (e.g. `isa/v0.57/opcodes/lx_32.opc`).
+* the opcode catalog notes (e.g. `isa/v0.58/opcodes/lx_32.opc`).
 
 Unless stated otherwise:
 
@@ -71,9 +71,9 @@ Other descriptors (tile inputs, register in/out bindings, etc.) are kernel-defin
 kernels but are not universally required by the ISA.
 
 [[tileblocks-rendering-profile]]
-=== Rendering profile (v0.57 canonical)
+=== Rendering profile (v0.58 canonical)
 
-The rendering-oriented v0.57 profile inherits the frozen v0.57 tile conventions unless a v0.57 delta explicitly changes them:
+The rendering-oriented v0.58 profile inherits the frozen v0.58 tile conventions unless a v0.58 delta explicitly changes them:
 
 * tiles remain general-purpose intermediate-state storage; they are not inherently screen-space tiles,
 * the canonical carrier is a 4KB `1024x1` row-major tile,
@@ -83,9 +83,9 @@ The rendering-oriented v0.57 profile inherits the frozen v0.57 tile conventions 
 * `MPAR` VEC kernels are the required functional fallback for rendering PTOs when no TAU hardening exists.
 
 [[tileblocks-tma]]
-=== Tile Memory Agent blocks (`TLOAD`/`TSTORE`)
+=== Tile load/store unit blocks (`TLOAD`/`TSTORE`)
 
-`BSTART.TLOAD` / `BSTART.TSTORE` are aliases of `BSTART.TMA Function=0/1`.
+`BSTART.TLOAD` / `BSTART.TSTORE` are the named forms for TLSU Functions 0/1.
 
 These blocks do not have a SIMT body (`B.TEXT` is not used).
 
@@ -99,9 +99,9 @@ Missing mandatory descriptors MUST trap with `E_BLOCK(EC_BLOCKFMT)` and report t
 [[tileblocks-tmov]]
 === Tile move / reshape blocks (`TMOV`)
 
-NOTE (header legality): `B.TEXT` is not meaningful for header-driven engine ops (`TMOV`/`TMA`/`CUBE`/`TEPL`). If `B.TEXT` appears in such a header, it is an illegal descriptor combination and MUST trap with `E_BLOCK(EC_BLOCKFMT)` with `MissingDescFamily=B.TEXT` and `MissingDetail=0x02`.
+NOTE (header legality): `B.TEXT` is not meaningful for header-driven engine ops (`TMOV`/`TLSU`/`CUBE`/`TEPL`). If `B.TEXT` appears in such a header, it is an illegal descriptor combination and MUST trap with `E_BLOCK(EC_BLOCKFMT)` with `MissingDescFamily=B.TEXT` and `MissingDetail=0x02`.
 
-`BSTART.TMOV` is an alias of `BSTART.TMA Function=2`.
+`BSTART.TMOV` is the named form for TLSU Function 2.
 
 `TMOV` is tile-state only (no global memory access). Destination allocation is queue-push only.
 
@@ -114,11 +114,12 @@ Optional descriptors:
 * `B.DATR` selects an operation-applicable layout conversion; NORM is the mandatory default and other layouts are capability gated.
 
 [[tileblocks-cube]]
-=== CUBE / tensor blocks (`TMATMUL`, `TMATMUL.ACC`, `ACCCVT`)
+=== CUBE / tensor blocks
 
-`BSTART.TMATMUL`, `BSTART.TMATMUL.ACC`, and `BSTART.ACCCVT` are named
-CUBE-family forms. Their assigned function values are part of the frozen
-0.57.1 selector map; no generic executable `BSTART.CUBE` form exists.
+`BSTART.TMATMUL*`, `BSTART.TMATMULMX*`, `BSTART.TGEMV*`, and
+`BSTART.TGEMVMX*` are the named CUBE-family forms in the frozen 0.58 selector
+map; no generic executable `BSTART.CUBE` form exists. `ACCCVT` is deleted from
+the 0.58 direct-operation catalog and MUST NOT decode.
 
 These blocks do not have a SIMT body (`B.TEXT` is not used).
 
@@ -130,15 +131,8 @@ Mandatory header descriptors:
 * `B.IOT` is **mandatory** (bind operand tiles and sizes).
 * `B.DATR` is required when a non-default, supported matrix layout is selected.
 
-==== `ACCCVT`
-
-Source operand note:
-
-* The source is the implicit **ACC tile**.
-* ACC shape/layout is derived from `B.DIM` (matmul dimension state) plus fixed ACC layout rules.
-
-Mandatory header descriptors:
-
-* `B.DIM` is **mandatory**.
-* `B.IOT` is **mandatory** (bind destination tile + size).
-* Applicable `B.DATR` fields plus `B.IOR` are **mandatory** for quantization controls and scalar bindings.
+Every CUBE form has an explicit destination. An `.ACC` form additionally has
+an explicit accumulator source; the other forms do not read an accumulator.
+If destination and accumulator alias the same allocation, the operation reads
+the old accumulator value before writing the new result, and their data type,
+shape, layout, and allocation must be identical.

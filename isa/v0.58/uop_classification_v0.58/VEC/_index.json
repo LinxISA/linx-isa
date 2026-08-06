@@ -1,0 +1,11 @@
+{
+  "big_kind": "VEC",
+  "sub_kinds": [
+    "AGU",
+    "ALU",
+    "AMO",
+    "BRU",
+    "FSU",
+    "VEC"
+  ]
+}

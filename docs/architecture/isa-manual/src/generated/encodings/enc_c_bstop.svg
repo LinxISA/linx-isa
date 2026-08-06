@@ -11,8 +11,6 @@
   <text x="644.25" y="8" text-anchor="middle" font-size="8" fill="#999999">4</text>
   <text x="866.25" y="8" text-anchor="middle" font-size="8" fill="#999999">0</text>
   <rect x="6" y="24" width="888.00" height="28" fill="none" stroke="#999999" stroke-width="0.8"/>
-  <rect x="6.000" y="25" width="666.000" height="26" fill="#90A4AE" stroke="white" stroke-width="0.5"/>
-  <rect x="672.000" y="25" width="166.500" height="26" fill="#90A4AE" stroke="white" stroke-width="0.5"/>
-  <rect x="838.500" y="25" width="55.500" height="26" fill="#90A4AE" stroke="white" stroke-width="0.5"/>
+  <rect x="6.000" y="25" width="888.000" height="26" fill="#90A4AE" stroke="white" stroke-width="0.5"/>
   <text x="6" y="64" font-size="9" fill="#aaaaaa" font-family="Helvetica Neue,Arial,sans-serif">16-bit encoding</text>
 </svg>

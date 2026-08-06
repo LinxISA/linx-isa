@@ -34,7 +34,8 @@ TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7
 - 命名块头：`BSTART.TLOAD DataType`、`BSTART.TSTORE DataType`、`BSTART.TMOV DataType`、
   `BSTART.TPREFETCH DataType`、`BSTART.MGATHER DataType`、`BSTART.MSCATTER DataType`、
   `BSTART.MGATHER.MASK DataType`、`BSTART.MSCATTER.MASK DataType`、
-  `BSTART.MGATHER.CAS DataType`
+  `BSTART.MGATHER.CAS DataType`、
+  `BSTART.GMOV DataType`
 - [B.DATR](../../header/B.DATR.md) `Layout, PadValue`
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0`
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`
@@ -46,13 +47,13 @@ TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7
 - ...
 - [B.IOR](../../header/B.IOR.md) `RegSrc9, RegSrc10, RegSrc11, ->RegDst4`
 
-其中，TMA 命名块头共享同一个相邻编码族；`function` 字段选择具体 TileOp。
+其中，TLSU 命名块头共享同一个相邻编码族；`function` 字段选择具体 TileOp。
 旧的泛化文本汇编形式已退役，活动汇编必须使用命名块头。
 TPREFETCH 与 TLOAD 相邻编码，是没有目标 Tile 的预取形式。
 
-TMA 编码族的格式如下：
+TLSU 编码族的格式如下（图文件沿用历史名称）：
 
-![BSTART.TMA](../../../figs/bitfield/svg/BlockHeader_32bit/BSTART.TMA.svg)
+![TLSU 编码族（历史图文件名）](../../../figs/bitfield/svg/BlockHeader_32bit/BSTART.TMA.svg)
 
 其中，function字段用于编码具体的TileOp信息。编码方式如下：
 
@@ -64,10 +65,16 @@ TMA 编码族的格式如下：
 | 3 | [TPREFETCH](../../header/tileblock/TPREFETCH.md) | 与 TLOAD 使用相同地址/尺寸描述，但不写目标 Tile；用于预取 |
 | 4 | [MGATHER](../../header/tileblock/MGATHER.md) | 将离散的内存空间中的数据聚集到Tile寄存器中。 |
 | 5 | [MSCATTER](../../header/tileblock/MSCATTER.md) | 将Tile寄存器中的数据存储到离散的内存空间。  |
-| 6 | [MGATHER.MASK](../../header/tileblock/MGATHER.MASK.md) | 带掩码的内存聚集，仅当 MaskTile 中对应标志位为 1 时才执行聚集。 |
-| 7 | [MSCATTER.MASK](../../header/tileblock/MSCATTER.MASK.md) | 带掩码的内存分散，仅当 MaskTile 中对应标志位为 1 时才执行分散。 |
-| 8 | [MGATHER.CAS](../../header/tileblock/MGATHER.CAS.md) | 基于 offset 的聚集比较交换；返回旧值到目标 Tile |
-| 9-31 | 暂时保留 |
+| 6 | `BSTART.MGATHER.MASK` | 带掩码的离散内存聚集；关闭的元素不产生访存效果 |
+| 7 | `BSTART.MSCATTER.MASK` | 带掩码的离散内存散写；关闭的元素不产生访存效果 |
+| 8 | `BSTART.MGATHER.CAS` | 每个活动元素执行一次原子读-改-写 compare-and-swap |
+| 9 | [TMOV](../../header/tileblock/TMOV.md) Local-to-Shared insert | 使用 `C.B.IOS` 和 Local 源 `B.IOT` |
+| 10 | [TMOV](../../header/tileblock/TMOV.md) Local-to-Shared publish | 使用 `C.B.IOS` 和 Local 源 `B.IOT` |
+| 11 | [TMOV](../../header/tileblock/TMOV.md) Shared-to-Local broadcast | 使用 `C.B.IOS` 和 Local 目标 `B.IOT` |
+| 12 | [TMOV](../../header/tileblock/TMOV.md) Shared-to-Local extract | 使用 `C.B.IOS` 和 Local 目标 `B.IOT` |
+| 13 | `BSTART.GMOV` | Core4 协同全局内存搬运 |
+| 14 | `TSTORE.SPART` | 使用 `C.B.IOS` 和 `B.IOR` 的 Shared 分区存储 |
+| 15-31 | 保留 | 非法 |
 
 DataType字段编码方式如下：
 

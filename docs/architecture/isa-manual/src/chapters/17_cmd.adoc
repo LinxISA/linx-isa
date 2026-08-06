@@ -1,5 +1,5 @@
 // Generated file; do not edit by hand.
-// Auto-generated from isa/v0.57/linxisa-v0.57.json and uop_classification_v0.57.json
+// Auto-generated from isa/v0.58/linxisa-v0.58.json and uop_classification_v0.58.json
 
 [[chapter_cmd]]
 == CMD - Command and Control
@@ -11,11 +11,11 @@ The Command (CMD) group covers the block-split instruction forms (typed `BSTART.
 * `.STD` / `.SYS` / `.FP` -- scalar execution.
 * `.MPAR` / `.MSEQ` -- SIMT parallel/sequential shader kernel launch.
 * `.VPAR` / `.VSEQ` -- tile-parallel/sequential vector execution (TVEC-equivalent).
-* TMA-family typed starts such as `TLOAD`, `TSTORE`, and `TMOV` -- tile memory access.
-* CUBE-family typed starts such as `TMATMUL`, `TMATMUL.ACC`, and `ACCCVT` -- tile matrix operations.
+* TLSU-family typed starts such as `TLOAD`, `TSTORE`, `MGATHER.MASK`, and `MGATHER.CAS` -- tile load/store operations.
+* CUBE-family typed starts such as `TMATMUL`, `TMATMUL.ACC`, and `TGEMV` -- tile matrix operations.
 * `BSTART.TEPL` with Mode/Function selection -- template operations such as `TADD`.
 
-Typed block starts are the only public spellings for TMA and CUBE operations. TEPL uses the public `BSTART.TEPL` raw form with Mode/Function fields; unassigned selectors are illegal instructions.
+Typed block starts are the only public spellings for TLSU and CUBE operations. TEPL uses the public `BSTART.TEPL` raw form with Mode/Function fields; unassigned selectors are illegal instructions.
 
 **Header descriptors**: tile and scalar block metadata is conveyed by descriptor instructions that must appear immediately after a block-start marker. Descriptors are consumed in program order and do not affect the scalar execution path unless the platform profile specifies otherwise.
 
@@ -30,17 +30,17 @@ include::../generated/instructions/bstart_mseq.adoc[]
 include::../generated/instructions/bstart_mpar.adoc[]
 include::../generated/instructions/bstart_vseq.adoc[]
 include::../generated/instructions/bstart_vpar.adoc[]
-include::../generated/instructions/bstart_acccvt.adoc[]
 include::../generated/instructions/bstart_tepl.adoc[]
 include::../generated/instructions/bstart_tload.adoc[]
 include::../generated/instructions/bstart_tstore.adoc[]
 include::../generated/instructions/bstart_tmov.adoc[]
 include::../generated/instructions/bstart_tprefetch.adoc[]
 include::../generated/instructions/bstart_mgather.adoc[]
-include::../generated/instructions/bstart_mscatter.adoc[]
 include::../generated/instructions/bstart_mgather_mask.adoc[]
-include::../generated/instructions/bstart_mscatter_mask.adoc[]
 include::../generated/instructions/bstart_mgather_cas.adoc[]
+include::../generated/instructions/bstart_mscatter.adoc[]
+include::../generated/instructions/bstart_mscatter_mask.adoc[]
+include::../generated/instructions/bstart_gmov.adoc[]
 include::../generated/instructions/bstart_tmatmul.adoc[]
 include::../generated/instructions/bstart_tmatmul_bias.adoc[]
 include::../generated/instructions/bstart_tmatmul_acc.adoc[]
@@ -79,3 +79,4 @@ include::../generated/instructions/b_datr.adoc[]
 include::../generated/instructions/b_hint.adoc[]
 include::../generated/instructions/b_text.adoc[]
 include::../generated/instructions/b_dim.adoc[]
+include::../generated/instructions/c_b_ios.adoc[]

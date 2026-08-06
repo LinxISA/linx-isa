@@ -11,33 +11,33 @@
 
 ## Assembly Syntax
 
+- `L.BSTART.STD COND, <label>`
 - `L.BSTART.STD DIRECT, <label>`
 - `L.BSTART.STD CALL, <label>`
-- `L.BSTART.STD COND, <label>`
 - `L.BSTART.STD FALL<, fixup_label>`
 
 ## Encoding
 
 <div class="enc-diagram">
 
-<figure id="encoding-l_bstart_std_64_37e84068ce61">
-<img src="../wavedrom/enc_l_bstart_std_64_37e84068ce61.svg" alt="L.BSTART.STD encoding form l_bstart_std_64_37e84068ce61" width="100%" />
-<figcaption><code>l_bstart_std_64_37e84068ce61</code> — <code>L.BSTART.STD DIRECT, <label></code>. MSB is on the left, LSB is on the right.</figcaption>
+<figure id="encoding-l_bstart_std_64_40bf385dbbff">
+<img src="../wavedrom/enc_l_bstart_std_64_40bf385dbbff.svg" alt="L.BSTART.STD encoding form l_bstart_std_64_40bf385dbbff" width="100%" />
+<figcaption><code>l_bstart_std_64_40bf385dbbff</code> — <code>L.BSTART.STD COND, <label></code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
-<figure id="encoding-l_bstart_std_64_463a1567da91">
-<img src="../wavedrom/enc_l_bstart_std_64_463a1567da91.svg" alt="L.BSTART.STD encoding form l_bstart_std_64_463a1567da91" width="100%" />
-<figcaption><code>l_bstart_std_64_463a1567da91</code> — <code>L.BSTART.STD CALL, <label></code>. MSB is on the left, LSB is on the right.</figcaption>
+<figure id="encoding-l_bstart_std_64_49b7cf990e62">
+<img src="../wavedrom/enc_l_bstart_std_64_49b7cf990e62.svg" alt="L.BSTART.STD encoding form l_bstart_std_64_49b7cf990e62" width="100%" />
+<figcaption><code>l_bstart_std_64_49b7cf990e62</code> — <code>L.BSTART.STD DIRECT, <label></code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
-<figure id="encoding-l_bstart_std_64_72d502fcd30d">
-<img src="../wavedrom/enc_l_bstart_std_64_72d502fcd30d.svg" alt="L.BSTART.STD encoding form l_bstart_std_64_72d502fcd30d" width="100%" />
-<figcaption><code>l_bstart_std_64_72d502fcd30d</code> — <code>L.BSTART.STD COND, <label></code>. MSB is on the left, LSB is on the right.</figcaption>
+<figure id="encoding-l_bstart_std_64_9a6081ab8f08">
+<img src="../wavedrom/enc_l_bstart_std_64_9a6081ab8f08.svg" alt="L.BSTART.STD encoding form l_bstart_std_64_9a6081ab8f08" width="100%" />
+<figcaption><code>l_bstart_std_64_9a6081ab8f08</code> — <code>L.BSTART.STD CALL, <label></code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
-<figure id="encoding-l_bstart_std_64_899592f9c5bc">
-<img src="../wavedrom/enc_l_bstart_std_64_899592f9c5bc.svg" alt="L.BSTART.STD encoding form l_bstart_std_64_899592f9c5bc" width="100%" />
-<figcaption><code>l_bstart_std_64_899592f9c5bc</code> — <code>L.BSTART.STD FALL<, fixup_label></code>. MSB is on the left, LSB is on the right.</figcaption>
+<figure id="encoding-l_bstart_std_64_ed61315d3418">
+<img src="../wavedrom/enc_l_bstart_std_64_ed61315d3418.svg" alt="L.BSTART.STD encoding form l_bstart_std_64_ed61315d3418" width="100%" />
+<figcaption><code>l_bstart_std_64_ed61315d3418</code> — <code>L.BSTART.STD FALL<, fixup_label></code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
 </div>
@@ -54,16 +54,17 @@ Instruction from the BSTART group.
 
 ## Encoding Notes
 
+- `Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.`
 - `Bare L.BSTART.STD CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.`
 
 ## Full Catalog Forms
 
 | Form ID | Assembly | Length | Decode | Encoding |
 |---------|----------|--------|--------|----------|
-| `l_bstart_std_64_37e84068ce61` | `L.BSTART.STD DIRECT, <label>` | 64 | — | [SVG](../wavedrom/enc_l_bstart_std_64_37e84068ce61.svg) |
-| `l_bstart_std_64_463a1567da91` | `L.BSTART.STD CALL, <label>` | 64 | — | [SVG](../wavedrom/enc_l_bstart_std_64_463a1567da91.svg) |
-| `l_bstart_std_64_72d502fcd30d` | `L.BSTART.STD COND, <label>` | 64 | — | [SVG](../wavedrom/enc_l_bstart_std_64_72d502fcd30d.svg) |
-| `l_bstart_std_64_899592f9c5bc` | `L.BSTART.STD FALL<, fixup_label>` | 64 | — | [SVG](../wavedrom/enc_l_bstart_std_64_899592f9c5bc.svg) |
+| `l_bstart_std_64_40bf385dbbff` | `L.BSTART.STD COND, <label>` | 64 | — | [SVG](../wavedrom/enc_l_bstart_std_64_40bf385dbbff.svg) |
+| `l_bstart_std_64_49b7cf990e62` | `L.BSTART.STD DIRECT, <label>` | 64 | — | [SVG](../wavedrom/enc_l_bstart_std_64_49b7cf990e62.svg) |
+| `l_bstart_std_64_9a6081ab8f08` | `L.BSTART.STD CALL, <label>` | 64 | — | [SVG](../wavedrom/enc_l_bstart_std_64_9a6081ab8f08.svg) |
+| `l_bstart_std_64_ed61315d3418` | `L.BSTART.STD FALL<, fixup_label>` | 64 | — | [SVG](../wavedrom/enc_l_bstart_std_64_ed61315d3418.svg) |
 
 <div class="insn-nav">
 
