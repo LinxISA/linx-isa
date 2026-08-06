@@ -53,7 +53,7 @@ opcode {input_parameters} {, ->output_parameters}
 | [访存串行块](../blockIntro/mem_block/intro.md)（**Memory Access and Sequel Block**）   | MSEQ | 提供向量化的内存数据搬运能力，多Group串行执行 |
 | [向量并行块](../blockIntro/vec_block/intro.md)（**Vector and Parallel Block**） | VPAR | 提供向量数据计算能力，多Group并行执行 |
 | [向量串行块](../blockIntro/vec_block/intro.md)（**Vector and Sequel Block**）   | VSEQ | 提供向量数据计算能力，多Group串行执行 |
-| [数据搬运块](../blockIntro/tma_block/intro.md)（**Tile and Memory Access Block**） | TMA | 提供内存与Tile寄存器间数据搬移能力 |
+| [数据搬运块](../blockIntro/tma_block/intro.md)（**Tile Load/Store Unit**） | TLSU | 提供目录定义的内存与 Tile 寄存器间数据搬移能力 |
 | [矩阵数据块](../blockIntro/cube_block/intro.md)（**Cube Block**） | CUBE | 提供矩阵运算能力，将矩阵拆成多个分型，以分型的粒度执行矩阵运算 |
 | [模版数据块](../blockIntro/tepl_block/intro.md)（**Template Tile Block**） | TEPL | 提供模版化的数据块（Tile）计算能力 |
 | [系统调用块](../blockIntro/xb_block/intro.md)（**Cross Block**） | XB | 提供轻量化的系统调用能力 |

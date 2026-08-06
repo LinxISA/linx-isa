@@ -13,14 +13,14 @@ TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7
 
 | 参数 | 说明 | 是否可选 |
 |------|------|---------|
-| **TileOp** | 指定矩阵运算的具体操作，可选：TMATMUL, ACCCVT等 | 否  |
+| **TileOp** | 选择 v0.58 的 12 个 TMATMUL/TGEMV base、BIAS 或 ACC 操作之一 | 否  |
 | **LB0** | 输入矩阵的行或列参数，具体见特定指令介绍。arg0可以通过（`全局寄存器`、`立即数`或`全局寄存器加立即数`）参数设置。 | 是，默认为1 |
 | **LB1** | 输入矩阵的行或列参数，具体见特定指令介绍。arg1可以通过（`全局寄存器`、`立即数`或`全局寄存器加立即数`）参数设置。 | 是，默认为1 |
 | **LB2** | 输入矩阵的行或列参数，具体见特定指令介绍。arg2可以通过（`全局寄存器`、`立即数`或`全局寄存器加立即数`）参数设置。 | 是，默认为1 |
 | **DataType** | 输入元素的数据格式，包括FP32, FP16, S16等 | 是 |
 | **SrcTile0, ..., SrcTile7** | 分别指示最多8个输入的Tile寄存器。 | 是 |
 | **reuse** | 当本指令执行结束后相应的输入Tile寄存器不允许被释放则需要增加该标识。如无此标识，则表示允许硬件释放本寄存器。 | 是 |
-| **DstTile0, ..., DstTile3** | 分别指示最多4个输出Tile寄存器类型 | 可选T, U, M, N或ACC。 | 是 |
+| **DstTile0, ..., DstTile3** | 指定显式 Local 输出 Tile；ACC 形式还需指定显式 Local 累加输入 C | 是 |
 | **TileSize0, ..., TileSize3** | 分别指示每个输出Tile寄存器的空间大小，可以通过一个 `立即数`或者`全局寄存器`传参。 | 取决于DstTile |
 | **DepSrc0, DepSrc1, DepSrc2** | 表示本块指令最多显式记录 3 个前序 `D` 依赖槽位。 | 是 |
 | **DepDst** | 表示本块指令对后序引用该标识的块指令的屏障。 | 是 |
@@ -32,7 +32,7 @@ TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7
 - 命名块头：`BSTART.TMATMUL DataTypeA`、`BSTART.TMATMUL.BIAS DataTypeA`、
   `BSTART.TMATMUL.ACC DataTypeA`、`BSTART.TMATMULMX DataTypeA`、
   `BSTART.TMATMULMX.BIAS DataTypeA`、`BSTART.TMATMULMX.ACC DataTypeA`、
-  `BSTART.ACCCVT SrcType`、`BSTART.TGEMV DataType`、`BSTART.TGEMV.BIAS DataType`、
+  `BSTART.TGEMV DataType`、`BSTART.TGEMV.BIAS DataType`、
   `BSTART.TGEMV.ACC DataType`、`BSTART.TGEMVMX DataType`、
   `BSTART.TGEMVMX.BIAS DataType`、`BSTART.TGEMVMX.ACC DataType`
 - [B.DATR](../../header/B.DATR.md) Layout.{canon, normal}, DataType
@@ -43,7 +43,7 @@ TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7
 - ...
 - [B.IOT](../../header/B.IOT.md) SrcTile6<.reuse>, SrcTile7<.reuse>, last, ->DstTile3< TileSize3>
 
-其中，CUBE 命名块头共享 BSTART.CUBE 编码族。只有表中的 13 个命名函数
+其中，CUBE 命名块头共享 BSTART.CUBE 编码族。只有表中的 12 个命名函数
 合法；未分配的 Function 均为非法指令，不存在可执行的泛化 `BSTART.CUBE`
 汇编形式。
 
@@ -63,8 +63,7 @@ TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7
 | 0    | 5        | [TMATMULMX.BIAS](../../header/tileblock/TMATMULMX.BIAS.md)   |
 | 0    | 6        | [TMATMULMX.ACC](../../header/tileblock/TMATMULMX.ACC.md)     |
 | 0    | 7        | 预留编码        |
-| 0    | 8        | [ACCCVT](../../header/tileblock/ACCCVT.md)   |
-| 0    | 9-15     | 预留编码          |
+| 0    | 8-15     | 预留编码          |
 | 0    | 16       | [TGEMV](../../header/tileblock/TGEMV.md)                |
 | 0    | 17       | [TGEMV.BIAS](../../header/tileblock/TGEMV.BIAS.md)      |
 | 0    | 18       | [TGEMV.ACC](../../header/tileblock/TGEMV.ACC.md)        |

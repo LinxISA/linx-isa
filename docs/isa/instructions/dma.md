@@ -36,7 +36,7 @@ Instruction from the DMA Operation group.
 
 ## Encoding Notes
 
-- `v0.57 encoding for the inherited DMA operation: copy 64 bytes from the source address in SrcL to the destination address in SrcR and complete before submission.`
+- `v0.58 encoding for the inherited DMA operation: copy 64 bytes from the source address in SrcL to the destination address in SrcR and complete before submission.`
 
 ## Full Catalog Forms
 

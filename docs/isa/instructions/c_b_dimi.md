@@ -2,9 +2,9 @@
 
 <div class="insn-header">
 
-<span class="badge-16">16-bit C.</span> **Group:** <a href="../groups/block_dimension.md">Block Dimension</a> &nbsp;|&nbsp;
-<span class="ch-tag ch-tag-04">Ch 04</span>
-&nbsp; <strong>Block ISA — Block-structured Control Flow</strong> &nbsp;|&nbsp;
+<span class="badge-16">16-bit C.</span> **Group:** <a href="../groups/bundle_dimension.md">Bundle Dimension</a> &nbsp;|&nbsp;
+<span class="ch-tag ch-tag-00">Ch 00</span>
+&nbsp; <strong>ISA Manual</strong> &nbsp;|&nbsp;
 **Length:** <code>16</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
 
 </div>
@@ -26,17 +26,17 @@
 
 ## Description
 
-[16-bit C.] Instruction from the Block Dimension group.
+[16-bit C.] Instruction from the Bundle Dimension group.
 
 ## Pseudocode (informative)
 
 ```c
-// Execute C.B.DIMI as defined by the Block Dimension semantics.
+// Execute C.B.DIMI as defined by the Bundle Dimension semantics.
 ```
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `Writes one of the three bundle-local dimension registers.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ _No additional encoding notes._
 
 <div class="insn-nav">
 
-← [Block Dimension](../groups/block_dimension.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [Bundle Dimension](../groups/bundle_dimension.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

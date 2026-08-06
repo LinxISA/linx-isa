@@ -2,9 +2,9 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/block_offset.md">Block Offset</a> &nbsp;|&nbsp;
-<span class="ch-tag ch-tag-04">Ch 04</span>
-&nbsp; <strong>Block ISA — Block-structured Control Flow</strong> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/bundle_offset.md">Bundle Offset</a> &nbsp;|&nbsp;
+<span class="ch-tag ch-tag-00">Ch 00</span>
+&nbsp; <strong>ISA Manual</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
 
 </div>
@@ -26,17 +26,17 @@
 
 ## Description
 
-Instruction from the Block Offset group.
+Instruction from the Bundle Offset group.
 
 ## Pseudocode (informative)
 
 ```c
-// Execute B.TEXT as defined by the Block Offset semantics.
+// Execute B.TEXT as defined by the Bundle Offset semantics.
 ```
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `Sets the out-of-line body entry address for a decoupled bundle.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ _No additional encoding notes._
 
 <div class="insn-nav">
 
-← [Block Offset](../groups/block_offset.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [Bundle Offset](../groups/bundle_offset.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

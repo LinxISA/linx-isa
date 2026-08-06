@@ -7,14 +7,14 @@
 
 *Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
-[[inst_bstart_tstore_32_6f6869479814]]
-===== Form `bstart_tstore_32_6f6869479814`
+[[inst_bstart_tstore_32_6bed4bf0e415]]
+===== Form `bstart_tstore_32_6bed4bf0e415`
 
 *Syntax:* BSTART.TSTORE DataType
 
 *Encoding:*
 
-image::encodings/enc_bstart_tstore_32_6f6869479814.svg[BSTART.TSTORE encoding form bstart_tstore_32_6f6869479814,width=800]
+image::encodings/enc_bstart_tstore_32_6bed4bf0e415.svg[BSTART.TSTORE encoding form bstart_tstore_32_6bed4bf0e415,width=800]
 
 *Compression:* L32 (len=32)
 

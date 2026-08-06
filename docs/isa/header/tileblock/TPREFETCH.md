@@ -31,6 +31,6 @@ fault behavior. It does not allocate or write a destination Tile.
 
 ## Encoding adjacency
 
-The TMA function assignments are `TLOAD=0`, `TSTORE=1`, `TMOV=2`, and
+The TLSU function assignments are `TLOAD=0`, `TSTORE=1`, `TMOV=2`, and
 `TPREFETCH=3`, placing `TPREFETCH` directly beside the existing load/store
-family as required by the v0.57 contract.
+family in the v0.58 contract.

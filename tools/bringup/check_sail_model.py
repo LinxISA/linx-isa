@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Validate the Sail model status and active-surface wording for v0.57.
+Validate the Sail model status and active-surface wording for v0.58.
 """
 
 from __future__ import annotations
@@ -188,8 +188,8 @@ def _collect_impl_gap_hits(paths: list[Path]) -> list[str]:
 
 
 def main(argv: list[str]) -> int:
-    ap = argparse.ArgumentParser(description="Validate Sail model status for canonical v0.57")
-    ap.add_argument("--spec", default="isa/v0.57/linxisa-v0.57.json")
+    ap = argparse.ArgumentParser(description="Validate Sail model status for canonical v0.58")
+    ap.add_argument("--spec", default="isa/v0.58/linxisa-v0.58.json")
     ap.add_argument("--status", default="isa/sail/semantics_status.json")
     ap.add_argument("--entry", default="isa/sail/model/linxisa.sail")
     ap.add_argument("--toolchain", default="isa/sail/toolchain.json")

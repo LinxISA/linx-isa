@@ -63,7 +63,7 @@ these are treated as **standalone blocks** that map to hardware macro execution 
 
 The catalog also defines header-driven accelerator families:
 
-* TMA-family typed forms such as `BSTART.TLOAD`, `BSTART.TSTORE`, and `BSTART.TMOV`,
+* TLSU-family typed forms such as `BSTART.TLOAD`, `BSTART.TSTORE`, and `BSTART.TMOV`,
 * CUBE-family typed forms such as `BSTART.TMATMUL`, `BSTART.TMATMUL.ACC`, and `BSTART.ACCCVT`,
 * `BSTART.TEPL`, whose raw header carries `Mode[1:0]` and `Function[4:0]`; the logical selector is
   `(Mode << 5) | Function`.

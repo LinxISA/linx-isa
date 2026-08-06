@@ -18,15 +18,7 @@
   <rect x="6.000" y="25" width="138.750" height="26" fill="#90A4AE" stroke="white" stroke-width="0.5"/>
   <rect x="144.750" y="25" width="55.500" height="26" fill="#607D8B" stroke="white" stroke-width="0.5"/>
   <text x="172.5" y="41.5" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="white" pointer-events="none">Mode</text>
-  <rect x="200.250" y="25" width="138.750" height="26" fill="#90A4AE" stroke="white" stroke-width="0.5"/>
-  <rect x="339.000" y="25" width="138.750" height="26" fill="#90A4AE" stroke="white" stroke-width="0.5"/>
-  <rect x="477.750" y="25" width="83.250" height="26" fill="#607D8B" stroke="white" stroke-width="0.5"/>
-  <text x="519.4" y="41.5" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="white" pointer-events="none">001</text>
-  <rect x="561.000" y="25" width="138.750" height="26" fill="#607D8B" stroke="white" stroke-width="0.5"/>
-  <text x="630.4" y="41.5" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="white" pointer-events="none">0x03</text>
-  <rect x="699.750" y="25" width="83.250" height="26" fill="#90A4AE" stroke="white" stroke-width="0.5"/>
-  <rect x="783.000" y="25" width="83.250" height="26" fill="#90A4AE" stroke="white" stroke-width="0.5"/>
-  <rect x="866.250" y="25" width="27.750" height="26" fill="#607D8B" stroke="white" stroke-width="0.5"/>
-  <text x="880.1" y="41.5" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="white" pointer-events="none">1</text>
+  <rect x="200.250" y="25" width="693.750" height="26" fill="#607D8B" stroke="white" stroke-width="0.5"/>
+  <text x="547.1" y="41.5" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="white" pointer-events="none">0x0001181</text>
   <text x="6" y="64" font-size="9" fill="#aaaaaa" font-family="Helvetica Neue,Arial,sans-serif">32-bit encoding</text>
 </svg>

@@ -24,12 +24,13 @@ def validate(root: Path) -> list[str]:
     required = {
         "C.B.IOS", "BSTART.GMOV", "BSTART.VPAR", "BSTART.VSEQ",
         "C.BSTART.VPAR", "C.BSTART.VSEQ", "V.QPOP", "V.QPUSH",
+        "BSTART.MGATHER.CAS", "BSTART.MGATHER.MASK", "BSTART.MSCATTER.MASK",
     }
     for mnemonic in sorted(required - mnemonics):
         errors.append(f"required LinxISA 0.58 mnemonic missing: {mnemonic}")
     retired = {
         "B.IOD", "BSTART.PAR", "BSTART.TMA", "BSTART.ACCCVT",
-        "BSTART.MGATHER.CAS", "BSTART.MGATHER.MASK", "BSTART.MSCATTER.MASK", "C.B.DIM",
+        "C.B.DIM",
     }
     for mnemonic in sorted(retired & mnemonics):
         errors.append(f"retired 0.57 mnemonic still decodes: {mnemonic}")

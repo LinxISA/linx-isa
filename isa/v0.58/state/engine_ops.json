@@ -95,106 +95,6 @@
   },
   "note": "Linx scheduling metadata projected onto the normative PTO ISA 0.58.0 tile catalog.",
   "profile": "v0.58",
-  "tma": {
-    "kind": "function_u5",
-    "function_field_bits": [
-      0,
-      4
-    ],
-    "legal_aliases": [
-      {
-        "name": "TLOAD",
-        "function": 0,
-        "mnemonic": "BSTART.TLOAD",
-        "semantic_status": "reviewed-complete",
-        "semantic_handler": "TLOAD",
-        "state_effects": [
-          "operand:destination0:destination",
-          "operand:address:base-address"
-        ]
-      },
-      {
-        "name": "TSTORE",
-        "function": 1,
-        "mnemonic": "BSTART.TSTORE",
-        "semantic_status": "reviewed-complete",
-        "semantic_handler": "TSTORE",
-        "state_effects": [
-          "operand:address:base-address",
-          "operand:source0:source"
-        ]
-      },
-      {
-        "name": "TMOV",
-        "function": 2,
-        "mnemonic": "BSTART.TMOV",
-        "semantic_status": "reviewed-complete",
-        "semantic_handler": "TMOV",
-        "state_effects": [
-          "operand:destination0:destination",
-          "operand:source0:source"
-        ]
-      },
-      {
-        "name": "TPREFETCH",
-        "function": 3,
-        "mnemonic": "BSTART.TPREFETCH",
-        "semantic_status": "reviewed-complete",
-        "semantic_handler": "TPREFETCH",
-        "state_effects": [
-          "operand:address:base-address",
-          "operand:byte_count:byte-count"
-        ]
-      },
-      {
-        "name": "MGATHER",
-        "function": 4,
-        "mnemonic": "BSTART.MGATHER",
-        "semantic_status": "reviewed-complete",
-        "semantic_handler": "MGATHER",
-        "state_effects": [
-          "operand:destination0:destination",
-          "operand:address:base-address",
-          "operand:source0:indices"
-        ]
-      },
-      {
-        "name": "MSCATTER",
-        "function": 5,
-        "mnemonic": "BSTART.MSCATTER",
-        "semantic_status": "reviewed-complete",
-        "semantic_handler": "MSCATTER",
-        "state_effects": [
-          "operand:address:base-address",
-          "operand:source0:source",
-          "operand:source1:indices"
-        ]
-      },
-      {
-        "name": "GMOV",
-        "function": 13,
-        "mnemonic": "BSTART.GMOV",
-        "semantic_status": "reviewed-complete",
-        "semantic_handler": "GMOV",
-        "state_effects": [
-          "operand:destination0:destination",
-          "operand:source0:resolved-peer-source",
-          "operand:scalar0:peer-tid"
-        ]
-      }
-    ],
-    "reserved_function_ranges": [
-      [
-        6,
-        7
-      ],
-      [
-        14,
-        31
-      ]
-    ],
-    "reserved_behavior": "illegal_instruction"
-  },
   "cube": {
     "kind": "function_u5",
     "function_field_bits": [
@@ -437,8 +337,8 @@
         "0x061"
       ],
       [
-        "0x068",
-        "0x068"
+        "0x069",
+        "0x069"
       ],
       [
         "0x075",
@@ -3572,12 +3472,16 @@
         ]
       },
       {
-        "name": "TRANDOM",
+        "name": "THISTOGRAM",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 3,
-        "function": 9,
-        "semantic_handler": "TRANDOM",
-        "legality_handler": "TileOperandsLegal_TRANDOM",
-        "effect_contract": "TRANDOM",
+        "function": 8,
+        "logical_selector": 104,
+        "semantic_handler": "THISTOGRAM",
+        "legality_handler": "TileOperandsLegal_THISTOGRAM",
+        "effect_contract": "THISTOGRAM",
         "fault_contract": "ExecuteTileInstruction",
         "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
         "operands": [
@@ -3586,31 +3490,24 @@
             "role": "destination"
           },
           {
-            "field": "scalar0",
-            "role": "key-64"
+            "field": "source0",
+            "role": "source"
           },
           {
-            "field": "scalar1",
-            "role": "counter-low-64"
+            "field": "source1",
+            "role": "indices"
           },
           {
-            "field": "address",
-            "role": "counter-high-64"
-          },
-          {
-            "field": "flag0",
-            "role": "seven-rounds"
+            "field": "selected_byte",
+            "role": "selected-byte"
           }
         ],
         "state_effects": [
           "operand:destination0:destination",
-          "operand:scalar0:key-64",
-          "operand:scalar1:counter-low-64",
-          "operand:address:counter-high-64",
-          "operand:flag0:seven-rounds"
-        ],
-        "logical_selector": 105,
-        "semantic_status": "reviewed-complete"
+          "operand:source0:source",
+          "operand:source1:indices",
+          "operand:selected_byte:selected-byte"
+        ]
       },
       {
         "name": "TQUANT",
@@ -3699,12 +3596,16 @@
         ]
       },
       {
-        "name": "TSORT32",
+        "name": "TSORT",
+        "profile": "v0.57",
+        "semantic_status": "reviewed-complete",
+        "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
         "mode": 3,
         "function": 12,
-        "semantic_handler": "TSORT32",
-        "legality_handler": "TileOperandsLegal_TSORT32",
-        "effect_contract": "TSORT32",
+        "logical_selector": 108,
+        "semantic_handler": "TSORT",
+        "legality_handler": "TileOperandsLegal_TSORT",
+        "effect_contract": "TSORT",
         "fault_contract": "ExecuteTileInstruction",
         "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
         "operands": [
@@ -3721,6 +3622,10 @@
             "role": "source"
           },
           {
+            "field": "sort_width",
+            "role": "sort-width"
+          },
+          {
             "field": "flag0",
             "role": "descending"
           }
@@ -3729,10 +3634,9 @@
           "operand:destination0:destination",
           "operand:destination1:original-indices-u32",
           "operand:source0:source",
+          "operand:sort_width:sort-width",
           "operand:flag0:descending"
-        ],
-        "logical_selector": 108,
-        "semantic_status": "reviewed-complete"
+        ]
       },
       {
         "name": "TMRGSORT",
@@ -4074,6 +3978,142 @@
   },
   "version": "0.58.0",
   "source_lock": "isa/v0.58/pto-spec.lock.json",
+  "tlsu": {
+    "kind": "function_u5",
+    "function_field_bits": [
+      0,
+      4
+    ],
+    "legal_aliases": [
+      {
+        "name": "TLOAD",
+        "function": 0,
+        "mnemonic": "BSTART.TLOAD",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "TLOAD",
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:address:base-address"
+        ]
+      },
+      {
+        "name": "TSTORE",
+        "function": 1,
+        "mnemonic": "BSTART.TSTORE",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "TSTORE",
+        "state_effects": [
+          "operand:address:base-address",
+          "operand:source0:source"
+        ]
+      },
+      {
+        "name": "TMOV",
+        "function": 2,
+        "mnemonic": "BSTART.TMOV",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "TMOV",
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:source"
+        ]
+      },
+      {
+        "name": "TPREFETCH",
+        "function": 3,
+        "mnemonic": "BSTART.TPREFETCH",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "TPREFETCH",
+        "state_effects": [
+          "operand:address:base-address",
+          "operand:byte_count:byte-count"
+        ]
+      },
+      {
+        "name": "MGATHER",
+        "function": 4,
+        "mnemonic": "BSTART.MGATHER",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "MGATHER",
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:address:base-address",
+          "operand:source0:indices"
+        ]
+      },
+      {
+        "name": "MSCATTER",
+        "function": 5,
+        "mnemonic": "BSTART.MSCATTER",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "MSCATTER",
+        "state_effects": [
+          "operand:address:base-address",
+          "operand:source0:source",
+          "operand:source1:indices"
+        ]
+      },
+      {
+        "name": "MGATHER_MASK",
+        "function": 6,
+        "mnemonic": "BSTART.MGATHER.MASK",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "MGATHER_MASK",
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:address:base-address",
+          "operand:source0:indices",
+          "operand:source1:mask"
+        ]
+      },
+      {
+        "name": "MSCATTER_MASK",
+        "function": 7,
+        "mnemonic": "BSTART.MSCATTER.MASK",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "MSCATTER_MASK",
+        "state_effects": [
+          "operand:address:base-address",
+          "operand:source0:source",
+          "operand:source1:indices",
+          "operand:source2:mask"
+        ]
+      },
+      {
+        "name": "MGATHER_CAS",
+        "function": 8,
+        "mnemonic": "BSTART.MGATHER.CAS",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "MGATHER_CAS",
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:address:base-address",
+          "operand:source0:indices",
+          "operand:source1:expected",
+          "operand:source2:replacement"
+        ]
+      },
+      {
+        "name": "GMOV",
+        "function": 13,
+        "mnemonic": "BSTART.GMOV",
+        "semantic_status": "reviewed-complete",
+        "semantic_handler": "GMOV",
+        "state_effects": [
+          "operand:destination0:destination",
+          "operand:source0:resolved-peer-source",
+          "operand:scalar0:peer-tid"
+        ]
+      }
+    ],
+    "reserved_function_ranges": [
+      [
+        15,
+        31
+      ]
+    ],
+    "reserved_behavior": "illegal_instruction"
+  },
   "shared_tile_registers": {
     "registers_per_core": 256,
     "assembly_names": "S0..S255",

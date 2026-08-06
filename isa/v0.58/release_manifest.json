@@ -10,16 +10,16 @@
     "unlisted_selectors_reserved": true
   },
   "cardinality": {
-    "tile_operations": 106,
+    "tile_operations": 109,
     "tile_families": {
       "CUBE": 12,
       "TEPL": 87,
-      "TMA": 7
+      "TLSU": 10
     },
-    "command_forms": 96,
+    "command_forms": 99,
     "command_form_families": {
       "BBD": 25,
-      "CMD": 71
+      "CMD": 74
     },
     "scalar_forms": 474,
     "linx_vector_reservations": 6
@@ -27,9 +27,6 @@
   "migration_aliases": {},
   "deleted_names": [
     "ACCCVT",
-    "MGATHER_CAS",
-    "MGATHER_MASK",
-    "MSCATTER_MASK",
     "TADDC",
     "TADDSC",
     "TALLOC",
@@ -39,7 +36,6 @@
     "TFMODS",
     "TFREE",
     "TGATHERB",
-    "THISTOGRAM",
     "TINTERLEAVE",
     "TLRELU",
     "TPARTARGMAX",
@@ -49,7 +45,9 @@
     "TPUSH",
     "TRESHAPE",
     "TSUBC",
-    "TSUBSC"
+    "TSUBSC",
+    "TRANDOM",
+    "TSORT32"
   ],
   "rejected_names": [
     "TEXRACT",

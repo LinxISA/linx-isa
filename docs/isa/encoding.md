@@ -1,8 +1,8 @@
 # Instruction Encoding Formats
 
-> **ISA Version:** v0.57.1 &nbsp;|&nbsp; **Chapter 03** of the ISA Manual
+> **ISA Version:** v0.58.0 &nbsp;|&nbsp; **Chapter 03** of the ISA Manual
 
-LinxISA v0.57.1 supports four instruction lengths in a little-endian
+LinxISA v0.58.0 supports four instruction lengths in a little-endian
 halfword-oriented model. Bit positions are shown as `[msb:0]`
 (MSB leftmost, LSB rightmost), matching ARM and RISC-V conventions.
 

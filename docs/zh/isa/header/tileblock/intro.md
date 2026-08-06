@@ -15,12 +15,16 @@ TMA类指令主要用于内存操作，包括数据的加载、存储、复制�
 | 0    | 0        | [TLOAD](./TLOAD.md)      | 从内存ddr或remote向Tile寄存器拷贝 |
 | 0    | 1        | [TSTORE](./TSTORE.md)    | 从Tile寄存器向内存ddr或remote拷贝 |
 | 0    | 2        | [TMOV](./TMOV.md)        | Tile寄存器之间的数据移动/复制，支持存储布局的变换 |
-| 0    | 3        | -                        | 保留 |
+| 0    | 3        | [TPREFETCH](./TPREFETCH.md) | 与 TLOAD 相同的检查和访存足迹，但不更新目标 Tile |
 | 0    | 4        | [MGATHER](./MGATHER.md)  | 将离散的内存空间的数据聚集到Tile寄存器中 |
 | 0    | 5        | [MSCATTER](./MSCATTER.md)| 将Tile寄存器中的数据存储到离散的内存空间 |
-| 0    | 6        | [MGATHER.MASK](./MGATHER.MASK.md)  | 带掩码的内存聚集，仅当 MaskTile 中对应标志位为 1 时才执行聚集 |
-| 0    | 7        | [MSCATTER.MASK](./MSCATTER.MASK.md) | 带掩码的内存分散，仅当 MaskTile 中对应标志位为 1 时才执行分散 |
-| 0    | 8-31     | -                        | 保留 |
+| 0    | 6        | `MGATHER.MASK`           | 带掩码的离散内存聚集 |
+| 0    | 7        | `MSCATTER.MASK`          | 带掩码的离散内存散写 |
+| 0    | 8        | `MGATHER.CAS`             | 每个活动元素执行原子 compare-and-swap |
+| 0    | 9-12     | [TMOV](./TMOV.md)        | Local 与 Shared Tile 之间的 insert/publish/broadcast/extract |
+| 0    | 13       | `GMOV`                    | Core4 协同全局内存搬运 |
+| 0    | 14       | `TSTORE.SPART`            | Shared Tile 分区存储 |
+| 0    | 15-31    | -                         | 保留/非法 |
 
 ---
 
@@ -41,12 +45,11 @@ CUBE类指令主要用于矩阵和向量的乘法运算，包括基本矩阵乘�
 | 0    | 6        | [TMATMULMX.ACC](./TMATMULMX.ACC.md)     | 缩放矩阵乘，结果矩阵累加到ACC寄存器 |
 | 0    | 7        | -              | 保留 |
 
-### **固定管线操作**
+### **保留编码**
 
-| Mode | Function | 操作             | 说明 |
-|------|----------|------------------|------|
-| 0    | 8        | [ACCCVT](./ACCCVT.md)   | 将数据从ACC寄存器搬移到外部的T、U、M、N寄存器。在数据搬运期间支持转换操作 |
-| 0    | 9-15     | -                | 保留 |
+| Mode | Function | 操作 | 说明 |
+|------|----------|------|------|
+| 0    | 8-15     | -    | 保留；v0.58 不定义 ACCCVT |
 
 ### **矩阵-向量乘法操作**
 

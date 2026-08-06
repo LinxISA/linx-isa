@@ -2689,6 +2689,64 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
+[[insndesc-bundle-split-bstart-mgather-cas]]
+===== BSTART.MGATHER.CAS
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.MGATHER.CAS DataType`
+
+Encoding::
++
+.`bstart_mgather_cas_32_74d282c28e52` — `BSTART.MGATHER.CAS DataType`
+image::encodings/enc_bstart_mgather_cas.svg[BSTART.MGATHER.CAS encoding form bstart_mgather_cas_32_74d282c28e52,align="center"]
+
+
+Encoding notes (informative)::
++
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-bundle-split-bstart-mgather-mask]]
+===== BSTART.MGATHER.MASK
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.MGATHER.MASK DataType`
+
+Encoding::
++
+.`bstart_mgather_mask_32_c53a0033eb26` — `BSTART.MGATHER.MASK DataType`
+image::encodings/enc_bstart_mgather_mask.svg[BSTART.MGATHER.MASK encoding form bstart_mgather_mask_32_c53a0033eb26,align="center"]
+
+
+Encoding notes (informative)::
++
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
 [[insndesc-bundle-split-bstart-mpar]]
 ===== BSTART.MPAR
 
@@ -2733,6 +2791,35 @@ Encoding::
 +
 .`bstart_mscatter_32_7f76f632a75f` — `BSTART.MSCATTER DataType`
 image::encodings/enc_bstart_mscatter.svg[BSTART.MSCATTER encoding form bstart_mscatter_32_7f76f632a75f,align="center"]
+
+
+Encoding notes (informative)::
++
+* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-bundle-split-bstart-mscatter-mask]]
+===== BSTART.MSCATTER.MASK
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.MSCATTER.MASK DataType`
+
+Encoding::
++
+.`bstart_mscatter_mask_32_6037e1cd885f` — `BSTART.MSCATTER.MASK DataType`
+image::encodings/enc_bstart_mscatter_mask.svg[BSTART.MSCATTER.MASK encoding form bstart_mscatter_mask_32_6037e1cd885f,align="center"]
 
 
 Encoding notes (informative)::
@@ -3275,8 +3362,8 @@ Encoding::
 image::encodings/enc_bstart_tmov_32_3079328b98d6.svg[BSTART.TMOV encoding form bstart_tmov_32_3079328b98d6,align="center"]
 .`bstart_tmov_32_34d0ab432974` — `BSTART.TMOV DataType`
 image::encodings/enc_bstart_tmov_32_34d0ab432974.svg[BSTART.TMOV encoding form bstart_tmov_32_34d0ab432974,align="center"]
-.`bstart_tmov_32_68c4ed390b75` — `BSTART.TMOV DataType`
-image::encodings/enc_bstart_tmov_32_68c4ed390b75.svg[BSTART.TMOV encoding form bstart_tmov_32_68c4ed390b75,align="center"]
+.`bstart_tmov_32_472804576301` — `BSTART.TMOV DataType`
+image::encodings/enc_bstart_tmov_32_472804576301.svg[BSTART.TMOV encoding form bstart_tmov_32_472804576301,align="center"]
 .`bstart_tmov_32_d96181e99f01` — `BSTART.TMOV DataType`
 image::encodings/enc_bstart_tmov_32_d96181e99f01.svg[BSTART.TMOV encoding form bstart_tmov_32_d96181e99f01,align="center"]
 .`bstart_tmov_32_efe5c49fcb78` — `BSTART.TMOV DataType`
@@ -3337,8 +3424,8 @@ Assembly forms::
 
 Encoding::
 +
-.`bstart_tstore_32_6f6869479814` — `BSTART.TSTORE DataType`
-image::encodings/enc_bstart_tstore_32_6f6869479814.svg[BSTART.TSTORE encoding form bstart_tstore_32_6f6869479814,align="center"]
+.`bstart_tstore_32_6bed4bf0e415` — `BSTART.TSTORE DataType`
+image::encodings/enc_bstart_tstore_32_6bed4bf0e415.svg[BSTART.TSTORE encoding form bstart_tstore_32_6bed4bf0e415,align="center"]
 .`bstart_tstore_32_d592de9e15a8` — `BSTART.TSTORE DataType`
 image::encodings/enc_bstart_tstore_32_d592de9e15a8.svg[BSTART.TSTORE encoding form bstart_tstore_32_d592de9e15a8,align="center"]
 
@@ -3709,6 +3796,10 @@ Assembly forms::
 +
 * `BSTART.CALL <br_label>, <rt_label>, ->ra`
 
+Exact operand contract (catalog-derived)::
++
+* `bstart_call_32_d30ef065210c`: relocations `simm12` → `CBSTART12_PCREL`, `uimm5` → `CSETRET5_PCREL`; roles `<br_label>` → call_target (P), `<rt_label>` → return_target (P+2), `->ra` → link_destination (n/a).
+
 Encoding::
 +
 .`bstart_call_32_d30ef065210c` — `BSTART.CALL <br_label>, <rt_label>, ->ra`
@@ -3717,7 +3808,7 @@ image::encodings/enc_bstart_call.svg[BSTART CALL encoding form bstart_call_32_d3
 
 Encoding notes (informative)::
 +
-* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+* Atomic fused CALL: call_target = P + (SignExtend(simm12) << 1); ra = (P + 2) + (ZeroExtend(uimm5) << 1). Both labels are explicit and independently relocatable.
 
 Operation (informative)::
 +
@@ -3740,6 +3831,10 @@ Assembly forms::
 +
 * `HL.BSTART.CALL <br_label>, <rt_label>, ->ra`
 
+Exact operand contract (catalog-derived)::
++
+* `hl_bstart_call_48_d71cee46ab50`: relocations `simm25` → `B25_PCREL`, `uimm5` → `CSETRET5_PCREL`; roles `<br_label>` → call_target (P), `<rt_label>` → return_target (P+4), `->ra` → link_destination (n/a).
+
 Encoding::
 +
 .`hl_bstart_call_48_d71cee46ab50` — `HL.BSTART.CALL <br_label>, <rt_label>, ->ra`
@@ -3748,7 +3843,7 @@ image::encodings/enc_hl_bstart_call.svg[HL.BSTART CALL encoding form hl_bstart_c
 
 Encoding notes (informative)::
 +
-* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+* Atomic fused CALL: call_target = P + (SignExtend(simm25) << 1); ra = (P + 4) + (ZeroExtend(uimm5) << 1). Both labels are explicit and independently relocatable.
 
 Operation (informative)::
 +
@@ -3894,6 +3989,7 @@ image::encodings/enc_l_bstart_fp_64_b27a4726298b.svg[L.BSTART.FP encoding form l
 Encoding notes (informative)::
 +
 * Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+* Bare L.BSTART.FP CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.
 
 Operation (informative)::
 +
@@ -3931,6 +4027,7 @@ image::encodings/enc_l_bstart_std_64_ed61315d3418.svg[L.BSTART.STD encoding form
 Encoding notes (informative)::
 +
 * Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+* Bare L.BSTART.STD CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.
 
 Operation (informative)::
 +

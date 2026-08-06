@@ -92,7 +92,7 @@
       "l.*.brg",
       "v.*.brg"
     ],
-    "ordering_domain": "shared TSO domain with BCC and TMA/MTC operations",
+    "ordering_domain": "shared TSO domain with BCC and TLSU/MTC operations",
     "kernel_policy": "normal BCC scalar memory issue is closed while a shader kernel is active"
   },
   "local_memory": {

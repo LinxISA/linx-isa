@@ -225,8 +225,11 @@
 |`BSTART.FP` |32 |- |`BSTART.FP COND, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.GMOV` |32 |- |`BSTART.GMOV DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.MGATHER` |32 |- |`BSTART.MGATHER DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.MGATHER.CAS` |32 |- |`BSTART.MGATHER.CAS DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.MGATHER.MASK` |32 |- |`BSTART.MGATHER.MASK DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.MPAR` |32 |- |`BSTART.MPAR <VS8, VS16>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.MSCATTER` |32 |- |`BSTART.MSCATTER DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.MSCATTER.MASK` |32 |- |`BSTART.MSCATTER.MASK DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.MSEQ` |32 |- |`BSTART.MSEQ <VS8, VS16>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.STD` |32 |- |`BSTART.STD IND` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.STD` |32 |- |`BSTART.STD COND, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
@@ -279,8 +282,8 @@
 [cols="1,1,2,4,6",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`BSTART CALL` |32 |- |`BSTART.CALL <br_label>, <rt_label>, ->ra` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`HL.BSTART CALL` |48 |- |`HL.BSTART.CALL <br_label>, <rt_label>, ->ra` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART CALL` |32 |- |`BSTART.CALL <br_label>, <rt_label>, ->ra` |Atomic fused CALL: call_target = P + (SignExtend(simm12) << 1); ra = (P + 2) + (ZeroExtend(uimm5) << 1). Both labels are explicit and independently relocatable.
+|`HL.BSTART CALL` |48 |- |`HL.BSTART.CALL <br_label>, <rt_label>, ->ra` |Atomic fused CALL: call_target = P + (SignExtend(simm25) << 1); ra = (P + 4) + (ZeroExtend(uimm5) << 1). Both labels are explicit and independently relocatable.
 |`HL.BSTART.FP` |48 |- |`HL.BSTART.FP FALL<, fixup_label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`HL.BSTART.FP` |48 |- |`HL.BSTART.FP CALL, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`HL.BSTART.FP` |48 |- |`HL.BSTART.FP DIRECT, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
@@ -292,11 +295,11 @@
 |`HL.BSTART.SYS` |48 |- |`HL.BSTART.SYS FALL<, fixup_label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`L.BSTART.FP` |64 |- |`L.BSTART.FP DIRECT, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`L.BSTART.FP` |64 |- |`L.BSTART.FP FALL<, fixup_label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`L.BSTART.FP` |64 |- |`L.BSTART.FP CALL, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`L.BSTART.FP` |64 |- |`L.BSTART.FP CALL, <label>` |Bare L.BSTART.FP CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.
 |`L.BSTART.FP` |64 |- |`L.BSTART.FP COND, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`L.BSTART.STD` |64 |- |`L.BSTART.STD COND, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`L.BSTART.STD` |64 |- |`L.BSTART.STD DIRECT, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`L.BSTART.STD` |64 |- |`L.BSTART.STD CALL, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`L.BSTART.STD` |64 |- |`L.BSTART.STD CALL, <label>` |Bare L.BSTART.STD CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.
 |`L.BSTART.STD` |64 |- |`L.BSTART.STD FALL<, fixup_label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`L.BSTART.SYS` |64 |- |`L.BSTART.SYS FALL<, fixup_label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |===

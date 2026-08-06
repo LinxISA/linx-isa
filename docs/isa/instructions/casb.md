@@ -36,7 +36,7 @@ Atomic memory read-modify-write operation.
 
 ## Encoding Notes
 
-- `v0.57 32-bit compare-and-swap byte: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.`
+- `v0.58 32-bit compare-and-swap byte: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.`
 
 ## Full Catalog Forms
 

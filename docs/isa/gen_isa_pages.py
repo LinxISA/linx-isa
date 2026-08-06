@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate MkDocs-compatible instruction reference pages for LinxISA v0.57.
+Generate MkDocs-compatible instruction reference pages for LinxISA v0.58.
 
 Creates:
   docs/isa/index.md              — ISA instruction reference hub
@@ -21,7 +21,7 @@ Each instruction page embeds the WaveDrom SVG encoding diagram and includes:
 
 Usage:
     python3 gen_isa_pages.py \\
-        --spec isa/v0.57/linxisa-v0.57.json \\
+        --spec isa/v0.58/linxisa-v0.58.json \\
         --out-dir docs/isa \\
         --svg-dir docs/isa/wavedrom \\
         --verbose
@@ -1225,7 +1225,7 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--spec", default="isa/v0.57/linxisa-v0.57.json")
+    ap.add_argument("--spec", default="isa/v0.58/linxisa-v0.58.json")
     ap.add_argument("--out-dir", default="docs/isa")
     ap.add_argument("--svg-dir", default="docs/isa/wavedrom")
     ap.add_argument("--verbose", action="store_true")

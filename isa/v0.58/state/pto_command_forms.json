@@ -1,6 +1,6 @@
 {
-  "form_count": 96,
-  "form_constraint_count": 37,
+  "form_count": 99,
+  "form_constraint_count": 40,
   "forms": [
     {
       "asm": "B.CATR {trap, atomic, <aq, rl, aqrl>, far, dr}",
@@ -1590,6 +1590,207 @@
       "status": "accepted"
     },
     {
+      "asm": "BSTART.MGATHER.CAS DataType",
+      "constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x07ffffff",
+          "match": "0x00811181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_mgather_cas_32_fd8c8a3b720a",
+      "length_bits": 32,
+      "mnemonic": "BSTART.MGATHER.CAS",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.MGATHER.MASK DataType",
+      "constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x07ffffff",
+          "match": "0x00611181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_mgather_mask_32_5573241cd944",
+      "length_bits": 32,
+      "mnemonic": "BSTART.MGATHER.MASK",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
+      "asm": "BSTART.MSCATTER.MASK DataType",
+      "constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x07ffffff",
+          "match": "0x00711181",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "DataType",
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        }
+      ],
+      "form_id": "bstart_mscatter_mask_32_2a33eed646f7",
+      "length_bits": 32,
+      "mnemonic": "BSTART.MSCATTER.MASK",
+      "semantic_family": "CMD",
+      "semantic_group": "Bundle Split",
+      "semantic_handler": "ExecuteBundleStart",
+      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "status": "accepted"
+    },
+    {
       "asm": "BSTART.MPAR <VS8, VS16>",
       "constraints": [],
       "encoding": [
@@ -2975,18 +3176,6 @@
       "encoding_variants": [
         {
           "name": "TMOV.L2S.INSERT",
-          "function": 8,
-          "encoding": [
-            {
-              "index": 0,
-              "mask": "0x07ffffff",
-              "match": "0x00811181",
-              "width_bits": 32
-            }
-          ]
-        },
-        {
-          "name": "TMOV.L2S.PUBLISH",
           "function": 9,
           "encoding": [
             {
@@ -2998,7 +3187,7 @@
           ]
         },
         {
-          "name": "TMOV.S2L.BROADCAST",
+          "name": "TMOV.L2S.PUBLISH",
           "function": 10,
           "encoding": [
             {
@@ -3010,13 +3199,25 @@
           ]
         },
         {
-          "name": "TMOV.S2L.EXTRACT",
+          "name": "TMOV.S2L.BROADCAST",
           "function": 11,
           "encoding": [
             {
               "index": 0,
               "mask": "0x07ffffff",
               "match": "0x00b11181",
+              "width_bits": 32
+            }
+          ]
+        },
+        {
+          "name": "TMOV.S2L.EXTRACT",
+          "function": 12,
+          "encoding": [
+            {
+              "index": 0,
+              "mask": "0x07ffffff",
+              "match": "0x00c11181",
               "width_bits": 32
             }
           ]
@@ -3226,12 +3427,12 @@
       "encoding_variants": [
         {
           "name": "TSTORE.SPART",
-          "function": 12,
+          "function": 14,
           "encoding": [
             {
               "index": 0,
               "mask": "0x07ffffff",
-              "match": "0x00c11181",
+              "match": "0x00e11181",
               "width_bits": 32
             }
           ]
@@ -5270,8 +5471,8 @@
     }
   ],
   "isa": "PTO Instruction Set Architecture",
-  "operand_field_count": 56,
-  "operand_piece_count": 186,
+  "operand_field_count": 57,
+  "operand_piece_count": 189,
   "reviewed_encoding_overlaps": [
     {
       "broad_form_id": "b_iot_32_10db6db84f5d",

@@ -59,19 +59,19 @@ def validate_source(source_root: Path) -> dict[str, dict[str, Any]]:
         raise ValueError("upstream PTO release/encoding ABI is not the canonical 0.58.0 contract")
     counts = manifest.get("catalog_counts") or {}
     expected = {
-        "tile_operations_total": 106,
-        "command_forms": 96,
+        "tile_operations_total": 109,
+        "command_forms": 99,
         "scalar_forms": 474,
         "linx_vector_reservations": 6,
     }
     if any(counts.get(key) != value for key, value in expected.items()):
         raise ValueError(f"unexpected PTO 0.58 catalog counts: {counts}")
     if Counter(item["family"] for item in docs["tiles"]["operations"]) != Counter(
-        {"TEPL": 87, "TMA": 7, "CUBE": 12}
+        {"TEPL": 87, "TLSU": 10, "CUBE": 12}
     ):
         raise ValueError("unexpected PTO 0.58 tile family counts")
     if Counter(item["semantic_family"] for item in docs["commands"]["forms"]) != Counter(
-        {"CMD": 71, "BBD": 25}
+        {"CMD": 74, "BBD": 25}
     ):
         raise ValueError("unexpected PTO 0.58 command family counts")
     if docs["scalars"].get("form_count") != 474 or docs["reservations"].get("reservation_count") != 6:
@@ -106,9 +106,9 @@ def build_lock(source_root: Path, docs: dict[str, dict[str, Any]]) -> dict[str, 
     manifest = docs["manifest"]
     catalogs = {}
     for name, relative, count in (
-        ("command_forms", "spec/catalog/command-forms.json", 96),
+        ("command_forms", "spec/catalog/command-forms.json", 99),
         ("scalar_forms", "spec/catalog/scalar-forms.json", 474),
-        ("tile_operations", "spec/catalog/tile-operations.json", 106),
+        ("tile_operations", "spec/catalog/tile-operations.json", 109),
         ("linx_vector_reservations", "spec/catalog/linx-vector-reservations.json", 6),
     ):
         key = "reservations" if name == "linx_vector_reservations" else name.split("_")[0] + "s"
@@ -252,11 +252,12 @@ def project_engine_ops(tiles: dict[str, Any]) -> dict[str, Any]:
         "source_lock": "isa/v0.58/pto-spec.lock.json",
         "note": "Linx scheduling metadata projected onto the normative PTO ISA 0.58.0 tile catalog.",
     })
-    current["tma"] = {
+    current.pop("tma", None)
+    current["tlsu"] = {
         "kind": "function_u5",
         "function_field_bits": [0, 4],
-        "legal_aliases": operation_aliases(tiles, "TMA"),
-        "reserved_function_ranges": tiles["reserved"]["tma_functions"],
+        "legal_aliases": operation_aliases(tiles, "TLSU"),
+        "reserved_function_ranges": tiles["reserved"]["tlsu_functions"],
         "reserved_behavior": "illegal_instruction",
     }
     current["cube"] = {

@@ -1,6 +1,6 @@
 # All Instructions
 
-Complete alphabetical index of all **761** instruction forms in the LinxISA v0.57.1 catalog.
+Complete alphabetical index of all **766** instruction forms in the LinxISA v0.58.0 catalog.
 
 Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 
@@ -27,27 +27,27 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 
 | Mnemonic | Group | Bits | Description |
 |----------|-------|------|-------------|
-| [B.CATR](b_catr.md) | [Block Control Attribute](../groups/block_control_attribute.md) | 32 | Instruction from the Block Control Attribute group. |
-| [B.DATR](b_datr.md) | [Block Data Attribute](../groups/block_data_attribute.md) | 32 | Instruction from the Block Data Attribute group. |
-| [B.DIM](b_dim.md) | [Block Argument](../groups/block_argument.md) | 32 | Instruction from the Block Argument group. |
-| [B.DIM](b_dim.md) | [Block Argument](../groups/block_argument.md) | 32 | Instruction from the Block Argument group. |
-| [B.DIM](b_dim.md) | [Block Argument](../groups/block_argument.md) | 32 | Instruction from the Block Argument group. |
+| [B.CATR](b_catr.md) | [Bundle Control Attribute](../groups/bundle_control_attribute.md) | 32 | Instruction from the Bundle Control Attribute group. |
+| [B.DATR](b_datr.md) | [Bundle Data Attribute](../groups/bundle_data_attribute.md) | 32 | Instruction from the Bundle Data Attribute group. |
+| [B.DIM](b_dim.md) | [Bundle Argument](../groups/bundle_argument.md) | 32 | Instruction from the Bundle Argument group. |
+| [B.DIM](b_dim.md) | [Bundle Argument](../groups/bundle_argument.md) | 32 | Instruction from the Bundle Argument group. |
+| [B.DIM](b_dim.md) | [Bundle Argument](../groups/bundle_argument.md) | 32 | Instruction from the Bundle Argument group. |
 | [B.EQ](b_eq.md) | [Branch](../groups/branch.md) | 32 | Conditional branch taken when SrcL equals SrcR. |
 | [B.GE](b_ge.md) | [Branch](../groups/branch.md) | 32 | Conditional branch taken when SrcL is greater than or equal to SrcR (signed). |
 | [B.GEU](b_geu.md) | [Branch](../groups/branch.md) | 32 | Conditional branch taken when SrcL is greater than or equal to SrcR (unsigned). |
-| [B.HINT](b_hint.md) | [Block Hint](../groups/block_hint.md) | 32 | Instruction from the Block Hint group. |
-| [B.HINT](b_hint.md) | [Block Hint](../groups/block_hint.md) | 32 | Instruction from the Block Hint group. |
-| [B.IOR](b_ior.md) | [Block Input & Output](../groups/block_input_output.md) | 32 | Instruction from the Block Input & Output group. |
-| [B.IOT](b_iot.md) | [Block Input & Output](../groups/block_input_output.md) | 32 | Instruction from the Block Input & Output group. |
-| [B.IOT](b_iot.md) | [Block Input & Output](../groups/block_input_output.md) | 32 | Instruction from the Block Input & Output group. |
-| [B.IOT](b_iot.md) | [Block Input & Output](../groups/block_input_output.md) | 32 | Instruction from the Block Input & Output group. |
-| [B.IOT](b_iot.md) | [Block Input & Output](../groups/block_input_output.md) | 32 | Instruction from the Block Input & Output group. |
-| [B.IOT](b_iot.md) | [Block Input & Output](../groups/block_input_output.md) | 32 | Instruction from the Block Input & Output group. |
+| [B.HINT](b_hint.md) | [Bundle Hint](../groups/bundle_hint.md) | 32 | Instruction from the Bundle Hint group. |
+| [B.HINT](b_hint.md) | [Bundle Hint](../groups/bundle_hint.md) | 32 | Instruction from the Bundle Hint group. |
+| [B.IOR](b_ior.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Instruction from the Bundle Input & Output group. |
+| [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Instruction from the Bundle Input & Output group. |
+| [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Instruction from the Bundle Input & Output group. |
+| [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Instruction from the Bundle Input & Output group. |
+| [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Instruction from the Bundle Input & Output group. |
+| [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Instruction from the Bundle Input & Output group. |
 | [B.LT](b_lt.md) | [Branch](../groups/branch.md) | 32 | Conditional branch taken when SrcL is less than SrcR (signed). |
 | [B.LTU](b_ltu.md) | [Branch](../groups/branch.md) | 32 | Conditional branch taken when SrcL is less than SrcR (unsigned). |
 | [B.NE](b_ne.md) | [Branch](../groups/branch.md) | 32 | Conditional branch taken when SrcL not equal to SrcR. |
 | [B.NZ](b_nz.md) | [Branch](../groups/branch.md) | 32 | Conditional PC-relative branch. |
-| [B.TEXT](b_text.md) | [Block Offset](../groups/block_offset.md) | 32 | Instruction from the Block Offset group. |
+| [B.TEXT](b_text.md) | [Bundle Offset](../groups/bundle_offset.md) | 32 | Instruction from the Bundle Offset group. |
 | [B.Z](b_z.md) | [Branch](../groups/branch.md) | 32 | Conditional PC-relative branch. |
 | [BC.IALL](bc_iall.md) | [Cache Maintain](../groups/cache_maintain.md) | 32 | Branch-predictor cache invalidate all entries. |
 | [BC.IVA](bc_iva.md) | [Cache Maintain](../groups/cache_maintain.md) | 32 | Branch-predictor cache invalidate by address. |
@@ -55,52 +55,57 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [BIC](bic.md) | [Bit Operation](../groups/bit_operation.md) | 32 | Bit clear / AND-NOT. |
 | [BIS](bis.md) | [Bit Operation](../groups/bit_operation.md) | 32 | Bit set / OR. |
 | [BSE](bse.md) | [Execution Control](../groups/execution_control.md) | 32 | Execution control instruction. |
-| [BSTART](bstart.md) | [Block Split](../groups/block_split.md) | 32 | Block split marker. Terminates the current basic block and begins the next. Encodes block type and transition kind. |
-| [BSTART](bstart.md) | [Block Split](../groups/block_split.md) | 32 | Block split marker. Terminates the current basic block and begins the next. Encodes block type and transition kind. |
+| [BSTART](bstart.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Block split marker. Terminates the current basic block and begins the next. Encodes block type and transition kind. |
+| [BSTART](bstart.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Block split marker. Terminates the current basic block and begins the next. Encodes block type and transition kind. |
 | [BSTART CALL](bstart_call.md) | [BSTART](../groups/bstart.md) | 32 | Atomic fused call with independent call-target and return-target fields; transfers to the call block and writes `ra`. This exact aggregate is distinct from the generic bare-call form, which preserves `ra` and requires an adjacent `SETRET` or `C.SETRET`. |
-| [BSTART.ACCCVT](bstart_acccvt.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.FP](bstart_fp.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.FP](bstart_fp.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.FP](bstart_fp.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.FP](bstart_fp.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.FP](bstart_fp.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.FP](bstart_fp.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.FP](bstart_fp.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.MGATHER](bstart_mgather.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.MGATHER.CAS](bstart_mgather_cas.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.MGATHER.MASK](bstart_mgather_mask.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.MPAR](bstart_mpar.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.MSCATTER](bstart_mscatter.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.MSCATTER.MASK](bstart_mscatter_mask.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.MSEQ](bstart_mseq.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.STD](bstart_std.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.STD](bstart_std.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.STD](bstart_std.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.STD](bstart_std.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.STD](bstart_std.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.STD](bstart_std.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.STD](bstart_std.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.SYS](bstart_sys.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.TEPL](bstart_tepl.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.TGEMV](bstart_tgemv.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.TGEMV.ACC](bstart_tgemv_acc.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.TGEMV.BIAS](bstart_tgemv_bias.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.TGEMVMX](bstart_tgemvmx.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.TGEMVMX.ACC](bstart_tgemvmx_acc.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.TGEMVMX.BIAS](bstart_tgemvmx_bias.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.TLOAD](bstart_tload.md) | [Block Split](../groups/block_split.md) | 32 | Loads a 64-bit value from memory. |
-| [BSTART.TMATMUL](bstart_tmatmul.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.TMATMUL.ACC](bstart_tmatmul_acc.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.TMATMUL.BIAS](bstart_tmatmul_bias.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.TMATMULMX](bstart_tmatmulmx.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.TMATMULMX.ACC](bstart_tmatmulmx_acc.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.TMATMULMX.BIAS](bstart_tmatmulmx_bias.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.TMOV](bstart_tmov.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.TPREFETCH](bstart_tprefetch.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.TSTORE](bstart_tstore.md) | [Block Split](../groups/block_split.md) | 32 | Stores a register value to memory. |
+| [BSTART.FP](bstart_fp.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.FP](bstart_fp.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.FP](bstart_fp.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.FP](bstart_fp.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.FP](bstart_fp.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.FP](bstart_fp.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.FP](bstart_fp.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.GMOV](bstart_gmov.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.MGATHER](bstart_mgather.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.MGATHER.CAS](bstart_mgather_cas.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.MGATHER.MASK](bstart_mgather_mask.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.MPAR](bstart_mpar.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.MSCATTER](bstart_mscatter.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.MSCATTER.MASK](bstart_mscatter_mask.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.MSEQ](bstart_mseq.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.STD](bstart_std.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.STD](bstart_std.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.STD](bstart_std.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.STD](bstart_std.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.STD](bstart_std.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.STD](bstart_std.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.STD](bstart_std.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.SYS](bstart_sys.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.TEPL](bstart_tepl.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.TGEMV](bstart_tgemv.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.TGEMV.ACC](bstart_tgemv_acc.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.TGEMV.BIAS](bstart_tgemv_bias.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.TGEMVMX](bstart_tgemvmx.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.TGEMVMX.ACC](bstart_tgemvmx_acc.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.TGEMVMX.BIAS](bstart_tgemvmx_bias.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.TLOAD](bstart_tload.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Loads a 64-bit value from memory. |
+| [BSTART.TMATMUL](bstart_tmatmul.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.TMATMUL.ACC](bstart_tmatmul_acc.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.TMATMUL.BIAS](bstart_tmatmul_bias.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.TMATMULMX](bstart_tmatmulmx.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.TMATMULMX.ACC](bstart_tmatmulmx_acc.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.TMATMULMX.BIAS](bstart_tmatmulmx_bias.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.TMOV](bstart_tmov.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.TMOV](bstart_tmov.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.TMOV](bstart_tmov.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.TMOV](bstart_tmov.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.TMOV](bstart_tmov.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.TPREFETCH](bstart_tprefetch.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.TSTORE](bstart_tstore.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Stores a register value to memory. |
+| [BSTART.TSTORE](bstart_tstore.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Stores a register value to memory. |
 | [BSTART.VPAR](bstart_vpar.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.VSEQ](bstart_vseq.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTOP](bstop.md) | [Block Split](../groups/block_split.md) | 32 | Block termination marker. Ends the current basic block. |
+| [BSTOP](bstop.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Block termination marker. Ends the current basic block. |
 | [BWE](bwe.md) | [Execution Control](../groups/execution_control.md) | 32 | Execution control instruction. |
 | [BWI](bwi.md) | [Execution Control](../groups/execution_control.md) | 32 | Execution control instruction. |
 | [BWT](bwt.md) | [Execution Control](../groups/execution_control.md) | 32 | Execution control instruction. |
@@ -114,10 +119,10 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [C.ADD](c_add.md) | [Arithmetic Operation](../groups/arithmetic_operation.md) | 16 | [16-bit C.] Integer addition. |
 | [C.ADDI](c_addi.md) | [Arithmetic](../groups/arithmetic.md) | 16 | [16-bit C.] Instruction from the Arithmetic group. |
 | [C.AND](c_and.md) | [Arithmetic Operation](../groups/arithmetic_operation.md) | 16 | [16-bit C.] Bitwise AND. |
-| [C.B.DIM](c_b_dim.md) | [Block Dimension](../groups/block_dimension.md) | 16 | [16-bit C.] Instruction from the Block Dimension group. |
-| [C.B.DIMI](c_b_dimi.md) | [Block Dimension](../groups/block_dimension.md) | 16 | [16-bit C.] Instruction from the Block Dimension group. |
-| [C.BSTART](c_bstart.md) | [Block Split](../groups/block_split.md) | 16 | [16-bit C.] Terminates the current block and begins the next. |
-| [C.BSTART](c_bstart.md) | [Block Split](../groups/block_split.md) | 16 | [16-bit C.] Terminates the current block and begins the next. |
+| [C.B.DIMI](c_b_dimi.md) | [Bundle Dimension](../groups/bundle_dimension.md) | 16 | [16-bit C.] Instruction from the Bundle Dimension group. |
+| [C.B.IOS](c_b_ios.md) | [Bundle Shared Operand Binding](../groups/bundle_shared_operand_binding.md) | 16 | [16-bit C.] Instruction from the Bundle Shared Operand Binding group. |
+| [C.BSTART](c_bstart.md) | [Bundle Split](../groups/bundle_split.md) | 16 | [16-bit C.] Terminates the current block and begins the next. |
+| [C.BSTART](c_bstart.md) | [Bundle Split](../groups/bundle_split.md) | 16 | [16-bit C.] Terminates the current block and begins the next. |
 | [C.BSTART.FP](c_bstart_fp.md) | [C.BSTART](../groups/c_bstart.md) | 16 | [16-bit C.] Terminates the current block and begins the next. |
 | [C.BSTART.MPAR](c_bstart_mpar.md) | [C.BSTART](../groups/c_bstart.md) | 16 | [16-bit C.] Terminates the current block and begins the next. |
 | [C.BSTART.MSEQ](c_bstart_mseq.md) | [C.BSTART](../groups/c_bstart.md) | 16 | [16-bit C.] Terminates the current block and begins the next. |
@@ -125,7 +130,7 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [C.BSTART.SYS](c_bstart_sys.md) | [C.BSTART](../groups/c_bstart.md) | 16 | [16-bit C.] Terminates the current block and begins the next. |
 | [C.BSTART.VPAR](c_bstart_vpar.md) | [C.BSTART](../groups/c_bstart.md) | 16 | [16-bit C.] Terminates the current block and begins the next. |
 | [C.BSTART.VSEQ](c_bstart_vseq.md) | [C.BSTART](../groups/c_bstart.md) | 16 | [16-bit C.] Terminates the current block and begins the next. |
-| [C.BSTOP](c_bstop.md) | [Block Split](../groups/block_split.md) | 16 | [16-bit C.] Marks the end of the current block. |
+| [C.BSTOP](c_bstop.md) | [Bundle Split](../groups/bundle_split.md) | 16 | [16-bit C.] Marks the end of the current block. |
 | [C.CMP.EQI](c_cmp_eqi.md) | [C.TINST](../groups/c_tinst.md) | 16 | [16-bit C.] Instruction from the C.TINST group. |
 | [C.CMP.NEI](c_cmp_nei.md) | [C.TINST](../groups/c_tinst.md) | 16 | [16-bit C.] Instruction from the C.TINST group. |
 | [C.EBREAK](c_ebreak.md) | [C.TINST](../groups/c_tinst.md) | 16 | [16-bit C.] Instruction from the C.TINST group. |
@@ -197,8 +202,8 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | Mnemonic | Group | Bits | Description |
 |----------|-------|------|-------------|
 | [EBREAK](ebreak.md) | [Execution Control](../groups/execution_control.md) | 32 | Environment break instruction. Traps to the debugging or OS handler. |
-| [ERCOV](ercov.md) | [Block Split](../groups/block_split.md) | 32 | Instruction from the Block Split group. |
-| [ESAVE](esave.md) | [Block Split](../groups/block_split.md) | 32 | Instruction from the Block Split group. |
+| [ERCOV](ercov.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Instruction from the Bundle Split group. |
+| [ESAVE](esave.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Instruction from the Bundle Split group. |
 
 ### F
 
@@ -215,10 +220,10 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [FDIV](fdiv.md) | [Floating-point Arithmetic](../groups/floating_point_arithmetic.md) | 32 | Floating-point division. |
 | [FENCE.D](fence_d.md) | [Execution Control](../groups/execution_control.md) | 32 | Data memory ordering fence. |
 | [FENCE.I](fence_i.md) | [Execution Control](../groups/execution_control.md) | 32 | Instruction-cache fence. Synchronizes instruction fetch with prior stores. |
-| [FENTRY](fentry.md) | [Block Split](../groups/block_split.md) | 32 | Instruction from the Block Split group. |
+| [FENTRY](fentry.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Instruction from the Bundle Split group. |
 | [FEQ](feq.md) | [Floating-point Compare](../groups/floating_point_compare.md) | 32 | Floating-point equality comparison. Writes 1 if ordered and equal. |
 | [FEQS](feqs.md) | [Floating-point Compare](../groups/floating_point_compare.md) | 32 | Instruction from the Floating-point Compare group. |
-| [FEXIT](fexit.md) | [Block Split](../groups/block_split.md) | 32 | Instruction from the Block Split group. |
+| [FEXIT](fexit.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Instruction from the Bundle Split group. |
 | [FEXP](fexp.md) | [Floating-point Arithmetic](../groups/floating_point_arithmetic.md) | 32 | Instruction from the Floating-point Arithmetic group. |
 | [FGE](fge.md) | [Floating-point Compare](../groups/floating_point_compare.md) | 32 | Floating-point greater-or-equal comparison (ordered). |
 | [FGES](fges.md) | [Floating-point Compare](../groups/floating_point_compare.md) | 32 | Instruction from the Floating-point Compare group. |
@@ -234,8 +239,8 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [FNMADD](fnmadd.md) | [Floating-point Arithmetic](../groups/floating_point_arithmetic.md) | 32 | Instruction from the Floating-point Arithmetic group. |
 | [FNMSUB](fnmsub.md) | [Floating-point Arithmetic](../groups/floating_point_arithmetic.md) | 32 | Instruction from the Floating-point Arithmetic group. |
 | [FRECIP](frecip.md) | [Floating-point Arithmetic](../groups/floating_point_arithmetic.md) | 32 | Instruction from the Floating-point Arithmetic group. |
-| [FRET.RA](fret_ra.md) | [Block Split](../groups/block_split.md) | 32 | Instruction from the Block Split group. |
-| [FRET.STK](fret_stk.md) | [Block Split](../groups/block_split.md) | 32 | Instruction from the Block Split group. |
+| [FRET.RA](fret_ra.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Instruction from the Bundle Split group. |
+| [FRET.STK](fret_stk.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Instruction from the Bundle Split group. |
 | [FSQRT](fsqrt.md) | [Floating-point Arithmetic](../groups/floating_point_arithmetic.md) | 32 | Floating-point square root. |
 | [FSUB](fsub.md) | [Floating-point Arithmetic](../groups/floating_point_arithmetic.md) | 32 | Floating-point subtraction. |
 
@@ -528,10 +533,10 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [MADDW](maddw.md) | [Multi-Cycle ALU](../groups/multi_cycle_alu.md) | 32 | 32-bit word multiply-add. |
 | [MAX](max.md) | [Max-Min](../groups/max_min.md) | 32 | Integer max (signed). |
 | [MAXU](maxu.md) | [Max-Min](../groups/max_min.md) | 32 | Instruction from the Max-Min group. |
-| [MCOPY](mcopy.md) | [Block Split](../groups/block_split.md) | 32 | Instruction from the Block Split group. |
+| [MCOPY](mcopy.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Instruction from the Bundle Split group. |
 | [MIN](min.md) | [Max-Min](../groups/max_min.md) | 32 | Integer min (signed). |
 | [MINU](minu.md) | [Max-Min](../groups/max_min.md) | 32 | Instruction from the Max-Min group. |
-| [MSET](mset.md) | [Block Split](../groups/block_split.md) | 32 | Instruction from the Block Split group. |
+| [MSET](mset.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Instruction from the Bundle Split group. |
 | [MUL](mul.md) | [Multi-Cycle ALU](../groups/multi_cycle_alu.md) | 32 | Integer multiply (lower product written to destination). |
 | [MULU](mulu.md) | [Multi-Cycle ALU](../groups/multi_cycle_alu.md) | 32 | Integer multiply (unsigned). |
 | [MULUW](muluw.md) | [Multi-Cycle ALU](../groups/multi_cycle_alu.md) | 32 | 32-bit word integer multiply (unsigned). |
@@ -856,7 +861,7 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 
 | Mnemonic | Group | Bits | Description |
 |----------|-------|------|-------------|
-| [XB](xb.md) | [Block Split](../groups/block_split.md) | 32 | Instruction from the Block Split group. |
+| [XB](xb.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Instruction from the Bundle Split group. |
 | [XOR](xor.md) | [Arithmetic Operation 64bit](../groups/arithmetic_operation_64bit.md) | 32 | Bitwise XOR of two registers. |
 | [XORI](xori.md) | [Arithmetic Operation 64bit](../groups/arithmetic_operation_64bit.md) | 32 | Bitwise XOR with an immediate. |
 | [XORIW](xoriw.md) | [Arithmetic Operation 32bit](../groups/arithmetic_operation_32bit.md) | 32 | 32-bit word XOR-immediate. |

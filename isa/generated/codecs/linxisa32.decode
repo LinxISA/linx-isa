@@ -232,109 +232,118 @@ bstart_fp_32_eb33ff25b92a .... .... .... .... .100 0001 0000 0001 %simm17
 # BSTART.FP | BSTART.FP COND, <label> | opcodes/lx_32.opc:301
 bstart_fp_32_ed54a0ac3b7a .... .... .... .... .011 0001 0000 0001 %simm17
 
-# BSTART.GMOV | BSTART.GMOV DataType | opcodes/lx_32.opc:337
+# BSTART.GMOV | BSTART.GMOV DataType | opcodes/lx_32.opc:340
 bstart_gmov_32_ccfcf9904850 .... .000 1101 0001 0001 0001 1000 0001 DataType=%DataType_27_5
 
 # BSTART.MGATHER | BSTART.MGATHER DataType | opcodes/lx_32.opc:306
 bstart_mgather_32_477b2795765c .... .000 0100 0001 0001 0001 1000 0001 DataType=%DataType_27_5
 
-# BSTART.MPAR | BSTART.MPAR <VS8, VS16> | opcodes/lx_32.opc:307
+# BSTART.MGATHER.CAS | BSTART.MGATHER.CAS DataType | opcodes/lx_32.opc:307
+bstart_mgather_cas_32_74d282c28e52 .... .000 1000 0001 0001 0001 1000 0001 DataType=%DataType_27_5
+
+# BSTART.MGATHER.MASK | BSTART.MGATHER.MASK DataType | opcodes/lx_32.opc:308
+bstart_mgather_mask_32_c53a0033eb26 .... .000 0110 0001 0001 0001 1000 0001 DataType=%DataType_27_5
+
+# BSTART.MPAR | BSTART.MPAR <VS8, VS16> | opcodes/lx_32.opc:310
 bstart_mpar_32_beccb0565e7d 0000 0..0 0000 0000 0001 0001 1000 0001 %Mode
 
-# BSTART.MSCATTER | BSTART.MSCATTER DataType | opcodes/lx_32.opc:308
+# BSTART.MSCATTER | BSTART.MSCATTER DataType | opcodes/lx_32.opc:311
 bstart_mscatter_32_7f76f632a75f .... .000 0101 0001 0001 0001 1000 0001 DataType=%DataType_27_5
 
-# BSTART.MSEQ | BSTART.MSEQ <VS8, VS16> | opcodes/lx_32.opc:309
+# BSTART.MSCATTER.MASK | BSTART.MSCATTER.MASK DataType | opcodes/lx_32.opc:309
+bstart_mscatter_mask_32_6037e1cd885f .... .000 0111 0001 0001 0001 1000 0001 DataType=%DataType_27_5
+
+# BSTART.MSEQ | BSTART.MSEQ <VS8, VS16> | opcodes/lx_32.opc:312
 bstart_mseq_32_2cdcceaf89d4 0000 0..0 0000 0000 1001 0001 1000 0001 %Mode
 
-# BSTART.STD | BSTART.STD IND | opcodes/lx_32.opc:314
+# BSTART.STD | BSTART.STD IND | opcodes/lx_32.opc:317
 bstart_std_32_49f2c6a8906f 0000 0000 0000 0000 0101 0000 0000 0001
 
-# BSTART.STD | BSTART.STD COND, <label> | opcodes/lx_32.opc:310
+# BSTART.STD | BSTART.STD COND, <label> | opcodes/lx_32.opc:313
 bstart_std_32_696f98ac4bf1 .... .... .... .... .011 0000 0000 0001 %simm17
 
-# BSTART.STD | BSTART.STD RET | opcodes/lx_32.opc:313
+# BSTART.STD | BSTART.STD RET | opcodes/lx_32.opc:316
 bstart_std_32_7876537dce06 0000 0000 0000 0000 0111 0000 0000 0001
 
-# BSTART.STD | BSTART.STD CALL, <label> | opcodes/lx_32.opc:315
+# BSTART.STD | BSTART.STD CALL, <label> | opcodes/lx_32.opc:318
 bstart_std_32_97d38b7be05e .... .... .... .... .100 0000 0000 0001 %simm17
 
-# BSTART.STD | BSTART.STD FALL<, fixup_label> | opcodes/lx_32.opc:312
+# BSTART.STD | BSTART.STD FALL<, fixup_label> | opcodes/lx_32.opc:315
 bstart_std_32_a5103b49e336 .... .... .... .... .001 0000 0000 0001 %simm17
 
-# BSTART.STD | BSTART.STD ICALL | opcodes/lx_32.opc:311
+# BSTART.STD | BSTART.STD ICALL | opcodes/lx_32.opc:314
 bstart_std_32_c386430b732a 0000 0000 0000 0000 0110 0000 0000 0001
 
-# BSTART.STD | BSTART.STD DIRECT, <label> | opcodes/lx_32.opc:316
+# BSTART.STD | BSTART.STD DIRECT, <label> | opcodes/lx_32.opc:319
 bstart_std_32_d3733f87964d .... .... .... .... .010 0000 0000 0001 %simm17
 
-# BSTART.SYS | BSTART.SYS FALL<, fixup_label> | opcodes/lx_32.opc:317
+# BSTART.SYS | BSTART.SYS FALL<, fixup_label> | opcodes/lx_32.opc:320
 bstart_sys_32_7220989624e7 .... .... .... .... .001 0000 1000 0001 %simm17
 
-# BSTART.TEPL | BSTART.TEPL Mode, Function, DataType | opcodes/lx_32.opc:318
+# BSTART.TEPL | BSTART.TEPL Mode, Function, DataType | opcodes/lx_32.opc:321
 bstart_tepl_32_f0754cf51a8d .... .... .... 0001 1001 0001 1000 0001 DataType=%DataType_27_5 %Function %Mode
 
-# BSTART.TGEMV | BSTART.TGEMV DataType | opcodes/lx_32.opc:319
+# BSTART.TGEMV | BSTART.TGEMV DataType | opcodes/lx_32.opc:322
 bstart_tgemv_32_5793d27aa023 .... .001 0000 0011 0001 0001 1000 0001 DataType=%DataType_27_5
 
-# BSTART.TGEMV.ACC | BSTART.TGEMV.ACC DataType | opcodes/lx_32.opc:320
+# BSTART.TGEMV.ACC | BSTART.TGEMV.ACC DataType | opcodes/lx_32.opc:323
 bstart_tgemv_acc_32_d95ec8489341 .... .001 0010 0011 0001 0001 1000 0001 DataType=%DataType_27_5
 
-# BSTART.TGEMV.BIAS | BSTART.TGEMV.BIAS DataType | opcodes/lx_32.opc:321
+# BSTART.TGEMV.BIAS | BSTART.TGEMV.BIAS DataType | opcodes/lx_32.opc:324
 bstart_tgemv_bias_32_98ff0e3b4e7b .... .001 0001 0011 0001 0001 1000 0001 DataType=%DataType_27_5
 
-# BSTART.TGEMVMX | BSTART.TGEMVMX DataType | opcodes/lx_32.opc:322
+# BSTART.TGEMVMX | BSTART.TGEMVMX DataType | opcodes/lx_32.opc:325
 bstart_tgemvmx_32_a6083394d51a .... .001 0100 0011 0001 0001 1000 0001 DataType=%DataType_27_5
 
-# BSTART.TGEMVMX.ACC | BSTART.TGEMVMX.ACC DataType | opcodes/lx_32.opc:323
+# BSTART.TGEMVMX.ACC | BSTART.TGEMVMX.ACC DataType | opcodes/lx_32.opc:326
 bstart_tgemvmx_acc_32_750196820fcf .... .001 0110 0011 0001 0001 1000 0001 DataType=%DataType_27_5
 
-# BSTART.TGEMVMX.BIAS | BSTART.TGEMVMX.BIAS DataType | opcodes/lx_32.opc:324
+# BSTART.TGEMVMX.BIAS | BSTART.TGEMVMX.BIAS DataType | opcodes/lx_32.opc:327
 bstart_tgemvmx_bias_32_efccafe36069 .... .001 0101 0011 0001 0001 1000 0001 DataType=%DataType_27_5
 
-# BSTART.TLOAD | BSTART.TLOAD DataType | opcodes/lx_32.opc:325
+# BSTART.TLOAD | BSTART.TLOAD DataType | opcodes/lx_32.opc:328
 bstart_tload_32_5178a1794614 .... .000 0000 0001 0001 0001 1000 0001 DataType=%DataType_27_5
 
-# BSTART.TMATMUL | BSTART.TMATMUL DataType | opcodes/lx_32.opc:326
+# BSTART.TMATMUL | BSTART.TMATMUL DataType | opcodes/lx_32.opc:329
 bstart_tmatmul_32_3bb582723869 .... .000 0000 0011 0001 0001 1000 0001 DataType=%DataType_27_5
 
-# BSTART.TMATMUL.ACC | BSTART.TMATMUL.ACC DataType | opcodes/lx_32.opc:327
+# BSTART.TMATMUL.ACC | BSTART.TMATMUL.ACC DataType | opcodes/lx_32.opc:330
 bstart_tmatmul_acc_32_e0bbf989304d .... .000 0010 0011 0001 0001 1000 0001 DataType=%DataType_27_5
 
-# BSTART.TMATMUL.BIAS | BSTART.TMATMUL.BIAS DataType | opcodes/lx_32.opc:328
+# BSTART.TMATMUL.BIAS | BSTART.TMATMUL.BIAS DataType | opcodes/lx_32.opc:331
 bstart_tmatmul_bias_32_82792b6c3b84 .... .000 0001 0011 0001 0001 1000 0001 DataType=%DataType_27_5
 
-# BSTART.TMATMULMX | BSTART.TMATMULMX DataType | opcodes/lx_32.opc:329
+# BSTART.TMATMULMX | BSTART.TMATMULMX DataType | opcodes/lx_32.opc:332
 bstart_tmatmulmx_32_4df63f33e364 .... .000 0100 0011 0001 0001 1000 0001 DataType=%DataType_27_5
 
-# BSTART.TMATMULMX.ACC | BSTART.TMATMULMX.ACC DataType | opcodes/lx_32.opc:330
+# BSTART.TMATMULMX.ACC | BSTART.TMATMULMX.ACC DataType | opcodes/lx_32.opc:333
 bstart_tmatmulmx_acc_32_3848afaeabdd .... .000 0110 0011 0001 0001 1000 0001 DataType=%DataType_27_5
 
-# BSTART.TMATMULMX.BIAS | BSTART.TMATMULMX.BIAS DataType | opcodes/lx_32.opc:331
+# BSTART.TMATMULMX.BIAS | BSTART.TMATMULMX.BIAS DataType | opcodes/lx_32.opc:334
 bstart_tmatmulmx_bias_32_5b20d174f5d9 .... .000 0101 0011 0001 0001 1000 0001 DataType=%DataType_27_5
 
-# BSTART.TMOV | BSTART.TMOV DataType | opcodes/lx_32.opc:332
+# BSTART.TMOV | BSTART.TMOV DataType | opcodes/lx_32.opc:335
 bstart_tmov_32_3079328b98d6 .... .000 0010 0001 0001 0001 1000 0001 DataType=%DataType_27_5
 
-# BSTART.TMOV | BSTART.TMOV DataType | opcodes/lx_32.opc:335
+# BSTART.TMOV | BSTART.TMOV DataType | opcodes/lx_32.opc:337
 bstart_tmov_32_34d0ab432974 .... .000 1010 0001 0001 0001 1000 0001 DataType=%DataType_27_5
 
-# BSTART.TMOV | BSTART.TMOV DataType | opcodes/lx_32.opc:333
-bstart_tmov_32_68c4ed390b75 .... .000 1000 0001 0001 0001 1000 0001 DataType=%DataType_27_5
+# BSTART.TMOV | BSTART.TMOV DataType | opcodes/lx_32.opc:339
+bstart_tmov_32_472804576301 .... .000 1100 0001 0001 0001 1000 0001 DataType=%DataType_27_5
 
-# BSTART.TMOV | BSTART.TMOV DataType | opcodes/lx_32.opc:336
+# BSTART.TMOV | BSTART.TMOV DataType | opcodes/lx_32.opc:338
 bstart_tmov_32_d96181e99f01 .... .000 1011 0001 0001 0001 1000 0001 DataType=%DataType_27_5
 
-# BSTART.TMOV | BSTART.TMOV DataType | opcodes/lx_32.opc:334
+# BSTART.TMOV | BSTART.TMOV DataType | opcodes/lx_32.opc:336
 bstart_tmov_32_efe5c49fcb78 .... .000 1001 0001 0001 0001 1000 0001 DataType=%DataType_27_5
 
-# BSTART.TPREFETCH | BSTART.TPREFETCH DataType | opcodes/lx_32.opc:338
+# BSTART.TPREFETCH | BSTART.TPREFETCH DataType | opcodes/lx_32.opc:341
 bstart_tprefetch_32_3c9e83c5a42f .... .000 0011 0001 0001 0001 1000 0001 DataType=%DataType_27_5
 
-# BSTART.TSTORE | BSTART.TSTORE DataType | opcodes/lx_32.opc:340
-bstart_tstore_32_6f6869479814 .... .000 1100 0001 0001 0001 1000 0001 DataType=%DataType_27_5
+# BSTART.TSTORE | BSTART.TSTORE DataType | opcodes/lx_32.opc:343
+bstart_tstore_32_6bed4bf0e415 .... .000 1110 0001 0001 0001 1000 0001 DataType=%DataType_27_5
 
-# BSTART.TSTORE | BSTART.TSTORE DataType | opcodes/lx_32.opc:339
+# BSTART.TSTORE | BSTART.TSTORE DataType | opcodes/lx_32.opc:342
 bstart_tstore_32_d592de9e15a8 .... .000 0001 0001 0001 0001 1000 0001 DataType=%DataType_27_5
 
 # BSTART.VPAR | BSTART.VPAR <VS8, VS16> | opcodes/lx_32.opc:44
@@ -343,7 +352,7 @@ bstart_vpar_32_8998d3fa51f8 0000 0..0 0000 0010 0001 0001 1000 0001 %Mode
 # BSTART.VSEQ | BSTART.VSEQ <VS8, VS16> | opcodes/lx_32.opc:45
 bstart_vseq_32_9324064902ae 0000 0..0 0000 0010 1001 0001 1000 0001 %Mode
 
-# BSTOP | BSTOP | opcodes/lx_32.opc:341
+# BSTOP | BSTOP | opcodes/lx_32.opc:344
 bstop_32_1c80341ebaa2 0000 0000 0000 0000 0000 0000 0000 0001
 
 # BWE | bwe SrcL | opcodes/lx_32.opc:46
@@ -472,10 +481,10 @@ dma_32_a168aeca5fa5 0000 000. .... .... .111 0000 0000 1011 %SrcL %SrcR
 # EBREAK | ebreak imm | opcodes/lx_32.opc:87
 ebreak_32_4f122d1e6be3 0000 .... 0001 0000 0001 0000 0010 1011 %imm4
 
-# ERCOV | ERCOV [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind] | opcodes/lx_32.opc:342
+# ERCOV | ERCOV [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind] | opcodes/lx_32.opc:345
 ercov_32_9b0c74795df0 .... .00. .... .... .011 0000 0011 0001 %RegSrc0 %RegSrc1 %RegSrc2
 
-# ESAVE | ESAVE [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind] | opcodes/lx_32.opc:343
+# ESAVE | ESAVE [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind] | opcodes/lx_32.opc:346
 esave_32_c85cb830dc0b .... .00. .... .... .010 0000 0011 0001 %RegSrc0 %RegSrc1 %RegSrc2
 
 # FABS | fabs.{T} SrcL, ->{t, u, Rd} | opcodes/lx_32.opc:88
@@ -511,7 +520,7 @@ fence_d_32_f4783f17d84d 0000 .... .... 0000 0010 0000 0010 1011 %PRED_IMM %SUCC_
 # FENCE.I | fence.i | opcodes/lx_32.opc:98
 fence_i_32_a321a2a186b1 0001 0000 0000 0000 0010 0000 0010 1011
 
-# FENTRY | FENTRY [RegSrc0 ~ RegSrcn], sp!, uimm | opcodes/lx_32.opc:344
+# FENTRY | FENTRY [RegSrc0 ~ RegSrcn], sp!, uimm | opcodes/lx_32.opc:347
 fentry_32_74a07f46d846 .... .... .... .... .000 .... .100 0001 %SrcBegin %SrcEnd %uimm
 
 # FEQ | feq.{T} SrcL, SrcR, ->{t, u, Rd} | opcodes/lx_32.opc:99
@@ -520,7 +529,7 @@ feq_32_9435d6959c3c 0000 0... .... .... .000 .... .101 1011 %RegDst %SrcL %SrcR 
 # FEQS | feqs.{T} SrcL, SrcR, ->{t, u, Rd} | opcodes/lx_32.opc:100
 feqs_32_1d3011890fa8 0000 1... .... .... .000 .... .101 1011 %RegDst %SrcL %SrcR %SrcType
 
-# FEXIT | FEXIT [RegDst0 ~ RegDstn], sp!, uimm | opcodes/lx_32.opc:345
+# FEXIT | FEXIT [RegDst0 ~ RegDstn], sp!, uimm | opcodes/lx_32.opc:348
 fexit_32_6492f41b2239 .... .... .... .... .001 .... .100 0001 %DstBegin %DstEnd %uimm
 
 # FEXP | fexp.{T} SrcL, ->{t, u, Rd} | opcodes/lx_32.opc:101
@@ -568,10 +577,10 @@ fnmsub_32_6542d56665b3 .... .... .... .... .111 .... .100 1011 %RegDst %SrcA %Sr
 # FRECIP | frecip.{T} SrcL, ->{t, u, Rd} | opcodes/lx_32.opc:115
 frecip_32_3d51f4f727ea 0000 0..0 0000 .... .010 .... .111 1011 %RegDst %SrcL %SrcType
 
-# FRET.RA | FRET.RA [RegDst0 ~ RegDstn], sp!, uimm | opcodes/lx_32.opc:346
+# FRET.RA | FRET.RA [RegDst0 ~ RegDstn], sp!, uimm | opcodes/lx_32.opc:349
 fret_ra_32_b6f13adb3ea1 .... .... .... .... .010 .... .100 0001 %DstBegin %DstEnd %uimm
 
-# FRET.STK | FRET.STK [RegDst0 ~ RegDstn], sp!, uimm | opcodes/lx_32.opc:347
+# FRET.STK | FRET.STK [RegDst0 ~ RegDstn], sp!, uimm | opcodes/lx_32.opc:350
 fret_stk_32_4522597d3ce0 .... .... .... .... .011 .... .100 0001 %DstBegin %DstEnd %uimm
 
 # FSQRT | fsqrt.{T} SrcL, ->{t, u, Rd} | opcodes/lx_32.opc:116
@@ -748,7 +757,7 @@ max_32_9166468a1db7 0000 000. .... .... .100 .... .101 1011 %RegDst %SrcL %SrcR
 # MAXU | maxu SrcL, SrcR, ->{t, u, Rd} | opcodes/lx_32.opc:173
 maxu_32_b8789571339d 0000 100. .... .... .100 .... .101 1011 %RegDst %SrcL %SrcR
 
-# MCOPY | MCOPY [RegSrc0, RegSrc1, RegSrc2] | opcodes/lx_32.opc:348
+# MCOPY | MCOPY [RegSrc0, RegSrc1, RegSrc2] | opcodes/lx_32.opc:351
 mcopy_32_10262506ace5 .... .00. .... .... .000 0000 0011 0001 %RegSrc0 %RegSrc1 %RegSrc2
 
 # MIN | min SrcL, SrcR, ->{t, u, Rd} | opcodes/lx_32.opc:174
@@ -757,7 +766,7 @@ min_32_25692b799267 0000 000. .... .... .101 .... .101 1011 %RegDst %SrcL %SrcR
 # MINU | minu SrcL, SrcR, ->{t, u, Rd} | opcodes/lx_32.opc:175
 minu_32_9bdb71ef7b19 0000 100. .... .... .101 .... .101 1011 %RegDst %SrcL %SrcR
 
-# MSET | MSET [RegSrc0, RegSrc1, RegSrc2] | opcodes/lx_32.opc:349
+# MSET | MSET [RegSrc0, RegSrc1, RegSrc2] | opcodes/lx_32.opc:352
 mset_32_7a5f3c26ac6b .... .00. .... .... .001 0000 0011 0001 %RegSrc0 %RegSrc1 %RegSrc2
 
 # MUL | mul SrcL, SrcR, ->{t, u, Rd} | opcodes/lx_32.opc:176
@@ -1060,7 +1069,7 @@ tlb_iv_32_bf0a5d1ea211 0000 0000 0001 .... .111 0000 0010 1011 %SrcL
 # UCVTF | ucvtf.{srcT2dstT} SrcL, ->{t, u, Rd} | opcodes/lx_32.opc:275
 ucvtf_32_987f4e019c32 .... ...0 0000 .... .111 .... .110 1011 %DstType %RegDst %SrcL %SrcType
 
-# XB | XB ACR-ID, C-ID | opcodes/lx_32.opc:350
+# XB | XB ACR-ID, C-ID | opcodes/lx_32.opc:353
 xb_32_1c3043ef6fa8 .... .... .... .... .110 1111 1000 0001 %ACR_ID %CROSS_BID
 
 # XOR | xor SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd} | opcodes/lx_32.opc:276

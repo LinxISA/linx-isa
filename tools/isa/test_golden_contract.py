@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Focused regression checks for the standalone v0.57 ISA contract."""
+"""Focused regression checks for the retained standalone v0.57 ISA contract."""
 
 from __future__ import annotations
 
@@ -192,12 +192,6 @@ def main() -> int:
     ) == (0xFBF07FFF, 0x00000023)
     trace_hint = next(inst for inst in instructions if inst["asm"] == "B.HINT TRACE.{begin, end}")
     assert int(trace_hint["encoding"]["parts"][0]["mask"], 0) == 0xFFFF7FFF
-
-    status = json.loads((ROOT / "isa/sail/semantics_status.json").read_text(encoding="utf-8"))
-    assert set(form_ids) == set(status["forms"])
-    assert {
-        entry["status"] for entry in status["forms"].values()
-    } <= {"decode-only", "executable-subset", "architecturally-complete"}
 
     frame = spec["semantics_conventions"]["frame_templates_r975"]
     assert frame["applies_to"] == ["FENTRY", "FEXIT", "FRET.RA", "FRET.STK"]

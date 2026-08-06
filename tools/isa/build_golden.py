@@ -510,7 +510,7 @@ def _attach_pto_source_form_ids(in_dir: Path, instructions: List[Dict[str, Any]]
         (in_dir / "state" / "pto_scalar_forms.json", 474),
         (
             in_dir / "state" / "pto_command_forms.json",
-            96 if in_dir.name == "v0.58" else 99,
+            99,
         ),
     )
 

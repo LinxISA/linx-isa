@@ -39,6 +39,32 @@ class ReportQemuIsaCoverageTests(unittest.TestCase):
             ],
         )
 
+    def test_v058_tlsu_reserved_selector_family_stays_outside_legal_forms(self) -> None:
+        families = coverage._reserved_encoding_families(
+            {
+                "state": {
+                    "engine_ops": {
+                        "tlsu": {
+                            "reserved_function_ranges": [[15, 31]],
+                            "reserved_behavior": "illegal_instruction",
+                        }
+                    }
+                }
+            }
+        )
+        self.assertEqual(
+            families,
+            [
+                {
+                    "family": "TLSU",
+                    "selector_field": "Function",
+                    "reserved_range": [15, 31],
+                    "reserved_value_count": 17,
+                    "behavior": "illegal_instruction",
+                }
+            ],
+        )
+
     def test_checked_in_l2_l3_counts_match_executable_ledger(self) -> None:
         root = Path(__file__).resolve().parents[2]
         executable = json.loads(

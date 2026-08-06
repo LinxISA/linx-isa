@@ -2,57 +2,57 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/block_hint.md">Block Hint</a> &nbsp;|&nbsp;
-<span class="ch-tag ch-tag-17">Ch 17</span>
-&nbsp; <strong>CMD — Command and Control</strong> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/bundle_hint.md">Bundle Hint</a> &nbsp;|&nbsp;
+<span class="ch-tag ch-tag-00">Ch 00</span>
+&nbsp; <strong>ISA Manual</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
 
 </div>
 
 ## Assembly Syntax
 
-- `B.HINT {BR.{likely, unlikely}, TEMP.{hot, warm, cool, none}, PRFSIZE}`
 - `B.HINT TRACE.{begin, end}`
+- `B.HINT {BR.{likely, unlikely}, TEMP.{hot, warm, cool, none}, PRFSIZE}`
 
 ## Encoding
 
 <div class="enc-diagram">
 
-<figure id="encoding-b_hint_32_69d942ff1583">
-<img src="../wavedrom/enc_b_hint_32_69d942ff1583.svg" alt="B.HINT encoding form b_hint_32_69d942ff1583" width="100%" />
-<figcaption><code>b_hint_32_69d942ff1583</code> — <code>B.HINT {BR.{likely, unlikely}, TEMP.{hot, warm, cool, none}, PRFSIZE}</code>. MSB is on the left, LSB is on the right.</figcaption>
+<figure id="encoding-b_hint_32_67e2ad8dd981">
+<img src="../wavedrom/enc_b_hint_32_67e2ad8dd981.svg" alt="B.HINT encoding form b_hint_32_67e2ad8dd981" width="100%" />
+<figcaption><code>b_hint_32_67e2ad8dd981</code> — <code>B.HINT TRACE.{begin, end}</code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
-<figure id="encoding-b_hint_32_f7d01d734925">
-<img src="../wavedrom/enc_b_hint_32_f7d01d734925.svg" alt="B.HINT encoding form b_hint_32_f7d01d734925" width="100%" />
-<figcaption><code>b_hint_32_f7d01d734925</code> — <code>B.HINT TRACE.{begin, end}</code>. MSB is on the left, LSB is on the right.</figcaption>
+<figure id="encoding-b_hint_32_b3e8a4e77930">
+<img src="../wavedrom/enc_b_hint_32_b3e8a4e77930.svg" alt="B.HINT encoding form b_hint_32_b3e8a4e77930" width="100%" />
+<figcaption><code>b_hint_32_b3e8a4e77930</code> — <code>B.HINT {BR.{likely, unlikely}, TEMP.{hot, warm, cool, none}, PRFSIZE}</code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
 </div>
 
 ## Description
 
-Instruction from the Block Hint group.
+Instruction from the Bundle Hint group.
 
 ## Pseudocode (informative)
 
 ```c
-// Execute B.HINT as defined by the Block Hint semantics.
+// Execute B.HINT as defined by the Bundle Hint semantics.
 ```
 
 ## Encoding Notes
 
-- `Bits 31:16 are reserved zero.`
+- `Records non-functional branch, temperature, prefetch-size, or trace guidance.`
 
 ## Full Catalog Forms
 
 | Form ID | Assembly | Length | Decode | Encoding |
 |---------|----------|--------|--------|----------|
-| `b_hint_32_69d942ff1583` | `B.HINT {BR.{likely, unlikely}, TEMP.{hot, warm, cool, none}, PRFSIZE}` | 32 | — | [SVG](../wavedrom/enc_b_hint_32_69d942ff1583.svg) |
-| `b_hint_32_f7d01d734925` | `B.HINT TRACE.{begin, end}` | 32 | — | [SVG](../wavedrom/enc_b_hint_32_f7d01d734925.svg) |
+| `b_hint_32_67e2ad8dd981` | `B.HINT TRACE.{begin, end}` | 32 | — | [SVG](../wavedrom/enc_b_hint_32_67e2ad8dd981.svg) |
+| `b_hint_32_b3e8a4e77930` | `B.HINT {BR.{likely, unlikely}, TEMP.{hot, warm, cool, none}, PRFSIZE}` | 32 | — | [SVG](../wavedrom/enc_b_hint_32_b3e8a4e77930.svg) |
 
 <div class="insn-nav">
 
-← [Block Hint](../groups/block_hint.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [Bundle Hint](../groups/bundle_hint.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

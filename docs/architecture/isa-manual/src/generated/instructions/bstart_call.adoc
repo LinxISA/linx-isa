@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.CALL <br_label>, <rt_label>, ->ra
 
-*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+*Description:* Atomic fused CALL: call_target = P + (SignExtend(simm12) << 1); ra = (P + 2) + (ZeroExtend(uimm5) << 1). Both labels are explicit and independently relocatable.
 
 *Encoding:*
 

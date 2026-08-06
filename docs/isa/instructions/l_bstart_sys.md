@@ -36,7 +36,7 @@ Instruction from the BSTART group.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.`
 
 ## Full Catalog Forms
 

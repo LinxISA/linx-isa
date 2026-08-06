@@ -20,14 +20,14 @@ TEPL plays the role of **Core Execution Unit (EU)** in the computing pipeline, f
                               ↑
                       [控制] 核心调度器 (指令派发)
 ```
-* **Input and output:** Its operand source and result destination are mainly **Tile register array**. It does not directly manage data movement (that is the responsibility of the TMA), but focuses on performing calculations on Tile data residing in registers.
-* **Cooperation:** Relies on the Data Movement Block (TMA) to efficiently load data from memory into Tile registers; after calculations are completed, the results are typically written back to memory by the TMA or used by other blocks (including TEPL itself for subsequent instructions).
+* **Input and output:** Its operand source and result destination are mainly the **Tile register array**. It does not directly manage system-memory movement (that is the responsibility of TLSU), but focuses on calculations on resident Tile data.
+* **Cooperation:** Relies on TLSU to load data from memory into Tile registers; after calculations, results may be written back by TLSU or consumed by other Tile operations.
 * **Control method:** The core control logic/scheduler starts its corresponding internal **hardened functional unit** to perform specific computing tasks by dispatching **TEPL instructions**.
 
 ## block type Features* **Core role**: **Dedicated, hardware-solidified parallel computing engine**.
 * **Operation object**: Mainly perform operations on the data block stored in the **Tile register**.
 * **execution mechanism**: **No microinstruction layer**. Instructions are mapped directly to internal predefined **hardened functional units** for execution, achieving ultra-low latency and high throughput.
 * **Functional Scope**: Covers the key primitives of tensor calculations: vectorized arithmetic/logic/comparison, basic mathematical functions, scalar fusion calculations, along-axis reduction and broadcasting.
-* **Data Movement**: **Does not access system memory directly**. Data input/output all work together with the data handling block (TMA) through the Tile register array and global register GGPR.
+* **Data Movement**: **Does not access system memory directly**. Data input/output cooperate with TLSU through the Tile register array and global register GGPR.
 * **Performance Critical**: Provides **deterministic, high-performance acceleration** for common computing patterns on Tile data blocks by eliminating microinstruction overhead and leveraging dedicated hardware circuitry.
 * **Jump method**: Only supports Fall extension.

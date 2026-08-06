@@ -29,14 +29,14 @@ image::encodings/enc_bstart_tmov_32_34d0ab432974.svg[BSTART.TMOV encoding form b
 
 *Compression:* L32 (len=32)
 
-[[inst_bstart_tmov_32_68c4ed390b75]]
-===== Form `bstart_tmov_32_68c4ed390b75`
+[[inst_bstart_tmov_32_472804576301]]
+===== Form `bstart_tmov_32_472804576301`
 
 *Syntax:* BSTART.TMOV DataType
 
 *Encoding:*
 
-image::encodings/enc_bstart_tmov_32_68c4ed390b75.svg[BSTART.TMOV encoding form bstart_tmov_32_68c4ed390b75,width=800]
+image::encodings/enc_bstart_tmov_32_472804576301.svg[BSTART.TMOV encoding form bstart_tmov_32_472804576301,width=800]
 
 *Compression:* L32 (len=32)
 

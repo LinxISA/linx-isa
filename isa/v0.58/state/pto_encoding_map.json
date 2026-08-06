@@ -9,11 +9,11 @@
     "legacy_decode_allowed": false,
     "source_aliases_are_migration_only": false
   },
-  "entry_count": 106,
+  "entry_count": 109,
   "family_counts": {
     "CUBE": 12,
     "TEPL": 87,
-    "TMA": 7
+    "TLSU": 10
   },
   "migration_aliases": {},
   "entries": [
@@ -768,12 +768,12 @@
       "contract_status": "reviewed-complete"
     },
     {
-      "name": "TRANDOM",
+      "name": "THISTOGRAM",
       "family": "TEPL",
       "command_mnemonic": "BSTART.TEPL",
-      "selector": "0x069",
+      "selector": "0x068",
       "mode": 3,
-      "function": 9,
+      "function": 8,
       "disposition": "accepted-direct-operation",
       "contract_status": "reviewed-complete"
     },
@@ -798,7 +798,7 @@
       "contract_status": "reviewed-complete"
     },
     {
-      "name": "TSORT32",
+      "name": "TSORT",
       "family": "TEPL",
       "command_mnemonic": "BSTART.TEPL",
       "selector": "0x06C",
@@ -889,7 +889,7 @@
     },
     {
       "name": "TLOAD",
-      "family": "TMA",
+      "family": "TLSU",
       "command_mnemonic": "BSTART.TLOAD",
       "selector": null,
       "mode": null,
@@ -899,7 +899,7 @@
     },
     {
       "name": "TSTORE",
-      "family": "TMA",
+      "family": "TLSU",
       "command_mnemonic": "BSTART.TSTORE",
       "selector": null,
       "mode": null,
@@ -909,7 +909,7 @@
     },
     {
       "name": "TMOV",
-      "family": "TMA",
+      "family": "TLSU",
       "command_mnemonic": "BSTART.TMOV",
       "selector": null,
       "mode": null,
@@ -919,7 +919,7 @@
     },
     {
       "name": "TPREFETCH",
-      "family": "TMA",
+      "family": "TLSU",
       "command_mnemonic": "BSTART.TPREFETCH",
       "selector": null,
       "mode": null,
@@ -929,7 +929,7 @@
     },
     {
       "name": "MGATHER",
-      "family": "TMA",
+      "family": "TLSU",
       "command_mnemonic": "BSTART.MGATHER",
       "selector": null,
       "mode": null,
@@ -939,7 +939,7 @@
     },
     {
       "name": "MSCATTER",
-      "family": "TMA",
+      "family": "TLSU",
       "command_mnemonic": "BSTART.MSCATTER",
       "selector": null,
       "mode": null,
@@ -948,8 +948,38 @@
       "contract_status": "reviewed-complete"
     },
     {
+      "name": "MGATHER_MASK",
+      "family": "TLSU",
+      "command_mnemonic": "BSTART.MGATHER.MASK",
+      "selector": null,
+      "mode": null,
+      "function": 6,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "MSCATTER_MASK",
+      "family": "TLSU",
+      "command_mnemonic": "BSTART.MSCATTER.MASK",
+      "selector": null,
+      "mode": null,
+      "function": 7,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "MGATHER_CAS",
+      "family": "TLSU",
+      "command_mnemonic": "BSTART.MGATHER.CAS",
+      "selector": null,
+      "mode": null,
+      "function": 8,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
       "name": "GMOV",
-      "family": "TMA",
+      "family": "TLSU",
       "command_mnemonic": "BSTART.GMOV",
       "selector": null,
       "mode": null,

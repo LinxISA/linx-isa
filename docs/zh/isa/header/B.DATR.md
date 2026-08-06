@@ -15,9 +15,9 @@ B.DATR {Layout.{canon, normal}, DataType, PadValue, ByteId, CMode, RMode, Sat}
 ## 汇编符号
 
 - **Layout**：数据存储格式转换标识，可选类型见下表。该参数可以有两种可选后缀：
-    - **canon(canonicalize)**: 将输入矩阵转换成标准左矩阵格式，基于不同的数据格式需要将输入原分形进行合并或者拆分。具体请见[ACCCVT](../header/tileblock/ACCCVT.md)指令介绍。
+    - **canon(canonicalize)**: 将输入矩阵转换成标准左矩阵格式；基于不同的数据格式，输入原分形可能需要合并或拆分。
     - **normal**：不对输入矩阵的原分形做变换，可缺省。
-- **DataType**：用于[TCVT](../header/tileblock/TCVT.md)和[ACCCVT](../header/tileblock/ACCCVT.md)等指令中表示数据格式转换后的目标类型。
+- **DataType**：用于[TCVT](../header/tileblock/TCVT.md)等指令中表示数据格式转换后的目标类型。
 - **PadValue**：表示输出Tile寄存器的填充值。无填充时可缺省。
 - **ByteId**：指定要统计的目标字节，可选参数 Byte0、Byte1、Byte2、Byte3。
 - **CMode**：比较模式，用于[TCMP](./tileblock/TCMP.md)和[TCMPS](./tileblock/TCMPS.md)指令。

@@ -208,12 +208,24 @@
       "mnemonic": "BSTART.MGATHER",
       "status": "executable-subset"
     },
+    "bstart_mgather_cas_32_74d282c28e52": {
+      "mnemonic": "BSTART.MGATHER.CAS",
+      "status": "executable-subset"
+    },
+    "bstart_mgather_mask_32_c53a0033eb26": {
+      "mnemonic": "BSTART.MGATHER.MASK",
+      "status": "executable-subset"
+    },
     "bstart_mpar_32_beccb0565e7d": {
       "mnemonic": "BSTART.MPAR",
       "status": "executable-subset"
     },
     "bstart_mscatter_32_7f76f632a75f": {
       "mnemonic": "BSTART.MSCATTER",
+      "status": "executable-subset"
+    },
+    "bstart_mscatter_mask_32_6037e1cd885f": {
+      "mnemonic": "BSTART.MSCATTER.MASK",
       "status": "executable-subset"
     },
     "bstart_mseq_32_2cdcceaf89d4": {
@@ -316,7 +328,7 @@
       "mnemonic": "BSTART.TMOV",
       "status": "executable-subset"
     },
-    "bstart_tmov_32_68c4ed390b75": {
+    "bstart_tmov_32_472804576301": {
       "mnemonic": "BSTART.TMOV",
       "status": "executable-subset"
     },
@@ -332,7 +344,7 @@
       "mnemonic": "BSTART.TPREFETCH",
       "status": "executable-subset"
     },
-    "bstart_tstore_32_6f6869479814": {
+    "bstart_tstore_32_6bed4bf0e415": {
       "mnemonic": "BSTART.TSTORE",
       "status": "executable-subset"
     },
@@ -3053,6 +3065,6 @@
       "status": "executable-subset"
     }
   },
-  "schema_version": "linx-sail-status-v0.57.1",
+  "schema_version": "linx-sail-status-v0.58.0",
   "spec_version": "0.58.0"
 }

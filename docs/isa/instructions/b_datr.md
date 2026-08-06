@@ -2,9 +2,9 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/block_data_attribute.md">Block Data Attribute</a> &nbsp;|&nbsp;
-<span class="ch-tag ch-tag-17">Ch 17</span>
-&nbsp; <strong>CMD — Command and Control</strong> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/bundle_data_attribute.md">Bundle Data Attribute</a> &nbsp;|&nbsp;
+<span class="ch-tag ch-tag-00">Ch 00</span>
+&nbsp; <strong>ISA Manual</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
 
 </div>
@@ -26,17 +26,17 @@
 
 ## Description
 
-Instruction from the Block Data Attribute group.
+Instruction from the Bundle Data Attribute group.
 
 ## Pseudocode (informative)
 
 ```c
-// Execute B.DATR as defined by the Block Data Attribute semantics.
+// Execute B.DATR as defined by the Bundle Data Attribute semantics.
 ```
 
 ## Encoding Notes
 
-- `PTO ISA 0.57.1 data attributes. PadValueOrByteId is an opcode-defined two-bit union; bits 19:18 are reserved zero.`
+- `Latches tile layout, data type, padding, conversion, rounding, and saturation attributes.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ Instruction from the Block Data Attribute group.
 
 <div class="insn-nav">
 
-← [Block Data Attribute](../groups/block_data_attribute.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [Bundle Data Attribute](../groups/bundle_data_attribute.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

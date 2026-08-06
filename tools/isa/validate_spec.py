@@ -308,7 +308,7 @@ def _validate_engine_ops_v058(spec: Dict[str, Any], engine_ops: Dict[str, Any], 
         selectors.add(selector)
 
     expected = {
-        "tma": {0, 1, 2, 3, 4, 5, 13},
+        "tlsu": {0, 1, 2, 3, 4, 5, 6, 7, 8, 13},
         "cube": {0, 1, 2, 4, 5, 6, 16, 17, 18, 20, 21, 22},
     }
     for family, functions in expected.items():
@@ -316,8 +316,8 @@ def _validate_engine_ops_v058(spec: Dict[str, Any], engine_ops: Dict[str, Any], 
         actual = {int(item["function"]) for item in state.get("legal_aliases", [])}
         if actual != functions:
             errors.append(f"state.engine_ops.{family} functions differ from PTO ISA 0.58")
-    if engine_ops.get("tma", {}).get("reserved_function_ranges") != [[6, 7], [14, 31]]:
-        errors.append("state.engine_ops.tma reserved ranges must be [[6, 7], [14, 31]]")
+    if engine_ops.get("tlsu", {}).get("reserved_function_ranges") != [[15, 31]]:
+        errors.append("state.engine_ops.tlsu reserved ranges must be [[15, 31]]")
     if engine_ops.get("cube", {}).get("unassigned_function_behavior") != "illegal_instruction":
         errors.append("state.engine_ops.cube unassigned functions must be illegal_instruction")
     shared = engine_ops.get("shared_tile_registers", {})

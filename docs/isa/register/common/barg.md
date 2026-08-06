@@ -49,7 +49,7 @@ Used to record the block type of the current block. This information plays a key
 | 0 | INTEGER scalar BLOCK STD |
 | 1 | System block SYS |
 | 2 | Floating Point scalar Block FP |
-| 3 | Data blocks (MPAR, MSEQ, VPAR, VSEQ, CUBE, TMA) |
+| 3 | Data blocks (MPAR, MSEQ, VPAR, VSEQ, CUBE, TLSU) |
 | 31 | system-call blockXB |
 
 ### 5. **TYPE**

@@ -71,7 +71,7 @@ In order to ensure the correctness and safety of program execution, LinxISA impo
 | A9.1 | The matrix Tile block cannot be programmed inside and cannot be disassembled || A9.2 | Matrix Tile blocks only support Fall jump mode |
 | A9.3 | The matrix Tile block allows access to the global register GGPR and the Tile register, but does not allow access to memory and system registerSSR. |
 | A9.4 | Matrix Tile block allows up to 8 Tile registers to be read and 4 tile registers to be written in one block |
-| A9.5 | The matrix Tile block only allows output to the ACC register |
+| A9.5 | A CUBE block writes an explicit Local destination D; ACC forms also read explicit Local accumulator C, with D == C defined as read-old/write-new |
 | A9.6 | After the data in the ACC register of the matrix Tile block is moved out, the ACC register is immediately released, and subsequent instructions are not allowed to read. |
 | A9.7 | The data type elements in the ACC register of the matrix Tile block can only be FP32, S32 and U32. Other data type report illegal instructions exception. |
 | A9.8 | The left matrix input by the matrix Tile block must be stored in the layout of Nz (big N and small z), and the size of a fractal is fixed at 512 bytes. |

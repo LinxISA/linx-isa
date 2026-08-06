@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 FORMS = {
-    "bstart_call_32_9404418d1ae5": {
+    "bstart_call_32_d30ef065210c": {
         "asm": "BSTART.CALL <br_label>, <rt_label>, ->ra",
         "call_field": "simm12",
         "call_lsb": 4,
@@ -23,7 +23,7 @@ FORMS = {
         "directed_cases": [(2, 3), (2, 29), ((1 << 12) - 1, 3)],
         "length": 32,
     },
-    "hl_bstart_call_48_3c784c583c90": {
+    "hl_bstart_call_48_d71cee46ab50": {
         "asm": "HL.BSTART.CALL <br_label>, <rt_label>, ->ra",
         "call_field": "simm25",
         "call_lsb": 7,
@@ -65,7 +65,7 @@ def targets(raw: int, contract: dict, p: int) -> tuple[int, int]:
 
 
 def main() -> int:
-    spec = json.loads((ROOT / "isa/v0.57/linxisa-v0.57.json").read_text(encoding="utf-8"))
+    spec = json.loads((ROOT / "isa/v0.58/linxisa-v0.58.json").read_text(encoding="utf-8"))
     by_id = {inst["id"]: inst for inst in spec["instructions"]}
     sail = (ROOT / "isa/sail/model/decode/decode.sail").read_text(encoding="utf-8")
     directed = (ROOT / "isa/sail/tests/directed.sail").read_text(encoding="utf-8")
@@ -79,10 +79,10 @@ def main() -> int:
         ROOT / "docs/architecture/isa-manual/src/generated/instruction_details.adoc"
     ).read_text(encoding="utf-8")
     mkdocs_pages = {
-        "bstart_call_32_9404418d1ae5": (
+        "bstart_call_32_d30ef065210c": (
             ROOT / "docs/isa/instructions/bstart_call.md"
         ).read_text(encoding="utf-8"),
-        "hl_bstart_call_48_3c784c583c90": (
+        "hl_bstart_call_48_d71cee46ab50": (
             ROOT / "docs/isa/instructions/hl_bstart_call.md"
         ).read_text(encoding="utf-8"),
     }

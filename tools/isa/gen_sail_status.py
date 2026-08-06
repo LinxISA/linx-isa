@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate form-ID Sail semantic grades from the canonical v0.57 ISA catalog."""
+"""Generate form-ID Sail semantic grades from the canonical ISA catalog."""
 
 from __future__ import annotations
 
@@ -50,7 +50,7 @@ def build(spec_path: Path, policy_path: Path) -> dict[str, Any]:
         }
 
     return {
-        "schema_version": "linx-sail-status-v0.57.1",
+        "schema_version": f"linx-sail-status-v{spec.get('version', '')}",
         "spec_version": str(spec.get("version") or ""),
         "forms": forms,
     }

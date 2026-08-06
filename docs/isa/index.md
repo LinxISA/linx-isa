@@ -3,7 +3,7 @@
 <!-- Hero Banner -->
 <div class="isa-hero">
 
-**ISA Version:** v0.57.1 &nbsp;·&nbsp; **761 instruction forms** &nbsp;·&nbsp; **67 groups** &nbsp;·&nbsp; **4 encoding formats**
+**ISA Version:** v0.58.0 &nbsp;·&nbsp; **766 instruction forms** &nbsp;·&nbsp; **69 groups** &nbsp;·&nbsp; **4 encoding formats**
 
 ---
 
@@ -66,21 +66,22 @@ The LinxISA manual is organized into 12 chapters covering distinct functional un
 <div class="group-card-grid">
 [Arithmetic (1)](groups/arithmetic.md){.group-card} [Arithmetic Operation (20)](groups/arithmetic_operation.md){.group-card} [Arithmetic Operation 32bit (21)](groups/arithmetic_operation_32bit.md){.group-card} [Arithmetic Operation 64bit (21)](groups/arithmetic_operation_64bit.md){.group-card}
 [Atomic (4)](groups/atomic.md){.group-card} [Atomic Operation (72)](groups/atomic_operation.md){.group-card} [BSTART (20)](groups/bstart.md){.group-card} [Bit Manipulation (8)](groups/bit_manipulation.md){.group-card}
-[Bit Operation (8)](groups/bit_operation.md){.group-card} [Block Argument (3)](groups/block_argument.md){.group-card} [Block Control Attribute (1)](groups/block_control_attribute.md){.group-card} [Block Data Attribute (1)](groups/block_data_attribute.md){.group-card}
-[Block Dimension (2)](groups/block_dimension.md){.group-card} [Block Hint (2)](groups/block_hint.md){.group-card} [Block Input & Output (6)](groups/block_input_output.md){.group-card} [Block Offset (1)](groups/block_offset.md){.group-card}
-[Block Split (57)](groups/block_split.md){.group-card} [Branch (10)](groups/branch.md){.group-card} [C.BSTART (7)](groups/c_bstart.md){.group-card} [C.TINST (6)](groups/c_tinst.md){.group-card}
-[C.UNARY (7)](groups/c_unary.md){.group-card} [Cache Maintain (16)](groups/cache_maintain.md){.group-card} [Compare Instruction (40)](groups/compare_instruction.md){.group-card} [Compound Operation (1)](groups/compound_operation.md){.group-card}
-[Concat (2)](groups/concat.md){.group-card} [DMA Operation (1)](groups/dma_operation.md){.group-card} [Division (2)](groups/division.md){.group-card} [Execution Control (10)](groups/execution_control.md){.group-card}
-[Floating Point Arithmetic (5)](groups/floating_point_arithmetic.md){.group-card} [Floating-point Arithmetic (12)](groups/floating_point_arithmetic.md){.group-card} [Floating-point Compare (8)](groups/floating_point_compare.md){.group-card} [Format Convert (12)](groups/format_convert.md){.group-card}
-[General (3)](groups/general.md){.group-card} [General Manager (2)](groups/general_manager.md){.group-card} [Immediate (2)](groups/immediate.md){.group-card} [Load Immediate Offset (23)](groups/load_immediate_offset.md){.group-card}
-[Load Long Offset (12)](groups/load_long_offset.md){.group-card} [Load PC-Relative (7)](groups/load_pc_relative.md){.group-card} [Load Pair (19)](groups/load_pair.md){.group-card} [Load Post-Index (19)](groups/load_post_index.md){.group-card}
-[Load Pre-Index (19)](groups/load_pre_index.md){.group-card} [Load Register Offset (22)](groups/load_register_offset.md){.group-card} [Load Symbol (7)](groups/load_symbol.md){.group-card} [Load UnScaled (16)](groups/load_unscaled.md){.group-card}
-[Long Immediate (2)](groups/long_immediate.md){.group-card} [Max-Min (6)](groups/max_min.md){.group-card} [Move (3)](groups/move.md){.group-card} [Multi-Cycle ALU (28)](groups/multi_cycle_alu.md){.group-card}
-[PC-Relative (4)](groups/pc_relative.md){.group-card} [Prefetch (4)](groups/prefetch.md){.group-card} [RESERVE (3)](groups/reserve.md){.group-card} [Reduce Operation with Register (9)](groups/reduce_operation_with_register.md){.group-card}
-[SSR Access (7)](groups/ssr_access.md){.group-card} [Set Commit Argument (26)](groups/set_commit_argument.md){.group-card} [Shuffle (8)](groups/shuffle.md){.group-card} [Store Immediate Offset (9)](groups/store_immediate_offset.md){.group-card}
-[Store Long Offset (7)](groups/store_long_offset.md){.group-card} [Store Offset (14)](groups/store_offset.md){.group-card} [Store PC-Relative (4)](groups/store_pc_relative.md){.group-card} [Store Pair (14)](groups/store_pair.md){.group-card}
-[Store Post-Index (14)](groups/store_post_index.md){.group-card} [Store Pre-Index (14)](groups/store_pre_index.md){.group-card} [Store Register Offset (21)](groups/store_register_offset.md){.group-card} [Store Symbol (4)](groups/store_symbol.md){.group-card}
-[Three Source Integer (2)](groups/three_source_integer.md){.group-card} [Three-Source Floating Point (8)](groups/three_source_floating_point.md){.group-card} [Two-Source Floating Point (12)](groups/two_source_floating_point.md){.group-card}
+[Bit Operation (8)](groups/bit_operation.md){.group-card} [Block Split (2)](groups/block_split.md){.group-card} [Branch (10)](groups/branch.md){.group-card} [Bundle Argument (3)](groups/bundle_argument.md){.group-card}
+[Bundle Control Attribute (1)](groups/bundle_control_attribute.md){.group-card} [Bundle Data Attribute (1)](groups/bundle_data_attribute.md){.group-card} [Bundle Dimension (1)](groups/bundle_dimension.md){.group-card} [Bundle Hint (2)](groups/bundle_hint.md){.group-card}
+[Bundle Input & Output (6)](groups/bundle_input_output.md){.group-card} [Bundle Offset (1)](groups/bundle_offset.md){.group-card} [Bundle Shared Operand Binding (1)](groups/bundle_shared_operand_binding.md){.group-card} [Bundle Split (60)](groups/bundle_split.md){.group-card}
+[C.BSTART (7)](groups/c_bstart.md){.group-card} [C.TINST (6)](groups/c_tinst.md){.group-card} [C.UNARY (7)](groups/c_unary.md){.group-card} [Cache Maintain (16)](groups/cache_maintain.md){.group-card}
+[Compare Instruction (40)](groups/compare_instruction.md){.group-card} [Compound Operation (1)](groups/compound_operation.md){.group-card} [Concat (2)](groups/concat.md){.group-card} [DMA Operation (1)](groups/dma_operation.md){.group-card}
+[Division (2)](groups/division.md){.group-card} [Execution Control (10)](groups/execution_control.md){.group-card} [Floating Point Arithmetic (5)](groups/floating_point_arithmetic.md){.group-card} [Floating-point Arithmetic (12)](groups/floating_point_arithmetic.md){.group-card}
+[Floating-point Compare (8)](groups/floating_point_compare.md){.group-card} [Format Convert (12)](groups/format_convert.md){.group-card} [General (3)](groups/general.md){.group-card} [General Manager (2)](groups/general_manager.md){.group-card}
+[Immediate (2)](groups/immediate.md){.group-card} [Load Immediate Offset (23)](groups/load_immediate_offset.md){.group-card} [Load Long Offset (12)](groups/load_long_offset.md){.group-card} [Load PC-Relative (7)](groups/load_pc_relative.md){.group-card}
+[Load Pair (19)](groups/load_pair.md){.group-card} [Load Post-Index (19)](groups/load_post_index.md){.group-card} [Load Pre-Index (19)](groups/load_pre_index.md){.group-card} [Load Register Offset (22)](groups/load_register_offset.md){.group-card}
+[Load Symbol (7)](groups/load_symbol.md){.group-card} [Load UnScaled (16)](groups/load_unscaled.md){.group-card} [Long Immediate (2)](groups/long_immediate.md){.group-card} [Max-Min (6)](groups/max_min.md){.group-card}
+[Move (3)](groups/move.md){.group-card} [Multi-Cycle ALU (28)](groups/multi_cycle_alu.md){.group-card} [PC-Relative (4)](groups/pc_relative.md){.group-card} [Prefetch (4)](groups/prefetch.md){.group-card}
+[RESERVE (3)](groups/reserve.md){.group-card} [Reduce Operation with Register (9)](groups/reduce_operation_with_register.md){.group-card} [SSR Access (7)](groups/ssr_access.md){.group-card} [Set Commit Argument (26)](groups/set_commit_argument.md){.group-card}
+[Shuffle (8)](groups/shuffle.md){.group-card} [Store Immediate Offset (9)](groups/store_immediate_offset.md){.group-card} [Store Long Offset (7)](groups/store_long_offset.md){.group-card} [Store Offset (14)](groups/store_offset.md){.group-card}
+[Store PC-Relative (4)](groups/store_pc_relative.md){.group-card} [Store Pair (14)](groups/store_pair.md){.group-card} [Store Post-Index (14)](groups/store_post_index.md){.group-card} [Store Pre-Index (14)](groups/store_pre_index.md){.group-card}
+[Store Register Offset (21)](groups/store_register_offset.md){.group-card} [Store Symbol (4)](groups/store_symbol.md){.group-card} [Three Source Integer (2)](groups/three_source_integer.md){.group-card} [Three-Source Floating Point (8)](groups/three_source_floating_point.md){.group-card}
+[Two-Source Floating Point (12)](groups/two_source_floating_point.md){.group-card}
 
 </div>
 
@@ -114,18 +115,18 @@ Use **Ctrl+F** / **Cmd+F** to search, or browse the [full alphabetical list](ins
 | [HL.ADDTPC](instructions/hl_addtpc.md) | pc_relative | 48 | [48-bit HL.] Instruction from the PC-Relative group. |
 | [HL.SETRET](instructions/hl_setret.md) | pc_relative | 48 | [48-bit HL.] Instruction from the PC-Relative group. |
 | [SETRET](instructions/setret.md) | pc_relative | 32 | Materializes a return address (ra) using a PC-relative offset. Used in call headers. |
-| [B.CATR](instructions/b_catr.md) | block_control_attribute | 32 | Instruction from the Block Control Attribute group. |
-| [B.DATR](instructions/b_datr.md) | block_data_attribute | 32 | Instruction from the Block Data Attribute group. |
-| [B.DIM](instructions/b_dim.md) | block_argument | 32 | Instruction from the Block Argument group. |
+| [B.CATR](instructions/b_catr.md) | bundle_control_attribute | 32 | Instruction from the Bundle Control Attribute group. |
+| [B.DATR](instructions/b_datr.md) | bundle_data_attribute | 32 | Instruction from the Bundle Data Attribute group. |
+| [B.DIM](instructions/b_dim.md) | bundle_argument | 32 | Instruction from the Bundle Argument group. |
 | [B.EQ](instructions/b_eq.md) | branch | 32 | Conditional branch taken when SrcL equals SrcR. |
 | [B.GE](instructions/b_ge.md) | branch | 32 | Conditional branch taken when SrcL is greater than or equal to SrcR (signed). |
 | [B.GEU](instructions/b_geu.md) | branch | 32 | Conditional branch taken when SrcL is greater than or equal to SrcR (unsigned). |
 | [B.LT](instructions/b_lt.md) | branch | 32 | Conditional branch taken when SrcL is less than SrcR (signed). |
 | [B.LTU](instructions/b_ltu.md) | branch | 32 | Conditional branch taken when SrcL is less than SrcR (unsigned). |
-| [B.HINT](instructions/b_hint.md) | block_hint | 32 | Instruction from the Block Hint group. |
-| [B.IOR](instructions/b_ior.md) | block_input_output | 32 | Instruction from the Block Input & Output group. |
-| [B.IOT](instructions/b_iot.md) | block_input_output | 32 | Instruction from the Block Input & Output group. |
-| [B.TEXT](instructions/b_text.md) | block_offset | 32 | Instruction from the Block Offset group. |
+| [B.HINT](instructions/b_hint.md) | bundle_hint | 32 | Instruction from the Bundle Hint group. |
+| [B.IOR](instructions/b_ior.md) | bundle_input_output | 32 | Instruction from the Bundle Input & Output group. |
+| [B.IOT](instructions/b_iot.md) | bundle_input_output | 32 | Instruction from the Bundle Input & Output group. |
+| [B.TEXT](instructions/b_text.md) | bundle_offset | 32 | Instruction from the Bundle Offset group. |
 | [BC.IALL](instructions/bc_iall.md) | cache_maintain | 32 | Branch-predictor cache invalidate all entries. |
 | [BC.IVA](instructions/bc_iva.md) | cache_maintain | 32 | Branch-predictor cache invalidate by address. |
 | [DC.CISW](instructions/dc_cisw.md) | cache_maintain | 32 | Data cache clean-and-invalidate by set/way. |
@@ -136,24 +137,26 @@ Use **Ctrl+F** / **Cmd+F** to search, or browse the [full alphabetical list](ins
 | [BIS](instructions/bis.md) | bit_operation | 32 | Bit set / OR. |
 | [BXS](instructions/bxs.md) | bit_operation | 32 | Bit-field extract signed. |
 | [BXU](instructions/bxu.md) | bit_operation | 32 | Bit-field extract unsigned. |
-| [BSTART](instructions/bstart.md) | block_split | 32 | Block split marker. Terminates the current basic block and begins the next. Encodes block type and transition kind. |
-| [BSTART.ACCCVT](instructions/bstart_acccvt.md) | block_split | 32 | Terminates the current block and begins the next. |
-| [BSTART.FP](instructions/bstart_fp.md) | block_split | 32 | Terminates the current block and begins the next. |
-| [BSTART.MGATHER](instructions/bstart_mgather.md) | block_split | 32 | Terminates the current block and begins the next. |
-| [BSTART.MGATHER.CAS](instructions/bstart_mgather_cas.md) | block_split | 32 | Terminates the current block and begins the next. |
+| [BSTART](instructions/bstart.md) | bundle_split | 32 | Block split marker. Terminates the current basic block and begins the next. Encodes block type and transition kind. |
+| [BSTART.FP](instructions/bstart_fp.md) | bundle_split | 32 | Terminates the current block and begins the next. |
+| [BSTART.GMOV](instructions/bstart_gmov.md) | bundle_split | 32 | Terminates the current block and begins the next. |
+| [BSTART.MGATHER](instructions/bstart_mgather.md) | bundle_split | 32 | Terminates the current block and begins the next. |
+| [BSTART.MGATHER.CAS](instructions/bstart_mgather_cas.md) | bundle_split | 32 | Terminates the current block and begins the next. |
 | [BSTART CALL](instructions/bstart_call.md) | bstart | 32 | Atomic fused call with independent call-target and return-target fields; transfers to the call block and writes `ra`. This exact aggregate is distinct from the generic bare-call form, which preserves `ra` and requires an adjacent `SETRET` or `C.SETRET`. |
 | [HL.BSTART CALL](instructions/hl_bstart_call.md) | bstart | 48 | [48-bit HL.] Atomic fused call with independent call-target and return-target fields; transfers to the call block and writes `ra`. This exact aggregate is distinct from the generic bare-call form, which preserves `ra` and requires an adjacent `SETRET` or `C.SETRET`. |
 | [HL.BSTART.FP](instructions/hl_bstart_fp.md) | bstart | 48 | [48-bit HL.] Terminates the current block and begins the next. |
 | [HL.BSTART.STD](instructions/hl_bstart_std.md) | bstart | 48 | [48-bit HL.] Terminates the current block and begins the next. |
 | [HL.BSTART.SYS](instructions/hl_bstart_sys.md) | bstart | 48 | [48-bit HL.] Terminates the current block and begins the next. |
+| [BSTART.VPAR](instructions/bstart_vpar.md) | block_split | 32 | Terminates the current block and begins the next. |
+| [BSTART.VSEQ](instructions/bstart_vseq.md) | block_split | 32 | Terminates the current block and begins the next. |
 | [C.ADD](instructions/c_add.md) | arithmetic_operation | 16 | [16-bit C.] Integer addition. |
 | [C.AND](instructions/c_and.md) | arithmetic_operation | 16 | [16-bit C.] Bitwise AND. |
 | [C.OR](instructions/c_or.md) | arithmetic_operation | 16 | [16-bit C.] Bitwise OR. |
 | [C.SUB](instructions/c_sub.md) | arithmetic_operation | 16 | [16-bit C.] Integer subtraction. |
 | [V.ADD](instructions/v_add.md) | arithmetic_operation | 64 | [64-bit V.] Integer addition. |
 | [C.ADDI](instructions/c_addi.md) | arithmetic | 16 | [16-bit C.] Instruction from the Arithmetic group. |
-| [C.B.DIM](instructions/c_b_dim.md) | block_dimension | 16 | [16-bit C.] Instruction from the Block Dimension group. |
-| [C.B.DIMI](instructions/c_b_dimi.md) | block_dimension | 16 | [16-bit C.] Instruction from the Block Dimension group. |
+| [C.B.DIMI](instructions/c_b_dimi.md) | bundle_dimension | 16 | [16-bit C.] Instruction from the Bundle Dimension group. |
+| [C.B.IOS](instructions/c_b_ios.md) | bundle_shared_operand_binding | 16 | [16-bit C.] Instruction from the Bundle Shared Operand Binding group. |
 | [C.BSTART.FP](instructions/c_bstart_fp.md) | c_bstart | 16 | [16-bit C.] Terminates the current block and begins the next. |
 | [C.BSTART.MPAR](instructions/c_bstart_mpar.md) | c_bstart | 16 | [16-bit C.] Terminates the current block and begins the next. |
 | [C.BSTART.MSEQ](instructions/c_bstart_mseq.md) | c_bstart | 16 | [16-bit C.] Terminates the current block and begins the next. |
@@ -364,4 +367,4 @@ Use **Ctrl+F** / **Cmd+F** to search, or browse the [full alphabetical list](ins
 | [V.SHFL.UP](instructions/v_shfl_up.md) | shuffle | 64 | [64-bit V.] Instruction from the Shuffle group. |
 | [V.SHFLI.BFLY](instructions/v_shfli_bfly.md) | shuffle | 64 | [64-bit V.] Instruction from the Shuffle group. |
 
-[View all 761 instruction forms →](instructions/index.md)
+[View all 766 instruction forms →](instructions/index.md)

@@ -3,8 +3,8 @@
   "catalogs": {
     "command_forms": {
       "path": "spec/catalog/command-forms.json",
-      "sha256": "58cb445f7a4bc690859f017db4e9ec7b054ab1c10d50773eb2d6cf3a2a87d94a",
-      "count": 96
+      "sha256": "014501ed69c25cca527a67649c365c2da91859076479d7218111bda97df38f37",
+      "count": 99
     },
     "scalar_forms": {
       "path": "spec/catalog/scalar-forms.json",
@@ -13,8 +13,8 @@
     },
     "tile_operations": {
       "path": "spec/catalog/tile-operations.json",
-      "sha256": "99f7b99a881c60ba0cbd92b4ad6f02d36bac3bd3b43b650585d04c7bedc4ad08",
-      "count": 106
+      "sha256": "2aeff5d762b067923cee2c5c848213fff70aa1622d70e53fc6818ee08bd8d107",
+      "count": 109
     },
     "linx_vector_reservations": {
       "path": "spec/catalog/linx-vector-reservations.json",
@@ -22,9 +22,9 @@
       "count": 6
     }
   },
-  "content_sha256": "d657760f7cd998f9735f72b68bddff478f44b2c0487ee0c071fde091174d0b5b",
+  "content_sha256": "f1a92b4107e96a117619d6545ce7cdc7f402593441ba2c4df9f455b77d3a8d8e",
   "encoding_abi": "pto-isa-0.58.0-mode-function-v1",
-  "encoding_projection_sha256": "e0c7c9c81378b03402893c4c4f1b7940daf75f96eb2d1785e2c9c725cb89ec39",
+  "encoding_projection_sha256": "0d9dda5c9830c126f31febb67186067792e2994f5dae998c0e248c4bbe419e13",
   "hardware_conformance_profile": {
     "path": "spec/hardware-conformance-profile.json",
     "profile_id": "pto-hardware-numeric-0.58.0-ieee-v1",
@@ -37,11 +37,11 @@
   "release": "0.58.0",
   "release_manifest": {
     "path": "spec/release-manifest.json",
-    "sha256": "274df8818664f2ee203c6f585e5b337a1c5e87da54f5581bc97f4613e60b642b"
+    "sha256": "d833e6f0ae565297107acf8989c3cb8ba347076d993b700c89d097d4a396eac5"
   },
   "source": {
-    "commit": "925a9d718d4093f3a4a571d5ffaf5ea1f5e5fdc5",
-    "tree": "c8390577c68eedcd0d20030aeb62c9c160aea640",
+    "commit": "aab9ea300a125e5b7a7bb6fdcc1510323070afd3",
+    "tree": "c82c5aea1d0b1d90b45d26d31975612c3f0d6ad6",
     "repository": "https://github.com/PTO-ISA/pto-spec.git"
   }
 }

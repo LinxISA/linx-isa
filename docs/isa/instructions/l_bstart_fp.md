@@ -11,33 +11,33 @@
 
 ## Assembly Syntax
 
-- `L.BSTART.FP COND, <label>`
 - `L.BSTART.FP DIRECT, <label>`
-- `L.BSTART.FP CALL, <label>`
 - `L.BSTART.FP FALL<, fixup_label>`
+- `L.BSTART.FP CALL, <label>`
+- `L.BSTART.FP COND, <label>`
 
 ## Encoding
 
 <div class="enc-diagram">
 
-<figure id="encoding-l_bstart_fp_64_098e57019d7b">
-<img src="../wavedrom/enc_l_bstart_fp_64_098e57019d7b.svg" alt="L.BSTART.FP encoding form l_bstart_fp_64_098e57019d7b" width="100%" />
-<figcaption><code>l_bstart_fp_64_098e57019d7b</code> — <code>L.BSTART.FP COND, <label></code>. MSB is on the left, LSB is on the right.</figcaption>
+<figure id="encoding-l_bstart_fp_64_52a1fd45d908">
+<img src="../wavedrom/enc_l_bstart_fp_64_52a1fd45d908.svg" alt="L.BSTART.FP encoding form l_bstart_fp_64_52a1fd45d908" width="100%" />
+<figcaption><code>l_bstart_fp_64_52a1fd45d908</code> — <code>L.BSTART.FP DIRECT, <label></code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
-<figure id="encoding-l_bstart_fp_64_0cac9941f7d4">
-<img src="../wavedrom/enc_l_bstart_fp_64_0cac9941f7d4.svg" alt="L.BSTART.FP encoding form l_bstart_fp_64_0cac9941f7d4" width="100%" />
-<figcaption><code>l_bstart_fp_64_0cac9941f7d4</code> — <code>L.BSTART.FP DIRECT, <label></code>. MSB is on the left, LSB is on the right.</figcaption>
+<figure id="encoding-l_bstart_fp_64_59792b6f0002">
+<img src="../wavedrom/enc_l_bstart_fp_64_59792b6f0002.svg" alt="L.BSTART.FP encoding form l_bstart_fp_64_59792b6f0002" width="100%" />
+<figcaption><code>l_bstart_fp_64_59792b6f0002</code> — <code>L.BSTART.FP FALL<, fixup_label></code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
-<figure id="encoding-l_bstart_fp_64_2067ad6667ed">
-<img src="../wavedrom/enc_l_bstart_fp_64_2067ad6667ed.svg" alt="L.BSTART.FP encoding form l_bstart_fp_64_2067ad6667ed" width="100%" />
-<figcaption><code>l_bstart_fp_64_2067ad6667ed</code> — <code>L.BSTART.FP CALL, <label></code>. MSB is on the left, LSB is on the right.</figcaption>
+<figure id="encoding-l_bstart_fp_64_9673fedb498b">
+<img src="../wavedrom/enc_l_bstart_fp_64_9673fedb498b.svg" alt="L.BSTART.FP encoding form l_bstart_fp_64_9673fedb498b" width="100%" />
+<figcaption><code>l_bstart_fp_64_9673fedb498b</code> — <code>L.BSTART.FP CALL, <label></code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
-<figure id="encoding-l_bstart_fp_64_8115c042ef26">
-<img src="../wavedrom/enc_l_bstart_fp_64_8115c042ef26.svg" alt="L.BSTART.FP encoding form l_bstart_fp_64_8115c042ef26" width="100%" />
-<figcaption><code>l_bstart_fp_64_8115c042ef26</code> — <code>L.BSTART.FP FALL<, fixup_label></code>. MSB is on the left, LSB is on the right.</figcaption>
+<figure id="encoding-l_bstart_fp_64_b27a4726298b">
+<img src="../wavedrom/enc_l_bstart_fp_64_b27a4726298b.svg" alt="L.BSTART.FP encoding form l_bstart_fp_64_b27a4726298b" width="100%" />
+<figcaption><code>l_bstart_fp_64_b27a4726298b</code> — <code>L.BSTART.FP COND, <label></code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
 </div>
@@ -54,16 +54,17 @@ Instruction from the BSTART group.
 
 ## Encoding Notes
 
+- `Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.`
 - `Bare L.BSTART.FP CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.`
 
 ## Full Catalog Forms
 
 | Form ID | Assembly | Length | Decode | Encoding |
 |---------|----------|--------|--------|----------|
-| `l_bstart_fp_64_098e57019d7b` | `L.BSTART.FP COND, <label>` | 64 | — | [SVG](../wavedrom/enc_l_bstart_fp_64_098e57019d7b.svg) |
-| `l_bstart_fp_64_0cac9941f7d4` | `L.BSTART.FP DIRECT, <label>` | 64 | — | [SVG](../wavedrom/enc_l_bstart_fp_64_0cac9941f7d4.svg) |
-| `l_bstart_fp_64_2067ad6667ed` | `L.BSTART.FP CALL, <label>` | 64 | — | [SVG](../wavedrom/enc_l_bstart_fp_64_2067ad6667ed.svg) |
-| `l_bstart_fp_64_8115c042ef26` | `L.BSTART.FP FALL<, fixup_label>` | 64 | — | [SVG](../wavedrom/enc_l_bstart_fp_64_8115c042ef26.svg) |
+| `l_bstart_fp_64_52a1fd45d908` | `L.BSTART.FP DIRECT, <label>` | 64 | — | [SVG](../wavedrom/enc_l_bstart_fp_64_52a1fd45d908.svg) |
+| `l_bstart_fp_64_59792b6f0002` | `L.BSTART.FP FALL<, fixup_label>` | 64 | — | [SVG](../wavedrom/enc_l_bstart_fp_64_59792b6f0002.svg) |
+| `l_bstart_fp_64_9673fedb498b` | `L.BSTART.FP CALL, <label>` | 64 | — | [SVG](../wavedrom/enc_l_bstart_fp_64_9673fedb498b.svg) |
+| `l_bstart_fp_64_b27a4726298b` | `L.BSTART.FP COND, <label>` | 64 | — | [SVG](../wavedrom/enc_l_bstart_fp_64_b27a4726298b.svg) |
 
 <div class="insn-nav">
 

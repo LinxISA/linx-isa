@@ -1,6 +1,6 @@
 # Instruction Groups
 
-Alphabetical list of all 67 instruction groups in the LinxISA v0.57.1 catalog.
+Alphabetical list of all 69 instruction groups in the LinxISA v0.58.0 catalog.
 See the [chapter index](index.md) for the manual organization.
 
 | Group | Forms | Chapter | Sample mnemonics |
@@ -9,20 +9,22 @@ See the [chapter index](index.md) for the manual organization.
 | [Arithmetic Operation 64bit](arithmetic_operation_64bit.md) | 21 | **Ch 12** — [source](index.md) | `ADD`, `ADDI`, `AND`, `ANDI`, `HL.ADDI`, `HL.ANDI`, `HL.ORI`, `HL.SUBI` +13 |
 | [Arithmetic Operation 32bit](arithmetic_operation_32bit.md) | 21 | **Ch 12** — [source](index.md) | `ADDIW`, `ADDW`, `ANDIW`, `ANDW`, `HL.ADDIW`, `HL.ANDIW`, `HL.ORIW`, `HL.SUBIW` +13 |
 | [PC-Relative](pc_relative.md) | 4 | **Ch 16** — [source](index.md) | `ADDTPC`, `HL.ADDTPC`, `HL.SETRET`, `SETRET` |
-| [Block Control Attribute](block_control_attribute.md) | 1 | **Ch 17** — [source](index.md) | `B.CATR` |
-| [Block Data Attribute](block_data_attribute.md) | 1 | **Ch 17** — [source](index.md) | `B.DATR` |
-| [Block Argument](block_argument.md) | 3 | **Ch 4** — [source](index.md) | `B.DIM` |
+| [Bundle Control Attribute](bundle_control_attribute.md) | 1 | — | `B.CATR` |
+| [Bundle Data Attribute](bundle_data_attribute.md) | 1 | — | `B.DATR` |
+| [Bundle Argument](bundle_argument.md) | 3 | — | `B.DIM` |
 | [Branch](branch.md) | 10 | **Ch 16** — [source](index.md) | `B.EQ`, `B.GE`, `B.GEU`, `B.LT`, `B.LTU`, `B.NE`, `B.NZ`, `B.Z` +2 |
-| [Block Hint](block_hint.md) | 2 | **Ch 17** — [source](index.md) | `B.HINT` |
-| [Block Input & Output](block_input_output.md) | 6 | **Ch 4** — [source](index.md) | `B.IOR`, `B.IOT` |
-| [Block Offset](block_offset.md) | 1 | **Ch 4** — [source](index.md) | `B.TEXT` |
+| [Bundle Hint](bundle_hint.md) | 2 | — | `B.HINT` |
+| [Bundle Input & Output](bundle_input_output.md) | 6 | — | `B.IOR`, `B.IOT` |
+| [Bundle Offset](bundle_offset.md) | 1 | — | `B.TEXT` |
 | [Cache Maintain](cache_maintain.md) | 16 | **Ch 19** — [source](index.md) | `BC.IALL`, `BC.IVA`, `DC.CISW`, `DC.CIVA`, `DC.CSW`, `DC.CVA`, `DC.IALL`, `DC.ISW` +8 |
 | [Bit Operation](bit_operation.md) | 8 | **Ch 12** — [source](index.md) | `BCNT`, `BIC`, `BIS`, `BXS`, `BXU`, `CLZ`, `CTZ`, `REV` |
-| [Block Split](block_split.md) | 57 | **Ch 4** — [source](index.md) | `BSTART`, `BSTART.ACCCVT`, `BSTART.FP`, `BSTART.MGATHER`, `BSTART.MGATHER.CAS`, `BSTART.MGATHER.MASK`, `BSTART.MPAR`, `BSTART.MSCATTER` +35 |
+| [Bundle Split](bundle_split.md) | 60 | — | `BSTART`, `BSTART.FP`, `BSTART.GMOV`, `BSTART.MGATHER`, `BSTART.MGATHER.CAS`, `BSTART.MGATHER.MASK`, `BSTART.MPAR`, `BSTART.MSCATTER` +33 |
 | [BSTART](bstart.md) | 20 | **Ch 4** — [source](index.md) | `BSTART CALL`, `HL.BSTART CALL`, `HL.BSTART.FP`, `HL.BSTART.STD`, `HL.BSTART.SYS`, `L.BSTART.FP`, `L.BSTART.STD`, `L.BSTART.SYS` |
+| [Block Split](block_split.md) | 2 | **Ch 4** — [source](index.md) | `BSTART.VPAR`, `BSTART.VSEQ` |
 | [Arithmetic Operation](arithmetic_operation.md) | 20 | **Ch 12** — [source](index.md) | `C.ADD`, `C.AND`, `C.OR`, `C.SUB`, `V.ADD`, `V.ADDI`, `V.AND`, `V.ANDI` +12 |
 | [Arithmetic](arithmetic.md) | 1 | **Ch 12** — [source](index.md) | `C.ADDI` |
-| [Block Dimension](block_dimension.md) | 2 | **Ch 4** — [source](index.md) | `C.B.DIM`, `C.B.DIMI` |
+| [Bundle Dimension](bundle_dimension.md) | 1 | — | `C.B.DIMI` |
+| [Bundle Shared Operand Binding](bundle_shared_operand_binding.md) | 1 | — | `C.B.IOS` |
 | [C.BSTART](c_bstart.md) | 7 | **Ch 15** — [source](index.md) | `C.BSTART.FP`, `C.BSTART.MPAR`, `C.BSTART.MSEQ`, `C.BSTART.STD`, `C.BSTART.SYS`, `C.BSTART.VPAR`, `C.BSTART.VSEQ` |
 | [C.TINST](c_tinst.md) | 6 | **Ch 19** — [source](index.md) | `C.CMP.EQI`, `C.CMP.NEI`, `C.EBREAK`, `C.SLLI`, `C.SRLI`, `C.SSRGET` |
 | [Load Immediate Offset](load_immediate_offset.md) | 23 | **Ch 11** — [source](index.md) | `C.LDI`, `C.LWI`, `LBI`, `LBUI`, `LDI`, `LHI`, `LHUI`, `LWI` +15 |

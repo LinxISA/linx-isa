@@ -13,14 +13,14 @@ Each parameter is explained as follows:
 
 | Parameters | Description | Optional or not |
 |------|------|---------|
-| **TileOp** | Specify the specific operation of matrix operation, optional: TMATMUL, ACCCVT, etc. | No |
+| **TileOp** | Select one of the 12 v0.58 TMATMUL/TGEMV base, BIAS, or ACC operations. | No |
 | **LB0** | Enter the row or column parameters of the matrix. For details, see the introduction of specific instructions. arg0 can be set by (`全局寄存器`, `立即数` or `全局寄存器加立即数`) parameters. | Yes, default is 1 |
 | **LB1** | Enter the row or column parameters of the matrix. For details, see the introduction of specific instructions. arg1 can be set by (`全局寄存器`, `立即数` or `全局寄存器加立即数`) parameters. | Yes, default is 1 |
 | **LB2** | Enter the row or column parameters of the matrix. For details, see the introduction of specific instructions. arg2 can be set by (`全局寄存器`, `立即数` or `全局寄存器加立即数`) parameters. | Yes, default is 1 |
 | **DataType** | The data format of the input element, including FP32, FP16, S16, etc. | Yes |
 | **SrcTile0, ..., SrcTile7** | Indicate up to 8 input Tile registers respectively. | Yes |
 | **reuse** | This flag needs to be added when the corresponding input Tile register is not allowed to be released after the execution of this instruction. If there is no such mark, it means that the hardware is allowed to release this register. | Yes |
-| **DstTile0, ..., DstTile3** | Indicate up to 4 output Tile register types respectively | Optional T, U, M, N or ACC. | Yes |
+| **DstTile0, ..., DstTile3** | Indicate explicit Local output Tile registers. ACC forms additionally name an explicit Local accumulator input. | Yes |
 | **TileSize0, ..., TileSize3** | Indicates the space size of each output Tile register respectively. The parameter can be passed through a `立即数` or `全局寄存器`. | Depends on DstTile |
 | **DepSrc0, DepSrc1, DepSrc2** | Up to three dependency-source slots that refer to previous block-instruction outputs to `D`. | Yes |
 | **DepDst** | Indicates the barrier of this block instruction to the block instruction that references this identifier in subsequent sequences. | Yes |
@@ -36,7 +36,6 @@ by its descriptor records. For example:
 - `BSTART.TMATMULMX DataType`
 - `BSTART.TMATMULMX.BIAS DataType`
 - `BSTART.TMATMULMX.ACC DataType`
-- `BSTART.ACCCVT DataType`
 - `BSTART.TGEMV DataType`
 - `BSTART.TGEMV.BIAS DataType`
 - `BSTART.TGEMV.ACC DataType`
@@ -51,7 +50,7 @@ by its descriptor records. For example:
 -...
 - [B.IOT](../../header/B.IOT.md) SrcTile6<.reuse>, SrcTile7<.reuse>, last, ->DstTile3<TileSize3>
 
-All named CUBE headers share the CUBE encoding family shown below. Only the 13
+All named CUBE headers share the CUBE encoding family shown below. Only the 12
 assigned named functions are legal; unassigned function values are illegal and
 there is no generic executable `BSTART.CUBE Function, DataType` spelling.
 
@@ -69,8 +68,7 @@ The function field encodes matrix and FIXPIPE operations as follows:
 | 0 | 5 | [TMATMULMX.BIAS](../../header/tileblock/TMATMULMX.BIAS.md) |
 | 0 | 6 | [TMATMULMX.ACC](../../header/tileblock/TMATMULMX.ACC.md) |
 | 0 | 7 | Reserved encoding |
-| 0 | 8 | [ACCCVT](../../header/tileblock/ACCCVT.md) |
-| 0 | 9-15 | Reserved encoding |
+| 0 | 8-15 | Reserved encoding |
 | 0 | 16 | [TGEMV](../../header/tileblock/TGEMV.md) |
 | 0 | 17 | [TGEMV.BIAS](../../header/tileblock/TGEMV.BIAS.md) |
 | 0 | 18 | [TGEMV.ACC](../../header/tileblock/TGEMV.ACC.md) |

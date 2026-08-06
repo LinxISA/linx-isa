@@ -686,7 +686,7 @@
       "Selector reserved_values and reserved_ranges enumerate rejected selector codes when known. Reserved fields declare their canonical allowed_values; reserve accepts only zero."
     ]
   },
-  "instruction_count": 763,
+  "instruction_count": 766,
   "instructions": [
     {
       "asm": "acrc rst_type",
@@ -2614,6 +2614,7 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "b_catr_32_e90bd52fa480",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -2956,6 +2957,70 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "CMode",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        },
+        {
+          "field": "Layout",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            3,
+            4,
+            6,
+            8,
+            9,
+            17,
+            18,
+            20,
+            27,
+            28,
+            30
+          ]
+        }
+      ],
       "pto_source_form_id": "b_datr_32_c161a042ff38",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -3072,6 +3137,7 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "b_dim_32_4191099a5f4d",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -3188,6 +3254,7 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "b_dim_32_27602ab68929",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -3304,6 +3371,7 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "b_dim_32_1caa1aa2944a",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -3839,6 +3907,7 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "b_hint_32_f7d01d734925",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -3975,6 +4044,7 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "b_hint_32_69d942ff1583",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -4121,6 +4191,7 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "b_ior_32_c3ea71404eb3",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -4293,6 +4364,30 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "PE_MASK",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ]
+        }
+      ],
       "pto_source_form_id": "b_iot_32_2c07e7177fad",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -4437,6 +4532,54 @@
             }
           ],
           "width_bits": 32
+        }
+      ],
+      "pto_source_constraints": [
+        {
+          "field": "PE_MASK",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ]
+        },
+        {
+          "field": "TSize",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        {
+          "field": "DstTile",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3
+          ]
         }
       ],
       "pto_source_form_id": "b_iot_32_efa0fe3fe49a",
@@ -4608,6 +4751,53 @@
             }
           ],
           "width_bits": 32
+        }
+      ],
+      "pto_source_constraints": [
+        {
+          "field": "PE_MASK",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ]
+        },
+        {
+          "field": "TSize",
+          "operator": "one-of",
+          "values": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        {
+          "field": "DstTile",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3
+          ]
         }
       ],
       "pto_source_form_id": "b_iot_32_10db6db84f5d",
@@ -4789,6 +4979,53 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "PE_MASK",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ]
+        },
+        {
+          "field": "TSize",
+          "operator": "one-of",
+          "values": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        {
+          "field": "DstTile",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3
+          ]
+        }
+      ],
       "pto_source_form_id": "b_iot_32_8b8bce6bffe8",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -4951,6 +5188,30 @@
             }
           ],
           "width_bits": 32
+        }
+      ],
+      "pto_source_constraints": [
+        {
+          "field": "PE_MASK",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ]
         }
       ],
       "pto_source_form_id": "b_iot_32_c11eb189dd83",
@@ -5593,6 +5854,7 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "b_text_32_1ce09f50e5dd",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -6655,6 +6917,7 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "bstart_32_7eb93b649748",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -6727,6 +6990,7 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "bstart_32_e11e678a32ac",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -6783,11 +7047,44 @@
         ]
       },
       "encoding_kind": "L32",
+      "exact_relocations": [
+        {
+          "field": "simm12",
+          "name": "CBSTART12_PCREL"
+        },
+        {
+          "field": "uimm5",
+          "name": "CSETRET5_PCREL"
+        }
+      ],
       "group": "BSTART",
       "id": "bstart_call_32_d30ef065210c",
       "length_bits": 32,
       "mnemonic": "BSTART CALL",
-      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "note": "Atomic fused CALL: call_target = P + (SignExtend(simm12) << 1); ra = (P + 2) + (ZeroExtend(uimm5) << 1). Both labels are explicit and independently relocatable.",
+      "operand_roles": [
+        {
+          "field": "simm12",
+          "pc_base": "P",
+          "role": "call_target",
+          "scale_bytes": 2,
+          "signed": true,
+          "syntax": "<br_label>"
+        },
+        {
+          "field": "uimm5",
+          "pc_base": "P+2",
+          "role": "return_target",
+          "scale_bytes": 2,
+          "signed": false,
+          "syntax": "<rt_label>"
+        },
+        {
+          "field": null,
+          "role": "link_destination",
+          "syntax": "->ra"
+        }
+      ],
       "parts": [
         {
           "segments": [
@@ -6837,7 +7134,14 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "bstart_call_32_9404418d1ae5",
+      "semantic_contract": {
+        "atomic": true,
+        "call_target": "P + (SignExtend(simm12) << 1)",
+        "link_write": "ra = (P + 2) + (ZeroExtend(uimm5) << 1)",
+        "transfer": "CALL"
+      },
       "source": {
         "file": "opcodes/lx_32.opc",
         "line": 298
@@ -6909,6 +7213,7 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "bstart_fp_32_face4f238d84",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -6962,6 +7267,7 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "bstart_fp_32_24db3966d6ba",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -7015,6 +7321,7 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "bstart_fp_32_0c671a644214",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -7087,6 +7394,7 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "bstart_fp_32_d00a708a81f0",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -7140,6 +7448,7 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "bstart_fp_32_7978795a29a1",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -7212,6 +7521,7 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "bstart_fp_32_dd7bc8dd694c",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -7284,6 +7594,7 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "bstart_fp_32_58ad7954fb49",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -7393,16 +7704,49 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
       "pto_source_form_id": "bstart_gmov_32_6c21e223eaa7",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 337
+        "line": 340
       },
       "uid": "ccfcf9904850",
       "uop_big_kind": "CMD",
       "uop_class": {
         "cmd_kind": "BLOCK_SPLIT",
-        "note": "PTO ISA 0.58 TMA Function=13",
+        "note": "PTO ISA 0.58 TLSU Function=13",
         "source": "group_rule",
         "uop_kind": "CMD"
       },
@@ -7502,6 +7846,39 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
       "pto_source_form_id": "bstart_mgather_32_c9defbf18276",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -7511,7 +7888,291 @@
       "uop_big_kind": "CMD",
       "uop_class": {
         "cmd_kind": "BLOCK_SPLIT",
-        "note": "v0.58 TMA Function=4",
+        "note": "PTO ISA 0.58 TLSU Function=4",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "uop_group": "CMD"
+    },
+    {
+      "asm": "BSTART.MGATHER.CAS DataType",
+      "encoding": {
+        "length_bits": 32,
+        "parts": [
+          {
+            "constraints": [
+              {
+                "field": "DataType",
+                "op": "!=",
+                "value": "15"
+              },
+              {
+                "field": "DataType",
+                "op": "!=",
+                "value": "21"
+              },
+              {
+                "field": "DataType",
+                "op": "!=",
+                "value": "22"
+              },
+              {
+                "field": "DataType",
+                "op": "!=",
+                "value": "23"
+              },
+              {
+                "field": "DataType",
+                "op": "!=",
+                "value": "29"
+              },
+              {
+                "field": "DataType",
+                "op": "!=",
+                "value": "30"
+              },
+              {
+                "field": "DataType",
+                "op": "!=",
+                "value": "31"
+              }
+            ],
+            "fields": [
+              {
+                "name": "DataType",
+                "pieces": [
+                  {
+                    "insn_lsb": 27,
+                    "insn_msb": 31,
+                    "token": "DataType",
+                    "width": 5
+                  }
+                ],
+                "signed": null
+              }
+            ],
+            "index": 0,
+            "mask": "0x07ffffff",
+            "match": "0x00811181",
+            "pattern": ".....000100000010001000110000001",
+            "width_bits": 32
+          }
+        ]
+      },
+      "encoding_kind": "L32",
+      "group": "Bundle Split",
+      "id": "bstart_mgather_cas_32_74d282c28e52",
+      "length_bits": 32,
+      "mnemonic": "BSTART.MGATHER.CAS",
+      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "lsb": 27,
+              "msb": 31,
+              "token": "DataType",
+              "width": 5
+            },
+            {
+              "const": {
+                "value": 8458625,
+                "width": 27
+              },
+              "lsb": 0,
+              "msb": 26,
+              "token": "27'b000100000010001000110000001",
+              "width": 27
+            }
+          ],
+          "width_bits": 32
+        }
+      ],
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "pto_source_form_id": "bstart_mgather_cas_32_fd8c8a3b720a",
+      "source": {
+        "file": "opcodes/lx_32.opc",
+        "line": 307
+      },
+      "uid": "74d282c28e52",
+      "uop_big_kind": "CMD",
+      "uop_class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58 TLSU Function=8",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "uop_group": "CMD"
+    },
+    {
+      "asm": "BSTART.MGATHER.MASK DataType",
+      "encoding": {
+        "length_bits": 32,
+        "parts": [
+          {
+            "constraints": [
+              {
+                "field": "DataType",
+                "op": "!=",
+                "value": "15"
+              },
+              {
+                "field": "DataType",
+                "op": "!=",
+                "value": "21"
+              },
+              {
+                "field": "DataType",
+                "op": "!=",
+                "value": "22"
+              },
+              {
+                "field": "DataType",
+                "op": "!=",
+                "value": "23"
+              },
+              {
+                "field": "DataType",
+                "op": "!=",
+                "value": "29"
+              },
+              {
+                "field": "DataType",
+                "op": "!=",
+                "value": "30"
+              },
+              {
+                "field": "DataType",
+                "op": "!=",
+                "value": "31"
+              }
+            ],
+            "fields": [
+              {
+                "name": "DataType",
+                "pieces": [
+                  {
+                    "insn_lsb": 27,
+                    "insn_msb": 31,
+                    "token": "DataType",
+                    "width": 5
+                  }
+                ],
+                "signed": null
+              }
+            ],
+            "index": 0,
+            "mask": "0x07ffffff",
+            "match": "0x00611181",
+            "pattern": ".....000011000010001000110000001",
+            "width_bits": 32
+          }
+        ]
+      },
+      "encoding_kind": "L32",
+      "group": "Bundle Split",
+      "id": "bstart_mgather_mask_32_c53a0033eb26",
+      "length_bits": 32,
+      "mnemonic": "BSTART.MGATHER.MASK",
+      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "lsb": 27,
+              "msb": 31,
+              "token": "DataType",
+              "width": 5
+            },
+            {
+              "const": {
+                "value": 6361473,
+                "width": 27
+              },
+              "lsb": 0,
+              "msb": 26,
+              "token": "27'b000011000010001000110000001",
+              "width": 27
+            }
+          ],
+          "width_bits": 32
+        }
+      ],
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "pto_source_form_id": "bstart_mgather_mask_32_5573241cd944",
+      "source": {
+        "file": "opcodes/lx_32.opc",
+        "line": 308
+      },
+      "uid": "c53a0033eb26",
+      "uop_big_kind": "CMD",
+      "uop_class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58 TLSU Function=6",
         "source": "group_rule",
         "uop_kind": "CMD"
       },
@@ -7584,10 +8245,11 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "bstart_mpar_32_2d163417c615",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 307
+        "line": 310
       },
       "uid": "beccb0565e7d",
       "uop_big_kind": "CMD",
@@ -7693,16 +8355,191 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
       "pto_source_form_id": "bstart_mscatter_32_0f0ba08bd798",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 308
+        "line": 311
       },
       "uid": "7f76f632a75f",
       "uop_big_kind": "CMD",
       "uop_class": {
         "cmd_kind": "BLOCK_SPLIT",
-        "note": "v0.58 TMA Function=5",
+        "note": "PTO ISA 0.58 TLSU Function=5",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "uop_group": "CMD"
+    },
+    {
+      "asm": "BSTART.MSCATTER.MASK DataType",
+      "encoding": {
+        "length_bits": 32,
+        "parts": [
+          {
+            "constraints": [
+              {
+                "field": "DataType",
+                "op": "!=",
+                "value": "15"
+              },
+              {
+                "field": "DataType",
+                "op": "!=",
+                "value": "21"
+              },
+              {
+                "field": "DataType",
+                "op": "!=",
+                "value": "22"
+              },
+              {
+                "field": "DataType",
+                "op": "!=",
+                "value": "23"
+              },
+              {
+                "field": "DataType",
+                "op": "!=",
+                "value": "29"
+              },
+              {
+                "field": "DataType",
+                "op": "!=",
+                "value": "30"
+              },
+              {
+                "field": "DataType",
+                "op": "!=",
+                "value": "31"
+              }
+            ],
+            "fields": [
+              {
+                "name": "DataType",
+                "pieces": [
+                  {
+                    "insn_lsb": 27,
+                    "insn_msb": 31,
+                    "token": "DataType",
+                    "width": 5
+                  }
+                ],
+                "signed": null
+              }
+            ],
+            "index": 0,
+            "mask": "0x07ffffff",
+            "match": "0x00711181",
+            "pattern": ".....000011100010001000110000001",
+            "width_bits": 32
+          }
+        ]
+      },
+      "encoding_kind": "L32",
+      "group": "Bundle Split",
+      "id": "bstart_mscatter_mask_32_6037e1cd885f",
+      "length_bits": 32,
+      "mnemonic": "BSTART.MSCATTER.MASK",
+      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "lsb": 27,
+              "msb": 31,
+              "token": "DataType",
+              "width": 5
+            },
+            {
+              "const": {
+                "value": 7410049,
+                "width": 27
+              },
+              "lsb": 0,
+              "msb": 26,
+              "token": "27'b000011100010001000110000001",
+              "width": 27
+            }
+          ],
+          "width_bits": 32
+        }
+      ],
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "pto_source_form_id": "bstart_mscatter_mask_32_2a33eed646f7",
+      "source": {
+        "file": "opcodes/lx_32.opc",
+        "line": 309
+      },
+      "uid": "6037e1cd885f",
+      "uop_big_kind": "CMD",
+      "uop_class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58 TLSU Function=7",
         "source": "group_rule",
         "uop_kind": "CMD"
       },
@@ -7775,10 +8612,11 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "bstart_mseq_32_39343a456ec5",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 309
+        "line": 312
       },
       "uid": "2cdcceaf89d4",
       "uop_big_kind": "CMD",
@@ -7828,10 +8666,11 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "bstart_std_32_986b7ee2cf6a",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 314
+        "line": 317
       },
       "uid": "49f2c6a8906f",
       "uop_big_kind": "CMD",
@@ -7900,10 +8739,11 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "bstart_std_32_1ef99c4cedcb",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 310
+        "line": 313
       },
       "uid": "696f98ac4bf1",
       "uop_big_kind": "CMD",
@@ -7953,10 +8793,11 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "bstart_std_32_816dfa76cc4a",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 313
+        "line": 316
       },
       "uid": "7876537dce06",
       "uop_big_kind": "CMD",
@@ -8025,10 +8866,11 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "bstart_std_32_b05390d367cf",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 315
+        "line": 318
       },
       "uid": "97d38b7be05e",
       "uop_big_kind": "CMD",
@@ -8097,10 +8939,11 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "bstart_std_32_441ad677fffe",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 312
+        "line": 315
       },
       "uid": "a5103b49e336",
       "uop_big_kind": "CMD",
@@ -8150,10 +8993,11 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "bstart_std_32_3f6980d013f7",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 311
+        "line": 314
       },
       "uid": "c386430b732a",
       "uop_big_kind": "CMD",
@@ -8222,10 +9066,11 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "bstart_std_32_c1de85e06878",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 316
+        "line": 319
       },
       "uid": "d3733f87964d",
       "uop_big_kind": "CMD",
@@ -8294,10 +9139,11 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "bstart_sys_32_762d9d84a6d8",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 317
+        "line": 320
       },
       "uid": "7220989624e7",
       "uop_big_kind": "CMD",
@@ -8439,10 +9285,43 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
       "pto_source_form_id": "bstart_tepl_32_d022db6dacb3",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 318
+        "line": 321
       },
       "uid": "f0754cf51a8d",
       "uop_big_kind": "CMD",
@@ -8548,10 +9427,43 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
       "pto_source_form_id": "bstart_tgemv_32_ae19f5b678f5",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 319
+        "line": 322
       },
       "uid": "5793d27aa023",
       "uop_big_kind": "CMD",
@@ -8657,10 +9569,43 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
       "pto_source_form_id": "bstart_tgemv_acc_32_9a471b21913e",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 320
+        "line": 323
       },
       "uid": "d95ec8489341",
       "uop_big_kind": "CMD",
@@ -8766,10 +9711,43 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
       "pto_source_form_id": "bstart_tgemv_bias_32_186ee96c0a8b",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 321
+        "line": 324
       },
       "uid": "98ff0e3b4e7b",
       "uop_big_kind": "CMD",
@@ -8875,10 +9853,43 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
       "pto_source_form_id": "bstart_tgemvmx_32_ae5e005f6589",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 322
+        "line": 325
       },
       "uid": "a6083394d51a",
       "uop_big_kind": "CMD",
@@ -8984,10 +9995,43 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
       "pto_source_form_id": "bstart_tgemvmx_acc_32_368647b04bb0",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 323
+        "line": 326
       },
       "uid": "750196820fcf",
       "uop_big_kind": "CMD",
@@ -9093,10 +10137,43 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
       "pto_source_form_id": "bstart_tgemvmx_bias_32_d23011f15171",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 324
+        "line": 327
       },
       "uid": "efccafe36069",
       "uop_big_kind": "CMD",
@@ -9202,10 +10279,43 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
       "pto_source_form_id": "bstart_tload_32_d0c18bb0ab15",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 325
+        "line": 328
       },
       "uid": "5178a1794614",
       "uop_big_kind": "CMD",
@@ -9311,10 +10421,43 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
       "pto_source_form_id": "bstart_tmatmul_32_f9da70e4e0ad",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 326
+        "line": 329
       },
       "uid": "3bb582723869",
       "uop_big_kind": "CMD",
@@ -9420,10 +10563,43 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
       "pto_source_form_id": "bstart_tmatmul_acc_32_0c8c62e5f00a",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 327
+        "line": 330
       },
       "uid": "e0bbf989304d",
       "uop_big_kind": "CMD",
@@ -9529,10 +10705,43 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
       "pto_source_form_id": "bstart_tmatmul_bias_32_4d5a498d12f3",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 328
+        "line": 331
       },
       "uid": "82792b6c3b84",
       "uop_big_kind": "CMD",
@@ -9638,10 +10847,43 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
       "pto_source_form_id": "bstart_tmatmulmx_32_e26cb3874648",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 329
+        "line": 332
       },
       "uid": "4df63f33e364",
       "uop_big_kind": "CMD",
@@ -9747,10 +10989,43 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
       "pto_source_form_id": "bstart_tmatmulmx_acc_32_70fa59b0ab4c",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 330
+        "line": 333
       },
       "uid": "3848afaeabdd",
       "uop_big_kind": "CMD",
@@ -9856,10 +11131,43 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
       "pto_source_form_id": "bstart_tmatmulmx_bias_32_098c7efa51b0",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 331
+        "line": 334
       },
       "uid": "5b20d174f5d9",
       "uop_big_kind": "CMD",
@@ -9965,10 +11273,43 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
       "pto_source_form_id": "bstart_tmov_32_211446509efb",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 332
+        "line": 335
       },
       "uid": "3079328b98d6",
       "uop_big_kind": "CMD",
@@ -10037,10 +11378,44 @@
           "width_bits": 32
         }
       ],
-      "pto_source_form_variant": "TMOV.S2L.BROADCAST",
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "pto_source_form_variant": "TMOV.L2S.PUBLISH",
+      "pto_source_form_variant_of": "bstart_tmov_32_211446509efb",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 335
+        "line": 337
       },
       "uid": "34d0ab432974",
       "uop_big_kind": "CMD",
@@ -10074,15 +11449,15 @@
             ],
             "index": 0,
             "mask": "0x07ffffff",
-            "match": "0x00811181",
-            "pattern": ".....000100000010001000110000001",
+            "match": "0x00c11181",
+            "pattern": ".....000110000010001000110000001",
             "width_bits": 32
           }
         ]
       },
       "encoding_kind": "L32",
       "group": "Bundle Split",
-      "id": "bstart_tmov_32_68c4ed390b75",
+      "id": "bstart_tmov_32_472804576301",
       "length_bits": 32,
       "mnemonic": "BSTART.TMOV",
       "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
@@ -10097,24 +11472,58 @@
             },
             {
               "const": {
-                "value": 8458625,
+                "value": 12652929,
                 "width": 27
               },
               "lsb": 0,
               "msb": 26,
-              "token": "27'b000100000010001000110000001",
+              "token": "27'b000110000010001000110000001",
               "width": 27
             }
           ],
           "width_bits": 32
         }
       ],
-      "pto_source_form_variant": "TMOV.L2S.INSERT",
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "pto_source_form_variant": "TMOV.S2L.EXTRACT",
+      "pto_source_form_variant_of": "bstart_tmov_32_211446509efb",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 333
+        "line": 339
       },
-      "uid": "68c4ed390b75",
+      "uid": "472804576301",
       "uop_big_kind": "CMD",
       "uop_class": {
         "cmd_kind": "BLOCK_SPLIT",
@@ -10181,10 +11590,44 @@
           "width_bits": 32
         }
       ],
-      "pto_source_form_variant": "TMOV.S2L.EXTRACT",
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "pto_source_form_variant": "TMOV.S2L.BROADCAST",
+      "pto_source_form_variant_of": "bstart_tmov_32_211446509efb",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 336
+        "line": 338
       },
       "uid": "d96181e99f01",
       "uop_big_kind": "CMD",
@@ -10253,10 +11696,44 @@
           "width_bits": 32
         }
       ],
-      "pto_source_form_variant": "TMOV.L2S.PUBLISH",
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
+      "pto_source_form_variant": "TMOV.L2S.INSERT",
+      "pto_source_form_variant_of": "bstart_tmov_32_211446509efb",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 334
+        "line": 336
       },
       "uid": "efe5c49fcb78",
       "uop_big_kind": "CMD",
@@ -10362,16 +11839,49 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
       "pto_source_form_id": "bstart_tprefetch_32_d5f83e5aadf6",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 338
+        "line": 341
       },
       "uid": "3c9e83c5a42f",
       "uop_big_kind": "CMD",
       "uop_class": {
         "cmd_kind": "BLOCK_SPLIT",
-        "note": "v0.58 TMA Function=3; TLOAD address/memory contract without destination side effects",
+        "note": "PTO ISA 0.58 TLSU Function=3; TLOAD address/memory contract without destination side effects",
         "source": "group_rule",
         "uop_kind": "CMD"
       },
@@ -10399,15 +11909,15 @@
             ],
             "index": 0,
             "mask": "0x07ffffff",
-            "match": "0x00c11181",
-            "pattern": ".....000110000010001000110000001",
+            "match": "0x00e11181",
+            "pattern": ".....000111000010001000110000001",
             "width_bits": 32
           }
         ]
       },
       "encoding_kind": "L32",
       "group": "Bundle Split",
-      "id": "bstart_tstore_32_6f6869479814",
+      "id": "bstart_tstore_32_6bed4bf0e415",
       "length_bits": 32,
       "mnemonic": "BSTART.TSTORE",
       "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
@@ -10422,24 +11932,58 @@
             },
             {
               "const": {
-                "value": 12652929,
+                "value": 14750081,
                 "width": 27
               },
               "lsb": 0,
               "msb": 26,
-              "token": "27'b000110000010001000110000001",
+              "token": "27'b000111000010001000110000001",
               "width": 27
             }
           ],
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
       "pto_source_form_variant": "TSTORE.SPART",
+      "pto_source_form_variant_of": "bstart_tstore_32_4048b6e8b0f4",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 340
+        "line": 343
       },
-      "uid": "6f6869479814",
+      "uid": "6bed4bf0e415",
       "uop_big_kind": "CMD",
       "uop_class": {
         "cmd_kind": "BLOCK_SPLIT",
@@ -10543,10 +12087,43 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "DataType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            20,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ],
       "pto_source_form_id": "bstart_tstore_32_4048b6e8b0f4",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 339
+        "line": 342
       },
       "uid": "d592de9e15a8",
       "uop_big_kind": "CMD",
@@ -10878,10 +12455,11 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "bstop_32_d25b09fdd59c",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 341
+        "line": 344
       },
       "uid": "1c80341ebaa2",
       "uop_big_kind": "CMD",
@@ -12025,6 +13603,13 @@
           "width_bits": 16
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "LoopNest",
+          "operator": "not-equal",
+          "value": 3
+        }
+      ],
       "pto_source_form_id": "c_b_dimi_16_3f1b113c76ce",
       "source": {
         "file": "opcodes/lx_c.opc",
@@ -12107,6 +13692,7 @@
           "width_bits": 16
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "c_b_ios_16_14f1b8fba5e6",
       "source": {
         "file": "opcodes/lx_c.opc",
@@ -12179,6 +13765,7 @@
           "width_bits": 16
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "c_bstart_16_f833d2a4753c",
       "source": {
         "file": "opcodes/lx_c.opc",
@@ -12251,6 +13838,7 @@
           "width_bits": 16
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "c_bstart_16_c4e238a9227a",
       "source": {
         "file": "opcodes/lx_c.opc",
@@ -12340,6 +13928,13 @@
           "width_bits": 16
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "BrType",
+          "operator": "not-equal",
+          "value": 0
+        }
+      ],
       "pto_source_form_id": "c_bstart_fp_16_9dcef7e3a85b",
       "source": {
         "file": "opcodes/lx_c.opc",
@@ -12393,6 +13988,7 @@
           "width_bits": 16
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "c_bstart_mpar_16_66c3ef2226ec",
       "source": {
         "file": "opcodes/lx_c.opc",
@@ -12446,6 +14042,7 @@
           "width_bits": 16
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "c_bstart_mseq_16_b5597e0e41c2",
       "source": {
         "file": "opcodes/lx_c.opc",
@@ -12535,6 +14132,13 @@
           "width_bits": 16
         }
       ],
+      "pto_source_constraints": [
+        {
+          "field": "BrType",
+          "operator": "not-equal",
+          "value": 0
+        }
+      ],
       "pto_source_form_id": "c_bstart_std_16_8b40f078c14a",
       "source": {
         "file": "opcodes/lx_c.opc",
@@ -12588,6 +14192,7 @@
           "width_bits": 16
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "c_bstart_sys_16_ec213ce96eb7",
       "source": {
         "file": "opcodes/lx_c.opc",
@@ -12843,6 +14448,7 @@
           "width_bits": 16
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "c_bstop_16_ca4743d8a95e",
       "source": {
         "file": "opcodes/lx_c.opc",
@@ -21231,10 +22837,11 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "ercov_32_dc0be14a2d8b",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 342
+        "line": 345
       },
       "uid": "9b0c74795df0",
       "uop_big_kind": "CMD",
@@ -21349,10 +22956,11 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "esave_32_4c4f79fe3171",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 343
+        "line": 346
       },
       "uid": "c85cb830dc0b",
       "uop_big_kind": "CMD",
@@ -23230,10 +24838,11 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "fentry_32_a47584ec13b6",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 344
+        "line": 347
       },
       "uid": "74a07f46d846",
       "uop_big_kind": "CMD",
@@ -23692,10 +25301,11 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "fexit_32_37b663f2a34d",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 345
+        "line": 348
       },
       "uid": "6492f41b2239",
       "uop_big_kind": "CMD",
@@ -26302,10 +27912,11 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "fret_ra_32_659c886221c1",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 346
+        "line": 349
       },
       "uid": "b6f13adb3ea1",
       "uop_big_kind": "CMD",
@@ -26436,10 +28047,11 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "fret_stk_32_4fe246bd8241",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 347
+        "line": 350
       },
       "uid": "4522597d3ce0",
       "uop_big_kind": "CMD",
@@ -27849,11 +29461,44 @@
         ]
       },
       "encoding_kind": "HL48",
+      "exact_relocations": [
+        {
+          "field": "simm25",
+          "name": "B25_PCREL"
+        },
+        {
+          "field": "uimm5",
+          "name": "CSETRET5_PCREL"
+        }
+      ],
       "group": "BSTART",
       "id": "hl_bstart_call_48_d71cee46ab50",
       "length_bits": 48,
       "mnemonic": "HL.BSTART CALL",
-      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "note": "Atomic fused CALL: call_target = P + (SignExtend(simm25) << 1); ra = (P + 4) + (ZeroExtend(uimm5) << 1). Both labels are explicit and independently relocatable.",
+      "operand_roles": [
+        {
+          "field": "simm25",
+          "pc_base": "P",
+          "role": "call_target",
+          "scale_bytes": 2,
+          "signed": true,
+          "syntax": "<br_label>"
+        },
+        {
+          "field": "uimm5",
+          "pc_base": "P+4",
+          "role": "return_target",
+          "scale_bytes": 2,
+          "signed": false,
+          "syntax": "<rt_label>"
+        },
+        {
+          "field": null,
+          "role": "link_destination",
+          "syntax": "->ra"
+        }
+      ],
       "parts": [
         {
           "segments": [
@@ -27903,7 +29548,14 @@
           "width_bits": 48
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "hl_bstart_call_48_3c784c583c90",
+      "semantic_contract": {
+        "atomic": true,
+        "call_target": "P + (SignExtend(simm25) << 1)",
+        "link_write": "ra = (P + 4) + (ZeroExtend(uimm5) << 1)",
+        "transfer": "CALL"
+      },
       "source": {
         "file": "opcodes/lx_hl48.opc",
         "line": 200
@@ -28001,6 +29653,7 @@
           "width_bits": 48
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "hl_bstart_fp_48_43530d2ebfae",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -28099,6 +29752,7 @@
           "width_bits": 48
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "hl_bstart_fp_48_81b457553844",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -28197,6 +29851,7 @@
           "width_bits": 48
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "hl_bstart_fp_48_eb938e9200eb",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -28295,6 +29950,7 @@
           "width_bits": 48
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "hl_bstart_fp_48_038e2e96cf64",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -28393,6 +30049,7 @@
           "width_bits": 48
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "hl_bstart_std_48_9ba705800872",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -28491,6 +30148,7 @@
           "width_bits": 48
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "hl_bstart_std_48_b13f22c7c4a3",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -28589,6 +30247,7 @@
           "width_bits": 48
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "hl_bstart_std_48_51f78942222e",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -28687,6 +30346,7 @@
           "width_bits": 48
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "hl_bstart_std_48_d814d26508a4",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -28785,6 +30445,7 @@
           "width_bits": 48
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "hl_bstart_sys_48_5bf0381f7bf8",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -50965,6 +52626,7 @@
           "width_bits": 48
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "hl_qmt_48_eb9e41958045",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -51157,6 +52819,7 @@
           "width_bits": 48
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "hl_qpop_48_a2c57f5bc27b",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -51339,6 +53002,7 @@
           "width_bits": 48
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "hl_qpush_48_3eab8e05d61a",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -66864,6 +68528,7 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "l_bstart_fp_64_0cac9941f7d4",
       "source": {
         "file": "opcodes/lx_64_prefix.opc",
@@ -66982,6 +68647,7 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "l_bstart_fp_64_8115c042ef26",
       "source": {
         "file": "opcodes/lx_64_prefix.opc",
@@ -67055,7 +68721,7 @@
       "id": "l_bstart_fp_64_9673fedb498b",
       "length_bits": 64,
       "mnemonic": "L.BSTART.FP",
-      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "note": "Bare L.BSTART.FP CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.",
       "parts": [
         {
           "segments": [
@@ -67100,6 +68766,7 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "l_bstart_fp_64_2067ad6667ed",
       "source": {
         "file": "opcodes/lx_64_prefix.opc",
@@ -67218,6 +68885,7 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "l_bstart_fp_64_098e57019d7b",
       "source": {
         "file": "opcodes/lx_64_prefix.opc",
@@ -67336,6 +69004,7 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "l_bstart_std_64_72d502fcd30d",
       "source": {
         "file": "opcodes/lx_64_prefix.opc",
@@ -67454,6 +69123,7 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "l_bstart_std_64_37e84068ce61",
       "source": {
         "file": "opcodes/lx_64_prefix.opc",
@@ -67527,7 +69197,7 @@
       "id": "l_bstart_std_64_9a6081ab8f08",
       "length_bits": 64,
       "mnemonic": "L.BSTART.STD",
-      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "note": "Bare L.BSTART.STD CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.",
       "parts": [
         {
           "segments": [
@@ -67572,6 +69242,7 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "l_bstart_std_64_463a1567da91",
       "source": {
         "file": "opcodes/lx_64_prefix.opc",
@@ -67690,6 +69361,7 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "l_bstart_std_64_899592f9c5bc",
       "source": {
         "file": "opcodes/lx_64_prefix.opc",
@@ -67808,6 +69480,7 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "l_bstart_sys_64_919e576c79e4",
       "source": {
         "file": "opcodes/lx_64_prefix.opc",
@@ -76510,10 +78183,11 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "mcopy_32_4fc4a803e995",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 348
+        "line": 351
       },
       "uid": "10262506ace5",
       "uop_big_kind": "CMD",
@@ -76940,10 +78614,11 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "mset_32_0b932f291932",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 349
+        "line": 352
       },
       "uid": "7a5f3c26ac6b",
       "uop_big_kind": "CMD",
@@ -153606,10 +155281,11 @@
           "width_bits": 32
         }
       ],
+      "pto_source_constraints": [],
       "pto_source_form_id": "xb_32_40ad190a0a7f",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 350
+        "line": 353
       },
       "uid": "1c3043ef6fa8",
       "uop_big_kind": "CMD",
@@ -159479,44 +161155,41 @@
             ]
           },
           {
-            "effect_contract": "TRANDOM",
+            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "effect_contract": "THISTOGRAM",
             "fault_contract": "ExecuteTileInstruction",
-            "function": 9,
-            "legality_handler": "TileOperandsLegal_TRANDOM",
-            "logical_selector": 105,
+            "function": 8,
+            "legality_handler": "TileOperandsLegal_THISTOGRAM",
+            "logical_selector": 104,
             "mode": 3,
-            "name": "TRANDOM",
+            "name": "THISTOGRAM",
             "operands": [
               {
                 "field": "destination0",
                 "role": "destination"
               },
               {
-                "field": "scalar0",
-                "role": "key-64"
+                "field": "source0",
+                "role": "source"
               },
               {
-                "field": "scalar1",
-                "role": "counter-low-64"
+                "field": "source1",
+                "role": "indices"
               },
               {
-                "field": "address",
-                "role": "counter-high-64"
-              },
-              {
-                "field": "flag0",
-                "role": "seven-rounds"
+                "field": "selected_byte",
+                "role": "selected-byte"
               }
             ],
+            "profile": "v0.57",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "semantic_handler": "TRANDOM",
+            "semantic_handler": "THISTOGRAM",
             "semantic_status": "reviewed-complete",
             "state_effects": [
               "operand:destination0:destination",
-              "operand:scalar0:key-64",
-              "operand:scalar1:counter-low-64",
-              "operand:address:counter-high-64",
-              "operand:flag0:seven-rounds"
+              "operand:source0:source",
+              "operand:source1:indices",
+              "operand:selected_byte:selected-byte"
             ]
           },
           {
@@ -159606,13 +161279,14 @@
             ]
           },
           {
-            "effect_contract": "TSORT32",
+            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "effect_contract": "TSORT",
             "fault_contract": "ExecuteTileInstruction",
             "function": 12,
-            "legality_handler": "TileOperandsLegal_TSORT32",
+            "legality_handler": "TileOperandsLegal_TSORT",
             "logical_selector": 108,
             "mode": 3,
-            "name": "TSORT32",
+            "name": "TSORT",
             "operands": [
               {
                 "field": "destination0",
@@ -159627,17 +161301,23 @@
                 "role": "source"
               },
               {
+                "field": "sort_width",
+                "role": "sort-width"
+              },
+              {
                 "field": "flag0",
                 "role": "descending"
               }
             ],
+            "profile": "v0.57",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "semantic_handler": "TSORT32",
+            "semantic_handler": "TSORT",
             "semantic_status": "reviewed-complete",
             "state_effects": [
               "operand:destination0:destination",
               "operand:destination1:original-indices-u32",
               "operand:source0:source",
+              "operand:sort_width:sort-width",
               "operand:flag0:descending"
             ]
           },
@@ -159991,8 +161671,8 @@
             "0x061"
           ],
           [
-            "0x068",
-            "0x068"
+            "0x069",
+            "0x069"
           ],
           [
             "0x075",
@@ -160030,7 +161710,7 @@
         "physical_contiguity": "required",
         "resource_shortage": "precise_allocation_trap"
       },
-      "tma": {
+      "tlsu": {
         "function_field_bits": [
           0,
           4
@@ -160106,6 +161786,46 @@
             ]
           },
           {
+            "function": 6,
+            "mnemonic": "BSTART.MGATHER.MASK",
+            "name": "MGATHER_MASK",
+            "semantic_handler": "MGATHER_MASK",
+            "semantic_status": "reviewed-complete",
+            "state_effects": [
+              "operand:destination0:destination",
+              "operand:address:base-address",
+              "operand:source0:indices",
+              "operand:source1:mask"
+            ]
+          },
+          {
+            "function": 7,
+            "mnemonic": "BSTART.MSCATTER.MASK",
+            "name": "MSCATTER_MASK",
+            "semantic_handler": "MSCATTER_MASK",
+            "semantic_status": "reviewed-complete",
+            "state_effects": [
+              "operand:address:base-address",
+              "operand:source0:source",
+              "operand:source1:indices",
+              "operand:source2:mask"
+            ]
+          },
+          {
+            "function": 8,
+            "mnemonic": "BSTART.MGATHER.CAS",
+            "name": "MGATHER_CAS",
+            "semantic_handler": "MGATHER_CAS",
+            "semantic_status": "reviewed-complete",
+            "state_effects": [
+              "operand:destination0:destination",
+              "operand:address:base-address",
+              "operand:source0:indices",
+              "operand:source1:expected",
+              "operand:source2:replacement"
+            ]
+          },
+          {
             "function": 13,
             "mnemonic": "BSTART.GMOV",
             "name": "GMOV",
@@ -160121,11 +161841,7 @@
         "reserved_behavior": "illegal_instruction",
         "reserved_function_ranges": [
           [
-            6,
-            7
-          ],
-          [
-            14,
+            15,
             31
           ]
         ]
@@ -160139,7 +161855,7 @@
           "v.*.brg"
         ],
         "kernel_policy": "normal BCC scalar memory issue is closed while a shader kernel is active",
-        "ordering_domain": "shared TSO domain with BCC and TMA/MTC operations"
+        "ordering_domain": "shared TSO domain with BCC and TLSU/MTC operations"
       },
       "exec_mask": {
         "domain": "scalar-uniform lane register",
@@ -160539,7 +162255,7 @@
             "rule": "Inactive-lane behavior is explicit and deterministic; implementations must not mix merge/zero semantics within one architectural mode.",
             "scope": "Vector/tile execution blocks (e.g. BSTART.VPAR/BSTART.VSEQ)"
           },
-          "tma": {
+          "tlsu": {
             "domain": "Normal",
             "ops": [
               "TLOAD",
@@ -160547,20 +162263,23 @@
               "TPREFETCH",
               "MGATHER",
               "MSCATTER",
-              "MGATHER.MASK",
-              "MSCATTER.MASK",
-              "MGATHER.CAS"
+              "MGATHER_MASK",
+              "MSCATTER_MASK",
+              "MGATHER_CAS",
+              "GMOV"
             ],
             "semantics": [
-              "Every listed TMA operation is an architectural memory operation in the same TSO domain as scalar load/store.",
-              "TMA memory operations participate in aq/rl/fence ordering and must not violate store->store ordering.",
-              "A TMA memory operation may decompose into multiple internal beats and is architecturally non-atomic to external observers except for each individual MGATHER.CAS lane transaction.",
+              "Every listed TLSU operation is an architectural memory operation in the same TSO domain as scalar load/store.",
+              "TLSU memory operations participate in aq/rl/fence ordering and must not violate store->store ordering.",
+              "Except for each MGATHER_CAS lane read-modify-write, a TLSU memory operation may decompose into multiple internal beats and is architecturally non-atomic to external observers.",
               "Internal beats have implementation-defined issue order; software must not infer row or element beat order from one architectural operation.",
               "Page and access faults are precise and restartable by software.",
               "TPREFETCH performs the same reads, address translation, permission checks, faults, restart, beat decomposition, coherence, and ordering as TLOAD, but allocates and writes no destination tile state.",
-              "MGATHER and MGATHER.MASK form lane addresses from the base scalar and unsigned u16/u32/u64 offset-tile elements; masked-off lanes perform no memory access.",
-              "MSCATTER and MSCATTER.MASK use the same address formation and write the corresponding data-tile elements; masked-off lanes perform no memory access.",
-              "MGATHER.CAS atomically compares the addressed element with the expected tile element, conditionally writes the desired tile element, and returns the pre-CAS memory value for every active lane."
+              "MGATHER forms lane addresses from the base scalar and unsigned u16/u32/u64 offset-tile elements.",
+              "MSCATTER uses the same address formation and writes the corresponding data-tile elements.",
+              "MGATHER_MASK and MSCATTER_MASK suppress memory effects for masked-off lanes.",
+              "Each active MGATHER_CAS lane is one atomic read-modify-write that returns the observed value and conditionally stores the replacement value.",
+              "GMOV is the TLSU Function 13 core4 collective global-memory movement operation."
             ],
             "strided_footprint": {
               "applies_to": [
@@ -160587,14 +162306,14 @@
       },
       "notes": [
         "The v0.58 profile uses TSO as the architectural memory model, retained by v0.58.",
-        "The TSO contract applies to both scalar (BCC) and tile-memory (MTC/TMA) channels.",
+        "The TSO contract applies to both scalar (BCC) and tile-memory (MTC/TLSU) channels.",
         "A single LXCPU must not reorder committed stores (including TSTORE beats) ahead of older stores.",
         "Shader-kernel bridged accesses (`l.*.brg` and `v.*.brg`) participate in the same architectural TSO domain."
       ]
     },
     "pto_command_forms": {
-      "form_constraint_count": 37,
-      "form_count": 96,
+      "form_constraint_count": 40,
+      "form_count": 99,
       "forms": [
         {
           "asm": "B.CATR {trap, atomic, <aq, rl, aqrl>, far, dr}",
@@ -162184,6 +163903,207 @@
           "status": "accepted"
         },
         {
+          "asm": "BSTART.MGATHER.CAS DataType",
+          "constraints": [
+            {
+              "field": "DataType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                16,
+                17,
+                18,
+                19,
+                20,
+                24,
+                25,
+                26,
+                27,
+                28
+              ]
+            }
+          ],
+          "encoding": [
+            {
+              "index": 0,
+              "mask": "0x07ffffff",
+              "match": "0x00811181",
+              "width_bits": 32
+            }
+          ],
+          "encoding_kind": "L32",
+          "fields": [
+            {
+              "name": "DataType",
+              "pieces": [
+                {
+                  "instruction_lsb": 27,
+                  "value_lsb": 0,
+                  "width": 5
+                }
+              ],
+              "signedness": "encoding-defined",
+              "width": 5
+            }
+          ],
+          "form_id": "bstart_mgather_cas_32_fd8c8a3b720a",
+          "length_bits": 32,
+          "mnemonic": "BSTART.MGATHER.CAS",
+          "semantic_family": "CMD",
+          "semantic_group": "Bundle Split",
+          "semantic_handler": "ExecuteBundleStart",
+          "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+          "status": "accepted"
+        },
+        {
+          "asm": "BSTART.MGATHER.MASK DataType",
+          "constraints": [
+            {
+              "field": "DataType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                16,
+                17,
+                18,
+                19,
+                20,
+                24,
+                25,
+                26,
+                27,
+                28
+              ]
+            }
+          ],
+          "encoding": [
+            {
+              "index": 0,
+              "mask": "0x07ffffff",
+              "match": "0x00611181",
+              "width_bits": 32
+            }
+          ],
+          "encoding_kind": "L32",
+          "fields": [
+            {
+              "name": "DataType",
+              "pieces": [
+                {
+                  "instruction_lsb": 27,
+                  "value_lsb": 0,
+                  "width": 5
+                }
+              ],
+              "signedness": "encoding-defined",
+              "width": 5
+            }
+          ],
+          "form_id": "bstart_mgather_mask_32_5573241cd944",
+          "length_bits": 32,
+          "mnemonic": "BSTART.MGATHER.MASK",
+          "semantic_family": "CMD",
+          "semantic_group": "Bundle Split",
+          "semantic_handler": "ExecuteBundleStart",
+          "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+          "status": "accepted"
+        },
+        {
+          "asm": "BSTART.MSCATTER.MASK DataType",
+          "constraints": [
+            {
+              "field": "DataType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                16,
+                17,
+                18,
+                19,
+                20,
+                24,
+                25,
+                26,
+                27,
+                28
+              ]
+            }
+          ],
+          "encoding": [
+            {
+              "index": 0,
+              "mask": "0x07ffffff",
+              "match": "0x00711181",
+              "width_bits": 32
+            }
+          ],
+          "encoding_kind": "L32",
+          "fields": [
+            {
+              "name": "DataType",
+              "pieces": [
+                {
+                  "instruction_lsb": 27,
+                  "value_lsb": 0,
+                  "width": 5
+                }
+              ],
+              "signedness": "encoding-defined",
+              "width": 5
+            }
+          ],
+          "form_id": "bstart_mscatter_mask_32_2a33eed646f7",
+          "length_bits": 32,
+          "mnemonic": "BSTART.MSCATTER.MASK",
+          "semantic_family": "CMD",
+          "semantic_group": "Bundle Split",
+          "semantic_handler": "ExecuteBundleStart",
+          "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+          "status": "accepted"
+        },
+        {
           "asm": "BSTART.MPAR <VS8, VS16>",
           "constraints": [],
           "encoding": [
@@ -163573,24 +165493,12 @@
                 {
                   "index": 0,
                   "mask": "0x07ffffff",
-                  "match": "0x00811181",
-                  "width_bits": 32
-                }
-              ],
-              "function": 8,
-              "name": "TMOV.L2S.INSERT"
-            },
-            {
-              "encoding": [
-                {
-                  "index": 0,
-                  "mask": "0x07ffffff",
                   "match": "0x00911181",
                   "width_bits": 32
                 }
               ],
               "function": 9,
-              "name": "TMOV.L2S.PUBLISH"
+              "name": "TMOV.L2S.INSERT"
             },
             {
               "encoding": [
@@ -163602,7 +165510,7 @@
                 }
               ],
               "function": 10,
-              "name": "TMOV.S2L.BROADCAST"
+              "name": "TMOV.L2S.PUBLISH"
             },
             {
               "encoding": [
@@ -163614,6 +165522,18 @@
                 }
               ],
               "function": 11,
+              "name": "TMOV.S2L.BROADCAST"
+            },
+            {
+              "encoding": [
+                {
+                  "index": 0,
+                  "mask": "0x07ffffff",
+                  "match": "0x00c11181",
+                  "width_bits": 32
+                }
+              ],
+              "function": 12,
               "name": "TMOV.S2L.EXTRACT"
             }
           ],
@@ -163824,11 +165744,11 @@
                 {
                   "index": 0,
                   "mask": "0x07ffffff",
-                  "match": "0x00c11181",
+                  "match": "0x00e11181",
                   "width_bits": 32
                 }
               ],
-              "function": 12,
+              "function": 14,
               "name": "TSTORE.SPART"
             }
           ],
@@ -165864,8 +167784,8 @@
         }
       ],
       "isa": "PTO Instruction Set Architecture",
-      "operand_field_count": 56,
-      "operand_piece_count": 186,
+      "operand_field_count": 57,
+      "operand_piece_count": 189,
       "reviewed_encoding_overlaps": [
         {
           "broad_form_id": "b_iot_32_10db6db84f5d",
@@ -166651,10 +168571,10 @@
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
           "family": "TEPL",
-          "function": 9,
+          "function": 8,
           "mode": 3,
-          "name": "TRANDOM",
-          "selector": "0x069"
+          "name": "THISTOGRAM",
+          "selector": "0x068"
         },
         {
           "command_mnemonic": "BSTART.TEPL",
@@ -166683,7 +168603,7 @@
           "family": "TEPL",
           "function": 12,
           "mode": 3,
-          "name": "TSORT32",
+          "name": "TSORT",
           "selector": "0x06C"
         },
         {
@@ -166770,7 +168690,7 @@
           "command_mnemonic": "BSTART.TLOAD",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
-          "family": "TMA",
+          "family": "TLSU",
           "function": 0,
           "mode": null,
           "name": "TLOAD",
@@ -166780,7 +168700,7 @@
           "command_mnemonic": "BSTART.TSTORE",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
-          "family": "TMA",
+          "family": "TLSU",
           "function": 1,
           "mode": null,
           "name": "TSTORE",
@@ -166790,7 +168710,7 @@
           "command_mnemonic": "BSTART.TMOV",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
-          "family": "TMA",
+          "family": "TLSU",
           "function": 2,
           "mode": null,
           "name": "TMOV",
@@ -166800,7 +168720,7 @@
           "command_mnemonic": "BSTART.TPREFETCH",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
-          "family": "TMA",
+          "family": "TLSU",
           "function": 3,
           "mode": null,
           "name": "TPREFETCH",
@@ -166810,7 +168730,7 @@
           "command_mnemonic": "BSTART.MGATHER",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
-          "family": "TMA",
+          "family": "TLSU",
           "function": 4,
           "mode": null,
           "name": "MGATHER",
@@ -166820,17 +168740,47 @@
           "command_mnemonic": "BSTART.MSCATTER",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
-          "family": "TMA",
+          "family": "TLSU",
           "function": 5,
           "mode": null,
           "name": "MSCATTER",
           "selector": null
         },
         {
+          "command_mnemonic": "BSTART.MGATHER.MASK",
+          "contract_status": "reviewed-complete",
+          "disposition": "accepted-direct-operation",
+          "family": "TLSU",
+          "function": 6,
+          "mode": null,
+          "name": "MGATHER_MASK",
+          "selector": null
+        },
+        {
+          "command_mnemonic": "BSTART.MSCATTER.MASK",
+          "contract_status": "reviewed-complete",
+          "disposition": "accepted-direct-operation",
+          "family": "TLSU",
+          "function": 7,
+          "mode": null,
+          "name": "MSCATTER_MASK",
+          "selector": null
+        },
+        {
+          "command_mnemonic": "BSTART.MGATHER.CAS",
+          "contract_status": "reviewed-complete",
+          "disposition": "accepted-direct-operation",
+          "family": "TLSU",
+          "function": 8,
+          "mode": null,
+          "name": "MGATHER_CAS",
+          "selector": null
+        },
+        {
           "command_mnemonic": "BSTART.GMOV",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
-          "family": "TMA",
+          "family": "TLSU",
           "function": 13,
           "mode": null,
           "name": "GMOV",
@@ -166957,11 +168907,11 @@
           "selector": null
         }
       ],
-      "entry_count": 106,
+      "entry_count": 109,
       "family_counts": {
         "CUBE": 12,
         "TEPL": 87,
-        "TMA": 7
+        "TLSU": 10
       },
       "migration_aliases": {},
       "policy": {
@@ -166978,9 +168928,6 @@
       "$schema": "https://docs.openclaw.ai/schemas/linxisa/pto_ops.v1.json",
       "deleted_names": [
         "ACCCVT",
-        "MGATHER_CAS",
-        "MGATHER_MASK",
-        "MSCATTER_MASK",
         "TADDC",
         "TADDSC",
         "TALLOC",
@@ -166990,7 +168937,6 @@
         "TFMODS",
         "TFREE",
         "TGATHERB",
-        "THISTOGRAM",
         "TINTERLEAVE",
         "TLRELU",
         "TPARTARGMAX",
@@ -167000,14 +168946,16 @@
         "TPUSH",
         "TRESHAPE",
         "TSUBC",
-        "TSUBSC"
+        "TSUBSC",
+        "TRANDOM",
+        "TSORT32"
       ],
       "family_counts": {
         "CUBE": 12,
         "TEPL": 87,
-        "TMA": 7
+        "TLSU": 10
       },
-      "operation_count": 106,
+      "operation_count": 109,
       "operations": [
         {
           "arguments": [
@@ -170914,63 +172862,58 @@
               "operand": "destination0"
             },
             {
-              "operand": "scalar0"
+              "operand": "source0"
             },
             {
-              "operand": "scalar1"
+              "operand": "source1"
             },
             {
-              "operand": "address"
-            },
-            {
-              "operand": "flag0"
+              "operand": "selected_byte"
             }
           ],
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
-            "allowed_nonzero_fields": [],
-            "pad_union": "must-zero"
+            "allowed_nonzero_fields": [
+              "PadValueOrByteId",
+              "DataType"
+            ],
+            "pad_union": "histogram-byte-id"
           },
           "disposition": "accepted-direct-operation",
-          "effect_contract": "TRANDOM",
+          "effect_contract": "THISTOGRAM",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
-          "function": 9,
-          "legality_handler": "TileOperandsLegal_TRANDOM",
+          "function": 8,
+          "legality_handler": "TileOperandsLegal_THISTOGRAM",
           "mode": 3,
-          "name": "TRANDOM",
+          "name": "THISTOGRAM",
           "operands": [
             {
               "field": "destination0",
               "role": "destination"
             },
             {
-              "field": "scalar0",
-              "role": "key-64"
+              "field": "source0",
+              "role": "source"
             },
             {
-              "field": "scalar1",
-              "role": "counter-low-64"
+              "field": "source1",
+              "role": "indices"
             },
             {
-              "field": "address",
-              "role": "counter-high-64"
-            },
-            {
-              "field": "flag0",
-              "role": "seven-rounds"
+              "field": "selected_byte",
+              "role": "selected-byte"
             }
           ],
           "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-          "selector": "0x069",
-          "semantic_handler": "TRANDOM",
+          "selector": "0x068",
+          "semantic_handler": "THISTOGRAM",
           "state_effects": [
             "operand:destination0:destination",
-            "operand:scalar0:key-64",
-            "operand:scalar1:counter-low-64",
-            "operand:address:counter-high-64",
-            "operand:flag0:seven-rounds"
+            "operand:source0:source",
+            "operand:source1:indices",
+            "operand:selected_byte:selected-byte"
           ]
         },
         {
@@ -171127,6 +173070,9 @@
               "operand": "source0"
             },
             {
+              "operand": "sort_width"
+            },
+            {
               "operand": "flag0"
             }
           ],
@@ -171137,13 +173083,13 @@
             "pad_union": "must-zero"
           },
           "disposition": "accepted-direct-operation",
-          "effect_contract": "TSORT32",
+          "effect_contract": "TSORT",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 12,
-          "legality_handler": "TileOperandsLegal_TSORT32",
+          "legality_handler": "TileOperandsLegal_TSORT",
           "mode": 3,
-          "name": "TSORT32",
+          "name": "TSORT",
           "operands": [
             {
               "field": "destination0",
@@ -171158,17 +173104,22 @@
               "role": "source"
             },
             {
+              "field": "sort_width",
+              "role": "sort-width"
+            },
+            {
               "field": "flag0",
               "role": "descending"
             }
           ],
           "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
           "selector": "0x06C",
-          "semantic_handler": "TSORT32",
+          "semantic_handler": "TSORT",
           "state_effects": [
             "operand:destination0:destination",
             "operand:destination1:original-indices-u32",
             "operand:source0:source",
+            "operand:sort_width:sort-width",
             "operand:flag0:descending"
           ]
         },
@@ -171601,7 +173552,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TLOAD",
-          "family": "TMA",
+          "family": "TLSU",
           "fault_contract": "ExecuteTileInstruction",
           "function": 0,
           "legality_handler": "TileOperandsLegal_TLOAD",
@@ -171642,7 +173593,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TSTORE",
-          "family": "TMA",
+          "family": "TLSU",
           "fault_contract": "ExecuteTileInstruction",
           "function": 1,
           "legality_handler": "TileOperandsLegal_TSTORE",
@@ -171683,7 +173634,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TMOV",
-          "family": "TMA",
+          "family": "TLSU",
           "fault_contract": "ExecuteTileInstruction",
           "function": 2,
           "legality_handler": "TileOperandsLegal_TMOV",
@@ -171722,7 +173673,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TPREFETCH",
-          "family": "TMA",
+          "family": "TLSU",
           "fault_contract": "ExecuteTileInstruction",
           "function": 3,
           "legality_handler": "TileOperandsLegal_TPREFETCH",
@@ -171766,7 +173717,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "MGATHER",
-          "family": "TMA",
+          "family": "TLSU",
           "fault_contract": "ExecuteTileInstruction",
           "function": 4,
           "legality_handler": "TileOperandsLegal_MGATHER",
@@ -171815,7 +173766,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "MSCATTER",
-          "family": "TMA",
+          "family": "TLSU",
           "fault_contract": "ExecuteTileInstruction",
           "function": 5,
           "legality_handler": "TileOperandsLegal_MSCATTER",
@@ -171848,6 +173799,189 @@
               "operand": "destination0"
             },
             {
+              "operand": "address"
+            },
+            {
+              "operand": "source0"
+            },
+            {
+              "operand": "source1"
+            },
+            {
+              "runtime": "CurrentBundlePadValue"
+            }
+          ],
+          "command_mnemonic": "BSTART.MGATHER.MASK",
+          "contract_status": "reviewed-complete",
+          "datr_contract": {
+            "allowed_nonzero_fields": [
+              "PadValueOrByteId",
+              "Layout"
+            ],
+            "pad_union": "pad-value"
+          },
+          "disposition": "accepted-direct-operation",
+          "effect_contract": "MGATHER_MASK",
+          "family": "TLSU",
+          "fault_contract": "ExecuteTileInstruction",
+          "function": 6,
+          "legality_handler": "TileOperandsLegal_MGATHER_MASK",
+          "name": "MGATHER_MASK",
+          "operands": [
+            {
+              "field": "destination0",
+              "role": "destination"
+            },
+            {
+              "field": "address",
+              "role": "base-address"
+            },
+            {
+              "field": "source0",
+              "role": "indices"
+            },
+            {
+              "field": "source1",
+              "role": "mask"
+            }
+          ],
+          "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+          "semantic_handler": "MGATHER_MASK",
+          "state_effects": [
+            "operand:destination0:destination",
+            "operand:address:base-address",
+            "operand:source0:indices",
+            "operand:source1:mask"
+          ]
+        },
+        {
+          "arguments": [
+            {
+              "operand": "address"
+            },
+            {
+              "operand": "source0"
+            },
+            {
+              "operand": "source1"
+            },
+            {
+              "operand": "source2"
+            }
+          ],
+          "command_mnemonic": "BSTART.MSCATTER.MASK",
+          "contract_status": "reviewed-complete",
+          "datr_contract": {
+            "allowed_nonzero_fields": [
+              "Layout"
+            ],
+            "pad_union": "must-zero"
+          },
+          "disposition": "accepted-direct-operation",
+          "effect_contract": "MSCATTER_MASK",
+          "family": "TLSU",
+          "fault_contract": "ExecuteTileInstruction",
+          "function": 7,
+          "legality_handler": "TileOperandsLegal_MSCATTER_MASK",
+          "name": "MSCATTER_MASK",
+          "operands": [
+            {
+              "field": "address",
+              "role": "base-address"
+            },
+            {
+              "field": "source0",
+              "role": "source"
+            },
+            {
+              "field": "source1",
+              "role": "indices"
+            },
+            {
+              "field": "source2",
+              "role": "mask"
+            }
+          ],
+          "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+          "semantic_handler": "MSCATTER_MASK",
+          "state_effects": [
+            "operand:address:base-address",
+            "operand:source0:source",
+            "operand:source1:indices",
+            "operand:source2:mask"
+          ]
+        },
+        {
+          "arguments": [
+            {
+              "operand": "destination0"
+            },
+            {
+              "operand": "address"
+            },
+            {
+              "operand": "source0"
+            },
+            {
+              "operand": "source1"
+            },
+            {
+              "operand": "source2"
+            }
+          ],
+          "command_mnemonic": "BSTART.MGATHER.CAS",
+          "contract_status": "reviewed-complete",
+          "datr_contract": {
+            "allowed_nonzero_fields": [
+              "Layout"
+            ],
+            "pad_union": "must-zero"
+          },
+          "disposition": "accepted-direct-operation",
+          "effect_contract": "MGATHER_CAS",
+          "family": "TLSU",
+          "fault_contract": "ExecuteTileInstruction",
+          "function": 8,
+          "legality_handler": "TileOperandsLegal_MGATHER_CAS",
+          "name": "MGATHER_CAS",
+          "operands": [
+            {
+              "field": "destination0",
+              "role": "destination"
+            },
+            {
+              "field": "address",
+              "role": "base-address"
+            },
+            {
+              "field": "source0",
+              "role": "indices"
+            },
+            {
+              "field": "source1",
+              "role": "expected"
+            },
+            {
+              "field": "source2",
+              "role": "replacement"
+            }
+          ],
+          "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+          "semantic_handler": "MGATHER_CAS",
+          "state_effects": [
+            "operand:destination0:destination",
+            "operand:address:base-address",
+            "operand:source0:indices",
+            "operand:source1:expected",
+            "operand:source2:replacement"
+          ]
+        },
+        {
+          "arguments": [
+            {
+              "operand": "destination0"
+            },
+            {
               "operand": "source0"
             },
             {
@@ -171864,7 +173998,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "GMOV",
-          "family": "TMA",
+          "family": "TLSU",
           "fault_contract": "ExecuteTileInstruction",
           "function": 13,
           "legality_handler": "TileOperandsLegal_GMOV",
@@ -172680,21 +174814,17 @@
             "0x061"
           ],
           [
-            "0x068",
-            "0x068"
+            "0x069",
+            "0x069"
           ],
           [
             "0x075",
             "0x07F"
           ]
         ],
-        "tma_functions": [
+        "tlsu_functions": [
           [
-            6,
-            7
-          ],
-          [
-            14,
+            15,
             31
           ]
         ]

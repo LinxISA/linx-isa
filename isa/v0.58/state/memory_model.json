@@ -1,7 +1,7 @@
 {
   "notes": [
     "The v0.58 profile uses TSO as the architectural memory model, retained by v0.58.",
-    "The TSO contract applies to both scalar (BCC) and tile-memory (MTC/TMA) channels.",
+    "The TSO contract applies to both scalar (BCC) and tile-memory (MTC/TLSU) channels.",
     "A single LXCPU must not reorder committed stores (including TSTORE beats) ahead of older stores.",
     "Shader-kernel bridged accesses (`l.*.brg` and `v.*.brg`) participate in the same architectural TSO domain."
   ],
@@ -30,16 +30,17 @@
         "rl": "Release",
         "aqrl": "AcquireRelease"
       },
-      "tma": {
+      "tlsu": {
         "ops": [
           "TLOAD",
           "TSTORE",
           "TPREFETCH",
           "MGATHER",
           "MSCATTER",
-          "MGATHER.MASK",
-          "MSCATTER.MASK",
-          "MGATHER.CAS"
+          "MGATHER_MASK",
+          "MSCATTER_MASK",
+          "MGATHER_CAS",
+          "GMOV"
         ],
         "domain": "Normal",
         "strided_footprint": {
@@ -57,15 +58,17 @@
           }
         },
         "semantics": [
-          "Every listed TMA operation is an architectural memory operation in the same TSO domain as scalar load/store.",
-          "TMA memory operations participate in aq/rl/fence ordering and must not violate store->store ordering.",
-          "A TMA memory operation may decompose into multiple internal beats and is architecturally non-atomic to external observers except for each individual MGATHER.CAS lane transaction.",
+          "Every listed TLSU operation is an architectural memory operation in the same TSO domain as scalar load/store.",
+          "TLSU memory operations participate in aq/rl/fence ordering and must not violate store->store ordering.",
+          "Except for each MGATHER_CAS lane read-modify-write, a TLSU memory operation may decompose into multiple internal beats and is architecturally non-atomic to external observers.",
           "Internal beats have implementation-defined issue order; software must not infer row or element beat order from one architectural operation.",
           "Page and access faults are precise and restartable by software.",
           "TPREFETCH performs the same reads, address translation, permission checks, faults, restart, beat decomposition, coherence, and ordering as TLOAD, but allocates and writes no destination tile state.",
-          "MGATHER and MGATHER.MASK form lane addresses from the base scalar and unsigned u16/u32/u64 offset-tile elements; masked-off lanes perform no memory access.",
-          "MSCATTER and MSCATTER.MASK use the same address formation and write the corresponding data-tile elements; masked-off lanes perform no memory access.",
-          "MGATHER.CAS atomically compares the addressed element with the expected tile element, conditionally writes the desired tile element, and returns the pre-CAS memory value for every active lane."
+          "MGATHER forms lane addresses from the base scalar and unsigned u16/u32/u64 offset-tile elements.",
+          "MSCATTER uses the same address formation and writes the corresponding data-tile elements.",
+          "MGATHER_MASK and MSCATTER_MASK suppress memory effects for masked-off lanes.",
+          "Each active MGATHER_CAS lane is one atomic read-modify-write that returns the observed value and conditionally stores the replacement value.",
+          "GMOV is the TLSU Function 13 core4 collective global-memory movement operation."
         ]
       },
       "simt_lane_policy": {

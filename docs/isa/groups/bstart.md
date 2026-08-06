@@ -18,11 +18,11 @@ Block split instructions with CALL/RET/commit argument encoding.
 |----------|----------|--------|--------|-------------|
 | [BSTART CALL](../instructions/bstart_call.md) | `BSTART.CALL <br_label>, <rt_label>, ->ra` | 32 | — | Atomic fused call with independent call-target and return-target fields; transfers to the call block and writes `ra`. This exact aggregate is distinct from the generic bare-call form, which preserves `ra` and requires an adjacent `SETRET` or `C.SETRET`. |
 | [HL.BSTART CALL](../instructions/hl_bstart_call.md) | `HL.BSTART.CALL <br_label>, <rt_label>, ->ra` | 48 | — | [48-bit HL.] Atomic fused call with independent call-target and return-target fields; transfers to the call block and writes `ra`. This exact aggregate is distinct from the generic bare-call form, which preserves `ra` and requires an adjacent `SETRET` or `C.SETRET`. |
-| [HL.BSTART.FP](../instructions/hl_bstart_fp.md) | `HL.BSTART.FP COND, <label>` | 48 | — | [48-bit HL.] Terminates the current block and begins the next. |
-| [HL.BSTART.STD](../instructions/hl_bstart_std.md) | `HL.BSTART.STD CALL, <label>` | 48 | — | [48-bit HL.] Terminates the current block and begins the next. |
+| [HL.BSTART.FP](../instructions/hl_bstart_fp.md) | `HL.BSTART.FP FALL<, fixup_label>` | 48 | — | [48-bit HL.] Terminates the current block and begins the next. |
+| [HL.BSTART.STD](../instructions/hl_bstart_std.md) | `HL.BSTART.STD FALL<, fixup_label>` | 48 | — | [48-bit HL.] Terminates the current block and begins the next. |
 | [HL.BSTART.SYS](../instructions/hl_bstart_sys.md) | `HL.BSTART.SYS FALL<, fixup_label>` | 48 | — | [48-bit HL.] Terminates the current block and begins the next. |
-| [L.BSTART.FP](../instructions/l_bstart_fp.md) | `L.BSTART.FP COND, <label>` | 64 | — | Instruction from the BSTART group. |
-| [L.BSTART.STD](../instructions/l_bstart_std.md) | `L.BSTART.STD DIRECT, <label>` | 64 | — | Instruction from the BSTART group. |
+| [L.BSTART.FP](../instructions/l_bstart_fp.md) | `L.BSTART.FP DIRECT, <label>` | 64 | — | Instruction from the BSTART group. |
+| [L.BSTART.STD](../instructions/l_bstart_std.md) | `L.BSTART.STD COND, <label>` | 64 | — | Instruction from the BSTART group. |
 | [L.BSTART.SYS](../instructions/l_bstart_sys.md) | `L.BSTART.SYS FALL<, fixup_label>` | 64 | — | Instruction from the BSTART group. |
 
 ## See Also

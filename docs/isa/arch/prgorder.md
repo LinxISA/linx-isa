@@ -31,105 +31,32 @@ When compiling, **header** will be arranged in a **linear order** (can be unders
 
 ---
 
-## 3. Look at the PO with three **real code snippets**
+## 3. CUBE examples in PTO ISA 0.58
 
-The following is a "header → Expand → PO" comparison of three common blocks, which does not require abstract notation at all.
+PTO ISA 0.58 has no hidden architectural ACC state and no `ACCCVT` block.
+CUBE descriptors always name an explicit Local destination D. ACC forms also
+name an explicit Local accumulator input C.
 
-### Example 1: Pure GEMM (16×16×16) and write the result back to Tile
+### Example 1: base matrix multiply
 
-**header (the order of appearance is L1-IPO):**
+`BSTART.TMATMUL` plus its dimension, attribute, and Tile descriptors expands to
+read A and B, perform the matrix product, and write D. The entire expansion
+occupies the program-order position of that block.
 
-```asm
-BSTART.TMATMUL FP16           ; 配置：做 FP16 的 A×B
-B.DIM     rM, 128, ->M        ; M=128
-B.DIM     rN, 128, ->N        ; N=128
-B.DIM     rK, 256, ->K        ; K=256
-B.DATR    normal, FP16, ZERO, cmode0, rmode0
-B.IOT     TA, TB, last        ; ACC 由 CUBE opcode 隐式选择
+### Example 2: conversion after matrix multiply
 
-BSTART.ACCCVT FP16            ; 将隐式 ACC 发布到普通 Tile
-B.DATR    normal, FP16, ZERO, cmode0, rmode0
-B.IOT     last, ->t<32KB>
-```
-
-**Expanded block body steps (sequential replacement):**
-
-1. Read/prefetch the slices of A and B to the internal buffer;
-2. CUBE Core performs multiplication and accumulation with a granularity of 16×16×16, and the results are accumulated into ACC;
-3. Write the ACC back to the target Tile (row major order).
-
-**Final PO (Semantic Order):**
+Format or layout conversion is a separate explicit Tile operation that reads D
+after the CUBE block. There is no implicit ACC-to-Tile path. Program order is:
 
 ```
-BSTART.TMATMUL → B.DIM → B.DIM → B.DIM → B.DATR → B.IOT →
-加载分片 → 乘累加到 ACC → ACC 写回 Tile
+TMATMUL descriptors → read A/B → write D → conversion descriptors → read D → write converted Tile
 ```
 
----
+### Example 3: scaled accumulation
 
-### Example 2: GEMM + TCVT conversion along the path (quantization/rearrangement before ACC→Tile)
-
-**header：**
-
-```asm
-BSTART.TMATMUL FP16
-B.DIM     zero, 64,  ->M
-B.DIM     zero, 64,  ->N
-B.DIM     zero, 256, ->K
-B.DATR    normal, FP16, ZERO, cmode0, rmode0
-B.IOT     TA, TB, last
-
-BSTART.ACCCVT FP16
-B.DATR    zn, FP16, ZERO, cmode0, rmode0  ; 指定转换布局（例）
-B.IOT     last, ->t<16KB>
-```
-
-**Expanded block body (sequential replacement):**
-
-1. Read/prefetch;
-2. CUBE is multiplied and accumulated to ACC;
-3. **TCVT FixPipe**: On the road of "ACC → Tile write back", **do format conversion while moving (such as inverse quantization, activation, layout transformation, etc.);
-4. Write the converted data into the Tile Register.
-
-**Final PO:**
-
-```
-ZXTERMZH39QXZ顺序 → 读取/预取 → 乘累加到 ACC → TCVT 边搬边转 → 写回 Tile
-```
-
-> The key here is: **TCVT is executed on the "ACC→Tile path"**, eliminating the round trip of "landing first and then starting another conversion".
-
----
-
-### Example 3: TMATMULMX (micro scaling) + optional C Tile accumulation
-
-**header：**
-
-```asm
-BSTART.TMATMULMX INT8
-B.DIM     zero, 128, ->M
-B.DIM     zero, 128, ->N
-B.DIM     zero, 256, ->K
-B.DATR    normal, INT8, ZERO, cmode0, rmode0
-B.IOT     TA, TSA                           ; A 与 ScaleA
-B.IOT     TB, TSB, last                     ; B 与 ScaleB；ACC 隐式选择
-
-BSTART.ACCCVT INT8
-B.DATR    normal, INT8, ZERO, cmode0, rmode0
-B.IOT     last, ->t<32KB>
-```
-
-**Block body (sequential replacement):**1. Load A, ScaleA and B, ScaleB;
-2. Before multiplication, press Tile broadcast scaling for A and B: `A' = A * ScaleA`, `B' = B * ScaleB`;
-3. Multiply and accumulate the scaled A' and B' to ACC;
-4. If there is C/ACC accumulation, perform the corresponding addition;
-5. Write the ACC back to the Tile, or continue to convert it from TCVT and then write it back.
-
-**Final PO:**
-
-```
-ZXTERMZH39QXZ顺序 → 读 A/B 与缩放 Tile → A/B 微缩放 → 乘累加到 ACC → (+C/ACC) → 写回
-```
+`BSTART.TMATMULMX.ACC` reads A, row scale, B, column scale, and accumulator C,
+then writes D. If D aliases C, the operation reads the old C value and writes
+the new result; otherwise C and D are independent explicit Tiles.
 
 ---
 

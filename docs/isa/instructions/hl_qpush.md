@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `Pushes the encoded scalar values to the selected temporary queue.`
 
 ## Full Catalog Forms
 
