@@ -36,7 +36,7 @@ Bit-reversal operation.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `REV - Reverse bytes within the selected scalar bitfield.`
 
 ## Full Catalog Forms
 

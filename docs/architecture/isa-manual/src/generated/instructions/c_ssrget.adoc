@@ -7,7 +7,7 @@
 
 *Syntax:* c.ssrget SSR-ID, ->t
 
-*Description:* Compressed 16-bit SSR read: loads the selected SSR into t.
+*Description:* C.SSRGET - Read the compressed-form system register.
 
 *Encoding:*
 

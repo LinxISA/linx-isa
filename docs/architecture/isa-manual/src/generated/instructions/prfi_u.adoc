@@ -7,7 +7,7 @@
 
 *Syntax:* prfi.u [SrcL, simm]
 
-*Description:* Load 32-bit value from [Rs+offset], result to Rd/t/u.
+*Description:* PRFI.U - Issue a scalar prefetch using this mnemonic's addressing form.
 
 *Encoding:*
 

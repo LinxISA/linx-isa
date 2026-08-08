@@ -7,7 +7,7 @@
 
 *Syntax:* lwui [SrcL, simm], ->{t, u, Rd}
 
-*Description:* Load 32-bit value from [Rs+offset], result to Rd/t/u.
+*Description:* LWUI - Load scalar data using this mnemonic's width, signedness, and address-update form.
 
 *Encoding:*
 

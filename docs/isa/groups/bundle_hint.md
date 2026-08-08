@@ -16,7 +16,7 @@ Instructions in the **Bundle Hint** group of the LinxISA v0.58.0 catalog.
 
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
-| [B.HINT](../instructions/b_hint.md) | `B.HINT TRACE.{begin, end}` | 32 | — | Instruction from the Bundle Hint group. |
+| [B.HINT](../instructions/b_hint.md) | `B.HINT TRACE.{begin, end}` | 32 | — | Records non-functional branch, temperature, prefetch-size, or trace guidance. |
 
 ## See Also
 

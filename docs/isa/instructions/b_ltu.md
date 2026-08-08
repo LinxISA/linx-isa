@@ -36,7 +36,7 @@ Conditional branch taken when SrcL is less than SrcR (unsigned).
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `B.LTU - Conditionally branch to the PC-relative target after comparing scalar operands.`
 
 ## Full Catalog Forms
 

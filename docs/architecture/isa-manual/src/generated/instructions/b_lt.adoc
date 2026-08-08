@@ -7,7 +7,7 @@
 
 *Syntax:* b.lt SrcL, SrcR, label
 
-*Description:* Conditional branch: take branch if lt.
+*Description:* B.LT - Conditionally branch to the PC-relative target after comparing scalar operands.
 
 *Encoding:*
 

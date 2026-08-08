@@ -26,7 +26,7 @@
 
 ## Description
 
-Instruction from the Floating-point Compare group.
+FNE - Compare floating-point operands and produce the encoded result.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ Instruction from the Floating-point Compare group.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `FNE - Compare floating-point operands and produce the encoded result.`
 
 ## Full Catalog Forms
 

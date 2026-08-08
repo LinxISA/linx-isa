@@ -26,7 +26,7 @@
 
 ## Description
 
-Instruction from the Bundle Split group.
+Transfers the named context value to a target virtual core block.
 
 ## Pseudocode (informative)
 

@@ -22,14 +22,14 @@ def validate(root: Path) -> list[str]:
         errors.append(f"compiled profile version must be 0.58.0, got {spec.get('version')!r}")
     mnemonics = {str(item.get("mnemonic")) for item in spec.get("instructions", [])}
     required = {
-        "C.B.IOS", "BSTART.GMOV", "BSTART.VPAR", "BSTART.VSEQ",
+        "B.IOS", "BSTART.GMOV", "BSTART.VPAR", "BSTART.VSEQ",
         "C.BSTART.VPAR", "C.BSTART.VSEQ", "V.QPOP", "V.QPUSH",
         "BSTART.MGATHER.CAS", "BSTART.MGATHER.MASK", "BSTART.MSCATTER.MASK",
     }
     for mnemonic in sorted(required - mnemonics):
         errors.append(f"required LinxISA 0.58 mnemonic missing: {mnemonic}")
     retired = {
-        "B.IOD", "BSTART.PAR", "BSTART.TMA", "BSTART.ACCCVT",
+        "B.IOD", "BSTART.PAR", "C.B.IOS", "BSTART.TMA", "BSTART.ACCCVT",
         "C.B.DIM",
     }
     for mnemonic in sorted(retired & mnemonics):

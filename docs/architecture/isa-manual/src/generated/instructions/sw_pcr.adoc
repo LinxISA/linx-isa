@@ -7,7 +7,7 @@
 
 *Syntax:* sw.pcr SrcL, [symbol]
 
-*Description:* Store 32-bit value to [Rs+offset], result to Rd/t/u.
+*Description:* SW.PCR - Store scalar data using this mnemonic's width and address-update form.
 
 *Encoding:*
 

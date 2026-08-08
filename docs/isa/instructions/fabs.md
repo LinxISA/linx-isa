@@ -36,7 +36,7 @@ rd = fabs(fs1);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `FABS - Compute this mnemonic's unary floating-point operation.`
 
 ## Full Catalog Forms
 

@@ -36,7 +36,7 @@ Floating-point format conversion.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `FCVT - Convert between the encoded scalar numeric formats.`
 
 ## Full Catalog Forms
 

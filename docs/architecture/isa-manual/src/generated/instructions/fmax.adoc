@@ -7,7 +7,7 @@
 
 *Syntax:* fmax.{T} SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* Max-Min: FMAX operation.
+*Description:* FMAX - Compute this mnemonic's binary floating-point operation.
 
 *Encoding:*
 

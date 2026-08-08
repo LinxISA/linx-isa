@@ -26,7 +26,7 @@
 
 ## Description
 
-[48-bit HL.] Instruction from the General group.
+Pushes the encoded scalar values to the selected temporary queue.
 
 ## Pseudocode (informative)
 

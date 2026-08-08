@@ -16,9 +16,9 @@ Register/memory move instructions.
 
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
-| [C.MOVI](../instructions/c_movi.md) | `c.movi simm, ->{t, u, Rd}` | 16 | — | [16-bit C.] Instruction from the Move group. |
-| [C.MOVR](../instructions/c_movr.md) | `c.movr SrcL, ->{t, u, Rd}` | 16 | — | [16-bit C.] Instruction from the Move group. |
-| [C.SETRET](../instructions/c_setret.md) | `c.setret uimm, - >Ra` | 16 | — | [16-bit C.] Instruction from the Move group. |
+| [C.MOVI](../instructions/c_movi.md) | `c.movi simm, ->{t, u, Rd}` | 16 | — | C.MOVI - Move the scalar source to the selected destination. |
+| [C.MOVR](../instructions/c_movr.md) | `c.movr SrcL, ->{t, u, Rd}` | 16 | — | C.MOVR - Move the scalar source to the selected destination. |
+| [C.SETRET](../instructions/c_setret.md) | `c.setret uimm, - >Ra` | 16 | — | C.SETRET - Write the architectural return address. |
 
 ## See Also
 

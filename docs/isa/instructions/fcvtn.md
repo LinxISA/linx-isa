@@ -26,7 +26,7 @@
 
 ## Description
 
-Instruction from the Format Convert group.
+FCVTN - Convert between the encoded scalar numeric formats.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ Instruction from the Format Convert group.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `FCVTN - Convert between the encoded scalar numeric formats.`
 
 ## Full Catalog Forms
 

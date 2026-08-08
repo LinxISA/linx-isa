@@ -26,7 +26,7 @@
 
 ## Description
 
-[48-bit HL.] Instruction from the PC-Relative group.
+HL.ADDTPC - Add the encoded displacement to the program counter.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ rd = PC + SignExtend(imm);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `HL.ADDTPC - Add the encoded displacement to the program counter.`
 
 ## Full Catalog Forms
 

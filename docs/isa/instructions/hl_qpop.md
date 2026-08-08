@@ -26,7 +26,7 @@
 
 ## Description
 
-[48-bit HL.] Instruction from the General group.
+Pops selected scalar queue values into encoded destinations.
 
 ## Pseudocode (informative)
 

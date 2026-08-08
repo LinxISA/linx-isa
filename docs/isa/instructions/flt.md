@@ -36,7 +36,7 @@ Floating-point less-than comparison (ordered).
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `FLT - Compare floating-point operands and produce the encoded result.`
 
 ## Full Catalog Forms
 

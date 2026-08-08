@@ -1,6 +1,6 @@
 {
   "big_kind": "CMD",
-  "count": 2,
+  "count": 3,
   "instructions": [
     {
       "class": {
@@ -27,6 +27,19 @@
         32
       ],
       "mnemonic": "B.IOT"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_IO",
+        "note": "PTO 0.58 common block contract",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Bundle Shared Input & Output",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "B.IOS"
     }
   ],
   "sub_kind": "BLOCK_IO"

@@ -26,7 +26,7 @@
 
 ## Description
 
-[48-bit HL.] Instruction from the Immediate group.
+HL.LUI - Materialize the encoded signed long immediate.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ rd = ZeroExtend(imm20) << 12;
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `HL.LUI - Materialize the encoded signed long immediate.`
 
 ## Full Catalog Forms
 

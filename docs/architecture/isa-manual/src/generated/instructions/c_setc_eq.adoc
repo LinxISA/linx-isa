@@ -7,7 +7,7 @@
 
 *Syntax:* c.setc.eq srcL, srcR
 
-*Description:* Compressed 16-bit set condition flag when Rs1 equal Rs2.
+*Description:* C.SETC.EQ - Compare scalar operands and update the bundle commit condition.
 
 *Encoding:*
 

@@ -26,7 +26,7 @@
 
 ## Description
 
-[16-bit C.] Instruction from the Move group.
+C.MOVI - Move the scalar source to the selected destination.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `C.MOVI - Move the scalar source to the selected destination.`
 
 ## Full Catalog Forms
 

@@ -26,7 +26,7 @@
 
 ## Description
 
-Instruction from the Compare Instruction group.
+CMP.GEI - Compare scalar operands and write the encoded boolean result.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ Instruction from the Compare Instruction group.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `CMP.GEI - Compare scalar operands and write the encoded boolean result.`
 
 ## Full Catalog Forms
 

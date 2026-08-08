@@ -19,9 +19,9 @@ Integer max/min instructions.
 | [FMAX](../instructions/fmax.md) | `fmax.{T} SrcL, SrcR, ->{t, u, Rd}` | 32 | — | Floating-point maximum. |
 | [FMIN](../instructions/fmin.md) | `fmin.{T} SrcL, SrcR, ->{t, u, Rd}` | 32 | — | Floating-point minimum. |
 | [MAX](../instructions/max.md) | `max SrcL, SrcR, ->{t, u, Rd}` | 32 | — | Integer max (signed). |
-| [MAXU](../instructions/maxu.md) | `maxu SrcL, SrcR, ->{t, u, Rd}` | 32 | — | Instruction from the Max-Min group. |
+| [MAXU](../instructions/maxu.md) | `maxu SrcL, SrcR, ->{t, u, Rd}` | 32 | — | MAXU - Compute this mnemonic's binary scalar operation and write the selected destination. |
 | [MIN](../instructions/min.md) | `min SrcL, SrcR, ->{t, u, Rd}` | 32 | — | Integer min (signed). |
-| [MINU](../instructions/minu.md) | `minu SrcL, SrcR, ->{t, u, Rd}` | 32 | — | Instruction from the Max-Min group. |
+| [MINU](../instructions/minu.md) | `minu SrcL, SrcR, ->{t, u, Rd}` | 32 | — | MINU - Compute this mnemonic's binary scalar operation and write the selected destination. |
 
 ## See Also
 

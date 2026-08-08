@@ -16,9 +16,9 @@ General high-level operations.
 
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
-| [HL.QMT](../instructions/hl_qmt.md) | `hl.qmt.{i,e,s,r,ie,is,ir,es,er,ies,ier} SrcL, SrcR, ->{t, u}` | 48 | — | [48-bit HL.] Instruction from the General group. |
-| [HL.QPOP](../instructions/hl_qpop.md) | `hl.qpop.{e,r,er} SrcL, ->Dst0, Dst1` | 48 | — | [48-bit HL.] Instruction from the General group. |
-| [HL.QPUSH](../instructions/hl_qpush.md) | `hl.qpush.{h,e,r,he,hr,er,her} SrcL, SrcR, ->{t, u}` | 48 | — | [48-bit HL.] Instruction from the General group. |
+| [HL.QMT](../instructions/hl_qmt.md) | `hl.qmt.{i,e,s,r,ie,is,ir,es,er,ies,ier} SrcL, SrcR, ->{t, u}` | 48 | — | Moves values between scalar temporary queues according to encoded queue controls. |
+| [HL.QPOP](../instructions/hl_qpop.md) | `hl.qpop.{e,r,er} SrcL, ->Dst0, Dst1` | 48 | — | Pops selected scalar queue values into encoded destinations. |
+| [HL.QPUSH](../instructions/hl_qpush.md) | `hl.qpush.{h,e,r,he,hr,er,her} SrcL, SrcR, ->{t, u}` | 48 | — | Pushes the encoded scalar values to the selected temporary queue. |
 
 ## See Also
 

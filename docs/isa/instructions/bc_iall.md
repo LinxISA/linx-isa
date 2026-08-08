@@ -36,7 +36,7 @@ Branch-predictor cache invalidate all entries.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `BC.IALL - Perform this mnemonic's cache, TLB, or bundle maintenance operation.`
 
 ## Full Catalog Forms
 

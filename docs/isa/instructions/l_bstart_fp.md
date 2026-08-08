@@ -44,7 +44,7 @@
 
 ## Description
 
-Instruction from the BSTART group.
+Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 ## Pseudocode (informative)
 
@@ -55,7 +55,6 @@ Instruction from the BSTART group.
 ## Encoding Notes
 
 - `Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.`
-- `Bare L.BSTART.FP CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.`
 
 ## Full Catalog Forms
 

@@ -3,28 +3,28 @@
   "catalogs": {
     "command_forms": {
       "path": "spec/catalog/command-forms.json",
-      "sha256": "014501ed69c25cca527a67649c365c2da91859076479d7218111bda97df38f37",
+      "sha256": "79ddfab5fc798d42e8280a5591dac33ef1ccdd42dce3ed9fa96d596f63963cc6",
       "count": 99
     },
     "scalar_forms": {
       "path": "spec/catalog/scalar-forms.json",
-      "sha256": "0fb686db56423c37d669f92058003d4668b0c183a9bd0428d25c4ae70b391670",
+      "sha256": "f6f753034d8c6538c6eeb5320005184e2267152f350748e2442254f1b30c9e5f",
       "count": 474
     },
     "tile_operations": {
       "path": "spec/catalog/tile-operations.json",
-      "sha256": "2aeff5d762b067923cee2c5c848213fff70aa1622d70e53fc6818ee08bd8d107",
+      "sha256": "e1c60c6acab2beffca2cc8ff9c24392ace035f01df19dca482a93876866908c8",
       "count": 109
     },
     "linx_vector_reservations": {
       "path": "spec/catalog/linx-vector-reservations.json",
-      "sha256": "5fce9dddb6e94d3aa7174eb470985b940441b644bde0ef5564308934a9d1d497",
-      "count": 6
+      "sha256": "1d3c666f2d2c6e5b8f3546cfaee55dd68ae10b29168bd02cdca63f99accfecfd",
+      "count": 5
     }
   },
-  "content_sha256": "b4a57a623bfe120a7497bba8ff02a9a7a06c788d0148b0e0d781615f06d9841e",
+  "content_sha256": "6185503f47da639b3e9ae97ec3286f32702403b189962949235df5baf29b8258",
   "encoding_abi": "pto-isa-0.58.0-mode-function-v1",
-  "encoding_projection_sha256": "0d9dda5c9830c126f31febb67186067792e2994f5dae998c0e248c4bbe419e13",
+  "encoding_projection_sha256": "0cad2272ada8f53fc8354e22568099fe8d6bd4b7832c837260cd370b0fc76ffa",
   "hardware_conformance_profile": {
     "path": "spec/hardware-conformance-profile.json",
     "profile_id": "pto-hardware-numeric-0.58.0-ieee-v1",
@@ -37,11 +37,11 @@
   "release": "0.58.0",
   "release_manifest": {
     "path": "spec/release-manifest.json",
-    "sha256": "12d32aa6adcb4837ee3e0d0af340963b2fdbcd5afecdccadf942c3b28ea5c68e"
+    "sha256": "2e9f5c068ccd964e32cb7e3a71ab13711de72d8591b938f7e07280ffc3842ccc"
   },
   "source": {
-    "commit": "f7d2d0c88e82929a65e9324eadbf6231aa164dcd",
-    "tree": "6819f712cd3a385bc1c26bf03793743547c08732",
+    "commit": "6570b349316155b4d7f8058efa288dc109eda271",
+    "tree": "37e5ac48aa597965bc697432332ad465a4674ff8",
     "repository": "https://github.com/PTO-ISA/pto-spec.git"
   }
 }

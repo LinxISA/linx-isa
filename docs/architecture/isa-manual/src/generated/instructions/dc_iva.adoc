@@ -7,7 +7,7 @@
 
 *Syntax:* dc.iva SrcL
 
-*Description:* Cache/TLB maintenance: DC.IVA operation on the specified memory hierarchy.
+*Description:* DC.IVA - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
 
 *Encoding:*
 

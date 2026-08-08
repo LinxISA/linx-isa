@@ -7,7 +7,7 @@
 
 *Syntax:* cmp.lti SrcL, simm, ->{t, u, Rd}
 
-*Description:* Compare lt immediate: set Rd/t/u to 1 if true, else 0.
+*Description:* CMP.LTI - Compare scalar operands and write the encoded boolean result.
 
 *Encoding:*
 

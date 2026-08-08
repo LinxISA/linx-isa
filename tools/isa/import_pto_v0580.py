@@ -62,7 +62,7 @@ def validate_source(source_root: Path) -> dict[str, dict[str, Any]]:
         "tile_operations_total": 109,
         "command_forms": 99,
         "scalar_forms": 474,
-        "linx_vector_reservations": 6,
+        "linx_vector_reservations": 5,
     }
     if any(counts.get(key) != value for key, value in expected.items()):
         raise ValueError(f"unexpected PTO 0.58 catalog counts: {counts}")
@@ -74,7 +74,7 @@ def validate_source(source_root: Path) -> dict[str, dict[str, Any]]:
         {"CMD": 74, "BBD": 25}
     ):
         raise ValueError("unexpected PTO 0.58 command family counts")
-    if docs["scalars"].get("form_count") != 474 or docs["reservations"].get("reservation_count") != 6:
+    if docs["scalars"].get("form_count") != 474 or docs["reservations"].get("reservation_count") != 5:
         raise ValueError("unexpected PTO 0.58 scalar/reservation cardinality")
 
     canonical = {entry["path"]: entry["sha256"] for entry in manifest["canonical_inputs"]}
@@ -109,7 +109,7 @@ def build_lock(source_root: Path, docs: dict[str, dict[str, Any]]) -> dict[str, 
         ("command_forms", "spec/catalog/command-forms.json", 99),
         ("scalar_forms", "spec/catalog/scalar-forms.json", 474),
         ("tile_operations", "spec/catalog/tile-operations.json", 109),
-        ("linx_vector_reservations", "spec/catalog/linx-vector-reservations.json", 6),
+        ("linx_vector_reservations", "spec/catalog/linx-vector-reservations.json", 5),
     ):
         key = "reservations" if name == "linx_vector_reservations" else name.split("_")[0] + "s"
         catalogs[name] = {"path": relative, "sha256": sha256(paths[key]), "count": count}
@@ -205,7 +205,7 @@ def project_release_manifest(docs: dict[str, dict[str, Any]]) -> dict[str, Any]:
             "command_forms": len(commands["forms"]),
             "command_form_families": manifest["catalog_counts"]["command_form_families"],
             "scalar_forms": len(scalars["forms"]),
-            "linx_vector_reservations": 6,
+            "linx_vector_reservations": 5,
         },
         "migration_aliases": {},
         "deleted_names": tiles["deleted_names"],
@@ -283,10 +283,18 @@ def project_engine_ops(tiles: dict[str, Any]) -> dict[str, Any]:
         "cell_bytes": 128,
         "cells_per_pe": 2048,
         "capacity_bytes_per_pe": 262144,
-        "b_iot_size_imm4_bytes": [None, 512, 1024, 2048, 4096, 8192, 16384, 32768,
-                                      None, None, None, None, None, None, None, None],
-        "normal_tile_min_bytes": 512,
-        "normal_tile_max_bytes": 32768,
+        "b_iot_tsize_bytes": [None, 128, 256, 512, 1024, 2048, 4096, 8192],
+        "b_ios_tsize_bytes": [None, 128, 256, 512, 1024, 2048, 4096, 8192],
+        "normal_tile_min_bytes": 128,
+        "normal_tile_max_bytes": 8192,
+        "shape": {
+            "rows": "TSizeBytes / (columns * element_size)",
+            "rows_power_of_two": True,
+            "columns_power_of_two": True,
+            "valid_rows_at_most_rows": True,
+            "valid_columns_at_most_columns": True,
+            "matrix_operations_obey_same_shape_constraints": True,
+        },
         "resource_shortage": "precise_allocation_trap",
         "eviction_or_spill": "forbidden",
         "physical_contiguity": "required",
@@ -296,7 +304,7 @@ def project_engine_ops(tiles: dict[str, Any]) -> dict[str, Any]:
         "assembly_names": "S0..S255",
         "addressing": "absolute-index",
         "sharing_domain": "one bank private to each core and shared by its four PEs",
-        "quarter_selection": "optional B.IOT 4-bit PE mask; absent means 0b1111; zero means NOP",
+        "quarter_selection": "B.IOS 4-bit PE mask; zero means NOP",
         "access": "all four PEs may access all shared registers and independently select tile offsets",
         "write_atomicity": "atomic descriptor-and-payload read-modify-write",
         "initial_state": "uninitialized; reads behave like undefined-register reads",
@@ -323,14 +331,45 @@ def shared_register_state() -> dict[str, Any]:
             "allocation": "compiler",
         },
         "pe_mask": {
+            "owner": "B.IOS",
             "width": 4,
             "kind": "predicate bitmask",
             "multiple_bits_allowed": True,
-            "absent_value": "0b1111",
             "zero_behavior": "nop",
             "source_read_updates_descriptor": False,
             "destination_write_updates_descriptor": True,
         },
+        "tsize_bytes": [None, 128, 256, 512, 1024, 2048, 4096, 8192],
+        "gm_access": {
+            "gpr_scope": "each selected PE resolves selectors in its private GPR file",
+            "base_selector": "B.IOR.RegSrc0",
+            "row_stride_selector": "B.IOR.RegSrc1",
+            "row_stride_unit": "logical-elements",
+            "omitted_b_ior": {
+                "base": 0,
+                "row_stride": "dense-column-count",
+            },
+            "explicit_zero_stride": "zero",
+            "element_address": "base + (row * row_stride + column) * element_size",
+            "packed_four_bit": "logical index selects containing byte and nibble",
+            "preflight": "all selected accesses before effects",
+            "pe_order": "none",
+            "conflict_avoidance": "programmer responsibility",
+            "b_iot_scope": "local-only",
+        },
+    }
+
+
+def retired_encoding_state(tiles: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "entries": [],
+        "deleted_tile_names": tiles["deleted_names"],
+        "migration_only_source_aliases": {},
+        "notes": [
+            "Deleted spellings and tile operations are assembler errors.",
+            "Deleted scalar/block spellings do not retain encoding reservations in v0.58.",
+            "Unassigned tile selectors remain illegal unless the PTO catalog assigns them.",
+        ],
     }
 
 
@@ -344,6 +383,7 @@ def projections(docs: dict[str, dict[str, Any]]) -> dict[Path, dict[str, Any]]:
         state / "linx_vector_reservations.json": locked_projection(docs["reservations"]),
         state / "shared_tile_registers.json": shared_register_state(),
         state / "engine_ops.json": project_engine_ops(docs["tiles"]),
+        PROFILE / "encoding/retired_encodings.json": retired_encoding_state(docs["tiles"]),
         PROFILE / "release_manifest.json": project_release_manifest(docs),
     }
 

@@ -185,6 +185,8 @@ register decoded_biot_raw_shadow : bits(64) = 0x0000_0000_0000_0000
 // PTO/Linx 0.58 absolute-index core-private Shared tile binding.
 register shared_tile_binding_valid : bool = false
 register shared_tile_binding_id : bits(8) = 0x00
+register shared_tile_binding_pe_mask : bits(4) = 0x0
+register shared_tile_binding_tsize : bits(3) = 0b000
 register decoded_tile_datatype_shadow : bits(5) = 0b00000
 register decoded_bior_regsrc0_shadow : bits(5) = 0b00000
 register decoded_bior_regsrc1_shadow : bits(5) = 0b00000
@@ -1679,6 +1681,10 @@ function bdesc_reset() -> unit = {
   bdesc_seen_datr = false;
   bdesc_seen_ior = false;
   bdesc_seen_iot = false;
+  shared_tile_binding_valid = false;
+  shared_tile_binding_id = 0x00;
+  shared_tile_binding_pe_mask = 0x0;
+  shared_tile_binding_tsize = 0b000;
   clear_ri_bindings();
   tile_effect_reset_descriptors()
 }

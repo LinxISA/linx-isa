@@ -26,7 +26,7 @@
 
 ## Description
 
-Instruction from the DMA Operation group.
+Copies exactly one 64-byte region from the SrcL address to the SrcR address; validates both ranges before effects, snapshots the source so overlap has memmove semantics, and guarantees that a fault leaves memory unchanged.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ Instruction from the DMA Operation group.
 
 ## Encoding Notes
 
-- `v0.58 encoding for the inherited DMA operation: copy 64 bytes from the source address in SrcL to the destination address in SrcR and complete before submission.`
+- `Copies exactly one 64-byte region from the SrcL address to the SrcR address; validates both ranges before effects, snapshots the source so overlap has memmove semantics, and guarantees that a fault leaves memory unchanged.`
 
 ## Full Catalog Forms
 

@@ -7,7 +7,7 @@
 
 *Syntax:* casd<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}
 
-*Description:* v0.58 32-bit compare-and-swap doubleword: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
+*Description:* CASD - Atomically compare the scalar memory value and conditionally store the replacement.
 
 *Encoding:*
 

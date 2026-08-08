@@ -36,7 +36,7 @@ rd = rs1 >> shamt (logical);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `SRLI - Compute this mnemonic's binary scalar operation and write the selected destination.`
 
 ## Full Catalog Forms
 

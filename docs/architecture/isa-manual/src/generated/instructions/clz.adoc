@@ -7,7 +7,7 @@
 
 *Syntax:* clz SrcL,  M, N, ->{t, u, Rd}
 
-*Description:* count leading zeros: Dst = popcount/extract/select bits of SrcL/M/N, result to Rd/t/u.
+*Description:* CLZ - Count the selected bit property of the scalar source.
 
 *Encoding:*
 

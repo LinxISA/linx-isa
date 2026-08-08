@@ -36,7 +36,7 @@ SetCommitArgument(/* condition */);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `HL.SETC.ANDI - Combine scalar comparison results and update the bundle commit condition.`
 
 ## Full Catalog Forms
 

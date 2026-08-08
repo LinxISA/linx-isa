@@ -7,7 +7,7 @@
 
 *Syntax:* fsqrt.{T} SrcL, ->{t, u, Rd}
 
-*Description:* Floating-point sqrt: Dst = sqrt(SrcL).
+*Description:* FSQRT - Compute this mnemonic's unary floating-point operation.
 
 *Encoding:*
 

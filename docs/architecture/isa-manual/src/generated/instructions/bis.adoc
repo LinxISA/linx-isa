@@ -7,7 +7,7 @@
 
 *Syntax:* bis SrcL, M, N, ->{t, u, Rd}
 
-*Description:* bit select: Dst = popcount/extract/select bits of SrcL/M/N, result to Rd/t/u.
+*Description:* BIS - Modify the selected scalar bitfield.
 
 *Encoding:*
 

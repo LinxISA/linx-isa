@@ -7,7 +7,7 @@
 
 *Syntax:* mulu SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* Multiply: Dst = SrcL * SrcR, high part Dst1.
+*Description:* MULU - Compute the scalar product.
 
 *Encoding:*
 

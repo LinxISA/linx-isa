@@ -39,7 +39,6 @@ C.ZEXT.H [{"asm":"c.zext.h srcL, ->t","group":"C.UNARY","length_bits":16}] : 15.
 C.ZEXT.W [{"asm":"c.zext.w srcL, ->t","group":"C.UNARY","length_bits":16}] : 15..14=2'b01 13..11=3'b101 10..6=SrcL 5..4=2'b01 3..1=3'b110 0=0 ; SrcL ; -
 
 # PTO ISA 0.58.0 canonical command forms
-C.B.IOS [{"asm":"C.B.IOS S<SharedTID> | C.B.IOS -> S<SharedTID>","group":"Bundle Shared Operand Binding","length_bits":16,"note":"Binds one absolute core-private Shared register S0..S255; source or destination role is derived from the surrounding BSTART schema and the binder is consumed once.","pto_source_constraints":[]}] : 15..14=2'b11 13..6=SharedTID 5..0=6'b111100 ; SharedTID ; -
 C.B.DIMI [{"asm":"C.B.DIMI imm, ->{LB0, LB1, LB2}","group":"Bundle Dimension","length_bits":16,"note":"Writes one of the three bundle-local dimension registers.","pto_source_constraints":[{"field":"LoopNest","operator":"not-equal","value":3}]}] : 15..14=LoopNest 13..6=imm8 5..0=6'b111100 ; LoopNest imm8 ; -
 C.BSTART [{"asm":"C.BSTART COND,  label","group":"Bundle Split","length_bits":16,"note":"Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.","pto_source_constraints":[]}] : 15..4=simm12 3..0=4'b0100 ; simm12 ; -
 C.BSTART [{"asm":"C.BSTART DIRECT, label","group":"Bundle Split","length_bits":16,"note":"Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.","pto_source_constraints":[]}] : 15..4=simm12 3..0=4'b0010 ; simm12 ; -

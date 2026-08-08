@@ -7,7 +7,7 @@
 
 *Syntax:* ld [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}
 
-*Description:* Load 64-bit signed value from [Rs+offset], result to Rd/t/u.
+*Description:* LD - Load scalar data using this mnemonic's width, signedness, and address-update form.
 
 *Encoding:*
 

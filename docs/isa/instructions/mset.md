@@ -26,7 +26,7 @@
 
 ## Description
 
-Instruction from the Bundle Split group.
+Fills an encoded memory range after complete access preflight.
 
 ## Pseudocode (informative)
 

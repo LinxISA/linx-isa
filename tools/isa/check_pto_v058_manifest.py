@@ -27,6 +27,23 @@ def encoding_key(item: dict[str, Any], compiled: bool = False) -> tuple[tuple[in
     return tuple((int(part["mask"], 0), int(part["match"], 0), int(part["width_bits"])) for part in parts)
 
 
+def reservation_covers(reservation: dict[str, Any], item: dict[str, Any]) -> bool:
+    reserved = encoding_key(reservation)
+    concrete = encoding_key(item, True)
+    if len(reserved) != len(concrete):
+        return False
+    return all(
+        reserved_width == concrete_width
+        and concrete_mask & reserved_mask == reserved_mask
+        and concrete_match & reserved_mask == reserved_match
+        for (reserved_mask, reserved_match, reserved_width), (
+            concrete_mask,
+            concrete_match,
+            concrete_width,
+        ) in zip(reserved, concrete)
+    )
+
+
 def source_field_key(item: dict[str, Any]) -> tuple[Any, ...]:
     signedness = {"encoding-defined": None, "signed": True, "unsigned": False}
     return tuple(sorted(
@@ -124,7 +141,7 @@ def validate(root: Path) -> list[str]:
         "scalar_forms": 474,
         "command_forms": 99,
         "tile_operations": 109,
-        "linx_vector_reservations": 6,
+        "linx_vector_reservations": 5,
     }
     for name, count in expected_catalogs.items():
         entry = lock.get("catalogs", {}).get(name, {})
@@ -237,21 +254,66 @@ def validate(root: Path) -> list[str]:
 
     compiled_by_mnemonic = {item["mnemonic"]: item for item in docs["spec"].get("instructions", [])}
     reservations = docs["reservations"].get("reservations", [])
-    if len(reservations) != 6:
-        errors.append("PTO must reserve exactly six Linx vector encodings")
-    for reservation in reservations:
-        item = compiled_by_mnemonic.get(reservation["mnemonic"])
-        if item is None or encoding_key(item, True) != encoding_key(reservation):
-            errors.append(f"Linx vector reservation mismatch: {reservation['mnemonic']}")
+    expected_reservations = {
+        "BSTART.VPAR",
+        "BSTART.VSEQ",
+        "C.BSTART.VPAR",
+        "C.BSTART.VSEQ",
+        "V.*",
+    }
+    reservation_by_name = {str(item.get("mnemonic")): item for item in reservations}
+    if set(reservation_by_name) != expected_reservations:
+        errors.append(
+            "PTO must reserve four Linx vector block headers and the complete V.* root"
+        )
+    for name in sorted(expected_reservations - {"V.*"}):
+        reservation = reservation_by_name.get(name)
+        item = compiled_by_mnemonic.get(name)
+        if reservation is None or item is None or not reservation_covers(reservation, item):
+            errors.append(f"Linx vector reservation mismatch: {name}")
+    vector_root = reservation_by_name.get("V.*")
+    vector_forms = [
+        item
+        for item in linx_only
+        if str(item.get("mnemonic")).startswith("V.")
+    ]
+    if vector_root is None or any(
+        not reservation_covers(vector_root, item) for item in vector_forms
+    ):
+        errors.append("PTO V.* reservation does not cover every Linx vector form")
 
     shared = docs["shared"]
     if shared.get("register_count") != 256 or shared.get("register_names", {}).get("syntax") != "S<absolute-index>":
         errors.append("Shared tile bank must expose absolute S0..S255 names")
     if shared.get("scope") != {"private_to": "core", "shared_by": "four PEs in that core"}:
         errors.append("Shared tile bank must be core-private and shared by four PEs")
+    if shared.get("tsize_bytes") != [None, 128, 256, 512, 1024, 2048, 4096, 8192]:
+        errors.append("Shared and Local TSize codes must both map 1..7 to 128 B..8 KiB")
     mask = shared.get("pe_mask", {})
-    if mask.get("width") != 4 or mask.get("zero_behavior") != "nop" or mask.get("absent_value") != "0b1111":
-        errors.append("Shared tile PE mask must be optional 4-bit predicate with zero=Nop")
+    if mask.get("owner") != "B.IOS" or mask.get("width") != 4 or mask.get("zero_behavior") != "nop":
+        errors.append("Shared tile PE mask must be a B.IOS 4-bit predicate with zero=Nop")
+    gm_access = shared.get("gm_access", {})
+    if (
+        gm_access.get("base_selector") != "B.IOR.RegSrc0"
+        or gm_access.get("row_stride_selector") != "B.IOR.RegSrc1"
+        or gm_access.get("row_stride_unit") != "logical-elements"
+        or gm_access.get("b_iot_scope") != "local-only"
+    ):
+        errors.append("Shared GM access must use per-PE B.IOR base/stride and Local-only B.IOT")
+
+    retired_entries = docs["spec"].get("retired_encodings", {}).get("entries")
+    if retired_entries != []:
+        errors.append("v0.58 deleted scalar/block spellings must not reserve encodings")
+
+    b_ios = [item for item in docs["spec"].get("instructions", []) if item.get("mnemonic") == "B.IOS"]
+    if len(b_ios) != 1 or encoding_key(b_ios[0], True) != ((0xF00871FF, 0x00001013, 32),):
+        errors.append("B.IOS must own the former B.IOD 32-bit slot exactly")
+    if {"B.IOD", "BSTART.PAR", "C.B.IOS"} & set(compiled_by_mnemonic):
+        errors.append("deleted PTO scalar/block spellings must not decode in Linx v0.58")
+
+    tfma = [item for item in tiles if item.get("name") == "TFMA"]
+    if len(tfma) != 1 or (tfma[0].get("mode"), tfma[0].get("function"), tfma[0].get("selector")) != (0, 28, "0x01C"):
+        errors.append("TFMA must remain active at TEPL Mode=0 Function=28")
     return errors
 
 

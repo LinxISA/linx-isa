@@ -36,7 +36,7 @@ Trap(EBREAK);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `EBREAK - Raise the software breakpoint exception.`
 
 ## Full Catalog Forms
 

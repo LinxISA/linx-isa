@@ -36,7 +36,7 @@ Bit-field extract unsigned.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `BXU - Extract the selected scalar bitfield.`
 
 ## Full Catalog Forms
 

@@ -36,7 +36,7 @@ rd = Load(/* addr */);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `HL.LBI.PR - Load scalar data using this mnemonic's width, signedness, and address-update form.`
 
 ## Full Catalog Forms
 

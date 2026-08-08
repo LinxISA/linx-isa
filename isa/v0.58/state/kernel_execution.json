@@ -47,7 +47,7 @@
   "operand_namespace": {
     "scalar_imports": {
       "form": "ri0..ri11",
-      "binding_rule": "allocated from repeated B.IOR descriptors in header order, then RegSrc0/RegSrc1/RegSrc2 within each descriptor"
+      "binding_rule": "Linx-only vector-body imports are allocated from repeated B.IOR descriptors in header order, then RegSrc0/RegSrc1/RegSrc2 within each descriptor; PTO direct TileOp schemas permit at most one B.IOR"
     },
     "lane_counters": [
       "lc0",

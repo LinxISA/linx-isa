@@ -17,13 +17,13 @@ Floating-point and integer format conversion instructions.
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
 | [FCVT](../instructions/fcvt.md) | `fcvt.{srcT2dstT} SrcL, ->{t, u, Rd}` | 32 | — | Floating-point format conversion. |
-| [FCVTA](../instructions/fcvta.md) | `fcvta.{srcT2dstT} SrcL, ->{t, u, Rd}` | 32 | — | Instruction from the Format Convert group. |
-| [FCVTM](../instructions/fcvtm.md) | `fcvtm.{srcT2dstT} SrcL, ->{t, u, Rd}` | 32 | — | Instruction from the Format Convert group. |
-| [FCVTN](../instructions/fcvtn.md) | `fcvtn.{srcT2dstT} SrcL, ->{t, u, Rd}` | 32 | — | Instruction from the Format Convert group. |
-| [FCVTP](../instructions/fcvtp.md) | `fcvtp.{srcT2dstT} SrcL, ->{t, u, Rd}` | 32 | — | Instruction from the Format Convert group. |
-| [FCVTZ](../instructions/fcvtz.md) | `fcvtz.{srcT2dstT} SrcL, ->{t, u, Rd}` | 32 | — | Instruction from the Format Convert group. |
-| [SCVTF](../instructions/scvtf.md) | `scvtf.{srcT2dstT} SrcL, ->{t, u, Rd}` | 32 | — | Instruction from the Format Convert group. |
-| [UCVTF](../instructions/ucvtf.md) | `ucvtf.{srcT2dstT} SrcL, ->{t, u, Rd}` | 32 | — | Instruction from the Format Convert group. |
+| [FCVTA](../instructions/fcvta.md) | `fcvta.{srcT2dstT} SrcL, ->{t, u, Rd}` | 32 | — | FCVTA - Convert between the encoded scalar numeric formats. |
+| [FCVTM](../instructions/fcvtm.md) | `fcvtm.{srcT2dstT} SrcL, ->{t, u, Rd}` | 32 | — | FCVTM - Convert between the encoded scalar numeric formats. |
+| [FCVTN](../instructions/fcvtn.md) | `fcvtn.{srcT2dstT} SrcL, ->{t, u, Rd}` | 32 | — | FCVTN - Convert between the encoded scalar numeric formats. |
+| [FCVTP](../instructions/fcvtp.md) | `fcvtp.{srcT2dstT} SrcL, ->{t, u, Rd}` | 32 | — | FCVTP - Convert between the encoded scalar numeric formats. |
+| [FCVTZ](../instructions/fcvtz.md) | `fcvtz.{srcT2dstT} SrcL, ->{t, u, Rd}` | 32 | — | FCVTZ - Convert between the encoded scalar numeric formats. |
+| [SCVTF](../instructions/scvtf.md) | `scvtf.{srcT2dstT} SrcL, ->{t, u, Rd}` | 32 | — | SCVTF - Convert between the encoded scalar numeric formats. |
+| [UCVTF](../instructions/ucvtf.md) | `ucvtf.{srcT2dstT} SrcL, ->{t, u, Rd}` | 32 | — | UCVTF - Convert between the encoded scalar numeric formats. |
 | [V.FCVT](../instructions/v_fcvt.md) | `v.fcvt.{st2dt} SrcL, ->Dst` | 64 | — | [64-bit V.] Instruction from the Format Convert group. |
 | [V.FCVTI](../instructions/v_fcvti.md) | `v.fcvti.{st2dt} SrcL, ->Dst` | 64 | — | [64-bit V.] Instruction from the Format Convert group. |
 | [V.ICVT](../instructions/v_icvt.md) | `v.icvt.{st2dt} SrcL, ->Dst` | 64 | — | [64-bit V.] Instruction from the Format Convert group. |

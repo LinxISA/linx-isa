@@ -26,7 +26,7 @@
 
 ## Description
 
-[48-bit HL.] Instruction from the Multi-Cycle ALU group.
+HL.REMUW - Compute 32-bit quotient and remainder as a sign-extended result pair.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `HL.REMUW - Compute 32-bit quotient and remainder as a sign-extended result pair.`
 
 ## Full Catalog Forms
 

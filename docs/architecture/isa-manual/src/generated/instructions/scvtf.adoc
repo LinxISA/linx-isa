@@ -7,7 +7,7 @@
 
 *Syntax:* scvtf.{srcT2dstT} SrcL, ->{t, u, Rd}
 
-*Description:* Integer-to-floating-point conversion: convert SrcL to floating-point, result to Rd/t/u.
+*Description:* SCVTF - Convert between the encoded scalar numeric formats.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* swaph<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}
 
-*Description:* Atomic swap halfword: atomically swap [Rs] with SrcR, result to Rd/t/u.
+*Description:* SWAPH - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
 
 *Encoding:*
 

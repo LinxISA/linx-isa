@@ -36,7 +36,7 @@ Fence(/* ordering */);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `FENCE.D - Order the selected predecessor and successor data-access classes.`
 
 ## Full Catalog Forms
 

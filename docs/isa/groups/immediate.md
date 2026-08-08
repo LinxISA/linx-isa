@@ -16,7 +16,7 @@ Immediate materialization instructions (LUI, ADDTPC, HL.LUI).
 
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
-| [HL.LUI](../instructions/hl_lui.md) | `hl.lui imm, ->{t, u, Rd}` | 48 | — | [48-bit HL.] Instruction from the Immediate group. |
+| [HL.LUI](../instructions/hl_lui.md) | `hl.lui imm, ->{t, u, Rd}` | 48 | — | HL.LUI - Materialize the encoded signed long immediate. |
 | [LUI](../instructions/lui.md) | `lui simm, ->{t, u, Rd}` | 32 | — | Load upper immediate. Materializes a 20-bit constant in the upper bits of the destination. |
 
 ## See Also

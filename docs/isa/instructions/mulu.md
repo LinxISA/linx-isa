@@ -36,7 +36,7 @@ Integer multiply (unsigned).
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `MULU - Compute the scalar product.`
 
 ## Full Catalog Forms
 

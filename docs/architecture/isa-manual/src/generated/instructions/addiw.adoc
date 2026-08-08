@@ -7,7 +7,7 @@
 
 *Syntax:* addiw SrcL, uimm, ->{t, u, Rd}
 
-*Description:* Add immediate (word operation): Rd/t/u = operand1 op operand2.
+*Description:* ADDIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
 
 *Encoding:*
 

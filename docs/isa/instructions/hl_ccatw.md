@@ -26,7 +26,7 @@
 
 ## Description
 
-[48-bit HL.] Instruction from the Concat group.
+HL.CCATW - Concatenate two 32-bit values into a sign-extended result pair.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `HL.CCATW - Concatenate two 32-bit values into a sign-extended result pair.`
 
 ## Full Catalog Forms
 

@@ -7,7 +7,7 @@
 
 *Syntax:* b.ltu SrcL, SrcR, label
 
-*Description:* Conditional branch: take branch if ltu.
+*Description:* B.LTU - Conditionally branch to the PC-relative target after comparing scalar operands.
 
 *Encoding:*
 

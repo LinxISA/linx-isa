@@ -7,7 +7,7 @@
 
 *Syntax:* cmp.ltui SrcL, uimm, ->{t, u, Rd}
 
-*Description:* Compare ltu immediate: set Rd/t/u to 1 if true, else 0.
+*Description:* CMP.LTUI - Compare scalar operands and write the encoded boolean result.
 
 *Encoding:*
 

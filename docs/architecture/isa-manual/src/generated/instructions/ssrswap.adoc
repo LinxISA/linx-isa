@@ -7,7 +7,7 @@
 
 *Syntax:* ssrswap SrcL, SSR_ID, ->{t, u, Rd}
 
-*Description:* System register access: read/write system status register.
+*Description:* SSRSWAP - Atomically exchange the addressed system register and scalar value.
 
 *Encoding:*
 

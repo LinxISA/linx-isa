@@ -26,7 +26,7 @@
 
 ## Description
 
-Instruction from the Bundle Split group.
+Recovers the encoded execution-context range from memory.
 
 ## Pseudocode (informative)
 

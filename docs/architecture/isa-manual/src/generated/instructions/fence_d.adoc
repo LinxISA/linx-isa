@@ -7,7 +7,7 @@
 
 *Syntax:* fence.d pred_imm, succ_imm
 
-*Description:* Memory fence: orders memory accesses per pred_imm/succ_imm mask.
+*Description:* FENCE.D - Order the selected predecessor and successor data-access classes.
 
 *Encoding:*
 

@@ -36,7 +36,7 @@ rd = PC + SignExtend(imm);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `ADDTPC - Add the encoded displacement to the program counter.`
 
 ## Full Catalog Forms
 

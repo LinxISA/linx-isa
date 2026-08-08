@@ -7,7 +7,7 @@
 
 *Syntax:* setc.geui SrcL, uimm
 
-*Description:* Set block condition flag for eu immediate: consumed by BSTART COND.
+*Description:* SETC.GEUI - Compare scalar operands and update the bundle commit condition.
 
 *Encoding:*
 

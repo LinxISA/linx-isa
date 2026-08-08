@@ -26,7 +26,7 @@
 
 ## Description
 
-[48-bit HL.] Instruction from the Long Immediate group.
+HL.LIS - Materialize the encoded signed long immediate.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `HL.LIS - Materialize the encoded signed long immediate.`
 
 ## Full Catalog Forms
 

@@ -7,7 +7,7 @@
 
 *Syntax:* srai SrcL, shamt, ->{t, u, Rd}
 
-*Description:* Arithmetic Operation 64bit: SRAI operation.
+*Description:* SRAI - Compute this mnemonic's binary scalar operation and write the selected destination.
 
 *Encoding:*
 

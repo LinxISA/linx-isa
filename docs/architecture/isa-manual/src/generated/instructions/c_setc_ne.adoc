@@ -7,7 +7,7 @@
 
 *Syntax:* c.setc.ne srcL, srcR
 
-*Description:* Compressed 16-bit set condition flag when Rs1 not-equal Rs2.
+*Description:* C.SETC.NE - Compare scalar operands and update the bundle commit condition.
 
 *Encoding:*
 

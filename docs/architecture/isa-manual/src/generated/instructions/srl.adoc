@@ -7,7 +7,7 @@
 
 *Syntax:* srl SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* Arithmetic Operation 64bit: SRL operation.
+*Description:* SRL - Compute this mnemonic's binary scalar operation and write the selected destination.
 
 *Encoding:*
 

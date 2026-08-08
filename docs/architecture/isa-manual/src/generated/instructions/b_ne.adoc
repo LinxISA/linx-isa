@@ -7,7 +7,7 @@
 
 *Syntax:* b.ne SrcL, SrcR, label
 
-*Description:* Conditional branch: take branch if ne.
+*Description:* B.NE - Conditionally branch to the PC-relative target after comparing scalar operands.
 
 *Encoding:*
 

@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_b_ios]]
+==== B.IOS
+
+*Syntax:* B.IOS S<SharedTID>, mask=<PE_MASK> | B.IOS mask=<PE_MASK>, ->S<SharedTID><TSize>
+
+*Description:* Binds one ordered absolute core-private Shared register S0..S255 with a per-PE source/destination size code and four-PE participation mask.
+
+*Encoding:*
+
+image::encodings/enc_b_ios.svg[B.IOS encoding,width=800]
+
+*Uop-Class:* CMD
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_IO", "note": "PTO 0.58 common block contract", "source": "group_rule", "uop_kind": "CMD"}`

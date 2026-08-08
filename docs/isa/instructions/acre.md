@@ -36,7 +36,7 @@ Architectural control (ring entry). Enters an implementation-defined ACR.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `ACRE - Request architecture context entry.`
 
 ## Full Catalog Forms
 

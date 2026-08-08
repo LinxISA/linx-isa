@@ -36,7 +36,7 @@ Atomic memory read-modify-write operation.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `LR.W - Load the scalar memory value and establish a matching reservation.`
 
 ## Full Catalog Forms
 

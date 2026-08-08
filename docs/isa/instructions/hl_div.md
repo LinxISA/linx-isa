@@ -36,7 +36,7 @@ rd = (rs2 != 0) ? (rs1 / rs2) : 0;
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `HL.DIV - Compute quotient and remainder as a scalar result pair.`
 
 ## Full Catalog Forms
 

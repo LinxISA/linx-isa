@@ -26,7 +26,7 @@
 
 ## Description
 
-[48-bit HL.] Instruction from the General group.
+Moves values between scalar temporary queues according to encoded queue controls.
 
 ## Pseudocode (informative)
 

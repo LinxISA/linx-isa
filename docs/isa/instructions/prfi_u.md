@@ -36,7 +36,7 @@ rd = Load(/* addr */);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `PRFI.U - Issue a scalar prefetch using this mnemonic's addressing form.`
 
 ## Full Catalog Forms
 

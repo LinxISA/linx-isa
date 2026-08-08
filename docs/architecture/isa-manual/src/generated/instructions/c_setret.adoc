@@ -7,7 +7,7 @@
 
 *Syntax:* c.setret uimm, - >Ra
 
-*Description:* Compressed 16-bit set return address; packs ra with a small uimm offset.
+*Description:* C.SETRET - Write the architectural return address.
 
 *Encoding:*
 

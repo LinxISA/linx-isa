@@ -68,12 +68,12 @@ TLSU 编码族的格式如下（图文件沿用历史名称）：
 | 6 | `BSTART.MGATHER.MASK` | 带掩码的离散内存聚集；关闭的元素不产生访存效果 |
 | 7 | `BSTART.MSCATTER.MASK` | 带掩码的离散内存散写；关闭的元素不产生访存效果 |
 | 8 | `BSTART.MGATHER.CAS` | 每个活动元素执行一次原子读-改-写 compare-and-swap |
-| 9 | [TMOV](../../header/tileblock/TMOV.md) Local-to-Shared insert | 使用 `C.B.IOS` 和 Local 源 `B.IOT` |
-| 10 | [TMOV](../../header/tileblock/TMOV.md) Local-to-Shared publish | 使用 `C.B.IOS` 和 Local 源 `B.IOT` |
-| 11 | [TMOV](../../header/tileblock/TMOV.md) Shared-to-Local broadcast | 使用 `C.B.IOS` 和 Local 目标 `B.IOT` |
-| 12 | [TMOV](../../header/tileblock/TMOV.md) Shared-to-Local extract | 使用 `C.B.IOS` 和 Local 目标 `B.IOT` |
+| 9 | [TMOV](../../header/tileblock/TMOV.md) Local-to-Shared insert | 使用 `B.IOS` 和 Local 源 `B.IOT` |
+| 10 | [TMOV](../../header/tileblock/TMOV.md) Local-to-Shared publish | 使用 `B.IOS` 和 Local 源 `B.IOT` |
+| 11 | [TMOV](../../header/tileblock/TMOV.md) Shared-to-Local broadcast | 使用 `B.IOS` 和 Local 目标 `B.IOT` |
+| 12 | [TMOV](../../header/tileblock/TMOV.md) Shared-to-Local extract | 使用 `B.IOS` 和 Local 目标 `B.IOT` |
 | 13 | `BSTART.GMOV` | Core4 协同全局内存搬运 |
-| 14 | `TSTORE.SPART` | 使用 `C.B.IOS` 和 `B.IOR` 的 Shared 分区存储 |
+| 14 | `TSTORE.SPART` | 使用 `B.IOS` 和 `B.IOR` 的 Shared 分区存储 |
 | 15-31 | 保留 | 非法 |
 
 DataType字段编码方式如下：

@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `HL.BFI - Insert one scalar bitfield into another.`
 
 ## Full Catalog Forms
 

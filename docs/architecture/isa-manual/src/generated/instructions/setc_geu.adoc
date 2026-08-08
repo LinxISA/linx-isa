@@ -7,7 +7,7 @@
 
 *Syntax:* setc.geu SrcL, SrcR<{.sw, .uw}>
 
-*Description:* Set block condition flag for eu: consumed by BSTART COND.
+*Description:* SETC.GEU - Compare scalar operands and update the bundle commit condition.
 
 *Encoding:*
 

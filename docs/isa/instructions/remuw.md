@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `REMUW - Compute unsigned 32-bit remainder and sign-extend it.`
 
 ## Full Catalog Forms
 

@@ -7,7 +7,7 @@
 
 *Syntax:* sra SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* Arithmetic Operation 64bit: SRA operation.
+*Description:* SRA - Compute this mnemonic's binary scalar operation and write the selected destination.
 
 *Encoding:*
 

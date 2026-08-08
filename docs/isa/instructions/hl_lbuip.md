@@ -36,7 +36,7 @@ rd = Load(/* addr */);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `HL.LBUIP - Load a scalar register pair using this mnemonic's address-update form.`
 
 ## Full Catalog Forms
 

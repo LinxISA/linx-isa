@@ -7,7 +7,7 @@
 
 *Syntax:* dc.csw SrcL
 
-*Description:* Cache/TLB maintenance: DC.CSW operation on the specified memory hierarchy.
+*Description:* DC.CSW - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
 
 *Encoding:*
 

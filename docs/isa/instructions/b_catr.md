@@ -26,7 +26,7 @@
 
 ## Description
 
-Instruction from the Bundle Control Attribute group.
+Latches bundle control, trap, atomic, ordering, and address-class attributes.
 
 ## Pseudocode (informative)
 

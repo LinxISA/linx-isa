@@ -7,7 +7,7 @@
 
 *Syntax:* fexp.{T} SrcL, ->{t, u, Rd}
 
-*Description:* Floating-point exp: Dst = exp(SrcL).
+*Description:* FEXP - Compute this mnemonic's unary floating-point operation.
 
 *Encoding:*
 

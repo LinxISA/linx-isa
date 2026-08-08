@@ -7,7 +7,7 @@
 
 *Syntax:* hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd}
 
-*Description:* Long 48-bit store with PC-relative offset or indexed form.
+*Description:* HL.SH.PR - Store scalar data using this mnemonic's width and address-update form.
 
 *Encoding:*
 

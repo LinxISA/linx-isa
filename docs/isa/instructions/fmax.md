@@ -36,7 +36,7 @@ rd = fmax(fs1, fs2);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `FMAX - Compute this mnemonic's binary floating-point operation.`
 
 ## Full Catalog Forms
 

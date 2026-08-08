@@ -7,7 +7,7 @@
 
 *Syntax:* addtpc simm, ->{t, u, Rd}
 
-*Description:* Add to temporary PC: TPC = TPC + simm.
+*Description:* ADDTPC - Add the encoded displacement to the program counter.
 
 *Encoding:*
 

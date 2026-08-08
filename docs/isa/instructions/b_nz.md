@@ -36,7 +36,7 @@ Conditional PC-relative branch.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `B.NZ - Conditionally branch to the PC-relative target after comparing scalar operands.`
 
 ## Full Catalog Forms
 

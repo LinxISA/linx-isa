@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `MULUW - Compute the 32-bit product and sign-extend it.`
 
 ## Full Catalog Forms
 

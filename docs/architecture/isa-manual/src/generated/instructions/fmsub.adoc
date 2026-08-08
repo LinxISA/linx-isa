@@ -7,7 +7,7 @@
 
 *Syntax:* fmsub.{T} SrcL, SrcR, SrcA, ->{t, u, Rd}
 
-*Description:* Floating-point fused multiply-subtract: Dst = +(SrcL * SrcR) - SrcA.
+*Description:* FMSUB - Compute this mnemonic's fused floating-point operation.
 
 *Encoding:*
 

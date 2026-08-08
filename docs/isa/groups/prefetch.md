@@ -16,10 +16,10 @@ Memory prefetch hint instructions.
 
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
-| [HL.PRF](../instructions/hl_prf.md) | `hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]` | 48 | — | [48-bit HL.] Instruction from the Prefetch group. |
-| [HL.PRF.A](../instructions/hl_prf_a.md) | `hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` | 48 | — | [48-bit HL.] Instruction from the Prefetch group. |
-| [HL.PRFI.U](../instructions/hl_prfi_u.md) | `hl.prfi.u{.l1,.l2,.l3} [SrcL, simm]` | 48 | — | [48-bit HL.] Instruction from the Prefetch group. |
-| [HL.PRFI.UA](../instructions/hl_prfi_ua.md) | `hl.prfi.ua{.l1,.l2,.l3} [SrcL, simm], ->{t, u, Rd}` | 48 | — | [48-bit HL.] Instruction from the Prefetch group. |
+| [HL.PRF](../instructions/hl_prf.md) | `hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]` | 48 | — | HL.PRF - Issue a scalar prefetch using this mnemonic's addressing form. |
+| [HL.PRF.A](../instructions/hl_prf_a.md) | `hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` | 48 | — | HL.PRF.A - Issue a scalar prefetch using this mnemonic's addressing form. |
+| [HL.PRFI.U](../instructions/hl_prfi_u.md) | `hl.prfi.u{.l1,.l2,.l3} [SrcL, simm]` | 48 | — | HL.PRFI.U - Issue a scalar prefetch using this mnemonic's addressing form. |
+| [HL.PRFI.UA](../instructions/hl_prfi_ua.md) | `hl.prfi.ua{.l1,.l2,.l3} [SrcL, simm], ->{t, u, Rd}` | 48 | — | HL.PRFI.UA - Issue a scalar prefetch using this mnemonic's addressing form. |
 
 ## See Also
 

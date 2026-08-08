@@ -36,7 +36,7 @@ rd = Trunc64(rs1 * rs2);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `HL.MUL - Compute the full-width scalar product as a result pair.`
 
 ## Full Catalog Forms
 

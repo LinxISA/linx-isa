@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `HL.CASH - Atomically compare the scalar memory value and conditionally store the replacement.`
 
 ## Full Catalog Forms
 

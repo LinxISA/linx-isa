@@ -32,7 +32,7 @@
 
 ## Description
 
-Instruction from the Bundle Hint group.
+Records non-functional branch, temperature, prefetch-size, or trace guidance.
 
 ## Pseudocode (informative)
 

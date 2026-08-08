@@ -7,7 +7,7 @@
 
 *Syntax:* fge.{T} SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* Floating-point compare ge: set Rd/t/u to 1 if true, else 0.
+*Description:* FGE - Compare floating-point operands and produce the encoded result.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* fmul.{T} SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* Floating-point Arithmetic: FMUL floating-point operation.
+*Description:* FMUL - Compute this mnemonic's binary floating-point operation.
 
 *Encoding:*
 

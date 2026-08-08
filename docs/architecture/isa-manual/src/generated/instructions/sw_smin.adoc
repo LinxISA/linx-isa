@@ -7,7 +7,7 @@
 
 *Syntax:* sw.smin<.{rl, f, rlf}> [SrcL], SrcR
 
-*Description:* Atomic fetch-and-smin SMIN at address [Rs+RsR]: old value to Rd/t/u, updated memory.
+*Description:* SW.SMIN - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
 
 *Encoding:*
 

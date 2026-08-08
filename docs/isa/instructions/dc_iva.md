@@ -36,7 +36,7 @@ Data cache invalidate by address.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `DC.IVA - Perform this mnemonic's cache, TLB, or bundle maintenance operation.`
 
 ## Full Catalog Forms
 

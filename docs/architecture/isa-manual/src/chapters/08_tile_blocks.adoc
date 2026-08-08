@@ -23,8 +23,9 @@ Tile/vector block headers use the standard descriptor families:
 
 * `B.DIM`  — dimension/loop counters and/or operand extents
 * `B.DATR` — operation-applicable datatype, layout, rounding, comparison, and pad/byte controls
-* `B.IOR`  — stride/base/scalar register bindings (memory addressing)
-* `B.IOT` — tile binding and tile size (codes 3 through 9 select 128 B through 8 KiB)
+* `B.IOR`  — absolute GPR bindings; TLSU source 0 is GM base and source 1 is logical row stride
+* `B.IOT` — Local tile binding and per-PE tile size (`TSize=1..7` means 128 B through 8 KiB)
+* `B.IOS` — Shared S0..S255 binding, PE mask, and the same per-PE `TSize` map
 * `B.TEXT` — body pointer for SIMT vector blocks (group-granular kernel body)
 
 [[tileblocks-vvec]]
@@ -92,8 +93,11 @@ These blocks do not have a SIMT body (`B.TEXT` is not used).
 Mandatory header descriptors:
 
 * `B.DATR` is required when the operation uses non-default layout/pad controls.
-* `B.IOR` is **mandatory** (stride/base).
-* `B.IOT` is **mandatory** (tile binding + tile size).
+* `B.IOR` is optional. If omitted, base is zero and row stride is the dense
+  column count; an explicitly encoded zero stride is not replaced by a default.
+* Local form: `B.IOT` is mandatory for Local tile binding and tile size.
+* Shared form: `B.IOS` is mandatory for the Shared register and PE mask;
+  `B.IOT` is not legal as a Shared-mask companion.
 
 Missing mandatory descriptors MUST trap with `E_BLOCK(EC_BLOCKFMT)` and report the missing descriptor family in `TRAPARG0` (see System/Privilege trap reporting).
 [[tileblocks-tmov]]

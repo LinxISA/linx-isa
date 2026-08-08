@@ -26,7 +26,7 @@
 
 ## Description
 
-[48-bit HL.] Instruction from the Concat group.
+HL.CCAT - Concatenate two scalar values into a result pair.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `HL.CCAT - Concatenate two scalar values into a result pair.`
 
 ## Full Catalog Forms
 

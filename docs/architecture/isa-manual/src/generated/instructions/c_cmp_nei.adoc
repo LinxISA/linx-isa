@@ -7,7 +7,7 @@
 
 *Syntax:* c.cmp.nei t#1, simm, ->t
 
-*Description:* Compressed 16-bit compare t#1 not-equal immediate, result to t.
+*Description:* C.CMP.NEI - Compare scalar operands and write the encoded boolean result.
 
 *Encoding:*
 

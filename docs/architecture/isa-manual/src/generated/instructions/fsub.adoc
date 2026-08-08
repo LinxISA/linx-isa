@@ -7,7 +7,7 @@
 
 *Syntax:* fsub.{T} SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* Floating-point Arithmetic: FSUB floating-point operation.
+*Description:* FSUB - Compute this mnemonic's binary floating-point operation.
 
 *Encoding:*
 

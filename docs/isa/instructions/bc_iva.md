@@ -36,7 +36,7 @@ Branch-predictor cache invalidate by address.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `BC.IVA - Perform this mnemonic's cache, TLB, or bundle maintenance operation.`
 
 ## Full Catalog Forms
 

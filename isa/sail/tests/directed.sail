@@ -136,14 +136,26 @@ function main() : unit -> unit = {
   exec_c_setret(0b00101);
   assert(read_reg5(0b01010) == 0x0000_0000_0000_100A);
 
-  // Retired B.IOD and legacy BSTART.PAR encoding space must trap as illegal;
-  // neither spelling or bit pattern canonical-redecodes in PTO ISA 0.57.1.
+  // PTO/Linx 0.58 permanently remove the B.IOD spelling and reuse its former
+  // slot for B.IOS. PE_MASK=0000 is a strict no-op; a participating mask binds
+  // the absolute Shared register and per-PE TSize.
+  shared_tile_binding_valid = false;
   last_trapnum = sail_zeros(6);
   decode_execute32(0x0000_1013);
-  assert(last_trapnum == trapnum_illegal_inst());
+  assert(last_trapnum != trapnum_illegal_inst());
+  assert(not_bool(shared_tile_binding_valid));
+  decode_execute32(0x02A5_9613);
+  assert(shared_tile_binding_valid);
+  assert(shared_tile_binding_id == 0x2A);
+  assert(shared_tile_binding_pe_mask == 0xB);
+  assert(shared_tile_binding_tsize == 0b011);
+
+  // BSTART.PAR is also permanently removed as a spelling, but its historical
+  // bits are not reserved: the current catalog assigns this word to
+  // BSTART.MPAR, so it must decode rather than trap.
   last_trapnum = sail_zeros(6);
   decode_execute32(0x0200_1181);
-  assert(last_trapnum == trapnum_illegal_inst());
+  assert(last_trapnum != trapnum_illegal_inst());
 
   // Trap records retain precise source state and the block-interrupted bit.
   trap_block_cfi(0x1, 0xCAFE_BABE_DEAD_BEEF);

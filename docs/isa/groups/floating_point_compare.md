@@ -17,13 +17,13 @@ Floating-point comparison instructions.
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
 | [FEQ](../instructions/feq.md) | `feq.{T} SrcL, SrcR, ->{t, u, Rd}` | 32 | — | Floating-point equality comparison. Writes 1 if ordered and equal. |
-| [FEQS](../instructions/feqs.md) | `feqs.{T} SrcL, SrcR, ->{t, u, Rd}` | 32 | — | Instruction from the Floating-point Compare group. |
+| [FEQS](../instructions/feqs.md) | `feqs.{T} SrcL, SrcR, ->{t, u, Rd}` | 32 | — | FEQS - Compare floating-point operands and produce the encoded result. |
 | [FGE](../instructions/fge.md) | `fge.{T} SrcL, SrcR, ->{t, u, Rd}` | 32 | — | Floating-point greater-or-equal comparison (ordered). |
-| [FGES](../instructions/fges.md) | `fges.{T} SrcL, SrcR, ->{t, u, Rd}` | 32 | — | Instruction from the Floating-point Compare group. |
+| [FGES](../instructions/fges.md) | `fges.{T} SrcL, SrcR, ->{t, u, Rd}` | 32 | — | FGES - Compare floating-point operands and produce the encoded result. |
 | [FLT](../instructions/flt.md) | `flt.{T} SrcL, SrcR, ->{t, u, Rd}` | 32 | — | Floating-point less-than comparison (ordered). |
-| [FLTS](../instructions/flts.md) | `flts.{T} SrcL, SrcR, ->{t, u, Rd}` | 32 | — | Instruction from the Floating-point Compare group. |
-| [FNE](../instructions/fne.md) | `fne.{T} SrcL, SrcR, ->{t, u, Rd}` | 32 | — | Instruction from the Floating-point Compare group. |
-| [FNES](../instructions/fnes.md) | `fnes.{T} SrcL, SrcR, ->{t, u, Rd}` | 32 | — | Instruction from the Floating-point Compare group. |
+| [FLTS](../instructions/flts.md) | `flts.{T} SrcL, SrcR, ->{t, u, Rd}` | 32 | — | FLTS - Compare floating-point operands and produce the encoded result. |
+| [FNE](../instructions/fne.md) | `fne.{T} SrcL, SrcR, ->{t, u, Rd}` | 32 | — | FNE - Compare floating-point operands and produce the encoded result. |
+| [FNES](../instructions/fnes.md) | `fnes.{T} SrcL, SrcR, ->{t, u, Rd}` | 32 | — | FNES - Compare floating-point operands and produce the encoded result. |
 
 ## See Also
 

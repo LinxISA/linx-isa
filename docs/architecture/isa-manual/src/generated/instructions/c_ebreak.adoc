@@ -7,7 +7,7 @@
 
 *Syntax:* c.break imm
 
-*Description:* Compressed 16-bit breakpoint: raises an EBREAK trap for debugging.
+*Description:* C.EBREAK - Raise the software breakpoint exception.
 
 *Encoding:*
 

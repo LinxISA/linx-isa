@@ -7,7 +7,7 @@
 
 *Syntax:* acre rra_type
 
-*Description:* Access control ring transition: request a change in ACR privilege level.
+*Description:* ACRE - Request architecture context entry.
 
 *Encoding:*
 

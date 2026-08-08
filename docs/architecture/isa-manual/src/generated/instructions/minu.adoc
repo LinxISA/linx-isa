@@ -7,7 +7,7 @@
 
 *Syntax:* minu SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* Max-Min: MINU operation.
+*Description:* MINU - Compute this mnemonic's binary scalar operation and write the selected destination.
 
 *Encoding:*
 

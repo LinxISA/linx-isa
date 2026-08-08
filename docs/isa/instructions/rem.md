@@ -36,7 +36,7 @@ rd = (rs2 != 0) ? (rs1 % rs2) : rs1;
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `REM - Compute signed scalar remainder.`
 
 ## Full Catalog Forms
 

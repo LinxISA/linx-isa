@@ -7,7 +7,7 @@
 
 *Syntax:* cmp.ori SrcL, simm, ->{t, u, Rd}
 
-*Description:* Compare or immediate: set Rd/t/u to 1 if true, else 0.
+*Description:* CMP.ORI - Combine scalar comparison results with the encoded logical operation.
 
 *Encoding:*
 

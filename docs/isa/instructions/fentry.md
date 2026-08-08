@@ -26,7 +26,7 @@
 
 ## Description
 
-Instruction from the Bundle Split group.
+Atomically validates and creates a frame-template entry state.
 
 ## Pseudocode (informative)
 

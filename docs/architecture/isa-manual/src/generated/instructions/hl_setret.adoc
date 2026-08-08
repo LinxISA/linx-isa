@@ -7,7 +7,7 @@
 
 *Syntax:* hl.setret imm, ->Ra
 
-*Description:* Long 48-bit set return address with 32-bit PC-relative offset, packs ra.
+*Description:* HL.SETRET - Write the architectural return address.
 
 *Encoding:*
 

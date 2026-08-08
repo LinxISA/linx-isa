@@ -7,7 +7,7 @@
 
 *Syntax:* setc.lti SrcL, simm
 
-*Description:* Set block condition flag for t immediate: consumed by BSTART COND.
+*Description:* SETC.LTI - Compare scalar operands and update the bundle commit condition.
 
 *Encoding:*
 

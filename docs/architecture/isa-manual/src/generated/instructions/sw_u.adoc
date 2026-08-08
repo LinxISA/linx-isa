@@ -7,7 +7,7 @@
 
 *Syntax:* sw.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]
 
-*Description:* Store 32-bit unsigned value to [Rs+offset], result to Rd/t/u.
+*Description:* SW.U - Store scalar data using this mnemonic's width and address-update form.
 
 *Encoding:*
 

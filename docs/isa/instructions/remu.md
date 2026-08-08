@@ -36,7 +36,7 @@ Unsigned integer remainder.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `REMU - Compute unsigned scalar remainder.`
 
 ## Full Catalog Forms
 

@@ -7,7 +7,7 @@
 
 *Syntax:* b.eq SrcL, SrcR, label
 
-*Description:* Conditional branch: take branch if eq.
+*Description:* B.EQ - Conditionally branch to the PC-relative target after comparing scalar operands.
 
 *Encoding:*
 

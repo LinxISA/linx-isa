@@ -7,7 +7,7 @@
 
 *Syntax:* shi SrcL, [SrcR, simm]
 
-*Description:* Store 16-bit value to [Rs+offset], result to Rd/t/u.
+*Description:* SHI - Store scalar data using this mnemonic's width and address-update form.
 
 *Encoding:*
 

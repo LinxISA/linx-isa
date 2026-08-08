@@ -3994,26 +3994,36 @@
     "cell_bytes": 128,
     "cells_per_pe": 2048,
     "capacity_bytes_per_pe": 262144,
-    "b_iot_size_imm4_bytes": [
+    "b_iot_tsize_bytes": [
       null,
+      128,
+      256,
       512,
       1024,
       2048,
       4096,
-      8192,
-      16384,
-      32768,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null
+      8192
     ],
-    "normal_tile_min_bytes": 512,
-    "normal_tile_max_bytes": 32768,
+    "b_ios_tsize_bytes": [
+      null,
+      128,
+      256,
+      512,
+      1024,
+      2048,
+      4096,
+      8192
+    ],
+    "normal_tile_min_bytes": 128,
+    "normal_tile_max_bytes": 8192,
+    "shape": {
+      "rows": "TSizeBytes / (columns * element_size)",
+      "rows_power_of_two": true,
+      "columns_power_of_two": true,
+      "valid_rows_at_most_rows": true,
+      "valid_columns_at_most_columns": true,
+      "matrix_operations_obey_same_shape_constraints": true
+    },
     "resource_shortage": "precise_allocation_trap",
     "eviction_or_spill": "forbidden",
     "physical_contiguity": "required"
@@ -4035,7 +4045,8 @@
         "semantic_handler": "TLOAD",
         "state_effects": [
           "operand:destination0:destination",
-          "operand:address:base-address"
+          "operand:address:base-address",
+          "operand:scalar0:row-stride-elements"
         ]
       },
       {
@@ -4046,6 +4057,7 @@
         "semantic_handler": "TSTORE",
         "state_effects": [
           "operand:address:base-address",
+          "operand:scalar0:row-stride-elements",
           "operand:source0:source"
         ]
       },
@@ -4161,7 +4173,7 @@
     "assembly_names": "S0..S255",
     "addressing": "absolute-index",
     "sharing_domain": "one bank private to each core and shared by its four PEs",
-    "quarter_selection": "optional B.IOT 4-bit PE mask; absent means 0b1111; zero means NOP",
+    "quarter_selection": "B.IOS 4-bit PE mask; zero means NOP",
     "access": "all four PEs may access all shared registers and independently select tile offsets",
     "write_atomicity": "atomic descriptor-and-payload read-modify-write",
     "initial_state": "uninitialized; reads behave like undefined-register reads",

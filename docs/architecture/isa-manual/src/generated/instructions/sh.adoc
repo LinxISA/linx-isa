@@ -7,7 +7,7 @@
 
 *Syntax:* sh SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1]
 
-*Description:* Store 16-bit signed value to [Rs+offset], result to Rd/t/u.
+*Description:* SH - Store scalar data using this mnemonic's width and address-update form.
 
 *Encoding:*
 

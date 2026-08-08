@@ -4703,6 +4703,10 @@
         {
           "field": "address",
           "role": "base-address"
+        },
+        {
+          "field": "scalar0",
+          "role": "row-stride-elements"
         }
       ],
       "arguments": [
@@ -4711,6 +4715,9 @@
         },
         {
           "operand": "address"
+        },
+        {
+          "operand": "scalar0"
         }
       ],
       "contract_status": "reviewed-complete",
@@ -4720,7 +4727,8 @@
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "state_effects": [
         "operand:destination0:destination",
-        "operand:address:base-address"
+        "operand:address:base-address",
+        "operand:scalar0:row-stride-elements"
       ],
       "datr_contract": {
         "allowed_nonzero_fields": [
@@ -4742,6 +4750,10 @@
           "role": "base-address"
         },
         {
+          "field": "scalar0",
+          "role": "row-stride-elements"
+        },
+        {
           "field": "source0",
           "role": "source"
         }
@@ -4749,6 +4761,9 @@
       "arguments": [
         {
           "operand": "address"
+        },
+        {
+          "operand": "scalar0"
         },
         {
           "operand": "source0"
@@ -4761,6 +4776,7 @@
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "state_effects": [
         "operand:address:base-address",
+        "operand:scalar0:row-stride-elements",
         "operand:source0:source"
       ],
       "datr_contract": {

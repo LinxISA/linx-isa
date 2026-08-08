@@ -36,7 +36,7 @@ Bit-field extract signed.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `BXS - Extract the selected scalar bitfield.`
 
 ## Full Catalog Forms
 

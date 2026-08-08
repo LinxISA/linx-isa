@@ -67,12 +67,12 @@ Among them, the function field is used to encode specific TileOp information. Th
 | 6 | [MGATHER.MASK](../../instructions/bstart_mgather_mask.md) | Masked gather into a Tile register |
 | 7 | [MSCATTER.MASK](../../instructions/bstart_mscatter_mask.md) | Masked scatter from a Tile register |
 | 8 | [MGATHER.CAS](../../instructions/bstart_mgather_cas.md) | Atomic indexed compare-and-swap gather |
-| 9 | [TMOV](../../header/tileblock/TMOV.md) Local-to-Shared insert | Uses `C.B.IOS` plus a Local source `B.IOT` |
-| 10 | [TMOV](../../header/tileblock/TMOV.md) Local-to-Shared publish | Uses `C.B.IOS` plus a Local source `B.IOT` |
-| 11 | [TMOV](../../header/tileblock/TMOV.md) Shared-to-Local broadcast | Uses `C.B.IOS` plus a Local destination `B.IOT` |
-| 12 | [TMOV](../../header/tileblock/TMOV.md) Shared-to-Local extract | Uses `C.B.IOS` plus a Local destination `B.IOT` |
+| 9 | [TMOV](../../header/tileblock/TMOV.md) Local-to-Shared insert | Uses `B.IOS` plus a Local source `B.IOT` |
+| 10 | [TMOV](../../header/tileblock/TMOV.md) Local-to-Shared publish | Uses `B.IOS` plus a Local source `B.IOT` |
+| 11 | [TMOV](../../header/tileblock/TMOV.md) Shared-to-Local broadcast | Uses `B.IOS` plus a Local destination `B.IOT` |
+| 12 | [TMOV](../../header/tileblock/TMOV.md) Shared-to-Local extract | Uses `B.IOS` plus a Local destination `B.IOT` |
 | 13 | [BSTART.GMOV](../../instructions/bstart_gmov.md) | Core4 collective global-memory movement |
-| 14 | `TSTORE.SPART` | Shared partition store using `C.B.IOS` plus `B.IOR` |
+| 14 | `TSTORE.SPART` | Shared partition store using `B.IOS` plus `B.IOR` |
 | 15-31 | Reserved | Illegal |
 
 The DataType field is encoded as follows:

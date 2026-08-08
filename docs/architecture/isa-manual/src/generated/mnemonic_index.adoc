@@ -28,6 +28,7 @@ This table lists unique mnemonics in the v0.58.0 catalog. Each mnemonic may have
 |`B.GEU` |Branch |32 |1
 |`B.HINT` |Bundle Hint |32 |2
 |`B.IOR` |Bundle Input & Output |32 |1
+|`B.IOS` |Bundle Input & Output |32 |1
 |`B.IOT` |Bundle Input & Output |32 |5
 |`B.LT` |Branch |32 |1
 |`B.LTU` |Branch |32 |1
@@ -83,7 +84,6 @@ This table lists unique mnemonics in the v0.58.0 catalog. Each mnemonic may have
 |`C.ADDI` |Arithmetic |16 |1
 |`C.AND` |Arithmetic Operation |16 |1
 |`C.B.DIMI` |Bundle Dimension |16 |1
-|`C.B.IOS` |Bundle Shared Operand Binding |16 |1
 |`C.BSTART` |Bundle Split |16 |2
 |`C.BSTART.FP` |C.BSTART |16 |1
 |`C.BSTART.MPAR` |C.BSTART |16 |1

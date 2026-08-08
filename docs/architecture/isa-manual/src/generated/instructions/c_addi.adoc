@@ -7,7 +7,7 @@
 
 *Syntax:* c.addi srcL, simm, ->t
 
-*Description:* Compressed 16-bit add immediate: Rd = Rs1 + imm, result to t.
+*Description:* C.ADDI - Compute this mnemonic's binary scalar operation and write the selected destination.
 
 *Encoding:*
 

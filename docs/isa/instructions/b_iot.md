@@ -12,7 +12,7 @@
 ## Assembly Syntax
 
 - `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>`
-- `B.IOT mask=PE_MASK, <last> <, ->DstTile<TSize>>`
+- `B.IOT mask=PE_MASK, <last>, ->DstTile<TSize>`
 - `B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<TSize>`
 - `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<TSize>`
 - `B.IOT SrcTile0, mask=PE_MASK, <last>`
@@ -28,7 +28,7 @@
 
 <figure id="encoding-b_iot_32_3a493c45ddfa">
 <img src="../wavedrom/enc_b_iot_32_3a493c45ddfa.svg" alt="B.IOT encoding form b_iot_32_3a493c45ddfa" width="100%" />
-<figcaption><code>b_iot_32_3a493c45ddfa</code> — <code>B.IOT mask=PE_MASK, <last> <, ->DstTile<TSize>></code>. MSB is on the left, LSB is on the right.</figcaption>
+<figcaption><code>b_iot_32_3a493c45ddfa</code> — <code>B.IOT mask=PE_MASK, <last>, ->DstTile<TSize></code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
 <figure id="encoding-b_iot_32_437af312f86d">
@@ -50,7 +50,7 @@
 
 ## Description
 
-Instruction from the Bundle Input & Output group.
+Binds v5 PE_MASK, ordered Local tile sources, last-use, and optional TSize/2-bit Local destination metadata; reuse bits do not exist.
 
 ## Pseudocode (informative)
 
@@ -61,14 +61,14 @@ Instruction from the Bundle Input & Output group.
 ## Encoding Notes
 
 - `Binds v5 PE_MASK, ordered Local tile sources, last-use, and optional TSize/2-bit Local destination metadata; reuse bits do not exist.`
-- `Binds v5 PE_MASK, ordered Local tile sources, last-use, and optional TSize/2-bit Local destination metadata; TSize=DstTile=0 is the mask-only Shared TLOAD/TSTORE companion and PE_MASK=0000 is a legal no-op.`
+- `Binds a destination-only Local Tile operand with per-PE TSize, PE_MASK, and last-use metadata; PE_MASK=0000 is a strict no-op and there is no mask-only Shared companion form.`
 
 ## Full Catalog Forms
 
 | Form ID | Assembly | Length | Decode | Encoding |
 |---------|----------|--------|--------|----------|
 | `b_iot_32_36792782e584` | `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>` | 32 | — | [SVG](../wavedrom/enc_b_iot_32_36792782e584.svg) |
-| `b_iot_32_3a493c45ddfa` | `B.IOT mask=PE_MASK, <last> <, ->DstTile<TSize>>` | 32 | — | [SVG](../wavedrom/enc_b_iot_32_3a493c45ddfa.svg) |
+| `b_iot_32_3a493c45ddfa` | `B.IOT mask=PE_MASK, <last>, ->DstTile<TSize>` | 32 | — | [SVG](../wavedrom/enc_b_iot_32_3a493c45ddfa.svg) |
 | `b_iot_32_437af312f86d` | `B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<TSize>` | 32 | — | [SVG](../wavedrom/enc_b_iot_32_437af312f86d.svg) |
 | `b_iot_32_84944b9c3d19` | `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<TSize>` | 32 | — | [SVG](../wavedrom/enc_b_iot_32_84944b9c3d19.svg) |
 | `b_iot_32_f17390877416` | `B.IOT SrcTile0, mask=PE_MASK, <last>` | 32 | — | [SVG](../wavedrom/enc_b_iot_32_f17390877416.svg) |

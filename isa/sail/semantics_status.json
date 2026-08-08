@@ -92,6 +92,10 @@
       "mnemonic": "B.IOR",
       "status": "executable-subset"
     },
+    "b_ios_32_11ff57a2e635": {
+      "mnemonic": "B.IOS",
+      "status": "executable-subset"
+    },
     "b_iot_32_36792782e584": {
       "mnemonic": "B.IOT",
       "status": "executable-subset"
@@ -398,10 +402,6 @@
     },
     "c_b_dimi_16_f5bd6ae22b96": {
       "mnemonic": "C.B.DIMI",
-      "status": "executable-subset"
-    },
-    "c_b_ios_16_5c9d7b427740": {
-      "mnemonic": "C.B.IOS",
       "status": "executable-subset"
     },
     "c_bstart_16_78ebf9b37d2d": {

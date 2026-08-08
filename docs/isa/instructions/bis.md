@@ -36,7 +36,7 @@ Bit set / OR.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `BIS - Modify the selected scalar bitfield.`
 
 ## Full Catalog Forms
 

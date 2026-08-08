@@ -36,7 +36,7 @@ Atomic memory read-modify-write operation.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `SC.B - Conditionally store the scalar value when the matching reservation remains valid.`
 
 ## Full Catalog Forms
 

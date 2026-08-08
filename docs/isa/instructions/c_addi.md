@@ -26,7 +26,7 @@
 
 ## Description
 
-[16-bit C.] Instruction from the Arithmetic group.
+C.ADDI - Compute this mnemonic's binary scalar operation and write the selected destination.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ rd = rs1 + SignExtend(imm12);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `C.ADDI - Compute this mnemonic's binary scalar operation and write the selected destination.`
 
 ## Full Catalog Forms
 

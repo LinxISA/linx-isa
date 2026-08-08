@@ -36,7 +36,7 @@ rd = ZeroExtend(imm20) << 12;
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `LUI - Materialize the upper immediate.`
 
 ## Full Catalog Forms
 

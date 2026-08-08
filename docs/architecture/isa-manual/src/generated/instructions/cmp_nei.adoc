@@ -7,7 +7,7 @@
 
 *Syntax:* cmp.nei SrcL, simm, ->{t, u, Rd}
 
-*Description:* Compare ne immediate: set Rd/t/u to 1 if true, else 0.
+*Description:* CMP.NEI - Compare scalar operands and write the encoded boolean result.
 
 *Encoding:*
 

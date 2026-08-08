@@ -16,7 +16,7 @@ Integer arithmetic instructions operating on general-purpose registers.
 
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
-| [C.ADDI](../instructions/c_addi.md) | `c.addi srcL, simm, ->t` | 16 | — | [16-bit C.] Instruction from the Arithmetic group. |
+| [C.ADDI](../instructions/c_addi.md) | `c.addi srcL, simm, ->t` | 16 | — | C.ADDI - Compute this mnemonic's binary scalar operation and write the selected destination. |
 
 ## See Also
 

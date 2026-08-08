@@ -1,20 +1,7 @@
 {
   "big_kind": "CMD",
-  "count": 2,
+  "count": 1,
   "instructions": [
-    {
-      "class": {
-        "cmd_kind": "BLOCK_DIMENSION",
-        "note": "User confirmed A",
-        "source": "group_rule",
-        "uop_kind": "CMD"
-      },
-      "group": "Bundle Input & Output",
-      "length_bits": [
-        16
-      ],
-      "mnemonic": "C.B.IOS"
-    },
     {
       "class": {
         "cmd_kind": "BLOCK_DIMENSION",

@@ -36,7 +36,7 @@ Fence(/* ordering */);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `FENCE.I - Synchronize instruction visibility after prior writes.`
 
 ## Full Catalog Forms
 

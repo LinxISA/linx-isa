@@ -36,7 +36,7 @@ Architectural control (ring call). Calls an implementation-defined ACR.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `ACRC - Request architecture context close.`
 
 ## Full Catalog Forms
 

@@ -16,7 +16,7 @@ Instructions in the **Bundle Dimension** group of the LinxISA v0.58.0 catalog.
 
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
-| [C.B.DIMI](../instructions/c_b_dimi.md) | `C.B.DIMI imm, ->{LB0, LB1, LB2}` | 16 | — | [16-bit C.] Instruction from the Bundle Dimension group. |
+| [C.B.DIMI](../instructions/c_b_dimi.md) | `C.B.DIMI imm, ->{LB0, LB1, LB2}` | 16 | — | Writes one of the three bundle-local dimension registers. |
 
 ## See Also
 

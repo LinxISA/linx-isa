@@ -1,6 +1,6 @@
 # Instruction Groups
 
-Alphabetical list of all 69 instruction groups in the LinxISA v0.58.0 catalog.
+Alphabetical list of all 68 instruction groups in the LinxISA v0.58.0 catalog.
 See the [chapter index](index.md) for the manual organization.
 
 | Group | Forms | Chapter | Sample mnemonics |
@@ -14,7 +14,7 @@ See the [chapter index](index.md) for the manual organization.
 | [Bundle Argument](bundle_argument.md) | 3 | — | `B.DIM` |
 | [Branch](branch.md) | 10 | **Ch 16** — [source](index.md) | `B.EQ`, `B.GE`, `B.GEU`, `B.LT`, `B.LTU`, `B.NE`, `B.NZ`, `B.Z` +2 |
 | [Bundle Hint](bundle_hint.md) | 2 | — | `B.HINT` |
-| [Bundle Input & Output](bundle_input_output.md) | 6 | — | `B.IOR`, `B.IOT` |
+| [Bundle Input & Output](bundle_input_output.md) | 7 | — | `B.IOR`, `B.IOS`, `B.IOT` |
 | [Bundle Offset](bundle_offset.md) | 1 | — | `B.TEXT` |
 | [Cache Maintain](cache_maintain.md) | 16 | **Ch 19** — [source](index.md) | `BC.IALL`, `BC.IVA`, `DC.CISW`, `DC.CIVA`, `DC.CSW`, `DC.CVA`, `DC.IALL`, `DC.ISW` +8 |
 | [Bit Operation](bit_operation.md) | 8 | **Ch 12** — [source](index.md) | `BCNT`, `BIC`, `BIS`, `BXS`, `BXU`, `CLZ`, `CTZ`, `REV` |
@@ -24,7 +24,6 @@ See the [chapter index](index.md) for the manual organization.
 | [Arithmetic Operation](arithmetic_operation.md) | 20 | **Ch 12** — [source](index.md) | `C.ADD`, `C.AND`, `C.OR`, `C.SUB`, `V.ADD`, `V.ADDI`, `V.AND`, `V.ANDI` +12 |
 | [Arithmetic](arithmetic.md) | 1 | **Ch 12** — [source](index.md) | `C.ADDI` |
 | [Bundle Dimension](bundle_dimension.md) | 1 | — | `C.B.DIMI` |
-| [Bundle Shared Operand Binding](bundle_shared_operand_binding.md) | 1 | — | `C.B.IOS` |
 | [C.BSTART](c_bstart.md) | 7 | **Ch 15** — [source](index.md) | `C.BSTART.FP`, `C.BSTART.MPAR`, `C.BSTART.MSEQ`, `C.BSTART.STD`, `C.BSTART.SYS`, `C.BSTART.VPAR`, `C.BSTART.VSEQ` |
 | [C.TINST](c_tinst.md) | 6 | **Ch 19** — [source](index.md) | `C.CMP.EQI`, `C.CMP.NEI`, `C.EBREAK`, `C.SLLI`, `C.SRLI`, `C.SSRGET` |
 | [Load Immediate Offset](load_immediate_offset.md) | 23 | **Ch 11** — [source](index.md) | `C.LDI`, `C.LWI`, `LBI`, `LBUI`, `LDI`, `LHI`, `LHUI`, `LWI` +15 |

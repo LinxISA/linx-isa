@@ -26,7 +26,7 @@
 
 ## Description
 
-[16-bit C.] Instruction from the C.UNARY group.
+C.SEXT.H - Sign-extend or zero-extend the selected scalar subword.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `C.SEXT.H - Sign-extend or zero-extend the selected scalar subword.`
 
 ## Full Catalog Forms
 

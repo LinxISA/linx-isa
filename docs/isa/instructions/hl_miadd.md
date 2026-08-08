@@ -26,7 +26,7 @@
 
 ## Description
 
-[48-bit HL.] Instruction from the RESERVE group.
+HL.MIADD - Multiply by the encoded immediate and add the scalar source.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `HL.MIADD - Multiply by the encoded immediate and add the scalar source.`
 
 ## Full Catalog Forms
 

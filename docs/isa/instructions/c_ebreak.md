@@ -26,7 +26,7 @@
 
 ## Description
 
-[16-bit C.] Instruction from the C.TINST group.
+C.EBREAK - Raise the software breakpoint exception.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ Trap(EBREAK);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `C.EBREAK - Raise the software breakpoint exception.`
 
 ## Full Catalog Forms
 

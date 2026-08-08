@@ -7,7 +7,7 @@
 
 *Syntax:* sd SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3]
 
-*Description:* Store 64-bit signed value to [Rs+offset], result to Rd/t/u.
+*Description:* SD - Store scalar data using this mnemonic's width and address-update form.
 
 *Encoding:*
 

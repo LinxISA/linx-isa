@@ -7,7 +7,7 @@
 
 *Syntax:* bwe SrcL
 
-*Description:* Branch barrier/wait: BWE instruction for control-flow speculation management.
+*Description:* BWE - Issue this mnemonic's architecture control request.
 
 *Encoding:*
 

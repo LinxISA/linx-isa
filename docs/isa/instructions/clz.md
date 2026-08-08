@@ -36,7 +36,7 @@ rd = CountLeadingZeros(rs1);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `CLZ - Count the selected bit property of the scalar source.`
 
 ## Full Catalog Forms
 

@@ -26,7 +26,7 @@
 
 ## Description
 
-[48-bit HL.] Instruction from the Compare Instruction group.
+HL.CMP.GEUI - Compare scalar operands and write the encoded boolean result.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `HL.CMP.GEUI - Compare scalar operands and write the encoded boolean result.`
 
 ## Full Catalog Forms
 

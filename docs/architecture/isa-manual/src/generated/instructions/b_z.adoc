@@ -7,7 +7,7 @@
 
 *Syntax:* b.z label
 
-*Description:* Conditional branch: take branch if zero.
+*Description:* B.Z - Conditionally branch to the PC-relative target after comparing scalar operands.
 
 *Encoding:*
 

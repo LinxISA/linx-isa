@@ -429,6 +429,21 @@ def _describe_instruction(mnemonic: str, group: str, asm: str) -> str:
     return f"{prefix}Instruction from the {group} group."
 
 
+def _catalog_description(inst: dict) -> str:
+    """Use a specific description, falling back to the catalog summary."""
+    derived = _describe_instruction(
+        str(inst["mnemonic"]),
+        str(inst.get("group", "Ungrouped")),
+        str(inst.get("asm", "")),
+    )
+    if "Instruction from the " not in derived:
+        return derived
+    note = _collapse_ws(str(inst.get("note") or ""))
+    if note:
+        return note
+    return derived
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Page templates
 # ─────────────────────────────────────────────────────────────────────────────
@@ -554,7 +569,7 @@ Use **Ctrl+F** / **Cmd+F** to search, or browse the [full alphabetical list](ins
             if m in seen:
                 continue
             seen.add(m)
-            desc = _describe_instruction(m, group, inst.get("asm", ""))
+            desc = _catalog_description(inst)
             gslug = _slug(group)
             bits = inst.get("length_bits", "?")
             mnem_rows.append(
@@ -787,7 +802,7 @@ def _render_group_page(
         decode = inst.get("parts", [{}])[0].get("decode", "—")
         if decode is None:
             decode = "—"
-        desc = _collapse_ws(_describe_instruction(m, group, asm))
+        desc = _catalog_description(inst)
         rows.append(f"| [{m}](../instructions/{_slug(m)}.md) | `{asm}` | {length} | {decode} | {desc} |")
 
     ch_info = get_manual_chapter(group)
@@ -952,7 +967,7 @@ def _render_instruction_page(
     length = inst.get("length_bits", "?")
     decode_tag = inst.get("parts", [{}])[0].get("decode", "—") or "—"
     asm = inst.get("asm", "")
-    desc = _describe_instruction(mnemonic, group, asm)
+    desc = _catalog_description(inst)
 
     # Assembly forms (unique by asm string)
     seen_asm: set[str] = set()
@@ -1199,7 +1214,7 @@ def _render_instruction_index(
             g = inst.get("group", "Ungrouped")
             gslug = _slug(g)
             l = inst.get("length_bits", "?")
-            desc = _collapse_ws(_describe_instruction(m, g, inst.get("asm", "")))
+            desc = _catalog_description(inst)
             rows.append(f"| [{m}]({_slug(m)}.md) | [{g}](../groups/{gslug}.md) | {l} | {desc} |")
         sections.append(f"### {letter}\n\n| Mnemonic | Group | Bits | Description |\n|----------|-------|------|-------------|\n" + "\n".join(rows))
 

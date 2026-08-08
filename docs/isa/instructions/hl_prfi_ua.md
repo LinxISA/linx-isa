@@ -26,7 +26,7 @@
 
 ## Description
 
-[48-bit HL.] Instruction from the Prefetch group.
+HL.PRFI.UA - Issue a scalar prefetch using this mnemonic's addressing form.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `HL.PRFI.UA - Issue a scalar prefetch using this mnemonic's addressing form.`
 
 ## Full Catalog Forms
 

@@ -36,7 +36,7 @@ rd = rs1 >> shamt (arith);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `SRAI - Compute this mnemonic's binary scalar operation and write the selected destination.`
 
 ## Full Catalog Forms
 

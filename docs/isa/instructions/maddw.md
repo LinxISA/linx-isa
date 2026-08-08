@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `MADDW - Compute 32-bit multiply-add and sign-extend it.`
 
 ## Full Catalog Forms
 

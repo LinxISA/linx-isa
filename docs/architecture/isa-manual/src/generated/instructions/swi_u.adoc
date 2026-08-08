@@ -7,7 +7,7 @@
 
 *Syntax:* swi.u SrcL, [SrcR, simm]
 
-*Description:* Store 32-bit value to [Rs+offset], result to Rd/t/u.
+*Description:* SWI.U - Store scalar data using this mnemonic's width and address-update form.
 
 *Encoding:*
 

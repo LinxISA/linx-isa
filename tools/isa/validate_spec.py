@@ -324,8 +324,13 @@ def _validate_engine_ops_v058(spec: Dict[str, Any], engine_ops: Dict[str, Any], 
     if shared.get("registers_per_core") != 256 or shared.get("addressing") != "absolute-index":
         errors.append("state.engine_ops Shared tile registers must be absolute S0..S255")
     mnemonics = {str(item.get("mnemonic") or "") for item in spec.get("instructions", [])}
-    if "C.B.IOS" not in mnemonics or "BSTART.GMOV" not in mnemonics:
-        errors.append("PTO ISA 0.58 requires C.B.IOS and BSTART.GMOV")
+    if "B.IOS" not in mnemonics or "BSTART.GMOV" not in mnemonics:
+        errors.append("PTO ISA 0.58 requires B.IOS and BSTART.GMOV")
+    if {"B.IOD", "BSTART.PAR", "C.B.IOS"} & mnemonics:
+        errors.append("PTO ISA 0.58 deleted scalar/block spellings must not decode")
+    tfma = [op for op in ops if op.get("name") == "TFMA"]
+    if len(tfma) != 1 or (tfma[0].get("mode"), tfma[0].get("function")) != (0, 28):
+        errors.append("PTO ISA 0.58 requires TFMA at TEPL Mode=0 Function=28")
 
 
 def _validate_engine_ops(spec: Dict[str, Any], errors: List[str]) -> None:
@@ -1110,8 +1115,11 @@ def validate(path: str) -> List[str]:
         errors.append("missing compiled retired_encodings.entries")
     else:
         retired_names = {str(entry.get("retired_mnemonic") or "") for entry in retired_entries}
-        if retired_names != {"B.IOD", "BSTART.PAR"}:
-            errors.append(f"retired encoding identities must be exactly B.IOD and BSTART.PAR, got {retired_names}")
+        expected_retired = set() if str(spec.get("version") or "") == "0.58.0" else {"B.IOD", "BSTART.PAR"}
+        if retired_names != expected_retired:
+            errors.append(
+                f"retired encoding identities must be exactly {sorted(expected_retired)}, got {retired_names}"
+            )
 
     for inst in spec.get("instructions", []):
         inst_id = inst.get("id", inst.get("mnemonic", "<missing-id>"))

@@ -7,7 +7,7 @@
 
 *Syntax:* hl.sh.pcr SrcL, [<symbol>]
 
-*Description:* Long 48-bit store with PC-relative offset or indexed form.
+*Description:* HL.SH.PCR - Store scalar data using this mnemonic's width and address-update form.
 
 *Encoding:*
 

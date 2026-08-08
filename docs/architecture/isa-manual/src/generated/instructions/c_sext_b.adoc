@@ -7,7 +7,7 @@
 
 *Syntax:* c.sext.b srcL, ->t
 
-*Description:* Compressed 16-bit sign-extend Rs1 from 8-bit to 64-bit, result to t.
+*Description:* C.SEXT.B - Sign-extend or zero-extend the selected scalar subword.
 
 *Encoding:*
 

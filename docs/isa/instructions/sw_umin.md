@@ -36,7 +36,7 @@ Atomic memory read-modify-write operation.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `SW.UMIN - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.`
 
 ## Full Catalog Forms
 

@@ -1,38 +1,33 @@
 {
-  "entries": [
-    {
-      "disposition": "reserved",
-      "length_bits": 32,
-      "mask": "0x0600707f",
-      "match": "0x00001013",
-      "retired_mnemonic": "B.IOD"
-    },
-    {
-      "disposition": "reserved",
-      "length_bits": 32,
-      "mask": "0x06007fff",
-      "match": "0x02001181",
-      "retired_mnemonic": "BSTART.PAR"
-    }
-  ],
+  "entries": [],
   "deleted_tile_names": [
+    "ACCCVT",
     "TADDC",
     "TADDSC",
-    "TFMA",
+    "TALLOC",
+    "TAXPY",
+    "TDEINTERLEAVE",
     "TFMOD",
     "TFMODS",
+    "TFREE",
+    "TGATHERB",
+    "TINTERLEAVE",
     "TLRELU",
-    "TRANDOM",
+    "TPARTARGMAX",
+    "TPARTARGMIN",
+    "TPOP",
+    "TPRELU",
+    "TPUSH",
+    "TRESHAPE",
     "TSUBC",
-    "TSUBSC"
+    "TSUBSC",
+    "TRANDOM",
+    "TSORT32"
   ],
-  "migration_only_source_aliases": {
-    "TSORT32": "TSORT",
-    "TTRANSPOSE": "TTRANS"
-  },
+  "migration_only_source_aliases": {},
   "notes": [
-    "Retired spellings are assembler errors.",
-    "B.IOD and the former BSTART.PAR/legacy-TEPL bit pattern are reserved and must not canonical-redecode.",
-    "Deleted tile operation selectors remain unallocated in the PTO ISA 0.58.0 TEPL Mode/Function map."
+    "Deleted spellings and tile operations are assembler errors.",
+    "Deleted scalar/block spellings do not retain encoding reservations in v0.58.",
+    "Unassigned tile selectors remain illegal unless the PTO catalog assigns them."
   ]
 }
