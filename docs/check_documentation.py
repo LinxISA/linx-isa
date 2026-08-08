@@ -16,6 +16,7 @@ TEXT_SUFFIXES = {".adoc", ".json", ".md", ".py", ".sh", ".yaml", ".yml"}
 RETIRED_MNEMONICS = (
     "B" + ".IOD",
     "BSTART" + ".PAR",
+    "C" + ".B.IOS",
     "B" + ".ATTR",
     "B" + ".IOTI",
 )
@@ -23,6 +24,7 @@ RETIRED_SOURCE_POLICY = "linx-v03-" + "parity"
 RETIRED_PAGE_SLUGS = (
     "b_" + "iod",
     "bstart_" + "par",
+    "c_b_" + "ios",
     "b_" + "attr",
     "b_" + "ioti",
 )
@@ -156,6 +158,24 @@ def _check_generated_image_links(root: Path, errors: list[str]) -> None:
                     )
 
 
+def _check_asciidoc_includes(root: Path, errors: list[str]) -> None:
+    """Require every local AsciiDoc include target to exist."""
+    manual_src = root / "docs" / "architecture" / "isa-manual" / "src"
+    include_pattern = re.compile(r"^include::([^\[]+)\[", re.MULTILINE)
+    for source in manual_src.rglob("*.adoc"):
+        text = source.read_text(encoding="utf-8", errors="replace")
+        for match in include_pattern.finditer(text):
+            target_text = match.group(1)
+            if "://" in target_text or target_text.startswith("/") or "{" in target_text:
+                continue
+            target = (source.parent / target_text).resolve()
+            if not target.is_file():
+                _error(
+                    errors,
+                    f"broken AsciiDoc include in {source.relative_to(root)}: {target_text}",
+                )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", default=".", help="superproject root")
@@ -172,6 +192,7 @@ def main() -> int:
 
     _check_retired_surfaces(root, errors)
     _check_generated_image_links(root, errors)
+    _check_asciidoc_includes(root, errors)
 
     placeholders = [
         path.relative_to(root)
