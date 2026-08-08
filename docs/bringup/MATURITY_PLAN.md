@@ -165,7 +165,7 @@ Current milestone interpretation:
 ## SIMT-Specific Planning Pages
 
 - Architecture detail plan:
-  `docs/architecture/v0.57-simt-compiler-contract-plan.md`
+  `docs/architecture/v0.58-architecture-contract.md`
 - Compiler maturation plan:
   `docs/bringup/SIMT_COMPILER_MATURITY_PLAN.md`
 

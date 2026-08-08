@@ -1,5 +1,7 @@
 # LinxISA Assembly Sample Pack (v0.57.1)
 
+> Historical, non-normative archive. Do not use these examples for current assembly or toolchain decisions.
+
 Canonical public assembly examples generated from the locked PTO ISA 0.57.1
 kernel surface.
 

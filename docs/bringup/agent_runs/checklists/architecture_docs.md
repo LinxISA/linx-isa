@@ -10,7 +10,7 @@
   Done means: verification matrix contains every required Architecture/LinxCore/Testbench/pyCircuit/LinxTrace gate key.
   Status: ✅ PASS (2026-03-15) - `arch_contract_report.json` for run `2026-03-15-r2-pin` reports `ok=true` with no contract-matrix drift (artifact: `docs/bringup/gates/logs/2026-03-15-r2-pin/pin/arch_contract_report.json`).
 
-- [ ] ID: ARCH-003 Keep the live v0.57 architecture contract and LinxCore contract pages cross-linked.
+- [ ] ID: ARCH-003 Keep the live v0.58 architecture contract and LinxCore implementation pages cross-linked.
   Done means: `v0.57-architecture-contract.md` references LinxCore pages and LinxCore overview references the v0.57 scope.
 
 - [ ] ID: ARCH-004 Ensure architecture-affecting changes update LinxArch before implementation sign-off.

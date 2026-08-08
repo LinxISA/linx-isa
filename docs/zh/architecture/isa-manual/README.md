@@ -1,6 +1,6 @@
 # 灵犀指令集架构 手册 (AsciiDoc)
 
-此目录包含 **灵犀指令集架构 (灵犀 ISA)** 的实时 v0.57 ISA 手册，以
+此目录包含 **灵犀指令集架构 (灵犀 ISA)** 的实时 v0.58 ISA 手册，以
 **AsciiDoc** 并使用以下方式构建为 **PDF**
 `asciidoctor-pdf`（通过 Bundler）。
 
@@ -32,13 +32,13 @@ make pdf
 
 ## 发布工件
 
-- 当前发行说明：`docs/zh/releases/v0.57.0.md`
+- 当前发行说明：`docs/zh/releases/v0.58.0.md`
 - 最新发布页面：https://github.com/灵犀指令集/linx-isa/releases/latest
 
 ## 重新生成生成的部分
 
 该手册包括从规范规范生成的 AsciiDoc：
-- `isa/v0.57/linxisa-v0.57.json`
+- `isa/v0.58/linxisa-v0.58.json`（当前规范权威）
 
 再生：
 

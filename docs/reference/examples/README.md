@@ -1,7 +1,9 @@
 # Examples
 
-Canonical LinxISA sample pack:
+Current LinxISA example policy:
 
-- `docs/reference/examples/v0.57/`
+- New examples MUST target `isa/v0.58/linxisa-v0.58.json` and pass the current
+  assembler/disassembler and AVS gates.
+- No historical sample pack is a current encoding or semantic definition.
 
-This location is canonical in v0.57 and no longer redirects to `examples/`.
+Historical examples are retained outside active navigation for provenance only.

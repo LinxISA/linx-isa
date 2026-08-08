@@ -10,7 +10,7 @@
 
 ## 规范合同
 
-- 架构合约：`docs/architecture/v0.57-architecture-contract.md`
+- 架构合约：`docs/zh/architecture/v0.58-architecture-contract.md`
 - AVS合约页面：`docs/bringup/AVS_CONTRACT.md`
 - 规范 AVS 矩阵：`avs/linx_avs_v1_test_matrix.yaml`
 - 合约门：`python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml`

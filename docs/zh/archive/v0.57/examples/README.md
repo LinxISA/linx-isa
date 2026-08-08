@@ -1,5 +1,7 @@
 # LinxISA 汇编示例包（v0.57.1）
 
+> 历史、非规范归档。不得将这些示例用于当前汇编或工具链决策。
+
 本目录包含由锁定的 PTO ISA 0.57.1 kernel surface 生成的规范公共汇编示例。
 
 ## 目录布局
@@ -23,4 +25,4 @@ B.IOT        last, ->t<4KB>
 `MAMULB` 或已删除的 D 类操作。请使用 `index.yaml` 记录的 LLVM 与
 PTO-Kernel 提交重新生成示例。
 
-来源：`docs/reference/examples/v0.57/`
+来源：`docs/zh/archive/v0.57/examples/`

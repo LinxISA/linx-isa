@@ -34,7 +34,7 @@ This workspace follows a strict navigation contract. See [navigation.md](navigat
 | Freestanding libc | `avs/runtime/freestanding/` |
 | Linux libc sources | `lib/glibc/`, `lib/musl/` |
 | PTO kernel headers | `workloads/pto_kernels/include/` |
-| Assembly examples | `docs/reference/examples/v0.57/` |
+| Assembly examples | `docs/reference/examples/README.md` |
 
 ## CI Validation
 

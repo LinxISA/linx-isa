@@ -82,3 +82,8 @@
   Command: `python3 tools/bringup/report_isa_llvm_qemu_coverage.py --compiler-analyzer avs/compiler/linx-llvm/tests/analyze_coverage.py --compiler-out-dir avs/compiler/linx-llvm/tests/out-linx64 --qemu-isa-report docs/bringup/gates/qemu_isa_coverage_latest.json --qemu-translation-report docs/bringup/gates/qemu_translation_coverage_latest.json --report-out docs/bringup/gates/isa_llvm_qemu_coverage_latest.json --out-md docs/bringup/gates/isa_llvm_qemu_coverage_latest.md --require-coherent`
   Done means: LLVM coverage, QEMU implementation coverage, and AVS translation coverage are compared against the same canonical ISA set and no mismatch buckets remain.
   Status: ✅ PASS (2026-05-21) - LLVM coverage, QEMU implementation coverage, and AVS translation coverage now all reach `710/710` canonical mnemonics in the combined coherence report.
+
+- [ ] ID: LLVM-009 Upgrade LLVM against the formal LinxISA v0.58 catalog.
+  Command: `python3 tools/isa/check_canonical_v058.py --root .`
+  Done means: assembly, disassembly, relocation, canonical spelling, and compile AVS evidence are regenerated from `isa/v0.58/linxisa-v0.58.json`; no v0.57 PASS record is transferred.
+  Status: pending fresh v0.58 implementation and exact-head evidence.

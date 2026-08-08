@@ -12,7 +12,8 @@ upgrade is smaller.
    model structure, and tool interfaces rarely change between minor versions.
    Avoid sprinkling version numbers where a generic reference works.
 
-2. **Prefer canonical references.** Instead of `isa/v0.57/linxisa-v0.57.json`,
+2. **Prefer canonical references.** Instead of scattering
+   `isa/v0.58/linxisa-v0.58.json`,
    prefer phrasing like *"the canonical ISA catalog"* when the exact path is not
    load-bearing for the reader. When a concrete path is needed, use the
    versioned path and keep it in one obvious place per file.
@@ -27,8 +28,8 @@ upgrade is smaller.
 
 ```
 isa/
-├── v0.57/                      # ← current active profile
-│   ├── linxisa-v0.57.json      #     compiled ISA catalog (golden)
+├── v0.58/                      # ← current active profile
+│   ├── linxisa-v0.58.json      #     compiled ISA catalog (golden)
 │   ├── meta.json               #     profile identity
 │   ├── release_manifest.json   #     release manifest
 │   ├── encoding/               #     field definitions, retired encodings
@@ -36,15 +37,17 @@ isa/
 │   ├── registers/              #     register definitions
 │   ├── state/                  #     architectural state, engine ops, PTO
 │   ├── semantics_conventions.json
-│   └── uop_classification_v0.57/
+│   └── uop_classification_v0.58/
+├── v0.57/                      # retained immutable historical profile
 │
 ├── sail/                       # Sail formal model (consumes the catalog)
 ├── generated/                  # Generated codecs (consumes the catalog)
 └── README.md
 ```
 
-Retired profiles (v0.56 and earlier) are **not** shipped in the active
-worktree. They are available through git history.
+The v0.57 profile remains checked in as immutable release history. It is not an
+agent entry point and does not define current behavior. Older profiles are
+available through git history.
 
 ---
 
@@ -60,19 +63,19 @@ these files. The list is ordered from most critical to least.
 | `isa/v<new>/` | Add the new profile directory with the compiled catalog, meta.json, release_manifest.json, and all state/encoding/register artifacts. |
 | `tools/isa/build_golden.py` | Update `--profile` default and `choices` list. |
 | `tools/isa/validate_spec.py` | Update `--profile` default and `choices` list. |
-| `tools/isa/check_canonical_v057.py` | Rename to `check_canonical_v<new>.py`, update internal spec path and required mnemonics. |
+| `tools/isa/check_canonical_v058.py` | Rename for the next profile and update its spec path and required mnemonics. |
 | `tools/isa/test_golden_contract.py` | Update spec path and retired-encoding assertions. |
-| `tools/isa/test_v057_profile.py` | Rename and update profile references. |
+| `tools/isa/test_v058_profile.py` | Rename and update profile references. |
 | `isa/generated/codecs/README.md` | Update the source-of-truth path. |
 | `isa/README.md` | Update the "latest stable compiled catalog" path. |
 | `isa/sail/README.md` | Update the compiled catalog path. |
-| `tools/bringup/gate_registry.json` | Update all `isa/v0.57/` paths. |
+| `tools/bringup/gate_registry.json` | Update all paths for the previous active profile. |
 
 ### Tier 2 — Consumer references
 
 | File | What to change |
 |---|---|
-| `rtl/README.md` | Update `isa/v0.57/linxisa-v0.57.json` to the new version. |
+| `rtl/README.md` | Update the previous active catalog path to the new version. |
 | `workloads/BENCHMARKING_METHOD.md` | Update the canonical spec path. |
 | `docs/bringup/README.md` | Update spec paths in example commands. |
 | `docs/README.md` | Update the architecture contract and ISA spec paths. |
@@ -112,7 +115,7 @@ or edit a file that references the ISA spec:
   ```
   ✅ "the canonical ISA catalog"
   ✅ "the current active ISA profile"
-  ❌ "isa/v0.57/linxisa-v0.57.json" (only where the exact path matters)
+  ❌ a hard-coded previous-profile path where the exact version is not load-bearing
   ```
 
 - **Consolidate the version string in one place per file.** If a README needs

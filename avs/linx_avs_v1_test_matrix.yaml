@@ -33,7 +33,7 @@ tests:
     profiles: [LNX-S32, LNX-S64]
     must_pass_in_tier: [nightly]
     spec_refs:
-      - docs/architecture/v0.57-architecture-contract.md
+      - docs/archive/v0.57/architecture/v0.57-architecture-contract.md
       - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
     requirement: "Any encoding not matched by the canonical ISA catalog traps as illegal instruction."
     pass_fail: "QEMU and reference decode vectors trap on the same byte sequence with no partial side effects."
@@ -110,7 +110,7 @@ tests:
     profiles: [LNX-S32, LNX-S64]
     must_pass_in_tier: [pr, nightly]
     spec_refs:
-      - docs/architecture/v0.57-architecture-contract.md
+      - docs/archive/v0.57/architecture/v0.57-architecture-contract.md
       - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
     requirement: "Control-flow targets must land on block start markers."
     pass_fail: "Jumping into the middle of a block traps with correct BPC/TPC capture."
@@ -158,7 +158,7 @@ tests:
     must_pass_in_tier: [pr, nightly]
     spec_refs:
       - docs/architecture/isa-manual/src/chapters/04_block_isa.adoc
-      - docs/architecture/v0.57-architecture-contract.md
+      - docs/archive/v0.57/architecture/v0.57-architecture-contract.md
     requirement: "Canonical vector block types are BSTART.VPAR and BSTART.VSEQ only."
     pass_fail: "Repo and runtime suites contain no live BSTART.VEC behavior."
 
@@ -313,7 +313,7 @@ tests:
     must_pass_in_tier: [pr, nightly]
     spec_refs:
       - docs/architecture/isa-manual/src/chapters/10_system_and_privilege.adoc
-      - docs/architecture/v0.57-architecture-contract.md
+      - docs/archive/v0.57/architecture/v0.57-architecture-contract.md
     requirement: "ACRC is last in a block and routes or traps as specified."
     pass_fail: "Placement violations trigger the defined trap; valid requests route to the managing ring vector."
 
@@ -432,7 +432,7 @@ tests:
     profiles: [LNX-VPAR, LNX-VSEQ]
     must_pass_in_tier: [nightly]
     spec_refs:
-      - docs/architecture/v0.57-architecture-contract.md
+      - docs/archive/v0.57/architecture/v0.57-architecture-contract.md
       - docs/architecture/isa-manual/src/chapters/20_vec.adoc
     requirement: "Vector ops that require vector blocks trap when executed outside vector blocks."
     pass_fail: "Vector op outside the correct header traps; inside the header it executes and updates state."
@@ -468,7 +468,7 @@ tests:
     profiles: [LNX-S32, LNX-S64]
     must_pass_in_tier: [pr, nightly]
     spec_refs:
-      - docs/architecture/v0.57-architecture-contract.md
+      - docs/archive/v0.57/architecture/v0.57-architecture-contract.md
       - docs/architecture/isa-manual/src/chapters/10_system_and_privilege.adoc
     requirement: "Illegal encodings trap deterministically with no partial state committed."
     pass_fail: "Negative tests validate trap PC and cause plus unchanged regs and memory."

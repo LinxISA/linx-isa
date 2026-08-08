@@ -6,17 +6,11 @@ Architecture-facing documentation lives under `docs/architecture/`.
 
 - v0.58 canonical page:
   - `docs/architecture/v0.58-architecture-contract.md`
-- retained v0.57 baseline pages:
-  - `docs/architecture/pto-isa-v0.57.1-upgrade-plan.md` (historical cross-repository implementation plan)
-  - `docs/architecture/v0.57-architecture-contract.md`
-  - `docs/architecture/v0.57-encoding-decisions.md`
-  - `docs/architecture/v0.57-hardening-policy.md`
-  - `docs/architecture/v0.57-simt-compiler-contract.md`
-  - `docs/architecture/v0.57-simt-compiler-contract-plan.md` (planning page; not itself normative)
-  - `docs/architecture/v0.57-workload-engine-model.md`
-  - `docs/architecture/v0.57-rendering-kernel-authoring.md`
-  - `docs/architecture/v0.57-rendering-pto-contract.md`
-  - `docs/architecture/v0.57-rendering-command-contract.md`
+- machine-readable authority:
+  - `isa/v0.58/linxisa-v0.58.json`
+- generated encoding and instruction reference:
+  - `docs/isa/encoding.md`
+  - `docs/isa/instructions/`
 - published LinxCore mirrors:
   - `docs/architecture/linxcore/overview.md`
   - `docs/architecture/linxcore/microarchitecture.md`
@@ -50,6 +44,7 @@ Architecture-facing documentation lives under `docs/architecture/`.
 - Any architecture-affecting change must update LinxArch first, then implementation.
 - v0.58 is the sole active profile; its sources must not revive retired
   compatibility spellings or archived raw fragments.
-- Pre-canonical drafts and research notes are history only and must not be used
-  as the live contract.
+- Historical profiles, archived narratives, pre-canonical drafts, and research
+  notes are context only and must not be used as the live contract or an agent
+  entry point.
 - Planning pages may live alongside canonical pages when they define the staged path to a future contract freeze; they must state clearly whether they are normative.

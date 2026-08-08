@@ -257,7 +257,7 @@ These are intentionally deferred:
 ## Relationship to Other Canonical Pages
 
 - Architectural submission ownership is defined in
-  `docs/architecture/v0.57-rendering-command-contract.md`.
+  `docs/architecture/v0.58-architecture-contract.md`.
 - Shader-kernel semantics remain defined by the ISA contract, manual, and
   `isa/v0.57/state/` canonical state files.
 - Workload and gate closure status remain tracked through AVS and the bring-up

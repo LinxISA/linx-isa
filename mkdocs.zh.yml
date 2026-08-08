@@ -42,10 +42,9 @@ markdown_extensions:
   - md_in_html
 
 nav:
-    - v0.57 架构:
-        - 架构合约: architecture/v0.57-architecture-contract.md
-        - 编码决策: architecture/v0.57-encoding-decisions.md
-        - 发布说明: releases/v0.57.0.md
+    - v0.58 架构:
+        - 架构合约: architecture/v0.58-architecture-contract.md
+        - 发布说明: releases/v0.58.0.md
     - 设计背景: background/index.md
     - 总体架构:
         - 块指令定义: isa/arch/bisa.md

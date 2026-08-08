@@ -10,18 +10,18 @@ toolchain:
     -fno-stack-protector -fno-exceptions -fno-rtti -nostdlib
     -Iworkloads/pto_kernels/include
 entries:
-  - path: docs/reference/examples/v0.57/curated/disasm_example.s
+  - path: docs/archive/v0.57/examples/curated/disasm_example.s
     source: historical reviewed disassembly fixture
     generation: manual-curation
-  - path: docs/reference/examples/v0.57/generated/pto_flash_attention_auto.s
+  - path: docs/archive/v0.57/examples/generated/pto_flash_attention_auto.s
     source: workloads/pto_kernels/tools/examples/pto_flash_attention_auto.cpp
     generation: compile-with-recorded-toolchain
-  - path: docs/reference/examples/v0.57/generated/pto_gemm_auto.s
+  - path: docs/archive/v0.57/examples/generated/pto_gemm_auto.s
     source: workloads/pto_kernels/tools/examples/pto_gemm_auto.cpp
     generation: compile-with-recorded-toolchain
-  - path: docs/reference/examples/v0.57/generated/pto_tload_store.s
+  - path: docs/archive/v0.57/examples/generated/pto_tload_store.s
     source: workloads/pto_kernels/tools/examples/pto_tload_store.cpp
     generation: compile-with-recorded-toolchain
-  - path: docs/reference/examples/v0.57/generated/pto_tmatmul_acc.s
+  - path: docs/archive/v0.57/examples/generated/pto_tmatmul_acc.s
     source: workloads/pto_kernels/tools/examples/pto_tmatmul_acc.cpp
     generation: compile-with-recorded-toolchain

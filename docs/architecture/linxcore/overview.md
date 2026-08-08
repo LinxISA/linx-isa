@@ -32,9 +32,9 @@ glue.
 
 ## Normative links
 
-- Base ISA architecture contract: `docs/architecture/v0.57-architecture-contract.md`
-- Workload-to-engine model: `docs/architecture/v0.57-workload-engine-model.md`
-- Rendering command model: `docs/architecture/v0.57-rendering-command-contract.md`
+- Base ISA architecture contract: `docs/architecture/v0.58-architecture-contract.md`
+- Workload-to-engine model: `docs/architecture/v0.58-architecture-contract.md`
+- Rendering command model: `docs/architecture/v0.58-architecture-contract.md`
 - LinxCore microarchitecture contract: `rtl/LinxCore/docs/architecture/microarchitecture.md`
 - LinxCore interface contract: `rtl/LinxCore/docs/architecture/interfaces.md`
 - LinxCore verification matrix: `rtl/LinxCore/docs/architecture/verification-matrix.md`
@@ -164,9 +164,9 @@ LinxISA model.
 
 This composition rule is required for consistency with:
 
-- `docs/architecture/v0.57-architecture-contract.md`
-- `docs/architecture/v0.57-workload-engine-model.md`
-- `docs/architecture/v0.57-rendering-command-contract.md`
+- `docs/architecture/v0.58-architecture-contract.md`
+- `docs/architecture/v0.58-architecture-contract.md`
+- `docs/architecture/v0.58-architecture-contract.md`
 
 ## Current architecture closure slice
 

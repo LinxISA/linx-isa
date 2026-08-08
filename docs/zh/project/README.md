@@ -34,7 +34,7 @@
 |独立式 libc | `avs/runtime/freestanding/` |
 | Linux libc 源代码 | `lib/glibc/`，`lib/musl/` |
 | PTO 内核 块头s | `workloads/pto_kernels/include/` |
-|装配示例 | `docs/reference/examples/v0.57/` |
+|装配示例 | `docs/zh/reference/examples/README.md` |
 
 ## CI 验证
 

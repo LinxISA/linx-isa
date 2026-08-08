@@ -15,6 +15,9 @@ order and with the right proof requirements.
 
 ## Core Rules
 
+- Resolve ISA questions from `isa/v0.58/linxisa-v0.58.json` and the v0.58
+  generated/reference surfaces. Never route normative work to historical
+  profiles or archived narrative.
 - Treat the superproject as the coordination plane, not the place to hide leaf
   fixes.
 - Start from the smallest failing contract, gate, or test.
@@ -34,6 +37,14 @@ git submodule sync --recursive
 git submodule update --init --recursive
 bash tools/ci/check_repo_layout.sh
 omx --high
+```
+
+Before architecture work, verify the current contract directly:
+
+```bash
+python3 tools/isa/build_golden.py --profile v0.58 --check
+python3 tools/isa/validate_spec.py --profile v0.58
+python3 tools/isa/check_canonical_v058.py --root .
 ```
 
 Use `--madmax` only when you intentionally want the less constrained path.

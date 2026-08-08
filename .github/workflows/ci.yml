@@ -29,6 +29,8 @@ jobs:
           python3 tools/isa/check_pto_v058_manifest.py --root .
           python3 tools/isa/test_golden_contract.py
           python3 tools/isa/test_fused_call_contract.py
+          python3 tools/isa/test_agent_navigation.py
+          python3 tools/isa/check_agent_navigation.py --root .
           python3 tools/isa/report_encoding_space.py --check
           python3 tools/isa/gen_qemu_codec.py --check
           python3 tools/isa/gen_c_codec.py --check

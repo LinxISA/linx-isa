@@ -72,7 +72,7 @@ This enables:
 
 LinxISA already defines SIMT-style execution via **vector block types** (`MSEQ/MPAR/VSEQ/VPAR`) rather than a separate “GPU mode”.
 
-Reference contract: `docs/architecture/v0.57-simt-compiler-contract.md`
+Reference contract: `docs/architecture/v0.58-architecture-contract.md`
 
 ### 2.1 The core idea (ISA-grounded)
 - Programmer-visible model: **SIMT** expressed as a *one-lane body* replayed over a lane space.

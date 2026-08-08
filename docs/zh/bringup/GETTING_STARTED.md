@@ -2,6 +2,8 @@
 
 本指南是贡献者加入 灵犀指令集 启动工作区的入口点。
 
+当前 ISA 的机器可读权威源是 `isa/v0.58/linxisa-v0.58.json`。
+
 ## 1.先决条件
 
 ### 平台说明
@@ -26,10 +28,10 @@
 ## 2. 克隆子模块
 
 ```bash
-git clone --recurse-submodules git@github.com:LinxISA/linx-isa.git
+git clone git@github.com:LinxISA/linx-isa.git
 cd linx-isa
-git submodule sync --recursive
-git submodule update --init --recursive
+git submodule sync -- compiler/llvm
+git submodule update --init compiler/llvm
 ```
 
 子模块图：
@@ -86,20 +88,23 @@ python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test
 4. 合并生态系统存储库中的上游。
 5. 修改 `linx-isa` 中的子模块 SHA。
 
-子模块凹凸命令：
+叶子仓修改完成、合入并验证后，只更新对应的固定 gitlink：
 
 ```bash
-git submodule update --remote compiler/llvm emulator/qemu kernel/linux rtl/LinxCore tools/pyCircuit lib/glibc lib/musl workloads/pto_kernels
-git add .gitmodules compiler/llvm emulator/qemu kernel/linux rtl/LinxCore tools/pyCircuit lib/glibc lib/musl workloads/pto_kernels
-git commit -m "chore(submodules): bump ecosystem revisions"
+git -C compiler/llvm fetch origin <reviewed-commit>
+git -C compiler/llvm checkout --detach <reviewed-commit>
+git add compiler/llvm
+git commit -m "chore(submodules): bump llvm revision"
 ```
+
+Agent 工作流不得使用未固定提交的远端更新。
 
 ## 5. 规范路径- AVS 运行时测试：`avs/qemu/`
 - AVS编译测试：`avs/compiler/linx-llvm/tests/`
 - AVS 使用的独立 libc 支持：`avs/runtime/freestanding/`
 - Linux libc 源代码分支：`lib/glibc/`、`lib/musl/`
 - PTO内核块头s：`workloads/pto_kernels/include/`
-- 组装样品包：`docs/reference/examples/v0.57/`
+- 组装样品包：`docs/zh/reference/examples/README.md`
 
 ## 6. 协调参考
 

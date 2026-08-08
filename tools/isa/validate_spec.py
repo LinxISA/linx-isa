@@ -1223,7 +1223,7 @@ def validate_active_surfaces(root: Path) -> List[str]:
         root / "docs" / "README.md",
         root / "docs" / "index.md",
         root / "docs" / "architecture" / "README.md",
-        root / "docs" / "architecture" / "v0.57-architecture-contract.md",
+        root / "docs" / "architecture" / "v0.58-architecture-contract.md",
         root / "docs" / "bringup" / "README.md",
         root / "docs" / "bringup" / "AVS_CONTRACT.md",
         root / "docs" / "bringup" / "GETTING_STARTED.md",

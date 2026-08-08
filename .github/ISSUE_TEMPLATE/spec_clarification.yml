@@ -7,7 +7,7 @@ body:
     id: location
     attributes:
       label: Spec location
-      description: Link to the relevant doc/section (e.g. `docs/architecture/v0.57-architecture-contract.md#...`).
+      description: Link to the v0.58 machine-readable clause or current generated/reference page (e.g. `isa/v0.58/linxisa-v0.58.json`).
     validations:
       required: true
   - type: textarea

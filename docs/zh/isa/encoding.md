@@ -65,7 +65,7 @@ v0.58 的标量、块命令和 Tile 编码以 PTO ISA 0.58 为共同基线。TLS
 完整内容请参见[编码空间分析](../reference/encoding_space_report.md)无冲突分配表。
 
 PTO ISA 编码工作簿 `encoding/PTO-ISA-Encoding.xlsx` 仅作为非规范评审材料提供；
-规范来源是检入的 v0.57 JSON/opcode 源和生成检查。
+规范来源是检入的 v0.58 JSON/opcode 源和生成检查。
 
 ## 字段颜色键
 

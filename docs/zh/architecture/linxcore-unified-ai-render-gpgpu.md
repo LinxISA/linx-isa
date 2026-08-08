@@ -70,7 +70,7 @@
 
 灵犀指令集 已经通过 **向量 块类型s** (`MSEQ/MPAR/VSEQ/VPAR`) 定义了 SIMT 样式执行，而不是单独的“GPU 模式”。
 
-参考合约：`docs/architecture/v0.57-simt-compiler-contract.md`### 2.1 核心思想（基于ISA）
+参考合约：`docs/zh/architecture/v0.58-architecture-contract.md`### 2.1 核心思想（基于ISA）
 - 程序员可见模型：**SIMT** 表示为在通道空间上重播的*单通道 块体*。
 - 硬件后端：在 **VEC** 管道上高效实现重放。
 

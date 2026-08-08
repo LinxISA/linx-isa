@@ -5,9 +5,9 @@
 
 ## 实时规范来源
 
-- `docs/architecture/v0.57-architecture-contract.md`
-- `docs/architecture/v0.57-workload-engine-model.md`
-- `docs/architecture/v0.57-rendering-command-contract.md`
+- `docs/zh/architecture/v0.58-architecture-contract.md`
+- `docs/zh/architecture/v0.58-architecture-contract.md`
+- `docs/zh/architecture/v0.58-architecture-contract.md`
 - `docs/architecture/linxcore/overview.md`
 - `docs/architecture/linxcore/microarchitecture.md`
 - `isa/v0.57/`

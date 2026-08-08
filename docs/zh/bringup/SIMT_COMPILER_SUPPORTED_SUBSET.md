@@ -8,7 +8,7 @@
 
 它是一个实现状态页面，而不是架构契约。现场直播
 架构方向定义为
-`docs/architecture/v0.57-simt-compiler-contract.md`。
+`docs/zh/architecture/v0.58-architecture-contract.md`。
 
 ## 目的
 
@@ -518,9 +518,9 @@ JSON 注释现在还公开了面向编译器的控制流分类
 ## 与其他页面的关系
 
 - 建筑合同：
-  `docs/architecture/v0.57-simt-compiler-contract.md`
+  `docs/zh/architecture/v0.58-architecture-contract.md`
 - 架构规划：
-  `docs/architecture/v0.57-simt-compiler-contract-plan.md`
+  `docs/zh/architecture/v0.58-architecture-contract.md`
 - 编译器成熟度路线图：
   `docs/bringup/SIMT_COMPILER_MATURITY_PLAN.md`
 

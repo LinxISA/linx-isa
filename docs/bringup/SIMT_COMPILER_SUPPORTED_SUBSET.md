@@ -8,7 +8,7 @@ lowering centered on
 
 It is an implementation-status page, not the architectural contract. The live
 architecture direction is defined by
-`docs/architecture/v0.57-simt-compiler-contract.md`.
+`docs/architecture/v0.58-architecture-contract.md`.
 
 ## Purpose
 
@@ -546,9 +546,9 @@ For now, a kernel should be considered within the supported subset when it:
 ## Relationship To Other Pages
 
 - Architecture contract:
-  `docs/architecture/v0.57-simt-compiler-contract.md`
+  `docs/architecture/v0.58-architecture-contract.md`
 - Architecture planning:
-  `docs/architecture/v0.57-simt-compiler-contract-plan.md`
+  `docs/architecture/v0.58-architecture-contract.md`
 - Compiler maturity roadmap:
   `docs/bringup/SIMT_COMPILER_MATURITY_PLAN.md`
 

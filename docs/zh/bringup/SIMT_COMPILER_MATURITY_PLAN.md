@@ -27,7 +27,7 @@
 分支较多、通道发散的 SIMT 内核。
 
 架构方向现在已冻结
-`docs/architecture/v0.57-simt-compiler-contract.md`：规范的 `v0.57` 内核
+`docs/zh/architecture/v0.58-architecture-contract.md`：规范的 `v0.57` 内核
 是由显式 `p` 管理驱动的组粒度发散 SIMT 内核。
 因此，剩下的工作是实现成熟度，而不是架构
 寻找方向。
@@ -295,7 +295,7 @@
 ## 依赖规则
 
 这个成熟度计划取决于架构计划
-`docs/architecture/v0.57-simt-compiler-contract-plan.md`。
+`docs/zh/architecture/v0.58-architecture-contract.md`。
 
 如果编译器实现达到其中任何一个，则必须停止并升级
 解冻问题：

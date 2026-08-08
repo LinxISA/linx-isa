@@ -1,5 +1,7 @@
 # PTO ISA 0.57.1 upgrade plan
 
+> Historical, non-normative archive. Do not use this page for current ISA or implementation decisions.
+
 Status: accepted implementation plan
 
 Decision date: 2026-07-30
