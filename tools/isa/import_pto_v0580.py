@@ -70,6 +70,22 @@ def validate_source(source_root: Path) -> dict[str, dict[str, Any]]:
         {"TEPL": 87, "TLSU": 10, "CUBE": 12}
     ):
         raise ValueError("unexpected PTO 0.58 tile family counts")
+    if Counter(item["engine"] for item in docs["tiles"]["operations"]) != Counter(
+        {"VEC": 35, "SFU": 52, "TLSU": 10, "CUBE": 12}
+    ):
+        raise ValueError("unexpected PTO 0.58 semantic engine counts")
+    if Counter(item["classification"] for item in docs["tiles"]["operations"]) != Counter(
+        {
+            "elementwise-tile-tile": 25,
+            "tile-scalar-and-immediate": 15,
+            "reduce-and-expand": 28,
+            "memory-and-data-movement": 9,
+            "matrix-and-matrix-vector": 12,
+            "layout-and-rearrangement": 7,
+            "irregular-and-complex": 13,
+        }
+    ):
+        raise ValueError("unexpected PTO 0.58 tile classification counts")
     if Counter(item["semantic_family"] for item in docs["commands"]["forms"]) != Counter(
         {"CMD": 74, "BBD": 25}
     ):
@@ -145,14 +161,18 @@ def locked_projection(document: dict[str, Any]) -> dict[str, Any]:
 
 
 def project_pto_ops(tiles: dict[str, Any]) -> dict[str, Any]:
-    counts = Counter(operation["family"] for operation in tiles["operations"])
+    family_counts = Counter(operation["family"] for operation in tiles["operations"])
+    engine_counts = Counter(operation["engine"] for operation in tiles["operations"])
+    classification_counts = Counter(operation["classification"] for operation in tiles["operations"])
     return {
         "$schema": "https://docs.openclaw.ai/schemas/linxisa/pto_ops.v1.json",
         "profile": "v0.58",
         "version": RELEASE,
         "source_lock": "isa/v0.58/pto-spec.lock.json",
         "operation_count": len(tiles["operations"]),
-        "family_counts": dict(sorted(counts.items())),
+        "family_counts": dict(sorted(family_counts.items())),
+        "engine_counts": dict(sorted(engine_counts.items())),
+        "classification_counts": dict(sorted(classification_counts.items())),
         "deleted_names": tiles["deleted_names"],
         "rejected_names": tiles["rejected_names"],
         "reserved": tiles["reserved"],
@@ -163,8 +183,8 @@ def project_pto_ops(tiles: dict[str, Any]) -> dict[str, Any]:
 def project_encoding_map(tiles: dict[str, Any]) -> dict[str, Any]:
     entries = [
         {key: operation.get(key) for key in (
-            "name", "family", "command_mnemonic", "selector", "mode", "function",
-            "disposition", "contract_status"
+            "name", "family", "classification", "engine", "command_mnemonic",
+            "selector", "mode", "function", "disposition", "contract_status"
         )}
         for operation in tiles["operations"]
     ]
@@ -181,6 +201,10 @@ def project_encoding_map(tiles: dict[str, Any]) -> dict[str, Any]:
         },
         "entry_count": len(entries),
         "family_counts": dict(sorted(Counter(entry["family"] for entry in entries).items())),
+        "engine_counts": dict(sorted(Counter(entry["engine"] for entry in entries).items())),
+        "classification_counts": dict(
+            sorted(Counter(entry["classification"] for entry in entries).items())
+        ),
         "migration_aliases": {},
         "entries": entries,
     }
@@ -202,6 +226,10 @@ def project_release_manifest(docs: dict[str, dict[str, Any]]) -> dict[str, Any]:
         "cardinality": {
             "tile_operations": len(tiles["operations"]),
             "tile_families": dict(sorted(Counter(item["family"] for item in tiles["operations"]).items())),
+            "semantic_engines": dict(sorted(Counter(item["engine"] for item in tiles["operations"]).items())),
+            "tile_classifications": dict(
+                sorted(Counter(item["classification"] for item in tiles["operations"]).items())
+            ),
             "command_forms": len(commands["forms"]),
             "command_form_families": manifest["catalog_counts"]["command_form_families"],
             "scalar_forms": len(scalars["forms"]),
@@ -218,6 +246,8 @@ def operation_aliases(tiles: dict[str, Any], family: str) -> list[dict[str, Any]
     return [
         {
             "name": operation["name"],
+            "classification": operation["classification"],
+            "engine": operation["engine"],
             "function": operation["function"],
             "mnemonic": operation["command_mnemonic"],
             "semantic_status": operation["contract_status"],
@@ -229,31 +259,32 @@ def operation_aliases(tiles: dict[str, Any], family: str) -> list[dict[str, Any]
 
 
 def project_engine_ops(tiles: dict[str, Any]) -> dict[str, Any]:
-    current = load_json(ROOT / "isa/v0.57/state/engine_ops.json")
-    old_tepl = {entry["name"]: entry for entry in current["tepl"]["ops"]}
-    if "TTRANSPOSE" in old_tepl:
-        old_tepl.setdefault("TTRANS", old_tepl["TTRANSPOSE"])
     tepl_ops = []
     for operation in (item for item in tiles["operations"] if item["family"] == "TEPL"):
-        entry = dict(old_tepl.get(operation["name"], {}))
-        entry.pop("tile_opcode", None)
-        entry.update({
+        entry = {
             key: operation[key] for key in (
-                "name", "mode", "function", "semantic_handler", "legality_handler",
+                "name", "classification", "engine", "mode", "function",
+                "semantic_handler", "legality_handler",
                 "effect_contract", "fault_contract", "restart_contract", "operands", "state_effects"
             )
-        })
+        }
         entry["profile"] = "v0.58"
         entry["logical_selector"] = int(operation["selector"], 16)
         entry["semantic_status"] = operation["contract_status"]
         tepl_ops.append(entry)
-    current.update({
+    current = {
+        "$schema": "https://docs.openclaw.ai/schemas/linxisa/engine_ops.v0.json",
         "profile": "v0.58",
         "version": RELEASE,
         "source_lock": "isa/v0.58/pto-spec.lock.json",
-        "note": "Linx scheduling metadata projected onto the normative PTO ISA 0.58.0 tile catalog.",
-    })
-    current.pop("tma", None)
+        "note": (
+            "PTO ISA 0.58 encoding families and semantic execution-engine annotations; "
+            "TEPL remains an encoding carrier and is not a semantic engine."
+        ),
+        "semantic_engine_counts": dict(
+            sorted(Counter(item["engine"] for item in tiles["operations"]).items())
+        ),
+    }
     current["tlsu"] = {
         "kind": "function_u5",
         "function_field_bits": [0, 4],

@@ -2289,7 +2289,17 @@
       "status": "accepted"
     },
     {
+      "accepted_assembly_mnemonics": [
+        "BSTART.TEPL",
+        "BSTART.VEC",
+        "BSTART.SFU"
+      ],
       "asm": "BSTART.TEPL Mode, Function, DataType",
+      "canonical_assembly_by_engine": {
+        "SFU": "BSTART.SFU",
+        "VEC": "BSTART.VEC"
+      },
+      "carrier_mnemonic": "BSTART.TEPL",
       "constraints": [
         {
           "field": "DataType",

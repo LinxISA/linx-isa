@@ -146,19 +146,19 @@ stream, completion model, flush rules, and observability rules as scalar work.
 
 ## Architectural role in LinxISA
 
-Under `v0.57`, LinxCore is the execution substrate for the multi-workload
+Under v0.58, LinxCore is the execution substrate for the multi-workload
 LinxISA model.
 
 - BCC and the block fabric provide the architectural control and submission
   path.
 - `VEC` is the general programmable SIMT engine for parallel-loop work.
-- `TMA` remains selected through the same block model. Architecturally it owns
-  the Tile Memory Access command/completion frontend, while southbound memory
+- `TLSU` remains selected through the same block model. Architecturally it owns
+  the Tile Load/Store command/completion frontend, while southbound memory
   transport terminates at the shared CSU/L2 boundary. That target CSU owner is
   not yet promoted here; `src/tma/tma.py` is the current reduced compatibility
-  facade.
-- `CUBE` and `TAU` remain integrated engines selected through the same block
-  model.
+  facade; that filename is non-normative implementation history.
+- `CUBE`, `VEC`, and `SFU` are the Tile execution engines selected through the
+  same block model. TEPL is only the VEC/SFU Mode/Function encoding carrier.
 - Engine-backed work must retire, cancel, redirect, and trace through LinxCore
   rules rather than through a separate architectural domain.
 

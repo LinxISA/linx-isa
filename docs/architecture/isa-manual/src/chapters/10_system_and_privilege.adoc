@@ -234,11 +234,11 @@ Template replay flags (bring-up):
 * For `FENTRY`/`FEXIT`/`FRET.*` templates, phase zero is validation, phase one is the ordered event stream defined in <<templates-frame-contract>>, and phase two is the final boundary transfer/retirement row.
 * For recoverable `FENTRY`/`FEXIT`/`FRET.*` phase-one traps, `TPL_REDO_OK` MUST be `0` and `TPL_RESUME_OK` MUST be `1`.
 * `TPL_RESUME_OK=0` is the required terminal exception for the post-seal template-integrity fail-stop in <<system-template-integrity-fail>>; it does not permit rollback of committed template effects.
-* TEPL templates (`TemplateKind.class=1` / `BSTART.TEPL`) are accelerator-driven (not uop-expanded).
-  - `TPL_PHASE` for TEPL is defined by the selected tile opcode but MUST respect the top-level meanings; `TPL_PHASE=0` is decode/validate only and MUST NOT be used once execution begins.
+* TEPL-carried templates (`TemplateKind.class=1` / `BSTART.TEPL`) are accelerator-driven (not uop-expanded). TEPL is the Mode/Function encoding carrier; the selected operation executes on VEC or SFU.
+  - `TPL_PHASE` is defined by the selected Mode/Function operation but MUST respect the top-level meanings; `TPL_PHASE=0` is decode/validate only and MUST NOT be used once execution begins.
   - `TPL_REDO_OK` MUST be `0` once execution begins.
-  - `TPL_RESUME_OK` is defined by the selected tile opcode.
-  - `TPL_DIRTY` is set if the TEPL engine state actually progresses and requires restore.
+  - `TPL_RESUME_OK` is defined by the selected Mode/Function operation.
+  - `TPL_DIRTY` is set if the selected VEC or SFU engine state actually progresses and requires restore.
   - `ECSTATE.BI` for TEPL traps: `BI=0` when `TPL_PHASE=0`, and `BI=1` when `TPL_PHASE=1/2`.
 * Canonical resume cursor: `BSTATE.Template.StepIndex` is the architectural micro-op progress cursor for template replay.
 * Template-specific fine-grain subphase/state for replay belongs in `EBSTATE` (template-defined).

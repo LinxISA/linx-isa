@@ -16,6 +16,21 @@
       "TEPL": 87,
       "TLSU": 10
     },
+    "semantic_engines": {
+      "CUBE": 12,
+      "SFU": 52,
+      "TLSU": 10,
+      "VEC": 35
+    },
+    "tile_classifications": {
+      "elementwise-tile-tile": 25,
+      "irregular-and-complex": 13,
+      "layout-and-rearrangement": 7,
+      "matrix-and-matrix-vector": 12,
+      "memory-and-data-movement": 9,
+      "reduce-and-expand": 28,
+      "tile-scalar-and-immediate": 15
+    },
     "command_forms": 99,
     "command_form_families": {
       "BBD": 25,

@@ -149,8 +149,27 @@ def validate(root: Path) -> list[str]:
             errors.append(f"PTO lock must freeze {count} {name}")
 
     tiles = docs["tiles"].get("operations", [])
-    if Counter(item.get("family") for item in tiles) != Counter({"TEPL": 87, "TLSU": 10, "CUBE": 12}):
+    expected_family_counts = Counter({"TEPL": 87, "TLSU": 10, "CUBE": 12})
+    expected_engine_counts = Counter({"VEC": 35, "SFU": 52, "TLSU": 10, "CUBE": 12})
+    expected_classification_counts = Counter({
+        "elementwise-tile-tile": 25,
+        "tile-scalar-and-immediate": 15,
+        "reduce-and-expand": 28,
+        "memory-and-data-movement": 9,
+        "matrix-and-matrix-vector": 12,
+        "layout-and-rearrangement": 7,
+        "irregular-and-complex": 13,
+    })
+    if Counter(item.get("family") for item in tiles) != expected_family_counts:
         errors.append("tile inventory must be exactly 87 TEPL / 10 TLSU / 12 CUBE")
+    if Counter(item.get("engine") for item in tiles) != expected_engine_counts:
+        errors.append("tile semantic engines must be exactly 35 VEC / 52 SFU / 10 TLSU / 12 CUBE")
+    if Counter(item.get("classification") for item in tiles) != expected_classification_counts:
+        errors.append("tile semantic classifications differ from the canonical PTO 0.58 catalog")
+    if docs["tiles"].get("engine_counts") != dict(sorted(expected_engine_counts.items())):
+        errors.append("PTO operation projection must publish exact semantic engine counts")
+    if docs["tiles"].get("classification_counts") != dict(sorted(expected_classification_counts.items())):
+        errors.append("PTO operation projection must publish exact semantic classification counts")
     source_forms = docs["scalars"].get("forms", []) + docs["commands"].get("forms", [])
     scalar_ids = {str(form["form_id"]) for form in docs["scalars"].get("forms", [])}
     if len(source_forms) != 573:
@@ -253,6 +272,19 @@ def validate(root: Path) -> list[str]:
         errors.append("PTO tile catalog must retain MGATHER_MASK, MSCATTER_MASK, and MGATHER_CAS")
 
     compiled_by_mnemonic = {item["mnemonic"]: item for item in docs["spec"].get("instructions", [])}
+    bstart_tepl = [item for item in docs["spec"].get("instructions", []) if item.get("mnemonic") == "BSTART.TEPL"]
+    if len(bstart_tepl) != 1:
+        errors.append("compiled Linx profile must contain exactly one BSTART.TEPL encoding carrier")
+    else:
+        carrier = bstart_tepl[0]
+        if carrier.get("accepted_assembly_mnemonics") != ["BSTART.TEPL", "BSTART.VEC", "BSTART.SFU"]:
+            errors.append("BSTART.TEPL must accept exactly the TEPL/VEC/SFU assembly spellings")
+        if carrier.get("canonical_assembly_by_engine") != {"SFU": "BSTART.SFU", "VEC": "BSTART.VEC"}:
+            errors.append("BSTART.TEPL canonical assembly must be selected by VEC/SFU semantic engine")
+        if carrier.get("carrier_mnemonic") != "BSTART.TEPL":
+            errors.append("BSTART.TEPL must remain the unchanged encoding carrier")
+    if {"BSTART.VEC", "BSTART.SFU"} & set(compiled_by_mnemonic):
+        errors.append("BSTART.VEC/SFU aliases must not create additional decode identities")
     reservations = docs["reservations"].get("reservations", [])
     expected_reservations = {
         "BSTART.VPAR",

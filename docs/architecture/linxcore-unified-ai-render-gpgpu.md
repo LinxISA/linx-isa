@@ -87,7 +87,7 @@ Architectural mapping (strict v0.57):
 - Scalar instructions in a vector body are **uniform per group** (execute once per group replay), while vector instructions operate in the lane domain.
 
 Execution families:
-- `MSEQ/MPAR`: may use bridged global memory (`*.brg`) via the tile/TMA path.
+- `MSEQ/MPAR`: may use bridged global memory (`*.brg`) via the tile/TLSU path.
 - `VSEQ/VPAR`: **tile-only** (must not use `*.brg`).
 
 ### 2.1.1 Proposed LinxGPGPU group (warp-like) microarchitecture
@@ -122,7 +122,7 @@ Architecturally, vector memory operations split into:
 
 Bring-up constraints:
 - `VPAR/VSEQ` are tile-only and MUST NOT use `.brg`.
-- `MSEQ/MPAR` may use `.brg` but the path is **bridged through tile/TMA**, so the “shader core” microarchitecture must treat global memory as an engine/bridge, not a free LSU.
+- `MSEQ/MPAR` may use `.brg` but the path is **bridged through tile/TLSU**, so the “shader core” microarchitecture must treat global memory as an engine/bridge, not a free LSU.
 
 Implementation goal:
 - coalesce `.brg` accesses across lanes/groups (merge cacheline requests, handle scatter/gather efficiently, and define per-lane fault/disable behavior consistently with the restartability contracts).

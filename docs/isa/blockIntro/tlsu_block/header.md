@@ -1,4 +1,4 @@
-# headerDefinition
+# TLSU header definition
 
 The header of the data transfer block needs to define which data transfer operation is performed, the size of the input data and the Tile register of input/output and other information. The storage layout is also supported during the data transfer process.
 
@@ -52,7 +52,7 @@ followed by its descriptor records:
 All named TLSU headers share the TLSU encoding family shown below. The textual
 generic selector form is not part of the v0.58 assembly language.
 
-![TLSU encoding family](../../../figs/bitfield/svg/BlockHeader_32bit/BSTART.TMA.svg)
+![TLSU encoding family](../../../figs/bitfield/svg/BlockHeader_32bit/TLSU.svg)
 
 Among them, the function field is used to encode specific TileOp information. The encoding method is as follows:
 

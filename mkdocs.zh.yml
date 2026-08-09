@@ -173,10 +173,10 @@ nav:
         - 矩阵数据块:
             - 类型说明: isa/blockIntro/cube_block/intro.md
             - 块头定义: isa/blockIntro/cube_block/header.md
-        - 数据搬运块:
-            - 类型说明: isa/blockIntro/tma_block/intro.md
-            - 块头定义: isa/blockIntro/tma_block/header.md
-        - 模版数据块:
+        - TLSU 数据搬运块:
+            - 类型说明: isa/blockIntro/tlsu_block/intro.md
+            - 块头定义: isa/blockIntro/tlsu_block/header.md
+        - TEPL 编码载体:
             - 类型说明: isa/blockIntro/tepl_block/intro.md
             - 块头定义: isa/blockIntro/tepl_block/header.md
         - 系统调用块:

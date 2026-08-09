@@ -18,6 +18,10 @@ order and with the right proof requirements.
 - Resolve ISA questions from `isa/v0.58/linxisa-v0.58.json` and the v0.58
   generated/reference surfaces. Never route normative work to historical
   profiles or archived narrative.
+- Route Tile-engine questions through the exact `VEC`, `SFU`, `TLSU`, and
+  `CUBE` taxonomy. VEC is element-wise only and SFU owns complex operations.
+  TEPL is the unchanged Mode/Function encoding carrier for VEC/SFU, not an
+  engine; aliases do not allocate new opcode space.
 - Treat the superproject as the coordination plane, not the place to hide leaf
   fixes.
 - Start from the smallest failing contract, gate, or test.

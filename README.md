@@ -27,6 +27,11 @@ The current machine-readable ISA authority is
 `isa/v0.58/linxisa-v0.58.json`. Historical profiles and archives do not define
 current encodings or semantics.
 
+Tile operations execute on exactly four engines: **VEC**, **SFU**, **TLSU**,
+and **CUBE**. VEC is restricted to element-wise operations, while SFU handles
+complex functions and transformations. TEPL remains the unchanged
+Mode/Function encoding carrier for VEC/SFU and is not an engine.
+
 ---
 
 ## Quick Start

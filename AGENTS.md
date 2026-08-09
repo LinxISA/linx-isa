@@ -11,6 +11,9 @@ This document defines the navigation rules for AI agents and contributors workin
 
 - Start every architecture lookup from `isa/v0.58/linxisa-v0.58.json`, then
   use `docs/architecture/v0.58-architecture-contract.md` for narrative context.
+- The Tile execution engines are exactly `VEC`, `SFU`, `TLSU`, and `CUBE`.
+  `VEC` is element-wise only; `SFU` owns complex operations. `TEPL` is the
+  unchanged Mode/Function encoding carrier for VEC/SFU, not an engine.
 - Historical profiles and archived documents are non-normative and MUST NOT be
   used to infer current encodings or semantics.
 - Start benchmark/QEMU/Linux bring-up from `docs/bringup/BENCHMARK_QEMU_LINUX_FLOW.md`.

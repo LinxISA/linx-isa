@@ -23,6 +23,10 @@ class AgentNavigationTest(unittest.TestCase):
         )
 
     def write_entrypoints(self, root: Path, body: str) -> None:
+        body += (
+            "Tile engines: VEC SFU TLSU CUBE. "
+            "TEPL is the encoding carrier, not an engine.\n"
+        )
         paths = (
             Path("README.md"),
             Path("AGENTS.md"),
@@ -156,6 +160,23 @@ class AgentNavigationTest(unittest.TestCase):
 
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("lacks non-transfer contract", result.stderr)
+
+    def test_rejects_agent_contract_without_current_tile_engine_taxonomy(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.write_entrypoints(
+                root,
+                "Canonical ISA: isa/v0.58/linxisa-v0.58.json\n",
+            )
+            (root / "AGENTS.md").write_text(
+                "Canonical ISA: isa/v0.58/linxisa-v0.58.json\n",
+                encoding="utf-8",
+            )
+
+            result = self.run_checker(root)
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("tile engine taxonomy", result.stderr)
 
 
 if __name__ == "__main__":

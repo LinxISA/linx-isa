@@ -83,7 +83,7 @@ The rendering-oriented v0.58 profile inherits the frozen v0.58 tile conventions 
 * small or rarely-changing state is descriptor-driven (`B.DATR`, `B.DIM`, `B.IOR`), while hot/large state uses dedicated StateTiles,
 * `MPAR` VEC kernels are the required functional fallback for rendering PTOs when no TAU hardening exists.
 
-[[tileblocks-tma]]
+[[tileblocks-tlsu]]
 === Tile load/store unit blocks (`TLOAD`/`TSTORE`)
 
 `BSTART.TLOAD` / `BSTART.TSTORE` are the named forms for TLSU Functions 0/1.

@@ -49,12 +49,15 @@ block type determines what engine is needed to execute this block and the execut
 | [Memory Access and Sequel Block](../blockIntro/mem_block/intro.md)（**Memory Access and Sequel Block**） | MSEQ | Provides vector-based memory data transfer capabilities, multi-Group serial execution |
 | [vector Parallel Block](../blockIntro/vec_block/intro.md)（**Vector and Parallel Block**） | VPAR | Provides vector data computing capabilities, multi-Group parallel execution |
 | [vector serial block](../blockIntro/vec_block/intro.md) (**Vector and Sequel Block**) | VSEQ | Provides vector data computing capabilities, multi-Group serial execution |
-| [Data Movement Block](../blockIntro/tma_block/intro.md) (**Tile Load/Store Unit**) | TLSU | Provides catalog-defined movement between memory and Tile registers |
+| [Data Movement Block](../blockIntro/tlsu_block/intro.md) (**Tile Load/Store Unit**) | TLSU | Provides catalog-defined movement between memory and Tile registers |
 | [Matrix Data Block](../blockIntro/cube_block/intro.md)（**Cube Block**） | CUBE | Provides matrix operation capabilities, splits the matrix into multiple subtypes, and performs matrix operations at the granularity of subtypes |
-| [Template Data Block](../blockIntro/tepl_block/intro.md)（**Template Tile Block**） | TEPL | Provides templated data block (Tile) computing capabilities |
+| [Element-wise Tile Block](../blockIntro/tepl_block/intro.md) | VEC | Executes only catalogued element-wise Tile operations; assembled as `BSTART.VEC` over the TEPL encoding carrier |
+| [Special Function Tile Block](../blockIntro/tepl_block/intro.md) | SFU | Executes catalogued complex, reduction/expand, rearrangement, and irregular operations; assembled as `BSTART.SFU` over the TEPL encoding carrier |
 | [system-call block](../blockIntro/xb_block/intro.md)（**Cross Block**） | XB | Provides lightweight system calling capabilities |
 
-Among them, the memory access parallel block and the memory access parallel block are both used to perform data movement tasks between memory and Tile, but the execution requirements between groups are different, so these two blocks are collectively called memory access data blocks. vector parallel block and vector serial block only have different execution requirements between groups, so they can also be collectively called vector data block.
+TEPL is not an execution engine. It is the unchanged Mode/Function encoding carrier for VEC and SFU, and `BSTART.TEPL` remains the unique compiled decode identity. TLSU and CUBE retain their own encoding families and engines.
+
+Among them, the memory access parallel block and the memory access sequel block are both used to perform data movement tasks between memory and Tile, but the execution requirements between groups are different, so these two blocks are collectively called memory access data blocks. vector parallel block and vector serial block only have different execution requirements between groups, so they can also be collectively called vector data blocks.
 
 All block instruction share the same first layer architectural state, but different types of block instruction can have their own unique second layer architectural state, for example, the second layer architectural state of a scalar block can be completely different from a vector block. This design can provide a flexible and adaptable computing framework when processing tasks of different complexity such as scalar operations, vector operations and large-scale parallel operations, helping the processor achieve efficient performance in different scenarios.
 

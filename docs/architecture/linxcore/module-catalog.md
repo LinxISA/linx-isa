@@ -944,8 +944,8 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 
 ### `src/tma/tma.py`
 
-- Owns the current reduced `TMA` Tile Memory Access command, completion, and
-  block-identity facade.
+- Owns the current reduced TLSU command, completion, and block-identity facade.
+  The `tma` filename is non-normative implementation history.
 - The target architecture splits southbound memory transport into the shared
   CSU/L2 boundary; that owner is not yet promoted in this repository.
 - Its present 64-bit BID ports and unsigned numeric flush comparison are
@@ -960,14 +960,15 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 
 - Owns the current `TAU` typed tile-to-tile template/tile-operation boundary.
 
-### TEPL owner status
+### TEPL carrier owner status
 
-- LinxISA `v0.57` `TEPL` targets the `TAU` typed tile-to-tile
-  template/tile-operation boundary through `TileOpcode`.
+- LinxISA v0.58 uses TEPL only as the Mode/Function encoding carrier and routes
+  each selected operation to VEC or SFU according to the catalog.
 - Current `src/tau/tau.py` is a reduced fixed-latency shell without promoted
-  TileOpcode, descriptor, STID, rejection, or tile-state behavior. BCTRL must
-  fail TEPL explicitly until that behavior and its single non-scalar completion
-  are integrated; it must not silently route TEPL to the reduced shell.
+  Mode/Function, descriptor, STID, rejection, or tile-state behavior. BCTRL must
+  fail an unsupported selected operation explicitly until that behavior and its
+  single non-scalar completion are integrated; it must not silently route it to
+  the reduced shell.
 
 ### FIXP owner status
 

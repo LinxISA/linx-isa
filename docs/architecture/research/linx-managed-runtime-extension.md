@@ -188,7 +188,7 @@ Non-goals:
 - no dedicated JVM bytecode execution mode;
 - no unchecked indirect branch;
 - no overloading of `BSTART.FIXP`;
-- no ad-hoc semantics in reserved TMA/CUBE/TEPL selector space;
+- no ad-hoc semantics in reserved TLSU/CUBE/TEPL-carrier selector space;
 - no requirement that hardware understand a specific object model such as
   HotSpot, V8, CPython, or Ruby internally.
 

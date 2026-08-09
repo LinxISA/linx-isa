@@ -1,6 +1,10 @@
-# 块头定义
+# TEPL 载体块头定义
 
-模版数据块的块头需要定义执行哪种数据运算操作、输入数据的尺寸和输入输出的Tile寄存器等信息。
+TEPL 是 VEC 与 SFU 的 Mode/Function 编码载体，不是执行单元。下列表格只描述
+编码位置，不定义执行单元归属；精确归属来自 `isa/v0.58/state/pto_ops.json`。
+VEC 只执行逐元素操作，复杂函数、归约/展开、重排和不规则操作由 SFU 执行。
+
+块头定义所选 Tile 操作、输入维度和 Tile 寄存器操作数。
 
 ## 汇编格式
 
@@ -29,7 +33,8 @@ TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7
 
 一条完整数据搬运块指令块头需要拆分成以下多条指令进行编码，其中包括：
 
-- `BSTART.TEPL TileOp, DataType`
+- `BSTART.TEPL TileOp, DataType`，或经过执行单元检查的汇编别名
+  `BSTART.VEC` / `BSTART.SFU`
 - [B.DATR](../../header/B.DATR.md) `Layout, PadValue`
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0`
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`
@@ -41,7 +46,9 @@ TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7
 - ...
 - [B.IOR](../../header/B.IOR.md) `RegSrc9, RegSrc10, RegSrc11, ->RegDst4`
 
-其中，BSTART.TEPL指令的编码格式如下：
+`BSTART.TEPL` 是唯一编译后的译码身份。两个别名使用相同编码位，不占用新
+opcode 空间。规范反汇编根据所选操作在目录中的执行单元选择 VEC 或 SFU。
+编码格式如下：
 
 ![BSTART.TEPL](../../../figs/bitfield/svg/BlockHeader_32bit/BSTART.TEPL.svg)
 

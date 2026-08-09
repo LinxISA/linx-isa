@@ -9610,7 +9610,17 @@
       "uop_group": "CMD"
     },
     {
+      "accepted_assembly_mnemonics": [
+        "BSTART.TEPL",
+        "BSTART.VEC",
+        "BSTART.SFU"
+      ],
       "asm": "BSTART.TEPL Mode, Function, DataType",
+      "canonical_assembly_by_engine": {
+        "SFU": "BSTART.SFU",
+        "VEC": "BSTART.VEC"
+      },
+      "carrier_mnemonic": "BSTART.TEPL",
       "encoding": {
         "length_bits": 32,
         "parts": [
@@ -158538,6 +158548,8 @@
         "kind": "function_u5",
         "legal_aliases": [
           {
+            "classification": "matrix-and-matrix-vector",
+            "engine": "CUBE",
             "function": 0,
             "mnemonic": "BSTART.TMATMUL",
             "name": "TMATMUL",
@@ -158550,6 +158562,8 @@
             ]
           },
           {
+            "classification": "matrix-and-matrix-vector",
+            "engine": "CUBE",
             "function": 1,
             "mnemonic": "BSTART.TMATMUL.BIAS",
             "name": "TMATMUL_BIAS",
@@ -158563,6 +158577,8 @@
             ]
           },
           {
+            "classification": "matrix-and-matrix-vector",
+            "engine": "CUBE",
             "function": 2,
             "mnemonic": "BSTART.TMATMUL.ACC",
             "name": "TMATMUL_ACC",
@@ -158576,6 +158592,8 @@
             ]
           },
           {
+            "classification": "matrix-and-matrix-vector",
+            "engine": "CUBE",
             "function": 4,
             "mnemonic": "BSTART.TMATMULMX",
             "name": "TMATMUL_MX",
@@ -158590,6 +158608,8 @@
             ]
           },
           {
+            "classification": "matrix-and-matrix-vector",
+            "engine": "CUBE",
             "function": 5,
             "mnemonic": "BSTART.TMATMULMX.BIAS",
             "name": "TMATMUL_MX_BIAS",
@@ -158605,6 +158625,8 @@
             ]
           },
           {
+            "classification": "matrix-and-matrix-vector",
+            "engine": "CUBE",
             "function": 6,
             "mnemonic": "BSTART.TMATMULMX.ACC",
             "name": "TMATMUL_MX_ACC",
@@ -158620,6 +158642,8 @@
             ]
           },
           {
+            "classification": "matrix-and-matrix-vector",
+            "engine": "CUBE",
             "function": 16,
             "mnemonic": "BSTART.TGEMV",
             "name": "TGEMV",
@@ -158632,6 +158656,8 @@
             ]
           },
           {
+            "classification": "matrix-and-matrix-vector",
+            "engine": "CUBE",
             "function": 17,
             "mnemonic": "BSTART.TGEMV.BIAS",
             "name": "TGEMV_BIAS",
@@ -158645,6 +158671,8 @@
             ]
           },
           {
+            "classification": "matrix-and-matrix-vector",
+            "engine": "CUBE",
             "function": 18,
             "mnemonic": "BSTART.TGEMV.ACC",
             "name": "TGEMV_ACC",
@@ -158658,6 +158686,8 @@
             ]
           },
           {
+            "classification": "matrix-and-matrix-vector",
+            "engine": "CUBE",
             "function": 20,
             "mnemonic": "BSTART.TGEMVMX",
             "name": "TGEMV_MX",
@@ -158672,6 +158702,8 @@
             ]
           },
           {
+            "classification": "matrix-and-matrix-vector",
+            "engine": "CUBE",
             "function": 21,
             "mnemonic": "BSTART.TGEMVMX.BIAS",
             "name": "TGEMV_MX_BIAS",
@@ -158687,6 +158719,8 @@
             ]
           },
           {
+            "classification": "matrix-and-matrix-vector",
+            "engine": "CUBE",
             "function": 22,
             "mnemonic": "BSTART.TGEMVMX.ACC",
             "name": "TGEMV_MX_ACC",
@@ -158718,101 +158752,14 @@
         ],
         "unassigned_function_behavior": "illegal_instruction"
       },
-      "data_types": {
-        "compare_modes": {
-          "0": "EQ",
-          "1": "NE",
-          "2": "LT",
-          "3": "GT",
-          "4": "LE",
-          "5": "GE",
-          "6": "reserve",
-          "7": "reserve"
-        },
-        "cube_bstart_datatype": {
-          "0": "FP64",
-          "1": "FP32",
-          "10": "E2M3",
-          "11": "E2M1x2",
-          "12": "E1M2x2",
-          "13": "E8M0",
-          "14": "HiF4x2",
-          "15": "reserve",
-          "16": "S64",
-          "17": "S32",
-          "18": "S16",
-          "19": "S8",
-          "2": "TF32",
-          "20": "S4x2",
-          "21": "reserve",
-          "22": "reserve",
-          "23": "reserve",
-          "24": "U64",
-          "25": "U32",
-          "26": "U16",
-          "27": "U8",
-          "28": "U4x2",
-          "29": "reserve",
-          "3": "HF32",
-          "30": "reserve",
-          "31": "invalid",
-          "4": "FP16",
-          "5": "BF16",
-          "6": "HiF8",
-          "7": "E4M3",
-          "8": "E5M2",
-          "9": "E3M2"
-        },
-        "float_convert_type_u5": {
-          "0": "fp64",
-          "1": "fp32",
-          "10": "e2m3",
-          "11": "e2m1x2",
-          "12": "e1m2x2",
-          "13": "hif4x2",
-          "14": "e8m0",
-          "15": "reserve",
-          "16": "fp16x2",
-          "17": "e4m3x4",
-          "2": "tf32",
-          "3": "hf32",
-          "4": "fp16",
-          "5": "bf16",
-          "6": "hif8",
-          "7": "e4m3",
-          "8": "e5m2",
-          "9": "e3m2"
-        },
-        "integer_convert_type_u5": {
-          "0": "u64",
-          "1": "u32",
-          "10": "s16",
-          "11": "s8",
-          "12": "s4x2",
-          "13": "s16x2",
-          "14": "s8x4",
-          "2": "u16",
-          "3": "u8",
-          "4": "u4x2",
-          "5": "u16x2",
-          "6": "u8x4",
-          "7": "reserve",
-          "8": "s64",
-          "9": "s32"
-        },
-        "round_modes": {
-          "0": "RNONE",
-          "1": "RNE",
-          "2": "RTZ",
-          "3": "RDN",
-          "4": "RUP",
-          "5": "RNA",
-          "6": "RTO",
-          "7": "RHB"
-        }
-      },
-      "note": "Linx scheduling metadata projected onto the normative PTO ISA 0.58.0 tile catalog.",
+      "note": "PTO ISA 0.58 encoding families and semantic execution-engine annotations; TEPL remains an encoding carrier and is not a semantic engine.",
       "profile": "v0.58",
+      "semantic_engine_counts": {
+        "CUBE": 12,
+        "SFU": 52,
+        "TLSU": 10,
+        "VEC": 35
+      },
       "shared_tile_registers": {
         "access": "all four PEs may access all shared registers and independently select tile offsets",
         "addressing": "absolute-index",
@@ -158840,22 +158787,11 @@
         ],
         "ops": [
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "elementwise-tile-tile",
             "effect_contract": "ExecuteTileBinary",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 0,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileBinary",
             "logical_selector": 0,
             "mode": 0,
@@ -158874,14 +158810,10 @@
                 "role": "source-right"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "ExecuteTileBinary",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 2,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source-left",
@@ -158889,22 +158821,11 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "elementwise-tile-tile",
             "effect_contract": "ExecuteTileBinary",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 1,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileBinary",
             "logical_selector": 1,
             "mode": 0,
@@ -158923,14 +158844,10 @@
                 "role": "source-right"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "ExecuteTileBinary",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 2,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source-left",
@@ -158938,22 +158855,11 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "elementwise-tile-tile",
             "effect_contract": "ExecuteTileBinary",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 2,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileBinary",
             "logical_selector": 2,
             "mode": 0,
@@ -158972,14 +158878,10 @@
                 "role": "source-right"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "ExecuteTileBinary",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 2,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source-left",
@@ -158987,24 +158889,11 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "div_by_zero_result": "0",
-            "div_overflow_result": "0",
-            "dst_tiles": 1,
+            "classification": "elementwise-tile-tile",
             "effect_contract": "ExecuteTileBinary",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 3,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileBinary",
             "logical_selector": 3,
             "mode": 0,
@@ -159023,33 +158912,20 @@
                 "role": "source-right"
               }
             ],
-            "optional_scalar_status": true,
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
-            "requires_b_ior": true,
-            "requires_b_iot": true,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
-            "scalar_status_flags": [
-              "DIV_BY_ZERO_SEEN",
-              "DIV_OVERFLOW_SEEN",
-              "NAN_SEEN"
-            ],
-            "scalar_status_reduce": "or",
             "semantic_handler": "ExecuteTileBinary",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 2,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source-left",
               "operand:source1:source-right"
-            ],
-            "status_absent_behavior": "flags_dropped"
+            ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "elementwise-tile-tile",
             "effect_contract": "ExecuteTileBinary",
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 4,
             "legality_handler": "TileOperandsLegal_ExecuteTileBinary",
@@ -159081,22 +158957,11 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "elementwise-tile-tile",
             "effect_contract": "ExecuteTileBinary",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 6,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileBinary",
             "logical_selector": 6,
             "mode": 0,
@@ -159115,14 +158980,10 @@
                 "role": "source-right"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "ExecuteTileBinary",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 2,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source-left",
@@ -159130,22 +158991,11 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "elementwise-tile-tile",
             "effect_contract": "ExecuteTileBinary",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 7,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileBinary",
             "logical_selector": 7,
             "mode": 0,
@@ -159164,14 +159014,10 @@
                 "role": "source-right"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "ExecuteTileBinary",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 2,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source-left",
@@ -159179,22 +159025,11 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "elementwise-tile-tile",
             "effect_contract": "ExecuteTileBinary",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 8,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileBinary",
             "logical_selector": 8,
             "mode": 0,
@@ -159213,14 +159048,10 @@
                 "role": "source-right"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "ExecuteTileBinary",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 2,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source-left",
@@ -159228,22 +159059,11 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "elementwise-tile-tile",
             "effect_contract": "ExecuteTileBinary",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 9,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileBinary",
             "logical_selector": 9,
             "mode": 0,
@@ -159262,14 +159082,10 @@
                 "role": "source-right"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "ExecuteTileBinary",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 2,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source-left",
@@ -159277,22 +159093,11 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "elementwise-tile-tile",
             "effect_contract": "ExecuteTileBinary",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 10,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileBinary",
             "logical_selector": 10,
             "mode": 0,
@@ -159311,14 +159116,10 @@
                 "role": "source-right"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "ExecuteTileBinary",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 2,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source-left",
@@ -159326,22 +159127,11 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "elementwise-tile-tile",
             "effect_contract": "ExecuteTileBinary",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 11,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileBinary",
             "logical_selector": 11,
             "mode": 0,
@@ -159360,14 +159150,10 @@
                 "role": "source-right"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "ExecuteTileBinary",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 2,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source-left",
@@ -159375,22 +159161,11 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "elementwise-tile-tile",
             "effect_contract": "ExecuteTileBinary",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 12,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileBinary",
             "logical_selector": 12,
             "mode": 0,
@@ -159409,14 +159184,10 @@
                 "role": "source-right"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "ExecuteTileBinary",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 2,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source-left",
@@ -159424,8 +159195,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "elementwise-tile-tile",
             "effect_contract": "ExecuteTileCompare",
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 13,
             "legality_handler": "TileOperandsLegal_ExecuteTileCompare",
@@ -159462,8 +159234,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "elementwise-tile-tile",
             "effect_contract": "ExecuteTileUnary",
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 15,
             "legality_handler": "TileOperandsLegal_ExecuteTileUnary",
@@ -159490,8 +159263,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "elementwise-tile-tile",
             "effect_contract": "ExecuteTileUnary",
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 16,
             "legality_handler": "TileOperandsLegal_ExecuteTileUnary",
@@ -159518,8 +159292,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "elementwise-tile-tile",
             "effect_contract": "ExecuteTileUnary",
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 17,
             "legality_handler": "TileOperandsLegal_ExecuteTileUnary",
@@ -159546,21 +159321,11 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
+            "classification": "elementwise-tile-tile",
             "effect_contract": "ExecuteTileUnary",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 18,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileUnary",
             "logical_selector": 18,
             "mode": 0,
@@ -159575,11 +159340,8 @@
                 "role": "source"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "ExecuteTileUnary",
             "semantic_status": "reviewed-complete",
             "state_effects": [
@@ -159588,21 +159350,11 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
+            "classification": "elementwise-tile-tile",
             "effect_contract": "ExecuteTileUnary",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 19,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileUnary",
             "logical_selector": 19,
             "mode": 0,
@@ -159617,11 +159369,8 @@
                 "role": "source"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "ExecuteTileUnary",
             "semantic_status": "reviewed-complete",
             "state_effects": [
@@ -159630,21 +159379,11 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
+            "classification": "elementwise-tile-tile",
             "effect_contract": "ExecuteTileUnary",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 20,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileUnary",
             "logical_selector": 20,
             "mode": 0,
@@ -159659,11 +159398,8 @@
                 "role": "source"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "ExecuteTileUnary",
             "semantic_status": "reviewed-complete",
             "state_effects": [
@@ -159672,21 +159408,11 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
+            "classification": "elementwise-tile-tile",
             "effect_contract": "ExecuteTileUnary",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 21,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileUnary",
             "logical_selector": 21,
             "mode": 0,
@@ -159701,11 +159427,8 @@
                 "role": "source"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "ExecuteTileUnary",
             "semantic_status": "reviewed-complete",
             "state_effects": [
@@ -159714,21 +159437,11 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
+            "classification": "elementwise-tile-tile",
             "effect_contract": "ExecuteTileUnary",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 22,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileUnary",
             "logical_selector": 22,
             "mode": 0,
@@ -159743,11 +159456,8 @@
                 "role": "source"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "ExecuteTileUnary",
             "semantic_status": "reviewed-complete",
             "state_effects": [
@@ -159756,22 +159466,11 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "elementwise-tile-tile",
             "effect_contract": "ExecuteTileUnary",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 23,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileUnary",
             "logical_selector": 23,
             "mode": 0,
@@ -159786,22 +159485,19 @@
                 "role": "source"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "ExecuteTileUnary",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 1,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source"
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "elementwise-tile-tile",
             "effect_contract": "ExecuteTileSelect",
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 26,
             "legality_handler": "TileOperandsLegal_ExecuteTileSelect",
@@ -159838,30 +159534,13 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "elementwise-tile-tile",
             "effect_contract": "TCVT",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 27,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_TCVT",
             "logical_selector": 27,
-            "missing_required_attr_desc_family": "B.CATR/B.DATR",
-            "missing_required_attr_detail": "0x00",
-            "missing_required_attr_trap": "E_BLOCK(EC_BLOCKFMT)",
-            "missing_required_ior_desc_family": "B.IOR",
-            "missing_required_ior_detail": "0x00",
-            "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
             "mode": 0,
             "name": "TCVT",
             "operands": [
@@ -159878,18 +159557,10 @@
                 "role": "rounding-and-saturation"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
-            "requires_b_arg": true,
-            "requires_b_ior": true,
-            "requires_b_iot": true,
-            "requires_catr_or_datr": true,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "TCVT",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 1,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source",
@@ -159897,7 +159568,9 @@
             ]
           },
           {
+            "classification": "elementwise-tile-tile",
             "effect_contract": "TFMA",
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 28,
             "legality_handler": "TileOperandsLegal_TFMA",
@@ -159934,27 +159607,13 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "tile-scalar-and-immediate",
             "effect_contract": "ExecuteTileScalar",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 0,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileScalar",
             "logical_selector": 32,
-            "missing_required_ior_desc_family": "B.IOR",
-            "missing_required_ior_detail": "0x00",
-            "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
             "mode": 1,
             "name": "TADDS",
             "operands": [
@@ -159971,20 +159630,10 @@
                 "role": "scalar"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
-            "requires_b_ior": true,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
-            "scalar_rhs_broadcast": true,
-            "scalar_rhs_extract": "truncate_low_bits",
-            "scalar_rhs_mixed_signedness": false,
-            "scalar_rhs_signedness": "match_tile_dtype",
-            "scalar_rhs_type": "tile_element_dtype",
             "semantic_handler": "ExecuteTileScalar",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 1,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source",
@@ -159992,27 +159641,13 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "tile-scalar-and-immediate",
             "effect_contract": "ExecuteTileScalar",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 1,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileScalar",
             "logical_selector": 33,
-            "missing_required_ior_desc_family": "B.IOR",
-            "missing_required_ior_detail": "0x00",
-            "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
             "mode": 1,
             "name": "TSUBS",
             "operands": [
@@ -160029,20 +159664,10 @@
                 "role": "scalar"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
-            "requires_b_ior": true,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
-            "scalar_rhs_broadcast": true,
-            "scalar_rhs_extract": "truncate_low_bits",
-            "scalar_rhs_mixed_signedness": false,
-            "scalar_rhs_signedness": "match_tile_dtype",
-            "scalar_rhs_type": "tile_element_dtype",
             "semantic_handler": "ExecuteTileScalar",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 1,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source",
@@ -160050,27 +159675,13 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "tile-scalar-and-immediate",
             "effect_contract": "ExecuteTileScalar",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 2,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileScalar",
             "logical_selector": 34,
-            "missing_required_ior_desc_family": "B.IOR",
-            "missing_required_ior_detail": "0x00",
-            "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
             "mode": 1,
             "name": "TMULS",
             "operands": [
@@ -160087,20 +159698,10 @@
                 "role": "scalar"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
-            "requires_b_ior": true,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
-            "scalar_rhs_broadcast": true,
-            "scalar_rhs_extract": "truncate_low_bits",
-            "scalar_rhs_mixed_signedness": false,
-            "scalar_rhs_signedness": "match_tile_dtype",
-            "scalar_rhs_type": "tile_element_dtype",
             "semantic_handler": "ExecuteTileScalar",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 1,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source",
@@ -160108,27 +159709,13 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "tile-scalar-and-immediate",
             "effect_contract": "ExecuteTileScalar",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 3,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileScalar",
             "logical_selector": 35,
-            "missing_required_ior_desc_family": "B.IOR",
-            "missing_required_ior_detail": "0x00",
-            "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
             "mode": 1,
             "name": "TDIVS",
             "operands": [
@@ -160145,20 +159732,10 @@
                 "role": "scalar"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
-            "requires_b_ior": true,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
-            "scalar_rhs_broadcast": true,
-            "scalar_rhs_extract": "truncate_low_bits",
-            "scalar_rhs_mixed_signedness": false,
-            "scalar_rhs_signedness": "match_tile_dtype",
-            "scalar_rhs_type": "tile_element_dtype",
             "semantic_handler": "ExecuteTileScalar",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 1,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source",
@@ -160166,8 +159743,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "tile-scalar-and-immediate",
             "effect_contract": "ExecuteTileScalar",
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 4,
             "legality_handler": "TileOperandsLegal_ExecuteTileScalar",
@@ -160199,27 +159777,13 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "tile-scalar-and-immediate",
             "effect_contract": "ExecuteTileScalar",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 6,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileScalar",
             "logical_selector": 38,
-            "missing_required_ior_desc_family": "B.IOR",
-            "missing_required_ior_detail": "0x00",
-            "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
             "mode": 1,
             "name": "TANDS",
             "operands": [
@@ -160236,20 +159800,10 @@
                 "role": "scalar"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
-            "requires_b_ior": true,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
-            "scalar_rhs_broadcast": true,
-            "scalar_rhs_extract": "truncate_low_bits",
-            "scalar_rhs_mixed_signedness": false,
-            "scalar_rhs_signedness": "match_tile_dtype",
-            "scalar_rhs_type": "tile_element_dtype",
             "semantic_handler": "ExecuteTileScalar",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 1,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source",
@@ -160257,27 +159811,13 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "tile-scalar-and-immediate",
             "effect_contract": "ExecuteTileScalar",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 7,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileScalar",
             "logical_selector": 39,
-            "missing_required_ior_desc_family": "B.IOR",
-            "missing_required_ior_detail": "0x00",
-            "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
             "mode": 1,
             "name": "TORS",
             "operands": [
@@ -160294,20 +159834,10 @@
                 "role": "scalar"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
-            "requires_b_ior": true,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
-            "scalar_rhs_broadcast": true,
-            "scalar_rhs_extract": "truncate_low_bits",
-            "scalar_rhs_mixed_signedness": false,
-            "scalar_rhs_signedness": "match_tile_dtype",
-            "scalar_rhs_type": "tile_element_dtype",
             "semantic_handler": "ExecuteTileScalar",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 1,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source",
@@ -160315,27 +159845,13 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "tile-scalar-and-immediate",
             "effect_contract": "ExecuteTileScalar",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 8,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileScalar",
             "logical_selector": 40,
-            "missing_required_ior_desc_family": "B.IOR",
-            "missing_required_ior_detail": "0x00",
-            "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
             "mode": 1,
             "name": "TXORS",
             "operands": [
@@ -160352,20 +159868,10 @@
                 "role": "scalar"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
-            "requires_b_ior": true,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
-            "scalar_rhs_broadcast": true,
-            "scalar_rhs_extract": "truncate_low_bits",
-            "scalar_rhs_mixed_signedness": false,
-            "scalar_rhs_signedness": "match_tile_dtype",
-            "scalar_rhs_type": "tile_element_dtype",
             "semantic_handler": "ExecuteTileScalar",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 1,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source",
@@ -160373,27 +159879,13 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "tile-scalar-and-immediate",
             "effect_contract": "ExecuteTileScalar",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 9,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileScalar",
             "logical_selector": 41,
-            "missing_required_ior_desc_family": "B.IOR",
-            "missing_required_ior_detail": "0x00",
-            "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
             "mode": 1,
             "name": "TSHLS",
             "operands": [
@@ -160410,20 +159902,10 @@
                 "role": "scalar"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
-            "requires_b_ior": true,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
-            "scalar_rhs_broadcast": true,
-            "scalar_rhs_extract": "truncate_low_bits",
-            "scalar_rhs_mixed_signedness": false,
-            "scalar_rhs_signedness": "match_tile_dtype",
-            "scalar_rhs_type": "tile_element_dtype",
             "semantic_handler": "ExecuteTileScalar",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 1,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source",
@@ -160431,27 +159913,13 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "tile-scalar-and-immediate",
             "effect_contract": "ExecuteTileScalar",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 10,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileScalar",
             "logical_selector": 42,
-            "missing_required_ior_desc_family": "B.IOR",
-            "missing_required_ior_detail": "0x00",
-            "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
             "mode": 1,
             "name": "TSHRS",
             "operands": [
@@ -160468,20 +159936,10 @@
                 "role": "scalar"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
-            "requires_b_ior": true,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
-            "scalar_rhs_broadcast": true,
-            "scalar_rhs_extract": "truncate_low_bits",
-            "scalar_rhs_mixed_signedness": false,
-            "scalar_rhs_signedness": "match_tile_dtype",
-            "scalar_rhs_type": "tile_element_dtype",
             "semantic_handler": "ExecuteTileScalar",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 1,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source",
@@ -160489,27 +159947,13 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "tile-scalar-and-immediate",
             "effect_contract": "ExecuteTileScalar",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 11,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileScalar",
             "logical_selector": 43,
-            "missing_required_ior_desc_family": "B.IOR",
-            "missing_required_ior_detail": "0x00",
-            "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
             "mode": 1,
             "name": "TMAXS",
             "operands": [
@@ -160526,20 +159970,10 @@
                 "role": "scalar"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
-            "requires_b_ior": true,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
-            "scalar_rhs_broadcast": true,
-            "scalar_rhs_extract": "truncate_low_bits",
-            "scalar_rhs_mixed_signedness": false,
-            "scalar_rhs_signedness": "match_tile_dtype",
-            "scalar_rhs_type": "tile_element_dtype",
             "semantic_handler": "ExecuteTileScalar",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 1,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source",
@@ -160547,27 +159981,13 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "tile-scalar-and-immediate",
             "effect_contract": "ExecuteTileScalar",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 12,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileScalar",
             "logical_selector": 44,
-            "missing_required_ior_desc_family": "B.IOR",
-            "missing_required_ior_detail": "0x00",
-            "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
             "mode": 1,
             "name": "TMINS",
             "operands": [
@@ -160584,20 +160004,10 @@
                 "role": "scalar"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
-            "requires_b_ior": true,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
-            "scalar_rhs_broadcast": true,
-            "scalar_rhs_extract": "truncate_low_bits",
-            "scalar_rhs_mixed_signedness": false,
-            "scalar_rhs_signedness": "match_tile_dtype",
-            "scalar_rhs_type": "tile_element_dtype",
             "semantic_handler": "ExecuteTileScalar",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 1,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source",
@@ -160605,8 +160015,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "tile-scalar-and-immediate",
             "effect_contract": "ExecuteTileCompareScalar",
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 13,
             "legality_handler": "TileOperandsLegal_ExecuteTileCompareScalar",
@@ -160643,8 +160054,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "tile-scalar-and-immediate",
             "effect_contract": "ExecuteTileSelectScalar",
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 26,
             "legality_handler": "TileOperandsLegal_ExecuteTileSelectScalar",
@@ -160681,27 +160093,13 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "tile-scalar-and-immediate",
             "effect_contract": "ExecuteTileFillScalar",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "VEC",
             "fault_contract": "ExecuteTileInstruction",
             "function": 27,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileFillScalar",
             "logical_selector": 59,
-            "missing_required_ior_desc_family": "B.IOR",
-            "missing_required_ior_detail": "0x00",
-            "missing_required_ior_trap": "E_BLOCK(EC_BLOCKFMT)",
             "mode": 1,
             "name": "TEXPANDS",
             "operands": [
@@ -160714,43 +160112,21 @@
                 "role": "scalar"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
-            "requires_b_ior": true,
-            "requires_b_iot": true,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
-            "scalar_rhs_broadcast": true,
-            "scalar_rhs_extract": "truncate_low_bits",
-            "scalar_rhs_mixed_signedness": false,
-            "scalar_rhs_signedness": "match_tile_dtype",
-            "scalar_rhs_type": "tile_element_dtype",
             "semantic_handler": "ExecuteTileFillScalar",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 0,
             "state_effects": [
               "operand:destination0:destination",
               "operand:scalar0:scalar"
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileReduction",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 0,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileReduction",
             "logical_selector": 64,
             "mode": 2,
@@ -160765,36 +160141,21 @@
                 "role": "source"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "ExecuteTileReduction",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 1,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source"
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileReduction",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 1,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileReduction",
             "logical_selector": 65,
             "mode": 2,
@@ -160809,36 +160170,21 @@
                 "role": "source"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "ExecuteTileReduction",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 1,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source"
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileReduction",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 2,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileReduction",
             "logical_selector": 66,
             "mode": 2,
@@ -160853,22 +160199,19 @@
                 "role": "source"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "ExecuteTileReduction",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 1,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source"
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileReduction",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 3,
             "legality_handler": "TileOperandsLegal_ExecuteTileReduction",
@@ -160895,22 +160238,11 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileExpand",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 4,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
             "logical_selector": 68,
             "mode": 2,
@@ -160929,14 +160261,10 @@
                 "role": "broadcast-source"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "ExecuteTileExpand",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 1,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source",
@@ -160944,8 +160272,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileExpand",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 5,
             "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
@@ -160977,8 +160306,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileExpand",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 6,
             "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
@@ -161010,8 +160340,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileExpand",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 7,
             "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
@@ -161043,8 +160374,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileExpand",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 8,
             "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
@@ -161076,8 +160408,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileExpand",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 9,
             "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
@@ -161109,8 +160442,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileExpand",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 10,
             "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
@@ -161142,8 +160476,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileExpand",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 11,
             "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
@@ -161175,8 +160510,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileReduction",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 12,
             "legality_handler": "TileOperandsLegal_ExecuteTileReduction",
@@ -161203,8 +160539,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileReduction",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 13,
             "legality_handler": "TileOperandsLegal_ExecuteTileReduction",
@@ -161231,22 +160568,11 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileReduction",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 16,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileReduction",
             "logical_selector": 80,
             "mode": 2,
@@ -161261,36 +160587,21 @@
                 "role": "source"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "ExecuteTileReduction",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 1,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source"
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileReduction",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 17,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileReduction",
             "logical_selector": 81,
             "mode": 2,
@@ -161305,36 +160616,21 @@
                 "role": "source"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "ExecuteTileReduction",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 1,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source"
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileReduction",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 18,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileReduction",
             "logical_selector": 82,
             "mode": 2,
@@ -161349,22 +160645,19 @@
                 "role": "source"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "ExecuteTileReduction",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 1,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source"
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileReduction",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 19,
             "legality_handler": "TileOperandsLegal_ExecuteTileReduction",
@@ -161391,22 +160684,11 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileExpand",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 20,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
             "logical_selector": 84,
             "mode": 2,
@@ -161425,14 +160707,10 @@
                 "role": "broadcast-source"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "ExecuteTileExpand",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 1,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source",
@@ -161440,8 +160718,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileExpand",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 21,
             "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
@@ -161473,8 +160752,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileExpand",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 22,
             "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
@@ -161506,8 +160786,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileExpand",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 23,
             "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
@@ -161539,8 +160820,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileExpand",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 24,
             "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
@@ -161572,8 +160854,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileExpand",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 25,
             "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
@@ -161605,8 +160888,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileExpand",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 26,
             "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
@@ -161638,8 +160922,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileExpand",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 27,
             "legality_handler": "TileOperandsLegal_ExecuteTileExpand",
@@ -161671,8 +160956,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileReduction",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 28,
             "legality_handler": "TileOperandsLegal_ExecuteTileReduction",
@@ -161699,8 +160985,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "reduce-and-expand",
             "effect_contract": "ExecuteTileReduction",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 29,
             "legality_handler": "TileOperandsLegal_ExecuteTileReduction",
@@ -161727,8 +161014,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "layout-and-rearrangement",
             "effect_contract": "TCONCAT",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 0,
             "legality_handler": "TileOperandsLegal_TCONCAT",
@@ -161765,8 +161053,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "layout-and-rearrangement",
             "effect_contract": "TEXTRACT",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 2,
             "legality_handler": "TileOperandsLegal_TEXTRACT",
@@ -161803,8 +161092,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "layout-and-rearrangement",
             "effect_contract": "TINSERT",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 3,
             "legality_handler": "TileOperandsLegal_TINSERT",
@@ -161841,8 +161131,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "layout-and-rearrangement",
             "effect_contract": "TIMG2COL",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 4,
             "legality_handler": "TileOperandsLegal_TIMG2COL",
@@ -161904,8 +161195,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "layout-and-rearrangement",
             "effect_contract": "TFILLPAD",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 5,
             "legality_handler": "TileOperandsLegal_TFILLPAD",
@@ -161937,8 +161229,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "irregular-and-complex",
             "effect_contract": "TCI",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 6,
             "legality_handler": "TileOperandsLegal_TCI",
@@ -161970,8 +161263,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "irregular-and-complex",
             "effect_contract": "TTRI",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 7,
             "legality_handler": "TileOperandsLegal_TTRI",
@@ -162003,8 +161297,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "irregular-and-complex",
             "effect_contract": "THISTOGRAM",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 8,
             "legality_handler": "TileOperandsLegal_THISTOGRAM",
@@ -162041,8 +161336,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "irregular-and-complex",
             "effect_contract": "TQUANT",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 10,
             "legality_handler": "TileOperandsLegal_TQUANT",
@@ -162084,8 +161380,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "irregular-and-complex",
             "effect_contract": "TDEQUANT",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 11,
             "legality_handler": "TileOperandsLegal_TDEQUANT",
@@ -162127,8 +161424,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "irregular-and-complex",
             "effect_contract": "TSORT",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 12,
             "legality_handler": "TileOperandsLegal_TSORT",
@@ -162170,8 +161468,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "irregular-and-complex",
             "effect_contract": "TMRGSORT",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 13,
             "legality_handler": "TileOperandsLegal_TMRGSORT",
@@ -162208,22 +161507,11 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
-            "dst_tiles": 1,
+            "classification": "layout-and-rearrangement",
             "effect_contract": "TTRANS",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 14,
-            "has_index_tile": false,
             "legality_handler": "TileOperandsLegal_TTRANS",
             "logical_selector": 110,
             "mode": 3,
@@ -162238,36 +161526,21 @@
                 "role": "source"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "TTRANS",
             "semantic_status": "reviewed-complete",
-            "src_tiles": 1,
             "state_effects": [
               "operand:destination0:destination",
               "operand:source0:source"
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
+            "classification": "irregular-and-complex",
             "effect_contract": "TGATHER",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 15,
-            "has_index_tile": true,
-            "index_range_rule": "unpredictable",
             "legality_handler": "TileOperandsLegal_TGATHER",
             "logical_selector": 111,
             "mode": 3,
@@ -162286,11 +161559,8 @@
                 "role": "indices"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "TGATHER",
             "semantic_status": "reviewed-complete",
             "state_effects": [
@@ -162300,22 +161570,11 @@
             ]
           },
           {
-            "dim_lb_defaults": {
-              "LB1": 1,
-              "LB2": 1
-            },
-            "dim_lb_required": [
-              "LB0"
-            ],
-            "dim_required": true,
-            "dirty_rule": "op-defined",
+            "classification": "irregular-and-complex",
             "effect_contract": "TSCATTER",
-            "engineop_state_bytes_max": 0,
-            "engineop_state_version": 0,
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 16,
-            "has_index_tile": true,
-            "index_range_rule": "unpredictable",
             "legality_handler": "TileOperandsLegal_TSCATTER",
             "logical_selector": 112,
             "mode": 3,
@@ -162334,11 +161593,8 @@
                 "role": "indices"
               }
             ],
-            "phase_model": "op-defined",
             "profile": "v0.58",
-            "redo_ok_after_start": false,
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "resume_ok": false,
             "semantic_handler": "TSCATTER",
             "semantic_status": "reviewed-complete",
             "state_effects": [
@@ -162348,8 +161604,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "irregular-and-complex",
             "effect_contract": "ExecuteTilePartial",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 17,
             "legality_handler": "TileOperandsLegal_ExecuteTilePartial",
@@ -162381,8 +161638,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "irregular-and-complex",
             "effect_contract": "ExecuteTilePartial",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 18,
             "legality_handler": "TileOperandsLegal_ExecuteTilePartial",
@@ -162414,8 +161672,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "irregular-and-complex",
             "effect_contract": "ExecuteTilePartial",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 19,
             "legality_handler": "TileOperandsLegal_ExecuteTilePartial",
@@ -162447,8 +161706,9 @@
             ]
           },
           {
-            "allocation_source": "isa-golden-v0.57-upgrade.md Section 3.7",
+            "classification": "irregular-and-complex",
             "effect_contract": "ExecuteTilePartial",
+            "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
             "function": 20,
             "legality_handler": "TileOperandsLegal_ExecuteTilePartial",
@@ -162579,6 +161839,8 @@
         "kind": "function_u5",
         "legal_aliases": [
           {
+            "classification": "memory-and-data-movement",
+            "engine": "TLSU",
             "function": 0,
             "mnemonic": "BSTART.TLOAD",
             "name": "TLOAD",
@@ -162591,6 +161853,8 @@
             ]
           },
           {
+            "classification": "memory-and-data-movement",
+            "engine": "TLSU",
             "function": 1,
             "mnemonic": "BSTART.TSTORE",
             "name": "TSTORE",
@@ -162603,6 +161867,8 @@
             ]
           },
           {
+            "classification": "layout-and-rearrangement",
+            "engine": "TLSU",
             "function": 2,
             "mnemonic": "BSTART.TMOV",
             "name": "TMOV",
@@ -162614,6 +161880,8 @@
             ]
           },
           {
+            "classification": "memory-and-data-movement",
+            "engine": "TLSU",
             "function": 3,
             "mnemonic": "BSTART.TPREFETCH",
             "name": "TPREFETCH",
@@ -162625,6 +161893,8 @@
             ]
           },
           {
+            "classification": "memory-and-data-movement",
+            "engine": "TLSU",
             "function": 4,
             "mnemonic": "BSTART.MGATHER",
             "name": "MGATHER",
@@ -162637,6 +161907,8 @@
             ]
           },
           {
+            "classification": "memory-and-data-movement",
+            "engine": "TLSU",
             "function": 5,
             "mnemonic": "BSTART.MSCATTER",
             "name": "MSCATTER",
@@ -162649,6 +161921,8 @@
             ]
           },
           {
+            "classification": "memory-and-data-movement",
+            "engine": "TLSU",
             "function": 6,
             "mnemonic": "BSTART.MGATHER.MASK",
             "name": "MGATHER_MASK",
@@ -162662,6 +161936,8 @@
             ]
           },
           {
+            "classification": "memory-and-data-movement",
+            "engine": "TLSU",
             "function": 7,
             "mnemonic": "BSTART.MSCATTER.MASK",
             "name": "MSCATTER_MASK",
@@ -162675,6 +161951,8 @@
             ]
           },
           {
+            "classification": "memory-and-data-movement",
+            "engine": "TLSU",
             "function": 8,
             "mnemonic": "BSTART.MGATHER.CAS",
             "name": "MGATHER_CAS",
@@ -162689,6 +161967,8 @@
             ]
           },
           {
+            "classification": "memory-and-data-movement",
+            "engine": "TLSU",
             "function": 13,
             "mnemonic": "BSTART.GMOV",
             "name": "GMOV",
@@ -165352,7 +164632,17 @@
           "status": "accepted"
         },
         {
+          "accepted_assembly_mnemonics": [
+            "BSTART.TEPL",
+            "BSTART.VEC",
+            "BSTART.SFU"
+          ],
           "asm": "BSTART.TEPL Mode, Function, DataType",
+          "canonical_assembly_by_engine": {
+            "SFU": "BSTART.SFU",
+            "VEC": "BSTART.VEC"
+          },
+          "carrier_mnemonic": "BSTART.TEPL",
           "constraints": [
             {
               "field": "DataType",
@@ -168704,11 +167994,28 @@
     },
     "pto_encoding_map": {
       "$schema": "https://docs.openclaw.ai/schemas/linxisa/pto_encoding_map.v1.json",
+      "classification_counts": {
+        "elementwise-tile-tile": 25,
+        "irregular-and-complex": 13,
+        "layout-and-rearrangement": 7,
+        "matrix-and-matrix-vector": 12,
+        "memory-and-data-movement": 9,
+        "reduce-and-expand": 28,
+        "tile-scalar-and-immediate": 15
+      },
+      "engine_counts": {
+        "CUBE": 12,
+        "SFU": 52,
+        "TLSU": 10,
+        "VEC": 35
+      },
       "entries": [
         {
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 0,
           "mode": 0,
@@ -168716,9 +168023,11 @@
           "selector": "0x000"
         },
         {
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 1,
           "mode": 0,
@@ -168726,9 +168035,11 @@
           "selector": "0x001"
         },
         {
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 2,
           "mode": 0,
@@ -168736,9 +168047,11 @@
           "selector": "0x002"
         },
         {
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 3,
           "mode": 0,
@@ -168746,9 +168059,11 @@
           "selector": "0x003"
         },
         {
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 4,
           "mode": 0,
@@ -168756,9 +168071,11 @@
           "selector": "0x004"
         },
         {
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 6,
           "mode": 0,
@@ -168766,9 +168083,11 @@
           "selector": "0x006"
         },
         {
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 7,
           "mode": 0,
@@ -168776,9 +168095,11 @@
           "selector": "0x007"
         },
         {
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 8,
           "mode": 0,
@@ -168786,9 +168107,11 @@
           "selector": "0x008"
         },
         {
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 9,
           "mode": 0,
@@ -168796,9 +168119,11 @@
           "selector": "0x009"
         },
         {
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 10,
           "mode": 0,
@@ -168806,9 +168131,11 @@
           "selector": "0x00A"
         },
         {
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 11,
           "mode": 0,
@@ -168816,9 +168143,11 @@
           "selector": "0x00B"
         },
         {
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 12,
           "mode": 0,
@@ -168826,9 +168155,11 @@
           "selector": "0x00C"
         },
         {
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 13,
           "mode": 0,
@@ -168836,9 +168167,11 @@
           "selector": "0x00D"
         },
         {
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 15,
           "mode": 0,
@@ -168846,9 +168179,11 @@
           "selector": "0x00F"
         },
         {
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 16,
           "mode": 0,
@@ -168856,9 +168191,11 @@
           "selector": "0x010"
         },
         {
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 17,
           "mode": 0,
@@ -168866,9 +168203,11 @@
           "selector": "0x011"
         },
         {
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 18,
           "mode": 0,
@@ -168876,9 +168215,11 @@
           "selector": "0x012"
         },
         {
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 19,
           "mode": 0,
@@ -168886,9 +168227,11 @@
           "selector": "0x013"
         },
         {
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 20,
           "mode": 0,
@@ -168896,9 +168239,11 @@
           "selector": "0x014"
         },
         {
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 21,
           "mode": 0,
@@ -168906,9 +168251,11 @@
           "selector": "0x015"
         },
         {
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 22,
           "mode": 0,
@@ -168916,9 +168263,11 @@
           "selector": "0x016"
         },
         {
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 23,
           "mode": 0,
@@ -168926,9 +168275,11 @@
           "selector": "0x017"
         },
         {
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 26,
           "mode": 0,
@@ -168936,9 +168287,11 @@
           "selector": "0x01A"
         },
         {
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 27,
           "mode": 0,
@@ -168946,9 +168299,11 @@
           "selector": "0x01B"
         },
         {
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 28,
           "mode": 0,
@@ -168956,9 +168311,11 @@
           "selector": "0x01C"
         },
         {
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 0,
           "mode": 1,
@@ -168966,9 +168323,11 @@
           "selector": "0x020"
         },
         {
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 1,
           "mode": 1,
@@ -168976,9 +168335,11 @@
           "selector": "0x021"
         },
         {
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 2,
           "mode": 1,
@@ -168986,9 +168347,11 @@
           "selector": "0x022"
         },
         {
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 3,
           "mode": 1,
@@ -168996,9 +168359,11 @@
           "selector": "0x023"
         },
         {
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 4,
           "mode": 1,
@@ -169006,9 +168371,11 @@
           "selector": "0x024"
         },
         {
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 6,
           "mode": 1,
@@ -169016,9 +168383,11 @@
           "selector": "0x026"
         },
         {
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 7,
           "mode": 1,
@@ -169026,9 +168395,11 @@
           "selector": "0x027"
         },
         {
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 8,
           "mode": 1,
@@ -169036,9 +168407,11 @@
           "selector": "0x028"
         },
         {
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 9,
           "mode": 1,
@@ -169046,9 +168419,11 @@
           "selector": "0x029"
         },
         {
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 10,
           "mode": 1,
@@ -169056,9 +168431,11 @@
           "selector": "0x02A"
         },
         {
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 11,
           "mode": 1,
@@ -169066,9 +168443,11 @@
           "selector": "0x02B"
         },
         {
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 12,
           "mode": 1,
@@ -169076,9 +168455,11 @@
           "selector": "0x02C"
         },
         {
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 13,
           "mode": 1,
@@ -169086,9 +168467,11 @@
           "selector": "0x02D"
         },
         {
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 26,
           "mode": 1,
@@ -169096,9 +168479,11 @@
           "selector": "0x03A"
         },
         {
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "VEC",
           "family": "TEPL",
           "function": 27,
           "mode": 1,
@@ -169106,9 +168491,11 @@
           "selector": "0x03B"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 0,
           "mode": 2,
@@ -169116,9 +168503,11 @@
           "selector": "0x040"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 1,
           "mode": 2,
@@ -169126,9 +168515,11 @@
           "selector": "0x041"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 2,
           "mode": 2,
@@ -169136,9 +168527,11 @@
           "selector": "0x042"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 3,
           "mode": 2,
@@ -169146,9 +168539,11 @@
           "selector": "0x043"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 4,
           "mode": 2,
@@ -169156,9 +168551,11 @@
           "selector": "0x044"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 5,
           "mode": 2,
@@ -169166,9 +168563,11 @@
           "selector": "0x045"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 6,
           "mode": 2,
@@ -169176,9 +168575,11 @@
           "selector": "0x046"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 7,
           "mode": 2,
@@ -169186,9 +168587,11 @@
           "selector": "0x047"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 8,
           "mode": 2,
@@ -169196,9 +168599,11 @@
           "selector": "0x048"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 9,
           "mode": 2,
@@ -169206,9 +168611,11 @@
           "selector": "0x049"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 10,
           "mode": 2,
@@ -169216,9 +168623,11 @@
           "selector": "0x04A"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 11,
           "mode": 2,
@@ -169226,9 +168635,11 @@
           "selector": "0x04B"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 12,
           "mode": 2,
@@ -169236,9 +168647,11 @@
           "selector": "0x04C"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 13,
           "mode": 2,
@@ -169246,9 +168659,11 @@
           "selector": "0x04D"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 16,
           "mode": 2,
@@ -169256,9 +168671,11 @@
           "selector": "0x050"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 17,
           "mode": 2,
@@ -169266,9 +168683,11 @@
           "selector": "0x051"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 18,
           "mode": 2,
@@ -169276,9 +168695,11 @@
           "selector": "0x052"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 19,
           "mode": 2,
@@ -169286,9 +168707,11 @@
           "selector": "0x053"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 20,
           "mode": 2,
@@ -169296,9 +168719,11 @@
           "selector": "0x054"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 21,
           "mode": 2,
@@ -169306,9 +168731,11 @@
           "selector": "0x055"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 22,
           "mode": 2,
@@ -169316,9 +168743,11 @@
           "selector": "0x056"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 23,
           "mode": 2,
@@ -169326,9 +168755,11 @@
           "selector": "0x057"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 24,
           "mode": 2,
@@ -169336,9 +168767,11 @@
           "selector": "0x058"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 25,
           "mode": 2,
@@ -169346,9 +168779,11 @@
           "selector": "0x059"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 26,
           "mode": 2,
@@ -169356,9 +168791,11 @@
           "selector": "0x05A"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 27,
           "mode": 2,
@@ -169366,9 +168803,11 @@
           "selector": "0x05B"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 28,
           "mode": 2,
@@ -169376,9 +168815,11 @@
           "selector": "0x05C"
         },
         {
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 29,
           "mode": 2,
@@ -169386,9 +168827,11 @@
           "selector": "0x05D"
         },
         {
+          "classification": "layout-and-rearrangement",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 0,
           "mode": 3,
@@ -169396,9 +168839,11 @@
           "selector": "0x060"
         },
         {
+          "classification": "layout-and-rearrangement",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 2,
           "mode": 3,
@@ -169406,9 +168851,11 @@
           "selector": "0x062"
         },
         {
+          "classification": "layout-and-rearrangement",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 3,
           "mode": 3,
@@ -169416,9 +168863,11 @@
           "selector": "0x063"
         },
         {
+          "classification": "layout-and-rearrangement",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 4,
           "mode": 3,
@@ -169426,9 +168875,11 @@
           "selector": "0x064"
         },
         {
+          "classification": "layout-and-rearrangement",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 5,
           "mode": 3,
@@ -169436,9 +168887,11 @@
           "selector": "0x065"
         },
         {
+          "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 6,
           "mode": 3,
@@ -169446,9 +168899,11 @@
           "selector": "0x066"
         },
         {
+          "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 7,
           "mode": 3,
@@ -169456,9 +168911,11 @@
           "selector": "0x067"
         },
         {
+          "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 8,
           "mode": 3,
@@ -169466,9 +168923,11 @@
           "selector": "0x068"
         },
         {
+          "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 10,
           "mode": 3,
@@ -169476,9 +168935,11 @@
           "selector": "0x06A"
         },
         {
+          "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 11,
           "mode": 3,
@@ -169486,9 +168947,11 @@
           "selector": "0x06B"
         },
         {
+          "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 12,
           "mode": 3,
@@ -169496,9 +168959,11 @@
           "selector": "0x06C"
         },
         {
+          "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 13,
           "mode": 3,
@@ -169506,9 +168971,11 @@
           "selector": "0x06D"
         },
         {
+          "classification": "layout-and-rearrangement",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 14,
           "mode": 3,
@@ -169516,9 +168983,11 @@
           "selector": "0x06E"
         },
         {
+          "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 15,
           "mode": 3,
@@ -169526,9 +168995,11 @@
           "selector": "0x06F"
         },
         {
+          "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 16,
           "mode": 3,
@@ -169536,9 +169007,11 @@
           "selector": "0x070"
         },
         {
+          "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 17,
           "mode": 3,
@@ -169546,9 +169019,11 @@
           "selector": "0x071"
         },
         {
+          "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 18,
           "mode": 3,
@@ -169556,9 +169031,11 @@
           "selector": "0x072"
         },
         {
+          "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 19,
           "mode": 3,
@@ -169566,9 +169043,11 @@
           "selector": "0x073"
         },
         {
+          "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "SFU",
           "family": "TEPL",
           "function": 20,
           "mode": 3,
@@ -169576,9 +169055,11 @@
           "selector": "0x074"
         },
         {
+          "classification": "memory-and-data-movement",
           "command_mnemonic": "BSTART.TLOAD",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "TLSU",
           "family": "TLSU",
           "function": 0,
           "mode": null,
@@ -169586,9 +169067,11 @@
           "selector": null
         },
         {
+          "classification": "memory-and-data-movement",
           "command_mnemonic": "BSTART.TSTORE",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "TLSU",
           "family": "TLSU",
           "function": 1,
           "mode": null,
@@ -169596,9 +169079,11 @@
           "selector": null
         },
         {
+          "classification": "layout-and-rearrangement",
           "command_mnemonic": "BSTART.TMOV",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "TLSU",
           "family": "TLSU",
           "function": 2,
           "mode": null,
@@ -169606,9 +169091,11 @@
           "selector": null
         },
         {
+          "classification": "memory-and-data-movement",
           "command_mnemonic": "BSTART.TPREFETCH",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "TLSU",
           "family": "TLSU",
           "function": 3,
           "mode": null,
@@ -169616,9 +169103,11 @@
           "selector": null
         },
         {
+          "classification": "memory-and-data-movement",
           "command_mnemonic": "BSTART.MGATHER",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "TLSU",
           "family": "TLSU",
           "function": 4,
           "mode": null,
@@ -169626,9 +169115,11 @@
           "selector": null
         },
         {
+          "classification": "memory-and-data-movement",
           "command_mnemonic": "BSTART.MSCATTER",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "TLSU",
           "family": "TLSU",
           "function": 5,
           "mode": null,
@@ -169636,9 +169127,11 @@
           "selector": null
         },
         {
+          "classification": "memory-and-data-movement",
           "command_mnemonic": "BSTART.MGATHER.MASK",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "TLSU",
           "family": "TLSU",
           "function": 6,
           "mode": null,
@@ -169646,9 +169139,11 @@
           "selector": null
         },
         {
+          "classification": "memory-and-data-movement",
           "command_mnemonic": "BSTART.MSCATTER.MASK",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "TLSU",
           "family": "TLSU",
           "function": 7,
           "mode": null,
@@ -169656,9 +169151,11 @@
           "selector": null
         },
         {
+          "classification": "memory-and-data-movement",
           "command_mnemonic": "BSTART.MGATHER.CAS",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "TLSU",
           "family": "TLSU",
           "function": 8,
           "mode": null,
@@ -169666,9 +169163,11 @@
           "selector": null
         },
         {
+          "classification": "memory-and-data-movement",
           "command_mnemonic": "BSTART.GMOV",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "TLSU",
           "family": "TLSU",
           "function": 13,
           "mode": null,
@@ -169676,9 +169175,11 @@
           "selector": null
         },
         {
+          "classification": "matrix-and-matrix-vector",
           "command_mnemonic": "BSTART.TMATMUL",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "CUBE",
           "family": "CUBE",
           "function": 0,
           "mode": null,
@@ -169686,9 +169187,11 @@
           "selector": null
         },
         {
+          "classification": "matrix-and-matrix-vector",
           "command_mnemonic": "BSTART.TMATMUL.BIAS",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "CUBE",
           "family": "CUBE",
           "function": 1,
           "mode": null,
@@ -169696,9 +169199,11 @@
           "selector": null
         },
         {
+          "classification": "matrix-and-matrix-vector",
           "command_mnemonic": "BSTART.TMATMUL.ACC",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "CUBE",
           "family": "CUBE",
           "function": 2,
           "mode": null,
@@ -169706,9 +169211,11 @@
           "selector": null
         },
         {
+          "classification": "matrix-and-matrix-vector",
           "command_mnemonic": "BSTART.TMATMULMX",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "CUBE",
           "family": "CUBE",
           "function": 4,
           "mode": null,
@@ -169716,9 +169223,11 @@
           "selector": null
         },
         {
+          "classification": "matrix-and-matrix-vector",
           "command_mnemonic": "BSTART.TMATMULMX.BIAS",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "CUBE",
           "family": "CUBE",
           "function": 5,
           "mode": null,
@@ -169726,9 +169235,11 @@
           "selector": null
         },
         {
+          "classification": "matrix-and-matrix-vector",
           "command_mnemonic": "BSTART.TMATMULMX.ACC",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "CUBE",
           "family": "CUBE",
           "function": 6,
           "mode": null,
@@ -169736,9 +169247,11 @@
           "selector": null
         },
         {
+          "classification": "matrix-and-matrix-vector",
           "command_mnemonic": "BSTART.TGEMV",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "CUBE",
           "family": "CUBE",
           "function": 16,
           "mode": null,
@@ -169746,9 +169259,11 @@
           "selector": null
         },
         {
+          "classification": "matrix-and-matrix-vector",
           "command_mnemonic": "BSTART.TGEMV.BIAS",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "CUBE",
           "family": "CUBE",
           "function": 17,
           "mode": null,
@@ -169756,9 +169271,11 @@
           "selector": null
         },
         {
+          "classification": "matrix-and-matrix-vector",
           "command_mnemonic": "BSTART.TGEMV.ACC",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "CUBE",
           "family": "CUBE",
           "function": 18,
           "mode": null,
@@ -169766,9 +169283,11 @@
           "selector": null
         },
         {
+          "classification": "matrix-and-matrix-vector",
           "command_mnemonic": "BSTART.TGEMVMX",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "CUBE",
           "family": "CUBE",
           "function": 20,
           "mode": null,
@@ -169776,9 +169295,11 @@
           "selector": null
         },
         {
+          "classification": "matrix-and-matrix-vector",
           "command_mnemonic": "BSTART.TGEMVMX.BIAS",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "CUBE",
           "family": "CUBE",
           "function": 21,
           "mode": null,
@@ -169786,9 +169307,11 @@
           "selector": null
         },
         {
+          "classification": "matrix-and-matrix-vector",
           "command_mnemonic": "BSTART.TGEMVMX.ACC",
           "contract_status": "reviewed-complete",
           "disposition": "accepted-direct-operation",
+          "engine": "CUBE",
           "family": "CUBE",
           "function": 22,
           "mode": null,
@@ -169815,6 +169338,15 @@
     },
     "pto_ops": {
       "$schema": "https://docs.openclaw.ai/schemas/linxisa/pto_ops.v1.json",
+      "classification_counts": {
+        "elementwise-tile-tile": 25,
+        "irregular-and-complex": 13,
+        "layout-and-rearrangement": 7,
+        "matrix-and-matrix-vector": 12,
+        "memory-and-data-movement": 9,
+        "reduce-and-expand": 28,
+        "tile-scalar-and-immediate": 15
+      },
       "deleted_names": [
         "ACCCVT",
         "TADDC",
@@ -169839,6 +169371,12 @@
         "TRANDOM",
         "TSORT32"
       ],
+      "engine_counts": {
+        "CUBE": 12,
+        "SFU": 52,
+        "TLSU": 10,
+        "VEC": 35
+      },
       "family_counts": {
         "CUBE": 12,
         "TEPL": 87,
@@ -169861,6 +169399,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -169869,6 +169408,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileBinary",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 0,
@@ -169913,6 +169453,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -169921,6 +169462,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileBinary",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 1,
@@ -169965,6 +169507,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -169973,6 +169516,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileBinary",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 2,
@@ -170017,6 +169561,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -170025,6 +169570,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileBinary",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 3,
@@ -170069,6 +169615,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -170077,6 +169624,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileBinary",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 4,
@@ -170121,6 +169669,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -170129,6 +169678,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileBinary",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 6,
@@ -170173,6 +169723,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -170181,6 +169732,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileBinary",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 7,
@@ -170225,6 +169777,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -170233,6 +169786,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileBinary",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 8,
@@ -170277,6 +169831,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -170285,6 +169840,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileBinary",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 9,
@@ -170329,6 +169885,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -170337,6 +169894,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileBinary",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 10,
@@ -170381,6 +169939,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -170389,6 +169948,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileBinary",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 11,
@@ -170433,6 +169993,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -170441,6 +170002,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileBinary",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 12,
@@ -170485,6 +170047,7 @@
               "operand": "comparison"
             }
           ],
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -170495,6 +170058,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileCompare",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 13,
@@ -170541,6 +170105,7 @@
               "operand": "source0"
             }
           ],
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -170549,6 +170114,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileUnary",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 15,
@@ -170585,6 +170151,7 @@
               "operand": "source0"
             }
           ],
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -170593,6 +170160,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileUnary",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 16,
@@ -170629,6 +170197,7 @@
               "operand": "source0"
             }
           ],
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -170637,6 +170206,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileUnary",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 17,
@@ -170673,6 +170243,7 @@
               "operand": "source0"
             }
           ],
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -170681,6 +170252,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileUnary",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 18,
@@ -170717,6 +170289,7 @@
               "operand": "source0"
             }
           ],
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -170725,6 +170298,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileUnary",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 19,
@@ -170761,6 +170335,7 @@
               "operand": "source0"
             }
           ],
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -170769,6 +170344,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileUnary",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 20,
@@ -170805,6 +170381,7 @@
               "operand": "source0"
             }
           ],
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -170813,6 +170390,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileUnary",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 21,
@@ -170849,6 +170427,7 @@
               "operand": "source0"
             }
           ],
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -170857,6 +170436,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileUnary",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 22,
@@ -170893,6 +170473,7 @@
               "operand": "source0"
             }
           ],
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -170901,6 +170482,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileUnary",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 23,
@@ -170940,6 +170522,7 @@
               "operand": "source2"
             }
           ],
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -170948,6 +170531,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileSelect",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 26,
@@ -170994,6 +170578,7 @@
               "operand": "numeric_control"
             }
           ],
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -171008,6 +170593,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TCVT",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 27,
@@ -171052,6 +170638,7 @@
               "operand": "source2"
             }
           ],
+          "classification": "elementwise-tile-tile",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -171060,6 +170647,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TFMA",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 28,
@@ -171109,6 +170697,7 @@
               "operand": "scalar0"
             }
           ],
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -171117,6 +170706,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileScalar",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 0,
@@ -171161,6 +170751,7 @@
               "operand": "scalar0"
             }
           ],
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -171169,6 +170760,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileScalar",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 1,
@@ -171213,6 +170805,7 @@
               "operand": "scalar0"
             }
           ],
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -171221,6 +170814,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileScalar",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 2,
@@ -171265,6 +170859,7 @@
               "operand": "scalar0"
             }
           ],
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -171273,6 +170868,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileScalar",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 3,
@@ -171317,6 +170913,7 @@
               "operand": "scalar0"
             }
           ],
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -171325,6 +170922,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileScalar",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 4,
@@ -171369,6 +170967,7 @@
               "operand": "scalar0"
             }
           ],
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -171377,6 +170976,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileScalar",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 6,
@@ -171421,6 +171021,7 @@
               "operand": "scalar0"
             }
           ],
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -171429,6 +171030,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileScalar",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 7,
@@ -171473,6 +171075,7 @@
               "operand": "scalar0"
             }
           ],
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -171481,6 +171084,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileScalar",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 8,
@@ -171525,6 +171129,7 @@
               "operand": "scalar0"
             }
           ],
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -171533,6 +171138,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileScalar",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 9,
@@ -171577,6 +171183,7 @@
               "operand": "scalar0"
             }
           ],
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -171585,6 +171192,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileScalar",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 10,
@@ -171629,6 +171237,7 @@
               "operand": "scalar0"
             }
           ],
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -171637,6 +171246,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileScalar",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 11,
@@ -171681,6 +171291,7 @@
               "operand": "scalar0"
             }
           ],
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -171689,6 +171300,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileScalar",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 12,
@@ -171733,6 +171345,7 @@
               "operand": "comparison"
             }
           ],
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -171743,6 +171356,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileCompareScalar",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 13,
@@ -171792,6 +171406,7 @@
               "operand": "scalar0"
             }
           ],
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -171800,6 +171415,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileSelectScalar",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 26,
@@ -171843,6 +171459,7 @@
               "operand": "scalar0"
             }
           ],
+          "classification": "tile-scalar-and-immediate",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -171851,6 +171468,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileFillScalar",
+          "engine": "VEC",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 27,
@@ -171890,6 +171508,7 @@
               "operand": "source0"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -171898,6 +171517,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileReduction",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 0,
@@ -171937,6 +171557,7 @@
               "operand": "source0"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -171945,6 +171566,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileReduction",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 1,
@@ -171984,6 +171606,7 @@
               "operand": "source0"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -171992,6 +171615,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileReduction",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 2,
@@ -172031,6 +171655,7 @@
               "operand": "source0"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -172039,6 +171664,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileReduction",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 3,
@@ -172081,6 +171707,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -172089,6 +171716,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileExpand",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 4,
@@ -172136,6 +171764,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -172144,6 +171773,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileExpand",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 5,
@@ -172191,6 +171821,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -172199,6 +171830,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileExpand",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 6,
@@ -172246,6 +171878,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -172254,6 +171887,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileExpand",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 7,
@@ -172301,6 +171935,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -172309,6 +171944,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileExpand",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 8,
@@ -172356,6 +171992,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -172364,6 +172001,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileExpand",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 9,
@@ -172411,6 +172049,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -172419,6 +172058,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileExpand",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 10,
@@ -172466,6 +172106,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -172474,6 +172115,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileExpand",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 11,
@@ -172518,6 +172160,7 @@
               "operand": "source0"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -172526,6 +172169,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileReduction",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 12,
@@ -172565,6 +172209,7 @@
               "operand": "source0"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -172573,6 +172218,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileReduction",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 13,
@@ -172612,6 +172258,7 @@
               "operand": "source0"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -172620,6 +172267,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileReduction",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 16,
@@ -172659,6 +172307,7 @@
               "operand": "source0"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -172667,6 +172316,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileReduction",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 17,
@@ -172706,6 +172356,7 @@
               "operand": "source0"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -172714,6 +172365,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileReduction",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 18,
@@ -172753,6 +172405,7 @@
               "operand": "source0"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -172761,6 +172414,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileReduction",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 19,
@@ -172803,6 +172457,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -172811,6 +172466,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileExpand",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 20,
@@ -172858,6 +172514,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -172866,6 +172523,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileExpand",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 21,
@@ -172913,6 +172571,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -172921,6 +172580,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileExpand",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 22,
@@ -172968,6 +172628,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -172976,6 +172637,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileExpand",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 23,
@@ -173023,6 +172685,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -173031,6 +172694,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileExpand",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 24,
@@ -173078,6 +172742,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -173086,6 +172751,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileExpand",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 25,
@@ -173133,6 +172799,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -173141,6 +172808,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileExpand",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 26,
@@ -173188,6 +172856,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -173196,6 +172865,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileExpand",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 27,
@@ -173240,6 +172910,7 @@
               "operand": "source0"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -173248,6 +172919,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileReduction",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 28,
@@ -173287,6 +172959,7 @@
               "operand": "source0"
             }
           ],
+          "classification": "reduce-and-expand",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -173295,6 +172968,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTileReduction",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 29,
@@ -173334,6 +173008,7 @@
               "operand": "axis"
             }
           ],
+          "classification": "layout-and-rearrangement",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -173344,6 +173019,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TCONCAT",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 0,
@@ -173393,6 +173069,7 @@
               "operand": "natural1"
             }
           ],
+          "classification": "layout-and-rearrangement",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -173403,6 +173080,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TEXTRACT",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 2,
@@ -173452,6 +173130,7 @@
               "operand": "natural1"
             }
           ],
+          "classification": "layout-and-rearrangement",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -173462,6 +173141,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TINSERT",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 3,
@@ -173526,6 +173206,7 @@
               "operand": "scalar0"
             }
           ],
+          "classification": "layout-and-rearrangement",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -173536,6 +173217,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TIMG2COL",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 4,
@@ -173607,6 +173289,7 @@
               "operand": "scalar0"
             }
           ],
+          "classification": "layout-and-rearrangement",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -173618,6 +173301,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TFILLPAD",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 5,
@@ -173659,6 +173343,7 @@
               "operand": "flag0"
             }
           ],
+          "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -173667,6 +173352,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TCI",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 6,
@@ -173708,6 +173394,7 @@
               "operand": "diagonal"
             }
           ],
+          "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -173716,6 +173403,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TTRI",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 7,
@@ -173760,6 +173448,7 @@
               "operand": "selected_byte"
             }
           ],
+          "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -173771,6 +173460,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "THISTOGRAM",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 8,
@@ -173823,6 +173513,7 @@
               "operand": "numeric_control"
             }
           ],
+          "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -173837,6 +173528,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TQUANT",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 10,
@@ -173894,6 +173586,7 @@
               "operand": "numeric_control"
             }
           ],
+          "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -173908,6 +173601,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TDEQUANT",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 11,
@@ -173965,6 +173659,7 @@
               "operand": "flag0"
             }
           ],
+          "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -173973,6 +173668,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TSORT",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 12,
@@ -174027,6 +173723,7 @@
               "operand": "flag0"
             }
           ],
+          "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -174035,6 +173732,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TMRGSORT",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 13,
@@ -174078,6 +173776,7 @@
               "operand": "source0"
             }
           ],
+          "classification": "layout-and-rearrangement",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -174088,6 +173787,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TTRANS",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 14,
@@ -174124,6 +173824,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -174134,6 +173835,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TGATHER",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 15,
@@ -174175,6 +173877,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -174185,6 +173888,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TSCATTER",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 16,
@@ -174229,6 +173933,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -174237,6 +173942,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTilePartial",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 17,
@@ -174281,6 +173987,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -174289,6 +173996,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTilePartial",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 18,
@@ -174333,6 +174041,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -174341,6 +174050,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTilePartial",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 19,
@@ -174385,6 +174095,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -174393,6 +174104,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "ExecuteTilePartial",
+          "engine": "SFU",
           "family": "TEPL",
           "fault_contract": "ExecuteTileInstruction",
           "function": 20,
@@ -174434,6 +174146,7 @@
               "operand": "scalar0"
             }
           ],
+          "classification": "memory-and-data-movement",
           "command_mnemonic": "BSTART.TLOAD",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -174444,6 +174157,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TLOAD",
+          "engine": "TLSU",
           "family": "TLSU",
           "fault_contract": "ExecuteTileInstruction",
           "function": 0,
@@ -174483,6 +174197,7 @@
               "operand": "source0"
             }
           ],
+          "classification": "memory-and-data-movement",
           "command_mnemonic": "BSTART.TSTORE",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -174493,6 +174208,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TSTORE",
+          "engine": "TLSU",
           "family": "TLSU",
           "fault_contract": "ExecuteTileInstruction",
           "function": 1,
@@ -174529,6 +174245,7 @@
               "operand": "source0"
             }
           ],
+          "classification": "layout-and-rearrangement",
           "command_mnemonic": "BSTART.TMOV",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -174539,6 +174256,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TMOV",
+          "engine": "TLSU",
           "family": "TLSU",
           "fault_contract": "ExecuteTileInstruction",
           "function": 2,
@@ -174570,6 +174288,7 @@
               "operand": "byte_count"
             }
           ],
+          "classification": "memory-and-data-movement",
           "command_mnemonic": "BSTART.TPREFETCH",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -174578,6 +174297,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TPREFETCH",
+          "engine": "TLSU",
           "family": "TLSU",
           "fault_contract": "ExecuteTileInstruction",
           "function": 3,
@@ -174612,6 +174332,7 @@
               "operand": "source0"
             }
           ],
+          "classification": "memory-and-data-movement",
           "command_mnemonic": "BSTART.MGATHER",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -174622,6 +174343,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "MGATHER",
+          "engine": "TLSU",
           "family": "TLSU",
           "fault_contract": "ExecuteTileInstruction",
           "function": 4,
@@ -174661,6 +174383,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "memory-and-data-movement",
           "command_mnemonic": "BSTART.MSCATTER",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -174671,6 +174394,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "MSCATTER",
+          "engine": "TLSU",
           "family": "TLSU",
           "fault_contract": "ExecuteTileInstruction",
           "function": 5,
@@ -174716,6 +174440,7 @@
               "runtime": "CurrentBundlePadValue"
             }
           ],
+          "classification": "memory-and-data-movement",
           "command_mnemonic": "BSTART.MGATHER.MASK",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -174727,6 +174452,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "MGATHER_MASK",
+          "engine": "TLSU",
           "family": "TLSU",
           "fault_contract": "ExecuteTileInstruction",
           "function": 6,
@@ -174774,6 +174500,7 @@
               "operand": "source2"
             }
           ],
+          "classification": "memory-and-data-movement",
           "command_mnemonic": "BSTART.MSCATTER.MASK",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -174784,6 +174511,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "MSCATTER_MASK",
+          "engine": "TLSU",
           "family": "TLSU",
           "fault_contract": "ExecuteTileInstruction",
           "function": 7,
@@ -174834,6 +174562,7 @@
               "operand": "source2"
             }
           ],
+          "classification": "memory-and-data-movement",
           "command_mnemonic": "BSTART.MGATHER.CAS",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -174844,6 +174573,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "MGATHER_CAS",
+          "engine": "TLSU",
           "family": "TLSU",
           "fault_contract": "ExecuteTileInstruction",
           "function": 8,
@@ -174893,6 +174623,7 @@
               "operand": "scalar0"
             }
           ],
+          "classification": "memory-and-data-movement",
           "command_mnemonic": "BSTART.GMOV",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -174903,6 +174634,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "GMOV",
+          "engine": "TLSU",
           "family": "TLSU",
           "fault_contract": "ExecuteTileInstruction",
           "function": 13,
@@ -174942,6 +174674,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "matrix-and-matrix-vector",
           "command_mnemonic": "BSTART.TMATMUL",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -174950,6 +174683,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TMATMUL",
+          "engine": "CUBE",
           "family": "CUBE",
           "fault_contract": "ExecuteTileInstruction",
           "function": 0,
@@ -174992,6 +174726,7 @@
               "operand": "source2"
             }
           ],
+          "classification": "matrix-and-matrix-vector",
           "command_mnemonic": "BSTART.TMATMUL.BIAS",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -175000,6 +174735,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TMATMUL_BIAS",
+          "engine": "CUBE",
           "family": "CUBE",
           "fault_contract": "ExecuteTileInstruction",
           "function": 1,
@@ -175047,6 +174783,7 @@
               "operand": "source2"
             }
           ],
+          "classification": "matrix-and-matrix-vector",
           "command_mnemonic": "BSTART.TMATMUL.ACC",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -175055,6 +174792,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TMATMUL_ACC",
+          "engine": "CUBE",
           "family": "CUBE",
           "fault_contract": "ExecuteTileInstruction",
           "function": 2,
@@ -175105,6 +174843,7 @@
               "operand": "source3"
             }
           ],
+          "classification": "matrix-and-matrix-vector",
           "command_mnemonic": "BSTART.TMATMULMX",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -175113,6 +174852,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TMATMUL_MX",
+          "engine": "CUBE",
           "family": "CUBE",
           "fault_contract": "ExecuteTileInstruction",
           "function": 4,
@@ -175171,6 +174911,7 @@
               "operand": "source4"
             }
           ],
+          "classification": "matrix-and-matrix-vector",
           "command_mnemonic": "BSTART.TMATMULMX.BIAS",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -175179,6 +174920,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TMATMUL_MX_BIAS",
+          "engine": "CUBE",
           "family": "CUBE",
           "fault_contract": "ExecuteTileInstruction",
           "function": 5,
@@ -175242,6 +174984,7 @@
               "operand": "source4"
             }
           ],
+          "classification": "matrix-and-matrix-vector",
           "command_mnemonic": "BSTART.TMATMULMX.ACC",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -175250,6 +174993,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TMATMUL_MX_ACC",
+          "engine": "CUBE",
           "family": "CUBE",
           "fault_contract": "ExecuteTileInstruction",
           "function": 6,
@@ -175304,6 +175048,7 @@
               "operand": "source1"
             }
           ],
+          "classification": "matrix-and-matrix-vector",
           "command_mnemonic": "BSTART.TGEMV",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -175312,6 +175057,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TGEMV",
+          "engine": "CUBE",
           "family": "CUBE",
           "fault_contract": "ExecuteTileInstruction",
           "function": 16,
@@ -175354,6 +175100,7 @@
               "operand": "source2"
             }
           ],
+          "classification": "matrix-and-matrix-vector",
           "command_mnemonic": "BSTART.TGEMV.BIAS",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -175362,6 +175109,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TGEMV_BIAS",
+          "engine": "CUBE",
           "family": "CUBE",
           "fault_contract": "ExecuteTileInstruction",
           "function": 17,
@@ -175409,6 +175157,7 @@
               "operand": "source2"
             }
           ],
+          "classification": "matrix-and-matrix-vector",
           "command_mnemonic": "BSTART.TGEMV.ACC",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -175417,6 +175166,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TGEMV_ACC",
+          "engine": "CUBE",
           "family": "CUBE",
           "fault_contract": "ExecuteTileInstruction",
           "function": 18,
@@ -175467,6 +175217,7 @@
               "operand": "source3"
             }
           ],
+          "classification": "matrix-and-matrix-vector",
           "command_mnemonic": "BSTART.TGEMVMX",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -175475,6 +175226,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TGEMV_MX",
+          "engine": "CUBE",
           "family": "CUBE",
           "fault_contract": "ExecuteTileInstruction",
           "function": 20,
@@ -175533,6 +175285,7 @@
               "operand": "source4"
             }
           ],
+          "classification": "matrix-and-matrix-vector",
           "command_mnemonic": "BSTART.TGEMVMX.BIAS",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -175541,6 +175294,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TGEMV_MX_BIAS",
+          "engine": "CUBE",
           "family": "CUBE",
           "fault_contract": "ExecuteTileInstruction",
           "function": 21,
@@ -175604,6 +175358,7 @@
               "operand": "source4"
             }
           ],
+          "classification": "matrix-and-matrix-vector",
           "command_mnemonic": "BSTART.TGEMVMX.ACC",
           "contract_status": "reviewed-complete",
           "datr_contract": {
@@ -175612,6 +175367,7 @@
           },
           "disposition": "accepted-direct-operation",
           "effect_contract": "TGEMV_MX_ACC",
+          "engine": "CUBE",
           "family": "CUBE",
           "fault_contract": "ExecuteTileInstruction",
           "function": 22,

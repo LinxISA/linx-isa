@@ -155,6 +155,13 @@ def opcode_line(
         "note": form.get("semantic_summary", "PTO ISA 0.58.0 canonical command form."),
         "pto_source_constraints": form.get("constraints", []),
     }
+    for key in (
+        "accepted_assembly_mnemonics",
+        "canonical_assembly_by_engine",
+        "carrier_mnemonic",
+    ):
+        if key in form:
+            meta[key] = form[key]
     if variant is not None:
         meta["pto_source_form_variant"] = variant
         meta["pto_source_form_variant_of"] = form["form_id"]

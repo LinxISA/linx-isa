@@ -53,12 +53,15 @@ opcode {input_parameters} {, ->output_parameters}
 | [访存串行块](../blockIntro/mem_block/intro.md)（**Memory Access and Sequel Block**）   | MSEQ | 提供向量化的内存数据搬运能力，多Group串行执行 |
 | [向量并行块](../blockIntro/vec_block/intro.md)（**Vector and Parallel Block**） | VPAR | 提供向量数据计算能力，多Group并行执行 |
 | [向量串行块](../blockIntro/vec_block/intro.md)（**Vector and Sequel Block**）   | VSEQ | 提供向量数据计算能力，多Group串行执行 |
-| [数据搬运块](../blockIntro/tma_block/intro.md)（**Tile Load/Store Unit**） | TLSU | 提供目录定义的内存与 Tile 寄存器间数据搬移能力 |
+| [数据搬运块](../blockIntro/tlsu_block/intro.md)（**Tile Load/Store Unit**） | TLSU | 提供目录定义的内存与 Tile 寄存器间数据搬移能力 |
 | [矩阵数据块](../blockIntro/cube_block/intro.md)（**Cube Block**） | CUBE | 提供矩阵运算能力，将矩阵拆成多个分型，以分型的粒度执行矩阵运算 |
-| [模版数据块](../blockIntro/tepl_block/intro.md)（**Template Tile Block**） | TEPL | 提供模版化的数据块（Tile）计算能力 |
+| [逐元素 Tile 块](../blockIntro/tepl_block/intro.md) | VEC | 只执行目录定义的逐元素 Tile 操作；使用 TEPL 编码载体上的 `BSTART.VEC` 汇编别名 |
+| [特殊函数 Tile 块](../blockIntro/tepl_block/intro.md) | SFU | 执行目录定义的复杂函数、归约/展开、重排和不规则操作；使用 TEPL 编码载体上的 `BSTART.SFU` 汇编别名 |
 | [系统调用块](../blockIntro/xb_block/intro.md)（**Cross Block**） | XB | 提供轻量化的系统调用能力 |
 
-其中，访存并行块和访存并行块都用于执行内存与Tile之间的数据搬移任务，只是Group间执行要求不同，因此这两种块统称为访存数据块。向量并行块和向量串行块也只是Group间的执行要求不同，因此也可以统称为向量数据块。
+TEPL 不是执行单元，而是 VEC 与 SFU 保持不变的 Mode/Function 编码载体；`BSTART.TEPL` 仍是唯一编译后的译码身份。TLSU 与 CUBE 保留各自的编码族和执行单元。
+
+其中，访存并行块和访存串行块都用于执行内存与Tile之间的数据搬移任务，只是Group间执行要求不同，因此这两种块统称为访存数据块。向量并行块和向量串行块也只是Group间执行要求不同，因此也可以统称为向量数据块。
 
 所有块指令共享同一份第一层架构状态，但是不同类型的块指令可以有其独特的第二层架构状态，例如标量块与向量块的第二层架构状态可以完全不同。这种设计可以在处理标量运算、向量运算和大规模并行运算等不同复杂度的任务时，为其提供灵活且适配的计算框架，帮助处理器在不同场景中取得高效性能。
 

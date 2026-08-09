@@ -27,6 +27,8 @@ ENTRYPOINTS = (
     Path("skills/linx-omx/SKILL.md"),
 )
 ROUTE_ONLY_ENTRYPOINTS = (Path("docs/zh/assets/lang-map.json"),)
+TAXONOMY_ENTRYPOINTS = (Path("AGENTS.md"), Path("skills/linx-omx/SKILL.md"))
+TILE_TAXONOMY_TOKENS = ("VEC", "SFU", "TLSU", "CUBE", "TEPL", "encoding carrier")
 COMPATIBILITY_ENTRYPOINTS = {
     Path("docs/bringup/AVS_CONTRACT.md"): ("v0.57", "do not transfer"),
     Path("docs/zh/bringup/AVS_CONTRACT.md"): ("v0.57", "不得转移"),
@@ -76,6 +78,16 @@ def validate(root: Path) -> list[str]:
                 )
         if UNPINNED_SUBMODULE_ROUTE in text:
             errors.append(f"unpinned submodule route in compatibility entrypoint: {relative}")
+    for relative in TAXONOMY_ENTRYPOINTS:
+        path = root / relative
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8")
+        missing = [token for token in TILE_TAXONOMY_TOKENS if token not in text]
+        if missing:
+            errors.append(
+                f"active entrypoint lacks current tile engine taxonomy: {relative}: {missing}"
+            )
     for relative_root in UNPINNED_ROUTE_ROOTS:
         directory = root / relative_root
         if not directory.exists():

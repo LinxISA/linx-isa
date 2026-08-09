@@ -3,7 +3,7 @@
   "catalogs": {
     "command_forms": {
       "path": "spec/catalog/command-forms.json",
-      "sha256": "79ddfab5fc798d42e8280a5591dac33ef1ccdd42dce3ed9fa96d596f63963cc6",
+      "sha256": "aaa16ddd046b7c6ee06aedd6444c90da2541c6f3204ef8d12dba34815e96f15b",
       "count": 99
     },
     "scalar_forms": {
@@ -13,7 +13,7 @@
     },
     "tile_operations": {
       "path": "spec/catalog/tile-operations.json",
-      "sha256": "e1c60c6acab2beffca2cc8ff9c24392ace035f01df19dca482a93876866908c8",
+      "sha256": "aa1fa0a5ba07c7f015875025cc93c42f49b8d4313c55ce2cd72eaaa51bdc7d56",
       "count": 109
     },
     "linx_vector_reservations": {
@@ -22,7 +22,7 @@
       "count": 5
     }
   },
-  "content_sha256": "10221f524558595977f01c46f0d3621585b969674ac927b1d796cee45f16d038",
+  "content_sha256": "645efccf6ac537e3a6ac821e3c0e42aa283eab4c3b07e11fd813cf5e61e4926f",
   "encoding_abi": "pto-isa-0.58.0-mode-function-v1",
   "encoding_projection_sha256": "0cad2272ada8f53fc8354e22568099fe8d6bd4b7832c837260cd370b0fc76ffa",
   "hardware_conformance_profile": {
@@ -37,11 +37,11 @@
   "release": "0.58.0",
   "release_manifest": {
     "path": "spec/release-manifest.json",
-    "sha256": "1b14eee518458cb1149302af90af251ee6b919635c278701b7900dd35e4de6d0"
+    "sha256": "c4b35c9b58531be975cbc55e388ce2d159a2599375a5acbe52387857db32709a"
   },
   "source": {
-    "commit": "3729115b1efcdfed70ec5391679b45e356098254",
-    "tree": "f5860385bd0deac68d55a6aed63e33e520042676",
+    "commit": "9ba598d9f0ce0b31dd9ff8c03fb3b5e61c9afde2",
+    "tree": "10097cf6e44aafad61fcfc5f6d3c2cc7e0086169",
     "repository": "https://github.com/PTO-ISA/pto-spec.git"
   }
 }

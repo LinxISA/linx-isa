@@ -1,4 +1,4 @@
-# 块头定义
+# TLSU 块头定义
 
 数据搬运块的块头需要定义执行哪种数据搬运操作、输入数据的尺寸和输入输出的Tile寄存器等信息。数据搬运过程中同时支持改变存储布局。
 
@@ -51,9 +51,9 @@ TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7
 旧的泛化文本汇编形式已退役，活动汇编必须使用命名块头。
 TPREFETCH 与 TLOAD 相邻编码，是没有目标 Tile 的预取形式。
 
-TLSU 编码族的格式如下（图文件沿用历史名称）：
+TLSU 编码族的格式如下：
 
-![TLSU 编码族（历史图文件名）](../../../figs/bitfield/svg/BlockHeader_32bit/BSTART.TMA.svg)
+![TLSU 编码族](../../../figs/bitfield/svg/BlockHeader_32bit/TLSU.svg)
 
 其中，function字段用于编码具体的TileOp信息。编码方式如下：
 

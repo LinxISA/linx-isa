@@ -37,7 +37,7 @@ MSCATTER <LB0:validCol, LB1:validRow, LB2:Col, DataType>, SrcTile0<.reuse>, SrcT
 
 该 TileOp 编码为以下指令：
 
-- [BSTART.MSCATTER](../../blockIntro/tma_block/header.md) `DataType`
+- [BSTART.MSCATTER](../../blockIntro/tlsu_block/header.md) `DataType`
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0` *（`validCol`）*
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1` *（`validRow`）*
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB2` *（`Col`，可选）*

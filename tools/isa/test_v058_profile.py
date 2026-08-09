@@ -1,15 +1,34 @@
 #!/usr/bin/env python3
 """Small dependency-free contract test for the LinxISA 0.58 profile."""
 
-from pathlib import Path
 import json
 import re
+from collections import Counter
+from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[2]
 spec = json.loads((ROOT / "isa/v0.58/linxisa-v0.58.json").read_text(encoding="utf-8"))
 assert spec["version"] == "0.58.0"
 assert sum("pto_source_form_id" in item for item in spec["instructions"]) == 573
+pto_owned_instructions = [
+    item
+    for item in spec["instructions"]
+    if item.get("pto_source_form_id") or item.get("pto_source_form_variant_of")
+]
+linx_only_instructions = [
+    item
+    for item in spec["instructions"]
+    if not (item.get("pto_source_form_id") or item.get("pto_source_form_variant_of"))
+]
+assert len(pto_owned_instructions) == 578
+assert len(linx_only_instructions) == 188
+assert sum(item["mnemonic"].startswith("V.") for item in linx_only_instructions) == 184
+assert {
+    item["mnemonic"]
+    for item in linx_only_instructions
+    if not item["mnemonic"].startswith("V.")
+} == {"BSTART.VPAR", "BSTART.VSEQ", "C.BSTART.VPAR", "C.BSTART.VSEQ"}
 mnemonics = {item["mnemonic"] for item in spec["instructions"]}
 assert {"B.IOS", "BSTART.GMOV", "BSTART.VPAR", "BSTART.VSEQ", "V.QPOP", "V.QPUSH"} <= mnemonics
 assert {"B.IOD", "BSTART.PAR", "C.B.IOS"}.isdisjoint(mnemonics)
@@ -22,6 +41,73 @@ assert (int(b_ios_part["mask"], 0), int(b_ios_part["match"], 0)) == (
 )
 assert spec["retired_encodings"]["entries"] == []
 pto_ops = json.loads((ROOT / "isa/v0.58/state/pto_ops.json").read_text(encoding="utf-8"))
+expected_family_counts = {"CUBE": 12, "TEPL": 87, "TLSU": 10}
+expected_engine_counts = {"CUBE": 12, "SFU": 52, "TLSU": 10, "VEC": 35}
+expected_classification_counts = {
+    "elementwise-tile-tile": 25,
+    "irregular-and-complex": 13,
+    "layout-and-rearrangement": 7,
+    "matrix-and-matrix-vector": 12,
+    "memory-and-data-movement": 9,
+    "reduce-and-expand": 28,
+    "tile-scalar-and-immediate": 15,
+}
+assert pto_ops["family_counts"] == expected_family_counts
+assert pto_ops["engine_counts"] == expected_engine_counts
+assert pto_ops["classification_counts"] == expected_classification_counts
+assert Counter(item["engine"] for item in pto_ops["operations"]) == Counter(expected_engine_counts)
+assert Counter(item["classification"] for item in pto_ops["operations"]) == Counter(
+    expected_classification_counts
+)
+assert all(
+    item["engine"] in {"VEC", "SFU"}
+    for item in pto_ops["operations"]
+    if item["family"] == "TEPL"
+)
+assert all(
+    item["engine"] == item["family"]
+    for item in pto_ops["operations"]
+    if item["family"] in {"TLSU", "CUBE"}
+)
+encoding_map = json.loads(
+    (ROOT / "isa/v0.58/state/pto_encoding_map.json").read_text(encoding="utf-8")
+)
+assert encoding_map["family_counts"] == expected_family_counts
+assert encoding_map["engine_counts"] == expected_engine_counts
+assert encoding_map["classification_counts"] == expected_classification_counts
+projected_classification = {
+    item["name"]: (item["family"], item["classification"], item["engine"])
+    for item in encoding_map["entries"]
+}
+assert projected_classification == {
+    item["name"]: (item["family"], item["classification"], item["engine"])
+    for item in pto_ops["operations"]
+}
+engine_ops = json.loads((ROOT / "isa/v0.58/state/engine_ops.json").read_text(encoding="utf-8"))
+assert engine_ops["semantic_engine_counts"] == expected_engine_counts
+legacy_scheduler_fields = {
+    "dim_lb_defaults",
+    "dim_lb_required",
+    "dim_required",
+    "dirty_rule",
+    "dst_tiles",
+    "engineop_state_bytes_max",
+    "engineop_state_version",
+    "has_index_tile",
+    "phase_model",
+    "redo_ok_after_start",
+    "resume_ok",
+    "src_tiles",
+}
+for item in engine_ops["tepl"]["ops"]:
+    assert item["engine"] in {"VEC", "SFU"}
+    assert item["classification"] in expected_classification_counts
+    assert legacy_scheduler_fields.isdisjoint(item)
+for family in ("tlsu", "cube"):
+    expected_engine = family.upper()
+    for item in engine_ops[family]["legal_aliases"]:
+        assert item["engine"] == expected_engine
+        assert item["classification"] in expected_classification_counts
 tfma = [item for item in pto_ops["operations"] if item["name"] == "TFMA"]
 assert len(tfma) == 1
 assert (tfma[0]["mode"], tfma[0]["function"], tfma[0]["selector"]) == (0, 28, "0x01C")
@@ -50,6 +136,20 @@ src0_alloc = sail_execute.index("allocate_ri_binding(src0)")
 src1_alloc = sail_execute.index("allocate_ri_binding(src1)")
 src2_alloc = sail_execute.index("allocate_ri_binding(src2)")
 assert src0_alloc < src1_alloc < src2_alloc
+
+bstart_tepl = [item for item in spec["instructions"] if item["mnemonic"] == "BSTART.TEPL"]
+assert len(bstart_tepl) == 1
+assert bstart_tepl[0]["accepted_assembly_mnemonics"] == [
+    "BSTART.TEPL",
+    "BSTART.VEC",
+    "BSTART.SFU",
+]
+assert bstart_tepl[0]["canonical_assembly_by_engine"] == {
+    "SFU": "BSTART.SFU",
+    "VEC": "BSTART.VEC",
+}
+assert bstart_tepl[0]["carrier_mnemonic"] == "BSTART.TEPL"
+assert {"BSTART.VEC", "BSTART.SFU"}.isdisjoint(mnemonics)
 
 
 def instruction_slug(mnemonic: str) -> str:

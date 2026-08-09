@@ -288,7 +288,7 @@ B-SIDE 不拥有 ITLB、L1I、refill、predecode 或 Instruction Buffer。
 - 设计角色：块控制使用的平铺网络问题/响应边界
   命令运输。
 
-### TMA
+### TLSU
 
 - 所有者模块：
   - `src/csu/subsystem.py` (`JanusCsuSubsystem`)
@@ -333,7 +333,7 @@ B-SIDE 不拥有 ITLB、L1I、refill、predecode 或 Instruction Buffer。
   - `src/tmu/sram/tilereg.py`
 - 设计角色：瓷砖运动和瓷砖状态运输所有权。
 
-### TMA
+### TLSU
 
 - 所有者模块：
   - `src/csu/subsystem.py`
