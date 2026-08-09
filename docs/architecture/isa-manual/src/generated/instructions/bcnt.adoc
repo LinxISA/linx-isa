@@ -7,7 +7,7 @@
 
 *Syntax:* bcnt srcL,  M, N, ->{t, u, Rd}
 
-*Description:* bit count: Dst = popcount/extract/select bits of SrcL/M/N, result to Rd/t/u.
+*Description:* BCNT - Count the selected bit property of the scalar source.
 
 *Encoding:*
 

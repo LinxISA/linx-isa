@@ -7,7 +7,7 @@
 
 *Syntax:* sd.add<.{rl, f, rlf}> [SrcL], SrcR
 
-*Description:* Atomic fetch-and-add ADD at address [Rs+RsR]: old value to Rd/t/u, updated memory.
+*Description:* SD.ADD - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
 
 *Encoding:*
 

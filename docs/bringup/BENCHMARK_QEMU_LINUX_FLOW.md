@@ -294,7 +294,7 @@ Inference:
 
 | Stage | Owner | Stop Rule | Purpose |
 | --- | --- | --- | --- |
-| `source-contract` | integration | hard break | Validate layout, canonical v0.57 catalog, and agent ownership map before build work. |
+| `source-contract` | integration | hard break | Validate layout, canonical v0.58 catalog, and agent ownership map before build work. |
 | `compiler-contract` | llvm | hard break | Prove active `clang` can build and cover the Linx64 AVS compile corpus. |
 | `qemu-contract` | qemu | hard break | Prove strict QEMU AVS runtime and keep decode coverage visible. |
 | `tsvc-qemu-hardbreak` | integration | hard break | Run compile-only TSVC floor, then batched QEMU TSVC before Linux rootfs or SPEC. |

@@ -7,7 +7,7 @@
 
 *Syntax:* sub SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}
 
-*Description:* Subtract: Rd/t/u = operand1 op operand2.
+*Description:* SUB - Compute this mnemonic's binary scalar operation and write the selected destination.
 
 *Encoding:*
 

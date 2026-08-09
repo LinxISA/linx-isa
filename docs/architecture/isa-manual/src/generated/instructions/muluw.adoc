@@ -7,7 +7,7 @@
 
 *Syntax:* muluw SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* Multiply (word): Dst = SrcL * SrcR, high part Dst1.
+*Description:* MULUW - Compute the 32-bit product and sign-extend it.
 
 *Encoding:*
 

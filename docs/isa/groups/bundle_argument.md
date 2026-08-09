@@ -16,7 +16,7 @@ Instructions in the **Bundle Argument** group of the LinxISA v0.58.0 catalog.
 
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
-| [B.DIM](../instructions/b_dim.md) | `B.DIM RegSrc, uimm, ->LB1` | 32 | — | Instruction from the Bundle Argument group. |
+| [B.DIM](../instructions/b_dim.md) | `B.DIM RegSrc, uimm, ->LB1` | 32 | — | Writes one of the three bundle-local dimension registers. |
 
 ## See Also
 

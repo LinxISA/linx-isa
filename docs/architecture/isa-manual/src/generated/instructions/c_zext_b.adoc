@@ -7,7 +7,7 @@
 
 *Syntax:* c.zext.b srcL, ->t
 
-*Description:* Compressed 16-bit zero-extend Rs1 from 8-bit to 64-bit, result to t.
+*Description:* C.ZEXT.B - Sign-extend or zero-extend the selected scalar subword.
 
 *Encoding:*
 

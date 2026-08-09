@@ -26,7 +26,7 @@
 
 ## Description
 
-Instruction from the Bundle Split group.
+Restores a frame and returns through the validated stack target.
 
 ## Pseudocode (informative)
 

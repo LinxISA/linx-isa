@@ -7,7 +7,7 @@
 
 *Syntax:* c.movr SrcL, ->{t, u, Rd}
 
-*Description:* Compressed 16-bit register move: copy Rs1 to destination.
+*Description:* C.MOVR - Move the scalar source to the selected destination.
 
 *Encoding:*
 

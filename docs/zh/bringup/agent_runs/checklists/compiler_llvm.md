@@ -52,7 +52,7 @@
   完成意味着：每个所需的活动裸机目标都报告 100% 助记符覆盖率，没有丢失助记符。
   状态： ✅ PASS (2026-05-14) - `analyze_coverage.py --fail-under 100` 报告 `Coverage: 100.0%` 为 `out-linx64`（710/710 独特助记符）。不需要当前的 `linx32` 输出，因为分支不注册该目标。
 
-- [x] ID：LLVM-003 确认 LLVM 中的规范 v0.57 TEPL 磁贴操作码与手册和其他使用者保持一致。
+- [x] ID：LLVM-003 确认 LLVM 中的规范 v0.57 TEPL Tile 操作码与手册和其他使用者保持一致。
   命令：`python3 tools/bringup/check_tepl_encoding.py --root .`
   完成意味着：脚本返回 `OK` 并且不存在旧版 TEPL 编码。
   状态：✅ 通过 (2026-02-23) - `check_tepl_encoding.py` 返回 `OK`（日志：`docs/bringup/gates/logs/2026-02-23-r2-pin-reassess/pin/compiler_tepl.log`）。- [x] ID：LLVM-004 当运行时门需要时，为目标模式重建 C++ 运行时覆盖。
@@ -71,3 +71,7 @@
   命令：`cd avs/compiler/linx-llvm/tests && CLANG=compiler/llvm/build-linxisa-clang/bin/clang TARGET=linx64-linx-none-elf OUT_DIR=avs/compiler/linx-llvm/tests/out-linx64 ./run.sh`
   完成意味着：标量 直接调用源和手写启动 asm 使用融合的 `ra=` 调用 块头，而对象级重定位检查仍然接受降低的相邻 `setret` 对。
   状态： ✅ 通过 (2026-05-15) - `run.sh` 在将 标量 手写直接调用转换为融合的 `BSTART.STD CALL, ..., ra=...` 源语法后通过。重定位/模板门仍然通过呼叫/返回 AVS 通道，包括 `18_setret_relax`、`33`-`40` 和 `41_v057_isa_forms`。
+
+- [ ] ID：LLVM-009 基于正式 LinxISA v0.58 目录升级 LLVM。
+  完成意味着：从 `isa/v0.58/linxisa-v0.58.json` 重新生成汇编、反汇编、重定位、规范拼写和编译 AVS 证据；不得转移 v0.57 的 PASS 记录。
+  状态：等待新的 v0.58 实现和精确提交证据。

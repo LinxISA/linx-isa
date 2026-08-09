@@ -7,7 +7,7 @@
 
 *Syntax:* sh.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]
 
-*Description:* Store 16-bit unsigned value to [Rs+offset], result to Rd/t/u.
+*Description:* SH.U - Store scalar data using this mnemonic's width and address-update form.
 
 *Encoding:*
 

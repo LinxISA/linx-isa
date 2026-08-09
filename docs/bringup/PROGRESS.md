@@ -1,10 +1,12 @@
-# Bring-up Progress (v0.57 workspace)
+# Bring-up Progress (v0.58 workspace)
 
 Last updated: 2026-07-15
 
 ## Closure Snapshot
 
-- `v0.57` golden/spec is canonical and validated.
+- `isa/v0.58/linxisa-v0.58.json` is the current canonical ISA contract.
+- Run records below that predate the v0.58 cutover are historical evidence and
+  are not v0.58 release proof.
 - AVS is now the only live public bring-up contract.
 - The v0.57 maintenance packet replaces the April aggregate with one
   SHA-manifested run; it must remain non-green while BusyBox/MMU, QEMU semantic

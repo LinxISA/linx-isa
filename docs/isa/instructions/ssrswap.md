@@ -26,7 +26,7 @@
 
 ## Description
 
-Instruction from the SSR Access group.
+SSRSWAP - Atomically exchange the addressed system register and scalar value.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ Instruction from the SSR Access group.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `SSRSWAP - Atomically exchange the addressed system register and scalar value.`
 
 ## Full Catalog Forms
 

@@ -7,7 +7,7 @@
 
 *Syntax:* maxu SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* Max-Min: MAXU operation.
+*Description:* MAXU - Compute this mnemonic's binary scalar operation and write the selected destination.
 
 *Encoding:*
 

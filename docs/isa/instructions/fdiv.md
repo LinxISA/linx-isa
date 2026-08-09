@@ -36,7 +36,7 @@ Floating-point division.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `FDIV - Compute this mnemonic's binary floating-point operation.`
 
 ## Full Catalog Forms
 

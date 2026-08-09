@@ -36,7 +36,7 @@ Unconditional PC-relative jump to a target label.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `J - Jump to the PC-relative target.`
 
 ## Full Catalog Forms
 

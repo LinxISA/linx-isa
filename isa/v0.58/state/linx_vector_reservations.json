@@ -1,7 +1,7 @@
 {
   "isa": "PTO Instruction Set Architecture",
   "release": "0.58.0",
-  "reservation_count": 6,
+  "reservation_count": 5,
   "reservations": [
     {
       "encoding": [
@@ -63,8 +63,8 @@
       "encoding": [
         {
           "index": 0,
-          "mask": "0xffff",
-          "match": "0x88c0",
+          "mask": "0x0000ffff",
+          "match": "0x000088c0",
           "width_bits": 16
         }
       ],
@@ -78,8 +78,8 @@
       "encoding": [
         {
           "index": 0,
-          "mask": "0xffff",
-          "match": "0xc8c0",
+          "mask": "0x0000ffff",
+          "match": "0x0000c8c0",
           "width_bits": 16
         }
       ],
@@ -93,133 +93,20 @@
       "encoding": [
         {
           "index": 0,
-          "mask": "0xfff0707f",
+          "mask": "0x0000007f",
           "match": "0x0000007f",
           "width_bits": 32
         },
         {
           "index": 1,
-          "mask": "0xfff0707f",
-          "match": "0x0000207d",
+          "mask": "0x00000000",
+          "match": "0x00000000",
           "width_bits": 32
         }
       ],
-      "fields": [
-        {
-          "name": "RegDst",
-          "pieces": [
-            {
-              "instruction_lsb": 7,
-              "part_index": 0,
-              "value_lsb": 5,
-              "width": 5
-            },
-            {
-              "instruction_lsb": 7,
-              "part_index": 1,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "width": 10
-        },
-        {
-          "name": "SrcL",
-          "pieces": [
-            {
-              "instruction_lsb": 15,
-              "part_index": 0,
-              "value_lsb": 5,
-              "width": 5
-            },
-            {
-              "instruction_lsb": 15,
-              "part_index": 1,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "width": 10
-        }
-      ],
+      "fields": [],
       "length_bits": 64,
-      "mnemonic": "V.QPOP",
-      "owner": "Linx ISA two-level vector extension",
-      "status": "reserved-in-pto"
-    },
-    {
-      "encoding": [
-        {
-          "index": 0,
-          "mask": "0xfe00707f",
-          "match": "0x0000007f",
-          "width_bits": 32
-        },
-        {
-          "index": 1,
-          "mask": "0xfe00707f",
-          "match": "0x0000107d",
-          "width_bits": 32
-        }
-      ],
-      "fields": [
-        {
-          "name": "RegDst",
-          "pieces": [
-            {
-              "instruction_lsb": 7,
-              "part_index": 0,
-              "value_lsb": 5,
-              "width": 5
-            },
-            {
-              "instruction_lsb": 7,
-              "part_index": 1,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "width": 10
-        },
-        {
-          "name": "SrcL",
-          "pieces": [
-            {
-              "instruction_lsb": 15,
-              "part_index": 0,
-              "value_lsb": 5,
-              "width": 5
-            },
-            {
-              "instruction_lsb": 15,
-              "part_index": 1,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "width": 10
-        },
-        {
-          "name": "SrcR",
-          "pieces": [
-            {
-              "instruction_lsb": 20,
-              "part_index": 0,
-              "value_lsb": 5,
-              "width": 5
-            },
-            {
-              "instruction_lsb": 20,
-              "part_index": 1,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "width": 10
-        }
-      ],
-      "length_bits": 64,
-      "mnemonic": "V.QPUSH",
+      "mnemonic": "V.*",
       "owner": "Linx ISA two-level vector extension",
       "status": "reserved-in-pto"
     }

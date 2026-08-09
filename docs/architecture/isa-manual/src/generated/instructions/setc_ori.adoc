@@ -7,7 +7,7 @@
 
 *Syntax:* setc.ori SrcL, simm
 
-*Description:* Set block condition flag for r immediate: consumed by BSTART COND.
+*Description:* SETC.ORI - Combine scalar comparison results and update the bundle commit condition.
 
 *Encoding:*
 

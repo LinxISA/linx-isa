@@ -36,7 +36,7 @@ Conditional branch taken when SrcL equals SrcR.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `B.EQ - Conditionally branch to the PC-relative target after comparing scalar operands.`
 
 ## Full Catalog Forms
 

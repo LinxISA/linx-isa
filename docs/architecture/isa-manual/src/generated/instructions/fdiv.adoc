@@ -7,7 +7,7 @@
 
 *Syntax:* fdiv.{T} SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* Floating-point Arithmetic: FDIV floating-point operation.
+*Description:* FDIV - Compute this mnemonic's binary floating-point operation.
 
 *Encoding:*
 

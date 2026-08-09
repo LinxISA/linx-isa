@@ -16,7 +16,7 @@ Instructions in the **Bundle Offset** group of the LinxISA v0.58.0 catalog.
 
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
-| [B.TEXT](../instructions/b_text.md) | `B.TEXT <label>` | 32 | — | Instruction from the Bundle Offset group. |
+| [B.TEXT](../instructions/b_text.md) | `B.TEXT <label>` | 32 | — | Sets the out-of-line body entry address for a decoupled bundle. |
 
 ## See Also
 

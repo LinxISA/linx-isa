@@ -5,10 +5,10 @@ decisions. It is not normative for the current canonical `v0.57` ISA contract.
 
 ## Live Canonical Sources
 
-- `docs/architecture/v0.57-architecture-contract.md`
+- `docs/architecture/v0.58-architecture-contract.md`
 - `docs/architecture/isa-manual/src/linxisa-isa-manual.adoc`
-- `docs/architecture/v0.57-workload-engine-model.md`
-- `docs/architecture/v0.57-rendering-command-contract.md`
+- `docs/architecture/v0.58-architecture-contract.md`
+- `docs/architecture/v0.58-architecture-contract.md`
 - `isa/v0.57/state/engine_ops.json`
 - `tools/bringup/check_avs_contract.py`
 - `tools/bringup/check_sail_model.py`

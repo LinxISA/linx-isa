@@ -21,7 +21,7 @@ image::encodings/enc_b_iot_32_36792782e584.svg[B.IOT encoding form b_iot_32_3679
 [[inst_b_iot_32_3a493c45ddfa]]
 ===== Form `b_iot_32_3a493c45ddfa`
 
-*Syntax:* B.IOT mask=PE_MASK, <last> <, ->DstTile<TSize>>
+*Syntax:* B.IOT mask=PE_MASK, <last>, ->DstTile<TSize>
 
 *Encoding:*
 

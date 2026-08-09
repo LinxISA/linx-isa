@@ -26,7 +26,7 @@
 
 ## Description
 
-[48-bit HL.] Instruction from the Compare Instruction group.
+HL.CMP.ANDI - Combine scalar comparison results with the encoded logical operation.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `HL.CMP.ANDI - Combine scalar comparison results with the encoded logical operation.`
 
 ## Full Catalog Forms
 

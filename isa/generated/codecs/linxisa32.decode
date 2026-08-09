@@ -36,6 +36,7 @@
 %SSR_ID 20:12
 %SUCC_IMM 20:4
 %Sat 26:1
+%SharedTID 20:8
 %SrcA 27:5
 %SrcBegin 15:5
 %SrcD 27:5
@@ -148,13 +149,16 @@ b_hint_32_67e2ad8dd981 0000 0000 0000 0000 .001 0000 0011 0011 %B_E
 # B.HINT | B.HINT {BR.{likely, unlikely}, TEMP.{hot, warm, cool, none}, PRFSIZE} | opcodes/lx_32.opc:287
 b_hint_32_b3e8a4e77930 .... .... .... 0... .000 0000 0011 0011 %L_UL %V %prefetch_size %temp
 
-# B.IOR | B.IOR [RegSrc0, RegSrc1, RegSrc2],[RegDst] | opcodes/lx_32.opc:289
+# B.IOR | B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>] | opcodes/lx_32.opc:289
 b_ior_32_df50a269be7c .... .00. .... .... .000 .... .001 0011 %RegDst %RegSrc0 %RegSrc1 %RegSrc2
+
+# B.IOS | B.IOS S<SharedTID>, mask=<PE_MASK> | B.IOS mask=<PE_MASK>, ->S<SharedTID><TSize> | opcodes/lx_32.opc:345
+b_ios_32_11ff57a2e635 0000 .... .... 0... .001 ...0 0001 0011 %PE_MASK %SharedTID %TSize
 
 # B.IOT | B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last> | opcodes/lx_32.opc:291
 b_iot_32_36792782e584 .... .... .... .... .100 000. .001 0011 %L %PE_MASK %PTOU0_7 %PTOU0_8 %SrcTile0 %SrcTile1
 
-# B.IOT | B.IOT mask=PE_MASK, <last> <, ->DstTile<TSize>> | opcodes/lx_32.opc:294
+# B.IOT | B.IOT mask=PE_MASK, <last>, ->DstTile<TSize> | opcodes/lx_32.opc:294
 b_iot_32_3a493c45ddfa 0000 0000 0000 .... .110 .... .001 0011 %DstTile %L %PE_MASK %TSize
 
 # B.IOT | B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<TSize> | opcodes/lx_32.opc:290
@@ -481,10 +485,10 @@ dma_32_a168aeca5fa5 0000 000. .... .... .111 0000 0000 1011 %SrcL %SrcR
 # EBREAK | ebreak imm | opcodes/lx_32.opc:87
 ebreak_32_4f122d1e6be3 0000 .... 0001 0000 0001 0000 0010 1011 %imm4
 
-# ERCOV | ERCOV [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind] | opcodes/lx_32.opc:345
+# ERCOV | ERCOV [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind] | opcodes/lx_32.opc:346
 ercov_32_9b0c74795df0 .... .00. .... .... .011 0000 0011 0001 %RegSrc0 %RegSrc1 %RegSrc2
 
-# ESAVE | ESAVE [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind] | opcodes/lx_32.opc:346
+# ESAVE | ESAVE [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind] | opcodes/lx_32.opc:347
 esave_32_c85cb830dc0b .... .00. .... .... .010 0000 0011 0001 %RegSrc0 %RegSrc1 %RegSrc2
 
 # FABS | fabs.{T} SrcL, ->{t, u, Rd} | opcodes/lx_32.opc:88
@@ -520,7 +524,7 @@ fence_d_32_f4783f17d84d 0000 .... .... 0000 0010 0000 0010 1011 %PRED_IMM %SUCC_
 # FENCE.I | fence.i | opcodes/lx_32.opc:98
 fence_i_32_a321a2a186b1 0001 0000 0000 0000 0010 0000 0010 1011
 
-# FENTRY | FENTRY [RegSrc0 ~ RegSrcn], sp!, uimm | opcodes/lx_32.opc:347
+# FENTRY | FENTRY [RegSrc0 ~ RegSrcn], sp!, uimm | opcodes/lx_32.opc:348
 fentry_32_74a07f46d846 .... .... .... .... .000 .... .100 0001 %SrcBegin %SrcEnd %uimm
 
 # FEQ | feq.{T} SrcL, SrcR, ->{t, u, Rd} | opcodes/lx_32.opc:99
@@ -529,7 +533,7 @@ feq_32_9435d6959c3c 0000 0... .... .... .000 .... .101 1011 %RegDst %SrcL %SrcR 
 # FEQS | feqs.{T} SrcL, SrcR, ->{t, u, Rd} | opcodes/lx_32.opc:100
 feqs_32_1d3011890fa8 0000 1... .... .... .000 .... .101 1011 %RegDst %SrcL %SrcR %SrcType
 
-# FEXIT | FEXIT [RegDst0 ~ RegDstn], sp!, uimm | opcodes/lx_32.opc:348
+# FEXIT | FEXIT [RegDst0 ~ RegDstn], sp!, uimm | opcodes/lx_32.opc:349
 fexit_32_6492f41b2239 .... .... .... .... .001 .... .100 0001 %DstBegin %DstEnd %uimm
 
 # FEXP | fexp.{T} SrcL, ->{t, u, Rd} | opcodes/lx_32.opc:101
@@ -577,10 +581,10 @@ fnmsub_32_6542d56665b3 .... .... .... .... .111 .... .100 1011 %RegDst %SrcA %Sr
 # FRECIP | frecip.{T} SrcL, ->{t, u, Rd} | opcodes/lx_32.opc:115
 frecip_32_3d51f4f727ea 0000 0..0 0000 .... .010 .... .111 1011 %RegDst %SrcL %SrcType
 
-# FRET.RA | FRET.RA [RegDst0 ~ RegDstn], sp!, uimm | opcodes/lx_32.opc:349
+# FRET.RA | FRET.RA [RegDst0 ~ RegDstn], sp!, uimm | opcodes/lx_32.opc:350
 fret_ra_32_b6f13adb3ea1 .... .... .... .... .010 .... .100 0001 %DstBegin %DstEnd %uimm
 
-# FRET.STK | FRET.STK [RegDst0 ~ RegDstn], sp!, uimm | opcodes/lx_32.opc:350
+# FRET.STK | FRET.STK [RegDst0 ~ RegDstn], sp!, uimm | opcodes/lx_32.opc:351
 fret_stk_32_4522597d3ce0 .... .... .... .... .011 .... .100 0001 %DstBegin %DstEnd %uimm
 
 # FSQRT | fsqrt.{T} SrcL, ->{t, u, Rd} | opcodes/lx_32.opc:116
@@ -757,7 +761,7 @@ max_32_9166468a1db7 0000 000. .... .... .100 .... .101 1011 %RegDst %SrcL %SrcR
 # MAXU | maxu SrcL, SrcR, ->{t, u, Rd} | opcodes/lx_32.opc:173
 maxu_32_b8789571339d 0000 100. .... .... .100 .... .101 1011 %RegDst %SrcL %SrcR
 
-# MCOPY | MCOPY [RegSrc0, RegSrc1, RegSrc2] | opcodes/lx_32.opc:351
+# MCOPY | MCOPY [RegSrc0, RegSrc1, RegSrc2] | opcodes/lx_32.opc:352
 mcopy_32_10262506ace5 .... .00. .... .... .000 0000 0011 0001 %RegSrc0 %RegSrc1 %RegSrc2
 
 # MIN | min SrcL, SrcR, ->{t, u, Rd} | opcodes/lx_32.opc:174
@@ -766,7 +770,7 @@ min_32_25692b799267 0000 000. .... .... .101 .... .101 1011 %RegDst %SrcL %SrcR
 # MINU | minu SrcL, SrcR, ->{t, u, Rd} | opcodes/lx_32.opc:175
 minu_32_9bdb71ef7b19 0000 100. .... .... .101 .... .101 1011 %RegDst %SrcL %SrcR
 
-# MSET | MSET [RegSrc0, RegSrc1, RegSrc2] | opcodes/lx_32.opc:352
+# MSET | MSET [RegSrc0, RegSrc1, RegSrc2] | opcodes/lx_32.opc:353
 mset_32_7a5f3c26ac6b .... .00. .... .... .001 0000 0011 0001 %RegSrc0 %RegSrc1 %RegSrc2
 
 # MUL | mul SrcL, SrcR, ->{t, u, Rd} | opcodes/lx_32.opc:176
@@ -1069,7 +1073,7 @@ tlb_iv_32_bf0a5d1ea211 0000 0000 0001 .... .111 0000 0010 1011 %SrcL
 # UCVTF | ucvtf.{srcT2dstT} SrcL, ->{t, u, Rd} | opcodes/lx_32.opc:275
 ucvtf_32_987f4e019c32 .... ...0 0000 .... .111 .... .110 1011 %DstType %RegDst %SrcL %SrcType
 
-# XB | XB ACR-ID, C-ID | opcodes/lx_32.opc:353
+# XB | XB ACR-ID, C-ID | opcodes/lx_32.opc:354
 xb_32_1c3043ef6fa8 .... .... .... .... .110 1111 1000 0001 %ACR_ID %CROSS_BID
 
 # XOR | xor SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd} | opcodes/lx_32.opc:276

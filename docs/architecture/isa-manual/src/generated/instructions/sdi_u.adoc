@@ -7,7 +7,7 @@
 
 *Syntax:* sdi.u SrcL, [SrcR, simm]
 
-*Description:* Store 64-bit value to [Rs+offset], result to Rd/t/u.
+*Description:* SDI.U - Store scalar data using this mnemonic's width and address-update form.
 
 *Encoding:*
 

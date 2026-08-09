@@ -21,12 +21,39 @@
     "allocation": "compiler"
   },
   "pe_mask": {
+    "owner": "B.IOS",
     "width": 4,
     "kind": "predicate bitmask",
     "multiple_bits_allowed": true,
-    "absent_value": "0b1111",
     "zero_behavior": "nop",
     "source_read_updates_descriptor": false,
     "destination_write_updates_descriptor": true
+  },
+  "tsize_bytes": [
+    null,
+    128,
+    256,
+    512,
+    1024,
+    2048,
+    4096,
+    8192
+  ],
+  "gm_access": {
+    "gpr_scope": "each selected PE resolves selectors in its private GPR file",
+    "base_selector": "B.IOR.RegSrc0",
+    "row_stride_selector": "B.IOR.RegSrc1",
+    "row_stride_unit": "logical-elements",
+    "omitted_b_ior": {
+      "base": 0,
+      "row_stride": "dense-column-count"
+    },
+    "explicit_zero_stride": "zero",
+    "element_address": "base + (row * row_stride + column) * element_size",
+    "packed_four_bit": "logical index selects containing byte and nibble",
+    "preflight": "all selected accesses before effects",
+    "pe_order": "none",
+    "conflict_avoidance": "programmer responsibility",
+    "b_iot_scope": "local-only"
   }
 }

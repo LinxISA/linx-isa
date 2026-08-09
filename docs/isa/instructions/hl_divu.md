@@ -36,7 +36,7 @@ rd = (rs2 != 0) ? UnsignedDiv(rs1, rs2) : 0;
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `HL.DIVU - Compute quotient and remainder as a scalar result pair.`
 
 ## Full Catalog Forms
 

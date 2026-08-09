@@ -26,7 +26,7 @@
 
 ## Description
 
-[48-bit HL.] Instruction from the Multi-Cycle ALU group.
+HL.MULU - Compute the full-width scalar product as a result pair.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `HL.MULU - Compute the full-width scalar product as a result pair.`
 
 ## Full Catalog Forms
 

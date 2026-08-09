@@ -36,7 +36,7 @@ rd = rs1 + SignExtend(imm12);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `ADDI - Compute this mnemonic's binary scalar operation and write the selected destination.`
 
 ## Full Catalog Forms
 

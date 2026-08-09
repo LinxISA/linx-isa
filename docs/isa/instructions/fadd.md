@@ -36,7 +36,7 @@ Floating-point addition.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `FADD - Compute this mnemonic's binary floating-point operation.`
 
 ## Full Catalog Forms
 

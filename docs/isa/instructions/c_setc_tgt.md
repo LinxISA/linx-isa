@@ -36,7 +36,7 @@ SetCommitArgument(/* condition */);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `C.SETC.TGT - Write the bundle commit target.`
 
 ## Full Catalog Forms
 

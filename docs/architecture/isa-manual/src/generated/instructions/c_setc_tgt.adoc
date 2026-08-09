@@ -7,7 +7,7 @@
 
 *Syntax:* c.setc.tgt srcL
 
-*Description:* Compressed 16-bit set block target register from Rs1.
+*Description:* C.SETC.TGT - Write the bundle commit target.
 
 *Encoding:*
 

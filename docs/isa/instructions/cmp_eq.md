@@ -36,7 +36,7 @@ Compare equal. Sets destination to 1 if operands are equal.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `CMP.EQ - Compare scalar operands and write the encoded boolean result.`
 
 ## Full Catalog Forms
 

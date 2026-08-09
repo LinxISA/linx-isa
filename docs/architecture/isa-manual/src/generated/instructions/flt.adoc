@@ -7,7 +7,7 @@
 
 *Syntax:* flt.{T} SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* Floating-point compare lt: set Rd/t/u to 1 if true, else 0.
+*Description:* FLT - Compare floating-point operands and produce the encoded result.
 
 *Encoding:*
 

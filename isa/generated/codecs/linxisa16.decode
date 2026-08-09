@@ -6,7 +6,6 @@
 %LoopNest 14:2
 %RegDst 11:5
 %SSRID 6:5
-%SharedTID 6:8
 %SrcL 6:5
 %SrcR 11:5
 %imm5 6:5
@@ -26,31 +25,28 @@ c_addi_16_3050744f2322 .... .... ..00 1100 %SrcL simm5=%simm5_11_s5
 # C.AND | c.and srcL, srcR, ->t | opcodes/lx_c.opc:13
 c_and_16_379e5bed3352 .... .... ..10 1000 %SrcL %SrcR
 
-# C.B.DIMI | C.B.DIMI imm, ->{LB0, LB1, LB2} | opcodes/lx_c.opc:43
+# C.B.DIMI | C.B.DIMI imm, ->{LB0, LB1, LB2} | opcodes/lx_c.opc:42
 c_b_dimi_16_f5bd6ae22b96 .... .... ..11 1100 %LoopNest %imm8
 
-# C.B.IOS | C.B.IOS S<SharedTID> | C.B.IOS -> S<SharedTID> | opcodes/lx_c.opc:42
-c_b_ios_16_5c9d7b427740 11.. .... ..11 1100 %SharedTID
-
-# C.BSTART | C.BSTART DIRECT, label | opcodes/lx_c.opc:45
+# C.BSTART | C.BSTART DIRECT, label | opcodes/lx_c.opc:44
 c_bstart_16_78ebf9b37d2d .... .... .... 0010 %simm12
 
-# C.BSTART | C.BSTART COND,  label | opcodes/lx_c.opc:44
+# C.BSTART | C.BSTART COND,  label | opcodes/lx_c.opc:43
 c_bstart_16_b82b9a0c292c .... .... .... 0100 %simm12
 
-# C.BSTART.FP | C.BSTART.FP BrType | opcodes/lx_c.opc:46
+# C.BSTART.FP | C.BSTART.FP BrType | opcodes/lx_c.opc:45
 c_bstart_fp_16_9581dfc6187e 00.. .000 1000 0000 %BrType
 
-# C.BSTART.MPAR | C.BSTART.MPAR FALL | opcodes/lx_c.opc:47
+# C.BSTART.MPAR | C.BSTART.MPAR FALL | opcodes/lx_c.opc:46
 c_bstart_mpar_16_44b1572333b1 0000 1000 1100 0000
 
-# C.BSTART.MSEQ | C.BSTART.MSEQ FALL | opcodes/lx_c.opc:48
+# C.BSTART.MSEQ | C.BSTART.MSEQ FALL | opcodes/lx_c.opc:47
 c_bstart_mseq_16_190877b09b0a 0100 1000 1100 0000
 
-# C.BSTART.STD | C.BSTART.STD BrType | opcodes/lx_c.opc:49
+# C.BSTART.STD | C.BSTART.STD BrType | opcodes/lx_c.opc:48
 c_bstart_std_16_f98cb0206cb1 00.. .000 0000 0000 %BrType
 
-# C.BSTART.SYS | C.BSTART.SYS FALL | opcodes/lx_c.opc:50
+# C.BSTART.SYS | C.BSTART.SYS FALL | opcodes/lx_c.opc:49
 c_bstart_sys_16_1c7558ab7fe7 0000 1000 0100 0000
 
 # C.BSTART.VPAR | C.BSTART.VPAR FALL | opcodes/lx_c.opc:14
@@ -59,7 +55,7 @@ c_bstart_vpar_16_c4d89efc71ea 1000 1000 1100 0000
 # C.BSTART.VSEQ | C.BSTART.VSEQ FALL | opcodes/lx_c.opc:15
 c_bstart_vseq_16_50d70de3f84f 1100 1000 1100 0000
 
-# C.BSTOP | C.BSTOP | opcodes/lx_c.opc:51
+# C.BSTOP | C.BSTOP | opcodes/lx_c.opc:50
 c_bstop_16_08a2ad84e04b 0000 0000 0000 0000
 
 # C.CMP.EQI | c.cmp.eqi t#1, simm, ->t | opcodes/lx_c.opc:16

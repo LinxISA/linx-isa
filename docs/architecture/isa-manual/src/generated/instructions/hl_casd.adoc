@@ -7,7 +7,7 @@
 
 *Syntax:* hl.casd<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}
 
-*Description:* Long 48-bit compare-and-swap doubleword at address [SrcL]: atomically swap with SrcD if SrcR matches.
+*Description:* HL.CASD - Atomically compare the scalar memory value and conditionally store the replacement.
 
 *Encoding:*
 

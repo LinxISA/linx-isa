@@ -7,7 +7,7 @@
 
 *Syntax:* b.nz label
 
-*Description:* Conditional branch: take branch if not zeroero.
+*Description:* B.NZ - Conditionally branch to the PC-relative target after comparing scalar operands.
 
 *Encoding:*
 

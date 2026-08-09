@@ -26,7 +26,7 @@
 
 ## Description
 
-Instruction from the Bundle Split group.
+Saves the encoded execution-context range to memory.
 
 ## Pseudocode (informative)
 

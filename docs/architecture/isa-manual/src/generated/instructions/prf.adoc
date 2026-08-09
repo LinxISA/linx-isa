@@ -7,7 +7,7 @@
 
 *Syntax:* prf [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]
 
-*Description:* Load 32-bit signed value from [Rs+offset], result to Rd/t/u.
+*Description:* PRF - Issue a scalar prefetch using this mnemonic's addressing form.
 
 *Encoding:*
 

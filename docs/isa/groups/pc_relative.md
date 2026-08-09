@@ -17,8 +17,8 @@ PC-relative address computation instructions.
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
 | [ADDTPC](../instructions/addtpc.md) | `addtpc simm, ->{t, u, Rd}` | 32 | — | PC-relative addition. Adds an immediate to the current PC/TPC and writes the result. |
-| [HL.ADDTPC](../instructions/hl_addtpc.md) | `hl.addtpc imm, ->{t, u, Rd}` | 48 | — | [48-bit HL.] Instruction from the PC-Relative group. |
-| [HL.SETRET](../instructions/hl_setret.md) | `hl.setret imm, ->Ra` | 48 | — | [48-bit HL.] Instruction from the PC-Relative group. |
+| [HL.ADDTPC](../instructions/hl_addtpc.md) | `hl.addtpc imm, ->{t, u, Rd}` | 48 | — | HL.ADDTPC - Add the encoded displacement to the program counter. |
+| [HL.SETRET](../instructions/hl_setret.md) | `hl.setret imm, ->Ra` | 48 | — | HL.SETRET - Write the architectural return address. |
 | [SETRET](../instructions/setret.md) | `setret uimm, ->Ra` | 32 | — | Materializes a return address (ra) using a PC-relative offset. Used in call headers. |
 
 ## See Also

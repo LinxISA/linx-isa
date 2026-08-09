@@ -36,7 +36,7 @@ Conditional branch taken when SrcL not equal to SrcR.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `B.NE - Conditionally branch to the PC-relative target after comparing scalar operands.`
 
 ## Full Catalog Forms
 

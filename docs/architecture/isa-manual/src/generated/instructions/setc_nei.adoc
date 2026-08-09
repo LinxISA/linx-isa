@@ -7,7 +7,7 @@
 
 *Syntax:* setc.nei SrcL, simm
 
-*Description:* Set block condition flag for e immediate: consumed by BSTART COND.
+*Description:* SETC.NEI - Compare scalar operands and update the bundle commit condition.
 
 *Encoding:*
 

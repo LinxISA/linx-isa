@@ -36,7 +36,7 @@ rd = Trunc64(rs1 * rs2);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `MUL - Compute the scalar product.`
 
 ## Full Catalog Forms
 

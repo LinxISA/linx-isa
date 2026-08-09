@@ -7,7 +7,7 @@
 
 *Syntax:* setc.ltui SrcL, uimm
 
-*Description:* Set block condition flag for tu immediate: consumed by BSTART COND.
+*Description:* SETC.LTUI - Compare scalar operands and update the bundle commit condition.
 
 *Encoding:*
 

@@ -26,7 +26,7 @@
 
 ## Description
 
-[48-bit HL.] Instruction from the Arithmetic Operation 32bit group.
+HL.ORIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `HL.ORIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.`
 
 ## Full Catalog Forms
 

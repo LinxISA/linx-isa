@@ -36,7 +36,7 @@ Floating-point multiplication.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `FMUL - Compute this mnemonic's binary floating-point operation.`
 
 ## Full Catalog Forms
 

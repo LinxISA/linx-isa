@@ -10,7 +10,7 @@ LB (full name: **Lane Bound Register**) contains 3 registers, named LB0, LB1 and
 - **LB1**: used to store the upper limit value of the middle layer loop iteration.
 - **LB2**: used to store the upper limit of the outermost loop iteration.
 
-In data blocks without body (such as [TLSU block](../../blockIntro/tma_block/intro.md) or [CUBE block](../../blockIntro/cube_block/intro.md)), the LB register is usually used to set the number of rows and columns of data in Tile and other dimension information.
+In data blocks without body (such as [TLSU block](../../blockIntro/tlsu_block/intro.md) or [CUBE block](../../blockIntro/cube_block/intro.md)), the LB register is usually used to set the number of rows and columns of data in Tile and other dimension information.
 
 ## <span id="LC">**2.LC register**</span>
 

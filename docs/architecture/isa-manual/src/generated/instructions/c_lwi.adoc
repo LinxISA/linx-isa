@@ -7,7 +7,7 @@
 
 *Syntax:* c.lwi [srcL, simm], ->t
 
-*Description:* Compressed 16-bit load 32-bit word from [Rs1+imm] into t.
+*Description:* C.LWI - Load scalar data using this mnemonic's width, signedness, and address-update form.
 
 *Encoding:*
 

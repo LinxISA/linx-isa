@@ -48,15 +48,15 @@ Instructions in the **Bundle Split** group of the LinxISA v0.58.0 catalog.
 | [BSTOP](../instructions/bstop.md) | `BSTOP` | 32 | — | Block termination marker. Ends the current basic block. |
 | [C.BSTART](../instructions/c_bstart.md) | `C.BSTART DIRECT, label` | 16 | — | [16-bit C.] Terminates the current block and begins the next. |
 | [C.BSTOP](../instructions/c_bstop.md) | `C.BSTOP` | 16 | — | [16-bit C.] Marks the end of the current block. |
-| [ERCOV](../instructions/ercov.md) | `ERCOV [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]` | 32 | — | Instruction from the Bundle Split group. |
-| [ESAVE](../instructions/esave.md) | `ESAVE [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]` | 32 | — | Instruction from the Bundle Split group. |
-| [FENTRY](../instructions/fentry.md) | `FENTRY [RegSrc0 ~ RegSrcn], sp!, uimm` | 32 | — | Instruction from the Bundle Split group. |
-| [FEXIT](../instructions/fexit.md) | `FEXIT [RegDst0 ~ RegDstn], sp!, uimm` | 32 | — | Instruction from the Bundle Split group. |
-| [FRET.RA](../instructions/fret_ra.md) | `FRET.RA [RegDst0 ~ RegDstn], sp!, uimm` | 32 | — | Instruction from the Bundle Split group. |
-| [FRET.STK](../instructions/fret_stk.md) | `FRET.STK [RegDst0 ~ RegDstn], sp!, uimm` | 32 | — | Instruction from the Bundle Split group. |
-| [MCOPY](../instructions/mcopy.md) | `MCOPY [RegSrc0, RegSrc1, RegSrc2]` | 32 | — | Instruction from the Bundle Split group. |
-| [MSET](../instructions/mset.md) | `MSET [RegSrc0, RegSrc1, RegSrc2]` | 32 | — | Instruction from the Bundle Split group. |
-| [XB](../instructions/xb.md) | `XB ACR-ID, C-ID` | 32 | — | Instruction from the Bundle Split group. |
+| [ERCOV](../instructions/ercov.md) | `ERCOV [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]` | 32 | — | Recovers the encoded execution-context range from memory. |
+| [ESAVE](../instructions/esave.md) | `ESAVE [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]` | 32 | — | Saves the encoded execution-context range to memory. |
+| [FENTRY](../instructions/fentry.md) | `FENTRY [RegSrc0 ~ RegSrcn], sp!, uimm` | 32 | — | Atomically validates and creates a frame-template entry state. |
+| [FEXIT](../instructions/fexit.md) | `FEXIT [RegDst0 ~ RegDstn], sp!, uimm` | 32 | — | Atomically validates and commits a frame-template exit state. |
+| [FRET.RA](../instructions/fret_ra.md) | `FRET.RA [RegDst0 ~ RegDstn], sp!, uimm` | 32 | — | Restores a frame and returns through the retained return-address target. |
+| [FRET.STK](../instructions/fret_stk.md) | `FRET.STK [RegDst0 ~ RegDstn], sp!, uimm` | 32 | — | Restores a frame and returns through the validated stack target. |
+| [MCOPY](../instructions/mcopy.md) | `MCOPY [RegSrc0, RegSrc1, RegSrc2]` | 32 | — | Copies an encoded memory range with instruction-atomic preflight and snapshot semantics. |
+| [MSET](../instructions/mset.md) | `MSET [RegSrc0, RegSrc1, RegSrc2]` | 32 | — | Fills an encoded memory range after complete access preflight. |
+| [XB](../instructions/xb.md) | `XB ACR-ID, C-ID` | 32 | — | Transfers the named context value to a target virtual core block. |
 
 ## See Also
 

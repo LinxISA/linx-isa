@@ -7,7 +7,7 @@
 
 *Syntax:* setc.ge SrcL, SrcR<{.sw, .uw}>
 
-*Description:* Set block condition flag for e: consumed by BSTART COND.
+*Description:* SETC.GE - Compare scalar operands and update the bundle commit condition.
 
 *Encoding:*
 

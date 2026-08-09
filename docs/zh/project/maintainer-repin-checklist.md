@@ -67,21 +67,15 @@ python3 tools/bringup/check_multi_agent_gates.py \
 
 ## 列宾力学
 
-仅更新预期的模块：
+仅把预期模块更新到已经审查的提交：
 
 ```bash
-git submodule update --remote \
-  compiler/llvm \
-  emulator/qemu \
-  kernel/linux \
-  rtl/LinxCore \
-  tools/pyCircuit \
-  lib/glibc \
-  lib/musl \
-  workloads/pto_kernels
+git -C <leaf> fetch origin <reviewed-commit>
+git -C <leaf> checkout --detach <reviewed-commit>
+git add <leaf>
 ```
 
-在实践中，将该命令缩小到您要重新固定的特定模块。
+不得选择未经审查的远端分支头，也不得同时重新固定无关模块。
 
 更新 SHA 后：
 

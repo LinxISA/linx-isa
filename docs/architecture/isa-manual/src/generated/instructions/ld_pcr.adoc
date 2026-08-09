@@ -7,7 +7,7 @@
 
 *Syntax:* ld.pcr [symbol], ->{t, u, Rd}
 
-*Description:* Load 64-bit value from [Rs+offset], result to Rd/t/u.
+*Description:* LD.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form.
 
 *Encoding:*
 

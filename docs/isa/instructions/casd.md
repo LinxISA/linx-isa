@@ -36,7 +36,7 @@ Atomic memory read-modify-write operation.
 
 ## Encoding Notes
 
-- `v0.58 32-bit compare-and-swap doubleword: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.`
+- `CASD - Atomically compare the scalar memory value and conditionally store the replacement.`
 
 ## Full Catalog Forms
 

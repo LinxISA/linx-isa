@@ -7,7 +7,7 @@
 
 *Syntax:* hl.lhuip [SrcL, simm], ->Dst0, Dst1
 
-*Description:* Long 48-bit instruction encoding (prefix + 32-bit main form).
+*Description:* HL.LHUIP - Load a scalar register pair using this mnemonic's address-update form.
 
 *Encoding:*
 

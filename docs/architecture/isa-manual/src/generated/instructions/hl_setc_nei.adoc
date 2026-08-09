@@ -7,7 +7,7 @@
 
 *Syntax:* hl.setc.nei SrcL, simm
 
-*Description:* Long 48-bit set condition flag: ei of SrcL with operand.
+*Description:* HL.SETC.NEI - Compare scalar operands and update the bundle commit condition.
 
 *Encoding:*
 

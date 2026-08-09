@@ -26,7 +26,7 @@
 
 ## Description
 
-[48-bit HL.] Instruction from the SSR Access group.
+HL.SSRSET - Write the addressed system register.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `HL.SSRSET - Write the addressed system register.`
 
 ## Full Catalog Forms
 

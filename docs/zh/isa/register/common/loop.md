@@ -10,7 +10,7 @@ LB（全称为**Lane Bound Register**）寄存器包含3个，分别命名为LB0
 - **LB1**：用于存储中间层循环迭代上限值。
 - **LB2**：用于存储最外层循环迭代上限值。
 
-在没有块体的数据块（例如[TMA块](../../blockIntro/tma_block/intro.md)或[CUBE块](../../blockIntro/cube_block/intro.md)）中，LB寄存器通常用作设置Tile中数据的行列数等维度信息。
+在没有块体的数据块（例如[TLSU块](../../blockIntro/tlsu_block/intro.md)或[CUBE块](../../blockIntro/cube_block/intro.md)）中，LB寄存器通常用作设置Tile中数据的行列数等维度信息。
 
 ## <span id="LC">**2.LC寄存器**</span>
 

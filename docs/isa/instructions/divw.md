@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `DIVW - Compute signed 32-bit quotient and sign-extend it.`
 
 ## Full Catalog Forms
 

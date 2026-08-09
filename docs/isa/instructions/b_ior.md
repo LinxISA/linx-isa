@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `B.IOR [RegSrc0, RegSrc1, RegSrc2],[RegDst]`
+- `B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>]`
 
 ## Encoding
 
@@ -26,7 +26,7 @@
 
 ## Description
 
-Instruction from the Bundle Input & Output group.
+Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as logical row stride.
 
 ## Pseudocode (informative)
 
@@ -36,13 +36,13 @@ Instruction from the Bundle Input & Output group.
 
 ## Encoding Notes
 
-- `Binds encoded scalar inputs and outputs to the current bundle interface.`
+- `Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as logical row stride.`
 
 ## Full Catalog Forms
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `B.IOR [RegSrc0, RegSrc1, RegSrc2],[RegDst]` | 32 | — |
+| `B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>]` | 32 | — |
 
 <div class="insn-nav">
 

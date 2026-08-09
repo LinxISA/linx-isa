@@ -7,7 +7,7 @@
 
 *Syntax:* orw SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}
 
-*Description:* Arithmetic Operation 32bit: ORW operation.
+*Description:* ORW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
 
 *Encoding:*
 

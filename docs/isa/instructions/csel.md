@@ -36,7 +36,7 @@ rd = (rs_p != 0) ? rs1 : rs2;
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `CSEL - Select one of two scalar inputs under the encoded condition.`
 
 ## Full Catalog Forms
 

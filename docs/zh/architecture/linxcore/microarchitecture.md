@@ -460,7 +460,7 @@ mismatch 使用 BRU flush/recover 并发布 frontend restart。
   跨槽排序。
 
 ### 架构块完成抽象- 对于块完成语义，灵犀Core 遵循 ISA 可见规范
-  块型结构域`{STD, FP, SYS, MPAR, MSEQ, VPAR, VSEQ, TMA, CUBE, TEPL}`。
+  块类型域 `{STD, FP, SYS, MPAR, MSEQ, VPAR, VSEQ, TLSU, CUBE, VEC, SFU}`。
 - `STD`、`FP` 和 `SYS` 在两层完成模型中等效。
 - 动态块实例完全崩溃为三种架构之一
   参与者集：
@@ -548,7 +548,7 @@ mismatch 使用 BRU flush/recover 并发布 frontend restart。
 ### 工作负载-引擎组成
 
 - `VEC` 仍然是通用可编程 SIMT 计算引擎。
-- `TMA` 通过与 灵犀Core 相同的区块/BID 合约集成到 灵犀Core
+- `TLSU` 通过与灵犀 Core 相同的块/BID 合约集成到灵犀 Core
   机器的其余部分，但其南向内存流量归 CSU 所有
   子系统并以 CSU L2 和前端填充流量为目标。
 - `CUBE` 和 `TAU` 继续通过相同的区块/BID 合约进行集成

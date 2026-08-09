@@ -16,8 +16,8 @@ Long immediate materialization (HL.LIS, HL.LIU).
 
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
-| [HL.LIS](../instructions/hl_lis.md) | `hl.lis simm, ->{t, u, Rd}` | 48 | — | [48-bit HL.] Instruction from the Long Immediate group. |
-| [HL.LIU](../instructions/hl_liu.md) | `hl.liu uimm, ->{t, u, Rd}` | 48 | — | [48-bit HL.] Instruction from the Long Immediate group. |
+| [HL.LIS](../instructions/hl_lis.md) | `hl.lis simm, ->{t, u, Rd}` | 48 | — | HL.LIS - Materialize the encoded signed long immediate. |
+| [HL.LIU](../instructions/hl_liu.md) | `hl.liu uimm, ->{t, u, Rd}` | 48 | — | HL.LIU - Materialize the encoded unsigned long immediate. |
 
 ## See Also
 

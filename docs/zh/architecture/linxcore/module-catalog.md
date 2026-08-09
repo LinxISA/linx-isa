@@ -366,20 +366,20 @@ mismatch 使用 Dispatch/BRU flush/recover。
 ### `src/csu/subsystem.py`
 
 - 拥有统一的CSU父子系统，吸收IFU充值流量并
-  CSU-内部 TMA 传输所有权。
+  CSU 内部 TLSU 传输所有权。
 
 ### `src/csu/{tma_cmd_frontend,tma_ctx_tracker,tma_l2_client,client_arb}.py`
 
-- 拥有 CSU 内部 TMA 命令入口、上下文跟踪、L2 客户端
-  转换和再填充与 TMA 仲裁边界。
+- 拥有 CSU 内部 TLSU 命令入口、上下文跟踪、L2 客户端
+  转换和再填充与 TLSU 仲裁边界。
 
 ### `src/vec/vec.py`
 
 - 拥有 `VEC` 发动机边界。
 
-### `src/tma/tma.py`
+### `src/tma/tma.py`（TLSU 的历史实现文件名）
 
-- 保留独立 TMA 单元测试的独立兼容性外观。
+- 保留独立 TLSU 单元测试的兼容外观；`tma` 文件名不是架构术语。
 - Janus顶层整合不再将其视为规范的南向
   运输业主。
 

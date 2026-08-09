@@ -13,7 +13,7 @@ import argparse
 import json
 import re
 import sys
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
@@ -297,6 +297,8 @@ def _validate_engine_ops_v058(spec: Dict[str, Any], engine_ops: Dict[str, Any], 
     if tepl.get("accepted_selector_count") != 87 or len(ops) != 87:
         errors.append("state.engine_ops.tepl must contain exactly 87 PTO 0.58 operations")
     selectors = set()
+    engine_counts: Counter[str] = Counter()
+    classification_counts: Counter[str] = Counter()
     for idx, op in enumerate(ops):
         mode, function = op.get("mode"), op.get("function")
         if not isinstance(mode, int) or not isinstance(function, int):
@@ -306,6 +308,8 @@ def _validate_engine_ops_v058(spec: Dict[str, Any], engine_ops: Dict[str, Any], 
         if op.get("logical_selector") != selector or selector in selectors:
             errors.append(f"state.engine_ops.tepl.ops[{idx}] has invalid or duplicate selector")
         selectors.add(selector)
+        engine_counts[str(op.get("engine"))] += 1
+        classification_counts[str(op.get("classification"))] += 1
 
     expected = {
         "tlsu": {0, 1, 2, 3, 4, 5, 6, 7, 8, 13},
@@ -316,6 +320,25 @@ def _validate_engine_ops_v058(spec: Dict[str, Any], engine_ops: Dict[str, Any], 
         actual = {int(item["function"]) for item in state.get("legal_aliases", [])}
         if actual != functions:
             errors.append(f"state.engine_ops.{family} functions differ from PTO ISA 0.58")
+        for operation in state.get("legal_aliases", []):
+            engine_counts[str(operation.get("engine"))] += 1
+            classification_counts[str(operation.get("classification"))] += 1
+    expected_engine_counts = {"CUBE": 12, "SFU": 52, "TLSU": 10, "VEC": 35}
+    if dict(sorted(engine_counts.items())) != expected_engine_counts:
+        errors.append("state.engine_ops semantic engines must be exactly 35 VEC / 52 SFU / 10 TLSU / 12 CUBE")
+    if engine_ops.get("semantic_engine_counts") != expected_engine_counts:
+        errors.append("state.engine_ops.semantic_engine_counts differs from the PTO 0.58 projection")
+    expected_classification_counts = {
+        "elementwise-tile-tile": 25,
+        "irregular-and-complex": 13,
+        "layout-and-rearrangement": 7,
+        "matrix-and-matrix-vector": 12,
+        "memory-and-data-movement": 9,
+        "reduce-and-expand": 28,
+        "tile-scalar-and-immediate": 15,
+    }
+    if dict(sorted(classification_counts.items())) != expected_classification_counts:
+        errors.append("state.engine_ops semantic classifications differ from the PTO 0.58 projection")
     if engine_ops.get("tlsu", {}).get("reserved_function_ranges") != [[15, 31]]:
         errors.append("state.engine_ops.tlsu reserved ranges must be [[15, 31]]")
     if engine_ops.get("cube", {}).get("unassigned_function_behavior") != "illegal_instruction":
@@ -324,8 +347,13 @@ def _validate_engine_ops_v058(spec: Dict[str, Any], engine_ops: Dict[str, Any], 
     if shared.get("registers_per_core") != 256 or shared.get("addressing") != "absolute-index":
         errors.append("state.engine_ops Shared tile registers must be absolute S0..S255")
     mnemonics = {str(item.get("mnemonic") or "") for item in spec.get("instructions", [])}
-    if "C.B.IOS" not in mnemonics or "BSTART.GMOV" not in mnemonics:
-        errors.append("PTO ISA 0.58 requires C.B.IOS and BSTART.GMOV")
+    if "B.IOS" not in mnemonics or "BSTART.GMOV" not in mnemonics:
+        errors.append("PTO ISA 0.58 requires B.IOS and BSTART.GMOV")
+    if {"B.IOD", "BSTART.PAR", "C.B.IOS"} & mnemonics:
+        errors.append("PTO ISA 0.58 deleted scalar/block spellings must not decode")
+    tfma = [op for op in ops if op.get("name") == "TFMA"]
+    if len(tfma) != 1 or (tfma[0].get("mode"), tfma[0].get("function")) != (0, 28):
+        errors.append("PTO ISA 0.58 requires TFMA at TEPL Mode=0 Function=28")
 
 
 def _validate_engine_ops(spec: Dict[str, Any], errors: List[str]) -> None:
@@ -1110,8 +1138,11 @@ def validate(path: str) -> List[str]:
         errors.append("missing compiled retired_encodings.entries")
     else:
         retired_names = {str(entry.get("retired_mnemonic") or "") for entry in retired_entries}
-        if retired_names != {"B.IOD", "BSTART.PAR"}:
-            errors.append(f"retired encoding identities must be exactly B.IOD and BSTART.PAR, got {retired_names}")
+        expected_retired = set() if str(spec.get("version") or "") == "0.58.0" else {"B.IOD", "BSTART.PAR"}
+        if retired_names != expected_retired:
+            errors.append(
+                f"retired encoding identities must be exactly {sorted(expected_retired)}, got {retired_names}"
+            )
 
     for inst in spec.get("instructions", []):
         inst_id = inst.get("id", inst.get("mnemonic", "<missing-id>"))
@@ -1215,7 +1246,7 @@ def validate_active_surfaces(root: Path) -> List[str]:
         root / "docs" / "README.md",
         root / "docs" / "index.md",
         root / "docs" / "architecture" / "README.md",
-        root / "docs" / "architecture" / "v0.57-architecture-contract.md",
+        root / "docs" / "architecture" / "v0.58-architecture-contract.md",
         root / "docs" / "bringup" / "README.md",
         root / "docs" / "bringup" / "AVS_CONTRACT.md",
         root / "docs" / "bringup" / "GETTING_STARTED.md",

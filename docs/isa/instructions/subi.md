@@ -26,7 +26,7 @@
 
 ## Description
 
-Instruction from the Arithmetic Operation 64bit group.
+SUBI - Compute this mnemonic's binary scalar operation and write the selected destination.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ Instruction from the Arithmetic Operation 64bit group.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `SUBI - Compute this mnemonic's binary scalar operation and write the selected destination.`
 
 ## Full Catalog Forms
 

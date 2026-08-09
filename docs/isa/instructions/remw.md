@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `REMW - Compute signed 32-bit remainder and sign-extend it.`
 
 ## Full Catalog Forms
 

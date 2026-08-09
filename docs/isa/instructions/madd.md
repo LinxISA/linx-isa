@@ -36,7 +36,7 @@ Multiply-add: `Dest = SrcD + SrcL * SrcR`.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `MADD - Compute scalar multiply-add.`
 
 ## Full Catalog Forms
 

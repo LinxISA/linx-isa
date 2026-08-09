@@ -7,7 +7,7 @@
 
 *Syntax:* max SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* Max-Min: MAX operation.
+*Description:* MAX - Compute this mnemonic's binary scalar operation and write the selected destination.
 
 *Encoding:*
 

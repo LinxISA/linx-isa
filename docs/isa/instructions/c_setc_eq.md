@@ -36,7 +36,7 @@ SetCommitArgument(/* condition */);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `C.SETC.EQ - Compare scalar operands and update the bundle commit condition.`
 
 ## Full Catalog Forms
 

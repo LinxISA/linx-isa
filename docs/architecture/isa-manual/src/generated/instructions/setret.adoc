@@ -7,7 +7,7 @@
 
 *Syntax:* setret uimm, ->Ra
 
-*Description:* PC-Relative: SETRET.
+*Description:* SETRET - Write the architectural return address.
 
 *Encoding:*
 

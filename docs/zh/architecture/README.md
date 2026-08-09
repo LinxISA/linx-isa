@@ -2,18 +2,12 @@
 
 面向架构的文档位于 `docs/architecture/` 下。
 
-## 规范合约页面
+## 当前合约页面
 
-- v0.57 规范页面：
-  - `docs/architecture/v0.57-architecture-contract.md`
-  - `docs/architecture/v0.57-encoding-decisions.md`
-  - `docs/architecture/v0.57-hardening-policy.md`
-  - `docs/architecture/v0.57-simt-compiler-contract.md`
-  - `docs/architecture/v0.57-simt-compiler-contract-plan.md`（规划页面；本身不是规范的）
-  - `docs/architecture/v0.57-workload-engine-model.md`
-  - `docs/architecture/v0.57-rendering-kernel-authoring.md`
-  - `docs/architecture/v0.57-rendering-pto-contract.md`
-  - `docs/architecture/v0.57-rendering-command-contract.md`
+- v0.58 当前页面：
+  - `docs/zh/architecture/v0.58-architecture-contract.md`
+- 机器可读权威来源：
+  - `isa/v0.58/linxisa-v0.58.json`
 - 发布的灵犀Core镜像：
   - `docs/architecture/linxcore/overview.md`
   - `docs/architecture/linxcore/microarchitecture.md`
@@ -48,7 +42,7 @@
   保留为附录/参考而不是主要手册主页。
 
 规范规则没有改变：影响架构的行为仍然存在
-由英语 v0.57 合同页面和英语 AsciiDoc 手册拥有。
+由英语 v0.58 合同页面和英语 AsciiDoc 手册拥有。
 导入/手动层次结构页面是主要发布的叙述表面，
 但它们必须与这些规范来源保持同步。
 
@@ -58,7 +52,7 @@
   镜子。
 - 子模块中特定于实现的深入研究必须链接回这些
   合同页。
-- v0.57 是唯一活动配置；其源文件不得恢复已退休兼容拼写或归档原始片段。
+- v0.58 是唯一活动配置；其源文件不得恢复已退休兼容拼写或归档原始片段。
 - 任何影响架构的更改都必须首先更新 灵犀Arch，然后再实施。
 - 规范之前的草稿笔记和研究笔记仅保留用于历史记录，不得用作实时合约。
 - 当规划页面定义下一次合同冻结的分阶段路径时，它们可以与规范页面并存；它们必须明确说明它们是否规范。

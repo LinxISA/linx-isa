@@ -36,7 +36,7 @@ Compare less-than (signed).
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `CMP.LT - Compare scalar operands and write the encoded boolean result.`
 
 ## Full Catalog Forms
 

@@ -26,7 +26,7 @@
 
 ## Description
 
-Instruction from the Bundle Offset group.
+Sets the out-of-line body entry address for a decoupled bundle.
 
 ## Pseudocode (informative)
 

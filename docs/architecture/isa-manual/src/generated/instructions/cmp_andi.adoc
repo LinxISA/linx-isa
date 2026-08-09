@@ -7,7 +7,7 @@
 
 *Syntax:* cmp.andi SrcL, simm, ->{t, u, Rd}
 
-*Description:* Compare and immediate: set Rd/t/u to 1 if true, else 0.
+*Description:* CMP.ANDI - Combine scalar comparison results with the encoded logical operation.
 
 *Encoding:*
 

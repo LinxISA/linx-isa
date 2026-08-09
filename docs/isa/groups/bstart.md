@@ -21,9 +21,9 @@ Block split instructions with CALL/RET/commit argument encoding.
 | [HL.BSTART.FP](../instructions/hl_bstart_fp.md) | `HL.BSTART.FP FALL<, fixup_label>` | 48 | — | [48-bit HL.] Terminates the current block and begins the next. |
 | [HL.BSTART.STD](../instructions/hl_bstart_std.md) | `HL.BSTART.STD FALL<, fixup_label>` | 48 | — | [48-bit HL.] Terminates the current block and begins the next. |
 | [HL.BSTART.SYS](../instructions/hl_bstart_sys.md) | `HL.BSTART.SYS FALL<, fixup_label>` | 48 | — | [48-bit HL.] Terminates the current block and begins the next. |
-| [L.BSTART.FP](../instructions/l_bstart_fp.md) | `L.BSTART.FP DIRECT, <label>` | 64 | — | Instruction from the BSTART group. |
-| [L.BSTART.STD](../instructions/l_bstart_std.md) | `L.BSTART.STD COND, <label>` | 64 | — | Instruction from the BSTART group. |
-| [L.BSTART.SYS](../instructions/l_bstart_sys.md) | `L.BSTART.SYS FALL<, fixup_label>` | 64 | — | Instruction from the BSTART group. |
+| [L.BSTART.FP](../instructions/l_bstart_fp.md) | `L.BSTART.FP DIRECT, <label>` | 64 | — | Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind. |
+| [L.BSTART.STD](../instructions/l_bstart_std.md) | `L.BSTART.STD COND, <label>` | 64 | — | Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind. |
+| [L.BSTART.SYS](../instructions/l_bstart_sys.md) | `L.BSTART.SYS FALL<, fixup_label>` | 64 | — | Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind. |
 
 ## See Also
 

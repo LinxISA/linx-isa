@@ -7,7 +7,7 @@
 
 *Syntax:* csel SrcP, SrcL, SrcR<.neg>, ->{t, u, Rd}
 
-*Description:* Conditional select: Rd/t/u = SrcP ? SrcL : SrcR.
+*Description:* CSEL - Select one of two scalar inputs under the encoded condition.
 
 *Encoding:*
 

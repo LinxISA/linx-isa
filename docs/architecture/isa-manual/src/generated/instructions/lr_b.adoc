@@ -7,7 +7,7 @@
 
 *Syntax:* lr.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], {->t, ->u, ->Rd}
 
-*Description:* Load-reserve byte: atomically load and set reservation on address [Rs].
+*Description:* LR.B - Load the scalar memory value and establish a matching reservation.
 
 *Encoding:*
 

@@ -26,7 +26,7 @@
 
 ## Description
 
-[48-bit HL.] Instruction from the Arithmetic Operation 64bit group.
+HL.SUBI - Compute this mnemonic's binary scalar operation and write the selected destination.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `HL.SUBI - Compute this mnemonic's binary scalar operation and write the selected destination.`
 
 ## Full Catalog Forms
 

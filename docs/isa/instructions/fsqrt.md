@@ -36,7 +36,7 @@ Floating-point square root.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `FSQRT - Compute this mnemonic's unary floating-point operation.`
 
 ## Full Catalog Forms
 

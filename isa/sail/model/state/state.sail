@@ -185,6 +185,8 @@ register decoded_biot_raw_shadow : bits(64) = 0x0000_0000_0000_0000
 // PTO/Linx 0.58 absolute-index core-private Shared tile binding.
 register shared_tile_binding_valid : bool = false
 register shared_tile_binding_id : bits(8) = 0x00
+register shared_tile_binding_pe_mask : bits(4) = 0x0
+register shared_tile_binding_tsize : bits(3) = 0b000
 register decoded_tile_datatype_shadow : bits(5) = 0b00000
 register decoded_bior_regsrc0_shadow : bits(5) = 0b00000
 register decoded_bior_regsrc1_shadow : bits(5) = 0b00000
@@ -241,7 +243,7 @@ function bdatr_sat() -> bool = { bdatr_raw[26] == 0b1 }
 // Payload arithmetic remains a separately graded numeric-oracle gap.
 
 register tile_effect_pending : bool = false
-register tile_effect_family : bits(2) = 0b00 // 1=TMA, 2=CUBE
+register tile_effect_family : bits(2) = 0b00 // 1=TLSU, 2=CUBE
 register tile_effect_function : bits(5) = 0b00000
 register tile_effect_datatype : bits(5) = 0b00000
 register tile_effect_iot_count : bits(6) = 0b00_0000
@@ -1679,6 +1681,10 @@ function bdesc_reset() -> unit = {
   bdesc_seen_datr = false;
   bdesc_seen_ior = false;
   bdesc_seen_iot = false;
+  shared_tile_binding_valid = false;
+  shared_tile_binding_id = 0x00;
+  shared_tile_binding_pe_mask = 0x0;
+  shared_tile_binding_tsize = 0b000;
   clear_ri_bindings();
   tile_effect_reset_descriptors()
 }
@@ -1692,8 +1698,8 @@ function bdesc_mark_iot() -> unit = { bdesc_seen_iot = true }
 // Block type classification for mandatory-descriptor contracts.
 // The decoder provides a stable classification string for the staged model.
 function decoded_block_contract_kind() -> bits(4) = {
-  // 0=none/unspecified, 1=VEC (VPAR/VSEQ/MPAR/MSEQ), 2=TMA (TLOAD/TSTORE),
-  // 3=TMOV, 4=CUBE (TMATMUL/TMATMUL.ACC), 5=ACCCVT, 6=HDRDRV (TEPL/FIXP/TMA-other)
+  // 0=none/unspecified, 1=VEC (VPAR/VSEQ/MPAR/MSEQ), 2=TLSU (TLOAD/TSTORE),
+  // 3=TMOV, 4=CUBE (TMATMUL/TMATMUL.ACC), 5=ACCCVT, 6=HDRDRV (TEPL/FIXP/TLSU-other)
   decoded_block_contract_kind_shadow
 }
 
@@ -1720,7 +1726,7 @@ function bdesc_validate_header_end(src_pc_or_tpc : bits(64)) -> unit = {
         vec_init_p_for_group(ssr_lc1)
       }
     },
-    // TMA: require DATR + IOR + IOT; TEXT illegal.
+    // TLSU: require DATR + IOR + IOT; TEXT illegal.
     0b0010 => {
       if bdesc_seen_text then bdesc_illegal_combo_or_trap(0x02, src_pc_or_tpc)
       else if not_bool(bdesc_seen_datr) then trap_blockfmt(0x03, 0x00, src_pc_or_tpc)

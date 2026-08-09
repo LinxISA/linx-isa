@@ -36,7 +36,7 @@ Store(/* addr */, rs2);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `SDI.U - Store scalar data using this mnemonic's width and address-update form.`
 
 ## Full Catalog Forms
 

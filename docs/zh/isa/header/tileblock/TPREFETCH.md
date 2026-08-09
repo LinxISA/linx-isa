@@ -38,7 +38,7 @@ TPREFETCH <LB0:row, LB1:col, LB2:stride, DataType, PadValue>, [RegSrc]
 
 该 TileOp 编码为以下指令：
 
-- [BSTART.TPREFETCH](../../blockIntro/tma_block/header.md) `DataType`
+- [BSTART.TPREFETCH](../../blockIntro/tlsu_block/header.md) `DataType`
 - [B.DATR](../../header/B.DATR.md) `Layout, PadValue` *（与 TLOAD 共享描述字段）*
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0`
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`

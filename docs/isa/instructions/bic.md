@@ -36,7 +36,7 @@ Bit clear / AND-NOT.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `BIC - Modify the selected scalar bitfield.`
 
 ## Full Catalog Forms
 

@@ -20,11 +20,11 @@
 | [ADDW](../instructions/addw.md) | `addw SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}` | 32 | — | 32-bit word integer addition. |
 | [ANDIW](../instructions/andiw.md) | `andiw SrcL, simm, ->{t, u, Rd}` | 32 | — | 32-bit word AND-immediate. |
 | [ANDW](../instructions/andw.md) | `andw SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}` | 32 | — | 32-bit word bitwise AND. |
-| [HL.ADDIW](../instructions/hl_addiw.md) | `hl.addiw SrcL, uimm, ->{t, u, Rd}` | 48 | — | [48-bit HL.] Instruction from the Arithmetic Operation 32bit group. |
-| [HL.ANDIW](../instructions/hl_andiw.md) | `hl.andiw SrcL, simm, ->{t, u, Rd}` | 48 | — | [48-bit HL.] Instruction from the Arithmetic Operation 32bit group. |
-| [HL.ORIW](../instructions/hl_oriw.md) | `hl.oriw SrcL, simm, ->{t, u, Rd}` | 48 | — | [48-bit HL.] Instruction from the Arithmetic Operation 32bit group. |
-| [HL.SUBIW](../instructions/hl_subiw.md) | `hl.subiw SrcL, uimm, ->{t, u, Rd}` | 48 | — | [48-bit HL.] Instruction from the Arithmetic Operation 32bit group. |
-| [HL.XORIW](../instructions/hl_xoriw.md) | `hl.xoriw SrcL, simm, ->{t, u, Rd}` | 48 | — | [48-bit HL.] Instruction from the Arithmetic Operation 32bit group. |
+| [HL.ADDIW](../instructions/hl_addiw.md) | `hl.addiw SrcL, uimm, ->{t, u, Rd}` | 48 | — | HL.ADDIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result. |
+| [HL.ANDIW](../instructions/hl_andiw.md) | `hl.andiw SrcL, simm, ->{t, u, Rd}` | 48 | — | HL.ANDIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result. |
+| [HL.ORIW](../instructions/hl_oriw.md) | `hl.oriw SrcL, simm, ->{t, u, Rd}` | 48 | — | HL.ORIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result. |
+| [HL.SUBIW](../instructions/hl_subiw.md) | `hl.subiw SrcL, uimm, ->{t, u, Rd}` | 48 | — | HL.SUBIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result. |
+| [HL.XORIW](../instructions/hl_xoriw.md) | `hl.xoriw SrcL, simm, ->{t, u, Rd}` | 48 | — | HL.XORIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result. |
 | [ORIW](../instructions/oriw.md) | `oriw SrcL, simm, ->{t, u, Rd}` | 32 | — | 32-bit word OR-immediate. |
 | [ORW](../instructions/orw.md) | `orw SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}` | 32 | — | 32-bit word bitwise OR. |
 | [SLLIW](../instructions/slliw.md) | `slliw SrcL, shamt, ->{t, u, Rd}` | 32 | — | 32-bit word logical left shift (immediate). |
@@ -33,7 +33,7 @@
 | [SRAW](../instructions/sraw.md) | `sraw SrcL, SrcR, ->{t, u, Rd}` | 32 | — | 32-bit word arithmetic right shift. |
 | [SRLIW](../instructions/srliw.md) | `srliw SrcL, shamt, ->{t, u, Rd}` | 32 | — | 32-bit word logical right shift (immediate). |
 | [SRLW](../instructions/srlw.md) | `srlw SrcL, SrcR, ->{t, u, Rd}` | 32 | — | 32-bit word logical right shift. |
-| [SUBIW](../instructions/subiw.md) | `subiw SrcL, uimm, ->{t, u, Rd}` | 32 | — | Instruction from the Arithmetic Operation 32bit group. |
+| [SUBIW](../instructions/subiw.md) | `subiw SrcL, uimm, ->{t, u, Rd}` | 32 | — | SUBIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result. |
 | [SUBW](../instructions/subw.md) | `subw SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}` | 32 | — | 32-bit word integer subtraction. |
 | [XORIW](../instructions/xoriw.md) | `xoriw SrcL, simm, ->{t, u, Rd}` | 32 | — | 32-bit word XOR-immediate. |
 | [XORW](../instructions/xorw.md) | `xorw SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}` | 32 | — | 32-bit word bitwise XOR. |

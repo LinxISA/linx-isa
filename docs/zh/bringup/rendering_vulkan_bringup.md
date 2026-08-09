@@ -245,7 +245,7 @@ Mesa 软件后端是 `v0.57` 的规范早期渲染支架
 - 完全符合 OpenGL 标准。
 
 ## 与其他规范页面的关系- 架构提交所有权定义在
-  `docs/architecture/v0.57-rendering-command-contract.md`。
+  `docs/zh/architecture/v0.58-architecture-contract.md`。
 - 着色器内核语义仍然由 ISA 合同、手册和
   `isa/v0.57/state/` 规范状态文件。
 - 通过 AVS 和启动保持跟踪工作负载和门关闭状态

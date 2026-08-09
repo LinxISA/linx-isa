@@ -36,7 +36,7 @@ Floating-point subtraction.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `FSUB - Compute this mnemonic's binary floating-point operation.`
 
 ## Full Catalog Forms
 

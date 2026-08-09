@@ -76,6 +76,11 @@
   Done means: no mnemonic appears in AVS translation coverage without also appearing in mapped QEMU implementation coverage.
   Status: ✅ PASS (2026-05-21) - AVS translation coverage, LLVM coverage, and mapped QEMU implementation coverage all now reach `710/710` canonical mnemonics, so the whole-stack mnemonic mismatch bucket is empty.
 
+- [ ] ID: QEMU-009 Upgrade QEMU against the formal LinxISA v0.58 catalog.
+  Command: `python3 tools/bringup/check_qemu_opcode_meta_sync.py --strict`
+  Done means: decode, translation, trap behavior, and runtime AVS evidence are regenerated from `isa/v0.58/linxisa-v0.58.json`; no v0.57 PASS record is transferred.
+  Status: pending fresh v0.58 implementation and exact-head evidence.
+
 - [x] ID: QEMU-006 QEMU can boot full Linux with complete runtime APIs.
   Done means: Linux kernel boots with timer interrupts working, full syscalls available.
   Status: ✅ PASS (2026-02-25) - full-OS closure gate is green in run `2026-02-25-r2-pin-lanefix` (`strict_cross_repo.sh` pass and BusyBox rootfs boot pass evidence in `kernel_busybox_rootfs.log`). Note for current recovery work: the merged Linx64 recovery lane now expects direct kernel/rootfs boot to run firmwareless (`-bios none`), so local rootfs/SPEC reruns should preserve that QEMU invocation policy.

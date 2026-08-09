@@ -7,7 +7,7 @@
 
 *Syntax:* cash<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}
 
-*Description:* v0.58 32-bit compare-and-swap halfword: old=[SrcL]; if old==SrcR then [SrcL]=SrcD; RegDst=old. Supports aq/rl ordering and has no far flag.
+*Description:* CASH - Atomically compare the scalar memory value and conditionally store the replacement.
 
 *Encoding:*
 

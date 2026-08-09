@@ -7,7 +7,7 @@
 
 *Syntax:* setc.eq SrcL, SrcR<{.sw, .uw}>
 
-*Description:* Set block condition flag for q: consumed by BSTART COND.
+*Description:* SETC.EQ - Compare scalar operands and update the bundle commit condition.
 
 *Encoding:*
 

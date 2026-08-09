@@ -26,7 +26,7 @@
 
 ## Description
 
-[16-bit C.] Instruction from the Move group.
+C.SETRET - Write the architectural return address.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ ra = PC + ZeroExtend(imm << 1);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `C.SETRET - Write the architectural return address.`
 
 ## Full Catalog Forms
 

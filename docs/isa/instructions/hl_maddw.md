@@ -26,7 +26,7 @@
 
 ## Description
 
-[48-bit HL.] Instruction from the Multi-Cycle ALU group.
+HL.MADDW - Compute multiply-add and return the scalar result pair.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `HL.MADDW - Compute multiply-add and return the scalar result pair.`
 
 ## Full Catalog Forms
 

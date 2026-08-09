@@ -7,7 +7,7 @@
 
 *Syntax:* sll SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* Shift left of SrcL by SrcR/shamt bits, result to Rd/t/u.
+*Description:* SLL - Compute this mnemonic's binary scalar operation and write the selected destination.
 
 *Encoding:*
 

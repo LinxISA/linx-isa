@@ -7,7 +7,7 @@
 
 *Syntax:* cmp.ltu SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}
 
-*Description:* Compare ltu: set Rd/t/u to 1 if true, else 0.
+*Description:* CMP.LTU - Compare scalar operands and write the encoded boolean result.
 
 *Encoding:*
 

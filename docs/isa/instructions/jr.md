@@ -36,7 +36,7 @@ Jump register: PC-relative or register-based jump to the address in a register.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `JR - Jump to the scalar-register target.`
 
 ## Full Catalog Forms
 

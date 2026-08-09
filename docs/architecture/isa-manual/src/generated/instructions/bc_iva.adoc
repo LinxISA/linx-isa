@@ -7,7 +7,7 @@
 
 *Syntax:* bc.iva SrcL
 
-*Description:* Cache/TLB maintenance: BC.IVA operation on the specified memory hierarchy.
+*Description:* BC.IVA - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
 
 *Encoding:*
 

@@ -26,7 +26,7 @@
 
 ## Description
 
-Instruction from the Bundle Split group.
+Copies an encoded memory range with instruction-atomic preflight and snapshot semantics.
 
 ## Pseudocode (informative)
 

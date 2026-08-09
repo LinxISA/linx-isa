@@ -36,7 +36,7 @@ rd = rs1 >> rs2 (logical);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `SRL - Compute this mnemonic's binary scalar operation and write the selected destination.`
 
 ## Full Catalog Forms
 

@@ -229,7 +229,8 @@ not mutate the input tiles in-place.
 
 NOTE: In the strict profile contract, `B.IOT` prints transfer size in KiB (for example `->t<1KB>`)
 and uses `last` to mark the terminal descriptor in a block header chain. Descriptor metadata may be carried by multiple
-`B.IOR` and `B.IOT` entries in the same header; descriptors are consumed in header order.
+`B.IOT` entries when the operation schema needs more tile operands. PTO direct operations accept at most one `B.IOR`;
+Linx-only vector-body scalar imports may use repeated B.IOR descriptors in header order.
 
 Inherited v0.58 descriptor rules (normative in v0.58 unless explicitly
 extended below):
@@ -241,7 +242,7 @@ extended below):
 ** `m#k` → tile-id `16+(k-1)` (16..23)
 ** `n#k` → tile-id `24+(k-1)` (24..31)
   These tile-ids name positions within the corresponding hand’s architectural tile-register queue.
-* `B.IOT` size codes 3 through 9 map to 128 B through 8 KiB. Every other code is illegal.
+* `B.IOT` and `B.IOS` TSize codes 1 through 7 map to 128 B through 8 KiB. Every other destination size code is illegal.
 * A runtime-resolved size must equal one of those accepted footprints. Compiler/runtime MUST fail fast otherwise.
 * `S0V` / `S1V` semantics are *inverted*: `0` means the corresponding `SrcTile*` is present as an input; `1` means absent.
   When a source is absent, its corresponding `SrcTile*` field is ignored and SHOULD be encoded as `0` in canonical v0.58 output.
@@ -262,7 +263,7 @@ extended below):
   is the most recent definition and larger `k` values refer to older definitions.
 * `.reuse=0` releases an input only after successful consumer commit; `.reuse=1` retains it. Fault, retry, and squash preserve it.
 * Each `B.IOR` descriptor carries up to three source GPR bindings plus one destination GPR binding.
-* Canonical shader-kernel scalar imports are the ordered namespace `ri0..ri11`:
+* In the Linx-only vector-body interface, canonical shader-kernel scalar imports are the ordered namespace `ri0..ri11`:
 ** bindings are allocated from repeated `B.IOR` descriptors in header order,
 ** within one descriptor, imports are assigned in `RegSrc0`, `RegSrc1`, `RegSrc2` order.
 * Each `B.IOT` descriptor carries up to two source-tile references plus one destination tile kind; repeated descriptors
@@ -367,7 +368,9 @@ v0.58 `TMOV` contracts:
 * `TMOV` is a tile-state operation; it MUST NOT directly access GM memory.
 * For `DstTile` kinds `t/u/m/n`, destination allocation is queue-push only (new `hand#1`).
 * Explicit destination depth encoding (`->t#k`/`->u#k`/`->m#k`/`->n#k`) is not part of v0.58.
-* `B.IOT` size codes 3 through 9 select 128 B through 8 KiB; other codes are illegal.
+* `B.IOT` and `B.IOS` size codes 1 through 7 select 128 B through 8 KiB; code 0 is illegal for a participating PE.
+* The selected capacity applies independently to each participating PE. Allocated rows and columns are powers of two,
+  rows are derived from capacity, columns, and datatype, and the valid region must fit inside that allocation.
 * Layout conversion is selected only by an operation-applicable `B.DATR.Layout` value and is capability gated.
 
 v0.58 TLSU assignments:
@@ -400,8 +403,8 @@ v0.58 block split patterns and per-family constraints:
 
 * `BSTART.TLOAD` / `BSTART.TSTORE` (named TLSU Functions 0/1):
 ** use operation-applicable `B.DATR` layout/pad controls; inapplicable non-zero fields are illegal.
-** require at least one `B.IOR` binding carrying base/stride arguments (strict profile convention: stride and base are explicit scalar inputs).
-** strict binding convention is `RegSrc0=stride/ld`, `RegSrc1=base` when both are present.
+** accept zero or one `B.IOR`; omission selects base zero and dense row stride.
+** bind `RegSrc0=base`, `RegSrc1=row_stride_elements`; a second B.IOR is illegal.
 ** require tile binding via `B.IOT`.
 ** are header-driven block commands (no SIMT body; do not use `B.TEXT`).
 * `BSTART.TMATMUL`, `BSTART.TMATMUL.BIAS`, `BSTART.TMATMUL.ACC`, `BSTART.TMATMULMX*`,
@@ -444,8 +447,9 @@ that define per-block metadata for accelerated/tile execution and for bring-up t
 Bring-up conventions:
 
 * Block header descriptors are placed **immediately after** the block start marker.
-* Block metadata is **reset at block start**; repeated descriptor writes within a block are legal, but tooling should
-  prefer *single assignment* in the header.
+* Block metadata is **reset at block start**. Descriptor repetition is legal only when the selected block schema permits
+  it; PTO direct TileOp schemas permit at most one `B.IOR`, while Linx-only vector-body imports may use repeated `B.IOR`
+  descriptors. Tooling should prefer *single assignment* where the schema permits it.
 * Scalar-only implementations may treat most descriptors as **hints/no-ops**, but accelerated implementations may
   consult them for correctness (tile operand binding, ordering, traps).
 
@@ -453,7 +457,8 @@ The v0.58 catalog includes the following descriptor families:
 
 * **Block I/O binding**
   - `B.IOR`: binds GPR inputs/outputs for a block.
-  - `B.IOT`: binds tile inputs/outputs for a block (including optional input reuse and transfer sizing).
+  - `B.IOT`: binds Local tile inputs/outputs for a block (including last-use and transfer sizing).
+  - `B.IOS`: binds an absolute Shared register, PE mask, and destination TSize.
 * **Block arguments**
   - `B.DIM`: writes a block argument register (`LB0`–`LB2`) used for loop bounds, dimensions, and valid masks.
 * **Block attributes and hints**

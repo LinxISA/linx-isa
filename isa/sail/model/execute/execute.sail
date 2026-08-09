@@ -3174,11 +3174,18 @@ function exec_b_dim() -> unit = {
 }
 function exec_c_b_dim() -> unit = { exec_b_dim() }
 function exec_c_b_dimi() -> unit = { exec_b_dim() }
-function exec_c_b_ios(SharedTID : bits(8)) -> unit = {
-  // Role is consumed by the surrounding BSTART schema.  The architectural
-  // index is absolute (S0..S255), not relative to a PE or queue hand.
-  shared_tile_binding_id = SharedTID;
-  shared_tile_binding_valid = true
+function exec_b_ios(SharedTID : bits(8), PE_MASK : bits(4), TSize : bits(3)) -> unit = {
+  // Role is consumed by the surrounding BSTART schema. The architectural
+  // index is absolute (S0..S255), and each mask bit selects one fixed PE
+  // quarter. A zero mask is a strict no-op and does not mutate descriptors.
+  if PE_MASK == 0x0 then ()
+  else {
+    shared_tile_binding_id = SharedTID;
+    shared_tile_binding_pe_mask = PE_MASK;
+    shared_tile_binding_tsize = TSize;
+    shared_tile_binding_valid = true;
+    bdesc_mark_iot()
+  }
 }
 
 function exec_b_text() -> unit = { bdesc_mark_text() }
@@ -3187,10 +3194,11 @@ function exec_b_ior() -> unit = {
   let src1 : bits(5) = decoded_bior_regsrc1();
   let src2 : bits(5) = decoded_bior_regsrc2();
   let _dst : bits(5) = decoded_bior_regdst();
-  // Live v0.57 bring-up follows the shipped LLVM/QEMU ordering for ri* capture:
-  // RegSrc1, then RegSrc0, then RegSrc2; zero-valued GPR slots are skipped.
-  if src1 != 0b00000 then allocate_ri_binding(src1) else ();
+  // Linx-only vector-body scalar imports consume selectors in architectural
+  // header order: RegSrc0, RegSrc1, RegSrc2. PTO direct TileOp schemas allow
+  // at most one B.IOR and assign operation-specific roles to these selectors.
   if src0 != 0b00000 then allocate_ri_binding(src0) else ();
+  if src1 != 0b00000 then allocate_ri_binding(src1) else ();
   if src2 != 0b00000 then allocate_ri_binding(src2) else ();
   bdesc_mark_ior()
 }

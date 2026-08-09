@@ -1,12 +1,16 @@
-# AVS 合约 (v0.57)
+# AVS 兼容性合约（v0.57）
 
-`avs/linx_avs_v1_test_matrix.yaml` 是 灵犀指令集 `v0.57` 唯一的实时公开启动合约。
+`avs/linx_avs_v1_test_matrix.yaml` 保留为公开的 `v0.57` 兼容性矩阵。
+它是硬断裂升级的回归证据，不是 LLVM、QEMU、Linux 或其他消费者已实现
+`v0.58` 的规范证据。每个下游消费者升级时都必须生成新的 `v0.58` AVS
+证据；历史 `v0.57` PASS 结果不得转移。
 
 ## 规范文件
 
 - 矩阵：`avs/linx_avs_v1_test_matrix.yaml`
 - 状态：`avs/linx_avs_v1_test_matrix_status.json`
-- 架构合约：`docs/architecture/v0.57-architecture-contract.md`
+- 当前架构权威：`isa/v0.58/linxisa-v0.58.json`
+- 当前架构说明：`docs/zh/architecture/v0.58-architecture-contract.md`
 
 ## 必需的条目元数据
 
@@ -52,4 +56,6 @@ python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test
 - 维护工作负载运行程序
 - SPEC舞台大门
 
-矩阵就是公共契约。历史数字合同材料已从活动导航中删除，并且不参与关闭。
+该矩阵是上一配置的公开兼容性合约。它不覆盖
+`isa/v0.58/linxisa-v0.58.json`，也不能在缺少新证据时关闭任何 `v0.58`
+消费者升级。

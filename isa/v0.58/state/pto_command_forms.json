@@ -1,6 +1,6 @@
 {
   "form_count": 99,
-  "form_constraint_count": 40,
+  "form_constraint_count": 44,
   "forms": [
     {
       "asm": "B.CATR {trap, atomic, <aq, rl, aqrl>, far, dr}",
@@ -530,8 +530,129 @@
       "status": "accepted"
     },
     {
-      "asm": "B.IOR [RegSrc0, RegSrc1, RegSrc2],[RegDst]",
-      "constraints": [],
+      "asm": "B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>]",
+      "constraints": [
+        {
+          "field": "RegDst",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ]
+        },
+        {
+          "field": "RegSrc0",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ]
+        },
+        {
+          "field": "RegSrc1",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ]
+        },
+        {
+          "field": "RegSrc2",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -597,7 +718,7 @@
       "semantic_family": "CMD",
       "semantic_group": "Bundle Input & Output",
       "semantic_handler": "BindBundleScalarIO",
-      "semantic_summary": "Binds encoded scalar inputs and outputs to the current bundle interface.",
+      "semantic_summary": "Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as logical row stride.",
       "status": "accepted"
     },
     {
@@ -1047,7 +1168,7 @@
       "status": "accepted"
     },
     {
-      "asm": "B.IOT mask=PE_MASK, <last> <, ->DstTile<TSize>>",
+      "asm": "B.IOT mask=PE_MASK, <last>, ->DstTile<TSize>",
       "constraints": [
         {
           "field": "PE_MASK",
@@ -1075,7 +1196,6 @@
           "field": "TSize",
           "operator": "one-of",
           "values": [
-            0,
             1,
             2,
             3,
@@ -1161,7 +1281,7 @@
       "semantic_family": "CMD",
       "semantic_group": "Bundle Input & Output",
       "semantic_handler": "BindBundleTileIO",
-      "semantic_summary": "Binds v5 PE_MASK, ordered Local tile sources, last-use, and optional TSize/2-bit Local destination metadata; TSize=DstTile=0 is the mask-only Shared TLOAD/TSTORE companion and PE_MASK=0000 is a legal no-op.",
+      "semantic_summary": "Binds a destination-only Local Tile operand with per-PE TSize, PE_MASK, and last-use metadata; PE_MASK=0000 is a strict no-op and there is no mask-only Shared companion form.",
       "status": "accepted"
     },
     {
@@ -1313,7 +1433,7 @@
       "semantic_family": "BBD",
       "semantic_group": "BSTART",
       "semantic_handler": "ExecuteBundleStart",
-      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "semantic_summary": "Atomically closes the current bundle, computes the call target from the signed displacement and the return address from the independent unsigned displacement, writes ra, and transfers control to the call bundle.",
       "status": "accepted"
     },
     {
@@ -2169,7 +2289,17 @@
       "status": "accepted"
     },
     {
+      "accepted_assembly_mnemonics": [
+        "BSTART.TEPL",
+        "BSTART.VEC",
+        "BSTART.SFU"
+      ],
       "asm": "BSTART.TEPL Mode, Function, DataType",
+      "canonical_assembly_by_engine": {
+        "SFU": "BSTART.SFU",
+        "VEC": "BSTART.VEC"
+      },
+      "carrier_mnemonic": "BSTART.TEPL",
       "constraints": [
         {
           "field": "DataType",
@@ -3173,10 +3303,9 @@
           "width_bits": 32
         }
       ],
+      "encoding_kind": "L32",
       "encoding_variants": [
         {
-          "name": "TMOV.L2S.INSERT",
-          "function": 9,
           "encoding": [
             {
               "index": 0,
@@ -3184,11 +3313,11 @@
               "match": "0x00911181",
               "width_bits": 32
             }
-          ]
+          ],
+          "function": 9,
+          "name": "TMOV.L2S.INSERT"
         },
         {
-          "name": "TMOV.L2S.PUBLISH",
-          "function": 10,
           "encoding": [
             {
               "index": 0,
@@ -3196,11 +3325,11 @@
               "match": "0x00a11181",
               "width_bits": 32
             }
-          ]
+          ],
+          "function": 10,
+          "name": "TMOV.L2S.PUBLISH"
         },
         {
-          "name": "TMOV.S2L.BROADCAST",
-          "function": 11,
           "encoding": [
             {
               "index": 0,
@@ -3208,11 +3337,11 @@
               "match": "0x00b11181",
               "width_bits": 32
             }
-          ]
+          ],
+          "function": 11,
+          "name": "TMOV.S2L.BROADCAST"
         },
         {
-          "name": "TMOV.S2L.EXTRACT",
-          "function": 12,
           "encoding": [
             {
               "index": 0,
@@ -3220,10 +3349,11 @@
               "match": "0x00c11181",
               "width_bits": 32
             }
-          ]
+          ],
+          "function": 12,
+          "name": "TMOV.S2L.EXTRACT"
         }
       ],
-      "encoding_kind": "L32",
       "fields": [
         {
           "name": "DataType",
@@ -3424,10 +3554,9 @@
           "width_bits": 32
         }
       ],
+      "encoding_kind": "L32",
       "encoding_variants": [
         {
-          "name": "TSTORE.SPART",
-          "function": 14,
           "encoding": [
             {
               "index": 0,
@@ -3435,10 +3564,11 @@
               "match": "0x00e11181",
               "width_bits": 32
             }
-          ]
+          ],
+          "function": 14,
+          "name": "TSTORE.SPART"
         }
       ],
-      "encoding_kind": "L32",
       "fields": [
         {
           "name": "DataType",
@@ -3485,38 +3615,62 @@
       "status": "accepted"
     },
     {
-      "asm": "C.B.IOS S<SharedTID> | C.B.IOS -> S<SharedTID>",
+      "asm": "B.IOS S<SharedTID>, mask=<PE_MASK> | B.IOS mask=<PE_MASK>, ->S<SharedTID><TSize>",
       "constraints": [],
       "encoding": [
         {
           "index": 0,
-          "mask": "0xc03f",
-          "match": "0xc03c",
-          "width_bits": 16
+          "mask": "0xf00871ff",
+          "match": "0x00001013",
+          "width_bits": 32
         }
       ],
-      "encoding_kind": "C16",
+      "encoding_kind": "L32",
       "fields": [
         {
           "name": "SharedTID",
           "pieces": [
             {
-              "instruction_lsb": 6,
+              "instruction_lsb": 20,
               "value_lsb": 0,
               "width": 8
             }
           ],
           "signedness": "encoding-defined",
           "width": 8
+        },
+        {
+          "name": "PE_MASK",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 4
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 4
+        },
+        {
+          "name": "TSize",
+          "pieces": [
+            {
+              "instruction_lsb": 9,
+              "value_lsb": 0,
+              "width": 3
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 3
         }
       ],
-      "form_id": "c_b_ios_16_14f1b8fba5e6",
-      "length_bits": 16,
-      "mnemonic": "C.B.IOS",
+      "form_id": "b_ios_32_4ba5ef98fdaa",
+      "length_bits": 32,
+      "mnemonic": "B.IOS",
       "semantic_family": "CMD",
-      "semantic_group": "Bundle Shared Operand Binding",
+      "semantic_group": "Bundle Input & Output",
       "semantic_handler": "BindBundleSharedIO",
-      "semantic_summary": "Binds one absolute core-private Shared register S0..S255; source or destination role is derived from the surrounding BSTART schema and the binder is consumed once.",
+      "semantic_summary": "Binds one ordered absolute core-private Shared register S0..S255 with a per-PE source/destination size code and four-PE participation mask.",
       "status": "accepted"
     },
     {
@@ -4230,7 +4384,7 @@
       "semantic_family": "BBD",
       "semantic_group": "BSTART",
       "semantic_handler": "ExecuteBundleStart",
-      "semantic_summary": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "semantic_summary": "Atomically closes the current bundle, computes the call target from the signed displacement and the return address from the independent unsigned displacement, writes ra, and transfers control to the call bundle.",
       "status": "accepted"
     },
     {
@@ -5472,7 +5626,7 @@
   ],
   "isa": "PTO Instruction Set Architecture",
   "operand_field_count": 57,
-  "operand_piece_count": 189,
+  "operand_piece_count": 190,
   "reviewed_encoding_overlaps": [
     {
       "broad_form_id": "b_iot_32_10db6db84f5d",
@@ -5485,18 +5639,13 @@
       "reason": "source-only form fixes TSize to zero; destination form requires TSize 1..7 and a 2-bit DstTile"
     },
     {
-      "broad_form_id": "c_b_dimi_16_3f1b113c76ce",
-      "narrow_form_id": "c_b_ios_16_14f1b8fba5e6",
-      "reason": "C.B.IOS occupies the v5 compressed register-dimension encoding slot reassigned from C.B.DIM"
-    },
-    {
       "broad_form_id": "c_bstart_std_16_8b40f078c14a",
       "narrow_form_id": "c_bstop_16_ca4743d8a95e",
       "reason": "C.BSTOP fixes the broad C.BSTART.STD BrType field to excluded value 0"
     }
   ],
   "schema_version": 2,
-  "semantic_handler_count": 21,
+  "semantic_handler_count": 22,
   "surface": "command-and-boundary",
   "source_lock": "isa/v0.58/pto-spec.lock.json"
 }

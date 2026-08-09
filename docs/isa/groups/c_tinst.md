@@ -16,12 +16,12 @@
 
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
-| [C.CMP.EQI](../instructions/c_cmp_eqi.md) | `c.cmp.eqi t#1, simm, ->t` | 16 | — | [16-bit C.] Instruction from the C.TINST group. |
-| [C.CMP.NEI](../instructions/c_cmp_nei.md) | `c.cmp.nei t#1, simm, ->t` | 16 | — | [16-bit C.] Instruction from the C.TINST group. |
-| [C.EBREAK](../instructions/c_ebreak.md) | `c.break imm` | 16 | — | [16-bit C.] Instruction from the C.TINST group. |
-| [C.SLLI](../instructions/c_slli.md) | `c.slli t#1, uimm, ->t` | 16 | — | [16-bit C.] Instruction from the C.TINST group. |
-| [C.SRLI](../instructions/c_srli.md) | `c.srli t#1, uimm, ->t` | 16 | — | [16-bit C.] Instruction from the C.TINST group. |
-| [C.SSRGET](../instructions/c_ssrget.md) | `c.ssrget SSR-ID, ->t` | 16 | — | [16-bit C.] Instruction from the C.TINST group. |
+| [C.CMP.EQI](../instructions/c_cmp_eqi.md) | `c.cmp.eqi t#1, simm, ->t` | 16 | — | C.CMP.EQI - Compare scalar operands and write the encoded boolean result. |
+| [C.CMP.NEI](../instructions/c_cmp_nei.md) | `c.cmp.nei t#1, simm, ->t` | 16 | — | C.CMP.NEI - Compare scalar operands and write the encoded boolean result. |
+| [C.EBREAK](../instructions/c_ebreak.md) | `c.break imm` | 16 | — | C.EBREAK - Raise the software breakpoint exception. |
+| [C.SLLI](../instructions/c_slli.md) | `c.slli t#1, uimm, ->t` | 16 | — | C.SLLI - Compute this mnemonic's binary scalar operation and write the selected destination. |
+| [C.SRLI](../instructions/c_srli.md) | `c.srli t#1, uimm, ->t` | 16 | — | C.SRLI - Compute this mnemonic's binary scalar operation and write the selected destination. |
+| [C.SSRGET](../instructions/c_ssrget.md) | `c.ssrget SSR-ID, ->t` | 16 | — | C.SSRGET - Read the compressed-form system register. |
 
 ## See Also
 

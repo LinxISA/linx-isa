@@ -26,7 +26,7 @@
 
 ## Description
 
-[16-bit C.] Instruction from the C.TINST group.
+C.SLLI - Compute this mnemonic's binary scalar operation and write the selected destination.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ rd = rs1 << shamt;
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `C.SLLI - Compute this mnemonic's binary scalar operation and write the selected destination.`
 
 ## Full Catalog Forms
 

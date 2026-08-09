@@ -36,7 +36,7 @@ Execution control instruction.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `BWI - Issue this mnemonic's architecture control request.`
 
 ## Full Catalog Forms
 

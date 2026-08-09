@@ -7,7 +7,7 @@
 
 *Syntax:* feq.{T} SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* Floating-point compare eq: set Rd/t/u to 1 if true, else 0.
+*Description:* FEQ - Compare floating-point operands and produce the encoded result.
 
 *Encoding:*
 

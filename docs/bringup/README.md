@@ -13,7 +13,7 @@ is the only live public bring-up contract.
 
 ## Normative Contract
 
-- Architecture contract: `docs/architecture/v0.57-architecture-contract.md`
+- Architecture contract: `docs/architecture/v0.58-architecture-contract.md`
 - AVS contract page: `docs/bringup/AVS_CONTRACT.md`
 - canonical AVS matrix: `avs/linx_avs_v1_test_matrix.yaml`
 - contract gate: `python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml`

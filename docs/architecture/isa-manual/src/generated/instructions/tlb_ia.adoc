@@ -7,7 +7,7 @@
 
 *Syntax:* tlb.ia SrcL
 
-*Description:* Cache/TLB maintenance: TLB.IA operation on the specified memory hierarchy.
+*Description:* TLB.IA - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
 
 *Encoding:*
 

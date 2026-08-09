@@ -7,7 +7,7 @@
 
 *Syntax:* dc.iall
 
-*Description:* Cache/TLB maintenance: DC.IALL operation on the specified memory hierarchy.
+*Description:* DC.IALL - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
 
 *Encoding:*
 

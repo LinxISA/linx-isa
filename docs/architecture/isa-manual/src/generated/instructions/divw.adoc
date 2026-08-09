@@ -7,7 +7,7 @@
 
 *Syntax:* divw SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* Divide (word): Dst0 = quotient, Dst1 = remainder.
+*Description:* DIVW - Compute signed 32-bit quotient and sign-extend it.
 
 *Encoding:*
 

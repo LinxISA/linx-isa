@@ -36,7 +36,7 @@ Cache maintenance operation.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `DC.CVA - Perform this mnemonic's cache, TLB, or bundle maintenance operation.`
 
 ## Full Catalog Forms
 

@@ -355,20 +355,12 @@ discipline should be:
 4. Run strict cross-repo closure.
 5. Merge the repin only when required gates and evidence are complete.
 
-Recommended sync and repin flow:
+Recommended pinned repin flow:
 
 ```bash
-git submodule sync --recursive
-git submodule update --init --recursive
-git submodule update --remote \
-  compiler/llvm \
-  emulator/qemu \
-  kernel/linux \
-  rtl/LinxCore \
-  tools/pyCircuit \
-  lib/glibc \
-  lib/musl \
-  workloads/pto_kernels
+git -C <leaf> fetch origin <reviewed-commit>
+git -C <leaf> checkout --detach <reviewed-commit>
+git add <leaf>
 bash tools/ci/check_repo_layout.sh
 ```
 

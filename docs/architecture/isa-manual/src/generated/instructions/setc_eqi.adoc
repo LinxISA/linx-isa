@@ -7,7 +7,7 @@
 
 *Syntax:* setc.eqi SrcL, simm
 
-*Description:* Set block condition flag for q immediate: consumed by BSTART COND.
+*Description:* SETC.EQI - Compare scalar operands and update the bundle commit condition.
 
 *Encoding:*
 

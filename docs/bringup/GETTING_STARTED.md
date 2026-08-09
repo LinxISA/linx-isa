@@ -2,6 +2,8 @@
 
 This guide is the entry point for contributors joining the LinxISA bring-up workspace.
 
+The current ISA authority is `isa/v0.58/linxisa-v0.58.json`.
+
 ## 1. Prerequisites
 
 ### Platform notes
@@ -26,10 +28,10 @@ This guide is the entry point for contributors joining the LinxISA bring-up work
 ## 2. Clone with Submodules
 
 ```bash
-git clone --recurse-submodules git@github.com:LinxISA/linx-isa.git
+git clone git@github.com:LinxISA/linx-isa.git
 cd linx-isa
-git submodule sync --recursive
-git submodule update --init --recursive
+git submodule sync -- compiler/llvm
+git submodule update --init compiler/llvm
 ```
 
 Submodule map:
@@ -86,13 +88,16 @@ python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test
 4. Merge upstream in ecosystem repos.
 5. Bump submodule SHAs in `linx-isa`.
 
-Submodule bump command:
+After a leaf change is merged and verified, update only its pinned gitlink:
 
 ```bash
-git submodule update --remote compiler/llvm emulator/qemu kernel/linux rtl/LinxCore tools/pyCircuit lib/glibc lib/musl workloads/pto_kernels
-git add .gitmodules compiler/llvm emulator/qemu kernel/linux rtl/LinxCore tools/pyCircuit lib/glibc lib/musl workloads/pto_kernels
-git commit -m "chore(submodules): bump ecosystem revisions"
+git -C compiler/llvm fetch origin <reviewed-commit>
+git -C compiler/llvm checkout --detach <reviewed-commit>
+git add compiler/llvm
+git commit -m "chore(submodules): bump llvm revision"
 ```
+
+Do not use an unpinned remote update in an agent workflow.
 
 ## 5. Canonical Paths
 
@@ -101,7 +106,7 @@ git commit -m "chore(submodules): bump ecosystem revisions"
 - Freestanding libc support used by AVS: `avs/runtime/freestanding/`
 - Linux libc source forks: `lib/glibc/`, `lib/musl/`
 - PTO kernel headers: `workloads/pto_kernels/include/`
-- Assembly sample pack: `docs/reference/examples/v0.57/`
+- Assembly sample pack: `docs/reference/examples/README.md`
 
 ## 6. Coordination References
 

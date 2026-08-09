@@ -5,9 +5,9 @@
 [[inst_b_ior]]
 ==== B.IOR
 
-*Syntax:* B.IOR [RegSrc0, RegSrc1, RegSrc2],[RegDst]
+*Syntax:* B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>]
 
-*Description:* Binds encoded scalar inputs and outputs to the current bundle interface.
+*Description:* Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as logical row stride.
 
 *Encoding:*
 

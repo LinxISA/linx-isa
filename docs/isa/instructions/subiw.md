@@ -26,7 +26,7 @@
 
 ## Description
 
-Instruction from the Arithmetic Operation 32bit group.
+SUBIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ Instruction from the Arithmetic Operation 32bit group.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `SUBIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.`
 
 ## Full Catalog Forms
 

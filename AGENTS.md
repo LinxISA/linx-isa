@@ -1,6 +1,6 @@
 # LinxISA Agent Navigation Contract
 
-> **Version**: v0.5  
+> **Version**: v0.58
 > **Canonical Map**: [docs/project/navigation.md](docs/project/navigation.md)
 
 This document defines the navigation rules for AI agents and contributors working in the LinxISA superproject.
@@ -9,6 +9,13 @@ This document defines the navigation rules for AI agents and contributors workin
 
 ## Bring-up Workflow Entry Points
 
+- Start every architecture lookup from `isa/v0.58/linxisa-v0.58.json`, then
+  use `docs/architecture/v0.58-architecture-contract.md` for narrative context.
+- The Tile execution engines are exactly `VEC`, `SFU`, `TLSU`, and `CUBE`.
+  `VEC` is element-wise only; `SFU` owns complex operations. `TEPL` is the
+  unchanged Mode/Function encoding carrier for VEC/SFU, not an engine.
+- Historical profiles and archived documents are non-normative and MUST NOT be
+  used to infer current encodings or semantics.
 - Start benchmark/QEMU/Linux bring-up from `docs/bringup/BENCHMARK_QEMU_LINUX_FLOW.md`.
 - Treat `docs/bringup/benchmark_qemu_linux_flow.json` as the machine-readable hard-break stage order.
 - Use `tools/bringup/run_benchmark_linux_flow.py` for PR, Linux, and nightly benchmark profiles.
@@ -44,7 +51,7 @@ lib/         # Standard libraries (glibc, musl)
 | Freestanding libc | `avs/runtime/freestanding/` |
 | pyCircuit model | `tools/pyCircuit/` (submodule) |
 | PTO kernels | `workloads/pto_kernels/` (submodule) |
-| Assembly examples | `docs/reference/examples/v0.57/` |
+| Assembly guidance | `docs/reference/linxisa-assembly-agent-guide.md` |
 
 ---
 
@@ -70,30 +77,19 @@ lib/         # Standard libraries (glibc, musl)
 
 ---
 
-## Submodule Bump Workflow
+## Submodule Workflow
 
 ```bash
-# Sync all submodules
-git submodule sync --recursive
-
-# Initialize all submodules
-git submodule update --init --recursive
-
-# Pull latest from upstream remotes
-git submodule update --remote \
-    compiler/llvm \
-    compiler/ptoas \
-    emulator/qemu \
-    kernel/linux \
-    rtl/LinxCore \
-    tools/pyCircuit \
-    lib/glibc \
-    lib/musl \
-    workloads/pto_kernels
+# Initialize only the pinned leaf required by the current task.
+git submodule sync -- compiler/llvm
+git submodule update --init compiler/llvm
 
 # Verify repository layout
 bash tools/ci/check_repo_layout.sh
 ```
+
+Never use an unpinned remote update as an agent shortcut. Merge and verify the
+leaf repository first, then update its gitlink in a dedicated superproject PR.
 
 ---
 

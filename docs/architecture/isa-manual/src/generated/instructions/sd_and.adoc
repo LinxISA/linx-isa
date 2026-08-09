@@ -7,7 +7,7 @@
 
 *Syntax:* sd.and<.{rl, f, rlf}> [SrcL], SrcR
 
-*Description:* Atomic fetch-and-and AND at address [Rs+RsR]: old value to Rd/t/u, updated memory.
+*Description:* SD.AND - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
 
 *Encoding:*
 

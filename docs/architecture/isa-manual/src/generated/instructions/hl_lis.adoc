@@ -7,7 +7,7 @@
 
 *Syntax:* hl.lis simm, ->{t, u, Rd}
 
-*Description:* Long 48-bit load immediate signed (32-bit sign-extended constant), result to Rd/t/u.
+*Description:* HL.LIS - Materialize the encoded signed long immediate.
 
 *Encoding:*
 

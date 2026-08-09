@@ -37,7 +37,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ArchitectureCloseRequest",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "ACRC - Request architecture context close."
     },
     {
       "asm": "acre rra_type",
@@ -71,7 +72,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ArchitectureEnterRequest",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "ACRE - Request architecture context entry."
     },
     {
       "asm": "add SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}",
@@ -153,7 +155,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "ADD - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "addi SrcL, uimm, ->{t, u, Rd}",
@@ -211,7 +214,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "ADDI - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "addiw SrcL, uimm, ->{t, u, Rd}",
@@ -269,7 +273,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinaryW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "ADDIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result."
     },
     {
       "asm": "addtpc simm, ->{t, u, Rd}",
@@ -321,7 +326,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "AddToPC",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "ADDTPC - Add the encoded displacement to the program counter."
     },
     {
       "asm": "addw SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}",
@@ -403,7 +409,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinaryW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "ADDW - Compute this mnemonic's 32-bit binary operation and sign-extend the result."
     },
     {
       "asm": "and SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}",
@@ -485,7 +492,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "AND - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "andi SrcL, simm, ->{t, u, Rd}",
@@ -543,7 +551,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "ANDI - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "andiw SrcL, simm, ->{t, u, Rd}",
@@ -601,7 +610,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinaryW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "ANDIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result."
     },
     {
       "asm": "andw SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}",
@@ -683,7 +693,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinaryW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "ANDW - Compute this mnemonic's 32-bit binary operation and sign-extend the result."
     },
     {
       "asm": "assert SrcL",
@@ -717,7 +728,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ArchitectureAssert",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "ASSERT - Raise the architecture assertion trap when its condition fails."
     },
     {
       "asm": "b.eq SrcL, SrcR, label",
@@ -780,7 +792,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "BranchRelative",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "B.EQ - Conditionally branch to the PC-relative target after comparing scalar operands."
     },
     {
       "asm": "b.ge SrcL, SrcR, label",
@@ -843,7 +856,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "BranchRelative",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "B.GE - Conditionally branch to the PC-relative target after comparing scalar operands."
     },
     {
       "asm": "b.geu SrcL, SrcR, label",
@@ -906,7 +920,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "BranchRelative",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "B.GEU - Conditionally branch to the PC-relative target after comparing scalar operands."
     },
     {
       "asm": "b.lt SrcL, SrcR, label",
@@ -969,7 +984,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "BranchRelative",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "B.LT - Conditionally branch to the PC-relative target after comparing scalar operands."
     },
     {
       "asm": "b.ltu SrcL, SrcR, label",
@@ -1032,7 +1048,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "BranchRelative",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "B.LTU - Conditionally branch to the PC-relative target after comparing scalar operands."
     },
     {
       "asm": "b.ne SrcL, SrcR, label",
@@ -1095,7 +1112,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "BranchRelative",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "B.NE - Conditionally branch to the PC-relative target after comparing scalar operands."
     },
     {
       "asm": "b.nz label",
@@ -1134,7 +1152,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "BranchRelative",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "B.NZ - Conditionally branch to the PC-relative target after comparing scalar operands."
     },
     {
       "asm": "b.z label",
@@ -1173,7 +1192,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "BranchRelative",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "B.Z - Conditionally branch to the PC-relative target after comparing scalar operands."
     },
     {
       "asm": "bc.iall",
@@ -1194,7 +1214,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteMaintenance",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "BC.IALL - Perform this mnemonic's cache, TLB, or bundle maintenance operation."
     },
     {
       "asm": "bc.iva SrcL",
@@ -1228,7 +1249,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteMaintenance",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "BC.IVA - Perform this mnemonic's cache, TLB, or bundle maintenance operation."
     },
     {
       "asm": "bcnt srcL,  M, N, ->{t, u, Rd}",
@@ -1298,7 +1320,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "CountBitfield",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "BCNT - Count the selected bit property of the scalar source."
     },
     {
       "asm": "bic SrcL, M, N, ->{t, u, Rd}",
@@ -1368,7 +1391,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ModifyBitfield",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "BIC - Modify the selected scalar bitfield."
     },
     {
       "asm": "bis SrcL, M, N, ->{t, u, Rd}",
@@ -1438,7 +1462,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ModifyBitfield",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "BIS - Modify the selected scalar bitfield."
     },
     {
       "asm": "bse SrcL",
@@ -1472,7 +1497,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteControlRequest",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "BSE - Issue this mnemonic's architecture control request."
     },
     {
       "asm": "bwe SrcL",
@@ -1506,7 +1532,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteControlRequest",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "BWE - Issue this mnemonic's architecture control request."
     },
     {
       "asm": "bwi SrcL",
@@ -1540,7 +1567,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteControlRequest",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "BWI - Issue this mnemonic's architecture control request."
     },
     {
       "asm": "bwt SrcL",
@@ -1574,7 +1602,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteControlRequest",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "BWT - Issue this mnemonic's architecture control request."
     },
     {
       "asm": "bxs SrcL, M, N, ->{t, u, Rd}",
@@ -1644,7 +1673,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ExtractBitfield",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "BXS - Extract the selected scalar bitfield."
     },
     {
       "asm": "bxu SrcL, M, N, ->{t, u, Rd}",
@@ -1714,7 +1744,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ExtractBitfield",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "BXU - Extract the selected scalar bitfield."
     },
     {
       "asm": "c.add srcL, srcR, ->t",
@@ -1760,7 +1791,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.ADD - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "c.addi srcL, simm, ->t",
@@ -1806,7 +1838,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.ADDI - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "c.and srcL, srcR, ->t",
@@ -1852,7 +1885,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.AND - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "c.cmp.eqi t#1, simm, ->t",
@@ -1886,7 +1920,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.CMP.EQI - Compare scalar operands and write the encoded boolean result."
     },
     {
       "asm": "c.cmp.nei t#1, simm, ->t",
@@ -1920,7 +1955,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.CMP.NEI - Compare scalar operands and write the encoded boolean result."
     },
     {
       "asm": "c.break imm",
@@ -1954,7 +1990,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "SoftwareBreakpoint",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.EBREAK - Raise the software breakpoint exception."
     },
     {
       "asm": "c.ldi [srcL, simm], ->t",
@@ -2000,7 +2037,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/BASE_IMM",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.LDI - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "c.lwi [srcL, simm], ->t",
@@ -2046,7 +2084,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/BASE_IMM",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.LWI - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "c.movi simm, ->{t, u, Rd}",
@@ -2098,7 +2137,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "MoveScalarValue",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.MOVI - Move the scalar source to the selected destination."
     },
     {
       "asm": "c.movr SrcL, ->{t, u, Rd}",
@@ -2144,7 +2184,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "MoveScalarValue",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.MOVR - Move the scalar source to the selected destination."
     },
     {
       "asm": "c.or srcL, srcR, ->t",
@@ -2190,7 +2231,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.OR - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "c.sdi t#1, [srcL, simm]",
@@ -2236,7 +2278,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/BASE_IMM",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.SDI - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "c.setc.eq srcL, srcR",
@@ -2282,7 +2325,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteSetCommit",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.SETC.EQ - Compare scalar operands and update the bundle commit condition."
     },
     {
       "asm": "c.setc.ne srcL, srcR",
@@ -2328,7 +2372,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteSetCommit",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.SETC.NE - Compare scalar operands and update the bundle commit condition."
     },
     {
       "asm": "c.setc.tgt srcL",
@@ -2362,7 +2407,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "SetCommitTarget",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.SETC.TGT - Write the bundle commit target."
     },
     {
       "asm": "c.setret uimm, - >Ra",
@@ -2396,7 +2442,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "SetReturnAddress",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.SETRET - Write the architectural return address."
     },
     {
       "asm": "c.sext.b srcL, ->t",
@@ -2430,7 +2477,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ExtendScalarValue",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.SEXT.B - Sign-extend or zero-extend the selected scalar subword."
     },
     {
       "asm": "c.sext.h srcL, ->t",
@@ -2464,7 +2512,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ExtendScalarValue",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.SEXT.H - Sign-extend or zero-extend the selected scalar subword."
     },
     {
       "asm": "c.sext.w srcL, ->t",
@@ -2498,7 +2547,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ExtendScalarValue",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.SEXT.W - Sign-extend or zero-extend the selected scalar subword."
     },
     {
       "asm": "c.slli t#1, uimm, ->t",
@@ -2532,7 +2582,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.SLLI - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "c.srli t#1, uimm, ->t",
@@ -2566,7 +2617,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.SRLI - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "c.ssrget SSR-ID, ->t",
@@ -2600,7 +2652,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteCompressedSystemRegisterGet",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.SSRGET - Read the compressed-form system register."
     },
     {
       "asm": "c.sub srcL, srcR, ->t",
@@ -2646,7 +2699,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.SUB - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "c.swi t#1, [srcL, simm]",
@@ -2692,7 +2746,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/BASE_IMM",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.SWI - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "c.zext.b srcL, ->t",
@@ -2726,7 +2781,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ExtendScalarValue",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.ZEXT.B - Sign-extend or zero-extend the selected scalar subword."
     },
     {
       "asm": "c.zext.h srcL, ->t",
@@ -2760,7 +2816,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ExtendScalarValue",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.ZEXT.H - Sign-extend or zero-extend the selected scalar subword."
     },
     {
       "asm": "c.zext.w srcL, ->t",
@@ -2794,7 +2851,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ExtendScalarValue",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "C.ZEXT.W - Sign-extend or zero-extend the selected scalar subword."
     },
     {
       "asm": "casb<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}",
@@ -2888,7 +2946,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "CompareAndSwap",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "CASB - Atomically compare the scalar memory value and conditionally store the replacement."
     },
     {
       "asm": "casd<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}",
@@ -2982,7 +3041,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "CompareAndSwap",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "CASD - Atomically compare the scalar memory value and conditionally store the replacement."
     },
     {
       "asm": "cash<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}",
@@ -3076,7 +3136,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "CompareAndSwap",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "CASH - Atomically compare the scalar memory value and conditionally store the replacement."
     },
     {
       "asm": "casw<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}",
@@ -3170,7 +3231,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "CompareAndSwap",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "CASW - Atomically compare the scalar memory value and conditionally store the replacement."
     },
     {
       "asm": "clz SrcL,  M, N, ->{t, u, Rd}",
@@ -3240,7 +3302,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "CountBitfield",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "CLZ - Count the selected bit property of the scalar source."
     },
     {
       "asm": "cmp.and SrcL, SrcR<.sw, .uw, .not>, ->{t, u, Rd}",
@@ -3310,7 +3373,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteCompareLogical",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "CMP.AND - Combine scalar comparison results with the encoded logical operation."
     },
     {
       "asm": "cmp.andi SrcL, simm, ->{t, u, Rd}",
@@ -3368,7 +3432,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteCompareLogical",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "CMP.ANDI - Combine scalar comparison results with the encoded logical operation."
     },
     {
       "asm": "cmp.eq SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}",
@@ -3438,7 +3503,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "CMP.EQ - Compare scalar operands and write the encoded boolean result."
     },
     {
       "asm": "cmp.eqi SrcL, simm, ->{t, u, Rd}",
@@ -3496,7 +3562,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "CMP.EQI - Compare scalar operands and write the encoded boolean result."
     },
     {
       "asm": "cmp.ge SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}",
@@ -3566,7 +3633,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "CMP.GE - Compare scalar operands and write the encoded boolean result."
     },
     {
       "asm": "cmp.gei SrcL, simm, ->{t, u, Rd}",
@@ -3624,7 +3692,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "CMP.GEI - Compare scalar operands and write the encoded boolean result."
     },
     {
       "asm": "cmp.geu SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}",
@@ -3694,7 +3763,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "CMP.GEU - Compare scalar operands and write the encoded boolean result."
     },
     {
       "asm": "cmp.geui SrcL, uimm, ->{t, u, Rd}",
@@ -3752,7 +3822,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "CMP.GEUI - Compare scalar operands and write the encoded boolean result."
     },
     {
       "asm": "cmp.lt SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}",
@@ -3822,7 +3893,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "CMP.LT - Compare scalar operands and write the encoded boolean result."
     },
     {
       "asm": "cmp.lti SrcL, simm, ->{t, u, Rd}",
@@ -3880,7 +3952,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "CMP.LTI - Compare scalar operands and write the encoded boolean result."
     },
     {
       "asm": "cmp.ltu SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}",
@@ -3950,7 +4023,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "CMP.LTU - Compare scalar operands and write the encoded boolean result."
     },
     {
       "asm": "cmp.ltui SrcL, uimm, ->{t, u, Rd}",
@@ -4008,7 +4082,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "CMP.LTUI - Compare scalar operands and write the encoded boolean result."
     },
     {
       "asm": "cmp.ne SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}",
@@ -4078,7 +4153,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "CMP.NE - Compare scalar operands and write the encoded boolean result."
     },
     {
       "asm": "cmp.nei SrcL, simm, ->{t, u, Rd}",
@@ -4136,7 +4212,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "CMP.NEI - Compare scalar operands and write the encoded boolean result."
     },
     {
       "asm": "cmp.or SrcL, SrcR<.sw, .uw, .not>, ->{t, u, Rd}",
@@ -4206,7 +4283,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteCompareLogical",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "CMP.OR - Combine scalar comparison results with the encoded logical operation."
     },
     {
       "asm": "cmp.ori SrcL, simm, ->{t, u, Rd}",
@@ -4264,7 +4342,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteCompareLogical",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "CMP.ORI - Combine scalar comparison results with the encoded logical operation."
     },
     {
       "asm": "csel SrcP, SrcL, SrcR<.neg>, ->{t, u, Rd}",
@@ -4346,7 +4425,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarConditionalSelect",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "CSEL - Select one of two scalar inputs under the encoded condition."
     },
     {
       "asm": "ctz SrcL,  M, N, ->{t, u, Rd}",
@@ -4416,7 +4496,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "CountBitfield",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "CTZ - Count the selected bit property of the scalar source."
     },
     {
       "asm": "dc.cisw SrcL",
@@ -4450,7 +4531,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteMaintenance",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "DC.CISW - Perform this mnemonic's cache, TLB, or bundle maintenance operation."
     },
     {
       "asm": "dc.civa SrcL",
@@ -4484,7 +4566,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteMaintenance",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "DC.CIVA - Perform this mnemonic's cache, TLB, or bundle maintenance operation."
     },
     {
       "asm": "dc.csw SrcL",
@@ -4518,7 +4601,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteMaintenance",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "DC.CSW - Perform this mnemonic's cache, TLB, or bundle maintenance operation."
     },
     {
       "asm": "dc.cva SrcL",
@@ -4552,7 +4636,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteMaintenance",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "DC.CVA - Perform this mnemonic's cache, TLB, or bundle maintenance operation."
     },
     {
       "asm": "dc.iall",
@@ -4573,7 +4658,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteMaintenance",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "DC.IALL - Perform this mnemonic's cache, TLB, or bundle maintenance operation."
     },
     {
       "asm": "dc.isw SrcL",
@@ -4607,7 +4693,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteMaintenance",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "DC.ISW - Perform this mnemonic's cache, TLB, or bundle maintenance operation."
     },
     {
       "asm": "dc.iva SrcL",
@@ -4641,7 +4728,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteMaintenance",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "DC.IVA - Perform this mnemonic's cache, TLB, or bundle maintenance operation."
     },
     {
       "asm": "dc.zva SrcL",
@@ -4675,7 +4763,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteMaintenance",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "DC.ZVA - Perform this mnemonic's cache, TLB, or bundle maintenance operation."
     },
     {
       "asm": "dma [SrcL], SrcR",
@@ -4721,7 +4810,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "ExecuteScalarDMACopy64",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "Copies exactly one 64-byte region from the SrcL address to the SrcR address; validates both ranges before effects, snapshots the source so overlap has memmove semantics, and guarantees that a fault leaves memory unchanged."
     },
     {
       "asm": "div SrcL, SrcR, ->{t, u, Rd}",
@@ -4779,7 +4869,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarDivideSigned",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "DIV - Compute signed scalar quotient."
     },
     {
       "asm": "divu SrcL, SrcR, ->{t, u, Rd}",
@@ -4837,7 +4928,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarDivideUnsigned",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "DIVU - Compute unsigned scalar quotient."
     },
     {
       "asm": "divuw SrcL, SrcR, ->{t, u, Rd}",
@@ -4895,7 +4987,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarDivideUnsignedW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "DIVUW - Compute unsigned 32-bit quotient and sign-extend it."
     },
     {
       "asm": "divw SrcL, SrcR, ->{t, u, Rd}",
@@ -4953,7 +5046,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarDivideSignedW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "DIVW - Compute signed 32-bit quotient and sign-extend it."
     },
     {
       "asm": "ebreak imm",
@@ -4987,7 +5081,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "SoftwareBreakpoint",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "EBREAK - Raise the software breakpoint exception."
     },
     {
       "asm": "fabs.{T} SrcL, ->{t, u, Rd}",
@@ -5045,7 +5140,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "FloatingUnary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FABS - Compute this mnemonic's unary floating-point operation."
     },
     {
       "asm": "fadd.{T} SrcL, SrcR, ->{t, u, Rd}",
@@ -5115,7 +5211,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "FloatingBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FADD - Compute this mnemonic's binary floating-point operation."
     },
     {
       "asm": "fcvt.{srcT2dstT} SrcL, ->{t, u, Rd}",
@@ -5185,7 +5282,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "ConvertFloatingEncoding",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FCVT - Convert between the encoded scalar numeric formats."
     },
     {
       "asm": "fcvta.{srcT2dstT} SrcL, ->{t, u, Rd}",
@@ -5255,7 +5353,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "ConvertFloatingEncoding",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FCVTA - Convert between the encoded scalar numeric formats."
     },
     {
       "asm": "fcvtm.{srcT2dstT} SrcL, ->{t, u, Rd}",
@@ -5325,7 +5424,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "ConvertFloatingEncoding",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FCVTM - Convert between the encoded scalar numeric formats."
     },
     {
       "asm": "fcvtn.{srcT2dstT} SrcL, ->{t, u, Rd}",
@@ -5395,7 +5495,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "ConvertFloatingEncoding",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FCVTN - Convert between the encoded scalar numeric formats."
     },
     {
       "asm": "fcvtp.{srcT2dstT} SrcL, ->{t, u, Rd}",
@@ -5465,7 +5566,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "ConvertFloatingEncoding",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FCVTP - Convert between the encoded scalar numeric formats."
     },
     {
       "asm": "fcvtz.{srcT2dstT} SrcL, ->{t, u, Rd}",
@@ -5535,7 +5637,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "ConvertFloatingEncoding",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FCVTZ - Convert between the encoded scalar numeric formats."
     },
     {
       "asm": "fdiv.{T} SrcL, SrcR, ->{t, u, Rd}",
@@ -5605,7 +5708,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "FloatingBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FDIV - Compute this mnemonic's binary floating-point operation."
     },
     {
       "asm": "fence.d pred_imm, succ_imm",
@@ -5651,7 +5755,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "FenceData",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FENCE.D - Order the selected predecessor and successor data-access classes."
     },
     {
       "asm": "fence.i",
@@ -5672,7 +5777,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "FenceInstruction",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FENCE.I - Synchronize instruction visibility after prior writes."
     },
     {
       "asm": "feq.{T} SrcL, SrcR, ->{t, u, Rd}",
@@ -5742,7 +5848,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "FloatingCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FEQ - Compare floating-point operands and produce the encoded result."
     },
     {
       "asm": "feqs.{T} SrcL, SrcR, ->{t, u, Rd}",
@@ -5812,7 +5919,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "FloatingCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FEQS - Compare floating-point operands and produce the encoded result."
     },
     {
       "asm": "fexp.{T} SrcL, ->{t, u, Rd}",
@@ -5870,7 +5978,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "FloatingUnary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FEXP - Compute this mnemonic's unary floating-point operation."
     },
     {
       "asm": "fge.{T} SrcL, SrcR, ->{t, u, Rd}",
@@ -5940,7 +6049,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "FloatingCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FGE - Compare floating-point operands and produce the encoded result."
     },
     {
       "asm": "fges.{T} SrcL, SrcR, ->{t, u, Rd}",
@@ -6010,7 +6120,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "FloatingCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FGES - Compare floating-point operands and produce the encoded result."
     },
     {
       "asm": "flt.{T} SrcL, SrcR, ->{t, u, Rd}",
@@ -6080,7 +6191,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "FloatingCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FLT - Compare floating-point operands and produce the encoded result."
     },
     {
       "asm": "flts.{T} SrcL, SrcR, ->{t, u, Rd}",
@@ -6150,7 +6262,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "FloatingCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FLTS - Compare floating-point operands and produce the encoded result."
     },
     {
       "asm": "fmadd.{T} SrcL, SrcR, SrcA, ->{t, u, Rd}",
@@ -6232,7 +6345,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "FloatingFused",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FMADD - Compute this mnemonic's fused floating-point operation."
     },
     {
       "asm": "fmax.{T} SrcL, SrcR, ->{t, u, Rd}",
@@ -6302,7 +6416,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "FloatingBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FMAX - Compute this mnemonic's binary floating-point operation."
     },
     {
       "asm": "fmin.{T} SrcL, SrcR, ->{t, u, Rd}",
@@ -6372,7 +6487,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "FloatingBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FMIN - Compute this mnemonic's binary floating-point operation."
     },
     {
       "asm": "fmsub.{T} SrcL, SrcR, SrcA, ->{t, u, Rd}",
@@ -6454,7 +6570,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "FloatingFused",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FMSUB - Compute this mnemonic's fused floating-point operation."
     },
     {
       "asm": "fmul.{T} SrcL, SrcR, ->{t, u, Rd}",
@@ -6524,7 +6641,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "FloatingBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FMUL - Compute this mnemonic's binary floating-point operation."
     },
     {
       "asm": "fne.{T} SrcL, SrcR, ->{t, u, Rd}",
@@ -6594,7 +6712,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "FloatingCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FNE - Compare floating-point operands and produce the encoded result."
     },
     {
       "asm": "fnes.{T} SrcL, SrcR, ->{t, u, Rd}",
@@ -6664,7 +6783,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "FloatingCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FNES - Compare floating-point operands and produce the encoded result."
     },
     {
       "asm": "fnmadd.{T} SrcL, SrcR, SrcA, ->{t, u, Rd}",
@@ -6746,7 +6866,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "FloatingFused",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FNMADD - Compute this mnemonic's fused floating-point operation."
     },
     {
       "asm": "fnmsub.{T} SrcL, SrcR, SrcA, ->{t, u, Rd}",
@@ -6828,7 +6949,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "FloatingFused",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FNMSUB - Compute this mnemonic's fused floating-point operation."
     },
     {
       "asm": "frecip.{T} SrcL, ->{t, u, Rd}",
@@ -6886,7 +7008,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "FloatingUnary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FRECIP - Compute this mnemonic's unary floating-point operation."
     },
     {
       "asm": "fsqrt.{T} SrcL, ->{t, u, Rd}",
@@ -6944,7 +7067,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "FloatingUnary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FSQRT - Compute this mnemonic's unary floating-point operation."
     },
     {
       "asm": "fsub.{T} SrcL, SrcR, ->{t, u, Rd}",
@@ -7014,7 +7138,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "FloatingBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "FSUB - Compute this mnemonic's binary floating-point operation."
     },
     {
       "asm": "hl.addi SrcL, uimm, ->{t, u, Rd}",
@@ -7077,7 +7202,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.ADDI - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "hl.addiw SrcL, uimm, ->{t, u, Rd}",
@@ -7140,7 +7266,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinaryW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.ADDIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result."
     },
     {
       "asm": "hl.addtpc imm, ->{t, u, Rd}",
@@ -7197,7 +7324,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "AddToPC",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.ADDTPC - Add the encoded displacement to the program counter."
     },
     {
       "asm": "hl.andi SrcL, simm, ->{t, u, Rd}",
@@ -7260,7 +7388,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.ANDI - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "hl.andiw SrcL, simm, ->{t, u, Rd}",
@@ -7323,7 +7452,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinaryW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.ANDIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result."
     },
     {
       "asm": "hl.bfi SrcL, SrcR, M, N, ->{t, u, Rd}",
@@ -7405,7 +7535,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "InsertBitfield",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.BFI - Insert one scalar bitfield into another."
     },
     {
       "asm": "hl.casb<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}",
@@ -7511,7 +7642,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "CompareAndSwap",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.CASB - Atomically compare the scalar memory value and conditionally store the replacement."
     },
     {
       "asm": "hl.casd<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}",
@@ -7617,7 +7749,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "CompareAndSwap",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.CASD - Atomically compare the scalar memory value and conditionally store the replacement."
     },
     {
       "asm": "hl.cash<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}",
@@ -7723,7 +7856,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "CompareAndSwap",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.CASH - Atomically compare the scalar memory value and conditionally store the replacement."
     },
     {
       "asm": "hl.casw<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}",
@@ -7829,7 +7963,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "CompareAndSwap",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.CASW - Atomically compare the scalar memory value and conditionally store the replacement."
     },
     {
       "asm": "hl.ccat SrcL, SrcR, shamt, ->Dst0, Dst1",
@@ -7911,7 +8046,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ExecuteConcatenatePair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.CCAT - Concatenate two scalar values into a result pair."
     },
     {
       "asm": "hl.ccatw SrcL, SrcR, shamt, ->Dst0, Dst1",
@@ -7993,7 +8129,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ExecuteConcatenatePairW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.CCATW - Concatenate two 32-bit values into a sign-extended result pair."
     },
     {
       "asm": "hl.cmp.andi SrcL, simm, ->{t, u, Rd}",
@@ -8056,7 +8193,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteCompareLogical",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.CMP.ANDI - Combine scalar comparison results with the encoded logical operation."
     },
     {
       "asm": "hl.cmp.eqi SrcL, simm, ->{t, u, Rd}",
@@ -8119,7 +8257,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.CMP.EQI - Compare scalar operands and write the encoded boolean result."
     },
     {
       "asm": "hl.cmp.gei SrcL, simm, ->{t, u, Rd}",
@@ -8182,7 +8321,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.CMP.GEI - Compare scalar operands and write the encoded boolean result."
     },
     {
       "asm": "hl.cmp.geui SrcL, uimm, ->{t, u, Rd}",
@@ -8245,7 +8385,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.CMP.GEUI - Compare scalar operands and write the encoded boolean result."
     },
     {
       "asm": "hl.cmp.lti SrcL, simm, ->{t, u, Rd}",
@@ -8308,7 +8449,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.CMP.LTI - Compare scalar operands and write the encoded boolean result."
     },
     {
       "asm": "hl.cmp.ltui SrcL, uimm, ->{t, u, Rd}",
@@ -8371,7 +8513,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.CMP.LTUI - Compare scalar operands and write the encoded boolean result."
     },
     {
       "asm": "hl.cmp.nei SrcL, simm, ->{t, u, Rd}",
@@ -8434,7 +8577,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteCompare",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.CMP.NEI - Compare scalar operands and write the encoded boolean result."
     },
     {
       "asm": "hl.cmp.ori SrcL, simm, ->{t, u, Rd}",
@@ -8497,7 +8641,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteCompareLogical",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.CMP.ORI - Combine scalar comparison results with the encoded logical operation."
     },
     {
       "asm": "hl.div SrcL, SrcR, ->Dst0, Dst1",
@@ -8567,7 +8712,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ExecuteScalarDividePair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.DIV - Compute quotient and remainder as a scalar result pair."
     },
     {
       "asm": "hl.divu SrcL, SrcR, ->Dst0, Dst1",
@@ -8637,7 +8783,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ExecuteScalarDividePair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.DIVU - Compute quotient and remainder as a scalar result pair."
     },
     {
       "asm": "hl.divuw SrcL, SrcR, ->Dst0, Dst1",
@@ -8707,7 +8854,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ExecuteScalarDividePairW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.DIVUW - Compute 32-bit quotient and remainder as a sign-extended result pair."
     },
     {
       "asm": "hl.divw SrcL, SrcR, ->Dst0, Dst1",
@@ -8777,7 +8925,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ExecuteScalarDividePairW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.DIVW - Compute 32-bit quotient and remainder as a sign-extended result pair."
     },
     {
       "asm": "hl.lb.pcr [<symbol>], ->{t, u, Rd}",
@@ -8828,7 +8977,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PC_REL",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LB.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lb.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
@@ -8922,7 +9072,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/POST_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LB.PO - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lb.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
@@ -9016,7 +9167,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LB.PR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lbi [SrcL, simm], ->{t, u, Rd}",
@@ -9079,7 +9231,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/LONG",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LBI - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lbi.po [SrcL, simm], ->Dst0, Dst1",
@@ -9154,7 +9307,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/POST_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LBI.PO - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lbi.pr [SrcL, simm], ->Dst0, Dst1",
@@ -9229,7 +9383,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LBI.PR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lbip [SrcL, simm], ->Dst0, Dst1",
@@ -9304,7 +9459,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PAIR",
       "semantic_handler": "ExecuteScalarLoadPair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LBIP - Load a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.lbp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
@@ -9398,7 +9554,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PAIR",
       "semantic_handler": "ExecuteScalarLoadPair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LBP - Load a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.lbu.pcr [<symbol>], ->{t, u, Rd}",
@@ -9449,7 +9606,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PC_REL",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LBU.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lbu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
@@ -9543,7 +9701,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/POST_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LBU.PO - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lbu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
@@ -9637,7 +9796,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LBU.PR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lbui [SrcL, simm], ->{t, u, Rd}",
@@ -9700,7 +9860,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/LONG",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LBUI - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lbui.po [SrcL, simm], ->Dst0, Dst1",
@@ -9775,7 +9936,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/POST_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LBUI.PO - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lbui.pr [SrcL, simm], ->Dst0, Dst1",
@@ -9850,7 +10012,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LBUI.PR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lbuip [SrcL, simm], ->Dst0, Dst1",
@@ -9925,7 +10088,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PAIR",
       "semantic_handler": "ExecuteScalarLoadPair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LBUIP - Load a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.lbup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
@@ -10019,7 +10183,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PAIR",
       "semantic_handler": "ExecuteScalarLoadPair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LBUP - Load a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.ld.pcr [<symbol>], ->{t, u, Rd}",
@@ -10070,7 +10235,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PC_REL",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LD.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.ld.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
@@ -10164,7 +10330,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/POST_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LD.PO - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.ld.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
@@ -10258,7 +10425,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LD.PR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.ldi [SrcL, simm], ->{t, u, Rd}",
@@ -10321,7 +10489,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/LONG",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LDI - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.ldi.po [SrcL, simm], ->Dst0, Dst1",
@@ -10396,7 +10565,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/POST_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LDI.PO - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.ldi.pr [SrcL, simm], ->Dst0, Dst1",
@@ -10471,7 +10641,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LDI.PR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.ldi.u [SrcL, simm], ->{t, u, Rd}",
@@ -10534,7 +10705,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/LONG",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LDI.U - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.ldi.upo [SrcL, simm], ->Dst0, Dst1",
@@ -10609,7 +10781,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/POST_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LDI.UPO - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.ldi.upr [SrcL, simm], ->Dst0, Dst1",
@@ -10684,7 +10857,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LDI.UPR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.ldip [SrcL, simm], ->Dst0, Dst1",
@@ -10759,7 +10933,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PAIR",
       "semantic_handler": "ExecuteScalarLoadPair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LDIP - Load a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.ldip.u [SrcL, simm], ->Dst0, Dst1",
@@ -10834,7 +11009,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PAIR",
       "semantic_handler": "ExecuteScalarLoadPair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LDIP.U - Load a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.ldp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
@@ -10928,7 +11104,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PAIR",
       "semantic_handler": "ExecuteScalarLoadPair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LDP - Load a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.lh.pcr [<symbol>], ->{t, u, Rd}",
@@ -10979,7 +11156,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PC_REL",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LH.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lh.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
@@ -11073,7 +11251,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/POST_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LH.PO - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lh.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
@@ -11167,7 +11346,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LH.PR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lhi [SrcL, simm], ->{t, u, Rd}",
@@ -11230,7 +11410,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/LONG",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LHI - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lhi.po [SrcL, simm], ->Dst0, Dst1",
@@ -11305,7 +11486,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/POST_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LHI.PO - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lhi.pr [SrcL, simm], ->Dst0, Dst1",
@@ -11380,7 +11562,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LHI.PR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lhi.u [SrcL, simm], ->{t, u, Rd}",
@@ -11443,7 +11626,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/LONG",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LHI.U - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lhi.upo [SrcL, simm], ->Dst0, Dst1",
@@ -11518,7 +11702,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/POST_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LHI.UPO - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lhi.upr [SrcL, simm], ->Dst0, Dst1",
@@ -11593,7 +11778,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LHI.UPR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lhip [SrcL, simm], ->Dst0, Dst1",
@@ -11668,7 +11854,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PAIR",
       "semantic_handler": "ExecuteScalarLoadPair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LHIP - Load a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.lhip.u [SrcL, simm], ->Dst0, Dst1",
@@ -11743,7 +11930,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PAIR",
       "semantic_handler": "ExecuteScalarLoadPair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LHIP.U - Load a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.lhp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
@@ -11837,7 +12025,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PAIR",
       "semantic_handler": "ExecuteScalarLoadPair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LHP - Load a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.lhu.pcr [<symbol>], ->{t, u, Rd}",
@@ -11888,7 +12077,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PC_REL",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LHU.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lhu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
@@ -11982,7 +12172,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/POST_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LHU.PO - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lhu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
@@ -12076,7 +12267,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LHU.PR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lhui [SrcL, simm], ->{t, u, Rd}",
@@ -12139,7 +12331,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/LONG",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LHUI - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lhui.po [SrcL, simm], ->Dst0, Dst1",
@@ -12214,7 +12407,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/POST_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LHUI.PO - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lhui.pr [SrcL, simm], ->Dst0, Dst1",
@@ -12289,7 +12483,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LHUI.PR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lhui.u [SrcL, simm], ->{t, u, Rd}",
@@ -12352,7 +12547,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/LONG",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LHUI.U - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lhui.upo [SrcL, simm], ->Dst0, Dst1",
@@ -12427,7 +12623,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/POST_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LHUI.UPO - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lhui.upr [SrcL, simm], ->Dst0, Dst1",
@@ -12502,7 +12699,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LHUI.UPR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lhuip [SrcL, simm], ->Dst0, Dst1",
@@ -12577,7 +12775,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PAIR",
       "semantic_handler": "ExecuteScalarLoadPair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LHUIP - Load a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.lhuip.u [SrcL, simm], ->Dst0, Dst1",
@@ -12652,7 +12851,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PAIR",
       "semantic_handler": "ExecuteScalarLoadPair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LHUIP.U - Load a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.lhup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
@@ -12746,7 +12946,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PAIR",
       "semantic_handler": "ExecuteScalarLoadPair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LHUP - Load a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.lis simm, ->{t, u, Rd}",
@@ -12797,7 +12998,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "MaterializeLongSigned",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LIS - Materialize the encoded signed long immediate."
     },
     {
       "asm": "hl.liu uimm, ->{t, u, Rd}",
@@ -12848,7 +13050,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "MaterializeLongUnsigned",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LIU - Materialize the encoded unsigned long immediate."
     },
     {
       "asm": "hl.lui imm, ->{t, u, Rd}",
@@ -12899,7 +13102,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "MaterializeLongSigned",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LUI - Materialize the encoded signed long immediate."
     },
     {
       "asm": "hl.lw.pcr [<symbol>], ->{t, u, Rd}",
@@ -12950,7 +13154,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PC_REL",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LW.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lw.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
@@ -13044,7 +13249,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/POST_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LW.PO - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lw.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
@@ -13138,7 +13344,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LW.PR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lwi [SrcL, simm], ->{t, u, Rd}",
@@ -13201,7 +13408,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/LONG",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LWI - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lwi.po [SrcL, simm], ->Dst0, Dst1",
@@ -13276,7 +13484,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/POST_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LWI.PO - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lwi.pr [SrcL, simm], ->Dst0, Dst1",
@@ -13351,7 +13560,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LWI.PR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lwi.u [SrcL, simm], ->{t, u, Rd}",
@@ -13414,7 +13624,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/LONG",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LWI.U - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lwi.upo [SrcL, simm], ->Dst0, Dst1",
@@ -13489,7 +13700,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/POST_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LWI.UPO - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lwi.upr [SrcL, simm], ->Dst0, Dst1",
@@ -13564,7 +13776,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LWI.UPR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lwip [SrcL, simm], ->Dst0, Dst1",
@@ -13639,7 +13852,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PAIR",
       "semantic_handler": "ExecuteScalarLoadPair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LWIP - Load a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.lwip.u [SrcL, simm], ->Dst0, Dst1",
@@ -13714,7 +13928,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PAIR",
       "semantic_handler": "ExecuteScalarLoadPair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LWIP.U - Load a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.lwp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
@@ -13808,7 +14023,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PAIR",
       "semantic_handler": "ExecuteScalarLoadPair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LWP - Load a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.lwu.pcr [<symbol>], ->{t, u, Rd}",
@@ -13859,7 +14075,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PC_REL",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LWU.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lwu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
@@ -13953,7 +14170,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/POST_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LWU.PO - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lwu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
@@ -14047,7 +14265,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LWU.PR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lwui [SrcL, simm], ->{t, u, Rd}",
@@ -14110,7 +14329,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/LONG",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LWUI - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lwui.po [SrcL, simm], ->Dst0, Dst1",
@@ -14185,7 +14405,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/POST_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LWUI.PO - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lwui.pr [SrcL, simm], ->Dst0, Dst1",
@@ -14260,7 +14481,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LWUI.PR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lwui.u [SrcL, simm], ->{t, u, Rd}",
@@ -14323,7 +14545,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/LONG",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LWUI.U - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lwui.upo [SrcL, simm], ->Dst0, Dst1",
@@ -14398,7 +14621,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/POST_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LWUI.UPO - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lwui.upr [SrcL, simm], ->Dst0, Dst1",
@@ -14473,7 +14697,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LWUI.UPR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "hl.lwuip [SrcL, simm], ->Dst0, Dst1",
@@ -14548,7 +14773,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PAIR",
       "semantic_handler": "ExecuteScalarLoadPair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LWUIP - Load a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.lwuip.u [SrcL, simm], ->Dst0, Dst1",
@@ -14623,7 +14849,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PAIR",
       "semantic_handler": "ExecuteScalarLoadPair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LWUIP.U - Load a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.lwup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
@@ -14717,7 +14944,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/PAIR",
       "semantic_handler": "ExecuteScalarLoadPair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.LWUP - Load a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.madd SrcL, SrcR, SrcD, ->Dst0, Dst1",
@@ -14799,7 +15027,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ExecuteScalarMultiplyAddPair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.MADD - Compute multiply-add and return the scalar result pair."
     },
     {
       "asm": "hl.maddw SrcL, SrcR, SrcD, ->Dst0, Dst1",
@@ -14881,7 +15110,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ExecuteScalarMultiplyAddPair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.MADDW - Compute multiply-add and return the scalar result pair."
     },
     {
       "asm": "hl.miadd SrcL, SrcR, uimm, ->{t, u, Rd}",
@@ -14956,7 +15186,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarMultiplyImmediateAdd",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.MIADD - Multiply by the encoded immediate and add the scalar source."
     },
     {
       "asm": "hl.misub SrcL, SrcR, uimm, ->{t, u, Rd}",
@@ -15031,7 +15262,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarMultiplyImmediateAdd",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.MISUB - Multiply by the encoded immediate and add the scalar source."
     },
     {
       "asm": "hl.mul SrcL, SrcR, ->Dst0, Dst1",
@@ -15101,7 +15333,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ExecuteScalarMultiplyPair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.MUL - Compute the full-width scalar product as a result pair."
     },
     {
       "asm": "hl.mulu SrcL, SrcR, ->Dst0, Dst1",
@@ -15171,7 +15404,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ExecuteScalarMultiplyPair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.MULU - Compute the full-width scalar product as a result pair."
     },
     {
       "asm": "hl.ori SrcL, simm, ->{t, u, Rd}",
@@ -15234,7 +15468,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.ORI - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "hl.oriw SrcL, simm, ->{t, u, Rd}",
@@ -15297,7 +15532,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinaryW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.ORIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result."
     },
     {
       "asm": "hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]",
@@ -15379,7 +15615,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA",
       "semantic_handler": "ScalarPrefetch",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.PRF - Issue a scalar prefetch using this mnemonic's addressing form."
     },
     {
       "asm": "hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
@@ -15473,7 +15710,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA",
       "semantic_handler": "ScalarPrefetch",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.PRF.A - Issue a scalar prefetch using this mnemonic's addressing form."
     },
     {
       "asm": "hl.prfi.u{.l1,.l2,.l3} [SrcL, simm]",
@@ -15536,7 +15774,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA",
       "semantic_handler": "ScalarPrefetch",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.PRFI.U - Issue a scalar prefetch using this mnemonic's addressing form."
     },
     {
       "asm": "hl.prfi.ua{.l1,.l2,.l3} [SrcL, simm], ->{t, u, Rd}",
@@ -15611,7 +15850,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA",
       "semantic_handler": "ScalarPrefetch",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.PRFI.UA - Issue a scalar prefetch using this mnemonic's addressing form."
     },
     {
       "asm": "hl.rem SrcL, SrcR, ->Dst0, Dst1",
@@ -15681,7 +15921,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ExecuteScalarDividePair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.REM - Compute quotient and remainder as a scalar result pair."
     },
     {
       "asm": "hl.remu SrcL, SrcR, ->Dst0, Dst1",
@@ -15751,7 +15992,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ExecuteScalarDividePair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.REMU - Compute quotient and remainder as a scalar result pair."
     },
     {
       "asm": "hl.remuw SrcL, SrcR, ->Dst0, Dst1",
@@ -15821,7 +16063,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ExecuteScalarDividePairW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.REMUW - Compute 32-bit quotient and remainder as a sign-extended result pair."
     },
     {
       "asm": "hl.remw SrcL, SrcR, ->Dst0, Dst1",
@@ -15891,7 +16134,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ExecuteScalarDividePairW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.REMW - Compute 32-bit quotient and remainder as a sign-extended result pair."
     },
     {
       "asm": "hl.sb.pcr SrcL, [<symbol>]",
@@ -15947,7 +16191,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PC_REL",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SB.PCR - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
@@ -16029,7 +16274,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/POST_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SB.PO - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
@@ -16111,7 +16357,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SB.PR - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.sbi SrcD, [SrcR, simm]",
@@ -16179,7 +16426,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/LONG",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SBI - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.sbi.po SrcD, [SrcR, simm], ->{t, u, Rd}",
@@ -16259,7 +16507,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/POST_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SBI.PO - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.sbi.pr SrcD, [SrcR, simm], ->{t, u, Rd}",
@@ -16339,7 +16588,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SBI.PR - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.sbip SrcD, SrcD1, [SrcR, simm]",
@@ -16419,7 +16669,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PAIR",
       "semantic_handler": "ExecuteScalarStorePair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SBIP - Store a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]",
@@ -16501,7 +16752,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PAIR",
       "semantic_handler": "ExecuteScalarStorePair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SBP - Store a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.sd.pcr SrcL, [<symbol>]",
@@ -16557,7 +16809,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PC_REL",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SD.PCR - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd}",
@@ -16639,7 +16892,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/POST_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SD.PO - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd}",
@@ -16721,7 +16975,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SD.PR - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
@@ -16803,7 +17058,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/POST_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SD.UPO - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
@@ -16885,7 +17141,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SD.UPR - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.sdi SrcD, [SrcR, simm]",
@@ -16953,7 +17210,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/LONG",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SDI - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.sdi.po SrcD, [SrcR, simm], ->{t, u, Rd}",
@@ -17033,7 +17291,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/POST_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SDI.PO - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.sdi.pr SrcD, [SrcR, simm], ->{t, u, Rd}",
@@ -17113,7 +17372,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SDI.PR - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.sdi.u SrcD, [SrcR, simm]",
@@ -17181,7 +17441,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/LONG",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SDI.U - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.sdi.upo SrcD, [SrcR, simm], ->{t, u, Rd}",
@@ -17261,7 +17522,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/POST_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SDI.UPO - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.sdi.upr SrcD, [SrcR, simm], ->{t, u, Rd}",
@@ -17341,7 +17603,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SDI.UPR - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.sdip SrcD, SrcD1, [SrcR, simm]",
@@ -17421,7 +17684,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PAIR",
       "semantic_handler": "ExecuteScalarStorePair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SDIP - Store a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.sdip.u SrcD, SrcD1, [SrcR, simm]",
@@ -17501,7 +17765,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PAIR",
       "semantic_handler": "ExecuteScalarStorePair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SDIP.U - Store a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<3]",
@@ -17583,7 +17848,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PAIR",
       "semantic_handler": "ExecuteScalarStorePair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SDP - Store a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]",
@@ -17665,7 +17931,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PAIR",
       "semantic_handler": "ExecuteScalarStorePair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SDP.U - Store a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.setc.andi SrcL, simm",
@@ -17728,7 +17995,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteSetCommitLogical",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SETC.ANDI - Combine scalar comparison results and update the bundle commit condition."
     },
     {
       "asm": "hl.setc.eqi SrcL, simm",
@@ -17791,7 +18059,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteSetCommit",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SETC.EQI - Compare scalar operands and update the bundle commit condition."
     },
     {
       "asm": "hl.setc.gei SrcL, simm",
@@ -17854,7 +18123,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteSetCommit",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SETC.GEI - Compare scalar operands and update the bundle commit condition."
     },
     {
       "asm": "hl.setc.geui SrcL, uimm",
@@ -17917,7 +18187,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteSetCommit",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SETC.GEUI - Compare scalar operands and update the bundle commit condition."
     },
     {
       "asm": "hl.setc.lti SrcL, simm",
@@ -17980,7 +18251,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteSetCommit",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SETC.LTI - Compare scalar operands and update the bundle commit condition."
     },
     {
       "asm": "hl.setc.ltui SrcL, uimm",
@@ -18043,7 +18315,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteSetCommit",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SETC.LTUI - Compare scalar operands and update the bundle commit condition."
     },
     {
       "asm": "hl.setc.nei SrcL, simm",
@@ -18106,7 +18379,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteSetCommit",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SETC.NEI - Compare scalar operands and update the bundle commit condition."
     },
     {
       "asm": "hl.setc.ori SrcL, simm",
@@ -18169,7 +18443,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteSetCommitLogical",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SETC.ORI - Combine scalar comparison results and update the bundle commit condition."
     },
     {
       "asm": "hl.setret imm, ->Ra",
@@ -18208,7 +18483,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "SetReturnAddress",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SETRET - Write the architectural return address."
     },
     {
       "asm": "hl.sh.pcr SrcL, [<symbol>]",
@@ -18264,7 +18540,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PC_REL",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SH.PCR - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd}",
@@ -18346,7 +18623,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/POST_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SH.PO - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd}",
@@ -18428,7 +18706,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SH.PR - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
@@ -18510,7 +18789,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/POST_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SH.UPO - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
@@ -18592,7 +18872,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SH.UPR - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.shi SrcD, [SrcR, simm]",
@@ -18660,7 +18941,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/LONG",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SHI - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.shi.po SrcD, [SrcR, simm], ->{t, u, Rd}",
@@ -18740,7 +19022,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/POST_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SHI.PO - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.shi.pr SrcD, [SrcR, simm], ->{t, u, Rd}",
@@ -18820,7 +19103,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SHI.PR - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.shi.u SrcD, [SrcR, simm]",
@@ -18888,7 +19172,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/LONG",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SHI.U - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.shi.upo SrcD, [SrcR, simm], ->{t, u, Rd}",
@@ -18968,7 +19253,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/POST_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SHI.UPO - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.shi.upr SrcD, [SrcR, simm], ->{t, u, Rd}",
@@ -19048,7 +19334,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SHI.UPR - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.ship SrcD, SrcD1, [SrcR, simm]",
@@ -19128,7 +19415,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PAIR",
       "semantic_handler": "ExecuteScalarStorePair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SHIP - Store a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.ship.u SrcD, SrcD1, [SrcR, simm]",
@@ -19208,7 +19496,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PAIR",
       "semantic_handler": "ExecuteScalarStorePair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SHIP.U - Store a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<1]",
@@ -19290,7 +19579,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PAIR",
       "semantic_handler": "ExecuteScalarStorePair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SHP - Store a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]",
@@ -19372,7 +19662,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PAIR",
       "semantic_handler": "ExecuteScalarStorePair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SHP.U - Store a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.ssrget SSR_ID, ->{t, u, Rd}",
@@ -19423,7 +19714,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteSystemRegisterGet",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SSRGET - Read the addressed system register."
     },
     {
       "asm": "hl.ssrset SrcL, SSR_ID",
@@ -19474,7 +19766,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteSystemRegisterSet",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SSRSET - Write the addressed system register."
     },
     {
       "asm": "hl.subi SrcL, uimm, ->{t, u, Rd}",
@@ -19537,7 +19830,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SUBI - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "hl.subiw SrcL, uimm, ->{t, u, Rd}",
@@ -19600,7 +19894,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinaryW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SUBIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result."
     },
     {
       "asm": "hl.sw.pcr SrcL, [<symbol>]",
@@ -19656,7 +19951,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PC_REL",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SW.PCR - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd}",
@@ -19738,7 +20034,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/POST_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SW.PO - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd}",
@@ -19820,7 +20117,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SW.PR - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
@@ -19902,7 +20200,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/POST_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SW.UPO - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
@@ -19984,7 +20283,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SW.UPR - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.swi SrcD, [SrcR, simm]",
@@ -20052,7 +20352,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/LONG",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SWI - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.swi.po SrcD, [SrcR, simm], ->{t, u, Rd}",
@@ -20132,7 +20433,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/POST_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SWI.PO - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.swi.pr SrcD, [SrcR, simm], ->{t, u, Rd}",
@@ -20212,7 +20514,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SWI.PR - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.swi.u SrcD, [SrcR, simm]",
@@ -20280,7 +20583,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/LONG",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SWI.U - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.swi.upo SrcD, [SrcR, simm], ->{t, u, Rd}",
@@ -20360,7 +20664,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/POST_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SWI.UPO - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.swi.upr SrcD, [SrcR, simm], ->{t, u, Rd}",
@@ -20440,7 +20745,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PRE_INDEX",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SWI.UPR - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "hl.swip SrcD, SrcD1, [SrcR, simm]",
@@ -20520,7 +20826,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PAIR",
       "semantic_handler": "ExecuteScalarStorePair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SWIP - Store a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.swip.u SrcD, SrcD1, [SrcR, simm]",
@@ -20600,7 +20907,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PAIR",
       "semantic_handler": "ExecuteScalarStorePair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SWIP.U - Store a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<2]",
@@ -20682,7 +20990,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PAIR",
       "semantic_handler": "ExecuteScalarStorePair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SWP - Store a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]",
@@ -20764,7 +21073,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/PAIR",
       "semantic_handler": "ExecuteScalarStorePair",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.SWP.U - Store a scalar register pair using this mnemonic's address-update form."
     },
     {
       "asm": "hl.xori SrcL, simm, ->{t, u, Rd}",
@@ -20827,7 +21137,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.XORI - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "hl.xoriw SrcL, simm, ->{t, u, Rd}",
@@ -20890,7 +21201,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinaryW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "HL.XORIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result."
     },
     {
       "asm": "ic.iall",
@@ -20911,7 +21223,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteMaintenance",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "IC.IALL - Perform this mnemonic's cache, TLB, or bundle maintenance operation."
     },
     {
       "asm": "ic.iva SrcL",
@@ -20945,7 +21258,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteMaintenance",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "IC.IVA - Perform this mnemonic's cache, TLB, or bundle maintenance operation."
     },
     {
       "asm": "j label",
@@ -20984,7 +21298,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "JumpRelative",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "J - Jump to the PC-relative target."
     },
     {
       "asm": "jr SrcL, label",
@@ -21047,7 +21362,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "JumpRegister",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "JR - Jump to the scalar-register target."
     },
     {
       "asm": "lb [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
@@ -21129,7 +21445,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/BASE_REG",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LB - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "lb.pcr [symbol], ->{t, u, Rd}",
@@ -21175,7 +21492,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LB.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "lbi [SrcL, simm], ->{t, u, Rd}",
@@ -21233,7 +21551,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/BASE_IMM",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LBI - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "lbu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
@@ -21315,7 +21634,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/BASE_REG",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LBU - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "lbu.pcr [symbol], ->{t, u, Rd}",
@@ -21361,7 +21681,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LBU.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "lbui [SrcL, simm], ->{t, u, Rd}",
@@ -21419,7 +21740,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/BASE_IMM",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LBUI - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "ld [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
@@ -21501,7 +21823,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/BASE_REG",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LD - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "ld.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
@@ -21595,7 +21918,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LD.ADD - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "ld.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
@@ -21689,7 +22013,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LD.AND - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "ld.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
@@ -21783,7 +22108,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LD.OR - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "ld.pcr [symbol], ->{t, u, Rd}",
@@ -21829,7 +22155,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LD.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "ld.smax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
@@ -21923,7 +22250,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LD.SMAX - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "ld.smin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
@@ -22017,7 +22345,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LD.SMIN - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "ld.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
@@ -22111,7 +22440,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LD.UMAX - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "ld.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
@@ -22205,7 +22535,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LD.UMIN - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
@@ -22299,7 +22630,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LD.XOR - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "ldi [SrcL, simm], ->{t, u, Rd}",
@@ -22357,7 +22689,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/BASE_IMM",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LDI - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "ldi.u [SrcL, simm], ->{t, u, Rd}",
@@ -22415,7 +22748,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/UNSCALED",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LDI.U - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "lh [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
@@ -22497,7 +22831,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/BASE_REG",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LH - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "lh.pcr [symbol], ->{t, u, Rd}",
@@ -22543,7 +22878,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LH.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "lhi [SrcL, simm], ->{t, u, Rd}",
@@ -22601,7 +22937,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/BASE_IMM",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LHI - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "lhi.u [SrcL, simm], ->{t, u, Rd}",
@@ -22659,7 +22996,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/UNSCALED",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LHI.U - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "lhu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
@@ -22741,7 +23079,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/BASE_REG",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LHU - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "lhu.pcr [symbol], ->{t, u, Rd}",
@@ -22787,7 +23126,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LHU.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "lhui [SrcL, simm], ->{t, u, Rd}",
@@ -22845,7 +23185,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/BASE_IMM",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LHUI - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "lhui.u [SrcL, simm], ->{t, u, Rd}",
@@ -22903,7 +23244,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/UNSCALED",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LHUI.U - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "lr.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], {->t, ->u, ->Rd}",
@@ -22997,7 +23339,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "LoadReserved",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LR.B - Load the scalar memory value and establish a matching reservation."
     },
     {
       "asm": "lr.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], {->t, ->u, ->Rd}",
@@ -23091,7 +23434,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "LoadReserved",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LR.D - Load the scalar memory value and establish a matching reservation."
     },
     {
       "asm": "lr.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], {->t, ->u, ->Rd}",
@@ -23185,7 +23529,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "LoadReserved",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LR.H - Load the scalar memory value and establish a matching reservation."
     },
     {
       "asm": "lr.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], {->t, ->u, ->Rd}",
@@ -23279,7 +23624,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "LoadReserved",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LR.W - Load the scalar memory value and establish a matching reservation."
     },
     {
       "asm": "lsrget LSR_ID, ->{t, u, Rd}",
@@ -23325,7 +23671,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteSystemRegisterGet",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LSRGET - Read the addressed system register."
     },
     {
       "asm": "lui simm, ->{t, u, Rd}",
@@ -23371,7 +23718,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "MaterializeLUI",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LUI - Materialize the upper immediate."
     },
     {
       "asm": "lw [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
@@ -23453,7 +23801,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/BASE_REG",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LW - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "lw.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
@@ -23547,7 +23896,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LW.ADD - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "lw.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
@@ -23641,7 +23991,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LW.AND - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "lw.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
@@ -23735,7 +24086,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LW.OR - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "lw.pcr [symbol], ->{t, u, Rd}",
@@ -23781,7 +24133,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LW.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "lw.smax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
@@ -23875,7 +24228,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LW.SMAX - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "lw.smin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
@@ -23969,7 +24323,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LW.SMIN - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "lw.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
@@ -24063,7 +24418,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LW.UMAX - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "lw.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
@@ -24157,7 +24513,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LW.UMIN - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "lw.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
@@ -24251,7 +24608,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LW.XOR - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "lwi [SrcL, simm], ->{t, u, Rd}",
@@ -24309,7 +24667,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/BASE_IMM",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LWI - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "lwi.u [SrcL, simm], ->{t, u, Rd}",
@@ -24367,7 +24726,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/UNSCALED",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LWI.U - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "lwu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
@@ -24449,7 +24809,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/BASE_REG",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LWU - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "lwu.pcr [symbol], ->{t, u, Rd}",
@@ -24495,7 +24856,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LWU.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "lwui [SrcL, simm], ->{t, u, Rd}",
@@ -24553,7 +24915,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/BASE_IMM",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LWUI - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "lwui.u [SrcL, simm], ->{t, u, Rd}",
@@ -24611,7 +24974,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/UNSCALED",
       "semantic_handler": "ExecuteScalarLoad",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "LWUI.U - Load scalar data using this mnemonic's width, signedness, and address-update form."
     },
     {
       "asm": "madd SrcL, SrcR, SrcD, ->{t, u, Rd}",
@@ -24681,7 +25045,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarMultiplyAdd",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "MADD - Compute scalar multiply-add."
     },
     {
       "asm": "maddw SrcL, SrcR, SrcD, ->{t, u, Rd}",
@@ -24751,7 +25116,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarMultiplyAddW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "MADDW - Compute 32-bit multiply-add and sign-extend it."
     },
     {
       "asm": "max SrcL, SrcR, ->{t, u, Rd}",
@@ -24809,7 +25175,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "MAX - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "maxu SrcL, SrcR, ->{t, u, Rd}",
@@ -24867,7 +25234,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "MAXU - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "min SrcL, SrcR, ->{t, u, Rd}",
@@ -24925,7 +25293,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "MIN - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "minu SrcL, SrcR, ->{t, u, Rd}",
@@ -24983,7 +25352,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "MINU - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "mul SrcL, SrcR, ->{t, u, Rd}",
@@ -25041,7 +25411,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "MultiplyWord",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "MUL - Compute the scalar product."
     },
     {
       "asm": "mulu SrcL, SrcR, ->{t, u, Rd}",
@@ -25099,7 +25470,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "MultiplyWord",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "MULU - Compute the scalar product."
     },
     {
       "asm": "muluw SrcL, SrcR, ->{t, u, Rd}",
@@ -25157,7 +25529,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarMultiplyW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "MULUW - Compute the 32-bit product and sign-extend it."
     },
     {
       "asm": "mulw SrcL, SrcR, ->{t, u, Rd}",
@@ -25215,7 +25588,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarMultiplyW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "MULW - Compute the 32-bit product and sign-extend it."
     },
     {
       "asm": "or SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}",
@@ -25297,7 +25671,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "OR - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "ori SrcL, simm, ->{t, u, Rd}",
@@ -25355,7 +25730,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "ORI - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "oriw SrcL, simm, ->{t, u, Rd}",
@@ -25413,7 +25789,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinaryW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "ORIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result."
     },
     {
       "asm": "orw SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}",
@@ -25495,7 +25872,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinaryW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "ORW - Compute this mnemonic's 32-bit binary operation and sign-extend the result."
     },
     {
       "asm": "prf [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]",
@@ -25577,7 +25955,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/BASE_REG",
       "semantic_handler": "ScalarPrefetch",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "PRF - Issue a scalar prefetch using this mnemonic's addressing form."
     },
     {
       "asm": "prfi.u [SrcL, simm]",
@@ -25635,7 +26014,8 @@
       "semantic_family": "AGU",
       "semantic_group": "LDA/UNSCALED",
       "semantic_handler": "ScalarPrefetch",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "PRFI.U - Issue a scalar prefetch using this mnemonic's addressing form."
     },
     {
       "asm": "rem SrcL, SrcR, ->{t, u, Rd}",
@@ -25693,7 +26073,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarRemainderSigned",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "REM - Compute signed scalar remainder."
     },
     {
       "asm": "remu SrcL, SrcR, ->{t, u, Rd}",
@@ -25751,7 +26132,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarRemainderUnsigned",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "REMU - Compute unsigned scalar remainder."
     },
     {
       "asm": "remuw SrcL, SrcR, ->{t, u, Rd}",
@@ -25809,7 +26191,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarRemainderUnsignedW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "REMUW - Compute unsigned 32-bit remainder and sign-extend it."
     },
     {
       "asm": "remw SrcL, SrcR, ->{t, u, Rd}",
@@ -25867,7 +26250,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarRemainderSignedW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "REMW - Compute signed 32-bit remainder and sign-extend it."
     },
     {
       "asm": "rev SrcL,  M, N, ->{t, u, Rd}",
@@ -25937,7 +26321,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ReverseBitfieldBytes",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "REV - Reverse bytes within the selected scalar bitfield."
     },
     {
       "asm": "sb SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]",
@@ -26007,7 +26392,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/BASE_REG",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SB - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "sb.pcr SrcL, [symbol]",
@@ -26058,7 +26444,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SB.PCR - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "sbi SrcL, [SrcR, simm]",
@@ -26121,7 +26508,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/BASE_IMM",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SBI - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "sc.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], {->t, ->u, ->Rd}",
@@ -26215,7 +26603,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "StoreConditional",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SC.B - Conditionally store the scalar value when the matching reservation remains valid."
     },
     {
       "asm": "sc.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], {->t, ->u, ->Rd}",
@@ -26309,7 +26698,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "StoreConditional",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SC.D - Conditionally store the scalar value when the matching reservation remains valid."
     },
     {
       "asm": "sc.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], {->t, ->u, ->Rd}",
@@ -26403,7 +26793,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "StoreConditional",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SC.H - Conditionally store the scalar value when the matching reservation remains valid."
     },
     {
       "asm": "sc.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], {->t, ->u, ->Rd}",
@@ -26497,7 +26888,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "StoreConditional",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SC.W - Conditionally store the scalar value when the matching reservation remains valid."
     },
     {
       "asm": "scvtf.{srcT2dstT} SrcL, ->{t, u, Rd}",
@@ -26567,7 +26959,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "ConvertFloatingEncoding",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SCVTF - Convert between the encoded scalar numeric formats."
     },
     {
       "asm": "sd SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3]",
@@ -26637,7 +27030,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/BASE_REG",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SD - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "sd.add<.{rl, f, rlf}> [SrcL], SrcR",
@@ -26707,7 +27101,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SD.ADD - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "sd.and<.{rl, f, rlf}> [SrcL], SrcR",
@@ -26777,7 +27172,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SD.AND - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "sd.or<.{rl, f, rlf}> [SrcL], SrcR",
@@ -26847,7 +27243,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SD.OR - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "sd.pcr SrcL, [symbol]",
@@ -26898,7 +27295,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SD.PCR - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "sd.smax<.{rl, f, rlf}> [SrcL], SrcR",
@@ -26968,7 +27366,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SD.SMAX - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "sd.smin<.{rl, f, rlf}> [SrcL], SrcR",
@@ -27038,7 +27437,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SD.SMIN - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "sd.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]",
@@ -27108,7 +27508,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/BASE_REG",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SD.U - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "sd.umax<.{rl, f, rlf}> [SrcL], SrcR",
@@ -27178,7 +27579,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SD.UMAX - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "sd.umin<.{rl, f, rlf}> [SrcL], SrcR",
@@ -27248,7 +27650,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SD.UMIN - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "sd.xor<.{rl, f, rlf}> [SrcL], SrcR",
@@ -27318,7 +27721,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SD.XOR - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "sdi SrcL, [SrcR, simm]",
@@ -27381,7 +27785,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/BASE_IMM",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SDI - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "sdi.u SrcL, [SrcR, simm]",
@@ -27444,7 +27849,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/BASE_IMM",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SDI.U - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "setc.and SrcL, SrcR<.sw, .uw, .not>",
@@ -27502,7 +27908,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteSetCommitLogical",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SETC.AND - Combine scalar comparison results and update the bundle commit condition."
     },
     {
       "asm": "setc.andi SrcL, simm",
@@ -27560,7 +27967,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteSetCommitLogical",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SETC.ANDI - Combine scalar comparison results and update the bundle commit condition."
     },
     {
       "asm": "setc.eq SrcL, SrcR<{.sw, .uw}>",
@@ -27618,7 +28026,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteSetCommit",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SETC.EQ - Compare scalar operands and update the bundle commit condition."
     },
     {
       "asm": "setc.eqi SrcL, simm",
@@ -27676,7 +28085,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteSetCommit",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SETC.EQI - Compare scalar operands and update the bundle commit condition."
     },
     {
       "asm": "setc.ge SrcL, SrcR<{.sw, .uw}>",
@@ -27734,7 +28144,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteSetCommit",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SETC.GE - Compare scalar operands and update the bundle commit condition."
     },
     {
       "asm": "setc.gei SrcL, simm",
@@ -27792,7 +28203,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteSetCommit",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SETC.GEI - Compare scalar operands and update the bundle commit condition."
     },
     {
       "asm": "setc.geu SrcL, SrcR<{.sw, .uw}>",
@@ -27850,7 +28262,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteSetCommit",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SETC.GEU - Compare scalar operands and update the bundle commit condition."
     },
     {
       "asm": "setc.geui SrcL, uimm",
@@ -27908,7 +28321,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteSetCommit",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SETC.GEUI - Compare scalar operands and update the bundle commit condition."
     },
     {
       "asm": "setc.lt SrcL, SrcR<{.sw, .uw}>",
@@ -27966,7 +28380,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteSetCommit",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SETC.LT - Compare scalar operands and update the bundle commit condition."
     },
     {
       "asm": "setc.lti SrcL, simm",
@@ -28024,7 +28439,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteSetCommit",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SETC.LTI - Compare scalar operands and update the bundle commit condition."
     },
     {
       "asm": "setc.ltu SrcL, SrcR<{.sw, .uw}>",
@@ -28082,7 +28498,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteSetCommit",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SETC.LTU - Compare scalar operands and update the bundle commit condition."
     },
     {
       "asm": "setc.ltui SrcL, uimm",
@@ -28140,7 +28557,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteSetCommit",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SETC.LTUI - Compare scalar operands and update the bundle commit condition."
     },
     {
       "asm": "setc.ne SrcL, SrcR<{.sw, .uw}>",
@@ -28198,7 +28616,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteSetCommit",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SETC.NE - Compare scalar operands and update the bundle commit condition."
     },
     {
       "asm": "setc.nei SrcL, simm",
@@ -28256,7 +28675,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteSetCommit",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SETC.NEI - Compare scalar operands and update the bundle commit condition."
     },
     {
       "asm": "setc.or SrcL, SrcR<.sw, .uw, .not>",
@@ -28314,7 +28734,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteSetCommitLogical",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SETC.OR - Combine scalar comparison results and update the bundle commit condition."
     },
     {
       "asm": "setc.ori SrcL, simm",
@@ -28372,7 +28793,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "ExecuteSetCommitLogical",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SETC.ORI - Combine scalar comparison results and update the bundle commit condition."
     },
     {
       "asm": "setc.tgt SrcL",
@@ -28406,7 +28828,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "SetCommitTarget",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SETC.TGT - Write the bundle commit target."
     },
     {
       "asm": "setret uimm, ->Ra",
@@ -28440,7 +28863,8 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "SetReturnAddress",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SETRET - Write the architectural return address."
     },
     {
       "asm": "sh SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1]",
@@ -28510,7 +28934,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/BASE_REG",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SH - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "sh.pcr SrcL, [symbol]",
@@ -28561,7 +28986,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SH.PCR - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "sh.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]",
@@ -28631,7 +29057,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/BASE_REG",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SH.U - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "shi SrcL, [SrcR, simm]",
@@ -28694,7 +29121,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/BASE_IMM",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SHI - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "shi.u SrcL, [SrcR, simm]",
@@ -28757,7 +29185,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/BASE_IMM",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SHI.U - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "sll SrcL, SrcR, ->{t, u, Rd}",
@@ -28815,7 +29244,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SLL - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "slli SrcL, shamt, ->{t, u, Rd}",
@@ -28873,7 +29303,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SLLI - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "slliw SrcL, shamt, ->{t, u, Rd}",
@@ -28931,7 +29362,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinaryW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SLLIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result."
     },
     {
       "asm": "sllw SrcL, SrcR, ->{t, u, Rd}",
@@ -28989,7 +29421,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinaryW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SLLW - Compute this mnemonic's 32-bit binary operation and sign-extend the result."
     },
     {
       "asm": "sra SrcL, SrcR, ->{t, u, Rd}",
@@ -29047,7 +29480,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SRA - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "srai SrcL, shamt, ->{t, u, Rd}",
@@ -29105,7 +29539,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SRAI - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "sraiw SrcL, shamt, ->{t, u, Rd}",
@@ -29163,7 +29598,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinaryW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SRAIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result."
     },
     {
       "asm": "sraw SrcL, SrcR, ->{t, u, Rd}",
@@ -29221,7 +29657,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinaryW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SRAW - Compute this mnemonic's 32-bit binary operation and sign-extend the result."
     },
     {
       "asm": "srl SrcL, SrcR, ->{t, u, Rd}",
@@ -29279,7 +29716,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SRL - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "srli SrcL, shamt, ->{t, u, Rd}",
@@ -29337,7 +29775,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SRLI - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "srliw SrcL, shamt, ->{t, u, Rd}",
@@ -29395,7 +29834,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinaryW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SRLIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result."
     },
     {
       "asm": "srlw SrcL, SrcR, ->{t, u, Rd}",
@@ -29453,7 +29893,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinaryW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SRLW - Compute this mnemonic's 32-bit binary operation and sign-extend the result."
     },
     {
       "asm": "ssrget SSR_ID, ->{t, u, Rd}",
@@ -29499,7 +29940,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteSystemRegisterGet",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SSRGET - Read the addressed system register."
     },
     {
       "asm": "ssrset SrcL, SSR_ID",
@@ -29545,7 +29987,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteSystemRegisterSet",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SSRSET - Write the addressed system register."
     },
     {
       "asm": "ssrswap SrcL, SSR_ID, ->{t, u, Rd}",
@@ -29603,7 +30046,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteSystemRegisterSwap",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SSRSWAP - Atomically exchange the addressed system register and scalar value."
     },
     {
       "asm": "sub SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}",
@@ -29685,7 +30129,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SUB - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "subi SrcL, uimm, ->{t, u, Rd}",
@@ -29743,7 +30188,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SUBI - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "subiw SrcL, uimm, ->{t, u, Rd}",
@@ -29801,7 +30247,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinaryW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SUBIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result."
     },
     {
       "asm": "subw SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}",
@@ -29883,7 +30330,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinaryW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SUBW - Compute this mnemonic's 32-bit binary operation and sign-extend the result."
     },
     {
       "asm": "sw SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2]",
@@ -29953,7 +30401,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/BASE_REG",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SW - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "sw.add<.{rl, f, rlf}> [SrcL], SrcR",
@@ -30023,7 +30472,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SW.ADD - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "sw.and<.{rl, f, rlf}> [SrcL], SrcR",
@@ -30093,7 +30543,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SW.AND - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "sw.or<.{rl, f, rlf}> [SrcL], SrcR",
@@ -30163,7 +30614,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SW.OR - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "sw.pcr SrcL, [symbol]",
@@ -30214,7 +30666,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SW.PCR - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "sw.smax<.{rl, f, rlf}> [SrcL], SrcR",
@@ -30284,7 +30737,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SW.SMAX - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "sw.smin<.{rl, f, rlf}> [SrcL], SrcR",
@@ -30354,7 +30808,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SW.SMIN - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "sw.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]",
@@ -30424,7 +30879,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/BASE_REG",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SW.U - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "sw.umax<.{rl, f, rlf}> [SrcL], SrcR",
@@ -30494,7 +30950,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SW.UMAX - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "sw.umin<.{rl, f, rlf}> [SrcL], SrcR",
@@ -30564,7 +31021,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SW.UMIN - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "sw.xor<.{rl, f, rlf}> [SrcL], SrcR",
@@ -30634,7 +31092,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SW.XOR - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "swapb<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
@@ -30728,7 +31187,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SWAPB - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "swapd<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
@@ -30822,7 +31282,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SWAPD - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "swaph<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
@@ -30916,7 +31377,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SWAPH - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "swapw<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
@@ -31010,7 +31472,8 @@
       "semantic_family": "AMO",
       "semantic_group": "AMO",
       "semantic_handler": "AtomicReadModifyWrite",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SWAPW - Atomically read, apply this mnemonic's named operation, and write the scalar memory location."
     },
     {
       "asm": "swi SrcL, [SrcR, simm]",
@@ -31073,7 +31536,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/BASE_IMM",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SWI - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "swi.u SrcL, [SrcR, simm]",
@@ -31136,7 +31600,8 @@
       "semantic_family": "AGU",
       "semantic_group": "STA/BASE_IMM",
       "semantic_handler": "ExecuteScalarStore",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "SWI.U - Store scalar data using this mnemonic's width and address-update form."
     },
     {
       "asm": "tlb.ia SrcL",
@@ -31170,7 +31635,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteMaintenance",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "TLB.IA - Perform this mnemonic's cache, TLB, or bundle maintenance operation."
     },
     {
       "asm": "tlb.iall",
@@ -31191,7 +31657,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteMaintenance",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "TLB.IALL - Perform this mnemonic's cache, TLB, or bundle maintenance operation."
     },
     {
       "asm": "tlb.iav SrcL",
@@ -31225,7 +31692,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteMaintenance",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "TLB.IAV - Perform this mnemonic's cache, TLB, or bundle maintenance operation."
     },
     {
       "asm": "tlb.iv SrcL",
@@ -31259,7 +31727,8 @@
       "semantic_family": "SYS",
       "semantic_group": "SYS",
       "semantic_handler": "ExecuteMaintenance",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "TLB.IV - Perform this mnemonic's cache, TLB, or bundle maintenance operation."
     },
     {
       "asm": "ucvtf.{srcT2dstT} SrcL, ->{t, u, Rd}",
@@ -31329,7 +31798,8 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "ConvertFloatingEncoding",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "UCVTF - Convert between the encoded scalar numeric formats."
     },
     {
       "asm": "xor SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}",
@@ -31411,7 +31881,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "XOR - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "xori SrcL, simm, ->{t, u, Rd}",
@@ -31469,7 +31940,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinary",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "XORI - Compute this mnemonic's binary scalar operation and write the selected destination."
     },
     {
       "asm": "xoriw SrcL, simm, ->{t, u, Rd}",
@@ -31527,7 +31999,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinaryW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "XORIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result."
     },
     {
       "asm": "xorw SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}",
@@ -31609,7 +32082,8 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ScalarBinaryW",
-      "status": "accepted"
+      "status": "accepted",
+      "semantic_summary": "XORW - Compute this mnemonic's 32-bit binary operation and sign-extend the result."
     }
   ],
   "isa": "PTO Instruction Set Architecture",

@@ -550,6 +550,19 @@ def _attach_pto_source_form_ids(in_dir: Path, instructions: List[Dict[str, Any]]
             form_id = str(form["form_id"])
             matched = matches[0]
             matched["pto_source_form_id"] = form_id
+            for key in (
+                "accepted_assembly_mnemonics",
+                "canonical_assembly_by_engine",
+                "carrier_mnemonic",
+            ):
+                if key in form:
+                    matched[key] = form[key]
+            semantic_summary = " ".join(str(form.get("semantic_summary") or "").split())
+            if not semantic_summary:
+                raise ValueError(
+                    f"{source_path}: PTO form {form_id} has no semantic summary"
+                )
+            matched["note"] = semantic_summary
             for part in matched.get("encoding", {}).get("parts", []):
                 part.pop("constraints", None)
             widths = {

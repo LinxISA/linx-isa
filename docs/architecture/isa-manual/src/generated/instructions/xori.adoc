@@ -7,7 +7,7 @@
 
 *Syntax:* xori SrcL, simm, ->{t, u, Rd}
 
-*Description:* Bitwise xor with immediate: Rd/t/u = operand1 op operand2.
+*Description:* XORI - Compute this mnemonic's binary scalar operation and write the selected destination.
 
 *Encoding:*
 

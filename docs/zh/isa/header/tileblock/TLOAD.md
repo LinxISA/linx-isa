@@ -42,7 +42,7 @@ TLOAD.Layout <LB0:ValidCol, LB1:ValidRow, LB2:Col, DataType, PadValue>, [RegSrc0
 
 该TileOp模版块编码为以下指令：
 
-- [BSTART.TLOAD](../../blockIntro/tma_block/header.md) `DataType`
+- [BSTART.TLOAD](../../blockIntro/tlsu_block/header.md) `DataType`
 - [B.DATR](../../header/B.DATR.md) `Layout, PadValue`
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0`    （注：*ValidCol*）
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`    （注：*ValidRow*）

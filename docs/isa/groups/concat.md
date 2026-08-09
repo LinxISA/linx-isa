@@ -16,8 +16,8 @@ Concatenation / combine operations.
 
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
-| [HL.CCAT](../instructions/hl_ccat.md) | `hl.ccat SrcL, SrcR, shamt, ->Dst0, Dst1` | 48 | — | [48-bit HL.] Instruction from the Concat group. |
-| [HL.CCATW](../instructions/hl_ccatw.md) | `hl.ccatw SrcL, SrcR, shamt, ->Dst0, Dst1` | 48 | — | [48-bit HL.] Instruction from the Concat group. |
+| [HL.CCAT](../instructions/hl_ccat.md) | `hl.ccat SrcL, SrcR, shamt, ->Dst0, Dst1` | 48 | — | HL.CCAT - Concatenate two scalar values into a result pair. |
+| [HL.CCATW](../instructions/hl_ccatw.md) | `hl.ccatw SrcL, SrcR, shamt, ->Dst0, Dst1` | 48 | — | HL.CCATW - Concatenate two 32-bit values into a sign-extended result pair. |
 
 ## See Also
 

@@ -2,18 +2,16 @@
 
 This directory contains the complete documentation suite for LinxISA.
 
+The current machine-readable ISA authority is
+`isa/v0.58/linxisa-v0.58.json`. Start architecture work from that catalog and
+`architecture/v0.58-architecture-contract.md`.
+
 ## Structure
 
 ```
 docs/
 ├── architecture/           # ISA specification and manual
-│   ├── v0.57-architecture-contract.md    # ISA v0.57 contract
-│   ├── v0.57-encoding-decisions.md       # ISA v0.57 encoding decisions
-│   ├── v0.57-hardening-policy.md         # Hardening selection and fallback policy
-│   ├── v0.57-workload-engine-model.md    # Workload-class to engine mapping
-│   ├── v0.57-rendering-kernel-authoring.md # Rendering kernel authoring guide
-│   ├── v0.57-rendering-pto-contract.md   # Rendering PTO carrier and selector contract
-│   ├── v0.57-rendering-command-contract.md # Rendering command lowering contract
+│   ├── v0.58-architecture-contract.md    # Current ISA v0.58 contract
 │   └── isa-manual/                      # Full ISA manual (AsciiDoc)
 │
 ├── bringup/               # Bring-up and validation
@@ -61,13 +59,8 @@ docs/
 | Topic | File |
 |-------|------|
 | **New Contributors** | [bringup/GETTING_STARTED.md](bringup/GETTING_STARTED.md) |
-| **ISA Specification** | [architecture/v0.57-architecture-contract.md](architecture/v0.57-architecture-contract.md) |
-| **v0.57 Encoding Decisions** | [architecture/v0.57-encoding-decisions.md](architecture/v0.57-encoding-decisions.md) |
-| **Hardening Policy** | [architecture/v0.57-hardening-policy.md](architecture/v0.57-hardening-policy.md) |
-| **Workload Engine Model** | [architecture/v0.57-workload-engine-model.md](architecture/v0.57-workload-engine-model.md) |
-| **Rendering Kernel Guide** | [architecture/v0.57-rendering-kernel-authoring.md](architecture/v0.57-rendering-kernel-authoring.md) |
-| **Rendering PTO Contract** | [architecture/v0.57-rendering-pto-contract.md](architecture/v0.57-rendering-pto-contract.md) |
-| **Rendering Command Contract** | [architecture/v0.57-rendering-command-contract.md](architecture/v0.57-rendering-command-contract.md) |
+| **ISA Specification** | [architecture/v0.58-architecture-contract.md](architecture/v0.58-architecture-contract.md) |
+| **Encoding Space** | [reference/encoding_space_report.md](reference/encoding_space_report.md) |
 | **Matmul Research** | [matmul/low-precision-inner-vs-outer-product.md](matmul/low-precision-inner-vs-outer-product.md) |
 | **AVS Contract** | [bringup/AVS_CONTRACT.md](bringup/AVS_CONTRACT.md) |
 | **Rendering Bring-up** | [bringup/rendering_vulkan_bringup.md](bringup/rendering_vulkan_bringup.md) |

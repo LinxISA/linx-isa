@@ -7,7 +7,7 @@
 
 *Syntax:* j label
 
-*Description:* Unconditional jump to PC-relative label.
+*Description:* J - Jump to the PC-relative target.
 
 *Encoding:*
 

@@ -26,7 +26,7 @@
 
 ## Description
 
-[16-bit C.] Instruction from the C.TINST group.
+C.SSRGET - Read the compressed-form system register.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `C.SSRGET - Read the compressed-form system register.`
 
 ## Full Catalog Forms
 

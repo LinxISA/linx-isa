@@ -17,8 +17,8 @@ Reservation and conditional-update operations.
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
 | [HL.BFI](../instructions/hl_bfi.md) | `hl.bfi SrcL, SrcR, M, N, ->{t, u, Rd}` | 48 | — | [48-bit HL.] Bit-field insert. |
-| [HL.MIADD](../instructions/hl_miadd.md) | `hl.miadd SrcL, SrcR, uimm, ->{t, u, Rd}` | 48 | — | [48-bit HL.] Instruction from the RESERVE group. |
-| [HL.MISUB](../instructions/hl_misub.md) | `hl.misub SrcL, SrcR, uimm, ->{t, u, Rd}` | 48 | — | [48-bit HL.] Instruction from the RESERVE group. |
+| [HL.MIADD](../instructions/hl_miadd.md) | `hl.miadd SrcL, SrcR, uimm, ->{t, u, Rd}` | 48 | — | HL.MIADD - Multiply by the encoded immediate and add the scalar source. |
+| [HL.MISUB](../instructions/hl_misub.md) | `hl.misub SrcL, SrcR, uimm, ->{t, u, Rd}` | 48 | — | HL.MISUB - Multiply by the encoded immediate and add the scalar source. |
 
 ## See Also
 

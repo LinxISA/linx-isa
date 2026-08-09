@@ -7,7 +7,7 @@
 
 *Syntax:* fence.i
 
-*Description:* Memory fence: orders memory accesses per pred_imm/succ_imm mask.
+*Description:* FENCE.I - Synchronize instruction visibility after prior writes.
 
 *Encoding:*
 

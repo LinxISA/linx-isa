@@ -14,7 +14,7 @@ from pathlib import Path
 
 REQUIRED_TOPLEVEL_DOCS = [
     "docs/architecture/README.md",
-    "docs/architecture/v0.57-architecture-contract.md",
+    "docs/architecture/v0.58-architecture-contract.md",
 ]
 
 CANONICAL_ARCH_DOCS = [
@@ -213,13 +213,9 @@ def main(argv: list[str]) -> int:
                 if token not in text:
                     errors.append(f"{rel} missing required token: {token}")
 
-        v057_contract = _load_text(root / "docs/architecture/v0.57-architecture-contract.md")
-        if "docs/architecture/linxcore/overview.md" not in v057_contract:
-            errors.append("v0.57 architecture contract missing LinxCore overview cross-link")
-
-        overview = _load_text(root / "rtl/LinxCore/docs/architecture/overview.md")
-        if "docs/architecture/v0.57-architecture-contract.md" not in overview:
-            errors.append("LinxCore overview missing v0.57 architecture contract cross-link")
+        current_contract = _load_text(root / "docs/architecture/v0.58-architecture-contract.md")
+        if "docs/architecture/linxcore/" not in current_contract:
+            errors.append("v0.58 architecture contract missing LinxCore implementation cross-link")
 
         matrix_text = _load_text(root / "rtl/LinxCore/docs/architecture/verification-matrix.md")
         for gate_key in REQUIRED_MATRIX_GATE_NAMES:

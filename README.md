@@ -23,17 +23,26 @@
 
 This repository serves as the **superproject** that pins together all ecosystem components: compiler (LLVM), emulator (QEMU), Linux kernel, RTL (LinxCore), and standard libraries (glibc, musl).
 
+The current machine-readable ISA authority is
+`isa/v0.58/linxisa-v0.58.json`. Historical profiles and archives do not define
+current encodings or semantics.
+
+Tile operations execute on exactly four engines: **VEC**, **SFU**, **TLSU**,
+and **CUBE**. VEC is restricted to element-wise operations, while SFU handles
+complex functions and transformations. TEPL remains the unchanged
+Mode/Function encoding carrier for VEC/SFU and is not an engine.
+
 ---
 
 ## Quick Start
 
-### Clone with Submodules
+### Clone and Initialize a Required Pinned Leaf
 
 ```bash
-git clone --recurse-submodules git@github.com:LinxISA/linx-isa.git
+git clone git@github.com:LinxISA/linx-isa.git
 cd linx-isa
-git submodule sync --recursive
-git submodule update --init --recursive
+git submodule sync -- compiler/llvm
+git submodule update --init compiler/llvm
 ```
 
 ### Run Validation Gates
@@ -104,19 +113,19 @@ linx-isa/
 | `lib/musl` | [LinxISA/musl](https://github.com/LinxISA/musl) | musl libc port |
 | `workloads/pto_kernels` | [LinxISA/PTO-Kernel](https://github.com/LinxISA/PTO-Kernel) | PTO accelerator kernels |
 
-### Updating Submodules
+### Updating a Pinned Submodule
 
 ```bash
-# Sync and update all submodules
-git submodule sync --recursive
-git submodule update --init --recursive
-
-# Pull latest from upstream
-git submodule update --remote compiler/llvm emulator/qemu kernel/linux rtl/LinxCore tools/pyCircuit lib/glibc lib/musl workloads/pto_kernels
+# Fetch and select an already reviewed leaf commit
+git -C compiler/llvm fetch origin <reviewed-commit>
+git -C compiler/llvm checkout --detach <reviewed-commit>
+git add compiler/llvm
 
 # Verify layout
 bash tools/ci/check_repo_layout.sh
 ```
+
+Never update all submodules implicitly or select an unreviewed remote tip.
 
 ---
 
@@ -126,7 +135,7 @@ bash tools/ci/check_repo_layout.sh
 
 | Gate | Command | Description |
 |------|---------|-------------|
-| **AVS Contract** | `python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml` | Public `v0.58` bring-up contract schema + reference validation |
+| **AVS Compatibility** | `python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml` | Public `v0.57` compatibility matrix; fresh `v0.58` consumer evidence is required separately |
 | **AVS Closure** | `python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier pr` | Tier-scoped AVS closure status |
 | **Sail Model** | `python3 tools/bringup/check_sail_model.py` | Sail wording, status, and parser/typecheck gate |
 | **Compiler AVS** | `cd avs/compiler/linx-llvm/tests && ./run.sh` | LLVM code generation tests |
@@ -153,7 +162,7 @@ bash tools/regression/strict_cross_repo.sh
 - **Website**: https://linxisa.github.io/
 - **[Getting Started](docs/bringup/GETTING_STARTED.md)** - Onboarding guide
 - **[Architecture Contract](docs/architecture/v0.58-architecture-contract.md)** - ISA v0.58 specification
-- **[Encoding Decisions](docs/architecture/v0.57-encoding-decisions.md)** - Retained baseline encoding rationale
+- **[Encoding Space](docs/reference/encoding_space_report.md)** - Current generated allocation report
 - **[Bring-up Progress](docs/bringup/PROGRESS.md)** - Current status tracking
 - **[Navigation Guide](docs/project/navigation.md)** - Repository layout policy
 - **[ISA Manual](docs/architecture/isa-manual/README.md)** - Complete ISA documentation

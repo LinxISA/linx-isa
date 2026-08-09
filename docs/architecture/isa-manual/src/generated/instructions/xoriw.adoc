@@ -7,7 +7,7 @@
 
 *Syntax:* xoriw SrcL, simm, ->{t, u, Rd}
 
-*Description:* Bitwise xor with immediate (word operation): Rd/t/u = operand1 op operand2.
+*Description:* XORIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
 
 *Encoding:*
 

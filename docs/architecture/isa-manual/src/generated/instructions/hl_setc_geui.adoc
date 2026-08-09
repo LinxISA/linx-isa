@@ -7,7 +7,7 @@
 
 *Syntax:* hl.setc.geui SrcL, uimm
 
-*Description:* Long 48-bit set condition flag: eui of SrcL with operand.
+*Description:* HL.SETC.GEUI - Compare scalar operands and update the bundle commit condition.
 
 *Encoding:*
 

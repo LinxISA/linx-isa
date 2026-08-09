@@ -22,16 +22,16 @@ Multi-cycle ALU operations: division, remainder, and extended multiply.
 | [DIVW](../instructions/divw.md) | `divw SrcL, SrcR, ->{t, u, Rd}` | 32 | — | 32-bit word signed integer division. |
 | [HL.DIV](../instructions/hl_div.md) | `hl.div SrcL, SrcR, ->Dst0, Dst1` | 48 | — | [48-bit HL.] Signed integer division. |
 | [HL.DIVU](../instructions/hl_divu.md) | `hl.divu SrcL, SrcR, ->Dst0, Dst1` | 48 | — | [48-bit HL.] Unsigned integer division. |
-| [HL.DIVUW](../instructions/hl_divuw.md) | `hl.divuw SrcL, SrcR, ->Dst0, Dst1` | 48 | — | [48-bit HL.] Instruction from the Multi-Cycle ALU group. |
-| [HL.DIVW](../instructions/hl_divw.md) | `hl.divw SrcL, SrcR, ->Dst0, Dst1` | 48 | — | [48-bit HL.] Instruction from the Multi-Cycle ALU group. |
-| [HL.MADD](../instructions/hl_madd.md) | `hl.madd SrcL, SrcR, SrcD, ->Dst0, Dst1` | 48 | — | [48-bit HL.] Instruction from the Multi-Cycle ALU group. |
-| [HL.MADDW](../instructions/hl_maddw.md) | `hl.maddw SrcL, SrcR, SrcD, ->Dst0, Dst1` | 48 | — | [48-bit HL.] Instruction from the Multi-Cycle ALU group. |
+| [HL.DIVUW](../instructions/hl_divuw.md) | `hl.divuw SrcL, SrcR, ->Dst0, Dst1` | 48 | — | HL.DIVUW - Compute 32-bit quotient and remainder as a sign-extended result pair. |
+| [HL.DIVW](../instructions/hl_divw.md) | `hl.divw SrcL, SrcR, ->Dst0, Dst1` | 48 | — | HL.DIVW - Compute 32-bit quotient and remainder as a sign-extended result pair. |
+| [HL.MADD](../instructions/hl_madd.md) | `hl.madd SrcL, SrcR, SrcD, ->Dst0, Dst1` | 48 | — | HL.MADD - Compute multiply-add and return the scalar result pair. |
+| [HL.MADDW](../instructions/hl_maddw.md) | `hl.maddw SrcL, SrcR, SrcD, ->Dst0, Dst1` | 48 | — | HL.MADDW - Compute multiply-add and return the scalar result pair. |
 | [HL.MUL](../instructions/hl_mul.md) | `hl.mul SrcL, SrcR, ->Dst0, Dst1` | 48 | — | [48-bit HL.] Integer multiply. |
-| [HL.MULU](../instructions/hl_mulu.md) | `hl.mulu SrcL, SrcR, ->Dst0, Dst1` | 48 | — | [48-bit HL.] Instruction from the Multi-Cycle ALU group. |
+| [HL.MULU](../instructions/hl_mulu.md) | `hl.mulu SrcL, SrcR, ->Dst0, Dst1` | 48 | — | HL.MULU - Compute the full-width scalar product as a result pair. |
 | [HL.REM](../instructions/hl_rem.md) | `hl.rem SrcL, SrcR, ->Dst0, Dst1` | 48 | — | [48-bit HL.] Signed integer remainder. |
 | [HL.REMU](../instructions/hl_remu.md) | `hl.remu SrcL, SrcR, ->Dst0, Dst1` | 48 | — | [48-bit HL.] Unsigned integer remainder. |
-| [HL.REMUW](../instructions/hl_remuw.md) | `hl.remuw SrcL, SrcR, ->Dst0, Dst1` | 48 | — | [48-bit HL.] Instruction from the Multi-Cycle ALU group. |
-| [HL.REMW](../instructions/hl_remw.md) | `hl.remw SrcL, SrcR, ->Dst0, Dst1` | 48 | — | [48-bit HL.] Instruction from the Multi-Cycle ALU group. |
+| [HL.REMUW](../instructions/hl_remuw.md) | `hl.remuw SrcL, SrcR, ->Dst0, Dst1` | 48 | — | HL.REMUW - Compute 32-bit quotient and remainder as a sign-extended result pair. |
+| [HL.REMW](../instructions/hl_remw.md) | `hl.remw SrcL, SrcR, ->Dst0, Dst1` | 48 | — | HL.REMW - Compute 32-bit quotient and remainder as a sign-extended result pair. |
 | [MADD](../instructions/madd.md) | `madd SrcL, SrcR, SrcD, ->{t, u, Rd}` | 32 | — | Multiply-add: `Dest = SrcD + SrcL * SrcR`. |
 | [MADDW](../instructions/maddw.md) | `maddw SrcL, SrcR, SrcD, ->{t, u, Rd}` | 32 | — | 32-bit word multiply-add. |
 | [MUL](../instructions/mul.md) | `mul SrcL, SrcR, ->{t, u, Rd}` | 32 | — | Integer multiply (lower product written to destination). |

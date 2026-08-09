@@ -26,7 +26,7 @@
 
 ## Description
 
-Instruction from the Floating-point Arithmetic group.
+FNMADD - Compute this mnemonic's fused floating-point operation.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ Instruction from the Floating-point Arithmetic group.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `FNMADD - Compute this mnemonic's fused floating-point operation.`
 
 ## Full Catalog Forms
 

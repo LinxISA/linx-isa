@@ -87,12 +87,12 @@ Layout and dimension contract (v0.58 current profile for TLSU):
   - `LB2`: TR-side inner element count
 * Conceptual GM-side bounding rectangle (reconciled to the canonical descriptor model):
   - `Base` is the bound base-pointer argument from `B.IOR`.
-  - `Stride` is the bound row/outer-stride argument from `B.IOR`.
+  - `Stride` is the bound row/outer-stride argument from `B.IOR`, measured in logical elements.
   - `ElemBytes` is derived from the canonical tile-memory header data type.
   - top-left corner: `Base`
   - top-right exclusive corner: `Base + LB0 * ElemBytes`
-  - bottom-left exclusive corner: `Base + LB1 * Stride`
-  - bottom-right exclusive corner: `Base + LB0 * ElemBytes + LB1 * Stride`
+  - bottom-left exclusive corner: `Base + LB1 * Stride * ElemBytes`
+  - bottom-right exclusive corner: `Base + (LB1 * Stride + LB0) * ElemBytes`
 * TR-side outer element count is derived as:
   - `TR_outer = TileElements / LB2`
   - `TileElements = TileBytes / element_size`, where `TileBytes` comes from the active `B.IOT`/size descriptor.
@@ -117,14 +117,17 @@ Padding contract (TLOAD):
 * TSTORE does not synthesize padding data; values are read from TR and written to GM according to the selected
   source/destination layouts and the effective GM footprint.
 
-Bring-up (auto-mode) binding convention for `B.IOR` in `TLOAD/TSTORE`:
+Canonical `B.IOR` binding for `TLOAD/TSTORE`:
 
-* The effective base pointer register is taken from the most recent `B.IOR` in the header:
-  - prefer `RegSrc1` when it is non-zero,
-  - otherwise fall back to `RegSrc0` (base-only binding).
-* When both are present, `RegSrc0` is treated as a stride/leading-dimension register and `RegSrc1` as the base pointer.
-  Canonical disassembly prints the raw register list in encoding order (`[RegSrc0,RegSrc1,...]`), so the base pointer
-  commonly appears as the *second* entry (for example `B.IOR [s0,a6],[]`).
+* `RegSrc0` selects the GM base pointer.
+* `RegSrc1` selects row stride in logical elements.
+* Each selected PE resolves the same selectors in its own private GPR file.
+* Omitting B.IOR selects base zero and dense row stride (`LB2`, the column count).
+* An explicitly encoded selector whose register value is zero denotes a true
+  zero base or zero stride and is distinct from omission.
+* The address of logical element `(row,column)` is
+  `Base + (row * Stride + column) * ElemBytes`. Packed four-bit formats use
+  the logical element index to choose the containing byte and nibble.
 * A single `TLOAD`/`TSTORE` may decompose into multiple internal memory beats; completion is not atomic to observers.
 * Internal beats of one operation are not guaranteed to issue in source-program order; software must not assume row-major,
   element-major, or beat-commit order within one architectural `TLOAD`/`TSTORE`.
@@ -134,9 +137,9 @@ Bring-up (auto-mode) binding convention for `B.IOR` in `TLOAD/TSTORE`:
 
 Canonical v0.58 profile constraints:
 
-* Applicable `B.DATR` fields plus `B.IOR` are mandatory in descriptor-rich `TLOAD/TSTORE` headers.
+* Applicable `B.DATR` fields are mandatory when non-default attributes are needed; B.IOR is optional with the defaults above.
 * TLSU execution consumes the typed block start and applicable `B.CATR/B.DATR/B.DIM/B.IOR/B.IOT` state.
-* Repeated `B.IOR` and repeated `B.IOT` are legal and are consumed in header order.
+* At most one B.IOR is legal in a TLOAD/TSTORE header; a second B.IOR is rejected rather than replacing the first.
 * A runtime-resolved `B.IOT` size is legal only when it equals an accepted 128 B through 8 KiB footprint.
 * For bring-up code size, emit `C.B.DIMI` for `LB0/LB1/LB2` when the value fits in `imm8` (and `RegSrc=zero`).
 * Raw `group=2` material and broad fixed-pipe/TCVT metadata flows are reserved/illegal in canonical v0.58 until a future

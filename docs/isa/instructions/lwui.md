@@ -36,7 +36,7 @@ rd = Load(/* addr */);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `LWUI - Load scalar data using this mnemonic's width, signedness, and address-update form.`
 
 ## Full Catalog Forms
 

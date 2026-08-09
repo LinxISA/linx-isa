@@ -7,7 +7,7 @@
 
 *Syntax:* fmadd.{T} SrcL, SrcR, SrcA, ->{t, u, Rd}
 
-*Description:* Floating-point fused multiply-add: Dst = +(SrcL * SrcR) + SrcA.
+*Description:* FMADD - Compute this mnemonic's fused floating-point operation.
 
 *Encoding:*
 

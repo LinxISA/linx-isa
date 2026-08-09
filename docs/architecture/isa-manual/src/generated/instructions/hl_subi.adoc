@@ -7,7 +7,7 @@
 
 *Syntax:* hl.subi SrcL, uimm, ->{t, u, Rd}
 
-*Description:* Long 48-bit SUBI with 32-bit immediate, result to Rd/t/u.
+*Description:* HL.SUBI - Compute this mnemonic's binary scalar operation and write the selected destination.
 
 *Encoding:*
 

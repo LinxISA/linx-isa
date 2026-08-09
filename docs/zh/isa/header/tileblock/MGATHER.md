@@ -41,7 +41,7 @@ MGATHER <LB0:validCol, LB1:validRow, LB2:Col, DataType, PadValue>, SrcTile<.reus
 
 该 TileOp 编码为以下指令：
 
-- [BSTART.MGATHER](../../blockIntro/tma_block/header.md) `DataType`
+- [BSTART.MGATHER](../../blockIntro/tlsu_block/header.md) `DataType`
 - [B.DATR](../../header/B.DATR.md) `PadValue` *（可选）*
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0` *（`validCol`）*
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1` *（`validRow`）*

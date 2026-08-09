@@ -26,7 +26,7 @@
 
 ## Description
 
-Instruction from the BSTART group.
+Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
 ## Pseudocode (informative)
 

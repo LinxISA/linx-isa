@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `HL.REMU - Compute quotient and remainder as a scalar result pair.`
 
 ## Full Catalog Forms
 

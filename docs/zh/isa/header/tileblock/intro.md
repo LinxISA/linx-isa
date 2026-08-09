@@ -6,9 +6,9 @@
 
 ---
 
-## **TMA类指令**
+## **TLSU 类指令**
 
-TMA类指令主要用于内存操作，包括数据的加载、存储、复制、类型转换以及内存聚集和散布操作。关于这种块指令的详细介绍请见[访存数据块](../../blockIntro/tma_block/intro.md)。
+TLSU 类指令用于内存与 Tile 数据搬运，包括加载、存储、复制、预取、聚集和散布。详细定义请见 [TLSU 数据搬运块](../../blockIntro/tlsu_block/intro.md)。
 
 | Mode | Function | 操作   | 说明 |
 |------|----------|--------|------|
@@ -66,9 +66,9 @@ CUBE类指令主要用于矩阵和向量的乘法运算，包括基本矩阵乘�
 
 ---
 
-## **TEPL类指令**
+## **TEPL 编码载体：VEC 与 SFU**
 
-TEPL类指令主要用于对Tile数据块进行逐元素操作、标量操作以及按轴操作。关于这种块指令的详细介绍请见[模版数据块](../../blockIntro/tepl_block/intro.md)。
+TEPL 是保持不变的 Mode/Function 编码载体，不是执行单元。目录将每条 TEPL 编码操作精确分配给 VEC 或 SFU：VEC 只做逐元素运算，SFU 执行复杂函数、归约/展开、重排和不规则运算。详细定义请见 [TEPL 编码载体](../../blockIntro/tepl_block/intro.md)。
 
 ### **Tile-Tile逐元素操作**
 

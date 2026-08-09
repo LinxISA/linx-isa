@@ -26,7 +26,7 @@
 
 ## Description
 
-Instruction from the SSR Access group.
+SSRGET - Read the addressed system register.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ Instruction from the SSR Access group.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `SSRGET - Read the addressed system register.`
 
 ## Full Catalog Forms
 

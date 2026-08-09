@@ -26,7 +26,7 @@
 
 ## Description
 
-[16-bit C.] Instruction from the C.TINST group.
+C.CMP.EQI - Compare scalar operands and write the encoded boolean result.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `C.CMP.EQI - Compare scalar operands and write the encoded boolean result.`
 
 ## Full Catalog Forms
 

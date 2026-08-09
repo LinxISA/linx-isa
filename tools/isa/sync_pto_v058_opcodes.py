@@ -27,14 +27,15 @@ def load(path: Path) -> dict[str, Any]:
 def current_owned_lines() -> dict[Path, set[int]]:
     """Locate the currently projected PTO rows in the active v0.58 files."""
     spec = load(PROFILE / "linxisa-v0.58.json")
-    command_form_ids = {
+    scalar_form_ids = {
         str(form["form_id"])
-        for form in load(PROFILE / "state/pto_command_forms.json")["forms"]
+        for form in load(PROFILE / "state/pto_scalar_forms.json")["forms"]
     }
     result: dict[Path, set[int]] = {}
     for instruction in spec["instructions"]:
         is_canonical_command = (
-            str(instruction.get("pto_source_form_id") or "") in command_form_ids
+            bool(instruction.get("pto_source_form_id"))
+            and str(instruction["pto_source_form_id"]) not in scalar_form_ids
         )
         is_command_variant = bool(instruction.get("pto_source_form_variant"))
         if not (is_canonical_command or is_command_variant):
@@ -154,6 +155,13 @@ def opcode_line(
         "note": form.get("semantic_summary", "PTO ISA 0.58.0 canonical command form."),
         "pto_source_constraints": form.get("constraints", []),
     }
+    for key in (
+        "accepted_assembly_mnemonics",
+        "canonical_assembly_by_engine",
+        "carrier_mnemonic",
+    ):
+        if key in form:
+            meta[key] = form[key]
     if variant is not None:
         meta["pto_source_form_variant"] = variant
         meta["pto_source_form_variant_of"] = form["form_id"]

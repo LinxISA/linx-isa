@@ -7,7 +7,7 @@
 
 *Syntax:* lhui [SrcL, simm], ->{t, u, Rd}
 
-*Description:* Load 16-bit signedvalue from [Rs+offset], result to Rd/t/u.
+*Description:* LHUI - Load scalar data using this mnemonic's width, signedness, and address-update form.
 
 *Encoding:*
 

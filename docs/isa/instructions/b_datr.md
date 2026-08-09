@@ -26,7 +26,7 @@
 
 ## Description
 
-Instruction from the Bundle Data Attribute group.
+Latches tile layout, data type, padding, conversion, rounding, and saturation attributes.
 
 ## Pseudocode (informative)
 

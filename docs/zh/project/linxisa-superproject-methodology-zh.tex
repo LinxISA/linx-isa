@@ -647,15 +647,9 @@ python3 tools/bringup/check_multi_agent_gates.py \
 原则上只更新 intended modules。通用形式如下：
 
 \begin{CodeBlock}
-git submodule update --remote \
-  compiler/llvm \
-  emulator/qemu \
-  kernel/linux \
-  rtl/LinxCore \
-  tools/pyCircuit \
-  lib/glibc \
-  lib/musl \
-  workloads/pto_kernels
+git -C <leaf> fetch origin <reviewed-commit>
+git -C <leaf> checkout --detach <reviewed-commit>
+git add <leaf>
 \end{CodeBlock}
 
 实际执行时，应尽量收窄到这次确实需要 repin 的模块。

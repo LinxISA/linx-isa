@@ -36,7 +36,7 @@ Store(/* addr */, rs2);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `HL.SHIP - Store a scalar register pair using this mnemonic's address-update form.`
 
 ## Full Catalog Forms
 

@@ -26,7 +26,7 @@
 
 ## Description
 
-[16-bit C.] Instruction from the Bundle Dimension group.
+Writes one of the three bundle-local dimension registers.
 
 ## Pseudocode (informative)
 

@@ -36,7 +36,7 @@ Floating-point greater-or-equal comparison (ordered).
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `FGE - Compare floating-point operands and produce the encoded result.`
 
 ## Full Catalog Forms
 

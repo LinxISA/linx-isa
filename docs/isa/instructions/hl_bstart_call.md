@@ -39,7 +39,7 @@ AtomicCallTransfer(call_target, ra);
 
 ## Encoding Notes
 
-- `Atomic fused CALL: call_target = P + (SignExtend(simm25) << 1); ra = (P + 4) + (ZeroExtend(uimm5) << 1). Both labels are explicit and independently relocatable.`
+- `Atomically closes the current bundle, computes the call target from the signed displacement and the return address from the independent unsigned displacement, writes ra, and transfers control to the call bundle.`
 
 ## Full Catalog Forms
 

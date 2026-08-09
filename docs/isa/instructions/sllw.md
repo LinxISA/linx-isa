@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `SLLW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.`
 
 ## Full Catalog Forms
 

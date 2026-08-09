@@ -36,7 +36,7 @@ Compare not-equal.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `CMP.NE - Compare scalar operands and write the encoded boolean result.`
 
 ## Full Catalog Forms
 

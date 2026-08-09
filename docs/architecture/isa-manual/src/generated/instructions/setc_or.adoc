@@ -7,7 +7,7 @@
 
 *Syntax:* setc.or SrcL, SrcR<.sw, .uw, .not>
 
-*Description:* Set block condition flag for r: consumed by BSTART COND.
+*Description:* SETC.OR - Combine scalar comparison results and update the bundle commit condition.
 
 *Encoding:*
 

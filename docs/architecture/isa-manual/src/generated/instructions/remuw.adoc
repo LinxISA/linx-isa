@@ -7,7 +7,7 @@
 
 *Syntax:* remuw SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* Remainder (word): Dst0 = remainder, Dst1 = quotient.
+*Description:* REMUW - Compute unsigned 32-bit remainder and sign-extend it.
 
 *Encoding:*
 

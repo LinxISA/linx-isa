@@ -4,7 +4,7 @@
 
 ## 范围和事实来源
 
-- 架构/规范权威：`linxisa`（`isa/v0.57/`、`isa/v0.57/linxisa-v0.57.json`、`isa/generated/codecs/`）。
+- 架构/规范权威：`linxisa`（`isa/v0.58/`、`isa/v0.58/linxisa-v0.58.json`、`isa/generated/codecs/`）。
 - RTL/模型生成权限：
   - 固定子模块：`tools/pyCircuit`（推荐用于再现性）
   - 或外部结帐（设置 `PYCIRCUIT_ROOT=/path/to/pyCircuit`）。

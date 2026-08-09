@@ -29,9 +29,9 @@
 
 ## 规范链接
 
-- 基础 ISA 架构合约：`docs/architecture/v0.57-architecture-contract.md`
-- 工作负载到引擎模型：`docs/architecture/v0.57-workload-engine-model.md`
-- 渲染命令型号：`docs/architecture/v0.57-rendering-command-contract.md`
+- 基础 ISA 架构合约：`docs/zh/architecture/v0.58-architecture-contract.md`
+- 工作负载到引擎模型：`docs/zh/architecture/v0.58-architecture-contract.md`
+- 渲染命令型号：`docs/zh/architecture/v0.58-architecture-contract.md`
 - 灵犀核心微架构合约：`rtl/LinxCore/docs/architecture/microarchitecture.md`
 - 灵犀核心接口合约：`rtl/LinxCore/docs/architecture/interfaces.md`
 - 灵犀核心验证矩阵：`rtl/LinxCore/docs/architecture/verification-matrix.md`当措辞出现分歧时，灵犀指令集 架构页面和 灵犀Core
@@ -63,7 +63,7 @@
 灵犀指令集 型号。- BCC和块结构提供架构控制和提交
   路径。
 - `VEC` 是用于并行循环工作的通用可编程 SIMT 引擎。
-- `TMA` 仍然通过相同的块模型进行选择，但其内存传输
+- `TLSU` 仍然通过相同的块模型进行选择，但其内存传输
   由 CSU 子系统拥有，而不是由对等顶级引擎 shell 拥有。
 - `CUBE`和`TAU`仍然是通过同一块选择的集成发动机
   模型。
@@ -72,9 +72,9 @@
 
 该组合规则需要与以下内容保持一致：
 
-- `docs/architecture/v0.57-architecture-contract.md`
-- `docs/architecture/v0.57-workload-engine-model.md`
-- `docs/architecture/v0.57-rendering-command-contract.md`
+- `docs/zh/architecture/v0.58-architecture-contract.md`
+- `docs/zh/architecture/v0.58-architecture-contract.md`
+- `docs/zh/architecture/v0.58-architecture-contract.md`
 
 ## 当前架构闭包切片
 

@@ -17,12 +17,12 @@
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
 | [C.SETC.TGT](../instructions/c_setc_tgt.md) | `c.setc.tgt srcL` | 16 | — | [16-bit C.] Sets the block-commit condition. |
-| [C.SEXT.B](../instructions/c_sext_b.md) | `c.sext.b srcL, ->t` | 16 | — | [16-bit C.] Instruction from the C.UNARY group. |
-| [C.SEXT.H](../instructions/c_sext_h.md) | `c.sext.h srcL, ->t` | 16 | — | [16-bit C.] Instruction from the C.UNARY group. |
-| [C.SEXT.W](../instructions/c_sext_w.md) | `c.sext.w srcL, ->t` | 16 | — | [16-bit C.] Instruction from the C.UNARY group. |
-| [C.ZEXT.B](../instructions/c_zext_b.md) | `c.zext.b srcL, ->t` | 16 | — | [16-bit C.] Instruction from the C.UNARY group. |
-| [C.ZEXT.H](../instructions/c_zext_h.md) | `c.zext.h srcL, ->t` | 16 | — | [16-bit C.] Instruction from the C.UNARY group. |
-| [C.ZEXT.W](../instructions/c_zext_w.md) | `c.zext.w srcL, ->t` | 16 | — | [16-bit C.] Instruction from the C.UNARY group. |
+| [C.SEXT.B](../instructions/c_sext_b.md) | `c.sext.b srcL, ->t` | 16 | — | C.SEXT.B - Sign-extend or zero-extend the selected scalar subword. |
+| [C.SEXT.H](../instructions/c_sext_h.md) | `c.sext.h srcL, ->t` | 16 | — | C.SEXT.H - Sign-extend or zero-extend the selected scalar subword. |
+| [C.SEXT.W](../instructions/c_sext_w.md) | `c.sext.w srcL, ->t` | 16 | — | C.SEXT.W - Sign-extend or zero-extend the selected scalar subword. |
+| [C.ZEXT.B](../instructions/c_zext_b.md) | `c.zext.b srcL, ->t` | 16 | — | C.ZEXT.B - Sign-extend or zero-extend the selected scalar subword. |
+| [C.ZEXT.H](../instructions/c_zext_h.md) | `c.zext.h srcL, ->t` | 16 | — | C.ZEXT.H - Sign-extend or zero-extend the selected scalar subword. |
+| [C.ZEXT.W](../instructions/c_zext_w.md) | `c.zext.w srcL, ->t` | 16 | — | C.ZEXT.W - Sign-extend or zero-extend the selected scalar subword. |
 
 ## See Also
 

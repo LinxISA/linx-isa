@@ -345,20 +345,12 @@ python3 tools/bringup/check_avs_profile_closure.py \
 4. 执行严格的跨仓库关闭。
 5. 仅当所需的门和证据完整时才合并 repin。
 
-推荐的同步和重新固定流程：
+推荐的固定提交重新绑定流程：
 
 ```bash
-git submodule sync --recursive
-git submodule update --init --recursive
-git submodule update --remote \
-  compiler/llvm \
-  emulator/qemu \
-  kernel/linux \
-  rtl/LinxCore \
-  tools/pyCircuit \
-  lib/glibc \
-  lib/musl \
-  workloads/pto_kernels
+git -C <leaf> fetch origin <reviewed-commit>
+git -C <leaf> checkout --detach <reviewed-commit>
+git add <leaf>
 bash tools/ci/check_repo_layout.sh
 ```
 

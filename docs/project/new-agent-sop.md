@@ -38,8 +38,9 @@ Read only what you need, in this order:
 4. your owning checklist under `docs/bringup/agent_runs/checklists/`
 5. the relevant gate script under `tools/bringup/` or `tools/regression/`
 
-If the task is architectural, also read the relevant contract in `docs/` or
-`isa/`.
+If the task is architectural, read `isa/v0.58/linxisa-v0.58.json` first and
+then `docs/architecture/v0.58-architecture-contract.md`. Historical profiles
+and archived pages are context only, never current definitions.
 
 ## Scope Rules
 
@@ -57,7 +58,7 @@ Follow these rules strictly:
 When different files disagree, trust them in this order:
 
 1. failing test or gate command,
-2. canonical contracts in `isa/` and `docs/architecture/`,
+2. `isa/v0.58/linxisa-v0.58.json` and its current generated/reference views,
 3. machine-readable reports such as `docs/bringup/gates/latest.json`,
 4. generated markdown views such as `docs/bringup/GATE_STATUS.md`.
 

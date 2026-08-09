@@ -7,7 +7,7 @@
 
 *Syntax:* c.or srcL, srcR, ->t
 
-*Description:* Compressed 16-bit bitwise OR: Rd = Rs1 | Rs2, result to t.
+*Description:* C.OR - Compute this mnemonic's binary scalar operation and write the selected destination.
 
 *Encoding:*
 

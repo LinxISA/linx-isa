@@ -38,7 +38,7 @@
 
 ## Description
 
-Instruction from the Bundle Argument group.
+Writes one of the three bundle-local dimension registers.
 
 ## Pseudocode (informative)
 

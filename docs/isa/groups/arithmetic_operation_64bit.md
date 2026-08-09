@@ -20,11 +20,11 @@ Full 64-bit integer arithmetic instructions.
 | [ADDI](../instructions/addi.md) | `addi SrcL, uimm, ->{t, u, Rd}` | 32 | — | Integer add-immediate. Adds a sign-extended 12-bit immediate to a register. |
 | [AND](../instructions/and.md) | `and SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}` | 32 | — | Bitwise AND of two registers. |
 | [ANDI](../instructions/andi.md) | `andi SrcL, simm, ->{t, u, Rd}` | 32 | — | Bitwise AND with an immediate. |
-| [HL.ADDI](../instructions/hl_addi.md) | `hl.addi SrcL, uimm, ->{t, u, Rd}` | 48 | — | [48-bit HL.] Instruction from the Arithmetic Operation 64bit group. |
-| [HL.ANDI](../instructions/hl_andi.md) | `hl.andi SrcL, simm, ->{t, u, Rd}` | 48 | — | [48-bit HL.] Instruction from the Arithmetic Operation 64bit group. |
-| [HL.ORI](../instructions/hl_ori.md) | `hl.ori SrcL, simm, ->{t, u, Rd}` | 48 | — | [48-bit HL.] Instruction from the Arithmetic Operation 64bit group. |
-| [HL.SUBI](../instructions/hl_subi.md) | `hl.subi SrcL, uimm, ->{t, u, Rd}` | 48 | — | [48-bit HL.] Instruction from the Arithmetic Operation 64bit group. |
-| [HL.XORI](../instructions/hl_xori.md) | `hl.xori SrcL, simm, ->{t, u, Rd}` | 48 | — | [48-bit HL.] Instruction from the Arithmetic Operation 64bit group. |
+| [HL.ADDI](../instructions/hl_addi.md) | `hl.addi SrcL, uimm, ->{t, u, Rd}` | 48 | — | HL.ADDI - Compute this mnemonic's binary scalar operation and write the selected destination. |
+| [HL.ANDI](../instructions/hl_andi.md) | `hl.andi SrcL, simm, ->{t, u, Rd}` | 48 | — | HL.ANDI - Compute this mnemonic's binary scalar operation and write the selected destination. |
+| [HL.ORI](../instructions/hl_ori.md) | `hl.ori SrcL, simm, ->{t, u, Rd}` | 48 | — | HL.ORI - Compute this mnemonic's binary scalar operation and write the selected destination. |
+| [HL.SUBI](../instructions/hl_subi.md) | `hl.subi SrcL, uimm, ->{t, u, Rd}` | 48 | — | HL.SUBI - Compute this mnemonic's binary scalar operation and write the selected destination. |
+| [HL.XORI](../instructions/hl_xori.md) | `hl.xori SrcL, simm, ->{t, u, Rd}` | 48 | — | HL.XORI - Compute this mnemonic's binary scalar operation and write the selected destination. |
 | [OR](../instructions/or.md) | `or SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}` | 32 | — | Bitwise OR of two registers. |
 | [ORI](../instructions/ori.md) | `ori SrcL, simm, ->{t, u, Rd}` | 32 | — | Bitwise OR with an immediate. |
 | [SLL](../instructions/sll.md) | `sll SrcL, SrcR, ->{t, u, Rd}` | 32 | — | Logical left shift by the value in SrcR. |
@@ -34,7 +34,7 @@ Full 64-bit integer arithmetic instructions.
 | [SRL](../instructions/srl.md) | `srl SrcL, SrcR, ->{t, u, Rd}` | 32 | — | Logical right shift by the value in SrcR. |
 | [SRLI](../instructions/srli.md) | `srli SrcL, shamt, ->{t, u, Rd}` | 32 | — | Logical right shift by an immediate amount. |
 | [SUB](../instructions/sub.md) | `sub SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}` | 32 | — | Integer subtraction. |
-| [SUBI](../instructions/subi.md) | `subi SrcL, uimm, ->{t, u, Rd}` | 32 | — | Instruction from the Arithmetic Operation 64bit group. |
+| [SUBI](../instructions/subi.md) | `subi SrcL, uimm, ->{t, u, Rd}` | 32 | — | SUBI - Compute this mnemonic's binary scalar operation and write the selected destination. |
 | [XOR](../instructions/xor.md) | `xor SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}` | 32 | — | Bitwise XOR of two registers. |
 | [XORI](../instructions/xori.md) | `xori SrcL, simm, ->{t, u, Rd}` | 32 | — | Bitwise XOR with an immediate. |
 

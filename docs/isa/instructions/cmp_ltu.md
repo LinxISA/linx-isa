@@ -36,7 +36,7 @@ Compare less-than (unsigned).
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `CMP.LTU - Compare scalar operands and write the encoded boolean result.`
 
 ## Full Catalog Forms
 

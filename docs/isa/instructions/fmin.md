@@ -36,7 +36,7 @@ rd = fmin(fs1, fs2);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `FMIN - Compute this mnemonic's binary floating-point operation.`
 
 ## Full Catalog Forms
 

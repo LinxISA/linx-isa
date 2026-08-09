@@ -36,7 +36,7 @@ ra = PC + ZeroExtend(imm << 1);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `SETRET - Write the architectural return address.`
 
 ## Full Catalog Forms
 

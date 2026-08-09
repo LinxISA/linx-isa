@@ -7,7 +7,7 @@
 
 *Syntax:* lsrget LSR_ID, ->{t, u, Rd}
 
-*Description:* System register access: read/write system status register.
+*Description:* LSRGET - Read the addressed system register.
 
 *Encoding:*
 

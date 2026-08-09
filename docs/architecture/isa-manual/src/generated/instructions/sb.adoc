@@ -7,7 +7,7 @@
 
 *Syntax:* sb SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]
 
-*Description:* Store 8-bit signed value to [Rs+offset], result to Rd/t/u.
+*Description:* SB - Store scalar data using this mnemonic's width and address-update form.
 
 *Encoding:*
 

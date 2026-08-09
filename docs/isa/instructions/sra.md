@@ -36,7 +36,7 @@ rd = rs1 >> rs2 (arith);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `SRA - Compute this mnemonic's binary scalar operation and write the selected destination.`
 
 ## Full Catalog Forms
 

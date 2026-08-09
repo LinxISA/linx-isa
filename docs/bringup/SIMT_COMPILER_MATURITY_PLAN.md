@@ -27,7 +27,7 @@ That is a reasonable bring-up baseline. It is not yet a mature compiler for
 branch-heavy, lane-divergent SIMT kernels.
 
 The architecture direction is now frozen in
-`docs/architecture/v0.57-simt-compiler-contract.md`: canonical `v0.57` kernels
+`docs/architecture/v0.58-architecture-contract.md`: canonical `v0.57` kernels
 are group-granular divergent SIMT kernels driven by explicit `p` management.
 The remaining work is therefore implementation maturity, not architecture
 direction-finding.
@@ -308,7 +308,7 @@ Exit criteria:
 ## Dependency Rules
 
 This maturity plan depends on the architecture plan in
-`docs/architecture/v0.57-simt-compiler-contract-plan.md`.
+`docs/architecture/v0.58-architecture-contract.md`.
 
 Compiler implementation must stop and escalate if it reaches any of these
 unfrozen questions:

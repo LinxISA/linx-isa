@@ -1,4 +1,4 @@
-# LinxISA Navigation Guide (v0.5)
+# LinxISA Navigation Guide (v0.58)
 
 This is the canonical navigation contract for contributors and agents.
 
@@ -22,6 +22,14 @@ This is the canonical navigation contract for contributors and agents.
 - Runtime AVS suites: `avs/qemu/`
 - Compile AVS suites: `avs/compiler/linx-llvm/tests/`
 - AVS matrix/docs: `avs/`
+
+## Canonical ISA contract
+
+- Machine-readable authority: `isa/v0.58/linxisa-v0.58.json`
+- Stable architecture overview: `docs/architecture/v0.58-architecture-contract.md`
+- Generated instruction reference: `docs/isa/`
+- Historical profiles and archived narrative are non-normative and are not
+  valid agent-routing targets.
 
 ## Canonical toolchain support locations
 

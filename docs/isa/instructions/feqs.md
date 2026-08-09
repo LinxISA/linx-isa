@@ -26,7 +26,7 @@
 
 ## Description
 
-Instruction from the Floating-point Compare group.
+FEQS - Compare floating-point operands and produce the encoded result.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ rd = (fs1 == fs2) ? 1 : 0;
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `FEQS - Compare floating-point operands and produce the encoded result.`
 
 ## Full Catalog Forms
 

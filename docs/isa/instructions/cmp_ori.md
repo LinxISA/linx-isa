@@ -26,7 +26,7 @@
 
 ## Description
 
-Instruction from the Compare Instruction group.
+CMP.ORI - Combine scalar comparison results with the encoded logical operation.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ Instruction from the Compare Instruction group.
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `CMP.ORI - Combine scalar comparison results with the encoded logical operation.`
 
 ## Full Catalog Forms
 

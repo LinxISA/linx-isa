@@ -16,7 +16,7 @@ Instructions in the **DMA Operation** group of the LinxISA v0.58.0 catalog.
 
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
-| [DMA](../instructions/dma.md) | `dma [SrcL], SrcR` | 32 | — | Instruction from the DMA Operation group. |
+| [DMA](../instructions/dma.md) | `dma [SrcL], SrcR` | 32 | — | Copies exactly one 64-byte region from the SrcL address to the SrcR address; validates both ranges before effects, snapshots the source so overlap has memmove semantics, and guarantees that a fault leaves memory unchanged. |
 
 ## See Also
 

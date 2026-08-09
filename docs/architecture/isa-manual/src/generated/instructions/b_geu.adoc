@@ -7,7 +7,7 @@
 
 *Syntax:* b.geu SrcL, SrcR, label
 
-*Description:* Conditional branch: take branch if geu.
+*Description:* B.GEU - Conditionally branch to the PC-relative target after comparing scalar operands.
 
 *Encoding:*
 

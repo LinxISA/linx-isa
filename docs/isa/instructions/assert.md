@@ -36,7 +36,7 @@ Trap(EBREAK);
 
 ## Encoding Notes
 
-_No additional encoding notes._
+- `ASSERT - Raise the architecture assertion trap when its condition fails.`
 
 ## Full Catalog Forms
 

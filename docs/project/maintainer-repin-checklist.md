@@ -67,21 +67,15 @@ If this fails, do not trust later runtime results until policy is fixed.
 
 ## Repin Mechanics
 
-Update only the intended modules:
+Update only the intended module to an already reviewed commit:
 
 ```bash
-git submodule update --remote \
-  compiler/llvm \
-  emulator/qemu \
-  kernel/linux \
-  rtl/LinxCore \
-  tools/pyCircuit \
-  lib/glibc \
-  lib/musl \
-  workloads/pto_kernels
+git -C <leaf> fetch origin <reviewed-commit>
+git -C <leaf> checkout --detach <reviewed-commit>
+git add <leaf>
 ```
 
-In practice, narrow that command to the specific modules you are repinning.
+Never select an unreviewed remote tip or repin unrelated modules together.
 
 After updating SHAs:
 

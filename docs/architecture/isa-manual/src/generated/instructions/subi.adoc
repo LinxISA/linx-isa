@@ -7,7 +7,7 @@
 
 *Syntax:* subi SrcL, uimm, ->{t, u, Rd}
 
-*Description:* Subtract immediate: Rd/t/u = operand1 op operand2.
+*Description:* SUBI - Compute this mnemonic's binary scalar operation and write the selected destination.
 
 *Encoding:*
 

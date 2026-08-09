@@ -1,6 +1,13 @@
-# headerDefinition
+# TEPL carrier header definition
 
-The header of the template data block needs to define which data operation operation to perform, the size of the input data and the Tile register of input/output and other information.
+TEPL is the Mode/Function encoding carrier for VEC and SFU, not an execution
+engine. The tables below describe encoding positions only; they do not define
+engine ownership. Exact ownership comes from `isa/v0.58/state/pto_ops.json`.
+VEC is limited to element-wise operations, while complex functions,
+reductions/expands, rearrangement, and irregular operations execute on SFU.
+
+The header defines the selected Tile operation, input dimensions, and Tile
+register operands.
 
 ## Assembly format
 
@@ -29,7 +36,8 @@ Each parameter is explained as follows:
 
 A complete data transfer block instructionheader needs to be split into the following multiple instructions for encoding, including:
 
-- `BSTART.TEPL TileOp, DataType`
+- `BSTART.TEPL TileOp, DataType`, or the engine-checked assembly alias
+  `BSTART.VEC` / `BSTART.SFU`
 - [B.DATR](../../header/B.DATR.md) `Layout, PadValue`
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0`
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`
@@ -41,7 +49,9 @@ A complete data transfer block instructionheader needs to be split into the foll
 -...
 - [B.IOR](../../header/B.IOR.md) `RegSrc9, RegSrc10, RegSrc11, ->RegDst4`
 
-Among them, the encoding format of the BSTART.TEPL instruction is as follows:
+`BSTART.TEPL` is the unique compiled decode identity. The aliases use the same
+bits and allocate no new opcode space. Canonical disassembly chooses VEC or SFU
+from the selected operation's catalogued engine. The encoding format is:
 
 ![BSTART.TEPL](../../../figs/bitfield/svg/BlockHeader_32bit/BSTART.TEPL.svg)
 

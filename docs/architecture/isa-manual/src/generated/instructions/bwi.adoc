@@ -7,7 +7,7 @@
 
 *Syntax:* bwi SrcL
 
-*Description:* Branch barrier/wait: BWI instruction for control-flow speculation management.
+*Description:* BWI - Issue this mnemonic's architecture control request.
 
 *Encoding:*
 
