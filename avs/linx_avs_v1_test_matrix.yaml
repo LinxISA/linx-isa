@@ -662,16 +662,16 @@ tests:
     pass_fail: "archived diagnostic only; no active required gate result"
 
   - id: AVS-WORK-005
-    state: active
+    state: archived
     area: WORK
     domain: Regression
     profiles: [LNX-WORKLOAD, LNX-TILE]
     must_pass_in_tier: [pr, nightly]
     spec_refs:
-      - workloads/pto_kernels/docs
+      - avs/archive/v0.57/qemu/README.md
       - docs/bringup/ALIGNMENT_MATRIX.md
-    requirement: "PTO host-vs-QEMU parity passes for the maintained kernel set."
-    pass_fail: "workloads/pto_kernels/tools/run_pto_kernel_parity.py exits 0 with parity evidence."
+    requirement: "The retired v0.57 PTO-Kernel host-vs-QEMU parity suite is historical evidence only and does not define the v0.58 component contract."
+    pass_fail: "archived diagnostic only; fresh v0.58 runtime AVS is tracked by LinxISA/linx-isa issue 169"
 
   - id: AVS-WORK-006
     state: active

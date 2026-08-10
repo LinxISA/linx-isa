@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "profile": "v0.58",
+  "description": "Exact reviewed component pins for the LinxISA v0.58 superproject integration surface.",
+  "components": [
+    {
+      "path": "compiler/llvm",
+      "url": "https://github.com/LinxISA/llvm-project.git",
+      "branch": "main",
+      "commit": "be1fc2451936a713e2a15620d5e7f8fe0a73688e",
+      "role": "v0.58 compiler and assembler"
+    },
+    {
+      "path": "compiler/ptoas",
+      "url": "https://github.com/LinxISA/ptoas.git",
+      "branch": "main",
+      "commit": "cf2d2870748023b15ba2c69fed7c7ee9542f173d",
+      "role": "PTO assembler"
+    },
+    {
+      "path": "emulator/qemu",
+      "url": "https://github.com/LinxISA/qemu.git",
+      "branch": "master",
+      "commit": "98d2907e5f6bf5d0fa0c2a21027680124c016879",
+      "role": "v0.58 emulator"
+    },
+    {
+      "path": "kernel/linux",
+      "url": "https://github.com/LinxISA/linux.git",
+      "branch": "main",
+      "commit": "a24886e6ad56d7f0da6a91d5385907e92a9c02c3",
+      "role": "v0.58 Linux port"
+    },
+    {
+      "path": "lib/glibc",
+      "url": "https://github.com/LinxISA/glibc.git",
+      "branch": "master",
+      "commit": "d5ca74ac57c19d2f89e66991da5e6f043f64e684",
+      "role": "GNU C library"
+    },
+    {
+      "path": "lib/mesa3d",
+      "url": "https://github.com/LinxISA/mesa3d.git",
+      "branch": "main",
+      "commit": "11c1663090d31ee744059281c4fa8f347e10e023",
+      "role": "graphics stack"
+    },
+    {
+      "path": "lib/musl",
+      "url": "https://github.com/LinxISA/musl.git",
+      "branch": "master",
+      "commit": "7098648ff8330ae1e0bae82fc91f017287d2054b",
+      "role": "musl C library"
+    },
+    {
+      "path": "rtl/LinxCore",
+      "url": "https://github.com/LinxISA/LinxCore.git",
+      "branch": "main",
+      "commit": "47b7ce29d1fea560f793c8f23b4aadd5aa34f8bb",
+      "role": "RTL implementation"
+    },
+    {
+      "path": "skills/linx-skills",
+      "url": "https://github.com/LinxISA/linx-skills.git",
+      "branch": "main",
+      "commit": "1c838cb713cc26552262cbfdcb15ce554bee6029",
+      "role": "agent routing and workflow skills"
+    },
+    {
+      "path": "tools/Linx-TileOP-API",
+      "url": "https://github.com/LinxISA/Linx-TileOP-API.git",
+      "branch": "linx",
+      "commit": "ecddba7e92a4fad56bb5e6f955458ec6d56c7318",
+      "role": "v0.58 Linx tile-operation API"
+    },
+    {
+      "path": "tools/LinxCoreModel",
+      "url": "https://github.com/LinxISA/LinxCoreModel.git",
+      "branch": "main",
+      "commit": "78f44ab5078291e76faffbbccdecc8d2e1c14584",
+      "role": "C++ core model"
+    },
+    {
+      "path": "tools/model",
+      "url": "https://github.com/LinxISA/linx-model.git",
+      "branch": "main",
+      "commit": "f6e7548082732c274a3936e5cf0db282171866e5",
+      "role": "queue-wired model"
+    },
+    {
+      "path": "tools/pyCircuit",
+      "url": "https://github.com/LinxISA/pyCircuit.git",
+      "branch": "main",
+      "commit": "84b40281c60ad208a5d2f1b4d03f50ad52a6262c",
+      "role": "pyCircuit model"
+    },
+    {
+      "path": "workloads/pto_kernels",
+      "url": "https://github.com/PTO-ISA/pto-kernels.git",
+      "branch": "main",
+      "commit": "15fa021ef5f2015254085b9675fa3e4c69ab0912",
+      "role": "PTO kernels and maintained SuperNPU workloads"
+    }
+  ]
+}

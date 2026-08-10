@@ -247,8 +247,8 @@
       "source": "ev-0046"
     }
   },
-  "generated_at_utc": "2026-07-18 02:38:29Z",
-  "matrix_file": "/Users/zhoubot/linx-isa/avs/linx_avs_v1_test_matrix.yaml",
+  "generated_at_utc": "2026-08-10 05:55:07Z",
+  "matrix_file": "avs/linx_avs_v1_test_matrix.yaml",
   "schema_version": "linx-avs-v0.57-status-v1",
   "statuses": {
     "AVS-ABI-001": {
@@ -613,14 +613,14 @@
   },
   "tier_summaries": {
     "nightly": {
-      "implemented": 33,
-      "pass": 33,
-      "tests": 55
-    },
-    "pr": {
       "implemented": 32,
       "pass": 32,
-      "tests": 32
+      "tests": 54
+    },
+    "pr": {
+      "implemented": 31,
+      "pass": 31,
+      "tests": 31
     }
   }
 }

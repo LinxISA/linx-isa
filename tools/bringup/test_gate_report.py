@@ -27,13 +27,13 @@ class GateReportTests(unittest.TestCase):
                 "linxcore",
                 "linx-skills",
                 "linxcore-model",
+                "linx-tileop-api",
                 "model",
                 "pycircuit",
                 "glibc",
                 "mesa3d",
                 "musl",
                 "pto-kernels",
-                "supernpu-bench",
             },
         )
 

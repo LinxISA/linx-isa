@@ -272,16 +272,26 @@
       "enabled_if_env": "RUN_BUSYBOX_ROOTFS_GATE"
     },
     {
-      "gate_key": "Workloads::PTO host-vs-QEMU parity",
+      "gate_key": "Workloads::Linx TileOP API v0.58",
       "domain": "Workloads",
       "owner": "integration",
-      "command": "python3 \"$ROOT/workloads/pto_kernels/tools/run_pto_kernel_parity.py\" --timeout \"${PTO_PARITY_TIMEOUT:-180}\"",
+      "command": "make -C \"$ROOT/tools/Linx-TileOP-API\" check",
       "profiles": ["release-strict"],
       "tiers": ["pr", "nightly"],
       "required": true,
-      "artifacts": ["workloads/pto_kernels"],
-      "freshness_hours": 24,
-      "enabled_if_env": "RUN_PTO_PARITY_GATE"
+      "artifacts": ["tools/Linx-TileOP-API"],
+      "freshness_hours": 24
+    },
+    {
+      "gate_key": "Workloads::nested SuperNPU v0.58 corpus",
+      "domain": "Workloads",
+      "owner": "integration",
+      "command": "python3 \"$ROOT/workloads/pto_kernels/scripts/check_supernpu_v058.py\"",
+      "profiles": ["release-strict"],
+      "tiers": ["pr", "nightly"],
+      "required": true,
+      "artifacts": ["workloads/pto_kernels/benchmarks/supernpu"],
+      "freshness_hours": 24
     },
     {
       "gate_key": "Workloads::ctuning smoke",

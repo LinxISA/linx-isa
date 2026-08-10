@@ -218,13 +218,13 @@ def _pin_paths(root: Path) -> dict[str, Path]:
         "linxcore": root / "rtl" / "LinxCore",
         "linx-skills": root / "skills" / "linx-skills",
         "linxcore-model": root / "tools" / "LinxCoreModel",
+        "linx-tileop-api": root / "tools" / "Linx-TileOP-API",
         "model": root / "tools" / "model",
         "pycircuit": root / "tools" / "pyCircuit",
         "glibc": root / "lib" / "glibc",
         "mesa3d": root / "lib" / "mesa3d",
         "musl": root / "lib" / "musl",
         "pto-kernels": root / "workloads" / "pto_kernels",
-        "supernpu-bench": root / "workloads" / "SuperNPUBench",
     }
 
 

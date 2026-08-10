@@ -43,7 +43,8 @@ git submodule update --init compiler/llvm
 - `tools/pyCircuit` -> `LinxISA/pyCircuit`
 - `lib/glibc` -> `LinxISA/glibc`
 - `lib/musl` -> `LinxISA/musl`
-- `workloads/pto_kernels` -> `LinxISA/PTO-Kernel`
+- `tools/Linx-TileOP-API` -> `LinxISA/Linx-TileOP-API`（`linx` 分支）
+- `workloads/pto_kernels` -> `PTO-ISA/pto-kernels`
 
 ## 3. 验证基线
 
@@ -103,7 +104,8 @@ Agent 工作流不得使用未固定提交的远端更新。
 - AVS编译测试：`avs/compiler/linx-llvm/tests/`
 - AVS 使用的独立 libc 支持：`avs/runtime/freestanding/`
 - Linux libc 源代码分支：`lib/glibc/`、`lib/musl/`
-- PTO内核块头s：`workloads/pto_kernels/include/`
+- Linx TileOP API 头文件：`tools/Linx-TileOP-API/include/`
+- PTO kernels 和 SuperNPU 工作负载：`workloads/pto_kernels/`
 - 组装样品包：`docs/zh/reference/examples/README.md`
 
 ## 6. 协调参考

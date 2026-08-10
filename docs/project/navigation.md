@@ -11,8 +11,8 @@ This is the canonical navigation contract for contributors and agents.
 - `emulator/` — upstream QEMU submodule (`emulator/qemu`)
 - `kernel/` — upstream Linux submodule (`kernel/linux`)
 - `rtl/` — LinxCore submodule (`rtl/LinxCore`) + rtl notes
-- `tools/` — generators, regression, pyCircuit submodule
-- `workloads/` — benchmark runners + generated artifacts + PTO kernel submodule
+- `tools/` — generators, regression, models, and the Linx TileOP API submodule
+- `workloads/` — benchmark runners + generated artifacts + PTO kernels submodule
 - `isa/` — ISA source of truth and generated catalogs
 - `docs/` — architecture, bring-up, migration, project references
 - `lib/` — glibc/musl fork submodules
@@ -36,9 +36,9 @@ This is the canonical navigation contract for contributors and agents.
 - Freestanding libc support used by AVS/tests: `avs/runtime/freestanding/`
 - Linux libc source forks: `lib/glibc/`, `lib/musl/`
 - PTO assembler fork: `compiler/ptoas/`
-- PTO kernels/tools/headers (submodule): `workloads/pto_kernels/`
-- SuperNPUBench AI workload suite (submodule): `workloads/SuperNPUBench/`
-- PTO header include root: `workloads/pto_kernels/include/`
+- PTO kernels and maintained SuperNPU workloads (submodule): `workloads/pto_kernels/`
+- SuperNPU active root: `workloads/pto_kernels/benchmarks/supernpu/`
+- Linx v0.58 TileOP API include root: `tools/Linx-TileOP-API/include/`
 - LLVM opcode sync helper: `tools/isa/sync_generated_opcodes.sh`
 
 ## Benchmark locations
@@ -66,6 +66,7 @@ Do not add or revive these paths:
 - `tools/glibc/`
 - `workloads/benchmarks/`
 - `workloads/examples/`
+- `workloads/SuperNPUBench/`
 - `spec/`
 
 CI guard: `tools/ci/check_repo_layout.sh`
@@ -76,7 +77,8 @@ When implementation repos change:
 
 1. Merge in the upstream ecosystem repo first.
 2. Update submodule SHA in this workspace.
-3. Keep `.gitmodules` URLs aligned to LinxISA org forks/repos.
+3. Keep `.gitmodules` URLs aligned to the owning organization and
+   `docs/bringup/component-lock.v0.58.json`.
 4. Validate with:
 
 ```bash

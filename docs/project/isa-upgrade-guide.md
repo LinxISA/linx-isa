@@ -100,7 +100,7 @@ these files. The list is ordered from most critical to least.
 | File | What to change |
 |---|---|
 | `tools/LinxCoreModel/README.md` | Version string near the top. |
-| `workloads/SuperNPUBench/.../build_data_obj.sh` | COMPILER_DIR default (remote path). |
+| `workloads/pto_kernels/benchmarks/supernpu/.../build_data_obj.sh` | COMPILER_DIR default (remote path). |
 | Agent run records under `docs/bringup/agent_runs/` | Add historical caveats; do not rewrite. |
 
 ---

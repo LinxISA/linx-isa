@@ -978,11 +978,19 @@ run_gate \
 
 run_gate \
   "Regression" \
-  "PTO kernel parity" \
-  "QEMU=$QEMU_BIN python3 $ROOT/workloads/pto_kernels/tools/run_pto_kernel_parity.py --out-dir ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}" \
-  "workload_pto_parity_pass" \
-  "workload_pto_parity_fail" \
-  "workload_pto_parity"
+  "Linx TileOP API v0.58" \
+  "make -C $ROOT/tools/Linx-TileOP-API check" \
+  "linx_tileop_api_pass" \
+  "linx_tileop_api_fail" \
+  "linx_tileop_api"
+
+run_gate \
+  "Regression" \
+  "Nested SuperNPU v0.58 corpus" \
+  "python3 $ROOT/workloads/pto_kernels/scripts/check_supernpu_v058.py" \
+  "supernpu_v058_pass" \
+  "supernpu_v058_fail" \
+  "supernpu_v058"
 
 if [[ -n "${CTUNING_ROOT:-}" && -d "${CTUNING_ROOT}/program" ]]; then
   run_gate \

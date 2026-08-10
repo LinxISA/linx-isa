@@ -35,7 +35,7 @@
 	update = checkout
 [submodule "workloads/pto_kernels"]
 	path = workloads/pto_kernels
-	url = https://github.com/LinxISA/PTO-Kernel.git
+	url = https://github.com/PTO-ISA/pto-kernels.git
 	branch = main
 	update = checkout
 [submodule "skills/linx-skills"]
@@ -63,8 +63,8 @@
 	url = https://github.com/LinxISA/ptoas.git
 	branch = main
 	update = checkout
-[submodule "workloads/SuperNPUBench"]
-	path = workloads/SuperNPUBench
-	url = https://github.com/PTO-ISA/SuperNPUBench.git
-	branch = main
+[submodule "tools/Linx-TileOP-API"]
+	path = tools/Linx-TileOP-API
+	url = https://github.com/LinxISA/Linx-TileOP-API.git
+	branch = linx
 	update = checkout

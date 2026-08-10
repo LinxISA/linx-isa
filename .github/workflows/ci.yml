@@ -41,6 +41,8 @@ jobs:
         run: python3 tools/isa/check_canonical_v058.py --root .
       - name: Enforce canonical QEMU opcode metadata
         run: python3 tools/bringup/check_qemu_opcode_meta_sync.py --strict
+      - name: Cross-check QEMU v0.58 TEPL carrier selectors
+        run: python3 tools/bringup/check_tepl_encoding.py --root .
       - name: Enforce Repository Layout
         run: bash tools/ci/check_repo_layout.sh
 
@@ -61,6 +63,8 @@ jobs:
           ocaml-compiler: "4.14.3"
       - name: Init top-level LinxISA submodules
         run: |
+          git submodule sync -- tools/Linx-TileOP-API
+          git submodule update --init tools/Linx-TileOP-API
           git submodule sync -- workloads/pto_kernels
           git submodule update --init workloads/pto_kernels
       - name: Install deps
@@ -71,6 +75,12 @@ jobs:
         run: opam install --yes sail.0.20.2
       - name: Run AVS contract gate
         run: python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml
+      - name: Validate Linx-TileOP-API v0.58 surface
+        run: make -C tools/Linx-TileOP-API check
+      - name: Cross-check TileOP v0.58 VEC/SFU aliases
+        run: python3 tools/bringup/check_tepl_encoding.py --root .
+      - name: Validate nested SuperNPU v0.58 corpus
+        run: python3 workloads/pto_kernels/scripts/check_supernpu_v058.py
       - name: Test shared freestanding math services
         run: |
           cc -std=c11 -Wall -Wextra -Werror -fno-builtin \

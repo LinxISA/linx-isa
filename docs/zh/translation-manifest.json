@@ -202,8 +202,8 @@
       "translation_sha256": "ac906ca7fa565897747fdbf2117a393755580598746e0eda25389d8010039650"
     },
     "bringup/ALIGNMENT_MATRIX.md": {
-      "source_sha256": "a686d1c23adfd61aac91c3e152db3a0d528c0008efd91f9d5be2d9283f198cd9",
-      "translation_sha256": "a55548ce2625061633ba66dfc0798af511a8d1b1056125d4e666551be0a49841"
+      "source_sha256": "126d44473b1d8530787c72b7c229f3b71f5c46086975f25b50cb124074fef372",
+      "translation_sha256": "fd31eaef6fa8779aeb1e513c49cf4f5be56aee54851b538b4b843b4a87a424d7"
     },
     "bringup/AVS_CONTRACT.md": {
       "source_sha256": "c2f9e5a6fa25b954fe150b70efe2e273c2cdcb97df71031a38ff18fd292a9fe8",
@@ -218,8 +218,8 @@
       "translation_sha256": "66b76c88aab7655b3091a0708704364b7ad7ec669ab7af6e9da6649ae5ee9785"
     },
     "bringup/GETTING_STARTED.md": {
-      "source_sha256": "4dcb28348d86704c984997c9416f1af08878594fa1894c4d1d1513c9a265b4b5",
-      "translation_sha256": "49bf8a79840e716e5573f5a06a7b60199cb6a508b4ed9faad42f567fdca95f5c"
+      "source_sha256": "1001f16f41e29de934e050c2b6f641bbd417eb2f967dc3e4fe9c575cdf6e00fc",
+      "translation_sha256": "b31ec50d374ff9f9d56378f30f3412781f8fe680221eb848c06c708eb01422bd"
     },
     "bringup/ISA_GAP_ANALYSIS.md": {
       "source_sha256": "b4e8e45bddec4af9a278de28cd311457a64c3535142cef11773f780dcc9cfff1",
@@ -234,8 +234,8 @@
       "translation_sha256": "900c546670f0c22d80d7d8e01bdff8d4ee2987a41f3516254abcb01011648313"
     },
     "bringup/PROGRESS.md": {
-      "source_sha256": "fabf6054c9282e2a2e103d3698dfd2a0c2d987d4333fd23ef9b8b948fff1e21d",
-      "translation_sha256": "ecd53723311b114c4f2e49029f6ec3667bc39a016fc6ca6a1ffa6c8254f8380a"
+      "source_sha256": "6b13fb87a0b764fcfbb83dd28943b265642c5458fc560bb6682ec78eae2107fc",
+      "translation_sha256": "094c17d606ff81d0531328de40ae204988b366f4b0c37a2f668d65fe7639854b"
     },
     "bringup/README.md": {
       "source_sha256": "188f15ad05d90b65e3bf6d9c4fdf17c53b9e3f35f75b9f7ca0dee376303773f8",
@@ -250,8 +250,8 @@
       "translation_sha256": "57ae07edbc2c2f4c2b62d9db3c5cd21975cf6e5f3089c3eafbd8409daf45772d"
     },
     "bringup/SUPERPROJECT_BRINGUP_CHECKLIST.md": {
-      "source_sha256": "202d34ec646e68bcc089bbf8f3a332cb67ace9383cd449fc768eb10aadf50dad",
-      "translation_sha256": "4239b7dce789968a5d7d513770850fb081625abfae4a6c336fc2c213a9aed33f"
+      "source_sha256": "052ac4a1ced50ad9423e7df867bf12a1361042cf6593226d6de20da0afe348e9",
+      "translation_sha256": "b14d7f846a572f66c9265f038b8b3f12bc94105a41c42d4c577c88e691954b19"
     },
     "bringup/agent_runs/checklists/architecture_docs.md": {
       "source_sha256": "a626706107c3d16773e3e7eec2669cfe980475311ff08a0852e34bdad4f4d662",
@@ -326,7 +326,7 @@
       "translation_sha256": "8a5ba84e690cdd7561f596534a41ba3ee4dcbfcd41e9f863aefba2f25d13c137"
     },
     "bringup/gates/qemu_isa_coverage_latest.md": {
-      "source_sha256": "0d8f817fe59dabf172feb963c58f84016cd66d71001403bd6a0f3cb8ade059c6",
+      "source_sha256": "07edb8351f51097971ec52e784008eaf3f19566cb405a02939c5268414486920",
       "translation_sha256": "e1f9d5565f16fae1d143ba9bbe8c74e30cb01c71e144ce665a1f9f9f36ecefe4"
     },
     "bringup/gates/qemu_opcode_sync_latest.md": {
@@ -8178,16 +8178,16 @@
       "translation_sha256": "d6d7ad308e48666c5d4e0032a588b83befb3ea61a55d7bd1711981af3f4b4991"
     },
     "project/README.md": {
-      "source_sha256": "c1bd6d0d71b0596d355f9b06875859479432099d749deeffee8e380ee223377f",
-      "translation_sha256": "0b94dd9c92b9cc1a26cd0702fe908e628e1f9197bd1a6e7f3d0794b32d66c224"
+      "source_sha256": "58db302dda79004372259f35574e7c05cfe063351cb3689ae92e4027c0c72efe",
+      "translation_sha256": "92f0f26006a1a284b77673694e0b23b7a5297872a37adcb4fc4217ad969b44af"
     },
     "project/maintainer-repin-checklist.md": {
       "source_sha256": "399ae840c5ded081c1a57c3ab10b62f3639f393b447e19c10684dbc0359989f5",
       "translation_sha256": "51e8c34ff5d9689ce2b067be5202288055bc04ef90325be1fef5c7ea3d253f41"
     },
     "project/navigation.md": {
-      "source_sha256": "b7abbac83f6aed4031d361cb78c994017f692b8f591375aa9fdd45e0d7b514d6",
-      "translation_sha256": "b4ebbf8cb7fd410123f2544dab68fffc564fc5fd72e726c9006bff831d0d02c6"
+      "source_sha256": "baf154e513cb53d4e97e4fd04ba3f7b5eedfcf08e29b243bb3cec52c6cc5a258",
+      "translation_sha256": "70113ee7f02e255dea3b85e3dd35edd0acc3a795dd661a8e44a4fb9a3c491285"
     },
     "project/new-agent-sop.md": {
       "source_sha256": "92594d31746bad2a17c87e7d2cff14292dec5764ce15d30b8c178de99d16c623",

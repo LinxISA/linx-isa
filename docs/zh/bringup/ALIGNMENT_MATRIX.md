@@ -1,12 +1,13 @@
 # 对齐矩阵
 
-该矩阵跟踪当前工作空间范围内的跨域对齐。
+本矩阵将当前 v0.58 架构权威与历史 v0.57 兼容性证据分开。历史 PASS
+不能转移为 v0.58 结论。
 
-|主题 |规格|编译器|模拟器|内核|型号|证据|
+| 主题 | 规范 | 编译器 | 模拟器 | 内核 | 模型 | 证据 |
 | --- | --- | --- | --- | --- | --- | --- |
-| 灵犀 Linux libc ABI + 重定位合约（`EM_LINXISA`、`R_LINX_*`、`setjmp/signal/ucontext`）| ✅ ABI 指南/清单 + musl/glibc 块头 同步 | ✅ 工作区 clang 调用/ret 重定位+模板门通行证（`FENTRY/FRET.STK` 与 Musttail `FENTRY/FEXIT`）| ✅ 严格通道运行时门通行证（musl 运行时 + glibc G1b + 严格系统 + 模型差异）| ✅ 烟雾/已满/busybox/virtio-disk 启动门通过 | ✅ qemu-vs-pyc 提交差异传递 | `docs/bringup/gates/latest.json`; `docs/bringup/gates/logs/2026-02-25-r2-pin-lanefix/pin/lib_musl_both.log`; `docs/bringup/gates/logs/2026-02-25-r2-pin-lanefix/pin/lib_glibc_g1b.log`; `docs/bringup/gates/logs/2026-02-25-r2-pin-lanefix/pin/model_diff_suite.log` |
-|区块/描述符合约 (`B.ARG/B.IOR/B.IOT/C.B.DIMI`) | ✅ 手册 + 生成的参考 | ✅ 描述符发射/测试 | ✅ 描述符执行 + AVS 门 | ✅ 用户空间启动未回归 | ✅ 跟踪兼容的启动子集 | `bash tools/regression/run.sh` |
-| ACR/IRQ/异常 正确性 | ✅ 特权章+陷阱表| ✅ MC 符号 + 编码 | ✅ 严格的系统测试 | ✅ 烟/全/virtio 靴子通行证 | ✅ qemu-vs-pyc 提交差异传递 | `avs/qemu/check_system_strict.sh` |
-| ISA 目录奇偶校验 (`v0.57`) | ✅ 黄金 + 当前 json | ✅ 编译覆盖率测试 | ✅ 解码/执行门 | ✅ 没有过时的活动表面参考 | ✅ 模型方合同检查 | `python3 tools/isa/check_canonical_v057.py --root .` |
-| ISA 广度跟踪（规范与 QEMU 实现）| ✅ 规范规格目录（`710` 独特助记符）| ✅ 对于已实现的工具链表面，编译/解除覆盖率保持 100% | ⚠ 映射的 QEMU 覆盖范围为 `524/710`（间隙作为工件进行跟踪，未放弃）| ✅ 内核运行时闭包保持绿色，同时广度逐渐扩展 | ✅ 模型套件仍然是必需的，并传递已实现的子集 | `docs/bringup/gates/qemu_isa_coverage_latest.json`； `docs/bringup/gates/qemu_isa_coverage_latest.md` |
-| AVS 整合 | ✅ `avs/` 中维护的矩阵 | ✅ 在 `avs/compiler/linx-llvm/tests` 下编译测试 | ✅ `avs/qemu` 下的运行时测试 | ✅ 不适用 | ✅ 不适用 | `bash tools/ci/check_repo_layout.sh` |
+| Linx Linux libc ABI 与重定位 | ✅ ABI 指南与清单 | ✅ 精确升级后的 LLVM gitlink | ✅ 精确升级后的 QEMU gitlink | ✅ 精确升级后的 Linux gitlink | ⚠ 模型升级单独跟踪 | 组件锁与各 leaf 仓检查 |
+| Block/descriptor 合约 | ✅ 手册与生成参考 | ✅ 描述符发射测试 | ✅ 已升级实现 | ✅ 用户态 ABI 同步 | ⚠ 当前实现子集 | `bash tools/regression/run.sh` |
+| ISA 目录一致性（v0.58） | ✅ golden 目录与 PTO 0.58 精确锁 | ✅ v0.58 leaf 已合入 | ✅ v0.58 leaf 已合入 | ✅ v0.58 leaf 已合入 | ⚠ 单独升级 | `python3 tools/isa/check_canonical_v058.py --root .` |
+| ISA 广度（v0.58） | `728` 个合法 mnemonic、`766` 个合法 form | leaf 检查已合入 | L1 `728/728` mnemonic、`759/766` form；L2/L3 不可用 | 精确 gitlink | L1 不测量模型 | `docs/bringup/gates/qemu_isa_coverage_latest.json` |
+| AVS QEMU translation（v0.58） | 当前目录 | 需要重新生成当前 pin 对象 | 开放；v0.57 对象报告已归档 | 不适用 | 不适用 | 生成新证据前不得声明通过 |
+| Tile 工作负载（v0.58） | VEC/TLSU/CUBE/SFU；TEPL 仅为 VEC/SFU 编码载体 | Linx-TileOP-API | runtime AVS 由 issue 169 跟踪 | 不适用 | 流程只提升独立通过的 ELF | `make -C tools/Linx-TileOP-API check`；`python3 workloads/pto_kernels/scripts/check_supernpu_v058.py` |

@@ -4,7 +4,7 @@
 Verify that the unchanged TEPL binary-carrier selectors are consistent across:
 
 - ISA canonical engine-op catalog (`isa/v0.58/state/engine_ops.json`)
-- PTO-Kernel constants (include/common/pto_tileop.hpp) if available
+- Linx-TileOP-API VEC/SFU assembly aliases if available
 - Optional other consumers (LLVM/QEMU) *if present* in the superproject
 
 Policy:
@@ -36,6 +36,13 @@ RE_PTO_CONST = re.compile(
 )
 RE_QEMU_TEPL_CONST = re.compile(r"\bLINX_TEPL_([A-Z0-9_]+)\s*=\s*0x([0-9A-Fa-f]{3})u\b")
 RE_LLVM_TEPL_CASE = re.compile(r'\.Case\("([A-Z][A-Z0-9_.]*)",\s*0x([0-9A-Fa-f]{3})u\)')
+RE_TILEOP_ENGINE_ALIAS = re.compile(r'"BSTART\.(VEC|SFU)\s+([A-Z][A-Z0-9_.]*),')
+RE_QEMU_SELECTOR_CASE = re.compile(
+    r"\bcase\s+0x([0-9A-Fa-f]{3})u:\s*/\*\s*([A-Z][A-Z0-9_.]*)\s*\*/\s*return\b"
+)
+RE_LLVM_V058_ENGINE_ROW = re.compile(
+    r"\bX\(([A-Z][A-Z0-9_.]*),\s*0x([0-9A-Fa-f]{3})u,\s*(VEC|SFU)\)"
+)
 
 
 @dataclass(frozen=True)
@@ -84,11 +91,38 @@ def _load_engine_ops_map(path: Path) -> dict[str, int]:
     return out
 
 
+def _load_engine_class_map(path: Path) -> dict[str, str]:
+    obj = json.loads(path.read_text(encoding="utf-8"))
+    ops = obj.get("tepl", {}).get("ops", [])
+    return {
+        op["name"]: op["engine"]
+        for op in ops
+        if isinstance(op, dict)
+        and isinstance(op.get("name"), str)
+        and op.get("engine") in {"VEC", "SFU"}
+    }
+
+
+def _parse_tileop_engine_aliases(text: str) -> dict[str, str]:
+    aliases: dict[str, str] = {}
+    for engine, mnemonic in RE_TILEOP_ENGINE_ALIAS.findall(text):
+        previous = aliases.setdefault(mnemonic, engine)
+        if previous != engine:
+            raise RuntimeError(
+                f"TileOP alias {mnemonic} is emitted as both {previous} and {engine}"
+            )
+    return aliases
+
+
 def _read_worktree_or_git(repo_dir: Path, rel_path: str) -> str:
     worktree_path = repo_dir / rel_path
     if worktree_path.is_file():
         return worktree_path.read_text(encoding="utf-8", errors="ignore")
     return _run_git_show(repo_dir, f"HEAD:{rel_path}")
+
+
+def _is_materialized_repo(path: Path) -> bool:
+    return path.is_dir() and (path / ".git").exists()
 
 
 def _parse_pto_constants(text: str) -> dict[str, int]:
@@ -105,6 +139,16 @@ def _parse_qemu_tepl_constants(text: str) -> dict[str, int]:
         name = raw_name.replace("_", ".")
         out[name] = int(hx, 16)
     return out
+
+
+def _parse_qemu_selector_switch(text: str) -> dict[str, int]:
+    marker = "linx_tile_operation_impl_selector"
+    start = text.find(marker)
+    if start < 0:
+        return {}
+    end = text.find("\n}\n\nstatic ", start)
+    window = text[start : end if end >= 0 else start + 16_384]
+    return {name: int(selector, 16) for selector, name in RE_QEMU_SELECTOR_CASE.findall(window)}
 
 
 def _parse_llvm_tepl_tileop_cases(text: str) -> dict[str, int]:
@@ -129,6 +173,14 @@ def _parse_llvm_tepl_tileop_cases(text: str) -> dict[str, int]:
     for name, hx in RE_LLVM_TEPL_CASE.findall(window):
         out[name] = int(hx, 16)
     return out
+
+
+def _parse_llvm_v058_engine_table(text: str) -> dict[str, int]:
+    return {name: int(selector, 16) for name, selector, _engine in RE_LLVM_V058_ENGINE_ROW.findall(text)}
+
+
+def _parse_llvm_v058_engine_classes(text: str) -> dict[str, str]:
+    return {name: engine for name, _selector, engine in RE_LLVM_V058_ENGINE_ROW.findall(text)}
 
 
 def _report_diff(canonical: SourceMap, other: SourceMap) -> tuple[int, list[str]]:
@@ -180,14 +232,14 @@ def main(argv: list[str]) -> int:
         help="path to the current v0.58 VEC/SFU TEPL-carrier catalog",
     )
     ap.add_argument(
-        "--pto-submodule",
-        default="workloads/pto_kernels",
-        help="path to PTO-Kernel submodule dir (git repo)",
+        "--tileop-api",
+        default="tools/Linx-TileOP-API",
+        help="path to the Linx-TileOP-API submodule",
     )
     ap.add_argument(
-        "--pto-const-path",
-        default="include/common/pto_tileop.hpp",
-        help="path inside PTO-Kernel repo for tile opcode constants",
+        "--tileop-alias-path",
+        default="include/jcore/template_asm.hpp",
+        help="path inside Linx-TileOP-API containing v0.58 VEC/SFU aliases",
     )
     args = ap.parse_args(argv)
 
@@ -198,31 +250,51 @@ def main(argv: list[str]) -> int:
         return 2
 
     canonical_map = _load_engine_ops_map(engine_ops_path)
+    canonical_engines = _load_engine_class_map(engine_ops_path)
     canonical = SourceMap(f"engine_ops({engine_ops_path.relative_to(root)})", canonical_map)
 
     print(f"canonical TEPL ops: {len(canonical.items)}")
 
     total_errs = 0
 
-    # PTO-Kernel constants (prefer working tree; fall back to git HEAD if absent).
-    pto_dir = root / args.pto_submodule
-    pto_items: dict[str, int] = {}
-    if pto_dir.exists():
+    # Linx-TileOP-API aliases (prefer working tree; fall back to git HEAD).
+    tileop_dir = root / args.tileop_api
+    if _is_materialized_repo(tileop_dir):
         try:
-            pto_text = _read_worktree_or_git(pto_dir, args.pto_const_path)
-            pto_items = _parse_pto_constants(pto_text)
-            other = SourceMap("PTO-Kernel(include/common/pto_tileop.hpp)", pto_items)
-            errs, notes = _report_diff(canonical, other)
-            for line in notes:
-                print(line)
-            total_errs += errs
+            alias_text = _read_worktree_or_git(tileop_dir, args.tileop_alias_path)
+            aliases = _parse_tileop_engine_aliases(alias_text)
+            for mnemonic, engine in sorted(aliases.items()):
+                expected = canonical_engines.get(mnemonic)
+                if expected is None:
+                    print(
+                        f"ERROR: Linx-TileOP-API emits unassigned operation {mnemonic}",
+                        file=sys.stderr,
+                    )
+                    total_errs += 1
+                elif expected != engine:
+                    print(
+                        f"ERROR: Linx-TileOP-API emits {mnemonic} on {engine}; catalog requires {expected}",
+                        file=sys.stderr,
+                    )
+                    total_errs += 1
+            missing = sorted(set(canonical_engines) - set(aliases))
+            if missing:
+                print(
+                    f"NOTE: Linx-TileOP-API does not yet emit {len(missing)}/{len(canonical_engines)} VEC/SFU operations."
+                )
         except RuntimeError as exc:
-            print(f"NOTE: skipping PTO-Kernel check: {exc}")
+            print(f"ERROR: cannot validate Linx-TileOP-API aliases: {exc}", file=sys.stderr)
+            total_errs += 1
+    else:
+        print("NOTE: Linx-TileOP-API is not materialized; skipped optional alias check.")
 
     # Optional checks: LLVM/QEMU consumers in the superproject if present.
     qemu_consumer = root / "emulator" / "qemu" / "target" / "linx" / "helper.c"
     if qemu_consumer.exists():
-        qemu_items = _parse_qemu_tepl_constants(qemu_consumer.read_text(encoding="utf-8", errors="ignore"))
+        qemu_text = qemu_consumer.read_text(encoding="utf-8", errors="ignore")
+        qemu_items = _parse_qemu_selector_switch(qemu_text)
+        if not qemu_items:
+            qemu_items = _parse_qemu_tepl_constants(qemu_text)
         if qemu_items:
             other = SourceMap(f"QEMU({qemu_consumer.relative_to(root)})", qemu_items)
             errs, notes = _report_diff(canonical, other)
@@ -230,7 +302,8 @@ def main(argv: list[str]) -> int:
                 print(line)
             total_errs += errs
         else:
-            print(f"NOTE: QEMU TEPL consumer present but no constants parsed: {qemu_consumer}")
+            print(f"ERROR: QEMU TEPL consumer present but no selector table parsed: {qemu_consumer}", file=sys.stderr)
+            total_errs += 1
     else:
         print("NOTE: no QEMU TEPL consumer file detected under emulator/qemu; skipped optional check.")
 
@@ -242,21 +315,29 @@ def main(argv: list[str]) -> int:
         / "lib"
         / "Target"
         / "LinxISA"
-        / "AsmParser"
-        / "LinxISAAsmParser.cpp"
+        / "LinxISATileEnginesV058.h"
     )
     if llvm_consumer.exists():
-        llvm_items = _parse_llvm_tepl_tileop_cases(
-            llvm_consumer.read_text(encoding="utf-8", errors="ignore")
-        )
+        llvm_text = llvm_consumer.read_text(encoding="utf-8", errors="ignore")
+        llvm_items = _parse_llvm_v058_engine_table(llvm_text)
         if llvm_items:
             other = SourceMap(f"LLVM({llvm_consumer.relative_to(root)})", llvm_items)
             errs, notes = _report_diff(canonical, other)
             for line in notes:
                 print(line)
             total_errs += errs
+            llvm_engines = _parse_llvm_v058_engine_classes(llvm_text)
+            for name, engine in sorted(llvm_engines.items()):
+                expected = canonical_engines.get(name)
+                if expected != engine:
+                    print(
+                        f"ERROR: LLVM classifies {name} as {engine}; catalog requires {expected}",
+                        file=sys.stderr,
+                    )
+                    total_errs += 1
         else:
-            print(f"NOTE: LLVM TEPL consumer present but no tileop cases parsed: {llvm_consumer}")
+            print(f"ERROR: LLVM v0.58 engine table present but no rows parsed: {llvm_consumer}", file=sys.stderr)
+            total_errs += 1
     else:
         print("NOTE: no LLVM TEPL consumer file detected under compiler/llvm; skipped optional check.")
 

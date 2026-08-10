@@ -81,10 +81,11 @@ linx-isa/
 ├── tools/                 # Build scripts, generators, regression
 │   ├── bringup/          # Bring-up orchestration
 │   ├── regression/       # Test runners
+│   ├── Linx-TileOP-API/ # v0.58 Linx tile-operation API (submodule)
 │   └── pyCircuit/        # ISA model (submodule)
 │
 ├── workloads/             # Benchmarks and kernels
-│   └── pto_kernels/     # PTO accelerator kernels (submodule)
+│   └── pto_kernels/     # PTO kernels + SuperNPU workloads (submodule)
 │
 ├── isa/                   # ISA specification sources
 │   ├── v0.58/            # current canonical ISA definition
@@ -109,9 +110,10 @@ linx-isa/
 | `kernel/linux` | [LinxISA/linux](https://github.com/LinxISA/linux) | Linux kernel port |
 | `rtl/LinxCore` | [LinxISA/LinxCore](https://github.com/LinxISA/LinxCore) | RTL implementation |
 | `tools/pyCircuit` | [LinxISA/pyCircuit](https://github.com/LinxISA/pyCircuit) | ISA reference model |
+| `tools/Linx-TileOP-API` | [LinxISA/Linx-TileOP-API](https://github.com/LinxISA/Linx-TileOP-API) | Linx v0.58 tile-operation API |
 | `lib/glibc` | [LinxISA/glibc](https://github.com/LinxISA/glibc) | GNU C Library port |
 | `lib/musl` | [LinxISA/musl](https://github.com/LinxISA/musl) | musl libc port |
-| `workloads/pto_kernels` | [LinxISA/PTO-Kernel](https://github.com/LinxISA/PTO-Kernel) | PTO accelerator kernels |
+| `workloads/pto_kernels` | [PTO-ISA/pto-kernels](https://github.com/PTO-ISA/pto-kernels) | PTO kernels and the maintained SuperNPU workload subtree |
 
 ### Updating a Pinned Submodule
 

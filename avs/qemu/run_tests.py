@@ -17,8 +17,6 @@ from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parents[1]
-PTO_KERNEL_ROOT = REPO_ROOT / "workloads" / "pto_kernels" / "kernels"
-PTO_KERNEL_CATALOG = PTO_KERNEL_ROOT / "catalog.txt"
 LLVM_AVS_ROOT = REPO_ROOT / "avs" / "compiler" / "linx-llvm" / "tests"
 LLVM_AVS_DISASM_VECTOR_GEN = LLVM_AVS_ROOT / "gen_disasm_vectors.py"
 LLVM_AVS_V057_FORMS = LLVM_AVS_ROOT / "asm" / "41_v057_isa_forms.s"
@@ -78,7 +76,6 @@ COMPLETION_TEST_IDS_BY_SUITE = {
     "executable_setc_imm": 0x0000280A,
     "executable_maddw_bfi_mi": 0x00002904,
     "system": 0x0000110D,
-    "deepseek_tilekernels": 0x00001705,
 }
 
 
@@ -482,86 +479,6 @@ def _write_execution_evidence(
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
-def _load_pto_kernel_catalog() -> dict[str, str]:
-    catalog: dict[str, str] = {}
-    for raw_line in PTO_KERNEL_CATALOG.read_text(encoding="utf-8").splitlines():
-        entry = raw_line.strip()
-        if not entry or entry.startswith("#"):
-            continue
-        name = Path(entry).stem
-        if name in catalog:
-            raise SystemExit(f"error: duplicate PTO kernel name in catalog: {name}")
-        catalog[name] = entry
-    return catalog
-
-
-def _pto_kernel_src(name: str) -> str:
-    rel_path = _load_pto_kernel_catalog().get(name)
-    if rel_path is None:
-        raise SystemExit(f"error: missing PTO kernel in catalog: {name}")
-    return str(Path("workloads") / "pto_kernels" / "kernels" / rel_path)
-
-
-PTO_TILE_KERNEL_NAMES = [
-    "tload_store",
-    "tmatmul_acc",
-    "gemm",
-    "flash_attention",
-    "flash_attention_masked",
-]
-
-PTO_PARITY_KERNEL_NAMES = [
-    "tload_store",
-    "tmatmul_acc",
-    "gemm",
-    "gemm_basic",
-    "gemm_demo",
-    "gemm_performance",
-    "add_custom",
-    "relu_fp32",
-    "sigmoid_fp32",
-    "silu_fp32",
-    "tanh_fp32",
-    "softmax_fp32",
-    "flash_attention",
-    "flash_attention_demo",
-    "flash_attention_masked",
-    "fa_performance",
-    "mla_attention_demo",
-    "flash_attention_cube_fp16",
-    "flash_attention_vec_fp32",
-    "flash_attention_vec_fp16",
-    "gqa_fp16",
-    "sparse_attention_local_fp16",
-    "rmsnorm_fp16",
-    "gelu_fp32",
-    "argmax_fp32",
-    "gather_fp32",
-    "where_fp32",
-    "slice_fp32",
-    "concat_fp32",
-    "flatten_fp32",
-    "reshape_fp32",
-    "scatter_fp32",
-    "squeeze_fp32",
-    "unsqueeze_fp32",
-    "stack_fp32",
-    "split_fp32",
-    "permute_nhwc_nchw_fp32",
-    "transpose_large_fp32",
-    "unsorted_segment_sum_fp32",
-    "unique_i32",
-]
-
-DEEPSEEK_TILEKERNEL_NAMES = [
-    "engram",
-    "mhc",
-    "moe",
-    "quant",
-    "transpose",
-]
-
-
 SUITES: dict[str, dict[str, str]] = {
     "arithmetic": {"src": "tests/01_arithmetic.c", "macro": "LINX_TEST_ENABLE_ARITHMETIC"},
     "bitwise": {"src": "tests/02_bitwise.c", "macro": "LINX_TEST_ENABLE_BITWISE"},
@@ -572,12 +489,6 @@ SUITES: dict[str, dict[str, str]] = {
     "atomic": {"src": "tests/07_atomic.c", "macro": "LINX_TEST_ENABLE_ATOMIC"},
     "jumptable": {"src": "tests/08_jumptable.c", "macro": "LINX_TEST_ENABLE_JUMPTABLE"},
     "varargs": {"src": "tests/09_varargs.c", "macro": "LINX_TEST_ENABLE_VARARGS"},
-    "tile": {"src": "tests/10_tile.cpp", "macro": "LINX_TEST_ENABLE_TILE"},
-    "pto_parity": {"src": "tests/16_pto_kernel_parity.cpp", "macro": "LINX_TEST_ENABLE_PTO_PARITY"},
-    "deepseek_tilekernels": {
-        "src": "tests/17_deepseek_tilekernels.cpp",
-        "macro": "LINX_TEST_ENABLE_DEEPSEEK_TILEKERNELS",
-    },
     "system": {"src": "tests/11_system.c", "macro": "LINX_TEST_ENABLE_SYSTEM"},
     "v057_vector": {"src": "tests/12_v057_vector_tile.c", "macro": "LINX_TEST_ENABLE_V057_VECTOR"},
     "v057_vector_ops": {
@@ -627,24 +538,9 @@ SUITES: dict[str, dict[str, str]] = {
     },
 }
 
-COMPILE_ONLY_SUITE_SOURCE_OVERRIDE: dict[str, str] = {
-    # Runtime tile stress currently relies on backend paths that are still
-    # unstable for compile-only regression gating; keep a dedicated compile
-    # smoke that validates PTO kernel integration.
-    "tile": "tests/10_tile_compile_smoke.cpp",
-}
+COMPILE_ONLY_SUITE_SOURCE_OVERRIDE: dict[str, str] = {}
 
 def _extra_sources_for_suite(suite: str) -> list[str]:
-    if suite == "tile":
-        return [
-            "avs/qemu/tests/10_tile_tlsu.cpp",
-            "avs/qemu/tests/10_tile_cube.cpp",
-            "avs/qemu/tests/10_tile_cube_asm.S",
-            "avs/qemu/tests/10_tile_vec_sfu.cpp",
-            "avs/qemu/tests/10_tile_vec_sfu_asm.S",
-            "avs/qemu/tests/10_tile_integration.cpp",
-            *[_pto_kernel_src(name) for name in PTO_TILE_KERNEL_NAMES],
-        ]
     if suite == "atomic":
         return [
             "avs/qemu/tests/07_atomic_lr_srczero.S",
@@ -659,18 +555,11 @@ def _extra_sources_for_suite(suite: str) -> list[str]:
             "avs/runtime/freestanding/src/stdlib/stdlib.c",
             "avs/runtime/freestanding/src/math/math.c",
         ]
-    if suite == "pto_parity":
-        return [_pto_kernel_src(name) for name in PTO_PARITY_KERNEL_NAMES]
-    if suite == "deepseek_tilekernels":
-        return [_pto_kernel_src(name) for name in DEEPSEEK_TILEKERNEL_NAMES]
     return []
 
 LLC_PIPELINE_SUITES: set[str] = set()
 
 EXTRA_CFLAGS_BY_SUITE: dict[str, list[str]] = {
-    "pto_parity": [
-        "-DPTO_USE_MIXED_TILE_SIMT=1",
-    ],
     "simt_autovec": [
         "-mllvm",
         "-linx-simt-autovec=1",
@@ -710,9 +599,6 @@ OBJDUMP_ASSERTS_BY_SUITE: dict[str, list[str]] = {
 }
 
 EXPERIMENTAL_SUITES: set[str] = {
-    # Requires tile builtin-enabled clang and PTO kernel headers.
-    "tile",
-    "pto_parity",
     # v0.57 migration keeps this behind --all-suites until the vblock body
     # symbol lowering and objdump expectations are refreshed for canonical B.IOT.
     "simt_autovec",
@@ -1242,25 +1128,6 @@ def main(argv: list[str]) -> int:
 
     include_dir = SCRIPT_DIR / "lib"
     libc_include_dir = REPO_ROOT / "avs" / "runtime" / "freestanding" / "include"
-    pto_kernel_include_dir: Path | None = None
-    include_env = os.environ.get("PTO_KERNEL_INCLUDE")
-    if include_env:
-        include_candidate = Path(os.path.expanduser(include_env))
-        if not include_candidate.exists():
-            raise SystemExit(
-                f"error: PTO_KERNEL_INCLUDE does not exist: {include_candidate}"
-            )
-        pto_kernel_include_dir = include_candidate
-    else:
-        default_include = REPO_ROOT / "workloads" / "pto_kernels" / "include"
-        if default_include.exists():
-            pto_kernel_include_dir = default_include
-    if any(s in selected for s in ("tile", "pto_parity", "deepseek_tilekernels")) and pto_kernel_include_dir is None:
-        raise SystemExit(
-            "error: tile suite requires PTO headers; looked for "
-            f"{REPO_ROOT / 'workloads' / 'pto_kernels' / 'include'} "
-            "or set PTO_KERNEL_INCLUDE=/path/to/include"
-        )
     pto_include_dir: Path | None = None
     env = os.environ.get("PTO_ISA_INCLUDE")
     if env:
@@ -1299,9 +1166,6 @@ def main(argv: list[str]) -> int:
         "v057_vector_ops",
         "v04_vector_ops",
         "simt_autovec",
-        "tile",
-        "pto_parity",
-        "deepseek_tilekernels",
         "runtime",
     }
     if any(s in softfp_suites for s in selected):
@@ -1316,8 +1180,6 @@ def main(argv: list[str]) -> int:
         f"-D{macro}={'1' if enabled else '0'}"
         for macro, enabled in suite_macro_values.items()
     ]
-    if "tile" in selected:
-        suite_macros.append("-DLINX_TEST_ENABLE_TLSU_DESC=1")
     terminal_test_ids = [
         TERMINAL_TEST_IDS_BY_SUITE[suite]
         for suite in selected
@@ -1360,32 +1222,8 @@ def main(argv: list[str]) -> int:
         f"-DLINX_TEST_QUIET={'0' if emit_test_logs else '1'}",
         *args.extra_cflag,
     ]
-    if any(s in selected for s in ("tile", "pto_parity", "deepseek_tilekernels")):
-        # Keep tile-suite bring-up deterministic: SIMT autovec currently
-        # triggers a mid-end crash on migrated PTO kernels under strict v0.57.
-        common_cflags += ["-mllvm", "-linx-simt-autovec=false"]
-    if any(s in selected for s in ("tile", "pto_parity", "deepseek_tilekernels")):
-        # Runtime policy: migrated PTO kernels run in smoke profile under QEMU.
-        # Full-profile coverage remains in compile/objdump gates.
-        common_cflags += ["-DPTO_QEMU_SMOKE=1"]
-    if "pto_parity" in selected:
-        # Keep host parity and QEMU parity on the same mixed tile/SIMT path.
-        common_cflags += ["-DPTO_USE_MIXED_TILE_SIMT=1"]
-    if pto_kernel_include_dir is not None:
-        common_cflags.append(f"-I{pto_kernel_include_dir}")
     if pto_include_dir:
         common_cflags.append(f"-I{pto_include_dir}")
-    if "pto_parity" in selected:
-        parity_gen = REPO_ROOT / "workloads" / "pto_kernels" / "tools" / "generate_pto_parity_shape_header.py"
-        parity_header = REPO_ROOT / "workloads" / "generated" / "pto_parity_shape_config.generated.hpp"
-        if parity_gen.is_file():
-            p = _run([sys.executable, str(parity_gen), "--out", str(parity_header)],
-                     verbose=args.verbose, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            if p.returncode != 0:
-                sys.stderr.buffer.write(p.stdout)
-                sys.stderr.buffer.write(p.stderr)
-                raise SystemExit("error: failed to generate PTO parity shape header")
-            common_cflags.append(f"-I{parity_header.parent}")
 
     objects: list[Path] = []
     for src in sources:

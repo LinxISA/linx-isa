@@ -54,33 +54,20 @@ class ReportQemuIsaCoverageTests(unittest.TestCase):
             ],
         )
 
-    def test_checked_in_l2_l3_counts_match_executable_ledger(self) -> None:
+    def test_checked_in_v058_report_does_not_transfer_stale_runtime_evidence(self) -> None:
         root = Path(__file__).resolve().parents[2]
-        executable = json.loads(
-            (root / "docs/bringup/gates/qemu_executable_coverage_latest.json").read_text(
-                encoding="utf-8"
-            )
-        )
         aggregate = json.loads(
             (root / "docs/bringup/gates/qemu_isa_coverage_latest.json").read_text(
                 encoding="utf-8"
             )
         )
+        self.assertIn("isa/v0.58/linxisa-v0.58.json", aggregate["spec_path"])
+        self.assertEqual(aggregate["coverage_count"], aggregate["legal_mnemonic_count"])
         for level in ("L2", "L3"):
             with self.subTest(level=level):
-                self.assertEqual(aggregate["evidence"][level]["availability"], "available")
-                self.assertEqual(
-                    aggregate["evidence"][level]["form_count"],
-                    executable["evidence"][level]["form_count"],
-                )
-                self.assertEqual(
-                    aggregate["evidence"][level]["mnemonic_count"],
-                    executable["evidence"][level]["mnemonic_count"],
-                )
-                self.assertEqual(
-                    aggregate["evidence"][level]["qemu_sha"],
-                    executable["inputs"]["qemu_sha"],
-                )
+                self.assertEqual(aggregate["evidence"][level]["availability"], "unavailable")
+                self.assertIsNone(aggregate["evidence"][level]["form_count"])
+                self.assertIsNone(aggregate["evidence"][level]["mnemonic_count"])
 
     def _executable_report(self) -> dict[str, object]:
         return {
