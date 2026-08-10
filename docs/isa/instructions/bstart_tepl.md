@@ -13,6 +13,13 @@
 
 - `BSTART.TEPL Mode, Function, DataType`
 
+## Canonical Semantic Aliases
+
+- `BSTART.VEC TileOp, DataType` is accepted only when `TileOp` is catalogued for VEC.
+- `BSTART.SFU TileOp, DataType` is accepted only when `TileOp` is catalogued for SFU.
+- `BSTART.TEPL Mode, Function, DataType` remains the raw compatibility spelling.
+- Canonical disassembly emits the VEC or SFU alias selected by the Tile operation catalog.
+
 ## Encoding
 
 <div class="enc-diagram">

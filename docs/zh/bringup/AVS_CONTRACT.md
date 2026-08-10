@@ -50,7 +50,7 @@ python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test
 规范的 AVS 矩阵现在涵盖：
 
 - 标量 和 向量 ISA 合法性
-- 平铺和 TEPL 行为
+- 使用 v0.57 兼容术语表达的 Tile 与 TEPL 行为
 - Linux 启动和运行时门
 - musl 和 glibc 门
 - 维护工作负载运行程序

@@ -103,7 +103,7 @@ Missing mandatory descriptors MUST trap with `E_BLOCK(EC_BLOCKFMT)` and report t
 [[tileblocks-tmov]]
 === Tile move / reshape blocks (`TMOV`)
 
-NOTE (header legality): `B.TEXT` is not meaningful for header-driven engine ops (`TMOV`/`TLSU`/`CUBE`/`TEPL`). If `B.TEXT` appears in such a header, it is an illegal descriptor combination and MUST trap with `E_BLOCK(EC_BLOCKFMT)` with `MissingDescFamily=B.TEXT` and `MissingDetail=0x02`.
+NOTE (header legality): `B.TEXT` is not meaningful for header-driven engine ops (`TMOV`/`TLSU`/`CUBE`/`VEC`/`SFU`). If `B.TEXT` appears in such a header, it is an illegal descriptor combination and MUST trap with `E_BLOCK(EC_BLOCKFMT)` with `MissingDescFamily=B.TEXT` and `MissingDetail=0x02`.
 
 `BSTART.TMOV` is the named form for TLSU Function 2.
 

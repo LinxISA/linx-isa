@@ -66,10 +66,10 @@ Comparable to Arm/x86/RISC-V maturity means:
 ### Tile
 
 - ISA:
-  - tile/template opcode catalog and TEPL surface exist, but semantic envelope
+  - Tile operation catalog and VEC/SFU TEPL-carrier surface exist, but semantic envelope
     and legality validation still need continued tightening
 - Compiler:
-  - MC/asm coverage and TEPL encoding checks exist, but generic-C tile closure
+  - MC/asm coverage and VEC/SFU carrier encoding checks exist, but generic-C tile closure
     is not claimed
 - QEMU:
   - tile/template decode coverage and semantics remain materially incomplete

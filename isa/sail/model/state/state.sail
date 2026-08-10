@@ -234,7 +234,7 @@ function bcatr_dr() -> bool = { bcatr_raw[26] == 0b1 }
 function bdatr_sat() -> bool = { bdatr_raw[26] == 0b1 }
 
 // -----------------------------------------------------------------------------
-// Tile-engine architectural effect envelope (PTO ISA 0.57.1 subset)
+// Tile-engine architectural effect envelope (PTO ISA 0.58 subset)
 //
 // The current Sail carrier does not yet contain a byte-addressable Tile payload
 // array.  These registers nevertheless model the architectural transaction:
@@ -1699,7 +1699,8 @@ function bdesc_mark_iot() -> unit = { bdesc_seen_iot = true }
 // The decoder provides a stable classification string for the staged model.
 function decoded_block_contract_kind() -> bits(4) = {
   // 0=none/unspecified, 1=VEC (VPAR/VSEQ/MPAR/MSEQ), 2=TLSU (TLOAD/TSTORE),
-  // 3=TMOV, 4=CUBE (TMATMUL/TMATMUL.ACC), 5=ACCCVT, 6=HDRDRV (TEPL/FIXP/TLSU-other)
+  // 3=TMOV, 4=CUBE, 6=HDRDRV (TEPL/FIXP/TLSU-other).
+  // Kind 5 is intentionally unassigned in v0.58.
   decoded_block_contract_kind_shadow
 }
 
@@ -1746,13 +1747,6 @@ function bdesc_validate_header_end(src_pc_or_tpc : bits(64)) -> unit = {
       else if not_bool(bdesc_seen_datr) then trap_blockfmt(0x03, 0x00, src_pc_or_tpc)
       else if not_bool(bdesc_seen_iot) then trap_blockfmt(0x05, 0x00, src_pc_or_tpc)
       else if not_bool(bdesc_seen_dim) then trap_blockfmt(0x01, 0x00, src_pc_or_tpc)
-      else ()
-    },
-    // ACCCVT: require DATR + destination IOT; shape is inherited from ACC.
-    0b0101 => {
-      if bdesc_seen_text then bdesc_illegal_combo_or_trap(0x02, src_pc_or_tpc)
-      else if not_bool(bdesc_seen_datr) then trap_blockfmt(0x03, 0x00, src_pc_or_tpc)
-      else if not_bool(bdesc_seen_iot) then trap_blockfmt(0x05, 0x00, src_pc_or_tpc)
       else ()
     },
     // HDRDRV: header-driven engine ops: TEXT illegal; mandatory families are op-specific.

@@ -637,11 +637,11 @@ COMPILE_ONLY_SUITE_SOURCE_OVERRIDE: dict[str, str] = {
 def _extra_sources_for_suite(suite: str) -> list[str]:
     if suite == "tile":
         return [
-            "avs/qemu/tests/10_tile_tma.cpp",
+            "avs/qemu/tests/10_tile_tlsu.cpp",
             "avs/qemu/tests/10_tile_cube.cpp",
             "avs/qemu/tests/10_tile_cube_asm.S",
-            "avs/qemu/tests/10_tile_tepl.cpp",
-            "avs/qemu/tests/10_tile_tepl_asm.S",
+            "avs/qemu/tests/10_tile_vec_sfu.cpp",
+            "avs/qemu/tests/10_tile_vec_sfu_asm.S",
             "avs/qemu/tests/10_tile_integration.cpp",
             *[_pto_kernel_src(name) for name in PTO_TILE_KERNEL_NAMES],
         ]
@@ -1317,7 +1317,7 @@ def main(argv: list[str]) -> int:
         for macro, enabled in suite_macro_values.items()
     ]
     if "tile" in selected:
-        suite_macros.append("-DLINX_TEST_ENABLE_TMA_DESC=1")
+        suite_macros.append("-DLINX_TEST_ENABLE_TLSU_DESC=1")
     terminal_test_ids = [
         TERMINAL_TEST_IDS_BY_SUITE[suite]
         for suite in selected

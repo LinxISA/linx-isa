@@ -13,7 +13,7 @@ import report_qemu_isa_coverage as coverage
 
 
 class ReportQemuIsaCoverageTests(unittest.TestCase):
-    def test_reserved_selector_family_stays_outside_legal_forms(self) -> None:
+    def test_retired_tma_state_is_not_a_current_reserved_family(self) -> None:
         families = coverage._reserved_encoding_families(
             {
                 "state": {
@@ -26,18 +26,7 @@ class ReportQemuIsaCoverageTests(unittest.TestCase):
                 }
             }
         )
-        self.assertEqual(
-            families,
-            [
-                {
-                    "family": "TMA",
-                    "selector_field": "Function",
-                    "reserved_range": [3, 31],
-                    "reserved_value_count": 29,
-                    "behavior": "illegal_instruction",
-                }
-            ],
-        )
+        self.assertEqual(families, [])
 
     def test_v058_tlsu_reserved_selector_family_stays_outside_legal_forms(self) -> None:
         families = coverage._reserved_encoding_families(

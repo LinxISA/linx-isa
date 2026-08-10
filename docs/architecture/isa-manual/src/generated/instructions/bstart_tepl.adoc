@@ -17,4 +17,10 @@ image::encodings/enc_bstart_tepl.svg[BSTART.TEPL encoding,width=800]
 
 *Compression:* L32 (len=32)
 
+*Canonical semantic aliases:* `BSTART.VEC TileOp, DataType` for VEC operations and `BSTART.SFU TileOp, DataType` for SFU operations.
+
+*Compatibility spelling:* `BSTART.TEPL Mode, Function, DataType`.
+
+*Canonical disassembly:* selects `BSTART.VEC` or `BSTART.SFU` from the catalogued Tile operation engine.
+
 *Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "User corrected to A", "source": "group_rule", "uop_kind": "CMD"}`

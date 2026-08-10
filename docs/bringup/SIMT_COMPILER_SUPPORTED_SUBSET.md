@@ -63,7 +63,7 @@ The current pass is intended for loops with these properties:
 - innermost loop only,
 - loop-simplify form with stable preheader/header/latch structure,
 - no unsupported calls,
-- no Linx tile/CUBE/TEPL intrinsic loop bodies,
+- no Linx TLSU/CUBE/VEC/SFU intrinsic loop bodies,
 - tripcount expressible through the current ScalarEvolution-based expansion,
 - affine-enough memory/indexing for the lowering path in use,
 - at least one meaningful loop-side effect:

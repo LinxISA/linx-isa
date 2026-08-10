@@ -36,8 +36,9 @@ Each parameter is explained as follows:
 
 A complete data transfer block instructionheader needs to be split into the following multiple instructions for encoding, including:
 
-- `BSTART.TEPL TileOp, DataType`, or the engine-checked assembly alias
-  `BSTART.VEC` / `BSTART.SFU`
+- `BSTART.VEC TileOp, DataType` or `BSTART.SFU TileOp, DataType`, selected from
+  the operation catalog; the raw compatibility spelling is
+  `BSTART.TEPL Mode, Function, DataType`
 - [B.DATR](../../header/B.DATR.md) `Layout, PadValue`
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0`
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`

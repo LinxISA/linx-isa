@@ -21,7 +21,7 @@
 - 块结构执行和仅限边界控制流，
 - GSTATE/BSTATE分割和块命令调度，
 - 描述符验证和解耦的 块体 条目行为，
-- TMA、CUBE、TEPL 和 SIMT/向量 块系列形状，
+- TLSU、CUBE、VEC、SFU 和 SIMT/向量块系列形状，
 - 桥接 `.brg` 内存形式和 RI 命名空间规则，
 - 早期编译器/QEMU/RTL 奇偶校验的陷阱信封和可重启性。
 

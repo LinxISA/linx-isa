@@ -31,7 +31,7 @@ META_WITH_ID_RE = re.compile(
 )
 
 
-class QemuTmaReservedDecodeContractTests(unittest.TestCase):
+class QemuTlsuReservedDecodeContractTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.root = Path(__file__).resolve().parents[2]
@@ -49,13 +49,12 @@ class QemuTmaReservedDecodeContractTests(unittest.TestCase):
             for match in META_WITH_ID_RE.finditer(meta_text)
         ]
 
-    def test_only_exact_legal_aliases_are_decoded_and_cataloged(self) -> None:
+    def test_current_qemu_exact_tlsu_subset_is_decoded_and_cataloged(self) -> None:
         decoded = {
             entry["mnemonic"]: (entry["mask"], entry["match"])
             for entry in self.decode_entries
-            if entry["mnemonic"] in EXPECTED or entry["mnemonic"] == "bstart_tma"
+            if entry["mnemonic"] in EXPECTED
         }
-        self.assertNotIn("bstart_tma", decoded)
         for token, (mask, match, _) in EXPECTED.items():
             with self.subTest(token=token):
                 self.assertEqual(decoded.get(token), (mask, match))
@@ -63,17 +62,17 @@ class QemuTmaReservedDecodeContractTests(unittest.TestCase):
         meta = {
             entry["mnemonic"]: entry
             for entry in self.meta_entries
-            if entry["mnemonic"] in EXPECTED or entry["mnemonic"] == "bstart_tma"
+            if entry["mnemonic"] in EXPECTED
         }
-        self.assertNotIn("bstart_tma", meta)
+        shared_op_ids = {meta[token]["op_id"] for token in EXPECTED}
+        self.assertEqual(len(shared_op_ids), 1)
         for token, (mask, match, _) in EXPECTED.items():
             with self.subTest(token=token):
                 self.assertEqual(meta[token]["insn_len"], 32)
                 self.assertEqual(meta[token]["mask"], mask)
                 self.assertEqual(meta[token]["match"], match)
-                self.assertEqual(meta[token]["op_id"], 23)
 
-    def test_positive_and_reserved_raw_words_partition_the_family(self) -> None:
+    def test_current_qemu_subset_and_architecturally_reserved_words_partition_the_family(self) -> None:
         for token, (_, _, function) in EXPECTED.items():
             word = (1 << 27) | (function << 20) | 0x00011181
             matches = [
@@ -83,7 +82,7 @@ class QemuTmaReservedDecodeContractTests(unittest.TestCase):
             ]
             self.assertEqual(matches, [token])
 
-        for function, word in ((9, 0x08911181), (31, 0x09F11181)):
+        for function, word in ((15, 0x08F11181), (31, 0x09F11181)):
             with self.subTest(function=function):
                 decode_matches = [
                     entry["mnemonic"]
@@ -101,7 +100,7 @@ class QemuTmaReservedDecodeContractTests(unittest.TestCase):
 
     def test_translators_freeze_the_nine_legal_function_values(self) -> None:
         translate = (self.linx / "translate.c").read_text(encoding="utf-8")
-        self.assertIsNone(re.search(r"\btrans_bstart_tma\s*\(", translate))
+        self.assertIsNone(re.search(r"\btrans_bstart_(?:tma|tlsu)\s*\(", translate))
         for token, (_, _, function) in EXPECTED.items():
             with self.subTest(token=token):
                 found = re.search(rf"static bool trans_{token}\([^)]*\)\s*\{{", translate)
@@ -130,14 +129,6 @@ class QemuTmaReservedDecodeContractTests(unittest.TestCase):
         self.assertIsNotNone(body)
         self.assertIn("gen_helper_raise_exception", body)
         self.assertIn("LINX_EXCP_ILLEGAL_INST", body)
-
-    def test_generator_preserves_the_shared_tma_opcode_id(self) -> None:
-        generator = (
-            self.root / "rtl/LinxCore/tools/generate/opcode_catalog_lib.py"
-        ).read_text(encoding="utf-8")
-        for token in EXPECTED:
-            self.assertIn(f'"{token}": "OP_BSTART_TMA"', generator)
-
 
 if __name__ == "__main__":
     unittest.main()

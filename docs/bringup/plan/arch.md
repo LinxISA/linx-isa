@@ -21,7 +21,7 @@ The retired `v0.3` checklist tracked the initial bring-up of:
 - block-structured execution and boundary-only control-flow,
 - GSTATE/BSTATE split and block command dispatch,
 - descriptor validation and decoupled body entry behavior,
-- TMA, CUBE, TEPL, and SIMT/vector block-family shape,
+- TLSU, CUBE, VEC, SFU, and SIMT/vector block-family shape,
 - bridged `.brg` memory forms and RI namespace rules,
 - trap envelopes and restartability for early compiler/QEMU/RTL parity.
 

@@ -159,7 +159,7 @@ def _render_markdown(report: dict[str, object], out_path: Path) -> None:
 
 def _parse_args(argv: list[str]) -> argparse.Namespace:
     ap = argparse.ArgumentParser(description="Generate combined ISA-LLVM-QEMU coverage report")
-    ap.add_argument("--spec", default="isa/v0.57/linxisa-v0.57.json", help="Path to compiled ISA JSON")
+    ap.add_argument("--spec", default="isa/v0.58/linxisa-v0.58.json", help="Path to compiled ISA JSON")
     ap.add_argument(
         "--compiler-analyzer",
         default="avs/compiler/linx-llvm/tests/analyze_coverage.py",

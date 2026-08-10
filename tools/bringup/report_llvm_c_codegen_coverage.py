@@ -975,7 +975,7 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
     default_root = Path(__file__).resolve().parents[2]
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", default=str(default_root))
-    parser.add_argument("--spec", default="isa/v0.57/linxisa-v0.57.json")
+    parser.add_argument("--spec", default="isa/v0.58/linxisa-v0.58.json")
     parser.add_argument(
         "--compiler-analyzer",
         default="avs/compiler/linx-llvm/tests/analyze_coverage.py",
@@ -1030,7 +1030,7 @@ def main(argv: list[str]) -> int:
     out_md = _under_root(root, args.out_md)
 
     canonical = {
-        "spec": root / "isa/v0.57/linxisa-v0.57.json",
+        "spec": root / "isa/v0.58/linxisa-v0.58.json",
         "compiler analyzer": root / "avs/compiler/linx-llvm/tests/analyze_coverage.py",
         "C/C++ source directory": root / "avs/compiler/linx-llvm/tests/c",
         "assembly source directory": root / "avs/compiler/linx-llvm/tests/asm",

@@ -21,9 +21,9 @@
 - 块边界合法性和仅限边界的控制流目标，
 - 块格式验证和 块体-fetch 故障报告，
 - `TPC` 和 块体 入门术语，
-- 模板重放元数据和 `BSTART.TEPL` 选择器处理，
+- 模板重放元数据和 VEC/SFU TEPL 载体选择器处理，
 - SIMT/向量 块体 终止、`.brg` 合法性和 RI 命名空间使用，
-- 当前的 `BSTART.TEPL` 与 `BSTART.FIXP` 分离。
+- 当前 VEC/SFU 编码载体与已删除 `BSTART.FIXP` 的分离。
 
 ## 历史状况
 

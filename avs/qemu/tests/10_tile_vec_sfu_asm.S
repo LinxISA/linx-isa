@@ -1,11 +1,11 @@
-/* PTO ISA TEPL execution carriers. */
+/* PTO ISA VEC/SFU execution through the unchanged TEPL binary carrier. */
 
     .text
 
 /* Rejected dtype profiles. The ACR0 trap handler resumes at the TSTORE below,
  * which must observe the original source as the queue head. */
 
-    .macro TEPL_REJECT_USER name, resume, op, dtype
+    .macro SFU_REJECT_USER name, resume, op, dtype
     .globl \name
     .type \name,@function
 \name:
@@ -32,14 +32,14 @@
     .size \name, .-\name
     .endm
 
-    TEPL_REJECT_USER linx_tepl_reject_texp_fp16_user, \
-                     linx_tepl_reject_texp_fp16_resume, TEXP, FP16
-    TEPL_REJECT_USER linx_tepl_reject_tlog_bf16_user, \
-                     linx_tepl_reject_tlog_bf16_resume, TLOG, BF16
+    SFU_REJECT_USER linx_sfu_reject_texp_fp16_user, \
+                    linx_sfu_reject_texp_fp16_resume, TEXP, FP16
+    SFU_REJECT_USER linx_sfu_reject_tlog_bf16_user, \
+                    linx_sfu_reject_tlog_bf16_resume, TLOG, BF16
 
-    .globl linx_tepl_reject_acr0_trap_handler
-    .type linx_tepl_reject_acr0_trap_handler,@function
-linx_tepl_reject_acr0_trap_handler:
+    .globl linx_sfu_reject_acr0_trap_handler
+    .type linx_sfu_reject_acr0_trap_handler,@function
+linx_sfu_reject_acr0_trap_handler:
     C.BSTART
     ssrget 0x0f02, ->a0
     ssrset a0, 0x0036
@@ -49,10 +49,10 @@ linx_tepl_reject_acr0_trap_handler:
     ssrset a0, 0x0f41
     ssrset a0, 0x0f43
     acre 0
-    .size linx_tepl_reject_acr0_trap_handler, \
-          .-linx_tepl_reject_acr0_trap_handler
+    .size linx_sfu_reject_acr0_trap_handler, \
+          .-linx_sfu_reject_acr0_trap_handler
 
-/* PTO ISA TEPL row/column broadcast and expand-arithmetic kernels. */
+/* PTO ISA SFU row/column broadcast and expand-arithmetic kernels. */
 
 
     .macro LOAD_FP32 reg, cols, rows, stride
@@ -131,7 +131,7 @@ linx_tepl_reject_acr0_trap_handler:
     EXPAND_BINARY linx_tcolexpandmin_f32, TCOLEXPANDMIN, 8, 1, 8
     EXPAND_BINARY linx_tcolexpandexpdif_f32, TCOLEXPANDEXPDIF, 8, 1, 8
 
-/* PTO ISA TEPL layout and padding kernels. */
+/* PTO ISA SFU layout and padding kernels. */
 
 
     .macro TFILLPAD_KERNEL name, pad, emit_datr=1
@@ -454,7 +454,7 @@ linx_tdequant_s8_f32:
     INTERLEAVE_KERNEL linx_tinterleave_s32, TINTERLEAVE
     INTERLEAVE_KERNEL linx_tdeinterleave_s32, TDEINTERLEAVE
 
-/* PTO ISA TEPL partial-valid binary kernels. */
+/* PTO ISA SFU partial-valid binary kernels. */
 
 
     .macro TPART_KERNEL name, op
@@ -668,7 +668,7 @@ linx_tdequant_s8_f32:
 
     TCMPS_KERNEL linx_tcmps_s32_lt, INT32, 2
 
-/* Exact-value carriers for signed narrow TEPL arithmetic. */
+/* Exact-value carriers for signed narrow VEC arithmetic. */
 
 
     .macro TILE_BINARY name, opcode, dtype, footprint
@@ -819,7 +819,7 @@ linx_trems_s32:
     FRET.STK [ra ~ ra], sp!, 8
     .size linx_trems_s32, .-linx_trems_s32
 
-/* PTO ISA TEPL product and index-reduction kernels. */
+/* PTO ISA SFU product and index-reduction kernels. */
 
 
     .macro REDUCE_KERNEL name, op, src_dtype, dst_dtype, dst_cols, dst_rows, dst_stride
@@ -861,7 +861,7 @@ linx_trems_s32:
     REDUCE_KERNEL linx_tcolargmax_f32, TCOLARGMAX, FP32, UINT32, 8, 1, 8
     REDUCE_KERNEL linx_tcolargmin_f32, TCOLARGMIN, FP32, UINT32, 8, 1, 8
 
-/* PTO ISA TEPL packed-predicate selection kernels. */
+/* PTO ISA VEC packed-predicate selection kernels. */
 
 
     .globl linx_tsel_s32

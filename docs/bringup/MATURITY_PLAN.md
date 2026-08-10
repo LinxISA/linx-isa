@@ -108,7 +108,7 @@ Status: Partial / staged after scalar
 Status: Partial / staged after scalar
 
 - Priority:
-  - keep tile/TEPL encoding and asm/manual sync green
+  - keep VEC/SFU TEPL-carrier encoding and asm/manual sync green
   - expand decode/runtime semantics without conflating that work with scalar
     closure
 

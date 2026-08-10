@@ -31,7 +31,7 @@ header：<br>
 
 ```
 ...
-BSTART.TEPL fall    /* 用静态汇编中下一个块的 bstart 表示当前块的结束 */
+BSTART.VPAR fall    /* 用静态汇编中下一个块的 bstart 表示当前块的结束 */
 B.TEXT .Lbody1
 BSTART               /* 用bstop指令表达ZXTERMZH39QXZ的结束 */
 微指令

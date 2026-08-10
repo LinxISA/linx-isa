@@ -31,7 +31,7 @@ BSTOP
 
 ```
 ...
-BSTART.TEPL fall    /* 用静态汇编中下一个块的 bstart 表示当前块头的结束 */
+BSTART.VPAR fall    /* 用静态汇编中下一个块的 bstart 表示当前块头的结束 */
 B.TEXT .Lbody1
 BSTART               /* 用bstop指令表达块头的结束 */
 微指令

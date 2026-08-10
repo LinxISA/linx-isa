@@ -193,7 +193,8 @@ The bring-up profile constrains certain combinations (examples):
   memory-sequential execution modes.
 * `.FP` blocks mirror `.STD` transitions but mark a floating-point execution context.
 
-Block types beyond the scalar core use the named TLSU and CUBE direct forms plus the raw TEPL Mode/Function form.
+Block types beyond the scalar core use named TLSU and CUBE direct forms plus VEC/SFU aliases over the unchanged TEPL
+Mode/Function carrier.
 Selector space not explicitly assigned by the PTO ISA 0.58.0 catalog is reserved and must not acquire ad hoc semantics.
 
 [[blockisa-tile]]
@@ -201,7 +202,7 @@ Selector space not explicitly assigned by the PTO ISA 0.58.0 catalog is reserved
 
 Linx defines *tile blocks* for hardware-accelerated tile operations. A tile block is a basic block that:
 
-* starts with a tile/vector header (for example `BSTART.TLOAD`, `BSTART.TMATMUL`, `BSTART.TEPL`,
+* starts with a tile/vector header (for example `BSTART.TLOAD`, `BSTART.TMATMUL`, `BSTART.VEC`, `BSTART.SFU`,
   `BSTART.MPAR`, `BSTART.MSEQ`, `BSTART.VPAR`, or `BSTART.VSEQ`), and
 * ends at `BSTOP` / `C.BSTOP` or the next block start marker.
 
@@ -214,11 +215,13 @@ Tile blocks operate on **tile registers** (see <<progmodel-tile>>), and use expl
 
 Bring-up contract (v0.58 current profile):
 
-* Typed operation starts are canonical for TLSU and CUBE. TEPL uses `BSTART.TEPL Mode, Function, DataType`.
+* Typed operation starts are canonical for TLSU and CUBE. VEC/SFU operations use
+  `BSTART.VEC TileOp, DataType` or `BSTART.SFU TileOp, DataType` over the TEPL carrier.
+  The raw compatibility spelling remains `BSTART.TEPL Mode, Function, DataType`.
 * Retired PAR-style block-start spellings are illegal and MUST be rejected.
 * `TLOAD`/`TSTORE` are the canonical memory-tile baseline for AI and rendering bring-up.
 * `TMOV` is the canonical tile-state move baseline operation in the TLSU family.
-* PTO template operations (`TADD`, `TSUB`, `TROWMAX`, etc.) are carried under `BSTART.TEPL`.
+* PTO VEC/SFU operations (`TADD`, `TSUB`, `TROWMAX`, etc.) use the engine alias selected by the operation catalog.
 * `TVEC` is not a standalone v0.58 header mnemonic; TVEC-style execution is represented by `BSTART.VPAR`/`BSTART.VSEQ`.
 * Historical `MCALL` terminology is represented by `.MPAR`/`.MSEQ` execution modes in the live profile.
 * `TPREFETCH` is TLSU Function 3 and has the same architectural memory
@@ -280,7 +283,7 @@ v0.58 tile header encoding families:
 
 * TLSU-family typed forms: `31..27=DataType`, `26..25=00`, `24..20=Function`, `19..15=00010`, `14..0` fixed block-split tail.
 * CUBE-family typed forms: `31..27=DataType`, `26..25=00`, `24..20=Function`, `19..15=00110`, `14..0` fixed block-split tail.
-* TEPL-family typed forms: `31..27=DataType`, `26..25=Mode`, `24..20=Function`, `19..0` fixed block-split tail.
+* VEC/SFU TEPL-carrier form: `31..27=DataType`, `26..25=Mode`, `24..20=Function`, `19..0` fixed block-split tail.
 * `BSTART.VPAR`: `26..25=Mode`, `19..15=00100` with fixed block-split tail.
 * `BSTART.VSEQ`: `26..25=Mode`, `19..15=00101` with fixed block-split tail.
 
@@ -297,8 +300,9 @@ v0.58 named-form policy (normative):
 
 * TLSU, CUBE, and TEPL name binary encoding families. TLSU and CUBE have no generic
   legal assembly form; each allocated function has an exact `BSTART.<operation>` form.
-  TEPL has one legal `BSTART.TEPL Mode, Function, DataType` form whose accepted
-  mode/function pairs come from the locked catalog.
+  The TEPL carrier accepts `BSTART.VEC TileOp, DataType`, `BSTART.SFU TileOp, DataType`,
+  and the raw compatibility spelling `BSTART.TEPL Mode, Function, DataType`; canonical
+  output selects VEC or SFU from the locked catalog.
 * Named mnemonics are explicit v0.58 instruction forms in the golden catalog
   and resolve to encoding selectors:
 ** `BSTART.TLOAD` -> TLSU `Function=0`
@@ -315,7 +319,8 @@ v0.58 named-form policy (normative):
 ** `BSTART.TSTORE` Shared partition mode -> TLSU `Function=14`
 ** `BSTART.TMATMUL` -> CUBE `Function=0`
 ** `BSTART.TMATMUL.ACC` -> CUBE `Function=2`
-** `TADD`, `TSUB`, `TROWMAX`, ... -> `BSTART.TEPL Mode=<assigned mode>, Function=<assigned function>`
+** VEC operations such as `TADD`/`TSUB` -> `BSTART.VEC TileOp, DataType`
+** SFU operations such as `TROWMAX` -> `BSTART.SFU TileOp, DataType`
 * TLSU `Function=15..31` encodings are reserved and MUST raise an
   illegal-instruction exception. They are not instruction forms and MUST NOT
   contribute to legal-form or executable-coverage denominators.
@@ -345,7 +350,7 @@ v0.58 CUBE named `Function` assignments:
 * `20/21/22` => `TGEMVMX` / `TGEMVMX.BIAS` / `TGEMVMX.ACC`
 * Other 5-bit CUBE values are reserved and raise an illegal-instruction exception.
 
-v0.58 TEPL mode/function allocation policy:
+v0.58 VEC/SFU TEPL-carrier allocation policy:
 
 * The authoritative machine-readable selector map is
   `isa/v0.58/state/pto_encoding_map.json`.
@@ -356,10 +361,10 @@ v0.58 TEPL mode/function allocation policy:
 * Canonical names include `TTRANS`; `TTRANSPOSE` and `TSORT32` are
   migration-only source aliases and never decode as instruction identities.
 * Tile-scalar extension ops require `B.IOR` scalar RHS binding as defined by the op profile.
-  - NOTE (toolchain convention): when a TEPL op requires scalar RHS data, place the binding in the first `B.IOR` entry
+  - NOTE (toolchain convention): when a VEC/SFU operation requires scalar RHS data, place the binding in the first `B.IOR` entry
     where practical, even though implementations must accept any `B.IOR` position defined by the op profile.
 
-Unassigned TEPL mode/function pairs are reserved/illegal in canonical v0.58.
+Unassigned TEPL-carrier mode/function pairs are reserved/illegal in canonical v0.58.
 Canonical toolchains MUST reject them and implementations MUST NOT assign ad
 hoc semantics.
 
@@ -417,10 +422,10 @@ v0.58 block split patterns and per-family constraints:
    data type, shape, layout, and allocation.
 ** no architectural implicit ACC singleton exists; `ACCCVT` is removed and reserved.
 ** are header-driven block commands (no SIMT body; do not use `B.TEXT`).
-* `BSTART.TEPL`:
+* `BSTART.VEC` / `BSTART.SFU` (TEPL carrier):
 ** operation is selected only by the raw `Mode` and `Function` fields.
 ** descriptor requirements are op-profile-specific, but tile and scalar bindings MUST still be expressed through block descriptors.
-** PTO template-op forms (`TADD`, `TSUB`, `TROWMAX`, etc.) are header-driven in v0.58 (no SIMT body).
+** PTO VEC/SFU forms (`TADD`, `TSUB`, `TROWMAX`, etc.) are header-driven in v0.58 (no SIMT body).
 * `BSTART.VPAR` / `BSTART.VSEQ`:
 ** are the only TVEC-equivalent headers.
 ** require one `B.TEXT` target for the SIMT body in decoupled form.
@@ -432,7 +437,7 @@ Future encoding-space growth policy:
 ** `isa/v0.58/opcodes/lx_32.opc`
 ** the alias table above
 ** strict profile checks and regression tests.
-* TEPL uses a two-bit Mode and five-bit Function selector. New assignments
+* The VEC/SFU TEPL carrier uses a two-bit Mode and five-bit Function selector. New assignments
   MUST be added to a later normative manifest and MUST NOT occupy a reserved
   pair implicitly.
 * Future banks MUST be assigned explicitly by a later revision and carried by
@@ -511,8 +516,9 @@ The canonical v0.58 auto-mode profile maps PTO tile primitives to typed TAU bloc
   `BSTART.TMATMUL` with explicit left/right sources and destination
 * `PTO TMATMUL_ACC`:
   `BSTART.TMATMUL.ACC` with explicit accumulator/left/right sources and destination
-* `PTO template ops` (`TADD`, `TSUB`, `TROWMAX`, ...):
-  `BSTART.TEPL` with assigned Mode/Function plus the descriptor stream required by the operation contract.
+* `PTO VEC/SFU ops` (`TADD`, `TSUB`, `TROWMAX`, ...):
+  `BSTART.VEC TileOp, DataType` or `BSTART.SFU TileOp, DataType`; the assembler resolves
+  `TileOp` to its assigned TEPL Mode/Function and emits the descriptor stream required by the operation contract.
 
 Normative notes:
 
@@ -520,7 +526,7 @@ Normative notes:
 * `TLOAD/TSTORE` dtype comes from encoded TLSU selector state (surfaced as `BSTART.TLOAD/BSTART.TSTORE` named forms),
   and applicable pad/layout policy comes from `B.DATR`.
 * `TMOV` layout/convert policy comes from applicable `B.DATR` fields; destination tile kind/size comes from `B.IOT`.
-* TEPL template-op selection is carried by raw Mode/Function fields; no standalone `TVEC` header encoding exists.
+* VEC/SFU operation selection is carried by the unchanged TEPL Mode/Function fields; no standalone `TVEC` header encoding exists.
 * Multiple `B.IOR` and `B.IOT` descriptors in one header are legal and consumed in order.
 * Every CUBE operation binds an explicit destination. `.ACC` forms additionally bind the accumulator source explicitly.
 * Compiler strict checks MUST reject a `.ACC` form with a missing accumulator source or an incompatible
@@ -694,16 +700,19 @@ The architectural interface between the first and second layer is a block comman
 * `BROB` tracks completion and retires block commands in-order; speculative commands may be flushed by misprediction.
 
 [[blockisa-tepl]]
-=== Generic accelerator block (`BSTART.TEPL`)
+=== VEC/SFU Tile engines (TEPL carrier)
 
-`BSTART.TEPL` provides a generic extensible block type for implementation-defined in-core accelerators and for
-PTO template-op families (`TADD`, `TSUB`, `TROWMAX`, etc.).
+`BSTART.VEC TileOp, DataType` and `BSTART.SFU TileOp, DataType` select catalogued
+VEC and SFU operations through the unchanged TEPL Mode/Function encoding.
+`BSTART.TEPL Mode, Function, DataType` is an accepted
+compatibility spelling for the same carrier; it is not a fifth engine or an
+extension namespace.
 
-* TEPL-family typed headers use the same descriptor families (`B.CATR/B.DATR`, `B.IOR`, `B.IOT`) as other decoupled
-  blocks.
-* `Mode` and `Function` select the operation; `DataType` is carried in the same header.
-* TEPL template ops are header-driven and do not require a separate SIMT body selector.
-* `BSTART.TEPL` blocks must follow the same block-boundary legality rules and must not directly bypass the memory and
+* VEC/SFU headers use the same descriptor families (`B.CATR/B.DATR`, `B.IOR`, `B.IOT`) as other decoupled blocks.
+* `Mode` and `Function` select only operations assigned by the v0.58 catalog; `DataType` is carried in the same header.
+* VEC/SFU operations are header-driven and do not require a separate SIMT body selector.
+* Unassigned Mode/Function pairs are illegal and MUST NOT acquire implementation-defined semantics.
+* VEC/SFU blocks must follow the same block-boundary legality rules and must not directly bypass the memory and
   privilege contracts defined in this manual.
 
 [[blockisa-assembly]]

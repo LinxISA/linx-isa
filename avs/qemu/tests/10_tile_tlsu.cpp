@@ -1,4 +1,4 @@
-// TMA-family execution tests: TLOAD/TSTORE, descriptors, and ordering.
+// TLSU-engine execution tests: TLOAD/TSTORE, descriptors, and ordering.
 
 #include "10_tile_test_common.hpp"
 
@@ -6,8 +6,8 @@
 
 using namespace linx::test::tile;
 
-#ifndef LINX_TEST_ENABLE_TMA_DESC
-#define LINX_TEST_ENABLE_TMA_DESC 0
+#ifndef LINX_TEST_ENABLE_TLSU_DESC
+#define LINX_TEST_ENABLE_TLSU_DESC 0
 #endif
 
 static constexpr unsigned kFmtNorm = 0;
@@ -33,10 +33,10 @@ static void run_tload_tstore_roundtrip_test()
     test_pass();
 }
 
-static void run_tma_layout_and_padding_tests()
+static void run_tlsu_layout_and_padding_tests()
 {
     test_start(0x000A000E);
-    uart_puts("PTO TMA desc NORM (8x8 sanity) ... ");
+    uart_puts("PTO TLSU desc NORM (8x8 sanity) ... ");
 
     alignas(16) static int32_t norm_src[64];
     alignas(16) static int32_t norm_dst[64];
@@ -56,7 +56,7 @@ static void run_tma_layout_and_padding_tests()
     test_pass();
 
     test_start(0x000A000F);
-    uart_puts("PTO TMA desc ND<->NZ (8x8 in 64x16 TR) ... ");
+    uart_puts("PTO TLSU desc ND<->NZ (8x8 in 64x16 TR) ... ");
 
     alignas(16) static int32_t nz_src[1024];
     alignas(16) static int32_t nz_dst[1024];
@@ -111,7 +111,7 @@ static void run_tma_layout_and_padding_tests()
     test_pass();
 
     test_start(0x000A0011);
-    uart_puts("PTO TMA desc NORM (non-pow2 30x17) ... ");
+    uart_puts("PTO TLSU desc NORM (non-pow2 30x17) ... ");
 
     alignas(16) static int32_t np2_src[1024];
     alignas(16) static int32_t np2_dst[1024];
@@ -134,7 +134,7 @@ static void run_tma_layout_and_padding_tests()
 static void run_tso_store_store_order_smoke()
 {
     test_start(0x000A000B);
-    uart_puts("TSO store->store ordering (scalar + TMA) ... ");
+    uart_puts("TSO store->store ordering (scalar + TLSU) ... ");
 
     alignas(16) static int32_t src[1024];
     alignas(16) static int32_t dst[1024];
@@ -160,13 +160,13 @@ static void run_tso_store_store_order_smoke()
     test_pass();
 }
 
-extern "C" void run_tile_tma_tests(void)
+extern "C" void run_tile_tlsu_tests(void)
 {
     run_tload_tstore_roundtrip_test();
-    if (LINX_TEST_ENABLE_TMA_DESC) {
-        run_tma_layout_and_padding_tests();
+    if (LINX_TEST_ENABLE_TLSU_DESC) {
+        run_tlsu_layout_and_padding_tests();
     } else {
-        uart_puts("PTO TMA descriptor stress tests ... (skipped)\n");
+        uart_puts("PTO TLSU descriptor stress tests ... (skipped)\n");
     }
     run_tso_store_store_order_smoke();
 }
