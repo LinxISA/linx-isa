@@ -63,7 +63,7 @@
       "path": "skills/linx-skills",
       "url": "https://github.com/LinxISA/linx-skills.git",
       "branch": "main",
-      "commit": "1c838cb713cc26552262cbfdcb15ce554bee6029",
+      "commit": "501f726f695873bf255f9e21cfc19cf05a888e93",
       "role": "agent routing and workflow skills"
     },
     {
