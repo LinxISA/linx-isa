@@ -18,6 +18,11 @@ _OBJDUMP_INSN_RE = re.compile(r"^\s*[0-9a-fA-F]+:\s+")
 _SPEC_DECODE_COMMENT_RE = re.compile(
     r"^\s*#\s+([A-Za-z][A-Za-z0-9_. ]*)\s+\([^)]+\)\s+\[\d+\]\s*$"
 )
+_DEFAULT_SPEC = "isa/v0.58/linxisa-v0.58.json"
+_ASSEMBLY_ALIAS_TO_CARRIER = {
+    "BSTART.VEC": "BSTART.TEPL",
+    "BSTART.SFU": "BSTART.TEPL",
+}
 
 
 def _utc_now() -> str:
@@ -83,12 +88,6 @@ def derived_selector_mnemonics(mnemonic: str, operands: list[str]) -> set[str]:
     aliases = {
         ("BSTART.STD", "CALL"): "BSTART CALL",
         ("HL.BSTART.STD", "CALL"): "HL.BSTART CALL",
-        ("BSTART.TEPL", "ACCCVT"): "BSTART.ACCCVT",
-        ("BSTART.TMA", "TLOAD"): "BSTART.TLOAD",
-        ("BSTART.TMA", "TSTORE"): "BSTART.TSTORE",
-        ("BSTART.TMA", "TMOV"): "BSTART.TMOV",
-        ("BSTART.TEPL", "ERCOV"): "ERCOV",
-        ("BSTART.TEPL", "ESAVE"): "ESAVE",
     }
     alias = aliases.get((selector, op0))
     return {alias} if alias else set()
@@ -139,6 +138,9 @@ def map_emitted_to_spec(emitted_mnem: str, spec_mnemonics: set[str]) -> str | No
     cur = canonicalize_mnemonic(emitted_mnem)
     if not cur:
         return None
+    carrier = _ASSEMBLY_ALIAS_TO_CARRIER.get(cur)
+    if carrier in spec_mnemonics:
+        return carrier
     if cur in spec_mnemonics:
         return cur
     while "." in cur:
@@ -157,19 +159,6 @@ def close_aliases(covered_spec: set[str], spec_mnemonics: set[str]) -> None:
         if a in spec_mnemonics and b in spec_mnemonics and (a in covered_spec or b in covered_spec):
             covered_spec.add(a)
             covered_spec.add(b)
-    if any(
-        m in covered_spec
-        for m in (
-            "BSTART.TMA",
-            "BSTART.CUBE",
-            "BSTART.VPAR",
-            "BSTART.VSEQ",
-            "BSTART.MPAR",
-            "BSTART.MSEQ",
-        )
-    ):
-        if "BSTART.TEPL" in spec_mnemonics:
-            covered_spec.add("BSTART.TEPL")
 
 
 def load_spec_mnemonics(spec_path: Path) -> set[str]:
@@ -221,7 +210,7 @@ def render_markdown(report: dict[str, object], out_path: Path) -> None:
 
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description="Generate AVS QEMU translation coverage report")
-    ap.add_argument("--spec", default="isa/v0.57/linxisa-v0.57.json", help="Path to compiled ISA JSON")
+    ap.add_argument("--spec", default=_DEFAULT_SPEC, help="Path to compiled ISA JSON")
     ap.add_argument("--obj-dir", default="avs/qemu/out/obj", help="Directory containing per-source AVS QEMU objects")
     ap.add_argument(
         "--llvm-objdump",

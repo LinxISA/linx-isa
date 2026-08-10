@@ -397,13 +397,13 @@ if [[ -d "$NEG_DIR" ]]; then
   fi
 
   echo "[neg] legacy generic BSTART.TMA rejection"
-  if "$LLVMMC" -triple="$TARGET" -filetype=obj "$NEG_DIR/tma_reserved_selector.s" -o /dev/null 2>"$NEG_OUT/tma_reserved_selector.err"; then
+  if "$LLVMMC" -triple="$TARGET" -filetype=obj "$NEG_DIR/retired_bstart_tma.s" -o /dev/null 2>"$NEG_OUT/retired_bstart_tma.err"; then
     echo "error: legacy generic BSTART.TMA unexpectedly assembled" >&2
     exit 1
   fi
-  if ! grep -Eqi "unrecognized instruction 'bstart\\.tma'" "$NEG_OUT/tma_reserved_selector.err"; then
+  if ! grep -Eqi "unrecognized instruction 'bstart\\.tma'" "$NEG_OUT/retired_bstart_tma.err"; then
     echo "error: legacy generic BSTART.TMA rejection did not report an unrecognized instruction" >&2
-    cat "$NEG_OUT/tma_reserved_selector.err" >&2
+    cat "$NEG_OUT/retired_bstart_tma.err" >&2
     exit 1
   fi
 fi

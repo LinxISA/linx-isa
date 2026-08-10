@@ -194,7 +194,7 @@ Vector reduction contract (`V.RD*` family):
 === Tile registers (TAU)
 
 Linx defines a tile register file used by accelerator-oriented *tile blocks* (for example `BSTART.TLOAD`,
-`BSTART.TMATMUL`, `BSTART.TEPL`, `BSTART.MPAR`, `BSTART.MSEQ`, `BSTART.VPAR`, and `BSTART.VSEQ`).
+`BSTART.TMATMUL`, `BSTART.VEC`, `BSTART.SFU`, `BSTART.MPAR`, `BSTART.MSEQ`, `BSTART.VPAR`, and `BSTART.VSEQ`).
 
 Bring-up model:
 

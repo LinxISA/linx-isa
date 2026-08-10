@@ -583,6 +583,23 @@ def _emit_fragment(
                 f"*Compression:* {comp} (len={length_bits})",
             ]
         )
+        if (
+            form.get("carrier_mnemonic") == mnemonic
+            and isinstance(form.get("accepted_assembly_mnemonics"), list)
+            and isinstance(form.get("canonical_assembly_by_engine"), dict)
+        ):
+            lines.extend(
+                [
+                    "",
+                    "*Canonical semantic aliases:* `BSTART.VEC TileOp, DataType` for VEC "
+                    "operations and `BSTART.SFU TileOp, DataType` for SFU operations.",
+                    "",
+                    "*Compatibility spelling:* `BSTART.TEPL Mode, Function, DataType`.",
+                    "",
+                    "*Canonical disassembly:* selects `BSTART.VEC` or `BSTART.SFU` from "
+                    "the catalogued Tile operation engine.",
+                ]
+            )
     else:
         lines.extend(["", f"*Description:* {desc}"])
         for form in forms:

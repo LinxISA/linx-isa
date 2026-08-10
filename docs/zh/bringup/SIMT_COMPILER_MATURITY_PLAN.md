@@ -27,7 +27,7 @@
 分支较多、通道发散的 SIMT 内核。
 
 架构方向现在已冻结
-`docs/zh/architecture/v0.58-architecture-contract.md`：规范的 `v0.57` 内核
+`docs/zh/architecture/v0.58-architecture-contract.md`：规范的 `v0.58` 内核
 是由显式 `p` 管理驱动的组粒度发散 SIMT 内核。
 因此，剩下的工作是实现成熟度，而不是架构
 寻找方向。
@@ -68,7 +68,7 @@
 退出标准：
 
 - 编译器用户可以判断被拒绝的循环是否“尚未成熟”或
-  “规范之外的 `v0.57`”。
+  “规范之外的 `v0.58`”。
 
 ### S1：明确分组车道降低
 

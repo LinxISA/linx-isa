@@ -1,7 +1,9 @@
-# 灵犀指令集 启动（公共 v0.57）
+# 灵犀指令集启动（架构 v0.58）
 
-该目录跟踪 `v0.57` 架构和实现一致性。v0.57 是相对不可变 v0.57
-基线的严格增量，AVS 是唯一实时公开启动合约。
+该目录跟踪实现与当前机器可读架构权威
+`isa/v0.58/linxisa-v0.58.json` 的一致性。签入的 AVS 矩阵在发布新的
+v0.58 consumer 矩阵之前只属于 `v0.57` 兼容性基线；其历史 PASS 结果
+不得转移到 v0.58。
 
 ## 从这里开始
 
@@ -12,7 +14,7 @@
 
 - 架构合约：`docs/zh/architecture/v0.58-architecture-contract.md`
 - AVS合约页面：`docs/bringup/AVS_CONTRACT.md`
-- 规范 AVS 矩阵：`avs/linx_avs_v1_test_matrix.yaml`
+- v0.57 兼容性 AVS 矩阵：`avs/linx_avs_v1_test_matrix.yaml`
 - 合约门：`python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml`
 - 关闭门：`python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier ${LINX_GATE_TIER:-pr}`
 

@@ -132,6 +132,32 @@ for mnemonic in ("BSTART CALL", "HL.BSTART CALL"):
     assert "independent unsigned displacement" in call["note"]
     assert "writes ra" in call["note"]
 sail_execute = (ROOT / "isa/sail/model/execute/execute.sail").read_text(encoding="utf-8")
+sail_state = (ROOT / "isa/sail/model/state/state.sail").read_text(encoding="utf-8")
+assert "tile_tlsu_required_sources" in sail_execute
+assert "tile_tlsu_produces_output" in sail_execute
+assert "tile_tma_" not in sail_execute
+assert "PTO ISA 0.57" not in sail_execute
+assert "PTO ISA 0.57" not in sail_state
+for sail_path in (
+    ROOT / "isa/sail/model/execute/execute.sail",
+    ROOT / "isa/sail/model/lib/common.sail",
+    ROOT / "isa/sail/model/linxisa.sail",
+    ROOT / "isa/sail/model/state/state.sail",
+    ROOT / "isa/sail/tests/directed.sail",
+):
+    sail_text = sail_path.read_text(encoding="utf-8")
+    assert not re.search(
+        r"\b(?:canonical|current|active|live)(?:[^\n]{0,80})\bv0\.57\b",
+        sail_text,
+        re.IGNORECASE,
+    ), sail_path
+assert "exec_bstart_acccvt" not in sail_execute
+publish_body = sail_execute[
+    sail_execute.index("function tile_effect_publish") : sail_execute.index("function tile_effect_finalize")
+]
+assert "selector == 0b01000" not in publish_body
+assert "ACCCVT" not in sail_execute
+assert "ACCCVT" not in sail_state
 src0_alloc = sail_execute.index("allocate_ri_binding(src0)")
 src1_alloc = sail_execute.index("allocate_ri_binding(src1)")
 src2_alloc = sail_execute.index("allocate_ri_binding(src2)")
@@ -150,6 +176,33 @@ assert bstart_tepl[0]["canonical_assembly_by_engine"] == {
 }
 assert bstart_tepl[0]["carrier_mnemonic"] == "BSTART.TEPL"
 assert {"BSTART.VEC", "BSTART.SFU"}.isdisjoint(mnemonics)
+assembly_contract_pages = "\n".join(
+    (ROOT / relative).read_text(encoding="utf-8")
+    for relative in (
+        "docs/isa/arch/branch.md",
+        "docs/zh/isa/arch/branch.md",
+        "docs/compiler/assembly_manual/bstop.md",
+        "docs/zh/compiler/assembly_manual/bstop.md",
+        "docs/architecture/isa-manual/src/chapters/04_block_isa.adoc",
+    )
+)
+assert not re.search(
+    r"BSTART\.(?:TEPL|VEC|SFU)\s+(?:FALL|DIRECT|COND|CALL)\b",
+    assembly_contract_pages,
+    re.IGNORECASE,
+)
+assert not re.search(r"BSTART\.(?:VEC|SFU)\s+Mode\b", assembly_contract_pages)
+tepl_page = (ROOT / "docs/isa/instructions/bstart_tepl.md").read_text(encoding="utf-8")
+tepl_fragment = (
+    ROOT / "docs/architecture/isa-manual/src/generated/instructions/bstart_tepl.adoc"
+).read_text(encoding="utf-8")
+for syntax in (
+    "BSTART.VEC TileOp, DataType",
+    "BSTART.SFU TileOp, DataType",
+    "BSTART.TEPL Mode, Function, DataType",
+):
+    assert syntax in tepl_page
+    assert syntax in tepl_fragment
 
 
 def instruction_slug(mnemonic: str) -> str:

@@ -32,7 +32,7 @@
    - `python3 tools/isa/sail_coverage.py ... --check`
    - `python3 tools/isa/validate_spec.py --profile v0.3`
    - `python3 tools/isa/build_golden.py --profile v0.3 --check`
-5) 将任何审稿人的决定记录在：`docs/bringup/plan/sail_review_log_v0.3.md`
+5) 将任何审稿人的决定记录在：`docs/zh/archive/v0.3/bringup/sail_review_log_v0.3.md`
 
 初始优先级（可以调整）：- P0：建立可维护的解码/调度路径（最好从 `retired-profile/retired-catalog.json` 生成）。
 - P1：工具链/QEMU 对齐所需的整数核心缺失语义（比较 + setc + 分支）。

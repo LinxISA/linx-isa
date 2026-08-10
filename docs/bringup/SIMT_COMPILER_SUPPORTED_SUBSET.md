@@ -63,7 +63,7 @@ The current pass is intended for loops with these properties:
 - innermost loop only,
 - loop-simplify form with stable preheader/header/latch structure,
 - no unsupported calls,
-- no Linx tile/CUBE/TEPL intrinsic loop bodies,
+- no Linx TLSU/CUBE/VEC/SFU intrinsic loop bodies,
 - tripcount expressible through the current ScalarEvolution-based expansion,
 - affine-enough memory/indexing for the lowering path in use,
 - at least one meaningful loop-side effect:
@@ -222,10 +222,11 @@ local `p`-branch/jump control flow. The guarded positive cases are:
 
 Those extra positives line up with a standard SIMT compiler technique: when
 earlier scalar optimization can if-convert a simple diamond into predicate and
-select form, the grouped kernel can stay within the current canonical `v0.57`
-body contract (`BSTART.MSEQ`, `B.TEXT`, grouped `LB0/LB1`, vector compare, and
-select) without needing first-class EXEC-mask save/restore or split/rejoin
-reconvergence.
+select form, the grouped kernel can stay within the current compiler's `v0.57`
+compatibility body contract (`BSTART.MSEQ`, `B.TEXT`, grouped `LB0/LB1`, vector
+compare, and select) without needing first-class EXEC-mask save/restore or
+split/rejoin reconvergence. This compiler evidence does not transfer to the
+canonical v0.58 architecture until the consumer is upgraded and revalidated.
 
 That positive lane is now covered in both ways:
 

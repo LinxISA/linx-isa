@@ -27,7 +27,7 @@ That is a reasonable bring-up baseline. It is not yet a mature compiler for
 branch-heavy, lane-divergent SIMT kernels.
 
 The architecture direction is now frozen in
-`docs/architecture/v0.58-architecture-contract.md`: canonical `v0.57` kernels
+`docs/architecture/v0.58-architecture-contract.md`: canonical `v0.58` kernels
 are group-granular divergent SIMT kernels driven by explicit `p` management.
 The remaining work is therefore implementation maturity, not architecture
 direction-finding.
@@ -70,7 +70,7 @@ Required evidence:
 Exit criteria:
 
 - compiler users can tell whether a rejected loop is “not yet mature” or
-  “outside canonical `v0.57`”.
+  “outside canonical `v0.58`”.
 
 ### S1: Make Grouped-Lane Lowering Explicit
 

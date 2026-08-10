@@ -31,7 +31,9 @@ class AgentNavigationTest(unittest.TestCase):
             Path("README.md"),
             Path("AGENTS.md"),
             Path("docs/README.md"),
+            Path("docs/bringup/README.md"),
             Path("docs/bringup/GETTING_STARTED.md"),
+            Path("docs/zh/bringup/README.md"),
             Path("docs/zh/bringup/GETTING_STARTED.md"),
             Path("docs/zh/index.md"),
             Path("docs/bringup/phases/02_isa_spec.md"),
@@ -98,6 +100,24 @@ class AgentNavigationTest(unittest.TestCase):
 
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("historical route", result.stderr)
+
+    def test_rejects_v057_described_as_active_contract(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.write_entrypoints(
+                root,
+                "Canonical ISA: isa/v0.58/linxisa-v0.58.json\n",
+            )
+            (root / "docs/bringup/README.md").write_text(
+                "Canonical ISA: isa/v0.58/linxisa-v0.58.json\n"
+                "The active v0.57 contract defines the architecture.\n",
+                encoding="utf-8",
+            )
+
+            result = self.run_checker(root)
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("stale active profile", result.stderr)
 
     def test_accepts_only_current_v058_agent_routes(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

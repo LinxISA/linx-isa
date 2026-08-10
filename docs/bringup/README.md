@@ -1,8 +1,9 @@
-# LinxISA Bring-up (Public v0.57)
+# LinxISA Bring-up (Architecture v0.58)
 
-This directory tracks the active `v0.57` architecture and implementation
-alignment. v0.57 is a strict delta on the immutable v0.57 baseline, and AVS
-is the only live public bring-up contract.
+This directory tracks implementation alignment to the current machine-readable
+architecture authority, `isa/v0.58/linxisa-v0.58.json`. The checked-in AVS
+matrix remains a `v0.57` compatibility baseline until a fresh v0.58 consumer
+matrix is published. Its historical PASS results do not transfer to v0.58.
 
 ## Start Here
 
@@ -15,7 +16,7 @@ is the only live public bring-up contract.
 
 - Architecture contract: `docs/architecture/v0.58-architecture-contract.md`
 - AVS contract page: `docs/bringup/AVS_CONTRACT.md`
-- canonical AVS matrix: `avs/linx_avs_v1_test_matrix.yaml`
+- v0.57 compatibility AVS matrix: `avs/linx_avs_v1_test_matrix.yaml`
 - contract gate: `python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml`
 - closure gate: `python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier ${LINX_GATE_TIER:-pr}`
 
@@ -108,7 +109,7 @@ Release-strict bring-up consistency checks:
 - `python3 tools/bringup/check_sail_model.py`
 - `python3 tools/bringup/check_qemu_opcode_meta_sync.py --allowlist docs/bringup/qemu_opcode_sync_allowlist.json --report-out docs/bringup/gates/qemu_opcode_sync_latest.json --out-md docs/bringup/gates/qemu_opcode_sync_latest.md`
 - `python3 tools/bringup/report_qemu_executable_coverage.py --require-nonzero --require-clean` (audited per-form L2 runtime and L3 semantic-oracle ledger)
-- `python3 tools/bringup/report_qemu_isa_coverage.py --spec isa/v0.57/linxisa-v0.57.json --qemu-root emulator/qemu --qemu-meta emulator/qemu/target/linx/linx_opcode_meta_gen.h --executable-report docs/bringup/gates/qemu_executable_coverage_latest.json --report-out docs/bringup/gates/qemu_isa_coverage_latest.json --out-md docs/bringup/gates/qemu_isa_coverage_latest.md --require-full` (L1 mnemonic/form mapping plus independently audited partial L2/L3 counts)
+- `python3 tools/bringup/report_qemu_isa_coverage.py --spec isa/v0.58/linxisa-v0.58.json --qemu-root emulator/qemu --qemu-meta emulator/qemu/target/linx/linx_opcode_meta_gen.h --executable-report docs/bringup/gates/qemu_executable_coverage_latest.json --report-out docs/bringup/gates/qemu_isa_coverage_latest.json --out-md docs/bringup/gates/qemu_isa_coverage_latest.md --require-full` (L1 mnemonic/form mapping plus independently audited partial L2/L3 counts)
 - `python3 tools/bringup/report_qemu_translation_coverage.py --obj-dir avs/qemu/out/obj --llvm-objdump compiler/llvm/build-linxisa-clang/bin/llvm-objdump --report-out docs/bringup/gates/qemu_translation_coverage_latest.json --out-md docs/bringup/gates/qemu_translation_coverage_latest.md --require-full` (per-source AVS QEMU translation coverage)
 - `python3 tools/bringup/report_llvm_c_codegen_coverage.py --build-manifest avs/compiler/linx-llvm/tests/out/c-codegen-build-manifest.json --report-out docs/bringup/gates/llvm_c_codegen_coverage_latest.json --out-md docs/bringup/gates/llvm_c_codegen_coverage_latest.md` (manifest-bound and replayed pure CodeGen vs source-directed C/C++ mnemonic breadth; no target threshold asserted)
 - `python3 tools/bringup/report_isa_llvm_qemu_coverage.py --compiler-analyzer avs/compiler/linx-llvm/tests/analyze_coverage.py --compiler-out-dir avs/compiler/linx-llvm/tests/out --qemu-isa-report docs/bringup/gates/qemu_isa_coverage_latest.json --qemu-translation-report docs/bringup/gates/qemu_translation_coverage_latest.json --report-out docs/bringup/gates/isa_llvm_qemu_coverage_latest.json --out-md docs/bringup/gates/isa_llvm_qemu_coverage_latest.md --require-coherent` (whole ISA-LLVM-QEMU consistency view)

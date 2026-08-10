@@ -20,7 +20,7 @@
 ## 当前的优势（回购协议中的证据）
 
 - 黄金操作码数据库和生成的 JSON 目录：
-  - `isa/v0.57/` -> `isa/v0.57/linxisa-v0.57.json`
+  - `isa/v0.58/` -> `isa/v0.58/linxisa-v0.58.json`
 - 编码冲突检查和漏洞报告：
   - `python3 tools/isa/report_encoding_space.py --check`
   - 报告：`docs/reference/encoding_space_report.md`
@@ -49,7 +49,7 @@
 ### SIMT
 
 - 指令集：
-  - 记录了规范的 `v0.57` 分组背离合约，包括
+  - 记录了规范的 `v0.58` 分组背离合约，包括
     显式 EXEC 掩码 (`p`) 控制
 - 编译器：
   - 仅关闭记录的启动子集
@@ -62,10 +62,10 @@
     全品类齐全
 
 ### 瓷砖- 指令集：
-  - 瓦片/模板操作码目录和 TEPL 表面存在，但语义信封
+  - Tile 操作目录和 VEC/SFU TEPL 编码载体已存在，但语义边界
     合法性验证仍需继续加强
 - 编译器：
-  - 存在 MC/asm 覆盖和 TEPL 编码检查，但通用 C 平铺闭包
+  - 存在 MC/asm 覆盖和 VEC/SFU 载体编码检查，但通用 C Tile 闭包
     未被认领
 -QEMU：
   - 平铺/模板解码覆盖范围和语义仍然不完整

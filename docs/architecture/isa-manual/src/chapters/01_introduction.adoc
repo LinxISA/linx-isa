@@ -23,7 +23,7 @@ The v0.58 catalog and toolchain bring-up emphasize:
 * **Compact temporaries** (see <<progmodel-clockhands>>): short-lived values can be carried in per-block private queues (ClockHands) to reduce architectural register pressure.
 * **Dense encodings** (see <<encoding-lengths>>): variable-length instruction forms (16/32/48/64-bit) plus composed prefix/postfix forms are used to keep common cases compact while still providing sufficient encoding space.
 * **Extensibility:** opcode space is intentionally structured so future optional domains (vector/tile/system) can grow without re-encoding the scalar core.
-* **Unified vector/tile acceleration** (v0.58): explicitly allocated TEPL tile selectors, descriptor-driven TLSU/CUBE tile blocks, and structured `MPAR`/`MSEQ` shader kernels in one live canonical contract.
+* **Unified vector/tile acceleration** (v0.58): explicitly allocated VEC/SFU operations on the TEPL carrier, descriptor-driven TLSU/CUBE tile blocks, and structured `MPAR`/`MSEQ` shader kernels in one live canonical contract.
 
 [[intro-normative]]
 == Normative Language and Notation

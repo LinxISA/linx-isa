@@ -13,9 +13,11 @@ The Command (CMD) group covers the block-split instruction forms (typed `BSTART.
 * `.VPAR` / `.VSEQ` -- tile-parallel/sequential vector execution (TVEC-equivalent).
 * TLSU-family typed starts such as `TLOAD`, `TSTORE`, `MGATHER.MASK`, and `MGATHER.CAS` -- tile load/store operations.
 * CUBE-family typed starts such as `TMATMUL`, `TMATMUL.ACC`, and `TGEMV` -- tile matrix operations.
-* `BSTART.TEPL` with Mode/Function selection -- template operations such as `TADD`.
+* `BSTART.VEC TileOp, DataType` / `BSTART.SFU TileOp, DataType` -- catalogued Tile operations such as `TADD`; the assembler resolves `TileOp` to the TEPL Mode/Function carrier fields.
 
-Typed block starts are the only public spellings for TLSU and CUBE operations. TEPL uses the public `BSTART.TEPL` raw form with Mode/Function fields; unassigned selectors are illegal instructions.
+Typed block starts are the only public spellings for TLSU and CUBE operations. VEC/SFU use `BSTART.VEC` and
+`BSTART.SFU` aliases over the unchanged TEPL Mode/Function carrier. The compatibility spelling `BSTART.TEPL` remains
+accepted; unassigned selectors are illegal instructions.
 
 **Header descriptors**: tile and scalar block metadata is conveyed by descriptor instructions that must appear immediately after a block-start marker. Descriptors are consumed in program order and do not affect the scalar execution path unless the platform profile specifies otherwise.
 

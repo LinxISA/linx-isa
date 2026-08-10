@@ -234,7 +234,7 @@ function bcatr_dr() -> bool = { bcatr_raw[26] == 0b1 }
 function bdatr_sat() -> bool = { bdatr_raw[26] == 0b1 }
 
 // -----------------------------------------------------------------------------
-// Tile-engine architectural effect envelope (PTO ISA 0.57.1 subset)
+// Tile-engine architectural effect envelope (PTO ISA 0.58 subset)
 //
 // The current Sail carrier does not yet contain a byte-addressable Tile payload
 // array.  These registers nevertheless model the architectural transaction:
@@ -388,9 +388,9 @@ function vec_init_p_for_group(lc1 : bits(64)) -> unit = {
 }
 
 // -----------------------------------------------------------------------------
-// Vector lane register file (canonical v0.57 decode carrier)
+// Vector lane register file (canonical v0.58 decode carrier)
 //
-// Live LLVM/QEMU v0.57 uses a class/index RegId10 encoding:
+// Pinned LLVM/QEMU v0.57 compatibility consumers use a class/index RegId10 encoding:
 //   (Class << 5) | Index
 //   Class 1 = ri*    (ordered B.IOR import namespace)
 //   Class 3 = lc*    (lane/group counters)
@@ -983,7 +983,7 @@ register ssr_ebarg_extctx_meta_acr2 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID
 // (ssr_lcfr/ssr_lb0..2 declared earlier for vec bring-up)
 
 // -----------------------------------------------------------------------------
-// XBINFO / CAC_TABLE (current v0.57 bring-up profile)
+// XBINFO / CAC_TABLE (current v0.58 architecture profile)
 //
 // XBINFO provides the base address of the CAC_TABLE for a given target ACR.
 // The full system-call-block mechanism is platform-defined; the staged Sail model
@@ -1113,7 +1113,7 @@ function record_xb_dispatch(acr : bits(4), cid : bits(7), entry_ea : bits(64), w
 }
 
 // -----------------------------------------------------------------------------
-// ILLEGAL_INST / E_INST helpers (current v0.57 bring-up contract)
+// ILLEGAL_INST / E_INST helpers (current v0.58 architecture contract)
 //
 // TRAPNUM major class:
 //   ILLEGAL_INST = 4
@@ -1277,11 +1277,11 @@ function cstate_set_frm(rm : bits(3)) -> unit = {
 }
 
 // -----------------------------------------------------------------------------
-// BLOCK_TRAP / E_BLOCK helpers (v0.57 bring-up contract)
+// BLOCK_TRAP / E_BLOCK helpers (v0.58 architecture contract)
 //
 // Normative sources:
 // - docs/architecture/isa-manual/src/chapters/09_system_and_privilege.adoc
-// - docs/bringup/plan/isa_clarifications.md
+// - docs/architecture/v0.58-architecture-contract.md
 //
 // TRAPNUM major class:
 //   BLOCK_TRAP = 5
@@ -1325,7 +1325,7 @@ function trap_bfetch(fault_va : bits(64)) -> unit = {
 }
 
 // -----------------------------------------------------------------------------
-// Block boundary + BARG state (current v0.57 bring-up contract)
+// Block boundary + BARG state (current v0.58 architecture contract)
 //
 // The Sail model keeps an explicit architectural BARG shadow so block-control
 // instructions have concrete semantics even before fetch/decode is fully wired.
@@ -1587,7 +1587,7 @@ function template_raise_phase1_interrupt(event_kind : bits(8)) -> unit = {
 }
 
 function template_trap_vload_mmu_perm(fault_va : bits(64)) -> unit = {
-  // DATA_PAGE_FAULT load permission syndrome in the active v0.57 profile.
+  // DATA_PAGE_FAULT load permission syndrome in the active v0.58 profile.
   raise_trap(trapnum_data_page_fault(), (sail_zeros(24) + 2), fault_va, 0b0)
 }
 
@@ -1662,7 +1662,7 @@ function template_integrity_assert_fail(reason : bits(8)) -> unit = {
 // Normative sources:
 // - docs/architecture/isa-manual/src/chapters/07_tile_blocks.adoc
 // - docs/architecture/isa-manual/src/chapters/09_system_and_privilege.adoc
-// - docs/bringup/plan/isa_clarifications.md
+// - docs/architecture/v0.58-architecture-contract.md
 //
 // MissingDescFamily IDs (TRAPARG0[7:0]):
 //   1=B.DIM, 2=B.TEXT, 3=B.DATR, 4=B.IOR, 5=B.IOT
@@ -1699,7 +1699,8 @@ function bdesc_mark_iot() -> unit = { bdesc_seen_iot = true }
 // The decoder provides a stable classification string for the staged model.
 function decoded_block_contract_kind() -> bits(4) = {
   // 0=none/unspecified, 1=VEC (VPAR/VSEQ/MPAR/MSEQ), 2=TLSU (TLOAD/TSTORE),
-  // 3=TMOV, 4=CUBE (TMATMUL/TMATMUL.ACC), 5=ACCCVT, 6=HDRDRV (TEPL/FIXP/TLSU-other)
+  // 3=TMOV, 4=CUBE, 6=HDRDRV (TEPL/FIXP/TLSU-other).
+  // Kind 5 is intentionally unassigned in v0.58.
   decoded_block_contract_kind_shadow
 }
 
@@ -1746,13 +1747,6 @@ function bdesc_validate_header_end(src_pc_or_tpc : bits(64)) -> unit = {
       else if not_bool(bdesc_seen_datr) then trap_blockfmt(0x03, 0x00, src_pc_or_tpc)
       else if not_bool(bdesc_seen_iot) then trap_blockfmt(0x05, 0x00, src_pc_or_tpc)
       else if not_bool(bdesc_seen_dim) then trap_blockfmt(0x01, 0x00, src_pc_or_tpc)
-      else ()
-    },
-    // ACCCVT: require DATR + destination IOT; shape is inherited from ACC.
-    0b0101 => {
-      if bdesc_seen_text then bdesc_illegal_combo_or_trap(0x02, src_pc_or_tpc)
-      else if not_bool(bdesc_seen_datr) then trap_blockfmt(0x03, 0x00, src_pc_or_tpc)
-      else if not_bool(bdesc_seen_iot) then trap_blockfmt(0x05, 0x00, src_pc_or_tpc)
       else ()
     },
     // HDRDRV: header-driven engine ops: TEXT illegal; mandatory families are op-specific.

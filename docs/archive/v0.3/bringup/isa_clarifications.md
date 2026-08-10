@@ -1,4 +1,4 @@
-# Archived v0.3 Bring-up Plan: Clarifications
+# Archived v0.3 Bring-up Plan: Clarifications (non-normative)
 
 This page is preserved only as an archive index for retired `v0.3` bring-up
 decisions. It is not normative for the current canonical `v0.57` ISA contract.
@@ -21,9 +21,9 @@ decisions that originally lived here:
 - block-boundary legality and boundary-only control-flow targets,
 - block-format validation and body-fetch fault reporting,
 - `TPC` and body-entry terminology,
-- template replay metadata and `BSTART.TEPL` selector handling,
+- template replay metadata and VEC/SFU TEPL-carrier selector handling,
 - SIMT/vector body termination, `.brg` legality, and RI namespace usage,
-- current `BSTART.TEPL` versus `BSTART.FIXP` separation.
+- current VEC/SFU carrier versus retired `BSTART.FIXP` separation.
 
 ## Historical Status
 

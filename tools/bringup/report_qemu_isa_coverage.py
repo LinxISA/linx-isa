@@ -237,7 +237,6 @@ def _reserved_encoding_families(spec: dict[str, object]) -> list[dict[str, objec
         return []
     families: list[dict[str, object]] = []
     for state_key, family_name, range_key in (
-        ("tma", "TMA", "reserved_function_range"),
         ("tlsu", "TLSU", "reserved_function_ranges"),
     ):
         family = engine_ops.get(state_key)
@@ -1087,7 +1086,7 @@ def _render_markdown(report: dict[str, object], out_path: Path) -> None:
 
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description="Generate ISA-vs-QEMU decoder/source-mapping report")
-    ap.add_argument("--spec", default="isa/v0.57/linxisa-v0.57.json", help="Path to compiled ISA JSON")
+    ap.add_argument("--spec", default="isa/v0.58/linxisa-v0.58.json", help="Path to compiled ISA JSON")
     ap.add_argument(
         "--qemu-root",
         default="emulator/qemu",

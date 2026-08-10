@@ -1,4 +1,4 @@
-// LinxISA Sail common helpers for the canonical v0.57 model.
+// LinxISA Sail common helpers for the canonical v0.58 model.
 
 // Basic bit utilities.
 function zext32(x : bits(64)) -> bits(64) = {
@@ -245,7 +245,7 @@ function ashr32(w : bits(32), sh : int) -> bits(32) = {
 }
 
 // ClockHands queues: depth-4 shift register (t#1..t#4, u#1..u#4).
-// In the current v0.57 bring-up profile, queues are block-local architectural state.
+// In the current v0.58 architecture profile, queues are block-local architectural state.
 
 // Architectural state accessors are defined in state.sail.
 

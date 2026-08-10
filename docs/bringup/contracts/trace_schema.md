@@ -12,8 +12,10 @@ All differential validation paths must emit a common architectural trace schema.
 - `MINOR` is forward-compatible within the same `MAJOR`:
   - consumer `X.Y` accepts producer `X.Z` when `Z >= Y`;
   - producer `X.Z` with `Z < Y` must be rejected.
-- Producers may emit an explicit per-row `schema_version`; if omitted, gate tooling
-  must use the active profile default (`1.0` in the current v0.57 strict baseline).
+- Producers may emit an explicit per-row `schema_version`; if omitted, gate
+  tooling must use the active trace-schema default (`1.0`). Historical v0.57
+  producers remain compatibility inputs and must not redefine the current ISA
+  profile.
 
 ## Mandatory fields per commit/event
 

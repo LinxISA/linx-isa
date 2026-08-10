@@ -65,7 +65,7 @@ The catalog also defines header-driven accelerator families:
 
 * TLSU-family typed forms such as `BSTART.TLOAD`, `BSTART.TSTORE`, and `BSTART.TMOV`,
 * CUBE-family typed forms such as `BSTART.TMATMUL`, `BSTART.TMATMUL.ACC`, and `BSTART.TGEMV`,
-* `BSTART.TEPL`, whose raw header carries `Mode[1:0]` and `Function[4:0]`; the logical selector is
-  `(Mode << 5) | Function`.
+* VEC/SFU headers, assembled canonically as `BSTART.VEC` or `BSTART.SFU`, whose unchanged TEPL carrier holds
+  `Mode[1:0]` and `Function[4:0]`; the logical selector is `(Mode << 5) | Function`.
 
 Selector values that are not explicitly assigned by the v0.58 catalog are reserved and must not acquire ad hoc semantics.

@@ -51,7 +51,7 @@ python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test
 The canonical AVS matrix now covers:
 
 - scalar and vector ISA legality
-- tile and TEPL behavior
+- Tile and TEPL behavior using the v0.57 compatibility vocabulary
 - Linux boot and runtime gates
 - musl and glibc gates
 - maintained workload runners

@@ -1,6 +1,6 @@
-// LinxISA execute semantics for the canonical v0.57 model.
+// LinxISA execute semantics for the canonical v0.58 model.
 
-// This file holds the live execute semantics used by the v0.57 Sail gate.
+// This file holds the live execute semantics used by the v0.58 Sail gate.
 // Coverage is incomplete in some units, but active mnemonics are tracked in
 // semantics_status.json rather than via staged placeholder wording here.
 
@@ -2821,7 +2821,7 @@ function exec_bwe() -> unit = { () }
 function exec_bse() -> unit = { () }
 
 // -----------------------------------------------------------------------------
-// PTO ISA 0.57.1 tile transaction envelope
+// PTO ISA 0.58 tile transaction envelope
 
 function tile_effect_begin(family : bits(2), selector : bits(5)) -> unit = {
   tile_effect_pending = true;
@@ -2859,7 +2859,7 @@ function tile_effect_append_iot(raw : bits(64)) -> unit = {
   bdesc_mark_iot()
 }
 
-function tile_tma_required_sources(selector : bits(5)) -> bits(6) = {
+function tile_tlsu_required_sources(selector : bits(5)) -> bits(6) = {
   if selector == 0b00100 then 0b00_0001       // MGATHER
   else if selector == 0b00110 then 0b00_0010  // MGATHER.MASK
   else if selector == 0b00101 then 0b00_0010  // MSCATTER
@@ -2868,7 +2868,7 @@ function tile_tma_required_sources(selector : bits(5)) -> bits(6) = {
   else 0b00_0000
 }
 
-function tile_tma_produces_output(selector : bits(5)) -> bool = {
+function tile_tlsu_produces_output(selector : bits(5)) -> bool = {
   (selector == 0b00100) | (selector == 0b00110) | (selector == 0b01000)
 }
 
@@ -2914,9 +2914,9 @@ function tile_effect_header_legal() -> bool = {
       bdesc_seen_datr & bdesc_seen_ior & not_bool(bdesc_seen_text) &
       (tile_effect_iot_count == 0b00_0000)
     } else {
-      let required = tile_tma_required_sources(tile_effect_function);
+      let required = tile_tlsu_required_sources(tile_effect_function);
       let output_ok =
-        if tile_tma_produces_output(tile_effect_function) then tile_effect_output_count == 0b00_0001
+        if tile_tlsu_produces_output(tile_effect_function) then tile_effect_output_count == 0b00_0001
         else tile_effect_output_count == 0b00_0000;
       (required != 0b00_0000) & bdesc_seen_datr & bdesc_seen_ior & bdesc_seen_iot &
       not_bool(bdesc_seen_text) & tile_effect_iot_legal & tile_effect_last_seen &
@@ -2924,27 +2924,21 @@ function tile_effect_header_legal() -> bool = {
       ((tile_effect_function != 0b01000) | (bcatr_raw[17] == 0b1))
     }
   } else if tile_effect_family == 0b10 then {
-    if tile_effect_function == 0b01000 then {
-      bdesc_seen_datr & bdesc_seen_iot & not_bool(bdesc_seen_text) & tile_effect_iot_legal &
-      tile_effect_last_seen & not_bool(tile_effect_after_last) & tile_acc_valid &
-      (tile_effect_source_count == 0b00_0000) & (tile_effect_output_count == 0b00_0001)
-    } else {
-      let required = tile_cube_required_sources(tile_effect_function);
-      let mx = tile_cube_is_mx(tile_effect_function);
-      let accumulate = tile_cube_is_accumulate(tile_effect_function);
-      let m = tile_cube_dim(ssr_lb0);
-      let n = tile_cube_dim(ssr_lb1);
-      let k = tile_cube_dim(ssr_lb2);
-      let dtype_ok = if mx then tile_effect_datatype == 0b00001 else tile_numeric_ordinary(tile_effect_datatype);
-      let acc_ok =
-        if accumulate then tile_acc_valid & (tile_acc_rows == m) & (tile_acc_cols == n) &
-          (tile_acc_k == k) & (tile_acc_datatype == (if mx then 0b00001 else tile_effect_datatype))
-        else true;
-      (required != 0b00_0000) & bdesc_seen_datr & bdesc_seen_dim & bdesc_seen_iot &
-      not_bool(bdesc_seen_text) & tile_effect_iot_legal & tile_effect_last_seen &
-      not_bool(tile_effect_after_last) & (tile_effect_source_count == required) &
-      (tile_effect_output_count == 0b00_0000) & dtype_ok & acc_ok
-    }
+    let required = tile_cube_required_sources(tile_effect_function);
+    let mx = tile_cube_is_mx(tile_effect_function);
+    let accumulate = tile_cube_is_accumulate(tile_effect_function);
+    let m = tile_cube_dim(ssr_lb0);
+    let n = tile_cube_dim(ssr_lb1);
+    let k = tile_cube_dim(ssr_lb2);
+    let dtype_ok = if mx then tile_effect_datatype == 0b00001 else tile_numeric_ordinary(tile_effect_datatype);
+    let acc_ok =
+      if accumulate then tile_acc_valid & (tile_acc_rows == m) & (tile_acc_cols == n) &
+        (tile_acc_k == k) & (tile_acc_datatype == (if mx then 0b00001 else tile_effect_datatype))
+      else true;
+    (required != 0b00_0000) & bdesc_seen_datr & bdesc_seen_dim & bdesc_seen_iot &
+    not_bool(bdesc_seen_text) & tile_effect_iot_legal & tile_effect_last_seen &
+    not_bool(tile_effect_after_last) & (tile_effect_source_count == required) &
+    (tile_effect_output_count == 0b00_0000) & dtype_ok & acc_ok
   } else false
 }
 
@@ -2968,33 +2962,28 @@ function tile_effect_publish() -> unit = {
   tile_effect_last_accumulate = accumulate;
   if family == 0b01 then {
     if selector != 0b00011 then tile_effect_memory_seq = tile_effect_memory_seq + 1 else ();
-    if tile_tma_produces_output(selector) then tile_effect_tile_seq = tile_effect_tile_seq + 1 else ()
+    if tile_tlsu_produces_output(selector) then tile_effect_tile_seq = tile_effect_tile_seq + 1 else ()
   } else if family == 0b10 then {
-    if selector == 0b01000 then {
-      tile_effect_tile_seq = tile_effect_tile_seq + 1;
-      tile_acc_valid = false
-    } else {
-      let m = tile_cube_dim(ssr_lb0);
-      let n = tile_cube_dim(ssr_lb1);
-      let k = tile_cube_dim(ssr_lb2);
-      tile_effect_acc_seq = tile_effect_acc_seq + 1;
-      tile_acc_valid = true;
-      tile_acc_datatype = if mx then 0b00001 else tile_effect_datatype;
-      tile_acc_rows = m;
-      tile_acc_cols = n;
-      tile_acc_k = k;
-      if mx then {
-        let groups_i : int = tdiv_int(unsigned(k) + 31, 32);
-        let groups : bits(64) = sail_zeros(64) + groups_i;
-        tile_effect_last_scale_a_rows = m;
-        tile_effect_last_scale_a_cols = groups;
-        tile_effect_last_scale_b_rows = groups;
-        tile_effect_last_scale_b_cols = n;
-        // B.IOT authored source order: A, B, ScaleA, ScaleB, optional Bias.
-        tile_effect_last_scale_a_source = 0b00_0010;
-        tile_effect_last_scale_b_source = 0b00_0011
-      } else ()
-    }
+    let m = tile_cube_dim(ssr_lb0);
+    let n = tile_cube_dim(ssr_lb1);
+    let k = tile_cube_dim(ssr_lb2);
+    tile_effect_acc_seq = tile_effect_acc_seq + 1;
+    tile_acc_valid = true;
+    tile_acc_datatype = if mx then 0b00001 else tile_effect_datatype;
+    tile_acc_rows = m;
+    tile_acc_cols = n;
+    tile_acc_k = k;
+    if mx then {
+      let groups_i : int = tdiv_int(unsigned(k) + 31, 32);
+      let groups : bits(64) = sail_zeros(64) + groups_i;
+      tile_effect_last_scale_a_rows = m;
+      tile_effect_last_scale_a_cols = groups;
+      tile_effect_last_scale_b_rows = groups;
+      tile_effect_last_scale_b_cols = n;
+      // B.IOT authored source order: A, B, ScaleA, ScaleB, optional Bias.
+      tile_effect_last_scale_a_source = 0b00_0010;
+      tile_effect_last_scale_b_source = 0b00_0011
+    } else ()
   } else ();
   tile_effect_pending = false;
   tile_effect_restart_pending = false
@@ -3077,7 +3066,6 @@ function exec_bstart_tstore() -> unit = { exec_bstart() }
 function exec_bstart_tmov() -> unit = { exec_bstart() }
 function exec_bstart_tmatmul() -> unit = { exec_tile_bstart(0b10, 0b00000) }
 function exec_bstart_tmatmul_acc() -> unit = { exec_tile_bstart(0b10, 0b00010) }
-function exec_bstart_acccvt() -> unit = { exec_tile_bstart(0b10, 0b01000) }
 function exec_bstart_mgather() -> unit = { exec_tile_bstart(0b01, 0b00100) }
 function exec_bstart_mgather_cas() -> unit = { exec_tile_bstart(0b01, 0b01000) }
 function exec_bstart_mgather_mask() -> unit = { exec_tile_bstart(0b01, 0b00110) }

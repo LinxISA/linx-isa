@@ -919,7 +919,7 @@ _INSN_PAGE_TEMPLATE = """# {mnemonic}
 ## Assembly Syntax
 
 {assembly_forms}
-
+{assembly_aliases}
 ## Encoding
 
 <div class="enc-diagram">
@@ -978,6 +978,22 @@ def _render_instruction_page(
             seen_asm.add(a)
             asm_list.append(a)
     asm_block = "\n".join(f"- `{a}`" for a in asm_list) if asm_list else "_No assembly forms defined._"
+
+    alias_block = ""
+    aliases = inst.get("accepted_assembly_mnemonics")
+    canonical_by_engine = inst.get("canonical_assembly_by_engine")
+    carrier = inst.get("carrier_mnemonic")
+    if isinstance(aliases, list) and isinstance(canonical_by_engine, dict) and carrier == mnemonic:
+        alias_lines = [
+            "## Canonical Semantic Aliases",
+            "",
+            "- `BSTART.VEC TileOp, DataType` is accepted only when `TileOp` is catalogued for VEC.",
+            "- `BSTART.SFU TileOp, DataType` is accepted only when `TileOp` is catalogued for SFU.",
+            "- `BSTART.TEPL Mode, Function, DataType` remains the raw compatibility spelling.",
+            "- Canonical disassembly emits the VEC or SFU alias selected by the Tile operation catalog.",
+            "",
+        ]
+        alias_block = "\n" + "\n".join(alias_lines)
 
     # One stable asset per form. Duplicate mnemonics must not overwrite one
     # another, so their filenames are based on the catalog form ID.
@@ -1069,6 +1085,7 @@ def _render_instruction_page(
         decode_tag=decode_tag,
         form_count=len(all_forms),
         assembly_forms=asm_block,
+        assembly_aliases=alias_block,
         wavedrom_svg=wavedrom_svg,
         description=desc,
         pseudocode=pseudo_block,

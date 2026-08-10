@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """check_tepl_encoding.py
 
-Verify that TEPL tile opcode encodings are consistent across:
+Verify that the unchanged TEPL binary-carrier selectors are consistent across:
 
-- ISA canonical engine-op catalog (`isa/v0.57/state/engine_ops.json`)
+- ISA canonical engine-op catalog (`isa/v0.58/state/engine_ops.json`)
 - PTO-Kernel constants (include/common/pto_tileop.hpp) if available
 - Optional other consumers (LLVM/QEMU) *if present* in the superproject
 
 Policy:
-- The v0.57 engine-op catalog is treated as the current encoding contract.
+- The v0.58 engine-op catalog is treated as the current encoding contract.
+- VEC and SFU are semantic engines; TEPL is only their Mode/Function carrier.
 - Other sources may omit ops (unimplemented), but MUST NOT disagree on any op they define.
 - Other sources MUST NOT define TEPL ops that are absent from the canonical catalog.
 
@@ -72,13 +73,13 @@ def _load_engine_ops_map(path: Path) -> dict[str, int]:
         name = op.get("name")
         if not isinstance(name, str) or not name.strip():
             raise RuntimeError(f"{path}: tepl.ops[{idx}] missing non-empty name")
-        raw = op.get("tile_opcode")
+        raw = op.get("logical_selector", op.get("tile_opcode"))
         if isinstance(raw, int):
             selector = raw
         elif isinstance(raw, str):
             selector = int(raw.strip(), 0)
         else:
-            raise RuntimeError(f"{path}: tepl.ops[{idx}] missing tile_opcode")
+            raise RuntimeError(f"{path}: tepl.ops[{idx}] missing logical_selector")
         out[name.strip()] = selector
     return out
 
@@ -175,8 +176,8 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--root", default=".", help="repo root")
     ap.add_argument(
         "--engine-ops",
-        default="isa/v0.57/state/engine_ops.json",
-        help="path to current v0.57 TEPL engine-op catalog",
+        default="isa/v0.58/state/engine_ops.json",
+        help="path to the current v0.58 VEC/SFU TEPL-carrier catalog",
     )
     ap.add_argument(
         "--pto-submodule",

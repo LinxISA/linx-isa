@@ -51,7 +51,7 @@ Usage scenarios:
     BSTART.SYS FALL
     ...
 .block2:
-    BSTART.VEC FALL
+    BSTART.VPAR FALL
     ...
 ```
 
@@ -72,7 +72,7 @@ Usage scenarios:
     BSTART.SYS FALL
     ...
 .block2:
-    BSTART.VEC FALL
+    BSTART.VPAR FALL
     ...
 ```
 
@@ -98,7 +98,7 @@ Usage scenarios:
     BSTART.SYS FALL
     ...
 .block2:
-    BSTART.VEC FALL
+    BSTART.VPAR FALL
     ...
 ```
 
@@ -120,7 +120,7 @@ Usage scenarios:
     BSTART.SYS FALL
     ...
 .block2:
-    BSTART.VEC FALL
+    BSTART.VPAR FALL
     ...
 ```
 
@@ -142,7 +142,7 @@ Usage scenarios:
     BSTART.SYS FALL
     ...
 .block2:
-    BSTART.TEPL FALL
+    BSTART.VPAR FALL
     ...
 ```
 

@@ -1,4 +1,4 @@
-// Directed executable checks for the canonical LinxISA v0.57 Sail model.
+// Directed executable checks for the canonical LinxISA v0.58 Sail model.
 
 $include "../model/linxisa.sail"
 
@@ -180,13 +180,13 @@ function main() : unit -> unit = {
   assert(fp64_is_nan(0x7FF8_0000_0000_0001));
   assert(fp64_eq(0x0000_0000_0000_0000, 0x8000_0000_0000_0000));
 
-  // PTO 0.57.1 differential operand maps match the frozen catalog/QEMU
+  // PTO 0.58 differential operand maps match the frozen catalog/QEMU
   // function identities, including implicit ACC and MX scale operands.
-  assert(tile_tma_required_sources(0b00100) == 0b00_0001);
-  assert(tile_tma_required_sources(0b00110) == 0b00_0010);
-  assert(tile_tma_required_sources(0b00101) == 0b00_0010);
-  assert(tile_tma_required_sources(0b00111) == 0b00_0011);
-  assert(tile_tma_required_sources(0b01000) == 0b00_0011);
+  assert(tile_tlsu_required_sources(0b00100) == 0b00_0001);
+  assert(tile_tlsu_required_sources(0b00110) == 0b00_0010);
+  assert(tile_tlsu_required_sources(0b00101) == 0b00_0010);
+  assert(tile_tlsu_required_sources(0b00111) == 0b00_0011);
+  assert(tile_tlsu_required_sources(0b01000) == 0b00_0011);
   assert(tile_cube_required_sources(0b10000) == 0b00_0010);
   assert(tile_cube_required_sources(0b10001) == 0b00_0011);
   assert(tile_cube_required_sources(0b10100) == 0b00_0100);

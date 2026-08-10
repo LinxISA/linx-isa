@@ -33,8 +33,9 @@ TileOp <LB0:arg0, LB1:arg1, LB2:arg2, DataType>, SrcTile0<.reuse>, ..., SrcTile7
 
 一条完整数据搬运块指令块头需要拆分成以下多条指令进行编码，其中包括：
 
-- `BSTART.TEPL TileOp, DataType`，或经过执行单元检查的汇编别名
-  `BSTART.VEC` / `BSTART.SFU`
+- 按操作目录选择 `BSTART.VEC TileOp, DataType` 或
+  `BSTART.SFU TileOp, DataType`；原始兼容写法为
+  `BSTART.TEPL Mode, Function, DataType`
 - [B.DATR](../../header/B.DATR.md) `Layout, PadValue`
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0`
 - [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1`

@@ -1,4 +1,4 @@
-// TEPL-family execution tests: elementwise arithmetic and comparisons.
+// VEC/SFU-engine execution tests. TEPL remains only the binary carrier.
 
 #include "10_tile_test_common.hpp"
 
@@ -41,11 +41,11 @@ static inline uint64_t trapno_trapnum(uint64_t trapno)
     return trapno & 0x3fu;
 }
 
-extern "C" void linx_tepl_reject_texp_fp16_user(void);
-extern "C" void linx_tepl_reject_texp_fp16_resume(void);
-extern "C" void linx_tepl_reject_tlog_bf16_user(void);
-extern "C" void linx_tepl_reject_tlog_bf16_resume(void);
-extern "C" void linx_tepl_reject_acr0_trap_handler(void);
+extern "C" void linx_sfu_reject_texp_fp16_user(void);
+extern "C" void linx_sfu_reject_texp_fp16_resume(void);
+extern "C" void linx_sfu_reject_tlog_bf16_user(void);
+extern "C" void linx_sfu_reject_tlog_bf16_resume(void);
+extern "C" void linx_sfu_reject_acr0_trap_handler(void);
 
 static void run_rejected_profile(void (*user)(void), void (*resume)(void))
 {
@@ -57,7 +57,7 @@ static void run_rejected_profile(void (*user)(void), void (*resume)(void))
     ssrset_uimm(kSsrRejectResume, reinterpret_cast<uint64_t>(resume));
     ssrset_uimm(kSsrEvbaseAcr0,
                 reinterpret_cast<uint64_t>(
-                    &linx_tepl_reject_acr0_trap_handler));
+                    &linx_sfu_reject_acr0_trap_handler));
     user();
 }
 
@@ -81,21 +81,21 @@ static void check_rejected_profile(uint32_t test_id)
 
 } // namespace
 
-extern "C" void run_tile_tepl_reject_tests(void)
+extern "C" void run_tile_sfu_reject_tests(void)
 {
     test_start(0x000A0029u);
-    uart_puts("PTO TEPL rejects FP16 TEXP before queue publish ... ");
+    uart_puts("PTO SFU rejects FP16 TEXP before queue publish ... ");
     init_reject_buffers(0x3c00u);
-    run_rejected_profile(&linx_tepl_reject_texp_fp16_user,
-                         &linx_tepl_reject_texp_fp16_resume);
+    run_rejected_profile(&linx_sfu_reject_texp_fp16_user,
+                         &linx_sfu_reject_texp_fp16_resume);
     check_rejected_profile(0x000A0029u);
     test_pass();
 
     test_start(0x000A002Au);
-    uart_puts("PTO TEPL rejects BF16 TLOG before queue publish ... ");
+    uart_puts("PTO SFU rejects BF16 TLOG before queue publish ... ");
     init_reject_buffers(0x3f80u);
-    run_rejected_profile(&linx_tepl_reject_tlog_bf16_user,
-                         &linx_tepl_reject_tlog_bf16_resume);
+    run_rejected_profile(&linx_sfu_reject_tlog_bf16_user,
+                         &linx_sfu_reject_tlog_bf16_resume);
     check_rejected_profile(0x000A002Au);
     test_pass();
 }
@@ -973,7 +973,7 @@ static uint8_t arithmetic_shift_right_s8(uint8_t value, unsigned shift)
 static void run_signed_narrow_lane_test()
 {
     test_start(0x000A0015);
-    uart_puts("PTO TEPL signed narrow lanes ... ");
+    uart_puts("PTO VEC signed narrow lanes ... ");
 
     alignas(16) static int8_t lhs8[1024];
     alignas(16) static int8_t rhs8[1024];
@@ -1030,7 +1030,7 @@ static void run_signed_narrow_lane_test()
 static void run_float16_lane_test()
 {
     test_start(0x000A0016);
-    uart_puts("PTO TEPL FP16/BF16 softfloat lanes ... ");
+    uart_puts("PTO VEC/SFU FP16/BF16 softfloat lanes ... ");
 
     alignas(16) static uint16_t lhs[1024];
     alignas(16) static uint16_t rhs[1024];
@@ -1318,7 +1318,7 @@ static void run_part_arg_test()
     test_pass();
 }
 
-extern "C" void run_tile_tepl_tests(void)
+extern "C" void run_tile_vec_sfu_tests(void)
 {
     run_tadd_test();
     run_tsub_test();
