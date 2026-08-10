@@ -30,6 +30,7 @@ jobs:
           python3 tools/isa/test_golden_contract.py
           python3 tools/isa/test_fused_call_contract.py
           python3 tools/isa/test_agent_navigation.py
+          python3 tools/isa/test_b_datr_documentation.py
           python3 tools/isa/test_documentation_includes.py
           python3 tools/isa/check_agent_navigation.py --root .
           python3 tools/isa/report_encoding_space.py --check

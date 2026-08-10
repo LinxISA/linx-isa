@@ -128,6 +128,7 @@ def _label(token: str, const: dict | None, width: int) -> str:
     short = {
         "RegDst": "rd", "SrcL": "rs1", "SrcR": "rs2",
         "SrcD": "rs3", "SrcA": "rs3", "SrcRType": "rt",
+        "PadValueOrByteId": "Pad/Byte",
         "shamt": "sh",
     }
     if token in short:
