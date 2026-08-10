@@ -1,22 +1,22 @@
 # ISA vs QEMU Decoder/Source Mapping Snapshot
 
-- Generated (UTC): `2026-08-10 06:00:55Z`
+- Generated (UTC): `2026-08-02 12:51:46Z`
 - Evidence level: `L1`
 - Claim: `decoder_source_mapping`
-- L2 runtime execution: `unavailable`
-- L3 semantic oracle: `unavailable`
-- Limitation: this report does not prove that an instruction executed in QEMU or produced an architecturally correct result.
+- L2 runtime execution: `available`; `60` forms / `60` mnemonics
+- L3 semantic oracle: `available`; `60` forms / `60` mnemonics
+- Limitation: L1 mapping does not imply execution; L2/L3 counts are independently audited per-form evidence and remain partial.
 - Spec unique mnemonics: `728`
-- QEMU unique decode mnemonics (non-internal): `846`
+- QEMU unique decode mnemonics (non-internal): `856`
 - QEMU mapped spec mnemonics: `728`
 - L1 mnemonic mapping: `728/728` (`100.0%`)
-- Spec legal forms: `766`
-- QEMU mapped spec forms: `759`
-- L1 form mapping: `759/766` (`99.09%`)
+- Spec legal forms: `761`
+- QEMU mapped spec forms: `761`
+- L1 form mapping: `761/761` (`100.0%`)
 - Missing spec mnemonics: `0`
-- Missing spec forms: `7`
+- Missing spec forms: `0`
 - Reserved spec forms: `1`
-- Unmapped QEMU mnemonics: `88`
+- Unmapped QEMU mnemonics: `98`
 
 ## L1 Mnemonic Mapping By Prefix
 
@@ -32,7 +32,7 @@
 - `ANDIW`: `1`
 - `ANDW`: `1`
 - `ASSERT`: `1`
-- `B`: `16`
+- `B`: `15`
 - `BC`: `2`
 - `BCNT`: `1`
 - `BIC`: `1`
@@ -45,7 +45,7 @@
 - `BWT`: `1`
 - `BXS`: `1`
 - `BXU`: `1`
-- `C`: `37`
+- `C`: `38`
 - `CASB`: `1`
 - `CASD`: `1`
 - `CASH`: `1`
@@ -201,7 +201,7 @@
 - `ANDIW`: `1`
 - `ANDW`: `1`
 - `ASSERT`: `1`
-- `B`: `21`
+- `B`: `22`
 - `BC`: `2`
 - `BCNT`: `1`
 - `BIC`: `1`
@@ -214,7 +214,7 @@
 - `BWT`: `1`
 - `BXS`: `1`
 - `BXU`: `1`
-- `C`: `38`
+- `C`: `39`
 - `CASB`: `1`
 - `CASD`: `1`
 - `CASH`: `1`
@@ -355,17 +355,16 @@
 
 ## Missing Forms By Prefix
 
-- `B`: `2`
-- `BSTART`: `5`
 
 ## Unmapped QEMU Mnemonics
 
-- `bstart_acccvt`
 - `bstart_tabs`
 - `bstart_tadd`
 - `bstart_tadds`
+- `bstart_talloc`
 - `bstart_tand`
 - `bstart_tands`
+- `bstart_taxpy`
 - `bstart_tci`
 - `bstart_tcmp`
 - `bstart_tcmps`
@@ -385,6 +384,7 @@
 - `bstart_tcolsum`
 - `bstart_tconcat`
 - `bstart_tcvt`
+- `bstart_tdeinterleave`
 - `bstart_tdequant`
 - `bstart_tdiv`
 - `bstart_tdivs`
@@ -392,11 +392,13 @@
 - `bstart_texpands`
 - `bstart_textract`
 - `bstart_tfillpad`
-- `bstart_tfma`
+- `bstart_tfree`
 - `bstart_tgather`
+- `bstart_tgatherb`
 - `bstart_thistogram`
 - `bstart_timg2col`
 - `bstart_tinsert`
+- `bstart_tinterleave`
 - `bstart_tlog`
 - `bstart_tmax`
 - `bstart_tmaxs`
@@ -410,14 +412,20 @@
 - `bstart_tor`
 - `bstart_tors`
 - `bstart_tpartadd`
+- `bstart_tpartargmax`
+- `bstart_tpartargmin`
 - `bstart_tpartmax`
 - `bstart_tpartmin`
 - `bstart_tpartmul`
+- `bstart_tpop`
+- `bstart_tprelu`
+- `bstart_tpush`
 - `bstart_tquant`
 - `bstart_trecip`
 - `bstart_trelu`
 - `bstart_trem`
 - `bstart_trems`
+- `bstart_treshape`
 - `bstart_trowargmax`
 - `bstart_trowargmin`
 - `bstart_trowexpand`
@@ -453,11 +461,3 @@
 
 
 ## Missing Spec Forms (First 200)
-
-- `B.IOT [len=32 mask=0x7e7f match=0x4013]`
-- `B.IOT [len=32 mask=0xfc007e7f match=0x5013]`
-- `BSTART.TMOV [len=32 mask=0x7ffffff match=0x911181]`
-- `BSTART.TMOV [len=32 mask=0x7ffffff match=0xa11181]`
-- `BSTART.TMOV [len=32 mask=0x7ffffff match=0xb11181]`
-- `BSTART.TMOV [len=32 mask=0x7ffffff match=0xc11181]`
-- `BSTART.TSTORE [len=32 mask=0x7ffffff match=0xe11181]`

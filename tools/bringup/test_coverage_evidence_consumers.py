@@ -42,39 +42,18 @@ class CoverageEvidenceConsumerTests(unittest.TestCase):
         self.assertEqual(missing, {"FENCE.D", "FENCE.I"})
         self.assertEqual(extras, {"NCE.D", "NCE.I"})
 
-    def test_checked_in_translation_reports_are_set_coherent(self) -> None:
+    def test_v057_aggregate_reports_are_archived_not_active(self) -> None:
         root = Path(__file__).resolve().parents[2]
-        upstream = json.loads(
-            (root / "docs/bringup/gates/qemu_translation_coverage_latest.json").read_text(
-                encoding="utf-8"
-            )
+        names = (
+            "qemu_translation_coverage_latest.json",
+            "qemu_executable_coverage_latest.json",
+            "isa_llvm_qemu_coverage_latest.json",
+            "isa_48bit_implementation_latest.json",
         )
-        inventory = upstream["covered_objects_by_mnemonic"]
-        self.assertIn("FENCE.D", inventory)
-        self.assertIn("FENCE.I", inventory)
-        self.assertNotIn("NCE.D", inventory)
-        self.assertNotIn("NCE.I", inventory)
-
-        aggregate = json.loads(
-            (root / "docs/bringup/gates/isa_llvm_qemu_coverage_latest.json").read_text(
-                encoding="utf-8"
-            )
-        )
-        translation = aggregate["qemu_translation"]
-        self.assertEqual(
-            translation["coverage_count"] + translation["missing_count"],
-            aggregate["spec_unique_mnemonics"],
-        )
-        self.assertEqual(translation["non_spec_count"], 0)
-
-        qemu_l1 = aggregate["qemu_l1_mapping"]
-        qemu_source = json.loads(
-            (root / "docs/bringup/gates/qemu_isa_coverage_latest.json").read_text(
-                encoding="utf-8"
-            )
-        )
-        self.assertEqual(qemu_l1["coverage_count"], qemu_source["coverage_count"])
-        self.assertEqual(qemu_l1["missing_count"], qemu_source["missing_count"])
+        for name in names:
+            with self.subTest(name=name):
+                self.assertFalse((root / "docs/bringup/gates" / name).exists())
+                self.assertTrue((root / "docs/archive/v0.57/bringup/gates" / name).is_file())
 
     def test_current_bringup_views_match_authoritative_qemu_l1_counts(self) -> None:
         root = Path(__file__).resolve().parents[2]
@@ -84,31 +63,21 @@ class CoverageEvidenceConsumerTests(unittest.TestCase):
         ):
             with self.subTest(document=relative):
                 text = (root / relative).read_text(encoding="utf-8")
-                self.assertIn("624/710", text)
-                self.assertIn("655/746", text)
-                self.assertNotIn("620/711", text)
-                self.assertNotIn("625/747", text)
+                self.assertNotIn("624/710", text)
+                self.assertNotIn("655/746", text)
 
-    def test_checked_in_reports_publish_the_llvm_metric_contract(self) -> None:
+    def test_current_checked_in_report_is_v058_l1_only(self) -> None:
         root = Path(__file__).resolve().parents[2]
-        for relative in (
-            "docs/bringup/gates/isa_llvm_qemu_coverage_latest.json",
-            "docs/bringup/gates/isa_48bit_implementation_latest.json",
-        ):
-            with self.subTest(report=relative):
-                report = json.loads((root / relative).read_text(encoding="utf-8"))
-                llvm = report["llvm"]
-                self.assertEqual(
-                    llvm["claim"],
-                    "observed_disassembly_mnemonic_breadth",
-                )
-                self.assertIn("*.objdump", llvm["metric_scope"])
-                self.assertIn("C-CodeGen coverage", llvm["not_measured"])
-                compiler_out_dir = llvm.get(
-                    "compiler_out_dir",
-                    report.get("compiler_out_dir", ""),
-                )
-                self.assertNotIn("out-linx64", compiler_out_dir)
+        report = json.loads(
+            (root / "docs/bringup/gates/qemu_isa_coverage_latest.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        self.assertIn("isa/v0.58/linxisa-v0.58.json", report["spec_path"])
+        self.assertEqual(report["coverage_count"], 728)
+        self.assertEqual(report["legal_mnemonic_count"], 728)
+        self.assertEqual(report["evidence"]["L2"]["availability"], "unavailable")
+        self.assertEqual(report["evidence"]["L3"]["availability"], "unavailable")
 
     def test_aggregators_default_to_canonical_compiler_run_lane(self) -> None:
         coherence_args = coherence._parse_args([])
@@ -212,21 +181,12 @@ class CoverageEvidenceConsumerTests(unittest.TestCase):
             self.assertIn("does not measure C-CodeGen coverage", text48)
             self.assertIn("does not claim runtime or semantic completeness", text48)
 
-    def test_canonical_gate_uses_l1_wording(self) -> None:
+    def test_canonical_gate_report_does_not_republish_v057_passes(self) -> None:
         root = Path(__file__).resolve().parents[2]
         report = json.loads((root / "docs/bringup/gates/latest.json").read_text(encoding="utf-8"))
-        gates = [gate for run in report["runs"] for gate in run["gates"]]
-        gate = next(
-            item
-            for item in gates
-            if item["gate"] == "Canonical ISA L1 decoder/source mapping breadth"
-        )
-        evidence = " ".join(gate["evidence"]).lower()
-        self.assertIn("l1 decoder/source mapping", evidence)
-        self.assertIn("l2 runtime execution", evidence)
-        self.assertNotIn("implementation evidence", evidence)
+        self.assertEqual(report["runs"], [])
         status = (root / "docs/bringup/GATE_STATUS.md").read_text(encoding="utf-8")
-        self.assertNotIn("Canonical ISA executable semantic breadth", status)
+        self.assertNotIn("v057-release", status)
 
 
 if __name__ == "__main__":

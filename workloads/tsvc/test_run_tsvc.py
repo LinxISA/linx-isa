@@ -35,6 +35,23 @@ class SourcePolicyTests(unittest.TestCase):
         self.assertIn("invalid choice", proc.stderr)
         self.assertNotIn("clang not found", proc.stderr)
 
+    def test_retired_v057_policy_is_rejected(self) -> None:
+        proc = subprocess.run(
+            [sys.executable, str(RUNNER), "--source-policy", "linx-v057"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(proc.returncode, 2)
+        self.assertIn("invalid choice", proc.stderr)
+
+    def test_v058_is_the_default_source_policy(self) -> None:
+        runner = _load_runner_module()
+        parser_source = RUNNER.read_text(encoding="utf-8")
+        self.assertEqual(runner._SOURCE_POLICIES, ("linx-v058", "upstream"))
+        self.assertIn('default="linx-v058"', parser_source)
+
 
 class QemuFinisherTests(unittest.TestCase):
     def test_qemu_runner_enables_and_accepts_canonical_pass_finisher(self) -> None:

@@ -33,7 +33,8 @@
 |编译测试 | `avs/compiler/linx-llvm/tests/` |
 |独立式 libc | `avs/runtime/freestanding/` |
 | Linux libc 源代码 | `lib/glibc/`，`lib/musl/` |
-| PTO 内核 块头s | `workloads/pto_kernels/include/` |
+| Linx TileOP API 头文件 | `tools/Linx-TileOP-API/include/` |
+| PTO kernels 和 SuperNPU 工作负载 | `workloads/pto_kernels/` |
 |装配示例 | `docs/zh/reference/examples/README.md` |
 
 ## CI 验证

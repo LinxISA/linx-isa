@@ -150,18 +150,14 @@ class QemuLocalMemoryDecodeContractTests(unittest.TestCase):
                     r"helper_raise_exception\(env,\s*LINX_EXCP_ILLEGAL_INST\)",
                 )
 
-    def test_new_l1_forms_are_not_claimed_as_executed(self) -> None:
-        target_ids = {
-            insn["id"] for insn in self._target_spec_forms().values()
-        }
-        executable = json.loads(
-            (
-                self.root
-                / "docs/bringup/gates/qemu_executable_coverage_latest.json"
-            ).read_text(encoding="utf-8")
+    def test_current_l1_report_does_not_claim_runtime_execution(self) -> None:
+        report = json.loads(
+            (self.root / "docs/bringup/gates/qemu_isa_coverage_latest.json").read_text(
+                encoding="utf-8"
+            )
         )
-        claimed_ids = {item["form_id"] for item in executable["admitted"]}
-        self.assertTrue(target_ids.isdisjoint(claimed_ids))
+        self.assertEqual(report["evidence"]["L2"]["availability"], "unavailable")
+        self.assertEqual(report["evidence"]["L3"]["availability"], "unavailable")
 
 
 if __name__ == "__main__":

@@ -1,302 +1,106 @@
 {
   "schema_version": 1,
-  "flow_id": "ai-workload-qemu-linxcoremodel-hardbreak",
-  "description": "Fail-fast bring-up flow for promoting PTO and SuperNPUBench AI workloads from source contracts through Linx LLVM, QEMU, and the C++ LinxCoreModel.",
+  "flow_id": "v058-supernpu-qemu-linxcoremodel-hardbreak",
+  "description": "Fail-fast v0.58 flow for the nested SuperNPU corpus through Linx-TileOP-API, LLVM, QEMU, and LinxCoreModel.",
   "artifact_policy": {
     "canonical_root": "workloads/generated",
     "default_subdir": "ai-bringup",
-    "forbidden_roots": [
-      "workloads/generated-*"
-    ],
-    "rule": "AI workload bring-up artifacts must be placed under workloads/generated/<run-id>/ai-bringup/ or a temp directory, never as ad-hoc sibling directories under workloads/."
-  },
-  "tool_defaults": {
-    "qemu": {
-      "override_env": "QEMU",
-      "preferred_local_build": "emulator/qemu/build-linx/qemu-system-linx64",
-      "clean_build_env": "QEMU_CLEAN_OUT_DIR",
-      "legacy_fallback": "emulator/qemu/build/qemu-system-linx64",
-      "runtime_env": {
-        "LINX_VIRT_TEST_FINISHER": "1"
-      },
-      "rule": "Prefer the current in-repo build-linx QEMU binary for local AI bring-up unless QEMU or a matching clean-build marker explicitly selects another binary."
-    },
-    "model": {
-      "model_root": "tools/LinxCoreModel",
-      "binary": "tools/LinxCoreModel/bin/gfsim",
-      "cmake_options": [
-        "-DOPT_LEVEL=O3",
-        "-DDISABLE_DEBUG_SYMBOLS=ON"
-      ],
-      "rule": "Build the final C++ model target as the optimized O3/no-debug bring-up binary before model-smoke and workload execution unless --skip-model-build selects an already-built binary."
-    }
+    "rule": "Artifacts belong under workloads/generated/<run-id>/ai-bringup or a temporary directory."
   },
   "profiles": {
     "smoke": {
-      "description": "Tier-0 proof that source discovery, bounded PTO parity/tile smoke, and minimal SuperNPUBench tileop cases can enter the flow.",
-      "tiers": [
-        0
-      ]
+      "description": "Tier-0 VEC, TLSU, and CUBE SuperNPU smoke cases.",
+      "tiers": [0]
     },
     "pr": {
-      "description": "Fast promotion lane for Tier 0 and Tier 1 AI workload bring-up, including promoted SuperNPUBench tileop API/control smoke cases.",
-      "tiers": [
-        0,
-        1
-      ]
+      "description": "Tier-0 and Tier-1 cases suitable for pull-request validation.",
+      "tiers": [0, 1]
     },
     "nightly": {
-      "description": "Expanded AI workload lane for matrix, memory, reduction, accelerator, and model suites.",
-      "tiers": [
-        0,
-        1,
-        2,
-        3
-      ]
+      "description": "Expanded matrix, memory, reduction, accelerator, and model cases.",
+      "tiers": [0, 1, 2, 3]
     },
     "full": {
-      "description": "Full AI workload matrix. Required final target is all promoted cases passing in C++ LinxCoreModel.",
-      "tiers": [
-        0,
-        1,
-        2,
-        3,
-        4
-      ]
+      "description": "Every active nested SuperNPU case.",
+      "tiers": [0, 1, 2, 3, 4]
     }
   },
   "case_kinds": {
-    "avs_pto": {
-      "description": "AVS direct-boot PTO/tile suites that produce a Linx ELF through avs/qemu/run_tests.py. Tier-0 avs-pto-parity-smoke keeps the tload_store-only handoff proof. Tier-1 avs-pto-parity-prefix-gemm-performance uses deterministic F32/FP16 bit-pattern seeds plus PTO_PARITY_STOP_AFTER_STAGE=PTO_PARITY_STAGE_GEMM_PERFORMANCE to prove the matmul/GEMM prefix through QEMU and gfsim. Tier-1 avs-pto-parity-prefix-flash-attention stops after PTO_PARITY_STAGE_FLASH_ATTENTION and proves the post-GEMM model-green boundary reaches the flash_attention digest. Tier-1 avs-pto-parity-prefix-flash-attention-softmax stops after PTO_PARITY_STAGE_FLASH_ATTENTION_SOFTMAX and uses opt-in PTO_ATTENTION_* plus PTO_FLASH_TILE_* micro-shape flags so the softmax prefix is model-runnable. Tier-1 avs-pto-parity-prefix-flash-attention-softmax-2x uses the same stop point with PTO_ATTENTION_* set to 2 and PTO_FLASH_TILE_* set to 1, proving a larger scalar soft-float softmax prefix through QEMU and plain gfsim -f <elf>. Tier-1 avs-pto-parity-prefix-flash-attention-masked stops after PTO_PARITY_STAGE_FLASH_ATTENTION_MASKED and adds PTO_ATTENTION_MASKED_SMOKE_* micro-shape flags. Tier-1 avs-pto-parity-prefix-fa-performance stops after PTO_PARITY_STAGE_FA_PERFORMANCE and reuses the same 1x attention micro-profile. Tier-1 avs-pto-parity-prefix-mla-attention stops after PTO_PARITY_STAGE_MLA_ATTENTION and reuses that profile. Tier-1 avs-pto-parity-prefix-flash-attention-cube stops after PTO_PARITY_STAGE_FLASH_ATTENTION_CUBE and adds PTO_PARITY_FLASH_CUBE_* plus PTO_FLASH_CUBE_* 1x controls. Tier-1 avs-pto-parity-prefix-flash-attention-vec stops after PTO_PARITY_STAGE_FLASH_ATTENTION_VEC and adds PTO_FLASH_VEC_* 1x controls. Tier-1 avs-pto-parity-prefix-gqa stops after PTO_PARITY_STAGE_GQA, adds matching PTO_PARITY_GQA_* and PTO_GQA_SMOKE_* 1x controls, and is promoted through source, compiler, QEMU, model smoke, and plain gfsim -f <elf> with the gqa digest 0x99D39E00C4C9CE38. Tier-1 avs-pto-parity-prefix-sparse-attention-local stops after PTO_PARITY_STAGE_SPARSE_ATTENTION_LOCAL, adds matching PTO_PARITY_SPARSE_* and PTO_SPARSE_LOCAL_SMOKE_* 1x controls, and is promoted through source, compiler, QEMU, model smoke, and plain gfsim -f <elf> with the sparse_attention_local digest 0x9A43A000C528D955. Tier-1 avs-pto-parity-prefix-rmsnorm stops after PTO_PARITY_STAGE_RMSNORM, adds matching PTO_PARITY_RMS_* and PTO_RMSNORM_SMOKE_* 1x controls, and is promoted through source, compiler, QEMU, model smoke, and plain gfsim -f <elf> with the rmsnorm digest 0x9AA9A100C57F8E3A and pass finisher. The Tier-1 avs-pto-parity row is a QEMU parity maturity target and is intentionally not model-eligible in PR; the mirrored Tier-4 avs-pto-parity-full-model row owns final full-row LinxCoreModel closure. Current QEMU-passing full-row evidence reaches flash_attention_softmax and times out in flash_attention_demo_f32 at BROB BPC 0x18348 inside scalar soft-float normalization, so model timeout/crash evidence beyond the micro-profiled prefixes stays model-owned unless static legality evidence proves otherwise; prior tanh/softmax BFU local-pipe, softmax_inplace RAS assertion, and RMSNorm UART handoff failures were model-owned."
-    },
-    "pto_kernel": {
-      "description": "Cataloged PTO kernel sources. Most entries validate source and compile/static contracts only; explicitly promoted final-green direct-boot smoke ELF cases include Tier-1 pto-kernel-tload_store, pto-kernel-gemm, pto-kernel-gemm_basic, pto-kernel-gemm_demo, pto-kernel-gemm_performance, pto-kernel-gemm_reuse_a_fp16, pto-kernel-gemm_reuse_b_fp16, pto-kernel-gemm_reuse_ab_fp16, pto-kernel-mamulb, pto-kernel-tmatmul_acc, pto-kernel-relu_fp32, and pto-kernel-add_custom, plus Tier-2 pto-kernel-flatten_fp32, pto-kernel-reshape_fp32, pto-kernel-squeeze_fp32, pto-kernel-unsqueeze_fp32, pto-kernel-concat_fp32, pto-kernel-split_fp32, pto-kernel-stack_fp32, pto-kernel-permute_nhwc_nchw_fp32, pto-kernel-transpose_large_fp32, pto-kernel-slice_fp32, pto-kernel-gather_fp32, pto-kernel-scatter_fp32, pto-kernel-where_fp32, pto-kernel-argmax_fp32, pto-kernel-unique_i32, pto-kernel-hash_table_insert_fp32, pto-kernel-hash_table_lookup_fp32, and pto-kernel-unsorted_segment_sum_fp32. Float add_custom and unsorted_segment_sum use harness-local freestanding __addsf3 helpers scoped to positive integer-valued smoke inputs seeded by the oracle; they are not general compiler-rt replacements. The add_custom oracle uses an exact small-value f32 bit table for the current smoke range to avoid harness-only model bit-scan timeouts; keep that table local to add_custom unless gemm_basic and gemm_demo are rerun after any shared-harness change. The gemm_basic/gemm_demo/gemm_performance smokes are float bit-pattern copy-oracles for PTO_QEMU_SMOKE branches, not full float TMATMUL/TCVT/TMULS coverage; gemm_performance keeps repeat_tiles=3 and verifies the final repeat with a precomputed expected-bit table. The FP16 reuse smokes use harness-local positive-integer __mulsf3/__addsf3 shims and require --model-timeout 600 for current final-green AI flow evidence."
-    },
     "supernpu": {
-      "description": "SuperNPUBench Makefile cases compiled with PLAT=linx, per-case OBJ_ROOT under the run artifact tree, and the in-repo Linx LLVM toolchain."
+      "description": "Concrete compile.all cases under workloads/pto_kernels/benchmarks/supernpu, compiled with the pinned Linx-TileOP-API and Linx LLVM."
     }
   },
   "tiers": [
-    {
-      "id": 0,
-      "name": "smoke",
-      "description": "Tiny known-good Linx AVS smoke, bounded PTO parity tload_store smoke, tile smoke, and minimal SuperNPUBench tileop cases."
-    },
-    {
-      "id": 1,
-      "name": "kernel-pr",
-      "description": "Standalone PTO catalog smoke harnesses, PTO kernel catalog compile/static checks, AVS PTO parity model-prefix coverage, the full AVS PTO QEMU parity row, and promoted SuperNPUBench tileop API/control smoke cases."
-    },
-    {
-      "id": 2,
-      "name": "ai-kernel-domains",
-      "description": "Matrix, reduction, memory, and accelerator cases with digest/trace capture when available."
-    },
-    {
-      "id": 3,
-      "name": "model-workloads",
-      "description": "DeepSeek/model-oriented cases and larger shapes suitable for nightly runs."
-    },
-    {
-      "id": 4,
-      "name": "full-matrix",
-      "description": "Full PTO and SuperNPUBench matrix for final LinxCoreModel maturity closure, including avs-pto-parity-full-model as the full AVS parity model target."
-    }
+    {"id": 0, "name": "smoke", "description": "Minimal VEC, TLSU, and CUBE source/compiler path."},
+    {"id": 1, "name": "pr", "description": "Promoted TileOP API and control cases."},
+    {"id": 2, "name": "expanded", "description": "Matrix, memory, reduction, and accelerator cases."},
+    {"id": 3, "name": "model", "description": "DeepSeek and model-oriented cases."},
+    {"id": 4, "name": "full", "description": "Remaining active cases."}
   ],
   "stages": [
     {
       "id": "source-contract",
-      "profiles": [
-        "smoke",
-        "pr",
-        "nightly",
-        "full"
-      ],
+      "profiles": ["smoke", "pr", "nightly", "full"],
       "owner": "benchmark",
       "hard_break": true,
-      "why": "Stop before compiler or model work if PTO catalogs, SuperNPUBench manifests, source paths, or normalized case records are invalid.",
-      "promotes": "valid cases with source hashes and reproducible build metadata"
+      "why": "Reject missing, legacy, or non-concrete nested SuperNPU manifests before compilation."
     },
     {
       "id": "compiler-contract",
-      "profiles": [
-        "smoke",
-        "pr",
-        "nightly",
-        "full"
-      ],
+      "profiles": ["smoke", "pr", "nightly", "full"],
       "owner": "compiler",
       "hard_break": true,
-      "why": "Stop before QEMU if the in-repo Linx LLVM toolchain cannot compile, link, or statically inspect the selected cases.",
-      "promotes": "Linx ELF for executable cases, standalone PTO harness cases, and assembly/object/static reports for non-executable PTO kernel cases"
+      "why": "Require the pinned v0.58 Linx-TileOP-API and LLVM to produce a fresh Linx ELF."
     },
     {
       "id": "qemu-execution",
-      "profiles": [
-        "smoke",
-        "pr",
-        "nightly",
-        "full"
-      ],
+      "profiles": ["smoke", "pr", "nightly", "full"],
       "owner": "emulator",
       "hard_break": true,
-      "why": "Stop before model execution if QEMU cannot run the legal compiler-produced Linx artifact.",
-      "promotes": "QEMU-passing Linx ELFs with log, optional trace, and digest evidence"
+      "why": "Require an explicit QEMU terminal oracle before model promotion."
     },
     {
       "id": "model-build-smoke",
-      "profiles": [
-        "smoke",
-        "pr",
-        "nightly",
-        "full"
-      ],
+      "profiles": ["smoke", "pr", "nightly", "full"],
       "owner": "model",
       "hard_break": true,
-      "why": "Stop before model workload execution if the C++ LinxCoreModel cannot build or run a known generated smoke ELF within the model runtime timeout.",
-      "promotes": "fresh gfsim binary plus generated model-smoke source, linker script, ELF, and bounded smoke transcript"
+      "why": "Require a fresh LinxCoreModel build and known-good smoke ELF."
     },
     {
       "id": "linxcoremodel-execution",
-      "profiles": [
-        "smoke",
-        "pr",
-        "nightly",
-        "full"
-      ],
+      "profiles": ["smoke", "pr", "nightly", "full"],
       "owner": "model",
       "hard_break": true,
-      "why": "Final execution target: run only QEMU-passing ELFs through tools/LinxCoreModel/bin/gfsim.",
-      "promotes": "model-passing cases or model-owned fix packets with stop reason, log, optional trace, digest evidence, finisher/assertion markers, and latest BROB head progress"
+      "why": "Run only QEMU-passing ELFs in LinxCoreModel."
     },
     {
       "id": "differential-triage",
-      "profiles": [
-        "smoke",
-        "pr",
-        "nightly",
-        "full"
-      ],
+      "profiles": ["smoke", "pr", "nightly", "full"],
       "owner": "integration",
-      "hard_break": false,
-      "why": "Compare QEMU and model evidence, then assign first-failure owners using the stage ownership map.",
-      "promotes": "owner-classified failures and green final cases"
+      "hard_break": true,
+      "why": "Compare QEMU and model evidence without transferring a pass between implementations."
     },
     {
       "id": "fix-packets",
-      "profiles": [
-        "smoke",
-        "pr",
-        "nightly",
-        "full"
-      ],
+      "profiles": ["smoke", "pr", "nightly", "full"],
       "owner": "integration",
       "hard_break": false,
-      "why": "Emit bounded fix packets for benchmark, compiler, emulator, model, and docs-skills agents.",
-      "promotes": "per-failure reproduction packets with artifact links and expected next boundary"
+      "why": "Publish bounded failure packets for the first failing owner."
     },
     {
       "id": "skill-doc-evolution",
-      "profiles": [
-        "smoke",
-        "pr",
-        "nightly",
-        "full"
-      ],
-      "owner": "docs-skills",
+      "profiles": ["smoke", "pr", "nightly", "full"],
+      "owner": "integration",
       "hard_break": false,
-      "why": "Close every run with a skill-evolve update/no-update decision and document reusable flow changes.",
-      "promotes": "skill-evolve closeout line and documentation delta summary"
+      "why": "Record whether reusable workflow guidance changed."
     }
   ],
-  "owner_map": {
-    "source-contract": "benchmark",
-    "compiler-contract": "compiler",
-    "qemu-execution": "emulator",
-    "model-build-smoke": "model",
-    "linxcoremodel-execution": "model",
-    "differential-triage": "integration",
-    "fix-packets": "integration",
-    "skill-doc-evolution": "docs-skills"
-  },
-  "owner_decision_rules": {
-    "case_selection": {
-      "contains_match": "--case <text> selects cases whose id, suite, or kind contains <text>.",
-      "exact_match": "--case =<text> selects only cases whose id, suite, or kind equals <text>; quote the argument in zsh shells."
-    },
-    "supernpu_source_selection": {
-      "generic_testcase_rule": "When a SuperNPUBench compile.all row uses a generic TESTCASE such as matmul, resolve concrete source files from TYPE before TESTCASE and preserve actual path casing in source manifests.",
-      "compile_all_manifest_rule": "SuperNPUBench compile.all rows consumed by the AI flow must be concrete make commands with expanded values; shell-loop variables such as ${num_col} or ${debug} are benchmark/source-contract failures.",
-      "control_data_object_rule": "SuperNPUBench kernel/control data-object cases must build generated .o files under the redirected OBJ_ROOT and use explicit generated-object targets so Make does not rebuild .s files with a host/default assembler.",
-      "hashtable_lookup_simt_direct_smoke": "The promoted model-green Tier-1 control smokes are hashtable_lookup_simt with kNum=16, LINX_HT_CAPACITY=2048, LINX_HT_DIRECT=1, and FOR_GFSIM. Keep the LINX_HT_SCAN=1 linear-scan fallback and the no-scan MurmurHash3/probe path; the hash/probe case is the regression for model SRLW/SRLIW low32, 5-bit shift, sign-extended result semantics. Keep kNum=6144 SIMT rows and SIMD NUM_COL=256/512/1024 rows in Tier 2 until their large/debug source contracts are adapted for Linx direct boot.",
-      "matmul_e4m3_linx_smoke": "SuperNPUBench MatMul_e4m3 keeps its original FP8 e4m3 conversion, TileLeft/TileRight inputs, TileAcc output, and vector-kernel conversion contract for non-Linx builds, but the Linx direct-boot path is a source-local 4x4 int64 MATMUL smoke until boxed, ACC, and FP8 runtime support exists. Keep this smoke in both tileop_api and other/tileop_api manifests instead of collapsing the case into MatMul.",
-      "tier1_supernpu_boundary": "Tier 1 SuperNPUBench contains tileop_api, other/tileop_api, and the two kNum=16 kernel/control smokes. Keep other/tileop_test and non-control kernel suites in Tier 2 until their larger shape/source contracts are individually promoted; keep kernel/fusion* rows in Tier 3.",
-      "example": "kernel/gemm/matmul TESTCASE=matmul TYPE=HIF4_HIF4 resolves src/HiF4_HiF4.cpp, not src/matmul.cpp or a case-mismatched path."
-    },
-    "supernpu_compiler_contract": [
-      {
-        "owner": "benchmark",
-        "evidence": "SuperNPUBench Linx tile API implementation is not available",
-        "markers": [
-          "use of undeclared identifier '<TOKEN>_Impl'"
-        ]
-      },
-      {
-        "owner": "benchmark",
-        "evidence": "SuperNPUBench source uses unsupported Linx tile runtime contract",
-        "markers": [
-          "unknown type name '__vbuf__'",
-          "use of undeclared identifier 'blkv_get_'",
-          "invalid output constraint '=Tr'",
-          "invalid input constraint 'Tr'",
-          "Linx smoke TCOPYIN supports only unboxed tiles",
-          "Linx scalar MATMUL supports only unboxed layouts",
-          "Linx scalar MATMUL does not support ACC tile operands",
-          "TADD not support Boxed Layout!"
-        ]
-      },
-      {
-        "owner": "benchmark",
-        "evidence": "SuperNPUBench source is not adapted to the Linx direct-boot runtime",
-        "markers": [
-          "undefined symbol: malloc",
-          "undefined symbol: free",
-          "undefined symbol: exit",
-          "undefined symbol: memcpy",
-          "undefined symbol: __divsf3"
-        ]
-      },
-      {
-        "owner": "benchmark",
-        "evidence": "SuperNPUBench source/toolchain manifest mismatch",
-        "markers": [
-          "unknown target triple 'linx64v5'",
-          "fatal error: 'benchmark.h' file not found"
-        ],
-        "note": "Apply this rule even when make exits successfully but the expected ELF is missing."
-      }
-    ]
-  },
-  "final_target": {
-    "model_root": "tools/LinxCoreModel",
-    "binary": "tools/LinxCoreModel/bin/gfsim",
-    "command": "tools/LinxCoreModel/bin/gfsim -f <linx.elf>",
-    "artifact": "Linx ELF"
-  },
-  "model_diagnostics": {
-    "source": "tools/LinxCoreModel/bin/gfsim stdout/stderr log",
-    "report_fields": [
-      "finisher_value",
-      "finisher_status",
-      "assertion",
-      "uart_count",
-      "uart_tail",
-      "last_brob_bpc",
-      "last_retired_blocks",
-      "last_brob_head",
-      "last_brob_bpc_disasm",
-      "last_brob_bpc_window"
-    ],
-    "rule": "When gfsim fails or times out, report.json and fix packets should include the parsed terminal marker, UART breadcrumb tail, or latest BROB head progress if the log provides it. If the latest BROB BPC is known and llvm-objdump is available, also emit a focused disassembly window around that BPC."
+  "v058_contract": {
+    "engines": ["VEC", "TLSU", "CUBE", "SFU"],
+    "tepl": "unchanged VEC/SFU Mode/Function encoding carrier; not an engine",
+    "tileop_api": "tools/Linx-TileOP-API",
+    "workload_root": "workloads/pto_kernels/benchmarks/supernpu",
+    "archived_runtime_avs": "avs/archive/v0.57/qemu",
+    "runtime_rebuild_issue": "https://github.com/LinxISA/linx-isa/issues/169"
   }
 }

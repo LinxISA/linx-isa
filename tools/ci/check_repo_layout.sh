@@ -113,9 +113,9 @@ expected_submodules=(
   "rtl/LinxCore"
   "skills/linx-skills"
   "tools/LinxCoreModel"
+  "tools/Linx-TileOP-API"
   "tools/model"
   "tools/pyCircuit"
-  "workloads/SuperNPUBench"
   "workloads/pto_kernels"
 )
 
@@ -216,3 +216,5 @@ if [[ "$fail" -ne 0 ]]; then
 fi
 
 echo "OK: repository layout policy passed"
+
+python3 tools/ci/check_component_lock.py --root .

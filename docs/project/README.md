@@ -33,7 +33,8 @@ This workspace follows a strict navigation contract. See [navigation.md](navigat
 | Compile tests | `avs/compiler/linx-llvm/tests/` |
 | Freestanding libc | `avs/runtime/freestanding/` |
 | Linux libc sources | `lib/glibc/`, `lib/musl/` |
-| PTO kernel headers | `workloads/pto_kernels/include/` |
+| Linx TileOP API headers | `tools/Linx-TileOP-API/include/` |
+| PTO kernels and SuperNPU workloads | `workloads/pto_kernels/` |
 | Assembly examples | `docs/reference/examples/README.md` |
 
 ## CI Validation

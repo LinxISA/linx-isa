@@ -2,11 +2,12 @@
   "canonical_specialization_forms": [],
   "capabilities": [
     "decoder_source_to_isa_mnemonic_mapping",
-    "decoder_mask_to_isa_form_matching"
+    "decoder_mask_to_isa_form_matching",
+    "audited_per_form_runtime_evidence_ingestion",
+    "audited_per_form_semantic_oracle_ingestion"
   ],
   "claim": "decoder_source_mapping",
   "constraint_union_forms": [
-    "C.B.DIMI [len=16 mask=0x3f match=0x3c]",
     "C.BSTART.FP [len=16 mask=0xc7ff match=0x80]",
     "C.BSTART.STD [len=16 mask=0xc7ff match=0x0]"
   ],
@@ -16,34 +17,37 @@
     "L1": {
       "availability": "available",
       "claim": "decoder_source_mapping",
-      "form_count": 759,
+      "form_count": 761,
       "mnemonic_count": 728
     },
     "L2": {
-      "availability": "unavailable",
+      "availability": "available",
       "claim": "runtime_execution",
-      "form_count": null,
-      "mnemonic_count": null,
-      "reason": "runtime_execution_evidence_not_ingested"
+      "form_count": 60,
+      "mnemonic_count": 60,
+      "qemu_sha": "cfc253e844f4b0d017b2190a025c4375771f899a",
+      "source": "/private/tmp/linx-isa-v0571/docs/bringup/gates/qemu_executable_coverage_latest.json"
     },
     "L3": {
-      "availability": "unavailable",
+      "availability": "available",
       "claim": "semantic_oracle",
-      "form_count": null,
-      "mnemonic_count": null,
-      "reason": "semantic_oracle_evidence_not_ingested"
+      "form_count": 60,
+      "mnemonic_count": 60,
+      "qemu_sha": "cfc253e844f4b0d017b2190a025c4375771f899a",
+      "source": "/private/tmp/linx-isa-v0571/docs/bringup/gates/qemu_executable_coverage_latest.json"
     }
   },
   "evidence_level": "L1",
-  "form_coverage_count": 759,
-  "form_coverage_ratio_percent": 99.09,
-  "form_missing_count": 7,
-  "generated_at_utc": "2026-08-10 06:00:55Z",
-  "legal_form_count": 766,
+  "form_coverage_count": 761,
+  "form_coverage_ratio_percent": 100.0,
+  "form_missing_count": 0,
+  "generated_at_utc": "2026-08-02 12:51:46Z",
+  "legal_form_count": 761,
   "legal_mnemonic_count": 728,
   "limitations": [
-    "no_runtime_execution_evidence",
-    "no_semantic_oracle_evidence"
+    "runtime_execution_evidence_is_partial",
+    "semantic_oracle_evidence_is_partial",
+    "l2_l3_counts_do_not_extend_the_l1_mapping_claim"
   ],
   "mapped_by_prefix": {
     "ACRC": 1,
@@ -58,7 +62,7 @@
     "ANDIW": 1,
     "ANDW": 1,
     "ASSERT": 1,
-    "B": 16,
+    "B": 15,
     "BC": 2,
     "BCNT": 1,
     "BIC": 1,
@@ -71,7 +75,7 @@
     "BWT": 1,
     "BXS": 1,
     "BXU": 1,
-    "C": 37,
+    "C": 38,
     "CASB": 1,
     "CASD": 1,
     "CASH": 1,
@@ -223,7 +227,7 @@
     "ANDIW": 1,
     "ANDW": 1,
     "ASSERT": 1,
-    "B": 21,
+    "B": 22,
     "BC": 2,
     "BCNT": 1,
     "BIC": 1,
@@ -236,7 +240,7 @@
     "BWT": 1,
     "BXS": 1,
     "BXU": 1,
-    "C": 38,
+    "C": 39,
     "CASB": 1,
     "CASD": 1,
     "CASH": 1,
@@ -448,9 +452,6 @@
     "b_ior": [
       "B.IOR"
     ],
-    "b_ios": [
-      "B.IOS"
-    ],
     "b_iot": [
       "B.IOT"
     ],
@@ -490,6 +491,9 @@
     "bse": [
       "BSE"
     ],
+    "bstart_acccvt": [
+      "BSTART.ACCCVT"
+    ],
     "bstart_call": [
       "BSTART CALL",
       "BSTART.STD"
@@ -525,9 +529,6 @@
     ],
     "bstart_fp_ret": [
       "BSTART.FP"
-    ],
-    "bstart_gmov": [
-      "BSTART.GMOV"
     ],
     "bstart_icall": [
       "BSTART",
@@ -576,7 +577,8 @@
       "BSTART.TLOAD",
       "BSTART.TSTORE",
       "BSTART.TMATMUL",
-      "BSTART.TMATMUL.ACC"
+      "BSTART.TMATMUL.ACC",
+      "BSTART.ACCCVT"
     ],
     "bstart_tgemv": [
       "BSTART.TGEMV"
@@ -658,6 +660,9 @@
     ],
     "c_and": [
       "C.AND"
+    ],
+    "c_b_dim": [
+      "C.B.DIM"
     ],
     "c_b_dimi": [
       "C.B.DIMI"
@@ -2688,40 +2693,29 @@
   },
   "missing_by_prefix": {},
   "missing_count": 0,
-  "missing_forms_by_prefix": {
-    "B": 2,
-    "BSTART": 5
-  },
-  "missing_spec_forms": [
-    "B.IOT [len=32 mask=0x7e7f match=0x4013]",
-    "B.IOT [len=32 mask=0xfc007e7f match=0x5013]",
-    "BSTART.TMOV [len=32 mask=0x7ffffff match=0x911181]",
-    "BSTART.TMOV [len=32 mask=0x7ffffff match=0xa11181]",
-    "BSTART.TMOV [len=32 mask=0x7ffffff match=0xb11181]",
-    "BSTART.TMOV [len=32 mask=0x7ffffff match=0xc11181]",
-    "BSTART.TSTORE [len=32 mask=0x7ffffff match=0xe11181]"
-  ],
+  "missing_forms_by_prefix": {},
+  "missing_spec_forms": [],
   "missing_spec_mnemonics": [],
   "qemu_manual_translate_mnemonics": [
     "C.SETRET"
   ],
-  "qemu_mapped_spec_forms": 759,
+  "qemu_mapped_spec_forms": 761,
   "qemu_mapped_spec_mnemonics": 728,
-  "qemu_meta_mnemonics": 845,
-  "qemu_meta_path": "${QEMU_ROOT}/target/linx/linx_opcode_meta_gen.h",
-  "qemu_root": "${QEMU_ROOT}",
+  "qemu_meta_mnemonics": 855,
+  "qemu_meta_path": "/private/tmp/linx-isa-v0571/emulator/qemu/target/linx/linx_opcode_meta_gen.h",
+  "qemu_root": "/private/tmp/linx-isa-v0571/emulator/qemu",
   "qemu_source_kind": "decode",
-  "qemu_unique_forms": 862,
-  "qemu_unique_mnemonics": 846,
+  "qemu_unique_forms": 872,
+  "qemu_unique_mnemonics": 856,
   "reserved_encoding_families": [
     {
       "behavior": "illegal_instruction",
-      "family": "TLSU",
+      "family": "TMA",
       "reserved_range": [
-        15,
+        9,
         31
       ],
-      "reserved_value_count": 17,
+      "reserved_value_count": 23,
       "selector_field": "Function"
     }
   ],
@@ -2732,16 +2726,17 @@
     "ok": true
   },
   "schema_version": "qemu-isa-coverage-v3",
-  "spec_path": "${LINXISA_ROOT}/isa/v0.58/linxisa-v0.58.json",
-  "spec_total_forms": 766,
+  "spec_path": "/private/tmp/linx-isa-v0571/isa/v0.57/linxisa-v0.57.json",
+  "spec_total_forms": 761,
   "spec_unique_mnemonics": 728,
   "unmapped_qemu_mnemonics": [
-    "bstart_acccvt",
     "bstart_tabs",
     "bstart_tadd",
     "bstart_tadds",
+    "bstart_talloc",
     "bstart_tand",
     "bstart_tands",
+    "bstart_taxpy",
     "bstart_tci",
     "bstart_tcmp",
     "bstart_tcmps",
@@ -2761,6 +2756,7 @@
     "bstart_tcolsum",
     "bstart_tconcat",
     "bstart_tcvt",
+    "bstart_tdeinterleave",
     "bstart_tdequant",
     "bstart_tdiv",
     "bstart_tdivs",
@@ -2768,11 +2764,13 @@
     "bstart_texpands",
     "bstart_textract",
     "bstart_tfillpad",
-    "bstart_tfma",
+    "bstart_tfree",
     "bstart_tgather",
+    "bstart_tgatherb",
     "bstart_thistogram",
     "bstart_timg2col",
     "bstart_tinsert",
+    "bstart_tinterleave",
     "bstart_tlog",
     "bstart_tmax",
     "bstart_tmaxs",
@@ -2786,14 +2784,20 @@
     "bstart_tor",
     "bstart_tors",
     "bstart_tpartadd",
+    "bstart_tpartargmax",
+    "bstart_tpartargmin",
     "bstart_tpartmax",
     "bstart_tpartmin",
     "bstart_tpartmul",
+    "bstart_tpop",
+    "bstart_tprelu",
+    "bstart_tpush",
     "bstart_tquant",
     "bstart_trecip",
     "bstart_trelu",
     "bstart_trem",
     "bstart_trems",
+    "bstart_treshape",
     "bstart_trowargmax",
     "bstart_trowargmin",
     "bstart_trowexpand",

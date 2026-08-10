@@ -106,10 +106,7 @@ def _check_retired_surfaces(root: Path, errors: list[str]) -> None:
     if duplicate_uops.exists():
         _error(errors, "duplicate documentation uop mirror exists; use isa/v0.57/uop_classification_v0.57")
 
-    for rel in (
-        Path("docs/bringup/gates/qemu_isa_coverage_latest.json"),
-        Path("docs/bringup/gates/qemu_translation_coverage_latest.json"),
-    ):
+    for rel in (Path("docs/bringup/gates/qemu_isa_coverage_latest.json"),):
         path = root / rel
         try:
             report = json.loads(path.read_text(encoding="utf-8"))

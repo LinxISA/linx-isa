@@ -298,52 +298,61 @@ class AiWorkloadFlowTests(unittest.TestCase):
             "skill-evolve: no-update classifier-only evidence",
         )
 
-    def test_pto_tload_store_catalog_case_has_standalone_harness(self) -> None:
-        cases = run_ai_workload_flow.discover_cases(run_ai_workload_flow.repo_root())
-        case = next(case for case in cases if case.id == "pto-kernel-tload_store")
+    def test_v058_supernpu_smoke_comes_from_nested_pto_kernels(self) -> None:
+        root = run_ai_workload_flow.repo_root()
+        cases = run_ai_workload_flow.discover_cases(root)
+        expected = {
+            "supernpu-microbenchmark-vector-tadd_fp32_16x16",
+            "supernpu-microbenchmark-memory-tload_fp32_16x16",
+            "supernpu-microbenchmark-cube-tmatmul_fp16_64x64x64",
+        }
+        discovered = {case.id for case in cases if case.tier == 0 and case.kind == "supernpu"}
+        self.assertTrue(expected <= discovered, discovered)
+        for case in cases:
+            if case.kind != "supernpu":
+                continue
+            self.assertIn("workloads/pto_kernels/benchmarks/supernpu", case.workdir.as_posix())
+            self.assertNotIn("status/legacy", case.workdir.as_posix())
 
-        self.assertEqual(case.kind, "pto_kernel")
-        self.assertTrue(case.produces_elf)
-        self.assertTrue(case.model_eligible)
-        self.assertEqual(case.metadata["standalone_harness"], "tload_store_i32")
-        self.assertIn("-DPTO_QEMU_SMOKE=1", case.metadata["compile_defines"])
-
-    def test_avs_full_parity_splits_qemu_and_model_closure(self) -> None:
-        cases = run_ai_workload_flow.discover_cases(run_ai_workload_flow.repo_root())
-        qemu_case = next(case for case in cases if case.id == "avs-pto-parity")
-        model_case = next(case for case in cases if case.id == "avs-pto-parity-full-model")
-
-        self.assertEqual(qemu_case.tier, 1)
-        self.assertFalse(qemu_case.model_eligible)
-        self.assertEqual(model_case.tier, 4)
-        self.assertTrue(model_case.model_eligible)
+    def test_supernpu_tiers_reject_retired_manifest_layouts(self) -> None:
         self.assertEqual(
-            qemu_case.metadata["avs_extra_cflags"],
-            model_case.metadata["avs_extra_cflags"],
+            run_ai_workload_flow.supernpu_tier(
+                "microbenchmark/vector", {"TESTCASE": "tadd_fp32_16x16"}
+            ),
+            0,
         )
+        self.assertEqual(
+            run_ai_workload_flow.supernpu_tier(
+                "one-level/kernel/deepseek", {"TESTCASE": "attention"}
+            ),
+            3,
+        )
+        with self.assertRaises(ValueError):
+            run_ai_workload_flow.supernpu_tier(
+                "tileop_api", {"TESTCASE": "retired-layout"}
+            )
 
-    def test_avs_softmax_2x_prefix_case_is_model_eligible(self) -> None:
+    def test_removed_pto_kernel_catalog_does_not_publish_stale_parity_cases(self) -> None:
         cases = run_ai_workload_flow.discover_cases(run_ai_workload_flow.repo_root())
-        case = next(
-            case
-            for case in cases
-            if case.id == "avs-pto-parity-prefix-flash-attention-softmax-2x"
-        )
+        self.assertFalse(any(case.kind == "pto_kernel" for case in cases))
+        retired = {"tile", "pto_parity", "deepseek_tilekernels"}
+        self.assertTrue(retired.isdisjoint(case.suite for case in cases))
 
-        self.assertEqual(case.tier, 1)
-        self.assertTrue(case.model_eligible)
-        self.assertTrue(case.produces_elf)
-        self.assertIn("-DPTO_ATTENTION_SMOKE_SEQ=2", case.metadata["avs_extra_cflags"])
-        self.assertIn("-DPTO_ATTENTION_LARGE_SMOKE_SEQ=2", case.metadata["avs_extra_cflags"])
-        self.assertIn("-DPTO_FLASH_TILE_M=1", case.metadata["avs_extra_cflags"])
-        self.assertIn(
-            "-DPTO_PARITY_STOP_AFTER_STAGE=PTO_PARITY_STAGE_FLASH_ATTENTION_SOFTMAX",
-            case.metadata["avs_extra_cflags"],
+    def test_supernpu_make_command_pins_tileop_api_root(self) -> None:
+        case = self.case("supernpu-microbenchmark-vector-tadd_fp32_16x16")
+        case.metadata["make_vars"] = {"TESTCASE": "tadd_fp32_16x16"}
+        command = run_ai_workload_flow.supernpu_make_command(
+            case,
+            {"clang": "/toolchain/bin/clang"},
+            tileop_api_root=Path("/repo/tools/Linx-TileOP-API"),
+            obj_root=Path("/tmp/out"),
         )
+        self.assertIn("LINX_TILEOP_API_ROOT=/repo/tools/Linx-TileOP-API", command)
+        self.assertIn("OBJ_ROOT=/tmp/out", command)
 
     def test_model_smoke_is_not_applicable_without_model_cases(self) -> None:
-        cases = run_ai_workload_flow.discover_cases(run_ai_workload_flow.repo_root())
-        qemu_case = next(case for case in cases if case.id == "avs-pto-parity")
+        qemu_case = self.case("non-model-case")
+        qemu_case.model_eligible = False
         with tempfile.TemporaryDirectory() as td:
             state = run_ai_workload_flow.CaseState(
                 case=qemu_case,
@@ -370,119 +379,6 @@ class AiWorkloadFlowTests(unittest.TestCase):
             state.stages["model-build-smoke"]["evidence"],
             "no selected model-eligible executable cases",
         )
-
-    def test_pto_gemm_catalog_case_has_standalone_harness(self) -> None:
-        cases = run_ai_workload_flow.discover_cases(run_ai_workload_flow.repo_root())
-        case = next(case for case in cases if case.id == "pto-kernel-gemm")
-
-        self.assertEqual(case.kind, "pto_kernel")
-        self.assertTrue(case.produces_elf)
-        self.assertTrue(case.model_eligible)
-        self.assertEqual(case.metadata["standalone_harness"], "gemm_i32")
-        self.assertIn("-DPTO_QEMU_SMOKE=1", case.metadata["compile_defines"])
-
-    def test_pto_integer_matmul_catalog_cases_have_standalone_harnesses(self) -> None:
-        cases = run_ai_workload_flow.discover_cases(run_ai_workload_flow.repo_root())
-        expected = {
-            "pto-kernel-mamulb": "mamulb_i32",
-            "pto-kernel-tmatmul_acc": "tmatmul_acc_i32",
-        }
-
-        for case_id, harness in expected.items():
-            with self.subTest(case_id=case_id):
-                case = next(case for case in cases if case.id == case_id)
-                self.assertEqual(case.kind, "pto_kernel")
-                self.assertTrue(case.produces_elf)
-                self.assertTrue(case.model_eligible)
-                self.assertEqual(case.metadata["standalone_harness"], harness)
-                self.assertIn("-DPTO_QEMU_SMOKE=1", case.metadata["compile_defines"])
-
-    def test_pto_float_elementwise_catalog_cases_have_standalone_harnesses(self) -> None:
-        cases = run_ai_workload_flow.discover_cases(run_ai_workload_flow.repo_root())
-        expected = {
-            "pto-kernel-relu_fp32": "relu_f32",
-        }
-
-        for case_id, harness in expected.items():
-            with self.subTest(case_id=case_id):
-                case = next(case for case in cases if case.id == case_id)
-                self.assertEqual(case.kind, "pto_kernel")
-                self.assertTrue(case.produces_elf)
-                self.assertTrue(case.model_eligible)
-                self.assertEqual(case.metadata["standalone_harness"], harness)
-                self.assertIn("-DPTO_QEMU_SMOKE=1", case.metadata["compile_defines"])
-
-    def test_pto_layout_copy_catalog_cases_have_standalone_harnesses(self) -> None:
-        cases = run_ai_workload_flow.discover_cases(run_ai_workload_flow.repo_root())
-        expected = {
-            "pto-kernel-flatten_fp32": "flatten_f32",
-            "pto-kernel-reshape_fp32": "reshape_f32",
-            "pto-kernel-squeeze_fp32": "squeeze_f32",
-            "pto-kernel-unsqueeze_fp32": "unsqueeze_f32",
-        }
-
-        for case_id, harness in expected.items():
-            with self.subTest(case_id=case_id):
-                case = next(case for case in cases if case.id == case_id)
-                self.assertEqual(case.kind, "pto_kernel")
-                self.assertTrue(case.produces_elf)
-                self.assertTrue(case.model_eligible)
-                self.assertEqual(case.metadata["standalone_harness"], harness)
-                self.assertIn("-DPTO_QEMU_SMOKE=1", case.metadata["compile_defines"])
-
-    def test_pto_indexing_layout_catalog_cases_have_standalone_harnesses(self) -> None:
-        cases = run_ai_workload_flow.discover_cases(run_ai_workload_flow.repo_root())
-        expected = {
-            "pto-kernel-argmax_fp32": "argmax_f32",
-            "pto-kernel-concat_fp32": "concat_f32",
-            "pto-kernel-gather_fp32": "gather_f32",
-            "pto-kernel-hash_table_insert_fp32": "hash_table_insert_f32",
-            "pto-kernel-hash_table_lookup_fp32": "hash_table_lookup_f32",
-            "pto-kernel-permute_nhwc_nchw_fp32": "permute_nhwc_nchw_f32",
-            "pto-kernel-scatter_fp32": "scatter_f32",
-            "pto-kernel-slice_fp32": "slice_f32",
-            "pto-kernel-split_fp32": "split_f32",
-            "pto-kernel-stack_fp32": "stack_f32",
-            "pto-kernel-transpose_large_fp32": "transpose_large_f32",
-            "pto-kernel-unique_i32": "unique_i32",
-            "pto-kernel-unsorted_segment_sum_fp32": "unsorted_segment_sum_f32",
-            "pto-kernel-where_fp32": "where_f32",
-        }
-
-        for case_id, harness in expected.items():
-            with self.subTest(case_id=case_id):
-                case = next(case for case in cases if case.id == case_id)
-                self.assertEqual(case.kind, "pto_kernel")
-                self.assertTrue(case.produces_elf)
-                self.assertTrue(case.model_eligible)
-                self.assertEqual(case.metadata["standalone_harness"], harness)
-                self.assertIn("-DPTO_QEMU_SMOKE=1", case.metadata["compile_defines"])
-
-    def test_other_pto_catalog_cases_remain_compile_static(self) -> None:
-        cases = run_ai_workload_flow.discover_cases(run_ai_workload_flow.repo_root())
-        case = next(case for case in cases if case.id == "pto-kernel-gelu_fp32")
-
-        self.assertEqual(case.kind, "pto_kernel")
-        self.assertFalse(case.produces_elf)
-        self.assertFalse(case.model_eligible)
-        self.assertNotIn("standalone_harness", case.metadata)
-
-    def test_pto_fp16_reuse_cases_have_standalone_harnesses(self) -> None:
-        cases = run_ai_workload_flow.discover_cases(run_ai_workload_flow.repo_root())
-        expected = {
-            "pto-kernel-gemm_reuse_a_fp16": "gemm_reuse_a_f16",
-            "pto-kernel-gemm_reuse_b_fp16": "gemm_reuse_b_f16",
-            "pto-kernel-gemm_reuse_ab_fp16": "gemm_reuse_ab_f16",
-        }
-
-        for case_id, harness in expected.items():
-            with self.subTest(case_id=case_id):
-                case = next(case for case in cases if case.id == case_id)
-                self.assertEqual(case.kind, "pto_kernel")
-                self.assertTrue(case.produces_elf)
-                self.assertTrue(case.model_eligible)
-                self.assertEqual(case.metadata["standalone_harness"], harness)
-                self.assertIn("-DPTO_QEMU_SMOKE=1", case.metadata["compile_defines"])
 
     def case(self, case_id: str) -> run_ai_workload_flow.Case:
         return run_ai_workload_flow.Case(

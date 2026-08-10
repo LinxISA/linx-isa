@@ -12,13 +12,10 @@ import run_tests
 
 
 class StructuredEvidenceParsingTests(unittest.TestCase):
-    def test_selected_pto_kernel_names_are_current_and_catalogued(self) -> None:
-        selected = set(run_tests.PTO_TILE_KERNEL_NAMES) | set(
-            run_tests.PTO_PARITY_KERNEL_NAMES
-        )
-        self.assertNotIn("mamulb", selected)
-        catalog = run_tests._load_pto_kernel_catalog()
-        self.assertEqual(sorted(selected - set(catalog)), [])
+    def test_v058_runner_does_not_publish_retired_pto_kernel_suites(self) -> None:
+        retired = {"tile", "pto_parity", "deepseek_tilekernels"}
+        self.assertTrue(retired.isdisjoint(run_tests.SUITES), run_tests.SUITES)
+        self.assertTrue(retired.isdisjoint(run_tests.EXPERIMENTAL_SUITES))
 
     def test_every_declared_suite_source_exists(self) -> None:
         missing = {

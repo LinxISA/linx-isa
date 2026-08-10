@@ -43,7 +43,8 @@ Submodule map:
 - `tools/pyCircuit` -> `LinxISA/pyCircuit`
 - `lib/glibc` -> `LinxISA/glibc`
 - `lib/musl` -> `LinxISA/musl`
-- `workloads/pto_kernels` -> `LinxISA/PTO-Kernel`
+- `tools/Linx-TileOP-API` -> `LinxISA/Linx-TileOP-API` (`linx` branch)
+- `workloads/pto_kernels` -> `PTO-ISA/pto-kernels`
 
 ## 3. Validate Baseline
 
@@ -105,7 +106,8 @@ Do not use an unpinned remote update in an agent workflow.
 - AVS compile tests: `avs/compiler/linx-llvm/tests/`
 - Freestanding libc support used by AVS: `avs/runtime/freestanding/`
 - Linux libc source forks: `lib/glibc/`, `lib/musl/`
-- PTO kernel headers: `workloads/pto_kernels/include/`
+- Linx TileOP API headers: `tools/Linx-TileOP-API/include/`
+- PTO kernels and SuperNPU workloads: `workloads/pto_kernels/`
 - Assembly sample pack: `docs/reference/examples/README.md`
 
 ## 6. Coordination References

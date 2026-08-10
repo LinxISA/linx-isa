@@ -1,4 +1,4 @@
-# 灵犀指令集 Navigation Guide (v0.5)
+# 灵犀指令集 Navigation Guide (v0.58)
 
 这是贡献者和代理的规范导航合约。
 
@@ -11,8 +11,8 @@
 - `emulator/` — 上游 QEMU 子模块 (`emulator/qemu`)
 - `kernel/` — 上游 Linux 子模块 (`kernel/linux`)
 - `rtl/` — 灵犀Core 子模块 (`rtl/LinxCore`) + rtl 注释
-- `tools/` — 生成器、回归、pyCircuit 子模块
-- `workloads/` — 基准运行程序 + 生成的工件 + PTO 内核子模块
+- `tools/` — 生成器、回归、模型和 Linx TileOP API 子模块
+- `workloads/` — 基准运行程序 + 生成的工件 + PTO kernels 子模块
 - `isa/` — ISA 事实来源和生成的目录
 - `docs/` — 架构、启动、迁移、项目参考
 - `lib/` — glibc/musl fork submodules
@@ -28,8 +28,9 @@
 - AVS/测试使用的独立 libc 支持：`avs/runtime/freestanding/`
 - Linux libc 源代码分支：`lib/glibc/`、`lib/musl/`
 - PTO装配叉：`compiler/ptoas/`
-- PTO 内核/工具/块头（子模块）：`workloads/pto_kernels/`
-- PTO 块头 包括根：`workloads/pto_kernels/include/`
+- PTO kernels 和维护中的 SuperNPU 工作负载（子模块）：`workloads/pto_kernels/`
+- SuperNPU 活跃根目录：`workloads/pto_kernels/benchmarks/supernpu/`
+- Linx v0.58 TileOP API include 根目录：`tools/Linx-TileOP-API/include/`
 - LLVM opcode sync helper: `tools/isa/sync_generated_opcodes.sh`
 
 ## 基准位置
@@ -53,6 +54,7 @@
 - `tools/glibc/`
 - `workloads/benchmarks/`
 - `workloads/examples/`
+- `workloads/SuperNPUBench/`
 - `spec/`
 
 CI防护装置：`tools/ci/check_repo_layout.sh`
@@ -63,7 +65,8 @@ CI防护装置：`tools/ci/check_repo_layout.sh`
 
 1. 首先合并到上游生态系统仓库中。
 2. 更新此工作区中的子模块 SHA。
-3. 保持 `.gitmodules` URL 与 灵犀指令集 org forks/repos 保持一致。
+3. 保持 `.gitmodules` URL 与仓库所属组织以及
+   `docs/bringup/component-lock.v0.58.json` 一致。
 4. 验证：
 
 ```bash
