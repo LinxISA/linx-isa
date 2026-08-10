@@ -1,4 +1,4 @@
-# LinxISA v0.3 — Sail formalization review log
+# LinxISA v0.3 — Sail formalization review log (archived)
 
 This log captures *review decisions* and open questions made while implementing the v0.3 Sail model.
 

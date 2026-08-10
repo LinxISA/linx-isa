@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import re
 import sys
 from pathlib import Path
 
@@ -12,7 +13,9 @@ ENTRYPOINTS = (
     Path("README.md"),
     Path("AGENTS.md"),
     Path("docs/README.md"),
+    Path("docs/bringup/README.md"),
     Path("docs/bringup/GETTING_STARTED.md"),
+    Path("docs/zh/bringup/README.md"),
     Path("docs/zh/bringup/GETTING_STARTED.md"),
     Path("docs/zh/index.md"),
     Path("docs/bringup/phases/02_isa_spec.md"),
@@ -42,6 +45,14 @@ HISTORICAL_ROUTES = (
 )
 UNPINNED_SUBMODULE_ROUTE = "git submodule update --remote"
 UNPINNED_ROUTE_ROOTS = (Path("docs/project"), Path("docs/zh/project"))
+STALE_ACTIVE_PROFILE_PATTERNS = (
+    re.compile(r"\b(?:active|current|canonical|normative)\s+[`*_]*v0\.57\b", re.IGNORECASE),
+    re.compile(
+        r"\bv0\.57\b[^\n]{0,80}\b(?:active|current|canonical|normative|source of truth|authority)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(r"(?:当前|现行|规范|权威)\s*[`*_]*v0\.57\b"),
+)
 
 
 def validate(root: Path) -> list[str]:
@@ -56,6 +67,10 @@ def validate(root: Path) -> list[str]:
             errors.append(
                 f"active agent entrypoint does not name {CURRENT_CONTRACT}: {relative}"
             )
+        if relative in ENTRYPOINTS and any(
+            pattern.search(text) for pattern in STALE_ACTIVE_PROFILE_PATTERNS
+        ):
+            errors.append(f"stale active profile in agent entrypoint: {relative}: v0.57")
         for route in HISTORICAL_ROUTES:
             if route in text:
                 errors.append(f"historical route in active agent entrypoint: {relative}: {route}")

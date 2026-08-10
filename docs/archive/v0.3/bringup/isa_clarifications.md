@@ -1,4 +1,4 @@
-# Archived v0.3 Bring-up Plan: Clarifications
+# Archived v0.3 Bring-up Plan: Clarifications (non-normative)
 
 This page is preserved only as an archive index for retired `v0.3` bring-up
 decisions. It is not normative for the current canonical `v0.57` ISA contract.

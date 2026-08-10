@@ -138,6 +138,19 @@ assert "tile_tlsu_produces_output" in sail_execute
 assert "tile_tma_" not in sail_execute
 assert "PTO ISA 0.57" not in sail_execute
 assert "PTO ISA 0.57" not in sail_state
+for sail_path in (
+    ROOT / "isa/sail/model/execute/execute.sail",
+    ROOT / "isa/sail/model/lib/common.sail",
+    ROOT / "isa/sail/model/linxisa.sail",
+    ROOT / "isa/sail/model/state/state.sail",
+    ROOT / "isa/sail/tests/directed.sail",
+):
+    sail_text = sail_path.read_text(encoding="utf-8")
+    assert not re.search(
+        r"\b(?:canonical|current|active|live)(?:[^\n]{0,80})\bv0\.57\b",
+        sail_text,
+        re.IGNORECASE,
+    ), sail_path
 assert "exec_bstart_acccvt" not in sail_execute
 publish_body = sail_execute[
     sail_execute.index("function tile_effect_publish") : sail_execute.index("function tile_effect_finalize")

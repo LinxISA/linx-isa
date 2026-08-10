@@ -20,7 +20,7 @@ Comparable to Arm/x86/RISC-V maturity means:
 ## Current Strengths (Evidence in Repo)
 
 - Golden opcode database and generated JSON catalog:
-  - `isa/v0.57/` -> `isa/v0.57/linxisa-v0.57.json`
+  - `isa/v0.58/` -> `isa/v0.58/linxisa-v0.58.json`
 - Encoding conflict checks and hole reporting:
   - `python3 tools/isa/report_encoding_space.py --check`
   - Report: `docs/reference/encoding_space_report.md`
@@ -51,7 +51,7 @@ Comparable to Arm/x86/RISC-V maturity means:
 ### SIMT
 
 - ISA:
-  - canonical `v0.57` grouped divergence contract is documented, including
+  - canonical `v0.58` grouped divergence contract is documented, including
     explicit EXEC-mask (`p`) control
 - Compiler:
   - only the documented bring-up subset is closed

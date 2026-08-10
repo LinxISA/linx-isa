@@ -1,8 +1,9 @@
-# LinxISA Bring-up (Public v0.57)
+# LinxISA Bring-up (Architecture v0.58)
 
-This directory tracks the active `v0.57` architecture and implementation
-alignment. v0.57 is a strict delta on the immutable v0.57 baseline, and AVS
-is the only live public bring-up contract.
+This directory tracks implementation alignment to the current machine-readable
+architecture authority, `isa/v0.58/linxisa-v0.58.json`. The checked-in AVS
+matrix remains a `v0.57` compatibility baseline until a fresh v0.58 consumer
+matrix is published. Its historical PASS results do not transfer to v0.58.
 
 ## Start Here
 
@@ -15,7 +16,7 @@ is the only live public bring-up contract.
 
 - Architecture contract: `docs/architecture/v0.58-architecture-contract.md`
 - AVS contract page: `docs/bringup/AVS_CONTRACT.md`
-- canonical AVS matrix: `avs/linx_avs_v1_test_matrix.yaml`
+- v0.57 compatibility AVS matrix: `avs/linx_avs_v1_test_matrix.yaml`
 - contract gate: `python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml`
 - closure gate: `python3 tools/bringup/check_avs_profile_closure.py --matrix avs/linx_avs_v1_test_matrix.yaml --status avs/linx_avs_v1_test_matrix_status.json --tier ${LINX_GATE_TIER:-pr}`
 

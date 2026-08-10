@@ -38,6 +38,6 @@ treated as archive-only history, not as a normative source.
 
 ## Historical Note
 
-This file stays in `docs/bringup/plan/` only to preserve planning traceability for
-older bring-up discussions. It should not be cited as evidence for current
-release-strict `v0.57` closure.
+This file stays under `docs/archive/v0.3/` only to preserve planning
+traceability for older bring-up discussions. It must not be cited as evidence
+for current release-strict closure.

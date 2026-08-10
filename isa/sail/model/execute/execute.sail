@@ -1,6 +1,6 @@
-// LinxISA execute semantics for the canonical v0.57 model.
+// LinxISA execute semantics for the canonical v0.58 model.
 
-// This file holds the live execute semantics used by the v0.57 Sail gate.
+// This file holds the live execute semantics used by the v0.58 Sail gate.
 // Coverage is incomplete in some units, but active mnemonics are tracked in
 // semantics_status.json rather than via staged placeholder wording here.
 

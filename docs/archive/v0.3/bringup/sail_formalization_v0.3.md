@@ -32,7 +32,7 @@ Proposed iteration loop (one PR per small slice):
    - `python3 tools/isa/sail_coverage.py ... --check`
    - `python3 tools/isa/validate_spec.py --profile v0.3`
    - `python3 tools/isa/build_golden.py --profile v0.3 --check`
-5) Historical reviewer decisions were recorded in: `docs/bringup/archive/v0.3/sail_review_log_v0.3.md`
+5) Historical reviewer decisions were recorded in: `docs/archive/v0.3/bringup/sail_review_log_v0.3.md`
 
 Initial prioritization (can be adjusted):
 

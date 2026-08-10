@@ -89,7 +89,7 @@ See [bringup/PROGRESS.md](bringup/PROGRESS.md) for current gate status.
 
 ### Architecture Contract
 
-The active v0.57 contract defines the complete mandatory architecture:
+The active v0.58 contract defines the complete mandatory architecture:
 
 1. Block-structured execution is mandatory
 2. Control-flow targets MUST resolve to legal block boundaries

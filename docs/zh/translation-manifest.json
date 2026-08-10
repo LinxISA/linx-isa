@@ -73,6 +73,26 @@
       "source_sha256": "8561b8343b97a587f094feb2437cddba0943a143b76b696420fa6b514adad294",
       "translation_sha256": "3abb3572d1d4f7b7f39e7df3c8dd0c4e455ad36e9d99ed621cab0c82e5fb3596"
     },
+    "archive/v0.3/bringup/README.md": {
+      "source_sha256": "abe815ba7cf8173c27249f0e919dee967db52fb4d96398fb1f000b4db81fbd99",
+      "translation_sha256": "f2a387fa7b6e5df64405030268acb185e12833954cd66d385fa4d1ee389db066"
+    },
+    "archive/v0.3/bringup/arch.md": {
+      "source_sha256": "1ec8b367a1785629861b7ccb795213bf5c3176c58b7459aa04115ad9f97d1ccf",
+      "translation_sha256": "6cf515b7009ac34930873cc7914b53e02e1e2206c2ba10c7597aaad73cf8f88d"
+    },
+    "archive/v0.3/bringup/isa_clarifications.md": {
+      "source_sha256": "c10b03f71bb4d3127c0feed146f491e43f7e8109ca9df2c4fef9bed0d1cf4cba",
+      "translation_sha256": "a8d7dceeef8f8de9cfbada9f3db7861be22457d65cb7ea0434100ed0d38523bb"
+    },
+    "archive/v0.3/bringup/sail_formalization_v0.3.md": {
+      "source_sha256": "08e4b09e900765011bf9b5b1265fed991bc5f857a925dc5a986c33180e02fc32",
+      "translation_sha256": "04ff0aa13c47ac464cfa6bc4442560f10ca317c81d298c31c9b7966dbda4695d"
+    },
+    "archive/v0.3/bringup/sail_review_log_v0.3.md": {
+      "source_sha256": "fa14224a2f0d3b60f5d74cb7562a663076cf83cdb54a2a86761796ad71e516ad",
+      "translation_sha256": "1dcd7ce6dadf02cb823f7794a3e1a51e554a16334da442131ace8ffd2210e704"
+    },
     "archive/v0.57/README.md": {
       "source_sha256": "07bbae8acc23a8ebf7b7a6542d403b77e770c6e17b0c53e48a66b6dc807116b6",
       "translation_sha256": "cfe45d4283fee6d07a3d14265492b1ed4cb7a5b7cedf3ff86e80b148e21131ac"
@@ -202,8 +222,8 @@
       "translation_sha256": "49bf8a79840e716e5573f5a06a7b60199cb6a508b4ed9faad42f567fdca95f5c"
     },
     "bringup/ISA_GAP_ANALYSIS.md": {
-      "source_sha256": "9113a7a5f44aa52c2b11a6e78c7392f06bc38a086cebdafa443729c5e6b67760",
-      "translation_sha256": "8e93f1128532c1e5840333b448923f4b996c38d6a3cb450419458a512e928c24"
+      "source_sha256": "b4e8e45bddec4af9a278de28cd311457a64c3535142cef11773f780dcc9cfff1",
+      "translation_sha256": "5a692ea0722bee15f1cd5b23986ba5108a8f79684257cbc1540f6f9f7fb86db3"
     },
     "bringup/LINX_ASM_ABI_UNWIND_CONTEXT_CHECKLIST.md": {
       "source_sha256": "66def0d1977314fbc481f7125ca69801c3c9fc9678328e1a89a60e76eafac738",
@@ -215,19 +235,19 @@
     },
     "bringup/PROGRESS.md": {
       "source_sha256": "fabf6054c9282e2a2e103d3698dfd2a0c2d987d4333fd23ef9b8b948fff1e21d",
-      "translation_sha256": "cecca74a5d5e77bf69b2e3e2d87ee27f8eb936bdb3201287b01572eca8198640"
+      "translation_sha256": "ecd53723311b114c4f2e49029f6ec3667bc39a016fc6ca6a1ffa6c8254f8380a"
     },
     "bringup/README.md": {
-      "source_sha256": "ade7a508b1b3940e04321b772b9a7cc1f0586032d8efe4e1257995b28732adcf",
-      "translation_sha256": "36f84a3a0687c301de3c8c7dbe412e1310898b5ae2f50a6e206ee57326f27516"
+      "source_sha256": "188f15ad05d90b65e3bf6d9c4fdf17c53b9e3f35f75b9f7ca0dee376303773f8",
+      "translation_sha256": "e332ae660467016c632fe6bbaeae2d402f5c0912f6988eefe3924ffc0b69f009"
     },
     "bringup/SIMT_COMPILER_MATURITY_PLAN.md": {
-      "source_sha256": "2b64602843929fc9ad9f83539831db1e433fca3628018544c044a7727caba605",
-      "translation_sha256": "06ab5e97d855182a8909d8dbb126d6025cfc4414d41e5d380a577e42c8bd2f3b"
+      "source_sha256": "02471b8b1fdacd53ae28dd52f1d454128eb2d95e80dc2ae6f92bd841962663c4",
+      "translation_sha256": "89e250961925305b62728f74a710614374edd13795c99a10b6d76a7a3236b248"
     },
     "bringup/SIMT_COMPILER_SUPPORTED_SUBSET.md": {
-      "source_sha256": "05b0b41423985abba6972b0028dd09884bd9251b918b6843df313e1a615c8543",
-      "translation_sha256": "a22cd6f6c152a83fc0450aed1643e89be37c01d732108d324b86134701d91855"
+      "source_sha256": "d703d77f29f66bf46f49aed3b0737bd1c8c2ef1fd86b75f308621105541cb86e",
+      "translation_sha256": "57ae07edbc2c2f4c2b62d9db3c5cd21975cf6e5f3089c3eafbd8409daf45772d"
     },
     "bringup/SUPERPROJECT_BRINGUP_CHECKLIST.md": {
       "source_sha256": "202d34ec646e68bcc089bbf8f3a332cb67ace9383cd449fc768eb10aadf50dad",
@@ -302,8 +322,8 @@
       "translation_sha256": "1ad46ffb3c8f60c8503003ba16fac0c60db3638e85e5f74daad2d713e185bb9b"
     },
     "bringup/contracts/trace_schema.md": {
-      "source_sha256": "7788336d7cb7b19029ac2e52a46ff7ea2e5a7b7e7060663f95b38a9ce156637e",
-      "translation_sha256": "661807c8fe839be781a2c8e46b9f8040fafd227cff6844e25e97d248c140ec09"
+      "source_sha256": "0b7da4d8bfe581049da511066e3e16c3eebe24713ea31a60e81923883f56411c",
+      "translation_sha256": "8a5ba84e690cdd7561f596534a41ba3ee4dcbfcd41e9f863aefba2f25d13c137"
     },
     "bringup/gates/qemu_isa_coverage_latest.md": {
       "source_sha256": "0d8f817fe59dabf172feb963c58f84016cd66d71001403bd6a0f3cb8ade059c6",
@@ -353,17 +373,9 @@
       "source_sha256": "eb4bb478f6c062382872ced69fe45ffa76101d0eb8d9cbc8fd8f68c3a889745e",
       "translation_sha256": "c8c0fe1924a755a3d5fc232553eb7e955735730a4e52a0244c6e321606a6b68d"
     },
-    "bringup/plan/arch.md": {
-      "source_sha256": "7e35f3ffc4356037dd6c64bf1bf4bf104caadbfbeb556213920a569b2d33b05a",
-      "translation_sha256": "76388a1a2276d834bad1b10aaf718d230b9c729819a0127041a505f357cc5642"
-    },
-    "bringup/plan/isa_clarifications.md": {
-      "source_sha256": "19f687a1d3f2f1646892a030eb4ce044cb58b5d88521be2f4edb85821b40305b",
-      "translation_sha256": "2502a60f5d660176654f3cc89e34fab62c36388c0454cd42cec05d1c2a5fafec"
-    },
     "bringup/rendering_vulkan_bringup.md": {
-      "source_sha256": "2ab8f074d96a026533d7c2d8892a46ebdb8ac882cbe72d0cfcbd463e87ffd754",
-      "translation_sha256": "5c294c552e1351fb55e7322b742faf92178237ff6af6ae57230547c9d9bb7730"
+      "source_sha256": "c70a1b20c63803bc608f8d65d0347bcf0a099b4766a0990b1a4273fe87c05937",
+      "translation_sha256": "2f303af5afa33250472660406489f4e2a769f5de3c6184ba2c11bfa5b3f9aeaa"
     },
     "bringup/spec_linxcore_xcheck.md": {
       "source_sha256": "2bea91c19b56c7d05c2c61e642eadd9b1a5a1342670424a0a126a5dadbd2c143",
@@ -8310,8 +8322,6 @@
   "translation_docs_root": "docs/zh",
   "translation_only_pages": [
     "archive/gate-status/README.md",
-    "bringup/plan/sail_formalization_v0.3.md",
-    "bringup/plan/sail_review_log_v0.3.md",
     "isa/groups/block_argument.md",
     "isa/groups/block_control_attribute.md",
     "isa/groups/block_data_attribute.md",
