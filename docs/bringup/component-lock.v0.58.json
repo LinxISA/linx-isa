@@ -21,7 +21,7 @@
       "path": "emulator/qemu",
       "url": "https://github.com/LinxISA/qemu.git",
       "branch": "master",
-      "commit": "f3b8bb4c960b1bc826e99001cf0a35987d20e537",
+      "commit": "c667cdec93ba4ee48bf09c2649c16949e219c95c",
       "role": "v0.58 emulator"
     },
     {
