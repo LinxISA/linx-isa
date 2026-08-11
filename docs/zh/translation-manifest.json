@@ -1197,6 +1197,10 @@
       "source_sha256": "7abc6c4a6fb9013f9f5a006a937f03913d660d7acde16970558e1bb142e94533",
       "translation_sha256": "97b60b526ca1af1e386a768c3fe5d92660ccaeab069c6921bbaa88558777bbbf"
     },
+    "isa/header/B.IOS.md": {
+      "source_sha256": "af68300e086331c7535e17793746e3cf622dd4620189715ef25906d4d9679cc0",
+      "translation_sha256": "235b1f169e9981399b96c45d7ab3cf718deaa0af4d8b88b22c30495237529afe"
+    },
     "isa/header/B.IOT.md": {
       "source_sha256": "d2faa362777299fd7717dbd625f3fe5958ec95cb256492cbbb3e69c92a1419c5",
       "translation_sha256": "aca5b60312e5797ab57f6e337e487aad9ac4e64f4ce5a6216a5cdfb39999e459"
@@ -7698,8 +7702,8 @@
       "translation_sha256": "dacf66e75fd02d2a083f99fc623ffe6e43de36a4f844671b5b4fb01433c98d9b"
     },
     "isa/instset/baseInstrs.md": {
-      "source_sha256": "2e07222a5c44ef430fc60c78af4603908d0e44d381a9102dfd4eaa7275c3eea2",
-      "translation_sha256": "841d5716b1e0c4bd0a86b51fc1bba0e0259048c7d2b562d883372985a1d0afbf"
+      "source_sha256": "6dba4066d056088ac3e716dc3f38f015f7fbe6246412827823616e19a3436d9c",
+      "translation_sha256": "8bd8e244a0ffd06324a346544eb78c4a16d782fa39f74b880aa3d602293a063a"
     },
     "isa/instset/compressInstrs.md": {
       "source_sha256": "92dfa8b32a3abae4bdbd65e7cbf34fd63a4e7a34b92f74a77b365f3906065086",

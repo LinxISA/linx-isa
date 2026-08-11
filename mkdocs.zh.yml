@@ -190,6 +190,7 @@ nav:
             - B.HINT: isa/header/B.HINT.md
             - B.TEXT: isa/header/B.TEXT.md
             - B.IOR: isa/header/B.IOR.md
+            - B.IOS: isa/header/B.IOS.md
             - B.IOT: isa/header/B.IOT.md
             - B.DIM: isa/header/B.DIM.md
             - C.B.DIM: isa/header/C.B.DIM.md
