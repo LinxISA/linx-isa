@@ -7,7 +7,7 @@
       "path": "compiler/llvm",
       "url": "https://github.com/LinxISA/llvm-project.git",
       "branch": "main",
-      "commit": "be1fc2451936a713e2a15620d5e7f8fe0a73688e",
+      "commit": "9fb4f7aa89ee22541bfae288e2085ada266ffd75",
       "role": "v0.58 compiler and assembler"
     },
     {
@@ -21,21 +21,21 @@
       "path": "emulator/qemu",
       "url": "https://github.com/LinxISA/qemu.git",
       "branch": "master",
-      "commit": "98d2907e5f6bf5d0fa0c2a21027680124c016879",
+      "commit": "f3b8bb4c960b1bc826e99001cf0a35987d20e537",
       "role": "v0.58 emulator"
     },
     {
       "path": "kernel/linux",
       "url": "https://github.com/LinxISA/linux.git",
       "branch": "main",
-      "commit": "a24886e6ad56d7f0da6a91d5385907e92a9c02c3",
+      "commit": "7c37630555f8a9f25258ff9f9dc4f37c50271a60",
       "role": "v0.58 Linux port"
     },
     {
       "path": "lib/glibc",
       "url": "https://github.com/LinxISA/glibc.git",
       "branch": "master",
-      "commit": "d5ca74ac57c19d2f89e66991da5e6f043f64e684",
+      "commit": "27429ba6ffa9314c3ffb4e726d89debc1b15b468",
       "role": "GNU C library"
     },
     {
@@ -49,14 +49,14 @@
       "path": "lib/musl",
       "url": "https://github.com/LinxISA/musl.git",
       "branch": "master",
-      "commit": "7098648ff8330ae1e0bae82fc91f017287d2054b",
+      "commit": "6f28d26d7c759393f89697c97210bd1523ff4b96",
       "role": "musl C library"
     },
     {
       "path": "rtl/LinxCore",
       "url": "https://github.com/LinxISA/LinxCore.git",
       "branch": "main",
-      "commit": "47b7ce29d1fea560f793c8f23b4aadd5aa34f8bb",
+      "commit": "3735c57a8564fbfd5b757c4fb033ab7772303323",
       "role": "RTL implementation"
     },
     {
@@ -70,7 +70,7 @@
       "path": "tools/Linx-TileOP-API",
       "url": "https://github.com/LinxISA/Linx-TileOP-API.git",
       "branch": "linx",
-      "commit": "ecddba7e92a4fad56bb5e6f955458ec6d56c7318",
+      "commit": "aa3b165057dcd041e7f0bf1a7d0fd2ccff7521b2",
       "role": "v0.58 Linx tile-operation API"
     },
     {
@@ -86,14 +86,14 @@
       "path": "tools/model",
       "url": "https://github.com/LinxISA/linx-model.git",
       "branch": "main",
-      "commit": "f6e7548082732c274a3936e5cf0db282171866e5",
+      "commit": "69e926b43a929cc4bcd1286510016fdc5aed1331",
       "role": "queue-wired model"
     },
     {
       "path": "tools/pyCircuit",
       "url": "https://github.com/LinxISA/pyCircuit.git",
       "branch": "main",
-      "commit": "84b40281c60ad208a5d2f1b4d03f50ad52a6262c",
+      "commit": "03b0250f74b4f58434c77927c25e7508ac09a3eb",
       "role": "pyCircuit model"
     },
     {
