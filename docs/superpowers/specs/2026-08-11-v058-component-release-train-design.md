@@ -59,8 +59,8 @@ All leaves consume one identity:
 - Shared binding: 32-bit `B.IOS`, absolute `S0..S255`
 - TSize: codes `1..7` represent 128 B through 8 KiB per selected PE
 - Zero PE mask: strict no-effect operation
-- Retired active spellings include `C.B.IOS`, `B.IOD`, `BSTART.PAR`, and the
-  superseded v0.57 selector surface
+- Retired spellings and the superseded selector surface are rejected exactly
+  as enumerated by the canonical v0.58 release manifest
 
 The `.note.pto.isa` wire identity is exactly one allocatable `SHT_NOTE`
 section, four-byte aligned, with owner bytes `PTO\0`, type `1`, and canonical
