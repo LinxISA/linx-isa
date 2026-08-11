@@ -77,8 +77,10 @@
       "path": "tools/LinxCoreModel",
       "url": "https://github.com/LinxISA/LinxCoreModel.git",
       "branch": "main",
-      "commit": "78f44ab5078291e76faffbbccdecc8d2e1c14584",
-      "role": "C++ core model"
+      "commit": "486ca07c7eee745216c864bf861700123b8ca5b7",
+      "role": "C++ core model",
+      "integration_status": "review_only_open_pr",
+      "review_url": "https://github.com/LinxISA/LinxCoreModel/pull/36"
     },
     {
       "path": "tools/model",

@@ -4,8 +4,11 @@
 
 Upgrade every component governed by `docs/bringup/component-lock.v0.58.json`
 to one coherent LinxISA/PTO ISA 0.58 contract, verify the exact integrated
-component set, publish each governed leaf as `linxisa-v0.58.0`, and publish the
-corrective superproject release as `v0.58.1`.
+component set, publish each release-eligible governed leaf as
+`linxisa-v0.58.0`, and publish the corrective superproject release as
+`v0.58.1`. `tools/LinxCoreModel` is the explicit review-only exception: its
+upgrade remains an open issue-linked PR and receives no merge, tag, or GitHub
+Release in this train.
 
 The existing mutable lightweight `v0.58` tag is historical and must never move
 again. The new releases use signed annotated tags and immutable exact commit
@@ -30,6 +33,10 @@ lock:
 12. `tools/model`
 13. `tools/pyCircuit`
 14. `workloads/pto_kernels`
+
+Thirteen leaves are release-eligible. `tools/LinxCoreModel` remains governed
+and verified, but its exact reviewed PR head is recorded as a review-only
+integration candidate rather than being represented as a released leaf.
 
 The removed standalone `PTO-ISA/SuperNPUBench` repository is not a release
 train leaf. No code, tag, or release is pushed there. Existing issue
@@ -70,7 +77,7 @@ ISA/PTO lock
   -> LLVM + PTOAS
   -> QEMU + Linux + glibc + musl + Linx-TileOP-API
   -> tools/model
-  -> LinxCoreModel + pyCircuit
+  -> LinxCoreModel review-only PR + pyCircuit
   -> LinxCore
   -> pto-kernels and nested SuperNPU
   -> linx-skills
@@ -78,9 +85,11 @@ ISA/PTO lock
 ```
 
 Independent leaves may be implemented in separate branches, but this session
-executes them inline and sequentially at dependency boundaries. Every leaf is
-merged before its SHA is eligible for the component lock. Topic heads and
-uncommitted worktrees are never release identities.
+executes them inline and sequentially at dependency boundaries. Every
+release-eligible leaf is merged before its SHA is eligible for the component
+lock. Topic heads and uncommitted worktrees are never release identities,
+except for the explicitly identified LinxCoreModel review-only PR head; that
+commit must remain remotely reachable and must not be described as released.
 
 ## 5. Leaf Responsibilities
 
@@ -105,8 +114,10 @@ main executable, interpreter, dependency, and `dlopen` closure.
 `tools/model` is the first architectural oracle for Shared allocation and
 effect rules. LinxCoreModel and pyCircuit then implement their cycle/interface
 surfaces. LinxCore consumes the stable catalog and model fixtures and proves
-RTL-visible allocation, rename, atomic update, reset, and trace parity. Orphan
-topic gitlinks for LinxCore and LinxCoreModel are replaced by merged commits.
+RTL-visible allocation, rename, atomic update, reset, and trace parity. The
+orphan LinxCore gitlink is replaced by a merged commit. The orphan
+LinxCoreModel gitlink is replaced by the exact remotely reachable head of its
+open issue-linked review PR and is explicitly marked review-only.
 
 ### 5.4 API, workloads, and skills
 
@@ -150,15 +161,17 @@ fatal.
 
 ## 7. Merge and Release Transaction
 
-1. Implement and review a leaf on a dedicated branch/worktree.
+1. Implement and review a leaf on a dedicated branch.
 2. Run the leaf acceptance matrix and hosted checks.
 3. Merge through a PR without bypassing required checks.
-4. Record the merged commit and tree.
+4. Record the merged commit and tree. For LinxCoreModel only, record the open
+   PR head and tree without merging.
 5. Repin only that leaf in the superproject integration branch.
 6. After all leaves land, run the complete exact-SHA integration matrix.
 7. Freeze the candidate superproject commit, tree, component-lock digest, and
    fourteen leaf SHAs.
-8. Create signed annotated `linxisa-v0.58.0` tags at the frozen leaf commits.
+8. Create signed annotated `linxisa-v0.58.0` tags at the thirteen frozen
+   release-eligible leaf commits; do not tag LinxCoreModel.
 9. Create draft GitHub Releases, attach provenance/checksum evidence, and
    verify tag-to-commit-to-tree resolution.
 10. Publish leaf releases in dependency order. Stop on the first failure.
@@ -195,12 +208,16 @@ use a new patch tag if its identity is invalid. After publication, mark a bad
 release superseded, land a normal corrective PR, and publish a new patch
 release; never rewrite release history.
 
-The user's original dirty checkout remains untouched. All implementation and
-verification work occurs in isolated worktrees.
+The user's unrelated local modifications remain untouched. This session uses
+the existing component checkouts and stages only explicitly reviewed files and
+gitlinks.
 
 ## 10. Completion Criteria
 
-The objective is complete only when all fourteen leaf releases exist at the
-verified exact commits, the nested SuperNPU issue carries current evidence,
-the superproject component lock and gitlinks match those releases, all required
-current-SHA gates pass, and `v0.58.1` is published at the proven final tree.
+The objective is complete only when thirteen leaf releases exist at the
+verified exact commits, the LinxCoreModel issue-linked PR remains open at its
+recorded remotely reachable head with no tag or release, the nested SuperNPU
+issue carries current evidence, the superproject component lock and gitlinks
+match those thirteen releases plus the documented review-only exception, all
+required current-SHA gates pass, and `v0.58.1` is published at the proven final
+tree.
