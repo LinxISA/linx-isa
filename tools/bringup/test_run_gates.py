@@ -74,9 +74,10 @@ class RunGatesTests(unittest.TestCase):
         )
         self.assertEqual(gates, [])
 
-    def test_env_flag_filtering(self) -> None:
+    def test_env_flag_filtering_for_non_strict_profile(self) -> None:
         registry = minimal_registry()
         registry["gates"][0]["enabled_if_env"] = "RUN_UNIT_GATE"
+        registry["gates"][0]["profiles"].append("dev")
         old = os.environ.pop("RUN_UNIT_GATE", None)
         def restore_env() -> None:
             if old is None:
@@ -88,7 +89,7 @@ class RunGatesTests(unittest.TestCase):
         self.assertEqual(
             run_gates.select_gates(
                 registry,
-                profile="release-strict",
+                profile="dev",
                 tier="pr",
                 gate_filter=[],
                 domain_filter=[],
@@ -101,7 +102,7 @@ class RunGatesTests(unittest.TestCase):
             len(
                 run_gates.select_gates(
                     registry,
-                    profile="release-strict",
+                    profile="dev",
                     tier="pr",
                     gate_filter=[],
                     domain_filter=[],
@@ -110,6 +111,23 @@ class RunGatesTests(unittest.TestCase):
             ),
             1,
         )
+
+    def test_release_strict_required_env_gate_is_not_silently_omitted(self) -> None:
+        registry = minimal_registry()
+        registry["gates"][0]["enabled_if_env"] = "RUN_UNIT_GATE"
+        with mock.patch.dict(os.environ, {}, clear=True):
+            with self.assertRaisesRegex(
+                SystemExit,
+                "release-strict required gate disabled by RUN_UNIT_GATE",
+            ):
+                run_gates.select_gates(
+                    registry,
+                    profile="release-strict",
+                    tier="pr",
+                    gate_filter=[],
+                    domain_filter=[],
+                    include_optional=False,
+                )
 
     def test_stale_artifact_detection(self) -> None:
         with tempfile.TemporaryDirectory() as td:
@@ -139,6 +157,26 @@ class RunGatesTests(unittest.TestCase):
             with self.subTest(variable=variable):
                 self.assertTrue(env[variable], variable)
                 self.assertEqual(Path(env[variable]).name, basename)
+
+    def test_release_strict_prepare_env_enables_linux_boot_gates(self) -> None:
+        root = Path(__file__).resolve().parents[2]
+        with (
+            mock.patch.dict(os.environ, {}, clear=True),
+            mock.patch.object(run_gates, "default_tool", return_value=""),
+        ):
+            env = run_gates.prepare_env(root, "release-strict", "pr")
+        self.assertEqual(env["RUN_LINUX_BOOT_GATES"], "1")
+
+    def test_canonical_v058_gate_tracks_v058_release_manifest(self) -> None:
+        root = Path(__file__).resolve().parents[2]
+        registry = run_gates.load_registry(root / "docs/bringup/gate_registry.json")
+        gate = next(
+            item
+            for item in registry["gates"]
+            if item["gate_key"] == "ISA::Canonical v0.58 guard"
+        )
+        self.assertIn("isa/v0.58/release_manifest.json", gate["artifacts"])
+        self.assertNotIn("isa/v0.57/release_manifest.json", gate["artifacts"])
 
     def test_compiler_registry_has_symmetric_arch_coverage_reports(self) -> None:
         root = Path(__file__).resolve().parents[2]

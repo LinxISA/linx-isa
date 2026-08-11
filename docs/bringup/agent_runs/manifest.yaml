@@ -109,6 +109,99 @@
         "LinxTrace::sample trace lint",
         "LinxTrace::semver compatibility gate"
       ]
+    },
+    "LINUX-RUNTIME": {
+      "required_gate_keys": [
+        "Compiler::AVS compile suites (linx64)",
+        "Compiler::Coverage 100% (linx64)",
+        "Compiler::AVS compile suites (linx32)",
+        "Compiler::Coverage 100% (linx32)",
+        "Compiler::LLVM auxiliary tool suite (`llvm-ar`/`llvm-nm`/`llvm-readelf`/`llvm-strip`)",
+        "Emulator::QEMU pinned binary build",
+        "Emulator::QEMU strict system",
+        "Emulator::QEMU all suites",
+        "Kernel::Linux `vmlinux` build closure",
+        "Kernel::Linux initramfs smoke",
+        "Kernel::Linux initramfs full boot",
+        "Kernel::Linux busybox rootfs boot"
+      ]
+    },
+    "HOSTED-RUNTIME": {
+      "required_gate_keys": [
+        "Library::musl build closure (`phase-b`)",
+        "Library::glibc baseline G1a",
+        "Library::musl runtime static+shared",
+        "Library::glibc G1b shared libc.so",
+        "Library::glibc runtime dynamic hello",
+        "Integration::Pinned workspace build closure"
+      ]
+    },
+    "WORKLOAD-RUNTIME": {
+      "required_gate_keys": [
+        "Regression::Workload benchmarks",
+        "Regression::Workload polybench",
+        "Regression::Workload portfolio",
+        "Regression::Linx TileOP API v0.58",
+        "Regression::Nested SuperNPU v0.58 corpus",
+        "Regression::SPECint fast test/train gate"
+      ]
+    },
+    "PROMOTION": {
+      "required_gate_keys": [
+        "Architecture::LinxCore architecture contract lint",
+        "Architecture::mkdocs architecture nav/docs",
+        "Compiler::AVS compile suites (linx64)",
+        "Compiler::Coverage 100% (linx64)",
+        "Compiler::AVS compile suites (linx32)",
+        "Compiler::Coverage 100% (linx32)",
+        "Compiler::LLVM auxiliary tool suite (`llvm-ar`/`llvm-nm`/`llvm-readelf`/`llvm-strip`)",
+        "Emulator::QEMU pinned binary build",
+        "Emulator::QEMU strict system",
+        "Emulator::QEMU all suites",
+        "Kernel::Linux `vmlinux` build closure",
+        "Kernel::Linux initramfs smoke",
+        "Kernel::Linux initramfs full boot",
+        "Kernel::Linux busybox rootfs boot",
+        "Library::musl build closure (`phase-b`)",
+        "Library::glibc baseline G1a",
+        "Library::musl runtime static+shared",
+        "Library::glibc G1b shared libc.so",
+        "Library::glibc runtime dynamic hello",
+        "Integration::Pinned workspace build closure",
+        "Regression::Workload benchmarks",
+        "Regression::Workload polybench",
+        "Regression::Workload portfolio",
+        "Regression::Linx TileOP API v0.58",
+        "Regression::Nested SuperNPU v0.58 corpus",
+        "Regression::SPECint fast test/train gate",
+        "Regression::SPECint nightly test/train gate",
+        "LinxCore::stage/connectivity lint",
+        "LinxCore::opcode parity",
+        "LinxCore::runner protocol",
+        "LinxCore::trace schema and memory smoke",
+        "LinxCore::cosim smoke",
+        "LinxCore::CoreMark crosscheck 1000",
+        "LinxCore::CBSTOP inflation guard",
+        "Testbench::ROB bookkeeping",
+        "Testbench::block struct pyc flow smoke",
+        "pyCircuit::CPU C++ smoke",
+        "pyCircuit::QEMU vs pyCircuit trace diff",
+        "pyCircuit::interface contract gate",
+        "pyCircuit::examples regression",
+        "pyCircuit::simulation regression",
+        "pyCircuit::nightly simulation regression",
+        "LinxTrace::contract sync lint",
+        "LinxTrace::sample trace lint",
+        "LinxTrace::semver compatibility gate",
+        "LinxTrace::DFX trace smoke",
+        "LinxTrace::template trace smoke",
+        "Model::QEMU vs model differential suite",
+        "ISA::AVS matrix status audit",
+        "ISA::AVS tier closure",
+        "Integration::LinxCore performance floor",
+        "Regression::strict_cross_repo.sh",
+        "Integration::Gate status render"
+      ]
     }
   },
   "agents": {
@@ -462,6 +555,26 @@
       "checklist_ids": ["INT-023"]
     },
     {
+      "gate_key": "Regression::Linx TileOP API v0.58",
+      "agent": "integration",
+      "checklist_ids": ["INT-020"]
+    },
+    {
+      "gate_key": "Regression::Nested SuperNPU v0.58 corpus",
+      "agent": "integration",
+      "checklist_ids": ["INT-020", "INT-023"]
+    },
+    {
+      "gate_key": "Regression::SPECint fast test/train gate",
+      "agent": "spec",
+      "checklist_ids": ["SPEC-M05"]
+    },
+    {
+      "gate_key": "Regression::SPECint nightly test/train gate",
+      "agent": "spec",
+      "checklist_ids": ["SPEC-M06"]
+    },
+    {
       "gate_key": "Regression::ctuning curated subset",
       "agent": "integration",
       "checklist_ids": ["INT-024"]
@@ -499,8 +612,8 @@
   ],
   "checklist_id_map": {
     "architecture_docs.md": ["ARCH-001", "ARCH-002", "ARCH-003", "ARCH-004"],
-    "compiler_llvm.md": ["LLVM-001", "LLVM-002", "LLVM-003", "LLVM-004", "LLVM-005", "LLVM-006", "LLVM-007", "LLVM-008"],
-    "emulator_qemu.md": ["QEMU-001", "QEMU-002", "QEMU-003", "QEMU-004", "QEMU-005", "QEMU-005A", "QEMU-005B", "QEMU-006", "QEMU-007", "QEMU-008"],
+    "compiler_llvm.md": ["LLVM-001", "LLVM-002", "LLVM-003", "LLVM-004", "LLVM-005", "LLVM-006", "LLVM-007", "LLVM-008", "LLVM-009"],
+    "emulator_qemu.md": ["QEMU-001", "QEMU-002", "QEMU-003", "QEMU-004", "QEMU-005", "QEMU-005A", "QEMU-005B", "QEMU-006", "QEMU-007", "QEMU-008", "QEMU-009"],
     "kernel_linux.md": ["LINUX-001", "LINUX-002", "LINUX-003", "LINUX-004", "LINUX-005"],
     "libc_runtime.md": ["LIBC-001", "LIBC-005", "LIBC-002", "LIBC-003", "LIBC-007", "LIBC-009", "LIBC-008", "LIBC-004", "LIBC-006"],
     "linxcore_rtl.md": ["LC-001", "LC-002", "LC-003", "LC-004", "LC-005", "LC-006", "LC-007", "LC-008", "LC-009"],
