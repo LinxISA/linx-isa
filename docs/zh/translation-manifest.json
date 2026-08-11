@@ -10,8 +10,8 @@
       "translation_sha256": "cf25ea0ac26da196e1066871153e9ae2432119370a19a2c12e1cbf89c66eaa2e"
     },
     "architecture/isa-manual/README.md": {
-      "source_sha256": "5811a5c84f5ba80e56f8a8af24d9e584ae8a6bb5117b10414c51246ffa237c87",
-      "translation_sha256": "fddfed166e98c0701b2e590dfb44d7769b23f55a54f14281bba6f5b66e579e08"
+      "source_sha256": "5df9a957ed6df6d1ea38e26c81cfab14f0d55e6417ef4d8079a6c1b923999b9a",
+      "translation_sha256": "2005f76034bd3436509d1b93e1bdf177c374820b6a15c66d5c5dec4e356f0528"
     },
     "architecture/linxcore-unified-ai-render-gpgpu.md": {
       "source_sha256": "9871dd404ded3b2c153658a87de91a2d87554116bb3087806ba253e3a7c11387",
@@ -662,7 +662,7 @@
       "translation_sha256": "16bb434410d480303055fd4b6fee8c27336ebdc108dd697b0ab272dfc3aec335"
     },
     "index.md": {
-      "source_sha256": "ce6d318134f81a0672a3aa6b3493f5a39465884d3b2cebd13da31abfa6427cc1",
+      "source_sha256": "44a34b280f59614cdc80b378c219c1444122275e01bd3900ce3859bbc866b657",
       "translation_sha256": "753066c6038a4fe0cfc0dce7a147208a4ecbe586bf9bcda1877255a2ed8d319f"
     },
     "isa/arch/acr.md": {
@@ -8240,6 +8240,10 @@
     "releases/v0.58.0.md": {
       "source_sha256": "1d0b7c0eb9608d0cdef24d4c1c89f589e4c5db47911cd9a5a24dff6a3f18b6a8",
       "translation_sha256": "fc02ae6f178b2aa38a2a71b97f9fae91e55e884d204a326d72ba06f32aeb7279"
+    },
+    "releases/v0.58.1.md": {
+      "source_sha256": "5b807a13dc9114889e7f9016a1e7c40e579373db0007ab9393ee45b1a98f0c32",
+      "translation_sha256": "6dcbadabb20e511e92ec938b335d7d9f3e7df22c7bacf1223b9c43e906a04122"
     },
     "white_paper/Chapter-2.md": {
       "source_sha256": "824f65ca55ca85eb4d4be117368520b22c23528bb45b2f07001ece73f4945f57",
