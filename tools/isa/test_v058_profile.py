@@ -223,4 +223,8 @@ for mnemonic in common_mnemonics:
     description = page.split("## Description\n\n", 1)[1].split("\n\n## Pseudocode", 1)[0].strip()
     assert description
     assert "Instruction from the " not in description, mnemonic
+instruction_reference = (
+    ROOT / "docs/architecture/isa-manual/src/generated/instruction_reference.adoc"
+).read_text(encoding="utf-8")
+assert '[cols="3,1,2,5,5",options="header"]' in instruction_reference
 print("OK")

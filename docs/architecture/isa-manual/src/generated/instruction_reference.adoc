@@ -3,7 +3,7 @@
 [[insnref-execution-control]]
 === Execution Control
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`ACRC` |32 |- |`acrc rst_type` |ACRC - Request architecture context close.
@@ -21,7 +21,7 @@
 [[insnref-arithmetic-operation-64bit]]
 === Arithmetic Operation 64bit
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`ADD` |32 |- |`add SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}` |ADD - Compute this mnemonic's binary scalar operation and write the selected destination.
@@ -50,7 +50,7 @@
 [[insnref-arithmetic-operation-32bit]]
 === Arithmetic Operation 32bit
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`ADDIW` |32 |- |`addiw SrcL, uimm, ->{t, u, Rd}` |ADDIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
@@ -79,7 +79,7 @@
 [[insnref-pc-relative]]
 === PC-Relative
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`ADDTPC` |32 |- |`addtpc simm, ->{t, u, Rd}` |ADDTPC - Add the encoded displacement to the program counter.
@@ -91,7 +91,7 @@
 [[insnref-bundle-control-attribute]]
 === Bundle Control Attribute
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`B.CATR` |32 |- |`B.CATR {trap, atomic, <aq, rl, aqrl>, far, dr}` |Latches bundle control, trap, atomic, ordering, and address-class attributes.
@@ -100,7 +100,7 @@
 [[insnref-bundle-data-attribute]]
 === Bundle Data Attribute
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`B.DATR` |32 |- |`B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize}` |Latches tile layout, data type, padding, conversion, rounding, and saturation attributes.
@@ -109,7 +109,7 @@
 [[insnref-bundle-argument]]
 === Bundle Argument
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`B.DIM` |32 |- |`B.DIM RegSrc, uimm, ->LB1` |Writes one of the three bundle-local dimension registers.
@@ -120,7 +120,7 @@
 [[insnref-branch]]
 === Branch
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`B.EQ` |32 |- |`b.eq SrcL, SrcR, label` |B.EQ - Conditionally branch to the PC-relative target after comparing scalar operands.
@@ -138,7 +138,7 @@
 [[insnref-bundle-hint]]
 === Bundle Hint
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`B.HINT` |32 |- |`B.HINT TRACE.{begin, end}` |Records non-functional branch, temperature, prefetch-size, or trace guidance.
@@ -148,7 +148,7 @@
 [[insnref-bundle-input-output]]
 === Bundle Input & Output
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`B.IOR` |32 |- |`B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>]` |Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as logical row stride.
@@ -163,7 +163,7 @@
 [[insnref-bundle-offset]]
 === Bundle Offset
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`B.TEXT` |32 |- |`B.TEXT <label>` |Sets the out-of-line body entry address for a decoupled bundle.
@@ -172,7 +172,7 @@
 [[insnref-cache-maintain]]
 === Cache Maintain
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`BC.IALL` |32 |- |`bc.iall` |BC.IALL - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
@@ -196,7 +196,7 @@
 [[insnref-bit-operation]]
 === Bit Operation
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`BCNT` |32 |- |`bcnt srcL, Nminus1, M, ->{t, u, Rd}` |BCNT - Count the selected bit property of the scalar source.
@@ -212,7 +212,7 @@
 [[insnref-bundle-split]]
 === Bundle Split
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`BSTART` |32 |- |`BSTART {DIRECT, CALL}, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
@@ -280,7 +280,7 @@
 [[insnref-bstart]]
 === BSTART
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`BSTART CALL` |32 |- |`BSTART.CALL <br_label>, <rt_label>, ->ra` |Atomically closes the current bundle, computes the call target from the signed displacement and the return address from the independent unsigned displacement, writes ra, and transfers control to the call bundle.
@@ -308,7 +308,7 @@
 [[insnref-block-split]]
 === Block Split
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`BSTART.VPAR` |32 |- |`BSTART.VPAR <VS8, VS16>` |TVEC-equivalent parallel SIMT header; requires B.TEXT body target in decoupled form.
@@ -318,7 +318,7 @@
 [[insnref-arithmetic-operation]]
 === Arithmetic Operation
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`C.ADD` |16 |- |`c.add srcL, srcR, ->t` |C.ADD - Compute this mnemonic's binary scalar operation and write the selected destination.
@@ -346,7 +346,7 @@
 [[insnref-arithmetic]]
 === Arithmetic
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`C.ADDI` |16 |- |`c.addi srcL, simm, ->t` |C.ADDI - Compute this mnemonic's binary scalar operation and write the selected destination.
@@ -355,7 +355,7 @@
 [[insnref-bundle-dimension]]
 === Bundle Dimension
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`C.B.DIMI` |16 |- |`C.B.DIMI imm, ->{LB0, LB1, LB2}` |Writes one of the three bundle-local dimension registers.
@@ -364,7 +364,7 @@
 [[insnref-c-bstart]]
 === C.BSTART
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`C.BSTART.FP` |16 |- |`C.BSTART.FP BrType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
@@ -379,7 +379,7 @@
 [[insnref-c-tinst]]
 === C.TINST
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`C.CMP.EQI` |16 |- |`c.cmp.eqi t#1, simm, ->t` |C.CMP.EQI - Compare scalar operands and write the encoded boolean result.
@@ -393,7 +393,7 @@
 [[insnref-load-immediate-offset]]
 === Load Immediate Offset
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`C.LDI` |16 |- |`c.ldi [srcL, simm], ->t` |C.LDI - Load scalar data using this mnemonic's width, signedness, and address-update form.
@@ -424,7 +424,7 @@
 [[insnref-move]]
 === Move
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`C.MOVI` |16 |- |`c.movi simm, ->{t, u, Rd}` |C.MOVI - Move the scalar source to the selected destination.
@@ -435,7 +435,7 @@
 [[insnref-store-immediate-offset]]
 === Store Immediate Offset
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`C.SDI` |16 |- |`c.sdi t#1, [srcL, simm]` |C.SDI - Store scalar data using this mnemonic's width and address-update form.
@@ -452,7 +452,7 @@
 [[insnref-set-commit-argument]]
 === Set Commit Argument
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`C.SETC.EQ` |16 |- |`c.setc.eq srcL, srcR` |C.SETC.EQ - Compare scalar operands and update the bundle commit condition.
@@ -486,7 +486,7 @@
 [[insnref-c-unary]]
 === C.UNARY
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`C.SETC.TGT` |16 |- |`c.setc.tgt srcL` |C.SETC.TGT - Write the bundle commit target.
@@ -501,7 +501,7 @@
 [[insnref-atomic-operation]]
 === Atomic Operation
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`CASB` |32 |- |`casb<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |CASB - Atomically compare the scalar memory value and conditionally store the replacement.
@@ -581,7 +581,7 @@
 [[insnref-compare-instruction]]
 === Compare Instruction
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`CMP.AND` |32 |- |`cmp.and SrcL, SrcR<.sw, .uw, .not>, ->{t, u, Rd}` |CMP.AND - Combine scalar comparison results with the encoded logical operation.
@@ -629,7 +629,7 @@
 [[insnref-compound-operation]]
 === Compound Operation
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`CSEL` |32 |- |`csel SrcP, SrcL, SrcR<.neg>, ->{t, u, Rd}` |CSEL - Select one of two scalar inputs under the encoded condition.
@@ -638,7 +638,7 @@
 [[insnref-multi-cycle-alu]]
 === Multi-Cycle ALU
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`DIV` |32 |- |`div SrcL, SrcR, ->{t, u, Rd}` |DIV - Compute signed scalar quotient.
@@ -674,7 +674,7 @@
 [[insnref-dma-operation]]
 === DMA Operation
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`DMA` |32 |- |`dma [SrcL], SrcR` |Copies exactly one 64-byte region from the SrcL address to the SrcR address; validates both ranges before effects, snapshots the source so overlap has memmove semantics, and guarantees that a fault leaves memory unchanged.
@@ -683,7 +683,7 @@
 [[insnref-floating-point-arithmetic]]
 === Floating-point Arithmetic
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`FABS` |32 |- |`fabs.{T} SrcL, ->{t, u, Rd}` |FABS - Compute this mnemonic's unary floating-point operation.
@@ -703,7 +703,7 @@
 [[insnref-format-convert]]
 === Format Convert
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`FCVT` |32 |- |`fcvt.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVT - Convert between the encoded scalar numeric formats.
@@ -723,7 +723,7 @@
 [[insnref-floating-point-compare]]
 === Floating-point Compare
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`FEQ` |32 |- |`feq.{T} SrcL, SrcR, ->{t, u, Rd}` |FEQ - Compare floating-point operands and produce the encoded result.
@@ -739,7 +739,7 @@
 [[insnref-max-min]]
 === Max-Min
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`FMAX` |32 |- |`fmax.{T} SrcL, SrcR, ->{t, u, Rd}` |FMAX - Compute this mnemonic's binary floating-point operation.
@@ -753,7 +753,7 @@
 [[insnref-reserve]]
 === RESERVE
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`HL.BFI` |48 |- |`hl.bfi SrcL, SrcR, M, N, ->{t, u, Rd}` |HL.BFI - Insert one scalar bitfield into another.
@@ -764,7 +764,7 @@
 [[insnref-atomic]]
 === Atomic
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`HL.CASB` |48 |- |`hl.casb<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |HL.CASB - Atomically compare the scalar memory value and conditionally store the replacement.
@@ -776,7 +776,7 @@
 [[insnref-concat]]
 === Concat
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`HL.CCAT` |48 |- |`hl.ccat SrcL, SrcR, shamt, ->Dst0, Dst1` |HL.CCAT - Concatenate two scalar values into a result pair.
@@ -786,7 +786,7 @@
 [[insnref-load-pc-relative]]
 === Load PC-Relative
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`HL.LB.PCR` |48 |- |`hl.lb.pcr [<symbol>], ->{t, u, Rd}` |HL.LB.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form.
@@ -801,7 +801,7 @@
 [[insnref-load-post-index]]
 === Load Post-Index
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`HL.LB.PO` |48 |- |`hl.lb.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LB.PO - Load scalar data using this mnemonic's width, signedness, and address-update form.
@@ -828,7 +828,7 @@
 [[insnref-load-pre-index]]
 === Load Pre-Index
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`HL.LB.PR` |48 |- |`hl.lb.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LB.PR - Load scalar data using this mnemonic's width, signedness, and address-update form.
@@ -855,7 +855,7 @@
 [[insnref-load-long-offset]]
 === Load Long Offset
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`HL.LBI` |48 |- |`hl.lbi [SrcL, simm], ->{t, u, Rd}` |HL.LBI - Load scalar data using this mnemonic's width, signedness, and address-update form.
@@ -875,7 +875,7 @@
 [[insnref-load-pair]]
 === Load Pair
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`HL.LBIP` |48 |- |`hl.lbip [SrcL, simm], ->Dst0, Dst1` |HL.LBIP - Load a scalar register pair using this mnemonic's address-update form.
@@ -902,7 +902,7 @@
 [[insnref-long-immediate]]
 === Long Immediate
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`HL.LIS` |48 |- |`hl.lis simm, ->{t, u, Rd}` |HL.LIS - Materialize the encoded signed long immediate.
@@ -912,7 +912,7 @@
 [[insnref-immediate]]
 === Immediate
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`HL.LUI` |48 |- |`hl.lui imm, ->{t, u, Rd}` |HL.LUI - Materialize the encoded signed long immediate.
@@ -922,7 +922,7 @@
 [[insnref-prefetch]]
 === Prefetch
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`HL.PRF` |48 |- |`hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]` |HL.PRF - Issue a scalar prefetch using this mnemonic's addressing form.
@@ -934,7 +934,7 @@
 [[insnref-general]]
 === General
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`HL.QMT` |48 |- |`hl.qmt.{i,e,s,r,ie,is,ir,es,er,ies,ier} SrcL, SrcR, ->{t, u}` |Moves values between scalar temporary queues according to encoded queue controls.
@@ -945,7 +945,7 @@
 [[insnref-store-pc-relative]]
 === Store PC-Relative
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`HL.SB.PCR` |48 |- |`hl.sb.pcr SrcL, [<symbol>]` |HL.SB.PCR - Store scalar data using this mnemonic's width and address-update form.
@@ -957,7 +957,7 @@
 [[insnref-store-post-index]]
 === Store Post-Index
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`HL.SB.PO` |48 |- |`hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` |HL.SB.PO - Store scalar data using this mnemonic's width and address-update form.
@@ -979,7 +979,7 @@
 [[insnref-store-pre-index]]
 === Store Pre-Index
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`HL.SB.PR` |48 |- |`hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` |HL.SB.PR - Store scalar data using this mnemonic's width and address-update form.
@@ -1001,7 +1001,7 @@
 [[insnref-store-long-offset]]
 === Store Long Offset
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`HL.SBI` |48 |- |`hl.sbi SrcD, [SrcR, simm]` |HL.SBI - Store scalar data using this mnemonic's width and address-update form.
@@ -1016,7 +1016,7 @@
 [[insnref-store-pair]]
 === Store Pair
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`HL.SBIP` |48 |- |`hl.sbip SrcD, SrcD1, [SrcR, simm]` |HL.SBIP - Store a scalar register pair using this mnemonic's address-update form.
@@ -1038,7 +1038,7 @@
 [[insnref-ssr-access]]
 === SSR Access
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`HL.SSRGET` |48 |- |`hl.ssrget SSR_ID, ->{t, u, Rd}` |HL.SSRGET - Read the addressed system register.
@@ -1053,7 +1053,7 @@
 [[insnref-load-register-offset]]
 === Load Register Offset
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`LB` |32 |- |`lb [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |LB - Load scalar data using this mnemonic's width, signedness, and address - update form.
@@ -1083,7 +1083,7 @@
 [[insnref-load-symbol]]
 === Load Symbol
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`LB.PCR` |32 |- |`lb.pcr [symbol], ->{t, u, Rd}` |LB.PCR - Load scalar data using this mnemonic's width, signedness, and address - update form.
@@ -1098,7 +1098,7 @@
 [[insnref-load-unscaled]]
 === Load UnScaled
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`LDI.U` |32 |- |`ldi.u [SrcL, simm], ->{t, u, Rd}` |LDI.U - Load scalar data using this mnemonic's width, signedness, and address-update form.
@@ -1122,7 +1122,7 @@
 [[insnref-store-register-offset]]
 === Store Register Offset
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`SB` |32 |- |`sb SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]` |SB - Store scalar data using this mnemonic's width and address-update form.
@@ -1151,7 +1151,7 @@
 [[insnref-store-symbol]]
 === Store Symbol
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`SB.PCR` |32 |- |`sb.pcr SrcL, [symbol]` |SB.PCR - Store scalar data using this mnemonic's width and address-update form.
@@ -1163,7 +1163,7 @@
 [[insnref-bit-manipulation]]
 === Bit Manipulation
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`V.BCNT` |64 |- |`v.bcnt SrcL, Nminus1, M, ->Dst` |-
@@ -1179,7 +1179,7 @@
 [[insnref-three-source-integer]]
 === Three Source Integer
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`V.CSEL` |64 |- |`v.csel SrcP, SrcL, SrcR<.neg>, ->Dst` |-
@@ -1189,7 +1189,7 @@
 [[insnref-division]]
 === Division
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`V.DIV` |64 |- |`v.div SrcL, SrcR, ->Dst` |-
@@ -1199,7 +1199,7 @@
 [[insnref-floating-point-arithmetic-2]]
 === Floating Point Arithmetic
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`V.FABS` |64 |- |`v.fabs SrcL, ->Dst` |-
@@ -1212,7 +1212,7 @@
 [[insnref-three-source-floating-point]]
 === Three-Source Floating Point
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`V.FADD` |64 |- |`v.fadd SrcL, SrcR, ->Dst` |-
@@ -1228,7 +1228,7 @@
 [[insnref-two-source-floating-point]]
 === Two-Source Floating Point
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`V.FEQ` |64 |- |`v.feq SrcL, SrcR, ->Dst` |-
@@ -1248,7 +1248,7 @@
 [[insnref-general-manager]]
 === General Manager
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`V.QPOP` |64 |- |`v.qpop SrcL.ud, ->Dst` |-
@@ -1258,7 +1258,7 @@
 [[insnref-reduce-operation-with-register]]
 === Reduce Operation with Register
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`V.RDADD` |64 |- |`v.rdadd SrcL, ->Dst` |-
@@ -1275,7 +1275,7 @@
 [[insnref-store-offset]]
 === Store Offset
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`V.SBI` |64 |- |`v.sbi<.local> SrcL, [SrcR, <lc0>, simm]` |-
@@ -1297,7 +1297,7 @@
 [[insnref-shuffle]]
 === Shuffle
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`V.SHFL.BFLY` |64 |- |`v.shfl.bfly SrcL, SrcP, ->Dst` |-
