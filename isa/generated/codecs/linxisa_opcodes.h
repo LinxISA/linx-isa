@@ -11,6 +11,7 @@ typedef struct {
   const char *id;          /* stable identifier */
   const char *mnemonic;    /* draft mnemonic (e.g. 'ADD', 'C.ADD', 'HL.ADDI') */
   const char *asm_fmt;     /* assembly template from the ISA catalog (may be empty) */
+  const char *source_variant; /* distinct source selector for shared encodings */
   uint16_t length_bits;    /* 16/32/48/64 */
   uint64_t mask;           /* fixed-bit mask over the packed instruction bitvector */
   uint64_t match;          /* fixed-bit value over the packed instruction bitvector */
