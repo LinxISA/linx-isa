@@ -41,9 +41,9 @@
       "tests": 2
     },
     "LNX-TILE": {
-      "implemented": 3,
-      "pass": 3,
-      "tests": 4
+      "implemented": 7,
+      "pass": 7,
+      "tests": 8
     },
     "LNX-VPAR": {
       "implemented": 3,
@@ -191,65 +191,129 @@
       "source": "ev-0032"
     },
     "ev-0033": {
-      "kind": "note",
-      "source": "ev-0033"
+      "exists": true,
+      "kind": "path",
+      "path": "avs/qemu/tests/28_v058_tile_tlsu.c",
+      "source": "avs/qemu/tests/28_v058_tile_tlsu.c"
     },
     "ev-0034": {
-      "kind": "note",
-      "source": "ev-0034"
+      "exists": true,
+      "kind": "path",
+      "path": "avs/qemu/tests/28_v058_tile_tlsu_carrier.S",
+      "source": "avs/qemu/tests/28_v058_tile_tlsu_carrier.S"
     },
     "ev-0035": {
       "kind": "note",
-      "source": "ev-0035"
+      "source": "python3 avs/qemu/run_tests.py --suite tile_v058_tlsu --require-test-id 0x2A01"
     },
     "ev-0036": {
-      "kind": "note",
-      "source": "ev-0036"
+      "exists": true,
+      "kind": "path",
+      "path": "avs/qemu/tests/29_v058_tile_vec.c",
+      "source": "avs/qemu/tests/29_v058_tile_vec.c"
     },
     "ev-0037": {
-      "kind": "note",
-      "source": "ev-0037"
+      "exists": true,
+      "kind": "path",
+      "path": "avs/qemu/tests/29_v058_tile_vec_carrier.S",
+      "source": "avs/qemu/tests/29_v058_tile_vec_carrier.S"
     },
     "ev-0038": {
       "kind": "note",
-      "source": "ev-0038"
+      "source": "python3 avs/qemu/run_tests.py --suite tile_v058_vec --require-test-id 0x2B01"
     },
     "ev-0039": {
-      "kind": "note",
-      "source": "ev-0039"
+      "exists": true,
+      "kind": "path",
+      "path": "avs/qemu/tests/30_v058_tile_sfu.c",
+      "source": "avs/qemu/tests/30_v058_tile_sfu.c"
     },
     "ev-0040": {
-      "kind": "note",
-      "source": "ev-0040"
+      "exists": true,
+      "kind": "path",
+      "path": "avs/qemu/tests/30_v058_tile_sfu_carrier.S",
+      "source": "avs/qemu/tests/30_v058_tile_sfu_carrier.S"
     },
     "ev-0041": {
       "kind": "note",
-      "source": "ev-0041"
+      "source": "python3 avs/qemu/run_tests.py --suite tile_v058_sfu --require-test-id 0x2C01"
     },
     "ev-0042": {
-      "kind": "note",
-      "source": "ev-0042"
+      "exists": true,
+      "kind": "path",
+      "path": "avs/qemu/tests/31_v058_tile_cube.c",
+      "source": "avs/qemu/tests/31_v058_tile_cube.c"
     },
     "ev-0043": {
-      "kind": "note",
-      "source": "ev-0043"
+      "exists": true,
+      "kind": "path",
+      "path": "avs/qemu/tests/31_v058_tile_cube_carrier.S",
+      "source": "avs/qemu/tests/31_v058_tile_cube_carrier.S"
     },
     "ev-0044": {
       "kind": "note",
-      "source": "ev-0044"
+      "source": "python3 avs/qemu/run_tests.py --suite tile_v058_cube --require-test-id 0x2D01"
     },
     "ev-0045": {
       "kind": "note",
-      "source": "ev-0045"
+      "source": "ev-0033"
     },
     "ev-0046": {
+      "kind": "note",
+      "source": "ev-0034"
+    },
+    "ev-0047": {
+      "kind": "note",
+      "source": "ev-0035"
+    },
+    "ev-0048": {
+      "kind": "note",
+      "source": "ev-0036"
+    },
+    "ev-0049": {
+      "kind": "note",
+      "source": "ev-0037"
+    },
+    "ev-0050": {
+      "kind": "note",
+      "source": "ev-0038"
+    },
+    "ev-0051": {
+      "kind": "note",
+      "source": "ev-0039"
+    },
+    "ev-0052": {
+      "kind": "note",
+      "source": "ev-0040"
+    },
+    "ev-0053": {
+      "kind": "note",
+      "source": "ev-0041"
+    },
+    "ev-0054": {
+      "kind": "note",
+      "source": "ev-0042"
+    },
+    "ev-0055": {
+      "kind": "note",
+      "source": "ev-0043"
+    },
+    "ev-0056": {
+      "kind": "note",
+      "source": "ev-0044"
+    },
+    "ev-0057": {
+      "kind": "note",
+      "source": "ev-0045"
+    },
+    "ev-0058": {
       "kind": "note",
       "source": "ev-0046"
     }
   },
-  "generated_at_utc": "2026-08-10 05:55:07Z",
+  "generated_at_utc": "2026-08-12 16:33:58Z",
   "matrix_file": "avs/linx_avs_v1_test_matrix.yaml",
-  "schema_version": "linx-avs-v0.57-status-v1",
+  "schema_version": "linx-avs-v0.58-status-v1",
   "statuses": {
     "AVS-ABI-001": {
       "evidence": [
@@ -396,7 +460,7 @@
     },
     "AVS-EMU-001": {
       "evidence": [
-        "ev-0033"
+        "ev-0045"
       ],
       "implemented": true,
       "validated": "pass"
@@ -423,49 +487,49 @@
     },
     "AVS-LIBC-001": {
       "evidence": [
-        "ev-0039"
+        "ev-0051"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-LIBC-002": {
       "evidence": [
-        "ev-0040"
+        "ev-0052"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-LIBC-003": {
       "evidence": [
-        "ev-0041"
+        "ev-0053"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-LIBC-004": {
       "evidence": [
-        "ev-0042"
+        "ev-0054"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-LINUX-001": {
       "evidence": [
-        "ev-0036"
+        "ev-0048"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-LINUX-002": {
       "evidence": [
-        "ev-0037"
+        "ev-0049"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-LINUX-003": {
       "evidence": [
-        "ev-0038"
+        "ev-0050"
       ],
       "implemented": true,
       "validated": "pass"
@@ -495,14 +559,14 @@
     },
     "AVS-MODEL-001": {
       "evidence": [
-        "ev-0034"
+        "ev-0046"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-MODEL-002": {
       "evidence": [
-        "ev-0035"
+        "ev-0047"
       ],
       "implemented": true,
       "validated": "pass"
@@ -522,6 +586,42 @@
     "AVS-SYS-002": {
       "evidence": [
         "ev-0021"
+      ],
+      "implemented": true,
+      "validated": "pass"
+    },
+    "AVS-TILE-CUBE-001": {
+      "evidence": [
+        "ev-0042",
+        "ev-0043",
+        "ev-0044"
+      ],
+      "implemented": true,
+      "validated": "pass"
+    },
+    "AVS-TILE-SFU-001": {
+      "evidence": [
+        "ev-0039",
+        "ev-0040",
+        "ev-0041"
+      ],
+      "implemented": true,
+      "validated": "pass"
+    },
+    "AVS-TILE-TLSU-001": {
+      "evidence": [
+        "ev-0033",
+        "ev-0034",
+        "ev-0035"
+      ],
+      "implemented": true,
+      "validated": "pass"
+    },
+    "AVS-TILE-VEC-001": {
+      "evidence": [
+        "ev-0036",
+        "ev-0037",
+        "ev-0038"
       ],
       "implemented": true,
       "validated": "pass"
@@ -574,21 +674,21 @@
     },
     "AVS-WORK-001": {
       "evidence": [
-        "ev-0043"
+        "ev-0055"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-WORK-002": {
       "evidence": [
-        "ev-0044"
+        "ev-0056"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-WORK-003": {
       "evidence": [
-        "ev-0045"
+        "ev-0057"
       ],
       "implemented": true,
       "validated": "pass"
@@ -600,7 +700,7 @@
     },
     "AVS-WORK-005": {
       "evidence": [
-        "ev-0046"
+        "ev-0058"
       ],
       "implemented": true,
       "validated": "pass"
@@ -613,14 +713,14 @@
   },
   "tier_summaries": {
     "nightly": {
-      "implemented": 32,
-      "pass": 32,
-      "tests": 54
+      "implemented": 36,
+      "pass": 36,
+      "tests": 58
     },
     "pr": {
-      "implemented": 31,
-      "pass": 31,
-      "tests": 31
+      "implemented": 35,
+      "pass": 35,
+      "tests": 35
     }
   }
 }

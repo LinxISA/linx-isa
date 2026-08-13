@@ -63,6 +63,8 @@ Active runtime note:
 
 - the live QEMU runtime lane keeps the `system`, `callret`, scalar, and the
   still-supported handwritten `v057` SIMT/vector suites;
+- the LinxISA/PTO v0.58 Tile lane is split by execution engine into
+  `tile_v058_tlsu`, `tile_v058_vec`, `tile_v058_sfu`, and `tile_v058_cube`;
 - the older handwritten `v04_vector_ops` runtime suite is removed from the
   active surface on this Bisheng branch because the current compiler/MC stack
   does not accept that handwritten asm dialect reliably enough for gating.
@@ -76,6 +78,47 @@ Run a specific suite:
 ./run_tests.sh --suite jumptable
 ./run_tests.sh --suite varargs
 ```
+
+Run the complete v0.58 Tile engine smoke with bounded execution:
+
+```bash
+python3 avs/qemu/run_tests.py \
+  --suite tile_v058_tlsu \
+  --suite tile_v058_vec \
+  --suite tile_v058_sfu \
+  --suite tile_v058_cube \
+  --timeout 30 \
+  --no-progress-timeout 15 \
+  --heartbeat-sec 2
+```
+
+The Tile cases compile `*_carrier.S` with canonical v0.58 mnemonics and use
+the corresponding C source as an independent result oracle:
+
+| Suite | Architectural check |
+|-------|---------------------|
+| `tile_v058_tlsu` | FP32 TLOAD/TSTORE transfers a nontrivial 4 KiB payload |
+| `tile_v058_vec` | FP32 TADD produces `1.0 + 2.0 = 3.0` |
+| `tile_v058_sfu` | FP32 TEXP produces `exp(0.0) = 1.0` |
+| `tile_v058_cube` | S32 4x4 identity TMATMUL reproduces the right operand |
+
+Every output buffer starts with a non-golden sentinel. This prevents a
+non-writing implementation from passing. The runner also checks the carrier
+object's disassembly before linking and records START/PASS IDs in structured
+runtime evidence when `--evidence-out` is supplied.
+
+Current v0.58 frontend boundary:
+
+- the pinned TileOP C++ API still depends on removed LinxV5 extensions such as
+  `__fp32`, `tile_size(...)`, and the `Tr` inline-assembly constraint;
+- current LLVM Tile intrinsic lowering reverses the two v0.58 `B.IOR` source
+  roles (`RegSrc0=base`, `RegSrc1=row stride`).
+
+The engine smoke therefore uses canonical assembly carriers instead of
+claiming that the obsolete C++ Tile frontend is valid runtime evidence. The
+assembly parser must encode bare `BSTART.TSTORE DataType` as the base Local
+TSTORE form (TLSU Function 1), not the textually identical Shared partition
+variant (Function 14).
 
 Run everything (includes float + atomic):
 
@@ -126,10 +169,10 @@ rm -rf out
 ./run_tests.sh --all --compile-only
 ```
 
-Custom output directory:
+Custom repository-local output directory:
 
 ```bash
-./run_tests.sh --out-dir /tmp/linx-qemu-tests --all --compile-only
+./run_tests.sh --out-dir .codex_logs/avs-qemu --all --compile-only
 ```
 
 ## Outputs

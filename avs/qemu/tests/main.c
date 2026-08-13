@@ -65,6 +65,18 @@
 #ifndef LINX_TEST_ENABLE_MADDW_BFI_MI
 #define LINX_TEST_ENABLE_MADDW_BFI_MI 0
 #endif
+#ifndef LINX_TEST_ENABLE_TILE_V058_TLSU
+#define LINX_TEST_ENABLE_TILE_V058_TLSU 0
+#endif
+#ifndef LINX_TEST_ENABLE_TILE_V058_VEC
+#define LINX_TEST_ENABLE_TILE_V058_VEC 0
+#endif
+#ifndef LINX_TEST_ENABLE_TILE_V058_SFU
+#define LINX_TEST_ENABLE_TILE_V058_SFU 0
+#endif
+#ifndef LINX_TEST_ENABLE_TILE_V058_CUBE
+#define LINX_TEST_ENABLE_TILE_V058_CUBE 0
+#endif
 
 /* Forward declarations for test suite functions */
 #if LINX_TEST_ENABLE_ARITHMETIC
@@ -123,6 +135,18 @@ void run_setc_imm_tests(void);
 #endif
 #if LINX_TEST_ENABLE_MADDW_BFI_MI
 void run_maddw_bfi_mi_tests(void);
+#endif
+#if LINX_TEST_ENABLE_TILE_V058_TLSU
+void run_tile_v058_tlsu_tests(void);
+#endif
+#if LINX_TEST_ENABLE_TILE_V058_VEC
+void run_tile_v058_vec_tests(void);
+#endif
+#if LINX_TEST_ENABLE_TILE_V058_SFU
+void run_tile_v058_sfu_tests(void);
+#endif
+#if LINX_TEST_ENABLE_TILE_V058_CUBE
+void run_tile_v058_cube_tests(void);
 #endif
 
 /*
@@ -187,6 +211,18 @@ void _start(void) {
 #endif
 #if LINX_TEST_ENABLE_MADDW_BFI_MI
     run_maddw_bfi_mi_tests();
+#endif
+#if LINX_TEST_ENABLE_TILE_V058_TLSU
+    run_tile_v058_tlsu_tests();
+#endif
+#if LINX_TEST_ENABLE_TILE_V058_VEC
+    run_tile_v058_vec_tests();
+#endif
+#if LINX_TEST_ENABLE_TILE_V058_SFU
+    run_tile_v058_sfu_tests();
+#endif
+#if LINX_TEST_ENABLE_TILE_V058_CUBE
+    run_tile_v058_cube_tests();
 #endif
 #if LINX_TEST_ENABLE_SYSTEM
     /* This suite exits through its final trap continuation; keep it last. */

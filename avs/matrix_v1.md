@@ -1,6 +1,7 @@
-# Linx-AVS v1 Test Matrix
+# Linx-AVS v0.58 Test Matrix
 
-Version: v1 (draft)
+Version: v0.58 (canonical machine-readable source:
+`avs/linx_avs_v1_test_matrix.yaml`)
 
 This file is a **test matrix**, not an implementation. It defines test IDs,
 required architectural behavior, and pass/fail criteria. A later agent should
@@ -20,7 +21,7 @@ useful subset without pretending vector/tile/MMU are done.
 - `LNX-FP`: adds scalar FP + FCSR behavior
 - `LNX-VPAR`: enables vector blocks (`BSTART.VPAR`)
 - `LNX-VSEQ`: enables vector blocks (`BSTART.VSEQ`)
-- `LNX-TILE`: enables tile blocks / TAU (not required for v1 pass)
+- `LNX-TILE`: enables PTO v0.58 TLSU, VEC, SFU, and CUBE Tile execution
 
 Unless stated otherwise, tests apply to both `LNX-S32` and `LNX-S64`.
 
