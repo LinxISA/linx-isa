@@ -41,6 +41,8 @@ jobs:
           python3 tools/isa/gen_sail_status.py --check
       - name: Enforce canonical v0.58 release guard
         run: python3 tools/isa/check_canonical_v058.py --root .
+      - name: Validate branch cleanup evidence schema
+        run: python3 tools/bringup/check_branch_cleanup_manifest.py --manifest docs/bringup/branch_cleanup_manifest.json --mode static
       - name: Enforce canonical QEMU opcode metadata
         run: python3 tools/bringup/check_qemu_opcode_meta_sync.py --strict
       - name: Cross-check QEMU v0.58 TEPL carrier selectors

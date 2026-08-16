@@ -1,0 +1,231 @@
+{
+  "schema": "linx-branch-cleanup-v1",
+  "entries": [
+    {
+      "repository": ".",
+      "scope": "local",
+      "ref": "codex/v058-b-datr-doc-fix",
+      "oid": "3913d7cc09cf9fb1392338a69460e1894f50949c",
+      "action": "delete",
+      "classification": "patch-equivalent-in-v0.58.1",
+      "evidence": {
+        "kind": "git-cherry-patch-equivalent",
+        "replacement_oid": "ea54153b3351c48df306a57189ffb587801b9197",
+        "summary": "The B.DATR documentation retirement patch is already integrated in the immutable v0.58.1 tree."
+      },
+      "required_integration_commit": "ea54153b3351c48df306a57189ffb587801b9197",
+      "attached_worktree_prohibited": true,
+      "pre_state": {"expected_present": true},
+      "post_state": {"expected_present": false}
+    },
+    {
+      "repository": ".",
+      "scope": "local",
+      "ref": "codex/v058-bior-resolution-sync",
+      "oid": "23745cc8556b5ae3c056ef924c5001a1fcda9142",
+      "action": "delete",
+      "classification": "patch-equivalent-in-v0.58.1",
+      "evidence": {
+        "kind": "git-cherry-patch-equivalent",
+        "replacement_oid": "ea54153b3351c48df306a57189ffb587801b9197",
+        "summary": "The PTO bundle-GPR resolution lock patch is already integrated in the immutable v0.58.1 tree."
+      },
+      "required_integration_commit": "ea54153b3351c48df306a57189ffb587801b9197",
+      "attached_worktree_prohibited": true,
+      "pre_state": {"expected_present": true},
+      "post_state": {"expected_present": false}
+    },
+    {
+      "repository": ".",
+      "scope": "local",
+      "ref": "codex/linx-l-bstop-v058",
+      "oid": "5de637dfea660a308330aa85322c7e8dc13e5925",
+      "action": "delete",
+      "classification": "unique-content-integrated-and-cleaned",
+      "evidence": {
+        "kind": "semantic-port-plus-regression",
+        "replacement_oid": "abf5768a9782876d9d1816d8b7dc556e488f0988",
+        "summary": "Bilingual B.IOS content was integrated and hardened; the loose L.BSTOP test was preserved separately before cleanup."
+      },
+      "required_integration_commit": "abf5768a9782876d9d1816d8b7dc556e488f0988",
+      "attached_worktree_prohibited": true,
+      "pre_state": {"expected_present": false},
+      "post_state": {"expected_present": false}
+    },
+    {
+      "repository": ".",
+      "scope": "remote",
+      "remote": "origin",
+      "ref": "codex/fishtoucher-software-loop",
+      "oid": "8b6f21bf8151500c8d693fc80168bab3734355fc",
+      "action": "delete",
+      "classification": "squash-integrated-and-superseded",
+      "evidence": {
+        "kind": "tree-and-component-ancestry-audit",
+        "replacement_oid": "ea54153b3351c48df306a57189ffb587801b9197",
+        "summary": "The feature train was squash-integrated and every retained leaf pin is an ancestor of the v0.58.1 component set."
+      },
+      "required_integration_commit": "ea54153b3351c48df306a57189ffb587801b9197",
+      "attached_worktree_prohibited": true,
+      "pre_state": {"expected_present": true},
+      "post_state": {"expected_present": false}
+    },
+    {
+      "repository": ".",
+      "scope": "remote",
+      "remote": "origin",
+      "ref": "codex/refresh-translation-freshness",
+      "oid": "3fc63e5fc1d1913b7c4754944df983d7bd8416c5",
+      "action": "delete",
+      "classification": "integrated-and-superseded",
+      "evidence": {
+        "kind": "content-audit",
+        "replacement_oid": "ea54153b3351c48df306a57189ffb587801b9197",
+        "summary": "The heading fix is integrated and the old translation hashes are superseded by current generated metadata."
+      },
+      "required_integration_commit": "ea54153b3351c48df306a57189ffb587801b9197",
+      "attached_worktree_prohibited": true,
+      "pre_state": {"expected_present": true},
+      "post_state": {"expected_present": false}
+    },
+    {
+      "repository": ".",
+      "scope": "remote",
+      "remote": "origin",
+      "ref": "feat/v0.57",
+      "oid": "41ec8d5fabdb301982742e0e2008e72dd37de38c",
+      "action": "delete",
+      "classification": "stale-contradictory-v0.57-proposal",
+      "evidence": {
+        "kind": "catalog-contradiction-audit",
+        "replacement_oid": "ea54153b3351c48df306a57189ffb587801b9197",
+        "summary": "The proposal contradicts current opcodes and engine ownership; no content is eligible to port verbatim."
+      },
+      "required_integration_commit": "ea54153b3351c48df306a57189ffb587801b9197",
+      "attached_worktree_prohibited": true,
+      "pre_state": {"expected_present": true},
+      "post_state": {"expected_present": false}
+    },
+    {
+      "repository": ".",
+      "scope": "remote",
+      "remote": "origin",
+      "ref": "dependabot/github_actions/actions/checkout-7",
+      "oid": "395e035bf27bcf6f7c478f0177ad9c468a5034e7",
+      "action": "delete",
+      "classification": "dependency-update-ported",
+      "evidence": {
+        "kind": "semantic-port",
+        "replacement_oid": "d1f437b3bcdde293569e323990835cff3caa547a",
+        "summary": "All six checkout uses were ported to v7 with the Chinese Pages workflow update."
+      },
+      "required_integration_commit": "d1f437b3bcdde293569e323990835cff3caa547a",
+      "attached_worktree_prohibited": true,
+      "pre_state": {"expected_present": true},
+      "post_state": {"expected_present": false}
+    },
+    {
+      "repository": ".",
+      "scope": "remote",
+      "remote": "origin",
+      "ref": "dependabot/github_actions/actions/setup-python-7",
+      "oid": "55defee96461f729051001bfaf1fb40a79338bc4",
+      "action": "delete",
+      "classification": "dependency-update-ported",
+      "evidence": {
+        "kind": "semantic-port",
+        "replacement_oid": "d1f437b3bcdde293569e323990835cff3caa547a",
+        "summary": "All six setup-python uses were ported to v7 and the workflow YAML was validated."
+      },
+      "required_integration_commit": "d1f437b3bcdde293569e323990835cff3caa547a",
+      "attached_worktree_prohibited": true,
+      "pre_state": {"expected_present": true},
+      "post_state": {"expected_present": false}
+    },
+    {
+      "repository": ".",
+      "scope": "local",
+      "ref": "codex/linx-058-final-release",
+      "oid": "24ac3aa117411a311590a5eb0327c6368416beb6",
+      "action": "retain",
+      "classification": "release-branch",
+      "evidence": {
+        "kind": "retention-policy",
+        "replacement_oid": "24ac3aa117411a311590a5eb0327c6368416beb6",
+        "summary": "The user requested release branches be retained."
+      },
+      "required_integration_commit": "ea54153b3351c48df306a57189ffb587801b9197",
+      "attached_worktree_prohibited": false,
+      "pre_state": {"expected_present": true},
+      "post_state": {"expected_present": true}
+    },
+    {
+      "repository": ".",
+      "scope": "local",
+      "ref": "codex/linx-isa-0.57.1",
+      "oid": "96860ff5c6af1c324683af3a626d1f7e8104a351",
+      "action": "retain",
+      "classification": "release-history-branch",
+      "evidence": {
+        "kind": "retention-policy",
+        "replacement_oid": "96860ff5c6af1c324683af3a626d1f7e8104a351",
+        "summary": "The branch preserves individual release-train commits while its final tree is already integrated by squash."
+      },
+      "required_integration_commit": "ea54153b3351c48df306a57189ffb587801b9197",
+      "attached_worktree_prohibited": false,
+      "pre_state": {"expected_present": true},
+      "post_state": {"expected_present": true}
+    },
+    {
+      "repository": ".",
+      "scope": "local",
+      "ref": "codex/v058-release-existing-repos",
+      "oid": "92425b747adafda3fa100b16b9e6861d4f5566c3",
+      "action": "retain",
+      "classification": "release-branch",
+      "evidence": {
+        "kind": "retention-policy",
+        "replacement_oid": "92425b747adafda3fa100b16b9e6861d4f5566c3",
+        "summary": "The user requested release branches be retained."
+      },
+      "required_integration_commit": "ea54153b3351c48df306a57189ffb587801b9197",
+      "attached_worktree_prohibited": false,
+      "pre_state": {"expected_present": true},
+      "post_state": {"expected_present": true}
+    },
+    {
+      "repository": ".",
+      "scope": "local",
+      "ref": "codex/v058-release-train",
+      "oid": "da240037831ea7937652527be9893d949e786188",
+      "action": "retain",
+      "classification": "release-branch",
+      "evidence": {
+        "kind": "retention-policy",
+        "replacement_oid": "da240037831ea7937652527be9893d949e786188",
+        "summary": "The user requested release branches be retained."
+      },
+      "required_integration_commit": "ea54153b3351c48df306a57189ffb587801b9197",
+      "attached_worktree_prohibited": false,
+      "pre_state": {"expected_present": true},
+      "post_state": {"expected_present": true}
+    },
+    {
+      "repository": ".",
+      "scope": "tag",
+      "ref": "v0.58.1",
+      "oid": "ea54153b3351c48df306a57189ffb587801b9197",
+      "action": "retain",
+      "classification": "immutable-release-tag",
+      "evidence": {
+        "kind": "retention-policy",
+        "replacement_oid": "ea54153b3351c48df306a57189ffb587801b9197",
+        "summary": "The immutable v0.58.1 release tag must never move or be deleted."
+      },
+      "required_integration_commit": "ea54153b3351c48df306a57189ffb587801b9197",
+      "attached_worktree_prohibited": false,
+      "pre_state": {"expected_present": true},
+      "post_state": {"expected_present": true}
+    }
+  ]
+}
