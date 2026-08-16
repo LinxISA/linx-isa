@@ -7,6 +7,7 @@ import hashlib
 import json
 import os
 import select
+import signal
 import subprocess
 import sys
 import time
@@ -322,11 +323,27 @@ def _retryable_pre_wrapper_timeout(result: QemuRunResult) -> bool:
     )
 
 
+def _normalize_qemu_result(result: QemuRunResult) -> QemuRunResult:
+    if (
+        result.timed_out
+        and result.termination == "timeout"
+        and result.returncode not in (None, -signal.SIGKILL)
+    ):
+        return QemuRunResult(
+            output=result.output,
+            timed_out=False,
+            saw_pass=result.saw_pass,
+            returncode=result.returncode,
+            termination="natural_exit",
+        )
+    return result
+
+
 def _run_system_runtime(cmd: list[str], timeout_s: int) -> SystemRuntimeResult:
-    qemu_result = _run_qemu(cmd, timeout_s)
+    qemu_result = _normalize_qemu_result(_run_qemu(cmd, timeout_s))
     attempts = 1
     if _retryable_pre_wrapper_timeout(qemu_result):
-        qemu_result = _run_qemu(cmd, timeout_s)
+        qemu_result = _normalize_qemu_result(_run_qemu(cmd, timeout_s))
         attempts = 2
     return _classify_system_runtime(
         qemu_result.output,

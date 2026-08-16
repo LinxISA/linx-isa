@@ -219,6 +219,27 @@ class GlibcSystemRuntimeTests(unittest.TestCase):
             },
         )
 
+    def test_deadline_race_with_positive_exit_is_not_retried_as_timeout(self) -> None:
+        with mock.patch.object(
+            run_glibc_smoke,
+            "_run_qemu",
+            return_value=_qemu_result(
+                "qemu: fatal startup error\n",
+                timed_out=True,
+                saw_pass=False,
+                returncode=7,
+                termination="timeout",
+            ),
+        ) as run_qemu:
+            result = run_glibc_smoke._run_system_runtime(["qemu"], 60)
+
+        self.assertFalse(result.ok)
+        self.assertEqual(result.classification, "qemu_exit_failure")
+        self.assertEqual(result.returncode, 7)
+        self.assertEqual(result.termination, "natural_exit")
+        self.assertEqual(result.attempts, 1)
+        self.assertEqual(run_qemu.call_count, 1)
+
 
 if __name__ == "__main__":
     unittest.main()
