@@ -10,6 +10,7 @@ import select
 import subprocess
 import sys
 import time
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -50,6 +51,19 @@ FAIL_MARKERS = [
     "LINX_PANIC",
     "LINX_EXIT_INIT",
 ]
+
+WRAPPER_START_MARKER = "SWRAP_INIT_START"
+
+
+@dataclass(frozen=True)
+class SystemRuntimeResult:
+    output: str
+    timed_out: bool
+    saw_pass: bool
+    attempts: int
+    ok: bool
+    classification: str
+    detail: str
 
 
 def _complete_failure_marker(text: str) -> str | None:
@@ -210,6 +224,66 @@ def _run_qemu(cmd: list[str], timeout_s: int) -> tuple[str, bool, bool]:
     if tail_out:
         out_chunks.append(tail_out)
     return b"".join(out_chunks).decode("utf-8", errors="replace"), timed_out, saw_pass
+
+
+def _classify_system_runtime(
+    output: str,
+    timed_out: bool,
+    saw_pass: bool,
+    *,
+    attempts: int = 1,
+) -> SystemRuntimeResult:
+    missing_markers = [marker for marker in SYSTEM_PASS_MARKERS if marker not in output]
+    if saw_pass and not missing_markers:
+        retry_suffix = " after one guest-boot retry" if attempts == 2 else ""
+        return SystemRuntimeResult(
+            output=output,
+            timed_out=timed_out,
+            saw_pass=saw_pass,
+            attempts=attempts,
+            ok=True,
+            classification="runtime_pass",
+            detail="glibc-linked hello reached main and reported pass" + retry_suffix,
+        )
+
+    if timed_out:
+        if WRAPPER_START_MARKER not in output:
+            detail = f"guest boot timed out before {WRAPPER_START_MARKER} after {attempts} attempt(s)"
+            classification = "guest_boot_timeout"
+        else:
+            detail = f"qemu timed out after {attempts} attempt(s) after {WRAPPER_START_MARKER}"
+            classification = "glibc_runtime_timeout"
+    elif any(marker in output for marker in FAIL_MARKERS):
+        hit = next(marker for marker in FAIL_MARKERS if marker in output)
+        detail = f"runtime hit failure marker: {hit}"
+        classification = "glibc_runtime_failure_marker"
+    else:
+        detail = "missing pass markers: " + ", ".join(missing_markers)
+        classification = "glibc_runtime_missing_marker"
+
+    return SystemRuntimeResult(
+        output=output,
+        timed_out=timed_out,
+        saw_pass=saw_pass,
+        attempts=attempts,
+        ok=False,
+        classification=classification,
+        detail=detail,
+    )
+
+
+def _run_system_runtime(cmd: list[str], timeout_s: int) -> SystemRuntimeResult:
+    output, timed_out, saw_pass = _run_qemu(cmd, timeout_s)
+    attempts = 1
+    if timed_out and not output and WRAPPER_START_MARKER not in output:
+        output, timed_out, saw_pass = _run_qemu(cmd, timeout_s)
+        attempts = 2
+    return _classify_system_runtime(
+        output,
+        timed_out,
+        saw_pass,
+        attempts=attempts,
+    )
 
 
 def _select_variants(raw: list[str] | None, *, runner: str) -> list[str]:
@@ -506,36 +580,22 @@ def main(argv: list[str]) -> int:
             "-bios",
             "none",
         ]
-        output, timed_out, saw_pass = _run_qemu(cmd, args.timeout)
-        qemu_log.write_text(output, encoding="utf-8")
-        missing_markers = [marker for marker in SYSTEM_PASS_MARKERS if marker not in output]
+        runtime = _run_system_runtime(cmd, args.timeout)
+        qemu_log.write_text(runtime.output, encoding="utf-8")
 
-        if saw_pass and not missing_markers:
-            detail = "glibc-linked hello reached main and reported pass"
-            classification = "runtime_pass"
-            ok = True
-            add_stage(f"qemu-runtime[{variant}]", "pass", detail, str(qemu_log))
+        if runtime.ok:
+            add_stage(f"qemu-runtime[{variant}]", "pass", runtime.detail, str(qemu_log))
         else:
-            ok = False
             overall_ok = False
-            if timed_out:
-                detail = f"qemu timed out after {args.timeout}s"
-                classification = "glibc_runtime_timeout"
-            elif any(marker in output for marker in FAIL_MARKERS):
-                hit = next(marker for marker in FAIL_MARKERS if marker in output)
-                detail = f"runtime hit failure marker: {hit}"
-                classification = "glibc_runtime_failure_marker"
-            else:
-                detail = "missing pass markers: " + ", ".join(missing_markers)
-                classification = "glibc_runtime_missing_marker"
-            add_stage(f"qemu-runtime[{variant}]", "fail", detail, str(qemu_log))
+            add_stage(f"qemu-runtime[{variant}]", "fail", runtime.detail, str(qemu_log))
 
         variant_results[variant] = {
             "hello": str(hello),
             "initramfs": str(initramfs_cpio),
             "log": str(qemu_log),
-            "ok": ok,
-            "classification": classification,
+            "ok": runtime.ok,
+            "classification": runtime.classification,
+            "attempts": runtime.attempts,
         }
 
     summary["variants"] = variant_results
