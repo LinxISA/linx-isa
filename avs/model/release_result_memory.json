@@ -1,0 +1,8 @@
+{
+  "result_memory": {
+    "result_symbol": "cross_model_result",
+    "size_symbol": "cross_model_result_size",
+    "address": 131072,
+    "size": 12
+  }
+}

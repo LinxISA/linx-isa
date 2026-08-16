@@ -337,6 +337,8 @@ def main(argv: list[str]) -> int:
     ]
     if args.workdir:
         cmd.extend(["--workdir", args.workdir])
+    if args.profile:
+        cmd.extend(["--profile", args.profile])
 
     proc = subprocess.run(
         cmd,

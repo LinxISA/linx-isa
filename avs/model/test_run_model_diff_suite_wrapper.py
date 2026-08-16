@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import importlib.util
 import io
+import json
 import subprocess
 import tempfile
 import unittest
@@ -19,6 +20,32 @@ SPEC.loader.exec_module(root_model_diff_runner)
 
 
 class ModelDiffWrapperTests(unittest.TestCase):
+    def test_tile_suite_uses_authoritative_tlsu_block_kind(self) -> None:
+        import yaml
+
+        root = Path(__file__).resolve().parents[2]
+        engines = json.loads(
+            (root / "isa/v0.58/state/engine_ops.json").read_text(encoding="utf-8")
+        )
+        tload = next(
+            row
+            for row in engines["tlsu"]["legal_aliases"]
+            if row["mnemonic"] == "BSTART.TLOAD"
+        )
+        self.assertEqual(tload["engine"], "TLSU")
+
+        suite = yaml.safe_load(
+            (root / "avs/model/linx_model_diff_suite.yaml").read_text(
+                encoding="utf-8"
+            )
+        )
+        tile_cases = [
+            case for case in suite["cases"] if case["category"].startswith("tile_")
+        ]
+        self.assertEqual(len(tile_cases), 2)
+        for case in tile_cases:
+            self.assertEqual(case["require_block_kind_any_of"], ["tlsu"])
+
     def test_explicit_qemu_path_is_forwarded_to_model_suite(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
@@ -34,13 +61,22 @@ class ModelDiffWrapperTests(unittest.TestCase):
             ) as run:
                 with redirect_stdout(io.StringIO()):
                     result = root_model_diff_runner.main(
-                        ["--root", str(root), "--qemu", str(qemu)]
+                        [
+                            "--root",
+                            str(root),
+                            "--qemu",
+                            str(qemu),
+                            "--profile",
+                            "dev",
+                        ]
                     )
 
         self.assertEqual(result, 0)
         command = run.call_args.args[0]
         qemu_index = command.index("--qemu")
         self.assertEqual(command[qemu_index + 1], str(qemu.resolve()))
+        profile_index = command.index("--profile")
+        self.assertEqual(command[profile_index + 1], "dev")
 
 
 if __name__ == "__main__":
