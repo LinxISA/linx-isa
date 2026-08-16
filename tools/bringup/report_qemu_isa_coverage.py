@@ -113,6 +113,10 @@ DECODE_48_AS_64_FILES = {"block48.decode", "insn48.decode"}
 
 
 SPECIAL_MAP: dict[str, str | list[str]] = {
+    "b_fpatr": "B.FPATR",
+    "start_call": ["BSTART.CALL", "HL.BSTART CALL"],
+    "start_icall": "BSTART.ICALL",
+    "l_bstop": "L.BSTOP",
     "bstart_call": ["BSTART CALL", "BSTART.STD"],
     "bstart_split_direct": "BSTART",
     "bstart_split_cond": "BSTART",
@@ -135,6 +139,11 @@ SPECIAL_MAP: dict[str, str | list[str]] = {
         "BSTART.TMATMUL.ACC",
         "BSTART.ACCCVT",
     ],
+    "bstart_tstore_spart": "BSTART.TSTORE",
+    "bstart_tmov_l2s_insert": "BSTART.TMOV",
+    "bstart_tmov_l2s_publish": "BSTART.TMOV",
+    "bstart_tmov_s2l_broadcast": "BSTART.TMOV",
+    "bstart_tmov_s2l_extract": "BSTART.TMOV",
     "c_bstop": "C.BSTOP",
     "c_bstart_cond": "C.BSTART",
     "c_bstart_direct": "C.BSTART",

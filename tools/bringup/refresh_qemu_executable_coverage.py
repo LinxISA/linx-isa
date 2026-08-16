@@ -31,6 +31,7 @@ import report_qemu_executable_coverage as reporter  # noqa: E402
 
 
 EVIDENCE_ROOT = Path("docs/bringup/gates/evidence/qemu-executable")
+ACTIVE_RELEASE = "0.58.1"
 SUITE_PREFIXES = {
     "callret": "callret",
     "executable_memory": "executable-memory",
@@ -523,6 +524,11 @@ def main(argv: list[str] | None = None) -> int:
         raise SystemExit("error: --timeout must be positive")
     manifest_path = (args.manifest or repo_root / "avs/qemu/qemu_executable_coverage_manifest.json").resolve()
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if manifest.get("active_release") is not True or manifest.get("release") != ACTIVE_RELEASE:
+        raise SystemExit(
+            "error: executable coverage manifest is archival; provide an active "
+            f"{ACTIVE_RELEASE} --manifest template"
+        )
     grouped = _suite_entries(manifest, require_all_suites=not args.allow_partial_manifest)
 
     qemu_root = (args.qemu_root if args.qemu_root.is_absolute() else repo_root / args.qemu_root).resolve()

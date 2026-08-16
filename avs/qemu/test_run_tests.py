@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import json
 import sys
 import tempfile
 import unittest
@@ -9,11 +10,15 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import run_tests
+import run_elf_identity_contract as elf_identity
 
 
 class StructuredEvidenceParsingTests(unittest.TestCase):
     def test_v058_runner_does_not_publish_retired_pto_kernel_suites(self) -> None:
-        retired = {"tile", "pto_parity", "deepseek_tilekernels"}
+        retired = {
+            "tile", "pto_parity", "deepseek_tilekernels",
+            "v057_vector", "v057_vector_ops", "v057_vector_body_fault",
+        }
         self.assertTrue(retired.isdisjoint(run_tests.SUITES), run_tests.SUITES)
         self.assertTrue(retired.isdisjoint(run_tests.EXPERIMENTAL_SUITES))
 
@@ -31,13 +36,32 @@ class StructuredEvidenceParsingTests(unittest.TestCase):
         )
         system_index = main_source.index("run_system_tests();")
         for invocation in (
-            "run_v057_vector_tile_tests();",
-            "run_v057_vector_ops_matrix_tests();",
             "run_callret_tests();",
             "run_freestanding_runtime_tests();",
         ):
             with self.subTest(invocation=invocation):
                 self.assertLess(main_source.index(invocation), system_index)
+
+    def test_active_catalog_is_the_exact_v0581_catalog(self) -> None:
+        self.assertEqual(run_tests.LLVM_AVS_SPEC, run_tests.REPO_ROOT / "isa/v0.58/linxisa-v0.58.json")
+        catalog = json.loads(run_tests.LLVM_AVS_SPEC.read_text())
+        self.assertEqual(catalog["version"], "0.58.1")
+        self.assertEqual(catalog["instruction_count"], 765)
+
+    def test_v0571_executable_evidence_is_explicitly_archived(self) -> None:
+        manifest = json.loads(
+            (run_tests.SCRIPT_DIR / "qemu_executable_coverage_manifest.json").read_text()
+        )
+        self.assertEqual(manifest["release"], "0.57.1")
+        self.assertFalse(manifest["active_release"])
+        self.assertEqual(manifest["superseded_by"], "0.58.1")
+
+    def test_elf_identity_fixture_matrix_is_exact(self) -> None:
+        self.assertEqual(len(elf_identity.IDENTITY), 165)
+        self.assertTrue(elf_identity._note(elf_identity.IDENTITY).startswith(
+            b"\x04\x00\x00\x00\xa5\x00\x00\x00\x01\x00\x00\x00PTO\0"
+        ))
+        self.assertNotEqual(elf_identity.IDENTITY, elf_identity.OLD_IDENTITY)
 
     def test_evidence_paths_remain_relative_in_repo_and_absolute_outside(self) -> None:
         in_repo = Path(__file__).resolve()
