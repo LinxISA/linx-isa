@@ -303,6 +303,11 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--root", default="")
     ap.add_argument("--suite", default="avs/model/linx_model_diff_suite.yaml")
     ap.add_argument("--workdir", default="")
+    ap.add_argument(
+        "--qemu",
+        default="",
+        help="Exact QEMU executable to authenticate and use for every case.",
+    )
     ap.add_argument("--profile", default="", help="Compatibility-only metadata field.")
     ap.add_argument("--trace-schema-version", default="", help="Compatibility-only metadata field.")
     ap.add_argument("--report-out", default="", help="Optional path to write the JSON summary.")
@@ -310,6 +315,11 @@ def main(argv: list[str]) -> int:
 
     root = Path(args.root).resolve() if args.root else Path(__file__).resolve().parents[2]
     runner = root / "tools" / "model" / "tests" / "avs" / "run_model_diff_suite.py"
+    qemu = (
+        Path(args.qemu).expanduser().resolve()
+        if args.qemu
+        else root / "emulator" / "qemu" / "build-linx" / "qemu-system-linx64"
+    )
 
     env = dict(os.environ)
     env["LINX_VIRT_TEST_FINISHER"] = "1"
@@ -321,7 +331,7 @@ def main(argv: list[str]) -> int:
         "--suite",
         args.suite,
         "--qemu",
-        str(root / "emulator" / "qemu" / "build-linx" / "qemu-system-linx64"),
+        str(qemu),
         "--qemu-bios",
         "none",
     ]
