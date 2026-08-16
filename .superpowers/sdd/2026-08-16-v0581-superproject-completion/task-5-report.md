@@ -96,3 +96,16 @@ mutated tools; arbitrary consumer names; manifest/ELF size disagreement; and
 self-declared comparison hashes. The synthetic complete proof passes only when
 all files, hashes, sizes, symbols, bytes, consumers, and comparison bindings
 agree.
+
+Fresh remediation verification:
+
+- Generator authority/freshness tests: 6/6 passed.
+- Root AI/provenance tests: 36/36 passed.
+- Model build: no work pending after successful configure.
+- Model CTest: 11/11 passed.
+- Standalone copied model checkout configured with explicit immutable authority
+  and passed `check-isa-codec`.
+- Hosted workflow YAML parsed and contains both the exact LinxISA commit and
+  the committed-output freshness invocation.
+- The real release-strict command remains fail-closed at the intentionally
+  absent Task 4 QEMU binary; no runtime promotion is claimed.
