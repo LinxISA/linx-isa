@@ -7,7 +7,7 @@
 
 *Syntax:* remw SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* REMW - Compute signed 32-bit remainder and sign-extend it.
+*Description:* REMW computes the signed low-32-bit remainder using total fixed-width semantics and publishes the XLEN result.
 
 *Encoding:*
 

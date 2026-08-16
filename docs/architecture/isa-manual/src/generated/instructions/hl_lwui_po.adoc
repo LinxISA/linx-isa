@@ -7,7 +7,7 @@
 
 *Syntax:* hl.lwui.po [SrcL, simm], ->Dst0, Dst1
 
-*Description:* HL.LWUI.PO - Load scalar data using this mnemonic's width, signedness, and address-update form.
+*Description:* HL.LWUI.PO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
 
 *Encoding:*
 

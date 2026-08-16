@@ -93,7 +93,12 @@
 - [ ] ID: QEMU-008 Keep scalar call/ret contract coverage aligned with fused direct-call source syntax.
   Command: `python3 avs/qemu/run_callret_contract.py`
   Done means: scalar direct-call source cases use fused `CALL ..., ra=...`, malformed or missing setret lowerings still fault, and positive scalar direct-call cases remain no-fault.
-  Status: ✅ PASS (2026-05-15) - `run_callret_contract.py` passed after converting the scalar direct-call source cases to fused `BSTART.STD CALL, ..., ra=...`. Negative malformed/missing setret cases still trapped, and the positive fused direct-call cases remained no-fault.
+  Historical v0.57 evidence only; it does not transfer approval to the current
+  v0.58.1 syntax or semantics. Status: ✅ PASS (2026-05-15) -
+  `run_callret_contract.py` passed after converting the then-current scalar
+  direct-call source cases to `BSTART.STD CALL, ..., ra=...`. The current
+  PTO-common form is `BSTART.CALL <br_label>, <rt_label>, ->ra` and requires
+  fresh v0.58.1 evidence.
 
 ---
 

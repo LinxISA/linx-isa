@@ -7,7 +7,7 @@
 
 *Syntax:* hl.ld.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1
 
-*Description:* HL.LD.PR - Load scalar data using this mnemonic's width, signedness, and address-update form.
+*Description:* HL.LD.PR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value.
 
 *Encoding:*
 

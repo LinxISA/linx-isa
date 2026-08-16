@@ -3,8 +3,8 @@
 <div class="insn-header">
 
 <span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/bundle_control_attribute.md">Bundle Control Attribute</a> &nbsp;|&nbsp;
-<span class="ch-tag ch-tag-00">Ch 00</span>
-&nbsp; <strong>ISA Manual</strong> &nbsp;|&nbsp;
+<span class="ch-tag ch-tag-17">Ch 17</span>
+&nbsp; <strong>CMD — Command and Control</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
 
 </div>
@@ -26,7 +26,7 @@
 
 ## Description
 
-Latches bundle control, trap, atomic, ordering, and address-class attributes.
+Defines one optional block control record for post-commit trap, transactional visibility, acquire/release ordering, remote execution, and dimension-reduction mode.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ Latches bundle control, trap, atomic, ordering, and address-class attributes.
 
 ## Encoding Notes
 
-- `Latches bundle control, trap, atomic, ordering, and address-class attributes.`
+- `Defines one optional block control record for post-commit trap, transactional visibility, acquire/release ordering, remote execution, and dimension-reduction mode.`
 
 ## Full Catalog Forms
 

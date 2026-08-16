@@ -19,9 +19,15 @@ In-repo compile validation assets are centralized under AVS:
 
 ## Required invariants
 
-- Encodings and decode assumptions must match `isa/v0.57/linxisa-v0.57.json`.
+- Encodings and decode assumptions must match `isa/v0.58/linxisa-v0.58.json`.
 - Block ISA control-flow invariants must hold.
-- Call header adjacency rule (`BSTART CALL` + `SETRET`) must hold.
+- PTO-common direct calls must use the atomic fused
+  `BSTART.CALL <br_label>, <rt_label>, ->ra` form.
+- PTO-common indirect calls must use
+  `BSTART.ICALL <rt_label>, ->ra`; the target comes from the retiring
+  STD/FP block's `BARG.BPCN` and does not consume `SETC.TGT` or `SETRET`.
+- Linx-only long bare-call forms preserve `ra`; an optional `SETRET` or
+  `C.SETRET` pairing must immediately precede the bare call.
 
 ## Execution
 

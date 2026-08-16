@@ -7,7 +7,7 @@
 
 *Syntax:* hl.ssrset SrcL, SSR_ID
 
-*Description:* HL.SSRSET - Write the addressed system register.
+*Description:* HL.SSRSET writes the complete encoded system-register address.
 
 *Encoding:*
 

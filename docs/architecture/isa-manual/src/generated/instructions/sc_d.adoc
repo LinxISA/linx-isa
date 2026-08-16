@@ -7,7 +7,7 @@
 
 *Syntax:* sc.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], {->t, ->u, ->Rd}
 
-*Description:* SC.D - Conditionally store the scalar value when the matching reservation remains valid.
+*Description:* SC.D conditionally stores one doubleword when the local 64-byte-line reservation matches.
 
 *Encoding:*
 

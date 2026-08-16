@@ -3,15 +3,15 @@
 <div class="insn-header">
 
 <span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/bundle_split.md">Bundle Split</a> &nbsp;|&nbsp;
-<span class="ch-tag ch-tag-00">Ch 00</span>
-&nbsp; <strong>ISA Manual</strong> &nbsp;|&nbsp;
+<span class="ch-tag ch-tag-04">Ch 04</span>
+&nbsp; <strong>Block ISA — Block-structured Control Flow</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
 
 </div>
 
 ## Assembly Syntax
 
-- `MSET [RegSrc0, RegSrc1, RegSrc2]`
+- `MSET [RegSrc0=Destination, RegSrc1=FillByte, RegSrc2=LengthBytes]`
 
 ## Encoding
 
@@ -26,7 +26,7 @@
 
 ## Description
 
-Fills an encoded memory range after complete access preflight.
+Fills zero through 63 bytes with the low byte of an absolute GPR after complete access preflight.
 
 ## Pseudocode (informative)
 
@@ -36,13 +36,13 @@ Fills an encoded memory range after complete access preflight.
 
 ## Encoding Notes
 
-- `Fills an encoded memory range after complete access preflight.`
+- `Fills zero through 63 bytes with the low byte of an absolute GPR after complete access preflight.`
 
 ## Full Catalog Forms
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `MSET [RegSrc0, RegSrc1, RegSrc2]` | 32 | — |
+| `MSET [RegSrc0=Destination, RegSrc1=FillByte, RegSrc2=LengthBytes]` | 32 | — |
 
 <div class="insn-nav">
 

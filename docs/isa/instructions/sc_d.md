@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/atomic_operation.md">Atomic Operation</a> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/amo.md">AMO</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-14">Ch 14</span>
 &nbsp; <strong>AMO — Atomic Memory Operations</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -26,17 +26,17 @@
 
 ## Description
 
-Atomic memory read-modify-write operation.
+SC.D conditionally stores one doubleword when the local 64-byte-line reservation matches.
 
 ## Pseudocode (informative)
 
 ```c
-// Execute SC.D as defined by the Atomic Operation semantics.
+// Execute SC.D as defined by the AMO semantics.
 ```
 
 ## Encoding Notes
 
-- `SC.D - Conditionally store the scalar value when the matching reservation remains valid.`
+- `SC.D conditionally stores one doubleword when the local 64-byte-line reservation matches.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ Atomic memory read-modify-write operation.
 
 <div class="insn-nav">
 
-← [Atomic Operation](../groups/atomic_operation.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [AMO](../groups/amo.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

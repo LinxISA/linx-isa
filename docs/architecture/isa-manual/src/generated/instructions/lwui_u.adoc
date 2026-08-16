@@ -7,7 +7,7 @@
 
 *Syntax:* lwui.u [SrcL, simm], ->{t, u, Rd}
 
-*Description:* LWUI.U - Load scalar data using this mnemonic's width, signedness, and address-update form.
+*Description:* LWUI.U snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
 
 *Encoding:*
 

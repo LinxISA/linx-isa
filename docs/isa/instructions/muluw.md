@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/multi_cycle_alu.md">Multi-Cycle ALU</a> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/alu.md">ALU</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-12">Ch 12</span>
 &nbsp; <strong>ALU — Arithmetic Logic Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -31,12 +31,12 @@
 ## Pseudocode (informative)
 
 ```c
-// Execute MULUW as defined by the Multi-Cycle ALU semantics.
+// Execute MULUW as defined by the ALU semantics.
 ```
 
 ## Encoding Notes
 
-- `MULUW - Compute the 32-bit product and sign-extend it.`
+- `MULUW multiplies the source low 32-bit values, retains the low 32 product bits, sign-extends them to XLEN, and publishes the result.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@
 
 <div class="insn-nav">
 
-← [Multi-Cycle ALU](../groups/multi_cycle_alu.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [ALU](../groups/alu.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

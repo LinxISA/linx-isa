@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.MGATHER DataType
 
-*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+*Description:* Begins a TLSU byte-displacement gather block and selects its transfer DataType.
 
 *Encoding:*
 

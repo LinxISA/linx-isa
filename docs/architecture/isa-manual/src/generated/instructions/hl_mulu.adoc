@@ -7,7 +7,7 @@
 
 *Syntax:* hl.mulu SrcL, SrcR, ->Dst0, Dst1
 
-*Description:* HL.MULU - Compute the full-width scalar product as a result pair.
+*Description:* HL.MULU computes an unsigned 128-bit scalar product and publishes its low half followed by its high half.
 
 *Encoding:*
 

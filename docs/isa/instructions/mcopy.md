@@ -3,8 +3,8 @@
 <div class="insn-header">
 
 <span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/bundle_split.md">Bundle Split</a> &nbsp;|&nbsp;
-<span class="ch-tag ch-tag-00">Ch 00</span>
-&nbsp; <strong>ISA Manual</strong> &nbsp;|&nbsp;
+<span class="ch-tag ch-tag-04">Ch 04</span>
+&nbsp; <strong>Block ISA — Block-structured Control Flow</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
 
 </div>
@@ -26,7 +26,7 @@
 
 ## Description
 
-Copies an encoded memory range with instruction-atomic preflight and snapshot semantics.
+Copies a non-overlapping byte range in restartable forward memory steps.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ Copies an encoded memory range with instruction-atomic preflight and snapshot se
 
 ## Encoding Notes
 
-- `Copies an encoded memory range with instruction-atomic preflight and snapshot semantics.`
+- `Copies a non-overlapping byte range in restartable forward memory steps.`
 
 ## Full Catalog Forms
 

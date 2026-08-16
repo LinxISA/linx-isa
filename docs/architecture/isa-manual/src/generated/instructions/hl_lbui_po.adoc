@@ -7,7 +7,7 @@
 
 *Syntax:* hl.lbui.po [SrcL, simm], ->Dst0, Dst1
 
-*Description:* HL.LBUI.PO - Load scalar data using this mnemonic's width, signedness, and address-update form.
+*Description:* HL.LBUI.PO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value.
 
 *Encoding:*
 

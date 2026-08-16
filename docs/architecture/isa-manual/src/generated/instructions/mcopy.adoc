@@ -7,7 +7,7 @@
 
 *Syntax:* MCOPY [RegSrc0, RegSrc1, RegSrc2]
 
-*Description:* Copies an encoded memory range with instruction-atomic preflight and snapshot semantics.
+*Description:* Copies a non-overlapping byte range in restartable forward memory steps.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* maddw SrcL, SrcR, SrcD, ->{t, u, Rd}
 
-*Description:* MADDW - Compute 32-bit multiply-add and sign-extend it.
+*Description:* MADDW adds low 32-bit source values modulo 2^32, sign-extends the accumulated result to XLEN, and publishes it.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* casw<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}
 
-*Description:* CASW - Atomically compare the scalar memory value and conditionally store the replacement.
+*Description:* CASW atomically compares and conditionally replaces one word, then publishes the prior value.
 
 *Encoding:*
 

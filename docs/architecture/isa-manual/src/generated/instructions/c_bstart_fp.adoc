@@ -5,9 +5,9 @@
 [[inst_c_bstart_fp]]
 ==== C.BSTART.FP
 
-*Syntax:* C.BSTART.FP BrType
+*Syntax:* C.BSTART.FP {FALL, IND, RET}
 
-*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+*Description:* Starts a compressed FP block with fallthrough, indirect, or return transfer; every other BrType rejects before effects.
 
 *Encoding:*
 

@@ -2,9 +2,9 @@
 
 <div class="insn-header">
 
-<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/reserve.md">RESERVE</a> &nbsp;|&nbsp;
-<span class="ch-tag ch-tag-18">Ch 18</span>
-&nbsp; <strong>RSV — Reserved and Indexed Operations</strong> &nbsp;|&nbsp;
+<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/alu.md">ALU</a> &nbsp;|&nbsp;
+<span class="ch-tag ch-tag-12">Ch 12</span>
+&nbsp; <strong>ALU — Arithmetic Logic Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>48</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
 
 </div>
@@ -31,12 +31,12 @@
 ## Pseudocode (informative)
 
 ```c
-// Execute HL.BFI as defined by the RESERVE semantics.
+// Execute HL.BFI as defined by the ALU semantics.
 ```
 
 ## Encoding Notes
 
-- `HL.BFI - Insert one scalar bitfield into another.`
+- `HL.BFI inserts ascending low source bits into an inclusive wrapping destination interval of a snapshotted base value and publishes the XLEN result.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@
 
 <div class="insn-nav">
 
-← [RESERVE](../groups/reserve.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [ALU](../groups/alu.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

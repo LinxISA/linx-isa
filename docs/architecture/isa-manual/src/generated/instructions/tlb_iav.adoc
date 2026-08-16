@@ -7,7 +7,7 @@
 
 *Syntax:* tlb.iav SrcL
 
-*Description:* TLB.IAV - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
+*Description:* TLB.IAV completes the canonical 48-bit virtual address with ASID scope maintenance operation synchronously.
 
 *Encoding:*
 

@@ -3,7 +3,7 @@
 <!-- Hero Banner -->
 <div class="isa-hero">
 
-**ISA Version:** v0.58.0 &nbsp;·&nbsp; **766 instruction forms** &nbsp;·&nbsp; **68 groups** &nbsp;·&nbsp; **4 encoding formats**
+**ISA Version:** v0.58.1 &nbsp;·&nbsp; **765 instruction forms** &nbsp;·&nbsp; **54 groups** &nbsp;·&nbsp; **4 encoding formats**
 
 ---
 
@@ -64,23 +64,20 @@ The LinxISA manual is organized into 12 chapters covering distinct functional un
 ## Browse by Group
 
 <div class="group-card-grid">
-[Arithmetic (1)](groups/arithmetic.md){.group-card} [Arithmetic Operation (20)](groups/arithmetic_operation.md){.group-card} [Arithmetic Operation 32bit (21)](groups/arithmetic_operation_32bit.md){.group-card} [Arithmetic Operation 64bit (21)](groups/arithmetic_operation_64bit.md){.group-card}
-[Atomic (4)](groups/atomic.md){.group-card} [Atomic Operation (72)](groups/atomic_operation.md){.group-card} [BSTART (20)](groups/bstart.md){.group-card} [Bit Manipulation (8)](groups/bit_manipulation.md){.group-card}
-[Bit Operation (8)](groups/bit_operation.md){.group-card} [Block Split (2)](groups/block_split.md){.group-card} [Branch (10)](groups/branch.md){.group-card} [Bundle Argument (3)](groups/bundle_argument.md){.group-card}
-[Bundle Control Attribute (1)](groups/bundle_control_attribute.md){.group-card} [Bundle Data Attribute (1)](groups/bundle_data_attribute.md){.group-card} [Bundle Dimension (1)](groups/bundle_dimension.md){.group-card} [Bundle Hint (2)](groups/bundle_hint.md){.group-card}
-[Bundle Input & Output (7)](groups/bundle_input_output.md){.group-card} [Bundle Offset (1)](groups/bundle_offset.md){.group-card} [Bundle Split (60)](groups/bundle_split.md){.group-card} [C.BSTART (7)](groups/c_bstart.md){.group-card}
-[C.TINST (6)](groups/c_tinst.md){.group-card} [C.UNARY (7)](groups/c_unary.md){.group-card} [Cache Maintain (16)](groups/cache_maintain.md){.group-card} [Compare Instruction (40)](groups/compare_instruction.md){.group-card}
-[Compound Operation (1)](groups/compound_operation.md){.group-card} [Concat (2)](groups/concat.md){.group-card} [DMA Operation (1)](groups/dma_operation.md){.group-card} [Division (2)](groups/division.md){.group-card}
-[Execution Control (10)](groups/execution_control.md){.group-card} [Floating Point Arithmetic (5)](groups/floating_point_arithmetic.md){.group-card} [Floating-point Arithmetic (12)](groups/floating_point_arithmetic.md){.group-card} [Floating-point Compare (8)](groups/floating_point_compare.md){.group-card}
-[Format Convert (12)](groups/format_convert.md){.group-card} [General (3)](groups/general.md){.group-card} [General Manager (2)](groups/general_manager.md){.group-card} [Immediate (2)](groups/immediate.md){.group-card}
-[Load Immediate Offset (23)](groups/load_immediate_offset.md){.group-card} [Load Long Offset (12)](groups/load_long_offset.md){.group-card} [Load PC-Relative (7)](groups/load_pc_relative.md){.group-card} [Load Pair (19)](groups/load_pair.md){.group-card}
-[Load Post-Index (19)](groups/load_post_index.md){.group-card} [Load Pre-Index (19)](groups/load_pre_index.md){.group-card} [Load Register Offset (22)](groups/load_register_offset.md){.group-card} [Load Symbol (7)](groups/load_symbol.md){.group-card}
-[Load UnScaled (16)](groups/load_unscaled.md){.group-card} [Long Immediate (2)](groups/long_immediate.md){.group-card} [Max-Min (6)](groups/max_min.md){.group-card} [Move (3)](groups/move.md){.group-card}
-[Multi-Cycle ALU (28)](groups/multi_cycle_alu.md){.group-card} [PC-Relative (4)](groups/pc_relative.md){.group-card} [Prefetch (4)](groups/prefetch.md){.group-card} [RESERVE (3)](groups/reserve.md){.group-card}
-[Reduce Operation with Register (9)](groups/reduce_operation_with_register.md){.group-card} [SSR Access (7)](groups/ssr_access.md){.group-card} [Set Commit Argument (26)](groups/set_commit_argument.md){.group-card} [Shuffle (8)](groups/shuffle.md){.group-card}
-[Store Immediate Offset (9)](groups/store_immediate_offset.md){.group-card} [Store Long Offset (7)](groups/store_long_offset.md){.group-card} [Store Offset (14)](groups/store_offset.md){.group-card} [Store PC-Relative (4)](groups/store_pc_relative.md){.group-card}
-[Store Pair (14)](groups/store_pair.md){.group-card} [Store Post-Index (14)](groups/store_post_index.md){.group-card} [Store Pre-Index (14)](groups/store_pre_index.md){.group-card} [Store Register Offset (21)](groups/store_register_offset.md){.group-card}
-[Store Symbol (4)](groups/store_symbol.md){.group-card} [Three Source Integer (2)](groups/three_source_integer.md){.group-card} [Three-Source Floating Point (8)](groups/three_source_floating_point.md){.group-card} [Two-Source Floating Point (12)](groups/two_source_floating_point.md){.group-card}
+[ALU (107)](groups/alu.md){.group-card} [AMO (53)](groups/amo.md){.group-card} [Arithmetic Operation (16)](groups/arithmetic_operation.md){.group-card} [Atomic Operation (24)](groups/atomic_operation.md){.group-card}
+[BRU (66)](groups/bru.md){.group-card} [BSTART (21)](groups/bstart.md){.group-card} [Bit Manipulation (8)](groups/bit_manipulation.md){.group-card} [Block Split (2)](groups/block_split.md){.group-card}
+[Bundle Argument (3)](groups/bundle_argument.md){.group-card} [Bundle Control Attribute (1)](groups/bundle_control_attribute.md){.group-card} [Bundle Data Attribute (1)](groups/bundle_data_attribute.md){.group-card} [Bundle Dimension (1)](groups/bundle_dimension.md){.group-card}
+[Bundle Fixed-Point PostProcess Attribute (1)](groups/bundle_fixed_point_postprocess_attribute.md){.group-card} [Bundle Hint (2)](groups/bundle_hint.md){.group-card} [Bundle Input & Output (7)](groups/bundle_input_output.md){.group-card} [Bundle Offset (1)](groups/bundle_offset.md){.group-card}
+[Bundle Split (57)](groups/bundle_split.md){.group-card} [C.BSTART (7)](groups/c_bstart.md){.group-card} [Compare Instruction (16)](groups/compare_instruction.md){.group-card} [Division (2)](groups/division.md){.group-card}
+[FSU (30)](groups/fsu.md){.group-card} [Floating Point Arithmetic (5)](groups/floating_point_arithmetic.md){.group-card} [Format Convert (4)](groups/format_convert.md){.group-card} [General (3)](groups/general.md){.group-card}
+[General Manager (2)](groups/general_manager.md){.group-card} [LDA (11)](groups/lda.md){.group-card} [LDA/BASE_IMM (9)](groups/lda_base_imm.md){.group-card} [LDA/BASE_REG (8)](groups/lda_base_reg.md){.group-card}
+[LDA/LONG (12)](groups/lda_long.md){.group-card} [LDA/PAIR (19)](groups/lda_pair.md){.group-card} [LDA/PC_REL (7)](groups/lda_pc_rel.md){.group-card} [LDA/POST_INDEX (19)](groups/lda_post_index.md){.group-card}
+[LDA/PRE_INDEX (19)](groups/lda_pre_index.md){.group-card} [LDA/UNSCALED (6)](groups/lda_unscaled.md){.group-card} [Load Immediate Offset (14)](groups/load_immediate_offset.md){.group-card} [Load Register Offset (14)](groups/load_register_offset.md){.group-card}
+[Load UnScaled (10)](groups/load_unscaled.md){.group-card} [Multi-Cycle ALU (2)](groups/multi_cycle_alu.md){.group-card} [Reduce Operation with Register (9)](groups/reduce_operation_with_register.md){.group-card} [STA (4)](groups/sta.md){.group-card}
+[STA/BASE_IMM (9)](groups/sta_base_imm.md){.group-card} [STA/BASE_REG (7)](groups/sta_base_reg.md){.group-card} [STA/LONG (7)](groups/sta_long.md){.group-card} [STA/PAIR (14)](groups/sta_pair.md){.group-card}
+[STA/PC_REL (4)](groups/sta_pc_rel.md){.group-card} [STA/POST_INDEX (14)](groups/sta_post_index.md){.group-card} [STA/PRE_INDEX (14)](groups/sta_pre_index.md){.group-card} [SYS (35)](groups/sys.md){.group-card}
+[Shuffle (8)](groups/shuffle.md){.group-card} [Store Offset (14)](groups/store_offset.md){.group-card} [Store Register Offset (14)](groups/store_register_offset.md){.group-card} [Three Source Integer (2)](groups/three_source_integer.md){.group-card}
+[Three-Source Floating Point (8)](groups/three_source_floating_point.md){.group-card} [Two-Source Floating Point (12)](groups/two_source_floating_point.md){.group-card}
 
 </div>
 
@@ -95,240 +92,159 @@ Use **Ctrl+F** / **Cmd+F** to search, or browse the [full alphabetical list](ins
 | Mnemonic | Group | Bits | Description |
 |----------|-------|------|-------------|
 
-| [ACRC](instructions/acrc.md) | execution_control | 32 | Architectural control (ring call). Calls an implementation-defined ACR. |
-| [ACRE](instructions/acre.md) | execution_control | 32 | Architectural control (ring entry). Enters an implementation-defined ACR. |
-| [ASSERT](instructions/assert.md) | execution_control | 32 | Architectural assertion. Traps if the condition register is zero. |
-| [BSE](instructions/bse.md) | execution_control | 32 | Execution control instruction. |
-| [BWE](instructions/bwe.md) | execution_control | 32 | Execution control instruction. |
-| [ADD](instructions/add.md) | arithmetic_operation_64bit | 32 | Integer addition. Writes the sum of two registers to the destination. |
-| [ADDI](instructions/addi.md) | arithmetic_operation_64bit | 32 | Integer add-immediate. Adds a sign-extended 12-bit immediate to a register. |
-| [AND](instructions/and.md) | arithmetic_operation_64bit | 32 | Bitwise AND of two registers. |
-| [ANDI](instructions/andi.md) | arithmetic_operation_64bit | 32 | Bitwise AND with an immediate. |
-| [HL.ADDI](instructions/hl_addi.md) | arithmetic_operation_64bit | 48 | HL.ADDI - Compute this mnemonic's binary scalar operation and write the selected destination. |
-| [ADDIW](instructions/addiw.md) | arithmetic_operation_32bit | 32 | 32-bit word add-immediate. |
-| [ADDW](instructions/addw.md) | arithmetic_operation_32bit | 32 | 32-bit word integer addition. |
-| [ANDIW](instructions/andiw.md) | arithmetic_operation_32bit | 32 | 32-bit word AND-immediate. |
-| [ANDW](instructions/andw.md) | arithmetic_operation_32bit | 32 | 32-bit word bitwise AND. |
-| [HL.ADDIW](instructions/hl_addiw.md) | arithmetic_operation_32bit | 48 | HL.ADDIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result. |
-| [ADDTPC](instructions/addtpc.md) | pc_relative | 32 | PC-relative addition. Adds an immediate to the current PC/TPC and writes the result. |
-| [HL.ADDTPC](instructions/hl_addtpc.md) | pc_relative | 48 | HL.ADDTPC - Add the encoded displacement to the program counter. |
-| [HL.SETRET](instructions/hl_setret.md) | pc_relative | 48 | HL.SETRET - Write the architectural return address. |
-| [SETRET](instructions/setret.md) | pc_relative | 32 | Materializes a return address (ra) using a PC-relative offset. Used in call headers. |
-| [B.CATR](instructions/b_catr.md) | bundle_control_attribute | 32 | Latches bundle control, trap, atomic, ordering, and address-class attributes. |
-| [B.DATR](instructions/b_datr.md) | bundle_data_attribute | 32 | Latches tile layout, data type, padding, conversion, rounding, and saturation attributes. |
-| [B.DIM](instructions/b_dim.md) | bundle_argument | 32 | Writes one of the three bundle-local dimension registers. |
-| [B.EQ](instructions/b_eq.md) | branch | 32 | Conditional branch taken when SrcL equals SrcR. |
-| [B.GE](instructions/b_ge.md) | branch | 32 | Conditional branch taken when SrcL is greater than or equal to SrcR (signed). |
-| [B.GEU](instructions/b_geu.md) | branch | 32 | Conditional branch taken when SrcL is greater than or equal to SrcR (unsigned). |
-| [B.LT](instructions/b_lt.md) | branch | 32 | Conditional branch taken when SrcL is less than SrcR (signed). |
-| [B.LTU](instructions/b_ltu.md) | branch | 32 | Conditional branch taken when SrcL is less than SrcR (unsigned). |
-| [B.HINT](instructions/b_hint.md) | bundle_hint | 32 | Records non-functional branch, temperature, prefetch-size, or trace guidance. |
+| [ACRC](instructions/acrc.md) | sys | 32 | Architectural control (ring call). Calls an implementation-defined ACR. |
+| [ACRE](instructions/acre.md) | sys | 32 | Architectural control (ring entry). Enters an implementation-defined ACR. |
+| [ASSERT](instructions/assert.md) | sys | 32 | Architectural assertion. Traps if the condition register is zero. |
+| [BC.IALL](instructions/bc_iall.md) | sys | 32 | Branch-predictor cache invalidate all entries. |
+| [BC.IVA](instructions/bc_iva.md) | sys | 32 | Branch-predictor cache invalidate by address. |
+| [ADD](instructions/add.md) | alu | 32 | Integer addition. Writes the sum of two registers to the destination. |
+| [ADDI](instructions/addi.md) | alu | 32 | Integer add-immediate. Adds a sign-extended 12-bit immediate to a register. |
+| [ADDIW](instructions/addiw.md) | alu | 32 | 32-bit word add-immediate. |
+| [ADDW](instructions/addw.md) | alu | 32 | 32-bit word integer addition. |
+| [AND](instructions/and.md) | alu | 32 | Bitwise AND of two registers. |
+| [ADDTPC](instructions/addtpc.md) | bru | 32 | PC-relative addition. Adds an immediate to the current PC/TPC and writes the result. |
+| [B.EQ](instructions/b_eq.md) | bru | 32 | Conditional branch taken when SrcL equals SrcR. |
+| [B.GE](instructions/b_ge.md) | bru | 32 | Conditional branch taken when SrcL is greater than or equal to SrcR (signed). |
+| [B.GEU](instructions/b_geu.md) | bru | 32 | Conditional branch taken when SrcL is greater than or equal to SrcR (unsigned). |
+| [B.LT](instructions/b_lt.md) | bru | 32 | Conditional branch taken when SrcL is less than SrcR (signed). |
+| [B.CATR](instructions/b_catr.md) | bundle_control_attribute | 32 | Defines one optional block control record for post-commit trap, transactional visibility, acquire/release ordering, remote execution, and dimension-reduction mode. |
+| [B.DATR](instructions/b_datr.md) | bundle_data_attribute | 32 | Latches the optional per-block tile layout, data type, padding, comparison, rounding, saturation, and canonicalization attributes. |
+| [B.DIM](instructions/b_dim.md) | bundle_argument | 32 | Writes zero-extend((GPR[RegSrc] + uimm17)[15:0]) to the selected bundle-local LB register exactly once. |
+| [B.FPATR](instructions/b_fpatr.md) | bundle_fixed_point_postprocess_attribute | 32 | Latches complete-bundle matrix post-processing mode, reduction enables, and fixed-point descriptor controls. |
+| [B.HINT](instructions/b_hint.md) | bundle_hint | 32 | Records one optional per-block branch, temperature, prefetch-size, or trace-boundary hint without changing functional results. |
 | [B.IOR](instructions/b_ior.md) | bundle_input_output | 32 | Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as logical row stride. |
-| [B.IOS](instructions/b_ios.md) | bundle_input_output | 32 | Binds one ordered absolute core-private Shared register S0..S255 with a per-PE source/destination size code and four-PE participation mask. |
-| [B.IOT](instructions/b_iot.md) | bundle_input_output | 32 | Binds v5 PE_MASK, ordered Local tile sources, last-use, and optional TSize/2-bit Local destination metadata; reuse bits do not exist. |
+| [B.IOS](instructions/b_ios.md) | bundle_input_output | 32 | Binds one ordered absolute Core-private Shared register S0..S255 as a source or destination with a common four-PE participation mask. |
+| [B.IOT](instructions/b_iot.md) | bundle_input_output | 32 | Binds an ordered Local Tile source/destination sequence with one common four-PE participation mask; L terminates only that sequence and never releases a source. |
 | [B.TEXT](instructions/b_text.md) | bundle_offset | 32 | Sets the out-of-line body entry address for a decoupled bundle. |
-| [BC.IALL](instructions/bc_iall.md) | cache_maintain | 32 | Branch-predictor cache invalidate all entries. |
-| [BC.IVA](instructions/bc_iva.md) | cache_maintain | 32 | Branch-predictor cache invalidate by address. |
-| [DC.CISW](instructions/dc_cisw.md) | cache_maintain | 32 | Data cache clean-and-invalidate by set/way. |
-| [DC.CIVA](instructions/dc_civa.md) | cache_maintain | 32 | Cache maintenance operation. |
-| [DC.CSW](instructions/dc_csw.md) | cache_maintain | 32 | Cache maintenance operation. |
-| [BCNT](instructions/bcnt.md) | bit_operation | 32 | Population count. Counts the number of set bits in a register. |
-| [BIC](instructions/bic.md) | bit_operation | 32 | Bit clear / AND-NOT. |
-| [BIS](instructions/bis.md) | bit_operation | 32 | Bit set / OR. |
-| [BXS](instructions/bxs.md) | bit_operation | 32 | Bit-field extract signed. |
-| [BXU](instructions/bxu.md) | bit_operation | 32 | Bit-field extract unsigned. |
 | [BSTART](instructions/bstart.md) | bundle_split | 32 | Block split marker. Terminates the current basic block and begins the next. Encodes block type and transition kind. |
 | [BSTART.FP](instructions/bstart_fp.md) | bundle_split | 32 | Terminates the current block and begins the next. |
 | [BSTART.GMOV](instructions/bstart_gmov.md) | bundle_split | 32 | Terminates the current block and begins the next. |
 | [BSTART.MGATHER](instructions/bstart_mgather.md) | bundle_split | 32 | Terminates the current block and begins the next. |
 | [BSTART.MGATHER.CAS](instructions/bstart_mgather_cas.md) | bundle_split | 32 | Terminates the current block and begins the next. |
-| [BSTART CALL](instructions/bstart_call.md) | bstart | 32 | Atomic fused call with independent call-target and return-target fields; transfers to the call block and writes `ra`. This exact aggregate is distinct from the generic bare-call form, which preserves `ra` and requires an adjacent `SETRET` or `C.SETRET`. |
+| [BSTART.CALL](instructions/bstart_call.md) | bstart | 32 | Atomic fused call with independent call-target and return-target fields; transfers to the call block and writes `ra`. This exact aggregate is distinct from the generic bare-call form, which preserves `ra` and requires an adjacent `SETRET` or `C.SETRET`. |
+| [BSTART.ICALL](instructions/bstart_icall.md) | bstart | 32 | Terminates the current block and begins the next. |
 | [HL.BSTART CALL](instructions/hl_bstart_call.md) | bstart | 48 | [48-bit HL.] Atomic fused call with independent call-target and return-target fields; transfers to the call block and writes `ra`. This exact aggregate is distinct from the generic bare-call form, which preserves `ra` and requires an adjacent `SETRET` or `C.SETRET`. |
 | [HL.BSTART.FP](instructions/hl_bstart_fp.md) | bstart | 48 | [48-bit HL.] Terminates the current block and begins the next. |
 | [HL.BSTART.STD](instructions/hl_bstart_std.md) | bstart | 48 | [48-bit HL.] Terminates the current block and begins the next. |
-| [HL.BSTART.SYS](instructions/hl_bstart_sys.md) | bstart | 48 | [48-bit HL.] Terminates the current block and begins the next. |
 | [BSTART.VPAR](instructions/bstart_vpar.md) | block_split | 32 | Terminates the current block and begins the next. |
 | [BSTART.VSEQ](instructions/bstart_vseq.md) | block_split | 32 | Terminates the current block and begins the next. |
-| [C.ADD](instructions/c_add.md) | arithmetic_operation | 16 | [16-bit C.] Integer addition. |
-| [C.AND](instructions/c_and.md) | arithmetic_operation | 16 | [16-bit C.] Bitwise AND. |
-| [C.OR](instructions/c_or.md) | arithmetic_operation | 16 | [16-bit C.] Bitwise OR. |
-| [C.SUB](instructions/c_sub.md) | arithmetic_operation | 16 | [16-bit C.] Integer subtraction. |
-| [V.ADD](instructions/v_add.md) | arithmetic_operation | 64 | [64-bit V.] Integer addition. |
-| [C.ADDI](instructions/c_addi.md) | arithmetic | 16 | C.ADDI - Compute this mnemonic's binary scalar operation and write the selected destination. |
-| [C.B.DIMI](instructions/c_b_dimi.md) | bundle_dimension | 16 | Writes one of the three bundle-local dimension registers. |
+| [C.B.DIMI](instructions/c_b_dimi.md) | bundle_dimension | 16 | Zero-extends imm8 and writes one selected bundle-local LB exactly once. |
 | [C.BSTART.FP](instructions/c_bstart_fp.md) | c_bstart | 16 | [16-bit C.] Terminates the current block and begins the next. |
 | [C.BSTART.MPAR](instructions/c_bstart_mpar.md) | c_bstart | 16 | [16-bit C.] Terminates the current block and begins the next. |
 | [C.BSTART.MSEQ](instructions/c_bstart_mseq.md) | c_bstart | 16 | [16-bit C.] Terminates the current block and begins the next. |
 | [C.BSTART.STD](instructions/c_bstart_std.md) | c_bstart | 16 | [16-bit C.] Terminates the current block and begins the next. |
 | [C.BSTART.SYS](instructions/c_bstart_sys.md) | c_bstart | 16 | [16-bit C.] Terminates the current block and begins the next. |
-| [C.CMP.EQI](instructions/c_cmp_eqi.md) | c_tinst | 16 | C.CMP.EQI - Compare scalar operands and write the encoded boolean result. |
-| [C.CMP.NEI](instructions/c_cmp_nei.md) | c_tinst | 16 | C.CMP.NEI - Compare scalar operands and write the encoded boolean result. |
-| [C.EBREAK](instructions/c_ebreak.md) | c_tinst | 16 | C.EBREAK - Raise the software breakpoint exception. |
-| [C.SLLI](instructions/c_slli.md) | c_tinst | 16 | C.SLLI - Compute this mnemonic's binary scalar operation and write the selected destination. |
-| [C.SRLI](instructions/c_srli.md) | c_tinst | 16 | C.SRLI - Compute this mnemonic's binary scalar operation and write the selected destination. |
-| [C.LDI](instructions/c_ldi.md) | load_immediate_offset | 16 | [16-bit C.] Loads a value from memory into a register. |
-| [C.LWI](instructions/c_lwi.md) | load_immediate_offset | 16 | [16-bit C.] Loads a value from memory into a register. |
-| [LBI](instructions/lbi.md) | load_immediate_offset | 32 | Loads a value from memory into a register. |
-| [LBUI](instructions/lbui.md) | load_immediate_offset | 32 | Loads a value from memory into a register. |
-| [LDI](instructions/ldi.md) | load_immediate_offset | 32 | Loads a value from memory into a register. |
-| [C.MOVI](instructions/c_movi.md) | move | 16 | C.MOVI - Move the scalar source to the selected destination. |
-| [C.MOVR](instructions/c_movr.md) | move | 16 | C.MOVR - Move the scalar source to the selected destination. |
-| [C.SETRET](instructions/c_setret.md) | move | 16 | C.SETRET - Write the architectural return address. |
-| [C.SDI](instructions/c_sdi.md) | store_immediate_offset | 16 | [16-bit C.] Stores a register value to memory. |
-| [C.SWI](instructions/c_swi.md) | store_immediate_offset | 16 | [16-bit C.] Stores a register value to memory. |
-| [SBI](instructions/sbi.md) | store_immediate_offset | 32 | Stores a register value to memory. |
-| [SDI](instructions/sdi.md) | store_immediate_offset | 32 | Stores a register value to memory. |
-| [SDI.U](instructions/sdi_u.md) | store_immediate_offset | 32 | Stores a register value to memory. |
-| [C.SETC.EQ](instructions/c_setc_eq.md) | set_commit_argument | 16 | [16-bit C.] Sets the block-commit condition. |
-| [C.SETC.NE](instructions/c_setc_ne.md) | set_commit_argument | 16 | [16-bit C.] Sets the block-commit condition. |
-| [HL.SETC.ANDI](instructions/hl_setc_andi.md) | set_commit_argument | 48 | [48-bit HL.] Sets the block-commit condition. |
-| [HL.SETC.EQI](instructions/hl_setc_eqi.md) | set_commit_argument | 48 | [48-bit HL.] Sets the block-commit condition. |
-| [HL.SETC.GEI](instructions/hl_setc_gei.md) | set_commit_argument | 48 | [48-bit HL.] Sets the block-commit condition. |
-| [C.SETC.TGT](instructions/c_setc_tgt.md) | c_unary | 16 | [16-bit C.] Sets the block-commit condition. |
-| [C.SEXT.B](instructions/c_sext_b.md) | c_unary | 16 | C.SEXT.B - Sign-extend or zero-extend the selected scalar subword. |
-| [C.SEXT.H](instructions/c_sext_h.md) | c_unary | 16 | C.SEXT.H - Sign-extend or zero-extend the selected scalar subword. |
-| [C.SEXT.W](instructions/c_sext_w.md) | c_unary | 16 | C.SEXT.W - Sign-extend or zero-extend the selected scalar subword. |
-| [C.ZEXT.B](instructions/c_zext_b.md) | c_unary | 16 | C.ZEXT.B - Sign-extend or zero-extend the selected scalar subword. |
-| [CASB](instructions/casb.md) | atomic_operation | 32 | Atomic memory read-modify-write operation. |
-| [CASD](instructions/casd.md) | atomic_operation | 32 | Atomic memory read-modify-write operation. |
-| [CASH](instructions/cash.md) | atomic_operation | 32 | Atomic memory read-modify-write operation. |
-| [CASW](instructions/casw.md) | atomic_operation | 32 | Atomic memory read-modify-write operation. |
-| [LD.ADD](instructions/ld_add.md) | atomic_operation | 32 | Atomic memory read-modify-write operation. |
-| [CMP.AND](instructions/cmp_and.md) | compare_instruction | 32 | CMP.AND - Combine scalar comparison results with the encoded logical operation. |
-| [CMP.ANDI](instructions/cmp_andi.md) | compare_instruction | 32 | CMP.ANDI - Combine scalar comparison results with the encoded logical operation. |
-| [CMP.EQ](instructions/cmp_eq.md) | compare_instruction | 32 | Compare equal. Sets destination to 1 if operands are equal. |
-| [CMP.EQI](instructions/cmp_eqi.md) | compare_instruction | 32 | CMP.EQI - Compare scalar operands and write the encoded boolean result. |
-| [CMP.GE](instructions/cmp_ge.md) | compare_instruction | 32 | Compare greater-or-equal (signed). |
-| [CSEL](instructions/csel.md) | compound_operation | 32 | Conditional select. `Dest = (SrcP != 0) ? SrcL : SrcR`. |
-| [DIV](instructions/div.md) | multi_cycle_alu | 32 | Signed integer division. |
-| [DIVU](instructions/divu.md) | multi_cycle_alu | 32 | Unsigned integer division. |
-| [DIVUW](instructions/divuw.md) | multi_cycle_alu | 32 | 32-bit word unsigned integer division. |
-| [DIVW](instructions/divw.md) | multi_cycle_alu | 32 | 32-bit word signed integer division. |
-| [HL.DIV](instructions/hl_div.md) | multi_cycle_alu | 48 | [48-bit HL.] Signed integer division. |
-| [DMA](instructions/dma.md) | dma_operation | 32 | Copies exactly one 64-byte region from the SrcL address to the SrcR address; validates both ranges before effects, snapshots the source so overlap has memmove semantics, and guarantees that a fault leaves memory unchanged. |
-| [FABS](instructions/fabs.md) | floating_point_arithmetic | 32 | Floating-point absolute value. |
-| [FADD](instructions/fadd.md) | floating_point_arithmetic | 32 | Floating-point addition. |
-| [FDIV](instructions/fdiv.md) | floating_point_arithmetic | 32 | Floating-point division. |
-| [FEXP](instructions/fexp.md) | floating_point_arithmetic | 32 | FEXP - Compute this mnemonic's unary floating-point operation. |
-| [FMADD](instructions/fmadd.md) | floating_point_arithmetic | 32 | FMADD - Compute this mnemonic's fused floating-point operation. |
-| [FCVT](instructions/fcvt.md) | format_convert | 32 | Floating-point format conversion. |
-| [FCVTA](instructions/fcvta.md) | format_convert | 32 | FCVTA - Convert between the encoded scalar numeric formats. |
-| [FCVTM](instructions/fcvtm.md) | format_convert | 32 | FCVTM - Convert between the encoded scalar numeric formats. |
-| [FCVTN](instructions/fcvtn.md) | format_convert | 32 | FCVTN - Convert between the encoded scalar numeric formats. |
-| [FCVTP](instructions/fcvtp.md) | format_convert | 32 | FCVTP - Convert between the encoded scalar numeric formats. |
-| [FEQ](instructions/feq.md) | floating_point_compare | 32 | Floating-point equality comparison. Writes 1 if ordered and equal. |
-| [FEQS](instructions/feqs.md) | floating_point_compare | 32 | FEQS - Compare floating-point operands and produce the encoded result. |
-| [FGE](instructions/fge.md) | floating_point_compare | 32 | Floating-point greater-or-equal comparison (ordered). |
-| [FGES](instructions/fges.md) | floating_point_compare | 32 | FGES - Compare floating-point operands and produce the encoded result. |
-| [FLT](instructions/flt.md) | floating_point_compare | 32 | Floating-point less-than comparison (ordered). |
-| [FMAX](instructions/fmax.md) | max_min | 32 | Floating-point maximum. |
-| [FMIN](instructions/fmin.md) | max_min | 32 | Floating-point minimum. |
-| [MAX](instructions/max.md) | max_min | 32 | Integer max (signed). |
-| [MAXU](instructions/maxu.md) | max_min | 32 | MAXU - Compute this mnemonic's binary scalar operation and write the selected destination. |
-| [MIN](instructions/min.md) | max_min | 32 | Integer min (signed). |
-| [HL.BFI](instructions/hl_bfi.md) | reserve | 48 | [48-bit HL.] Bit-field insert. |
-| [HL.MIADD](instructions/hl_miadd.md) | reserve | 48 | HL.MIADD - Multiply by the encoded immediate and add the scalar source. |
-| [HL.MISUB](instructions/hl_misub.md) | reserve | 48 | HL.MISUB - Multiply by the encoded immediate and add the scalar source. |
-| [HL.CASB](instructions/hl_casb.md) | atomic | 48 | [48-bit HL.] Atomic memory read-modify-write operation. |
-| [HL.CASD](instructions/hl_casd.md) | atomic | 48 | [48-bit HL.] Atomic memory read-modify-write operation. |
-| [HL.CASH](instructions/hl_cash.md) | atomic | 48 | [48-bit HL.] Atomic memory read-modify-write operation. |
-| [HL.CASW](instructions/hl_casw.md) | atomic | 48 | [48-bit HL.] Atomic memory read-modify-write operation. |
-| [HL.CCAT](instructions/hl_ccat.md) | concat | 48 | HL.CCAT - Concatenate two scalar values into a result pair. |
-| [HL.CCATW](instructions/hl_ccatw.md) | concat | 48 | HL.CCATW - Concatenate two 32-bit values into a sign-extended result pair. |
-| [HL.LB.PCR](instructions/hl_lb_pcr.md) | load_pc_relative | 48 | [48-bit HL.] Loads a value from memory into a register. |
-| [HL.LBU.PCR](instructions/hl_lbu_pcr.md) | load_pc_relative | 48 | [48-bit HL.] Loads a value from memory into a register. |
-| [HL.LD.PCR](instructions/hl_ld_pcr.md) | load_pc_relative | 48 | [48-bit HL.] Loads a value from memory into a register. |
-| [HL.LH.PCR](instructions/hl_lh_pcr.md) | load_pc_relative | 48 | [48-bit HL.] Loads a value from memory into a register. |
-| [HL.LHU.PCR](instructions/hl_lhu_pcr.md) | load_pc_relative | 48 | [48-bit HL.] Loads a value from memory into a register. |
-| [HL.LB.PO](instructions/hl_lb_po.md) | load_post_index | 48 | [48-bit HL.] Loads a value from memory into a register. |
-| [HL.LBI.PO](instructions/hl_lbi_po.md) | load_post_index | 48 | [48-bit HL.] Loads a value from memory into a register. |
-| [HL.LBU.PO](instructions/hl_lbu_po.md) | load_post_index | 48 | [48-bit HL.] Loads a value from memory into a register. |
-| [HL.LBUI.PO](instructions/hl_lbui_po.md) | load_post_index | 48 | [48-bit HL.] Loads a value from memory into a register. |
-| [HL.LD.PO](instructions/hl_ld_po.md) | load_post_index | 48 | [48-bit HL.] Loads a value from memory into a register. |
-| [HL.LB.PR](instructions/hl_lb_pr.md) | load_pre_index | 48 | [48-bit HL.] Loads a value from memory into a register. |
-| [HL.LBI.PR](instructions/hl_lbi_pr.md) | load_pre_index | 48 | [48-bit HL.] Loads a value from memory into a register. |
-| [HL.LBU.PR](instructions/hl_lbu_pr.md) | load_pre_index | 48 | [48-bit HL.] Loads a value from memory into a register. |
-| [HL.LBUI.PR](instructions/hl_lbui_pr.md) | load_pre_index | 48 | [48-bit HL.] Loads a value from memory into a register. |
-| [HL.LD.PR](instructions/hl_ld_pr.md) | load_pre_index | 48 | [48-bit HL.] Loads a value from memory into a register. |
-| [HL.LBI](instructions/hl_lbi.md) | load_long_offset | 48 | [48-bit HL.] Loads a value from memory into a register. |
-| [HL.LBUI](instructions/hl_lbui.md) | load_long_offset | 48 | [48-bit HL.] Loads a value from memory into a register. |
-| [HL.LDI](instructions/hl_ldi.md) | load_long_offset | 48 | [48-bit HL.] Loads a value from memory into a register. |
-| [HL.LDI.U](instructions/hl_ldi_u.md) | load_long_offset | 48 | [48-bit HL.] Loads a value from memory into a register. |
-| [HL.LHI](instructions/hl_lhi.md) | load_long_offset | 48 | [48-bit HL.] Loads a value from memory into a register. |
-| [HL.LBIP](instructions/hl_lbip.md) | load_pair | 48 | [48-bit HL.] Loads a value from memory into a register. |
-| [HL.LBP](instructions/hl_lbp.md) | load_pair | 48 | [48-bit HL.] Loads a value from memory into a register. |
-| [HL.LBUIP](instructions/hl_lbuip.md) | load_pair | 48 | [48-bit HL.] Loads a value from memory into a register. |
-| [HL.LBUP](instructions/hl_lbup.md) | load_pair | 48 | [48-bit HL.] Loads a value from memory into a register. |
-| [HL.LDIP](instructions/hl_ldip.md) | load_pair | 48 | [48-bit HL.] Loads a value from memory into a register. |
-| [HL.LIS](instructions/hl_lis.md) | long_immediate | 48 | HL.LIS - Materialize the encoded signed long immediate. |
-| [HL.LIU](instructions/hl_liu.md) | long_immediate | 48 | HL.LIU - Materialize the encoded unsigned long immediate. |
-| [HL.LUI](instructions/hl_lui.md) | immediate | 48 | HL.LUI - Materialize the encoded signed long immediate. |
-| [LUI](instructions/lui.md) | immediate | 32 | Load upper immediate. Materializes a 20-bit constant in the upper bits of the destination. |
-| [HL.PRF](instructions/hl_prf.md) | prefetch | 48 | HL.PRF - Issue a scalar prefetch using this mnemonic's addressing form. |
-| [HL.PRF.A](instructions/hl_prf_a.md) | prefetch | 48 | HL.PRF.A - Issue a scalar prefetch using this mnemonic's addressing form. |
-| [HL.PRFI.U](instructions/hl_prfi_u.md) | prefetch | 48 | HL.PRFI.U - Issue a scalar prefetch using this mnemonic's addressing form. |
-| [HL.PRFI.UA](instructions/hl_prfi_ua.md) | prefetch | 48 | HL.PRFI.UA - Issue a scalar prefetch using this mnemonic's addressing form. |
-| [HL.QMT](instructions/hl_qmt.md) | general | 48 | Moves values between scalar temporary queues according to encoded queue controls. |
-| [HL.QPOP](instructions/hl_qpop.md) | general | 48 | Pops selected scalar queue values into encoded destinations. |
-| [HL.QPUSH](instructions/hl_qpush.md) | general | 48 | Pushes the encoded scalar values to the selected temporary queue. |
-| [HL.SB.PCR](instructions/hl_sb_pcr.md) | store_pc_relative | 48 | [48-bit HL.] Stores a register value to memory. |
-| [HL.SD.PCR](instructions/hl_sd_pcr.md) | store_pc_relative | 48 | [48-bit HL.] Stores a register value to memory. |
-| [HL.SH.PCR](instructions/hl_sh_pcr.md) | store_pc_relative | 48 | [48-bit HL.] Stores a register value to memory. |
-| [HL.SW.PCR](instructions/hl_sw_pcr.md) | store_pc_relative | 48 | [48-bit HL.] Stores a register value to memory. |
-| [HL.SB.PO](instructions/hl_sb_po.md) | store_post_index | 48 | [48-bit HL.] Stores a register value to memory. |
-| [HL.SBI.PO](instructions/hl_sbi_po.md) | store_post_index | 48 | [48-bit HL.] Stores a register value to memory. |
-| [HL.SD.PO](instructions/hl_sd_po.md) | store_post_index | 48 | [48-bit HL.] Stores a register value to memory. |
-| [HL.SD.UPO](instructions/hl_sd_upo.md) | store_post_index | 48 | [48-bit HL.] Stores a register value to memory. |
-| [HL.SDI.PO](instructions/hl_sdi_po.md) | store_post_index | 48 | [48-bit HL.] Stores a register value to memory. |
-| [HL.SB.PR](instructions/hl_sb_pr.md) | store_pre_index | 48 | [48-bit HL.] Stores a register value to memory. |
-| [HL.SBI.PR](instructions/hl_sbi_pr.md) | store_pre_index | 48 | [48-bit HL.] Stores a register value to memory. |
-| [HL.SD.PR](instructions/hl_sd_pr.md) | store_pre_index | 48 | [48-bit HL.] Stores a register value to memory. |
-| [HL.SD.UPR](instructions/hl_sd_upr.md) | store_pre_index | 48 | [48-bit HL.] Stores a register value to memory. |
-| [HL.SDI.PR](instructions/hl_sdi_pr.md) | store_pre_index | 48 | [48-bit HL.] Stores a register value to memory. |
-| [HL.SBI](instructions/hl_sbi.md) | store_long_offset | 48 | [48-bit HL.] Stores a register value to memory. |
-| [HL.SDI](instructions/hl_sdi.md) | store_long_offset | 48 | [48-bit HL.] Stores a register value to memory. |
-| [HL.SDI.U](instructions/hl_sdi_u.md) | store_long_offset | 48 | [48-bit HL.] Stores a register value to memory. |
-| [HL.SHI](instructions/hl_shi.md) | store_long_offset | 48 | [48-bit HL.] Stores a register value to memory. |
-| [HL.SHI.U](instructions/hl_shi_u.md) | store_long_offset | 48 | [48-bit HL.] Stores a register value to memory. |
-| [HL.SBIP](instructions/hl_sbip.md) | store_pair | 48 | [48-bit HL.] Stores a register value to memory. |
-| [HL.SBP](instructions/hl_sbp.md) | store_pair | 48 | [48-bit HL.] Stores a register value to memory. |
-| [HL.SDIP](instructions/hl_sdip.md) | store_pair | 48 | [48-bit HL.] Stores a register value to memory. |
-| [HL.SDIP.U](instructions/hl_sdip_u.md) | store_pair | 48 | [48-bit HL.] Stores a register value to memory. |
-| [HL.SDP](instructions/hl_sdp.md) | store_pair | 48 | [48-bit HL.] Stores a register value to memory. |
-| [HL.SSRGET](instructions/hl_ssrget.md) | ssr_access | 48 | HL.SSRGET - Read the addressed system register. |
-| [HL.SSRSET](instructions/hl_ssrset.md) | ssr_access | 48 | HL.SSRSET - Write the addressed system register. |
-| [LSRGET](instructions/lsrget.md) | ssr_access | 32 | LSRGET - Read the addressed system register. |
-| [SETC.TGT](instructions/setc_tgt.md) | ssr_access | 32 | Sets the block-commit condition. |
-| [SSRGET](instructions/ssrget.md) | ssr_access | 32 | SSRGET - Read the addressed system register. |
-| [LB](instructions/lb.md) | load_register_offset | 32 | Loads a signed 8-bit value from memory. |
-| [LBU](instructions/lbu.md) | load_register_offset | 32 | Loads a 8-bit value from memory. |
-| [LD](instructions/ld.md) | load_register_offset | 32 | Loads a 64-bit value from memory. |
-| [LH](instructions/lh.md) | load_register_offset | 32 | Loads a signed 16-bit value from memory. |
-| [LHU](instructions/lhu.md) | load_register_offset | 32 | Loads a 16-bit value from memory. |
-| [LB.PCR](instructions/lb_pcr.md) | load_symbol | 32 | Loads a value from memory into a register. |
-| [LBU.PCR](instructions/lbu_pcr.md) | load_symbol | 32 | Loads a value from memory into a register. |
-| [LD.PCR](instructions/ld_pcr.md) | load_symbol | 32 | Loads a value from memory into a register. |
-| [LH.PCR](instructions/lh_pcr.md) | load_symbol | 32 | Loads a value from memory into a register. |
-| [LHU.PCR](instructions/lhu_pcr.md) | load_symbol | 32 | Loads a value from memory into a register. |
-| [LDI.U](instructions/ldi_u.md) | load_unscaled | 32 | Loads a value from memory into a register. |
-| [LHI.U](instructions/lhi_u.md) | load_unscaled | 32 | Loads a value from memory into a register. |
-| [LHUI.U](instructions/lhui_u.md) | load_unscaled | 32 | Loads a value from memory into a register. |
-| [LWI.U](instructions/lwi_u.md) | load_unscaled | 32 | Loads a value from memory into a register. |
-| [LWUI.U](instructions/lwui_u.md) | load_unscaled | 32 | Loads a value from memory into a register. |
-| [SB](instructions/sb.md) | store_register_offset | 32 | Stores a register value to memory. |
-| [SD](instructions/sd.md) | store_register_offset | 32 | Stores a register value to memory. |
-| [SD.U](instructions/sd_u.md) | store_register_offset | 32 | Stores a register value to memory. |
-| [SH](instructions/sh.md) | store_register_offset | 32 | Stores a register value to memory. |
-| [SH.U](instructions/sh_u.md) | store_register_offset | 32 | Stores a register value to memory. |
-| [SB.PCR](instructions/sb_pcr.md) | store_symbol | 32 | Stores a register value to memory. |
-| [SD.PCR](instructions/sd_pcr.md) | store_symbol | 32 | Stores a register value to memory. |
-| [SH.PCR](instructions/sh_pcr.md) | store_symbol | 32 | Stores a register value to memory. |
-| [SW.PCR](instructions/sw_pcr.md) | store_symbol | 32 | Stores a register value to memory. |
+| [C.LDI](instructions/c_ldi.md) | lda_base_imm | 16 | C.LDI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value. |
+| [C.LWI](instructions/c_lwi.md) | lda_base_imm | 16 | C.LWI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value. |
+| [LBI](instructions/lbi.md) | lda_base_imm | 32 | LBI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value. |
+| [LBUI](instructions/lbui.md) | lda_base_imm | 32 | LBUI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value. |
+| [LDI](instructions/ldi.md) | lda_base_imm | 32 | LDI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value. |
+| [C.SDI](instructions/c_sdi.md) | sta_base_imm | 16 | C.SDI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value. |
+| [C.SWI](instructions/c_swi.md) | sta_base_imm | 16 | C.SWI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value. |
+| [SBI](instructions/sbi.md) | sta_base_imm | 32 | SBI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value. |
+| [SDI](instructions/sdi.md) | sta_base_imm | 32 | SDI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value. |
+| [SDI.U](instructions/sdi_u.md) | sta_base_imm | 32 | SDI.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value. |
+| [CASB](instructions/casb.md) | amo | 32 | CASB atomically compares and conditionally replaces one byte, then publishes the prior value. |
+| [CASD](instructions/casd.md) | amo | 32 | CASD atomically compares and conditionally replaces one doubleword, then publishes the prior value. |
+| [CASH](instructions/cash.md) | amo | 32 | CASH atomically compares and conditionally replaces one halfword, then publishes the prior value. |
+| [CASW](instructions/casw.md) | amo | 32 | CASW atomically compares and conditionally replaces one word, then publishes the prior value. |
+| [DMA](instructions/dma.md) | amo | 32 | DMA performs an exact 64-byte copy, validates both ranges before effects, snapshots the source so overlap has memmove semantics, and guarantees that any fault leaves memory unchanged for precise full reissue. |
+| [FABS](instructions/fabs.md) | fsu | 32 | Floating-point absolute value. |
+| [FADD](instructions/fadd.md) | fsu | 32 | Floating-point addition. |
+| [FCVT](instructions/fcvt.md) | fsu | 32 | Floating-point format conversion. |
+| [FCVTA](instructions/fcvta.md) | fsu | 32 | FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-away mode. |
+| [FCVTM](instructions/fcvtm.md) | fsu | 32 | FCVTM converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-down mode. |
+| [HL.LB.PCR](instructions/hl_lb_pcr.md) | lda_pc_rel | 48 | HL.LB.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value. |
+| [HL.LBU.PCR](instructions/hl_lbu_pcr.md) | lda_pc_rel | 48 | HL.LBU.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value. |
+| [HL.LD.PCR](instructions/hl_ld_pcr.md) | lda_pc_rel | 48 | HL.LD.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value. |
+| [HL.LH.PCR](instructions/hl_lh_pcr.md) | lda_pc_rel | 48 | HL.LH.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value. |
+| [HL.LHU.PCR](instructions/hl_lhu_pcr.md) | lda_pc_rel | 48 | HL.LHU.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value. |
+| [HL.LB.PO](instructions/hl_lb_po.md) | lda_post_index | 48 | HL.LB.PO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value. |
+| [HL.LBI.PO](instructions/hl_lbi_po.md) | lda_post_index | 48 | HL.LBI.PO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value. |
+| [HL.LBU.PO](instructions/hl_lbu_po.md) | lda_post_index | 48 | HL.LBU.PO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value. |
+| [HL.LBUI.PO](instructions/hl_lbui_po.md) | lda_post_index | 48 | HL.LBUI.PO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value. |
+| [HL.LD.PO](instructions/hl_ld_po.md) | lda_post_index | 48 | HL.LD.PO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value. |
+| [HL.LB.PR](instructions/hl_lb_pr.md) | lda_pre_index | 48 | HL.LB.PR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value. |
+| [HL.LBI.PR](instructions/hl_lbi_pr.md) | lda_pre_index | 48 | HL.LBI.PR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value. |
+| [HL.LBU.PR](instructions/hl_lbu_pr.md) | lda_pre_index | 48 | HL.LBU.PR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value. |
+| [HL.LBUI.PR](instructions/hl_lbui_pr.md) | lda_pre_index | 48 | HL.LBUI.PR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value. |
+| [HL.LD.PR](instructions/hl_ld_pr.md) | lda_pre_index | 48 | HL.LD.PR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value. |
+| [HL.LBI](instructions/hl_lbi.md) | lda_long | 48 | HL.LBI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value. |
+| [HL.LBUI](instructions/hl_lbui.md) | lda_long | 48 | HL.LBUI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value. |
+| [HL.LDI](instructions/hl_ldi.md) | lda_long | 48 | HL.LDI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value. |
+| [HL.LDI.U](instructions/hl_ldi_u.md) | lda_long | 48 | HL.LDI.U snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value. |
+| [HL.LHI](instructions/hl_lhi.md) | lda_long | 48 | HL.LHI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value. |
+| [HL.LBIP](instructions/hl_lbip.md) | lda_pair | 48 | HL.LBIP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 1-byte values. |
+| [HL.LBP](instructions/hl_lbp.md) | lda_pair | 48 | HL.LBP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 1-byte values. |
+| [HL.LBUIP](instructions/hl_lbuip.md) | lda_pair | 48 | HL.LBUIP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 1-byte values. |
+| [HL.LBUP](instructions/hl_lbup.md) | lda_pair | 48 | HL.LBUP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 1-byte values. |
+| [HL.LDIP](instructions/hl_ldip.md) | lda_pair | 48 | HL.LDIP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 8-byte values. |
+| [HL.PRF](instructions/hl_prf.md) | lda | 48 | HL.PRF snapshots its scalar sources, forms its encoded address, and issues a non-binding 1-byte-granularity prefetch hint with no destination effect. |
+| [HL.PRF.A](instructions/hl_prf_a.md) | lda | 48 | HL.PRF.A snapshots its scalar sources, forms its encoded address, and issues a non-binding 1-byte-granularity prefetch hint and publishes the effective address. |
+| [HL.PRFI.U](instructions/hl_prfi_u.md) | lda | 48 | HL.PRFI.U snapshots its scalar sources, forms its encoded address, and issues a non-binding 1-byte-granularity prefetch hint with no destination effect. |
+| [HL.PRFI.UA](instructions/hl_prfi_ua.md) | lda | 48 | HL.PRFI.UA snapshots its scalar sources, forms its encoded address, and issues a non-binding 1-byte-granularity prefetch hint and publishes the effective address. |
+| [LB.PCR](instructions/lb_pcr.md) | lda | 32 | LB.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value. |
+| [HL.QMT](instructions/hl_qmt.md) | general | 48 | Queries, initializes, notifies, suspends, or restores one General Queue Management queue. |
+| [HL.QPOP](instructions/hl_qpop.md) | general | 48 | Atomically pops one 64-bit head entry from a General Queue Management queue. |
+| [HL.QPUSH](instructions/hl_qpush.md) | general | 48 | Atomically pushes one 64-bit entry at the tail or head of a General Queue Management queue. |
+| [HL.SB.PCR](instructions/hl_sb_pcr.md) | sta_pc_rel | 48 | HL.SB.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value. |
+| [HL.SD.PCR](instructions/hl_sd_pcr.md) | sta_pc_rel | 48 | HL.SD.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value. |
+| [HL.SH.PCR](instructions/hl_sh_pcr.md) | sta_pc_rel | 48 | HL.SH.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value. |
+| [HL.SW.PCR](instructions/hl_sw_pcr.md) | sta_pc_rel | 48 | HL.SW.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value. |
+| [HL.SB.PO](instructions/hl_sb_po.md) | sta_post_index | 48 | HL.SB.PO snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value. |
+| [HL.SBI.PO](instructions/hl_sbi_po.md) | sta_post_index | 48 | HL.SBI.PO snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value. |
+| [HL.SD.PO](instructions/hl_sd_po.md) | sta_post_index | 48 | HL.SD.PO snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value. |
+| [HL.SD.UPO](instructions/hl_sd_upo.md) | sta_post_index | 48 | HL.SD.UPO snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value. |
+| [HL.SDI.PO](instructions/hl_sdi_po.md) | sta_post_index | 48 | HL.SDI.PO snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value. |
+| [HL.SB.PR](instructions/hl_sb_pr.md) | sta_pre_index | 48 | HL.SB.PR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value. |
+| [HL.SBI.PR](instructions/hl_sbi_pr.md) | sta_pre_index | 48 | HL.SBI.PR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value. |
+| [HL.SD.PR](instructions/hl_sd_pr.md) | sta_pre_index | 48 | HL.SD.PR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value. |
+| [HL.SD.UPR](instructions/hl_sd_upr.md) | sta_pre_index | 48 | HL.SD.UPR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value. |
+| [HL.SDI.PR](instructions/hl_sdi_pr.md) | sta_pre_index | 48 | HL.SDI.PR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value. |
+| [HL.SBI](instructions/hl_sbi.md) | sta_long | 48 | HL.SBI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value. |
+| [HL.SDI](instructions/hl_sdi.md) | sta_long | 48 | HL.SDI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value. |
+| [HL.SDI.U](instructions/hl_sdi_u.md) | sta_long | 48 | HL.SDI.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value. |
+| [HL.SHI](instructions/hl_shi.md) | sta_long | 48 | HL.SHI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value. |
+| [HL.SHI.U](instructions/hl_shi_u.md) | sta_long | 48 | HL.SHI.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value. |
+| [HL.SBIP](instructions/hl_sbip.md) | sta_pair | 48 | HL.SBIP snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 1-byte values. |
+| [HL.SBP](instructions/hl_sbp.md) | sta_pair | 48 | HL.SBP snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 1-byte values. |
+| [HL.SDIP](instructions/hl_sdip.md) | sta_pair | 48 | HL.SDIP snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 8-byte values. |
+| [HL.SDIP.U](instructions/hl_sdip_u.md) | sta_pair | 48 | HL.SDIP.U snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 8-byte values. |
+| [HL.SDP](instructions/hl_sdp.md) | sta_pair | 48 | HL.SDP snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 8-byte values. |
+| [LB](instructions/lb.md) | lda_base_reg | 32 | LB snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value. |
+| [LBU](instructions/lbu.md) | lda_base_reg | 32 | LBU snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value. |
+| [LD](instructions/ld.md) | lda_base_reg | 32 | LD snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value. |
+| [LH](instructions/lh.md) | lda_base_reg | 32 | LH snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value. |
+| [LHU](instructions/lhu.md) | lda_base_reg | 32 | LHU snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value. |
+| [LDI.U](instructions/ldi_u.md) | lda_unscaled | 32 | LDI.U snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value. |
+| [LHI.U](instructions/lhi_u.md) | lda_unscaled | 32 | LHI.U snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value. |
+| [LHUI.U](instructions/lhui_u.md) | lda_unscaled | 32 | LHUI.U snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value. |
+| [LWI.U](instructions/lwi_u.md) | lda_unscaled | 32 | LWI.U snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value. |
+| [LWUI.U](instructions/lwui_u.md) | lda_unscaled | 32 | LWUI.U snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value. |
+| [SB](instructions/sb.md) | sta_base_reg | 32 | SB snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value. |
+| [SD](instructions/sd.md) | sta_base_reg | 32 | SD snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value. |
+| [SD.U](instructions/sd_u.md) | sta_base_reg | 32 | SD.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value. |
+| [SH](instructions/sh.md) | sta_base_reg | 32 | SH snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value. |
+| [SH.U](instructions/sh_u.md) | sta_base_reg | 32 | SH.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value. |
+| [SB.PCR](instructions/sb_pcr.md) | sta | 32 | SB.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value. |
+| [SD.PCR](instructions/sd_pcr.md) | sta | 32 | SD.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value. |
+| [SH.PCR](instructions/sh_pcr.md) | sta | 32 | SH.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value. |
+| [SW.PCR](instructions/sw_pcr.md) | sta | 32 | SW.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value. |
+| [V.ADD](instructions/v_add.md) | arithmetic_operation | 64 | [64-bit V.] Integer addition. |
+| [V.ADDI](instructions/v_addi.md) | arithmetic_operation | 64 | [64-bit V.] Instruction from the Arithmetic Operation group. |
+| [V.AND](instructions/v_and.md) | arithmetic_operation | 64 | [64-bit V.] Bitwise AND. |
+| [V.ANDI](instructions/v_andi.md) | arithmetic_operation | 64 | [64-bit V.] Instruction from the Arithmetic Operation group. |
+| [V.OR](instructions/v_or.md) | arithmetic_operation | 64 | [64-bit V.] Bitwise OR. |
 | [V.BCNT](instructions/v_bcnt.md) | bit_manipulation | 64 | [64-bit V.] Population count. |
 | [V.BIC](instructions/v_bic.md) | bit_manipulation | 64 | [64-bit V.] Bit clear. |
 | [V.BIS](instructions/v_bis.md) | bit_manipulation | 64 | [64-bit V.] Bit set. |
 | [V.BXS](instructions/v_bxs.md) | bit_manipulation | 64 | [64-bit V.] Bit-field extract signed. |
 | [V.BXU](instructions/v_bxu.md) | bit_manipulation | 64 | [64-bit V.] Bit-field extract unsigned. |
+| [V.CMP.AND](instructions/v_cmp_and.md) | compare_instruction | 64 | [64-bit V.] Instruction from the Compare Instruction group. |
+| [V.CMP.ANDI](instructions/v_cmp_andi.md) | compare_instruction | 64 | [64-bit V.] Instruction from the Compare Instruction group. |
+| [V.CMP.EQ](instructions/v_cmp_eq.md) | compare_instruction | 64 | [64-bit V.] Instruction from the Compare Instruction group. |
+| [V.CMP.EQI](instructions/v_cmp_eqi.md) | compare_instruction | 64 | [64-bit V.] Instruction from the Compare Instruction group. |
+| [V.CMP.GE](instructions/v_cmp_ge.md) | compare_instruction | 64 | [64-bit V.] Instruction from the Compare Instruction group. |
 | [V.CSEL](instructions/v_csel.md) | three_source_integer | 64 | [64-bit V.] Conditional select. |
 | [V.PSEL](instructions/v_psel.md) | three_source_integer | 64 | [64-bit V.] Instruction from the Three Source Integer group. |
 | [V.DIV](instructions/v_div.md) | division | 64 | [64-bit V.] Signed integer division. |
@@ -343,11 +259,37 @@ Use **Ctrl+F** / **Cmd+F** to search, or browse the [full alphabetical list](ins
 | [V.FMADD](instructions/v_fmadd.md) | three_source_floating_point | 64 | [64-bit V.] Instruction from the Three-Source Floating Point group. |
 | [V.FMSUB](instructions/v_fmsub.md) | three_source_floating_point | 64 | [64-bit V.] Instruction from the Three-Source Floating Point group. |
 | [V.FMUL](instructions/v_fmul.md) | three_source_floating_point | 64 | [64-bit V.] Instruction from the Three-Source Floating Point group. |
+| [V.FCVT](instructions/v_fcvt.md) | format_convert | 64 | [64-bit V.] Instruction from the Format Convert group. |
+| [V.FCVTI](instructions/v_fcvti.md) | format_convert | 64 | [64-bit V.] Instruction from the Format Convert group. |
+| [V.ICVT](instructions/v_icvt.md) | format_convert | 64 | [64-bit V.] Instruction from the Format Convert group. |
+| [V.ICVTF](instructions/v_icvtf.md) | format_convert | 64 | [64-bit V.] Instruction from the Format Convert group. |
 | [V.FEQ](instructions/v_feq.md) | two_source_floating_point | 64 | [64-bit V.] Instruction from the Two-Source Floating Point group. |
 | [V.FEQS](instructions/v_feqs.md) | two_source_floating_point | 64 | [64-bit V.] Instruction from the Two-Source Floating Point group. |
 | [V.FGE](instructions/v_fge.md) | two_source_floating_point | 64 | [64-bit V.] Instruction from the Two-Source Floating Point group. |
 | [V.FGES](instructions/v_fges.md) | two_source_floating_point | 64 | [64-bit V.] Instruction from the Two-Source Floating Point group. |
 | [V.FLT](instructions/v_flt.md) | two_source_floating_point | 64 | [64-bit V.] Instruction from the Two-Source Floating Point group. |
+| [V.LB](instructions/v_lb.md) | load_register_offset | 64 | [64-bit V.] Loads a signed 8-bit value from memory. |
+| [V.LB.BRG](instructions/v_lb_brg.md) | load_register_offset | 64 | [64-bit V.] Loads a value from memory into a register. |
+| [V.LBU](instructions/v_lbu.md) | load_register_offset | 64 | [64-bit V.] Loads a 8-bit value from memory. |
+| [V.LBU.BRG](instructions/v_lbu_brg.md) | load_register_offset | 64 | [64-bit V.] Loads a value from memory into a register. |
+| [V.LD](instructions/v_ld.md) | load_register_offset | 64 | [64-bit V.] Loads a 64-bit value from memory. |
+| [V.LBI](instructions/v_lbi.md) | load_immediate_offset | 64 | [64-bit V.] Loads a value from memory into a register. |
+| [V.LBI.BRG](instructions/v_lbi_brg.md) | load_immediate_offset | 64 | [64-bit V.] Loads a value from memory into a register. |
+| [V.LBUI](instructions/v_lbui.md) | load_immediate_offset | 64 | [64-bit V.] Loads a value from memory into a register. |
+| [V.LBUI.BRG](instructions/v_lbui_brg.md) | load_immediate_offset | 64 | [64-bit V.] Loads a value from memory into a register. |
+| [V.LDI](instructions/v_ldi.md) | load_immediate_offset | 64 | [64-bit V.] Loads a value from memory into a register. |
+| [V.LD.ADD](instructions/v_ld_add.md) | atomic_operation | 64 | [64-bit V.] Atomic memory read-modify-write operation. |
+| [V.LD.AND](instructions/v_ld_and.md) | atomic_operation | 64 | [64-bit V.] Atomic memory read-modify-write operation. |
+| [V.LD.MAX](instructions/v_ld_max.md) | atomic_operation | 64 | [64-bit V.] Atomic memory read-modify-write operation. |
+| [V.LD.MIN](instructions/v_ld_min.md) | atomic_operation | 64 | [64-bit V.] Atomic memory read-modify-write operation. |
+| [V.LD.OR](instructions/v_ld_or.md) | atomic_operation | 64 | [64-bit V.] Atomic memory read-modify-write operation. |
+| [V.LDI.U](instructions/v_ldi_u.md) | load_unscaled | 64 | [64-bit V.] Loads a value from memory into a register. |
+| [V.LDI.U.BRG](instructions/v_ldi_u_brg.md) | load_unscaled | 64 | [64-bit V.] Loads a value from memory into a register. |
+| [V.LHI.U](instructions/v_lhi_u.md) | load_unscaled | 64 | [64-bit V.] Loads a value from memory into a register. |
+| [V.LHI.U.BRG](instructions/v_lhi_u_brg.md) | load_unscaled | 64 | [64-bit V.] Loads a value from memory into a register. |
+| [V.LHUI.U](instructions/v_lhui_u.md) | load_unscaled | 64 | [64-bit V.] Loads a value from memory into a register. |
+| [V.MADD](instructions/v_madd.md) | multi_cycle_alu | 64 | [64-bit V.] Instruction from the Multi-Cycle ALU group. |
+| [V.MUL](instructions/v_mul.md) | multi_cycle_alu | 64 | [64-bit V.] Integer multiply. |
 | [V.QPOP](instructions/v_qpop.md) | general_manager | 64 | [64-bit V.] Instruction from the General Manager group. |
 | [V.QPUSH](instructions/v_qpush.md) | general_manager | 64 | [64-bit V.] Instruction from the General Manager group. |
 | [V.RDADD](instructions/v_rdadd.md) | reduce_operation_with_register | 64 | [64-bit V.] Instruction from the Reduce Operation with Register group. |
@@ -355,6 +297,11 @@ Use **Ctrl+F** / **Cmd+F** to search, or browse the [full alphabetical list](ins
 | [V.RDFADD](instructions/v_rdfadd.md) | reduce_operation_with_register | 64 | [64-bit V.] Instruction from the Reduce Operation with Register group. |
 | [V.RDFMAX](instructions/v_rdfmax.md) | reduce_operation_with_register | 64 | [64-bit V.] Instruction from the Reduce Operation with Register group. |
 | [V.RDFMIN](instructions/v_rdfmin.md) | reduce_operation_with_register | 64 | [64-bit V.] Instruction from the Reduce Operation with Register group. |
+| [V.SB](instructions/v_sb.md) | store_register_offset | 64 | [64-bit V.] Stores a register value to memory. |
+| [V.SB.BRG](instructions/v_sb_brg.md) | store_register_offset | 64 | [64-bit V.] Stores a register value to memory. |
+| [V.SD](instructions/v_sd.md) | store_register_offset | 64 | [64-bit V.] Stores a register value to memory. |
+| [V.SD.BRG](instructions/v_sd_brg.md) | store_register_offset | 64 | [64-bit V.] Stores a register value to memory. |
+| [V.SD.U](instructions/v_sd_u.md) | store_register_offset | 64 | [64-bit V.] Stores a register value to memory. |
 | [V.SBI](instructions/v_sbi.md) | store_offset | 64 | [64-bit V.] Stores a register value to memory. |
 | [V.SBI.BRG](instructions/v_sbi_brg.md) | store_offset | 64 | [64-bit V.] Stores a register value to memory. |
 | [V.SDI](instructions/v_sdi.md) | store_offset | 64 | [64-bit V.] Stores a register value to memory. |
@@ -366,4 +313,4 @@ Use **Ctrl+F** / **Cmd+F** to search, or browse the [full alphabetical list](ins
 | [V.SHFL.UP](instructions/v_shfl_up.md) | shuffle | 64 | [64-bit V.] Instruction from the Shuffle group. |
 | [V.SHFLI.BFLY](instructions/v_shfli_bfly.md) | shuffle | 64 | [64-bit V.] Instruction from the Shuffle group. |
 
-[View all 766 instruction forms →](instructions/index.md)
+[View all 765 instruction forms →](instructions/index.md)

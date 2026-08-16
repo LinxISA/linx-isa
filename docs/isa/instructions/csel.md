@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/compound_operation.md">Compound Operation</a> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/alu.md">ALU</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-12">Ch 12</span>
 &nbsp; <strong>ALU — Arithmetic Logic Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -36,7 +36,7 @@ rd = (rs_p != 0) ? rs1 : rs2;
 
 ## Encoding Notes
 
-- `CSEL - Select one of two scalar inputs under the encoded condition.`
+- `CSEL snapshots three Reg5 sources, selects SrcL for a nonzero predicate or its optionally negated SrcR for zero, and publishes through the common scalar destination map.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ rd = (rs_p != 0) ? rs1 : rs2;
 
 <div class="insn-nav">
 
-← [Compound Operation](../groups/compound_operation.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [ALU](../groups/alu.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

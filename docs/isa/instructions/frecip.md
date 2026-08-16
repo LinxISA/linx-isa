@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/floating_point_arithmetic.md">Floating-point Arithmetic</a> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/fsu.md">FSU</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-13">Ch 13</span>
 &nbsp; <strong>FSU — Floating-point / SIMD Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -26,17 +26,17 @@
 
 ## Description
 
-FRECIP - Compute this mnemonic's unary floating-point operation.
+FRECIP applies the active numeric profile reciprocal operation to the selected FP64 or FP32 carrier.
 
 ## Pseudocode (informative)
 
 ```c
-// Execute FRECIP as defined by the Floating-point Arithmetic semantics.
+// Execute FRECIP as defined by the FSU semantics.
 ```
 
 ## Encoding Notes
 
-- `FRECIP - Compute this mnemonic's unary floating-point operation.`
+- `FRECIP applies the active numeric profile reciprocal operation to the selected FP64 or FP32 carrier.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ FRECIP - Compute this mnemonic's unary floating-point operation.
 
 <div class="insn-nav">
 
-← [Floating-point Arithmetic](../groups/floating_point_arithmetic.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [FSU](../groups/fsu.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

@@ -7,7 +7,7 @@
 
 *Syntax:* addi SrcL, uimm, ->{t, u, Rd}
 
-*Description:* ADDI - Compute this mnemonic's binary scalar operation and write the selected destination.
+*Description:* ADDI adds the zero-extended unsigned 12-bit immediate to the snapshotted XLEN source modulo 2^PTO_XLEN and publishes the result through the selected Reg5 destination.
 
 *Encoding:*
 

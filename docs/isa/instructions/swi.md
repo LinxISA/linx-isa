@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/store_immediate_offset.md">Store Immediate Offset</a> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/sta_base_imm.md">STA/BASE_IMM</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-11">Ch 11</span>
 &nbsp; <strong>AGU — Address Generation Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -26,17 +26,17 @@
 
 ## Description
 
-Stores a register value to memory.
+SWI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.
 
 ## Pseudocode (informative)
 
 ```c
-Store(/* addr */, rs2);
+// Execute SWI as defined by the STA/BASE_IMM semantics.
 ```
 
 ## Encoding Notes
 
-- `SWI - Store scalar data using this mnemonic's width and address-update form.`
+- `SWI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ Store(/* addr */, rs2);
 
 <div class="insn-nav">
 
-← [Store Immediate Offset](../groups/store_immediate_offset.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [STA/BASE_IMM](../groups/sta_base_imm.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

@@ -5,9 +5,9 @@
 [[inst_c_bstart_std]]
 ==== C.BSTART.STD
 
-*Syntax:* C.BSTART.STD BrType
+*Syntax:* C.BSTART.STD {FALL, IND, RET}
 
-*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+*Description:* Starts a compressed STD block with fallthrough, indirect, or return transfer; every other BrType rejects before effects.
 
 *Encoding:*
 

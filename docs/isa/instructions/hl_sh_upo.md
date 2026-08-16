@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/store_post_index.md">Store Post-Index</a> &nbsp;|&nbsp;
+<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/sta_post_index.md">STA/POST_INDEX</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-11">Ch 11</span>
 &nbsp; <strong>AGU — Address Generation Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>48</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -26,17 +26,17 @@
 
 ## Description
 
-[48-bit HL.] Stores a register value to memory.
+HL.SH.UPO snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
 
 ## Pseudocode (informative)
 
 ```c
-Store(/* addr */, rs2);
+// Execute HL.SH.UPO as defined by the STA/POST_INDEX semantics.
 ```
 
 ## Encoding Notes
 
-- `HL.SH.UPO - Store scalar data using this mnemonic's width and address-update form.`
+- `HL.SH.UPO snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ Store(/* addr */, rs2);
 
 <div class="insn-nav">
 
-← [Store Post-Index](../groups/store_post_index.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [STA/POST_INDEX](../groups/sta_post_index.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

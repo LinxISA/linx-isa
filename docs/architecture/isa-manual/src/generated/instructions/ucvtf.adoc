@@ -7,7 +7,7 @@
 
 *Syntax:* ucvtf.{srcT2dstT} SrcL, ->{t, u, Rd}
 
-*Description:* UCVTF - Convert between the encoded scalar numeric formats.
+*Description:* UCVTF converts an unsigned 64-bit or zero-extended unsigned 32-bit source to floating carrier code 0 through 14 through the active numeric profile.
 
 *Encoding:*
 

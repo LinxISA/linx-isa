@@ -7,7 +7,7 @@
 
 *Syntax:* tlb.iall
 
-*Description:* TLB.IALL - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
+*Description:* TLB.IALL completes the all translation entries maintenance operation synchronously.
 
 *Encoding:*
 

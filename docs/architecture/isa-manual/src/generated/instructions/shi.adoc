@@ -7,7 +7,7 @@
 
 *Syntax:* shi SrcL, [SrcR, simm]
 
-*Description:* SHI - Store scalar data using this mnemonic's width and address-update form.
+*Description:* SHI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
 
 *Encoding:*
 

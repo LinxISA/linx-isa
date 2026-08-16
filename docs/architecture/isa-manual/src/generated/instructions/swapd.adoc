@@ -7,7 +7,7 @@
 
 *Syntax:* swapd<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}
 
-*Description:* SWAPD - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
+*Description:* SWAPD atomically replaces one doubleword and publishes the prior value.
 
 *Encoding:*
 

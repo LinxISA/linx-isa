@@ -7,7 +7,7 @@
 
 *Syntax:* lr.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], {->t, ->u, ->Rd}
 
-*Description:* LR.H - Load the scalar memory value and establish a matching reservation.
+*Description:* LR.H loads one halfword, establishes a 64-byte-line reservation, and publishes the prior value.
 
 *Encoding:*
 

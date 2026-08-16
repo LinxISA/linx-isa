@@ -2,9 +2,9 @@
 
 <div class="insn-header">
 
-<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/reserve.md">RESERVE</a> &nbsp;|&nbsp;
-<span class="ch-tag ch-tag-18">Ch 18</span>
-&nbsp; <strong>RSV — Reserved and Indexed Operations</strong> &nbsp;|&nbsp;
+<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/alu.md">ALU</a> &nbsp;|&nbsp;
+<span class="ch-tag ch-tag-12">Ch 12</span>
+&nbsp; <strong>ALU — Arithmetic Logic Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>48</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
 
 </div>
@@ -26,17 +26,17 @@
 
 ## Description
 
-HL.MISUB - Multiply by the encoded immediate and add the scalar source.
+HL.MISUB multiplies SrcR by the unsigned 19-bit immediate, subtracts the product from SrcL modulo 2^PTO_XLEN, and publishes the result.
 
 ## Pseudocode (informative)
 
 ```c
-// Execute HL.MISUB as defined by the RESERVE semantics.
+// Execute HL.MISUB as defined by the ALU semantics.
 ```
 
 ## Encoding Notes
 
-- `HL.MISUB - Multiply by the encoded immediate and add the scalar source.`
+- `HL.MISUB multiplies SrcR by the unsigned 19-bit immediate, subtracts the product from SrcL modulo 2^PTO_XLEN, and publishes the result.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ HL.MISUB - Multiply by the encoded immediate and add the scalar source.
 
 <div class="insn-nav">
 
-← [RESERVE](../groups/reserve.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [ALU](../groups/alu.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

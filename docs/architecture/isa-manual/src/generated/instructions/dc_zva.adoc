@@ -7,7 +7,7 @@
 
 *Syntax:* dc.zva SrcL
 
-*Description:* DC.ZVA - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
+*Description:* DC.ZVA completes the data-cache zero-by-address scope token maintenance operation synchronously.
 
 *Encoding:*
 

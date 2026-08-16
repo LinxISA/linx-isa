@@ -7,7 +7,7 @@
 
 *Syntax:* B.CATR {trap, atomic, <aq, rl, aqrl>, far, dr}
 
-*Description:* Latches bundle control, trap, atomic, ordering, and address-class attributes.
+*Description:* Defines one optional block control record for post-commit trap, transactional visibility, acquire/release ordering, remote execution, and dimension-reduction mode.
 
 *Encoding:*
 

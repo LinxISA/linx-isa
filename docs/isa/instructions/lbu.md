@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/load_register_offset.md">Load Register Offset</a> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/lda_base_reg.md">LDA/BASE_REG</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-11">Ch 11</span>
 &nbsp; <strong>AGU — Address Generation Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -26,17 +26,17 @@
 
 ## Description
 
-Loads a 8-bit value from memory.
+LBU snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value.
 
 ## Pseudocode (informative)
 
 ```c
-rd = Load(/* addr */);
+// Execute LBU as defined by the LDA/BASE_REG semantics.
 ```
 
 ## Encoding Notes
 
-- `LBU - Load scalar data using this mnemonic's width, signedness, and address-update form.`
+- `LBU snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ rd = Load(/* addr */);
 
 <div class="insn-nav">
 
-← [Load Register Offset](../groups/load_register_offset.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [LDA/BASE_REG](../groups/lda_base_reg.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

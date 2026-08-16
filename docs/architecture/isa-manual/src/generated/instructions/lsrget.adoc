@@ -7,7 +7,7 @@
 
 *Syntax:* lsrget LSR_ID, ->{t, u, Rd}
 
-*Description:* LSRGET - Read the addressed system register.
+*Description:* LSRGET reads one assigned word from the active block BARG view.
 
 *Encoding:*
 

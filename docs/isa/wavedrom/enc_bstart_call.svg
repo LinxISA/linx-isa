@@ -4,7 +4,7 @@
       text { font-family: 'Courier New', monospace; }
     </style>
   </defs>
-  <text x="6" y="15" font-family="Helvetica Neue,Arial,sans-serif" font-weight="bold" font-size="14" fill="#1a1a1a">BSTART CALL</text>
+  <text x="6" y="15" font-family="Helvetica Neue,Arial,sans-serif" font-weight="bold" font-size="14" fill="#1a1a1a">BSTART.CALL</text>
   <text x="19.88" y="8" text-anchor="middle" font-size="8" fill="#999999">31</text>
   <text x="103.12" y="8" text-anchor="middle" font-size="8" fill="#999999">28</text>
   <text x="214.12" y="8" text-anchor="middle" font-size="8" fill="#999999">24</text>

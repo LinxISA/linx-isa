@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.MSCATTER.MASK DataType
 
-*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+*Description:* Begins a predicate-masked TLSU byte-displacement scatter block.
 
 *Encoding:*
 

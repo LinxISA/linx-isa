@@ -3,8 +3,8 @@
 <div class="insn-header">
 
 <span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/bundle_split.md">Bundle Split</a> &nbsp;|&nbsp;
-<span class="ch-tag ch-tag-00">Ch 00</span>
-&nbsp; <strong>ISA Manual</strong> &nbsp;|&nbsp;
+<span class="ch-tag ch-tag-04">Ch 04</span>
+&nbsp; <strong>Block ISA — Block-structured Control Flow</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
 
 </div>
@@ -26,7 +26,7 @@
 
 ## Description
 
-Transfers the named context value to a target virtual core block.
+Inventories an extension-owned cross-block transfer encoding that PTO rejects before field interpretation or architectural effects.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ Transfers the named context value to a target virtual core block.
 
 ## Encoding Notes
 
-- `Transfers the named context value to a target virtual core block.`
+- `Inventories an extension-owned cross-block transfer encoding that PTO rejects before field interpretation or architectural effects.`
 
 ## Full Catalog Forms
 

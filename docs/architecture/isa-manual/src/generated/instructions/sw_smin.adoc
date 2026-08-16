@@ -7,7 +7,7 @@
 
 *Syntax:* sw.smin<.{rl, f, rlf}> [SrcL], SrcR
 
-*Description:* SW.SMIN - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
+*Description:* SW.SMIN atomically replaces the aligned 32-bit memory value with its signed minimum with SrcR; it does not publish the old value.
 
 *Encoding:*
 

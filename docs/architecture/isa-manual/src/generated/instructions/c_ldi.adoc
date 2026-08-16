@@ -7,7 +7,7 @@
 
 *Syntax:* c.ldi [srcL, simm], ->t
 
-*Description:* C.LDI - Load scalar data using this mnemonic's width, signedness, and address-update form.
+*Description:* C.LDI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value.
 
 *Encoding:*
 

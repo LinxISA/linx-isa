@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/atomic_operation.md">Atomic Operation</a> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/amo.md">AMO</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-14">Ch 14</span>
 &nbsp; <strong>AMO — Atomic Memory Operations</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -26,17 +26,17 @@
 
 ## Description
 
-Atomic memory read-modify-write operation.
+SD.SMIN atomically replaces the aligned 64-bit memory value with its signed minimum with SrcR; it does not publish the old value.
 
 ## Pseudocode (informative)
 
 ```c
-// Execute SD.SMIN as defined by the Atomic Operation semantics.
+// Execute SD.SMIN as defined by the AMO semantics.
 ```
 
 ## Encoding Notes
 
-- `SD.SMIN - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.`
+- `SD.SMIN atomically replaces the aligned 64-bit memory value with its signed minimum with SrcR; it does not publish the old value.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ Atomic memory read-modify-write operation.
 
 <div class="insn-nav">
 
-← [Atomic Operation](../groups/atomic_operation.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [AMO](../groups/amo.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

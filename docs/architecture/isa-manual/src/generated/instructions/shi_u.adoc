@@ -7,7 +7,7 @@
 
 *Syntax:* shi.u SrcL, [SrcR, simm]
 
-*Description:* SHI.U - Store scalar data using this mnemonic's width and address-update form.
+*Description:* SHI.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
 
 *Encoding:*
 

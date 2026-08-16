@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/compare_instruction.md">Compare Instruction</a> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/bru.md">BRU</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-16">Ch 16</span>
 &nbsp; <strong>BRU — Branch and Compare</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -31,7 +31,7 @@ CMP.ORI - Combine scalar comparison results with the encoded logical operation.
 ## Pseudocode (informative)
 
 ```c
-// Execute CMP.ORI as defined by the Compare Instruction semantics.
+// Execute CMP.ORI as defined by the BRU semantics.
 ```
 
 ## Encoding Notes
@@ -46,6 +46,6 @@ CMP.ORI - Combine scalar comparison results with the encoded logical operation.
 
 <div class="insn-nav">
 
-← [Compare Instruction](../groups/compare_instruction.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [BRU](../groups/bru.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

@@ -7,7 +7,7 @@
 
 *Syntax:* sh.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]
 
-*Description:* SH.U - Store scalar data using this mnemonic's width and address-update form.
+*Description:* SH.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
 
 *Encoding:*
 

@@ -3,8 +3,8 @@
 <div class="insn-header">
 
 <span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/bundle_split.md">Bundle Split</a> &nbsp;|&nbsp;
-<span class="ch-tag ch-tag-00">Ch 00</span>
-&nbsp; <strong>ISA Manual</strong> &nbsp;|&nbsp;
+<span class="ch-tag ch-tag-04">Ch 04</span>
+&nbsp; <strong>Block ISA — Block-structured Control Flow</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
 
 </div>
@@ -26,7 +26,7 @@
 
 ## Description
 
-Recovers the encoded execution-context range from memory.
+Inventories an extension-owned execution-context recovery family rejected by PTO before operand interpretation or effects.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ Recovers the encoded execution-context range from memory.
 
 ## Encoding Notes
 
-- `Recovers the encoded execution-context range from memory.`
+- `Inventories an extension-owned execution-context recovery family rejected by PTO before operand interpretation or effects.`
 
 ## Full Catalog Forms
 

@@ -7,7 +7,7 @@
 
 *Syntax:* lb [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}
 
-*Description:* LB - Load scalar data using this mnemonic's width, signedness, and address-update form.
+*Description:* LB snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value.
 
 *Encoding:*
 

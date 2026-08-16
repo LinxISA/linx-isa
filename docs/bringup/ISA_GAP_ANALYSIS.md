@@ -35,18 +35,19 @@ Comparable to Arm/x86/RISC-V maturity means:
 
 - ISA:
   - scalar block/call/ret semantics are the current first-closure lane
-  - direct-call source examples should use fused `BSTART CALL, <target>, ra=<label>`
+  - direct-call source examples must use the fused
+    `BSTART.CALL <br_label>, <rt_label>, ->ra` form
 - Compiler:
   - generic freestanding C coverage is strong and the active LLVM AVS lane is green
   - direct-call source closure is now expected to stay fused at the asm level,
-    while object code may still lower to adjacent `setret`
+    and object code must preserve the same atomic architectural operation
 - QEMU:
   - scalar runtime/system baseline is substantially ahead of SIMT/tile breadth
   - call/ret correctness is part of the scalar closure lane
 - Remaining scalar gap:
-  - indirect-call fused `ra=` source syntax is not yet portable on the current
-    compiler branch, so handwritten `ICALL` still relies on explicit adjacent
-    `setret/c.setret`
+  - compiler support for `BSTART.ICALL <rt_label>, ->ra` must preserve the
+    retiring STD/FP block's `BARG.BPCN` target and must not synthesize an
+    adjacent `setret/c.setret`
 
 ### SIMT
 

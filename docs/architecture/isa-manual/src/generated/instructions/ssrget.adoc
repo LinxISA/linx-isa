@@ -7,7 +7,7 @@
 
 *Syntax:* ssrget SSR_ID, ->{t, u, Rd}
 
-*Description:* SSRGET - Read the addressed system register.
+*Description:* SSRGET reads the complete encoded system-register address.
 
 *Encoding:*
 

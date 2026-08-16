@@ -7,7 +7,7 @@
 
 *Syntax:* c.movi simm, ->{t, u, Rd}
 
-*Description:* C.MOVI - Move the scalar source to the selected destination.
+*Description:* C.MOVI sign-extends its encoded five-bit immediate to XLEN and publishes it through RegDst.
 
 *Encoding:*
 

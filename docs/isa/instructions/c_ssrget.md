@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-16">16-bit C.</span> **Group:** <a href="../groups/c_tinst.md">C.TINST</a> &nbsp;|&nbsp;
+<span class="badge-16">16-bit C.</span> **Group:** <a href="../groups/sys.md">SYS</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-19">Ch 19</span>
 &nbsp; <strong>SYS — System Operations</strong> &nbsp;|&nbsp;
 **Length:** <code>16</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -26,17 +26,17 @@
 
 ## Description
 
-C.SSRGET - Read the compressed-form system register.
+C.SSRGET reads the complete encoded system-register address.
 
 ## Pseudocode (informative)
 
 ```c
-// Execute C.SSRGET as defined by the C.TINST semantics.
+// Execute C.SSRGET as defined by the SYS semantics.
 ```
 
 ## Encoding Notes
 
-- `C.SSRGET - Read the compressed-form system register.`
+- `C.SSRGET reads the complete encoded system-register address.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ C.SSRGET - Read the compressed-form system register.
 
 <div class="insn-nav">
 
-← [C.TINST](../groups/c_tinst.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [SYS](../groups/sys.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

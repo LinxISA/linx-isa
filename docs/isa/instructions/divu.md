@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/multi_cycle_alu.md">Multi-Cycle ALU</a> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/alu.md">ALU</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-12">Ch 12</span>
 &nbsp; <strong>ALU — Arithmetic Logic Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -36,7 +36,7 @@ rd = (rs2 != 0) ? UnsignedDiv(rs1, rs2) : 0;
 
 ## Encoding Notes
 
-- `DIVU - Compute unsigned scalar quotient.`
+- `DIVU computes the unsigned XLEN quotient using total fixed-width semantics and publishes the XLEN result.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ rd = (rs2 != 0) ? UnsignedDiv(rs1, rs2) : 0;
 
 <div class="insn-nav">
 
-← [Multi-Cycle ALU](../groups/multi_cycle_alu.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [ALU](../groups/alu.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

@@ -7,7 +7,7 @@
 
 *Syntax:* c.setc.tgt srcL
 
-*Description:* C.SETC.TGT - Write the bundle commit target.
+*Description:* Snapshot one scalar source value into the active block BARG.BPCN.
 
 *Encoding:*
 

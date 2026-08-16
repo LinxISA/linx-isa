@@ -7,7 +7,7 @@
 
 *Syntax:* c.sub srcL, srcR, ->t
 
-*Description:* C.SUB - Compute this mnemonic's binary scalar operation and write the selected destination.
+*Description:* C.SUB snapshots two complete Reg5 sources, subtracts SrcR from SrcL modulo 2^XLEN, and pushes the result to T.
 
 *Encoding:*
 

@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/immediate.md">Immediate</a> &nbsp;|&nbsp;
+<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/alu.md">ALU</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-12">Ch 12</span>
 &nbsp; <strong>ALU — Arithmetic Logic Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>48</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -26,7 +26,7 @@
 
 ## Description
 
-HL.LUI - Materialize the encoded signed long immediate.
+HL.LUI sign-extends its split encoded 32-bit immediate to XLEN and publishes the result through RegDst.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ rd = ZeroExtend(imm20) << 12;
 
 ## Encoding Notes
 
-- `HL.LUI - Materialize the encoded signed long immediate.`
+- `HL.LUI sign-extends its split encoded 32-bit immediate to XLEN and publishes the result through RegDst.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ rd = ZeroExtend(imm20) << 12;
 
 <div class="insn-nav">
 
-← [Immediate](../groups/immediate.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [ALU](../groups/alu.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

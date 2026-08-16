@@ -7,7 +7,7 @@
 
 *Syntax:* bis SrcL, M, N, ->{t, u, Rd}
 
-*Description:* BIS - Modify the selected scalar bitfield.
+*Description:* BIS sets every bit in an independently selected wrapping scalar field and publishes the modified XLEN value.
 
 *Encoding:*
 

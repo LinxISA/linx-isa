@@ -7,7 +7,7 @@
 
 *Syntax:* c.srli t#1, uimm, ->t
 
-*Description:* C.SRLI - Compute this mnemonic's binary scalar operation and write the selected destination.
+*Description:* C.SRLI snapshots the pre-instruction T#1 value, logically shifts it right by uimm5, and pushes the XLEN result to T.
 
 *Encoding:*
 

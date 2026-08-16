@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/cache_maintain.md">Cache Maintain</a> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/sys.md">SYS</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-19">Ch 19</span>
 &nbsp; <strong>SYS — System Operations</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -26,17 +26,17 @@
 
 ## Description
 
-Cache maintenance operation.
+DC.CIVA completes the data-cache clean-and-invalidate scope token maintenance operation synchronously.
 
 ## Pseudocode (informative)
 
 ```c
-// Execute DC.CIVA as defined by the Cache Maintain semantics.
+// Execute DC.CIVA as defined by the SYS semantics.
 ```
 
 ## Encoding Notes
 
-- `DC.CIVA - Perform this mnemonic's cache, TLB, or bundle maintenance operation.`
+- `DC.CIVA completes the data-cache clean-and-invalidate scope token maintenance operation synchronously.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ Cache maintenance operation.
 
 <div class="insn-nav">
 
-← [Cache Maintain](../groups/cache_maintain.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [SYS](../groups/sys.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

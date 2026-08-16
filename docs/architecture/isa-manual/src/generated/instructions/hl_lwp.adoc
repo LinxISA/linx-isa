@@ -7,7 +7,7 @@
 
 *Syntax:* hl.lwp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1
 
-*Description:* HL.LWP - Load a scalar register pair using this mnemonic's address-update form.
+*Description:* HL.LWP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 4-byte values.
 
 *Encoding:*
 

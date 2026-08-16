@@ -7,7 +7,7 @@
 
 *Syntax:* max SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* MAX - Compute this mnemonic's binary scalar operation and write the selected destination.
+*Description:* MAX performs a signed full-XLEN comparison and publishes the complete bit pattern of the maximum operand.
 
 *Encoding:*
 

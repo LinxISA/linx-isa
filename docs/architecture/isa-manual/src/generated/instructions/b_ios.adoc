@@ -7,7 +7,7 @@
 
 *Syntax:* B.IOS S<SharedTID>, mask=<PE_MASK> | B.IOS mask=<PE_MASK>, ->S<SharedTID><TSize>
 
-*Description:* Binds one ordered absolute core-private Shared register S0..S255 with a per-PE source/destination size code and four-PE participation mask.
+*Description:* Binds one ordered absolute Core-private Shared register S0..S255 as a source or destination with a common four-PE participation mask.
 
 *Encoding:*
 

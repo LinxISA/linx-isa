@@ -7,7 +7,7 @@
 
 *Syntax:* FEXIT [RegDst0 ~ RegDstn], sp!, uimm
 
-*Description:* Atomically validates and commits a frame-template exit state.
+*Description:* Destroys a restartable stack frame and restores one inclusive callee-save register-ring range.
 
 *Encoding:*
 

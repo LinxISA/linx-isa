@@ -85,6 +85,13 @@ def _collapse_ws(s: str) -> str:
 # Canonical group → (manual_chapter_num, manual_chapter_title)
 # These correspond to the active LinxISA v0.58 manual chapters.
 MANUAL_CHAPTERS: dict[str, tuple[int, str]] = {
+    "ALU":                            (12, "ALU — Arithmetic Logic Unit"),
+    "AMO":                            (14, "AMO — Atomic Memory Operations"),
+    "BRU":                            (16, "BRU — Branch and Compare"),
+    "FSU":                            (13, "FSU — Floating-point / SIMD Unit"),
+    "LDA":                            (11, "AGU — Address Generation Unit"),
+    "STA":                            (11, "AGU — Address Generation Unit"),
+    "SYS":                            (19, "SYS — System Operations"),
     "Arithmetic":                     (12, "ALU — Arithmetic Logic Unit"),
     "Arithmetic Operation":           (12, "ALU — Arithmetic Logic Unit"),
     "Arithmetic Operation 32bit":     (12, "ALU — Arithmetic Logic Unit"),
@@ -132,6 +139,7 @@ MANUAL_CHAPTERS: dict[str, tuple[int, str]] = {
     "Atomic":                       (14, "AMO — Atomic Memory Operations"),
     # Block ISA
     "Block Split":                  (4,  "Block ISA — Block-structured Control Flow"),
+    "Bundle Split":                 (4,  "Block ISA — Block-structured Control Flow"),
     "BSTART":                       (4,  "Block ISA — Block-structured Control Flow"),
     "Branch":                       (16, "BRU — Branch and Compare"),
     "Set Commit Argument":           (16, "BRU — Branch and Compare"),
@@ -143,6 +151,15 @@ MANUAL_CHAPTERS: dict[str, tuple[int, str]] = {
     "Block Hint":                    (17, "CMD — Command and Control"),
     "Block Input & Output":          (4,  "Block ISA — Block-structured Control Flow"),
     "Block Offset":                  (4,  "Block ISA — Block-structured Control Flow"),
+    "Bundle Argument":               (4,  "Block ISA — Block-structured Control Flow"),
+    "Bundle Control Attribute":      (17, "CMD — Command and Control"),
+    "Bundle Data Attribute":         (17, "CMD — Command and Control"),
+    "Bundle Dimension":              (4,  "Block ISA — Block-structured Control Flow"),
+    "Bundle Fixed-Point PostProcess Attribute":
+                                      (17, "CMD — Command and Control"),
+    "Bundle Hint":                   (17, "CMD — Command and Control"),
+    "Bundle Input & Output":         (4,  "Block ISA — Block-structured Control Flow"),
+    "Bundle Offset":                 (4,  "Block ISA — Block-structured Control Flow"),
     "C.UNARY":                      (12, "ALU — Arithmetic Logic Unit"),
     "C.TINST":                      (19, "SYS — System Operations"),
     "Move":                         (12, "ALU — Arithmetic Logic Unit"),
@@ -179,6 +196,8 @@ MANUAL_CHAPTER_INDEX: list[tuple[int, str, str]] = [
 
 def get_manual_chapter(group: str) -> tuple[int, str] | None:
     """Return (chapter_num, chapter_title) for a catalog group, or None."""
+    if group.startswith(("LDA/", "STA/")):
+        return (11, "AGU — Address Generation Unit")
     return MANUAL_CHAPTERS.get(group)
 
 
@@ -616,7 +635,7 @@ halfword-oriented model. Bit positions are shown as `[msb:0]`
 | Namespace | Format | Bits | Composition | Example |
 |-----------|--------|------|-------------|---------|
 | **C.** | C16 | 16 | Single 16-bit part | `C.ADD`, `C.LD`, `C.BSTART.FP` |
-| *(base)* | LX32 | 32 | Single 32-bit part | `ADD`, `LD`, `BSTART CALL` |
+| *(base)* | LX32 | 32 | Single 32-bit part | `ADD`, `LD`, `BSTART.CALL` |
 | **HL.** | HL48 | 48 | 16-bit prefix + 32-bit main | `HL.LDI`, `HL.CASB`, `HL.SETRET` |
 | **V.** | V64 | 64 | 32-bit prefix + 32-bit main | `V.ADD`, `V.FMADD`, `V.DIV` |
 
@@ -1282,6 +1301,11 @@ def main() -> int:
         os.makedirs(os.path.join(out_dir, sub), exist_ok=True)
 
     groups = _group_instructions(instructions)
+    unmapped_groups = sorted(group for group in groups if get_manual_chapter(group) is None)
+    if unmapped_groups:
+        raise ValueError(
+            "catalog groups have no ISA manual chapter: " + ", ".join(unmapped_groups)
+        )
 
     if args.verbose:
         print(f"[gen_isa_pages] ISA v{spec_version} — {len(instructions)} forms, {len(groups)} groups")

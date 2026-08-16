@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `hl.qpush.{h,e,r,he,hr,er,her} SrcL, SrcR, ->{t, u}`
+- `hl.qpush[.{h,e,r,he,hr,er,her}] SrcL, SrcR, ->RegDst`
 
 ## Encoding
 
@@ -26,7 +26,7 @@
 
 ## Description
 
-Pushes the encoded scalar values to the selected temporary queue.
+Atomically pushes one 64-bit entry at the tail or head of a General Queue Management queue.
 
 ## Pseudocode (informative)
 
@@ -36,13 +36,13 @@ Pushes the encoded scalar values to the selected temporary queue.
 
 ## Encoding Notes
 
-- `Pushes the encoded scalar values to the selected temporary queue.`
+- `Atomically pushes one 64-bit entry at the tail or head of a General Queue Management queue.`
 
 ## Full Catalog Forms
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `hl.qpush.{h,e,r,he,hr,er,her} SrcL, SrcR, ->{t, u}` | 48 | — |
+| `hl.qpush[.{h,e,r,he,hr,er,her}] SrcL, SrcR, ->RegDst` | 48 | — |
 
 <div class="insn-nav">
 

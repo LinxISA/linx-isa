@@ -7,7 +7,7 @@
 
 *Syntax:* C.B.DIMI imm, ->{LB0, LB1, LB2}
 
-*Description:* Writes one of the three bundle-local dimension registers.
+*Description:* Zero-extends imm8 and writes one selected bundle-local LB exactly once.
 
 *Encoding:*
 

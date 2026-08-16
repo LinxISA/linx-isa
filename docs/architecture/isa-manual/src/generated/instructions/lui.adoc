@@ -7,7 +7,7 @@
 
 *Syntax:* lui simm, ->{t, u, Rd}
 
-*Description:* LUI - Materialize the upper immediate.
+*Description:* LUI sign-extends its encoded 20-bit immediate to XLEN, shifts it left by 12 bits, and publishes the result through RegDst.
 
 *Encoding:*
 

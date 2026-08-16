@@ -7,7 +7,7 @@
 
 *Syntax:* hl.ccat SrcL, SrcR, shamt, ->Dst0, Dst1
 
-*Description:* HL.CCAT - Concatenate two scalar values into a result pair.
+*Description:* HL.CCAT logically right-shifts {SrcL, SrcR}, writes the low 64-bit result to Dst0, then writes the high result to Dst1.
 
 *Encoding:*
 

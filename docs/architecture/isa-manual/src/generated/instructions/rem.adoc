@@ -7,7 +7,7 @@
 
 *Syntax:* rem SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* REM - Compute signed scalar remainder.
+*Description:* REM computes the signed XLEN remainder using total fixed-width semantics and publishes the XLEN result.
 
 *Encoding:*
 

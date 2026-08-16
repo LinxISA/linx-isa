@@ -7,7 +7,7 @@
 
 *Syntax:* hl.ccatw SrcL, SrcR, shamt, ->Dst0, Dst1
 
-*Description:* HL.CCATW - Concatenate two 32-bit values into a sign-extended result pair.
+*Description:* HL.CCATW logically right-shifts {SrcL[31:0], SrcR[31:0]}, sign-extends the low then high 32-bit results, and writes them in order.
 
 *Encoding:*
 

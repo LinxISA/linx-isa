@@ -3,8 +3,8 @@
 <div class="insn-header">
 
 <span class="badge-16">16-bit C.</span> **Group:** <a href="../groups/bundle_dimension.md">Bundle Dimension</a> &nbsp;|&nbsp;
-<span class="ch-tag ch-tag-00">Ch 00</span>
-&nbsp; <strong>ISA Manual</strong> &nbsp;|&nbsp;
+<span class="ch-tag ch-tag-04">Ch 04</span>
+&nbsp; <strong>Block ISA — Block-structured Control Flow</strong> &nbsp;|&nbsp;
 **Length:** <code>16</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
 
 </div>
@@ -26,7 +26,7 @@
 
 ## Description
 
-Writes one of the three bundle-local dimension registers.
+Zero-extends imm8 and writes one selected bundle-local LB exactly once.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ Writes one of the three bundle-local dimension registers.
 
 ## Encoding Notes
 
-- `Writes one of the three bundle-local dimension registers.`
+- `Zero-extends imm8 and writes one selected bundle-local LB exactly once.`
 
 ## Full Catalog Forms
 

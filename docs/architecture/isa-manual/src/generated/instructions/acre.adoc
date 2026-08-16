@@ -7,7 +7,7 @@
 
 *Syntax:* acre rra_type
 
-*Description:* ACRE - Request architecture context entry.
+*Description:* ACRE atomically commits the active SYS block and recovers one validated architecture context.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* fmadd.{T} SrcL, SrcR, SrcA, ->{t, u, Rd}
 
-*Description:* FMADD - Compute this mnemonic's fused floating-point operation.
+*Description:* FMADD computes one fused SrcL multiplied by SrcR plus SrcA operation through the active numeric profile.
 
 *Encoding:*
 

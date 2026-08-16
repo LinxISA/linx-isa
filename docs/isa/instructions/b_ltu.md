@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/branch.md">Branch</a> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/bru.md">BRU</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-16">Ch 16</span>
 &nbsp; <strong>BRU — Branch and Compare</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -31,7 +31,7 @@ Conditional branch taken when SrcL is less than SrcR (unsigned).
 ## Pseudocode (informative)
 
 ```c
-// Execute B.LTU as defined by the Branch semantics.
+// Execute B.LTU as defined by the BRU semantics.
 ```
 
 ## Encoding Notes
@@ -46,6 +46,6 @@ Conditional branch taken when SrcL is less than SrcR (unsigned).
 
 <div class="insn-nav">
 
-← [Branch](../groups/branch.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [BRU](../groups/bru.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

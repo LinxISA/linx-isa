@@ -7,7 +7,7 @@
 
 *Syntax:* FENTRY [RegSrc0 ~ RegSrcn], sp!, uimm
 
-*Description:* Atomically validates and creates a frame-template entry state.
+*Description:* Creates a restartable stack frame by snapshotting and storing one inclusive callee-save register-ring range.
 
 *Encoding:*
 

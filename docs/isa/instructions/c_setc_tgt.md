@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-16">16-bit C.</span> **Group:** <a href="../groups/c_unary.md">C.UNARY</a> &nbsp;|&nbsp;
+<span class="badge-16">16-bit C.</span> **Group:** <a href="../groups/alu.md">ALU</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-12">Ch 12</span>
 &nbsp; <strong>ALU — Arithmetic Logic Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>16</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -36,7 +36,7 @@ SetCommitArgument(/* condition */);
 
 ## Encoding Notes
 
-- `C.SETC.TGT - Write the bundle commit target.`
+- `Snapshot one scalar source value into the active block BARG.BPCN.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ SetCommitArgument(/* condition */);
 
 <div class="insn-nav">
 
-← [C.UNARY](../groups/c_unary.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [ALU](../groups/alu.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

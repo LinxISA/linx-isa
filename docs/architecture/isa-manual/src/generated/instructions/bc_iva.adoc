@@ -7,7 +7,7 @@
 
 *Syntax:* bc.iva SrcL
 
-*Description:* BC.IVA - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
+*Description:* BC.IVA completes the bundle-cache virtual-address scope token maintenance operation synchronously.
 
 *Encoding:*
 

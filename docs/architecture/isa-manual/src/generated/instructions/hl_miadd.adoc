@@ -7,7 +7,7 @@
 
 *Syntax:* hl.miadd SrcL, SrcR, uimm, ->{t, u, Rd}
 
-*Description:* HL.MIADD - Multiply by the encoded immediate and add the scalar source.
+*Description:* HL.MIADD multiplies SrcR by the unsigned 19-bit immediate, adds SrcL modulo 2^PTO_XLEN, and publishes the result.
 
 *Encoding:*
 

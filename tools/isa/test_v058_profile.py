@@ -9,8 +9,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 spec = json.loads((ROOT / "isa/v0.58/linxisa-v0.58.json").read_text(encoding="utf-8"))
-assert spec["version"] == "0.58.0"
-assert sum("pto_source_form_id" in item for item in spec["instructions"]) == 573
+assert spec["version"] == "0.58.1"
+assert sum("pto_source_form_id" in item for item in spec["instructions"]) == 548
 pto_owned_instructions = [
     item
     for item in spec["instructions"]
@@ -21,17 +21,69 @@ linx_only_instructions = [
     for item in spec["instructions"]
     if not (item.get("pto_source_form_id") or item.get("pto_source_form_variant_of"))
 ]
-assert len(pto_owned_instructions) == 578
-assert len(linx_only_instructions) == 188
+assert len(pto_owned_instructions) == 553
+assert len(linx_only_instructions) == 212
 assert sum(item["mnemonic"].startswith("V.") for item in linx_only_instructions) == 184
-assert {
-    item["mnemonic"]
-    for item in linx_only_instructions
-    if not item["mnemonic"].startswith("V.")
-} == {"BSTART.VPAR", "BSTART.VSEQ", "C.BSTART.VPAR", "C.BSTART.VSEQ"}
 mnemonics = {item["mnemonic"] for item in spec["instructions"]}
-assert {"B.IOS", "BSTART.GMOV", "BSTART.VPAR", "BSTART.VSEQ", "V.QPOP", "V.QPUSH"} <= mnemonics
+assert {
+    "B.FPATR",
+    "B.IOS",
+    "BSTART.CALL",
+    "BSTART.GMOV",
+    "BSTART.ICALL",
+    "BSTART.VPAR",
+    "BSTART.VSEQ",
+    "L.BSTOP",
+    "V.QPOP",
+    "V.QPUSH",
+} <= mnemonics
 assert {"B.IOD", "BSTART.PAR", "C.B.IOS"}.isdisjoint(mnemonics)
+obsolete_assembly = {
+    "BSTART.FP CALL, <label>",
+    "BSTART.FP ICALL",
+    "BSTART.STD CALL, <label>",
+    "BSTART.STD ICALL",
+}
+assert obsolete_assembly.isdisjoint(
+    str(item.get("asm") or "") for item in spec["instructions"]
+)
+reservations = json.loads(
+    (ROOT / "isa/v0.58/state/extension_encoding_reservations.json").read_text(
+        encoding="utf-8"
+    )
+)["reservations"]
+assert len(reservations) == 32
+
+
+def encoding_parts(item: dict) -> tuple[tuple[int, int, int], ...]:
+    encoding = item.get("encoding", [])
+    if isinstance(encoding, dict):
+        encoding = encoding.get("parts", [])
+    return tuple(
+        (int(part["mask"], 0), int(part["match"], 0), int(part["width_bits"]))
+        for part in encoding
+    )
+
+
+def reservation_covers(reservation: dict, instruction: dict) -> bool:
+    reserved = encoding_parts(reservation)
+    concrete = encoding_parts(instruction)
+    return len(reserved) == len(concrete) and all(
+        reserved_width == concrete_width
+        and concrete_mask & reserved_mask == reserved_mask
+        and concrete_match & reserved_mask == reserved_match
+        for (reserved_mask, reserved_match, reserved_width), (
+            concrete_mask,
+            concrete_match,
+            concrete_width,
+        ) in zip(reserved, concrete)
+    )
+
+
+assert all(
+    any(reservation_covers(reservation, item) for reservation in reservations)
+    for item in linx_only_instructions
+)
 b_ios = [item for item in spec["instructions"] if item["mnemonic"] == "B.IOS"]
 assert len(b_ios) == 1
 b_ios_part = b_ios[0]["encoding"]["parts"][0]
@@ -42,7 +94,7 @@ assert (int(b_ios_part["mask"], 0), int(b_ios_part["match"], 0)) == (
 assert spec["retired_encodings"]["entries"] == []
 pto_ops = json.loads((ROOT / "isa/v0.58/state/pto_ops.json").read_text(encoding="utf-8"))
 expected_family_counts = {"CUBE": 12, "TEPL": 87, "TLSU": 10}
-expected_engine_counts = {"CUBE": 12, "SFU": 52, "TLSU": 10, "VEC": 35}
+expected_engine_counts = {"CUBE": 12, "SFU": 56, "TLSU": 10, "VEC": 31}
 expected_classification_counts = {
     "elementwise-tile-tile": 25,
     "irregular-and-complex": 13,
@@ -121,16 +173,18 @@ assert shared["gm_access"]["base_selector"] == "B.IOR.RegSrc0"
 assert shared["gm_access"]["row_stride_selector"] == "B.IOR.RegSrc1"
 b_ios_page = (ROOT / "docs/isa/instructions/b_ios.md").read_text(encoding="utf-8")
 b_ior_page = (ROOT / "docs/isa/instructions/b_ior.md").read_text(encoding="utf-8")
-assert "## Description\n\nBinds one ordered absolute core-private Shared register" in b_ios_page
+assert "## Description\n\nBinds one ordered absolute Core-private Shared register" in b_ios_page
 assert "## Description\n\nBind up to three absolute GPR inputs" in b_ior_page
 dma = next(item for item in spec["instructions"] if item["mnemonic"] == "DMA")
 assert "64-byte" in dma["note"]
 assert "overlap has memmove semantics" in dma["note"]
 assert "64-bit" not in dma["note"]
-for mnemonic in ("BSTART CALL", "HL.BSTART CALL"):
-    call = next(item for item in spec["instructions"] if item["mnemonic"] == mnemonic)
-    assert "independent unsigned displacement" in call["note"]
-    assert "writes ra" in call["note"]
+call = next(item for item in spec["instructions"] if item["mnemonic"] == "BSTART.CALL")
+assert "independent return target" in call["note"]
+assert "ra" in call["note"]
+hl_call = next(item for item in spec["instructions"] if item["mnemonic"] == "HL.BSTART CALL")
+assert "Both labels are explicit and independently relocatable" in hl_call["note"]
+assert "ra" in hl_call["note"]
 sail_execute = (ROOT / "isa/sail/model/execute/execute.sail").read_text(encoding="utf-8")
 sail_state = (ROOT / "isa/sail/model/state/state.sail").read_text(encoding="utf-8")
 assert "tile_tlsu_required_sources" in sail_execute
@@ -223,6 +277,11 @@ for mnemonic in common_mnemonics:
     description = page.split("## Description\n\n", 1)[1].split("\n\n## Pseudocode", 1)[0].strip()
     assert description
     assert "Instruction from the " not in description, mnemonic
+for page_path in (
+    *(ROOT / "docs/isa/groups").glob("*.md"),
+    *(ROOT / "docs/isa/instructions").glob("*.md"),
+):
+    assert "ch-tag-00" not in page_path.read_text(encoding="utf-8"), page_path
 instruction_reference = (
     ROOT / "docs/architecture/isa-manual/src/generated/instruction_reference.adoc"
 ).read_text(encoding="utf-8")

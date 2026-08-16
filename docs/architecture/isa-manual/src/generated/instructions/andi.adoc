@@ -7,7 +7,7 @@
 
 *Syntax:* andi SrcL, simm, ->{t, u, Rd}
 
-*Description:* ANDI - Compute this mnemonic's binary scalar operation and write the selected destination.
+*Description:* ANDI sign-extends simm12 to PTO_XLEN, ANDs it with the snapshotted XLEN source, and publishes the complete result through RegDst.
 
 *Encoding:*
 

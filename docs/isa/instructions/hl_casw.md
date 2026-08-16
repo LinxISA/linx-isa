@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/atomic.md">Atomic</a> &nbsp;|&nbsp;
+<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/amo.md">AMO</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-14">Ch 14</span>
 &nbsp; <strong>AMO — Atomic Memory Operations</strong> &nbsp;|&nbsp;
 **Length:** <code>48</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -26,17 +26,17 @@
 
 ## Description
 
-[48-bit HL.] Atomic memory read-modify-write operation.
+HL.CASW atomically compares and conditionally replaces one word, then publishes the prior value.
 
 ## Pseudocode (informative)
 
 ```c
-// Execute HL.CASW as defined by the Atomic semantics.
+// Execute HL.CASW as defined by the AMO semantics.
 ```
 
 ## Encoding Notes
 
-- `HL.CASW - Atomically compare the scalar memory value and conditionally store the replacement.`
+- `HL.CASW atomically compares and conditionally replaces one word, then publishes the prior value.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@
 
 <div class="insn-nav">
 
-← [Atomic](../groups/atomic.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [AMO](../groups/amo.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

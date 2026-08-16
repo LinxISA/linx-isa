@@ -7,7 +7,7 @@
 
 *Syntax:* dc.iall
 
-*Description:* DC.IALL - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
+*Description:* DC.IALL completes the data-cache all-entry scope maintenance operation synchronously.
 
 *Encoding:*
 

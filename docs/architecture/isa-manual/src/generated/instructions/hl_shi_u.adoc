@@ -7,7 +7,7 @@
 
 *Syntax:* hl.shi.u SrcD, [SrcR, simm]
 
-*Description:* HL.SHI.U - Store scalar data using this mnemonic's width and address-update form.
+*Description:* HL.SHI.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
 
 *Encoding:*
 

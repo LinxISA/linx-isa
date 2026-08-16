@@ -2,9 +2,9 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/max_min.md">Max-Min</a> &nbsp;|&nbsp;
-<span class="ch-tag ch-tag-16">Ch 16</span>
-&nbsp; <strong>BRU — Branch and Compare</strong> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/alu.md">ALU</a> &nbsp;|&nbsp;
+<span class="ch-tag ch-tag-12">Ch 12</span>
+&nbsp; <strong>ALU — Arithmetic Logic Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
 
 </div>
@@ -31,12 +31,12 @@ Integer min (signed).
 ## Pseudocode (informative)
 
 ```c
-// Execute MIN as defined by the Max-Min semantics.
+// Execute MIN as defined by the ALU semantics.
 ```
 
 ## Encoding Notes
 
-- `MIN - Compute this mnemonic's binary scalar operation and write the selected destination.`
+- `MIN performs a signed full-XLEN comparison and publishes the complete bit pattern of the minimum operand.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ Integer min (signed).
 
 <div class="insn-nav">
 
-← [Max-Min](../groups/max_min.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [ALU](../groups/alu.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

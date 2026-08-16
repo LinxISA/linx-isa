@@ -7,7 +7,7 @@
 
 *Syntax:* assert SrcL
 
-*Description:* ASSERT - Raise the architecture assertion trap when its condition fails.
+*Description:* ASSERT raises the architecture assertion trap exactly when its snapshotted scalar condition is zero.
 
 *Encoding:*
 

@@ -195,7 +195,7 @@ The bring-up profile constrains certain combinations (examples):
 
 Block types beyond the scalar core use named TLSU and CUBE direct forms plus VEC/SFU aliases over the unchanged TEPL
 Mode/Function carrier.
-Selector space not explicitly assigned by the PTO ISA 0.58.0 catalog is reserved and must not acquire ad hoc semantics.
+Selector space not explicitly assigned by the PTO ISA 0.58.1 catalog is reserved and must not acquire ad hoc semantics.
 
 [[blockisa-tile]]
 === Tile blocks (TAU)
@@ -735,8 +735,10 @@ invalid/reserved encoding and as the block-stop marker in current conventions.
 
 In the current toolchain bring-up:
 
-* Calls are represented as a block transition (`BSTART.STD CALL, <target>`).
-* Generic bare calls use `BSTART.STD CALL, <target>` and preserve `ra`.
+* The common 32-bit returning call is exactly `BSTART.CALL <br_label>, <rt_label>, ->ra`.
+  The deleted `BSTART.STD CALL` and `BSTART.FP CALL` spellings are not aliases.
+* Linx-only generic bare calls use `L.BSTART.{STD,FP} CALL, <target>` or
+  `HL.BSTART.{STD,FP} CALL, <target>` and preserve `ra`.
 * The exact 32-bit `BSTART.CALL <br_label>, <rt_label>, ->ra` and 48-bit
   `HL.BSTART.CALL <br_label>, <rt_label>, ->ra` forms are fused returning calls. They encode both labels and write
   `ra`; they are not bare-call aliases.
@@ -766,8 +768,9 @@ transfer and `ra` write atomically. Changing `simm12`/`simm25` MUST NOT change `
 
 **Constraint (call header pairing):**
 
-When a standalone `SETRET`/`C.SETRET` is used to materialize the return address for a generic call transition, it must
-appear **immediately before** the call-type block start marker (e.g. `BSTART.STD CALL, <target>` / `C.BSTART CALL`).
+When a standalone `SETRET`/`C.SETRET` is used to materialize the return address for a Linx-only generic call
+transition, it must appear **immediately before** the call-type block start marker (for example,
+`L.BSTART.STD CALL, <target>` or `HL.BSTART.FP CALL, <target>`).
 Tooling and hardware may fuse that instruction pair; no other instruction may be placed between them. This source
 pair is distinct from the exact aggregate `BSTART.CALL`/`HL.BSTART.CALL` forms above, whose embedded `C.SETRET` field
 is already part of the same encoded instruction.
@@ -793,13 +796,6 @@ is:
 
 NOTE: With the safety rule above, `label` must refer to a block start marker (e.g. `BSTART.*` or a template block such
 as `FENTRY`/`FRET.*`). Branching into the interior of another block is invalid and raises an exception.
-
-*Direct call with explicit return address:*
-
-[source,asm]
-----
-BSTART.STD    CALL, callee, ra=return_label
-----
 
 *Exact aggregate call with two explicit targets:*
 

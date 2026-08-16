@@ -7,7 +7,7 @@
 
 *Syntax:* hl.ssrget SSR_ID, ->{t, u, Rd}
 
-*Description:* HL.SSRGET - Read the addressed system register.
+*Description:* HL.SSRGET reads the complete encoded system-register address.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.TMATMUL.ACC DataType
 
-*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+*Description:* Starts CUBE Function 2 for the TMATMUL_ACC Matrix-matrix complete-bundle operation.
 
 *Encoding:*
 

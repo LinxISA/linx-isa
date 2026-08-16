@@ -36,7 +36,7 @@ EndBlock(); BeginNextBlock(/* kind */);
 
 ## Encoding Notes
 
-- `Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.`
+- `Starts the fixed compressed sequential System block without a selecting branch continuation.`
 
 ## Full Catalog Forms
 

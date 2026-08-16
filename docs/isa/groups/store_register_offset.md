@@ -5,8 +5,8 @@
 <span class="ch-tag ch-tag-11">Ch 11</span>
 &nbsp; <strong>AGU — Address Generation Unit</strong> &nbsp;|&nbsp;
 **Group:** Store Register Offset &nbsp;|&nbsp;
-**Forms:** 21 &nbsp;|&nbsp;
-**Unique mnemonics:** 21
+**Forms:** 14 &nbsp;|&nbsp;
+**Unique mnemonics:** 14
 
 </div>
 
@@ -16,13 +16,6 @@ Store instructions with register offsets.
 
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
-| [SB](../instructions/sb.md) | `sb SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]` | 32 | — | Stores a register value to memory. |
-| [SD](../instructions/sd.md) | `sd SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3]` | 32 | — | Stores a register value to memory. |
-| [SD.U](../instructions/sd_u.md) | `sd.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]` | 32 | — | Stores a register value to memory. |
-| [SH](../instructions/sh.md) | `sh SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1]` | 32 | — | Stores a register value to memory. |
-| [SH.U](../instructions/sh_u.md) | `sh.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]` | 32 | — | Stores a register value to memory. |
-| [SW](../instructions/sw.md) | `sw SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2]` | 32 | — | Stores a register value to memory. |
-| [SW.U](../instructions/sw_u.md) | `sw.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]` | 32 | — | Stores a register value to memory. |
 | [V.SB](../instructions/v_sb.md) | `v.sb<.local> SrcD.<T1>, [SrcL, <lc0>, SrcR.<T2><<<shamt>]` | 64 | — | [64-bit V.] Stores a register value to memory. |
 | [V.SB.BRG](../instructions/v_sb_brg.md) | `v.sb.brg<.local> SrcD.<T1>, [SrcL, <lc0>, SrcR.<T2><<<shamt>]` | 64 | — | [64-bit V.] Stores a register value to memory. |
 | [V.SD](../instructions/v_sd.md) | `v.sd<.local> SrcD.<T1>, [SrcL, <lc0<<3>, SrcR.<T2><<(3+shamt)]` | 64 | — | [64-bit V.] Stores a register value to memory. |

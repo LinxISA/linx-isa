@@ -7,7 +7,7 @@
 
 *Syntax:* bxs SrcL, M, N, ->{t, u, Rd}
 
-*Description:* BXS - Extract the selected scalar bitfield.
+*Description:* BXS extracts an independently selected wrapping scalar field, sign-extends it to XLEN, and publishes the result.
 
 *Encoding:*
 

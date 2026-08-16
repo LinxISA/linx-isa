@@ -7,7 +7,7 @@
 
 *Syntax:* c.zext.w srcL, ->t
 
-*Description:* C.ZEXT.W - Sign-extend or zero-extend the selected scalar subword.
+*Description:* C.ZEXT.W zero-extends SrcL[31:0] to XLEN and pushes the result to T.
 
 *Encoding:*
 

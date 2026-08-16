@@ -7,7 +7,7 @@
 
 *Syntax:* addw SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}
 
-*Description:* ADDW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
+*Description:* ADDW applies the selected right-source transformation before its encoded logical left shift, performs fixed-width word addition, and publishes the low 32-bit result sign-extended to XLEN.
 
 *Encoding:*
 

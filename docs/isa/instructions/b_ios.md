@@ -3,8 +3,8 @@
 <div class="insn-header">
 
 <span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/bundle_input_output.md">Bundle Input & Output</a> &nbsp;|&nbsp;
-<span class="ch-tag ch-tag-00">Ch 00</span>
-&nbsp; <strong>ISA Manual</strong> &nbsp;|&nbsp;
+<span class="ch-tag ch-tag-04">Ch 04</span>
+&nbsp; <strong>Block ISA — Block-structured Control Flow</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
 
 </div>
@@ -26,7 +26,7 @@
 
 ## Description
 
-Binds one ordered absolute core-private Shared register S0..S255 with a per-PE source/destination size code and four-PE participation mask.
+Binds one ordered absolute Core-private Shared register S0..S255 as a source or destination with a common four-PE participation mask.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ Binds one ordered absolute core-private Shared register S0..S255 with a per-PE s
 
 ## Encoding Notes
 
-- `Binds one ordered absolute core-private Shared register S0..S255 with a per-PE source/destination size code and four-PE participation mask.`
+- `Binds one ordered absolute Core-private Shared register S0..S255 as a source or destination with a common four-PE participation mask.`
 
 ## Full Catalog Forms
 

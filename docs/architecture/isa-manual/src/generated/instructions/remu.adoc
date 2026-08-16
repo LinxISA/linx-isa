@@ -7,7 +7,7 @@
 
 *Syntax:* remu SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* REMU - Compute unsigned scalar remainder.
+*Description:* REMU computes the unsigned XLEN remainder using total fixed-width semantics and publishes the XLEN result.
 
 *Encoding:*
 

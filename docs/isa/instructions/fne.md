@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/floating_point_compare.md">Floating-point Compare</a> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/fsu.md">FSU</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-13">Ch 13</span>
 &nbsp; <strong>FSU — Floating-point / SIMD Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -26,17 +26,17 @@
 
 ## Description
 
-FNE - Compare floating-point operands and produce the encoded result.
+FNE performs ordered quiet inequality and returns canonical XLEN zero or one.
 
 ## Pseudocode (informative)
 
 ```c
-// Execute FNE as defined by the Floating-point Compare semantics.
+// Execute FNE as defined by the FSU semantics.
 ```
 
 ## Encoding Notes
 
-- `FNE - Compare floating-point operands and produce the encoded result.`
+- `FNE performs ordered quiet inequality and returns canonical XLEN zero or one.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ FNE - Compare floating-point operands and produce the encoded result.
 
 <div class="insn-nav">
 
-← [Floating-point Compare](../groups/floating_point_compare.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [FSU](../groups/fsu.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

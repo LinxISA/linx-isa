@@ -7,7 +7,7 @@
 
 *Syntax:* div SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* DIV - Compute signed scalar quotient.
+*Description:* DIV computes the signed XLEN quotient using total fixed-width semantics and publishes the XLEN result.
 
 *Encoding:*
 

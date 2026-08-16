@@ -7,7 +7,7 @@
 
 *Syntax:* remuw SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* REMUW - Compute unsigned 32-bit remainder and sign-extend it.
+*Description:* REMUW computes the unsigned low-32-bit remainder using total fixed-width semantics and publishes the XLEN result.
 
 *Encoding:*
 

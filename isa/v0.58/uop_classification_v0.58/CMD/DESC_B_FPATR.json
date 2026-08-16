@@ -1,0 +1,20 @@
+{
+  "big_kind": "CMD",
+  "count": 1,
+  "instructions": [
+    {
+      "class": {
+        "cmd_kind": "DESC_B_FPATR",
+        "note": "PTO fixed-point post-processing descriptor command",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Bundle Fixed-Point PostProcess Attribute",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "B.FPATR"
+    }
+  ],
+  "sub_kind": "DESC_B_FPATR"
+}

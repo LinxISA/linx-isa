@@ -55,6 +55,7 @@ Closes the current bundle, initializes the next bundle descriptor, and selects i
 ## Encoding Notes
 
 - `Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.`
+- `Bare L.BSTART.STD CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.`
 
 ## Full Catalog Forms
 

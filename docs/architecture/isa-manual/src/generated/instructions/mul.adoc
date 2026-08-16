@@ -7,7 +7,7 @@
 
 *Syntax:* mul SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* MUL - Compute the scalar product.
+*Description:* MUL computes the low XLEN bits of the complete scalar product and publishes the result.
 
 *Encoding:*
 

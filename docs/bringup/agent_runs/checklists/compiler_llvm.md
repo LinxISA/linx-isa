@@ -73,10 +73,17 @@
   Done means: auxiliary LLVM binutils required by kernel/libc integration are present next to the pinned `clang` and `ld.lld`.
   Status: ✅ PASS (2026-03-08) - auxiliary tools were rebuilt in-place for pinned LLVM `e6ce4b78faaa`, producing `compiler/llvm/build-linxisa-clang/bin/llvm-ar`, `llvm-nm`, `llvm-readelf`, and `llvm-strip`.
 
-- [ ] ID: LLVM-007 Keep scalar direct-call source closure on fused `BSTART ... , ra=...`.
+- [ ] ID: LLVM-007 Keep scalar direct-call source closure on fused `BSTART.CALL`.
   Command: `cd avs/compiler/linx-llvm/tests && CLANG=compiler/llvm/build-linxisa-clang/bin/clang TARGET=linx64-linx-none-elf OUT_DIR=avs/compiler/linx-llvm/tests/out-linx64 ./run.sh`
-  Done means: scalar direct-call sources and handwritten startup asm use fused `ra=` call headers, while object-level relocation checks still accept the lowered adjacent `setret` pair.
-  Status: ✅ PASS (2026-05-15) - `run.sh` passed after converting scalar handwritten direct calls to fused `BSTART.STD CALL, ..., ra=...` source syntax. The relocation/template gates still passed for the call/ret AVS lane, including `18_setret_relax`, `33`-`40`, and `41_v057_isa_forms`.
+  Done means: scalar direct-call sources and handwritten startup asm use
+  `BSTART.CALL <br_label>, <rt_label>, ->ra`, and object-level relocation
+  checks preserve that single atomic architectural operation.
+  Historical v0.57 evidence only; it does not transfer approval to the current
+  v0.58.1 syntax or semantics. Status: ✅ PASS (2026-05-15) - `run.sh`
+  passed after converting the then-current scalar handwritten direct calls to
+  `BSTART.STD CALL, ..., ra=...`. The current PTO-common form is
+  `BSTART.CALL <br_label>, <rt_label>, ->ra` and requires fresh v0.58.1
+  evidence.
 
 - [x] ID: LLVM-008 Keep whole-stack coverage coherent with ISA and QEMU.
   Command: `python3 tools/bringup/report_isa_llvm_qemu_coverage.py --compiler-analyzer avs/compiler/linx-llvm/tests/analyze_coverage.py --compiler-out-dir avs/compiler/linx-llvm/tests/out-linx64 --qemu-isa-report docs/bringup/gates/qemu_isa_coverage_latest.json --qemu-translation-report docs/bringup/gates/qemu_translation_coverage_latest.json --report-out docs/bringup/gates/isa_llvm_qemu_coverage_latest.json --out-md docs/bringup/gates/isa_llvm_qemu_coverage_latest.md --require-coherent`

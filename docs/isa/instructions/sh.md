@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/store_register_offset.md">Store Register Offset</a> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/sta_base_reg.md">STA/BASE_REG</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-11">Ch 11</span>
 &nbsp; <strong>AGU — Address Generation Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -26,17 +26,17 @@
 
 ## Description
 
-Stores a register value to memory.
+SH snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
 
 ## Pseudocode (informative)
 
 ```c
-Store(/* addr */, rs2);
+// Execute SH as defined by the STA/BASE_REG semantics.
 ```
 
 ## Encoding Notes
 
-- `SH - Store scalar data using this mnemonic's width and address-update form.`
+- `SH snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ Store(/* addr */, rs2);
 
 <div class="insn-nav">
 
-← [Store Register Offset](../groups/store_register_offset.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [STA/BASE_REG](../groups/sta_base_reg.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

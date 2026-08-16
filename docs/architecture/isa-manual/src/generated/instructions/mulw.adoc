@@ -7,7 +7,7 @@
 
 *Syntax:* mulw SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* MULW - Compute the 32-bit product and sign-extend it.
+*Description:* MULW multiplies the source low 32-bit values, retains the low 32 product bits, sign-extends them to XLEN, and publishes the result.
 
 *Encoding:*
 

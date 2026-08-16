@@ -7,7 +7,7 @@
 
 *Syntax:* divw SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* DIVW - Compute signed 32-bit quotient and sign-extend it.
+*Description:* DIVW computes the signed low-32-bit quotient using total fixed-width semantics and publishes the XLEN result.
 
 *Encoding:*
 

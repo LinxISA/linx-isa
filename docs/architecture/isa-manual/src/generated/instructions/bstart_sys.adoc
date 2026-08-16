@@ -5,7 +5,7 @@
 [[inst_bstart_sys]]
 ==== BSTART.SYS
 
-*Syntax:* BSTART.SYS FALL<, fixup_label>
+*Syntax:* BSTART.SYS FALL
 
 *Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 

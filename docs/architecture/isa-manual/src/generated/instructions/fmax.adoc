@@ -7,7 +7,7 @@
 
 *Syntax:* fmax.{T} SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* FMAX - Compute this mnemonic's binary floating-point operation.
+*Description:* FMAX applies the architecture-owned ordered maximum, NaN, and signed-zero rules to selected FP64 or FP32 carriers.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* dc.isw SrcL
 
-*Description:* DC.ISW - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
+*Description:* DC.ISW completes the data-cache set/way scope token maintenance operation synchronously.
 
 *Encoding:*
 

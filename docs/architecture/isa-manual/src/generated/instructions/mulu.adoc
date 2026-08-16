@@ -7,7 +7,7 @@
 
 *Syntax:* mulu SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* MULU - Compute the scalar product.
+*Description:* MULU computes the low XLEN bits of the complete unsigned scalar product and publishes the result.
 
 *Encoding:*
 

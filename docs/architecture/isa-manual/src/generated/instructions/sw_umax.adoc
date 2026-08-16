@@ -7,7 +7,7 @@
 
 *Syntax:* sw.umax<.{rl, f, rlf}> [SrcL], SrcR
 
-*Description:* SW.UMAX - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
+*Description:* SW.UMAX atomically replaces the aligned 32-bit memory value with its unsigned maximum with SrcR; it does not publish the old value.
 
 *Encoding:*
 

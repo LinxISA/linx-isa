@@ -7,7 +7,7 @@
 
 *Syntax:* bwi SrcL
 
-*Description:* BWI - Issue this mnemonic's architecture control request.
+*Description:* BWI publishes the WaitInterrupt nonblocking execution-control request.
 
 *Encoding:*
 

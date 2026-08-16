@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check exact PTO 0.58 scalar/block alignment and Linx vector reservations."""
+"""Check exact PTO 0.58.1 common-subset alignment and Linx extensions."""
 
 from __future__ import annotations
 
@@ -10,6 +10,8 @@ import sys
 from collections import Counter
 from pathlib import Path
 from typing import Any
+
+from build_golden import effective_pto_encoding, singleton_pto_fields
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -25,6 +27,15 @@ def load(root: Path, relative: str) -> dict[str, Any]:
 def encoding_key(item: dict[str, Any], compiled: bool = False) -> tuple[tuple[int, int, int], ...]:
     parts = item.get("encoding", {}).get("parts", []) if compiled else item.get("encoding", [])
     return tuple((int(part["mask"], 0), int(part["match"], 0), int(part["width_bits"])) for part in parts)
+
+
+def source_encoding_key(
+    item: dict[str, Any], encoding: list[dict[str, Any]] | None = None
+) -> tuple[tuple[int, int, int], ...]:
+    return tuple(
+        (int(part["mask"], 0), int(part["match"], 0), int(part["width_bits"]))
+        for part in effective_pto_encoding(item, encoding)
+    )
 
 
 def reservation_covers(reservation: dict[str, Any], item: dict[str, Any]) -> bool:
@@ -44,8 +55,23 @@ def reservation_covers(reservation: dict[str, Any], item: dict[str, Any]) -> boo
     )
 
 
-def source_field_key(item: dict[str, Any]) -> tuple[Any, ...]:
+def source_field_key(
+    item: dict[str, Any], encoding: list[dict[str, Any]] | None = None
+) -> tuple[Any, ...]:
     signedness = {"encoding-defined": None, "signed": True, "unsigned": False}
+    encoding_masks = [
+        int(part["mask"], 0) for part in effective_pto_encoding(item, encoding)
+    ]
+
+    def is_variable(field: dict[str, Any]) -> bool:
+        for piece in field["pieces"]:
+            instruction_lsb = int(piece["instruction_lsb"])
+            part_index, local_lsb = divmod(instruction_lsb, 32)
+            piece_mask = ((1 << int(piece["width"])) - 1) << local_lsb
+            if part_index >= len(encoding_masks) or encoding_masks[part_index] & piece_mask != piece_mask:
+                return True
+        return False
+
     return tuple(sorted(
         (
             field["name"],
@@ -61,6 +87,7 @@ def source_field_key(item: dict[str, Any]) -> tuple[Any, ...]:
             ),
         )
         for field in item.get("fields", [])
+        if is_variable(field)
     ))
 
 
@@ -88,29 +115,70 @@ def compiled_field_key(item: dict[str, Any]) -> tuple[Any, ...]:
     return tuple(sorted(result))
 
 
-def source_constraint_key(item: dict[str, Any]) -> tuple[tuple[Any, ...], ...]:
-    operators = {
-        "equal": "==",
-        "not-equal": "!=",
-        "less-than": "<",
-        "less-than-or-equal": "<=",
-        "greater-than": ">",
-        "greater-than-or-equal": ">=",
+def _constraint_domains(
+    constraints: list[dict[str, Any]],
+    widths: dict[str, int],
+    *,
+    compiled: bool,
+) -> tuple[tuple[str, tuple[int, ...]], ...]:
+    domains = {field: set(range(1 << width)) for field, width in widths.items()}
+    for constraint in constraints:
+        field = str(constraint["field"])
+        if field not in domains:
+            continue
+        operator = str(constraint["op"] if compiled else constraint["operator"])
+        if operator == "one-of":
+            values = {int(value) for value in constraint["values"]}
+            domains[field] &= values
+            continue
+        value = int(constraint["value"], 0) if compiled else int(constraint["value"])
+        predicates = {
+            "equal": lambda candidate: candidate == value,
+            "==": lambda candidate: candidate == value,
+            "not-equal": lambda candidate: candidate != value,
+            "!=": lambda candidate: candidate != value,
+            "less-than": lambda candidate: candidate < value,
+            "<": lambda candidate: candidate < value,
+            "less-than-or-equal": lambda candidate: candidate <= value,
+            "<=": lambda candidate: candidate <= value,
+            "greater-than": lambda candidate: candidate > value,
+            ">": lambda candidate: candidate > value,
+            "greater-than-or-equal": lambda candidate: candidate >= value,
+            ">=": lambda candidate: candidate >= value,
+        }
+        domains[field] = {candidate for candidate in domains[field] if predicates[operator](candidate)}
+    return tuple(sorted((field, tuple(sorted(values))) for field, values in domains.items()))
+
+
+def source_constraint_key(item: dict[str, Any]) -> tuple[tuple[str, tuple[int, ...]], ...]:
+    widths = {str(field["name"]): int(field["width"]) for field in item.get("fields", [])}
+    variable_fields = {str(field[0]) for field in source_field_key(item)}
+    constrained = {
+        str(constraint["field"])
+        for constraint in item.get("constraints", [])
+        if str(constraint["field"]) in variable_fields
     }
-    result = []
-    for constraint in item.get("constraints", []):
-        if constraint["operator"] == "one-of":
-            result.append((constraint["field"], "one-of", tuple(int(value) for value in constraint["values"])))
-        else:
-            result.append((constraint["field"], operators[constraint["operator"]], int(constraint["value"])))
-    return tuple(result)
+    return _constraint_domains(
+        item.get("constraints", []),
+        {field: widths[field] for field in constrained},
+        compiled=False,
+    )
 
 
-def compiled_constraint_key(item: dict[str, Any]) -> tuple[tuple[str, str, int], ...]:
-    return tuple(
-        (constraint["field"], constraint["op"], int(constraint["value"], 0))
+def compiled_constraint_key(
+    item: dict[str, Any], source: dict[str, Any]
+) -> tuple[tuple[str, tuple[int, ...]], ...]:
+    constraints = [
+        constraint
         for part in item.get("encoding", {}).get("parts", [])
         for constraint in part.get("constraints", [])
+    ]
+    widths = {str(field["name"]): int(field["width"]) for field in source.get("fields", [])}
+    constrained = {str(constraint["field"]) for constraint in constraints}
+    return _constraint_domains(
+        constraints,
+        {field: widths[field] for field in constrained},
+        compiled=True,
     )
 
 
@@ -121,7 +189,7 @@ def validate(root: Path) -> list[str]:
         "tiles": "isa/v0.58/state/pto_ops.json",
         "commands": "isa/v0.58/state/pto_command_forms.json",
         "scalars": "isa/v0.58/state/pto_scalar_forms.json",
-        "reservations": "isa/v0.58/state/linx_vector_reservations.json",
+        "reservations": "isa/v0.58/state/extension_encoding_reservations.json",
         "shared": "isa/v0.58/state/shared_tile_registers.json",
         "release": "isa/v0.58/release_manifest.json",
         "spec": "isa/v0.58/linxisa-v0.58.json",
@@ -131,17 +199,17 @@ def validate(root: Path) -> list[str]:
         return [f"missing PTO/Linx 0.58 artifact: {relative}" for relative in missing]
     docs = {name: load(root, relative) for name, relative in paths.items()}
     lock = docs["lock"]
-    if lock.get("release") != "0.58.0" or lock.get("encoding_abi") != "pto-isa-0.58.0-mode-function-v1":
-        errors.append("PTO lock has the wrong 0.58 release/ABI identity")
+    if lock.get("release") != "0.58.1" or lock.get("encoding_abi") != "pto-isa-0.58.1-mode-function-v1":
+        errors.append("PTO lock has the wrong 0.58.1 release/ABI identity")
     if not GIT_OID.fullmatch(str(lock.get("source", {}).get("commit", ""))):
         errors.append("PTO lock must pin an exact source commit")
     if not GIT_OID.fullmatch(str(lock.get("source", {}).get("tree", ""))):
         errors.append("PTO lock must pin an exact source tree")
     expected_catalogs = {
         "scalar_forms": 474,
-        "command_forms": 99,
+        "command_forms": 74,
         "tile_operations": 109,
-        "linx_vector_reservations": 5,
+        "extension_encoding_reservations": 32,
     }
     for name, count in expected_catalogs.items():
         entry = lock.get("catalogs", {}).get(name, {})
@@ -150,7 +218,7 @@ def validate(root: Path) -> list[str]:
 
     tiles = docs["tiles"].get("operations", [])
     expected_family_counts = Counter({"TEPL": 87, "TLSU": 10, "CUBE": 12})
-    expected_engine_counts = Counter({"VEC": 35, "SFU": 52, "TLSU": 10, "CUBE": 12})
+    expected_engine_counts = Counter({"VEC": 31, "SFU": 56, "TLSU": 10, "CUBE": 12})
     expected_classification_counts = Counter({
         "elementwise-tile-tile": 25,
         "tile-scalar-and-immediate": 15,
@@ -163,7 +231,7 @@ def validate(root: Path) -> list[str]:
     if Counter(item.get("family") for item in tiles) != expected_family_counts:
         errors.append("tile inventory must be exactly 87 TEPL / 10 TLSU / 12 CUBE")
     if Counter(item.get("engine") for item in tiles) != expected_engine_counts:
-        errors.append("tile semantic engines must be exactly 35 VEC / 52 SFU / 10 TLSU / 12 CUBE")
+        errors.append("tile semantic engines must be exactly 31 VEC / 56 SFU / 10 TLSU / 12 CUBE")
     if Counter(item.get("classification") for item in tiles) != expected_classification_counts:
         errors.append("tile semantic classifications differ from the canonical PTO 0.58 catalog")
     if docs["tiles"].get("engine_counts") != dict(sorted(expected_engine_counts.items())):
@@ -172,8 +240,8 @@ def validate(root: Path) -> list[str]:
         errors.append("PTO operation projection must publish exact semantic classification counts")
     source_forms = docs["scalars"].get("forms", []) + docs["commands"].get("forms", [])
     scalar_ids = {str(form["form_id"]) for form in docs["scalars"].get("forms", [])}
-    if len(source_forms) != 573:
-        errors.append("PTO scalar/block form inventory must contain exactly 573 forms")
+    if len(source_forms) != 548:
+        errors.append("PTO scalar/block form inventory must contain exactly 548 forms")
     source_ids = [str(form["form_id"]) for form in source_forms]
     if len(source_ids) != len(set(source_ids)):
         errors.append("PTO scalar/block form identities must be unique")
@@ -186,8 +254,8 @@ def validate(root: Path) -> list[str]:
     }
     if len(compiled_items) != len(compiled):
         errors.append("compiled Linx profile must not duplicate PTO form identities")
-    if len(compiled) != 573:
-        errors.append("compiled Linx profile must attach exactly 573 PTO form identities")
+    if len(compiled) != 548:
+        errors.append("compiled Linx profile must attach exactly 548 PTO form identities")
     if set(compiled) != set(source_ids):
         errors.append("compiled Linx PTO form identity set must equal the canonical PTO set")
     for form in source_forms:
@@ -197,13 +265,15 @@ def validate(root: Path) -> list[str]:
             errors.append(f"missing compiled PTO form {form_id}")
             continue
         if (item.get("mnemonic"), item.get("asm"), item.get("length_bits"), encoding_key(item, True)) != (
-            form.get("mnemonic"), form.get("asm"), form.get("length_bits"), encoding_key(form)
+            form.get("mnemonic"), form.get("asm"), form.get("length_bits"), source_encoding_key(form)
         ):
             errors.append(f"compiled PTO form differs from source: {form_id}")
         if compiled_field_key(item) != source_field_key(form):
             errors.append(f"compiled PTO fields differ from source: {form_id}")
+        if item.get("pto_source_fixed_fields", []) != singleton_pto_fields(form):
+            errors.append(f"compiled PTO fixed fields differ from source: {form_id}")
         if form_id in scalar_ids:
-            if compiled_constraint_key(item) != source_constraint_key(form):
+            if compiled_constraint_key(item, form) != source_constraint_key(form):
                 errors.append(f"compiled PTO scalar constraints differ from source: {form_id}")
         elif item.get("pto_source_constraints") != form.get("constraints", []):
             errors.append(f"compiled PTO command constraints differ from source: {form_id}")
@@ -224,7 +294,6 @@ def validate(root: Path) -> list[str]:
         item = compiled_variants.get(key)
         if item is None:
             continue
-        expected_variant = {"encoding": variant["encoding"]}
         if (
             item.get("mnemonic"),
             item.get("asm"),
@@ -234,10 +303,10 @@ def validate(root: Path) -> list[str]:
             form.get("mnemonic"),
             form.get("asm"),
             form.get("length_bits"),
-            encoding_key(expected_variant),
+            source_encoding_key(form, variant["encoding"]),
         ):
             errors.append(f"compiled PTO command variant differs from source: {key}")
-        if compiled_field_key(item) != source_field_key(form):
+        if compiled_field_key(item) != source_field_key(form, variant["encoding"]):
             errors.append(f"compiled PTO command variant fields differ from source: {key}")
         if item.get("pto_source_constraints") != form.get("constraints", []):
             errors.append(f"compiled PTO command variant constraints differ from source: {key}")
@@ -247,17 +316,9 @@ def validate(root: Path) -> list[str]:
         for item in docs["spec"].get("instructions", [])
         if not item.get("pto_source_form_id") and not item.get("pto_source_form_variant")
     ]
-    vector_headers = {"BSTART.VPAR", "BSTART.VSEQ", "C.BSTART.VPAR", "C.BSTART.VSEQ"}
-    non_vector_delta = sorted(
-        str(item.get("mnemonic"))
-        for item in linx_only
-        if not str(item.get("mnemonic")).startswith("V.")
-        and str(item.get("mnemonic")) not in vector_headers
-    )
-    if len(linx_only) != 188 or sum(str(item.get("mnemonic")).startswith("V.") for item in linx_only) != 184:
-        errors.append("Linx-only delta must contain exactly 184 V.* forms plus four vector block headers")
-    if non_vector_delta:
-        errors.append(f"non-vector Linx-only scalar/block forms leaked: {non_vector_delta}")
+    vector_form_count = sum(str(item.get("mnemonic")).startswith("V.") for item in linx_only)
+    if len(linx_only) != 212 or vector_form_count != 184:
+        errors.append("Linx-only delta must contain exactly 184 V.* forms and 28 reserved command forms")
 
     required_command_mnemonics = {
         "BSTART.MGATHER.MASK",
@@ -286,33 +347,16 @@ def validate(root: Path) -> list[str]:
     if {"BSTART.VEC", "BSTART.SFU"} & set(compiled_by_mnemonic):
         errors.append("BSTART.VEC/SFU aliases must not create additional decode identities")
     reservations = docs["reservations"].get("reservations", [])
-    expected_reservations = {
-        "BSTART.VPAR",
-        "BSTART.VSEQ",
-        "C.BSTART.VPAR",
-        "C.BSTART.VSEQ",
-        "V.*",
-    }
     reservation_by_name = {str(item.get("mnemonic")): item for item in reservations}
-    if set(reservation_by_name) != expected_reservations:
-        errors.append(
-            "PTO must reserve four Linx vector block headers and the complete V.* root"
-        )
-    for name in sorted(expected_reservations - {"V.*"}):
-        reservation = reservation_by_name.get(name)
-        item = compiled_by_mnemonic.get(name)
-        if reservation is None or item is None or not reservation_covers(reservation, item):
-            errors.append(f"Linx vector reservation mismatch: {name}")
-    vector_root = reservation_by_name.get("V.*")
-    vector_forms = [
-        item
+    if len(reservations) != 32 or len(reservation_by_name) != 32:
+        errors.append("PTO must publish exactly 32 unique extension encoding reservations")
+    uncovered = sorted(
+        str(item.get("asm") or item.get("mnemonic"))
         for item in linx_only
-        if str(item.get("mnemonic")).startswith("V.")
-    ]
-    if vector_root is None or any(
-        not reservation_covers(vector_root, item) for item in vector_forms
-    ):
-        errors.append("PTO V.* reservation does not cover every Linx vector form")
+        if not any(reservation_covers(reservation, item) for reservation in reservations)
+    )
+    if uncovered:
+        errors.append(f"Linx-only forms escape PTO extension reservations: {uncovered}")
 
     shared = docs["shared"]
     if shared.get("register_count") != 256 or shared.get("register_names", {}).get("syntax") != "S<absolute-index>":

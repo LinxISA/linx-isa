@@ -7,7 +7,7 @@
 
 *Syntax:* ssrset SrcL, SSR_ID
 
-*Description:* SSRSET - Write the addressed system register.
+*Description:* SSRSET writes the complete encoded system-register address.
 
 *Encoding:*
 

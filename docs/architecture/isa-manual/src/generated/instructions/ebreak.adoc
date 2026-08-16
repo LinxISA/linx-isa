@@ -7,7 +7,7 @@
 
 *Syntax:* ebreak imm
 
-*Description:* EBREAK - Raise the software breakpoint exception.
+*Description:* EBREAK raises software-breakpoint trap 50 with its 4-bit immediate as cause.
 
 *Encoding:*
 

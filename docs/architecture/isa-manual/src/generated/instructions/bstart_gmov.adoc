@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.GMOV DataType
 
-*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+*Description:* Starts a Core4 peer-Local fragment transfer block.
 
 *Encoding:*
 

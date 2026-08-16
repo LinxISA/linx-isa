@@ -7,7 +7,7 @@
 
 *Syntax:* hl.swip.u SrcD, SrcD1, [SrcR, simm]
 
-*Description:* HL.SWIP.U - Store a scalar register pair using this mnemonic's address-update form.
+*Description:* HL.SWIP.U snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 4-byte values.
 
 *Encoding:*
 

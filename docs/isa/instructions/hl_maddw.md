@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/multi_cycle_alu.md">Multi-Cycle ALU</a> &nbsp;|&nbsp;
+<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/alu.md">ALU</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-12">Ch 12</span>
 &nbsp; <strong>ALU — Arithmetic Logic Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>48</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -26,17 +26,17 @@
 
 ## Description
 
-HL.MADDW - Compute multiply-add and return the scalar result pair.
+HL.MADDW sign-extends three low-32-bit sources, computes a 128-bit product plus addend, and publishes low then high halves.
 
 ## Pseudocode (informative)
 
 ```c
-// Execute HL.MADDW as defined by the Multi-Cycle ALU semantics.
+// Execute HL.MADDW as defined by the ALU semantics.
 ```
 
 ## Encoding Notes
 
-- `HL.MADDW - Compute multiply-add and return the scalar result pair.`
+- `HL.MADDW sign-extends three low-32-bit sources, computes a 128-bit product plus addend, and publishes low then high halves.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ HL.MADDW - Compute multiply-add and return the scalar result pair.
 
 <div class="insn-nav">
 
-← [Multi-Cycle ALU](../groups/multi_cycle_alu.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [ALU](../groups/alu.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

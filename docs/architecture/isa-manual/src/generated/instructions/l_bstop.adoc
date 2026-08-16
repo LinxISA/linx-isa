@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_l_bstop]]
+==== L.BSTOP
+
+*Syntax:* L.BSTOP
+
+*Description:* Commits the current bundle and transfers to its selected continuation.
+
+*Encoding:*
+
+image::encodings/enc_l_bstop_parts.svg[L.BSTOP encoding,width=800]
+
+*Uop-Class:* CMD
+
+*Compression:* L64 (len=64)
+
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "PTO long-form block stop", "source": "group_rule", "uop_kind": "CMD"}`

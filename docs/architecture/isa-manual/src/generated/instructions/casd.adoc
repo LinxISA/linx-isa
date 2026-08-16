@@ -7,7 +7,7 @@
 
 *Syntax:* casd<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}
 
-*Description:* CASD - Atomically compare the scalar memory value and conditionally store the replacement.
+*Description:* CASD atomically compares and conditionally replaces one doubleword, then publishes the prior value.
 
 *Encoding:*
 

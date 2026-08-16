@@ -5,9 +5,9 @@
 [[inst_hl_qmt]]
 ==== HL.QMT
 
-*Syntax:* hl.qmt.{i,e,s,r,ie,is,ir,es,er,ies,ier} SrcL, SrcR, ->{t, u}
+*Syntax:* hl.qmt[.{i,e,s,r,ie,is,ir,es,er,ies,ier}] SrcL[, SrcR when i], ->RegDst
 
-*Description:* Moves values between scalar temporary queues according to encoded queue controls.
+*Description:* Queries, initializes, notifies, suspends, or restores one General Queue Management queue.
 
 *Encoding:*
 

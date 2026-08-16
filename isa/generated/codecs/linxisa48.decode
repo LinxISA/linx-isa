@@ -46,602 +46,602 @@
 %uimm5 38:5
 
 # Instruction forms
-# HL.ADDI | hl.addi SrcL, uimm, ->{t, u, Rd} | opcodes/lx_hl48.opc:11
-hl_addi_48_9d3818bfbe64 .... .... .... .... .000 .... .001 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %uimm24
+# HL.ADDI | hl.addi SrcL, uimm, ->{t, u, Rd} | opcodes/lx_hl48.opc:24
+hl_addi_48_33e95acd8260 .... .... .... .... .000 .... .001 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %uimm24
 
-# HL.ADDIW | hl.addiw SrcL, uimm, ->{t, u, Rd} | opcodes/lx_hl48.opc:12
-hl_addiw_48_f6d7f5032964 .... .... .... .... .000 .... .011 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %uimm24
+# HL.ADDIW | hl.addiw SrcL, uimm, ->{t, u, Rd} | opcodes/lx_hl48.opc:25
+hl_addiw_48_44b1e49e137f .... .... .... .... .000 .... .011 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %uimm24
 
-# HL.ADDTPC | hl.addtpc imm, ->{t, u, Rd} | opcodes/lx_hl48.opc:13
-hl_addtpc_48_2e8e692eea09 .... .... .... .... .... .... .000 0111 .... .... .... 1110 RegDst=%RegDst_23_5 %imm32
+# HL.ADDTPC | hl.addtpc imm, ->{t, u, Rd} | opcodes/lx_hl48.opc:26
+hl_addtpc_48_ff231c57a91f .... .... .... .... .... .... .000 0111 .... .... .... 1110 RegDst=%RegDst_23_5 %imm32
 
-# HL.ANDI | hl.andi SrcL, simm, ->{t, u, Rd} | opcodes/lx_hl48.opc:14
-hl_andi_48_fe11c7ebca41 .... .... .... .... .010 .... .001 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %simm24
+# HL.ANDI | hl.andi SrcL, simm, ->{t, u, Rd} | opcodes/lx_hl48.opc:27
+hl_andi_48_eb27c6a8244f .... .... .... .... .010 .... .001 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %simm24
 
-# HL.ANDIW | hl.andiw SrcL, simm, ->{t, u, Rd} | opcodes/lx_hl48.opc:15
-hl_andiw_48_878c6594c6ff .... .... .... .... .010 .... .011 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %simm24
+# HL.ANDIW | hl.andiw SrcL, simm, ->{t, u, Rd} | opcodes/lx_hl48.opc:28
+hl_andiw_48_86e6d9c1191f .... .... .... .... .010 .... .011 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %simm24
 
-# HL.BFI | hl.bfi SrcL, SrcR, M, N, ->{t, u, Rd} | opcodes/lx_hl48.opc:16
-hl_bfi_48_8adfd476aacc 0000 000. .... .... .010 .... .100 1101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %SrcR %immr %imms
+# HL.BFI | hl.bfi SrcL, SrcR, M, N, ->{t, u, Rd} | opcodes/lx_hl48.opc:29
+hl_bfi_48_995211593446 0000 000. .... .... .010 .... .100 1101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %SrcR %immr %imms
 
-# HL.BSTART CALL | HL.BSTART.CALL <br_label>, <rt_label>, ->ra | opcodes/lx_hl48.opc:200
+# HL.BSTART CALL | HL.BSTART.CALL <br_label>, <rt_label>, ->ra | opcodes/lx_hl48.opc:12
 hl_bstart_call_48_d71cee46ab50 0101 0... ..01 0110 .... .... .... .... .... .... .001 0001 %simm25 %uimm5
 
-# HL.BSTART.FP | HL.BSTART.FP FALL<, fixup_label> | opcodes/lx_hl48.opc:202
+# HL.BSTART.FP | HL.BSTART.FP FALL<, fixup_label> | opcodes/lx_hl48.opc:14
 hl_bstart_fp_48_0368fb7424f4 .... .... .... .... .001 0001 0000 0001 .... .... .... 1110 simm=%simm_4_s12_31_17
 
-# HL.BSTART.FP | HL.BSTART.FP CALL, <label> | opcodes/lx_hl48.opc:203
+# HL.BSTART.FP | HL.BSTART.FP CALL, <label> | opcodes/lx_hl48.opc:15
 hl_bstart_fp_48_9955c1f823f6 .... .... .... .... .100 0001 0000 0001 .... .... .... 1110 simm=%simm_4_s12_31_17
 
-# HL.BSTART.FP | HL.BSTART.FP DIRECT, <label> | opcodes/lx_hl48.opc:204
+# HL.BSTART.FP | HL.BSTART.FP DIRECT, <label> | opcodes/lx_hl48.opc:16
 hl_bstart_fp_48_9a0544563449 .... .... .... .... .010 0001 0000 0001 .... .... .... 1110 simm=%simm_4_s12_31_17
 
-# HL.BSTART.FP | HL.BSTART.FP COND, <label> | opcodes/lx_hl48.opc:201
+# HL.BSTART.FP | HL.BSTART.FP COND, <label> | opcodes/lx_hl48.opc:13
 hl_bstart_fp_48_f074f1e2c089 .... .... .... .... .011 0001 0000 0001 .... .... .... 1110 simm=%simm_4_s12_31_17
 
-# HL.BSTART.STD | HL.BSTART.STD FALL<, fixup_label> | opcodes/lx_hl48.opc:206
+# HL.BSTART.STD | HL.BSTART.STD FALL<, fixup_label> | opcodes/lx_hl48.opc:18
 hl_bstart_std_48_170d04be4f7e .... .... .... .... .001 0000 0000 0001 .... .... .... 1110 simm=%simm_4_s12_31_17
 
-# HL.BSTART.STD | HL.BSTART.STD COND, <label> | opcodes/lx_hl48.opc:207
+# HL.BSTART.STD | HL.BSTART.STD COND, <label> | opcodes/lx_hl48.opc:19
 hl_bstart_std_48_436ff4a95f39 .... .... .... .... .011 0000 0000 0001 .... .... .... 1110 simm=%simm_4_s12_31_17
 
-# HL.BSTART.STD | HL.BSTART.STD CALL, <label> | opcodes/lx_hl48.opc:205
+# HL.BSTART.STD | HL.BSTART.STD CALL, <label> | opcodes/lx_hl48.opc:17
 hl_bstart_std_48_4eff98193028 .... .... .... .... .100 0000 0000 0001 .... .... .... 1110 simm=%simm_4_s12_31_17
 
-# HL.BSTART.STD | HL.BSTART.STD DIRECT, <label> | opcodes/lx_hl48.opc:208
+# HL.BSTART.STD | HL.BSTART.STD DIRECT, <label> | opcodes/lx_hl48.opc:20
 hl_bstart_std_48_c970f578674f .... .... .... .... .010 0000 0000 0001 .... .... .... 1110 simm=%simm_4_s12_31_17
 
-# HL.BSTART.SYS | HL.BSTART.SYS FALL<, fixup_label> | opcodes/lx_hl48.opc:209
+# HL.BSTART.SYS | HL.BSTART.SYS FALL<, fixup_label> | opcodes/lx_hl48.opc:21
 hl_bstart_sys_48_54ff489122fe .... .... .... .... .001 0000 1000 0001 .... .... .... 1110 simm=%simm_4_s12_31_17
 
-# HL.CASB | hl.casb<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd} | opcodes/lx_hl48.opc:17
-hl_casb_48_21fb578617a8 0000 .... .... .... .110 .... .000 1011 0000 0... ..00 1110 RegDst=%RegDst_23_5 SrcD=%SrcD_6_5 %SrcL %SrcR %aq %far %rl
+# HL.CASB | hl.casb<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd} | opcodes/lx_hl48.opc:30
+hl_casb_48_543d7c321553 0000 .... .... .... .110 .... .000 1011 0000 0... ..00 1110 RegDst=%RegDst_23_5 SrcD=%SrcD_6_5 %SrcL %SrcR %aq %far %rl
 
-# HL.CASD | hl.casd<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd} | opcodes/lx_hl48.opc:18
-hl_casd_48_fbb5c4256d30 0011 .... .... .... .110 .... .000 1011 0000 0... ..00 1110 RegDst=%RegDst_23_5 SrcD=%SrcD_6_5 %SrcL %SrcR %aq %far %rl
+# HL.CASD | hl.casd<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd} | opcodes/lx_hl48.opc:31
+hl_casd_48_c9fee5d4bfb6 0011 .... .... .... .110 .... .000 1011 0000 0... ..00 1110 RegDst=%RegDst_23_5 SrcD=%SrcD_6_5 %SrcL %SrcR %aq %far %rl
 
-# HL.CASH | hl.cash<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd} | opcodes/lx_hl48.opc:19
-hl_cash_48_eee12c324d97 0001 .... .... .... .110 .... .000 1011 0000 0... ..00 1110 RegDst=%RegDst_23_5 SrcD=%SrcD_6_5 %SrcL %SrcR %aq %far %rl
+# HL.CASH | hl.cash<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd} | opcodes/lx_hl48.opc:32
+hl_cash_48_e2e9707803e1 0001 .... .... .... .110 .... .000 1011 0000 0... ..00 1110 RegDst=%RegDst_23_5 SrcD=%SrcD_6_5 %SrcL %SrcR %aq %far %rl
 
-# HL.CASW | hl.casw<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd} | opcodes/lx_hl48.opc:20
-hl_casw_48_a89b3d58d8f0 0010 .... .... .... .110 .... .000 1011 0000 0... ..00 1110 RegDst=%RegDst_23_5 SrcD=%SrcD_6_5 %SrcL %SrcR %aq %far %rl
+# HL.CASW | hl.casw<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd} | opcodes/lx_hl48.opc:33
+hl_casw_48_0752c0399a3b 0010 .... .... .... .110 .... .000 1011 0000 0... ..00 1110 RegDst=%RegDst_23_5 SrcD=%SrcD_6_5 %SrcL %SrcR %aq %far %rl
 
-# HL.CCAT | hl.ccat SrcL, SrcR, shamt, ->Dst0, Dst1 | opcodes/lx_hl48.opc:21
-hl_ccat_48_a1200d8bf5ac .... .... .... .... .001 .... .101 1101 .... .000 0000 1110 %RegDst0 %RegDst1 %SrcL %SrcR shamt=%shamt_41_7
+# HL.CCAT | hl.ccat SrcL, SrcR, shamt, ->Dst0, Dst1 | opcodes/lx_hl48.opc:34
+hl_ccat_48_8d442e3c68d1 .... .... .... .... .001 .... .101 1101 .... .000 0000 1110 %RegDst0 %RegDst1 %SrcL %SrcR shamt=%shamt_41_7
 
-# HL.CCATW | hl.ccatw SrcL, SrcR, shamt, ->Dst0, Dst1 | opcodes/lx_hl48.opc:22
-hl_ccatw_48_24a85ea4659c .... .... .... .... .010 .... .101 1101 .... .000 0000 1110 %RegDst0 %RegDst1 %SrcL %SrcR shamt=%shamt_41_7
+# HL.CCATW | hl.ccatw SrcL, SrcR, shamt, ->Dst0, Dst1 | opcodes/lx_hl48.opc:35
+hl_ccatw_48_c255ae0ff09d .... .... .... .... .010 .... .101 1101 .... .000 0000 1110 %RegDst0 %RegDst1 %SrcL %SrcR shamt=%shamt_41_7
 
-# HL.CMP.ANDI | hl.cmp.andi SrcL, simm, ->{t, u, Rd} | opcodes/lx_hl48.opc:23
-hl_cmp_andi_48_de2aae3f4516 .... .... .... .... .010 .... .101 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %simm24
+# HL.CMP.ANDI | hl.cmp.andi SrcL, simm, ->{t, u, Rd} | opcodes/lx_hl48.opc:36
+hl_cmp_andi_48_1c5c0a327c51 .... .... .... .... .010 .... .101 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %simm24
 
-# HL.CMP.EQI | hl.cmp.eqi SrcL, simm, ->{t, u, Rd} | opcodes/lx_hl48.opc:24
-hl_cmp_eqi_48_887accd218b1 .... .... .... .... .000 .... .101 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %simm24
+# HL.CMP.EQI | hl.cmp.eqi SrcL, simm, ->{t, u, Rd} | opcodes/lx_hl48.opc:37
+hl_cmp_eqi_48_a8ed1ea8c5f7 .... .... .... .... .000 .... .101 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %simm24
 
-# HL.CMP.GEI | hl.cmp.gei SrcL, simm, ->{t, u, Rd} | opcodes/lx_hl48.opc:25
-hl_cmp_gei_48_b3703d4c4619 .... .... .... .... .101 .... .101 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %simm24
+# HL.CMP.GEI | hl.cmp.gei SrcL, simm, ->{t, u, Rd} | opcodes/lx_hl48.opc:38
+hl_cmp_gei_48_b2f7c4a0a0c3 .... .... .... .... .101 .... .101 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %simm24
 
-# HL.CMP.GEUI | hl.cmp.geui SrcL, uimm, ->{t, u, Rd} | opcodes/lx_hl48.opc:26
-hl_cmp_geui_48_c71f4fb29e6b .... .... .... .... .111 .... .101 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %uimm24
+# HL.CMP.GEUI | hl.cmp.geui SrcL, uimm, ->{t, u, Rd} | opcodes/lx_hl48.opc:39
+hl_cmp_geui_48_23dc3a234311 .... .... .... .... .111 .... .101 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %uimm24
 
-# HL.CMP.LTI | hl.cmp.lti SrcL, simm, ->{t, u, Rd} | opcodes/lx_hl48.opc:27
-hl_cmp_lti_48_bec21b77021a .... .... .... .... .100 .... .101 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %simm24
+# HL.CMP.LTI | hl.cmp.lti SrcL, simm, ->{t, u, Rd} | opcodes/lx_hl48.opc:40
+hl_cmp_lti_48_4ab7ca4fb5c8 .... .... .... .... .100 .... .101 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %simm24
 
-# HL.CMP.LTUI | hl.cmp.ltui SrcL, uimm, ->{t, u, Rd} | opcodes/lx_hl48.opc:28
-hl_cmp_ltui_48_d12167277d58 .... .... .... .... .110 .... .101 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %uimm24
+# HL.CMP.LTUI | hl.cmp.ltui SrcL, uimm, ->{t, u, Rd} | opcodes/lx_hl48.opc:41
+hl_cmp_ltui_48_49567bfce62b .... .... .... .... .110 .... .101 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %uimm24
 
-# HL.CMP.NEI | hl.cmp.nei SrcL, simm, ->{t, u, Rd} | opcodes/lx_hl48.opc:29
-hl_cmp_nei_48_e77da507704a .... .... .... .... .001 .... .101 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %simm24
+# HL.CMP.NEI | hl.cmp.nei SrcL, simm, ->{t, u, Rd} | opcodes/lx_hl48.opc:42
+hl_cmp_nei_48_c7925860f736 .... .... .... .... .001 .... .101 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %simm24
 
-# HL.CMP.ORI | hl.cmp.ori SrcL, simm, ->{t, u, Rd} | opcodes/lx_hl48.opc:30
-hl_cmp_ori_48_4167568cb50b .... .... .... .... .011 .... .101 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %simm24
+# HL.CMP.ORI | hl.cmp.ori SrcL, simm, ->{t, u, Rd} | opcodes/lx_hl48.opc:43
+hl_cmp_ori_48_4441b48214ea .... .... .... .... .011 .... .101 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %simm24
 
-# HL.DIV | hl.div SrcL, SrcR, ->Dst0, Dst1 | opcodes/lx_hl48.opc:31
-hl_div_48_e8ff1fc1cb98 0000 000. .... .... .000 .... .101 0111 .... .000 0000 1110 %RegDst0 %RegDst1 %SrcL %SrcR
+# HL.DIV | hl.div SrcL, SrcR, ->Dst0, Dst1 | opcodes/lx_hl48.opc:44
+hl_div_48_71f2e355e814 0000 000. .... .... .000 .... .101 0111 .... .000 0000 1110 %RegDst0 %RegDst1 %SrcL %SrcR
 
-# HL.DIVU | hl.divu SrcL, SrcR, ->Dst0, Dst1 | opcodes/lx_hl48.opc:32
-hl_divu_48_597acda29e08 0000 000. .... .... .001 .... .101 0111 .... .000 0000 1110 %RegDst0 %RegDst1 %SrcL %SrcR
+# HL.DIVU | hl.divu SrcL, SrcR, ->Dst0, Dst1 | opcodes/lx_hl48.opc:45
+hl_divu_48_c52b29acc7b1 0000 000. .... .... .001 .... .101 0111 .... .000 0000 1110 %RegDst0 %RegDst1 %SrcL %SrcR
 
-# HL.DIVUW | hl.divuw SrcL, SrcR, ->Dst0, Dst1 | opcodes/lx_hl48.opc:33
-hl_divuw_48_9ebe516091b8 0000 000. .... .... .011 .... .101 0111 .... .000 0000 1110 %RegDst0 %RegDst1 %SrcL %SrcR
+# HL.DIVUW | hl.divuw SrcL, SrcR, ->Dst0, Dst1 | opcodes/lx_hl48.opc:46
+hl_divuw_48_9d1b07a9059c 0000 000. .... .... .011 .... .101 0111 .... .000 0000 1110 %RegDst0 %RegDst1 %SrcL %SrcR
 
-# HL.DIVW | hl.divw SrcL, SrcR, ->Dst0, Dst1 | opcodes/lx_hl48.opc:34
-hl_divw_48_9048cdb3b22f 0000 000. .... .... .010 .... .101 0111 .... .000 0000 1110 %RegDst0 %RegDst1 %SrcL %SrcR
+# HL.DIVW | hl.divw SrcL, SrcR, ->Dst0, Dst1 | opcodes/lx_hl48.opc:47
+hl_divw_48_fb301f0618c6 0000 000. .... .... .010 .... .101 0111 .... .000 0000 1110 %RegDst0 %RegDst1 %SrcL %SrcR
 
-# HL.LB.PCR | hl.lb.pcr [<symbol>], ->{t, u, Rd} | opcodes/lx_hl48.opc:35
-hl_lb_pcr_48_c0ba9a54c8e0 .... .... .... .... .000 .... .011 1001 .... .... .... 1110 RegDst=%RegDst_23_5 simm=%simm_4_s12_31_17
+# HL.LB.PCR | hl.lb.pcr [<symbol>], ->{t, u, Rd} | opcodes/lx_hl48.opc:48
+hl_lb_pcr_48_0d026bcec3ef .... .... .... .... .000 .... .011 1001 .... .... .... 1110 RegDst=%RegDst_23_5 simm=%simm_4_s12_31_17
 
-# HL.LB.PO | hl.lb.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:36
-hl_lb_po_48_5c7f5c82b186 .... .... .... .... .000 .... .000 1001 .... .000 0011 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
+# HL.LB.PO | hl.lb.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:49
+hl_lb_po_48_6681088ab2a9 .... .... .... .... .000 .... .000 1001 .... .000 0011 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
 
-# HL.LB.PR | hl.lb.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:37
-hl_lb_pr_48_cf73675cad50 .... .... .... .... .000 .... .000 1001 .... .000 0010 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
+# HL.LB.PR | hl.lb.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:50
+hl_lb_pr_48_7dd145c8dca5 .... .... .... .... .000 .... .000 1001 .... .000 0010 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
 
-# HL.LBI | hl.lbi [SrcL, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:38
-hl_lbi_48_250803040cc8 .... .... .... .... .000 .... .001 1001 .... .... ..00 1110 RegDst=%RegDst_23_5 %SrcL simm22=%simm22_6_s10_36_12
+# HL.LBI | hl.lbi [SrcL, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:51
+hl_lbi_48_e7c7b8c76609 .... .... .... .... .000 .... .001 1001 .... .... ..00 1110 RegDst=%RegDst_23_5 %SrcL simm22=%simm22_6_s10_36_12
 
-# HL.LBI.PO | hl.lbi.po [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:39
-hl_lbi_po_48_afbc00c48aba .... .... .... .... .000 .... .001 1001 .... .... ..11 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LBI.PO | hl.lbi.po [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:52
+hl_lbi_po_48_8939cd7ecd19 .... .... .... .... .000 .... .001 1001 .... .... ..11 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LBI.PR | hl.lbi.pr [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:40
-hl_lbi_pr_48_b4bdbd29f859 .... .... .... .... .000 .... .001 1001 .... .... ..10 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LBI.PR | hl.lbi.pr [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:53
+hl_lbi_pr_48_d86f43dc8985 .... .... .... .... .000 .... .001 1001 .... .... ..10 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LBIP | hl.lbip [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:41
-hl_lbip_48_70a5767aff16 .... .... .... .... .000 .... .001 1001 .... .... ..01 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LBIP | hl.lbip [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:54
+hl_lbip_48_99deb40fb45c .... .... .... .... .000 .... .001 1001 .... .... ..01 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LBP | hl.lbp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:42
-hl_lbp_48_9d1fd0b3105b .... .... .... .... .000 .... .000 1001 .... .000 0001 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
+# HL.LBP | hl.lbp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:55
+hl_lbp_48_2fcf575fd0c8 .... .... .... .... .000 .... .000 1001 .... .000 0001 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
 
-# HL.LBU.PCR | hl.lbu.pcr [<symbol>], ->{t, u, Rd} | opcodes/lx_hl48.opc:43
-hl_lbu_pcr_48_504b34c0ec9d .... .... .... .... .100 .... .011 1001 .... .... .... 1110 RegDst=%RegDst_23_5 simm=%simm_4_s12_31_17
+# HL.LBU.PCR | hl.lbu.pcr [<symbol>], ->{t, u, Rd} | opcodes/lx_hl48.opc:56
+hl_lbu_pcr_48_206750c55446 .... .... .... .... .100 .... .011 1001 .... .... .... 1110 RegDst=%RegDst_23_5 simm=%simm_4_s12_31_17
 
-# HL.LBU.PO | hl.lbu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:44
-hl_lbu_po_48_5c8a5b39e6c5 .... .... .... .... .100 .... .000 1001 .... .000 0011 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
+# HL.LBU.PO | hl.lbu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:57
+hl_lbu_po_48_7269ae6c8b57 .... .... .... .... .100 .... .000 1001 .... .000 0011 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
 
-# HL.LBU.PR | hl.lbu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:45
-hl_lbu_pr_48_bf9a0ea4b0db .... .... .... .... .100 .... .000 1001 .... .000 0010 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
+# HL.LBU.PR | hl.lbu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:58
+hl_lbu_pr_48_38f53bbd7a7d .... .... .... .... .100 .... .000 1001 .... .000 0010 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
 
-# HL.LBUI | hl.lbui [SrcL, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:46
-hl_lbui_48_50579e3558f4 .... .... .... .... .100 .... .001 1001 .... .... ..00 1110 RegDst=%RegDst_23_5 %SrcL simm22=%simm22_6_s10_36_12
+# HL.LBUI | hl.lbui [SrcL, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:59
+hl_lbui_48_b2a72ba31c04 .... .... .... .... .100 .... .001 1001 .... .... ..00 1110 RegDst=%RegDst_23_5 %SrcL simm22=%simm22_6_s10_36_12
 
-# HL.LBUI.PO | hl.lbui.po [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:47
-hl_lbui_po_48_c889b4445022 .... .... .... .... .100 .... .001 1001 .... .... ..11 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LBUI.PO | hl.lbui.po [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:60
+hl_lbui_po_48_07d4e31821b3 .... .... .... .... .100 .... .001 1001 .... .... ..11 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LBUI.PR | hl.lbui.pr [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:48
-hl_lbui_pr_48_78a81538a7fa .... .... .... .... .100 .... .001 1001 .... .... ..10 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LBUI.PR | hl.lbui.pr [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:61
+hl_lbui_pr_48_f8822006b39c .... .... .... .... .100 .... .001 1001 .... .... ..10 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LBUIP | hl.lbuip [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:49
-hl_lbuip_48_ad419fc474c0 .... .... .... .... .100 .... .001 1001 .... .... ..01 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LBUIP | hl.lbuip [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:62
+hl_lbuip_48_19d9df22b9d2 .... .... .... .... .100 .... .001 1001 .... .... ..01 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LBUP | hl.lbup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:50
-hl_lbup_48_c9598658dde4 .... .... .... .... .100 .... .000 1001 .... .000 0001 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
+# HL.LBUP | hl.lbup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:63
+hl_lbup_48_c9bf719605ca .... .... .... .... .100 .... .000 1001 .... .000 0001 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
 
-# HL.LD.PCR | hl.ld.pcr [<symbol>], ->{t, u, Rd} | opcodes/lx_hl48.opc:51
-hl_ld_pcr_48_703673c266da .... .... .... .... .011 .... .011 1001 .... .... .... 1110 RegDst=%RegDst_23_5 simm=%simm_4_s12_31_17
+# HL.LD.PCR | hl.ld.pcr [<symbol>], ->{t, u, Rd} | opcodes/lx_hl48.opc:64
+hl_ld_pcr_48_971d12875e46 .... .... .... .... .011 .... .011 1001 .... .... .... 1110 RegDst=%RegDst_23_5 simm=%simm_4_s12_31_17
 
-# HL.LD.PO | hl.ld.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:52
-hl_ld_po_48_870e30995d10 .... .... .... .... .011 .... .000 1001 .... .000 0011 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
+# HL.LD.PO | hl.ld.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:65
+hl_ld_po_48_bf5a47212c1e .... .... .... .... .011 .... .000 1001 .... .000 0011 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
 
-# HL.LD.PR | hl.ld.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:53
-hl_ld_pr_48_7ec4111b123b .... .... .... .... .011 .... .000 1001 .... .000 0010 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
+# HL.LD.PR | hl.ld.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:66
+hl_ld_pr_48_b3cce95b31c8 .... .... .... .... .011 .... .000 1001 .... .000 0010 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
 
-# HL.LDI | hl.ldi [SrcL, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:54
-hl_ldi_48_088e69e45b37 .... .... .... .... .011 .... .001 1001 .... .... ..00 1110 RegDst=%RegDst_23_5 %SrcL simm22=%simm22_6_s10_36_12
+# HL.LDI | hl.ldi [SrcL, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:67
+hl_ldi_48_42b665589078 .... .... .... .... .011 .... .001 1001 .... .... ..00 1110 RegDst=%RegDst_23_5 %SrcL simm22=%simm22_6_s10_36_12
 
-# HL.LDI.PO | hl.ldi.po [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:55
-hl_ldi_po_48_0cc539e6798d .... .... .... .... .011 .... .001 1001 .... .... ..11 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LDI.PO | hl.ldi.po [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:68
+hl_ldi_po_48_6c56a698bc83 .... .... .... .... .011 .... .001 1001 .... .... ..11 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LDI.PR | hl.ldi.pr [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:56
-hl_ldi_pr_48_d07cced5a281 .... .... .... .... .011 .... .001 1001 .... .... ..10 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LDI.PR | hl.ldi.pr [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:69
+hl_ldi_pr_48_163ccda97ea5 .... .... .... .... .011 .... .001 1001 .... .... ..10 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LDI.U | hl.ldi.u [SrcL, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:57
-hl_ldi_u_48_894d02c12dcc .... .... .... .... .011 .... .010 1001 .... .... ..00 1110 RegDst=%RegDst_23_5 %SrcL simm22=%simm22_6_s10_36_12
+# HL.LDI.U | hl.ldi.u [SrcL, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:70
+hl_ldi_u_48_5fc63cc9d17f .... .... .... .... .011 .... .010 1001 .... .... ..00 1110 RegDst=%RegDst_23_5 %SrcL simm22=%simm22_6_s10_36_12
 
-# HL.LDI.UPO | hl.ldi.upo [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:58
-hl_ldi_upo_48_5126b735cfe8 .... .... .... .... .011 .... .010 1001 .... .... ..11 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LDI.UPO | hl.ldi.upo [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:71
+hl_ldi_upo_48_b564aabf17a1 .... .... .... .... .011 .... .010 1001 .... .... ..11 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LDI.UPR | hl.ldi.upr [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:59
-hl_ldi_upr_48_7a8e2794526f .... .... .... .... .011 .... .010 1001 .... .... ..10 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LDI.UPR | hl.ldi.upr [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:72
+hl_ldi_upr_48_e05f983dbeea .... .... .... .... .011 .... .010 1001 .... .... ..10 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LDIP | hl.ldip [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:60
-hl_ldip_48_60afa6423d39 .... .... .... .... .011 .... .001 1001 .... .... ..01 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LDIP | hl.ldip [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:73
+hl_ldip_48_7ee4459b0119 .... .... .... .... .011 .... .001 1001 .... .... ..01 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LDIP.U | hl.ldip.u [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:61
-hl_ldip_u_48_6813f4fdce5c .... .... .... .... .011 .... .010 1001 .... .... ..01 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LDIP.U | hl.ldip.u [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:74
+hl_ldip_u_48_ec566188b987 .... .... .... .... .011 .... .010 1001 .... .... ..01 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LDP | hl.ldp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:62
-hl_ldp_48_a7a45a43dff9 .... .... .... .... .011 .... .000 1001 .... .000 0001 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
+# HL.LDP | hl.ldp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:75
+hl_ldp_48_bacfe47cfd0b .... .... .... .... .011 .... .000 1001 .... .000 0001 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
 
-# HL.LH.PCR | hl.lh.pcr [<symbol>], ->{t, u, Rd} | opcodes/lx_hl48.opc:63
-hl_lh_pcr_48_37df3cfe0d6e .... .... .... .... .001 .... .011 1001 .... .... .... 1110 RegDst=%RegDst_23_5 simm=%simm_4_s12_31_17
+# HL.LH.PCR | hl.lh.pcr [<symbol>], ->{t, u, Rd} | opcodes/lx_hl48.opc:76
+hl_lh_pcr_48_e44e7573e419 .... .... .... .... .001 .... .011 1001 .... .... .... 1110 RegDst=%RegDst_23_5 simm=%simm_4_s12_31_17
 
-# HL.LH.PO | hl.lh.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:64
-hl_lh_po_48_7ca3e8b77906 .... .... .... .... .001 .... .000 1001 .... .000 0011 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
+# HL.LH.PO | hl.lh.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:77
+hl_lh_po_48_94154c7cdaba .... .... .... .... .001 .... .000 1001 .... .000 0011 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
 
-# HL.LH.PR | hl.lh.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:65
-hl_lh_pr_48_d59f64cde1dc .... .... .... .... .001 .... .000 1001 .... .000 0010 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
+# HL.LH.PR | hl.lh.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:78
+hl_lh_pr_48_d39cc9e74fc5 .... .... .... .... .001 .... .000 1001 .... .000 0010 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
 
-# HL.LHI | hl.lhi [SrcL, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:66
-hl_lhi_48_6d94cb04aeac .... .... .... .... .001 .... .001 1001 .... .... ..00 1110 RegDst=%RegDst_23_5 %SrcL simm22=%simm22_6_s10_36_12
+# HL.LHI | hl.lhi [SrcL, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:79
+hl_lhi_48_ccd58bb7ba6a .... .... .... .... .001 .... .001 1001 .... .... ..00 1110 RegDst=%RegDst_23_5 %SrcL simm22=%simm22_6_s10_36_12
 
-# HL.LHI.PO | hl.lhi.po [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:67
-hl_lhi_po_48_aa393747abda .... .... .... .... .001 .... .001 1001 .... .... ..11 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LHI.PO | hl.lhi.po [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:80
+hl_lhi_po_48_7777af2b3eba .... .... .... .... .001 .... .001 1001 .... .... ..11 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LHI.PR | hl.lhi.pr [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:68
-hl_lhi_pr_48_9ec8198594ad .... .... .... .... .001 .... .001 1001 .... .... ..10 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LHI.PR | hl.lhi.pr [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:81
+hl_lhi_pr_48_7a7ffb4eb11b .... .... .... .... .001 .... .001 1001 .... .... ..10 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LHI.U | hl.lhi.u [SrcL, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:69
-hl_lhi_u_48_4d4b89e63c98 .... .... .... .... .001 .... .010 1001 .... .... ..00 1110 RegDst=%RegDst_23_5 %SrcL simm22=%simm22_6_s10_36_12
+# HL.LHI.U | hl.lhi.u [SrcL, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:82
+hl_lhi_u_48_56134c39e154 .... .... .... .... .001 .... .010 1001 .... .... ..00 1110 RegDst=%RegDst_23_5 %SrcL simm22=%simm22_6_s10_36_12
 
-# HL.LHI.UPO | hl.lhi.upo [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:70
-hl_lhi_upo_48_81c796b13b12 .... .... .... .... .001 .... .010 1001 .... .... ..11 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LHI.UPO | hl.lhi.upo [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:83
+hl_lhi_upo_48_8f1c29de8d0d .... .... .... .... .001 .... .010 1001 .... .... ..11 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LHI.UPR | hl.lhi.upr [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:71
-hl_lhi_upr_48_2a7c09d4b645 .... .... .... .... .001 .... .010 1001 .... .... ..10 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LHI.UPR | hl.lhi.upr [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:84
+hl_lhi_upr_48_b0352400b8b9 .... .... .... .... .001 .... .010 1001 .... .... ..10 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LHIP | hl.lhip [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:72
-hl_lhip_48_2c664751c537 .... .... .... .... .001 .... .001 1001 .... .... ..01 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LHIP | hl.lhip [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:85
+hl_lhip_48_72c9f0a89cc7 .... .... .... .... .001 .... .001 1001 .... .... ..01 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LHIP.U | hl.lhip.u [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:73
-hl_lhip_u_48_e37e98d63bfd .... .... .... .... .001 .... .010 1001 .... .... ..01 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LHIP.U | hl.lhip.u [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:86
+hl_lhip_u_48_7a8680fa8b47 .... .... .... .... .001 .... .010 1001 .... .... ..01 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LHP | hl.lhp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:74
-hl_lhp_48_128eb429101f .... .... .... .... .001 .... .000 1001 .... .000 0001 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
+# HL.LHP | hl.lhp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:87
+hl_lhp_48_1a5646453ffe .... .... .... .... .001 .... .000 1001 .... .000 0001 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
 
-# HL.LHU.PCR | hl.lhu.pcr [<symbol>], ->{t, u, Rd} | opcodes/lx_hl48.opc:75
-hl_lhu_pcr_48_444cb4ddde1d .... .... .... .... .101 .... .011 1001 .... .... .... 1110 RegDst=%RegDst_23_5 simm=%simm_4_s12_31_17
+# HL.LHU.PCR | hl.lhu.pcr [<symbol>], ->{t, u, Rd} | opcodes/lx_hl48.opc:88
+hl_lhu_pcr_48_1b37beb01959 .... .... .... .... .101 .... .011 1001 .... .... .... 1110 RegDst=%RegDst_23_5 simm=%simm_4_s12_31_17
 
-# HL.LHU.PO | hl.lhu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:76
-hl_lhu_po_48_c57c3b4a74e8 .... .... .... .... .101 .... .000 1001 .... .000 0011 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
+# HL.LHU.PO | hl.lhu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:89
+hl_lhu_po_48_70fcb01a2cd1 .... .... .... .... .101 .... .000 1001 .... .000 0011 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
 
-# HL.LHU.PR | hl.lhu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:77
-hl_lhu_pr_48_f874b126e29c .... .... .... .... .101 .... .000 1001 .... .000 0010 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
+# HL.LHU.PR | hl.lhu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:90
+hl_lhu_pr_48_2b52029d8c1e .... .... .... .... .101 .... .000 1001 .... .000 0010 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
 
-# HL.LHUI | hl.lhui [SrcL, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:78
-hl_lhui_48_6450dca3aad9 .... .... .... .... .101 .... .001 1001 .... .... ..00 1110 RegDst=%RegDst_23_5 %SrcL simm22=%simm22_6_s10_36_12
+# HL.LHUI | hl.lhui [SrcL, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:91
+hl_lhui_48_d8ada6e118bb .... .... .... .... .101 .... .001 1001 .... .... ..00 1110 RegDst=%RegDst_23_5 %SrcL simm22=%simm22_6_s10_36_12
 
-# HL.LHUI.PO | hl.lhui.po [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:79
-hl_lhui_po_48_16db8d40eee8 .... .... .... .... .101 .... .001 1001 .... .... ..11 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LHUI.PO | hl.lhui.po [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:92
+hl_lhui_po_48_9072402646de .... .... .... .... .101 .... .001 1001 .... .... ..11 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LHUI.PR | hl.lhui.pr [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:80
-hl_lhui_pr_48_6a99a2b99298 .... .... .... .... .101 .... .001 1001 .... .... ..10 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LHUI.PR | hl.lhui.pr [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:93
+hl_lhui_pr_48_ffbc70cf6bab .... .... .... .... .101 .... .001 1001 .... .... ..10 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LHUI.U | hl.lhui.u [SrcL, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:81
-hl_lhui_u_48_d75649bac1c7 .... .... .... .... .101 .... .010 1001 .... .... ..00 1110 RegDst=%RegDst_23_5 %SrcL simm22=%simm22_6_s10_36_12
+# HL.LHUI.U | hl.lhui.u [SrcL, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:94
+hl_lhui_u_48_9c6adb3e74fa .... .... .... .... .101 .... .010 1001 .... .... ..00 1110 RegDst=%RegDst_23_5 %SrcL simm22=%simm22_6_s10_36_12
 
-# HL.LHUI.UPO | hl.lhui.upo [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:82
-hl_lhui_upo_48_7f2c3eae793e .... .... .... .... .101 .... .010 1001 .... .... ..11 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LHUI.UPO | hl.lhui.upo [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:95
+hl_lhui_upo_48_4dd8fd7a2b40 .... .... .... .... .101 .... .010 1001 .... .... ..11 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LHUI.UPR | hl.lhui.upr [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:83
-hl_lhui_upr_48_7e66aaf61701 .... .... .... .... .101 .... .010 1001 .... .... ..10 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LHUI.UPR | hl.lhui.upr [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:96
+hl_lhui_upr_48_f8e469e22f81 .... .... .... .... .101 .... .010 1001 .... .... ..10 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LHUIP | hl.lhuip [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:84
-hl_lhuip_48_0b0ef5bd2405 .... .... .... .... .101 .... .001 1001 .... .... ..01 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LHUIP | hl.lhuip [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:97
+hl_lhuip_48_bee400d26d88 .... .... .... .... .101 .... .001 1001 .... .... ..01 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LHUIP.U | hl.lhuip.u [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:85
-hl_lhuip_u_48_11a0e580caf1 .... .... .... .... .101 .... .010 1001 .... .... ..01 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LHUIP.U | hl.lhuip.u [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:98
+hl_lhuip_u_48_20eef6633c21 .... .... .... .... .101 .... .010 1001 .... .... ..01 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LHUP | hl.lhup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:86
-hl_lhup_48_ea24f978b27a .... .... .... .... .101 .... .000 1001 .... .000 0001 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
+# HL.LHUP | hl.lhup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:99
+hl_lhup_48_0ba242a670ec .... .... .... .... .101 .... .000 1001 .... .000 0001 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
 
-# HL.LIS | hl.lis simm, ->{t, u, Rd} | opcodes/lx_hl48.opc:87
-hl_lis_48_908853d6ef87 .... .... .... .... .... .... .000 1101 .... .... .... 1110 RegDst=%RegDst_23_5 %simm32
+# HL.LIS | hl.lis simm, ->{t, u, Rd} | opcodes/lx_hl48.opc:100
+hl_lis_48_cfdc142eab23 .... .... .... .... .... .... .000 1101 .... .... .... 1110 RegDst=%RegDst_23_5 %simm32
 
-# HL.LIU | hl.liu uimm, ->{t, u, Rd} | opcodes/lx_hl48.opc:88
-hl_liu_48_9dd207ce3aea .... .... .... .... .... .... .001 1101 .... .... .... 1110 RegDst=%RegDst_23_5 %uimm32
+# HL.LIU | hl.liu uimm, ->{t, u, Rd} | opcodes/lx_hl48.opc:101
+hl_liu_48_38b81ddfedb9 .... .... .... .... .... .... .001 1101 .... .... .... 1110 RegDst=%RegDst_23_5 %uimm32
 
-# HL.LUI | hl.lui imm, ->{t, u, Rd} | opcodes/lx_hl48.opc:89
-hl_lui_48_255991889818 .... .... .... .... .... .... .001 0111 .... .... .... 1110 RegDst=%RegDst_23_5 %imm
+# HL.LUI | hl.lui imm, ->{t, u, Rd} | opcodes/lx_hl48.opc:102
+hl_lui_48_6807bdeb5949 .... .... .... .... .... .... .001 0111 .... .... .... 1110 RegDst=%RegDst_23_5 %imm
 
-# HL.LW.PCR | hl.lw.pcr [<symbol>], ->{t, u, Rd} | opcodes/lx_hl48.opc:90
-hl_lw_pcr_48_00cf25e2ac36 .... .... .... .... .010 .... .011 1001 .... .... .... 1110 RegDst=%RegDst_23_5 simm=%simm_4_s12_31_17
+# HL.LW.PCR | hl.lw.pcr [<symbol>], ->{t, u, Rd} | opcodes/lx_hl48.opc:103
+hl_lw_pcr_48_8baa40761b79 .... .... .... .... .010 .... .011 1001 .... .... .... 1110 RegDst=%RegDst_23_5 simm=%simm_4_s12_31_17
 
-# HL.LW.PO | hl.lw.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:91
-hl_lw_po_48_ff2c6de58064 .... .... .... .... .010 .... .000 1001 .... .000 0011 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
+# HL.LW.PO | hl.lw.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:104
+hl_lw_po_48_e8f3606964a3 .... .... .... .... .010 .... .000 1001 .... .000 0011 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
 
-# HL.LW.PR | hl.lw.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:92
-hl_lw_pr_48_2b0d62d28b57 .... .... .... .... .010 .... .000 1001 .... .000 0010 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
+# HL.LW.PR | hl.lw.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:105
+hl_lw_pr_48_18db10ea88bf .... .... .... .... .010 .... .000 1001 .... .000 0010 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
 
-# HL.LWI | hl.lwi [SrcL, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:93
-hl_lwi_48_549c666c56fd .... .... .... .... .010 .... .001 1001 .... .... ..00 1110 RegDst=%RegDst_23_5 %SrcL simm22=%simm22_6_s10_36_12
+# HL.LWI | hl.lwi [SrcL, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:106
+hl_lwi_48_4e3ee1ad8fbb .... .... .... .... .010 .... .001 1001 .... .... ..00 1110 RegDst=%RegDst_23_5 %SrcL simm22=%simm22_6_s10_36_12
 
-# HL.LWI.PO | hl.lwi.po [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:94
-hl_lwi_po_48_2dc642d88d9d .... .... .... .... .010 .... .001 1001 .... .... ..11 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LWI.PO | hl.lwi.po [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:107
+hl_lwi_po_48_d1dd4dcb83f8 .... .... .... .... .010 .... .001 1001 .... .... ..11 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LWI.PR | hl.lwi.pr [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:95
-hl_lwi_pr_48_3b5e1524de1b .... .... .... .... .010 .... .001 1001 .... .... ..10 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LWI.PR | hl.lwi.pr [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:108
+hl_lwi_pr_48_07652004a078 .... .... .... .... .010 .... .001 1001 .... .... ..10 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LWI.U | hl.lwi.u [SrcL, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:96
-hl_lwi_u_48_267e0f4a6222 .... .... .... .... .010 .... .010 1001 .... .... ..00 1110 RegDst=%RegDst_23_5 %SrcL simm22=%simm22_6_s10_36_12
+# HL.LWI.U | hl.lwi.u [SrcL, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:109
+hl_lwi_u_48_8f7ddeda1ee1 .... .... .... .... .010 .... .010 1001 .... .... ..00 1110 RegDst=%RegDst_23_5 %SrcL simm22=%simm22_6_s10_36_12
 
-# HL.LWI.UPO | hl.lwi.upo [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:97
-hl_lwi_upo_48_1c25d6266934 .... .... .... .... .010 .... .010 1001 .... .... ..11 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LWI.UPO | hl.lwi.upo [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:110
+hl_lwi_upo_48_22bd809942f5 .... .... .... .... .010 .... .010 1001 .... .... ..11 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LWI.UPR | hl.lwi.upr [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:98
-hl_lwi_upr_48_03b5f7994b14 .... .... .... .... .010 .... .010 1001 .... .... ..10 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LWI.UPR | hl.lwi.upr [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:111
+hl_lwi_upr_48_be29d00a32b6 .... .... .... .... .010 .... .010 1001 .... .... ..10 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LWIP | hl.lwip [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:99
-hl_lwip_48_e459297b8b7c .... .... .... .... .010 .... .001 1001 .... .... ..01 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LWIP | hl.lwip [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:112
+hl_lwip_48_359f152d06c6 .... .... .... .... .010 .... .001 1001 .... .... ..01 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LWIP.U | hl.lwip.u [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:100
-hl_lwip_u_48_c9aca369eab2 .... .... .... .... .010 .... .010 1001 .... .... ..01 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LWIP.U | hl.lwip.u [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:113
+hl_lwip_u_48_1b411285dd44 .... .... .... .... .010 .... .010 1001 .... .... ..01 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LWP | hl.lwp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:101
-hl_lwp_48_10fe25c62553 .... .... .... .... .010 .... .000 1001 .... .000 0001 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
+# HL.LWP | hl.lwp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:114
+hl_lwp_48_7a46de902d85 .... .... .... .... .010 .... .000 1001 .... .000 0001 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
 
-# HL.LWU.PCR | hl.lwu.pcr [<symbol>], ->{t, u, Rd} | opcodes/lx_hl48.opc:102
-hl_lwu_pcr_48_95ba33b7b68c .... .... .... .... .110 .... .011 1001 .... .... .... 1110 RegDst=%RegDst_23_5 simm=%simm_4_s12_31_17
+# HL.LWU.PCR | hl.lwu.pcr [<symbol>], ->{t, u, Rd} | opcodes/lx_hl48.opc:115
+hl_lwu_pcr_48_33cfc704c915 .... .... .... .... .110 .... .011 1001 .... .... .... 1110 RegDst=%RegDst_23_5 simm=%simm_4_s12_31_17
 
-# HL.LWU.PO | hl.lwu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:103
-hl_lwu_po_48_98730d2ddead .... .... .... .... .110 .... .000 1001 .... .000 0011 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
+# HL.LWU.PO | hl.lwu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:116
+hl_lwu_po_48_ec309139d376 .... .... .... .... .110 .... .000 1001 .... .000 0011 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
 
-# HL.LWU.PR | hl.lwu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:104
-hl_lwu_pr_48_f105cacec36c .... .... .... .... .110 .... .000 1001 .... .000 0010 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
+# HL.LWU.PR | hl.lwu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:117
+hl_lwu_pr_48_319ed7e2c7d1 .... .... .... .... .110 .... .000 1001 .... .000 0010 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
 
-# HL.LWUI | hl.lwui [SrcL, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:105
-hl_lwui_48_eeb551f8269d .... .... .... .... .110 .... .001 1001 .... .... ..00 1110 RegDst=%RegDst_23_5 %SrcL simm22=%simm22_6_s10_36_12
+# HL.LWUI | hl.lwui [SrcL, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:118
+hl_lwui_48_ecf00d3a73ba .... .... .... .... .110 .... .001 1001 .... .... ..00 1110 RegDst=%RegDst_23_5 %SrcL simm22=%simm22_6_s10_36_12
 
-# HL.LWUI.PO | hl.lwui.po [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:106
-hl_lwui_po_48_09a75b628dc4 .... .... .... .... .110 .... .001 1001 .... .... ..11 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LWUI.PO | hl.lwui.po [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:119
+hl_lwui_po_48_0209610deddf .... .... .... .... .110 .... .001 1001 .... .... ..11 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LWUI.PR | hl.lwui.pr [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:107
-hl_lwui_pr_48_32de19a508f0 .... .... .... .... .110 .... .001 1001 .... .... ..10 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LWUI.PR | hl.lwui.pr [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:120
+hl_lwui_pr_48_4074eea19f29 .... .... .... .... .110 .... .001 1001 .... .... ..10 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LWUI.U | hl.lwui.u [SrcL, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:108
-hl_lwui_u_48_4570cc517629 .... .... .... .... .110 .... .010 1001 .... .... ..00 1110 RegDst=%RegDst_23_5 %SrcL simm22=%simm22_6_s10_36_12
+# HL.LWUI.U | hl.lwui.u [SrcL, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:121
+hl_lwui_u_48_37c064b9c5f3 .... .... .... .... .110 .... .010 1001 .... .... ..00 1110 RegDst=%RegDst_23_5 %SrcL simm22=%simm22_6_s10_36_12
 
-# HL.LWUI.UPO | hl.lwui.upo [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:109
-hl_lwui_upo_48_33260eb06a2c .... .... .... .... .110 .... .010 1001 .... .... ..11 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LWUI.UPO | hl.lwui.upo [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:122
+hl_lwui_upo_48_ae76cad8040a .... .... .... .... .110 .... .010 1001 .... .... ..11 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LWUI.UPR | hl.lwui.upr [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:110
-hl_lwui_upr_48_998a98c46469 .... .... .... .... .110 .... .010 1001 .... .... ..10 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LWUI.UPR | hl.lwui.upr [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:123
+hl_lwui_upr_48_3fcf561adb02 .... .... .... .... .110 .... .010 1001 .... .... ..10 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LWUIP | hl.lwuip [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:111
-hl_lwuip_48_2a5d6d8f3b70 .... .... .... .... .110 .... .001 1001 .... .... ..01 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LWUIP | hl.lwuip [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:124
+hl_lwuip_48_0c385f4e5dbb .... .... .... .... .110 .... .001 1001 .... .... ..01 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LWUIP.U | hl.lwuip.u [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:112
-hl_lwuip_u_48_0fed3b8c43b6 .... .... .... .... .110 .... .010 1001 .... .... ..01 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
+# HL.LWUIP.U | hl.lwuip.u [SrcL, simm], ->Dst0, Dst1 | opcodes/lx_hl48.opc:125
+hl_lwuip_u_48_73994be97243 .... .... .... .... .110 .... .010 1001 .... .... ..01 1110 %RegDst0 %RegDst1 %SrcL simm17=%simm17_6_s5_36_12
 
-# HL.LWUP | hl.lwup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:113
-hl_lwup_48_30f20380c354 .... .... .... .... .110 .... .000 1001 .... .000 0001 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
+# HL.LWUP | hl.lwup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | opcodes/lx_hl48.opc:126
+hl_lwup_48_9af645913747 .... .... .... .... .110 .... .000 1001 .... .000 0001 1110 %RegDst0 %RegDst1 %SrcL %SrcR %SrcRType shamt=%shamt_43_5
 
-# HL.MADD | hl.madd SrcL, SrcR, SrcD, ->Dst0, Dst1 | opcodes/lx_hl48.opc:114
-hl_madd_48_b062d741fd99 .... .00. .... .... .110 .... .100 0111 .... .000 0000 1110 %RegDst0 %RegDst1 SrcD=%SrcD_43_5 %SrcL %SrcR
+# HL.MADD | hl.madd SrcL, SrcR, SrcD, ->Dst0, Dst1 | opcodes/lx_hl48.opc:127
+hl_madd_48_1c48c58a9113 .... .00. .... .... .110 .... .100 0111 .... .000 0000 1110 %RegDst0 %RegDst1 SrcD=%SrcD_43_5 %SrcL %SrcR
 
-# HL.MADDW | hl.maddw SrcL, SrcR, SrcD, ->Dst0, Dst1 | opcodes/lx_hl48.opc:115
-hl_maddw_48_6fac897f0264 .... .00. .... .... .111 .... .100 0111 .... .000 0000 1110 %RegDst0 %RegDst1 SrcD=%SrcD_43_5 %SrcL %SrcR
+# HL.MADDW | hl.maddw SrcL, SrcR, SrcD, ->Dst0, Dst1 | opcodes/lx_hl48.opc:128
+hl_maddw_48_f3705bdfbffe .... .00. .... .... .111 .... .100 0111 .... .000 0000 1110 %RegDst0 %RegDst1 SrcD=%SrcD_43_5 %SrcL %SrcR
 
-# HL.MIADD | hl.miadd SrcL, SrcR, uimm, ->{t, u, Rd} | opcodes/lx_hl48.opc:116
-hl_miadd_48_ec5127b6dfd6 .... .... .... .... .000 .... .100 1101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %SrcR %uimm19
+# HL.MIADD | hl.miadd SrcL, SrcR, uimm, ->{t, u, Rd} | opcodes/lx_hl48.opc:129
+hl_miadd_48_988747dddd68 .... .... .... .... .000 .... .100 1101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %SrcR %uimm19
 
-# HL.MISUB | hl.misub SrcL, SrcR, uimm, ->{t, u, Rd} | opcodes/lx_hl48.opc:117
-hl_misub_48_e9e4c7b23479 .... .... .... .... .001 .... .100 1101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %SrcR %uimm19
+# HL.MISUB | hl.misub SrcL, SrcR, uimm, ->{t, u, Rd} | opcodes/lx_hl48.opc:130
+hl_misub_48_f04e7ab7158a .... .... .... .... .001 .... .100 1101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %SrcR %uimm19
 
-# HL.MUL | hl.mul SrcL, SrcR, ->Dst0, Dst1 | opcodes/lx_hl48.opc:118
-hl_mul_48_0d059ff178fb 0000 000. .... .... .000 .... .100 0111 .... .000 0000 1110 %RegDst0 %RegDst1 %SrcL %SrcR
+# HL.MUL | hl.mul SrcL, SrcR, ->Dst0, Dst1 | opcodes/lx_hl48.opc:131
+hl_mul_48_630da5409394 0000 000. .... .... .000 .... .100 0111 .... .000 0000 1110 %RegDst0 %RegDst1 %SrcL %SrcR
 
-# HL.MULU | hl.mulu SrcL, SrcR, ->Dst0, Dst1 | opcodes/lx_hl48.opc:119
-hl_mulu_48_85efdc81e8fc 0000 000. .... .... .001 .... .100 0111 .... .000 0000 1110 %RegDst0 %RegDst1 %SrcL %SrcR
+# HL.MULU | hl.mulu SrcL, SrcR, ->Dst0, Dst1 | opcodes/lx_hl48.opc:132
+hl_mulu_48_a136ffa6b63f 0000 000. .... .... .001 .... .100 0111 .... .000 0000 1110 %RegDst0 %RegDst1 %SrcL %SrcR
 
-# HL.ORI | hl.ori SrcL, simm, ->{t, u, Rd} | opcodes/lx_hl48.opc:120
-hl_ori_48_c6d8ce28a78b .... .... .... .... .011 .... .001 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %simm24
+# HL.ORI | hl.ori SrcL, simm, ->{t, u, Rd} | opcodes/lx_hl48.opc:133
+hl_ori_48_2c8dba59eddb .... .... .... .... .011 .... .001 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %simm24
 
-# HL.ORIW | hl.oriw SrcL, simm, ->{t, u, Rd} | opcodes/lx_hl48.opc:121
-hl_oriw_48_17673d186249 .... .... .... .... .011 .... .011 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %simm24
+# HL.ORIW | hl.oriw SrcL, simm, ->{t, u, Rd} | opcodes/lx_hl48.opc:134
+hl_oriw_48_688c3cd2776e .... .... .... .... .011 .... .011 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %simm24
 
-# HL.PRF | hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>] | opcodes/lx_hl48.opc:122
-hl_prf_48_39641863bb21 .... .... .... .... .111 0000 0000 1001 .... .000 0000 1110 %SrcL %SrcR %SrcRType %model shamt=%shamt_43_5
+# HL.PRF | hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>] | opcodes/lx_hl48.opc:135
+hl_prf_48_6a2f3688490f .... .... .... .... .111 0000 0000 1001 .... .000 0000 1110 %SrcL %SrcR %SrcRType %model shamt=%shamt_43_5
 
-# HL.PRF.A | hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd} | opcodes/lx_hl48.opc:123
-hl_prf_a_48_267dc57d14f4 .... .... .... .... .111 .... .000 1001 .... .000 0001 1110 RegDst=%RegDst_23_5 %SrcL %SrcR %SrcRType %model shamt=%shamt_43_5
+# HL.PRF.A | hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd} | opcodes/lx_hl48.opc:136
+hl_prf_a_48_1dc197c8b5a5 .... .... .... .... .111 .... .000 1001 .... .000 0001 1110 RegDst=%RegDst_23_5 %SrcL %SrcR %SrcRType %model shamt=%shamt_43_5
 
-# HL.PRFI.U | hl.prfi.u{.l1,.l2,.l3} [SrcL, simm] | opcodes/lx_hl48.opc:124
-hl_prfi_u_48_be73891e376e .... .... .... .... .111 0000 0010 1001 .... .... ..00 1110 %SrcL %model simm17=%simm17_6_s5_36_12
+# HL.PRFI.U | hl.prfi.u{.l1,.l2,.l3} [SrcL, simm] | opcodes/lx_hl48.opc:137
+hl_prfi_u_48_2181f92b4f6c .... .... .... .... .111 0000 0010 1001 .... .... ..00 1110 %SrcL %model simm17=%simm17_6_s5_36_12
 
-# HL.PRFI.UA | hl.prfi.ua{.l1,.l2,.l3} [SrcL, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:125
-hl_prfi_ua_48_c37fb30ecb0f .... .... .... .... .111 .... .010 1001 .... .... ..01 1110 RegDst=%RegDst_23_5 %SrcL %model simm17=%simm17_6_s5_36_12
+# HL.PRFI.UA | hl.prfi.ua{.l1,.l2,.l3} [SrcL, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:138
+hl_prfi_ua_48_9cb440f97caa .... .... .... .... .111 .... .010 1001 .... .... ..01 1110 RegDst=%RegDst_23_5 %SrcL %model simm17=%simm17_6_s5_36_12
 
-# HL.QMT | hl.qmt.{i,e,s,r,ie,is,ir,es,er,ies,ier} SrcL, SrcR, ->{t, u} | opcodes/lx_hl48.opc:210
+# HL.QMT | hl.qmt[.{i,e,s,r,ie,is,ir,es,er,ies,ier}] SrcL[, SrcR when i], ->RegDst | opcodes/lx_hl48.opc:211
 hl_qmt_48_e99d838fab5c 000. .... .... .... .000 .... .111 1101 0000 0000 0000 1110 RegDst=%RegDst_23_5 %SrcL %SrcR %e %i %r %s
 
-# HL.QPOP | hl.qpop.{e,r,er} SrcL, ->Dst0, Dst1 | opcodes/lx_hl48.opc:211
-hl_qpop_48_15aeb8bc347e 0000 0... .... .... .010 .... .111 1101 .... .000 0000 1110 %RegDst0 %RegDst1 %SrcL %SrcR %e %r
+# HL.QPOP | hl.qpop[.{e,r,er}] SrcL, ->RegDst0, RegDst1 | opcodes/lx_hl48.opc:212
+hl_qpop_48_59f01625592b 0000 0..0 0000 .... .010 .... .111 1101 .... .000 0000 1110 %RegDst0 %RegDst1 %SrcL %e %r
 
-# HL.QPUSH | hl.qpush.{h,e,r,he,hr,er,her} SrcL, SrcR, ->{t, u} | opcodes/lx_hl48.opc:212
+# HL.QPUSH | hl.qpush[.{h,e,r,he,hr,er,her}] SrcL, SrcR, ->RegDst | opcodes/lx_hl48.opc:213
 hl_qpush_48_6183db9ebfd4 0000 .... .... .... .001 .... .111 1101 0000 0000 0000 1110 RegDst=%RegDst_23_5 %SrcL %SrcR %e %h %r
 
-# HL.REM | hl.rem SrcL, SrcR, ->Dst0, Dst1 | opcodes/lx_hl48.opc:126
-hl_rem_48_3c13e08615aa 0000 000. .... .... .100 .... .101 0111 .... .000 0000 1110 %RegDst0 %RegDst1 %SrcL %SrcR
+# HL.REM | hl.rem SrcL, SrcR, ->Dst0, Dst1 | opcodes/lx_hl48.opc:139
+hl_rem_48_d27b2fa30c08 0000 000. .... .... .100 .... .101 0111 .... .000 0000 1110 %RegDst0 %RegDst1 %SrcL %SrcR
 
-# HL.REMU | hl.remu SrcL, SrcR, ->Dst0, Dst1 | opcodes/lx_hl48.opc:127
-hl_remu_48_3bf4e5a663c1 0000 000. .... .... .101 .... .101 0111 .... .000 0000 1110 %RegDst0 %RegDst1 %SrcL %SrcR
+# HL.REMU | hl.remu SrcL, SrcR, ->Dst0, Dst1 | opcodes/lx_hl48.opc:140
+hl_remu_48_4c8ad6d9e72e 0000 000. .... .... .101 .... .101 0111 .... .000 0000 1110 %RegDst0 %RegDst1 %SrcL %SrcR
 
-# HL.REMUW | hl.remuw SrcL, SrcR, ->Dst0, Dst1 | opcodes/lx_hl48.opc:128
-hl_remuw_48_26ea6e70f2fc 0000 000. .... .... .111 .... .101 0111 .... .000 0000 1110 %RegDst0 %RegDst1 %SrcL %SrcR
+# HL.REMUW | hl.remuw SrcL, SrcR, ->Dst0, Dst1 | opcodes/lx_hl48.opc:141
+hl_remuw_48_43e2a7472661 0000 000. .... .... .111 .... .101 0111 .... .000 0000 1110 %RegDst0 %RegDst1 %SrcL %SrcR
 
-# HL.REMW | hl.remw SrcL, SrcR, ->Dst0, Dst1 | opcodes/lx_hl48.opc:129
-hl_remw_48_3acb485d39a7 0000 000. .... .... .110 .... .101 0111 .... .000 0000 1110 %RegDst0 %RegDst1 %SrcL %SrcR
+# HL.REMW | hl.remw SrcL, SrcR, ->Dst0, Dst1 | opcodes/lx_hl48.opc:142
+hl_remw_48_1d5c20784d8d 0000 000. .... .... .110 .... .101 0111 .... .000 0000 1110 %RegDst0 %RegDst1 %SrcL %SrcR
 
-# HL.SB.PCR | hl.sb.pcr SrcL, [<symbol>] | opcodes/lx_hl48.opc:130
-hl_sb_pcr_48_d0ba4b6e0f54 .... .... .... .... .000 .... .110 1001 .... .... .... 1110 %SrcL simm=%simm_4_s12_23_5_36_12
+# HL.SB.PCR | hl.sb.pcr SrcL, [<symbol>] | opcodes/lx_hl48.opc:143
+hl_sb_pcr_48_3edd50c2e4d3 .... .... .... .... .000 .... .110 1001 .... .... .... 1110 %SrcL simm=%simm_4_s12_23_5_36_12
 
-# HL.SB.PO | hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | opcodes/lx_hl48.opc:131
-hl_sb_po_48_c21837f2c14d .... .... .... .... .000 0000 0100 1001 .... .000 0011 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
+# HL.SB.PO | hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | opcodes/lx_hl48.opc:144
+hl_sb_po_48_bb1ccb3da24b .... .... .... .... .000 0000 0100 1001 .... .000 0011 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
 
-# HL.SB.PR | hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | opcodes/lx_hl48.opc:132
-hl_sb_pr_48_40eae4513905 .... .... .... .... .000 0000 0100 1001 .... .000 0010 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
+# HL.SB.PR | hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | opcodes/lx_hl48.opc:145
+hl_sb_pr_48_6355032ffe23 .... .... .... .... .000 0000 0100 1001 .... .000 0010 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
 
-# HL.SBI | hl.sbi SrcD, [SrcR, simm] | opcodes/lx_hl48.opc:133
-hl_sbi_48_3504e6935382 .... .... .... .... .000 .... .101 1001 .... .... ..00 1110 SrcD=%SrcD_31_5 %SrcR simm22=%simm22_6_s10_23_5_41_7
+# HL.SBI | hl.sbi SrcD, [SrcR, simm] | opcodes/lx_hl48.opc:146
+hl_sbi_48_9ded48f94933 .... .... .... .... .000 .... .101 1001 .... .... ..00 1110 SrcD=%SrcD_31_5 %SrcR simm22=%simm22_6_s10_23_5_41_7
 
-# HL.SBI.PO | hl.sbi.po SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:134
-hl_sbi_po_48_493d9c8b27eb .... .... .... .... .000 .... .101 1001 .... .... ..11 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
+# HL.SBI.PO | hl.sbi.po SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:147
+hl_sbi_po_48_4d35de8bc8ed .... .... .... .... .000 .... .101 1001 .... .... ..11 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
 
-# HL.SBI.PR | hl.sbi.pr SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:135
-hl_sbi_pr_48_d6f48429cca5 .... .... .... .... .000 .... .101 1001 .... .... ..10 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
+# HL.SBI.PR | hl.sbi.pr SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:148
+hl_sbi_pr_48_7d8ae796d058 .... .... .... .... .000 .... .101 1001 .... .... ..10 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
 
-# HL.SBIP | hl.sbip SrcD, SrcD1, [SrcR, simm] | opcodes/lx_hl48.opc:136
-hl_sbip_48_48a212ee655e .... .... .... .... .000 .... .101 1001 .... .... ..01 1110 SrcD=%SrcD_31_5 %SrcD1 %SrcR simm17=%simm17_11_s5_23_5_41_7
+# HL.SBIP | hl.sbip SrcD, SrcD1, [SrcR, simm] | opcodes/lx_hl48.opc:149
+hl_sbip_48_78d33102ae32 .... .... .... .... .000 .... .101 1001 .... .... ..01 1110 SrcD=%SrcD_31_5 %SrcD1 %SrcR simm17=%simm17_11_s5_23_5_41_7
 
-# HL.SBP | hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>] | opcodes/lx_hl48.opc:137
-hl_sbp_48_12e03c011f0a .... .... .... .... .000 0000 0100 1001 0000 0... ..01 1110 SrcD=%SrcD_43_5 %SrcD1 %SrcL %SrcR %SrcRType
+# HL.SBP | hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>] | opcodes/lx_hl48.opc:150
+hl_sbp_48_4e0c7cb0c724 .... .... .... .... .000 0000 0100 1001 0000 0... ..01 1110 SrcD=%SrcD_43_5 %SrcD1 %SrcL %SrcR %SrcRType
 
-# HL.SD.PCR | hl.sd.pcr SrcL, [<symbol>] | opcodes/lx_hl48.opc:138
-hl_sd_pcr_48_8ed6bb942a78 .... .... .... .... .011 .... .110 1001 .... .... .... 1110 %SrcL simm=%simm_4_s12_23_5_36_12
+# HL.SD.PCR | hl.sd.pcr SrcL, [<symbol>] | opcodes/lx_hl48.opc:151
+hl_sd_pcr_48_1f32ea8965a7 .... .... .... .... .011 .... .110 1001 .... .... .... 1110 %SrcL simm=%simm_4_s12_23_5_36_12
 
-# HL.SD.PO | hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd} | opcodes/lx_hl48.opc:139
-hl_sd_po_48_9ced722101a8 .... .... .... .... .011 0000 0100 1001 .... .000 0011 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
+# HL.SD.PO | hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd} | opcodes/lx_hl48.opc:152
+hl_sd_po_48_f335328a7f87 .... .... .... .... .011 0000 0100 1001 .... .000 0011 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
 
-# HL.SD.PR | hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd} | opcodes/lx_hl48.opc:140
-hl_sd_pr_48_4f96249f5efe .... .... .... .... .011 0000 0100 1001 .... .000 0010 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
+# HL.SD.PR | hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd} | opcodes/lx_hl48.opc:153
+hl_sd_pr_48_a9ff27c38e8d .... .... .... .... .011 0000 0100 1001 .... .000 0010 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
 
-# HL.SD.UPO | hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | opcodes/lx_hl48.opc:141
-hl_sd_upo_48_ba930fbec5c7 .... .... .... .... .111 0000 0100 1001 .... .000 0011 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
+# HL.SD.UPO | hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | opcodes/lx_hl48.opc:154
+hl_sd_upo_48_7d91573c6555 .... .... .... .... .111 0000 0100 1001 .... .000 0011 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
 
-# HL.SD.UPR | hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | opcodes/lx_hl48.opc:142
-hl_sd_upr_48_af7118270a90 .... .... .... .... .111 0000 0100 1001 .... .000 0010 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
+# HL.SD.UPR | hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | opcodes/lx_hl48.opc:155
+hl_sd_upr_48_9dcf6a32e5df .... .... .... .... .111 0000 0100 1001 .... .000 0010 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
 
-# HL.SDI | hl.sdi SrcD, [SrcR, simm] | opcodes/lx_hl48.opc:143
-hl_sdi_48_3203094081da .... .... .... .... .011 .... .101 1001 .... .... ..00 1110 SrcD=%SrcD_31_5 %SrcR simm22=%simm22_6_s10_23_5_41_7
+# HL.SDI | hl.sdi SrcD, [SrcR, simm] | opcodes/lx_hl48.opc:156
+hl_sdi_48_e62d1f19a3e4 .... .... .... .... .011 .... .101 1001 .... .... ..00 1110 SrcD=%SrcD_31_5 %SrcR simm22=%simm22_6_s10_23_5_41_7
 
-# HL.SDI.PO | hl.sdi.po SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:144
-hl_sdi_po_48_4b6af4b433bb .... .... .... .... .011 .... .101 1001 .... .... ..11 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
+# HL.SDI.PO | hl.sdi.po SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:157
+hl_sdi_po_48_147ebb5e1375 .... .... .... .... .011 .... .101 1001 .... .... ..11 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
 
-# HL.SDI.PR | hl.sdi.pr SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:145
-hl_sdi_pr_48_8b2688251991 .... .... .... .... .011 .... .101 1001 .... .... ..10 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
+# HL.SDI.PR | hl.sdi.pr SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:158
+hl_sdi_pr_48_c0d6ef7ce611 .... .... .... .... .011 .... .101 1001 .... .... ..10 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
 
-# HL.SDI.U | hl.sdi.u SrcD, [SrcR, simm] | opcodes/lx_hl48.opc:146
-hl_sdi_u_48_d9597eeba6b4 .... .... .... .... .111 .... .101 1001 .... .... ..00 1110 SrcD=%SrcD_31_5 %SrcR simm22=%simm22_6_s10_23_5_41_7
+# HL.SDI.U | hl.sdi.u SrcD, [SrcR, simm] | opcodes/lx_hl48.opc:159
+hl_sdi_u_48_dde4cfc9cefe .... .... .... .... .111 .... .101 1001 .... .... ..00 1110 SrcD=%SrcD_31_5 %SrcR simm22=%simm22_6_s10_23_5_41_7
 
-# HL.SDI.UPO | hl.sdi.upo SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:147
-hl_sdi_upo_48_0ceed9e5fdb0 .... .... .... .... .111 .... .101 1001 .... .... ..11 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
+# HL.SDI.UPO | hl.sdi.upo SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:160
+hl_sdi_upo_48_99764b84d0a4 .... .... .... .... .111 .... .101 1001 .... .... ..11 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
 
-# HL.SDI.UPR | hl.sdi.upr SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:148
-hl_sdi_upr_48_f8aba43b65d5 .... .... .... .... .111 .... .101 1001 .... .... ..10 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
+# HL.SDI.UPR | hl.sdi.upr SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:161
+hl_sdi_upr_48_c1c26840de0c .... .... .... .... .111 .... .101 1001 .... .... ..10 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
 
-# HL.SDIP | hl.sdip SrcD, SrcD1, [SrcR, simm] | opcodes/lx_hl48.opc:149
-hl_sdip_48_6d622cf167ca .... .... .... .... .011 .... .101 1001 .... .... ..01 1110 SrcD=%SrcD_31_5 %SrcD1 %SrcR simm17=%simm17_11_s5_23_5_41_7
+# HL.SDIP | hl.sdip SrcD, SrcD1, [SrcR, simm] | opcodes/lx_hl48.opc:162
+hl_sdip_48_0a27599f4729 .... .... .... .... .011 .... .101 1001 .... .... ..01 1110 SrcD=%SrcD_31_5 %SrcD1 %SrcR simm17=%simm17_11_s5_23_5_41_7
 
-# HL.SDIP.U | hl.sdip.u SrcD, SrcD1, [SrcR, simm] | opcodes/lx_hl48.opc:150
-hl_sdip_u_48_3260b03bb762 .... .... .... .... .111 .... .101 1001 .... .... ..01 1110 SrcD=%SrcD_31_5 %SrcD1 %SrcR simm17=%simm17_11_s5_23_5_41_7
+# HL.SDIP.U | hl.sdip.u SrcD, SrcD1, [SrcR, simm] | opcodes/lx_hl48.opc:163
+hl_sdip_u_48_50e999584b6c .... .... .... .... .111 .... .101 1001 .... .... ..01 1110 SrcD=%SrcD_31_5 %SrcD1 %SrcR simm17=%simm17_11_s5_23_5_41_7
 
-# HL.SDP | hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<3] | opcodes/lx_hl48.opc:151
-hl_sdp_48_5884c49a7e55 .... .... .... .... .011 0000 0100 1001 0000 0... ..01 1110 SrcD=%SrcD_43_5 %SrcD1 %SrcL %SrcR %SrcRType
+# HL.SDP | hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<3] | opcodes/lx_hl48.opc:164
+hl_sdp_48_355cef372d62 .... .... .... .... .011 0000 0100 1001 0000 0... ..01 1110 SrcD=%SrcD_43_5 %SrcD1 %SrcL %SrcR %SrcRType
 
-# HL.SDP.U | hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>] | opcodes/lx_hl48.opc:152
-hl_sdp_u_48_66de58724f2f .... .... .... .... .111 0000 0100 1001 0000 0... ..01 1110 SrcD=%SrcD_43_5 %SrcD1 %SrcL %SrcR %SrcRType
+# HL.SDP.U | hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>] | opcodes/lx_hl48.opc:165
+hl_sdp_u_48_30e8e0d29477 .... .... .... .... .111 0000 0100 1001 0000 0... ..01 1110 SrcD=%SrcD_43_5 %SrcD1 %SrcL %SrcR %SrcRType
 
-# HL.SETC.ANDI | hl.setc.andi SrcL, simm | opcodes/lx_hl48.opc:153
-hl_setc_andi_48_f27796612fb3 .... .... .... .... .010 .... .111 0101 .... .... .... 1110 %SrcL shamt=%shamt_23_5 %simm24
+# HL.SETC.ANDI | hl.setc.andi SrcL, simm | opcodes/lx_hl48.opc:166
+hl_setc_andi_48_0f1b4b325221 .... .... .... .... .010 .... .111 0101 .... .... .... 1110 %SrcL shamt=%shamt_23_5 %simm24
 
-# HL.SETC.EQI | hl.setc.eqi SrcL, simm | opcodes/lx_hl48.opc:154
-hl_setc_eqi_48_0fe891fb0890 .... .... .... .... .000 .... .111 0101 .... .... .... 1110 %SrcL shamt=%shamt_23_5 %simm24
+# HL.SETC.EQI | hl.setc.eqi SrcL, simm | opcodes/lx_hl48.opc:167
+hl_setc_eqi_48_36b03e040e50 .... .... .... .... .000 .... .111 0101 .... .... .... 1110 %SrcL shamt=%shamt_23_5 %simm24
 
-# HL.SETC.GEI | hl.setc.gei SrcL, simm | opcodes/lx_hl48.opc:155
-hl_setc_gei_48_9563d6395d06 .... .... .... .... .101 .... .111 0101 .... .... .... 1110 %SrcL shamt=%shamt_23_5 %simm24
+# HL.SETC.GEI | hl.setc.gei SrcL, simm | opcodes/lx_hl48.opc:168
+hl_setc_gei_48_c8e6af25febe .... .... .... .... .101 .... .111 0101 .... .... .... 1110 %SrcL shamt=%shamt_23_5 %simm24
 
-# HL.SETC.GEUI | hl.setc.geui SrcL, uimm | opcodes/lx_hl48.opc:156
-hl_setc_geui_48_2390319baf54 .... .... .... .... .111 .... .111 0101 .... .... .... 1110 %SrcL shamt=%shamt_23_5 %uimm24
+# HL.SETC.GEUI | hl.setc.geui SrcL, uimm | opcodes/lx_hl48.opc:169
+hl_setc_geui_48_4dccc643dda4 .... .... .... .... .111 .... .111 0101 .... .... .... 1110 %SrcL shamt=%shamt_23_5 %uimm24
 
-# HL.SETC.LTI | hl.setc.lti SrcL, simm | opcodes/lx_hl48.opc:157
-hl_setc_lti_48_ad4ffebe877c .... .... .... .... .100 .... .111 0101 .... .... .... 1110 %SrcL shamt=%shamt_23_5 %simm24
+# HL.SETC.LTI | hl.setc.lti SrcL, simm | opcodes/lx_hl48.opc:170
+hl_setc_lti_48_4ba5d7d9fa2a .... .... .... .... .100 .... .111 0101 .... .... .... 1110 %SrcL shamt=%shamt_23_5 %simm24
 
-# HL.SETC.LTUI | hl.setc.ltui SrcL, uimm | opcodes/lx_hl48.opc:158
-hl_setc_ltui_48_cb7a12ba6ead .... .... .... .... .110 .... .111 0101 .... .... .... 1110 %SrcL shamt=%shamt_23_5 %uimm24
+# HL.SETC.LTUI | hl.setc.ltui SrcL, uimm | opcodes/lx_hl48.opc:171
+hl_setc_ltui_48_c2daef3063ae .... .... .... .... .110 .... .111 0101 .... .... .... 1110 %SrcL shamt=%shamt_23_5 %uimm24
 
-# HL.SETC.NEI | hl.setc.nei SrcL, simm | opcodes/lx_hl48.opc:159
-hl_setc_nei_48_f0bcf6586274 .... .... .... .... .001 .... .111 0101 .... .... .... 1110 %SrcL shamt=%shamt_23_5 %simm24
+# HL.SETC.NEI | hl.setc.nei SrcL, simm | opcodes/lx_hl48.opc:172
+hl_setc_nei_48_1062c234904a .... .... .... .... .001 .... .111 0101 .... .... .... 1110 %SrcL shamt=%shamt_23_5 %simm24
 
-# HL.SETC.ORI | hl.setc.ori SrcL, simm | opcodes/lx_hl48.opc:160
-hl_setc_ori_48_137bce8aeb04 .... .... .... .... .011 .... .111 0101 .... .... .... 1110 %SrcL shamt=%shamt_23_5 %simm24
+# HL.SETC.ORI | hl.setc.ori SrcL, simm | opcodes/lx_hl48.opc:173
+hl_setc_ori_48_7c8062d805d3 .... .... .... .... .011 .... .111 0101 .... .... .... 1110 %SrcL shamt=%shamt_23_5 %simm24
 
-# HL.SETRET | hl.setret imm, ->Ra | opcodes/lx_hl48.opc:161
-hl_setret_48_302bb793a800 .... .... .... .... .... 0101 0000 0111 .... .... .... 1110 %imm32
+# HL.SETRET | hl.setret imm, ->Ra | opcodes/lx_hl48.opc:174
+hl_setret_48_303ff59769e6 .... .... .... .... .... 0101 0000 0111 .... .... .... 1110 %imm32
 
-# HL.SH.PCR | hl.sh.pcr SrcL, [<symbol>] | opcodes/lx_hl48.opc:162
-hl_sh_pcr_48_705ea4062d0b .... .... .... .... .001 .... .110 1001 .... .... .... 1110 %SrcL simm=%simm_4_s12_23_5_36_12
+# HL.SH.PCR | hl.sh.pcr SrcL, [<symbol>] | opcodes/lx_hl48.opc:175
+hl_sh_pcr_48_ab8f759fa2d1 .... .... .... .... .001 .... .110 1001 .... .... .... 1110 %SrcL simm=%simm_4_s12_23_5_36_12
 
-# HL.SH.PO | hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd} | opcodes/lx_hl48.opc:163
-hl_sh_po_48_e0b543d5b724 .... .... .... .... .001 0000 0100 1001 .... .000 0011 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
+# HL.SH.PO | hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd} | opcodes/lx_hl48.opc:176
+hl_sh_po_48_2b20a782f566 .... .... .... .... .001 0000 0100 1001 .... .000 0011 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
 
-# HL.SH.PR | hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd} | opcodes/lx_hl48.opc:164
-hl_sh_pr_48_40ab17f5a580 .... .... .... .... .001 0000 0100 1001 .... .000 0010 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
+# HL.SH.PR | hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd} | opcodes/lx_hl48.opc:177
+hl_sh_pr_48_ec007e4fe531 .... .... .... .... .001 0000 0100 1001 .... .000 0010 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
 
-# HL.SH.UPO | hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | opcodes/lx_hl48.opc:165
-hl_sh_upo_48_5bfb8ea0c992 .... .... .... .... .101 0000 0100 1001 .... .000 0011 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
+# HL.SH.UPO | hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | opcodes/lx_hl48.opc:178
+hl_sh_upo_48_d28769e5b16f .... .... .... .... .101 0000 0100 1001 .... .000 0011 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
 
-# HL.SH.UPR | hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | opcodes/lx_hl48.opc:166
-hl_sh_upr_48_719102d66e45 .... .... .... .... .101 0000 0100 1001 .... .000 0010 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
+# HL.SH.UPR | hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | opcodes/lx_hl48.opc:179
+hl_sh_upr_48_d53d5eeaff29 .... .... .... .... .101 0000 0100 1001 .... .000 0010 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
 
-# HL.SHI | hl.shi SrcD, [SrcR, simm] | opcodes/lx_hl48.opc:167
-hl_shi_48_38ea3f0a4f08 .... .... .... .... .001 .... .101 1001 .... .... ..00 1110 SrcD=%SrcD_31_5 %SrcR simm22=%simm22_6_s10_23_5_41_7
+# HL.SHI | hl.shi SrcD, [SrcR, simm] | opcodes/lx_hl48.opc:180
+hl_shi_48_19b6916e34bd .... .... .... .... .001 .... .101 1001 .... .... ..00 1110 SrcD=%SrcD_31_5 %SrcR simm22=%simm22_6_s10_23_5_41_7
 
-# HL.SHI.PO | hl.shi.po SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:168
-hl_shi_po_48_636fea832c7b .... .... .... .... .001 .... .101 1001 .... .... ..11 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
+# HL.SHI.PO | hl.shi.po SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:181
+hl_shi_po_48_bbfebb77238a .... .... .... .... .001 .... .101 1001 .... .... ..11 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
 
-# HL.SHI.PR | hl.shi.pr SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:169
-hl_shi_pr_48_1020eb4dff56 .... .... .... .... .001 .... .101 1001 .... .... ..10 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
+# HL.SHI.PR | hl.shi.pr SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:182
+hl_shi_pr_48_4b0c8fab1063 .... .... .... .... .001 .... .101 1001 .... .... ..10 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
 
-# HL.SHI.U | hl.shi.u SrcD, [SrcR, simm] | opcodes/lx_hl48.opc:170
-hl_shi_u_48_79dbaa14d2c2 .... .... .... .... .101 .... .101 1001 .... .... ..00 1110 SrcD=%SrcD_31_5 %SrcR simm22=%simm22_6_s10_23_5_41_7
+# HL.SHI.U | hl.shi.u SrcD, [SrcR, simm] | opcodes/lx_hl48.opc:183
+hl_shi_u_48_c065af0df813 .... .... .... .... .101 .... .101 1001 .... .... ..00 1110 SrcD=%SrcD_31_5 %SrcR simm22=%simm22_6_s10_23_5_41_7
 
-# HL.SHI.UPO | hl.shi.upo SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:171
-hl_shi_upo_48_de81eed370cf .... .... .... .... .101 .... .101 1001 .... .... ..11 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
+# HL.SHI.UPO | hl.shi.upo SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:184
+hl_shi_upo_48_b0d962877d74 .... .... .... .... .101 .... .101 1001 .... .... ..11 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
 
-# HL.SHI.UPR | hl.shi.upr SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:172
-hl_shi_upr_48_ca9f1acbb1b2 .... .... .... .... .101 .... .101 1001 .... .... ..10 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
+# HL.SHI.UPR | hl.shi.upr SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:185
+hl_shi_upr_48_583e46fc6a97 .... .... .... .... .101 .... .101 1001 .... .... ..10 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
 
-# HL.SHIP | hl.ship SrcD, SrcD1, [SrcR, simm] | opcodes/lx_hl48.opc:173
-hl_ship_48_156afe74f95b .... .... .... .... .001 .... .101 1001 .... .... ..01 1110 SrcD=%SrcD_31_5 %SrcD1 %SrcR simm17=%simm17_11_s5_23_5_41_7
+# HL.SHIP | hl.ship SrcD, SrcD1, [SrcR, simm] | opcodes/lx_hl48.opc:186
+hl_ship_48_5e9e236d7bcf .... .... .... .... .001 .... .101 1001 .... .... ..01 1110 SrcD=%SrcD_31_5 %SrcD1 %SrcR simm17=%simm17_11_s5_23_5_41_7
 
-# HL.SHIP.U | hl.ship.u SrcD, SrcD1, [SrcR, simm] | opcodes/lx_hl48.opc:174
-hl_ship_u_48_fa5e1d981a8a .... .... .... .... .101 .... .101 1001 .... .... ..01 1110 SrcD=%SrcD_31_5 %SrcD1 %SrcR simm17=%simm17_11_s5_23_5_41_7
+# HL.SHIP.U | hl.ship.u SrcD, SrcD1, [SrcR, simm] | opcodes/lx_hl48.opc:187
+hl_ship_u_48_c6538e773f2f .... .... .... .... .101 .... .101 1001 .... .... ..01 1110 SrcD=%SrcD_31_5 %SrcD1 %SrcR simm17=%simm17_11_s5_23_5_41_7
 
-# HL.SHP | hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<1] | opcodes/lx_hl48.opc:175
-hl_shp_48_ccc507e71a27 .... .... .... .... .001 0000 0100 1001 0000 0... ..01 1110 SrcD=%SrcD_43_5 %SrcD1 %SrcL %SrcR %SrcRType
+# HL.SHP | hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<1] | opcodes/lx_hl48.opc:188
+hl_shp_48_c360aaff00b3 .... .... .... .... .001 0000 0100 1001 0000 0... ..01 1110 SrcD=%SrcD_43_5 %SrcD1 %SrcL %SrcR %SrcRType
 
-# HL.SHP.U | hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>] | opcodes/lx_hl48.opc:176
-hl_shp_u_48_232b2200b7b9 .... .... .... .... .101 0000 0100 1001 0000 0... ..01 1110 SrcD=%SrcD_43_5 %SrcD1 %SrcL %SrcR %SrcRType
+# HL.SHP.U | hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>] | opcodes/lx_hl48.opc:189
+hl_shp_u_48_f36739d9d0e0 .... .... .... .... .101 0000 0100 1001 0000 0... ..01 1110 SrcD=%SrcD_43_5 %SrcD1 %SrcL %SrcR %SrcRType
 
-# HL.SSRGET | hl.ssrget SSR_ID, ->{t, u, Rd} | opcodes/lx_hl48.opc:177
-hl_ssrget_48_fde37e58a3c4 .... .... .... 0000 0000 .... .011 1011 .... .... .... 1110 RegDst=%RegDst_23_5 %SSR_ID
+# HL.SSRGET | hl.ssrget SSR_ID, ->{t, u, Rd} | opcodes/lx_hl48.opc:190
+hl_ssrget_48_3f4a207e02ae .... .... .... 0000 0000 .... .011 1011 .... .... .... 1110 RegDst=%RegDst_23_5 %SSR_ID
 
-# HL.SSRSET | hl.ssrset SrcL, SSR_ID | opcodes/lx_hl48.opc:178
-hl_ssrset_48_dd25753307c2 .... .... .... .... .001 0000 0011 1011 .... .... .... 1110 %SSR_ID %SrcL
+# HL.SSRSET | hl.ssrset SrcL, SSR_ID | opcodes/lx_hl48.opc:191
+hl_ssrset_48_b5e450817a0e .... .... .... .... .001 0000 0011 1011 .... .... .... 1110 %SSR_ID %SrcL
 
-# HL.SUBI | hl.subi SrcL, uimm, ->{t, u, Rd} | opcodes/lx_hl48.opc:179
-hl_subi_48_e1f491a8aead .... .... .... .... .001 .... .001 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %uimm24
+# HL.SUBI | hl.subi SrcL, uimm, ->{t, u, Rd} | opcodes/lx_hl48.opc:192
+hl_subi_48_e24cfc10af59 .... .... .... .... .001 .... .001 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %uimm24
 
-# HL.SUBIW | hl.subiw SrcL, uimm, ->{t, u, Rd} | opcodes/lx_hl48.opc:180
-hl_subiw_48_adc7b127a2f8 .... .... .... .... .001 .... .011 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %uimm24
+# HL.SUBIW | hl.subiw SrcL, uimm, ->{t, u, Rd} | opcodes/lx_hl48.opc:193
+hl_subiw_48_15dba1df0e83 .... .... .... .... .001 .... .011 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %uimm24
 
-# HL.SW.PCR | hl.sw.pcr SrcL, [<symbol>] | opcodes/lx_hl48.opc:181
-hl_sw_pcr_48_8f8900dfac6b .... .... .... .... .010 .... .110 1001 .... .... .... 1110 %SrcL simm=%simm_4_s12_23_5_36_12
+# HL.SW.PCR | hl.sw.pcr SrcL, [<symbol>] | opcodes/lx_hl48.opc:194
+hl_sw_pcr_48_4ae85c4a7c73 .... .... .... .... .010 .... .110 1001 .... .... .... 1110 %SrcL simm=%simm_4_s12_23_5_36_12
 
-# HL.SW.PO | hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd} | opcodes/lx_hl48.opc:182
-hl_sw_po_48_84cf0cd97fde .... .... .... .... .010 0000 0100 1001 .... .000 0011 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
+# HL.SW.PO | hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd} | opcodes/lx_hl48.opc:195
+hl_sw_po_48_3183f373cc63 .... .... .... .... .010 0000 0100 1001 .... .000 0011 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
 
-# HL.SW.PR | hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd} | opcodes/lx_hl48.opc:183
-hl_sw_pr_48_d80424b0a9cb .... .... .... .... .010 0000 0100 1001 .... .000 0010 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
+# HL.SW.PR | hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd} | opcodes/lx_hl48.opc:196
+hl_sw_pr_48_f2ebdd2d507e .... .... .... .... .010 0000 0100 1001 .... .000 0010 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
 
-# HL.SW.UPO | hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | opcodes/lx_hl48.opc:184
-hl_sw_upo_48_59be7b468f8a .... .... .... .... .110 0000 0100 1001 .... .000 0011 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
+# HL.SW.UPO | hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | opcodes/lx_hl48.opc:197
+hl_sw_upo_48_bab8d2d69b0b .... .... .... .... .110 0000 0100 1001 .... .000 0011 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
 
-# HL.SW.UPR | hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | opcodes/lx_hl48.opc:185
-hl_sw_upr_48_d4ccb513944a .... .... .... .... .110 0000 0100 1001 .... .000 0010 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
+# HL.SW.UPR | hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | opcodes/lx_hl48.opc:198
+hl_sw_upr_48_0710e763bdf1 .... .... .... .... .110 0000 0100 1001 .... .000 0010 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_43_5 %SrcL %SrcR %SrcRType
 
-# HL.SWI | hl.swi SrcD, [SrcR, simm] | opcodes/lx_hl48.opc:186
-hl_swi_48_13deb2849df5 .... .... .... .... .010 .... .101 1001 .... .... ..00 1110 SrcD=%SrcD_31_5 %SrcR simm22=%simm22_6_s10_23_5_41_7
+# HL.SWI | hl.swi SrcD, [SrcR, simm] | opcodes/lx_hl48.opc:199
+hl_swi_48_1ca52c250ca8 .... .... .... .... .010 .... .101 1001 .... .... ..00 1110 SrcD=%SrcD_31_5 %SrcR simm22=%simm22_6_s10_23_5_41_7
 
-# HL.SWI.PO | hl.swi.po SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:187
-hl_swi_po_48_66a80d0fa7f5 .... .... .... .... .010 .... .101 1001 .... .... ..11 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
+# HL.SWI.PO | hl.swi.po SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:200
+hl_swi_po_48_22c0e2195cd7 .... .... .... .... .010 .... .101 1001 .... .... ..11 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
 
-# HL.SWI.PR | hl.swi.pr SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:188
-hl_swi_pr_48_68b9003e0421 .... .... .... .... .010 .... .101 1001 .... .... ..10 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
+# HL.SWI.PR | hl.swi.pr SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:201
+hl_swi_pr_48_109e1049de72 .... .... .... .... .010 .... .101 1001 .... .... ..10 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
 
-# HL.SWI.U | hl.swi.u SrcD, [SrcR, simm] | opcodes/lx_hl48.opc:189
-hl_swi_u_48_fac636330fd6 .... .... .... .... .110 .... .101 1001 .... .... ..00 1110 SrcD=%SrcD_31_5 %SrcR simm22=%simm22_6_s10_23_5_41_7
+# HL.SWI.U | hl.swi.u SrcD, [SrcR, simm] | opcodes/lx_hl48.opc:202
+hl_swi_u_48_83c932505b7c .... .... .... .... .110 .... .101 1001 .... .... ..00 1110 SrcD=%SrcD_31_5 %SrcR simm22=%simm22_6_s10_23_5_41_7
 
-# HL.SWI.UPO | hl.swi.upo SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:190
-hl_swi_upo_48_243d3c38cd1a .... .... .... .... .110 .... .101 1001 .... .... ..11 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
+# HL.SWI.UPO | hl.swi.upo SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:203
+hl_swi_upo_48_60c134e0b774 .... .... .... .... .110 .... .101 1001 .... .... ..11 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
 
-# HL.SWI.UPR | hl.swi.upr SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:191
-hl_swi_upr_48_15c2fb96aab0 .... .... .... .... .110 .... .101 1001 .... .... ..10 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
+# HL.SWI.UPR | hl.swi.upr SrcD, [SrcR, simm], ->{t, u, Rd} | opcodes/lx_hl48.opc:204
+hl_swi_upr_48_314b5788553e .... .... .... .... .110 .... .101 1001 .... .... ..10 1110 RegDst=%RegDst_11_5 SrcD=%SrcD_31_5 %SrcR simm17=%simm17_6_s5_23_5_41_7
 
-# HL.SWIP | hl.swip SrcD, SrcD1, [SrcR, simm] | opcodes/lx_hl48.opc:192
-hl_swip_48_e2fca8cde001 .... .... .... .... .010 .... .101 1001 .... .... ..01 1110 SrcD=%SrcD_31_5 %SrcD1 %SrcR simm17=%simm17_11_s5_23_5_41_7
+# HL.SWIP | hl.swip SrcD, SrcD1, [SrcR, simm] | opcodes/lx_hl48.opc:205
+hl_swip_48_48e44471c6f2 .... .... .... .... .010 .... .101 1001 .... .... ..01 1110 SrcD=%SrcD_31_5 %SrcD1 %SrcR simm17=%simm17_11_s5_23_5_41_7
 
-# HL.SWIP.U | hl.swip.u SrcD, SrcD1, [SrcR, simm] | opcodes/lx_hl48.opc:193
-hl_swip_u_48_e2dc917c8505 .... .... .... .... .110 .... .101 1001 .... .... ..01 1110 SrcD=%SrcD_31_5 %SrcD1 %SrcR simm17=%simm17_11_s5_23_5_41_7
+# HL.SWIP.U | hl.swip.u SrcD, SrcD1, [SrcR, simm] | opcodes/lx_hl48.opc:206
+hl_swip_u_48_be6dc0457f8a .... .... .... .... .110 .... .101 1001 .... .... ..01 1110 SrcD=%SrcD_31_5 %SrcD1 %SrcR simm17=%simm17_11_s5_23_5_41_7
 
-# HL.SWP | hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<2] | opcodes/lx_hl48.opc:194
-hl_swp_48_d0efe96e09f0 .... .... .... .... .010 0000 0100 1001 0000 0... ..01 1110 SrcD=%SrcD_43_5 %SrcD1 %SrcL %SrcR %SrcRType
+# HL.SWP | hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<2] | opcodes/lx_hl48.opc:207
+hl_swp_48_86359b86a0ae .... .... .... .... .010 0000 0100 1001 0000 0... ..01 1110 SrcD=%SrcD_43_5 %SrcD1 %SrcL %SrcR %SrcRType
 
-# HL.SWP.U | hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>] | opcodes/lx_hl48.opc:195
-hl_swp_u_48_c244a576be8e .... .... .... .... .110 0000 0100 1001 0000 0... ..01 1110 SrcD=%SrcD_43_5 %SrcD1 %SrcL %SrcR %SrcRType
+# HL.SWP.U | hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>] | opcodes/lx_hl48.opc:208
+hl_swp_u_48_31bb1fa06039 .... .... .... .... .110 0000 0100 1001 0000 0... ..01 1110 SrcD=%SrcD_43_5 %SrcD1 %SrcL %SrcR %SrcRType
 
-# HL.XORI | hl.xori SrcL, simm, ->{t, u, Rd} | opcodes/lx_hl48.opc:196
-hl_xori_48_b4d85f91aad8 .... .... .... .... .100 .... .001 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %simm24
+# HL.XORI | hl.xori SrcL, simm, ->{t, u, Rd} | opcodes/lx_hl48.opc:209
+hl_xori_48_8c8f3b38f25f .... .... .... .... .100 .... .001 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %simm24
 
-# HL.XORIW | hl.xoriw SrcL, simm, ->{t, u, Rd} | opcodes/lx_hl48.opc:197
-hl_xoriw_48_9a3edbd09746 .... .... .... .... .100 .... .011 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %simm24
+# HL.XORIW | hl.xoriw SrcL, simm, ->{t, u, Rd} | opcodes/lx_hl48.opc:210
+hl_xoriw_48_e30713fd754d .... .... .... .... .100 .... .011 0101 .... .... .... 1110 RegDst=%RegDst_23_5 %SrcL %simm24

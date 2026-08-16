@@ -7,7 +7,7 @@
 
 *Syntax:* hl.sw.pcr SrcL, [<symbol>]
 
-*Description:* HL.SW.PCR - Store scalar data using this mnemonic's width and address-update form.
+*Description:* HL.SW.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.
 
 *Encoding:*
 

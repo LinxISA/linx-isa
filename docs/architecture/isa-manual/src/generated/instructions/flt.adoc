@@ -7,7 +7,7 @@
 
 *Syntax:* flt.{T} SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* FLT - Compare floating-point operands and produce the encoded result.
+*Description:* FLT performs ordered quiet less-than comparison and returns canonical XLEN zero or one.
 
 *Encoding:*
 

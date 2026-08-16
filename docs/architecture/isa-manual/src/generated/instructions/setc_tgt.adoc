@@ -7,7 +7,7 @@
 
 *Syntax:* setc.tgt SrcL
 
-*Description:* SETC.TGT - Write the bundle commit target.
+*Description:* SETC.TGT snapshots SrcL into BARG.BPCN for the active Standard or Floating block.
 
 *Encoding:*
 

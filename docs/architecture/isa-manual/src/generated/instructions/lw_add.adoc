@@ -7,7 +7,7 @@
 
 *Syntax:* lw.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}
 
-*Description:* LW.ADD - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
+*Description:* LW.ADD atomically stores the modular 32-bit sum and publishes the prior memory value.
 
 *Encoding:*
 

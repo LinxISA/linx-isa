@@ -7,7 +7,7 @@
 
 *Syntax:* hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd}
 
-*Description:* HL.SW.PO - Store scalar data using this mnemonic's width and address-update form.
+*Description:* HL.SW.PO snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.
 
 *Encoding:*
 

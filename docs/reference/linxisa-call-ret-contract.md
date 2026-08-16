@@ -42,69 +42,50 @@ C.BSTOP
 
 ## 3) Call Header Contract
 
-Returning call headers are architecturally fused:
+The PTO-common returning call is one fused architectural instruction:
 
-- `BSTART.CALL + C.SETRET` for compressed/direct call headers.
-- `BSTART.CALL + SETRET` for non-compressed forms.
-- Source-level direct-call assembly should use fused `..., ra=<label>` syntax.
-- Lowered object code may still spell that pair as explicit adjacent
-  `setret/c.setret`.
-- Object disassembly may still show the lowered `CALL` plus `setret/c.setret`
-  pair after MC lowering or relaxation.
+- `BSTART.CALL <br_label>, <rt_label>, ->ra` encodes the branch target and
+  return target together and writes `ra` atomically.
+- It does not consume an adjacent `SETRET`/`C.SETRET`, and disassembly must not
+  rewrite it into the deleted `BSTART.STD CALL` or `BSTART.FP CALL` spellings.
+- `br_label` and `rt_label` are independent PC-relative operands; the return
+  target is never inferred from lexical fall-through.
 
-Adjacency rule for returning calls:
-
-- `SETRET/C.SETRET` must be immediately adjacent to the corresponding `BSTART.CALL`.
-- No instruction may be scheduled between call-header and setret materialization.
-- Return target is the explicit label encoded by `setret`, not the lexical fall-through.
-
-Non-returning call headers:
-
-- `BSTART.CALL` without `SETRET` is valid only for non-returning control transfer paths.
-- In this form, `ra` is preserved (no implicit return-target rewrite).
-- If control eventually returns and the dynamic target is not a legal block start, dynamic target safety checks must fault.
-
-Required fused form:
+Required form:
 
 ```asm
-BSTART.STD CALL, callee, ra=.Lret
+BSTART.CALL callee, .Lret, ->ra
 ```
 
 Non-fallthrough return form is valid and common:
 
 ```asm
-BSTART.STD CALL, callee, ra=.Ljoin
-... call block body ...
-C.BSTOP
+BSTART.CALL callee, .Ljoin, ->ra
 
 ... unrelated blocks ...
 
 .Ljoin:
-C.BSTART.STD
+C.BSTART.STD FALL
 ```
 
-Setret width selection:
-
-- `c.setret`: short forward range only.
-- `setret`: larger forward range only.
-- `hl.setret`: wide signed range (forward/backward), but it is not part of the
-  current compiler AVS closure surface.
-
-Current compiler branch note:
-
-- the Bisheng `compiler/llvm` branch emits fused `ra=` call headers in textual
-  assembly and preserves the paired return-address relocation in objects;
-- handwritten `ICALL` still does not accept fused `ra=` source syntax on this
-  branch, so explicit adjacent `setret/c.setret` remains the portable source
-  form there;
-- do not assume `hl.setret` is available in portable compiler/runtime flows
-  unless a dedicated MC/backend test for that branch proves it.
+Linx additionally retains long bare-call forms such as
+`L.BSTART.STD CALL, <label>` and `HL.BSTART.FP CALL, <label>`. A bare call
+preserves `ra`. When software deliberately pairs one with `SETRET` or
+`C.SETRET`, the return-address instruction must immediately precede the bare
+call; this Linx-only pair is not an alternative spelling of `BSTART.CALL`.
 
 ## 4) Indirect Target Setup Rules
 
-Before any `RET`, `IND`, or `ICALL` block transfer, a `setc.tgt` must define the dynamic target register source in the same block.
+`RET` and `IND` block transfers require `setc.tgt` to define the dynamic target
+register source in the same block.
 
-Non-conforming sequences (`setc.tgt` missing, or non-adjacent `SETRET` in returning call headers) are contract violations and must trap in strict mode.
+`BSTART.ICALL <rt_label>, ->ra` is different: it retires the active STD or FP
+block, snapshots that block's `BARG.BPCN` as the indirect target, and writes
+the explicit return label to `ra`. It does not read `SETC.TGT` and does not
+consume a separate `SETRET`.
+
+Missing target state, misaligned targets, or malformed long bare-call pairs
+are contract violations and must trap before architectural effects.
 
 ## 5) Dynamic Target Safety Rule
 

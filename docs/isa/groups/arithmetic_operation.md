@@ -5,8 +5,8 @@
 <span class="ch-tag ch-tag-12">Ch 12</span>
 &nbsp; <strong>ALU — Arithmetic Logic Unit</strong> &nbsp;|&nbsp;
 **Group:** Arithmetic Operation &nbsp;|&nbsp;
-**Forms:** 20 &nbsp;|&nbsp;
-**Unique mnemonics:** 20
+**Forms:** 16 &nbsp;|&nbsp;
+**Unique mnemonics:** 16
 
 </div>
 
@@ -16,10 +16,6 @@ Extended integer arithmetic, including 64-bit forms and vector variants.
 
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
-| [C.ADD](../instructions/c_add.md) | `c.add srcL, srcR, ->t` | 16 | — | [16-bit C.] Integer addition. |
-| [C.AND](../instructions/c_and.md) | `c.and srcL, srcR, ->t` | 16 | — | [16-bit C.] Bitwise AND. |
-| [C.OR](../instructions/c_or.md) | `c.or srcL, srcR, ->t` | 16 | — | [16-bit C.] Bitwise OR. |
-| [C.SUB](../instructions/c_sub.md) | `c.sub srcL, srcR, ->t` | 16 | — | [16-bit C.] Integer subtraction. |
 | [V.ADD](../instructions/v_add.md) | `v.add SrcL, SrcR<.neg><<<shamt>, ->Dst` | 64 | — | [64-bit V.] Integer addition. |
 | [V.ADDI](../instructions/v_addi.md) | `v.addi SrcL, uimm, ->Dst` | 64 | — | [64-bit V.] Instruction from the Arithmetic Operation group. |
 | [V.AND](../instructions/v_and.md) | `v.and SrcL, SrcR<.not><<<shamt>, ->Dst` | 64 | — | [64-bit V.] Bitwise AND. |

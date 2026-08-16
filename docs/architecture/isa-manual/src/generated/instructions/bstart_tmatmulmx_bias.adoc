@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.TMATMULMX.BIAS DataType
 
-*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+*Description:* Starts CUBE Function 5 for the TMATMUL_MX_BIAS Matrix-matrix complete-bundle operation.
 
 *Encoding:*
 

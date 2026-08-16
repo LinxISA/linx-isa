@@ -230,6 +230,13 @@ function set_decoded_bior(regsrc0 : bits(5), regsrc1 : bits(5), regsrc2 : bits(5
 // Latched B.CATR/B.DATR state relevant to VEC bring-up.
 register bcatr_raw : bits(64) = 0x0000_0000_0000_0000
 register bdatr_raw : bits(64) = 0x0000_0000_0000_0000
+register bfpatr_pre_quant_mode : bits(6) = 0b00_0000
+register bfpatr_relu_mode : bits(3) = 0b000
+register bfpatr_group_n_code : bits(4) = 0x0
+register bfpatr_row_max_en : bool = false
+register bfpatr_group_max_en : bool = false
+register bfpatr_row_max_init : bool = false
+register bfpatr_max_abs_en : bool = false
 function bcatr_dr() -> bool = { bcatr_raw[26] == 0b1 }
 function bdatr_sat() -> bool = { bdatr_raw[26] == 0b1 }
 
@@ -1665,7 +1672,7 @@ function template_integrity_assert_fail(reason : bits(8)) -> unit = {
 // - docs/architecture/v0.58-architecture-contract.md
 //
 // MissingDescFamily IDs (TRAPARG0[7:0]):
-//   1=B.DIM, 2=B.TEXT, 3=B.DATR, 4=B.IOR, 5=B.IOT
+//   1=B.DIM, 2=B.TEXT, 3=B.DATR, 4=B.IOR, 5=B.IOT, 6=B.FPATR
 // MissingDetail (TRAPARG0[15:8]):
 //   0x00 missing, 0x01 invalid/out-of-range, 0x02 illegal combination
 
@@ -1674,6 +1681,7 @@ register bdesc_seen_text : bool = false
 register bdesc_seen_datr : bool = false
 register bdesc_seen_ior : bool = false
 register bdesc_seen_iot : bool = false
+register bdesc_seen_fpatr : bool = false
 
 function bdesc_reset() -> unit = {
   bdesc_seen_dim = false;
@@ -1681,6 +1689,14 @@ function bdesc_reset() -> unit = {
   bdesc_seen_datr = false;
   bdesc_seen_ior = false;
   bdesc_seen_iot = false;
+  bdesc_seen_fpatr = false;
+  bfpatr_pre_quant_mode = 0b00_0000;
+  bfpatr_relu_mode = 0b000;
+  bfpatr_group_n_code = 0x0;
+  bfpatr_row_max_en = false;
+  bfpatr_group_max_en = false;
+  bfpatr_row_max_init = false;
+  bfpatr_max_abs_en = false;
   shared_tile_binding_valid = false;
   shared_tile_binding_id = 0x00;
   shared_tile_binding_pe_mask = 0x0;
@@ -1694,6 +1710,7 @@ function bdesc_mark_text() -> unit = { bdesc_seen_text = true }
 function bdesc_mark_datr() -> unit = { bdesc_seen_datr = true }
 function bdesc_mark_ior() -> unit = { bdesc_seen_ior = true }
 function bdesc_mark_iot() -> unit = { bdesc_seen_iot = true }
+function bdesc_mark_fpatr() -> unit = { bdesc_seen_fpatr = true }
 
 // Block type classification for mandatory-descriptor contracts.
 // The decoder provides a stable classification string for the staged model.

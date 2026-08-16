@@ -10,8 +10,8 @@ import gen_sail_decode
 
 
 ROOT = Path(__file__).resolve().parents[2]
-SPEC_PATH = ROOT / "isa/v0.57/linxisa-v0.57.json"
-RETIRED_PATH = ROOT / "isa/v0.57/encoding/retired_encodings.json"
+SPEC_PATH = ROOT / "isa/v0.58/linxisa-v0.58.json"
+RETIRED_PATH = ROOT / "isa/v0.58/encoding/retired_encodings.json"
 
 
 def _load_spec() -> dict:
@@ -57,7 +57,7 @@ def test_tepl_mode_function_decode_render_selects_tepl_first() -> None:
     spec = _load_spec()
     retired = _load_retired()
     execute_text = (ROOT / "isa/sail/model/execute/execute.sail").read_text(encoding="utf-8")
-    rendered = gen_sail_decode.render(spec, execute_text, "isa/v0.57/linxisa-v0.57.json", retired)
+    rendered = gen_sail_decode.render(spec, execute_text, "isa/v0.58/linxisa-v0.58.json", retired)
 
     tepl_pos = rendered.index("// BSTART.TEPL |")
     tepl_body = rendered[tepl_pos : rendered.index("  }", tepl_pos)]
@@ -68,7 +68,7 @@ def test_decode32_dispatch_is_partitioned_by_exact_opcode() -> None:
     spec = _load_spec()
     retired = _load_retired()
     execute_text = (ROOT / "isa/sail/model/execute/execute.sail").read_text(encoding="utf-8")
-    rendered = gen_sail_decode.render(spec, execute_text, "isa/v0.57/linxisa-v0.57.json", retired)
+    rendered = gen_sail_decode.render(spec, execute_text, "isa/v0.58/linxisa-v0.58.json", retired)
 
     assert "function decode_execute32_opcode_0b0001011" in rendered
     assert "function decode_execute32_opcode_0b0001011_funct3_0b010" in rendered
@@ -80,10 +80,10 @@ def test_decode32_dispatch_is_partitioned_by_exact_opcode() -> None:
     assert "and_bool_no_flow" in rendered
 
     dispatcher = rendered[rendered.index("function decode_execute32(inst") :]
-    reserved_pos = dispatcher.index("(inst & 0x06007fff) == 0x02001181")
-    wildcard_pos = dispatcher.index("// BSTART CALL |")
+    wildcard_pos = dispatcher.index("// BSTART.CALL |")
     match_pos = dispatcher.index("match inst[6..0]")
-    assert reserved_pos < wildcard_pos < match_pos
+    assert wildcard_pos < match_pos
+    assert "Reserved retired encoding: BSTART.PAR" not in dispatcher
 
 
 def test_malformed_canonical_redecode_metadata_fails_closed() -> None:
@@ -147,6 +147,16 @@ def test_ambiguous_canonical_redecode_metadata_fails_closed() -> None:
         raise AssertionError("ambiguous canonical-redecode metadata was accepted")
 
 
+def test_fixed_source_field_supplies_execute_parameter() -> None:
+    inst = {
+        "mnemonic": "FRET.STK",
+        "pto_source_fixed_fields": [
+            {"name": "DstBegin", "value": 10, "width": 5}
+        ],
+    }
+    assert gen_sail_decode.param_expr(inst, "DstBegin", {}) == "0b01010"
+
+
 def main() -> int:
     tests = [
         test_tepl_mode_function_decode_precedes_broad_overlaps,
@@ -156,6 +166,7 @@ def main() -> int:
         test_malformed_canonical_redecode_metadata_fails_closed,
         test_unresolved_canonical_redecode_metadata_fails_closed,
         test_ambiguous_canonical_redecode_metadata_fails_closed,
+        test_fixed_source_field_supplies_execute_parameter,
     ]
     for test in tests:
         test()

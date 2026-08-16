@@ -7,7 +7,7 @@
 
 *Syntax:* xor SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}
 
-*Description:* XOR - Compute this mnemonic's binary scalar operation and write the selected destination.
+*Description:* XOR applies the selected right-source transformation before its encoded logical left shift, performs bitwise exclusive OR, and publishes the PTO_XLEN result.
 
 *Encoding:*
 

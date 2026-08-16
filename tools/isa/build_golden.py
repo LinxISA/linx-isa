@@ -56,6 +56,89 @@ def _hex_width(val: int, width_bits: int) -> str:
     return f"0x{val:0{hex_digits}x}"
 
 
+def singleton_pto_fields(form: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """Return source fields whose legal encoding set contains one value."""
+    fields = {str(field["name"]): field for field in form.get("fields", [])}
+    fixed = []
+    for constraint in form.get("constraints", []):
+        if constraint.get("operator") != "one-of":
+            continue
+        values = constraint.get("values", [])
+        if len(values) != 1:
+            continue
+        name = str(constraint["field"])
+        field = fields.get(name)
+        if field is None:
+            raise ValueError(
+                f"{form.get('form_id')}: constraint references unknown field {name!r}"
+            )
+        width = int(field["width"])
+        value = int(values[0])
+        if not 0 <= value < (1 << width):
+            raise ValueError(
+                f"{form.get('form_id')}: {name} value {value} does not fit {width} bits"
+            )
+        fixed.append({"name": name, "value": value, "width": width})
+    return fixed
+
+
+def effective_pto_encoding(
+    form: Dict[str, Any],
+    encoding: Optional[List[Dict[str, Any]]] = None,
+) -> List[Dict[str, Any]]:
+    """Fold singleton PTO field constraints into the effective mask/match.
+
+    PTO keeps constraints as first-class catalog metadata.  A singleton
+    ``one-of`` constraint, however, is also a fixed encoding discriminator.
+    Projecting it as a runtime rejection table would create one entry for
+    every other value in the field (for example 131071 entries for simm17).
+    Keep the source constraint for provenance, but make the compiled encoding
+    express the fixed bits directly.
+    """
+    parts = [dict(part) for part in (encoding or form.get("encoding", []))]
+    parts_by_index = {int(part["index"]): part for part in parts}
+    fields = {str(field["name"]): field for field in form.get("fields", [])}
+
+    for fixed in singleton_pto_fields(form):
+        field_name = str(fixed["name"])
+        field = fields[field_name]
+        value = int(fixed["value"])
+
+        for piece in field.get("pieces", []):
+            global_lsb = int(piece["instruction_lsb"])
+            piece_width = int(piece["width"])
+            value_lsb = int(piece["value_lsb"])
+            part_index = global_lsb // 32
+            part = parts_by_index.get(part_index)
+            if part is None:
+                raise ValueError(
+                    f"{form.get('form_id')}: {field_name} piece has no encoding part {part_index}"
+                )
+            local_lsb = global_lsb - part_index * 32
+            if local_lsb + piece_width > int(part["width_bits"]):
+                raise ValueError(
+                    f"{form.get('form_id')}: {field_name} piece crosses encoding part {part_index}"
+                )
+
+            piece_mask = ((1 << piece_width) - 1) << local_lsb
+            piece_value = (
+                (value >> value_lsb) & ((1 << piece_width) - 1)
+            ) << local_lsb
+            mask = int(part["mask"], 0)
+            match = int(part["match"], 0)
+            if ((match ^ piece_value) & mask & piece_mask) != 0:
+                raise ValueError(
+                    f"{form.get('form_id')}: {field_name} singleton conflicts with fixed encoding bits"
+                )
+            mask |= piece_mask
+            match = (match & ~piece_mask) | piece_value
+            width_bits = int(part["width_bits"])
+            part["mask"] = _hex_width(mask, width_bits)
+            part["match"] = _hex_width(match, width_bits)
+
+    return parts
+
+
 def _parse_int_value(s: str) -> int:
     s = s.strip()
     if s.startswith("0x") or s.startswith("0X"):
@@ -510,14 +593,14 @@ def _attach_pto_source_form_ids(in_dir: Path, instructions: List[Dict[str, Any]]
         (in_dir / "state" / "pto_scalar_forms.json", 474),
         (
             in_dir / "state" / "pto_command_forms.json",
-            99,
+            74,
         ),
     )
 
     def source_key(form: Dict[str, Any]) -> Tuple[Any, ...]:
         encoding = tuple(
             (int(part["mask"], 0), int(part["match"], 0), int(part["width_bits"]))
-            for part in form.get("encoding", [])
+            for part in effective_pto_encoding(form)
         )
         return (form.get("mnemonic"), form.get("asm"), int(form.get("length_bits", 0)), encoding)
 
@@ -569,9 +652,20 @@ def _attach_pto_source_form_ids(in_dir: Path, instructions: List[Dict[str, Any]]
                 str(field["name"]): int(field["width"])
                 for field in form.get("fields", [])
             }
+            encoded_field_names = {
+                str(field["name"])
+                for part in matched.get("encoding", {}).get("parts", [])
+                for field in part.get("fields", [])
+            }
             compiled_constraints = []
             for constraint in form.get("constraints", []):
                 field = str(constraint["field"])
+                # A constraint on a fully masked source field documents the
+                # fixed discriminator already proved by mask/match.  Do not
+                # emit a runtime predicate for a field the compiled decoder
+                # does not expose.
+                if field not in encoded_field_names:
+                    continue
                 if constraint["operator"] == "one-of":
                     allowed = {int(value) for value in constraint["values"]}
                     rejected = sorted(set(range(1 << widths[field])) - allowed)

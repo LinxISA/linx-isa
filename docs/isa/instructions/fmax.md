@@ -2,9 +2,9 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/max_min.md">Max-Min</a> &nbsp;|&nbsp;
-<span class="ch-tag ch-tag-16">Ch 16</span>
-&nbsp; <strong>BRU — Branch and Compare</strong> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/fsu.md">FSU</a> &nbsp;|&nbsp;
+<span class="ch-tag ch-tag-13">Ch 13</span>
+&nbsp; <strong>FSU — Floating-point / SIMD Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
 
 </div>
@@ -36,7 +36,7 @@ rd = fmax(fs1, fs2);
 
 ## Encoding Notes
 
-- `FMAX - Compute this mnemonic's binary floating-point operation.`
+- `FMAX applies the architecture-owned ordered maximum, NaN, and signed-zero rules to selected FP64 or FP32 carriers.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ rd = fmax(fs1, fs2);
 
 <div class="insn-nav">
 
-← [Max-Min](../groups/max_min.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [FSU](../groups/fsu.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

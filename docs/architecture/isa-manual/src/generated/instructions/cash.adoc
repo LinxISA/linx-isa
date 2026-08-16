@@ -7,7 +7,7 @@
 
 *Syntax:* cash<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}
 
-*Description:* CASH - Atomically compare the scalar memory value and conditionally store the replacement.
+*Description:* CASH atomically compares and conditionally replaces one halfword, then publishes the prior value.
 
 *Encoding:*
 

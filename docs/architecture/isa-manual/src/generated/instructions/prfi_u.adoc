@@ -7,7 +7,7 @@
 
 *Syntax:* prfi.u [SrcL, simm]
 
-*Description:* PRFI.U - Issue a scalar prefetch using this mnemonic's addressing form.
+*Description:* PRFI.U snapshots its scalar sources, forms its encoded address, and issues a non-binding 1-byte-granularity prefetch hint with no destination effect.
 
 *Encoding:*
 

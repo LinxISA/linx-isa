@@ -5,7 +5,7 @@
 [[inst_b_dim]]
 ==== B.DIM
 
-*Description:* Writes one of the three bundle-local dimension registers.
+*Description:* Writes zero-extend((GPR[RegSrc] + uimm17)[15:0]) to the selected bundle-local LB register exactly once.
 
 [[inst_b_dim_32_570ae2178c51]]
 ===== Form `b_dim_32_570ae2178c51`

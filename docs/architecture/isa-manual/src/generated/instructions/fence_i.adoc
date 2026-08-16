@@ -7,7 +7,7 @@
 
 *Syntax:* fence.i
 
-*Description:* FENCE.I - Synchronize instruction visibility after prior writes.
+*Description:* FENCE.I establishes instruction visibility, invalidates the reservation, and advances the instruction-cache epoch.
 
 *Encoding:*
 

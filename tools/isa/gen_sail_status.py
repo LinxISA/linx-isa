@@ -34,14 +34,20 @@ def build(spec_path: Path, policy_path: Path) -> dict[str, Any]:
     if not isinstance(instructions, list):
         raise ValueError(f"{spec_path}: instructions must be a list")
     form_ids = {str(inst.get("id") or "") for inst in instructions}
-    unknown = sorted(set(overrides) - form_ids)
+    source_form_ids = {
+        str(inst.get("pto_source_form_id") or "")
+        for inst in instructions
+        if inst.get("pto_source_form_id")
+    }
+    unknown = sorted(set(overrides) - form_ids - source_form_ids)
     if unknown:
         raise ValueError(f"{policy_path}: unknown form IDs: {unknown[:20]}")
 
     forms: dict[str, Any] = {}
     for inst in sorted(instructions, key=lambda item: str(item.get("id") or "")):
         form_id = str(inst.get("id") or "")
-        status = str(overrides.get(form_id, default))
+        source_form_id = str(inst.get("pto_source_form_id") or "")
+        status = str(overrides.get(form_id, overrides.get(source_form_id, default)))
         if status not in VALID_STATUSES:
             raise ValueError(f"{policy_path}: invalid status {status!r} for {form_id}")
         forms[form_id] = {

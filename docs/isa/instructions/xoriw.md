@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/arithmetic_operation_32bit.md">Arithmetic Operation 32bit</a> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/alu.md">ALU</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-12">Ch 12</span>
 &nbsp; <strong>ALU — Arithmetic Logic Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -31,12 +31,12 @@
 ## Pseudocode (informative)
 
 ```c
-// Execute XORIW as defined by the Arithmetic Operation 32bit semantics.
+// Execute XORIW as defined by the ALU semantics.
 ```
 
 ## Encoding Notes
 
-- `XORIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.`
+- `XORIW XORs SrcL[31:0] with the low 32 bits of sign-extended simm12, sign-extends the result to XLEN, and publishes it through RegDst.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@
 
 <div class="insn-nav">
 
-← [Arithmetic Operation 32bit](../groups/arithmetic_operation_32bit.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [ALU](../groups/alu.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

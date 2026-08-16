@@ -36,65 +36,38 @@ C.BSTOP
 
 ## 3) 调用标头合约
 
-返回调用 块头 在架构上是融合的：
+PTO 公共返回调用是一条融合的架构指令：
 
-- `BSTART.CALL + C.SETRET` 用于压缩/直接调用 块头。
-- `BSTART.CALL + SETRET` 用于非压缩形式。
-- 源代码级直接调用程序集应使用融合的 `..., ra=<label>` 语法。
-- 降低的目标代码可能仍然将该对拼写为显式相邻
-  `setret/c.setret`。
-- 对象反汇编仍可能显示降低的 `CALL` 加 `setret/c.setret`
-  MC 降低或放松后配对。
+- `BSTART.CALL <br_label>, <rt_label>, ->ra` 同时编码分支目标和返回目标，并原子写入 `ra`。
+- 它不消费相邻的 `SETRET/C.SETRET`，反汇编也不得输出已删除的 `BSTART.STD CALL` 或 `BSTART.FP CALL`。
+- `br_label` 与 `rt_label` 是两个独立的 PC-relative 操作数；返回目标不能由词法 fall-through 推导。
 
-返回呼叫的邻接规则：- `SETRET/C.SETRET` 必须紧邻相应的 `BSTART.CALL`。
-- 在 call-块头 和 setret 实现之间不能安排任何指令。
-- 返回目标是由 `setret` 编码的显式标签，而不是词法失败。
-
-不回电 块头s：
-
-- 不带 `SETRET` 的 `BSTART.CALL` 仅对非返回控制传输路径有效。
-- 在这种形式中，`ra` 被保留（没有隐式返回目标重写）。
-- 如果控制最终返回并且动态目标不是合法的块启动，则动态目标安全检查必定出错。
-
-所需融合形式：
+正式形式：
 
 ```asm
-BSTART.STD CALL, callee, ra=.Lret
+BSTART.CALL callee, .Lret, ->ra
 ```
 
 非失败退货表格是有效且常见的：
 
 ```asm
-BSTART.STD CALL, callee, ra=.Ljoin
-... call block body ...
-C.BSTOP
+BSTART.CALL callee, .Ljoin, ->ra
 
 ... unrelated blocks ...
 
 .Ljoin:
-C.BSTART.STD
+C.BSTART.STD FALL
 ```
 
-设置宽度选择：
+Linx 额外保留 `L.BSTART.STD CALL, <label>`、`HL.BSTART.FP CALL, <label>` 等长格式 bare call；它们保持 `ra` 不变。若软件显式搭配 `SETRET/C.SETRET`，该指令必须紧邻并位于 bare call 之前；这不是 `BSTART.CALL` 的别名。
 
-- `c.setret`：仅限短距离前进。
-- `setret`：仅更大的前进范围。
-- `hl.setret`：宽符号范围（向前/向后），但它不属于
-  当前编译器 AVS 封闭面。
+## 4) 间接目标设置规则
 
-当前编译器分支注释：
+`RET` 和 `IND` block transfer 必须在同一 block 中用 `setc.tgt` 定义动态目标。
 
-- Bisheng `compiler/llvm` 分支在文本中发出融合的 `ra=` 调用 块头
-  汇编并保留对象中成对的返回地址重定位；
-- 手写的 `ICALL` 仍然不接受融合的 `ra=` 源语法
-  分支，因此显式相邻的 `setret/c.setret` 仍然是可移植源
-  在那里形成；
-- 不要假设 `hl.setret` 在可移植编译器/运行时流程中可用
-  除非该分支的专用 MC/后端测试证明了这一点。
+`BSTART.ICALL <rt_label>, ->ra` 不同：它退役活动的 STD/FP block，将该 block 的 `BARG.BPCN` 快照为间接目标，并把显式返回标签写入 `ra`。它不读取 `SETC.TGT`，也不消费独立的 `SETRET`。
 
-## 4) 间接目标设置规则在任何 `RET`、`IND` 或 `ICALL` 块传输之前，`setc.tgt` 必须在同一块中定义动态目标寄存器源。
-
-不合格序列（`setc.tgt` 缺失，或者返回调用 块头 中 `SETRET` 不相邻）属于违反合约的行为，必须在严格模式下捕获。
+目标状态缺失、目标未对齐或长格式 bare-call 组合错误，都必须在产生架构效果前触发异常。
 
 ## 5) 动态目标安全规则
 

@@ -7,7 +7,7 @@
 
 *Syntax:* hl.lhip [SrcL, simm], ->Dst0, Dst1
 
-*Description:* HL.LHIP - Load a scalar register pair using this mnemonic's address-update form.
+*Description:* HL.LHIP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 2-byte values.
 
 *Encoding:*
 

@@ -2,22 +2,22 @@
 
 <div class="insn-header">
 
-<span class="ch-tag ch-tag-00">Ch 00</span>
-&nbsp; <strong>ISA Manual</strong> &nbsp;|&nbsp;
+<span class="ch-tag ch-tag-04">Ch 04</span>
+&nbsp; <strong>Block ISA — Block-structured Control Flow</strong> &nbsp;|&nbsp;
 **Group:** Bundle Split &nbsp;|&nbsp;
-**Forms:** 60 &nbsp;|&nbsp;
-**Unique mnemonics:** 41
+**Forms:** 57 &nbsp;|&nbsp;
+**Unique mnemonics:** 42
 
 </div>
 
-Instructions in the **Bundle Split** group of the LinxISA v0.58.0 catalog.
+Instructions in the **Bundle Split** group of the LinxISA v0.58.1 catalog.
 
 ## Instructions
 
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
-| [BSTART](../instructions/bstart.md) | `BSTART {DIRECT, CALL}, <label>` | 32 | — | Block split marker. Terminates the current basic block and begins the next. Encodes block type and transition kind. |
-| [BSTART.FP](../instructions/bstart_fp.md) | `BSTART.FP FALL<, fixup_label>` | 32 | — | Terminates the current block and begins the next. |
+| [BSTART](../instructions/bstart.md) | `BSTART DIRECT, <label>` | 32 | — | Block split marker. Terminates the current basic block and begins the next. Encodes block type and transition kind. |
+| [BSTART.FP](../instructions/bstart_fp.md) | `BSTART.FP FALL` | 32 | — | Terminates the current block and begins the next. |
 | [BSTART.GMOV](../instructions/bstart_gmov.md) | `BSTART.GMOV DataType` | 32 | — | Terminates the current block and begins the next. |
 | [BSTART.MGATHER](../instructions/bstart_mgather.md) | `BSTART.MGATHER DataType` | 32 | — | Terminates the current block and begins the next. |
 | [BSTART.MGATHER.CAS](../instructions/bstart_mgather_cas.md) | `BSTART.MGATHER.CAS DataType` | 32 | — | Terminates the current block and begins the next. |
@@ -26,8 +26,8 @@ Instructions in the **Bundle Split** group of the LinxISA v0.58.0 catalog.
 | [BSTART.MSCATTER](../instructions/bstart_mscatter.md) | `BSTART.MSCATTER DataType` | 32 | — | Terminates the current block and begins the next. |
 | [BSTART.MSCATTER.MASK](../instructions/bstart_mscatter_mask.md) | `BSTART.MSCATTER.MASK DataType` | 32 | — | Terminates the current block and begins the next. |
 | [BSTART.MSEQ](../instructions/bstart_mseq.md) | `BSTART.MSEQ <VS8, VS16>` | 32 | — | Terminates the current block and begins the next. |
-| [BSTART.STD](../instructions/bstart_std.md) | `BSTART.STD IND` | 32 | — | Terminates the current block and begins the next. |
-| [BSTART.SYS](../instructions/bstart_sys.md) | `BSTART.SYS FALL<, fixup_label>` | 32 | — | Terminates the current block and begins the next. |
+| [BSTART.STD](../instructions/bstart_std.md) | `BSTART.STD FALL` | 32 | — | Terminates the current block and begins the next. |
+| [BSTART.SYS](../instructions/bstart_sys.md) | `BSTART.SYS FALL` | 32 | — | Terminates the current block and begins the next. |
 | [BSTART.TEPL](../instructions/bstart_tepl.md) | `BSTART.TEPL Mode, Function, DataType` | 32 | — | Terminates the current block and begins the next. |
 | [BSTART.TGEMV](../instructions/bstart_tgemv.md) | `BSTART.TGEMV DataType` | 32 | — | Terminates the current block and begins the next. |
 | [BSTART.TGEMV.ACC](../instructions/bstart_tgemv_acc.md) | `BSTART.TGEMV.ACC DataType` | 32 | — | Terminates the current block and begins the next. |
@@ -48,18 +48,19 @@ Instructions in the **Bundle Split** group of the LinxISA v0.58.0 catalog.
 | [BSTOP](../instructions/bstop.md) | `BSTOP` | 32 | — | Block termination marker. Ends the current basic block. |
 | [C.BSTART](../instructions/c_bstart.md) | `C.BSTART DIRECT, label` | 16 | — | [16-bit C.] Terminates the current block and begins the next. |
 | [C.BSTOP](../instructions/c_bstop.md) | `C.BSTOP` | 16 | — | [16-bit C.] Marks the end of the current block. |
-| [ERCOV](../instructions/ercov.md) | `ERCOV [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]` | 32 | — | Recovers the encoded execution-context range from memory. |
-| [ESAVE](../instructions/esave.md) | `ESAVE [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]` | 32 | — | Saves the encoded execution-context range to memory. |
-| [FENTRY](../instructions/fentry.md) | `FENTRY [RegSrc0 ~ RegSrcn], sp!, uimm` | 32 | — | Atomically validates and creates a frame-template entry state. |
-| [FEXIT](../instructions/fexit.md) | `FEXIT [RegDst0 ~ RegDstn], sp!, uimm` | 32 | — | Atomically validates and commits a frame-template exit state. |
-| [FRET.RA](../instructions/fret_ra.md) | `FRET.RA [RegDst0 ~ RegDstn], sp!, uimm` | 32 | — | Restores a frame and returns through the retained return-address target. |
-| [FRET.STK](../instructions/fret_stk.md) | `FRET.STK [RegDst0 ~ RegDstn], sp!, uimm` | 32 | — | Restores a frame and returns through the validated stack target. |
-| [MCOPY](../instructions/mcopy.md) | `MCOPY [RegSrc0, RegSrc1, RegSrc2]` | 32 | — | Copies an encoded memory range with instruction-atomic preflight and snapshot semantics. |
-| [MSET](../instructions/mset.md) | `MSET [RegSrc0, RegSrc1, RegSrc2]` | 32 | — | Fills an encoded memory range after complete access preflight. |
-| [XB](../instructions/xb.md) | `XB ACR-ID, C-ID` | 32 | — | Transfers the named context value to a target virtual core block. |
+| [ERCOV](../instructions/ercov.md) | `ERCOV [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]` | 32 | — | Inventories an extension-owned execution-context recovery family rejected by PTO before operand interpretation or effects. |
+| [ESAVE](../instructions/esave.md) | `ESAVE [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]` | 32 | — | Inventories an extension-owned execution-context save family rejected by PTO before operand interpretation or effects. |
+| [FENTRY](../instructions/fentry.md) | `FENTRY [RegSrc0 ~ RegSrcn], sp!, uimm` | 32 | — | Creates a restartable stack frame by snapshotting and storing one inclusive callee-save register-ring range. |
+| [FEXIT](../instructions/fexit.md) | `FEXIT [RegDst0 ~ RegDstn], sp!, uimm` | 32 | — | Destroys a restartable stack frame and restores one inclusive callee-save register-ring range. |
+| [FRET.RA](../instructions/fret_ra.md) | `FRET.RA [RegDst0 ~ RegDstn], sp!, uimm` | 32 | — | Restores a restartable stack frame and returns through the pre-restore architectural return address. |
+| [FRET.STK](../instructions/fret_stk.md) | `FRET.STK [ra ~ RegDstn], sp!, uimm` | 32 | — | Restores a restartable stack frame whose first stack slot supplies the validated return target. |
+| [L.BSTOP](../instructions/l_bstop.md) | `L.BSTOP` | 64 | — | Commits the current bundle and transfers to its selected continuation. |
+| [MCOPY](../instructions/mcopy.md) | `MCOPY [RegSrc0, RegSrc1, RegSrc2]` | 32 | — | Copies a non-overlapping byte range in restartable forward memory steps. |
+| [MSET](../instructions/mset.md) | `MSET [RegSrc0=Destination, RegSrc1=FillByte, RegSrc2=LengthBytes]` | 32 | — | Fills zero through 63 bytes with the low byte of an absolute GPR after complete access preflight. |
+| [XB](../instructions/xb.md) | `XB ACR-ID, C-ID` | 32 | — | Inventories an extension-owned cross-block transfer encoding that PTO rejects before field interpretation or architectural effects. |
 
 ## See Also
 
 - [Instruction reference](../index.md) · [Groups Index](index.md)
-- [Chapter 0: ISA Manual](../index.md)
+- [Chapter 4: Block ISA — Block-structured Control Flow](../index.md)
 - [Encoding formats](../encoding.md)

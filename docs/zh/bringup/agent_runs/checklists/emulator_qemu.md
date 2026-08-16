@@ -72,7 +72,11 @@
   状态： ✅ 通过 (2026-03-08) - 在 v0.57 传播修复和操作码同步刷新后，固定 QEMU `043390f788da` 成功构建 `emulator/qemu/build/qemu-system-linx64`。- [ ] ID：QEMU-008 保持 标量 调用/ret 合约覆盖范围与融合直接调用源语法一致。
   命令：`python3 avs/qemu/run_callret_contract.py`
   完成意味着：标量 直接呼叫源案例使用融合的 `CALL ..., ra=...`，畸形或缺失的 setret 降低仍然是故障，并且积极的 标量 直接呼叫案例仍然是无故障。
-  状态： ✅ 通过 (2026-05-15) - 将 标量 直接调用源案例转换为融合的 `BSTART.STD CALL, ..., ra=...` 后，`run_callret_contract.py` 通过。阴性畸形/缺失固定病例仍被困住，阳性融合直接呼叫病例仍无过错。
+  仅为 v0.57 历史证据，不向当前 v0.58.1 语法或语义转移批准。状态：
+  ✅ 通过 (2026-05-15) - 将当时的标量直接调用源案例转换为
+  `BSTART.STD CALL, ..., ra=...` 后，`run_callret_contract.py` 通过。
+  当前 PTO 公共形式为 `BSTART.CALL <br_label>, <rt_label>, ->ra`，需要
+  重新取得 v0.58.1 证据。
 
 ---
 

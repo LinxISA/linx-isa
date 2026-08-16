@@ -7,7 +7,7 @@
 
 *Syntax:* hl.maddw SrcL, SrcR, SrcD, ->Dst0, Dst1
 
-*Description:* HL.MADDW - Compute multiply-add and return the scalar result pair.
+*Description:* HL.MADDW sign-extends three low-32-bit sources, computes a 128-bit product plus addend, and publishes low then high halves.
 
 *Encoding:*
 

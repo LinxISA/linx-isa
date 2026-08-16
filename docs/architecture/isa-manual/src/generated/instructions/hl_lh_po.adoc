@@ -7,7 +7,7 @@
 
 *Syntax:* hl.lh.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1
 
-*Description:* HL.LH.PO - Load scalar data using this mnemonic's width, signedness, and address-update form.
+*Description:* HL.LH.PO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
 
 *Encoding:*
 

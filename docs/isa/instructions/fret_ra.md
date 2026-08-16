@@ -3,8 +3,8 @@
 <div class="insn-header">
 
 <span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/bundle_split.md">Bundle Split</a> &nbsp;|&nbsp;
-<span class="ch-tag ch-tag-00">Ch 00</span>
-&nbsp; <strong>ISA Manual</strong> &nbsp;|&nbsp;
+<span class="ch-tag ch-tag-04">Ch 04</span>
+&nbsp; <strong>Block ISA — Block-structured Control Flow</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
 
 </div>
@@ -26,7 +26,7 @@
 
 ## Description
 
-Restores a frame and returns through the retained return-address target.
+Restores a restartable stack frame and returns through the pre-restore architectural return address.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ Restores a frame and returns through the retained return-address target.
 
 ## Encoding Notes
 
-- `Restores a frame and returns through the retained return-address target.`
+- `Restores a restartable stack frame and returns through the pre-restore architectural return address.`
 
 ## Full Catalog Forms
 

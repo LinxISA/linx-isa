@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `hl.qmt.{i,e,s,r,ie,is,ir,es,er,ies,ier} SrcL, SrcR, ->{t, u}`
+- `hl.qmt[.{i,e,s,r,ie,is,ir,es,er,ies,ier}] SrcL[, SrcR when i], ->RegDst`
 
 ## Encoding
 
@@ -26,7 +26,7 @@
 
 ## Description
 
-Moves values between scalar temporary queues according to encoded queue controls.
+Queries, initializes, notifies, suspends, or restores one General Queue Management queue.
 
 ## Pseudocode (informative)
 
@@ -36,13 +36,13 @@ Moves values between scalar temporary queues according to encoded queue controls
 
 ## Encoding Notes
 
-- `Moves values between scalar temporary queues according to encoded queue controls.`
+- `Queries, initializes, notifies, suspends, or restores one General Queue Management queue.`
 
 ## Full Catalog Forms
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `hl.qmt.{i,e,s,r,ie,is,ir,es,er,ies,ier} SrcL, SrcR, ->{t, u}` | 48 | — |
+| `hl.qmt[.{i,e,s,r,ie,is,ir,es,er,ies,ier}] SrcL[, SrcR when i], ->RegDst` | 48 | — |
 
 <div class="insn-nav">
 

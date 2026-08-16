@@ -7,7 +7,7 @@
 
 *Syntax:* hl.ldip [SrcL, simm], ->Dst0, Dst1
 
-*Description:* HL.LDIP - Load a scalar register pair using this mnemonic's address-update form.
+*Description:* HL.LDIP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 8-byte values.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* bxu SrcL, M, N, ->{t, u, Rd}
 
-*Description:* BXU - Extract the selected scalar bitfield.
+*Description:* BXU extracts an independently selected wrapping scalar field, zero-extends it to XLEN, and publishes the result.
 
 *Encoding:*
 

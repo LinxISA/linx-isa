@@ -286,8 +286,8 @@ function exec_hl_qpush(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), e : bit
   write_regdst(RegDst, 0x0000_0000_0000_0000)
 }
 
-function exec_hl_qpop(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR : bits(5), e : bits(1), r : bits(1)) -> unit = {
-  let _ = SrcL; let _ = SrcR; let _ = e; let _ = r;
+function exec_hl_qpop(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), e : bits(1), r : bits(1)) -> unit = {
+  let _ = SrcL; let _ = e; let _ = r;
   write_regdst(RegDst0, 0x0000_0000_0000_0000);
   write_regdst(RegDst1, 0x0000_0000_0000_0000)
 }
@@ -2936,6 +2936,7 @@ function tile_effect_header_legal() -> bool = {
         (tile_acc_k == k) & (tile_acc_datatype == (if mx then 0b00001 else tile_effect_datatype))
       else true;
     (required != 0b00_0000) & bdesc_seen_datr & bdesc_seen_dim & bdesc_seen_iot &
+    bdesc_seen_fpatr &
     not_bool(bdesc_seen_text) & tile_effect_iot_legal & tile_effect_last_seen &
     not_bool(tile_effect_after_last) & (tile_effect_source_count == required) &
     (tile_effect_output_count == 0b00_0000) & dtype_ok & acc_ok
@@ -3093,6 +3094,8 @@ function exec_fused_bstart_call(uimm5 : bits(5), embedded_setret_bytes : bits(64
   let tgt = decoded_block_target_pc();
   if not_bool(is_block_start_marker(tgt)) then {
     trap_block_cfi(0x1, read_pc_or_tpc())
+  } else if tile_effect_pending & not_bool(tile_effect_finalize()) then {
+    ()
   } else {
     let return_base = read_pc_or_tpc() + embedded_setret_bytes;
     let return_off = sail_shiftleft(sail_zero_extend(uimm5, 64), 1);
@@ -3108,6 +3111,29 @@ function exec_fused_bstart_call(uimm5 : bits(5), embedded_setret_bytes : bits(64
 
 function exec_bstart_call(uimm5 : bits(5)) -> unit = {
   exec_fused_bstart_call(uimm5, sail_zeros(64) + 2)
+}
+
+function exec_bstart_icall(uimm5 : bits(5)) -> unit = {
+  let source_pc = read_pc_or_tpc();
+  let target = barg_bpc_tgt;
+  let retiring_type_legal =
+    (barg_block_type_cur == 0b0000) | (barg_block_type_cur == 0b0010);
+  if not_bool(barg_valid & retiring_type_legal) then {
+    trap_blockfmt(0x00, 0x02, source_pc)
+  } else if target[0] == 0b1 then {
+    trap_block_cfi(0x1, source_pc)
+  } else if tile_effect_pending & not_bool(tile_effect_finalize()) then {
+    ()
+  } else {
+    let return_off = sail_shiftleft(sail_zero_extend(uimm5, 64), 1);
+    block_commit_boundary();
+    barg_reset_at_block_start();
+    bdesc_reset();
+    barg_set_block_type(0b0000);
+    barg_set_xfer_kind(block_xfer_icall());
+    barg_set_next_pc_target(target);
+    write_regdst(0b01010, source_pc + 2 + return_off)
+  }
 }
 
 function exec_hl_bstart_call(uimm5 : bits(5)) -> unit = {
@@ -3140,6 +3166,7 @@ function exec_bstop() -> unit = {
 }
 
 function exec_c_bstop() -> unit = { exec_bstop() }
+function exec_l_bstop() -> unit = { exec_bstop() }
 
 // -----------------------------------------------------------------------------
 // B.* header descriptors (staged)
@@ -3201,6 +3228,32 @@ function exec_b_datr() -> unit = {
   // Staged semantics: latch raw data-attribute word so datatype/layout/rmode/sat can be consulted.
   bdatr_raw = decoded_bdatr_raw();
   bdesc_mark_datr()
+}
+function exec_b_fpatr(PreQuantMode : bits(6), ReluMode : bits(3), GroupNCode : bits(4), RowMaxEn : bits(1), GroupMaxEn : bits(1), RowMaxInit : bits(1), MaxAbsEn : bits(1)) -> unit = {
+  let row_max = RowMaxEn == 0b1;
+  let group_max = GroupMaxEn == 0b1;
+  let row_init = RowMaxInit == 0b1;
+  let max_abs = MaxAbsEn == 0b1;
+  let legal_combination =
+    (not_bool(row_init) | row_max) &
+    ((GroupNCode == 0x0) == not_bool(group_max)) &
+    (not_bool(max_abs) | row_max | group_max);
+  let legal_position =
+    tile_effect_pending & (tile_effect_family == 0b10) &
+    not_bool(bdesc_seen_fpatr) & not_bool(bdesc_seen_ior) &
+    not_bool(bdesc_seen_iot);
+  if not_bool(legal_position & legal_combination) then {
+    trap_blockfmt(0x06, 0x02, read_pc_or_tpc())
+  } else {
+    bfpatr_pre_quant_mode = PreQuantMode;
+    bfpatr_relu_mode = ReluMode;
+    bfpatr_group_n_code = GroupNCode;
+    bfpatr_row_max_en = row_max;
+    bfpatr_group_max_en = group_max;
+    bfpatr_row_max_init = row_init;
+    bfpatr_max_abs_en = max_abs;
+    bdesc_mark_fpatr()
+  }
 }
 function exec_b_hint() -> unit = { () }
 // -----------------------------------------------------------------------------

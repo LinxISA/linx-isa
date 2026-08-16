@@ -7,7 +7,7 @@
 
 *Syntax:* c.or srcL, srcR, ->t
 
-*Description:* C.OR - Compute this mnemonic's binary scalar operation and write the selected destination.
+*Description:* C.OR snapshots two complete Reg5 sources, computes the bitwise inclusive OR of SrcL and SrcR, and pushes the wrapping XLEN result to T.
 
 *Encoding:*
 

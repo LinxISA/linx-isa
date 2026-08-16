@@ -7,7 +7,7 @@
 
 *Syntax:* sub SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}
 
-*Description:* SUB - Compute this mnemonic's binary scalar operation and write the selected destination.
+*Description:* SUB applies the selected right-source transformation before its encoded logical left shift, performs fixed-width subtraction, and publishes the PTO_XLEN result.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* madd SrcL, SrcR, SrcD, ->{t, u, Rd}
 
-*Description:* MADD - Compute scalar multiply-add.
+*Description:* MADD adds a snapshotted XLEN addend to the low XLEN scalar product modulo 2^PTO_XLEN and publishes the result.
 
 *Encoding:*
 

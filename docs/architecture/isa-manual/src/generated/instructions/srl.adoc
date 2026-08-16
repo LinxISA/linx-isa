@@ -7,7 +7,7 @@
 
 *Syntax:* srl SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* SRL - Compute this mnemonic's binary scalar operation and write the selected destination.
+*Description:* SRL performs a logical right shift of the PTO_XLEN source by the low six bits of the snapshotted SrcR; the XLEN result is published directly.
 
 *Encoding:*
 
