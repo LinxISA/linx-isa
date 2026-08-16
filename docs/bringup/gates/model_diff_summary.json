@@ -25,12 +25,12 @@
             "sha256": "b8d77ec5e895681d54bdfdaeb4f3fe8e71dcef2785ce3ebef4ecd218e7241dba"
           },
           "qemu": {
-            "path": "/private/tmp/linx-qemu-task5-merged-build/qemu-system-linx64",
-            "sha256": "b0cf76eb8d189fd1a64c7fe1735f36e05bb67841c6cd6a2e684c5d4e7624d621"
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/qemu-system-linx64",
+            "sha256": "fa617898a34f8b9d19d98e9fddfe8defa8afdea62971e347eb322c9ecd8635bd"
           },
           "qemu_source_marker": {
-            "path": "/private/tmp/linx-qemu-task5-merged-build/.linx_qemu_clean_head",
-            "sha256": "fe73a07755ede9013408f80c4d5aa87fc884d514e08338f1381344356eba5b56"
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/.linx_qemu_clean_head",
+            "sha256": "eb856e815da9cd5d05d62334241c1afc95b9b88ae32d5e87a3831756e7dccbc8"
           }
         },
         "components": {
@@ -48,9 +48,9 @@
           },
           "qemu": {
             "clean": true,
-            "commit": "b8a8e1bf01859978702722ff6e67eeb4433fa8a6",
+            "commit": "51160366fac325ab71ff7876dcdb1711edeed06d",
             "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu",
-            "tree": "ec361e5107c6e1c167cb1de9f19ee91841072232"
+            "tree": "506acd2e9234d5bffe8d5173f7519f707665eaae"
           }
         },
         "inputs": {
@@ -94,12 +94,12 @@
             "sha256": "b8d77ec5e895681d54bdfdaeb4f3fe8e71dcef2785ce3ebef4ecd218e7241dba"
           },
           "qemu": {
-            "path": "/private/tmp/linx-qemu-task5-merged-build/qemu-system-linx64",
-            "sha256": "b0cf76eb8d189fd1a64c7fe1735f36e05bb67841c6cd6a2e684c5d4e7624d621"
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/qemu-system-linx64",
+            "sha256": "fa617898a34f8b9d19d98e9fddfe8defa8afdea62971e347eb322c9ecd8635bd"
           },
           "qemu_source_marker": {
-            "path": "/private/tmp/linx-qemu-task5-merged-build/.linx_qemu_clean_head",
-            "sha256": "fe73a07755ede9013408f80c4d5aa87fc884d514e08338f1381344356eba5b56"
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/.linx_qemu_clean_head",
+            "sha256": "eb856e815da9cd5d05d62334241c1afc95b9b88ae32d5e87a3831756e7dccbc8"
           }
         },
         "components": {
@@ -117,9 +117,9 @@
           },
           "qemu": {
             "clean": true,
-            "commit": "b8a8e1bf01859978702722ff6e67eeb4433fa8a6",
+            "commit": "51160366fac325ab71ff7876dcdb1711edeed06d",
             "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu",
-            "tree": "ec361e5107c6e1c167cb1de9f19ee91841072232"
+            "tree": "506acd2e9234d5bffe8d5173f7519f707665eaae"
           }
         },
         "inputs": {
@@ -163,12 +163,12 @@
             "sha256": "b8d77ec5e895681d54bdfdaeb4f3fe8e71dcef2785ce3ebef4ecd218e7241dba"
           },
           "qemu": {
-            "path": "/private/tmp/linx-qemu-task5-merged-build/qemu-system-linx64",
-            "sha256": "b0cf76eb8d189fd1a64c7fe1735f36e05bb67841c6cd6a2e684c5d4e7624d621"
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/qemu-system-linx64",
+            "sha256": "fa617898a34f8b9d19d98e9fddfe8defa8afdea62971e347eb322c9ecd8635bd"
           },
           "qemu_source_marker": {
-            "path": "/private/tmp/linx-qemu-task5-merged-build/.linx_qemu_clean_head",
-            "sha256": "fe73a07755ede9013408f80c4d5aa87fc884d514e08338f1381344356eba5b56"
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/.linx_qemu_clean_head",
+            "sha256": "eb856e815da9cd5d05d62334241c1afc95b9b88ae32d5e87a3831756e7dccbc8"
           }
         },
         "components": {
@@ -186,9 +186,9 @@
           },
           "qemu": {
             "clean": true,
-            "commit": "b8a8e1bf01859978702722ff6e67eeb4433fa8a6",
+            "commit": "51160366fac325ab71ff7876dcdb1711edeed06d",
             "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu",
-            "tree": "ec361e5107c6e1c167cb1de9f19ee91841072232"
+            "tree": "506acd2e9234d5bffe8d5173f7519f707665eaae"
           }
         },
         "inputs": {
@@ -232,12 +232,12 @@
             "sha256": "b8d77ec5e895681d54bdfdaeb4f3fe8e71dcef2785ce3ebef4ecd218e7241dba"
           },
           "qemu": {
-            "path": "/private/tmp/linx-qemu-task5-merged-build/qemu-system-linx64",
-            "sha256": "b0cf76eb8d189fd1a64c7fe1735f36e05bb67841c6cd6a2e684c5d4e7624d621"
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/qemu-system-linx64",
+            "sha256": "fa617898a34f8b9d19d98e9fddfe8defa8afdea62971e347eb322c9ecd8635bd"
           },
           "qemu_source_marker": {
-            "path": "/private/tmp/linx-qemu-task5-merged-build/.linx_qemu_clean_head",
-            "sha256": "fe73a07755ede9013408f80c4d5aa87fc884d514e08338f1381344356eba5b56"
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/.linx_qemu_clean_head",
+            "sha256": "eb856e815da9cd5d05d62334241c1afc95b9b88ae32d5e87a3831756e7dccbc8"
           }
         },
         "components": {
@@ -255,9 +255,9 @@
           },
           "qemu": {
             "clean": true,
-            "commit": "b8a8e1bf01859978702722ff6e67eeb4433fa8a6",
+            "commit": "51160366fac325ab71ff7876dcdb1711edeed06d",
             "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu",
-            "tree": "ec361e5107c6e1c167cb1de9f19ee91841072232"
+            "tree": "506acd2e9234d5bffe8d5173f7519f707665eaae"
           }
         },
         "inputs": {
@@ -301,12 +301,12 @@
             "sha256": "b8d77ec5e895681d54bdfdaeb4f3fe8e71dcef2785ce3ebef4ecd218e7241dba"
           },
           "qemu": {
-            "path": "/private/tmp/linx-qemu-task5-merged-build/qemu-system-linx64",
-            "sha256": "b0cf76eb8d189fd1a64c7fe1735f36e05bb67841c6cd6a2e684c5d4e7624d621"
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/qemu-system-linx64",
+            "sha256": "fa617898a34f8b9d19d98e9fddfe8defa8afdea62971e347eb322c9ecd8635bd"
           },
           "qemu_source_marker": {
-            "path": "/private/tmp/linx-qemu-task5-merged-build/.linx_qemu_clean_head",
-            "sha256": "fe73a07755ede9013408f80c4d5aa87fc884d514e08338f1381344356eba5b56"
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/.linx_qemu_clean_head",
+            "sha256": "eb856e815da9cd5d05d62334241c1afc95b9b88ae32d5e87a3831756e7dccbc8"
           }
         },
         "components": {
@@ -324,9 +324,9 @@
           },
           "qemu": {
             "clean": true,
-            "commit": "b8a8e1bf01859978702722ff6e67eeb4433fa8a6",
+            "commit": "51160366fac325ab71ff7876dcdb1711edeed06d",
             "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu",
-            "tree": "ec361e5107c6e1c167cb1de9f19ee91841072232"
+            "tree": "506acd2e9234d5bffe8d5173f7519f707665eaae"
           }
         },
         "inputs": {
@@ -370,12 +370,12 @@
             "sha256": "b8d77ec5e895681d54bdfdaeb4f3fe8e71dcef2785ce3ebef4ecd218e7241dba"
           },
           "qemu": {
-            "path": "/private/tmp/linx-qemu-task5-merged-build/qemu-system-linx64",
-            "sha256": "b0cf76eb8d189fd1a64c7fe1735f36e05bb67841c6cd6a2e684c5d4e7624d621"
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/qemu-system-linx64",
+            "sha256": "fa617898a34f8b9d19d98e9fddfe8defa8afdea62971e347eb322c9ecd8635bd"
           },
           "qemu_source_marker": {
-            "path": "/private/tmp/linx-qemu-task5-merged-build/.linx_qemu_clean_head",
-            "sha256": "fe73a07755ede9013408f80c4d5aa87fc884d514e08338f1381344356eba5b56"
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/.linx_qemu_clean_head",
+            "sha256": "eb856e815da9cd5d05d62334241c1afc95b9b88ae32d5e87a3831756e7dccbc8"
           }
         },
         "components": {
@@ -393,9 +393,9 @@
           },
           "qemu": {
             "clean": true,
-            "commit": "b8a8e1bf01859978702722ff6e67eeb4433fa8a6",
+            "commit": "51160366fac325ab71ff7876dcdb1711edeed06d",
             "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu",
-            "tree": "ec361e5107c6e1c167cb1de9f19ee91841072232"
+            "tree": "506acd2e9234d5bffe8d5173f7519f707665eaae"
           }
         },
         "inputs": {
@@ -425,7 +425,7 @@
         },
         "qemu": {
           "actual_sha256": "b4f8dd4aa33545575cd35add493bf98f99af26d16559683e2c272d23fd46773a",
-          "consumer_sha256": "b0cf76eb8d189fd1a64c7fe1735f36e05bb67841c6cd6a2e684c5d4e7624d621",
+          "consumer_sha256": "fa617898a34f8b9d19d98e9fddfe8defa8afdea62971e347eb322c9ecd8635bd",
           "golden_sha256": "b4f8dd4aa33545575cd35add493bf98f99af26d16559683e2c272d23fd46773a",
           "size": 12,
           "status": "pass"
@@ -441,7 +441,7 @@
       "id": "MODEL-RELEASE-RESULT-MEMORY",
       "pairwise_comparisons": {
         "qemu:compare": {
-          "left_consumer_sha256": "b0cf76eb8d189fd1a64c7fe1735f36e05bb67841c6cd6a2e684c5d4e7624d621",
+          "left_consumer_sha256": "fa617898a34f8b9d19d98e9fddfe8defa8afdea62971e347eb322c9ecd8635bd",
           "left_sha256": "b4f8dd4aa33545575cd35add493bf98f99af26d16559683e2c272d23fd46773a",
           "right_consumer_sha256": "b8d77ec5e895681d54bdfdaeb4f3fe8e71dcef2785ce3ebef4ecd218e7241dba",
           "right_sha256": "b4f8dd4aa33545575cd35add493bf98f99af26d16559683e2c272d23fd46773a",
@@ -449,7 +449,7 @@
           "status": "pass"
         },
         "qemu:ref": {
-          "left_consumer_sha256": "b0cf76eb8d189fd1a64c7fe1735f36e05bb67841c6cd6a2e684c5d4e7624d621",
+          "left_consumer_sha256": "fa617898a34f8b9d19d98e9fddfe8defa8afdea62971e347eb322c9ecd8635bd",
           "left_sha256": "b4f8dd4aa33545575cd35add493bf98f99af26d16559683e2c272d23fd46773a",
           "right_consumer_sha256": "b8d77ec5e895681d54bdfdaeb4f3fe8e71dcef2785ce3ebef4ecd218e7241dba",
           "right_sha256": "b4f8dd4aa33545575cd35add493bf98f99af26d16559683e2c272d23fd46773a",
@@ -492,12 +492,12 @@
             "sha256": "4d17fe0303b574e1367d1acff1e44f402384947ba232d8ead6b5a17338fd020b"
           },
           "qemu": {
-            "path": "/private/tmp/linx-qemu-task5-merged-build/qemu-system-linx64",
-            "sha256": "b0cf76eb8d189fd1a64c7fe1735f36e05bb67841c6cd6a2e684c5d4e7624d621"
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/qemu-system-linx64",
+            "sha256": "fa617898a34f8b9d19d98e9fddfe8defa8afdea62971e347eb322c9ecd8635bd"
           },
           "qemu_source_marker": {
-            "path": "/private/tmp/linx-qemu-task5-merged-build/.linx_qemu_clean_head",
-            "sha256": "fe73a07755ede9013408f80c4d5aa87fc884d514e08338f1381344356eba5b56"
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/.linx_qemu_clean_head",
+            "sha256": "eb856e815da9cd5d05d62334241c1afc95b9b88ae32d5e87a3831756e7dccbc8"
           },
           "ref": {
             "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/tools/model/build/linx_model_cli",
@@ -519,9 +519,9 @@
           },
           "qemu": {
             "clean": true,
-            "commit": "b8a8e1bf01859978702722ff6e67eeb4433fa8a6",
+            "commit": "51160366fac325ab71ff7876dcdb1711edeed06d",
             "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu",
-            "tree": "ec361e5107c6e1c167cb1de9f19ee91841072232"
+            "tree": "506acd2e9234d5bffe8d5173f7519f707665eaae"
           }
         },
         "inputs": {
@@ -544,7 +544,7 @@
           "size": 12
         },
         "qemu": {
-          "consumer_sha256": "b0cf76eb8d189fd1a64c7fe1735f36e05bb67841c6cd6a2e684c5d4e7624d621",
+          "consumer_sha256": "fa617898a34f8b9d19d98e9fddfe8defa8afdea62971e347eb322c9ecd8635bd",
           "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/docs/bringup/gates/model_diff_work/06_MODEL-RELEASE-RESULT-MEMORY/qemu.result.bin",
           "sha256": "b4f8dd4aa33545575cd35add493bf98f99af26d16559683e2c272d23fd46773a",
           "size": 12
