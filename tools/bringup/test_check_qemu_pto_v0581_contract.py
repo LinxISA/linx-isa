@@ -36,6 +36,17 @@ class QemuPtoV0581ContractTests(unittest.TestCase):
         source = (ROOT / "emulator/qemu/hw/linx/virt.c").read_text()
         checker.validate_elf_loader_order(source)
 
+    def test_fpatr_position_validation_must_precede_state_mutation(self) -> None:
+        translate = (ROOT / "emulator/qemu/target/linx/translate.c").read_text()
+        helper = (ROOT / "emulator/qemu/target/linx/helper.c").read_text()
+        cpu = (ROOT / "emulator/qemu/target/linx/cpu.c").read_text()
+        checker.validate_fpatr_position_contract(translate, helper, cpu)
+        mutated = translate.replace(
+            "gen_helper_linx_validate_fpatr_position", "removed_position_validator", 1
+        )
+        with self.assertRaisesRegex(ValueError, "precede state mutation"):
+            checker.validate_fpatr_position_contract(mutated, helper, cpu)
+
 
 if __name__ == "__main__":
     unittest.main()

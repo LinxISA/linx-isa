@@ -72,6 +72,29 @@ def validate_elf_loader_order(source: str) -> None:
         raise ValueError(f"ELF fail-closed markers missing: {missing}")
 
 
+def validate_fpatr_position_contract(
+    translate: str, helper: str, cpu: str
+) -> None:
+    fpatr = translate.split("static bool trans_b_fpatr", 1)[1]
+    fpatr = fpatr.split("static bool trans_b_hint", 1)[0]
+    validator = "gen_helper_linx_validate_fpatr_position"
+    if validator not in fpatr or fpatr.index(validator) > fpatr.index("tile_fpatr_raw"):
+        raise ValueError("B.FPATR position validation must precede state mutation")
+    for token in (
+        "env->blocktype == LINX_BLOCK_CUBE",
+        "env->tile_fpatr_valid",
+        "env->tile_ior_count",
+        "env->tile_iot_count",
+        "LINX_BLOCKFMT_FAMILY_FPATR",
+    ):
+        if token not in helper:
+            raise ValueError(f"B.FPATR position validator missing {token}")
+    pre_save = cpu.split("static int linx_cpu_pre_save", 1)[1]
+    pre_save = pre_save.split("static bool linx_cpu_post_load", 1)[0]
+    if "acr_block_state[acr].tile_ior_count" not in pre_save:
+        raise ValueError("inactive-ACR IOR state must be rejected for migration")
+
+
 def _array(text: str, function: str, size: int) -> list[int]:
     match = re.search(
         rf"{re.escape(function)}.*?allowed\[{size}\]\s*=\s*\{{(.*?)\}};",
@@ -155,6 +178,14 @@ def check_contract(root: Path) -> CheckResult:
     try:
         validate_elf_loader_order(virt)
     except ValueError as exc:
+        errors.append(str(exc))
+
+    translate = (root / "emulator/qemu/target/linx/translate.c").read_text()
+    helper = (root / "emulator/qemu/target/linx/helper.c").read_text()
+    cpu = (root / "emulator/qemu/target/linx/cpu.c").read_text()
+    try:
+        validate_fpatr_position_contract(translate, helper, cpu)
+    except (IndexError, ValueError) as exc:
         errors.append(str(exc))
 
     insn16 = (root / "emulator/qemu/target/linx/insn16.decode").read_text()
