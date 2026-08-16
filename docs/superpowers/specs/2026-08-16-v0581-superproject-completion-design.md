@@ -116,7 +116,12 @@ governed branch, not from an unrelated default history.
 ### 5.3 QEMU and AVS
 
 QEMU keeps its current descendant implementation and regenerates or audits
-decode/execute/catalog projections against the current manifest. AVS compile,
+decode/execute/catalog projections against the current manifest. Its Linx ELF
+loaders must validate the exact canonical `.note.pto.isa` identity before
+execution, because the released documentation already promises fail-closed
+QEMU enforcement and the current pin does not implement it. AVS adds positive
+`0.58.1` ELF-note coverage plus missing, old-`0.58.0`, malformed, trailing-NUL,
+duplicate-conflicting, and mixed-identity rejection cases. AVS compile,
 runtime, strict decode, retired-spelling, B.IOS, and executable-coverage tests
 must exercise the delivered QEMU and compiler SHAs. Historical evidence stays
 under versioned archives and cannot satisfy a current gate.
