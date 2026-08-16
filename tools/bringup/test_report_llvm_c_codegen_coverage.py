@@ -465,6 +465,18 @@ class LLVMCodeGenCoverageTests(unittest.TestCase):
             )
             self.assertEqual(producer._rel(tool_alias, root), "clang-real")
 
+    def test_current_compressed_standard_header_closes_standard_aliases(self) -> None:
+        direct = {"C.BSTART.STD"}
+        spec = {"BSTART", "BSTART.STD", "C.BSTART.STD"}
+
+        closed, additions = coverage._apply_alias_closure(direct, spec)
+
+        self.assertEqual(closed, spec)
+        self.assertEqual(
+            {item["added_alias"] for item in additions},
+            {"BSTART", "BSTART.STD"},
+        )
+
     def test_asm_volatile_and_builtin_spellings_are_source_directed(self) -> None:
         hostile_sources = (
             'asm volatile("add a0, a1, ->a0");',
@@ -570,7 +582,7 @@ class LLVMCodeGenCoverageTests(unittest.TestCase):
         spec_mnemonics = {
             instruction["mnemonic"].upper()
             for instruction in json.loads(
-                (ROOT / "isa/v0.57/linxisa-v0.57.json").read_text(
+                (ROOT / "isa/v0.58/linxisa-v0.58.json").read_text(
                     encoding="utf-8"
                 )
             )["instructions"]
@@ -719,14 +731,14 @@ class LLVMCodeGenCoverageTests(unittest.TestCase):
         markdown = markdown_path.read_text(encoding="utf-8")
 
         self.assertEqual(report["schema_version"], coverage.SCHEMA_VERSION)
-        self.assertEqual(report["direct"]["coverage_count"], 146)
+        self.assertEqual(report["direct"]["coverage_count"], 145)
         self.assertEqual(report["alias_closure"]["coverage_count"], 147)
-        self.assertEqual(report["pure_codegen"]["direct_coverage_count"], 145)
+        self.assertEqual(report["pure_codegen"]["direct_coverage_count"], 144)
         self.assertEqual(report["pure_codegen"]["alias_closure_coverage_count"], 146)
-        self.assertEqual(report["spec_unique_mnemonics"], 728)
-        self.assertIn("`146/728`", markdown)
-        self.assertIn("`147/728`", markdown)
-        self.assertIn("`145/728`", markdown)
+        self.assertEqual(report["spec_unique_mnemonics"], 731)
+        self.assertIn("`145/731`", markdown)
+        self.assertIn("`147/731`", markdown)
+        self.assertIn("`144/731`", markdown)
         self.assertIn("`146/146` (`PASS`)", markdown)
         self.assertIn("`barbara-liskov-plain-c-sub-immediate`", markdown)
         self.assertIn("`HL.SUBIW`", markdown)

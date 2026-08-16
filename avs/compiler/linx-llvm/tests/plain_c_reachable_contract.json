@@ -113,12 +113,13 @@
       "mnemonic": "BSTART",
       "witness_source": "avs/compiler/linx-llvm/tests/c/06_recursion.c",
       "evidence_kind": "alias",
-      "observed_mnemonic": "BSTART.STD"
+      "observed_mnemonic": "C.BSTART.STD"
     },
     {
       "mnemonic": "BSTART.STD",
       "witness_source": "avs/compiler/linx-llvm/tests/c/06_recursion.c",
-      "evidence_kind": "direct"
+      "evidence_kind": "alias",
+      "observed_mnemonic": "C.BSTART.STD"
     },
     {
       "mnemonic": "BXU",
@@ -201,7 +202,7 @@
       "evidence_kind": "direct"
     },
     {
-      "mnemonic": "C.SETRET",
+      "mnemonic": "BSTART.ICALL",
       "witness_source": "avs/compiler/linx-llvm/tests/c/36_callret_indirect.c",
       "evidence_kind": "direct"
     },
