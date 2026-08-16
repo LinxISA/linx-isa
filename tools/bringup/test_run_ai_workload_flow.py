@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import json
-import hashlib
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -25,43 +25,73 @@ class AiWorkloadFlowTests(unittest.TestCase):
             )
 
     def test_release_strict_accepts_complete_result_memory_proof(self) -> None:
-        artifacts = {
-            name: {
-                "path": f"/{name}",
-                "sha256": hashlib.sha256(name.encode()).hexdigest(),
-            }
-            for name in (
-                "compiler",
-                "linker",
-                "elf",
-                "qemu",
-                "model",
-                "manifest",
-                "golden",
-            )
-        }
-        payload = {
-            "provenance": {"artifacts": artifacts, "verified_after_run": True},
-            "cases": [
-                {
-                    "id": "complete",
-                    "status": "pass",
-                    "result_memory": {
-                        "qemu": {"path": "/qemu.bin", "sha256": "a" * 64},
-                        "model": {"path": "/model.bin", "sha256": "b" * 64},
-                    },
-                    "golden_comparisons": {
-                        "qemu": {"status": "pass"},
-                        "model": {"status": "pass"},
-                    },
-                    "pairwise_comparisons": {
-                        "qemu:model": {"status": "pass"},
-                    },
-                }
-            ],
-        }
+        with tempfile.TemporaryDirectory() as td:
+            payload, _ = self.release_strict_payload(Path(td))
+            run_model_diff_suite.validate_release_strict_payload(payload)
 
-        run_model_diff_suite.validate_release_strict_payload(payload)
+    def test_release_strict_reopens_and_rehashes_artifacts(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            payload, paths = self.release_strict_payload(Path(td))
+            paths["qemu"].write_bytes(b"mutated qemu")
+            with self.assertRaisesRegex(
+                run_model_diff_suite.ReleaseStrictError,
+                r"qemu SHA-256 mismatch",
+            ):
+                run_model_diff_suite.validate_release_strict_payload(payload)
+
+    def test_release_strict_rejects_arbitrary_consumer_set(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            payload, _ = self.release_strict_payload(Path(td))
+            case = payload["cases"][0]
+            case["result_memory"]["arbitrary"] = case["result_memory"].pop("compare")
+            with self.assertRaisesRegex(
+                run_model_diff_suite.ReleaseStrictError,
+                r"consumer set",
+            ):
+                run_model_diff_suite.validate_release_strict_payload(payload)
+
+    def test_release_strict_rejects_missing_short_long_or_mutated_results(self) -> None:
+        for mode in ("missing", "short", "long", "mutated"):
+            with self.subTest(mode=mode), tempfile.TemporaryDirectory() as td:
+                payload, paths = self.release_strict_payload(Path(td))
+                result = paths["qemu_result"]
+                if mode == "missing":
+                    result.unlink()
+                elif mode == "short":
+                    result.write_bytes(b"short")
+                elif mode == "long":
+                    result.write_bytes(b"too-long-result")
+                else:
+                    result.write_bytes(b"87654321")
+                with self.assertRaises(run_model_diff_suite.ReleaseStrictError):
+                    run_model_diff_suite.validate_release_strict_payload(payload)
+
+    def test_release_strict_binds_comparisons_to_result_hashes(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            payload, _ = self.release_strict_payload(Path(td))
+            payload["cases"][0]["golden_comparisons"]["qemu"][
+                "actual_sha256"
+            ] = "0" * 64
+            with self.assertRaisesRegex(
+                run_model_diff_suite.ReleaseStrictError,
+                r"comparison hash binding",
+            ):
+                run_model_diff_suite.validate_release_strict_payload(payload)
+
+    def test_release_strict_validates_manifest_size_against_elf_symbols(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            payload, paths = self.release_strict_payload(Path(td))
+            manifest = json.loads(paths["manifest"].read_text())
+            manifest["result_memory"]["size"] = 7
+            paths["manifest"].write_text(json.dumps(manifest), encoding="utf-8")
+            payload["cases"][0]["provenance"]["artifacts"]["manifest"][
+                "sha256"
+            ] = run_ai_workload_flow.sha256_file(paths["manifest"])
+            with self.assertRaisesRegex(
+                run_model_diff_suite.ReleaseStrictError,
+                r"ELF symbol size",
+            ):
+                run_model_diff_suite.validate_release_strict_payload(payload)
 
     def test_immutable_artifact_manifest_rejects_mutation_before_second_consumer(self) -> None:
         with tempfile.TemporaryDirectory() as td:
@@ -478,6 +508,117 @@ class AiWorkloadFlowTests(unittest.TestCase):
             expected="test",
             metadata={},
         )
+
+    def release_strict_payload(
+        self, temp: Path
+    ) -> tuple[dict[str, object], dict[str, Path]]:
+        llvm_mc = run_ai_workload_flow.repo_root() / "compiler/llvm/build-linxisa-clang/bin/llvm-mc"
+        self.assertTrue(llvm_mc.is_file(), llvm_mc)
+        asm = temp / "result.s"
+        elf = temp / "case.o"
+        asm.write_text(
+            ".section .data\n"
+            ".globl cross_model_result\n"
+            ".type cross_model_result,@object\n"
+            ".size cross_model_result,8\n"
+            "cross_model_result:\n.zero 8\n"
+            ".globl cross_model_result_size\n"
+            ".set cross_model_result_size,8\n",
+            encoding="utf-8",
+        )
+        built = subprocess.run(
+            [str(llvm_mc), "-triple=linx64", "-filetype=obj", str(asm), "-o", str(elf)],
+            capture_output=True,
+        )
+        self.assertEqual(built.returncode, 0, built.stderr.decode(errors="replace"))
+
+        manifest = temp / "manifest.json"
+        manifest.write_text(
+            json.dumps(
+                {
+                    "result_memory": {
+                        "result_symbol": "cross_model_result",
+                        "size_symbol": "cross_model_result_size",
+                        "address": 0,
+                        "size": 8,
+                    }
+                }
+            ),
+            encoding="utf-8",
+        )
+        golden = temp / "golden.bin"
+        golden.write_bytes(b"12345678")
+        paths: dict[str, Path] = {
+            "compiler": temp / "compiler",
+            "linker": temp / "linker",
+            "qemu": temp / "qemu",
+            "ref": temp / "ref-model",
+            "compare": temp / "compare-model",
+            "elf": elf,
+            "manifest": manifest,
+            "golden": golden,
+        }
+        for name in ("compiler", "linker", "qemu", "ref", "compare"):
+            paths[name].write_bytes(name.encode())
+        result_memory: dict[str, dict[str, object]] = {}
+        for consumer in ("qemu", "ref", "compare"):
+            result = temp / f"{consumer}.result.bin"
+            result.write_bytes(golden.read_bytes())
+            paths[f"{consumer}_result"] = result
+            result_memory[consumer] = {
+                "path": str(result),
+                "sha256": run_ai_workload_flow.sha256_file(result),
+                "size": 8,
+            }
+        artifacts = {
+            name: {
+                "path": str(path),
+                "sha256": run_ai_workload_flow.sha256_file(path),
+            }
+            for name, path in paths.items()
+            if name in {"compiler", "linker", "elf", "qemu", "ref", "compare", "manifest", "golden"}
+        }
+        for consumer in result_memory:
+            result_memory[consumer]["consumer_sha256"] = artifacts[consumer]["sha256"]
+        golden_hash = artifacts["golden"]["sha256"]
+        comparisons = {
+            consumer: {
+                "status": "pass",
+                "actual_sha256": result_memory[consumer]["sha256"],
+                "golden_sha256": golden_hash,
+                "consumer_sha256": artifacts[consumer]["sha256"],
+                "size": 8,
+            }
+            for consumer in result_memory
+        }
+        pairwise = {}
+        consumers = ("qemu", "ref", "compare")
+        for index, left in enumerate(consumers):
+            for right in consumers[index + 1 :]:
+                pairwise[f"{left}:{right}"] = {
+                    "status": "pass",
+                    "left_sha256": result_memory[left]["sha256"],
+                    "right_sha256": result_memory[right]["sha256"],
+                    "left_consumer_sha256": artifacts[left]["sha256"],
+                    "right_consumer_sha256": artifacts[right]["sha256"],
+                    "size": 8,
+                }
+        payload: dict[str, object] = {
+            "cases": [
+                {
+                    "id": "complete",
+                    "status": "pass",
+                    "provenance": {
+                        "artifacts": artifacts,
+                        "verified_after_run": True,
+                    },
+                    "result_memory": result_memory,
+                    "golden_comparisons": comparisons,
+                    "pairwise_comparisons": pairwise,
+                }
+            ]
+        }
+        return payload, paths
 
     def flow(self) -> dict[str, object]:
         root = run_ai_workload_flow.repo_root()
