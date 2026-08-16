@@ -85,6 +85,7 @@ def validate_fpatr_position_contract(
         "env->tile_fpatr_valid",
         "env->tile_ior_count",
         "env->tile_iot_count",
+        "env->tile_iot_valid",
         "LINX_BLOCKFMT_FAMILY_FPATR",
     ):
         if token not in helper:
