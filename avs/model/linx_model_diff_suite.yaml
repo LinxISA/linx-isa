@@ -6,7 +6,7 @@ cases:
     category: scalar_basic
     source: emulator/qemu/tests/linxisa/mcopy_mset_basic.s
     seed: 1001
-    required_in_profile: [dev]
+    required_in_profile: [dev, release-strict]
     trace_version: "1.0"
     ignore_fields: [cycle]
     notes: "Uses deterministic scalar memcpy/mset fixture while addtpc commit smoke remains optional until model/QEMU addtpc address convergence."
@@ -15,7 +15,7 @@ cases:
     category: scalar_basic
     source: emulator/qemu/tests/linxisa/mcopy_mset_basic.s
     seed: 1002
-    required_in_profile: [dev]
+    required_in_profile: [dev, release-strict]
     trace_version: "1.0"
     ignore_fields: [cycle]
 
@@ -24,7 +24,7 @@ cases:
     source: emulator/qemu/tests/linxisa/vector_header_smoke.s
     require_block_kind_any_of: [vpar, vseq]
     seed: 2001
-    required_in_profile: [dev]
+    required_in_profile: [dev, release-strict]
     trace_version: "1.0"
     ignore_fields: [cycle, next_pc]
     drop_boundary_selfloops: true
@@ -35,7 +35,7 @@ cases:
     source: emulator/qemu/tests/linxisa/tile_descriptor_smoke.s
     require_block_kind_any_of: [tlsu]
     seed: 2002
-    required_in_profile: [dev]
+    required_in_profile: [dev, release-strict]
     trace_version: "1.0"
     ignore_fields: [cycle, next_pc]
     drop_boundary_selfloops: true
@@ -46,7 +46,7 @@ cases:
     source: emulator/qemu/tests/linxisa/tile_control_flow_smoke.s
     require_block_kind_any_of: [tlsu]
     seed: 2003
-    required_in_profile: [dev]
+    required_in_profile: [dev, release-strict]
     trace_version: "1.0"
     ignore_fields: [cycle, next_pc]
     drop_boundary_selfloops: true
@@ -57,7 +57,7 @@ cases:
     source: emulator/qemu/tests/linxisa/privileged_ssrset_smoke.s
     require_block_kind_any_of: [sys]
     seed: 2004
-    required_in_profile: [dev]
+    required_in_profile: [dev, release-strict]
     trace_version: "1.0"
     ignore_fields: [cycle]
 

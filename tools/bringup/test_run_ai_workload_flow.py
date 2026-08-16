@@ -675,13 +675,21 @@ class AiWorkloadFlowTests(unittest.TestCase):
             "compiler": temp / "compiler",
             "linker": temp / "linker",
             "qemu": temp / "qemu",
+            "qemu_source_marker": temp / ".linx_qemu_clean_head",
             "ref": temp / "ref-model",
             "compare": temp / "compare-model",
             "elf": elf,
             "manifest": manifest,
             "golden": golden,
         }
-        for name in ("compiler", "linker", "qemu", "ref", "compare"):
+        for name in (
+            "compiler",
+            "linker",
+            "qemu",
+            "qemu_source_marker",
+            "ref",
+            "compare",
+        ):
             paths[name].write_bytes(name.encode())
         result_memory: dict[str, dict[str, object]] = {}
         for consumer in ("qemu", "ref", "compare"):
@@ -699,7 +707,18 @@ class AiWorkloadFlowTests(unittest.TestCase):
                 "sha256": run_ai_workload_flow.sha256_file(path),
             }
             for name, path in paths.items()
-            if name in {"compiler", "linker", "elf", "qemu", "ref", "compare", "manifest", "golden"}
+            if name
+            in {
+                "compiler",
+                "linker",
+                "elf",
+                "qemu",
+                "qemu_source_marker",
+                "ref",
+                "compare",
+                "manifest",
+                "golden",
+            }
         }
         for consumer in result_memory:
             result_memory[consumer]["consumer_sha256"] = artifacts[consumer]["sha256"]
