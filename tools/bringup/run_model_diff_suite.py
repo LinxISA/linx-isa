@@ -61,7 +61,13 @@ def _read_verified_file(row: object, label: str) -> tuple[Path, bytes, str]:
     return path, content, actual_hash
 
 
-def _elf_symbols(elf: bytes) -> dict[str, tuple[int, int, int]]:
+def _elf_metadata(
+    elf: bytes,
+) -> tuple[
+    dict[str, tuple[int, int, int]],
+    list[tuple[int, ...]],
+    list[tuple[int, int]],
+]:
     _require_release_strict(elf[:4] == b"\x7fELF", "release-strict ELF artifact is not ELF")
     _require_release_strict(
         len(elf) >= 64 and elf[4] == 2 and elf[5] in (1, 2),
@@ -69,7 +75,32 @@ def _elf_symbols(elf: bytes) -> dict[str, tuple[int, int, int]]:
     )
     endian = "<" if elf[5] == 1 else ">"
     header = struct.unpack_from(endian + "HHIQQQIHHHHHH", elf, 16)
+    _require_release_strict(
+        header[0] == 2,
+        "release-strict requires an ET_EXEC ELF artifact",
+    )
+    program_offset, program_entry_size, program_count = (
+        header[4],
+        header[8],
+        header[9],
+    )
     section_offset, section_entry_size, section_count = header[5], header[10], header[11]
+    _require_release_strict(
+        program_entry_size >= 56
+        and program_count > 0
+        and program_offset + program_entry_size * program_count <= len(elf),
+        "release-strict ELF program header table is malformed",
+    )
+    load_segments: list[tuple[int, int]] = []
+    for index in range(program_count):
+        program = struct.unpack_from(
+            endian + "IIQQQQQQ", elf, program_offset + index * program_entry_size
+        )
+        if program[0] == 1:
+            load_segments.append((program[3], program[3] + program[6]))
+    _require_release_strict(
+        bool(load_segments), "release-strict ELF has no PT_LOAD segment"
+    )
     _require_release_strict(
         section_entry_size >= 64
         and section_count > 0
@@ -105,7 +136,7 @@ def _elf_symbols(elf: bytes) -> dict[str, tuple[int, int, int]]:
             name = strings[name_offset:].split(b"\0", 1)[0].decode("utf-8", errors="replace")
             if name:
                 symbols[name] = (value, symbol_size, section_index)
-    return symbols
+    return symbols, sections, load_segments
 
 
 def _result_contract(elf: bytes, manifest_bytes: bytes) -> tuple[int, int]:
@@ -121,10 +152,22 @@ def _result_contract(elf: bytes, manifest_bytes: bytes) -> tuple[int, int]:
         result_name == "cross_model_result" and size_name == "cross_model_result_size",
         "release-strict manifest uses unexpected result symbols",
     )
-    symbols = _elf_symbols(elf)
+    symbols, sections, load_segments = _elf_metadata(elf)
     _require_release_strict(result_name in symbols and size_name in symbols, "release-strict ELF lacks result symbols")
-    result_address, result_symbol_size, _ = symbols[result_name]
+    result_address, result_symbol_size, result_section = symbols[result_name]
     size_value, _, size_section = symbols[size_name]
+    _require_release_strict(
+        result_section != 0 and result_section < len(sections),
+        "release-strict ELF requires a defined result symbol",
+    )
+    _require_release_strict(
+        sections[result_section][2] & 0x2 != 0,
+        "release-strict ELF result symbol must be in an allocatable section",
+    )
+    _require_release_strict(
+        result_address > 0,
+        "release-strict ELF result symbol must have a nonzero address",
+    )
     _require_release_strict(
         size_section == 0xFFF1 and size_value > 0,
         "release-strict ELF size symbol must be a positive absolute symbol",
@@ -134,6 +177,12 @@ def _result_contract(elf: bytes, manifest_bytes: bytes) -> tuple[int, int]:
             result_symbol_size == size_value,
             "release-strict ELF result and size symbols disagree",
         )
+    result_end = result_address + size_value
+    _require_release_strict(
+        result_end > result_address
+        and any(start <= result_address and result_end <= end for start, end in load_segments),
+        "release-strict ELF result range must be fully contained in a PT_LOAD segment",
+    )
     _require_release_strict(
         contract.get("address") == result_address,
         "release-strict manifest address disagrees with ELF symbol",

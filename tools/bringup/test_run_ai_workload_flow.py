@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import struct
 import subprocess
 import sys
 import tempfile
@@ -15,6 +16,42 @@ import run_model_diff_suite
 
 
 class AiWorkloadFlowTests(unittest.TestCase):
+    @staticmethod
+    def set_elf_symbol_value(elf_path: Path, symbol_name: str, value: int) -> None:
+        elf = bytearray(elf_path.read_bytes())
+        endian = "<" if elf[5] == 1 else ">"
+        header = struct.unpack_from(endian + "HHIQQQIHHHHHH", elf, 16)
+        section_offset, section_entry_size, section_count = (
+            header[5],
+            header[10],
+            header[11],
+        )
+        sections = [
+            struct.unpack_from(
+                endian + "IIQQQQIIQQ",
+                elf,
+                section_offset + index * section_entry_size,
+            )
+            for index in range(section_count)
+        ]
+        for section in sections:
+            if section[1] not in (2, 11) or section[9] < 24:
+                continue
+            strings_section = sections[section[6]]
+            strings = elf[
+                strings_section[4] : strings_section[4] + strings_section[5]
+            ]
+            for symbol_offset in range(
+                section[4], section[4] + section[5], section[9]
+            ):
+                name_offset = struct.unpack_from(endian + "I", elf, symbol_offset)[0]
+                name = strings[name_offset:].split(b"\0", 1)[0].decode()
+                if name == symbol_name:
+                    struct.pack_into(endian + "Q", elf, symbol_offset + 8, value)
+                    elf_path.write_bytes(elf)
+                    return
+        raise AssertionError(f"missing ELF symbol {symbol_name}")
+
     def test_release_strict_rejects_trace_only_payload(self) -> None:
         with self.assertRaisesRegex(
             run_model_diff_suite.ReleaseStrictError,
@@ -90,6 +127,56 @@ class AiWorkloadFlowTests(unittest.TestCase):
             with self.assertRaisesRegex(
                 run_model_diff_suite.ReleaseStrictError,
                 r"ELF symbol size",
+            ):
+                run_model_diff_suite.validate_release_strict_payload(payload)
+
+    def test_release_strict_rejects_relocatable_elf(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            payload, _ = self.release_strict_payload(Path(td), elf_kind="relocatable")
+            with self.assertRaisesRegex(
+                run_model_diff_suite.ReleaseStrictError, r"ET_EXEC"
+            ):
+                run_model_diff_suite.validate_release_strict_payload(payload)
+
+    def test_release_strict_rejects_undefined_result_symbol(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            payload, _ = self.release_strict_payload(Path(td), elf_kind="undefined")
+            with self.assertRaisesRegex(
+                run_model_diff_suite.ReleaseStrictError, r"defined result symbol"
+            ):
+                run_model_diff_suite.validate_release_strict_payload(payload)
+
+    def test_release_strict_rejects_result_in_nonalloc_section(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            payload, _ = self.release_strict_payload(Path(td), elf_kind="nonalloc")
+            with self.assertRaisesRegex(
+                run_model_diff_suite.ReleaseStrictError, r"allocatable section"
+            ):
+                run_model_diff_suite.validate_release_strict_payload(payload)
+
+    def test_release_strict_rejects_undefined_size_symbol(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            payload, _ = self.release_strict_payload(
+                Path(td), elf_kind="undefined_size"
+            )
+            with self.assertRaisesRegex(
+                run_model_diff_suite.ReleaseStrictError, r"positive absolute symbol"
+            ):
+                run_model_diff_suite.validate_release_strict_payload(payload)
+
+    def test_release_strict_rejects_zero_result_address(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            payload, _ = self.release_strict_payload(Path(td), elf_kind="zero_address")
+            with self.assertRaisesRegex(
+                run_model_diff_suite.ReleaseStrictError, r"nonzero address"
+            ):
+                run_model_diff_suite.validate_release_strict_payload(payload)
+
+    def test_release_strict_rejects_result_range_outside_load_segment(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            payload, _ = self.release_strict_payload(Path(td), elf_kind="oversized")
+            with self.assertRaisesRegex(
+                run_model_diff_suite.ReleaseStrictError, r"PT_LOAD"
             ):
                 run_model_diff_suite.validate_release_strict_payload(payload)
 
@@ -510,27 +597,63 @@ class AiWorkloadFlowTests(unittest.TestCase):
         )
 
     def release_strict_payload(
-        self, temp: Path
+        self, temp: Path, *, elf_kind: str = "executable"
     ) -> tuple[dict[str, object], dict[str, Path]]:
         llvm_mc = run_ai_workload_flow.repo_root() / "compiler/llvm/build-linxisa-clang/bin/llvm-mc"
+        ld_lld = run_ai_workload_flow.repo_root() / "compiler/llvm/build-linxisa-clang/bin/ld.lld"
         self.assertTrue(llvm_mc.is_file(), llvm_mc)
+        self.assertTrue(ld_lld.is_file(), ld_lld)
         asm = temp / "result.s"
-        elf = temp / "case.o"
+        obj = temp / "case.o"
+        elf = obj if elf_kind == "relocatable" else temp / "case.elf"
+        section_flags = "" if elf_kind == "nonalloc" else "a"
+        result_size = 1048576 if elf_kind == "oversized" else 8
+        if elf_kind == "undefined":
+            result_definition = ".weak cross_model_result\n"
+        else:
+            result_definition = (
+                ".globl cross_model_result\n"
+                ".type cross_model_result,@object\n"
+                f".size cross_model_result,{result_size}\n"
+                "cross_model_result:\n.zero 8\n"
+            )
+        size_definition = (
+            ".weak cross_model_result_size\n"
+            if elf_kind == "undefined_size"
+            else ".globl cross_model_result_size\n"
+            f".set cross_model_result_size,{result_size}\n"
+        )
         asm.write_text(
-            ".section .data\n"
-            ".globl cross_model_result\n"
-            ".type cross_model_result,@object\n"
-            ".size cross_model_result,8\n"
-            "cross_model_result:\n.zero 8\n"
-            ".globl cross_model_result_size\n"
-            ".set cross_model_result_size,8\n",
+            ".text\n.globl _start\n_start:\n.long 0\n"
+            f'.section .result,"{section_flags}",@progbits\n'
+            + result_definition
+            + size_definition,
             encoding="utf-8",
         )
         built = subprocess.run(
-            [str(llvm_mc), "-triple=linx64", "-filetype=obj", str(asm), "-o", str(elf)],
+            [str(llvm_mc), "-triple=linx64", "-filetype=obj", str(asm), "-o", str(obj)],
             capture_output=True,
         )
         self.assertEqual(built.returncode, 0, built.stderr.decode(errors="replace"))
+        if elf_kind != "relocatable":
+            link_command = [
+                str(ld_lld),
+                "-e",
+                "_start",
+                "-Ttext=0x10000",
+                "--section-start=.result=0x20000",
+                str(obj),
+                "-o",
+                str(elf),
+            ]
+            linked = subprocess.run(link_command, capture_output=True)
+            self.assertEqual(
+                linked.returncode, 0, linked.stderr.decode(errors="replace")
+            )
+            if elf_kind == "zero_address":
+                self.set_elf_symbol_value(elf, "cross_model_result", 0)
+
+        manifest_address = 0 if elf_kind in {"relocatable", "undefined", "zero_address"} else 0x20000
 
         manifest = temp / "manifest.json"
         manifest.write_text(
@@ -539,8 +662,8 @@ class AiWorkloadFlowTests(unittest.TestCase):
                     "result_memory": {
                         "result_symbol": "cross_model_result",
                         "size_symbol": "cross_model_result_size",
-                        "address": 0,
-                        "size": 8,
+                        "address": manifest_address,
+                        "size": result_size,
                     }
                 }
             ),

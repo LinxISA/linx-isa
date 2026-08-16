@@ -109,3 +109,36 @@ Fresh remediation verification:
   the committed-output freshness invocation.
 - The real release-strict command remains fail-closed at the intentionally
   absent Task 4 QEMU binary; no runtime promotion is claimed.
+
+## Scoped re-review remediation
+
+Follow-up model commit `5004faa` closes the remaining hosted-CI authority gap:
+every job that runs authority-dependent CTest (`st` and `sanitizers`) checks
+out immutable LinxISA authority commit
+`ea54153b3351c48df306a57189ffb587801b9197` and configures
+`LINXISA_AUTHORITY_ROOT`. A workflow regression test enforces that exact pin
+for both jobs, while standalone execution without authority still fails
+closed.
+
+Release-strict ELF validation now accepts only ELF64 `ET_EXEC` artifacts with
+a program-header table and at least one `PT_LOAD`. It requires
+`cross_model_result` to be defined in an allocatable section at a nonzero
+address, requires `cross_model_result_size` to be a positive absolute symbol,
+and proves the complete result byte range is inside one loadable segment before
+consulting self-declared manifest or comparison data. Explicit negatives cover
+`ET_REL`, undefined result and size symbols, non-alloc sections, a patched
+zero-address symbol, and a symbol range extending past its `PT_LOAD` segment.
+
+Fresh scoped re-review verification:
+
+- Red: the hosted-workflow regression failed for `sanitizers`; all five initial
+  malformed-ELF tests failed because the validator either accepted the input
+  or reached a later, unrelated check.
+- Green: generator/hosted-workflow tests passed 7/7.
+- Green: targeted positive plus malformed-ELF tests passed 7/7, including the
+  additional undefined-size-symbol case.
+- Green: root AI/provenance tests passed 42/42.
+- Green: committed codec freshness passed with 765 forms, 2661 fields, 3401
+  pieces, and 780 constraints; model build was current and CTest passed 11/11.
+- Runtime promotion remains blocked by the absent Task 4 QEMU executable; no
+  release-strict runtime PASS is claimed.
