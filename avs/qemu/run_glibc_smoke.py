@@ -56,10 +56,22 @@ WRAPPER_START_MARKER = "SWRAP_INIT_START"
 
 
 @dataclass(frozen=True)
+class QemuRunResult:
+    output: str
+    timed_out: bool
+    saw_pass: bool
+    returncode: int | None
+    termination: str
+
+
+@dataclass(frozen=True)
 class SystemRuntimeResult:
     output: str
     timed_out: bool
     saw_pass: bool
+    returncode: int | None
+    termination: str
+    failure_marker: str | None
     attempts: int
     ok: bool
     classification: str
@@ -179,7 +191,7 @@ def _qemu_debug_env() -> dict[str, str]:
     return {key: os.environ[key] for key in sorted(os.environ) if key.startswith("LINX_")}
 
 
-def _run_qemu(cmd: list[str], timeout_s: int) -> tuple[str, bool, bool]:
+def _run_qemu(cmd: list[str], timeout_s: int) -> QemuRunResult:
     proc = subprocess.Popen(
         cmd,
         stdin=subprocess.DEVNULL,
@@ -189,6 +201,7 @@ def _run_qemu(cmd: list[str], timeout_s: int) -> tuple[str, bool, bool]:
 
     timed_out = False
     saw_pass = False
+    termination = "running"
     out_chunks: list[bytes] = []
     deadline = time.monotonic() + timeout_s
 
@@ -196,6 +209,7 @@ def _run_qemu(cmd: list[str], timeout_s: int) -> tuple[str, bool, bool]:
         now = time.monotonic()
         if now >= deadline:
             timed_out = True
+            termination = "timeout"
             proc.kill()
             break
 
@@ -204,26 +218,39 @@ def _run_qemu(cmd: list[str], timeout_s: int) -> tuple[str, bool, bool]:
         if r:
             chunk = os.read(proc.stdout.fileno(), 4096)
             if not chunk:
+                termination = "natural_exit"
                 break
             out_chunks.append(chunk)
             text = b"".join(out_chunks).decode("utf-8", errors="replace")
-            if all(marker in text for marker in SYSTEM_PASS_MARKERS):
-                saw_pass = True
+            if _complete_failure_marker(text):
+                termination = "failure_marker"
                 proc.kill()
                 break
-            if _complete_failure_marker(text):
+            if all(marker in text for marker in SYSTEM_PASS_MARKERS):
+                saw_pass = True
+                termination = "pass_marker"
                 proc.kill()
                 break
 
         if proc.poll() is not None:
+            termination = "natural_exit"
             break
 
     if proc.poll() is None:
         proc.kill()
+        if termination == "running":
+            termination = "runner_stop"
     tail_out = proc.stdout.read() if proc.stdout else b""
     if tail_out:
         out_chunks.append(tail_out)
-    return b"".join(out_chunks).decode("utf-8", errors="replace"), timed_out, saw_pass
+    returncode = proc.wait()
+    return QemuRunResult(
+        output=b"".join(out_chunks).decode("utf-8", errors="replace"),
+        timed_out=timed_out,
+        saw_pass=saw_pass,
+        returncode=returncode,
+        termination=termination,
+    )
 
 
 def _classify_system_runtime(
@@ -231,32 +258,40 @@ def _classify_system_runtime(
     timed_out: bool,
     saw_pass: bool,
     *,
+    returncode: int | None = None,
+    termination: str = "unknown",
     attempts: int = 1,
 ) -> SystemRuntimeResult:
     missing_markers = [marker for marker in SYSTEM_PASS_MARKERS if marker not in output]
-    if saw_pass and not missing_markers:
+    failure_marker = next((marker for marker in FAIL_MARKERS if marker in output), None)
+    if failure_marker is not None:
+        detail = f"runtime hit failure marker: {failure_marker}"
+        classification = "glibc_runtime_failure_marker"
+    elif termination == "natural_exit" and returncode not in (None, 0):
+        detail = f"qemu exited naturally with rc={returncode}"
+        classification = "qemu_exit_failure"
+    elif saw_pass and not missing_markers:
         retry_suffix = " after one guest-boot retry" if attempts == 2 else ""
         return SystemRuntimeResult(
             output=output,
             timed_out=timed_out,
             saw_pass=saw_pass,
+            returncode=returncode,
+            termination=termination,
+            failure_marker=None,
             attempts=attempts,
             ok=True,
             classification="runtime_pass",
             detail="glibc-linked hello reached main and reported pass" + retry_suffix,
         )
 
-    if timed_out:
+    elif timed_out:
         if WRAPPER_START_MARKER not in output:
             detail = f"guest boot timed out before {WRAPPER_START_MARKER} after {attempts} attempt(s)"
             classification = "guest_boot_timeout"
         else:
             detail = f"qemu timed out after {attempts} attempt(s) after {WRAPPER_START_MARKER}"
             classification = "glibc_runtime_timeout"
-    elif any(marker in output for marker in FAIL_MARKERS):
-        hit = next(marker for marker in FAIL_MARKERS if marker in output)
-        detail = f"runtime hit failure marker: {hit}"
-        classification = "glibc_runtime_failure_marker"
     else:
         detail = "missing pass markers: " + ", ".join(missing_markers)
         classification = "glibc_runtime_missing_marker"
@@ -265,6 +300,9 @@ def _classify_system_runtime(
         output=output,
         timed_out=timed_out,
         saw_pass=saw_pass,
+        returncode=returncode,
+        termination=termination,
+        failure_marker=failure_marker,
         attempts=attempts,
         ok=False,
         classification=classification,
@@ -272,18 +310,43 @@ def _classify_system_runtime(
     )
 
 
+def _retryable_pre_wrapper_timeout(result: QemuRunResult) -> bool:
+    return (
+        result.timed_out
+        and WRAPPER_START_MARKER not in result.output
+        and not any(marker in result.output for marker in FAIL_MARKERS)
+        and not (
+            result.termination == "natural_exit"
+            and result.returncode not in (None, 0)
+        )
+    )
+
+
 def _run_system_runtime(cmd: list[str], timeout_s: int) -> SystemRuntimeResult:
-    output, timed_out, saw_pass = _run_qemu(cmd, timeout_s)
+    qemu_result = _run_qemu(cmd, timeout_s)
     attempts = 1
-    if timed_out and not output and WRAPPER_START_MARKER not in output:
-        output, timed_out, saw_pass = _run_qemu(cmd, timeout_s)
+    if _retryable_pre_wrapper_timeout(qemu_result):
+        qemu_result = _run_qemu(cmd, timeout_s)
         attempts = 2
     return _classify_system_runtime(
-        output,
-        timed_out,
-        saw_pass,
+        qemu_result.output,
+        qemu_result.timed_out,
+        qemu_result.saw_pass,
+        returncode=qemu_result.returncode,
+        termination=qemu_result.termination,
         attempts=attempts,
     )
+
+
+def _system_runtime_summary(result: SystemRuntimeResult) -> dict[str, Any]:
+    return {
+        "ok": result.ok,
+        "classification": result.classification,
+        "attempts": result.attempts,
+        "returncode": result.returncode,
+        "termination": result.termination,
+        "failure_marker": result.failure_marker,
+    }
 
 
 def _select_variants(raw: list[str] | None, *, runner: str) -> list[str]:
@@ -593,9 +656,7 @@ def main(argv: list[str]) -> int:
             "hello": str(hello),
             "initramfs": str(initramfs_cpio),
             "log": str(qemu_log),
-            "ok": runtime.ok,
-            "classification": runtime.classification,
-            "attempts": runtime.attempts,
+            **_system_runtime_summary(runtime),
         }
 
     summary["variants"] = variant_results
