@@ -35,10 +35,12 @@ class AtomicLrSrcZeroDecodeTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         golden = json.loads(
-            (REPO_ROOT / "isa" / "v0.57" / "linxisa-v0.57.json").read_text(
+            (REPO_ROOT / "isa" / "v0.58" / "linxisa-v0.58.json").read_text(
                 encoding="utf-8"
             )
         )
+        if golden.get("version") != "0.58.1":
+            raise AssertionError("atomic decode authority must be PTO ISA 0.58.1")
         cls.golden = {
             insn["mnemonic"]: insn["encoding"]["parts"][0]
             for insn in golden["instructions"]

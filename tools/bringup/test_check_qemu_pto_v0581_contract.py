@@ -23,7 +23,7 @@ class QemuPtoV0581ContractTests(unittest.TestCase):
         self.assertEqual(result.forms, 765)
         self.assertEqual(result.engine_counts, {"VEC": 31, "SFU": 56, "TLSU": 10, "CUBE": 12})
         self.assertEqual(result.operation_count, 109)
-        self.assertEqual(result.numeric_vector_count, 104)
+        self.assertEqual(result.numeric_reference_vector_count, 104)
 
     def test_catalog_release_mutation_is_rejected(self) -> None:
         catalog = json.loads((ROOT / "isa/v0.58/linxisa-v0.58.json").read_text())

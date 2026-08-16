@@ -33,7 +33,7 @@ class CheckResult:
     forms: int
     engine_counts: dict[str, int]
     operation_count: int
-    numeric_vector_count: int
+    numeric_reference_vector_count: int
 
 
 def validate_catalog(catalog: dict[str, object]) -> None:
@@ -139,6 +139,17 @@ def check_contract(root: Path) -> CheckResult:
         errors.append("official numeric vector SHA-256 mismatch")
     if numeric_vector_count != 104:
         errors.append(f"numeric vector count is {numeric_vector_count}, expected 104")
+    conformance = json.loads(
+        (root / "emulator/qemu/tests/linxisa/pto-v058-cube-profile-conformance.json").read_text()
+    )
+    evidence = conformance.get("qemu_implementation_gap", {}).get("evidence", {})
+    if conformance.get("status") != "reference-vector-coverage-only":
+        errors.append("numeric conformance must not claim production proof")
+    if (
+        evidence.get("canonical_reference_vectors_checked") != 104
+        or evidence.get("production_vector_cases") != "unavailable"
+    ):
+        errors.append("numeric evidence must distinguish reference checks from production execution")
 
     virt = (root / "emulator/qemu/hw/linx/virt.c").read_text()
     try:
@@ -181,7 +192,8 @@ def main() -> int:
         return 1
     print(f"ok: PTO ISA 0.58.1 QEMU contract ({result.mnemonics}/731 mnemonics, "
           f"{result.forms}/765 forms, {result.operation_count} operations, "
-          f"{result.numeric_vector_count} numeric vectors)")
+          f"{result.numeric_reference_vector_count} canonical reference vectors; "
+          "full production-vector execution unavailable)")
     return 0
 
 
