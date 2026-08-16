@@ -8,7 +8,7 @@ v0.58 consumer 矩阵之前只属于 `v0.57` 兼容性基线；其历史 PASS �
 ## 从这里开始
 
 - 入门和工作区设置：`docs/bringup/GETTING_STARTED.md`
-- 执行顺序阻止程序操作手册：`docs/bringup/SUPERPROJECT_BRINGUP_CHECKLIST.md`
+- 基准测试/QEMU/Linux 当前流程：`docs/bringup/BENCHMARK_QEMU_LINUX_FLOW.md`
 
 ## 规范合同
 
@@ -21,7 +21,8 @@ v0.58 consumer 矩阵之前只属于 `v0.57` 兼容性基线；其历史 PASS �
 ## 关键参考文献
 
 - `docs/bringup/AVS_CONTRACT.md`
-- `docs/bringup/SUPERPROJECT_BRINGUP_CHECKLIST.md`
+- 2026 年 4 月的历史阻止清单：
+  `docs/zh/archive/v0.58/bringup/SUPERPROJECT_BRINGUP_CHECKLIST.md`
 - `docs/bringup/MATURITY_PLAN.md`
 - `docs/bringup/SIMT_COMPILER_MATURITY_PLAN.md`
 - `docs/bringup/SIMT_COMPILER_SUPPORTED_SUBSET.md`

@@ -8,7 +8,6 @@ matrix is published. Its historical PASS results do not transfer to v0.58.
 ## Start Here
 
 - Onboarding and workspace setup: `docs/bringup/GETTING_STARTED.md`
-- Execution-order blocker runbook: `docs/bringup/SUPERPROJECT_BRINGUP_CHECKLIST.md`
 - Benchmark/QEMU/Linux hard-break flow: `docs/bringup/BENCHMARK_QEMU_LINUX_FLOW.md`
 - AI workload/QEMU/LinxCoreModel hard-break flow: `docs/bringup/AI_WORKLOAD_BRINGUP_FLOW.md`
 
@@ -23,7 +22,8 @@ matrix is published. Its historical PASS results do not transfer to v0.58.
 ## Key References
 
 - `docs/bringup/AVS_CONTRACT.md`
-- `docs/bringup/SUPERPROJECT_BRINGUP_CHECKLIST.md`
+- Historical April 2026 blocker snapshot:
+  `docs/archive/v0.58/bringup/SUPERPROJECT_BRINGUP_CHECKLIST.md`
 - `docs/bringup/SUPERPROJECT_MILESTONES.md`
 - `docs/bringup/SPEC_WORKLOAD_PLAN.md`
 - `docs/bringup/BENCHMARK_QEMU_LINUX_FLOW.md`

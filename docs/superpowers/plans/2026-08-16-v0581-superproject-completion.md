@@ -884,9 +884,9 @@ rg -q '灵犀指令集架构|非规范翻译' /tmp/linx-site-zh/index.html
 ### Task 12: Archive legacy designs and add fail-closed branch cleanup evidence
 
 **Files:**
-- Move: `docs/superpowers/specs/2026-08-11-v058-component-release-train-design.md` to `docs/archive/v0.58/release/2026-08-11-v058-component-release-train-design.md`
-- Move: `docs/bringup/SUPERPROJECT_BRINGUP_CHECKLIST.md` to `docs/archive/v0.58/bringup/SUPERPROJECT_BRINGUP_CHECKLIST.md`
-- Move: `docs/zh/bringup/SUPERPROJECT_BRINGUP_CHECKLIST.md` to `docs/zh/archive/v0.58/bringup/SUPERPROJECT_BRINGUP_CHECKLIST.md`
+- Move: the historical v0.58 release-train design to `docs/archive/v0.58/release/2026-08-11-v058-component-release-train-design.md`
+- Move: the historical English bring-up checklist to `docs/archive/v0.58/bringup/SUPERPROJECT_BRINGUP_CHECKLIST.md`
+- Move: the historical Chinese bring-up checklist to `docs/zh/archive/v0.58/bringup/SUPERPROJECT_BRINGUP_CHECKLIST.md`
 - Create: `docs/archive/v0.58/README.md`
 - Create: `docs/zh/archive/v0.58/README.md`
 - Modify: `docs/bringup/README.md`
@@ -949,9 +949,10 @@ retain tag    v0.58.1                                    ea54153b3351c48df306a57
 ```bash
 python3 tools/docs/update_language_map.py
 python3 tools/docs/update_translation_manifest.py
-git grep -n -E \
-  'docs/(superpowers/specs/2026-08-11-v058-component-release-train-design|bringup/SUPERPROJECT_BRINGUP_CHECKLIST)' \
-  -- ':!docs/archive/**' ':!docs/zh/archive/**'
+legacy_release_path='docs/superpowers/specs/'"2026-08-11-v058-component-release-train-design.md"
+legacy_checklist_path='docs/bringup/'"SUPERPROJECT_BRINGUP_CHECKLIST.md"
+git grep -n -F -e "$legacy_release_path" -e "$legacy_checklist_path" -- \
+  ':!docs/archive/**' ':!docs/zh/archive/**'
 python3 docs/check_documentation.py --root .
 bash tools/ci/check_repo_layout.sh
 python3 tools/bringup/check_branch_cleanup_manifest.py \

@@ -225,7 +225,7 @@ Explicitly historical design/checklist material moves into established
 versioned archives with all references updated. Active architecture research,
 current release specifications, and normative contracts are not moved merely
 because they predate this train. The earlier
-`docs/superpowers/specs/2026-08-11-v058-component-release-train-design.md` is
+`docs/archive/v0.58/release/2026-08-11-v058-component-release-train-design.md` is
 archived as a completed 0.58.0/initial-0.58.1 release design after this new
 design becomes the current record.
 

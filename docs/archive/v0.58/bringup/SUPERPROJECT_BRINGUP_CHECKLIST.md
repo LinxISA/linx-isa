@@ -1,5 +1,7 @@
 # LinxISA Superproject Bringup Blocker Checklist
 
+Archive status: historical and non-normative.
+
 Use this runbook for the current **red-gate recovery lane** in the `linx-isa`
 superproject. It reflects the checked-in April 18, 2026 canonical gate report,
 not the older March 15 baseline.
@@ -17,7 +19,7 @@ checklists for the module-specific closure criteria.
 
 ## Baseline
 
-- Canonical baseline: [`docs/bringup/gates/latest.json`](gates/latest.json),
+- Canonical baseline: [`docs/bringup/gates/latest.json`](../../../bringup/gates/latest.json),
   generated `2026-04-18 02:11:34Z`, latest pin-lane run
   `2026-04-18-r9-pin-linuxlibc-refresh`.
 - The April 18 report supersedes the stale March rows for Sail/model, PTO
@@ -130,7 +132,7 @@ Exit criteria:
 
 - [ ] When iterating on `strict_cross_repo.sh` in isolation, reuse the exact
       `Regression::strict_cross_repo.sh` command recorded in
-      [`docs/bringup/gates/latest.json`](gates/latest.json) for the active run
+      [`docs/bringup/gates/latest.json`](../../../bringup/gates/latest.json) for the active run
       shape, so the environment matches the failing row.
 - [x] Replace the stale March Sail first-failure diagnosis with the current
       BusyBox-rootfs-driven strict closure failure.
@@ -149,7 +151,7 @@ Exit criteria:
 - [x] Keep the PR lane on compile-only strict coverage until the auto-runtime
       hangs are closed. Dedicated runtime triage should still classify the
       first hanging kernel against
-      [`docs/bringup/SIMT_COMPILER_SUPPORTED_SUBSET.md`](SIMT_COMPILER_SUPPORTED_SUBSET.md)
+      [`docs/bringup/SIMT_COMPILER_SUPPORTED_SUBSET.md`](../../../bringup/SIMT_COMPILER_SUPPORTED_SUBSET.md)
       as exactly one of:
   - within the documented supported subset;
   - intentional scalar fallback;

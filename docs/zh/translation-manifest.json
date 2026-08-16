@@ -137,6 +137,14 @@
       "source_sha256": "fdda4e960582a74b9c9a41444a1127e4263f48d9bf88016c6d04bcf5fc242c50",
       "translation_sha256": "94b1d9131e8368c0a3c98d049cd9853306264e86c9e1d37c5fd21140522fb49d"
     },
+    "archive/v0.58/README.md": {
+      "source_sha256": "25761f4c957e359a1c229d1d18f8aa16179cfe5498f8c7430c71d51b078eb687",
+      "translation_sha256": "4565304bb20a2755cf321828c4044b89de60af00e323a168a05fc8f29c40fc3e"
+    },
+    "archive/v0.58/bringup/SUPERPROJECT_BRINGUP_CHECKLIST.md": {
+      "source_sha256": "c96b2d662be617a0f651c50fef576a35552c3334bf77792abed09248fb6c583e",
+      "translation_sha256": "97715ca26130a970af137cfdca2433e47e9870a26bdba03e5c9bf5a5d0a8ac11"
+    },
     "backend/exu.md": {
       "source_sha256": "afb881029f09e20ade72b7c3df7569f86277d1990e8ca5109007ca4bf053bac4",
       "translation_sha256": "bce3dfa4eaf1cb370982552380b00444f469a403cd3f18170b18d82717d99e9b"
@@ -238,8 +246,8 @@
       "translation_sha256": "094c17d606ff81d0531328de40ae204988b366f4b0c37a2f668d65fe7639854b"
     },
     "bringup/README.md": {
-      "source_sha256": "188f15ad05d90b65e3bf6d9c4fdf17c53b9e3f35f75b9f7ca0dee376303773f8",
-      "translation_sha256": "e332ae660467016c632fe6bbaeae2d402f5c0912f6988eefe3924ffc0b69f009"
+      "source_sha256": "70f3f1adef8e285dbb69b27f917169d403a82dc8cb36e1f888c10166df82c15d",
+      "translation_sha256": "546d10db1147158fb2deeabf0ef47183dad949f8230dabd9fe5904f2df04dbbb"
     },
     "bringup/SIMT_COMPILER_MATURITY_PLAN.md": {
       "source_sha256": "02471b8b1fdacd53ae28dd52f1d454128eb2d95e80dc2ae6f92bd841962663c4",
@@ -248,10 +256,6 @@
     "bringup/SIMT_COMPILER_SUPPORTED_SUBSET.md": {
       "source_sha256": "d703d77f29f66bf46f49aed3b0737bd1c8c2ef1fd86b75f308621105541cb86e",
       "translation_sha256": "57ae07edbc2c2f4c2b62d9db3c5cd21975cf6e5f3089c3eafbd8409daf45772d"
-    },
-    "bringup/SUPERPROJECT_BRINGUP_CHECKLIST.md": {
-      "source_sha256": "052ac4a1ced50ad9423e7df867bf12a1361042cf6593226d6de20da0afe348e9",
-      "translation_sha256": "b14d7f846a572f66c9265f038b8b3f12bc94105a41c42d4c577c88e691954b19"
     },
     "bringup/agent_runs/checklists/architecture_docs.md": {
       "source_sha256": "a626706107c3d16773e3e7eec2669cfe980475311ff08a0852e34bdad4f4d662",

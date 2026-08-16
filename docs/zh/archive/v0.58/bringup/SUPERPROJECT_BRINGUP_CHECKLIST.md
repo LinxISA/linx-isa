@@ -1,5 +1,7 @@
 # 灵犀指令集 超级项目启动阻止清单
 
+归档状态：历史资料，非规范。
+
 将此运行手册用于 `linx-isa` 中当前的**红门恢复通道**
 超级项目。它反映了 2026 年 4 月 18 日签入的规范门报告，
 不是旧的 3 月 15 日基线。
@@ -17,7 +19,7 @@
 
 ## 基线
 
-- 规范基线：[`docs/bringup/gates/latest.json`](gates/latest.json)，
+- 规范基线：[`docs/bringup/gates/latest.json`](../../../bringup/gates/latest.json)，
   生成 `2026-04-18 02:11:34Z`，最新的 pin-lane 运行
   `2026-04-18-r9-pin-linuxlibc-refresh`。
 - 4 月 18 日的报告取代了 Sail/model、PTO 的过时的 3 月行
@@ -123,7 +125,7 @@
 
 - [ ] 当单独迭代 `strict_cross_repo.sh` 时，重复使用精确的
       `Regression::strict_cross_repo.sh`命令记录在
-      [`docs/bringup/gates/latest.json`](gates/latest.json) 用于主动运行
+      [`docs/bringup/gates/latest.json`](../../../bringup/gates/latest.json) 用于主动运行
       形状，因此环境与失败的行匹配。
 - [x] 将陈旧的 March Sail 首次故障诊断替换为当前的诊断
       BusyBox-rootfs驱动的严格关闭失败。
@@ -140,7 +142,7 @@
 - [x] 保持 PR 通道仅编译严格覆盖，直到自动运行时
       挂起已关闭。专用运行时分类仍应对
       第一个挂内核
-      [`docs/bringup/SIMT_COMPILER_SUPPORTED_SUBSET.md`](SIMT_COMPILER_SUPPORTED_SUBSET.md)
+      [`docs/bringup/SIMT_COMPILER_SUPPORTED_SUBSET.md`](../../../bringup/SIMT_COMPILER_SUPPORTED_SUBSET.md)
       恰好是以下之一：
   - 在记录的支持子集中；
   - 故意 标量 后备；
