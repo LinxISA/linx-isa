@@ -132,8 +132,16 @@ is not pulled into the train.
 
 ### 5.5 TileOP API and PTO Kernels
 
-The current TileOP API descendant is retained. PTO kernels merges the two
-reviewed commits on `codex/v058-release` into canonical `pto-isa/main`, then
+The released TileOP API pin `8f021d53d6b33ccff6babab6b80693c4fa9f6aa1`
+is the known-good `0.58.1` baseline. Canonical `origin/linx` is a
+non-descendant that retains obsolete selector and constraint surfaces and
+fails the release contract suite; it must not be pinned directly. Reconcile
+canonical `linx` by porting its still-desired additions onto the known-good
+release baseline, or by repairing it on a reviewed topic branch until
+`make check` passes without waivers, then pin the canonical merged SHA.
+
+PTO kernels merges the two reviewed commits on `codex/v058-release` into
+canonical `pto-isa/main`, never the divergent legacy `origin` fork, then
 validates the current startup syntax, sysroot/triple contract, TLOAD/TSTORE
 migration, heap behavior, formatting/lint rules, and retired TCOPYIN/OUT
 rejection. The maintained SuperNPU source remains
